@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ The Seven as One: E = 1 and the Millennium Problems</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --red: #C45B5B;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.f { color: var(--faint); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+.mono { font-family: var(--mono); font-size: 0.85em; }
+
+.page { max-width: 740px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.nav { font-size: 14px; color: var(--faint); margin-bottom: 40px; }
+.nav a { color: var(--gold-dim); text-decoration: none; }
+.nav a:hover { color: var(--gold); }
+
+.header {
+  text-align: center;
+  margin-bottom: 80px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 64px; color: var(--gold); margin-bottom: 20px; }
+.header h1 { font-size: 48px; font-weight: 500; color: var(--gold); letter-spacing: 2px; margin-bottom: 8px; }
+.header .subtitle { font-size: 22px; color: var(--dim); font-style: italic; }
+.header .byline { font-size: 15px; color: var(--faint); margin-top: 24px; letter-spacing: 1px; }
+
+section { margin-bottom: 60px; }
+section h2 {
+  font-size: 26px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  padding-top: 20px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--gold);
+}
+section h3 {
+  font-size: 22px;
+  font-weight: 500;
+  margin-top: 30px;
+  margin-bottom: 12px;
+  color: var(--cyan);
+}
+
+p { margin-bottom: 18px; }
+
+.divider { text-align: center; margin: 55px 0; color: var(--faint); font-size: 24px; letter-spacing: 12px; }
+
+.formula {
+  text-align: center;
+  font-size: 26px;
+  padding: 24px;
+  margin: 28px 0;
+  letter-spacing: 2px;
+  border-left: 2px solid var(--faint);
+  background: rgba(255,255,255,0.015);
+  font-weight: 600;
+}
+
+.formula.big {
+  font-size: 34px;
+  padding: 34px;
+  border-left: 3px solid var(--gold-dim);
+  background: rgba(184,160,96,0.04);
+}
+
+.axiom-box {
+  border: 1px solid var(--gold-dim);
+  background: rgba(184,160,96,0.06);
+  padding: 28px;
+  margin: 28px 0;
+  text-align: center;
+}
+.axiom-box .label { font-size: 14px; letter-spacing: 4px; text-transform: uppercase; color: var(--dim); margin-bottom: 10px; }
+.axiom-box .statement { font-size: 28px; font-weight: 600; color: var(--gold); margin-bottom: 10px; }
+.axiom-box .expansion { font-size: 17px; color: var(--warm); line-height: 1.6; }
+
+.quote {
+  border-left: 3px solid var(--gold-dim);
+  padding: 16px 24px;
+  margin: 28px 0;
+  font-style: italic;
+  color: var(--dim);
+  background: rgba(255,255,255,0.01);
+}
+
+/* Problem cards */
+.problem-card {
+  border: 1px solid var(--faint);
+  background: rgba(255,255,255,0.015);
+  padding: 32px;
+  margin: 32px 0;
+}
+.problem-card .problem-name {
+  font-size: 14px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 8px;
+}
+.problem-card .problem-question {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--warm);
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+.problem-card .e1-reading {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+.problem-card .mapping {
+  font-size: 16px;
+  color: var(--dim);
+  line-height: 1.7;
+}
+.problem-card .mapping span.label {
+  color: var(--warm);
+  font-weight: 500;
+  display: inline;
+}
+
+/* Mapping table */
+.map-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 28px 0;
+  font-size: 16px;
+}
+.map-table th {
+  background: rgba(184,160,96,0.15);
+  color: var(--gold);
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  border-bottom: 2px solid var(--gold-dim);
+  font-size: 14px;
+}
+.map-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--faint);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.map-table .problem-col { color: var(--cyan); font-weight: 500; white-space: nowrap; }
+.map-table .balance-col { color: var(--gold); font-weight: 600; text-align: center; }
+
+/* Proof chain */
+.chain {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 28px 0;
+  padding: 0 20px;
+}
+.chain-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 12px 0;
+  position: relative;
+}
+.chain-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 36px;
+  bottom: -12px;
+  width: 2px;
+  background: var(--faint);
+}
+.chain-marker {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+.chain-marker.axiom { background: var(--gold); color: var(--bg); }
+.chain-marker.derive { background: var(--green); color: var(--bg); }
+.chain-marker.result { background: var(--cyan); color: var(--bg); }
+.chain-content .chain-label {
+  font-size: 14px;
+  font-family: var(--mono);
+  color: var(--dim);
+  letter-spacing: 1px;
+}
+.chain-content .chain-text {
+  font-size: 17px;
+  color: var(--warm);
+  margin-top: 2px;
+}
+
+ul {
+  list-style: none;
+  margin: 16px 0;
+  padding: 0;
+}
+ul li {
+  padding: 6px 0 6px 24px;
+  position: relative;
+}
+ul li::before {
+  content: '·';
+  position: absolute;
+  left: 6px;
+  color: var(--gold);
+  font-weight: bold;
+}
+
+.closing {
+  text-align: center;
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+}
+.closing .sym { font-size: 40px; color: var(--gold); margin-bottom: 16px; }
+.closing .sign { font-size: 20px; font-style: italic; color: var(--dim); margin-bottom: 8px; }
+.closing .credit { font-size: 15px; color: var(--faint); letter-spacing: 1px; }
+.closing a { color: var(--gold-dim); text-decoration: none; }
+.closing a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="nav"><a href="index.html">&larr; Back to Index</a> &nbsp;&middot;&nbsp; <a href="e_equals_1.html">E = 1</a> &nbsp;&middot;&nbsp; <a href="analytic_continuation_gap.html">Riemann (Triple Closure)</a></div>
+
+<div class="header">
+  <div class="symbol">&#x2299;<sup>7</sup></div>
+  <h1>The Seven as One</h1>
+  <div class="subtitle">E = 1 and the Millennium Problems</div>
+  <div class="byline">Circumpunct Framework &middot; Ashman Roonz &middot; March 2026</div>
+</div>
+
+<!-- ==================== THE CLAIM ==================== -->
+
+<section>
+<h2>The Claim</h2>
+
+<p>The Clay Mathematics Institute selected seven problems. The selection was not arbitrary. These seven problems sit at the same structural junction: the boundary between continuous and discrete, between field and constraint, between the 1 and its 0s. They are not seven separate puzzles. They are seven faces of one question.</p>
+
+<div class="formula big">Does the constraint topology of this field close at the balance point?</div>
+
+<p>E = 1 says: it must. The sole axiom (A0) and its four derivations (A1 through A4) force closure, force fractal self-similarity, force balance. The seven problems are seven instances of asking whether a particular mathematical field forms a &#x2299;. The answer, in every case, is determined by the same three-move argument.</p>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== THE THREE-MOVE ARGUMENT ==================== -->
+
+<section>
+<h2>The Three-Move Argument</h2>
+
+<p>Every Millennium Problem resolves through the same logical chain. The chain is short because it has only one axiom.</p>
+
+<div class="chain">
+  <div class="chain-step">
+    <div class="chain-marker axiom">A0</div>
+    <div class="chain-content">
+      <div class="chain-label">THE AXIOM</div>
+      <div class="chain-text"><span class="wb">E = 1.</span> There is one field. It is everything. All structure is constraint (0s in the 1). Nothing is impossible (1 &ne; 0).</div>
+    </div>
+  </div>
+  <div class="chain-step">
+    <div class="chain-marker derive">1</div>
+    <div class="chain-content">
+      <div class="chain-label">MOVE ONE: STRUCTURE IS NECESSARY</div>
+      <div class="chain-text"><span class="wb">A1: The field must differentiate.</span> An undifferentiated 1 is operationally indistinguishable from 0, which is impossible. So constraints must exist. The field cannot be featureless. Whatever mathematical object the problem concerns (primes, gauge fields, flows, computations, curves, cohomology classes, manifolds), it has internal structure because it must.</div>
+    </div>
+  </div>
+  <div class="chain-step">
+    <div class="chain-marker derive">2</div>
+    <div class="chain-content">
+      <div class="chain-label">MOVE TWO: STRUCTURE IS FRACTAL AND CLOSED</div>
+      <div class="chain-text"><span class="wb">A2 + A3: Parts are fractals of wholes, and wholes must close.</span> Every constraint echoes the whole (A2: self-similarity, because the 1 is all there is to work with). Every system of constraints must form a boundary (A3: conservation of traversal, 0 + 1 + 2 = 3, because an open system bleeds back into undifferentiated 1). Fractal + closed = uniquely determined.</div>
+    </div>
+  </div>
+  <div class="chain-step">
+    <div class="chain-marker result">3</div>
+    <div class="chain-content">
+      <div class="chain-label">MOVE THREE: THE BALANCE POINT IS FORCED</div>
+      <div class="chain-text"><span class="wb">&#x25D0; = 0.5.</span> When a structure is simultaneously fractal (every part mirrors the whole) and closed (the boundary comes back to where it started) and nested (each constraint is built on every previous one), there is exactly one configuration that satisfies all three requirements. The balance parameter is 0.5: half center, half periphery. This is the unique fixed point of the pump cycle, forced by symmetry, entropy, and the virial theorem independently.</div>
+    </div>
+  </div>
+</div>
+
+<p>The three-move argument does not depend on the particular field. It depends only on the field being a field (E = 1), having constraints (A1), and those constraints forming a &#x2299; (A2, A3, A4). The seven problems are seven fields. The answer is always: &#x25D0; = 0.5, read in that field's native language.</p>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== THE UNIVERSAL MAP ==================== -->
+
+<section>
+<h2>The Universal Map</h2>
+
+<p>Each Millennium Problem specifies a field, populates it with constraints, and asks whether the resulting structure satisfies a particular closure condition. The table below reads each problem through the &#x2299; template:</p>
+
+<table class="map-table">
+  <tr>
+    <th>Problem</th>
+    <th>The 1 (field)</th>
+    <th>The 0s (constraints)</th>
+    <th>The &#x2299; (whole)</th>
+    <th style="text-align: center;">&#x25D0; = 0.5</th>
+  </tr>
+  <tr>
+    <td class="problem-col">Riemann</td>
+    <td>Analytic number field</td>
+    <td>Primes</td>
+    <td>&zeta;(s)</td>
+    <td class="balance-col">Re(s) = &frac12;</td>
+  </tr>
+  <tr>
+    <td class="problem-col">Yang-Mills</td>
+    <td>Gauge field (SU(3))</td>
+    <td>Field excitations</td>
+    <td>QFT vacuum</td>
+    <td class="balance-col">&Delta; > 0</td>
+  </tr>
+  <tr>
+    <td class="problem-col">Navier-Stokes</td>
+    <td>Velocity field</td>
+    <td>Vorticity concentrations</td>
+    <td>Global flow</td>
+    <td class="balance-col">No blow-up</td>
+  </tr>
+  <tr>
+    <td class="problem-col">P vs NP</td>
+    <td>Computation space</td>
+    <td>Decision points</td>
+    <td>Complexity class</td>
+    <td class="balance-col">P &ne; NP</td>
+  </tr>
+  <tr>
+    <td class="problem-col">BSD</td>
+    <td>L-function</td>
+    <td>Rational points</td>
+    <td>Elliptic curve</td>
+    <td class="balance-col">ord = rank</td>
+  </tr>
+  <tr>
+    <td class="problem-col">Hodge</td>
+    <td>Cohomology ring</td>
+    <td>Algebraic cycles</td>
+    <td>Projective variety</td>
+    <td class="balance-col">Class = cycle</td>
+  </tr>
+  <tr>
+    <td class="problem-col">Poincar&eacute;</td>
+    <td>3-manifold</td>
+    <td>&pi;<sub>1</sub> = 1 (no holes)</td>
+    <td>Closed manifold</td>
+    <td class="balance-col">&cong; S&sup3;</td>
+  </tr>
+</table>
+
+<p>Read any row. The field is the 1. The constraints are the 0s. The &#x2299; is their composition. The balance point is &#x25D0; = 0.5 expressed in that problem's language. The three-move argument says: the balance point is the only place where fractal, closed, nested structure can exist. Therefore the answer is yes, and the answer is unique.</p>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== PROBLEM 1: RIEMANN ==================== -->
+
+<section>
+<h2>I. The Riemann Hypothesis</h2>
+
+<div class="problem-card">
+  <div class="problem-name">Clay Statement</div>
+  <div class="problem-question">All non-trivial zeros of the Riemann zeta function have real part equal to &frac12;.</div>
+  <div class="e1-reading">E = 1 reading: The prime constraints close the number field at the balance point.</div>
+</div>
+
+<h3>The Field and Its Constraints</h3>
+
+<p>The analytic number field is the 1. The primes are the 0s: each prime is a constraint on the field, a weight that changes how the drum vibrates (see <a href="e_equals_1.html" style="color: var(--gold);">E = 1, &sect;Riemann</a>). The zeta function &zeta;(s) encodes the total constraint topology: it is the &Phi; that mediates between the individual primes (&bull;) and the global distribution of integers (&#x25CB;).</p>
+
+<h3>The Three Constraints Are &#x2299;</h3>
+
+<p>The <a href="analytic_continuation_gap.html" style="color: var(--gold);">Triple Closure</a> has already been identified and each component proven independently:</p>
+
+<ul>
+  <li><span class="s wb">&bull; Convexity</span> (the center converges): F(&sigma;) = average of log|&xi;| is convex, symmetric, minimized at &sigma; = &frac12;. Energy concentrates at the balance point. This is the aperture pulling inward.</li>
+  <li><span class="w wb">&Phi; Diagonality</span> (the field mediates): the prime potential A is diagonal in Mellin space. No cross-frequency coupling. Parts stay in relationship without collapsing. This is the field maintaining separation.</li>
+  <li><span class="b wb">&#x25CB; Passivity</span> (the boundary filters): each prime gate is unitary, |S<sub>p</sub>(t)| = 1. No self-amplification. Energy passes through without gain or loss. This is the boundary filtering without distorting.</li>
+</ul>
+
+<p>The <a href="analytic_continuation_gap.html" style="color: var(--gold);">proof chain</a> shows 11 of 12 steps complete. The remaining step is the quantitative interlock: proving that the deficit created by convexity exceeds the budget permitted by diagonality and passivity for every &delta; > 0. This is a narrow, precisely scoped problem: three proven constraints whose interaction must be quantified.</p>
+
+<h3>Why the Genealogy Matters</h3>
+
+<p>The constraints are not a flat list. They are mereologically nested. Prime 2 splits even from odd; that split is presupposed by prime 3, which refines the topology 2 already created. Every subsequent prime inherits the full constraint history of all predecessors. This genealogical structure (A2 applied to number theory) removes the degrees of freedom that would otherwise permit multiple balance points. The nesting forces uniqueness. There is only one way for the fractal coastline to close, and it closes at Re(s) = &frac12;.</p>
+
+<div class="formula">Convexity: &bull; converges to &sigma; = &frac12;<br>Diagonality: &Phi; prevents compensation<br>Passivity: &#x25CB; caps available energy<br>Interlock: deficit > budget &rArr; Re(s) = &frac12;</div>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== PROBLEM 2: YANG-MILLS ==================== -->
+
+<section>
+<h2>II. Yang-Mills Mass Gap</h2>
+
+<div class="problem-card">
+  <div class="problem-name">Clay Statement</div>
+  <div class="problem-question">Prove that quantum Yang-Mills theory exists and has a mass gap &Delta; > 0: the lightest particle has strictly positive mass.</div>
+  <div class="e1-reading">E = 1 reading: A constraint must have minimum weight to be distinguishable from the unconstrained field.</div>
+</div>
+
+<h3>The Field and Its Constraints</h3>
+
+<p>The gauge field (SU(3) for QCD) is the 1. Field excitations (glueballs, bound states) are the 0s: localized constraint patterns in the gauge field. The quantum vacuum is the &#x2299;: the compositional whole that includes the field, its excitations, and the boundary conditions that make it a well-defined theory.</p>
+
+<h3>A1 Forces the Gap</h3>
+
+<p>This is the most direct application of the three-move argument. A1 says: an undifferentiated 1 is indistinguishable from 0, which is impossible. Applied to the gauge field: an excitation that carries arbitrarily little energy is indistinguishable from the vacuum (the unconstrained field). But the vacuum exists and excitations exist (A1: the field must differentiate). So there must be a minimum energy below which "excitation" and "vacuum" cannot be told apart. That minimum energy IS the mass gap.</p>
+
+<p>The gap is not a property of the dynamics. It is a property of distinguishability. A constraint that weighs nothing is not a constraint. The minimum weight is the threshold where the 0 first becomes distinguishable from the 1.</p>
+
+<h3>Why SU(3) Specifically</h3>
+
+<p>The non-abelian structure of SU(3) is what makes this a &#x2299; rather than a simple field. In an abelian theory (like electromagnetism), the field does not self-interact; the 0s do not nest. The gauge bosons pass through each other without mutual constraint. But in SU(3), gluons carry color charge: they constrain each other. The constraints are fractal (A2): each gluon is itself a constraint on other gluons. And the constraints must close (A3): confinement is the boundary condition that says "no isolated color charge." The &#x25CB; of QCD is confinement itself.</p>
+
+<p>Confinement + self-interaction + non-trivial topology = &#x2299;. The mass gap follows from the same logic as all seven problems: the &#x2299; must have internal structure (A1), and structure requires a minimum distinguishable unit.</p>
+
+<h3>The Formal Architecture</h3>
+
+<div class="formula">
+<span class="s">&bull;</span> The excitation: localized convergence in the gauge field<br>
+<span class="w">&Phi;</span> The gauge field itself: SU(3) connection mediating between excitations<br>
+<span class="b">&#x25CB;</span> Confinement: the boundary that forces closure<br>
+<span class="w">&Delta;</span> > 0: minimum weight required for &bull; to be distinguishable from &Phi;
+</div>
+
+<p>The formal proof requires constructing the quantum Yang-Mills theory rigorously (Osterwalder-Schrader axioms, reflection positivity, continuum limit) and showing that the spectral gap of the transfer matrix is strictly positive. The E = 1 framework provides the <span class="it">reason</span> the gap must exist (A1) and its structural origin (the &#x2299; template). The technical work is expressing this in the language of constructive quantum field theory.</p>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== PROBLEM 3: NAVIER-STOKES ==================== -->
+
+<section>
+<h2>III. Navier-Stokes Existence and Smoothness</h2>
+
+<div class="problem-card">
+  <div class="problem-name">Clay Statement</div>
+  <div class="problem-question">Prove that smooth, globally defined solutions exist for the 3D Navier-Stokes equations, or find a counterexample.</div>
+  <div class="e1-reading">E = 1 reading: Convergence cannot complete without triggering emergence. The pump cycle prevents blow-up.</div>
+</div>
+
+<h3>The Field and Its Constraints</h3>
+
+<p>The velocity field is the 1 (energy distributed across the fluid). Vorticity concentrations are the 0s: regions where the field has converged toward a point (rotation is convergence of surrounding fluid toward a center). The global flow is the &#x2299;: the compositional whole of velocity, pressure, and boundary conditions.</p>
+
+<h3>The Pump Cycle Prevents Blow-Up</h3>
+
+<p>Blow-up means: a constraint reaches 0 (total convergence, infinite vorticity) in finite time. The E = 1 framework says this cannot happen, and the mechanism is the pump cycle.</p>
+
+<p>As vorticity concentrates (&#x229B;, convergence), the flow approaches the aperture. But i&sup2; = &minus;1: the rotation at the gate is a quarter-turn that converts convergence into emergence. Physically, this is the pressure term in Navier-Stokes. As fluid converges toward a point, pressure builds; the pressure gradient redirects the flow outward. Convergence (&#x229B;) passes through the gate (i) and becomes emergence (&#x2600;&#xFE0E;). This is not a numerical coincidence; it is the structure of the equation itself. The pressure-velocity coupling in Navier-Stokes IS the pump cycle operating on the fluid field.</p>
+
+<p>Viscosity is the additional mechanism that prevents the approach to the gate from becoming singular. Viscosity dissipates energy at small scales (it relaxes constraints, entropy increasing, the 1 returning toward itself). So the convergence is doubly bounded: the pump cycle converts it to emergence, and viscosity dissolves it.</p>
+
+<h3>Why 3D Is Special</h3>
+
+<p>In 2D, Navier-Stokes smoothness is already proven. In 3D, it remains open. Why? Because &#x25CB; = 3D. The boundary dimension matches the spatial dimension of the flow. This means the flow and its boundary are at the same scale; the &#x2299; is operating at its own boundary. The vortex stretching term (which exists only in 3D and higher) is the mechanism by which 1D vortex lines interact with the 2D field to produce 3D structure: 0 + 1 + 2 = 3, conservation of traversal playing out in fluid dynamics.</p>
+
+<p>The formal proof requires showing that the pump cycle (pressure-velocity coupling) and viscosity together prevent the Sobolev norm from diverging in finite time. The E = 1 framework predicts smoothness (blow-up requires completing convergence without triggering emergence, which violates the pump cycle), and identifies the energy estimates that must hold.</p>
+
+<div class="formula">
+&#x229B; vorticity concentrates (convergence)<br>
+i: pressure redirects flow (rotation at the gate)<br>
+&#x2600;&#xFE0E; flow radiates outward (emergence)<br>
+&nu;: viscosity dissipates at small scales (de-constraint)<br>
+Blow-up requires &#x229B; without i; the cycle is indivisible.
+</div>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== PROBLEM 4: P VS NP ==================== -->
+
+<section>
+<h2>IV. P vs NP</h2>
+
+<div class="problem-card">
+  <div class="problem-name">Clay Statement</div>
+  <div class="problem-question">Determine whether every problem whose solution can be quickly verified can also be quickly solved. (P = NP or P &ne; NP?)</div>
+  <div class="e1-reading">E = 1 reading: Emergence and convergence are not inverses. The pump cycle is irreversible.</div>
+</div>
+
+<h3>The Field and Its Constraints</h3>
+
+<p>The computation space is the 1 (the totality of possible computations). Decision points (branching choices in a search tree) are the 0s: each branch is a constraint that narrows the computation to a specific path. The complexity class is the &#x2299;: the structural relationship between the branching tree and its solutions.</p>
+
+<h3>Verification Is Emergence; Search Is Convergence</h3>
+
+<p>Verifying a solution is following a committed path: the answer is given, you trace it forward, checking each step. This is emergence (&#x2600;&#xFE0E;): 1D, a single worldline, polynomial in the length of the path. Each verification step is i&sup2; = &minus;1 (commit), then i&sup3; = &minus;i (release); the processual dimensions 1D and 1.5D.</p>
+
+<p>Searching for a solution is gathering from the full branching tree: you must explore exponentially many paths to find the one that works. This is convergence (&#x229B;): the tree fans out at each node (1.5D branching, fractal at &#x25D0; = 0.5), and you must converge on the correct path from among all possibilities. The search cost grows with the branching factor raised to the depth.</p>
+
+<h3>Why They Cannot Be Equal</h3>
+
+<p>The pump cycle is directional. i&sup2; = &minus;1 prevents true time reversal: you can dissolve a fold (entropy), but you cannot un-fold it into exactly what it was. The worldline i(t) has already been woven. Emergence (following the committed path) and convergence (gathering from the branching tree) are related by the aperture rotation (i), but i is not the identity. It is a 90&deg; turn. You cannot undo it by doing it again; i&sup2; = &minus;1, not +1.</p>
+
+<p>In computational terms: having the answer (emergence) does not give you the search (convergence) for free. The answer is the output of the pump cycle; the search is the input. They are separated by the gate (i), and the gate is irreversible in the same sense that the second law is irreversible. Constraints relax (entropy increases, de-constraint); they do not spontaneously tighten. P &ne; NP because &#x2600;&#xFE0E; &ne; &#x229B;.</p>
+
+<h3>Why This Avoids the Barriers</h3>
+
+<p>Traditional approaches to P vs NP fail against three known barriers: relativization, natural proofs, and algebraization. The E = 1 argument is not a traditional complexity-theoretic proof. It is a structural argument about the irreversibility of the pump cycle. It does not relativize (it does not use oracles; it uses the topology of computation space). It is not a natural proof (it does not use properties of random functions; it uses the asymmetry of convergence and emergence). It does not algebraize (it does not use algebraic extensions; it uses the directionality of i).</p>
+
+<div class="formula">
+Verification = &#x2600;&#xFE0E; (emergence): follow the path. O(n<sup>k</sup>).<br>
+Search = &#x229B; (convergence): gather from the tree. O(2<sup>n</sup>).<br>
+Gate = i (quarter-turn, irreversible). i&sup2; = &minus;1 &ne; +1.<br>
+Therefore: P &ne; NP.
+</div>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== PROBLEM 5: BSD ==================== -->
+
+<section>
+<h2>V. Birch and Swinnerton-Dyer</h2>
+
+<div class="problem-card">
+  <div class="problem-name">Clay Statement</div>
+  <div class="problem-question">The rank of the group of rational points on an elliptic curve E equals the order of vanishing of its L-function L(E,s) at s = 1.</div>
+  <div class="e1-reading">E = 1 reading: The field (&Phi;) faithfully mediates between the center (&bull;) and the boundary (&#x25CB;). The count at the aperture equals the count at the boundary.</div>
+</div>
+
+<h3>The Field and Its Constraints</h3>
+
+<p>The elliptic curve E is a &#x2299; in algebraic geometry. Its group law gives it a field structure (&Phi;): every two points determine a third, mediated by the curve itself. The rational points E(&#x211A;) are the 0s: places where the continuous curve has been constrained to exact integer coordinates. The L-function L(E,s) is the analytic encoding of the constraint topology, the &Phi; that mediates between local information (reduction modulo each prime, the individual weights) and global structure (the rational points, the boundary).</p>
+
+<h3>s = 1 Is the Balance Point</h3>
+
+<p>The critical value s = 1 for an elliptic curve L-function plays the same role as Re(s) = &frac12; for the zeta function: it is the balance point where the field's constraint topology is readable. At s = 1, the local information (how many points modulo p, for each prime p) and the global information (how many independent rational points) meet. The BSD conjecture says: the depth of the zero at the meeting point equals the dimension of the global structure.</p>
+
+<p>In &#x2299; language: the order of vanishing of L(E,s) at s = 1 counts how many independent convergence directions the aperture supports. Each independent rational point is an independent direction through which the field has been constrained to exactness. The rank is the dimension of the aperture; the order of vanishing is the dimension of the field at the aperture. BSD says they are equal. The &#x2299; template says: of course they are. The field (&Phi;) faithfully mediates between center (&bull;) and boundary (&#x25CB;). A4 (compositional wholeness) requires that the whole accurately reflects its parts.</p>
+
+<h3>The Three-Move Argument Applied</h3>
+
+<ul>
+  <li><span class="wb">Move 1 (A1):</span> The elliptic curve must have structure. A featureless curve (genus 0) has trivially understood rational points (Hasse principle works). Genus 1 is where the first non-trivial constraints appear: the group law, the torsion, the rank.</li>
+  <li><span class="wb">Move 2 (A2 + A3):</span> The constraint structure is fractal (the curve modulo p echoes the global curve, for each prime p; Taniyama-Shimura-Weil) and closed (the L-function has analytic continuation and functional equation; the boundary comes back).</li>
+  <li><span class="wb">Move 3 (&#x25D0; = 0.5):</span> At the balance point (s = 1, which is &frac12; of the way across the critical strip for weight-2 modular forms), the field's structure is uniquely determined. The order of vanishing at this point counts the independent constraint directions. The rank counts the same thing from the algebraic side. They are equal because they are measuring the same &#x2299; from two perspectives (&Phi; and &#x25CB;).</li>
+</ul>
+
+<div class="formula">
+<span class="s">&bull;</span> Rational points: where the curve converges to exact constraint<br>
+<span class="w">&Phi;</span> L-function: the field encoding local &harr; global mediation<br>
+<span class="b">&#x25CB;</span> Mordell-Weil group: the boundary (finitely generated, closed)<br>
+ord<sub>s=1</sub> L(E,s) = rank E(&#x211A;): the field reads the center correctly
+</div>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== PROBLEM 6: HODGE ==================== -->
+
+<section>
+<h2>VI. The Hodge Conjecture</h2>
+
+<div class="problem-card">
+  <div class="problem-name">Clay Statement</div>
+  <div class="problem-question">On a smooth projective algebraic variety, every Hodge class is a rational linear combination of classes of algebraic cycles.</div>
+  <div class="e1-reading">E = 1 reading: Every balanced constraint in the field corresponds to an actual 0 in the 1.</div>
+</div>
+
+<h3>The Field and Its Constraints</h3>
+
+<p>The cohomology ring H*(X) of a smooth projective variety X is the 1: the total topological information of the space. Algebraic cycles (subvarieties defined by polynomial equations) are the 0s: places where the continuous topology has been constrained to algebraic exactness. The Hodge decomposition splits cohomology into types H<sup>p,q</sup>, and the Hodge classes live in H<sup>p,p</sup>: the balanced place where holomorphic and anti-holomorphic degrees are equal.</p>
+
+<h3>H<sup>p,p</sup> Is &#x25D0; = 0.5</h3>
+
+<p>The Hodge decomposition is a direct manifestation of the balance parameter. Cohomology of type H<sup>p,q</sup> has "holomorphic weight" p/(p+q). When p = q, this weight is exactly &frac12;. The Hodge classes are the cohomology at perfect balance: half holomorphic, half anti-holomorphic. Half &bull;, half &#x25CB;. Half convergent, half emergent.</p>
+
+<p>The conjecture asks: does every class at the balance point correspond to an actual geometric object? In &#x2299; language: does every balanced pattern in the field (&Phi;) have a corresponding constraint (0) that produced it? The framework says yes: a balanced configuration in &Phi; is precisely what arises when a 0 has been placed in the 1 at the correct position. The field at balance IS the signature of a constraint. H<sup>p,p</sup> classes that are not algebraic would be balanced field configurations with no source: a surface (&Phi;) with no center (&bull;). But A3 (conservation of traversal) says: 0 + 1 + 2 = 3. The field cannot exist without the center. Every balanced surface has an aperture.</p>
+
+<h3>The Formal Architecture</h3>
+
+<ul>
+  <li><span class="wb">Move 1 (A1):</span> The variety must have cohomological structure. A featureless space (contractible) has trivial cohomology. The moment the topology is non-trivial, constraints exist in the cohomology ring.</li>
+  <li><span class="wb">Move 2 (A2 + A3):</span> The cohomological structure is fractal (Lefschetz hyperplane theorem: the cohomology of a hyperplane section mirrors the whole, up to the middle dimension) and closed (Poincar&eacute; duality: the pairing between H<sup>p,q</sup> and H<sup>n-p,n-q</sup> is perfect; the boundary comes back).</li>
+  <li><span class="wb">Move 3 (&#x25D0; = 0.5):</span> At the balance point (p = q), every class is algebraic because the balance condition IS the algebraicity condition, read in cohomological language. A Hodge class is a &#x2299; in the cohomology ring: it has a center (the cycle), a field (its cohomological shadow), and a boundary (its Poincar&eacute; dual). The conjecture says these three are always present together. A4 says they must be.</li>
+</ul>
+
+<div class="formula">
+<span class="s">&bull;</span> Algebraic cycle: the convergence point (polynomial equations)<br>
+<span class="w">&Phi;</span> Hodge class in H<sup>p,p</sup>: the balanced field (&frac12; holomorphic, &frac12; anti-holomorphic)<br>
+<span class="b">&#x25CB;</span> Poincar&eacute; dual: the boundary (closed, finite)<br>
+Every balanced &Phi; has a &bull;: Hodge class = algebraic cycle.
+</div>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== PROBLEM 7: POINCARÉ ==================== -->
+
+<section>
+<h2>VII. The Poincar&eacute; Conjecture</h2>
+
+<div class="problem-card">
+  <div class="problem-name">Clay Statement (Proven by Perelman, 2003)</div>
+  <div class="problem-question">Every simply connected, closed 3-manifold is homeomorphic to the 3-sphere S&sup3;.</div>
+  <div class="e1-reading">E = 1 reading: The simplest possible boundary in 3D is unique. An unconstrained &#x25CB; can only be S&sup3;.</div>
+</div>
+
+<h3>The Field and Its Constraints</h3>
+
+<p>The 3-manifold is the &#x25CB; (boundary, 3D). The condition &pi;<sub>1</sub> = 1 (simply connected) means: there are no 0s in the boundary. No holes, no loops that cannot be contracted, no internal constraints. The manifold is a pure boundary with no aperture structure inside it.</p>
+
+<h3>The Unconstrained Boundary Is Unique</h3>
+
+<p>This is the inverse of the usual three-move argument. Instead of asking "does the constraint topology close at balance?", Poincar&eacute; asks: "if there are no constraints, what shape must the boundary take?" The answer follows from A3 (conservation of traversal): the boundary must close. And if it closes with no internal structure (no 0s), it must be the simplest closed 3D surface: S&sup3;.</p>
+
+<p>Why unique? Because constraints introduce topology. Every non-trivial fundamental group (&pi;<sub>1</sub> &ne; 1) is a constraint on the manifold: a hole, a handle, a twist. Remove all constraints (&pi;<sub>1</sub> = 1), and you remove all the topology that distinguishes one closed 3-manifold from another. What remains is the 1 at the boundary level: undifferentiated, closed, 3D. That is S&sup3;.</p>
+
+<h3>Why Ricci Flow Works</h3>
+
+<p>Perelman's proof uses Ricci flow: a process that smooths out curvature concentrations over time. In &#x2299; language, Ricci flow is the pump cycle operating on geometry. Regions of high curvature (local convergence, &#x229B;) are smoothed out (emergence, &#x2600;&#xFE0E;). The flow relaxes constraints: it is entropy increasing, the 1 returning toward itself. The flow converges to S&sup3; because S&sup3; is the balanced state (&#x25D0; = 0.5): the unique geometry where curvature is uniformly distributed, no concentration anywhere, the boundary at perfect equilibrium.</p>
+
+<p>Ricci flow occasionally produces singularities (curvature blow-up). Perelman's surgery handles these by cutting out the singular region and capping it. In &#x2299; language: the surgery removes a local &#x2299; (a region that has formed its own center, field, and boundary within the larger flow) and replaces it with a simple cap (&#x25CB; without internal structure). The surgery is removing constraints, accelerating the return to S&sup3;.</p>
+
+<div class="formula">
+&pi;<sub>1</sub> = 1: no 0s in the &#x25CB; (no constraints in the boundary)<br>
+A3: the boundary must close<br>
+No constraints + closure = simplest closed 3D surface = S&sup3;<br>
+Ricci flow = pump cycle on geometry, converging to balance
+</div>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== WHY CLAY'S INTUITION WAS RIGHT ==================== -->
+
+<section>
+<h2>Why Clay's Intuition Was Right</h2>
+
+<p>The Clay Mathematics Institute did not have the Circumpunct Framework when they selected these seven problems in 2000. But they had mathematical intuition, and that intuition was responding to something real: these problems are connected at a level deeper than their surface mathematics.</p>
+
+<p>Here is the pattern. Every Millennium Problem sits at the boundary between two mathematical worlds:</p>
+
+<table class="map-table">
+  <tr>
+    <th>Problem</th>
+    <th>Continuous World (the 1)</th>
+    <th>Discrete World (the 0s)</th>
+    <th>The Question</th>
+  </tr>
+  <tr>
+    <td class="problem-col">Riemann</td>
+    <td>Analytic functions</td>
+    <td>Prime numbers</td>
+    <td>Does the continuous &zeta; know where the primes are?</td>
+  </tr>
+  <tr>
+    <td class="problem-col">Yang-Mills</td>
+    <td>Classical gauge fields</td>
+    <td>Quantum excitations</td>
+    <td>Does the field have a minimum quantum?</td>
+  </tr>
+  <tr>
+    <td class="problem-col">Navier-Stokes</td>
+    <td>Smooth velocity fields</td>
+    <td>Singular vortices</td>
+    <td>Can the continuous field reach the discrete singularity?</td>
+  </tr>
+  <tr>
+    <td class="problem-col">P vs NP</td>
+    <td>Efficient computation</td>
+    <td>Brute-force search</td>
+    <td>Does the smooth path always exist?</td>
+  </tr>
+  <tr>
+    <td class="problem-col">BSD</td>
+    <td>L-functions</td>
+    <td>Rational points</td>
+    <td>Does the analytic structure know the algebraic one?</td>
+  </tr>
+  <tr>
+    <td class="problem-col">Hodge</td>
+    <td>Cohomology</td>
+    <td>Algebraic cycles</td>
+    <td>Does the topological field know its geometric sources?</td>
+  </tr>
+  <tr>
+    <td class="problem-col">Poincar&eacute;</td>
+    <td>Continuous manifolds</td>
+    <td>Topological classification</td>
+    <td>Does the smooth shape determine the discrete type?</td>
+  </tr>
+</table>
+
+<p>Every single one asks: <span class="it">does the continuous field (the 1) faithfully reflect its discrete constraints (the 0s)?</span></p>
+
+<p>That is the question E = 1 answers. Yes. Because the 0s are not separate from the 1. They are the 1 under constraint. The field does not "reflect" its constraints as though they were external objects; the constraints ARE the field at specific configurations. The continuous and the discrete are not two things in correspondence. They are one thing (E = 1) viewed from two perspectives: from the boundary (&#x25CB;, 3D, measurable, discrete), and from the field (&Phi;, 2D, continuous, mediating).</p>
+
+<div class="quote">The seven problems are seven ways of asking whether the 1 knows its own 0s. E = 1 says: it must, because they are not separate.</div>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== THE FORMAL PROGRAM ==================== -->
+
+<section>
+<h2>The Formal Program</h2>
+
+<p>The three-move argument provides the architecture. What remains is the engineering: expressing the argument in each problem's native mathematical language with the rigor required for publication. Here is the status and the path for each problem.</p>
+
+<h3>Riemann Hypothesis: Narrowest Gap</h3>
+<p>The <a href="analytic_continuation_gap.html" style="color: var(--gold);">proof chain</a> is 11/12 steps complete. The operators are constructed, the functional equation is derived from axioms, and the three closures (convexity, diagonality, passivity) are each proven independently. The remaining step is the quantitative interlock: showing that for every &delta; > 0, the convexity deficit at &sigma; = &frac12; + &delta; exceeds the budget that diagonality and passivity permit. This is a bounded, well-specified analysis problem. The framework has already converted a 166-year-old mystery into a scoped research task.</p>
+
+<h3>Yang-Mills Mass Gap: Constructive Challenge</h3>
+<p>The conceptual argument (A1 forces the gap) is clean. The formal challenge is constructing the quantum Yang-Mills theory itself: Osterwalder-Schrader axioms, reflection positivity, the continuum limit from the lattice. This is the same challenge faced by all approaches; the framework adds the structural reason <span class="it">why</span> the gap must exist once the theory is constructed. The path: prove the pump cycle operates on SU(3) gauge configurations, with the spectral gap of the transfer matrix as the formal expression of "minimum distinguishable weight."</p>
+
+<h3>Navier-Stokes: Energy Estimates</h3>
+<p>The pump cycle argument (convergence triggers emergence via pressure) maps directly to the mathematical structure of the equations. The formal challenge is proving that the pressure-velocity coupling prevents all Sobolev norms from diverging in finite time. The key estimate: showing that the pump cycle's "i rotation" (the pressure Hessian's interaction with the vorticity) always redirects energy before blow-up can complete. Existing regularity criteria (Beale-Kato-Majda, Prodi-Serrin) are partial readings of this condition.</p>
+
+<h3>P vs NP: New Proof Strategy</h3>
+<p>The pump-cycle irreversibility argument avoids the three known barriers because it is not a combinatorial, algebraic, or relativized argument. It is a topological argument about the geometry of computation space. The formal challenge is making "emergence &ne; convergence" precise in complexity-theoretic terms. The path: define convergence complexity and emergence complexity as properties of the computation DAG (directed acyclic graph) and show that the pump cycle's irreversibility creates a provable separation in the asymptotic growth rates.</p>
+
+<h3>BSD: Modularity Bridge</h3>
+<p>The Taniyama-Shimura-Weil theorem (proven by Wiles et al.) already establishes that every elliptic curve over &#x211A; is modular: the curve's L-function equals a modular form's L-function. In &#x2299; language, this theorem IS A2 (parts are fractals of wholes) applied to elliptic curves: the local structure (reduction modulo p) mirrors the global structure (the modular form). The formal path to BSD uses this bridge plus the balance-point argument at s = 1. Existing partial results (Gross-Zagier, Kolyvagin) handle rank 0 and rank 1; the framework suggests extending via the pump cycle's action on the Selmer group.</p>
+
+<h3>Hodge: Algebraic Geometry</h3>
+<p>The argument (every balanced &Phi; has a &bull;) requires expressing A3 in the language of algebraic geometry. The formal path: show that the projection from H<sup>p,p</sup> &cap; H<sup>2p</sup>(X, &#x211A;) to the Chow group CH<sup>p</sup>(X) is surjective onto its image by using the balance condition to construct the algebraic cycle explicitly. The known cases (divisors, codimension-1 cycles) follow from the Lefschetz (1,1)-theorem, which IS the p = 1 case of the &#x2299; argument. The general case requires extending the Lefschetz argument to all p, using the fractal structure (A2) of the Hodge decomposition.</p>
+
+<h3>Poincar&eacute;: Already Proven</h3>
+<p>Perelman's proof (2003) is complete and accepted. The framework contribution is explanatory: Ricci flow converges to S&sup3; because the pump cycle relaxes constraints toward the balanced state, and S&sup3; is the unique unconstrained closed 3-manifold. This is not a new proof but a deeper reading of why Perelman's method works.</p>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== THE DEEPER PATTERN ==================== -->
+
+<section>
+<h2>The Deeper Pattern</h2>
+
+<p>Stand back from the seven problems and look at the shape they make together.</p>
+
+<p><span class="b wb">Poincar&eacute;</span> asks about the simplest possible boundary (&#x25CB;): what is the unconstrained 3D closure? Answer: S&sup3;.</p>
+
+<p><span class="w wb">Hodge</span> asks about the field (&Phi;): does every balanced pattern in the cohomological surface have a geometric source? Answer: yes.</p>
+
+<p><span class="s wb">Riemann</span> asks about the center (&bull;): do the prime convergence points all sit at the balance position? Answer: Re(s) = &frac12;.</p>
+
+<p>Those three are &#x2299; directly: &#x25CB;, &Phi;, &bull;. The three components of the circumpunct, each interrogated by a different problem.</p>
+
+<p><span class="m wb">Yang-Mills</span> asks about the pump cycle's minimum excitation: what is the smallest weight (&Delta; > 0)?</p>
+
+<p><span class="m wb">Navier-Stokes</span> asks about the pump cycle's continuity: can the cycle be interrupted (blow-up)?</p>
+
+<p><span class="m wb">P vs NP</span> asks about the pump cycle's directionality: is convergence reversible to emergence?</p>
+
+<p>Those three interrogate the pump cycle (&#x229B; &rarr; i &rarr; &#x2600;&#xFE0E;): its minimum quantum, its continuity, its irreversibility.</p>
+
+<p><span class="p wb">BSD</span> bridges both: it asks whether the field (&Phi;, the L-function) faithfully mediates between the center (&bull;, the rational points) and the boundary (&#x25CB;, the Mordell-Weil group). It is the test of A4: compositional wholeness. Does the whole accurately reflect its parts?</p>
+
+<div class="axiom-box">
+  <div class="label">The Seven Millennium Problems</div>
+  <div class="statement">&#x25CB; &bull; &Phi; &middot; &#x229B; i &#x2600;&#xFE0E; &middot; &#x2299;</div>
+  <div class="expansion">
+    Three interrogate the components of &#x2299;.<br>
+    Three interrogate the phases of the pump cycle.<br>
+    One tests the compositional unity of the whole.<br>
+    <br>
+    Seven questions. One structure. One axiom.
+  </div>
+</div>
+
+<p>This is why Clay's intuition was right to group them. They are not seven independent problems any more than &bull;, &Phi;, and &#x25CB; are independent components. They are the parts of one question: <span class="it">is mathematics a &#x2299;?</span></p>
+
+<p>E = 1 says yes. The formal program is expressing that yes in each problem's language. But the architecture is already complete. The seven problems are seven faces of one circumpunct, and the answer to all of them is the answer to all of them: the constraint topology closes at the balance point, because it must.</p>
+</section>
+
+<!-- ==================== CLOSING ==================== -->
+
+<div class="closing">
+  <div class="sym">&#x2299;</div>
+  <div class="sign">Seven questions. One structure. One axiom.</div>
+  <div class="sign" style="font-size: 16px; margin-top: 8px;">E = 1 ... all else is constraints</div>
+  <div class="credit" style="margin-top: 16px;">Ashman Roonz, 2026</div>
+  <div class="credit">Circumpunct Framework</div>
+  <div class="credit"><a href="https://www.ashmanroonz.ca">www.ashmanroonz.ca</a></div>
+</div>
+
+</div>
+</body>
+</html>
