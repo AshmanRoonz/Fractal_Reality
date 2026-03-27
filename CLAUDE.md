@@ -49,13 +49,13 @@ Both are correct; they describe the same structure at different scales.
 
 ---
 
-## The Five Axioms
+## The One Axiom and Its Four Derivations
 
-- **A0**: Nothing cannot cause anything (genesis from impossibility of nothing)
-- **A1**: The One cannot be alone (necessary multiplicity)
-- **A2**: Parts are fractals of their wholes (self-similarity across scale)
-- **A3**: Wholeness requires closure (boundary is necessary); equivalently, conservation of traversal: 0 + 1 + 2 = 3 (the full dimensional path from singularity to boundary, including 0D)
-- **A4**: The whole is not the sum of its parts; it is their compositional unity via Φ
+- **A0**: E = 1. There is one energy. It is everything. All else is constraints. Nothing is impossible (1 ≠ 0).
+- **A1** (from A0): Necessary multiplicity; an undifferentiated 1 is operationally indistinguishable from 0, which is impossible, so the 1 must self-limit
+- **A2** (from A0 + A1): Parts are fractals of their wholes (self-similarity across scale); the 1 is all there is to work with
+- **A3** (from A0 + A1): Wholeness requires closure (boundary is necessary); equivalently, conservation of traversal: 0 + 1 + 2 = 3 (the full dimensional path from singularity to boundary, including 0D)
+- **A4** (from A2 + A3): The whole is not the sum of its parts; it is their compositional unity via Φ
 
 ### The Genesis Sequence
 

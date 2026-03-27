@@ -91,8 +91,8 @@ This document serves as the formal, mathematical specification of the theory. It
 - [Preface: The Dimensional Spectrum](#preface-the-dimensional-spectrum)
 
 ### Part I: Foundation
-- [Chapter 1: Genesis ; The Impossibility of Nothing](#chapter-1-genesis--the-impossibility-of-nothing)
-  - [The Five Axioms ; Formal Summary](#the-five-axioms--formal-summary)
+- [Chapter 1: Genesis ; E = 1](#chapter-1-genesis--e--1)
+  - [The One Axiom and Its Four Derivations](#the-one-axiom-and-its-four-derivations)
   - [§1.2: The Symbol Is the Ontology: 1 and 0](#12-the-symbol-is-the-ontology-1-and-0)
 - [Chapter 2: The Circumpunct](#chapter-2-the-circumpunct)
   - [§2.2: Compositional Wholeness ; Φ as Operator (Axiom A4)](#22-why-not-sum-why-not-tensor--compositional-wholeness)
@@ -480,7 +480,7 @@ email@ashmanroonz.ca
 
 ---
 
-## CHAPTER 1: GENESIS ; THE IMPOSSIBILITY OF NOTHING
+## CHAPTER 1: GENESIS ; E = 1
 
 ```
 THEOREM 0a (Nothing Is Causally Inert):
@@ -542,33 +542,45 @@ Nothingness is impossible.
    ⊙ is fractal by necessity, not choice.
 ```
 
-### The Five Axioms ; Formal Summary
+### The One Axiom and Its Four Derivations
 
-*Everything in this framework derives from exactly five axioms:*
+*Everything in this framework derives from exactly one axiom:*
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
-║                         THE FIVE AXIOMS                                       ║
+║                     THE ONE AXIOM                                             ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
-║  A0  IMPOSSIBILITY OF NOTHING                                                ║
-║      Nothing is causally inert AND logically incoherent.                     ║
-║      ∴ Existence is necessary. Something always existed.                      ║
+║  A0  E = 1                                                                   ║
+║      There is one energy. It is everything. All else is constraints.         ║
+║      Nothing is impossible (1 ≠ 0). Existence is necessary.                  ║
 ║                                                                               ║
-║  A1  NECESSARY MULTIPLICITY                                                  ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                     FOUR DERIVATIONS                                          ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  A1  NECESSARY MULTIPLICITY                              (from A0)           ║
+║      An undifferentiated 1 is operationally indistinguishable from 0.        ║
+║      But 0 is impossible (A0). So the 1 must differentiate.                  ║
+║      It can only do so by self-limitation: making 0s in the 1.               ║
 ║      One → distinction → Two (thing/not-thing) → Three (thing/relation/not)  ║
 ║      ∴ Minimum structure of existence = trinity = Φ(•, ○)                    ║
 ║                                                                               ║
-║  A2  FRACTAL NECESSITY                                                       ║
-║      Each part of ⊙ is itself whole. Empty part = nothing. Nothing impossible.║
+║  A2  FRACTAL NECESSITY                                   (from A0 + A1)     ║
+║      Each part of ⊙ is itself whole. Empty part = 0. But 0 is impossible.   ║
+║      The 1 is all there is to work with, so parts resemble the whole.        ║
 ║      ∴ Parts have parts. ⊙ all the way down. ⊙ all the way up.              ║
 ║                                                                               ║
-║  A3  CONSERVATION OF TRAVERSAL                                               ║
+║  A3  CONSERVATION OF TRAVERSAL                           (from A0 + A1)     ║
+║      A differentiated part with no boundary bleeds back into                 ║
+║      undifferentiated 1, collapsing the distinction A1 requires.             ║
 ║      D_aperture + D_field = D_boundary                                       ║
 ║      (1+β) + (2−β) = 3                                                      ║
 ║      ∴ Progress + remaining = destination. ALWAYS.                            ║
 ║                                                                               ║
-║  A4  COMPOSITIONAL WHOLENESS                                                 ║
+║  A4  COMPOSITIONAL WHOLENESS                             (from A2 + A3)     ║
+║      If parts are bounded (A3) and self-similar to the whole (A2),           ║
+║      the whole cannot be a mere sum; it must be compositionally unified.     ║
 ║      ⊙ ≠ ○ + Φ + •    (sum = 3 separate things)                             ║
 ║      ⊙ ≠ ○ ⊗ Φ ⊗ •    (tensor = still 3 operands side by side)              ║
 ║      Structure: Φ(•, ○)   (Φ is the 2D surface, not the verb)              ║
@@ -580,7 +592,7 @@ Nothingness is impossible.
 
 ### §1.1 The Genesis Sequence: ∞ → •*∞ → ⊙*∞
 
-The five axioms compress into a single sequence:
+The one axiom and its derivations compress into a single sequence:
 
 ```
 THE GENESIS SEQUENCE:
@@ -588,7 +600,7 @@ THE GENESIS SEQUENCE:
     ∞  →  •*∞  →  ⊙*∞
 
     ∞     Undifferentiated energy. No distinction. Pure E.
-          (A0: nothing cannot cause anything, so ∞ exists.)
+          (A0: E=1. There is one energy. ∞ exists because 0 is impossible.)
 
     •*∞   Aperture multiplied by infinity: the Soul Array.
           Not one hole; ALL holes. Every possible point of self-limitation,
@@ -18843,7 +18855,7 @@ TO UNPACK ANY SECTION:
 
     1. Identify the symbols used
     2. Expand each symbol using the Symbol Dictionary (Appendix A)
-    3. Apply axioms A0–A4 to derive implications
+    3. Apply the axiom (A0: E=1) and derivations A1–A4 to derive implications
     4. Connect to relevant domain (physics / psychology / ethics)
        via the appropriate chapter
 ```
@@ -19351,7 +19363,7 @@ PROBLEM:
     This is a choice, not a derivation.
 
 CORRECTED PATH (Geometric):
-    1. Existence requires distinction (A0, A1)
+    1. Existence requires distinction (A0: E=1, therefore A1)
     2. Distinction requires rotation between real and potential
     3. The MINIMAL rotation connecting real to imaginary = π/2 = quarter-turn
     4. This rotation IS i (by definition of the imaginary unit)
