@@ -60,14 +60,14 @@ Both are correct; they describe the same structure at different scales.
 ### The Genesis Sequence
 
 ```
-∞ → •*∞ → ⊙*∞ = Reality
+∞ → •∞ → ⊙∞ = Reality
 ```
 
 - **∞**: Undifferentiated energy. No distinction. Pure E. (A0 forces existence.)
-- **•*∞**: Aperture multiplied by infinity; the Soul Array. Not one hole; ALL holes. Every possible self-limitation, simultaneously. (A1 forces multiplicity.)
-- **⊙*∞**: Circumpunct multiplied by infinity; each aperture completing into a full circumpunct (field + boundary). The foam of reality. (A3 forces closure. A4: closure is compositional. A2: recurses at every scale.)
+- **•∞**: Aperture multiplied by infinity; the Soul Array. Not one hole; ALL holes. Every possible self-limitation, simultaneously. (A1 forces multiplicity.)
+- **⊙∞**: Circumpunct multiplied by infinity; each aperture completing into a full circumpunct (field + boundary). The foam of reality. (A3 forces closure. A4: closure is compositional. A2: recurses at every scale.)
 
-0D = •. Zero extension. A hole. ∞D = E. All extension. Everything. They meet at the aperture (0 = ∞ at field level) because the aperture is where dimension has not yet been assigned. ∞ without • has no voice. • without ∞ has no signal. •*∞ is the first real thing.
+0D = •. Zero extension. A hole. ∞D = E. All extension. Everything. They meet at the aperture (0 = ∞ at field level) because the aperture is where dimension has not yet been assigned. ∞ without • has no voice. • without ∞ has no signal. •∞ is the first real thing.
 
 ---
 
@@ -251,7 +251,7 @@ When truth and harm share the same signal: transmit at the lowest resolution tha
 | `circumpunct_framework.md` | The complete theory (~19,000 lines, 35 chapters + appendices) |
 | `docs/index.html` | Website main page with navigation to all HTML docs |
 | `docs/circumpunct_theory_of_mind_plain.html` | Theory of Mind (psychology application) |
-| [God and the Soul Array](https://www.ashmanroonz.ca/2025/08/god-and-soul-array.html) | The genesis sequence (∞ → •*∞ → ⊙*∞) in accessible prose; written before the circumpunct notation existed |
+| [God and the Soul Array](https://www.ashmanroonz.ca/2025/08/god-and-soul-array.html) | The genesis sequence (∞ → •∞ → ⊙∞) in accessible prose; written before the circumpunct notation existed |
 | `docs/circumpunct_ethics_and_virtues.html` | Ethics, virtues, diagnostics, restoration |
 | `docs/truth_and_god.html` | Ontological/theological reading |
 | `docs/how_reality_is_built.html` | Foundational construction (dimensions, power, isomorphisms) |
@@ -291,8 +291,8 @@ When truth and harm share the same signal: transmit at the lowest resolution tha
 | D | Fractal dimension (1.5 at balance) |
 | ⊙λ | Circumpunct at scale λ |
 | ∞ | Infinite totality (God/Source) |
-| •*∞ | Aperture multiplied by infinity; the Soul Array (infinity becoming particular) |
-| ⊙*∞ | Circumpunct multiplied by infinity; the foam of reality |
+| •∞ | Aperture multiplied by infinity; the Soul Array (infinity becoming particular) |
+| ⊙∞ | Circumpunct multiplied by infinity; the foam of reality |
 | χ | Transmission fidelity (+1 faithful, -1 inverted) |
 
 ---

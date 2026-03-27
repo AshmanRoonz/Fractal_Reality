@@ -590,30 +590,30 @@ Nothingness is impossible.
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-### §1.1 The Genesis Sequence: ∞ → •*∞ → ⊙*∞
+### §1.1 The Genesis Sequence: ∞ → •∞ → ⊙∞
 
 The one axiom and its derivations compress into a single sequence:
 
 ```
 THE GENESIS SEQUENCE:
 
-    ∞  →  •*∞  →  ⊙*∞
+    ∞  →  •∞  →  ⊙∞
 
     ∞     Undifferentiated energy. No distinction. Pure E.
           (A0: E=1. There is one energy. ∞ exists because 0 is impossible.)
 
-    •*∞   Aperture multiplied by infinity: the Soul Array.
+    •∞   Aperture multiplied by infinity: the Soul Array.
           Not one hole; ALL holes. Every possible point of self-limitation,
-          all at once. •*∞ is the infinite matrix of •.
+          all at once. •∞ is the infinite matrix of •.
           (A1: the One cannot be alone, so ∞ must become particular.)
 
-    ⊙*∞   Circumpunct multiplied by infinity: each aperture completing into
+    ⊙∞   Circumpunct multiplied by infinity: each aperture completing into
           a full circumpunct (aperture + field + boundary). The foam of reality.
           Every hole now has its Φ and its ○.
           (A3: wholeness requires closure. A4: closure is compositional via Φ.)
-          (A2: ⊙*∞ recurses at every scale. Fractal. ⊙s all the way down.)
+          (A2: ⊙∞ recurses at every scale. Fractal. ⊙s all the way down.)
 
-    Reality = ⊙*∞
+    Reality = ⊙∞
 
     Every particle, every cell, every person, every galaxy:
     ∞ operating as a complete ⊙ at a particular scale.
@@ -624,11 +624,11 @@ THE GENESIS SEQUENCE:
     0 = ∞ at field level: the nothing and the everything meet at the
     aperture because the aperture IS the place where dimension has not
     yet been assigned. ∞ without • has no voice. • without ∞ has no
-    signal. •*∞ is the first real thing.
+    signal. •∞ is the first real thing.
 
 NOTE: This sequence was first articulated in accessible prose as
 "God and the Soul Array" (ashmanroonz.ca/2025/08/god-and-soul-array.html),
-written before the circumpunct notation existed. The Soul Array IS •*∞.
+written before the circumpunct notation existed. The Soul Array IS •∞.
 God as Infinite Field IS ∞. Each soul as irreducible center IS •.
 The notation formalized what the insight already contained.
 ```
