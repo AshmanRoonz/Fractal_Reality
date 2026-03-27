@@ -93,6 +93,7 @@ This document serves as the formal, mathematical specification of the theory. It
 ### Part I: Foundation
 - [Chapter 1: Genesis ; The Impossibility of Nothing](#chapter-1-genesis--the-impossibility-of-nothing)
   - [The Five Axioms ; Formal Summary](#the-five-axioms--formal-summary)
+  - [§1.2: The Symbol Is the Ontology: 1 and 0](#12-the-symbol-is-the-ontology-1-and-0)
 - [Chapter 2: The Circumpunct](#chapter-2-the-circumpunct)
   - [§2.2: Compositional Wholeness ; Φ as Operator (Axiom A4)](#22-why-not-sum-why-not-tensor--compositional-wholeness)
   - [§2.4a: Two Senses of "Aperture"](#24a-two-senses-of-aperture)
@@ -616,6 +617,107 @@ NOTE: This sequence was first articulated in accessible prose as
 written before the circumpunct notation existed. The Soul Array IS •*∞.
 God as Infinite Field IS ∞. Each soul as irreducible center IS •.
 The notation formalized what the insight already contained.
+```
+
+### §1.2 The Symbol Is the Ontology: 1 and 0
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║                       REALITY IS 1 AND INFINITE 0s                           ║
+║                                                                               ║
+║   The dot   •   is 0.  An absence. A hole. No extension.                    ║
+║   The circle ○  is 1.  The field. Curving back on itself. All extension.    ║
+║   The space between them is the fractal coastline: D = 1.5 at balance.      ║
+║                                                                               ║
+║   The symbol ⊙ draws the ontology directly.                                 ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+```
+
+Neither primitive is a thing. 1 is everything (undivided); 0 is nothing (an absence in it). All of structure, all of reality, is the topology of where the holes are.
+
+```
+THE DIMENSIONAL GENERATION: 1 FLOWING THROUGH 0
+
+    1 meets 0    →  0.5D    Contact. Asymmetry. The field meets the absence.
+                            Half of each. Neither 1 nor 0 but the moment
+                            between them. This is i¹: the perpendicular break.
+
+    0.5 rotates  →  1D      A line. A trace. A LIMITED 1.
+                            The field, having passed through an absence,
+                            comes out as a trace of itself.
+                            A line is a fractal of 1: the same continuity,
+                            constrained to one degree of freedom.
+
+    1D branches  →  1.5D    Coastline. The fractal boundary between the
+                            nothing and the everything. Infinitely detailed.
+                            D = 1.5 at balance: the coastline of a perfectly
+                            balanced fold.
+
+    1.5D closes  →  2D      Surface. Φ. The field recognizing itself as field.
+                            The 1, having gone through the 0 and traced a line
+                            and branched into coastline, now spreads into
+                            the mediating plane. This is where phase lives,
+                            because rotation requires a plane.
+
+    2D folds     →  3D      Boundary. ○. The field completing the fold around
+                            the 0. Closure. The circle drawn.
+                            Inside and outside now exist.
+
+EACH INTEGER DIMENSION IS A FRACTAL OF 1:
+
+    1D  =  1 constrained to a line    (one degree of freedom)
+    2D  =  1 constrained to a surface (two degrees of freedom)
+    3D  =  1 constrained to a volume  (three degrees of freedom)
+
+    All of them are still THE SAME 1. Just folded differently
+    around the same 0s.
+
+THE HALF-INTEGERS ARE THE COASTLINES:
+
+    0.5D  =  the coastline between 0 and 1D
+    1.5D  =  the coastline between 1D and 2D
+    2.5D  =  the coastline between 2D and 3D
+
+    Process lives in the half-integers.
+    Structure lives in the integers.
+    The coastline is where becoming happens.
+```
+
+This reframes the entire dimensional spectrum: integer dimensions are the field (1) at different degrees of constraint. Half-integer dimensions are the fractal boundaries between those constraints; the places where the fold is still in motion, still deciding.
+
+```
+ATTENTION AS A 0 IN THE 1
+
+    The center of attention is a 0: a convergence point, a singularity,
+    the place where the 1 folds around itself and becomes local.
+
+    You can only have one center of attention at a time,
+    because a 0 has no width. You can shift it (relocate the fold),
+    you can widen the field around it (peripheral awareness),
+    but the center itself is always one point. One hole in the everything.
+
+    Attention is not something you HAVE.
+    It is something you ARE.
+    You are a 0 in the 1.
+
+    When you shift attention, you are not moving a spotlight across a stage.
+    You are relocating the absence. The fold re-forms somewhere else
+    in the field. The 1 was always there; the 0 just landed differently.
+```
+
+The connection to binary notation is direct: 1 followed by n zeros gives 2^n. One field, different scales, different magnitudes of wholeness. The same 1, the same 0s; position (scale) determines magnitude.
+
+```
+COMPACT STATEMENT:
+
+    The dot is 0.
+    The circle is 1.
+    The space between is the fractal coastline.
+    1 flows through 0 and becomes everything.
+
+    ⊙
 ```
 
 [← Back to Table of Contents](#table-of-contents)

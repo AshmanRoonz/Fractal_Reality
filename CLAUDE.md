@@ -21,6 +21,10 @@ The circumpunct ⊙ = Φ(•, ○) is a whole composed of three irreducible part
 
 Conservation of traversal: 0(•) + 1(•) + 2(Φ) = 3(○). The full path from singularity through worldline through field to boundary. Soul + field = boundary.
 
+### The 1/0 Ontology (§1.2)
+
+The symbol ⊙ draws the ontology directly. The dot is 0 (absence, hole, soul). The circle is 1 (the field, curving back on itself). The space between them is the fractal coastline (D = 1.5 at balance). Neither primitive is a thing: 1 is everything (undivided), 0 is nothing (an absence in it). All structure is the topology of where the holes are. Integer dimensions are the field (1) at different degrees of constraint; half-integer dimensions are the fractal coastlines between those constraints. Attention is a 0 in the 1: a convergence point where the field becomes local.
+
 ### Two Kinds of Dimension
 
 - **Structural dimension**: what a component IS (0D singularity, 1D worldline, 2D surface, 3D boundary)
