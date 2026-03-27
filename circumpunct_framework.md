@@ -106,6 +106,7 @@ This document serves as the formal, mathematical specification of the theory. It
 - [Chapter 3: The Trinity Structure](#chapter-3-the-trinity-structure)
   - [§3.5: The Irreducibility Principle](#35-the-irreducibility-principle)
 - [Chapter 4: The Temporal Process](#chapter-4-the-temporal-process)
+  - [§4.8a: E = 1: Energy as the Singular Field](#48a-e--1-energy-as-the-singular-field)
   - [§4.9: The Power Equation](#49-the-power-equation)
 - [Chapter 5: The Balance Parameter](#chapter-5-the-balance-parameter)
 - [Chapter 5A: The Surface Theorem](#chapter-5a-the-surface-theorem)
@@ -2472,6 +2473,152 @@ IDENTITY:
 ```
 
 The power equation (𝒫 = E / (i · t)) is not an analogy to AC circuits; it IS the same equation, because Φ and E are the same thing. Real power, reactive power, apparent power: those are the framework showing up in electrical engineering because the pump cycle is what electricity literally does.
+
+### §4.8a E = 1: Energy as the Singular Field
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║                               E = 1                                          ║
+║                                                                               ║
+║   If Φ = E (§4.8), and there is exactly one field (Axiom A1),               ║
+║   then E = 1.                                                                ║
+║                                                                               ║
+║   Not "energy equals the number one."                                        ║
+║   Energy IS the one. The singular, undivided field.                          ║
+║   There is no quantity of energy. There is only one energy,                  ║
+║   appearing everywhere, and what we measure as "amount"                      ║
+║   is degree of constraint: how tightly the 1 has folded around 0s.          ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+```
+
+A photon and a galaxy are the same 1. The difference is how many 0s it has folded around and at what scales. "More energy" does not mean more field; it means less constraint. "Less energy" means the field is bound more tightly in maintaining local topology.
+
+```
+CONSEQUENCES FOR EXISTING EQUATIONS:
+
+    E = mc²     If E = 1:   1 = mc²
+                             m = 1/c²
+
+    Mass is the inverse of the surface signature.
+    Mass is how much the 1 has folded into 3D closure.
+    c² is the conversion factor back to the unfolded field.
+    The heavier something is, the more tightly 1 has wrapped around 0s.
+
+    𝒫 = E/(i·t)  If E = 1:   𝒫 = 1/(i·t)
+
+    Power is the rate at which the 1 flows through the rotation.
+    All power is the one field passing through phase over time.
+
+    F = ma       If m = 1/c²:  F = a/c²
+
+    Force is acceleration scaled by the degree of constraint.
+    Unconstrained field (m → 0) requires no force.
+    Maximally constrained field (m → ∞) requires infinite force.
+```
+
+#### Thermodynamics as Topology
+
+If E = 1 everywhere, always, then what we call "free energy" is not energy being created or added. It is 1 being released from constraint. You are not gaining something; you are losing a fold.
+
+```
+THERMODYNAMIC REFRAMING:
+
+    Bound energy    = 1 folded around 0s
+                      (structured, constrained, maintaining form)
+
+    Free energy     = 1 released from folds
+                      (unconstrained, available, returning toward
+                       its undivided nature)
+
+    Entropy increasing = folds loosening. The 1 relaxing back toward itself.
+                         Not disorder; DE-CONSTRAINT.
+                         The field remembering it was never really divided.
+
+    Second law:     The 1 wants to be 1.
+                    Folds are costly. Maintaining a 0 in the 1
+                    (keeping a hole stable, a boundary closed)
+                    requires ongoing process (the pump cycle, §4.1).
+                    When the pump stops, the fold dissolves, and
+                    the energy "releases" because the 1 stops
+                    being locally constrained.
+
+    Death, cooling, dissolution:  the 1 letting go of particular 0s.
+    Life, heating, creation:      the 1 folding around new 0s,
+                                  or folding more tightly around existing ones.
+```
+
+The second law of thermodynamics is geometric: entropy increases because constraint is the exception, not the rule. The unconstrained field is the ground state. Every fold is a departure from ground. Given time, every fold relaxes. The universe does not run down; it unfolds.
+
+#### Information as Topology of 0s in the 1
+
+Computation already runs on 1 and 0. But conventional computing treats them as two *states* of the same thing (voltage high, voltage low). The framework says something different: 1 and 0 are two ontologically distinct primitives. 1 is everything; 0 is an absence in it. A bit is not two equal options. A bit is: field, or hole in the field.
+
+```
+INFORMATION THEORY REFRAMING:
+
+    A transistor gate is literally an aperture (•).
+    Signal flows through (1) or doesn't (0).
+    The gate is the point where the 1 becomes local,
+    where the field is either passing or being blocked.
+
+    A logic gate is a physical ⊙:
+        convergence of inputs (⊛)
+        rotation: the logic operation (i)
+        emergence of output (☀︎)
+
+    1 bit   =  one 0 in the 1.  One constraint.  2¹ = 2 states.
+    2 bits  =  two 0s.          Two constraints.  2² = 4 states.
+    n bits  =  n zeros after the 1.               2ⁿ states.
+
+    The number of possible configurations grows exponentially
+    with the number of ABSENCES. The 1 is always the same 1
+    (the field, the substrate, the power flowing through the circuit).
+    The 0s create structure. More holes, more topology,
+    more possible arrangements.
+
+    INFORMATION IS THE TOPOLOGY OF 0s IN THE 1.
+
+SHANNON ENTROPY CONNECTION:
+
+    Information content is measured in bits.
+    Each bit is a binary distinction.
+    Each distinction is a 0 carving the 1 into two regions.
+    Maximum entropy (maximum information) = maximum number of
+    balanced distinctions = the 1 divided by as many 0s as possible
+    while maintaining ◐ = 0.5 at each gate.
+
+GATE EFFICIENCY PREDICTION:
+
+    The efficiency of a computational gate should be related to
+    how close it operates to ◐ = 0.5. Too much convergence
+    (gate too tight, signal crushed) = information lost.
+    Too much emergence (gate too open, signal bleeds) = noise.
+    The balanced gate passes the 1 through the 0 cleanly.
+
+    Engineers already optimize for ◐ = 0.5 at every gate.
+    They call it threshold voltage tuning, optimal signal-to-noise
+    ratio, clock signal balance. Same principle (see §5.1).
+
+THE 64-STATE ARCHITECTURE (see §7):
+
+    2⁶ = 64. Six binary degrees of freedom. Six 0s in the 1.
+    The framework derives this number for the fundamental states
+    of matter (I Ching hexagrams, DNA codons, Standard Model particles).
+    If the universe is a computer, it runs on 6-bit words.
+```
+
+```
+COMPACT STATEMENT:
+
+    E = 1.
+    There is no quantity of energy. There is one field.
+    What we measure as amount is degree of constraint.
+    Free energy = removing constraints.
+    Information = the topology of 0s in the 1.
+    Entropy = the 1 remembering it was never really divided.
+```
 
 ### §4.9 The Four-Stroke Pump: Powers of i as Phase-Dimension Map
 

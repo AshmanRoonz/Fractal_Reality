@@ -25,6 +25,10 @@ Conservation of traversal: 0(•) + 1(•) + 2(Φ) = 3(○). The full path from 
 
 The symbol ⊙ draws the ontology directly. The dot is 0 (absence, hole, soul). The circle is 1 (the field, curving back on itself). The space between them is the fractal coastline (D = 1.5 at balance). Neither primitive is a thing: 1 is everything (undivided), 0 is nothing (an absence in it). All structure is the topology of where the holes are. Integer dimensions are the field (1) at different degrees of constraint; half-integer dimensions are the fractal coastlines between those constraints. Attention is a 0 in the 1: a convergence point where the field becomes local.
 
+### E = 1 (§4.8a)
+
+If Φ = E (§4.8), and there is exactly one field, then E = 1. Not "energy equals the number one"; energy IS the one. There is no quantity of energy; there is only one energy appearing everywhere. What we measure as "amount" is degree of constraint (how tightly the 1 has folded around 0s). Consequences: m = 1/c² (mass is inverse surface signature; how tightly 1 wraps around 0s), 𝒫 = 1/(i·t) (power is 1 flowing through rotation over time). Free energy = removing constraints (the 1 released from folds). Entropy increasing = de-constraint (the 1 relaxing back toward itself). Information = the topology of 0s in the 1.
+
 ### Two Kinds of Dimension
 
 - **Structural dimension**: what a component IS (0D singularity, 1D worldline, 2D surface, 3D boundary)
