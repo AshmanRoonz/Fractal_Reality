@@ -124,6 +124,10 @@ Fractal dimension at balance: D = 1 + ◐ = 1.5 (Brownian motion, proven by Mand
 3 circumpuncts × 2 channels each = 6 binary degrees of freedom. 2⁶ = 64 states.
 Maps to I Ching hexagrams, DNA codons, and the Standard Model particle spectrum (with 3 extended Higgs states as framework predictions beyond the minimal SM).
 
+### Time Is Scale (§4.11)
+
+The three nested circumpuncts that give 64 states are the three scales visible from any position: the greater whole (the ⊙ you are inside), your ⊙ (your scale), the parts (the ⊙s inside you). These map directly to temporal orientation: greater whole = ⊛ = future (undifferentiated field that hasn't been gated yet), your ⊙ = i = present (the gate, the turn, the now), parts = ☀︎ = past (what's already been committed into structure). Time and scale are the same axis. Time IS the direction of the fold: from 1 through 0 into topology. Space is the lateral relationship between 0s at the same scale (symmetric; peers). Time is the vertical relationship across scales (asymmetric; fold direction). i² = −1 prevents true time reversal: you can dissolve a fold (death, entropy), but you cannot un-fold it into exactly what it was. The receipt chain i(t) has already been woven.
+
 ---
 
 ## Ontological Reading (God, Soul, Connection)

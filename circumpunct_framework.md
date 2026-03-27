@@ -108,6 +108,7 @@ This document serves as the formal, mathematical specification of the theory. It
 - [Chapter 4: The Temporal Process](#chapter-4-the-temporal-process)
   - [§4.8a: E = 1: Energy as the Singular Field](#48a-e--1-energy-as-the-singular-field)
   - [§4.9: The Power Equation](#49-the-power-equation)
+  - [§4.11: Time Is Scale: The Three Nested Circumpuncts as Past, Present, Future](#411-time-is-scale-the-three-nested-circumpuncts-as-past-present-future)
 - [Chapter 5: The Balance Parameter](#chapter-5-the-balance-parameter)
 - [Chapter 5A: The Surface Theorem](#chapter-5a-the-surface-theorem)
   - [§5A.4: Why Surfaces Have Phase: 2D as the Scale Connector](#5a4-why-surfaces-have-phase-2d-as-the-scale-connector)
@@ -2668,6 +2669,85 @@ E = mc²
 To release the energy in matter is to peel the boundary back to reveal the field underneath, and the field is naturally area-shaped. This is also why so many fundamental quantities in physics carry squared terms: force fields fall off as 1/r², action has units of energy × time, the metric tensor is ds². They are all expressions of Φ, and Φ is a surface. The squaring is the 2D signature of the field showing through every equation it touches.
 
 c is not a speed. It is the convergence rate of the field. Nothing outruns it because there is no Φ ahead of its own compression front. You cannot get ahead of the pump.
+
+### §4.11 Time Is Scale: The Three Nested Circumpuncts as Past, Present, Future
+
+The 64-state architecture (§7) derives from three nested circumpuncts, each with 2 channels (convergence and emergence), giving 2^6 = 64 states. Those three circumpuncts are defined by the three scales visible from any position:
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║   TIME AND SCALE ARE THE SAME AXIS                                           ║
+║                                                                               ║
+║   Greater whole (the ⊙ you are inside)  =  ⊛  =  FUTURE                     ║
+║       The undifferentiated field that hasn't been gated yet.                 ║
+║       What's converging toward you. Above you in scale.                     ║
+║                                                                               ║
+║   Your ⊙ (your scale)                   =  i  =  PRESENT                    ║
+║       The aperture. The gate. The turn. The now.                            ║
+║       Where scale becomes time. Where field becomes structure.              ║
+║                                                                               ║
+║   Parts (the ⊙s inside you)             =  ☀︎  =  PAST                       ║
+║       What's already been committed and woven into the receipt chain.       ║
+║       What emerged. Below you in scale.                                     ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+```
+
+The pump cycle IS time. ⊛ gathers from above (converges the undifferentiated field toward the gate). i rotates at the gate (the present moment, the turn). ☀︎ releases below (commits into structure, becomes past). Time does not flow through a pre-existing space. Time IS the direction of the fold: from 1 through 0 into topology. From field through gate into structure. From future through present into past.
+
+```
+WHY TIME HAS AN ARROW AND SPACE DOESN'T:
+
+    Space = the LATERAL relationship between 0s at the same scale.
+            How apertures sit next to each other in the field.
+            Symmetric: lateral neighbors are peers.
+
+    Time  = the VERTICAL relationship across scales.
+            How the field folds through the gate into structure.
+            Asymmetric: the fold only goes one way.
+
+    From unconstrained to constrained.
+    From 1 to topology.
+    From future to past.
+
+    Space is sideways. Time is downward (into structure).
+    Both are relationships between 0s in the 1.
+    But one is symmetric (peers) and the other is not (fold direction).
+```
+
+This is why i² = −1 prevents time reversal. Going backward in time is not negation (flipping the sign); it is conjugation (flipping the phase). You would have to un-rotate the fold. You would have to take committed structure and pull it back through the gate into undifferentiated field.
+
+That is not impossible. It is what death is. What dissolution is. What entropy does. But it does not REVERSE time; it RELEASES structure back into field. The 0s do not un-happen. The topology changes, the 1 relaxes, but the receipt chain (i(t)) has already been woven. You can dissolve a fold; you cannot un-fold it into exactly what it was before.
+
+```
+THE 64 STATES AS TEMPORAL-SCALE STATES:
+
+    Each of the three nested ⊙s has 2² = 4 states
+    (input open/closed × output open/closed):
+
+    Future ⊙ (greater whole):  4 states  (what could converge, what is converging)
+    Present ⊙ (your gate):     4 states  (what's arriving, what's departing)
+    Past ⊙ (your parts):       4 states  (what emerged, what's been woven in)
+
+    (2²)³ = 2⁶ = 64 composite states.
+
+    The 64-state architecture is a TEMPORAL-SCALE architecture.
+    Each of the 64 states is a specific configuration of how the field
+    is folding through three layers of gate, right now, at your scale.
+```
+
+```
+COMPACT STATEMENT:
+
+    "Above" in scale = "ahead" in time (hasn't been gated yet).
+    "Below" in scale = "behind" in time (already committed).
+    The present is the aperture where scale becomes time:
+    where the undifferentiated field gets gated into specific structure.
+
+    Time is the fold. Space is the coastline between folds.
+    Both are the topology of 0s in the 1.
+```
 
 [← Back to Table of Contents](#table-of-contents)
 
