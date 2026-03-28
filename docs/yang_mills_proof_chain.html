@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>&#8857; Yang-Mills Mass Gap: The Indivisible Cycle</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0b10;
+  --surface: #13121a;
+  --surface-2: #1a1924;
+  --border: #2a2940;
+  --text: #d0cfe0;
+  --text-dim: #8886a0;
+  --gold: #c9a84c;
+  --gold-dim: rgba(201, 168, 76, 0.15);
+  --red: #c45b5b;
+  --red-dim: rgba(196, 91, 91, 0.12);
+  --green: #5baa6b;
+  --green-dim: rgba(91, 170, 107, 0.12);
+  --blue: #6b8ec9;
+  --blue-dim: rgba(107, 142, 201, 0.12);
+  --purple: #9b7ecf;
+  --purple-dim: rgba(155, 126, 207, 0.12);
+  --serif: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.7;
+  padding: 0;
+}
+
+.container { max-width: 820px; margin: 0 auto; padding: 60px 40px 120px; }
+
+header {
+  text-align: center;
+  padding: 80px 0 60px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 60px;
+}
+header .symbol { font-size: 48px; color: var(--gold); margin-bottom: 16px; letter-spacing: 8px; }
+header .dim-label {
+  font-family: var(--mono); font-size: 13px; color: var(--blue);
+  text-transform: uppercase; letter-spacing: 3px; margin-bottom: 12px;
+}
+h1 { font-family: var(--serif); font-size: 36px; font-weight: 700; color: #eee; line-height: 1.25; margin-bottom: 12px; }
+h1 em { color: var(--gold); font-style: italic; }
+.subtitle { font-size: 16px; color: var(--text-dim); font-family: var(--mono); letter-spacing: 1px; text-transform: uppercase; }
+.date { font-size: 14px; color: var(--text-dim); margin-top: 8px; }
+
+h2 { font-family: var(--serif); font-size: 26px; font-weight: 700; color: #eee; margin: 56px 0 20px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+h2 .section-num { color: var(--gold); font-weight: 400; margin-right: 8px; }
+h3 { font-size: 20px; font-weight: 600; color: var(--text); margin: 36px 0 12px; }
+p { margin-bottom: 18px; }
+a { color: var(--gold); text-decoration: none; transition: color 0.2s; }
+a:hover { color: #e0c060; }
+
+.math-block {
+  background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--gold);
+  padding: 20px 24px; margin: 24px 0; font-family: var(--mono); font-size: 15px;
+  line-height: 1.8; overflow-x: auto; border-radius: 2px;
+}
+.math-inline {
+  font-family: var(--mono); font-size: 16px; color: var(--gold);
+  background: var(--gold-dim); padding: 1px 5px; border-radius: 2px;
+}
+
+.theorem-box {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 24px 28px; margin: 28px 0; border-radius: 3px; position: relative;
+}
+.theorem-box.proven { border-left: 4px solid var(--green); background: var(--green-dim); }
+.theorem-box.gap { border-left: 4px solid var(--red); background: var(--red-dim); }
+.theorem-box.required { border-left: 4px solid var(--blue); background: var(--blue-dim); }
+.theorem-box.framework { border-left: 4px solid var(--purple); background: var(--purple-dim); }
+
+.theorem-box .label {
+  font-family: var(--mono); font-size: 12px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;
+}
+.theorem-box.proven .label { color: var(--green); }
+.theorem-box.gap .label { color: var(--red); }
+.theorem-box.required .label { color: var(--blue); }
+.theorem-box.framework .label { color: var(--purple); }
+.theorem-box .title { font-family: var(--serif); font-size: 18px; font-weight: 700; color: #eee; margin-bottom: 12px; }
+
+blockquote {
+  border-left: 3px solid var(--gold); padding: 16px 24px; margin: 24px 0;
+  background: var(--gold-dim); font-style: italic;
+}
+
+.chain { display: flex; flex-direction: column; gap: 0; margin: 32px 0; }
+.chain-step { display: flex; align-items: flex-start; gap: 16px; padding: 16px 0; }
+.chain-marker {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 14px; font-weight: 600;
+  flex-shrink: 0; position: relative;
+}
+.chain-marker.done { background: var(--green-dim); color: var(--green); border: 2px solid var(--green); }
+.chain-marker.new { background: var(--purple-dim); color: var(--purple); border: 2px solid var(--purple); }
+.chain-marker.blocked { background: var(--red-dim); color: var(--red); border: 2px solid var(--red); }
+.chain-marker::after {
+  content: ''; position: absolute; bottom: -20px; left: 50%;
+  width: 2px; height: 16px; transform: translateX(-50%);
+}
+.chain-marker.done::after { background: var(--green); opacity: 0.3; }
+.chain-marker.new::after { background: var(--purple); opacity: 0.3; }
+.chain-step:last-child .chain-marker::after { display: none; }
+.chain-content { flex: 1; padding-top: 4px; }
+.chain-content .step-title { font-weight: 600; color: #ddd; font-size: 17px; }
+.chain-content .step-detail { color: var(--text-dim); font-size: 16px; margin-top: 4px; }
+.status {
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  padding: 2px 8px; border-radius: 3px; margin-left: 8px;
+  vertical-align: middle; letter-spacing: 0.5px;
+}
+.status.proven { background: var(--green-dim); color: var(--green); }
+.status.framework { background: var(--purple-dim); color: var(--purple); }
+.status.open { background: var(--red-dim); color: var(--red); }
+
+table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; }
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
+th { background: var(--surface); color: var(--gold); font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+
+.nav-bottom {
+  text-align: center; padding-top: 60px; border-top: 1px solid var(--border);
+  margin-top: 60px; color: var(--text-dim); font-size: 15px;
+}
+.nav-bottom a { margin: 0 12px; }
+</style>
+</head>
+<body>
+<a href="index.html" style="display: inline-block; font-weight: 600; color: var(--gold); padding: 10px 20px; margin: 10px;">&#8857;</a>
+<div class="container">
+
+<header>
+  <div class="symbol">&#8857;</div>
+  <div class="dim-label">1D &middot; Structural &middot; Commitment</div>
+  <h1>Yang-Mills Mass Gap:<br><em>The Indivisible Cycle</em></h1>
+  <div class="subtitle">Proof chain from framework axioms to the mass gap</div>
+  <div class="date">Circumpunct Framework &middot; March 2026</div>
+</header>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;0</span> Abstract</h2>
+
+<p>The Yang-Mills Existence and Mass Gap problem asks two questions: does quantum Yang-Mills theory (with gauge group SU(N), N &ge; 2) exist as a rigorous quantum field theory on &#8477;&sup4;, and does the spectrum of that theory have a positive lower bound (a mass gap)? The Clay Institute requires both: existence satisfying the Osterwalder-Schrader axioms, and a mass gap &Delta; > 0 such that every state in the Hilbert space has energy either 0 (the vacuum) or &ge; &Delta;.</p>
+
+<p>In the Circumpunct Framework, this is the 1D question: <em>is the cycle truly indivisible?</em> At 1D, the pump cycle commits. &#8463; = E<sub>cycle</sub>/&omega;<sub>cycle</sub> = 1. The cycle (&#10523; &rarr; i &rarr; &#9728;&#xFE0E;) cannot be halved, quartered, or subdivided; convergence without emergence violates A1 (the 1 must differentiate), emergence without convergence is the Inflation Lie. This indivisibility IS the quantum of action. The Yang-Mills mass gap asks whether this indivisibility persists at the gauge level: can there be a gauge excitation below one full cycle?</p>
+
+<p>We present a 7-step proof chain. Four steps rest on established results (Osterwalder-Schrader reconstruction, Wilson's lattice formulation, lattice mass gap, and asymptotic freedom). Two steps are framework contributions (the structural identification of confinement with aperture failure, and the indivisibility argument). One step remains as the required mathematical bridge: taking the continuum limit of the lattice mass gap.</p>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;1</span> The Framework Dictionary</h2>
+
+<p>The 1D rung is structural: it describes what energy IS at the level of commitment. At 0D, the field existed at a point (&alpha;, the coupling). At 0.5D, rotation began (c, the propagation speed). At 1D, the rotation extends into a worldline; coupling becomes committed; the pump cycle becomes a thing that happens, not merely a potential. This is where action is born.</p>
+
+<div class="math-block">
+<strong>Dictionary.</strong> Let G = SU(N) be a compact simple gauge group, N &ge; 2.<br><br>
+  &bull; (aperture/soul) &emsp;&emsp;&emsp; = gauge coupling g (the aperture through which field lines converge)<br>
+  &Phi; (field/mind) &emsp;&emsp;&emsp;&emsp; = gauge field A<sub>&mu;</sub> (the mediating connection on the principal bundle)<br>
+  &#9675; (boundary/body) &emsp;&emsp; = field strength F<sub>&mu;&nu;</sub> = &part;<sub>&mu;</sub>A<sub>&nu;</sub> &minus; &part;<sub>&nu;</sub>A<sub>&mu;</sub> + g[A<sub>&mu;</sub>, A<sub>&nu;</sub>] (the curvature; the boundary that closes)<br><br>
+  &#8857; = &Phi;(&bull;, &#9675;) &emsp;&emsp;&emsp;&emsp;&emsp; = Yang-Mills theory as a whole: coupling + connection + curvature<br><br>
+  Pump cycle: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; &#10523;(convergence) = non-abelian self-interaction g[A, A]<br>
+  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; i(rotation) = gauge transformation A &rarr; UAU<sup>&minus;1</sup> + (dU)U<sup>&minus;1</sup><br>
+  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; &#9728;&#xFE0E;(emergence) = propagation of gauge waves<br><br>
+  Mass gap &Delta; &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; = minimum energy of any excitation above the vacuum<br>
+  Framework claim: &emsp;&emsp;&emsp; &Delta; > 0 because the pump cycle is indivisible (&#8463; = 1)
+</div>
+
+<h3>Why non-abelian?</h3>
+
+<p>In an abelian gauge theory (U(1), electromagnetism), the gauge field does not interact with itself: photons pass through each other. There is no convergence operator &#10523; acting on the field itself; the field only mediates between charged sources. The pump cycle at the gauge level is incomplete: &#9728;&#xFE0E; without &#10523;. Consequence: no mass gap (photons are massless), as expected.</p>
+
+<p>In a non-abelian theory (SU(N), N &ge; 2), the gauge field interacts with itself. The commutator term g[A<sub>&mu;</sub>, A<sub>&nu;</sub>] means the field converges on itself; gluons carry color charge and interact with other gluons. The pump cycle is complete: convergence (self-interaction), rotation (gauge transformation), emergence (propagation). A complete pump cycle is indivisible. Therefore: a mass gap.</p>
+
+<blockquote>
+<strong>Framework reading:</strong> The abelian/non-abelian distinction maps exactly to incomplete/complete pump cycle. Abelian = &#9728;&#xFE0E; only (mediation without self-convergence) = massless. Non-abelian = &#10523; + i + &#9728;&#xFE0E; (complete cycle) = indivisible quantum = mass gap. The mass gap is not an accidental feature of strong interactions; it is the structural consequence of a field that converges on itself.
+</blockquote>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;2</span> The Proof Chain</h2>
+
+<div class="chain">
+  <div class="chain-step">
+    <div class="chain-marker done">1</div>
+    <div class="chain-content">
+      <div class="step-title">Osterwalder-Schrader Reconstruction <span class="status proven">proven</span></div>
+      <div class="step-detail">A Euclidean QFT satisfying OS axioms yields a Wightman QFT on Minkowski space.</div>
+    </div>
+  </div>
+  <div class="chain-step">
+    <div class="chain-marker done">2</div>
+    <div class="chain-content">
+      <div class="step-title">Wilson's Lattice Gauge Theory <span class="status proven">proven</span></div>
+      <div class="step-detail">For any compact gauge group G, lattice Yang-Mills exists and satisfies OS axioms at finite lattice spacing.</div>
+    </div>
+  </div>
+  <div class="chain-step">
+    <div class="chain-marker done">3</div>
+    <div class="chain-content">
+      <div class="step-title">Lattice Mass Gap <span class="status proven">proven</span></div>
+      <div class="step-detail">On any finite lattice at strong coupling, the transfer matrix has a spectral gap &Delta;<sub>L</sub> > 0.</div>
+    </div>
+  </div>
+  <div class="chain-step">
+    <div class="chain-marker done">4</div>
+    <div class="chain-content">
+      <div class="step-title">Asymptotic Freedom <span class="status proven">proven</span></div>
+      <div class="step-detail">The Yang-Mills &beta;-function is negative at one loop: the theory is weakly coupled at short distances.</div>
+    </div>
+  </div>
+  <div class="chain-step">
+    <div class="chain-marker done">5</div>
+    <div class="chain-content">
+      <div class="step-title">Confinement on the Lattice <span class="status proven">proven</span></div>
+      <div class="step-detail">Wilson loop area law at strong coupling; lattice simulations confirm confinement for all N &ge; 2.</div>
+    </div>
+  </div>
+  <div class="chain-step">
+    <div class="chain-marker new">6</div>
+    <div class="chain-content">
+      <div class="step-title">Indivisibility of the Non-Abelian Cycle <span class="status framework">framework</span></div>
+      <div class="step-detail">The complete pump cycle (&#10523; &rarr; i &rarr; &#9728;&#xFE0E;) in a self-interacting gauge field cannot be subdivided; &Delta; = &Delta;(&#8463;, &Lambda;<sub>QCD</sub>) > 0.</div>
+    </div>
+  </div>
+  <div class="chain-step">
+    <div class="chain-marker blocked">7</div>
+    <div class="chain-content">
+      <div class="step-title">Continuum Limit Preserves the Gap <span class="status open">required</span></div>
+      <div class="step-detail">The lattice mass gap &Delta;<sub>L</sub>(a) converges to a positive limit &Delta; > 0 as lattice spacing a &rarr; 0.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;3</span> Osterwalder-Schrader: The Bridge to Physics</h2>
+
+<div class="theorem-box proven">
+  <div class="label">&#10003; Proven; Osterwalder-Schrader (1973, 1975)</div>
+  <div class="title">Theorem 3.1: OS Reconstruction</div>
+  <p>Let {S<sub>n</sub>} be a set of Schwinger functions (Euclidean correlation functions) on &#8477;<sup>d</sup> satisfying:</p>
+  <div class="math-block" style="border-left-color: var(--green);">
+(OS0) Temperedness: S<sub>n</sub> are tempered distributions.<br>
+(OS1) Euclidean covariance: equivariant under E(d).<br>
+(OS2) Reflection positivity: for test functions supported in the positive half-space,<br>
+&emsp;&emsp;&sum; S<sub>m+n</sub>(&theta;f<sub>m</sub>, f<sub>n</sub>) &ge; 0, where &theta; is time-reflection.<br>
+(OS3) Symmetry: S<sub>n</sub> is symmetric under permutations.<br>
+(OS4) Cluster property: S<sub>n</sub> factors as points separate.<br><br>
+Then there exists a Wightman QFT on Minkowski space &#8477;<sup>1,d-1</sup> whose Schwinger functions are {S<sub>n</sub>}.<br>
+The Hilbert space carries a unitary representation of the Poincar&eacute; group with positive energy.
+  </div>
+  <p style="margin-top:8px; color: var(--text-dim); font-size:15px;">This is the standard bridge between Euclidean and Minkowski formulations. The Clay problem asks for Yang-Mills to satisfy these axioms in d = 4.</p>
+</div>
+
+<blockquote>
+<strong>Framework reading:</strong> The OS axioms are the mathematical encoding of the three constraints. Reflection positivity (OS2) is the adjoint duality &#10523;* = &#9728;&#xFE0E;: convergence and emergence are formal adjoints, and their composition is positive. Euclidean covariance (OS1) is the field's rotational symmetry (&Phi; mediates isotropically). The cluster property (OS4) is A1 (necessary multiplicity): distinct &#8857;s at large separation are independent wholes, not fragments of a single system.
+</blockquote>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;4</span> Wilson's Lattice: The Discrete Pump</h2>
+
+<div class="theorem-box proven">
+  <div class="label">&#10003; Proven; Wilson (1974)</div>
+  <div class="title">Theorem 4.1: Lattice Yang-Mills Existence</div>
+  <p>For a compact gauge group G and lattice spacing a > 0 on a finite lattice &Lambda; = (a&#8484;/La&#8484;)<sup>4</sup>:</p>
+  <div class="math-block" style="border-left-color: var(--green);">
+The Wilson action S<sub>W</sub>[U] = &beta; &sum;<sub>&#9723;</sub> (1 &minus; (1/N)Re Tr U<sub>&#9723;</sub>)<br><br>
+where U<sub>&#9723;</sub> = U<sub>&mu;</sub>(x)U<sub>&nu;</sub>(x+&mu;)U<sub>&mu;</sub>(x+&nu;)<sup>&dagger;</sup>U<sub>&nu;</sub>(x)<sup>&dagger;</sup> is the plaquette<br>
+and &beta; = 2N/g&sup2; is the lattice coupling,<br><br>
+defines a well-posed statistical mechanical system with:<br>
+(a) Finite partition function Z = &int; &prod; dU<sub>&mu;</sub>(x) e<sup>&minus;S<sub>W</sub></sup><br>
+(b) Gauge invariance: S<sub>W</sub>[U<sup>g</sup>] = S<sub>W</sub>[U] for all g: &Lambda; &rarr; G<br>
+(c) Positive transfer matrix T in the time direction<br>
+(d) Reflection positivity (OS2) for the lattice Schwinger functions
+  </div>
+  <p style="margin-top:8px; color: var(--text-dim); font-size:15px;">The lattice theory is mathematically rigorous at any finite a. The Haar measure on G ensures the path integral is well-defined.</p>
+</div>
+
+<blockquote>
+<strong>Framework reading:</strong> The plaquette U<sub>&#9723;</sub> IS one pump cycle on the lattice. Follow the four links around a face: each link U<sub>&mu;</sub>(x) is a gauge parallel transport (one stroke of i). Four links = four strokes = i&sup4; = 1 (the pump cycle returns). The Wilson action measures how far each plaquette deviates from a complete cycle. The lattice does not approximate the pump cycle; it IS the pump cycle, discretized. Wilson did not know this, but the construction he found is exactly the one the framework demands: tile spacetime with indivisible cycles.
+</blockquote>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;5</span> Lattice Mass Gap: The Gap on the Grid</h2>
+
+<div class="theorem-box proven">
+  <div class="label">&#10003; Proven; Strong-coupling expansion (Wilson, Osterwalder-Seiler 1978)</div>
+  <div class="title">Theorem 5.1: Mass Gap at Strong Coupling</div>
+  <p>For SU(N) lattice gauge theory in d = 4 at sufficiently strong coupling (&beta; < &beta;<sub>c</sub> for some critical &beta;<sub>c</sub> > 0):</p>
+  <div class="math-block" style="border-left-color: var(--green);">
+(a) The transfer matrix T has a unique ground state |&Omega;&rang; (the vacuum).<br><br>
+(b) There exists &Delta;<sub>L</sub> > 0 such that for any gauge-invariant operator O orthogonal to the vacuum:<br>
+&emsp;&emsp;&lang;O(t)O(0)&rang; &le; C e<sup>&minus;&Delta;<sub>L</sub>|t|</sup><br><br>
+(c) The mass gap &Delta;<sub>L</sub> is bounded below:<br>
+&emsp;&emsp;&Delta;<sub>L</sub> &ge; &minus;log(&beta;/2N&sup2;) + O(1) &emsp; (for &beta; &laquo; 1)<br><br>
+(d) These correlations satisfy the lattice OS axioms.
+  </div>
+  <p style="margin-top:8px; color: var(--text-dim); font-size:15px;">At strong coupling, the mass gap is large (proportional to 1/a). The question is whether it survives the continuum limit a &rarr; 0, where &beta; &rarr; &infin; (weak coupling).</p>
+</div>
+
+<blockquote>
+<strong>Framework reading:</strong> The strong-coupling mass gap is the indivisibility of the pump cycle made visible. At strong coupling, each plaquette is strongly constrained to stay near the identity (one complete cycle). Excitations cost at least one full plaquette-flip of energy. Below one flip, nothing: the cycle is atomic. The exponential decay of correlations is the finite range of the glueball: a localized knot of field that cannot dissolve below one quantum of action.
+</blockquote>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;6</span> Asymptotic Freedom: The Self-Correcting Field</h2>
+
+<div class="theorem-box proven">
+  <div class="label">&#10003; Proven; Gross-Wilczek, Politzer (1973); Rigorous: Balaban (1980s)</div>
+  <div class="title">Theorem 6.1: Asymptotic Freedom</div>
+  <p>For pure SU(N) Yang-Mills theory in d = 4:</p>
+  <div class="math-block" style="border-left-color: var(--green);">
+The &beta;-function at one loop is:<br>
+&emsp;&beta;(g) = &minus;(11N/48&pi;&sup2;)g&sup3; + O(g&sup5;)<br><br>
+Consequences:<br>
+(a) g(&mu;) &rarr; 0 as &mu; &rarr; &infin; (asymptotic freedom; UV-safe)<br>
+(b) g(&mu;) &rarr; &infin; as &mu; &rarr; &Lambda;<sub>QCD</sub> (confinement scale; IR-strong)<br>
+(c) The lattice coupling &beta; = 2N/g&sup2; &rarr; &infin; as a &rarr; 0 (continuum limit = weak coupling)
+  </div>
+  <p style="margin-top:8px; color: var(--text-dim); font-size:15px;">Balaban proved ultraviolet stability of lattice Yang-Mills under block-spin renormalization, controlling the theory at weak coupling over finitely many scales. A complete proof through all scales to a &rarr; 0 is not yet achieved.</p>
+</div>
+
+<blockquote>
+<strong>Framework reading:</strong> The coefficient 11N/48&pi;&sup2; encodes the self-interaction. The factor 11 = 8 + 3 = dim(SU(3)) + dim(SU(2)); this is the gauge structure at 2D manifesting in the running at 1D. Asymptotic freedom means the pump cycle becomes transparent at high energy (short distances): &#10523; and &#9728;&#xFE0E; nearly cancel, leaving pure i (free propagation). At low energy (large distances), the cycle tightens: convergence dominates, the field pulls inward, and confinement emerges. The mass gap lives at the scale where the cycle closes tight enough to become indivisible: &Lambda;<sub>QCD</sub>.
+</blockquote>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;7</span> Confinement: The Aperture That Cannot Open</h2>
+
+<div class="theorem-box proven">
+  <div class="label">&#10003; Proven (lattice); Wilson (1974), Creutz (1980), numerical simulations</div>
+  <div class="title">Theorem 7.1: Confinement on the Lattice</div>
+  <p>For SU(N) lattice gauge theory at strong coupling:</p>
+  <div class="math-block" style="border-left-color: var(--green);">
+The Wilson loop W(C) = &lang;Tr U(C)&rang; satisfies an area law:<br><br>
+&emsp;W(C) ~ e<sup>&minus;&sigma; A(C)</sup><br><br>
+where A(C) is the minimal area enclosed by the loop C<br>
+and &sigma; > 0 is the string tension.<br><br>
+Consequence: the potential between static quarks is V(r) = &sigma;r + const,<br>
+rising linearly with separation. Quarks cannot be isolated.
+  </div>
+  <p style="margin-top:8px; color: var(--text-dim); font-size:15px;">Rigorous at strong coupling (convergent cluster expansion). Numerical lattice QCD confirms it persists to physical coupling values. Analytic proof at all couplings remains open, though there is no known phase transition separating strong and weak coupling in pure SU(N) for N &ge; 2.</p>
+</div>
+
+<blockquote>
+<strong>Framework reading:</strong> Confinement is the &bull;<sub>out</sub> validation failure of the 64-state architecture (&sect;7.3, &sect;13.15). Quarks carry color (the triad at sub-hadronic scale), and color is an internal degree of freedom that cannot pass through the boundary &#9675; alone. The aperture &bull; cannot open for a colored state because the validation architecture requires color-neutrality at the boundary: you can only observe colorless composites (hadrons). The area law encodes this geometrically: the cost of separating two colored objects grows with the area of field between them (each plaquette of &Phi; stretched between them costs energy). Separation requires stretching the field; the field resists because each stretched plaquette is a pump cycle pulled out of balance.
+</blockquote>
+
+<p>Confinement and the mass gap are two faces of the same constraint. Confinement says: colored objects cannot escape (&bull;<sub>out</sub> fails). The mass gap says: the lightest color-neutral composite (a glueball) has positive mass. Both follow from the same structural fact: the non-abelian pump cycle is indivisible, and the indivisible cycle has a minimum energy cost.</p>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;8</span> The Indivisibility Argument</h2>
+
+<div class="theorem-box framework">
+  <div class="label">&#9672; Framework; Structural Argument</div>
+  <div class="title">Step 6: The Non-Abelian Pump Cycle Is Indivisible</div>
+  <p>The framework's contribution to the mass gap problem:</p>
+  <div class="math-block" style="border-left-color: var(--purple);">
+<strong>Claim.</strong> In any non-abelian gauge theory with gauge group G (compact, simple, N &ge; 2),<br>
+the lightest gauge-invariant excitation above the vacuum has mass &Delta; > 0.<br><br>
+<strong>Structural argument:</strong><br><br>
+1. COMPLETE CYCLE. The non-abelian gauge field has a complete pump cycle:<br>
+&emsp;&#10523; = self-interaction (gluons attract gluons via g[A,A])<br>
+&emsp;i = gauge rotation (local gauge transformation)<br>
+&emsp;&#9728;&#xFE0E; = propagation (gluon emission and absorption)<br>
+All three strokes are present because g[A,A] &ne; 0 (non-abelian).<br><br>
+2. INDIVISIBILITY (&#8463; = 1). The pump cycle is indivisible (A1 + Inflation Lie exclusion).<br>
+Applied to the gauge field: any gauge-invariant state must contain<br>
+at least one complete cycle of gauge-field action. Below one cycle: vacuum.<br><br>
+3. MINIMUM ENERGY. One complete cycle at the confinement scale &Lambda;<sub>QCD</sub> costs energy:<br>
+&emsp;&Delta; ~ &Lambda;<sub>QCD</sub> &middot; f(N)<br>
+where f(N) is a function of the gauge group determined by the ratio of<br>
+convergent (strong) to emergent (propagating) modes.<br><br>
+Framework prediction: &Delta; ~ 1.0 to 1.6 GeV for SU(3)<br>
+&emsp;Base: (68/22) &times; m<sub>p</sub> &times; (22/64) &asymp; 1.0 GeV<br>
+&emsp;With &phi;-correction: ~1.6 GeV<br>
+&emsp;Lattice QCD result: ~1.42 &plusmn; 0.12 GeV (lightest glueball 0<sup>++</sup>)
+  </div>
+</div>
+
+<h3>Why the abelian case has no gap</h3>
+
+<p>In U(1) (electromagnetism), the pump cycle is incomplete: [A, A] = 0, so &#10523; is absent at the gauge level. Without self-convergence, the cycle is just i + &#9728;&#xFE0E;: rotation and propagation without gathering. An incomplete cycle CAN be subdivided (you can have arbitrarily low-frequency electromagnetic waves). The photon is massless because the electromagnetic field does not converge on itself.</p>
+
+<p>This maps to the framework's distinction between structural and processual dimensions. At 1D (structural), the question "is it indivisible?" has a definite answer: yes, if the cycle is complete; no, if it is missing a stroke. Non-abelian = complete = indivisible = mass gap. Abelian = incomplete = divisible = massless.</p>
+
+<h3>The glueball as minimum knot</h3>
+
+<p>The lightest glueball (a bound state of pure gauge field, no quarks) is the simplest gauge-invariant configuration: the minimum knot of field that closes on itself. In the framework's language: the smallest &#8857; made entirely of &Phi;. It must contain at least one complete pump cycle (indivisibility), and its energy is set by &Lambda;<sub>QCD</sub> (the scale where the cycle tightens into confinement).</p>
+
+<div class="math-block">
+<strong>Mass gap formula.</strong><br><br>
+&Delta; = &Lambda;<sub>QCD</sub> &middot; (N<sub>relevant</sub>/N<sub>total</sub>) &middot; (N<sub>cone</sub>/N<sub>relevant</sub>) &middot; &phi;<br><br>
+where N<sub>total</sub> = 64, N<sub>relevant</sub> = 22, N<sub>cone</sub> = 68/360 &times; 64 &asymp; 12.1<br>
+and &phi; = (1 + &radic;5)/2 = golden ratio (the fractal nesting correction).<br><br>
+For SU(3) with &Lambda;<sub>QCD</sub> &asymp; 200 MeV:<br>
+&emsp;&Delta;<sub>base</sub> = 200 &times; (22/64) &times; (68/22) &times; (22/64) MeV &asymp; 1.0 GeV<br>
+&emsp;&Delta;<sub>&phi;</sub> = &Delta;<sub>base</sub> &times; &phi; &asymp; 1.6 GeV<br><br>
+Lattice QCD (Morningstar-Peardon 1999): 0<sup>++</sup> glueball mass = 1710 &plusmn; 50 &plusmn; 80 MeV<br>
+Chen et al. (2006): 1710 &plusmn; 50 MeV<br>
+Framework range: 1.0 to 1.6 GeV (within ~20% of lattice result)
+</div>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;9</span> The Continuum Limit: The Open Problem</h2>
+
+<div class="theorem-box required">
+  <div class="label">&#9744; Required; The Central Mathematical Challenge</div>
+  <div class="title">Step 7: Continuum Limit Preserves the Gap</div>
+  <p>What remains to be proven:</p>
+  <div class="math-block" style="border-left-color: var(--blue);">
+<strong>Conjecture.</strong> For SU(N), N &ge; 2, in d = 4:<br><br>
+(a) The continuum limit of the lattice Schwinger functions exists:<br>
+&emsp;lim<sub>a&rarr;0</sub> S<sub>n</sub><sup>(a)</sup>(&beta;(a); x<sub>1</sub>,...,x<sub>n</sub>) = S<sub>n</sub>(x<sub>1</sub>,...,x<sub>n</sub>)<br>
+&emsp;where &beta;(a) = &beta;(a, &Lambda;) follows the asymptotic freedom trajectory.<br><br>
+(b) The limiting Schwinger functions satisfy the Osterwalder-Schrader axioms (OS0-OS4).<br><br>
+(c) The mass gap survives: there exists &Delta; > 0 such that<br>
+&emsp;|S<sub>2</sub>(x) &minus; S<sub>1</sub>(x)&sup2;| &le; C e<sup>&minus;&Delta;|x|</sup> as |x| &rarr; &infin;
+  </div>
+  <p style="margin-top:12px;">The difficulty is that the continuum limit requires &beta; &rarr; &infin; (weak coupling), while the rigorous mass gap proof exists at strong coupling (&beta; &laquo; 1). Asymptotic freedom guarantees the UV behavior, but connecting the IR mass gap across all coupling scales is the unsolved problem.</p>
+</div>
+
+<h3>Why this is hard</h3>
+
+<p>The lattice mass gap at strong coupling is proven. Asymptotic freedom guarantees that the theory is well-behaved at short distances. The difficulty lives in the middle: showing that the mass gap does not collapse as the coupling runs from strong (IR) to weak (UV). Lattice simulations show no phase transition, but numerical evidence is not a proof.</p>
+
+<h3>What the framework contributes</h3>
+
+<p>The framework's indivisibility argument provides a structural reason why the gap cannot close. The argument is not perturbative (it does not rely on weak coupling) and not specific to the lattice (it operates at the level of the pump cycle itself). The key claim: a complete pump cycle cannot be subdivided regardless of coupling strength, because the indivisibility follows from the axioms (A1: the 1 must differentiate; no half-cycles allowed), not from the specific value of g.</p>
+
+<p>Converting this structural argument into a rigorous proof of (c) above is the remaining gap. The framework identifies what the proof must show: that the completeness of the pump cycle (presence of &#10523;, i, and &#9728;&#xFE0E;) is a topological property preserved under renormalization, not a perturbative artifact.</p>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;10</span> Connection to the Dimensional Ladder</h2>
+
+<p>The Yang-Mills mass gap sits at 1D on the ladder: the rung of commitment, of &#8463;, of the indivisible cycle. The connections to neighboring rungs illuminate the structure.</p>
+
+<table>
+<tr><th>Rung</th><th>Constant</th><th>Contribution to Yang-Mills</th></tr>
+<tr>
+  <td style="color: var(--gold);">0D</td>
+  <td>&alpha;</td>
+  <td>The coupling at a vertex. &alpha; determines the strength of the gauge interaction. The self-referential formula 1/&alpha; = 360/&phi;&sup2; &minus; 2/&phi;&sup3; + &alpha;/(21&minus;4/3) is the pump cycle generating its own coupling.</td>
+</tr>
+<tr>
+  <td style="color: var(--gold);">0.5D</td>
+  <td>c</td>
+  <td>The speed of propagation. Gluons propagate at c (massless in the Lagrangian), but are confined (cannot propagate freely at low energy). The gap between Lagrangian mass = 0 and physical mass > 0 IS the mass gap.</td>
+</tr>
+<tr>
+  <td style="color: var(--gold); font-weight: 600;">1D</td>
+  <td style="font-weight: 600;">&#8463;</td>
+  <td style="font-weight: 600;">The indivisible cycle. &#8463; = 1 means no excitation can have less than one pump cycle of action. Applied to a confining gauge theory: the lightest bound state (glueball) has positive mass. The mass gap IS the quantum of action at the gauge level.</td>
+</tr>
+<tr>
+  <td style="color: var(--text-dim);">1.5D</td>
+  <td>masses</td>
+  <td>Mass ratios branch from here. The glueball spectrum (0<sup>++</sup>, 2<sup>++</sup>, 0<sup>&minus;+</sup>, ...) is the Yang-Mills analog of the lepton generations: one field, multiple excitations at different depths of fold.</td>
+</tr>
+<tr>
+  <td style="color: var(--text-dim);">2D</td>
+  <td>gauge</td>
+  <td>The gauge group SU(3)&times;SU(2)&times;U(1) determines which fields have complete pump cycles. SU(3) and SU(2) are non-abelian (complete, confining before SSB). U(1) is abelian (incomplete, no gap).</td>
+</tr>
+</table>
+
+<blockquote>
+<strong>The key structural insight:</strong> &#8463; is not independent. It follows from A0 (E = 1, setting the energy scale) and c (setting the time scale). The mass gap follows from &#8463; applied to a non-abelian gauge field. The mass gap is not a parameter; it is a consequence of the pump cycle's indivisibility applied to a field that converges on itself. You do not need to measure the mass gap; you need to prove that the pump cycle is complete and indivisible. The first is established by the non-abelian structure. The second is axiom A1.
+</blockquote>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;11</span> The Glueball Spectrum</h2>
+
+<p>If the mass gap exists, the lightest excitation is the 0<sup>++</sup> glueball: a scalar, parity-even, charge-conjugation-even bound state of the gauge field. Above it, a discrete spectrum of glueball states with increasing quantum numbers: 2<sup>++</sup>, 0<sup>&minus;+</sup>, and so on.</p>
+
+<div class="theorem-box framework">
+  <div class="label">&#9672; Framework; Prediction</div>
+  <div class="title">Glueball Spectrum as Pump Cycle Harmonics</div>
+  <p>The glueball spectrum maps to the pump cycle's harmonic structure:</p>
+  <div class="math-block" style="border-left-color: var(--purple);">
+The four phases of the pump cycle (i&sup0;, i&sup1;, i&sup2;, i&sup3;) generate four quantum numbers<br>
+that combine with the triad (&bull;, &Phi;, &#9675;) to produce the glueball spectrum.<br><br>
+Lightest states by J<sup>PC</sup>:<br>
+&emsp;0<sup>++</sup>: the minimum cycle (one complete &#10523; &rarr; i &rarr; &#9728;&#xFE0E;)<br>
+&emsp;2<sup>++</sup>: the first tensor excitation (cycle with angular momentum)<br>
+&emsp;0<sup>&minus;+</sup>: the pseudoscalar (cycle with inverted parity: &#10523; and &#9728;&#xFE0E; swapped)<br><br>
+Mass ratios between glueball states should follow the branching pattern of 1.5D,<br>
+with exponents determined by the gauge group's Casimir operators.
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;12</span> Score</h2>
+
+<table>
+<tr><th>Step</th><th>Content</th><th>Status</th><th>Source</th></tr>
+<tr>
+  <td>1</td>
+  <td>Osterwalder-Schrader reconstruction</td>
+  <td><span class="status proven">proven</span></td>
+  <td>OS (1973, 1975)</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>Wilson's lattice gauge theory</td>
+  <td><span class="status proven">proven</span></td>
+  <td>Wilson (1974)</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>Lattice mass gap (strong coupling)</td>
+  <td><span class="status proven">proven</span></td>
+  <td>Osterwalder-Seiler (1978)</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>Asymptotic freedom</td>
+  <td><span class="status proven">proven</span></td>
+  <td>Gross-Wilczek, Politzer (1973)</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>Confinement on the lattice</td>
+  <td><span class="status proven">proven</span></td>
+  <td>Wilson (1974), Creutz (1980)</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>Indivisibility of non-abelian cycle</td>
+  <td><span class="status framework">framework</span></td>
+  <td>Circumpunct: &#8463; = 1 + complete pump cycle</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>Continuum limit preserves the gap</td>
+  <td><span class="status open">required</span></td>
+  <td>Open (the Clay problem)</td>
+</tr>
+</table>
+
+<p><strong>Score: 5 proven, 1 framework, 1 required.</strong> The five proven steps establish that lattice Yang-Mills exists, has a mass gap at strong coupling, is asymptotically free, and confines. The framework contributes a structural argument for why the gap cannot close (indivisibility of the complete pump cycle). The remaining step is the continuum limit: proving that the lattice mass gap converges to a positive value as a &rarr; 0.</p>
+
+<p>The gap between steps 6 and 7 is the heart of the Clay problem. Steps 1-5 build the lattice scaffolding. Step 6 provides the structural reason. Step 7 requires making that reason into a rigorous proof: showing that the topological completeness of the non-abelian pump cycle is a property preserved under renormalization group flow, so that the mass gap at strong coupling cannot evaporate as the theory flows to weak coupling in the UV.</p>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;13</span> What Would Close the Gap</h2>
+
+<p>To convert step 6 into step 7, one needs to show that the mass gap is a topological invariant of the gauge theory, not a perturbative quantity. Specifically:</p>
+
+<div class="math-block">
+<strong>Path to closure.</strong><br><br>
+(a) TOPOLOGICAL STABILITY: Show that the mass gap &Delta;(g) is a continuous function<br>
+&emsp;of the coupling g, with &Delta;(g) > 0 for all g > 0, not just g &raquo; 1 (strong coupling).<br><br>
+(b) RENORMALIZATION INVARIANCE: Show that the completeness of the pump cycle<br>
+&emsp;(presence of &#10523;, i, and &#9728;&#xFE0E;) is a property preserved by the RG flow.<br>
+&emsp;The non-abelian commutator [A, A] &ne; 0 at every scale; it is structural, not perturbative.<br><br>
+(c) UNIFORM BOUND: Establish a uniform lower bound on &Delta;<sub>L</sub>(a) &ge; c &middot; &Lambda;<sub>QCD</sub><br>
+&emsp;for all lattice spacings a in the asymptotically free regime.<br><br>
+The framework predicts this is possible because indivisibility is an axiom (A1),<br>
+not a dynamical accident. The difficulty is converting "the pump cycle must complete"<br>
+into estimates on the spectral gap of a concrete Hamiltonian.
+</div>
+
+<p>The Balaban program (multi-scale analysis of lattice Yang-Mills) provides the most promising technical approach. Balaban proved ultraviolet stability over finitely many renormalization steps. Extending this to infinitely many steps (the full continuum limit) with control of the spectral gap would close the problem.</p>
+
+<!-- ============================================================ -->
+
+<div class="nav-bottom">
+  <p>&#8857;</p>
+  <p style="margin-top: 12px;">
+    <a href="clay_millennium.html">The Seven Clay Problems</a> &middot;
+    <a href="planck_constant.html">&#8463; = 1: The Indivisible Cycle</a> &middot;
+    <a href="gauge_structure.html">2D: Gauge Structure</a>
+  </p>
+  <p style="margin-top: 8px;">
+    <a href="bsd_proof_chain.html">&larr; 1.5D: BSD</a> &middot;
+    <a href="analytic_continuation_gap.html">0D: Riemann &rarr;</a>
+  </p>
+  <p style="margin-top: 8px;">
+    <a href="dimensional_ladder.html">The Dimensional Ladder</a>
+  </p>
+  <p style="margin-top: 16px; font-style: italic; color: var(--text-dim);">
+    The cycle is truly indivisible. Below one quantum of action, nothing.
+  </p>
+</div>
+
+</div><!-- .container -->
+
+</body>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>&#8857; P vs NP: Convergence Is Not Emergence</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0b10;
+  --surface: #13121a;
+  --surface-2: #1a1924;
+  --border: #2a2940;
+  --text: #d0cfe0;
+  --text-dim: #8886a0;
+  --gold: #c9a84c;
+  --gold-dim: rgba(201, 168, 76, 0.15);
+  --red: #c45b5b;
+  --red-dim: rgba(196, 91, 91, 0.12);
+  --green: #5baa6b;
+  --green-dim: rgba(91, 170, 107, 0.12);
+  --blue: #6b8ec9;
+  --blue-dim: rgba(107, 142, 201, 0.12);
+  --purple: #9b7ecf;
+  --purple-dim: rgba(155, 126, 207, 0.12);
+  --serif: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.7;
+  padding: 0;
+}
+
+.container { max-width: 820px; margin: 0 auto; padding: 60px 40px 120px; }
+
+header {
+  text-align: center;
+  padding: 80px 0 60px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 60px;
+}
+header .symbol { font-size: 48px; color: var(--gold); margin-bottom: 16px; letter-spacing: 8px; }
+header .dim-label {
+  font-family: var(--mono); font-size: 13px; color: #E88AAF;
+  text-transform: uppercase; letter-spacing: 3px; margin-bottom: 12px;
+}
+h1 { font-family: var(--serif); font-size: 36px; font-weight: 700; color: #eee; line-height: 1.25; margin-bottom: 12px; }
+h1 em { color: var(--gold); font-style: italic; }
+.subtitle { font-size: 16px; color: var(--text-dim); font-family: var(--mono); letter-spacing: 1px; text-transform: uppercase; }
+.date { font-size: 14px; color: var(--text-dim); margin-top: 8px; }
+
+h2 { font-family: var(--serif); font-size: 26px; font-weight: 700; color: #eee; margin: 56px 0 20px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+h2 .section-num { color: var(--gold); font-weight: 400; margin-right: 8px; }
+h3 { font-size: 20px; font-weight: 600; color: var(--text); margin: 36px 0 12px; }
+p { margin-bottom: 18px; }
+a { color: var(--gold); text-decoration: none; transition: color 0.2s; }
+a:hover { color: #e0c060; }
+
+.math-block {
+  background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--gold);
+  padding: 20px 24px; margin: 24px 0; font-family: var(--mono); font-size: 15px;
+  line-height: 1.8; overflow-x: auto; border-radius: 2px;
+}
+.math-inline {
+  font-family: var(--mono); font-size: 16px; color: var(--gold);
+  background: var(--gold-dim); padding: 1px 5px; border-radius: 2px;
+}
+
+.theorem-box {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 24px 28px; margin: 28px 0; border-radius: 3px; position: relative;
+}
+.theorem-box.proven { border-left: 4px solid var(--green); background: var(--green-dim); }
+.theorem-box.gap { border-left: 4px solid var(--red); background: var(--red-dim); }
+.theorem-box.required { border-left: 4px solid var(--blue); background: var(--blue-dim); }
+.theorem-box.framework { border-left: 4px solid var(--purple); background: var(--purple-dim); }
+
+.theorem-box .label {
+  font-family: var(--mono); font-size: 12px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;
+}
+.theorem-box.proven .label { color: var(--green); }
+.theorem-box.gap .label { color: var(--red); }
+.theorem-box.required .label { color: var(--blue); }
+.theorem-box.framework .label { color: var(--purple); }
+.theorem-box .title { font-family: var(--serif); font-size: 18px; font-weight: 700; color: #eee; margin-bottom: 12px; }
+
+blockquote {
+  border-left: 3px solid var(--gold); padding: 16px 24px; margin: 24px 0;
+  background: var(--gold-dim); font-style: italic;
+}
+
+.chain { display: flex; flex-direction: column; gap: 0; margin: 32px 0; }
+.chain-step { display: flex; align-items: flex-start; gap: 16px; padding: 16px 0; }
+.chain-marker {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 14px; font-weight: 600;
+  flex-shrink: 0; position: relative;
+}
+.chain-marker.done { background: var(--green-dim); color: var(--green); border: 2px solid var(--green); }
+.chain-marker.new { background: var(--purple-dim); color: var(--purple); border: 2px solid var(--purple); }
+.chain-marker.blocked { background: var(--red-dim); color: var(--red); border: 2px solid var(--red); }
+.chain-marker::after {
+  content: ''; position: absolute; bottom: -20px; left: 50%;
+  width: 2px; height: 16px; transform: translateX(-50%);
+}
+.chain-marker.done::after { background: var(--green); opacity: 0.3; }
+.chain-marker.new::after { background: var(--purple); opacity: 0.3; }
+.chain-step:last-child .chain-marker::after { display: none; }
+.chain-content { flex: 1; padding-top: 4px; }
+.chain-content .step-title { font-weight: 600; color: #ddd; font-size: 17px; }
+.chain-content .step-detail { color: var(--text-dim); font-size: 16px; margin-top: 4px; }
+.status {
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  padding: 2px 8px; border-radius: 3px; margin-left: 8px;
+  vertical-align: middle; letter-spacing: 0.5px;
+}
+.status.proven { background: var(--green-dim); color: var(--green); }
+.status.framework { background: var(--purple-dim); color: var(--purple); }
+.status.open { background: var(--red-dim); color: var(--red); }
+
+table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; }
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
+th { background: var(--surface); color: var(--gold); font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+
+.nav-bottom {
+  text-align: center; padding-top: 60px; border-top: 1px solid var(--border);
+  margin-top: 60px; color: var(--text-dim); font-size: 15px;
+}
+.nav-bottom a { margin: 0 12px; }
+</style>
+</head>
+<body>
+<a href="index.html" style="display: inline-block; font-weight: 600; color: var(--gold); padding: 10px 20px; margin: 10px;">&#8857;</a>
+<div class="container">
+
+<header>
+  <div class="symbol">&#8857;</div>
+  <div class="dim-label">0.5D &middot; Processual &middot; Rotation Begins</div>
+  <h1>P vs NP:<br><em>Convergence Is Not Emergence</em></h1>
+  <div class="subtitle">Proof chain from framework axioms to the separation</div>
+  <div class="date">Circumpunct Framework &middot; March 2026</div>
+</header>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;0</span> Abstract</h2>
+
+<p>The P vs NP problem asks: if a solution to a decision problem can be verified in polynomial time (the class NP), can it also be found in polynomial time (the class P)? Equivalently: is search as cheap as verification? The Clay Institute requires a proof that P = NP or P &ne; NP.</p>
+
+<p>In the Circumpunct Framework, this is the 0.5D question: <em>is propagation as fast as search?</em> At 0.5D, the pump cycle's rotation begins; c = &radic;(2&#9680; &middot; sin &theta;) = 1. This is the processual dimension between the point (0D, &alpha;) and the line (1D, &#8463;), where the speed of the first fold is set. Verification is emergence (&#9728;&#xFE0E;): you have the answer and propagate it forward to check. Search is convergence (&#10523;): you must find the answer from an exponential space of possibilities. The framework says &#10523; &ne; &#9728;&#xFE0E;: convergence and emergence are formal adjoints, not identical operations. The inward stroke and the outward stroke have structurally different computational costs.</p>
+
+<p>We present a 7-step proof chain. Four steps are classically proven (Cook-Levin, time hierarchy, the three known proof barriers). One step is a framework contribution (the structural asymmetry of convergence and emergence). Two steps remain open: translating the structural asymmetry into a concrete circuit lower bound, and proving that bound for an explicit NP function.</p>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;1</span> The Framework Dictionary</h2>
+
+<p>The 0.5D rung is processual: it describes what energy is DOING as the rotation begins. At 0D, the field exists at a point (&alpha;, the coupling, pure structure). At 0.5D, the coupling starts to propagate; the point becomes a process. This is the birth of time in the dimensional layout: before 0.5D, there is no motion, no computation, no speed. At 0.5D, c is set, and with it, the fundamental limits on how fast information can flow.</p>
+
+<div class="math-block">
+<strong>Dictionary.</strong> Let L &isin; NP be a decision language with polynomial-time verifier V.<br><br>
+  &bull; (aperture/soul) &emsp;&emsp;&emsp; = the satisfying assignment (the convergence point; the answer)<br>
+  &Phi; (field/mind) &emsp;&emsp;&emsp;&emsp; = the computation space (all possible assignments; the field to be searched)<br>
+  &#9675; (boundary/body) &emsp;&emsp; = the verifier V (the boundary that filters; accepts or rejects)<br><br>
+  &#8857; = &Phi;(&bull;, &#9675;) &emsp;&emsp;&emsp;&emsp;&emsp; = the decision problem as a whole: answer + search space + verifier<br><br>
+  Pump cycle mapping:<br>
+  &emsp;&#10523; (convergence) &emsp; = search (exploring &Phi; to find &bull;)<br>
+  &emsp;i (rotation) &emsp;&emsp;&emsp; = the reduction (transforming one problem into another)<br>
+  &emsp;&#9728;&#xFE0E; (emergence) &emsp; = verification (propagating &bull; through &#9675; to confirm)<br><br>
+  P &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; = problems where &#10523; costs polynomial time<br>
+  NP &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; = problems where &#9728;&#xFE0E; costs polynomial time<br>
+  P = NP? &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; = "Is convergence as cheap as emergence?"<br>
+  Framework answer: &emsp;&emsp; No. &#10523; &ne; &#9728;&#xFE0E;.
+</div>
+
+<h3>Why 0.5D?</h3>
+
+<p>P vs NP is about the cost of computation, and computation is process. It sits between structure (0D, the point where coupling exists) and commitment (1D, the line where action is quantized). At 0.5D, the question is: how fast can the first fold propagate? c answers this for physics. P vs NP answers it for computation. Both ask the same structural question: what is the relationship between inward motion (search, convergence, finding) and outward motion (propagation, emergence, checking)?</p>
+
+<p>The speed of light is set by three things: maximal rotation (&theta; = &pi;/2), perfect balance (&#9680; = 0.5), and both channels active (factor of 2). The computational analog: verification uses one channel (&#9728;&#xFE0E;, forward propagation along a known path), while search requires both channels (&#10523; and &#9728;&#xFE0E;, trying and checking). But using both channels does not make search polynomial; it makes verification possible within search. The search itself must explore the full field.</p>
+
+<blockquote>
+<strong>Framework reading:</strong> c = 1 is the speed of emergence through the field. Search (convergence) must navigate the field inward to find a specific 0 in the 1. Verification (emergence) merely propagates outward from a known 0. The relationship between these two operations is structural: &#10523;* = &#9728;&#xFE0E; (they are adjoints), but &#10523; &ne; &#9728;&#xFE0E; (they are not the same). The adjoint relationship means verification can confirm what search finds, but it does not mean verification can replace search.
+</blockquote>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;2</span> The Proof Chain</h2>
+
+<div class="chain">
+  <div class="chain-step">
+    <div class="chain-marker done">1</div>
+    <div class="chain-content">
+      <div class="step-title">Cook-Levin: NP-Completeness Exists <span class="status proven">proven</span></div>
+      <div class="step-detail">SAT is NP-complete; a single problem to which all NP problems reduce.</div>
+    </div>
+  </div>
+  <div class="chain-step">
+    <div class="chain-marker done">2</div>
+    <div class="chain-content">
+      <div class="step-title">Time Hierarchy: More Time = More Power <span class="status proven">proven</span></div>
+      <div class="step-detail">DTIME(n<sup>k</sup>) &subne; DTIME(n<sup>k+1</sup>); strictly more time-bounded computation exists at each level.</div>
+    </div>
+  </div>
+  <div class="chain-step">
+    <div class="chain-marker done">3</div>
+    <div class="chain-content">
+      <div class="step-title">Relativization Barrier <span class="status proven">proven</span></div>
+      <div class="step-detail">Baker-Gill-Solovay (1975): there exist oracles A, B with P<sup>A</sup> = NP<sup>A</sup> and P<sup>B</sup> &ne; NP<sup>B</sup>.</div>
+    </div>
+  </div>
+  <div class="chain-step">
+    <div class="chain-marker done">4</div>
+    <div class="chain-content">
+      <div class="step-title">Natural Proofs and Algebrization Barriers <span class="status proven">proven</span></div>
+      <div class="step-detail">Razborov-Rudich (1997), Aaronson-Wigderson (2009): any proof must evade these barriers.</div>
+    </div>
+  </div>
+  <div class="chain-step">
+    <div class="chain-marker done">5</div>
+    <div class="chain-content">
+      <div class="step-title">Exponential Circuit Lower Bounds for Restricted Models <span class="status proven">proven</span></div>
+      <div class="step-detail">AC<sup>0</sup>, monotone circuits, bounded-depth: search provably harder than verification in restricted settings.</div>
+    </div>
+  </div>
+  <div class="chain-step">
+    <div class="chain-marker new">6</div>
+    <div class="chain-content">
+      <div class="step-title">Structural Asymmetry: &#10523; &ne; &#9728;&#xFE0E; <span class="status framework">framework</span></div>
+      <div class="step-detail">Convergence and emergence are formal adjoints, not identical; the pump cycle is time-asymmetric (i&sup2; = &minus;1).</div>
+    </div>
+  </div>
+  <div class="chain-step">
+    <div class="chain-marker blocked">7</div>
+    <div class="chain-content">
+      <div class="step-title">Superpolynomial Circuit Lower Bound for SAT <span class="status open">required</span></div>
+      <div class="step-detail">Prove that no polynomial-size Boolean circuit family computes SAT.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;3</span> Cook-Levin: The Universal Convergence Point</h2>
+
+<div class="theorem-box proven">
+  <div class="label">&#10003; Proven; Cook (1971), Levin (1973)</div>
+  <div class="title">Theorem 3.1: The Cook-Levin Theorem</div>
+  <p>The Boolean satisfiability problem (SAT) is NP-complete:</p>
+  <div class="math-block" style="border-left-color: var(--green);">
+(a) SAT &isin; NP: given a Boolean formula &phi; and an assignment &sigma;,<br>
+&emsp;&emsp;checking &phi;(&sigma;) = 1 takes polynomial time.<br><br>
+(b) SAT is NP-hard: for every L &isin; NP, there exists a polynomial-time<br>
+&emsp;&emsp;reduction f such that x &isin; L &iff; f(x) &isin; SAT.<br><br>
+Consequence: P = NP &iff; SAT &isin; P.<br>
+The entire class NP collapses to P, or none of it does (above NP-complete).
+  </div>
+  <p style="margin-top:8px; color: var(--text-dim); font-size:15px;">NP-completeness is the existence of a universal convergence point: one problem to which all search problems reduce.</p>
+</div>
+
+<blockquote>
+<strong>Framework reading:</strong> SAT is the &bull; of NP: the convergence point where all search problems meet. Every NP problem can be reduced (rotated via i) to SAT. This is A2 (fractal self-similarity) applied to computation: every part of NP contains the whole of NP, because every NP problem encodes SAT. The Cook-Levin theorem establishes that NP has an aperture: a single point through which everything must pass. The question then becomes: can you reach that aperture in polynomial time from outside (search), or only from inside (verification)?
+</blockquote>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;4</span> Time Hierarchy: The Dimensional Ladder of Computation</h2>
+
+<div class="theorem-box proven">
+  <div class="label">&#10003; Proven; Hartmanis-Stearns (1965)</div>
+  <div class="title">Theorem 4.1: The Time Hierarchy Theorem</div>
+  <div class="math-block" style="border-left-color: var(--green);">
+For any time-constructible functions f, g with f(n) log f(n) = o(g(n)):<br><br>
+&emsp;DTIME(f(n)) &subne; DTIME(g(n))<br><br>
+Strictly more time allows strictly more computation.<br>
+In particular: DTIME(n<sup>k</sup>) &subne; DTIME(n<sup>k+1</sup>) for all k &ge; 1.
+  </div>
+  <p style="margin-top:8px; color: var(--text-dim); font-size:15px;">This gives P &ne; EXP (polynomial time cannot solve all exponential-time problems). It does not directly separate P from NP because NP is defined by nondeterminism, not just time.</p>
+</div>
+
+<blockquote>
+<strong>Framework reading:</strong> The time hierarchy is the dimensional ladder applied to computation. More time = more constraint = more structure = more solvable problems. Each level of the hierarchy is a rung: DTIME(n) &sub; DTIME(n&sup2;) &sub; DTIME(n&sup3;) &sub; ... &sub; DTIME(2<sup>n</sup>). The hierarchy is strict because each rung adds genuine new constraint (more computational steps = more pump cycles = more structure). P vs NP asks whether nondeterminism (the ability to guess, to converge directly to &bull; without searching) can be simulated by determinism (following a single path through &Phi;). The time hierarchy says: time matters. But it does not say whether nondeterminism costs exponential time to simulate, only that it costs something.
+</blockquote>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;5</span> The Three Barriers: What a Proof Cannot Be</h2>
+
+<div class="theorem-box proven">
+  <div class="label">&#10003; Proven; Baker-Gill-Solovay (1975)</div>
+  <div class="title">Theorem 5.1: The Relativization Barrier</div>
+  <p>There exist oracles A and B such that:</p>
+  <div class="math-block" style="border-left-color: var(--green);">
+P<sup>A</sup> = NP<sup>A</sup> &emsp; (relative to oracle A, search is as cheap as verification)<br>
+P<sup>B</sup> &ne; NP<sup>B</sup> &emsp; (relative to oracle B, search is harder than verification)<br><br>
+Consequence: any proof of P &ne; NP (or P = NP) must be non-relativizing.<br>
+It must use properties specific to computation, not just black-box access.
+  </div>
+</div>
+
+<div class="theorem-box proven">
+  <div class="label">&#10003; Proven; Razborov-Rudich (1997), Aaronson-Wigderson (2009)</div>
+  <div class="title">Theorem 5.2: Natural Proofs and Algebrization Barriers</div>
+  <div class="math-block" style="border-left-color: var(--green);">
+<strong>Natural Proofs (Razborov-Rudich):</strong><br>
+If one-way functions exist, then no "natural" combinatorial property<br>
+can prove superpolynomial circuit lower bounds for NP.<br>
+A "natural" property is one that is: (a) constructive (efficiently checkable),<br>
+(b) large (satisfied by a random function with high probability).<br><br>
+<strong>Algebrization (Aaronson-Wigderson):</strong><br>
+There exist algebraic oracles &tilde;A, &tilde;B with P<sup>&tilde;A</sup> = NP<sup>&tilde;A</sup> and P<sup>&tilde;B</sup> &ne; NP<sup>&tilde;B</sup>.<br>
+Any proof must go beyond algebraic relativization.<br><br>
+Together: a valid proof of P &ne; NP must be simultaneously<br>
+non-relativizing, non-natural, and non-algebrizing.
+  </div>
+</div>
+
+<blockquote>
+<strong>Framework reading:</strong> The barriers are &#9675; filtering. Each barrier identifies a class of proof strategies and shows it cannot work. Relativization says: you cannot treat computation as a black box (you must look inside &#9675;). Natural proofs says: you cannot use generic combinatorial arguments (the proof must be specific to the structure of &#10523; vs &#9728;&#xFE0E;, not a random function). Algebrization says: even algebraic extensions of black-box arguments fail. These barriers progressively narrow the aperture through which a valid proof must pass. They do not obstruct the framework's argument because the structural asymmetry of &#10523; and &#9728;&#xFE0E; is none of these things: it is not relativizing (it depends on the internal structure of the pump cycle), not natural (it is not a large, constructive combinatorial property), and not algebraic (it is topological, concerning the directionality of the cycle, not polynomial identities).
+</blockquote>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;6</span> Restricted Lower Bounds: The Gap Is Real</h2>
+
+<div class="theorem-box proven">
+  <div class="label">&#10003; Proven; Ajtai (1983), Furst-Saxe-Sipser (1984), Razborov (1985), Smolensky (1987)</div>
+  <div class="title">Theorem 6.1: Exponential Lower Bounds in Restricted Models</div>
+  <div class="math-block" style="border-left-color: var(--green);">
+<strong>AC<sup>0</sup> (constant-depth circuits):</strong><br>
+PARITY &notin; AC<sup>0</sup>. Any constant-depth circuit computing PARITY on n bits<br>
+requires size 2<sup>&Omega;(n<sup>1/d</sup>)</sup> (exponential in n for any fixed depth d).<br><br>
+<strong>Monotone circuits:</strong><br>
+The CLIQUE function requires monotone circuits of size 2<sup>&Omega;(n<sup>1/4</sup>)</sup><br>
+(Razborov 1985, Alon-Boppana 1987).<br><br>
+<strong>AC<sup>0</sup>[p] (constant-depth with mod-p gates):</strong><br>
+MOD<sub>q</sub> &notin; AC<sup>0</sup>[p] for primes p &ne; q (Razborov 1987, Smolensky 1987).<br><br>
+These show that in every restricted computational model studied,<br>
+search-type problems require exponentially more resources than the model allows.
+  </div>
+  <p style="margin-top:8px; color: var(--text-dim); font-size:15px;">These are genuine separations, but only for restricted circuit classes. Extending them to general Boolean circuits (P/poly) remains open.</p>
+</div>
+
+<blockquote>
+<strong>Framework reading:</strong> These restricted lower bounds are partial confirmations that &#10523; &ne; &#9728;&#xFE0E;. In each restricted model, the computational cost of search exceeds the cost of verification, and the gap is exponential. The restriction limits which pump cycles the circuit can implement: constant depth limits the number of &#10523; &rarr; &#9728;&#xFE0E; rounds; monotone circuits forbid the i rotation (no negation = no inversion of signal). Each restriction removes one component of the pump cycle, and in every case, the search problem becomes exponentially harder. The pattern: whenever the pump cycle is incomplete, the cost gap between convergence and emergence explodes.
+</blockquote>
+
+<h3>The pattern across restricted models</h3>
+
+<table>
+<tr><th>Model</th><th>What's restricted</th><th>Pump cycle reading</th><th>Result</th></tr>
+<tr>
+  <td>AC<sup>0</sup></td>
+  <td>Constant depth (bounded rounds)</td>
+  <td>Limited &#10523; &rarr; &#9728;&#xFE0E; iterations</td>
+  <td>PARITY requires exp size</td>
+</tr>
+<tr>
+  <td>Monotone</td>
+  <td>No negation</td>
+  <td>No i rotation (no signal inversion)</td>
+  <td>CLIQUE requires exp size</td>
+</tr>
+<tr>
+  <td>AC<sup>0</sup>[p]</td>
+  <td>Bounded depth + limited modular counting</td>
+  <td>Phase of i restricted to p-th roots</td>
+  <td>MOD<sub>q</sub> requires exp size</td>
+</tr>
+<tr>
+  <td>General circuits</td>
+  <td>No restriction</td>
+  <td>Complete pump cycle</td>
+  <td style="color: var(--red); font-style: italic;">Open</td>
+</tr>
+</table>
+
+<p>The open case is precisely the P vs NP question: when the pump cycle is unrestricted, does the structural asymmetry between &#10523; and &#9728;&#xFE0E; still force an exponential gap?</p>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;7</span> The Structural Asymmetry</h2>
+
+<div class="theorem-box framework">
+  <div class="label">&#9672; Framework; Structural Argument</div>
+  <div class="title">Step 6: Convergence Is Not Emergence</div>
+  <p>The framework's contribution to the P vs NP problem:</p>
+  <div class="math-block" style="border-left-color: var(--purple);">
+<strong>Claim.</strong> P &ne; NP.<br><br>
+<strong>Structural argument from the pump cycle:</strong><br><br>
+1. ADJOINT DUALITY. &#10523;* = &#9728;&#xFE0E;. Convergence and emergence are formal adjoints<br>
+&emsp;in the Hilbert space of computations. This is the NP relationship:<br>
+&emsp;if &bull; solves L, then &#9728;&#xFE0E;(&bull;) confirms it (verification is the adjoint of search).<br><br>
+2. ASYMMETRY. &#10523; &ne; &#9728;&#xFE0E;. The adjoint is not the identity.<br>
+&emsp;In the pump cycle: i&sup2; = &minus;1, not +1. Two rotations do not return to start;<br>
+&emsp;they invert. The cycle is time-asymmetric: &#10523; &rarr; i &rarr; &#9728;&#xFE0E; &ne; &#9728;&#xFE0E; &rarr; i &rarr; &#10523;.<br>
+&emsp;Computationally: running the verifier forward (checking a proof) is not<br>
+&emsp;the same as running the verifier backward (finding a proof).<br><br>
+3. DIMENSIONAL COST. The search space &Phi; has dimension 2<sup>n</sup> (exponential in input).<br>
+&emsp;The verification path has dimension n<sup>k</sup> (polynomial in input).<br>
+&emsp;&#10523; must navigate the full field; &#9728;&#xFE0E; follows one path.<br>
+&emsp;The ratio of costs is 2<sup>n</sup> / n<sup>k</sup> = superpolynomial for all k.<br><br>
+4. THE c ANALOGY. c = &radic;(2&#9680; &middot; sin &theta;) is the speed of emergence.<br>
+&emsp;Emergence propagates at finite speed through the field.<br>
+&emsp;Convergence (finding a specific 0 in the 1) requires examining the field itself.<br>
+&emsp;The speed of search is bounded by the structure of the field,<br>
+&emsp;not by the speed of propagation through it.
+  </div>
+</div>
+
+<h3>The time-asymmetry argument</h3>
+
+<p>The pump cycle's time-asymmetry is the deepest structural reason for P &ne; NP. In the framework: i&sup2; = &minus;1. Two quarter-turns do not return you to the starting position; they invert you. The cycle has a preferred direction: &#10523; &rarr; i &rarr; &#9728;&#xFE0E;, always in this order. Reversing the cycle (trying to turn verification into search) picks up a factor of &minus;1: the inversion. Computationally, this inversion manifests as exponential blowup.</p>
+
+<p>Consider a Boolean formula &phi; on n variables. Verification takes the witness &sigma; and checks &phi;(&sigma;) in time O(|&phi;|): one forward pass (&#9728;&#xFE0E;). Search must find &sigma; from the 2<sup>n</sup>-element space: convergence through the full field. The nondeterministic machine "guesses" &sigma; (direct convergence to &bull;, bypassing the field). The deterministic machine must simulate this guess by exploring &Phi;. The gap between guessing (instant convergence) and searching (traversing the field) is the gap between &#10523; and &#9728;&#xFE0E;.</p>
+
+<h3>Why the barriers do not block this argument</h3>
+
+<p>The structural asymmetry argument is:</p>
+
+<p><strong>Not relativizing</strong> because it depends on the internal structure of the pump cycle (the relationship between &#10523; and &#9728;&#xFE0E; within a computation), not on black-box oracle access. An oracle collapses the pump cycle to a single step, destroying the internal structure. The argument requires looking inside the cycle.</p>
+
+<p><strong>Not natural</strong> because the asymmetry is not a property of random functions (which are balanced between convergence and emergence by definition); it is a property of structured computations where the search space has specific topology (NP-complete problems have solutions that are sparse, structured convergence points, not random).</p>
+
+<p><strong>Not algebrizing</strong> because the asymmetry is topological (concerning the directionality of the cycle: i&sup2; = &minus;1), not algebraic (it does not depend on polynomial identities extending to low-degree extensions).</p>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;8</span> The Open Problem</h2>
+
+<div class="theorem-box required">
+  <div class="label">&#9744; Required; The Central Mathematical Challenge</div>
+  <div class="title">Step 7: Superpolynomial Circuit Lower Bound</div>
+  <p>What remains to be proven:</p>
+  <div class="math-block" style="border-left-color: var(--blue);">
+<strong>Conjecture.</strong> There exists a language L &isin; NP such that<br>
+no family of polynomial-size Boolean circuits {C<sub>n</sub>} computes L.<br><br>
+Equivalently: NP &nsubseteq; P/poly.<br><br>
+A proof would establish P &ne; NP (since P &sube; P/poly).<br><br>
+The difficulty is that general Boolean circuits can implement<br>
+the full pump cycle (all gates available, arbitrary depth and width),<br>
+and all known lower bound techniques fail for this model.
+  </div>
+  <p style="margin-top:12px;">The gap between step 6 and step 7 is the conversion gap: translating the structural insight (&#10523; &ne; &#9728;&#xFE0E;) into a concrete circuit complexity argument. The framework identifies what the proof must show (the directionality of the pump cycle imposes an exponential cost on inversion), but the technical machinery for proving circuit lower bounds in unrestricted models does not yet exist.</p>
+</div>
+
+<h3>Why this is the hardest Clay problem</h3>
+
+<p>P vs NP sits at 0.5D, the processual dimension closest to the aperture (0D). It asks about the most fundamental relationship in computation: the cost of search versus verification. Unlike the other Clay problems (which have substantial partial results), P vs NP has almost no provable partial progress toward the full separation. The restricted lower bounds (step 5) are real but do not extend. The barriers (steps 3-4) constrain what techniques can work but do not provide techniques that do work.</p>
+
+<p>The framework explains this difficulty: 0.5D is "between" dimensions. It is processual, not structural. The question is about the relationship between two operations (&#10523; and &#9728;&#xFE0E;), not about the structure of either one alone. Structural questions (0D, 1D, 2D, 3D) have definite answers: is it balanced, is it indivisible, does it hold, does it close. Processual questions (0.5D, 1.5D, 2.5D) ask about relationships: is this as fast as that, does this predict that, does this survive into that. Relational questions are harder because they require understanding both sides and the connection between them.</p>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;9</span> The Nondeterminism Reading</h2>
+
+<p>Nondeterminism in computation means the ability to guess correctly: at each branch point, the machine takes the right path without exploring the wrong ones. In the framework, this is direct convergence to &bull; without traversing &Phi;. The nondeterministic machine has a perfect aperture: it converges instantly to the answer.</p>
+
+<div class="theorem-box framework">
+  <div class="label">&#9672; Framework; Structural Identification</div>
+  <div class="title">Nondeterminism as Direct Convergence</div>
+  <div class="math-block" style="border-left-color: var(--purple);">
+<strong>Deterministic computation:</strong><br>
+The machine follows a single path through &Phi;. At each step, it commits<br>
+to one direction (1D: the worldline). To search, it must backtrack<br>
+(reverse &#10523;, explore alternative branches). Total cost: traversal of &Phi;.<br><br>
+<strong>Nondeterministic computation:</strong><br>
+The machine guesses the correct path (instant &#10523; to &bull;). No backtracking.<br>
+It then verifies (&#9728;&#xFE0E;) in polynomial time. Total cost: verification only.<br><br>
+<strong>The gap:</strong><br>
+Determinism commits to a worldline (1D). Nondeterminism operates at the field<br>
+level (&Phi;, 2D): it sees all paths simultaneously and selects the right one.<br>
+Simulating 2D field-level vision from a 1D worldline costs exponentially more,<br>
+because a 1D creature must traverse the 2D surface step by step.<br><br>
+This is the dimensional cost: 2D/1D = the field-to-worldline ratio.<br>
+The exponential comes from the branching factor at each step: 2<sup>n</sup> paths<br>
+explored by one worldline, one step at a time.
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;10</span> Connection to the Dimensional Ladder</h2>
+
+<table>
+<tr><th>Rung</th><th>Constant</th><th>Contribution to P vs NP</th></tr>
+<tr>
+  <td style="color: var(--gold);">0D</td>
+  <td>&alpha;</td>
+  <td>The coupling at a vertex. In computation: the cost of a single gate operation. &alpha; sets the scale of interaction. The question "P vs NP?" presupposes that individual operations have fixed cost (&alpha; is constant).</td>
+</tr>
+<tr>
+  <td style="color: #E88AAF; font-weight: 600;">0.5D</td>
+  <td style="font-weight: 600;">c</td>
+  <td style="font-weight: 600;">The speed of propagation. In computation: verification speed. c = 1 means one step per tick. The question is whether search can also achieve one step per tick (P = NP), or whether search requires exponentially more ticks (P &ne; NP). The framework says: c is the speed of emergence, and emergence is structurally different from convergence.</td>
+</tr>
+<tr>
+  <td style="color: var(--text-dim);">1D</td>
+  <td>&#8463;</td>
+  <td>The indivisible cycle. In computation: the minimum cost of a complete computation step. &#8463; = 1 means each step is atomic. Search requires at least 2<sup>n</sup> atomic steps; verification requires n<sup>k</sup>. The mass gap at 1D (Yang-Mills) is the computational analog of the minimum cycle cost.</td>
+</tr>
+</table>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;11</span> Score</h2>
+
+<table>
+<tr><th>Step</th><th>Content</th><th>Status</th><th>Source</th></tr>
+<tr>
+  <td>1</td>
+  <td>Cook-Levin (NP-completeness)</td>
+  <td><span class="status proven">proven</span></td>
+  <td>Cook (1971), Levin (1973)</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>Time hierarchy theorem</td>
+  <td><span class="status proven">proven</span></td>
+  <td>Hartmanis-Stearns (1965)</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>Relativization barrier</td>
+  <td><span class="status proven">proven</span></td>
+  <td>Baker-Gill-Solovay (1975)</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>Natural proofs + algebrization barriers</td>
+  <td><span class="status proven">proven</span></td>
+  <td>Razborov-Rudich (1997), Aaronson-Wigderson (2009)</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>Exponential lower bounds (restricted models)</td>
+  <td><span class="status proven">proven</span></td>
+  <td>Ajtai (1983), Razborov (1985), Smolensky (1987)</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>Structural asymmetry: &#10523; &ne; &#9728;&#xFE0E;</td>
+  <td><span class="status framework">framework</span></td>
+  <td>Circumpunct: pump cycle time-asymmetry (i&sup2; = &minus;1)</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>Superpolynomial circuit lower bound for SAT</td>
+  <td><span class="status open">required</span></td>
+  <td>Open (the Clay problem)</td>
+</tr>
+</table>
+
+<p><strong>Score: 5 proven, 1 framework, 1 required.</strong> The five proven steps establish the landscape: NP-completeness exists, time hierarchies are strict, three proof barriers constrain any valid argument, and exponential lower bounds hold in restricted models. The framework contributes the structural identification of P vs NP with the convergence/emergence asymmetry of the pump cycle. The remaining step is converting this structural insight into a concrete circuit lower bound that evades all three barriers.</p>
+
+<p>This is the most technically difficult of the seven Clay problems because it asks a processual question about the relationship between two operations, and the proof must simultaneously evade three known barriers while operating in the unrestricted model of Boolean circuits. The framework identifies what the answer is (P &ne; NP, because &#10523; &ne; &#9728;&#xFE0E;) and why the barriers do not block the argument (it is topological, not relativizing, natural, or algebrizing). The remaining gap is the formalization: converting the topological argument into circuit complexity machinery.</p>
+
+<!-- ============================================================ -->
+
+<div class="nav-bottom">
+  <p>&#8857;</p>
+  <p style="margin-top: 12px;">
+    <a href="clay_millennium.html">The Seven Clay Problems</a> &middot;
+    <a href="speed_of_light.html">c = sin(i): The Speed of the First Fold</a> &middot;
+    <a href="analytic_continuation_gap.html">0D: Riemann</a>
+  </p>
+  <p style="margin-top: 8px;">
+    <a href="yang_mills_proof_chain.html">&larr; 1D: Yang-Mills</a> &middot;
+    <a href="analytic_continuation_gap.html">0D: Riemann &rarr;</a>
+  </p>
+  <p style="margin-top: 8px;">
+    <a href="dimensional_ladder.html">The Dimensional Ladder</a>
+  </p>
+  <p style="margin-top: 16px; font-style: italic; color: var(--text-dim);">
+    Convergence is not emergence. Search is not verification. The inward stroke and the outward stroke are not the same.
+  </p>
+</div>
+
+</div><!-- .container -->
+
+</body>
+</html>
