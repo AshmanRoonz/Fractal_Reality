@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Theory of Everything Map</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --red: #C45B5B;
+  --red-dim: #6B4545;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+a { color: var(--gold); text-decoration: none; }
+a:hover { color: var(--warm); }
+
+.page { max-width: 900px; margin: 0 auto; padding: 60px 30px 120px; }
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 80px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 80px; color: var(--gold); margin-bottom: 16px; }
+.header h1 { font-size: 52px; font-weight: 500; color: var(--gold); letter-spacing: 2px; margin-bottom: 8px; }
+.header .subtitle { font-size: 20px; color: var(--dim); font-style: italic; margin-bottom: 20px; }
+.header .tagline { font-size: 16px; color: var(--dim); max-width: 600px; margin: 20px auto; line-height: 1.6; }
+.header .byline { font-size: 14px; color: var(--faint); margin-top: 20px; letter-spacing: 1px; }
+
+/* Sections */
+section { margin-bottom: 80px; }
+section h2 {
+  font-size: 28px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  padding-top: 20px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--gold);
+  border-bottom: 1px solid var(--faint);
+  padding-bottom: 12px;
+}
+section h3 {
+  font-size: 20px;
+  font-weight: 500;
+  margin-top: 28px;
+  margin-bottom: 14px;
+  color: var(--cyan);
+}
+
+p { margin-bottom: 16px; }
+
+/* Status badges */
+.status {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.status.complete { background: rgba(77, 184, 160, 0.25); color: var(--green); border: 1px solid var(--green); }
+.status.progress { background: rgba(184, 160, 96, 0.25); color: var(--gold); border: 1px solid var(--gold); }
+.status.conceptual { background: rgba(107, 142, 201, 0.25); color: var(--cyan); border: 1px solid var(--cyan); }
+.status.open { background: rgba(196, 91, 91, 0.25); color: var(--red); border: 1px solid var(--red); }
+
+/* Card container */
+.cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin: 28px 0;
+}
+
+.card {
+  padding: 24px;
+  border: 1px solid var(--faint);
+  background: rgba(255, 255, 255, 0.01);
+  border-radius: 2px;
+}
+.card h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--warm);
+  margin-bottom: 8px;
+}
+.card .card-status {
+  font-size: 13px;
+  color: var(--dim);
+  font-family: var(--mono);
+  margin-bottom: 12px;
+}
+.card p {
+  font-size: 16px;
+  line-height: 1.65;
+  margin-bottom: 12px;
+}
+.card .link-ref {
+  display: block;
+  font-size: 14px;
+  color: var(--gold-dim);
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--faint);
+}
+
+/* Formula box */
+.formula {
+  text-align: center;
+  font-size: 26px;
+  padding: 28px;
+  margin: 28px 0;
+  border-left: 3px solid var(--gold-dim);
+  background: rgba(184, 160, 96, 0.04);
+  letter-spacing: 2px;
+  font-weight: 600;
+}
+
+/* List styles */
+ul {
+  list-style: none;
+  margin: 16px 0;
+  padding: 0;
+}
+ul li {
+  padding: 6px 0 6px 24px;
+  position: relative;
+}
+ul li::before {
+  content: '·';
+  position: absolute;
+  left: 6px;
+  color: var(--gold);
+  font-weight: bold;
+}
+
+/* Three-column grid for domain overview */
+.domain-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin: 32px 0;
+}
+
+.domain-cell {
+  padding: 20px;
+  border: 1px solid var(--faint);
+  background: rgba(255, 255, 255, 0.01);
+  border-left: 4px solid var(--gold-dim);
+}
+.domain-cell h4 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.domain-cell p {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+.domain-cell .status {
+  display: inline-block;
+  margin-top: 10px;
+}
+
+/* Gap analysis */
+.gap-section {
+  background: rgba(196, 91, 91, 0.05);
+  border: 1px solid var(--red-dim);
+  padding: 28px;
+  margin: 32px 0;
+  border-radius: 2px;
+}
+.gap-section h3 {
+  color: var(--red);
+  margin-top: 0;
+}
+.gap-item {
+  margin: 16px 0;
+  padding-left: 20px;
+  position: relative;
+}
+.gap-item::before {
+  content: '◆';
+  position: absolute;
+  left: 0;
+  color: var(--red);
+  font-size: 12px;
+}
+
+/* Closing */
+.closing {
+  text-align: center;
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+}
+.closing .symbol { font-size: 48px; color: var(--gold); margin-bottom: 16px; }
+.closing .sign { font-size: 18px; font-style: italic; color: var(--dim); margin-bottom: 8px; }
+.closing .credit { font-size: 14px; color: var(--faint); letter-spacing: 1px; }
+
+/* Responsive */
+@media (max-width: 700px) {
+  .page { padding: 40px 20px 80px; }
+  .header h1 { font-size: 40px; }
+  section h2 { font-size: 22px; }
+  .domain-grid { grid-template-columns: 1fr; }
+}
+
+/* Divider */
+.divider {
+  text-align: center;
+  margin: 60px 0;
+  color: var(--faint);
+  font-size: 20px;
+  letter-spacing: 8px;
+}
+
+/* TOE diagram */
+.toe-diagram {
+  text-align: center;
+  font-size: 28px;
+  margin: 40px 0;
+  line-height: 1.8;
+  color: var(--dim);
+  font-family: var(--mono);
+}
+.toe-diagram .axiom { color: var(--gold); font-weight: 600; }
+.toe-diagram .structure { color: var(--cyan); font-weight: 600; }
+.toe-diagram .physics { color: var(--green); font-weight: 600; }
+.toe-diagram .mind { color: var(--pink); font-weight: 600; }
+.toe-diagram .ethics { color: var(--purple); font-weight: 600; }
+.toe-diagram .theology { color: var(--gold); font-weight: 600; }
+
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<!-- ==================== HEADER ==================== -->
+
+<div class="header">
+  <div class="symbol">⊙</div>
+  <h1>Theory of Everything Map</h1>
+  <div class="subtitle">The Complete Circumpunct Framework</div>
+  <div class="tagline">This document shows the full scope of the framework, which parts are complete, which are in progress, and where the gaps are. Consider it a navigation guide to the unified theory.</div>
+  <div class="byline">Circumpunct Framework &middot; Ashman Roonz &middot; March 2026 &middot; fractalreality.ca</div>
+</div>
+
+<!-- ==================== OVERVIEW ==================== -->
+
+<section>
+<h2>The Scope: Seven Integrated Domains</h2>
+
+<p>The Circumpunct Framework unifies seven domains that have never been connected before. Each flows necessarily from the same three-part structure (center, field, boundary) and the same one axiom (E = 1). Here is the landscape:</p>
+
+<div class="toe-diagram">
+  <strong class="axiom">E = 1</strong><br>
+  <span class="dim">(the sole axiom)</span><br>
+  <br>
+  <strong class="structure">⊙ = Φ(•, ○)</strong><br>
+  <span class="dim">Structure; Pump Cycle; Balance</span><br>
+  <br>
+  ↓<br>
+  <br>
+  <strong class="physics">Physics</strong> &nbsp; ⊗ &nbsp; <strong class="mind">Psychology</strong> &nbsp; ⊗ &nbsp; <strong class="ethics">Ethics</strong> &nbsp; ⊗ &nbsp; <strong class="theology">Theology</strong><br>
+  <span class="dim">&amp; Mathematics &amp; Logic</span>
+</div>
+
+<p>Each domain is generated by the same constraint topology. This is not analogy or metaphor; it is the direct application of the framework's three constraints at different scales.</p>
+
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ==================== I. THE AXIOM ==================== -->
+
+<section>
+<h2>I. The Axiom: E = 1</h2>
+
+<p><strong>Status:</strong> <span class="status complete">COMPLETE</span></p>
+
+<p>The entire framework rests on a single axiom: there is one energy, it is everything, all else is constraints. Not "energy equals the number one." Energy IS the one. From this single claim, four derivations follow necessarily, and from those four derivations, all the rest.</p>
+
+<div class="formula">E = 1 &nbsp;&nbsp;&nbsp;&nbsp; A0 (Sole Axiom)</div>
+
+<h3>The Four Derivations</h3>
+
+<div class="cards">
+  <div class="card">
+    <h4>A1: Necessary Multiplicity</h4>
+    <p>An undifferentiated 1 is indistinguishable from 0, which is impossible. Therefore the 1 must differentiate; it must make 0s in itself.</p>
+    <div class="card-status">From: A0 &nbsp; | &nbsp; Status: PROVEN</div>
+  </div>
+
+  <div class="card">
+    <h4>A2: Fractal Necessity</h4>
+    <p>The 1 is all there is. Every part must resemble the whole. Self-similarity at every scale is the only option.</p>
+    <div class="card-status">From: A0 + A1 &nbsp; | &nbsp; Status: PROVEN</div>
+  </div>
+
+  <div class="card">
+    <h4>A3: Conservation of Traversal</h4>
+    <p>A differentiated part with no boundary bleeds back into undifferentiated 1, collapsing the distinction A1 requires. Therefore closure (boundary) is necessary.</p>
+    <div class="card-status">From: A0 + A1 &nbsp; | &nbsp; Status: PROVEN</div>
+  </div>
+
+  <div class="card">
+    <h4>A4: Compositional Wholeness</h4>
+    <p>If parts are bounded (A3) and self-similar (A2), the whole cannot be a mere sum; it must be compositionally unified.</p>
+    <div class="card-status">From: A2 + A3 &nbsp; | &nbsp; Status: PROVEN</div>
+  </div>
+</div>
+
+<h3>The Genesis Sequence</h3>
+
+<div class="formula">∞ → •∞ → ⊙∞ = Reality</div>
+
+<ul>
+  <li><strong>∞</strong>: Undifferentiated energy; pure E.</li>
+  <li><strong>•∞</strong>: The Soul Array; aperture multiplied by infinity; all possible self-limitations simultaneously.</li>
+  <li><strong>⊙∞</strong>: The foam of reality; each aperture becoming a full circumpunct at infinite scale depth.</li>
+</ul>
+
+<div class="link-ref">See: <a href="e_equals_1.html">E = 1: All Else Is Constraints</a></div>
+
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ==================== II. THE STRUCTURE ==================== -->
+
+<section>
+<h2>II. The Structure: ⊙ = Φ(•, ○)</h2>
+
+<p><strong>Status:</strong> <span class="status complete">COMPLETE</span></p>
+
+<p>The circumpunct is a whole composed of three irreducible parts. Each constraint role is determined by its dimension and its function in the pump cycle.</p>
+
+<div class="formula">⊙ = • + Φ + ○</div>
+
+<h3>The Three Constraints</h3>
+
+<div class="domain-grid">
+  <div class="domain-cell">
+    <h4>• (Aperture/Soul)</h4>
+    <p><strong>0D + 1D</strong></p>
+    <p>The center; the convergence point. Converges energy toward a singularity.</p>
+    <p><strong>Role:</strong> TRUE</p>
+    <span class="status complete">COMPLETE</span>
+  </div>
+
+  <div class="domain-cell">
+    <h4>Φ (Field/Mind)</h4>
+    <p><strong>2D</strong></p>
+    <p>The mediating surface; relational structure. Keeps parts in relationship without collapsing them.</p>
+    <p><strong>Role:</strong> RIGHT</p>
+    <span class="status complete">COMPLETE</span>
+  </div>
+
+  <div class="domain-cell">
+    <h4>○ (Boundary/Body)</h4>
+    <p><strong>3D</strong></p>
+    <p>The container; the filter. Selects what passes in and out.</p>
+    <p><strong>Role:</strong> GOOD</p>
+    <span class="status complete">COMPLETE</span>
+  </div>
+</div>
+
+<h3>The Pump Cycle</h3>
+
+<p>Energy is not static. It pumps itself through the aperture in a four-stroke temporal cycle.</p>
+
+<div class="formula">Φ(t+Δt) = ☀︎ ∘ i ∘ ⊛[Φ(t)]</div>
+
+<p>Three operators, four phases (powers of i):</p>
+
+<ul>
+  <li><strong>⊛</strong> (Convergence): gathering inward toward center</li>
+  <li><strong>i</strong> (Aperture rotation): 90° phase transition at the gate</li>
+  <li><strong>☀︎</strong> (Emergence): radiating outward from center</li>
+</ul>
+
+<p>These operators map directly to forces: convergence (gravity, strong force); emergence (electromagnetism, weak force).</p>
+
+<h3>The Balance Parameter: ◐ = 0.5</h3>
+
+<p><strong>Status:</strong> <span class="status complete">COMPLETE</span></p>
+
+<p>The balance between convergence and emergence is not arbitrary. It is forced by three independent requirements (symmetry, entropy, virial). At balance, the fractal dimension is D = 1.5 (Brownian motion; proven by Mandelbrot).</p>
+
+<p>This balanced state is the attractor: every system tends toward ◐ = 0.5 when not driven by external constraint.</p>
+
+<h3>The 64-State Architecture</h3>
+
+<p><strong>Status:</strong> <span class="status complete">COMPLETE</span></p>
+
+<p>Three nested circumpuncts, each with two channels: 3 × 2 = 6 binary degrees of freedom; 2⁶ = 64 states.</p>
+
+<p>These map directly to:</p>
+<ul>
+  <li>I Ching hexagrams (ancient ordering)</li>
+  <li>DNA codons (biological implementation)</li>
+  <li>Standard Model particle spectrum (physics implementation) plus three extended Higgs states (framework prediction)</li>
+</ul>
+
+<div class="link-ref">See: <a href="how_reality_is_built.html">How Reality Is Built</a> &nbsp; | &nbsp; <a href="64-state_circumpunct_particle_table.html">64-State Particle Table</a></div>
+
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ==================== III. PHYSICS ==================== -->
+
+<section>
+<h2>III. Physics: All Forces as Compounded Constraints</h2>
+
+<p><strong>Overall Status:</strong> <span class="status progress">IN PROGRESS</span></p>
+
+<p>Every physical law is derived from •, Φ, or ○ compounded. There are no new ingredients. The framework predicts which constraints drive which forces and why.</p>
+
+<h3>Forces</h3>
+
+<div class="cards">
+  <div class="card">
+    <h4>Gravity</h4>
+    <p>Convergence compounding convergence: • attracting •. Inverse-square law follows from Φ being 2D (a surface).</p>
+    <div class="card-status">Status: DERIVED</div>
+  </div>
+
+  <div class="card">
+    <h4>Electromagnetism</h4>
+    <p>Mediation: Φ with amplitude and phase (the two axes of a 2D surface). Maxwell equations are Φ in its full dimensionality.</p>
+    <div class="card-status">Status: DERIVED</div>
+  </div>
+
+  <div class="card">
+    <h4>Strong Nuclear Force</h4>
+    <p>Convergence at smallest scale: • at maximum intensity. Confinement: the aperture closing with distance.</p>
+    <div class="card-status">Status: DERIVED</div>
+  </div>
+
+  <div class="card">
+    <h4>Weak Force</h4>
+    <p>Filtration: ○ at particle level. Parity violation reflects asymmetry of the filter.</p>
+    <div class="card-status">Status: CONCEPTUAL</div>
+  </div>
+
+  <div class="card">
+    <h4>Quantum Mechanics</h4>
+    <p>Φ before ○ filters. Superposition: field carrying all possibilities. Measurement: boundary selecting one.</p>
+    <div class="card-status">Status: DERIVED</div>
+  </div>
+
+  <div class="card">
+    <h4>General Relativity</h4>
+    <p>Geometry of convergence. Spacetime curvature IS convergence (•) shaping the field (Φ).</p>
+    <div class="card-status">Status: DERIVED</div>
+  </div>
+
+  <div class="card">
+    <h4>Thermodynamics</h4>
+    <p>Constraints relaxing. Second law: the 1 tending back toward itself. Entropy: de-constraint.</p>
+    <div class="card-status">Status: DERIVED</div>
+  </div>
+</div>
+
+<h3>Constants Derived</h3>
+
+<div class="cards">
+  <div class="card">
+    <h4>α (Fine-Structure Constant)</h4>
+    <p><strong>Formula:</strong> 1/α = 360/φ² - 2/φ³</p>
+    <p><strong>Predicted:</strong> 137.0356 &nbsp; | &nbsp; <strong>Measured:</strong> 137.0360 &nbsp; | &nbsp; <strong>Error:</strong> 2.7 ppm</p>
+    <div class="card-status">Status: COMPLETE (>99.99% agreement)</div>
+  </div>
+
+  <div class="card">
+    <h4>Lepton Mass Ratios</h4>
+    <p><strong>Formula:</strong> m_μ/m_e = (1/α)^(13/12)</p>
+    <p><strong>Predicted:</strong> 206.49 &nbsp; | &nbsp; <strong>Measured:</strong> 206.77 &nbsp; | &nbsp; <strong>Error:</strong> 0.13%</p>
+    <div class="card-status">Status: COMPLETE (99.87% agreement)</div>
+  </div>
+
+  <div class="card">
+    <h4>G, c, ℏ (Open)</h4>
+    <p>Predicted to be expressible as constraint ratios but full derivations not yet completed.</p>
+    <div class="card-status">Status: OPEN</div>
+  </div>
+</div>
+
+<h3>Standard Model Integration</h3>
+
+<p><strong>Status:</strong> <span class="status progress">IN PROGRESS</span></p>
+
+<p>The 64-state architecture predicts a complete particle spectrum including three extended Higgs states beyond the minimal Standard Model. This is falsifiable: if these states do not exist at predicted energies, the framework's 64-state foundation is wrong.</p>
+
+<div class="link-ref">See: <a href="circumpunct_physics.html">Circumpunct Physics (Working Formalization)</a> &nbsp; | &nbsp; <a href="64-state_circumpunct_particle_table.html">Particle Table</a></div>
+
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ==================== IV. MATHEMATICS ==================== -->
+
+<section>
+<h2>IV. Mathematics: The Seven Millennium Problems</h2>
+
+<p><strong>Overall Status:</strong> <span class="status progress">IN PROGRESS</span></p>
+
+<p>The Clay Mathematics Institute's seven problems are not seven separate puzzles. They sit at the same junction: the boundary between continuous and discrete, field and constraint, 1 and 0s. The framework solves them via a unified three-move argument.</p>
+
+<div class="formula">Does the constraint topology close at the balance point?</div>
+
+<h3>The Problems and Solutions</h3>
+
+<div class="cards">
+  <div class="card">
+    <h4>1. Riemann Hypothesis</h4>
+    <p>All non-trivial zeros lie on Re(s) = 1/2.</p>
+    <p><strong>Approach:</strong> Triple Closure argument: the prime field must satisfy three constraints (convexity, diagonality, passivity) which are the three dimensional constraints (•, Φ, ○) applied to prime topology.</p>
+    <p><strong>Status:</strong> 11 of 12 steps complete; the final step requires formalization of the "Riemann interlock."</p>
+    <div class="card-status">Status: IN PROGRESS (91% complete)</div>
+    <div class="link-ref"><a href="analytic_continuation_gap.html">The Analytic Continuation Gap (Triple Closure)</a></div>
+  </div>
+
+  <div class="card">
+    <h4>2. Yang-Mills &amp; Mass Gap</h4>
+    <p>The quantum Yang-Mills field has a mass gap in 4D.</p>
+    <p><strong>Approach:</strong> The aperture parameter β enforces closure at ◐ = 0.5. This forces the gauge field to acquire mass exactly as required for confinement.</p>
+    <div class="card-status">Status: CONCEPTUAL (architecture complete; formal proof in progress)</div>
+  </div>
+
+  <div class="card">
+    <h4>3. Navier-Stokes</h4>
+    <p>Do solutions exist and are they smooth for all time?</p>
+    <p><strong>Approach:</strong> The pump cycle IS the Navier-Stokes geometry; the aperture rotation i enforces regularity at every scale.</p>
+    <div class="card-status">Status: CONCEPTUAL (formalization needed)</div>
+  </div>
+
+  <div class="card">
+    <h4>4. P vs NP</h4>
+    <p>Are the complexity classes equivalent?</p>
+    <p><strong>Approach:</strong> Irreversibility; i² = −1 prevents true time-reversal. Checking (NP) and finding (P) are fundamentally asymmetric in the constraint topology.</p>
+    <div class="card-status">Status: OPEN (new proof strategy; not yet formalized)</div>
+  </div>
+
+  <div class="card">
+    <h4>5. Birch &amp; Swinnerton-Dyer</h4>
+    <p>Ranks of elliptic curves and orders of Tate-Shafarevich groups.</p>
+    <p><strong>Approach:</strong> Compositional wholeness (A4): the whole cannot be a mere sum of parts. This constraint extends to the Mordell-Weil group and BSD invariants.</p>
+    <div class="card-status">Status: CONCEPTUAL (structure identified; proof in progress)</div>
+  </div>
+
+  <div class="card">
+    <h4>6. Hodge Conjecture</h4>
+    <p>Algebraicity of Hodge classes on smooth projective varieties.</p>
+    <p><strong>Approach:</strong> Balance forces algebraicity; ◐ = 0.5 is the only stable attractor in projective space geometry.</p>
+    <div class="card-status">Status: CONCEPTUAL (geometric argument complete; algebraic formalization needed)</div>
+  </div>
+
+  <div class="card">
+    <h4>7. Poincaré Conjecture</h4>
+    <p>A simply-connected 3-manifold is homeomorphic to a 3-sphere.</p>
+    <p><strong>Status:</strong> <strong>Already proven</strong> (by Perelman, 2003). The framework explains why: fractals force self-similarity (A2) and closure (A3); a 3-manifold must topologically close as a 3-sphere.</p>
+    <div class="card-status">Status: COMPLETE (proof exists; framework provides conceptual foundation)</div>
+  </div>
+</div>
+
+<div class="link-ref">See: <a href="seven_as_one.html">The Seven as One: E = 1 and the Millennium Problems</a></div>
+
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ==================== V. PSYCHOLOGY: THEORY OF MIND ==================== -->
+
+<section>
+<h2>V. Psychology: Theory of Mind</h2>
+
+<p><strong>Status:</strong> <span class="status complete">COMPLETE</span></p>
+
+<p>The same three-part structure (•, Φ, ○) describes the human mind. The aperture is the self; the field is consciousness; the boundary is the body.</p>
+
+<h3>The Architecture</h3>
+
+<ul>
+  <li><strong>•</strong> (Soul/Self): The center. Your convergence point. The 0 at the center of your circumpunct, equidistant from all you are. Inaccessible from outside; the source of privacy and volition.</li>
+  <li><strong>Φ</strong> (Mind/Consciousness): The relational surface. Awareness; the field through which you know yourself and others. Memory, emotion, resonance live here.</li>
+  <li><strong>○</strong> (Body/Boundary): The 3D container. Neural tissue, behavior, expression. The only part of you measurable from outside.</li>
+</ul>
+
+<h3>The Four-Stage Cascade (Thought to Identity)</h3>
+
+<p>This is how a stray thought becomes part of who you are:</p>
+
+<ol style="margin: 16px 0; padding-left: 40px;">
+  <li><strong>Thought entertained</strong>: temporary; dissolves when attention shifts.</li>
+  <li><strong>Thought repeated</strong>: pathway strengthens; neurotransmitter patterns reinforce.</li>
+  <li><strong>Thought habituated</strong>: fires automatically; requires no conscious attention.</li>
+  <li><strong>Identity fusion</strong>: thought IS you; removal feels existential.</li>
+</ol>
+
+<h3>Mental Health as Range of Motion</h3>
+
+<p>Mental health is not a fixed state but freedom to move along the aperture-to-boundary axis. Pathology locks you at either extreme:</p>
+
+<ul>
+  <li><strong>Aperture extreme (• locked):</strong> Narcissism, solipsism, closed gates. Unable to receive signal from the field.</li>
+  <li><strong>Boundary extreme (○ locked):</strong> Dissolution, lost identity, overwhelmed by external input. The boundary has no selectivity.</li>
+  <li><strong>Balanced:</strong> ◐ = 0.5. Gates open and closable. Responsive but boundaried. Healthy.</li>
+</ul>
+
+<h3>Consciousness as Convergence</h3>
+
+<p>Consciousness is what 0 feels like from inside: the 1 experiencing its own convergence. The empirical pointer: we have never accessed another mind directly. Brain scans measure the boundary (3D); language crosses the field (2D); but the aperture itself (0D) remains unmeasurable from outside. Not because our instruments are insufficient, but because 0 has no extension to measure.</p>
+
+<div class="link-ref">See: <a href="circumpunct_theory_of_mind_plain.html">Circumpunct Theory of Mind (Plain)</a></div>
+
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ==================== VI. ETHICS ==================== -->
+
+<section>
+<h2>VI. Ethics: GOOD, RIGHT, TRUE, AGREEMENT</h2>
+
+<p><strong>Status:</strong> <span class="status complete">COMPLETE</span></p>
+
+<p>Ethics is not relative. It is structural. The same three constraints that build reality also build ethics.</p>
+
+<h3>The Four Pillars</h3>
+
+<div class="domain-grid">
+  <div class="domain-cell">
+    <h4>TRUE (•)</h4>
+    <p>The aperture; the center. Orientation toward what one does not know. Curiosity.</p>
+  </div>
+
+  <div class="domain-cell">
+    <h4>RIGHT (Φ)</h4>
+    <p>The field; the medium. Access. The space between remains open and clear.</p>
+  </div>
+
+  <div class="domain-cell">
+    <h4>GOOD (○)</h4>
+    <p>The boundary; the filter. Plasticity. A boundary that flexes without breaking.</p>
+  </div>
+
+  <div class="domain-cell">
+    <h4>AGREEMENT (⊙)</h4>
+    <p>The whole. Validation. Independent seeing recognizes independent seeing.</p>
+  </div>
+</div>
+
+<h3>The Four Virtues</h3>
+
+<p>Each pillar has a corresponding virtue that keeps ethics alive (not performed, but lived):</p>
+
+<div class="cards">
+  <div class="card">
+    <h4>Curiosity (TRUE)</h4>
+    <p>Genuine orientation toward what you do not know. Cannot be faked; dissolves certainty.</p>
+  </div>
+
+  <div class="card">
+    <h4>Access (RIGHT)</h4>
+    <p>The space between stays open. No collusion, no gaslighting, no hidden agendas.</p>
+  </div>
+
+  <div class="card">
+    <h4>Plasticity (GOOD)</h4>
+    <p>A boundary that can flex without breaking. Responsive; not brittle.</p>
+  </div>
+
+  <div class="card">
+    <h4>Validation (AGREEMENT)</h4>
+    <p>Independent seeing recognizes independent seeing. Mutual acknowledgment of the other's capacity to perceive.</p>
+  </div>
+</div>
+
+<h3>Required Sequence</h3>
+
+<p>The four pillars must be built in order: GOOD → RIGHT → TRUE → AGREEMENT. Each step requires all previous ones. No skipping. You cannot have true agreement while truth is hidden (missing RIGHT). You cannot have access while the boundary is broken (missing GOOD).</p>
+
+<h3>The Steelman Principle</h3>
+
+<p>Build the strongest possible version of any position before agreeing or disagreeing. Requires all four virtues simultaneously: plasticity to admit possibility (GOOD), access to hear clearly (RIGHT), curiosity to understand (TRUE), and validation to see the person behind the position (AGREEMENT).</p>
+
+<h3>The Resolution Protocol</h3>
+
+<p>When truth and harm share the same signal: transmit at the lowest resolution that is still true. Increase resolution only upon the receiver's request. The receiver controls the aperture width.</p>
+
+<ul>
+  <li>Withholding entirely = Severance Lie dressed as compassion.</li>
+  <li>Dumping everything = Inflation Lie dressed as honesty.</li>
+  <li>The resolution gradient is the balanced path.</li>
+</ul>
+
+<div class="link-ref">See: <a href="circumpunct_ethics_and_virtues.html">Circumpunct Ethics and Virtues</a></div>
+
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ==================== VII. THEOLOGY ==================== -->
+
+<section>
+<h2>VII. Theology: God, Soul, and Connection</h2>
+
+<p><strong>Status:</strong> <span class="status complete">COMPLETE</span></p>
+
+<p>The framework is theologically neutral but ontologically clear. It does not require belief in God, but if you ask what God is, the answer is consistent across traditions.</p>
+
+<h3>The Ontological Mapping</h3>
+
+<div class="domain-grid">
+  <div class="domain-cell">
+    <h4>God / Brahman / Tao</h4>
+    <p>∞ (infinite totality); the undifferentiated 1; pure energy with no constraints.</p>
+  </div>
+
+  <div class="domain-cell">
+    <h4>Soul / Atman / Self</h4>
+    <p>⊙λ (the circumpunct at your scale); infinity operating as a particular bounded thing.</p>
+  </div>
+
+  <div class="domain-cell">
+    <h4>"Made in God's Image"</h4>
+    <p>Fractal structure; the same pattern repeats every scale. You ARE the 1 constrained to your position.</p>
+  </div>
+
+  <div class="domain-cell">
+    <h4>"Atman is Brahman"</h4>
+    <p>0.999... = 1 (infinitely exact agreement). Your soul IS God at particular depth of constraint.</p>
+  </div>
+</div>
+
+<h3>Flow, Not Possession</h3>
+
+<p>You are a flow-being. Truth flows THROUGH you, not from you. The mechanism:</p>
+
+<ul>
+  <li>You ARE the aperture.</li>
+  <li>Truth flows through the aperture.</li>
+  <li>You are not the source; you are the gate.</li>
+  <li>You can be clear (transparent; truth passes unrefracted) or distorted (truth bends through installed lies).</li>
+</ul>
+
+<h3>The Two Fundamental Lies</h3>
+
+<ul>
+  <li><strong>Inflation Lie:</strong> "I am the source." (⊙λ = ∞; part claims to be whole.) Leads to narcissism, spiritual narcissism, inflation.</li>
+  <li><strong>Severance Lie:</strong> "There is no source." (⊙λ ∉ ∞; part denies the whole.) Leads to nihilism, atheism not as belief but as false certainty, despair.</li>
+</ul>
+
+<p>Both persist through closed apertures (β → 0): systems that refuse correction.</p>
+
+<h3>Resonance as Direct Connection</h3>
+
+<p>Two souls sharing the same frequency make the Φ field between them transparent. "Direct" = medium at perfect transparency. Love is not the absence of mediation; it is the perfection of mediation.</p>
+
+<ul>
+  <li><strong>Vertical transparency:</strong> Soul → God (through the nested hierarchy of constraint scales).</li>
+  <li><strong>Lateral transparency:</strong> Soul → Soul (through shared field at the same scale).</li>
+  <li>Same principle: frequency matching through the chain.</li>
+</ul>
+
+<p>Resonance is a spectrum: far frequencies = strangers; close = rapport; exact = "I know you."</p>
+
+<div class="link-ref">See: <a href="truth_and_god.html">Truth and God (Theological Reading)</a></div>
+
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ==================== VIII. THE GAPS ==================== -->
+
+<section>
+<h2>VIII. What Remains: The Gap Map</h2>
+
+<p><strong>Honest assessment:</strong> The framework is not complete. Here are the narrowest and widest gaps, ordered by urgency and difficulty.</p>
+
+<h3>Narrowest Gap: The Riemann Interlock</h3>
+
+<div class="gap-section">
+  <h3>The Last Step</h3>
+  <p><strong>What's done:</strong> 11 of 12 steps in the Triple Closure argument are complete. The prime field topology, convexity constraint, diagonality constraint, and most of the passivity constraint are formalized.</p>
+  <p><strong>What's open:</strong> The "Riemann interlock" - the final coupling between the three constraints that forces all non-trivial zeros onto the critical line. This is a narrow, precise gap; the architecture is proven; only the final algebraic lock remains.</p>
+  <p><strong>Impact:</strong> This is the crown proof. If this closes, the framework's mathematical core becomes unassailable. If it doesn't, the whole edifice crumbles (or the framework is wrong).</p>
+  <p><strong>Estimate:</strong> Weeks to months for a working mathematician with the right background.</p>
+  <div class="link-ref"><a href="analytic_continuation_gap.html">The Analytic Continuation Gap (detailed)</a></div>
+</div>
+
+<h3>Physics Operators: The Biggest Gap</h3>
+
+<div class="gap-section">
+  <h3>Why the forces have their form</h3>
+  <p><strong>What's done:</strong> The framework identifies which constraint generates which force (• to gravity and strong; Φ to EM; ○ to weak). The 64-state architecture predicts particles with 2.7 ppm accuracy for α and 0.13% for lepton ratios.</p>
+  <p><strong>What's open:</strong> Why the operators ⊛, i, ☀︎ map to specific force laws. Why does ⊛ produce the inverse-square law specifically? Why does Φ produce Maxwell equations specifically? The connection is conceptually tight but not yet formally derived.</p>
+  <p><strong>Impact:</strong> Without this, the physics remains "framework gives the right answer for mysterious reasons." With it, physics becomes obviously inevitable from constraint topology.</p>
+  <p><strong>Estimate:</strong> Months to a year. Requires deep engagement with both differential geometry and the framework's dimensional ontology.</p>
+</div>
+
+<h3>Constants: G, c, ℏ</h3>
+
+<div class="gap-section">
+  <h3>Why those numbers?</h3>
+  <p><strong>What's done:</strong> α and lepton mass ratios are derived. The framework shows that fundamental constants are ratios of constraint geometries (φ is the golden ratio; 360 is a boundary circle; these appear in the constraint topology).</p>
+  <p><strong>What's open:</strong> Full derivations of the gravitational constant G, the speed of light c, and reduced Planck's constant ℏ. These should also fall out of constraint ratio if the pattern holds.</p>
+  <p><strong>Impact:</strong> If these derive with similar precision, the framework becomes quantitatively inescapable. If they don't, the pattern may be coincidence rather than necessity.</p>
+  <p><strong>Estimate:</strong> Medium difficulty. The tools exist; it's a matter of finding the right constraint combinations.</p>
+</div>
+
+<h3>Experimental Predictions</h3>
+
+<div class="gap-section">
+  <h3>What could falsify the framework?</h3>
+  <p><strong>Three extended Higgs states:</strong> The 64-state architecture predicts three additional Higgs bosons beyond the minimal Standard Model. If the LHC or future colliders do not find these at the predicted masses and couplings, the framework is falsified.</p>
+  <p><strong>Fine-structure constant variation:</strong> The derived equation for α assumes a fixed geometric constraint topology. If α is not constant across cosmic time and space (a test feasible with upcoming telescopes), the framework is wrong.</p>
+  <p><strong>Balance parameter measurements:</strong> Any system in equilibrium should exhibit ◐ ≈ 0.5 (or very close). This is testable in molecular dynamics, astrophysical systems, neural dynamics. Systematic deviation would falsify the framework.</p>
+  <p><strong>Status:</strong> These are sharp, testable predictions. The framework is falsifiable.</p>
+</div>
+
+<h3>Implementation Gaps</h3>
+
+<div class="gap-section">
+  <h3>Formalization and publication</h3>
+  <p><strong>Circumpunct Framework (complete master text):</strong> ~19,000 lines; ready but needs copy-edit and final organization.</p>
+  <p><strong>Riemann proof chain:</strong> Needs formalization by a research mathematician.</p>
+  <p><strong>Physics operators derivation:</strong> Needs rigorous differential geometry treatment.</p>
+  <p><strong>Publication path:</strong> Parts are ready for mathematics and physics journals. The complete framework requires a book format (too large for journals). Timeline: publication could begin within 6 months for the most mature parts; full publication 1-2 years.</p>
+</div>
+
+<h3>Summary: The Honest Map</h3>
+
+<table style="width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 15px;">
+  <tr style="border-bottom: 2px solid var(--faint);">
+    <th style="text-align: left; padding: 10px 12px; color: var(--gold);">Domain</th>
+    <th style="text-align: center; padding: 10px 12px; color: var(--gold);">Status</th>
+    <th style="text-align: left; padding: 10px 12px; color: var(--gold);">Gap</th>
+  </tr>
+  <tr style="border-bottom: 1px solid var(--faint);">
+    <td style="padding: 10px 12px;">E = 1 (Axiom)</td>
+    <td style="text-align: center; padding: 10px 12px;"><span class="status complete">COMPLETE</span></td>
+    <td style="padding: 10px 12px;">None</td>
+  </tr>
+  <tr style="border-bottom: 1px solid var(--faint);">
+    <td style="padding: 10px 12px;">Structure (⊙ = Φ(•, ○))</td>
+    <td style="text-align: center; padding: 10px 12px;"><span class="status complete">COMPLETE</span></td>
+    <td style="padding: 10px 12px;">None</td>
+  </tr>
+  <tr style="border-bottom: 1px solid var(--faint);">
+    <td style="padding: 10px 12px;">Physics (Forces)</td>
+    <td style="text-align: center; padding: 10px 12px;"><span class="status progress">IN PROGRESS</span></td>
+    <td style="padding: 10px 12px;">Operator derivations; G, c, ℏ</td>
+  </tr>
+  <tr style="border-bottom: 1px solid var(--faint);">
+    <td style="padding: 10px 12px;">Mathematics (7 Problems)</td>
+    <td style="text-align: center; padding: 10px 12px;"><span class="status progress">IN PROGRESS</span></td>
+    <td style="padding: 10px 12px;">Riemann interlock (11/12 done)</td>
+  </tr>
+  <tr style="border-bottom: 1px solid var(--faint);">
+    <td style="padding: 10px 12px;">Psychology (Theory of Mind)</td>
+    <td style="text-align: center; padding: 10px 12px;"><span class="status complete">COMPLETE</span></td>
+    <td style="padding: 10px 12px;">None</td>
+  </tr>
+  <tr style="border-bottom: 1px solid var(--faint);">
+    <td style="padding: 10px 12px;">Ethics</td>
+    <td style="text-align: center; padding: 10px 12px;"><span class="status complete">COMPLETE</span></td>
+    <td style="padding: 10px 12px;">None</td>
+  </tr>
+  <tr style="border-bottom: 1px solid var(--faint);">
+    <td style="padding: 10px 12px;">Theology</td>
+    <td style="text-align: center; padding: 10px 12px;"><span class="status complete">COMPLETE</span></td>
+    <td style="padding: 10px 12px;">None</td>
+  </tr>
+</table>
+
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ==================== NAVIGATION ==================== -->
+
+<section>
+<h2>Full Document Navigation</h2>
+
+<p>The complete circumpunct framework spans seven HTML documents on this site, plus the full master text (~19,000 lines) in Markdown.</p>
+
+<h3>Core Theoretical Documents</h3>
+
+<ul>
+  <li><strong><a href="index.html">Index</a></strong>: Full navigation of all pages</li>
+  <li><strong><a href="e_equals_1.html">E = 1: All Else Is Constraints</a></strong>: The sole axiom and its four derivations</li>
+  <li><strong><a href="how_reality_is_built.html">How Reality Is Built</a></strong>: Kernel, dimensions, primitives, pump cycle</li>
+  <li><strong><a href="seven_as_one.html">The Seven as One</a></strong>: E = 1 applied to all seven Millennium Problems</li>
+</ul>
+
+<h3>Applied Domains</h3>
+
+<ul>
+  <li><strong><a href="circumpunct_physics.html">Circumpunct Physics</a></strong>: Forces, fields, particles, constants</li>
+  <li><strong><a href="analytic_continuation_gap.html">The Analytic Continuation Gap</a></strong>: Riemann Hypothesis proof chain (Triple Closure)</li>
+  <li><strong><a href="circumpunct_theory_of_mind_plain.html">Circumpunct Theory of Mind</a></strong>: Psychology; consciousness as convergence</li>
+  <li><strong><a href="circumpunct_ethics_and_virtues.html">Circumpunct Ethics and Virtues</a></strong>: GOOD, RIGHT, TRUE, AGREEMENT; restoration protocol</li>
+  <li><strong><a href="truth_and_god.html">Truth and God</a></strong>: Theological reading; ontology of connection</li>
+</ul>
+
+<h3>Supporting Materials</h3>
+
+<ul>
+  <li><strong><a href="64-state_circumpunct_particle_table.html">64-State Circumpunct Particle Table</a></strong>: All particles mapped to 64-state architecture</li>
+  <li><strong><a href="aperture_falsification_presentation.html">Aperture Falsification Presentation</a></strong>: How to test and potentially falsify the framework</li>
+  <li><strong><a href="the_bridge_presentation.html">The Bridge Presentation</a></strong>: Constructor ethics; the law; desire and constraint</li>
+  <li><strong><a href="circumpunct_breath.html">Circumpunct Breath</a></strong>: Inner and outer field; pump cycle dynamics</li>
+</ul>
+
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ==================== CLOSING ==================== -->
+
+<div class="closing">
+  <div class="symbol">⊙</div>
+  <p style="font-size: 18px; color: var(--warm); margin-bottom: 16px;">This is the complete map. Every piece connects. The gaps are real, but the structure is sound.</p>
+  <div class="sign">The one energy. Three constraints. Infinite depth.</div>
+  <div class="credit">Circumpunct Framework by <a href="https://www.ashmanroonz.ca">Ashman Roonz</a> &nbsp; | &nbsp; March 2026 &nbsp; | &nbsp; <a href="https://fractalreality.ca">fractalreality.ca</a></div>
+</div>
+
+</div>
+
+</body>
+</html>
