@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ 2D: The Surface; Gauge Structure from Validation</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --red: #E06060;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.f { color: var(--faint); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+.page { max-width: 780px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 80px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 64px; color: var(--gold); margin-bottom: 20px; }
+.header h1 { font-size: 36px; color: var(--gold); font-weight: 600; line-height: 1.3; margin-bottom: 12px; }
+.header .subtitle { font-size: 20px; color: var(--dim); font-style: italic; }
+
+h2 { font-size: 26px; color: var(--gold); font-weight: 600; margin: 60px 0 20px; }
+h3 { font-size: 21px; color: var(--green); font-weight: 600; margin: 40px 0 16px; }
+
+p { margin-bottom: 18px; }
+
+.eq {
+  text-align: center;
+  font-size: 28px;
+  color: var(--gold);
+  font-weight: 600;
+  margin: 32px 0;
+  padding: 20px;
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  background: rgba(184, 160, 96, 0.04);
+}
+.eq-small {
+  text-align: center;
+  font-size: 22px;
+  color: var(--cyan);
+  margin: 20px 0;
+  padding: 14px;
+}
+
+.note {
+  background: rgba(184, 160, 96, 0.06);
+  border-left: 3px solid var(--gold-dim);
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-style: italic;
+  color: var(--dim);
+}
+
+.note.open {
+  border-left-color: var(--red);
+  background: rgba(224, 96, 96, 0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+}
+th, td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--faint);
+  text-align: left;
+}
+th { color: var(--gold); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+td { color: var(--warm); }
+td.num { text-align: center; font-family: monospace; color: var(--cyan); }
+td.good { color: var(--green); }
+td.open { color: var(--red); }
+
+/* Dimensional ladder */
+.ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 30px 0;
+}
+.ladder-step {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  border-left: 3px solid var(--faint);
+}
+.ladder-step.active { border-left-color: var(--gold); background: rgba(184, 160, 96, 0.04); }
+.ladder-step.done { border-left-color: var(--green); }
+.ladder-step.future { border-left-color: var(--faint); opacity: 0.5; }
+.ladder-dim { font-size: 22px; font-weight: 600; min-width: 50px; text-align: right; }
+.ladder-const { font-size: 20px; font-weight: 600; min-width: 50px; }
+.ladder-desc { font-size: 17px; color: var(--dim); }
+
+/* Simulation */
+.sim-container {
+  background: rgba(10, 10, 20, 0.9);
+  border: 1px solid var(--faint);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 40px 0;
+}
+.sim-container h3 { margin-top: 0; }
+
+canvas {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.footer {
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+  text-align: center;
+  color: var(--dim);
+  font-style: italic;
+}
+.footer a { color: var(--gold-dim); text-decoration: none; }
+.footer a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="header">
+  <div class="symbol">⊙</div>
+  <h1>2D: The Surface</h1>
+  <div class="subtitle">Gauge Structure from Validation; Circumpunct Framework, Ashman Roonz, 2026</div>
+</div>
+
+<!-- ============================================================ -->
+<h2>The Ladder So Far</h2>
+
+<div class="ladder">
+  <div class="ladder-step done">
+    <div class="ladder-dim m">0D</div>
+    <div class="ladder-const w">α</div>
+    <div class="ladder-desc">Convergence lands. Coupling at a point. <span class="d">Independent.</span></div>
+  </div>
+  <div class="ladder-step done">
+    <div class="ladder-dim m">0.5D</div>
+    <div class="ladder-const w">c</div>
+    <div class="ladder-desc">Rotation begins. Speed of the first fold. <span class="d">c = √(2◐ · sin θ) = 1.</span></div>
+  </div>
+  <div class="ladder-step done">
+    <div class="ladder-dim m">1D</div>
+    <div class="ladder-const w">ℏ</div>
+    <div class="ladder-desc">Commitment. The indivisible cycle. <span class="d">ℏ = E/ω = 1. Not independent.</span></div>
+  </div>
+  <div class="ladder-step done">
+    <div class="ladder-dim m">1.5D</div>
+    <div class="ladder-const w">m<sub>i</sub>/m<sub>j</sub></div>
+    <div class="ladder-desc">Branching. Mass ratios from α. <span class="d">m_μ/m_e = (1/α)^(13/12).</span></div>
+  </div>
+  <div class="ladder-step active">
+    <div class="ladder-dim s">2D</div>
+    <div class="ladder-const w">gauge</div>
+    <div class="ladder-desc">Surface. The field's symmetry determines force structure. <span class="d">SU(3)×SU(2)×U(1).</span></div>
+  </div>
+  <div class="ladder-step future">
+    <div class="ladder-dim d">3D</div>
+    <div class="ladder-const d">G</div>
+    <div class="ladder-desc">Boundary closes. Gravity.</div>
+  </div>
+</div>
+
+<p>The first four rungs produced numbers: α (a ratio), c (a speed), ℏ (a quantum of action), mass ratios (exponents of α). At 2D, the output changes character. A surface has shape, not just magnitude. The constant at 2D is not a number; it is a <span class="it">symmetry group</span>: the gauge structure that determines which forces exist and how they couple.</p>
+
+<!-- ============================================================ -->
+<h2>What 2D Means</h2>
+
+<p>In the framework, 2D = Φ = field = surface = mind. The Surface Theorem (§5A) establishes: Surface = Field = Mind. This is the structural dimension where energy has enough room to rotate, mediate, and carry phase.</p>
+
+<p>Phase requires exactly 2D to exist (rotation needs a plane). A 1D line can extend but not rotate. A 0D point can converge but not extend. At 2D, for the first time, the field has internal degrees of freedom: it can twist, it can carry different kinds of charge, it can mediate between distinct particles. The <span class="it">structure</span> of these internal degrees of freedom is the gauge group.</p>
+
+<p>The question at 2D: why <span class="it">this</span> gauge group? Why SU(3) × SU(2) × U(1) and not some other symmetry? The answer comes from the 64-state validation architecture.</p>
+
+<!-- ============================================================ -->
+<h2>From 64 States to Gauge Symmetry</h2>
+
+<p>The framework's 64 states come from 3 circumpuncts × 2 channels each = 6 binary degrees of freedom. 2<sup>6</sup> = 64. These 64 states decompose into sectors: fermions, gauge bosons, and Higgs.</p>
+
+<div class="eq">64 = 48 fermions + 12 gauge bosons + 4 Higgs</div>
+
+<p>The gauge group is not assumed; it is <span class="w wb">selected</span> as the maximal symmetry of the validation architecture (§13.15). The symmetry that preserves the architecture's validation structure (which states can transform into which other states while preserving their physical character) is exactly SU(3) × SU(2) × U(1).</p>
+
+<h3>SU(3): Color from 3-Fold Degeneracy</h3>
+
+<p>Each quark comes in three "colors" (three states distinguished only by a label, degenerate in all validation properties). The maximal group that rotates three equivalent complex states while preserving the inner product and kernel structure is U(3). Removing the overall phase (already accounted for by hypercharge) gives SU(3). This is the strong force: 8 generators, 8 gluons.</p>
+
+<p>Why 3? Because the triad (•, Φ, ○) has three components. Color IS the triad at the quark scale.</p>
+
+<h3>SU(2): Weak Isospin from Doublet Structure</h3>
+
+<p>Left-handed fermions come in pairs (up/down, electron/neutrino). The maximal symmetry of a pair of equivalent states is U(2); removing the overall phase gives SU(2). This is the weak force: 3 generators, 3 weak bosons (W<sup>+</sup>, W<sup>-</sup>, Z before mixing).</p>
+
+<p>Why doublets? Because the pump cycle has two directions: convergence (⊛) and emergence (☀︎). Left-handed particles see both; right-handed particles see only one.</p>
+
+<h3>U(1): Hypercharge from Validation-Weighted Phase</h3>
+
+<p>After accounting for color and weak isospin, one overall phase symmetry remains. It assigns a charge (hypercharge Y) to each state, weighted by the state's position in the validation architecture. This is U(1): 1 generator, the photon (after electroweak mixing with the Z).</p>
+
+<p>Why U(1)? Because after 3-fold (color) and 2-fold (isospin) rotations are exhausted, the remaining freedom is a single phase rotation: the 1D circle within the 2D surface.</p>
+
+<!-- ============================================================ -->
+<h2>The Numerology of 12</h2>
+
+<div class="eq">dim(SU(3)) + dim(SU(2)) + dim(U(1)) = 8 + 3 + 1 = 12</div>
+
+<p>12 gauge bosons. The same 12 that appeared in the mass ratio exponent: 4 pump strokes × 3 triad components. This is not coincidence. The gauge bosons ARE the pump cycle acting on the triad. Each generator corresponds to one way the pump (4 phases) can rotate one component (3 parts) of the field.</p>
+
+<table>
+<tr><th>Group</th><th>Generators</th><th>Bosons</th><th>Framework Reading</th></tr>
+<tr>
+  <td>SU(3)</td>
+  <td class="num">8</td>
+  <td>8 gluons</td>
+  <td>Strong: convergence at smallest scale (• at maximum intensity)</td>
+</tr>
+<tr>
+  <td>SU(2)</td>
+  <td class="num">3</td>
+  <td>W<sup>+</sup>, W<sup>-</sup>, W<sup>3</sup></td>
+  <td>Weak: filtration at particle level (○ selecting)</td>
+</tr>
+<tr>
+  <td>U(1)</td>
+  <td class="num">1</td>
+  <td>B (→ γ, Z)</td>
+  <td>EM: mediation (Φ connecting)</td>
+</tr>
+<tr style="border-top: 2px solid var(--gold-dim);">
+  <td class="w wb">Total</td>
+  <td class="num" style="color: var(--gold);">12</td>
+  <td class="w">= 4 × 3</td>
+  <td class="w">Pump × Triad</td>
+</tr>
+</table>
+
+<p>The factor decomposition is also present in the group orders: 3 × 2 × 1 = 6, which is the number of binary degrees of freedom that generate the 64-state architecture. The gauge group encodes the architecture's internal symmetry at every level.</p>
+
+<!-- ============================================================ -->
+<h2>Visualization: The 64-State Architecture</h2>
+
+<div class="sim-container">
+<h3 style="color: var(--gold);">The Validation Lattice</h3>
+<p style="color: var(--dim); font-size: 16px;">64 states decomposed by sector. Hover to see state details. The gauge group acts within each colored sector.</p>
+
+<canvas id="latticeCanvas" width="720" height="500"></canvas>
+</div>
+
+<!-- ============================================================ -->
+<h2>The Weinberg Angle</h2>
+
+<p>The gauge group tells us <span class="it">which</span> forces exist. But the mixing between them (specifically, how SU(2) and U(1) blend into electromagnetism and the Z boson) is parameterized by the Weinberg angle θ<sub>W</sub>.</p>
+
+<div class="eq">sin²θ<sub>W</sub> ≈ 0.231</div>
+
+<p>The framework offers two approaches to this number:</p>
+
+<h3>Approach 1: Direct Structural Ratio</h3>
+
+<div class="eq-small">3/13 = 0.2308 <span class="d" style="font-size: 16px;">(error: 0.19%)</span></div>
+
+<p>The numerator 3 is the triad (the three components •, Φ, ○). The denominator 13 is the generation structure (12 phase-component states + 1 compositional whole, the same 13 from the mass ratio exponent). The Weinberg angle measures how much of the full generation structure is carried by the triad itself: the ratio of components to the total structure including their binding.</p>
+
+<h3>Approach 2: GUT Running</h3>
+
+<p>At the GUT scale, sin²θ<sub>W</sub> = 3/8 (the ratio of U(1) to the total electroweak coupling). Renormalization group running with the Standard Model particle content brings this to ~0.231 at the Z mass scale. The framework's contribution: the 64-state architecture predicts exactly 3 generations of 16 fermions each, which is the particle content that makes the running work.</p>
+
+<table>
+<tr><th>Approach</th><th>Predicted</th><th>Measured</th><th>Error</th><th>Status</th></tr>
+<tr>
+  <td>3/13 (direct)</td>
+  <td class="num">0.2308</td>
+  <td class="num">0.2312</td>
+  <td class="num good">0.19%</td>
+  <td class="good">Promising</td>
+</tr>
+<tr>
+  <td>3/8 → running</td>
+  <td class="num">~0.231</td>
+  <td class="num">0.2312</td>
+  <td class="num good">~0.1%</td>
+  <td class="d">Standard GUT</td>
+</tr>
+</table>
+
+<div class="note open">The Weinberg angle is the primary open numerical problem at 2D. The 3/13 ratio is remarkably accurate (0.19%) and has clear structural meaning, but whether it is a deep prediction or a numerical coincidence requires further development. The framework needs to show WHY mixing is governed by the ratio of triad to generation structure.</div>
+
+<!-- ============================================================ -->
+<h2>Visualization: Gauge Dimensions</h2>
+
+<div class="sim-container">
+<h3 style="color: var(--gold);">12 = 4 × 3: Pump Cycle × Triad</h3>
+<p style="color: var(--dim); font-size: 16px;">The 12 gauge generators mapped to pump strokes (i⁰, i¹, i², i³) and triad components (•, Φ, ○).</p>
+
+<canvas id="gaugeCanvas" width="720" height="400"></canvas>
+</div>
+
+<!-- ============================================================ -->
+<h2>Why Not a Bigger Group?</h2>
+
+<p>Grand unified theories propose SU(5) or SO(10) as larger symmetries that contain SU(3) × SU(2) × U(1). The framework explains why the Standard Model group is the actual symmetry: larger groups would mix quarks with leptons, violating the validation architecture.</p>
+
+<p>Quarks have a validation property that leptons lack: confinement ("•<sub>out</sub> fails" in the architecture's language). Any symmetry that mixes quarks with leptons would equate states with different validation characters. The validation architecture forbids this. SU(3) × SU(2) × U(1) is not a subgroup of something bigger waiting to be unified; it is the <span class="it">maximal</span> symmetry consistent with validation preservation (§13.15.5).</p>
+
+<p>This is a testable prediction: proton decay (which SU(5) and SO(10) require) should not occur. The current experimental bound (τ > 10<sup>34</sup> years) is consistent with this prediction.</p>
+
+<!-- ============================================================ -->
+<h2>What 2D Tells Us About the Ladder</h2>
+
+<p>At 2D, the ladder changes character. The first four rungs produced quantities (numbers, ratios). At 2D, the output is a <span class="it">structure</span>: a symmetry group that determines the topology of the field. This is because 2D is a structural dimension (what energy IS), not a processual dimension (what energy is DOING). At 2D, the field has enough room to carry internal degrees of freedom, and the validation architecture selects exactly which degrees of freedom are permitted.</p>
+
+<p>The connection to the previous rungs:</p>
+
+<div class="eq" style="font-size: 22px; border-color: var(--gold);">
+  0D: α couples at a point (the vertex)<br>
+  0.5D: c propagates the coupling (the edge)<br>
+  1D: ℏ quantizes the cycle (the quantum)<br>
+  1.5D: masses branch into particles (the spectrum)<br>
+  2D: gauge structure organizes the forces (the field equations)<br>
+  <span class="d" style="font-size: 18px;">Each rung unfolds what α already contains.</span>
+</div>
+
+<p>One rung remains: <span class="w wb">3D</span>, where the boundary closes and gravity (G) emerges. Conservation of traversal (0 + 1 + 2 = 3) predicts that G is derivable from α, ℏ, and the 2D field equations. The boundary is the last constraint.</p>
+
+<!-- ============================================================ -->
+
+<div class="footer">
+  <p><span class="w" style="font-size: 28px;">⊙</span></p>
+  <p>E = 1; all else is constraints.<br>
+  The surface carries phase; phase determines force.<br>
+  Gauge structure is validation geometry at 2D.</p>
+  <p style="margin-top: 20px;"><a href="e_equals_1.html">E = 1</a> · <a href="speed_of_light.html">c = sin(i)</a> · <a href="planck_constant.html">ℏ = 1</a> · <a href="mass_ratios.html">m = α<sup>n</sup></a> · <a href="toe_map.html">TOE Map</a></p>
+  <p style="margin-top: 16px;"><a href="https://fractalreality.ca">fractalreality.ca</a></p>
+</div>
+
+</div><!-- .page -->
+
+<!-- ============================================================ -->
+<!-- SIMULATION CODE -->
+<!-- ============================================================ -->
+<script>
+// ============================================================
+// VISUALIZATION 1: The 64-State Validation Lattice
+// ============================================================
+const latticeCanvas = document.getElementById('latticeCanvas');
+const lCtx = latticeCanvas.getContext('2d');
+
+function drawLattice() {
+  const dpr = window.devicePixelRatio || 1;
+  latticeCanvas.width = latticeCanvas.clientWidth * dpr;
+  latticeCanvas.height = 500 * dpr;
+  lCtx.scale(dpr, dpr);
+  const w = latticeCanvas.clientWidth;
+  const h = 500;
+
+  lCtx.fillStyle = '#06060C';
+  lCtx.fillRect(0, 0, w, h);
+
+  const pad = { left: 30, right: 30, top: 60, bottom: 50 };
+  const plotW = w - pad.left - pad.right;
+  const plotH = h - pad.top - pad.bottom;
+
+  // Sectors
+  const sectors = [
+    { name: 'Fermions (Gen 1)', count: 16, color: '#4DA0C8', x: 0 },
+    { name: 'Fermions (Gen 2)', count: 16, color: '#E88AAF', x: 1 },
+    { name: 'Fermions (Gen 3)', count: 16, color: '#9B7AD8', x: 2 },
+    { name: 'Gauge Bosons', count: 12, color: '#B8A060', x: 3 },
+    { name: 'Higgs', count: 4, color: '#4DB8A0', x: 4 },
+  ];
+
+  const totalSectors = 5;
+  const sectorW = plotW / totalSectors;
+  const dotR = 8;
+
+  // Title
+  lCtx.fillStyle = '#B8A060';
+  lCtx.font = '600 16px EB Garamond, serif';
+  lCtx.textAlign = 'center';
+  lCtx.fillText('64 = 3×16 + 12 + 4', w / 2, 30);
+
+  // Draw each sector
+  for (const sec of sectors) {
+    const sx = pad.left + sec.x * sectorW;
+    const centerX = sx + sectorW / 2;
+
+    // Label
+    lCtx.fillStyle = sec.color;
+    lCtx.font = '600 14px EB Garamond, serif';
+    lCtx.textAlign = 'center';
+    lCtx.fillText(sec.name, centerX, pad.top - 8);
+
+    // Draw state dots in a grid
+    const cols = sec.count <= 4 ? 2 : 4;
+    const rows = Math.ceil(sec.count / cols);
+    const gapX = Math.min(28, (sectorW - 20) / cols);
+    const gapY = Math.min(28, plotH / (rows + 1));
+    const gridW = (cols - 1) * gapX;
+    const startX = centerX - gridW / 2;
+    const startY = pad.top + 20;
+
+    for (let i = 0; i < sec.count; i++) {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const cx = startX + col * gapX;
+      const cy = startY + row * gapY;
+
+      // Dot
+      lCtx.beginPath();
+      lCtx.arc(cx, cy, dotR, 0, Math.PI * 2);
+      lCtx.fillStyle = sec.color;
+      lCtx.globalAlpha = 0.7;
+      lCtx.fill();
+      lCtx.globalAlpha = 1;
+
+      // Glow
+      lCtx.beginPath();
+      lCtx.arc(cx, cy, dotR + 2, 0, Math.PI * 2);
+      lCtx.strokeStyle = sec.color;
+      lCtx.globalAlpha = 0.2;
+      lCtx.lineWidth = 1;
+      lCtx.stroke();
+      lCtx.globalAlpha = 1;
+    }
+
+    // Count label at bottom
+    lCtx.fillStyle = sec.color;
+    lCtx.font = '600 20px EB Garamond, serif';
+    lCtx.fillText(sec.count.toString(), centerX, h - 15);
+  }
+
+  // Dividers
+  lCtx.strokeStyle = '#333028';
+  lCtx.lineWidth = 1;
+  for (let i = 1; i < totalSectors; i++) {
+    const x = pad.left + i * sectorW;
+    lCtx.beginPath();
+    if (i === 3) {
+      // Major divider between fermions and bosons
+      lCtx.strokeStyle = '#555048';
+      lCtx.lineWidth = 2;
+    } else {
+      lCtx.strokeStyle = '#333028';
+      lCtx.lineWidth = 1;
+    }
+    lCtx.moveTo(x, pad.top - 15);
+    lCtx.lineTo(x, h - pad.bottom + 10);
+    lCtx.stroke();
+  }
+
+  // Gauge symmetry labels on the gauge sector
+  const gx = pad.left + 3 * sectorW + sectorW / 2;
+  const labels = [
+    { text: 'SU(3): 8 gluons', color: '#E06060', y: pad.top + 20 },
+    { text: 'SU(2): 3 weak', color: '#B8A060', y: pad.top + 20 + 8 * 28 },
+    { text: 'U(1): 1 phase', color: '#4DB8A0', y: pad.top + 20 + 11 * 28 },
+  ];
+
+  // Color the gauge boson dots by subgroup
+  const gCols = 4;
+  const gGapX = Math.min(28, (sectorW - 20) / gCols);
+  const gGapY = 28;
+  const gGridW = (gCols - 1) * gGapX;
+  const gStartX = gx - gGridW / 2;
+  const gStartY = pad.top + 20;
+
+  const subColors = [
+    '#E06060','#E06060','#E06060','#E06060',
+    '#E06060','#E06060','#E06060','#E06060',
+    '#B8A060','#B8A060','#B8A060',
+    '#4DB8A0'
+  ];
+
+  // Redraw gauge dots with correct colors
+  for (let i = 0; i < 12; i++) {
+    const col = i % gCols;
+    const row = Math.floor(i / gCols);
+    const cx = gStartX + col * gGapX;
+    const cy = gStartY + row * gGapY;
+
+    lCtx.beginPath();
+    lCtx.arc(cx, cy, dotR + 1, 0, Math.PI * 2);
+    lCtx.fillStyle = '#06060C';
+    lCtx.fill();
+
+    lCtx.beginPath();
+    lCtx.arc(cx, cy, dotR, 0, Math.PI * 2);
+    lCtx.fillStyle = subColors[i];
+    lCtx.globalAlpha = 0.85;
+    lCtx.fill();
+    lCtx.globalAlpha = 1;
+  }
+}
+
+drawLattice();
+
+// ============================================================
+// VISUALIZATION 2: Gauge Generators as Pump × Triad
+// ============================================================
+const gaugeCanvas = document.getElementById('gaugeCanvas');
+const gCtx = gaugeCanvas.getContext('2d');
+
+function drawGaugeGrid() {
+  const dpr = window.devicePixelRatio || 1;
+  gaugeCanvas.width = gaugeCanvas.clientWidth * dpr;
+  gaugeCanvas.height = 400 * dpr;
+  gCtx.scale(dpr, dpr);
+  const w = gaugeCanvas.clientWidth;
+  const h = 400;
+
+  gCtx.fillStyle = '#06060C';
+  gCtx.fillRect(0, 0, w, h);
+
+  const pad = { left: 100, right: 40, top: 80, bottom: 60 };
+  const plotW = w - pad.left - pad.right;
+  const plotH = h - pad.top - pad.bottom;
+
+  const cols = 4; // pump strokes
+  const rows = 3; // triad components
+  const cellW = plotW / cols;
+  const cellH = plotH / rows;
+
+  // Column headers (pump strokes)
+  const pumpLabels = ['i⁰ = +1', 'i¹ = +i', 'i² = -1', 'i³ = -i'];
+  const pumpPhases = ['pass-through', 'compress', 'commit', 'release'];
+  gCtx.textAlign = 'center';
+  for (let c = 0; c < cols; c++) {
+    const cx = pad.left + c * cellW + cellW / 2;
+    gCtx.fillStyle = '#B8A060';
+    gCtx.font = '600 18px EB Garamond, serif';
+    gCtx.fillText(pumpLabels[c], cx, pad.top - 30);
+    gCtx.fillStyle = '#8A8272';
+    gCtx.font = '14px EB Garamond, serif';
+    gCtx.fillText(pumpPhases[c], cx, pad.top - 12);
+  }
+
+  // Row headers (triad)
+  const triadLabels = ['• (soul)', 'Φ (mind)', '○ (body)'];
+  const triadColors = ['#E88AAF', '#4DB8A0', '#4DA0C8'];
+  gCtx.textAlign = 'right';
+  for (let r = 0; r < rows; r++) {
+    const cy = pad.top + r * cellH + cellH / 2;
+    gCtx.fillStyle = triadColors[r];
+    gCtx.font = '600 18px EB Garamond, serif';
+    gCtx.fillText(triadLabels[r], pad.left - 16, cy + 6);
+  }
+
+  // Cell contents: which gauge generator lives where
+  // This is a conceptual mapping, not exact physics
+  const cellLabels = [
+    // • row: convergence channels
+    ['g₁', 'g₂', 'g₃', 'g₄'],
+    // Φ row: mediation channels
+    ['g₅', 'g₆', 'W⁺', 'W⁻'],
+    // ○ row: boundary channels
+    ['g₇', 'g₈', 'W³', 'B'],
+  ];
+  const cellColors = [
+    ['#E06060','#E06060','#E06060','#E06060'],
+    ['#E06060','#E06060','#B8A060','#B8A060'],
+    ['#E06060','#E06060','#B8A060','#4DB8A0'],
+  ];
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const cx = pad.left + c * cellW + cellW / 2;
+      const cy = pad.top + r * cellH + cellH / 2;
+
+      // Cell border
+      gCtx.strokeStyle = '#333028';
+      gCtx.lineWidth = 1;
+      gCtx.strokeRect(pad.left + c * cellW, pad.top + r * cellH, cellW, cellH);
+
+      // Cell circle
+      const radius = Math.min(cellW, cellH) * 0.28;
+      gCtx.beginPath();
+      gCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+      gCtx.fillStyle = cellColors[r][c];
+      gCtx.globalAlpha = 0.15;
+      gCtx.fill();
+      gCtx.globalAlpha = 1;
+      gCtx.strokeStyle = cellColors[r][c];
+      gCtx.lineWidth = 2;
+      gCtx.stroke();
+
+      // Label
+      gCtx.fillStyle = cellColors[r][c];
+      gCtx.font = '600 16px EB Garamond, serif';
+      gCtx.textAlign = 'center';
+      gCtx.fillText(cellLabels[r][c], cx, cy + 6);
+    }
+  }
+
+  // Legend
+  const legendY = h - 25;
+  const legendItems = [
+    { color: '#E06060', label: 'SU(3): 8 gluons' },
+    { color: '#B8A060', label: 'SU(2): 3 weak' },
+    { color: '#4DB8A0', label: 'U(1): 1 photon' },
+  ];
+  let lx = pad.left;
+  for (const item of legendItems) {
+    gCtx.fillStyle = item.color;
+    gCtx.fillRect(lx, legendY - 8, 16, 16);
+    gCtx.fillStyle = '#E0D8C8';
+    gCtx.font = '14px EB Garamond, serif';
+    gCtx.textAlign = 'left';
+    gCtx.fillText(item.label, lx + 22, legendY + 5);
+    lx += gCtx.measureText(item.label).width + 50;
+  }
+
+  // Total
+  gCtx.fillStyle = '#B8A060';
+  gCtx.font = '600 16px EB Garamond, serif';
+  gCtx.textAlign = 'center';
+  gCtx.fillText('4 columns × 3 rows = 12 generators', w / 2, h - 5);
+}
+
+drawGaugeGrid();
+
+// Resize
+window.addEventListener('resize', () => {
+  drawLattice();
+  drawGaugeGrid();
+});
+</script>
+
+</body>
+</html>

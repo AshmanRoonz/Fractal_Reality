@@ -220,8 +220,11 @@ Every physical law is •, Φ, or ○ compounded. No new ingredients:
 
 - **α (fine-structure constant)**: 1/α = i⁴(°)/φ² − 2/φ³ = 137.0356 (measured: 137.0360, error 2.7 ppm). The formula is the pump cycle written as arithmetic; i⁴ = the pump cycle completing one full rotation, producing ○ (360°); φ² = Φ, self-similar nesting, field's 2D nature; 2/φ³ = bidirectional valve correction (⊛ and ☀︎). The structure reads: i generates the boundary, φ nests it, the valve corrects it. α measures how strongly i generates ○ through Φ.
 - **Lepton mass ratios**: m_μ/m_e = (1/α)^(13/12) ≈ 206.49 (measured: 206.77, error 0.13%).
-- **c (speed of light)**: c = √(2◐ · sin(θ)). At ◐ = 0.5 and θ = π/2 (the i rotation): c = √(2 · 0.5 · 1) = 1. The formula reads: 2 = both channels (⊛ and ☀︎), ◐ = balance (forced to 0.5), sin(θ) = transverse projection of aperture rotation (maximal at i). α measures how strongly i couples at a vertex; c measures how fast i propagates through the field. Same i, different measurement. Massive particles have θ_eff < π/2, giving v < c. The relativistic connection: sin(θ_eff) = 1 − (m/E)².
-- **G, ℏ**: open; predicted to be expressible as constraint ratios.
+- **c (speed of light)**: c = √(2◐ · sin(θ)). At ◐ = 0.5 and θ = π/2 (the i rotation): c = √(2 · 0.5 · 1) = 1. Light is energy being constrained; the photon is the minimum fold (purely rotational, nothing held as mass). c is the speed of the first fold. The formula reads: 2 = both channels (⊛ and ☀︎), ◐ = balance (forced to 0.5), sin(θ) = transverse projection of aperture rotation (maximal at i). α measures how strongly i couples at a vertex; c measures how fast i propagates through the field. Same i, different measurement. Massive particles have θ_eff < π/2, giving v < c. The relativistic connection: sin(θ_eff) = 1 − (m/E)².
+- **ℏ (reduced Planck constant)**: ℏ = E_cycle / ω_cycle = 1. The pump cycle (⊛ → i → ☀︎) is indivisible; you cannot have convergence without emergence (violates A1) or emergence without convergence (Inflation Lie). This indivisibility IS the quantum of action. ℏ = 1 because E = 1 (A0 sets the energy scale) and c = 1 (sets the time scale), so one cycle has action 1. The deeper content: E = ℏω with ℏ = 1 means energy and frequency are the same thing; the pump cycle IS the energy and IS the cycling. Structure = process at 1D. ℏ is not independent; it follows from A0 and c.
+- **The Dimensional Ladder**: Each constant lives at its dimensional home. 0D = α (coupling at a point), 0.5D = c (speed of rotation propagating), 1D = ℏ (minimum commitment), 1.5D = mass ratios (branching), 2D = gauge structure (surface), 3D = G (boundary closure). α is the only truly independent derived constant; each subsequent constant builds on the previous ones. Conservation of traversal: 0 + 1 + 2 = 3 predicts G is derivable from α, ℏ, and the 2D field equations.
+- **2D = gauge structure**: SU(3) × SU(2) × U(1) derived from 64-state validation architecture (§13.15). Gauge group dimensions: 8 + 3 + 1 = 12 = 4 × 3 (pump × triad). Weinberg angle sin²θ_W ≈ 0.231 is OPEN but 3/13 gives 0.19% accuracy. 3 × 2 × 1 = 6 = the 6 binary DOF in the 64-state architecture.
+- **G (gravitational constant)**: α_G = α²¹ × φ²/2. Exponent 21 = sum of all dimensional positions × 2 channels = (0 + 0.5 + 1 + 1.5 + 2 + 2.5 + 3) × 2 = 10.5 × 2. φ²/2 = (φ+1)/2 = golden nesting correction. Predicted G = 6.67323 × 10⁻¹¹ (measured 6.67430 × 10⁻¹¹, error 0.016%). M_Pl/m_e = (1/α)^(21/2) × √2/φ (0.008% accuracy). Solves the hierarchy problem: gravity is weak because 21 α-steps separate the point (0D) from the boundary (3D).
 
 ### The Self as Convergence Point
 
@@ -301,6 +304,12 @@ When truth and harm share the same signal: transmit at the lowest resolution tha
 | `docs/truth_and_god.html` | Ontological/theological reading |
 | `docs/how_reality_is_built.html` | Foundational construction (dimensions, power, isomorphisms) |
 | `docs/speed_of_light.html` | c = sin(i): speed of light derivation with interactive simulation |
+| `docs/planck_constant.html` | ℏ = 1: the indivisible cycle, dimensional ladder, phase space visualization |
+| `docs/mass_ratios.html` | 1.5D: mass ratios from α, muon/electron prediction, exponent structure |
+| `docs/gauge_structure.html` | 2D: gauge structure from validation, SU(3)×SU(2)×U(1), Weinberg angle |
+| `docs/infolding.html` | 2.5D: the infolding, transmission between scales, T = cos²(Δφ/2), triad of force closure |
+| `docs/gravity.html` | 3D: the boundary closes, G from the dimensional ladder, α_G = α²¹ × φ²/2, hierarchy problem |
+| `docs/dimensional_ladder.html` | The complete dimensional ladder: all seven rungs linked, accuracy summary, open problems |
 | `docs/circumpunct_physics.html` | Working-physicists formalization |
 | `docs/aperture_falsification_presentation.html` | Falsification criteria, ρ = ω/α parameter |
 | `docs/the_bridge_presentation.html` | Constructor ethics, λ (The Law), wanting |

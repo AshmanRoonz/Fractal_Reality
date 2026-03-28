@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ 1.5D: The Branching; Mass Ratios from α</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --red: #E06060;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+.page { max-width: 780px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 80px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 64px; color: var(--gold); margin-bottom: 20px; }
+.header h1 { font-size: 36px; color: var(--gold); font-weight: 600; line-height: 1.3; margin-bottom: 12px; }
+.header .subtitle { font-size: 20px; color: var(--dim); font-style: italic; }
+
+h2 { font-size: 26px; color: var(--gold); font-weight: 600; margin: 60px 0 20px; }
+h3 { font-size: 21px; color: var(--green); font-weight: 600; margin: 40px 0 16px; }
+
+p { margin-bottom: 18px; }
+
+.eq {
+  text-align: center;
+  font-size: 28px;
+  color: var(--gold);
+  font-weight: 600;
+  margin: 32px 0;
+  padding: 20px;
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  background: rgba(184, 160, 96, 0.04);
+}
+.eq-small {
+  text-align: center;
+  font-size: 22px;
+  color: var(--cyan);
+  margin: 20px 0;
+  padding: 14px;
+}
+
+.note {
+  background: rgba(184, 160, 96, 0.06);
+  border-left: 3px solid var(--gold-dim);
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-style: italic;
+  color: var(--dim);
+}
+
+.note.open {
+  border-left-color: var(--red);
+  background: rgba(224, 96, 96, 0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+}
+th, td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--faint);
+  text-align: left;
+}
+th { color: var(--gold); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+td { color: var(--warm); }
+td.num { text-align: center; font-family: monospace; color: var(--cyan); }
+td.good { color: var(--green); }
+td.open { color: var(--red); }
+
+/* Dimensional ladder */
+.ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 30px 0;
+}
+.ladder-step {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  border-left: 3px solid var(--faint);
+}
+.ladder-step.active { border-left-color: var(--gold); background: rgba(184, 160, 96, 0.04); }
+.ladder-step.done { border-left-color: var(--green); }
+.ladder-step.future { border-left-color: var(--faint); opacity: 0.5; }
+.ladder-dim { font-size: 22px; font-weight: 600; min-width: 50px; text-align: right; }
+.ladder-const { font-size: 20px; font-weight: 600; min-width: 50px; }
+.ladder-desc { font-size: 17px; color: var(--dim); }
+
+/* Simulation */
+.sim-container {
+  background: rgba(10, 10, 20, 0.9);
+  border: 1px solid var(--faint);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 40px 0;
+}
+.sim-container h3 { margin-top: 0; }
+
+canvas {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.footer {
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+  text-align: center;
+  color: var(--dim);
+  font-style: italic;
+}
+.footer a { color: var(--gold-dim); text-decoration: none; }
+.footer a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="header">
+  <div class="symbol">⊙</div>
+  <h1>1.5D: The Branching</h1>
+  <div class="subtitle">Mass Ratios from α; Circumpunct Framework, Ashman Roonz, 2026</div>
+</div>
+
+<!-- ============================================================ -->
+<h2>The Ladder So Far</h2>
+
+<div class="ladder">
+  <div class="ladder-step done">
+    <div class="ladder-dim m">0D</div>
+    <div class="ladder-const w">α</div>
+    <div class="ladder-desc">Convergence lands. Coupling at a point. <span class="d">Independent.</span></div>
+  </div>
+  <div class="ladder-step done">
+    <div class="ladder-dim m">0.5D</div>
+    <div class="ladder-const w">c</div>
+    <div class="ladder-desc">Rotation begins. Speed of the first fold. <span class="d">c = √(2◐ · sin θ) = 1.</span></div>
+  </div>
+  <div class="ladder-step done">
+    <div class="ladder-dim m">1D</div>
+    <div class="ladder-const w">ℏ</div>
+    <div class="ladder-desc">Commitment. The indivisible cycle. <span class="d">ℏ = E/ω = 1. Not independent.</span></div>
+  </div>
+  <div class="ladder-step active">
+    <div class="ladder-dim s">1.5D</div>
+    <div class="ladder-const w">m<sub>i</sub>/m<sub>j</sub></div>
+    <div class="ladder-desc">Branching. The pump cycle differentiates into particles. <span class="d">m_μ/m_e = (1/α)^(13/12).</span></div>
+  </div>
+  <div class="ladder-step future">
+    <div class="ladder-dim d">2D</div>
+    <div class="ladder-const d">gauge</div>
+    <div class="ladder-desc">Surface. Field equations.</div>
+  </div>
+  <div class="ladder-step future">
+    <div class="ladder-dim d">3D</div>
+    <div class="ladder-const d">G</div>
+    <div class="ladder-desc">Boundary closes. Gravity.</div>
+  </div>
+</div>
+
+<p>At 1D, the pump cycle committed. One indivisible unit of action. But committed to <span class="it">what</span>? At 1D, the answer is generic: any single quantum. At 1.5D, the extension begins to branch. The single pump cycle pattern differentiates into distinct particle types, each with a different mass, because each folds the field to a different depth.</p>
+
+<!-- ============================================================ -->
+<h2>What 1.5D Means</h2>
+
+<p>The processual dimensions (0.5D, 1.5D, 2.5D) describe what energy is <span class="it">doing</span>, not what it <span class="it">is</span>. At 0.5D, energy was rotating (c). At 1.5D, energy is <span class="s wb">branching</span>: the committed extension (1D) unfolds into multiple distinct patterns.</p>
+
+<p>Think of it as a tree. At 1D, there is one trunk (one committed worldline). At 1.5D, the trunk forks: electron here, muon there, tau over there. The branching IS the particle spectrum. Each branch is a different depth of fold in the 1, a different effective rotation angle θ<sub>eff</sub>, a different mass.</p>
+
+<p>The question at 1.5D: what determines the <span class="it">ratios</span> between branches? Why is the muon 206.77 times heavier than the electron, and not some other number?</p>
+
+<!-- ============================================================ -->
+<h2>The Muon/Electron Mass Ratio</h2>
+
+<div class="eq">m<sub>μ</sub> / m<sub>e</sub> = (1/α)<sup>13/12</sup></div>
+
+<table>
+<tr><th>Quantity</th><th>Predicted</th><th>Measured</th><th>Error</th></tr>
+<tr>
+  <td>m<sub>μ</sub> / m<sub>e</sub></td>
+  <td class="num">206.49</td>
+  <td class="num">206.77</td>
+  <td class="num good">0.13%</td>
+</tr>
+</table>
+
+<p>One formula. Zero free parameters. The only input is α (which was derived at 0D). The output matches experiment to 0.13%.</p>
+
+<h3>Why 13/12?</h3>
+
+<p>The exponent 13/12 decomposes as (12 + 1) / 12. The structural reading:</p>
+
+<p><span class="b wb">12</span> = 4 pump strokes × 3 components. The four-stroke pump cycle (i⁰, i¹, i², i³) acts on each of the three triad components (•, Φ, ○). This gives 12 phase-component states: the complete set of configurations a particle can occupy within one generation.</p>
+
+<p><span class="s wb">+1</span> = the compositional whole. Axiom A4 says the whole is not the sum of its parts; it is their unity via Φ. The 12 states do not merely coexist; they are bound into a ⊙. That binding costs one additional unit of constraint.</p>
+
+<p><span class="w wb">13/12</span> = one full generation (12 states + their binding) divided by the number of states. The exponent reads: "one generation of α-coupling." The muon is one generation deeper in the constraint hierarchy than the electron.</p>
+
+<div class="note">The formula says: to make a muon from an electron, you fold the field through one complete generation of constraint. Each of the 12 phase-component states contributes one factor of (1/α)^(1/12), and the binding of those states into a whole contributes one more. The total cost: (1/α)^(13/12).</div>
+
+<!-- ============================================================ -->
+<h2>Visualization: The Mass Hierarchy</h2>
+
+<div class="sim-container">
+<h3 style="color: var(--gold);">Lepton Masses from α</h3>
+<p style="color: var(--dim); font-size: 16px;">The mass of each lepton generation, shown on a logarithmic scale. The muon/electron ratio is predicted by (1/α)^(13/12). The tau ratio remains open.</p>
+
+<canvas id="massCanvas" width="720" height="400"></canvas>
+</div>
+
+<!-- ============================================================ -->
+<h2>The Exponent Structure</h2>
+
+<div class="sim-container">
+<h3 style="color: var(--gold);">Building 13/12 from the Pump Cycle</h3>
+<p style="color: var(--dim); font-size: 16px;">The 12 phase-component states and their binding into a whole.</p>
+
+<canvas id="exponentCanvas" width="720" height="350"></canvas>
+</div>
+
+<!-- ============================================================ -->
+<h2>What About the Tau?</h2>
+
+<p>The tau lepton (m<sub>τ</sub>/m<sub>e</sub> = 3477.23) does not fit the same simple pattern. The exact exponent needed is:</p>
+
+<div class="eq-small">m<sub>τ</sub>/m<sub>e</sub> = (1/α)<sup>1.6572...</sup></div>
+
+<p>This is close to 5/3 (1.6667, error 4.75%) but not close enough for a zero-parameter prediction. It is also close to φ (1.618, error 2.4%), tantalizingly so, but again not precise enough.</p>
+
+<table>
+<tr><th>Ratio</th><th>Best fraction</th><th>Predicted</th><th>Measured</th><th>Error</th><th>Status</th></tr>
+<tr>
+  <td>m<sub>μ</sub>/m<sub>e</sub></td>
+  <td class="num">13/12</td>
+  <td class="num">206.49</td>
+  <td class="num">206.77</td>
+  <td class="num good">0.13%</td>
+  <td class="good">Solid</td>
+</tr>
+<tr>
+  <td>m<sub>τ</sub>/m<sub>e</sub></td>
+  <td class="num">?</td>
+  <td class="num">?</td>
+  <td class="num">3477.23</td>
+  <td class="num open">Open</td>
+  <td class="open">Open</td>
+</tr>
+<tr>
+  <td>m<sub>τ</sub>/m<sub>μ</sub></td>
+  <td class="num">?</td>
+  <td class="num">?</td>
+  <td class="num">16.82</td>
+  <td class="num open">Open</td>
+  <td class="open">Open</td>
+</tr>
+</table>
+
+<p>The tau generation does not cost the same as the muon generation. The second branching is <span class="it">cheaper</span> than the first (exponent ~0.574 vs 1.083). This suggests the generations are not uniform: the first branching (e → μ) opens the full 12+1 structure, while subsequent branchings use a different mechanism.</p>
+
+<div class="note open">The tau mass ratio is the first open problem at 1.5D. Its resolution will likely require understanding the relationship between the three nested circumpuncts in the 64-state architecture (your ⊙, the ⊙ you're inside, the ⊙s inside you) and how they generate the three lepton generations. The 64-state architecture predicts exactly three generations; the mass ratios between them are where the architecture meets measurement.</div>
+
+<!-- ============================================================ -->
+<h2>Connection to the 64-State Architecture</h2>
+
+<p>The framework's 64 states come from 3 circumpuncts × 2 channels = 6 binary degrees of freedom. 2⁶ = 64. These map to the Standard Model particle spectrum.</p>
+
+<p>The three circumpuncts correspond to three scales: the greater whole (future), your ⊙ (present), the parts (past). These three scales IS why there are three generations. The electron, muon, and tau are the same pattern (charged lepton) instantiated at three different scales of the nested hierarchy.</p>
+
+<p>The mass ratio between generations measures the "cost" of moving between scales. The muon/electron ratio says: the cost of one scale transition is (1/α)^(13/12). If the three scales are not equally spaced (and in a fractal hierarchy, they need not be), the second transition (μ → τ) has a different cost. The full generation structure requires understanding the nesting geometry of the three circumpuncts.</p>
+
+<!-- ============================================================ -->
+<h2>What 1.5D Tells Us About the Ladder</h2>
+
+<p>The dimensional ladder reveals its nature at 1.5D. The first three rungs (0D, 0.5D, 1D) each produced a single constant. At 1.5D, the output is not one number but a <span class="it">spectrum</span>: the mass ratios of the particle zoo. This is because 1.5D is a processual dimension (what energy is doing), not a structural dimension (what energy is). The branching generates multiplicity, not unity.</p>
+
+<p>The key insight: <span class="w wb">α is the generator of the mass spectrum.</span> The mass ratios are powers of 1/α. The exponents encode the constraint structure (how many phase-component states plus their binding). All particle masses, in principle, should be expressible as (1/α) raised to a power determined by the 64-state architecture.</p>
+
+<p>This means the entire particle spectrum is latent in α. The one independent constant at 0D contains, implicitly, every mass in the universe. The dimensional ladder does not add information at each rung; it unfolds the information already present in α.</p>
+
+<div class="eq" style="font-size: 22px; border-color: var(--gold);">
+  0D: α exists (the one free constant)<br>
+  0.5D: c follows from α + balance<br>
+  1D: ℏ follows from A0 + c<br>
+  1.5D: masses follow from α<sup>exponents</sup><br>
+  The ladder unfolds what α already contains.
+</div>
+
+<!-- ============================================================ -->
+
+<div class="footer">
+  <p><span class="w" style="font-size: 28px;">⊙</span></p>
+  <p>E = 1; all else is constraints.<br>
+  The particle spectrum branches from α.<br>
+  One constant, many masses.</p>
+  <p style="margin-top: 20px;"><a href="e_equals_1.html">E = 1</a> · <a href="speed_of_light.html">c = sin(i)</a> · <a href="planck_constant.html">ℏ = 1</a> · <a href="toe_map.html">TOE Map</a></p>
+  <p style="margin-top: 16px;"><a href="https://fractalreality.ca">fractalreality.ca</a></p>
+</div>
+
+</div><!-- .page -->
+
+<!-- ============================================================ -->
+<!-- SIMULATION CODE -->
+<!-- ============================================================ -->
+<script>
+const alpha_inv = 137.035999084;
+
+// ============================================================
+// VISUALIZATION 1: Mass hierarchy
+// ============================================================
+const massCanvas = document.getElementById('massCanvas');
+const mCtx = massCanvas.getContext('2d');
+
+function drawMassHierarchy() {
+  const dpr = window.devicePixelRatio || 1;
+  massCanvas.width = massCanvas.clientWidth * dpr;
+  massCanvas.height = 400 * dpr;
+  mCtx.scale(dpr, dpr);
+  const w = massCanvas.clientWidth;
+  const h = 400;
+  const pad = { left: 80, right: 40, top: 40, bottom: 60 };
+
+  mCtx.fillStyle = '#06060C';
+  mCtx.fillRect(0, 0, w, h);
+
+  const plotW = w - pad.left - pad.right;
+  const plotH = h - pad.top - pad.bottom;
+
+  // Masses in MeV
+  const particles = [
+    { name: 'e', mass: 0.511, color: '#4DA0C8', gen: 1 },
+    { name: 'μ', mass: 105.66, color: '#E88AAF', gen: 2 },
+    { name: 'τ', mass: 1776.86, color: '#9B7AD8', gen: 3 },
+  ];
+
+  // Predicted muon
+  const pred_mu = 0.511 * Math.pow(alpha_inv, 13/12);
+
+  // Log scale
+  const logMin = Math.log10(0.3);
+  const logMax = Math.log10(3000);
+
+  function xPos(mass) {
+    return pad.left + plotW * (Math.log10(mass) - logMin) / (logMax - logMin);
+  }
+
+  // Axis
+  mCtx.strokeStyle = '#444038';
+  mCtx.lineWidth = 1;
+  mCtx.beginPath();
+  mCtx.moveTo(pad.left, h - pad.bottom);
+  mCtx.lineTo(w - pad.right, h - pad.bottom);
+  mCtx.stroke();
+
+  // Log scale ticks
+  const ticks = [0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000];
+  mCtx.fillStyle = '#887850';
+  mCtx.font = '12px EB Garamond, serif';
+  mCtx.textAlign = 'center';
+  for (const t of ticks) {
+    const x = xPos(t);
+    if (x < pad.left || x > w - pad.right) continue;
+    mCtx.strokeStyle = '#1a1a2a';
+    mCtx.beginPath();
+    mCtx.moveTo(x, pad.top);
+    mCtx.lineTo(x, h - pad.bottom);
+    mCtx.stroke();
+    mCtx.fillText(t >= 1 ? t.toString() : t.toFixed(1), x, h - pad.bottom + 16);
+  }
+  mCtx.fillStyle = '#8A8272';
+  mCtx.font = '14px EB Garamond, serif';
+  mCtx.fillText('Mass (MeV/c²)', w / 2, h - 8);
+
+  // Draw particles
+  const barY = pad.top + plotH * 0.3;
+  const barH = 50;
+
+  for (const p of particles) {
+    const x = xPos(p.mass);
+
+    // Vertical line
+    mCtx.strokeStyle = p.color;
+    mCtx.lineWidth = 3;
+    mCtx.beginPath();
+    mCtx.moveTo(x, barY - 20);
+    mCtx.lineTo(x, barY + barH + 20);
+    mCtx.stroke();
+
+    // Label
+    mCtx.fillStyle = p.color;
+    mCtx.font = '24px EB Garamond, serif';
+    mCtx.textAlign = 'center';
+    mCtx.fillText(p.name, x, barY - 30);
+
+    mCtx.font = '13px EB Garamond, serif';
+    mCtx.fillText(p.mass.toFixed(p.mass < 1 ? 3 : 2) + ' MeV', x, barY + barH + 40);
+    mCtx.fillText('Gen ' + p.gen, x, barY + barH + 56);
+  }
+
+  // Predicted muon (dashed)
+  const xPred = xPos(pred_mu);
+  mCtx.strokeStyle = 'rgba(232, 138, 175, 0.4)';
+  mCtx.lineWidth = 2;
+  mCtx.setLineDash([6, 4]);
+  mCtx.beginPath();
+  mCtx.moveTo(xPred, barY - 10);
+  mCtx.lineTo(xPred, barY + barH + 10);
+  mCtx.stroke();
+  mCtx.setLineDash([]);
+  mCtx.fillStyle = 'rgba(232, 138, 175, 0.6)';
+  mCtx.font = '12px EB Garamond, serif';
+  mCtx.fillText('predicted', xPred + 4, barY + barH + 76);
+
+  // Arrow between e and μ with formula
+  const xe = xPos(0.511);
+  const xmu = xPos(105.66);
+  const arrowY = barY + barH + 90;
+  mCtx.strokeStyle = '#B8A060';
+  mCtx.lineWidth = 1.5;
+  mCtx.beginPath();
+  mCtx.moveTo(xe, arrowY);
+  mCtx.lineTo(xmu, arrowY);
+  mCtx.stroke();
+  // Arrowhead
+  mCtx.beginPath();
+  mCtx.moveTo(xmu - 8, arrowY - 5);
+  mCtx.lineTo(xmu, arrowY);
+  mCtx.lineTo(xmu - 8, arrowY + 5);
+  mCtx.stroke();
+
+  mCtx.fillStyle = '#B8A060';
+  mCtx.font = '15px EB Garamond, serif';
+  mCtx.textAlign = 'center';
+  mCtx.fillText('× (1/α)^{13/12} = × 206.49', (xe + xmu) / 2, arrowY - 8);
+  mCtx.fillStyle = '#4DB8A0';
+  mCtx.font = '12px EB Garamond, serif';
+  mCtx.fillText('error: 0.13%', (xe + xmu) / 2, arrowY + 16);
+
+  // Arrow between μ and τ
+  const xtau = xPos(1776.86);
+  const arrowY2 = arrowY + 36;
+  mCtx.strokeStyle = 'rgba(184, 160, 96, 0.3)';
+  mCtx.lineWidth = 1;
+  mCtx.setLineDash([4, 4]);
+  mCtx.beginPath();
+  mCtx.moveTo(xmu, arrowY2);
+  mCtx.lineTo(xtau, arrowY2);
+  mCtx.stroke();
+  mCtx.setLineDash([]);
+
+  mCtx.fillStyle = '#E06060';
+  mCtx.font = '13px EB Garamond, serif';
+  mCtx.fillText('× 16.82 = (1/α)^(?) — open', (xmu + xtau) / 2, arrowY2 - 8);
+}
+
+// ============================================================
+// VISUALIZATION 2: Exponent structure (13/12)
+// ============================================================
+const expCanvas = document.getElementById('exponentCanvas');
+const eCtx = expCanvas.getContext('2d');
+
+function drawExponentStructure() {
+  const dpr = window.devicePixelRatio || 1;
+  expCanvas.width = expCanvas.clientWidth * dpr;
+  expCanvas.height = 350 * dpr;
+  eCtx.scale(dpr, dpr);
+  const w = expCanvas.clientWidth;
+  const h = 350;
+
+  eCtx.fillStyle = '#06060C';
+  eCtx.fillRect(0, 0, w, h);
+
+  const cx = w / 2;
+
+  // Title
+  eCtx.fillStyle = '#B8A060';
+  eCtx.font = '18px EB Garamond, serif';
+  eCtx.textAlign = 'center';
+  eCtx.fillText('13/12 = (4 pump strokes × 3 components + 1 whole) / 12', cx, 30);
+
+  // Draw the 12 phase-component states as a grid
+  const gridX = 80;
+  const gridY = 60;
+  const cellW = 110;
+  const cellH = 50;
+  const phases = ['i⁰ (+1)', 'i¹ (+i)', 'i² (−1)', 'i³ (−i)'];
+  const components = ['• (aperture)', 'Φ (field)', '○ (boundary)'];
+  const phaseColors = ['#4DA0C8', '#E88AAF', '#4DB8A0', '#9B7AD8'];
+  const compColors = ['#E88AAF', '#4DB8A0', '#4DA0C8'];
+
+  // Column headers (pump strokes)
+  eCtx.font = '14px EB Garamond, serif';
+  eCtx.textAlign = 'center';
+  for (let p = 0; p < 4; p++) {
+    eCtx.fillStyle = phaseColors[p];
+    eCtx.fillText(phases[p], gridX + cellW * p + cellW / 2, gridY + 16);
+  }
+
+  // Row headers (components)
+  eCtx.textAlign = 'right';
+  for (let c = 0; c < 3; c++) {
+    eCtx.fillStyle = compColors[c];
+    eCtx.fillText(components[c], gridX - 8, gridY + 36 + cellH * c + cellH / 2 + 4);
+  }
+
+  // Grid cells
+  let cellNum = 0;
+  for (let c = 0; c < 3; c++) {
+    for (let p = 0; p < 4; p++) {
+      cellNum++;
+      const x = gridX + cellW * p;
+      const y = gridY + 36 + cellH * c;
+
+      // Cell background
+      eCtx.fillStyle = 'rgba(184, 160, 96, 0.06)';
+      eCtx.fillRect(x + 2, y + 2, cellW - 4, cellH - 4);
+      eCtx.strokeStyle = 'rgba(184, 160, 96, 0.2)';
+      eCtx.lineWidth = 1;
+      eCtx.strokeRect(x + 2, y + 2, cellW - 4, cellH - 4);
+
+      // Cell number
+      eCtx.fillStyle = '#B8A060';
+      eCtx.font = '20px EB Garamond, serif';
+      eCtx.textAlign = 'center';
+      eCtx.fillText(cellNum, x + cellW / 2, y + cellH / 2 + 6);
+    }
+  }
+
+  // The +1 whole
+  const wholeY = gridY + 36 + cellH * 3 + 16;
+  eCtx.fillStyle = 'rgba(232, 138, 175, 0.08)';
+  eCtx.fillRect(gridX + 2, wholeY, cellW * 4 - 4, cellH - 4);
+  eCtx.strokeStyle = 'rgba(232, 138, 175, 0.4)';
+  eCtx.lineWidth = 2;
+  eCtx.strokeRect(gridX + 2, wholeY, cellW * 4 - 4, cellH - 4);
+
+  eCtx.fillStyle = '#E88AAF';
+  eCtx.font = '20px EB Garamond, serif';
+  eCtx.textAlign = 'center';
+  eCtx.fillText('⊙  +1 (compositional whole, A4)', gridX + cellW * 2, wholeY + cellH / 2 + 2);
+
+  // Summary
+  const sumY = wholeY + cellH + 24;
+  eCtx.fillStyle = '#B8A060';
+  eCtx.font = '18px EB Garamond, serif';
+  eCtx.textAlign = 'center';
+  eCtx.fillText('12 states + 1 binding = 13', cx, sumY);
+  eCtx.fillStyle = '#8A8272';
+  eCtx.font = '15px EB Garamond, serif';
+  eCtx.fillText('Exponent = 13/12 : one generation costs (1/α) per state, plus (1/α) for the whole', cx, sumY + 24);
+}
+
+// Initialize
+drawMassHierarchy();
+drawExponentStructure();
+</script>
+
+</body>
+</html>

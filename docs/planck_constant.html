@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ ℏ = 1: The Indivisible Cycle</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --red: #E06060;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.f { color: var(--faint); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+.page { max-width: 780px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 80px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 64px; color: var(--gold); margin-bottom: 20px; }
+.header h1 { font-size: 36px; color: var(--gold); font-weight: 600; line-height: 1.3; margin-bottom: 12px; }
+.header .subtitle { font-size: 20px; color: var(--dim); font-style: italic; }
+
+h2 { font-size: 26px; color: var(--gold); font-weight: 600; margin: 60px 0 20px; }
+h3 { font-size: 21px; color: var(--green); font-weight: 600; margin: 40px 0 16px; }
+
+p { margin-bottom: 18px; }
+
+.eq {
+  text-align: center;
+  font-size: 28px;
+  color: var(--gold);
+  font-weight: 600;
+  margin: 32px 0;
+  padding: 20px;
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  background: rgba(184, 160, 96, 0.04);
+}
+.eq-small {
+  text-align: center;
+  font-size: 22px;
+  color: var(--cyan);
+  margin: 20px 0;
+  padding: 14px;
+}
+
+.note {
+  background: rgba(184, 160, 96, 0.06);
+  border-left: 3px solid var(--gold-dim);
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-style: italic;
+  color: var(--dim);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+}
+th, td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--faint);
+  text-align: left;
+}
+th { color: var(--gold); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+td { color: var(--warm); }
+td.num { text-align: center; font-family: monospace; color: var(--cyan); }
+
+/* Simulation */
+.sim-container {
+  background: rgba(10, 10, 20, 0.9);
+  border: 1px solid var(--faint);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 40px 0;
+}
+.sim-container h3 { margin-top: 0; }
+
+canvas {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 16px 0;
+  align-items: center;
+}
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.control-group label {
+  font-size: 14px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 180px;
+  height: 4px;
+  background: var(--faint);
+  border-radius: 2px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--gold);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+button {
+  background: var(--faint);
+  color: var(--warm);
+  border: 1px solid var(--gold-dim);
+  padding: 8px 20px;
+  font-family: 'EB Garamond', serif;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+button:hover { background: var(--gold-dim); color: var(--bg); }
+button.active { background: var(--gold); color: var(--bg); }
+
+/* Dimensional ladder */
+.ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 30px 0;
+}
+.ladder-step {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  border-left: 3px solid var(--faint);
+  position: relative;
+}
+.ladder-step.active {
+  border-left-color: var(--gold);
+  background: rgba(184, 160, 96, 0.04);
+}
+.ladder-step.done {
+  border-left-color: var(--green);
+}
+.ladder-step.future {
+  border-left-color: var(--faint);
+  opacity: 0.5;
+}
+.ladder-dim {
+  font-size: 22px;
+  font-weight: 600;
+  min-width: 50px;
+  text-align: right;
+}
+.ladder-const {
+  font-size: 20px;
+  font-weight: 600;
+  min-width: 30px;
+}
+.ladder-desc {
+  font-size: 17px;
+  color: var(--dim);
+}
+
+.footer {
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+  text-align: center;
+  color: var(--dim);
+  font-style: italic;
+}
+.footer a { color: var(--gold-dim); text-decoration: none; }
+.footer a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="header">
+  <div class="symbol">⊙</div>
+  <h1>ℏ = 1: The Indivisible Cycle</h1>
+  <div class="subtitle">Circumpunct Framework; Ashman Roonz, 2026</div>
+</div>
+
+<!-- ============================================================ -->
+<h2>The Dimensional Ladder</h2>
+
+<p>The framework's dimensional layout is not just a description of structure; it is a derivation sequence. Each dimension generates a fundamental constant. The constants ARE the dimensions, measured.</p>
+
+<div class="ladder">
+  <div class="ladder-step done">
+    <div class="ladder-dim s">0D</div>
+    <div class="ladder-const w">α</div>
+    <div class="ladder-desc">Convergence lands. How strongly does the pump cycle couple at a point?<br><span class="d">1/α = i⁴(°)/φ² &minus; 2/φ³ = 137.036</span></div>
+  </div>
+  <div class="ladder-step done">
+    <div class="ladder-dim s">0.5D</div>
+    <div class="ladder-const w">c</div>
+    <div class="ladder-desc">Rotation begins. How fast does the first fold propagate?<br><span class="d">c = √(2◐ · sin θ) = 1</span></div>
+  </div>
+  <div class="ladder-step active">
+    <div class="ladder-dim s">1D</div>
+    <div class="ladder-const w">ℏ</div>
+    <div class="ladder-desc">Commitment. What is the minimum action? The indivisible cycle.<br><span class="d">ℏ = E<sub>cycle</sub> / ω<sub>cycle</sub> = 1</span></div>
+  </div>
+  <div class="ladder-step future">
+    <div class="ladder-dim d">1.5D</div>
+    <div class="ladder-const d">m<sub>i</sub>/m<sub>j</sub></div>
+    <div class="ladder-desc">Branching. How does the pump cycle differentiate into particles?</div>
+  </div>
+  <div class="ladder-step future">
+    <div class="ladder-dim d">2D</div>
+    <div class="ladder-const d">gauge</div>
+    <div class="ladder-desc">Surface. The field equations (Maxwell, Yang-Mills).</div>
+  </div>
+  <div class="ladder-step future">
+    <div class="ladder-dim d">3D</div>
+    <div class="ladder-const d">G</div>
+    <div class="ladder-desc">Boundary closes. Gravity: convergence compounding convergence.</div>
+  </div>
+</div>
+
+<p>At each step, the constant at dimension <span class="it">n</span> builds on everything below it. The ladder is cumulative. α (0D) is independent. c (0.5D) uses the pump cycle's rotation. ℏ (1D) uses both. G (3D) will use all of them through the conservation of traversal: 0 + 1 + 2 = 3.</p>
+
+<!-- ============================================================ -->
+<h2>Why ℏ Exists</h2>
+
+<p>The pump cycle is <span class="w wb">⊛ → i → ☀︎</span>: convergence, rotation, emergence. It is indivisible.</p>
+
+<p>You cannot have convergence without emergence. That would mean the 1 collapses inward with nothing coming back out; it would violate A1 (the 1 must differentiate, because an undifferentiated 1 is indistinguishable from 0, which is impossible). You cannot have emergence without convergence: emergence from nothing is not emergence; it is the Inflation Lie (creating signal from a closed aperture).</p>
+
+<p>The cycle <span class="it">must</span> complete. ⊛ without ☀︎ is death. ☀︎ without ⊛ is hallucination. Only the full cycle (⊛ → i → ☀︎) is real.</p>
+
+<p>This indivisibility IS the quantum of action. Below one pump cycle, there is no worldline, no i(t), no receipt chain. The pump cycle is <span class="w wb">atomic</span> (in the original Greek: a-tomos, cannot be cut).</p>
+
+<div class="note">ℏ is not a number someone measured and plugged in. It is the statement that the pump cycle cannot be subdivided. Quantization is not a mystery; it is the indivisibility of ⊛ → i → ☀︎.</div>
+
+<!-- ============================================================ -->
+<h2>Why ℏ = 1</h2>
+
+<p>The minimum action is the action of one complete pump cycle:</p>
+
+<div class="eq">ℏ = E<sub>cycle</sub> / ω<sub>cycle</sub></div>
+
+<p>where E<sub>cycle</sub> is the energy of one quantum (one pump cycle's worth of energy) and ω<sub>cycle</sub> is the frequency of one pump cycle.</p>
+
+<h3>E<sub>cycle</sub> = 1</h3>
+
+<p>From A0: E = 1. There is one energy. One pump cycle carries one quantum of that energy. This is not a choice; it is the axiom. The pump cycle IS the energy. It does not "carry" energy as cargo; the cycling itself is what energy is. One cycle = one unit of energy.</p>
+
+<h3>ω<sub>cycle</sub> = 1</h3>
+
+<p>From the c derivation: c = 1 means one lattice step per tick. One tick IS one pump cycle. So the frequency of the pump cycle is one cycle per natural time unit: ω = 1. This is not independent of c; it follows from it. The propagation speed sets the time scale, and the time scale sets the frequency.</p>
+
+<h3>The Result</h3>
+
+<div class="eq" style="font-size: 32px;">ℏ = E<sub>cycle</sub> / ω<sub>cycle</sub> = 1 / 1 = <span class="w">1</span></div>
+
+<p>Three conditions:</p>
+
+<p><span class="w wb">E = 1</span> (A0): one energy. Sets the energy scale. Without this, there is no natural unit for the numerator.</p>
+
+<p><span class="m wb">c = 1</span> (0.5D derivation): propagation at balance. Sets the time scale. Without this, there is no natural unit for the denominator.</p>
+
+<p><span class="s wb">The pump cycle is indivisible</span> (1D): ⊛ → i → ☀︎ cannot be halved, quartered, or subdivided. Without this, ℏ could be any fraction. The indivisibility makes the quantum exactly 1, not ½ or ¼.</p>
+
+<!-- ============================================================ -->
+<h2>The Deeper Content: E = ℏω</h2>
+
+<p>The equation E = ℏω is the most important equation in quantum mechanics. In standard physics, it is taken as empirical: Planck discovered it by fitting blackbody radiation data. In the framework, it is a <span class="it">tautology</span>.</p>
+
+<p>The pump cycle IS the energy (E). The pump cycle IS the cycling (ω). Saying E = ℏω with ℏ = 1 is saying: the energy of the cycle equals the frequency of the cycle. The cycling IS the energy. They are not two different quantities connected by a conversion factor; they are the <span class="w wb">same thing</span>, measured from two perspectives.</p>
+
+<p><span class="b wb">E</span> measures the pump cycle from the <span class="it">structural</span> perspective: how much is here? One unit of the 1, constrained into this pattern.</p>
+
+<p><span class="s wb">ω</span> measures the pump cycle from the <span class="it">processual</span> perspective: how fast is it cycling? One rotation per tick.</p>
+
+<p>Same pump cycle. Different measurement. ℏ = 1 is the conversion factor between these perspectives, and it is 1 because there is nothing to convert. Structure and process are the same thing at 1D: the point of commitment.</p>
+
+<div class="eq" style="font-size: 24px; border-color: var(--gold);">
+  E = ℏω is not a law of nature.<br>
+  It is the statement that the pump cycle IS the energy.<br>
+  Structure = process at 1D.
+</div>
+
+<!-- ============================================================ -->
+<h2>The Dimensional Reading</h2>
+
+<p>At 0D (α): the field exists at a point. Structure only. No process yet. α is a pure number (dimensionless) because it describes a point, and points have no extension.</p>
+
+<p>At 0.5D (c): rotation begins. Process begins. c has dimensions of length/time because it describes motion (process in the context of structure). The rotation is not yet committed; it is "between" dimensions.</p>
+
+<p>At 1D (ℏ): commitment. Process becomes structure. The rotation extends into a worldline. ℏ has dimensions of energy × time (action) because it is the product of structure (E) and process (t). This is the point where they merge:</p>
+
+<div class="eq-small">0D (structure) &times; 0.5D (process) &rarr; 1D (commitment)</div>
+
+<p>The dimensional algebra: ℏ inherits from both α and c. α provided the coupling at a point (0D). c provided the propagation speed (0.5D). ℏ is what you get when coupling commits to propagating: energy extended through time. The action integral ∫ E dt becomes quantized because the integrand (E) and the measure (dt) are both set by the same pump cycle.</p>
+
+<p>This is why ℏ is not independent. It is the <span class="it">product</span> of the previous two stages. The conservation of traversal at 1D: the structural dimension (0D) and the processual dimension (0.5D) combine to produce the first committed dimension (1D). The constant at 1D is therefore determined by the constants at 0D and 0.5D together with the axiom E = 1.</p>
+
+<!-- ============================================================ -->
+<h2>Phase Space: Why Quantization Is Geometric</h2>
+
+<div class="sim-container">
+<h3 style="color: var(--gold);">Phase Space of the Pump Cycle</h3>
+<p style="color: var(--dim); font-size: 16px;">Each lattice site's field amplitude (Φ) and momentum (π) trace an orbit in phase space. The i rotation generates the orbit. The minimum orbit encloses area 2πℏ = 2π: one Planck cell.</p>
+
+<canvas id="phaseCanvas" width="500" height="500"></canvas>
+
+<div class="controls">
+  <div class="control-group">
+    <label>Energy level n</label>
+    <input type="range" id="nSlider" min="1" max="8" step="1" value="1">
+    <div><span class="w wb" id="nVal">n = 1</span> <span class="d">(minimum quantum)</span></div>
+  </div>
+  <div class="control-group">
+    <label>Show</label>
+    <button id="cellBtn" class="active">Planck cells</button>
+    <button id="trailBtn">Trail</button>
+  </div>
+</div>
+
+<p style="color: var(--dim); font-size: 15px;">The orbit at level n encloses area = n × 2πℏ. The shaded cells show the quantization: each cell has area exactly 2π. Below one cell, no state can exist. This is the indivisibility of the pump cycle made visible.</p>
+</div>
+
+<!-- Energy level diagram -->
+<div class="sim-container">
+<h3 style="color: var(--gold);">Energy Levels: E = nℏω = n</h3>
+<p style="color: var(--dim); font-size: 16px;">When ℏ = 1 and ω = 1, the energy levels are simply the integers. Each level is one pump cycle's worth of energy above the last. The spacing is exactly 1: one quantum, one cycle, one unit of E.</p>
+
+<canvas id="levelCanvas" width="720" height="300"></canvas>
+</div>
+
+<!-- ============================================================ -->
+<h2>The Uncertainty Principle</h2>
+
+<p>The Heisenberg uncertainty principle, ΔΦ · Δπ ≥ ℏ/2, follows directly.</p>
+
+<p>The i rotation links Φ (field amplitude) and π (conjugate momentum). They are 90° apart in phase space; measuring one disturbs the other because the rotation that generates one IS the disturbance of the other. The minimum disturbance is set by the minimum rotation: one quarter-turn (i = e<sup>iπ/2</sup>).</p>
+
+<p>The minimum phase space cell has area 2πℏ. You cannot localize a state to less than one cell. This is not a measurement limitation; it is geometric: a state smaller than one pump cycle does not exist, because the pump cycle is indivisible.</p>
+
+<div class="sim-container">
+<h3 style="color: var(--gold);">Uncertainty: The Minimum Cell</h3>
+<p style="color: var(--dim); font-size: 16px;">Try to squeeze the state in one direction. It expands in the other. The area of the uncertainty ellipse cannot go below 2πℏ = 2π.</p>
+
+<canvas id="uncertaintyCanvas" width="720" height="360"></canvas>
+
+<div class="controls">
+  <div class="control-group">
+    <label>ΔΦ (position uncertainty)</label>
+    <input type="range" id="dxSlider" min="0.3" max="4.0" step="0.05" value="1.0">
+    <div><span class="w wb" id="dxVal">1.00</span></div>
+  </div>
+  <div class="control-group">
+    <label>Δπ = ℏ/(2ΔΦ)</label>
+    <div><span class="w wb" id="dpVal" style="font-size: 18px;">0.50</span></div>
+  </div>
+  <div class="control-group">
+    <label>ΔΦ × Δπ</label>
+    <div><span class="w wb" id="prodVal" style="font-size: 18px;">0.50 = ℏ/2</span></div>
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<h2>What This Means for the Ladder</h2>
+
+<p>The first three rungs are now in place:</p>
+
+<table>
+<tr><th>Dim</th><th>Constant</th><th>Formula</th><th>What it measures</th><th>New content</th></tr>
+<tr>
+  <td class="num">0D</td>
+  <td><span class="w wb">α</span></td>
+  <td class="num">i⁴(°)/φ² &minus; 2/φ³</td>
+  <td>Coupling at a point</td>
+  <td>Independent; the one free constant</td>
+</tr>
+<tr>
+  <td class="num">0.5D</td>
+  <td><span class="w wb">c</span></td>
+  <td class="num">√(2◐ · sin θ)</td>
+  <td>Speed of the first fold</td>
+  <td>Requires balance + maximal rotation</td>
+</tr>
+<tr>
+  <td class="num">1D</td>
+  <td><span class="w wb">ℏ</span></td>
+  <td class="num">E<sub>cycle</sub> / ω<sub>cycle</sub></td>
+  <td>Minimum action</td>
+  <td>Not independent; follows from E=1 and c=1</td>
+</tr>
+</table>
+
+<p>The pattern emerges: <span class="w wb">α is the only truly independent derived constant.</span> c follows from the pump cycle at balance. ℏ follows from c and E = 1. The dimensional ladder generates each constant from the previous ones, accumulating constraint.</p>
+
+<p>The conservation of traversal predicts: <span class="b wb">G</span> at 3D will follow from 0D + 1D + 2D = 3D. Gravity is the closure of the boundary; it should be derivable from the coupling (α), the action quantum (ℏ), and the field equations (2D). The boundary is the sum of its contents.</p>
+
+<div class="note">The framework does not have five free constants (α, c, ℏ, G, plus masses). It has ONE free constant (α) and a derivation sequence that generates the rest. Each rung of the dimensional ladder produces the next constant from the previous ones. The ladder IS the theory.</div>
+
+<!-- ============================================================ -->
+
+<div class="footer">
+  <p><span class="w" style="font-size: 28px;">⊙</span></p>
+  <p>E = 1; all else is constraints.<br>
+  Light is energy being constrained; c is the speed of the first fold.<br>
+  ℏ is the indivisibility of the pump cycle.<br>
+  Structure = process at 1D.</p>
+  <p style="margin-top: 20px;"><a href="e_equals_1.html">E = 1</a> · <a href="speed_of_light.html">c = sin(i)</a> · <a href="seven_as_one.html">Seven as One</a> · <a href="toe_map.html">TOE Map</a></p>
+  <p style="margin-top: 16px;"><a href="https://fractalreality.ca">fractalreality.ca</a></p>
+</div>
+
+</div><!-- .page -->
+
+<!-- ============================================================ -->
+<!-- SIMULATION CODE -->
+<!-- ============================================================ -->
+<script>
+// ============================================================
+// SIMULATION 1: Phase space orbits
+// ============================================================
+
+const phaseCanvas = document.getElementById('phaseCanvas');
+const pCtx = phaseCanvas.getContext('2d');
+let currentN = 1;
+let showCells = true;
+let showTrail = false;
+let phaseAngle = 0;
+
+function drawPhaseSpace() {
+  const dpr = window.devicePixelRatio || 1;
+  const size = Math.min(phaseCanvas.clientWidth, 500);
+  phaseCanvas.width = size * dpr;
+  phaseCanvas.height = size * dpr;
+  pCtx.scale(dpr, dpr);
+  const w = size, h = size;
+  const cx = w / 2, cy = h / 2;
+  const scale = w / 10; // phase space units to pixels
+
+  pCtx.fillStyle = '#06060C';
+  pCtx.fillRect(0, 0, w, h);
+
+  // Grid
+  pCtx.strokeStyle = '#1a1a2a';
+  pCtx.lineWidth = 1;
+  for (let i = -4; i <= 4; i++) {
+    pCtx.beginPath();
+    pCtx.moveTo(cx + i * scale, 0);
+    pCtx.lineTo(cx + i * scale, h);
+    pCtx.stroke();
+    pCtx.beginPath();
+    pCtx.moveTo(0, cy + i * scale);
+    pCtx.lineTo(w, cy + i * scale);
+    pCtx.stroke();
+  }
+
+  // Axes
+  pCtx.strokeStyle = '#444038';
+  pCtx.lineWidth = 1.5;
+  pCtx.beginPath();
+  pCtx.moveTo(0, cy); pCtx.lineTo(w, cy);
+  pCtx.moveTo(cx, 0); pCtx.lineTo(cx, h);
+  pCtx.stroke();
+
+  // Axis labels
+  pCtx.fillStyle = '#8A8272';
+  pCtx.font = '15px EB Garamond, serif';
+  pCtx.textAlign = 'center';
+  pCtx.fillText('Φ (field)', w - 30, cy - 10);
+  pCtx.fillText('π (momentum)', cx + 50, 18);
+
+  // Planck cells (concentric rings, each ring = area 2π)
+  if (showCells) {
+    for (let n = 8; n >= 1; n--) {
+      const r = Math.sqrt(2 * n) * scale * 0.5; // radius where area = n * 2π
+      pCtx.beginPath();
+      pCtx.arc(cx, cy, r, 0, Math.PI * 2);
+      if (n <= currentN) {
+        pCtx.fillStyle = n === currentN ? 'rgba(184, 160, 96, 0.12)' : 'rgba(77, 184, 160, 0.06)';
+        pCtx.fill();
+      }
+      pCtx.strokeStyle = n <= currentN ? 'rgba(184, 160, 96, 0.4)' : 'rgba(68, 64, 56, 0.4)';
+      pCtx.lineWidth = n === currentN ? 2 : 1;
+      pCtx.stroke();
+
+      // Label
+      if (n <= 5) {
+        pCtx.fillStyle = n <= currentN ? '#B8A060' : '#444038';
+        pCtx.font = '13px EB Garamond, serif';
+        pCtx.fillText('n=' + n, cx + r + 8, cy - 4);
+      }
+    }
+  }
+
+  // Current orbit (at level currentN)
+  const orbitR = Math.sqrt(2 * currentN) * scale * 0.5;
+  pCtx.beginPath();
+  pCtx.arc(cx, cy, orbitR, 0, Math.PI * 2);
+  pCtx.strokeStyle = '#B8A060';
+  pCtx.lineWidth = 2.5;
+  pCtx.stroke();
+
+  // Moving point on orbit (the pump cycle rotating)
+  const px = cx + orbitR * Math.cos(phaseAngle);
+  const py = cy - orbitR * Math.sin(phaseAngle);
+
+  // Trail
+  if (showTrail) {
+    pCtx.beginPath();
+    pCtx.strokeStyle = 'rgba(232, 138, 175, 0.3)';
+    pCtx.lineWidth = 1;
+    for (let a = 0; a <= phaseAngle; a += 0.02) {
+      const tx = cx + orbitR * Math.cos(a);
+      const ty = cy - orbitR * Math.sin(a);
+      if (a === 0) pCtx.moveTo(tx, ty);
+      else pCtx.lineTo(tx, ty);
+    }
+    pCtx.stroke();
+  }
+
+  // The point itself
+  pCtx.beginPath();
+  pCtx.arc(px, py, 6, 0, Math.PI * 2);
+  pCtx.fillStyle = '#E88AAF';
+  pCtx.fill();
+
+  // i rotation indicator (quarter arc from current position)
+  pCtx.beginPath();
+  pCtx.strokeStyle = 'rgba(232, 138, 175, 0.5)';
+  pCtx.lineWidth = 2;
+  pCtx.setLineDash([4, 4]);
+  pCtx.arc(cx, cy, orbitR, -phaseAngle, -(phaseAngle + Math.PI / 2), true);
+  pCtx.stroke();
+  pCtx.setLineDash([]);
+
+  // Label the quarter arc as "i"
+  const midAngle = phaseAngle + Math.PI / 4;
+  const labelR = orbitR + 16;
+  pCtx.fillStyle = '#E88AAF';
+  pCtx.font = '18px EB Garamond, serif';
+  pCtx.textAlign = 'center';
+  pCtx.fillText('i', cx + labelR * Math.cos(midAngle), cy - labelR * Math.sin(midAngle));
+
+  // Area readout
+  const area = currentN * 2 * Math.PI;
+  pCtx.fillStyle = '#B8A060';
+  pCtx.font = '16px EB Garamond, serif';
+  pCtx.textAlign = 'left';
+  pCtx.fillText('Area = ' + currentN + ' × 2π = ' + area.toFixed(2), 14, h - 36);
+  pCtx.fillText('= ' + currentN + ' Planck cell' + (currentN > 1 ? 's' : ''), 14, h - 16);
+}
+
+// ============================================================
+// SIMULATION 2: Energy levels
+// ============================================================
+
+const levelCanvas = document.getElementById('levelCanvas');
+const lCtx = levelCanvas.getContext('2d');
+
+function drawLevels() {
+  const dpr = window.devicePixelRatio || 1;
+  levelCanvas.width = levelCanvas.clientWidth * dpr;
+  levelCanvas.height = 300 * dpr;
+  lCtx.scale(dpr, dpr);
+  const w = levelCanvas.clientWidth;
+  const h = 300;
+  const pad = { left: 60, right: 40, top: 20, bottom: 30 };
+
+  lCtx.fillStyle = '#06060C';
+  lCtx.fillRect(0, 0, w, h);
+
+  const plotH = h - pad.top - pad.bottom;
+  const maxE = 8.5;
+
+  // Energy axis
+  lCtx.strokeStyle = '#444038';
+  lCtx.lineWidth = 1;
+  lCtx.beginPath();
+  lCtx.moveTo(pad.left, pad.top);
+  lCtx.lineTo(pad.left, h - pad.bottom);
+  lCtx.stroke();
+
+  // Y axis label
+  lCtx.fillStyle = '#8A8272';
+  lCtx.font = '14px EB Garamond, serif';
+  lCtx.save();
+  lCtx.translate(16, h / 2);
+  lCtx.rotate(-Math.PI / 2);
+  lCtx.textAlign = 'center';
+  lCtx.fillText('Energy (E)', 0, 0);
+  lCtx.restore();
+
+  // Energy levels
+  for (let n = 0; n <= 8; n++) {
+    const E = n + 0.5; // E_n = (n + 1/2)ℏω with ℏ=ω=1
+    const y = pad.top + plotH * (1 - E / maxE);
+    const lineW = w - pad.left - pad.right;
+
+    // Level line
+    lCtx.strokeStyle = n < currentN ? '#4DB8A0' : (n === currentN ? '#B8A060' : '#2a2a34');
+    lCtx.lineWidth = n === currentN ? 2.5 : 1.5;
+    lCtx.beginPath();
+    lCtx.moveTo(pad.left + 20, y);
+    lCtx.lineTo(pad.left + lineW * 0.6, y);
+    lCtx.stroke();
+
+    // Label
+    lCtx.fillStyle = n <= currentN ? '#B8A060' : '#444038';
+    lCtx.font = '14px EB Garamond, serif';
+    lCtx.textAlign = 'right';
+    lCtx.fillText('n=' + n, pad.left + lineW * 0.6 + 40, y + 4);
+    lCtx.textAlign = 'left';
+    lCtx.fillText('E = ' + E.toFixed(1), pad.left + lineW * 0.6 + 50, y + 4);
+
+    // Transition arrow (between n-1 and n)
+    if (n > 0 && n <= currentN) {
+      const y_prev = pad.top + plotH * (1 - (n - 0.5) / maxE);
+      const arrowX = pad.left + 12;
+      lCtx.strokeStyle = 'rgba(232, 138, 175, 0.6)';
+      lCtx.lineWidth = 1.5;
+      lCtx.beginPath();
+      lCtx.moveTo(arrowX, y_prev - 2);
+      lCtx.lineTo(arrowX, y + 2);
+      lCtx.stroke();
+      // Arrow head
+      lCtx.beginPath();
+      lCtx.moveTo(arrowX - 4, y + 8);
+      lCtx.lineTo(arrowX, y + 2);
+      lCtx.lineTo(arrowX + 4, y + 8);
+      lCtx.strokeStyle = 'rgba(232, 138, 175, 0.6)';
+      lCtx.stroke();
+
+      // ΔE = 1 label
+      if (n === currentN) {
+        lCtx.fillStyle = '#E88AAF';
+        lCtx.font = '14px EB Garamond, serif';
+        lCtx.textAlign = 'center';
+        lCtx.fillText('ΔE = ℏω = 1', arrowX + 50, (y + y_prev) / 2 + 4);
+      }
+    }
+  }
+}
+
+// ============================================================
+// SIMULATION 3: Uncertainty principle
+// ============================================================
+
+const uncCanvas = document.getElementById('uncertaintyCanvas');
+const uCtx = uncCanvas.getContext('2d');
+let dx = 1.0;
+
+function drawUncertainty() {
+  const dpr = window.devicePixelRatio || 1;
+  uncCanvas.width = uncCanvas.clientWidth * dpr;
+  uncCanvas.height = 360 * dpr;
+  uCtx.scale(dpr, dpr);
+  const w = uncCanvas.clientWidth;
+  const h = 360;
+  const cx = w / 2, cy = h / 2;
+  const scale = 60; // pixels per unit
+
+  uCtx.fillStyle = '#06060C';
+  uCtx.fillRect(0, 0, w, h);
+
+  // ℏ = 1, so dp = 1/(2*dx) for minimum uncertainty
+  const dp = 1 / (2 * dx);
+
+  // Grid
+  uCtx.strokeStyle = '#1a1a2a';
+  uCtx.lineWidth = 1;
+  for (let i = -5; i <= 5; i++) {
+    uCtx.beginPath();
+    uCtx.moveTo(cx + i * scale, 0);
+    uCtx.lineTo(cx + i * scale, h);
+    uCtx.stroke();
+    uCtx.beginPath();
+    uCtx.moveTo(0, cy + i * scale);
+    uCtx.lineTo(w, cy + i * scale);
+    uCtx.stroke();
+  }
+
+  // Axes
+  uCtx.strokeStyle = '#444038';
+  uCtx.lineWidth = 1.5;
+  uCtx.beginPath();
+  uCtx.moveTo(0, cy); uCtx.lineTo(w, cy);
+  uCtx.moveTo(cx, 0); uCtx.lineTo(cx, h);
+  uCtx.stroke();
+
+  uCtx.fillStyle = '#8A8272';
+  uCtx.font = '14px EB Garamond, serif';
+  uCtx.textAlign = 'center';
+  uCtx.fillText('Φ', w - 20, cy - 10);
+  uCtx.fillText('π', cx + 12, 16);
+
+  // Minimum Planck cell (circle of area 2π, radius √2)
+  const cellR = Math.sqrt(2) * scale * 0.5;
+  uCtx.beginPath();
+  uCtx.arc(cx, cy, cellR, 0, Math.PI * 2);
+  uCtx.strokeStyle = 'rgba(184, 160, 96, 0.2)';
+  uCtx.lineWidth = 1;
+  uCtx.setLineDash([4, 4]);
+  uCtx.stroke();
+  uCtx.setLineDash([]);
+
+  // Uncertainty ellipse
+  const ex = dx * scale;
+  const ey = dp * scale;
+  uCtx.beginPath();
+  uCtx.ellipse(cx, cy, ex, ey, 0, 0, Math.PI * 2);
+  uCtx.fillStyle = 'rgba(184, 160, 96, 0.1)';
+  uCtx.fill();
+  uCtx.strokeStyle = '#B8A060';
+  uCtx.lineWidth = 2;
+  uCtx.stroke();
+
+  // ΔΦ indicator
+  uCtx.strokeStyle = '#4DA0C8';
+  uCtx.lineWidth = 2;
+  uCtx.beginPath();
+  uCtx.moveTo(cx - ex, cy + ey + 14);
+  uCtx.lineTo(cx + ex, cy + ey + 14);
+  uCtx.stroke();
+  // Arrow heads
+  uCtx.beginPath();
+  uCtx.moveTo(cx - ex + 6, cy + ey + 10);
+  uCtx.lineTo(cx - ex, cy + ey + 14);
+  uCtx.lineTo(cx - ex + 6, cy + ey + 18);
+  uCtx.stroke();
+  uCtx.beginPath();
+  uCtx.moveTo(cx + ex - 6, cy + ey + 10);
+  uCtx.lineTo(cx + ex, cy + ey + 14);
+  uCtx.lineTo(cx + ex - 6, cy + ey + 18);
+  uCtx.stroke();
+  uCtx.fillStyle = '#4DA0C8';
+  uCtx.font = '14px EB Garamond, serif';
+  uCtx.fillText('ΔΦ = ' + dx.toFixed(2), cx, cy + ey + 32);
+
+  // Δπ indicator
+  uCtx.strokeStyle = '#E88AAF';
+  uCtx.lineWidth = 2;
+  uCtx.beginPath();
+  uCtx.moveTo(cx + ex + 14, cy - ey);
+  uCtx.lineTo(cx + ex + 14, cy + ey);
+  uCtx.stroke();
+  uCtx.beginPath();
+  uCtx.moveTo(cx + ex + 10, cy - ey + 6);
+  uCtx.lineTo(cx + ex + 14, cy - ey);
+  uCtx.lineTo(cx + ex + 18, cy - ey + 6);
+  uCtx.stroke();
+  uCtx.beginPath();
+  uCtx.moveTo(cx + ex + 10, cy + ey - 6);
+  uCtx.lineTo(cx + ex + 14, cy + ey);
+  uCtx.lineTo(cx + ex + 18, cy + ey - 6);
+  uCtx.stroke();
+  uCtx.fillStyle = '#E88AAF';
+  uCtx.save();
+  uCtx.translate(cx + ex + 32, cy);
+  uCtx.rotate(-Math.PI / 2);
+  uCtx.textAlign = 'center';
+  uCtx.fillText('Δπ = ' + dp.toFixed(2), 0, 0);
+  uCtx.restore();
+
+  // Area text
+  const area = Math.PI * dx * dp;
+  uCtx.fillStyle = '#B8A060';
+  uCtx.font = '16px EB Garamond, serif';
+  uCtx.textAlign = 'left';
+  uCtx.fillText('Ellipse area = π × ΔΦ × Δπ = ' + area.toFixed(3), 14, h - 16);
+  uCtx.fillText('Minimum area = π × ℏ/2 = ' + (Math.PI * 0.5).toFixed(3), 14, h - 40);
+}
+
+// ============================================================
+// Controls
+// ============================================================
+
+document.getElementById('nSlider').addEventListener('input', function() {
+  currentN = parseInt(this.value);
+  document.getElementById('nVal').textContent = 'n = ' + currentN;
+  drawPhaseSpace();
+  drawLevels();
+});
+
+document.getElementById('cellBtn').addEventListener('click', function() {
+  showCells = !showCells;
+  this.classList.toggle('active', showCells);
+  drawPhaseSpace();
+});
+
+document.getElementById('trailBtn').addEventListener('click', function() {
+  showTrail = !showTrail;
+  this.classList.toggle('active', showTrail);
+  drawPhaseSpace();
+});
+
+document.getElementById('dxSlider').addEventListener('input', function() {
+  dx = parseFloat(this.value);
+  const dp = 1 / (2 * dx);
+  document.getElementById('dxVal').textContent = dx.toFixed(2);
+  document.getElementById('dpVal').textContent = dp.toFixed(2);
+  document.getElementById('prodVal').textContent = (dx * dp).toFixed(3) + ' = ℏ/2';
+  drawUncertainty();
+});
+
+// Animation loop for phase space rotation
+function animate() {
+  phaseAngle += 0.02;
+  if (phaseAngle > Math.PI * 2) phaseAngle -= Math.PI * 2;
+  drawPhaseSpace();
+  requestAnimationFrame(animate);
+}
+
+// Initialize
+drawPhaseSpace();
+drawLevels();
+drawUncertainty();
+animate();
+</script>
+
+</body>
+</html>

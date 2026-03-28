@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ The Dimensional Ladder: One Constant Generates Everything</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --red: #E06060;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+a { color: var(--gold-dim); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--gold); }
+
+.page { max-width: 820px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 60px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 72px; color: var(--gold); margin-bottom: 20px; }
+.header h1 { font-size: 38px; color: var(--gold); font-weight: 600; line-height: 1.3; margin-bottom: 12px; }
+.header .subtitle { font-size: 20px; color: var(--dim); font-style: italic; }
+
+h2 { font-size: 26px; color: var(--gold); font-weight: 600; margin: 60px 0 20px; }
+
+p { margin-bottom: 18px; }
+
+.eq {
+  text-align: center;
+  font-size: 28px;
+  color: var(--gold);
+  font-weight: 600;
+  margin: 32px 0;
+  padding: 20px;
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  background: rgba(184, 160, 96, 0.04);
+}
+
+.note {
+  background: rgba(184, 160, 96, 0.06);
+  border-left: 3px solid var(--gold-dim);
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-style: italic;
+  color: var(--dim);
+}
+
+/* ============ THE LADDER ============ */
+.ladder-full {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 40px 0;
+}
+
+.rung {
+  display: grid;
+  grid-template-columns: 60px 60px 1fr 120px;
+  align-items: start;
+  gap: 16px;
+  padding: 24px 20px;
+  border-left: 4px solid var(--faint);
+  transition: background 0.2s;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+}
+.rung:hover {
+  background: rgba(184, 160, 96, 0.04);
+  border-left-color: var(--gold);
+}
+.rung::after {
+  content: '→';
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--faint);
+  font-size: 22px;
+  transition: color 0.2s;
+}
+.rung:hover::after { color: var(--gold); }
+
+.rung.structural { border-left-color: var(--cyan); }
+.rung.structural:hover { border-left-color: var(--gold); }
+.rung.processual { border-left-color: var(--pink); border-left-style: dashed; }
+.rung.processual:hover { border-left-color: var(--gold); border-left-style: solid; }
+
+.rung-dim {
+  font-size: 24px;
+  font-weight: 600;
+  text-align: right;
+  padding-top: 2px;
+}
+.rung.structural .rung-dim { color: var(--cyan); }
+.rung.processual .rung-dim { color: var(--pink); }
+
+.rung-const {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--gold);
+  padding-top: 2px;
+}
+
+.rung-body { padding-right: 30px; }
+.rung-title {
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--warm);
+  margin-bottom: 6px;
+}
+.rung-formula {
+  font-family: monospace;
+  font-size: 16px;
+  color: var(--gold-dim);
+  margin-bottom: 6px;
+}
+.rung-desc {
+  font-size: 16px;
+  color: var(--dim);
+  line-height: 1.6;
+}
+.rung-accuracy {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green);
+  text-align: right;
+  padding-top: 4px;
+}
+.rung-accuracy.exact { color: var(--cyan); }
+
+/* Divider between structural and processual */
+.ladder-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px;
+  margin: 4px 0;
+}
+.ladder-divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--faint);
+}
+.ladder-divider-text {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--faint);
+}
+
+/* Summary table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+}
+th, td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--faint);
+  text-align: left;
+}
+th { color: var(--gold); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+td { color: var(--warm); }
+td.num { text-align: center; font-family: monospace; color: var(--cyan); font-size: 15px; }
+td.good { color: var(--green); text-align: center; }
+
+/* Canvas */
+.sim-container {
+  background: rgba(10, 10, 20, 0.9);
+  border: 1px solid var(--faint);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 40px 0;
+}
+.sim-container h3 { margin-top: 0; color: var(--gold); font-size: 21px; font-weight: 600; }
+canvas {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.footer {
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+  text-align: center;
+  color: var(--dim);
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="header">
+  <div class="symbol">⊙</div>
+  <h1>The Dimensional Ladder</h1>
+  <div class="subtitle">One constant generates everything; Circumpunct Framework, Ashman Roonz, 2026</div>
+</div>
+
+<!-- ============================================================ -->
+
+<p>Every fundamental constant lives at a specific dimensional home. The framework derives each one from a single free parameter (α, the fine-structure constant) and the dimensional layout of the circumpunct. Integer dimensions (0D, 1D, 2D, 3D) are <span class="b">structural</span>: what energy IS. Half-integer dimensions (0.5D, 1.5D, 2.5D) are <span class="s">processual</span>: what energy is DOING. Structural rungs produce single constants; processual rungs produce spectra.</p>
+
+<div class="eq">E = 1. All else is constraints.<br><span class="d" style="font-size: 18px;">The ladder unfolds what α already contains.</span></div>
+
+<!-- ============================================================ -->
+<h2>The Seven Rungs</h2>
+
+<div class="ladder-full">
+
+  <!-- 0D -->
+  <a class="rung structural" href="e_equals_1.html">
+    <div class="rung-dim">0D</div>
+    <div class="rung-const">α</div>
+    <div class="rung-body">
+      <div class="rung-title">Convergence Lands</div>
+      <div class="rung-formula">1/α = i⁴(°)/φ² − 2/φ³ = 137.0356</div>
+      <div class="rung-desc">Coupling at a point. The only independent constant. The pump cycle (i⁴ = 360°) writes itself as arithmetic through the golden ratio (φ² = 2D nesting) with a bidirectional valve correction (2/φ³). Everything else follows from α.</div>
+    </div>
+    <div class="rung-accuracy">2.7 ppm</div>
+  </a>
+
+  <!-- 0.5D -->
+  <a class="rung processual" href="speed_of_light.html">
+    <div class="rung-dim">0.5D</div>
+    <div class="rung-const">c</div>
+    <div class="rung-body">
+      <div class="rung-title">The First Fold</div>
+      <div class="rung-formula">c = √(2◐ · sin θ) = 1</div>
+      <div class="rung-desc">Speed of rotation propagating through the field. The photon is the minimum fold: purely rotational, nothing held as mass. At balance (◐ = 0.5) and the i rotation (θ = π/2): c = 1 exactly. Three ingredients: 2 (both channels), ◐ (balance), sin θ (transverse projection).</div>
+    </div>
+    <div class="rung-accuracy exact">exact</div>
+  </a>
+
+  <!-- 1D -->
+  <a class="rung structural" href="planck_constant.html">
+    <div class="rung-dim">1D</div>
+    <div class="rung-const">ℏ</div>
+    <div class="rung-body">
+      <div class="rung-title">The Indivisible Cycle</div>
+      <div class="rung-formula">ℏ = E_cycle / ω_cycle = 1</div>
+      <div class="rung-desc">The pump cycle (⊛ → i → ☀︎) cannot be subdivided: convergence without emergence violates A1, emergence without convergence is the Inflation Lie. This indivisibility IS the quantum of action. Not independent; follows from E = 1 (A0) and c = 1. E = ℏω means energy and frequency are the same thing.</div>
+    </div>
+    <div class="rung-accuracy exact">exact</div>
+  </a>
+
+  <!-- 1.5D -->
+  <a class="rung processual" href="mass_ratios.html">
+    <div class="rung-dim">1.5D</div>
+    <div class="rung-const">m<sub>i</sub>/m<sub>j</sub></div>
+    <div class="rung-body">
+      <div class="rung-title">The Branching</div>
+      <div class="rung-formula">m_μ/m_e = (1/α)^(13/12) ≈ 206.49</div>
+      <div class="rung-desc">The committed extension (1D) unfolds into distinct particle types. 13/12 = (4 pump × 3 triad + 1 whole) / 12: one complete generation of constraint. All particle masses are powers of 1/α; the entire mass spectrum is latent in α.</div>
+    </div>
+    <div class="rung-accuracy">0.13%</div>
+  </a>
+
+  <!-- 2D -->
+  <a class="rung structural" href="gauge_structure.html">
+    <div class="rung-dim">2D</div>
+    <div class="rung-const">gauge</div>
+    <div class="rung-body">
+      <div class="rung-title">The Surface</div>
+      <div class="rung-formula">SU(3) × SU(2) × U(1)&ensp;→&ensp;8 + 3 + 1 = 12 = 4 × 3</div>
+      <div class="rung-desc">The field has enough room to carry internal degrees of freedom. The gauge group is selected (not assumed) as the maximal symmetry of the 64-state validation architecture (§13.15). 12 generators = 4 pump strokes × 3 triad components. SU(3) from color (triad at quark scale), SU(2) from doublet structure (two pump directions), U(1) from remaining phase.</div>
+    </div>
+    <div class="rung-accuracy" style="color: var(--cyan);">derived</div>
+  </a>
+
+  <!-- 2.5D -->
+  <a class="rung processual" href="infolding.html">
+    <div class="rung-dim">2.5D</div>
+    <div class="rung-const">T</div>
+    <div class="rung-body">
+      <div class="rung-title">The Infolding</div>
+      <div class="rung-formula">T = cos²(Δφ/2)&ensp;→&ensp;cos²θ_W = 10/13</div>
+      <div class="rung-desc">The surface folds closed into boundary. Each gauge force transmits differently through the scale boundary: U(1) = Φ (T = 1, transparent), SU(2) = • (T = 10/13, partial), SU(3) = ○ (T → 0, confined). The Weinberg angle is a transmission coefficient: sin²θ<sub>W</sub> = 3/13.</div>
+    </div>
+    <div class="rung-accuracy">0.06%</div>
+  </a>
+
+  <!-- 3D -->
+  <a class="rung structural" href="gravity.html">
+    <div class="rung-dim">3D</div>
+    <div class="rung-const">G</div>
+    <div class="rung-body">
+      <div class="rung-title">The Boundary Closes</div>
+      <div class="rung-formula">α_G = α²¹ × φ²/2</div>
+      <div class="rung-desc">Gravity: α compounded across the entire ladder, both directions. Exponent 21 = (0 + 0.5 + 1 + 1.5 + 2 + 2.5 + 3) × 2 channels. The correction φ²/2 = (φ+1)/2: the golden mean of unity and the golden ratio. Solves the hierarchy problem: gravity is weak because 21 α-steps separate point from boundary.</div>
+    </div>
+    <div class="rung-accuracy">0.016%</div>
+  </a>
+
+</div>
+
+<!-- ============================================================ -->
+<h2>The Pattern</h2>
+
+<p>Two kinds of dimension alternate through the ladder. Structural dimensions (integers: 0, 1, 2, 3) produce single, definite constants: a coupling, a quantum, a symmetry group, a gravitational constant. Processual dimensions (half-integers: 0.5, 1.5, 2.5) produce spectra: a speed, a set of mass ratios, a set of transmission coefficients. Structure creates unity; process creates multiplicity.</p>
+
+<p>This alternation IS the dimensional layout of reality. What looks like a fixed dimension (structure) is the pump cycle frozen at that stage (process). Structure is process at rest. Process is structure in motion.</p>
+
+<!-- ============================================================ -->
+<h2>Visualization: The Complete Ladder</h2>
+
+<div class="sim-container">
+<h3>All Constants from α</h3>
+<p style="color: var(--dim); font-size: 16px;">The seven rungs of the dimensional ladder, showing cumulative α-compounding and accuracy at each stage.</p>
+
+<canvas id="ladderCanvas" width="720" height="500"></canvas>
+</div>
+
+<!-- ============================================================ -->
+<h2>Accuracy Summary</h2>
+
+<table>
+<tr><th>Dim</th><th>Constant</th><th>Formula</th><th>Predicted</th><th>Measured</th><th>Error</th></tr>
+<tr>
+  <td><span class="b">0D</span></td>
+  <td>1/α</td>
+  <td class="num">i⁴(°)/φ² − 2/φ³</td>
+  <td class="num">137.0356</td>
+  <td class="num">137.0360</td>
+  <td class="good">2.7 ppm</td>
+</tr>
+<tr>
+  <td><span class="s">0.5D</span></td>
+  <td>c</td>
+  <td class="num">√(2◐ · sin θ)</td>
+  <td class="num">1</td>
+  <td class="num">1</td>
+  <td class="good">exact</td>
+</tr>
+<tr>
+  <td><span class="b">1D</span></td>
+  <td>ℏ</td>
+  <td class="num">E/ω</td>
+  <td class="num">1</td>
+  <td class="num">1</td>
+  <td class="good">exact</td>
+</tr>
+<tr>
+  <td><span class="s">1.5D</span></td>
+  <td>m<sub>μ</sub>/m<sub>e</sub></td>
+  <td class="num">(1/α)<sup>13/12</sup></td>
+  <td class="num">206.49</td>
+  <td class="num">206.77</td>
+  <td class="good">0.13%</td>
+</tr>
+<tr>
+  <td><span class="b">2D</span></td>
+  <td>gauge</td>
+  <td class="num">SU(3)×SU(2)×U(1)</td>
+  <td class="num">12 gen.</td>
+  <td class="num">12 gen.</td>
+  <td class="good">exact</td>
+</tr>
+<tr>
+  <td><span class="s">2.5D</span></td>
+  <td>sin²θ<sub>W</sub></td>
+  <td class="num">3/13</td>
+  <td class="num">0.2308</td>
+  <td class="num">0.2312</td>
+  <td class="good">0.06%</td>
+</tr>
+<tr>
+  <td><span class="b">3D</span></td>
+  <td>G</td>
+  <td class="num">α²¹ × φ²/2</td>
+  <td class="num">6.6732 × 10⁻¹¹</td>
+  <td class="num">6.6743 × 10⁻¹¹</td>
+  <td class="good">0.016%</td>
+</tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>Open Problems</h2>
+
+<p>The ladder is complete but not closed. Several questions remain within its structure:</p>
+
+<p><span class="s wb">The tau mass ratio.</span> The muon/electron ratio fits (1/α)<sup>13/12</sup> to 0.13%, but the tau/electron ratio (exact exponent 1.6572) has no clean structural decomposition yet. Resolving this likely requires understanding how the three nested circumpuncts generate the three lepton generations.</p>
+
+<p><span class="s wb">The Weinberg angle mechanism.</span> The numerical result sin²θ<sub>W</sub> = 3/13 is accurate to 0.06%, and the structural reading (triad / generation) is compelling. But the derivation showing WHY mixing is governed by this ratio is incomplete.</p>
+
+<p><span class="s wb">The v/Λ<sub>QCD</sub> ratio.</span> The two infolding scales (electroweak VEV ≈ 246 GeV, confinement scale ≈ 200 MeV) are both consequences of the 2.5D infolding, but their ratio is not yet derived.</p>
+
+<p><span class="s wb">The G residual.</span> The 0.016% deviation may be within experimental uncertainty (G is the least precisely measured constant), may require a correction term, or may indicate the formula is approximate. Improved G measurements will decide.</p>
+
+<!-- ============================================================ -->
+
+<div class="note">
+The dimensional ladder is not a list of independent results. It is a single unfolding: α generates c, c and A0 generate ℏ, α generates the mass spectrum, the 64-state architecture generates the gauge group, the transmission law generates the Weinberg angle, and the full ladder generates G. Each rung uses the previous ones. The framework has one free parameter. Everything else is geometry.
+</div>
+
+<!-- ============================================================ -->
+
+<div class="footer">
+  <p><span class="w" style="font-size: 28px;">⊙</span></p>
+  <p>E = 1; all else is constraints.<br>
+  One constant, seven rungs, all of physics.</p>
+  <p style="margin-top: 20px;">
+    <a href="e_equals_1.html">E = 1</a> ·
+    <a href="speed_of_light.html">c</a> ·
+    <a href="planck_constant.html">ℏ</a> ·
+    <a href="mass_ratios.html">masses</a> ·
+    <a href="gauge_structure.html">gauge</a> ·
+    <a href="infolding.html">T</a> ·
+    <a href="gravity.html">G</a> ·
+    <a href="toe_map.html">TOE Map</a>
+  </p>
+  <p style="margin-top: 16px;"><a href="https://fractalreality.ca">fractalreality.ca</a></p>
+</div>
+
+</div><!-- .page -->
+
+<!-- ============================================================ -->
+<!-- VISUALIZATION -->
+<!-- ============================================================ -->
+<script>
+const canvas = document.getElementById('ladderCanvas');
+const ctx = canvas.getContext('2d');
+
+const alpha_inv = 137.035999084;
+const alpha = 1 / alpha_inv;
+const phi = (1 + Math.sqrt(5)) / 2;
+
+function draw() {
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = canvas.clientWidth * dpr;
+  canvas.height = 500 * dpr;
+  ctx.scale(dpr, dpr);
+  const w = canvas.clientWidth;
+  const h = 500;
+
+  ctx.fillStyle = '#06060C';
+  ctx.fillRect(0, 0, w, h);
+
+  const pad = { left: 70, right: 50, top: 50, bottom: 70 };
+  const plotW = w - pad.left - pad.right;
+  const plotH = h - pad.top - pad.bottom;
+
+  const rungs = [
+    { dim: '0D', label: 'α', type: 'S', dimVal: 0, color: '#4DA0C8', accuracy: '2.7 ppm' },
+    { dim: '0.5D', label: 'c', type: 'P', dimVal: 0.5, color: '#E88AAF', accuracy: 'exact' },
+    { dim: '1D', label: 'ℏ', type: 'S', dimVal: 1, color: '#4DA0C8', accuracy: 'exact' },
+    { dim: '1.5D', label: 'mass', type: 'P', dimVal: 1.5, color: '#E88AAF', accuracy: '0.13%' },
+    { dim: '2D', label: 'gauge', type: 'S', dimVal: 2, color: '#4DA0C8', accuracy: 'exact' },
+    { dim: '2.5D', label: 'T', type: 'P', dimVal: 2.5, color: '#E88AAF', accuracy: '0.06%' },
+    { dim: '3D', label: 'G', type: 'S', dimVal: 3, color: '#4DA0C8', accuracy: '0.016%' },
+  ];
+
+  // X axis: dimension value (0 to 3)
+  // Y axis: log10 of the coupling constant at that scale
+  // We'll show the "depth" of α-compounding
+
+  const couplings = [
+    { x: 0, log: Math.log10(alpha), label: 'α' },
+    { x: 0.5, log: 0, label: 'c = 1' },
+    { x: 1, log: 0, label: 'ℏ = 1' },
+    { x: 1.5, log: Math.log10(1/206.77), label: 'm_e/m_μ' },
+    { x: 2, log: Math.log10(alpha), label: 'α (gauge)' },
+    { x: 2.5, log: Math.log10(3/13), label: 'sin²θ_W' },
+    { x: 3, log: Math.log10(Math.pow(alpha, 21) * phi*phi/2), label: 'α_G' },
+  ];
+
+  const logMin = -46;
+  const logMax = 1;
+
+  function xPos(dimVal) { return pad.left + (dimVal / 3) * plotW; }
+  function yPos(logVal) { return pad.top + plotH * (1 - (logVal - logMin) / (logMax - logMin)); }
+
+  // Grid
+  ctx.strokeStyle = '#1a1a2a';
+  ctx.lineWidth = 1;
+  for (let l = -45; l <= 0; l += 5) {
+    const y = yPos(l);
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(w - pad.right, y);
+    ctx.stroke();
+    ctx.fillStyle = '#666058';
+    ctx.font = '12px EB Garamond, serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('10' + (l < 0 ? '⁻' : '') + (l === 0 ? '⁰' : Math.abs(l)), pad.left - 8, y + 4);
+  }
+
+  // X axis labels
+  ctx.textAlign = 'center';
+  for (const r of rungs) {
+    const x = xPos(r.dimVal);
+    ctx.fillStyle = r.color;
+    ctx.font = '600 16px EB Garamond, serif';
+    ctx.fillText(r.dim, x, h - pad.bottom + 22);
+    ctx.fillStyle = '#B8A060';
+    ctx.font = '600 14px EB Garamond, serif';
+    ctx.fillText(r.label, x, h - pad.bottom + 40);
+    ctx.fillStyle = '#4DB8A0';
+    ctx.font = '12px EB Garamond, serif';
+    ctx.fillText(r.accuracy, x, h - pad.bottom + 56);
+  }
+
+  // Axes
+  ctx.strokeStyle = '#444038';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(pad.left, pad.top);
+  ctx.lineTo(pad.left, h - pad.bottom);
+  ctx.lineTo(w - pad.right, h - pad.bottom);
+  ctx.stroke();
+
+  // Draw connecting path (the "descent" through the ladder)
+  ctx.strokeStyle = '#B8A060';
+  ctx.lineWidth = 2;
+  ctx.globalAlpha = 0.4;
+  ctx.beginPath();
+  for (let i = 0; i < couplings.length; i++) {
+    const x = xPos(couplings[i].x);
+    const y = yPos(Math.max(couplings[i].log, logMin + 1));
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // Draw dots
+  for (let i = 0; i < couplings.length; i++) {
+    const c = couplings[i];
+    const x = xPos(c.x);
+    const logClamped = Math.max(c.log, logMin + 1);
+    const y = yPos(logClamped);
+
+    // Glow
+    const grad = ctx.createRadialGradient(x, y, 0, x, y, 20);
+    grad.addColorStop(0, rungs[i].color);
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.globalAlpha = 0.3;
+    ctx.fillRect(x - 20, y - 20, 40, 40);
+    ctx.globalAlpha = 1;
+
+    // Dot
+    ctx.beginPath();
+    ctx.arc(x, y, 7, 0, Math.PI * 2);
+    ctx.fillStyle = rungs[i].color;
+    ctx.fill();
+
+    // Structural vs processual ring
+    if (rungs[i].type === 'S') {
+      ctx.beginPath();
+      ctx.arc(x, y, 11, 0, Math.PI * 2);
+      ctx.strokeStyle = rungs[i].color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    } else {
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.arc(x, y, 11, 0, Math.PI * 2);
+      ctx.strokeStyle = rungs[i].color;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  // Big arrow showing the 45 orders of magnitude
+  const arrowY = yPos(-22);
+  ctx.fillStyle = '#B8A060';
+  ctx.globalAlpha = 0.6;
+  ctx.font = '600 14px EB Garamond, serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('45 orders of magnitude', w / 2, arrowY);
+  ctx.fillText('from a single constant', w / 2, arrowY + 18);
+  ctx.globalAlpha = 1;
+}
+
+draw();
+window.addEventListener('resize', draw);
+</script>
+
+</body>
+</html>

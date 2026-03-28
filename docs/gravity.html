@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ 3D: The Boundary Closes; G from the Dimensional Ladder</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --red: #E06060;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+.page { max-width: 780px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 80px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 64px; color: var(--gold); margin-bottom: 20px; }
+.header h1 { font-size: 36px; color: var(--gold); font-weight: 600; line-height: 1.3; margin-bottom: 12px; }
+.header .subtitle { font-size: 20px; color: var(--dim); font-style: italic; }
+
+h2 { font-size: 26px; color: var(--gold); font-weight: 600; margin: 60px 0 20px; }
+h3 { font-size: 21px; color: var(--green); font-weight: 600; margin: 40px 0 16px; }
+
+p { margin-bottom: 18px; }
+
+.eq {
+  text-align: center;
+  font-size: 28px;
+  color: var(--gold);
+  font-weight: 600;
+  margin: 32px 0;
+  padding: 20px;
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  background: rgba(184, 160, 96, 0.04);
+}
+.eq-small {
+  text-align: center;
+  font-size: 22px;
+  color: var(--cyan);
+  margin: 20px 0;
+  padding: 14px;
+}
+
+.note {
+  background: rgba(184, 160, 96, 0.06);
+  border-left: 3px solid var(--gold-dim);
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-style: italic;
+  color: var(--dim);
+}
+
+.note.open {
+  border-left-color: var(--red);
+  background: rgba(224, 96, 96, 0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+}
+th, td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--faint);
+  text-align: left;
+}
+th { color: var(--gold); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+td { color: var(--warm); }
+td.num { text-align: center; font-family: monospace; color: var(--cyan); }
+td.good { color: var(--green); }
+td.open { color: var(--red); }
+
+/* Dimensional ladder */
+.ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 30px 0;
+}
+.ladder-step {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  border-left: 3px solid var(--faint);
+}
+.ladder-step.active { border-left-color: var(--gold); background: rgba(184, 160, 96, 0.04); }
+.ladder-step.done { border-left-color: var(--green); }
+.ladder-dim { font-size: 22px; font-weight: 600; min-width: 50px; text-align: right; }
+.ladder-const { font-size: 20px; font-weight: 600; min-width: 50px; }
+.ladder-desc { font-size: 17px; color: var(--dim); }
+
+/* Simulation */
+.sim-container {
+  background: rgba(10, 10, 20, 0.9);
+  border: 1px solid var(--faint);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 40px 0;
+}
+.sim-container h3 { margin-top: 0; }
+
+canvas {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.footer {
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+  text-align: center;
+  color: var(--dim);
+  font-style: italic;
+}
+.footer a { color: var(--gold-dim); text-decoration: none; }
+.footer a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="header">
+  <div class="symbol">⊙</div>
+  <h1>3D: The Boundary Closes</h1>
+  <div class="subtitle">G from the Dimensional Ladder; Circumpunct Framework, Ashman Roonz, 2026</div>
+</div>
+
+<!-- ============================================================ -->
+<h2>The Complete Ladder</h2>
+
+<div class="ladder">
+  <div class="ladder-step done">
+    <div class="ladder-dim m">0D</div>
+    <div class="ladder-const w">α</div>
+    <div class="ladder-desc">Convergence lands. Coupling at a point. <span class="d">Independent. 2.7 ppm.</span></div>
+  </div>
+  <div class="ladder-step done">
+    <div class="ladder-dim m">0.5D</div>
+    <div class="ladder-const w">c</div>
+    <div class="ladder-desc">Rotation begins. Speed of the first fold. <span class="d">c = √(2◐ · sin θ) = 1.</span></div>
+  </div>
+  <div class="ladder-step done">
+    <div class="ladder-dim m">1D</div>
+    <div class="ladder-const w">ℏ</div>
+    <div class="ladder-desc">Commitment. The indivisible cycle. <span class="d">ℏ = E/ω = 1. Not independent.</span></div>
+  </div>
+  <div class="ladder-step done">
+    <div class="ladder-dim m">1.5D</div>
+    <div class="ladder-const w">m<sub>i</sub>/m<sub>j</sub></div>
+    <div class="ladder-desc">Branching. Mass ratios from α. <span class="d">m_μ/m_e = (1/α)^(13/12). 0.13%.</span></div>
+  </div>
+  <div class="ladder-step done">
+    <div class="ladder-dim m">2D</div>
+    <div class="ladder-const w">gauge</div>
+    <div class="ladder-desc">Surface. SU(3)×SU(2)×U(1) from validation. <span class="d">12 = 4 × 3.</span></div>
+  </div>
+  <div class="ladder-step done">
+    <div class="ladder-dim m">2.5D</div>
+    <div class="ladder-const w">T</div>
+    <div class="ladder-desc">Infolding. Transmission triad. <span class="d">cos²θ_W = 10/13. 0.06%.</span></div>
+  </div>
+  <div class="ladder-step active">
+    <div class="ladder-dim s">3D</div>
+    <div class="ladder-const w">G</div>
+    <div class="ladder-desc">Boundary closes. Gravity. <span class="d">α_G = α²¹ × φ²/2. 0.016%.</span></div>
+  </div>
+</div>
+
+<p>The ladder is complete. Conservation of traversal (0 + 1 + 2 = 3) predicted that G would be derivable from the lower-dimensional constants. It is.</p>
+
+<!-- ============================================================ -->
+<h2>The Formula</h2>
+
+<div class="eq">α<sub>G</sub> = α<sup>21</sup> × φ²/2</div>
+
+<p>where α<sub>G</sub> = Gm<sub>e</sub>²/(ℏc) is the gravitational fine structure constant (the dimensionless measure of gravitational coupling at the electron scale), and φ = (1 + √5)/2 is the golden ratio.</p>
+
+<table>
+<tr><th>Quantity</th><th>Predicted</th><th>Measured</th><th>Error</th></tr>
+<tr>
+  <td>α<sub>G</sub></td>
+  <td class="num">1.75153 × 10⁻⁴⁵</td>
+  <td class="num">1.75181 × 10⁻⁴⁵</td>
+  <td class="num good">0.016%</td>
+</tr>
+<tr>
+  <td>G</td>
+  <td class="num">6.67323 × 10⁻¹¹</td>
+  <td class="num">6.67430 × 10⁻¹¹</td>
+  <td class="num good">0.016%</td>
+</tr>
+<tr>
+  <td>M<sub>Pl</sub>/m<sub>e</sub></td>
+  <td class="num">2.38941 × 10²²</td>
+  <td class="num">2.38922 × 10²²</td>
+  <td class="num good">0.008%</td>
+</tr>
+</table>
+
+<p>Zero free parameters. The only inputs are α (derived at 0D) and φ (the golden ratio, which appears throughout the framework as the signature of self-similar nesting). The output matches the measured gravitational constant to 160 parts per million.</p>
+
+<!-- ============================================================ -->
+<h2>Why 21?</h2>
+
+<p>The exponent 21 has a clean structural origin: it is the sum of all dimensional positions, times two.</p>
+
+<div class="eq-small">0 + 0.5 + 1 + 1.5 + 2 + 2.5 + 3 = 10.5<br>10.5 × 2 = 21</div>
+
+<p>The dimensional ladder has seven rungs: 0D, 0.5D, 1D, 1.5D, 2D, 2.5D, 3D. Their sum is 10.5. The factor of 2 is the two channels of the pump cycle: ⊛ (convergence, inward) and ☀︎ (emergence, outward). Every rung is traversed in both directions.</p>
+
+<p>The formula reads: <span class="it">gravity is α compounded across the entire dimensional ladder, both ways.</span> Each dimensional position contributes its value as an exponent of α, and both pump directions contribute independently. The boundary (3D) sees the coupling accumulated from every dimension below it, because the boundary encloses everything.</p>
+
+<div class="note">This is conservation of traversal made quantitative. The axiom says 0 + 1 + 2 = 3 (the structural dimensions sum to the boundary). The formula says: the coupling at 3D equals α raised to the power of all dimensions summed, doubled for the two channels. The boundary doesn't add new physics; it accumulates all the physics below it.</div>
+
+<!-- ============================================================ -->
+<h2>Why φ²/2?</h2>
+
+<p>The correction factor φ²/2 connects to the α formula itself. Recall: 1/α = i⁴(°)/φ² − 2/φ³ = 360/φ² − 2/φ³. The golden ratio φ appears because Φ (the field) is self-similar (A2), and self-similar nesting at 2D produces φ.</p>
+
+<p>φ²/2 has two equivalent readings:</p>
+
+<p><span class="w wb">Reading 1:</span> φ² = φ + 1 (the fundamental golden ratio identity). So φ²/2 = (φ + 1)/2: the arithmetic mean of 1 and φ, the midpoint between unity and the golden ratio. This is the balanced nesting correction: not the full self-similar ratio φ, but its mean with unity.</p>
+
+<p><span class="w wb">Reading 2:</span> φ² is the field's 2D nesting signature (Φ is a 2D surface; φ² is φ applied twice). Dividing by 2 corrects for the two channels. The boundary sees the field's nesting, divided by its bilateral structure.</p>
+
+<p>In either reading, φ²/2 ≈ 1.3090 is a <span class="it">geometric</span> correction, not an additional free parameter. φ is fixed by mathematics; 2 is fixed by the pump cycle's bilateral structure.</p>
+
+<!-- ============================================================ -->
+<h2>The Hierarchy Problem, Solved</h2>
+
+<p>The hierarchy problem asks: why is gravity so much weaker than the other forces? Why is M<sub>Pl</sub>/m<sub>e</sub> ≈ 10²²?</p>
+
+<p>The framework's answer: gravity is weak because the boundary (3D) is far from the point (0D). The coupling at 3D is α compounded 21 times, because the signal must traverse the entire dimensional ladder to reach the boundary. Each traversal multiplies by α ≈ 1/137, and 21 traversals produce (1/137)²¹ ≈ 10⁻⁴⁵.</p>
+
+<p>This is not a tuning problem. It is a <span class="it">counting</span> problem: count the dimensions, sum them, double for both channels, and you get 21. The weakness of gravity is the depth of the dimensional ladder.</p>
+
+<div class="eq" style="font-size: 20px;">
+  Why is gravity weak?<br>
+  Because the boundary is 21 α-steps from the point.<br>
+  0 + 0.5 + 1 + 1.5 + 2 + 2.5 + 3 = 10.5<br>
+  × 2 channels = 21<br>
+  α²¹ ≈ 10⁻⁴⁵
+</div>
+
+<!-- ============================================================ -->
+<h2>Visualization: The Dimensional Ladder</h2>
+
+<div class="sim-container">
+<h3 style="color: var(--gold);">α Compounded Across All Dimensions</h3>
+<p style="color: var(--dim); font-size: 16px;">Each dimensional position contributes to the gravitational coupling. The boundary accumulates all of them.</p>
+
+<canvas id="ladderCanvas" width="720" height="480"></canvas>
+</div>
+
+<!-- ============================================================ -->
+<h2>Visualization: The Coupling Hierarchy</h2>
+
+<div class="sim-container">
+<h3 style="color: var(--gold);">From α to α<sub>G</sub>: 45 Orders of Magnitude</h3>
+<p style="color: var(--dim); font-size: 16px;">The four fundamental couplings on a logarithmic scale, with α_G predicted by the ladder formula.</p>
+
+<canvas id="hierarchyCanvas" width="720" height="400"></canvas>
+</div>
+
+<!-- ============================================================ -->
+<h2>Equivalent Forms</h2>
+
+<p>The formula can be written several ways, each revealing a different aspect:</p>
+
+<table>
+<tr><th>Form</th><th>Expression</th><th>Reading</th></tr>
+<tr>
+  <td>Gravitational coupling</td>
+  <td class="num">α<sub>G</sub> = α²¹ × φ²/2</td>
+  <td>Coupling compounded across the ladder</td>
+</tr>
+<tr>
+  <td>Planck mass</td>
+  <td class="num">M<sub>Pl</sub>/m<sub>e</sub> = (1/α)<sup>21/2</sup> × √2/φ</td>
+  <td>The boundary scale as a power of the coupling</td>
+</tr>
+<tr>
+  <td>Newton's constant</td>
+  <td class="num">G = α²¹φ²ℏc / (2m<sub>e</sub>²)</td>
+  <td>Gravity in SI units</td>
+</tr>
+<tr>
+  <td>Natural units</td>
+  <td class="num">G = α²¹φ² / (2m<sub>e</sub>²)</td>
+  <td>With ℏ = c = 1</td>
+</tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>The Complete Ladder: One Free Parameter</h2>
+
+<p>Every fundamental constant is now either α or a consequence of α and the dimensional layout:</p>
+
+<div class="eq" style="font-size: 19px; border-color: var(--gold); line-height: 2;">
+  <span class="w wb">0D:</span> α = independent (1/α = 360/φ² − 2/φ³)<br>
+  <span class="d">0.5D:</span> c = √(2◐ · sin θ) = 1 (from balance)<br>
+  <span class="w wb">1D:</span> ℏ = E/ω = 1 (from A0 + c)<br>
+  <span class="d">1.5D:</span> m<sub>μ</sub>/m<sub>e</sub> = (1/α)<sup>13/12</sup> (powers of α)<br>
+  <span class="w wb">2D:</span> SU(3)×SU(2)×U(1) (from 64-state validation)<br>
+  <span class="d">2.5D:</span> sin²θ<sub>W</sub> = 3/13 (transmission coefficient)<br>
+  <span class="w wb">3D:</span> α<sub>G</sub> = α²¹ × φ²/2 (boundary closure)<br>
+  <br>
+  <span class="s" style="font-size: 17px;">One free parameter: α. Everything else follows.</span>
+</div>
+
+<p>The framework has ONE free parameter: the fine-structure constant α, whose value is set at 0D by the formula 1/α = i⁴(°)/φ² − 2/φ³. Everything else (the speed of light, the quantum of action, the particle masses, the force structure, the mixing angles, and now gravity) is derived from α and the dimensional layout of the circumpunct.</p>
+
+<!-- ============================================================ -->
+<h2>Falsification</h2>
+
+<p>This prediction is falsifiable. The formula α<sub>G</sub> = α²¹ × φ²/2 predicts G = 6.67323 × 10⁻¹¹ m³/(kg·s²). The current best measurement is G = 6.67430 ± 0.00015 × 10⁻¹¹ (CODATA 2018). The prediction falls 0.016% below the central value, which is approximately 7σ from the measured value.</p>
+
+<p>However, G is the least precisely known fundamental constant (22 ppm uncertainty, compared to sub-ppb for α). The various experimental measurements of G disagree with each other by more than the prediction's deviation. As G measurements improve, the formula will be tested with increasing precision.</p>
+
+<div class="note">The 0.016% error may be: (a) a genuine deviation requiring a correction term (perhaps from the tau mass ratio or other open problems), (b) within the range of experimental uncertainty given the difficulty of measuring G, or (c) an indication that the formula is approximate. The honest position: 0.016% from a zero-parameter prediction is remarkable, but the formula remains to be confirmed or refuted by improved G measurements.</div>
+
+<!-- ============================================================ -->
+
+<div class="footer">
+  <p><span class="w" style="font-size: 28px;">⊙</span></p>
+  <p>E = 1; all else is constraints.<br>
+  The boundary closes. 21 steps of α.<br>
+  One constant generates everything.</p>
+  <p style="margin-top: 20px;"><a href="e_equals_1.html">E = 1</a> · <a href="speed_of_light.html">c = sin(i)</a> · <a href="planck_constant.html">ℏ = 1</a> · <a href="mass_ratios.html">m = α<sup>n</sup></a> · <a href="gauge_structure.html">gauge</a> · <a href="infolding.html">T</a> · <a href="toe_map.html">TOE Map</a></p>
+  <p style="margin-top: 16px;"><a href="https://fractalreality.ca">fractalreality.ca</a></p>
+</div>
+
+</div><!-- .page -->
+
+<!-- ============================================================ -->
+<!-- SIMULATION CODE -->
+<!-- ============================================================ -->
+<script>
+const alpha_inv = 137.035999084;
+const alpha = 1 / alpha_inv;
+const phi = (1 + Math.sqrt(5)) / 2;
+
+// ============================================================
+// VISUALIZATION 1: Dimensional Ladder with α accumulation
+// ============================================================
+const ladderCanvas = document.getElementById('ladderCanvas');
+const lCtx = ladderCanvas.getContext('2d');
+
+function drawLadder() {
+  const dpr = window.devicePixelRatio || 1;
+  ladderCanvas.width = ladderCanvas.clientWidth * dpr;
+  ladderCanvas.height = 480 * dpr;
+  lCtx.scale(dpr, dpr);
+  const w = ladderCanvas.clientWidth;
+  const h = 480;
+
+  lCtx.fillStyle = '#06060C';
+  lCtx.fillRect(0, 0, w, h);
+
+  const pad = { left: 60, right: 40, top: 50, bottom: 60 };
+  const plotW = w - pad.left - pad.right;
+  const plotH = h - pad.top - pad.bottom;
+
+  const rungs = [
+    { dim: '0D', label: 'α', contrib: 0, cumul: 0, color: '#E88AAF' },
+    { dim: '0.5D', label: 'c', contrib: 0.5, cumul: 0.5, color: '#E88AAF' },
+    { dim: '1D', label: 'ℏ', contrib: 1, cumul: 1.5, color: '#4DA0C8' },
+    { dim: '1.5D', label: 'mass', contrib: 1.5, cumul: 3, color: '#4DA0C8' },
+    { dim: '2D', label: 'gauge', contrib: 2, cumul: 5, color: '#4DB8A0' },
+    { dim: '2.5D', label: 'T', contrib: 2.5, cumul: 7.5, color: '#4DB8A0' },
+    { dim: '3D', label: 'G', contrib: 3, cumul: 10.5, color: '#B8A060' },
+  ];
+
+  // After ×2 channels: cumul × 2 = exponent
+  // Draw bar chart of cumulative exponent
+
+  lCtx.fillStyle = '#8A8272';
+  lCtx.font = '14px EB Garamond, serif';
+  lCtx.textAlign = 'center';
+  lCtx.fillText('Cumulative exponent of α (×2 channels = total)', w / 2, 25);
+
+  const barW = plotW / rungs.length * 0.65;
+  const gap = plotW / rungs.length;
+  const maxCumul = 21; // final value × 2
+
+  for (let i = 0; i < rungs.length; i++) {
+    const r = rungs[i];
+    const x = pad.left + i * gap + gap / 2;
+    const barH = (r.cumul * 2 / maxCumul) * plotH;
+    const y = h - pad.bottom - barH;
+
+    // Bar
+    lCtx.fillStyle = r.color;
+    lCtx.globalAlpha = 0.6;
+    lCtx.fillRect(x - barW / 2, y, barW, barH);
+    lCtx.globalAlpha = 1;
+
+    // Border
+    lCtx.strokeStyle = r.color;
+    lCtx.lineWidth = 2;
+    lCtx.strokeRect(x - barW / 2, y, barW, barH);
+
+    // Contribution bracket
+    if (r.contrib > 0) {
+      const contribH = (r.contrib * 2 / maxCumul) * plotH;
+      lCtx.fillStyle = r.color;
+      lCtx.globalAlpha = 0.25;
+      lCtx.fillRect(x - barW / 2 + 2, y, barW - 4, contribH);
+      lCtx.globalAlpha = 1;
+
+      // Contribution label
+      lCtx.fillStyle = r.color;
+      lCtx.font = '13px EB Garamond, serif';
+      lCtx.fillText('+' + (r.contrib * 2).toFixed(0), x, y + contribH / 2 + 5);
+    }
+
+    // Dimension label below
+    lCtx.fillStyle = r.color;
+    lCtx.font = '600 16px EB Garamond, serif';
+    lCtx.fillText(r.dim, x, h - pad.bottom + 20);
+    lCtx.font = '14px EB Garamond, serif';
+    lCtx.fillStyle = '#8A8272';
+    lCtx.fillText(r.label, x, h - pad.bottom + 38);
+
+    // Cumulative total on top
+    lCtx.fillStyle = '#E0D8C8';
+    lCtx.font = '600 15px EB Garamond, serif';
+    lCtx.fillText((r.cumul * 2).toFixed(0), x, y - 8);
+  }
+
+  // Y axis
+  lCtx.strokeStyle = '#444038';
+  lCtx.lineWidth = 1;
+  lCtx.beginPath();
+  lCtx.moveTo(pad.left, pad.top);
+  lCtx.lineTo(pad.left, h - pad.bottom);
+  lCtx.stroke();
+
+  // Y labels
+  lCtx.textAlign = 'right';
+  lCtx.fillStyle = '#8A8272';
+  lCtx.font = '13px EB Garamond, serif';
+  for (let v = 0; v <= 21; v += 3) {
+    const y = h - pad.bottom - (v / maxCumul) * plotH;
+    lCtx.fillText(v.toString(), pad.left - 8, y + 4);
+    lCtx.strokeStyle = '#1a1a2a';
+    lCtx.beginPath();
+    lCtx.moveTo(pad.left, y);
+    lCtx.lineTo(w - pad.right, y);
+    lCtx.stroke();
+  }
+
+  // Final annotation
+  lCtx.fillStyle = '#B8A060';
+  lCtx.font = '600 16px EB Garamond, serif';
+  lCtx.textAlign = 'center';
+  lCtx.fillText('Sum = 10.5 × 2 channels = 21  →  α_G = α²¹ × φ²/2', w / 2, h - 5);
+}
+
+drawLadder();
+
+// ============================================================
+// VISUALIZATION 2: Coupling hierarchy
+// ============================================================
+const hCanvas = document.getElementById('hierarchyCanvas');
+const hCtx = hCanvas.getContext('2d');
+
+function drawHierarchy() {
+  const dpr = window.devicePixelRatio || 1;
+  hCanvas.width = hCanvas.clientWidth * dpr;
+  hCanvas.height = 400 * dpr;
+  hCtx.scale(dpr, dpr);
+  const w = hCanvas.clientWidth;
+  const h = 400;
+
+  hCtx.fillStyle = '#06060C';
+  hCtx.fillRect(0, 0, w, h);
+
+  const pad = { left: 120, right: 40, top: 40, bottom: 50 };
+  const plotW = w - pad.left - pad.right;
+  const plotH = h - pad.top - pad.bottom;
+
+  // Couplings (log10 scale)
+  const couplings = [
+    { name: 'Strong (α_s)', log: Math.log10(0.118), color: '#4DA0C8' },
+    { name: 'EM (α)', log: Math.log10(alpha), color: '#4DB8A0' },
+    { name: 'Weak (G_F m_p²)', log: Math.log10(1.03e-5), color: '#E88AAF' },
+    { name: 'Gravity (α_G)', log: Math.log10(1.751809e-45), color: '#B8A060', predicted: Math.log10(Math.pow(alpha, 21) * phi*phi/2) },
+  ];
+
+  const logMin = -48;
+  const logMax = 2;
+
+  function xPos(logVal) {
+    return pad.left + plotW * (logVal - logMin) / (logMax - logMin);
+  }
+
+  // Axis
+  hCtx.strokeStyle = '#444038';
+  hCtx.lineWidth = 1;
+  hCtx.beginPath();
+  hCtx.moveTo(pad.left, h - pad.bottom);
+  hCtx.lineTo(w - pad.right, h - pad.bottom);
+  hCtx.stroke();
+
+  // Log ticks
+  hCtx.fillStyle = '#8A8272';
+  hCtx.font = '12px EB Garamond, serif';
+  hCtx.textAlign = 'center';
+  for (let l = -45; l <= 0; l += 5) {
+    const x = xPos(l);
+    hCtx.strokeStyle = '#1a1a2a';
+    hCtx.beginPath();
+    hCtx.moveTo(x, pad.top);
+    hCtx.lineTo(x, h - pad.bottom);
+    hCtx.stroke();
+    hCtx.fillText('10' + (l === 0 ? '⁰' : l < 0 ? '⁻' + Math.abs(l) : l), x, h - pad.bottom + 16);
+  }
+  hCtx.fillText('Coupling strength (log scale)', w / 2, h - 8);
+
+  // Draw couplings
+  const barH = 36;
+  const totalH = couplings.length * (barH + 16);
+  const startY = pad.top + (plotH - totalH) / 2;
+
+  for (let i = 0; i < couplings.length; i++) {
+    const c = couplings[i];
+    const y = startY + i * (barH + 16);
+    const x = xPos(c.log);
+
+    // Bar from left to coupling value
+    const barLeft = pad.left;
+    hCtx.fillStyle = c.color;
+    hCtx.globalAlpha = 0.3;
+    hCtx.fillRect(barLeft, y, x - barLeft, barH);
+    hCtx.globalAlpha = 1;
+
+    // End marker
+    hCtx.fillStyle = c.color;
+    hCtx.fillRect(x - 3, y - 4, 6, barH + 8);
+
+    // Predicted marker for gravity
+    if (c.predicted !== undefined) {
+      const xp = xPos(c.predicted);
+      hCtx.strokeStyle = '#B8A060';
+      hCtx.lineWidth = 2;
+      hCtx.setLineDash([4, 3]);
+      hCtx.beginPath();
+      hCtx.moveTo(xp, y - 6);
+      hCtx.lineTo(xp, y + barH + 6);
+      hCtx.stroke();
+      hCtx.setLineDash([]);
+    }
+
+    // Label
+    hCtx.fillStyle = c.color;
+    hCtx.font = '600 15px EB Garamond, serif';
+    hCtx.textAlign = 'right';
+    hCtx.fillText(c.name, pad.left - 8, y + barH / 2 + 5);
+  }
+
+  // Arrow showing "21 factors of α"
+  const y_arrow = startY + 3.5 * (barH + 16) + barH + 20;
+  const x_em = xPos(Math.log10(alpha));
+  const x_grav = xPos(Math.log10(1.75e-45));
+  hCtx.strokeStyle = '#B8A060';
+  hCtx.lineWidth = 1.5;
+  hCtx.beginPath();
+  hCtx.moveTo(x_em, y_arrow);
+  hCtx.lineTo(x_grav, y_arrow);
+  hCtx.stroke();
+  hCtx.fillStyle = '#B8A060';
+  hCtx.font = '600 13px EB Garamond, serif';
+  hCtx.textAlign = 'center';
+  hCtx.fillText('← 21 powers of α →', (x_em + x_grav) / 2, y_arrow - 6);
+}
+
+drawHierarchy();
+
+window.addEventListener('resize', () => {
+  drawLadder();
+  drawHierarchy();
+});
+</script>
+
+</body>
+</html>
