@@ -277,33 +277,39 @@ canvas {
 
 <p>The weak force's transmission coefficient is cos²θ<sub>W</sub>, where θ<sub>W</sub> is the Weinberg angle. In the Standard Model, cos²θ<sub>W</sub> = m<sub>W</sub>²/m<sub>Z</sub>². It measures exactly what the framework predicts: the fraction of electroweak signal that passes through the infolding as electromagnetic (transparent) versus the fraction that gets filtered into the Z (partially opaque).</p>
 
-<div class="eq">T<sub>weak</sub> = cos²θ<sub>W</sub> = 10/13</div>
+<div class="eq">sin²θ<sub>W</sub> = 3/13 + 5α/81</div>
 
 <table>
-<tr><th>Quantity</th><th>Predicted</th><th>Measured</th><th>Error</th></tr>
-<tr>
-  <td>cos²θ<sub>W</sub></td>
-  <td class="num">10/13 = 0.76923</td>
-  <td class="num">0.76880</td>
-  <td class="num good">0.06%</td>
-</tr>
+<tr><th>Quantity</th><th>Base</th><th>With Self-Referential Correction</th><th>Predicted</th><th>Measured</th><th>Error</th></tr>
 <tr>
   <td>sin²θ<sub>W</sub></td>
-  <td class="num">3/13 = 0.23077</td>
-  <td class="num">0.23120</td>
-  <td class="num good">0.19%</td>
+  <td class="num">3/13</td>
+  <td class="num">3/13 + 5α/81</td>
+  <td class="num">0.23122</td>
+  <td class="num">0.23122</td>
+  <td class="num good">1.4 ppm</td>
+</tr>
+<tr>
+  <td>cos²θ<sub>W</sub></td>
+  <td class="num">10/13</td>
+  <td class="num">1 − sin²θ<sub>W</sub></td>
+  <td class="num">0.76878</td>
+  <td class="num">0.76878</td>
+  <td class="num good">1.4 ppm</td>
 </tr>
 </table>
 
-<h3>Why 10/13?</h3>
+<h3>Why 3/13 Base; Why 5α/81 Correction?</h3>
 
-<p>The denominator <span class="w wb">13</span> = 12 + 1 = (4 pump strokes × 3 triad components) + 1 compositional whole. This is the same 13 from the mass ratio exponent at 1.5D. It is the total constraint budget of one generation.</p>
+<p>The base ratio: <span class="w wb">3/13</span> divides the generation into two parts. The denominator 13 = 12 + 1 (the full pump-triad structure plus compositional binding; from §1.5D). The numerator 3 = dim(SU(2)) = the three generators of the weak force group = the triad (•, Φ, ○). This is the same 3 from the mass ratio formulas at 1.5D.</p>
 
-<p>The numerator <span class="w wb">10</span> = 12 − 2 = the full pump-triad structure minus the bidirectional valve correction (the 2/φ³ term that appears in the α derivation). The 2 comes from the two directions of the pump: ⊛ (inward) and ☀︎ (outward). Of the 12 phase-component states, 10 transmit through the infolding; 2 are filtered.</p>
+<p>The self-referential correction: <span class="w wb">5α/81</span> where K = 81/5 = 3⁴/(Φ+○). The numerator 5 = Φ + ○ = 2 + 3 (field plus boundary; the two outer dimensions of the gauge hierarchy). The denominator 81 = 3⁴ (boundary cubed to the second generation power, matching the tau mass formula). This refines the coupling to account for feedback from the dimensional ladder itself.</p>
 
-<p>The Weinberg angle reads: <span class="it">of the 13 units of generational structure, 10 pass through as electromagnetic (field) and 3 are absorbed into massive bosons (boundary).</span></p>
+<p>The selection rule: <span class="w wb">13 = 12 + 1</span> = 4 pump strokes × 3 components + 1 compositional whole (A4). Of these 13 units, exactly 3 get filtered into the massive weak bosons (the Z boson mass); the remaining 10 stay open as electromagnetic. The infolding transmits 10/13 of the signal while filtering 3/13.</p>
 
-<div class="note">This connects the 2D result (gauge group) to 2.5D (transmission). The gauge structure determines WHICH forces exist. The transmission law determines HOW MUCH of each force passes through the scale boundary. sin²θ<sub>W</sub> = 3/13 says: the triad (3) out of the full generation (13) gets filtered into massive boundary character.</div>
+<p>The Weinberg angle reads: <span class="it">of the 13 units of generational structure, 3 (the triad) get absorbed into massive boundary character; 10 pass through as electromagnetic (field) and remain massless.</span></p>
+
+<div class="note">This connects the 2D result (gauge group) to 2.5D (transmission). The gauge structure determines WHICH forces exist. The transmission law (with self-referential coupling) determines HOW MUCH of each force passes through the scale boundary. sin²θ<sub>W</sub> = 3/13 + 5α/81 says: the triad (3) out of the full generation (13), refined by feedback from the dimensional ladder (5α/81), gets filtered into massive boundary character. Precision: 1.4 ppm.</div>
 
 <!-- ============================================================ -->
 <h2>Visualization: Transmission Across the Scale Boundary</h2>

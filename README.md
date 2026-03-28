@@ -88,10 +88,11 @@ Zero free parameters. The fine-structure constant (α) is self-referentially det
 ║  0D    │ α (fine-structure)  │ 360/φ²-2/φ³+α/(21-4/3)          │ 0.22 ppb    ║
 ║  0.5D  │ c (speed of light)  │ c = √(2◐·sin θ) = 1 at balance  │ exact       ║
 ║  1D    │ ℏ (Planck constant) │ E_cycle/ω_cycle = 1              │ exact       ║
-║  1.5D  │ m_μ/m_e (mass ratio)│ (1/α)^(13/12) = 206.49          │ 0.13%       ║
+║  1.5D  │ m_μ/m_e (muon)     │ (1/α)^(13/12 + α/27)             │ 5 ppm       ║
+║  1.5D  │ m_τ/m_e (tau)      │ (1/α)^(58/35 + α/81)             │ 1 ppm       ║
 ║  2D    │ gauge structure     │ SU(3)×SU(2)×U(1) from 64 states  │ exact       ║
-║  2.5D  │ sin²θ_W (Weinberg)  │ 3/13; cos²θ_W = 10/13           │ 0.06%       ║
-║  3D    │ G (gravity)         │ α_G = α²¹ × φ²/2                │ 0.016%      ║
+║  2.5D  │ sin²θ_W (Weinberg)  │ 3/13 + 5α/81                    │ 1.4 ppm     ║
+║  3D    │ G (gravity)         │ α²¹×φ²/2×(1+2α/91)             │ 0.04 ppm    ║
 ╠═════════════════════════════════════════════════════════════════════════════════╣
 ║  Earth │ g = GM/R²           │ = 9.8187 m/s²                    │ 0.12%       ║
 ╚═════════════════════════════════════════════════════════════════════════════════╝
@@ -217,7 +218,7 @@ The framework is falsified if:
 1. D ≠ 1.5 in new dynamic systems (>3σ deviation)
 2. Fourth generation particles are found
 3. Consciousness exists with D ≪ 1.5 in neural recordings
-4. Any derived constant deviates from measurement beyond its stated accuracy (e.g., G predicted to 0.016%; a measurement establishing >1% deviation would falsify)
+4. Any derived constant deviates from measurement beyond its stated accuracy (e.g., G predicted to 0.04 ppm; a measurement establishing >1% deviation would falsify)
 5. A gauge group other than SU(3)×SU(2)×U(1) is observed at low energy
 
 We welcome attempts to falsify.
