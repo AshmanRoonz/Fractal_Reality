@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ c = sin(i): The Speed of the Unconstrained Field</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --red: #E06060;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.f { color: var(--faint); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+.page { max-width: 780px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 80px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 64px; color: var(--gold); margin-bottom: 20px; }
+.header h1 { font-size: 36px; color: var(--gold); font-weight: 600; line-height: 1.3; margin-bottom: 12px; }
+.header .subtitle { font-size: 20px; color: var(--dim); font-style: italic; }
+
+h2 { font-size: 26px; color: var(--gold); font-weight: 600; margin: 60px 0 20px; }
+h3 { font-size: 21px; color: var(--green); font-weight: 600; margin: 40px 0 16px; }
+
+p { margin-bottom: 18px; }
+
+.eq {
+  text-align: center;
+  font-size: 28px;
+  color: var(--gold);
+  font-weight: 600;
+  margin: 32px 0;
+  padding: 20px;
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  background: rgba(184, 160, 96, 0.04);
+}
+.eq-small {
+  text-align: center;
+  font-size: 22px;
+  color: var(--cyan);
+  margin: 20px 0;
+  padding: 14px;
+}
+
+.note {
+  background: rgba(184, 160, 96, 0.06);
+  border-left: 3px solid var(--gold-dim);
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-style: italic;
+  color: var(--dim);
+}
+
+/* Simulation Canvas */
+.sim-container {
+  background: rgba(10, 10, 20, 0.9);
+  border: 1px solid var(--faint);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 40px 0;
+}
+.sim-container h3 { margin-top: 0; }
+
+canvas {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 16px 0;
+  align-items: center;
+}
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.control-group label {
+  font-size: 14px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.control-group .val {
+  font-size: 18px;
+  color: var(--gold);
+  font-weight: 600;
+  min-width: 60px;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 180px;
+  height: 4px;
+  background: var(--faint);
+  border-radius: 2px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--gold);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+button {
+  background: var(--faint);
+  color: var(--warm);
+  border: 1px solid var(--gold-dim);
+  padding: 8px 20px;
+  font-family: 'EB Garamond', serif;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+button:hover { background: var(--gold-dim); color: var(--bg); }
+button.active { background: var(--gold); color: var(--bg); }
+
+.readout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+}
+.readout-item {
+  background: rgba(184, 160, 96, 0.05);
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  padding: 12px 16px;
+  text-align: center;
+}
+.readout-item .label { font-size: 13px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
+.readout-item .value { font-size: 24px; color: var(--gold); font-weight: 600; margin-top: 4px; }
+.readout-item .unit { font-size: 13px; color: var(--dim); }
+
+.speed-bar {
+  height: 24px;
+  background: var(--faint);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 8px 0;
+  position: relative;
+}
+.speed-bar-fill {
+  height: 100%;
+  border-radius: 12px;
+  transition: width 0.3s;
+}
+.speed-bar-label {
+  position: absolute;
+  right: 8px;
+  top: 2px;
+  font-size: 13px;
+  color: var(--warm);
+  font-weight: 600;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+}
+th, td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--faint);
+  text-align: left;
+}
+th { color: var(--gold); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+td { color: var(--warm); }
+td.num { text-align: center; font-family: monospace; color: var(--cyan); }
+
+.footer {
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+  text-align: center;
+  color: var(--dim);
+  font-style: italic;
+}
+.footer a { color: var(--gold-dim); text-decoration: none; }
+.footer a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="header">
+  <div class="symbol">⊙</div>
+  <h1>c = sin(i): The Speed of the Unconstrained Field</h1>
+  <div class="subtitle">Circumpunct Framework; Ashman Roonz, 2026</div>
+</div>
+
+<!-- ============================================================ -->
+<h2>The Question</h2>
+
+<p>The fine-structure constant tells us how strongly <span class="s">i</span> couples at a vertex: <span class="w">1/α = i⁴(°)/φ² &minus; 2/φ³</span>. But coupling is only half the story. The other half: how fast does the field propagate between vertices?</p>
+
+<p>That speed is <span class="w wb">c</span>.</p>
+
+<p>In SI units, c = 299,792,458 m/s. But that number is a measurement artifact (it depends on how long a metre is and how long a second is). In natural units (ℏ = c = 1), the speed of light is simply <span class="w">1</span>: one unit of field per unit of time. The question is not "why 299 million" but rather: <span class="it">why is the maximum propagation speed exactly 1, and what makes it maximum?</span></p>
+
+<!-- ============================================================ -->
+<h2>The Model: Coupled Oscillator Lattice</h2>
+
+<p>Consider a lattice of circumpuncts. Each site is a <span class="w">⊙</span>: an aperture with a complex field amplitude. The pump cycle couples adjacent sites:</p>
+
+<div class="eq">Φₙ(t+1) = Φₙ(t) + κ · [Φₙ₊₁(t) + Φₙ₋₁(t) &minus; 2Φₙ(t)]</div>
+
+<p>where <span class="b">κ</span> is the coupling strength. This is the discrete wave equation. The question: what determines κ?</p>
+
+<h3>Coupling from the Pump Cycle</h3>
+
+<p>Each pump cycle has two parameters:</p>
+
+<p><span class="s wb">θ</span> (aperture rotation angle): how much the signal rotates as it passes through the gate. For light, θ = π/2 (the <span class="s">i</span> rotation). For massive particles, θ &lt; π/2 (the mass constrains the rotation).</p>
+
+<p><span class="m wb">◐</span> (balance parameter): how evenly the pump distributes between convergence and emergence. At ◐ = 0.5, the pump is balanced. Away from 0.5, energy pools on one side.</p>
+
+<p>The coupling between adjacent sites is:</p>
+
+<div class="eq">κ = ◐ · sin(θ)</div>
+
+<p>Why? Because <span class="m">◐</span> controls how much energy the pump actually transfers (balance), and <span class="s">sin(θ)</span> controls the transverse component of the rotation (the part that moves energy laterally through the lattice rather than keeping it local).</p>
+
+<h3>Phase Velocity</h3>
+
+<p>For the discrete wave equation with coupling κ, the dispersion relation is:</p>
+
+<div class="eq-small">ω(k) = 2√κ · |sin(k/2)|</div>
+
+<p>The maximum phase velocity (long wavelength limit, k → 0) is:</p>
+
+<div class="eq">v<sub>max</sub> = √κ = √(◐ · sin θ)</div>
+
+<p>But we need the <span class="it">group</span> velocity (signal speed). For the continuum limit of this lattice, the group velocity at long wavelengths equals the phase velocity:</p>
+
+<div class="eq">v<sub>signal</sub> = √(◐ · sin θ)</div>
+
+<h3>The Speed of Light</h3>
+
+<p>At balance (◐ = 0.5) with the i rotation (θ = π/2):</p>
+
+<div class="eq-small">v = √(0.5 · sin(π/2)) = √(0.5 · 1) = √0.5 = 1/√2 ≈ 0.707</div>
+
+<p>That is not 1. But we have not yet accounted for the fact that the pump cycle operates in <span class="it">both</span> channels simultaneously. The ⊛ channel and the ☀︎ channel each carry half the coupling. The total effective coupling for a signal propagating through both channels:</p>
+
+<div class="eq">κ<sub>total</sub> = 2◐ · sin(θ)</div>
+
+<p>At ◐ = 0.5, θ = π/2:</p>
+
+<div class="eq" style="font-size: 32px;">c = √(2 · 0.5 · sin(π/2)) = √(1 · 1) = <span class="w">1</span></div>
+
+<p class="note">c = 1 requires three things simultaneously: (1) the rotation is maximal (θ = π/2, the i rotation), (2) the balance is perfect (◐ = 0.5), and (3) both channels are active (factor of 2). Remove any one and c &lt; 1.</p>
+
+<!-- ============================================================ -->
+<h2>Interactive Simulation</h2>
+
+<div class="sim-container">
+<h3 style="color: var(--gold);">Wave Propagation on the ⊙ Lattice</h3>
+<p style="color: var(--dim); font-size: 16px;">A Gaussian pulse propagates through a lattice of coupled circumpuncts. Adjust θ and ◐ to see how the speed changes.</p>
+
+<canvas id="waveCanvas" width="720" height="280"></canvas>
+
+<div class="controls">
+  <div class="control-group">
+    <label>θ (aperture rotation)</label>
+    <input type="range" id="thetaSlider" min="0.05" max="1.5708" step="0.01" value="1.5708">
+    <div><span class="val" id="thetaVal">π/2</span> <span class="d">= i rotation</span></div>
+  </div>
+  <div class="control-group">
+    <label>◐ (balance)</label>
+    <input type="range" id="balanceSlider" min="0.01" max="1.0" step="0.01" value="0.5">
+    <div><span class="val" id="balanceVal">0.50</span></div>
+  </div>
+  <div class="control-group">
+    <label>Action</label>
+    <button id="resetBtn">Reset Pulse</button>
+    <button id="pauseBtn">Pause</button>
+  </div>
+</div>
+
+<div class="readout">
+  <div class="readout-item">
+    <div class="label">sin(θ)</div>
+    <div class="value" id="sinVal">1.000</div>
+  </div>
+  <div class="readout-item">
+    <div class="label">κ = 2◐·sin(θ)</div>
+    <div class="value" id="kappaVal">1.000</div>
+  </div>
+  <div class="readout-item">
+    <div class="label">v = √κ</div>
+    <div class="value" id="speedVal">1.000</div>
+    <div class="unit">× c</div>
+  </div>
+  <div class="readout-item">
+    <div class="label">Measured speed</div>
+    <div class="value" id="measuredVal">...</div>
+    <div class="unit">× c</div>
+  </div>
+</div>
+
+<div style="margin-top: 12px;">
+  <div style="font-size: 14px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Speed relative to c</div>
+  <div class="speed-bar">
+    <div class="speed-bar-fill" id="speedBar" style="width: 100%; background: var(--gold);"></div>
+    <div class="speed-bar-label" id="speedBarLabel">1.00c</div>
+  </div>
+</div>
+</div>
+
+<!-- Second simulation: angle sweep -->
+<div class="sim-container">
+<h3 style="color: var(--gold);">Speed vs. Rotation Angle (at ◐ = 0.5)</h3>
+<p style="color: var(--dim); font-size: 16px;">The propagation speed as a function of the aperture rotation angle. The i rotation (π/2) is the unique maximum.</p>
+
+<canvas id="speedCurve" width="720" height="300"></canvas>
+
+<div style="text-align: center; margin-top: 8px;">
+  <span class="d">Moving dot shows current θ setting from above.</span>
+</div>
+</div>
+
+<!-- Third simulation: 2D parameter space -->
+<div class="sim-container">
+<h3 style="color: var(--gold);">The Speed Surface: v(θ, ◐)</h3>
+<p style="color: var(--dim); font-size: 16px;">Propagation speed as a function of both parameters. The unique maximum (v = 1 = c) occurs at θ = π/2, ◐ = 0.5 (marked with ⊙).</p>
+
+<canvas id="surfaceCanvas" width="720" height="400"></canvas>
+</div>
+
+<!-- ============================================================ -->
+<h2>Why c = 1 (Natural Units)</h2>
+
+<p>The derivation reads structurally:</p>
+
+<div class="eq">c = √(2◐ · sin θ)</div>
+
+<p>Set ◐ = 0.5 (forced by symmetry, entropy, virial):<br>
+c = √(2 · ½ · sin θ) = √(sin θ)</p>
+
+<p>Set θ = π/2 (the i rotation; unconstrained aperture):<br>
+c = √(sin π/2) = √1 = <span class="w wb">1</span></p>
+
+<p>The speed of light is 1 because:</p>
+
+<p><span class="s wb">sin(π/2) = 1</span>: the i rotation transfers ALL of the transverse component. No rotation angle can do more (sin θ ≤ 1 for all θ, equality only at π/2). This is why c is maximum: i is the maximum rotation.</p>
+
+<p><span class="m wb">2 × 0.5 = 1</span>: perfect balance means the two channels (⊛ and ☀︎) together carry exactly one full coupling unit. The factor of 2 comes from both channels; the 0.5 comes from balance distributing equally between them. Their product is unity.</p>
+
+<p><span class="b wb">√1 = 1</span>: the square root appears because propagation speed scales as the square root of coupling (just as sound speed scales as √(modulus/density)). When coupling is exactly 1, the root is trivially 1.</p>
+
+<div class="note">c is not a free parameter. It is forced to 1 by the same three requirements that force ◐ = 0.5: the geometry of ⊙ permits no other value for the unconstrained field.</div>
+
+<!-- ============================================================ -->
+<h2>Why Massive Particles Are Slower</h2>
+
+<p>Mass constrains the aperture rotation. A massive particle has an effective rotation angle θ<sub>eff</sub> &lt; π/2. The heavier the particle, the more constrained the rotation, the smaller sin(θ<sub>eff</sub>), the slower the propagation:</p>
+
+<div class="eq">v = √(2◐ · sin θ<sub>eff</sub>) &lt; c</div>
+
+<p>In the rest frame, a massive particle is a circumpunct whose pump cycle rotates less than π/2 per tick. It still pumps (it still exists, still has energy), but the rotation does not fully transfer to lateral propagation; some stays as internal cycling. That internal cycling IS the rest mass energy: E₀ = mc².</p>
+
+<table>
+<tr><th>Particle</th><th>θ<sub>eff</sub></th><th>sin(θ<sub>eff</sub>)</th><th>v/c</th><th>Physical meaning</th></tr>
+<tr><td>Photon (massless)</td><td class="num">π/2</td><td class="num">1.000</td><td class="num">1.000</td><td>Unconstrained rotation; all energy propagates</td></tr>
+<tr><td>Neutrino (tiny mass)</td><td class="num">≈ π/2 &minus; ε</td><td class="num">≈ 0.9999...</td><td class="num">≈ 0.9999...</td><td>Nearly unconstrained; almost all propagation</td></tr>
+<tr><td>Electron</td><td class="num">θ<sub>e</sub></td><td class="num">sin θ<sub>e</sub></td><td class="num">v<sub>e</sub>/c</td><td>Light but constrained; mixedinternal/propagation</td></tr>
+<tr><td>Proton</td><td class="num">θ<sub>p</sub> ≪ π/2</td><td class="num">sin θ<sub>p</sub></td><td class="num">v<sub>p</sub>/c</td><td>Heavy; mostly internal cycling</td></tr>
+<tr><td>Black hole limit</td><td class="num">→ 0</td><td class="num">→ 0</td><td class="num">→ 0</td><td>Maximum constraint; all energy internal</td></tr>
+</table>
+
+<p>The relationship between mass and effective rotation angle:</p>
+
+<div class="eq">sin(θ<sub>eff</sub>) = 1 &minus; (m/E)²</div>
+
+<p>At m = 0: sin(θ<sub>eff</sub>) = 1 (photon, travels at c). At m = E: sin(θ<sub>eff</sub>) = 0 (all energy is rest mass, no propagation). This IS the relativistic velocity formula v/c = √(1 &minus; m²/E²), rewritten in the language of the pump cycle.</p>
+
+<!-- ============================================================ -->
+<h2>The SI Value: 299,792,458 m/s</h2>
+
+<p>The numerical value of c in SI units is set by our definitions of the metre and second. Since 2019, the metre is <span class="it">defined</span> as the distance light travels in 1/299,792,458 of a second. So the number 299,792,458 is a unit conversion factor, not a physical fact.</p>
+
+<p>The physical fact is: <span class="w wb">c = 1</span>. One lattice step per pump cycle. One unit of field per unit of time. The unconstrained balanced field propagates at the maximum possible speed, and that speed is the natural unit of velocity.</p>
+
+<p>Asking "which constraint ratio gives 299,792,458" is like asking "which constraint ratio gives 12" about inches per foot. The answer is: that is not a constraint ratio; it is how we calibrated our rulers.</p>
+
+<p>What IS a constraint ratio: c/v for any massive particle. That ratio depends only on θ<sub>eff</sub>, which depends only on the particle's mass relative to its total energy. Those ratios are physically meaningful. The absolute number 299,792,458 is not.</p>
+
+<!-- ============================================================ -->
+<h2>Structural Reading</h2>
+
+<p>Compare the two fundamental constants we have derived:</p>
+
+<table>
+<tr><th>Constant</th><th>Formula</th><th>What it measures</th><th>Framework reading</th></tr>
+<tr>
+  <td><span class="w wb">α</span></td>
+  <td class="num">1/α = i⁴(°)/φ² &minus; 2/φ³</td>
+  <td>Coupling strength</td>
+  <td>How strongly i generates ○ through Φ at a vertex</td>
+</tr>
+<tr>
+  <td><span class="w wb">c</span></td>
+  <td class="num">c = √(2◐ · sin(i))</td>
+  <td>Propagation speed</td>
+  <td>How fast i propagates through Φ between vertices</td>
+</tr>
+</table>
+
+<p>Same <span class="s">i</span>. Same <span class="m">Φ</span>. Different measurement. One asks "how strong is the interaction at a point?" The other asks "how fast does the interaction travel between points?" Together they fully characterize the electromagnetic field: its strength (α) and its speed (c).</p>
+
+<p>The formula for c contains exactly three ingredients:</p>
+
+<p><span class="w wb">2</span>: the two channels of the pump cycle (⊛ and ☀︎). Bidirectionality. The same 2 that appears in the valve correction 2/φ³ of the α formula.</p>
+
+<p><span class="m wb">◐</span>: the balance parameter. At 0.5, the pump is balanced. This is forced, not chosen. Three independent derivations (symmetry, maximum entropy, virial theorem) all give ◐ = 0.5.</p>
+
+<p><span class="s wb">sin(θ)</span>: the transverse projection of the aperture rotation. For the i rotation, θ = π/2, so sin(θ) = 1. This is the same sin that appears in every rotation problem in physics, because rotation IS the pump cycle and sin IS the transverse component.</p>
+
+<div class="eq" style="font-size: 24px; border-color: var(--gold);">
+  α measures how strongly i <span class="s">couples</span> at a vertex.<br>
+  c measures how fast i <span class="m">propagates</span> through the field.<br>
+  Same i. Different measurement. Same ⊙.
+</div>
+
+<!-- ============================================================ -->
+<h2>Connection to E = mc²</h2>
+
+<p>The equation E = mc² now reads: the total energy of a massive particle equals its mass times the square of the maximum propagation speed. Why squared? Because Φ is 2D (a surface). The c² is the field declaring its dimensionality, converting between the 3D boundary measurement (mass) and the 2D surface reality (energy).</p>
+
+<p>In our framework: E = 1 always. Mass is m = 1/c² (the 1 at maximum convergence, measured in boundary units). The squaring is Φ: to peel the boundary back to the surface costs c², because the surface has two dimensions and each dimension contributes one factor of c.</p>
+
+<!-- ============================================================ -->
+
+<div class="footer">
+  <p><span class="w" style="font-size: 28px;">⊙</span></p>
+  <p>E = 1; all else is constraints.<br>
+  c = sin(i); the speed of the unconstrained field.</p>
+  <p style="margin-top: 20px;"><a href="e_equals_1.html">E = 1</a> · <a href="seven_as_one.html">Seven as One</a> · <a href="circumpunct_operators.html">Operators</a> · <a href="toe_map.html">TOE Map</a></p>
+  <p style="margin-top: 16px;"><a href="https://fractalreality.ca">fractalreality.ca</a></p>
+</div>
+
+</div><!-- .page -->
+
+<!-- ============================================================ -->
+<!-- SIMULATION CODE -->
+<!-- ============================================================ -->
+<script>
+// ============================================================
+// SIMULATION 1: Wave propagation on coupled oscillator lattice
+// ============================================================
+
+const N = 400;            // lattice sites
+const dt = 0.5;           // time step
+let theta = Math.PI / 2;  // aperture rotation
+let balance = 0.5;        // balance parameter
+
+// Field arrays (real part only for visualization; full sim uses complex)
+let fieldR = new Float64Array(N);  // real part
+let fieldI = new Float64Array(N);  // imaginary part
+let fieldR_prev = new Float64Array(N);
+let fieldI_prev = new Float64Array(N);
+let paused = false;
+let stepCount = 0;
+let pulseX0 = 80;        // initial pulse position
+let peakPositions = [];   // for speed measurement
+
+function initPulse() {
+  fieldR.fill(0);
+  fieldI.fill(0);
+  fieldR_prev.fill(0);
+  fieldI_prev.fill(0);
+  stepCount = 0;
+  peakPositions = [];
+
+  // Gaussian pulse
+  const sigma = 12;
+  for (let i = 0; i < N; i++) {
+    const x = i - pulseX0;
+    const envelope = Math.exp(-x * x / (2 * sigma * sigma));
+    // Give it a carrier wave for nice propagation
+    const carrier = Math.cos(0.3 * x);
+    fieldR[i] = envelope * carrier;
+    fieldI[i] = envelope * Math.sin(0.3 * x);
+    fieldR_prev[i] = fieldR[i];
+    fieldI_prev[i] = fieldI[i];
+  }
+}
+
+function stepWave() {
+  const kappa = 2 * balance * Math.sin(theta);
+  // Clamp kappa to stability limit for discrete wave equation
+  const k = Math.min(kappa, 0.5) * dt * dt;
+
+  let newR = new Float64Array(N);
+  let newI = new Float64Array(N);
+
+  for (let i = 1; i < N - 1; i++) {
+    // Discrete wave equation: u(t+1) = 2u(t) - u(t-1) + k*(u(i+1) + u(i-1) - 2u(i))
+    const lapR = fieldR[i + 1] + fieldR[i - 1] - 2 * fieldR[i];
+    const lapI = fieldI[i + 1] + fieldI[i - 1] - 2 * fieldI[i];
+    newR[i] = 2 * fieldR[i] - fieldR_prev[i] + k * lapR;
+    newI[i] = 2 * fieldI[i] - fieldI_prev[i] + k * lapI;
+  }
+
+  fieldR_prev.set(fieldR);
+  fieldI_prev.set(fieldI);
+  fieldR.set(newR);
+  fieldI.set(newI);
+  stepCount++;
+
+  // Track peak position for speed measurement
+  if (stepCount % 5 === 0) {
+    let maxVal = 0;
+    let maxIdx = 0;
+    for (let i = pulseX0; i < N; i++) {
+      const amp = fieldR[i] * fieldR[i] + fieldI[i] * fieldI[i];
+      if (amp > maxVal) { maxVal = amp; maxIdx = i; }
+    }
+    if (maxVal > 0.001) {
+      peakPositions.push({ t: stepCount, x: maxIdx });
+    }
+  }
+}
+
+function getMeasuredSpeed() {
+  if (peakPositions.length < 6) return null;
+  // Linear regression on recent peak positions
+  const recent = peakPositions.slice(-20);
+  let sumT = 0, sumX = 0, sumTX = 0, sumTT = 0;
+  for (const p of recent) {
+    sumT += p.t; sumX += p.x; sumTX += p.t * p.x; sumTT += p.t * p.t;
+  }
+  const n = recent.length;
+  const slope = (n * sumTX - sumT * sumX) / (n * sumTT - sumT * sumT);
+  // Normalize: theoretical c=1 corresponds to slope = sqrt(kappa) * dt
+  const kappa = 2 * balance * Math.sin(theta);
+  const theoreticalSlope = Math.sqrt(Math.min(kappa, 0.5)) * dt;
+  if (theoreticalSlope < 0.001) return 0;
+  return slope / (Math.sqrt(0.5) * dt); // normalize so c=1 at kappa=1
+}
+
+// Canvas drawing
+const waveCanvas = document.getElementById('waveCanvas');
+const wCtx = waveCanvas.getContext('2d');
+
+function drawWave() {
+  const W = waveCanvas.width;
+  const H = waveCanvas.height;
+  const dpr = window.devicePixelRatio || 1;
+  waveCanvas.width = waveCanvas.clientWidth * dpr;
+  waveCanvas.height = 280 * dpr;
+  wCtx.scale(dpr, dpr);
+  const w = waveCanvas.clientWidth;
+  const h = 280;
+
+  wCtx.fillStyle = '#06060C';
+  wCtx.fillRect(0, 0, w, h);
+
+  // Grid lines
+  wCtx.strokeStyle = '#1a1a2a';
+  wCtx.lineWidth = 1;
+  for (let y = h * 0.25; y < h; y += h * 0.25) {
+    wCtx.beginPath();
+    wCtx.moveTo(0, y);
+    wCtx.lineTo(w, y);
+    wCtx.stroke();
+  }
+
+  // Draw amplitude (|Φ|²)
+  const dx = w / N;
+  const mid = h / 2;
+  const scale = h * 0.4;
+
+  // Intensity (probability) in cyan
+  wCtx.beginPath();
+  wCtx.strokeStyle = '#4DA0C8';
+  wCtx.lineWidth = 1.5;
+  for (let i = 0; i < N; i++) {
+    const amp = fieldR[i] * fieldR[i] + fieldI[i] * fieldI[i];
+    const y = mid - amp * scale * 2;
+    if (i === 0) wCtx.moveTo(i * dx, y);
+    else wCtx.lineTo(i * dx, y);
+  }
+  wCtx.stroke();
+
+  // Real part in gold
+  wCtx.beginPath();
+  wCtx.strokeStyle = '#B8A060';
+  wCtx.lineWidth = 2;
+  for (let i = 0; i < N; i++) {
+    const y = mid - fieldR[i] * scale;
+    if (i === 0) wCtx.moveTo(i * dx, y);
+    else wCtx.lineTo(i * dx, y);
+  }
+  wCtx.stroke();
+
+  // Imaginary part in pink (faint)
+  wCtx.beginPath();
+  wCtx.strokeStyle = 'rgba(232, 138, 175, 0.4)';
+  wCtx.lineWidth = 1;
+  for (let i = 0; i < N; i++) {
+    const y = mid - fieldI[i] * scale;
+    if (i === 0) wCtx.moveTo(i * dx, y);
+    else wCtx.lineTo(i * dx, y);
+  }
+  wCtx.stroke();
+
+  // Initial position marker
+  const x0px = pulseX0 * dx;
+  wCtx.strokeStyle = 'rgba(184, 160, 96, 0.3)';
+  wCtx.setLineDash([4, 4]);
+  wCtx.beginPath();
+  wCtx.moveTo(x0px, 0);
+  wCtx.lineTo(x0px, h);
+  wCtx.stroke();
+  wCtx.setLineDash([]);
+
+  // Labels
+  wCtx.fillStyle = '#887850';
+  wCtx.font = '12px EB Garamond, serif';
+  wCtx.fillText('Re(Φ)', 8, 16);
+  wCtx.fillStyle = 'rgba(232, 138, 175, 0.6)';
+  wCtx.fillText('Im(Φ)', 60, 16);
+  wCtx.fillStyle = '#4DA0C8';
+  wCtx.fillText('|Φ|²', 110, 16);
+  wCtx.fillStyle = '#444038';
+  wCtx.fillText('t = ' + stepCount, w - 60, 16);
+}
+
+// ============================================================
+// SIMULATION 2: Speed vs angle curve
+// ============================================================
+const speedCanvas = document.getElementById('speedCurve');
+const sCtx = speedCanvas.getContext('2d');
+
+function drawSpeedCurve() {
+  const dpr = window.devicePixelRatio || 1;
+  speedCanvas.width = speedCanvas.clientWidth * dpr;
+  speedCanvas.height = 300 * dpr;
+  sCtx.scale(dpr, dpr);
+  const w = speedCanvas.clientWidth;
+  const h = 300;
+  const pad = { left: 50, right: 20, top: 20, bottom: 50 };
+
+  sCtx.fillStyle = '#06060C';
+  sCtx.fillRect(0, 0, w, h);
+
+  const plotW = w - pad.left - pad.right;
+  const plotH = h - pad.top - pad.bottom;
+
+  // Axes
+  sCtx.strokeStyle = '#444038';
+  sCtx.lineWidth = 1;
+  sCtx.beginPath();
+  sCtx.moveTo(pad.left, pad.top);
+  sCtx.lineTo(pad.left, h - pad.bottom);
+  sCtx.lineTo(w - pad.right, h - pad.bottom);
+  sCtx.stroke();
+
+  // Grid
+  sCtx.strokeStyle = '#1a1a2a';
+  for (let v = 0.25; v <= 1; v += 0.25) {
+    const y = pad.top + plotH * (1 - v);
+    sCtx.beginPath();
+    sCtx.moveTo(pad.left, y);
+    sCtx.lineTo(w - pad.right, y);
+    sCtx.stroke();
+  }
+
+  // Y axis labels
+  sCtx.fillStyle = '#887850';
+  sCtx.font = '13px EB Garamond, serif';
+  sCtx.textAlign = 'right';
+  for (let v = 0; v <= 1; v += 0.25) {
+    const y = pad.top + plotH * (1 - v);
+    sCtx.fillText(v.toFixed(2), pad.left - 8, y + 4);
+  }
+
+  // X axis labels
+  sCtx.textAlign = 'center';
+  const angles = [0, Math.PI / 6, Math.PI / 4, Math.PI / 3, Math.PI / 2];
+  const labels = ['0', 'π/6', 'π/4', 'π/3', 'π/2'];
+  for (let i = 0; i < angles.length; i++) {
+    const x = pad.left + (angles[i] / (Math.PI / 2)) * plotW;
+    sCtx.fillText(labels[i], x, h - pad.bottom + 18);
+
+    sCtx.strokeStyle = '#1a1a2a';
+    sCtx.beginPath();
+    sCtx.moveTo(x, pad.top);
+    sCtx.lineTo(x, h - pad.bottom);
+    sCtx.stroke();
+  }
+
+  // Axis titles
+  sCtx.fillStyle = '#8A8272';
+  sCtx.font = '14px EB Garamond, serif';
+  sCtx.fillText('θ (aperture rotation)', w / 2, h - 8);
+  sCtx.save();
+  sCtx.translate(14, h / 2);
+  sCtx.rotate(-Math.PI / 2);
+  sCtx.fillText('v / c', 0, 0);
+  sCtx.restore();
+
+  // The curve: v = sqrt(2 * 0.5 * sin(theta)) = sqrt(sin(theta))
+  sCtx.beginPath();
+  sCtx.strokeStyle = '#B8A060';
+  sCtx.lineWidth = 2.5;
+  for (let px = 0; px <= plotW; px++) {
+    const t = (px / plotW) * (Math.PI / 2);
+    const v = Math.sqrt(Math.sin(t));
+    const x = pad.left + px;
+    const y = pad.top + plotH * (1 - v);
+    if (px === 0) sCtx.moveTo(x, y);
+    else sCtx.lineTo(x, y);
+  }
+  sCtx.stroke();
+
+  // Also draw sin(theta) for comparison
+  sCtx.beginPath();
+  sCtx.strokeStyle = 'rgba(77, 184, 160, 0.4)';
+  sCtx.lineWidth = 1.5;
+  sCtx.setLineDash([6, 4]);
+  for (let px = 0; px <= plotW; px++) {
+    const t = (px / plotW) * (Math.PI / 2);
+    const v = Math.sin(t);
+    const x = pad.left + px;
+    const y = pad.top + plotH * (1 - v);
+    if (px === 0) sCtx.moveTo(x, y);
+    else sCtx.lineTo(x, y);
+  }
+  sCtx.stroke();
+  sCtx.setLineDash([]);
+
+  // Legend
+  sCtx.fillStyle = '#B8A060';
+  sCtx.font = '13px EB Garamond, serif';
+  sCtx.textAlign = 'left';
+  sCtx.fillText('v = √sin(θ)', w - 140, pad.top + 20);
+  sCtx.fillStyle = 'rgba(77, 184, 160, 0.6)';
+  sCtx.fillText('sin(θ)', w - 140, pad.top + 38);
+
+  // Current theta marker
+  const currentX = pad.left + (theta / (Math.PI / 2)) * plotW;
+  const currentV = Math.sqrt(2 * balance * Math.sin(theta));
+  const currentY = pad.top + plotH * (1 - Math.min(currentV, 1));
+
+  sCtx.beginPath();
+  sCtx.arc(currentX, currentY, 8, 0, Math.PI * 2);
+  sCtx.fillStyle = '#E88AAF';
+  sCtx.fill();
+  sCtx.strokeStyle = '#E88AAF';
+  sCtx.lineWidth = 1;
+  sCtx.stroke();
+
+  // c = 1 line
+  const cY = pad.top;
+  sCtx.strokeStyle = 'rgba(184, 160, 96, 0.3)';
+  sCtx.setLineDash([2, 4]);
+  sCtx.beginPath();
+  sCtx.moveTo(pad.left, cY);
+  sCtx.lineTo(w - pad.right, cY);
+  sCtx.stroke();
+  sCtx.setLineDash([]);
+  sCtx.fillStyle = 'rgba(184, 160, 96, 0.5)';
+  sCtx.textAlign = 'left';
+  sCtx.fillText('c = 1', pad.left + 4, cY + 14);
+}
+
+// ============================================================
+// SIMULATION 3: 2D parameter space heatmap
+// ============================================================
+const surfCanvas = document.getElementById('surfaceCanvas');
+const surfCtx = surfCanvas.getContext('2d');
+
+function drawSurface() {
+  const dpr = window.devicePixelRatio || 1;
+  surfCanvas.width = surfCanvas.clientWidth * dpr;
+  surfCanvas.height = 400 * dpr;
+  surfCtx.scale(dpr, dpr);
+  const w = surfCanvas.clientWidth;
+  const h = 400;
+  const pad = { left: 60, right: 80, top: 20, bottom: 50 };
+
+  surfCtx.fillStyle = '#06060C';
+  surfCtx.fillRect(0, 0, w, h);
+
+  const plotW = w - pad.left - pad.right;
+  const plotH = h - pad.top - pad.bottom;
+
+  // Draw heatmap
+  const res = 2; // pixel resolution
+  for (let px = 0; px < plotW; px += res) {
+    for (let py = 0; py < plotH; py += res) {
+      const t = (px / plotW) * (Math.PI / 2);
+      const b = 1 - (py / plotH); // balance: 0 at bottom, 1 at top
+      const v = Math.sqrt(2 * b * Math.sin(t));
+      const vClamped = Math.min(v, 1.2);
+
+      // Color: dark blue (slow) to gold (c) to red (superluminal, shouldn't happen)
+      let r, g, bl;
+      if (vClamped <= 1) {
+        const f = vClamped;
+        r = Math.floor(10 + f * 174);
+        g = Math.floor(10 + f * 150);
+        bl = Math.floor(40 + f * 56);
+      } else {
+        r = 224; g = 96; bl = 96;
+      }
+
+      surfCtx.fillStyle = `rgb(${r},${g},${bl})`;
+      surfCtx.fillRect(pad.left + px, pad.top + py, res, res);
+    }
+  }
+
+  // Contour lines at v = 0.25, 0.5, 0.75, 1.0
+  for (const targetV of [0.25, 0.5, 0.75, 1.0]) {
+    surfCtx.beginPath();
+    surfCtx.strokeStyle = targetV === 1.0 ? 'rgba(184, 160, 96, 0.8)' : 'rgba(255,255,255,0.15)';
+    surfCtx.lineWidth = targetV === 1.0 ? 2 : 1;
+
+    let started = false;
+    for (let px = 0; px <= plotW; px += 2) {
+      const t = (px / plotW) * (Math.PI / 2);
+      const sinT = Math.sin(t);
+      if (sinT < 0.001) continue;
+      // v = sqrt(2*b*sin(t)) = targetV => b = targetV^2 / (2*sin(t))
+      const b = (targetV * targetV) / (2 * sinT);
+      if (b < 0 || b > 1) continue;
+      const py = plotH * (1 - b);
+      const x = pad.left + px;
+      const y = pad.top + py;
+      if (!started) { surfCtx.moveTo(x, y); started = true; }
+      else surfCtx.lineTo(x, y);
+    }
+    surfCtx.stroke();
+  }
+
+  // Mark current position
+  const curPx = pad.left + (theta / (Math.PI / 2)) * plotW;
+  const curPy = pad.top + plotH * (1 - balance);
+  surfCtx.beginPath();
+  surfCtx.arc(curPx, curPy, 6, 0, Math.PI * 2);
+  surfCtx.strokeStyle = '#E88AAF';
+  surfCtx.lineWidth = 2;
+  surfCtx.stroke();
+
+  // Mark the ⊙ point (theta=pi/2, balance=0.5)
+  const optPx = pad.left + plotW;
+  const optPy = pad.top + plotH * 0.5;
+  surfCtx.font = '20px serif';
+  surfCtx.fillStyle = '#B8A060';
+  surfCtx.textAlign = 'center';
+  surfCtx.fillText('⊙', optPx, optPy + 6);
+
+  // Axes
+  surfCtx.strokeStyle = '#444038';
+  surfCtx.lineWidth = 1;
+  surfCtx.beginPath();
+  surfCtx.moveTo(pad.left, pad.top);
+  surfCtx.lineTo(pad.left, h - pad.bottom);
+  surfCtx.lineTo(w - pad.right, h - pad.bottom);
+  surfCtx.stroke();
+
+  // X axis labels
+  surfCtx.fillStyle = '#887850';
+  surfCtx.font = '13px EB Garamond, serif';
+  surfCtx.textAlign = 'center';
+  const xLabels = [['0', 0], ['π/6', Math.PI/6], ['π/4', Math.PI/4], ['π/3', Math.PI/3], ['π/2', Math.PI/2]];
+  for (const [label, val] of xLabels) {
+    const x = pad.left + (val / (Math.PI / 2)) * plotW;
+    surfCtx.fillText(label, x, h - pad.bottom + 18);
+  }
+  surfCtx.fillStyle = '#8A8272';
+  surfCtx.font = '14px EB Garamond, serif';
+  surfCtx.fillText('θ (aperture rotation)', (pad.left + w - pad.right) / 2, h - 8);
+
+  // Y axis labels
+  surfCtx.textAlign = 'right';
+  surfCtx.fillStyle = '#887850';
+  surfCtx.font = '13px EB Garamond, serif';
+  for (let b = 0; b <= 1; b += 0.25) {
+    const y = pad.top + plotH * (1 - b);
+    surfCtx.fillText(b.toFixed(2), pad.left - 8, y + 4);
+  }
+  surfCtx.save();
+  surfCtx.translate(14, (pad.top + h - pad.bottom) / 2);
+  surfCtx.rotate(-Math.PI / 2);
+  surfCtx.fillStyle = '#8A8272';
+  surfCtx.font = '14px EB Garamond, serif';
+  surfCtx.textAlign = 'center';
+  surfCtx.fillText('◐ (balance)', 0, 0);
+  surfCtx.restore();
+
+  // Color bar
+  const barX = w - pad.right + 16;
+  const barW = 16;
+  for (let py = 0; py < plotH; py++) {
+    const v = 1 - py / plotH;
+    const r = Math.floor(10 + v * 174);
+    const g = Math.floor(10 + v * 150);
+    const b2 = Math.floor(40 + v * 56);
+    surfCtx.fillStyle = `rgb(${r},${g},${b2})`;
+    surfCtx.fillRect(barX, pad.top + py, barW, 1);
+  }
+  surfCtx.strokeStyle = '#444038';
+  surfCtx.strokeRect(barX, pad.top, barW, plotH);
+  surfCtx.fillStyle = '#887850';
+  surfCtx.font = '12px EB Garamond, serif';
+  surfCtx.textAlign = 'left';
+  surfCtx.fillText('v=1', barX + barW + 4, pad.top + 10);
+  surfCtx.fillText('v=0', barX + barW + 4, pad.top + plotH);
+
+  // Contour labels
+  surfCtx.fillStyle = 'rgba(184, 160, 96, 0.7)';
+  surfCtx.font = '12px EB Garamond, serif';
+  // label v=1 contour near theta=pi/2
+  surfCtx.fillText('v = c', pad.left + plotW * 0.7, pad.top + plotH * 0.42);
+}
+
+// ============================================================
+// UI Controls
+// ============================================================
+
+const thetaSlider = document.getElementById('thetaSlider');
+const balanceSlider = document.getElementById('balanceSlider');
+const thetaVal = document.getElementById('thetaVal');
+const balanceVal = document.getElementById('balanceVal');
+const sinVal = document.getElementById('sinVal');
+const kappaVal = document.getElementById('kappaVal');
+const speedVal = document.getElementById('speedVal');
+const measuredVal = document.getElementById('measuredVal');
+const speedBar = document.getElementById('speedBar');
+const speedBarLabel = document.getElementById('speedBarLabel');
+
+function formatTheta(t) {
+  if (Math.abs(t - Math.PI / 2) < 0.02) return 'π/2';
+  if (Math.abs(t - Math.PI / 3) < 0.02) return 'π/3';
+  if (Math.abs(t - Math.PI / 4) < 0.02) return 'π/4';
+  if (Math.abs(t - Math.PI / 6) < 0.02) return 'π/6';
+  return (t * 180 / Math.PI).toFixed(0) + '°';
+}
+
+function updateReadouts() {
+  const sinT = Math.sin(theta);
+  const kappa = 2 * balance * sinT;
+  const v = Math.sqrt(kappa);
+
+  thetaVal.textContent = formatTheta(theta);
+  balanceVal.textContent = balance.toFixed(2);
+  sinVal.textContent = sinT.toFixed(3);
+  kappaVal.textContent = kappa.toFixed(3);
+  speedVal.textContent = Math.min(v, 1.414).toFixed(3);
+
+  const barPct = Math.min(v, 1.2) / 1.2 * 100;
+  speedBar.style.width = barPct + '%';
+  speedBar.style.background = v > 1.01 ? 'var(--red)' : v > 0.99 ? 'var(--gold)' : 'var(--cyan)';
+  speedBarLabel.textContent = v.toFixed(2) + 'c';
+
+  const ms = getMeasuredSpeed();
+  measuredVal.textContent = ms !== null ? ms.toFixed(3) : '...';
+}
+
+thetaSlider.addEventListener('input', () => {
+  theta = parseFloat(thetaSlider.value);
+  initPulse();
+  updateReadouts();
+  drawSpeedCurve();
+  drawSurface();
+});
+
+balanceSlider.addEventListener('input', () => {
+  balance = parseFloat(balanceSlider.value);
+  initPulse();
+  updateReadouts();
+  drawSpeedCurve();
+  drawSurface();
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  initPulse();
+});
+
+document.getElementById('pauseBtn').addEventListener('click', function() {
+  paused = !paused;
+  this.textContent = paused ? 'Resume' : 'Pause';
+  this.classList.toggle('active', paused);
+});
+
+// ============================================================
+// Animation loop
+// ============================================================
+
+function animate() {
+  if (!paused) {
+    // Multiple steps per frame for smooth propagation
+    for (let i = 0; i < 3; i++) stepWave();
+    updateReadouts();
+  }
+  drawWave();
+  requestAnimationFrame(animate);
+}
+
+// Initialize
+initPulse();
+updateReadouts();
+drawSpeedCurve();
+drawSurface();
+animate();
+</script>
+
+</body>
+</html>

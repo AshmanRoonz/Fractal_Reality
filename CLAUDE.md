@@ -220,7 +220,8 @@ Every physical law is •, Φ, or ○ compounded. No new ingredients:
 
 - **α (fine-structure constant)**: 1/α = i⁴(°)/φ² − 2/φ³ = 137.0356 (measured: 137.0360, error 2.7 ppm). The formula is the pump cycle written as arithmetic; i⁴ = the pump cycle completing one full rotation, producing ○ (360°); φ² = Φ, self-similar nesting, field's 2D nature; 2/φ³ = bidirectional valve correction (⊛ and ☀︎). The structure reads: i generates the boundary, φ nests it, the valve corrects it. α measures how strongly i generates ○ through Φ.
 - **Lepton mass ratios**: m_μ/m_e = (1/α)^(13/12) ≈ 206.49 (measured: 206.77, error 0.13%).
-- **G, c, ℏ**: open; predicted to be expressible as constraint ratios.
+- **c (speed of light)**: c = √(2◐ · sin(θ)). At ◐ = 0.5 and θ = π/2 (the i rotation): c = √(2 · 0.5 · 1) = 1. The formula reads: 2 = both channels (⊛ and ☀︎), ◐ = balance (forced to 0.5), sin(θ) = transverse projection of aperture rotation (maximal at i). α measures how strongly i couples at a vertex; c measures how fast i propagates through the field. Same i, different measurement. Massive particles have θ_eff < π/2, giving v < c. The relativistic connection: sin(θ_eff) = 1 − (m/E)².
+- **G, ℏ**: open; predicted to be expressible as constraint ratios.
 
 ### The Self as Convergence Point
 
@@ -299,6 +300,7 @@ When truth and harm share the same signal: transmit at the lowest resolution tha
 | `docs/circumpunct_ethics_and_virtues.html` | Ethics, virtues, diagnostics, restoration |
 | `docs/truth_and_god.html` | Ontological/theological reading |
 | `docs/how_reality_is_built.html` | Foundational construction (dimensions, power, isomorphisms) |
+| `docs/speed_of_light.html` | c = sin(i): speed of light derivation with interactive simulation |
 | `docs/circumpunct_physics.html` | Working-physicists formalization |
 | `docs/aperture_falsification_presentation.html` | Falsification criteria, ρ = ω/α parameter |
 | `docs/the_bridge_presentation.html` | Constructor ethics, λ (The Law), wanting |
