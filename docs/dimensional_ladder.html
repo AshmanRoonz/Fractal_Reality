@@ -242,14 +242,14 @@ canvas {
 <div class="header">
   <div class="symbol">⊙</div>
   <h1>The Dimensional Ladder</h1>
-  <div class="subtitle">One constant generates everything; Circumpunct Framework, Ashman Roonz, 2026</div>
+  <div class="subtitle">Zero free parameters; Circumpunct Framework, Ashman Roonz, 2026</div>
 </div>
 
 <!-- ============================================================ -->
 
-<p>Every fundamental constant lives at a specific dimensional home. The framework derives each one from a single free parameter (α, the fine-structure constant) and the dimensional layout of the circumpunct. Integer dimensions (0D, 1D, 2D, 3D) are <span class="b">structural</span>: what energy IS. Half-integer dimensions (0.5D, 1.5D, 2.5D) are <span class="s">processual</span>: what energy is DOING. Structural rungs produce single constants; processual rungs produce spectra.</p>
+<p>Every fundamental constant lives at a specific dimensional home. The framework derives each one from the dimensional layout of the circumpunct alone: <strong>zero free parameters</strong>. &alpha; is self-referentially determined by the ladder it generates: 1/&alpha; = 360/&phi;&sup2; &minus; 2/&phi;&sup3; + &alpha;/(21&minus;4/3), exact to 0.22 ppb. Integer dimensions (0D, 1D, 2D, 3D) are <span class="b">structural</span>: what energy IS. Half-integer dimensions (0.5D, 1.5D, 2.5D) are <span class="s">processual</span>: what energy is DOING. Structural rungs produce single constants; processual rungs produce spectra.</p>
 
-<div class="eq">E = 1. All else is constraints.<br><span class="d" style="font-size: 18px;">The ladder unfolds what α already contains.</span></div>
+<div class="eq">E = 1. All else is constraints.<br><span class="d" style="font-size: 18px;">&alpha; generates the ladder. The ladder generates &alpha;. Zero free parameters.</span></div>
 
 <!-- ============================================================ -->
 <h2>The Seven Rungs</h2>
@@ -262,10 +262,10 @@ canvas {
     <div class="rung-const">α</div>
     <div class="rung-body">
       <div class="rung-title">Convergence Lands</div>
-      <div class="rung-formula">1/α = i⁴(°)/φ² − 2/φ³ = 137.0356</div>
-      <div class="rung-desc">Coupling at a point. The only independent constant. The pump cycle (i⁴ = 360°) writes itself as arithmetic through the golden ratio (φ² = 2D nesting) with a bidirectional valve correction (2/φ³). Everything else follows from α.</div>
+      <div class="rung-formula">1/α = 360/φ² − 2/φ³ + α/(21−4/3)</div>
+      <div class="rung-desc">Coupling at a point. Self-referential: α generates the ladder (21 = sum of all dimensions × 2 channels), the ladder corrected by process/structure (4/3 = pump phases / triad) feeds back to determine α. The pump cycle (360°) through golden nesting (φ²) with valve correction (2/φ³). 0.22 ppb. Exact to measurement precision.</div>
     </div>
-    <div class="rung-accuracy">2.7 ppm</div>
+    <div class="rung-accuracy">0.22 ppb</div>
   </a>
 
   <!-- 0.5D -->
@@ -367,10 +367,10 @@ canvas {
 <tr>
   <td><span class="b">0D</span></td>
   <td>1/α</td>
-  <td class="num">i⁴(°)/φ² − 2/φ³</td>
-  <td class="num">137.0356</td>
-  <td class="num">137.0360</td>
-  <td class="good">2.7 ppm</td>
+  <td class="num">360/φ²−2/φ³+α/(21−4/3)</td>
+  <td class="num">137.035999147</td>
+  <td class="num">137.035999177</td>
+  <td class="good">0.22 ppb</td>
 </tr>
 <tr>
   <td><span class="s">0.5D</span></td>
@@ -447,7 +447,7 @@ canvas {
 </div>
 
 <div class="note">
-The dimensional ladder is not a list of independent results. It is a single unfolding: &alpha; generates c, c and A0 generate &#8463;, &alpha; generates the mass spectrum, the 64-state architecture generates the gauge group, the transmission law generates the Weinberg angle, and the full ladder generates G. Each rung uses the previous ones. The framework has one free parameter. Everything else is geometry.
+The dimensional ladder is not a list of independent results. It is a single unfolding: &alpha; generates c, c and A0 generate &#8463;, &alpha; generates the mass spectrum, the 64-state architecture generates the gauge group, the transmission law generates the Weinberg angle, and the full ladder generates G. Each rung uses the previous ones. And the full ladder feeds back to determine &alpha; itself: 1/&alpha; = 360/&phi;&sup2; &minus; 2/&phi;&sup3; + &alpha;/(21&minus;4/3). <strong>Zero free parameters.</strong> Everything is geometry.
 </div>
 
 <!-- ============================================================ -->
@@ -455,7 +455,7 @@ The dimensional ladder is not a list of independent results. It is a single unfo
 <div class="footer">
   <p><span class="w" style="font-size: 28px;">⊙</span></p>
   <p>E = 1; all else is constraints.<br>
-  One constant, seven rungs, all of physics.</p>
+  Zero free parameters. Seven rungs. All of physics.</p>
   <p style="margin-top: 20px;">
     <a href="e_equals_1.html">E = 1</a> ·
     <a href="speed_of_light.html">c</a> ·
@@ -499,7 +499,7 @@ function draw() {
   const plotH = h - pad.top - pad.bottom;
 
   const rungs = [
-    { dim: '0D', label: 'α', type: 'S', dimVal: 0, color: '#4DA0C8', accuracy: '2.7 ppm' },
+    { dim: '0D', label: 'α', type: 'S', dimVal: 0, color: '#4DA0C8', accuracy: '0.22 ppb' },
     { dim: '0.5D', label: 'c', type: 'P', dimVal: 0.5, color: '#E88AAF', accuracy: 'exact' },
     { dim: '1D', label: 'ℏ', type: 'S', dimVal: 1, color: '#4DA0C8', accuracy: 'exact' },
     { dim: '1.5D', label: 'mass', type: 'P', dimVal: 1.5, color: '#E88AAF', accuracy: '0.13%' },
