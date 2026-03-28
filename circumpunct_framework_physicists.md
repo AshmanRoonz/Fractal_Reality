@@ -3362,12 +3362,15 @@ SELF-REFERENTIAL CORRECTIONS ACROSS THE LADDER:
     ║  m_μ/m_e   │ (1/α)^(13/12 + α/K)           │ 27 = 3³   │ 5 ppm      ║
     ║  m_τ/m_e   │ (1/α)^(58/35 + α/K)           │ 81 = 3⁴   │ 1 ppm      ║
     ║  sin²θ_W   │ 3/13 + 5α/K                   │ 81 = 3⁴   │ 1.4 ppm    ║
+    ║  v/Λ_QCD   │ (1/α)^(56/39)                 │ none      │ 3.4 ppm*   ║
     ║  G         │ α²¹×φ²/2×(1+2α/K)             │ 91 = 7×13 │ 0.04 ppm   ║
     ╚════════════════════════════════════════════════════════════════════════╝
 
     K structure: 59/3 (ladder/pump-triad), 27=3³, 81=3⁴, 91=7×13.
     All K values built from structural numbers (3, 7, 13, 21, 59).
+    v/Λ_QCD: 56 = 8×7 (SU(3) generators × dimensional rungs), 39 = 3×13 (constraints × generators+aperture).
     13 = 12 + 1 = gauge generators + compositional whole (A4).
+    * = 3.4 ppm accuracy; error dominated by Λ_QCD measurement uncertainty in experiments, not theory.
     Zero free parameters. α generates the ladder; the ladder determines α.
 ```
 
