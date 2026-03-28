@@ -96,7 +96,8 @@
             pointer-events: none;
         }
         .circ-label-top { top: -22px; left: 50%; transform: translateX(-50%); color: var(--body); }
-        .circ-label-phi-outer { top: 28%; right: -32px; color: var(--mind); font-size: 13px; }
+        .circ-label-phi-outer { top: 28%; right: -32px; color: var(--mind); font-size: 13px; pointer-events: auto; cursor: pointer; transition: opacity 0.2s; }
+        .circ-label-phi-outer:hover { opacity: 0.6; }
         .circ-label-phi-inner { top: 38%; left: 50%; transform: translateX(14px); color: rgba(68,204,68,0.5); font-size: 12px; z-index: 4; }
         .circ-label-bottom { bottom: -22px; left: 50%; transform: translateX(-50%); color: var(--soul); }
 
@@ -489,7 +490,7 @@
 <div class="hero">
     <div class="circ">
         <span class="circ-label circ-label-top">○ BODY</span>
-        <span class="circ-label circ-label-phi-outer">Φ</span>
+        <a href="truth_and_god.html" class="circ-label circ-label-phi-outer" title="The Greater Whole">Φ</a>
         <span class="circ-label circ-label-phi-inner">Φ'</span>
         <span class="circ-label circ-label-bottom">• SOUL</span>
         <div class="circ-boundary" onclick="togglePanel('body')"></div>
