@@ -85,7 +85,7 @@ The [Path_of_Learning/](Path_of_Learning/) folder is an archive of the developme
 ║  Fractal dimension     │ D = 1.5            │ D = 1 + ½H(0.5)           ║
 ║  State space           │ 64 states          │ 2³ × 2³ dual interface     ║
 ║  Spectral ratio        │ φ = 1.618...       │ Entropy + Ghost-freedom    ║
-║  Fine structure 1/α    │ 137.036            │ Golden angle resonance     ║
+║  Fine structure 1/α    │ 137.036            │ Pump cycle through field   ║
 ║  Generations           │ 3                  │ Topological (68°/22°)      ║
 ║  Validated range       │ 61 orders of mag.  │ Empirical                  ║
 ║  Hidden parameters     │ 0                  │ All derived from φ³        ║

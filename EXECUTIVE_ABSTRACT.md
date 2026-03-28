@@ -187,7 +187,7 @@ All constants derive from the geometry of this equation:
 | β (Balance) | 0.5 | Symmetry of ⊛ and ☀︎ |
 | D (Fractal dimension) | 1.5 | D = 1 + ½H(0.5) |
 | φ (Golden ratio) | 1.618... | Entropy + ghost-freedom |
-| α (Fine structure) | 1/137.036 | 360°/φ² golden angle resonance |
+| α (Fine structure) | 1/137.036 | 1/α = i⁴(°)/φ² − 2/φ³; pump cycle through field |
 | State space | 64 states | (2²)³ — three nested ⊙, each with 4-phase pump |
 | Generations | 3 | 68°/22° cone geometry |
 

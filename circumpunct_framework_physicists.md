@@ -2781,7 +2781,7 @@ However, "plausible mechanism" ≠ derivation. To close this gap, we would need 
 | α_quantum | ατ | 0.02705 | (via τ) | (via τ) |
 | α_texture | (2/5)φ³ | 1.6944 | DERIVED | PHENOMENOLOGICAL |
 
-**No external constants required.** The fine structure constant α is derived from the golden angle resonance (1/α_ideal = 360°/φ² = 137.508, see §7A.5). The rational prefactors come from circumpunct geometry. The φ³ scaling fits empirical values but awaits first-principles derivation from self-similar structure.
+**No external constants required.** The fine structure constant α is derived from the pump cycle through the field (1/α_ideal = i⁴(°)/φ² = 137.508; see §7A.5 for the full formula 1/α = i⁴(°)/φ² − 2/φ³). The rational prefactors come from circumpunct geometry. The φ³ scaling fits empirical values but awaits first-principles derivation from self-similar structure.
 
 **Important distinction:** The D = 1.5 prediction requires zero free parameters—it follows directly from ◐ = 0.5. The texture constants involving φ³ are currently phenomenological fits that require derivation from first principles.
 
@@ -3237,7 +3237,7 @@ THE TWO FUNDAMENTAL RATIOS OF ⊙:
 THE GOLDEN RESONANCE:
     The ideal (undamped) resonance of • ↔ ○ coupling through Φ:
 
-        1/α_ideal = 360° / φ² = 137.508  (golden angle)
+        1/α_ideal = i⁴(°) / φ² = 137.508  (pump cycle through field)
 
     This is where the self-similar field Φ naturally resonates.
 
@@ -3259,7 +3259,8 @@ THE SELF-REFERENTIAL CORRECTION:
 
     ╔═══════════════════════════════════════════════════════════════════════════╗
     ║                                                                           ║
-    ║    IDEAL RESONANCE:    1/α_ideal = 360°/φ² = 137.508                      ║
+    ║    IDEAL RESONANCE:    1/α_ideal = i⁴(°)/φ² = 137.508                     ║
+    ║                        (pump cycle through field)                         ║
     ║                                                                           ║
     ║    VALIDATION NOISE:   α itself detunes the resonance                     ║
     ║                                                                           ║
@@ -3294,13 +3295,13 @@ Electromagnetic coupling happens at the BOUNDARY (○), which is 2D:
 
 The infinite depth of the aperture chamber contributes at each level:
 
-    Level 2:  360/φ²  ←  main term
-    Level 3:  2/φ³    ←  valve correction
+    Level 2:  i⁴(°)/φ²  ←  main term (pump cycle → boundary)
+    Level 3:  2/φ³     ←  valve correction
     Level 4+: residual
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║             1/α = 360/φ² − 2/φ³                                  ║
+    ║         1/α = i⁴(°)/φ² − 2/φ³                                    ║
     ║                                                                   ║
     ║   = 137.5077 − 0.4721 = 137.0356   (2.7 ppm from CODATA)        ║
     ║                                                                   ║
@@ -3308,18 +3309,20 @@ The infinite depth of the aperture chamber contributes at each level:
 
 COMPONENT MEANINGS:
 
-    360 = 2D boundary signature (θ for D = 2)
-    φ² = Level 2 impedance (self-similar nesting)
-    2 = Bidirectional flow (input valve + output valve)
+    i⁴(°) = 360° = pump cycle completing; i⁴ expressed as degree measure
+    φ² = Level 2 impedance = Φ (self-similar nesting, field's 2D nature)
+    2 = Bidirectional flow (input valve ⊛ + output valve ☀︎)
     φ³ = Level 3 impedance
 
 CONNECTION TO CHAMBER DYNAMICS:
 
     Chamber Concept     →    α Formula Component
     ─────────────────────────────────────────────
-    Boundary (○)             360° = 2D signature
-    Level 2 nesting          /φ²
-    Valve difference         2/φ³
+    Boundary (○)             i⁴(°) = pump completes; i generates
+    Level 2 nesting          /φ² = Φ nests
+    Input valve (⊛)          ⊛ valve
+    Output valve (☀︎)         ☀︎ valve
+    Valve difference         2/φ³: valve corrects
     Infinite depth           Higher φⁿ corrections
     β = 0.5 everywhere       Why the formula works
 
@@ -3471,7 +3474,7 @@ Step 3: Solve cone angle from this constraint
         So: α = arcsin(1/4) ≈ 14.48°
 
 Step 4: Golden-spiral pitch constraint
-        Golden angle:       θ_G = 360° / φ² ≈ 137.508°
+        Golden angle:       θ_G = i⁴(°) / φ² ≈ 137.508°
         Supplement:         θ_c = 180° - θ_G ≈ 42.492°
         Half-supplement:    θ_p = θ_c / 2 ≈ 21.246° ≈ 22°
 
@@ -4423,7 +4426,7 @@ This formulation benefited from iterative refinement focused on mathematical rig
 - §7A.2: Fermionic anticommutation {ψ,ψ†}=1 from exclusive node occupancy
 - §7A.3: QCD beta function β₀ = 11Nc/3 - 2nf/3 from 22/64 selection rule
 - §7A.4: Lepton mass formula m_μ/m_e = (1/α)^(13/12) from 6-channel geometry (0.13% error)
-- §7A.5: Fine structure constant 1/α = 360°/φ² from golden angle resonance
+- §7A.5: Fine structure constant 1/α = i⁴(°)/φ² − 2/φ³ from pump cycle through field
 - §7A.6: Three generations numerical proof (>99.9% confidence)
 - §7A.7: 22/64 from middle-state mereological derivation
 - §7A.8: 68°/22° cone geometry from quarter circle + golden pitch

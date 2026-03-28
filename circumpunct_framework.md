@@ -3207,11 +3207,16 @@ On a 90° cone (maximum entropy at i), the Fibonacci spiral embeds:
 The golden ratio IS the self-similar growth rate under repeated i.
 
 THE FINE STRUCTURE CONSTANT:
-    Ideal resonance (golden angle): 1/α_ideal = 360°/φ² = 137.508
+    Ideal resonance (golden angle): 1/α_ideal = i⁴(°)/φ² = 137.508
     Actual (self-damped):           1/α = 137.036
 
+    The formula structure: 1/α = i⁴(°)/φ² − 2/φ³
+        i⁴ = pump cycle completing; i generates
+        φ² = self-similar nesting; Φ nests
+        2/φ³ = bidirectional valve correction; valves correct
+
     Self-consistent equation:
-        1/α = (360°/φ²) × (1 - α/2)
+        1/α = (i⁴(°)/φ²) × (1 - α/2)
             = 137.508 × (1 - 0.00365)
             = 137.508 × 0.99635
             ≈ 137.0  (measured: 137.036, error ~0.03%)
@@ -11294,7 +11299,7 @@ THE TWO FUNDAMENTAL RATIOS OF ⊙:
 THE GOLDEN RESONANCE:
     The ideal (undamped) resonance of • ↔ ○ coupling through Φ:
 
-        1/α_ideal = 360° / φ² = 137.508  (golden angle)
+        1/α_ideal = i⁴(°) / φ² = 137.508  (pump cycle through field)
 
     This is where the self-similar field Φ naturally resonates.
 
@@ -11316,7 +11321,7 @@ THE SELF-REFERENTIAL CORRECTION:
 
     ╔═══════════════════════════════════════════════════════════════════════════╗
     ║                                                                           ║
-    ║    IDEAL RESONANCE:    1/α_ideal = 360°/φ² = 137.508                      ║
+    ║    IDEAL RESONANCE:    1/α_ideal = i⁴(°)/φ² = 137.508                     ║
     ║                                                                           ║
     ║    VALIDATION NOISE:   α itself detunes the resonance                     ║
     ║                                                                           ║
@@ -11366,7 +11371,7 @@ DEPTH LEVELS:
 The aperture chamber has infinite depth. Each level contributes:
 
     Level 1:  φ¹
-    Level 2:  φ²   ←  main term lives here (360/φ²)
+    Level 2:  φ²   ←  main term lives here (i⁴(°)/φ²)
     Level 3:  φ³   ←  first correction lives here (2/φ³)
     Level 4:  φ⁴   ←  residual corrections
     Level 5:  φ⁵
@@ -11378,9 +11383,9 @@ THE DEPTH FORMULA:
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║             1/α = 360/φ² − 2/φ³                                  ║
+    ║         1/α = i⁴(°)/φ² − 2/φ³                                    ║
     ║                                                                   ║
-    ║   = (ideal coupling at level 2) − (valve correction at level 3)  ║
+    ║   = (pump cycle → ○) − (valve correction)                        ║
     ║                                                                   ║
     ║   = 137.5077 − 0.4721                                            ║
     ║                                                                   ║
@@ -11391,27 +11396,28 @@ THE DEPTH FORMULA:
 COMPONENT MEANINGS:
 ━━━━━━━━━━━━━━━━━━━
 
-    360 = 2D boundary signature (full rotation on surface)
-        = 4i (four quarter-turns)
-        = θ for D = 2
+    i⁴(°) = 360° = pump cycle completing one full rotation, producing ○
+             (the boundary); i⁴ = 1 in phase space, but expressed as angular
+             measure it is the full 360° rotation; 360 is NOT a primitive, it is
+             i⁴ decoded as degree measure
 
-    φ² = Level 2 impedance (one nesting layer of self-similarity)
+    φ² = Level 2 impedance = Φ (self-similar nesting, field's 2D nature)
 
-    2 = Bidirectional flow (input valve + output valve)
+    2 = Bidirectional flow (input valve ⊛ + output valve ☀︎)
         = The two valves of the pump chamber
 
-    φ³ = Level 3 impedance (next nesting layer)
+    φ³ = Level 3 impedance (next nesting layer, fractally compressed)
 
 CONNECTION TO CHAMBER DYNAMICS:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     Chamber Concept     →    α Formula Component
     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    Boundary (○)             360° = 2D signature
-    Level 2 nesting          /φ²
-    Input valve (⊛)          180°/φ²
-    Output valve (☀︎)         180°/φ²
-    Valve difference         2/φ³
+    Boundary (○)             i⁴(°) = 360° signature; i generates
+    Level 2 nesting          /φ² = Φ nests it
+    Input valve (⊛)          ⊛: 180°/φ²
+    Output valve (☀︎)         ☀︎: 180°/φ²
+    Valve difference         2/φ³: valve corrects
     Infinite depth           Higher φⁿ corrections
     β = 0.5 everywhere       Why the formula works at all
 
@@ -11433,7 +11439,7 @@ affects transmission through the boundary.
 RESIDUAL AND DEEPER LEVELS:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    Predicted (360/φ² − 2/φ³):  137.035628
+    Predicted (i⁴(°)/φ² − 2/φ³):  137.035628
     Measured (CODATA 2022):     137.035999
     Residual:                   0.000371 (2.7 ppm)
 
@@ -18084,7 +18090,7 @@ Step 4: Golden-spiral pitch constraint
         Independently, golden-ratio dynamics single out a canonical
         pitch angle.
 
-        Golden angle:       θ_G = 360° / φ² ≈ 137.508°
+        Golden angle:       θ_G = i⁴(°) / φ² ≈ 137.508°
         Supplement:         θ_c = 180° - θ_G ≈ 42.492°
         Half-supplement:    θ_p = θ_c / 2 ≈ 21.246° ≈ 22°
 
@@ -18264,7 +18270,7 @@ HYBRID ; Framework provides structure, measurement provides precision:
 ║  QUANTITY              │ VALUE              │ STATUS                        ║
 ╠════════════════════════════════════════════════════════════════════════════╣
 ║  Fine structure α      │  1/137.036          │ Resonance of Φ (see §26.5)    ║
-║                        │                    │ Ideal: 360°/φ² = 137.508      ║
+║                        │                    │ Ideal: i⁴(°)/φ² = 137.508     ║
 ║                        │                    │ Shifted by validation noise   ║
 ║  Yang-Mills gap Δ      │ ~1.0-1.6 GeV       │ Base: (68/22)×m_p×(22/64)≈1.0 ║
 ║                        │                    │ With φ: ~1.6 GeV; lattice:1.42║
@@ -18274,8 +18280,8 @@ HYBRID ; Framework provides structure, measurement provides precision:
 
 WHAT'S TRULY DERIVED FOR α:
     - α is the resonant coupling of Φ between • and ○
-    - Ideal resonance: 1/α_ideal = 360°/φ² (golden angle)
-    - Self-consistent: 1/α = (360°/φ²) × (1 - α/2) ≈ 137.0
+    - Ideal resonance: 1/α_ideal = i⁴(°)/φ² (pump cycle through field)
+    - Self-consistent: 1/α = (i⁴(°)/φ²) × (1 - α/2) ≈ 137.0
     - The relative shift from ideal ≈ α/2 (leading correction)
 
     π = property of ○ (boundary shape)
@@ -18307,7 +18313,7 @@ CONSTANTS SPANNING 61 ORDERS OF MAGNITUDE:
 ║                 │ Initial density       │ ρ_texture > 0      │ EXISTENCE   ║
 ╠════════════════════════════════════════════════════════════════════════════╣
 ║  QUANTUM        │ Fine Structure α      │ 1/137.036          │ DERIVED     ║
-║                 │                       │ (360°/φ² damped)   │ (see §26.5) ║
+║                 │                       │ (i⁴(°)/φ² damped)  │ (see §26.5) ║
 ║                 │ Mass Gap Δ            │ ~1.6 GeV           │ DERIVED     ║
 ║                 │                       │ (68/64)×m_p×φ      │ (see §26.4) ║
 ║                 │ Validation Noise      │ α_quantum = ατ     │ DERIVED     ║
@@ -19130,7 +19136,7 @@ APERTURE CHAMBER DYNAMICS (§4.4.1-4.4.3):
 CONSTANTS:
   φ      = Golden ratio (≈ 1.618)
   α      = Fine structure (≈ 1/137)
-           1/α = 360/φ² − 2/φ³ = 137.036 (depth formula, §15.5.1)
+           1/α = i⁴(°)/φ² − 2/φ³ = 137.036 (depth formula, §15.5.1)
   ℏ      = i-rotation rate scale (Planck's constant)
 
 ETHICS (Chapter XIX):

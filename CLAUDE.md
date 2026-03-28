@@ -218,7 +218,7 @@ Every physical law is •, Φ, or ○ compounded. No new ingredients:
 
 ### Derived Constants
 
-- **α (fine-structure constant)**: 1/α = 360/φ² − 2/φ³ = 137.0356 (measured: 137.0360, error 2.7 ppm). 360 = boundary rotation, φ² = self-similar nesting, 2/φ³ = bidirectional valve correction.
+- **α (fine-structure constant)**: 1/α = i⁴(°)/φ² − 2/φ³ = 137.0356 (measured: 137.0360, error 2.7 ppm). The formula is the pump cycle written as arithmetic; i⁴ = the pump cycle completing one full rotation, producing ○ (360°); φ² = Φ, self-similar nesting, field's 2D nature; 2/φ³ = bidirectional valve correction (⊛ and ☀︎). The structure reads: i generates the boundary, φ nests it, the valve corrects it. α measures how strongly i generates ○ through Φ.
 - **Lepton mass ratios**: m_μ/m_e = (1/α)^(13/12) ≈ 206.49 (measured: 206.77, error 0.13%).
 - **G, c, ℏ**: open; predicted to be expressible as constraint ratios.
 
