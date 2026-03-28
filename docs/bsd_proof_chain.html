@@ -411,6 +411,39 @@ If &#1064; is finite (as BSD predicts), then for p large enough, &#1064;[p] = 0,
   <p style="margin-top:12px;"><strong>Current mathematical frontier:</strong> The Iwasawa-theoretic approach (connecting L-values to Selmer groups via p-adic L-functions) has made significant progress. Skinner-Urban (2014) proved the main conjecture of Iwasawa theory for GL(2), which implies BSD for many curves of rank 0. Extensions to higher rank are active research.</p>
 </div>
 
+<h3>Closing the Gap: The Higher Heegner Iteration</h3>
+
+<p>Making &#8857; = &Phi;(&bull;, &#9675;) explicit in the native notation of arithmetic geometry reveals the closure path. The elliptic curve <em>is</em> the circumpunct:</p>
+
+<div class="math-block" style="border-left-color: var(--purple);">
+&bull; = E(&Qopf;)<sub>tors</sub> &cup; E(&Qopf;)<sub>free</sub> &emsp; rational points (convergence points on the curve)<br>
+&Phi; = L(E, s) &emsp; L-function (the analytic field encoding local data)<br>
+&#9675; = MW(E) = E(&Qopf;) &cong; &Zopf;<sup>r</sup> &oplus; E(&Qopf;)<sub>tors</sub> &emsp; Mordell-Weil group (the closed structure)<br>
+&#8857; = (E(&Qopf;), L(E,s), MW(E)) &emsp; the curve as a whole
+</div>
+
+<p>The pump cycle in native notation: <strong>&oplus;</strong> = descent (convergence; reducing rational points to simpler ones); <strong>i</strong> = the modular parametrization X<sub>0</sub>(N) &rarr; E (rotation; modularity IS the aperture); <strong>&#9788;</strong> = Heegner construction (emergence; building rational points from modular forms).</p>
+
+<p>The framework's fractal self-similarity (A2) predicts a recursive structure:</p>
+
+<table>
+<tr><th>Rank</th><th>Apertures</th><th>L-function behavior at s = 1</th><th>Construction</th></tr>
+<tr><td>0</td><td>No aperture opens</td><td>L(E, 1) &ne; 0</td><td>No branches needed &#10003;</td></tr>
+<tr><td>1</td><td>One aperture</td><td>L'(E, 1) &prop; height of Heegner point</td><td>One Heegner point &#10003;</td></tr>
+<tr><td>r</td><td>r apertures</td><td>L<sup>(r)</sup>(E, 1) &prop; r-fold product</td><td>r independent Heegner-type points</td></tr>
+</table>
+
+<p>Each rational point P<sub>i</sub> generates a sub-curve (the translate of E by P<sub>i</sub>, or the quotient E/&lang;P<sub>i</sub>&rang;). The L-function should decompose into r "branches," each corresponding to one independent rational point. The A2 argument: the rank-r case is r copies of the rank-1 case, each operating at a different scale within the Mordell-Weil lattice.</p>
+
+<div class="theorem-box required">
+  <div class="label">&rarr; The Closure Lemma (Higher Heegner Iteration)</div>
+  <div class="title">r Independent Heegner-Type Constructions from r Imaginary Quadratic Fields</div>
+  <p>For an elliptic curve E/&Qopf; of rank r, there exist r imaginary quadratic fields K<sub>1</sub>, ..., K<sub>r</sub> such that the Heegner points y<sub>K<sub>1</sub></sub>, ..., y<sub>K<sub>r</sub></sub> &isin; E(&Qopf;) are linearly independent in E(&Qopf;) &otimes; &Qopf;, and the corresponding Euler systems {c<sub>n,K<sub>i</sub></sub>} simultaneously control the Selmer group.</p>
+  <p style="margin-top:12px;">This is the <strong>higher Heegner point program</strong> (Darmon's Stark-Heegner points, Bertolini-Darmon for rank 2, Zhang for higher weight). The gap reduces to: construct higher Euler systems that iterate the Kolyvagin machinery r times, one per branch.</p>
+</div>
+
+<p><strong>Partial results:</strong> Bertolini-Darmon have constructed Stark-Heegner points for real quadratic fields. Zhang (Yuan-Zhang-Zhang) extended Gross-Zagier to higher-weight modular forms. Jetchev-Nekov&aacute;&#345;-Skinner have extended Kolyvagin's Euler system to prove BSD for many rank-0 and rank-1 curves over totally real fields. The blueprint is clear: iterate the Heegner construction r times, one per branch of the aperture. The framework says this iteration must terminate at rank r because the L-function has exactly r zeros at s = 1 (the balance point), and each zero corresponds to one &#8857; at a smaller scale (A2).</p>
+
 <!-- ============================================================ -->
 <h2><span class="section-num">&sect;10</span> Conclusion</h2>
 

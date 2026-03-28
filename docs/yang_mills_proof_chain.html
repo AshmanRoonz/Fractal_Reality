@@ -573,6 +573,28 @@ into estimates on the spectral gap of a concrete Hamiltonian.
 
 <p>The Balaban program (multi-scale analysis of lattice Yang-Mills) provides the most promising technical approach. Balaban proved ultraviolet stability over finitely many renormalization steps. Extending this to infinitely many steps (the full continuum limit) with control of the spectral gap would close the problem.</p>
 
+<h3>Closing the Gap: The Plaquette as &#8857;</h3>
+
+<p>Making &#8857; = &Phi;(&bull;, &#9675;) explicit in the native notation of lattice gauge theory reveals the closure path. The Wilson action <em>is</em> the circumpunct:</p>
+
+<div class="math-block" style="border-left-color: var(--purple);">
+&bull; = g &emsp; coupling constant (the aperture strength)<br>
+&Phi; = U<sub>&mu;</sub>(x) &isin; G &emsp; link variables (the gauge connection on each edge)<br>
+&#9675; = U<sub>&#9633;</sub> = U<sub>1</sub>U<sub>2</sub>U<sub>3</sub><sup>&dagger;</sup>U<sub>4</sub><sup>&dagger;</sup> &emsp; plaquette (the boundary that closes around a face)<br>
+&#8857; = S<sub>W</sub> = &beta; &Sigma;<sub>&#9633;</sub> (1 &minus; (1/N)Re Tr U<sub>&#9633;</sub>) &emsp; Wilson action (the whole)
+</div>
+
+<p>Four links around a face = i<sup>4</sup> = 1. The plaquette IS one pump cycle. This identification narrows the gap to a topological invariant:</p>
+
+<div class="theorem-box required">
+  <div class="label">&rarr; The Closure Lemma (&Delta;/&Lambda;<sub>QCD</sub> as Topological Invariant)</div>
+  <div class="title">The Mass Gap Ratio is a Property of the Whole</div>
+  <p>The ratio &Delta;/&Lambda;<sub>QCD</sub> is a topological invariant of the gauge theory, determined by the gauge group G and independent of the lattice spacing a (in the continuum limit). Specifically: for the transfer matrix T on gauge-invariant wavefunctions, the spectral gap &minus;log(&lambda;<sub>1</sub>/&lambda;<sub>0</sub>) depends on &beta; only through &Lambda;<sub>QCD</sub> = (1/a)exp(&minus;1/(2b<sub>0</sub>g&sup2;)).</p>
+  <p style="margin-top:12px;">The &#8857; closure: the gap is a property of the WHOLE (the gauge-invariant sector), not of the coupling (&bull;) or the links (&Phi;) separately. The whole determines the gap through A4 (compositional wholeness &ne; sum of parts). As a &rarr; 0 with &Lambda;<sub>QCD</sub> fixed: &beta;(a) &rarr; &infin; (asymptotic freedom), g(a) &rarr; 0, but &Delta;<sub>L</sub>/&Lambda;<sub>QCD</sub> &rarr; constant (dimensional transmutation).</p>
+</div>
+
+<p>Lattice QCD confirms the ratio is stable across different lattice spacings: Morningstar-Peardon (1999) find &Delta; = 1710 &plusmn; 80 MeV, Chen et al. (2006) find 1710 &plusmn; 50 MeV, Lucini-Teper (2001, large N) find 1654 &plusmn; 40 MeV. The ratio &Delta;/&Lambda;<sub>QCD</sub> &asymp; 8.3-8.6 is remarkably stable. The gap reduces to: prove this stability rigorously under Balaban's continuum limit program, extending UV stability from finitely many renormalization steps to infinitely many, with uniform control of the spectral gap at each step.</p>
+
 <!-- ============================================================ -->
 
 <div class="nav-bottom">

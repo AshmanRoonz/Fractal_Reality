@@ -576,6 +576,43 @@ T = cos&sup2;(&Delta;&phi;/2) = 1 &emsp; when p = q
   <p style="margin-top:12px;">The framework argument: this must hold because T = 1 at balance forbids a non-algebraic balanced residue. The formal translation requires proving that the monodromy group acts with no balanced fixed subspace outside &Lambda;<sub>&Qopf;</sub> &cap; H<sup>p,p</sup>. For generic pencils, this follows from the irreducibility results of Beauville, Deligne, and Voisin on monodromy groups of Lefschetz pencils. The gap is extending these irreducibility results to all smooth projective varieties.</p>
 </div>
 
+<h3>Closing the Gap: The Mumford-Tate Route</h3>
+
+<p>Making &#8857; = &Phi;(&bull;, &#9675;) explicit in the native notation of algebraic geometry reveals the closure path. The variation of Hodge structure <em>is</em> the circumpunct:</p>
+
+<div class="math-block" style="border-left-color: var(--purple);">
+&bull; = {&delta;<sub>i</sub>} &emsp; vanishing cycles (convergence points; where fibers degenerate)<br>
+&Phi; = &nabla; &emsp; Gauss-Manin connection (field; parallel transport of cohomology)<br>
+&#9675; = F<sup>&bull;</sup> &emsp; Hodge filtration (boundary; separates types (p,q))<br>
+&#8857; = (V, F<sup>&bull;</sup>, &nabla;) &emsp; the variation of Hodge structure (the whole)
+</div>
+
+<p>The pump cycle in native notation: <strong>&oplus;</strong> = degeneration (t &rarr; t<sub>i</sub>, fiber develops node, &delta;<sub>i</sub> collapses); <strong>i</strong> = Picard-Lefschetz reflection T<sub>&delta;</sub>(&alpha;) = &alpha; &plusmn; &lang;&alpha;, &delta;<sub>i</sub>&rang;&delta;<sub>i</sub>; <strong>&#9788;</strong> = smoothing (t moves away from t<sub>i</sub>, fiber recovers).</p>
+
+<p>With &#8857; explicit, the gap narrows to a single conjecture:</p>
+
+<div class="theorem-box required">
+  <div class="label">&rarr; The Closure Lemma (Mumford-Tate)</div>
+  <div class="title">Algebraic Generation of Hodge Classes via G<sub>mon</sub> = MT</div>
+  <p>For a sufficiently general Lefschetz pencil on X, the algebraic monodromy group <span class="math-inline">G<sub>mon</sub></span> acts on <span class="math-inline">H<sup>n&minus;1</sup><sub>van</sub></span> with the property that every <span class="math-inline">G<sub>mon</sub></span>-invariant tensor of type (p,p) lies in the span of intersection products of vanishing cycles.</p>
+  <p style="margin-top:12px;">This follows from the <strong>Mumford-Tate conjecture</strong>: <span class="math-inline">G<sub>mon</sub> = MT</span> (the algebraic monodromy group equals the Mumford-Tate group). The Mumford-Tate group is defined as the group that fixes exactly the Hodge tensors; so if G<sub>mon</sub> = MT, then the only monodromy-invariant tensors of type (p,p) are the Hodge tensors, which are exactly those in &Lambda;<sub>&Qopf;</sub> &cap; H<sup>p,p</sup>.</p>
+</div>
+
+<p><strong>Status of the Mumford-Tate conjecture:</strong></p>
+
+<table>
+<tr><th>Class</th><th>MT Status</th><th>Reference</th></tr>
+<tr><td>Abelian varieties (CM type)</td><td class="t-perfect">Proven</td><td>Deligne</td></tr>
+<tr><td>K3 surfaces</td><td class="t-perfect">Proven</td><td>Zarhin, Andr&eacute;</td></tr>
+<tr><td>Hypersurfaces (most degrees)</td><td class="t-perfect">Proven</td><td>Monodromy calculations (Beauville)</td></tr>
+<tr><td>Curves (all genera)</td><td class="t-perfect">Proven</td><td>Classical</td></tr>
+<tr><td>General smooth projective</td><td class="t-zero">Open</td><td>The remaining content</td></tr>
+</table>
+
+<p>The dimensional induction argument clarifies why the gap is narrow. For Hodge classes of degree 2p with 2p &lt; n&minus;1 or 2p &gt; n&minus;1, weak and hard Lefschetz reduce the problem to lower-dimensional fibers, where induction applies. The only case that resists induction is <em>middle-dimensional cohomology</em> (2p = n&minus;1), where the class lives in the hardest part of the fiber's cohomology. This is exactly the case where the Mumford-Tate conjecture is needed: the monodromy group must be large enough (equal to MT) to ensure vanishing cycles span the balanced subspace.</p>
+
+<p>The framework reading: the middle dimension is where &Phi; lives (the 2D surface). The hardest case is always the field itself, because the field mediates between &bull; and &#9675;; you cannot reduce the mediator to either endpoint. The Mumford-Tate conjecture states that the algebraic monodromy group captures the full structure of the field's balanced subspace; equivalently, that the &#8857; is compositionally whole (A4), not decomposable into a part the monodromy sees and a part it misses.</p>
+
 <!-- ============================================================ -->
 <h2><span class="section-num">&sect;8</span> The Full Proof Chain</h2>
 

@@ -552,6 +552,30 @@ explored by one worldline, one step at a time.
 
 <p>This is the most technically difficult of the seven Clay problems because it asks a processual question about the relationship between two operations, and the proof must simultaneously evade three known barriers while operating in the unrestricted model of Boolean circuits. The framework identifies what the answer is (P &ne; NP, because &#10523; &ne; &#9728;&#xFE0E;) and why the barriers do not block the argument (it is topological, not relativizing, natural, or algebrizing). The remaining gap is the formalization: converting the topological argument into circuit complexity machinery.</p>
 
+<h3>Attempting to Close the Gap: The SAT Instance as &#8857;</h3>
+
+<p>Making &#8857; = &Phi;(&bull;, &#9675;) explicit in the native notation of complexity theory:</p>
+
+<div class="math-block" style="border-left-color: var(--purple);">
+&bull; = &sigma;* &isin; {0,1}<sup>n</sup> &emsp; satisfying assignment (convergence point)<br>
+&Phi; = {0,1}<sup>n</sup> &emsp; the Boolean cube (field of all possible assignments)<br>
+&#9675; = &phi; &emsp; the formula (boundary that filters: &phi;(&sigma;) = 1 or 0)<br>
+&#8857; = (&sigma;*, {0,1}<sup>n</sup>, &phi;) &emsp; the SAT instance as a whole
+</div>
+
+<p>The pump cycle: <strong>&oplus;</strong> = unit propagation / DPLL search (convergence; narrowing the search space); <strong>i</strong> = reduction (rotation; transforming one formula into another); <strong>&#9728;&#xFE0E;</strong> = evaluation &phi;(&sigma;) (emergence; checking the answer).</p>
+
+<p>The &#8857; structure reveals a counting argument: a polynomial-size circuit C deciding SAT must, for every YES instance, "find" a witness &sigma;* internally (by the self-reducibility of SAT, a poly-size decision circuit implies a poly-size search circuit). The circuit has depth d and can only implement d rounds of the pump cycle. For the convergence to reach &bull; from an arbitrary point in &Phi;, enough rounds are needed to traverse the field.</p>
+
+<div class="theorem-box required">
+  <div class="label">&rarr; The Closure Lemma (Pump Rounds &times; Width)</div>
+  <div class="title">The Pump Cycle Count for SAT</div>
+  <p>For SAT on n variables, any circuit family {C<sub>n</sub>} computing SAT requires depth &times; width &ge; 2<sup>n<sup>&epsilon;</sup></sup> for some &epsilon; > 0. This would follow from: the pump cycle of SAT requires &Omega;(n) complete &#10523; &rarr; i &rarr; &#9728;&#xFE0E; rounds, each of which needs &Omega;(2<sup>n/rounds</sup>) width.</p>
+  <p style="margin-top:12px;"><strong>Status: NOT CLOSED.</strong> This is the genuine gap. Converting the pump cycle round-count into a formal circuit lower bound requires new techniques that do not yet exist. All known lower bound methods (random restrictions, approximation, algebraic) fail for unrestricted circuits. The framework identifies the structural reason (the pump cycle is time-asymmetric), but the formalization requires circuit complexity machinery that has not yet been invented.</p>
+</div>
+
+<p>P vs NP is the one Clay problem where making &#8857; explicit does not narrow the gap to a specific existing program. The gap is not technical (needing to verify a convergence condition or extend a known method); it is <em>methodological</em> (needing a new proof technique). This is consistent with its position at 0.5D: the most processual, most "between" rung, where the question is not about any single structure but about the relationship between two operations. The framework says the answer is P &ne; NP, and says why; it does not yet say how to prove it.</p>
+
 <!-- ============================================================ -->
 
 <div class="nav-bottom">
