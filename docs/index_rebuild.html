@@ -506,10 +506,46 @@
         <a href="speed_of_light.html" style="color:var(--soul)">Speed of Light</a> · <a href="planck_constant.html" style="color:var(--soul)">Planck Constant</a> · <a href="mass_ratios.html" style="color:#44aa88">Mass Ratios</a> · <a href="gauge_structure.html" style="color:var(--mind)">Gauge Structure</a> · <a href="infolding.html" style="color:#cc8833">Infolding</a> · <a href="gravity.html" style="color:var(--body)">Gravity</a> · <a href="dimensional_ladder.html" style="color:var(--amber)">Full Ladder</a> · <a href="analytic_continuation_gap.html" style="color:var(--soul)">Riemann Hypothesis</a> · <a href="circumpunct_breath.html" style="color:var(--mind)">The Breath</a> · <a href="why_space_can_never_be_empty.html" style="color:var(--mind)">Why Space Is Never Empty</a>
     </div>
 
+    <!-- SUBSCRIBE & COMMUNITY -->
+    <div style="text-align:center;margin-top:40px;padding:20px 0;border-top:1px solid rgba(255,255,255,0.06)">
+        <div style="font-size:10px;color:var(--mute);letter-spacing:0.06em;margin-bottom:10px">New papers and formalizations as they publish.</div>
+        <form id="subscribe-form" style="display:inline-flex;gap:6px" onsubmit="return handleSubscribe(event)">
+            <input type="email" name="email" placeholder="your@email.com" required style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:3px;padding:5px 10px;color:var(--text);font-family:inherit;font-size:11px;width:180px;outline:none">
+            <button type="submit" style="background:rgba(68,136,255,0.1);border:1px solid rgba(68,136,255,0.3);border-radius:3px;padding:5px 10px;color:var(--soul);font-family:inherit;font-size:10px;cursor:pointer;letter-spacing:0.05em">Subscribe</button>
+        </form>
+        <div id="subscribe-msg" style="font-size:10px;color:var(--soul);margin-top:4px;min-height:1em"></div>
+        <div style="margin-top:12px;font-size:10px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+            <a href="https://www.facebook.com/groups/4397079510569470" target="_blank" style="color:var(--mute);border:1px solid rgba(255,255,255,0.08);padding:3px 8px;border-radius:3px;transition:border-color 0.2s">Facebook Group</a>
+            <a href="https://www.reddit.com/r/Circumpunct/" target="_blank" style="color:var(--mute);border:1px solid rgba(255,255,255,0.08);padding:3px 8px;border-radius:3px;transition:border-color 0.2s">Reddit r/Circumpunct</a>
+        </div>
+    </div>
+
+    <!-- BOTTOM LINKS -->
+    <div style="text-align:center;margin-top:16px;font-size:10px;line-height:2.2">
+        <a href="pages.html" style="color:var(--amber)">All Pages</a> · <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" style="color:var(--mute)">GitHub</a> · <a href="https://www.ashmanroonz.ca/2025/08/god-and-soul-array.html" target="_blank" style="color:var(--mute)">Blog</a> · <a href="simulators.html" style="color:var(--mute)">Interactive Demos</a> · <a href="circumpunct_encyclopedia.html" style="color:var(--mute)">Encyclopedia</a> · <a href="mailto:email@ashmanroonz.ca" style="color:var(--mute)">Contact</a>
+    </div>
+
+    <!-- CLOSING QUOTE -->
+    <div style="text-align:center;padding:24px 20px 10px;max-width:420px;margin:0 auto;font-style:italic;font-size:11px;color:rgba(255,170,0,0.5);line-height:1.7">
+        Reality flows through the gate of your consciousness. May the Truth of Reality (the Light of God) flow through you, authentically, expressed compressed but not distorted.
+    </div>
+    <div style="text-align:center;font-size:9px;color:rgba(255,255,255,0.15);letter-spacing:0.08em;padding-bottom:6px">; Ashman Roonz</div>
+
     <footer>THE CIRCUMPUNCT FRAMEWORK · ASHMAN ROONZ · FRACTALREALITY.CA</footer>
 </div>
 
 <script>
+function handleSubscribe(e) {
+    e.preventDefault();
+    var form = document.getElementById('subscribe-form');
+    var msg = document.getElementById('subscribe-msg');
+    var email = form.querySelector('input[type="email"]').value;
+    var subject = encodeURIComponent('Subscribe to Fractal Reality');
+    var body = encodeURIComponent('Please add ' + email + ' to the mailing list.');
+    window.location.href = 'mailto:email@ashmanroonz.ca?subject=' + subject + '&body=' + body;
+    msg.textContent = 'Opening your email client; send to subscribe.';
+    return false;
+}
 function togglePanel(zone) {
     const panels = ['soul','mind','body'];
     panels.forEach(p => {
