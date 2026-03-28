@@ -23,7 +23,7 @@ const PAGES = [
   { title: "Theory of Mind", desc: "Source, surface, boundary", href: "circumpunct_theory_of_mind_plain.html", color: SOUL },
   { title: "Ethics & Virtues", desc: "Good, Right, True, Agreement", href: "circumpunct_ethics_and_virtues.html", color: BODY },
   { title: "God and the Soul Array", desc: "∞ → •∞ → ⊙∞", href: "truth_and_god.html", color: AMBER },
-  { title: "Working Formalization", desc: "Hilbert spaces, operators", href: "circumpunct_physics.html", color: MIND },
+  { title: "Mathematical Formalization", desc: "Derivations, operators, predictions", href: "circumpunct_math.html", color: MIND },
   { title: "Seven Clay Problems", desc: "Seven rungs, seven problems", href: "clay_millennium.html", color: SOUL },
   { title: "How To Break This", desc: "Falsification criteria", href: "aperture_falsification_presentation.html", color: BODY },
 ];
