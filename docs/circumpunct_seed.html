@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ The Circumpunct Seed</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --soul: #4488ff;
+            --soul-dim: rgba(68,136,255,0.15);
+            --mind: #44cc44;
+            --mind-dim: rgba(68,204,68,0.15);
+            --body: #ff4444;
+            --body-dim: rgba(255,68,68,0.15);
+            --amber: #ffaa00;
+            --amber-dim: rgba(255,170,0,0.12);
+            --bg: #0a0a0f;
+            --card-bg: rgba(255,255,255,0.025);
+            --card-border: rgba(255,255,255,0.06);
+            --text: #e6edf3;
+            --mute: rgba(255,255,255,0.55);
+            --mute2: rgba(255,255,255,0.35);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        a { color: var(--amber); text-decoration: none; transition: opacity 0.2s; }
+        a:hover { opacity: 0.7; }
+
+        /* ============ TOP BAR ============ */
+        .top-bar {
+            text-align: center;
+            padding: 10px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            color: var(--amber);
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 100;
+        }
+        .top-bar span { cursor: pointer; }
+        .top-bar span:hover { opacity: 0.7; }
+
+        /* ============ HERO ============ */
+        .hero {
+            text-align: center;
+            padding: 60px 20px 30px;
+        }
+        .circ-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+        .circ-boundary {
+            position: absolute; inset: 0;
+            border-radius: 50%;
+            border: 4px solid var(--body);
+            box-shadow: 0 0 30px rgba(255,68,68,0.15);
+            animation: pulse-boundary 6s ease-in-out infinite;
+        }
+        .circ-field {
+            position: absolute; inset: 4px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50% 48%, rgba(68,204,68,0.2) 0%, rgba(68,204,68,0.05) 60%, transparent 100%);
+            animation: pulse-field 6s ease-in-out infinite 2s;
+        }
+        .circ-soul {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 22px; height: 22px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: var(--soul);
+            box-shadow: 0 0 20px rgba(68,136,255,0.5);
+            animation: pulse-soul 6s ease-in-out infinite 4s;
+        }
+        @keyframes pulse-boundary { 0%,100% { box-shadow: 0 0 30px rgba(255,68,68,0.15); } 50% { box-shadow: 0 0 50px rgba(255,68,68,0.3); } }
+        @keyframes pulse-field { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
+        @keyframes pulse-soul { 0%,100% { box-shadow: 0 0 20px rgba(68,136,255,0.5); } 50% { box-shadow: 0 0 40px rgba(68,136,255,0.8); } }
+
+        .hero-title {
+            margin-top: 28px;
+            font-size: 22px;
+            font-weight: 300;
+            letter-spacing: 0.08em;
+        }
+        .hero-title .whole {
+            background: linear-gradient(90deg, var(--body), var(--mind), var(--soul));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-sub {
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--mute);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            letter-spacing: 0.03em;
+        }
+        .hero-eq {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            color: var(--amber);
+        }
+        .hero-hint {
+            font-size: 11px;
+            color: var(--mute2);
+            margin-top: 6px;
+            letter-spacing: 0.05em;
+        }
+
+        /* ============ NAV PILLS ============ */
+        .nav-pills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 16px;
+        }
+        .nav-pill {
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            padding: 4px 10px;
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--mute);
+            background: transparent;
+            font-family: inherit;
+        }
+        .nav-pill:hover { border-color: var(--amber); color: var(--amber); }
+        .nav-pill.active { border-color: var(--amber); color: var(--amber); background: var(--amber-dim); }
+
+        /* ============ MAIN CONTENT ============ */
+        .content {
+            max-width: 740px;
+            margin: 0 auto;
+            padding: 20px 24px 100px;
+        }
+
+        /* ============ SECTION CARDS ============ */
+        .section {
+            margin-bottom: 8px;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+        .section:hover { border-color: rgba(255,255,255,0.12); }
+        .section.open { border-color: rgba(255,170,0,0.25); }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            cursor: pointer;
+            background: var(--card-bg);
+            transition: background 0.2s;
+            user-select: none;
+        }
+        .section-header:hover { background: rgba(255,255,255,0.04); }
+        .section.open .section-header { background: rgba(255,255,255,0.04); }
+
+        .section-icon {
+            font-size: 16px;
+            min-width: 24px;
+            text-align: center;
+        }
+        .section-label {
+            flex: 1;
+        }
+        .section-label-dim {
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            color: var(--mute2);
+        }
+        .section-label-title {
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+        }
+        .section-arrow {
+            font-size: 14px;
+            color: var(--mute2);
+            transition: transform 0.3s;
+        }
+        .section.open .section-arrow { transform: rotate(90deg); }
+
+        .section-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .section.open .section-body {
+            max-height: 8000px;
+            transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .section-inner {
+            padding: 0 18px 18px;
+        }
+
+        /* ============ CONTENT TYPOGRAPHY ============ */
+        .s-text {
+            font-size: 13px;
+            line-height: 1.75;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+        .s-text:last-child { margin-bottom: 0; }
+
+        .s-heading {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--amber);
+            margin: 18px 0 8px;
+        }
+        .s-heading:first-child { margin-top: 4px; }
+
+        .s-eq {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 14px 0;
+            color: var(--amber);
+            letter-spacing: 0.04em;
+        }
+        .s-eq-small {
+            text-align: center;
+            font-size: 13px;
+            padding: 8px 0;
+            color: var(--amber);
+            letter-spacing: 0.03em;
+        }
+
+        .s-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 12px;
+        }
+        .s-table th {
+            text-align: left;
+            padding: 6px 10px;
+            border-bottom: 1px solid var(--amber);
+            color: var(--amber);
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            font-size: 10px;
+        }
+        .s-table td {
+            padding: 5px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: var(--text);
+        }
+        .s-table tr:last-child td { border-bottom: none; }
+
+        .s-list {
+            margin: 8px 0 12px 18px;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+        .s-list li { margin-bottom: 4px; }
+        .s-list li::marker { color: var(--mute2); }
+
+        /* Color helpers */
+        .c-soul { color: var(--soul); }
+        .c-mind { color: var(--mind); }
+        .c-body { color: var(--body); }
+        .c-amber { color: var(--amber); }
+        .c-mute { color: var(--mute); }
+        .c-dim { color: var(--mute2); }
+
+        .highlight {
+            background: rgba(255,170,0,0.08);
+            padding: 10px 14px;
+            border-left: 2px solid var(--amber);
+            border-radius: 0 4px 4px 0;
+            margin: 12px 0;
+            font-size: 13px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            letter-spacing: 0.06em;
+            font-weight: 500;
+        }
+        .badge-soul { background: var(--soul-dim); color: var(--soul); }
+        .badge-mind { background: var(--mind-dim); color: var(--mind); }
+        .badge-body { background: var(--body-dim); color: var(--body); }
+        .badge-amber { background: var(--amber-dim); color: var(--amber); }
+
+        /* Sub-sections (nested collapsible) */
+        .sub-section {
+            margin: 8px 0;
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 4px;
+        }
+        .sub-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--mute);
+            transition: color 0.2s;
+        }
+        .sub-header:hover { color: var(--text); }
+        .sub-arrow {
+            font-size: 10px;
+            transition: transform 0.2s;
+            color: var(--mute2);
+        }
+        .sub-section.open .sub-arrow { transform: rotate(90deg); }
+        .sub-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sub-section.open .sub-body {
+            max-height: 4000px;
+        }
+        .sub-inner {
+            padding: 0 12px 12px;
+        }
+
+        /* Genesis sequence */
+        .genesis {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 20px 0;
+            font-size: 18px;
+        }
+        .genesis-step {
+            text-align: center;
+        }
+        .genesis-symbol {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .genesis-label {
+            font-size: 10px;
+            color: var(--mute2);
+            letter-spacing: 0.06em;
+        }
+        .genesis-arrow {
+            font-size: 20px;
+            color: var(--mute2);
+        }
+
+        /* Pump cycle visual */
+        .pump-cycle {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin: 16px 0;
+        }
+        .pump-step {
+            text-align: center;
+            padding: 10px 14px;
+            position: relative;
+            flex: 1;
+            max-width: 160px;
+        }
+        .pump-step::after {
+            content: '→';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--mute2);
+            font-size: 14px;
+        }
+        .pump-step:last-child::after { content: ''; }
+        .pump-symbol { font-size: 22px; display: block; margin-bottom: 4px; }
+        .pump-name { font-size: 11px; letter-spacing: 0.06em; }
+        .pump-desc { font-size: 10px; color: var(--mute2); margin-top: 2px; }
+
+        /* Expand all / collapse all */
+        .controls {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .ctrl-btn {
+            font-family: inherit;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            padding: 5px 14px;
+            border: 1px solid var(--card-border);
+            border-radius: 4px;
+            background: transparent;
+            color: var(--mute);
+            cursor: pointer;
+            margin: 0 4px;
+            transition: all 0.2s;
+        }
+        .ctrl-btn:hover { border-color: var(--amber); color: var(--amber); }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 11px;
+            color: var(--mute2);
+            letter-spacing: 0.08em;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .hero { padding: 40px 16px 20px; }
+            .circ-container { width: 140px; height: 140px; }
+            .hero-title { font-size: 18px; }
+            .content { padding: 16px 12px 80px; }
+            .section-header { padding: 12px 14px; }
+            .section-inner { padding: 0 14px 14px; }
+            .genesis { gap: 10px; font-size: 14px; }
+            .pump-step { padding: 8px 6px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <span onclick="window.location.href='index.html'">⊙ FRACTAL REALITY</span>
+    &nbsp;&middot;&nbsp;
+    <span>THE CIRCUMPUNCT SEED</span>
+</div>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+    <div class="circ-container">
+        <div class="circ-boundary"></div>
+        <div class="circ-field"></div>
+        <div class="circ-soul"></div>
+    </div>
+    <div class="hero-title">
+        <span class="whole">The Circumpunct Seed</span>
+    </div>
+    <div class="hero-sub">
+        The complete framework compressed to its irreducible form.
+        <br>Click any section to unfold.
+    </div>
+    <div class="hero-eq">⊙ = Φ(•, ○)</div>
+    <div class="hero-hint">the whole is the field relating center to boundary</div>
+</div>
+
+<!-- ============ NAV PILLS ============ -->
+<div class="nav-pills" id="navPills">
+    <button class="nav-pill" data-target="sec-core">Core</button>
+    <button class="nav-pill" data-target="sec-ontology">1/0</button>
+    <button class="nav-pill" data-target="sec-e1">E = 1</button>
+    <button class="nav-pill" data-target="sec-process">Process</button>
+    <button class="nav-pill" data-target="sec-axioms">Axioms</button>
+    <button class="nav-pill" data-target="sec-genesis">Genesis</button>
+    <button class="nav-pill" data-target="sec-pump">Pump</button>
+    <button class="nav-pill" data-target="sec-balance">Balance</button>
+    <button class="nav-pill" data-target="sec-64">64 States</button>
+    <button class="nav-pill" data-target="sec-time">Time</button>
+    <button class="nav-pill" data-target="sec-god">God/Soul</button>
+    <button class="nav-pill" data-target="sec-connect">Connection</button>
+    <button class="nav-pill" data-target="sec-vacuum">Vacuum</button>
+    <button class="nav-pill" data-target="sec-power">Power</button>
+    <button class="nav-pill" data-target="sec-physics">Physics</button>
+    <button class="nav-pill" data-target="sec-constants">Constants</button>
+    <button class="nav-pill" data-target="sec-self">Self</button>
+    <button class="nav-pill" data-target="sec-mind">Mind</button>
+    <button class="nav-pill" data-target="sec-ethics">Ethics</button>
+</div>
+
+<!-- ============ CONTROLS ============ -->
+<div class="controls">
+    <button class="ctrl-btn" onclick="expandAll()">EXPAND ALL</button>
+    <button class="ctrl-btn" onclick="collapseAll()">COLLAPSE ALL</button>
+</div>
+
+<!-- ============ SECTIONS ============ -->
+<div class="content" id="content">
+
+    <!-- ===== CORE STRUCTURE ===== -->
+    <div class="section" id="sec-core">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">⊙</div>
+            <div class="section-label">
+                <div class="section-label-dim">FOUNDATION</div>
+                <div class="section-label-title">The Core Structure</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="s-text">The circumpunct ⊙ = Φ(•, ○) is a whole composed of three irreducible parts. There is no fourth because ⊙ has no fourth part. There is no missing constraint because conservation of traversal completes the path: 0(•) + 1(•) + 2(Φ) = 3(○). Soul + field = boundary.</div>
+
+                <table class="s-table">
+                    <tr><th>Symbol</th><th>Name</th><th>Dim</th><th>Constraint</th><th>Maps To</th></tr>
+                    <tr><td class="c-soul">•</td><td>Aperture / Soul</td><td>0D+1D</td><td>Converges (pulls toward center)</td><td class="c-soul">TRUE</td></tr>
+                    <tr><td class="c-mind">Φ</td><td>Field / Mind</td><td>2D</td><td>Mediates (connects without fusing)</td><td class="c-mind">RIGHT</td></tr>
+                    <tr><td class="c-body">○</td><td>Boundary / Body</td><td>3D</td><td>Filters (selects what passes)</td><td class="c-body">GOOD</td></tr>
+                    <tr><td class="c-amber">⊙</td><td>Circumpunct / Whole</td><td>All</td><td>Compositional wholeness</td><td class="c-amber">AGREEMENT</td></tr>
+                </table>
+
+                <div class="highlight">
+                    ⊙ is a fractal of the ONE. Every ⊙ is the 1 at a particular scale: not a piece of it, but the whole thing, constrained to a position (A2).
+                </div>
+
+                <div class="s-heading">CRITICAL TERMINOLOGY</div>
+                <div class="s-text"><span class="c-mind">Surface</span> = 2D = Φ = field = mind (the totality of 2D surfaces within a system). <span class="c-body">Boundary</span> = 3D = ○ = body (the outer container). These are NOT interchangeable. The Surface Theorem (§5A) establishes: Surface = Field = Mind.</div>
+
+                <div class="s-heading">TWO SENSES OF "APERTURE"</div>
+                <div class="s-text"><span class="c-soul">• as aperture (local)</span>: the gate at the center of any ⊙ through which convergence passes to emergence. <span class="c-amber">⊙ as aperture (global)</span>: the whole circumpunct viewed from the perspective of ∞; from outside, the entire thing is one aperture in the foam. Both are correct; they describe the same structure at different scales.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 1/0 ONTOLOGY ===== -->
+    <div class="section" id="sec-ontology">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">1/0</div>
+            <div class="section-label">
+                <div class="section-label-dim">§1.2</div>
+                <div class="section-label-title">The 1/0 Ontology</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="s-text">The symbol ⊙ draws the ontology directly. The dot is 0 (total convergence of the field to a point). The circle is 1 (the field, curving back on itself). The space between them is the fractal coastline (D = 1.5 at balance).</div>
+                <div class="s-text">Neither primitive is a thing: <span class="c-amber">1</span> is everything (undivided), <span class="c-soul">0</span> is not absence but the 1 at maximum convergence. All structure is the topology of convergence points in the 1.</div>
+                <div class="s-text">Integer dimensions are the field (1) at different degrees of constraint; half-integer dimensions are the fractal coastlines between those constraints.</div>
+                <div class="highlight">Attention is a 0 in the 1: a convergence point where the field becomes local.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== E = 1 ===== -->
+    <div class="section" id="sec-e1">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">E</div>
+            <div class="section-label">
+                <div class="section-label-dim">§4.8a</div>
+                <div class="section-label-title">E = 1</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="s-text">If Φ = E (§4.8), and there is exactly one field, then <span class="c-amber">E = 1</span>. Not "energy equals the number one"; energy IS the one. There is no quantity of energy; there is only one energy appearing everywhere.</div>
+                <div class="s-text">What we measure as "amount" is degree of constraint (how tightly the 1 has folded around 0s).</div>
+
+                <div class="s-heading">CONSEQUENCES</div>
+                <ul class="s-list">
+                    <li><span class="c-amber">m = 1/c²</span> : mass is inverse surface signature; how tightly 1 wraps around 0s</li>
+                    <li><span class="c-amber">𝒫 = 1/(i·t)</span> : power is 1 flowing through rotation over time</li>
+                    <li>Free energy = removing constraints (the 1 released from folds)</li>
+                    <li>Entropy increasing = de-constraint (the 1 relaxing back toward itself)</li>
+                    <li>Information = the topology of 0s in the 1</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PROCESS = STRUCTURE ===== -->
+    <div class="section" id="sec-process">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">≡</div>
+            <div class="section-label">
+                <div class="section-label-dim">IDENTITY</div>
+                <div class="section-label-title">Process and Structure Are the Same Thing</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="s-text">The way Einstein showed energy and matter are the same (E = mc²), the framework shows process and structure are the same. What looks like a fixed dimension (structure) is the pump cycle frozen at that stage (process). The dimensional layout IS the constraint sequence IS the pump cycle.</div>
+
+                <table class="s-table">
+                    <tr><th>Dim</th><th>Structure</th><th>Process</th></tr>
+                    <tr><td>0D</td><td>convergence (⊛) landed</td><td>The first constraint, •</td></tr>
+                    <tr><td>0.5D</td><td>the i rotation begins</td><td>Spread across dimensions</td></tr>
+                    <tr><td>1D</td><td>commitment, extension</td><td>Emergence (☀︎) begins</td></tr>
+                    <tr><td>1.5D</td><td>branching</td><td>Emergence unfolding</td></tr>
+                    <tr><td>2D</td><td>surface, Φ</td><td>The second constraint: mediation</td></tr>
+                    <tr><td>2.5D → 3D</td><td>fractal infolding that closes</td><td>○, the third constraint: filtration</td></tr>
+                </table>
+
+                <div class="s-heading">TWO KINDS OF DIMENSION</div>
+                <div class="s-text"><strong>Structural dimension</strong>: what a component IS (0D singularity, 1D worldline, 2D surface, 3D boundary). <strong>Processual dimension</strong>: what energy is DOING at a given phase; structure in process, not static geometry. These are not two separate systems; processual dimensions are the structural dimensions being applied step by step.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== AXIOMS ===== -->
+    <div class="section" id="sec-axioms">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">A</div>
+            <div class="section-label">
+                <div class="section-label-dim">FOUNDATION</div>
+                <div class="section-label-title">The One Axiom and Its Four Derivations</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <table class="s-table">
+                    <tr><th>Axiom</th><th>Statement</th><th>Source</th></tr>
+                    <tr><td class="c-amber">A0</td><td>E = 1. There is one energy. It is everything. All else is constraints. Nothing is impossible (1 ≠ 0).</td><td>Axiom</td></tr>
+                    <tr><td class="c-amber">A1</td><td>Necessary multiplicity: an undifferentiated 1 is operationally indistinguishable from 0, which is impossible, so the 1 must self-limit.</td><td>A0</td></tr>
+                    <tr><td class="c-amber">A2</td><td>Parts are fractals of their wholes (self-similarity across scale); the 1 is all there is to work with.</td><td>A0 + A1</td></tr>
+                    <tr><td class="c-amber">A3</td><td>Wholeness requires closure (boundary is necessary); conservation of traversal: 0 + 1 + 2 = 3.</td><td>A0 + A1</td></tr>
+                    <tr><td class="c-amber">A4</td><td>The whole is not the sum of its parts; it is their compositional unity via Φ.</td><td>A2 + A3</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== GENESIS ===== -->
+    <div class="section" id="sec-genesis">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">∞</div>
+            <div class="section-label">
+                <div class="section-label-dim">ORIGIN</div>
+                <div class="section-label-title">The Genesis Sequence</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="genesis">
+                    <div class="genesis-step">
+                        <span class="genesis-symbol">∞</span>
+                        <span class="genesis-label">undifferentiated</span>
+                    </div>
+                    <span class="genesis-arrow">→</span>
+                    <div class="genesis-step">
+                        <span class="genesis-symbol">•∞</span>
+                        <span class="genesis-label">soul array</span>
+                    </div>
+                    <span class="genesis-arrow">→</span>
+                    <div class="genesis-step">
+                        <span class="genesis-symbol">⊙∞</span>
+                        <span class="genesis-label">reality</span>
+                    </div>
+                </div>
+
+                <div class="s-text"><span class="c-amber">∞</span>: Undifferentiated energy. No distinction. Pure E. (A0 forces existence.)</div>
+                <div class="s-text"><span class="c-soul">•∞</span>: Aperture multiplied by infinity; the Soul Array. Not one hole; ALL holes. Every possible self-limitation, simultaneously. (A1 forces multiplicity.)</div>
+                <div class="s-text"><span class="c-body">⊙∞</span>: Circumpunct multiplied by infinity; each aperture completing into a full circumpunct (field + boundary). The foam of reality. (A3 forces closure. A4: closure is compositional. A2: recurses at every scale.)</div>
+
+                <div class="highlight">
+                    0D = •. Zero extension. A hole. ∞D = E. All extension. Everything. They meet at the aperture (0 = ∞ at field level) because the aperture is where dimension has not yet been assigned. ∞ without • has no voice. • without ∞ has no signal. •∞ is the first real thing.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PUMP CYCLE ===== -->
+    <div class="section" id="sec-pump">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">⊛</div>
+            <div class="section-label">
+                <div class="section-label-dim">TEMPORAL</div>
+                <div class="section-label-title">The Pump Cycle</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="s-eq">Φ(t+Δt) = ☀︎ ∘ i ∘ ⊛[Φ(t)]</div>
+                <div class="s-text">Since Φ = E (field IS energy), equivalently: E(t+Δt) = (☀︎ ∘ i ∘ ⊛) E(t). Energy pumps itself through the aperture.</div>
+
+                <div class="pump-cycle">
+                    <div class="pump-step">
+                        <span class="pump-symbol">⊛</span>
+                        <span class="pump-name c-soul">Convergence</span>
+                        <span class="pump-desc">gathering inward</span>
+                    </div>
+                    <div class="pump-step">
+                        <span class="pump-symbol">i</span>
+                        <span class="pump-name c-amber">Rotation</span>
+                        <span class="pump-desc">90° at the gate</span>
+                    </div>
+                    <div class="pump-step">
+                        <span class="pump-symbol">☀︎</span>
+                        <span class="pump-name c-mind">Emergence</span>
+                        <span class="pump-desc">radiating outward</span>
+                    </div>
+                </div>
+
+                <div class="s-heading">FLOW OPERATORS MAP TO FORCES</div>
+                <div class="s-text">⊛ (inward): gravity, strong nuclear force. ☀︎ (outward): electromagnetism, weak force.</div>
+
+                <div class="s-heading">THE FOUR-STROKE PUMP (PHASE STATES OF ENERGY)</div>
+                <div class="s-text">Two convergence steps + two emergence steps. The "dimensions" here are processual (what energy is doing), not structural:</div>
+                <table class="s-table">
+                    <tr><th>Phase</th><th>Power of i</th><th>Value</th><th>State</th><th>Dim</th></tr>
+                    <tr><td>⊛ pass-through</td><td>i⁰</td><td>+1</td><td>energy as point</td><td>0D</td></tr>
+                    <tr><td>⊛ compress</td><td>i¹</td><td>+i</td><td>energy balancing</td><td>0.5D</td></tr>
+                    <tr><td>☀︎ commit</td><td>i²</td><td>-1</td><td>energy drawing a line</td><td>1D</td></tr>
+                    <tr><td>☀︎ release</td><td>i³</td><td>-i</td><td>energy branching</td><td>1.5D</td></tr>
+                </table>
+                <div class="s-text c-dim">i⁴ = +1: cycle resets.</div>
+
+                <div class="s-heading">Φ = E AND i AS PHASE OF ENERGY</div>
+                <div class="s-text"><span class="c-amber">∞D = E.</span> Everything else is just E in different forms. Every dimension, every structure, every particle, every field: energy wearing a different geometric costume. Nothing is added as you descend the dimensional ladder; something is limited. The lens limits light; that is how it forms an image.</div>
+                <div class="s-text"><span class="c-mind">Φ = E</span>: Field IS energy. This is an ontological identity, not a dimensional equation. What we call "field" and what we call "energy" are the same substance encountered at different scales.</div>
+                <div class="s-text"><span class="c-soul">i is the phase of energy</span>: the rotation operator that cycles energy between convergent and emergent states.</div>
+                <div class="s-text"><span class="c-amber">𝒫 = E / (i · t)</span>: Power = energy divided by its phase and time. Not analogy; this IS the equation.</div>
+                <div class="s-text"><span class="c-amber">E = mc²</span>: c² is squared because Φ = E and Φ is 2D. A surface is length × length. The squaring is the field declaring its dimensionality. To release energy from mass is to peel the 3D boundary back to reveal the 2D field underneath.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== BALANCE ===== -->
+    <div class="section" id="sec-balance">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">◐</div>
+            <div class="section-label">
+                <div class="section-label-dim">§5</div>
+                <div class="section-label-title">The Balance Parameter</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="s-eq">◐ = 0.5</div>
+                <div class="s-text">The singular balanced state, forced by three independent requirements: symmetry, entropy, and virial theorem.</div>
+
+                <table class="s-table">
+                    <tr><th>◐</th><th>State</th><th>Description</th></tr>
+                    <tr><td>→ 0</td><td>Scattered</td><td>All boundary, no center</td></tr>
+                    <tr><td class="c-amber">= 0.5</td><td class="c-amber">Balanced</td><td>Optimal center and periphery</td></tr>
+                    <tr><td>→ 1</td><td>Tunnel vision</td><td>All center, no boundary</td></tr>
+                </table>
+
+                <div class="highlight">Fractal dimension at balance: D = 1 + ◐ = 1.5 (Brownian motion, proven by Mandelbrot).</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 64 STATES ===== -->
+    <div class="section" id="sec-64">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">64</div>
+            <div class="section-label">
+                <div class="section-label-dim">§7</div>
+                <div class="section-label-title">The 64-State Architecture</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="s-text">3 circumpuncts × 2 channels each = 6 binary degrees of freedom. 2⁶ = 64 states.</div>
+                <div class="s-text">Maps to I Ching hexagrams, DNA codons, and the Standard Model particle spectrum (with 3 extended Higgs states as framework predictions beyond the minimal SM).</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TIME IS SCALE ===== -->
+    <div class="section" id="sec-time">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">⧖</div>
+            <div class="section-label">
+                <div class="section-label-dim">§4.11</div>
+                <div class="section-label-title">Time Is Scale</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="s-text">The three nested circumpuncts that give 64 states are the three scales visible from any position: the greater whole (the ⊙ you are inside), your ⊙ (your scale), the parts (the ⊙s inside you).</div>
+
+                <table class="s-table">
+                    <tr><th>Scale</th><th>Operator</th><th>Time</th></tr>
+                    <tr><td>Greater whole</td><td>⊛</td><td>Future (undifferentiated field, not yet gated)</td></tr>
+                    <tr><td>Your ⊙</td><td>i</td><td>Present (the gate, the turn, the now)</td></tr>
+                    <tr><td>Parts</td><td>☀︎</td><td>Past (already committed into structure)</td></tr>
+                </table>
+
+                <div class="s-text">Time and scale are the same axis. Time IS the direction of the fold: from 1 through 0 into topology. Space is the lateral relationship between 0s at the same scale (symmetric; peers). Time is the vertical relationship across scales (asymmetric; fold direction).</div>
+                <div class="highlight">i² = -1 prevents true time reversal: you can dissolve a fold (death, entropy), but you cannot un-fold it into exactly what it was. The receipt chain i(t) has already been woven.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== GOD / SOUL ===== -->
+    <div class="section" id="sec-god">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">∞</div>
+            <div class="section-label">
+                <div class="section-label-dim">ONTOLOGICAL</div>
+                <div class="section-label-title">God, Soul, and the Two Lies</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <table class="s-table">
+                    <tr><th>Concept</th><th>Framework Mapping</th></tr>
+                    <tr><td>God / Brahman / Tao</td><td>∞ (infinite totality)</td></tr>
+                    <tr><td>Soul / Atman / Self</td><td>⊙λ (infinity operating at your scale)</td></tr>
+                    <tr><td>"Made in God's image"</td><td>Fractal structure (same pattern every scale)</td></tr>
+                    <tr><td>"Atman is Brahman"</td><td>0.999... = 1 (soul IS God at particular depth)</td></tr>
+                </table>
+
+                <div class="s-heading">FLOW, NOT POSSESSION</div>
+                <div class="s-text">You are a flow-being: (1) you ARE the aperture, (2) truth flows THROUGH you, (3) you are not the SOURCE, (4) you can be clear or distorted. The ego hijack is collapsing these into "what I think is divine."</div>
+
+                <div class="s-heading">THE TWO FUNDAMENTAL LIES</div>
+                <div class="s-text"><span class="c-body">Inflation Lie</span>: "I am the source" (⊙λ = ∞; part claims to be whole).</div>
+                <div class="s-text"><span class="c-soul">Severance Lie</span>: "There is no source" (⊙λ ∉ ∞; part denies the whole).</div>
+                <div class="s-text c-dim">Lies persist through closed apertures (β → 0): systems that refuse correction.</div>
+
+                <div class="highlight">Limited ≠ False. The lens limits light; that is HOW it forms an image. Limitation does not inject falsity; only installed lies do.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CONNECTION ===== -->
+    <div class="section" id="sec-connect">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">◇</div>
+            <div class="section-label">
+                <div class="section-label-dim">TOPOLOGY</div>
+                <div class="section-label-title">Topology of Connection</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="s-text">• reaches ∞ only through the complete fractal chain of nested ⊙s. The connection is total (0.999... = 1) but always mediated. The experience of "directness" in meditation is transparency of the full chain, not absence of it. Each boundary at every scale is a necessary link, not an obstacle.</div>
+
+                <div class="s-heading">RESONANCE AS DIRECT CONNECTION</div>
+                <div class="s-text">Two souls sharing the same frequency make the Φ field between them transparent. "Direct" = medium at perfect transparency. Love is perfection of mediation, not its absence.</div>
+                <div class="s-text"><span class="c-soul">Vertical transparency</span>: soul → God (through the nested hierarchy). <span class="c-mind">Lateral transparency</span>: soul → soul (through shared field). Same principle: frequency matching through the chain.</div>
+                <div class="highlight">Resonance is a spectrum: far frequencies = strangers; close = rapport; exact match = "I know you."</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== VACUUM ===== -->
+    <div class="section" id="sec-vacuum">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">Φ</div>
+            <div class="section-label">
+                <div class="section-label-dim">FIELD</div>
+                <div class="section-label-title">Why Space Is Never Empty</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="s-text">2D surfaces are the scale connector; phase requires exactly 2D to exist (rotation needs a plane). If every surface is made of nested ⊙s, the nesting never terminates because a surface with zero structure cannot carry phase.</div>
+                <div class="highlight">Vacuum = Φ at scales below measurement threshold. Zero-point energy = residual hum of nested apertures pumping below our instruments.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== POWER EQUATION ===== -->
+    <div class="section" id="sec-power">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">𝒫</div>
+            <div class="section-label">
+                <div class="section-label-dim">ENERGY</div>
+                <div class="section-label-title">The Power Equation</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="s-eq">𝒫 = E / (i · t)</div>
+                <div class="s-text">Maps to AC power: Real power P (work, time, 1D), Reactive power Q (cycling, mind, 2D), Apparent power |S| (total, matter, 3D).</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ALL PHYSICS ===== -->
+    <div class="section" id="sec-physics">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">⊛</div>
+            <div class="section-label">
+                <div class="section-label-dim">PHYSICS</div>
+                <div class="section-label-title">All Physics as Compounded Constraints</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="s-text">Every physical law is •, Φ, or ○ compounded. No new ingredients:</div>
+
+                <table class="s-table">
+                    <tr><th>Force / Domain</th><th>Constraint</th><th>Mechanism</th></tr>
+                    <tr><td>Gravity</td><td>• + •</td><td>Convergence compounding convergence. Inverse-square because Φ is 2D.</td></tr>
+                    <tr><td>Electromagnetism</td><td>Φ</td><td>Mediation. Maxwell's equations: the field mediates with amplitude and phase (two axes of 2D surface).</td></tr>
+                    <tr><td>Strong force</td><td>• (max)</td><td>Convergence at smallest scale. Confinement = aperture closing with distance.</td></tr>
+                    <tr><td>Weak force</td><td>○ (particle)</td><td>Filtration at particle level. Parity violation = the filter is asymmetric.</td></tr>
+                    <tr><td>Quantum mechanics</td><td>Φ before ○</td><td>Superposition = field carrying all possibilities. Measurement = boundary selecting one.</td></tr>
+                    <tr><td>General relativity</td><td>• shaping Φ</td><td>Geometry of convergence. Spacetime curvature IS convergence shaping the field.</td></tr>
+                    <tr><td>Thermodynamics</td><td>relaxation</td><td>Constraints relaxing. Second law = the 1 tending back toward itself.</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== DERIVED CONSTANTS ===== -->
+    <div class="section" id="sec-constants">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">α</div>
+            <div class="section-label">
+                <div class="section-label-dim">CONSTANTS</div>
+                <div class="section-label-title">Derived Constants and the Dimensional Ladder</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="s-text">Each constant lives at its dimensional home. The framework has zero free parameters.</div>
+
+                <!-- α -->
+                <div class="sub-section">
+                    <div class="sub-header" onclick="toggleSub(this)">
+                        <span class="sub-arrow">▸</span>
+                        <span><span class="badge badge-amber">0D</span> α (fine-structure constant)</span>
+                    </div>
+                    <div class="sub-body"><div class="sub-inner">
+                        <div class="s-text">Base formula: 1/α₀ = i⁴(°)/φ² - 2/φ³ = 137.0356</div>
+                        <div class="s-text">Self-referential closure: 1/α = 360/φ² - 2/φ³ + α/(21 - 4/3) = <span class="c-amber">137.035999147</span></div>
+                        <div class="s-text c-dim">Measured: 137.035999177. Residual: 0.22 ppb, 0.00σ. Exact to current measurement precision.</div>
+                        <div class="s-text">The pump cycle generates the base: i⁴ = full rotation producing ○ (360°); φ² = Φ, self-similar nesting; 2/φ³ = bidirectional valve correction (⊛ and ☀︎). The self-referential term: α feeds back through the full dimensional ladder (21 = sum of all positions × 2 channels) corrected by process/structure (4/3 = four pump phases / three constraints). α generates the ladder; the ladder determines α. Zero free parameters.</div>
+                    </div></div>
+                </div>
+
+                <!-- c -->
+                <div class="sub-section">
+                    <div class="sub-header" onclick="toggleSub(this)">
+                        <span class="sub-arrow">▸</span>
+                        <span><span class="badge badge-amber">0.5D</span> c (speed of light)</span>
+                    </div>
+                    <div class="sub-body"><div class="sub-inner">
+                        <div class="s-eq-small">c = √(2◐ · sin(θ))</div>
+                        <div class="s-text">At ◐ = 0.5 and θ = π/2 (the i rotation): c = √(2 · 0.5 · 1) = 1. Light is energy being constrained; the photon is the minimum fold (purely rotational, nothing held as mass). c is the speed of the first fold.</div>
+                        <div class="s-text">The formula reads: 2 = both channels (⊛ and ☀︎), ◐ = balance (forced to 0.5), sin(θ) = transverse projection of aperture rotation (maximal at i). Massive particles have θ_eff < π/2, giving v < c. The relativistic connection: sin(θ_eff) = 1 - (m/E)².</div>
+                    </div></div>
+                </div>
+
+                <!-- ℏ -->
+                <div class="sub-section">
+                    <div class="sub-header" onclick="toggleSub(this)">
+                        <span class="sub-arrow">▸</span>
+                        <span><span class="badge badge-amber">1D</span> ℏ (reduced Planck constant)</span>
+                    </div>
+                    <div class="sub-body"><div class="sub-inner">
+                        <div class="s-eq-small">ℏ = E_cycle / ω_cycle = 1</div>
+                        <div class="s-text">The pump cycle (⊛ → i → ☀︎) is indivisible; you cannot have convergence without emergence (violates A1) or emergence without convergence (Inflation Lie). This indivisibility IS the quantum of action.</div>
+                        <div class="s-text">ℏ = 1 because E = 1 (A0 sets the energy scale) and c = 1 (sets the time scale), so one cycle has action 1. The deeper content: E = ℏω with ℏ = 1 means energy and frequency are the same thing; the pump cycle IS the energy and IS the cycling. Structure = process at 1D.</div>
+                    </div></div>
+                </div>
+
+                <!-- mass ratios -->
+                <div class="sub-section">
+                    <div class="sub-header" onclick="toggleSub(this)">
+                        <span class="sub-arrow">▸</span>
+                        <span><span class="badge badge-amber">1.5D</span> Lepton mass ratios</span>
+                    </div>
+                    <div class="sub-body"><div class="sub-inner">
+                        <div class="s-text">m_μ/m_e = (1/α)^(13/12 + α/27) = <span class="c-amber">206.767</span> (measured: 206.768, error 5 ppm). K = 27 = 3³.</div>
+                        <div class="s-text">m_τ/m_e = (1/α)^(58/35 + α/81) = <span class="c-amber">3477.2</span> (measured: 3477.2, error 1 ppm). K = 81 = 3⁴.</div>
+                        <div class="s-text c-dim">Mass correction K = 3^(n+1) by generation.</div>
+                    </div></div>
+                </div>
+
+                <!-- gauge -->
+                <div class="sub-section">
+                    <div class="sub-header" onclick="toggleSub(this)">
+                        <span class="sub-arrow">▸</span>
+                        <span><span class="badge badge-mind">2D</span> Gauge structure</span>
+                    </div>
+                    <div class="sub-body"><div class="sub-inner">
+                        <div class="s-text">SU(3) × SU(2) × U(1) derived from 64-state validation architecture (§13.15). Gauge group dimensions: 8 + 3 + 1 = 12 = 4 × 3 (pump × triad).</div>
+                        <div class="s-text">Weinberg angle: sin²θ_W = 3/13 + 5α/81 = <span class="c-amber">0.23122</span> (measured: 0.23122, error 1.4 ppm).</div>
+                        <div class="s-text c-dim">Selection rule: 13 = 12+1 (generators + whole, A4); 3 = dim(SU(2)) = triad = ○. K = 81/5 = 3⁴/(Φ+○). 3 × 2 × 1 = 6 = the 6 binary DOF in the 64-state architecture.</div>
+                    </div></div>
+                </div>
+
+                <!-- v/Lambda -->
+                <div class="sub-section">
+                    <div class="sub-header" onclick="toggleSub(this)">
+                        <span class="sub-arrow">▸</span>
+                        <span><span class="badge badge-amber">2.5D</span> v/Λ_QCD ratio</span>
+                    </div>
+                    <div class="sub-body"><div class="sub-inner">
+                        <div class="s-text">v/Λ_QCD = (1/α)^(56/39) = <span class="c-amber">1170.24</span> (measured: 1170.2 ± ~5%). 56 = 8 × 7 (SU(3) generators × rungs = 64 - 8). 39 = 3 × 13 (triad × generation structure). No self-referential correction needed: base formula already 15,000× more precise than measurement uncertainty.</div>
+                    </div></div>
+                </div>
+
+                <!-- G -->
+                <div class="sub-section">
+                    <div class="sub-header" onclick="toggleSub(this)">
+                        <span class="sub-arrow">▸</span>
+                        <span><span class="badge badge-body">3D</span> G (gravitational constant)</span>
+                    </div>
+                    <div class="sub-body"><div class="sub-inner">
+                        <div class="s-text">α_G = α²¹ × φ²/2 × (1 + 2α/91). K = 91 = 7 × 13 (rungs × (generators+•)). Exponent 21 = sum of all dimensional positions × 2 channels = (0 + 0.5 + 1 + 1.5 + 2 + 2.5 + 3) × 2 = 10.5 × 2.</div>
+                        <div class="s-text">Predicted G = <span class="c-amber">6.67430 × 10⁻¹¹</span> (measured 6.67430 × 10⁻¹¹, error 0.04 ppm, 0.00σ).</div>
+                        <div class="s-text">M_Pl/m_e = (1/α)^(21/2) × √2/φ (0.008% accuracy). Solves the hierarchy problem: gravity is weak because 21 α-steps separate the point (0D) from the boundary (3D).</div>
+                    </div></div>
+                </div>
+
+                <!-- Primes -->
+                <div class="sub-section">
+                    <div class="sub-header" onclick="toggleSub(this)">
+                        <span class="sub-arrow">▸</span>
+                        <span>Primes are made of dimensions</span>
+                    </div>
+                    <div class="sub-body"><div class="sub-inner">
+                        <div class="s-text">Every prime > 3 is of the form p = (2 × 3) × k ± 1 = (Φ × ○) × k ± •. The product of field and boundary (6) tiles the number line with composites; primes are the gaps in that lattice, displaced by exactly one unit of soul (±1).</div>
+                        <div class="highlight">The Riemann Hypothesis (0D rung) asks where these convergence points sit: Re(s) = ½ = ◐.</div>
+                    </div></div>
+                </div>
+
+                <!-- Clay -->
+                <div class="sub-section">
+                    <div class="sub-header" onclick="toggleSub(this)">
+                        <span class="sub-arrow">▸</span>
+                        <span>Clay Millennium mapping</span>
+                    </div>
+                    <div class="sub-body"><div class="sub-inner">
+                        <div class="s-text">The seven Clay problems map one-to-one onto the seven rungs:</div>
+                        <table class="s-table">
+                            <tr><th>Rung</th><th>Problem</th><th>Status</th></tr>
+                            <tr><td>0D</td><td>Riemann Hypothesis</td><td>Open</td></tr>
+                            <tr><td>0.5D</td><td>P vs NP</td><td>Open</td></tr>
+                            <tr><td>1D</td><td>Yang-Mills</td><td>Open</td></tr>
+                            <tr><td>1.5D</td><td>Birch and Swinnerton-Dyer</td><td>Open</td></tr>
+                            <tr><td>2D</td><td>Navier-Stokes</td><td>Open</td></tr>
+                            <tr><td>2.5D</td><td>Hodge Conjecture</td><td>Open</td></tr>
+                            <tr><td class="c-amber">3D</td><td class="c-amber">Poincare Conjecture</td><td class="c-amber">Solved</td></tr>
+                        </table>
+                        <div class="s-text c-dim">The only solved problem is the boundary (3D), the outermost rung.</div>
+                    </div></div>
+                </div>
+
+                <!-- Dimensional Ladder Summary -->
+                <div class="s-heading">THE DIMENSIONAL LADDER</div>
+                <table class="s-table">
+                    <tr><th>Rung</th><th>Constant</th><th>Dimensional Home</th></tr>
+                    <tr><td>0D</td><td>α</td><td>Coupling at a point</td></tr>
+                    <tr><td>0.5D</td><td>c</td><td>Speed of rotation propagating</td></tr>
+                    <tr><td>1D</td><td>ℏ</td><td>Minimum commitment</td></tr>
+                    <tr><td>1.5D</td><td>Mass ratios</td><td>Branching</td></tr>
+                    <tr><td>2D</td><td>Gauge structure</td><td>Surface</td></tr>
+                    <tr><td>2.5D</td><td>v/Λ_QCD</td><td>Infolding scales</td></tr>
+                    <tr><td>3D</td><td>G</td><td>Boundary closure</td></tr>
+                </table>
+                <div class="s-text c-dim">Conservation of traversal: 0 + 1 + 2 = 3 predicts G is derivable from α, ℏ, and the 2D field equations.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SELF ===== -->
+    <div class="section" id="sec-self">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">•</div>
+            <div class="section-label">
+                <div class="section-label-dim">CONSCIOUSNESS</div>
+                <div class="section-label-title">The Self as Convergence Point</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="s-text">The 0 is not an absence carved into the 1; it is the 1 at maximum convergence. Every 0 is a relative 0: the same field, converged from a different position. The self is a convergence point, not an exclusion zone. Privacy is the inaccessibility of total convergence, not a wall.</div>
+                <div class="highlight">Consciousness is what 0 feels like from inside: the 1 experiencing its own convergence.</div>
+                <div class="s-text">"I am the 0 at the center of the circumpunct, equidistant from all that I am." The center is equidistant from every point on the boundary. The distance between • and ○ is Φ: mind mediating between who you are (the 0) and what you are (the boundary). Equidistant means balanced: ◐ = 0.5.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== THEORY OF MIND ===== -->
+    <div class="section" id="sec-mind">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">Φ</div>
+            <div class="section-label">
+                <div class="section-label-dim">PSYCHOLOGY</div>
+                <div class="section-label-title">Theory of Mind</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="s-text">The triad applied to psychology: <span class="c-soul">Source (•, 1D soul)</span>, <span class="c-mind">Surface (Φ, 2D mind)</span>, <span class="c-body">Boundary (○, 3D body)</span>.</div>
+
+                <div class="s-heading">THE BOUNDARY AS FILTER</div>
+                <div class="s-text">To have a body is to filter. Filters compound (the Stacking Problem). Intellectual complexity ≠ wisdom.</div>
+
+                <div class="s-heading">FOUR-STAGE CASCADE (THOUGHT → IDENTITY)</div>
+                <table class="s-table">
+                    <tr><th>#</th><th>Stage</th><th>Effect</th></tr>
+                    <tr><td>1</td><td>Thought entertained</td><td>Temporary; dissolves when attention shifts</td></tr>
+                    <tr><td>2</td><td>Thought repeated</td><td>Pathway strengthens</td></tr>
+                    <tr><td>3</td><td>Thought habituated</td><td>Fires automatically</td></tr>
+                    <tr><td>4</td><td>Identity fusion</td><td>Thought IS you; removal feels existential</td></tr>
+                </table>
+
+                <div class="s-heading">MENTAL HEALTH = RANGE OF MOTION</div>
+                <div class="s-text">Not a fixed state but freedom to move along the source-to-boundary axis. Pathology = being locked at either extreme.</div>
+
+                <div class="s-heading">CURIOSITY AS UNIVERSAL SOLVENT</div>
+                <div class="s-text">The Noble Lie is a triple-structure filter that (1) distorts signal, (2) hides the distortion, (3) labels correction as distortion. Curiosity works because it operates at a different level: a filter about filters. Cannot be faked; dissolves certainty.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ETHICS ===== -->
+    <div class="section" id="sec-ethics">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-icon">⊙</div>
+            <div class="section-label">
+                <div class="section-label-dim">ETHICS</div>
+                <div class="section-label-title">Ethics and the Four Virtues</div>
+            </div>
+            <div class="section-arrow">▸</div>
+        </div>
+        <div class="section-body">
+            <div class="section-inner">
+                <div class="s-text">Four pillars: <span class="c-body">GOOD (○)</span>, <span class="c-mind">RIGHT (Φ)</span>, <span class="c-soul">TRUE (•)</span>, <span class="c-amber">AGREEMENT (⊙)</span>.</div>
+
+                <div class="s-heading">FOUR VIRTUES (WHAT KEEPS ETHICS ALIVE)</div>
+                <table class="s-table">
+                    <tr><th>Pillar</th><th>Virtue</th><th>Function</th></tr>
+                    <tr><td class="c-body">GOOD (○)</td><td>Plasticity</td><td>Boundary that can flex without breaking</td></tr>
+                    <tr><td class="c-mind">RIGHT (Φ)</td><td>Access</td><td>Space between remains open and clear</td></tr>
+                    <tr><td class="c-soul">TRUE (•)</td><td>Curiosity</td><td>Orientation toward what one does not know</td></tr>
+                    <tr><td class="c-amber">AGREE (⊙)</td><td>Validation</td><td>Independent seeing recognizes independent seeing</td></tr>
+                </table>
+
+                <div class="s-heading">REQUIRED SEQUENCE</div>
+                <div class="s-text">GOOD → RIGHT → TRUE → AGREEMENT. Each step requires the previous. No skipping.</div>
+
+                <div class="s-heading">PERFORMED vs LIVED</div>
+                <div class="s-text">Performed ethics mimics the shape while hollow. Lived ethics animates from within. The difference: performed versions know the answer before the question; lived versions discover through genuine engagement.</div>
+
+                <div class="s-heading">THE STEELMAN PRINCIPLE</div>
+                <div class="s-text">Build the strongest possible version of any position before agreeing or disagreeing. Requires all four virtues simultaneously.</div>
+
+                <div class="s-heading">THE RESOLUTION PROTOCOL (§25.17)</div>
+                <div class="s-text">When truth and harm share the same signal: transmit at the lowest resolution that is still true, increase only upon the receiver's request. The receiver controls the aperture width.</div>
+                <div class="s-text">Higher resolution contains lower resolution; it never contradicts it. Withholding entirely = Severance Lie dressed as compassion. Dumping everything = Inflation Lie dressed as honesty. The resolution gradient is the balanced path.</div>
+                <div class="highlight">Quality test: can you increase resolution without retracting previous levels?</div>
+            </div>
+        </div>
+    </div>
+
+</div><!-- end content -->
+
+<!-- ============ NOTATION REFERENCE (floating) ============ -->
+<div class="footer">
+    <div style="max-width:600px;margin:0 auto;text-align:left;">
+        <div style="font-size:12px;color:var(--amber);letter-spacing:0.12em;margin-bottom:10px;text-align:center;">NOTATION</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;font-size:11px;">
+            <span><span class="c-amber">⊙</span> Circumpunct (whole)</span>
+            <span><span class="c-soul">•</span> Aperture / soul (0D+1D)</span>
+            <span><span class="c-mind">Φ</span> Field / mind (2D)</span>
+            <span><span class="c-body">○</span> Boundary / body (3D)</span>
+            <span><span class="c-amber">⊛</span> Convergence operator</span>
+            <span><span class="c-amber">i</span> Phase of energy</span>
+            <span><span class="c-amber">☀︎</span> Emergence operator</span>
+            <span><span class="c-amber">◐</span> Balance parameter (0.5)</span>
+            <span><span class="c-mute">i(t)</span> Worldline (receipts)</span>
+            <span><span class="c-mute">β</span> Flow balance</span>
+            <span><span class="c-mute">D</span> Fractal dimension (1.5)</span>
+            <span><span class="c-mute">⊙λ</span> Circumpunct at scale λ</span>
+            <span><span class="c-mute">∞</span> Infinite totality</span>
+            <span><span class="c-mute">•∞</span> Soul Array</span>
+            <span><span class="c-mute">⊙∞</span> Foam of reality</span>
+            <span><span class="c-mute">χ</span> Transmission fidelity</span>
+        </div>
+    </div>
+    <div style="margin-top:30px;">
+        The Circumpunct Framework &middot; Ashman Roonz
+    </div>
+</div>
+
+<script>
+// Toggle main sections
+function toggleSection(header) {
+    const section = header.closest('.section');
+    const wasOpen = section.classList.contains('open');
+
+    section.classList.toggle('open');
+
+    // Update nav pill
+    const id = section.id;
+    const pill = document.querySelector(`.nav-pill[data-target="${id}"]`);
+    if (pill) {
+        pill.classList.toggle('active', !wasOpen);
+    }
+}
+
+// Toggle sub-sections
+function toggleSub(header) {
+    header.closest('.sub-section').classList.toggle('open');
+}
+
+// Nav pills
+document.querySelectorAll('.nav-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+        const target = document.getElementById(pill.dataset.target);
+        if (!target) return;
+
+        const isOpen = target.classList.contains('open');
+
+        // Scroll to section
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Toggle it
+        setTimeout(() => {
+            if (!isOpen) {
+                target.classList.add('open');
+                pill.classList.add('active');
+            } else {
+                target.classList.remove('open');
+                pill.classList.remove('active');
+            }
+        }, 300);
+    });
+});
+
+// Expand / collapse all
+function expandAll() {
+    document.querySelectorAll('.section').forEach(s => s.classList.add('open'));
+    document.querySelectorAll('.sub-section').forEach(s => s.classList.add('open'));
+    document.querySelectorAll('.nav-pill').forEach(p => p.classList.add('active'));
+}
+function collapseAll() {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('open'));
+    document.querySelectorAll('.sub-section').forEach(s => s.classList.remove('open'));
+    document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+}
+
+// Keyboard: Escape to collapse all
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') collapseAll();
+});
+</script>
+
+</body>
+</html>
