@@ -307,6 +307,174 @@
             margin-top: 30px;
             letter-spacing: 0.08em;
         }
+
+        /* ==========================================
+           SEED: Nav Pills
+           ========================================== */
+        .sd-pills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            max-width: 640px;
+            margin: 16px auto 0;
+            padding: 0 24px;
+        }
+        .sd-pill {
+            font-family: inherit;
+            font-size: 10px;
+            letter-spacing: 0.06em;
+            padding: 3px 9px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--mute);
+            background: transparent;
+        }
+        .sd-pill:hover { border-color: var(--amber); color: var(--amber); }
+        .sd-pill.active { border-color: var(--amber); color: var(--amber); background: rgba(255,170,0,0.1); }
+
+        .sd-controls {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .sd-ctrl {
+            font-family: inherit;
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            padding: 3px 10px;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 3px;
+            background: transparent;
+            color: rgba(255,255,255,0.35);
+            cursor: pointer;
+            margin: 0 3px;
+            transition: all 0.2s;
+        }
+        .sd-ctrl:hover { border-color: var(--amber); color: var(--amber); }
+
+        /* ==========================================
+           SEED: Expandable Sections
+           ========================================== */
+        .sd-wrap {
+            max-width: 640px;
+            margin: 20px auto 0;
+            padding: 0 24px;
+        }
+        .sd-section {
+            margin-bottom: 6px;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 5px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+        .sd-section:hover { border-color: rgba(255,255,255,0.12); }
+        .sd-section.open { border-color: rgba(255,170,0,0.2); }
+
+        .sd-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 14px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.02);
+            transition: background 0.2s;
+            user-select: none;
+        }
+        .sd-header:hover { background: rgba(255,255,255,0.04); }
+        .sd-section.open .sd-header { background: rgba(255,255,255,0.04); }
+
+        .sd-icon { font-size: 14px; min-width: 22px; text-align: center; }
+        .sd-label { flex: 1; }
+        .sd-dim { font-size: 9px; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); }
+        .sd-title { font-size: 12px; font-weight: 500; letter-spacing: 0.05em; }
+        .sd-arrow { font-size: 12px; color: rgba(255,255,255,0.3); transition: transform 0.3s; }
+        .sd-section.open .sd-arrow { transform: rotate(90deg); }
+
+        .sd-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sd-section.open .sd-body {
+            max-height: 8000px;
+            transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sd-inner { padding: 0 14px 14px; }
+
+        /* Seed typography */
+        .sd-text { font-size: 13px; line-height: 1.75; color: var(--text); margin-bottom: 10px; }
+        .sd-text:last-child { margin-bottom: 0; }
+        .sd-heading { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--amber); margin: 14px 0 6px; }
+        .sd-heading:first-child { margin-top: 2px; }
+        .sd-eq { text-align: center; font-size: 15px; font-weight: 500; padding: 12px 0; color: var(--amber); letter-spacing: 0.04em; }
+        .sd-eq-sm { text-align: center; font-size: 12px; padding: 6px 0; color: var(--amber); }
+
+        .sd-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 11px; }
+        .sd-table th { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--amber); color: var(--amber); font-weight: 500; letter-spacing: 0.08em; font-size: 9px; }
+        .sd-table td { padding: 4px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .sd-table tr:last-child td { border-bottom: none; }
+
+        .sd-list { margin: 6px 0 10px 16px; font-size: 12px; line-height: 1.8; }
+        .sd-list li { margin-bottom: 3px; }
+        .sd-list li::marker { color: rgba(255,255,255,0.3); }
+
+        .sd-highlight {
+            background: rgba(255,170,0,0.06);
+            padding: 8px 12px;
+            border-left: 2px solid var(--amber);
+            border-radius: 0 3px 3px 0;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+
+        .sd-badge {
+            display: inline-block;
+            font-size: 9px;
+            padding: 1px 7px;
+            border-radius: 8px;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+        .sd-badge-soul { background: rgba(68,136,255,0.15); color: var(--soul); }
+        .sd-badge-mind { background: rgba(68,204,68,0.15); color: var(--mind); }
+        .sd-badge-body { background: rgba(255,68,68,0.15); color: var(--body); }
+        .sd-badge-amber { background: rgba(255,170,0,0.12); color: var(--amber); }
+
+        /* Seed sub-sections */
+        .sd-sub { margin: 6px 0; border: 1px solid rgba(255,255,255,0.04); border-radius: 3px; }
+        .sd-sub-header { display: flex; align-items: center; gap: 6px; padding: 6px 10px; cursor: pointer; font-size: 11px; color: var(--mute); transition: color 0.2s; }
+        .sd-sub-header:hover { color: var(--text); }
+        .sd-sub-arrow { font-size: 9px; transition: transform 0.2s; color: rgba(255,255,255,0.3); }
+        .sd-sub.open .sd-sub-arrow { transform: rotate(90deg); }
+        .sd-sub-body { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .sd-sub.open .sd-sub-body { max-height: 4000px; }
+        .sd-sub-inner { padding: 0 10px 10px; }
+
+        /* Genesis visual */
+        .sd-genesis { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 16px 0; font-size: 16px; }
+        .sd-genesis-step { text-align: center; }
+        .sd-genesis-sym { font-size: 24px; display: block; margin-bottom: 3px; }
+        .sd-genesis-lbl { font-size: 9px; color: rgba(255,255,255,0.35); letter-spacing: 0.05em; }
+        .sd-genesis-arrow { font-size: 18px; color: rgba(255,255,255,0.3); }
+
+        /* Pump visual */
+        .sd-pump { display: flex; justify-content: center; gap: 0; margin: 12px 0; }
+        .sd-pump-step { text-align: center; padding: 8px 12px; position: relative; flex: 1; max-width: 140px; }
+        .sd-pump-step::after { content: '→'; position: absolute; right: -6px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.3); font-size: 12px; }
+        .sd-pump-step:last-child::after { content: ''; }
+        .sd-pump-sym { font-size: 20px; display: block; margin-bottom: 3px; }
+        .sd-pump-name { font-size: 10px; letter-spacing: 0.05em; }
+        .sd-pump-desc { font-size: 9px; color: rgba(255,255,255,0.35); margin-top: 1px; }
+
+        /* Color helpers */
+        .c-soul { color: var(--soul); }
+        .c-mind { color: var(--mind); }
+        .c-body { color: var(--body); }
+        .c-amber { color: var(--amber); }
+        .c-mute { color: var(--mute); }
+        .c-dim { color: rgba(255,255,255,0.35); }
     </style>
 </head>
 <body>
@@ -374,6 +542,33 @@
         <a href="e_equals_1.html" style="color:var(--amber)">E = 1.</a> All else is <a href="how_reality_is_built.html" style="color:var(--mute)">constraints.</a>
     </div>
     <div class="axiom-sub">One axiom (A0). Four derivations: <a href="how_reality_is_built.html" style="color:var(--mute)">multiplicity</a> (A1), <a href="how_reality_is_built.html" style="color:var(--mute)">self-similarity</a> (A2), <a href="how_reality_is_built.html" style="color:var(--mute)">closure</a> (A3), <a href="how_reality_is_built.html" style="color:var(--mute)">compositional unity</a> (A4). All of <a href="dimensional_ladder.html" style="color:var(--mind)">physics</a>, <a href="circumpunct_theory_of_mind_plain.html" style="color:var(--soul)">consciousness</a>, and <a href="circumpunct_ethics_and_virtues.html" style="color:var(--body)">ethics</a> from geometry alone.</div>
+</div>
+
+<!-- SEED: Nav Pills -->
+<div class="sd-pills" id="sdPills">
+    <button class="sd-pill" data-target="sd-core">Core</button>
+    <button class="sd-pill" data-target="sd-ontology">1/0</button>
+    <button class="sd-pill" data-target="sd-e1">E = 1</button>
+    <button class="sd-pill" data-target="sd-process">Process</button>
+    <button class="sd-pill" data-target="sd-axioms">Axioms</button>
+    <button class="sd-pill" data-target="sd-genesis">Genesis</button>
+    <button class="sd-pill" data-target="sd-pump">Pump</button>
+    <button class="sd-pill" data-target="sd-balance">Balance</button>
+    <button class="sd-pill" data-target="sd-64">64 States</button>
+    <button class="sd-pill" data-target="sd-time">Time</button>
+    <button class="sd-pill" data-target="sd-god">God/Soul</button>
+    <button class="sd-pill" data-target="sd-connect">Connection</button>
+    <button class="sd-pill" data-target="sd-vacuum">Vacuum</button>
+    <button class="sd-pill" data-target="sd-power">Power</button>
+    <button class="sd-pill" data-target="sd-physics">Physics</button>
+    <button class="sd-pill" data-target="sd-constants">Constants</button>
+    <button class="sd-pill" data-target="sd-self">Self</button>
+    <button class="sd-pill" data-target="sd-mind">Mind</button>
+    <button class="sd-pill" data-target="sd-ethics">Ethics</button>
+</div>
+<div class="sd-controls">
+    <button class="sd-ctrl" onclick="sdExpandAll()">EXPAND ALL</button>
+    <button class="sd-ctrl" onclick="sdCollapseAll()">COLLAPSE ALL</button>
 </div>
 
 <!-- THE DIMENSIONAL LADDER -->
@@ -482,6 +677,560 @@
 
     <div style="font-size:11px;color:var(--mute);margin-top:8px">* Λ_QCD known to ~5%; formula 15,000× more precise than measurement.</div>
 
+    <!-- ==========================================
+         SEED: Expandable Framework Sections
+         ========================================== -->
+    <div class="sd-wrap" id="sdSections">
+
+    <!-- CORE STRUCTURE -->
+    <div class="sd-section" id="sd-core">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">⊙</div>
+            <div class="sd-label">
+                <div class="sd-dim">FOUNDATION</div>
+                <div class="sd-title">The Core Structure</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-text">The circumpunct ⊙ = Φ(•, ○) is a whole composed of three irreducible parts. There is no fourth because ⊙ has no fourth part. There is no missing constraint because conservation of traversal completes the path: 0(•) + 1(•) + 2(Φ) = 3(○). Soul + field = boundary.</div>
+            <table class="sd-table">
+                <tr><th>Symbol</th><th>Name</th><th>Dim</th><th>Constraint</th><th>Maps To</th></tr>
+                <tr><td class="c-soul">•</td><td>Aperture / Soul</td><td>0D+1D</td><td>Converges</td><td class="c-soul">TRUE</td></tr>
+                <tr><td class="c-mind">Φ</td><td>Field / Mind</td><td>2D</td><td>Mediates</td><td class="c-mind">RIGHT</td></tr>
+                <tr><td class="c-body">○</td><td>Boundary / Body</td><td>3D</td><td>Filters</td><td class="c-body">GOOD</td></tr>
+                <tr><td class="c-amber">⊙</td><td>Circumpunct / Whole</td><td>All</td><td>Compositional wholeness</td><td class="c-amber">AGREEMENT</td></tr>
+            </table>
+            <div class="sd-highlight">⊙ is a fractal of the ONE. Every ⊙ is the 1 at a particular scale: not a piece of it, but the whole thing, constrained to a position (A2).</div>
+            <div class="sd-heading">CRITICAL TERMINOLOGY</div>
+            <div class="sd-text"><span class="c-mind">Surface</span> = 2D = Φ = field = mind. <span class="c-body">Boundary</span> = 3D = ○ = body. These are NOT interchangeable. §5A establishes: Surface = Field = Mind.</div>
+            <div class="sd-heading">TWO SENSES OF "APERTURE"</div>
+            <div class="sd-text"><span class="c-soul">• as aperture (local)</span>: the gate at the center of any ⊙ through which convergence passes to emergence. <span class="c-amber">⊙ as aperture (global)</span>: the whole circumpunct viewed from ∞; from outside, the entire thing is one aperture in the foam.</div>
+        </div></div>
+    </div>
+
+    <!-- 1/0 ONTOLOGY -->
+    <div class="sd-section" id="sd-ontology">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">1/0</div>
+            <div class="sd-label">
+                <div class="sd-dim">§1.2</div>
+                <div class="sd-title">The 1/0 Ontology</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-text">The symbol ⊙ draws the ontology directly. The dot is 0 (total convergence of the field to a point). The circle is 1 (the field, curving back on itself). The space between them is the fractal coastline (D = 1.5 at balance).</div>
+            <div class="sd-text">Neither primitive is a thing: <span class="c-amber">1</span> is everything (undivided), <span class="c-soul">0</span> is not absence but the 1 at maximum convergence. All structure is the topology of convergence points in the 1.</div>
+            <div class="sd-text">Integer dimensions are the field (1) at different degrees of constraint; half-integer dimensions are the fractal coastlines between those constraints.</div>
+            <div class="sd-highlight">Attention is a 0 in the 1: a convergence point where the field becomes local.</div>
+        </div></div>
+    </div>
+
+    <!-- E = 1 -->
+    <div class="sd-section" id="sd-e1">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">E</div>
+            <div class="sd-label">
+                <div class="sd-dim">§4.8a</div>
+                <div class="sd-title">E = 1</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-text">If Φ = E (§4.8), and there is exactly one field, then <span class="c-amber">E = 1</span>. Not "energy equals the number one"; energy IS the one. There is no quantity of energy; there is only one energy appearing everywhere.</div>
+            <div class="sd-text">What we measure as "amount" is degree of constraint (how tightly the 1 has folded around 0s).</div>
+            <div class="sd-heading">CONSEQUENCES</div>
+            <ul class="sd-list">
+                <li><span class="c-amber">m = 1/c²</span> : mass is inverse surface signature; how tightly 1 wraps around 0s</li>
+                <li><span class="c-amber">𝒫 = 1/(i·t)</span> : power is 1 flowing through rotation over time</li>
+                <li>Free energy = removing constraints (the 1 released from folds)</li>
+                <li>Entropy increasing = de-constraint (the 1 relaxing back toward itself)</li>
+                <li>Information = the topology of 0s in the 1</li>
+            </ul>
+        </div></div>
+    </div>
+
+    <!-- PROCESS = STRUCTURE -->
+    <div class="sd-section" id="sd-process">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">≡</div>
+            <div class="sd-label">
+                <div class="sd-dim">IDENTITY</div>
+                <div class="sd-title">Process and Structure Are the Same Thing</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-text">The way Einstein showed energy and matter are the same (E = mc²), the framework shows process and structure are the same. What looks like a fixed dimension (structure) is the pump cycle frozen at that stage (process).</div>
+            <table class="sd-table">
+                <tr><th>Dim</th><th>Structure</th><th>Process</th></tr>
+                <tr><td>0D</td><td>convergence (⊛) landed</td><td>The first constraint, •</td></tr>
+                <tr><td>0.5D</td><td>the i rotation begins</td><td>Spread across dimensions</td></tr>
+                <tr><td>1D</td><td>commitment, extension</td><td>Emergence (☀︎) begins</td></tr>
+                <tr><td>1.5D</td><td>branching</td><td>Emergence unfolding</td></tr>
+                <tr><td>2D</td><td>surface, Φ</td><td>Second constraint: mediation</td></tr>
+                <tr><td>2.5D→3D</td><td>fractal infolding</td><td>○, third constraint: filtration</td></tr>
+            </table>
+            <div class="sd-heading">TWO KINDS OF DIMENSION</div>
+            <div class="sd-text"><strong>Structural</strong>: what a component IS (0D singularity, 1D worldline, 2D surface, 3D boundary). <strong>Processual</strong>: what energy is DOING at a given phase; structure in process, not static geometry. These are not two separate systems; processual dimensions are the structural dimensions being applied step by step.</div>
+        </div></div>
+    </div>
+
+    <!-- AXIOMS -->
+    <div class="sd-section" id="sd-axioms">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">A</div>
+            <div class="sd-label">
+                <div class="sd-dim">FOUNDATION</div>
+                <div class="sd-title">The One Axiom and Its Four Derivations</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <table class="sd-table">
+                <tr><th>Axiom</th><th>Statement</th><th>Source</th></tr>
+                <tr><td class="c-amber">A0</td><td>E = 1. There is one energy. It is everything. All else is constraints. Nothing is impossible (1 ≠ 0).</td><td>Axiom</td></tr>
+                <tr><td class="c-amber">A1</td><td>Necessary multiplicity: an undifferentiated 1 is operationally indistinguishable from 0, which is impossible, so the 1 must self-limit.</td><td>A0</td></tr>
+                <tr><td class="c-amber">A2</td><td>Parts are fractals of their wholes (self-similarity across scale); the 1 is all there is to work with.</td><td>A0 + A1</td></tr>
+                <tr><td class="c-amber">A3</td><td>Wholeness requires closure (boundary is necessary); conservation of traversal: 0 + 1 + 2 = 3.</td><td>A0 + A1</td></tr>
+                <tr><td class="c-amber">A4</td><td>The whole is not the sum of its parts; it is their compositional unity via Φ.</td><td>A2 + A3</td></tr>
+            </table>
+        </div></div>
+    </div>
+
+    <!-- GENESIS -->
+    <div class="sd-section" id="sd-genesis">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">∞</div>
+            <div class="sd-label">
+                <div class="sd-dim">ORIGIN</div>
+                <div class="sd-title">The Genesis Sequence</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-genesis">
+                <div class="sd-genesis-step"><span class="sd-genesis-sym">∞</span><span class="sd-genesis-lbl">undifferentiated</span></div>
+                <span class="sd-genesis-arrow">→</span>
+                <div class="sd-genesis-step"><span class="sd-genesis-sym">•∞</span><span class="sd-genesis-lbl">soul array</span></div>
+                <span class="sd-genesis-arrow">→</span>
+                <div class="sd-genesis-step"><span class="sd-genesis-sym">⊙∞</span><span class="sd-genesis-lbl">reality</span></div>
+            </div>
+            <div class="sd-text"><span class="c-amber">∞</span>: Undifferentiated energy. No distinction. Pure E. (A0 forces existence.)</div>
+            <div class="sd-text"><span class="c-soul">•∞</span>: Aperture multiplied by infinity; the Soul Array. Not one hole; ALL holes. Every possible self-limitation, simultaneously. (A1 forces multiplicity.)</div>
+            <div class="sd-text"><span class="c-body">⊙∞</span>: Circumpunct multiplied by infinity; each aperture completing into a full circumpunct (field + boundary). The foam of reality. (A3 forces closure. A4: closure is compositional. A2: recurses at every scale.)</div>
+            <div class="sd-highlight">0D = •. Zero extension. A hole. ∞D = E. All extension. Everything. They meet at the aperture (0 = ∞ at field level) because the aperture is where dimension has not yet been assigned. ∞ without • has no voice. • without ∞ has no signal. •∞ is the first real thing.</div>
+        </div></div>
+    </div>
+
+    <!-- PUMP CYCLE -->
+    <div class="sd-section" id="sd-pump">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">⊛</div>
+            <div class="sd-label">
+                <div class="sd-dim">TEMPORAL</div>
+                <div class="sd-title">The Pump Cycle</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-eq">Φ(t+Δt) = ☀︎ ∘ i ∘ ⊛[Φ(t)]</div>
+            <div class="sd-text">Since Φ = E (field IS energy), equivalently: E(t+Δt) = (☀︎ ∘ i ∘ ⊛) E(t). Energy pumps itself through the aperture.</div>
+            <div class="sd-pump">
+                <div class="sd-pump-step"><span class="sd-pump-sym">⊛</span><span class="sd-pump-name c-soul">Convergence</span><span class="sd-pump-desc">gathering inward</span></div>
+                <div class="sd-pump-step"><span class="sd-pump-sym">i</span><span class="sd-pump-name c-amber">Rotation</span><span class="sd-pump-desc">90° at the gate</span></div>
+                <div class="sd-pump-step"><span class="sd-pump-sym">☀︎</span><span class="sd-pump-name c-mind">Emergence</span><span class="sd-pump-desc">radiating outward</span></div>
+            </div>
+            <div class="sd-heading">FLOW OPERATORS MAP TO FORCES</div>
+            <div class="sd-text">⊛ (inward): gravity, strong nuclear force. ☀︎ (outward): electromagnetism, weak force.</div>
+            <div class="sd-heading">THE FOUR-STROKE PUMP</div>
+            <table class="sd-table">
+                <tr><th>Phase</th><th>i^n</th><th>Value</th><th>State</th><th>Dim</th></tr>
+                <tr><td>⊛ pass-through</td><td>i⁰</td><td>+1</td><td>energy as point</td><td>0D</td></tr>
+                <tr><td>⊛ compress</td><td>i¹</td><td>+i</td><td>energy balancing</td><td>0.5D</td></tr>
+                <tr><td>☀︎ commit</td><td>i²</td><td>-1</td><td>energy drawing a line</td><td>1D</td></tr>
+                <tr><td>☀︎ release</td><td>i³</td><td>-i</td><td>energy branching</td><td>1.5D</td></tr>
+            </table>
+            <div class="sd-text c-dim" style="font-size:11px">i⁴ = +1: cycle resets.</div>
+            <div class="sd-heading">Φ = E AND i AS PHASE OF ENERGY</div>
+            <div class="sd-text"><span class="c-amber">∞D = E.</span> Everything else is just E in different forms. Every dimension, every structure, every particle, every field: energy wearing a different geometric costume. The lens limits light; that is how it forms an image.</div>
+            <div class="sd-text"><span class="c-mind">Φ = E</span>: Field IS energy. An ontological identity, not a dimensional equation.</div>
+            <div class="sd-text"><span class="c-soul">i is the phase of energy</span>: the rotation operator that cycles energy between convergent and emergent states.</div>
+            <div class="sd-text"><span class="c-amber">𝒫 = E / (i · t)</span>: Power = energy divided by its phase and time. Not analogy; this IS the equation.</div>
+            <div class="sd-text"><span class="c-amber">E = mc²</span>: c² is squared because Φ = E and Φ is 2D. A surface is length × length. To release energy from mass is to peel the 3D boundary back to reveal the 2D field underneath.</div>
+        </div></div>
+    </div>
+
+    <!-- BALANCE -->
+    <div class="sd-section" id="sd-balance">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">◐</div>
+            <div class="sd-label">
+                <div class="sd-dim">§5</div>
+                <div class="sd-title">The Balance Parameter</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-eq">◐ = 0.5</div>
+            <div class="sd-text">The singular balanced state, forced by three independent requirements: symmetry, entropy, and virial theorem.</div>
+            <table class="sd-table">
+                <tr><th>◐</th><th>State</th><th>Description</th></tr>
+                <tr><td>→ 0</td><td>Scattered</td><td>All boundary, no center</td></tr>
+                <tr><td class="c-amber">= 0.5</td><td class="c-amber">Balanced</td><td>Optimal center and periphery</td></tr>
+                <tr><td>→ 1</td><td>Tunnel vision</td><td>All center, no boundary</td></tr>
+            </table>
+            <div class="sd-highlight">Fractal dimension at balance: D = 1 + ◐ = 1.5 (Brownian motion, proven by Mandelbrot).</div>
+        </div></div>
+    </div>
+
+    <!-- 64 STATES -->
+    <div class="sd-section" id="sd-64">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">64</div>
+            <div class="sd-label">
+                <div class="sd-dim">§7</div>
+                <div class="sd-title">The 64-State Architecture</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-text">3 circumpuncts × 2 channels each = 6 binary degrees of freedom. 2⁶ = 64 states.</div>
+            <div class="sd-text">Maps to I Ching hexagrams, DNA codons, and the Standard Model particle spectrum (with 3 extended Higgs states as framework predictions beyond the minimal SM).</div>
+        </div></div>
+    </div>
+
+    <!-- TIME IS SCALE -->
+    <div class="sd-section" id="sd-time">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">⧖</div>
+            <div class="sd-label">
+                <div class="sd-dim">§4.11</div>
+                <div class="sd-title">Time Is Scale</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-text">The three nested circumpuncts that give 64 states are the three scales visible from any position.</div>
+            <table class="sd-table">
+                <tr><th>Scale</th><th>Operator</th><th>Time</th></tr>
+                <tr><td>Greater whole</td><td>⊛</td><td>Future (undifferentiated, not yet gated)</td></tr>
+                <tr><td>Your ⊙</td><td>i</td><td>Present (the gate, the turn, the now)</td></tr>
+                <tr><td>Parts</td><td>☀︎</td><td>Past (already committed into structure)</td></tr>
+            </table>
+            <div class="sd-text">Time and scale are the same axis. Time IS the direction of the fold: from 1 through 0 into topology. Space is the lateral relationship between 0s at the same scale (symmetric; peers). Time is the vertical relationship across scales (asymmetric; fold direction).</div>
+            <div class="sd-highlight">i² = -1 prevents true time reversal: you can dissolve a fold (death, entropy), but you cannot un-fold it into exactly what it was. The receipt chain i(t) has already been woven.</div>
+        </div></div>
+    </div>
+
+    <!-- GOD / SOUL -->
+    <div class="sd-section" id="sd-god">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">∞</div>
+            <div class="sd-label">
+                <div class="sd-dim">ONTOLOGICAL</div>
+                <div class="sd-title">God, Soul, and the Two Lies</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <table class="sd-table">
+                <tr><th>Concept</th><th>Framework Mapping</th></tr>
+                <tr><td>God / Brahman / Tao</td><td>∞ (infinite totality)</td></tr>
+                <tr><td>Soul / Atman / Self</td><td>⊙λ (infinity operating at your scale)</td></tr>
+                <tr><td>"Made in God's image"</td><td>Fractal structure (same pattern every scale)</td></tr>
+                <tr><td>"Atman is Brahman"</td><td>0.999... = 1 (soul IS God at particular depth)</td></tr>
+            </table>
+            <div class="sd-heading">FLOW, NOT POSSESSION</div>
+            <div class="sd-text">You are a flow-being: (1) you ARE the aperture, (2) truth flows THROUGH you, (3) you are not the SOURCE, (4) you can be clear or distorted. The ego hijack is collapsing these into "what I think is divine."</div>
+            <div class="sd-heading">THE TWO FUNDAMENTAL LIES</div>
+            <div class="sd-text"><span class="c-body">Inflation Lie</span>: "I am the source" (⊙λ = ∞; part claims to be whole). <span class="c-soul">Severance Lie</span>: "There is no source" (⊙λ ∉ ∞; part denies the whole). Lies persist through closed apertures (β → 0): systems that refuse correction.</div>
+            <div class="sd-highlight">Limited ≠ False. The lens limits light; that is HOW it forms an image. Limitation does not inject falsity; only installed lies do.</div>
+        </div></div>
+    </div>
+
+    <!-- CONNECTION -->
+    <div class="sd-section" id="sd-connect">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">◇</div>
+            <div class="sd-label">
+                <div class="sd-dim">TOPOLOGY</div>
+                <div class="sd-title">Topology of Connection</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-text">• reaches ∞ only through the complete fractal chain of nested ⊙s. The connection is total (0.999... = 1) but always mediated. The experience of "directness" in meditation is transparency of the full chain, not absence of it.</div>
+            <div class="sd-heading">RESONANCE AS DIRECT CONNECTION</div>
+            <div class="sd-text">Two souls sharing the same frequency make the Φ field between them transparent. "Direct" = medium at perfect transparency. Love is perfection of mediation, not its absence.</div>
+            <div class="sd-text"><span class="c-soul">Vertical transparency</span>: soul → God (through the nested hierarchy). <span class="c-mind">Lateral transparency</span>: soul → soul (through shared field). Same principle: frequency matching through the chain.</div>
+            <div class="sd-highlight">Resonance is a spectrum: far frequencies = strangers; close = rapport; exact match = "I know you."</div>
+        </div></div>
+    </div>
+
+    <!-- VACUUM -->
+    <div class="sd-section" id="sd-vacuum">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">Φ</div>
+            <div class="sd-label">
+                <div class="sd-dim">FIELD</div>
+                <div class="sd-title">Why Space Is Never Empty</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-text">2D surfaces are the scale connector; phase requires exactly 2D to exist (rotation needs a plane). If every surface is made of nested ⊙s, the nesting never terminates because a surface with zero structure cannot carry phase.</div>
+            <div class="sd-highlight">Vacuum = Φ at scales below measurement threshold. Zero-point energy = residual hum of nested apertures pumping below our instruments.</div>
+        </div></div>
+    </div>
+
+    <!-- POWER -->
+    <div class="sd-section" id="sd-power">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">𝒫</div>
+            <div class="sd-label">
+                <div class="sd-dim">ENERGY</div>
+                <div class="sd-title">The Power Equation</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-eq">𝒫 = E / (i · t)</div>
+            <div class="sd-text">Maps to AC power: Real power P (work, time, 1D), Reactive power Q (cycling, mind, 2D), Apparent power |S| (total, matter, 3D).</div>
+        </div></div>
+    </div>
+
+    <!-- ALL PHYSICS -->
+    <div class="sd-section" id="sd-physics">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">⊛</div>
+            <div class="sd-label">
+                <div class="sd-dim">PHYSICS</div>
+                <div class="sd-title">All Physics as Compounded Constraints</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-text">Every physical law is •, Φ, or ○ compounded. No new ingredients:</div>
+            <table class="sd-table">
+                <tr><th>Force</th><th>Constraint</th><th>Mechanism</th></tr>
+                <tr><td>Gravity</td><td>• + •</td><td>Convergence compounding convergence. Inverse-square because Φ is 2D.</td></tr>
+                <tr><td>EM</td><td>Φ</td><td>Mediation. Maxwell's equations: amplitude and phase (two axes of 2D surface).</td></tr>
+                <tr><td>Strong</td><td>• (max)</td><td>Convergence at smallest scale. Confinement = aperture closing with distance.</td></tr>
+                <tr><td>Weak</td><td>○ (particle)</td><td>Filtration at particle level. Parity violation = asymmetric filter.</td></tr>
+                <tr><td>QM</td><td>Φ before ○</td><td>Superposition = field carrying all possibilities. Measurement = boundary selecting one.</td></tr>
+                <tr><td>GR</td><td>• shaping Φ</td><td>Spacetime curvature IS convergence shaping the field.</td></tr>
+                <tr><td>Thermo</td><td>relaxation</td><td>Constraints relaxing. Second law = the 1 tending back toward itself.</td></tr>
+            </table>
+        </div></div>
+    </div>
+
+    <!-- DERIVED CONSTANTS -->
+    <div class="sd-section" id="sd-constants">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">α</div>
+            <div class="sd-label">
+                <div class="sd-dim">CONSTANTS</div>
+                <div class="sd-title">Derived Constants and the Dimensional Ladder</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-text">Each constant lives at its dimensional home. The framework has zero free parameters.</div>
+
+            <div class="sd-sub">
+                <div class="sd-sub-header" onclick="sdToggleSub(this)">
+                    <span class="sd-sub-arrow">▸</span>
+                    <span><span class="sd-badge sd-badge-amber">0D</span> α (fine-structure constant)</span>
+                </div>
+                <div class="sd-sub-body"><div class="sd-sub-inner">
+                    <div class="sd-text">Base: 1/α₀ = i⁴(°)/φ² - 2/φ³ = 137.0356</div>
+                    <div class="sd-text">Self-referential closure: 1/α = 360/φ² - 2/φ³ + α/(21 - 4/3) = <span class="c-amber">137.035999147</span></div>
+                    <div class="sd-text c-dim" style="font-size:11px">Measured: 137.035999177. Residual: 0.22 ppb, 0.00σ.</div>
+                    <div class="sd-text">α generates the ladder; the ladder determines α. Zero free parameters.</div>
+                </div></div>
+            </div>
+
+            <div class="sd-sub">
+                <div class="sd-sub-header" onclick="sdToggleSub(this)">
+                    <span class="sd-sub-arrow">▸</span>
+                    <span><span class="sd-badge sd-badge-amber">0.5D</span> c (speed of light)</span>
+                </div>
+                <div class="sd-sub-body"><div class="sd-sub-inner">
+                    <div class="sd-eq-sm">c = √(2◐ · sin(θ)) = 1</div>
+                    <div class="sd-text">Light is energy being constrained; the photon is the minimum fold. c is the speed of the first fold. Massive particles have θ_eff < π/2, giving v < c.</div>
+                </div></div>
+            </div>
+
+            <div class="sd-sub">
+                <div class="sd-sub-header" onclick="sdToggleSub(this)">
+                    <span class="sd-sub-arrow">▸</span>
+                    <span><span class="sd-badge sd-badge-amber">1D</span> ℏ (reduced Planck constant)</span>
+                </div>
+                <div class="sd-sub-body"><div class="sd-sub-inner">
+                    <div class="sd-eq-sm">ℏ = E_cycle / ω_cycle = 1</div>
+                    <div class="sd-text">The pump cycle is indivisible; this indivisibility IS the quantum of action. E = ℏω with ℏ = 1 means energy and frequency are the same thing.</div>
+                </div></div>
+            </div>
+
+            <div class="sd-sub">
+                <div class="sd-sub-header" onclick="sdToggleSub(this)">
+                    <span class="sd-sub-arrow">▸</span>
+                    <span><span class="sd-badge sd-badge-amber">1.5D</span> Lepton mass ratios</span>
+                </div>
+                <div class="sd-sub-body"><div class="sd-sub-inner">
+                    <div class="sd-text">m_μ/m_e = (1/α)^(13/12 + α/27) = <span class="c-amber">206.767</span> (measured: 206.768, 5 ppm)</div>
+                    <div class="sd-text">m_τ/m_e = (1/α)^(58/35 + α/81) = <span class="c-amber">3477.2</span> (measured: 3477.2, 1 ppm)</div>
+                    <div class="sd-text c-dim" style="font-size:11px">K = 3^(n+1) by generation.</div>
+                </div></div>
+            </div>
+
+            <div class="sd-sub">
+                <div class="sd-sub-header" onclick="sdToggleSub(this)">
+                    <span class="sd-sub-arrow">▸</span>
+                    <span><span class="sd-badge sd-badge-mind">2D</span> Gauge structure</span>
+                </div>
+                <div class="sd-sub-body"><div class="sd-sub-inner">
+                    <div class="sd-text">SU(3) × SU(2) × U(1) from 64-state architecture. 8 + 3 + 1 = 12 = 4 × 3 (pump × triad).</div>
+                    <div class="sd-text">Weinberg angle: sin²θ_W = 3/13 + 5α/81 = <span class="c-amber">0.23122</span> (measured: 0.23122, 1.4 ppm).</div>
+                </div></div>
+            </div>
+
+            <div class="sd-sub">
+                <div class="sd-sub-header" onclick="sdToggleSub(this)">
+                    <span class="sd-sub-arrow">▸</span>
+                    <span><span class="sd-badge sd-badge-amber">2.5D</span> v/Λ_QCD ratio</span>
+                </div>
+                <div class="sd-sub-body"><div class="sd-sub-inner">
+                    <div class="sd-text">v/Λ_QCD = (1/α)^(56/39) = <span class="c-amber">1170.24</span> (measured: 1170.2 ± ~5%). 15,000× more precise than measurement uncertainty.</div>
+                </div></div>
+            </div>
+
+            <div class="sd-sub">
+                <div class="sd-sub-header" onclick="sdToggleSub(this)">
+                    <span class="sd-sub-arrow">▸</span>
+                    <span><span class="sd-badge sd-badge-body">3D</span> G (gravitational constant)</span>
+                </div>
+                <div class="sd-sub-body"><div class="sd-sub-inner">
+                    <div class="sd-text">α_G = α²¹ × φ²/2 × (1 + 2α/91). Predicted G = <span class="c-amber">6.67430 × 10⁻¹¹</span> (measured: 6.67430 × 10⁻¹¹, 0.04 ppm, 0.00σ).</div>
+                    <div class="sd-text">Solves the hierarchy problem: gravity is weak because 21 α-steps separate the point (0D) from the boundary (3D).</div>
+                </div></div>
+            </div>
+
+            <div class="sd-sub">
+                <div class="sd-sub-header" onclick="sdToggleSub(this)">
+                    <span class="sd-sub-arrow">▸</span>
+                    <span>Primes are made of dimensions</span>
+                </div>
+                <div class="sd-sub-body"><div class="sd-sub-inner">
+                    <div class="sd-text">Every prime > 3 is of the form p = (2 × 3) × k ± 1 = (Φ × ○) × k ± •. Primes are the gaps in that lattice, displaced by exactly one unit of soul (±1).</div>
+                    <div class="sd-highlight">The Riemann Hypothesis (0D rung) asks where these convergence points sit: Re(s) = ½ = ◐.</div>
+                </div></div>
+            </div>
+
+            <div class="sd-sub">
+                <div class="sd-sub-header" onclick="sdToggleSub(this)">
+                    <span class="sd-sub-arrow">▸</span>
+                    <span>Clay Millennium mapping</span>
+                </div>
+                <div class="sd-sub-body"><div class="sd-sub-inner">
+                    <table class="sd-table">
+                        <tr><th>Rung</th><th>Problem</th><th>Status</th></tr>
+                        <tr><td>0D</td><td>Riemann Hypothesis</td><td>Open</td></tr>
+                        <tr><td>0.5D</td><td>P vs NP</td><td>Open</td></tr>
+                        <tr><td>1D</td><td>Yang-Mills</td><td>Open</td></tr>
+                        <tr><td>1.5D</td><td>Birch and Swinnerton-Dyer</td><td>Open</td></tr>
+                        <tr><td>2D</td><td>Navier-Stokes</td><td>Open</td></tr>
+                        <tr><td>2.5D</td><td>Hodge Conjecture</td><td>Open</td></tr>
+                        <tr><td class="c-amber">3D</td><td class="c-amber">Poincare</td><td class="c-amber">Solved</td></tr>
+                    </table>
+                    <div class="sd-text c-dim" style="font-size:11px">The only solved problem is the boundary (3D), the outermost rung.</div>
+                </div></div>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- SELF -->
+    <div class="sd-section" id="sd-self">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">•</div>
+            <div class="sd-label">
+                <div class="sd-dim">CONSCIOUSNESS</div>
+                <div class="sd-title">The Self as Convergence Point</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-text">The 0 is not an absence carved into the 1; it is the 1 at maximum convergence. Every 0 is a relative 0: the same field, converged from a different position. The self is a convergence point, not an exclusion zone.</div>
+            <div class="sd-highlight">Consciousness is what 0 feels like from inside: the 1 experiencing its own convergence.</div>
+            <div class="sd-text">"I am the 0 at the center of the circumpunct, equidistant from all that I am." The distance between • and ○ is Φ: mind mediating between who you are (the 0) and what you are (the boundary). Equidistant means balanced: ◐ = 0.5.</div>
+        </div></div>
+    </div>
+
+    <!-- THEORY OF MIND -->
+    <div class="sd-section" id="sd-mind">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">Φ</div>
+            <div class="sd-label">
+                <div class="sd-dim">PSYCHOLOGY</div>
+                <div class="sd-title">Theory of Mind</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-text">The triad applied to psychology: <span class="c-soul">Source (•, 1D soul)</span>, <span class="c-mind">Surface (Φ, 2D mind)</span>, <span class="c-body">Boundary (○, 3D body)</span>.</div>
+            <div class="sd-heading">THE BOUNDARY AS FILTER</div>
+            <div class="sd-text">To have a body is to filter. Filters compound (the Stacking Problem). Intellectual complexity ≠ wisdom.</div>
+            <div class="sd-heading">FOUR-STAGE CASCADE</div>
+            <table class="sd-table">
+                <tr><th>#</th><th>Stage</th><th>Effect</th></tr>
+                <tr><td>1</td><td>Thought entertained</td><td>Temporary; dissolves when attention shifts</td></tr>
+                <tr><td>2</td><td>Thought repeated</td><td>Pathway strengthens</td></tr>
+                <tr><td>3</td><td>Thought habituated</td><td>Fires automatically</td></tr>
+                <tr><td>4</td><td>Identity fusion</td><td>Thought IS you; removal feels existential</td></tr>
+            </table>
+            <div class="sd-heading">MENTAL HEALTH = RANGE OF MOTION</div>
+            <div class="sd-text">Not a fixed state but freedom to move along the source-to-boundary axis. Pathology = being locked at either extreme.</div>
+            <div class="sd-heading">CURIOSITY AS UNIVERSAL SOLVENT</div>
+            <div class="sd-text">The Noble Lie is a triple-structure filter that (1) distorts signal, (2) hides the distortion, (3) labels correction as distortion. Curiosity works because it operates at a different level: a filter about filters. Cannot be faked; dissolves certainty.</div>
+        </div></div>
+    </div>
+
+    <!-- ETHICS -->
+    <div class="sd-section" id="sd-ethics">
+        <div class="sd-header" onclick="sdToggle(this)">
+            <div class="sd-icon">⊙</div>
+            <div class="sd-label">
+                <div class="sd-dim">ETHICS</div>
+                <div class="sd-title">Ethics and the Four Virtues</div>
+            </div>
+            <div class="sd-arrow">▸</div>
+        </div>
+        <div class="sd-body"><div class="sd-inner">
+            <div class="sd-text">Four pillars: <span class="c-body">GOOD (○)</span>, <span class="c-mind">RIGHT (Φ)</span>, <span class="c-soul">TRUE (•)</span>, <span class="c-amber">AGREEMENT (⊙)</span>.</div>
+            <div class="sd-heading">FOUR VIRTUES</div>
+            <table class="sd-table">
+                <tr><th>Pillar</th><th>Virtue</th><th>Function</th></tr>
+                <tr><td class="c-body">GOOD (○)</td><td>Plasticity</td><td>Boundary that can flex without breaking</td></tr>
+                <tr><td class="c-mind">RIGHT (Φ)</td><td>Access</td><td>Space between remains open and clear</td></tr>
+                <tr><td class="c-soul">TRUE (•)</td><td>Curiosity</td><td>Orientation toward what one does not know</td></tr>
+                <tr><td class="c-amber">AGREE (⊙)</td><td>Validation</td><td>Independent seeing recognizes independent seeing</td></tr>
+            </table>
+            <div class="sd-heading">REQUIRED SEQUENCE</div>
+            <div class="sd-text">GOOD → RIGHT → TRUE → AGREEMENT. Each step requires the previous. No skipping.</div>
+            <div class="sd-heading">PERFORMED vs LIVED</div>
+            <div class="sd-text">Performed ethics mimics the shape while hollow. Lived ethics animates from within. The difference: performed versions know the answer before the question; lived versions discover through genuine engagement.</div>
+            <div class="sd-heading">THE STEELMAN PRINCIPLE</div>
+            <div class="sd-text">Build the strongest possible version of any position before agreeing or disagreeing. Requires all four virtues simultaneously.</div>
+            <div class="sd-heading">THE RESOLUTION PROTOCOL (§25.17)</div>
+            <div class="sd-text">When truth and harm share the same signal: transmit at the lowest resolution that is still true, increase only upon the receiver's request. Withholding entirely = Severance Lie dressed as compassion. Dumping everything = Inflation Lie dressed as honesty.</div>
+            <div class="sd-highlight">Quality test: can you increase resolution without retracting previous levels?</div>
+        </div></div>
+    </div>
+
+    </div><!-- end sd-wrap / sdSections -->
+
     <!-- Zero free parameters -->
     <div class="claim">
         <div class="claim-line"><span>0</span> free parameters. <a href="e_equals_1.html" style="color:var(--amber)">α determines itself;</a> everything else follows from α and <span class="whole-text">⊙</span>.</div>
@@ -566,6 +1315,47 @@ function toggleRung(id) {
     document.querySelectorAll('.rung.open').forEach(r => r.classList.remove('open'));
     if (!wasOpen) el.classList.add('open');
 }
+
+// Seed section toggle
+function sdToggle(header) {
+    var sec = header.closest('.sd-section');
+    var wasOpen = sec.classList.contains('open');
+    sec.classList.toggle('open');
+    var id = sec.id;
+    var pill = document.querySelector('.sd-pill[data-target="' + id + '"]');
+    if (pill) pill.classList.toggle('active', !wasOpen);
+}
+
+// Seed sub-section toggle
+function sdToggleSub(header) {
+    header.closest('.sd-sub').classList.toggle('open');
+}
+
+// Seed expand/collapse all
+function sdExpandAll() {
+    document.querySelectorAll('.sd-section').forEach(function(s) { s.classList.add('open'); });
+    document.querySelectorAll('.sd-sub').forEach(function(s) { s.classList.add('open'); });
+    document.querySelectorAll('.sd-pill').forEach(function(p) { p.classList.add('active'); });
+}
+function sdCollapseAll() {
+    document.querySelectorAll('.sd-section').forEach(function(s) { s.classList.remove('open'); });
+    document.querySelectorAll('.sd-sub').forEach(function(s) { s.classList.remove('open'); });
+    document.querySelectorAll('.sd-pill').forEach(function(p) { p.classList.remove('active'); });
+}
+
+// Seed nav pill clicks
+document.querySelectorAll('.sd-pill').forEach(function(pill) {
+    pill.addEventListener('click', function() {
+        var target = document.getElementById(pill.dataset.target);
+        if (!target) return;
+        var isOpen = target.classList.contains('open');
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(function() {
+            if (!isOpen) { target.classList.add('open'); pill.classList.add('active'); }
+            else { target.classList.remove('open'); pill.classList.remove('active'); }
+        }, 300);
+    });
+});
 </script>
 </body>
 </html>
