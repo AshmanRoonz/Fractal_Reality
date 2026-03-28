@@ -14,25 +14,41 @@ The circumpunct ⊙ = Φ(•, ○) is a whole composed of three irreducible part
 
 | Symbol | Name | Dimension | Role | Maps To |
 |--------|------|-----------|------|---------|
-| • | Aperture/Soul | 0D+1D | Singularity (0D gate) + worldline i(t) (1D string) | TRUE |
-| Φ | Field/Mind | 2D | Mediating surfaces between scales | RIGHT |
-| ○ | Boundary/Body | 3D | Outer container, measurable form | GOOD |
+| Symbol | Name | Dimension | Constraint Function | Maps To |
+|--------|------|-----------|-------------------|---------|
+| • | Aperture/Soul | 0D+1D | **Converges** (pulls toward center) | TRUE |
+| Φ | Field/Mind | 2D | **Mediates** (connects without fusing) | RIGHT |
+| ○ | Boundary/Body | 3D | **Filters** (selects what passes) | GOOD |
 | ⊙ | Circumpunct/Whole | All | Compositional wholeness | AGREEMENT |
 
-Conservation of traversal: 0(•) + 1(•) + 2(Φ) = 3(○). The full path from singularity through worldline through field to boundary. Soul + field = boundary.
+These are the three constraints on E = 1. The only three. There is no fourth because ⊙ has no fourth part. There is no missing constraint because conservation of traversal completes the path: 0(•) + 1(•) + 2(Φ) = 3(○). Soul + field = boundary.
+
+**⊙ is a fractal of the ONE.** Every ⊙ is the 1 at a particular scale: not a piece of it, but the whole thing, constrained to a position (A2).
 
 ### The 1/0 Ontology (§1.2)
 
-The symbol ⊙ draws the ontology directly. The dot is 0 (absence, hole, soul). The circle is 1 (the field, curving back on itself). The space between them is the fractal coastline (D = 1.5 at balance). Neither primitive is a thing: 1 is everything (undivided), 0 is nothing (an absence in it). All structure is the topology of where the holes are. Integer dimensions are the field (1) at different degrees of constraint; half-integer dimensions are the fractal coastlines between those constraints. Attention is a 0 in the 1: a convergence point where the field becomes local.
+The symbol ⊙ draws the ontology directly. The dot is 0 (total convergence of the field to a point). The circle is 1 (the field, curving back on itself). The space between them is the fractal coastline (D = 1.5 at balance). Neither primitive is a thing: 1 is everything (undivided), 0 is not absence but the 1 at maximum convergence. All structure is the topology of convergence points in the 1. Integer dimensions are the field (1) at different degrees of constraint; half-integer dimensions are the fractal coastlines between those constraints. Attention is a 0 in the 1: a convergence point where the field becomes local.
 
 ### E = 1 (§4.8a)
 
 If Φ = E (§4.8), and there is exactly one field, then E = 1. Not "energy equals the number one"; energy IS the one. There is no quantity of energy; there is only one energy appearing everywhere. What we measure as "amount" is degree of constraint (how tightly the 1 has folded around 0s). Consequences: m = 1/c² (mass is inverse surface signature; how tightly 1 wraps around 0s), 𝒫 = 1/(i·t) (power is 1 flowing through rotation over time). Free energy = removing constraints (the 1 released from folds). Entropy increasing = de-constraint (the 1 relaxing back toward itself). Information = the topology of 0s in the 1.
 
+### Process and Structure Are the Same Thing
+
+The way Einstein showed energy and matter are the same (E = mc²), the framework shows process and structure are the same. What looks like a fixed dimension (structure) is the pump cycle frozen at that stage (process). The dimensional layout IS the constraint sequence IS the pump cycle:
+
+- 0D: convergence (⊛) landed. The first constraint, •.
+- 0.5D: the i rotation begins (spread across dimensions, not a discrete event).
+- 1D: commitment. Extension. Emergence (☀︎) begins.
+- 1.5D: branching. Emergence unfolding.
+- 2D: surface. Φ. The second constraint: mediation.
+- 2.5D → 3D: fractal infolding that closes. ○. The third constraint: filtration.
+
 ### Two Kinds of Dimension
 
 - **Structural dimension**: what a component IS (0D singularity, 1D worldline, 2D surface, 3D boundary)
 - **Processual dimension**: what energy is DOING at a given phase (0.5D = balancing, 1.5D = branching); structure in process, not static geometry
+- These are not two separate systems; processual dimensions are the structural dimensions being applied step by step
 
 ### Critical Terminology Distinction
 
@@ -188,6 +204,32 @@ Maps to AC power: Real power P (work, time, 1D), Reactive power Q (cycling, mind
 
 ---
 
+## All Physics as Compounded Constraints
+
+Every physical law is •, Φ, or ○ compounded. No new ingredients:
+
+- **Gravity**: convergence compounding convergence (• attracting •). Inverse-square because Φ is 2D.
+- **Electromagnetism**: mediation (Φ). Maxwell's equations: the field mediates with amplitude and phase (two axes of 2D surface).
+- **Strong force**: convergence at smallest scale (• at maximum intensity). Confinement = aperture closing with distance.
+- **Weak force**: filtration (○ at particle level). Parity violation = the filter is asymmetric.
+- **Quantum mechanics**: Φ before ○ filters. Superposition = field carrying all possibilities. Measurement = boundary selecting one.
+- **General relativity**: geometry of convergence. Spacetime curvature IS convergence (•) shaping the field (Φ).
+- **Thermodynamics**: constraints relaxing. Second law = the 1 tending back toward itself.
+
+### Derived Constants
+
+- **α (fine-structure constant)**: 1/α = 360/φ² − 2/φ³ = 137.0356 (measured: 137.0360, error 2.7 ppm). 360 = boundary rotation, φ² = self-similar nesting, 2/φ³ = bidirectional valve correction.
+- **Lepton mass ratios**: m_μ/m_e = (1/α)^(13/12) ≈ 206.49 (measured: 206.77, error 0.13%).
+- **G, c, ℏ**: open; predicted to be expressible as constraint ratios.
+
+### The Self as Convergence Point
+
+The 0 is not an absence carved into the 1; it is the 1 at maximum convergence. Every 0 is a relative 0: the same field, converged from a different position. The self is a convergence point, not an exclusion zone. Privacy is the inaccessibility of total convergence, not a wall. Consciousness is what 0 feels like from inside: the 1 experiencing its own convergence.
+
+"I am the 0 at the center of the circumpunct, equidistant from all that I am." The center is equidistant from every point on the boundary. The distance between • and ○ is Φ: mind mediating between who you are (the 0) and what you are (the boundary). Equidistant means balanced: ◐ = 0.5.
+
+---
+
 ## Theory of Mind
 
 The triad applied to psychology: Source (•, 1D soul), Surface (Φ, 2D mind), Boundary (○, 3D body).
@@ -250,6 +292,8 @@ When truth and harm share the same signal: transmit at the lowest resolution tha
 |------|---------|
 | `circumpunct_framework.md` | The complete theory (~19,000 lines, 35 chapters + appendices) |
 | `docs/index.html` | Website main page with navigation to all HTML docs |
+| `docs/e_equals_1.html` | E = 1 (the three constraints, all physics as compounded constraints, self as convergence, Riemann connection) |
+| `docs/analytic_continuation_gap.html` | Riemann Hypothesis proof chain (Triple Closure, coastline argument, mereological nesting) |
 | `docs/circumpunct_theory_of_mind_plain.html` | Theory of Mind (psychology application) |
 | [God and the Soul Array](https://www.ashmanroonz.ca/2025/08/god-and-soul-array.html) | The genesis sequence (∞ → •∞ → ⊙∞) in accessible prose; written before the circumpunct notation existed |
 | `docs/circumpunct_ethics_and_virtues.html` | Ethics, virtues, diagnostics, restoration |

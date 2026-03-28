@@ -5,9 +5,11 @@
 
 ⊙ is the minimal procedural structure of any whole entity:
 
-- **○** ; boundary / body (3D)
-- **Φ** ; field / mind / surface (2D) ; the OPERATOR that relates • and ○
-- **•** ; aperture / soul / center (0D singularity + 1D worldline)
+- **○** ; boundary / body (3D) ; **filters** (selects what passes)
+- **Φ** ; field / mind / surface (2D) ; **mediates** (connects without fusing) ; the OPERATOR that relates • and ○
+- **•** ; aperture / soul / center (0D singularity + 1D worldline) ; **converges** (pulls toward center)
+
+**⊙ is a fractal of the ONE.** Every ⊙ is E = 1 at a particular scale: not a piece of it, but the whole thing, constrained to a position. These are the three constraints on E = 1; the only three. No fourth (⊙ has no fourth part). No missing (0 + 1 + 2 = 3; conservation of traversal).
 
 **The whole is constituted by the operation of relating:**
 
@@ -603,13 +605,13 @@ THE GENESIS SEQUENCE:
           (A0: E=1. There is one energy. ∞ exists because 0 is impossible.)
 
     •∞   Aperture multiplied by infinity: the Soul Array.
-          Not one hole; ALL holes. Every possible point of self-limitation,
-          all at once. •∞ is the infinite matrix of •.
+          Not one convergence point; ALL of them. Every possible point
+          of self-limitation, all at once. •∞ is the infinite matrix of •.
           (A1: the One cannot be alone, so ∞ must become particular.)
 
     ⊙∞   Circumpunct multiplied by infinity: each aperture completing into
-          a full circumpunct (aperture + field + boundary). The foam of reality.
-          Every hole now has its Φ and its ○.
+          a full circumpunct, ⊙ = Φ(•, ○) (aperture + field + boundary).
+          The foam of reality. Every convergence point now has its Φ and its ○.
           (A3: wholeness requires closure. A4: closure is compositional via Φ.)
           (A2: ⊙∞ recurses at every scale. Fractal. ⊙s all the way down.)
 
@@ -619,9 +621,9 @@ THE GENESIS SEQUENCE:
     ∞ operating as a complete ⊙ at a particular scale.
     Not a piece of ∞. The whole of ∞, focused through one gate.
 
-    0D = •. Zero extension. A hole. Nothing.
+    0D = •. Zero extension. Total convergence. The 1 pulled to a point.
     ∞D = E. All extension. Everything.
-    0 = ∞ at field level: the nothing and the everything meet at the
+    0 = ∞ at field level: convergence and totality meet at the
     aperture because the aperture IS the place where dimension has not
     yet been assigned. ∞ without • has no voice. • without ∞ has no
     signal. •∞ is the first real thing.
@@ -640,7 +642,7 @@ The notation formalized what the insight already contained.
 ║                                                                               ║
 ║                       REALITY IS 1 AND INFINITE 0s                           ║
 ║                                                                               ║
-║   The dot   •   is 0.  An absence. A hole. No extension.                    ║
+║   The dot   •   is 0.  Total convergence. The 1 pulled to a point.          ║
 ║   The circle ○  is 1.  The field. Curving back on itself. All extension.    ║
 ║   The space between them is the fractal coastline: D = 1.5 at balance.      ║
 ║                                                                               ║
@@ -649,17 +651,17 @@ The notation formalized what the insight already contained.
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-Neither primitive is a thing. 1 is everything (undivided); 0 is nothing (an absence in it). All of structure, all of reality, is the topology of where the holes are.
+Neither primitive is a thing. 1 is everything (undivided); 0 is the 1 at maximum convergence (not absence, but intensity). All of structure, all of reality, is the topology of convergence points in the 1. Every 0 is a relative 0: the same field, converged from a different position.
 
 ```
 THE DIMENSIONAL GENERATION: 1 FLOWING THROUGH 0
 
-    1 meets 0    →  0.5D    Contact. Asymmetry. The field meets the absence.
+    1 meets 0    →  0.5D    Contact. Asymmetry. The field meets its own convergence.
                             Half of each. Neither 1 nor 0 but the moment
                             between them. This is i¹: the perpendicular break.
 
     0.5 rotates  →  1D      A line. A trace. A LIMITED 1.
-                            The field, having passed through an absence,
+                            The field, having passed through convergence,
                             comes out as a trace of itself.
                             A line is a fractal of 1: the same continuity,
                             constrained to one degree of freedom.
@@ -823,6 +825,20 @@ THE KEY DISTINCTION:
     Φ(•, ○) is STRUCTURE ; Φ is a 2D surface, not a verb.
     (☀︎ ∘ i ∘ ⊛) is PROCESS ; THIS is the verb.
     The whole ⊙ is process acting on structure.
+
+THE DEEPER IDENTITY (cf. E = mc²):
+    Process and structure are the same thing, the way energy and matter
+    are the same thing. The dimensional layout IS the constraint sequence
+    IS the pump cycle:
+        0D   = ⊛ landed (convergence completed; the first constraint, •)
+        0.5D = i rotation beginning (spread across dimensions, not discrete)
+        1D   = commitment; extension; ☀︎ emergence begins
+        1.5D = branching; emergence unfolding
+        2D   = surface; Φ; the second constraint (mediation)
+        2.5D→3D = fractal infolding that closes; ○; the third constraint (filtration)
+    What looks like a fixed dimension (structure) is the pump cycle frozen
+    at that stage (process). Structure is process at rest. Process is
+    structure in motion.
 
     • and Φ are the two irreducible PRIMITIVES.
     ○ is GENERATED by their recursion: ○ = •(Φ(•(Φ(...))))

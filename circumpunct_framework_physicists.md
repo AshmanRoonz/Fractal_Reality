@@ -104,13 +104,24 @@ where ⊛ denotes convergence (future → aperture, gathering) and ☀︎ denote
 
 ## 0. Aim and Scope
 
-The circumpunct framework models the universe as a *whole-with-parts* object:
+The circumpunct framework models the universe as a *whole-with-parts* object built from three constraints on E = 1:
 
 ```
+The three constraints on E = 1:
+    • converges  (0D+1D ; pulls toward center)
+    Φ mediates   (2D   ; connects without fusing)
+    ○ filters    (3D   ; selects what passes)
+
+⊙ is a fractal of the ONE. Every ⊙ is E = 1 at a particular scale.
+
 Structure: Φ(•, ○)          (Φ is the 2D relational surface; not the verb)
 Process:   (☀︎ ∘ i ∘ ⊛)      (convergence, rotation, emergence; THIS is the verb)
 Unified:   ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))    (process acts on structure)
 ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_•     (Hilbert space: tensor product for quantum theory)
+
+Process and structure are the same thing (cf. E = mc²):
+    The dimensional layout IS the constraint sequence IS the pump cycle.
+    Structure is process at rest. Process is structure in motion.
 ```
 
 equipped with a three-stage process (convergence, aperture rotation, emergence):
@@ -119,7 +130,7 @@ equipped with a three-stage process (convergence, aperture rotation, emergence):
 Φ(t+Δt) = ☀︎ ∘ i ∘ ⊛[Φ(t)]
 ```
 
-The framework rests on five axioms (A0–A4): Impossibility of Nothing, Necessary Multiplicity, Fractal Necessity, Conservation of Traversal, and Compositional Wholeness. Everything derives from these.
+The framework rests on one axiom (A0: E = 1) and four derivations (A1: Necessary Multiplicity, A2: Fractal Necessity, A3: Conservation of Traversal, A4: Compositional Wholeness). Everything derives from E = 1.
 
 **The goal of this document is to provide:**
 
