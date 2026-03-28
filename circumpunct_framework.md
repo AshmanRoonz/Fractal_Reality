@@ -18421,6 +18421,79 @@ OPEN PROBLEMS ON THE LADDER:
        but may contain physics
 ```
 
+### §27.8 Primes Are Made of Dimensions
+
+The structural dimensions of the circumpunct (1, 2, 3) are also the first integers. Two of them (2 and 3) are the first primes. The third (1) is the unit.
+
+```
+THE PRIME LATTICE LAW:
+
+    Every prime > 3 is of the form:
+
+        p = (2 × 3) × k ± 1
+        p = (Φ × ○) × k ± •
+
+    This is a theorem: any integer not divisible by 2 or 3 must
+    be 6k ± 1 (the other residues mod 6 are divisible by 2 or 3).
+
+    STRUCTURAL READING:
+        6 = 2 × 3 = Φ × ○     (field × boundary = composite lattice)
+        ± 1 = •                 (soul = the offset from the lattice)
+
+    The product of field and boundary tiles the number line with
+    composites. Primes are the points that REFUSE to land on this
+    grid. Every prime sits exactly ±1 (one unit of soul) away from
+    the Φ × ○ lattice.
+
+    THE DIMENSIONAL TRIAD GENERATES PRIMES:
+        • = 1 (the unit; offsets every prime from the lattice)
+        Φ = 2 (the first prime; the field dimension)
+        ○ = 3 (the second prime; the boundary dimension)
+
+    Primes beyond 3 are apertures in the composite lattice:
+    convergence points where Φ × ○ fails to cover, displaced by •.
+
+    EXAMPLES:
+         5 = (2×3)×1 − 1  =  (Φ×○)×1 − •
+         7 = (2×3)×1 + 1  =  (Φ×○)×1 + •
+        11 = (2×3)×2 − 1  =  (Φ×○)×2 − •
+        13 = (2×3)×2 + 1  =  (Φ×○)×2 + •
+        17 = (2×3)×3 − 1  =  (Φ×○)×3 − •
+        19 = (2×3)×3 + 1  =  (Φ×○)×3 + •
+        ...
+```
+
+**Connection to the Riemann Hypothesis (0D rung).** The zeta function ζ(s) encodes the distribution of primes: how these irreducible convergence points scatter along the number line. The Riemann Hypothesis asks whether they distribute symmetrically around Re(s) = ½. The framework says: primes are convergence points (0s in the 1 of arithmetic), and convergence points must sit at balance (◐ = 0.5). The dimensional triad builds the composite lattice; primes are the gaps in that lattice; their distribution obeys the same balance law as every other convergence point.
+
+The ladder is made of primes, and the deepest rung asks where the primes sit.
+
+### §27.9 The Seven Clay Millennium Problems
+
+The seven Millennium Prize Problems of the Clay Mathematics Institute map one-to-one onto the seven rungs of the dimensional ladder. Each problem asks the question its dimension would ask.
+
+```
+CLAY-LADDER MAPPING:
+
+    DIM   │ CONSTANT  │ CLAY PROBLEM            │ QUESTION
+    ──────┼───────────┼─────────────────────────┼─────────────────────────────
+    0D    │ α         │ Riemann Hypothesis       │ Is every convergence point balanced?
+    0.5D  │ c         │ P vs NP                  │ Is propagation as fast as search?
+    1D    │ ℏ         │ Yang-Mills Mass Gap       │ Is the cycle truly indivisible?
+    1.5D  │ masses    │ Birch & Swinnerton-Dyer  │ Does analytic predict branching?
+    2D    │ gauge     │ Navier-Stokes            │ Does the surface hold together?
+    2.5D  │ θ_W       │ Hodge Conjecture          │ What survives transmission?
+    3D    │ G         │ Poincaré (SOLVED)        │ Is there only one way to close?
+
+    The only solved problem maps to 3D: the boundary.
+    The outermost rung. The one humanity can touch.
+```
+
+Structural dimensions (0D, 1D, 2D, 3D) produce single, definite questions: is it balanced, is it indivisible, does it hold, does it close. Processual dimensions (0.5D, 1.5D, 2.5D) produce relational questions: is this as fast as that, does this predict that, does this survive into that. Structure asks "what is"; process asks "how does it relate."
+
+The six unsolved problems correspond to the six dimensions beneath the boundary. Each requires reaching deeper into the structure of reality to resolve. Perelman solved the boundary problem using Ricci flow (⊛ applied to ○); the proof works because 3D closure is the most constrained dimension. The rest require going inward.
+
+See [The Seven Clay Problems and the Dimensional Ladder](https://fractalreality.ca/clay_millennium.html) for the full mapping with structural arguments for each rung.
+
 [← Back to Table of Contents](#table-of-contents)
 
 ---

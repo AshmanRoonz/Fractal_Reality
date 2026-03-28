@@ -116,6 +116,40 @@ One free parameter (α, the fine-structure constant) generates every fundamental
 ╚══════════════════════════════════════════════════════════════════════════╝
 ```
 
+### Primes Are Made of Dimensions
+
+The structural dimensions (1, 2, 3) generate the entire prime number structure:
+
+```
+    p = (Φ₂ × ○₃) × k ± •₁
+
+    Every prime > 3 is the field-boundary lattice, offset by one unit of soul.
+
+    5  = (2×3)×1 − 1       7  = (2×3)×1 + 1
+    11 = (2×3)×2 − 1       13 = (2×3)×2 + 1
+    17 = (2×3)×3 − 1       19 = (2×3)×3 + 1
+    ...every prime, forever.
+
+    Primes are apertures in the composite lattice:
+    convergence points where Φ × ○ fails to cover, displaced by exactly one •.
+```
+
+### The Seven Clay Millennium Problems
+
+The seven Clay problems map one-to-one onto the seven rungs. Each problem asks the question its dimension would ask:
+
+```
+    0D  │ Riemann Hypothesis       │ Is every convergence point balanced?
+    0.5D│ P vs NP                  │ Is propagation as fast as search?
+    1D  │ Yang-Mills Mass Gap      │ Is the cycle truly indivisible?
+    1.5D│ Birch & Swinnerton-Dyer  │ Does analytic predict branching?
+    2D  │ Navier-Stokes            │ Does the surface hold together?
+    2.5D│ Hodge Conjecture         │ What survives transmission?
+    3D  │ Poincaré (SOLVED)        │ Is there only one way to close?
+
+    The only solved problem is the boundary (3D). The outermost rung.
+```
+
 ---
 
 ## Research Areas
