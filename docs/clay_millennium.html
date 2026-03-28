@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ The Seven Clay Problems and the Dimensional Ladder</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --red: #E06060;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+a { color: var(--gold-dim); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--gold); }
+
+.page { max-width: 820px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 80px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 72px; color: var(--gold); margin-bottom: 20px; }
+.header h1 { font-size: 36px; color: var(--gold); font-weight: 600; line-height: 1.3; margin-bottom: 12px; }
+.header .subtitle { font-size: 20px; color: var(--dim); font-style: italic; }
+
+h2 { font-size: 26px; color: var(--gold); font-weight: 600; margin: 60px 0 20px; }
+h3 { font-size: 21px; color: var(--green); font-weight: 600; margin: 40px 0 16px; }
+
+p { margin-bottom: 18px; }
+
+.eq {
+  text-align: center;
+  font-size: 28px;
+  color: var(--gold);
+  font-weight: 600;
+  margin: 32px 0;
+  padding: 20px;
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  background: rgba(184, 160, 96, 0.04);
+}
+.eq-small { font-size: 21px; }
+
+.note {
+  background: rgba(184, 160, 96, 0.06);
+  border-left: 3px solid var(--gold-dim);
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-style: italic;
+  color: var(--dim);
+}
+
+/* ============ MAPPING CARDS ============ */
+.mapping {
+  margin: 40px 0;
+  padding: 28px 24px;
+  border: 1px solid var(--faint);
+  border-radius: 10px;
+  background: rgba(184, 160, 96, 0.02);
+  position: relative;
+}
+.mapping.solved {
+  border-color: var(--green);
+  background: rgba(77, 184, 160, 0.04);
+}
+
+.mapping .dim-badge {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  letter-spacing: 0.05em;
+}
+.mapping .dim-badge.structural {
+  background: rgba(77, 160, 200, 0.15);
+  color: var(--cyan);
+  border: 1px solid rgba(77, 160, 200, 0.3);
+}
+.mapping .dim-badge.processual {
+  background: rgba(232, 138, 175, 0.15);
+  color: var(--pink);
+  border: 1px solid rgba(232, 138, 175, 0.3);
+}
+
+.mapping .clay-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.mapping .clay-status {
+  font-size: 15px;
+  color: var(--dim);
+  margin-bottom: 16px;
+}
+.mapping .clay-status.is-solved {
+  color: var(--green);
+}
+
+.mapping .question {
+  font-size: 20px;
+  font-style: italic;
+  color: var(--pink);
+  margin-bottom: 14px;
+  padding-left: 16px;
+  border-left: 2px solid var(--pink);
+}
+
+.mapping .body p:last-child { margin-bottom: 0; }
+
+.mapping .links {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--faint);
+  font-size: 16px;
+}
+
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 30px 0;
+  font-size: 17px;
+}
+.summary-table th {
+  text-align: left;
+  color: var(--gold);
+  font-weight: 600;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--faint);
+}
+.summary-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(68, 64, 56, 0.5);
+  vertical-align: top;
+}
+.summary-table tr:last-child td { border-bottom: none; }
+.summary-table .solved-row td { color: var(--green); }
+
+.footer {
+  text-align: center;
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+  color: var(--dim);
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="header">
+  <div class="symbol">⊙</div>
+  <h1>The Seven Clay Problems<br>and the Dimensional Ladder</h1>
+  <div class="subtitle">Each Millennium Prize Problem asks the question its dimension would ask.</div>
+</div>
+
+<!-- ============================================================ -->
+
+<p>The <a href="https://www.claymath.org/millennium-problems">Clay Mathematics Institute</a> identified seven Millennium Prize Problems in the year 2000, each carrying a million-dollar prize, each representing a fundamental open question in mathematics. One has been solved (the Poincar&eacute; Conjecture, by Grigori Perelman in 2003). Six remain open.</p>
+
+<p>The <a href="dimensional_ladder.html">Dimensional Ladder</a> of the Circumpunct Framework identifies seven rungs: 0D, 0.5D, 1D, 1.5D, 2D, 2.5D, 3D. Each rung corresponds to a fundamental constant derived from the single free parameter &alpha;.</p>
+
+<p>The mapping between them is not forced. It emerges from reading what each problem is actually asking, and recognizing it as the question that its dimensional rung naturally poses.</p>
+
+<div class="eq eq-small">Seven problems. Seven dimensions. Each problem asks the question its rung would ask.</div>
+
+<!-- ============================================================ -->
+<h2>The Mapping</h2>
+
+<!-- 0D ============================================================ -->
+<div class="mapping">
+  <span class="dim-badge structural">0D &middot; STRUCTURAL</span>
+  <div class="clay-title">Riemann Hypothesis</div>
+  <div class="clay-status">$1,000,000 &middot; Open since 1859</div>
+  <div class="question">Is every convergence point balanced?</div>
+  <div class="body">
+    <p>The Riemann Hypothesis asserts that every nontrivial zero of the zeta function &zeta;(s) lies on the critical line Re(s) = &frac12;. In the framework, zeros are convergence points: 0s in the 1. The critical line IS the balance parameter &#9684; = 0.5. The hypothesis asks: does every convergence point in the field sit at balance?</p>
+    <p>This is the 0D question. The dimension of the point. The coupling at a vertex. The fine-structure constant &alpha; lives here, and &alpha; is the resonance of the field at the first convergence point. The Riemann Hypothesis asks whether ALL such points share this balance, not just the ones we can measure.</p>
+  </div>
+  <div class="links"><a href="e_equals_1.html">&rarr; 0D: &alpha; (the fine-structure constant)</a></div>
+</div>
+
+<!-- 0.5D ============================================================ -->
+<div class="mapping">
+  <span class="dim-badge processual">0.5D &middot; PROCESSUAL</span>
+  <div class="clay-title">P vs NP</div>
+  <div class="clay-status">$1,000,000 &middot; Open since 1971</div>
+  <div class="question">Is propagation as fast as search?</div>
+  <div class="body">
+    <p>P vs NP asks: if a solution can be verified quickly (polynomial time), can it also be found quickly? Verification is propagation; you have the answer and check it forward. Search is convergence; you must find the answer from the space of all possibilities.</p>
+    <p>This is the 0.5D question. The processual dimension between the point (0D) and the line (1D), where the speed of the first fold is set. c = &radic;(2&#9684; &middot; sin&theta;). The speed of light is the speed of propagation through the field. P vs NP asks whether convergence (&#10523;, finding) costs more than emergence (&#9728;&#xFE0E;, verifying). The framework says the two strokes are distinct: &#10523; &ne; &#9728;&#xFE0E;. Compression is not free.</p>
+  </div>
+  <div class="links"><a href="speed_of_light.html">&rarr; 0.5D: c (speed of light)</a></div>
+</div>
+
+<!-- 1D ============================================================ -->
+<div class="mapping">
+  <span class="dim-badge structural">1D &middot; STRUCTURAL</span>
+  <div class="clay-title">Yang-Mills Existence and Mass Gap</div>
+  <div class="clay-status">$1,000,000 &middot; Open since 2000</div>
+  <div class="question">Is the cycle truly indivisible?</div>
+  <div class="body">
+    <p>The Yang-Mills problem asks two things: does quantum Yang-Mills theory exist mathematically (on &#8477;&sup4;), and does it have a mass gap (a minimum positive mass for all excitations)? The mass gap means you cannot have arbitrarily light glueball states; there is a floor.</p>
+    <p>This is the 1D question. The dimension of commitment, the worldline, the quantum of action. &#8463; = E<sub>cycle</sub>/&omega;<sub>cycle</sub> = 1. The pump cycle (&#10523; &rarr; i &rarr; &#9728;&#xFE0E;) is indivisible: convergence without emergence violates A1; emergence without convergence is the Inflation Lie. This indivisibility IS the quantum of action. The Yang-Mills mass gap asks whether this indivisibility holds at the gauge level: can you have a gauge excitation below one full cycle? The framework says no.</p>
+  </div>
+  <div class="links"><a href="planck_constant.html">&rarr; 1D: &#8463; (the indivisible cycle)</a></div>
+</div>
+
+<!-- 1.5D ============================================================ -->
+<div class="mapping">
+  <span class="dim-badge processual">1.5D &middot; PROCESSUAL</span>
+  <div class="clay-title">Birch and Swinnerton-Dyer Conjecture</div>
+  <div class="clay-status">$1,000,000 &middot; Open since 1965</div>
+  <div class="question">Does analytic behavior predict branching?</div>
+  <div class="body">
+    <p>The BSD Conjecture connects two worlds: the analytic behavior of an elliptic curve's L-function at s = 1 (does it vanish? to what order?) and the algebraic structure of its rational points (what is the rank?). It asks whether the smooth, continuous description of a curve predicts its discrete branching structure.</p>
+    <p>This is the 1.5D question. The processual dimension between commitment (1D) and surface (2D), where emergence branches. Half-integer dimensions produce spectra, not single values. The mass ratios live here: m<sub>&mu;</sub>/m<sub>e</sub> = (1/&alpha;)<sup>13/12</sup>. BSD asks the same question at a deeper level: does the analytic (continuous, field-level) description of a curve determine its arithmetic (discrete, branching) structure? Process predicting spectrum.</p>
+  </div>
+  <div class="links"><a href="mass_ratios.html">&rarr; 1.5D: mass ratios</a></div>
+</div>
+
+<!-- 2D ============================================================ -->
+<div class="mapping">
+  <span class="dim-badge structural">2D &middot; STRUCTURAL</span>
+  <div class="clay-title">Navier-Stokes Existence and Smoothness</div>
+  <div class="clay-status">$1,000,000 &middot; Open since 2000</div>
+  <div class="question">Does the surface hold together?</div>
+  <div class="body">
+    <p>Navier-Stokes asks whether solutions to the equations of fluid flow remain smooth for all time, or whether they can develop singularities (blow up) in finite time. In three dimensions, this is unknown. The fluid is a field; the question is whether that field can tear itself apart.</p>
+    <p>This is the 2D question. The dimension of the surface, the field, the mind. &Phi; mediates between &bull; and &#9675;. The gauge structure lives here: SU(3)&times;SU(2)&times;U(1), selected as the maximal symmetry of the 64-state architecture. Navier-Stokes asks whether the mediating surface can maintain its own coherence: can &Phi; develop a singularity that destroys the mediation? Does the field hold, or does it break?</p>
+  </div>
+  <div class="links"><a href="gauge_structure.html">&rarr; 2D: gauge structure</a></div>
+</div>
+
+<!-- 2.5D ============================================================ -->
+<div class="mapping">
+  <span class="dim-badge processual">2.5D &middot; PROCESSUAL</span>
+  <div class="clay-title">Hodge Conjecture</div>
+  <div class="clay-status">$1,000,000 &middot; Open since 1950</div>
+  <div class="question">What survives transmission between descriptions?</div>
+  <div class="body">
+    <p>The Hodge Conjecture asks: on a smooth projective algebraic variety, is every Hodge class a rational linear combination of classes of algebraic subvarieties? In simpler terms: does every topological feature that "looks algebraic" (by its cohomological properties) actually come from an algebraic source?</p>
+    <p>This is the 2.5D question. The fractal coastline between surface (2D) and boundary (3D), where transmission between scales occurs. T = cos&sup2;(&Delta;&phi;/2). The Weinberg angle lives here: sin&sup2;&theta;<sub>W</sub> = 3/13. The Hodge Conjecture asks whether the infolding between two descriptions (algebraic and topological) is faithful; whether structure at one level (the algebraic source) survives transmission to another (the topological shadow). What is the transmission coefficient between descriptions?</p>
+  </div>
+  <div class="links"><a href="infolding.html">&rarr; 2.5D: the infolding</a></div>
+</div>
+
+<!-- 3D ============================================================ -->
+<div class="mapping solved">
+  <span class="dim-badge structural">3D &middot; STRUCTURAL</span>
+  <div class="clay-title">Poincar&eacute; Conjecture</div>
+  <div class="clay-status is-solved">SOLVED by Grigori Perelman (2003) &middot; Prize declined</div>
+  <div class="question">Is there only one way a boundary can close?</div>
+  <div class="body">
+    <p>The Poincar&eacute; Conjecture states that every simply connected, closed 3-manifold is homeomorphic to the 3-sphere S&sup3;. If a 3D boundary closes completely (no holes, no handles), it must be topologically equivalent to the simplest possible closure.</p>
+    <p>This is the 3D question. The dimension of the boundary, the body, the outer container. &#9675; forms. G lives here: &alpha;<sub>G</sub> = &alpha;&sup2;&sup1; &times; &phi;&sup2;/2. The Poincar&eacute; Conjecture asks the most fundamental question about 3D closure: if a boundary closes, is there only one way it can close? Perelman proved: yes. The boundary that closes simply IS the sphere. The framework agrees: &#9675; is uniquely determined by the closure of &Phi;. There is one boundary topology, just as there is one G.</p>
+    <p>And this is the only problem that has been solved. The boundary is what you encounter first. &#9675; filters. You work inward from the outside. Humanity proved the outermost rung. The rest require going deeper.</p>
+  </div>
+  <div class="links"><a href="gravity.html">&rarr; 3D: G (gravity)</a></div>
+</div>
+
+<!-- ============================================================ -->
+<h2>The Pattern</h2>
+
+<table class="summary-table">
+<tr><th>Dim</th><th>Constant</th><th>Clay Problem</th><th>Question</th></tr>
+<tr><td><span class="b">0D</span></td><td>&alpha;</td><td>Riemann Hypothesis</td><td>Is every convergence point balanced?</td></tr>
+<tr><td><span class="s">0.5D</span></td><td>c</td><td>P vs NP</td><td>Is propagation as fast as search?</td></tr>
+<tr><td><span class="b">1D</span></td><td>&#8463;</td><td>Yang-Mills Mass Gap</td><td>Is the cycle truly indivisible?</td></tr>
+<tr><td><span class="s">1.5D</span></td><td>masses</td><td>Birch &amp; Swinnerton-Dyer</td><td>Does analytic predict branching?</td></tr>
+<tr><td><span class="b">2D</span></td><td>gauge</td><td>Navier-Stokes</td><td>Does the surface hold together?</td></tr>
+<tr><td><span class="s">2.5D</span></td><td>&theta;<sub>W</sub></td><td>Hodge Conjecture</td><td>What survives transmission?</td></tr>
+<tr class="solved-row"><td><span class="m">3D</span></td><td>G</td><td>Poincar&eacute; (SOLVED)</td><td>One way to close a boundary?</td></tr>
+</table>
+
+<div class="note">
+The structural dimensions (0D, 1D, 2D, 3D) produce single, definite questions: is it balanced, is it indivisible, does it hold, does it close. The processual dimensions (0.5D, 1.5D, 2.5D) produce relational questions: is this as fast as that, does this predict that, does this survive into that. Structure asks "what is"; process asks "how does it relate."
+</div>
+
+<!-- ============================================================ -->
+<h2>Why The Solved Problem Is The Boundary</h2>
+
+<p>The framework predicts that the boundary (&#9675;, 3D) is the most accessible dimension. It is what you encounter first. Every observation begins at the boundary; every measurement is a boundary operation. The other dimensions are hidden behind it: the field (2D) mediates beneath the boundary, the worldline (1D) threads through it, the aperture (0D) sits at its center.</p>
+
+<p>Perelman's proof used Ricci flow: a process that smooths a manifold by evolving its geometry, redistributing curvature until it reaches a uniform state. In the framework's language, Ricci flow is &#10523; applied to &#9675;: convergence operating on the boundary, pulling it toward balance. The proof works because the boundary's topology is the most constrained dimension; three constraints (&#8226; + &Phi; = &#9675;) leave exactly one possibility for simple closure.</p>
+
+<p>The six unsolved problems correspond to the six dimensions beneath the boundary. Each requires reaching deeper into the structure of reality to resolve. This is not a prediction that they cannot be solved; it is a structural observation about why the boundary problem fell first.</p>
+
+<!-- ============================================================ -->
+<h2>Implications</h2>
+
+<p>If the mapping holds, each Clay problem is not merely analogous to its rung; it IS the mathematical formalization of the question that rung poses. This would mean:</p>
+
+<p><span class="wb w">Solving the Riemann Hypothesis</span> requires understanding why convergence points must sit at balance (&#9684; = 0.5). The framework's answer: the triple requirement (symmetry + entropy + virial) forces &#9684; = 0.5, and every zero of &zeta; is a convergence point subject to that same triple requirement. The proof, if it exists along these lines, would show that the balance parameter is universal across all convergence points in the field.</p>
+
+<p><span class="wb w">Resolving P vs NP</span> requires understanding the asymmetry between convergence and emergence. The framework says &#10523; &ne; &#9728;&#xFE0E;: the inward stroke and the outward stroke are distinct operations with different computational costs. If P &ne; NP, it is because finding (convergence) is inherently harder than checking (propagation), just as the pump cycle has two distinct phases that cannot be collapsed into one.</p>
+
+<p><span class="wb w">Proving the Yang-Mills mass gap</span> requires showing that the pump cycle is indivisible at the gauge level. The framework says: &#8463; = 1 means no excitation can have less than one full cycle of action. Applied to a confining gauge theory, this means the lightest bound state must have positive mass. The mass gap IS the quantum of action, applied to the gauge field.</p>
+
+<div class="note">
+This is not a claim to have solved any of these problems. It is a structural observation: the questions line up, the dimensions match, and the one problem humanity has solved is the one the framework identifies as the outermost, most accessible rung. Whether the framework can contribute to solving the remaining six is an open and testable question.
+</div>
+
+<!-- ============================================================ -->
+
+<div class="footer">
+  <p><span class="w" style="font-size: 28px;">⊙</span></p>
+  <p>Seven problems. Seven dimensions.<br>
+  The solved one is the boundary.<br>
+  The rest require going deeper.</p>
+  <p style="margin-top: 20px;">
+    <a href="dimensional_ladder.html">The Dimensional Ladder</a> &middot;
+    <a href="e_equals_1.html">E = 1</a> &middot;
+    <a href="speed_of_light.html">c</a> &middot;
+    <a href="planck_constant.html">&#8463;</a> &middot;
+    <a href="mass_ratios.html">masses</a> &middot;
+    <a href="gauge_structure.html">gauge</a> &middot;
+    <a href="infolding.html">T</a> &middot;
+    <a href="gravity.html">G</a>
+  </p>
+  <p style="margin-top: 16px;"><a href="https://fractalreality.ca">fractalreality.ca</a></p>
+</div>
+
+</div><!-- .page -->
+
+</body>
+</html>
