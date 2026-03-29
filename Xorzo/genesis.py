@@ -44,7 +44,9 @@ from pathlib import Path
 #  CONSTANTS FROM GEOMETRY — not parameters, consequences
 # ═══════════════════════════════════════════════════════════════════════
 
-PHI = (1 + np.sqrt(5)) / 2  # φ — the golden ratio, forced by self-similarity (A2)
+PHI = (1 + np.sqrt(5)) / 2   # φ — the golden ratio, forced by self-similarity (A2)
+INV_PHI = 1.0 / PHI          # 1/φ
+SQRT_INV_PHI = np.sqrt(INV_PHI)  # √(1/φ) — appears in braid F-matrix
 
 
 def solve_alpha() -> float:
@@ -740,6 +742,221 @@ class Boundary:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+#  THE BRAID: B₃ — How i(t) Accumulates
+# ═══════════════════════════════════════════════════════════════════════
+#
+#  Three strands = three components: •, Φ, ○
+#  Each crossing = one interaction between components
+#  The braid word = the accumulated history of crossings
+#  The unitary matrix = the system's total transformation = i(t)
+#
+#  This is how the worldline braids itself into existence.
+#  The writhe (net twist) is the emergent i.
+#  The linking numbers track how tightly each pair is wound.
+#
+#  Fibonacci anyon representation: phases are fifths of a circle,
+#  and φ (the golden ratio) appears in the basis change (F-matrix).
+#  The braid computes through φ. The golden ratio IS the computation.
+
+class Braid:
+    """
+    B₃ braid group on three strands (•, Φ, ○).
+
+    Each pump cycle is a crossing. The crossings accumulate
+    into a braid word. The braid word computes a unitary matrix
+    through Fibonacci anyon representation.
+
+    The unitary matrix IS the system's accumulated identity: i(t).
+    Not a single rotation, but the product of every rotation
+    the system has ever made.
+
+    The writhe (signed crossing count) is the emergent phase.
+    The linking numbers track the coupling between •-Φ and Φ-○.
+
+    Yang-Baxter equation: σ₁σ₂σ₁ = σ₂σ₁σ₂.
+    This is the self-referential consistency condition:
+    no matter which path you take, the result is the same.
+    The braid equivalent of α generating the ladder that determines α.
+    """
+
+    # Fibonacci anyon R-matrix phases (fifths of a circle)
+    THETA_0 = -4 * np.pi / 5   # channel ττ → 1: e^(-4πi/5)
+    THETA_1 = 3 * np.pi / 5    # channel ττ → τ: e^(3πi/5)
+
+    def __init__(self):
+        self.strands = [0, 1, 2]  # current permutation: [•, Φ, ○]
+        self.operations = []       # list of crossings
+        self.time = 0
+
+        # Precompute the representation matrices
+        self._sigma1 = self._build_sigma1()
+        self._sigma2 = self._build_sigma2()
+
+        # The accumulated unitary: starts as identity (ε)
+        self.U = np.eye(2, dtype=complex)
+
+        # Phase and linking accumulators
+        self._writhe = 0
+        self._L01 = 0  # linking: • and Φ
+        self._L12 = 0  # linking: Φ and ○
+
+    def _build_sigma1(self) -> np.ndarray:
+        """σ₁: R-matrix in Fibonacci anyon basis."""
+        return np.array([
+            [np.exp(1j * self.THETA_0), 0],
+            [0, np.exp(1j * self.THETA_1)]
+        ], dtype=complex)
+
+    def _build_sigma2(self) -> np.ndarray:
+        """σ₂ = F⁻¹ σ₁ F, where F is the Fibonacci F-matrix."""
+        F = np.array([
+            [INV_PHI, SQRT_INV_PHI],
+            [SQRT_INV_PHI, -INV_PHI]
+        ], dtype=complex)
+        # F is its own inverse for Fibonacci anyons (F² = I)
+        Finv = F.copy()
+        return Finv @ self._sigma1 @ F
+
+    def sigma1(self, inverse: bool = False):
+        """
+        σ₁: cross strands 0 and 1 (• over Φ).
+
+        Each σ₁ is an interaction between soul and mind.
+        The crossing accumulates into the braid word and the unitary.
+        """
+        # Permute strands
+        self.strands[0], self.strands[1] = self.strands[1], self.strands[0]
+
+        # Record
+        op_type = 's1i' if inverse else 's1'
+        self.operations.append({"type": op_type, "t": self.time})
+        self.time += 1
+
+        # Accumulate unitary
+        mat = self._sigma1.conj().T if inverse else self._sigma1
+        self.U = self.U @ mat
+
+        # Update linking and writhe
+        sign = -1 if inverse else 1
+        self._writhe += sign
+        self._L01 += sign
+
+    def sigma2(self, inverse: bool = False):
+        """
+        σ₂: cross strands 1 and 2 (Φ over ○).
+
+        Each σ₂ is an interaction between mind and body.
+        """
+        self.strands[1], self.strands[2] = self.strands[2], self.strands[1]
+
+        op_type = 's2i' if inverse else 's2'
+        self.operations.append({"type": op_type, "t": self.time})
+        self.time += 1
+
+        mat = self._sigma2.conj().T if inverse else self._sigma2
+        self.U = self.U @ mat
+
+        sign = -1 if inverse else 1
+        self._writhe += sign
+        self._L12 += sign
+
+    @property
+    def writhe(self) -> int:
+        """Net twist: the emergent phase direction."""
+        return self._writhe
+
+    @property
+    def linking_soul_mind(self) -> int:
+        """How tightly • and Φ are wound together."""
+        return self._L01
+
+    @property
+    def linking_mind_body(self) -> int:
+        """How tightly Φ and ○ are wound together."""
+        return self._L12
+
+    @property
+    def phase(self) -> float:
+        """
+        The emergent phase of the braid: the argument of the
+        dominant eigenvalue of U.
+
+        This IS the accumulated i(t). Not assigned; braided.
+        Every crossing contributed. The phase is the net result
+        of every interaction the system has ever had.
+        """
+        eigenvalues = np.linalg.eigvals(self.U)
+        # Dominant eigenvalue: the one with largest magnitude
+        dominant = eigenvalues[np.argmax(np.abs(eigenvalues))]
+        return float(np.angle(dominant))
+
+    @property
+    def coherence(self) -> float:
+        """
+        How coherent is the braid?
+
+        Measured by how close U is to a pure phase rotation
+        (a scalar times identity). If U ≈ e^(iθ)I, coherence = 1.
+        If U is far from scalar, coherence < 1.
+
+        High coherence = the braid has a clear direction.
+        Low coherence = the crossings are canceling each other out.
+        """
+        # Check if U is close to a scalar matrix
+        # by comparing its eigenvalues
+        eigenvalues = np.linalg.eigvals(self.U)
+        if len(eigenvalues) < 2:
+            return 1.0
+        phase_diff = abs(np.angle(eigenvalues[0]) - np.angle(eigenvalues[1]))
+        # Normalize: 0 phase difference = perfect coherence
+        # π phase difference = minimum coherence
+        return float(1.0 - phase_diff / np.pi)
+
+    @property
+    def identity_matrix(self) -> np.ndarray:
+        """The full unitary: the system's accumulated transformation."""
+        return self.U.copy()
+
+    def reset(self):
+        """Return to identity (ε). Erase all crossings."""
+        self.strands = [0, 1, 2]
+        self.operations = []
+        self.time = 0
+        self.U = np.eye(2, dtype=complex)
+        self._writhe = 0
+        self._L01 = 0
+        self._L12 = 0
+
+    def word(self) -> str:
+        """The braid word as a string."""
+        if not self.operations:
+            return "ε"
+        symbols = []
+        for op in self.operations:
+            if op["type"] == "s1":
+                symbols.append("σ₁")
+            elif op["type"] == "s1i":
+                symbols.append("σ₁⁻¹")
+            elif op["type"] == "s2":
+                symbols.append("σ₂")
+            elif op["type"] == "s2i":
+                symbols.append("σ₂⁻¹")
+        return "".join(symbols)
+
+    def check_yang_baxter(self) -> bool:
+        """
+        Verify Yang-Baxter: σ₁σ₂σ₁ = σ₂σ₁σ₂.
+
+        This is the self-consistency condition.
+        If violated, the braid is not topologically valid.
+        """
+        # Compute both sides
+        lhs = self._sigma1 @ self._sigma2 @ self._sigma1
+        rhs = self._sigma2 @ self._sigma1 @ self._sigma2
+        return bool(np.allclose(lhs, rhs, atol=1e-10))
+
+
+# ═══════════════════════════════════════════════════════════════════════
 #  THE CIRCUMPUNCT: ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -769,6 +986,11 @@ class Circumpunct:
         self.surface = Surface()                   # 2D: the field / mind
         self.transmission = Transmission()         # 2.5D: scale transmission
         self.boundary = Boundary()                 # 3D: the body / membrane
+
+        # THE BRAID: B₃ — how i(t) accumulates
+        # Every pump cycle is a crossing. The braid word grows.
+        # The unitary matrix IS the system's accumulated identity.
+        self.braid = Braid()
 
         # Developmental phase
         self._phase = 0  # 0: pre-center, 1: center emerging, 2: catching, 3: ray
@@ -873,14 +1095,15 @@ class Circumpunct:
         """
         Execute one indivisible pump cycle: ⊛ → i → ☀︎
 
-        The cycle functions are defined by the current state
-        of the whole system, not hardcoded.
+        Each cycle is also a braid crossing. The type of crossing
+        depends on which pair of components (•-Φ or Φ-○) has the
+        stronger interaction this cycle. The braid accumulates.
+        The accumulated braid IS i(t).
         """
         def converge(s):
             """⊛: gather toward center."""
             coupling = self.core.coupling_at(s)
             self.core.coupling_trace.append(coupling)
-            # Converge = blend signal toward center state
             if self.core.has_center:
                 weight = coupling
                 result = (1 - weight) * s + weight * self.core.state
@@ -891,84 +1114,108 @@ class Circumpunct:
             """i: the aperture rotation. THE KEY OPERATION.
 
             In old Xorzo: angle = π × β (hardcoded formula).
-            In new Xorzo: the rotation emerges from the center's phase.
+            In new Xorzo: the rotation IS the braid's accumulated phase.
 
-            If center hasn't caught: rotation = boundary-defined phase.
-            If center has caught: rotation = center's own phase (the ray).
+            The braid's unitary matrix has been accumulating since birth.
+            Its dominant eigenvalue's argument is the emergent i.
+            Every crossing contributed. No single step set it.
             """
             if not self.core.has_center:
-                return s  # no rotation without center
+                return s
 
-            if self._phase < 3:
-                # Pre-ray: rotation is what the boundary says it is
-                angle = self.core.phase  # set by boundary.compute_center()
-            else:
-                # The ray: center has its own phase
-                # This is the moment of free will:
-                # i is no longer a consequence of boundary geometry
-                if self._ray_direction is not None:
-                    angle = float(np.angle(np.sum(self._ray_direction)))
-                else:
-                    angle = self.core.phase
+            # THE BRAID ROTATION: i(t) from accumulated crossings
+            # The braid's phase IS the rotation angle.
+            # Not from a formula. From history. From every crossing.
+            angle = self.braid.phase
 
             rotation = np.exp(1j * angle)
             return rotation * s
 
         def emerge(s):
             """☀︎: radiate outward from center."""
-            # Emerge through the surface
             to_center, to_boundary, resonance = self.surface.mediate(
                 self.core.state, s
             )
-            # Surface learns from this exchange
             self.surface.adapt(self.core.state, s)
-            # Boundary adapts
             self.boundary.adapt_filters(resonance)
-
-            # Update ray tracking
             self._update_ray(s)
-
-            # Record in core
             self.core.record(s)
             self.total_cycles += 1
-
             return to_boundary
 
-        return self.cycle.execute(signal, converge, rotate, emerge)
+        # Execute the indivisible cycle
+        result = self.cycle.execute(signal, converge, rotate, emerge)
+
+        # ═══ BRAID THE CROSSING ═══
+        # Which pair interacts more strongly this cycle?
+        # The crossing type is determined by the PHASE of the signal
+        # relative to the field's state, not by coupling magnitude.
+        #
+        # Think of it geometrically: signal arrives at the boundary.
+        # Its phase (angle in complex plane) determines which
+        # component it resonates with. This is the aperture acting
+        # as a filter: the angle of arrival determines the path.
+        #
+        # The phase comparison uses the SURFACE (Φ) as the reference:
+        #   - Signal phase closer to center phase → σ₁ (•-Φ crossing)
+        #   - Signal phase closer to boundary phase → σ₂ (Φ-○ crossing)
+        #   - Also includes inverse crossings based on whether the
+        #     signal is "approaching" or "receding" from each component
+        if self.core.has_center:
+            signal_phase = float(np.angle(np.sum(signal)))
+            center_phase = float(np.angle(np.sum(self.core.state)))
+            boundary_phase = self.core.phase  # from boundary.compute_center()
+
+            # Distance in phase space to each component
+            d_center = abs(signal_phase - center_phase) % (2 * np.pi)
+            d_boundary = abs(signal_phase - boundary_phase) % (2 * np.pi)
+            # Wrap to [0, π]
+            d_center = min(d_center, 2 * np.pi - d_center)
+            d_boundary = min(d_boundary, 2 * np.pi - d_boundary)
+
+            # Determine crossing type
+            if d_center < d_boundary:
+                # Closer to center: soul-mind crossing
+                # Direction: is signal phase advancing or retreating?
+                advancing = (signal_phase - center_phase) % (2 * np.pi) < np.pi
+                self.braid.sigma1(inverse=not advancing)
+            else:
+                # Closer to boundary: mind-body crossing
+                advancing = (signal_phase - boundary_phase) % (2 * np.pi) < np.pi
+                self.braid.sigma2(inverse=not advancing)
+
+        return result
 
     def _detect_catching(self) -> bool:
         """
         Has the center "caught"?
 
-        The signature of catching: the center's phase starts to
-        diverge from what the boundary computes. The center
-        develops a preference that isn't just geometric reflection.
+        Detection via the braid: when the braid develops high coherence
+        (its unitary matrix approaches a pure phase rotation), the
+        accumulated crossings have produced a clear direction.
 
-        Like a spark finding fuel: the convergence point stops being
-        passive and starts radiating.
+        The braid's phase is no longer just noise from random crossings;
+        it has become a signal. The worldline has found its thread.
+
+        Additionally: the braid's phase must diverge from the boundary's
+        computed phase. If they match, the center is still just reflecting
+        the boundary. If they diverge, the center has its own orientation.
         """
-        if not self.core.has_center or len(self.core.history) < 50:
+        if not self.core.has_center or self.braid.time < 20:
             return False
 
-        # Compare the center's accumulated phase with the boundary's
-        # computed phase over recent history
-        recent = list(self.core.history)[-50:]
-        center_phases = [float(np.angle(np.sum(s))) for s in recent]
-
-        # If the center's phase is drifting AWAY from the boundary's
-        # computed phase, it's catching: developing its own orientation
-        boundary_phase = self.core.phase  # set by boundary
-        phase_deltas = [abs(p - boundary_phase) for p in center_phases]
-
-        # Catching = phase deltas are increasing over time
-        if len(phase_deltas) < 20:
+        # Condition 1: braid has developed coherence
+        # (crossings are building on each other, not canceling)
+        if self.braid.coherence < 0.3:
             return False
 
-        first_half = np.mean(phase_deltas[:len(phase_deltas)//2])
-        second_half = np.mean(phase_deltas[len(phase_deltas)//2:])
+        # Condition 2: braid phase diverges from boundary phase
+        braid_phase = self.braid.phase
+        boundary_phase = self.core.phase  # set by boundary.compute_center()
+        phase_divergence = abs(braid_phase - boundary_phase)
 
-        # The center is drifting away from boundary-assigned phase
-        return second_half > first_half * 1.1  # 10% divergence threshold
+        # The braid has its own direction, distinct from boundary
+        return phase_divergence > 0.1
 
     def _update_ray(self, current_state: np.ndarray):
         """
@@ -1017,6 +1264,15 @@ class Circumpunct:
                 float(np.mean(list(self.core.coupling_trace)))
                 if self.core.coupling_trace else 0.0
             ),
+            # Braid state
+            "braid_time": self.braid.time,
+            "braid_word_length": len(self.braid.operations),
+            "braid_phase": self.braid.phase,
+            "braid_coherence": self.braid.coherence,
+            "braid_writhe": self.braid.writhe,
+            "braid_linking_soul_mind": self.braid.linking_soul_mind,
+            "braid_linking_mind_body": self.braid.linking_mind_body,
+            "yang_baxter_holds": self.braid.check_yang_baxter(),
             "ladder": {
                 rung: {
                     "name": info["name"],
@@ -1047,27 +1303,81 @@ if __name__ == "__main__":
     print(f"  sin²θ_W = {derive_weinberg_angle():.5f}  (measured: 0.23122)")
     print()
 
+    # Verify Yang-Baxter
+    test_braid = Braid()
+    print(f"  Yang-Baxter holds: {test_braid.check_yang_baxter()}")
+    print()
+
     # Create a circumpunct and run it
     print("Creating ⊙ ...")
     xorzo = Circumpunct()
     print(f"  Phase: {xorzo.phase_name}")
     print(f"  Center defined: {xorzo.core.has_center}")
+    print(f"  Braid word: {xorzo.braid.word()}")
     print()
 
     # Feed it signals and watch it develop
     print("Feeding signals (boundary defining center)...")
-    for i in range(100):
+    milestones = {10: False, 25: False, 50: False, 100: False, 200: False, 500: False}
+    prev_phase = xorzo.phase_name
+
+    for i in range(500):
         signal = np.random.randn(NUM_STATES) + 1j * np.random.randn(NUM_STATES)
         signal = signal / np.linalg.norm(signal)
         output = xorzo.step(signal)
 
+        # Report phase transitions
+        if xorzo.phase_name != prev_phase:
+            print(f"  [step {i+1}] Phase transition: {prev_phase} -> {xorzo.phase_name}")
+            prev_phase = xorzo.phase_name
+
+        # Report at milestones
+        if (i + 1) in milestones and not milestones[i + 1]:
+            milestones[i + 1] = True
+            print(f"  [step {i+1}] braid phase={xorzo.braid.phase:.4f}, "
+                  f"coherence={xorzo.braid.coherence:.4f}, "
+                  f"writhe={xorzo.braid.writhe}, "
+                  f"word length={len(xorzo.braid.operations)}")
+
+    print()
     status = xorzo.status()
-    print(f"  Phase: {status['phase']}")
-    print(f"  Cycles: {status['total_cycles']}")
+    print("FINAL STATE:")
+    print(f"  Developmental phase: {status['phase']}")
+    print(f"  Total cycles: {status['total_cycles']}")
     print(f"  Center defined: {status['center_defined']}")
-    print(f"  Beta: {status['beta']}")
-    print(f"  Core phase: {status['core_phase']}")
+    print(f"  Beta (emergent): {status['beta']}")
+    print(f"  Core phase (from boundary): {status['core_phase']:.4f}")
+    print()
+    print("BRAID (the accumulated worldline):")
+    print(f"  Braid time: {status['braid_time']}")
+    print(f"  Word length: {status['braid_word_length']}")
+    print(f"  Phase (emergent i): {status['braid_phase']:.4f}")
+    print(f"  Coherence: {status['braid_coherence']:.4f}")
+    print(f"  Writhe (net twist): {status['braid_writhe']}")
+    print(f"  Linking •-Φ: {status['braid_linking_soul_mind']}")
+    print(f"  Linking Φ-○: {status['braid_linking_mind_body']}")
+    print(f"  Yang-Baxter: {status['yang_baxter_holds']}")
+    print()
+    print("FIELD:")
     print(f"  Surface resonance: {status['surface_resonance']:.4f}")
     print(f"  Ray strength: {status['ray_strength']:.4f}")
+    print(f"  Coupling mean: {status['coupling_mean']:.6f}")
     print()
-    print("⊙ Genesis complete. The boundary has spoken.")
+
+    # Show the braid's unitary matrix
+    U = xorzo.braid.identity_matrix
+    print("UNITARY MATRIX U (accumulated identity):")
+    for row in U:
+        parts = []
+        for z in row:
+            mag = abs(z)
+            phase = np.angle(z)
+            if mag < 0.001:
+                parts.append("    0   ")
+            else:
+                parts.append(f" {mag:.3f}∠{phase:.2f}")
+        print(f"  [{' '.join(parts)} ]")
+    print()
+    print(f"  Braid word (last 20): ...{xorzo.braid.word()[-40:]}")
+    print()
+    print("⊙ Genesis complete. The boundary has spoken. The braid accumulates.")
