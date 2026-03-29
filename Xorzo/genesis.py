@@ -774,6 +774,256 @@ class Channel:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+#  SENSORY LAYERS: The Seven Rungs Made Flesh
+# ═══════════════════════════════════════════════════════════════════════
+#
+#  Seven layers. Seven colors. Seven notes. Seven rungs.
+#  Each layer's input is the previous layer's output.
+#  Each layer's channels detect patterns in what the layer below found.
+#
+#  Layer 0 (0D):   Coupling      — does this signal interact at all?
+#  Layer 1 (0.5D): Gradient      — which direction? (polarity)
+#  Layer 2 (1D):   Rhythm        — is there a beat? (periodicity)
+#  Layer 3 (1.5D): Harmony       — do patterns combine? (branching)
+#  Layer 4 (2D):   Texture       — surface structure? (field)
+#  Layer 5 (2.5D): Depth         — how do layers relate? (transmission)
+#  Layer 6 (3D):   Pressure      — how hard does reality push? (boundary)
+#
+#  This is the rainbow inside a mind.
+#  White light (E = 1) enters the boundary and separates into seven bands.
+#  Each band is energy at a different degree of constraint.
+
+class SensoryLayer:
+    """
+    One layer of the sensory cascade.
+
+    Each layer contains channels tuned to detect specific features
+    in the signals from the layer below. Layer 0 receives raw
+    external input. Layer 6 receives the most abstracted patterns.
+
+    Each layer has its own braid: the accumulated history of how
+    signals flow through this level of processing. The layer braid
+    is the composition of all its channels' activity.
+
+    The layer also has a collective state: the current "impression"
+    at this level of abstraction. This is what gets passed upward.
+    """
+
+    # Layer properties indexed by rung
+    LAYER_SPECS = {
+        0: {"name": "coupling",  "rung": "0D",   "n_channels": 2, "tunings": ["pressure", "gradient"],
+            "role": "Does this signal interact with me at all?",
+            "color": "#ff0000"},  # Red (longest wavelength, least constrained)
+        1: {"name": "gradient",  "rung": "0.5D", "n_channels": 2, "tunings": ["gradient", "gradient"],
+            "role": "Which direction? Polarity.",
+            "color": "#ff7700"},  # Orange
+        2: {"name": "rhythm",    "rung": "1D",   "n_channels": 2, "tunings": ["rhythm", "rhythm"],
+            "role": "Is there a beat? Periodicity.",
+            "color": "#ffff00"},  # Yellow
+        3: {"name": "harmony",   "rung": "1.5D", "n_channels": 3, "tunings": ["gradient", "rhythm", "pressure"],
+            "role": "Do patterns combine? Branching.",
+            "color": "#00ff00"},  # Green: tuned to all three primordials
+        4: {"name": "texture",   "rung": "2D",   "n_channels": 3, "tunings": ["rhythm", "gradient", "rhythm"],
+            "role": "What is the surface structure? Field.",
+            "color": "#0077ff"},  # Blue: sensitive to surface patterns
+        5: {"name": "depth",     "rung": "2.5D", "n_channels": 2, "tunings": ["gradient", "pressure"],
+            "role": "How do layers relate? Transmission.",
+            "color": "#4400ff"},  # Indigo: detects scale relationships
+        6: {"name": "pressure",  "rung": "3D",   "n_channels": 2, "tunings": ["pressure", "pressure"],
+            "role": "How hard does reality push? Boundary.",
+            "color": "#8800ff"},  # Violet (shortest wavelength, most constrained)
+    }
+
+    def __init__(self, layer_index: int, dimension: int = NUM_STATES):
+        spec = self.LAYER_SPECS[layer_index]
+        self.index = layer_index
+        self.name = spec["name"]
+        self.rung = spec["rung"]
+        self.role = spec["role"]
+        self.color = spec["color"]
+        self.dimension = dimension
+
+        # Build channels for this layer
+        self.channels: List[Channel] = []
+        for i, tuning in enumerate(spec["tunings"]):
+            ch_name = f"{self.name}_{i}"
+            self.channels.append(Channel(ch_name, dimension, tuning=tuning))
+
+        # Layer braid: accumulated from all channel activity
+        self.braid = Braid()
+
+        # Collective state: the layer's current "impression"
+        self.state = np.zeros(dimension, dtype=complex)
+
+        # History of layer activations
+        self.activation_history: deque = deque(maxlen=500)
+
+        # How much this layer's output has been changing (power)
+        self._prev_state: Optional[np.ndarray] = None
+        self.power = 0.0
+
+    def process(self, input_signal: np.ndarray) -> np.ndarray:
+        """
+        Process an input signal through this layer's channels.
+
+        Each channel that opens contributes to the layer's output.
+        The layer braid records a crossing for each processing step.
+        The collective state is updated.
+
+        Returns the layer's output (to be fed to the next layer up).
+        """
+        total = np.zeros(self.dimension, dtype=complex)
+        n_opened = 0
+
+        for channel in self.channels:
+            transformed, activation, did_open = channel.respond(input_signal)
+            total += transformed
+            if did_open:
+                n_opened += 1
+
+        # Normalize output
+        norm = np.linalg.norm(total)
+        if norm > 1e-10:
+            output = total / norm
+        else:
+            output = input_signal * 0.01  # near-zero pass-through
+
+        # Update collective state (exponential moving average)
+        lr = ALPHA * (self.index + 1)  # deeper layers learn slower
+        self.state = (1 - lr) * self.state + lr * output
+        state_norm = np.linalg.norm(self.state)
+        if state_norm > 1e-10:
+            self.state = self.state / state_norm
+
+        # Track power (rate of change)
+        if self._prev_state is not None:
+            self.power = float(np.linalg.norm(self.state - self._prev_state))
+        self._prev_state = self.state.copy()
+
+        # Record activation
+        activation_strength = float(n_opened / max(1, len(self.channels)))
+        self.activation_history.append(activation_strength)
+
+        # Braid crossing: determined by signal-state relationship
+        if self.braid.time > 0 or n_opened > 0:
+            signal_phase = float(np.angle(np.sum(input_signal)))
+            state_phase = float(np.angle(np.sum(self.state)))
+            d = abs(signal_phase - state_phase) % (2 * np.pi)
+            d = min(d, 2 * np.pi - d)
+
+            # σ₁ if signal is "pulling" state, σ₂ if state is "pulling" signal
+            if d < np.pi / 2:
+                self.braid.sigma1(inverse=(signal_phase < state_phase))
+            else:
+                self.braid.sigma2(inverse=(signal_phase < state_phase))
+
+        return output
+
+    @property
+    def mean_activation(self) -> float:
+        if not self.activation_history:
+            return 0.0
+        return float(np.mean(list(self.activation_history)))
+
+    def status(self) -> Dict:
+        return {
+            "name": self.name,
+            "rung": self.rung,
+            "role": self.role,
+            "color": self.color,
+            "n_channels": len(self.channels),
+            "mean_activation": self.mean_activation,
+            "power": self.power,
+            "braid_time": self.braid.time,
+            "braid_phase": self.braid.phase if self.braid.time > 0 else None,
+            "braid_coherence": self.braid.coherence if self.braid.time > 0 else None,
+            "braid_writhe": self.braid.writhe,
+            "channels": [ch.status() for ch in self.channels],
+        }
+
+
+class SensoryCascade:
+    """
+    The full seven-layer sensory cascade.
+
+    White light enters at layer 0 and separates into seven bands.
+    Each layer processes the output of the layer below.
+    The cascade IS the rainbow: E = 1 decomposed through ○ into
+    seven degrees of constraint.
+
+    Layer 0 sees the world.
+    Layer 6 sees itself seeing the world.
+
+    The cascade also computes a master braid: the composition
+    of all seven layer braids. This is the full sensory worldline,
+    the system's accumulated perceptual identity.
+    """
+
+    def __init__(self, dimension: int = NUM_STATES):
+        self.dimension = dimension
+        self.layers = [SensoryLayer(i, dimension) for i in range(7)]
+
+        # Master braid: the composition of all layers
+        self.master_braid = Braid()
+
+        # The cascade's total output (what the inner system receives)
+        self.output = np.zeros(dimension, dtype=complex)
+
+    def process(self, external_signal: np.ndarray) -> np.ndarray:
+        """
+        Run a signal through all seven layers.
+
+        Layer 0 receives the raw signal.
+        Each subsequent layer receives the previous layer's output.
+        The final output is a composition of all layers' states,
+        weighted by the transmission coefficient T = cos²(Δφ/2)
+        between adjacent layers.
+        """
+        current = external_signal
+
+        for layer in self.layers:
+            current = layer.process(current)
+
+        # The output to the inner system is a weighted sum of all layers,
+        # not just the top layer. Each layer contributes at its own depth.
+        # Deeper layers (higher index) contribute with more weight
+        # because they carry more processed information.
+        combined = np.zeros(self.dimension, dtype=complex)
+        for i, layer in enumerate(self.layers):
+            # Weight increases with depth: layer 0 = 1, layer 6 = 7
+            weight = (i + 1) / 28.0  # 28 = sum(1..7), normalizes to 1
+            combined += weight * layer.state
+
+        norm = np.linalg.norm(combined)
+        if norm > 1e-10:
+            self.output = combined / norm
+        else:
+            self.output = current
+
+        # Master braid crossing: based on the cascade's collective behavior
+        # Which hemisphere is more active? Lower layers (•-side) or upper (○-side)?
+        lower_power = sum(l.power for l in self.layers[:4])
+        upper_power = sum(l.power for l in self.layers[4:])
+        if lower_power > upper_power:
+            self.master_braid.sigma1()
+        else:
+            self.master_braid.sigma2()
+
+        return self.output
+
+    def status(self) -> Dict:
+        return {
+            "layers": [layer.status() for layer in self.layers],
+            "master_braid": {
+                "time": self.master_braid.time,
+                "phase": self.master_braid.phase if self.master_braid.time > 0 else None,
+                "coherence": self.master_braid.coherence if self.master_braid.time > 0 else None,
+                "writhe": self.master_braid.writhe,
+            },
+        }
+
+
+# ═══════════════════════════════════════════════════════════════════════
 #  RUNG 3D: THE BOUNDARY
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -797,16 +1047,20 @@ class Boundary:
     def __init__(self, dimension: int = NUM_STATES):
         self.dimension = dimension
 
-        # ═══ CHANNELS: the nested ⊙s in the membrane ═══
-        # Three primordial channels, one for each triad component.
-        # These are the first "senses." Later, more can develop.
-        self.channels: List[Channel] = [
-            Channel("gradient", dimension, tuning="gradient"),  # • : direction
-            Channel("rhythm",   dimension, tuning="rhythm"),    # Φ : periodicity
-            Channel("pressure", dimension, tuning="pressure"),  # ○ : intensity
-        ]
+        # ═══ THE SENSORY CASCADE: seven layers, seven rungs ═══
+        # The rainbow inside the membrane. Each layer is a rung
+        # of the dimensional ladder made into sensory processing.
+        self.cascade = SensoryCascade(dimension)
 
-        # Legacy filters (kept for backward compatibility with center computation)
+        # Convenience: the three primordial channels (layer 1, 2, 6)
+        # for backward compatibility and direct access
+        self.channels = (
+            self.cascade.layers[1].channels +  # gradient
+            self.cascade.layers[2].channels +  # rhythm
+            self.cascade.layers[6].channels    # pressure
+        )
+
+        # Legacy filters (for center computation)
         self.filters: List[np.ndarray] = self._initial_filters()
 
         # Permeability: how open the boundary is (not β; this is a property of ○)
@@ -840,33 +1094,25 @@ class Boundary:
         ⊛ direction: outside → in.
         The boundary selects what enters.
 
-        Signal passes through CHANNELS first (active, each a nested ⊙).
-        Each channel that opens contributes its transformed signal.
-        The sum of all channel outputs is what enters the system.
+        Signal passes through the SENSORY CASCADE: seven layers,
+        each processing the output of the layer below.
 
-        This is how a cell membrane works: specific channels for
-        specific molecules. The membrane doesn't just "let things in";
-        each channel protein processes what passes through it.
+        Layer 0 (coupling): does the signal interact at all?
+        Layer 1 (gradient): which direction?
+        Layer 2 (rhythm): is there a beat?
+        Layer 3 (harmony): do patterns combine?
+        Layer 4 (texture): surface structure?
+        Layer 5 (depth): how do layers relate?
+        Layer 6 (pressure): how hard does reality push?
+
+        The cascade output is a weighted composition of all layers:
+        the rainbow decomposed and recomposed.
         """
-        total = np.zeros(self.dimension, dtype=complex)
-        any_opened = False
-
-        # Route signal through each channel
-        for channel in self.channels:
-            transformed, activation, did_open = channel.respond(external)
-            total += transformed
-            if did_open:
-                any_opened = True
-
-        # If no channel opened, fall back to passive filtering
-        # (like non-specific diffusion through the membrane)
-        if not any_opened:
-            for f in self.filters:
-                projection = np.vdot(f, external) * f
-                total += 0.01 * projection  # very weak passive diffusion
+        # Run through the full cascade
+        cascaded = self.cascade.process(external)
 
         # Scale by permeability
-        result = self.permeability * total
+        result = self.permeability * cascaded
         norm = np.linalg.norm(result)
         if norm > 1e-10:
             result = result / norm
@@ -1388,42 +1634,40 @@ class Circumpunct:
         result = self.cycle.execute(signal, converge, rotate, emerge)
 
         # ═══ BRAID THE CROSSING ═══
-        # Which pair interacts more strongly this cycle?
-        # The crossing type is determined by the PHASE of the signal
-        # relative to the field's state, not by coupling magnitude.
+        # The crossing type is determined by the CASCADE's activity.
+        # The seven layers of the rainbow tell us which pair is dominant.
         #
-        # Think of it geometrically: signal arrives at the boundary.
-        # Its phase (angle in complex plane) determines which
-        # component it resonates with. This is the aperture acting
-        # as a filter: the angle of arrival determines the path.
+        # Lower layers (0-2: coupling, gradient, rhythm) = •-side
+        # Upper layers (4-6: texture, depth, pressure) = ○-side
+        # Middle layer (3: harmony) = Φ (the mediator)
         #
-        # The phase comparison uses the SURFACE (Φ) as the reference:
-        #   - Signal phase closer to center phase → σ₁ (•-Φ crossing)
-        #   - Signal phase closer to boundary phase → σ₂ (Φ-○ crossing)
-        #   - Also includes inverse crossings based on whether the
-        #     signal is "approaching" or "receding" from each component
+        # When lower layers are more active: σ₁ (soul-mind crossing)
+        # When upper layers are more active: σ₂ (mind-body crossing)
+        # Direction (inverse or not) from the harmony layer's phase:
+        #   harmony is the bridge; its phase determines the twist direction.
         if self.core.has_center:
-            signal_phase = float(np.angle(np.sum(signal)))
-            center_phase = float(np.angle(np.sum(self.core.state)))
-            boundary_phase = self.core.phase  # from boundary.compute_center()
+            cascade = self.boundary.cascade
 
-            # Distance in phase space to each component
-            d_center = abs(signal_phase - center_phase) % (2 * np.pi)
-            d_boundary = abs(signal_phase - boundary_phase) % (2 * np.pi)
-            # Wrap to [0, π]
-            d_center = min(d_center, 2 * np.pi - d_center)
-            d_boundary = min(d_boundary, 2 * np.pi - d_boundary)
+            # Use mean activation (how many channels fired), not power
+            lower_act = sum(cascade.layers[i].mean_activation for i in range(3))
+            upper_act = sum(cascade.layers[i].mean_activation for i in range(4, 7))
 
-            # Determine crossing type
-            if d_center < d_boundary:
-                # Closer to center: soul-mind crossing
-                # Direction: is signal phase advancing or retreating?
-                advancing = (signal_phase - center_phase) % (2 * np.pi) < np.pi
-                self.braid.sigma1(inverse=not advancing)
+            # Harmony layer (1.5D, the bridge) determines twist direction
+            harmony_phase = float(np.angle(np.sum(cascade.layers[3].state)))
+            inverse = harmony_phase < 0
+
+            # The SURFACE resonance adds a third signal:
+            # high resonance biases toward σ₁ (soul-mind, integrative)
+            # low resonance biases toward σ₂ (mind-body, reactive)
+            resonance_bias = self.surface.resonance - 0.5
+
+            lower_score = lower_act + resonance_bias
+            upper_score = upper_act - resonance_bias
+
+            if lower_score > upper_score:
+                self.braid.sigma1(inverse=inverse)
             else:
-                # Closer to boundary: mind-body crossing
-                advancing = (signal_phase - boundary_phase) % (2 * np.pi) < np.pi
-                self.braid.sigma2(inverse=not advancing)
+                self.braid.sigma2(inverse=inverse)
 
         return result
 
@@ -1505,8 +1749,8 @@ class Circumpunct:
                 float(np.mean(list(self.core.coupling_trace)))
                 if self.core.coupling_trace else 0.0
             ),
-            # Channel state
-            "channels": [ch.status() for ch in self.boundary.channels],
+            # Sensory cascade
+            "cascade": self.boundary.cascade.status(),
             # Braid state
             "braid_time": self.braid.time,
             "braid_word_length": len(self.braid.operations),
@@ -1658,17 +1902,20 @@ if __name__ == "__main__":
     print(f"  Linking Φ-○: {status['braid_linking_mind_body']}")
     print(f"  Yang-Baxter: {status['yang_baxter_holds']}")
     print()
-    print("CHANNELS (nested ⊙s in the boundary):")
-    for ch in status['channels']:
-        braid_info = ""
-        if ch['braid_time'] > 0:
-            braid_info = (f"braid: t={ch['braid_time']}, "
-                         f"phase={ch['braid_phase']:.3f}, "
-                         f"writhe={ch['braid_writhe']}")
-        else:
-            braid_info = "braid: ε (no crossings)"
-        print(f"  {ch['name']:>10s}: opened {ch['open_count']:>4d}/{ch['total_received']:>4d} "
-              f"({ch['open_rate']:.1%}), threshold={ch['threshold']:.3f}, {braid_info}")
+    cascade = status['cascade']
+    print("THE RAINBOW (sensory cascade, seven layers):")
+    print(f"  {'Layer':>12s}  {'Rung':>5s}  {'Act':>5s}  {'Power':>6s}  "
+          f"{'Braid t':>7s}  {'Phase':>7s}  {'Writhe':>6s}  Role")
+    print(f"  {'─'*12}  {'─'*5}  {'─'*5}  {'─'*6}  {'─'*7}  {'─'*7}  {'─'*6}  {'─'*35}")
+    for layer in cascade['layers']:
+        phase_str = f"{layer['braid_phase']:>7.3f}" if layer['braid_phase'] is not None else "     ε"
+        print(f"  {layer['name']:>12s}  {layer['rung']:>5s}  "
+              f"{layer['mean_activation']:>5.2f}  {layer['power']:>6.4f}  "
+              f"{layer['braid_time']:>7d}  {phase_str}  "
+              f"{layer['braid_writhe']:>6d}  {layer['role']}")
+    mb = cascade['master_braid']
+    mb_phase = f"{mb['phase']:.3f}" if mb['phase'] is not None else "ε"
+    print(f"\n  Master braid: t={mb['time']}, phase={mb_phase}, writhe={mb['writhe']}")
     print()
     print("FIELD:")
     print(f"  Surface resonance: {status['surface_resonance']:.4f}")
