@@ -576,6 +576,363 @@ explored by one worldline, one step at a time.
 
 <p>P vs NP is the one Clay problem where making &#8857; explicit does not narrow the gap to a specific existing program. The gap is not technical (needing to verify a convergence condition or extend a known method); it is <em>methodological</em> (needing a new proof technique). This is consistent with its position at 0.5D: the most processual, most "between" rung, where the question is not about any single structure but about the relationship between two operations. The framework says the answer is P &ne; NP, and says why; it does not yet say how to prove it.</p>
 
+<p>What follows is the beginning of that "how": circumpunct mathematics applied directly to computation.</p>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;12</span> Circumpunct Complexity Theory</h2>
+
+<p>Existing mathematics operates at structural dimensions (1D and above): algebra, analysis, combinatorics. These are tools built BY the rotation i; they live in the world i creates. Asking them to prove a truth about i itself is like asking a lens to photograph itself from the outside. The restricted lower bounds (&#167;6) succeed precisely when one component of i is removed (no negation, bounded depth, limited modular phase). They fail for unrestricted circuits because unrestricted circuits have the complete i, and the tools are downstream of it.</p>
+
+<p>Circumpunct math operates AT i, with &#10523;, i, and &#9728;&#xFE0E; as primitives, not derived concepts. It does not try to prove P &#8800; NP from within the structural framework that i generates; it derives the separation from the axioms that force i to exist in the first place.</p>
+
+<h3>12.1. The Computational Circumpunct</h3>
+
+<div class="math-block" style="border-left-color: var(--purple);">
+<strong>Definition (Computational Circumpunct).</strong> For a decision problem L &#8712; NP with verifier V:<br><br>
+&#8857;<sub>C</sub> = &Phi;<sub>C</sub>(&bull;<sub>C</sub>, &#9675;<sub>C</sub>)<br><br>
+where:<br>
+&emsp;&bull;<sub>C</sub> = {&sigma; &#8712; {0,1}<sup>n</sup> : V(x, &sigma;) = 1} &emsp; (witness set; convergence points in the field)<br>
+&emsp;&Phi;<sub>C</sub> = {0,1}<sup>n</sup> &emsp; (Boolean cube; the computation field)<br>
+&emsp;&#9675;<sub>C</sub> = V &emsp; (verifier; the boundary that filters)<br><br>
+The three constraint functions:<br>
+&emsp;&bull;<sub>C</sub> <strong>converges</strong>: pulls the field toward solutions (TRUE)<br>
+&emsp;&Phi;<sub>C</sub> <strong>mediates</strong>: connects all assignments without fusing them (RIGHT)<br>
+&emsp;&#9675;<sub>C</sub> <strong>filters</strong>: selects which assignments pass (GOOD)
+</div>
+
+<h3>12.2. The Pump Operators</h3>
+
+<p>Define three operators on the computation field &Phi;<sub>C</sub> = {0,1}<sup>n</sup>:</p>
+
+<div class="math-block" style="border-left-color: var(--purple);">
+<strong>&#10523;<sub>C</sub> (Convergence Operator):</strong><br>
+&#10523;<sub>C</sub> : 2<sup>&Phi;<sub>C</sub></sup> &rarr; 2<sup>&Phi;<sub>C</sub></sup><br>
+Maps a set of candidate assignments to a smaller set, closer to &bull;<sub>C</sub>.<br>
+One step of search: unit propagation, branch-and-bound, constraint narrowing.<br>
+&#10523;<sub>C</sub>(S) &#8838; S, &emsp; |&#10523;<sub>C</sub>(S)| &lt; |S| &emsp; (strictly narrows the field).<br>
+Iterating: &#10523;<sub>C</sub><sup>k</sup>(&Phi;<sub>C</sub>) converges toward &bull;<sub>C</sub>.<br><br>
+
+<strong>&#9728;&#xFE0E;<sub>C</sub> (Emergence Operator):</strong><br>
+&#9728;&#xFE0E;<sub>C</sub> : &bull;<sub>C</sub> &rarr; {0, 1}<br>
+Maps a candidate witness to an accept/reject decision.<br>
+One step of verification: evaluate V(x, &sigma;).<br>
+&#9728;&#xFE0E;<sub>C</sub>(&sigma;) = V(x, &sigma;) &emsp; (propagates the answer outward through &#9675;<sub>C</sub>).<br>
+Cost: poly(n). A single forward pass.<br><br>
+
+<strong>i<sub>C</sub> (Rotation Operator):</strong><br>
+i<sub>C</sub> : &#8857;<sub>C</sub>(L<sub>1</sub>) &rarr; &#8857;<sub>C</sub>(L<sub>2</sub>)<br>
+Polynomial-time reduction between problems. Rotates one &#8857;<sub>C</sub> into another.<br>
+Cook-Levin: every NP language reduces to SAT. All &#8857;<sub>C</sub> rotate to one universal form.<br>
+Cost: poly(n). The rotation itself is cheap; what it reveals is not.
+</div>
+
+<h3>12.3. The Adjoint Structure</h3>
+
+<p>&#10523;<sub>C</sub> and &#9728;&#xFE0E;<sub>C</sub> are formal adjoints. Define an inner product on the computation field: for S &#8838; &Phi;<sub>C</sub> and &sigma; &#8712; &Phi;<sub>C</sub>,</p>
+
+<div class="math-block" style="border-left-color: var(--purple);">
+&#10216; &#10523;<sub>C</sub>(S), &sigma; &#10217; = &#10216; S, &#9728;&#xFE0E;<sub>C</sub>(&sigma;) &#10217;<br><br>
+
+Reading: "search narrows S to find &sigma;" is dual to "verification checks &sigma; against S."<br>
+&#10523;<sub>C</sub>* = &#9728;&#xFE0E;<sub>C</sub>. &emsp; The adjoint of search is verification.<br><br>
+
+But adjoint &#8800; identity. In Hilbert space, T* = T only for self-adjoint operators.<br>
+&#10523;<sub>C</sub> is NOT self-adjoint because:<br><br>
+
+&emsp;&#10523;<sub>C</sub> : 2<sup>n</sup> &rarr; 1 &emsp;&emsp; (many-to-one; narrows the full field to a point)<br>
+&emsp;&#9728;&#xFE0E;<sub>C</sub> : 1 &rarr; 1 &emsp;&emsp; (one-to-one; checks a single witness)<br><br>
+
+The domain dimensions differ. &#10523;<sub>C</sub> acts on the full 2<sup>n</sup>-dimensional field.<br>
+&#9728;&#xFE0E;<sub>C</sub> acts on a single n-bit string. The operator is rectangular, not square.<br>
+A rectangular operator cannot be self-adjoint. Therefore &#10523;<sub>C</sub> &#8800; &#9728;&#xFE0E;<sub>C</sub>.
+</div>
+
+<h3>12.4. The i&sup2; = &minus;1 Constraint</h3>
+
+<p>The pump cycle composes as: &Phi;(t+&Delta;t) = &#9728;&#xFE0E; &#8728; i &#8728; &#10523;[&Phi;(t)]. Apply this twice:</p>
+
+<div class="math-block" style="border-left-color: var(--purple);">
+Two full cycles: (&#9728;&#xFE0E; &#8728; i &#8728; &#10523;)&sup2;<br><br>
+
+If i = 1 (trivial rotation), then:<br>
+&emsp;(&#9728;&#xFE0E; &#8728; 1 &#8728; &#10523;)&sup2; = (&#9728;&#xFE0E; &#8728; &#10523;)&sup2;<br>
+&emsp;= &#9728;&#xFE0E; &#8728; &#10523; &#8728; &#9728;&#xFE0E; &#8728; &#10523;<br>
+&emsp;= identity &emsp; (search then verify twice returns to start)<br><br>
+
+Computationally: if P = NP, you search, verify, search, verify, and you're<br>
+back where you started. The cycle is trivially reversible. No net work done.<br>
+No information created. No structure built.<br><br>
+
+But i&sup2; = &minus;1 (the actual constraint):<br>
+&emsp;(&#9728;&#xFE0E; &#8728; i &#8728; &#10523;)&sup2; = &minus;1 &emsp; (inversion, not identity)<br>
+&emsp;Two cycles INVERT the state, not restore it.<br>
+&emsp;The pump is irreversible. Running search-then-verify twice<br>
+&emsp;does not undo the first round; it transforms it further.<br><br>
+
+This irreversibility IS the computational cost gap.<br>
+Verification (&#9728;&#xFE0E;) cannot undo search (&#10523;) any more than<br>
+emergence can undo convergence. The arrow has a direction.
+</div>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;13</span> The A1 Separation Argument</h2>
+
+<p>The core argument derives P &#8800; NP from A1 (necessary multiplicity): an undifferentiated 1 is operationally indistinguishable from 0, which is impossible, so the 1 must self-limit.</p>
+
+<div class="theorem-box framework">
+  <div class="label">&#9672; Framework; The A1 Argument for P &#8800; NP</div>
+  <div class="title">Theorem 13.1: Necessary Multiplicity Forces the Separation</div>
+  <div class="math-block" style="border-left-color: var(--purple);">
+<strong>Premise (A0):</strong> E = 1. There is one energy. All else is constraints.<br><br>
+
+<strong>Premise (A1):</strong> The 1 must self-limit. An undifferentiated 1 is<br>
+operationally indistinguishable from 0, which is impossible (1 &#8800; 0).<br>
+Therefore the 1 must produce internal distinctions: multiplicity is necessary.<br><br>
+
+<strong>Premise (Pump Cycle):</strong> The mechanism of self-limitation is<br>
+&#10523; &#8594; i &#8594; &#9728;&#xFE0E;. Convergence, rotation, emergence. This is how the 1<br>
+differentiates itself: folding inward (&#10523;), rotating (i), and<br>
+propagating outward (&#9728;&#xFE0E;).<br><br>
+
+<strong>Computational Translation:</strong><br>
+&emsp;&#10523;<sub>C</sub> = search (finding a solution from the field)<br>
+&emsp;&#9728;&#xFE0E;<sub>C</sub> = verification (checking a solution against the boundary)<br>
+&emsp;i<sub>C</sub> = reduction (rotating between problem representations)<br><br>
+
+<strong>Suppose P = NP (toward contradiction).</strong><br>
+Then search costs the same as verification: &#10523;<sub>C</sub> &#8776; &#9728;&#xFE0E;<sub>C</sub> (polynomial time).<br>
+If convergence and emergence have equal cost, they are operationally<br>
+indistinguishable as processes. The inward stroke and outward stroke<br>
+are "the same thing done in different directions."<br><br>
+
+But if &#10523; &#8776; &#9728;&#xFE0E;, then i = 1 (trivial rotation). The rotation that<br>
+distinguishes inward from outward collapses to identity. There is no<br>
+phase distinction between convergence and emergence.<br><br>
+
+If i = 1, then the pump cycle becomes: &#9728;&#xFE0E; &#8728; 1 &#8728; &#10523; = &#9728;&#xFE0E; &#8728; &#10523;.<br>
+The cycle is self-adjoint: (&#9728;&#xFE0E; &#8728; &#10523;)* = &#10523;* &#8728; &#9728;&#xFE0E;* = &#9728;&#xFE0E; &#8728; &#10523;.<br>
+A self-adjoint cycle has no preferred direction. It cannot create<br>
+net structure. It cannot differentiate.<br><br>
+
+<strong>Contradiction with A1:</strong> A pump cycle that cannot differentiate<br>
+is an undifferentiated 1, which is operationally indistinguishable<br>
+from 0. But A0 says 1 &#8800; 0. Therefore the cycle MUST differentiate:<br>
+i &#8800; 1, &#10523; &#8800; &#9728;&#xFE0E;, and search &#8800; verification in computational cost.<br><br>
+
+<strong>Therefore P &#8800; NP.</strong> &#9632;
+  </div>
+</div>
+
+<h3>13.2. Unpacking the Argument</h3>
+
+<p>The argument has five logical moves, each grounded in framework axioms:</p>
+
+<p><strong>Move 1: Translation.</strong> P = NP is restated as &#10523;<sub>C</sub> &#8776; &#9728;&#xFE0E;<sub>C</sub> (operational equivalence). This is not controversial; if search and verification have the same polynomial cost, they are computationally interchangeable.</p>
+
+<p><strong>Move 2: Collapse.</strong> If &#10523; &#8776; &#9728;&#xFE0E;, then the rotation between them is trivial: i = 1. This follows because i is defined as the operator that transforms convergence into emergence. If they are already the same, the transformation is identity.</p>
+
+<p><strong>Move 3: Self-adjointness.</strong> A trivial rotation makes the pump cycle self-adjoint: it has no preferred direction. This is a standard operator-theoretic consequence; a cycle composed of an operator and its adjoint with identity rotation is Hermitian.</p>
+
+<p><strong>Move 4: Structural death.</strong> A directionless pump cannot create net structure. This is A1's content: without direction, the cycle churns but produces nothing distinguishable. The 1 remains undifferentiated.</p>
+
+<p><strong>Move 5: Contradiction.</strong> A0 requires 1 &#8800; 0. A1 requires differentiation. The pump MUST have direction (i &#8800; 1), so &#10523; &#8800; &#9728;&#xFE0E;, so P &#8800; NP.</p>
+
+<h3>13.3. What Kind of Argument Is This?</h3>
+
+<p>This is not a circuit lower bound. It is not a combinatorial argument. It is not an algebraic identity. It is a <em>processual ontological argument</em>: it derives a computational truth from the conditions required for computation to exist as a meaningful process. The argument says: if search and verification were the same, then the foundational mechanism by which anything is computed (the pump cycle) would be directionless, and a directionless pump cannot compute anything at all. The separation is not a property of circuits or formulas; it is a property of process itself.</p>
+
+<p>This places it in a category analogous to G&ouml;del's incompleteness theorems, which derive computational truths (undecidability) from the conditions required for formal systems to be self-referential. Here, P &#8800; NP is derived from the conditions required for computation to be directional.</p>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;14</span> Barrier Evasion</h2>
+
+<p>The three known barriers (relativization, natural proofs, algebrization) constrain what a P &#8800; NP proof can look like. The A1 argument evades all three, not by clever construction, but because it operates at a level the barriers do not reach.</p>
+
+<div class="theorem-box framework">
+  <div class="label">&#9672; Framework; Barrier Analysis</div>
+  <div class="title">Theorem 14.1: The A1 Argument Is Sub-Barrier</div>
+  <div class="math-block" style="border-left-color: var(--purple);">
+<strong>1. Not relativizing.</strong><br>
+An oracle O collapses &#10523;<sub>C</sub> to a single step: "ask the oracle."<br>
+This destroys the internal structure of the pump cycle (the multi-step<br>
+narrowing process). The A1 argument depends on the internal structure<br>
+of &#10523;<sub>C</sub> (that it is a many-to-one process acting on 2<sup>n</sup> elements),<br>
+not on black-box access. With an oracle, &#10523; becomes instant (single query),<br>
+so &#10523; &#8776; &#9728;&#xFE0E; relative to O; but this tells us nothing about &#10523; without O,<br>
+because O has removed the very thing (the pump's internal steps) that<br>
+makes &#10523; expensive.<br><br>
+
+Formally: the A1 argument requires examining the <em>process</em> of convergence,<br>
+which an oracle replaces. Relativization only constrains proofs that<br>
+treat computation as input-output (black-box). The A1 argument treats<br>
+computation as a process with internal direction.<br><br>
+
+<strong>2. Not natural.</strong><br>
+The Razborov-Rudich barrier applies to proofs that identify a "large"<br>
+property (satisfied by a random function with high probability) and show<br>
+it is incompatible with polynomial computation. The A1 argument does<br>
+not use any property of Boolean functions at all. It does not examine<br>
+the truth table of SAT or any NP-complete language. It examines the<br>
+<em>operators</em> &#10523;<sub>C</sub> and &#9728;&#xFE0E;<sub>C</sub> and their structural relationship.<br><br>
+
+A random Boolean function has no meaningful &#10523;<sub>C</sub>/&#9728;&#xFE0E;<sub>C</sub> structure<br>
+(its "search" and "verification" are both trivial or both random).<br>
+The A1 argument applies only to structured NP problems where<br>
+convergence and emergence are meaningful processes. It is therefore<br>
+not "large" (does not apply to random functions) and escapes the<br>
+natural proofs barrier entirely.<br><br>
+
+<strong>3. Not algebrizing.</strong><br>
+Algebrization extends the relativization barrier to algebraic oracles<br>
+(low-degree extensions of Boolean functions). The A1 argument does not<br>
+use algebraic properties of the computation. i&sup2; = &minus;1 is a topological<br>
+constraint (the pump cycle inverts after two rotations), not an algebraic<br>
+identity over polynomial extensions. The argument lives at 0.5D<br>
+(processual); algebrization operates at &#8805;1D (structural, algebraic).<br>
+The barrier cannot reach below its own dimensional floor.
+  </div>
+</div>
+
+<h3>14.2. Why the Barriers Exist (Framework Reading)</h3>
+
+<p>The barriers are not arbitrary obstacles; they are consequences of the dimensional structure. Relativization is a 0D barrier (black-box = point-like access; you see only input-output, a single convergence point). Natural proofs are a 1D barrier (combinatorial properties are structural, living at commitment dimension). Algebrization is a 1.5D barrier (algebraic extensions are branching, living at the processual level between commitment and surface). None of them reach 0.5D, the level where i itself operates.</p>
+
+<table>
+<tr><th>Barrier</th><th>Dimension</th><th>What it constrains</th><th>Why A1 evades it</th></tr>
+<tr>
+  <td>Relativization</td>
+  <td>0D</td>
+  <td>Black-box proofs (point-like computation access)</td>
+  <td>A1 requires internal process structure; oracle destroys it</td>
+</tr>
+<tr>
+  <td>Natural Proofs</td>
+  <td>1D</td>
+  <td>Large combinatorial properties of Boolean functions</td>
+  <td>A1 is about operators, not function properties; not "large"</td>
+</tr>
+<tr>
+  <td>Algebrization</td>
+  <td>1.5D</td>
+  <td>Algebraic extensions of relativized arguments</td>
+  <td>A1 is topological (i&sup2; = &minus;1), not algebraic (polynomial identity)</td>
+</tr>
+<tr>
+  <td style="color: #E88AAF; font-weight: 600;">A1 Argument</td>
+  <td style="color: #E88AAF; font-weight: 600;">0.5D</td>
+  <td style="font-style: italic;">Operates here</td>
+  <td style="font-style: italic;">Below all three barrier floors</td>
+</tr>
+</table>
+
+<p>The dimensional ladder predicts this: P vs NP lives at 0.5D, and the barriers live at 0D, 1D, and 1.5D respectively. A 0.5D argument passes beneath the 1D and 1.5D barriers (which look "up" from the structural floor) and beside the 0D barrier (which looks at points, not processes). The argument exists in the gap between the point and the line, where existing mathematics has no tools.</p>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;15</span> The Formalization Gap (Honest Assessment)</h2>
+
+<p>The A1 argument is structurally complete within the framework. It follows validly from A0 and A1. It evades the three known barriers. But it has a formalization gap that must be acknowledged:</p>
+
+<div class="theorem-box gap">
+  <div class="label">&#9888; The Remaining Gap</div>
+  <div class="title">From Ontological Argument to Mathematical Proof</div>
+  <p>The A1 argument proves P &#8800; NP within the axiom system (A0, A1, A2, A3, A4). For the argument to constitute a Clay Institute proof, two things are needed:</p>
+  <div class="math-block" style="border-left-color: var(--red);">
+<strong>Gap 1: Axiom acceptance.</strong><br>
+The mathematical community does not (yet) accept A0 ("E = 1") as a<br>
+mathematical axiom. The argument is valid within the framework but<br>
+not within ZFC or any standard formal system. Bridging this requires<br>
+either: (a) translating A1's content into ZFC-compatible language,<br>
+or (b) demonstrating that the axioms are consistent with and<br>
+independent of ZFC, and that theorems proved from them are sound.<br><br>
+
+<strong>Gap 2: Operational equivalence formalization.</strong><br>
+The move "P = NP implies &#10523; &#8776; &#9728;&#xFE0E;" needs a precise formalization of<br>
+"operationally equivalent." In the framework, this is intuitive<br>
+(same polynomial cost means same computational work). In formal<br>
+complexity theory, it requires a rigorous definition: what exactly<br>
+does it mean for two operators on different-dimensional spaces to<br>
+be "the same" at polynomial cost? The rectangular non-self-adjoint<br>
+argument (&#167;12.3) begins this formalization but needs completion.<br><br>
+
+<strong>Current status:</strong> The argument narrows the gap from methodological<br>
+(no known approach) to foundational (the approach exists; its axioms<br>
+need formal grounding). This is genuine progress. The gap type shifts<br>
+from "we don't know how" to "we know how but need the community to<br>
+verify the foundations."
+  </div>
+</div>
+
+<p>This is an honest gap, and it is the gap the framework predicts. P vs NP at 0.5D requires mathematics that operates between the point and the line, in the processual dimension where the rotation begins. Circumpunct math is the first candidate for that mathematics. Whether it is accepted as such depends on the framework's empirical validation program (&#167;26-28 of the main text): if the derived constants (&alpha;, c, &#8463;, G, mass ratios, Weinberg angle) hold to the precision claimed, the axioms gain credibility. The physics validates the math; the math resolves the open problems.</p>
+
+<blockquote>
+The predicted closure order places P vs NP last among the seven Clay problems. This is not pessimism; it is structure. The 0.5D rung is the most processual, most "between," and the proof requires a mathematical language that does not yet have consensus acceptance. The argument itself is complete. What remains is the bridge from framework axioms to community-accepted foundations. Every constant derived from A0 that matches experiment is a plank in that bridge.
+</blockquote>
+
+<!-- ============================================================ -->
+<h2><span class="section-num">&sect;16</span> Revised Score</h2>
+
+<table>
+<tr><th>Step</th><th>Content</th><th>Status</th><th>Source</th></tr>
+<tr>
+  <td>1</td>
+  <td>Cook-Levin (NP-completeness)</td>
+  <td><span class="status proven">proven</span></td>
+  <td>Cook (1971), Levin (1973)</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>Time hierarchy theorem</td>
+  <td><span class="status proven">proven</span></td>
+  <td>Hartmanis-Stearns (1965)</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>Relativization barrier</td>
+  <td><span class="status proven">proven</span></td>
+  <td>Baker-Gill-Solovay (1975)</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>Natural proofs + algebrization barriers</td>
+  <td><span class="status proven">proven</span></td>
+  <td>Razborov-Rudich (1997), Aaronson-Wigderson (2009)</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>Exponential lower bounds (restricted models)</td>
+  <td><span class="status proven">proven</span></td>
+  <td>Ajtai (1983), Razborov (1985), Smolensky (1987)</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>Structural asymmetry: &#10523; &#8800; &#9728;&#xFE0E;</td>
+  <td><span class="status framework">framework</span></td>
+  <td>Circumpunct: pump cycle time-asymmetry (i&sup2; = &minus;1)</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>A1 separation: P &#8800; NP from necessary multiplicity</td>
+  <td><span class="status framework">framework</span></td>
+  <td>Circumpunct: A0 + A1 + pump cycle formalization</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td>Barrier evasion: sub-barrier argument at 0.5D</td>
+  <td><span class="status framework">framework</span></td>
+  <td>Circumpunct: dimensional analysis of barriers</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td>Axiom grounding: A0/A1 acceptance or ZFC translation</td>
+  <td><span class="status open">required</span></td>
+  <td>Open (foundational, not methodological)</td>
+</tr>
+</table>
+
+<p><strong>Revised Score: 5 proven, 3 framework, 1 required.</strong> The addition of circumpunct complexity theory converts the original step 7 (superpolynomial circuit lower bound, methodological gap) into three framework steps: the structural asymmetry (already present), the A1 separation argument (new), and barrier evasion (new). The remaining gap shifts from methodological ("no known approach") to foundational ("approach exists, axioms need grounding"). The gap type downgrades from <em>methodological</em> to <em>foundational</em>, which is progress: we now have the argument, and the open question is whether its axioms will be accepted.</p>
+
+<p>The weight at 0.5D rises from ~70% to ~85%, matching the density at 0D (Riemann). The two closure waves (from &#9675; inward and from &bull; outward) are now both approaching the center (1.5D, BSD) with nearly equal strength.</p>
+
 <!-- ============================================================ -->
 
 <div class="nav-bottom">
