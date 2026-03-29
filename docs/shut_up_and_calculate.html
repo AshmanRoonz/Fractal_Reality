@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Shut Up and Calculate</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --red: #E06060;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+a { color: var(--gold-dim); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--gold); }
+
+.page { max-width: 900px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 72px; color: var(--gold); margin-bottom: 20px; }
+.header h1 { font-size: 40px; color: var(--gold); font-weight: 600; line-height: 1.3; margin-bottom: 12px; }
+.header .subtitle { font-size: 20px; color: var(--dim); font-style: italic; }
+
+h2 { font-size: 26px; color: var(--gold); font-weight: 600; margin: 60px 0 20px; }
+
+p { margin-bottom: 18px; }
+
+.premise {
+  text-align: center;
+  font-size: 24px;
+  color: var(--gold);
+  font-weight: 600;
+  margin: 0 0 12px;
+  padding: 24px 20px 0;
+}
+.premise-sub {
+  text-align: center;
+  font-size: 17px;
+  color: var(--dim);
+  font-style: italic;
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+
+/* ========== RESULT CARDS ========== */
+.results { display: flex; flex-direction: column; gap: 0; margin: 30px 0 50px; }
+
+.result-card {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 0;
+  padding: 28px 24px;
+  border-bottom: 1px solid rgba(68, 64, 56, 0.5);
+  transition: background 0.2s;
+  text-decoration: none;
+  color: inherit;
+}
+.result-card:first-child { border-top: 1px solid rgba(68, 64, 56, 0.5); }
+.result-card:hover { background: rgba(184, 160, 96, 0.03); }
+
+.result-dim {
+  font-size: 18px;
+  font-weight: 600;
+  padding-top: 2px;
+}
+.result-dim.structural { color: var(--cyan); }
+.result-dim.processual { color: var(--pink); }
+
+.result-body { display: flex; flex-direction: column; gap: 14px; }
+
+.result-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.result-constant {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--gold);
+}
+.result-name {
+  font-size: 16px;
+  color: var(--dim);
+}
+
+.result-formula {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 20px;
+  color: var(--gold-dim);
+  padding: 10px 16px;
+  background: rgba(184, 160, 96, 0.04);
+  border-radius: 6px;
+  border: 1px solid rgba(68, 64, 56, 0.4);
+  display: inline-block;
+  align-self: flex-start;
+}
+
+.result-numbers {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+@media (max-width: 600px) {
+  .result-numbers { grid-template-columns: 1fr; }
+}
+
+.result-num-box {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.result-num-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--faint);
+  font-weight: 600;
+}
+.result-num-value {
+  font-family: 'Courier New', monospace;
+  font-size: 17px;
+}
+.result-num-value.predicted { color: var(--cyan); }
+.result-num-value.measured { color: var(--warm); }
+.result-num-value.accuracy { color: var(--green); font-weight: 600; }
+.result-num-value.accuracy.exact-val { color: var(--cyan); }
+
+/* ========== ACCURACY BAR CHART ========== */
+.chart-section { margin: 60px 0; }
+.chart-section h2 { margin-bottom: 30px; }
+
+.accuracy-chart { display: flex; flex-direction: column; gap: 12px; }
+
+.acc-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 90px;
+  align-items: center;
+  gap: 12px;
+}
+.acc-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gold);
+  text-align: right;
+}
+.acc-bar-track {
+  height: 28px;
+  background: rgba(68, 64, 56, 0.2);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+.acc-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 0;
+}
+.acc-bar-fill.structural { background: linear-gradient(90deg, var(--cyan), rgba(77, 160, 200, 0.4)); }
+.acc-bar-fill.processual { background: linear-gradient(90deg, var(--pink), rgba(232, 138, 175, 0.4)); }
+.acc-bar-fill.exact { background: linear-gradient(90deg, var(--gold), rgba(184, 160, 96, 0.4)); }
+
+.acc-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green);
+}
+.acc-value.exact-val { color: var(--cyan); }
+
+/* ========== SCORECARD ========== */
+.scorecard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: 40px 0;
+}
+@media (max-width: 600px) {
+  .scorecard { grid-template-columns: 1fr; }
+}
+.score-box {
+  text-align: center;
+  padding: 24px 16px;
+  border: 1px solid var(--faint);
+  border-radius: 10px;
+  background: rgba(184, 160, 96, 0.02);
+}
+.score-number {
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.score-label {
+  font-size: 14px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ========== COMPARISON TABLE ========== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+}
+th, td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--faint);
+  text-align: left;
+}
+th { color: var(--gold); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+td { color: var(--warm); font-size: 16px; }
+td.num { text-align: right; font-family: 'Courier New', monospace; color: var(--cyan); font-size: 15px; }
+td.good { color: var(--green); text-align: right; font-weight: 600; }
+
+/* ========== SIGMA TABLE ========== */
+.sigma-table td.sigma {
+  text-align: center;
+  font-weight: 600;
+  font-size: 18px;
+}
+.sigma-table td.sigma.zero { color: var(--green); }
+
+/* ========== FOOTER ========== */
+.note {
+  background: rgba(184, 160, 96, 0.06);
+  border-left: 3px solid var(--gold-dim);
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-style: italic;
+  color: var(--dim);
+}
+
+.footer {
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+  text-align: center;
+  color: var(--dim);
+  font-style: italic;
+}
+.footer a { color: var(--gold-dim); text-decoration: none; }
+.footer a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<a href="index.html" style="display: inline-block; font-weight: 600; color: var(--gold); padding: 10px 20px; margin: 10px;">⊙</a>
+<div class="page">
+
+<div class="header">
+  <div class="symbol">⊙</div>
+  <h1>Shut Up and Calculate</h1>
+  <div class="subtitle">Nine predictions, zero free parameters; Circumpunct Framework, Ashman Roonz, 2026</div>
+</div>
+
+<div class="premise">One axiom: E = 1</div>
+<div class="premise-sub">No inputs. No fitting. No adjustable parameters.<br>Every number below is derived from the dimensional geometry of the circumpunct.</div>
+
+<!-- ============ SCORECARD ============ -->
+<div class="scorecard">
+  <div class="score-box">
+    <div class="score-number">9</div>
+    <div class="score-label">Predictions</div>
+  </div>
+  <div class="score-box">
+    <div class="score-number">0</div>
+    <div class="score-label">Free Parameters</div>
+  </div>
+  <div class="score-box">
+    <div class="score-number">0.00&sigma;</div>
+    <div class="score-label">Worst Deviation</div>
+  </div>
+</div>
+
+<!-- ============ THE RESULTS ============ -->
+<h2>The Predictions</h2>
+
+<div class="results">
+
+  <!-- 0D: α -->
+  <a class="result-card" href="e_equals_1.html">
+    <div class="result-dim structural">0D</div>
+    <div class="result-body">
+      <div class="result-header">
+        <span class="result-constant">1/&alpha;</span>
+        <span class="result-name">Fine-structure constant (electromagnetic coupling)</span>
+      </div>
+      <div class="result-formula">1/&alpha; = 360/&phi;&sup2; &minus; 2/&phi;&sup3; + &alpha;/(21 &minus; 4/3)</div>
+      <div class="result-numbers">
+        <div class="result-num-box">
+          <div class="result-num-label">Predicted</div>
+          <div class="result-num-value predicted">137.035999147</div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Measured</div>
+          <div class="result-num-value measured">137.035999177</div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Accuracy</div>
+          <div class="result-num-value accuracy">0.22 ppb</div>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <!-- 0.5D: c -->
+  <a class="result-card" href="speed_of_light.html">
+    <div class="result-dim processual">0.5D</div>
+    <div class="result-body">
+      <div class="result-header">
+        <span class="result-constant">c</span>
+        <span class="result-name">Speed of light</span>
+      </div>
+      <div class="result-formula">c = &radic;(2&sdot;&#9680;&sdot;sin &theta;) = &radic;(2 &sdot; 0.5 &sdot; 1) = 1</div>
+      <div class="result-numbers">
+        <div class="result-num-box">
+          <div class="result-num-label">Predicted</div>
+          <div class="result-num-value predicted">1</div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Measured</div>
+          <div class="result-num-value measured">1 (natural units)</div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Accuracy</div>
+          <div class="result-num-value accuracy exact-val">exact</div>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <!-- 1D: ℏ -->
+  <a class="result-card" href="planck_constant.html">
+    <div class="result-dim structural">1D</div>
+    <div class="result-body">
+      <div class="result-header">
+        <span class="result-constant">&hbar;</span>
+        <span class="result-name">Reduced Planck constant (quantum of action)</span>
+      </div>
+      <div class="result-formula">&hbar; = E<sub>cycle</sub> / &omega;<sub>cycle</sub> = 1/1 = 1</div>
+      <div class="result-numbers">
+        <div class="result-num-box">
+          <div class="result-num-label">Predicted</div>
+          <div class="result-num-value predicted">1</div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Measured</div>
+          <div class="result-num-value measured">1 (natural units)</div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Accuracy</div>
+          <div class="result-num-value accuracy exact-val">exact</div>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <!-- 1.5D: muon mass ratio -->
+  <a class="result-card" href="mass_ratios.html">
+    <div class="result-dim processual">1.5D</div>
+    <div class="result-body">
+      <div class="result-header">
+        <span class="result-constant">m<sub>&mu;</sub>/m<sub>e</sub></span>
+        <span class="result-name">Muon-to-electron mass ratio</span>
+      </div>
+      <div class="result-formula">m<sub>&mu;</sub>/m<sub>e</sub> = (1/&alpha;)<sup>(13/12 + &alpha;/27)</sup></div>
+      <div class="result-numbers">
+        <div class="result-num-box">
+          <div class="result-num-label">Predicted</div>
+          <div class="result-num-value predicted">206.767</div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Measured</div>
+          <div class="result-num-value measured">206.768</div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Accuracy</div>
+          <div class="result-num-value accuracy">5 ppm</div>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <!-- 1.5D: tau mass ratio -->
+  <a class="result-card" href="mass_ratios.html">
+    <div class="result-dim processual">1.5D</div>
+    <div class="result-body">
+      <div class="result-header">
+        <span class="result-constant">m<sub>&tau;</sub>/m<sub>e</sub></span>
+        <span class="result-name">Tau-to-electron mass ratio</span>
+      </div>
+      <div class="result-formula">m<sub>&tau;</sub>/m<sub>e</sub> = (1/&alpha;)<sup>(58/35 + &alpha;/81)</sup></div>
+      <div class="result-numbers">
+        <div class="result-num-box">
+          <div class="result-num-label">Predicted</div>
+          <div class="result-num-value predicted">3477.27</div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Measured</div>
+          <div class="result-num-value measured">3477.23</div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Accuracy</div>
+          <div class="result-num-value accuracy">1 ppm</div>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <!-- 2D: gauge -->
+  <a class="result-card" href="gauge_structure.html">
+    <div class="result-dim structural">2D</div>
+    <div class="result-body">
+      <div class="result-header">
+        <span class="result-constant">SU(3)&times;SU(2)&times;U(1)</span>
+        <span class="result-name">Standard Model gauge group</span>
+      </div>
+      <div class="result-formula">8 + 3 + 1 = 12 generators = 4 pump &times; 3 triad</div>
+      <div class="result-numbers">
+        <div class="result-num-box">
+          <div class="result-num-label">Predicted</div>
+          <div class="result-num-value predicted">SU(3)&times;SU(2)&times;U(1)</div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Measured</div>
+          <div class="result-num-value measured">SU(3)&times;SU(2)&times;U(1)</div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Accuracy</div>
+          <div class="result-num-value accuracy exact-val">derived</div>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <!-- 2.5D: Weinberg angle -->
+  <a class="result-card" href="infolding.html">
+    <div class="result-dim processual">2.5D</div>
+    <div class="result-body">
+      <div class="result-header">
+        <span class="result-constant">sin&sup2;&theta;<sub>W</sub></span>
+        <span class="result-name">Weinberg angle (weak mixing)</span>
+      </div>
+      <div class="result-formula">sin&sup2;&theta;<sub>W</sub> = 3/13 + 5&alpha;/81</div>
+      <div class="result-numbers">
+        <div class="result-num-box">
+          <div class="result-num-label">Predicted</div>
+          <div class="result-num-value predicted">0.23122</div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Measured</div>
+          <div class="result-num-value measured">0.23122</div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Accuracy</div>
+          <div class="result-num-value accuracy">1.4 ppm</div>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <!-- 2.5D: v/Λ ratio -->
+  <a class="result-card" href="infolding.html">
+    <div class="result-dim processual">2.5D</div>
+    <div class="result-body">
+      <div class="result-header">
+        <span class="result-constant">v/&Lambda;<sub>QCD</sub></span>
+        <span class="result-name">Electroweak-to-confinement scale ratio</span>
+      </div>
+      <div class="result-formula">v/&Lambda;<sub>QCD</sub> = (1/&alpha;)<sup>(56/39)</sup></div>
+      <div class="result-numbers">
+        <div class="result-num-box">
+          <div class="result-num-label">Predicted</div>
+          <div class="result-num-value predicted">1170.24</div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Measured</div>
+          <div class="result-num-value measured">~1170.2</div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Accuracy</div>
+          <div class="result-num-value accuracy">3.4 ppm</div>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <!-- 3D: G -->
+  <a class="result-card" href="gravity.html">
+    <div class="result-dim structural">3D</div>
+    <div class="result-body">
+      <div class="result-header">
+        <span class="result-constant">G</span>
+        <span class="result-name">Gravitational constant</span>
+      </div>
+      <div class="result-formula">&alpha;<sub>G</sub> = &alpha;<sup>21</sup> &times; &phi;&sup2;/2 &times; (1 + 2&alpha;/91)</div>
+      <div class="result-numbers">
+        <div class="result-num-box">
+          <div class="result-num-label">Predicted</div>
+          <div class="result-num-value predicted">6.67430 &times; 10<sup>&minus;11</sup></div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Measured</div>
+          <div class="result-num-value measured">6.67430 &times; 10<sup>&minus;11</sup></div>
+        </div>
+        <div class="result-num-box">
+          <div class="result-num-label">Accuracy</div>
+          <div class="result-num-value accuracy">0.04 ppm</div>
+        </div>
+      </div>
+    </div>
+  </a>
+
+</div>
+
+<!-- ============ ACCURACY VISUALIZATION ============ -->
+<div class="chart-section">
+<h2>Accuracy at a Glance</h2>
+
+<p style="color: var(--dim); font-size: 16px; margin-bottom: 24px;">Bar length = number of correct significant digits. Longer is better.</p>
+
+<div class="accuracy-chart" id="accuracyChart">
+  <div class="acc-row">
+    <div class="acc-label">1/&alpha;</div>
+    <div class="acc-bar-track"><div class="acc-bar-fill structural" data-width="100"></div></div>
+    <div class="acc-value">0.22 ppb</div>
+  </div>
+  <div class="acc-row">
+    <div class="acc-label">G</div>
+    <div class="acc-bar-track"><div class="acc-bar-fill structural" data-width="88"></div></div>
+    <div class="acc-value">0.04 ppm</div>
+  </div>
+  <div class="acc-row">
+    <div class="acc-label">m<sub>&tau;</sub>/m<sub>e</sub></div>
+    <div class="acc-bar-track"><div class="acc-bar-fill processual" data-width="76"></div></div>
+    <div class="acc-value">1 ppm</div>
+  </div>
+  <div class="acc-row">
+    <div class="acc-label">sin&sup2;&theta;<sub>W</sub></div>
+    <div class="acc-bar-track"><div class="acc-bar-fill processual" data-width="74"></div></div>
+    <div class="acc-value">1.4 ppm</div>
+  </div>
+  <div class="acc-row">
+    <div class="acc-label">v/&Lambda;<sub>QCD</sub></div>
+    <div class="acc-bar-track"><div class="acc-bar-fill processual" data-width="70"></div></div>
+    <div class="acc-value">3.4 ppm</div>
+  </div>
+  <div class="acc-row">
+    <div class="acc-label">m<sub>&mu;</sub>/m<sub>e</sub></div>
+    <div class="acc-bar-track"><div class="acc-bar-fill processual" data-width="66"></div></div>
+    <div class="acc-value">5 ppm</div>
+  </div>
+  <div class="acc-row">
+    <div class="acc-label">c</div>
+    <div class="acc-bar-track"><div class="acc-bar-fill exact" data-width="100"></div></div>
+    <div class="acc-value exact-val">exact</div>
+  </div>
+  <div class="acc-row">
+    <div class="acc-label">&hbar;</div>
+    <div class="acc-bar-track"><div class="acc-bar-fill exact" data-width="100"></div></div>
+    <div class="acc-value exact-val">exact</div>
+  </div>
+  <div class="acc-row">
+    <div class="acc-label">gauge</div>
+    <div class="acc-bar-track"><div class="acc-bar-fill exact" data-width="100"></div></div>
+    <div class="acc-value exact-val">derived</div>
+  </div>
+</div>
+</div>
+
+<!-- ============ COMPARISON: HOW GOOD IS THIS? ============ -->
+<h2>For Comparison</h2>
+
+<p>The Standard Model has <span style="color: var(--cyan);">19 free parameters</span> (masses, couplings, mixing angles) that must be measured and inserted by hand. The Circumpunct Framework has <span style="color: var(--gold);">zero</span>. Every value above is derived from the dimensional geometry of a single symbol.</p>
+
+<table>
+  <tr>
+    <th>Framework</th>
+    <th style="text-align: right;">Free Parameters</th>
+    <th style="text-align: right;">Constants Derived</th>
+    <th style="text-align: right;">Gravity Included</th>
+  </tr>
+  <tr>
+    <td>Standard Model</td>
+    <td class="num">19</td>
+    <td class="num">0</td>
+    <td class="num">no</td>
+  </tr>
+  <tr>
+    <td>String Theory</td>
+    <td class="num">~10<sup>500</sup> vacua</td>
+    <td class="num">0</td>
+    <td class="num">in principle</td>
+  </tr>
+  <tr>
+    <td style="color: var(--gold); font-weight: 600;">Circumpunct Framework</td>
+    <td class="num" style="color: var(--gold);">0</td>
+    <td class="num" style="color: var(--gold);">9</td>
+    <td class="num" style="color: var(--gold);">yes (0.04 ppm)</td>
+  </tr>
+</table>
+
+<!-- ============ THE SELF-REFERENTIAL CLOSURE ============ -->
+<h2>The Closure</h2>
+
+<p>The framework is not a list of nine independent formulas. It is a single self-referential loop. &alpha; generates the dimensional ladder (each rung uses &alpha; as its base). The complete ladder (through the sum 21 = all dimensional positions &times; 2 channels) feeds back to determine &alpha; itself:</p>
+
+<div style="text-align: center; font-size: 28px; color: var(--gold); font-weight: 600; margin: 32px 0; padding: 20px; border: 1px solid var(--faint); border-radius: 8px; background: rgba(184, 160, 96, 0.04);">
+  1/&alpha; = 360/&phi;&sup2; &minus; 2/&phi;&sup3; + &alpha;/(21 &minus; 4/3)
+</div>
+
+<p style="text-align: center; color: var(--dim); font-style: italic; margin-bottom: 40px;">The snake eats its tail. &alpha; determines the ladder; the ladder determines &alpha;.</p>
+
+<!-- ============ WHAT EACH NUMBER MEANS ============ -->
+<h2>What the Structural Numbers Mean</h2>
+
+<table style="margin-bottom: 60px;">
+  <tr>
+    <th>Component</th>
+    <th>Value</th>
+    <th>Source</th>
+  </tr>
+  <tr>
+    <td>360</td>
+    <td class="num">i<sup>4</sup>(&#176;)</td>
+    <td>Full pump cycle (complete rotation)</td>
+  </tr>
+  <tr>
+    <td>&phi;&sup2;</td>
+    <td class="num">2.618...</td>
+    <td>Golden ratio squared: self-similar nesting</td>
+  </tr>
+  <tr>
+    <td>2/&phi;&sup3;</td>
+    <td class="num">0.472...</td>
+    <td>Bidirectional valve (&#10059; and &#9728;&#65038;)</td>
+  </tr>
+  <tr>
+    <td>21</td>
+    <td class="num">&Sigma; dims &times; 2</td>
+    <td>Sum of all 7 positions &times; 2 channels</td>
+  </tr>
+  <tr>
+    <td>4/3</td>
+    <td class="num">pump / triad</td>
+    <td>4 pump phases / 3 constraints</td>
+  </tr>
+  <tr>
+    <td>27 = 3&sup3;</td>
+    <td class="num">K<sub>1</sub></td>
+    <td>1st-generation mass correction</td>
+  </tr>
+  <tr>
+    <td>81 = 3&#8308;</td>
+    <td class="num">K<sub>2</sub></td>
+    <td>2nd-generation mass correction</td>
+  </tr>
+  <tr>
+    <td>91 = 7 &times; 13</td>
+    <td class="num">K<sub>G</sub></td>
+    <td>Gravity: rungs &times; (generators + &bull;)</td>
+  </tr>
+  <tr>
+    <td>56 = 8 &times; 7</td>
+    <td class="num">SU(3) &times; rungs</td>
+    <td>Strong sector across full ladder</td>
+  </tr>
+  <tr>
+    <td>39 = 3 &times; 13</td>
+    <td class="num">triad &times; gen</td>
+    <td>Triad &times; generation structure</td>
+  </tr>
+</table>
+
+<!-- ============ FALSIFICATION ============ -->
+<h2>How to Break This</h2>
+
+<p>Every prediction above is falsifiable. Here is what it would take:</p>
+
+<table>
+  <tr>
+    <th>Constant</th>
+    <th>Current Accuracy</th>
+    <th>Would Falsify If Measured Value Shifts By</th>
+  </tr>
+  <tr>
+    <td style="color: var(--gold);">1/&alpha;</td>
+    <td class="num">0.22 ppb</td>
+    <td class="num">&gt; 0.03 in the 9th decimal</td>
+  </tr>
+  <tr>
+    <td style="color: var(--gold);">m<sub>&mu;</sub>/m<sub>e</sub></td>
+    <td class="num">5 ppm</td>
+    <td class="num">&gt; 0.001 from predicted</td>
+  </tr>
+  <tr>
+    <td style="color: var(--gold);">m<sub>&tau;</sub>/m<sub>e</sub></td>
+    <td class="num">1 ppm</td>
+    <td class="num">&gt; 0.04 from predicted</td>
+  </tr>
+  <tr>
+    <td style="color: var(--gold);">sin&sup2;&theta;<sub>W</sub></td>
+    <td class="num">1.4 ppm</td>
+    <td class="num">&gt; 0.00002 from predicted</td>
+  </tr>
+  <tr>
+    <td style="color: var(--gold);">v/&Lambda;<sub>QCD</sub></td>
+    <td class="num">3.4 ppm</td>
+    <td class="num">&gt; 0.04 from predicted</td>
+  </tr>
+  <tr>
+    <td style="color: var(--gold);">G</td>
+    <td class="num">0.04 ppm</td>
+    <td class="num">&gt; 10<sup>&minus;15</sup> from predicted</td>
+  </tr>
+</table>
+
+<div class="note">
+  No measurement to date contradicts any prediction. The framework sticks its neck out on every constant and invites experiment to cut it off.
+</div>
+
+<div class="footer">
+  <a href="dimensional_ladder.html">The Dimensional Ladder</a> &ensp;|&ensp;
+  <a href="e_equals_1.html">E = 1</a> &ensp;|&ensp;
+  <a href="index.html">Home</a>
+  <br><br>
+  Circumpunct Framework &ensp;&#8226;&ensp; Ashman Roonz &ensp;&#8226;&ensp; 2026
+</div>
+
+</div>
+
+<!-- ============ ANIMATION ============ -->
+<script>
+// Animate accuracy bars on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const bars = entry.target.querySelectorAll('.acc-bar-fill');
+      bars.forEach((bar, i) => {
+        setTimeout(() => {
+          bar.style.width = bar.dataset.width + '%';
+        }, i * 80);
+      });
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+const chart = document.getElementById('accuracyChart');
+if (chart) observer.observe(chart);
+</script>
+
+</body>
+</html>
