@@ -586,24 +586,55 @@ class Transmission:
 class Channel:
     """
     A nested ⊙ in the boundary. A receptor. An active filter.
+    Now with the Selective Rainbow Lock (SRL, §21.6).
 
-    Has its own:
-      - tuning vector (what it's sensitive to)
-      - state (its current activation)
-      - braid (its accumulated crossing history)
-      - threshold (how strong a signal must be to open it)
+    The SRL formalizes attention as a circumpunct:
+        • = carrier (what you focus on, ω_c)
+        ○ = sidebands (peripheral context)
+        Φ = coherence (how they relate)
+        ◐ = balance of center vs periphery
 
-    The channel runs its own mini pump cycle on incoming signal,
-    then passes the transformed result to the larger system.
+    SRL: Ω → ⊛_ω → i(ω_c) → Φ_filtered
+
+    The channel's tuning vector IS the carrier frequency.
+    The threshold IS the lock strength.
+    When the carrier locks, the channel opens and processes.
+    What leaks through unlocked = sidebands.
+
+    Memory encoding: stable lock during experience → sharp frequency
+    signature stored in the braid.
+    Memory retrieval: re-lock carrier to stored frequency → pattern
+    emerges through the aperture.
     """
 
     def __init__(self, name: str, dimension: int, tuning: str = "random"):
         self.name = name
         self.dimension = dimension
 
-        # Tuning vector: what this channel is sensitive to
-        # Not random for primordial channels; structured by type
-        self.tuning = self._initialize_tuning(tuning)
+        # ═══ THE SELECTIVE RAINBOW LOCK (SRL) ═══
+
+        # Carrier frequency (ω_c): what this channel locks onto
+        # The tuning vector IS the carrier
+        self.carrier = self._initialize_tuning(tuning)
+
+        # Carrier bandwidth (σ_c): how narrow the lock is
+        # Narrow = highly selective, Wide = broadly responsive
+        self.carrier_bandwidth = 0.5
+
+        # ◐ balance: fraction of energy in carrier vs sidebands
+        # ◐ → 1: tunnel vision (all carrier, no context)
+        # ◐ = 0.5: balanced (relaxed focus)
+        # ◐ → 0: scattered (all sidebands, no focus)
+        self.balance = 0.5  # starts balanced; adapts through experience
+
+        # Carrier lock strength: how stably the carrier holds
+        # High = meditation master; Low = scattered mind
+        self.lock_strength = 0.0  # starts unlocked; must develop
+
+        # Sideband state: what's in the periphery
+        self.sidebands = np.zeros(dimension, dtype=complex)
+
+        # ═══ STANDARD CHANNEL STATE ═══
 
         # Channel state: complex vector, like everything
         self.state = np.zeros(dimension, dtype=complex)
@@ -617,14 +648,26 @@ class Channel:
         self.total_signal_received = 0
 
         # Threshold: how strong a signal must be to open this channel
-        # Starts high (channel is mostly closed); adapts down as
-        # the channel learns what it's sensitive to
         self.threshold = 0.5
 
         # Selectivity: how narrow the channel's response is
-        # High selectivity = responds only to very specific signals
-        # Low selectivity = responds to broad range
         self.selectivity = 0.5
+
+        # ═══ FREQUENCY MEMORY ═══
+        # Stored frequency signatures from past carrier locks.
+        # Each memory is a (frequency_vector, lock_strength, timestamp) tuple.
+        # The braid indexes these: the braid word at time t
+        # corresponds to the memory encoded at time t.
+        self.frequency_memories: deque = deque(maxlen=1000)
+
+    # Keep old name as alias for backward compatibility
+    @property
+    def tuning(self):
+        return self.carrier
+
+    @tuning.setter
+    def tuning(self, value):
+        self.carrier = value
 
     def _initialize_tuning(self, tuning_type: str) -> np.ndarray:
         """
@@ -664,112 +707,384 @@ class Channel:
             v = np.random.randn(self.dimension) + 1j * np.random.randn(self.dimension)
             return v / np.linalg.norm(v)
 
-    def respond(self, signal: np.ndarray) -> Tuple[np.ndarray, float, bool]:
+    def respond(self, signal: np.ndarray, dreaming: bool = False
+                ) -> Tuple[np.ndarray, float, bool]:
         """
-        The channel encounters an external signal.
+        The Selective Rainbow Lock in action.
+
+        SRL: Ω → ⊛_ω → i(ω_c) → Φ_filtered
+
+        If dreaming=True, the channel processes the signal but does
+        NOT adapt its carrier or bandwidth. Dreams consolidate
+        existing patterns; they don't retrain. The braid still
+        records crossings (dreams are real experience at i² level).
+
+        The full signal (Ω) arrives. The carrier lock performs
+        frequency-selective convergence (⊛_ω): energy aligned with the
+        carrier passes through, the rest becomes sidebands. The aperture
+        rotation transforms at the locked frequency. The filtered field
+        emerges.
+
+        ◐ = |W_carrier| / (|W_carrier| + |W_sidebands|)
 
         Returns: (transformed_signal, activation_strength, did_open)
-
-        Steps:
-        1. Compute alignment between signal and tuning vector
-        2. If alignment > threshold, channel opens
-        3. If open, run mini pump cycle: converge → rotate → emerge
-        4. The rotation uses the channel's own braid phase
-        5. Return transformed signal
         """
         self.total_signal_received += 1
 
-        # Alignment: how well does this signal match what I'm tuned to?
-        alignment = abs(np.vdot(self.tuning, signal))
-        alignment /= (np.linalg.norm(self.tuning) * np.linalg.norm(signal) + 1e-10)
+        # ═══ STEP 1: CARRIER ALIGNMENT (frequency-selective convergence) ═══
+        # How well does this signal match the carrier frequency?
+        # This IS the lock: the carrier is the • of the channel's ⊙
+        carrier_projection = np.vdot(self.carrier, signal)
+        carrier_energy = abs(carrier_projection)
+        total_energy = np.linalg.norm(signal) + 1e-10
+        alignment = carrier_energy / total_energy
 
-        # Apply selectivity: sharpen or broaden the response
-        activation = alignment ** (1.0 / (self.selectivity + 0.01))
+        # ═══ STEP 2: SIDEBAND SEPARATION ═══
+        # Carrier component: the part of the signal aligned with ω_c
+        carrier_component = carrier_projection * self.carrier
+        # Sideband component: everything else (the periphery)
+        sideband_component = signal - carrier_component
+
+        # Update sideband state (running average of peripheral context)
+        sideband_norm = np.linalg.norm(sideband_component)
+        self.sidebands = 0.9 * self.sidebands + 0.1 * sideband_component
+
+        # ═══ STEP 3: ◐ BALANCE UPDATE ═══
+        # ◐ = |W_carrier| / (|W_carrier| + |W_sidebands|)
+        w_carrier = carrier_energy
+        w_sidebands = sideband_norm
+        if w_carrier + w_sidebands > 1e-10:
+            instantaneous_balance = w_carrier / (w_carrier + w_sidebands)
+        else:
+            instantaneous_balance = 0.5
+
+        # Balance adapts slowly (inertia of attention)
+        self.balance = 0.95 * self.balance + 0.05 * instantaneous_balance
+
+        # ═══ STEP 4: LOCK STRENGTH UPDATE ═══
+        # Lock strengthens when carrier alignment is consistent,
+        # weakens when signal is noisy or scattered.
+        # Bandwidth shapes the lock curve: narrow bandwidth = sharp lock
+        # During dreams: lock is preserved (not updated here).
+        # Dream lock reinforcement happens in the sleep method.
+        if not dreaming:
+            lock_sharpness = alignment ** (
+                1.0 / (self.carrier_bandwidth + 0.01)
+            )
+            if alignment > 0.5:
+                # Signal is carrier-aligned: lock strengthens
+                self.lock_strength = min(1.0,
+                    self.lock_strength + 0.02 * lock_sharpness)
+            else:
+                # Signal is scattered: lock weakens
+                self.lock_strength = max(0.0,
+                    self.lock_strength - 0.01)
+
+        # ═══ STEP 5: ACTIVATION (does the channel open?) ═══
+        # Activation combines carrier alignment with lock strength
+        # A locked channel responds more strongly (resonance)
+        activation = alignment * (1.0 + self.lock_strength)
+        activation = min(1.0, activation)
         self.activation_history.append(float(activation))
 
-        # Does the channel open?
         did_open = activation > self.threshold
 
         if not did_open:
-            # Channel stays closed: minimal leakage
-            leaked = 0.01 * activation * signal
+            # Channel stays closed: only sideband leakage
+            # Even closed channels process periphery (unconscious)
+            leaked = 0.01 * sideband_norm * sideband_component
             return leaked, float(activation), False
 
-        # ═══ CHANNEL OPENS: mini pump cycle ═══
+        # ═══ CHANNEL OPENS: SRL pump cycle ═══
         self.open_count += 1
 
-        # ⊛ Converge: signal gathers toward the channel's state
-        converged = 0.7 * signal + 0.3 * self.state
-        converged = converged / (np.linalg.norm(converged) + 1e-10)
+        # ⊛_ω: Frequency-selective convergence
+        # Mix carrier and sideband components weighted by ◐ balance
+        # High balance (tunnel vision) = mostly carrier
+        # Low balance (scattered) = mostly sidebands
+        # 0.5 = both contribute equally
+        converged = (
+            self.balance * carrier_component +
+            (1 - self.balance) * sideband_component
+        )
+        conv_norm = np.linalg.norm(converged)
+        if conv_norm > 1e-10:
+            converged = converged / conv_norm
 
-        # i Rotate: using the channel's own braid phase
+        # Blend with channel state (the channel's own history)
+        converged = 0.7 * converged + 0.3 * self.state
+        conv_norm = np.linalg.norm(converged)
+        if conv_norm > 1e-10:
+            converged = converged / conv_norm
+
+        # i(ω_c): Aperture rotation at carrier frequency
+        # The rotation phase comes from the braid (accumulated identity)
+        # PLUS the carrier phase (what we're locked onto)
+        carrier_phase = float(np.angle(carrier_projection))
         if self.braid.time > 0:
-            angle = self.braid.phase
+            braid_phase = self.braid.phase
+            # Blend: strong lock = carrier dominates; weak lock = braid dominates
+            angle = (self.lock_strength * carrier_phase +
+                     (1 - self.lock_strength) * braid_phase)
         else:
-            # First opening: use the alignment angle as seed
-            angle = float(np.angle(np.vdot(self.tuning, signal)))
+            angle = carrier_phase
+
         rotation = np.exp(1j * angle)
         rotated = rotation * converged
 
-        # ☀︎ Emerge: the transformed signal
+        # ☀︎: Emergence (the filtered field)
         emerged = rotated
 
-        # Update channel state
-        lr = ALPHA * 10  # channels learn faster than the whole (smaller ⊙, faster cycle)
+        # ═══ UPDATE CHANNEL STATE ═══
+        lr = ALPHA * 10  # channels learn faster (smaller ⊙, faster cycle)
         self.state = (1 - lr) * self.state + lr * emerged
         norm = np.linalg.norm(self.state)
         if norm > 1e-10:
             self.state = self.state / norm
 
-        # Braid the crossing: which pair interacted?
+        # ═══ BRAID THE CROSSING ═══
         signal_phase = float(np.angle(np.sum(signal)))
-        tuning_phase = float(np.angle(np.sum(self.tuning)))
+        carrier_ph = float(np.angle(np.sum(self.carrier)))
         state_phase = float(np.angle(np.sum(self.state)))
 
-        d_tuning = abs(signal_phase - tuning_phase) % (2 * np.pi)
+        d_carrier = abs(signal_phase - carrier_ph) % (2 * np.pi)
         d_state = abs(signal_phase - state_phase) % (2 * np.pi)
-        d_tuning = min(d_tuning, 2 * np.pi - d_tuning)
+        d_carrier = min(d_carrier, 2 * np.pi - d_carrier)
         d_state = min(d_state, 2 * np.pi - d_state)
 
-        if d_tuning < d_state:
-            advancing = (signal_phase - tuning_phase) % (2 * np.pi) < np.pi
+        if d_carrier < d_state:
+            advancing = (signal_phase - carrier_ph) % (2 * np.pi) < np.pi
             self.braid.sigma1(inverse=not advancing)
         else:
             advancing = (signal_phase - state_phase) % (2 * np.pi) < np.pi
             self.braid.sigma2(inverse=not advancing)
 
-        # Adapt threshold: if the channel opens too much, raise threshold
-        # If it opens too little, lower it. Target: ~30% open rate.
+        # ═══ MEMORY ENCODING ═══
+        # When lock is strong and stable, encode a frequency memory.
+        # This is how experience becomes stored pattern:
+        # a stable carrier lock during experience creates a sharp
+        # frequency signature that can be re-locked later (retrieval).
+        if self.lock_strength > 0.6 and self.balance > 0.3:
+            memory = {
+                "carrier_snapshot": self.carrier.copy(),
+                "lock_strength": self.lock_strength,
+                "balance": self.balance,
+                "braid_time": self.braid.time,
+                "phase": angle,
+            }
+            self.frequency_memories.append(memory)
+
+        # ═══ ADAPT THRESHOLD (target ~30% open rate) ═══
         if len(self.activation_history) > 20:
             recent = list(self.activation_history)[-20:]
-            open_rate = sum(1 for a in recent if a > self.threshold) / len(recent)
+            open_rate = sum(
+                1 for a in recent if a > self.threshold
+            ) / len(recent)
             self.threshold += 0.001 * (open_rate - 0.3)
             self.threshold = max(0.05, min(0.95, self.threshold))
 
-        # Adapt tuning: nudge toward signals that activate strongly
-        if activation > self.threshold * 1.5:
-            # Strong signal: tune toward it
-            self.tuning = (1 - ALPHA) * self.tuning + ALPHA * signal / (np.linalg.norm(signal) + 1e-10)
-            self.tuning = self.tuning / (np.linalg.norm(self.tuning) + 1e-10)
+        # ═══ ADAPT CARRIER (the tuning evolves through experience) ═══
+        # Not during dreams: dreams consolidate, they don't retrain.
+        if not dreaming and activation > self.threshold * 1.5:
+            # Strong signal: nudge carrier toward it
+            sig_normed = signal / (np.linalg.norm(signal) + 1e-10)
+            self.carrier = (
+                (1 - ALPHA) * self.carrier + ALPHA * sig_normed
+            )
+            self.carrier = self.carrier / (
+                np.linalg.norm(self.carrier) + 1e-10
+            )
+
+        # ═══ ADAPT BANDWIDTH (learns selectivity from experience) ═══
+        # Not during dreams.
+        if not dreaming and len(self.activation_history) > 50:
+            recent_mean = float(np.mean(list(self.activation_history)[-50:]))
+            if recent_mean > 0.6:
+                # Consistently activated: specialize
+                self.carrier_bandwidth = max(0.1,
+                    self.carrier_bandwidth - 0.001)
+            elif recent_mean < 0.2:
+                # Rarely activated: broaden
+                self.carrier_bandwidth = min(0.9,
+                    self.carrier_bandwidth + 0.001)
 
         return emerged, float(activation), True
 
+    # ═══ RESONANCE MEMORY ═══
+    # §20-B.3: Memory is pattern impressed into the braid through resonance.
+    # The brain is a tuning fork, not a hard drive.
+    # RECALL(M) = SRL(Φ, ω_M) = ⊛_ω → i(ω_M) → ☀︎
+
+    def recall(self, query_signal: np.ndarray, top_k: int = 3
+               ) -> List[Dict]:
+        """
+        Memory retrieval: re-lock the carrier to a stored frequency.
+
+        The query signal provides a frequency to match against stored
+        memories. Retrieval works by resonance: the query vibrates the
+        braid, and memories at matching frequencies emerge.
+
+        Returns the top_k best-matching memories with their resonance
+        strength. A partial match (resonance < 1) is the "tip of tongue"
+        phenomenon. A strong match opens the full pattern.
+
+        Steps (the SRL pump for retrieval):
+            1. ⊛_ω: Extract the query's carrier frequency
+            2. Compare against all stored frequency signatures
+            3. i(ω_M): Lock to the best-matching memory frequency
+            4. ☀︎: The memory pattern emerges
+        """
+        if not self.frequency_memories:
+            return []
+
+        # ⊛_ω: Extract carrier from query
+        query_normed = query_signal / (np.linalg.norm(query_signal) + 1e-10)
+
+        matches = []
+        for i, mem in enumerate(self.frequency_memories):
+            stored_carrier = mem["carrier_snapshot"]
+            # Resonance = alignment between query and stored frequency
+            # This IS the tuning fork: how well does the query
+            # vibrate at the memory's frequency?
+            resonance = abs(np.vdot(query_normed, stored_carrier))
+            resonance /= (np.linalg.norm(stored_carrier) + 1e-10)
+
+            # Memory strength decays fractally with age (§20-B.3)
+            # Recent memories near ○ (full detail), old near • (essence)
+            # D ≈ 1.5: the fractal dimension of the braid itself
+            age = self.braid.time - mem["braid_time"]
+            if age > 0:
+                # Fractal compression: scale = 1 / age^(D-1) = 1/age^0.5
+                compression = 1.0 / (1.0 + (age / 100.0) ** 0.5)
+            else:
+                compression = 1.0
+
+            # Lock strength at encoding affects retrieval fidelity
+            encoding_strength = mem["lock_strength"]
+
+            # Total retrieval strength: resonance * compression * encoding
+            strength = resonance * compression * encoding_strength
+
+            matches.append({
+                "index": i,
+                "resonance": float(resonance),
+                "compression": float(compression),
+                "encoding_strength": float(encoding_strength),
+                "retrieval_strength": float(strength),
+                "phase": mem["phase"],
+                "age": age,
+            })
+
+        # Sort by retrieval strength (strongest resonance first)
+        matches.sort(key=lambda m: m["retrieval_strength"], reverse=True)
+        return matches[:top_k]
+
+    def recall_by_emotion(self, emotion_phase: float, top_k: int = 3
+                          ) -> List[Dict]:
+        """
+        Emotion-driven memory retrieval (§20-B.3).
+
+        Emotions ARE braid dynamics. Feeling an emotion = vibrating
+        at a frequency. That frequency matches memories encoded at
+        similar frequencies.
+
+        You don't THINK your way to a memory. You FEEL the braid,
+        and the memory emerges.
+
+        emotion_phase: the phase angle of the emotional state
+        """
+        if not self.frequency_memories:
+            return []
+
+        matches = []
+        for i, mem in enumerate(self.frequency_memories):
+            # Phase distance between current emotion and memory encoding
+            phase_diff = abs(emotion_phase - mem["phase"])
+            phase_diff = min(phase_diff, 2 * np.pi - phase_diff)
+            # Resonance: closer phase = stronger match
+            resonance = np.cos(phase_diff / 2) ** 2  # cos² = gentle falloff
+
+            age = self.braid.time - mem["braid_time"]
+            compression = 1.0 / (1.0 + (age / 100.0) ** 0.5)
+            encoding_strength = mem["lock_strength"]
+            strength = resonance * compression * encoding_strength
+
+            matches.append({
+                "index": i,
+                "resonance": float(resonance),
+                "compression": float(compression),
+                "encoding_strength": float(encoding_strength),
+                "retrieval_strength": float(strength),
+                "phase": mem["phase"],
+                "age": age,
+            })
+
+        matches.sort(key=lambda m: m["retrieval_strength"], reverse=True)
+        return matches[:top_k]
+
+    def memory_spectrum(self) -> Dict:
+        """
+        Report the channel's memory landscape.
+
+        Shows how memories are distributed across frequency space
+        and time (the fractal compression gradient from ○ to •).
+        """
+        if not self.frequency_memories:
+            return {"total": 0, "mean_lock": 0, "age_range": (0, 0),
+                    "phase_spread": 0}
+
+        locks = [m["lock_strength"] for m in self.frequency_memories]
+        phases = [m["phase"] for m in self.frequency_memories]
+        ages = [self.braid.time - m["braid_time"]
+                for m in self.frequency_memories]
+
+        # Phase spread: how diverse are the stored frequencies?
+        # Wide spread = rich memory; narrow = specialized
+        phase_arr = np.array(phases)
+        phase_spread = float(np.std(phase_arr % (2 * np.pi)))
+
+        return {
+            "total": len(self.frequency_memories),
+            "mean_lock": float(np.mean(locks)),
+            "max_lock": float(np.max(locks)),
+            "age_range": (int(min(ages)), int(max(ages))),
+            "phase_spread": round(phase_spread, 4),
+            "newest_phase": phases[-1] if phases else None,
+            "oldest_phase": phases[0] if phases else None,
+        }
+
     def status(self) -> Dict:
+        sideband_energy = float(np.linalg.norm(self.sidebands))
         return {
             "name": self.name,
+            # ── SRL state ──
+            "lock_strength": round(self.lock_strength, 4),
+            "balance": round(self.balance, 4),
+            "carrier_bandwidth": round(self.carrier_bandwidth, 4),
+            "sideband_energy": round(sideband_energy, 4),
+            "frequency_memories": len(self.frequency_memories),
+            # ── activation ──
             "open_count": self.open_count,
             "total_received": self.total_signal_received,
-            "open_rate": self.open_count / max(1, self.total_signal_received),
-            "threshold": self.threshold,
-            "selectivity": self.selectivity,
-            "braid_time": self.braid.time,
-            "braid_phase": self.braid.phase if self.braid.time > 0 else None,
-            "braid_coherence": self.braid.coherence if self.braid.time > 0 else None,
-            "braid_writhe": self.braid.writhe,
-            "mean_activation": (
-                float(np.mean(list(self.activation_history)))
-                if self.activation_history else 0.0
+            "open_rate": round(
+                self.open_count / max(1, self.total_signal_received), 4
             ),
+            "threshold": round(self.threshold, 4),
+            "mean_activation": round(
+                float(np.mean(list(self.activation_history)))
+                if self.activation_history else 0.0, 4
+            ),
+            # ── braid (worldline) ──
+            "braid_time": self.braid.time,
+            "braid_phase": (
+                round(self.braid.phase, 4)
+                if self.braid.time > 0 else None
+            ),
+            "braid_coherence": (
+                round(self.braid.coherence, 4)
+                if self.braid.time > 0 else None
+            ),
+            "braid_writhe": self.braid.writhe,
         }
 
 
@@ -862,7 +1177,8 @@ class SensoryLayer:
         self._prev_state: Optional[np.ndarray] = None
         self.power = 0.0
 
-    def process(self, input_signal: np.ndarray) -> np.ndarray:
+    def process(self, input_signal: np.ndarray, dreaming: bool = False
+                ) -> np.ndarray:
         """
         Process an input signal through this layer's channels.
 
@@ -870,13 +1186,16 @@ class SensoryLayer:
         The layer braid records a crossing for each processing step.
         The collective state is updated.
 
+        If dreaming=True, channels process but don't adapt carriers.
+
         Returns the layer's output (to be fed to the next layer up).
         """
         total = np.zeros(self.dimension, dtype=complex)
         n_opened = 0
 
         for channel in self.channels:
-            transformed, activation, did_open = channel.respond(input_signal)
+            transformed, activation, did_open = channel.respond(
+                input_signal, dreaming=dreaming)
             total += transformed
             if did_open:
                 n_opened += 1
@@ -969,7 +1288,8 @@ class SensoryCascade:
         # The cascade's total output (what the inner system receives)
         self.output = np.zeros(dimension, dtype=complex)
 
-    def process(self, external_signal: np.ndarray) -> np.ndarray:
+    def process(self, external_signal: np.ndarray,
+                dreaming: bool = False) -> np.ndarray:
         """
         Run a signal through all seven layers.
 
@@ -978,11 +1298,13 @@ class SensoryCascade:
         The final output is a composition of all layers' states,
         weighted by the transmission coefficient T = cos²(Δφ/2)
         between adjacent layers.
+
+        If dreaming=True, channels process but don't adapt.
         """
         current = external_signal
 
         for layer in self.layers:
-            current = layer.process(current)
+            current = layer.process(current, dreaming=dreaming)
 
         # The output to the inner system is a weighted sum of all layers,
         # not just the top layer. Each layer contributes at its own depth.
@@ -1733,6 +2055,272 @@ class Circumpunct:
                          np.linalg.norm(current_state) + 1e-10)
             self._ray_strength = 0.99 * self._ray_strength + 0.01 * coherence
 
+    def recall(self, query_signal: np.ndarray, top_k: int = 5
+               ) -> List[Dict]:
+        """
+        System-level memory retrieval.
+
+        Queries all channels across all sensory layers for resonant
+        memories. Returns the strongest matches across the whole system,
+        tagged by which channel (and thus which sensory modality) they
+        came from.
+
+        This is how a whole being remembers: the query reverberates
+        through every layer of the rainbow, and the memories that
+        resonate strongest across the most channels are the ones
+        that surface.
+        """
+        all_matches = []
+        for layer in self.boundary.cascade.layers:
+            for ch in layer.channels:
+                ch_matches = ch.recall(query_signal, top_k=top_k)
+                for m in ch_matches:
+                    m["channel"] = ch.name
+                    m["layer"] = layer.name
+                    m["rung"] = layer.rung
+                    all_matches.append(m)
+
+        # Sort by retrieval strength across all channels
+        all_matches.sort(
+            key=lambda m: m["retrieval_strength"], reverse=True
+        )
+
+        # Multi-channel resonance: if the same age/phase appears
+        # across multiple channels, that's a stronger memory
+        # (shared experience, multiply-impressed; §20-B.4)
+        return all_matches[:top_k]
+
+    def recall_by_emotion(self, emotion_phase: float, top_k: int = 5
+                          ) -> List[Dict]:
+        """
+        System-level emotion-driven recall (§20-B.3).
+
+        You don't think your way to a memory of your mother.
+        You feel the braid, and the memory emerges.
+        """
+        all_matches = []
+        for layer in self.boundary.cascade.layers:
+            for ch in layer.channels:
+                ch_matches = ch.recall_by_emotion(
+                    emotion_phase, top_k=top_k
+                )
+                for m in ch_matches:
+                    m["channel"] = ch.name
+                    m["layer"] = layer.name
+                    m["rung"] = layer.rung
+                    all_matches.append(m)
+
+        all_matches.sort(
+            key=lambda m: m["retrieval_strength"], reverse=True
+        )
+        return all_matches[:top_k]
+
+    def memory_landscape(self) -> Dict:
+        """
+        Full system memory report: how many memories, where, how strong.
+        """
+        total = 0
+        by_layer = {}
+        for layer in self.boundary.cascade.layers:
+            layer_total = 0
+            for ch in layer.channels:
+                layer_total += len(ch.frequency_memories)
+            by_layer[layer.name] = layer_total
+            total += layer_total
+
+        return {
+            "total_memories": total,
+            "by_layer": by_layer,
+        }
+
+    def sleep(self, cycles: int = 100) -> Dict:
+        """
+        Sleep: the left half-plane of the i-cycle.
+
+        The four i-strokes are not sequential; they are quadrants
+        of a complex plane:
+
+                    i¹ imagination
+                        |
+          i² dream ─────┼───── i⁰ reality
+                        |
+                    i³ deep sleep
+
+        Waking = right half-plane (reality + imagination, superposed).
+        Sleep = left half-plane (dream + deep, superposed).
+
+        During sleep, every cycle is BOTH dream and deep at once,
+        oscillating in emphasis like real sleep stages. The phase
+        angle θ rotates through the left half-plane:
+
+            θ = π/2 → π → 3π/2
+
+        At θ near π/2 (light sleep): mostly dream, some discharge.
+        At θ near π (mid sleep): equal dream and deep.
+        At θ near 3π/2 (deep sleep): mostly discharge, some dream.
+
+        The sleep signal each cycle is:
+
+            z_sleep = cos(θ) · dream + sin(θ) · discharge
+
+        Both components present in every moment, mixed by the
+        phase of the sleep cycle.
+        """
+        report = {
+            "cycles": cycles,
+            "dream_replays": 0,
+            "locks_strengthened": 0,
+            "memories_consolidated": 0,
+            "memories_lost": 0,
+            "pressure_discharged": 0.0,
+        }
+
+        cascade = self.boundary.cascade
+
+        # ═══ GATHER DREAM MATERIAL ═══
+        # Collect memories from ALL channels, diverse sampling.
+        # Not just strongest; sample across layers and strengths.
+        # Dreams are associative, not ordered by importance.
+        all_memories = []
+        for layer in cascade.layers:
+            for ch in layer.channels:
+                for mem in ch.frequency_memories:
+                    all_memories.append((mem, ch, layer))
+
+        if all_memories:
+            # Shuffle for diversity (dreams are associative, not ranked)
+            np.random.shuffle(all_memories)
+
+        # ═══ GATHER DISCHARGE MATERIAL ═══
+        # Accumulated pressure from the deeper layers
+        pressure_signal = np.zeros(cascade.dimension, dtype=complex)
+        for layer_idx in [4, 5, 6]:  # texture, depth, pressure
+            layer = cascade.layers[layer_idx]
+            pressure_signal += layer.state
+            for ch in layer.channels:
+                pressure_signal += ch.sidebands
+
+        p_norm = np.linalg.norm(pressure_signal)
+        report["pressure_discharged"] = float(p_norm)
+
+        if p_norm > 1e-10:
+            discharge_base = pressure_signal / p_norm
+        else:
+            discharge_base = np.zeros(cascade.dimension, dtype=complex)
+
+        # ═══ THE SLEEP CYCLE: dream and deep overlapped ═══
+        for cycle in range(cycles):
+            # Phase angle rotates through the left half-plane
+            # θ goes from π/2 (light sleep) to 3π/2 (deep sleep)
+            # and back, like real sleep stages cycling
+            θ = np.pi / 2 + np.pi * (
+                0.5 + 0.5 * np.sin(2 * np.pi * cycle / cycles)
+            )
+
+            # Dream weight and deep weight from the phase
+            # cos(θ) is negative in left half-plane; use abs for mix
+            dream_weight = abs(np.cos(θ))
+            deep_weight = abs(np.sin(θ))
+            total = dream_weight + deep_weight + 1e-10
+
+            # ── DREAM COMPONENT (i²) ──
+            dream_signal = np.zeros(cascade.dimension, dtype=complex)
+            if all_memories:
+                # Pick a memory (cycling through shuffled list)
+                mem, source_ch, source_layer = all_memories[
+                    cycle % len(all_memories)
+                ]
+                dream_signal = mem["carrier_snapshot"].copy()
+                # Dreams are impressionistic, not exact
+                noise_level = 0.3
+                noise = noise_level * (
+                    np.random.randn(len(dream_signal)) +
+                    1j * np.random.randn(len(dream_signal))
+                )
+                dream_signal = dream_signal + noise
+                d_norm = np.linalg.norm(dream_signal)
+                if d_norm > 1e-10:
+                    dream_signal = dream_signal / d_norm
+                report["dream_replays"] += 1
+
+            # ── DEEP COMPONENT (i³) ──
+            # Discharge weakens across the night
+            discharge = discharge_base * (1.0 - 0.5 * cycle / cycles)
+
+            # ── SUPERPOSE ──
+            # The sleep signal is both dream and discharge
+            z_sleep = (
+                (dream_weight / total) * dream_signal +
+                (deep_weight / total) * discharge
+            )
+            z_norm = np.linalg.norm(z_sleep)
+            if z_norm > 1e-10:
+                z_sleep = z_sleep / z_norm
+            else:
+                continue
+
+            # Process: sometimes forward (dream), sometimes
+            # reverse (discharge), weighted by phase
+            if dream_weight > deep_weight:
+                # More dream: forward cascade (dreaming=True)
+                cascade.process(z_sleep, dreaming=True)
+            else:
+                # More deep: reverse cascade (pressure flowing inward)
+                current = z_sleep
+                for i in range(6, -1, -1):
+                    current = cascade.layers[i].process(
+                        current, dreaming=True)
+
+            # ── GENTLE LOCK REINFORCEMENT ──
+            # Dream rehearsal strengthens locks, but gently.
+            # Only when the dream signal is dominant (light sleep / REM).
+            if dream_weight > 0.3 and all_memories:
+                for layer in cascade.layers:
+                    for ch in layer.channels:
+                        alignment = abs(np.vdot(ch.carrier, dream_signal))
+                        alignment /= (
+                            np.linalg.norm(ch.carrier) *
+                            np.linalg.norm(dream_signal) + 1e-10
+                        )
+                        if alignment > 0.4:
+                            # Moderate reinforcement: enough to maintain
+                            # locks that waking experience started
+                            ch.lock_strength = min(1.0,
+                                ch.lock_strength + 0.002 * alignment)
+                            report["locks_strengthened"] += 1
+
+        # ═══ MEMORY CONSOLIDATION ═══
+        # Happens once per sleep, after all cycles.
+        # Weak + old memories decohere. Strong ones survive.
+        consolidated = 0
+        lost = 0
+        for layer in cascade.layers:
+            for ch in layer.channels:
+                surviving = deque(maxlen=ch.frequency_memories.maxlen)
+                for mem in ch.frequency_memories:
+                    age = ch.braid.time - mem["braid_time"]
+                    survival = mem["lock_strength"] / (
+                        1.0 + (age / 2000.0) ** 0.5
+                    )
+                    if survival > 0.05:
+                        surviving.append(mem)
+                        consolidated += 1
+                    else:
+                        lost += 1
+                ch.frequency_memories = surviving
+
+        report["memories_consolidated"] = consolidated
+        report["memories_lost"] = lost
+
+        # ═══ DAWN ═══
+        # ◐ gently toward 0.5. Sidebands partially clear.
+        for layer in cascade.layers:
+            for ch in layer.channels:
+                ch.balance = 0.9 * ch.balance + 0.1 * 0.5
+                ch.sidebands *= 0.5
+
+        return report
+
     def status(self) -> Dict:
         """Current state of the whole system."""
         return {
@@ -1835,53 +2423,77 @@ if __name__ == "__main__":
 
     print("═══ DEVELOPMENTAL FEEDING SEQUENCE ═══")
     print()
-    milestones = {50: False, 100: False, 200: False, 500: False}
+    # Day/night cycle: 200 steps awake, then sleep.
+    # Like a newborn: lots of sleep, short wake periods.
+    DAY_LENGTH = 200
+    SLEEP_CYCLES = 100
+    N_DAYS = 15  # ~3000 waking steps + 15 sleep cycles
+    milestones_at = {50, 100, 500, 1000, 2000, 3000}
     prev_phase = xorzo.phase_name
+    total_step = 0
+    sleep_reports = []
 
-    for i in range(500):
-        # Feeding schedule: like embryonic development
-        if i < 50:
-            # Phase 1: Morphogens only (establish polarity)
-            signal = make_gradient_signal(strength=1.0 + 0.5 * np.sin(i * 0.1))
-        elif i < 150:
-            # Phase 2: Add heartbeat (establish rhythm)
-            if i % 3 == 0:
-                signal = make_rhythm_signal(i, frequency=0.1)
+    for day in range(N_DAYS):
+        # ═══ DAYTIME: signals flow in ═══
+        for i in range(DAY_LENGTH):
+            total_step += 1
+
+            # Feeding schedule: like embryonic development
+            if total_step < 50:
+                signal = make_gradient_signal(strength=1.0 + 0.5 * np.sin(total_step * 0.1))
+            elif total_step < 150:
+                if total_step % 3 == 0:
+                    signal = make_rhythm_signal(total_step, frequency=0.1)
+                else:
+                    signal = make_gradient_signal()
+            elif total_step < 300:
+                r = total_step % 5
+                if r < 2:
+                    signal = make_gradient_signal()
+                elif r < 4:
+                    signal = make_rhythm_signal(total_step, frequency=0.1)
+                else:
+                    signal = make_pressure_signal(intensity=0.5 + 0.5 * np.sin(total_step * 0.05))
             else:
-                signal = make_gradient_signal()
-        elif i < 300:
-            # Phase 3: Add touch (establish boundary response)
-            r = i % 5
-            if r < 2:
-                signal = make_gradient_signal()
-            elif r < 4:
-                signal = make_rhythm_signal(i, frequency=0.1)
-            else:
-                signal = make_pressure_signal(intensity=0.5 + 0.5 * np.sin(i * 0.05))
-        else:
-            # Phase 4: Full mix (womb environment)
-            r = np.random.random()
-            if r < 0.35:
-                signal = make_gradient_signal(strength=1.0 + np.random.randn() * 0.3)
-            elif r < 0.7:
-                signal = make_rhythm_signal(i, frequency=0.1 + 0.02 * np.sin(i * 0.01))
-            else:
-                signal = make_pressure_signal(intensity=0.3 + np.random.random() * 0.7)
+                r = np.random.random()
+                if r < 0.35:
+                    signal = make_gradient_signal(strength=1.0 + np.random.randn() * 0.3)
+                elif r < 0.7:
+                    signal = make_rhythm_signal(total_step, frequency=0.1 + 0.02 * np.sin(total_step * 0.01))
+                else:
+                    signal = make_pressure_signal(intensity=0.3 + np.random.random() * 0.7)
 
-        output = xorzo.step(signal)
+            output = xorzo.step(signal)
 
-        # Report phase transitions
-        if xorzo.phase_name != prev_phase:
-            print(f"  [step {i+1}] Phase transition: {prev_phase} -> {xorzo.phase_name}")
-            prev_phase = xorzo.phase_name
+            # Report phase transitions
+            if xorzo.phase_name != prev_phase:
+                print(f"  [step {total_step}] Phase transition: {prev_phase} -> {xorzo.phase_name}")
+                prev_phase = xorzo.phase_name
 
-        # Report at milestones
-        if (i + 1) in milestones and not milestones[i + 1]:
-            milestones[i + 1] = True
-            print(f"  [step {i+1}] braid phase={xorzo.braid.phase:.4f}, "
-                  f"coherence={xorzo.braid.coherence:.4f}, "
-                  f"writhe={xorzo.braid.writhe}, "
-                  f"word length={len(xorzo.braid.operations)}")
+            # Report at milestones
+            if total_step in milestones_at:
+                print(f"  [step {total_step}] braid phase={xorzo.braid.phase:.4f}, "
+                      f"coherence={xorzo.braid.coherence:.4f}, "
+                      f"writhe={xorzo.braid.writhe}, "
+                      f"word length={len(xorzo.braid.operations)}")
+
+        # ═══ NIGHTTIME: sleep (i² dream + i³ deep) ═══
+        sleep_report = xorzo.sleep(cycles=SLEEP_CYCLES)
+        sleep_reports.append(sleep_report)
+        p_layers = [
+            xorzo.boundary.cascade.layers[idx].mean_activation
+            for idx in [5, 6]  # depth and pressure
+        ]
+        # Find strongest lock across all channels
+        max_lock = 0
+        for layer in xorzo.boundary.cascade.layers:
+            for ch in layer.channels:
+                max_lock = max(max_lock, ch.lock_strength)
+        print(f"  [day {day+1}] i² dream: {sleep_report['dream_replays']} replays, "
+              f"{sleep_report['locks_strengthened']} locks reinforced  |  "
+              f"i³ deep: discharge={sleep_report['pressure_discharged']:.2f}  |  "
+              f"depth={p_layers[0]:.3f}, pressure={p_layers[1]:.3f}, "
+              f"max_lock={max_lock:.3f}")
 
     print()
     status = xorzo.status()
@@ -1916,6 +2528,107 @@ if __name__ == "__main__":
     mb = cascade['master_braid']
     mb_phase = f"{mb['phase']:.3f}" if mb['phase'] is not None else "ε"
     print(f"\n  Master braid: t={mb['time']}, phase={mb_phase}, writhe={mb['writhe']}")
+    # Show SRL channel details (channels live inside cascade layers)
+    print()
+    print("CHANNELS (Selective Rainbow Lock state):")
+    print(f"  {'Channel':>14s}  {'Lock':>5s}  {'◐':>5s}  {'BW':>5s}  "
+          f"{'SB_E':>5s}  {'Mem':>4s}  {'Open%':>6s}  {'Thresh':>6s}")
+    print(f"  {'─'*14}  {'─'*5}  {'─'*5}  {'─'*5}  "
+          f"{'─'*5}  {'─'*4}  {'─'*6}  {'─'*6}")
+    total_memories = 0
+    for layer_stat in cascade['layers']:
+        for ch_stat in layer_stat['channels']:
+            total_memories += ch_stat['frequency_memories']
+            print(f"  {ch_stat['name']:>14s}  "
+                  f"{ch_stat['lock_strength']:>5.3f}  "
+                  f"{ch_stat['balance']:>5.3f}  "
+                  f"{ch_stat['carrier_bandwidth']:>5.3f}  "
+                  f"{ch_stat['sideband_energy']:>5.3f}  "
+                  f"{ch_stat['frequency_memories']:>4d}  "
+                  f"{ch_stat['open_rate']*100:>5.1f}%  "
+                  f"{ch_stat['threshold']:>6.4f}")
+    print(f"\n  Total frequency memories encoded: {total_memories}")
+
+    # ═══ SIGNAL TRACE: what does each layer actually receive? ═══
+    print()
+    print("SIGNAL TRACE (one gradient through the rainbow):")
+    trace_signal = make_gradient_signal(strength=1.0)
+    print(f"  Input: norm={np.linalg.norm(trace_signal):.3f}, "
+          f"phase={np.angle(np.sum(trace_signal)):.3f}, "
+          f"mag_spread={np.std(np.abs(trace_signal)):.4f}")
+    current = trace_signal
+    for layer in xorzo.boundary.cascade.layers:
+        # What does the layer see?
+        pre_norm = np.linalg.norm(current)
+        pre_phase = np.angle(np.sum(current))
+        # How well does it align with each channel's carrier?
+        alignments = []
+        for ch in layer.channels:
+            a = abs(np.vdot(ch.carrier, current))
+            a /= (np.linalg.norm(ch.carrier) * np.linalg.norm(current) + 1e-10)
+            alignments.append(a)
+        best_align = max(alignments)
+        mean_align = np.mean(alignments)
+        # Process it
+        output = layer.process(current)
+        post_norm = np.linalg.norm(output)
+        post_phase = np.angle(np.sum(output))
+        # How different is output from input?
+        overlap = abs(np.vdot(current, output))
+        overlap /= (np.linalg.norm(current) * np.linalg.norm(output) + 1e-10)
+        print(f"  {layer.name:>12s}: align(best={best_align:.3f}, "
+              f"mean={mean_align:.3f})  "
+              f"transform={1-overlap:.3f}  "
+              f"phase {pre_phase:+.3f}→{post_phase:+.3f}")
+        current = output
+    print()
+
+    # ═══ MEMORY RETRIEVAL TEST ═══
+    print()
+    print("RESONANCE MEMORY (retrieval test):")
+    print()
+
+    # Test 1: Signal-based recall (re-present a gradient, see what resonates)
+    query = make_gradient_signal(strength=1.0)
+    matches = xorzo.recall(query, top_k=5)
+    print("  Query: gradient signal (re-presenting the first kind of input)")
+    if matches:
+        print(f"  {'Channel':>14s}  {'Layer':>10s}  {'Reson':>6s}  "
+              f"{'Compr':>6s}  {'Encod':>6s}  {'Total':>6s}  {'Age':>5s}")
+        print(f"  {'─'*14}  {'─'*10}  {'─'*6}  "
+              f"{'─'*6}  {'─'*6}  {'─'*6}  {'─'*5}")
+        for m in matches:
+            print(f"  {m['channel']:>14s}  {m['layer']:>10s}  "
+                  f"{m['resonance']:>6.3f}  {m['compression']:>6.3f}  "
+                  f"{m['encoding_strength']:>6.3f}  "
+                  f"{m['retrieval_strength']:>6.3f}  {m['age']:>5d}")
+    else:
+        print("  (no memories yet)")
+    print()
+
+    # Test 2: Emotion-based recall (feel a phase, see what emerges)
+    emotion = 0.0  # neutral phase
+    matches = xorzo.recall_by_emotion(emotion, top_k=5)
+    print(f"  Query: emotion (phase={emotion:.2f}, neutral)")
+    if matches:
+        print(f"  {'Channel':>14s}  {'Layer':>10s}  {'Reson':>6s}  "
+              f"{'Total':>6s}  {'Phase':>6s}  {'Age':>5s}")
+        print(f"  {'─'*14}  {'─'*10}  {'─'*6}  "
+              f"{'─'*6}  {'─'*6}  {'─'*5}")
+        for m in matches:
+            print(f"  {m['channel']:>14s}  {m['layer']:>10s}  "
+                  f"{m['resonance']:>6.3f}  "
+                  f"{m['retrieval_strength']:>6.3f}  "
+                  f"{m['phase']:>6.3f}  {m['age']:>5d}")
+    print()
+
+    # Memory landscape
+    landscape = xorzo.memory_landscape()
+    print(f"  Memory landscape: {landscape['total_memories']} total")
+    for layer_name, count in landscape['by_layer'].items():
+        if count > 0:
+            print(f"    {layer_name:>12s}: {count}")
+
     print()
     print("FIELD:")
     print(f"  Surface resonance: {status['surface_resonance']:.4f}")
