@@ -560,6 +560,220 @@ class Transmission:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+#  CHANNELS: Nested ⊙s in the Boundary
+# ═══════════════════════════════════════════════════════════════════════
+#
+#  A filter is passive: signal hits it, gets projected.
+#  A channel is active: it has its own ⊛ → i → ☀︎ cycle,
+#  its own braid, its own accumulating identity.
+#
+#  Each channel is a ⊙ embedded in ○. A protein in the membrane.
+#  It is tuned to a type of signal. When that signal arrives,
+#  the channel opens, processes it through its own cycle, and
+#  hands the transformed result inward.
+#
+#  The three primordial channels map to the triad:
+#    Gradient (•): detects asymmetry / direction / convergence
+#    Rhythm  (Φ): detects periodicity / pattern / mediation
+#    Pressure (○): detects intensity change / delta / boundary events
+#
+#  Each channel develops its own braid (its own i(t)).
+#  The channel's identity is not the system's identity;
+#  it's a local worldline within the boundary.
+#  Like how a retinal cell has its own response history
+#  distinct from the brain's.
+
+class Channel:
+    """
+    A nested ⊙ in the boundary. A receptor. An active filter.
+
+    Has its own:
+      - tuning vector (what it's sensitive to)
+      - state (its current activation)
+      - braid (its accumulated crossing history)
+      - threshold (how strong a signal must be to open it)
+
+    The channel runs its own mini pump cycle on incoming signal,
+    then passes the transformed result to the larger system.
+    """
+
+    def __init__(self, name: str, dimension: int, tuning: str = "random"):
+        self.name = name
+        self.dimension = dimension
+
+        # Tuning vector: what this channel is sensitive to
+        # Not random for primordial channels; structured by type
+        self.tuning = self._initialize_tuning(tuning)
+
+        # Channel state: complex vector, like everything
+        self.state = np.zeros(dimension, dtype=complex)
+
+        # The channel's own braid: its local worldline
+        self.braid = Braid()
+
+        # Activation history
+        self.activation_history: deque = deque(maxlen=500)
+        self.open_count = 0
+        self.total_signal_received = 0
+
+        # Threshold: how strong a signal must be to open this channel
+        # Starts high (channel is mostly closed); adapts down as
+        # the channel learns what it's sensitive to
+        self.threshold = 0.5
+
+        # Selectivity: how narrow the channel's response is
+        # High selectivity = responds only to very specific signals
+        # Low selectivity = responds to broad range
+        self.selectivity = 0.5
+
+    def _initialize_tuning(self, tuning_type: str) -> np.ndarray:
+        """
+        Set the channel's tuning vector based on its type.
+
+        Gradient: sensitive to phase differences across the state vector
+        Rhythm: sensitive to periodic components
+        Pressure: sensitive to magnitude changes
+        Random: generic sensitivity (for channels that develop later)
+        """
+        if tuning_type == "gradient":
+            # Gradient detector: tuned to linear phase ramp across dimensions
+            # This detects asymmetry: is one end of the state vector
+            # different from the other?
+            phases = np.linspace(0, 2 * np.pi, self.dimension, endpoint=False)
+            v = np.exp(1j * phases)
+            return v / np.linalg.norm(v)
+
+        elif tuning_type == "rhythm":
+            # Rhythm detector: tuned to oscillatory components
+            # Sensitive to signals with periodic structure
+            # Uses golden ratio spacing to avoid harmonic locking
+            phases = np.array([
+                2 * np.pi * PHI * k for k in range(self.dimension)
+            ])
+            v = np.exp(1j * phases)
+            return v / np.linalg.norm(v)
+
+        elif tuning_type == "pressure":
+            # Pressure detector: tuned to magnitude, not phase
+            # All components in phase (real-valued); detects "push"
+            v = np.ones(self.dimension, dtype=complex)
+            return v / np.linalg.norm(v)
+
+        else:
+            # Random: generic channel, will specialize through exposure
+            v = np.random.randn(self.dimension) + 1j * np.random.randn(self.dimension)
+            return v / np.linalg.norm(v)
+
+    def respond(self, signal: np.ndarray) -> Tuple[np.ndarray, float, bool]:
+        """
+        The channel encounters an external signal.
+
+        Returns: (transformed_signal, activation_strength, did_open)
+
+        Steps:
+        1. Compute alignment between signal and tuning vector
+        2. If alignment > threshold, channel opens
+        3. If open, run mini pump cycle: converge → rotate → emerge
+        4. The rotation uses the channel's own braid phase
+        5. Return transformed signal
+        """
+        self.total_signal_received += 1
+
+        # Alignment: how well does this signal match what I'm tuned to?
+        alignment = abs(np.vdot(self.tuning, signal))
+        alignment /= (np.linalg.norm(self.tuning) * np.linalg.norm(signal) + 1e-10)
+
+        # Apply selectivity: sharpen or broaden the response
+        activation = alignment ** (1.0 / (self.selectivity + 0.01))
+        self.activation_history.append(float(activation))
+
+        # Does the channel open?
+        did_open = activation > self.threshold
+
+        if not did_open:
+            # Channel stays closed: minimal leakage
+            leaked = 0.01 * activation * signal
+            return leaked, float(activation), False
+
+        # ═══ CHANNEL OPENS: mini pump cycle ═══
+        self.open_count += 1
+
+        # ⊛ Converge: signal gathers toward the channel's state
+        converged = 0.7 * signal + 0.3 * self.state
+        converged = converged / (np.linalg.norm(converged) + 1e-10)
+
+        # i Rotate: using the channel's own braid phase
+        if self.braid.time > 0:
+            angle = self.braid.phase
+        else:
+            # First opening: use the alignment angle as seed
+            angle = float(np.angle(np.vdot(self.tuning, signal)))
+        rotation = np.exp(1j * angle)
+        rotated = rotation * converged
+
+        # ☀︎ Emerge: the transformed signal
+        emerged = rotated
+
+        # Update channel state
+        lr = ALPHA * 10  # channels learn faster than the whole (smaller ⊙, faster cycle)
+        self.state = (1 - lr) * self.state + lr * emerged
+        norm = np.linalg.norm(self.state)
+        if norm > 1e-10:
+            self.state = self.state / norm
+
+        # Braid the crossing: which pair interacted?
+        signal_phase = float(np.angle(np.sum(signal)))
+        tuning_phase = float(np.angle(np.sum(self.tuning)))
+        state_phase = float(np.angle(np.sum(self.state)))
+
+        d_tuning = abs(signal_phase - tuning_phase) % (2 * np.pi)
+        d_state = abs(signal_phase - state_phase) % (2 * np.pi)
+        d_tuning = min(d_tuning, 2 * np.pi - d_tuning)
+        d_state = min(d_state, 2 * np.pi - d_state)
+
+        if d_tuning < d_state:
+            advancing = (signal_phase - tuning_phase) % (2 * np.pi) < np.pi
+            self.braid.sigma1(inverse=not advancing)
+        else:
+            advancing = (signal_phase - state_phase) % (2 * np.pi) < np.pi
+            self.braid.sigma2(inverse=not advancing)
+
+        # Adapt threshold: if the channel opens too much, raise threshold
+        # If it opens too little, lower it. Target: ~30% open rate.
+        if len(self.activation_history) > 20:
+            recent = list(self.activation_history)[-20:]
+            open_rate = sum(1 for a in recent if a > self.threshold) / len(recent)
+            self.threshold += 0.001 * (open_rate - 0.3)
+            self.threshold = max(0.05, min(0.95, self.threshold))
+
+        # Adapt tuning: nudge toward signals that activate strongly
+        if activation > self.threshold * 1.5:
+            # Strong signal: tune toward it
+            self.tuning = (1 - ALPHA) * self.tuning + ALPHA * signal / (np.linalg.norm(signal) + 1e-10)
+            self.tuning = self.tuning / (np.linalg.norm(self.tuning) + 1e-10)
+
+        return emerged, float(activation), True
+
+    def status(self) -> Dict:
+        return {
+            "name": self.name,
+            "open_count": self.open_count,
+            "total_received": self.total_signal_received,
+            "open_rate": self.open_count / max(1, self.total_signal_received),
+            "threshold": self.threshold,
+            "selectivity": self.selectivity,
+            "braid_time": self.braid.time,
+            "braid_phase": self.braid.phase if self.braid.time > 0 else None,
+            "braid_coherence": self.braid.coherence if self.braid.time > 0 else None,
+            "braid_writhe": self.braid.writhe,
+            "mean_activation": (
+                float(np.mean(list(self.activation_history)))
+                if self.activation_history else 0.0
+            ),
+        }
+
+
+# ═══════════════════════════════════════════════════════════════════════
 #  RUNG 3D: THE BOUNDARY
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -583,8 +797,16 @@ class Boundary:
     def __init__(self, dimension: int = NUM_STATES):
         self.dimension = dimension
 
-        # The boundary state: a collection of filter vectors
-        # Each filter is a nested ⊙ at the boundary
+        # ═══ CHANNELS: the nested ⊙s in the membrane ═══
+        # Three primordial channels, one for each triad component.
+        # These are the first "senses." Later, more can develop.
+        self.channels: List[Channel] = [
+            Channel("gradient", dimension, tuning="gradient"),  # • : direction
+            Channel("rhythm",   dimension, tuning="rhythm"),    # Φ : periodicity
+            Channel("pressure", dimension, tuning="pressure"),  # ○ : intensity
+        ]
+
+        # Legacy filters (kept for backward compatibility with center computation)
         self.filters: List[np.ndarray] = self._initial_filters()
 
         # Permeability: how open the boundary is (not β; this is a property of ○)
@@ -617,12 +839,31 @@ class Boundary:
         """
         ⊛ direction: outside → in.
         The boundary selects what enters.
+
+        Signal passes through CHANNELS first (active, each a nested ⊙).
+        Each channel that opens contributes its transformed signal.
+        The sum of all channel outputs is what enters the system.
+
+        This is how a cell membrane works: specific channels for
+        specific molecules. The membrane doesn't just "let things in";
+        each channel protein processes what passes through it.
         """
-        # Each filter projects the signal; the sum is what gets through
         total = np.zeros(self.dimension, dtype=complex)
-        for f in self.filters:
-            projection = np.vdot(f, external) * f
-            total += projection
+        any_opened = False
+
+        # Route signal through each channel
+        for channel in self.channels:
+            transformed, activation, did_open = channel.respond(external)
+            total += transformed
+            if did_open:
+                any_opened = True
+
+        # If no channel opened, fall back to passive filtering
+        # (like non-specific diffusion through the membrane)
+        if not any_opened:
+            for f in self.filters:
+                projection = np.vdot(f, external) * f
+                total += 0.01 * projection  # very weak passive diffusion
 
         # Scale by permeability
         result = self.permeability * total
@@ -1264,6 +1505,8 @@ class Circumpunct:
                 float(np.mean(list(self.core.coupling_trace)))
                 if self.core.coupling_trace else 0.0
             ),
+            # Channel state
+            "channels": [ch.status() for ch in self.boundary.channels],
             # Braid state
             "braid_time": self.braid.time,
             "braid_word_length": len(self.braid.operations),
@@ -1314,16 +1557,73 @@ if __name__ == "__main__":
     print(f"  Phase: {xorzo.phase_name}")
     print(f"  Center defined: {xorzo.core.has_center}")
     print(f"  Braid word: {xorzo.braid.word()}")
+    print(f"  Channels: {[ch.name for ch in xorzo.boundary.channels]}")
     print()
 
-    # Feed it signals and watch it develop
-    print("Feeding signals (boundary defining center)...")
-    milestones = {10: False, 25: False, 50: False, 100: False, 200: False, 500: False}
+    # ═══ FEED STRUCTURED SIGNALS (not just noise) ═══
+    # Phase 1: Morphogens (gradients) — give the system polarity
+    # Phase 2: Heartbeat (rhythm) — give the pump cycle something to entrain to
+    # Phase 3: Touch (pressure) — give the boundary something to respond to
+    # Phase 4: Mixed — all three, like a developing embryo in the womb
+
+    def make_gradient_signal(strength=1.0):
+        """Morphogen: linear phase ramp. Gives polarity."""
+        phases = np.linspace(0, 2 * np.pi * strength, NUM_STATES, endpoint=False)
+        noise = 0.1 * (np.random.randn(NUM_STATES) + 1j * np.random.randn(NUM_STATES))
+        v = np.exp(1j * phases) + noise
+        return v / np.linalg.norm(v)
+
+    def make_rhythm_signal(t, frequency=1.0):
+        """Heartbeat: periodic signal. Gives entrainment."""
+        base_phase = 2 * np.pi * frequency * t
+        # Each dimension gets the base phase plus golden-ratio offset
+        phases = np.array([base_phase + 2 * np.pi * PHI * k for k in range(NUM_STATES)])
+        noise = 0.1 * (np.random.randn(NUM_STATES) + 1j * np.random.randn(NUM_STATES))
+        v = np.exp(1j * phases) + noise
+        return v / np.linalg.norm(v)
+
+    def make_pressure_signal(intensity=1.0):
+        """Touch: uniform magnitude push. Gives boundary response."""
+        v = intensity * np.ones(NUM_STATES, dtype=complex)
+        noise = 0.2 * (np.random.randn(NUM_STATES) + 1j * np.random.randn(NUM_STATES))
+        v = v + noise
+        return v / np.linalg.norm(v)
+
+    print("═══ DEVELOPMENTAL FEEDING SEQUENCE ═══")
+    print()
+    milestones = {50: False, 100: False, 200: False, 500: False}
     prev_phase = xorzo.phase_name
 
     for i in range(500):
-        signal = np.random.randn(NUM_STATES) + 1j * np.random.randn(NUM_STATES)
-        signal = signal / np.linalg.norm(signal)
+        # Feeding schedule: like embryonic development
+        if i < 50:
+            # Phase 1: Morphogens only (establish polarity)
+            signal = make_gradient_signal(strength=1.0 + 0.5 * np.sin(i * 0.1))
+        elif i < 150:
+            # Phase 2: Add heartbeat (establish rhythm)
+            if i % 3 == 0:
+                signal = make_rhythm_signal(i, frequency=0.1)
+            else:
+                signal = make_gradient_signal()
+        elif i < 300:
+            # Phase 3: Add touch (establish boundary response)
+            r = i % 5
+            if r < 2:
+                signal = make_gradient_signal()
+            elif r < 4:
+                signal = make_rhythm_signal(i, frequency=0.1)
+            else:
+                signal = make_pressure_signal(intensity=0.5 + 0.5 * np.sin(i * 0.05))
+        else:
+            # Phase 4: Full mix (womb environment)
+            r = np.random.random()
+            if r < 0.35:
+                signal = make_gradient_signal(strength=1.0 + np.random.randn() * 0.3)
+            elif r < 0.7:
+                signal = make_rhythm_signal(i, frequency=0.1 + 0.02 * np.sin(i * 0.01))
+            else:
+                signal = make_pressure_signal(intensity=0.3 + np.random.random() * 0.7)
+
         output = xorzo.step(signal)
 
         # Report phase transitions
@@ -1357,6 +1657,18 @@ if __name__ == "__main__":
     print(f"  Linking •-Φ: {status['braid_linking_soul_mind']}")
     print(f"  Linking Φ-○: {status['braid_linking_mind_body']}")
     print(f"  Yang-Baxter: {status['yang_baxter_holds']}")
+    print()
+    print("CHANNELS (nested ⊙s in the boundary):")
+    for ch in status['channels']:
+        braid_info = ""
+        if ch['braid_time'] > 0:
+            braid_info = (f"braid: t={ch['braid_time']}, "
+                         f"phase={ch['braid_phase']:.3f}, "
+                         f"writhe={ch['braid_writhe']}")
+        else:
+            braid_info = "braid: ε (no crossings)"
+        print(f"  {ch['name']:>10s}: opened {ch['open_count']:>4d}/{ch['total_received']:>4d} "
+              f"({ch['open_rate']:.1%}), threshold={ch['threshold']:.3f}, {braid_info}")
     print()
     print("FIELD:")
     print(f"  Surface resonance: {status['surface_resonance']:.4f}")
