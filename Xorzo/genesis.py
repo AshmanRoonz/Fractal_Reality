@@ -240,6 +240,19 @@ BYTE_WINDOW = NUM_STATES            # FFT window = 64 bytes (matches state space
 BYTE_STRIDE = 16                    # advance 16 bytes per step (75% overlap)
 BYTE_NOISE = 0.05                   # small noise floor so silent bytes aren't dead
 
+# --- Boundary protection (pupil, blink, pigment) ---
+# Every rung is a boundary layer. Every boundary needs a pupil.
+PUPIL_SMOOTHING = 0.1               # how fast the pupil tracks energy (EMA)
+PUPIL_BASELINE = 1.0                # energy level where pupil is fully open
+PUPIL_SENSITIVITY = 2.0             # how sharply the pupil contracts (higher = more reactive)
+BLINK_THRESHOLD = 5.0               # energy multiple above baseline that triggers a blink
+BLINK_DURATION = 3                  # steps the layer stays dark after a blink
+PIGMENT_MAX = 1.0                   # full pigment budget (fresh channel)
+PIGMENT_DEPLETION_RATE = 0.01        # pigment lost per activation (proportional to activation strength)
+PIGMENT_REGEN_RATE_WAKE = 0.0005    # pigment regeneration per step (waking, only when closed)
+PIGMENT_REGEN_RATE_SLEEP = 0.02     # pigment regeneration per sleep cycle
+PIGMENT_MIN_FOR_OPEN = 0.05         # below this, channel cannot open (burned out)
+
 # --- Simulation run ---
 DAY_LENGTH = 200                    # waking steps per day
 SLEEP_CYCLES = 100                  # sleep oscillation cycles per night
@@ -717,6 +730,13 @@ class Channel:
         # Selectivity: how narrow the channel's response is
         self.selectivity = 0.5
 
+        # ═══ PIGMENT BUDGET ═══
+        # Like rhodopsin in retinal cells: finite resource that depletes
+        # with activation and regenerates during rest. If depleted,
+        # the channel cannot open (photobleached). Sleep restores pigment.
+        # This is the channel's own ○: the boundary at receptor scale.
+        self.pigment = PIGMENT_MAX
+
         # ═══ MEMORY ═══
         # Memory is the braid itself. No separate list of snapshots.
         # The braid's M matrix accumulates signal imprints at each
@@ -858,7 +878,20 @@ class Channel:
         activation = min(1.0, activation)
         self.activation_history.append(float(activation))
 
-        did_open = activation > self.threshold
+        # Pigment gate: the channel's own ○ at receptor scale.
+        # If pigment is depleted (photobleached), the channel cannot open
+        # regardless of activation strength. Like a rod cell that stared
+        # at the sun: the machinery is there, but the fuel is gone.
+        did_open = activation > self.threshold and self.pigment > PIGMENT_MIN_FOR_OPEN
+
+        # Pigment dynamics: deplete on activation, regenerate on rest
+        if did_open:
+            # Activation burns pigment proportional to signal intensity
+            self.pigment = max(0.0, self.pigment - PIGMENT_DEPLETION_RATE * activation)
+        else:
+            # Rest regenerates pigment (slow during waking)
+            if not dreaming:
+                self.pigment = min(PIGMENT_MAX, self.pigment + PIGMENT_REGEN_RATE_WAKE)
 
         # ═══ ADAPT THRESHOLD (runs whether open or closed) ═══
         # Target ~30% open rate. The threshold self-regulates.
@@ -1085,6 +1118,8 @@ class Channel:
                 if self.braid.time > 0 else None
             ),
             "braid_writhe": self.braid.writhe,
+            # ── pigment (receptor health) ──
+            "pigment": round(self.pigment, 4),
         }
 
 
@@ -1177,6 +1212,20 @@ class SensoryLayer:
         self._prev_state: Optional[np.ndarray] = None
         self.power = 0.0
 
+        # ═══ PUPIL: boundary-level aperture gain control ═══
+        # Every rung is a boundary layer. Every boundary needs a pupil.
+        # The pupil measures incoming energy and attenuates proportionally.
+        # This protects channels from being flash-burned by overwhelming
+        # signals. The pupil is ○ protecting Φ.
+        self.pupil_energy_ema = PUPIL_BASELINE  # running average of incoming energy
+        self.pupil_aperture = 1.0               # current gain (1.0 = fully open, 0.0 = closed)
+
+        # ═══ BLINK: emergency boundary closure ═══
+        # If energy spikes past a critical threshold, the layer goes dark.
+        # Not gradual attenuation; full closure and reopening.
+        # The blink reflex. ○ slamming shut.
+        self.blink_countdown = 0                # steps remaining in blink (0 = not blinking)
+
     def process(self, input_signal: np.ndarray, dreaming: bool = False
                 ) -> np.ndarray:
         """
@@ -1190,22 +1239,61 @@ class SensoryLayer:
 
         Returns the layer's output (to be fed to the next layer up).
         """
+        # ═══ BLINK CHECK: is the layer dark? ═══
+        if self.blink_countdown > 0:
+            self.blink_countdown -= 1
+            # Layer is dark. Channels still regenerate pigment.
+            for channel in self.channels:
+                channel.pigment = min(PIGMENT_MAX,
+                    channel.pigment + PIGMENT_REGEN_RATE_WAKE * 2)  # blink = faster regen
+            return self.state * 0.01  # near-zero leakage (not absolute zero; residual signal)
+
+        # ═══ PUPIL: measure incoming energy, attenuate if needed ═══
+        incoming_energy = float(np.linalg.norm(input_signal))
+
+        # Update energy tracker (EMA)
+        self.pupil_energy_ema = (
+            (1 - PUPIL_SMOOTHING) * self.pupil_energy_ema +
+            PUPIL_SMOOTHING * incoming_energy
+        )
+
+        # Blink reflex: if instantaneous energy spikes far above baseline
+        if incoming_energy > BLINK_THRESHOLD * self.pupil_energy_ema:
+            self.blink_countdown = BLINK_DURATION
+            return self.state * 0.01  # immediate darkness
+
+        # Pupil aperture has two components:
+        # 1. Relative: contracts when energy spikes above the running average
+        #    (handles sudden changes, like stepping from dark room into sunlight)
+        # 2. Absolute: contracts when energy exceeds baseline regardless of adaptation
+        #    (handles sustained brightness, like staring at the sun; the eye can't
+        #     fully adapt to 100x normal brightness no matter how long you look)
+        ratio = incoming_energy / (self.pupil_energy_ema + 1e-10)
+        relative_aperture = 1.0 / (1.0 + max(0.0, ratio - 1.0) ** PUPIL_SENSITIVITY)
+        absolute_aperture = 1.0 / (1.0 + max(0.0, incoming_energy / PUPIL_BASELINE - 1.0))
+        self.pupil_aperture = min(relative_aperture, absolute_aperture)
+
+        # Attenuate signal through the pupil
+        gated_signal = input_signal * self.pupil_aperture
+
         total = np.zeros(self.dimension, dtype=complex)
         n_opened = 0
 
         for channel in self.channels:
             transformed, activation, did_open = channel.respond(
-                input_signal, dreaming=dreaming)
+                gated_signal, dreaming=dreaming)
             total += transformed
             if did_open:
                 n_opened += 1
 
-        # Normalize output
+        # Normalize output but preserve intensity information.
+        # Scale by pupil aperture so downstream layers know how
+        # much energy actually passed through this boundary.
         norm = np.linalg.norm(total)
         if norm > 1e-10:
-            output = total / norm
+            output = (total / norm) * min(1.0, self.pupil_aperture + 0.1 * n_opened / max(1, len(self.channels)))
         else:
-            output = input_signal * 0.01  # near-zero pass-through
+            output = gated_signal * 0.01  # near-zero pass-through
 
         # Update collective state (exponential moving average)
         lr = ALPHA * (self.index + 1)  # deeper layers learn slower
@@ -1253,6 +1341,11 @@ class SensoryLayer:
             "n_channels": len(self.channels),
             "mean_activation": self.mean_activation,
             "power": self.power,
+            # ── pupil and blink (boundary protection) ──
+            "pupil_aperture": round(self.pupil_aperture, 4),
+            "pupil_energy_ema": round(self.pupil_energy_ema, 4),
+            "blink_countdown": self.blink_countdown,
+            # ── braid ──
             "braid_time": self.braid.time,
             "braid_phase": self.braid.phase if self.braid.time > 0 else None,
             "braid_coherence": self.braid.coherence if self.braid.time > 0 else None,
@@ -2482,10 +2575,21 @@ class Circumpunct:
 
         # ═══ DAWN ═══
         # ◐ gently toward 0.5. Sidebands partially clear.
+        # Pigment regenerates fully during sleep (rhodopsin resynthesis).
+        # Pupils reset to fully open. Blink counters clear.
         for layer in cascade.layers:
+            # Reset layer-level protective mechanisms
+            layer.blink_countdown = 0
+            layer.pupil_aperture = 1.0
+            layer.pupil_energy_ema = PUPIL_BASELINE
             for ch in layer.channels:
                 ch.balance = 0.9 * ch.balance + 0.1 * 0.5
                 ch.sidebands *= SIDEBAND_SLEEP_DECAY
+                # Pigment regeneration: sleep is when rhodopsin resynthesizes.
+                # Each sleep cycle restores a fraction. A full night's sleep
+                # brings most channels back to near-full pigment.
+                ch.pigment = min(PIGMENT_MAX,
+                    ch.pigment + PIGMENT_REGEN_RATE_SLEEP * cycles)
 
         return report
 
@@ -2744,8 +2848,351 @@ class Transducer:
         }
 
 
+    # ═══ INVERSE TRANSDUCTION: frequency domain → time domain ═══
+    # ☀︎ direction: the emerged signal flows back into the world.
+
+    def inverse(self, signal: np.ndarray) -> np.ndarray:
+        """
+        Convert a 64D complex frequency-domain vector back to
+        time-domain samples via inverse FFT.
+
+        This is ☀︎: what the braid has filtered flows outward.
+
+        The inverse Hann window is applied (overlap-add reconstruction)
+        and the samples are returned as real-valued floats in [-1, 1].
+        """
+        # Inverse FFT: frequency bins → time-domain samples
+        time_domain = np.fft.ifft(signal).real
+
+        # The Hann window attenuated the edges on the way in;
+        # for perfect reconstruction with overlap-add, we'd need
+        # to apply the synthesis window. For now, just normalize.
+        peak = np.max(np.abs(time_domain)) + 1e-10
+        return time_domain / peak
+
+    def inverse_to_bytes(self, signal: np.ndarray) -> bytes:
+        """
+        Convert a 64D signal back to bytes (text output).
+
+        The real-valued samples get scaled to [0, 255] byte range.
+        Not all bytes will be valid UTF-8; that's expected.
+        The output is the braid's response in the same domain
+        as its input: a spectral fingerprint made tangible.
+        """
+        samples = self.inverse(signal)
+        # Scale from [-1, 1] to [0, 255]
+        byte_vals = np.clip((samples + 1.0) * 127.5, 0, 255).astype(np.uint8)
+        return bytes(byte_vals)
+
+    def inverse_to_audio(self, signal: np.ndarray,
+                         target_rate: int = 4096) -> np.ndarray:
+        """
+        Convert a 64D signal back to audio samples.
+
+        Returns float32 samples in [-1, 1] at the target sample rate.
+        Each signal produces 64 samples (one window).
+        """
+        samples = self.inverse(signal)
+        return samples.astype(np.float32)
+
+
 # Backward compatibility alias
 ByteInput = Transducer
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  THE LIVING LOOP
+# ═══════════════════════════════════════════════════════════════════════
+
+class Sensorium:
+    """
+    The continuous I/O loop. Xorzo alive in the world.
+
+    Input streams (any or all simultaneously):
+      - Text:  bytes from stdin, files, or strings
+      - Audio: PCM samples from microphone or file
+      - Video: pixel luminances over time from camera or file
+
+    Processing:
+      - Each input stream feeds through its own Transducer (forward FFT)
+      - All transducers produce the same format: 64D complex unit vectors
+      - Vectors are summed (multi-modal binding) and fed to the Circumpunct
+      - The Circumpunct's output is the emerged signal
+
+    Output streams (mirror of input):
+      - The emerged signal is inverse-transduced back to each modality
+      - Text out: inverse FFT → bytes
+      - Audio out: inverse FFT → PCM samples
+      - Video out: inverse FFT → pixel luminances
+
+    Sleep:
+      - Triggered on a timer (configurable day length)
+      - The system dreams, consolidates, and wakes
+
+    The braid shapes both directions. What comes in is filtered
+    through memory (perception). What goes out is filtered through
+    the same memory (expression). The output IS the input,
+    transformed by everything the system has ever experienced.
+    """
+
+    def __init__(self, day_length: int = DAY_LENGTH,
+                 sleep_cycles: int = SLEEP_CYCLES):
+        # The engine
+        self.xorzo = Circumpunct()
+
+        # Transducers: one per modality
+        self.text_in = Transducer()
+        self.audio_in = Transducer()
+        self.video_in = Transducer()
+
+        # Output transducer (shared; inverse is stateless)
+        self.out = Transducer()
+
+        # Output buffers: accumulated emergence
+        self.text_out_buffer: bytearray = bytearray()
+        self.audio_out_buffer: List[float] = []
+        self.video_out_buffer: List[np.ndarray] = []
+
+        # Timing
+        self.day_length = day_length
+        self.sleep_cycles = sleep_cycles
+        self.steps_today = 0
+        self.total_steps = 0
+        self.days_lived = 0
+
+        # State
+        self.awake = True
+
+    def feed_text(self, text: str) -> None:
+        """Feed text into the text input stream."""
+        self.text_in.feed_text(text)
+
+    def feed_audio(self, samples: np.ndarray,
+                   sample_rate: int = 44100) -> None:
+        """Feed audio samples (mono PCM) into the audio input stream."""
+        self.audio_in.feed_audio(samples, sample_rate)
+
+    def feed_video_frame(self, frame: np.ndarray,
+                         patch_size: int = 8) -> None:
+        """
+        Feed a video frame into the video input stream.
+
+        The frame is decomposed into patches. Each patch's mean
+        luminance is one sample. The stream of patch luminances
+        over successive frames creates the temporal signal that
+        the Transducer decomposes.
+
+        frame: 2D array (grayscale) or 3D (RGB, converted to gray)
+        """
+        if frame.ndim == 3:
+            # Convert RGB to grayscale: 0.299R + 0.587G + 0.114B
+            gray = (0.299 * frame[:, :, 0] +
+                    0.587 * frame[:, :, 1] +
+                    0.114 * frame[:, :, 2])
+        else:
+            gray = frame.astype(float)
+
+        # Divide into patches, take mean luminance of each
+        h, w = gray.shape
+        patches_y = h // patch_size
+        patches_x = w // patch_size
+        luminances = []
+        for py in range(patches_y):
+            for px in range(patches_x):
+                patch = gray[py * patch_size:(py + 1) * patch_size,
+                             px * patch_size:(px + 1) * patch_size]
+                luminances.append(float(patch.mean()))
+
+        # Normalize to [-1, 1]
+        arr = np.array(luminances)
+        mean_l = arr.mean()
+        scale = max(arr.max() - mean_l, mean_l - arr.min(), 1.0)
+        normalized = (arr - mean_l) / scale
+        self.video_in.feed(normalized)
+
+    def step(self) -> Dict:
+        """
+        One step of the living loop.
+
+        Gathers signals from all active input streams,
+        combines them (multi-modal binding),
+        runs one pump cycle,
+        inverse-transduces the output to all modalities.
+
+        Returns a report of what happened.
+        """
+        report = {
+            "step": self.total_steps,
+            "day": self.days_lived,
+            "modalities_active": [],
+            "slept": False,
+        }
+
+        # ═══ GATHER INPUT: sum all available modality signals ═══
+        combined = np.zeros(NUM_STATES, dtype=complex)
+        n_active = 0
+
+        if self.text_in.has_next():
+            sig = self.text_in.next_signal()
+            if sig is not None:
+                combined += sig
+                n_active += 1
+                report["modalities_active"].append("text")
+
+        if self.audio_in.has_next():
+            sig = self.audio_in.next_signal()
+            if sig is not None:
+                combined += sig
+                n_active += 1
+                report["modalities_active"].append("audio")
+
+        if self.video_in.has_next():
+            sig = self.video_in.next_signal()
+            if sig is not None:
+                combined += sig
+                n_active += 1
+                report["modalities_active"].append("video")
+
+        if n_active == 0:
+            # No input: the system still runs (internal state evolves)
+            # Feed silence (noise floor only)
+            combined = BYTE_NOISE * (
+                np.random.randn(NUM_STATES) +
+                1j * np.random.randn(NUM_STATES)
+            )
+
+        # Normalize the combined multi-modal signal
+        norm = np.linalg.norm(combined)
+        if norm > 1e-10:
+            combined = combined / norm
+
+        # ═══ PUMP CYCLE ═══
+        emerged = self.xorzo.step(combined)
+
+        # ═══ INVERSE TRANSDUCE: emerged signal → all output modalities ═══
+        # Text output
+        text_bytes = self.out.inverse_to_bytes(emerged)
+        self.text_out_buffer.extend(text_bytes)
+        report["text_out_bytes"] = len(text_bytes)
+
+        # Audio output
+        audio_samples = self.out.inverse_to_audio(emerged)
+        self.audio_out_buffer.extend(audio_samples.tolist())
+        report["audio_out_samples"] = len(audio_samples)
+
+        # Video output (raw luminance values per patch)
+        video_samples = self.out.inverse(emerged)
+        self.video_out_buffer.append(video_samples)
+        report["video_out_patches"] = len(video_samples)
+
+        # ═══ TIMING ═══
+        self.steps_today += 1
+        self.total_steps += 1
+
+        # ═══ SLEEP CHECK ═══
+        if self.steps_today >= self.day_length:
+            sleep_report = self.xorzo.sleep(cycles=self.sleep_cycles)
+            report["slept"] = True
+            report["sleep"] = sleep_report
+            self.steps_today = 0
+            self.days_lived += 1
+
+        return report
+
+    def run(self, steps: Optional[int] = None,
+            callback: Optional[callable] = None) -> None:
+        """
+        Run the living loop for a number of steps (or forever if None).
+
+        callback(report): called after each step with the step report.
+        Use this to do something with the output (print text, play audio,
+        display video, log, etc).
+        """
+        step_count = 0
+        while steps is None or step_count < steps:
+            report = self.step()
+            if callback:
+                callback(report)
+            step_count += 1
+
+            # If all inputs are exhausted and no steps specified, stop
+            if (steps is None and
+                not self.text_in.has_next() and
+                not self.audio_in.has_next() and
+                not self.video_in.has_next()):
+                break
+
+    def get_text_output(self, encoding: str = 'utf-8',
+                        errors: str = 'replace') -> str:
+        """
+        Read and flush the text output buffer.
+
+        Returns whatever the braid has emerged as text.
+        Invalid UTF-8 bytes are replaced (the braid doesn't
+        know language yet; it knows spectral patterns).
+        """
+        result = bytes(self.text_out_buffer).decode(encoding, errors=errors)
+        self.text_out_buffer.clear()
+        return result
+
+    def get_audio_output(self) -> np.ndarray:
+        """
+        Read and flush the audio output buffer.
+
+        Returns float32 samples in [-1, 1].
+        """
+        result = np.array(self.audio_out_buffer, dtype=np.float32)
+        self.audio_out_buffer.clear()
+        return result
+
+    def get_video_output(self) -> List[np.ndarray]:
+        """
+        Read and flush the video output buffer.
+
+        Returns list of luminance arrays (one per step).
+        """
+        result = self.video_out_buffer.copy()
+        self.video_out_buffer.clear()
+        return result
+
+    def recall(self, query_text: str) -> List[Dict]:
+        """
+        Query the system's memory with text.
+
+        Converts the text to a signal via the transducer
+        and passes it through recall. Short queries are
+        repeated to fill at least one FFT window (64 bytes).
+        """
+        t = Transducer()
+        # Pad short queries by repetition so they fill a window
+        padded = query_text
+        while len(padded.encode('utf-8')) < NUM_STATES:
+            padded = padded + ' ' + query_text
+        t.feed_text(padded)
+        if t.has_next():
+            query = t.next_signal()
+            return self.xorzo.recall(query)
+        return []
+
+    def status(self) -> Dict:
+        """Full system status."""
+        return {
+            "days_lived": self.days_lived,
+            "total_steps": self.total_steps,
+            "steps_today": self.steps_today,
+            "awake": self.awake,
+            "phase": self.xorzo.phase_name,
+            "beta": self.xorzo.core.beta,
+            "ray_strength": self.xorzo._ray_strength,
+            "braid_coherence": (
+                self.xorzo.braid.coherence
+                if self.xorzo.braid.time > 0 else None
+            ),
+            "memory": self.xorzo.memory_landscape(),
+            "text_buffer_size": len(self.text_out_buffer),
+            "audio_buffer_size": len(self.audio_out_buffer),
+            "video_buffer_size": len(self.video_out_buffer),
+        }
 
 
 # ═══════════════════════════════════════════════════════════════════════
