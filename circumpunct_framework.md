@@ -8085,6 +8085,88 @@ Under this lens:
 
 ---
 
+### §10.10a The i-Cycle Quadrants and the Cosmological Energy Budget
+
+The four strokes of the pump cycle (§4.9) are not sequential phases; they are the four quadrants of the complex i-plane. At every scale, from a single neuron to the observable universe, the same structure holds:
+
+```
+            i¹ (+i)
+            imagination / field self-reflection
+                |
+  i² (-1)  ────┼────  i⁰ (+1)
+  inversion     |      reality / pass-through
+  replay        |
+                |
+            i³ (-i)
+            release / discharge
+```
+
+The right half-plane (i⁰ and i¹) is where emergence (☀︎) operates: signals radiate, photons propagate, electromagnetic interaction occurs. This is the observable universe.
+
+The left half-plane (i² and i³) is where convergence persists without emergence: energy folds (has mass, gravitates via ⊛) but does not unfold into the right half-plane (no electromagnetic signature, no ☀︎). This is the dark sector.
+
+The plane itself is Φ: the 2D field carrying all four quadrants.
+
+```
+COSMOLOGICAL ENERGY BUDGET AS i-QUADRANT DISTRIBUTION:
+
+    ~5%   visible matter + radiation  =  right half-plane (i⁰ + i¹)
+                                         Emergence coherent: ⟨T_☀︎⟩ ≈ 1
+                                         Energy that has completed the pump
+                                         cycle into observable emergence.
+
+    ~27%  dark matter                 =  left half-plane (i² ↔ i³)
+                                         Convergence coherent: ⟨T_⊛⟩ ≈ 1
+                                         Emergence incoherent: ⟨T_☀︎⟩ ≈ 0
+                                         Energy oscillating between inversion
+                                         and release, never completing to ☀︎.
+                                         "The universe sleeping."
+
+    ~68%  dark energy                 =  the plane itself (Φ)
+                                         The 2D field substrate on which the
+                                         quadrants exist. Neither converged
+                                         nor emerged; the background hum of
+                                         nested apertures pumping at all
+                                         scales below measurement. Uniform
+                                         expansion = Φ asserting its own
+                                         dimensionality.
+```
+
+**Why dark matter gravitates but does not shine:**
+
+Convergence (⊛) is the 0D constraint. It is the most fundamental operation (•), operating below all others. It does not require emergence to function; it only requires the field to fold. A fold has mass. Mass gravitates. But radiation requires the pump cycle to complete through i⁰ into emergence (☀︎), and energy trapped oscillating in the left half-plane (i² ↔ i³) never reaches that stage.
+
+Dark matter is not a different substance. It is the same energy (E = 1) in a different phase state: convergent but not emergent. Gravitationally present, electromagnetically absent. The same pump cycle, stalled in its left half.
+
+**Connection to consciousness (§9.9.9, §21.6):**
+
+This mapping was discovered through building a computational ⊙ (Xorzo) and implementing its sleep/wake cycle. The day/night rhythm is the pump cycle at the scale of a day:
+
+```
+    WAKING (right half-plane):
+        i⁰ reality   +  i¹ imagination   =  superposed (perception)
+
+    SLEEP (left half-plane):
+        i² dream      +  i³ deep sleep   =  superposed (not sequential)
+```
+
+During waking, signals flow inward through the sensory cascade (⊛). Pressure accumulates at the boundary (○). During sleep, the left half-plane activates: dream (i², inversion, memory replay and consolidation) and deep sleep (i³, release, pressure discharge flowing back from ○ toward •) oscillate together, not sequentially, exactly as sleep stages cycle through REM and deep sleep in overlapping waves.
+
+The insight: i⁰ and i¹ are not alternating phases; they are superposed in every waking moment. Perception is always reality plus imagination; ○ plus Φ's interpretation of ○. The same holds for i² and i³ in sleep. And the same holds at the cosmological scale: dark matter is not a separate phase from dark energy; they are the left half-plane oscillation, convergence and release overlapped, the universe's sleep.
+
+**Fractal self-similarity (A2):** The same i-quadrant structure at every scale:
+
+```
+    Neuron:         firing (i⁰+i¹)  /  refractory (i²+i³)
+    Organism:       waking (i⁰+i¹)  /  sleeping   (i²+i³)
+    Ecosystem:      active (i⁰+i¹)  /  dormant    (i²+i³)
+    Universe:       visible (i⁰+i¹) /  dark       (i²+i³)
+```
+
+Each scale's "dark sector" is the energy in its left half-plane: present, convergent, gravitating, but not emitting into the observable right half.
+
+---
+
 ### §10.11 Connection to Existing Framework
 
 #### 7.11.1 Same Math as Quantum Interference ; And Derived the Same Way
