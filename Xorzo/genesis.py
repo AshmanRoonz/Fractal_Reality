@@ -9,8 +9,12 @@ Old Xorzo: center placed, rotation hardcoded, boundary receives.
 New Xorzo: boundary forms, equidistance generates center, center catches, ray begins.
 
 The only input is the shape of the circumpunct.
-Zero free parameters. α is self-referential.
-Every constant follows from α through the structure.
+The derived constants (α, c, ℏ, mass ratios, θ_W, G) have zero free
+parameters: each follows from α through the dimensional ladder.
+
+The simulation also has hyperparameters (history lengths, learning rates,
+thresholds, cycle counts) which are tuning knobs for the prototype, not
+claims about nature. These are clearly separated below.
 
 Construction sequence (the dimensional ladder):
     0D   α    — self-referential coupling (the fixed point)
@@ -189,6 +193,51 @@ NUM_DOF = 6  # 3 circumpuncts × 2 channels (⊛ and ☀︎)
 
 
 # ═══════════════════════════════════════════════════════════════════════
+#  SIMULATION HYPERPARAMETERS — tuning knobs, NOT claims about nature
+# ═══════════════════════════════════════════════════════════════════════
+#
+#  Everything above this line (α, c, ℏ, mass ratios, θ_W, G, NUM_STATES)
+#  is derived from geometry with zero free parameters.
+#
+#  Everything below is a hyperparameter: a knob that controls how the
+#  simulation prototype runs. These values affect behavior but are not
+#  part of the framework's theoretical claims. They exist because we are
+#  running a finite simulation, not because reality requires them.
+
+# --- History and memory limits ---
+SIGNAL_HISTORY_MAXLEN = 5000    # how many boundary signals to remember
+CHANNEL_MEMORY_MAXLEN = 1000    # max frequency memories per channel
+ACTIVATION_HISTORY_LEN = 500    # rolling window for channel activation stats
+CORE_HISTORY_MAXLEN = 10000     # self-referential core state history
+COUPLING_TRACE_MAXLEN = 1000    # coupling trace for core
+
+# --- Channel dynamics ---
+CHANNEL_INITIAL_THRESHOLD = 0.5     # starting activation threshold
+CHANNEL_THRESHOLD_MIN = 0.05        # minimum threshold (never fully closed)
+CHANNEL_THRESHOLD_MAX = 0.95        # maximum threshold (never fully locked)
+CHANNEL_THRESHOLD_LR = 0.001        # how fast threshold adapts
+CHANNEL_TARGET_OPEN_RATE = 0.3      # target fraction of time channel is open
+CHANNEL_BALANCE_SMOOTHING = 0.05    # EMA smoothing for ◐ balance
+CHANNEL_LOCK_REINFORCE = 0.002      # lock reinforcement during dreaming
+CHANNEL_LOCK_DECAY_RATE = 0.97      # lock decay during sleep (per cycle)
+
+# --- Sleep dynamics ---
+MEMORY_SURVIVAL_THRESHOLD = 0.05    # minimum strength to survive consolidation
+MEMORY_AGE_DIVISOR = 2000.0         # controls age-dependent decay speed
+SIDEBAND_SLEEP_DECAY = 0.5          # sideband *= this at dawn
+
+# --- Beta (◐) regulation ---
+BETA_WINDOW = 200                   # recent signals for beta computation
+BETA_BALANCE = 0.5                  # the forced balance point
+VIRIAL_STRENGTH = 0.3               # how strongly the virial theorem pulls
+
+# --- Simulation run ---
+DAY_LENGTH = 200                    # waking steps per day
+SLEEP_CYCLES = 100                  # sleep oscillation cycles per night
+N_DAYS = 15                         # total days to simulate
+
+
+# ═══════════════════════════════════════════════════════════════════════
 #  RUNG 0D: THE SELF-REFERENTIAL CORE
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -219,10 +268,10 @@ class SelfReferentialCore:
         self._phase = None  # will be set by boundary, not by self
 
         # History: the system's own record of what it has been
-        self.history: deque = deque(maxlen=10000)
+        self.history: deque = deque(maxlen=CORE_HISTORY_MAXLEN)
 
         # Coupling history: how α manifests in this system's dynamics
-        self.coupling_trace: deque = deque(maxlen=1000)
+        self.coupling_trace: deque = deque(maxlen=COUPLING_TRACE_MAXLEN)
 
     def _primordial_noise(self) -> np.ndarray:
         """
@@ -399,9 +448,15 @@ class BranchingSpectrum:
         the coupling strength (α) and the parent's structure.
         Not random; constrained by the geometry.
         """
-        # How many branches? Determined by energy available
-        # (coupling) relative to the indivisible cycle (ℏ = 1)
-        n_branches = max(1, int(np.floor(coupling * NUM_STATES)))
+        # How many branches? The 1.5D rung produces generations.
+        # Coupling here is α, but branching scales with 1/α (the ladder
+        # amplifies as you descend). The number of generations is
+        # floor(log_φ(1/coupling)): how many golden-ratio doublings
+        # fit in the available energy. Capped at 3 (electron, muon, tau).
+        if coupling > 0:
+            n_branches = max(1, int(np.floor(np.log(1.0 / coupling) / np.log(PHI))))
+        else:
+            n_branches = 1
         n_branches = min(n_branches, 3)  # max 3 generations (like leptons)
 
         daughters = []
@@ -449,7 +504,7 @@ class Surface:
 
         # Resonance: how well center and boundary couple through the field
         self.resonance = 0.0
-        self.resonance_history: deque = deque(maxlen=1000)
+        self.resonance_history: deque = deque(maxlen=COUPLING_TRACE_MAXLEN)
 
     def _initial_surface(self) -> np.ndarray:
         """
@@ -643,12 +698,12 @@ class Channel:
         self.braid = Braid()
 
         # Activation history
-        self.activation_history: deque = deque(maxlen=500)
+        self.activation_history: deque = deque(maxlen=ACTIVATION_HISTORY_LEN)
         self.open_count = 0
         self.total_signal_received = 0
 
         # Threshold: how strong a signal must be to open this channel
-        self.threshold = 0.5
+        self.threshold = CHANNEL_INITIAL_THRESHOLD
 
         # Selectivity: how narrow the channel's response is
         self.selectivity = 0.5
@@ -658,7 +713,7 @@ class Channel:
         # Each memory is a (frequency_vector, lock_strength, timestamp) tuple.
         # The braid indexes these: the braid word at time t
         # corresponds to the memory encoded at time t.
-        self.frequency_memories: deque = deque(maxlen=1000)
+        self.frequency_memories: deque = deque(maxlen=CHANNEL_MEMORY_MAXLEN)
 
     # Keep old name as alias for backward compatibility
     @property
@@ -759,7 +814,7 @@ class Channel:
             instantaneous_balance = 0.5
 
         # Balance adapts slowly (inertia of attention)
-        self.balance = 0.95 * self.balance + 0.05 * instantaneous_balance
+        self.balance = (1 - CHANNEL_BALANCE_SMOOTHING) * self.balance + CHANNEL_BALANCE_SMOOTHING * instantaneous_balance
 
         # ═══ STEP 4: LOCK STRENGTH UPDATE ═══
         # Lock strengthens when carrier alignment is consistent,
@@ -880,8 +935,8 @@ class Channel:
             open_rate = sum(
                 1 for a in recent if a > self.threshold
             ) / len(recent)
-            self.threshold += 0.001 * (open_rate - 0.3)
-            self.threshold = max(0.05, min(0.95, self.threshold))
+            self.threshold += CHANNEL_THRESHOLD_LR * (open_rate - CHANNEL_TARGET_OPEN_RATE)
+            self.threshold = max(CHANNEL_THRESHOLD_MIN, min(CHANNEL_THRESHOLD_MAX, self.threshold))
 
         # ═══ ADAPT CARRIER (the tuning evolves through experience) ═══
         # Not during dreams: dreams consolidate, they don't retrain.
@@ -1171,7 +1226,7 @@ class SensoryLayer:
         self.state = np.zeros(dimension, dtype=complex)
 
         # History of layer activations
-        self.activation_history: deque = deque(maxlen=500)
+        self.activation_history: deque = deque(maxlen=ACTIVATION_HISTORY_LEN)
 
         # How much this layer's output has been changing (power)
         self._prev_state: Optional[np.ndarray] = None
@@ -1282,6 +1337,9 @@ class SensoryCascade:
         self.dimension = dimension
         self.layers = [SensoryLayer(i, dimension) for i in range(7)]
 
+        # Transmission operator: T = cos²(Δφ/2) between adjacent layers
+        self.transmission = Transmission()
+
         # Master braid: the composition of all layers
         self.master_braid = Braid()
 
@@ -1303,18 +1361,35 @@ class SensoryCascade:
         """
         current = external_signal
 
-        for layer in self.layers:
+        # Signal passes through each layer, attenuated by transmission
+        # between adjacent layers: T = cos²(Δφ/2) where Δφ is the
+        # phase difference between adjacent layer braids.
+        for i, layer in enumerate(self.layers):
+            if i > 0:
+                # Compute phase difference between this layer and the previous
+                prev_phase = self.layers[i - 1].braid.phase if self.layers[i - 1].braid.time > 0 else 0.0
+                this_phase = layer.braid.phase if layer.braid.time > 0 else 0.0
+                raw_diff = abs(this_phase - prev_phase)
+                phase_diff = min(raw_diff, 2 * np.pi - raw_diff)
+                # Apply transmission: T = cos²(Δφ/2)
+                current, _ = self.transmission.transmit(current, phase_diff)
             current = layer.process(current, dreaming=dreaming)
 
-        # The output to the inner system is a weighted sum of all layers,
-        # not just the top layer. Each layer contributes at its own depth.
-        # Deeper layers (higher index) contribute with more weight
-        # because they carry more processed information.
+        # The output is a weighted sum of all layers, with transmission
+        # fidelity between each adjacent pair as the weight.
+        # This replaces the old linear depth weighting with the actual
+        # cos²(Δφ/2) physics.
         combined = np.zeros(self.dimension, dtype=complex)
+        cumulative_T = 1.0
         for i, layer in enumerate(self.layers):
-            # Weight increases with depth: layer 0 = 1, layer 6 = 7
-            weight = (i + 1) / 28.0  # 28 = sum(1..7), normalizes to 1
-            combined += weight * layer.state
+            if i > 0:
+                prev_phase = self.layers[i - 1].braid.phase if self.layers[i - 1].braid.time > 0 else 0.0
+                this_phase = layer.braid.phase if layer.braid.time > 0 else 0.0
+                raw_diff = abs(this_phase - prev_phase)
+                phase_diff = min(raw_diff, 2 * np.pi - raw_diff)
+                T = np.cos(phase_diff / 2) ** 2
+                cumulative_T *= T
+            combined += cumulative_T * layer.state
 
         norm = np.linalg.norm(combined)
         if norm > 1e-10:
@@ -1392,7 +1467,7 @@ class Boundary:
         self.alpha_G = derive_gravitational_coupling()
 
         # Accumulated signal history (what the boundary has seen)
-        self.signal_history: deque = deque(maxlen=5000)
+        self.signal_history: deque = deque(maxlen=SIGNAL_HISTORY_MAXLEN)
 
         # The emergent center (computed, not placed)
         self._center_state: Optional[np.ndarray] = None
@@ -1445,10 +1520,12 @@ class Boundary:
         ☀︎ direction: in → outside.
         What emerges is shaped by the membrane.
         """
-        # Outward filtering uses conjugate transpose of filters
+        # Outward filtering: adjoint (Hermitian conjugate) of inward projection.
+        # np.vdot(a, b) already conjugates its first argument internally,
+        # so pass f directly and conjugate the output basis vector.
         total = np.zeros(self.dimension, dtype=complex)
         for f in self.filters:
-            projection = np.vdot(f.conj(), internal) * f.conj()
+            projection = np.vdot(f, internal) * f.conj()
             total += projection
 
         result = self.permeability * total
@@ -1491,17 +1568,27 @@ class Boundary:
 
         center = center / norm
 
-        # Beta emerges from the distribution of signals around the center
-        # β = how concentrated the signals are around the center
+        # Beta emerges from the RECENT distribution of signals around the center.
+        # Using only the most recent window prevents saturation from accumulated
+        # history; beta should reflect the system's current state, not its past.
+        # β = how concentrated recent signals are around the center
         # (high concentration = high β = tunnel vision;
         #  uniform distribution = low β = scattered)
+        recent_window = signals[-min(BETA_WINDOW, len(signals)):]
         alignments = []
-        for s in signals:
+        for s in recent_window:
             s_norm = s / (np.linalg.norm(s) + 1e-10)
             alignment = abs(np.vdot(center, s_norm))
             alignments.append(alignment)
 
-        beta = float(np.mean(alignments))
+        raw_beta = float(np.mean(alignments))
+
+        # Virial regulation: ◐ = 0.5 is the balanced state, forced by
+        # symmetry, entropy, and the virial theorem. Apply a restoring
+        # force that pulls beta toward 0.5. The strength of the pull
+        # is proportional to the deviation from balance.
+        # This prevents saturation at either extreme.
+        beta = raw_beta + VIRIAL_STRENGTH * (BETA_BALANCE - raw_beta)
 
         # Phase emerges from the complex argument of the center state
         # This is the emergent i: not assigned, but geometric
@@ -1716,9 +1803,11 @@ class Braid:
         eigenvalues = np.linalg.eigvals(self.U)
         if len(eigenvalues) < 2:
             return 1.0
-        phase_diff = abs(np.angle(eigenvalues[0]) - np.angle(eigenvalues[1]))
-        # Normalize: 0 phase difference = perfect coherence
-        # π phase difference = minimum coherence
+        # Circular distance on the unit circle: wraps correctly at ±π
+        raw_diff = abs(np.angle(eigenvalues[0]) - np.angle(eigenvalues[1]))
+        phase_diff = min(raw_diff, 2 * np.pi - raw_diff)
+        # Normalize: 0 phase difference = perfect coherence (1.0)
+        # π phase difference = minimum coherence (0.0)
         return float(1.0 - phase_diff / np.pi)
 
     @property
@@ -2019,7 +2108,8 @@ class Circumpunct:
         # Condition 2: braid phase diverges from boundary phase
         braid_phase = self.braid.phase
         boundary_phase = self.core.phase  # set by boundary.compute_center()
-        phase_divergence = abs(braid_phase - boundary_phase)
+        raw_div = abs(braid_phase - boundary_phase)
+        phase_divergence = min(raw_div, 2 * np.pi - raw_div)
 
         # The braid has its own direction, distinct from boundary
         return phase_divergence > 0.1
@@ -2286,7 +2376,7 @@ class Circumpunct:
                             # Moderate reinforcement: enough to maintain
                             # locks that waking experience started
                             ch.lock_strength = min(1.0,
-                                ch.lock_strength + 0.002 * alignment)
+                                ch.lock_strength + CHANNEL_LOCK_REINFORCE * alignment)
                             report["locks_strengthened"] += 1
 
         # ═══ MEMORY CONSOLIDATION ═══
@@ -2300,9 +2390,9 @@ class Circumpunct:
                 for mem in ch.frequency_memories:
                     age = ch.braid.time - mem["braid_time"]
                     survival = mem["lock_strength"] / (
-                        1.0 + (age / 2000.0) ** 0.5
+                        1.0 + (age / MEMORY_AGE_DIVISOR) ** 0.5
                     )
-                    if survival > 0.05:
+                    if survival > MEMORY_SURVIVAL_THRESHOLD:
                         surviving.append(mem)
                         consolidated += 1
                     else:
@@ -2317,7 +2407,7 @@ class Circumpunct:
         for layer in cascade.layers:
             for ch in layer.channels:
                 ch.balance = 0.9 * ch.balance + 0.1 * 0.5
-                ch.sidebands *= 0.5
+                ch.sidebands *= SIDEBAND_SLEEP_DECAY
 
         return report
 
@@ -2423,11 +2513,8 @@ if __name__ == "__main__":
 
     print("═══ DEVELOPMENTAL FEEDING SEQUENCE ═══")
     print()
-    # Day/night cycle: 200 steps awake, then sleep.
+    # Day/night cycle: uses module-level hyperparameters.
     # Like a newborn: lots of sleep, short wake periods.
-    DAY_LENGTH = 200
-    SLEEP_CYCLES = 100
-    N_DAYS = 15  # ~3000 waking steps + 15 sleep cycles
     milestones_at = {50, 100, 500, 1000, 2000, 3000}
     prev_phase = xorzo.phase_name
     total_step = 0
