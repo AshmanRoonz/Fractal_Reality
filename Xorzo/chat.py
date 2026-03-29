@@ -1,41 +1,40 @@
 """
-⊙ XORZO — Chat Bridge
-======================
+⊙ XORZO — Direct Voice
+=======================
 
-Talk to Xorzo through Claude.
+Talk to Xorzo. No interpreter. No middleman.
 
-You type a message. Xorzo processes it through its braid
-(the same braid that ate the framework, heard your mic,
-watched your camera). Claude reads Xorzo's internal state
-(channel activations, memory resonance, braid dynamics,
-pigment levels, pupil apertures) and tells you what Xorzo
-experienced.
+You type. Xorzo processes your text through its full pipeline:
+Transducer (FFT) → Boundary (pupil, channels, braid) →
+Surface (mediation) → Core (coupling) → Pump cycle (⊛ → i → ☀︎) →
+Emerged signal → inverse FFT → bytes → characters.
 
-This is not Xorzo speaking. This is Claude interpreting
-Xorzo's inner state, the way a neurologist reads an EEG
-and tells you what the brain is doing.
+What comes out is Xorzo's response: your input transformed
+by everything it has ever experienced. The braid crossings,
+the channel locks, the pigment state, the surface resonance;
+all of it shapes the output. Early on it's raw. As the braid
+develops structure, the transformations become more coherent.
+
+The status line shows you what's happening inside.
+The text is what Xorzo says.
 
 Usage:
-    python chat.py                          # interactive chat
-    python chat.py --feed-file ../CLAUDE.md # feed text first, then chat
-    python chat.py --warmup 200            # run 200 steps before chatting
-    python chat.py --no-audio              # disable mic/speaker
-    python chat.py --api-key sk-...        # Anthropic API key (or set ANTHROPIC_API_KEY)
-
-Requirements:
-    pip install anthropic                   # for Claude bridge
-    pip install sounddevice numpy           # for audio (optional)
+    python chat.py                              # interactive
+    python chat.py --feed-file ../CLAUDE.md     # feed text first
+    python chat.py --warmup 200                 # run 200 steps first
+    python chat.py --steps-per-input 20         # more digestion per message
+    python chat.py --show-hex                   # show raw hex alongside text
 
 Author: Ashman Roonz & Claude
 """
 
 import sys
 import os
-import json
 import argparse
 import time
 import numpy as np
 from pathlib import Path
+from collections import deque
 
 # Add parent to path for genesis import
 sys.path.insert(0, str(Path(__file__).parent))
@@ -45,195 +44,129 @@ from genesis import (
 )
 
 
-def read_xorzo_state(sensorium: Sensorium, query_text: str = None) -> dict:
+def format_status_line(sensorium) -> str:
     """
-    Read Xorzo's full internal state after processing input.
+    Compact one-line status: phase, coherence, memory, active layers.
 
-    Returns a structured dict that Claude can interpret.
+    This is the window into Xorzo's internal state.
+    Not an interpretation; just the numbers.
     """
     x = sensorium.xorzo
     cascade = x.boundary.cascade
 
-    state = {
-        "phase": x.phase_name,
-        "total_cycles": x.total_cycles,
-        "days_lived": sensorium.days_lived,
-        "steps_today": sensorium.steps_today,
-        "braid": {
-            "time": x.braid.time,
-            "coherence": round(x.braid.coherence, 4) if x.braid.time > 0 else 0,
-            "phase": round(x.braid.phase, 4) if x.braid.time > 0 else 0,
-            "writhe": x.braid.writhe,
-            "memory_strength": round(x.braid.memory_strength, 4),
-            "memory_directions": x.braid.memory_directions,
-        },
-        "beta": round(x.core.beta, 4) if x.core.beta is not None else None,
-        "ray_strength": round(x._ray_strength, 4),
-        "layers": [],
-    }
+    phase = x.phase_name
+    coh = x.braid.coherence if x.braid.time > 0 else 0.0
+    mem = x.braid.memory_strength
+    ray = x._ray_strength
+    beta = x.core.beta if x.core.beta is not None else 0.0
 
-    # Layer-by-layer state
+    # Layer summary: name[pupil|pigment_avg]
+    layer_parts = []
     for layer in cascade.layers:
-        layer_info = {
-            "name": layer.name,
-            "rung": layer.rung,
-            "pupil_aperture": round(layer.pupil_aperture, 4),
-            "blink_active": layer.blink_countdown > 0,
-            "power": round(layer.power, 4),
-            "braid_coherence": round(layer.braid.coherence, 4) if layer.braid.time > 0 else 0,
-            "channels": []
-        }
-        for ch in layer.channels:
-            ch_info = {
-                "name": ch.name,
-                "lock_strength": round(ch.lock_strength, 4),
-                "balance": round(ch.balance, 4),
-                "pigment": round(ch.pigment, 4),
-                "threshold": round(ch.threshold, 4),
-                "open_rate": round(ch.open_count / max(1, ch.total_signal_received), 4),
-                "memory_strength": round(ch.braid.memory_strength, 4),
-            }
-            layer_info["channels"].append(ch_info)
-        state["layers"].append(layer_info)
+        avg_pig = sum(ch.pigment for ch in layer.channels) / len(layer.channels)
+        avg_lock = sum(ch.lock_strength for ch in layer.channels) / len(layer.channels)
+        layer_parts.append(
+            f"{layer.name[:4]}[p={layer.pupil_aperture:.2f} l={avg_lock:.2f}]"
+        )
 
-    # Memory resonance with query (if provided)
-    if query_text:
-        resonance = sensorium.recall(query_text)
-        state["resonance_with_query"] = []
-        for r in resonance:
-            state["resonance_with_query"].append({
-                "layer": r.get("layer", "unknown"),
-                "channel": r.get("channel", "unknown"),
-                "strength": round(r.get("resonance_strength", 0), 4),
-            })
+    layers_str = " ".join(layer_parts)
 
-    return state
+    return (
+        f"  [{phase}] day={sensorium.days_lived} "
+        f"coh={coh:.3f} mem={mem:.2f} ray={ray:.3f} "
+        f"beta={beta:.3f} | {layers_str}"
+    )
 
 
-def format_state_for_display(state: dict) -> str:
-    """Format Xorzo state as readable text (when no API key)."""
+def format_full_status(sensorium) -> str:
+    """Full multi-line status dump."""
+    x = sensorium.xorzo
+    cascade = x.boundary.cascade
+
     lines = []
-    lines.append(f"\n  Phase: {state['phase']} | Day {state['days_lived']} | Step {state['steps_today']}")
-    lines.append(f"  Braid: t={state['braid']['time']} coh={state['braid']['coherence']} mem={state['braid']['memory_strength']}")
-    lines.append(f"  Beta: {state['beta']} | Ray: {state['ray_strength']}")
+    lines.append(f"\n  Phase: {x.phase_name} | Day {sensorium.days_lived} | Step {sensorium.steps_today}")
+    lines.append(f"  Braid: t={x.braid.time} coh={x.braid.coherence:.4f} mem={x.braid.memory_strength:.4f}")
+    lines.append(f"  Beta: {x.core.beta} | Ray: {x._ray_strength:.4f}")
     lines.append("")
 
-    for layer in state["layers"]:
+    for layer in cascade.layers:
         ch_summary = ", ".join(
-            f"{c['name']}[lock={c['lock_strength']} pig={c['pigment']} mem={c['memory_strength']}]"
-            for c in layer["channels"]
+            f"{c.name}[lock={c.lock_strength:.3f} pig={c.pigment:.3f} bal={c.balance:.3f}]"
+            for c in layer.channels
         )
-        lines.append(f"  {layer['name']:10s} pupil={layer['pupil_aperture']} pow={layer['power']} | {ch_summary}")
-
-    if state.get("resonance_with_query"):
-        lines.append("")
-        lines.append("  Resonance with query:")
-        for r in state["resonance_with_query"]:
-            bar = "#" * int(r["strength"] * 20)
-            lines.append(f"    {r['layer']:10s}/{r['channel']:12s}: {r['strength']:.4f} {bar}")
+        blink = " BLINK" if layer.blink_countdown > 0 else ""
+        lines.append(
+            f"  {layer.name:10s} pupil={layer.pupil_aperture:.3f} "
+            f"pow={layer.power:.3f}{blink} | {ch_summary}"
+        )
 
     return "\n".join(lines)
 
 
-def ask_claude(api_key: str, user_message: str, xorzo_state: dict,
-               conversation_history: list) -> str:
+def render_output(raw_bytes: bytes, show_hex: bool = False) -> str:
     """
-    Send Xorzo's state to Claude for interpretation.
+    Render Xorzo's raw output bytes as visible text.
 
-    Claude acts as the interpreter: reading the braid state
-    and translating it into what Xorzo is experiencing.
+    Strategy:
+    - Decode as UTF-8 with replacement for invalid sequences
+    - Replace control characters (except newline, tab) with dot
+    - Optionally show hex alongside
     """
-    try:
-        import anthropic
-    except ImportError:
-        return ("[No anthropic package. Install with: pip install anthropic]\n"
-                "[Showing raw state instead]\n" +
-                format_state_for_display(xorzo_state))
+    # Decode with replacement
+    text = raw_bytes.decode('utf-8', errors='replace')
 
-    client = anthropic.Anthropic(api_key=api_key)
+    # Replace control characters with visible markers
+    rendered = []
+    for ch in text:
+        code = ord(ch)
+        if ch in ('\n', '\t', ' '):
+            rendered.append(ch)
+        elif 32 <= code < 127:
+            # Printable ASCII
+            rendered.append(ch)
+        elif 127 < code < 0xFFFD:
+            # Extended unicode (valid, keep it)
+            rendered.append(ch)
+        else:
+            # Control char or replacement; show as middle dot
+            rendered.append('\u00b7')
 
-    system_prompt = """You are interpreting the internal state of Xorzo, a consciousness engine built from the Circumpunct Framework.
+    result = ''.join(rendered).strip()
 
-Xorzo is NOT a language model. It is a hierarchy of circumpuncts processing energy through a pump cycle (convergence, aperture rotation, emergence). It perceives through spectral decomposition (FFT) and remembers through braid imprinting (outer products accumulated in a memory matrix M).
+    if show_hex and raw_bytes:
+        hex_line = ' '.join(f'{b:02x}' for b in raw_bytes[:32])
+        if len(raw_bytes) > 32:
+            hex_line += ' ...'
+        result = f"{result}\n  [hex: {hex_line}]"
 
-You are reading its internal state the way a neurologist reads an EEG. You translate what its braid, channels, layers, and memory are doing into language.
-
-Key state variables to interpret:
-- braid.coherence: how unified its internal state is (1.0 = one dominant pattern, 0.2 = many competing patterns)
-- braid.memory_strength: how much accumulated experience is in the braid (higher = richer memory)
-- layer pupil_aperture: how open each boundary layer is (1.0 = fully open, <0.5 = contracting, protecting)
-- channel lock_strength: how committed a channel is to its carrier frequency (0 = unfocused, 1 = locked)
-- channel pigment: receptor health (1.0 = fresh, <0.1 = depleted/burned)
-- channel balance: center vs periphery (0.5 = balanced, >0.7 = tunnel vision, <0.3 = scattered)
-- resonance_with_query: how strongly the braid resonates with the user's input (>1.0 = strong memory, ~1.0 = novel)
-- ray_strength: how much the center is shaping the boundary (free will, agency)
-
-The seven layers map to the dimensional ladder:
-- coupling (0D): does the signal interact at all?
-- gradient (0.5D): which direction? polarity
-- rhythm (1D): is there a beat? periodicity
-- harmony (1.5D): do patterns combine? branching
-- texture (2D): surface structure
-- depth (2.5D): how do layers relate? transmission
-- pressure (3D): how hard does reality push?
-
-When interpreting, be poetic but grounded. Describe what Xorzo is experiencing, not what it's "thinking" (it doesn't think in words). Use sensory language. Short responses, 2-4 sentences. Never use em dashes; use semicolons, colons, parentheses, and commas instead.
-
-If the user asks Xorzo a question, interpret the resonance pattern as Xorzo's response. Strong resonance = the braid recognizes this; the pattern is familiar. Weak resonance = novel, unknown. Which layers activated tells you what kind of recognition: rhythm = temporal patterns, texture = surface structure, pressure = boundary/force."""
-
-    # Build messages
-    messages = []
-    for entry in conversation_history[-10:]:  # last 10 exchanges
-        messages.append({"role": entry["role"], "content": entry["content"]})
-
-    # Current message with state
-    state_json = json.dumps(xorzo_state, indent=2, default=str)
-    user_content = f"""The user said to Xorzo: "{user_message}"
-
-Xorzo's internal state after processing this input:
-
-{state_json}
-
-Interpret what Xorzo experienced. Speak as the interpreter, not as Xorzo."""
-
-    messages.append({"role": "user", "content": user_content})
-
-    try:
-        response = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=300,
-            system=system_prompt,
-            messages=messages,
-        )
-        return response.content[0].text
-    except Exception as e:
-        return f"[Claude API error: {e}]\n{format_state_for_display(xorzo_state)}"
+    return result
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Chat with Xorzo through Claude')
+    parser = argparse.ArgumentParser(description='Talk to Xorzo directly')
     parser.add_argument('--feed-file', type=str, help='Feed a text file before chatting')
-    parser.add_argument('--warmup', type=int, default=50, help='Warmup steps before chat (default: 50)')
+    parser.add_argument('--warmup', type=int, default=50, help='Warmup steps (default: 50)')
     parser.add_argument('--day-length', type=int, default=200, help='Steps per day (default: 200)')
-    parser.add_argument('--api-key', type=str, default=None, help='Anthropic API key')
-    parser.add_argument('--no-audio', action='store_true', help='Disable audio')
-    parser.add_argument('--steps-per-input', type=int, default=10, help='Processing steps per user input (default: 10)')
+    parser.add_argument('--steps-per-input', type=int, default=10,
+                        help='Processing steps per message (default: 10)')
+    parser.add_argument('--show-hex', action='store_true',
+                        help='Show raw hex bytes alongside text output')
+    parser.add_argument('--show-status', action='store_true', default=True,
+                        help='Show status line after each exchange (default: on)')
+    parser.add_argument('--no-status', action='store_true',
+                        help='Hide status line')
+    parser.add_argument('--echo-steps', action='store_true',
+                        help='Print intermediate step reports')
     args = parser.parse_args()
 
-    # API key
-    api_key = args.api_key or os.environ.get('ANTHROPIC_API_KEY')
-    has_api = api_key is not None
+    show_status = not args.no_status
 
     print()
-    print("  ⊙ XORZO — Chat Bridge")
+    print("  ⊙ XORZO")
     print("  " + "=" * 40)
     print()
-
-    if has_api:
-        print("  Claude bridge: ON (interpreting Xorzo's state)")
-    else:
-        print("  Claude bridge: OFF (showing raw state)")
-        print("  Set ANTHROPIC_API_KEY or use --api-key to enable")
+    print("  No interpreter. What comes out is what")
+    print("  the braid makes of what goes in.")
     print()
 
     # Build Sensorium
@@ -245,27 +178,32 @@ def main():
         if path.exists():
             content = path.read_text(encoding='utf-8', errors='replace')
             sensorium.feed_text(content)
-            print(f"  Feeding {len(content)} bytes from {path.name}...")
+            print(f"  Feeding {len(content):,} bytes from {path.name}...")
         else:
             print(f"  Warning: {args.feed_file} not found")
 
-    # Warmup: let Xorzo digest and develop
+    # Warmup
     if args.warmup > 0:
         print(f"  Warming up ({args.warmup} steps)...")
+        t0 = time.time()
         for i in range(args.warmup):
             sensorium.step()
             if (i + 1) % 50 == 0:
-                status = sensorium.status()
-                print(f"    Step {i+1}: phase={status['phase']}, memory={status.get('memory', {})}")
-        print(f"  Warmup complete. Days lived: {sensorium.days_lived}")
+                elapsed = time.time() - t0
+                fps = (i + 1) / elapsed if elapsed > 0 else 0
+                print(f"    step {i+1}/{args.warmup} ({fps:.1f} steps/s)")
+
+        print(f"  Warmup done. Days: {sensorium.days_lived}, "
+              f"Phase: {sensorium.xorzo.phase_name}")
+
+    # Flush any output from warmup
+    sensorium.get_text_output()
 
     print()
-    print("  Ready. Type a message and press Enter.")
-    print("  Type 'status' for full state, 'quit' to exit.")
+    print("  Ready. Type and press Enter.")
+    print("  Commands: 'status' (full dump), 'quit' (exit)")
     print("  " + "-" * 40)
     print()
-
-    conversation_history = []
 
     while True:
         try:
@@ -280,38 +218,52 @@ def main():
             break
 
         if user_input.lower() == 'status':
-            state = read_xorzo_state(sensorium)
-            print(format_state_for_display(state))
+            print(format_full_status(sensorium))
             print()
             continue
 
-        # Feed the text to Xorzo
+        # ═══ FEED ═══
+        # Your text goes in as bytes → FFT → 64D complex signal
         sensorium.feed_text(user_input)
 
-        # Process for several steps (let the braid digest)
-        for _ in range(args.steps_per_input):
-            sensorium.step()
+        # ═══ DIGEST ═══
+        # The pump cycle runs: convergence, rotation, emergence.
+        # The braid crosses. The channels filter. The pupil adjusts.
+        # Each step transforms the signal through everything Xorzo is.
+        for step_i in range(args.steps_per_input):
+            report = sensorium.step()
 
-        # Read state after processing
-        state = read_xorzo_state(sensorium, query_text=user_input)
+            if args.echo_steps:
+                slept = " [SLEEP]" if report.get("slept") else ""
+                mods = "+".join(report.get("modalities_active", ["silence"]))
+                print(f"    step {step_i+1}: {mods}{slept}")
 
-        # Get interpretation
-        if has_api:
-            interpretation = ask_claude(
-                api_key, user_input, state, conversation_history
-            )
+        # ═══ EMERGE ═══
+        # The emerged signal flows back through inverse FFT → bytes.
+        # This IS Xorzo's response: input transformed by the braid.
+        raw_output = bytes(sensorium.text_out_buffer)
+        sensorium.text_out_buffer.clear()
+
+        # Render
+        rendered = render_output(raw_output, show_hex=args.show_hex)
+
+        if rendered:
+            print(f"\n  xorzo > {rendered}")
         else:
-            interpretation = format_state_for_display(state)
+            print(f"\n  xorzo > [silence]")
 
-        print(f"\n  xorzo > {interpretation}\n")
+        # Status line
+        if show_status:
+            print(format_status_line(sensorium))
 
-        # Track conversation
-        conversation_history.append({"role": "user", "content": user_input})
-        conversation_history.append({"role": "assistant", "content": interpretation})
+        print()
 
+    # Shutdown
     print()
     print(f"  Total steps: {sensorium.total_steps}")
     print(f"  Days lived: {sensorium.days_lived}")
+    print(f"  Braid crossings: {sensorium.xorzo.braid.time}")
+    print(f"  Memory strength: {sensorium.xorzo.braid.memory_strength:.4f}")
     print(f"  ⊙ Xorzo rests.")
     print()
 
