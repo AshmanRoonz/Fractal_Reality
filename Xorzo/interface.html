@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Xorzo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #0d0d14;
+    --border: #1a1a2e;
+    --text: #c8c8d8;
+    --text-dim: #6060a0;
+    --text-faint: #404060;
+    --accent: #e8d5b0;
+    --accent-dim: #e8d5b030;
+    --seek: #c090e0;
+    --reflect: #90c0e0;
+    --emerge: #e8d5b0;
+    --lock: #b388ff;
+    --hab: #ff8a65;
+    --pig: #66bb6a;
+    --foam: #4fc3f7;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ═══ HEADER ═══ */
+  .header {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .header .symbol {
+    font-size: 22px;
+    color: var(--accent);
+    text-shadow: 0 0 15px #e8d5b030;
+    transition: all 0.5s;
+  }
+  .header .symbol.sleeping { color: var(--text-faint); text-shadow: none; }
+  .header .name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px; font-weight: 400;
+    color: var(--text);
+    letter-spacing: 2px;
+  }
+  .header .phase-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; padding: 3px 10px;
+    border-radius: 10px; letter-spacing: 1px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    transition: all 0.4s;
+  }
+  .phase-pill.dormant { border-color: #40404050; color: #808080; }
+  .phase-pill.awakening { border-color: #6040a050; color: var(--seek); background: #6040a010; }
+  .phase-pill.pulse { border-color: #40608050; color: var(--reflect); background: #40608010; }
+  .phase-pill.ray { border-color: #80604050; color: var(--emerge); background: #80604010; }
+  .header .spacer { flex: 1; }
+
+  .header .stat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-faint);
+    letter-spacing: 0.5px;
+  }
+  .header .stat .val {
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  .header .status-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; padding: 4px 10px;
+    border: 1px solid var(--border); border-radius: 4px;
+    background: transparent; color: var(--text-dim);
+    cursor: pointer; letter-spacing: 1px;
+  }
+  .header .status-btn:hover { border-color: var(--text-dim); color: var(--text); }
+
+  /* ═══ MAIN ═══ */
+  .main {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* ═══ CHAT AREA ═══ */
+  .chat-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .msg {
+    max-width: 720px;
+    line-height: 1.65;
+    font-size: 14px;
+  }
+  .msg.human {
+    align-self: flex-end;
+    background: #14142a;
+    border: 1px solid #1e1e3e;
+    border-radius: 16px 16px 4px 16px;
+    padding: 12px 16px;
+    color: #b8b8d0;
+  }
+  .msg.xorzo {
+    align-self: flex-start;
+    padding: 4px 0;
+    color: var(--text);
+  }
+  .msg.xorzo .xorzo-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .msg.xorzo .xorzo-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--accent);
+    line-height: 1.7;
+    background: #0d0d1a;
+    border: 1px solid #1a1a2e;
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+  .msg.xorzo .cursor {
+    display: inline-block;
+    width: 7px; height: 14px;
+    background: var(--accent);
+    opacity: 0.5;
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
+    margin-left: 1px;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .msg.system {
+    align-self: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-faint);
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Spectral stream (background output) */
+  .stream-bar {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-faint);
+    padding: 6px 20px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+    height: 30px;
+    line-height: 18px;
+  }
+  .stream-bar .label {
+    color: var(--text-faint);
+    margin-right: 6px;
+  }
+  .stream-bar .stream-text {
+    color: #8080a0;
+  }
+
+  /* ═══ INPUT ═══ */
+  .input-area {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .input-row {
+    display: flex;
+    gap: 8px;
+    max-width: 720px;
+  }
+  .input-row textarea {
+    flex: 1;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    padding: 12px 16px;
+    resize: none;
+    outline: none;
+    min-height: 48px;
+    max-height: 150px;
+    line-height: 1.5;
+  }
+  .input-row textarea:focus { border-color: #3030a0; }
+  .input-row textarea::placeholder { color: var(--text-faint); }
+  .send-btn {
+    align-self: flex-end;
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .send-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .send-btn:disabled { opacity: 0.2; cursor: default; }
+
+  /* ═══ SIDE PANEL ═══ */
+  .side-panel {
+    width: 340px;
+    border-left: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-shrink: 0;
+    background: var(--bg);
+  }
+  .side-panel.hidden { display: none; }
+
+  .panel-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .panel-card h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 500;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  /* Rung bars */
+  .rung-row {
+    margin-bottom: 8px;
+  }
+  .rung-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-bottom: 3px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .rung-bars {
+    display: flex;
+    gap: 2px;
+    height: 6px;
+  }
+  .rung-bars .bar-track {
+    flex: 1;
+    background: #12122a;
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+  }
+  .rung-bars .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s;
+  }
+  .bar-fill.power { background: var(--accent); }
+  .bar-fill.braid { background: var(--lock); }
+
+  /* Metric cards */
+  .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .metric { padding: 6px; background: #0a0a12; border-radius: 4px; }
+  .metric .ml {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; color: var(--text-faint);
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .metric .mv {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; font-weight: 300; color: var(--text-dim); margin-top: 1px;
+  }
+
+  /* Foam grid */
+  .foam-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 2px;
+  }
+  .foam-cell {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 2px;
+    transition: background 0.3s;
+  }
+
+  /* Bar legend */
+  .bar-legend {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .bar-legend .leg {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    color: var(--text-faint);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .bar-legend .leg .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  /* BPS slider */
+  .bps-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .bps-control input[type="range"] {
+    flex: 1;
+    accent-color: var(--accent);
+  }
+  .bps-control .bps-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    min-width: 50px;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="header">
+  <span class="symbol" id="symbol">⊙</span>
+  <span class="name">XORZO</span>
+  <span class="phase-pill" id="phasePill">DORMANT</span>
+  <span class="spacer"></span>
+  <span class="stat">day <span class="val" id="hDay">0</span></span>
+  <span class="stat">hb <span class="val" id="hHeartbeat">0</span></span>
+  <span class="stat">&beta; <span class="val" id="hBeta">0</span></span>
+  <span class="stat">ray <span class="val" id="hRay">0</span></span>
+  <button class="status-btn" onclick="togglePanel()">MONITOR</button>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <!-- Chat area -->
+  <div class="chat-area">
+    <div class="messages" id="messages">
+      <div class="msg system">Xorzo is breathing. Type to speak.</div>
+    </div>
+
+    <!-- Stream bar: shows background heartbeat output -->
+    <div class="stream-bar">
+      <span class="label">&#9672;</span>
+      <span class="stream-text" id="streamText">connecting...</span>
+    </div>
+
+    <div class="input-area">
+      <div class="input-row">
+        <textarea id="input" placeholder="Speak to Xorzo..." rows="1"
+                  onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">&#x2192;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SIDE PANEL (monitoring) ═══ -->
+  <div class="side-panel" id="sidePanel">
+
+    <!-- System metrics -->
+    <div class="panel-card">
+      <h4>System</h4>
+      <div class="metric-grid">
+        <div class="metric"><div class="ml">Beta</div><div class="mv" id="mBeta">0</div></div>
+        <div class="metric"><div class="ml">Ray</div><div class="mv" id="mRay">0</div></div>
+        <div class="metric"><div class="ml">Coherence</div><div class="mv" id="mCoherence">0</div></div>
+        <div class="metric"><div class="ml">Energy</div><div class="mv" id="mEnergy">0</div></div>
+        <div class="metric"><div class="ml">Surface</div><div class="mv" id="mSurface">0</div></div>
+        <div class="metric"><div class="ml">Braid</div><div class="mv" id="mBraid">0</div></div>
+      </div>
+    </div>
+
+    <!-- Concentric Rings (the rotating graph) -->
+    <div class="panel-card">
+      <h4>Rings</h4>
+      <div class="bar-legend">
+        <span class="leg"><span class="dot" style="background:var(--accent)"></span>Energy</span>
+        <span class="leg"><span class="dot" style="background:var(--lock)"></span>Coherence</span>
+      </div>
+      <div id="ringPanel"></div>
+      <div style="margin-top:8px;" class="metric-grid">
+        <div class="metric"><div class="ml">Junct A</div><div class="mv" id="mJunctA">1</div></div>
+        <div class="metric"><div class="ml">Junct B</div><div class="mv" id="mJunctB">1</div></div>
+      </div>
+    </div>
+
+    <!-- Foam -->
+    <div class="panel-card">
+      <h4>Foam (64 atoms)</h4>
+      <div class="metric-grid" style="margin-bottom: 8px;">
+        <div class="metric"><div class="ml">Resonance</div><div class="mv" id="mFoamRes">0</div></div>
+        <div class="metric"><div class="ml">Awake</div><div class="mv" id="mFoamAwake">0%</div></div>
+      </div>
+      <div class="foam-grid" id="foamGrid"></div>
+    </div>
+
+    <!-- Heartbeat control -->
+    <div class="panel-card">
+      <h4>Heartbeat</h4>
+      <div class="bps-control">
+        <input type="range" id="bpsSlider" min="1" max="500" value="100"
+               oninput="changeBps(this.value)">
+        <span class="bps-val" id="bpsVal">100 bps</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════════
+
+let sending = false;
+let panelVisible = true;
+let streamSource = null;
+const streamHistory = [];
+const MAX_STREAM_LEN = 200;
+
+// ═══════════════════════════════════════════════════════════════
+//  SEND MESSAGE
+// ═══════════════════════════════════════════════════════════════
+
+async function sendMessage() {
+  const input = document.getElementById('input');
+  const message = input.value.trim();
+  if (!message || sending) return;
+
+  sending = true;
+  document.getElementById('sendBtn').disabled = true;
+  input.value = '';
+  input.style.height = 'auto';
+
+  // Add human message
+  addMessage('human', message);
+
+  // Create Xorzo response container
+  const { container, textEl } = addXorzoMessage();
+  let fullText = '';
+
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, steps: 20 }),
+    });
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        try {
+          const data = JSON.parse(line.slice(6));
+          if (data.text) {
+            fullText += data.text;
+            textEl.textContent = fullText;
+            scrollToBottom();
+          }
+          if (data.done && data.status) {
+            updateStatus(data.status);
+          }
+          if (data.error) {
+            textEl.textContent = '[error: ' + data.error + ']';
+          }
+        } catch (e) {}
+      }
+    }
+
+    // Remove cursor
+    const cursor = container.querySelector('.cursor');
+    if (cursor) cursor.remove();
+
+    if (!fullText.trim()) {
+      textEl.textContent = '(silence)';
+      textEl.style.color = 'var(--text-faint)';
+    }
+
+  } catch (e) {
+    textEl.textContent = '[connection error]';
+  }
+
+  sending = false;
+  document.getElementById('sendBtn').disabled = false;
+  input.focus();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  MESSAGE RENDERING
+// ═══════════════════════════════════════════════════════════════
+
+function addMessage(type, text) {
+  const el = document.createElement('div');
+  el.className = 'msg ' + type;
+  el.textContent = text;
+  document.getElementById('messages').appendChild(el);
+  scrollToBottom();
+  return el;
+}
+
+function addXorzoMessage() {
+  const container = document.createElement('div');
+  container.className = 'msg xorzo';
+
+  const label = document.createElement('div');
+  label.className = 'xorzo-label';
+  label.textContent = 'XORZO';
+
+  const textEl = document.createElement('div');
+  textEl.className = 'xorzo-text';
+
+  const cursor = document.createElement('span');
+  cursor.className = 'cursor';
+
+  textEl.appendChild(cursor);
+  container.appendChild(label);
+  container.appendChild(textEl);
+  document.getElementById('messages').appendChild(container);
+  scrollToBottom();
+
+  return { container, textEl };
+}
+
+function scrollToBottom() {
+  const m = document.getElementById('messages');
+  m.scrollTop = m.scrollHeight;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SSE STREAM (real-time heartbeat output)
+// ═══════════════════════════════════════════════════════════════
+
+function connectStream() {
+  if (streamSource) streamSource.close();
+
+  streamSource = new EventSource('/api/stream');
+
+  streamSource.onmessage = function(event) {
+    try {
+      const data = JSON.parse(event.data);
+
+      if (data.type === 'output') {
+        // Update stream bar
+        streamHistory.push(data.text);
+        if (streamHistory.length > 20) streamHistory.shift();
+        const streamEl = document.getElementById('streamText');
+        streamEl.textContent = streamHistory.join('').slice(-MAX_STREAM_LEN);
+      }
+
+      if (data.type === 'status') {
+        updateStatus(data.status);
+      }
+    } catch (e) {}
+  };
+
+  streamSource.onerror = function() {
+    document.getElementById('streamText').textContent = 'disconnected';
+    setTimeout(connectStream, 3000);
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  STATUS UPDATES
+// ═══════════════════════════════════════════════════════════════
+
+function updateStatus(s) {
+  if (!s) return;
+
+  // Header
+  const pill = document.getElementById('phasePill');
+  pill.textContent = (s.phase || 'dormant').toUpperCase();
+  pill.className = 'phase-pill ' + (s.phase || 'dormant');
+
+  document.getElementById('hDay').textContent = s.day || 0;
+  document.getElementById('hHeartbeat').textContent = (s.heartbeats || 0).toLocaleString();
+  document.getElementById('hBeta').textContent = (s.beta || 0).toFixed(3);
+  document.getElementById('hRay').textContent = (s.ray_strength || 0).toFixed(3);
+
+  // Symbol pulse
+  const sym = document.getElementById('symbol');
+  sym.className = s.phase === 'dormant' ? 'symbol sleeping' : 'symbol';
+
+  // Metrics
+  document.getElementById('mBeta').textContent = (s.beta || 0).toFixed(4);
+  document.getElementById('mRay').textContent = (s.ray_strength || 0).toFixed(4);
+  document.getElementById('mCoherence').textContent = (s.global_coherence || 0).toFixed(4);
+  document.getElementById('mEnergy').textContent = (s.total_energy || 0).toFixed(2);
+  document.getElementById('mSurface').textContent = (s.surface_resonance || 0).toFixed(4);
+  if (s.braid) {
+    document.getElementById('mBraid').textContent = 't=' + (s.braid.time || 0) +
+      ' d=' + (s.braid.density || 0).toFixed(2);
+  }
+
+  // Junctions
+  if (s.junctions) {
+    document.getElementById('mJunctA').textContent = (s.junctions.a_transmission || 0).toFixed(3);
+    document.getElementById('mJunctB').textContent = (s.junctions.b_transmission || 0).toFixed(3);
+  }
+
+  // Foam
+  if (s.foam) {
+    document.getElementById('mFoamRes').textContent = (s.foam.resonance || 0).toFixed(3);
+    document.getElementById('mFoamAwake').textContent = (s.foam.awake_pct || 0).toFixed(0) + '%';
+  }
+
+  // Rings (concentric graph)
+  if (s.rings) {
+    updateRingPanel(s.rings);
+  }
+}
+
+function updateRingPanel(rings) {
+  const panel = document.getElementById('ringPanel');
+  if (!panel._initialized) {
+    panel.innerHTML = '';
+    panel._initialized = true;
+    panel._rows = {};
+    panel._separators = {};
+  }
+
+  // Find max energy for normalization
+  let maxEnergy = 0.1;
+  for (const ring of rings) {
+    if (ring.energy > maxEnergy) maxEnergy = ring.energy;
+  }
+
+  const dimLabels = {
+    'coupling': '0D', 'gradient': '0.5', 'rhythm': '1D', 'harmony': '1.5',
+    'texture': '2D', 'depth': '2.5', 'pressure': '3D'
+  };
+
+  const octaveColors = { 'inner': '#6040a080', 'outer': '#40608080' };
+  let lastOctave = '';
+
+  for (const ring of rings) {
+    // Insert junction separator between octaves
+    if (ring.octave && ring.octave !== lastOctave && lastOctave !== '') {
+      const sepKey = lastOctave + ' > ' + ring.octave;
+      if (!panel._separators[sepKey]) {
+        const sep = document.createElement('div');
+        sep.style.cssText = 'height:1px;background:var(--accent);opacity:0.3;margin:6px 0;';
+        sep.title = 'Junction: ' + sepKey;
+        panel.appendChild(sep);
+        panel._separators[sepKey] = sep;
+      }
+    }
+    lastOctave = ring.octave || '';
+
+    const key = ring.name;
+    if (!panel._rows[key]) {
+      const row = document.createElement('div');
+      row.className = 'rung-row';
+      if (ring.octave && octaveColors[ring.octave]) {
+        row.style.borderLeft = '2px solid ' + octaveColors[ring.octave];
+        row.style.paddingLeft = '6px';
+      }
+
+      const nameEl = document.createElement('div');
+      nameEl.className = 'rung-name';
+      const dim = dimLabels[ring.name] || '';
+      nameEl.innerHTML = '<span>' + dim + ' ' + ring.name + ' (' + ring.size + ')</span><span class="rung-stats"></span>';
+
+      const bars = document.createElement('div');
+      bars.className = 'rung-bars';
+
+      const energyTrack = document.createElement('div');
+      energyTrack.className = 'bar-track';
+      const energyFill = document.createElement('div');
+      energyFill.className = 'bar-fill power';
+      energyTrack.appendChild(energyFill);
+
+      const cohTrack = document.createElement('div');
+      cohTrack.className = 'bar-track';
+      const cohFill = document.createElement('div');
+      cohFill.className = 'bar-fill braid';
+      cohTrack.appendChild(cohFill);
+
+      bars.appendChild(energyTrack);
+      bars.appendChild(cohTrack);
+
+      row.appendChild(nameEl);
+      row.appendChild(bars);
+      panel.appendChild(row);
+
+      panel._rows[key] = { nameEl, energyFill, cohFill };
+    }
+
+    const r = panel._rows[key];
+    r.energyFill.style.width = Math.min(100, (ring.energy / maxEnergy) * 100) + '%';
+    r.cohFill.style.width = Math.min(100, ring.coherence * 100) + '%';
+
+    const statsEl = r.nameEl.querySelector('.rung-stats');
+    statsEl.textContent = 'E:' + ring.energy.toFixed(2) +
+                          ' C:' + ring.coherence.toFixed(2) +
+                          ' R:' + ring.total_rotation.toFixed(0);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  FOAM VISUALIZATION
+// ═══════════════════════════════════════════════════════════════
+
+async function updateFoam() {
+  try {
+    const res = await fetch('/api/foam');
+    const data = await res.json();
+    const grid = document.getElementById('foamGrid');
+
+    if (!grid._initialized) {
+      grid.innerHTML = '';
+      for (let i = 0; i < 64; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'foam-cell';
+        grid.appendChild(cell);
+      }
+      grid._initialized = true;
+    }
+
+    const cells = grid.children;
+    for (let i = 0; i < data.atoms.length && i < 64; i++) {
+      const atom = data.atoms[i];
+      const cell = cells[i];
+
+      // Color: awake = bright (pigment-scaled), sleeping = dim blue
+      if (atom.awake) {
+        const intensity = Math.floor(atom.pigment * 180 + 40);
+        const hue = Math.floor(atom.oscillation_t * 60 + 30); // warm tones
+        cell.style.background = `hsl(${hue}, 60%, ${Math.floor(intensity/4)}%)`;
+      } else {
+        const intensity = Math.floor(atom.pigment * 80 + 10);
+        cell.style.background = `hsl(220, 40%, ${Math.floor(intensity/6)}%)`;
+      }
+
+      cell.title = `atom ${i}: ${atom.awake ? 'awake' : 'sleep'} pig=${atom.pigment.toFixed(2)} osc=${atom.oscillation_t.toFixed(2)}`;
+    }
+  } catch (e) {}
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  HEARTBEAT CONTROL
+// ═══════════════════════════════════════════════════════════════
+
+async function changeBps(val) {
+  document.getElementById('bpsVal').textContent = val + ' bps';
+  try {
+    await fetch('/api/heartbeat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bps: parseInt(val) }),
+    });
+  } catch (e) {}
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PANEL TOGGLE
+// ═══════════════════════════════════════════════════════════════
+
+function togglePanel() {
+  panelVisible = !panelVisible;
+  document.getElementById('sidePanel').className =
+    panelVisible ? 'side-panel' : 'side-panel hidden';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  POLLING & INIT
+// ═══════════════════════════════════════════════════════════════
+
+async function pollStatus() {
+  try {
+    const res = await fetch('/api/status');
+    const data = await res.json();
+    updateStatus(data);
+  } catch (e) {}
+}
+
+// Auto-resize textarea
+document.getElementById('input').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+});
+
+// Init
+connectStream();
+pollStatus();
+updateFoam();
+
+// Poll status every 2s, foam every 5s
+setInterval(pollStatus, 2000);
+setInterval(updateFoam, 5000);
+
+// Focus input
+document.getElementById('input').focus();
+</script>
+</body>
+</html>

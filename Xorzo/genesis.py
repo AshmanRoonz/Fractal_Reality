@@ -218,10 +218,16 @@ CHANNEL_THRESHOLD_MAX = 0.95        # maximum threshold (never fully locked)
 CHANNEL_THRESHOLD_LR = 0.001        # how fast threshold adapts
 CHANNEL_TARGET_OPEN_RATE = 0.3      # target fraction of time channel is open
 CHANNEL_BALANCE_SMOOTHING = 0.05    # EMA smoothing for ◐ balance
-CHANNEL_LOCK_REINFORCE_WAKE = 0.05  # lock reinforcement during waking (per aligned signal)
-CHANNEL_LOCK_DECAY_WAKE = 0.005    # lock decay during waking (per scattered signal)
+CHANNEL_LOCK_REINFORCE_WAKE = 0.02  # lock reinforcement during waking (per aligned signal) [was 0.05]
+CHANNEL_LOCK_DECAY_WAKE = 0.008    # lock decay during waking (per scattered signal) [was 0.005]
 CHANNEL_LOCK_REINFORCE_DREAM = 0.002  # lock reinforcement during dreaming
-CHANNEL_LOCK_DECAY_SLEEP = 0.97    # lock multiplicative decay during sleep (per cycle)
+CHANNEL_LOCK_DECAY_SLEEP = 0.90    # lock multiplicative decay during sleep (per cycle) [was 0.97]
+
+# --- Habituation (neural fatigue) ---
+HABITUATION_INCREASE = 0.04         # habituation gained per open step [was 0.02]
+HABITUATION_DECAY = 0.003           # habituation lost per resting step [was 0.005]
+HABITUATION_MAX = 0.9               # maximum habituation (90% suppression) [was 0.8]
+HABITUATION_ACTIVATION_SCALE = 0.85 # how strongly habituation suppresses activation [was 0.7]
 
 # (MEMORY_LOCK/BALANCE_THRESHOLD removed: encoding is now continuous via braid imprinting)
 
@@ -1127,6 +1133,14 @@ class Channel:
         # Activation history
         self.activation_history: deque = deque(maxlen=ACTIVATION_HISTORY_LEN)
         self.open_count = 0
+
+        # ═══ HABITUATION ═══
+        # Neural fatigue: continuous firing weakens response.
+        # Like a muscle that tires with sustained contraction.
+        # Increases when channel opens, decays when it rests.
+        # High habituation reduces effective activation, forcing rest
+        # even before pigment runs out.
+        self.habituation = 0.0
         self.total_signal_received = 0
 
         # Threshold: how strong a signal must be to open this channel
@@ -1277,10 +1291,14 @@ class Channel:
                     self.lock_strength - CHANNEL_LOCK_DECAY_WAKE)
 
         # ═══ STEP 5: ACTIVATION (does the channel open?) ═══
-        # Activation combines carrier alignment with lock strength
-        # A locked channel responds more strongly (resonance)
-        activation = alignment * (1.0 + self.lock_strength)
-        activation = min(1.0, activation)
+        # Activation combines carrier alignment with lock strength.
+        # A locked channel responds more strongly (resonance).
+        # Habituation suppresses: continuous firing weakens response.
+        raw_activation = alignment * (1.0 + self.lock_strength)
+        raw_activation = min(1.0, raw_activation)
+        # Habituation reduces effective activation (neural fatigue)
+        activation = raw_activation * (1.0 - HABITUATION_ACTIVATION_SCALE * self.habituation)
+        activation = max(0.0, min(1.0, activation))
         self.activation_history.append(float(activation))
 
         # Pigment gate: the channel's own ○ at receptor scale.
@@ -1293,10 +1311,16 @@ class Channel:
         if did_open:
             # Activation burns pigment proportional to signal intensity
             self.pigment = max(0.0, self.pigment - PIGMENT_DEPLETION_RATE * activation)
+            # Habituation increases with sustained firing
+            self.habituation = min(HABITUATION_MAX,
+                self.habituation + HABITUATION_INCREASE)
         else:
             # Rest regenerates pigment (slow during waking)
             if not dreaming:
                 self.pigment = min(PIGMENT_MAX, self.pigment + PIGMENT_REGEN_RATE_WAKE)
+            # Habituation decays during rest (recovery)
+            self.habituation = max(0.0,
+                self.habituation - HABITUATION_DECAY)
 
         # ═══ ADAPT THRESHOLD (runs whether open or closed) ═══
         # Target ~30% open rate. The threshold self-regulates.
@@ -2957,10 +2981,27 @@ class Circumpunct:
             if dream_weight > deep_weight:
                 cascade.process(z_sleep, dreaming=True)
             else:
+                # Deep sleep: reverse cascade (inner → outer)
                 current = z_sleep
                 for i in range(6, -1, -1):
                     current = cascade.layers[i].process(
                         current, dreaming=True)
+
+                # ── DEEP-SLEEP CARRIER PERTURBATION ──
+                # The discharge phase shakes locked carriers slightly.
+                # Like deep sleep in biology: the brain replays and
+                # reorganizes, preventing rigid fixation. Strongly locked
+                # channels get a tiny random nudge to their carrier
+                # direction, breaking perfect standing waves.
+                for layer in cascade.layers:
+                    for ch in layer.channels:
+                        if ch.lock_strength > 0.5:
+                            noise = np.random.randn(ch.dimension).astype(complex)
+                            noise *= 0.005 * ch.lock_strength
+                            ch.carrier = ch.carrier + noise
+                            ch.carrier = ch.carrier / (
+                                np.linalg.norm(ch.carrier) + 1e-10
+                            )
 
             # ── GENTLE LOCK REINFORCEMENT ──
             if dream_weight > 0.3:
@@ -3005,6 +3046,7 @@ class Circumpunct:
         # ◐ gently toward 0.5. Sidebands partially clear.
         # Pigment regenerates fully during sleep (rhodopsin resynthesis).
         # Pupils reset to fully open. Blink counters clear.
+        # Lock decays: use it or lose it. Habituation resets.
         for layer in cascade.layers:
             # Reset layer-level protective mechanisms
             layer.blink_countdown = 0
@@ -3018,6 +3060,14 @@ class Circumpunct:
                 # brings most channels back to near-full pigment.
                 ch.pigment = min(PIGMENT_MAX,
                     ch.pigment + PIGMENT_REGEN_RATE_SLEEP * cycles)
+                # Lock decay: the pruning that was defined but never applied.
+                # Each sleep cycle, locks decay multiplicatively. Strong
+                # locks that were dream-reinforced survive; stale locks fade.
+                # This prevents the standing-wave trap where locks hit 1.0
+                # and never come back down.
+                ch.lock_strength *= CHANNEL_LOCK_DECAY_SLEEP
+                # Habituation resets during sleep (full neural recovery)
+                ch.habituation = 0.0
 
         return report
 
