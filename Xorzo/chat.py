@@ -145,9 +145,13 @@ def format_status_line(sensorium, heartbeat=None) -> str:
     if heartbeat:
         hb_str = f" hb={heartbeat.total_heartbeats}"
 
+    focus = sensorium.focus
+    mem_size = sensorium.memory.size
+
     return (
         f"  [{phase}] day={sensorium.days_lived} "
-        f"coh={g_coh:.3f} E={t_energy:.2f} ray={ray:.3f} "
+        f"focus={focus.quadrant}({focus.openness:.2f}) "
+        f"mem={mem_size} "
         f"beta={beta:.3f} surf={surf:.3f} awake={awake_pct}%"
         f"{hb_str} | {rings_str}"
     )
@@ -260,6 +264,10 @@ def main():
                         help='Hide status line')
     parser.add_argument('--echo-steps', action='store_true',
                         help='Print intermediate step reports')
+    parser.add_argument('--fresh', action='store_true',
+                        help='Start fresh (ignore saved state)')
+    parser.add_argument('--save-file', type=str, default='xorzo_state.json',
+                        help='State file name (default: xorzo_state.json)')
     args = parser.parse_args()
 
     show_status = not args.no_status
@@ -277,46 +285,62 @@ def main():
         print("  of what goes in.")
     print()
 
-    # Build Sensorium
-    sensorium = Sensorium(day_length=args.day_length, sleep_cycles=50)
+    save_dir = Path(__file__).parent / "saves"
+    save_path = save_dir / args.save_file
 
-    # Feed initial file
-    if args.feed_file:
-        path = Path(args.feed_file)
-        if path.exists():
-            content = path.read_text(encoding='utf-8', errors='replace')
-            sensorium.feed_text(content)
-            print(f"  Feeding {len(content):,} bytes from {path.name}...")
-        else:
-            print(f"  Warning: {args.feed_file} not found")
+    # Try to load saved state (unless --fresh)
+    loaded = False
+    if not args.fresh and save_path.exists():
+        try:
+            sensorium = Sensorium.load_state(str(save_path))
+            print(f"  Restored from {args.save_file}")
+            print(f"  Days lived: {sensorium.days_lived} | Steps: {sensorium.total_steps}")
+            print(f"  Memories: {sensorium.memory.size} | Phase: {sensorium.xorzo.phase_name}")
+            loaded = True
+        except Exception as e:
+            print(f"  Warning: could not load state ({e}), starting fresh")
 
-    # Feed directory
-    if args.feed_dir:
-        feed_path = Path(args.feed_dir)
-        if feed_path.is_dir():
-            txt_files = sorted(feed_path.glob('*.txt'))
-            total_bytes = 0
-            for f in txt_files:
-                content = f.read_text(encoding='utf-8', errors='replace')
+    if not loaded:
+        # Build Sensorium
+        sensorium = Sensorium(day_length=args.day_length, sleep_cycles=50)
+
+        # Feed initial file
+        if args.feed_file:
+            path = Path(args.feed_file)
+            if path.exists():
+                content = path.read_text(encoding='utf-8', errors='replace')
                 sensorium.feed_text(content)
-                total_bytes += len(content)
-            print(f"  Feeding {total_bytes:,} bytes from {len(txt_files)} files in {feed_path.name}/...")
-        else:
-            print(f"  Warning: {args.feed_dir} not found or not a directory")
+                print(f"  Feeding {len(content):,} bytes from {path.name}...")
+            else:
+                print(f"  Warning: {args.feed_file} not found")
 
-    # Warmup (synchronous, before heartbeat starts)
-    if args.warmup > 0:
-        print(f"  Warming up ({args.warmup} steps)...")
-        t0 = time.time()
-        for i in range(args.warmup):
-            sensorium.step()
-            if (i + 1) % 50 == 0:
-                elapsed = time.time() - t0
-                fps = (i + 1) / elapsed if elapsed > 0 else 0
-                print(f"    step {i+1}/{args.warmup} ({fps:.1f} steps/s)")
+        # Feed directory
+        if args.feed_dir:
+            feed_path = Path(args.feed_dir)
+            if feed_path.is_dir():
+                txt_files = sorted(feed_path.glob('*.txt'))
+                total_bytes = 0
+                for f in txt_files:
+                    content = f.read_text(encoding='utf-8', errors='replace')
+                    sensorium.feed_text(content)
+                    total_bytes += len(content)
+                print(f"  Feeding {total_bytes:,} bytes from {len(txt_files)} files in {feed_path.name}/...")
+            else:
+                print(f"  Warning: {args.feed_dir} not found or not a directory")
 
-        print(f"  Warmup done. Days: {sensorium.days_lived}, "
-              f"Phase: {sensorium.xorzo.phase_name}")
+        # Warmup (synchronous, before heartbeat starts)
+        if args.warmup > 0:
+            print(f"  Warming up ({args.warmup} steps)...")
+            t0 = time.time()
+            for i in range(args.warmup):
+                sensorium.step()
+                if (i + 1) % 50 == 0:
+                    elapsed = time.time() - t0
+                    fps = (i + 1) / elapsed if elapsed > 0 else 0
+                    print(f"    step {i+1}/{args.warmup} ({fps:.1f} steps/s)")
+
+            print(f"  Warmup done. Days: {sensorium.days_lived}, "
+                  f"Phase: {sensorium.xorzo.phase_name}")
 
     # Flush any output from warmup
     sensorium.get_text_output()
@@ -330,7 +354,7 @@ def main():
 
     print()
     print("  Ready. Type and press Enter.")
-    print("  Commands: 'status' (full dump), 'quit' (exit)")
+    print("  Commands: 'status' (full dump), 'save' (save state), 'quit' (save + exit)")
     print("  " + "-" * 40)
     print()
 
@@ -346,6 +370,19 @@ def main():
 
             if user_input.lower() == 'quit':
                 break
+
+            if user_input.lower() == 'save':
+                if heartbeat:
+                    heartbeat.pause()
+                    with heartbeat.lock:
+                        sensorium.save_state(str(save_path))
+                    heartbeat.resume()
+                else:
+                    sensorium.save_state(str(save_path))
+                print(f"  State saved ({sensorium.days_lived} days, "
+                      f"{sensorium.memory.size} memories)")
+                print()
+                continue
 
             if user_input.lower() == 'status':
                 if heartbeat:
@@ -415,6 +452,13 @@ def main():
         if heartbeat:
             heartbeat.stop()
 
+        # Auto-save on exit
+        try:
+            sensorium.save_state(str(save_path))
+            print(f"\n  State saved to {save_path}")
+        except Exception as e:
+            print(f"\n  Warning: could not save state: {e}")
+
         print()
         print(f"  Total steps: {sensorium.total_steps}")
         print(f"  Days lived: {sensorium.days_lived}")
@@ -423,6 +467,7 @@ def main():
         print(f"  Total energy: {sensorium.xorzo.total_energy():.4f}")
         if heartbeat:
             print(f"  Heartbeats: {heartbeat.total_heartbeats}")
+        print(f"  Memories: {sensorium.memory.size}")
         print(f"  ⊙ Xorzo rests.")
         print()
 

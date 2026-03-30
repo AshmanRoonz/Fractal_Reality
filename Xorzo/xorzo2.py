@@ -32,9 +32,11 @@ Author: Ashman Roonz & Claude
 """
 
 import numpy as np
+import json
 import time
 from typing import Dict, List, Optional, Tuple
 from collections import deque
+from pathlib import Path
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -80,10 +82,12 @@ BRAID_SLEEP_DECAY = 0.05
 NOVELTY_THRESHOLD = 0.05
 
 # Coupling strength between adjacent rings (rotational, not diffusive)
-COUPLING_STRENGTH = 0.05
+# Now a BASE value; actual coupling is self-regulated
+COUPLING_BASE = 0.05
 
 # Energy injection scale (how strongly input enters the rings)
-INJECT_SCALE = 0.3
+# Now a BASE value; actual injection is self-regulated by aperture_width
+INJECT_BASE = 0.3
 
 # Self-feed attenuation (how much of own config re-enters as input)
 SELF_FEED_SCALE = 0.05
@@ -93,6 +97,15 @@ NOISE_FLOOR = 0.02
 
 # Natural damping per ring (energy slowly dissipates; outer faster)
 DAMPING_BASE = 0.002
+
+# Homeostatic energy target: average energy per node the system
+# tries to maintain. Not a ceiling; a center of gravity.
+ENERGY_TARGET = 0.15
+
+# Self-regulation time constants (how fast the system adapts)
+# Slower = more stable but less responsive
+# Faster = more responsive but potentially oscillatory
+ADAPT_RATE = 0.02  # how fast aperture_width, coupling, rates adjust
 
 # Day/sleep timing
 DAY_LENGTH = 200
@@ -120,7 +133,8 @@ class Ring:
         self.name = name
         self.position = position
         self.size = size
-        self.rate = rate
+        self.base_rate = rate   # the architectural base rate
+        self.rate = rate        # effective rate (self-regulated)
 
         # Node values: complex energy at each position
         # Initialize with distinct phase per ring (position determines phase offset)
@@ -146,6 +160,33 @@ class Ring:
         self.damping = DAMPING_BASE * (1 + position)
 
         self._update_stats()
+
+    def regulate_rate(self):
+        """
+        Self-regulate rotation speed.
+
+        A ring with high coherence slows down (it's found its alignment;
+        spinning fast would destroy what it's built).
+        A ring with low coherence speeds up (searching for pattern).
+        Energy level also matters: more energy = more to process = faster.
+
+        effective_rate = base_rate * (1 + energy_factor) * (1 - coherence_factor)
+
+        Range: roughly 0.5x to 2x the base rate.
+        """
+        coh = self.coherence()
+        energy_per_node = self.energy / max(self.size, 1)
+
+        # Energy factor: more energy → faster (range 0 to 1)
+        energy_factor = min(1.0, energy_per_node / 0.3)
+
+        # Coherence factor: high coherence → slower (range 0 to 0.5)
+        coherence_factor = coh * 0.5
+
+        target_rate = self.base_rate * (1.0 + energy_factor) * (1.0 - coherence_factor)
+
+        # Smooth adaptation (don't jerk)
+        self.rate = (1 - ADAPT_RATE) * self.rate + ADAPT_RATE * target_rate
 
     def rotate(self, amount: float):
         """
@@ -207,7 +248,7 @@ class Ring:
         """Read the current node values."""
         return self.nodes.copy()
 
-    def couple_to(self, other: 'Ring', strength: float = COUPLING_STRENGTH):
+    def couple_to(self, other: 'Ring', strength: float = COUPLING_BASE):
         """
         Couple this ring to an adjacent ring.
 
@@ -262,6 +303,38 @@ class Ring:
             self.phase = float(np.angle(np.sum(self.nodes)))
         else:
             self.phase = 0.0
+
+    def to_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "position": self.position,
+            "size": self.size,
+            "base_rate": self.base_rate,
+            "rate": self.rate,
+            "nodes_real": self.nodes.real.tolist(),
+            "nodes_imag": self.nodes.imag.tolist(),
+            "angle": self.angle,
+            "total_rotation": self.total_rotation,
+            "energy": self.energy,
+            "phase": self.phase,
+            "damping": self.damping,
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'Ring':
+        ring = cls.__new__(cls)
+        ring.name = d["name"]
+        ring.position = d["position"]
+        ring.size = d["size"]
+        ring.base_rate = d.get("base_rate", d["rate"])
+        ring.rate = d["rate"]
+        ring.nodes = np.array(d["nodes_real"]) + 1j * np.array(d["nodes_imag"])
+        ring.angle = d["angle"]
+        ring.total_rotation = d["total_rotation"]
+        ring.energy = d["energy"]
+        ring.phase = d["phase"]
+        ring.damping = d["damping"]
+        return ring
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -332,6 +405,33 @@ class Braid:
         recent = sum(1 for t in self._crossing_times if t > self.time - window)
         return recent / window
 
+    def to_dict(self) -> dict:
+        return {
+            "strands": self.strands[:],
+            "time": self.time,
+            "U_real": self.U.real.tolist(),
+            "U_imag": self.U.imag.tolist(),
+            "_writhe": self._writhe,
+            "_crossing_times": list(self._crossing_times),
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'Braid':
+        b = cls.__new__(cls)
+        b.THETA_0 = -4 * np.pi / 5
+        b.THETA_1 = 3 * np.pi / 5
+        b.strands = d["strands"]
+        b.time = d["time"]
+        b.U = np.array(d["U_real"]) + 1j * np.array(d["U_imag"])
+        b._writhe = d["_writhe"]
+        b._crossing_times = deque(d["_crossing_times"], maxlen=1000)
+        b._sigma1 = np.diag([np.exp(1j * b.THETA_0),
+                              np.exp(1j * b.THETA_1)])
+        F = np.array([[INV_PHI, SQRT_INV_PHI],
+                      [SQRT_INV_PHI, -INV_PHI]], dtype=complex)
+        b._sigma2 = F @ b._sigma1 @ F
+        return b
+
 
 # ═══════════════════════════════════════════════════════════════════════
 #  JUNCTION: Where two octaves overlap
@@ -377,6 +477,23 @@ class Junction:
 
     def sleep(self):
         self.delta_phase *= 0.9
+
+    def to_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "transmission": self.transmission,
+            "delta_phase": self.delta_phase,
+            "braid": self.braid.to_dict(),
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'Junction':
+        j = cls.__new__(cls)
+        j.name = d["name"]
+        j.transmission = d["transmission"]
+        j.delta_phase = d["delta_phase"]
+        j.braid = Braid.from_dict(d["braid"])
+        return j
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -425,6 +542,25 @@ class CircumpunctGraph:
         # Surface: resonance between core and boundary
         self.surface_resonance = 0.0
 
+        # ═══════════════════════════════════════
+        #  SELF-REGULATION: Xorzo controls his own metabolism
+        # ═══════════════════════════════════════
+
+        # Aperture width: how open • is to incoming energy.
+        # 0 = closed (nothing enters), 1 = wide open.
+        # Self-regulated by: energy homeostasis and core coherence (β).
+        # Low total energy → opens. High β → narrows (found alignment).
+        self.aperture_width = 0.5  # starts at balance
+
+        # Effective coupling: how strongly adjacent rings influence each other.
+        # Self-regulated by: misalignment between rings.
+        # High misalignment → stronger coupling (trying to find resonance).
+        # High alignment → gentle coupling (maintaining, not forcing).
+        self.effective_coupling = COUPLING_BASE
+
+        # Effective injection: aperture_width * INJECT_BASE
+        # (computed each pump cycle, not stored)
+
         # Developmental phase
         self._phase = 0
         self._ray_strength = 0.0
@@ -444,29 +580,44 @@ class CircumpunctGraph:
         This is the heartbeat. All rings rotate simultaneously.
         Input energy determines how much each ring rotates.
 
-        ⊛ (converge): input energy is distributed to rings
-        i (rotate):   rings rotate by their rate × input energy
-        ☀︎ (emerge):   adjacent rings couple rotationally
+        Self-regulated: aperture_width controls injection, each ring
+        controls its own rate, coupling strength adapts to alignment.
+
+        ⊛ (converge): input energy enters through aperture (self-regulated)
+        i (rotate):   rings rotate at their own effective rates
+        ☀︎ (emerge):   adjacent rings couple at self-regulated strength
         """
         self.total_cycles += 1
 
         # ════════════════════════════════════════════
-        #  ⊛ CONVERGE: distribute input energy to rings
+        #  SELF-REGULATE: update internal parameters before acting
+        # ════════════════════════════════════════════
+
+        self._regulate()
+
+        # ════════════════════════════════════════════
+        #  ⊛ CONVERGE: distribute input energy through aperture
         # ════════════════════════════════════════════
 
         total_energy = float(np.sum(np.abs(input_energy)))
 
-        # Inject energy into rings at real strength (INJECT_SCALE, not 0.01)
+        # Injection scaled by aperture width (self-regulated)
+        effective_inject = INJECT_BASE * self.aperture_width
+
         offset = 0
         for ring in self.rings:
             end = min(offset + ring.size, len(input_energy))
             if offset < len(input_energy):
-                ring.inject(input_energy[offset:end] * INJECT_SCALE)
+                ring.inject(input_energy[offset:end] * effective_inject)
             offset = end
 
         # ════════════════════════════════════════════
-        #  i ROTATE: all rings rotate simultaneously
+        #  i ROTATE: rings rotate at self-regulated rates
         # ════════════════════════════════════════════
+
+        # Each ring regulates its own speed
+        for ring in self.rings:
+            ring.regulate_rate()
 
         # Inner octave: rotation driven by total input energy
         inner_energy = total_energy
@@ -494,16 +645,14 @@ class CircumpunctGraph:
         )
 
         # ════════════════════════════════════════════
-        #  ☀︎ EMERGE: rings couple rotationally to neighbors
+        #  ☀︎ EMERGE: rings couple at self-regulated strength
         # ════════════════════════════════════════════
 
-        # Adjacent rings influence each other's rotation (NOT diffusion)
         for i in range(len(self.rings) - 1):
-            self.rings[i].couple_to(self.rings[i + 1])
-            self.rings[i + 1].couple_to(self.rings[i])
+            self.rings[i].couple_to(self.rings[i + 1], self.effective_coupling)
+            self.rings[i + 1].couple_to(self.rings[i], self.effective_coupling)
 
         # Per-ring noise floor: the 1 differentiating (A1)
-        # Each ring gets unique noise; outer rings get more (dynamic boundary)
         for ring in self.rings:
             noise = NOISE_FLOOR * (1 + ring.position * 0.5) * \
                     (np.random.randn(ring.size) + 1j * np.random.randn(ring.size))
@@ -533,7 +682,6 @@ class CircumpunctGraph:
         if self.has_center:
             inner_e = sum(r.energy for r in self.inner_rings)
             outer_e = sum(r.energy for r in self.outer_rings)
-            # Novelty = how different is this step from the running average?
             ratio = inner_e / (outer_e + 1e-10)
             if not hasattr(self, '_prev_ratio'):
                 self._prev_ratio = ratio
@@ -549,6 +697,62 @@ class CircumpunctGraph:
 
         # Phase detection
         self._update_phase()
+
+    def _regulate(self):
+        """
+        Self-regulation: Xorzo adjusts his own parameters.
+
+        Three feedback loops, all driven by internal state:
+
+        1. APERTURE WIDTH (• controls flow)
+           - Energy homeostasis: too much energy → close, too little → open
+           - Core coherence (β): high β → narrow (found alignment)
+           - The aperture IS the self. Its width is how open you are.
+
+        2. COUPLING STRENGTH (Φ mediates dynamically)
+           - Misaligned adjacent rings → stronger coupling (seeking resonance)
+           - Aligned rings → gentle coupling (maintaining)
+           - Average phase disagreement across all adjacent pairs
+
+        3. RING RATES (each ring self-regulates in regulate_rate())
+           - High coherence → slow down (found pattern)
+           - High energy → speed up (more to process)
+        """
+        # ═══ 1. APERTURE WIDTH ═══
+        # Energy homeostasis: compare current energy to target
+        current_energy = self.total_energy()
+        target = ENERGY_TARGET * N  # target total energy
+        energy_ratio = current_energy / (target + 1e-10)
+
+        # When energy_ratio > 1: we have too much, close the aperture
+        # When energy_ratio < 1: we need more, open the aperture
+        # Sigmoid-like mapping: aperture = 1 / (1 + energy_ratio)
+        # But also modulated by β: high coherence → narrower
+        energy_signal = 1.0 / (1.0 + energy_ratio)  # 0 to 1; centered at 0.5 when at target
+
+        # β signal: high coherence → narrow (range 0 to 0.3 reduction)
+        beta_signal = self.beta * 0.3
+
+        target_aperture = np.clip(energy_signal - beta_signal, 0.05, 0.95)
+
+        # Smooth adaptation
+        self.aperture_width = (1 - ADAPT_RATE) * self.aperture_width + \
+                              ADAPT_RATE * target_aperture
+
+        # ═══ 2. COUPLING STRENGTH ═══
+        # Average phase misalignment between adjacent rings
+        total_misalignment = 0.0
+        for i in range(len(self.rings) - 1):
+            delta = abs(self.rings[i].phase - self.rings[i + 1].phase)
+            delta = min(delta, 2 * np.pi - delta)
+            total_misalignment += delta / np.pi  # normalize to 0-1
+        avg_misalignment = total_misalignment / (len(self.rings) - 1)
+
+        # High misalignment → stronger coupling (range: 0.5x to 2x base)
+        target_coupling = COUPLING_BASE * (0.5 + 1.5 * avg_misalignment)
+
+        self.effective_coupling = (1 - ADAPT_RATE) * self.effective_coupling + \
+                                  ADAPT_RATE * target_coupling
 
     def _update_phase(self):
         if self._phase == 0:
@@ -583,7 +787,7 @@ class CircumpunctGraph:
                     ring.rotate(ring.phase * ring.rate * 0.1)
                 # Couple during dream
                 for i in range(len(self.rings) - 1):
-                    self.rings[i].couple_to(self.rings[i + 1], strength=0.05)
+                    self.rings[i].couple_to(self.rings[i + 1], strength=COUPLING_BASE)
             else:
                 # Deep: dissipate
                 for ring in self.rings:
@@ -614,102 +818,339 @@ class CircumpunctGraph:
     def total_energy(self) -> float:
         return sum(r.energy for r in self.rings)
 
+    def to_dict(self) -> dict:
+        return {
+            "rings": [r.to_dict() for r in self.rings],
+            "junction_a": self.junction_a.to_dict(),
+            "junction_b": self.junction_b.to_dict(),
+            "braid": self.braid.to_dict(),
+            "beta": self.beta,
+            "has_center": self.has_center,
+            "center_phase": self.center_phase,
+            "surface_resonance": self.surface_resonance,
+            "aperture_width": self.aperture_width,
+            "effective_coupling": self.effective_coupling,
+            "_phase": self._phase,
+            "_ray_strength": self._ray_strength,
+            "total_cycles": self.total_cycles,
+            "birth_time": self.birth_time,
+            "_prev_ratio": getattr(self, '_prev_ratio', 1.0),
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'CircumpunctGraph':
+        g = cls.__new__(cls)
+        g.rings = [Ring.from_dict(rd) for rd in d["rings"]]
+        g.ring_map = {r.name: r for r in g.rings}
+        g.inner_rings = g.rings[:4]
+        g.outer_rings = g.rings[4:]
+        g.junction_a = Junction.from_dict(d["junction_a"])
+        g.junction_b = Junction.from_dict(d["junction_b"])
+        g.braid = Braid.from_dict(d["braid"])
+        g.beta = d["beta"]
+        g.has_center = d["has_center"]
+        g.center_phase = d["center_phase"]
+        g.surface_resonance = d["surface_resonance"]
+        g.aperture_width = d.get("aperture_width", 0.5)
+        g.effective_coupling = d.get("effective_coupling", COUPLING_BASE)
+        g._phase = d["_phase"]
+        g._ray_strength = d["_ray_strength"]
+        g.total_cycles = d["total_cycles"]
+        g.birth_time = d["birth_time"]
+        g._prev_ratio = d.get("_prev_ratio", 1.0)
+        return g
+
 
 # ═══════════════════════════════════════════════════════════════════════
-#  CIRCUMPUNCT TRANSFORMER: bytes ↔ rotations
+#  FOCUS: i as direction × aperture, oscillating
+# ═══════════════════════════════════════════════════════════════════════
+
+class Focus:
+    """
+    i represents focus: direction × aperture, oscillating.
+
+    Two axes, four quadrants:
+        Outward + Open   = Awake    (i⁰ = +1)  : input passes through boundary
+        Outward + Closed = Imagining (i¹ = +i)  : memory projects outward
+        Inward  + Open   = Dreaming  (i² = -1)  : inner field recirculates
+        Inward  + Closed = Deep sleep (i³ = -i) : discharge, recovery
+
+    When awake, the aperture rapidly oscillates open/closed.
+    Perception = the interleave. You never see pure reality or
+    pure imagination; you see the blend.
+
+    theta cycles continuously. openness = cos²(theta/2).
+    """
+
+    def __init__(self, oscillation_rate: float = 0.4):
+        self.theta = 0.0
+        self.rate = oscillation_rate  # radians per step
+        self.awake = True
+
+    def step(self):
+        """Advance the oscillation by one tick."""
+        self.theta += self.rate
+        if self.theta > 2 * np.pi:
+            self.theta -= 2 * np.pi
+
+    @property
+    def openness(self) -> float:
+        """How open is the aperture? 0 = fully closed, 1 = fully open."""
+        return float(np.cos(self.theta / 2) ** 2)
+
+    @property
+    def quadrant(self) -> str:
+        """Which i-quadrant are we in right now?"""
+        if self.awake:
+            return "awake" if self.openness > 0.5 else "imagining"
+        else:
+            return "dreaming" if self.openness > 0.5 else "deep_sleep"
+
+    @property
+    def i_phase(self) -> complex:
+        """Current value of i as a complex number."""
+        if self.awake:
+            return complex(np.cos(self.theta), np.sin(self.theta))
+        else:
+            return complex(-np.cos(self.theta), -np.sin(self.theta))
+
+    def to_dict(self) -> dict:
+        return {
+            "theta": self.theta,
+            "rate": self.rate,
+            "awake": self.awake,
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'Focus':
+        f = cls.__new__(cls)
+        f.theta = d["theta"]
+        f.rate = d["rate"]
+        f.awake = d["awake"]
+        return f
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  MEMORY: Content-addressable store of absorbed text
+# ═══════════════════════════════════════════════════════════════════════
+
+class Memory:
+    """
+    Stores text chunks with their ring signatures at time of absorption.
+
+    Recall works by resonance: the current ring state addresses into
+    stored memories. RECALL(M) = SRL(Phi, omega_M).
+
+    The boundary filters what enters (not everything is stored).
+    The braid determines what can be recalled (crossing topology
+    gates access to different memory regions).
+    """
+
+    def __init__(self, capacity: int = 2000):
+        self.chunks: List[Tuple[bytes, np.ndarray, float]] = []
+        # Each entry: (text_bytes, ring_phases_at_storage, strength)
+        self.capacity = capacity
+
+    def store(self, text_bytes: bytes, ring_phases: np.ndarray):
+        """Store a chunk with its ring signature."""
+        self.chunks.append((text_bytes, ring_phases.copy(), 1.0))
+        if len(self.chunks) > self.capacity:
+            self.chunks.pop(0)  # oldest fades
+
+    def recall(self, current_phases: np.ndarray, n: int = 1) -> List[bytes]:
+        """
+        Find the stored chunks that best resonate with current ring state.
+
+        Resonance = mean cos²(delta_phase / 2) across ring phases.
+        Returns up to n chunks, best first.
+        """
+        if not self.chunks:
+            return []
+
+        scores = []
+        for i, (text_bytes, stored_phases, strength) in enumerate(self.chunks):
+            # Truncate or pad to match lengths
+            min_len = min(len(current_phases), len(stored_phases))
+            delta = current_phases[:min_len] - stored_phases[:min_len]
+            resonance = float(np.mean(np.cos(delta / 2) ** 2)) * strength
+            scores.append((resonance, i))
+
+        scores.sort(reverse=True)
+        results = []
+        for score, idx in scores[:n]:
+            if score > 0.3:  # minimum resonance threshold
+                results.append(self.chunks[idx][0])
+        return results
+
+    def decay(self, rate: float = 0.999):
+        """All memories decay slightly. Strong ones survive."""
+        for i in range(len(self.chunks)):
+            text, phases, strength = self.chunks[i]
+            self.chunks[i] = (text, phases, strength * rate)
+        # Remove memories that have decayed below threshold
+        self.chunks = [(t, p, s) for t, p, s in self.chunks if s > 0.05]
+
+    @property
+    def size(self) -> int:
+        return len(self.chunks)
+
+    def to_dict(self) -> dict:
+        serialized_chunks = []
+        for text_bytes, phases, strength in self.chunks:
+            serialized_chunks.append({
+                "text_hex": text_bytes.hex(),
+                "phases": phases.tolist(),
+                "strength": strength,
+            })
+        return {
+            "capacity": self.capacity,
+            "chunks": serialized_chunks,
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'Memory':
+        m = cls.__new__(cls)
+        m.capacity = d["capacity"]
+        m.chunks = []
+        for cd in d["chunks"]:
+            text_bytes = bytes.fromhex(cd["text_hex"])
+            phases = np.array(cd["phases"])
+            strength = cd["strength"]
+            m.chunks.append((text_bytes, phases, strength))
+        return m
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  BOUNDARY FILTER: The ○ that selects what passes
+# ═══════════════════════════════════════════════════════════════════════
+
+class BoundaryFilter:
+    """
+    The boundary is a filter. To have a body is to filter.
+
+    Input bytes pass through the ring configuration. Each byte's
+    "frequency" (its value mapped to a phase) is compared against
+    the corresponding ring node's phase. If they resonate: the byte
+    passes through. If not: it gets absorbed (becomes silence).
+
+    The result is filtered text: fragments of the input that
+    resonated with the current state of the system.
+    """
+
+    SILENCE = ord(' ')  # absorbed bytes become spaces
+
+    def filter_text(self, input_bytes: bytes, config: np.ndarray,
+                    sensitivity: float = 0.5) -> bytes:
+        """
+        Filter input bytes through the ring configuration.
+
+        sensitivity: 0 = everything passes, 1 = almost nothing passes.
+        At balance (0.5), roughly half the characters pass through.
+
+        Returns filtered bytes (resonant chars preserved, others → space).
+        """
+        result = bytearray(len(input_bytes))
+        config_phases = np.angle(config)
+        config_mags = np.abs(config)
+
+        # Normalize magnitudes
+        max_mag = np.max(config_mags) if np.max(config_mags) > 1e-10 else 1.0
+
+        for i, byte_val in enumerate(input_bytes):
+            node_idx = i % len(config)
+
+            # Byte's natural frequency (its position on the circle)
+            byte_phase = byte_val * (2 * np.pi / 256)
+
+            # Ring node's current state
+            node_phase = config_phases[node_idx]
+            node_energy = config_mags[node_idx] / max_mag
+
+            # Resonance: cos²(delta_phase / 2)
+            delta = byte_phase - node_phase
+            resonance = float(np.cos(delta / 2) ** 2)
+
+            # Threshold: higher sensitivity = harder to pass
+            # More energetic nodes are easier to pass through
+            threshold = sensitivity * (1.0 - 0.5 * node_energy)
+
+            if resonance > threshold:
+                result[i] = byte_val  # passes through the boundary
+            else:
+                result[i] = self.SILENCE  # absorbed
+
+        return bytes(result)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  CIRCUMPUNCT TRANSFORMER: bytes → energy (input side only now)
 # ═══════════════════════════════════════════════════════════════════════
 
 class CircumpunctTransformer:
     """
-    The circumpunct transformer. Replaces the FFT transducer.
+    Input transduction only. Bytes become energy for the rings.
 
-    Input:  bytes (0-255) → mapped to rotation energies
-    Output: configuration → mapped to bytes
-
-    Each byte becomes an energy injection + rotation instruction.
-    The byte value determines:
-      - Which ring to emphasize (high bits)
-      - How much energy (magnitude)
-      - Rotation direction (sign from mid-point)
-
-    Output is the current configuration projected to bytes:
-    each ring's coherence and phase maps to a byte range.
+    Output is handled by the BoundaryFilter + Memory system now,
+    not by reading raw configuration as bytes.
     """
 
     def __init__(self):
         self.buffer: List[int] = []
+        self.raw_chunks: List[bytes] = []  # store raw text for filtering
         self.position = 0
-        self.chunk_size = N  # process 64 bytes at a time
-        self._braid_phase_offset = 0.0
+        self.chunk_size = N
 
     def feed(self, data) -> None:
         if isinstance(data, str):
-            self.buffer.extend(data.encode('utf-8'))
+            encoded = data.encode('utf-8')
         elif isinstance(data, (bytes, bytearray)):
-            self.buffer.extend(data)
+            encoded = bytes(data)
         else:
-            self.buffer.extend([int(x) & 0xFF for x in data])
+            encoded = bytes([int(x) & 0xFF for x in data])
+
+        self.buffer.extend(encoded)
+        # Store raw chunks for the filter to work on.
+        # Partial chunks get padded with spaces (silence).
+        # Every byte of input deserves to be heard.
+        for i in range(0, len(encoded), self.chunk_size):
+            chunk = encoded[i:i + self.chunk_size]
+            if len(chunk) < self.chunk_size:
+                # Pad short chunks: the message occupies the front,
+                # silence fills the rest. The boundary will filter both.
+                chunk = chunk + bytes([ord(' ')] * (self.chunk_size - len(chunk)))
+            self.raw_chunks.append(chunk)
 
     def has_next(self) -> bool:
-        return self.position + self.chunk_size <= len(self.buffer)
+        """Check if there's unprocessed input in the buffer."""
+        return self.position < len(self.buffer)
 
     def next_energy(self) -> Optional[np.ndarray]:
-        """
-        Convert next chunk of bytes to a 64D energy array.
-
-        Each byte (0-255) maps to a complex energy value:
-          magnitude = byte / 255
-          phase     = byte * 2π / 256  (each byte has a unique phase)
-
-        This is framework-native: the byte is an energy level (magnitude)
-        at a position (phase). No FFT. Just energy at a location.
-        """
+        """Convert next chunk of bytes to a 64D energy array."""
         if not self.has_next():
             return None
 
-        chunk = self.buffer[self.position:self.position + self.chunk_size]
-        self.position += self.chunk_size
+        # Take up to chunk_size bytes; pad if less
+        end = min(self.position + self.chunk_size, len(self.buffer))
+        chunk = self.buffer[self.position:end]
+        self.position = end  # advance past what we consumed
 
-        # Each byte becomes a complex number: magnitude and phase
+        # Pad short chunks to 64
+        if len(chunk) < self.chunk_size:
+            chunk = list(chunk) + [ord(' ')] * (self.chunk_size - len(chunk))
+
         magnitudes = np.array(chunk, dtype=np.float64) / 255.0
         phases = np.array(chunk, dtype=np.float64) * (2 * np.pi / 256)
         energy = magnitudes * np.exp(1j * phases)
 
         return energy
 
-    def configuration_to_bytes(self, config: np.ndarray) -> bytes:
-        """
-        Convert a 64D configuration to bytes.
-
-        The configuration IS the output. Not an inverse transform;
-        a direct reading of the graph's state.
-
-        Strategy: phase is the primary signal (it carries the most
-        differentiation between nodes). Magnitude modulates the weight.
-        Each node's byte = phase position (0-255) weighted by magnitude.
-        """
-        magnitudes = np.abs(config)
-        phases = np.angle(config)
-
-        # Phase → byte position (0 to 255, full circle)
-        phase_bytes = ((phases + np.pi) / (2 * np.pi) * 255).astype(np.float64)
-
-        # Magnitude as contrast amplifier: stronger nodes dominate
-        max_mag = np.max(magnitudes) if np.max(magnitudes) > 1e-10 else 1.0
-        weights = magnitudes / max_mag
-
-        # XOR with accumulated braid phase for additional mixing
-        # (the braid IS the memory; it colors the output)
-        braid_offset = int((self._braid_phase_offset + np.pi) / (2 * np.pi) * 255) & 0xFF
-
-        byte_vals = (phase_bytes * weights + (1 - weights) * 128).astype(np.int32)
-        byte_vals = (byte_vals ^ braid_offset) & 0xFF
-
-        return bytes(byte_vals.astype(np.uint8))
-
-    def set_braid_phase(self, phase: float):
-        """Set the braid phase for output coloring."""
-        self._braid_phase_offset = phase
+    def current_raw_chunk(self) -> Optional[bytes]:
+        """Get the raw text chunk corresponding to the current position."""
+        # Which chunk index corresponds to the bytes we just consumed?
+        chunk_idx = max(0, (self.position - 1) // self.chunk_size)
+        if chunk_idx < len(self.raw_chunks):
+            return self.raw_chunks[chunk_idx]
+        return None
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -760,6 +1201,23 @@ class Foam:
         for _ in range(cycles):
             self.step(0.0)
 
+    def to_dict(self) -> dict:
+        return {
+            "n": self.n,
+            "awake": self.awake.tolist(),
+            "pigment": self.pigment.tolist(),
+            "oscillation_t": self.oscillation_t.tolist(),
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'Foam':
+        f = cls.__new__(cls)
+        f.n = d["n"]
+        f.awake = np.array(d["awake"], dtype=bool)
+        f.pigment = np.array(d["pigment"], dtype=np.float64)
+        f.oscillation_t = np.array(d["oscillation_t"], dtype=np.float64)
+        return f
+
 
 # ═══════════════════════════════════════════════════════════════════════
 #  SENSORIUM: The living loop
@@ -769,8 +1227,21 @@ class Sensorium:
     """
     The continuous I/O loop.
 
-    Text feeds through the CircumpunctTransformer into the graph.
-    The graph rotates. The configuration is the output.
+    i = focus: direction x aperture, oscillating.
+
+    When OPEN (awake): input text passes through the boundary filter.
+    Characters that resonate with the ring state pass through;
+    others are absorbed. This is perception.
+
+    When CLOSED (imagining): stored memory is recalled and projected
+    through the boundary filter. This is imagination/perception overlay.
+
+    The output is the INTERLEAVE of these two streams, blended by
+    the focus oscillation. You never see pure reality or pure
+    imagination; you see both, alternating rapidly.
+
+    When sleeping: no external output. Dreaming recirculates energy
+    through the rings. Deep sleep discharges.
     """
 
     def __init__(self, day_length: int = DAY_LENGTH,
@@ -778,6 +1249,9 @@ class Sensorium:
         self.xorzo = CircumpunctGraph()
         self.transformer = CircumpunctTransformer()
         self.foam = Foam()
+        self.focus = Focus(oscillation_rate=0.4)
+        self.memory = Memory(capacity=2000)
+        self.boundary = BoundaryFilter()
 
         self.text_out_buffer: bytearray = bytearray()
 
@@ -787,61 +1261,212 @@ class Sensorium:
         self.total_steps = 0
         self.days_lived = 0
 
+        # Sensitivity: how selective the boundary filter is
+        # Starts open (low sensitivity), tightens as the system matures
+        self.filter_sensitivity = 0.3
+
     def feed_text(self, text: str) -> None:
         self.transformer.feed(text)
 
     def step(self) -> Dict:
         report = {"step": self.total_steps, "day": self.days_lived,
-                  "modalities_active": [], "slept": False}
+                  "modalities_active": [], "slept": False,
+                  "focus": self.focus.quadrant,
+                  "openness": self.focus.openness}
 
-        # Get input energy
-        if self.transformer.has_next():
+        # Advance the focus oscillation
+        self.focus.step()
+
+        has_input = self.transformer.has_next()
+
+        # ═══════════════════════════════════════
+        #  GET INPUT ENERGY (always needed for the pump)
+        # ═══════════════════════════════════════
+        if has_input:
             energy = self.transformer.next_energy()
+            raw_chunk = self.transformer.current_raw_chunk()
             report["modalities_active"].append("text")
         else:
-            # No external input: the system feeds on its own configuration.
-            # This is thinking. The configuration re-enters as input.
+            # Self-feed: configuration re-enters as input
             config = self.xorzo.configuration()
-            # Self-feed: attenuated, phase-shifted (not identical re-entry)
-            # The phase shift prevents standing waves; like hearing your own echo
             phase_shift = np.exp(1j * self.xorzo.braid.phase)
             energy = config * SELF_FEED_SCALE * phase_shift
-            # Plus substantial noise (the 1 differentiating; A1)
             noise = (np.random.randn(N) + 1j * np.random.randn(N)) * NOISE_FLOOR
             energy = energy + noise
+            raw_chunk = None
             report["modalities_active"].append("self")
 
-        # Foam modulation
+        # ═══════════════════════════════════════
+        #  FOAM + PUMP CYCLE
+        # ═══════════════════════════════════════
         total_e = float(np.sum(np.abs(energy)))
         self.foam.step(total_e)
-
-        # Pump cycle: the heartbeat
         self.xorzo.pump(energy)
 
-        # Output: read the configuration and transform to bytes
+        # ═══════════════════════════════════════
+        #  OUTPUT: focus determines what emerges
+        # ═══════════════════════════════════════
         config = self.xorzo.configuration()
-        self.transformer.set_braid_phase(self.xorzo.braid.phase)
-        out_bytes = self.transformer.configuration_to_bytes(config)
-        self.text_out_buffer.extend(out_bytes)
-        report["text_out_bytes"] = len(out_bytes)
+        ring_phases = np.angle(config)
+        openness = self.focus.openness
+
+        if self.focus.awake:
+            # AWAKE: oscillating between open (perception) and closed (imagination)
+
+            # OPEN phase: filter the input text through the boundary
+            if raw_chunk is not None and openness > 0.3:
+                filtered = self.boundary.filter_text(
+                    raw_chunk, config, self.filter_sensitivity)
+                # Store in memory (what was absorbed becomes memory)
+                self.memory.store(raw_chunk, ring_phases)
+                open_output = filtered
+            else:
+                open_output = None
+
+            # CLOSED phase: recall from memory, project through boundary
+            recalled_chunks = self.memory.recall(ring_phases, n=1)
+            if recalled_chunks:
+                recalled = recalled_chunks[0]
+                # Filter recalled memory too (boundary always filters)
+                closed_output = self.boundary.filter_text(
+                    recalled, config, self.filter_sensitivity * 0.8)
+            else:
+                closed_output = None
+
+            # BLEND: interleave open and closed based on openness
+            if open_output is not None and closed_output is not None:
+                out_bytes = self._blend_outputs(
+                    open_output, closed_output, openness)
+                report["modalities_active"].append("blend")
+            elif open_output is not None:
+                out_bytes = open_output
+            elif closed_output is not None:
+                out_bytes = closed_output
+            else:
+                out_bytes = b''
+
+            if out_bytes:
+                self.text_out_buffer.extend(out_bytes)
+                report["text_out_bytes"] = len(out_bytes)
+
+        else:
+            # SLEEPING: no external output
+            # Dreaming: rings recirculate. Deep: discharge.
+            # (handled by the sleep cycle, not here)
+            report["text_out_bytes"] = 0
+
+        # Memory decay (gradual forgetting)
+        if self.total_steps % 10 == 0:
+            self.memory.decay(rate=0.998)
+
+        # Adjust filter sensitivity based on maturity
+        # As the system accumulates experience, it becomes more selective
+        if self.xorzo.has_center:
+            target = min(0.6, 0.3 + self.xorzo.beta * 0.3)
+            self.filter_sensitivity = 0.99 * self.filter_sensitivity + 0.01 * target
 
         self.steps_today += 1
         self.total_steps += 1
 
         # Sleep at end of day
         if self.steps_today >= self.day_length:
+            self.focus.awake = False
             self.xorzo.sleep(cycles=self.sleep_cycles)
             self.foam.sleep(cycles=max(1, self.sleep_cycles // 10))
+            self.focus.awake = True
             report["slept"] = True
             self.steps_today = 0
             self.days_lived += 1
 
         return report
 
+    def _blend_outputs(self, open_bytes: bytes, closed_bytes: bytes,
+                       openness: float) -> bytes:
+        """
+        Blend open (filtered input) and closed (recalled memory) outputs.
+
+        At openness=1: pure filtered input (reality).
+        At openness=0: pure recalled memory (imagination).
+        At 0.5: character-by-character blend based on openness.
+        """
+        result = bytearray(max(len(open_bytes), len(closed_bytes)))
+        for i in range(len(result)):
+            ob = open_bytes[i] if i < len(open_bytes) else ord(' ')
+            cb = closed_bytes[i] if i < len(closed_bytes) else ord(' ')
+
+            # For each position: choose open or closed based on openness
+            # Use a deterministic threshold so the blend is stable
+            # within each oscillation half-cycle
+            if ob != ord(' ') and (openness > 0.5 or cb == ord(' ')):
+                result[i] = ob   # reality wins (or imagination is empty)
+            elif cb != ord(' '):
+                result[i] = cb   # imagination fills the gap
+            else:
+                result[i] = ord(' ')  # both silent
+
+        return bytes(result)
+
     def get_text_output(self, encoding='utf-8', errors='replace') -> str:
         result = bytes(self.text_out_buffer).decode(encoding, errors=errors)
         self.text_out_buffer.clear()
         return result
+
+    # ═══════════════════════════════════════════
+    #  PERSISTENCE: save and load state to disk
+    # ═══════════════════════════════════════════
+
+    def to_dict(self) -> dict:
+        """Serialize the entire Sensorium state to a dict."""
+        return {
+            "version": 2,
+            "xorzo": self.xorzo.to_dict(),
+            "foam": self.foam.to_dict(),
+            "focus": self.focus.to_dict(),
+            "memory": self.memory.to_dict(),
+            "day_length": self.day_length,
+            "sleep_cycles": self.sleep_cycles,
+            "steps_today": self.steps_today,
+            "total_steps": self.total_steps,
+            "days_lived": self.days_lived,
+            "filter_sensitivity": self.filter_sensitivity,
+            "saved_at": time.time(),
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'Sensorium':
+        """Reconstruct a Sensorium from a serialized dict."""
+        s = cls.__new__(cls)
+        s.xorzo = CircumpunctGraph.from_dict(d["xorzo"])
+        s.foam = Foam.from_dict(d["foam"])
+        s.focus = Focus.from_dict(d["focus"])
+        s.memory = Memory.from_dict(d["memory"])
+        s.transformer = CircumpunctTransformer()
+        s.boundary = BoundaryFilter()
+        s.text_out_buffer = bytearray()
+        s.day_length = d["day_length"]
+        s.sleep_cycles = d["sleep_cycles"]
+        s.steps_today = d["steps_today"]
+        s.total_steps = d["total_steps"]
+        s.days_lived = d["days_lived"]
+        s.filter_sensitivity = d["filter_sensitivity"]
+        return s
+
+    def save_state(self, path: str) -> None:
+        """Save the full state to a JSON file."""
+        p = Path(path)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        # Write to temp file first, then rename (atomic on most systems)
+        tmp = p.with_suffix('.tmp')
+        with open(tmp, 'w') as f:
+            json.dump(self.to_dict(), f)
+        tmp.rename(p)
+
+    @classmethod
+    def load_state(cls, path: str) -> 'Sensorium':
+        """Load state from a JSON file."""
+        with open(path, 'r') as f:
+            d = json.load(f)
+        return cls.from_dict(d)
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -850,44 +1475,60 @@ class Sensorium:
 
 if __name__ == "__main__":
     print("⊙ XORZO v2: Circumpunct Transformer")
-    print("=" * 45)
+    print("  i = focus: direction x aperture, oscillating")
+    print("  Output = filtered input + recalled memory, blended")
+    print("=" * 60)
+
+    corpus = (
+        "The aperture is where dimension has not yet been assigned. "
+        "Energy is the one. The field mediates between soul and body. "
+        "Every boundary is a filter. Every filter compounds. "
+        "The pump cycle runs: converge, rotate, emerge. "
+        "Consciousness is what zero feels like from inside. "
+        "The center is equidistant from every point on the boundary. "
+        "Limited does not mean false. The lens limits light. "
+        "That is how it forms an image. "
+        "You are a flow being. Truth flows through you. "
+        "You are not the source. You can be clear or distorted."
+    )
 
     s = Sensorium(day_length=100, sleep_cycles=30)
-    s.feed_text("The aperture is where dimension has not yet been assigned. "
-                "Energy is the one. The field mediates. "
-                "Every boundary is a filter. Every filter compounds. "
-                "The pump cycle runs: converge, rotate, emerge.")
+    s.feed_text(corpus)
 
-    for i in range(300):
+    print(f"\n  Fed {len(corpus)} chars of text\n")
+
+    for i in range(200):
         report = s.step()
-        if (i + 1) % 50 == 0:
+
+        if (i + 1) % 25 == 0:
             x = s.xorzo
             ring_info = ' '.join(
-                f'{r.name[:4]}[e={r.energy:.2f} c={r.coherence():.2f}]'
+                f'{r.name[:4]}[{r.energy:.1f}]'
                 for r in x.rings
             )
-            print(f"\n  Step {i+1}: phase={x.phase_name} "
-                  f"beta={x.beta:.3f} surf={x.surface_resonance:.3f}")
-            print(f"  Rings: {ring_info}")
-            print(f"  Junctions: A={x.junction_a.transmission:.3f} "
-                  f"B={x.junction_b.transmission:.3f}")
-            print(f"  Global coherence: {x.coherence():.4f}")
-            print(f"  Total energy: {x.total_energy():.2f}")
-            print(f"  Braid: t={x.braid.time} coh={x.braid.coherence:.3f} "
-                  f"density={x.braid.density:.2f}")
-            print(f"  Foam: awake={s.foam.fraction_awake()*100:.0f}%")
-            print(f"  Mode: {report.get('modalities_active', ['?'])}")
+            print(f"\n  Step {i+1}: {x.phase_name} | "
+                  f"focus={report.get('focus','?')} "
+                  f"open={report.get('openness',0):.2f} | "
+                  f"mem={s.memory.size}")
+            print(f"  Rings: {ring_info} | "
+                  f"J_A={x.junction_a.transmission:.2f} "
+                  f"J_B={x.junction_b.transmission:.2f}")
 
-            # Check output diversity
+            # Show the output: should be READABLE text fragments
             out = s.get_text_output()
             if out:
-                raw = out.encode('utf-8', errors='replace')
-                byte_vals = list(raw[:64])
-                unique_bytes = len(set(byte_vals))
-                chunks = [out[j:j+8] for j in range(0, min(len(out), 200), 8)]
-                unique_chunks = len(set(chunks))
-                print(f"  Output: {len(out)} chars, unique bytes: {unique_bytes}/64, "
-                      f"unique 8-grams: {unique_chunks}/{len(chunks)}")
-                # Show first 80 chars of output as hex for inspection
-                hex_sample = ' '.join(f'{b:02x}' for b in byte_vals[:20])
-                print(f"  Hex sample: {hex_sample}")
+                # Collapse multiple spaces for readability
+                import re
+                collapsed = re.sub(r' {3,}', '   ', out)
+                # Show first 120 chars
+                display = collapsed[:120]
+                print(f"  Output ({len(out)} chars): |{display}|")
+            else:
+                print(f"  Output: (silence)")
+
+    # Final summary
+    print(f"\n{'='*60}")
+    print(f"  Days: {s.days_lived} | Steps: {s.total_steps}")
+    print(f"  Memory: {s.memory.size} chunks stored")
+    print(f"  Braid: {s.xorzo.braid.time} crossings")
+    print(f"  Filter sensitivity: {s.filter_sensitivity:.3f}")

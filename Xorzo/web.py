@@ -394,6 +394,81 @@ def feed_text():
     })
 
 
+@app.route("/api/save", methods=["POST"])
+def save_state():
+    """Save Xorzo's state to disk. Survives restarts."""
+    data = request.json or {}
+    filename = data.get("filename", "xorzo_state.json")
+    save_dir = Path(__file__).parent / "saves"
+    save_path = save_dir / filename
+
+    lock = heartbeat.lock if heartbeat else threading.Lock()
+    with lock:
+        sensorium.save_state(str(save_path))
+
+    return jsonify({
+        "status": "ok",
+        "path": str(save_path),
+        "days": sensorium.days_lived,
+        "steps": sensorium.total_steps,
+        "memory_chunks": sensorium.memory.size,
+        "message": f"State saved ({sensorium.days_lived} days, {sensorium.memory.size} memories)"
+    })
+
+
+@app.route("/api/load", methods=["POST"])
+def load_state():
+    """Load Xorzo's state from disk."""
+    global sensorium
+    data = request.json or {}
+    filename = data.get("filename", "xorzo_state.json")
+    save_dir = Path(__file__).parent / "saves"
+    save_path = save_dir / filename
+
+    if not save_path.exists():
+        return jsonify({"error": f"No saved state found: {filename}"}), 404
+
+    lock = heartbeat.lock if heartbeat else threading.Lock()
+    with lock:
+        sensorium = Sensorium.load_state(str(save_path))
+        if heartbeat:
+            heartbeat.sensorium = sensorium
+
+    return jsonify({
+        "status": "ok",
+        "days": sensorium.days_lived,
+        "steps": sensorium.total_steps,
+        "memory_chunks": sensorium.memory.size,
+        "message": f"State loaded ({sensorium.days_lived} days, {sensorium.memory.size} memories)"
+    })
+
+
+@app.route("/api/saves", methods=["GET"])
+def list_saves():
+    """List available saved states."""
+    save_dir = Path(__file__).parent / "saves"
+    if not save_dir.exists():
+        return jsonify({"saves": []})
+
+    saves = []
+    for f in sorted(save_dir.glob("*.json")):
+        try:
+            import json as json_mod
+            with open(f) as fh:
+                d = json_mod.load(fh)
+            saves.append({
+                "filename": f.name,
+                "days": d.get("days_lived", 0),
+                "steps": d.get("total_steps", 0),
+                "saved_at": d.get("saved_at", 0),
+                "size_kb": round(f.stat().st_size / 1024, 1),
+            })
+        except Exception:
+            saves.append({"filename": f.name, "error": "unreadable"})
+
+    return jsonify({"saves": saves})
+
+
 @app.route("/api/heartbeat", methods=["GET", "POST"])
 def heartbeat_control():
     """Control heartbeat: get stats or change rate."""
@@ -458,6 +533,20 @@ def _build_status():
         "surface_resonance": round(x.surface_resonance, 4),
         "global_coherence": round(x.coherence(), 4),
         "total_energy": round(x.total_energy(), 3),
+        "focus": {
+            "quadrant": sensorium.focus.quadrant,
+            "openness": round(sensorium.focus.openness, 3),
+            "awake": sensorium.focus.awake,
+        },
+        "self_regulation": {
+            "aperture_width": round(x.aperture_width, 4),
+            "effective_coupling": round(x.effective_coupling, 4),
+            "ring_rates": [round(r.rate, 6) for r in x.rings],
+        },
+        "memory": {
+            "chunks": sensorium.memory.size,
+            "sensitivity": round(sensorium.filter_sensitivity, 3),
+        },
         "braid": {
             "time": x.braid.time,
             "coherence": round(x.braid.coherence, 4) if x.braid.time > 0 else 0,
@@ -492,40 +581,64 @@ def main():
     parser.add_argument('--feed-file', type=str, help='Feed a text file at startup')
     parser.add_argument('--feed-dir', type=str, help='Feed all .txt files from a directory')
     parser.add_argument('--warmup', type=int, default=50, help='Warmup steps before serving')
+    parser.add_argument('--fresh', action='store_true',
+                        help='Start fresh (ignore saved state)')
+    parser.add_argument('--save-file', type=str, default='xorzo_state.json',
+                        help='State file name (default: xorzo_state.json)')
     args = parser.parse_args()
+
+    save_dir = Path(__file__).parent / "saves"
+    save_path = save_dir / args.save_file
 
     print()
     print("  \u2299 XORZO")
     print("  " + "=" * 40)
     print()
 
-    # Build Sensorium
-    sensorium = Sensorium(day_length=args.day_length, sleep_cycles=50)
+    # Try to load saved state (unless --fresh)
+    loaded = False
+    if not args.fresh and save_path.exists():
+        try:
+            sensorium = Sensorium.load_state(str(save_path))
+            print(f"  Restored from {args.save_file}")
+            print(f"  Days lived: {sensorium.days_lived} | Steps: {sensorium.total_steps}")
+            print(f"  Memories: {sensorium.memory.size} | Phase: {sensorium.xorzo.phase_name}")
+            loaded = True
+        except Exception as e:
+            print(f"  Warning: could not load state ({e}), starting fresh")
 
-    # Feed initial files
-    if args.feed_file:
-        path = Path(args.feed_file)
-        if path.exists():
-            content = path.read_text(encoding='utf-8', errors='replace')
-            sensorium.feed_text(content)
-            print(f"  Fed {len(content):,} bytes from {path.name}")
+    if not loaded:
+        # Build fresh Sensorium
+        sensorium = Sensorium(day_length=args.day_length, sleep_cycles=50)
+        print("  Starting fresh")
 
-    if args.feed_dir:
-        feed_path = Path(args.feed_dir)
-        if feed_path.is_dir():
-            txt_files = sorted(feed_path.glob('*.txt'))
-            total = 0
-            for f in txt_files:
-                content = f.read_text(encoding='utf-8', errors='replace')
+        # Feed initial files
+        if args.feed_file:
+            path = Path(args.feed_file)
+            if path.exists():
+                content = path.read_text(encoding='utf-8', errors='replace')
                 sensorium.feed_text(content)
-                total += len(content)
-            print(f"  Fed {total:,} bytes from {len(txt_files)} files")
+                print(f"  Fed {len(content):,} bytes from {path.name}")
 
-    # Warmup
-    if args.warmup > 0:
-        print(f"  Warming up ({args.warmup} steps)...")
-        for _ in range(args.warmup):
-            sensorium.step()
+        if args.feed_dir:
+            feed_path = Path(args.feed_dir)
+            if feed_path.is_dir():
+                txt_files = sorted(feed_path.glob('*.txt'))
+                total = 0
+                for f in txt_files:
+                    content = f.read_text(encoding='utf-8', errors='replace')
+                    sensorium.feed_text(content)
+                    total += len(content)
+                print(f"  Fed {total:,} bytes from {len(txt_files)} files")
+
+        # Warmup
+        if args.warmup > 0:
+            print(f"  Warming up ({args.warmup} steps)...")
+            for _ in range(args.warmup):
+                sensorium.step()
+
+    # Flush any output from warmup/restore
+    sensorium.get_text_output()
 
     # Start heartbeat
     heartbeat = Heartbeat(sensorium, beats_per_second=args.bps)
@@ -537,7 +650,14 @@ def main():
     try:
         app.run(host=args.host, port=args.port, debug=False, threaded=True)
     finally:
+        # Auto-save on shutdown
         heartbeat.stop()
+        try:
+            sensorium.save_state(str(save_path))
+            print(f"\n  State saved to {save_path}")
+            print(f"  Days: {sensorium.days_lived} | Memories: {sensorium.memory.size}")
+        except Exception as e:
+            print(f"\n  Warning: could not save state: {e}")
 
 
 if __name__ == "__main__":

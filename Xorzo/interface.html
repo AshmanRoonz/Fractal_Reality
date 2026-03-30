@@ -382,7 +382,8 @@
   <span class="stat">day <span class="val" id="hDay">0</span></span>
   <span class="stat">hb <span class="val" id="hHeartbeat">0</span></span>
   <span class="stat">&beta; <span class="val" id="hBeta">0</span></span>
-  <span class="stat">ray <span class="val" id="hRay">0</span></span>
+  <span class="stat">focus <span class="val" id="hFocus">?</span></span>
+  <span class="stat">mem <span class="val" id="hMem">0</span></span>
   <button class="status-btn" onclick="togglePanel()">MONITOR</button>
 </div>
 
@@ -419,8 +420,10 @@
       <div class="metric-grid">
         <div class="metric"><div class="ml">Beta</div><div class="mv" id="mBeta">0</div></div>
         <div class="metric"><div class="ml">Ray</div><div class="mv" id="mRay">0</div></div>
-        <div class="metric"><div class="ml">Coherence</div><div class="mv" id="mCoherence">0</div></div>
-        <div class="metric"><div class="ml">Energy</div><div class="mv" id="mEnergy">0</div></div>
+        <div class="metric"><div class="ml">Focus</div><div class="mv" id="mFocus">?</div></div>
+        <div class="metric"><div class="ml">Openness</div><div class="mv" id="mOpen">0</div></div>
+        <div class="metric"><div class="ml">Memory</div><div class="mv" id="mMemory">0</div></div>
+        <div class="metric"><div class="ml">Sensitivity</div><div class="mv" id="mSensitivity">0</div></div>
         <div class="metric"><div class="ml">Surface</div><div class="mv" id="mSurface">0</div></div>
         <div class="metric"><div class="ml">Braid</div><div class="mv" id="mBraid">0</div></div>
       </div>
@@ -639,18 +642,28 @@ function updateStatus(s) {
 
   document.getElementById('hDay').textContent = s.day || 0;
   document.getElementById('hHeartbeat').textContent = (s.heartbeats || 0).toLocaleString();
-  document.getElementById('hBeta').textContent = (s.beta || 0).toFixed(3);
-  document.getElementById('hRay').textContent = (s.ray_strength || 0).toFixed(3);
 
   // Symbol pulse
   const sym = document.getElementById('symbol');
   sym.className = s.phase === 'dormant' ? 'symbol sleeping' : 'symbol';
 
   // Metrics
-  document.getElementById('mBeta').textContent = (s.beta || 0).toFixed(4);
-  document.getElementById('mRay').textContent = (s.ray_strength || 0).toFixed(4);
-  document.getElementById('mCoherence').textContent = (s.global_coherence || 0).toFixed(4);
-  document.getElementById('mEnergy').textContent = (s.total_energy || 0).toFixed(2);
+  document.getElementById('hBeta').textContent = (s.beta || 0).toFixed(3);
+
+  // Focus
+  if (s.focus) {
+    document.getElementById('hFocus').textContent = s.focus.quadrant || '?';
+    document.getElementById('mFocus').textContent = s.focus.quadrant || '?';
+    document.getElementById('mOpen').textContent = (s.focus.openness || 0).toFixed(2);
+  }
+
+  // Memory
+  if (s.memory) {
+    document.getElementById('hMem').textContent = s.memory.chunks || 0;
+    document.getElementById('mMemory').textContent = s.memory.chunks + ' chunks';
+    document.getElementById('mSensitivity').textContent = (s.memory.sensitivity || 0).toFixed(3);
+  }
+
   document.getElementById('mSurface').textContent = (s.surface_resonance || 0).toFixed(4);
   if (s.braid) {
     document.getElementById('mBraid').textContent = 't=' + (s.braid.time || 0) +
