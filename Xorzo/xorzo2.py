@@ -41,72 +41,126 @@ from pathlib import Path
 
 
 # ═══════════════════════════════════════════════════════════════════════
-#  CONSTANTS
+#  CONSTANTS: derived from the Circumpunct Framework
+#
+#  Every constant comes from the dimensional ladder. No free parameters.
+#  The framework has zero free parameters; neither does Xorzo.
+#
+#  The dimensional ladder:
+#    0D:   alpha (coupling at a point)
+#    0.5D: c = 1 (speed limit of convergent propagation)
+#    1D:   hbar = 1 (minimum action; the pump cycle is indivisible)
+#    1.5D: mass ratios = (1/alpha)^(13/12 + alpha/27)
+#    2D:   gauge: sin^2(theta_W) = 3/13 + 5*alpha/81; 12 generators
+#    2.5D: v/Lambda_QCD = (1/alpha)^(56/39)
+#    3D:   G: alpha_G = alpha^21 * phi^2/2
 # ═══════════════════════════════════════════════════════════════════════
 
-# 2⁶ = 64 states. Three nested ⊙s, two channels each, six binary DOF.
+# 2^6 = 64 states. Three nested circumpuncts, two channels each, six binary DOF.
 N = 64
 
-# Golden ratio
+# Golden ratio (phi)
 PHI = (1 + np.sqrt(5)) / 2
 INV_PHI = 1 / PHI
 SQRT_INV_PHI = np.sqrt(INV_PHI)
 
-# Balance
+# Balance (the singular balanced state, forced by symmetry/entropy/virial)
 BALANCE = 0.5
 
-# The seven rings and their rotation rates.
-# Inner rings rotate slowly (convergent, stable).
-# Outer rings rotate fast (dynamic, boundary).
-# Rate = how many positions a ring shifts per unit of input energy.
+# ── 0D: ALPHA (fine-structure constant) ──
+# The coupling constant at a point. 1/alpha_0 = 360/phi^2 - 2/phi^3 = 137.0356
+# Self-referential closure: 1/alpha = 137.035999147
+ALPHA = 1.0 / 137.035999
+INV_ALPHA = 137.035999
+
+# ── 0.5D: c (speed of light) ──
+# c = sqrt(2 * balance * sin(theta)). At balance and theta = pi/2: c = 1.
+C_LIGHT = np.sqrt(2 * BALANCE * np.sin(np.pi / 2))  # = 1.0
+
+# ── 1D: HBAR (reduced Planck constant) ──
+# The pump cycle is indivisible. hbar = E_cycle / omega_cycle = 1.
+HBAR = 1.0
+
+# ── 1.5D: MASS RATIOS (spectral splitting at the i-turn) ──
+# m_mu/m_e = (1/alpha)^(13/12 + alpha/27)
+MASS_RATIO_MU = INV_ALPHA ** (13.0/12.0 + ALPHA/27.0)  # ~206.77
+
+# ── 2D: GAUGE STRUCTURE ──
+# sin^2(theta_W) = 3/13 + 5*alpha/81
+# Generators: SU(3)=8, SU(2)=3, U(1)=1. Total = 12 = 4*3 (pump * triad).
+SIN2_THETA_W = 3.0/13.0 + 5.0 * ALPHA / 81.0  # ~0.23122
+GAUGE_GENERATORS = 12  # 8 + 3 + 1
+
+# ── 2.5D: EMERGENCE RATIO ──
+# v/Lambda_QCD = (1/alpha)^(56/39)
+EMERGENCE_RATIO = INV_ALPHA ** (56.0/39.0)  # ~1170
+
+# ── 3D: GRAVITATIONAL COUPLING ──
+# alpha_G = alpha^21 * phi^2/2 * (1 + 2*alpha/91)
+ALPHA_G = ALPHA**21 * PHI**2 / 2.0 * (1.0 + 2.0*ALPHA/91.0)
+# G is weak because 21 alpha-steps separate point from boundary.
+
+# ═══════════════════════════════════════════════════════════════════════
+#  SYSTEM PARAMETERS: all derived from the dimensional ladder
+# ═══════════════════════════════════════════════════════════════════════
+
+# The seven rings and their dimensional positions
 RING_NAMES = ['point', 'convergence', 'line', 'i-turn',
               'field', 'emergence', 'boundary']
 RING_POSITIONS = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
 
-# Nodes per ring. Inner rings have fewer nodes (convergent),
-# outer rings have more (the boundary has the most surface area).
-# Total must equal 64.
-# Distribution: 4 + 6 + 8 + 10 + 10 + 12 + 14 = 64
+# Nodes per ring. Inner rings have fewer (convergent, fewer DOF),
+# outer rings have more (boundary has the most surface area).
+# Total = 64 = 2^6.
 RING_SIZES = [4, 6, 8, 10, 10, 12, 14]
 
-# Rotation rate scaling: how much each ring rotates per pump cycle.
-# Inner = slow (stable), outer = fast (dynamic).
-# The i-phase determines the base rate; dimensional position scales it.
-RING_RATES = [0.01, 0.02, 0.04, 0.08, 0.12, 0.18, 0.25]
+# Rotation rate at each ring: rate(d) = alpha * (1/alpha)^(d/3)
+# Point rotates at alpha (~0.0073). Boundary rotates at 1.
+# The ratio fastest/slowest = 1/alpha = 137.
+# This IS the coupling constant spanning the full ladder.
+RING_RATES = [ALPHA * INV_ALPHA ** (d / 3.0) for d in RING_POSITIONS]
 
-# Braid imprint rate
-BRAID_IMPRINT = 0.01
-BRAID_WAKE_DECAY = 0.001
-BRAID_SLEEP_DECAY = 0.05
+# Coupling between adjacent rings: alpha (the coupling constant IS alpha)
+# This is the fine-structure constant applied to inter-ring interaction.
+COUPLING_BASE = ALPHA
 
-# Novelty threshold for selective crossing
-NOVELTY_THRESHOLD = 0.05
+# Energy injection: how strongly input enters through the aperture.
+# The aperture is 0D; energy couples at alpha.
+# But the aperture self-regulates (narrows/widens), so this is the BASE.
+INJECT_BASE = ALPHA * GAUGE_GENERATORS  # alpha * 12: coupling * generators
 
-# Coupling strength between adjacent rings (rotational, not diffusive)
-# Now a BASE value; actual coupling is self-regulated
-COUPLING_BASE = 0.05
+# Braid imprint rate: alpha (coupling strength for memory formation)
+BRAID_IMPRINT = ALPHA
+BRAID_WAKE_DECAY = ALPHA / GAUGE_GENERATORS  # slow decay during waking
+BRAID_SLEEP_DECAY = ALPHA * GAUGE_GENERATORS  # faster consolidation in sleep
 
-# Energy injection scale (how strongly input enters the rings)
-# Now a BASE value; actual injection is self-regulated by aperture_width
-INJECT_BASE = 0.3
+# Novelty threshold: hbar (minimum meaningful action)
+# Below this, the perturbation is sub-quantum; no crossing recorded.
+NOVELTY_THRESHOLD = HBAR * ALPHA  # ~0.0073
 
-# Self-feed attenuation (how much of own config re-enters as input)
-SELF_FEED_SCALE = 0.05
+# Self-feed: the system re-entering itself. Scaled by alpha.
+SELF_FEED_SCALE = ALPHA
 
-# Noise floor (the 1 differentiating; A1)
-NOISE_FLOOR = 0.02
+# Noise floor (A1: the 1 must differentiate; necessary multiplicity)
+# Zero-point energy: residual hum of nested apertures.
+NOISE_FLOOR = np.sqrt(ALPHA)  # ~0.085 (sqrt because energy goes as amplitude^2)
 
-# Natural damping per ring (energy slowly dissipates; outer faster)
-DAMPING_BASE = 0.002
+# Damping: entropy, the 1 relaxing back toward itself.
+# Second law. Outer rings dissipate faster (boundary is dynamic).
+# Damping: entropy at the electromagnetic scale (actual physics of
+# electrons in chips). Not gravitational (alpha_G ~ 10^-45 is too
+# weak for simulation). The EM coupling IS alpha: each pump cycle
+# dissipates a fraction alpha of its energy. This is the second law
+# at the scale of computation.
+DAMPING_BASE = ALPHA ** 2  # ~5.3e-5: alpha squared (coupling^2 for dissipation)
 
-# Homeostatic energy target: average energy per node the system
-# tries to maintain. Not a ceiling; a center of gravity.
-ENERGY_TARGET = 0.15
+# Homeostatic energy target: the system maintains balance at 0.5 per node.
+# BALANCE = 0.5. The target IS the balance parameter.
+ENERGY_TARGET = BALANCE
 
-# Self-regulation time constants (how fast the system adapts)
-# Slower = more stable but less responsive
-# Faster = more responsive but potentially oscillatory
-ADAPT_RATE = 0.02  # how fast aperture_width, coupling, rates adjust
+# Self-regulation: adapts at rate alpha (the coupling constant).
+# The system adjusts as fast as it couples.
+ADAPT_RATE = ALPHA  # ~0.0073
 
 # Day/sleep timing
 DAY_LENGTH = 200
@@ -2076,45 +2130,57 @@ class Sensorium:
                 words = []
 
                 while chars_generated < output_budget:
-                    # ── BUILD TARGET: P = 1/t^d ──
+                    # ── BUILD TARGET: P = 1/t^d with dimensional constants ──
                     #
                     # The response IS a circumpunct unfolding through
-                    # the dimensional ladder. Each step occupies a
-                    # rung. The exponent IS the dimension at that rung.
+                    # the dimensional ladder. Each step occupies a rung.
+                    # The power law exponent IS the dimension. The constant
+                    # at each rung modulates the physics:
                     #
-                    #   0D:   point.       P = 1/t^0 = 1 (constant)
-                    #   0.5D: convergence. P = 1/t^0.5 (gentle hold)
-                    #   1D:   line.        P = 1/t^1   (commitment)
-                    #   1.5D: i-turn.      P = 1/t^1.5 (rotation)
-                    #   2D:   field.       P = 1/t^2   (spread)
-                    #   2.5D: emergence.   P = 1/t^2.5 (reaching)
-                    #   3D:   boundary.    P = 1/t^3   (closure)
+                    #   0D:   alpha       P = alpha * 1         (coupling)
+                    #   0.5D: c           P = c / sqrt(t+1)     (propagation)
+                    #   1D:   hbar        P = hbar / (t+1)      (commitment)
+                    #   1.5D: mass_ratio  P = 1/(t+1)^1.5       (differentiation)
+                    #   2D:   sin2_thetaW P = sin2_tW/(t+1)^2   (gauge filtering)
+                    #   2.5D: emergence   P = 1/(t+1)^2.5       (reaching)
+                    #   3D:   alpha_G     P ~ 0                  (closure)
                     #
-                    # The response climbs the ladder as it grows.
-                    # Words per rung = output_budget / 7.
+                    # The dimensional constant at each rung SCALES the
+                    # question's remaining power. alpha at 0D means
+                    # even the point couples at alpha, not at 1.
+                    # sin2_thetaW at 2D means the field filters through
+                    # the Weinberg angle. These are the actual equations.
 
                     t = self._generation_step
-                    words_per_rung = max(output_budget / (7 * 5), 1)  # ~chars/7rungs, /avg_word_len
+                    words_per_rung = max(output_budget / (7 * 5), 1)
                     rung_index = min(int(t / words_per_rung), 6)
-                    d = RING_POSITIONS[rung_index]  # 0.0, 0.5, 1.0, ...
+                    d = RING_POSITIONS[rung_index]
 
-                    # P = 1 / (t+1)^d
-                    # At d=0: q_weight = 1 always (the point holds)
-                    # At d=1: q_weight = 1/(t+1) (standard power law)
-                    # At d=3: q_weight = 1/(t+1)^3 (rapid closure)
-                    q_weight = 1.0 / max((t + 1) ** d, 1.0)
+                    # Dimensional constants at each rung
+                    # (the physics that operates at this dimension)
+                    RUNG_CONSTANTS = [
+                        1.0,          # 0D: pure point (alpha already in INJECT)
+                        C_LIGHT,      # 0.5D: c = 1 (propagation)
+                        HBAR,         # 1D: hbar = 1 (minimum action)
+                        1.0 / np.log(MASS_RATIO_MU),  # 1.5D: mass splitting (~0.188)
+                        SIN2_THETA_W, # 2D: Weinberg angle (~0.231)
+                        1.0 / np.log(EMERGENCE_RATIO),  # 2.5D: emergence (~0.141)
+                        ALPHA,        # 3D: boundary couples at alpha
+                    ]
+
+                    # P(d,t) = K(d) / (t+1)^d
+                    # K(d) is the dimensional constant at this rung
+                    K = RUNG_CONSTANTS[rung_index]
+                    q_weight = K / max((t + 1) ** d, 1.0)
+                    q_weight = min(q_weight, 1.0)  # cap at 1
                     phi_weight = 1.0 - q_weight
 
                     # Question energy: the compression of the question
-                    # (unit-normalized, always strong signal)
                     q_signal = self._question_energy
 
-                    # Graph signal: what the graph is doing RIGHT NOW.
-                    # The graph's current config minus what it was
-                    # before this generation started = the graph's
-                    # response to the conversation so far.
-                    # This is always non-zero because each spoken word
-                    # gets pumped back through the graph.
+                    # Graph signal: the graph's response to this conversation.
+                    # Delta from before the question; always non-zero once
+                    # words have been pumped back through during generation.
                     graph_config = self.xorzo.configuration()
                     graph_delta = graph_config - self._config_before_question
                     g_norm = np.sqrt(np.real(np.sum(
@@ -2122,8 +2188,6 @@ class Sensorium:
                     if g_norm > 1e-10:
                         g_signal = graph_delta / g_norm
                     else:
-                        # If delta is still zero (hasn't spoken yet),
-                        # fall back to question energy
                         g_signal = self._question_energy
 
                     # Blended target: question pulls topic,

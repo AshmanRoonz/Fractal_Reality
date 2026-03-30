@@ -622,12 +622,20 @@ def main():
         sensorium = Sensorium(day_length=args.day_length, sleep_cycles=50)
         print("  Starting fresh")
 
-        # Feed initial files
+        # Feed initial files (training mode: learn + pump directly,
+        # bypassing feed_text which is for conversational input)
+        from xorzo2 import INJECT_BASE
+        train_words = 0
+
         if args.feed_file:
             path = Path(args.feed_file)
             if path.exists():
                 content = path.read_text(encoding='utf-8', errors='replace')
-                sensorium.feed_text(content)
+                for w in content.split():
+                    sensorium.vocabulary.learn_word(w)
+                    energy = sensorium.vocabulary.word_to_energy(w)
+                    sensorium.xorzo.pump(energy * INJECT_BASE)
+                    train_words += 1
                 print(f"  Fed {len(content):,} bytes from {path.name}")
 
         if args.feed_dir:
@@ -637,17 +645,16 @@ def main():
                 total = 0
                 for f in txt_files:
                     content = f.read_text(encoding='utf-8', errors='replace')
-                    sensorium.feed_text(content)
+                    for w in content.split():
+                        sensorium.vocabulary.learn_word(w)
+                        energy = sensorium.vocabulary.word_to_energy(w)
+                        sensorium.xorzo.pump(energy * INJECT_BASE)
+                        train_words += 1
                     total += len(content)
                 print(f"  Fed {total:,} bytes from {len(txt_files)} files")
 
-        # Process all queued input (training data) first
-        train_steps = 0
-        while sensorium.has_pending_input():
-            sensorium.step()
-            train_steps += 1
-        if train_steps > 0:
-            print(f"  Processed training data ({train_steps} steps)")
+        if train_words > 0:
+            print(f"  Processed {train_words} training words")
             print(f"  Vocabulary: {sensorium.vocabulary.vocab_size} tokens, "
                   f"{len(sensorium.vocabulary.bigram_transitions)} bigrams")
 
