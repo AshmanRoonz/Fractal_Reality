@@ -220,7 +220,7 @@ def chat():
                 sensorium.feed_text(message)
 
                 # Phase 1: absorb input (process all queued chunks)
-                while sensorium.transformer.has_next():
+                while sensorium.has_pending_input():
                     sensorium.step()
 
                 # Phase 2: generate response
@@ -643,7 +643,7 @@ def main():
 
         # Process all queued input (training data) first
         train_steps = 0
-        while sensorium.transformer.has_next():
+        while sensorium.has_pending_input():
             sensorium.step()
             train_steps += 1
         if train_steps > 0:

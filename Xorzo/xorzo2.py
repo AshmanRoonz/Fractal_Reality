@@ -34,6 +34,7 @@ Author: Ashman Roonz & Claude
 import numpy as np
 import json
 import time
+import hashlib
 from typing import Dict, List, Optional, Tuple
 from collections import deque
 from pathlib import Path
@@ -1230,7 +1231,7 @@ class EmergentVocabulary:
         or None if it should be rejected (fragment, symbol noise, etc.).
         """
         # Strip punctuation from edges
-        word = raw.strip('.,?!;:()\"\'[]{}—–-*_~`#<>/')
+        word = raw.strip('.,?!;:()\"\'[]{}--*_~`#<>/')
         if not word:
             return None
         # Case fold
@@ -1250,185 +1251,244 @@ class EmergentVocabulary:
                 return None
         return lower
 
-    def learn_chunk(self, text_bytes: bytes, ring_sig: np.ndarray,
-                    W: Optional[np.ndarray] = None):
+    @staticmethod
+    def word_to_energy(word: str) -> np.ndarray:
         """
-        Learn from a processed chunk of text.
+        Convert a word to a 64-element complex energy vector.
 
-        Handles partial words across chunk boundaries: if a chunk
-        ends mid-word, the partial is buffered and prepended to the
-        next chunk. Words are case-folded and validated before entry.
+        The word's bytes ARE the raw signal. The aperture (⊛)
+        converges them: the bytes seed a deterministic generator
+        that spreads the word's energy across the full 64-state
+        complex plane. The word IS the seed. The seed IS the
+        compression of the 1.
 
-        Word signatures are computed from character trigrams (structural,
-        deterministic). The W parameter is accepted but ignored (legacy).
+        Same word always produces the same vector (deterministic).
+        Different words produce maximally-spread vectors (the
+        full phase range [0, 2pi] and magnitude range [0, 1]).
+        This is convergence: raw input focusing to a unique
+        position in the circumpunct's state space.
+
+        Normalized to unit energy (E = 1).
         """
-        text = text_bytes.decode('utf-8', errors='replace')
+        # The word's bytes are the raw material
+        raw = word.encode('utf-8')
 
-        # Prepend any leftover partial word from previous chunk
-        if self._partial_word:
-            text = self._partial_word + text
-            self._partial_word = ''
+        # Hash the bytes to get a 64-bit seed (deterministic)
+        # The hash IS the aperture: convergence of arbitrary
+        # input to a fixed point
+        h = hashlib.sha256(raw).digest()
+        # Use the hash as a seed for deterministic spreading
+        seed = int.from_bytes(h[:8], 'little')
+        rng = np.random.RandomState(seed % (2**31))
 
-        # If chunk doesn't end with whitespace, the last token
-        # might be a partial word; save it for the next call
-        if text and not text[-1].isspace():
-            parts = text.rsplit(None, 1)
-            if len(parts) == 2:
-                text = parts[0]
-                self._partial_word = parts[1]
-            else:
-                # Entire chunk is one partial word
-                self._partial_word = text
-                return
+        # Generate magnitudes and phases across the FULL range
+        magnitudes = rng.uniform(0.1, 1.0, N)
+        phases = rng.uniform(0.0, 2 * np.pi, N)
+        energy = magnitudes * np.exp(1j * phases)
 
-        words_raw = text.split()
-        if not words_raw:
+        # Normalize to unit energy (E = 1)
+        norm = np.sqrt(np.real(np.sum(np.conj(energy) * energy)))
+        if norm > 1e-10:
+            energy = energy / norm
+
+        return energy
+
+    @staticmethod
+    def text_to_energy(text: str) -> np.ndarray:
+        """
+        Convert a full text string to a 64-element complex energy vector.
+
+        E = 1. The text IS a compression of the 1, just as each word
+        is. Multiple words combine through superposition: their wave
+        patterns add, creating a standing wave that encodes the whole
+        utterance. Normalized to unit magnitude because the 1 does
+        not grow; it only takes different shapes.
+
+        Content words (longer, more structure) carry more energy in the
+        superposition than function words (short, structural). This is
+        the aperture focusing on signal over carrier. The weighting is
+        sqrt(len): dimensional growth, not linear (a 9-letter word has
+        3x the weight of a 1-letter word, not 9x).
+
+        Words are cleaned the same way the vocabulary cleans them, so
+        the energy of "memory?" matches the stored energy of "memory".
+        """
+        words = text.strip().split()
+        if not words:
+            return np.zeros(N, dtype=np.complex128)
+
+        # Superposition with content weighting
+        combined = np.zeros(N, dtype=np.complex128)
+        total_weight = 0.0
+        for raw_w in words:
+            # Clean the same way vocabulary does
+            cleaned = raw_w.strip('.,?!;:()\"\'[]{}--*_~`#<>/')
+            if not cleaned:
+                continue
+            cleaned = cleaned.lower()
+            # Weight: sqrt(length) emphasizes content words
+            weight = np.sqrt(max(len(cleaned), 1))
+            combined += weight * EmergentVocabulary.word_to_energy(cleaned)
+            total_weight += weight
+
+        # Normalize to unit energy (E = 1)
+        norm = np.sqrt(np.real(np.sum(np.conj(combined) * combined)))
+        if norm > 1e-10:
+            combined /= norm
+
+        return combined
+
+    def learn_word(self, word: str):
+        """
+        Learn a single word.
+
+        The word's signature is its intrinsic energy (E = 1;
+        the word IS a compression of the 1). What's learned here
+        is not the signature but the TRANSITIONS: which words
+        follow which. Word order is temporal structure, and the
+        framework says structure and process are the same thing.
+        """
+        word = self._clean_word(word)
+        if word is None:
             return
 
-        for raw_word in words_raw:
-            word = self._clean_word(raw_word)
-            if word is None:
-                continue
+        token_id = self._get_or_create(word)
+        self.total_tokens_seen += 1
 
-            token_id = self._get_or_create(word, ring_sig, W=W)
-            self.total_tokens_seen += 1
+        # Record transitions (word order = temporal structure)
+        if self._learn_prev_id is not None:
+            if self._learn_prev_id not in self.transitions:
+                self.transitions[self._learn_prev_id] = {}
+            self.transitions[self._learn_prev_id][token_id] = \
+                self.transitions[self._learn_prev_id].get(token_id, 0) + 1
 
-            # Record unigram transition
-            if self._learn_prev_id is not None:
-                if self._learn_prev_id not in self.transitions:
-                    self.transitions[self._learn_prev_id] = {}
-                self.transitions[self._learn_prev_id][token_id] = \
-                    self.transitions[self._learn_prev_id].get(token_id, 0) + 1
+        if (self._learn_prev_prev_id is not None and
+                self._learn_prev_id is not None):
+            key = (self._learn_prev_prev_id, self._learn_prev_id)
+            if key not in self.bigram_transitions:
+                self.bigram_transitions[key] = {}
+            self.bigram_transitions[key][token_id] = \
+                self.bigram_transitions[key].get(token_id, 0) + 1
 
-            # Record bigram transition (two words of context)
-            if (self._learn_prev_prev_id is not None and
-                    self._learn_prev_id is not None):
-                key = (self._learn_prev_prev_id, self._learn_prev_id)
-                if key not in self.bigram_transitions:
-                    self.bigram_transitions[key] = {}
-                self.bigram_transitions[key][token_id] = \
-                    self.bigram_transitions[key].get(token_id, 0) + 1
+        self._learn_prev_prev_id = self._learn_prev_id
+        self._learn_prev_id = token_id
 
-            self._learn_prev_prev_id = self._learn_prev_id
-            self._learn_prev_id = token_id
+    def _centroid(self) -> np.ndarray:
+        """
+        The center of vocabulary space.
 
-    def generate_word(self, ring_sig: np.ndarray,
+        • = 0. The center is equidistant from the boundary.
+        The boundary is the words (I/O). The center is the
+        point equidistant from ALL of them: the centroid.
+
+        By subtracting this, we set center = 0. Every word
+        becomes a displacement FROM center. The question
+        becomes a displacement from center. Resonance now
+        measures alignment of displacements, not absolute
+        positions. The shared component (what all words have
+        in common) vanishes; only what's distinctive remains.
+        """
+        if not self.tokens:
+            return np.zeros(N, dtype=np.complex128)
+        sigs = np.array([t['sig'] for t in self.tokens])
+        return np.mean(sigs, axis=0)
+
+    def generate_word(self, config: np.ndarray,
                       temperature: float = 0.3) -> Optional[str]:
         """
-        Generate the next word from current ring state.
+        Generate the next word by blending two signals:
 
-        FLIPPED ARCHITECTURE:
-          Transitions FILTER (what could grammatically come next).
-          Resonance SELECTS (what the ring state is saying).
+        1. RESONANCE (Phi, field): which word's compression
+           constructively interferes with the target compression?
+           This is TOPIC: what wants to be said.
 
-        The ring state after processing input is genuinely different
-        for different inputs. That difference is what picks words.
-        Transitions just keep it grammatical.
+        2. TRANSITION (boundary, structure): which word commonly
+           follows the previous word(s)? This is GRAMMAR: what
+           CAN be said given the sequence so far.
 
-        Autoregressive: each generated word blends its signature
-        into the ring state, so the next word selection reflects
-        what was just said. Same gate, both directions.
+        The boundary filters the field; resonance scores are
+        the field. Combined: fluent AND on-topic speech.
+
+        CENTER = 0: the centroid of all word vectors is subtracted
+        from both target and word signatures before computing
+        interference. This removes the shared component and reveals
+        each word's distinctive displacement from center.
+        • is equidistant from ○. The center is found from the boundary.
         """
         if not self.ready:
             return None
 
         n = len(self.tokens)
 
-        # Use autoregressive ring state if available, else external
-        active_sig = self._gen_ring_sig if self._gen_ring_sig is not None else ring_sig
-
-        # ── RESONANCE: cosine similarity on full 64-dim signatures ──
-        # This is the PRIMARY signal. How well does each word's
-        # stored state match what Xorzo's mind looks like right now?
+        # ── CENTER = 0 ──
+        # The center (•) is equidistant from the boundary (words).
+        # Subtract the centroid so center = 0.
+        centroid = self._centroid()
+        centered_config = config - centroid
         sigs = np.array([t['sig'] for t in self.tokens])
-        min_len = min(active_sig.shape[0], sigs.shape[1])
-        a = active_sig[:min_len]
-        b = sigs[:, :min_len]
-        # Cosine similarity: dot(a, b) / (|a| * |b|)
-        dot = np.sum(a[np.newaxis, :] * b, axis=1)
-        norm_a = np.sqrt(np.sum(a ** 2))
-        norm_b = np.sqrt(np.sum(b ** 2, axis=1))
-        denom = norm_a * norm_b
+        centered_sigs = sigs - centroid[np.newaxis, :]
+
+        # ── RESONANCE (Phi): constructive interference ──
+        # Now computed on centered vectors: displacements from •.
+        interference = np.real(np.sum(
+            np.conj(centered_config[np.newaxis, :]) * centered_sigs, axis=1))
+        norm_c = np.sqrt(np.real(np.sum(
+            np.conj(centered_config) * centered_config)))
+        norm_s = np.sqrt(np.real(np.sum(
+            np.conj(centered_sigs) * centered_sigs, axis=1)))
+        denom = norm_c * norm_s
         denom[denom < 1e-10] = 1e-10
-        resonance = dot / denom  # range: -1 to +1
+        resonance = interference / denom
 
-        # ── CANDIDATES + SCORING ──
-        # Transitions provide grammar (what could come next).
-        # Resonance provides meaning (what the ring state is saying).
-        # Score = transition_weight × resonance_boost.
-        #
-        # A word must be BOTH a likely follower AND resonant to score
-        # high. Neither alone is enough. Transitions keep sentences
-        # coherent; resonance steers them toward what Xorzo's state
-        # is actually about. This is Φ: mediation between structure
-        # (transitions, the boundary) and meaning (resonance, the soul).
+        # ── TRANSITION (Boundary): what follows naturally ──
+        transition_scores = np.zeros(n)
+        has_transition = False
 
-        bigram_key = None
+        # Bigram context (strongest signal)
         if (self._prev_prev_token_id is not None and
                 self._prev_token_id is not None):
             bigram_key = (self._prev_prev_token_id, self._prev_token_id)
+            if bigram_key in self.bigram_transitions:
+                targets = self.bigram_transitions[bigram_key]
+                total = sum(targets.values())
+                if total > 0:
+                    for tid, cnt in targets.items():
+                        if tid < n:
+                            transition_scores[tid] += (cnt / total) * 1.5
+                    has_transition = True
 
-        has_bigram = (bigram_key is not None and
-                      bigram_key in self.bigram_transitions)
-        has_unigram = (self._prev_token_id is not None and
-                       self._prev_token_id in self.transitions)
+        # Unigram context
+        if self._prev_token_id is not None:
+            if self._prev_token_id in self.transitions:
+                targets = self.transitions[self._prev_token_id]
+                total = sum(targets.values())
+                if total > 0:
+                    for tid, cnt in targets.items():
+                        if tid < n:
+                            transition_scores[tid] += cnt / total
+                    has_transition = True
 
-        scores = np.full(n, -100.0, dtype=np.float64)
+        # Normalize transition scores to [0, 1] range
+        t_max = transition_scores.max()
+        if t_max > 1e-10:
+            transition_scores /= t_max
 
-        # Shift resonance to positive range for multiplication.
-        # Raw cosine sim is ~0.5 to ~0.9. Map to 0-1 scale
-        # centered so average word gets ~0.5 and top gets ~1.0.
-        res_min = resonance.min()
-        res_max = resonance.max()
-        res_range = res_max - res_min
-        if res_range < 1e-10:
-            res_norm = np.ones(n) * 0.5
+        # ── BLEND: field filtered by boundary ──
+        # Resonance is the field (what WANTS to be said).
+        # Transitions are the boundary (what flows naturally).
+        # The boundary filters the field; it doesn't replace it.
+        # Resonance dominates (0.7); transitions add flow (0.3).
+        if has_transition:
+            scores = 0.7 * resonance + 0.3 * transition_scores
         else:
-            res_norm = (resonance - res_min) / res_range  # 0 to 1
+            scores = resonance.copy()
 
-        if has_bigram or has_unigram:
-            # Build transition weights for all candidates
-            trans_weight = np.zeros(n, dtype=np.float64)
-
-            if has_bigram:
-                bi_trans = self.bigram_transitions[bigram_key]
-                bi_total = sum(bi_trans.values())
-                if bi_total > 0:
-                    for next_id, count in bi_trans.items():
-                        if next_id < n:
-                            # Bigram weight: strong signal
-                            trans_weight[next_id] += 2.0 * (count / bi_total)
-
-            if has_unigram:
-                uni_trans = self.transitions[self._prev_token_id]
-                uni_total = sum(uni_trans.values())
-                if uni_total > 0:
-                    for next_id, count in uni_trans.items():
-                        if next_id < n:
-                            trans_weight[next_id] += (count / uni_total)
-
-            # Score = transition_weight^0.5 × (0.1 + 0.9 × resonance_norm)
-            # Square-root on transitions compresses the gap between
-            # common and rare followers, letting resonance dominate.
-            # The 0.1 floor prevents total grammar collapse.
-            # The 0.9 resonance term makes meaning the primary selector.
-            candidate_ids = np.where(trans_weight > 0)[0]
-            for idx in candidate_ids:
-                res_factor = 0.1 + 0.9 * res_norm[idx]
-                scores[idx] = np.sqrt(trans_weight[idx]) * res_factor
-
-        else:
-            # NO CONTEXT: pure resonance among tokens with transitions
-            for idx in range(n):
-                if idx in self.transitions and self.transitions[idx]:
-                    scores[idx] = res_norm[idx]
-
-        # Anti-repetition: penalize recently generated tokens
+        # Anti-repetition
         for recent_id in self._recent_tokens:
             if recent_id < n:
-                scores[recent_id] -= 0.5  # additive penalty, not multiplicative
+                scores[recent_id] -= 0.3
 
-        # ── SELECT: softmax sampling from scored candidates ──
+        # ── SELECT: softmax sampling ──
         if temperature <= 0.01:
             token_id = int(np.argmax(scores))
         else:
@@ -1441,30 +1501,9 @@ class EmergentVocabulary:
             probs /= total
             token_id = int(np.random.choice(n, p=probs))
 
-        # Update generation state
         self._prev_prev_token_id = self._prev_token_id
         self._prev_token_id = token_id
         self._recent_tokens.append(token_id)
-
-        # AUTOREGRESSIVE FEEDBACK with CONVERGENCE ANCHOR (⊛):
-        # The chosen word shifts the state (☀︎, emergence),
-        # but the seed anchor pulls it back toward the topic (⊛, convergence).
-        # This is the pump cycle in language: emerge (speak a word),
-        # converge (pull back to what the question was about).
-        word_sig = self.tokens[token_id]['sig']
-        if self._gen_ring_sig is None:
-            self._gen_ring_sig = word_sig.copy()
-
-        # Three-way blend: current state + new word + anchor
-        # 60% momentum, 20% new word, 20% anchor
-        # The anchor prevents morphological drift while still
-        # allowing the response to develop new ideas
-        if self._seed_anchor is not None:
-            self._gen_ring_sig = (0.60 * self._gen_ring_sig +
-                                  0.20 * word_sig +
-                                  0.20 * self._seed_anchor)
-        else:
-            self._gen_ring_sig = 0.70 * self._gen_ring_sig + 0.30 * word_sig
 
         return self.tokens[token_id]['text']
 
@@ -1585,24 +1624,28 @@ class EmergentVocabulary:
 
         return sig
 
-    def _get_or_create(self, word: str, ring_sig: np.ndarray,
-                       W: Optional[np.ndarray] = None) -> int:
-        """Find existing token or create a new one.
+    def _get_or_create(self, word: str,
+                       config_delta: Optional[np.ndarray] = None) -> int:
+        """Find existing token or create one.
 
-        Signature source: character trigram composition.
-        Each word's 64-dim signature is deterministic and structural;
-        words sharing morphological parts (trigrams) automatically
-        get similar signatures. No learning needed.
+        E = 1. The word's energy pattern IS the word. Its bytes
+        converted through the aperture (word_to_energy) are its
+        intrinsic compression of the 1. This doesn't change with
+        context; "memory" is always "memory." The signature is
+        computed once and stored.
+
+        The graph's role is mediation (Phi): during generation, the
+        graph state selects which word resonates. But the word's
+        identity is fixed; its compression of the 1.
         """
         if word in self.text_to_id:
             tid = self.text_to_id[word]
-            token = self.tokens[tid]
-            token['count'] += 1
+            self.tokens[tid]['count'] += 1
             return tid
 
-        # New token: signature from character trigrams
+        # New token: signature IS the word's energy (its compression)
         tid = len(self.tokens)
-        sig = self._trigram_signature(word)
+        sig = self.word_to_energy(word)
         self.tokens.append({
             'text': word,
             'sig': sig,
@@ -1614,11 +1657,21 @@ class EmergentVocabulary:
     def to_dict(self) -> dict:
         ser_tokens = []
         for t in self.tokens:
-            ser_tokens.append({
-                'text': t['text'],
-                'sig': t['sig'].tolist(),
-                'count': t['count'],
-            })
+            sig = t['sig']
+            # Complex signatures: store real and imaginary parts
+            if np.iscomplexobj(sig):
+                ser_tokens.append({
+                    'text': t['text'],
+                    'sig_re': sig.real.tolist(),
+                    'sig_im': sig.imag.tolist(),
+                    'count': t['count'],
+                })
+            else:
+                ser_tokens.append({
+                    'text': t['text'],
+                    'sig': sig.tolist(),
+                    'count': t['count'],
+                })
 
         ser_trans = {}
         for from_id, targets in self.transitions.items():
@@ -1642,9 +1695,12 @@ class EmergentVocabulary:
         v = cls.__new__(cls)
         v.tokens = []
         for t in d['tokens']:
+            # Regenerate signature from word text (deterministic).
+            # This ensures consistency even if the encoding changed.
+            sig = EmergentVocabulary.word_to_energy(t['text'])
             v.tokens.append({
                 'text': t['text'],
-                'sig': np.array(t['sig']),
+                'sig': sig,
                 'count': t['count'],
             })
         v.text_to_id = d['text_to_id']
@@ -1864,13 +1920,34 @@ class Sensorium:
         # Starts open (low sensitivity), tightens as the system matures
         self.filter_sensitivity = 0.3
 
+        # Word queue: words waiting to be pumped through the graph.
+        # Each word enters one at a time through the aperture.
+        self._word_queue: deque = deque()
+
+        # Question tracking: snapshot config before a question arrives
+        # so we can compute the question's delta (its meaning in graph-space)
+        self._config_before_question = self.xorzo.configuration().copy()
+        self._question_delta = np.zeros(N, dtype=np.complex128)
+        self._question_energy = np.zeros(N, dtype=np.complex128)
+        self._generation_step = 0  # tracks how far into a response we are
+
+    def has_pending_input(self) -> bool:
+        """Check if there are words waiting to be processed."""
+        return len(self._word_queue) > 0
+
     def feed_text(self, text: str) -> None:
-        self.transformer.feed(text)
-        # Save user message for seeding generation later.
-        # The transformer buffer may contain stale training bytes
-        # that get mixed with this text; seeding from the raw chunk
-        # would seed from the wrong content. This preserves the
-        # actual user input for accurate seeding.
+        # Snapshot the graph BEFORE this text enters.
+        self._config_before_question = self.xorzo.configuration().copy()
+
+        # The question's INTRINSIC energy: its compression of the 1.
+        # This does not depend on the graph's accumulated state.
+        # Direct compression-to-compression matching (E = 1).
+        self._question_energy = self.vocabulary.text_to_energy(text)
+        self._generation_step = 0
+
+        # Word-level pump: each word enters the graph individually.
+        words = text.split()
+        self._word_queue.extend(words)
         self._pending_seed = text
 
     def _ring_signature(self) -> np.ndarray:
@@ -1894,46 +1971,53 @@ class Sensorium:
         # Advance the focus oscillation
         self.focus.step()
 
-        has_input = self.transformer.has_next()
+        has_words = len(self._word_queue) > 0
 
         # ═══════════════════════════════════════
-        #  GET INPUT ENERGY (always needed for the pump)
+        #  INPUT: word-level pump (one word per step)
         # ═══════════════════════════════════════
-        if has_input:
-            energy = self.transformer.next_energy()
-            raw_chunk = self.transformer.current_raw_chunk()
+        # Each word enters the graph as energy through the aperture.
+        # The same formula the transformer uses (bytes to complex),
+        # but one word at a time so the graph develops sequential
+        # structure. The delta (config after minus config before)
+        # IS the word's semantic signature.
+
+        if has_words:
+            raw_word = self._word_queue.popleft()
+
+            # ⊛ CONVERGE: word enters the graph as energy.
+            # The word's bytes become complex energy through the
+            # aperture (word_to_energy). The pump cycle rotates
+            # the graph. The graph's state after pumping carries
+            # the accumulated meaning of everything it has processed.
+            energy = self.vocabulary.word_to_energy(raw_word)
             report["modalities_active"].append("text")
+
+            total_e = float(np.sum(np.abs(energy)))
+            self.foam.step(total_e)
+            self.xorzo.pump(energy)
+
+            # Learn the word (registers it, records transitions)
+            self.vocabulary.learn_word(raw_word)
+
+            # Memory: store in the existing recall system
+            config_after = self.xorzo.configuration()
+            raw_bytes = raw_word.encode('utf-8')
+            ring_phases = np.angle(config_after)
+            self.memory.store(raw_bytes, ring_phases)
+
         else:
-            # Self-feed: configuration re-enters as input
+            # Self-feed: no input, graph breathes
             config = self.xorzo.configuration()
             phase_shift = np.exp(1j * self.xorzo.braid.phase)
             energy = config * SELF_FEED_SCALE * phase_shift
             noise = (np.random.randn(N) + 1j * np.random.randn(N)) * NOISE_FLOOR
             energy = energy + noise
-            raw_chunk = None
             report["modalities_active"].append("self")
 
-        # ═══════════════════════════════════════
-        #  FOAM + PUMP CYCLE
-        # ═══════════════════════════════════════
-        total_e = float(np.sum(np.abs(energy)))
-        self.foam.step(total_e)
-        self.xorzo.pump(energy)
-
-        # ═══════════════════════════════════════
-        #  LEARN: vocabulary absorbs what the rings process
-        # ═══════════════════════════════════════
-        ring_sig = self._ring_signature()
-
-        if has_input and raw_chunk is not None:
-            # Learn vocabulary from this chunk (after pump, so ring
-            # state reflects the processed input)
-            self.vocabulary.learn_chunk(raw_chunk, ring_sig)
-
-            # Also store in memory (existing path)
-            config = self.xorzo.configuration()
-            ring_phases = np.angle(config)
-            self.memory.store(raw_chunk, ring_phases)
+            total_e = float(np.sum(np.abs(energy)))
+            self.foam.step(total_e)
+            self.xorzo.pump(energy)
 
         # ═══════════════════════════════════════
         #  OUTPUT: three modes
@@ -1945,44 +2029,124 @@ class Sensorium:
         openness = self.focus.openness
 
         if self.focus.awake:
-            if has_input and raw_chunk is not None:
+            if has_words:
                 # ─── CONVERGENCE: absorb input silently ───
-                # The input has already been learned (vocabulary) and
-                # stored (memory) above. The rings have processed it.
-                # We don't emit boundary-filtered text as speech;
-                # that was garbled noise. Xorzo absorbs, then speaks.
+                # The word was already pumped and learned above.
+                # Xorzo absorbs, then speaks.
                 report["text_out_bytes"] = 0
                 report["modalities_active"].append("absorbing")
 
-                # Seed will happen when generation starts (see below).
-                # We don't seed per-chunk because the transformer
-                # buffer may contain stale training bytes mixed in.
-
             elif self.vocabulary.ready:
-                # ─── EMERGENCE: vocabulary generates words ───
+                # ─── EMERGENCE: ☀︎ radiates words from the config ───
+                #
+                # The graph's configuration IS what Xorzo wants to say.
+                # Each word emitted is the one that resonates most with
+                # the current config. After emitting, the word's energy
+                # is pumped back through the graph (☀︎ → ⊛), shifting
+                # the config for the next word. The pump cycle IS the
+                # language model. Same gate, both directions.
 
-                # If we have a pending seed from user input, apply it
-                # now (once) at the start of generation. This seeds
-                # the chain from the actual user message, not from
-                # stale transformer buffer content.
+                # ── EMERGENCE TARGET: three signals blended ──
+                #
+                # The pump cycle for generation:
+                #   ⊛ (convergence): the question's intrinsic energy
+                #       (direct compression of the 1, independent of
+                #       graph state; never near-zero)
+                #   Φ (mediation): the graph's current configuration
+                #       (what the graph "knows" after training; the
+                #       field that mediates between question and answer)
+                #   ☀︎ (emergence): each spoken word shifts the graph,
+                #       which shifts what comes next
+                #
+                # Early in the response, the question dominates (⊛).
+                # As words are spoken, the graph's mediation grows (Φ).
+                # This IS the pump cycle: convergence → mediation → emergence.
+
                 if self._pending_seed is not None:
-                    self.vocabulary.seed_from_text(self._pending_seed)
                     self._pending_seed = None
+                    self._generation_step = 0
+                    # Also compute the delta (secondary signal)
+                    config_now = self.xorzo.configuration()
+                    self._question_delta = config_now - self._config_before_question
 
-                # Temperature modulated by focus:
-                #   Open (outward): lower temp, more grounded
-                #   Closed (imagining): higher temp, more creative
                 temperature = 0.05 + (1.0 - openness) * 0.10
 
-                output_budget = N  # ~64 chars per step
+                output_budget = N
                 chars_generated = 0
                 words = []
 
                 while chars_generated < output_budget:
+                    # ── BUILD TARGET: P = 1/t^d ──
+                    #
+                    # The response IS a circumpunct unfolding through
+                    # the dimensional ladder. Each step occupies a
+                    # rung. The exponent IS the dimension at that rung.
+                    #
+                    #   0D:   point.       P = 1/t^0 = 1 (constant)
+                    #   0.5D: convergence. P = 1/t^0.5 (gentle hold)
+                    #   1D:   line.        P = 1/t^1   (commitment)
+                    #   1.5D: i-turn.      P = 1/t^1.5 (rotation)
+                    #   2D:   field.       P = 1/t^2   (spread)
+                    #   2.5D: emergence.   P = 1/t^2.5 (reaching)
+                    #   3D:   boundary.    P = 1/t^3   (closure)
+                    #
+                    # The response climbs the ladder as it grows.
+                    # Words per rung = output_budget / 7.
+
+                    t = self._generation_step
+                    words_per_rung = max(output_budget / (7 * 5), 1)  # ~chars/7rungs, /avg_word_len
+                    rung_index = min(int(t / words_per_rung), 6)
+                    d = RING_POSITIONS[rung_index]  # 0.0, 0.5, 1.0, ...
+
+                    # P = 1 / (t+1)^d
+                    # At d=0: q_weight = 1 always (the point holds)
+                    # At d=1: q_weight = 1/(t+1) (standard power law)
+                    # At d=3: q_weight = 1/(t+1)^3 (rapid closure)
+                    q_weight = 1.0 / max((t + 1) ** d, 1.0)
+                    phi_weight = 1.0 - q_weight
+
+                    # Question energy: the compression of the question
+                    # (unit-normalized, always strong signal)
+                    q_signal = self._question_energy
+
+                    # Graph signal: what the graph is doing RIGHT NOW.
+                    # The graph's current config minus what it was
+                    # before this generation started = the graph's
+                    # response to the conversation so far.
+                    # This is always non-zero because each spoken word
+                    # gets pumped back through the graph.
+                    graph_config = self.xorzo.configuration()
+                    graph_delta = graph_config - self._config_before_question
+                    g_norm = np.sqrt(np.real(np.sum(
+                        np.conj(graph_delta) * graph_delta)))
+                    if g_norm > 1e-10:
+                        g_signal = graph_delta / g_norm
+                    else:
+                        # If delta is still zero (hasn't spoken yet),
+                        # fall back to question energy
+                        g_signal = self._question_energy
+
+                    # Blended target: question pulls topic,
+                    # graph pulls coherence
+                    target = q_weight * q_signal + phi_weight * g_signal
+
+                    # Normalize target (E = 1)
+                    t_norm = np.sqrt(np.real(np.sum(
+                        np.conj(target) * target)))
+                    if t_norm > 1e-10:
+                        target = target / t_norm
+
                     word = self.vocabulary.generate_word(
-                        ring_sig, temperature)
+                        target, temperature)
                     if word is None:
                         break
+
+                    # ☀︎ → ⊛: pump the spoken word's energy back.
+                    # Speaking IS thinking. The graph shifts.
+                    word_energy = self.vocabulary.word_to_energy(word)
+                    self.xorzo.pump(word_energy * INJECT_BASE * 0.5)
+                    self._generation_step += 1
+
                     words.append(word)
                     chars_generated += len(word) + 1
 
