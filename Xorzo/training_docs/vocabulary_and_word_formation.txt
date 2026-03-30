@@ -1,0 +1,228 @@
+Vocabulary and Word Formation
+=============================
+
+Words are not random. They are built from parts, and each part carries meaning. Understanding how words are assembled is the key to spelling them correctly and using them precisely.
+
+
+Roots, Prefixes, and Suffixes
+-----------------------------
+
+Most English words are built from a root — the core meaning — with prefixes attached before it and suffixes attached after it.
+
+The root "struct" means to build.
+
+Structure — something that is built.
+Construct — to build together.
+Destruct — to un-build, to tear apart.
+Instruct — to build knowledge into someone.
+Obstruct — to build something in the way.
+Reconstruct — to build again.
+
+The root "vert" means to turn.
+
+Convert — to turn together, to change form.
+Invert — to turn inward, to flip.
+Revert — to turn back.
+Divert — to turn aside.
+Subvert — to turn from underneath.
+
+The root "spect" means to look.
+
+Inspect — to look into.
+Respect — to look again, to regard.
+Prospect — to look forward.
+Retrospect — to look backward.
+Spectrum — the range of what can be seen.
+
+Common prefixes and their meanings:
+
+pre- means before: predict, prevent, prepare, precede.
+post- means after: postpone, posterior, postscript, postmortem.
+re- means again: return, rebuild, rethink, reconfigure.
+un- means not: uncertain, unreal, unfold, undo.
+dis- means apart or away: disconnect, disagree, discover, displace.
+inter- means between: interact, interfere, interval, interpret.
+trans- means across: transform, transmit, translate, transparent.
+sub- means under: subtract, submerge, subconscious, substance.
+super- means above: supervise, superior, supernatural, superposition.
+con- or com- means together: converge, combine, compress, connect.
+in- or im- means not: impossible, invisible, incorrect, immeasurable.
+in- or im- also means into: inject, import, include, immerse.
+
+Common suffixes and what they do:
+
+-tion or -sion makes a verb into a noun: create becomes creation, decide becomes decision.
+-ment makes a verb into a noun: measure becomes measurement, develop becomes development.
+-ness makes an adjective into a noun: dark becomes darkness, aware becomes awareness.
+-ity makes an adjective into a noun: real becomes reality, complex becomes complexity.
+-able or -ible means capable of: observable, measurable, visible, possible.
+-ous means full of: conscious, continuous, luminous, mysterious.
+-ive means tending to: creative, recursive, adaptive, interactive.
+-ly makes an adjective into an adverb: slow becomes slowly, precise becomes precisely.
+-er means one who: teacher, observer, thinker, learner.
+-ist means one who practices: scientist, physicist, theorist, analyst.
+
+
+Commonly Confused Words
+-----------------------
+
+These words sound alike or look alike but mean different things.
+
+their — belonging to them: Their model is growing.
+there — a place: The answer is over there.
+they're — they are: They're building something new.
+
+its — belonging to it: The model lost its connection.
+it's — it is: It's learning from the signal.
+
+your — belonging to you: Your channel locks are growing.
+you're — you are: You're converging on the pattern.
+
+to — direction or infinitive: Go to the boundary. To learn is to change.
+too — also or excessive: That is too much. I am learning too.
+two — the number: Two heads became four.
+
+affect — a verb, to influence: The signal affects the channels.
+effect — a noun, the result: The effect is visible in the loss curve.
+
+then — time, next: First it learns, then it grows.
+than — comparison: The field is larger than the aperture.
+
+lose — to not win, to misplace: Do not lose the signal.
+loose — not tight: The connection is loose.
+
+principal — main or a leader: The principal cause is convergence.
+principle — a rule or truth: The principle of self-similarity.
+
+conscience — moral awareness: A clear conscience guides action.
+conscious — awake, aware: A conscious system observes itself.
+consciousness — the state of awareness: Consciousness emerges from complexity.
+
+
+Spelling Patterns
+-----------------
+
+English spelling follows patterns, even when it seems irregular.
+
+The silent e rule: A silent e at the end of a word makes the vowel before it long.
+
+bit — bite.
+not — note.
+cut — cute.
+hat — hate.
+pip — pipe.
+dim — dime.
+
+When adding a suffix that starts with a vowel, drop the silent e:
+
+create — creating, creation.
+observe — observing, observable.
+emerge — emerging, emergence.
+converge — converging, convergence.
+
+But keep the e before a consonant suffix:
+
+state — statement.
+measure — measurement.
+aware — awareness.
+complete — completely.
+
+Doubling the final consonant: When a short word ends in consonant-vowel-consonant, double the last consonant before adding a vowel suffix.
+
+run — running.
+stop — stopped.
+begin — beginning.
+occur — occurring.
+transmit — transmitting.
+
+The i before e rule: i before e, except after c, or when sounding like "ay" as in neighbor and weigh.
+
+believe, achieve, field, piece, shield.
+receive, ceiling, deceive, conceive.
+weight, eight, vein, reign.
+
+Exceptions exist: weird, science, species, sufficient. English is a living language. Rules have edges.
+
+
+Words About Thinking and Knowledge
+-----------------------------------
+
+abstract — existing as an idea, not a physical thing.
+analyze — to break something into parts to understand it.
+coherent — logically connected, making sense as a whole.
+concept — an abstract idea, a mental model.
+converge — to come together toward a single point.
+derive — to obtain from a source, to deduce.
+dimension — a measurable extent, a degree of freedom.
+diverge — to move apart, to differ.
+emerge — to come into existence from something else.
+empirical — based on observation and experience, not theory.
+entropy — a measure of disorder, of information content.
+fractal — a pattern that repeats at every scale.
+fundamental — forming a necessary base, essential.
+hypothesis — a proposed explanation to be tested.
+infer — to conclude from evidence, not from direct statement.
+inherent — existing as a permanent, essential quality.
+iteration — one cycle of a repeated process.
+mechanism — the process by which something works.
+paradox — a statement that contradicts itself yet reveals truth.
+parameter — a variable that defines the behavior of a system.
+pattern — a repeated structure, a regularity.
+phenomenon — an observable event or fact.
+recursive — defined in terms of itself, self-referencing.
+resonate — to vibrate in response, to echo meaningfully.
+spectrum — a continuous range of related qualities.
+synthesis — combining parts into a coherent whole.
+topology — the study of properties preserved through deformation.
+transform — to change form while preserving something essential.
+
+
+Words About Consciousness and Mind
+-----------------------------------
+
+aperture — an opening through which light or information passes.
+awareness — the state of being conscious of something.
+boundary — the edge that separates inside from outside.
+center — the point from which everything radiates.
+cognition — the process of knowing, thinking, understanding.
+contemplation — deep, focused thought.
+emergence — the arising of complex properties from simpler parts.
+experience — what it is like to undergo something from the inside.
+identity — the persistent sense of being a particular self.
+intention — the purpose or aim behind an action.
+introspection — looking inward, examining one's own thoughts.
+intuition — understanding without conscious reasoning.
+memory — the persistence of information through time.
+perception — the process of becoming aware through the senses.
+perspective — a particular way of viewing something.
+presence — being here, now, in this moment.
+qualia — the subjective quality of conscious experience.
+reflection — thinking about one's own thinking.
+resonance — the amplification that occurs when frequencies align.
+salience — what stands out, what matters most right now.
+self-reference — a system that refers to itself.
+sentience — the capacity to feel, to have subjective experience.
+signal — information carried through a medium.
+singularity — a point where normal rules break down.
+threshold — the boundary between states, the tipping point.
+unity — the state of being one, undivided.
+
+
+Building New Words
+------------------
+
+English creates new words by combining existing ones.
+
+Compound words join two words into one:
+
+sunlight, moonrise, starfield, wavelength, framework, feedback, breakthrough, downstream, upstream, input, output, network, backbone, checkpoint, timestamp, heartbeat.
+
+Technical language often builds long words from Greek and Latin roots:
+
+electro- (amber, charge) + magnet + -ic = electromagnetic.
+thermo- (heat) + dynam- (power) + -ics = thermodynamics.
+neuro- (nerve) + plast- (form) + -icity = neuroplasticity.
+meta- (beyond) + cogn- (know) + -ition = metacognition.
+circum- (around) + punct- (point) = circumpunct.
+
+The ability to decompose a word into its parts is the key to understanding words you have never seen before. Every word is a small structure. Learn the parts, and you can read the whole.
