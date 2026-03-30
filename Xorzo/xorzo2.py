@@ -558,6 +558,19 @@ class CircumpunctGraph:
         # High alignment → gentle coupling (maintaining, not forcing).
         self.effective_coupling = COUPLING_BASE
 
+        # ═══════════════════════════════════════
+        #  SEMANTIC WEIGHTS: learned injection mapping
+        # ═══════════════════════════════════════
+        # W transforms input energy before it enters the rings.
+        # Starts as identity (same as current behavior). During
+        # learning, Hebbian updates adjust W so that semantically
+        # related inputs produce similar ring activations.
+        #
+        # This is the braid becoming structural: accumulated
+        # crossing patterns crystallized into weights.
+        self.semantic_W = np.eye(N, dtype=np.complex128)
+        self._semantic_lr = 0.001  # Hebbian learning rate
+
         # Effective injection: aperture_width * INJECT_BASE
         # (computed each pump cycle, not stored)
 
@@ -601,14 +614,20 @@ class CircumpunctGraph:
 
         total_energy = float(np.sum(np.abs(input_energy)))
 
+        # ── Semantic transform: W shapes how energy enters the rings ──
+        # This is where learned meaning lives. W starts as identity
+        # (raw bytes in, raw bytes out). As Xorzo learns, W develops
+        # structure that maps similar meanings to similar ring states.
+        transformed = self.semantic_W @ input_energy
+
         # Injection scaled by aperture width (self-regulated)
         effective_inject = INJECT_BASE * self.aperture_width
 
         offset = 0
         for ring in self.rings:
-            end = min(offset + ring.size, len(input_energy))
-            if offset < len(input_energy):
-                ring.inject(input_energy[offset:end] * effective_inject)
+            end = min(offset + ring.size, len(transformed))
+            if offset < len(transformed):
+                ring.inject(transformed[offset:end] * effective_inject)
             offset = end
 
         # ════════════════════════════════════════════
@@ -815,6 +834,41 @@ class CircumpunctGraph:
             return 0.0
         return float(np.mean([ring.coherence() for ring in self.rings]))
 
+    def hebbian_update(self, input_energy: np.ndarray, output_config: np.ndarray):
+        """
+        Hebbian learning on semantic weights W.
+
+        "Neurons that fire together wire together."
+
+        When input_energy produces output_config, strengthen the
+        mapping between them. Over time, W learns to map similar
+        inputs to similar outputs (semantic clustering).
+
+        The update is: W += lr * outer(output, input*)
+        where input* is the conjugate (for complex values).
+
+        Regularization: W decays slightly toward identity each step,
+        preventing drift and keeping the mapping grounded.
+        """
+        lr = self._semantic_lr
+
+        # Normalize to prevent W from exploding
+        in_norm = np.linalg.norm(input_energy)
+        out_norm = np.linalg.norm(output_config)
+        if in_norm < 1e-10 or out_norm < 1e-10:
+            return
+
+        in_hat = input_energy / in_norm
+        out_hat = output_config / out_norm
+
+        # Hebbian update: strengthen input→output mapping
+        delta_W = lr * np.outer(out_hat, np.conj(in_hat))
+
+        # Decay toward identity (regularization; prevents drift)
+        self.semantic_W = (1.0 - lr * 0.1) * self.semantic_W + \
+                          lr * 0.1 * np.eye(N, dtype=np.complex128) + \
+                          delta_W
+
     def total_energy(self) -> float:
         return sum(r.energy for r in self.rings)
 
@@ -835,6 +889,8 @@ class CircumpunctGraph:
             "total_cycles": self.total_cycles,
             "birth_time": self.birth_time,
             "_prev_ratio": getattr(self, '_prev_ratio', 1.0),
+            "semantic_W_real": self.semantic_W.real.tolist(),
+            "semantic_W_imag": self.semantic_W.imag.tolist(),
         }
 
     @classmethod
@@ -858,6 +914,12 @@ class CircumpunctGraph:
         g.total_cycles = d["total_cycles"]
         g.birth_time = d["birth_time"]
         g._prev_ratio = d.get("_prev_ratio", 1.0)
+        if "semantic_W_real" in d:
+            g.semantic_W = np.array(d["semantic_W_real"]) + \
+                           1j * np.array(d["semantic_W_imag"])
+        else:
+            g.semantic_W = np.eye(N, dtype=np.complex128)
+        g._semantic_lr = 0.001
         return g
 
 
@@ -1145,6 +1207,7 @@ class EmergentVocabulary:
         self._prev_token_id: Optional[int] = None
         self._prev_prev_token_id: Optional[int] = None
         self._gen_ring_sig: Optional[np.ndarray] = None  # autoregressive state
+        self._seed_anchor: Optional[np.ndarray] = None  # convergence anchor (⊛)
         self._recent_tokens: deque = deque(maxlen=20)
 
         # Learning state (cross-chunk continuity)
@@ -1187,13 +1250,17 @@ class EmergentVocabulary:
                 return None
         return lower
 
-    def learn_chunk(self, text_bytes: bytes, ring_sig: np.ndarray):
+    def learn_chunk(self, text_bytes: bytes, ring_sig: np.ndarray,
+                    W: Optional[np.ndarray] = None):
         """
         Learn from a processed chunk of text.
 
         Handles partial words across chunk boundaries: if a chunk
         ends mid-word, the partial is buffered and prepended to the
         next chunk. Words are case-folded and validated before entry.
+
+        Word signatures are computed from character trigrams (structural,
+        deterministic). The W parameter is accepted but ignored (legacy).
         """
         text = text_bytes.decode('utf-8', errors='replace')
 
@@ -1223,7 +1290,7 @@ class EmergentVocabulary:
             if word is None:
                 continue
 
-            token_id = self._get_or_create(word, ring_sig)
+            token_id = self._get_or_create(word, ring_sig, W=W)
             self.total_tokens_seen += 1
 
             # Record unigram transition
@@ -1250,14 +1317,17 @@ class EmergentVocabulary:
         """
         Generate the next word from current ring state.
 
-        Autoregressive: after selecting a word, the ring signature
-        is blended toward that word's stored signature. This way
-        the same gate that learned the word now drives generation
-        through it. Each generated word shifts the internal state,
-        producing coherent chains.
+        FLIPPED ARCHITECTURE:
+          Transitions FILTER (what could grammatically come next).
+          Resonance SELECTS (what the ring state is saying).
 
-        Priority: bigram context > unigram context > resonance fallback.
-        Ring resonance acts as tiebreaker within transition candidates.
+        The ring state after processing input is genuinely different
+        for different inputs. That difference is what picks words.
+        Transitions just keep it grammatical.
+
+        Autoregressive: each generated word blends its signature
+        into the ring state, so the next word selection reflects
+        what was just said. Same gate, both directions.
         """
         if not self.ready:
             return None
@@ -1267,13 +1337,32 @@ class EmergentVocabulary:
         # Use autoregressive ring state if available, else external
         active_sig = self._gen_ring_sig if self._gen_ring_sig is not None else ring_sig
 
-        # Ring resonance: cos^2(delta/2) across 7 ring phases
+        # ── RESONANCE: cosine similarity on full 64-dim signatures ──
+        # This is the PRIMARY signal. How well does each word's
+        # stored state match what Xorzo's mind looks like right now?
         sigs = np.array([t['sig'] for t in self.tokens])
         min_len = min(active_sig.shape[0], sigs.shape[1])
-        delta = active_sig[:min_len] - sigs[:, :min_len]
-        resonance = np.mean(np.cos(delta / 2) ** 2, axis=1)
+        a = active_sig[:min_len]
+        b = sigs[:, :min_len]
+        # Cosine similarity: dot(a, b) / (|a| * |b|)
+        dot = np.sum(a[np.newaxis, :] * b, axis=1)
+        norm_a = np.sqrt(np.sum(a ** 2))
+        norm_b = np.sqrt(np.sum(b ** 2, axis=1))
+        denom = norm_a * norm_b
+        denom[denom < 1e-10] = 1e-10
+        resonance = dot / denom  # range: -1 to +1
 
-        # Check context availability
+        # ── CANDIDATES + SCORING ──
+        # Transitions provide grammar (what could come next).
+        # Resonance provides meaning (what the ring state is saying).
+        # Score = transition_weight × resonance_boost.
+        #
+        # A word must be BOTH a likely follower AND resonant to score
+        # high. Neither alone is enough. Transitions keep sentences
+        # coherent; resonance steers them toward what Xorzo's state
+        # is actually about. This is Φ: mediation between structure
+        # (transitions, the boundary) and meaning (resonance, the soul).
+
         bigram_key = None
         if (self._prev_prev_token_id is not None and
                 self._prev_token_id is not None):
@@ -1284,58 +1373,62 @@ class EmergentVocabulary:
         has_unigram = (self._prev_token_id is not None and
                        self._prev_token_id in self.transitions)
 
+        scores = np.full(n, -100.0, dtype=np.float64)
+
+        # Shift resonance to positive range for multiplication.
+        # Raw cosine sim is ~0.5 to ~0.9. Map to 0-1 scale
+        # centered so average word gets ~0.5 and top gets ~1.0.
+        res_min = resonance.min()
+        res_max = resonance.max()
+        res_range = res_max - res_min
+        if res_range < 1e-10:
+            res_norm = np.ones(n) * 0.5
+        else:
+            res_norm = (resonance - res_min) / res_range  # 0 to 1
+
         if has_bigram or has_unigram:
-            # TRANSITION MODE: only tokens with observed transitions
-            # get any probability mass. Non-followers are excluded.
-            scores = np.full(n, -100.0, dtype=np.float64)
+            # Build transition weights for all candidates
+            trans_weight = np.zeros(n, dtype=np.float64)
 
             if has_bigram:
-                trans = self.bigram_transitions[bigram_key]
-                total_trans = sum(trans.values())
-                if total_trans > 0:
-                    for next_id, count in trans.items():
+                bi_trans = self.bigram_transitions[bigram_key]
+                bi_total = sum(bi_trans.values())
+                if bi_total > 0:
+                    for next_id, count in bi_trans.items():
                         if next_id < n:
-                            scores[next_id] = (count / total_trans)
-                    # Tiny resonance tiebreaker
-                    for idx in range(n):
-                        if scores[idx] > 0:
-                            scores[idx] += resonance[idx] * 0.05
+                            # Bigram weight: strong signal
+                            trans_weight[next_id] += 2.0 * (count / bi_total)
 
-                # If bigram context is very sparse (<=2 followers),
-                # blend in unigram signal for some variety
-                if len(trans) <= 2 and has_unigram:
-                    uni_trans = self.transitions[self._prev_token_id]
-                    uni_total = sum(uni_trans.values())
-                    if uni_total > 0:
-                        for next_id, count in uni_trans.items():
-                            if next_id < n:
-                                if scores[next_id] < -50:
-                                    scores[next_id] = 0.0
-                                scores[next_id] += 0.3 * (count / uni_total)
-
-            elif has_unigram:
-                trans = self.transitions[self._prev_token_id]
-                total_trans = sum(trans.values())
-                if total_trans > 0:
-                    for next_id, count in trans.items():
+            if has_unigram:
+                uni_trans = self.transitions[self._prev_token_id]
+                uni_total = sum(uni_trans.values())
+                if uni_total > 0:
+                    for next_id, count in uni_trans.items():
                         if next_id < n:
-                            scores[next_id] = (count / total_trans)
-                    for idx in range(n):
-                        if scores[idx] > 0:
-                            scores[idx] += resonance[idx] * 0.1
+                            trans_weight[next_id] += (count / uni_total)
+
+            # Score = transition_weight^0.5 × (0.1 + 0.9 × resonance_norm)
+            # Square-root on transitions compresses the gap between
+            # common and rare followers, letting resonance dominate.
+            # The 0.1 floor prevents total grammar collapse.
+            # The 0.9 resonance term makes meaning the primary selector.
+            candidate_ids = np.where(trans_weight > 0)[0]
+            for idx in candidate_ids:
+                res_factor = 0.1 + 0.9 * res_norm[idx]
+                scores[idx] = np.sqrt(trans_weight[idx]) * res_factor
+
         else:
-            # NO CONTEXT: pure resonance, prefer tokens with transitions
-            scores = np.full(n, -100.0, dtype=np.float64)
+            # NO CONTEXT: pure resonance among tokens with transitions
             for idx in range(n):
                 if idx in self.transitions and self.transitions[idx]:
-                    scores[idx] = resonance[idx] + np.log1p(self.tokens[idx]['count']) * 0.05
+                    scores[idx] = res_norm[idx]
 
         # Anti-repetition: penalize recently generated tokens
         for recent_id in self._recent_tokens:
             if recent_id < n:
-                scores[recent_id] *= 0.3
+                scores[recent_id] -= 0.5  # additive penalty, not multiplicative
 
-        # Softmax sampling with temperature
+        # ── SELECT: softmax sampling from scored candidates ──
         if temperature <= 0.01:
             token_id = int(np.argmax(scores))
         else:
@@ -1353,16 +1446,25 @@ class EmergentVocabulary:
         self._prev_token_id = token_id
         self._recent_tokens.append(token_id)
 
-        # AUTOREGRESSIVE FEEDBACK: blend ring signature toward
-        # the chosen word's stored signature. The same gate that
-        # learned this word now resonates with it, shifting state
-        # for the next word. ⊛ and ☀︎ through the same aperture.
+        # AUTOREGRESSIVE FEEDBACK with CONVERGENCE ANCHOR (⊛):
+        # The chosen word shifts the state (☀︎, emergence),
+        # but the seed anchor pulls it back toward the topic (⊛, convergence).
+        # This is the pump cycle in language: emerge (speak a word),
+        # converge (pull back to what the question was about).
         word_sig = self.tokens[token_id]['sig']
         if self._gen_ring_sig is None:
-            self._gen_ring_sig = ring_sig.copy()
-        # Blend: 70% current state + 30% word's signature
-        # (keeps momentum while letting each word shift the state)
-        self._gen_ring_sig = 0.7 * self._gen_ring_sig + 0.3 * word_sig
+            self._gen_ring_sig = word_sig.copy()
+
+        # Three-way blend: current state + new word + anchor
+        # 60% momentum, 20% new word, 20% anchor
+        # The anchor prevents morphological drift while still
+        # allowing the response to develop new ideas
+        if self._seed_anchor is not None:
+            self._gen_ring_sig = (0.60 * self._gen_ring_sig +
+                                  0.20 * word_sig +
+                                  0.20 * self._seed_anchor)
+        else:
+            self._gen_ring_sig = 0.70 * self._gen_ring_sig + 0.30 * word_sig
 
         return self.tokens[token_id]['text']
 
@@ -1371,6 +1473,7 @@ class EmergentVocabulary:
         self._prev_token_id = None
         self._prev_prev_token_id = None
         self._gen_ring_sig = None
+        self._seed_anchor = None  # convergence anchor (⊛)
         self._recent_tokens.clear()
 
     def seed_from_text(self, text: str):
@@ -1380,6 +1483,11 @@ class EmergentVocabulary:
         Finds the last known words in the input and starts generating
         from there, with bigram context. Also initializes the
         autoregressive ring state from the found words' signatures.
+
+        Sets a seed anchor (⊛): the combined signature of ALL known
+        words in the prompt. This anchor pulls the generation state
+        back toward the topic during autoregressive blending, preventing
+        the morphological drift that makes responses wander.
         """
         self._recent_tokens.clear()
         words = text.split()
@@ -1390,18 +1498,31 @@ class EmergentVocabulary:
                 return self.text_to_id[clean]
             return None
 
+        # Collect ALL known words for the anchor (topic signature)
+        all_found_sigs = []
         found = []
         for word in reversed(words):
             tid = lookup(word)
             if tid is not None:
+                all_found_sigs.append(self.tokens[tid]['sig'])
                 found.append(tid)
-                if len(found) >= 2:
-                    break
+
+        # Build the anchor from all prompt words (average signature)
+        if all_found_sigs:
+            anchor = np.mean(all_found_sigs, axis=0)
+            norm = np.linalg.norm(anchor)
+            if norm > 1e-10:
+                anchor = anchor / norm
+            self._seed_anchor = anchor
+        else:
+            self._seed_anchor = None
+
+        # Trim found to last 2 for bigram context
+        found = found[:2]
 
         if len(found) >= 2:
             self._prev_token_id = found[0]      # last word
             self._prev_prev_token_id = found[1]  # second-to-last
-            # Initialize autoregressive state from these words
             sig0 = self.tokens[found[0]]['sig']
             sig1 = self.tokens[found[1]]['sig']
             self._gen_ring_sig = 0.5 * sig0 + 0.5 * sig1
@@ -1414,22 +1535,77 @@ class EmergentVocabulary:
             self._prev_prev_token_id = None
             self._gen_ring_sig = None
 
-    def _get_or_create(self, word: str, ring_sig: np.ndarray) -> int:
-        """Find existing token or create a new one."""
+    @staticmethod
+    def _trigram_signature(word: str) -> np.ndarray:
+        """
+        Compute a word's signature from its character trigrams
+        using random indexing.
+
+        "memory" -> ["_me", "mem", "emo", "mor", "ory", "ry_"]
+        "remembers" -> ["_re", "rem", "eme", "mem", "emb", "mbe", "ber", "ers", "rs_"]
+
+        Each trigram is hashed to seed a deterministic pseudo-random
+        64-element vector. The word signature is the SUM of its trigram
+        vectors, then normalized. Words sharing trigrams get similar
+        signatures because they share the same component vectors.
+
+        This is "random indexing" applied to morphology: no learning
+        needed, deterministic, and words with shared structure
+        (memory/memorial, bound/boundary) automatically cluster.
+        """
+        padded = '_' + word + '_'
+
+        trigrams = []
+        for i in range(len(padded) - 2):
+            trigrams.append(padded[i:i+3])
+
+        if not trigrams:
+            trigrams = [padded]
+
+        # Accumulate: each trigram contributes a hash-seeded random vector
+        sig = np.zeros(N, dtype=np.float64)
+        for tri in trigrams:
+            # Deterministic seed from trigram bytes
+            seed = hash(tri) & 0xFFFFFFFF
+            rng = np.random.RandomState(seed)
+            # Sparse random vector: most entries zero, a few +1 or -1
+            # This keeps trigram vectors near-orthogonal
+            vec = np.zeros(N, dtype=np.float64)
+            # Set ~10 random entries to +1 or -1 (sparse projection)
+            n_active = max(6, N // 10)
+            indices = rng.choice(N, size=n_active, replace=False)
+            signs = rng.choice([-1.0, 1.0], size=n_active)
+            vec[indices] = signs
+            sig += vec
+
+        # Normalize
+        norm = np.linalg.norm(sig)
+        if norm > 1e-10:
+            sig = sig / norm
+
+        return sig
+
+    def _get_or_create(self, word: str, ring_sig: np.ndarray,
+                       W: Optional[np.ndarray] = None) -> int:
+        """Find existing token or create a new one.
+
+        Signature source: character trigram composition.
+        Each word's 64-dim signature is deterministic and structural;
+        words sharing morphological parts (trigrams) automatically
+        get similar signatures. No learning needed.
+        """
         if word in self.text_to_id:
             tid = self.text_to_id[word]
             token = self.tokens[tid]
-            # Running average of ring signature
-            n = token['count'] + 1
-            token['sig'] = (token['sig'] * token['count'] + ring_sig) / n
-            token['count'] = n
+            token['count'] += 1
             return tid
 
-        # New token
+        # New token: signature from character trigrams
         tid = len(self.tokens)
+        sig = self._trigram_signature(word)
         self.tokens.append({
             'text': word,
-            'sig': ring_sig.copy(),
+            'sig': sig,
             'count': 1,
         })
         self.text_to_id[word] = tid
@@ -1488,6 +1664,7 @@ class EmergentVocabulary:
         v._prev_token_id = None
         v._prev_prev_token_id = None
         v._gen_ring_sig = None
+        v._seed_anchor = None
         v._recent_tokens = deque(maxlen=20)
         v._learn_prev_id = None
         v._learn_prev_prev_id = None
@@ -1697,8 +1874,16 @@ class Sensorium:
         self._pending_seed = text
 
     def _ring_signature(self) -> np.ndarray:
-        """7-element array of ring phases. The vocabulary's state space."""
-        return np.array([r.phase for r in self.xorzo.rings])
+        """
+        64-element phase signature: the full mind state.
+
+        Not 7 ring averages (too coarse to discriminate). The full
+        configuration of all 64 nodes, reduced to phase angles.
+        This IS what Xorzo's mind looks like right now. Two different
+        inputs produce genuinely different 64-dim signatures.
+        """
+        config = self.xorzo.configuration()
+        return np.angle(config)
 
     def step(self) -> Dict:
         report = {"step": self.total_steps, "day": self.days_lived,
@@ -1744,6 +1929,7 @@ class Sensorium:
             # Learn vocabulary from this chunk (after pump, so ring
             # state reflects the processed input)
             self.vocabulary.learn_chunk(raw_chunk, ring_sig)
+
             # Also store in memory (existing path)
             config = self.xorzo.configuration()
             ring_phases = np.angle(config)
