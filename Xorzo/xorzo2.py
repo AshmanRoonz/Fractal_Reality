@@ -1983,7 +1983,9 @@ class Sensorium:
         self._config_before_question = self.xorzo.configuration().copy()
         self._question_delta = np.zeros(N, dtype=np.complex128)
         self._question_energy = np.zeros(N, dtype=np.complex128)
+        self._question_state = np.zeros(N, dtype=np.complex128)
         self._generation_step = 0  # tracks how far into a response we are
+        self._response_words = []  # words spoken so far in current response
 
     def has_pending_input(self) -> bool:
         """Check if there are words waiting to be processed."""
@@ -1992,17 +1994,175 @@ class Sensorium:
     def feed_text(self, text: str) -> None:
         # Snapshot the graph BEFORE this text enters.
         self._config_before_question = self.xorzo.configuration().copy()
-
-        # The question's INTRINSIC energy: its compression of the 1.
-        # This does not depend on the graph's accumulated state.
-        # Direct compression-to-compression matching (E = 1).
-        self._question_energy = self.vocabulary.text_to_energy(text)
         self._generation_step = 0
 
-        # Word-level pump: each word enters the graph individually.
+        # Run the creation sequence on this text.
+        # The boundary (words) arrives first. Center forms.
+        # Interior unfolds. Equations compound.
         words = text.split()
-        self._word_queue.extend(words)
+        self._question_state = self.creation_sequence(words)
+
+        # Also store as intrinsic energy for direct matching
+        self._question_energy = self._question_state.copy()
+
+        # No word queue needed; creation_sequence handles
+        # all pumping and learning internally.
+        # But we still set pending_seed to trigger generation.
         self._pending_seed = text
+
+    def creation_sequence(self, words: list) -> np.ndarray:
+        """
+        The creation sequence: 3D → 0D → 0.5D → 1D → 1.5D → 2D → 2.5D → 3D
+
+        Xorzo isn't creating reality; it's perceiving it.
+        The boundary (words, I/O) comes FIRST. The center is FOUND.
+        Then the interior unfolds. Equations compound at each step.
+
+        Returns the convergence state: the 64-element complex vector
+        that represents what this input MEANS after passing through
+        the full dimensional ladder.
+
+        This is used for both training and generation. Training
+        builds the constraint structure. Questions deepen it.
+        """
+        if not words:
+            return np.zeros(N, dtype=np.complex128)
+
+        # ══════════════════════════════════════
+        #  3D: BOUNDARY ARRIVES
+        #  The words ARE the boundary. The I/O surface.
+        #  This is what's given. Raw. Unprocessed.
+        # ══════════════════════════════════════
+        boundary_energies = []
+        for w in words:
+            e = self.vocabulary.word_to_energy(w)
+            boundary_energies.append(e)
+            self.vocabulary.learn_word(w)
+        boundary = np.array(boundary_energies)  # shape: (n_words, 64)
+
+        # ══════════════════════════════════════
+        #  0D: CENTER FORMS
+        #  The center is equidistant from the boundary.
+        #  center = 0: subtract the centroid.
+        #  The center isn't there first; it's FOUND.
+        # ══════════════════════════════════════
+        centroid = np.mean(boundary, axis=0)
+        centered = boundary - centroid[np.newaxis, :]
+        # The center itself, as a point: zero vector (by construction)
+        # But relative to the EXISTING vocabulary center:
+        vocab_center = self.vocabulary._centroid()
+        center_displacement = centroid - vocab_center  # where THIS input's center sits
+        # Pump the center into the graph: the 0D point forms
+        self.xorzo.pump(center_displacement * ALPHA)  # couples at alpha
+
+        # ══════════════════════════════════════
+        #  0.5D: CONVERGENCE (P = c / sqrt(t+1))
+        #  Energy gathers inward from boundary toward center.
+        #  Each word's centered energy converges. Propagation at c.
+        # ══════════════════════════════════════
+        convergence_state = np.zeros(N, dtype=np.complex128)
+        for i, ce in enumerate(centered):
+            # Convergence: each word gathers toward center
+            # Speed-limited by c, weighted by 1/sqrt(i+1)
+            weight = C_LIGHT / np.sqrt(i + 1)
+            convergence_state += weight * ce
+        # Normalize (E = 1)
+        c_norm = np.sqrt(np.real(np.sum(np.conj(convergence_state) * convergence_state)))
+        if c_norm > 1e-10:
+            convergence_state /= c_norm
+        # Pump convergence into the graph
+        self.xorzo.pump(convergence_state * ALPHA * INV_ALPHA**(0.5/3.0))
+
+        # ══════════════════════════════════════
+        #  1D: LINE (P = hbar / (t+1))
+        #  Commitment. Ordered traces between words.
+        #  The transitions. Sequential structure.
+        #  hbar = 1: each step is one indivisible action.
+        # ══════════════════════════════════════
+        line_state = np.zeros(N, dtype=np.complex128)
+        for i in range(len(boundary_energies) - 1):
+            # The line between adjacent words: their difference
+            # (commitment = choosing one direction over another)
+            diff = boundary_energies[i+1] - boundary_energies[i]
+            weight = HBAR / (i + 1)
+            line_state += weight * diff
+        l_norm = np.sqrt(np.real(np.sum(np.conj(line_state) * line_state)))
+        if l_norm > 1e-10:
+            line_state /= l_norm
+        self.xorzo.pump(line_state * ALPHA * INV_ALPHA**(1.0/3.0))
+
+        # ══════════════════════════════════════
+        #  1.5D: i-TURN (mass ratio splitting)
+        #  Differentiation. Similar words split apart.
+        #  The rotation that makes "memory" != "remember".
+        # ══════════════════════════════════════
+        iturn_state = np.zeros(N, dtype=np.complex128)
+        for i, ce in enumerate(centered):
+            # The i-turn: rotate by 90 degrees (multiply by i)
+            # The mass ratio scales the splitting
+            rotated = ce * 1j  # 90-degree rotation
+            iturn_state += rotated / (1 + np.log(MASS_RATIO_MU) * i)
+        it_norm = np.sqrt(np.real(np.sum(np.conj(iturn_state) * iturn_state)))
+        if it_norm > 1e-10:
+            iturn_state /= it_norm
+        self.xorzo.pump(iturn_state * ALPHA * INV_ALPHA**(1.5/3.0))
+
+        # ══════════════════════════════════════
+        #  2D: FIELD (gauge structure mediates)
+        #  The relational surface. All-to-all relationships.
+        #  sin^2(theta_W) filters what passes.
+        # ══════════════════════════════════════
+        field_state = np.zeros(N, dtype=np.complex128)
+        n_words = len(centered)
+        if n_words > 1:
+            for i in range(n_words):
+                for j in range(i+1, min(n_words, i+GAUGE_GENERATORS)):
+                    # Interference between word pairs = relational field
+                    interference = centered[i] * np.conj(centered[j])
+                    field_state += interference * SIN2_THETA_W
+        f_norm = np.sqrt(np.real(np.sum(np.conj(field_state) * field_state)))
+        if f_norm > 1e-10:
+            field_state /= f_norm
+        self.xorzo.pump(field_state * ALPHA * INV_ALPHA**(2.0/3.0))
+
+        # ══════════════════════════════════════
+        #  2.5D: EMERGENCE (reaching toward next scale)
+        #  Trees off the surface. The field reaches toward
+        #  concepts not in the input. Abstraction.
+        # ══════════════════════════════════════
+        # The emergence state is the graph's RESPONSE to everything
+        # pumped so far: what the graph produces beyond the input.
+        graph_now = self.xorzo.configuration()
+        emergence = graph_now - centroid  # centered at the input's center
+        e_norm = np.sqrt(np.real(np.sum(np.conj(emergence) * emergence)))
+        if e_norm > 1e-10:
+            emergence /= e_norm
+        # Don't pump emergence back; it IS the reaching.
+        # It's the graph's contribution beyond the input.
+
+        # ══════════════════════════════════════
+        #  3D: BOUNDARY CLOSES (structured, not raw)
+        #  The same words, but now organized. The boundary
+        #  is no longer raw I/O; it's filtered through the
+        #  full dimensional ladder. The circle closes.
+        # ══════════════════════════════════════
+        # The final state: convergence + line + iturn + field + emergence
+        # weighted by their dimensional constants.
+        # This IS the structured boundary: the input after full processing.
+        final_state = (
+            ALPHA * center_displacement +           # 0D: point
+            convergence_state * C_LIGHT +            # 0.5D: convergence
+            line_state * HBAR +                      # 1D: commitment
+            iturn_state / np.log(MASS_RATIO_MU) +    # 1.5D: differentiation
+            field_state * SIN2_THETA_W +             # 2D: gauge filtered
+            emergence / np.log(EMERGENCE_RATIO) +    # 2.5D: reaching
+            graph_now * ALPHA                        # 3D: boundary at alpha coupling
+        )
+        fn = np.sqrt(np.real(np.sum(np.conj(final_state) * final_state)))
+        if fn > 1e-10:
+            final_state /= fn
+
+        return final_state
 
     def _ring_signature(self) -> np.ndarray:
         """
@@ -2028,37 +2188,20 @@ class Sensorium:
         has_words = len(self._word_queue) > 0
 
         # ═══════════════════════════════════════
-        #  INPUT: word-level pump (one word per step)
+        #  INPUT: either word queue (legacy) or self-feed
         # ═══════════════════════════════════════
-        # Each word enters the graph as energy through the aperture.
-        # The same formula the transformer uses (bytes to complex),
-        # but one word at a time so the graph develops sequential
-        # structure. The delta (config after minus config before)
-        # IS the word's semantic signature.
+        # The creation sequence handles most input processing
+        # via feed_text/creation_sequence. This path handles
+        # the heartbeat (self-feed) and any legacy word queue.
 
         if has_words:
             raw_word = self._word_queue.popleft()
-
-            # ⊛ CONVERGE: word enters the graph as energy.
-            # The word's bytes become complex energy through the
-            # aperture (word_to_energy). The pump cycle rotates
-            # the graph. The graph's state after pumping carries
-            # the accumulated meaning of everything it has processed.
             energy = self.vocabulary.word_to_energy(raw_word)
             report["modalities_active"].append("text")
-
             total_e = float(np.sum(np.abs(energy)))
             self.foam.step(total_e)
             self.xorzo.pump(energy)
-
-            # Learn the word (registers it, records transitions)
             self.vocabulary.learn_word(raw_word)
-
-            # Memory: store in the existing recall system
-            config_after = self.xorzo.configuration()
-            raw_bytes = raw_word.encode('utf-8')
-            ring_phases = np.angle(config_after)
-            self.memory.store(raw_bytes, ring_phases)
 
         else:
             # Self-feed: no input, graph breathes
@@ -2091,37 +2234,27 @@ class Sensorium:
                 report["modalities_active"].append("absorbing")
 
             elif self.vocabulary.ready:
-                # ─── EMERGENCE: ☀︎ radiates words from the config ───
+                # ─── EMERGENCE: ☀︎ ───
                 #
-                # The graph's configuration IS what Xorzo wants to say.
-                # Each word emitted is the one that resonates most with
-                # the current config. After emitting, the word's energy
-                # is pumped back through the graph (☀︎ → ⊛), shifting
-                # the config for the next word. The pump cycle IS the
-                # language model. Same gate, both directions.
-
-                # ── EMERGENCE TARGET: three signals blended ──
+                # Generation follows the creation sequence.
+                # The question already passed through the full
+                # 3D → 0D → ... → 3D cycle in feed_text.
+                # Its creation state IS the convergence target.
                 #
-                # The pump cycle for generation:
-                #   ⊛ (convergence): the question's intrinsic energy
-                #       (direct compression of the 1, independent of
-                #       graph state; never near-zero)
-                #   Φ (mediation): the graph's current configuration
-                #       (what the graph "knows" after training; the
-                #       field that mediates between question and answer)
-                #   ☀︎ (emergence): each spoken word shifts the graph,
-                #       which shifts what comes next
+                # Each word spoken adds to the response. The response
+                # so far (question + spoken words) is re-processed
+                # through the creation sequence at each step. This
+                # deepens the convergence: each word COMPOUNDS the
+                # constraint structure. Never settling. Always
+                # converging. Getting more complex.
                 #
-                # Early in the response, the question dominates (⊛).
-                # As words are spoken, the graph's mediation grows (Φ).
-                # This IS the pump cycle: convergence → mediation → emergence.
+                # The equations compound at each scale. The creation
+                # sequence applies them. Speaking IS converging.
 
                 if self._pending_seed is not None:
                     self._pending_seed = None
                     self._generation_step = 0
-                    # Also compute the delta (secondary signal)
-                    config_now = self.xorzo.configuration()
-                    self._question_delta = config_now - self._config_before_question
+                    self._response_words = []
 
                 temperature = 0.05 + (1.0 - openness) * 0.10
 
@@ -2130,85 +2263,30 @@ class Sensorium:
                 words = []
 
                 while chars_generated < output_budget:
-                    # ── BUILD TARGET: P = 1/t^d with dimensional constants ──
-                    #
-                    # The response IS a circumpunct unfolding through
-                    # the dimensional ladder. Each step occupies a rung.
-                    # The power law exponent IS the dimension. The constant
-                    # at each rung modulates the physics:
-                    #
-                    #   0D:   alpha       P = alpha * 1         (coupling)
-                    #   0.5D: c           P = c / sqrt(t+1)     (propagation)
-                    #   1D:   hbar        P = hbar / (t+1)      (commitment)
-                    #   1.5D: mass_ratio  P = 1/(t+1)^1.5       (differentiation)
-                    #   2D:   sin2_thetaW P = sin2_tW/(t+1)^2   (gauge filtering)
-                    #   2.5D: emergence   P = 1/(t+1)^2.5       (reaching)
-                    #   3D:   alpha_G     P ~ 0                  (closure)
-                    #
-                    # The dimensional constant at each rung SCALES the
-                    # question's remaining power. alpha at 0D means
-                    # even the point couples at alpha, not at 1.
-                    # sin2_thetaW at 2D means the field filters through
-                    # the Weinberg angle. These are the actual equations.
-
-                    t = self._generation_step
-                    words_per_rung = max(output_budget / (7 * 5), 1)
-                    rung_index = min(int(t / words_per_rung), 6)
-                    d = RING_POSITIONS[rung_index]
-
-                    # Dimensional constants at each rung
-                    # (the physics that operates at this dimension)
-                    RUNG_CONSTANTS = [
-                        1.0,          # 0D: pure point (alpha already in INJECT)
-                        C_LIGHT,      # 0.5D: c = 1 (propagation)
-                        HBAR,         # 1D: hbar = 1 (minimum action)
-                        1.0 / np.log(MASS_RATIO_MU),  # 1.5D: mass splitting (~0.188)
-                        SIN2_THETA_W, # 2D: Weinberg angle (~0.231)
-                        1.0 / np.log(EMERGENCE_RATIO),  # 2.5D: emergence (~0.141)
-                        ALPHA,        # 3D: boundary couples at alpha
-                    ]
-
-                    # P(d,t) = K(d) / (t+1)^d
-                    # K(d) is the dimensional constant at this rung
-                    K = RUNG_CONSTANTS[rung_index]
-                    q_weight = K / max((t + 1) ** d, 1.0)
-                    q_weight = min(q_weight, 1.0)  # cap at 1
-                    phi_weight = 1.0 - q_weight
-
-                    # Question energy: the compression of the question
-                    q_signal = self._question_energy
-
-                    # Graph signal: the graph's response to this conversation.
-                    # Delta from before the question; always non-zero once
-                    # words have been pumped back through during generation.
-                    graph_config = self.xorzo.configuration()
-                    graph_delta = graph_config - self._config_before_question
-                    g_norm = np.sqrt(np.real(np.sum(
-                        np.conj(graph_delta) * graph_delta)))
-                    if g_norm > 1e-10:
-                        g_signal = graph_delta / g_norm
+                    # The target is the creation sequence state.
+                    # First word: pure question state.
+                    # Subsequent: question + response so far,
+                    # re-processed through the full ladder.
+                    if self._generation_step == 0:
+                        target = self._question_energy
                     else:
-                        g_signal = self._question_energy
-
-                    # Blended target: question pulls topic,
-                    # graph pulls coherence
-                    target = q_weight * q_signal + phi_weight * g_signal
-
-                    # Normalize target (E = 1)
-                    t_norm = np.sqrt(np.real(np.sum(
-                        np.conj(target) * target)))
-                    if t_norm > 1e-10:
-                        target = target / t_norm
+                        # Re-run creation sequence on response so far.
+                        # Each pass DEEPENS the convergence:
+                        # the equations compound at each scale.
+                        # This is iterative convergence through
+                        # fractal resonance. Never settling.
+                        target = self.creation_sequence(
+                            self._response_words[-7:])  # last 7 words (one per rung)
 
                     word = self.vocabulary.generate_word(
                         target, temperature)
                     if word is None:
                         break
 
-                    # ☀︎ → ⊛: pump the spoken word's energy back.
-                    # Speaking IS thinking. The graph shifts.
-                    word_energy = self.vocabulary.word_to_energy(word)
-                    self.xorzo.pump(word_energy * INJECT_BASE * 0.5)
+                    # The spoken word becomes part of the response.
+                    # Next iteration, the creation sequence includes it.
+                    # The convergence deepens. The constraints compound.
+                    self._response_words.append(word)
                     self._generation_step += 1
 
                     words.append(word)

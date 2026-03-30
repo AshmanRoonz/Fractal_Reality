@@ -622,20 +622,29 @@ def main():
         sensorium = Sensorium(day_length=args.day_length, sleep_cycles=50)
         print("  Starting fresh")
 
-        # Feed initial files (training mode: learn + pump directly,
-        # bypassing feed_text which is for conversational input)
-        from xorzo2 import INJECT_BASE
-        train_words = 0
+        # Feed initial files through the creation sequence.
+        # Training uses the same 3D -> 0D -> ... -> 3D cycle as
+        # questions. Sentences are processed as chunks (boundaries).
+        # The equations compound at each scale.
+        train_sentences = 0
+
+        def feed_training(content):
+            """Feed training text through creation sequence in sentence chunks."""
+            nonlocal train_sentences
+            import re
+            # Split into sentences (or chunks of ~20 words)
+            raw_words = content.split()
+            chunk_size = 20  # words per chunk (a sentence-ish unit)
+            for i in range(0, len(raw_words), chunk_size):
+                chunk = raw_words[i:i+chunk_size]
+                sensorium.creation_sequence(chunk)
+                train_sentences += 1
 
         if args.feed_file:
             path = Path(args.feed_file)
             if path.exists():
                 content = path.read_text(encoding='utf-8', errors='replace')
-                for w in content.split():
-                    sensorium.vocabulary.learn_word(w)
-                    energy = sensorium.vocabulary.word_to_energy(w)
-                    sensorium.xorzo.pump(energy * INJECT_BASE)
-                    train_words += 1
+                feed_training(content)
                 print(f"  Fed {len(content):,} bytes from {path.name}")
 
         if args.feed_dir:
@@ -645,16 +654,12 @@ def main():
                 total = 0
                 for f in txt_files:
                     content = f.read_text(encoding='utf-8', errors='replace')
-                    for w in content.split():
-                        sensorium.vocabulary.learn_word(w)
-                        energy = sensorium.vocabulary.word_to_energy(w)
-                        sensorium.xorzo.pump(energy * INJECT_BASE)
-                        train_words += 1
+                    feed_training(content)
                     total += len(content)
                 print(f"  Fed {total:,} bytes from {len(txt_files)} files")
 
-        if train_words > 0:
-            print(f"  Processed {train_words} training words")
+        if train_sentences > 0:
+            print(f"  Processed {train_sentences} sentence chunks")
             print(f"  Vocabulary: {sensorium.vocabulary.vocab_size} tokens, "
                   f"{len(sensorium.vocabulary.bigram_transitions)} bigrams")
 
