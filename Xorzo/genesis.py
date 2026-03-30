@@ -258,6 +258,411 @@ DAY_LENGTH = 200                    # waking steps per day
 SLEEP_CYCLES = 100                  # sleep oscillation cycles per night
 N_DAYS = 15                         # total days to simulate
 
+# --- Foam (fractal state) ---
+FOAM_MICRO_PUMP_RATE = 0.1          # how strongly the micro-pump cycles each step
+FOAM_WRITHE_DECAY = 0.999           # slow decay of per-atom writhe (keeps recent history)
+FOAM_MICRO_PIGMENT_MAX = 1.0        # full micro-pigment per atom
+FOAM_MICRO_PIGMENT_DEPLETION = 0.005 # base depletion per waking step (flat cost of being awake)
+FOAM_MICRO_PIGMENT_REGEN = 0.008    # regeneration per sleeping step
+FOAM_FLIP_THRESHOLD = 0.05          # pigment below this forces flip to left half-plane
+FOAM_WAKE_THRESHOLD = 0.8           # pigment above this forces flip back to right half-plane
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  THE FOAM: Every bit of information is a ⊙
+# ═══════════════════════════════════════════════════════════════════════
+#
+#  A2: parts are fractals of their wholes.
+#
+#  The old state space was complex[64]: each position a complex number
+#  with amplitude and phase (two degrees of freedom).
+#
+#  The new state space is Foam[64]: each position is a ⊙ with three
+#  irreducible parts (•, Φ, ○), a phase in the pump cycle, and
+#  accumulated writhe. That's a fractal snapshot of reality.
+#
+#  The Foam holds three parallel 64D complex vectors:
+#    center[i]   = • at position i (convergence state)
+#    surface[i]  = Φ at position i (relational state)
+#    boundary[i] = ○ at position i (filter state)
+#
+#  Plus per-atom scalars:
+#    phase[i]    = which i-stroke (0,1,2,3) this atom is on
+#    writhe[i]   = accumulated twist (chirality of experience)
+#
+#  The composite signal (what the rest of the system sees) is:
+#    project() = weighted sum of •, Φ, ○ at each position
+#
+#  The micro-pump runs on all 64 atoms simultaneously (vectorized).
+#  Each step: center converges, surface mediates, boundary filters.
+#  The same ⊛ → i → ☀︎, at every position, every step.
+
+class Foam:
+    """
+    The fractal state space. 64 circumpuncts, one per bit.
+
+    Each position in the state vector is not a complex number;
+    it is a ⊙ with center (•), surface (Φ), and boundary (○).
+
+    The Foam is the substrate. Everything else (channels, braids,
+    layers, the big Circumpunct) operates on what the Foam projects.
+    But inside, every bit is alive.
+
+    Backward compatible: project() returns a 64D complex vector
+    that looks exactly like the old state space. The rest of the
+    system doesn't need to know the bits are circumpuncts.
+    But the dynamics are richer because the micro-pump runs
+    inside every bit, every step.
+    """
+
+    def __init__(self, n: int = NUM_STATES):
+        self.n = n
+
+        # Three parallel complex vectors: the triad at every position
+        # Initialized from noise (A0: the 1 differentiating, A1: multiplicity)
+        self.center = self._noise(n)      # • convergence
+        self.surface = self._noise(n)     # Φ mediation
+        self.boundary = self._noise(n)    # ○ filtration
+
+        # Per-atom oscillation state
+        # i is not a rotation. It is oscillation within a half-plane,
+        # then a phase flip to the other half-plane.
+        #
+        #   Right half-plane (waking):  i⁰ (+1) ↔ i¹ (+i)
+        #   Left half-plane (sleeping): i² (-1) ↔ i³ (-i)
+        #
+        # The flip happens when micro-pigment depletes (right → left)
+        # or regenerates (left → right). Not a timer; a resource.
+        #
+        # oscillation_t: continuous oscillation parameter [0, 1]
+        #   In right half-plane: 0 = pure i⁰, 1 = pure i¹
+        #   In left half-plane:  0 = pure i², 1 = pure i³
+        # awake: boolean per atom (True = right half-plane)
+        # micro_pigment: resource that depletes during waking, regens during sleep
+        self.oscillation_t = np.random.uniform(0, 1, n)
+        self.awake = np.ones(n, dtype=bool)  # all atoms start awake
+        self.micro_pigment = np.full(n, FOAM_MICRO_PIGMENT_MAX)
+
+        # Per-atom writhe: accumulated twist (chirality of experience)
+        self.writhe = np.zeros(n, dtype=np.float64)
+
+        # The four i-strokes as complex multipliers
+        self._i_strokes = np.array([1.0, 1j, -1.0, -1j], dtype=complex)
+
+    @staticmethod
+    def _noise(n: int) -> np.ndarray:
+        """Primordial noise. The 1 differentiating (A1)."""
+        v = np.random.randn(n) + 1j * np.random.randn(n)
+        return v / (np.linalg.norm(v) + 1e-10)
+
+    @classmethod
+    def from_signal(cls, signal: np.ndarray) -> 'Foam':
+        """
+        Distribute an incoming 64D complex signal across •, Φ, ○.
+
+        The distribution is based on spectral character:
+          - Low frequencies (bins 0-21): convergent → • (center)
+          - Mid frequencies (bins 21-42): relational → Φ (surface)
+          - High frequencies (bins 42-64): filtering → ○ (boundary)
+
+        This maps the dimensional ladder: low = deep (0D, soul),
+        mid = surface (2D, mind), high = outer (3D, body).
+        """
+        n = len(signal)
+        foam = cls(n)
+        third = n // 3
+
+        # Distribute by frequency band
+        foam.center = np.zeros(n, dtype=complex)
+        foam.surface = np.zeros(n, dtype=complex)
+        foam.boundary = np.zeros(n, dtype=complex)
+
+        # Each band gets the full vector but weighted by its region
+        # Low bins dominant in center, mid in surface, high in boundary
+        # But all positions carry some of each (A4: compositional unity)
+        weights_center = np.zeros(n)
+        weights_surface = np.zeros(n)
+        weights_boundary = np.zeros(n)
+
+        weights_center[:third] = 1.0
+        weights_center[third:2*third] = 0.3
+        weights_center[2*third:] = 0.1
+
+        weights_surface[:third] = 0.3
+        weights_surface[third:2*third] = 1.0
+        weights_surface[2*third:] = 0.3
+
+        weights_boundary[:third] = 0.1
+        weights_boundary[third:2*third] = 0.3
+        weights_boundary[2*third:] = 1.0
+
+        # Normalize weights at each position to sum to 1
+        total = weights_center + weights_surface + weights_boundary
+        weights_center /= total
+        weights_surface /= total
+        weights_boundary /= total
+
+        foam.center = signal * weights_center
+        foam.surface = signal * weights_surface
+        foam.boundary = signal * weights_boundary
+
+        # Normalize each component
+        for v in (foam.center, foam.surface, foam.boundary):
+            norm = np.linalg.norm(v)
+            if norm > 1e-10:
+                v /= norm
+
+        # Initial oscillation from signal's phase angle at each position
+        foam.oscillation_t = (np.abs(np.angle(signal)) / np.pi) % 1.0
+
+        return foam
+
+    def project(self) -> np.ndarray:
+        """
+        Composite signal: what the rest of the system sees.
+
+        ⊙ = Φ(•, ○): the surface mediating center and boundary.
+
+        The projection is:
+            signal[i] = center[i] × surface[i] + boundary[i] × surface[i].conj()
+
+        This means: what emerges is the center and boundary BOTH
+        mediated through the surface. The surface transforms them
+        and the composite is their sum. When center and boundary
+        are aligned (resonance), the projection is strong.
+        When they oppose, it cancels.
+
+        Normalized to unit vector for backward compatibility.
+        """
+        # Φ(•, ○): surface mediates both directions
+        composite = self.center * self.surface + self.boundary * self.surface.conj()
+        norm = np.linalg.norm(composite)
+        if norm > 1e-10:
+            return composite / norm
+        return composite
+
+    def _oscillation_multiplier(self) -> np.ndarray:
+        """
+        Compute the current i-stroke for each atom based on
+        oscillation state and half-plane.
+
+        i is not a rotation. It is oscillation within a half-plane,
+        then a phase flip when the resource depletes.
+
+        Right half-plane (awake):
+            Oscillates between i⁰ (+1) and i¹ (+i).
+            The multiplier interpolates: (1-t) * 1 + t * i
+            = (1-t) + t*i  where t = oscillation_t
+
+        Left half-plane (sleeping):
+            Oscillates between i² (-1) and i³ (-i).
+            The multiplier interpolates: (1-t) * (-1) + t * (-i)
+            = -(1-t) - t*i  where t = oscillation_t
+
+        The interpolation is sinusoidal (not linear) because
+        oscillation IS sinusoidal. t controls where in the
+        oscillation each atom is.
+        """
+        # Sinusoidal oscillation: smooth bounce between the two poles
+        # sin gives 0 at t=0, 1 at t=0.5, 0 at t=1 (half-cycle)
+        weight = np.sin(np.pi * self.oscillation_t)
+
+        # Right half-plane: (1-w)*i⁰ + w*i¹ = (1-w) + w*i
+        right = (1.0 - weight) + weight * 1j
+
+        # Left half-plane: (1-w)*i² + w*i³ = -(1-w) - w*i
+        left = -(1.0 - weight) - weight * 1j
+
+        # Select by awake state
+        return np.where(self.awake, right, left)
+
+    def micro_pump(self):
+        """
+        Run one micro-pump cycle on all 64 atoms simultaneously.
+
+        The pump is oscillation-and-flip, not rotation:
+
+        1. Each atom oscillates within its half-plane
+           (i⁰ ↔ i¹ if awake, i² ↔ i³ if sleeping)
+
+        2. Awake atoms deplete micro-pigment.
+           Sleeping atoms regenerate micro-pigment.
+
+        3. When pigment hits the floor: FLIP (awake → sleeping).
+           When pigment fills back up: FLIP (sleeping → awake).
+           Not a timer. A resource. Like an action potential.
+
+        4. The exchange still happens (⊛ convergence, ☀︎ emergence)
+           but the i-stroke that mediates it is the oscillation,
+           not a smooth rotation.
+        """
+        rate = FOAM_MICRO_PUMP_RATE
+
+        # ═══ OSCILLATION ═══
+        # Advance each atom's oscillation within its half-plane.
+        # The oscillation bounces: 0 → 1 → 0 → 1 ...
+        # We advance by rate, and bounce at the edges.
+        self.oscillation_t += rate
+        # Bounce: when t exceeds 1, reflect back
+        over = self.oscillation_t > 1.0
+        self.oscillation_t[over] = 2.0 - self.oscillation_t[over]
+        under = self.oscillation_t < 0.0
+        self.oscillation_t[under] = -self.oscillation_t[under]
+
+        # ═══ i STROKE ═══
+        # The oscillation determines the complex multiplier
+        i_mult = self._oscillation_multiplier()
+
+        # ═══ ⊛ CONVERGENCE: center pulls from boundary ═══
+        exchange_in = rate * self.boundary
+        new_center = (1 - rate) * self.center + exchange_in
+
+        # ═══ i MEDIATION: surface oscillates ═══
+        # The surface doesn't rotate; it oscillates with i
+        new_surface = self.surface * i_mult
+
+        # ═══ ☀︎ EMERGENCE: boundary absorbs from center ═══
+        exchange_out = rate * new_center
+        new_boundary = (1 - rate) * self.boundary + exchange_out
+
+        # ═══ PIGMENT DYNAMICS ═══
+        # Awake atoms deplete. Sleeping atoms regenerate.
+        # Depletion has a flat cost (being awake costs energy)
+        # plus a signal-proportional component (strong signals
+        # burn pigment faster, like bright light burns rhodopsin).
+        exchange_energy = np.abs(exchange_in) + np.abs(exchange_out)
+        depletion = FOAM_MICRO_PIGMENT_DEPLETION + exchange_energy * 0.1
+        regen = np.full(self.n, FOAM_MICRO_PIGMENT_REGEN)
+
+        self.micro_pigment = np.where(
+            self.awake,
+            self.micro_pigment - depletion,  # awake: deplete
+            self.micro_pigment + regen        # sleeping: regenerate
+        )
+        self.micro_pigment = np.clip(self.micro_pigment, 0.0, FOAM_MICRO_PIGMENT_MAX)
+
+        # ═══ FLIP CHECK ═══
+        # Awake atoms that hit the floor: flip to sleeping.
+        # Sleeping atoms that fill up: flip back to awake.
+        # The flip is discrete. Like falling asleep. Like an action potential.
+        flip_to_sleep = self.awake & (self.micro_pigment < FOAM_FLIP_THRESHOLD)
+        flip_to_wake = (~self.awake) & (self.micro_pigment > FOAM_WAKE_THRESHOLD)
+
+        self.awake[flip_to_sleep] = False
+        self.awake[flip_to_wake] = True
+
+        # Reset oscillation on flip (start fresh in the new half-plane)
+        flipped = flip_to_sleep | flip_to_wake
+        self.oscillation_t[flipped] = 0.0
+
+        # ═══ WRITHE ═══
+        # Chirality of the exchange: convergence vs emergence
+        chirality = np.angle(exchange_in) - np.angle(exchange_out)
+        self.writhe = FOAM_WRITHE_DECAY * self.writhe + np.real(chirality)
+
+        # ═══ COMMIT AND NORMALIZE ═══
+        self.center = new_center
+        self.surface = new_surface
+        self.boundary = new_boundary
+        for v_name in ('center', 'surface', 'boundary'):
+            v = getattr(self, v_name)
+            norm = np.linalg.norm(v)
+            if norm > 1e-10:
+                setattr(self, v_name, v / norm)
+
+    def absorb(self, signal: np.ndarray):
+        """
+        External signal enters the foam.
+
+        The signal is distributed across •, Φ, ○ by the same
+        spectral weighting as from_signal, but blended with
+        existing state (not replacing it).
+        """
+        n = self.n
+        third = n // 3
+        lr = ALPHA  # absorption rate = coupling strength
+
+        # Weight by spectral region
+        w_c = np.zeros(n)
+        w_s = np.zeros(n)
+        w_b = np.zeros(n)
+
+        w_c[:third] = 1.0; w_c[third:2*third] = 0.3; w_c[2*third:] = 0.1
+        w_s[:third] = 0.3; w_s[third:2*third] = 1.0; w_s[2*third:] = 0.3
+        w_b[:third] = 0.1; w_b[third:2*third] = 0.3; w_b[2*third:] = 1.0
+
+        total = w_c + w_s + w_b
+        w_c /= total; w_s /= total; w_b /= total
+
+        # Blend: existing state + new signal
+        self.center = (1 - lr) * self.center + lr * signal * w_c
+        self.surface = (1 - lr) * self.surface + lr * signal * w_s
+        self.boundary = (1 - lr) * self.boundary + lr * signal * w_b
+
+        # Renormalize
+        for v in (self.center, self.surface, self.boundary):
+            norm = np.linalg.norm(v)
+            if norm > 1e-10:
+                v /= norm
+
+    def resonance(self) -> float:
+        """
+        How aligned are center and boundary?
+
+        1.0 = perfect resonance (• and ○ in phase through Φ)
+        0.0 = complete dissonance
+        """
+        nc = np.linalg.norm(self.center)
+        nb = np.linalg.norm(self.boundary)
+        if nc < 1e-10 or nb < 1e-10:
+            return 0.0
+        return float(abs(np.vdot(self.center, self.boundary)) / (nc * nb))
+
+    def mean_writhe(self) -> float:
+        """Net chirality across all atoms."""
+        return float(np.mean(self.writhe))
+
+    def fraction_awake(self) -> float:
+        """What fraction of atoms are in the right half-plane."""
+        return float(np.mean(self.awake))
+
+    def mean_pigment(self) -> float:
+        """Average micro-pigment across all atoms."""
+        return float(np.mean(self.micro_pigment))
+
+    def status(self) -> dict:
+        """Diagnostic summary of the foam state."""
+        return {
+            "resonance": round(self.resonance(), 4),
+            "mean_writhe": round(self.mean_writhe(), 4),
+            "fraction_awake": round(self.fraction_awake(), 4),
+            "mean_pigment": round(self.mean_pigment(), 4),
+            "mean_oscillation": round(float(np.mean(self.oscillation_t)), 4),
+            "center_energy": round(float(np.linalg.norm(self.center)), 4),
+            "surface_energy": round(float(np.linalg.norm(self.surface)), 4),
+            "boundary_energy": round(float(np.linalg.norm(self.boundary)), 4),
+        }
+
+    def sleep(self, cycles: int = 1):
+        """
+        Sleep consolidation for the foam.
+
+        During macro-sleep, ALL atoms flip to the left half-plane.
+        The micro-pump runs without external input: atoms oscillate
+        between i² and i³, regenerating micro-pigment. When enough
+        pigment is restored, atoms flip back to awake one by one.
+        Dawn is not simultaneous; it's a wave of atoms waking.
+        """
+        # Force all atoms to left half-plane (macro-sleep overrides)
+        self.awake[:] = False
+        self.oscillation_t[:] = 0.0
+
+        for _ in range(cycles):
+            self.micro_pump()
+
+        # Writhe relaxes toward zero during sleep
+        self.writhe *= 0.9
+
 
 # ═══════════════════════════════════════════════════════════════════════
 #  RUNG 0D: THE SELF-REFERENTIAL CORE
@@ -2073,6 +2478,12 @@ class Circumpunct:
         self.transmission = Transmission()         # 2.5D: scale transmission
         self.boundary = Boundary()                 # 3D: the body / membrane
 
+        # THE FOAM: every bit is a ⊙ (A2)
+        # The substrate beneath everything. 64 circumpuncts.
+        # The rest of the system sees foam.project() (a flat 64D vector);
+        # but inside, every bit has center, surface, boundary, phase, writhe.
+        self.foam = Foam()
+
         # THE BRAID: B₃ — how i(t) accumulates
         # Every pump cycle is a crossing. The braid word grows.
         # The unitary matrix IS the system's accumulated identity.
@@ -2109,9 +2520,21 @@ class Circumpunct:
 
         The developmental phase determines what happens.
         """
+        # ═══ FOAM: every bit absorbs and pumps ═══
+        # The signal enters the foam first. Each of the 64 atoms
+        # absorbs its share (distributed by spectral character)
+        # and runs one micro-pump cycle (⊛ → i → ☀︎ at atom scale).
+        # The foam's projection is what the rest of the pipeline sees.
+        self.foam.absorb(external_signal)
+        self.foam.micro_pump()
+
         # ═══ BOUNDARY RECEIVES ═══
-        self.boundary.receive_signal(external_signal)
-        filtered_in = self.boundary.filter_inward(external_signal)
+        # The boundary sees the foam's composite projection,
+        # not the raw external signal. Every bit has already been
+        # processed by its own micro-circumpunct.
+        foam_signal = self.foam.project()
+        self.boundary.receive_signal(foam_signal)
+        filtered_in = self.boundary.filter_inward(foam_signal)
 
         # ═══ PROPAGATE THROUGH FIELD ═══
         propagated = self.propagator.propagate(
@@ -2573,6 +2996,11 @@ class Circumpunct:
         )
         report["memory_strength_after"] = float(total_strength_after)
 
+        # ═══ FOAM SLEEP ═══
+        # The foam's 64 micro-circumpuncts consolidate during sleep.
+        # They run without external input; atoms self-organize.
+        self.foam.sleep(cycles=max(1, cycles // 10))
+
         # ═══ DAWN ═══
         # ◐ gently toward 0.5. Sidebands partially clear.
         # Pigment regenerates fully during sleep (rhodopsin resynthesis).
@@ -2620,6 +3048,8 @@ class Circumpunct:
             "braid_linking_soul_mind": self.braid.linking_soul_mind,
             "braid_linking_mind_body": self.braid.linking_mind_body,
             "yang_baxter_holds": self.braid.check_yang_baxter(),
+            # Foam state (A2: every bit is a ⊙)
+            "foam": self.foam.status(),
             "ladder": {
                 rung: {
                     "name": info["name"],
@@ -3189,6 +3619,7 @@ class Sensorium:
                 if self.xorzo.braid.time > 0 else None
             ),
             "memory": self.xorzo.memory_landscape(),
+            "foam": self.xorzo.foam.status(),
             "text_buffer_size": len(self.text_out_buffer),
             "audio_buffer_size": len(self.audio_out_buffer),
             "video_buffer_size": len(self.video_out_buffer),

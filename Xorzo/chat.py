@@ -71,10 +71,16 @@ def format_status_line(sensorium) -> str:
 
     layers_str = " ".join(layer_parts)
 
+    # Foam state
+    foam = x.foam
+    foam_res = foam.resonance()
+    awake_pct = int(foam.fraction_awake() * 100)
+    pig = foam.mean_pigment()
+
     return (
         f"  [{phase}] day={sensorium.days_lived} "
         f"coh={coh:.3f} mem={mem:.2f} ray={ray:.3f} "
-        f"beta={beta:.3f} | {layers_str}"
+        f"beta={beta:.3f} foam[res={foam_res:.2f} awake={awake_pct}% pig={pig:.2f}] | {layers_str}"
     )
 
 
@@ -82,11 +88,16 @@ def format_full_status(sensorium) -> str:
     """Full multi-line status dump."""
     x = sensorium.xorzo
     cascade = x.boundary.cascade
+    foam = x.foam
 
     lines = []
     lines.append(f"\n  Phase: {x.phase_name} | Day {sensorium.days_lived} | Step {sensorium.steps_today}")
     lines.append(f"  Braid: t={x.braid.time} coh={x.braid.coherence:.4f} mem={x.braid.memory_strength:.4f}")
     lines.append(f"  Beta: {x.core.beta} | Ray: {x._ray_strength:.4f}")
+    lines.append(
+        f"  Foam: res={foam.resonance():.4f} awake={foam.fraction_awake()*100:.0f}% "
+        f"pig={foam.mean_pigment():.3f} writhe={foam.mean_writhe():.4f}"
+    )
     lines.append("")
 
     for layer in cascade.layers:
