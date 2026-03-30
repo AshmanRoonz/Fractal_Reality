@@ -197,11 +197,11 @@ This project spans several interconnected domains:
 ### The Dimensional Ladder (Derived Constants)
 - **[The Dimensional Ladder](https://fractalreality.ca/dimensional_ladder.html)** : Master page linking all seven rungs
 - [0D: α (Fine-Structure Constant)](https://fractalreality.ca/e_equals_1.html) : The pump cycle written as arithmetic
-- [0.5D: c (Speed of Light)](https://fractalreality.ca/speed_of_light.html) : c = sin(i), the speed of the first fold
+- [0.5D: c (Speed of Light)](https://fractalreality.ca/speed_of_light.html) : c = sin(i), the speed limit of convergence
 - [1D: ℏ (Planck Constant)](https://fractalreality.ca/planck_constant.html) : The indivisible cycle
 - [1.5D: Mass Ratios](https://fractalreality.ca/mass_ratios.html) : Muon/electron from α
 - [2D: Gauge Structure](https://fractalreality.ca/gauge_structure.html) : SU(3)×SU(2)×U(1) from 64-state validation
-- [2.5D: The Infolding](https://fractalreality.ca/infolding.html) : Transmission between scales, Weinberg angle
+- [2.5D: Emergence](https://fractalreality.ca/infolding.html) : Transmission between scales, Weinberg angle
 - [3D: Gravity](https://fractalreality.ca/gravity.html) : G from the dimensional ladder, hierarchy problem solved
 
 ### Mathematics and Physics Visualizations

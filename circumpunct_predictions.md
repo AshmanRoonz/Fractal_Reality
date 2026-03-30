@@ -56,7 +56,7 @@ The formula is a quadratic: x² - (360/φ² - 2/φ³)x - 3/59 = 0. The positive 
 
 ## Rung 0.5D: c (The Speed of Light)
 
-**What it is:** The speed of the first fold. The photon is the minimum fold: purely rotational, nothing held as mass.
+**What it is:** The speed limit of convergent propagation. The photon is the minimum fold: purely rotational, nothing held as mass.
 
 **Formula:**
 

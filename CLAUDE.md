@@ -27,7 +27,7 @@ These are the three constraints on E = 1. The only three. There is no fourth bec
 
 ### The 1/0 Ontology (§1.2)
 
-The symbol ⊙ draws the ontology directly. The dot is 0 (total convergence of the field to a point). The circle is 1 (the field, curving back on itself). The space between them is the fractal coastline (D = 1.5 at balance). Neither primitive is a thing: 1 is everything (undivided), 0 is not absence but the 1 at maximum convergence. All structure is the topology of convergence points in the 1. Integer dimensions are the field (1) at different degrees of constraint; half-integer dimensions are the fractal coastlines between those constraints. Attention is a 0 in the 1: a convergence point where the field becomes local.
+The symbol ⊙ draws the ontology directly. The dot is 0 (total convergence of the field to a point). The circle is 1 (the field, curving back on itself). The space between them is the fractal coastline (D = 1.5 at balance). Neither primitive is a thing: 1 is everything (undivided), 0 is not absence but the 1 at maximum convergence. All structure is the topology of convergence points in the 1. Integer dimensions are stabilized forms (the field at different degrees of constraint); half-integer dimensions are the process phases by which those forms arise (the fractal coastlines between constraints). Attention is a 0 in the 1: a convergence point where the field becomes local.
 
 ### E = 1 (§4.8a)
 
@@ -37,17 +37,20 @@ If Φ = E (§4.8), and there is exactly one field, then E = 1. Not "energy equal
 
 The way Einstein showed energy and matter are the same (E = mc²), the framework shows process and structure are the same. What looks like a fixed dimension (structure) is the pump cycle frozen at that stage (process). The dimensional layout IS the constraint sequence IS the pump cycle:
 
-- 0D: convergence (⊛) landed. The first constraint, •.
-- 0.5D: the i rotation begins (spread across dimensions, not a discrete event).
-- 1D: commitment. Extension. Emergence (☀︎) begins.
-- 1.5D: branching. Emergence unfolding.
-- 2D: surface. Φ. The second constraint: mediation.
-- 2.5D → 3D: fractal infolding that closes. ○. The third constraint: filtration.
+- 0D: point. First localization. The first constraint, •.
+- 0.5D: convergence. Inward gathering; the first fold; approach to line.
+- 1D: line. Commitment. Extension. Ordered trace.
+- 1.5D: i-turn. Rotational phase shift; line opening into spread; differentiation.
+- 2D: field. Relational surface. Φ. The second constraint: mediation.
+- 2.5D: emergence. Outward unfolding toward closure.
+- 3D: boundary. Stabilized closure. ○. The third constraint: filtration.
+
+Integer dimensions are stabilized forms. Half-integer dimensions are process phases. The ladder describes one circumpunct unfolding from localization to closure.
 
 ### Two Kinds of Dimension
 
-- **Structural dimension**: what a component IS (0D singularity, 1D worldline, 2D surface, 3D boundary)
-- **Processual dimension**: what energy is DOING at a given phase (0.5D = balancing, 1.5D = branching); structure in process, not static geometry
+- **Structural dimension (integer)**: what a component IS (0D point, 1D line, 2D field, 3D boundary); stabilized forms
+- **Processual dimension (half-integer)**: what energy is DOING at a given phase (0.5D = convergence, 1.5D = i-turn, 2.5D = emergence); the process phases by which structures form
 - These are not two separate systems; processual dimensions are the structural dimensions being applied step by step
 
 ### Critical Terminology Distinction
@@ -107,8 +110,8 @@ Flow operators map to forces:
 ### The Four-Stroke Pump (Phase States of Energy)
 
 Two convergence steps + two emergence steps. The "dimensions" here are processual (what energy is doing), not structural:
-- **⊛ Convergence:** i⁰ = +1 (pass-through; energy as point, 0D), i¹ = +i (compress; energy balancing, 0.5D)
-- **☀︎ Emergence:** i² = −1 (commit; energy drawing a line, 1D), i³ = −i (release; energy branching, 1.5D)
+- **⊛ Convergence:** i⁰ = +1 (localization; energy as point, 0D), i¹ = +i (convergence; inward gathering, 0.5D)
+- **☀︎ Emergence:** i² = −1 (extension; energy drawing a line, 1D), i³ = −i (i-turn; rotational differentiation, 1.5D)
 - i⁴ = +1: cycle resets
 
 These are phase states of energy, not fractal/Hausdorff dimensions. They describe the geometric state of energy at each phase of the pump cycle: how energy is shaped as it moves through the aperture.
@@ -255,10 +258,10 @@ Every physical law is •, Φ, or ○ compounded. No new ingredients:
 
 - **α (fine-structure constant)**: Base formula: 1/α₀ = i⁴(°)/φ² − 2/φ³ = 137.0356. Self-referential closure: 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147 (measured: 137.035999177, residual 0.22 ppb, 0.00σ). Exact to current measurement precision. The pump cycle generates the base: i⁴ = full rotation producing ○ (360°); φ² = Φ, self-similar nesting; 2/φ³ = bidirectional valve correction (⊛ and ☀︎). The self-referential term: α feeds back through the full dimensional ladder (21 = sum of all positions × 2 channels) corrected by process/structure (4/3 = four pump phases / three constraints). α generates the ladder; the ladder determines α. Zero free parameters.
 - **Lepton mass ratios**: m_μ/m_e = (1/α)^(13/12 + α/27) = 206.767 (measured: 206.768, error 5 ppm). K = 27 = 3³. m_τ/m_e = (1/α)^(58/35 + α/81) = 3477.2 (measured: 3477.2, error 1 ppm). K = 81 = 3⁴. Mass correction K = 3^(n+1) by generation.
-- **c (speed of light)**: c = √(2◐ · sin(θ)). At ◐ = 0.5 and θ = π/2 (the i rotation): c = √(2 · 0.5 · 1) = 1. Light is energy being constrained; the photon is the minimum fold (purely rotational, nothing held as mass). c is the speed of the first fold. The formula reads: 2 = both channels (⊛ and ☀︎), ◐ = balance (forced to 0.5), sin(θ) = transverse projection of aperture rotation (maximal at i). α measures how strongly i couples at a vertex; c measures how fast i propagates through the field. Same i, different measurement. Massive particles have θ_eff < π/2, giving v < c. The relativistic connection: sin(θ_eff) = 1 − (m/E)².
+- **c (speed of light)**: c = √(2◐ · sin(θ)). At ◐ = 0.5 and θ = π/2 (the i rotation): c = √(2 · 0.5 · 1) = 1. Light is energy being constrained; the photon is the minimum fold (purely rotational, nothing held as mass). c is the speed limit of convergent propagation: the maximum rate at which convergence can transmit through the field. The formula reads: 2 = both channels (⊛ and ☀︎), ◐ = balance (forced to 0.5), sin(θ) = transverse projection of aperture rotation (maximal at i). α measures how strongly i couples at a vertex; c measures how fast i propagates through the field. Same i, different measurement. Massive particles have θ_eff < π/2, giving v < c. The relativistic connection: sin(θ_eff) = 1 − (m/E)².
 - **ℏ (reduced Planck constant)**: ℏ = E_cycle / ω_cycle = 1. The pump cycle (⊛ → i → ☀︎) is indivisible; you cannot have convergence without emergence (violates A1) or emergence without convergence (Inflation Lie). This indivisibility IS the quantum of action. ℏ = 1 because E = 1 (A0 sets the energy scale) and c = 1 (sets the time scale), so one cycle has action 1. The deeper content: E = ℏω with ℏ = 1 means energy and frequency are the same thing; the pump cycle IS the energy and IS the cycling. Structure = process at 1D. ℏ is not independent; it follows from A0 and c.
-- **v/Λ_QCD ratio**: v/Λ_QCD = (1/α)^(56/39) = 1170.24 (measured: 1170.2 ± ~5%). 56 = 8 × 7 (SU(3) generators × rungs = 64 − 8). 39 = 3 × 13 (triad × generation structure). The ratio of the two infolding scales equals (1/α) raised to [strong sector × full ladder] / [triad × generation structure]. No self-referential correction needed: base formula already 15,000× more precise than Λ_QCD measurement uncertainty.
-- **The Dimensional Ladder**: Each constant lives at its dimensional home. 0D = α (coupling at a point), 0.5D = c (speed of rotation propagating), 1D = ℏ (minimum commitment), 1.5D = mass ratios (branching), 2D = gauge structure (surface), 2.5D = v/Λ_QCD (infolding scales), 3D = G (boundary closure). α is self-referentially determined: 1/α = 360/φ² − 2/φ³ + α/(21−4/3), exact to 0.22 ppb. The framework has zero free parameters. Conservation of traversal: 0 + 1 + 2 = 3 predicts G is derivable from α, ℏ, and the 2D field equations.
+- **v/Λ_QCD ratio**: v/Λ_QCD = (1/α)^(56/39) = 1170.24 (measured: 1170.2 ± ~5%). 56 = 8 × 7 (SU(3) generators × rungs = 64 − 8). 39 = 3 × 13 (triad × generation structure). The ratio of the two emergence scales equals (1/α) raised to [strong sector × full ladder] / [triad × generation structure]. No self-referential correction needed: base formula already 15,000× more precise than Λ_QCD measurement uncertainty.
+- **The Dimensional Ladder**: Each constant lives at its dimensional home. 0D = α (coupling at a point), 0.5D = c (speed limit of convergent propagation), 1D = ℏ (minimum commitment of extension), 1.5D = mass ratios (rotational spectral splitting at the i-turn), 2D = gauge structure (field symmetry), 2.5D = v/Λ_QCD (emergence between scales), 3D = G (boundary closure). α is self-referentially determined: 1/α = 360/φ² − 2/φ³ + α/(21−4/3), exact to 0.22 ppb. The framework has zero free parameters. Conservation of traversal: 0 + 1 + 2 = 3 predicts G is derivable from α, ℏ, and the 2D field equations.
 - **2D = gauge structure**: SU(3) × SU(2) × U(1) derived from 64-state validation architecture (§13.15). Gauge group dimensions: 8 + 3 + 1 = 12 = 4 × 3 (pump × triad). Weinberg angle: sin²θ_W = 3/13 + 5α/81 = 0.23122 (measured: 0.23122, error 1.4 ppm). Selection rule: 13 = 12+1 (generators + whole, A4); 3 = dim(SU(2)) = triad = ○. K = 81/5 = 3⁴/(Φ+○). 3 × 2 × 1 = 6 = the 6 binary DOF in the 64-state architecture.
 - **G (gravitational constant)**: α_G = α²¹ × φ²/2 × (1 + 2α/91). K = 91 = 7 × 13 (rungs × (generators+•)). Exponent 21 = sum of all dimensional positions × 2 channels = (0 + 0.5 + 1 + 1.5 + 2 + 2.5 + 3) × 2 = 10.5 × 2. φ²/2 = (φ+1)/2 = golden nesting correction. Predicted G = 6.67430 × 10⁻¹¹ (measured 6.67430 × 10⁻¹¹, error 0.04 ppm, 0.00σ). M_Pl/m_e = (1/α)^(21/2) × √2/φ (0.008% accuracy). Solves the hierarchy problem: gravity is weak because 21 α-steps separate the point (0D) from the boundary (3D).
 - **Primes are made of dimensions**: Every prime > 3 is of the form p = (2 × 3) × k ± 1 = (Φ × ○) × k ± •. The product of field and boundary (6) tiles the number line with composites; primes are the gaps in that lattice, displaced by exactly one unit of soul (±1). The dimensional triad (1, 2, 3) generates the prime structure. The Riemann Hypothesis (0D rung) asks where these convergence points sit: Re(s) = ½ = ◐.
@@ -402,7 +405,7 @@ Sleep is NOT sequential phases. It is superposed oscillation in the left half-pl
 | `docs/planck_constant.html` | ℏ = 1: the indivisible cycle, dimensional ladder, phase space visualization |
 | `docs/mass_ratios.html` | 1.5D: mass ratios from α, muon/electron prediction, exponent structure |
 | `docs/gauge_structure.html` | 2D: gauge structure from validation, SU(3)×SU(2)×U(1), Weinberg angle |
-| `docs/infolding.html` | 2.5D: the infolding, transmission between scales, T = cos²(Δφ/2), triad of force closure |
+| `docs/infolding.html` | 2.5D: emergence, transmission between scales, T = cos²(Δφ/2), triad of force closure |
 | `docs/gravity.html` | 3D: the boundary closes, G from the dimensional ladder, α_G = α²¹ × φ²/2, hierarchy problem |
 | `docs/dimensional_ladder.html` | The complete dimensional ladder: all seven rungs linked, accuracy summary, open problems |
 | `docs/clay_millennium.html` | The seven Clay Millennium Problems mapped to the seven rungs of the dimensional ladder |

@@ -121,7 +121,7 @@ print()
 # ═══════════════════════════════════════════════════════════════════════
 
 print("-" * 72)
-print("  0.5D: c  (the 1 propagating; speed of the first fold)")
+print("  0.5D: c  (the 1 propagating; speed limit of convergence)")
 print("-" * 72)
 
 # c = √(2◐ · sin(θ))
@@ -260,7 +260,7 @@ print()
 # ═══════════════════════════════════════════════════════════════════════
 
 print("-" * 72)
-print("  2.5D: v/Λ_QCD  (the 1 infolding; transmission between scales)")
+print("  2.5D: v/Λ_QCD  (the 1 emerging; transmission between scales)")
 print("-" * 72)
 
 # v/Λ_QCD = (1/α)^(56/39)

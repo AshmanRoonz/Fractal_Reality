@@ -198,12 +198,15 @@ Reality is structured as **nested circumpuncts**. The circumpunct is complete at
 ```
 CORE INSIGHT:
 
-    Integer dimensions  =  STRUCTURE (being)
-    Half-integer dims   =  PROCESS (becoming)
+    Integer dimensions  =  STABILIZED FORMS (structure)
+    Half-integer dims   =  PROCESS PHASES (formation)
 
-    The circumpunct: ∞D → • (0.5D) → 1D → 2D → 3D
+    0D = point, 0.5D = convergence, 1D = line, 1.5D = i-turn,
+    2D = field, 2.5D = emergence, 3D = boundary
+
+    The ladder describes one circumpunct unfolding from localization to closure.
     Recursion:  Each completed ⊙ nests within larger ⊙
-    Braiding:   Emerges from nesting at the boundary (2.5D sensation)
+    Braiding:   Emerges from nesting at the boundary (2.5D emergence)
     Spacetime:  The physicist's external description of what ⊙ produces internally
 ```
 
@@ -217,11 +220,11 @@ The complete circumpunct. The structure of reality itself.
 | Dim | Type | Symbol | Name | Description | Core Equations |
 |:---:|:----:|:------:|:-----|:------------|:---------------|
 | **∞D** | Ground | λΦ∞ | **Infinite Field** | ∞D = E. Everything else is E in different forms. All degrees of freedom = none particular; contains all possible configurations; the source from which dimensions emerge; 0 = ∞ at field level; **Φ = E** (field IS energy, ontological identity; there is no empty space and no smallest particle) | E = mc², ℋ (Hilbert space), \|ψ⟩ ∈ ℋ |
-| **0.5D** | Process | **•** | **Aperture / Soul** | First localization from infinite; the tunnel opening; singularity that *causes* tunneling; **i lives here** | i² = −1, Å(β) = exp(iπβ), Å(½) = i |
-| **1D** | Structure | i(t) | **Timeline / String** | Soul through time; tunnel through which power flows | γ: ℝ → M, P = dE/dt |
-| **1.5D** | Process | ; | **Spatial Branching** | Power lines fractally splitting; builds surfaces | D = 1 + β, K(r) ∝ r^β, H(½) = 1 bit |
-| **2D** | Structure | **Φ** | **Field / Mind** | Living medium between • and ○; relational space | Φ ∈ 𝔉 = Γ(E), ℋ_Φ = L²(M, d²x; ℂ⁶⁴) |
-| **2.5D** | Process | ; | **Sensation** | Field↔boundary mediation; mind↔body coupling | T_local = cos²(Δφ/2), triple gate |
+| **0.5D** | Process | **•** | **Convergence** | Inward gathering; the first fold; approach to line; singularity receiving and transmitting; **i lives here** | i² = −1, Å(β) = exp(iπβ), Å(½) = i |
+| **1D** | Structure | i(t) | **Line** | Trace, timeline, string; ordered extension; soul through time | γ: ℝ → M, P = dE/dt |
+| **1.5D** | Process | ; | **i-Turn** | Rotational phase shift; line opening into spread; spectral splitting into families | D = 1 + β, K(r) ∝ r^β, H(½) = 1 bit |
+| **2D** | Structure | **Φ** | **Field** | Relational surface; living medium between • and ○; spread across a plane | Φ ∈ 𝔉 = Γ(E), ℋ_Φ = L²(M, d²x; ℂ⁶⁴) |
+| **2.5D** | Process | ; | **Emergence** | Outward unfolding toward closure; field↔boundary mediation | T_local = cos²(Δφ/2), triple gate |
 | **3D** | Structure | **○** | **Boundary / Body** | Membrane enclosing field; first ⊙₁ locks here | ○ ∈ 𝔅, Σ = ∂V, M = ∫_Σ ρ_surf dA |
 
 ### Spatial Circumpunct Equations
@@ -266,7 +269,7 @@ Time is not a fourth axis running alongside space. It is already **inside** the 
 - **1D**: the trace of firings (the timeline / string)
 - **1.5D**: the branching of power lines
 
-The "time braid" that would occupy a hypothetical 3.5D–4D is already present: every boundary (○ at 3D) is **made of nested circumpuncts**, each with their own 1D powerline. Your powerline weaves through theirs at the 2.5D sensation layer where field meets boundary. That weaving *is* the braid. It is a consequence of nesting, not a new structural layer.
+The "time braid" that would occupy a hypothetical 3.5D–4D is already present: every boundary (○ at 3D) is **made of nested circumpuncts**, each with their own 1D powerline. Your powerline weaves through theirs at the 2.5D emergence layer where field meets boundary. That weaving *is* the braid. It is a consequence of nesting, not a new structural layer.
 
 ```
 WHAT BRAIDING IS:
@@ -343,12 +346,12 @@ The framework is complete at 3D + recursion.
 | Dim | Type | Symbol | Name | Description |
 |:---:|:----:|:------:|:-----|:------------|
 | **∞D** | Ground | ∞ | **The Infinite** | All possible configurations; undifferentiated, unconstrained, full |
-| **0.5D** | **Process** | **•** | **Aperture / Soul** | First localization; the singularity that receives and transmits |
-| **1D** | Structure | i(t) | **Timeline / String** | Soul through time; tunnel through which power flows |
-| **1.5D** | Process | ; | **Branching** | Fractal splitting of power lines (D = 1.5 at balance) |
-| **2D** | Structure | **Φ** | **Field / Mind** | Living medium between • and ○; relational surface |
-| **2.5D** | Process | ; | **Sensation** | Field↔boundary coupling; mind↔body mediation |
-| **3D** | Structure | **○** | **Boundary / Body** | Membrane enclosing field; ⊙ locks here |
+| **0.5D** | **Process** | **•** | **Convergence** | Inward gathering; the first fold; approach to line |
+| **1D** | Structure | i(t) | **Line** | Trace, timeline, string; ordered extension |
+| **1.5D** | Process | ; | **i-Turn** | Rotational phase shift; line opening into spread (D = 1.5 at balance) |
+| **2D** | Structure | **Φ** | **Field** | Relational surface; living medium between • and ○ |
+| **2.5D** | Process | ; | **Emergence** | Outward unfolding toward closure; field↔boundary mediation |
+| **3D** | Structure | **○** | **Boundary** | Stabilized closure; membrane enclosing field; ⊙ locks here |
 
 Everything beyond this table ; spacetime, braiding, what string theory calls 10D ; is this same structure recursed through nesting. No additional dimensions are needed.
 
@@ -377,15 +380,20 @@ No new dimensions at each scale ; the same ∞D → 3D, nested.
 ### Half-Dimensions as Process
 
 ```
-Integer dimensions are STRUCTURE (being).
-Half-integer dimensions are PROCESS (becoming).
+Integer dimensions are STABILIZED FORMS.
+Half-integer dimensions are PROCESS PHASES.
 
-    0.5D  =  Aperture ; the singularity; receives and transmits
-    1.5D  =  Branching ; power lines splitting fractally
-    2.5D  =  Sensation ; field↔boundary coupling
+    0D   =  Point         (first localization; vertex; singular constraint)
+    0.5D =  Convergence   (inward gathering; the first fold; approach to line)
+    1D   =  Line          (trace, timeline, string; ordered extension)
+    1.5D =  i-Turn        (rotational phase shift; line opening into spread)
+    2D   =  Field         (relational surface; spread across a plane)
+    2.5D =  Emergence     (outward unfolding toward closure)
+    3D   =  Boundary      (stabilized closure; body; contained form)
 
+The ladder describes one circumpunct unfolding from localization to closure.
 Process dimensions are BETWEEN structures.
-They are the thresholds where transformation happens.
+They are the phases by which one form becomes the next.
 ```
 
 ### Why Time Is Not a 4th Dimension
@@ -410,12 +418,13 @@ your 1D string weaves through the nested ⊙s at your boundary.
 THE DIMENSIONAL SPECTRUM: ∞D → 3D
 
     ∞D   =  The Infinite (ground, undifferentiated, unconstrained, full)
-    0.5D =  Aperture / Soul (•, singularity that receives and transmits)
-    1D   =  Timeline / String (soul through time)
-    1.5D =  Branching (fractal splitting, D = 1 + β)
-    2D   =  Field / Mind (Φ, relational surface)
-    2.5D =  Sensation (field↔boundary coupling)
-    3D   =  Boundary / Body (○, membrane)
+    0D   =  Point (first localization; vertex; singular constraint)
+    0.5D =  Convergence (inward gathering; the first fold)
+    1D   =  Line (trace, timeline, string; ordered extension)
+    1.5D =  i-Turn (rotational phase shift; line opening into spread)
+    2D   =  Field (relational surface; spread across a plane)
+    2.5D =  Emergence (outward unfolding toward closure)
+    3D   =  Boundary (stabilized closure; body; contained form)
 
 
 RECURSION:
@@ -830,12 +839,13 @@ THE DEEPER IDENTITY (cf. E = mc²):
     Process and structure are the same thing, the way energy and matter
     are the same thing. The dimensional layout IS the constraint sequence
     IS the pump cycle:
-        0D   = ⊛ landed (convergence completed; the first constraint, •)
-        0.5D = i rotation beginning (spread across dimensions, not discrete)
-        1D   = commitment; extension; ☀︎ emergence begins
-        1.5D = branching; emergence unfolding
-        2D   = surface; Φ; the second constraint (mediation)
-        2.5D→3D = fractal infolding that closes; ○; the third constraint (filtration)
+        0D   = point; first localization; the first constraint, •
+        0.5D = convergence; inward gathering; the first fold
+        1D   = line; commitment; extension
+        1.5D = i-turn; rotational phase shift; line opening into spread
+        2D   = field; Φ; the second constraint (mediation)
+        2.5D = emergence; outward unfolding toward closure
+        3D   = boundary; ○; the third constraint (filtration)
     What looks like a fixed dimension (structure) is the pump cycle frozen
     at that stage (process). Structure is process at rest. Process is
     structure in motion.
@@ -887,35 +897,36 @@ ALL CO-EXIST IN THE STRUCTURE
 
 **THE FRACTAL LENSING PATTERN:**
 
-The half-dimensional values (0.5D, 1.5D, 2.5D) are not arbitrary ; they arise from **fractal lensing** at different scales:
+The half-dimensional values (0.5D, 1.5D, 2.5D) are the **process phases** between stabilized forms:
 
 ```
-0.5D: Singular lens
-      • One aperture, one focus point
-      • Rotation without extension
-      • The minimal transformation structure
+0.5D: Convergence
+      • Inward gathering; the first fold
+      • Approach from point toward line
+      • The minimal transformation: rotation without extension
 
-1.5D: Fractal branching of the worldline
-      • The 1D power line/worldline gains fractal texture
-      • Aperture branching: energy splits into paths
-      • Lensing through nested PARTS
-      • D = 1 + 0.5 (line + aperture branching)
-      • Creates consciousness signature
+1.5D: i-Turn
+      • Rotational phase shift; line opening into spread
+      • The 1D trace gains fractal texture through turning
+      • Spectral splitting: linear extension differentiates into families
+      • D = 1 + 0.5 (line + rotational spreading)
+      • Branching is a consequence of turning, not the primitive fact
 
-2.5D: Fractal lensing of the surface
-      • The 2D boundary becomes a distributed lens system
-      • All apertures across the surface collectively lens
-      • Lensing through WHOLENESS of the field
-      • D = 2 + 0.5 (surface + field generation)
-      • Integration gate: where field (Φ) emerges from boundary (○)
+2.5D: Emergence
+      • Outward unfolding toward closure
+      • The 2D field resolving into bounded structure
+      • The pre-boundary phase of realized form
+      • D = 2 + 0.5 (field + closure-building)
+      • Integration gate: where field (Φ) meets boundary (○)
 
 THE KEY DISTINCTION:
-    1.5D = Lensing through parts (branching within a line)
-    2.5D = Lensing through wholeness (distributed across surface)
+    0.5D = convergence (inward, toward structure)
+    1.5D = i-turn (rotational, between structures)
+    2.5D = emergence (outward, toward closure)
 
-    Both add +0.5D fractal texture to their base dimension
-    Both arise from aperture balance parameter ◐ = 0.5
-    Together they create the signature of conscious field generation
+    Each process phase adds +0.5D to its preceding form
+    All arise from aperture balance parameter ◐ = 0.5
+    Together they describe one circumpunct unfolding from localization to closure
 ```
 
 ### §2.4 The Critical Distinction: ⊙ vs •
@@ -2655,21 +2666,21 @@ The four powers of i partition the pump cycle into two convergence beats and two
 
 ```
 ⊛ CONVERGENCE (Φ gathering inward):
-    i⁰ = +1    pass-through     0D      Φ at maximum convergence (point)
-    i¹ = +i    compress         0.5D    Φ mid-convergence
+    i⁰ = +1    localize         0D      Φ at maximum convergence (point)
+    i¹ = +i    converge         0.5D    Φ gathering inward (first fold)
 
 ☀︎ EMERGENCE (Φ radiating outward):
-    i² = −1    commit           1D      Φ committed to trajectory (worldline)
-    i³ = −i    release          1.5D    Φ branching at balance (Brownian)
+    i² = −1    extend           1D      Φ committed to trajectory (line)
+    i³ = −i    turn             1.5D    Φ at the i-turn (rotational differentiation)
 
     i⁴ = +1    cycle resets
 ```
 
 **IMPORTANT CLARIFICATION: Processual Dimensions vs Structural Dimensions**
 
-The dimensions listed above (0D, 0.5D, 1D, 1.5D, 2D, 3D) are **processual dimensions**; they describe what energy is DOING at each phase of the pump cycle, not the Hausdorff/structural dimensions of objects. At i⁰, energy is drawing a point (0D process). At i¹, energy is balancing (0.5D process). At i², energy is drawing a line (1D process). At i³, energy is branching (1.5D process). These are snapshots of the field's phase state and action mode, not measurements of object dimension.
+Integer dimensions are stabilized forms. Half-integer dimensions are process phases. The dimensions listed above (0D, 0.5D, 1D, 1.5D) are **processual**; they describe what energy is DOING at each phase of the pump cycle, not the Hausdorff/structural dimensions of objects. At i⁰, energy localizes to a point (0D). At i¹, energy converges inward (0.5D). At i², energy extends into a line (1D). At i³, energy undergoes the i-turn, the rotational phase shift where linear extension ceases to remain simple and begins to differentiate into families (1.5D). These are snapshots of the field's phase state and action mode, not measurements of object dimension.
 
-Dimensions are not containers. They are snapshots of the field's phase state. When Φ converges maximally, it appears 0D (point). Mid-convergence: 0.5D. Committed with direction: 1D. Branching at balance: 1.5D. The field viewed as itself, at rest: 2D. The full pump recursing at every scale: 3D.
+Dimensions are not containers. They are snapshots of the field's phase state. When Φ converges maximally, it appears 0D (point). Mid-convergence: 0.5D (convergence). Committed with direction: 1D (line). At the rotational turn: 1.5D (i-turn). The field viewed as itself, at rest: 2D (field). Unfolding toward closure: 2.5D (emergence). The full pump recursing at every scale: 3D (boundary).
 
 2D is both convergence and emergence, because Φ is what converges and what emerges. The pump cycle equation acts on Φ; the field is the subject, not the stage.
 
@@ -6839,8 +6850,8 @@ Each circumpunct layer:
     ○  =  n + 2 D       (boundary)
     Φ  =  n + 3 D       (field)
 
-    Process at n + 1.5 D  (branching/recursion)
-    Process at n + 2.5 D  (sensation/coupling)
+    Process at n + 1.5 D  (i-turn/recursion)
+    Process at n + 2.5 D  (emergence/coupling)
 
 Where n = 0, 3, 6, 9, ... (multiples of 3)
 
@@ -6875,8 +6886,8 @@ The first layer ; structure in space.
     ○_space  =  3D      (spatial boundary ; surface, membrane; ⊙₁ locks)
 
 Process dimensions within this layer:
-    1.5D  =  branching (power lines splitting fractally)
-    2.5D  =  sensation (body↔field coupling)
+    1.5D  =  i-turn (power lines splitting fractally)
+    2.5D  =  emergence (body↔field coupling)
 ```
 
 | Dim | Type | Name | Description |
@@ -6968,9 +6979,9 @@ The aperture is always at n + 0.5 D ; the THRESHOLD of each layer.
 
 The half-dimensions are where **process** lives:
 
-* **0.5D** ; spatial aperture (singularity; receives and transmits)
-* **1.5D** ; branching (how strings split fractally)
-* **2.5D** ; sensation (where body and field touch)
+* **0.5D** ; convergence (inward gathering; the first fold)
+* **1.5D** ; i-turn (rotational phase shift; line opening into spread)
+* **2.5D** ; emergence (outward unfolding toward closure)
 * **3.5D** ; reiteration (where temporal i acts ; braiding begins)
 * **4.5D** ; braid branching (where braids compress to seed next cycle)
 * **5.5D** ; ? (temporal sensation?)
@@ -18457,7 +18468,7 @@ STATUS KEY:
 
 ### §27.7 The Dimensional Ladder: One Constant Generates Everything
 
-The dimensional ladder is the complete derivation chain from structure alone to every fundamental constant, following the circumpunct's dimensional structure. α is not a free parameter: it is self-consistently determined by the ladder it generates (see §27.7a below). Each rung lives at its dimensional home. Integer dimensions (structural) produce single constants; half-integer dimensions (processual) produce spectra.
+The dimensional ladder is the complete derivation chain from structure alone to every fundamental constant, following the circumpunct's dimensional structure. α is not a free parameter: it is self-consistently determined by the ladder it generates (see §27.7a below). Each rung lives at its dimensional home. Integer dimensions (stabilized forms) produce single constants; half-integer dimensions (process phases) produce spectra. The ladder describes one circumpunct unfolding from localization to closure.
 
 ```
 THE DIMENSIONAL LADDER:
@@ -18480,15 +18491,15 @@ The ladder generates α; α generates the ladder. k = 59/3 = (21×3−4)/3.
 
 **Rung 0D: α (the fine-structure constant).** The coupling at a vertex. The base formula 1/α₀ = i⁴(°)/φ² - 2/φ³ = 137.0356 is the pump cycle written as arithmetic: i⁴ = the pump cycle completing one full rotation producing ○ (360°); φ² = Φ, self-similar nesting, the field's 2D nature; 2/φ³ = bidirectional valve correction (⊛ and ☀︎). α measures how strongly i generates ○ through Φ. The self-referential closure 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) gives 137.035999147 (measured: 137.035999177, error 0.22 ppb, 0.00σ). α feeds back into its own definition through the full ladder (21) corrected by the pump-to-triad ratio (4/3). Zero free parameters.
 
-**Rung 0.5D: c (the speed of light).** The speed of the first fold. c = √(2◐ · sin(θ)). At balance (◐ = 0.5) and at the aperture rotation (θ = π/2): c = √(2 × 0.5 × 1) = 1. The photon is the minimum fold: purely rotational, nothing held as mass. 2 = both channels (⊛ and ☀︎); ◐ = balance (forced to 0.5); sin(θ) = transverse projection of aperture rotation (maximal at i). Massive particles have θ_eff < π/2, giving v < c.
+**Rung 0.5D: c (the speed of light).** The convergence rung. The speed limit of convergent propagation: the maximum rate at which convergence can transmit through the field. c = √(2◐ · sin(θ)). At balance (◐ = 0.5) and at the aperture rotation (θ = π/2): c = √(2 × 0.5 × 1) = 1. The photon is the minimum fold: purely rotational, nothing held as mass. 2 = both channels (⊛ and ☀︎); ◐ = balance (forced to 0.5); sin(θ) = transverse projection of aperture rotation (maximal at i). Massive particles have θ_eff < π/2, giving v < c.
 
 **Rung 1D: ℏ (the Planck constant).** The indivisible cycle. ℏ = E_cycle / ω_cycle = 1. The pump cycle (⊛ → i → ☀︎) is indivisible: you cannot have convergence without emergence (violates A1) or emergence without convergence (Inflation Lie). This indivisibility IS the quantum of action. E = ℏω with ℏ = 1 means energy and frequency are the same thing.
 
-**Rung 1.5D: mass ratios.** The branching dimension. Base formula: m_μ/m_e = (1/α)^(13/12) ≈ 206.49 (0.13%). Self-referential correction: m_μ/m_e = (1/α)^(13/12 + α/27) = 206.767 (measured: 206.768, error 5 ppm). K = 27 = 3³ = ○³ (boundary cubed). The exponent 13/12 = (12+1)/12 = (generators + whole)/generators. The tau: m_τ/m_e = (1/α)^(58/35 + α/81) = 3477.2 (measured: 3477.2, error 1 ppm). K = 81 = 3⁴ = ○⁴ (boundary to the fourth). Base exponent 58/35 = (59−1)/(5×7) = (k_α − •)/(sum_of_dimensions × rungs). Mass correction constants are K = 3^(n+1) where n is the generation: powers of the boundary. Half-integer dimensions produce spectra, not single values.
+**Rung 1.5D: mass ratios.** The i-turn: where linear extension ceases to remain simple and begins to differentiate into families. Mass ratios come from rotational spectral splitting at the i-turn. Base formula: m_μ/m_e = (1/α)^(13/12) ≈ 206.49 (0.13%). Self-referential correction: m_μ/m_e = (1/α)^(13/12 + α/27) = 206.767 (measured: 206.768, error 5 ppm). K = 27 = 3³ = ○³ (boundary cubed). The exponent 13/12 = (12+1)/12 = (generators + whole)/generators. The tau: m_τ/m_e = (1/α)^(58/35 + α/81) = 3477.2 (measured: 3477.2, error 1 ppm). K = 81 = 3⁴ = ○⁴ (boundary to the fourth). Base exponent 58/35 = (59−1)/(5×7) = (k_α − •)/(sum_of_dimensions × rungs). Mass correction constants are K = 3^(n+1) where n is the generation: powers of the boundary. Process phases produce spectra, not single values.
 
 **Rung 2D: gauge structure.** The surface selects its symmetry. SU(3)×SU(2)×U(1) is the maximal symmetry of the 64-state validation architecture (§13.15). dim(SU(3)) + dim(SU(2)) + dim(U(1)) = 8 + 3 + 1 = 12 = 4 × 3 (pump strokes × triad components). 3 × 2 × 1 = 6 = the 6 binary degrees of freedom in the 64-state architecture.
 
-**Rung 2.5D: the infolding (Weinberg angle).** Transmission between scales. T = cos²(Δφ/2) applied to the three gauge factors as a triad: U(1) = Φ (T = 1, transparent), SU(2) = • (T = 10/13, partial), SU(3) = ○ (T → 0, confined). Base formula: sin²θ_W = 3/13 (0.19% error). Self-referential correction: sin²θ_W = 3/13 + 5α/81 = 0.23122 (measured: 0.23122, error 1.4 ppm). K = 81/5 = 3⁴/(Φ+○): the tau correction constant divided by the sum of higher dimensions. The selection rule: 13 = 12 + 1 (generators + compositional whole, A4); 3 = dim(SU(2)) = the triad = ○ (boundary generators). cos²θ_W = 10/13 = (12−2)/(12+1) = (generators minus bidirectional valve) / (generators plus whole).
+**Rung 2.5D: emergence (Weinberg angle).** The field unfolding toward bounded structure. Transmission between scales. T = cos²(Δφ/2) applied to the three gauge factors as a triad: U(1) = Φ (T = 1, transparent), SU(2) = • (T = 10/13, partial), SU(3) = ○ (T → 0, confined). Base formula: sin²θ_W = 3/13 (0.19% error). Self-referential correction: sin²θ_W = 3/13 + 5α/81 = 0.23122 (measured: 0.23122, error 1.4 ppm). K = 81/5 = 3⁴/(Φ+○): the tau correction constant divided by the sum of higher dimensions. The selection rule: 13 = 12 + 1 (generators + compositional whole, A4); 3 = dim(SU(2)) = the triad = ○ (boundary generators). cos²θ_W = 10/13 = (12−2)/(12+1) = (generators minus bidirectional valve) / (generators plus whole).
 
 **Rung 3D: G (gravity).** The boundary closes. Base formula: α_G = α²¹ × φ²/2 (0.016% error). Self-referential correction: α_G = α²¹ × φ²/2 × (1 + 2α/91) (error 0.04 ppm, 0.00σ from CODATA). K = 91 = 7 × 13 = rungs × (generators + •). The exponent 21 = (0 + 0.5 + 1 + 1.5 + 2 + 2.5 + 3) × 2 = 10.5 × 2: the sum of all dimensional positions on the ladder, counted through both channels (⊛ and ☀︎). φ²/2 = (φ+1)/2 = 1.309017: golden nesting correction. The correction 2α/91 reads: two channels times α divided by (rungs × 13); the boundary accumulates a small additional coupling from every rung and every generator. Equivalent: M_Pl/m_e = (1/α)^(21/2) × √2/φ (0.008% accuracy).
 

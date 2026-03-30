@@ -99,7 +99,7 @@ inv_alpha = 1.0 / alpha
 #   theta = pi/2 = the i rotation (quarter-turn)
 #
 # The photon is the minimum fold: purely rotational,
-# nothing held as mass. c is the speed of the first fold.
+# nothing held as mass. c is the speed limit of convergence.
 
 beta = 0.5
 theta = math.pi / 2.0

@@ -58,8 +58,8 @@ BALANCE = 0.5
 # Inner rings rotate slowly (convergent, stable).
 # Outer rings rotate fast (dynamic, boundary).
 # Rate = how many positions a ring shifts per unit of input energy.
-RING_NAMES = ['coupling', 'gradient', 'rhythm', 'harmony',
-              'texture', 'depth', 'pressure']
+RING_NAMES = ['point', 'convergence', 'line', 'i-turn',
+              'field', 'emergence', 'boundary']
 RING_POSITIONS = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
 
 # Nodes per ring. Inner rings have fewer nodes (convergent),
@@ -627,8 +627,8 @@ class CircumpunctGraph:
 
         # Junction A: how much passes from inner to outer?
         transmitted_a = self.junction_a.transfer(
-            self.inner_rings[-1],  # harmony (1.5D)
-            self.outer_rings[0],   # texture (2D)
+            self.inner_rings[-1],  # i-turn (1.5D)
+            self.outer_rings[0],   # field (2D)
             inner_energy
         )
 
@@ -639,8 +639,8 @@ class CircumpunctGraph:
 
         # Junction B: 3D wraps to 0D (the octave!)
         transmitted_b = self.junction_b.transfer(
-            self.outer_rings[-1],  # pressure (3D)
-            self.inner_rings[0],   # coupling (0D)
+            self.outer_rings[-1],  # boundary (3D)
+            self.inner_rings[0],   # point (0D)
             transmitted_a
         )
 
@@ -663,18 +663,18 @@ class CircumpunctGraph:
         #  UPDATE CORE AND SURFACE
         # ════════════════════════════════════════════
 
-        coupling_ring = self.rings[0]
-        pressure_ring = self.rings[-1]
+        point_ring = self.rings[0]       # 0D
+        boundary_ring = self.rings[-1]   # 3D
 
-        self.beta = 0.95 * self.beta + 0.05 * coupling_ring.coherence()
-        self.center_phase = coupling_ring.phase
+        self.beta = 0.95 * self.beta + 0.05 * point_ring.coherence()
+        self.center_phase = point_ring.phase
 
         if not self.has_center and self.total_cycles > 20:
             if self.beta > 0.1:
                 self.has_center = True
 
         # Surface: resonance between core (0D) and boundary (3D)
-        phase_diff = abs(coupling_ring.phase - pressure_ring.phase)
+        phase_diff = abs(point_ring.phase - boundary_ring.phase)
         phase_diff = min(phase_diff, 2 * np.pi - phase_diff)
         self.surface_resonance = float(np.cos(phase_diff / 2) ** 2)
 
@@ -1110,14 +1110,16 @@ class CircumpunctTransformer:
 
         self.buffer.extend(encoded)
         # Store raw chunks for the filter to work on.
-        # Partial chunks get padded with spaces (silence).
-        # Every byte of input deserves to be heard.
+        # Partial chunks get padded by cycling the message content
+        # (not silence). This keeps the energy signature of the
+        # actual message rather than biasing toward space-frequency.
         for i in range(0, len(encoded), self.chunk_size):
             chunk = encoded[i:i + self.chunk_size]
-            if len(chunk) < self.chunk_size:
-                # Pad short chunks: the message occupies the front,
-                # silence fills the rest. The boundary will filter both.
-                chunk = chunk + bytes([ord(' ')] * (self.chunk_size - len(chunk)))
+            if len(chunk) < self.chunk_size and len(chunk) > 0:
+                # Cycle the message to fill 64 bytes
+                repeats = (self.chunk_size // len(chunk)) + 1
+                padded = (chunk * repeats)[:self.chunk_size]
+                chunk = padded
             self.raw_chunks.append(chunk)
 
     def has_next(self) -> bool:
@@ -1129,14 +1131,16 @@ class CircumpunctTransformer:
         if not self.has_next():
             return None
 
-        # Take up to chunk_size bytes; pad if less
+        # Take up to chunk_size bytes; cycle if less
         end = min(self.position + self.chunk_size, len(self.buffer))
-        chunk = self.buffer[self.position:end]
+        chunk = list(self.buffer[self.position:end])
         self.position = end  # advance past what we consumed
 
-        # Pad short chunks to 64
-        if len(chunk) < self.chunk_size:
-            chunk = list(chunk) + [ord(' ')] * (self.chunk_size - len(chunk))
+        # Cycle short chunks to fill 64 (keeps the message's energy signature)
+        if len(chunk) < self.chunk_size and len(chunk) > 0:
+            original = chunk[:]
+            repeats = (self.chunk_size // len(original)) + 1
+            chunk = (original * repeats)[:self.chunk_size]
 
         magnitudes = np.array(chunk, dtype=np.float64) / 255.0
         phases = np.array(chunk, dtype=np.float64) * (2 * np.pi / 256)
@@ -1359,10 +1363,14 @@ class Sensorium:
         if self.total_steps % 10 == 0:
             self.memory.decay(rate=0.998)
 
-        # Adjust filter sensitivity based on maturity
-        # As the system accumulates experience, it becomes more selective
+        # Adjust filter sensitivity: driven by aperture_width.
+        # Wide aperture (searching, open) → low sensitivity (let more through).
+        # Narrow aperture (coherent, focused) → high sensitivity (selective).
+        # The aperture IS the gate; it controls both entry and exit.
+        # Range: aperture 0.05→0.95 maps to sensitivity 0.6→0.15
         if self.xorzo.has_center:
-            target = min(0.6, 0.3 + self.xorzo.beta * 0.3)
+            target = 0.6 - 0.5 * self.xorzo.aperture_width
+            target = np.clip(target, 0.1, 0.65)
             self.filter_sensitivity = 0.99 * self.filter_sensitivity + 0.01 * target
 
         self.steps_today += 1
