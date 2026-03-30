@@ -202,7 +202,7 @@ def chat():
     global sensorium, heartbeat
     data = request.json or {}
     message = data.get("message", "").strip()
-    steps = data.get("steps", 20)
+    steps = data.get("steps", 50)
 
     if not message:
         return jsonify({"error": "No message provided"}), 400
@@ -219,7 +219,11 @@ def chat():
                 # Feed the text
                 sensorium.feed_text(message)
 
-                # Run digestion steps, collecting output
+                # Phase 1: absorb input (process all queued chunks)
+                while sensorium.transformer.has_next():
+                    sensorium.step()
+
+                # Phase 2: generate response
                 for step_i in range(steps):
                     sensorium.step()
 
@@ -543,6 +547,12 @@ def _build_status():
             "effective_coupling": round(x.effective_coupling, 4),
             "ring_rates": [round(r.rate, 6) for r in x.rings],
         },
+        "vocabulary": {
+            "tokens": sensorium.vocabulary.vocab_size,
+            "total_seen": sensorium.vocabulary.total_tokens_seen,
+            "bigrams": len(sensorium.vocabulary.bigram_transitions),
+            "ready": sensorium.vocabulary.ready,
+        },
         "memory": {
             "chunks": sensorium.memory.size,
             "sensitivity": round(sensorium.filter_sensitivity, 3),
@@ -631,7 +641,17 @@ def main():
                     total += len(content)
                 print(f"  Fed {total:,} bytes from {len(txt_files)} files")
 
-        # Warmup
+        # Process all queued input (training data) first
+        train_steps = 0
+        while sensorium.transformer.has_next():
+            sensorium.step()
+            train_steps += 1
+        if train_steps > 0:
+            print(f"  Processed training data ({train_steps} steps)")
+            print(f"  Vocabulary: {sensorium.vocabulary.vocab_size} tokens, "
+                  f"{len(sensorium.vocabulary.bigram_transitions)} bigrams")
+
+        # Additional warmup
         if args.warmup > 0:
             print(f"  Warming up ({args.warmup} steps)...")
             for _ in range(args.warmup):
@@ -639,6 +659,9 @@ def main():
 
     # Flush any output from warmup/restore
     sensorium.get_text_output()
+    # Clear any pending seed from training data so the first
+    # user message seeds correctly (not from last training doc)
+    sensorium._pending_seed = None
 
     # Start heartbeat
     heartbeat = Heartbeat(sensorium, beats_per_second=args.bps)

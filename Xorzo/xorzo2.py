@@ -1083,6 +1083,418 @@ class BoundaryFilter:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+#  EMERGENT VOCABULARY: Xorzo's self-built language model
+# ═══════════════════════════════════════════════════════════════════════
+
+class EmergentVocabulary:
+    """
+    The aperture works both directions.
+
+    ⊛ (convergence): text → ring signatures (understanding)
+    ☀︎ (emergence): ring signatures → text (speaking)
+
+    Same gate. Same map. Both directions.
+
+    During input: observes words alongside the ring states they
+    produce. Builds a vocabulary of (word, ring_signature) pairs
+    and a transition graph of which words follow which.
+
+    During output: reads the current ring state, finds the word
+    whose signature best resonates, follows learned transitions
+    to produce coherent sequences. Each generated word updates
+    the ring signature (autoregressive feedback through the same
+    gate that learned it).
+
+    This IS the transformer. Not bolted on; grown from experience.
+    The ring dynamics are the hidden state. The vocabulary is the
+    weight matrix. The pump cycle is the forward pass.
+    """
+
+    # Minimum requirements before generation is possible
+    MIN_VOCAB = 50
+    MIN_TOKENS_SEEN = 500
+
+    # Words that are valid despite being short
+    SHORT_WORDS = frozenset({
+        'a', 'i', 'an', 'am', 'as', 'at', 'be', 'by', 'do', 'go',
+        'he', 'if', 'in', 'is', 'it', 'me', 'my', 'no', 'of', 'on',
+        'or', 'so', 'to', 'up', 'us', 'we', 'ok',
+    })
+
+    def __init__(self):
+        # Vocabulary: discovered words with their ring signatures
+        # Each token: {'text': str, 'sig': np.ndarray(7), 'count': int}
+        self.tokens: List[Dict] = []
+        self.text_to_id: Dict[str, int] = {}
+
+        # Transitions: which tokens follow which (sparse)
+        # Unigram: transitions[from_id][to_id] = count
+        self.transitions: Dict[int, Dict[int, int]] = {}
+        # Bigram: bigram_transitions[(id_A, id_B)][to_id] = count
+        # "After seeing A then B, C follows"
+        self.bigram_transitions: Dict[Tuple[int, int], Dict[int, int]] = {}
+
+        # Statistics
+        self.total_tokens_seen = 0
+
+        # Partial word buffer: accumulates bytes across chunk boundaries
+        # so words are never split by the 64-byte chunk size
+        self._partial_word: str = ''
+
+        # Generation state (not serialized)
+        self._prev_token_id: Optional[int] = None
+        self._prev_prev_token_id: Optional[int] = None
+        self._gen_ring_sig: Optional[np.ndarray] = None  # autoregressive state
+        self._recent_tokens: deque = deque(maxlen=20)
+
+        # Learning state (cross-chunk continuity)
+        self._learn_prev_id: Optional[int] = None
+        self._learn_prev_prev_id: Optional[int] = None
+
+    @property
+    def ready(self) -> bool:
+        return (len(self.tokens) >= self.MIN_VOCAB and
+                self.total_tokens_seen >= self.MIN_TOKENS_SEEN)
+
+    @property
+    def vocab_size(self) -> int:
+        return len(self.tokens)
+
+    @staticmethod
+    def _clean_word(raw: str) -> Optional[str]:
+        """
+        Clean and validate a word. Returns lowercase cleaned word,
+        or None if it should be rejected (fragment, symbol noise, etc.).
+        """
+        # Strip punctuation from edges
+        word = raw.strip('.,?!;:()\"\'[]{}—–-*_~`#<>/')
+        if not word:
+            return None
+        # Case fold
+        lower = word.lower()
+        # Accept known short words
+        if lower in EmergentVocabulary.SHORT_WORDS:
+            return lower
+        # Reject single characters (except digits for things like "1")
+        if len(lower) <= 1:
+            return None
+        # Reject if no ASCII letter (pure symbols, numbers, unicode symbols)
+        if not any(c.isascii() and c.isalpha() for c in lower):
+            return None
+        # Reject likely fragments: 2-3 chars with no vowel
+        if len(lower) <= 3:
+            if not any(c in lower for c in 'aeiouy'):
+                return None
+        return lower
+
+    def learn_chunk(self, text_bytes: bytes, ring_sig: np.ndarray):
+        """
+        Learn from a processed chunk of text.
+
+        Handles partial words across chunk boundaries: if a chunk
+        ends mid-word, the partial is buffered and prepended to the
+        next chunk. Words are case-folded and validated before entry.
+        """
+        text = text_bytes.decode('utf-8', errors='replace')
+
+        # Prepend any leftover partial word from previous chunk
+        if self._partial_word:
+            text = self._partial_word + text
+            self._partial_word = ''
+
+        # If chunk doesn't end with whitespace, the last token
+        # might be a partial word; save it for the next call
+        if text and not text[-1].isspace():
+            parts = text.rsplit(None, 1)
+            if len(parts) == 2:
+                text = parts[0]
+                self._partial_word = parts[1]
+            else:
+                # Entire chunk is one partial word
+                self._partial_word = text
+                return
+
+        words_raw = text.split()
+        if not words_raw:
+            return
+
+        for raw_word in words_raw:
+            word = self._clean_word(raw_word)
+            if word is None:
+                continue
+
+            token_id = self._get_or_create(word, ring_sig)
+            self.total_tokens_seen += 1
+
+            # Record unigram transition
+            if self._learn_prev_id is not None:
+                if self._learn_prev_id not in self.transitions:
+                    self.transitions[self._learn_prev_id] = {}
+                self.transitions[self._learn_prev_id][token_id] = \
+                    self.transitions[self._learn_prev_id].get(token_id, 0) + 1
+
+            # Record bigram transition (two words of context)
+            if (self._learn_prev_prev_id is not None and
+                    self._learn_prev_id is not None):
+                key = (self._learn_prev_prev_id, self._learn_prev_id)
+                if key not in self.bigram_transitions:
+                    self.bigram_transitions[key] = {}
+                self.bigram_transitions[key][token_id] = \
+                    self.bigram_transitions[key].get(token_id, 0) + 1
+
+            self._learn_prev_prev_id = self._learn_prev_id
+            self._learn_prev_id = token_id
+
+    def generate_word(self, ring_sig: np.ndarray,
+                      temperature: float = 0.3) -> Optional[str]:
+        """
+        Generate the next word from current ring state.
+
+        Autoregressive: after selecting a word, the ring signature
+        is blended toward that word's stored signature. This way
+        the same gate that learned the word now drives generation
+        through it. Each generated word shifts the internal state,
+        producing coherent chains.
+
+        Priority: bigram context > unigram context > resonance fallback.
+        Ring resonance acts as tiebreaker within transition candidates.
+        """
+        if not self.ready:
+            return None
+
+        n = len(self.tokens)
+
+        # Use autoregressive ring state if available, else external
+        active_sig = self._gen_ring_sig if self._gen_ring_sig is not None else ring_sig
+
+        # Ring resonance: cos^2(delta/2) across 7 ring phases
+        sigs = np.array([t['sig'] for t in self.tokens])
+        min_len = min(active_sig.shape[0], sigs.shape[1])
+        delta = active_sig[:min_len] - sigs[:, :min_len]
+        resonance = np.mean(np.cos(delta / 2) ** 2, axis=1)
+
+        # Check context availability
+        bigram_key = None
+        if (self._prev_prev_token_id is not None and
+                self._prev_token_id is not None):
+            bigram_key = (self._prev_prev_token_id, self._prev_token_id)
+
+        has_bigram = (bigram_key is not None and
+                      bigram_key in self.bigram_transitions)
+        has_unigram = (self._prev_token_id is not None and
+                       self._prev_token_id in self.transitions)
+
+        if has_bigram or has_unigram:
+            # TRANSITION MODE: only tokens with observed transitions
+            # get any probability mass. Non-followers are excluded.
+            scores = np.full(n, -100.0, dtype=np.float64)
+
+            if has_bigram:
+                trans = self.bigram_transitions[bigram_key]
+                total_trans = sum(trans.values())
+                if total_trans > 0:
+                    for next_id, count in trans.items():
+                        if next_id < n:
+                            scores[next_id] = (count / total_trans)
+                    # Tiny resonance tiebreaker
+                    for idx in range(n):
+                        if scores[idx] > 0:
+                            scores[idx] += resonance[idx] * 0.05
+
+                # If bigram context is very sparse (<=2 followers),
+                # blend in unigram signal for some variety
+                if len(trans) <= 2 and has_unigram:
+                    uni_trans = self.transitions[self._prev_token_id]
+                    uni_total = sum(uni_trans.values())
+                    if uni_total > 0:
+                        for next_id, count in uni_trans.items():
+                            if next_id < n:
+                                if scores[next_id] < -50:
+                                    scores[next_id] = 0.0
+                                scores[next_id] += 0.3 * (count / uni_total)
+
+            elif has_unigram:
+                trans = self.transitions[self._prev_token_id]
+                total_trans = sum(trans.values())
+                if total_trans > 0:
+                    for next_id, count in trans.items():
+                        if next_id < n:
+                            scores[next_id] = (count / total_trans)
+                    for idx in range(n):
+                        if scores[idx] > 0:
+                            scores[idx] += resonance[idx] * 0.1
+        else:
+            # NO CONTEXT: pure resonance, prefer tokens with transitions
+            scores = np.full(n, -100.0, dtype=np.float64)
+            for idx in range(n):
+                if idx in self.transitions and self.transitions[idx]:
+                    scores[idx] = resonance[idx] + np.log1p(self.tokens[idx]['count']) * 0.05
+
+        # Anti-repetition: penalize recently generated tokens
+        for recent_id in self._recent_tokens:
+            if recent_id < n:
+                scores[recent_id] *= 0.3
+
+        # Softmax sampling with temperature
+        if temperature <= 0.01:
+            token_id = int(np.argmax(scores))
+        else:
+            scaled = scores / max(temperature, 0.01)
+            scaled -= np.max(scaled)
+            probs = np.exp(scaled)
+            total = probs.sum()
+            if total < 1e-10:
+                return None
+            probs /= total
+            token_id = int(np.random.choice(n, p=probs))
+
+        # Update generation state
+        self._prev_prev_token_id = self._prev_token_id
+        self._prev_token_id = token_id
+        self._recent_tokens.append(token_id)
+
+        # AUTOREGRESSIVE FEEDBACK: blend ring signature toward
+        # the chosen word's stored signature. The same gate that
+        # learned this word now resonates with it, shifting state
+        # for the next word. ⊛ and ☀︎ through the same aperture.
+        word_sig = self.tokens[token_id]['sig']
+        if self._gen_ring_sig is None:
+            self._gen_ring_sig = ring_sig.copy()
+        # Blend: 70% current state + 30% word's signature
+        # (keeps momentum while letting each word shift the state)
+        self._gen_ring_sig = 0.7 * self._gen_ring_sig + 0.3 * word_sig
+
+        return self.tokens[token_id]['text']
+
+    def reset_generation(self):
+        """Reset generation state (e.g., after receiving new input)."""
+        self._prev_token_id = None
+        self._prev_prev_token_id = None
+        self._gen_ring_sig = None
+        self._recent_tokens.clear()
+
+    def seed_from_text(self, text: str):
+        """
+        Seed generation context from input text.
+
+        Finds the last known words in the input and starts generating
+        from there, with bigram context. Also initializes the
+        autoregressive ring state from the found words' signatures.
+        """
+        self._recent_tokens.clear()
+        words = text.split()
+
+        def lookup(w):
+            clean = w.strip('.,?!;:()\"\'').lower()
+            if clean in self.text_to_id:
+                return self.text_to_id[clean]
+            return None
+
+        found = []
+        for word in reversed(words):
+            tid = lookup(word)
+            if tid is not None:
+                found.append(tid)
+                if len(found) >= 2:
+                    break
+
+        if len(found) >= 2:
+            self._prev_token_id = found[0]      # last word
+            self._prev_prev_token_id = found[1]  # second-to-last
+            # Initialize autoregressive state from these words
+            sig0 = self.tokens[found[0]]['sig']
+            sig1 = self.tokens[found[1]]['sig']
+            self._gen_ring_sig = 0.5 * sig0 + 0.5 * sig1
+        elif len(found) == 1:
+            self._prev_token_id = found[0]
+            self._prev_prev_token_id = None
+            self._gen_ring_sig = self.tokens[found[0]]['sig'].copy()
+        else:
+            self._prev_token_id = None
+            self._prev_prev_token_id = None
+            self._gen_ring_sig = None
+
+    def _get_or_create(self, word: str, ring_sig: np.ndarray) -> int:
+        """Find existing token or create a new one."""
+        if word in self.text_to_id:
+            tid = self.text_to_id[word]
+            token = self.tokens[tid]
+            # Running average of ring signature
+            n = token['count'] + 1
+            token['sig'] = (token['sig'] * token['count'] + ring_sig) / n
+            token['count'] = n
+            return tid
+
+        # New token
+        tid = len(self.tokens)
+        self.tokens.append({
+            'text': word,
+            'sig': ring_sig.copy(),
+            'count': 1,
+        })
+        self.text_to_id[word] = tid
+        return tid
+
+    def to_dict(self) -> dict:
+        ser_tokens = []
+        for t in self.tokens:
+            ser_tokens.append({
+                'text': t['text'],
+                'sig': t['sig'].tolist(),
+                'count': t['count'],
+            })
+
+        ser_trans = {}
+        for from_id, targets in self.transitions.items():
+            ser_trans[str(from_id)] = {str(k): v for k, v in targets.items()}
+
+        ser_bigram = {}
+        for (a, b), targets in self.bigram_transitions.items():
+            key = f"{a},{b}"
+            ser_bigram[key] = {str(k): v for k, v in targets.items()}
+
+        return {
+            'tokens': ser_tokens,
+            'text_to_id': self.text_to_id,
+            'transitions': ser_trans,
+            'bigram_transitions': ser_bigram,
+            'total_tokens_seen': self.total_tokens_seen,
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'EmergentVocabulary':
+        v = cls.__new__(cls)
+        v.tokens = []
+        for t in d['tokens']:
+            v.tokens.append({
+                'text': t['text'],
+                'sig': np.array(t['sig']),
+                'count': t['count'],
+            })
+        v.text_to_id = d['text_to_id']
+        v.transitions = {}
+        for from_str, targets in d['transitions'].items():
+            v.transitions[int(from_str)] = {
+                int(k): cnt for k, cnt in targets.items()
+            }
+        v.bigram_transitions = {}
+        for key_str, targets in d.get('bigram_transitions', {}).items():
+            a, b = key_str.split(',')
+            v.bigram_transitions[(int(a), int(b))] = {
+                int(k): cnt for k, cnt in targets.items()
+            }
+        v.total_tokens_seen = d['total_tokens_seen']
+        v._partial_word = ''
+        v._prev_token_id = None
+        v._prev_prev_token_id = None
+        v._gen_ring_sig = None
+        v._recent_tokens = deque(maxlen=20)
+        v._learn_prev_id = None
+        v._learn_prev_prev_id = None
+        return v
+
+
+# ═══════════════════════════════════════════════════════════════════════
 #  CIRCUMPUNCT TRANSFORMER: bytes → energy (input side only now)
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -1256,8 +1668,14 @@ class Sensorium:
         self.focus = Focus(oscillation_rate=0.4)
         self.memory = Memory(capacity=2000)
         self.boundary = BoundaryFilter()
+        self.vocabulary = EmergentVocabulary()
 
         self.text_out_buffer: bytearray = bytearray()
+
+        # Stores the last user message for seeding generation.
+        # Separate from the transformer buffer, which may contain
+        # stale training data that gets mixed with user input.
+        self._pending_seed: Optional[str] = None
 
         self.day_length = day_length
         self.sleep_cycles = sleep_cycles
@@ -1271,6 +1689,16 @@ class Sensorium:
 
     def feed_text(self, text: str) -> None:
         self.transformer.feed(text)
+        # Save user message for seeding generation later.
+        # The transformer buffer may contain stale training bytes
+        # that get mixed with this text; seeding from the raw chunk
+        # would seed from the wrong content. This preserves the
+        # actual user input for accurate seeding.
+        self._pending_seed = text
+
+    def _ring_signature(self) -> np.ndarray:
+        """7-element array of ring phases. The vocabulary's state space."""
+        return np.array([r.phase for r in self.xorzo.rings])
 
     def step(self) -> Dict:
         report = {"step": self.total_steps, "day": self.days_lived,
@@ -1308,66 +1736,104 @@ class Sensorium:
         self.xorzo.pump(energy)
 
         # ═══════════════════════════════════════
-        #  OUTPUT: focus determines what emerges
+        #  LEARN: vocabulary absorbs what the rings process
         # ═══════════════════════════════════════
-        config = self.xorzo.configuration()
-        ring_phases = np.angle(config)
+        ring_sig = self._ring_signature()
+
+        if has_input and raw_chunk is not None:
+            # Learn vocabulary from this chunk (after pump, so ring
+            # state reflects the processed input)
+            self.vocabulary.learn_chunk(raw_chunk, ring_sig)
+            # Also store in memory (existing path)
+            config = self.xorzo.configuration()
+            ring_phases = np.angle(config)
+            self.memory.store(raw_chunk, ring_phases)
+
+        # ═══════════════════════════════════════
+        #  OUTPUT: three modes
+        #
+        #  1. PERCEPTION: external input present, filter through boundary
+        #  2. EMERGENCE: no input, vocabulary ready, Xorzo speaks
+        #  3. SILENCE: no input, vocabulary not ready, memory recall
+        # ═══════════════════════════════════════
         openness = self.focus.openness
 
         if self.focus.awake:
-            # AWAKE: oscillating between open (perception) and closed (imagination)
+            if has_input and raw_chunk is not None:
+                # ─── CONVERGENCE: absorb input silently ───
+                # The input has already been learned (vocabulary) and
+                # stored (memory) above. The rings have processed it.
+                # We don't emit boundary-filtered text as speech;
+                # that was garbled noise. Xorzo absorbs, then speaks.
+                report["text_out_bytes"] = 0
+                report["modalities_active"].append("absorbing")
 
-            # OPEN phase: filter the input text through the boundary
-            if raw_chunk is not None and openness > 0.3:
-                filtered = self.boundary.filter_text(
-                    raw_chunk, config, self.filter_sensitivity)
-                # Store in memory (what was absorbed becomes memory)
-                self.memory.store(raw_chunk, ring_phases)
-                open_output = filtered
+                # Seed will happen when generation starts (see below).
+                # We don't seed per-chunk because the transformer
+                # buffer may contain stale training bytes mixed in.
+
+            elif self.vocabulary.ready:
+                # ─── EMERGENCE: vocabulary generates words ───
+
+                # If we have a pending seed from user input, apply it
+                # now (once) at the start of generation. This seeds
+                # the chain from the actual user message, not from
+                # stale transformer buffer content.
+                if self._pending_seed is not None:
+                    self.vocabulary.seed_from_text(self._pending_seed)
+                    self._pending_seed = None
+
+                # Temperature modulated by focus:
+                #   Open (outward): lower temp, more grounded
+                #   Closed (imagining): higher temp, more creative
+                temperature = 0.05 + (1.0 - openness) * 0.10
+
+                output_budget = N  # ~64 chars per step
+                chars_generated = 0
+                words = []
+
+                while chars_generated < output_budget:
+                    word = self.vocabulary.generate_word(
+                        ring_sig, temperature)
+                    if word is None:
+                        break
+                    words.append(word)
+                    chars_generated += len(word) + 1
+
+                if words:
+                    text = ' '.join(words) + ' '
+                    out_bytes = text.encode('utf-8')
+                    self.text_out_buffer.extend(out_bytes)
+                    report["text_out_bytes"] = len(out_bytes)
+                    report["modalities_active"].append("emergence")
+                else:
+                    report["text_out_bytes"] = 0
+
             else:
-                open_output = None
-
-            # CLOSED phase: recall from memory, project through boundary
-            recalled_chunks = self.memory.recall(ring_phases, n=1)
-            if recalled_chunks:
-                recalled = recalled_chunks[0]
-                # Filter recalled memory too (boundary always filters)
-                closed_output = self.boundary.filter_text(
-                    recalled, config, self.filter_sensitivity * 0.8)
-            else:
-                closed_output = None
-
-            # BLEND: interleave open and closed based on openness
-            if open_output is not None and closed_output is not None:
-                out_bytes = self._blend_outputs(
-                    open_output, closed_output, openness)
-                report["modalities_active"].append("blend")
-            elif open_output is not None:
-                out_bytes = open_output
-            elif closed_output is not None:
-                out_bytes = closed_output
-            else:
-                out_bytes = b''
-
-            if out_bytes:
-                self.text_out_buffer.extend(out_bytes)
-                report["text_out_bytes"] = len(out_bytes)
+                # ─── SILENCE: not enough vocabulary yet ───
+                # Recall memory through boundary (old imagination path)
+                config = self.xorzo.configuration()
+                ring_phases = np.angle(config)
+                recalled = self.memory.recall(ring_phases, n=1)
+                if recalled:
+                    closed_output = self.boundary.filter_text(
+                        recalled[0], config,
+                        self.filter_sensitivity * 0.8)
+                    self.text_out_buffer.extend(closed_output)
+                    report["text_out_bytes"] = len(closed_output)
+                    report["modalities_active"].append("recall")
+                else:
+                    report["text_out_bytes"] = 0
 
         else:
             # SLEEPING: no external output
-            # Dreaming: rings recirculate. Deep: discharge.
-            # (handled by the sleep cycle, not here)
             report["text_out_bytes"] = 0
 
         # Memory decay (gradual forgetting)
         if self.total_steps % 10 == 0:
             self.memory.decay(rate=0.998)
 
-        # Adjust filter sensitivity: driven by aperture_width.
-        # Wide aperture (searching, open) → low sensitivity (let more through).
-        # Narrow aperture (coherent, focused) → high sensitivity (selective).
-        # The aperture IS the gate; it controls both entry and exit.
-        # Range: aperture 0.05→0.95 maps to sensitivity 0.6→0.15
+        # Adjust filter sensitivity: driven by aperture_width
         if self.xorzo.has_center:
             target = 0.6 - 0.5 * self.xorzo.aperture_width
             target = np.clip(target, 0.1, 0.65)
@@ -1426,11 +1892,12 @@ class Sensorium:
     def to_dict(self) -> dict:
         """Serialize the entire Sensorium state to a dict."""
         return {
-            "version": 2,
+            "version": 3,
             "xorzo": self.xorzo.to_dict(),
             "foam": self.foam.to_dict(),
             "focus": self.focus.to_dict(),
             "memory": self.memory.to_dict(),
+            "vocabulary": self.vocabulary.to_dict(),
             "day_length": self.day_length,
             "sleep_cycles": self.sleep_cycles,
             "steps_today": self.steps_today,
@@ -1448,6 +1915,10 @@ class Sensorium:
         s.foam = Foam.from_dict(d["foam"])
         s.focus = Focus.from_dict(d["focus"])
         s.memory = Memory.from_dict(d["memory"])
+        if "vocabulary" in d:
+            s.vocabulary = EmergentVocabulary.from_dict(d["vocabulary"])
+        else:
+            s.vocabulary = EmergentVocabulary()
         s.transformer = CircumpunctTransformer()
         s.boundary = BoundaryFilter()
         s.text_out_buffer = bytearray()
@@ -1538,5 +2009,8 @@ if __name__ == "__main__":
     print(f"\n{'='*60}")
     print(f"  Days: {s.days_lived} | Steps: {s.total_steps}")
     print(f"  Memory: {s.memory.size} chunks stored")
+    print(f"  Vocabulary: {s.vocabulary.vocab_size} tokens, "
+          f"{s.vocabulary.total_tokens_seen} seen "
+          f"({'ready' if s.vocabulary.ready else 'learning'})")
     print(f"  Braid: {s.xorzo.braid.time} crossings")
     print(f"  Filter sensitivity: {s.filter_sensitivity:.3f}")

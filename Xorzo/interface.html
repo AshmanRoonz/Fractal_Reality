@@ -422,6 +422,7 @@
         <div class="metric"><div class="ml">Ray</div><div class="mv" id="mRay">0</div></div>
         <div class="metric"><div class="ml">Focus</div><div class="mv" id="mFocus">?</div></div>
         <div class="metric"><div class="ml">Openness</div><div class="mv" id="mOpen">0</div></div>
+        <div class="metric"><div class="ml">Vocabulary</div><div class="mv" id="mVocab">0</div></div>
         <div class="metric"><div class="ml">Memory</div><div class="mv" id="mMemory">0</div></div>
         <div class="metric"><div class="ml">Sensitivity</div><div class="mv" id="mSensitivity">0</div></div>
         <div class="metric"><div class="ml">Surface</div><div class="mv" id="mSurface">0</div></div>
@@ -655,6 +656,13 @@ function updateStatus(s) {
     document.getElementById('hFocus').textContent = s.focus.quadrant || '?';
     document.getElementById('mFocus').textContent = s.focus.quadrant || '?';
     document.getElementById('mOpen').textContent = (s.focus.openness || 0).toFixed(2);
+  }
+
+  // Vocabulary
+  if (s.vocabulary) {
+    const vr = s.vocabulary.ready ? '' : ' (learning)';
+    document.getElementById('mVocab').textContent =
+      s.vocabulary.tokens + ' words, ' + s.vocabulary.bigrams + ' bigrams' + vr;
   }
 
   // Memory
