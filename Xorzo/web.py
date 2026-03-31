@@ -503,6 +503,10 @@ def _build_status():
             "identities": len(engine.memory.who),
             "who": dict(engine.memory.who),
         },
+        "contradictions": {
+            "propositions": len(engine.contradictions.propositions),
+        },
+        "cascade": engine.cascade.status(),
     }
 
 

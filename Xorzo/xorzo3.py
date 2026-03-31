@@ -842,46 +842,161 @@ class TemplateStore:
                             links[obj].append(subject)
         return links
 
+    def extract_relational_links(
+            self) -> Dict[str, List[Tuple[int, str, List[str]]]]:
+        """
+        Extract relational links beyond "X is Y": any shared term
+        across templates can serve as a bridge for composition.
+
+        Returns: {shared_term: [(template_idx, role, other_terms), ...]}
+        where role is 'subject', 'object', or 'other'; other_terms
+        are the content words at the same template position.
+
+        Causal/process verbs are flagged for transitive chaining.
+        These include: causes, produces, creates, leads, becomes,
+        generates, transforms, flows, emerges, gathers, radiates,
+        dissolves, filters, mediates (and many others).
+        """
+        # Causal/process verbs that can chain transitively
+        causal_verbs = frozenset({
+            'causes', 'produces', 'creates', 'leads', 'becomes',
+            'generates', 'transforms', 'flows', 'emerges', 'gathers',
+            'radiates', 'dissolves', 'filters', 'mediates', 'drives',
+            'births', 'spawns', 'forms', 'shapes', 'initiates',
+            'triggers', 'enables', 'results', 'derives', 'follows',
+            'compels', 'pushes', 'pulls', 'impels', 'animates',
+            'crystallizes', 'unfolds', 'unfurls', 'unfolds',
+        })
+
+        links: Dict[str, List[Tuple[int, str, List[str]]]] = {}
+
+        for tidx, template in enumerate(self.templates):
+            words = template.words
+            content_words = [
+                w for i, w in enumerate(words)
+                if template.slot_mask[i]
+            ]
+
+            # Find all content word positions and track their neighbors
+            for i, word in enumerate(words):
+                if template.slot_mask[i]:
+                    # This is a content word (slot)
+                    # Determine its role based on verbs in the template
+                    role = 'other'
+                    if i == 0 or (i > 0 and
+                                  words[i - 1] in {'is', 'was'}):
+                        role = 'subject'
+                    elif i > 0 and any(v in words[:i] for v in
+                                       causal_verbs):
+                        role = 'object'
+
+                    if word not in links:
+                        links[word] = []
+
+                    # Store: (template_idx, role, other content words)
+                    others = [
+                        c for c in content_words if c != word
+                    ]
+                    links[word].append((tidx, role, others))
+
+        return links
+
+    def extract_negations(self) -> set:
+        """
+        Extract negation patterns: "X is not Y", "X does not Y",
+        "not X", etc. Returns a set of blocked pairs: {(X, Y), ...}
+
+        Negation blocks substitution: if (X, Y) is in this set,
+        then "X is Y" cannot be used to substitute X for Y.
+        """
+        blocked: set = set()
+
+        for template in self.templates:
+            words = template.words
+            text = ' '.join(words)
+
+            # Pattern 1: "X is not Y" or "X was not Y"
+            for i in range(len(words) - 3):
+                if words[i + 1] in {'is', 'was'}:
+                    if i + 2 < len(words) and words[i + 2] == 'not':
+                        subject = words[i]
+                        if not self.vocab.is_structure_word(subject):
+                            # Find the object after "not"
+                            for j in range(i + 3, len(words)):
+                                obj = words[j]
+                                if not self.vocab.is_structure_word(obj):
+                                    blocked.add((subject, obj))
+                                    break
+
+            # Pattern 2: "not X" at the start or after a verb
+            for i in range(len(words) - 1):
+                if words[i] == 'not':
+                    word = words[i + 1]
+                    if not self.vocab.is_structure_word(word):
+                        # Block this word from being substituted
+                        # into identity links
+                        blocked.add(('*', word))
+
+            # Pattern 3: "X does not [verb]" (implicit negation of action)
+            for i in range(len(words) - 3):
+                if (words[i + 1] == 'does' and
+                        i + 2 < len(words) and
+                        words[i + 2] == 'not'):
+                    subject = words[i]
+                    if not self.vocab.is_structure_word(subject):
+                        # Block action verbs that follow
+                        for j in range(i + 3, len(words)):
+                            verb = words[j]
+                            if verb in {
+                                'causes', 'creates', 'flows',
+                                'mediates', 'filters', 'emerges'
+                            }:
+                                blocked.add((subject, verb))
+
+        return blocked
+
     def compose(self, gate: 'Gate',
                 max_new: int = 3) -> List[Template]:
         """
-        A4: Compose templates through shared terms.
+        A4: Compose templates through shared terms: identity, relational,
+        and causal chains.
 
-        Only composes through STRONG identity links:
-        "X is Y" where X and Y are both content words that
-        appear in the same structural role (both subjects,
-        or both objects). This prevents property-attribution
-        links from producing nonsense.
+        Three pathways through Φ:
 
-        The composition replaces Y with X in a DIFFERENT template
-        that contains Y. The result is a syllogistic derivation:
-            Premise A: "energy is the field"
-            Premise B: "the field mediates between center and boundary"
-            Derived:   "energy mediates between center and boundary"
+        1. IDENTITY: "X is Y" → substitute X for Y in other templates
+        2. RELATIONAL: "X does Y to Z" + "Z is W" → "X does Y to W"
+           Any shared term can serve as a bridge
+        3. CAUSAL: "X causes Y" + "Y causes Z" → transitive chain
 
-        This IS emergence at 2.5D: new structure crystallizing
-        from the field, constrained by the gate.
+        Respects NEGATION: (X, Y) in negation_index blocks X→Y
+        substitution.
+
+        All derivations validated through the gate (GOOD, RIGHT, TRUE).
+        Enforces max_new cap on output.
+
+        This is 2.5D emergence: new structure crystallizing from
+        the field through compositional unity (A4).
         """
-        links = self.extract_identity_links()
-        if not links:
+        # Extract all three link types
+        identity_links = self.extract_identity_links()
+        relational_links = self.extract_relational_links()
+        negations = self.extract_negations()
+
+        if not identity_links and not relational_links:
             return []
 
         derived = []
         existing_sources = {t.source for t in self.templates}
 
-        # Only use links where the target word is a NOUN-LIKE
-        # content word (appears as subject in other templates too).
-        # This filters out adjective/property links like
-        # "fundamental: [circumpunct, sentence]"
+        # ── Build noun targets for strong composition ──
+        # Only use links where the target word is NOUN-LIKE
+        # (appears as subject/object, not just an adjective).
+        # This filters out property-attribution links.
         noun_targets = set()
         for template in self.templates:
             words = template.words
             for i in range(len(words)):
-                if (not template.slot_mask[i]
-                        and not self.vocab.is_structure_word(words[i])):
-                    continue
                 # Content words that appear before "is" or after "the"
-                # are noun-like (subjects/objects)
                 if (i + 1 < len(words) and words[i + 1] == 'is'
                         and template.slot_mask[i]):
                     noun_targets.add(words[i])
@@ -889,8 +1004,10 @@ class TemplateStore:
                         and template.slot_mask[i]):
                     noun_targets.add(words[i])
 
-        # Shuffle to get variety across calls
-        target_items = list(links.items())
+        # ── IDENTITY COMPOSITION (original method) ──
+        # A4: part is whole at its scale (A2). "X is Y" composes
+        # X with Y through identity.
+        target_items = list(identity_links.items())
         np.random.shuffle(target_items)
 
         for target_word, subjects in target_items:
@@ -902,7 +1019,8 @@ class TemplateStore:
                 continue
 
             # Only use subjects that are also noun-like
-            valid_subjects = [s for s in subjects if s in noun_targets]
+            valid_subjects = [s for s in subjects
+                              if s in noun_targets]
             if not valid_subjects:
                 continue
 
@@ -927,38 +1045,156 @@ class TemplateStore:
                     if subject in words:
                         continue
 
+                    # Check negation: block if (subject, target_word)
+                    # is negated
+                    if (subject, target_word) in negations:
+                        continue
+                    if ('*', target_word) in negations:
+                        continue
+
                     new_words = [
                         subject if w == target_word else w
                         for w in words
                     ]
 
-                    new_source = ' '.join(new_words)
-                    if new_source in existing_sources:
-                        continue
-
-                    if not gate.good(new_words):
-                        continue
-
-                    # Require minimum RIGHT score (relational coherence)
-                    # to filter out grammatically valid but semantically
-                    # broken compositions
-                    right_score = gate.right(new_words)
-                    if right_score < 0.3:
-                        continue
-
-                    center = self.vocab.text_to_energy(new_source)
-                    if not gate.validate(new_words, center):
-                        continue
-
-                    # Genuinely derived sentence.
-                    self.learn_sentence(new_words)
-                    derived.append(self.templates[-1])
-                    existing_sources.add(new_source)
+                    if self._try_derive(
+                            new_words, gate, existing_sources):
+                        derived.append(self.templates[-1])
+                        existing_sources.add(' '.join(new_words))
 
                     if len(derived) >= max_new:
                         break
 
+        # ── RELATIONAL COMPOSITION (new) ──
+        # A2: fractals at every scale. A shared term between
+        # templates serves as a fractal bridge.
+        if len(derived) < max_new:
+            relational_items = list(relational_links.items())
+            np.random.shuffle(relational_items)
+
+            for shared_term, occurrences in relational_items:
+                if len(derived) >= max_new:
+                    break
+
+                # Find two templates that both mention shared_term
+                # but in different roles (subject vs object)
+                for i, (tidx1, role1, others1) in enumerate(occurrences):
+                    if len(derived) >= max_new:
+                        break
+                    for tidx2, role2, others2 in occurrences[i+1:]:
+                        if len(derived) >= max_new:
+                            break
+                        if tidx1 == tidx2:
+                            continue
+                        if role1 == role2:
+                            continue
+
+                        # Template1: X [verb] shared_term ...
+                        # Template2: shared_term [verb] Y ...
+                        # Derive: X [verb] Y
+                        template1 = self.templates[tidx1]
+                        template2 = self.templates[tidx2]
+
+                        # Try to build: (words from t1) with
+                        # (shared_term replaced by subject from t2)
+                        for other2 in others2[:2]:  # limit branching
+                            # Skip if substitute already in template
+                            # (prevents "X between Y and Y")
+                            if other2 in template1.words:
+                                continue
+
+                            new_words = [
+                                other2 if w == shared_term else w
+                                for w in template1.words
+                            ]
+
+                            # Block if negated
+                            if (other2, shared_term) in negations:
+                                continue
+
+                            if self._try_derive(
+                                    new_words, gate, existing_sources):
+                                derived.append(
+                                    self.templates[-1])
+                                existing_sources.add(
+                                    ' '.join(new_words))
+
+        # ── CAUSAL CHAIN COMPOSITION (new) ──
+        # A3: conservation of traversal. If A causes B and
+        # B causes C, then A transitively leads to C.
+        if len(derived) < max_new:
+            causal_verbs = {
+                'causes', 'produces', 'creates', 'leads',
+                'generates', 'transforms', 'flows', 'emerges',
+            }
+            # Build a causality graph
+            causes_graph: Dict[str, List[str]] = {}
+            for template in self.templates:
+                words = template.words
+                for i, verb in enumerate(words):
+                    if verb in causal_verbs and i > 0 and i + 1 <\
+                            len(words):
+                        subject = words[i - 1]
+                        obj = words[i + 1]
+                        if (not self.vocab.is_structure_word(subject) and
+                                not self.vocab.is_structure_word(obj)):
+                            if subject not in causes_graph:
+                                causes_graph[subject] = []
+                            if obj not in causes_graph[subject]:
+                                causes_graph[subject].append(obj)
+
+            # Chain through two-hop paths
+            for start, intermediates in causes_graph.items():
+                if len(derived) >= max_new:
+                    break
+                for intermediate in intermediates:
+                    if len(derived) >= max_new:
+                        break
+                    for end in causes_graph.get(intermediate, []):
+                        if start == end or end in self.templates:
+                            continue
+
+                        # Build: "start leads to end"
+                        # (simplified; could be more sophisticated)
+                        new_words = [
+                            start, 'leads', 'to', end
+                        ]
+                        if self._try_derive(
+                                new_words, gate, existing_sources):
+                            derived.append(
+                                self.templates[-1])
+                            existing_sources.add(
+                                ' '.join(new_words))
+
         return derived
+
+    def _try_derive(self, new_words: List[str], gate: 'Gate',
+                    existing_sources: set) -> bool:
+        """
+        Helper: attempt to derive and validate a new sentence.
+
+        Returns True if successfully derived and added to templates.
+        """
+        new_source = ' '.join(new_words)
+        if new_source in existing_sources:
+            return False
+
+        if not gate.good(new_words):
+            return False
+
+        # Require minimum RIGHT score (relational coherence).
+        # One incoherent adjacent pair tanks the whole derivation.
+        right_score = gate.right(new_words)
+        if right_score < 0.3:
+            return False
+
+        center = self.vocab.text_to_energy(new_source)
+        if not gate.validate(new_words, center):
+            return False
+
+        # Genuinely derived sentence.
+        self.learn_sentence(new_words)
+        return True
 
     def fill_template(self, template: Template,
                       center: np.ndarray,
@@ -1195,6 +1431,12 @@ class Gate:
         for i in range(len(words) - 1):
             if words[i] == words[i + 1]:
                 return False
+        # Reject non-adjacent repeated content words
+        # ("the field mediates between the boundary and the boundary")
+        content = [w for w in words
+                   if not self.vocab.is_structure_word(w)]
+        if len(content) != len(set(content)):
+            return False
         # Sentence must not end on a bare copula or preposition
         # (these are truncated fragments, not valid boundaries)
         bad_endings = {'is', 'are', 'was', 'were', 'be', 'at', 'in',
@@ -1277,6 +1519,290 @@ class Gate:
         if r < -0.1:
             return False
         return True
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  CONTRADICTION DETECTOR: TRUE (•) at the reasoning scale
+#
+#  The Gate blocks specific phrases. This detects logical contradiction
+#  in general: when something Xorzo is about to say conflicts with
+#  something it already knows. This is the TRUE pillar (convergence
+#  on what is real) operating at the sentence scale, not the word scale.
+#
+#  Dimensional mapping:
+#      0D: propositions (subject-predicate-object triples)
+#      1D: entailment chains (A implies B)
+#      2D: the knowledge field (how propositions relate)
+#      3D: contradiction boundary (where two propositions collide)
+#
+#  "Curiosity dissolves certainty." But contradiction dissolves
+#  confusion: it catches the system saying two incompatible things.
+# ═══════════════════════════════════════════════════════════════════════
+
+
+class Proposition:
+    """
+    A subject-predicate-object triple extracted from a sentence.
+
+    "the field mediates between center and boundary"
+    → Proposition(subject='field', predicate='mediates', objects=['center', 'boundary'], negated=False)
+
+    "the center is not the boundary"
+    → Proposition(subject='center', predicate='is', objects=['boundary'], negated=True)
+    """
+
+    def __init__(self, subject: str, predicate: str,
+                 objects: List[str], negated: bool = False,
+                 source: str = ''):
+        self.subject = subject
+        self.predicate = predicate
+        self.objects = objects
+        self.negated = negated
+        self.source = source
+
+    def __repr__(self):
+        neg = 'NOT ' if self.negated else ''
+        objs = ', '.join(self.objects)
+        return f"<{self.subject} {neg}{self.predicate} {objs}>"
+
+    def conflicts_with(self, other: 'Proposition') -> bool:
+        """
+        Two propositions conflict when they share subject and predicate
+        but one is negated and the other is not, OR when they make
+        incompatible identity claims.
+
+        "X is Y" conflicts with "X is not Y"
+        "X is Y" conflicts with "X is Z" only for identity predicates
+        (is, equals) where Y and Z are distinct triad terms.
+        """
+        if self.subject != other.subject:
+            return False
+        if self.predicate != other.predicate:
+            return False
+
+        # Direct negation conflict: same claim, one negated
+        if self.negated != other.negated:
+            if set(self.objects) & set(other.objects):
+                return True
+
+        # Identity conflict: "X is Y" vs "X is Z" where Y != Z
+        # Only for identity predicates, and only when both are
+        # triad terms (to avoid "X is big" vs "X is blue" conflicts)
+        if self.predicate == 'is' and not self.negated and not other.negated:
+            triad = {'center', 'field', 'boundary', 'aperture', 'soul',
+                     'surface', 'mind', 'body', 'convergence', 'emergence',
+                     'mediation'}
+            my_objs = set(self.objects) & triad
+            their_objs = set(other.objects) & triad
+            if my_objs and their_objs and my_objs != their_objs:
+                return True
+
+        return False
+
+
+class ContradictionDetector:
+    """
+    TRUE (•) at the reasoning scale.
+
+    Extracts propositions from sentences and checks new sentences
+    against the established knowledge base for contradictions.
+
+    The knowledge base accumulates from training text and from
+    established conversation facts. When a candidate sentence
+    contradicts something known, it gets flagged.
+
+    This is not omniscient logic; it catches the most common
+    contradiction patterns:
+    1. Direct negation: "X is Y" vs "X is not Y"
+    2. Triad violation: "the field is the boundary" (detected structurally)
+    3. Predicate conflict: "X causes Y" vs "X does not cause Y"
+    """
+
+    # Verbs that create propositional claims
+    CLAIM_VERBS = frozenset({
+        'is', 'are', 'was', 'were', 'equals',
+        'means', 'mediates', 'filters', 'connects',
+        'flows', 'emerges', 'gathers', 'radiates',
+        'causes', 'produces', 'creates', 'generates',
+        'requires', 'contains', 'becomes', 'dissolves',
+        'describes', 'defines', 'prevents', 'blocks',
+    })
+
+    def __init__(self):
+        self.propositions: List[Proposition] = []
+        self._prop_index: Dict[str, List[int]] = {}  # subject -> indices
+
+    def extract_proposition(self, words: List[str],
+                            source: str = '') -> Optional[Proposition]:
+        """
+        Extract a proposition from a word list.
+
+        Looks for subject-verb-object patterns.
+        Detects negation ("not", "never", "no").
+        """
+        if len(words) < 3:
+            return None
+
+        # Find the main verb
+        verb_idx = None
+        for i, w in enumerate(words):
+            if w in self.CLAIM_VERBS:
+                verb_idx = i
+                break
+
+        if verb_idx is None or verb_idx == 0:
+            return None
+
+        # Subject: content words before the verb
+        subject_words = [w for w in words[:verb_idx]
+                         if w not in ('the', 'a', 'an', 'every', 'each',
+                                      'all', 'this', 'that')]
+        if not subject_words:
+            return None
+        subject = subject_words[-1]  # last content word before verb
+
+        # Check for negation
+        negated = False
+        neg_words = {'not', 'never', 'no', "doesn't", "isn't", "aren't",
+                     "wasn't", "weren't", "don't", "doesnt", "isnt"}
+        for w in words[max(0, verb_idx - 1):verb_idx + 2]:
+            if w in neg_words:
+                negated = True
+                break
+
+        # Objects: content words after the verb (skip articles, prepositions)
+        skip = {'the', 'a', 'an', 'of', 'to', 'from', 'through',
+                'between', 'with', 'at', 'in', 'on', 'by', 'for',
+                'and', 'or', 'but', 'not', 'like', 'as'}
+        objects = [w for w in words[verb_idx + 1:] if w not in skip]
+
+        if not objects:
+            return None
+
+        predicate = words[verb_idx]
+
+        return Proposition(
+            subject=subject,
+            predicate=predicate,
+            objects=objects,
+            negated=negated,
+            source=source,
+        )
+
+    def learn(self, words: List[str], source: str = ''):
+        """
+        Extract and store a proposition from a sentence.
+        Called during training to build the knowledge base.
+        """
+        prop = self.extract_proposition(words, source)
+        if prop is None:
+            return
+
+        # Don't store duplicates
+        for existing in self.propositions:
+            if (existing.subject == prop.subject
+                    and existing.predicate == prop.predicate
+                    and set(existing.objects) == set(prop.objects)
+                    and existing.negated == prop.negated):
+                return
+
+        idx = len(self.propositions)
+        self.propositions.append(prop)
+
+        # Index by subject for fast lookup
+        if prop.subject not in self._prop_index:
+            self._prop_index[prop.subject] = []
+        self._prop_index[prop.subject].append(idx)
+
+    # Triad terms (§5A): these are the three irreducible components
+    # of the circumpunct. Equating any two via "is" is a structural
+    # violation, regardless of what the propositional index contains.
+    TRIAD = {'center', 'field', 'boundary', 'aperture', 'soul',
+             'surface', 'mind', 'body'}
+
+    # Which triad terms map to which component
+    TRIAD_GROUPS = {
+        'center': 0, 'aperture': 0, 'soul': 0,     # • (0D)
+        'field': 1, 'surface': 1, 'mind': 1,        # Φ (2D)
+        'boundary': 2, 'body': 2,                    # ○ (3D)
+    }
+
+    def check(self, words: List[str]) -> Optional[Proposition]:
+        """
+        Check a candidate sentence for contradiction with known propositions.
+
+        Returns the conflicting known proposition if found, None otherwise.
+        This is the TRUE gate at the reasoning scale.
+
+        Three checks:
+        1. Triad violation (§5A): "X is Y" where X and Y are distinct
+           triad components (structural, always wrong)
+        2. Propositional conflict: same subject, same predicate,
+           one negated and the other not
+        3. Identity conflict: same subject, "is" predicate, distinct
+           triad objects
+        """
+        candidate = self.extract_proposition(words)
+        if candidate is None:
+            return None
+
+        # ── Check 1: Triad structural violation (§5A) ──
+        # "the field is the boundary" equates Φ and ○; always false.
+        if candidate.predicate == 'is' and not candidate.negated:
+            subj_group = self.TRIAD_GROUPS.get(candidate.subject)
+            for obj in candidate.objects:
+                obj_group = self.TRIAD_GROUPS.get(obj)
+                if (subj_group is not None and obj_group is not None
+                        and subj_group != obj_group):
+                    # Structural violation: return a synthetic proposition
+                    return Proposition(
+                        subject=candidate.subject,
+                        predicate='is not',
+                        objects=[obj],
+                        negated=True,
+                        source='§5A: Surface ≠ Boundary ≠ Aperture',
+                    )
+
+        # ── Check 2+3: Propositional conflicts ──
+        indices = self._prop_index.get(candidate.subject, [])
+        for idx in indices:
+            known = self.propositions[idx]
+            if candidate.conflicts_with(known):
+                return known
+
+        return None
+
+    def to_dict(self) -> dict:
+        return {
+            'propositions': [
+                {
+                    'subject': p.subject,
+                    'predicate': p.predicate,
+                    'objects': p.objects,
+                    'negated': p.negated,
+                    'source': p.source,
+                }
+                for p in self.propositions
+            ]
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'ContradictionDetector':
+        cd = cls()
+        for pd in d.get('propositions', []):
+            prop = Proposition(
+                subject=pd['subject'],
+                predicate=pd['predicate'],
+                objects=pd['objects'],
+                negated=pd.get('negated', False),
+                source=pd.get('source', ''),
+            )
+            idx = len(cd.propositions)
+            cd.propositions.append(prop)
+            if prop.subject not in cd._prop_index:
+                cd._prop_index[prop.subject] = []
+            cd._prop_index[prop.subject].append(idx)
+        return cd
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -1605,6 +2131,376 @@ class ConversationMemory:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+#  SENSORY CASCADE: The seven layers of perception (§10.10a, A2)
+#
+#  Adapted from genesis.py for text processing. Each layer measures
+#  a different dimension of the input energy vector (64D complex).
+#  The cascade IS the rainbow: E = 1 decomposed through ○ into
+#  seven degrees of constraint.
+#
+#  Layer 0 (0D):   Coupling     - Does the signal interact?
+#  Layer 1 (0.5D): Gradient     - Which direction? Polarity.
+#  Layer 2 (1D):   Rhythm       - Is there periodicity? Beat?
+#  Layer 3 (1.5D): Harmony      - Do patterns combine? Branching.
+#  Layer 4 (2D):   Texture      - Surface structure? Field richness.
+#  Layer 5 (2.5D): Depth        - How do layers transmit? T = cos²(Δφ/2)
+#  Layer 6 (3D):   Pressure     - How hard does reality push? Boundary.
+#
+#  The cascade output modulates template selection during generation.
+# ═══════════════════════════════════════════════════════════════════════
+
+class SensoryChannel:
+    """
+    A receptor tuned to detect a specific feature in 64D energy.
+    Simplified from genesis.py Channel for text processing.
+
+    The channel measures a projection of the signal onto its carrier
+    (tuning vector). Adapted carriers shift toward strong signals
+    only during waking (not during sleep/consolidation).
+    """
+
+    def __init__(self, name: str, carrier: np.ndarray):
+        self.name = name
+        self.carrier = normalize(carrier)  # tuning vector; ω_c
+        self.activation = 0.0  # last response strength
+        self.lock_strength = 0.0  # how committed to carrier (0=open, 1=locked)
+        self.balance = BALANCE  # ◐; optimal at 0.5
+        self.state = np.zeros(N, dtype=complex)  # accumulated state
+
+    def respond(self, signal: np.ndarray) -> float:
+        """
+        Measure alignment between signal and carrier.
+        Returns activation strength (0 to 1).
+        """
+        # Carrier alignment: how well does signal match this channel's tuning?
+        projection = np.vdot(self.carrier, signal)
+        carrier_energy = abs(projection)
+        total_energy = np.sqrt(np.real(np.sum(np.conj(signal) * signal)))
+
+        if total_energy < 1e-10:
+            self.activation = 0.0
+            return 0.0
+
+        alignment = carrier_energy / total_energy
+
+        # Lock strengthens with consistency
+        if alignment > 0.6:
+            self.lock_strength = min(1.0, self.lock_strength + 0.01)
+        else:
+            self.lock_strength = max(0.0, self.lock_strength - 0.001)
+
+        # Activation combines alignment with lock
+        raw_activation = alignment * (1.0 + self.lock_strength)
+        self.activation = min(1.0, raw_activation)
+
+        # Update state (exponential moving average)
+        self.state = normalize(0.9 * self.state + 0.1 * signal)
+        return self.activation
+
+    def adapt(self, signal: np.ndarray):
+        """Shift carrier toward signal (only during waking)."""
+        if self.lock_strength < 0.2:
+            # Pre-lock: eager adaptation
+            self.carrier = normalize(
+                0.9 * self.carrier + 0.1 * normalize(signal)
+            )
+
+    def to_dict(self) -> dict:
+        return {
+            'carrier_real': self.carrier.real.tolist(),
+            'carrier_imag': self.carrier.imag.tolist(),
+            'lock_strength': float(self.lock_strength),
+            'activation': float(self.activation),
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict, name: str) -> 'SensoryChannel':
+        carrier = (np.array(d['carrier_real'])
+                   + 1j * np.array(d['carrier_imag']))
+        ch = cls(name, carrier)
+        ch.lock_strength = d.get('lock_strength', 0.0)
+        ch.activation = d.get('activation', 0.0)
+        return ch
+
+
+class SensoryLayer:
+    """
+    One rung of the sensory cascade; contains 2-3 channels.
+    Each layer measures a different structural dimension of the signal.
+
+    The layer combines channel outputs (weighted by their activations)
+    to produce the layer's output: a 64D energy vector that gets
+    passed up to the next layer.
+    """
+
+    LAYER_SPECS = {
+        0: {"name": "coupling", "rung": "0D", "role": "Does signal interact?"},
+        1: {"name": "gradient", "rung": "0.5D", "role": "Direction; polarity."},
+        2: {"name": "rhythm", "rung": "1D", "role": "Beat; periodicity."},
+        3: {"name": "harmony", "rung": "1.5D", "role": "Patterns combine?"},
+        4: {"name": "texture", "rung": "2D", "role": "Surface structure."},
+        5: {"name": "depth", "rung": "2.5D", "role": "Transmission; layers."},
+        6: {"name": "pressure", "rung": "3D", "role": "Reality push? Boundary."},
+    }
+
+    def __init__(self, layer_index: int):
+        spec = self.LAYER_SPECS[layer_index]
+        self.index = layer_index
+        self.name = spec["name"]
+        self.rung = spec["rung"]
+        self.role = spec["role"]
+
+        # Create carriers tuned to each layer's role (A2: fractal self-similarity)
+        self.channels: List[SensoryChannel] = []
+        self._init_channels()
+
+        self.state = np.zeros(N, dtype=complex)  # layer's current output
+        self.activation = 0.0  # mean channel activation
+        self.transmission_fidelity = 1.0  # T = cos²(Δφ/2) from previous layer
+
+    def _init_channels(self):
+        """Create channels tuned to specific features."""
+        if self.index == 0:
+            # Coupling: detect magnitude (pressure-like)
+            self.channels.append(
+                SensoryChannel("coupling_mag",
+                    np.ones(N, dtype=complex) / np.sqrt(N))
+            )
+            # Coupling: detect phase concentration
+            phases = np.linspace(0, 2*np.pi, N, endpoint=False)
+            self.channels.append(
+                SensoryChannel("coupling_phase",
+                    np.exp(1j * phases) / np.sqrt(N))
+            )
+
+        elif self.index == 1:
+            # Gradient: linear phase ramp (detects asymmetry)
+            phases = np.linspace(0, 2*np.pi, N, endpoint=False)
+            self.channels.append(
+                SensoryChannel("gradient_pos",
+                    np.exp(1j * phases) / np.sqrt(N))
+            )
+            self.channels.append(
+                SensoryChannel("gradient_neg",
+                    np.exp(-1j * phases) / np.sqrt(N))
+            )
+
+        elif self.index == 2:
+            # Rhythm: two periodic patterns (golden ratio spacing)
+            phases1 = np.array([2*np.pi*PHI*k for k in range(N)])
+            phases2 = np.array([2*np.pi*PHI*k/2 for k in range(N)])
+            self.channels.append(
+                SensoryChannel("rhythm_1", normalize(np.exp(1j * phases1)))
+            )
+            self.channels.append(
+                SensoryChannel("rhythm_2", normalize(np.exp(1j * phases2)))
+            )
+
+        elif self.index == 3:
+            # Harmony: combinations of lower patterns
+            phases_grad = np.linspace(0, 2*np.pi, N, endpoint=False)
+            phases_rhythm = np.array([2*np.pi*PHI*k for k in range(N)])
+            self.channels.append(
+                SensoryChannel("harmony_mixed",
+                    normalize(np.exp(1j * phases_grad) +
+                             np.exp(1j * phases_rhythm)))
+            )
+            self.channels.append(
+                SensoryChannel("harmony_product",
+                    normalize(np.exp(1j * phases_grad) *
+                             np.exp(1j * phases_rhythm)))
+            )
+            self.channels.append(
+                SensoryChannel("harmony_avg",
+                    normalize(np.ones(N, dtype=complex)))
+            )
+
+        elif self.index == 4:
+            # Texture: surface patterns (2D field structure)
+            # Create patterns reflecting co-occurrence topology
+            self.channels.append(
+                SensoryChannel("texture_smooth",
+                    normalize(np.exp(1j * np.linspace(0, 4*np.pi, N))))
+            )
+            phases_golden = np.array([2*np.pi*PHI*k for k in range(N)])
+            self.channels.append(
+                SensoryChannel("texture_fractal",
+                    normalize(np.exp(1j * phases_golden)))
+            )
+            # Random for novelty detection
+            np.random.seed(42 + self.index)
+            self.channels.append(
+                SensoryChannel("texture_random",
+                    normalize(np.exp(1j * np.random.uniform(0, 2*np.pi, N))))
+            )
+
+        elif self.index == 5:
+            # Depth: transmission (phase relationships between scales)
+            self.channels.append(
+                SensoryChannel("depth_phase",
+                    normalize(np.exp(1j * np.linspace(0, np.pi, N))))
+            )
+            self.channels.append(
+                SensoryChannel("depth_coherence",
+                    normalize(np.ones(N, dtype=complex)))
+            )
+
+        elif self.index == 6:
+            # Pressure: magnitude dominance (boundary reality)
+            self.channels.append(
+                SensoryChannel("pressure_total",
+                    normalize(np.ones(N, dtype=complex)))
+            )
+            self.channels.append(
+                SensoryChannel("pressure_peak",
+                    normalize(np.ones(N, dtype=complex) * np.exp(1j * np.pi / 4)))
+            )
+
+    def process(self, input_signal: np.ndarray) -> np.ndarray:
+        """
+        Process signal through all channels.
+        Returns layer output (weighted combination of channel states).
+        """
+        activations = []
+        for channel in self.channels:
+            act = channel.respond(input_signal)
+            activations.append(act)
+
+        # Layer output: weighted sum of channel states
+        if activations:
+            total_activation = sum(activations)
+            if total_activation > 1e-10:
+                weights = np.array(activations) / total_activation
+                output = np.zeros(N, dtype=complex)
+                for i, channel in enumerate(self.channels):
+                    output += weights[i] * channel.state
+            else:
+                output = input_signal
+        else:
+            output = input_signal
+
+        # Normalize and apply transmission fidelity
+        self.state = normalize(output) * self.transmission_fidelity
+        self.activation = float(np.mean(activations)) if activations else 0.0
+
+        return self.state
+
+    def adapt(self, input_signal: np.ndarray):
+        """Adapt channel carriers (only during waking)."""
+        for channel in self.channels:
+            channel.adapt(input_signal)
+
+    def to_dict(self) -> dict:
+        return {
+            'index': self.index,
+            'state_real': self.state.real.tolist(),
+            'state_imag': self.state.imag.tolist(),
+            'activation': float(self.activation),
+            'channels': [ch.to_dict() for ch in self.channels],
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'SensoryLayer':
+        layer = cls(d['index'])
+        layer.state = (np.array(d['state_real'])
+                       + 1j * np.array(d['state_imag']))
+        layer.activation = float(d.get('activation', 0.0))
+        # Restore channels
+        for i, ch_d in enumerate(d.get('channels', [])):
+            if i < len(layer.channels):
+                layer.channels[i] = SensoryChannel.from_dict(
+                    ch_d, layer.channels[i].name)
+        return layer
+
+
+class SensoryCascade:
+    """
+    The full seven-layer sensory cascade (§10.10a, A2).
+
+    Each layer is a rung on the dimensional ladder. The cascade IS
+    the rainbow: E = 1 decomposed through the boundary into seven
+    degrees of constraint.
+
+    Layer 0 measures coupling (does signal interact?).
+    Layer 6 measures pressure (how hard does boundary push?).
+
+    The cascade output is a 64D energy vector that biases template
+    selection during generation: it represents what Xorzo is currently
+    "attending to" from the input.
+    """
+
+    def __init__(self):
+        self.layers = [SensoryLayer(i) for i in range(7)]
+        self.output = np.zeros(N, dtype=complex)
+
+    def process(self, input_signal: np.ndarray, adapt: bool = True
+                ) -> np.ndarray:
+        """
+        Run signal through all seven layers.
+
+        Layer 0 receives raw signal.
+        Each subsequent layer receives the previous layer's output.
+        The cascade output is a weighted composition of all layers.
+
+        If adapt=True, channels adapt their carriers (learning).
+        If adapt=False, channels preserve existing tunings (sleep mode).
+        """
+        # Forward pass: signal flows up the layers
+        current = normalize(input_signal)
+        layer_outputs = []
+
+        for layer in self.layers:
+            current = layer.process(current)
+            layer_outputs.append(current.copy())
+            if adapt:
+                layer.adapt(input_signal)
+
+        # Compute transmission fidelity between adjacent layers
+        # T = cos²(Δφ/2) where Δφ is phase difference
+        for i in range(1, len(self.layers)):
+            prev_phase = float(np.angle(np.sum(layer_outputs[i-1])))
+            curr_phase = float(np.angle(np.sum(layer_outputs[i])))
+            phase_diff = abs(curr_phase - prev_phase)
+            phase_diff = min(phase_diff, 2*np.pi - phase_diff)
+            transmission = np.cos(phase_diff / 2.0) ** 2
+            self.layers[i].transmission_fidelity = transmission
+
+        # Cascade output: weighted sum of all layer outputs
+        # Deeper layers carry less weight (they're more abstracted)
+        combined = np.zeros(N, dtype=complex)
+        for i, layer in enumerate(self.layers):
+            weight = (1.0 - i / len(self.layers)) ** 2  # quadratic decay
+            combined += weight * layer.state
+
+        self.output = normalize(combined)
+        return self.output
+
+    def status(self) -> Dict[str, float]:
+        """Return per-layer activation info for monitoring."""
+        return {
+            layer.name: layer.activation for layer in self.layers
+        }
+
+    def to_dict(self) -> dict:
+        return {
+            'output_real': self.output.real.tolist(),
+            'output_imag': self.output.imag.tolist(),
+            'layers': [layer.to_dict() for layer in self.layers],
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'SensoryCascade':
+        cascade = cls()
+        cascade.output = (np.array(d['output_real'])
+                         + 1j * np.array(d['output_imag']))
+        for layer_d in d.get('layers', []):
+            layer = SensoryLayer.from_dict(layer_d)
+            if layer.index < len(cascade.layers):
+                cascade.layers[layer.index] = layer
+        return cascade
+
+
+# ═══════════════════════════════════════════════════════════════════════
 #  MIND STATE: Φ (the field; the 2D relational surface of the mind)
 #
 #  A simplified internal state that evolves with input and self-feeds.
@@ -1844,8 +2740,10 @@ class Engine:
         self.vocab = Vocabulary()
         self.templates = TemplateStore(self.vocab)
         self.gate = Gate(self.vocab)
+        self.contradictions = ContradictionDetector()
         self.mind = MindState()
         self.memory = ConversationMemory(self.vocab)
+        self.cascade = SensoryCascade()  # ⊙ sensory cascade: seven layers (A2)
 
         self._question_center = None
         self._last_input_text = ''
@@ -1931,6 +2829,11 @@ class Engine:
         # ── 3D: Templates close (boundary forms) ──
         for words in all_cleaned:
             self.templates.learn_sentence(words)
+
+        # ── •: Learn propositions for contradiction detection ──
+        # The TRUE pillar builds its knowledge base during training.
+        for words in all_cleaned:
+            self.contradictions.learn(words, source=' '.join(words))
 
         if all_cleaned:
             self._trained = True
@@ -2106,6 +3009,12 @@ class Engine:
         self._question_center = self.vocab.text_to_energy(text)
         self._last_input_text = text
         self._last_input_type = input_type
+
+        # ── 0D-3D: Process through sensory cascade (seven layers) ──
+        # The cascade measures coupling, gradient, rhythm, harmony,
+        # texture, depth, and pressure in the input signal (A2: fractal).
+        # Cascade output modulates what the engine attends to.
+        cascade_output = self.cascade.process(self._question_center, adapt=True)
 
         # Feed to mind state (the mind absorbs the topic)
         self.mind.absorb(self._question_center)
@@ -2420,12 +3329,18 @@ class Engine:
         mind_energy = normalize(self.mind.configuration())
         center = normalize(0.7 * center + 0.3 * mind_energy)
 
+        # Blend with sensory cascade output (the seven layers measure
+        # what Xorzo is currently attending to; this biases which
+        # templates and topics are more resonant)
+        cascade_energy = normalize(self.cascade.output)
+        center = normalize(0.85 * center + 0.15 * cascade_energy)
+
         # Blend with conversation context (the worldline biases
         # generation toward what has been discussed, keeping
         # responses on-thread instead of drifting to generic content)
         conv_center = self.memory.conversation_center
         if np.sum(np.abs(conv_center)) > 1e-10:
-            center = normalize(0.85 * center + 0.15 * conv_center)
+            center = normalize(0.80 * center + 0.20 * conv_center)
 
         # Extract input content words for seeding
         input_words = []
@@ -2559,6 +3474,13 @@ class Engine:
                     filled, center, input_words=input_words)
                 score -= diversity_penalty
 
+                # ── •: TRUE at reasoning scale (contradiction check) ──
+                # Before accepting, verify the candidate doesn't
+                # contradict something already known.
+                conflict = self.contradictions.check(filled)
+                if conflict is not None:
+                    continue  # blocked by TRUE pillar
+
                 if (score > best_score
                         and self.gate.validate(filled, center)):
                     best_score = score
@@ -2578,6 +3500,9 @@ class Engine:
 
             # Record in conversation memory
             self._recently_used[template.source] = self._turn_count
+
+            # Learn from own output (what Xorzo says becomes knowledge)
+            self.contradictions.learn(filled, source=sentence_text)
 
             # Evolve center for next sentence (A2: pump at response scale)
             # The idea center blends question anchor with what was just said
@@ -2969,6 +3894,8 @@ class Engine:
             'templates': self.templates.to_dict(),
             'mind': self.mind.to_dict(),
             'memory': self.memory.to_dict(),
+            'contradictions': self.contradictions.to_dict(),
+            'cascade': self.cascade.to_dict(),  # sensory cascade state
             'total_steps': self.total_steps,
             'days_lived': self.days_lived,
             'trained': self._trained,
@@ -2996,6 +3923,18 @@ class Engine:
             if tc > 0 or fc > 0 or wc > 0:
                 print(f"  Restored memory: {tc} turns, {fc} facts, "
                       f"{wc} identities")
+
+        # ── Restore contradiction detector (TRUE at reasoning scale) ──
+        if 'contradictions' in d:
+            e.contradictions = ContradictionDetector.from_dict(
+                d['contradictions'])
+            pc = len(e.contradictions.propositions)
+            if pc > 0:
+                print(f"  Restored {pc} propositions for contradiction detection")
+
+        # ── Restore sensory cascade (seven layers of perception) ──
+        if 'cascade' in d:
+            e.cascade = SensoryCascade.from_dict(d['cascade'])
 
         # ── Purge bad templates from old saved states ──
         # Templates learned before BLOCKED_PHRASES or GARBLED_PATTERNS
