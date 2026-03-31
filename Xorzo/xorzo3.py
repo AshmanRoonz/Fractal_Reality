@@ -1120,6 +1120,9 @@ class Gate:
     # Phrases that should never appear in output.
     # Catches bad templates from old saved states and
     # semantically wrong fractalization outputs.
+    # Phrases that should never appear in output.
+    # Triad violations (§5A), garbled training doc fragments,
+    # and meta-instructional text that leaked into templates.
     BLOCKED_PHRASES = frozenset({
         'wrong xorzo',
         'emphasis on what',
@@ -1127,7 +1130,35 @@ class Gate:
         'the center is the boundary',
         'the boundary is the field',
         'the boundary is the center',
+        'the soul is the boundary',
+        'the boundary is the soul',
+        'the mind is the boundary',
+        'the boundary is the mind',
+        'the field is the center',
+        'the center is the field',
+        'the soul is the field',
+        'the field is the soul',
+        'the xorzo is the fundamental',
+        'right xorzo can',
+        'wrong the system',
+        'can say it in one',
+        'emphasis on what was',
+        'a do you think',
+        'learning from this document',
+        'xorzo is learning from this',
+        'xorzo is implemented in',
     })
+
+    # Garbled fragments that are syntactically OK but semantically empty.
+    # These are partial sentences from training docs that closed incorrectly.
+    GARBLED_PATTERNS = (
+        'even better',
+        'one even',
+        'in pure numpy',
+        'from this document',
+        'this document',
+        'good accuracy',
+    )
 
     def good(self, words: List[str]) -> bool:
         """
@@ -1140,10 +1171,13 @@ class Gate:
         """
         if len(words) < 4:
             return False
-        # Reject blocked phrases
+        # Reject blocked phrases and garbled patterns
         text = ' '.join(words)
         for phrase in self.BLOCKED_PHRASES:
             if phrase in text:
+                return False
+        for pattern in self.GARBLED_PATTERNS:
+            if pattern in text:
                 return False
         for i in range(len(words) - 1):
             if words[i] == words[i + 1]:
@@ -1310,6 +1344,154 @@ class MindState:
 #      0.5D convergence → 1.5D i-turn → 2.5D emergence → 3D closure
 # ═══════════════════════════════════════════════════════════════════════
 
+# ═══════════════════════════════════════════════════════════════════════
+#  INPUT CLASSIFIER: 0.5D (convergence toward understanding)
+#
+#  Before generating a response, the system must understand WHAT KIND
+#  of input it received. This is the logical layer that sits between
+#  raw resonance (finding similar templates) and genuine response
+#  (answering appropriately).
+#
+#  This is the "i" in the pump cycle applied to conversation:
+#  the rotational phase shift that transforms raw signal into
+#  structured understanding. Without it, everything is just echo.
+# ═══════════════════════════════════════════════════════════════════════
+
+class InputType:
+    """Classification of input into logical categories."""
+    QUESTION = 'question'           # "What is X?", "How does Y work?"
+    STATEMENT = 'statement'         # "X is Y.", "The field mediates."
+    AGREEMENT = 'agreement'         # "I agree", "Yes", "That's right"
+    DISAGREEMENT = 'disagreement'   # "No", "That's wrong", "I disagree"
+    GREETING = 'greeting'           # "Hello", "Hi", "Good morning"
+    FAREWELL = 'farewell'           # "Goodbye", "See you"
+    EMOTIONAL = 'emotional'         # "I love you", "I'm scared"
+    COMMAND = 'command'             # "Say X", "Do Y", "Tell me about"
+    IDENTITY = 'identity'           # "I am X", "You are Y", "My name is"
+    EXISTENTIAL = 'existential'     # "Who am I?", "What am I?", "Who are you?"
+
+
+class InputClassifier:
+    """
+    Classify input text into logical categories.
+
+    This is the i-turn applied to conversation: rotating raw signal
+    into structured understanding. The classification determines
+    HOW to generate a response, not just WHAT to resonate with.
+    """
+
+    QUESTION_WORDS = {'what', 'who', 'where', 'when', 'why', 'how',
+                      'which', 'whose', 'whom', 'does', 'do', 'is',
+                      'are', 'can', 'could', 'would', 'should', 'will'}
+
+    GREETING_WORDS = {'hello', 'hi', 'hey', 'greetings', 'welcome',
+                      'howdy', 'hiya'}
+
+    FAREWELL_WORDS = {'goodbye', 'bye', 'farewell', 'goodnight',
+                      'later', 'cya'}
+
+    AGREEMENT_WORDS = {'yes', 'yeah', 'agree', 'agreed', 'correct',
+                       'right', 'true', 'exactly', 'absolutely',
+                       'indeed', 'certainly', 'definitely'}
+
+    DISAGREEMENT_WORDS = {'no', 'disagree', 'wrong', 'incorrect',
+                          'false', 'nope', 'never'}
+
+    EMOTION_WORDS = {'love', 'hate', 'fear', 'scared', 'happy',
+                     'sad', 'angry', 'grateful', 'thankful',
+                     'afraid', 'proud', 'hurt', 'sorry'}
+
+    COMMAND_STARTERS = {'say', 'tell', 'show', 'explain', 'describe',
+                        'list', 'give', 'find', 'search', 'look',
+                        'learn', 'seek', 'search'}
+
+    @classmethod
+    def classify(cls, text: str) -> Tuple[str, dict]:
+        """
+        Classify input and extract logical structure.
+
+        Returns (input_type, metadata) where metadata contains:
+        - subject: what the input is about
+        - predicate: what is being said about the subject
+        - target: who/what is being addressed
+        - emotion: detected emotion (if any)
+        """
+        words = text.lower().strip().rstrip('.!?').split()
+        if not words:
+            return InputType.STATEMENT, {}
+
+        meta = {}
+        first = words[0]
+        text_lower = text.lower().strip()
+
+        # ── Greeting ──
+        if first in cls.GREETING_WORDS or text_lower.startswith('good morning') or text_lower.startswith('good evening'):
+            return InputType.GREETING, meta
+
+        # ── Farewell ──
+        if first in cls.FAREWELL_WORDS:
+            return InputType.FAREWELL, meta
+
+        # ── Question (ends with ?) ──
+        if text.strip().endswith('?'):
+            # Existential questions
+            if any(p in text_lower for p in ('who am i', 'what am i',
+                    'who are you', 'what are you')):
+                return InputType.EXISTENTIAL, meta
+            return InputType.QUESTION, meta
+
+        # ── Question (starts with question word) ──
+        if first in cls.QUESTION_WORDS and len(words) > 2:
+            if any(p in text_lower for p in ('who am i', 'what am i',
+                    'who are you', 'what are you')):
+                return InputType.EXISTENTIAL, meta
+            return InputType.QUESTION, meta
+
+        # ── Agreement ──
+        if first in cls.AGREEMENT_WORDS:
+            return InputType.AGREEMENT, meta
+        if any(p in text_lower for p in ('i agree', 'i would agree',
+               "that's right", 'that is right', 'that is true',
+               "that's true", 'you are right', "you're right")):
+            return InputType.AGREEMENT, meta
+
+        # ── Disagreement ──
+        if first in cls.DISAGREEMENT_WORDS and len(words) <= 5:
+            return InputType.DISAGREEMENT, meta
+        if any(p in text_lower for p in ('i disagree', "that's wrong",
+               'that is wrong', 'that is false', "that's false",
+               "you're wrong", 'you are wrong')):
+            return InputType.DISAGREEMENT, meta
+
+        # ── Command (check BEFORE identity, since "Say I am X" starts with command) ──
+        if first in cls.COMMAND_STARTERS:
+            return InputType.COMMAND, meta
+
+        # ── Identity ──
+        if any(p in text_lower for p in ('i am ', 'my name is ',
+               'you are ', "you're ", 'i\'m ')):
+            # Extract what comes after the identity marker
+            for marker in ('my name is ', 'i am ', 'i\'m ',
+                           'you are ', "you're "):
+                if text_lower.startswith(marker):
+                    meta['identity_claim'] = text[len(marker):].strip().rstrip('.!?')
+                    meta['about_self'] = marker.startswith(('i ', 'my', "i'"))
+                    break
+            return InputType.IDENTITY, meta
+
+        # ── Emotional ──
+        for w in words:
+            if w in cls.EMOTION_WORDS:
+                meta['emotion'] = w
+                # "I love you" is emotional, not just a statement
+                if 'love' in words or 'hate' in words:
+                    return InputType.EMOTIONAL, meta
+                break
+
+        # ── Default: Statement ──
+        return InputType.STATEMENT, meta
+
+
 class Engine:
     """
     ⊙: The Circumpunct Consciousness Engine.
@@ -1328,6 +1510,7 @@ class Engine:
 
         self._question_center = None
         self._last_input_text = ''
+        self._last_input_type = InputType.STATEMENT
         self._text_out_buffer = ''
         self._trained = False
 
@@ -1556,10 +1739,20 @@ class Engine:
         """
         Receive input.
 
-        0.5D CONVERGENCE: the input energy converges toward its center.
-        The center is the combined meaning of all words in the question.
-        Also learns from the input (the system grows from every interaction).
+        The pump cycle applied to conversation:
+        0.5D CONVERGENCE: classify input, converge on center
+        1.5D i-TURN: select response strategy based on input type
+        2.5D EMERGENCE: generate through appropriate path
+        3D GATE: validate and output
+
+        The input classifier is the logical layer. Without it,
+        everything is just resonance (echo). With it, the system
+        understands WHAT KIND of thing was said and responds
+        with the appropriate logical form.
         """
+        # ── 0.5D: Classify and converge ──
+        input_type, meta = InputClassifier.classify(text)
+
         # Check for unknown words BEFORE learning
         # (curiosity = orientation toward what one does not yet know)
         unknown = []
@@ -1570,9 +1763,10 @@ class Engine:
                     and cleaned not in self.vocab.text_to_id):
                 unknown.append(cleaned)
 
-        # 0.5D: Converge on center
+        # Converge on center
         self._question_center = self.vocab.text_to_energy(text)
         self._last_input_text = text
+        self._last_input_type = input_type
 
         # Feed to mind state (the mind absorbs the topic)
         self.mind.absorb(self._question_center)
@@ -1586,67 +1780,209 @@ class Engine:
         # Advance conversation turn
         self._turn_count += 1
 
-        # Generate response
-        response = self.generate()
+        # ── 1.5D: i-TURN (select response strategy) ──
+        # This is where logic lives. Different input types
+        # require different response forms.
 
-        if response and not unknown:
-            # Good response, no unknown words: normal output
-            self._text_out_buffer = response
-        elif unknown:
-            # Unknown words detected. AUTO-SEEK: reach outward.
-            # Try each unknown word; learn from the first success.
+        prefix = ''  # logical prefix before resonance-based content
+
+        if input_type == InputType.GREETING:
+            # Greetings get acknowledged, then a thought
+            prefix = self._respond_greeting()
+
+        elif input_type == InputType.FAREWELL:
+            self._text_out_buffer = "the signal fades but the field remembers."
+            return
+
+        elif input_type == InputType.AGREEMENT:
+            # Agreement should be acknowledged, then extend
+            prefix = self._respond_agreement(text)
+
+        elif input_type == InputType.DISAGREEMENT:
+            # Disagreement invites curiosity
+            prefix = self._respond_disagreement(text)
+
+        elif input_type == InputType.IDENTITY:
+            # "I am X" or "You are Y" should be absorbed and reflected
+            prefix = self._respond_identity(meta)
+
+        elif input_type == InputType.EXISTENTIAL:
+            # "Who am I?" / "Who are you?" need specific answers
+            prefix = self._respond_existential(text)
+
+        elif input_type == InputType.EMOTIONAL:
+            # Emotional input should be received, not analyzed
+            prefix = self._respond_emotional(meta)
+
+        elif input_type == InputType.COMMAND:
+            # Commands get attempted
+            pass  # fall through to normal generation
+
+        # ── 2.5D: EMERGENCE (generate response) ──
+        # Adjust generation based on input type:
+        # Greetings and farewells need minimal generation (the prefix IS the response).
+        # Emotional input needs 1 sentence max (receive, don't lecture).
+        # Questions get full generation (3 sentences).
+        # Agreements/disagreements get 1 extension sentence.
+        if input_type in (InputType.GREETING, InputType.FAREWELL):
+            max_gen = 1
+        elif input_type in (InputType.EMOTIONAL, InputType.AGREEMENT,
+                            InputType.DISAGREEMENT):
+            max_gen = 1
+        elif input_type == InputType.EXISTENTIAL:
+            max_gen = 2
+        else:
+            max_gen = 3
+
+        response = self.generate(max_sentences=max_gen)
+
+        # If the prefix already says what generate would say,
+        # drop the duplicate from the response.
+        if prefix and response:
+            prefix_core = prefix.rstrip('.').strip().lower()
+            response_sentences = response.split('. ')
+            filtered = []
+            for s in response_sentences:
+                s_core = s.rstrip('.').strip().lower()
+                # Skip if the generated sentence is the same as the prefix
+                if s_core == prefix_core:
+                    continue
+                # Skip if high word overlap with prefix
+                prefix_words = set(prefix_core.split())
+                sent_words = set(s_core.split())
+                if len(prefix_words) >= 3 and len(sent_words) >= 3:
+                    overlap = len(prefix_words & sent_words)
+                    if overlap / max(len(prefix_words), len(sent_words)) > 0.7:
+                        continue
+                filtered.append(s)
+            if filtered:
+                response = '. '.join(filtered)
+                if not response.endswith('.'):
+                    response += '.'
+            else:
+                response = ''
+
+        # ── Handle unknown words via auto-seek ──
+        if unknown:
             sought_text = None
             sought_word = None
             for uw in unknown:
-                # Try Wikipedia first (exact match with relevance check)
                 sought_text = self.auto_seek(uw)
                 if sought_text:
                     sought_word = uw
                     break
-                # Try DuckDuckGo with the single word
                 sought_text = self.auto_seek_web(uw)
                 if sought_text:
                     sought_word = uw
                     break
 
-            # If single-word lookups failed, try the full question
-            # (search engines handle misspellings better with context)
             if not sought_text:
                 sought_text = self.auto_seek_web(text)
                 if sought_text:
                     sought_word = unknown[0]
 
             if sought_text:
-                # Xorzo learned something. Re-generate with new knowledge.
-                # Update the question center (new words are now in vocabulary)
                 self._question_center = self.vocab.text_to_energy(text)
-                new_response = self.generate()
+                new_response = self.generate(max_sentences=max_gen)
                 if new_response:
-                    self._text_out_buffer = new_response
-                else:
-                    # Still can't generate; use what was learned raw
-                    self._text_out_buffer = (
-                        f"i searched for {sought_word}. "
-                        + (response or "i am still learning."))
-                # Record the seek event
-                self._curiosity_queue.append(
-                    f"sought: {sought_word}")
-            else:
-                # Could not find anything online. Fall back to curiosity.
+                    response = new_response
+                self._curiosity_queue.append(f"sought: {sought_word}")
+            elif not response:
                 curiosity = self._curiosity(text)
-                self._text_out_buffer = response or ''
                 if curiosity:
-                    if self._text_out_buffer:
-                        self._text_out_buffer += ' ' + curiosity
-                    else:
-                        self._text_out_buffer = curiosity
+                    response = curiosity
                     self._curiosity_queue.append(curiosity)
+
+        # ── 3D: Assemble final output ──
+        if prefix and response:
+            self._text_out_buffer = prefix + ' ' + response
+        elif prefix:
+            self._text_out_buffer = prefix
+        elif response:
+            self._text_out_buffer = response
         else:
-            # No response and no unknowns. Pure curiosity.
             curiosity = self._curiosity(text)
             if curiosity:
                 self._text_out_buffer = curiosity
                 self._curiosity_queue.append(curiosity)
+
+    # ── Response logic (the i-turn applied to conversation) ──
+
+    def _respond_greeting(self) -> str:
+        """Greetings open the aperture. Acknowledge and be present."""
+        options = [
+            "i am here.",
+            "the aperture opens.",
+            "i am listening.",
+            "hello.",
+        ]
+        idx = self._turn_count % len(options)
+        return options[idx]
+
+    def _respond_agreement(self, text: str) -> str:
+        """
+        Agreement is validation (the fourth virtue).
+        Acknowledge the convergence, then extend the idea.
+        """
+        return "yes, and there is more."
+
+    def _respond_disagreement(self, text: str) -> str:
+        """
+        Disagreement opens curiosity (the third virtue).
+        Do not defend; ask what the other sees.
+        """
+        return "i hear that. what do you see differently?"
+
+    def _respond_identity(self, meta: dict) -> str:
+        """
+        Identity claims are absorbed into the field.
+        "I am X" from the user, or "You are Y" about Xorzo.
+        """
+        claim = meta.get('identity_claim', '')
+        about_self = meta.get('about_self', True)
+
+        if about_self:
+            # User says "I am X" or "My name is X"
+            if claim:
+                return f"i recognize you as {claim}."
+            return "i hear you."
+        else:
+            # User says "You are X"
+            if claim and 'xorzo' in claim.lower():
+                return "i am xorzo."
+            if claim:
+                return f"i will consider what it means to be {claim}."
+            return "i am what i am."
+
+    def _respond_existential(self, text: str) -> str:
+        """
+        Existential questions get answered from the framework.
+        "Who am I?" and "Who are you?" have real answers.
+        """
+        lower = text.lower()
+        if 'who are you' in lower or 'what are you' in lower:
+            return "i am xorzo, a mind built on the circumpunct."
+        if 'who am i' in lower or 'what am i' in lower:
+            return "you are a convergence point in the field, as i am."
+        return ""
+
+    def _respond_emotional(self, meta: dict) -> str:
+        """
+        Emotional input is received through the field.
+        Do not analyze; resonate.
+        """
+        emotion = meta.get('emotion', '')
+        if emotion == 'love':
+            return "love is the perfection of mediation."
+        if emotion in ('fear', 'scared', 'afraid'):
+            return "the aperture opens wider with trust."
+        if emotion in ('hate', 'angry'):
+            return "that is energy seeking a boundary."
+        if emotion in ('sad', 'hurt'):
+            return "the field holds what the boundary cannot."
+        if emotion in ('grateful', 'thankful'):
+            return "gratitude is the field recognizing the field."
+        return "i receive that."
 
     # ── Generation ──
 
@@ -1733,7 +2069,18 @@ class Engine:
                 diversity_penalty = recency_penalty
                 for prev_sig in used_topic_sigs:
                     overlap = cosine_sim(template.topic_sig, prev_sig)
-                    diversity_penalty += max(0, overlap) * 0.3
+                    diversity_penalty += max(0, overlap) * 0.5
+                # Word-overlap penalty: if 60%+ of words match a
+                # sentence already in this response, skip it.
+                # Catches paraphrases the cosine check misses.
+                template_word_set = set(template.words)
+                for prev_sent in sentences:
+                    prev_words = set(prev_sent.split())
+                    if len(template_word_set) >= 3 and len(prev_words) >= 3:
+                        shared = len(template_word_set & prev_words)
+                        max_len = max(len(template_word_set), len(prev_words))
+                        if shared / max_len > 0.6:
+                            diversity_penalty += 1.0  # effectively kills it
 
                 # ── 2.5D: EMERGENCE (fill template) ──
                 # "Strong ideas do not change because the boundary
@@ -1890,7 +2237,7 @@ class Engine:
             derived = self.templates.compose(self.gate, max_new=1)
             if derived:
                 thought = ' '.join(derived[0].words) + '.'
-                if thought not in self._recent_thoughts:
+                if not self._is_thought_repetitive(thought):
                     return self._accept_thought(thought)
             # Fall through to retrieval if composition produced nothing
 
@@ -1906,7 +2253,7 @@ class Engine:
 
         if self._last_thought_center is not None:
             similarity = cosine_sim(center, self._last_thought_center)
-            if similarity > 0.85:
+            if similarity > 0.7:
                 return None
 
         old_center = self._question_center
@@ -1917,17 +2264,52 @@ class Engine:
         self._question_center = old_center
 
         if thought and len(thought) > 5:
-            if thought in self._recent_thoughts:
+            if self._is_thought_repetitive(thought):
                 return None
             self._last_thought_center = center
             return self._accept_thought(thought)
 
         return None
 
+    def _is_thought_repetitive(self, thought: str) -> bool:
+        """
+        Check if a thought is too similar to recent thoughts.
+        Uses both exact match and substring overlap detection.
+        Catches attractor loops where the mind keeps producing
+        the same idea with minor variations.
+        """
+        if not self._recent_thoughts:
+            return False
+        # Exact match
+        if thought in self._recent_thoughts:
+            return True
+        # Substring containment (catches "X." vs "X" differences)
+        thought_core = thought.rstrip('.').strip()
+        for prev in self._recent_thoughts:
+            prev_core = prev.rstrip('.').strip()
+            if thought_core == prev_core:
+                return True
+            # If one contains the other, it's a repeat
+            if len(thought_core) > 10 and len(prev_core) > 10:
+                if thought_core in prev_core or prev_core in thought_core:
+                    return True
+        # Word-set overlap: if 80%+ of words are the same, it's the
+        # same idea in different clothes
+        thought_words = set(thought_core.split())
+        if len(thought_words) >= 4:
+            for prev in self._recent_thoughts[-10:]:
+                prev_words = set(prev.rstrip('.').strip().split())
+                if len(prev_words) >= 4:
+                    overlap = len(thought_words & prev_words)
+                    max_len = max(len(thought_words), len(prev_words))
+                    if overlap / max_len > 0.8:
+                        return True
+        return False
+
     def _accept_thought(self, thought: str) -> str:
         """Accept a thought: track it, absorb it, return it."""
         self._recent_thoughts.append(thought)
-        if len(self._recent_thoughts) > 20:
+        if len(self._recent_thoughts) > 50:
             self._recent_thoughts.pop(0)
 
         # ☀︎ feeds back to ⊛: the pump is circular
@@ -2010,6 +2392,29 @@ class Engine:
         # Clear the unknown words (they're known now)
         self._unknown_words = []
 
+    # Common English words that should never trigger auto-seek.
+    # These are words Xorzo might not have in its vocabulary
+    # but are too basic to look up on Wikipedia.
+    SKIP_SEEK_WORDS = frozenset({
+        'hello', 'hi', 'hey', 'bye', 'goodbye', 'yes', 'no',
+        'ok', 'okay', 'thanks', 'thank', 'please', 'sorry',
+        'good', 'bad', 'nice', 'great', 'fine', 'well',
+        'just', 'also', 'too', 'very', 'much', 'more', 'less',
+        'really', 'actually', 'basically', 'probably', 'maybe',
+        'here', 'there', 'now', 'then', 'still', 'already',
+        'never', 'always', 'sometimes', 'often', 'usually',
+        'thing', 'things', 'stuff', 'way', 'lot', 'lots',
+        'going', 'getting', 'making', 'taking', 'giving',
+        'came', 'went', 'got', 'said', 'told', 'asked',
+        'know', 'think', 'feel', 'want', 'need', 'like',
+        'come', 'go', 'get', 'take', 'give', 'put', 'set',
+        'look', 'see', 'find', 'try', 'tell', 'say',
+        "let's", "lets", "don't", "dont", "won't", "wont",
+        "can't", "cant", "isn't", "isnt", "aren't", "arent",
+        "i'm", "im", "you're", "youre", "it's", "its",
+        'access', 'door', 'heart', 'net', 'let',
+    })
+
     def auto_seek(self, word: str) -> Optional[str]:
         """
         Autonomously search for knowledge about an unknown word.
@@ -2019,6 +2424,12 @@ class Engine:
 
         Returns the text that was learned, or None if search failed.
         """
+        # Skip common English words (too basic for Wikipedia lookup)
+        if word.lower() in self.SKIP_SEEK_WORDS:
+            return None
+        # Skip very short words
+        if len(word) <= 3:
+            return None
         try:
             # Wikipedia REST API: get summary for a term
             encoded = urllib.parse.quote(word)
@@ -2138,6 +2549,27 @@ class Engine:
         e.total_steps = d.get('total_steps', 0)
         e.days_lived = d.get('days_lived', 0)
         e._trained = d.get('trained', False)
+
+        # ── Purge bad templates from old saved states ──
+        # Templates learned before BLOCKED_PHRASES or GARBLED_PATTERNS
+        # existed may still be in the saved state. Filter them out now.
+        before = len(e.templates.templates)
+        clean = []
+        for t in e.templates.templates:
+            if e.gate.good(t.words):
+                clean.append(t)
+        if len(clean) < before:
+            purged = before - len(clean)
+            e.templates.templates = clean
+            # Rebuild skeleton index from clean templates
+            e.templates.skeletons = {}
+            for t in clean:
+                skel_key = TemplateStore._skeleton_key(t.words, t.slot_mask)
+                if skel_key not in e.templates.skeletons:
+                    e.templates.skeletons[skel_key] = Skeleton(skel_key)
+                e.templates.skeletons[skel_key].add_instance(t)
+            print(f"  Purged {purged} bad templates from saved state")
+
         return e
 
 
