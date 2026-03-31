@@ -1407,6 +1407,7 @@ class Gate:
         'rock band',
         'malaysian',
         'called its referent',
+        'stagnates growth is',  # fused sentence from early training
     )
 
     def good(self, words: List[str]) -> bool:
@@ -1444,6 +1445,18 @@ class Gate:
                        'but', 'for', 'with', 'by', 'from', 'as', 'not'}
         if words[-1] in bad_endings:
             return False
+
+        # Fused sentence detector: if a main verb appears more than
+        # once, the template is likely two sentences glued together.
+        # "X grows when Y stagnates growth is the response..."
+        # has both 'stagnates' and 'is' as main verbs: fused.
+        main_verbs = {'is', 'are', 'was', 'were', 'becomes', 'means',
+                      'creates', 'produces', 'requires', 'contains',
+                      'describes', 'defines', 'equals', 'causes'}
+        verb_count = sum(1 for w in words if w in main_verbs)
+        if verb_count >= 2 and len(words) > 10:
+            return False  # likely fused; two clauses without punctuation
+
         return True
 
     def right(self, words: List[str]) -> float:
