@@ -1158,6 +1158,19 @@ class Gate:
         'from this document',
         'this document',
         'good accuracy',
+        'external observer',
+        'identification by',
+        'may refer to',
+        'refer to:',
+        'disambiguation',
+        'wikipedia',
+        'wikimedia',
+        'common names',
+        'sometimes called',
+        'other nouns',
+        'rock band',
+        'malaysian',
+        'called its referent',
     )
 
     def good(self, words: List[str]) -> bool:
@@ -1264,6 +1277,331 @@ class Gate:
         if r < -0.1:
             return False
         return True
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  CONVERSATION MEMORY: i(t) (the worldline; 1D commitment across turns)
+#
+#  The worldline is the accumulated validation receipts through time.
+#  Each turn leaves a trace: what was said, what was established,
+#  what the topic was, who said it. The traces compound into a
+#  conversation field (2D) where topics relate to each other.
+#
+#  Dimensional mapping:
+#      0D: topic centers (what each turn was about)
+#      1D: turn sequence (committed order, the thread)
+#      2D: conversation field (how topics relate across turns)
+#      3D: established facts (boundaries that closed through
+#          agreement or repetition)
+#
+#  This is NOT a chat log. It is a topological structure.
+# ═══════════════════════════════════════════════════════════════════════
+
+class ConversationTurn:
+    """A single turn in the worldline."""
+
+    def __init__(self, speaker: str, text: str, input_type: str,
+                 center: np.ndarray, turn_number: int):
+        self.speaker = speaker        # 'human' or 'xorzo'
+        self.text = text
+        self.input_type = input_type   # from InputClassifier
+        self.center = center           # 64D energy center of this turn
+        self.turn_number = turn_number
+        self.timestamp = time.time()
+
+        # Extract content words for quick matching
+        self.content_words = set()
+        for w in text.lower().split():
+            cleaned = w.strip('.,?!;:()\"\'')
+            if cleaned and len(cleaned) > 2:
+                self.content_words.add(cleaned)
+
+
+class EstablishedFact:
+    """
+    A 3D boundary in conversation: something that was agreed upon
+    or stated with enough weight to become "established."
+
+    Facts strengthen through repetition and agreement.
+    Facts weaken through disagreement or contradiction.
+    """
+
+    def __init__(self, text: str, center: np.ndarray,
+                 source_turn: int):
+        self.text = text
+        self.center = center
+        self.source_turn = source_turn
+        self.strength = 1.0            # grows with agreement, decays with time
+        self.agreed = False            # user explicitly agreed
+
+    def reinforce(self, amount: float = 0.5):
+        """Strengthen through repetition or agreement."""
+        self.strength = min(self.strength + amount, 3.0)
+
+    def weaken(self, amount: float = 0.3):
+        """Weaken through disagreement or time."""
+        self.strength = max(self.strength - amount, 0.0)
+
+    @property
+    def alive(self) -> bool:
+        """A fact with zero strength has dissolved."""
+        return self.strength > 0.1
+
+
+class ConversationMemory:
+    """
+    i(t): The worldline. Accumulated validation receipts through time.
+
+    Tracks:
+    - turns: the sequence of exchanges (1D commitment)
+    - facts: established boundaries (3D closure from conversation)
+    - conversation_center: the evolving center of the whole conversation
+    - who: identity facts about conversation participants
+    """
+
+    MAX_TURNS = 100       # rolling window; old turns fade
+    MAX_FACTS = 50        # maximum established facts
+
+    def __init__(self, vocab: 'Vocabulary'):
+        self.vocab = vocab
+        self.turns: List[ConversationTurn] = []
+        self.facts: List[EstablishedFact] = []
+        self.who: Dict[str, str] = {}    # identity register: key -> value
+        self._conversation_center = np.zeros(N, dtype=np.complex128)
+
+    @property
+    def turn_count(self) -> int:
+        return len(self.turns)
+
+    @property
+    def conversation_center(self) -> np.ndarray:
+        """The evolving center of the entire conversation."""
+        return self._conversation_center.copy()
+
+    def record_turn(self, speaker: str, text: str,
+                    input_type: str, center: np.ndarray):
+        """
+        Record a turn in the worldline.
+        The conversation center evolves: each new turn blends in.
+        """
+        turn = ConversationTurn(
+            speaker=speaker,
+            text=text,
+            input_type=input_type,
+            center=center,
+            turn_number=len(self.turns),
+        )
+        self.turns.append(turn)
+
+        # Evolve conversation center (weighted blend; recent turns matter more)
+        if np.sum(np.abs(self._conversation_center)) < 1e-10:
+            self._conversation_center = center.copy()
+        else:
+            # Blend: 70% existing conversation + 30% new turn
+            self._conversation_center = normalize(
+                0.7 * self._conversation_center + 0.3 * center)
+
+        # Rolling window: forget old turns
+        if len(self.turns) > self.MAX_TURNS:
+            self.turns.pop(0)
+
+        # Decay old facts (time weakens what isn't reinforced)
+        for fact in self.facts:
+            fact.weaken(0.05)
+        self.facts = [f for f in self.facts if f.alive]
+
+    def establish_fact(self, text: str, center: np.ndarray,
+                       source_turn: int):
+        """
+        A statement becomes established when it's stated clearly
+        or agreed upon. This is boundary closure at the conversation scale.
+        """
+        # Check if this fact already exists (reinforce, don't duplicate)
+        text_lower = text.lower().strip().rstrip('.')
+        for fact in self.facts:
+            if fact.text.lower().strip().rstrip('.') == text_lower:
+                fact.reinforce()
+                return
+            # Cosine similarity check for paraphrases
+            sim = cosine_sim(center, fact.center)
+            if sim > 0.9:
+                fact.reinforce(0.3)
+                return
+
+        # New fact
+        fact = EstablishedFact(text, center, source_turn)
+        self.facts.append(fact)
+
+        # Cap facts
+        if len(self.facts) > self.MAX_FACTS:
+            # Remove weakest
+            self.facts.sort(key=lambda f: f.strength, reverse=True)
+            self.facts = self.facts[:self.MAX_FACTS]
+
+    def agree_with_last(self):
+        """
+        The user agreed with what Xorzo said. Reinforce the last
+        Xorzo turn as an established fact.
+        """
+        for turn in reversed(self.turns):
+            if turn.speaker == 'xorzo':
+                # Establish each sentence from the last response
+                for sentence in turn.text.split('. '):
+                    sentence = sentence.strip().rstrip('.')
+                    if len(sentence.split()) >= 4:
+                        center = self.vocab.text_to_energy(sentence)
+                        self.establish_fact(sentence, center,
+                                            turn.turn_number)
+                        # Mark as agreed
+                        for fact in self.facts:
+                            if cosine_sim(center, fact.center) > 0.9:
+                                fact.agreed = True
+                                fact.reinforce(1.0)
+                break
+
+    def disagree_with_last(self):
+        """
+        The user disagreed. Weaken the last Xorzo statement.
+        """
+        for turn in reversed(self.turns):
+            if turn.speaker == 'xorzo':
+                center = turn.center
+                for fact in self.facts:
+                    if cosine_sim(center, fact.center) > 0.8:
+                        fact.weaken(0.5)
+                break
+
+    def register_identity(self, key: str, value: str):
+        """Register an identity fact: 'user_name' -> 'Ashman Roonz'."""
+        self.who[key] = value
+
+    def get_identity(self, key: str) -> Optional[str]:
+        """Look up an identity fact."""
+        return self.who.get(key)
+
+    def recall_about(self, center: np.ndarray,
+                     k: int = 3) -> List[ConversationTurn]:
+        """
+        Recall turns most relevant to a given topic center.
+        This is RECALL(M) = SRL(Φ, ω_M): frequency matching through
+        the conversation field.
+        """
+        if not self.turns:
+            return []
+        scored = []
+        for turn in self.turns:
+            sim = cosine_sim(turn.center, center)
+            scored.append((sim, turn))
+        scored.sort(key=lambda x: x[0], reverse=True)
+        return [t for _, t in scored[:k]]
+
+    def recall_facts_about(self, center: np.ndarray,
+                           k: int = 3) -> List[EstablishedFact]:
+        """
+        Recall established facts most relevant to a topic.
+        Stronger facts rank higher.
+        """
+        if not self.facts:
+            return []
+        scored = []
+        for fact in self.facts:
+            sim = cosine_sim(fact.center, center)
+            score = sim * fact.strength
+            scored.append((score, fact))
+        scored.sort(key=lambda x: x[0], reverse=True)
+        return [f for _, f in scored[:k]]
+
+    def get_recent_topics(self, n: int = 5) -> List[str]:
+        """
+        What has the conversation been about recently?
+        Returns content words from the last N turns.
+        """
+        topics = set()
+        for turn in self.turns[-n:]:
+            topics.update(turn.content_words)
+        return list(topics)
+
+    def last_speaker(self) -> Optional[str]:
+        """Who spoke last?"""
+        if self.turns:
+            return self.turns[-1].speaker
+        return None
+
+    def last_human_text(self) -> Optional[str]:
+        """What did the human say most recently?"""
+        for turn in reversed(self.turns):
+            if turn.speaker == 'human':
+                return turn.text
+        return None
+
+    def last_xorzo_text(self) -> Optional[str]:
+        """What did Xorzo say most recently?"""
+        for turn in reversed(self.turns):
+            if turn.speaker == 'xorzo':
+                return turn.text
+        return None
+
+    def to_dict(self) -> dict:
+        """Serialize for persistence."""
+        return {
+            'turns': [
+                {
+                    'speaker': t.speaker,
+                    'text': t.text,
+                    'input_type': t.input_type,
+                    'center_real': t.center.real.tolist(),
+                    'center_imag': t.center.imag.tolist(),
+                    'turn_number': t.turn_number,
+                }
+                for t in self.turns[-self.MAX_TURNS:]
+            ],
+            'facts': [
+                {
+                    'text': f.text,
+                    'center_real': f.center.real.tolist(),
+                    'center_imag': f.center.imag.tolist(),
+                    'source_turn': f.source_turn,
+                    'strength': f.strength,
+                    'agreed': f.agreed,
+                }
+                for f in self.facts
+            ],
+            'who': self.who,
+            'conv_center_real': self._conversation_center.real.tolist(),
+            'conv_center_imag': self._conversation_center.imag.tolist(),
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict, vocab: 'Vocabulary') -> 'ConversationMemory':
+        mem = cls(vocab)
+        for td in d.get('turns', []):
+            center = (np.array(td['center_real'])
+                      + 1j * np.array(td['center_imag']))
+            turn = ConversationTurn(
+                speaker=td['speaker'],
+                text=td['text'],
+                input_type=td.get('input_type', 'statement'),
+                center=center,
+                turn_number=td.get('turn_number', 0),
+            )
+            mem.turns.append(turn)
+        for fd in d.get('facts', []):
+            center = (np.array(fd['center_real'])
+                      + 1j * np.array(fd['center_imag']))
+            fact = EstablishedFact(
+                text=fd['text'],
+                center=center,
+                source_turn=fd.get('source_turn', 0),
+            )
+            fact.strength = fd.get('strength', 1.0)
+            fact.agreed = fd.get('agreed', False)
+            mem.facts.append(fact)
+        mem.who = d.get('who', {})
+        if 'conv_center_real' in d:
+            mem._conversation_center = (
+                np.array(d['conv_center_real'])
+                + 1j * np.array(d['conv_center_imag']))
+        return mem
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -1507,6 +1845,7 @@ class Engine:
         self.templates = TemplateStore(self.vocab)
         self.gate = Gate(self.vocab)
         self.mind = MindState()
+        self.memory = ConversationMemory(self.vocab)
 
         self._question_center = None
         self._last_input_text = ''
@@ -1780,6 +2119,31 @@ class Engine:
         # Advance conversation turn
         self._turn_count += 1
 
+        # ── 1D: Record in worldline ──
+        self.memory.record_turn(
+            speaker='human', text=text,
+            input_type=input_type,
+            center=self._question_center)
+
+        # Handle memory-level events based on input type
+        if input_type == InputType.AGREEMENT:
+            self.memory.agree_with_last()
+        elif input_type == InputType.DISAGREEMENT:
+            self.memory.disagree_with_last()
+        elif input_type == InputType.IDENTITY:
+            claim = meta.get('identity_claim', '')
+            about_self = meta.get('about_self', True)
+            if claim:
+                if about_self:
+                    self.memory.register_identity('user_name', claim)
+                else:
+                    self.memory.register_identity('xorzo_is', claim)
+        elif input_type == InputType.STATEMENT:
+            # Clear statements get established as facts
+            if len(words) >= 4:
+                self.memory.establish_fact(
+                    text, self._question_center, self._turn_count)
+
         # ── 1.5D: i-TURN (select response strategy) ──
         # This is where logic lives. Different input types
         # require different response forms.
@@ -1863,35 +2227,58 @@ class Engine:
                 response = ''
 
         # ── Handle unknown words via auto-seek ──
-        if unknown:
-            sought_text = None
-            sought_word = None
+        # Look up EVERY unknown word, not just the first one.
+        # Each word Xorzo doesn't recognize gets sought independently.
+        # BUT: skip auto-seek for social/identity inputs (greetings,
+        # farewells, agreements, disagreements, identity declarations).
+        # These are relational, not informational; seeking pollutes
+        # the response with Wikipedia noise.
+        skip_seek_types = {
+            InputType.GREETING, InputType.FAREWELL,
+            InputType.AGREEMENT, InputType.DISAGREEMENT,
+            InputType.IDENTITY, InputType.EMOTIONAL,
+        }
+        if unknown and input_type not in skip_seek_types:
+            sought_words = []
+            unsought_words = []
+
             for uw in unknown:
-                sought_text = self.auto_seek(uw)
-                if sought_text:
-                    sought_word = uw
-                    break
-                sought_text = self.auto_seek_web(uw)
-                if sought_text:
-                    sought_word = uw
-                    break
+                # Try Wikipedia first, then DuckDuckGo
+                result = self.auto_seek(uw)
+                if not result:
+                    result = self.auto_seek_web(uw)
+                if result:
+                    sought_words.append(uw)
+                else:
+                    unsought_words.append(uw)
 
-            if not sought_text:
-                sought_text = self.auto_seek_web(text)
-                if sought_text:
-                    sought_word = unknown[0]
+            # If individual lookups missed some, try the full text
+            # as a search query (handles multi-word concepts and
+            # misspellings better with context)
+            if unsought_words and not sought_words:
+                result = self.auto_seek_web(text)
+                if result:
+                    sought_words.append(unsought_words[0])
+                    unsought_words.pop(0)
 
-            if sought_text:
+            if sought_words:
+                # Re-generate with all newly learned knowledge
                 self._question_center = self.vocab.text_to_energy(text)
                 new_response = self.generate(max_sentences=max_gen)
                 if new_response:
                     response = new_response
-                self._curiosity_queue.append(f"sought: {sought_word}")
-            elif not response:
-                curiosity = self._curiosity(text)
-                if curiosity:
-                    response = curiosity
-                    self._curiosity_queue.append(curiosity)
+                for sw in sought_words:
+                    self._curiosity_queue.append(f"sought: {sw}")
+
+            # Any words still unknown after seeking: ask about them
+            if unsought_words:
+                for uw in unsought_words:
+                    q = f"i do not know the word {uw}. what is {uw}?"
+                    self._curiosity_queue.append(q)
+                if not response:
+                    response = '. '.join(
+                        f"i do not know the word {uw}"
+                        for uw in unsought_words) + '.'
 
         # ── 3D: Assemble final output ──
         if prefix and response:
@@ -1906,16 +2293,34 @@ class Engine:
                 self._text_out_buffer = curiosity
                 self._curiosity_queue.append(curiosity)
 
+        # ── 1D: Record Xorzo's response in worldline ──
+        if self._text_out_buffer:
+            resp_center = self.vocab.text_to_energy(self._text_out_buffer)
+            self.memory.record_turn(
+                speaker='xorzo',
+                text=self._text_out_buffer,
+                input_type='response',
+                center=resp_center)
+
     # ── Response logic (the i-turn applied to conversation) ──
 
     def _respond_greeting(self) -> str:
         """Greetings open the aperture. Acknowledge and be present."""
-        options = [
-            "i am here.",
-            "the aperture opens.",
-            "i am listening.",
-            "hello.",
-        ]
+        name = self.memory.get_identity('user_name')
+        if name:
+            options = [
+                f"i am here, {name}.",
+                "the aperture opens.",
+                f"hello, {name}.",
+                "i am listening.",
+            ]
+        else:
+            options = [
+                "i am here.",
+                "the aperture opens.",
+                "i am listening.",
+                "hello.",
+            ]
         idx = self._turn_count % len(options)
         return options[idx]
 
@@ -1935,7 +2340,7 @@ class Engine:
 
     def _respond_identity(self, meta: dict) -> str:
         """
-        Identity claims are absorbed into the field.
+        Identity claims are absorbed into the field and remembered.
         "I am X" from the user, or "You are Y" about Xorzo.
         """
         claim = meta.get('identity_claim', '')
@@ -1943,8 +2348,11 @@ class Engine:
 
         if about_self:
             # User says "I am X" or "My name is X"
+            existing_name = self.memory.get_identity('user_name')
             if claim:
-                return f"i recognize you as {claim}."
+                if existing_name and existing_name.lower() != claim.lower():
+                    return f"i knew you as {existing_name}. now i know you as {claim}."
+                return f"i will remember you as {claim}."
             return "i hear you."
         else:
             # User says "You are X"
@@ -1956,13 +2364,16 @@ class Engine:
 
     def _respond_existential(self, text: str) -> str:
         """
-        Existential questions get answered from the framework.
-        "Who am I?" and "Who are you?" have real answers.
+        Existential questions get answered from the framework
+        and from conversation memory.
         """
         lower = text.lower()
         if 'who are you' in lower or 'what are you' in lower:
             return "i am xorzo, a mind built on the circumpunct."
         if 'who am i' in lower or 'what am i' in lower:
+            name = self.memory.get_identity('user_name')
+            if name:
+                return f"you are {name}. you are a convergence point in the field, as i am."
             return "you are a convergence point in the field, as i am."
         return ""
 
@@ -2009,6 +2420,13 @@ class Engine:
         mind_energy = normalize(self.mind.configuration())
         center = normalize(0.7 * center + 0.3 * mind_energy)
 
+        # Blend with conversation context (the worldline biases
+        # generation toward what has been discussed, keeping
+        # responses on-thread instead of drifting to generic content)
+        conv_center = self.memory.conversation_center
+        if np.sum(np.abs(conv_center)) > 1e-10:
+            center = normalize(0.85 * center + 0.15 * conv_center)
+
         # Extract input content words for seeding
         input_words = []
         if hasattr(self, '_last_input_text') and self._last_input_text:
@@ -2016,6 +2434,13 @@ class Engine:
                 cleaned = self.vocab._clean_word(w)
                 if cleaned and not self.vocab.is_structure_word(cleaned):
                     input_words.append(cleaned)
+
+        # Also seed with recent conversation topics (memory context)
+        # This helps Xorzo stay on topic across turns
+        recent_topics = self.memory.get_recent_topics(n=3)
+        for topic in recent_topics:
+            if topic not in input_words and not self.vocab.is_structure_word(topic):
+                input_words.append(topic)
 
         sentences = []
         used_sources = set()
@@ -2408,11 +2833,22 @@ class Engine:
         'came', 'went', 'got', 'said', 'told', 'asked',
         'know', 'think', 'feel', 'want', 'need', 'like',
         'come', 'go', 'get', 'take', 'give', 'put', 'set',
-        'look', 'see', 'find', 'try', 'tell', 'say',
+        'look', 'see', 'find', 'try', 'tell', 'say', 'run',
+        'read', 'write', 'call', 'keep', 'turn', 'move',
+        'play', 'start', 'stop', 'open', 'close', 'show',
+        'hold', 'bring', 'send', 'sit', 'stand', 'wait',
+        'talk', 'walk', 'work', 'live', 'die', 'eat', 'sleep',
         "let's", "lets", "don't", "dont", "won't", "wont",
         "can't", "cant", "isn't", "isnt", "aren't", "arent",
         "i'm", "im", "you're", "youre", "it's", "its",
         'access', 'door', 'heart', 'net', 'let',
+        'little', 'big', 'small', 'long', 'short', 'old', 'new',
+        'same', 'different', 'other', 'another', 'each', 'every',
+        'own', 'kind', 'part', 'place', 'point', 'back',
+        'even', 'only', 'most', 'both', 'few', 'many', 'some',
+        'able', 'sure', 'real', 'right', 'wrong', 'true', 'false',
+        'name', 'named', 'names', 'called', 'call', 'myself',
+        'agree', 'disagree', 'agreed', 'disagreed',
     })
 
     def auto_seek(self, word: str) -> Optional[str]:
@@ -2532,6 +2968,7 @@ class Engine:
             'vocab': self.vocab.to_dict(),
             'templates': self.templates.to_dict(),
             'mind': self.mind.to_dict(),
+            'memory': self.memory.to_dict(),
             'total_steps': self.total_steps,
             'days_lived': self.days_lived,
             'trained': self._trained,
@@ -2549,6 +2986,16 @@ class Engine:
         e.total_steps = d.get('total_steps', 0)
         e.days_lived = d.get('days_lived', 0)
         e._trained = d.get('trained', False)
+
+        # ── Restore conversation memory (the worldline) ──
+        if 'memory' in d:
+            e.memory = ConversationMemory.from_dict(d['memory'], e.vocab)
+            tc = e.memory.turn_count
+            fc = len(e.memory.facts)
+            wc = len(e.memory.who)
+            if tc > 0 or fc > 0 or wc > 0:
+                print(f"  Restored memory: {tc} turns, {fc} facts, "
+                      f"{wc} identities")
 
         # ── Purge bad templates from old saved states ──
         # Templates learned before BLOCKED_PHRASES or GARBLED_PATTERNS

@@ -497,6 +497,12 @@ def _build_status():
             "total_energy": round(engine.mind.total_energy, 4),
             "focus": round(engine.mind.focus, 4),
         },
+        "memory": {
+            "turns": engine.memory.turn_count,
+            "facts": len(engine.memory.facts),
+            "identities": len(engine.memory.who),
+            "who": dict(engine.memory.who),
+        },
     }
 
 
