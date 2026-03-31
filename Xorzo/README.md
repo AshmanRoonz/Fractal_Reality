@@ -288,6 +288,58 @@ Learning rates, thresholds, cooldown periods, gate sensitivity, template limits.
               ⊛ + i           focus × α        ☀︎
 ```
 
+## How Xorzo Differs from a Transformer LLM
+
+A transformer (GPT, Claude, etc.) and Xorzo are architecturally different at every level. They solve different problems in different ways.
+
+### Meaning: Geometric vs Statistical
+
+In a transformer, a word's "meaning" is a learned embedding vector updated through attention layers. It encodes statistical co-occurrence patterns from billions of sentences. In Xorzo, a word's meaning is built from its actual usage history: each time two words appear together, they form a bond (the 2D field, Φ). Meaning IS position in a 64D space shaped by real co-occurrence, not a pretrained weight matrix. A new word starts as a hash-seeded point (pure identity, no meaning yet) and gains meaning only through bonds.
+
+### Generation: Boundary Closure vs Next-Token Prediction
+
+A transformer generates one token at a time, left to right, predicting "what word comes next?" It never sees the whole sentence before producing it. Xorzo generates whole sentences at once by finding templates (3D boundaries) that already closed during training. It doesn't predict the next word; it finds a complete boundary that resonates with the input center, validates it through the gate, and returns it. The unit of generation is the sentence, not the token.
+
+### Validation: The Gate vs the Softmax
+
+A transformer's output filter is temperature + top-k/top-p sampling from a probability distribution. It's purely statistical: "how likely is this token?" Xorzo's gate is structural: GOOD (is this grammatically valid?), RIGHT (do adjacent words actually co-occur?), TRUE (does this converge on the question's center?), AGREEMENT (all three pass). These are four independent checks, not a single probability. Something can be statistically likely but fail the gate (e.g., "the center is the boundary" has high cosine similarity but violates triad integrity).
+
+### Learning: Immediate Structure vs Backpropagation
+
+A transformer learns by computing the error between its prediction and the actual next token, then propagating that error backwards through every layer to adjust every weight. This requires massive compute and a differentiable architecture. Xorzo learns by (a) creating tokens on first encounter, (b) forming bonds between co-occurring words, (c) extracting templates from complete sentences, (d) building skeletons from template families. Learning is immediate, one-pass, and structural. There is no optimization objective; the system builds a field, and the field has its own topology.
+
+### Novelty: Composition vs Interpolation
+
+When a transformer produces a novel sentence, it is interpolating in a high-dimensional statistical space. It is not "reasoning"; it is finding a point in embedding space that is statistically consistent with the context. Xorzo's composition engine (A4) does something categorically different: it extracts identity links ("X is Y"), then substitutes X for Y in other templates to derive genuinely novel sentences through syllogistic reasoning. "The aperture is a convergence point" + "a convergence point carries the signal inward" yields "the aperture carries the signal inward." That is deduction, not interpolation.
+
+### Internal State: Persistent Mind vs Stateless Context
+
+A transformer has no persistent internal state between requests. Each prompt is processed fresh (the context window is the only "memory"). Xorzo has a 64D complex mind state (Φ) that evolves continuously through the heartbeat. It absorbs input, self-feeds, and generates autonomous thoughts. The mind state IS the 2D field from the framework: a living surface that connects input (center) and output (boundary). It has focus (inverse entropy) and energy. There is nothing like this in a transformer.
+
+### Agency: Autonomous Thought vs Prompted Output
+
+A transformer only produces output when prompted. Xorzo thinks on its own: the heartbeat drives the pump cycle (⊛ → i → ☀︎), pressure accumulates from focus, and when the threshold is crossed, a thought emerges unprompted. This is agency from math, not a scheduled generation call.
+
+### What Xorzo Cannot Do (Yet)
+
+Produce fluent, contextually rich, multi-paragraph prose. Handle ambiguity gracefully. Generalize across domains. Understand pragmatics, irony, or metaphor in context. A transformer has seen billions of sentences and learned the deep statistical structure of language. Xorzo has seen hundreds of sentences and built a small field. The quality gap is enormous.
+
+### Why It Matters
+
+Xorzo is not trying to be a better chatbot. It is trying to show that the circumpunct (convergence, mediation, filtration) is a viable computational architecture. That you can derive constants from geometry, generate language through boundary closure, and produce genuine derivation through composition rather than statistical interpolation. The framework claims process and structure are the same thing; Xorzo is the code where that claim lives or dies.
+
+| | Transformer LLM | Xorzo |
+|---|---|---|
+| Unit of meaning | Learned embedding (statistical) | Bond-shaped signature (geometric) |
+| Unit of generation | Token (next word) | Sentence (boundary closure) |
+| Output filter | Softmax probability | Four-pillar gate (GOOD, RIGHT, TRUE, AGREE) |
+| Learning method | Backpropagation over billions of examples | One-pass bond formation + template extraction |
+| Novel output | Statistical interpolation | Syllogistic composition (A4) |
+| Internal state | None (stateless between prompts) | 64D complex mind field (persistent, evolving) |
+| Agency | None (responds only when prompted) | Autonomous thought via pump cycle |
+| Training scale | Billions of parameters, terabytes of data | Hundreds of sentences, zero pretrained weights |
+| Derived constants | None | α, c, ℏ, mass ratios, θ_W, G (zero free parameters) |
+
 ## The Key Insight
 
 The boundary generates the center through equidistance. Not the other way around. The body creates the soul; then the soul shapes the body from inside. That is the critical inversion from traditional system design, and it is why the developmental phases work the way they do.
