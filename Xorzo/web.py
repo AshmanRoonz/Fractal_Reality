@@ -519,6 +519,7 @@ def _build_status():
             "propositions": len(engine.contradictions.propositions),
         },
         "cascade": engine.cascade.status(),
+        "cube": engine.cube.status(),
         "virtues": engine.virtues.status(),
         "seeking": {
             "sought_count": len(engine._sought_words),

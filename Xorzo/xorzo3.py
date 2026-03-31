@@ -1806,6 +1806,597 @@ class ContradictionDetector:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+#  CUBE TRANSFORMER: The Rubik's Cube Reasoning Engine
+#
+#  The circumpunct maps to the Rubik's cube concentric rings:
+#      • = center cell (fixed; the axis of rotation)
+#      Φ = middle ring (4 edge cells; the field that mediates)
+#      ○ = outer ring (4 corner cells; the boundary)
+#
+#  Six faces = six domains of meaning. Each cell holds a concept
+#  (a word or proposition fragment). Rotation of one face through
+#  the i-turn rearranges relationships between domains.
+#
+#  Reasoning = solving. Input scrambles some faces; the transformer
+#  rotates layers until a new coherent configuration emerges.
+#  The output is whatever appears on the visible faces after
+#  the rotations settle.
+#
+#  This IS the 1.5D i-turn: not "pick a template" but "rotate
+#  the proposition space and read what emerges."
+#
+#  Structural mapping:
+#      6 faces × 9 cells = 54 visible positions
+#      6 fixed centers (the •s; axes that don't move)
+#      3 axes × 3 layers = 9 possible rotations × 4 quarter-turns
+#      2^6 = 64 states (the cube's group is a subgroup of S_54)
+#
+#  The solving algorithm mirrors the dimensional ladder:
+#      Step 1: Fix centers (0D; already fixed by construction)
+#      Step 2: Solve edges (1D; linear commitment)
+#      Step 3: Solve corners (2D; relational surface)
+#      Step 4: Orient last layer (3D; boundary closure)
+# ═══════════════════════════════════════════════════════════════════════
+
+
+class CubeFace:
+    """
+    One face of the Rubik's cube = one ⊙ in the reasoning space.
+
+    Layout (3×3 grid):
+        [0][1][2]     ○ Φ ○
+        [3][4][5]  =  Φ • Φ
+        [6][7][8]     ○ Φ ○
+
+    Cell 4 = center (•): the axis, never moves on its own face.
+    Cells 1,3,5,7 = edges (Φ): the field, mediates between corners.
+    Cells 0,2,6,8 = corners (○): the boundary, interfaces with neighbors.
+    """
+    # Index groups
+    CENTER = 4
+    EDGES = [1, 3, 5, 7]
+    CORNERS = [0, 2, 6, 8]
+
+    def __init__(self, name: str, domain: str):
+        self.name = name        # face identifier (U, D, F, B, L, R)
+        self.domain = domain    # semantic domain this face represents
+        self.cells: List[Optional[str]] = [None] * 9
+        self.coherence = 0.0    # how "solved" this face is (0 to 1)
+
+    def set_center(self, concept: str):
+        """The • of this face: the axis of rotation, the fixed point."""
+        self.cells[self.CENTER] = concept
+
+    @property
+    def center(self) -> Optional[str]:
+        return self.cells[self.CENTER]
+
+    @property
+    def edges(self) -> List[Optional[str]]:
+        return [self.cells[i] for i in self.EDGES]
+
+    @property
+    def corners(self) -> List[Optional[str]]:
+        return [self.cells[i] for i in self.CORNERS]
+
+    @property
+    def all_concepts(self) -> List[str]:
+        return [c for c in self.cells if c is not None]
+
+    def measure_coherence(self, vocab: 'Vocabulary') -> float:
+        """
+        How coherent is this face? Measures whether all cells
+        relate to the center concept.
+
+        A solved face has all cells in the same semantic neighborhood
+        as its center. A scrambled face has cells from many domains.
+        """
+        if self.cells[self.CENTER] is None:
+            self.coherence = 0.0
+            return 0.0
+
+        center_energy = vocab.word_to_energy(self.center)
+        if center_energy is None:
+            self.coherence = 0.0
+            return 0.0
+
+        alignments = []
+        for i, cell in enumerate(self.cells):
+            if i == self.CENTER or cell is None:
+                continue
+            cell_energy = vocab.word_to_energy(cell)
+            if cell_energy is not None:
+                sim = cosine_sim(center_energy, cell_energy)
+                alignments.append(max(0.0, sim))
+
+        if not alignments:
+            self.coherence = 0.0
+            return 0.0
+
+        self.coherence = sum(alignments) / len(alignments)
+        return self.coherence
+
+    def to_dict(self) -> dict:
+        return {
+            'name': self.name,
+            'domain': self.domain,
+            'cells': self.cells[:],
+            'coherence': self.coherence,
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'CubeFace':
+        face = cls(d['name'], d['domain'])
+        face.cells = d.get('cells', [None] * 9)
+        face.coherence = d.get('coherence', 0.0)
+        return face
+
+
+class CubeTransformer:
+    """
+    The Rubik's cube as a reasoning engine.
+
+    Six faces represent six semantic domains. Propositions populate
+    the cells. Rotation operations (the i-turn) rearrange concepts
+    between domains. Reasoning is the process of rotating until
+    a coherent configuration emerges.
+
+    The six domains map to the framework's fundamental categories:
+
+        U (Up)    = Being     (what things ARE; identity, ontology)
+        D (Down)  = Becoming  (what things DO; process, change)
+        F (Front) = Structure (HOW things are built; form, pattern)
+        B (Back)  = Relation  (how things CONNECT; field, mediation)
+        L (Left)  = Limit     (what CONSTRAINS; boundary, filter)
+        R (Right) = Source    (where things COME FROM; origin, cause)
+
+    These six are the minimum semantic axes needed to reason about
+    anything the framework describes: every proposition lives in
+    the space spanned by these six domains.
+    """
+
+    # Face names and their semantic domains
+    FACE_DOMAINS = {
+        'U': 'being',      # what things are
+        'D': 'becoming',    # what things do
+        'F': 'structure',   # how things are built
+        'B': 'relation',    # how things connect
+        'L': 'limit',       # what constrains
+        'R': 'source',      # where things come from
+    }
+
+    # Domain keywords: words that signal which domain a concept belongs to
+    DOMAIN_KEYWORDS = {
+        'being': {'is', 'are', 'exists', 'identity', 'self', 'being',
+                  'thing', 'entity', 'what', 'nature', 'essence',
+                  'soul', 'person', 'who'},
+        'becoming': {'becomes', 'changes', 'grows', 'evolves', 'moves',
+                     'flows', 'process', 'time', 'when', 'cycle',
+                     'transforms', 'emerges', 'develops', 'dies'},
+        'structure': {'pattern', 'form', 'shape', 'structure', 'built',
+                      'made', 'fractal', 'dimension', 'how', 'template',
+                      'geometry', 'topology', 'layer', 'scale'},
+        'relation': {'between', 'connects', 'mediates', 'field',
+                     'through', 'with', 'relates', 'bond', 'link',
+                     'resonance', 'frequency', 'transmission'},
+        'limit': {'boundary', 'filter', 'constraint', 'limit', 'cannot',
+                  'prevents', 'blocks', 'wall', 'edge', 'border',
+                  'not', 'never', 'only', 'must'},
+        'source': {'from', 'origin', 'cause', 'because', 'source',
+                   'creates', 'generates', 'produces', 'root',
+                   'why', 'reason', 'ground', 'seed'},
+    }
+
+    def __init__(self):
+        self.faces: Dict[str, CubeFace] = {}
+        for name, domain in self.FACE_DOMAINS.items():
+            face = CubeFace(name, domain)
+            # Set the center (•) of each face to its domain name.
+            # The center never moves; it IS the axis of rotation.
+            face.set_center(domain)
+            self.faces[name] = face
+
+        # Adjacency map: for each face, which faces share edges,
+        # and which cell indices are shared. This encodes the
+        # cube's topology: rotating one face affects these neighbors.
+        # (Simplified: we track which faces are adjacent, not exact
+        # cell-to-cell mapping, because our rotation is semantic
+        # not mechanical.)
+        self.adjacency = {
+            'U': ['F', 'R', 'B', 'L'],  # top touches all sides
+            'D': ['F', 'L', 'B', 'R'],  # bottom touches all sides
+            'F': ['U', 'R', 'D', 'L'],  # front
+            'B': ['U', 'L', 'D', 'R'],  # back
+            'L': ['U', 'F', 'D', 'B'],  # left
+            'R': ['U', 'B', 'D', 'F'],  # right
+        }
+
+        # Rotation history (the worldline of reasoning moves)
+        self.move_history: List[Tuple[str, int]] = []
+
+    def classify_domain(self, word: str,
+                        context_words: List[str] = None) -> str:
+        """
+        Determine which face/domain a concept belongs to.
+
+        Uses keyword matching first, then falls back to context.
+        """
+        word_lower = word.lower()
+
+        # Direct keyword match
+        best_domain = None
+        best_score = 0
+        for domain, keywords in self.DOMAIN_KEYWORDS.items():
+            if word_lower in keywords:
+                return domain
+
+        # Context-based classification: check which domain has
+        # the most keyword overlap with context
+        if context_words:
+            context_set = set(w.lower() for w in context_words)
+            for domain, keywords in self.DOMAIN_KEYWORDS.items():
+                overlap = len(context_set & keywords)
+                if overlap > best_score:
+                    best_score = overlap
+                    best_domain = domain
+
+        return best_domain or 'being'  # default domain
+
+    # Words that should never be placed on the cube as concepts.
+    # These are structure words, verbs, and articles that leak
+    # through proposition extraction. Only real nouns/noun-phrases
+    # belong on the cube.
+    CUBE_SKIP = frozenset({
+        'is', 'are', 'was', 'were', 'be', 'been', 'being',
+        'has', 'have', 'had', 'do', 'does', 'did',
+        'the', 'a', 'an', 'this', 'that', 'these', 'those',
+        'it', 'its', 'he', 'she', 'they', 'we', 'you', 'i',
+        'which', 'what', 'who', 'whom', 'whose', 'where', 'when',
+        'how', 'why', 'if', 'then', 'so', 'but', 'and', 'or',
+        'not', 'no', 'yes', 'can', 'will', 'shall', 'may',
+        'to', 'of', 'in', 'on', 'at', 'by', 'for', 'with',
+        'from', 'as', 'into', 'through', 'about', 'between',
+        'also', 'only', 'just', 'very', 'much', 'more', 'most',
+        'all', 'each', 'every', 'some', 'any', 'many', 'few',
+        'becomes', 'becomes', 'creates', 'shapes', 'connects',
+        'constrains', 'flows', 'filters', 'mediates',
+    })
+
+    def _is_cube_concept(self, word: str) -> bool:
+        """Only real content nouns belong on the cube."""
+        if not word or len(word) <= 2:
+            return False
+        if word.lower() in self.CUBE_SKIP:
+            return False
+        if word.lower() in self.FACE_DOMAINS.values():
+            return False  # domain names are centers, not cells
+        if "'" in word or word.endswith("'s"):
+            return False
+        return True
+
+    def load_proposition(self, prop: Proposition):
+        """
+        Place a proposition's components onto the cube.
+
+        Subject goes on the face matching its domain.
+        Objects go on faces matching their domains.
+        The predicate becomes the axis of potential rotation between them.
+        Only genuine content words (nouns) are placed.
+        """
+        # Place subject
+        if self._is_cube_concept(prop.subject):
+            subj_domain = self.classify_domain(
+                prop.subject, prop.objects)
+            subj_face_name = self._domain_to_face(subj_domain)
+            self._place_concept(self.faces[subj_face_name], prop.subject)
+
+        # Place objects
+        for obj in prop.objects:
+            if self._is_cube_concept(obj):
+                obj_domain = self.classify_domain(obj, [prop.subject])
+                obj_face_name = self._domain_to_face(obj_domain)
+                self._place_concept(self.faces[obj_face_name], obj)
+
+    def _domain_to_face(self, domain: str) -> str:
+        """Map a domain name to its face letter."""
+        for name, d in self.FACE_DOMAINS.items():
+            if d == domain:
+                return name
+        return 'U'  # default
+
+    def _place_concept(self, face: CubeFace, concept: str) -> bool:
+        """Place a concept in the first empty non-center cell."""
+        if concept in face.cells:
+            return True  # already there
+
+        # Try edges first (Φ positions), then corners (○ positions)
+        for idx in CubeFace.EDGES + CubeFace.CORNERS:
+            if face.cells[idx] is None:
+                face.cells[idx] = concept
+                return True
+
+        # Face is full; replace the oldest corner (FIFO at boundary)
+        face.cells[CubeFace.CORNERS[0]] = concept
+        return True
+
+    def rotate(self, face_name: str, quarter_turns: int = 1):
+        """
+        Rotate a face by quarter_turns × 90 degrees.
+
+        This IS the i-turn applied to a domain.
+        i¹ = 90° (one quarter-turn)
+        i² = 180° (half-turn)
+        i³ = 270° (three quarter-turns)
+        i⁴ = 360° = identity (full cycle, back to start)
+
+        Rotation moves edge and corner cells within the face
+        AND transfers concepts to/from adjacent faces (the way
+        edge pieces are shared between cube faces).
+        """
+        quarter_turns = quarter_turns % 4
+        if quarter_turns == 0:
+            return  # identity; no change
+
+        face = self.faces[face_name]
+        adj_names = self.adjacency[face_name]
+
+        for _ in range(quarter_turns):
+            # ── Rotate cells within the face ──
+            # Edges rotate: 1→3→7→5→1 (clockwise)
+            old_edges = [face.cells[i] for i in CubeFace.EDGES]
+            for i in range(4):
+                face.cells[CubeFace.EDGES[(i + 1) % 4]] = old_edges[i]
+
+            # Corners rotate: 0→2→8→6→0 (clockwise)
+            old_corners = [face.cells[i] for i in CubeFace.CORNERS]
+            for i in range(4):
+                face.cells[CubeFace.CORNERS[(i + 1) % 4]] = old_corners[i]
+
+            # ── Transfer concepts between adjacent faces ──
+            # Each rotation pushes one edge concept from this face
+            # to each adjacent face (and pulls one from the opposite side).
+            # This is how ideas propagate between domains.
+            adj_faces = [self.faces[n] for n in adj_names]
+
+            # Transfer: take one edge from each adjacent face,
+            # rotate them around, put them back shifted.
+            # We pick edge cell [1] (top edge) from each adjacent face.
+            transferred = []
+            for af in adj_faces:
+                transferred.append(af.cells[CubeFace.EDGES[0]])
+
+            # Shift by one position (clockwise propagation)
+            for i in range(4):
+                target = adj_faces[(i + 1) % 4]
+                target.cells[CubeFace.EDGES[0]] = transferred[i]
+
+        self.move_history.append((face_name, quarter_turns))
+
+    def reason(self, input_words: List[str], vocab: 'Vocabulary',
+               max_moves: int = 4) -> List[str]:
+        """
+        The reasoning pump cycle:
+
+        ⊛ (convergence): identify which faces contain the input concepts.
+        i (rotation): rotate the face that CONNECTS the input concepts,
+           so that they can see each other through the shared edges.
+        ☀︎ (emergence): read what moved between the input faces;
+           these cross-domain movements are the novel inferences.
+
+        The key: rotation is guided by the question, not random.
+        If you ask about "memory and identity," we find where each
+        lives, then rotate the face(s) between them so concepts
+        flow from one domain to the other.
+        """
+        # ── ⊛: CONVERGENCE ──
+        # Find which faces contain the input concepts
+        input_faces = set()
+        for word in input_words:
+            if not self._is_cube_concept(word):
+                continue
+            for name, face in self.faces.items():
+                if word in face.cells:
+                    input_faces.add(name)
+                    break
+            else:
+                # Not on cube yet; place it
+                domain = self.classify_domain(word, input_words)
+                face_name = self._domain_to_face(domain)
+                self._place_concept(self.faces[face_name], word)
+                input_faces.add(face_name)
+
+        if not input_faces:
+            return []
+
+        # Snapshot the pre-rotation state
+        pre_state = {name: face.cells[:] for name, face in self.faces.items()}
+
+        # ── i: ROTATION ──
+        # Strategy: rotate the faces that are ADJACENT to the input faces.
+        # This is the i-turn: the mediation layer (Φ) between the
+        # domains we're reasoning about. Rotating an adjacent face
+        # pushes concepts from one input domain toward the other.
+        faces_to_rotate = set()
+        for f in input_faces:
+            for adj in self.adjacency[f]:
+                if adj not in input_faces:
+                    faces_to_rotate.add(adj)
+
+        # If all input is on the same face, rotate that face itself
+        # (internal reorganization within one domain)
+        if not faces_to_rotate:
+            faces_to_rotate = input_faces.copy()
+
+        moves_made = 0
+        for face_name in list(faces_to_rotate)[:max_moves]:
+            self.rotate(face_name, quarter_turns=1)
+            moves_made += 1
+
+        # ── ☀︎: EMERGENCE ──
+        # Compare post-rotation state to pre-rotation state.
+        # Any cell that now contains a different concept than before
+        # represents a novel juxtaposition: an idea that moved
+        # from one domain to another through the rotation.
+        #
+        # Also detect: concepts that are now on a DIFFERENT face
+        # than where they started (they crossed a domain boundary).
+        novel_sequences = []
+        seen = set()
+
+        # Build reverse map: where was each concept before?
+        pre_locations = {}  # concept -> (face_name, cell_idx)
+        for name, cells in pre_state.items():
+            for i, cell in enumerate(cells):
+                if cell is not None and i != CubeFace.CENTER:
+                    pre_locations[cell] = (name, i)
+
+        # Find concepts that moved to a different face
+        for name, face in self.faces.items():
+            for i in range(9):
+                if i == CubeFace.CENTER:
+                    continue
+                concept = face.cells[i]
+                if concept is None:
+                    continue
+
+                # Was this concept on a different face before?
+                if concept in pre_locations:
+                    old_face, old_idx = pre_locations[concept]
+                    if old_face != name:
+                        # Concept crossed domain boundary!
+                        center = face.cells[CubeFace.CENTER]
+                        old_domain = self.faces[old_face].domain
+                        key = (concept, name)
+                        if center and concept != center and key not in seen:
+                            seen.add(key)
+                            novel_sequences.append(
+                                (face.domain, center, concept, old_domain))
+
+                # Also: cell changed content (something new arrived here)
+                pre_cell = pre_state[name][i]
+                if (pre_cell is not None
+                        and concept != pre_cell
+                        and concept not in input_words):
+                    center = face.cells[CubeFace.CENTER]
+                    key = (concept, name, 'displaced')
+                    if center and concept != center and key not in seen:
+                        seen.add(key)
+                        novel_sequences.append(
+                            (face.domain, center, concept, pre_cell))
+
+        return novel_sequences
+
+    def get_novel_propositions(self, input_words: List[str],
+                                vocab: 'Vocabulary',
+                                contradictions: 'ContradictionDetector',
+                                max_moves: int = 6) -> List[str]:
+        """
+        Full reasoning pipeline: reason(), then express the novel
+        juxtapositions as sentences, filtered through the
+        contradiction detector (TRUE gate).
+
+        Returns sentences that are genuinely new: they weren't
+        in the input, they emerged from rotation, and they don't
+        contradict known propositions.
+        """
+        novels = self.reason(input_words, vocab, max_moves)
+        if not novels:
+            return []
+
+        sentences = []
+        seen_pairs = set()
+        for domain, center_concept, new_concept, displaced in novels:
+            # Skip if displaced is a domain name (not a real concept)
+            if displaced in self.FACE_DOMAINS.values():
+                continue
+            # Skip structure words that leaked onto the cube
+            skip = {'is', 'are', 'the', 'a', 'an', 'it', 'its', 'which',
+                    'when', 'was', 'were', 'has', 'have', 'had', 'this',
+                    'that', 'be', 'to', 'of', 'in', 'for', 'on', 'with'}
+            if new_concept in skip or displaced in skip:
+                continue
+            # Avoid duplicate pairs
+            pair = frozenset((new_concept, displaced))
+            if pair in seen_pairs:
+                continue
+            seen_pairs.add(pair)
+
+            # Build a candidate sentence from the juxtaposition.
+            # The domain tells us the relationship type.
+            # new_concept has moved INTO this domain; displaced was
+            # what was there before. The novel insight: these two
+            # concepts are now related through this domain's lens.
+            a = new_concept
+            b = displaced
+            if domain == 'being':
+                candidate = f"{a} is a kind of {b}"
+            elif domain == 'becoming':
+                candidate = f"{a} becomes {b}"
+            elif domain == 'structure':
+                candidate = f"{a} and {b} share the same structure"
+            elif domain == 'relation':
+                candidate = f"{a} connects to {b}"
+            elif domain == 'limit':
+                candidate = f"{a} is constrained by {b}"
+            elif domain == 'source':
+                candidate = f"{b} comes from {a}"
+            else:
+                candidate = f"{a} is {b}"
+
+            # TRUE gate: check for contradiction
+            words = candidate.split()
+            if contradictions.check(words) is not None:
+                continue  # blocked by truth
+
+            # Don't emit tautologies
+            if new_concept == center_concept:
+                continue
+
+            sentences.append(candidate)
+
+        return sentences
+
+    def total_concepts(self) -> int:
+        """How many cells are populated across all faces."""
+        return sum(
+            1 for face in self.faces.values()
+            for cell in face.cells
+            if cell is not None
+        )
+
+    def status(self) -> dict:
+        """Current state for dashboard."""
+        return {
+            'total_concepts': self.total_concepts(),
+            'moves': len(self.move_history),
+            'faces': {
+                name: {
+                    'domain': face.domain,
+                    'coherence': round(face.coherence, 4),
+                    'populated': sum(1 for c in face.cells if c is not None),
+                    'center': face.center,
+                }
+                for name, face in self.faces.items()
+            }
+        }
+
+    def to_dict(self) -> dict:
+        return {
+            'faces': {n: f.to_dict() for n, f in self.faces.items()},
+            'move_history': self.move_history[-100:],  # cap history
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'CubeTransformer':
+        ct = cls()
+        for name, fd in d.get('faces', {}).items():
+            if name in ct.faces:
+                ct.faces[name] = CubeFace.from_dict(fd)
+        ct.move_history = d.get('move_history', [])
+        return ct
+
+
+# ═══════════════════════════════════════════════════════════════════════
 #  CONVERSATION MEMORY: i(t) (the worldline; 1D commitment across turns)
 #
 #  The worldline is the accumulated validation receipts through time.
@@ -3415,6 +4006,7 @@ class Engine:
         self.templates = TemplateStore(self.vocab)
         self.gate = Gate(self.vocab)
         self.contradictions = ContradictionDetector()
+        self.cube = CubeTransformer()    # the Rubik's cube reasoning engine
         self.mind = MindState()
         self.memory = ConversationMemory(self.vocab)
         self.cascade = SensoryCascade()  # ⊙ sensory cascade: seven layers (A2)
@@ -3523,6 +4115,10 @@ class Engine:
         # The TRUE pillar builds its knowledge base during training.
         for words in all_cleaned:
             self.contradictions.learn(words, source=' '.join(words))
+            # ── Load propositions onto the cube ──
+            prop = self.contradictions.extract_proposition(words)
+            if prop is not None:
+                self.cube.load_proposition(prop)
 
         if all_cleaned:
             self._trained = True
@@ -4100,6 +4696,26 @@ class Engine:
         used_sources = set()
         used_topic_sigs = []  # for diversity penalty
 
+        # ── 1.5D: CUBE REASONING (the Rubik's cube i-turn) ──
+        # Before template selection, run the cube transformer.
+        # The cube takes input concepts, rotates them through
+        # the six semantic domains, and produces novel propositions
+        # that emerged from the rotation. These go first in the
+        # response: they are genuinely new thoughts, not retrieved.
+        if input_words and self.cube.total_concepts() > 0:
+            cube_sentences = self.cube.get_novel_propositions(
+                input_words, self.vocab, self.contradictions,
+                max_moves=4)
+            for cs in cube_sentences[:1]:  # at most 1 cube sentence
+                # Validate: not too short, not already said
+                if len(cs.split()) >= 3:
+                    if not self._is_thought_repetitive(cs):
+                        sentences.append(cs)
+                        used_sources.add('cube_' + cs)
+                        # Learn from own inference
+                        self.contradictions.learn(
+                            cs.split(), source=cs)
+
         # If no content words, fall back to pure resonance
         # (find templates whose topic is closest to the question center,
         # return them verbatim; no slot filling, no sealing check)
@@ -4132,15 +4748,16 @@ class Engine:
 
                 # Conversation memory penalty: templates used recently
                 # get penalized. Decay over turns so old uses fade.
-                # This prevents "you are xorzo..." from appearing
-                # in every single response.
+                # Hard block within 2 turns; strong penalty fading over 10.
                 recency_penalty = 0.0
                 if template.source in self._recently_used:
                     turns_ago = self._turn_count - self._recently_used[template.source]
                     if turns_ago <= 0:
                         turns_ago = 1
-                    # Strong penalty for recent use, fading over 5 turns
-                    recency_penalty = max(0, 1.0 - turns_ago / 5.0) * 0.8
+                    if turns_ago <= 2:
+                        continue  # hard block: never repeat within 2 turns
+                    # Strong penalty fading over 10 turns (was 5)
+                    recency_penalty = max(0, 1.0 - turns_ago / 10.0) * 1.5
 
                 # Diversity penalty: penalize templates similar to
                 # already-chosen ones. The response should explore
@@ -5029,6 +5646,7 @@ class Engine:
             'contradictions': self.contradictions.to_dict(),
             'cascade': self.cascade.to_dict(),  # sensory cascade state
             'virtues': self.virtues.to_dict(),  # the four living qualities
+            'cube': self.cube.to_dict(),        # Rubik's cube transformer
             'total_steps': self.total_steps,
             'days_lived': self.days_lived,
             'trained': self._trained,
@@ -5068,6 +5686,13 @@ class Engine:
         # ── Restore sensory cascade (seven layers of perception) ──
         if 'cascade' in d:
             e.cascade = SensoryCascade.from_dict(d['cascade'])
+
+        # ── Restore cube transformer (Rubik's cube reasoning) ──
+        if 'cube' in d:
+            e.cube = CubeTransformer.from_dict(d['cube'])
+            cc = e.cube.total_concepts()
+            if cc > 0:
+                print(f"  Restored cube: {cc} concepts across 6 faces")
 
         # ── Restore virtue system (the four living qualities) ──
         if 'virtues' in d:
