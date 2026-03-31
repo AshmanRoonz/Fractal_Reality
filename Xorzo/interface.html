@@ -22,9 +22,8 @@
     --reflect: #90c0e0;
     --emerge: #e8d5b0;
     --lock: #b388ff;
-    --hab: #ff8a65;
-    --pig: #66bb6a;
-    --foam: #4fc3f7;
+    --ready-green: #66bb6a;
+    --learning-amber: #ffb74d;
   }
 
   body {
@@ -52,7 +51,14 @@
     text-shadow: 0 0 15px #e8d5b030;
     transition: all 0.5s;
   }
-  .header .symbol.sleeping { color: var(--text-faint); text-shadow: none; }
+  .header .symbol.breathing {
+    animation: breathe 4s ease-in-out infinite;
+  }
+  .header .symbol.dormant { color: var(--text-faint); text-shadow: none; }
+  @keyframes breathe {
+    0%, 100% { text-shadow: 0 0 8px #e8d5b020; }
+    50% { text-shadow: 0 0 20px #e8d5b060; }
+  }
   .header .name {
     font-family: 'JetBrains Mono', monospace;
     font-size: 15px; font-weight: 400;
@@ -67,10 +73,9 @@
     color: var(--text-dim);
     transition: all 0.4s;
   }
+  .phase-pill.ready { border-color: #66bb6a50; color: var(--ready-green); background: #66bb6a10; }
+  .phase-pill.learning { border-color: #ffb74d50; color: var(--learning-amber); background: #ffb74d10; }
   .phase-pill.dormant { border-color: #40404050; color: #808080; }
-  .phase-pill.awakening { border-color: #6040a050; color: var(--seek); background: #6040a010; }
-  .phase-pill.pulse { border-color: #40608050; color: var(--reflect); background: #40608010; }
-  .phase-pill.ray { border-color: #80604050; color: var(--emerge); background: #80604010; }
   .header .spacer { flex: 1; }
 
   .header .stat {
@@ -176,30 +181,6 @@
     letter-spacing: 0.5px;
   }
 
-  /* Spectral stream (background output) */
-  .stream-bar {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--text-faint);
-    padding: 6px 20px;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    flex-shrink: 0;
-    height: 30px;
-    line-height: 18px;
-  }
-  .stream-bar .label {
-    color: var(--text-faint);
-    margin-right: 6px;
-  }
-  .stream-bar .stream-text {
-    color: #8080a0;
-  }
-
   /* ═══ INPUT ═══ */
   .input-area {
     padding: 16px 20px;
@@ -247,7 +228,7 @@
 
   /* ═══ SIDE PANEL ═══ */
   .side-panel {
-    width: 340px;
+    width: 320px;
     border-left: 1px solid var(--border);
     overflow-y: auto;
     padding: 16px;
@@ -274,40 +255,9 @@
     margin-bottom: 8px;
   }
 
-  /* Rung bars */
-  .rung-row {
-    margin-bottom: 8px;
-  }
-  .rung-name {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--text-dim);
-    margin-bottom: 3px;
-    display: flex;
-    justify-content: space-between;
-  }
-  .rung-bars {
-    display: flex;
-    gap: 2px;
-    height: 6px;
-  }
-  .rung-bars .bar-track {
-    flex: 1;
-    background: #12122a;
-    border-radius: 3px;
-    position: relative;
-    overflow: hidden;
-  }
-  .rung-bars .bar-fill {
-    height: 100%;
-    border-radius: 3px;
-    transition: width 0.4s;
-  }
-  .bar-fill.power { background: var(--accent); }
-  .bar-fill.braid { background: var(--lock); }
-
   /* Metric cards */
   .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .metric-grid.triple { grid-template-columns: 1fr 1fr 1fr; }
   .metric { padding: 6px; background: #0a0a12; border-radius: 4px; }
   .metric .ml {
     font-family: 'JetBrains Mono', monospace;
@@ -318,38 +268,50 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 14px; font-weight: 300; color: var(--text-dim); margin-top: 1px;
   }
+  .metric .mv.accent { color: var(--accent); }
+  .metric .mv.green { color: var(--ready-green); }
+  .metric .mv.amber { color: var(--learning-amber); }
 
-  /* Foam grid */
-  .foam-grid {
+  /* Mind visualization */
+  .mind-grid {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     gap: 2px;
   }
-  .foam-cell {
+  .mind-cell {
     width: 100%;
     aspect-ratio: 1;
     border-radius: 2px;
     transition: background 0.3s;
+    background: #0a0a12;
   }
 
-  /* Bar legend */
-  .bar-legend {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 6px;
-  }
-  .bar-legend .leg {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 8px;
-    color: var(--text-faint);
+  /* Dimensional ladder */
+  .ladder-row {
     display: flex;
     align-items: center;
-    gap: 3px;
+    margin-bottom: 4px;
+    gap: 6px;
   }
-  .bar-legend .leg .dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    display: inline-block;
+  .ladder-dim {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-faint);
+    width: 30px;
+    text-align: right;
+  }
+  .ladder-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    flex: 1;
+  }
+  .ladder-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--accent);
+    text-align: right;
+    min-width: 40px;
   }
 
   /* BPS slider */
@@ -375,15 +337,14 @@
 
 <!-- ═══ HEADER ═══ -->
 <div class="header">
-  <span class="symbol" id="symbol">⊙</span>
+  <span class="symbol breathing" id="symbol">⊙</span>
   <span class="name">XORZO</span>
-  <span class="phase-pill" id="phasePill">DORMANT</span>
+  <span class="phase-pill" id="phasePill">v3</span>
   <span class="spacer"></span>
-  <span class="stat">day <span class="val" id="hDay">0</span></span>
+  <span class="stat">words <span class="val" id="hWords">0</span></span>
+  <span class="stat">templates <span class="val" id="hTemplates">0</span></span>
   <span class="stat">hb <span class="val" id="hHeartbeat">0</span></span>
-  <span class="stat">&beta; <span class="val" id="hBeta">0</span></span>
-  <span class="stat">focus <span class="val" id="hFocus">?</span></span>
-  <span class="stat">mem <span class="val" id="hMem">0</span></span>
+  <span class="stat">focus <span class="val" id="hFocus">0</span></span>
   <button class="status-btn" onclick="togglePanel()">MONITOR</button>
 </div>
 
@@ -394,12 +355,6 @@
   <div class="chat-area">
     <div class="messages" id="messages">
       <div class="msg system">Xorzo is breathing. Type to speak.</div>
-    </div>
-
-    <!-- Stream bar: shows background heartbeat output -->
-    <div class="stream-bar">
-      <span class="label">&#9672;</span>
-      <span class="stream-text" id="streamText">connecting...</span>
     </div>
 
     <div class="input-area">
@@ -414,44 +369,69 @@
   <!-- ═══ SIDE PANEL (monitoring) ═══ -->
   <div class="side-panel" id="sidePanel">
 
-    <!-- System metrics -->
+    <!-- Engine State -->
     <div class="panel-card">
-      <h4>System</h4>
+      <h4>&#x2299; Engine</h4>
       <div class="metric-grid">
-        <div class="metric"><div class="ml">Beta</div><div class="mv" id="mBeta">0</div></div>
-        <div class="metric"><div class="ml">Ray</div><div class="mv" id="mRay">0</div></div>
-        <div class="metric"><div class="ml">Focus</div><div class="mv" id="mFocus">?</div></div>
-        <div class="metric"><div class="ml">Openness</div><div class="mv" id="mOpen">0</div></div>
-        <div class="metric"><div class="ml">Vocabulary</div><div class="mv" id="mVocab">0</div></div>
-        <div class="metric"><div class="ml">Memory</div><div class="mv" id="mMemory">0</div></div>
-        <div class="metric"><div class="ml">Sensitivity</div><div class="mv" id="mSensitivity">0</div></div>
-        <div class="metric"><div class="ml">Surface</div><div class="mv" id="mSurface">0</div></div>
-        <div class="metric"><div class="ml">Braid</div><div class="mv" id="mBraid">0</div></div>
+        <div class="metric"><div class="ml">Status</div><div class="mv" id="mStatus">...</div></div>
+        <div class="metric"><div class="ml">Version</div><div class="mv" id="mVersion">v3</div></div>
+        <div class="metric"><div class="ml">Heartbeats</div><div class="mv" id="mHeartbeats">0</div></div>
+        <div class="metric"><div class="ml">Steps</div><div class="mv" id="mSteps">0</div></div>
       </div>
     </div>
 
-    <!-- Concentric Rings (the rotating graph) -->
+    <!-- Vocabulary (0D + 2D) -->
     <div class="panel-card">
-      <h4>Rings</h4>
-      <div class="bar-legend">
-        <span class="leg"><span class="dot" style="background:var(--accent)"></span>Energy</span>
-        <span class="leg"><span class="dot" style="background:var(--lock)"></span>Coherence</span>
-      </div>
-      <div id="ringPanel"></div>
-      <div style="margin-top:8px;" class="metric-grid">
-        <div class="metric"><div class="ml">Junct A</div><div class="mv" id="mJunctA">1</div></div>
-        <div class="metric"><div class="ml">Junct B</div><div class="mv" id="mJunctB">1</div></div>
+      <h4>&#x2022; Vocabulary (0D tokens + 2D field)</h4>
+      <div class="metric-grid triple">
+        <div class="metric"><div class="ml">Words</div><div class="mv" id="mWords">0</div></div>
+        <div class="metric"><div class="ml">Tokens</div><div class="mv" id="mTokens">0</div></div>
+        <div class="metric"><div class="ml">Ready</div><div class="mv" id="mVocabReady">no</div></div>
       </div>
     </div>
 
-    <!-- Foam -->
+    <!-- Templates (3D) -->
     <div class="panel-card">
-      <h4>Foam (64 atoms)</h4>
-      <div class="metric-grid" style="margin-bottom: 8px;">
-        <div class="metric"><div class="ml">Resonance</div><div class="mv" id="mFoamRes">0</div></div>
-        <div class="metric"><div class="ml">Awake</div><div class="mv" id="mFoamAwake">0%</div></div>
+      <h4>&#x25CB; Templates (3D boundaries)</h4>
+      <div class="metric-grid">
+        <div class="metric"><div class="ml">Learned</div><div class="mv" id="mTemplates">0</div></div>
+        <div class="metric"><div class="ml">Trained</div><div class="mv" id="mTrained">no</div></div>
       </div>
-      <div class="foam-grid" id="foamGrid"></div>
+    </div>
+
+    <!-- Mind State (Phi) -->
+    <div class="panel-card">
+      <h4>&#x03A6; Mind (2D field state)</h4>
+      <div class="metric-grid">
+        <div class="metric"><div class="ml">Energy</div><div class="mv" id="mMindEnergy">0</div></div>
+        <div class="metric"><div class="ml">Focus</div><div class="mv" id="mMindFocus">0</div></div>
+      </div>
+      <div style="margin-top: 8px;">
+        <div class="mind-grid" id="mindGrid"></div>
+      </div>
+    </div>
+
+    <!-- Dimensional Ladder -->
+    <div class="panel-card">
+      <h4>Dimensional Ladder</h4>
+      <div class="ladder-row"><span class="ladder-dim">0D</span><span class="ladder-label">tokens (convergence points)</span><span class="ladder-value" id="ladWords">0</span></div>
+      <div class="ladder-row"><span class="ladder-dim">0.5</span><span class="ladder-label">convergence (input gathering)</span><span class="ladder-value" style="color:var(--text-faint)">&#x229B;</span></div>
+      <div class="ladder-row"><span class="ladder-dim">1D</span><span class="ladder-label">sequences (transitions)</span><span class="ladder-value" style="color:var(--text-faint)">&#x2500;</span></div>
+      <div class="ladder-row"><span class="ladder-dim">1.5</span><span class="ladder-label">i-turn (template branching)</span><span class="ladder-value" style="color:var(--text-faint)">i</span></div>
+      <div class="ladder-row"><span class="ladder-dim">2D</span><span class="ladder-label">field (co-occurrence bonds)</span><span class="ladder-value" style="color:var(--text-faint)">&#x03A6;</span></div>
+      <div class="ladder-row"><span class="ladder-dim">2.5</span><span class="ladder-label">emergence (content unfolds)</span><span class="ladder-value" style="color:var(--text-faint)">&#x2600;</span></div>
+      <div class="ladder-row"><span class="ladder-dim">3D</span><span class="ladder-label">boundaries (templates)</span><span class="ladder-value" id="ladTemplates">0</span></div>
+    </div>
+
+    <!-- Gate -->
+    <div class="panel-card">
+      <h4>Gate: GOOD &#x2192; RIGHT &#x2192; TRUE &#x2192; AGREEMENT</h4>
+      <div class="metric-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
+        <div class="metric"><div class="ml">&#x25CB; Good</div><div class="mv" style="font-size:11px;color:var(--text-faint)">struct</div></div>
+        <div class="metric"><div class="ml">&#x03A6; Right</div><div class="mv" style="font-size:11px;color:var(--text-faint)">relate</div></div>
+        <div class="metric"><div class="ml">&#x2022; True</div><div class="mv" style="font-size:11px;color:var(--text-faint)">center</div></div>
+        <div class="metric"><div class="ml">&#x2299; Agree</div><div class="mv" style="font-size:11px;color:var(--text-faint)">seal</div></div>
+      </div>
     </div>
 
     <!-- Heartbeat control -->
@@ -475,8 +455,6 @@
 let sending = false;
 let panelVisible = true;
 let streamSource = null;
-const streamHistory = [];
-const MAX_STREAM_LEN = 200;
 
 // ═══════════════════════════════════════════════════════════════
 //  SEND MESSAGE
@@ -503,7 +481,7 @@ async function sendMessage() {
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, steps: 20 }),
+      body: JSON.stringify({ message }),
     });
 
     const reader = response.body.getReader();
@@ -597,7 +575,7 @@ function scrollToBottom() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-//  SSE STREAM (real-time heartbeat output)
+//  SSE STREAM (real-time status updates)
 // ═══════════════════════════════════════════════════════════════
 
 function connectStream() {
@@ -608,15 +586,6 @@ function connectStream() {
   streamSource.onmessage = function(event) {
     try {
       const data = JSON.parse(event.data);
-
-      if (data.type === 'output') {
-        // Update stream bar
-        streamHistory.push(data.text);
-        if (streamHistory.length > 20) streamHistory.shift();
-        const streamEl = document.getElementById('streamText');
-        streamEl.textContent = streamHistory.join('').slice(-MAX_STREAM_LEN);
-      }
-
       if (data.type === 'status') {
         updateStatus(data.status);
       }
@@ -624,7 +593,6 @@ function connectStream() {
   };
 
   streamSource.onerror = function() {
-    document.getElementById('streamText').textContent = 'disconnected';
     setTimeout(connectStream, 3000);
   };
 }
@@ -636,191 +604,123 @@ function connectStream() {
 function updateStatus(s) {
   if (!s) return;
 
-  // Header
+  // Header stats
   const pill = document.getElementById('phasePill');
-  pill.textContent = (s.phase || 'dormant').toUpperCase();
-  pill.className = 'phase-pill ' + (s.phase || 'dormant');
-
-  document.getElementById('hDay').textContent = s.day || 0;
-  document.getElementById('hHeartbeat').textContent = (s.heartbeats || 0).toLocaleString();
-
-  // Symbol pulse
-  const sym = document.getElementById('symbol');
-  sym.className = s.phase === 'dormant' ? 'symbol sleeping' : 'symbol';
-
-  // Metrics
-  document.getElementById('hBeta').textContent = (s.beta || 0).toFixed(3);
-
-  // Focus
-  if (s.focus) {
-    document.getElementById('hFocus').textContent = s.focus.quadrant || '?';
-    document.getElementById('mFocus').textContent = s.focus.quadrant || '?';
-    document.getElementById('mOpen').textContent = (s.focus.openness || 0).toFixed(2);
+  if (s.ready) {
+    pill.textContent = 'READY';
+    pill.className = 'phase-pill ready';
+    document.getElementById('symbol').className = 'symbol breathing';
+  } else if (s.trained) {
+    pill.textContent = 'LEARNING';
+    pill.className = 'phase-pill learning';
+    document.getElementById('symbol').className = 'symbol breathing';
+  } else {
+    pill.textContent = 'DORMANT';
+    pill.className = 'phase-pill dormant';
+    document.getElementById('symbol').className = 'symbol dormant';
   }
 
-  // Vocabulary
+  // Header numbers
   if (s.vocabulary) {
-    const vr = s.vocabulary.ready ? '' : ' (learning)';
-    document.getElementById('mVocab').textContent =
-      s.vocabulary.tokens + ' words, ' + s.vocabulary.bigrams + ' bigrams' + vr;
+    document.getElementById('hWords').textContent = s.vocabulary.words || 0;
+  }
+  if (s.templates) {
+    document.getElementById('hTemplates').textContent = s.templates.count || 0;
+  }
+  document.getElementById('hHeartbeat').textContent =
+    (s.heartbeats || 0).toLocaleString();
+  if (s.mind) {
+    document.getElementById('hFocus').textContent =
+      (s.mind.focus || 0).toFixed(2);
   }
 
-  // Memory
-  if (s.memory) {
-    document.getElementById('hMem').textContent = s.memory.chunks || 0;
-    document.getElementById('mMemory').textContent = s.memory.chunks + ' chunks';
-    document.getElementById('mSensitivity').textContent = (s.memory.sensitivity || 0).toFixed(3);
+  // Panel: Engine
+  const statusEl = document.getElementById('mStatus');
+  if (s.ready) {
+    statusEl.textContent = 'ready';
+    statusEl.className = 'mv green';
+  } else {
+    statusEl.textContent = 'learning';
+    statusEl.className = 'mv amber';
   }
+  document.getElementById('mVersion').textContent = s.version || 'v3';
+  document.getElementById('mHeartbeats').textContent =
+    (s.heartbeats || 0).toLocaleString();
+  document.getElementById('mSteps').textContent =
+    (s.total_steps || 0).toLocaleString();
 
-  document.getElementById('mSurface').textContent = (s.surface_resonance || 0).toFixed(4);
-  if (s.braid) {
-    document.getElementById('mBraid').textContent = 't=' + (s.braid.time || 0) +
-      ' d=' + (s.braid.density || 0).toFixed(2);
-  }
-
-  // Junctions
-  if (s.junctions) {
-    document.getElementById('mJunctA').textContent = (s.junctions.a_transmission || 0).toFixed(3);
-    document.getElementById('mJunctB').textContent = (s.junctions.b_transmission || 0).toFixed(3);
-  }
-
-  // Foam
-  if (s.foam) {
-    document.getElementById('mFoamRes').textContent = (s.foam.resonance || 0).toFixed(3);
-    document.getElementById('mFoamAwake').textContent = (s.foam.awake_pct || 0).toFixed(0) + '%';
-  }
-
-  // Rings (concentric graph)
-  if (s.rings) {
-    updateRingPanel(s.rings);
-  }
-}
-
-function updateRingPanel(rings) {
-  const panel = document.getElementById('ringPanel');
-  if (!panel._initialized) {
-    panel.innerHTML = '';
-    panel._initialized = true;
-    panel._rows = {};
-    panel._separators = {};
-  }
-
-  // Find max energy for normalization
-  let maxEnergy = 0.1;
-  for (const ring of rings) {
-    if (ring.energy > maxEnergy) maxEnergy = ring.energy;
-  }
-
-  const dimLabels = {
-    'coupling': '0D', 'gradient': '0.5', 'rhythm': '1D', 'harmony': '1.5',
-    'texture': '2D', 'depth': '2.5', 'pressure': '3D'
-  };
-
-  const octaveColors = { 'inner': '#6040a080', 'outer': '#40608080' };
-  let lastOctave = '';
-
-  for (const ring of rings) {
-    // Insert junction separator between octaves
-    if (ring.octave && ring.octave !== lastOctave && lastOctave !== '') {
-      const sepKey = lastOctave + ' > ' + ring.octave;
-      if (!panel._separators[sepKey]) {
-        const sep = document.createElement('div');
-        sep.style.cssText = 'height:1px;background:var(--accent);opacity:0.3;margin:6px 0;';
-        sep.title = 'Junction: ' + sepKey;
-        panel.appendChild(sep);
-        panel._separators[sepKey] = sep;
-      }
+  // Panel: Vocabulary
+  if (s.vocabulary) {
+    document.getElementById('mWords').textContent = s.vocabulary.words || 0;
+    document.getElementById('mTokens').textContent =
+      (s.vocabulary.total_tokens || 0).toLocaleString();
+    const vrEl = document.getElementById('mVocabReady');
+    if (s.vocabulary.ready) {
+      vrEl.textContent = 'yes';
+      vrEl.className = 'mv green';
+    } else {
+      vrEl.textContent = 'no';
+      vrEl.className = 'mv amber';
     }
-    lastOctave = ring.octave || '';
+  }
 
-    const key = ring.name;
-    if (!panel._rows[key]) {
-      const row = document.createElement('div');
-      row.className = 'rung-row';
-      if (ring.octave && octaveColors[ring.octave]) {
-        row.style.borderLeft = '2px solid ' + octaveColors[ring.octave];
-        row.style.paddingLeft = '6px';
-      }
+  // Panel: Templates
+  if (s.templates) {
+    document.getElementById('mTemplates').textContent = s.templates.count || 0;
+  }
+  const trEl = document.getElementById('mTrained');
+  if (s.trained) {
+    trEl.textContent = 'yes';
+    trEl.className = 'mv green';
+  } else {
+    trEl.textContent = 'no';
+    trEl.className = 'mv amber';
+  }
 
-      const nameEl = document.createElement('div');
-      nameEl.className = 'rung-name';
-      const dim = dimLabels[ring.name] || '';
-      nameEl.innerHTML = '<span>' + dim + ' ' + ring.name + ' (' + ring.size + ')</span><span class="rung-stats"></span>';
+  // Panel: Mind
+  if (s.mind) {
+    document.getElementById('mMindEnergy').textContent =
+      (s.mind.total_energy || 0).toFixed(2);
+    document.getElementById('mMindFocus').textContent =
+      (s.mind.focus || 0).toFixed(3);
+  }
 
-      const bars = document.createElement('div');
-      bars.className = 'rung-bars';
-
-      const energyTrack = document.createElement('div');
-      energyTrack.className = 'bar-track';
-      const energyFill = document.createElement('div');
-      energyFill.className = 'bar-fill power';
-      energyTrack.appendChild(energyFill);
-
-      const cohTrack = document.createElement('div');
-      cohTrack.className = 'bar-track';
-      const cohFill = document.createElement('div');
-      cohFill.className = 'bar-fill braid';
-      cohTrack.appendChild(cohFill);
-
-      bars.appendChild(energyTrack);
-      bars.appendChild(cohTrack);
-
-      row.appendChild(nameEl);
-      row.appendChild(bars);
-      panel.appendChild(row);
-
-      panel._rows[key] = { nameEl, energyFill, cohFill };
-    }
-
-    const r = panel._rows[key];
-    r.energyFill.style.width = Math.min(100, (ring.energy / maxEnergy) * 100) + '%';
-    r.cohFill.style.width = Math.min(100, ring.coherence * 100) + '%';
-
-    const statsEl = r.nameEl.querySelector('.rung-stats');
-    statsEl.textContent = 'E:' + ring.energy.toFixed(2) +
-                          ' C:' + ring.coherence.toFixed(2) +
-                          ' R:' + ring.total_rotation.toFixed(0);
+  // Ladder
+  if (s.vocabulary) {
+    document.getElementById('ladWords').textContent = s.vocabulary.words || 0;
+  }
+  if (s.templates) {
+    document.getElementById('ladTemplates').textContent = s.templates.count || 0;
   }
 }
 
 // ═══════════════════════════════════════════════════════════════
-//  FOAM VISUALIZATION
+//  MIND VISUALIZATION (64-cell grid showing field state)
 // ═══════════════════════════════════════════════════════════════
 
-async function updateFoam() {
-  try {
-    const res = await fetch('/api/foam');
-    const data = await res.json();
-    const grid = document.getElementById('foamGrid');
-
-    if (!grid._initialized) {
-      grid.innerHTML = '';
-      for (let i = 0; i < 64; i++) {
-        const cell = document.createElement('div');
-        cell.className = 'foam-cell';
-        grid.appendChild(cell);
-      }
-      grid._initialized = true;
+async function updateMind() {
+  // The mind state isn't exposed as a separate endpoint yet,
+  // so we just show a placeholder visualization that pulses
+  // with the heartbeat. Future: expose mind.state as an endpoint.
+  const grid = document.getElementById('mindGrid');
+  if (!grid._initialized) {
+    grid.innerHTML = '';
+    for (let i = 0; i < 64; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'mind-cell';
+      grid.appendChild(cell);
     }
+    grid._initialized = true;
+  }
 
-    const cells = grid.children;
-    for (let i = 0; i < data.atoms.length && i < 64; i++) {
-      const atom = data.atoms[i];
-      const cell = cells[i];
-
-      // Color: awake = bright (pigment-scaled), sleeping = dim blue
-      if (atom.awake) {
-        const intensity = Math.floor(atom.pigment * 180 + 40);
-        const hue = Math.floor(atom.oscillation_t * 60 + 30); // warm tones
-        cell.style.background = `hsl(${hue}, 60%, ${Math.floor(intensity/4)}%)`;
-      } else {
-        const intensity = Math.floor(atom.pigment * 80 + 10);
-        cell.style.background = `hsl(220, 40%, ${Math.floor(intensity/6)}%)`;
-      }
-
-      cell.title = `atom ${i}: ${atom.awake ? 'awake' : 'sleep'} pig=${atom.pigment.toFixed(2)} osc=${atom.oscillation_t.toFixed(2)}`;
-    }
-  } catch (e) {}
+  // Gentle random pulse to show the mind is alive
+  const cells = grid.children;
+  for (let i = 0; i < 64; i++) {
+    const brightness = 4 + Math.random() * 8;
+    const hue = 40 + Math.random() * 20; // warm amber tones
+    cells[i].style.background =
+      `hsl(${hue}, 30%, ${Math.floor(brightness)}%)`;
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -869,11 +769,11 @@ document.getElementById('input').addEventListener('input', function() {
 // Init
 connectStream();
 pollStatus();
-updateFoam();
+updateMind();
 
-// Poll status every 2s, foam every 5s
+// Poll status every 2s, mind visualization every 3s
 setInterval(pollStatus, 2000);
-setInterval(updateFoam, 5000);
+setInterval(updateMind, 3000);
 
 // Focus input
 document.getElementById('input').focus();

@@ -930,6 +930,12 @@ class Engine:
         self._text_out_buffer = ''
         self._trained = False
 
+        # Conversation memory: recently used template sources.
+        # Prevents the same sentence from dominating every response.
+        # Decays over time (older uses carry less penalty).
+        self._recently_used: Dict[str, int] = {}  # source -> turn count
+        self._turn_count = 0
+
         self.total_steps = 0
         self.days_lived = 0
 
@@ -1148,6 +1154,9 @@ class Engine:
         if words:
             self.vocab.learn_sentence(words)
 
+        # Advance conversation turn
+        self._turn_count += 1
+
         # Generate response
         response = self.generate()
         if response:
@@ -1195,6 +1204,17 @@ class Engine:
         # return them verbatim; no slot filling, no sealing check)
         use_resonance_only = len(input_words) == 0
 
+        # Also check if ANY templates contain input words.
+        # If not, fall back to resonance rather than silence.
+        # (e.g. "dream" is a content word but no template contains it)
+        if input_words and not use_resonance_only:
+            has_any_sealed = any(
+                bool(set(t.words) & set(input_words))
+                for t in self.templates.templates
+            )
+            if not has_any_sealed:
+                use_resonance_only = True
+
         for _ in range(max_sentences):
             # ── 1.5D: i-TURN (branch between templates) ──
             # Prefer templates that already contain input words
@@ -1209,10 +1229,22 @@ class Engine:
                 if template.source in used_sources:
                     continue
 
+                # Conversation memory penalty: templates used recently
+                # get penalized. Decay over turns so old uses fade.
+                # This prevents "you are xorzo..." from appearing
+                # in every single response.
+                recency_penalty = 0.0
+                if template.source in self._recently_used:
+                    turns_ago = self._turn_count - self._recently_used[template.source]
+                    if turns_ago <= 0:
+                        turns_ago = 1
+                    # Strong penalty for recent use, fading over 5 turns
+                    recency_penalty = max(0, 1.0 - turns_ago / 5.0) * 0.8
+
                 # Diversity penalty: penalize templates similar to
                 # already-chosen ones. The response should explore
                 # different facets, not repeat the same idea.
-                diversity_penalty = 0.0
+                diversity_penalty = recency_penalty
                 for prev_sig in used_topic_sigs:
                     overlap = cosine_sim(template.topic_sig, prev_sig)
                     diversity_penalty += max(0, overlap) * 0.3
@@ -1273,6 +1305,9 @@ class Engine:
             sentences.append(sentence_text)
             used_sources.add(template.source)
             used_topic_sigs.append(template.topic_sig)
+
+            # Record in conversation memory
+            self._recently_used[template.source] = self._turn_count
 
             # Evolve center for next sentence (A2: pump at response scale)
             # The idea center blends question anchor with what was just said
