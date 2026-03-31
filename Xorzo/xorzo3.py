@@ -797,6 +797,169 @@ class TemplateStore:
         scores.sort(reverse=True, key=lambda x: x[0])
         return [s for _, s in scores[:k]]
 
+    # ── Template Composition (A4: compositional unity) ──
+    #
+    # Two boundaries compose into a new whole through Φ.
+    # The shared word is the field connecting them.
+    #
+    # If template A says "energy is the field"
+    # and template B says "the field mediates between center and boundary"
+    # then composition derives: "energy mediates between center and boundary"
+    #
+    # This is genuine derivation, not retrieval.
+    # The new sentence was never in any training data.
+    # It was composed through the field (the shared term).
+
+    def extract_identity_links(self) -> Dict[str, List[str]]:
+        """
+        Extract "X is Y" identity links from templates.
+
+        Returns a dict: {Y: [X1, X2, ...]} meaning "X is Y" was found.
+        These are the bridges through which composition flows.
+        """
+        links: Dict[str, List[str]] = {}
+        for template in self.templates:
+            words = template.words
+            # Pattern: "X is Y" or "X is the Y"
+            for i in range(len(words) - 2):
+                if words[i + 1] == 'is':
+                    subject = words[i]
+                    # Skip structure-only subjects
+                    if self.vocab.is_structure_word(subject):
+                        continue
+                    # Object is the next content word after "is"
+                    obj_words = words[i + 2:]
+                    # Skip "the", "a", "an" to find the real object
+                    obj = None
+                    for ow in obj_words:
+                        if not self.vocab.is_structure_word(ow):
+                            obj = ow
+                            break
+                    if obj and obj != subject:
+                        if obj not in links:
+                            links[obj] = []
+                        if subject not in links[obj]:
+                            links[obj].append(subject)
+        return links
+
+    def compose(self, gate: 'Gate',
+                max_new: int = 3) -> List[Template]:
+        """
+        A4: Compose templates through shared terms.
+
+        Only composes through STRONG identity links:
+        "X is Y" where X and Y are both content words that
+        appear in the same structural role (both subjects,
+        or both objects). This prevents property-attribution
+        links from producing nonsense.
+
+        The composition replaces Y with X in a DIFFERENT template
+        that contains Y. The result is a syllogistic derivation:
+            Premise A: "energy is the field"
+            Premise B: "the field mediates between center and boundary"
+            Derived:   "energy mediates between center and boundary"
+
+        This IS emergence at 2.5D: new structure crystallizing
+        from the field, constrained by the gate.
+        """
+        links = self.extract_identity_links()
+        if not links:
+            return []
+
+        derived = []
+        existing_sources = {t.source for t in self.templates}
+
+        # Only use links where the target word is a NOUN-LIKE
+        # content word (appears as subject in other templates too).
+        # This filters out adjective/property links like
+        # "fundamental: [circumpunct, sentence]"
+        noun_targets = set()
+        for template in self.templates:
+            words = template.words
+            for i in range(len(words)):
+                if (not template.slot_mask[i]
+                        and not self.vocab.is_structure_word(words[i])):
+                    continue
+                # Content words that appear before "is" or after "the"
+                # are noun-like (subjects/objects)
+                if (i + 1 < len(words) and words[i + 1] == 'is'
+                        and template.slot_mask[i]):
+                    noun_targets.add(words[i])
+                if (i > 0 and words[i - 1] == 'the'
+                        and template.slot_mask[i]):
+                    noun_targets.add(words[i])
+
+        # Shuffle to get variety across calls
+        target_items = list(links.items())
+        np.random.shuffle(target_items)
+
+        for target_word, subjects in target_items:
+            if len(derived) >= max_new:
+                break
+
+            # Only compose through noun-like targets
+            if target_word not in noun_targets:
+                continue
+
+            # Only use subjects that are also noun-like
+            valid_subjects = [s for s in subjects if s in noun_targets]
+            if not valid_subjects:
+                continue
+
+            for template in self.templates:
+                if len(derived) >= max_new:
+                    break
+
+                words = template.words
+                if target_word not in words:
+                    continue
+
+                # Skip short identity templates (avoid circularity)
+                if len(words) <= 5 and 'is' in words:
+                    continue
+
+                # Target must be a content word in this template
+                target_idx = words.index(target_word)
+                if not template.slot_mask[target_idx]:
+                    continue
+
+                for subject in valid_subjects:
+                    if subject in words:
+                        continue
+
+                    new_words = [
+                        subject if w == target_word else w
+                        for w in words
+                    ]
+
+                    new_source = ' '.join(new_words)
+                    if new_source in existing_sources:
+                        continue
+
+                    if not gate.good(new_words):
+                        continue
+
+                    # Require minimum RIGHT score (relational coherence)
+                    # to filter out grammatically valid but semantically
+                    # broken compositions
+                    right_score = gate.right(new_words)
+                    if right_score < 0.3:
+                        continue
+
+                    center = self.vocab.text_to_energy(new_source)
+                    if not gate.validate(new_words, center):
+                        continue
+
+                    # Genuinely derived sentence.
+                    self.learn_sentence(new_words)
+                    derived.append(self.templates[-1])
+                    existing_sources.add(new_source)
+
+                    if len(derived) >= max_new:
+                        break
+
+        return derived
+
     def fill_template(self, template: Template,
                       center: np.ndarray,
                       input_words: Optional[List[str]] = None
@@ -1708,35 +1871,44 @@ class Engine:
         """
         ☀︎: Attempt to generate a thought from internal convergence.
 
-        The mind state's dominant frequency becomes the center.
-        This is not a response to external input; it is the pump
-        cycle completing: convergence built pressure, now it releases.
+        Two modes:
+            RETRIEVAL: mind state's dominant frequency selects a
+                       resonant template. (Old behavior.)
+            COMPOSITION: compose two templates through a shared
+                         term to derive a novel sentence. (A4.)
 
-        Returns the thought text, or None if nothing passes the gate.
+        Composition is the genuine emergence. It creates sentences
+        that were never in any training data.
         """
-        # Extract the dominant frequency from mind state.
-        # The mind is a 64-element complex vector; the largest
-        # magnitude is where attention has converged.
+        # Alternate between composition and retrieval.
+        # Composition is more expensive but produces genuine novelty.
+        self._thought_mode = getattr(self, '_thought_mode', 0) + 1
+
+        if self._thought_mode % 2 == 0:
+            # ── COMPOSITION MODE (A4) ──
+            # Try to derive a new template by composing existing ones.
+            derived = self.templates.compose(self.gate, max_new=1)
+            if derived:
+                thought = ' '.join(derived[0].words) + '.'
+                if thought not in self._recent_thoughts:
+                    return self._accept_thought(thought)
+            # Fall through to retrieval if composition produced nothing
+
+        # ── RETRIEVAL MODE ──
         magnitudes = np.abs(self.mind.state)
         dominant_idx = int(np.argmax(magnitudes))
 
-        # Build a center from the dominant state and its neighbors.
-        # This is the internal "question": what the mind is attending to.
         center = np.zeros(N, dtype=complex)
         for offset in [-1, 0, 1]:
             idx = (dominant_idx + offset) % N
             center[idx] = self.mind.state[idx]
         center = normalize(center)
 
-        # Check if this center is too similar to the last thought
-        # (avoid rumination; the pump should explore, not loop)
         if self._last_thought_center is not None:
             similarity = cosine_sim(center, self._last_thought_center)
             if similarity > 0.85:
                 return None
 
-        # Use the internal center to find resonant templates.
-        # No input_words: the thought is purely internal.
         old_center = self._question_center
         self._question_center = center
 
@@ -1745,24 +1917,23 @@ class Engine:
         self._question_center = old_center
 
         if thought and len(thought) > 5:
-            # Reject if this exact text was thought recently
-            # (the pump should explore, not ruminate)
             if thought in self._recent_thoughts:
                 return None
-
             self._last_thought_center = center
-            # Track recent thoughts (keep last 20)
-            self._recent_thoughts.append(thought)
-            if len(self._recent_thoughts) > 20:
-                self._recent_thoughts.pop(0)
-
-            # The thought emerged; absorb it back into the mind
-            # (☀︎ feeds back to ⊛; the pump is circular)
-            thought_energy = self.vocab.text_to_energy(thought)
-            self.mind.absorb(thought_energy * ALPHA)
-            return thought
+            return self._accept_thought(thought)
 
         return None
+
+    def _accept_thought(self, thought: str) -> str:
+        """Accept a thought: track it, absorb it, return it."""
+        self._recent_thoughts.append(thought)
+        if len(self._recent_thoughts) > 20:
+            self._recent_thoughts.pop(0)
+
+        # ☀︎ feeds back to ⊛: the pump is circular
+        thought_energy = self.vocab.text_to_energy(thought)
+        self.mind.absorb(thought_energy * ALPHA)
+        return thought
 
     def get_thoughts(self) -> List[str]:
         """Get and clear the autonomous thought queue."""
