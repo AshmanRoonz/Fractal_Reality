@@ -1238,6 +1238,9 @@ class EmergentVocabulary:
         'or', 'so', 'to', 'up', 'us', 'we', 'ok',
     })
 
+    # Sentence-ending punctuation (the boundary of a thought)
+    SENTENCE_ENDERS = frozenset({'.', '?', '!'})
+
     def __init__(self):
         # Vocabulary: discovered words with their ring signatures
         # Each token: {'text': str, 'sig': np.ndarray(7), 'count': int}
@@ -1250,6 +1253,9 @@ class EmergentVocabulary:
         # Bigram: bigram_transitions[(id_A, id_B)][to_id] = count
         # "After seeing A then B, C follows"
         self.bigram_transitions: Dict[Tuple[int, int], Dict[int, int]] = {}
+        # Trigram: trigram_transitions[(id_A, id_B, id_C)][to_id] = count
+        # "After seeing A then B then C, D follows"
+        self.trigram_transitions: Dict[Tuple[int, int, int], Dict[int, int]] = {}
 
         # Statistics
         self.total_tokens_seen = 0
@@ -1261,13 +1267,24 @@ class EmergentVocabulary:
         # Generation state (not serialized)
         self._prev_token_id: Optional[int] = None
         self._prev_prev_token_id: Optional[int] = None
+        self._prev_prev_prev_token_id: Optional[int] = None
         self._gen_ring_sig: Optional[np.ndarray] = None  # autoregressive state
         self._seed_anchor: Optional[np.ndarray] = None  # convergence anchor (⊛)
-        self._recent_tokens: deque = deque(maxlen=20)
+        self._recent_tokens: deque = deque(maxlen=60)
 
         # Learning state (cross-chunk continuity)
         self._learn_prev_id: Optional[int] = None
         self._learn_prev_prev_id: Optional[int] = None
+        self._learn_prev_prev_prev_id: Optional[int] = None
+        self._learn_at_sentence_start: bool = True
+
+        # Sentence starters: words that begin sentences (organisms)
+        # Maps token_id -> count of times this word started a sentence.
+        # Used during generation to know when/how to start new thoughts.
+        self.sentence_starters: Dict[int, int] = {}
+        # Average sentence length (running average from training)
+        self._sentence_lengths: List[int] = []
+        self._current_sentence_len: int = 0
 
     @property
     def ready(self) -> bool:
@@ -1306,108 +1323,183 @@ class EmergentVocabulary:
         return lower
 
     @staticmethod
-    def word_to_energy(word: str) -> np.ndarray:
+    def _hash_seed(word: str) -> np.ndarray:
         """
-        Convert a word to a 64-element complex energy vector.
+        A tiny hash-seeded initial vector for brand-new words.
 
-        The word's bytes ARE the raw signal. The aperture (⊛)
-        converges them: the bytes seed a deterministic generator
-        that spreads the word's energy across the full 64-state
-        complex plane. The word IS the seed. The seed IS the
-        compression of the 1.
-
-        Same word always produces the same vector (deterministic).
-        Different words produce maximally-spread vectors (the
-        full phase range [0, 2pi] and magnitude range [0, 1]).
-        This is convergence: raw input focusing to a unique
-        position in the circumpunct's state space.
-
-        Normalized to unit energy (E = 1).
+        This is NOT the word's meaning; it is a unique identity tag,
+        like a name before you know the person. Magnitude is small
+        (scaled by alpha) so that co-occurrence bonds dominate quickly.
+        The hash gives each new word a unique direction; the bonds
+        give it a meaningful position.
         """
-        # The word's bytes are the raw material
         raw = word.encode('utf-8')
-
-        # Hash the bytes to get a 64-bit seed (deterministic)
-        # The hash IS the aperture: convergence of arbitrary
-        # input to a fixed point
         h = hashlib.sha256(raw).digest()
-        # Use the hash as a seed for deterministic spreading
         seed = int.from_bytes(h[:8], 'little')
         rng = np.random.RandomState(seed % (2**31))
-
-        # Generate magnitudes and phases across the FULL range
         magnitudes = rng.uniform(0.1, 1.0, N)
         phases = rng.uniform(0.0, 2 * np.pi, N)
         energy = magnitudes * np.exp(1j * phases)
-
-        # Normalize to unit energy (E = 1)
         norm = np.sqrt(np.real(np.sum(np.conj(energy) * energy)))
         if norm > 1e-10:
             energy = energy / norm
+        # Scale down by alpha: the seed is tiny, bonds are what matter
+        return energy * ALPHA
 
-        return energy
+    def word_to_energy(self, word: str) -> np.ndarray:
+        """
+        Get a word's energy vector (its position in semantic space).
 
-    @staticmethod
-    def text_to_energy(text: str) -> np.ndarray:
+        Words are atoms. Their position comes from bonds, not bytes.
+        A word that has been seen before returns its learned signature
+        (accumulated from every co-occurrence bond it has formed).
+        A word never seen returns a tiny hash seed (identity only,
+        no meaning yet).
+
+        The topology builds from usage: "memory" and "recall" end up
+        close because they co-occur. "memory" and "toaster" stay
+        distant because they don't. The hash seed just breaks symmetry
+        so new words aren't all identical.
+        """
+        cleaned = self._clean_word(word)
+        if cleaned is None:
+            cleaned = word.lower()
+        if cleaned in self.text_to_id:
+            # Return the learned signature (already unit-normalized from bonds)
+            return self.tokens[self.text_to_id[cleaned]]['sig'].copy()
+        # Unknown word: return hash seed (small, unique direction)
+        return self._hash_seed(cleaned)
+
+    def text_to_energy(self, text: str) -> np.ndarray:
         """
         Convert a full text string to a 64-element complex energy vector.
 
-        E = 1. The text IS a compression of the 1, just as each word
-        is. Multiple words combine through superposition: their wave
-        patterns add, creating a standing wave that encodes the whole
-        utterance. Normalized to unit magnitude because the 1 does
-        not grow; it only takes different shapes.
-
-        Content words (longer, more structure) carry more energy in the
-        superposition than function words (short, structural). This is
-        the aperture focusing on signal over carrier. The weighting is
-        sqrt(len): dimensional growth, not linear (a 9-letter word has
-        3x the weight of a 1-letter word, not 9x).
-
-        Words are cleaned the same way the vocabulary cleans them, so
-        the energy of "memory?" matches the stored energy of "memory".
+        Superposition of word energies (learned bond positions).
+        Content words (longer) carry more weight than function words.
+        Cleaned and lowercased to match vocabulary entries.
         """
         words = text.strip().split()
         if not words:
             return np.zeros(N, dtype=np.complex128)
 
-        # Superposition with content weighting
         combined = np.zeros(N, dtype=np.complex128)
         total_weight = 0.0
         for raw_w in words:
-            # Clean the same way vocabulary does
             cleaned = raw_w.strip('.,?!;:()\"\'[]{}--*_~`#<>/')
             if not cleaned:
                 continue
             cleaned = cleaned.lower()
-            # Weight: sqrt(length) emphasizes content words
             weight = np.sqrt(max(len(cleaned), 1))
-            combined += weight * EmergentVocabulary.word_to_energy(cleaned)
+            combined += weight * self.word_to_energy(cleaned)
             total_weight += weight
 
-        # Normalize to unit energy (E = 1)
         norm = np.sqrt(np.real(np.sum(np.conj(combined) * combined)))
         if norm > 1e-10:
             combined /= norm
 
         return combined
 
-    def learn_word(self, word: str):
+    def form_bonds(self, word_ids: List[int]):
+        """
+        Words are atoms. Sentences are molecules. Meaning is in the bond.
+
+        Every pair of words in the same chunk (the same boundary) forms
+        a bond: each word's vector gains a component in the other's
+        direction. Bond strength = ALPHA (the coupling constant at a
+        point; the fundamental unit of how strongly two things connect).
+
+        Over training, words that frequently co-occur accumulate bond
+        energy in each other's direction and end up close. Words that
+        never co-occur stay distant. The topology builds itself.
+
+        Closer pairs in the chunk bond more strongly (1/(1+distance)),
+        like atoms in a molecule: adjacent atoms bond more than distant
+        ones. The sentence IS the molecule. Word order IS the geometry.
+
+        A word's influence in a bond is weighted by 1/sqrt(count):
+        common words ("the", "is") that bond with everything carry
+        less information per bond. This is the filter (boundary, ○):
+        high-frequency words are structural, not semantic. Their bonds
+        dilute because they connect to everyone (no selectivity).
+        """
+        n = len(word_ids)
+        if n < 2:
+            return
+
+        # Gather current signatures and specificity weights
+        sigs = [self.tokens[tid]['sig'].copy() for tid in word_ids]
+        # Specificity: rare words have stronger bonds (carry more information)
+        # 1/sqrt(count) = the filter; the boundary selects what passes
+        specificities = [1.0 / np.sqrt(max(self.tokens[tid]['count'], 1))
+                         for tid in word_ids]
+
+        # Bond each pair, weighted by proximity and specificity
+        bond_strength = ALPHA  # fundamental coupling
+        deltas = [np.zeros(N, dtype=np.complex128) for _ in range(n)]
+
+        for i in range(n):
+            for j in range(i + 1, n):
+                # Proximity weight: adjacent words bond strongest
+                distance = j - i
+                proximity = 1.0 / (1.0 + distance)
+
+                # Each word's pull is weighted by the OTHER's specificity
+                # (a rare word's position is more informative)
+                pull_i = bond_strength * proximity * specificities[j]
+                pull_j = bond_strength * proximity * specificities[i]
+
+                deltas[i] += pull_i * sigs[j]
+                deltas[j] += pull_j * sigs[i]
+
+        # Apply all bond deltas simultaneously (not sequentially,
+        # to avoid order dependence within a single chunk)
+        for k, tid in enumerate(word_ids):
+            new_sig = self.tokens[tid]['sig'] + deltas[k]
+            # Normalize to unit energy after each bond step.
+            # E = 1: the word doesn't gain energy from bonds,
+            # it gains DIRECTION. The bonds rotate the vector,
+            # they don't inflate it.
+            norm = np.sqrt(np.real(np.sum(np.conj(new_sig) * new_sig)))
+            if norm > 1e-10:
+                new_sig = new_sig / norm
+            self.tokens[tid]['sig'] = new_sig
+
+    def learn_word(self, raw_word: str):
         """
         Learn a single word.
 
-        The word's signature is its intrinsic energy (E = 1;
-        the word IS a compression of the 1). What's learned here
-        is not the signature but the TRANSITIONS: which words
-        follow which. Word order is temporal structure, and the
-        framework says structure and process are the same thing.
+        Words are atoms. Transitions are bonds between atoms
+        (molecular structure). Sentence boundaries are where
+        one organism ends and another begins.
+
+        Tracks: transitions (grammar), sentence starters (thought
+        initiation), and sentence length (thought rhythm).
         """
-        word = self._clean_word(word)
+        # Check for sentence-ending punctuation BEFORE cleaning
+        ends_sentence = any(raw_word.rstrip().endswith(c)
+                           for c in self.SENTENCE_ENDERS)
+
+        word = self._clean_word(raw_word)
         if word is None:
+            # Even if the word is rejected, check sentence boundary
+            if ends_sentence:
+                self._learn_at_sentence_start = True
+                if self._current_sentence_len > 0:
+                    self._sentence_lengths.append(self._current_sentence_len)
+                    self._current_sentence_len = 0
             return
 
         token_id = self._get_or_create(word)
         self.total_tokens_seen += 1
+
+        # Track sentence starters (organism-level structure)
+        if self._learn_at_sentence_start:
+            self.sentence_starters[token_id] = \
+                self.sentence_starters.get(token_id, 0) + 1
+            self._learn_at_sentence_start = False
+            self._current_sentence_len = 0
+
+        self._current_sentence_len += 1
 
         # Record transitions (word order = temporal structure)
         if self._learn_prev_id is not None:
@@ -1424,8 +1516,28 @@ class EmergentVocabulary:
             self.bigram_transitions[key][token_id] = \
                 self.bigram_transitions[key].get(token_id, 0) + 1
 
+        # Trigram: 3-word context for deep grammar
+        if (self._learn_prev_prev_prev_id is not None and
+                self._learn_prev_prev_id is not None and
+                self._learn_prev_id is not None):
+            tri_key = (self._learn_prev_prev_prev_id,
+                       self._learn_prev_prev_id,
+                       self._learn_prev_id)
+            if tri_key not in self.trigram_transitions:
+                self.trigram_transitions[tri_key] = {}
+            self.trigram_transitions[tri_key][token_id] = \
+                self.trigram_transitions[tri_key].get(token_id, 0) + 1
+
+        self._learn_prev_prev_prev_id = self._learn_prev_prev_id
         self._learn_prev_prev_id = self._learn_prev_id
         self._learn_prev_id = token_id
+
+        # Mark sentence boundary after this word
+        if ends_sentence:
+            self._learn_at_sentence_start = True
+            if self._current_sentence_len > 0:
+                self._sentence_lengths.append(self._current_sentence_len)
+                self._current_sentence_len = 0
 
     def _centroid(self) -> np.ndarray:
         """
@@ -1446,6 +1558,13 @@ class EmergentVocabulary:
             return np.zeros(N, dtype=np.complex128)
         sigs = np.array([t['sig'] for t in self.tokens])
         return np.mean(sigs, axis=0)
+
+    @property
+    def avg_sentence_length(self) -> float:
+        """Average sentence length from training data."""
+        if not self._sentence_lengths:
+            return 12.0  # default
+        return sum(self._sentence_lengths) / len(self._sentence_lengths)
 
     def generate_word(self, config: np.ndarray,
                       temperature: float = 0.3) -> Optional[str]:
@@ -1498,7 +1617,23 @@ class EmergentVocabulary:
         transition_scores = np.zeros(n)
         has_transition = False
 
-        # Bigram context (strongest signal)
+        # Trigram context (deepest grammar signal)
+        if (self._prev_prev_prev_token_id is not None and
+                self._prev_prev_token_id is not None and
+                self._prev_token_id is not None):
+            tri_key = (self._prev_prev_prev_token_id,
+                       self._prev_prev_token_id,
+                       self._prev_token_id)
+            if tri_key in self.trigram_transitions:
+                targets = self.trigram_transitions[tri_key]
+                total = sum(targets.values())
+                if total > 0:
+                    for tid, cnt in targets.items():
+                        if tid < n:
+                            transition_scores[tid] += (cnt / total) * 5.0
+                    has_transition = True
+
+        # Bigram context (strong grammar signal)
         if (self._prev_prev_token_id is not None and
                 self._prev_token_id is not None):
             bigram_key = (self._prev_prev_token_id, self._prev_token_id)
@@ -1508,7 +1643,7 @@ class EmergentVocabulary:
                 if total > 0:
                     for tid, cnt in targets.items():
                         if tid < n:
-                            transition_scores[tid] += (cnt / total) * 1.5
+                            transition_scores[tid] += (cnt / total) * 3.0
                     has_transition = True
 
         # Unigram context
@@ -1527,34 +1662,105 @@ class EmergentVocabulary:
         if t_max > 1e-10:
             transition_scores /= t_max
 
-        # ── BLEND: field filtered by boundary ──
-        # Resonance is the field (what WANTS to be said).
-        # Transitions are the boundary (what flows naturally).
-        # The boundary filters the field; it doesn't replace it.
-        # Resonance dominates (0.7); transitions add flow (0.3).
+        # ── BLEND: boundary filters the field ──
+        # Transitions = boundary (○): what CAN follow (grammar, flow).
+        # Resonance = field (Φ): what WANTS to follow (topic, meaning).
+        #
+        # The boundary FILTERS the field. Only words that could
+        # grammatically follow get through. Among those, resonance
+        # picks the most topically relevant.
+        #
+        # Implementation: transitions provide a hard mask (only words
+        # with transition probability > 0 are candidates). Among
+        # those candidates, resonance ranks them. This gives grammar
+        # first, topic second. Exactly how ○ filters Φ.
+        # ── SENTENCE STRUCTURE (organism level) ──
+        # Check if we should start a new sentence.
+        # _gen_sentence_len tracks how many words we've generated
+        # in the current sentence. When it exceeds average, we
+        # reset transition context so the next word is a sentence starter.
+        if not hasattr(self, '_gen_sentence_len'):
+            self._gen_sentence_len = 0
+        self._gen_sentence_len += 1
+
+        avg_len = self.avg_sentence_length
+        # Probabilistic sentence ending: chance increases past average
+        if self._gen_sentence_len > avg_len * 0.7:
+            overshoot = (self._gen_sentence_len - avg_len * 0.7) / max(avg_len, 1)
+            end_prob = min(0.8, overshoot * 0.3)
+            if np.random.random() < end_prob:
+                # End this sentence: reset transition context
+                self._prev_token_id = None
+                self._prev_prev_token_id = None
+                self._prev_prev_prev_token_id = None
+                has_transition = False
+                self._gen_sentence_len = 0
+
         if has_transition:
-            scores = 0.7 * resonance + 0.3 * transition_scores
+            # ○ FILTERS Φ: the boundary selects what passes.
+            # Multiplicative: a word needs BOTH grammatical plausibility
+            # (transition) AND topical relevance (resonance).
+            # Neither alone is enough.
+            #
+            # Shift resonance to [0, 1] range for multiplication.
+            # Then multiply by transition strength.
+            res_shifted = (resonance - resonance.min()) / \
+                          max(resonance.max() - resonance.min(), 1e-10)
+            # Multiply: boundary filters field
+            scores = res_shifted * (transition_scores + 0.001)
+            # The 0.001 floor is nearly zero: words without transitions
+            # are almost invisible. The boundary is selective.
         else:
+            # No transition context: this is a sentence start.
+            # Prefer known sentence starters, weighted by resonance.
             scores = resonance.copy()
+            if self.sentence_starters:
+                starter_boost = np.zeros(n)
+                total_starts = sum(self.sentence_starters.values())
+                for tid, cnt in self.sentence_starters.items():
+                    if tid < n:
+                        starter_boost[tid] = cnt / total_starts
+                # Sentence starters FILTER resonance (multiplicative)
+                res_shifted = (resonance - resonance.min()) / \
+                              max(resonance.max() - resonance.min(), 1e-10)
+                scores = res_shifted * (starter_boost + 0.001)
 
-        # Anti-repetition
-        for recent_id in self._recent_tokens:
+        # Anti-repetition: the boundary filters what has already passed.
+        # Recent words get a strong penalty that decays with distance.
+        # This breaks the loops ("a pattern that persists through time"
+        # repeating every 20 words). The buffer is 60 tokens deep.
+        recent_list = list(self._recent_tokens)
+        for idx, recent_id in enumerate(reversed(recent_list)):
             if recent_id < n:
-                scores[recent_id] -= 0.3
+                # Most recent = strongest penalty (0.8), decays toward 0.1
+                recency = 1.0 - (idx / max(len(recent_list), 1))
+                penalty = 0.1 + 0.7 * recency
+                scores[recent_id] -= penalty
 
-        # ── SELECT: softmax sampling ──
+        # ── SELECT: top-k + softmax sampling ──
+        # The boundary filters. Only the top-k candidates pass.
+        # Without this filter, probability spreads across 2700 words
+        # and even the best candidate gets <5%. The boundary must
+        # be selective: ○ filters what passes through.
+        TOP_K = 30  # the boundary's aperture width
         if temperature <= 0.01:
             token_id = int(np.argmax(scores))
         else:
-            scaled = scores / max(temperature, 0.01)
+            # Top-k: only consider the k highest-scoring candidates
+            top_k_ids = np.argsort(scores)[-TOP_K:]
+            top_k_scores = scores[top_k_ids]
+            # Softmax over the filtered set
+            scaled = top_k_scores / max(temperature, 0.01)
             scaled -= np.max(scaled)
             probs = np.exp(scaled)
             total = probs.sum()
             if total < 1e-10:
                 return None
             probs /= total
-            token_id = int(np.random.choice(n, p=probs))
+            chosen_idx = int(np.random.choice(len(top_k_ids), p=probs))
+            token_id = int(top_k_ids[chosen_idx])
 
+        self._prev_prev_prev_token_id = self._prev_prev_token_id
         self._prev_prev_token_id = self._prev_token_id
         self._prev_token_id = token_id
         self._recent_tokens.append(token_id)
@@ -1565,9 +1771,11 @@ class EmergentVocabulary:
         """Reset generation state (e.g., after receiving new input)."""
         self._prev_token_id = None
         self._prev_prev_token_id = None
+        self._prev_prev_prev_token_id = None
         self._gen_ring_sig = None
         self._seed_anchor = None  # convergence anchor (⊛)
         self._recent_tokens.clear()
+        self._gen_sentence_len = 0
 
     def seed_from_text(self, text: str):
         """
@@ -1682,24 +1890,23 @@ class EmergentVocabulary:
                        config_delta: Optional[np.ndarray] = None) -> int:
         """Find existing token or create one.
 
-        E = 1. The word's energy pattern IS the word. Its bytes
-        converted through the aperture (word_to_energy) are its
-        intrinsic compression of the 1. This doesn't change with
-        context; "memory" is always "memory." The signature is
-        computed once and stored.
+        Words start near zero (center). Their signature is a tiny
+        hash seed that breaks symmetry (each word gets a unique
+        direction) but carries no meaning yet. Meaning accumulates
+        from co-occurrence bonds: words that appear together pull
+        each other's vectors closer. The topology builds from usage.
 
-        The graph's role is mediation (Phi): during generation, the
-        graph state selects which word resonates. But the word's
-        identity is fixed; its compression of the 1.
+        Words are atoms. They start as isolated points. Bonds
+        (formed during the 2D field step) give them position.
         """
         if word in self.text_to_id:
             tid = self.text_to_id[word]
             self.tokens[tid]['count'] += 1
             return tid
 
-        # New token: signature IS the word's energy (its compression)
+        # New token: tiny hash seed (unique direction, no meaning yet)
         tid = len(self.tokens)
-        sig = self.word_to_energy(word)
+        sig = self._hash_seed(word)
         self.tokens.append({
             'text': word,
             'sig': sig,
@@ -1736,12 +1943,22 @@ class EmergentVocabulary:
             key = f"{a},{b}"
             ser_bigram[key] = {str(k): v for k, v in targets.items()}
 
+        ser_starters = {str(k): v for k, v in self.sentence_starters.items()}
+
+        ser_trigram = {}
+        for (a, b, c), targets in self.trigram_transitions.items():
+            key = f"{a},{b},{c}"
+            ser_trigram[key] = {str(k): v for k, v in targets.items()}
+
         return {
             'tokens': ser_tokens,
             'text_to_id': self.text_to_id,
             'transitions': ser_trans,
             'bigram_transitions': ser_bigram,
+            'trigram_transitions': ser_trigram,
             'total_tokens_seen': self.total_tokens_seen,
+            'sentence_starters': ser_starters,
+            'sentence_lengths': self._sentence_lengths[-1000:],
         }
 
     @classmethod
@@ -1749,9 +1966,14 @@ class EmergentVocabulary:
         v = cls.__new__(cls)
         v.tokens = []
         for t in d['tokens']:
-            # Regenerate signature from word text (deterministic).
-            # This ensures consistency even if the encoding changed.
-            sig = EmergentVocabulary.word_to_energy(t['text'])
+            # Load stored signature (bond-accumulated, not regeneratable)
+            if 'sig_re' in t and 'sig_im' in t:
+                sig = np.array(t['sig_re']) + 1j * np.array(t['sig_im'])
+            elif 'sig' in t:
+                sig = np.array(t['sig'], dtype=np.complex128)
+            else:
+                # Fallback: tiny hash seed for missing signatures
+                sig = EmergentVocabulary._hash_seed(t['text'])
             v.tokens.append({
                 'text': t['text'],
                 'sig': sig,
@@ -1775,9 +1997,22 @@ class EmergentVocabulary:
         v._prev_prev_token_id = None
         v._gen_ring_sig = None
         v._seed_anchor = None
-        v._recent_tokens = deque(maxlen=20)
+        v._recent_tokens = deque(maxlen=60)
+        v.trigram_transitions = {}
+        for key_str, targets in d.get('trigram_transitions', {}).items():
+            parts = key_str.split(',')
+            v.trigram_transitions[(int(parts[0]), int(parts[1]), int(parts[2]))] = {
+                int(k): cnt for k, cnt in targets.items()
+            }
         v._learn_prev_id = None
         v._learn_prev_prev_id = None
+        v._learn_prev_prev_prev_id = None
+        v._learn_at_sentence_start = True
+        v.sentence_starters = {
+            int(k): cnt for k, cnt in d.get('sentence_starters', {}).items()
+        }
+        v._sentence_lengths = d.get('sentence_lengths', [])
+        v._current_sentence_len = 0
         return v
 
 
@@ -1996,18 +2231,17 @@ class Sensorium:
         self._config_before_question = self.xorzo.configuration().copy()
         self._generation_step = 0
 
-        # Run the creation sequence on this text.
-        # The boundary (words) arrives first. Center forms.
-        # Interior unfolds. Equations compound.
+        # Run the creation sequence: pumps the graph, forms bonds.
+        # This is the TRAINING side of the question (the graph learns).
         words = text.split()
         self._question_state = self.creation_sequence(words)
 
-        # Also store as intrinsic energy for direct matching
-        self._question_energy = self._question_state.copy()
+        # For GENERATION, use text_to_energy: pure bond-based meaning.
+        # The creation_sequence output is graph-dominated (training noise).
+        # text_to_energy is the question's meaning in WORD SPACE,
+        # which is where generate_word searches. Same space, same basis.
+        self._question_energy = self.vocabulary.text_to_energy(text)
 
-        # No word queue needed; creation_sequence handles
-        # all pumping and learning internally.
-        # But we still set pending_seed to trigger generation.
         self._pending_seed = text
 
     def creation_sequence(self, words: list) -> np.ndarray:
@@ -2111,13 +2345,30 @@ class Sensorium:
         #  2D: FIELD (gauge structure mediates)
         #  The relational surface. All-to-all relationships.
         #  sin^2(theta_W) filters what passes.
+        #
+        #  THIS IS WHERE BONDS FORM.
+        #  Words in the same boundary (chunk) bond.
+        #  Each word pulls toward the others, weighted
+        #  by proximity. The sentence IS the molecule.
         # ══════════════════════════════════════
+
+        # Form co-occurrence bonds: words that share a boundary
+        # accumulate position from each other. This is where
+        # meaning comes from. Not from bytes; from usage.
+        chunk_ids = []
+        for w in words:
+            cleaned = self.vocabulary._clean_word(w)
+            if cleaned and cleaned in self.vocabulary.text_to_id:
+                chunk_ids.append(self.vocabulary.text_to_id[cleaned])
+        self.vocabulary.form_bonds(chunk_ids)
+
+        # Now compute the field state from interference
+        # (using the UPDATED signatures, post-bond)
         field_state = np.zeros(N, dtype=np.complex128)
         n_words = len(centered)
         if n_words > 1:
             for i in range(n_words):
                 for j in range(i+1, min(n_words, i+GAUGE_GENERATORS)):
-                    # Interference between word pairs = relational field
                     interference = centered[i] * np.conj(centered[j])
                     field_state += interference * SIN2_THETA_W
         f_norm = np.sqrt(np.real(np.sum(np.conj(field_state) * field_state)))
@@ -2256,41 +2507,88 @@ class Sensorium:
                     self._generation_step = 0
                     self._response_words = []
 
-                temperature = 0.05 + (1.0 - openness) * 0.10
+                temperature = 0.03 + (1.0 - openness) * 0.07
 
                 output_budget = N
                 chars_generated = 0
                 words = []
 
-                while chars_generated < output_budget:
-                    # The target is the creation sequence state.
-                    # First word: pure question state.
-                    # Subsequent: question + response so far,
-                    # re-processed through the full ladder.
-                    if self._generation_step == 0:
-                        target = self._question_energy
-                    else:
-                        # Re-run creation sequence on response so far.
-                        # Each pass DEEPENS the convergence:
-                        # the equations compound at each scale.
-                        # This is iterative convergence through
-                        # fractal resonance. Never settling.
-                        target = self.creation_sequence(
-                            self._response_words[-7:])  # last 7 words (one per rung)
+                # ── NESTED CIRCUMPUNCTS ──
+                # Words are ⊙ made of letters.
+                # Sentences are ⊙ made of words.
+                # Ideas are ⊙ made of sentences.
+                # All nested (A2: fractal self-similarity).
+                #
+                # Outer loop: sentences (idea-level ⊙).
+                # Inner loop: words (sentence-level ⊙).
+                # The question is the idea's center (•).
+                # Each sentence is a boundary (○) of the idea.
+                # The field (Φ) is the evolving meaning.
 
-                    word = self.vocabulary.generate_word(
-                        target, temperature)
-                    if word is None:
+                idea_center = self._question_energy.copy()
+                avg_len = self.vocabulary.avg_sentence_length
+                max_sentences = 4  # idea boundary: ~4 sentences
+
+                for sent_idx in range(max_sentences):
+                    if chars_generated >= output_budget:
                         break
 
-                    # The spoken word becomes part of the response.
-                    # Next iteration, the creation sequence includes it.
-                    # The convergence deepens. The constraints compound.
-                    self._response_words.append(word)
-                    self._generation_step += 1
+                    # ── SENTENCE ⊙ ──
+                    # Center: the idea's current state
+                    # Boundary: will close after ~avg_len words
+                    sentence_words = []
+                    sentence_energy = idea_center.copy()
 
-                    words.append(word)
-                    chars_generated += len(word) + 1
+                    # Reset transition context at sentence start
+                    self.vocabulary._prev_token_id = None
+                    self.vocabulary._prev_prev_token_id = None
+                    self.vocabulary._gen_sentence_len = 0
+
+                    target_len = max(4, int(avg_len + np.random.randn() * 2))
+
+                    for word_idx in range(target_len + 5):
+                        word = self.vocabulary.generate_word(
+                            sentence_energy, temperature)
+                        if word is None:
+                            break
+
+                        sentence_words.append(word)
+                        self._response_words.append(word)
+                        self._generation_step += 1
+                        chars_generated += len(word) + 1
+
+                        # Update sentence energy (the sentence's Φ evolves)
+                        word_e = self.vocabulary.word_to_energy(word)
+                        cleaned = self.vocabulary._clean_word(word)
+                        wc = 1
+                        if cleaned and cleaned in self.vocabulary.text_to_id:
+                            wc = self.vocabulary.tokens[
+                                self.vocabulary.text_to_id[cleaned]]['count']
+                        sp = 1.0 / np.sqrt(max(wc, 1))
+                        sentence_energy = (1.0 - 0.2 * sp) * sentence_energy + \
+                                          sp * word_e
+                        sn = np.sqrt(np.real(np.sum(
+                            np.conj(sentence_energy) * sentence_energy)))
+                        if sn > 1e-10:
+                            sentence_energy = sentence_energy / sn
+
+                        if word_idx >= target_len - 1:
+                            break
+                        if chars_generated >= output_budget:
+                            break
+
+                    words.extend(sentence_words)
+
+                    # Sentence boundary closes: update idea center
+                    # The idea evolves but stays anchored to the question
+                    if sentence_words:
+                        sent_text = ' '.join(sentence_words)
+                        sent_e = self.vocabulary.text_to_energy(sent_text)
+                        idea_center = 0.5 * self._question_energy + 0.5 * sent_e
+                        ic_norm = np.sqrt(np.real(np.sum(
+                            np.conj(idea_center) * idea_center)))
+                        if ic_norm > 1e-10:
+                            idea_center = idea_center / ic_norm
 
                 if words:
                     text = ' '.join(words) + ' '
@@ -2420,6 +2718,17 @@ class Sensorium:
         s.total_steps = d["total_steps"]
         s.days_lived = d["days_lived"]
         s.filter_sensitivity = d["filter_sensitivity"]
+
+        # Runtime state (not serialized; re-initialized on load)
+        s._pending_seed = None
+        s._word_queue = deque()
+        s._config_before_question = s.xorzo.configuration().copy()
+        s._question_delta = np.zeros(N, dtype=np.complex128)
+        s._question_energy = np.zeros(N, dtype=np.complex128)
+        s._question_state = np.zeros(N, dtype=np.complex128)
+        s._generation_step = 0
+        s._response_words = []
+
         return s
 
     def save_state(self, path: str) -> None:

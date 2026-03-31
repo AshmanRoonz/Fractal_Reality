@@ -632,31 +632,43 @@ def main():
             """Feed training text through creation sequence in sentence chunks."""
             nonlocal train_sentences
             import re
-            # Split into sentences (or chunks of ~20 words)
             raw_words = content.split()
-            chunk_size = 20  # words per chunk (a sentence-ish unit)
+            chunk_size = 20
             for i in range(0, len(raw_words), chunk_size):
                 chunk = raw_words[i:i+chunk_size]
                 sensorium.creation_sequence(chunk)
                 train_sentences += 1
 
+        # Gather all training content
+        all_training = []
         if args.feed_file:
             path = Path(args.feed_file)
             if path.exists():
                 content = path.read_text(encoding='utf-8', errors='replace')
-                feed_training(content)
-                print(f"  Fed {len(content):,} bytes from {path.name}")
+                all_training.append((path.name, content))
 
         if args.feed_dir:
             feed_path = Path(args.feed_dir)
             if feed_path.is_dir():
                 txt_files = sorted(feed_path.glob('*.txt'))
-                total = 0
                 for f in txt_files:
                     content = f.read_text(encoding='utf-8', errors='replace')
+                    all_training.append((f.name, content))
+
+        # Multiple passes: bonds and transitions strengthen with repetition.
+        # Words that co-occur accumulate position toward each other.
+        # Transitions that recur accumulate count. 3 passes is enough
+        # for the topology to stabilize without overfitting.
+        TRAIN_EPOCHS = 3
+        if all_training:
+            total_bytes = sum(len(c) for _, c in all_training)
+            print(f"  Training: {len(all_training)} files, {total_bytes:,} bytes, {TRAIN_EPOCHS} epochs")
+            for epoch in range(TRAIN_EPOCHS):
+                for name, content in all_training:
                     feed_training(content)
-                    total += len(content)
-                print(f"  Fed {total:,} bytes from {len(txt_files)} files")
+                print(f"  Epoch {epoch + 1}/{TRAIN_EPOCHS}: "
+                      f"vocab={sensorium.vocabulary.vocab_size}, "
+                      f"tokens={sensorium.vocabulary.total_tokens_seen}")
 
         if train_sentences > 0:
             print(f"  Processed {train_sentences} sentence chunks")
