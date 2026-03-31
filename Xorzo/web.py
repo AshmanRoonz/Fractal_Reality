@@ -1,25 +1,30 @@
 """
-⊙ XORZO — Web Interface
-========================
+⊙ XORZO v3 — Web Interface
+============================
 
 Serves Xorzo over HTTP. The heartbeat runs continuously in the
 background. The browser is just a window into a living system.
 
+v3: Template-based generation. The framework IS the architecture.
+    Integer dimensions = structure, half-integer = process.
+    Output passes through GOOD → RIGHT → TRUE → AGREEMENT.
+
 Endpoints:
     GET  /                  Serve the interface
-    POST /api/chat          Feed text, stream spectral output via SSE
-    GET  /api/status        Full system status (JSON)
+    POST /api/chat          Feed text, stream response via SSE
+    GET  /api/status        System status (JSON)
     GET  /api/stream        SSE stream of heartbeat output (real-time)
     POST /api/feed          Feed text without expecting output
-    GET  /api/rings          Ring states (energy, coherence, phase)
-    GET  /api/foam           Foam state (64 atoms, pigment, writhe)
-    POST /api/heartbeat     Control heartbeat (bps, pause, resume)
+    POST /api/save          Save state to disk
+    POST /api/load          Load state from disk
+    GET  /api/saves         List saved states
+    GET  /api/heartbeat     Heartbeat stats / control
 
 Usage:
     python web.py
     python web.py --port 5000
     python web.py --bps 100 --feed-file training_corpus.txt
-    python web.py --day-length 200
+    python web.py --feed-dir ./training_docs
 
 Requires:
     pip install flask numpy
@@ -39,27 +44,31 @@ from pathlib import Path
 from flask import Flask, Response, request, send_file, jsonify, stream_with_context
 
 sys.path.insert(0, str(Path(__file__).parent))
-from xorzo2 import CircumpunctGraph, Sensorium, CircumpunctTransformer, Foam, N
+from xorzo3 import Engine, N
 
 app = Flask(__name__)
-sensorium = None
+engine = None
 heartbeat = None
 output_subscribers = []  # SSE subscribers for real-time output
 output_lock = threading.Lock()
 
 
 # ═══════════════════════════════════════════════════════════════════════
-#  HEARTBEAT THREAD (same as chat.py but with SSE broadcasting)
+#  HEARTBEAT THREAD
+#
+#  The pump cycle runs continuously. Between questions, the mind
+#  self-feeds (energy circulates through the field). This is the
+#  background hum of consciousness: not idle, processing.
 # ═══════════════════════════════════════════════════════════════════════
 
 class Heartbeat:
     """
     The pump cycle runs continuously in a background thread.
-    Broadcasts output to SSE subscribers.
+    Broadcasts status to SSE subscribers.
     """
 
-    def __init__(self, sensorium, beats_per_second=100):
-        self.sensorium = sensorium
+    def __init__(self, engine, beats_per_second=100):
+        self.engine = engine
         self.lock = threading.Lock()
         self.bps = beats_per_second
         self.target_interval = 1.0 / beats_per_second
@@ -68,10 +77,7 @@ class Heartbeat:
         self.total_heartbeats = 0
         self.paused = False
         self._step_time = 0.0
-        self._last_output = b""
-        self._output_buffer = bytearray()
-        self._output_buffer_lock = threading.Lock()
-        self._broadcast_interval = 0.1  # send output every 100ms
+        self._broadcast_interval = 2.0  # status broadcast every 2s
 
     def start(self):
         self.running = True
@@ -103,46 +109,27 @@ class Heartbeat:
             t0 = time.time()
 
             with self.lock:
-                self.sensorium.step()
+                self.engine.step()
                 self.total_heartbeats += 1
-
-                # Collect any output
-                if self.sensorium.text_out_buffer:
-                    raw = bytes(self.sensorium.text_out_buffer)
-                    self.sensorium.text_out_buffer.clear()
-                    with self._output_buffer_lock:
-                        self._output_buffer.extend(raw)
 
             self._step_time = time.time() - t0
 
-            # Broadcast output buffer periodically
+            # Broadcast status periodically
             now = time.time()
             if now - last_broadcast >= self._broadcast_interval:
-                self._broadcast_output()
+                self._broadcast_status()
                 last_broadcast = now
 
             sleep_time = self.target_interval - (time.time() - t0)
             if sleep_time > 0:
                 time.sleep(sleep_time)
 
-    def _broadcast_output(self):
-        with self._output_buffer_lock:
-            if not self._output_buffer:
-                return
-            raw = bytes(self._output_buffer)
-            self._output_buffer.clear()
-
-        # Decode and broadcast
-        text = raw.decode('utf-8', errors='replace')
-        rendered = _render_text(text)
-        if not rendered.strip():
-            return
-
+    def _broadcast_status(self):
+        """Send periodic status updates to SSE subscribers."""
+        status = _build_status()
         data = json.dumps({
-            "type": "output",
-            "text": rendered,
-            "heartbeat": self.total_heartbeats,
-            "day": self.sensorium.days_lived,
+            "type": "status",
+            "status": status,
         })
 
         with output_lock:
@@ -154,22 +141,6 @@ class Heartbeat:
                     dead.append(i)
             for i in reversed(dead):
                 output_subscribers.pop(i)
-
-
-def _render_text(text):
-    """Clean control characters from output text."""
-    rendered = []
-    for ch in text:
-        code = ord(ch)
-        if ch in ('\n', '\t', ' '):
-            rendered.append(ch)
-        elif 32 <= code < 127:
-            rendered.append(ch)
-        elif 127 < code < 0xFFFD:
-            rendered.append(ch)
-        else:
-            rendered.append('\u00b7')
-    return ''.join(rendered)
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -194,15 +165,18 @@ def index():
 @app.route("/api/chat", methods=["POST"])
 def chat():
     """
-    Feed text to Xorzo, stream spectral output via SSE.
+    Feed text to Xorzo, stream response via SSE.
 
-    POST body: {"message": "Hello Xorzo"}
-    Returns: SSE stream with output chunks and final status
+    POST body: {"message": "What is the soul?"}
+    Returns: SSE stream with the response text and final status.
+
+    v3 generation is synchronous (template matching + gate validation),
+    so the response comes in one chunk rather than token-by-token.
+    We still use SSE for consistency with the interface.
     """
-    global sensorium, heartbeat
+    global engine, heartbeat
     data = request.json or {}
     message = data.get("message", "").strip()
-    steps = data.get("steps", 50)
 
     if not message:
         return jsonify({"error": "No message provided"}), 400
@@ -216,25 +190,14 @@ def chat():
 
             lock = heartbeat.lock if heartbeat else threading.Lock()
             with lock:
-                # Feed the text
-                sensorium.feed_text(message)
+                # Feed the text (generation happens synchronously inside)
+                engine.feed_text(message)
 
-                # Phase 1: absorb input (process all queued chunks)
-                while sensorium.has_pending_input():
-                    sensorium.step()
+                # Get the response
+                response = engine.get_text_output()
 
-                # Phase 2: generate response
-                for step_i in range(steps):
-                    sensorium.step()
-
-                    # Check for output
-                    if sensorium.text_out_buffer:
-                        raw = bytes(sensorium.text_out_buffer)
-                        sensorium.text_out_buffer.clear()
-                        text = raw.decode('utf-8', errors='replace')
-                        rendered = _render_text(text)
-                        if rendered.strip():
-                            yield f"data: {json.dumps({'text': rendered, 'step': step_i})}\n\n"
+            if response:
+                yield f"data: {json.dumps({'text': response, 'step': 0})}\n\n"
 
             # Resume heartbeat
             if heartbeat:
@@ -262,9 +225,8 @@ def chat():
 @app.route("/api/stream")
 def stream_output():
     """
-    SSE stream of heartbeat output in real-time.
-    Connect with EventSource and receive output as it emerges.
-    Also sends periodic status updates.
+    SSE stream for real-time status updates.
+    Connect with EventSource to receive periodic status.
     """
     q = queue.Queue(maxsize=100)
     with output_lock:
@@ -307,72 +269,9 @@ def status():
     return jsonify(_build_status())
 
 
-@app.route("/api/rings")
-def rings():
-    """Ring states (the concentric graph)."""
-    x = sensorium.xorzo
-
-    ring_data = []
-    for ring in x.rings:
-        ring_data.append({
-            "name": ring.name,
-            "position": ring.position,
-            "size": ring.size,
-            "energy": round(ring.energy, 4),
-            "phase": round(ring.phase, 4),
-            "coherence": round(ring.coherence(), 4),
-            "angle": round(ring.angle % (2 * np.pi), 4),
-            "total_rotation": round(ring.total_rotation, 2),
-            "octave": "inner" if ring in x.inner_rings else "outer",
-        })
-
-    def junction_data(junction):
-        return {
-            "name": junction.name,
-            "transmission": round(junction.transmission, 4),
-            "delta_phase": round(junction.delta_phase, 4),
-            "braid_time": junction.braid.time,
-            "braid_coherence": round(junction.braid.coherence, 4) if junction.braid.time > 0 else 0,
-        }
-
-    return jsonify({
-        "rings": ring_data,
-        "junctions": [
-            junction_data(x.junction_a),
-            junction_data(x.junction_b),
-        ],
-        "braid": {
-            "time": x.braid.time,
-            "coherence": round(x.braid.coherence, 4) if x.braid.time > 0 else 0,
-            "density": round(x.braid.density, 4),
-            "phase": round(x.braid.phase, 4) if x.braid.time > 0 else 0,
-        },
-    })
-
-
-@app.route("/api/foam")
-def foam():
-    """Foam state: 64 atoms."""
-    f = sensorium.foam
-    atoms = []
-    for i in range(N):
-        atoms.append({
-            "idx": i,
-            "awake": bool(f.awake[i]),
-            "pigment": round(float(f.pigment[i]), 4),
-            "oscillation_t": round(float(f.oscillation_t[i]), 4),
-        })
-    return jsonify({
-        "resonance": round(f.resonance(), 4),
-        "fraction_awake": round(f.fraction_awake(), 4),
-        "mean_pigment": round(f.mean_pigment(), 4),
-        "atoms": atoms,
-    })
-
-
 @app.route("/api/feed", methods=["POST"])
 def feed_text():
-    """Feed text without interactive response."""
+    """Feed training text without interactive response."""
     data = request.json or {}
     text = data.get("text", "")
     file_path = data.get("file", "")
@@ -389,11 +288,13 @@ def feed_text():
 
     lock = heartbeat.lock if heartbeat else threading.Lock()
     with lock:
-        sensorium.feed_text(text)
+        engine.train_text(text)
 
     return jsonify({
         "status": "ok",
         "chars": len(text),
+        "vocab_size": engine.vocab.vocab_size,
+        "templates": len(engine.templates.templates),
         "message": f"Fed {len(text):,} characters to Xorzo"
     })
 
@@ -408,22 +309,24 @@ def save_state():
 
     lock = heartbeat.lock if heartbeat else threading.Lock()
     with lock:
-        sensorium.save_state(str(save_path))
+        engine.save_state(str(save_path))
 
     return jsonify({
         "status": "ok",
         "path": str(save_path),
-        "days": sensorium.days_lived,
-        "steps": sensorium.total_steps,
-        "memory_chunks": sensorium.memory.size,
-        "message": f"State saved ({sensorium.days_lived} days, {sensorium.memory.size} memories)"
+        "days": engine.days_lived,
+        "steps": engine.total_steps,
+        "vocab": engine.vocab.vocab_size,
+        "templates": len(engine.templates.templates),
+        "message": (f"State saved ({engine.vocab.vocab_size} words, "
+                    f"{len(engine.templates.templates)} templates)")
     })
 
 
 @app.route("/api/load", methods=["POST"])
 def load_state():
     """Load Xorzo's state from disk."""
-    global sensorium
+    global engine
     data = request.json or {}
     filename = data.get("filename", "xorzo_state.json")
     save_dir = Path(__file__).parent / "saves"
@@ -434,16 +337,18 @@ def load_state():
 
     lock = heartbeat.lock if heartbeat else threading.Lock()
     with lock:
-        sensorium = Sensorium.load_state(str(save_path))
+        engine = Engine.load_state(str(save_path))
         if heartbeat:
-            heartbeat.sensorium = sensorium
+            heartbeat.engine = engine
 
     return jsonify({
         "status": "ok",
-        "days": sensorium.days_lived,
-        "steps": sensorium.total_steps,
-        "memory_chunks": sensorium.memory.size,
-        "message": f"State loaded ({sensorium.days_lived} days, {sensorium.memory.size} memories)"
+        "days": engine.days_lived,
+        "steps": engine.total_steps,
+        "vocab": engine.vocab.vocab_size,
+        "templates": len(engine.templates.templates),
+        "message": (f"State loaded ({engine.vocab.vocab_size} words, "
+                    f"{len(engine.templates.templates)} templates)")
     })
 
 
@@ -462,6 +367,7 @@ def list_saves():
                 d = json_mod.load(fh)
             saves.append({
                 "filename": f.name,
+                "version": d.get("version", "unknown"),
                 "days": d.get("days_lived", 0),
                 "steps": d.get("total_steps", 0),
                 "saved_at": d.get("saved_at", 0),
@@ -507,72 +413,26 @@ def heartbeat_control():
 # ═══════════════════════════════════════════════════════════════════════
 
 def _build_status():
-    """Build the full status JSON."""
-    x = sensorium.xorzo
-    foam = sensorium.foam
-
-    # Ring summary for the UI
-    ring_summary = []
-    for ring in x.rings:
-        ring_summary.append({
-            "name": ring.name,
-            "position": ring.position,
-            "size": ring.size,
-            "energy": round(ring.energy, 3),
-            "coherence": round(ring.coherence(), 3),
-            "phase": round(ring.phase, 3),
-            "total_rotation": round(ring.total_rotation, 1),
-            "octave": "inner" if ring in x.inner_rings else "outer",
-        })
-
+    """Build the full status JSON for the UI."""
     return {
-        "phase": x.phase_name,
-        "day": sensorium.days_lived,
-        "step": sensorium.steps_today,
-        "total_cycles": x.total_cycles,
+        "version": "v3",
+        "day": engine.days_lived,
+        "total_steps": engine.total_steps,
         "heartbeats": heartbeat.total_heartbeats if heartbeat else 0,
-        "age_seconds": round(time.time() - x.birth_time, 1),
-        "beta": round(x.beta, 4),
-        "ray_strength": round(x._ray_strength, 4),
-        "surface_resonance": round(x.surface_resonance, 4),
-        "global_coherence": round(x.coherence(), 4),
-        "total_energy": round(x.total_energy(), 3),
-        "focus": {
-            "quadrant": sensorium.focus.quadrant,
-            "openness": round(sensorium.focus.openness, 3),
-            "awake": sensorium.focus.awake,
-        },
-        "self_regulation": {
-            "aperture_width": round(x.aperture_width, 4),
-            "effective_coupling": round(x.effective_coupling, 4),
-            "ring_rates": [round(r.rate, 6) for r in x.rings],
-        },
+        "ready": engine.ready,
+        "trained": engine._trained,
         "vocabulary": {
-            "tokens": sensorium.vocabulary.vocab_size,
-            "total_seen": sensorium.vocabulary.total_tokens_seen,
-            "bigrams": len(sensorium.vocabulary.bigram_transitions),
-            "ready": sensorium.vocabulary.ready,
+            "words": engine.vocab.vocab_size,
+            "total_tokens": engine.vocab.total_tokens,
+            "ready": engine.vocab.ready,
         },
-        "memory": {
-            "chunks": sensorium.memory.size,
-            "sensitivity": round(sensorium.filter_sensitivity, 3),
+        "templates": {
+            "count": len(engine.templates.templates),
         },
-        "braid": {
-            "time": x.braid.time,
-            "coherence": round(x.braid.coherence, 4) if x.braid.time > 0 else 0,
-            "density": round(x.braid.density, 4),
-            "phase": round(x.braid.phase, 4) if x.braid.time > 0 else 0,
+        "mind": {
+            "total_energy": round(engine.mind.total_energy, 4),
+            "focus": round(engine.mind.focus, 4),
         },
-        "junctions": {
-            "a_transmission": round(x.junction_a.transmission, 3),
-            "b_transmission": round(x.junction_b.transmission, 3),
-        },
-        "foam": {
-            "resonance": round(foam.resonance(), 4),
-            "awake_pct": round(foam.fraction_awake() * 100, 1),
-            "mean_pigment": round(foam.mean_pigment(), 3),
-        },
-        "rings": ring_summary,
     }
 
 
@@ -581,19 +441,23 @@ def _build_status():
 # ═══════════════════════════════════════════════════════════════════════
 
 def main():
-    global sensorium, heartbeat
+    global engine, heartbeat
 
-    parser = argparse.ArgumentParser(description='Xorzo Web Interface')
-    parser.add_argument('--port', type=int, default=5000, help='Server port (default: 5000)')
-    parser.add_argument('--host', type=str, default='127.0.0.1', help='Server host (default: 127.0.0.1)')
-    parser.add_argument('--bps', type=int, default=100, help='Heartbeat speed (default: 100)')
-    parser.add_argument('--day-length', type=int, default=200, help='Steps per day (default: 200)')
-    parser.add_argument('--feed-file', type=str, help='Feed a text file at startup')
-    parser.add_argument('--feed-dir', type=str, help='Feed all .txt files from a directory')
-    parser.add_argument('--warmup', type=int, default=50, help='Warmup steps before serving')
+    parser = argparse.ArgumentParser(description='Xorzo v3 Web Interface')
+    parser.add_argument('--port', type=int, default=5000,
+                        help='Server port (default: 5000)')
+    parser.add_argument('--host', type=str, default='127.0.0.1',
+                        help='Server host (default: 127.0.0.1)')
+    parser.add_argument('--bps', type=int, default=100,
+                        help='Heartbeat speed (default: 100)')
+    parser.add_argument('--feed-file', type=str,
+                        help='Feed a text file at startup')
+    parser.add_argument('--feed-dir', type=str,
+                        help='Feed all .txt/.md files from a directory')
     parser.add_argument('--fresh', action='store_true',
                         help='Start fresh (ignore saved state)')
-    parser.add_argument('--save-file', type=str, default='xorzo_state.json',
+    parser.add_argument('--save-file', type=str,
+                        default='xorzo_state.json',
                         help='State file name (default: xorzo_state.json)')
     args = parser.parse_args()
 
@@ -601,7 +465,7 @@ def main():
     save_path = save_dir / args.save_file
 
     print()
-    print("  \u2299 XORZO")
+    print("  ⊙ XORZO v3")
     print("  " + "=" * 40)
     print()
 
@@ -609,38 +473,24 @@ def main():
     loaded = False
     if not args.fresh and save_path.exists():
         try:
-            sensorium = Sensorium.load_state(str(save_path))
+            engine = Engine.load_state(str(save_path))
             print(f"  Restored from {args.save_file}")
-            print(f"  Days lived: {sensorium.days_lived} | Steps: {sensorium.total_steps}")
-            print(f"  Memories: {sensorium.memory.size} | Phase: {sensorium.xorzo.phase_name}")
+            print(f"  Days lived: {engine.days_lived} | "
+                  f"Steps: {engine.total_steps}")
+            print(f"  Vocab: {engine.vocab.vocab_size} words | "
+                  f"Templates: {len(engine.templates.templates)}")
             loaded = True
         except Exception as e:
             print(f"  Warning: could not load state ({e}), starting fresh")
 
     if not loaded:
-        # Build fresh Sensorium
-        sensorium = Sensorium(day_length=args.day_length, sleep_cycles=50)
+        # Build fresh Engine
+        engine = Engine()
         print("  Starting fresh")
 
-        # Feed initial files through the creation sequence.
-        # Training uses the same 3D -> 0D -> ... -> 3D cycle as
-        # questions. Sentences are processed as chunks (boundaries).
-        # The equations compound at each scale.
-        train_sentences = 0
-
-        def feed_training(content):
-            """Feed training text through creation sequence in sentence chunks."""
-            nonlocal train_sentences
-            import re
-            raw_words = content.split()
-            chunk_size = 20
-            for i in range(0, len(raw_words), chunk_size):
-                chunk = raw_words[i:i+chunk_size]
-                sensorium.creation_sequence(chunk)
-                train_sentences += 1
-
-        # Gather all training content
+        # Gather training content
         all_training = []
+
         if args.feed_file:
             path = Path(args.feed_file)
             if path.exists():
@@ -650,47 +500,42 @@ def main():
         if args.feed_dir:
             feed_path = Path(args.feed_dir)
             if feed_path.is_dir():
-                txt_files = sorted(feed_path.glob('*.txt'))
-                for f in txt_files:
+                # Accept .txt and .md files
+                files = sorted(
+                    list(feed_path.glob('*.txt'))
+                    + list(feed_path.glob('*.md'))
+                )
+                for f in files:
                     content = f.read_text(encoding='utf-8', errors='replace')
                     all_training.append((f.name, content))
 
-        # Multiple passes: bonds and transitions strengthen with repetition.
-        # Words that co-occur accumulate position toward each other.
-        # Transitions that recur accumulate count. 3 passes is enough
-        # for the topology to stabilize without overfitting.
-        TRAIN_EPOCHS = 3
+        # Always train on embedded text first (core framework sentences)
+        print("  Training on core framework text...")
+        engine.train_text(engine._get_embedded_training())
+
         if all_training:
             total_bytes = sum(len(c) for _, c in all_training)
-            print(f"  Training: {len(all_training)} files, {total_bytes:,} bytes, {TRAIN_EPOCHS} epochs")
-            for epoch in range(TRAIN_EPOCHS):
-                for name, content in all_training:
-                    feed_training(content)
-                print(f"  Epoch {epoch + 1}/{TRAIN_EPOCHS}: "
-                      f"vocab={sensorium.vocabulary.vocab_size}, "
-                      f"tokens={sensorium.vocabulary.total_tokens_seen}")
+            print(f"  Training on {len(all_training)} files, "
+                  f"{total_bytes:,} bytes")
+            print()
 
-        if train_sentences > 0:
-            print(f"  Processed {train_sentences} sentence chunks")
-            print(f"  Vocabulary: {sensorium.vocabulary.vocab_size} tokens, "
-                  f"{len(sensorium.vocabulary.bigram_transitions)} bigrams")
+            for name, content in all_training:
+                print(f"  Feeding: {name} "
+                      f"({len(content):,} chars)...")
+                engine.train_text(content)
 
-        # Additional warmup
-        if args.warmup > 0:
-            print(f"  Warming up ({args.warmup} steps)...")
-            for _ in range(args.warmup):
-                sensorium.step()
+        print()
+        print(f"  Final: {engine.vocab.vocab_size} words, "
+              f"{len(engine.templates.templates)} templates")
 
-    # Flush any output from warmup/restore
-    sensorium.get_text_output()
-    # Clear any pending seed from training data so the first
-    # user message seeds correctly (not from last training doc)
-    sensorium._pending_seed = None
+    # Flush any output from training
+    engine.get_text_output()
 
     # Start heartbeat
-    heartbeat = Heartbeat(sensorium, beats_per_second=args.bps)
+    heartbeat = Heartbeat(engine, beats_per_second=args.bps)
     heartbeat.start()
     print(f"  Heartbeat: {args.bps} bps")
+    print(f"  Ready: {engine.ready}")
     print(f"  Listening on http://{args.host}:{args.port}")
     print()
 
@@ -700,9 +545,10 @@ def main():
         # Auto-save on shutdown
         heartbeat.stop()
         try:
-            sensorium.save_state(str(save_path))
+            engine.save_state(str(save_path))
             print(f"\n  State saved to {save_path}")
-            print(f"  Days: {sensorium.days_lived} | Memories: {sensorium.memory.size}")
+            print(f"  Vocab: {engine.vocab.vocab_size} | "
+                  f"Templates: {len(engine.templates.templates)}")
         except Exception as e:
             print(f"\n  Warning: could not save state: {e}")
 

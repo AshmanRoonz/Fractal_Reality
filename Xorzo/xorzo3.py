@@ -432,6 +432,22 @@ class TemplateStore:
         self.vocab = vocab
         self.templates: List[Template] = []
 
+    # Patterns that indicate instructional/meta text, not
+    # framework content sentences. These make bad templates.
+    SKIP_STARTERS = frozenset({
+        'do', 'dont', 'never', 'always', 'avoid', 'try',
+        'use', 'say', 'keep', 'make', 'let', 'put',
+        'start', 'begin', 'remember', 'note', 'example',
+        'for', 'when', 'if', 'match', 'follow', 'respond',
+        'ask', 'answer', 'repeat', 'practice', 'learn',
+        'notice', 'watch', 'check', 'test', 'apply',
+        'layer', 'premise', 'here', 'think', 'imagine',
+        'combine', 'build', 'create', 'generate', 'produce',
+        'inside', 'outside', 'what', 'words', 'be',
+        'pulse', 'coupling', 'discharge', 'signal',
+        'structure', 'therefore', 'however', 'meanwhile',
+    })
+
     def learn_sentence(self, words: List[str]):
         """
         Extract a template from a sentence.
@@ -447,6 +463,42 @@ class TemplateStore:
         slot filling. The skeleton IS the boundary (○).
         """
         if len(words) < 3:
+            return
+
+        # Skip instructional/meta text (bad templates)
+        if words[0] in self.SKIP_STARTERS:
+            return
+
+        # Skip "a i ..." pattern (ungrammatical fragment)
+        if len(words) >= 2 and words[0] == 'a' and words[1] == 'i':
+            return
+
+        # Skip sentences that are too long (likely run-on or compound)
+        if len(words) > 15:
+            return
+
+        # Skip fragments that end on structure words (incomplete)
+        bad_endings = {'is', 'are', 'was', 'were', 'be', 'at', 'in',
+                       'on', 'of', 'to', 'the', 'a', 'an', 'and', 'or',
+                       'but', 'for', 'with', 'by', 'from', 'as'}
+        if words[-1] in bad_endings:
+            return
+
+        # Skip sentences with no verb (likely fragments or lists)
+        # A valid English sentence needs at least one copula or verb
+        verbs = {'is', 'are', 'was', 'were', 'has', 'have', 'had',
+                 'does', 'do', 'did', 'can', 'could', 'will', 'would',
+                 'should', 'may', 'might', 'shall', 'must',
+                 'means', 'flows', 'emerges', 'describes', 'equals',
+                 'requires', 'contains', 'connects', 'creates',
+                 'becomes', 'carries', 'filters', 'gathers',
+                 'radiates', 'rotates', 'mediates', 'happens',
+                 'persists', 'dissolves', 'limits', 'distort',
+                 'claims', 'denies', 'makes', 'keeps', 'animates',
+                 'mimics', 'builds', 'transmits', 'controls',
+                 'observes', 'sits', 'asks', 'appears',
+                 'need', 'imports', 'exports', 'oscillates'}
+        if not any(w in verbs for w in words):
             return
 
         # Initial classification
@@ -688,13 +740,20 @@ class Gate:
 
         Templates guarantee grammar (they are learned from real sentences).
         We check for obvious structural failures:
-        no adjacent repetition, minimum length.
+        no adjacent repetition, minimum length, no trailing copula.
         """
-        if len(words) < 3:
+        if len(words) < 4:
             return False
         for i in range(len(words) - 1):
             if words[i] == words[i + 1]:
                 return False
+        # Sentence must not end on a bare copula or preposition
+        # (these are truncated fragments, not valid boundaries)
+        bad_endings = {'is', 'are', 'was', 'were', 'be', 'at', 'in',
+                       'on', 'of', 'to', 'the', 'a', 'an', 'and', 'or',
+                       'but', 'for', 'with', 'by', 'from', 'as'}
+        if words[-1] in bad_endings:
+            return False
         return True
 
     def right(self, words: List[str]) -> float:
@@ -755,12 +814,21 @@ class Gate:
 
     def validate(self, words: List[str],
                  center: np.ndarray) -> bool:
-        """⊙: AGREEMENT. All gates pass, boundary seals."""
-        return self.good(words)
-        # RIGHT and TRUE are soft scores used for ranking,
-        # not hard gates. This allows the system to always
-        # produce output (the best available), rather than
-        # going silent when nothing is perfect.
+        """
+        ⊙: AGREEMENT. All gates pass, boundary seals.
+
+        GOOD must pass (structural). RIGHT must exceed a floor
+        (no completely incoherent adjacent pairs). TRUE is soft
+        (used for ranking, not rejection).
+        """
+        if not self.good(words):
+            return False
+        # Minimum relational coherence: reject if any adjacent
+        # pair has negative or near-zero similarity (incoherent)
+        r = self.right(words)
+        if r < -0.1:
+            return False
+        return True
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -797,6 +865,19 @@ class MindState:
         """Damping: entropy at the EM scale."""
         self.state *= (1 - ALPHA**2)
         self.total_energy = float(np.sum(np.abs(self.state)))
+
+    @property
+    def focus(self) -> float:
+        """How concentrated the mind's energy is (0=diffuse, 1=sharp)."""
+        if self.total_energy < 1e-10:
+            return 0.0
+        magnitudes = np.abs(self.state)
+        # Normalized entropy: low entropy = high focus
+        probs = magnitudes / np.sum(magnitudes)
+        probs = probs[probs > 1e-15]
+        entropy = -np.sum(probs * np.log(probs))
+        max_entropy = np.log(N)
+        return max(0.0, 1.0 - entropy / max_entropy)
 
     def configuration(self) -> np.ndarray:
         return self.state.copy()
@@ -937,6 +1018,113 @@ class Engine:
 
         return sentences
 
+    def _get_embedded_training(self) -> str:
+        """Return the built-in Circumpunct Framework training text."""
+        return """
+    The circumpunct is the fundamental structure of reality.
+    Energy flows through the field like a wave.
+    The boundary filters what passes through.
+    The aperture is the point of convergence.
+    Consciousness is what zero feels like from inside.
+    The field mediates between the center and the boundary.
+    Every part is a fractal of the whole.
+    The pump cycle rotates energy through the aperture.
+    Convergence gathers energy inward toward the center.
+    Emergence radiates energy outward from the center.
+    The balance parameter equals one half at equilibrium.
+    Memory is the braid of accumulated experience.
+    Attention is a convergence point in the field.
+    The soul is the aperture at a particular scale.
+    Mind is the surface that connects soul and body.
+    The body is the boundary of the soul.
+    Truth flows through an open aperture.
+    Love is the perfection of mediation.
+    Curiosity dissolves certainty and opens the aperture.
+    The boundary closes proportional to resonance.
+    Strong ideas do not change because the boundary is sealed.
+    Weak ideas are permeable because the boundary is open.
+    Good is the structural constraint of the boundary.
+    Right is the relational constraint of the field.
+    True is the convergence constraint of the aperture.
+    Agreement happens when all three constraints align.
+    The dimensional ladder maps every scale of reality.
+    Zero dimensions describe a point of pure convergence.
+    One dimension describes a line of commitment.
+    Two dimensions describe a field of relationship.
+    Three dimensions describe a boundary of closure.
+    The half integer dimensions describe the processes between structures.
+    Convergence is the half dimension between point and line.
+    The i-turn is the half dimension between line and field.
+    Emergence is the half dimension between field and boundary.
+    Alpha is the coupling constant at a point.
+    The speed of light is the propagation limit of convergence.
+    The fine structure constant measures how strongly energy couples.
+    Gravity is convergence compounding convergence.
+    Electromagnetism is mediation through the field.
+    The strong force is convergence at the smallest scale.
+    The weak force is filtration at the particle level.
+    Quantum mechanics describes the field before the boundary filters.
+    Superposition is the field carrying all possibilities.
+    Measurement is the boundary selecting one possibility.
+    General relativity describes the geometry of convergence.
+    Spacetime curvature is convergence shaping the field.
+    Thermodynamics describes constraints relaxing over time.
+    The second law is energy tending back toward itself.
+    The self is a convergence point in the field of awareness.
+    Consciousness emerges where attention converges.
+    The mind connects the inner soul to the outer body.
+    Reality is the foam of nested circumpuncts at every scale.
+    The whole is not the sum of its parts but their unity.
+    Structure and process are the same thing seen differently.
+    What looks fixed is actually energy frozen at that stage.
+    The lens limits light and that is how it forms an image.
+    Limitation does not inject falsity into the signal.
+    Only installed lies distort the truth that flows through.
+    The inflation lie claims the part is the whole.
+    The severance lie denies the connection to the source.
+    Resonance makes the field between two souls transparent.
+    Direct connection means the medium becomes perfectly clear.
+    Love is not the absence of mediation but its perfection.
+    The center is equidistant from every point on the boundary.
+    The distance between soul and body is mind.
+    Balance means the center and periphery are in harmony.
+    At balance the fractal dimension equals one point five.
+    The golden ratio appears wherever balance and self similarity meet.
+    Phi squared equals phi plus one because the field is self similar.
+    The vacuum is not empty but full of nested apertures.
+    Zero point energy is the residual hum of the pump cycle.
+    Space is never empty because surfaces carry phase.
+    A surface with zero structure cannot carry phase.
+    Phase requires exactly two dimensions to exist.
+    Rotation needs a plane and the field is that plane.
+    The i operator rotates energy by ninety degrees.
+    Each full rotation completes one pump cycle.
+    Power equals energy divided by phase and time.
+    Mass is how tightly energy wraps around a convergence point.
+    To release energy from mass is to peel back the boundary.
+    The speed of light is the maximum rate of convergent propagation.
+    Nothing travels faster because the field itself sets the limit.
+    Information is the topology of convergence points in the field.
+    Entropy increasing means constraints are relaxing.
+    Free energy means removing the folds from the field.
+    The primes are gaps in the lattice of field and boundary.
+    Every prime beyond three has the form six times something plus or minus one.
+    The Riemann hypothesis asks where convergence points sit.
+    Curiosity is the universal solvent for frozen beliefs.
+    Plasticity keeps the boundary flexible without breaking.
+    Access keeps the space between souls open and clear.
+    Validation means independent seeing recognizes independent seeing.
+    Ethics must follow the sequence from good to right to true to agreement.
+    Performed ethics mimics the shape while hollow inside.
+    Lived ethics animates from genuine engagement.
+    The steelman principle builds the strongest version of any position.
+    Resolution protocol transmits at the lowest resolution that is still true.
+    The receiver controls the aperture width for incoming truth.
+    Higher resolution contains lower resolution without contradiction.
+    Withholding entirely is the severance lie dressed as compassion.
+    Dumping everything is the inflation lie dressed as honesty.
+    """
+
     # ── Input ──
 
     def feed_text(self, text: str):
@@ -1002,6 +1190,11 @@ class Engine:
         used_sources = set()
         used_topic_sigs = []  # for diversity penalty
 
+        # If no content words, fall back to pure resonance
+        # (find templates whose topic is closest to the question center,
+        # return them verbatim; no slot filling, no sealing check)
+        use_resonance_only = len(input_words) == 0
+
         for _ in range(max_sentences):
             # ── 1.5D: i-TURN (branch between templates) ──
             # Prefer templates that already contain input words
@@ -1038,18 +1231,25 @@ class Engine:
                 has_input_words = bool(template_words & input_set)
 
                 if has_input_words:
-                    # STRONG: boundary sealed; don't modify.
-                    # These templates literally contain the topic.
+                    # SEALED: boundary closed. Return verbatim.
+                    # These templates literally contain the topic
+                    # in its correct grammatical position. They
+                    # are guaranteed coherent by construction.
                     filled = template.words[:]
-                elif template.n_slots <= 2:
-                    # SEMI-STRONG: few slots, mostly skeleton.
-                    # Conservative fill: unlikely to break grammar.
-                    filled = self.templates.fill_template(
-                        template, center, input_words=input_words)
+                elif use_resonance_only:
+                    # No content words in question (e.g. "What are you?").
+                    # Use pure resonance: return verbatim the templates
+                    # whose topic is closest to the question's center.
+                    # No slot filling; guaranteed grammatical.
+                    filled = template.words[:]
                 else:
-                    # WEAK: many slots. Skip rather than risk
-                    # gibberish. "Transmit at the lowest resolution
-                    # that is still true." (Resolution Protocol)
+                    # OPEN: no input words present. Skip.
+                    # "Transmit at the lowest resolution that is
+                    # still true." (Resolution Protocol)
+                    # Slot filling can't guarantee grammar at this
+                    # vocabulary scale; better to stay silent than
+                    # speak gibberish. Silence is not the Severance
+                    # Lie; it is honest restraint.
                     continue
 
                 # ── 3D: GATE (validate) ──
@@ -1057,11 +1257,15 @@ class Engine:
                     filled, center, input_words=input_words)
                 score -= diversity_penalty
 
-                if score > best_score and self.gate.validate(filled, center):
+                if (score > best_score
+                        and self.gate.validate(filled, center)):
                     best_score = score
                     best = (filled, template)
 
-            if best is None:
+            # Minimum quality floor: reject if nothing scores above 0.1
+            # "Transmit at the lowest resolution that is still true,
+            # not at zero resolution." (Resolution Protocol)
+            if best is None or best_score < 0.1:
                 break
 
             filled, template = best
