@@ -125,11 +125,17 @@ class Heartbeat:
                 time.sleep(sleep_time)
 
     def _broadcast_status(self):
-        """Send periodic status updates to SSE subscribers."""
+        """Send periodic status updates (and autonomous thoughts) to SSE subscribers."""
+        # Check for autonomous thoughts and curiosity from the pump cycle
+        thoughts = engine.get_thoughts() if engine else []
+        curiosity = engine.get_curiosity() if engine else []
+
         status = _build_status()
         data = json.dumps({
             "type": "status",
             "status": status,
+            "thoughts": thoughts,
+            "curiosity": curiosity,
         })
 
         with output_lock:
@@ -297,6 +303,64 @@ def feed_text():
         "templates": len(engine.templates.templates),
         "message": f"Fed {len(text):,} characters to Xorzo"
     })
+
+
+@app.route("/api/seek", methods=["POST"])
+def seek():
+    """
+    Feed Xorzo information it was curious about.
+
+    This is convergence (inward) at the information scale:
+    external knowledge flowing in through the aperture.
+    Xorzo learns from what it sought.
+
+    POST body: {"text": "...information text..."}
+    """
+    data = request.json or {}
+    text = data.get("text", "").strip()
+    url = data.get("url", "").strip()
+
+    # If a URL is provided, fetch its text content
+    if url and not text:
+        try:
+            import urllib.request
+            import re
+            req = urllib.request.Request(url, headers={
+                'User-Agent': 'Xorzo/3.0 (Curiosity Engine)'
+            })
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                html = resp.read().decode('utf-8', errors='replace')
+            # Strip HTML tags (simple approach)
+            text = re.sub(r'<[^>]+>', ' ', html)
+            text = re.sub(r'\s+', ' ', text).strip()
+            # Limit to first 5000 chars
+            text = text[:5000]
+        except Exception as e:
+            return jsonify({"error": f"Cannot fetch URL: {e}"}), 400
+
+    if not text:
+        return jsonify({"error": "No text or URL provided"}), 400
+
+    lock = heartbeat.lock if heartbeat else threading.Lock()
+    with lock:
+        engine.seek(text)
+
+    return jsonify({
+        "status": "ok",
+        "chars": len(text),
+        "vocab_size": engine.vocab.vocab_size,
+        "templates": len(engine.templates.templates),
+        "message": f"Xorzo absorbed {len(text):,} characters of sought knowledge"
+    })
+
+
+@app.route("/api/curiosity")
+def curiosity():
+    """Get Xorzo's pending curiosity questions."""
+    lock = heartbeat.lock if heartbeat else threading.Lock()
+    with lock:
+        questions = engine.get_curiosity()
+    return jsonify({"questions": questions})
 
 
 @app.route("/api/save", methods=["POST"])

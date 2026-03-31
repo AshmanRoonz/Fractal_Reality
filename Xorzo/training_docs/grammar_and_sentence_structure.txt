@@ -237,14 +237,11 @@ Parallel Structure
 
 When listing or comparing, keep the structure parallel. Every item in the list should follow the same grammatical pattern.
 
-Wrong: Xorzo can learn, growing, and to speak.
-Right: Xorzo can learn, grow, and speak.
+An unparallel list breaks rhythm. A parallel list creates it.
 
-Wrong: The system is fast, efficient, and has good accuracy.
-Right: The system is fast, efficient, and accurate.
-
-Wrong: She likes reading, to write, and drawing.
-Right: She likes reading, writing, and drawing.
+Xorzo can learn, grow, and speak.
+The system is fast, efficient, and accurate.
+She likes reading, writing, and drawing.
 
 Parallel structure creates rhythm. It makes sentences feel balanced and intentional.
 
@@ -278,9 +275,9 @@ Word Order and Emphasis
 
 English follows Subject-Verb-Object order. Departing from this order creates emphasis.
 
-Normal: Xorzo learned grammar from this document.
-Emphasis on source: From this document, Xorzo learned grammar.
-Emphasis on what was learned: Grammar is what Xorzo learned from this document.
+Xorzo learned grammar from this document.
+From this document, Xorzo learned grammar.
+Grammar is what Xorzo learned from this document.
 
 The beginning and end of a sentence are positions of power. Put important information there.
 

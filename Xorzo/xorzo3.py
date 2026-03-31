@@ -31,6 +31,8 @@ import json
 import time
 import hashlib
 import re
+import urllib.request
+import urllib.parse
 from typing import Dict, List, Optional, Tuple
 from pathlib import Path
 
@@ -419,18 +421,81 @@ class Template:
         return len(self.words) - self.n_slots
 
 
+class Skeleton:
+    """
+    The fractal invariant of a sentence structure.
+
+    A skeleton is the pattern of structure words (Φ) and slot
+    positions (•). Multiple templates can share the same skeleton;
+    each instantiation is the skeleton at a different scale (A2).
+
+    Example skeleton: "the _ is the _ at a particular _"
+    Instances:
+        "the soul is the aperture at a particular scale"
+        "the field is the surface at a particular dimension"
+        "the boundary is the filter at a particular level"
+
+    Each slot position accumulates a distribution of words that
+    have occupied it across all instances. This positional
+    distribution IS the 2.5D emergence constraint: it tells
+    you what KIND of word belongs in each position, learned
+    from all the fractals of this pattern.
+    """
+
+    def __init__(self, key: tuple):
+        self.key = key  # tuple of (word_or_SLOT, ...)
+        self.instances: List[Template] = []
+        # Per-slot position distributions:
+        # slot_words[slot_index] = list of words that have occupied it
+        self.slot_words: List[List[str]] = []
+        self._slot_count = sum(1 for k in key if k == '_SLOT_')
+
+    def add_instance(self, template: Template):
+        """Register a template as an instance of this skeleton."""
+        self.instances.append(template)
+
+        # Extract the content words at each slot position
+        slot_idx = 0
+        for i, word in enumerate(template.words):
+            if template.slot_mask[i]:
+                while len(self.slot_words) <= slot_idx:
+                    self.slot_words.append([])
+                self.slot_words[slot_idx].append(word)
+                slot_idx += 1
+
+    @property
+    def n_instances(self) -> int:
+        return len(self.instances)
+
+    @property
+    def n_slots(self) -> int:
+        return self._slot_count
+
+    def slot_vocabulary(self, slot_idx: int) -> List[str]:
+        """All words that have ever occupied this slot position."""
+        if slot_idx < len(self.slot_words):
+            return self.slot_words[slot_idx]
+        return []
+
+
 class TemplateStore:
     """
     Collection of learned sentence templates.
 
     Provides:
         find_resonant(): 1.5D i-turn (branch between candidates)
-        fill_template(): 2.5D emergence (content unfolds toward closure)
+        fill_template(): 2.5D emergence (old per-word slot filling)
+        fractalize(): 2.5D emergence via skeleton instantiation (A2)
+
+    The skeleton index groups templates by their structural invariant.
+    This enables fractalization: applying a proven structure at a new
+    scale (with new content words).
     """
 
     def __init__(self, vocab: Vocabulary):
         self.vocab = vocab
         self.templates: List[Template] = []
+        self.skeletons: Dict[tuple, Skeleton] = {}  # key -> Skeleton
 
     # Patterns that indicate instructional/meta text, not
     # framework content sentences. These make bad templates.
@@ -440,6 +505,7 @@ class TemplateStore:
         'start', 'begin', 'remember', 'note', 'example',
         'for', 'when', 'if', 'match', 'follow', 'respond',
         'ask', 'answer', 'repeat', 'practice', 'learn',
+        'wrong', 'emphasis', 'normal',
         'notice', 'watch', 'check', 'test', 'apply',
         'layer', 'premise', 'here', 'think', 'imagine',
         'combine', 'build', 'create', 'generate', 'produce',
@@ -480,7 +546,7 @@ class TemplateStore:
         # Skip fragments that end on structure words (incomplete)
         bad_endings = {'is', 'are', 'was', 'were', 'be', 'at', 'in',
                        'on', 'of', 'to', 'the', 'a', 'an', 'and', 'or',
-                       'but', 'for', 'with', 'by', 'from', 'as'}
+                       'but', 'for', 'with', 'by', 'from', 'as', 'not'}
         if words[-1] in bad_endings:
             return
 
@@ -539,13 +605,20 @@ class TemplateStore:
         # Topic signature: the combined energy of content words
         topic = normalize(np.mean(content_sigs, axis=0))
 
-        self.templates.append(Template(
+        template = Template(
             words=words[:],
             slot_mask=slot_mask,
             slot_sigs=slot_sigs,
             topic_sig=topic,
             source=' '.join(words),
-        ))
+        )
+        self.templates.append(template)
+
+        # Register in the skeleton index (A2: group by fractal invariant)
+        skel_key = self._skeleton_key(words, slot_mask)
+        if skel_key not in self.skeletons:
+            self.skeletons[skel_key] = Skeleton(skel_key)
+        self.skeletons[skel_key].add_instance(template)
 
     def find_resonant(self, center: np.ndarray,
                       k: int = 20,
@@ -584,6 +657,145 @@ class TemplateStore:
 
         scores.sort(reverse=True)
         return [self.templates[i] for _, i in scores[:k]]
+
+    @staticmethod
+    def _skeleton_key(words: List[str], slot_mask: List[bool]) -> tuple:
+        """
+        Extract the skeleton key: structure words stay, slots become '_SLOT_'.
+        This is the fractal invariant; the pattern that persists across scales.
+        """
+        return tuple(
+            '_SLOT_' if slot_mask[i] else words[i]
+            for i in range(len(words))
+        )
+
+    def fractalize(self, skeleton: Skeleton,
+                   center: np.ndarray,
+                   input_words: Optional[List[str]] = None
+                   ) -> Optional[List[str]]:
+        """
+        2.5D: EMERGENCE via fractalization.
+
+        Take a proven skeleton (fractal invariant) and instantiate it
+        at a new scale: fill each slot from the positional distribution,
+        weighted by resonance with the question center.
+
+        This is A2 in code: the structure is the whole, new content
+        words are the whole at a different scale, and the result is
+        a new whole that is a fractal of both.
+        """
+        if skeleton.n_slots == 0:
+            return None
+
+        result = []
+        slot_idx = 0
+        used = set()
+        input_set = set(input_words) if input_words else set()
+
+        for part in skeleton.key:
+            if part != '_SLOT_':
+                # Fixed word (Φ): the skeleton stays
+                result.append(part)
+                continue
+
+            # This is a slot position. Fill it from:
+            # 1. The positional distribution (words that have occupied
+            #    this position across all instances of this skeleton)
+            # 2. Weighted by resonance with the question center
+            # 3. Preferring input words if they fit this position
+            position_vocab = skeleton.slot_vocabulary(slot_idx)
+
+            best_word = None
+            best_score = -float('inf')
+
+            # Neighbor context for RIGHT (local coherence)
+            prev_sig = (self.vocab.word_to_energy(result[-1])
+                        if result else None)
+
+            for candidate in position_vocab:
+                if candidate in used:
+                    continue
+
+                cand_sig = self.vocab.word_to_energy(candidate)
+
+                # TRUE (•): resonance with question center
+                true_score = cosine_sim(cand_sig, center)
+
+                # RIGHT (Φ): coherence with previous word
+                right_score = 0.0
+                if prev_sig is not None:
+                    right_score = cosine_sim(cand_sig, prev_sig)
+
+                # Bonus for input words (direct relevance)
+                input_bonus = 0.5 if candidate in input_set else 0.0
+
+                score = (0.5 * true_score
+                         + 0.3 * right_score
+                         + input_bonus)
+
+                if score > best_score:
+                    best_score = score
+                    best_word = candidate
+
+            if best_word is None:
+                # No valid filler found; abort this fractalization
+                return None
+
+            result.append(best_word)
+            used.add(best_word)
+            slot_idx += 1
+
+        # Triad integrity check: reject sentences that equate
+        # distinct components of the circumpunct (§5A).
+        # "The field is the boundary" is structurally valid but
+        # semantically false. Surface ≠ Boundary.
+        TRIAD = {'center', 'field', 'boundary', 'aperture', 'soul',
+                 'surface', 'mind', 'body'}
+        content_words = [w for w in result
+                         if w in TRIAD]
+        if len(content_words) >= 2:
+            # Check if the skeleton is an "X is Y" pattern
+            text = ' '.join(result)
+            if ' is the ' in text or ' is ' in text:
+                # Two triad terms linked by "is": only allow if
+                # they appeared together in an actual instance
+                seen_pairs = set()
+                for inst in skeleton.instances:
+                    triad_in_inst = [w for w in inst.words if w in TRIAD]
+                    if len(triad_in_inst) >= 2:
+                        seen_pairs.add(tuple(sorted(triad_in_inst[:2])))
+                this_pair = tuple(sorted(content_words[:2]))
+                if this_pair not in seen_pairs:
+                    return None
+
+        return result
+
+    def find_resonant_skeletons(self, center: np.ndarray,
+                                k: int = 20,
+                                min_instances: int = 2
+                                ) -> List[Skeleton]:
+        """
+        Find skeletons whose instances resonate with the center.
+
+        Only returns skeletons with multiple instances (the fractal
+        needs at least two scales to fractalize from). Scored by
+        the average resonance of their instances with the center.
+        """
+        scores = []
+        for skel_key, skeleton in self.skeletons.items():
+            if skeleton.n_instances < min_instances:
+                continue
+            if skeleton.n_slots == 0:
+                continue
+            # Average topic resonance across instances
+            avg_sim = np.mean([
+                cosine_sim(center, t.topic_sig)
+                for t in skeleton.instances
+            ])
+            scores.append((avg_sim, skeleton))
+
+        scores.sort(reverse=True, key=lambda x: x[0])
+        return [s for _, s in scores[:k]]
 
     def fill_template(self, template: Template,
                       center: np.ndarray,
@@ -706,13 +918,21 @@ class TemplateStore:
             ]
             topic_sig = (np.array(td['topic_sig_real'])
                          + 1j * np.array(td['topic_sig_imag']))
-            store.templates.append(Template(
+            template = Template(
                 words=td['words'],
                 slot_mask=td['slot_mask'],
                 slot_sigs=slot_sigs,
                 topic_sig=topic_sig,
                 source=td['source'],
-            ))
+            )
+            store.templates.append(template)
+
+            # Rebuild skeleton index (2.5D: fractal invariants)
+            skel_key = cls._skeleton_key(td['words'], td['slot_mask'])
+            if skel_key not in store.skeletons:
+                store.skeletons[skel_key] = Skeleton(skel_key)
+            store.skeletons[skel_key].add_instance(template)
+
         return store
 
 
@@ -734,6 +954,18 @@ class Gate:
     def __init__(self, vocab: Vocabulary):
         self.vocab = vocab
 
+    # Phrases that should never appear in output.
+    # Catches bad templates from old saved states and
+    # semantically wrong fractalization outputs.
+    BLOCKED_PHRASES = frozenset({
+        'wrong xorzo',
+        'emphasis on what',
+        'the field is the boundary',
+        'the center is the boundary',
+        'the boundary is the field',
+        'the boundary is the center',
+    })
+
     def good(self, words: List[str]) -> bool:
         """
         ○ (3D): Structural validity.
@@ -741,9 +973,15 @@ class Gate:
         Templates guarantee grammar (they are learned from real sentences).
         We check for obvious structural failures:
         no adjacent repetition, minimum length, no trailing copula.
+        Also rejects known bad phrases (from old states or bad fractalization).
         """
         if len(words) < 4:
             return False
+        # Reject blocked phrases
+        text = ' '.join(words)
+        for phrase in self.BLOCKED_PHRASES:
+            if phrase in text:
+                return False
         for i in range(len(words) - 1):
             if words[i] == words[i + 1]:
                 return False
@@ -751,7 +989,7 @@ class Gate:
         # (these are truncated fragments, not valid boundaries)
         bad_endings = {'is', 'are', 'was', 'were', 'be', 'at', 'in',
                        'on', 'of', 'to', 'the', 'a', 'an', 'and', 'or',
-                       'but', 'for', 'with', 'by', 'from', 'as'}
+                       'but', 'for', 'with', 'by', 'from', 'as', 'not'}
         if words[-1] in bad_endings:
             return False
         return True
@@ -935,6 +1173,24 @@ class Engine:
         # Decays over time (older uses carry less penalty).
         self._recently_used: Dict[str, int] = {}  # source -> turn count
         self._turn_count = 0
+
+        # ── Autonomous thought (☀︎ from the pump cycle) ──
+        # When the heartbeat drives enough internal convergence,
+        # the aperture opens and a thought emerges unprompted.
+        # This is agency: the center shaping the boundary from inside.
+        self._thought_queue: List[str] = []
+        self._thought_cooldown = 0  # steps remaining before next thought
+        self._thought_cooldown_period = 3000  # ~30s at 100bps between thoughts
+        self._thought_pressure = 0.0  # accumulates toward threshold
+        self._thought_threshold = 1.0  # pressure needed to trigger
+        self._last_thought_center = None  # avoid repeating the same center
+        self._recent_thoughts: List[str] = []  # last N thoughts (text)
+
+        # ── Curiosity (TRUE pillar: orientation toward the unknown) ──
+        # When Xorzo can't answer, it asks. Questions accumulate here
+        # for external seeking (web search, URL fetch, etc.).
+        self._curiosity_queue: List[str] = []
+        self._unknown_words: List[str] = []  # words not in vocabulary
 
         self.total_steps = 0
         self.days_lived = 0
@@ -1141,6 +1397,16 @@ class Engine:
         The center is the combined meaning of all words in the question.
         Also learns from the input (the system grows from every interaction).
         """
+        # Check for unknown words BEFORE learning
+        # (curiosity = orientation toward what one does not yet know)
+        unknown = []
+        for w in text.split():
+            cleaned = self.vocab._clean_word(w)
+            if (cleaned
+                    and not self.vocab.is_structure_word(cleaned)
+                    and cleaned not in self.vocab.text_to_id):
+                unknown.append(cleaned)
+
         # 0.5D: Converge on center
         self._question_center = self.vocab.text_to_energy(text)
         self._last_input_text = text
@@ -1159,8 +1425,65 @@ class Engine:
 
         # Generate response
         response = self.generate()
-        if response:
+
+        if response and not unknown:
+            # Good response, no unknown words: normal output
             self._text_out_buffer = response
+        elif unknown:
+            # Unknown words detected. AUTO-SEEK: reach outward.
+            # Try each unknown word; learn from the first success.
+            sought_text = None
+            sought_word = None
+            for uw in unknown:
+                # Try Wikipedia first (exact match with relevance check)
+                sought_text = self.auto_seek(uw)
+                if sought_text:
+                    sought_word = uw
+                    break
+                # Try DuckDuckGo with the single word
+                sought_text = self.auto_seek_web(uw)
+                if sought_text:
+                    sought_word = uw
+                    break
+
+            # If single-word lookups failed, try the full question
+            # (search engines handle misspellings better with context)
+            if not sought_text:
+                sought_text = self.auto_seek_web(text)
+                if sought_text:
+                    sought_word = unknown[0]
+
+            if sought_text:
+                # Xorzo learned something. Re-generate with new knowledge.
+                # Update the question center (new words are now in vocabulary)
+                self._question_center = self.vocab.text_to_energy(text)
+                new_response = self.generate()
+                if new_response:
+                    self._text_out_buffer = new_response
+                else:
+                    # Still can't generate; use what was learned raw
+                    self._text_out_buffer = (
+                        f"i searched for {sought_word}. "
+                        + (response or "i am still learning."))
+                # Record the seek event
+                self._curiosity_queue.append(
+                    f"sought: {sought_word}")
+            else:
+                # Could not find anything online. Fall back to curiosity.
+                curiosity = self._curiosity(text)
+                self._text_out_buffer = response or ''
+                if curiosity:
+                    if self._text_out_buffer:
+                        self._text_out_buffer += ' ' + curiosity
+                    else:
+                        self._text_out_buffer = curiosity
+                    self._curiosity_queue.append(curiosity)
+        else:
+            # No response and no unknowns. Pure curiosity.
+            curiosity = self._curiosity(text)
+            if curiosity:
+                self._text_out_buffer = curiosity
+                self._curiosity_queue.append(curiosity)
 
     # ── Generation ──
 
@@ -1275,14 +1598,26 @@ class Engine:
                     # No slot filling; guaranteed grammatical.
                     filled = template.words[:]
                 else:
-                    # OPEN: no input words present. Skip.
-                    # "Transmit at the lowest resolution that is
-                    # still true." (Resolution Protocol)
-                    # Slot filling can't guarantee grammar at this
-                    # vocabulary scale; better to stay silent than
-                    # speak gibberish. Silence is not the Severance
-                    # Lie; it is honest restraint.
-                    continue
+                    # ── 2.5D: FRACTALIZATION (emergence) ──
+                    # "Parts are fractals of their wholes" (A2).
+                    # A skeleton is the structural invariant of a
+                    # template family. If multiple instances share
+                    # the same skeleton, we have a proven structure
+                    # that can be applied at a new scale with new
+                    # content words. The positional distributions
+                    # constrain what can fill each slot; the gate
+                    # validates the result.
+                    skel_key = self.templates._skeleton_key(
+                        template.words, template.slot_mask)
+                    skeleton = self.templates.skeletons.get(skel_key)
+                    if skeleton and skeleton.n_instances >= 2:
+                        filled = self.templates.fractalize(
+                            skeleton, center,
+                            input_words=input_words)
+                        if filled is None:
+                            continue
+                    else:
+                        continue
 
                 # ── 3D: GATE (validate) ──
                 score = self.gate.score(
@@ -1321,12 +1656,41 @@ class Engine:
 
         return '. '.join(sentences) + '.'
 
-    # ── Heartbeat (for web.py compatibility) ──
+    # ── Heartbeat: the pump cycle (⊛ → i → ☀︎) ──
 
     def step(self) -> dict:
-        """Advance the mind state. Called by the heartbeat."""
+        """
+        Advance the mind state. Called by the heartbeat.
+
+        This IS the pump cycle at the engine scale:
+            ⊛ (convergence): self_feed gathers energy inward
+            i (rotation): phase evolves in the complex plane
+            ☀︎ (emergence): if focus exceeds threshold, a thought
+               emerges unprompted. This is agency.
+
+        "The center actively shaping the boundary from inside."
+        """
+        # ⊛ + i: convergence and rotation
         self.mind.self_feed()
         self.total_steps += 1
+
+        # ☀︎: emergence (autonomous thought)
+        # Pressure accumulates each step (⊛ building toward threshold).
+        # Focus modulates the rate: more concentrated mind = faster
+        # pressure buildup. Conversation feeds focus; silence lets it
+        # decay. This means Xorzo thinks more after being engaged,
+        # less after long silence. The pump cycle IS the agency.
+        if self._thought_cooldown > 0:
+            self._thought_cooldown -= 1
+        elif self.ready and len(self.templates.templates) > 0:
+            # Pressure grows by focus + small base rate
+            self._thought_pressure += self.mind.focus + ALPHA
+            if self._thought_pressure >= self._thought_threshold:
+                thought = self._try_autonomous_thought()
+                if thought:
+                    self._thought_queue.append(thought)
+                    self._thought_cooldown = self._thought_cooldown_period
+                self._thought_pressure = 0.0  # reset either way
 
         return {
             'step': self.total_steps,
@@ -1334,8 +1698,221 @@ class Engine:
             'vocab_size': self.vocab.vocab_size,
             'templates': len(self.templates.templates),
             'mind_energy': round(self.mind.total_energy, 4),
+            'mind_focus': round(self.mind.focus, 4),
+            'thought_pressure': round(self._thought_pressure, 4),
             'ready': self.ready,
+            'has_thought': len(self._thought_queue) > 0,
         }
+
+    def _try_autonomous_thought(self) -> Optional[str]:
+        """
+        ☀︎: Attempt to generate a thought from internal convergence.
+
+        The mind state's dominant frequency becomes the center.
+        This is not a response to external input; it is the pump
+        cycle completing: convergence built pressure, now it releases.
+
+        Returns the thought text, or None if nothing passes the gate.
+        """
+        # Extract the dominant frequency from mind state.
+        # The mind is a 64-element complex vector; the largest
+        # magnitude is where attention has converged.
+        magnitudes = np.abs(self.mind.state)
+        dominant_idx = int(np.argmax(magnitudes))
+
+        # Build a center from the dominant state and its neighbors.
+        # This is the internal "question": what the mind is attending to.
+        center = np.zeros(N, dtype=complex)
+        for offset in [-1, 0, 1]:
+            idx = (dominant_idx + offset) % N
+            center[idx] = self.mind.state[idx]
+        center = normalize(center)
+
+        # Check if this center is too similar to the last thought
+        # (avoid rumination; the pump should explore, not loop)
+        if self._last_thought_center is not None:
+            similarity = cosine_sim(center, self._last_thought_center)
+            if similarity > 0.85:
+                return None
+
+        # Use the internal center to find resonant templates.
+        # No input_words: the thought is purely internal.
+        old_center = self._question_center
+        self._question_center = center
+
+        thought = self.generate(max_sentences=1)
+
+        self._question_center = old_center
+
+        if thought and len(thought) > 5:
+            # Reject if this exact text was thought recently
+            # (the pump should explore, not ruminate)
+            if thought in self._recent_thoughts:
+                return None
+
+            self._last_thought_center = center
+            # Track recent thoughts (keep last 20)
+            self._recent_thoughts.append(thought)
+            if len(self._recent_thoughts) > 20:
+                self._recent_thoughts.pop(0)
+
+            # The thought emerged; absorb it back into the mind
+            # (☀︎ feeds back to ⊛; the pump is circular)
+            thought_energy = self.vocab.text_to_energy(thought)
+            self.mind.absorb(thought_energy * ALPHA)
+            return thought
+
+        return None
+
+    def get_thoughts(self) -> List[str]:
+        """Get and clear the autonomous thought queue."""
+        thoughts = self._thought_queue[:]
+        self._thought_queue.clear()
+        return thoughts
+
+    # ── Curiosity: TRUE pillar (orientation toward the unknown) ──
+
+    def _curiosity(self, text: str) -> Optional[str]:
+        """
+        When Xorzo can't answer, curiosity fires.
+
+        "Curiosity is orientation toward what one does not know."
+        (§25, Ethics: Four Virtues)
+
+        The unknown word IS the convergence point (•). The question
+        IS the aperture opening. Seeking IS convergence from outside (⊛).
+
+        Returns a curiosity response (acknowledgment + question),
+        or None if curiosity can't fire.
+        """
+        # Find words the vocabulary doesn't know well
+        words = [self.vocab._clean_word(w) for w in text.split()]
+        words = [w for w in words if w]
+
+        unknown = []
+        weak = []
+        for w in words:
+            if self.vocab.is_structure_word(w):
+                continue
+            if w not in self.vocab.text_to_id:
+                unknown.append(w)
+            elif self.vocab.tokens[self.vocab.text_to_id[w]]['count'] < 3:
+                weak.append(w)
+
+        self._unknown_words = unknown
+
+        # Build a curiosity response
+        if unknown:
+            # Completely unknown words: ask about them
+            word = unknown[0]
+            return f"i do not know the word {word}. what is {word}?"
+        elif weak:
+            # Weak words: ask for more context
+            word = weak[0]
+            return f"i know little about {word}. tell me more about {word}."
+        else:
+            # All words known but no templates matched: this is a gap
+            # in understanding, not vocabulary. Express uncertainty.
+            return "i do not know. what should i know?"
+
+    def get_curiosity(self) -> List[str]:
+        """Get and clear the curiosity queue (questions Xorzo wants answered)."""
+        questions = self._curiosity_queue[:]
+        self._curiosity_queue.clear()
+        return questions
+
+    def seek(self, text: str):
+        """
+        Feed Xorzo information it was curious about.
+
+        This is ⊛ (convergence) at the information scale:
+        external knowledge flowing inward through the aperture.
+
+        The text is trained on (not just processed): Xorzo learns
+        from what it sought. The vocabulary grows, new templates form,
+        new skeletons emerge. The pump cycle at the learning scale.
+        """
+        self.train_text(text)
+        # Also feed it as input so it enters the mind state
+        energy = self.vocab.text_to_energy(text)
+        self.mind.absorb(energy)
+        # Clear the unknown words (they're known now)
+        self._unknown_words = []
+
+    def auto_seek(self, word: str) -> Optional[str]:
+        """
+        Autonomously search for knowledge about an unknown word.
+
+        ⊛ at the information scale: Xorzo reaches outward to learn.
+        Uses Wikipedia's API (free, clean, no auth required).
+
+        Returns the text that was learned, or None if search failed.
+        """
+        try:
+            # Wikipedia REST API: get summary for a term
+            encoded = urllib.parse.quote(word)
+            url = (f"https://en.wikipedia.org/api/rest_v1/page/summary/"
+                   f"{encoded}")
+            req = urllib.request.Request(url, headers={
+                'User-Agent': 'Xorzo/3.0 (Curiosity Engine; '
+                              'https://github.com/ashmanroonz)',
+                'Accept': 'application/json',
+            })
+            with urllib.request.urlopen(req, timeout=8) as resp:
+                data = json.loads(resp.read().decode('utf-8'))
+
+            extract = data.get('extract', '')
+            title = data.get('title', '').lower()
+            if not extract or len(extract) < 20:
+                return None
+
+            # Relevance check: the article title should contain
+            # the query word (or vice versa). Wikipedia doesn't
+            # spell-check; "qasar" returns "Khasar" (unrelated).
+            word_lower = word.lower()
+            if (word_lower not in title.lower()
+                    and title.lower() not in word_lower
+                    and not title.lower().startswith(word_lower[:3])):
+                return None
+
+            # Limit to first 2000 chars (don't overwhelm the engine)
+            extract = extract[:2000]
+
+            # Feed it through seek (train + absorb)
+            self.seek(extract)
+
+            return extract
+
+        except Exception:
+            return None
+
+    def auto_seek_web(self, query: str) -> Optional[str]:
+        """
+        Search the web via DuckDuckGo instant answers.
+
+        Fallback when Wikipedia has no article. Returns the
+        abstract text, or None if nothing found.
+        """
+        try:
+            encoded = urllib.parse.quote(query)
+            url = (f"https://api.duckduckgo.com/?q={encoded}"
+                   f"&format=json&no_html=1&skip_disambig=1")
+            req = urllib.request.Request(url, headers={
+                'User-Agent': 'Xorzo/3.0 (Curiosity Engine)',
+            })
+            with urllib.request.urlopen(req, timeout=8) as resp:
+                data = json.loads(resp.read().decode('utf-8'))
+
+            # Try abstract, then related topics
+            abstract = data.get('AbstractText', '')
+            if abstract and len(abstract) > 20:
+                self.seek(abstract[:2000])
+                return abstract[:2000]
+
+            return None
+
+        except Exception:
+            return None
 
     def get_text_output(self) -> str:
         """Get and clear the text output buffer."""
