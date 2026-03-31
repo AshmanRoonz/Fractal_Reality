@@ -496,17 +496,35 @@ def _build_status():
         "mind": {
             "total_energy": round(engine.mind.total_energy, 4),
             "focus": round(engine.mind.focus, 4),
+            "waking": bool(engine.mind.waking),
+            "quadrant": engine.mind.quadrant_name,
+            "i_phase": {
+                "theta": round(engine.mind.theta, 4),
+                "real": round(float(engine.mind.i_phase.real), 4),
+                "imag": round(float(engine.mind.i_phase.imag), 4),
+            },
+            "sleep_pressure": round(engine.mind.sleep_pressure, 4),
+            "sleep_threshold": round(engine.mind.sleep_threshold, 4),
+            "dream_weight": round(engine.mind.dream_weight, 4),
+            "deep_weight": round(engine.mind.deep_weight, 4),
         },
         "memory": {
             "turns": engine.memory.turn_count,
             "facts": len(engine.memory.facts),
             "identities": len(engine.memory.who),
             "who": dict(engine.memory.who),
+            "sensory_memories": engine.cascade.memory_count(),
         },
         "contradictions": {
             "propositions": len(engine.contradictions.propositions),
         },
         "cascade": engine.cascade.status(),
+        "virtues": engine.virtues.status(),
+        "seeking": {
+            "sought_count": len(engine._sought_words),
+            "seek_log": engine._seek_log[-5:],
+            "curiosity_queue": len(engine._curiosity_queue),
+        },
     }
 
 

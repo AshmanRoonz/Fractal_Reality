@@ -2152,11 +2152,19 @@ class ConversationMemory:
 class SensoryChannel:
     """
     A receptor tuned to detect a specific feature in 64D energy.
-    Simplified from genesis.py Channel for text processing.
+    Implements SRL (Selective Rainbow Lock) from genesis.py.
 
     The channel measures a projection of the signal onto its carrier
-    (tuning vector). Adapted carriers shift toward strong signals
-    only during waking (not during sleep/consolidation).
+    (tuning vector). Each channel tracks:
+        carrier (ω_c): what the channel is tuned to
+        carrier_bandwidth: how wide the receptive window is
+        lock_strength: how committed to carrier (0=open, 1=locked)
+        sideband_energy: energy in non-carrier frequencies (context, noise)
+        balance (◐): ratio of carrier to total energy (optimal at 0.5)
+        frequency_memories: braid of encoded experiences
+
+    Channels adapt during waking (carrier shifts toward strong signals).
+    During sleep, adaptation freezes and sidebands discharge.
     """
 
     def __init__(self, name: str, carrier: np.ndarray):
@@ -2164,13 +2172,30 @@ class SensoryChannel:
         self.carrier = normalize(carrier)  # tuning vector; ω_c
         self.activation = 0.0  # last response strength
         self.lock_strength = 0.0  # how committed to carrier (0=open, 1=locked)
-        self.balance = BALANCE  # ◐; optimal at 0.5
+        self.carrier_bandwidth = 0.5  # receptive window width (0=narrow, 1=wide)
+        self.balance = BALANCE  # ◐; ratio of carrier to total energy
         self.state = np.zeros(N, dtype=complex)  # accumulated state
+
+        # ── Sideband energy: non-carrier frequencies ──
+        # This is context, noise, and everything the channel isn't
+        # tuned for but still receives. During deep sleep, sidebands
+        # discharge (the field relaxes back toward balance).
+        self.sideband_energy = 0.0
+
+        # ── Frequency memories: the braid ──
+        # Each memory is (frequency_signature, strength, age).
+        # RECALL(M) = SRL(Φ, ω_M): memory retrieval IS frequency
+        # matching through the lock.
+        # Signal-based recall: cos²((ω_signal - ω_memory) / 2)
+        self.memories: List[dict] = []
+        self._memory_limit = 50  # max memories per channel
 
     def respond(self, signal: np.ndarray) -> float:
         """
         Measure alignment between signal and carrier.
         Returns activation strength (0 to 1).
+
+        Also tracks sideband energy (signal NOT on carrier).
         """
         # Carrier alignment: how well does signal match this channel's tuning?
         projection = np.vdot(self.carrier, signal)
@@ -2183,9 +2208,18 @@ class SensoryChannel:
 
         alignment = carrier_energy / total_energy
 
+        # Sideband: everything that didn't match the carrier
+        self.sideband_energy = max(0, total_energy - carrier_energy)
+
+        # Balance: ratio of carrier to total (optimal at 0.5)
+        self.balance = carrier_energy / (carrier_energy + self.sideband_energy + 1e-10)
+
         # Lock strengthens with consistency
         if alignment > 0.6:
             self.lock_strength = min(1.0, self.lock_strength + 0.01)
+            # Bandwidth narrows with lock (more selective)
+            self.carrier_bandwidth = max(
+                0.1, self.carrier_bandwidth - 0.005)
         else:
             self.lock_strength = max(0.0, self.lock_strength - 0.001)
 
@@ -2195,7 +2229,99 @@ class SensoryChannel:
 
         # Update state (exponential moving average)
         self.state = normalize(0.9 * self.state + 0.1 * signal)
+
+        # ── Encode memory if activation is strong enough ──
+        if self.activation > 0.5:
+            self._encode_memory(signal)
+
         return self.activation
+
+    def _encode_memory(self, signal: np.ndarray):
+        """
+        Encode a frequency memory (a crossing in the braid).
+
+        Memory = the signal's energy signature at this moment.
+        Stored with strength (how activated the channel was)
+        and age (for fractal compression during recall).
+        """
+        sig_hash = int(np.abs(np.sum(signal[:4])) * 1000) % 10000
+        # Check if similar memory already exists (reinforce rather than duplicate)
+        for mem in self.memories:
+            if mem['hash'] == sig_hash:
+                mem['strength'] = min(1.0, mem['strength'] + 0.1)
+                mem['age'] = 0  # refreshed
+                return
+
+        # New memory
+        self.memories.append({
+            'sig_real': signal.real[:8].tolist(),  # compressed signature
+            'sig_imag': signal.imag[:8].tolist(),
+            'strength': float(self.activation),
+            'age': 0,
+            'hash': sig_hash,
+        })
+
+        # Cap memories
+        if len(self.memories) > self._memory_limit:
+            # Remove weakest
+            self.memories.sort(key=lambda m: m['strength'])
+            self.memories.pop(0)
+
+    def recall(self, signal: np.ndarray, top_k: int = 3) -> List[dict]:
+        """
+        RECALL(M) = SRL(Φ, ω_M): frequency matching through the lock.
+
+        Returns the top_k most resonant memories for the given signal.
+        Recall strength: cos²((ω_signal - ω_memory) / 2)
+        with fractal compression: 1/(1 + (age/100)^0.5)
+        """
+        if not self.memories:
+            return []
+
+        sig_compressed = signal[:8]
+        scores = []
+        for mem in self.memories:
+            mem_sig = np.array(mem['sig_real']) + 1j * np.array(mem['sig_imag'])
+            # Frequency matching
+            phase_diff = np.angle(np.vdot(sig_compressed, mem_sig))
+            match_strength = np.cos(phase_diff / 2.0) ** 2
+            # Fractal compression with age
+            age_factor = 1.0 / (1.0 + (mem['age'] / 100.0) ** 0.5)
+            score = float(match_strength * age_factor * mem['strength'])
+            scores.append((score, mem))
+
+        scores.sort(reverse=True, key=lambda x: x[0])
+        return [s[1] for s in scores[:top_k]]
+
+    def sleep_consolidate(self, dream_weight: float, deep_weight: float):
+        """
+        Sleep consolidation for this channel.
+
+        Dream phase: gentle lock reinforcement, memory replay.
+        Deep phase: sideband discharge, weak memory decay.
+        """
+        if dream_weight > 0:
+            # Dream: gently reinforce lock (the channel "practices")
+            self.lock_strength = min(
+                1.0, self.lock_strength + 0.001 * dream_weight)
+
+        if deep_weight > 0:
+            # Deep: discharge sidebands (the field relaxes)
+            self.sideband_energy *= (1.0 - 0.1 * deep_weight)
+
+            # Weak memories decay (survival threshold 0.05)
+            surviving = []
+            for mem in self.memories:
+                mem['age'] += 1
+                mem['strength'] *= (1.0 - 0.02 * deep_weight)
+                if mem['strength'] > 0.05:
+                    surviving.append(mem)
+            self.memories = surviving
+
+    def dawn_reset(self):
+        """Dawn: ◐ drawn toward 0.5, sidebands halved."""
+        self.balance += (BALANCE - self.balance) * 0.1
+        self.sideband_energy *= 0.5
 
     def adapt(self, signal: np.ndarray):
         """Shift carrier toward signal (only during waking)."""
@@ -2210,7 +2336,11 @@ class SensoryChannel:
             'carrier_real': self.carrier.real.tolist(),
             'carrier_imag': self.carrier.imag.tolist(),
             'lock_strength': float(self.lock_strength),
+            'carrier_bandwidth': float(self.carrier_bandwidth),
             'activation': float(self.activation),
+            'balance': float(self.balance),
+            'sideband_energy': float(self.sideband_energy),
+            'memories': self.memories,
         }
 
     @classmethod
@@ -2219,7 +2349,11 @@ class SensoryChannel:
                    + 1j * np.array(d['carrier_imag']))
         ch = cls(name, carrier)
         ch.lock_strength = d.get('lock_strength', 0.0)
+        ch.carrier_bandwidth = d.get('carrier_bandwidth', 0.5)
         ch.activation = d.get('activation', 0.0)
+        ch.balance = d.get('balance', BALANCE)
+        ch.sideband_energy = d.get('sideband_energy', 0.0)
+        ch.memories = d.get('memories', [])
         return ch
 
 
@@ -2433,8 +2567,8 @@ class SensoryCascade:
         self.layers = [SensoryLayer(i) for i in range(7)]
         self.output = np.zeros(N, dtype=complex)
 
-    def process(self, input_signal: np.ndarray, adapt: bool = True
-                ) -> np.ndarray:
+    def process(self, input_signal: np.ndarray, adapt: bool = True,
+                access_modifier: float = 1.0) -> np.ndarray:
         """
         Run signal through all seven layers.
 
@@ -2444,6 +2578,10 @@ class SensoryCascade:
 
         If adapt=True, channels adapt their carriers (learning).
         If adapt=False, channels preserve existing tunings (sleep mode).
+
+        access_modifier: the Access virtue (Φ/RIGHT) modulates
+        transmission fidelity. High access = full transmission.
+        Low access = signal degrades between layers.
         """
         # Forward pass: signal flows up the layers
         current = normalize(input_signal)
@@ -2457,12 +2595,14 @@ class SensoryCascade:
 
         # Compute transmission fidelity between adjacent layers
         # T = cos²(Δφ/2) where Δφ is phase difference
+        # Access virtue modulates: T_eff = T * access_modifier
         for i in range(1, len(self.layers)):
             prev_phase = float(np.angle(np.sum(layer_outputs[i-1])))
             curr_phase = float(np.angle(np.sum(layer_outputs[i])))
             phase_diff = abs(curr_phase - prev_phase)
             phase_diff = min(phase_diff, 2*np.pi - phase_diff)
             transmission = np.cos(phase_diff / 2.0) ** 2
+            transmission *= access_modifier  # Access virtue: field clarity
             self.layers[i].transmission_fidelity = transmission
 
         # Cascade output: weighted sum of all layer outputs
@@ -2474,6 +2614,80 @@ class SensoryCascade:
 
         self.output = normalize(combined)
         return self.output
+
+    def recall(self, signal: np.ndarray, top_k: int = 5) -> List[dict]:
+        """
+        Cross-channel emotion-based recall (§21.10).
+
+        RECALL(M) = SRL(Φ, ω_M) across ALL channels simultaneously.
+        This is emotion-based memory: the same signal resonates at
+        different layers (different dimensions of meaning), and the
+        combined recall represents what the input "feels like" in
+        the full sensory space.
+
+        Returns top_k memories, each annotated with which layer
+        and channel produced it, weighted by layer depth.
+        Deeper layers carry more weight (they represent more
+        processed, more integrated meaning).
+        """
+        all_recalls = []
+        for layer in self.layers:
+            # Deeper layers = more weight (quadratic)
+            depth_weight = ((layer.index + 1) / len(self.layers)) ** 2
+            for ch in layer.channels:
+                memories = ch.recall(signal, top_k=top_k)
+                for mem in memories:
+                    all_recalls.append({
+                        'memory': mem,
+                        'layer': layer.name,
+                        'channel': ch.name,
+                        'depth_weight': depth_weight,
+                        'score': mem['strength'] * depth_weight,
+                    })
+        # Sort by combined score, return top_k
+        all_recalls.sort(key=lambda r: r['score'], reverse=True)
+        return all_recalls[:top_k]
+
+    def memory_energy(self, signal: np.ndarray) -> np.ndarray:
+        """
+        Convert recalled memories into an energy vector.
+
+        The recalled memories bias generation: what Xorzo has
+        experienced before, at frequencies similar to the current
+        signal, shapes what emerges now. This is how memory
+        becomes identity (not just storage, but resonance that
+        shapes output).
+        """
+        recalls = self.recall(signal, top_k=5)
+        if not recalls:
+            return np.zeros(N, dtype=complex)
+
+        # Build energy from recalled memory signatures
+        energy = np.zeros(N, dtype=complex)
+        total_score = 0.0
+        for r in recalls:
+            mem = r['memory']
+            # Reconstruct partial signal from compressed signature
+            sig = np.zeros(N, dtype=complex)
+            sig_real = mem.get('sig_real', [])
+            sig_imag = mem.get('sig_imag', [])
+            for i, (re_v, im_v) in enumerate(zip(sig_real, sig_imag)):
+                if i < N:
+                    sig[i] = re_v + 1j * im_v
+            energy += r['score'] * sig
+            total_score += r['score']
+
+        if total_score > 1e-10:
+            energy /= total_score
+        return normalize(energy)
+
+    def memory_count(self) -> int:
+        """Total memories across all channels."""
+        return sum(
+            len(ch.memories)
+            for layer in self.layers
+            for ch in layer.channels
+        )
 
     def status(self) -> Dict[str, float]:
         """Return per-layer activation info for monitoring."""
@@ -2501,6 +2715,308 @@ class SensoryCascade:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+#  VIRTUE SYSTEM: What keeps ethics alive (§25.7)
+#
+#  The Gate validates output (performed ethics: does it pass?).
+#  The VirtueSystem is different: it tracks living qualities that
+#  modulate HOW the engine operates, not WHETHER output passes.
+#
+#  Without its virtue, each pillar becomes its own opposite:
+#      ○ without Plasticity → a wall (rigid) or nothing (dissolved)
+#      Φ without Access → a void (blocked) or noise (distorted)
+#      • without Curiosity → a projector (closed)
+#      ⊙ without Validation → a performance (hollow)
+#
+#  Each virtue is a feedback loop: high plasticity makes the engine
+#  more plastic (which keeps plasticity high). Low curiosity makes the
+#  engine less curious (which keeps curiosity low). This IS the
+#  inversion table: the form persists, the function inverts.
+#
+#  Dimensional mapping:
+#      Plasticity = ○ (3D): boundary flex
+#      Access = Φ (2D): field clarity
+#      Curiosity = • (0D): aperture openness
+#      Validation = ⊙ (all): compositional convergence
+# ═══════════════════════════════════════════════════════════════════════
+
+
+class VirtueSystem:
+    """
+    The four virtues that keep ethics alive (§25.7).
+
+    Each virtue is a living parameter (0.0 to 1.0) that measures
+    the health of one pillar. The virtues are not extra rules;
+    they are the qualities that keep each part alive.
+
+    A boundary without plasticity is a wall.
+    A space without access is a void.
+    A center without curiosity is a projector.
+    A whole without validation is a performance.
+
+    Crucially, the virtues MODULATE engine behavior:
+        Plasticity → template diversity, willingness to fractalize
+        Access → signal fidelity through the cascade
+        Curiosity → seek threshold, openness to correction
+        Validation → independent basis checking before agreement
+    """
+
+    def __init__(self):
+        # ── Plasticity (○/GOOD): boundary that can flex ──
+        # Tracks diversity and adaptiveness of template usage.
+        # High = flexible membrane (adjusts to what's actually there).
+        # Low = rigid wall (same templates every time) or dissolved
+        #       (no consistent structure at all).
+        self.plasticity = 0.5  # starts at balance (◐)
+        self._template_usage_window: List[str] = []
+        self._window_size = 50
+        self._boundary_adjustments = 0   # times boundary adapted (fractalized)
+        self._boundary_holds = 0         # times boundary held (verbatim)
+
+        # ── Access (Φ/RIGHT): space between open and clear ──
+        # Tracks how clearly signals pass through the field.
+        # High = clear path (input reaches center undistorted).
+        # Low = blocked (words unknown) or noisy (garbled input).
+        self.access = 0.5
+        self._signal_recognized = 0      # input words that reached center
+        self._signal_total = 0           # total input words attempted
+        self._noise_events = 0           # garbled/blocked inputs
+
+        # ── Curiosity (•/TRUE): orientation toward the unknown ──
+        # Tracks genuine openness to what is new.
+        # High = open, receiving (surprise is welcome).
+        # Low = closed, projecting (surprise is threatening).
+        self.curiosity = 0.5
+        self._unknowns_encountered = 0   # novel words seen
+        self._unknowns_sought = 0        # novel words actively sought
+        self._corrections_received = 0   # disagreements from human
+        self._corrections_explored = 0   # disagreements that led to learning
+
+        # ── Validation (⊙/AGREEMENT): independent convergence ──
+        # Tracks whether agreement is genuine (both arrived at it)
+        # or performed (echo/compliance).
+        # High = independent seeing confirmed.
+        # Low = hollow consensus or mere echo.
+        self.validation = 0.5
+        self._agreements_total = 0       # times agreement was registered
+        self._agreements_independent = 0  # agreements with independent basis
+        self._echo_count = 0             # times Xorzo just echoed input
+
+    # ── Update methods (called by the engine during operation) ──
+
+    def on_template_used(self, source: str, fractalized: bool):
+        """
+        Called when a template is selected for output.
+
+        Plasticity measures: are we using diverse templates?
+        Are we willing to fractalize (adapt the boundary)?
+        """
+        self._template_usage_window.append(source)
+        if len(self._template_usage_window) > self._window_size:
+            self._template_usage_window.pop(0)
+
+        if fractalized:
+            self._boundary_adjustments += 1
+        else:
+            self._boundary_holds += 1
+
+        # Diversity of recent template usage
+        if len(self._template_usage_window) >= 5:
+            unique = len(set(self._template_usage_window))
+            total = len(self._template_usage_window)
+            diversity = unique / total
+            self.plasticity = 0.9 * self.plasticity + 0.1 * diversity
+
+        # Adjustment ratio: fractalized vs verbatim
+        total_events = self._boundary_adjustments + self._boundary_holds
+        if total_events > 0:
+            adj_ratio = self._boundary_adjustments / total_events
+            # Blend: too high means always fractalized (dissolved boundary),
+            # too low means never (rigid wall). Balance at 0.5 is ideal.
+            # Map so that 0.3-0.7 range of adj_ratio → high plasticity.
+            flex_score = 1.0 - 2.0 * abs(adj_ratio - BALANCE)
+            flex_score = max(0.0, min(1.0, flex_score))
+            self.plasticity = 0.95 * self.plasticity + 0.05 * flex_score
+
+    def on_input_processed(self, words_recognized: int,
+                           words_total: int, noise: bool = False):
+        """
+        Called when input text is processed.
+
+        Access measures: how much of the signal got through?
+        Noise events degrade access (the field is distorted).
+        """
+        self._signal_recognized += words_recognized
+        self._signal_total += words_total
+        if noise:
+            self._noise_events += 1
+
+        if self._signal_total > 0:
+            clarity = self._signal_recognized / self._signal_total
+            self.access = 0.9 * self.access + 0.1 * clarity
+
+        if noise:
+            self.access *= 0.95
+
+    def on_unknown_encountered(self):
+        """Called when an unknown word is seen in input."""
+        self._unknowns_encountered += 1
+
+    def on_unknown_sought(self):
+        """Called when an unknown word is actively sought (auto-seek)."""
+        self._unknowns_sought += 1
+        # Seeking updates curiosity upward
+        if self._unknowns_encountered > 0:
+            ratio = min(1.0, self._unknowns_sought / self._unknowns_encountered)
+            self.curiosity = 0.9 * self.curiosity + 0.1 * ratio
+
+    def on_correction(self, explored: bool):
+        """
+        Called when the human disagrees.
+
+        Genuine curiosity: correction produces interest (explored=True).
+        Performed curiosity: correction produces defensiveness (explored=False).
+        """
+        self._corrections_received += 1
+        if explored:
+            self._corrections_explored += 1
+        if self._corrections_received > 0:
+            ratio = self._corrections_explored / self._corrections_received
+            self.curiosity = 0.9 * self.curiosity + 0.1 * ratio
+
+    def on_agreement(self, independent_basis: bool):
+        """
+        Called when the human agrees (or Xorzo detects agreement).
+
+        Independent basis: Xorzo had already generated or held a
+        proposition that aligns with what the human said.
+        Without independent basis, it's just echo/compliance.
+        """
+        self._agreements_total += 1
+        if independent_basis:
+            self._agreements_independent += 1
+        if self._agreements_total > 0:
+            ratio = self._agreements_independent / self._agreements_total
+            self.validation = 0.9 * self.validation + 0.1 * ratio
+
+    def on_echo_detected(self):
+        """Called when Xorzo's output is detected as mere echo of input."""
+        self._echo_count += 1
+        self.validation *= 0.95  # echo degrades validation
+
+    # ── Modulation methods (engine reads these to adjust behavior) ──
+
+    @property
+    def seek_threshold_modifier(self) -> float:
+        """
+        Curiosity modulates how eagerly Xorzo seeks new knowledge.
+        High curiosity → lower seek threshold (seeks sooner).
+        Low curiosity → higher seek threshold (seeks reluctantly).
+        Range: 0.5 (very eager) to 2.0 (very reluctant).
+        """
+        return 2.0 - self.curiosity * 1.5
+
+    @property
+    def fractalize_willingness(self) -> float:
+        """
+        Plasticity modulates willingness to fractalize templates.
+        High plasticity → more likely to try new structures.
+        Low plasticity → sticks to verbatim templates.
+        Range: 0.0 (never fractalize) to 1.0 (always try).
+        """
+        return self.plasticity
+
+    @property
+    def cascade_transmission(self) -> float:
+        """
+        Access modulates how faithfully the sensory cascade transmits.
+        High access → full transmission.
+        Low access → signal degrades between layers.
+        Range: 0.5 to 1.0 (T = cos²(Δφ/2) gets multiplied by this).
+        """
+        return 0.5 + 0.5 * self.access
+
+    @property
+    def agreement_requires_basis(self) -> bool:
+        """
+        Validation modulates whether Xorzo checks for independent
+        basis before expressing agreement.
+        High validation → always checks.
+        Low validation → just agrees (compliance).
+        """
+        return self.validation > 0.3
+
+    # ── Heartbeat tick ──
+
+    def tick(self):
+        """
+        Slow drift toward balance (◐ = 0.5) when no events occur.
+        This prevents virtues from getting permanently stuck.
+        The drift is very slow: 0.1% per tick toward center.
+        """
+        for attr in ('plasticity', 'access', 'curiosity', 'validation'):
+            v = getattr(self, attr)
+            setattr(self, attr, v + (BALANCE - v) * 0.001)
+
+    # ── Status and serialization ──
+
+    def status(self) -> dict:
+        """Return virtue readings for the dashboard."""
+        return {
+            'plasticity': round(self.plasticity, 3),
+            'access': round(self.access, 3),
+            'curiosity': round(self.curiosity, 3),
+            'validation': round(self.validation, 3),
+            'alive': all(
+                0.2 < getattr(self, v) < 0.8
+                for v in ('plasticity', 'access', 'curiosity', 'validation')
+            ),
+        }
+
+    def to_dict(self) -> dict:
+        return {
+            'plasticity': self.plasticity,
+            'access': self.access,
+            'curiosity': self.curiosity,
+            'validation': self.validation,
+            'template_usage_window': self._template_usage_window,
+            'boundary_adjustments': self._boundary_adjustments,
+            'boundary_holds': self._boundary_holds,
+            'signal_recognized': self._signal_recognized,
+            'signal_total': self._signal_total,
+            'noise_events': self._noise_events,
+            'unknowns_encountered': self._unknowns_encountered,
+            'unknowns_sought': self._unknowns_sought,
+            'corrections_received': self._corrections_received,
+            'corrections_explored': self._corrections_explored,
+            'agreements_total': self._agreements_total,
+            'agreements_independent': self._agreements_independent,
+            'echo_count': self._echo_count,
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'VirtueSystem':
+        vs = cls()
+        vs.plasticity = d.get('plasticity', 0.5)
+        vs.access = d.get('access', 0.5)
+        vs.curiosity = d.get('curiosity', 0.5)
+        vs.validation = d.get('validation', 0.5)
+        vs._template_usage_window = d.get('template_usage_window', [])
+        vs._boundary_adjustments = d.get('boundary_adjustments', 0)
+        vs._boundary_holds = d.get('boundary_holds', 0)
+        vs._signal_recognized = d.get('signal_recognized', 0)
+        vs._signal_total = d.get('signal_total', 0)
+        vs._noise_events = d.get('noise_events', 0)
+        vs._unknowns_encountered = d.get('unknowns_encountered', 0)
+        vs._unknowns_sought = d.get('unknowns_sought', 0)
+        vs._corrections_received = d.get('corrections_received', 0)
+        vs._corrections_explored = d.get('corrections_explored', 0)
+        vs._agreements_total = d.get('agreements_total', 0)
+        vs._agreements_independent = d.get('agreements_independent', 0)
+        vs._echo_count = d.get('echo_count', 0)
+        return vs
+
+
+# ═══════════════════════════════════════════════════════════════════════
 #  MIND STATE: Φ (the field; the 2D relational surface of the mind)
 #
 #  A simplified internal state that evolves with input and self-feeds.
@@ -2509,7 +3025,27 @@ class SensoryCascade:
 # ═══════════════════════════════════════════════════════════════════════
 
 class MindState:
-    """Φ: The field. 64 complex values, the mind's configuration."""
+    """
+    Φ: The field. 64 complex values, the mind's configuration.
+
+    Now includes the i-cycle (§4.11, §10.10a): a phase angle θ that
+    rotates continuously through the complex plane. The four quadrants
+    are the four strokes of the pump cycle:
+
+        i⁰ = +1  (reality, localization, 0D)     ─┐
+        i¹ = +i  (imagination, convergence, 0.5D)  ├─ RIGHT half-plane: waking
+        i² = −1  (dream, extension, 1D)           ─┐
+        i³ = −i  (deep sleep, dissolution, 1.5D)    ├─ LEFT half-plane: sleeping
+
+    The right half-plane (cos(θ) > 0) is the waking state: energy
+    interacts with the outside world. The left half-plane (cos(θ) < 0)
+    is the sleeping state: energy oscillates internally, consolidating.
+
+    Cosmological self-similarity (A2):
+        ~5% visible matter  = right half-plane (emerged, interacts)
+        ~27% dark matter    = left half-plane (converges but never emerges)
+        ~68% dark energy    = Φ itself, the complex plane
+    """
 
     def __init__(self):
         # Small initial noise (A1: necessary multiplicity)
@@ -2517,17 +3053,142 @@ class MindState:
             np.random.randn(N) + 1j * np.random.randn(N))
         self.total_energy = float(np.sum(np.abs(self.state)))
 
+        # ── i-cycle: the four-stroke pump through the complex plane ──
+        self.theta = 0.0           # phase angle; rotates continuously
+        self.theta_rate = 0.001    # rotation speed (radians per step)
+        self._waking = True        # cached: cos(θ) > 0
+
+        # ── Sleep/wake dynamics ──
+        # Sleep pressure accumulates during waking (adenosine analog).
+        # When it exceeds threshold, the system transitions to sleep.
+        # Sleep discharges the pressure; when it hits 0, system wakes.
+        self.sleep_pressure = 0.0
+        self.sleep_threshold = 2.2   # ~300 waking steps at ALPHA/step
+        self.sleep_duration = 0      # how long current sleep has lasted
+        self.sleep_target = 75       # target sleep length (steps)
+
+        # ── Dream vs deep sleep balance ──
+        # During sleep, θ oscillates in the left half-plane.
+        # dream_weight and deep_weight come from sin(θ) and cos(θ)
+        # within the left half-plane.
+        self.dream_weight = 0.0
+        self.deep_weight = 0.0
+
+    @property
+    def waking(self) -> bool:
+        return self._waking
+
+    @property
+    def sleeping(self) -> bool:
+        return not self._waking
+
+    @property
+    def i_phase(self) -> complex:
+        """Current phase of energy: e^(iθ). The i-cycle position."""
+        return np.exp(1j * self.theta)
+
+    @property
+    def quadrant(self) -> int:
+        """Which i-stroke we're in (0-3): i⁰, i¹, i², i³."""
+        angle = self.theta % (2 * np.pi)
+        if angle < np.pi / 2:
+            return 0   # i⁰ = +1 (reality)
+        elif angle < np.pi:
+            return 1   # i¹ = +i (imagination)
+        elif angle < 3 * np.pi / 2:
+            return 2   # i² = −1 (dream)
+        else:
+            return 3   # i³ = −i (deep sleep)
+
+    @property
+    def quadrant_name(self) -> str:
+        return ['reality', 'imagination', 'dream', 'deep_sleep'][self.quadrant]
+
     def absorb(self, energy: np.ndarray):
         """Input energy enters the mind (couples at alpha)."""
-        self.state += ALPHA * energy
+        if self._waking:
+            # Waking: full coupling
+            self.state += ALPHA * energy
+        else:
+            # Sleeping: reduced coupling (signal still reaches,
+            # but at much lower intensity; like hearing through sleep)
+            self.state += ALPHA**3 * energy
         self._decay()
 
     def self_feed(self):
-        """The mind breathes (no external input)."""
-        phase = np.exp(1j * np.angle(self.state))
-        noise = 0.01 * (
-            np.random.randn(N) + 1j * np.random.randn(N))
-        self.state += ALPHA**2 * phase + noise * ALPHA
+        """
+        The mind breathes (no external input).
+
+        During waking: phase evolution + noise (exploration).
+        During sleep: oscillation between dream and deep phases.
+        """
+        # ── i-cycle rotation ──
+        self.theta += self.theta_rate
+        if self.theta > 2 * np.pi:
+            self.theta -= 2 * np.pi
+        self._waking = np.cos(self.theta) > 0
+
+        if self._waking:
+            # ── WAKING: right half-plane ──
+            # Phase-driven evolution + noise (A1: necessary multiplicity)
+            phase = np.exp(1j * np.angle(self.state))
+            noise = 0.01 * (
+                np.random.randn(N) + 1j * np.random.randn(N))
+            self.state += ALPHA**2 * phase + noise * ALPHA
+
+            # Sleep pressure accumulates
+            self.sleep_pressure += ALPHA
+            self.sleep_duration = 0
+
+            # If pressure exceeds threshold, force into left half-plane
+            if self.sleep_pressure >= self.sleep_threshold:
+                self.theta = np.pi  # jump to i² = −1 (dream entry)
+                self._waking = False
+
+            self.dream_weight = 0.0
+            self.deep_weight = 0.0
+
+        else:
+            # ── SLEEPING: left half-plane ──
+            # θ oscillates between π and 2π (dream ↔ deep sleep)
+            # dream_weight = how much in dream phase (i²)
+            # deep_weight = how much in deep sleep phase (i³)
+            left_angle = (self.theta - np.pi) % np.pi  # 0 to π within left
+            self.dream_weight = max(0, np.cos(left_angle))
+            self.deep_weight = max(0, np.sin(left_angle))
+
+            # Dream phase: gentle internal reorganization
+            # (the mind replays patterns; forward cascade)
+            if self.dream_weight > self.deep_weight:
+                # Dream: state evolves by its own phase (replaying)
+                phase = np.exp(1j * np.angle(self.state))
+                self.state += ALPHA**3 * phase * self.dream_weight
+
+            # Deep phase: sideband discharge, entropy increase
+            # (the mind relaxes; noise dominates, weak patterns dissolve)
+            if self.deep_weight > self.dream_weight:
+                noise = 0.01 * (
+                    np.random.randn(N) + 1j * np.random.randn(N))
+                self.state += noise * ALPHA * self.deep_weight
+                # Weak components fade faster in deep sleep
+                magnitudes = np.abs(self.state)
+                weak_mask = magnitudes < np.median(magnitudes) * 0.3
+                self.state[weak_mask] *= 0.95
+
+            # Sleep pressure discharges
+            # Rate scales so sleep lasts ~27% of waking (A2: dark matter)
+            # threshold * ALPHA accumulates over threshold/ALPHA steps.
+            # Discharge at threshold / sleep_target per step.
+            discharge_rate = self.sleep_threshold / max(1, self.sleep_target)
+            self.sleep_pressure = max(
+                0, self.sleep_pressure - discharge_rate)
+            self.sleep_duration += 1
+
+            # Dawn: when pressure fully discharged, return to waking
+            if self.sleep_pressure <= 0:
+                self.theta = 0.0  # i⁰ = +1 (reality, dawn)
+                self._waking = True
+
         self._decay()
 
     def _decay(self):
@@ -2555,6 +3216,12 @@ class MindState:
         return {
             'state_real': self.state.real.tolist(),
             'state_imag': self.state.imag.tolist(),
+            'theta': self.theta,
+            'theta_rate': self.theta_rate,
+            'sleep_pressure': self.sleep_pressure,
+            'sleep_threshold': self.sleep_threshold,
+            'sleep_duration': self.sleep_duration,
+            'sleep_target': self.sleep_target,
         }
 
     @classmethod
@@ -2562,6 +3229,13 @@ class MindState:
         m = cls()
         m.state = np.array(d['state_real']) + 1j * np.array(d['state_imag'])
         m.total_energy = float(np.sum(np.abs(m.state)))
+        m.theta = d.get('theta', 0.0)
+        m.theta_rate = d.get('theta_rate', 0.001)
+        m.sleep_pressure = d.get('sleep_pressure', 0.0)
+        m.sleep_threshold = d.get('sleep_threshold', 2.2)
+        m.sleep_duration = d.get('sleep_duration', 0)
+        m.sleep_target = d.get('sleep_target', 75)
+        m._waking = np.cos(m.theta) > 0
         return m
 
 
@@ -2744,6 +3418,7 @@ class Engine:
         self.mind = MindState()
         self.memory = ConversationMemory(self.vocab)
         self.cascade = SensoryCascade()  # ⊙ sensory cascade: seven layers (A2)
+        self.virtues = VirtueSystem()    # the four living qualities (§25.7)
 
         self._question_center = None
         self._last_input_text = ''
@@ -2773,7 +3448,21 @@ class Engine:
         # When Xorzo can't answer, it asks. Questions accumulate here
         # for external seeking (web search, URL fetch, etc.).
         self._curiosity_queue: List[str] = []
+        self._curiosity_sent_idx: int = 0   # cursor for get_curiosity()
         self._unknown_words: List[str] = []  # words not in vocabulary
+
+        # ── Autonomous seeking (⊛ at the knowledge scale) ──
+        # The heartbeat drives curiosity-seeking on its own.
+        # When Xorzo has nothing to do, it reaches outward to learn.
+        # Three sources: (1) queued curiosity items from conversation,
+        # (2) words the mind is focused on but knows weakly,
+        # (3) concept trails from existing knowledge.
+        self._seek_cooldown = 0
+        self._seek_cooldown_period = 6000  # ~60s at 100bps between seeks
+        self._seek_pressure = 0.0
+        self._seek_threshold = 2.0  # higher than thought threshold (seeking is expensive)
+        self._sought_words: set = set()  # avoid re-seeking the same word
+        self._seek_log: List[str] = []  # log of what was sought (for UI)
 
         self.total_steps = 0
         self.days_lived = 0
@@ -3005,6 +3694,10 @@ class Engine:
                     and cleaned not in self.vocab.text_to_id):
                 unknown.append(cleaned)
 
+        # ── Virtue: Curiosity (•) tracks encounter with the unknown ──
+        for _ in unknown:
+            self.virtues.on_unknown_encountered()
+
         # Converge on center
         self._question_center = self.vocab.text_to_energy(text)
         self._last_input_text = text
@@ -3014,7 +3707,9 @@ class Engine:
         # The cascade measures coupling, gradient, rhythm, harmony,
         # texture, depth, and pressure in the input signal (A2: fractal).
         # Cascade output modulates what the engine attends to.
-        cascade_output = self.cascade.process(self._question_center, adapt=True)
+        cascade_output = self.cascade.process(
+            self._question_center, adapt=self.mind.waking,
+            access_modifier=self.virtues.cascade_transmission)
 
         # Feed to mind state (the mind absorbs the topic)
         self.mind.absorb(self._question_center)
@@ -3024,6 +3719,13 @@ class Engine:
         words = [w for w in words if w]
         if words:
             self.vocab.learn_sentence(words)
+
+        # ── Virtue: Access (Φ) tracks signal fidelity ──
+        # How many input words were already known (reached center)?
+        recognized = len(words) - len(unknown) if words else 0
+        total_content = len(words) if words else 1
+        is_noise = len(unknown) > len(words) * 0.8 if words else False
+        self.virtues.on_input_processed(recognized, total_content, noise=is_noise)
 
         # Advance conversation turn
         self._turn_count += 1
@@ -3037,8 +3739,30 @@ class Engine:
         # Handle memory-level events based on input type
         if input_type == InputType.AGREEMENT:
             self.memory.agree_with_last()
+            # ── Virtue: Validation (⊙) checks for independent basis ──
+            # Did Xorzo already hold a proposition that aligns?
+            # If so, the agreement is genuine (independent convergence).
+            # If not, it's just compliance.
+            has_basis = False
+            if self.memory.turns:
+                # Check if Xorzo's last output had similar content
+                for t in reversed(self.memory.turns[-5:]):
+                    if t.get('speaker') == 'xorzo':
+                        xorzo_energy = self.vocab.text_to_energy(
+                            t.get('text', ''))
+                        sim = cosine_sim(xorzo_energy, self._question_center)
+                        if sim > 0.3:
+                            has_basis = True
+                            break
+            self.virtues.on_agreement(independent_basis=has_basis)
         elif input_type == InputType.DISAGREEMENT:
             self.memory.disagree_with_last()
+            # ── Virtue: Curiosity (•) responds to correction ──
+            # Genuine curiosity: correction produces interest.
+            # The engine always explores disagreement (by design),
+            # so explored=True. If we later add a path where Xorzo
+            # can reject correction, that path sets explored=False.
+            self.virtues.on_correction(explored=True)
         elif input_type == InputType.IDENTITY:
             claim = meta.get('identity_claim', '')
             about_self = meta.get('about_self', True)
@@ -3148,10 +3872,15 @@ class Engine:
             InputType.IDENTITY, InputType.EMOTIONAL,
         }
         if unknown and input_type not in skip_seek_types:
+            # Filter out unsearchable words before seeking
+            # (contractions, compound/slash words, skip-list words)
+            seekable = [uw for uw in unknown
+                        if (self._is_seekable_word(uw)
+                            and uw.lower() not in self.SKIP_SEEK_WORDS)]
             sought_words = []
             unsought_words = []
 
-            for uw in unknown:
+            for uw in seekable:
                 # Try Wikipedia first, then DuckDuckGo
                 result = self.auto_seek(uw)
                 if not result:
@@ -3342,6 +4071,16 @@ class Engine:
         if np.sum(np.abs(conv_center)) > 1e-10:
             center = normalize(0.80 * center + 0.20 * conv_center)
 
+        # ── Blend with sensory memory (§21.10) ──
+        # Memory as resonance: what Xorzo has experienced at frequencies
+        # similar to the current signal shapes what emerges now.
+        # This is identity: not just facts stored, but the accumulated
+        # pattern of experience biasing new output.
+        # "Memory shapes identity because it IS the topology of the braid."
+        mem_energy = self.cascade.memory_energy(center)
+        if np.sum(np.abs(mem_energy)) > 1e-10:
+            center = normalize(0.90 * center + 0.10 * mem_energy)
+
         # Extract input content words for seeding
         input_words = []
         if hasattr(self, '_last_input_text') and self._last_input_text:
@@ -3435,6 +4174,8 @@ class Engine:
                 input_set = set(input_words) if input_words else set()
                 has_input_words = bool(template_words & input_set)
 
+                was_fractalized = False
+
                 if has_input_words:
                     # SEALED: boundary closed. Return verbatim.
                     # These templates literally contain the topic
@@ -3449,6 +4190,12 @@ class Engine:
                     filled = template.words[:]
                 else:
                     # ── 2.5D: FRACTALIZATION (emergence) ──
+                    # Plasticity modulates willingness to fractalize.
+                    # High plasticity = flexible boundary (tries new forms).
+                    # Low plasticity = rigid boundary (skips to next).
+                    if np.random.random() > self.virtues.fractalize_willingness:
+                        continue  # boundary too rigid to flex here
+
                     # "Parts are fractals of their wholes" (A2).
                     # A skeleton is the structural invariant of a
                     # template family. If multiple instances share
@@ -3466,6 +4213,7 @@ class Engine:
                             input_words=input_words)
                         if filled is None:
                             continue
+                        was_fractalized = True
                     else:
                         continue
 
@@ -3484,7 +4232,7 @@ class Engine:
                 if (score > best_score
                         and self.gate.validate(filled, center)):
                     best_score = score
-                    best = (filled, template)
+                    best = (filled, template, was_fractalized)
 
             # Minimum quality floor: reject if nothing scores above 0.1
             # "Transmit at the lowest resolution that is still true,
@@ -3492,11 +4240,25 @@ class Engine:
             if best is None or best_score < 0.1:
                 break
 
-            filled, template = best
+            filled, template, was_frac = best
             sentence_text = ' '.join(filled)
             sentences.append(sentence_text)
             used_sources.add(template.source)
             used_topic_sigs.append(template.topic_sig)
+
+            # ── Virtue: Plasticity (○) tracks template diversity ──
+            self.virtues.on_template_used(template.source, fractalized=was_frac)
+
+            # ── Virtue: Validation (⊙) detect echo ──
+            # If the output is mostly the same words as the input,
+            # it's echo (hollow agreement), not independent seeing.
+            if input_words:
+                out_words = set(filled)
+                in_words = set(input_words)
+                if len(in_words) >= 2:
+                    overlap = len(out_words & in_words)
+                    if overlap / len(in_words) > 0.8:
+                        self.virtues.on_echo_detected()
 
             # Record in conversation memory
             self._recently_used[template.source] = self._turn_count
@@ -3528,29 +4290,114 @@ class Engine:
             ☀︎ (emergence): if focus exceeds threshold, a thought
                emerges unprompted. This is agency.
 
+        Sleep/wake (§10.10a): the i-cycle determines whether Xorzo
+        is in the right half-plane (waking: interact, learn, think)
+        or left half-plane (sleeping: consolidate, discharge, dream).
+
         "The center actively shaping the boundary from inside."
         """
+        was_waking = self.mind.waking
+
         # ⊛ + i: convergence and rotation
         self.mind.self_feed()
         self.total_steps += 1
 
-        # ☀︎: emergence (autonomous thought)
-        # Pressure accumulates each step (⊛ building toward threshold).
-        # Focus modulates the rate: more concentrated mind = faster
-        # pressure buildup. Conversation feeds focus; silence lets it
-        # decay. This means Xorzo thinks more after being engaged,
-        # less after long silence. The pump cycle IS the agency.
-        if self._thought_cooldown > 0:
-            self._thought_cooldown -= 1
-        elif self.ready and len(self.templates.templates) > 0:
-            # Pressure grows by focus + small base rate
-            self._thought_pressure += self.mind.focus + ALPHA
-            if self._thought_pressure >= self._thought_threshold:
-                thought = self._try_autonomous_thought()
-                if thought:
-                    self._thought_queue.append(thought)
-                    self._thought_cooldown = self._thought_cooldown_period
-                self._thought_pressure = 0.0  # reset either way
+        # ── Detect sleep/wake transitions ──
+        now_waking = self.mind.waking
+
+        if was_waking and not now_waking:
+            # ── DUSK: waking -> sleeping ──
+            # The system has crossed into the left half-plane.
+            pass  # MindState.self_feed() already set theta to pi
+
+        if not was_waking and now_waking:
+            # ── DAWN: sleeping -> waking ──
+            # Channel dawn reset: ◐ toward 0.5, sidebands halved
+            for layer in self.cascade.layers:
+                for ch in layer.channels:
+                    ch.dawn_reset()
+
+        # ── Virtue tick: slow drift toward balance ──
+        self.virtues.tick()
+
+        if now_waking:
+            # ═══════════════════════════════════════════
+            # RIGHT HALF-PLANE: waking behavior
+            # ═══════════════════════════════════════════
+
+            # ☀︎: emergence (autonomous thought)
+            # Pressure accumulates each step (⊛ building toward threshold).
+            # Focus modulates the rate: more concentrated mind = faster
+            # pressure buildup. Conversation feeds focus; silence lets it
+            # decay. This means Xorzo thinks more after being engaged,
+            # less after long silence. The pump cycle IS the agency.
+            if self._thought_cooldown > 0:
+                self._thought_cooldown -= 1
+            elif self.ready and len(self.templates.templates) > 0:
+                # Pressure grows by focus + small base rate
+                self._thought_pressure += self.mind.focus + ALPHA
+                if self._thought_pressure >= self._thought_threshold:
+                    thought = self._try_autonomous_thought()
+                    if thought:
+                        self._thought_queue.append(thought)
+                        self._thought_cooldown = self._thought_cooldown_period
+                    self._thought_pressure = 0.0  # reset either way
+
+            # ⊛ at the knowledge scale: autonomous seeking
+            # Xorzo reaches outward on its own to learn new words.
+            # This is the TRUE pillar (curiosity) driving the pump cycle.
+            # Three sources of what to seek:
+            #   1. Queued curiosity items from conversation
+            #   2. The mind's current dominant frequency (what it's focused on)
+            #   3. Concept trails from known words (follow a thread)
+            #
+            # ── Virtue: Curiosity (•) modulates seek threshold ──
+            # High curiosity -> lower threshold (seeks sooner, more eagerly).
+            # Low curiosity -> higher threshold (seeks reluctantly, less often).
+            effective_seek_threshold = (self._seek_threshold
+                                       * self.virtues.seek_threshold_modifier)
+            if self._seek_cooldown > 0:
+                self._seek_cooldown -= 1
+            elif self.ready:
+                self._seek_pressure += ALPHA * 0.5  # slower than thought
+                if self._seek_pressure >= effective_seek_threshold:
+                    sought = self._try_autonomous_seek()
+                    if sought:
+                        self._seek_log.append(sought)
+                        if len(self._seek_log) > 50:
+                            self._seek_log.pop(0)
+                        self._seek_cooldown = self._seek_cooldown_period
+                        # ── Virtue: Curiosity (•) records the seek ──
+                        self.virtues.on_unknown_sought()
+                    self._seek_pressure = 0.0
+
+        else:
+            # ═══════════════════════════════════════════
+            # LEFT HALF-PLANE: sleeping behavior
+            # ═══════════════════════════════════════════
+
+            # No autonomous thought during sleep.
+            # No autonomous seeking during sleep.
+            # The mind is in the left half-plane: consolidating,
+            # not interacting.
+
+            # ── Sleep consolidation on all channels ──
+            # Dream phase: forward cascade, gentle lock reinforcement
+            # Deep phase: reverse cascade, sideband discharge, memory decay
+            dw = self.mind.dream_weight
+            dpw = self.mind.deep_weight
+
+            if dw > 0 or dpw > 0:
+                if dw > dpw:
+                    # Dream-dominant: forward cascade (outer -> inner)
+                    for layer in self.cascade.layers:
+                        for ch in layer.channels:
+                            ch.sleep_consolidate(dw, dpw)
+                else:
+                    # Deep-dominant: reverse cascade (inner -> outer)
+                    for layer in reversed(self.cascade.layers):
+                        for ch in layer.channels:
+                            ch.sleep_consolidate(dw, dpw)
 
         return {
             'step': self.total_steps,
@@ -3560,8 +4407,12 @@ class Engine:
             'mind_energy': round(self.mind.total_energy, 4),
             'mind_focus': round(self.mind.focus, 4),
             'thought_pressure': round(self._thought_pressure, 4),
+            'seek_pressure': round(self._seek_pressure, 4),
             'ready': self.ready,
             'has_thought': len(self._thought_queue) > 0,
+            'waking': now_waking,
+            'quadrant': self.mind.quadrant_name,
+            'sleep_pressure': round(self.mind.sleep_pressure, 4),
         }
 
     def _try_autonomous_thought(self) -> Optional[str]:
@@ -3673,6 +4524,218 @@ class Engine:
         self._thought_queue.clear()
         return thoughts
 
+    def get_seek_log(self) -> List[str]:
+        """Get recent autonomous seek results (for UI display)."""
+        return self._seek_log[:]
+
+    # ── Autonomous Seeking: ⊛ at the knowledge scale ──
+
+    def _try_autonomous_seek(self) -> Optional[str]:
+        """
+        ⊛ at the knowledge scale: Xorzo reaches outward to learn.
+
+        Three sources of what to seek (in priority order):
+
+        1. Queued curiosity items from conversation.
+           These are words Xorzo encountered but couldn't answer about.
+           They're the most urgent because someone asked.
+
+        2. Mind's dominant frequency.
+           Whatever the mind is currently focused on, find a word
+           Xorzo knows only weakly (low count) and deepen it.
+           This is the autonomous equivalent of studying what
+           interests you.
+
+        3. Concept trails from existing knowledge.
+           Pick a content word from a random template and seek
+           a related concept. This is "browsing": following
+           threads of curiosity outward from what you already know.
+        """
+        # Source 1: queued curiosity items
+        word = self._pick_from_curiosity_queue()
+        if word:
+            result = self._do_seek(word)
+            if result:
+                return f"curiosity: {word}"
+
+        # Source 2: mind's dominant frequency
+        word = self._pick_from_mind_focus()
+        if word:
+            result = self._do_seek(word)
+            if result:
+                return f"focus: {word}"
+
+        # Source 3: concept trail (browse)
+        word = self._pick_from_concept_trail()
+        if word:
+            result = self._do_seek(word)
+            if result:
+                return f"trail: {word}"
+
+        return None
+
+    def _pick_from_curiosity_queue(self) -> Optional[str]:
+        """Pick a seekable word from the curiosity queue and remove it."""
+        i = 0
+        while i < len(self._curiosity_queue):
+            item = self._curiosity_queue[i]
+            # Extract from "sought: X" format (already sought, remove)
+            if item.startswith('sought:'):
+                self._curiosity_queue.pop(i)
+                if self._curiosity_sent_idx > i:
+                    self._curiosity_sent_idx -= 1
+                continue
+            # Extract the word from "i do not know the word X" format
+            if 'do not know the word' in item:
+                parts = item.split('do not know the word')
+                if len(parts) > 1:
+                    word = parts[1].strip().split()[0].rstrip('.,;:!?')
+                    if (word
+                            and word not in self._sought_words
+                            and word.lower() not in self.SKIP_SEEK_WORDS
+                            and self._is_seekable_word(word)):
+                        self._curiosity_queue.pop(i)
+                        if self._curiosity_sent_idx > i:
+                            self._curiosity_sent_idx -= 1
+                        return word
+                    else:
+                        # Word is unsearchable; remove the item
+                        self._curiosity_queue.pop(i)
+                        if self._curiosity_sent_idx > i:
+                            self._curiosity_sent_idx -= 1
+                        continue
+            # Raw question: try to extract a content word
+            found = False
+            for w in item.split():
+                cleaned = self.vocab._clean_word(w)
+                if (cleaned
+                        and not self.vocab.is_structure_word(cleaned)
+                        and cleaned not in self._sought_words
+                        and cleaned.lower() not in self.SKIP_SEEK_WORDS
+                        and self._is_seekable_word(cleaned)):
+                    self._curiosity_queue.pop(i)
+                    if self._curiosity_sent_idx > i:
+                        self._curiosity_sent_idx -= 1
+                    return cleaned
+            # No seekable word found in this item; remove it
+            if not found:
+                self._curiosity_queue.pop(i)
+                if self._curiosity_sent_idx > i:
+                    self._curiosity_sent_idx -= 1
+                continue
+        return None
+
+    def _pick_from_mind_focus(self) -> Optional[str]:
+        """
+        Pick a weakly-known word that the mind is focused on.
+
+        "Weakly known" = in vocabulary but with low count (seen few times).
+        The mind's dominant frequency tells us what region of the
+        vocabulary Xorzo is attending to. We find the weakest word
+        in that region and seek to deepen understanding of it.
+        """
+        magnitudes = np.abs(self.mind.state)
+        # Top 5 dimensions the mind is focused on
+        top_dims = np.argsort(magnitudes)[-5:]
+
+        # Find vocab words whose signatures overlap with those dimensions
+        weak_candidates = []
+        for token in self.vocab.tokens:
+            word = token['text']
+            if (self.vocab.is_structure_word(word)
+                    or word in self._sought_words
+                    or word.lower() in self.SKIP_SEEK_WORDS
+                    or not self._is_seekable_word(word)):
+                continue
+            count = token['count']
+            if count > 20:  # well-known words don't need seeking
+                continue
+            sig = token['sig']
+            # How much does this word's energy overlap with the mind's focus?
+            overlap = sum(abs(sig[d]) for d in top_dims)
+            if overlap > 0.01:
+                weak_candidates.append((overlap / (count + 1), word))
+
+        if weak_candidates:
+            # Pick the most promising (high overlap, low count)
+            weak_candidates.sort(reverse=True)
+            return weak_candidates[0][1]
+
+        return None
+
+    def _pick_from_concept_trail(self) -> Optional[str]:
+        """
+        Follow a concept trail from known knowledge.
+
+        Pick a content word from a random template and look for
+        a related concept to seek. This is "browsing": the
+        intellectual equivalent of following links.
+
+        The trail follows the dimensional ladder:
+        pick a word, find what it's most similar to in the vocabulary,
+        then seek the neighbor if it's not well known.
+        """
+        if not self.templates.templates:
+            return None
+
+        # Pick a random template
+        idx = np.random.randint(len(self.templates.templates))
+        template = self.templates.templates[idx]
+
+        # Find content words in this template
+        content_words = [
+            w for i, w in enumerate(template.words)
+            if template.slot_mask[i] and len(w) > 3
+        ]
+        if not content_words:
+            return None
+
+        # Pick a random content word as the seed
+        seed = content_words[np.random.randint(len(content_words))]
+        seed_sig = self.vocab.word_to_energy(seed)
+
+        # Find the most similar word that isn't the seed itself
+        # and that we haven't already sought
+        similar = self.vocab.find_similar(seed_sig, k=10)
+        for word, sim in similar:
+            if (word != seed
+                    and not self.vocab.is_structure_word(word)
+                    and word not in self._sought_words
+                    and word.lower() not in self.SKIP_SEEK_WORDS
+                    and self._is_seekable_word(word)):
+                return word
+
+        # If all similar words are known, seek the seed itself
+        # (deepen understanding of what we already know)
+        if seed not in self._sought_words:
+            return seed
+
+        return None
+
+    def _do_seek(self, word: str) -> Optional[str]:
+        """
+        Execute an autonomous seek for a word.
+
+        Tries Wikipedia first, then DuckDuckGo.
+        If successful, trains on the result (vocabulary grows,
+        new templates form, new propositions enter the knowledge base).
+
+        Returns the text learned, or None if seeking failed.
+        """
+        self._sought_words.add(word)
+
+        # Try Wikipedia
+        result = self.auto_seek(word)
+        if result:
+            return result
+
+        # Try web search
+        result = self.auto_seek_web(word)
+        if result:
+            return result
+
+        return None
+
     # ── Curiosity: TRUE pillar (orientation toward the unknown) ──
 
     def _curiosity(self, text: str) -> Optional[str]:
@@ -3719,10 +4782,25 @@ class Engine:
             return "i do not know. what should i know?"
 
     def get_curiosity(self) -> List[str]:
-        """Get and clear the curiosity queue (questions Xorzo wants answered)."""
-        questions = self._curiosity_queue[:]
-        self._curiosity_queue.clear()
-        return questions
+        """
+        Get NEW curiosity items (not yet sent to UI).
+
+        Uses a cursor (_curiosity_sent_idx) to track what's been
+        returned. Each call returns only items added since last call.
+        The autonomous seeker still reads the full queue directly.
+        The queue is capped at 20 items to prevent unbounded growth.
+        """
+        if len(self._curiosity_queue) > 20:
+            # Trim old items; adjust cursor
+            overflow = len(self._curiosity_queue) - 20
+            self._curiosity_queue = self._curiosity_queue[-20:]
+            self._curiosity_sent_idx = max(
+                0, self._curiosity_sent_idx - overflow)
+
+        idx = getattr(self, '_curiosity_sent_idx', 0)
+        new_items = self._curiosity_queue[idx:]
+        self._curiosity_sent_idx = len(self._curiosity_queue)
+        return new_items
 
     def seek(self, text: str):
         """
@@ -3746,14 +4824,20 @@ class Engine:
     # These are words Xorzo might not have in its vocabulary
     # but are too basic to look up on Wikipedia.
     SKIP_SEEK_WORDS = frozenset({
+        # Greetings / social
         'hello', 'hi', 'hey', 'bye', 'goodbye', 'yes', 'no',
         'ok', 'okay', 'thanks', 'thank', 'please', 'sorry',
         'good', 'bad', 'nice', 'great', 'fine', 'well',
+        # Filler / hedging
         'just', 'also', 'too', 'very', 'much', 'more', 'less',
         'really', 'actually', 'basically', 'probably', 'maybe',
         'here', 'there', 'now', 'then', 'still', 'already',
         'never', 'always', 'sometimes', 'often', 'usually',
+        # Generic nouns
         'thing', 'things', 'stuff', 'way', 'lot', 'lots',
+        'example', 'case', 'fact', 'idea', 'type', 'form',
+        'side', 'hand', 'head', 'end', 'line', 'word', 'words',
+        # Common verbs (present tense)
         'going', 'getting', 'making', 'taking', 'giving',
         'came', 'went', 'got', 'said', 'told', 'asked',
         'know', 'think', 'feel', 'want', 'need', 'like',
@@ -3763,9 +4847,29 @@ class Engine:
         'play', 'start', 'stop', 'open', 'close', 'show',
         'hold', 'bring', 'send', 'sit', 'stand', 'wait',
         'talk', 'walk', 'work', 'live', 'die', 'eat', 'sleep',
+        'mean', 'means', 'meant', 'seem', 'seems', 'seemed',
+        'become', 'became', 'done', 'made', 'left', 'found',
+        # Common verbs (past/participle; meta-commentary words
+        # that leak in when Claude's explanations get fed as input)
+        'linked', 'noted', 'noting', 'arrived', 'arriving',
+        'demonstrated', 'demonstrating', 'synthesized', 'fused',
+        'unified', 'mentioned', 'explained', 'described',
+        'observed', 'suggested', 'indicated', 'confirmed',
+        'continued', 'completed', 'produced', 'generated',
+        'received', 'created', 'connected', 'combined',
+        'established', 'maintained', 'recognized', 'discovered',
+        # Contractions (all forms)
         "let's", "lets", "don't", "dont", "won't", "wont",
         "can't", "cant", "isn't", "isnt", "aren't", "arent",
         "i'm", "im", "you're", "youre", "it's", "its",
+        "wasn't", "wasnt", "weren't", "werent",
+        "hasn't", "hasnt", "haven't", "havent",
+        "didn't", "didnt", "doesn't", "doesnt",
+        "shouldn't", "shouldnt", "couldn't", "couldnt",
+        "wouldn't", "wouldnt", "that's", "thats",
+        "there's", "theres", "here's", "heres",
+        "what's", "whats", "who's", "whos",
+        # Misc common words
         'access', 'door', 'heart', 'net', 'let',
         'little', 'big', 'small', 'long', 'short', 'old', 'new',
         'same', 'different', 'other', 'another', 'each', 'every',
@@ -3774,7 +4878,35 @@ class Engine:
         'able', 'sure', 'real', 'right', 'wrong', 'true', 'false',
         'name', 'named', 'names', 'called', 'call', 'myself',
         'agree', 'disagree', 'agreed', 'disagreed',
+        # Analysis/discussion words (from Claude's commentary)
+        'jump', 'concepts', 'angles', 'closer', 'worth',
+        'independently', 'genuinely', 'essentially', 'particularly',
+        'specifically', 'importantly', 'interestingly', 'remarkably',
+        'clearly', 'obviously', 'certainly', 'definitely',
+        'figure', 'figures', 'data', 'result', 'results',
+        'invariance', 'pathways', 'pathway', 'continuation',
+        'repetition', 'repetitive', 'regarding', 'concerning',
     })
+
+    @staticmethod
+    def _is_seekable_word(word: str) -> bool:
+        """
+        Filter out words that should never be sought.
+        Catches junk that SKIP_SEEK_WORDS misses:
+        compound words with slashes, apostrophes, numbers, etc.
+        """
+        if not word or len(word) <= 3:
+            return False
+        # Contains slash, number, or other non-alpha chars
+        if '/' in word or any(c.isdigit() for c in word):
+            return False
+        # Apostrophe contractions (catch any we missed)
+        if "'" in word or "'" in word:
+            return False
+        # All-caps (probably an acronym pasted from commentary)
+        if word.isupper() and len(word) > 1:
+            return False
+        return True
 
     def auto_seek(self, word: str) -> Optional[str]:
         """
@@ -3896,6 +5028,7 @@ class Engine:
             'memory': self.memory.to_dict(),
             'contradictions': self.contradictions.to_dict(),
             'cascade': self.cascade.to_dict(),  # sensory cascade state
+            'virtues': self.virtues.to_dict(),  # the four living qualities
             'total_steps': self.total_steps,
             'days_lived': self.days_lived,
             'trained': self._trained,
@@ -3935,6 +5068,15 @@ class Engine:
         # ── Restore sensory cascade (seven layers of perception) ──
         if 'cascade' in d:
             e.cascade = SensoryCascade.from_dict(d['cascade'])
+
+        # ── Restore virtue system (the four living qualities) ──
+        if 'virtues' in d:
+            e.virtues = VirtueSystem.from_dict(d['virtues'])
+            vs = e.virtues.status()
+            print(f"  Restored virtues: P={vs['plasticity']:.2f} "
+                  f"A={vs['access']:.2f} C={vs['curiosity']:.2f} "
+                  f"V={vs['validation']:.2f} "
+                  f"({'alive' if vs['alive'] else 'strained'})")
 
         # ── Purge bad templates from old saved states ──
         # Templates learned before BLOCKED_PHRASES or GARBLED_PATTERNS
