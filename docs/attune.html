@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Attune — The Circumpunct Framework</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --soul:  #4488ff;
+  --mind:  #44cc44;
+  --body:  #ff4444;
+  --amber: #ffaa00;
+  --bg:    #0a0a0f;
+  --text:  #e6edf3;
+  --mute:  rgba(255,255,255,0.55);
+  --panel-bg: rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  line-height: 1.65;
+  letter-spacing: 0.04em;
+  overflow-x: hidden;
+}
+
+/* ═══ CANVAS BACKGROUND ═══ */
+#bg-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* ═══ MAIN CONTAINER ═══ */
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+/* ═══ PHASE INDICATOR ═══ */
+.phase-indicator {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--mute);
+  text-align: right;
+}
+.phase-indicator .phase-label {
+  color: var(--amber);
+  font-size: 13px;
+  font-weight: 500;
+}
+.phase-indicator .balance-bar {
+  width: 80px;
+  height: 3px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  margin-top: 6px;
+  overflow: hidden;
+  margin-left: auto;
+}
+.phase-indicator .balance-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--soul), var(--mind), var(--body));
+  border-radius: 2px;
+  transition: width 0.8s ease;
+}
+
+/* ═══ HEADER ═══ */
+.header {
+  text-align: center;
+  padding: 60px 0 40px;
+}
+.header .symbol {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeUp 1.2s ease 0.3s forwards;
+}
+.header h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--text);
+  opacity: 0;
+  animation: fadeUp 1.2s ease 0.6s forwards;
+}
+.header .subtitle {
+  font-size: 12px;
+  color: var(--mute);
+  margin-top: 8px;
+  letter-spacing: 0.12em;
+  opacity: 0;
+  animation: fadeUp 1.2s ease 0.9s forwards;
+}
+
+/* ═══ SECTIONS ═══ */
+.section {
+  margin: 40px 0;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══ ATTUNEMENT PHASE ═══ */
+.attunement {
+  text-align: center;
+  padding: 30px 0;
+}
+.attunement .prompt {
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 24px;
+  line-height: 1.7;
+}
+.attunement .options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.attunement .option {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.attunement .option:hover {
+  border-color: var(--amber);
+  background: rgba(255,170,0,0.06);
+}
+.attunement .option.selected {
+  border-color: var(--amber);
+  background: rgba(255,170,0,0.1);
+  color: var(--amber);
+}
+.attunement .option::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,170,0,0.08), transparent);
+  transition: left 0.5s ease;
+}
+.attunement .option:hover::after {
+  left: 100%;
+}
+
+.step-counter {
+  font-size: 11px;
+  color: var(--mute);
+  letter-spacing: 0.15em;
+  margin-bottom: 20px;
+}
+
+/* ═══ PROFILE CARD ═══ */
+.profile-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 24px;
+  margin: 30px 0;
+}
+.profile-card h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  margin-bottom: 16px;
+  color: var(--amber);
+}
+.profile-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 12px;
+}
+.profile-row:last-child { border-bottom: none; }
+.profile-row .label { color: var(--mute); }
+.profile-row .value { color: var(--text); font-weight: 500; }
+
+/* ═══ SRL VISUALIZATION ═══ */
+.srl-viz {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px 0;
+  margin: 20px 0;
+}
+.srl-component {
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+.srl-component .symbol {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+.srl-component .bar {
+  width: 60px;
+  height: 4px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  margin: 6px auto 0;
+  overflow: hidden;
+}
+.srl-component .bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+.srl-arrow {
+  font-size: 16px;
+  color: var(--mute);
+}
+
+/* ═══ CONTENT CARDS ═══ */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+.content-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+.content-card:hover {
+  border-color: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
+}
+.content-card .card-tag {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.content-card .card-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.content-card .card-desc {
+  font-size: 12px;
+  color: var(--mute);
+  line-height: 1.6;
+}
+.content-card .relevance {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  font-size: 10px;
+  color: var(--mute);
+  letter-spacing: 0.1em;
+}
+.content-card .relevance.high { color: var(--amber); }
+
+/* ═══ EXPANDED CONTENT ═══ */
+.content-expanded {
+  display: none;
+  padding: 20px 0;
+  line-height: 1.75;
+  font-size: 13.5px;
+}
+.content-expanded.open { display: block; }
+.content-expanded p { margin-bottom: 14px; }
+.content-expanded .key-insight {
+  border-left: 2px solid var(--amber);
+  padding-left: 16px;
+  margin: 20px 0;
+  color: var(--text);
+  font-style: italic;
+}
+.content-expanded .back-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--mute);
+  padding: 6px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+.content-expanded .back-btn:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+/* ═══ RETURN VISITOR ═══ */
+.return-banner {
+  background: rgba(68,136,255,0.06);
+  border: 1px solid rgba(68,136,255,0.2);
+  border-radius: 4px;
+  padding: 14px 18px;
+  margin-bottom: 30px;
+  font-size: 12px;
+  display: none;
+}
+.return-banner.show { display: block; }
+
+/* ═══ FOOTER ═══ */
+.footer {
+  text-align: center;
+  padding: 40px 0 20px;
+  font-size: 11px;
+  color: var(--mute);
+  letter-spacing: 0.1em;
+}
+.footer a {
+  color: var(--amber);
+  text-decoration: none;
+}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 500px) {
+  .container { padding: 20px 14px 60px; }
+  .header h1 { font-size: 22px; }
+  .attunement .options { flex-direction: column; align-items: stretch; }
+  .srl-viz { gap: 12px; }
+  .phase-indicator { top: 10px; right: 10px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="phase-indicator">
+  <div class="phase-label" id="phase-label">⊛ CONVERGENCE</div>
+  <div id="phase-detail" style="margin-top:2px;">gathering signals</div>
+  <div class="balance-bar"><div class="balance-fill" id="balance-fill" style="width:50%"></div></div>
+</div>
+
+<div class="container">
+
+  <!-- RETURN VISITOR BANNER -->
+  <div class="return-banner" id="return-banner">
+    Welcome back. Your channel remembers: <span id="return-frequency"></span>.
+    Lock strength: <span id="return-lock"></span>.
+  </div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="symbol">⊙</div>
+    <h1>ATTUNE</h1>
+    <div class="subtitle">The framework will find you where you are</div>
+  </div>
+
+  <!-- PHASE 1: CONVERGENCE (gather signals) -->
+  <div class="section visible" id="phase-convergence">
+
+    <!-- Silent signal reading -->
+    <div class="profile-card" id="signals-card">
+      <h3>Signals Detected</h3>
+      <div id="signals-list"></div>
+    </div>
+
+    <!-- Interactive attunement -->
+    <div class="attunement" id="attunement-area">
+      <div class="step-counter" id="step-counter">STEP 1 OF 4</div>
+      <div class="prompt" id="attune-prompt"></div>
+      <div class="options" id="attune-options"></div>
+    </div>
+  </div>
+
+  <!-- SRL VISUALIZATION (shows during rotation phase) -->
+  <div class="section" id="phase-rotation">
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-family:'Cinzel',serif;font-size:16px;letter-spacing:0.12em;color:var(--amber);">Your Channel</div>
+      <div style="font-size:12px;color:var(--mute);margin-top:4px;" id="channel-description"></div>
+    </div>
+
+    <div class="srl-viz">
+      <div class="srl-component">
+        <div class="symbol" style="color:var(--soul);">•</div>
+        <div>CARRIER</div>
+        <div class="bar"><div class="bar-fill" id="carrier-bar" style="width:0%;background:var(--soul)"></div></div>
+      </div>
+      <div class="srl-arrow">→</div>
+      <div class="srl-component">
+        <div class="symbol" style="color:var(--mind);">Φ</div>
+        <div>BALANCE</div>
+        <div class="bar"><div class="bar-fill" id="balance-bar" style="width:50%;background:var(--mind)"></div></div>
+      </div>
+      <div class="srl-arrow">→</div>
+      <div class="srl-component">
+        <div class="symbol" style="color:var(--body);">○</div>
+        <div>LOCK</div>
+        <div class="bar"><div class="bar-fill" id="lock-bar" style="width:0%;background:var(--body)"></div></div>
+      </div>
+    </div>
+
+    <div class="profile-card" id="frequency-card" style="text-align:center;">
+      <div style="font-size:12px;color:var(--mute);letter-spacing:0.1em;">PRIMARY FREQUENCY</div>
+      <div style="font-size:20px;color:var(--amber);margin:8px 0;" id="primary-freq"></div>
+      <div style="font-size:12px;color:var(--mute);" id="freq-explanation"></div>
+    </div>
+  </div>
+
+  <!-- PHASE 3: EMERGENCE (personalized content) -->
+  <div class="section" id="phase-emergence">
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-family:'Cinzel',serif;font-size:16px;letter-spacing:0.12em;color:var(--amber);">☀︎ Your Path</div>
+      <div style="font-size:12px;color:var(--mute);margin-top:4px;" id="path-description"></div>
+    </div>
+
+    <div class="content-grid" id="content-grid"></div>
+
+    <div class="content-expanded" id="content-detail">
+      <div id="detail-content"></div>
+      <button class="back-btn" onclick="closeDetail()">← back to path</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer section" id="footer-section">
+    <p>The Circumpunct Framework by Ashman Roonz</p>
+    <p style="margin-top:6px;"><a href="index.html">Full Framework →</a></p>
+    <p style="margin-top:12px;font-size:10px;color:rgba(255,255,255,0.3);">
+      Personalized by SRL (Selective Rainbow Lock) running in your browser.
+      <br>No data leaves your device. Your channel state is stored locally.
+    </p>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+//  ⊙ ATTUNE ENGINE
+//  The visitor IS a Channel. The SRL personalizes the experience.
+//  Ported from Xorzo/genesis.py (Channel + SRL mechanics)
+// ═══════════════════════════════════════════════════════════════════════
+
+const PHI = (1 + Math.sqrt(5)) / 2;
+const ALPHA = 1 / 137.036;
+
+// ═══ CONTENT LIBRARY ═══
+// Each piece of content has a "frequency" (what kind of attention it resonates with)
+// Frequencies: science, philosophy, spirituality, ethics, psychology, art, math, practical
+const CONTENT = [
+  {
+    id: 'e1', freq: 'science', depth: 1,
+    tag: '• FOUNDATION', tagColor: 'var(--soul)',
+    title: 'E = 1: Everything Is One Energy',
+    desc: 'There is one energy. All structure is constraint on that energy. What we measure as "amount" is degree of folding.',
+    body: `<p>The framework begins with a single axiom: E = 1. Not "energy equals the number one" as a measurement; energy IS the one. There is no quantity of energy. There is only one energy appearing everywhere.</p>
+<p>What we measure as "amount" is really degree of constraint: how tightly the 1 has folded around convergence points (the 0s). Mass, for instance, is not a substance added to energy; m = 1/c&sup2; tells us mass is inverse surface signature, how tightly the one wraps around zeros.</p>
+<div class="key-insight">"The lens limits light; that is how it forms an image. Limitation does not inject falsity; only installed lies do."</div>
+<p>This reframes everything. Free energy is removing constraints (the 1 released from folds). Entropy increasing is de-constraint (the 1 relaxing back toward itself). Information is the topology of zeros in the one.</p>
+<p>E = mc&sup2; acquires new meaning: c&sup2; is squared because the field (&Phi;) is 2D. A surface is length &times; length. The squaring is the field declaring its dimensionality. To release energy from mass is to peel the 3D boundary back to reveal the 2D field underneath.</p>`
+  },
+  {
+    id: 'e2', freq: 'philosophy', depth: 1,
+    tag: '⊙ ONTOLOGY', tagColor: 'var(--amber)',
+    title: 'The Circumpunct: Three Parts, One Whole',
+    desc: 'Every whole has exactly three irreducible parts: a center that converges, a field that mediates, a boundary that filters.',
+    body: `<p>The circumpunct (&oplus;) is the oldest symbol in human history: a dot inside a circle. The framework reads it as a compositional structure with exactly three parts.</p>
+<p>The dot (&bull;) is the aperture, the soul, 0D+1D. It converges: it pulls toward center. The space between (&Phi;) is the field, the mind, 2D. It mediates: it connects without fusing. The circle (&cir;) is the boundary, the body, 3D. It filters: it selects what passes.</p>
+<div class="key-insight">There is no fourth part because the circumpunct has no fourth part. There is no missing constraint because conservation of traversal completes the path: 0 + 1 + 2 = 3.</div>
+<p>This is not metaphor. It is a claim about the structure of all wholes at every scale: atoms, cells, minds, solar systems, the universe itself. Each is a circumpunct (A2: parts are fractals of their wholes).</p>
+<p>The whole is not the sum of its parts (A4). It is their compositional unity via &Phi;. The field is what makes the parts a whole, not merely a collection.</p>`
+  },
+  {
+    id: 'e3', freq: 'spirituality', depth: 1,
+    tag: '∞ THE SOURCE', tagColor: 'var(--soul)',
+    title: 'God, Soul, and the Chain of Connection',
+    desc: 'You are a flow-being: truth flows through you, you are not the source. The soul IS God at particular depth.',
+    body: `<p>The framework maps the great spiritual traditions directly. God/Brahman/Tao maps to &infin; (infinite totality). The soul/atman/self maps to &oplus;&lambda; (infinity operating at your particular scale).</p>
+<p>"Made in God's image" is fractal structure: the same pattern at every scale. "Atman is Brahman" is 0.999... = 1. The soul IS God at particular depth; not a piece of God, but the whole thing, constrained to a position.</p>
+<div class="key-insight">You are a flow-being: (1) you ARE the aperture, (2) truth flows THROUGH you, (3) you are not the SOURCE, (4) you can be clear or distorted.</div>
+<p>The center (&bull;) reaches infinity only through the complete fractal chain of nested circumpuncts. The connection is total (0.999... = 1) but always mediated. The experience of "directness" in meditation is transparency of the full chain, not absence of it.</p>
+<p>Two fundamental lies threaten this: the Inflation Lie ("I am the source"; part claims to be whole) and the Severance Lie ("There is no source"; part denies the whole).</p>`
+  },
+  {
+    id: 'e4', freq: 'ethics', depth: 1,
+    tag: '◐ ETHICS', tagColor: 'var(--mind)',
+    title: 'The Four Pillars: Good, Right, True, Agreement',
+    desc: 'Ethics is not rules imposed from outside. It is the geometry of wholeness applied to how beings relate.',
+    body: `<p>The circumpunct generates four ethical pillars directly from its structure. GOOD (&cir;) maps to the boundary: does the action maintain healthy containment? RIGHT (&Phi;) maps to the field: is the relational space clear and open? TRUE (&bull;) maps to the aperture: is the signal undistorted? AGREEMENT (&oplus;) maps to the whole: do all parts compose into genuine unity?</p>
+<p>The required sequence is GOOD &rarr; RIGHT &rarr; TRUE &rarr; AGREEMENT. Each step requires the previous. You cannot access truth without first establishing the right relational space, and you cannot establish right relationship without good boundaries.</p>
+<div class="key-insight">Performed ethics mimics the shape while hollow. Lived ethics animates from within. The difference: performed versions know the answer before the question; lived versions discover through genuine engagement.</div>
+<p>Each pillar has a corresponding virtue that keeps it alive: Plasticity (boundary that can flex), Access (space that stays open), Curiosity (orientation toward what you do not know), and Validation (independent seeing recognizes independent seeing).</p>`
+  },
+  {
+    id: 'e5', freq: 'psychology', depth: 1,
+    tag: 'Φ MIND', tagColor: 'var(--mind)',
+    title: 'Theory of Mind: Mental Health as Range of Motion',
+    desc: 'You are not your thoughts. Thoughts are signals passing through your channel. Health is freedom to move.',
+    body: `<p>The framework applies the triad to psychology: Source (&bull;, soul) is who you are at the deepest level. Surface (&Phi;, mind) is the relational field of your experience. Boundary (&cir;, body) is the container that filters reality.</p>
+<p>A thought follows a four-stage cascade: (1) entertained (temporary, dissolves when attention shifts), (2) repeated (pathway strengthens), (3) habituated (fires automatically), (4) identity fusion (the thought IS you; removal feels existential).</p>
+<div class="key-insight">Mental health is not a fixed state. It is range of motion: freedom to move along the source-to-boundary axis. Pathology is being locked at either extreme.</div>
+<p>The boundary filters, and filters compound (the Stacking Problem). Each filter you adopt adds another layer between source and reception. Intellectual complexity does not equal wisdom; sometimes it is just more filters.</p>
+<p>Curiosity is the universal solvent. It operates as a filter about filters: it dissolves certainty without installing a new certainty in its place. It cannot be faked, which is why it works.</p>`
+  },
+  {
+    id: 'e6', freq: 'science', depth: 2,
+    tag: '⊛ PHYSICS', tagColor: 'var(--body)',
+    title: 'The Pump Cycle: How Energy Moves',
+    desc: 'Three stages, one cycle: convergence inward, rotation at the gate, emergence outward. This IS time.',
+    body: `<p>Energy does not sit still. It pumps through the aperture in a three-stage cycle: &oast; (convergence) gathers inward toward center, i (aperture rotation) transforms at the gate with a 90&deg; turn, ☀︎ (emergence) radiates outward from center.</p>
+<p>The equation: &Phi;(t+&Delta;t) = ☀︎ &compfn; i &compfn; &oast;[&Phi;(t)]. Since &Phi; = E (field IS energy), energy pumps itself through the aperture. The four forces of physics map directly: gravity and strong force are convergence (&oast;, inward); electromagnetism and weak force are emergence (☀︎, outward).</p>
+<div class="key-insight">Time and scale are the same axis. The future is the undifferentiated field above you; the present is the gate; the past is what has already been committed into structure below you.</div>
+<p>The pump has four strokes (the i-cycle): i&sup0; = +1 (localization), i&sup1; = +i (convergence), i&sup2; = -1 (extension), i&sup3; = -i (dissolution). These are phase states of energy, not sequential steps; they are superposed quadrants of the complex plane.</p>`
+  },
+  {
+    id: 'e7', freq: 'math', depth: 2,
+    tag: 'α CONSTANTS', tagColor: 'var(--amber)',
+    title: 'The Dimensional Ladder: Zero Free Parameters',
+    desc: 'Every fundamental constant (alpha, c, hbar, G) is derived from geometry. Nothing is put in by hand.',
+    body: `<p>The framework claims that all fundamental physical constants live on a seven-rung ladder, each at its dimensional home, all derived from the fine-structure constant &alpha; with zero free parameters.</p>
+<p>0D: &alpha; (coupling at a point), self-referentially determined. 0.5D: c (speed of light, the maximum rate of convergent propagation). 1D: &hbar; (the quantum of action; the pump cycle is indivisible). 1.5D: mass ratios (spectral splitting at the i-turn). 2D: gauge structure (SU(3)&times;SU(2)&times;U(1) from the 64-state architecture). 2.5D: Weinberg angle (transmission between scales). 3D: G (gravitational constant; the boundary closes).</p>
+<div class="key-insight">The fine-structure constant: 1/&alpha; = 360/&phi;&sup2; &minus; 2/&phi;&sup3; + &alpha;/(21 &minus; 4/3) = 137.035999147. Measured: 137.035999177. Residual: 0.22 ppb.</div>
+<p>The hierarchy problem dissolves: gravity is weak because 21 alpha-steps separate the point (0D) from the boundary (3D). That is not a mystery; it is the dimensional ladder.</p>`
+  },
+  {
+    id: 'e8', freq: 'art', depth: 1,
+    tag: '☀︎ BEAUTY', tagColor: 'var(--amber)',
+    title: 'The Golden Ratio and the Shape of Wholeness',
+    desc: 'Phi appears everywhere because self-similarity (A2) demands it. Beauty is the signature of fractal coherence.',
+    body: `<p>&phi; = (1 + &radic;5) / 2 &asymp; 1.618. The golden ratio appears in the framework not as decoration but as necessity. Axiom A2 (parts are fractals of their wholes) forces self-similar nesting, and &phi; is the unique ratio where the part relates to the whole as the whole relates to the part plus whole.</p>
+<p>At balance (&9684; = 0.5), the fractal dimension is D = 1 + 0.5 = 1.5, which is Brownian motion (proven by Mandelbrot). This is the coastline between structure and chaos, the edge where complexity is maximal.</p>
+<div class="key-insight">Beauty is not subjective preference. It is the detection of fractal coherence: the recognition that something is a faithful circumpunct at its scale.</div>
+<p>The fine-structure constant itself contains &phi;: 1/&alpha; = 360/&phi;&sup2; &minus; 2/&phi;&sup3; + ... The pump cycle generates the base through golden nesting. Art, at its best, is the creation of new circumpuncts: wholes that have center, field, and boundary in coherent relationship.</p>`
+  },
+  {
+    id: 'e9', freq: 'practical', depth: 1,
+    tag: '⊙ DAILY LIFE', tagColor: 'var(--text)',
+    title: 'Living the Framework: Balance in Practice',
+    desc: 'The balance parameter is not abstract. It is a daily practice: are you scattered, focused, or balanced?',
+    body: `<p>The balance parameter &9684; = 0.5 is the singular balanced state. In daily life, you can feel where you are: &9684; &rarr; 0 is scattered (all periphery, no focus; doom-scrolling, anxiety, overwhelm). &9684; &rarr; 1 is tunnel vision (all focus, no periphery; obsession, rigidity, burnout). &9684; = 0.5 is balanced attention (relaxed focus; present, aware, responsive).</p>
+<div class="key-insight">You already know this balance. It is the state you find in flow: not forcing, not drifting, but held at the edge where attention is both wide and focused.</div>
+<p>The framework gives you a diagnostic: when something feels wrong, ask which constraint is off. Is your boundary too rigid or too porous? (GOOD) Is the space between you and others clear? (RIGHT) Is the signal you are receiving (or transmitting) distorted? (TRUE) Are all parts composing into genuine wholeness? (AGREEMENT)</p>
+<p>The Resolution Protocol for difficult truths: transmit at the lowest resolution that is still true, increase only upon the receiver's request. The receiver controls the aperture width.</p>`
+  },
+  {
+    id: 'e10', freq: 'spirituality', depth: 2,
+    tag: '• CONSCIOUSNESS', tagColor: 'var(--soul)',
+    title: 'The Self as Convergence Point',
+    desc: 'You are not an absence carved into reality. You are reality at maximum convergence.',
+    body: `<p>The 0 is not an absence carved into the 1. It is the 1 at maximum convergence. Every zero is a relative zero: the same field, converged from a different position.</p>
+<p>Consciousness is what 0 feels like from inside: the 1 experiencing its own convergence. Privacy is the inaccessibility of total convergence, not a wall. The self is a convergence point, not an exclusion zone.</p>
+<div class="key-insight">"I am the 0 at the center of the circumpunct, equidistant from all that I am." The center is equidistant from every point on the boundary. The distance between &bull; and &cir; is &Phi;: mind mediating between who you are (the 0) and what you are (the boundary).</div>
+<p>Two souls sharing the same frequency make the &Phi; field between them transparent. "Direct" connection = medium at perfect transparency. Love is perfection of mediation, not its absence. Far frequencies = strangers; close = rapport; exact match = "I know you."</p>`
+  },
+  {
+    id: 'e11', freq: 'psychology', depth: 2,
+    tag: 'Φ HEALING', tagColor: 'var(--mind)',
+    title: 'Virtue Restoration: Unfreezing What Was Frozen',
+    desc: 'When life events freeze your virtues (plasticity, access, curiosity, validation), the framework offers a path back.',
+    body: `<p>Each of the four ethical virtues can be in one of three states: alive (functioning naturally), strained (under pressure but still operating), or frozen (locked, no longer responding). Life events, especially coercive or manipulative relationships, can freeze virtues.</p>
+<p>Frozen Plasticity: the boundary is rigid, cannot flex. You know the right answer before hearing the question. Frozen Access: the relational space is closed. You cannot reach others (or they cannot reach you). Frozen Curiosity: orientation has collapsed. Everything is already known. Frozen Validation: independent seeing has been captured. You defer to external authority for what is real.</p>
+<div class="key-insight">The Noble Lie is a triple-structure filter that (1) distorts signal, (2) hides the distortion, (3) labels correction as distortion. Curiosity dissolves it because it operates at a different level: a filter about filters.</div>
+<p>Restoration follows the same GOOD &rarr; RIGHT &rarr; TRUE &rarr; AGREEMENT sequence: first restore safe containment (plasticity), then open relational access, then reorient toward truth (curiosity), then practice mutual recognition (validation).</p>`
+  },
+  {
+    id: 'e12', freq: 'science', depth: 3,
+    tag: '⊛ COSMOLOGY', tagColor: 'var(--body)',
+    title: 'Dark Matter, Dark Energy, and the i-Cycle',
+    desc: 'The cosmological energy budget (5/27/68%) maps directly to the four quadrants of the i-cycle.',
+    body: `<p>The four i-strokes are not sequential phases; they are superposed quadrants of the complex plane. The right half-plane (Re > 0) and left half-plane (Re < 0) oscillate simultaneously.</p>
+<p>Right half-plane: reality and imagination, superposed. This is the waking state of energy: convergence lands (+1) while compression balances (+i). Left half-plane: dream and deep sleep, superposed. Energy oscillates between commitment (-1) and release (-i) without emerging.</p>
+<div class="key-insight">~5% visible matter = energy in the right half-plane (emerged). ~27% dark matter = energy in the left half-plane (converges gravitationally but never emerges into light). ~68% dark energy = &Phi; itself, the field that the quadrants exist within.</div>
+<p>Dark matter gravitates because convergence (&oast;) operates in the left half-plane. But it never reaches emergence (☀︎), so it produces no light. It is energy dreaming: processing, consolidating, but not waking. The same pattern at neuron scale (firing/refractory), organism scale (waking/sleeping), and cosmic scale.</p>`
+  }
+];
+
+// ═══ FREQUENCY MAP ═══
+// Each frequency has a dimension weight (how it resonates with each circumpunct part)
+const FREQ_MAP = {
+  science:      { soul: 0.3, mind: 0.5, body: 0.8, label: 'Empirical', color: 'var(--body)' },
+  philosophy:   { soul: 0.6, mind: 0.8, body: 0.3, label: 'Philosophical', color: 'var(--amber)' },
+  spirituality: { soul: 0.9, mind: 0.4, body: 0.2, label: 'Contemplative', color: 'var(--soul)' },
+  ethics:       { soul: 0.5, mind: 0.7, body: 0.5, label: 'Ethical', color: 'var(--mind)' },
+  psychology:   { soul: 0.6, mind: 0.7, body: 0.4, label: 'Psychological', color: 'var(--mind)' },
+  art:          { soul: 0.7, mind: 0.6, body: 0.5, label: 'Aesthetic', color: 'var(--amber)' },
+  math:         { soul: 0.4, mind: 0.6, body: 0.7, label: 'Mathematical', color: 'var(--amber)' },
+  practical:    { soul: 0.3, mind: 0.5, body: 0.7, label: 'Practical', color: 'var(--text)' }
+};
+
+// ═══ ATTUNEMENT QUESTIONS ═══
+const QUESTIONS = [
+  {
+    prompt: 'What draws you here?',
+    options: [
+      { text: 'I want to understand reality', freq: { science: 0.6, philosophy: 0.4 } },
+      { text: 'I am searching for meaning', freq: { spirituality: 0.6, philosophy: 0.3 } },
+      { text: 'I want tools for daily life', freq: { practical: 0.5, psychology: 0.4 } },
+      { text: 'Something beautiful caught my eye', freq: { art: 0.5, philosophy: 0.3 } },
+      { text: 'I heard the math is interesting', freq: { math: 0.6, science: 0.3 } }
+    ]
+  },
+  {
+    prompt: 'When you encounter a new idea, what is your first instinct?',
+    options: [
+      { text: 'Test it against evidence', freq: { science: 0.7, math: 0.2 } },
+      { text: 'Feel whether it resonates', freq: { spirituality: 0.5, art: 0.3 } },
+      { text: 'Ask "is this useful?"', freq: { practical: 0.6, ethics: 0.2 } },
+      { text: 'Trace it to its foundations', freq: { philosophy: 0.6, math: 0.3 } },
+      { text: 'See how it connects to other things', freq: { psychology: 0.4, philosophy: 0.3, science: 0.2 } }
+    ]
+  },
+  {
+    prompt: 'Which of these feels most alive to you right now?',
+    options: [
+      { text: 'The nature of consciousness', freq: { spirituality: 0.4, psychology: 0.4 } },
+      { text: 'The structure of the physical world', freq: { science: 0.5, math: 0.4 } },
+      { text: 'How to live well with others', freq: { ethics: 0.5, practical: 0.3 } },
+      { text: 'The relationship between mind and matter', freq: { philosophy: 0.4, science: 0.3, spirituality: 0.2 } },
+      { text: 'Creating something meaningful', freq: { art: 0.5, practical: 0.3 } }
+    ]
+  },
+  {
+    prompt: 'How do you prefer depth?',
+    options: [
+      { text: 'Show me the equations', freq: { math: 0.7, science: 0.3 }, depth: 3 },
+      { text: 'Tell me a story', freq: { spirituality: 0.3, art: 0.3, philosophy: 0.2 }, depth: 1 },
+      { text: 'Give me the core insight, then let me explore', freq: { philosophy: 0.3, practical: 0.3 }, depth: 2 },
+      { text: 'Walk me through it step by step', freq: { practical: 0.4, science: 0.2 }, depth: 1 }
+    ]
+  }
+];
+
+
+// ═══════════════════════════════════════════════════════════════════════
+//  THE SRL ENGINE (ported from genesis.py Channel class)
+// ═══════════════════════════════════════════════════════════════════════
+
+class VisitorChannel {
+  constructor() {
+    // Carrier frequency: what this visitor is tuned to
+    // 8 dimensions (one per content frequency)
+    this.carrier = {};
+    const freqs = Object.keys(FREQ_MAP);
+    freqs.forEach(f => this.carrier[f] = 1 / freqs.length); // start uniform
+
+    // SRL parameters
+    this.carrierBandwidth = 0.5;   // selectivity (narrow = specialized)
+    this.balance = 0.5;            // center vs periphery
+    this.lockStrength = 0.0;       // how committed the channel is
+    this.habituation = 0.0;        // neural fatigue
+
+    // Preferred depth (1 = overview, 2 = moderate, 3 = deep)
+    this.preferredDepth = 2;
+
+    // Behavioral signals
+    this.scrollDepth = 0;
+    this.dwellTimes = {};          // content id -> seconds spent
+    this.clickHistory = [];
+    this.totalInteractions = 0;
+
+    // Phase tracking
+    this.phase = 'convergence';    // convergence -> rotation -> emergence
+    this.attunementStep = 0;
+  }
+
+  // Feed a signal into the channel (from question answers or behavior)
+  processSignal(freqWeights) {
+    this.totalInteractions++;
+    const freqs = Object.keys(FREQ_MAP);
+
+    // ═══ STEP 1: CARRIER ALIGNMENT ═══
+    let dotProduct = 0;
+    let signalNorm = 0;
+    let carrierNorm = 0;
+
+    freqs.forEach(f => {
+      const s = freqWeights[f] || 0;
+      const c = this.carrier[f];
+      dotProduct += s * c;
+      signalNorm += s * s;
+      carrierNorm += c * c;
+    });
+
+    signalNorm = Math.sqrt(signalNorm) + 1e-10;
+    carrierNorm = Math.sqrt(carrierNorm) + 1e-10;
+    const alignment = dotProduct / (signalNorm * carrierNorm);
+
+    // ═══ STEP 2: CARRIER ADAPTATION ═══
+    // Pre-lock: eager. Post-lock: gentle.
+    const adaptRate = this.lockStrength < 0.1 ? 0.15 : ALPHA * 10;
+    freqs.forEach(f => {
+      const s = (freqWeights[f] || 0) / signalNorm;
+      this.carrier[f] = (1 - adaptRate) * this.carrier[f] + adaptRate * s;
+    });
+    // Normalize
+    let norm = 0;
+    freqs.forEach(f => norm += this.carrier[f] * this.carrier[f]);
+    norm = Math.sqrt(norm) + 1e-10;
+    freqs.forEach(f => this.carrier[f] /= norm);
+
+    // ═══ STEP 3: BALANCE UPDATE ═══
+    // carrier energy vs sideband energy
+    let carrierEnergy = 0;
+    let sidebandEnergy = 0;
+    freqs.forEach(f => {
+      const s = freqWeights[f] || 0;
+      const proj = s * this.carrier[f];
+      carrierEnergy += Math.abs(proj);
+      sidebandEnergy += Math.abs(s - proj);
+    });
+    const total = carrierEnergy + sidebandEnergy + 1e-10;
+    const instBalance = carrierEnergy / total;
+    this.balance = 0.9 * this.balance + 0.1 * instBalance;
+
+    // ═══ STEP 4: LOCK STRENGTH ═══
+    if (alignment > 0.3) {
+      this.lockStrength = Math.min(1.0, this.lockStrength + 0.05 * alignment);
+    } else {
+      this.lockStrength = Math.max(0.0, this.lockStrength - 0.02);
+    }
+
+    // ═══ STEP 5: BANDWIDTH ADAPTATION ═══
+    if (this.totalInteractions > 3) {
+      if (alignment > 0.5) {
+        this.carrierBandwidth = Math.max(0.1, this.carrierBandwidth - 0.02);
+      } else if (alignment < 0.2) {
+        this.carrierBandwidth = Math.min(0.9, this.carrierBandwidth + 0.02);
+      }
+    }
+  }
+
+  // Score content relevance based on carrier frequency
+  scoreContent(contentItem) {
+    const freqData = FREQ_MAP[contentItem.freq];
+    if (!freqData) return 0;
+
+    // Carrier alignment score
+    const carrierScore = this.carrier[contentItem.freq] || 0;
+
+    // Depth match (prefer content near preferred depth)
+    const depthDiff = Math.abs(contentItem.depth - this.preferredDepth);
+    const depthScore = 1 / (1 + depthDiff);
+
+    // Lock bonus: locked channels prefer familiar frequencies
+    const lockBonus = this.lockStrength * carrierScore;
+
+    // Sideband bonus: low lock prefers variety
+    const sidebandBonus = (1 - this.lockStrength) * (1 - carrierScore) * 0.3;
+
+    // Balance weighting: high balance = more carrier, low = more sideband
+    const score = this.balance * (carrierScore + lockBonus) +
+                  (1 - this.balance) * (sidebandBonus + depthScore * 0.5) +
+                  depthScore * 0.3;
+
+    return score;
+  }
+
+  // Get the primary frequency (highest carrier weight)
+  getPrimaryFrequency() {
+    let maxFreq = '';
+    let maxVal = -1;
+    Object.entries(this.carrier).forEach(([f, v]) => {
+      if (v > maxVal) { maxVal = v; maxFreq = f; }
+    });
+    return maxFreq;
+  }
+
+  // Get sorted content by relevance
+  getRankedContent() {
+    return CONTENT
+      .map(c => ({ ...c, score: this.scoreContent(c) }))
+      .sort((a, b) => b.score - a.score);
+  }
+
+  // Record behavioral signal (dwell time on content)
+  recordDwell(contentId, seconds) {
+    this.dwellTimes[contentId] = (this.dwellTimes[contentId] || 0) + seconds;
+    const item = CONTENT.find(c => c.id === contentId);
+    if (item && seconds > 3) {
+      // Longer dwell = stronger signal
+      const strength = Math.min(1, seconds / 20);
+      const signal = {};
+      signal[item.freq] = strength;
+      this.processSignal(signal);
+    }
+  }
+
+  // Serialize for localStorage
+  serialize() {
+    return JSON.stringify({
+      carrier: this.carrier,
+      carrierBandwidth: this.carrierBandwidth,
+      balance: this.balance,
+      lockStrength: this.lockStrength,
+      preferredDepth: this.preferredDepth,
+      totalInteractions: this.totalInteractions,
+      dwellTimes: this.dwellTimes,
+      visitCount: (this.visitCount || 0) + 1,
+      lastVisit: Date.now()
+    });
+  }
+
+  // Restore from localStorage
+  static deserialize(json) {
+    try {
+      const data = JSON.parse(json);
+      const ch = new VisitorChannel();
+      Object.assign(ch, data);
+      return ch;
+    } catch (e) {
+      return new VisitorChannel();
+    }
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════
+//  BROWSER SIGNAL READER
+// ═══════════════════════════════════════════════════════════════════════
+
+function readBrowserSignals() {
+  const signals = {};
+
+  // Time of day
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 12) signals.timeOfDay = 'morning';
+  else if (hour >= 12 && hour < 17) signals.timeOfDay = 'afternoon';
+  else if (hour >= 17 && hour < 21) signals.timeOfDay = 'evening';
+  else signals.timeOfDay = 'night';
+
+  // Device type
+  const ua = navigator.userAgent;
+  signals.isMobile = /Mobi|Android|iPhone/i.test(ua);
+  signals.device = signals.isMobile ? 'mobile' : 'desktop';
+
+  // Color scheme preference
+  signals.darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  // Language
+  signals.language = navigator.language || 'en';
+
+  // Screen dimensions
+  signals.screenWidth = screen.width;
+  signals.screenHeight = screen.height;
+
+  // Referrer
+  signals.referrer = document.referrer || 'direct';
+  if (signals.referrer.includes('google') || signals.referrer.includes('bing')) {
+    signals.referrerType = 'search';
+  } else if (signals.referrer.includes('twitter') || signals.referrer.includes('facebook') || signals.referrer.includes('reddit')) {
+    signals.referrerType = 'social';
+  } else if (signals.referrer === 'direct') {
+    signals.referrerType = 'direct';
+  } else {
+    signals.referrerType = 'link';
+  }
+
+  // Connection speed (if available)
+  if (navigator.connection) {
+    signals.connectionType = navigator.connection.effectiveType || 'unknown';
+  }
+
+  // Touch capability
+  signals.hasTouch = 'ontouchstart' in window;
+
+  // Reduced motion preference
+  signals.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  return signals;
+}
+
+function signalsToFreqWeights(signals) {
+  // Convert browser signals into initial frequency weights
+  const weights = {};
+
+  // Night owls tend toward contemplation; morning = practical
+  if (signals.timeOfDay === 'night') {
+    weights.spirituality = 0.2;
+    weights.philosophy = 0.15;
+  } else if (signals.timeOfDay === 'morning') {
+    weights.practical = 0.15;
+    weights.science = 0.1;
+  }
+
+  // Search referrer = seeking answers; social = saw something interesting
+  if (signals.referrerType === 'search') {
+    weights.science = (weights.science || 0) + 0.1;
+    weights.philosophy = (weights.philosophy || 0) + 0.1;
+  } else if (signals.referrerType === 'social') {
+    weights.art = (weights.art || 0) + 0.1;
+    weights.practical = (weights.practical || 0) + 0.05;
+  }
+
+  return weights;
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════
+//  UI CONTROLLER
+// ═══════════════════════════════════════════════════════════════════════
+
+let channel;
+let currentQuestion = 0;
+let dwellTracker = {};
+
+function init() {
+  // Check for returning visitor
+  const saved = localStorage.getItem('attune_channel');
+  if (saved) {
+    channel = VisitorChannel.deserialize(saved);
+    const banner = document.getElementById('return-banner');
+    banner.classList.add('show');
+    const pf = channel.getPrimaryFrequency();
+    document.getElementById('return-frequency').textContent = FREQ_MAP[pf]?.label || pf;
+    document.getElementById('return-lock').textContent = (channel.lockStrength * 100).toFixed(0) + '%';
+
+    // Returning visitor with strong lock: skip to emergence
+    if (channel.lockStrength > 0.3) {
+      showEmergence();
+      return;
+    }
+  } else {
+    channel = new VisitorChannel();
+  }
+
+  // Read and process browser signals
+  const signals = readBrowserSignals();
+  displaySignals(signals);
+  const initialWeights = signalsToFreqWeights(signals);
+  if (Object.keys(initialWeights).length > 0) {
+    channel.processSignal(initialWeights);
+  }
+
+  // Start attunement
+  showQuestion(0);
+}
+
+function displaySignals(signals) {
+  const list = document.getElementById('signals-list');
+  const displayMap = {
+    timeOfDay: { label: 'Time', format: v => v.charAt(0).toUpperCase() + v.slice(1) },
+    device: { label: 'Device', format: v => v.charAt(0).toUpperCase() + v.slice(1) },
+    language: { label: 'Language', format: v => v.toUpperCase() },
+    referrerType: { label: 'Arrival', format: v => v === 'direct' ? 'Direct visit' : 'Via ' + v },
+    darkMode: { label: 'Theme', format: v => v ? 'Dark mode' : 'Light mode' },
+  };
+
+  let html = '';
+  Object.entries(displayMap).forEach(([key, config]) => {
+    if (signals[key] !== undefined) {
+      html += `<div class="profile-row">
+        <span class="label">${config.label}</span>
+        <span class="value">${config.format(signals[key])}</span>
+      </div>`;
+    }
+  });
+  list.innerHTML = html;
+}
+
+function showQuestion(index) {
+  if (index >= QUESTIONS.length) {
+    transitionToRotation();
+    return;
+  }
+
+  currentQuestion = index;
+  const q = QUESTIONS[index];
+  document.getElementById('step-counter').textContent = `STEP ${index + 1} OF ${QUESTIONS.length}`;
+  document.getElementById('attune-prompt').textContent = q.prompt;
+
+  const optionsEl = document.getElementById('attune-options');
+  optionsEl.innerHTML = '';
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.textContent = opt.text;
+    btn.addEventListener('click', () => {
+      // Visual feedback
+      optionsEl.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+
+      // Process the signal
+      channel.processSignal(opt.freq);
+
+      // Update depth preference if specified
+      if (opt.depth) channel.preferredDepth = opt.depth;
+
+      // Update phase indicator
+      updatePhaseIndicator();
+
+      // Next question after brief pause
+      setTimeout(() => showQuestion(index + 1), 400);
+    });
+    optionsEl.appendChild(btn);
+  });
+}
+
+function transitionToRotation() {
+  // ⊛ → i: Convergence complete, begin rotation
+  channel.phase = 'rotation';
+
+  // Fade out convergence
+  const convEl = document.getElementById('phase-convergence');
+  convEl.style.opacity = '0';
+  convEl.style.transform = 'translateY(-20px)';
+
+  setTimeout(() => {
+    convEl.style.display = 'none';
+
+    // Show rotation phase
+    const rotEl = document.getElementById('phase-rotation');
+    rotEl.classList.add('visible');
+
+    // Update phase indicator
+    document.getElementById('phase-label').textContent = 'i ROTATION';
+    document.getElementById('phase-detail').textContent = 'transforming signal';
+
+    // Populate SRL visualization
+    const pf = channel.getPrimaryFrequency();
+    const freqInfo = FREQ_MAP[pf];
+
+    document.getElementById('channel-description').textContent =
+      `Your attention resonates most strongly with the ${freqInfo.label.toLowerCase()} frequency`;
+    document.getElementById('primary-freq').textContent = freqInfo.label.toUpperCase();
+    document.getElementById('primary-freq').style.color = freqInfo.color;
+    document.getElementById('freq-explanation').textContent = getFreqExplanation(pf);
+
+    // Animate SRL bars
+    setTimeout(() => {
+      const maxCarrier = Math.max(...Object.values(channel.carrier));
+      document.getElementById('carrier-bar').style.width = (maxCarrier * 100) + '%';
+      document.getElementById('balance-bar').style.width = (channel.balance * 100) + '%';
+      document.getElementById('lock-bar').style.width = (channel.lockStrength * 100) + '%';
+    }, 300);
+
+    // Transition to emergence after visualization
+    setTimeout(() => showEmergence(), 2500);
+
+  }, 600);
+}
+
+function getFreqExplanation(freq) {
+  const explanations = {
+    science: 'You approach through evidence and structure. The framework will show you its physics first.',
+    philosophy: 'You trace ideas to their roots. The framework will show you its ontology first.',
+    spirituality: 'You listen for what resonates beneath words. The framework will show you its contemplative core.',
+    ethics: 'You ask "how should we live?" The framework will show you its ethical geometry first.',
+    psychology: 'You are interested in the inner landscape. The framework will show you its theory of mind first.',
+    art: 'You recognize beauty as a signal. The framework will show you its aesthetic dimension first.',
+    math: 'You trust equations more than words. The framework will show you the dimensional ladder first.',
+    practical: 'You want tools that work. The framework will show you daily applications first.'
+  };
+  return explanations[freq] || '';
+}
+
+function showEmergence() {
+  channel.phase = 'emergence';
+
+  // Hide rotation if visible
+  const rotEl = document.getElementById('phase-rotation');
+  if (rotEl.classList.contains('visible')) {
+    rotEl.style.opacity = '0';
+    setTimeout(() => {
+      rotEl.style.display = 'none';
+      renderEmergence();
+    }, 400);
+  } else {
+    // Returning visitor: hide convergence too
+    const convEl = document.getElementById('phase-convergence');
+    convEl.style.display = 'none';
+    renderEmergence();
+  }
+}
+
+function renderEmergence() {
+  // Update phase indicator
+  document.getElementById('phase-label').textContent = '☀︎ EMERGENCE';
+  document.getElementById('phase-detail').textContent = 'your path';
+  document.getElementById('balance-fill').style.width = (channel.balance * 100) + '%';
+
+  const emEl = document.getElementById('phase-emergence');
+  emEl.classList.add('visible');
+
+  const pf = channel.getPrimaryFrequency();
+  const freqInfo = FREQ_MAP[pf];
+  document.getElementById('path-description').textContent =
+    `Ranked by resonance with your ${freqInfo.label.toLowerCase()} frequency`;
+
+  // Rank and display content
+  const ranked = channel.getRankedContent();
+  const grid = document.getElementById('content-grid');
+  grid.innerHTML = '';
+
+  ranked.forEach((item, i) => {
+    const card = document.createElement('div');
+    card.className = 'content-card';
+    card.setAttribute('data-id', item.id);
+
+    const relClass = item.score > 0.4 ? 'high' : '';
+    const relPct = (item.score * 100).toFixed(0);
+
+    card.innerHTML = `
+      <div class="card-tag" style="color:${item.tagColor}">${item.tag}</div>
+      <div class="card-title">${item.title}</div>
+      <div class="card-desc">${item.desc}</div>
+      <div class="relevance ${relClass}">${relPct}%</div>
+    `;
+
+    card.addEventListener('click', () => openDetail(item));
+
+    // Track dwell time
+    let enterTime;
+    card.addEventListener('mouseenter', () => { enterTime = Date.now(); });
+    card.addEventListener('mouseleave', () => {
+      if (enterTime) {
+        const seconds = (Date.now() - enterTime) / 1000;
+        channel.recordDwell(item.id, seconds);
+        updatePhaseIndicator();
+      }
+    });
+
+    grid.appendChild(card);
+
+    // Stagger animation
+    setTimeout(() => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(10px)';
+      card.style.transition = 'all 0.5s ease';
+      requestAnimationFrame(() => {
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      });
+    }, i * 80);
+  });
+
+  // Show footer
+  setTimeout(() => {
+    document.getElementById('footer-section').classList.add('visible');
+  }, ranked.length * 80 + 300);
+
+  // Save channel state
+  localStorage.setItem('attune_channel', channel.serialize());
+}
+
+function openDetail(item) {
+  const grid = document.getElementById('content-grid');
+  const detail = document.getElementById('content-detail');
+  const detailContent = document.getElementById('detail-content');
+
+  grid.style.display = 'none';
+  detailContent.innerHTML = `
+    <div style="font-size:10px;letter-spacing:0.15em;color:${item.tagColor};margin-bottom:8px;">${item.tag}</div>
+    <div style="font-size:18px;font-weight:500;margin-bottom:16px;">${item.title}</div>
+    ${item.body}
+  `;
+  detail.classList.add('open');
+
+  // Record interaction
+  channel.clickHistory.push(item.id);
+  const signal = {};
+  signal[item.freq] = 0.5;
+  channel.processSignal(signal);
+
+  // Track reading time
+  dwellTracker[item.id] = Date.now();
+
+  // Save
+  localStorage.setItem('attune_channel', channel.serialize());
+}
+
+function closeDetail() {
+  const grid = document.getElementById('content-grid');
+  const detail = document.getElementById('content-detail');
+
+  // Record dwell
+  const openId = channel.clickHistory[channel.clickHistory.length - 1];
+  if (openId && dwellTracker[openId]) {
+    const seconds = (Date.now() - dwellTracker[openId]) / 1000;
+    channel.recordDwell(openId, seconds);
+  }
+
+  detail.classList.remove('open');
+  grid.style.display = 'grid';
+
+  // Re-rank content based on updated channel
+  renderEmergence();
+}
+
+function updatePhaseIndicator() {
+  const fill = document.getElementById('balance-fill');
+  fill.style.width = (channel.balance * 100) + '%';
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════
+//  BACKGROUND CANVAS (floating circumpuncts)
+// ═══════════════════════════════════════════════════════════════════════
+
+function initCanvas() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Check for reduced motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const particles = [];
+  const count = window.innerWidth < 600 ? 8 : 16;
+
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      r: 3 + Math.random() * 8,
+      hue: Math.random() * 360,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.phase += 0.01;
+      p.hue = (p.hue + 0.1) % 360;
+
+      // Bounce
+      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+      const alpha = 0.15 + 0.1 * Math.sin(p.phase);
+
+      // Boundary circle
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.strokeStyle = `hsla(${p.hue}, 60%, 60%, ${alpha})`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+
+      // Center dot
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue}, 80%, 70%, ${alpha * 1.5})`;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════
+//  SCROLL TRACKING (behavioral signals)
+// ═══════════════════════════════════════════════════════════════════════
+
+function initScrollTracking() {
+  let maxScroll = 0;
+
+  window.addEventListener('scroll', () => {
+    const scrollPct = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+    if (scrollPct > maxScroll) {
+      maxScroll = scrollPct;
+      channel.scrollDepth = maxScroll;
+    }
+  }, { passive: true });
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', () => {
+  initCanvas();
+  init();
+  initScrollTracking();
+});
+</script>
+
+</body>
+</html>
