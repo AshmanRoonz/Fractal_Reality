@@ -11,7 +11,7 @@ Three modifications to the standard LSTM, each mapping to one constraint:
 
 Plus:
     i-rotation:       90° phase turn between convergence and emergence
-    ◐ balance:        self-regulating gate budget (conservation of traversal)
+    ◐ balance:        softmax temperature; self-regulating toward 0.5
     Sleep/wake:       periodic consolidation phase
 
 Four states (vs. standard LSTM's two):
@@ -227,6 +227,13 @@ class CircumpunctLSTMCell(nn.Module):
         # Candidate projection → complex (outputs 2*hidden for real+imag)
         self.W_c = nn.Linear(gate_input_size, 2 * hidden_size)
 
+        # ── Resonance projection: real input → complex ──
+        # The boundary (3D) is where real meets complex.
+        # This learned projection gives the input genuine phase so that
+        # T = cos²(Δφ/2) performs real frequency matching against the
+        # worldline, not just sign-matching against a quasi-real proxy.
+        self.W_resonance = nn.Linear(input_size, 2 * hidden_size)
+
         # ── Initialization: scale by 1/φ ──
         self._init_weights()
 
@@ -263,14 +270,12 @@ class CircumpunctLSTMCell(nn.Module):
         #  STEP 1: Φ Resonance retrieval from deep state
         # ════════════════════════════════════════════════════
 
-        # We need x_t as complex for phase matching.
-        # Project into complex space using first hidden_size dims
-        # (or pad with zeros for imaginary part).
-        x_complex = torch.zeros(batch, self.hidden_size, 2,
-                                device=x_t.device, dtype=x_t.dtype)
-        # Use first min(input_size, hidden_size) dims as real part
-        dim = min(self.input_size, self.hidden_size)
-        x_complex[:, :dim, 0] = x_t[:, :dim]
+        # Project real input into complex space with learned phase.
+        # The boundary (○, 3D) is where real meets complex; this
+        # projection IS the boundary: it gives the input genuine phase
+        # so that resonance (T = cos²(Δφ/2)) does real frequency matching.
+        x_proj = self.W_resonance(x_t)  # (batch, 2 * hidden_size)
+        x_complex = x_proj.view(batch, self.hidden_size, 2)  # (batch, hidden, 2)
 
         # T = cos²(Δφ/2): resonance between input and worldline
         # Detach d_prev for resonance: the worldline is read, not trained through
@@ -301,16 +306,17 @@ class CircumpunctLSTMCell(nn.Module):
         i_raw = self.W_i(combined)
         o_raw = self.W_o(combined)
 
-        # Conservation of traversal: gates share a budget
-        # budget = 3 · ◐ (≈ 1.5 at balance)
-        budget = 3.0 * b_prev  # (batch, 1)
+        # E = 1 (A0): total gate mass is exactly 1.
+        # Conservation of traversal (0 + 1 + 2 = 3) is WHY there are three
+        # gates (three constraints); E = 1 constrains their sum.
+        # ◐ modulates the softmax temperature: at balance (0.5), temp = 1.0
+        # (standard softmax). Drift from balance changes allocation sharpness.
+        temperature = (2.0 * b_prev + 1e-4).unsqueeze(-1)  # (batch, 1, 1)
 
-        # Stack and softmax-normalize, then scale by budget
         gate_stack = torch.stack([f_raw, i_raw, o_raw], dim=-1)  # (batch, hidden, 3)
-        gate_weights = F.softmax(gate_stack, dim=-1)             # sums to 1 per dim
-        gate_weights = gate_weights * budget.unsqueeze(-1)       # scale to budget
+        gate_weights = F.softmax(gate_stack / temperature, dim=-1)  # sums to 1 per dim
 
-        f_t = gate_weights[..., 0]  # (batch, hidden_size)
+        f_t = gate_weights[..., 0]  # (batch, hidden_size); always in [0, 1]
         i_t = gate_weights[..., 1]
         o_t = gate_weights[..., 2]
 
