@@ -76,6 +76,11 @@ def c_mul(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
     return torch.stack([real, imag], dim=-1)
 
 
+def c_conj(z: torch.Tensor) -> torch.Tensor:
+    """Conjugate of complex tensor (stored as [..., 2])."""
+    return torch.stack([z[..., 0], -z[..., 1]], dim=-1)
+
+
 def c_scale(z: torch.Tensor, s: torch.Tensor) -> torch.Tensor:
     """Scale complex tensor by real scalar (broadcast-safe)."""
     if s.dim() < z.dim():
@@ -252,7 +257,7 @@ class SelectiveSSM(nn.Module):
         # C_t: (batch, state_size, 2), h_t: (batch, d_model, state_size, 2)
         # Conjugate multiply and sum over state_size
         Ch = c_mul(
-            C_t.unsqueeze(1).expand(-1, self.d_model, -1, -1),
+            c_conj(C_t.unsqueeze(1).expand(-1, self.d_model, -1, -1)),
             h_t
         )  # (batch, d_model, state_size, 2)
         y_t = Ch[..., 0].sum(dim=-1)  # real part, summed over state: (batch, d_model)
@@ -347,6 +352,9 @@ class CircumpunctSSM(nn.Module):
         # real signal meets complex memory.
         self.W_resonance = nn.Linear(d_model, state_size * 2, bias=False)
 
+        # Surface projection: maps surfaced memory back to d_model for B_t transform
+        self.surface_proj = nn.Linear(state_size * 2, d_model, bias=False)
+
         self._init_weights()
 
     def _init_weights(self):
@@ -394,16 +402,17 @@ class CircumpunctSSM(nn.Module):
         gamma_t = dt_t  # (batch, d_model)
 
         # x_t + surfaced contribution: surfaced is (batch, state_size, 2)
-        # We need to add surfaced into the Bx computation.
-        # The surfaced memory augments the B projection:
-        # Instead of B_t · x_t, we compute B_t · x_t + surfaced
-        x_complex_full = torch.stack([x_t, torch.zeros_like(x_t)], dim=-1)
+        # Project surfaced back to d_model, add to x_t BEFORE B_t multiplication
+        surfaced_flat = surfaced.reshape(batch, -1)  # (batch, state_size*2)
+        surfaced_contribution = self.surface_proj(surfaced_flat)  # (batch, d_model)
+        x_augmented = x_t + surfaced_contribution  # (batch, d_model)
+
+        # Compute B_t · x_augmented (with surfaced properly transformed)
+        x_complex_full = torch.stack([x_augmented, torch.zeros_like(x_augmented)], dim=-1)
         Bx = c_mul(
             B_t.unsqueeze(1).expand(-1, self.d_model, -1, -1),
             x_complex_full.unsqueeze(2).expand(-1, -1, self.state_size, -1)
         )
-        # Add surfaced memory (broadcast across d_model)
-        Bx = Bx + surfaced.unsqueeze(1).expand(-1, self.d_model, -1, -1)
         Bx = c_scale(Bx, gamma_t.unsqueeze(-1))
 
         # Decay previous state
@@ -438,7 +447,7 @@ class CircumpunctSSM(nn.Module):
 
         # Output: y_t = Re(C_tᵀ · h_t) summed over state
         Ch = c_mul(
-            C_t.unsqueeze(1).expand(-1, self.d_model, -1, -1),
+            c_conj(C_t.unsqueeze(1).expand(-1, self.d_model, -1, -1)),
             h_t
         )
         y_t = Ch[..., 0].sum(dim=-1)  # (batch, d_model)
@@ -584,58 +593,34 @@ class CopyingProblem:
 
 class SelectiveCopyingProblem:
     """
-    Selective copying: remember WHICH items to recall, not just THAT there were items.
-
-    Input:  [16 tokens, 8 marked with * prefix] [T blanks] [trigger] [8 blanks]
-    Target: [blanks...] [the 8 marked tokens in order]
-
-    Harder than basic copying: the network must attend to markers
-    AND remember content across the gap.
+    Selective copying: remember only the marked tokens across T blanks.
+    Each position is (marker_or_blank, digit). The model sees all digits
+    but must recall only the marked ones.
     """
-
-    def __init__(self, T: int = 100, n_total: int = 16, n_marked: int = 8,
-                 vocab_size: int = 10, batch_size: int = 32):
-        self.T = T
-        self.n_total = n_total
-        self.n_marked = n_marked
-        self.vocab_size = vocab_size
-        self.batch_size = batch_size
-        self.seq_len = n_total + T + 1 + n_marked
-        self.BLANK = vocab_size
-        self.MARKER = vocab_size + 1  # prefixed to marked tokens
-        self.TRIGGER = vocab_size + 2
+    def __init__(self, T=100, n_total=16, n_marked=8, vocab_size=10, batch_size=32):
+        self.T, self.n_total, self.n_marked = T, n_total, n_marked
+        self.vocab_size, self.batch_size = vocab_size, batch_size
+        self.seq_len = n_total * 2 + T + 1 + n_marked
+        self.BLANK, self.MARKER, self.TRIGGER = vocab_size, vocab_size+1, vocab_size+2
         self.total_tokens = vocab_size + 3
+        self.trigger_pos = n_total * 2 + T
+        self.output_len = n_marked
 
     def generate_batch(self, device=None):
-        batch = self.batch_size
-        seq = torch.full((batch, self.seq_len), self.BLANK,
-                         dtype=torch.long, device=device)
-        target = torch.full((batch, self.seq_len), self.BLANK,
-                            dtype=torch.long, device=device)
-
-        for b in range(batch):
-            # Generate n_total random tokens
-            all_tokens = torch.randint(0, self.vocab_size, (self.n_total,), device=device)
-            # Randomly mark n_marked of them
-            marked_idx = torch.randperm(self.n_total, device=device)[:self.n_marked].sort().values
-
-            for i in range(self.n_total):
-                if i in marked_idx:
-                    seq[b, i] = self.MARKER  # marker token
-                else:
-                    seq[b, i] = all_tokens[i]
-
-            # Place actual marked values right after their markers
-            # (Simplified: use markers as positional, values interleaved)
-            # Actually, simpler approach: marked positions get MARKER token,
-            # the target is the original values at those positions
-            marked_values = all_tokens[marked_idx]
-
-            trigger_pos = self.n_total + self.T
-            seq[b, trigger_pos] = self.TRIGGER
-            target[b, trigger_pos + 1:trigger_pos + 1 + self.n_marked] = marked_values
-
-        return seq, target
+        b = self.batch_size
+        seq = torch.full((b, self.seq_len), self.BLANK, dtype=torch.long, device=device)
+        tgt = torch.full((b, self.seq_len), self.BLANK, dtype=torch.long, device=device)
+        for i in range(b):
+            tokens = torch.randint(0, self.vocab_size, (self.n_total,), device=device)
+            marked = torch.randperm(self.n_total, device=device)[:self.n_marked].sort().values
+            marked_set = set(marked.tolist())
+            for j in range(self.n_total):
+                flag = self.MARKER if j in marked_set else self.BLANK
+                seq[i, j * 2] = flag
+                seq[i, j * 2 + 1] = tokens[j]
+            tgt[i, self.trigger_pos+1:self.trigger_pos+1+self.n_marked] = tokens[marked]
+        seq[:, self.trigger_pos] = self.TRIGGER
+        return seq, tgt
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -691,8 +676,8 @@ def train_benchmark(model_type: str = 'circumpunct',
         trigger_pos = 1 + problem.n_digits + T
         output_len = problem.n_digits
     else:
-        trigger_pos = problem.n_total + T
-        output_len = problem.n_marked
+        trigger_pos = problem.trigger_pos
+        output_len = problem.output_len
 
     best_acc = 0.0
     history = []
