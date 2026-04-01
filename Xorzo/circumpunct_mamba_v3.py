@@ -2,8 +2,10 @@
 ⊙ The Circumpunct Mamba v3: Fractal State Transition
 ======================================================
 
-The ONE idea: forgetting IS fractal compression. Not a side buffer.
-Not a worldline. The state transition itself.
+Two ideas, one mechanism:
+
+1. Forgetting IS fractal compression (not linear decay).
+2. Compression is resonance-modulated (content-aware, not blind).
 
 Standard Mamba:   h_t = α_t · h_{t-1} + γ_t · B_t · x_t
                   (linear decay: α^T → 0 exponentially)
@@ -11,9 +13,9 @@ Standard Mamba:   h_t = α_t · h_{t-1} + γ_t · B_t · x_t
 Circumpunct v3:   h_t = squash(⊛(h_{t-1}, e_t) + γ_t · B_t · x_t)
                   (sub-linear decay: |h|^e preserves quiet memories)
 
-Why this matters:
+Why fractal compression matters:
     Linear decay is amnesic: after T steps, α^T vanishes exponentially.
-    A memory that was magnitude 0.01 dies as fast as one at 0.99.
+    A memory at magnitude 0.01 dies as fast as one at 0.99.
 
     Fractal compression is selective: |h|^e with e > 1 compresses
     sub-unit magnitudes sub-linearly. Quieter memories (small |h|)
@@ -23,21 +25,40 @@ Why this matters:
     This is how nature works: memories don't linearly evaporate.
     They compress. The gist survives; the detail fades. Fractal.
 
-The selective exponent:
-    e_t = 1 + (1 - α_t) * κ
+Why resonance-modulation matters:
+    Each state dimension carries a complex value with a phase signature
+    (its identity). The input at each timestep also has phase content.
+    T = cos²(Δφ/2) measures how well they match.
 
-    Where α_t = exp(Δ_t · A) is the standard Mamba retention signal.
-    When α_t → 1 (retain): e_t → 1 (identity, no compression)
-    When α_t → 0 (forget):  e_t → 1 + κ (strong compression)
+    High resonance (T -> 1): this state dim is RELEVANT to the input.
+        Compression exponent stays low: preserve it.
+    Low resonance (T -> 0): this state dim is IRRELEVANT right now.
+        Compression exponent goes high: compress it harder.
 
-    For |h| < 1 with e > 1: |h|^e < |h| (real decay, bounded)
-    For |h| = 0: stays 0 (silence stays silent)
-    For |h| = 1: stays 1 (full signal unchanged)
+    This is the SRL principle from Xorzo applied to SSM state:
+    each state dimension is a "head" tuned to a pattern (via its phase),
+    and compression adapts based on whether the current input matches.
+    Attention heads recognize patterns (3D input); resonance gates
+    determine which patterns survive.
 
-    The decay curve is concave, not linear. That's the whole insight.
+The selective exponent (now with resonance):
+    e_t = 1 + (1 - α_t) · κ · (1 - T_t)
+
+    Where:
+        α_t = exp(Δ_t · A)           (Mamba's selective retention)
+        T_t = cos²(Δφ/2)             (resonance between input and state)
+        κ = max extra exponent
+
+    Three regimes:
+        α high, T high: e ≈ 1         (retain: gate says keep, input matches)
+        α low,  T high: e ≈ 1         (resonance overrides: input needs this)
+        α low,  T low:  e ≈ 1 + κ     (compress: gate says forget, no match)
+        α high, T low:  e ≈ 1         (gate says keep regardless)
+
+    Both signals must agree to compress. Resonance protects relevant state.
 
 No worldline. No side buffer. No separate retrieval mechanism.
-The state IS the memory. Forgetting IS compression.
+The state IS the memory. Forgetting IS compression. Resonance IS selection.
 
 Author: Ashman Roonz & Claude
 Date: April 2026
@@ -99,6 +120,24 @@ def c_scale(z: torch.Tensor, s: torch.Tensor) -> torch.Tensor:
 
 
 # =====================================================================
+#  T: RESONANCE GATE
+# =====================================================================
+
+def resonance_gate(signal: torch.Tensor, memory: torch.Tensor) -> torch.Tensor:
+    """
+    T = cos²(Δφ/2)
+
+    Phase matching between signal and memory.
+    Perfect match (Δφ = 0): T = 1.  Orthogonal (Δφ = π): T = 0.
+
+    This is the SRL principle: carrier frequency matching determines
+    how much a state dimension responds to the current input.
+    """
+    delta_phi = c_phase(signal) - c_phase(memory)
+    return torch.cos(delta_phi / 2) ** 2
+
+
+# =====================================================================
 #  ⊛ FRACTAL STATE COMPRESSION (custom autograd for stable gradients)
 # =====================================================================
 
@@ -138,10 +177,18 @@ def fractal_compress(z: torch.Tensor, exponent: torch.Tensor) -> torch.Tensor:
     z: (..., 2) complex tensor
     exponent: (...) real tensor, same shape as z minus last dim
     Returns: (..., 2) complex tensor with compressed magnitude, same phase
+
+    Uses exp(e * log(|h|)) for differentiability through exponent.
+    Gradients flow through both magnitude AND exponent, so the
+    resonance gate and A_log can learn.
     """
     mag = c_mag(z)                          # (...)
     phase = c_phase(z)                      # (...)
-    compressed_mag = _FractalCompress.apply(mag, exponent)
+    # |h|^e = exp(e * log(|h|)), differentiable w.r.t. both h and e
+    log_mag = torch.log(mag + 1e-8)
+    compressed_mag = torch.exp(exponent * log_mag)
+    # Clamp for safety (shouldn't be needed with tanh squash, but just in case)
+    compressed_mag = torch.clamp(compressed_mag, max=10.0)
     return c_from_polar(compressed_mag, phase)
 
 
@@ -215,20 +262,25 @@ def dna_init(d_model: int, state_size: int, batch_size: int,
 
 class FractalSSM(nn.Module):
     """
-    Selective SSM where fractal compression IS the state transition.
+    Selective SSM where fractal compression IS the state transition,
+    modulated by resonance between input and state.
 
     Standard:    h_t = α_t · h_{t-1} + γ_t · B_t · x_t
     Fractal:     h_t = squash(⊛(h_{t-1}, e_t) + γ_t · B_t · x_t)
 
     Where:
-        e_t = 1 + (1 - α_t) · κ     (selective exponent)
-        ⊛(h, e) = |h|^e · e^(iφ)    (magnitude compressed, phase preserved)
-        squash = tanh on magnitude    (boundary condition, ○)
+        T_t = cos²(Δφ/2)                          (resonance gate)
+        e_t = 1 + (1 - α_t) · κ · (1 - T_t)      (resonance-modulated exponent)
+        ⊛(h, e) = |h|^e · e^(iφ)                  (magnitude compressed, phase preserved)
+        squash = tanh on magnitude                  (boundary condition, ○)
 
-    α_t is still computed as exp(Δ_t · A), same selective mechanism.
-    But instead of multiplying h by α (linear), we raise |h| to an
-    exponent derived from α (fractal). The selectivity is preserved;
-    the geometry of decay changes.
+    α_t controls selective retention (same as Mamba).
+    T_t measures phase match between input and each state dimension.
+    Both must agree to compress: high α OR high T protects state.
+
+    Each state dimension is a "head" with a carrier phase (DNA init).
+    The resonance projection gives input a phase to match against.
+    Relevant patterns survive; irrelevant ones compress faster.
     """
 
     def __init__(self, d_model: int, state_size: int = 16, dt_rank: int = None,
@@ -247,6 +299,11 @@ class FractalSSM(nn.Module):
         self.dt_proj = nn.Linear(self.dt_rank, d_model)
         self.out_proj = nn.Linear(d_model, d_model)
         self.in_proj = nn.Linear(d_model, d_model * 2, bias=False)
+
+        # Resonance projection: real input -> complex for phase matching
+        # Each state dimension is a "head" with a carrier phase (from DNA init).
+        # This projection gives the input a phase signature to match against.
+        self.W_resonance = nn.Linear(d_model, state_size * 2, bias=False)
 
         self._init_weights()
 
@@ -297,6 +354,22 @@ class FractalSSM(nn.Module):
             C_t = C[:, t]            # (batch, state_size, 2)
 
             # ════════════════════════════════════════
+            #  RESONANCE: input phase vs state phase
+            # ════════════════════════════════════════
+
+            # Project input to complex for phase matching
+            x_res = self.W_resonance(x_t)                      # (batch, state_size * 2)
+            x_complex_res = x_res.view(batch, self.state_size, 2)
+            # (batch, state_size, 2)
+
+            # State h is (batch, d_model, state_size, 2)
+            # Average over d_model to get the "carrier phase" per state dim
+            h_carrier = h.mean(dim=1)                           # (batch, state_size, 2)
+
+            # T = cos²(Δφ/2): resonance between input and each state dim
+            T_t = resonance_gate(x_complex_res, h_carrier)     # (batch, state_size)
+
+            # ════════════════════════════════════════
             #  COMPUTE SELECTIVE EXPONENT
             # ════════════════════════════════════════
 
@@ -305,10 +378,16 @@ class FractalSSM(nn.Module):
             dt_A = dt_t.unsqueeze(-1) * A_neg.unsqueeze(0)     # (batch, d_model, state_size)
             alpha_t = torch.exp(dt_A)                          # in (0, 1]
 
-            # Selective exponent: e_t = 1 + (1 - α_t) · κ
-            # α_t close to 1 (retain) → exponent ≈ 1 (identity)
-            # α_t close to 0 (forget) → exponent ≈ 1 + κ (compress)
-            exponent_t = 1.0 + (1.0 - alpha_t) * self.kappa   # (batch, d_model, state_size)
+            # Resonance-modulated exponent:
+            #   e_t = 1 + (1 - α_t) · κ · (1 - T_t)
+            #
+            # Both α (gate) and T (resonance) must agree to compress.
+            # High α OR high T protects the state from compression.
+            # Only when α is low AND T is low does full compression apply.
+            #
+            # T_t is (batch, state_size); broadcast to (batch, d_model, state_size)
+            T_broadcast = T_t.unsqueeze(1).expand_as(alpha_t)
+            exponent_t = 1.0 + (1.0 - alpha_t) * self.kappa * (1.0 - T_broadcast)
 
             # ════════════════════════════════════════
             #  ⊛ FRACTAL STATE TRANSITION
