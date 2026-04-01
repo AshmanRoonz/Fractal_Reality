@@ -118,7 +118,7 @@ class ByteCorpus:
                 if target_pos < len(self.data):
                     targets.append(self.data[target_pos])
                 else:
-                    targets.append(0)  # padding
+                    targets.append(PAD_TOKEN)  # padding (256; ignored by cross_entropy)
             target_batch.append(targets)
 
         input_tensor = torch.tensor(input_batch, dtype=torch.long, device=device)
