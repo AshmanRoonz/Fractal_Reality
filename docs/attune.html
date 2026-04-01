@@ -340,6 +340,58 @@ body {
 }
 .return-banner.show { display: block; }
 
+/* ═══ DOMAIN FILTER PILLS ═══ */
+.domain-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin: 16px 0 24px;
+}
+.domain-pill {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  color: var(--mute);
+  padding: 5px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  transition: all 0.2s ease;
+}
+.domain-pill:hover {
+  border-color: rgba(255,255,255,0.25);
+  color: var(--text);
+}
+.domain-pill.active {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: rgba(255,170,0,0.08);
+}
+.channel-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 12px 0 20px;
+}
+.channel-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--mute);
+  padding: 5px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  transition: all 0.2s ease;
+}
+.channel-btn:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
 /* ═══ FOOTER ═══ */
 .footer {
   text-align: center;
@@ -451,9 +503,19 @@ body {
 
   <!-- PHASE 3: EMERGENCE (personalized content) -->
   <div class="section" id="phase-emergence">
-    <div style="text-align:center;margin-bottom:24px;">
+    <div style="text-align:center;margin-bottom:12px;">
       <div style="font-family:'Cinzel',serif;font-size:16px;letter-spacing:0.12em;color:var(--amber);">☀︎ Your Path</div>
       <div style="font-size:12px;color:var(--mute);margin-top:4px;" id="path-description"></div>
+    </div>
+
+    <!-- Domain filter pills -->
+    <div class="domain-filters" id="domain-filters"></div>
+
+    <!-- Channel controls -->
+    <div class="channel-controls">
+      <button class="channel-btn" onclick="widenBandwidth()" title="Relax the lock, show more variety">⊛ Widen</button>
+      <button class="channel-btn" onclick="resetChannel()" title="Start fresh">◐ Reset</button>
+      <button class="channel-btn" onclick="reattune()" title="Re-answer the attunement questions">i Reattune</button>
     </div>
 
     <div class="content-grid" id="content-grid"></div>
@@ -1226,8 +1288,15 @@ function renderEmergence() {
   document.getElementById('path-description').textContent =
     `Ranked by resonance with your ${freqInfo.label.toLowerCase()} frequency`;
 
-  // Rank and display top content (show top 15 to keep it focused)
-  const ranked = channel.getRankedContent().slice(0, 15);
+  // Build domain filter pills
+  buildDomainPills();
+
+  // Rank content, optionally filtered by domain
+  let pool = channel.getRankedContent();
+  if (activeDomainFilter) {
+    pool = pool.filter(item => item.domain === activeDomainFilter);
+  }
+  const ranked = pool.slice(0, 15);
   const grid = document.getElementById('content-grid');
   grid.innerHTML = '';
 
@@ -1349,6 +1418,105 @@ function closeDetail() {
 function updatePhaseIndicator() {
   const fill = document.getElementById('balance-fill');
   fill.style.width = (channel.balance * 100) + '%';
+}
+
+// ═══ DOMAIN FILTER ═══
+let activeDomainFilter = null; // null = show all (SRL-ranked)
+
+function buildDomainPills() {
+  const container = document.getElementById('domain-filters');
+  container.innerHTML = '';
+
+  // "All" pill (SRL-ranked)
+  const allPill = document.createElement('button');
+  allPill.className = 'domain-pill' + (activeDomainFilter === null ? ' active' : '');
+  allPill.textContent = '⊙ All';
+  allPill.addEventListener('click', () => {
+    activeDomainFilter = null;
+    buildDomainPills();
+    renderEmergence();
+  });
+  container.appendChild(allPill);
+
+  // One pill per domain, ordered by SRL relevance
+  const domainScores = {};
+  Object.entries(DOMAINS).forEach(([key, domain]) => {
+    let score = 0;
+    const freqs = Object.keys(FREQ_MAP);
+    freqs.forEach(f => {
+      score += (channel.carrier[f] || 0) * (domain.freqs[f] || 0);
+    });
+    domainScores[key] = score;
+  });
+
+  const sortedDomains = Object.keys(DOMAINS).sort((a, b) => domainScores[b] - domainScores[a]);
+
+  sortedDomains.forEach(key => {
+    const domain = DOMAINS[key];
+    const pill = document.createElement('button');
+    pill.className = 'domain-pill' + (activeDomainFilter === key ? ' active' : '');
+    pill.textContent = domain.tag;
+    pill.style.borderColor = activeDomainFilter === key ? domain.tagColor : '';
+    pill.style.color = activeDomainFilter === key ? domain.tagColor : '';
+    pill.addEventListener('click', () => {
+      activeDomainFilter = key;
+      // Feed a signal so the channel learns from exploration
+      const signal = {};
+      Object.entries(domain.freqs).forEach(([f, w]) => { signal[f] = w * 0.15; });
+      channel.processSignal(signal);
+      buildDomainPills();
+      renderEmergence();
+    });
+    container.appendChild(pill);
+  });
+}
+
+// ═══ CHANNEL CONTROLS ═══
+
+function widenBandwidth() {
+  // Relax the lock: reduce lock strength, widen bandwidth, pull balance toward 0.5
+  channel.lockStrength = Math.max(0, channel.lockStrength - 0.3);
+  channel.carrierBandwidth = Math.min(0.9, channel.carrierBandwidth + 0.2);
+  channel.balance = channel.balance * 0.6 + 0.5 * 0.4; // pull toward 0.5
+  localStorage.setItem('attune_channel', channel.serialize());
+  updatePhaseIndicator();
+  renderEmergence();
+}
+
+function resetChannel() {
+  // Full reset: clear localStorage, create fresh channel
+  localStorage.removeItem('attune_channel');
+  channel = new VisitorChannel();
+  activeDomainFilter = null;
+  // Read browser signals again
+  const signals = readBrowserSignals();
+  const initialWeights = signalsToFreqWeights(signals);
+  if (Object.keys(initialWeights).length > 0) {
+    channel.processSignal(initialWeights);
+  }
+  renderEmergence();
+}
+
+function reattune() {
+  // Go back to the attunement questions with a fresh-ish channel
+  channel.lockStrength = 0;
+  channel.carrierBandwidth = 0.5;
+  channel.balance = 0.5;
+  activeDomainFilter = null;
+
+  // Hide emergence, show convergence
+  document.getElementById('phase-emergence').classList.remove('visible');
+  document.getElementById('phase-emergence').style.display = '';
+  const convEl = document.getElementById('phase-convergence');
+  convEl.style.display = '';
+  convEl.style.opacity = '1';
+  convEl.style.transform = 'translateY(0)';
+  convEl.classList.add('visible');
+
+  document.getElementById('phase-label').textContent = '⊛ CONVERGENCE';
+  document.getElementById('phase-detail').textContent = 'gathering signals';
+
+  showQuestion(0);
 }
 
 
