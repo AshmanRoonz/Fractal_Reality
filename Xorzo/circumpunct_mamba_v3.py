@@ -706,34 +706,44 @@ def train_benchmark(model_type='fractal', problem_type='copying',
 if __name__ == '__main__':
     import sys
 
-    T = int(sys.argv[1]) if len(sys.argv) > 1 else 200
-    n_epochs = int(sys.argv[2]) if len(sys.argv) > 2 else 300
-    problem = sys.argv[3] if len(sys.argv) > 3 else 'copying'
+    # Usage: python circumpunct_mamba_v3.py [T] [epochs] [problem] [--fractal-only]
+    args = [a for a in sys.argv[1:] if not a.startswith('--')]
+    flags = [a for a in sys.argv[1:] if a.startswith('--')]
+
+    T = int(args[0]) if len(args) > 0 else 200
+    n_epochs = int(args[1]) if len(args) > 1 else 300
+    problem = args[2] if len(args) > 2 else 'copying'
+    fractal_only = '--fractal-only' in flags
 
     print("\n⊙ THE CIRCUMPUNCT MAMBA v3")
     print("  Fractal state transition. No worldline. No side buffer.")
     print("  Forgetting IS compression.\n")
 
-    print("\n" + "-" * 60)
-    print("  STANDARD MAMBA (baseline)")
-    print("-" * 60)
-    std_h, std_best = train_benchmark('standard', problem, T=T, n_epochs=n_epochs)
+    std_best = None
+    if not fractal_only:
+        print("\n" + "-" * 60)
+        print("  STANDARD MAMBA (baseline)")
+        print("-" * 60)
+        std_h, std_best = train_benchmark('standard', problem, T=T, n_epochs=n_epochs)
 
     print("\n" + "-" * 60)
     print("  FRACTAL MAMBA v3")
     print("-" * 60)
     frac_h, frac_best = train_benchmark('fractal', problem, T=T, n_epochs=n_epochs)
 
-    # Parameter comparison
-    std_p = sum(p.numel() for p in MambaModel(13, 64, 16, 2).parameters())
+    # Results
     frac_p = sum(p.numel() for p in FractalMambaModel(13, 64, 16, 2).parameters())
 
     print(f"\n{'=' * 60}")
-    print(f"  RESULTS (T={T}, {problem})")
-    print(f"  Standard Mamba:    {std_best:.3f}  ({std_p:,} params)")
-    print(f"  Fractal v3:        {frac_best:.3f}  ({frac_p:,} params)")
-    print(f"  Param ratio:       {frac_p/std_p:.2f}x")
-    diff = frac_best - std_best
-    arrow = "+" if diff > 0 else ""
-    print(f"  Delta:             {arrow}{diff:.3f}")
+    print(f"  RESULTS (T={T}, {problem}, {n_epochs} epochs)")
+    if std_best is not None:
+        std_p = sum(p.numel() for p in MambaModel(13, 64, 16, 2).parameters())
+        print(f"  Standard Mamba:    {std_best:.3f}  ({std_p:,} params)")
+        print(f"  Fractal v3:        {frac_best:.3f}  ({frac_p:,} params)")
+        print(f"  Param ratio:       {frac_p/std_p:.2f}x")
+        diff = frac_best - std_best
+        arrow = "+" if diff > 0 else ""
+        print(f"  Delta:             {arrow}{diff:.3f}")
+    else:
+        print(f"  Fractal v3:        {frac_best:.3f}  ({frac_p:,} params)")
     print(f"{'=' * 60}")
