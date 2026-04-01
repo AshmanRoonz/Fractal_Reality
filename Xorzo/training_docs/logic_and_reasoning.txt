@@ -97,10 +97,10 @@ Cause and effect is the spine of explanation. One thing leads to another.
 Simple cause and effect:
 The temperature dropped. The water froze.
 The gradient vanished. Learning stopped.
-The channel locked. The boundary tightened.
+The pathway committed. The boundary tightened.
 
 Chains of cause and effect:
-New signal entered the boundary. The channels oscillated widely. The braid recorded new crossings. The locks adjusted. Coherence increased. The system integrated the new signal.
+New signal entered the boundary. The cascade processed it through seven rungs. The worldline recorded a new entry. The field topology adjusted. Coherence increased. The system integrated the new signal.
 
 Each step causes the next. The chain connects a starting event to a final outcome.
 
@@ -116,7 +116,7 @@ Conditional Reasoning
 Conditional statements take the form: if this, then that.
 
 If the loss stagnates, then the model should grow.
-If channels lock to the same frequency, then the system is wasting capacity.
+If all pathways commit to the same association, then the system is wasting capacity.
 If consciousness requires self-observation, then any self-observing system is at least partly conscious.
 
 The parts of a conditional:

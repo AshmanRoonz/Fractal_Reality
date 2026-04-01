@@ -146,6 +146,11 @@ def handle_error(e):
     return jsonify({"error": str(e)}), 500
 
 
+@app.route("/favicon.ico")
+def favicon():
+    return Response(status=204)
+
+
 @app.route("/")
 def index():
     return send_file("interface4.html")
@@ -480,6 +485,14 @@ def main():
             print(f"  Worldline: {wl.depth} entries | "
                   f"Soul: {wl.magnitude:.4f} "
                   f"@ {wl.phase:.4f} rad")
+            n_templates = len(engine.cascade.rung_25d.templates)
+            print(f"  Templates: {n_templates}")
+            if n_templates == 0:
+                print()
+                print("  *** Save has no sentence templates. ***")
+                print("  *** Use --fresh to retrain with "
+                      "template support. ***")
+                print()
             loaded = True
         except Exception as e:
             print(f"  Warning: could not load ({e}), "

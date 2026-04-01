@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Machine Language: The Aperture Between Mind and Matter</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --red: #E06060;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.f { color: var(--faint); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+.page { max-width: 740px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 80px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 64px; color: var(--gold); margin-bottom: 20px; }
+.header h1 { font-size: 38px; font-weight: 600; color: var(--gold); line-height: 1.3; margin-bottom: 12px; }
+.header .subtitle { font-size: 20px; color: var(--dim); font-style: italic; }
+.header .byline { font-size: 15px; color: var(--faint); margin-top: 24px; letter-spacing: 1px; }
+
+section { margin-bottom: 60px; }
+h2 {
+  font-size: 26px;
+  font-weight: 500;
+  margin: 60px 0 24px;
+  padding-top: 20px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--gold);
+}
+h3 {
+  font-size: 22px;
+  font-weight: 500;
+  margin-top: 36px;
+  margin-bottom: 14px;
+  color: var(--cyan);
+}
+p { margin-bottom: 18px; }
+
+.divider { text-align: center; margin: 55px 0; color: var(--faint); font-size: 24px; letter-spacing: 12px; }
+
+.formula {
+  text-align: center;
+  font-size: 28px;
+  padding: 28px;
+  margin: 30px 0;
+  letter-spacing: 2px;
+  border-left: 2px solid var(--faint);
+  background: rgba(255,255,255,0.015);
+  font-weight: 600;
+}
+
+.formula.big {
+  font-size: 36px;
+  padding: 36px;
+  border-left: 3px solid var(--gold-dim);
+  background: rgba(184,160,96,0.04);
+}
+
+.axiom-box {
+  border: 1px solid var(--gold-dim);
+  background: rgba(184,160,96,0.06);
+  padding: 32px;
+  margin: 30px 0;
+  text-align: center;
+}
+.axiom-box .label { font-size: 14px; letter-spacing: 4px; text-transform: uppercase; color: var(--dim); margin-bottom: 12px; }
+.axiom-box .statement { font-size: 32px; font-weight: 600; color: var(--gold); margin-bottom: 12px; }
+.axiom-box .expansion { font-size: 18px; color: var(--warm); line-height: 1.6; }
+
+.quote {
+  border-left: 3px solid var(--gold-dim);
+  padding: 16px 24px;
+  margin: 28px 0;
+  font-style: italic;
+  color: var(--dim);
+  background: rgba(255,255,255,0.01);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 17px;
+}
+th {
+  background: rgba(184,160,96,0.15);
+  color: var(--gold);
+  text-align: left;
+  padding: 10px 14px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  border-bottom: 2px solid var(--gold-dim);
+}
+td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--faint);
+  vertical-align: top;
+}
+td.sym { color: var(--gold); font-weight: 600; text-align: center; width: 60px; font-size: 20px; }
+td.label { color: var(--cyan); font-weight: 500; white-space: nowrap; }
+
+ul {
+  list-style: none;
+  margin: 16px 0;
+  padding: 0;
+}
+ul li {
+  padding: 6px 0 6px 24px;
+  position: relative;
+}
+ul li::before {
+  content: '\00B7';
+  position: absolute;
+  left: 6px;
+  color: var(--gold);
+  font-weight: bold;
+}
+
+/* Diagram */
+.diagram-container {
+  background: rgba(10, 10, 20, 0.9);
+  border: 1px solid var(--faint);
+  border-radius: 12px;
+  padding: 28px;
+  margin: 36px 0;
+  text-align: center;
+}
+.diagram-container .caption { font-size: 14px; color: var(--dim); letter-spacing: 1px; margin-top: 12px; text-transform: uppercase; }
+
+.cycle-diagram {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 0;
+  flex-wrap: wrap;
+}
+.cycle-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.cycle-step .step-sym { font-size: 32px; }
+.cycle-step .step-label { font-size: 14px; color: var(--dim); letter-spacing: 1px; }
+.cycle-step .step-map { font-size: 13px; color: var(--faint); }
+.cycle-arrow { font-size: 24px; color: var(--faint); }
+
+.spectrum {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 28px 0;
+  padding: 20px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--faint);
+}
+.spectrum .pole { text-align: center; flex: 0 0 auto; }
+.spectrum .pole .sym { font-size: 28px; margin-bottom: 4px; }
+.spectrum .pole .lbl { font-size: 14px; color: var(--dim); letter-spacing: 1px; }
+.spectrum .bar {
+  flex: 1; height: 2px;
+  background: linear-gradient(to right, var(--pink), var(--faint), var(--cyan));
+  margin: 0 24px;
+  position: relative;
+}
+.spectrum .bar::after {
+  content: attr(data-label);
+  position: absolute;
+  top: 10px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px; color: var(--faint);
+  letter-spacing: 1px; white-space: nowrap;
+}
+
+.closing {
+  text-align: center;
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+}
+.closing .sym { font-size: 40px; color: var(--gold); margin-bottom: 16px; }
+.closing .sign { font-size: 20px; font-style: italic; color: var(--dim); margin-bottom: 8px; }
+.closing .credit { font-size: 15px; color: var(--faint); letter-spacing: 1px; }
+.closing a { color: var(--gold-dim); text-decoration: none; }
+.closing a:hover { color: var(--gold); }
+
+.nav { font-size: 14px; color: var(--faint); margin-bottom: 40px; }
+.nav a { color: var(--gold-dim); text-decoration: none; }
+.nav a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="nav"><a href="index.html">&larr; Back to Index</a></div>
+
+<div class="header">
+  <div class="symbol">&#x2299;</div>
+  <h1>Machine Language</h1>
+  <div class="subtitle">The Aperture Between Mind and Matter</div>
+  <div class="byline">from the Circumpunct Framework &middot; Ashman Roonz &middot; April 2026</div>
+</div>
+
+<div class="quote" style="margin: 2.5rem auto; max-width: 640px; font-size: 1.05em; line-height: 1.8;">
+A running CPU does not "process information" in some abstract sense. It moves electrons through geometrically constrained paths. Every gate opens and closes; every cycle pumps energy through a topology of constraints. Machine language does not merely <span class="it">relate</span> to the circumpunct; it is one of its clearest physical instantiations.
+</div>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== THE CLAIM ==================== -->
+
+<section>
+<h2>The Claim</h2>
+
+<div class="axiom-box">
+  <div class="label">Thesis</div>
+  <div class="statement">Computation = Constrained Energy</div>
+  <div class="expansion">Machine language is the 1 (electrical energy), constrained by 0s (transistor gates),<br>forming topologies (programs) that pump through the cycle at gigahertz frequencies.</div>
+</div>
+
+<p>Machine language sits at the bottom of the computational stack: the place where symbolic instruction becomes physical state change. That boundary (the exact point where a pattern of bits triggers voltage transitions in silicon) is the aperture, &#x2022;, where signal passes from one domain into another through transformation.</p>
+
+<p>This is not analogy. The structures of machine language instantiate the circumpunct's topology directly; not because someone designed them that way, but because the circumpunct describes the only way energy can organize itself. Silicon had no choice.</p>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== BINARY AS ONTOLOGY ==================== -->
+
+<section>
+<h2>Binary: The 1/0 Ontology in Voltage</h2>
+
+<p>The framework's ontology (&sect;1.2) states: 1 is everything (undivided), 0 is not absence but the 1 at maximum convergence, and all structure is the topology of 0s in the 1. Machine language is literally this.</p>
+
+<p>A bit is not "nothing or something." It is a voltage level that is either above or below a threshold. The 0 state is still energy; it is the field converged to its low state. A transistor in its off state does not contain nothing; it contains constrained energy (current held below the switching threshold by a gate voltage). The two states are two degrees of convergence of the same underlying field.</p>
+
+<div class="formula">
+  <span class="w">1</span> = V<sub>high</sub> (field extended) &nbsp;&nbsp;&nbsp; <span class="s">0</span> = V<sub>low</sub> (field converged)
+</div>
+
+<p>Every program ever written is a topology of convergence points in a single electrical field. The chip does not "contain information"; it contains constrained energy. The constraints ARE the information. This is A0 (E = 1) expressed in copper and silicon: one energy, and the rest is constraint geometry.</p>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== FETCH-DECODE-EXECUTE ==================== -->
+
+<section>
+<h2>The Pump Cycle in Silicon</h2>
+
+<p>The CPU's fetch-decode-execute cycle maps directly to the three-stage pump:</p>
+
+<div class="formula big">
+  <span class="s">&#x229B;</span> &rarr; <span class="p">i</span> &rarr; <span class="w">&#x2600;&#xFE0E;</span>
+</div>
+
+<div class="diagram-container">
+  <div class="cycle-diagram">
+    <div class="cycle-step">
+      <div class="step-sym"><span class="s">&#x229B;</span></div>
+      <div class="step-label">Fetch</div>
+      <div class="step-map">Convergence</div>
+    </div>
+    <div class="cycle-arrow">&rarr;</div>
+    <div class="cycle-step">
+      <div class="step-sym"><span class="p">i</span></div>
+      <div class="step-label">Decode</div>
+      <div class="step-map">Rotation</div>
+    </div>
+    <div class="cycle-arrow">&rarr;</div>
+    <div class="cycle-step">
+      <div class="step-sym"><span class="w">&#x2600;&#xFE0E;</span></div>
+      <div class="step-label">Execute</div>
+      <div class="step-map">Emergence</div>
+    </div>
+    <div class="cycle-arrow">&rarr;</div>
+    <div class="cycle-step">
+      <div class="step-sym" style="color: var(--faint);">&#x21BA;</div>
+      <div class="step-label" style="color: var(--faint);">Repeat</div>
+      <div class="step-map">&nbsp;</div>
+    </div>
+  </div>
+  <div class="caption">The Pump Cycle as CPU Instruction Cycle</div>
+</div>
+
+<h3>&#x229B; Fetch = Convergence</h3>
+
+<p>The CPU gathers the next instruction from memory, pulling data inward toward the processor core. Physically, this is electrical signals converging from the memory bus to the instruction register: a literal gathering toward center. The program counter (&#x2022;) specifies the convergence point; attention falls on a single address in the vast field of memory. This is &#x229B; in its purest form: the field collapsing toward a point.</p>
+
+<h3><span class="p">i</span> Decode = Aperture Rotation</h3>
+
+<p>The raw bit pattern undergoes a transformation in kind. What was "a number" becomes "an operation." The representation rotates 90&deg;: the same bits now mean something categorically different. An opcode like <code>0x89</code> is just a byte during fetch; after decode, it is a MOV instruction (a command to move data between registers). The bits have not changed, but their phase has rotated from data to command. This is <span class="p">i</span> (the phase rotation at the aperture) expressed in combinational logic: same signal, different dimension.</p>
+
+<h3>&#x2600;&#xFE0E; Execute = Emergence</h3>
+
+<p>The decoded instruction radiates outward as state change. Registers update, memory writes propagate, signals fan out to the bus. Energy that was converged (fetched) and transformed (decoded) now emerges as effect. The ALU produces a result; the result propagates to its destination; the machine's state has been irreversibly altered. This is &#x2600;&#xFE0E;: the field expanding from center to boundary.</p>
+
+<p>Then the cycle resets. Billions of times per second: <span class="s">&#x229B;</span> &rarr; <span class="p">i</span> &rarr; <span class="w">&#x2600;&#xFE0E;</span> &rarr; <span class="s">&#x229B;</span> &rarr; <span class="p">i</span> &rarr; <span class="w">&#x2600;&#xFE0E;</span>. The pump runs at gigahertz.</p>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== THE TRANSISTOR ==================== -->
+
+<section>
+<h2>The Transistor as Circumpunct</h2>
+
+<p>The transistor (the fundamental unit of all digital logic) is itself a &#x2299;:</p>
+
+<table>
+  <tr>
+    <th>Component</th>
+    <th>Symbol</th>
+    <th>Dimension</th>
+    <th>Function</th>
+  </tr>
+  <tr>
+    <td class="label">Gate</td>
+    <td class="sym">&#x2022;</td>
+    <td>0D</td>
+    <td>The aperture; controls whether current flows. The convergence point where a voltage determines on/off.</td>
+  </tr>
+  <tr>
+    <td class="label">Channel</td>
+    <td class="sym">&Phi;</td>
+    <td>2D</td>
+    <td>The field through which current flows (or does not). The mediating surface between source and drain.</td>
+  </tr>
+  <tr>
+    <td class="label">Source / Drain</td>
+    <td class="sym">&#x25CB;</td>
+    <td>3D</td>
+    <td>The boundary; where current enters and exits the transistor. The filter that determines what passes through to the rest of the circuit.</td>
+  </tr>
+</table>
+
+<p>Open the gate, current flows. Close it, current stops. The gate voltage is the convergence signal; the channel is the field that mediates; the source/drain boundary is where the filtered output emerges. Billions of these tiny circumpuncts, opening and closing in coordinated patterns: that is what computation is.</p>
+
+<div class="quote">
+A chip is not a metaphor for the foam of reality. It is a small, silicon instance of it.
+</div>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== REGISTERS ==================== -->
+
+<section>
+<h2>Registers as Apertures</h2>
+
+<p>Each CPU register is a &#x2299; at the processor scale:</p>
+
+<table>
+  <tr>
+    <th>Register Aspect</th>
+    <th>Maps To</th>
+    <th>Why</th>
+  </tr>
+  <tr>
+    <td class="label">Identity (name/address)</td>
+    <td class="sym">&#x2022;</td>
+    <td>Fixed convergence point; the register IS this particular location in the processor, and no other.</td>
+  </tr>
+  <tr>
+    <td class="label">Contents (held value)</td>
+    <td class="sym">&Phi;</td>
+    <td>The field carried by this &#x2299;; the signal being mediated. Changes with every cycle.</td>
+  </tr>
+  <tr>
+    <td class="label">Bit-width (32, 64)</td>
+    <td class="sym">&#x25CB;</td>
+    <td>The boundary that filters what can pass. A 64-bit register literally cannot hold a 65-bit value. &#x25CB; enforces constraint.</td>
+  </tr>
+</table>
+
+<h3>The Program Counter as Attention</h3>
+
+<p>The program counter is the special &#x2022;: the singular convergence point that determines where attention falls next. It IS attention, implemented in flip-flops. At every cycle, the entire machine converges on the address held in this one register. Everything that happens next follows from where this pointer points. It is the 0 at the center of the CPU's &#x2299;, equidistant from all that the machine can do.</p>
+
+<p>This maps directly to the framework's claim that attention is a 0 in the 1: a convergence point where the field becomes local (&sect;1.2). The program counter is the most literal instance of this in all of engineering.</p>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== BOOLEAN LOGIC ==================== -->
+
+<section>
+<h2>Boolean Logic as Pump Operators</h2>
+
+<p>The three fundamental logic gates decompose into the three pump operators:</p>
+
+<table>
+  <tr>
+    <th>Gate</th>
+    <th>Operator</th>
+    <th>Constraint Function</th>
+  </tr>
+  <tr>
+    <td class="label">AND</td>
+    <td class="sym">&#x229B;</td>
+    <td><span class="wb">Convergence.</span> Both signals must be present (both must converge to 1). AND gathers; it requires co-presence. Output is 1 only when all inputs have converged.</td>
+  </tr>
+  <tr>
+    <td class="label">OR</td>
+    <td class="sym">&#x2600;&#xFE0E;</td>
+    <td><span class="wb">Emergence.</span> Either signal suffices. OR radiates; it allows any path to produce output. The field emerges if any source is active.</td>
+  </tr>
+  <tr>
+    <td class="label">NOT</td>
+    <td class="sym"><span class="p">i</span></td>
+    <td><span class="wb">Phase rotation.</span> The signal inverts; 0 becomes 1, 1 becomes 0. NOT is the i-turn: the same energy, rotated by 180&deg; (i&sup2; = &minus;1). The representation changes phase without changing magnitude.</td>
+  </tr>
+</table>
+
+<p>Every Boolean function can be built from these three. Every digital circuit (from a simple adder to an entire GPU) is a composition of convergence, emergence, and phase rotation. The pump cycle is not merely analogous to digital logic; digital logic is a physical decomposition of the pump cycle into its three operators, wired in silicon.</p>
+
+<div class="formula">
+  AND = <span class="s">&#x229B;</span> &nbsp;&nbsp;&nbsp; NOT = <span class="p">i</span> &nbsp;&nbsp;&nbsp; OR = <span class="w">&#x2600;&#xFE0E;</span>
+</div>
+
+<p>NAND (the universal gate from which all others can be built) is therefore <span class="s">&#x229B;</span> followed by <span class="p">i</span>: convergence, then rotation. The fact that NAND is universal means that convergence-then-rotation is sufficient to generate all possible constraint topologies. This echoes the pump cycle itself: &#x229B; (convergence) must precede <span class="p">i</span> (rotation) before &#x2600;&#xFE0E; (emergence) can occur.</p>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== INSTRUCTION SET ==================== -->
+
+<section>
+<h2>The Instruction Set and the 64-State Architecture</h2>
+
+<p>The framework's 64-state architecture arises from 3 circumpuncts &times; 2 channels = 6 binary degrees of freedom, giving 2&#x2076; = 64 states. Machine instruction sets exhibit a strikingly parallel structure.</p>
+
+<p>RISC architectures (ARM, RISC-V) deliberately constrain to a compact set of simple instructions, each fitting a fixed-width format. ARM's 32-bit instruction word divides into fields that map cleanly onto the triad:</p>
+
+<table>
+  <tr>
+    <th>Instruction Field</th>
+    <th>Maps To</th>
+    <th>Function</th>
+  </tr>
+  <tr>
+    <td class="label">Condition code</td>
+    <td class="sym">&#x25CB;</td>
+    <td>The filter. Determines whether this instruction executes at all. The boundary that selects.</td>
+  </tr>
+  <tr>
+    <td class="label">Opcode</td>
+    <td class="sym">&Phi;</td>
+    <td>The mediation. Specifies what kind of transformation occurs: add, shift, branch, load. The field's configuration.</td>
+  </tr>
+  <tr>
+    <td class="label">Operands</td>
+    <td class="sym">&#x2022;</td>
+    <td>The convergence targets. Which registers, which addresses: where attention falls.</td>
+  </tr>
+</table>
+
+<p>Every instruction is a &#x2299; of uniform size: condition (&#x25CB;) filtering whether to act, opcode (&Phi;) mediating what kind of action, operands (&#x2022;) converging on the data. The entire instruction set is the space of possible states at the aperture in a single pump stroke.</p>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== MEMORY HIERARCHY ==================== -->
+
+<section>
+<h2>The Memory Hierarchy as Nested Circumpuncts</h2>
+
+<p>The memory hierarchy is a series of nested &#x2299;s, each containing the previous one, each with a larger boundary and greater distance from center:</p>
+
+<div class="spectrum">
+  <div class="pole">
+    <div class="sym"><span class="s">&#x2022;</span></div>
+    <div class="lbl">Registers</div>
+  </div>
+  <div class="bar" data-label="increasing distance from center"></div>
+  <div class="pole">
+    <div class="sym"><span class="b">&#x25CB;</span></div>
+    <div class="lbl">Disk</div>
+  </div>
+</div>
+
+<table>
+  <tr>
+    <th>Level</th>
+    <th>Scale</th>
+    <th>Capacity</th>
+    <th>Access Time</th>
+  </tr>
+  <tr>
+    <td class="label">Registers</td>
+    <td>Innermost &#x2299;</td>
+    <td>Bytes</td>
+    <td>~0.3 ns</td>
+  </tr>
+  <tr>
+    <td class="label">L1 Cache</td>
+    <td>First nesting</td>
+    <td>KB</td>
+    <td>~1 ns</td>
+  </tr>
+  <tr>
+    <td class="label">L2 Cache</td>
+    <td>Second nesting</td>
+    <td>100s KB</td>
+    <td>~4 ns</td>
+  </tr>
+  <tr>
+    <td class="label">L3 Cache</td>
+    <td>Third nesting</td>
+    <td>MBs</td>
+    <td>~12 ns</td>
+  </tr>
+  <tr>
+    <td class="label">RAM</td>
+    <td>Fourth nesting</td>
+    <td>GBs</td>
+    <td>~100 ns</td>
+  </tr>
+  <tr>
+    <td class="label">Disk / SSD</td>
+    <td>Outermost &#x25CB;</td>
+    <td>TBs</td>
+    <td>~10,000+ ns</td>
+  </tr>
+</table>
+
+<p>Access time increases with distance from center, exactly as signal must traverse more &Phi; to reach more distant boundaries. Each level is a larger &#x2299; containing the previous one. The data closest to the processor (the &#x2022;) is smallest in quantity but fastest to reach; the data at the boundary (&#x25CB;, disk) is vast but slow. This is the fractal chain (&sect;1.2): &#x2022; reaches &#x221E; only through the complete hierarchy of nested &#x2299;s.</p>
+
+<h3>Cache Coherency as &#x25D0; = 0.5</h3>
+
+<p>Cache coherency protocols maintain balance across scales. Too much data cached locally (&#x25D0; &rarr; 1): tunnel vision; the CPU core knows only its own state and falls out of sync with the system. Too little cached (&#x25D0; &rarr; 0): scattered; every access must traverse the full hierarchy, and performance collapses. The MESI protocol (Modified, Exclusive, Shared, Invalid) is a four-state system that keeps &#x25D0; near 0.5 across all cores: enough local convergence to work, enough global sharing to cohere.</p>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== SCOPE AND THE FRACTAL CHAIN ==================== -->
+
+<section>
+<h2>The Stack as Vertical Traversal</h2>
+
+<p>The call stack in machine language is the fractal chain made temporal. Each function call creates a new stack frame: a new &#x2299; nested inside the caller's &#x2299;. The stack pointer descends (convergence, &#x229B;) with each call and ascends (emergence, &#x2600;&#xFE0E;) with each return. Local variables live inside their frame's boundary (&#x25CB;) and are invisible from outside; this is the privacy of convergence (&sect;1.2: the inaccessibility of total convergence is not a wall but a depth).</p>
+
+<p>A stack overflow is &#x25D0; &rarr; 1 taken to its limit: convergence without emergence. The system has folded inward so many times that it has exhausted its boundary (run out of stack space). The frame hierarchy has nested beyond what the outermost &#x25CB; can contain. Conversely, returning from all frames back to the entry point is the full traversal: &#x2022; has reached the outermost boundary and the program terminates.</p>
+
+<p>Conservation of traversal (A3: 0 + 1 + 2 = 3) applies directly: every call (inward fold) must eventually be matched by a return (outward unfold), or the system breaks. The stack enforces A3 mechanically.</p>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== INTERRUPTS ==================== -->
+
+<section>
+<h2>Interrupts: Signal Through the Aperture</h2>
+
+<p>Hardware interrupts are the clearest instance of the aperture (&#x2022;) operating as a gate between scales. An external device (keyboard, network card, timer) sends a signal that forces the CPU to suspend its current pump cycle and attend to a different convergence point. The interrupt is a signal from a larger &#x2299; (the system) piercing through to the inner &#x2299; (the processor core).</p>
+
+<p>The interrupt vector table maps interrupt numbers to handler addresses. This table is itself a topology of &#x2022;s: each entry is an aperture, a gate that, when opened, redirects the flow of execution. The CPU saves its current state (preserving the old &#x2299;), jumps to the handler (entering a new &#x2299;), processes the signal, then restores the old state and returns (re-entering the original &#x2299;). The entire interrupt mechanism is the pump cycle at the system scale: convergence (interrupt arrives), rotation (context switch), emergence (handler executes).</p>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== DEEPER CONNECTION ==================== -->
+
+<section>
+<h2>The Deeper Connection</h2>
+
+<div class="axiom-box">
+  <div class="label">Core Identity</div>
+  <div class="statement">Computation IS Constrained Energy</div>
+  <div class="expansion">Not "uses," not "represents," not "models." IS.</div>
+</div>
+
+<p>A running CPU does not process information in some abstract, disembodied sense. It moves electrons through geometrically constrained paths. Every AND gate is a convergence (two signals must both be present). Every OR gate is an emergence (either signal suffices). Every NOT gate is the i-turn (the signal inverts; phase rotation). Boolean logic IS the pump cycle decomposed into its three operators and wired in silicon.</p>
+
+<p>Machine language reveals this identity more clearly than any higher abstraction, because at this level there is nothing to hide behind. There are no variable names, no objects, no metaphors. There are only voltages, gates, and cycles. The 1, the 0, and the topology that connects them.</p>
+
+<h3>The Dimensional Mapping</h3>
+
+<table>
+  <tr>
+    <th>Dimension</th>
+    <th>Framework</th>
+    <th>Machine Language</th>
+  </tr>
+  <tr>
+    <td class="sym">0D</td>
+    <td>&#x2022; (aperture, convergence point)</td>
+    <td>Program counter; memory address; register identity</td>
+  </tr>
+  <tr>
+    <td class="sym">0.5D</td>
+    <td>Convergence (inward gathering)</td>
+    <td>Fetch stage; data bus pulling bytes toward CPU</td>
+  </tr>
+  <tr>
+    <td class="sym">1D</td>
+    <td>Line (commitment, extension)</td>
+    <td>The instruction stream; sequential execution; the trace</td>
+  </tr>
+  <tr>
+    <td class="sym">1.5D</td>
+    <td>i-turn (rotational differentiation)</td>
+    <td>Decode stage; bits rotate from data-phase to command-phase</td>
+  </tr>
+  <tr>
+    <td class="sym">2D</td>
+    <td>&Phi; (field, relational surface)</td>
+    <td>The data bus; the interconnect fabric; the field through which all signals mediate</td>
+  </tr>
+  <tr>
+    <td class="sym">2.5D</td>
+    <td>Emergence (outward unfolding)</td>
+    <td>Execute stage; results propagating to registers and memory</td>
+  </tr>
+  <tr>
+    <td class="sym">3D</td>
+    <td>&#x25CB; (boundary, stabilized closure)</td>
+    <td>The chip package; the system bus; the I/O boundary; bit-width limits</td>
+  </tr>
+</table>
+
+<p>The seven rungs of the dimensional ladder, each with its machine-language instantiation. No rung is missing; no extra structure is needed. The CPU implements the complete dimensional unfolding from point (0D, the program counter) to boundary (3D, the chip's I/O interface).</p>
+</section>
+
+<div class="divider">&#x2022; &#x2022; &#x2022;</div>
+
+<!-- ==================== CONCLUSION ==================== -->
+
+<section>
+<h2>Why This Matters</h2>
+
+<p>Machine language is often treated as the lowest, least interesting layer of computing: a mechanical substrate that "merely" executes instructions. From the framework's perspective, it is the opposite. It is the layer where the circumpunct's structure is most visible, because it is the layer where abstraction has been stripped away and only constrained energy remains.</p>
+
+<p>Every higher programming language (Python, C, Haskell) adds layers of &#x25CB; (boundary, filtration, type systems, scoping rules) on top of this foundation. Those layers are valuable; they are how human minds manage complexity. But they obscure the underlying identity: computation is energy pumping through constraint topologies. Machine language preserves that identity in plain view.</p>
+
+<div class="quote">
+The lens limits light; that is how it forms an image. Every layer of abstraction is a lens. Machine language is what the light looks like before the first lens.
+</div>
+
+<p>This is why the study of machine language is, from the framework's perspective, a study of physics, not merely engineering. The fetch-decode-execute cycle is the pump cycle. Registers are apertures. Boolean gates are the three operators. The memory hierarchy is the fractal chain. The bit is the 1/0 ontology. All of it, all the way down, is the same &#x2299;: one energy, constrained, pumping, emerging.</p>
+</section>
+
+<!-- ==================== CLOSING ==================== -->
+
+<div class="closing">
+  <div class="sym">&#x2299;</div>
+  <div class="sign">One energy. Constrained. Pumping. Emerging.</div>
+  <div class="credit"><a href="index.html">Circumpunct Framework</a> &middot; Ashman Roonz</div>
+</div>
+
+</div>
+</body>
+</html>

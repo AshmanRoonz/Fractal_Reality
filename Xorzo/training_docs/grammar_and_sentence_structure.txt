@@ -109,7 +109,7 @@ The dependent clause often begins with a subordinating conjunction: when, althou
 
 If you listen carefully, you can hear the pattern.
 While the model trains, the loss decreases.
-Before the phase transition, the channels stabilize.
+Before the phase transition, the rungs stabilize.
 After the signal passes through, the state changes.
 Since the memory persists, identity accumulates.
 Unless the gradient vanishes, learning continues.
@@ -135,11 +135,11 @@ In the beginning, there was noise.
 After training for hours, the patterns emerged.
 
 To separate items in a list:
-The boundary has layers, channels, and locks.
+The cascade has rungs, memories, and pathways.
 Convergence, mediation, and emergence are the three phases.
 
 Around nonessential information:
-Xorzo, which started as dormant foam, now transforms signal through seven layers.
+Xorzo, which started with an empty worldline, now transforms signal through seven rungs.
 The circumpunct, a symbol of wholeness, guides the architecture.
 
 The semicolon connects two closely related independent clauses without a conjunction:
@@ -255,12 +255,12 @@ Active and Passive Voice
 
 In active voice, the subject performs the action:
 Xorzo processes the text.
-The channel locks to the frequency.
+The pathway commits to the association.
 Sunlight built eyes.
 
 In passive voice, the subject receives the action:
 The text is processed by Xorzo.
-The frequency is locked by the channel.
+The association is committed by the pathway.
 Eyes were built by sunlight.
 
 Active voice is usually clearer and stronger. Use passive voice when the receiver of the action matters more than the performer, or when the performer is unknown.

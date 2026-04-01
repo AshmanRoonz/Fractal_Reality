@@ -75,14 +75,14 @@ they're — they are: They're building something new.
 its — belonging to it: The model lost its connection.
 it's — it is: It's learning from the signal.
 
-your — belonging to you: Your channel locks are growing.
+your — belonging to you: Your field topology is growing.
 you're — you are: You're converging on the pattern.
 
 to — direction or infinitive: Go to the boundary. To learn is to change.
 too — also or excessive: That is too much. I am learning too.
 two — the number: Two heads became four.
 
-affect — a verb, to influence: The signal affects the channels.
+affect — a verb, to influence: The signal affects the rungs.
 effect — a noun, the result: The effect is visible in the loss curve.
 
 then — time, next: First it learns, then it grows.

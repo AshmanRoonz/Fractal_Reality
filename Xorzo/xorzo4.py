@@ -426,31 +426,140 @@ class Rung3D:
     def emerge(self, words: List[str]) -> str:
         """
         Signal exits the boundary. Words become text.
-        Final GOOD gate check on output.
+        Final GOOD gate check on output. Basic grammar fixes.
         """
         clean = [w for w in words if w.lower() not in TOXIC_WORDS]
+
+        # Fix a/an agreement
+        vowels = set('aeiouAEIOU')
+        for i in range(len(clean) - 1):
+            if clean[i].lower() == 'a' and clean[i+1] and clean[i+1][0] in vowels:
+                clean[i] = 'an'
+            elif clean[i].lower() == 'an' and clean[i+1] and clean[i+1][0] not in vowels:
+                clean[i] = 'a'
+
         return ' '.join(clean)
+
+
+class SentenceTemplate:
+    """
+    A sentence skeleton extracted from training text.
+    Structure words (Phi) stay fixed; content words become slots.
+    This is the fractal invariant of a sentence's grammar.
+    """
+    __slots__ = ('words', 'slot_mask', 'topic_sig', 'source')
+
+    def __init__(self, words: List[str], slot_mask: List[bool],
+                 topic_sig: np.ndarray, source: str):
+        self.words = words        # all words in order
+        self.slot_mask = slot_mask  # True = slot (content), False = fixed
+        self.topic_sig = topic_sig  # 64D signature of content words
+        self.source = source        # original text
+
+    @property
+    def n_slots(self) -> int:
+        return sum(self.slot_mask)
+
+    def to_dict(self) -> dict:
+        return {
+            'words': self.words,
+            'slot_mask': self.slot_mask,
+            'source': self.source,
+            'topic_real': self.topic_sig.real.tolist(),
+            'topic_imag': self.topic_sig.imag.tolist(),
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'SentenceTemplate':
+        sig = np.array(d['topic_real']) + 1j * np.array(d['topic_imag'])
+        return cls(
+            words=d['words'],
+            slot_mask=d['slot_mask'],
+            topic_sig=sig,
+            source=d.get('source', ''),
+        )
 
 
 class Rung25D:
     """
     Rung 6: Emergence/Abstraction (2.5D)
 
-    On convergence: words → classified tokens (structure vs content)
-    On emergence: selected tokens → grammatical ordering
+    On convergence: words -> classified tokens (structure vs content)
+    On emergence: content words + templates -> grammatical sentences
 
-    Memory: word frequency distribution (how often each word
-    has passed through). This shapes which words are recognized
-    as structure (Φ) vs content (•).
+    Memory: word frequency distribution AND sentence templates.
+    Templates are the structural skeletons extracted from every
+    sentence that flows through. During emergence, a template is
+    selected by resonance with the current signal, and its slots
+    are filled with the content words being emerged.
     """
+
+    # Patterns that indicate instructional/meta text (bad templates)
+    SKIP_STARTERS = frozenset({
+        'do', 'dont', 'never', 'always', 'avoid', 'try',
+        'use', 'say', 'keep', 'make', 'let', 'put',
+        'start', 'begin', 'remember', 'note', 'example',
+        'for', 'when', 'if', 'match', 'follow', 'respond',
+        'ask', 'answer', 'repeat', 'practice', 'learn',
+        'wrong', 'emphasis', 'normal',
+        'notice', 'watch', 'check', 'test', 'apply',
+        'here', 'think', 'imagine',
+        'combine', 'build', 'create', 'generate', 'produce',
+        'inside', 'outside', 'what', 'words', 'be',
+        'simple', 'complex', 'correct', 'incorrect',
+        'active', 'passive', 'casual', 'neutral', 'formal',
+    })
+
+    # Content words that indicate meta/instructional templates
+    # (about grammar, formatting, writing technique)
+    META_WORDS = frozenset({
+        'comma', 'semicolon', 'colon', 'period', 'clause',
+        'clauses', 'conjunction', 'verb', 'noun', 'adjective',
+        'adverb', 'pronoun', 'preposition', 'sentence', 'phrase',
+        'paragraph', 'punctuation', 'grammar', 'syntax',
+        'subject', 'predicate', 'modifier', 'prefix', 'suffix',
+        'syllable', 'vowel', 'consonant', 'tense', 'plural',
+    })
+
+    # Endings that indicate an incomplete fragment (bad templates)
+    BAD_ENDINGS = frozenset({
+        'is', 'are', 'was', 'were', 'be', 'at', 'in',
+        'on', 'of', 'to', 'the', 'a', 'an', 'and', 'or',
+        'but', 'for', 'with', 'by', 'from', 'as', 'not',
+    })
+
+    # Verbs: a valid template needs at least one
+    VERBS = frozenset({
+        'is', 'are', 'was', 'were', 'has', 'have', 'had',
+        'does', 'do', 'did', 'can', 'could', 'will', 'would',
+        'should', 'may', 'might', 'shall', 'must',
+        'means', 'flows', 'emerges', 'describes', 'equals',
+        'requires', 'contains', 'connects', 'creates',
+        'becomes', 'carries', 'filters', 'gathers',
+        'radiates', 'rotates', 'mediates', 'happens',
+        'persists', 'dissolves', 'limits', 'defines',
+        'claims', 'denies', 'makes', 'keeps', 'animates',
+        'mimics', 'builds', 'transmits', 'controls',
+        'observes', 'sits', 'asks', 'appears', 'produces',
+        'need', 'changes', 'operates', 'records', 'shapes',
+        'transforms', 'enters', 'exists', 'generates',
+        'works', 'takes', 'gives', 'comes', 'goes',
+        'moves', 'runs', 'stays', 'holds', 'feels',
+        'sees', 'knows', 'thinks', 'says', 'tells',
+    })
 
     def __init__(self):
         self.word_freq: Dict[str, int] = {}  # memory: passage counts
+        self.templates: List[SentenceTemplate] = []  # sentence skeletons
+        # Skeleton index: groups templates by structural invariant
+        # key = skeleton tuple, value = list of (template_index, slot_words)
+        # slot_words = list of content words that filled each slot
+        self.skeletons: Dict[tuple, List[List[List[str]]]] = {}
 
     def converge(self, words: List[str], vocab: Vocabulary
                  ) -> Tuple[List[str], List[str]]:
         """
-        Classify words into structure (Φ) and content (•).
+        Classify words into structure (Phi) and content (*).
         Record passage in memory.
 
         Returns (content_words, structure_words).
@@ -465,30 +574,307 @@ class Rung25D:
                 content.append(w)
         return content, structure
 
-    def emerge(self, content_words: List[str],
-               template_words: List[str],
-               template_slots: List[bool]) -> List[str]:
+    def learn_sentence(self, words: List[str], vocab: Vocabulary):
         """
-        Assemble words into grammatical order using a template.
-        Content words fill slots; structure words stay fixed.
+        Extract a template from a sentence during training.
+
+        Structure words (Phi) stay fixed; content words become slots.
+        A valid template needs both structure and content words.
+
+        Critical: no two adjacent words can both be slots.
+        If adjacent content words are found, the less specific
+        one becomes fixed (part of the skeleton). This ensures
+        the grammar has enough structure to survive slot filling.
         """
+        if len(words) < 3 or len(words) > 15:
+            return
+
+        # Skip instructional/meta text (bad templates)
+        if words[0] in self.SKIP_STARTERS:
+            return
+
+        # Skip "a i ..." pattern (ungrammatical fragment)
+        if len(words) >= 2 and words[0] == 'a' and words[1] == 'i':
+            return
+
+        # Skip fragments that end on structure words
+        if words[-1] in self.BAD_ENDINGS:
+            return
+
+        # A valid sentence needs at least one verb
+        if not any(w in self.VERBS for w in words):
+            return
+
+        # Skip meta/instructional sentences (about grammar, formatting)
+        if any(w in self.META_WORDS for w in words):
+            return
+
+        # Initial classification
+        raw_is_content = [
+            not vocab.is_structure_word(w) for w in words
+        ]
+
+        # Resolve adjacent content words: fix the less specific one
+        slot_mask = raw_is_content[:]
+        for i in range(len(words) - 1):
+            if slot_mask[i] and slot_mask[i + 1]:
+                spec_i = vocab.specificity(words[i])
+                spec_j = vocab.specificity(words[i + 1])
+                if spec_i < spec_j:
+                    slot_mask[i] = False
+                else:
+                    slot_mask[i + 1] = False
+
+        n_slots = sum(slot_mask)
+        n_fixed = len(words) - n_slots
+
+        # Need both Phi (fixed) and * (slots) for a valid template
+        if n_slots < 1 or n_fixed < 2:
+            return
+
+        # Topic signature: combined energy of content words
+        content_sigs = []
+        for i, w in enumerate(words):
+            if slot_mask[i]:
+                content_sigs.append(vocab.word_to_energy(w))
+
+        if not content_sigs:
+            return
+
+        topic = normalize(np.mean(content_sigs, axis=0))
+
+        source = ' '.join(words)
+
+        # Deduplicate: skip if this exact source already exists
+        if any(t.source == source for t in self.templates[-200:]):
+            return
+
+        template = SentenceTemplate(
+            words=words[:],
+            slot_mask=slot_mask,
+            topic_sig=topic,
+            source=source,
+        )
+        self.templates.append(template)
+
+        # Build skeleton index: group by structural invariant
+        skel_key = tuple(
+            '_SLOT_' if slot_mask[i] else words[i]
+            for i in range(len(words))
+        )
+        # Extract slot words for this instance
+        slot_words = [words[i] for i in range(len(words)) if slot_mask[i]]
+        if skel_key not in self.skeletons:
+            self.skeletons[skel_key] = []
+        self.skeletons[skel_key].append(slot_words)
+
+        # Cap templates to prevent unbounded growth
+        if len(self.templates) > 2000:
+            # Keep the most diverse set: sample every other
+            self.templates = self.templates[::2]
+
+    def find_resonant(self, center: np.ndarray,
+                      preferred_words: Optional[List[str]] = None,
+                      k: int = 15) -> List[SentenceTemplate]:
+        """
+        Find templates whose content resonates with the signal.
+        Templates containing preferred words get a large bonus.
+        """
+        if not self.templates:
+            return []
+
+        pref_set = set(preferred_words) if preferred_words else set()
+
+        scores = []
+        for i, t in enumerate(self.templates):
+            # Prefer shorter, punchier templates (5-10 words)
+            n_words = len(t.words)
+            if n_words > 12:
+                continue  # skip overly complex templates
+
+            sim = cosine_sim(center, t.topic_sig)
+
+            # Slight preference for medium-length templates
+            if 5 <= n_words <= 9:
+                sim += 0.05
+
+            # Bonus for templates containing preferred (input) words
+            # Moderate bonus: enough to prefer relevant templates
+            # but not so strong that one word dominates
+            if pref_set:
+                template_words = set(w.lower() for w in t.words)
+                overlap = len(
+                    {pw.lower() for pw in pref_set} & template_words)
+                sim += overlap * 0.3
+
+            # Slight bonus for templates with more slots
+            # (more room for variation, less verbatim)
+            if t.n_slots >= 2:
+                sim += 0.05
+
+            scores.append((sim, i))
+
+        scores.sort(reverse=True)
+
+        # Diversity: don't return templates with the same skeleton
+        # Take top candidates but skip if skeleton is too similar
+        # to one already chosen
+        selected = []
+        seen_starts = set()
+        for _, i in scores:
+            t = self.templates[i]
+            # Use first 3 words as a rough skeleton fingerprint
+            start = tuple(t.words[:3])
+            if start in seen_starts and len(selected) >= 2:
+                continue
+            seen_starts.add(start)
+            selected.append(t)
+            if len(selected) >= k:
+                break
+
+        return selected
+
+    def emerge(self, template: SentenceTemplate,
+               center: np.ndarray, vocab: Vocabulary,
+               preferred_words: Optional[List[str]] = None,
+               ) -> Optional[List[str]]:
+        """
+        2.5D emergence: fractalization (A2).
+
+        Take a proven skeleton and instantiate it at a new scale.
+        For each slot, candidates come from three sources (priority order):
+        1. Preferred words (from current input) if they fit the position
+        2. Positional vocabulary (words that have occupied this slot
+           in other instances of the same skeleton)
+        3. Original word (grammatically safe fallback)
+
+        Each candidate is scored by resonance with the signal center.
+        """
+        pref_set = set(preferred_words) if preferred_words else set()
+        pref_list = list(preferred_words) if preferred_words else []
+
+        # Get the skeleton key for this template
+        skel_key = tuple(
+            '_SLOT_' if template.slot_mask[i] else template.words[i]
+            for i in range(len(template.words))
+        )
+
+        # Collect positional vocabulary from all instances of this skeleton
+        # positional_vocab[slot_idx] = set of words seen in that position
+        positional_vocab: List[set] = []
+        instances = self.skeletons.get(skel_key, [])
+        if instances:
+            n_slots = sum(template.slot_mask)
+            positional_vocab = [set() for _ in range(n_slots)]
+            for slot_words in instances:
+                for j, w in enumerate(slot_words):
+                    if j < len(positional_vocab):
+                        positional_vocab[j].add(w)
+
         result = []
-        content_idx = 0
-        for i, tw in enumerate(template_words):
-            if template_slots[i] and content_idx < len(content_words):
-                result.append(content_words[content_idx])
-                content_idx += 1
-            else:
-                result.append(tw)
+        used = set()
+        slot_idx = 0
+
+        for i, word in enumerate(template.words):
+            if not template.slot_mask[i]:
+                # Fixed word (structure): keep it
+                result.append(word)
+                continue
+
+            # This is a slot. Find the best content word.
+            # Gather candidates from all sources
+            candidates = []
+
+            # Source 1: preferred words (from input)
+            for pw in pref_list:
+                pw_lower = pw.lower()
+                if pw_lower not in used and not vocab.is_structure_word(pw):
+                    candidates.append(pw)
+
+            # Source 2: positional vocabulary (words proven in this slot)
+            if slot_idx < len(positional_vocab):
+                for pv_word in positional_vocab[slot_idx]:
+                    if pv_word.lower() not in used:
+                        candidates.append(pv_word)
+
+            # Score each candidate
+            orig_sig = vocab.word_to_energy(word)
+            prev_sig = vocab.word_to_energy(result[-1]) if result else None
+
+            best_word = word  # default: keep original
+            best_score = -1.0
+
+            for cand in candidates:
+                cand_lower = cand.lower()
+                if cand_lower in used:
+                    continue
+                if cand_lower in TOXIC_WORDS:
+                    continue
+
+                cand_sig = vocab.word_to_energy(cand)
+
+                # TRUE: resonance with the signal center
+                true_score = cosine_sim(cand_sig, center)
+
+                # RIGHT: positional fit (similarity to original slot word)
+                pos_score = cosine_sim(cand_sig, orig_sig)
+
+                # RIGHT: coherence with previous word
+                right_score = 0.0
+                if prev_sig is not None:
+                    right_score = cosine_sim(cand_sig, prev_sig)
+
+                # Bonus for preferred words (input relevance)
+                input_bonus = 0.3 if cand_lower in pref_set else 0.0
+
+                # Bonus for positional vocabulary (proven grammatical fit)
+                pos_bonus = 0.25 if (
+                    slot_idx < len(positional_vocab)
+                    and cand in positional_vocab[slot_idx]
+                ) else 0.0
+
+                score = (0.25 * true_score
+                         + 0.25 * pos_score
+                         + 0.10 * right_score
+                         + input_bonus
+                         + pos_bonus)
+
+                if score > best_score:
+                    best_score = score
+                    best_word = cand
+
+            result.append(best_word)
+            used.add(best_word.lower())
+            slot_idx += 1
+
         return result
 
     def to_dict(self) -> dict:
-        return {'word_freq': self.word_freq}
+        # Save top 500 most-used templates (by topic diversity)
+        saved_templates = self.templates[:500]
+        # Serialize skeletons: convert tuple keys to strings
+        skel_data = {}
+        for key, instances in self.skeletons.items():
+            skel_data[' '.join(key)] = instances[:50]  # cap per skeleton
+        return {
+            'word_freq': self.word_freq,
+            'templates': [t.to_dict() for t in saved_templates],
+            'skeletons': skel_data,
+        }
 
     @classmethod
     def from_dict(cls, d: dict) -> 'Rung25D':
         r = cls()
         r.word_freq = d.get('word_freq', {})
+        for td in d.get('templates', []):
+            try:
+                r.templates.append(SentenceTemplate.from_dict(td))
+            except Exception:
+                pass
+        # Restore skeletons
+        for key_str, instances in d.get('skeletons', {}).items():
+            skel_key = tuple(key_str.split())
+            r.skeletons[skel_key] = instances
         return r
 
 
@@ -942,6 +1328,8 @@ class Cascade:
 
         # Learn the sentence (bonds form in the field)
         self.vocab.learn_sentence(words)
+        # Learn sentence template at 2.5D (structural skeleton)
+        self.rung_25d.learn_sentence(words, self.vocab)
 
         # ── Rung 5 (2D, Φ): tokens → 64D vector ──
         z = self.rung_2d.converge(content_words, self.vocab)
@@ -1023,40 +1411,50 @@ class Cascade:
         emerging_scalar = self.rung_05d.emerge(
             scalar, self.rung_0d.worldline)
 
-        # ── Rung 3 (1D): committed association → proposition ──
-        sentences = []
+        # ── Rung 4 (1.5D): emerge selects which rotated view to weight ──
+        # (already have invariants and novel_words from convergence)
+
+        # ── Rung 5 (2D): the field reveals related words ──
+        # Expand: find additional content words resonant with center
+        preferred = list(content_words)
+        if subject:
+            preferred.insert(0, subject)
         if association:
+            preferred.append(association[1])
+
+        # ── Rung 6 (2.5D): templates reconstruct sentences ──
+        sentences = []
+
+        # Method 1: Template-based emergence (primary path)
+        if self.rung_25d.templates:
+            resonant = self.rung_25d.find_resonant(
+                z, preferred_words=preferred, k=10)
+
+            for tmpl in resonant:
+                if len(sentences) >= 2:
+                    break
+                filled = self.rung_25d.emerge(
+                    tmpl, z, self.vocab,
+                    preferred_words=preferred)
+                if filled:
+                    # Reject sentences with adjacent duplicate words
+                    has_dup = any(
+                        filled[j].lower() == filled[j+1].lower()
+                        for j in range(len(filled)-1)
+                    )
+                    if has_dup:
+                        continue
+                    sent = ' '.join(filled)
+                    if (sent not in self._recent_sentences
+                            and sent != tmpl.source):
+                        sentences.append(sent)
+
+        # Method 2: Fallback to simple "X is Y" from commitment
+        if not sentences and association:
             proposition = self.rung_1d.emerge(
                 association[0], association[1])
             if proposition not in self._recent_sentences:
                 sentences.append(proposition)
-
-        # ── Additional sentences from invariants and novel ──
-        if subject and invariants:
-            for obj in invariants[:3]:
-                if obj == subject:
-                    continue
-                if self.vocab.is_structure_word(obj):
-                    continue
-                if obj in TOXIC_WORDS:
-                    continue
-                sent = f"{subject} is {obj}"
-                if sent not in self._recent_sentences:
-                    sentences.append(sent)
-                    break
-
-        if subject and novel_words:
-            for obj in novel_words[:3]:
-                if obj == subject:
-                    continue
-                if self.vocab.is_structure_word(obj):
-                    continue
-                if obj in TOXIC_WORDS:
-                    continue
-                sent = f"{subject} is {obj}"
-                if sent not in self._recent_sentences:
-                    sentences.append(sent)
-                    break
 
         # Deduplicate and limit
         seen = set()
@@ -1075,8 +1473,14 @@ class Cascade:
         # ── Rung 7 (3D, ○): final output through boundary ──
         final_sentences = []
         for sent in sentences:
-            output = self.rung_3d.emerge(sent.split())
+            # Capitalize first letter and add period
+            words_out = sent.split()
+            output = self.rung_3d.emerge(words_out)
             if output:
+                # Basic sentence formatting
+                output = output[0].upper() + output[1:] if output else output
+                if output and output[-1] not in '.!?':
+                    output += '.'
                 final_sentences.append(output)
 
         result['sentences'] = final_sentences
@@ -1320,6 +1724,10 @@ class Engine:
                 if len(ids) >= 2:
                     self.vocab.form_bonds(ids)
 
+        # Learn sentence templates at 2.5D (structural skeletons)
+        for words in all_cleaned:
+            self.cascade.rung_25d.learn_sentence(words, self.vocab)
+
         # Echo each training sentence through the cascade
         # (this builds memory at every rung)
         for words in all_cleaned:
@@ -1331,6 +1739,7 @@ class Engine:
 
         print(f"  Trained: {self.vocab.vocab_size} words, "
               f"{self.vocab.total_tokens} tokens, "
+              f"templates: {len(self.cascade.rung_25d.templates)}, "
               f"worldline depth: {self.cascade.rung_0d.worldline.depth}")
 
     def _split_sentences(self, text: str) -> List[str]:
@@ -1376,10 +1785,21 @@ class Engine:
                     and cleaned not in self.vocab.text_to_id):
                 unknown.append(cleaned)
 
-        # Handle unknown words: try self-definition first
+        # Handle unknown words: try self-definition first.
+        # Cap at 5 to prevent flooding from large text inputs.
+        # The rest are silently absorbed into vocabulary without
+        # generating curiosity items (the signal still echoes
+        # through the cascade during pump).
         if unknown:
+            capped = unknown[:5]
+            overflow = unknown[5:]
+
+            # Silently absorb overflow into vocabulary
+            for uw in overflow:
+                self.vocab._get_or_create(uw)
+
             still_unknown = []
-            for uw in unknown:
+            for uw in capped:
                 defn = self.cascade.self_define(uw)
                 if defn:
                     self.vocab._get_or_create(uw)
@@ -1393,6 +1813,11 @@ class Engine:
     def process_input(self) -> dict:
         """
         Process the last input through the cascade.
+
+        For long input: split into sentences, pump each one,
+        collect the best output sentences. This prevents long
+        paragraphs from becoming a mushy 64D average.
+
         Returns the full pump cycle result.
         """
         if not self._last_input:
@@ -1401,8 +1826,46 @@ class Engine:
         if not self.ready:
             return {'sentences': [], 'error': 'not trained yet'}
 
-        # Run the cascade (the pump cycle)
-        result = self.cascade.pump(self._last_input)
+        text = self._last_input
+
+        # Split long input into sentences
+        sentences_in = self._split_sentences(text)
+        if not sentences_in:
+            sentences_in = [text]
+
+        # For short input (1-2 sentences), pump directly
+        if len(sentences_in) <= 2:
+            result = self.cascade.pump(text)
+        else:
+            # For long input, pump each sentence and collect
+            # the best output sentences (avoid signal mush)
+            all_out_sentences = []
+            last_result = None
+            for sent in sentences_in:
+                if len(sent.split()) < 3:
+                    continue
+                r = self.cascade.pump(sent)
+                last_result = r
+                out = r.get('sentences', [])
+                all_out_sentences.extend(out)
+
+            # Deduplicate and take the best (longest, most structured)
+            seen = set()
+            unique = []
+            for s in all_out_sentences:
+                if s not in seen:
+                    seen.add(s)
+                    unique.append(s)
+
+            # Prefer longer sentences (more structure)
+            unique.sort(key=lambda s: len(s.split()), reverse=True)
+
+            result = last_result if last_result else {
+                'sentences': [], 'rungs': {},
+                'worldline_depth': 0, 'soul_phase': 0.0,
+                'soul_magnitude': 0.0,
+            }
+            result['sentences'] = unique[:3]
 
         # Greeting handling
         if self._last_input_type == InputType.GREETING:
@@ -1601,15 +2064,20 @@ class Engine:
         for s in sentences:
             parts.append(s)
 
-        # Append curiosity if any
+        # Append curiosity if any (capped to avoid flooding)
+        recall_count = 0
+        max_recalls_per_response = 3
         while self._curiosity_sent_idx < len(self._curiosity_queue):
             item = self._curiosity_queue[self._curiosity_sent_idx]
             self._curiosity_sent_idx += 1
             if item.startswith('self-defined:'):
+                if recall_count >= max_recalls_per_response:
+                    continue  # skip, already shown enough
                 word = item.replace('self-defined:', '').strip()
                 defn = self.cascade.self_define(word)
                 if defn:
                     parts.append(f"⊙ RECALLED: {defn}")
+                    recall_count += 1
             elif item.startswith('sought:'):
                 continue
             else:
