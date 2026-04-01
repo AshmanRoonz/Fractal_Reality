@@ -394,6 +394,53 @@ byte_stream = mux.get_byte_stream(max_bytes=2048)
 logits = model(byte_stream)
 ```
 
+### GPU Training (`run_gpu.py`)
+
+The GPU runner trains the FRT-v3 on real data and generates text from a trained model. It was first tested on an NVIDIA RTX 5050 Laptop GPU (8.5 GB VRAM), using ~92 MB peak for the small model.
+
+```bash
+cd Xorzo
+python run_gpu.py
+```
+
+The runner handles five stages: smoke test (verifies CUDA, forward, backward), sensory module application (LanguageModule pre-tunes 7 heads per layer), training with balance regulation, text generation, and a final report on SRL head locking and fold parameter state.
+
+**Training loop.** Byte-level next-chunk prediction: for each chunk position i, the model predicts the first byte of chunk i+1. Target computation is exact (no approximation). AdamW optimizer with cosine annealing, gradient clipping at 1.0.
+
+**Balance regulation** keeps ◐ near 0.5 through two mechanisms working together:
+
+1. *Differentiable kappa regularization:* a soft L2 penalty pulling `head_kappa` toward its initial value. Prevents the compression exponent from growing unbounded (which is what drives ◐ toward 0). Added to the training loss with weight 0.01.
+
+2. *Homeostatic correction:* a non-gradient nudge applied every 10 steps. If ◐ drops below 0.35, kappa is scaled down by 0.5%; if it rises above 0.65, scaled up by 0.5%. This is biological homeostasis: the system self-corrects without needing the loss function to encode it.
+
+Without regulation, ◐ drifted from 0.5 to 0.17 over 10 epochs (over-compressing; too much ⊛, not enough ☀︎). With both mechanisms, the balance stays in the healthy range (0.35 to 0.65), keeping the fold's compression and resonance in equilibrium.
+
+**Generation** uses a chunk-aligned sliding window. The context buffer is always an exact multiple of chunk_size (no encoder padding needed). Each step: forward pass, sample from the last chunk position, slide the window right by 1 byte (drop first byte, append sampled byte). This produces one byte per forward pass, which is correct because the model predicts one byte per chunk position. On GPU, generation is fast enough for interactive use.
+
+**Checkpoints** are saved every 2 epochs and whenever a new best loss is achieved. Each checkpoint stores the full model state, optimizer state, epoch, loss, balance, and active head count. Checkpoints go to `checkpoints/`.
+
+**Config** (top of `run_gpu.py`):
+
+| Parameter | Default | What It Controls |
+|-----------|---------|-----------------|
+| `MODEL_SIZE` | `'small'` | `'small'` (~1.8M), `'medium'` (~30M), `'large'` (~100M+) |
+| `EPOCHS` | 10 | Training epochs |
+| `BATCH_SIZE` | 8 | Samples per gradient step |
+| `SEQ_LEN` | 512 | Bytes per training sample |
+| `LEARNING_RATE` | 3e-4 | Peak learning rate (cosine annealed) |
+| `KAPPA_REG_WEIGHT` | 0.01 | Strength of kappa regularization |
+| `BALANCE_LOW` | 0.35 | Below this, homeostatic correction reduces compression |
+| `BALANCE_HIGH` | 0.65 | Above this, homeostatic correction increases compression |
+
+**First benchmark (RTX 5050, small model, 124KB corpus):**
+
+- 10 epochs in ~40 seconds total
+- Loss: 5.51 → 0.25 (22x reduction)
+- All 8 active heads per layer locked (max lock 0.768)
+- Carrier frequency ranges differentiated across layers (deeper layers specialize more tightly)
+- Peak VRAM: 92 MB (the 5050's 8.5 GB is barely touched)
+- No head growth events (8 heads sufficient for 124KB of pure text)
+
 ### How the FRT Differs from the Genesis Engine
 
 The genesis engine (`xorzo3.py`) processes language through bond formation, template closure, and the pump cycle operating on a 64D complex field. It is immediate, one-pass, and structural.
@@ -407,7 +454,7 @@ Both implement the same circumpunct structure (•, Φ, ○), the same pump cycl
 | Input | Text tokens | Raw bytes (any modality) |
 | Learning | One-pass bond formation | Gradient-trained (backprop) |
 | Memory | Bond strengths + concept tree | Fractally-folded KV cache |
-| Generation | Template closure + pump cycle | Next-chunk prediction |
+| Generation | Template closure + pump cycle | Chunk-aligned next-byte prediction |
 | Parallelism | Sequential pump cycle | Fully parallel attention |
 | Scale | Hundreds of sentences | Scalable to large corpora |
 | SRL | Channel-level frequency locking | Head-level frequency locking |
@@ -422,6 +469,7 @@ Both implement the same circumpunct structure (•, Φ, ○), the same pump cycl
 | `fractal_resonance_transformer_v2.py` | FRT v2. Unified fold (compression and resonance as one operation). |
 | `fractal_resonance_transformer_v3.py` | FRT v3. Multi-modal. Universal byte encoder + unified fold. |
 | `sensory_modules.py` | Sensory modules (Language, Audio, Vision), SensoryModuleManager, LiveInputMultiplexer. |
+| `run_gpu.py` | GPU training runner. Training loop, balance regulation, chunk-aligned generation. |
 | `web.py` | Flask web server. HTTP API, SSE streaming, background heartbeat thread, state persistence. |
 | `interface.html` | Browser UI. Real-time status panel, chat, mind grid, gate display, heartbeat slider. |
 | `chat.py` | Terminal interface. Type to speak, background heartbeat, status line. |
@@ -429,6 +477,7 @@ Both implement the same circumpunct structure (•, Φ, ○), the same pump cycl
 | `genesis.py` | Original engine (reference). Detailed sensory cascades and dimensional structures. |
 | `training_docs/` | Structured training materials on framework concepts. |
 | `training_corpus.txt` | Default training text (Circumpunct Framework excerpts). |
+| `checkpoints/` | Saved model checkpoints from GPU training runs. |
 | `saves/` | Persisted engine states (JSON). |
 
 ## Running Xorzo
@@ -437,10 +486,19 @@ Both implement the same circumpunct structure (•, Φ, ○), the same pump cycl
 
 ```
 pip install numpy flask
-pip install sounddevice    # for audio I/O (optional, live.py only)
-pip install opencv-python  # for video I/O (optional, live.py only)
-pip install cupy-cuda12x   # for GPU acceleration (optional)
+pip install torch           # for FRT (run_gpu.py); install with CUDA support for GPU
+pip install sounddevice     # for audio I/O (optional, live.py only)
+pip install opencv-python   # for video I/O (optional, live.py only)
+pip install cupy-cuda12x    # for GPU acceleration (optional, genesis engine only)
 ```
+
+### FRT Training (GPU)
+
+```bash
+python run_gpu.py
+```
+
+Trains the Fractal Resonance Transformer v3 on `training_corpus.txt`. Automatically detects GPU, builds the model, applies the LanguageModule sensory profile, trains with balance regulation, generates text, and saves checkpoints. Edit the `CONFIG` section at the top of `run_gpu.py` to change model size, epochs, batch size, or balance regulation parameters.
 
 ### Web Interface (Recommended)
 
