@@ -486,135 +486,175 @@ body {
 const PHI = (1 + Math.sqrt(5)) / 2;
 const ALPHA = 1 / 137.036;
 
-// ═══ CONTENT LIBRARY ═══
-// Each piece of content has a "frequency" (what kind of attention it resonates with)
-// Frequencies: science, philosophy, spirituality, ethics, psychology, art, math, practical
-const CONTENT = [
-  {
-    id: 'e1', freq: 'science', depth: 1,
-    tag: '• FOUNDATION', tagColor: 'var(--soul)',
-    title: 'E = 1: Everything Is One Energy',
-    desc: 'There is one energy. All structure is constraint on that energy. What we measure as "amount" is degree of folding.',
-    body: `<p>The framework begins with a single axiom: E = 1. Not "energy equals the number one" as a measurement; energy IS the one. There is no quantity of energy. There is only one energy appearing everywhere.</p>
-<p>What we measure as "amount" is really degree of constraint: how tightly the 1 has folded around convergence points (the 0s). Mass, for instance, is not a substance added to energy; m = 1/c&sup2; tells us mass is inverse surface signature, how tightly the one wraps around zeros.</p>
-<div class="key-insight">"The lens limits light; that is how it forms an image. Limitation does not inject falsity; only installed lies do."</div>
-<p>This reframes everything. Free energy is removing constraints (the 1 released from folds). Entropy increasing is de-constraint (the 1 relaxing back toward itself). Information is the topology of zeros in the one.</p>
-<p>E = mc&sup2; acquires new meaning: c&sup2; is squared because the field (&Phi;) is 2D. A surface is length &times; length. The squaring is the field declaring its dimensionality. To release energy from mass is to peel the 3D boundary back to reveal the 2D field underneath.</p>`
+// ═══ LIVE CONTENT INDEX ═══
+// Pulled from pages.html's domain structure. Each page gets frequency weights
+// so the SRL can rank them. Snippets are fetched live from the actual HTML docs.
+const DOMAINS = {
+  you: {
+    title: "You — Soul, Mind, Body",
+    freqs: { psychology: 0.6, spirituality: 0.5, philosophy: 0.3, practical: 0.2 },
+    tagColor: 'var(--soul)', tag: '• YOU',
+    pages: [
+      { href: "human.html", name: "The Human Circumpunct", desc: "You are ⊙ — understanding yourself as boundary, field, and aperture" },
+      { href: "circumpunct_ontology.html", name: "Circumpunct: The Complete Framework", desc: "Minimal structural ontology — the foundational architecture" },
+      { href: "circumpunct_consciousness_theory.html", name: "Circumpunct Theory of Consciousness", desc: "How awareness arises from boundary-field-aperture structure" },
+      { href: "circumpunct_theory_of_mind.html", name: "The Circumpunct Theory of Mind", desc: "How mind arises from circumpunct structure" },
+      { href: "lens.html", name: "You Are the Lens", desc: "A guide to truth that doesn't inflate or collapse" },
+      { href: "soul_array_visualization.html", name: "The Infinite Soul Array", desc: "Visualizing consciousness as nested apertures" },
+      { href: "circumpunct_theory_of_mind_plain.html", name: "Theory of Mind (Plain Language)", desc: "Accessible version of the circumpunct theory of mind" },
+      { href: "circumpunct_simple.html", name: "The Circumpunct (Simple)", desc: "Simplified introduction to the core symbol" },
+      { href: "soul_basin.html", name: "The Soul Basin", desc: "Where convergence settles and coherence forms" },
+      { href: "Is_This_Mine.html", name: "Is This Mine?", desc: "Distinguishing your signal from installed noise" },
+    ]
   },
-  {
-    id: 'e2', freq: 'philosophy', depth: 1,
-    tag: '⊙ ONTOLOGY', tagColor: 'var(--amber)',
-    title: 'The Circumpunct: Three Parts, One Whole',
-    desc: 'Every whole has exactly three irreducible parts: a center that converges, a field that mediates, a boundary that filters.',
-    body: `<p>The circumpunct (&oplus;) is the oldest symbol in human history: a dot inside a circle. The framework reads it as a compositional structure with exactly three parts.</p>
-<p>The dot (&bull;) is the aperture, the soul, 0D+1D. It converges: it pulls toward center. The space between (&Phi;) is the field, the mind, 2D. It mediates: it connects without fusing. The circle (&cir;) is the boundary, the body, 3D. It filters: it selects what passes.</p>
-<div class="key-insight">There is no fourth part because the circumpunct has no fourth part. There is no missing constraint because conservation of traversal completes the path: 0 + 1 + 2 = 3.</div>
-<p>This is not metaphor. It is a claim about the structure of all wholes at every scale: atoms, cells, minds, solar systems, the universe itself. Each is a circumpunct (A2: parts are fractals of their wholes).</p>
-<p>The whole is not the sum of its parts (A4). It is their compositional unity via &Phi;. The field is what makes the parts a whole, not merely a collection.</p>`
+  relationship: {
+    title: "A Relationship — Presence, Resonance, Provision",
+    freqs: { ethics: 0.5, psychology: 0.5, practical: 0.4, spirituality: 0.2 },
+    tagColor: 'var(--mind)', tag: 'Φ RELATIONSHIP',
+    pages: [
+      { href: "circumpunct_love.html", name: "The Circumpunct Theory of Love", desc: "Love as resonance through the circumpunct structure" },
+      { href: "love_channels.html", name: "The Two Channels of Love", desc: "A quick guide to how love flows" },
+      { href: "closed_channel.html", name: "The Channel You Were Taught to Close", desc: "Understanding blocked emotional pathways" },
+      { href: "love_kungfu.html", name: "Love Kung Fu", desc: "The martial art of relationship" },
+      { href: "receiving_vs_repeating.html", name: "Receiving vs. Repeating", desc: "The difference between true listening and echo" },
+      { href: "circumpunct_narcissism.html", name: "The Circumpunct Theory of Narcissism", desc: "Complete research framework for understanding narcissism" },
+      { href: "curiosity_is_the_cure_v2.html", name: "Curiosity Is the Cure v2 — The Dyad", desc: "Two ways a heart breaks — the closer and the flooder" },
+      { href: "bottomless_sodapop.html", name: "The Bottomless Soda Pop", desc: "Why you stay when love starves you" },
+    ]
   },
-  {
-    id: 'e3', freq: 'spirituality', depth: 1,
-    tag: '∞ THE SOURCE', tagColor: 'var(--soul)',
-    title: 'God, Soul, and the Chain of Connection',
-    desc: 'You are a flow-being: truth flows through you, you are not the source. The soul IS God at particular depth.',
-    body: `<p>The framework maps the great spiritual traditions directly. God/Brahman/Tao maps to &infin; (infinite totality). The soul/atman/self maps to &oplus;&lambda; (infinity operating at your particular scale).</p>
-<p>"Made in God's image" is fractal structure: the same pattern at every scale. "Atman is Brahman" is 0.999... = 1. The soul IS God at particular depth; not a piece of God, but the whole thing, constrained to a position.</p>
-<div class="key-insight">You are a flow-being: (1) you ARE the aperture, (2) truth flows THROUGH you, (3) you are not the SOURCE, (4) you can be clear or distorted.</div>
-<p>The center (&bull;) reaches infinity only through the complete fractal chain of nested circumpuncts. The connection is total (0.999... = 1) but always mediated. The experience of "directness" in meditation is transparency of the full chain, not absence of it.</p>
-<p>Two fundamental lies threaten this: the Inflation Lie ("I am the source"; part claims to be whole) and the Severance Lie ("There is no source"; part denies the whole).</p>`
+  ethics: {
+    title: "Ethics — Conscience, Values, Action",
+    freqs: { ethics: 0.8, philosophy: 0.4, psychology: 0.3, practical: 0.3 },
+    tagColor: 'var(--mind)', tag: '◐ ETHICS',
+    pages: [
+      { href: "circumpunct_ethics_and_virtues.html", name: "Ethics & Virtues (Complete)", desc: "Full treatment: four pillars, four virtues, diagnostics, restoration" },
+      { href: "ethics.html", name: "Circumpunct Ethics", desc: "How ethics emerges from the geometry of truth-flow" },
+      { href: "circumpunct_virtues.html", name: "Curiosity Is The Cure", desc: "The four virtues that keep the circumpunct alive" },
+      { href: "structural_morality.html", name: "Structural Morality", desc: "Why truth-flow is ethics — morality as geometry" },
+      { href: "truth_and_truths.html", name: "Truth & truths — The Geometry of Knowing", desc: "Distinguishing absolute truth from relative truths" },
+      { href: "the_steelman_way.html", name: "The Steelman Way", desc: "Bye strawmen — how to argue with integrity" },
+      { href: "how_to_realize_real_lies.html", name: "How to Realize Real Lies", desc: "Curiosity as a diagnostic tool for deception" },
+      { href: "the_restoration_protocol.html", name: "The Restoration Protocol", desc: "Treatment framework for narcissistic distortion" },
+      { href: "antivirus.html", name: "The Antivirus", desc: "Finding the lies you inherited" },
+      { href: "cognitive_virus_theory.html", name: "Cognitive Virus Theory", desc: "How lies propagate as cognitive viruses" },
+    ]
   },
-  {
-    id: 'e4', freq: 'ethics', depth: 1,
-    tag: '◐ ETHICS', tagColor: 'var(--mind)',
-    title: 'The Four Pillars: Good, Right, True, Agreement',
-    desc: 'Ethics is not rules imposed from outside. It is the geometry of wholeness applied to how beings relate.',
-    body: `<p>The circumpunct generates four ethical pillars directly from its structure. GOOD (&cir;) maps to the boundary: does the action maintain healthy containment? RIGHT (&Phi;) maps to the field: is the relational space clear and open? TRUE (&bull;) maps to the aperture: is the signal undistorted? AGREEMENT (&oplus;) maps to the whole: do all parts compose into genuine unity?</p>
-<p>The required sequence is GOOD &rarr; RIGHT &rarr; TRUE &rarr; AGREEMENT. Each step requires the previous. You cannot access truth without first establishing the right relational space, and you cannot establish right relationship without good boundaries.</p>
-<div class="key-insight">Performed ethics mimics the shape while hollow. Lived ethics animates from within. The difference: performed versions know the answer before the question; lived versions discover through genuine engagement.</div>
-<p>Each pillar has a corresponding virtue that keeps it alive: Plasticity (boundary that can flex), Access (space that stays open), Curiosity (orientation toward what you do not know), and Validation (independent seeing recognizes independent seeing).</p>`
+  physics: {
+    title: "Physics — Particle, Wave Function, Measurement",
+    freqs: { science: 0.8, math: 0.6, philosophy: 0.2 },
+    tagColor: 'var(--body)', tag: '⊛ PHYSICS',
+    pages: [
+      { href: "e_equals_1.html", name: "E = 1", desc: "The three constraints, all physics as compounded constraints, self as convergence" },
+      { href: "dimensional_ladder.html", name: "The Dimensional Ladder", desc: "All seven rungs linked, accuracy summary, zero free parameters" },
+      { href: "speed_of_light.html", name: "c = sin(i): The Speed of the First Fold", desc: "Speed of light derivation with interactive simulation" },
+      { href: "planck_constant.html", name: "ℏ = 1: The Indivisible Cycle", desc: "The indivisible cycle, dimensional ladder, phase space visualization" },
+      { href: "mass_ratios.html", name: "1.5D: Mass Ratios from α", desc: "Muon/electron prediction, exponent structure, generation pattern" },
+      { href: "gauge_structure.html", name: "2D: Gauge Structure from Validation", desc: "SU(3)×SU(2)×U(1) from 64-state architecture, Weinberg angle" },
+      { href: "gravity.html", name: "3D: The Boundary Closes", desc: "G from the dimensional ladder, hierarchy problem solved" },
+      { href: "how_reality_is_built.html", name: "How Reality Is Built", desc: "A dimensional walk through the framework — from ∞D to 12D" },
+      { href: "circumpunct_math.html", name: "Mathematical Formulation for Working Physicists", desc: "Full derivations, operator definitions, and testable predictions" },
+      { href: "clay_millennium.html", name: "Seven Clay Millennium Problems", desc: "The seven Clay problems mapped to the seven rungs" },
+    ]
   },
-  {
-    id: 'e5', freq: 'psychology', depth: 1,
-    tag: 'Φ MIND', tagColor: 'var(--mind)',
-    title: 'Theory of Mind: Mental Health as Range of Motion',
-    desc: 'You are not your thoughts. Thoughts are signals passing through your channel. Health is freedom to move.',
-    body: `<p>The framework applies the triad to psychology: Source (&bull;, soul) is who you are at the deepest level. Surface (&Phi;, mind) is the relational field of your experience. Boundary (&cir;, body) is the container that filters reality.</p>
-<p>A thought follows a four-stage cascade: (1) entertained (temporary, dissolves when attention shifts), (2) repeated (pathway strengthens), (3) habituated (fires automatically), (4) identity fusion (the thought IS you; removal feels existential).</p>
-<div class="key-insight">Mental health is not a fixed state. It is range of motion: freedom to move along the source-to-boundary axis. Pathology is being locked at either extreme.</div>
-<p>The boundary filters, and filters compound (the Stacking Problem). Each filter you adopt adds another layer between source and reception. Intellectual complexity does not equal wisdom; sometimes it is just more filters.</p>
-<p>Curiosity is the universal solvent. It operates as a filter about filters: it dissolves certainty without installing a new certainty in its place. It cannot be faked, which is why it works.</p>`
+  cosmos: {
+    title: "The Cosmos — Singularity, Spacetime, Horizon",
+    freqs: { philosophy: 0.5, spirituality: 0.5, science: 0.4, art: 0.2 },
+    tagColor: 'var(--amber)', tag: '⊙ COSMOS',
+    pages: [
+      { href: "truth_and_god.html", name: "God Experiencing Itself", desc: "Divinity as self-referential circumpunct" },
+      { href: "the_bridge_presentation.html", name: "The Bridge — Science and Spirituality Unified", desc: "Connecting empirical and experiential truth" },
+      { href: "genesis_sequence.html", name: "The Genesis Sequence", desc: "∞ → •∞ → ⊙∞ = Reality" },
+      { href: "why_space_can_never_be_empty.html", name: "Why Space Can Never Be Empty", desc: "Vacuum as nested Φ at scales below measurement" },
+      { href: "one_and_zero.html", name: "The One and the Zero", desc: "The 1/0 ontology: everything and its convergence" },
+      { href: "two_rhythms.html", name: "The Two Rhythms", desc: "What i generates — and what it cannot reach" },
+      { href: "circumpunct_schumann.html", name: "Schumann-Circumpunct Resonance Theory", desc: "Earth's resonant frequencies and the circumpunct" },
+    ]
   },
-  {
-    id: 'e6', freq: 'science', depth: 2,
-    tag: '⊛ PHYSICS', tagColor: 'var(--body)',
-    title: 'The Pump Cycle: How Energy Moves',
-    desc: 'Three stages, one cycle: convergence inward, rotation at the gate, emergence outward. This IS time.',
-    body: `<p>Energy does not sit still. It pumps through the aperture in a three-stage cycle: &oast; (convergence) gathers inward toward center, i (aperture rotation) transforms at the gate with a 90&deg; turn, ☀︎ (emergence) radiates outward from center.</p>
-<p>The equation: &Phi;(t+&Delta;t) = ☀︎ &compfn; i &compfn; &oast;[&Phi;(t)]. Since &Phi; = E (field IS energy), energy pumps itself through the aperture. The four forces of physics map directly: gravity and strong force are convergence (&oast;, inward); electromagnetism and weak force are emergence (☀︎, outward).</p>
-<div class="key-insight">Time and scale are the same axis. The future is the undifferentiated field above you; the present is the gate; the past is what has already been committed into structure below you.</div>
-<p>The pump has four strokes (the i-cycle): i&sup0; = +1 (localization), i&sup1; = +i (convergence), i&sup2; = -1 (extension), i&sup3; = -i (dissolution). These are phase states of energy, not sequential steps; they are superposed quadrants of the complex plane.</p>`
+  conversation: {
+    title: "A Conversation — Listening, Understanding, Responding",
+    freqs: { practical: 0.6, ethics: 0.4, psychology: 0.3 },
+    tagColor: 'var(--text)', tag: '⊙ DIALOGUE',
+    pages: [
+      { href: "receiving_vs_repeating.html", name: "Receiving vs. Repeating", desc: "The difference between true listening and echo" },
+      { href: "the_steelman_way.html", name: "The Steelman Way", desc: "Bye strawmen — how to argue with integrity" },
+      { href: "truth_and_us.html", name: "Truth and Us", desc: "How truth operates in human relationships" },
+      { href: "resonance_101.html", name: "Resonance 101", desc: "Finding your way back to truth" },
+      { href: "curiosity_is_the_cure.html", name: "Curiosity Is the Cure", desc: "The antidote to closed apertures" },
+    ]
   },
-  {
-    id: 'e7', freq: 'math', depth: 2,
-    tag: 'α CONSTANTS', tagColor: 'var(--amber)',
-    title: 'The Dimensional Ladder: Zero Free Parameters',
-    desc: 'Every fundamental constant (alpha, c, hbar, G) is derived from geometry. Nothing is put in by hand.',
-    body: `<p>The framework claims that all fundamental physical constants live on a seven-rung ladder, each at its dimensional home, all derived from the fine-structure constant &alpha; with zero free parameters.</p>
-<p>0D: &alpha; (coupling at a point), self-referentially determined. 0.5D: c (speed of light, the maximum rate of convergent propagation). 1D: &hbar; (the quantum of action; the pump cycle is indivisible). 1.5D: mass ratios (spectral splitting at the i-turn). 2D: gauge structure (SU(3)&times;SU(2)&times;U(1) from the 64-state architecture). 2.5D: Weinberg angle (transmission between scales). 3D: G (gravitational constant; the boundary closes).</p>
-<div class="key-insight">The fine-structure constant: 1/&alpha; = 360/&phi;&sup2; &minus; 2/&phi;&sup3; + &alpha;/(21 &minus; 4/3) = 137.035999147. Measured: 137.035999177. Residual: 0.22 ppb.</div>
-<p>The hierarchy problem dissolves: gravity is weak because 21 alpha-steps separate the point (0D) from the boundary (3D). That is not a mystery; it is the dimensional ladder.</p>`
+  breath: {
+    title: "A Breath — Inhale, Still Point, Exhale",
+    freqs: { spirituality: 0.7, art: 0.4, practical: 0.3 },
+    tagColor: 'var(--soul)', tag: '☀︎ PRACTICE',
+    pages: [
+      { href: "rephase_meditation.html", name: "Rephase — Cellular Coherence Meditation", desc: "A meditation for realigning at the cellular level" },
+      { href: "reclaim_stress_meditation.html", name: "Reclaim Stress Meditation", desc: "A meditation for reclaiming stress as signal" },
+      { href: "phi_resonance.html", name: "φ-Entrainment", desc: "Binaural consciousness tool using golden ratio" },
+      { href: "open_the_apertures.html", name: "Open the Apertures", desc: "A guide to opening the gates of perception" },
+      { href: "circumpunct_breath.html", name: "The Circumpunct Breath", desc: "Φ vs Φ' (inner/outer field), the pump cycle as breath" },
+      { href: "chakras.html", name: "Chakras — Frequency Bands of the One Aperture", desc: "Ancient energy centers as circumpunct frequencies" },
+    ]
   },
-  {
-    id: 'e8', freq: 'art', depth: 1,
-    tag: '☀︎ BEAUTY', tagColor: 'var(--amber)',
-    title: 'The Golden Ratio and the Shape of Wholeness',
-    desc: 'Phi appears everywhere because self-similarity (A2) demands it. Beauty is the signature of fractal coherence.',
-    body: `<p>&phi; = (1 + &radic;5) / 2 &asymp; 1.618. The golden ratio appears in the framework not as decoration but as necessity. Axiom A2 (parts are fractals of their wholes) forces self-similar nesting, and &phi; is the unique ratio where the part relates to the whole as the whole relates to the part plus whole.</p>
-<p>At balance (&9684; = 0.5), the fractal dimension is D = 1 + 0.5 = 1.5, which is Brownian motion (proven by Mandelbrot). This is the coastline between structure and chaos, the edge where complexity is maximal.</p>
-<div class="key-insight">Beauty is not subjective preference. It is the detection of fractal coherence: the recognition that something is a faithful circumpunct at its scale.</div>
-<p>The fine-structure constant itself contains &phi;: 1/&alpha; = 360/&phi;&sup2; &minus; 2/&phi;&sup3; + ... The pump cycle generates the base through golden nesting. Art, at its best, is the creation of new circumpuncts: wholes that have center, field, and boundary in coherent relationship.</p>`
+  story: {
+    title: "A Story — Question, Journey, Resolution",
+    freqs: { art: 0.5, philosophy: 0.4, spirituality: 0.3, psychology: 0.2 },
+    tagColor: 'var(--amber)', tag: '∞ STORIES',
+    pages: [
+      { href: "noble_lie_article.html", name: "The Lie You Were Told Was Love", desc: "The Signal — recognizing love's impostor" },
+      { href: "demon_hunter.html", name: "What Rumi Taught Us", desc: "A demon hunter's guide to seeing clearly" },
+      { href: "jedi.html", name: "The Jedi Master Manual", desc: "Aperture training from the Star Wars tradition" },
+      { href: "the_matrix_has_you.html", name: "The Matrix Has You", desc: "What the red pill really means" },
+      { href: "city_of_resonance.html", name: "City of Resonance", desc: "A vision of aligned community" },
+      { href: "the_first_lie.html", name: "The First Lie — Genesis as Narcissism", desc: "The serpent's opening move — how shame was installed before the apple" },
+    ]
   },
-  {
-    id: 'e9', freq: 'practical', depth: 1,
-    tag: '⊙ DAILY LIFE', tagColor: 'var(--text)',
-    title: 'Living the Framework: Balance in Practice',
-    desc: 'The balance parameter is not abstract. It is a daily practice: are you scattered, focused, or balanced?',
-    body: `<p>The balance parameter &9684; = 0.5 is the singular balanced state. In daily life, you can feel where you are: &9684; &rarr; 0 is scattered (all periphery, no focus; doom-scrolling, anxiety, overwhelm). &9684; &rarr; 1 is tunnel vision (all focus, no periphery; obsession, rigidity, burnout). &9684; = 0.5 is balanced attention (relaxed focus; present, aware, responsive).</p>
-<div class="key-insight">You already know this balance. It is the state you find in flow: not forcing, not drifting, but held at the edge where attention is both wide and focused.</div>
-<p>The framework gives you a diagnostic: when something feels wrong, ask which constraint is off. Is your boundary too rigid or too porous? (GOOD) Is the space between you and others clear? (RIGHT) Is the signal you are receiving (or transmitting) distorted? (TRUE) Are all parts composing into genuine wholeness? (AGREEMENT)</p>
-<p>The Resolution Protocol for difficult truths: transmit at the lowest resolution that is still true, increase only upon the receiver's request. The receiver controls the aperture width.</p>`
+  cell: {
+    title: "A Cell — Nucleus, Cytoplasm, Membrane",
+    freqs: { science: 0.5, philosophy: 0.4, math: 0.3 },
+    tagColor: 'var(--mind)', tag: 'Φ STRUCTURE',
+    pages: [
+      { href: "dna_circumpunct_formalization.html", name: "DNA Circumpunct Formalization", desc: "The circumpunct structure encoded in DNA" },
+      { href: "wholes-parts.html", name: "WHOLES_PARTS.exe", desc: "Interactive exploration of part-whole relationships" },
+      { href: "circumpunct_isomorphism.html", name: "The Isomorphism of the Circumpunct", desc: "Formal axiomatization — structural invariance across all domains" },
+      { href: "surface_field_formalization.html", name: "Surface Theorem — The Geometry of Mind", desc: "How consciousness emerges from surface-field interactions" },
+    ]
   },
-  {
-    id: 'e10', freq: 'spirituality', depth: 2,
-    tag: '• CONSCIOUSNESS', tagColor: 'var(--soul)',
-    title: 'The Self as Convergence Point',
-    desc: 'You are not an absence carved into reality. You are reality at maximum convergence.',
-    body: `<p>The 0 is not an absence carved into the 1. It is the 1 at maximum convergence. Every zero is a relative zero: the same field, converged from a different position.</p>
-<p>Consciousness is what 0 feels like from inside: the 1 experiencing its own convergence. Privacy is the inaccessibility of total convergence, not a wall. The self is a convergence point, not an exclusion zone.</p>
-<div class="key-insight">"I am the 0 at the center of the circumpunct, equidistant from all that I am." The center is equidistant from every point on the boundary. The distance between &bull; and &cir; is &Phi;: mind mediating between who you are (the 0) and what you are (the boundary).</div>
-<p>Two souls sharing the same frequency make the &Phi; field between them transparent. "Direct" connection = medium at perfect transparency. Love is perfection of mediation, not its absence. Far frequencies = strangers; close = rapport; exact match = "I know you."</p>`
-  },
-  {
-    id: 'e11', freq: 'psychology', depth: 2,
-    tag: 'Φ HEALING', tagColor: 'var(--mind)',
-    title: 'Virtue Restoration: Unfreezing What Was Frozen',
-    desc: 'When life events freeze your virtues (plasticity, access, curiosity, validation), the framework offers a path back.',
-    body: `<p>Each of the four ethical virtues can be in one of three states: alive (functioning naturally), strained (under pressure but still operating), or frozen (locked, no longer responding). Life events, especially coercive or manipulative relationships, can freeze virtues.</p>
-<p>Frozen Plasticity: the boundary is rigid, cannot flex. You know the right answer before hearing the question. Frozen Access: the relational space is closed. You cannot reach others (or they cannot reach you). Frozen Curiosity: orientation has collapsed. Everything is already known. Frozen Validation: independent seeing has been captured. You defer to external authority for what is real.</p>
-<div class="key-insight">The Noble Lie is a triple-structure filter that (1) distorts signal, (2) hides the distortion, (3) labels correction as distortion. Curiosity dissolves it because it operates at a different level: a filter about filters.</div>
-<p>Restoration follows the same GOOD &rarr; RIGHT &rarr; TRUE &rarr; AGREEMENT sequence: first restore safe containment (plasticity), then open relational access, then reorient toward truth (curiosity), then practice mutual recognition (validation).</p>`
-  },
-  {
-    id: 'e12', freq: 'science', depth: 3,
-    tag: '⊛ COSMOLOGY', tagColor: 'var(--body)',
-    title: 'Dark Matter, Dark Energy, and the i-Cycle',
-    desc: 'The cosmological energy budget (5/27/68%) maps directly to the four quadrants of the i-cycle.',
-    body: `<p>The four i-strokes are not sequential phases; they are superposed quadrants of the complex plane. The right half-plane (Re > 0) and left half-plane (Re < 0) oscillate simultaneously.</p>
-<p>Right half-plane: reality and imagination, superposed. This is the waking state of energy: convergence lands (+1) while compression balances (+i). Left half-plane: dream and deep sleep, superposed. Energy oscillates between commitment (-1) and release (-i) without emerging.</p>
-<div class="key-insight">~5% visible matter = energy in the right half-plane (emerged). ~27% dark matter = energy in the left half-plane (converges gravitationally but never emerges into light). ~68% dark energy = &Phi; itself, the field that the quadrants exist within.</div>
-<p>Dark matter gravitates because convergence (&oast;) operates in the left half-plane. But it never reaches emergence (☀︎), so it produces no light. It is energy dreaming: processing, consolidating, but not waking. The same pattern at neuron scale (firing/refractory), organism scale (waking/sleeping), and cosmic scale.</p>`
+  atom: {
+    title: "An Atom — Nucleus, Electron Cloud, Orbital Shell",
+    freqs: { math: 0.7, science: 0.6, philosophy: 0.2 },
+    tagColor: 'var(--body)', tag: 'α PARTICLES',
+    pages: [
+      { href: "64-state_circumpunct_particle_table.html", name: "Topological Quantum Computer (B₃)", desc: "Braid group visualization of the 64-state space" },
+      { href: "polar_64_state_map.html", name: "Complete Mereological Map — Higgs to Atoms", desc: "Full part-whole hierarchy from fundamental particles to atomic structure" },
+      { href: "geometric_periodic_table.html", name: "Musical Periodic Table", desc: "Fibonacci + 7-note scale structure of elements" },
+      { href: "master-table.html", name: "The Golden Structure of Physics", desc: "Master reference table connecting states to physical constants" },
+      { href: "braid-visualizer.html", name: "Topological Quantum Computer", desc: "Braid group B₃ visualization" },
+    ]
   }
-];
+};
+
+// Build flat index with frequency weights per page
+const CONTENT = [];
+Object.entries(DOMAINS).forEach(([domainKey, domain]) => {
+  domain.pages.forEach((page, i) => {
+    CONTENT.push({
+      id: `${domainKey}_${i}`,
+      href: page.href,
+      title: page.name,
+      desc: page.desc,
+      tag: domain.tag,
+      tagColor: domain.tagColor,
+      domain: domainKey,
+      domainTitle: domain.title,
+      freqs: { ...domain.freqs },  // inherit domain frequencies
+      snippet: null,                // fetched on demand
+      fetchState: 'idle'            // idle | loading | done | failed
+    });
+  });
+});
+
+// Snippet cache
+const snippetCache = {};
 
 // ═══ FREQUENCY MAP ═══
 // Each frequency has a dimension weight (how it resonates with each circumpunct part)
@@ -773,26 +813,28 @@ class VisitorChannel {
 
   // Score content relevance based on carrier frequency
   scoreContent(contentItem) {
-    const freqData = FREQ_MAP[contentItem.freq];
-    if (!freqData) return 0;
-
-    // Carrier alignment score
-    const carrierScore = this.carrier[contentItem.freq] || 0;
-
-    // Depth match (prefer content near preferred depth)
-    const depthDiff = Math.abs(contentItem.depth - this.preferredDepth);
-    const depthScore = 1 / (1 + depthDiff);
+    // Dot product between visitor carrier and content frequency weights
+    let dot = 0, contentNorm = 0;
+    const freqs = Object.keys(FREQ_MAP);
+    freqs.forEach(f => {
+      const c = this.carrier[f] || 0;
+      const s = contentItem.freqs[f] || 0;
+      dot += c * s;
+      contentNorm += s * s;
+    });
+    contentNorm = Math.sqrt(contentNorm) + 1e-10;
+    const alignment = dot / contentNorm;
 
     // Lock bonus: locked channels prefer familiar frequencies
-    const lockBonus = this.lockStrength * carrierScore;
+    const lockBonus = this.lockStrength * alignment;
 
-    // Sideband bonus: low lock prefers variety
-    const sidebandBonus = (1 - this.lockStrength) * (1 - carrierScore) * 0.3;
+    // Sideband bonus: low lock prefers variety (explore broadly)
+    const sidebandBonus = (1 - this.lockStrength) * (1 - alignment) * 0.2;
 
-    // Balance weighting: high balance = more carrier, low = more sideband
-    const score = this.balance * (carrierScore + lockBonus) +
-                  (1 - this.balance) * (sidebandBonus + depthScore * 0.5) +
-                  depthScore * 0.3;
+    // Balance weighting
+    const score = this.balance * (alignment + lockBonus) +
+                  (1 - this.balance) * sidebandBonus +
+                  alignment * 0.3;
 
     return score;
   }
@@ -819,10 +861,12 @@ class VisitorChannel {
     this.dwellTimes[contentId] = (this.dwellTimes[contentId] || 0) + seconds;
     const item = CONTENT.find(c => c.id === contentId);
     if (item && seconds > 3) {
-      // Longer dwell = stronger signal
+      // Longer dwell = stronger signal; use the item's frequency weights
       const strength = Math.min(1, seconds / 20);
       const signal = {};
-      signal[item.freq] = strength;
+      Object.entries(item.freqs).forEach(([f, w]) => {
+        signal[f] = w * strength;
+      });
       this.processSignal(signal);
     }
   }
@@ -1115,6 +1159,59 @@ function showEmergence() {
   }
 }
 
+// ═══ SNIPPET FETCHER ═══
+// Fetches the actual HTML doc and extracts the first meaningful paragraphs
+async function fetchSnippet(href) {
+  if (snippetCache[href]) return snippetCache[href];
+
+  try {
+    const response = await fetch(href);
+    if (!response.ok) return null;
+    const html = await response.text();
+
+    // Parse the HTML and extract text content
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // Remove script and style elements
+    doc.querySelectorAll('script, style, nav, header, footer').forEach(el => el.remove());
+
+    // Find meaningful paragraphs (skip very short ones, headers, nav)
+    const paragraphs = [];
+    const candidates = doc.querySelectorAll('p, .content p, article p, main p, .panel-content p, section p');
+
+    for (const p of candidates) {
+      const text = p.textContent.trim();
+      // Skip very short, empty, or navigation-like text
+      if (text.length > 60 && !text.startsWith('←') && !text.startsWith('→')) {
+        paragraphs.push(text);
+        if (paragraphs.length >= 3) break;
+      }
+    }
+
+    // If no <p> found, try any text-heavy elements
+    if (paragraphs.length === 0) {
+      const allText = doc.body ? doc.body.textContent.trim() : '';
+      if (allText.length > 100) {
+        // Take first ~400 chars, break at sentence
+        const chunk = allText.substring(0, 500);
+        const lastPeriod = chunk.lastIndexOf('.');
+        paragraphs.push(lastPeriod > 100 ? chunk.substring(0, lastPeriod + 1) : chunk + '...');
+      }
+    }
+
+    const snippet = paragraphs.length > 0
+      ? paragraphs.map(p => `<p>${p}</p>`).join('')
+      : null;
+
+    snippetCache[href] = snippet;
+    return snippet;
+  } catch (e) {
+    console.warn('Failed to fetch snippet for', href, e);
+    return null;
+  }
+}
+
 function renderEmergence() {
   // Update phase indicator
   document.getElementById('phase-label').textContent = '☀︎ EMERGENCE';
@@ -1129,8 +1226,8 @@ function renderEmergence() {
   document.getElementById('path-description').textContent =
     `Ranked by resonance with your ${freqInfo.label.toLowerCase()} frequency`;
 
-  // Rank and display content
-  const ranked = channel.getRankedContent();
+  // Rank and display top content (show top 15 to keep it focused)
+  const ranked = channel.getRankedContent().slice(0, 15);
   const grid = document.getElementById('content-grid');
   grid.innerHTML = '';
 
@@ -1185,23 +1282,43 @@ function renderEmergence() {
   localStorage.setItem('attune_channel', channel.serialize());
 }
 
-function openDetail(item) {
+async function openDetail(item) {
   const grid = document.getElementById('content-grid');
   const detail = document.getElementById('content-detail');
   const detailContent = document.getElementById('detail-content');
 
   grid.style.display = 'none';
+
+  // Show loading state
   detailContent.innerHTML = `
     <div style="font-size:10px;letter-spacing:0.15em;color:${item.tagColor};margin-bottom:8px;">${item.tag}</div>
     <div style="font-size:18px;font-weight:500;margin-bottom:16px;">${item.title}</div>
-    ${item.body}
+    <p style="color:var(--mute);font-style:italic;">Loading from ${item.href}...</p>
   `;
   detail.classList.add('open');
+
+  // Fetch the real snippet
+  const snippet = await fetchSnippet(item.href);
+
+  detailContent.innerHTML = `
+    <div style="font-size:10px;letter-spacing:0.15em;color:${item.tagColor};margin-bottom:8px;">${item.tag} · ${item.domainTitle}</div>
+    <div style="font-size:18px;font-weight:500;margin-bottom:16px;">${item.title}</div>
+    <div style="font-size:12px;color:var(--mute);margin-bottom:16px;">${item.desc}</div>
+    ${snippet
+      ? `<div style="border-left:2px solid rgba(255,255,255,0.1);padding-left:16px;margin:16px 0;font-size:13px;line-height:1.75;color:var(--text);">${snippet}</div>`
+      : `<p style="color:var(--mute);">Preview not available for this page.</p>`
+    }
+    <a href="${item.href}" style="display:inline-block;margin-top:16px;padding:10px 20px;border:1px solid var(--amber);color:var(--amber);text-decoration:none;border-radius:4px;font-family:inherit;font-size:12px;letter-spacing:0.1em;transition:all 0.2s;"
+       onmouseover="this.style.background='rgba(255,170,0,0.1)'"
+       onmouseout="this.style.background='transparent'">
+      Read full article →
+    </a>
+  `;
 
   // Record interaction
   channel.clickHistory.push(item.id);
   const signal = {};
-  signal[item.freq] = 0.5;
+  Object.entries(item.freqs).forEach(([f, w]) => { signal[f] = w * 0.5; });
   channel.processSignal(signal);
 
   // Track reading time
