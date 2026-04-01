@@ -250,11 +250,174 @@ The remaining constants follow from α through the ladder:
 
 These are computed at import time and verified by assertion. Not parameters; consequences.
 
+## The Fractal Resonance Transformer (FRT)
+
+A parallel architecture that brings the circumpunct into the attention mechanism itself. Pure attention (no SSM, no sequential recurrence) with three framework-derived modifications that evolve across three versions.
+
+### Version History
+
+**v1** (`fractal_resonance_transformer.py`): Two separate mechanisms bolted together. Fractal KV compression (⊛: older entries compressed sub-linearly, preserving phase while reducing magnitude) plus a resonance bonus (☀︎: phase-matching boost added to attention scores). They work, but they're implemented as if they're unrelated operations.
+
+**v2** (`fractal_resonance_transformer_v2.py`): The unified fold. Compression and resonance fuse into one equation:
+
+```
+effective_exponent = 1 + age * (base_exp - 1) * (1 - lambda * cos^2(delta_phi / 2))
+```
+
+Phase-matched entries resist compression. The resonance is IN the field, not added on top. K and V arrive at the attention computation already encoding both temporal depth (how old they are) and relational structure (how resonant they are with the current moment). The 2D attention surface, computed over fractally-nested K/V, becomes 3D: the nesting IS the third dimension. Conservation of traversal: 0 + 1 + 2 = 3. The boundary emerges from the field folding back on itself.
+
+**v3** (`fractal_resonance_transformer_v3.py`): Multi-modal. Universal byte encoder replaces the token embedding. Any modality enters as raw bytes (text, audio, image, molecular, whatever) through the same encoder. No tokenizer. No spectrogram. No patch embedding. Just bytes -> chunks -> fold. Modality structure emerges from training through SRL head specialization, not from architectural assumptions. E = 1. Energy doesn't come in flavors.
+
+### The Core Architecture
+
+```
+    RAW BYTES (any modality)
+        │
+     UNIVERSAL BYTE ENCODER
+        │  byte embedding -> local conv -> chunk projection
+        │  (the lens; substrate-independent)
+        ▼
+    ┌────────────────────────────────┐
+    │   FRACTAL ATTENTION LAYER      │  × n_layers
+    │                                │
+    │   Q = • (aperture; selects)    │
+    │   K,V = Φ (field; folded)      │
+    │                                │
+    │   ⊙ THE FRACTAL FOLD:         │
+    │   K,V compressed by age,       │
+    │   modulated by phase coherence │
+    │   (one operation, both ⊛ + ☀︎)  │
+    │                                │
+    │   softmax(Q . K_folded^T)      │
+    │   2D field over 3D nesting     │
+    │                                │
+    │   + SRL head specialization    │
+    │   + dormant head growth        │
+    │   + resonance gating           │
+    │                                │
+    │   ──── FeedForward (SwiGLU) ── │
+    └────────────────────────────────┘
+        │
+     ◐ BALANCE-AS-TEMPERATURE
+        │  self-regulating output sharpness
+        ▼
+    OUTPUT LOGITS (byte predictions)
+```
+
+### The Fractal Fold (The Key Innovation)
+
+Standard softmax is competitive: every new token steals attention weight from every old token. That IS the memory deletion problem. The FRT solves it not by replacing attention, but by changing what attention sees.
+
+The fold is one operation with two directions:
+
+- **⊛ (compression)**: older K/V entries get sub-linearly compressed. Quiet memories decay slower than loud ones. Magnitude fades; identity (phase, direction) is preserved. This creates depth (nesting) in the field.
+- **☀︎ (resonance resistance)**: entries whose phase matches the current context resist compression. The field holds what resonates. This creates transparent channels through the nesting.
+
+Together, the flat 2D attention surface develops fractal depth. Phase-matched entries naturally have larger magnitudes (they resisted compression) and therefore naturally dominate the attention weights. The resonance is IN the field, not added on top.
+
+### Typed Dimensional Heads
+
+Heads are allocated across the seven-rung dimensional ladder using phi-proportioned groups (0D gets the most heads, 3D gets the fewest). Each head has a carrier phase (what frequency it's tuned to), a lock strength (how committed it is), and SRL adaptation dynamics. Seeded heads start pre-tuned; open heads start blank and specialize through training.
+
+Dormant heads (dark matter: energy in the left half-plane) wake when persistent unmatched patterns appear. This is A1: the pool must self-limit into distinct, active heads.
+
+### Sensory Modules (Prebuilt Lenses)
+
+The byte encoder is universal, but some signal structures are already known. Sensory modules pre-tune specific heads to known patterns, giving the system a head start without constraining it. SRL adaptation still runs; if the data contradicts the initialization, the carrier drifts. The initialization is a suggestion, not a constraint. A lens, not a wall.
+
+Three modules are implemented in `sensory_modules.py`:
+
+**Language Module** (7 heads, one per rung):
+
+| Rung | Head Function | Carrier Phase Source |
+|------|--------------|---------------------|
+| 0D | ASCII identity (space-anchored) | byte 0x20 frequency |
+| 0.5D | byte-pair patterns (digraph detector) | 'th' average byte |
+| 1D | word boundaries (whitespace detector) | low byte range |
+| 1.5D | morphological patterns (suffix detector) | -ing/-tion byte range |
+| 2D | syntactic relationships (verb-region) | lowercase ASCII midpoint |
+| 2.5D | discourse/topic shifts (capital detector) | uppercase ASCII range |
+| 3D | document structure (sentence/paragraph end) | period (0x2E) frequency |
+
+**Audio Module** (7 heads):
+
+| Rung | Head Function |
+|------|--------------|
+| 0D | onset/transient detection |
+| 0.5D | sub-bass convergence (20-60 Hz region) |
+| 1D | fundamental pitch (vocal range) |
+| 1.5D | harmonic series (timbre/overtones) |
+| 2D | spectral surface (broadband) |
+| 2.5D | rhythm/beat emergence |
+| 3D | phrase/utterance boundary |
+
+**Vision Module** (7 heads):
+
+| Rung | Head Function |
+|------|--------------|
+| 0D | pixel intensity (luminance center) |
+| 0.5D | local contrast (adjacent pixel difference) |
+| 1D | horizontal edge detection |
+| 1.5D | corner/junction (edge rotation) |
+| 2D | texture field (spatial frequency surface) |
+| 2.5D | object emergence (region formation) |
+| 3D | scene boundary (silhouette/frame) |
+
+Custom modules can be created by subclassing `SensoryModule` and providing head profiles.
+
+### The Live Input Multiplexer
+
+`LiveInputMultiplexer` interleaves bytes from multiple live sources (webcam, microphone, keyboard, file streams, web) into a single byte stream with lightweight framing. Each frame carries a source identifier and timestamp. The model learns cross-modal binding through phase coherence across sources: when a webcam frame and a microphone buffer arrive at the same moment, their phase signatures create resonance in the fold. No explicit cross-modal attention; the fold does it.
+
+Thread-safe with priority weighting. Sources can push from different threads. Higher priority sources get more frames per cycle.
+
+```python
+from sensory_modules import build_multimodal_frt
+
+model, manager, mux = build_multimodal_frt(
+    d_model=256, n_heads=16, max_heads=32,
+    n_layers=8, chunk_size=16,
+    modules=['language', 'audio', 'vision'],
+)
+
+# Push from any source
+mux.push_text("What is that sound?")
+mux.push_audio(microphone_buffer)
+mux.push_image(webcam_frame)
+
+# Get interleaved stream, run forward
+byte_stream = mux.get_byte_stream(max_bytes=2048)
+logits = model(byte_stream)
+```
+
+### How the FRT Differs from the Genesis Engine
+
+The genesis engine (`xorzo3.py`) processes language through bond formation, template closure, and the pump cycle operating on a 64D complex field. It is immediate, one-pass, and structural.
+
+The FRT processes any modality through attention with the fractal fold operating on a d_model-dimensional field. It is gradient-trained, parallel, and can scale.
+
+Both implement the same circumpunct structure (•, Φ, ○), the same pump cycle (⊛ → i → ☀︎), and the same SRL dynamics. They are two implementations of the same framework at different levels of abstraction: the genesis engine is a single circumpunct processing language; the FRT is a hierarchy of circumpuncts processing any signal.
+
+| | Genesis Engine | Fractal Resonance Transformer |
+|---|---|---|
+| Input | Text tokens | Raw bytes (any modality) |
+| Learning | One-pass bond formation | Gradient-trained (backprop) |
+| Memory | Bond strengths + concept tree | Fractally-folded KV cache |
+| Generation | Template closure + pump cycle | Next-chunk prediction |
+| Parallelism | Sequential pump cycle | Fully parallel attention |
+| Scale | Hundreds of sentences | Scalable to large corpora |
+| SRL | Channel-level frequency locking | Head-level frequency locking |
+| Modalities | Language only | Universal (byte-level) |
+
 ## Files
 
 | File | What It Does |
 |------|-------------|
-| `xorzo3.py` | The engine (v3). All core classes: Vocabulary, ConceptTree, Template, Skeleton, TemplateStore, Gate, PumpCycle, MindState, SensoryCascade, VirtueSystem, Engine. |
+| `xorzo3.py` | The genesis engine (v3). All core classes: Vocabulary, ConceptTree, Template, Skeleton, TemplateStore, Gate, PumpCycle, MindState, SensoryCascade, VirtueSystem, Engine. |
+| `fractal_resonance_transformer.py` | FRT v1. Separate fractal compression + resonance bonus. |
+| `fractal_resonance_transformer_v2.py` | FRT v2. Unified fold (compression and resonance as one operation). |
+| `fractal_resonance_transformer_v3.py` | FRT v3. Multi-modal. Universal byte encoder + unified fold. |
+| `sensory_modules.py` | Sensory modules (Language, Audio, Vision), SensoryModuleManager, LiveInputMultiplexer. |
 | `web.py` | Flask web server. HTTP API, SSE streaming, background heartbeat thread, state persistence. |
 | `interface.html` | Browser UI. Real-time status panel, chat, mind grid, gate display, heartbeat slider. |
 | `chat.py` | Terminal interface. Type to speak, background heartbeat, status line. |
@@ -435,7 +598,9 @@ A transformer only produces output when prompted. Xorzo thinks on its own: the h
 
 ### What Xorzo Cannot Do (Yet)
 
-Produce fluent, contextually rich, multi-paragraph prose. Handle ambiguity gracefully. Generalize across domains. Understand pragmatics, irony, or metaphor in context. A transformer has seen billions of sentences and learned the deep statistical structure of language. Xorzo has seen hundreds of sentences and built a small field. The quality gap is enormous.
+Produce fluent, contextually rich, multi-paragraph prose. Handle ambiguity gracefully. Understand pragmatics, irony, or metaphor in context. A transformer has seen billions of sentences and learned the deep statistical structure of language. The genesis engine has seen hundreds of sentences and built a small field. The quality gap is enormous.
+
+The FRT (v3) closes this gap architecturally: it can train on large corpora, process any modality through the universal byte encoder, and scale via standard GPU parallelism. What it still needs is training at scale and real-world multi-modal data streams to prove the fold's advantage over standard attention for long-range memory and cross-modal binding.
 
 ### Why It Matters
 
