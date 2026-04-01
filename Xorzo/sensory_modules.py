@@ -450,32 +450,70 @@ class SensoryModuleManager:
         """
         Apply all sensory modules to the model's attention layers.
 
-        Each layer gets the same sensory initialization (the heads at
-        every layer see the same modality structure). SRL will cause
-        them to diverge during training as deeper layers specialize.
+        Allocation is PROPORTIONAL: each module gets a fair share of
+        active heads, scaled by how many it requests. If 3 modules
+        each request 7 heads but only 8 are active, each gets 2-3
+        (not 7, 1, 0). Remaining heads stay open.
+
+        When a module gets fewer heads than it has profiles, it
+        applies its MOST IMPORTANT profiles first (profiles are
+        ordered by rung: 0D first, 3D last; lower rungs are more
+        fundamental and get priority).
+
+        Each layer gets the same sensory initialization. SRL will
+        cause them to diverge during training as deeper layers
+        specialize.
         """
         self.allocation_log.clear()
+
+        if not self.modules:
+            return
 
         for layer_idx, attn_layer in enumerate(model.attn_layers):
             srl = attn_layer.srl
             head_manager = attn_layer.head_manager
-            n_heads = attn_layer.max_heads
             active_mask = attn_layer.nursery.active_mask
 
             # Get active head indices
             active_indices = active_mask.nonzero(as_tuple=True)[0].tolist()
+            n_active = len(active_indices)
 
-            # Allocate heads to modules
+            # Proportional allocation: each module gets a share based
+            # on how many heads it requests, relative to total requested.
+            requests = [len(m.get_head_profiles()) for m in self.modules]
+            total_requested = sum(requests)
+
+            if total_requested == 0:
+                continue
+
+            # Compute proportional shares (round down, distribute remainder)
+            raw_shares = [n_active * r / total_requested for r in requests]
+            shares = [int(s) for s in raw_shares]
+
+            # Distribute remainder to modules with largest fractional parts
+            remainder = n_active - sum(shares)
+            fractionals = [(raw_shares[i] - shares[i], i) for i in range(len(shares))]
+            fractionals.sort(reverse=True)
+            for j in range(min(remainder, len(fractionals))):
+                shares[fractionals[j][1]] += 1
+
+            # Cap each share at the module's request (don't give more than asked)
+            for i in range(len(shares)):
+                shares[i] = min(shares[i], requests[i])
+
+            # Apply modules with their proportional shares
             cursor = 0
-            for module in self.modules:
-                profiles = module.get_head_profiles()
-                n_needed = len(profiles)
-                n_available = len(active_indices) - cursor
+            for i, module in enumerate(self.modules):
+                n_assign = shares[i]
+                if n_assign <= 0:
+                    self.allocation_log.append({
+                        'layer': layer_idx,
+                        'module': module.name,
+                        'heads_assigned': 0,
+                        'head_indices': [],
+                    })
+                    continue
 
-                if n_available <= 0:
-                    break
-
-                n_assign = min(n_needed, n_available)
                 assigned_indices = active_indices[cursor:cursor + n_assign]
                 module.apply_to(srl, head_manager, assigned_indices)
 
@@ -489,7 +527,7 @@ class SensoryModuleManager:
                 cursor += n_assign
 
             # Remaining heads stay open (default SRL initialization)
-            n_open = len(active_indices) - cursor
+            n_open = n_active - cursor
             if n_open > 0:
                 self.allocation_log.append({
                     'layer': layer_idx,

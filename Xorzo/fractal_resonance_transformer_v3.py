@@ -419,13 +419,19 @@ class UniversalByteEncoder(nn.Module):
         byte_ids: (batch, n_bytes) integer tensor, values 0-258
         Returns: (batch, n_chunks, d_model) field vectors
 
-        n_chunks = n_bytes // chunk_size (truncates remainder)
+        n_chunks = ceil(n_bytes / chunk_size). Short inputs are
+        right-padded with zeros to fill the last chunk.
         """
         batch, n_bytes = byte_ids.shape
-        n_chunks = n_bytes // self.chunk_size
 
-        # Truncate to exact multiple of chunk_size
-        byte_ids = byte_ids[:, :n_chunks * self.chunk_size]
+        # Pad to at least one full chunk, and to an exact multiple
+        min_bytes = max(self.chunk_size, n_bytes)
+        pad_needed = (self.chunk_size - (min_bytes % self.chunk_size)) % self.chunk_size
+        total_bytes = min_bytes + pad_needed
+        if total_bytes > n_bytes:
+            byte_ids = F.pad(byte_ids, (0, total_bytes - n_bytes), value=0)
+
+        n_chunks = byte_ids.size(1) // self.chunk_size
 
         # Stage 1: embed each byte
         x = self.byte_embed(byte_ids)  # (batch, n_bytes_trunc, d_model)
@@ -936,12 +942,8 @@ if __name__ == '__main__':
     print("\n  Test 1: TEXT input")
     text = "The circumpunct is a whole composed of three irreducible parts."
     text_bytes = text_to_bytes(text).unsqueeze(0).to(device)
-    # Pad to multiple of chunk_size
-    pad_needed = model.chunk_size - (text_bytes.size(1) % model.chunk_size)
-    if pad_needed < model.chunk_size:
-        text_bytes = F.pad(text_bytes, (0, pad_needed), value=PAD_TOKEN)
     print(f"  Input: \"{text}\"")
-    print(f"  Bytes: {text_bytes.shape[1]} -> {text_bytes.shape[1] // model.chunk_size} chunks")
+    print(f"  Bytes: {text_bytes.shape[1]} (encoder handles padding internally)")
 
     model.train()
     logits = model(text_bytes)
@@ -952,23 +954,35 @@ if __name__ == '__main__':
     #  TEST 2: RANDOM BYTES (simulated audio/image)
     # ════════════════════════════════════════
 
-    print("\n  Test 2: RANDOM BYTES (simulated multi-modal)")
-    batch_size = 4
-    n_bytes = 512  # 512 bytes = 32 chunks at chunk_size=16
+    print("\n  Test 2: SHORT INPUTS (edge cases)")
+    for short_len in [1, 8, 15, 16, 17]:
+        short_bytes = torch.randint(0, 256, (1, short_len), device=device)
+        model.eval()
+        with torch.no_grad():
+            out = model(short_bytes)
+        print(f"  {short_len:3d} bytes -> {out.shape[1]} chunks: OK")
+
+    # ════════════════════════════════════════
+    #  TEST 3: RANDOM BYTES (simulated multi-modal)
+    # ════════════════════════════════════════
+
+    print("\n  Test 3: RANDOM BYTES (simulated multi-modal)")
+    batch_size = 2
+    n_bytes = 256  # 256 bytes = 16 chunks at chunk_size=16
     random_bytes = torch.randint(0, 256, (batch_size, n_bytes), device=device)
     print(f"  Input: {random_bytes.shape} random bytes")
     print(f"  Chunks: {n_bytes // model.chunk_size}")
 
+    model.train()
     logits = model(random_bytes)
     print(f"  Output logits: {logits.shape}")
 
     # ════════════════════════════════════════
-    #  TEST 3: BACKWARD PASS
+    #  TEST 4: BACKWARD PASS
     # ════════════════════════════════════════
 
-    print("\n  Test 3: BACKWARD PASS")
-    # Target: predict the next chunk's first byte (simplified)
-    n_chunks = n_bytes // model.chunk_size
+    print("\n  Test 4: BACKWARD PASS")
+    n_chunks = logits.size(1)
     target = torch.randint(0, BYTE_VOCAB, (batch_size, n_chunks), device=device)
     loss = F.cross_entropy(logits.view(-1, BYTE_VOCAB), target.view(-1))
     loss.backward()
@@ -986,20 +1000,16 @@ if __name__ == '__main__':
     print(f"  Encoder gradients: {enc_grad}/{enc_total}")
 
     # ════════════════════════════════════════
-    #  TEST 4: REAL FILE INPUT (self-referential)
+    #  TEST 5: REAL FILE INPUT (self-referential)
     # ════════════════════════════════════════
 
-    print("\n  Test 4: REAL FILE INPUT (reading own source code)")
+    print("\n  Test 5: REAL FILE INPUT (reading own source code)")
     own_path = os.path.abspath(__file__)
     if os.path.exists(own_path):
-        file_bytes = file_to_bytes(own_path, max_bytes=1024)
-        # Pad
-        pad_needed = model.chunk_size - (len(file_bytes) % model.chunk_size)
-        if pad_needed < model.chunk_size:
-            file_bytes = F.pad(file_bytes, (0, pad_needed), value=PAD_TOKEN)
+        file_bytes = file_to_bytes(own_path, max_bytes=512)
         file_bytes = file_bytes.unsqueeze(0).to(device)
         print(f"  File: {own_path}")
-        print(f"  Bytes: {file_bytes.shape[1]} -> {file_bytes.shape[1] // model.chunk_size} chunks")
+        print(f"  Bytes: {file_bytes.shape[1]}")
 
         model.eval()
         with torch.no_grad():
@@ -1008,6 +1018,7 @@ if __name__ == '__main__':
             top5 = torch.topk(probs, 5)
             top_bytes = top5.indices.tolist()
             top_probs = top5.values.tolist()
+            print(f"  Output chunks: {logits.shape[1]}")
             print(f"  Next chunk prediction (top 5):")
             for b, p in zip(top_bytes, top_probs):
                 char = chr(b) if 32 <= b < 127 else f'<{b}>'
@@ -1016,36 +1027,20 @@ if __name__ == '__main__':
         print(f"  (skipped: cannot read own source)")
 
     # ════════════════════════════════════════
-    #  TEST 5: TIMING
+    #  TEST 6: TIMING (kept light for CPU)
     # ════════════════════════════════════════
 
-    print(f"\n  Test 5: TIMING")
-    model.train()
+    print(f"\n  Test 6: TIMING")
+    model.eval()
 
-    # Warmup
-    for _ in range(3):
-        model.zero_grad()
-        out = model(random_bytes)
-        F.cross_entropy(out.view(-1, BYTE_VOCAB), target.view(-1)).backward()
-
-    n_runs = 10
-    t0 = time.time()
-    for _ in range(n_runs):
-        model.zero_grad()
-        out = model(random_bytes)
-        F.cross_entropy(out.view(-1, BYTE_VOCAB), target.view(-1)).backward()
-    avg_ms = (time.time() - t0) / n_runs * 1000
-    print(f"  Avg forward+backward ({batch_size}x{n_bytes} bytes): {avg_ms:.1f} ms")
-
-    # Different byte lengths
-    for test_bytes in [256, 1024, 2048]:
+    # Forward-only timing at different byte lengths
+    for test_bytes in [128, 256, 512]:
         x_test = torch.randint(0, 256, (2, test_bytes), device=device)
-        model.eval()
         t0 = time.time()
         with torch.no_grad():
-            for _ in range(5):
+            for _ in range(3):
                 _ = model(x_test)
-        t_ms = (time.time() - t0) / 5 * 1000
+        t_ms = (time.time() - t0) / 3 * 1000
         n_chunks = test_bytes // model.chunk_size
         print(f"  {test_bytes} bytes ({n_chunks} chunks): {t_ms:.1f} ms forward")
 
