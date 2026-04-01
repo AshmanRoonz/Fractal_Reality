@@ -234,7 +234,7 @@ def train(model, corpus, device, epochs=EPOCHS, batch_size=BATCH_SIZE,
             main_loss = F.cross_entropy(
                 logits.reshape(-1, BYTE_VOCAB),
                 target.reshape(-1),
-                ignore_index=0,  # ignore padding
+                ignore_index=PAD_TOKEN,  # 256; never collides with real byte values
             )
 
             # Balance regulation: soft kappa regularization
