@@ -656,8 +656,9 @@ function addXorzoMessage() {
 function addCuriosity(text) {
   const container = document.createElement('div');
 
-  // Distinguish between seek events and curiosity questions
+  // Distinguish between seek events, self-definitions, and curiosity questions
   const isSought = text.startsWith('sought:');
+  const isSelfDefined = text.startsWith('self-defined:');
 
   if (isSought) {
     container.className = 'msg seek';
@@ -667,6 +668,16 @@ function addCuriosity(text) {
     const textEl = document.createElement('div');
     textEl.className = 'seek-text';
     textEl.textContent = text.replace('sought: ', '');
+    container.appendChild(label);
+    container.appendChild(textEl);
+  } else if (isSelfDefined) {
+    container.className = 'msg seek';
+    const label = document.createElement('div');
+    label.className = 'seek-label';
+    label.textContent = '\u2299 RECALLED';
+    const textEl = document.createElement('div');
+    textEl.className = 'seek-text';
+    textEl.textContent = text.replace('self-defined: ', '');
     container.appendChild(label);
     container.appendChild(textEl);
   } else {

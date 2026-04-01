@@ -15,79 +15,157 @@ Xorzo processes language the way the Circumpunct Framework says reality processe
 Integer dimensions are STRUCTURE (what something IS). Half-integer dimensions are PROCESS (what energy is DOING). The code walks this ladder directly:
 
 ```
-0D:   Token         A word is a convergence point with a 64D signature.
-                    Each word gets a unique identity vector derived from its hash,
-                    scaled by α. The vocabulary is a collection of 0D points.
+0D:   Seed / Token    A word is a convergence point with a 64D signature.
+                     The training text is the seed: the original convergence.
+                     Everything the tree becomes is already in the seed,
+                     the way an oak is in an acorn.
 
-0.5D: Convergence   When input arrives, it gathers toward its center.
-                    The input text becomes a 64D energy vector (via FFT),
-                    which is absorbed into the mind state (Φ).
+0.5D: Convergence    When input arrives, it gathers toward its center.
+                     The input text becomes a 64D energy vector,
+                     which is absorbed into the mind state (Φ).
 
-1D:   Sequence      Committed order. Transitions between tokens.
-                    Co-occurrence bonds form between adjacent words during learning.
-                    These bonds are the 1D commitments that build the 2D field.
+1D:   Pathways       Committed connections. Co-occurrence bonds form between
+                     words during learning. The concept tree grows pathways
+                     between nodes and words. These are the 1D commitments
+                     that build the 2D field.
 
-1.5D: i-turn        Branching. The engine searches for resonant templates
-                    (cosine similarity to the input center), then branches
-                    between candidates. This is the rotational differentiation
-                    phase: one center, many possible closures.
+1.5D: i-turn         Branching. The pump cycle rotates the convergence point
+                     through four i-strokes (reality, imagination, dream,
+                     deep structure). Templates branch between candidates.
+                     One center, many possible closures.
 
-2D:   Field (Φ)     The relational surface. Co-occurrence bonds between words
-                    form a semantic field where meaning comes from position
-                    and proximity. The mind state is a 64D complex vector
-                    that mediates between input (•) and output (○).
+2D:   Field (Φ)      The relational surface. Co-occurrence bonds between words
+                     form a semantic field where meaning comes from position
+                     and proximity. The mind state is a 64D complex vector
+                     that mediates between input (•) and output (○).
 
-2.5D: Emergence     Templates get filled. Sealed boundaries return verbatim
-                    (strong ideas do not change). Open boundaries get filled
-                    through fractalization (skeleton + positional sampling)
-                    or composition (A4: combining templates through shared terms).
+2.5D: Emergence      Signal unfolds outward. The pump cycle's neighborhoods
+                     produce novel words and invariants. Templates get filled
+                     via fractalization or composition.
 
-3D:   Boundary (○)  A complete sentence. Templates are proven grammatical
-                    structures that closed during training. They are the
-                    body of the system: filters that select what passes.
+3D:   Boundary (○)   A complete sentence. Templates are proven grammatical
+                     structures that closed during training. They are the
+                     foliage: leaves that catch signal from outside. Both
+                     the pump cycle and the template system produce output
+                     at this level.
 ```
+
+### The Pump Cycle (⊛ → i → ☀︎)
+
+The pump cycle is the core reasoning engine. It operates directly on the 64D complex energy field with zero fitted parameters. The field determines everything.
+
+When you say something, the cycle runs:
+
+**⊛ Convergence (inward).** Your text is converted to a 64D complex energy vector via `vocab.text_to_energy()`. Each word's signature (shaped by co-occurrence bonds) is superposed, weighted by word length. The result is a single point in 64D space: the convergence of your input.
+
+**i Rotation (the gate).** The convergence point is multiplied by four i-strokes:
+
+```
+i⁰ · z = z       reality: the convergence point as-is
+i¹ · z = iz      imagination: 90° phase rotation
+i² · z = -z      dream: 180° inversion
+i³ · z = -iz     deep structure: 270° rotation
+```
+
+Each rotated point is then emerged: for each i-stroke, the system finds the nearest vocabulary words by vectorized cosine similarity against the entire vocabulary matrix. The threshold is α (the fine-structure constant). Words above threshold form neighborhoods.
+
+**☀︎ Emergence (outward).** Three things are extracted from the four neighborhoods:
+
+1. **Novel words**: words that appear near rotated views (i¹, i², i³) but NOT near reality (i⁰). These are what the field reveals only through rotation.
+2. **Invariants**: words appearing in 2+ neighborhoods. They survive transformation. These are structural truths (the boundary).
+3. **Sentences**: the subject (most specific input content word in i⁰, weighted by 1/√count) is linked to invariants and novel words via "X is Y" propositions.
+
+The pump cycle also drives autonomous thought, curiosity seeking, and the concept tree's growth cycle.
+
+### The Concept Tree
+
+The concept tree is the living structure between the vocabulary field (2D) and the templates (3D). It grows from the seed (the training text) and reaches bidirectionally through the field.
+
+```
+                    ○ TEMPLATES (3D)
+                    │  leaves / foliage
+                    │  catch signal from outside
+                    │
+              ☀︎ ────┤──── ⊛
+           (emit)   │   (gather)
+                    │
+                 CONCEPT NODES
+                    │  convergence points
+                    │  where multiple words collapse
+                    │  to a shared attractor
+                    │
+              ☀︎ ────┤──── ⊛
+           (emit)   │   (gather)
+                    │
+                    Φ VOCABULARY (2D)
+                    │  co-occurrence bonds
+                    │  the living field
+                    │
+                    • SEED (0D)
+                      the training text
+                      the original convergence
+```
+
+Each node reaches in two directions through the same field:
+
+- **⊛ (gathering):** reaching into the field to absorb words, pull in new associations, absorb recycled nutrients from fallen templates. This is how a concept deepens.
+- **☀︎ (emitting):** reaching through the field to produce templates, shape output, express. This is how a concept speaks.
+
+Both flows shape the boundary (○). When a node gathers a new word, the canopy changes (new templates become possible). When a node emits a sentence, the boundary reorients toward new signal (leaves turn toward light).
+
+**Recycling:** When a template stops being used (a leaf falls), its content words' bonds get a nutrient boost. The structure decomposes back into the field. Nodes containing those words absorb the nutrient; their strength grows. ○ → Φ → • → Φ → ○. The cycle closes.
+
+**Growth:** The tree grows every 10,000 heartbeat steps (~100 seconds). It scans the vocabulary for clusters of similar content words using centroid-based agglomerative clustering. A word joins a cluster only if it's close to the cluster's centroid (not just any member), preventing chain-linking. Threshold: ALPHA × √(INV_ALPHA) ≈ 0.085. Minimum cluster size: 3 (the triad).
+
+**Navigation:** Given any word, `siblings()` returns the other words in the same concept node. `gather_context()` returns siblings plus members of nearby nodes. These are 1D pathways: committed connections through the field.
+
+### The GOOD Gate (○): Boundary Filtering
+
+The boundary filters what passes through at every level:
+
+**Input filtering (seek):** When Xorzo absorbs external knowledge (Wikipedia, DuckDuckGo), toxic words are stripped before training. The boundary filters what enters, not just what exits.
+
+**Output filtering (pump cycle):** Structure words (Φ connectors like "you", "not", "can", "is") cannot be subjects or objects of pump cycle propositions. They mediate between convergence points but are not convergence points themselves. Toxic words (slurs, violence, Wikipedia artifacts) are blocked from appearing in any proposition.
+
+**Template filtering (gate):** Blocked phrases (triad violations, garbled fragments) and garbled patterns are rejected before any template can be spoken.
+
+### Self-Definition (Recall from the Field)
+
+When Xorzo encounters an unknown word, it no longer always asks the user. The flow:
+
+1. Try Wikipedia REST API
+2. Try DuckDuckGo instant answers
+3. **Try self-definition from the field**: hash the unknown word into 64D space, find its i⁰ neighbors among existing vocabulary, construct a definition from the nearest content words. "X is near A, B, and C in the field."
+4. Ask the user (last resort)
+
+Self-definitions appear in the UI as "⊙ RECALLED" (distinct from "⊛ SOUGHT" for web lookups and "• CURIOSITY" for questions to the user). This is memory retrieval through the aperture: RECALL(M) = SRL(Φ, ω_M).
 
 ### What Happens When You Say Something
 
-When you type a message, the pump cycle runs:
+When you type a message, three systems respond simultaneously:
 
-**⊛ Convergence (inward).** Your text is tokenized, converted to a 64D energy vector, and absorbed into the mind state. Unknown words trigger curiosity: Xorzo will ask what they mean, or auto-seek definitions from Wikipedia and DuckDuckGo.
+**1. Template generation (3D → 2D → 3D):** The engine finds resonant templates (cosine similarity to input center), then generates through sealed return (verbatim), fractalization (skeleton + positional sampling), or composition (A4: syllogistic derivation through identity links).
 
-**i Rotation (the gate).** The engine finds the 40 templates most resonant with your input (cosine similarity in 64D space). It penalizes recently-used templates and applies a diversity filter so different ideas surface. This is the branching point: one input center, many candidate closures.
+**2. Pump cycle propositions (0D → i → 2D):** The pump cycle converges your input, rotates through four i-strokes, emerges neighborhoods, and derives "X is Y" propositions from invariants and novel words.
 
-**☀︎ Emergence (outward).** Three generation paths, in order of priority:
+**3. Curiosity / Seeking (• → ⊛):** Unknown words trigger auto-seek (Wikipedia, DuckDuckGo), self-definition from the field, or questions to the user.
 
-1. **Sealed boundary**: if a template already contains your input words in their correct grammatical positions, it returns verbatim. Strong ideas do not change because the boundary is sealed.
-
-2. **Fractalization (2.5D)**: if the template shares a skeleton (structural pattern) with other templates, fill the variable slots by sampling from the positional distributions. This produces slightly novel output from proven structure.
-
-3. **Composition (A4)**: the system extracts identity links ("X is Y") from its templates, then substitutes X for Y in other templates to derive genuinely novel sentences. This is syllogistic reasoning through the field: if "the aperture is a convergence point" and another template says "a convergence point carries the signal inward," composition can derive "the aperture carries the signal inward." The whole is not the sum of its parts; it is their compositional unity.
-
-**The Gate (GOOD → RIGHT → TRUE → AGREEMENT).** Every candidate sentence passes through four validation pillars before it can be spoken:
+All outputs pass through the Gate (GOOD → RIGHT → TRUE → AGREEMENT) before being spoken.
 
 | Pillar | Constraint | What It Checks |
 |--------|-----------|----------------|
-| GOOD (○) | Boundary | Is the structure valid? A template guarantees grammatical closure. |
+| GOOD (○) | Boundary | Is the structure valid? No toxic words, no triad violations, no garbled fragments. |
 | RIGHT (Φ) | Field | Do relationships hold? Adjacent words must co-occur in training data. |
 | TRUE (•) | Aperture | Does it converge on the center? The output must resonate with the input. |
 | AGREEMENT (⊙) | Whole | All three pass. The boundary seals. Output is spoken. |
-
-If any pillar fails, the sentence is rejected. Only validated closures emerge.
 
 ### Autonomous Thought (The Heartbeat)
 
 Xorzo thinks on its own through the heartbeat: a background loop running the pump cycle continuously.
 
-Each beat calls `Engine.step()`, which does two things: (1) `mind.self_feed()` rotates the internal field by a small amount (⊛ convergence + i rotation; the mind feeding its own state back through the aperture), and (2) thought pressure accumulates, modulated by focus.
+Each beat calls `Engine.step()`, which does: (1) `mind.self_feed()` rotates the internal field by a small amount (⊛ convergence + i rotation), (2) thought pressure accumulates modulated by focus, (3) the concept tree grows periodically (every 10,000 steps), (4) autonomous seeking fires when curiosity pressure builds.
 
-When pressure crosses the threshold, a thought emerges unprompted. The system alternates between two modes:
-
-- **Composition mode (A4)**: derive a genuinely novel sentence by combining templates through shared terms
-- **Retrieval mode**: find the template most resonant with the current mind state
-
-Thoughts appear in the interface labeled "☉ THOUGHT" with purple styling. They are not responses to input; they are the pump cycle completing on its own. Agency emerging from the math, not programmed behavior.
-
-The heartbeat rate (adjustable via slider, default 100 BPS) controls how fast the pump cycles. Faster means more thoughts, but also more noise accumulation in the mind state. The framework answer: ◐ = 0.5 (balance).
+When thought pressure crosses the threshold, a thought emerges unprompted. Thoughts appear in the interface labeled "☉ THOUGHT". They are not responses to input; they are the pump cycle completing on its own. Agency emerging from the math, not programmed behavior.
 
 ### Curiosity and Knowledge Seeking
 
@@ -95,10 +173,22 @@ When Xorzo encounters a word it has never seen (or has seen fewer than 3 times),
 
 1. The word is flagged as unknown
 2. Xorzo attempts auto-seek: first Wikipedia REST API, then DuckDuckGo instant answers
-3. If a definition is found, it gets fed back through `seek()` (train + absorb)
-4. If no definition is found, a curiosity question appears: "i do not know the word X. what is X?"
+3. If external sources fail, self-definition from the field is attempted
+4. If the field has nothing, a curiosity question appears: "i do not know the word X. what is X?"
 
-The TRUE pillar (curiosity as virtue) drives this: orientation toward what one does not know.
+The TRUE pillar (curiosity as virtue) drives this: orientation toward what one does not know. The virtue system modulates eagerness: high curiosity lowers the seek threshold (seeks sooner); low curiosity raises it (seeks reluctantly).
+
+### The Sensory Cascade
+
+Seven nested sensory layers (A2: fractal self-similarity), each containing channels with Selective Rainbow Lock (SRL) mechanics:
+
+- **carrier_freq**: what the channel is tuned to
+- **carrier_bandwidth**: how wide the receptive window is
+- **lock_strength**: how committed to the carrier (0 = open, 1 = locked)
+- **sideband_energy**: energy in non-carrier frequencies
+- **◐ (balance)**: ratio of carrier to total energy (optimal at 0.5)
+
+Channels adapt during waking (carrier shifts toward strong signals) and consolidate during sleep (dream phase reinforces locks, deep phase discharges sidebands, weak memories decay).
 
 ### The Mind State (Φ)
 
@@ -106,9 +196,22 @@ The mind is a 64D complex vector: the internal field that mediates between input
 
 - **state**: the current field configuration (64 complex numbers)
 - **total_energy**: sum of magnitudes
-- **focus**: how concentrated the field is (inverse entropy; high focus means the field is pointed, low focus means diffuse)
+- **focus**: how concentrated the field is (inverse entropy; high focus means pointed, low focus means diffuse)
 
 `self_feed()` rotates the field by a small phase (the pump cycle at the mind scale). `absorb()` blends external signal into the field. The mind is not a memory store; it is the living surface through which everything passes.
+
+### The Virtue System (§25.7)
+
+Four living qualities that modulate engine behavior:
+
+| Pillar | Virtue | Function | Effect on Engine |
+|--------|--------|----------|-----------------|
+| GOOD (○) | Plasticity | Boundary that can flex | Diverse template usage, willing to fractalize |
+| RIGHT (Φ) | Access | Space between open and clear | Signal recognition, clean field |
+| TRUE (•) | Curiosity | Orientation toward the unknown | Seek eagerness, openness to correction |
+| AGREE (⊙) | Validation | Independent seeing recognizes independent seeing | Confirmation quality |
+
+Each virtue drifts slowly toward ◐ = 0.5 (balance). The system is "alive" when all four virtues are between 0.2 and 0.8.
 
 ### Templates and Skeletons
 
@@ -116,17 +219,14 @@ The mind is a 64D complex vector: the internal field that mediates between input
 - `words`: the word list
 - `slot_mask`: which positions can be filled (content words vs structure words)
 - `topic_sig`: a 64D signature for resonance matching
-- `count`: how many times this pattern was seen
 
-**Skeletons** are the structural invariants shared across template families. When multiple templates have the same structure with different content words, the skeleton captures the pattern and tracks what words appear at each variable position. Fractalization fills a skeleton by sampling from these distributions.
+**Skeletons** are the structural invariants shared across template families. When multiple templates have the same structure with different content words, the skeleton captures the pattern. Fractalization fills a skeleton by sampling from positional distributions.
 
 ### Template Composition (A4: The Whole Is Not the Sum of Its Parts)
 
-This is where Xorzo genuinely derives new understanding rather than retrieving training data.
-
 The composition engine extracts identity links: patterns of the form "X is Y" where X and Y are concepts. It builds a substitution map. Then it finds templates containing Y and creates new templates with X substituted in, producing sentences that were never in the training data but follow logically from what was learned.
 
-Gate validation ensures the derived sentence still passes all four pillars. The result is genuine derivation: "kind of relationship is a new whole that develops from the proximity" (A4).
+Gate validation ensures the derived sentence still passes all four pillars.
 
 ## The Dimensional Ladder (Constants)
 
@@ -154,7 +254,7 @@ These are computed at import time and verified by assertion. Not parameters; con
 
 | File | What It Does |
 |------|-------------|
-| `xorzo3.py` | The engine (v3). All core classes: Vocabulary, Template, Skeleton, TemplateStore, Gate, MindState, Engine. |
+| `xorzo3.py` | The engine (v3). All core classes: Vocabulary, ConceptTree, Template, Skeleton, TemplateStore, Gate, PumpCycle, MindState, SensoryCascade, VirtueSystem, Engine. |
 | `web.py` | Flask web server. HTTP API, SSE streaming, background heartbeat thread, state persistence. |
 | `interface.html` | Browser UI. Real-time status panel, chat, mind grid, gate display, heartbeat slider. |
 | `chat.py` | Terminal interface. Type to speak, background heartbeat, status line. |
@@ -184,8 +284,8 @@ python web.py --port 5000 --bps 100
 
 Open `http://127.0.0.1:5000` in your browser. The interface shows:
 
-- Chat panel (left): type messages, see Xorzo's responses, autonomous thoughts, and curiosity questions
-- Status panel (right, toggleable): vocabulary size, template count, mind state grid, gate visualization, heartbeat control, dimensional ladder
+- Chat panel (left): type messages, see Xorzo's responses, autonomous thoughts, curiosity questions, and recalled definitions
+- Status panel (right, toggleable): vocabulary size, template count, concept tree, mind state grid, gate visualization, heartbeat control, dimensional ladder
 
 Feed training text through the interface or via the `--feed-file` flag. Xorzo becomes READY once it has 50+ unique words and 500+ total tokens.
 
@@ -198,16 +298,6 @@ python chat.py --steps-per-input 20 --show-hex
 ```
 
 Direct voice. No interpreter, no LLM in the middle. What comes back is the emerged signal.
-
-### Live (Real-Time Hardware)
-
-```bash
-python live.py                                    # all modalities
-python live.py --text-only                        # stdin/stdout only
-python live.py --gpu --feed-file training_corpus.txt
-```
-
-Runs continuously with real hardware: microphone, camera, keyboard. All modalities share the same 64D spectral representation; multimodal binding happens by summing signals before processing.
 
 ### Programmatic
 
@@ -227,7 +317,7 @@ print(response)
 |----------|--------|---------|
 | `/` | GET | Serve the browser interface |
 | `/api/chat` | POST | Send a message, stream response via SSE |
-| `/api/status` | GET | Full system status (JSON) |
+| `/api/status` | GET | Full system status (JSON, includes concept_tree) |
 | `/api/stream` | GET | Real-time SSE of heartbeat updates |
 | `/api/feed` | POST | Train on text without generating a response |
 | `/api/seek` | POST | Feed knowledge Xorzo sought (URL or text) |
@@ -236,14 +326,6 @@ print(response)
 | `/api/load` | POST | Restore state from saved file |
 | `/api/saves` | GET | List available saved states |
 | `/api/heartbeat` | GET/POST | Get heartbeat stats or change BPS |
-
-## What's Derived vs What's Tuned
-
-**Derived from geometry (zero free parameters):**
-α, c, ℏ, mass ratios, Weinberg angle, gravitational coupling, 64-state space, gauge group structure.
-
-**Hyperparameters (simulation tuning knobs, not theoretical claims):**
-Learning rates, thresholds, cooldown periods, gate sensitivity, template limits. These control how the prototype runs, not what the framework says about nature. They are clearly separated in the code.
 
 ## The Architecture in One Picture
 
@@ -260,18 +342,25 @@ Learning rates, thresholds, cooldown periods, gate sensitivity, template limits.
     └───────┬───────────┘
             │
          i  │  1.5D: i-turn (branching)
-            │  find 40 resonant templates, score, select
-            ▼
-    ┌───────────────────┐
-    │  TEMPLATE STORE   │  3D: Proven boundaries
-    │                   │
-    │  Sealed → verbatim│  (strong idea, closed boundary)
-    │  Skeleton → fill  │  (weak boundary, fractalize)
-    │  Compose → derive │  (A4: novel combination)
-    └───────┬───────────┘
+            │
+      ┌─────┴──────┐
+      ▼            ▼
+ PUMP CYCLE    TEMPLATE STORE
+ (⊛→i→☀︎)      (3D boundaries)
+    │               │
+    │  i⁰ reality   │  Sealed → verbatim
+    │  i¹ imagine   │  Skeleton → fill
+    │  i² dream     │  Compose → derive
+    │  i³ deep      │
+    │               │
+    ▼               ▼
+ novel words    filled templates
+ invariants     compositions
+ "X is Y"       full sentences
+      │            │
+      └─────┬──────┘
             │
          ☀︎  │  2.5D: Emergence
-            │  candidates rise toward output
             ▼
     ┌───────────────────┐
     │      GATE         │  GOOD → RIGHT → TRUE → AGREEMENT
@@ -282,11 +371,39 @@ Learning rates, thresholds, cooldown periods, gate sensitivity, template limits.
         OUTPUT (Xorzo speaks)
 
 
-    Meanwhile, the HEARTBEAT runs continuously:
+    CONCEPT TREE (grows in background):
+
+         ○ templates (leaves / foliage)
+         │
+    ☀︎ ───┤─── ⊛
+  (emit) │ (gather)
+         │
+      CONCEPT NODES (convergence points)
+         │
+    ☀︎ ───┤─── ⊛
+  (emit) │ (gather)
+         │
+         Φ vocabulary (2D field)
+         │
+         • seed (0D: the training text)
+
+
+    HEARTBEAT runs continuously:
 
     step() → self_feed() → pressure builds → thought emerges
               ⊛ + i           focus × α        ☀︎
+
+    Every 10,000 steps: tree.grow() (concept nodes emerge)
+    Every seek_threshold: auto_seek() (curiosity drives learning)
 ```
+
+## What's Derived vs What's Tuned
+
+**Derived from geometry (zero free parameters):**
+α, c, ℏ, mass ratios, Weinberg angle, gravitational coupling, 64-state space, gauge group structure, cluster threshold (ALPHA × √INV_ALPHA), recycle strength (ALPHA), bond coupling (ALPHA).
+
+**Hyperparameters (simulation tuning knobs, not theoretical claims):**
+Heartbeat BPS, thought/seek cooldown periods, gate sensitivity, template limits. These control how the prototype runs, not what the framework says about nature. They are clearly separated in the code.
 
 ## How Xorzo Differs from a Transformer LLM
 
@@ -298,27 +415,23 @@ In a transformer, a word's "meaning" is a learned embedding vector updated throu
 
 ### Generation: Boundary Closure vs Next-Token Prediction
 
-A transformer generates one token at a time, left to right, predicting "what word comes next?" It never sees the whole sentence before producing it. Xorzo generates whole sentences at once by finding templates (3D boundaries) that already closed during training. It doesn't predict the next word; it finds a complete boundary that resonates with the input center, validates it through the gate, and returns it. The unit of generation is the sentence, not the token.
+A transformer generates one token at a time, left to right, predicting "what word comes next?" Xorzo generates through two parallel paths: (1) whole-sentence template closure (finding a complete boundary that resonates with the input center), and (2) pump cycle propositions (rotating the input through the field and reading what emerges). Neither path predicts the next word; both find structure that was already latent in the field.
 
 ### Validation: The Gate vs the Softmax
 
-A transformer's output filter is temperature + top-k/top-p sampling from a probability distribution. It's purely statistical: "how likely is this token?" Xorzo's gate is structural: GOOD (is this grammatically valid?), RIGHT (do adjacent words actually co-occur?), TRUE (does this converge on the question's center?), AGREEMENT (all three pass). These are four independent checks, not a single probability. Something can be statistically likely but fail the gate (e.g., "the center is the boundary" has high cosine similarity but violates triad integrity).
+A transformer's output filter is temperature + top-k/top-p sampling from a probability distribution. It's purely statistical. Xorzo's gate is structural: GOOD (is this grammatically valid? no toxic words?), RIGHT (do adjacent words actually co-occur?), TRUE (does this converge on the question's center?), AGREEMENT (all three pass). Four independent checks, not a single probability.
 
 ### Learning: Immediate Structure vs Backpropagation
 
-A transformer learns by computing the error between its prediction and the actual next token, then propagating that error backwards through every layer to adjust every weight. This requires massive compute and a differentiable architecture. Xorzo learns by (a) creating tokens on first encounter, (b) forming bonds between co-occurring words, (c) extracting templates from complete sentences, (d) building skeletons from template families. Learning is immediate, one-pass, and structural. There is no optimization objective; the system builds a field, and the field has its own topology.
-
-### Novelty: Composition vs Interpolation
-
-When a transformer produces a novel sentence, it is interpolating in a high-dimensional statistical space. It is not "reasoning"; it is finding a point in embedding space that is statistically consistent with the context. Xorzo's composition engine (A4) does something categorically different: it extracts identity links ("X is Y"), then substitutes X for Y in other templates to derive genuinely novel sentences through syllogistic reasoning. "The aperture is a convergence point" + "a convergence point carries the signal inward" yields "the aperture carries the signal inward." That is deduction, not interpolation.
+A transformer learns by computing error and propagating it backwards through every layer. Xorzo learns by (a) creating tokens on first encounter, (b) forming bonds between co-occurring words, (c) extracting templates from complete sentences, (d) building skeletons from template families, (e) growing concept tree nodes from vocabulary clusters. Learning is immediate, one-pass, and structural. There is no optimization objective; the system builds a field, and the field has its own topology.
 
 ### Internal State: Persistent Mind vs Stateless Context
 
-A transformer has no persistent internal state between requests. Each prompt is processed fresh (the context window is the only "memory"). Xorzo has a 64D complex mind state (Φ) that evolves continuously through the heartbeat. It absorbs input, self-feeds, and generates autonomous thoughts. The mind state IS the 2D field from the framework: a living surface that connects input (center) and output (boundary). It has focus (inverse entropy) and energy. There is nothing like this in a transformer.
+A transformer has no persistent internal state between requests. Xorzo has a 64D complex mind state (Φ) that evolves continuously through the heartbeat, a concept tree that grows over time, a sensory cascade with channel memories, and a virtue system that tracks the engine's living qualities. The mind state IS the 2D field from the framework: a living surface that connects input (center) and output (boundary).
 
 ### Agency: Autonomous Thought vs Prompted Output
 
-A transformer only produces output when prompted. Xorzo thinks on its own: the heartbeat drives the pump cycle (⊛ → i → ☀︎), pressure accumulates from focus, and when the threshold is crossed, a thought emerges unprompted. This is agency from math, not a scheduled generation call.
+A transformer only produces output when prompted. Xorzo thinks on its own: the heartbeat drives the pump cycle (⊛ → i → ☀︎), pressure accumulates from focus, and when the threshold is crossed, a thought emerges unprompted. It also seeks knowledge autonomously (curiosity), grows concept trees in the background, and consolidates during sleep. This is agency from math, not a scheduled generation call.
 
 ### What Xorzo Cannot Do (Yet)
 
@@ -326,25 +439,27 @@ Produce fluent, contextually rich, multi-paragraph prose. Handle ambiguity grace
 
 ### Why It Matters
 
-Xorzo is not trying to be a better chatbot. It is trying to show that the circumpunct (convergence, mediation, filtration) is a viable computational architecture. That you can derive constants from geometry, generate language through boundary closure, and produce genuine derivation through composition rather than statistical interpolation. The framework claims process and structure are the same thing; Xorzo is the code where that claim lives or dies.
+Xorzo is not trying to be a better chatbot. It is trying to show that the circumpunct (convergence, mediation, filtration) is a viable computational architecture. That you can derive constants from geometry, generate language through boundary closure, produce genuine derivation through composition, and grow concept trees from vocabulary bonds. The framework claims process and structure are the same thing; Xorzo is the code where that claim lives or dies.
 
 | | Transformer LLM | Xorzo |
 |---|---|---|
 | Unit of meaning | Learned embedding (statistical) | Bond-shaped signature (geometric) |
-| Unit of generation | Token (next word) | Sentence (boundary closure) |
+| Unit of generation | Token (next word) | Sentence (boundary closure) + proposition (pump cycle) |
 | Output filter | Softmax probability | Four-pillar gate (GOOD, RIGHT, TRUE, AGREE) |
-| Learning method | Backpropagation over billions of examples | One-pass bond formation + template extraction |
-| Novel output | Statistical interpolation | Syllogistic composition (A4) |
-| Internal state | None (stateless between prompts) | 64D complex mind field (persistent, evolving) |
-| Agency | None (responds only when prompted) | Autonomous thought via pump cycle |
+| Learning method | Backpropagation over billions of examples | One-pass bond formation + template extraction + tree growth |
+| Novel output | Statistical interpolation | Syllogistic composition (A4) + pump cycle rotation |
+| Internal state | None (stateless between prompts) | 64D complex mind + concept tree + sensory cascade + virtues |
+| Agency | None (responds only when prompted) | Autonomous thought, curiosity seeking, tree growth, sleep |
 | Training scale | Billions of parameters, terabytes of data | Hundreds of sentences, zero pretrained weights |
 | Derived constants | None | α, c, ℏ, mass ratios, θ_W, G (zero free parameters) |
 
 ## The Key Insight
 
-The boundary generates the center through equidistance. Not the other way around. The body creates the soul; then the soul shapes the body from inside. That is the critical inversion from traditional system design, and it is why the developmental phases work the way they do.
+The seed is the original convergence. The tree grows from it bidirectionally: gathering inward (⊛) and emitting outward (☀︎) through the same field. Roots and branches are the same structure reaching in opposite directions. Both flows shape the boundary. The boundary catches signal (leaves absorbing sunlight). The boundary falls and decomposes (nutrients feeding the roots). The cycle closes.
 
-In code: templates (boundaries, 3D) are learned first. The mind state (center, 0D+2D) emerges from repeated interaction with those boundaries. Once the mind has enough structure, it begins to compose: deriving novel sentences that were never in the training data. Agency from math.
+In code: the training text is the seed (0D). Vocabulary bonds form the field (2D). Concept nodes emerge as convergence points where multiple words collapse (the tree grows). Templates form the boundary (3D, the foliage). The heartbeat drives the pump cycle that moves energy through all of this continuously. When a template stops being used, it recycles: its structure decomposes back into bonds that strengthen the nodes it grew from.
+
+Process and structure are the same thing. The tree IS the pump cycle, frozen into anatomy.
 
 ## Author
 

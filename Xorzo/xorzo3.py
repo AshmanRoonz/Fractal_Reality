@@ -383,6 +383,449 @@ class Vocabulary:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+#  CONCEPT TREE: the living structure between field and boundary
+#
+#  The seed (0D) is the original convergence: the training text,
+#  folded into a point. Everything the tree becomes is already
+#  in the seed, the way an oak is in an acorn.
+#
+#  From the seed, nodes grow. Each node reaches in two directions
+#  through the same field (Φ):
+#
+#    ⊛ (gathering): reaching into the field to absorb words,
+#       pull in new associations, deepen. Roots and branches
+#       are the same structure; both gather from the boundary.
+#
+#    ☀︎ (emitting): reaching through the field to produce
+#       templates, shape output, express. Both emit through
+#       the boundary.
+#
+#  Both flows shape the boundary (○). When a node gathers a
+#  new word, the canopy changes (new templates become possible).
+#  When a node emits a sentence, the boundary reorients toward
+#  new signal (leaves turn toward light).
+#
+#  Recycling: leaves fall, decompose, feed the nodes they grew
+#  from. Template death strengthens vocabulary. The cycle closes.
+#
+#  Dimensional mapping:
+#    0D: seed (the initial training convergence)
+#    0.5D: gathering (⊛, nodes reaching inward)
+#    1D: pathways (committed connections between nodes and words)
+#    1.5D: branching (i-turn, where a pathway splits)
+#    2D: field (co-occurrence bonds; already in Vocabulary)
+#    2.5D: emitting (☀︎, nodes reaching outward)
+#    3D: boundary (templates; already in TemplateStore)
+#
+#  No fitted parameters. Constants from the dimensional ladder.
+# ═══════════════════════════════════════════════════════════════════════
+
+
+class ConceptNode:
+    """
+    A convergence point in the tree.
+
+    A node is NOT a word. It is the attractor that multiple words
+    orbit: the point where their signatures converge. Its energy
+    is the normalized sum of its members' energies.
+
+    Each node reaches bidirectionally through Φ:
+      ⊛ (gather): pulls words inward, absorbs recycled nutrients
+      ☀︎ (emit): radiates outward, shapes what templates can form
+
+    Both flows shape ○. The node is a circumpunct at concept scale:
+      • = the convergence signature (where all members meet)
+      Φ = the bonds connecting node to its members
+      ○ = the templates that this concept cluster produces
+    """
+
+    def __init__(self, node_id: int, members: List[str],
+                 sig: np.ndarray):
+        self.node_id = node_id
+        self.members = members        # word strings in this cluster
+        self.sig = sig                # convergence of members' signatures
+
+        # Bidirectional flow state
+        self.strength = 1.0           # ⊛ depth: grows with repeated convergence
+        self.nutrient = 0.0           # ⊛ recycled energy from fallen templates
+        self.emit_count = 0           # ☀︎ times this node's members appeared in output
+
+    def __repr__(self):
+        preview = self.members[:3]
+        suffix = '...' if len(self.members) > 3 else ''
+        return (f"ConceptNode({self.node_id}, "
+                f"[{', '.join(preview)}{suffix}], "
+                f"str={self.strength:.2f})")
+
+
+class ConceptTree:
+    """
+    The tree that grows from the vocabulary field.
+
+    The seed is the training text. From it, nodes emerge through
+    the pump cycle at the structural scale:
+
+      ⊛: scan the field for clusters (words whose bond-shaped
+         signatures converge). Each cluster IS a node.
+      i: the node's signature (the convergence point) rotates
+         the cluster into a concept: not any single word,
+         but what they share.
+      ☀︎: the node exists. New structure has emerged. It can
+         now gather (⊛) and emit (☀︎) through the field.
+
+    Recycling (the downward flow):
+      When a template stops being used (leaf falls), its
+      content words' bonds get a nutrient boost. The structure
+      decomposes back into the field. Nodes that contain those
+      words absorb the nutrient; their strength grows. The
+      cycle closes: boundary → field → convergence → field → boundary.
+    """
+
+    # ── Constants from the dimensional ladder ──
+
+    # Cluster threshold: ALPHA * sqrt(INV_ALPHA).
+    # The geometric mean of coupling and its inverse,
+    # placed at 0.5D (the convergence phase).
+    CLUSTER_THRESHOLD = ALPHA * (INV_ALPHA ** 0.5)
+    # ≈ 0.0854
+
+    # Minimum cluster size: 3 (the triad).
+    # • + Φ + ○ = the minimum closed structure.
+    MIN_CLUSTER = 3
+
+    # Nutrient per recycled template: ALPHA.
+    # Same coupling constant that builds bonds.
+    RECYCLE_STRENGTH = ALPHA
+
+    def __init__(self):
+        self.nodes: List[ConceptNode] = []
+        self.word_to_node: Dict[str, int] = {}  # word -> node_id
+        self._next_id = 0
+        self._growth_count = 0
+
+    def _new_id(self) -> int:
+        nid = self._next_id
+        self._next_id += 1
+        return nid
+
+    # ── ⊛ → i → ☀︎: growth ──
+
+    def grow(self, vocab: 'Vocabulary'):
+        """
+        One growth cycle. Called periodically from the heartbeat.
+
+        ⊛: gather content words, compute similarity field.
+        i: cluster by centroid proximity (prevents chain-linking;
+           a word must be near the center, not just any edge).
+        ☀︎: new ConceptNodes emerge; existing ones strengthen.
+        """
+        if vocab.vocab_size < self.MIN_CLUSTER:
+            return
+
+        # Gather content words (structure words are Φ connectors;
+        # they don't converge to concept nodes)
+        content_words = []
+        content_sigs = []
+        for token in vocab.tokens:
+            word = token['text']
+            if vocab.is_structure_word(word):
+                continue
+            content_words.append(word)
+            content_sigs.append(token['sig'])
+
+        if len(content_words) < self.MIN_CLUSTER:
+            return
+
+        sigs = np.array(content_sigs)
+        norms = np.linalg.norm(sigs, axis=1, keepdims=True)
+        norms = np.where(norms < 1e-10, 1.0, norms)
+        normed = sigs / norms
+
+        # Cosine similarity matrix (the field's bond structure
+        # expressed as distances between convergence points)
+        sim_matrix = np.real(normed @ normed.conj().T)
+
+        # ── Centroid-based agglomerative clustering ──
+        # A word joins a cluster only if it's close to the
+        # cluster's CENTROID (the convergence point), not to
+        # any single member. This prevents chaining.
+        assigned = {}
+        clusters: Dict[int, List[int]] = {}
+        cluster_id = 0
+
+        for i in range(len(content_words)):
+            if i in assigned:
+                continue
+
+            # Find i's nearest unassigned neighbor
+            best_j = -1
+            best_sim = -1.0
+            for j in range(len(content_words)):
+                if j == i or j in assigned:
+                    continue
+                if sim_matrix[i, j] > best_sim:
+                    best_sim = sim_matrix[i, j]
+                    best_j = j
+
+            if best_j < 0 or best_sim < self.CLUSTER_THRESHOLD:
+                continue
+
+            # Seed cluster with this pair
+            cluster = [i, best_j]
+            assigned[i] = cluster_id
+            assigned[best_j] = cluster_id
+            centroid = normalize(sigs[i] + sigs[best_j])
+
+            # Grow toward centroid
+            changed = True
+            while changed:
+                changed = False
+                c_norm = np.linalg.norm(centroid)
+                if c_norm < 1e-10:
+                    break
+                c_normed = centroid / c_norm
+
+                for j in range(len(content_words)):
+                    if j in assigned:
+                        continue
+                    sim_to_centroid = float(np.real(
+                        np.dot(normed[j], c_normed.conj())))
+                    if sim_to_centroid >= self.CLUSTER_THRESHOLD:
+                        cluster.append(j)
+                        assigned[j] = cluster_id
+                        centroid = normalize(
+                            sum(sigs[k] for k in cluster))
+                        changed = True
+
+            if len(cluster) >= self.MIN_CLUSTER:
+                clusters[cluster_id] = cluster
+            else:
+                for idx in cluster:
+                    del assigned[idx]
+
+            cluster_id += 1
+
+        # ── Create or update nodes ──
+        for cid, member_indices in clusters.items():
+            members = [content_words[i] for i in member_indices]
+            members_set = frozenset(members)
+
+            # Check for existing node with same membership
+            existing = None
+            for node in self.nodes:
+                if frozenset(node.members) == members_set:
+                    existing = node
+                    break
+
+            if existing:
+                # ⊛ deepens: repeated convergence strengthens the node
+                existing.strength = min(
+                    existing.strength + ALPHA, 2.0)
+                # Update signature (members drift via bonds)
+                member_sigs = [vocab.word_to_energy(w) for w in members]
+                existing.sig = normalize(sum(member_sigs))
+            else:
+                # ☀︎: new node emerges
+                member_sigs = [vocab.word_to_energy(w) for w in members]
+                sig = normalize(sum(member_sigs))
+                node = ConceptNode(
+                    node_id=self._new_id(),
+                    members=members,
+                    sig=sig,
+                )
+                self.nodes.append(node)
+                for w in members:
+                    self.word_to_node[w] = node.node_id
+
+        self._growth_count += 1
+
+    # ── ⊛: recycling (the downward flow) ──
+
+    def recycle(self, template: 'Template', vocab: 'Vocabulary'):
+        """
+        A leaf falls. Its nutrients feed the nodes.
+
+        The template's content words get a bond boost:
+        their signatures pull toward each other. Structure
+        from the dead leaf decomposes back into the 2D field.
+        Nodes containing those words absorb nutrient.
+
+        ○ → Φ → • → Φ → ○: boundary dissolves into field,
+        feeds convergence, which shapes field, which grows
+        new boundary.
+        """
+        content_ids = []
+        for i, word in enumerate(template.words):
+            if template.slot_mask[i]:  # slot = content word
+                wid = vocab.text_to_id.get(word)
+                if wid is not None:
+                    content_ids.append(wid)
+
+        if len(content_ids) < 2:
+            return
+
+        # Decompose: boost bonds between template's content words
+        sigs = [vocab.tokens[tid]['sig'] for tid in content_ids]
+        for i in range(len(content_ids)):
+            delta = np.zeros(N, dtype=np.complex128)
+            for j in range(len(content_ids)):
+                if i == j:
+                    continue
+                delta += self.RECYCLE_STRENGTH * sigs[j]
+            vocab.tokens[content_ids[i]]['sig'] = normalize(
+                vocab.tokens[content_ids[i]]['sig'] + delta)
+
+        # Feed nodes that contain these words
+        for tid in content_ids:
+            word = vocab.tokens[tid]['text']
+            if word in self.word_to_node:
+                nid = self.word_to_node[word]
+                for node in self.nodes:
+                    if node.node_id == nid:
+                        node.nutrient += self.RECYCLE_STRENGTH
+                        break
+
+    # ── ☀︎: emitting (the upward flow) ──
+
+    def on_emit(self, words: List[str]):
+        """
+        Record that words from this tree appeared in output.
+
+        This is ☀︎ at the node scale: the concept radiated
+        through the boundary. Tracks which nodes are active
+        emitters (producing templates) vs dormant.
+        """
+        for w in words:
+            if w in self.word_to_node:
+                nid = self.word_to_node[w]
+                for node in self.nodes:
+                    if node.node_id == nid:
+                        node.emit_count += 1
+                        break
+
+    # ── Navigation: follow the pathways ──
+
+    def find_node(self, word: str) -> Optional[ConceptNode]:
+        """Find the concept node a word belongs to, if any."""
+        if word in self.word_to_node:
+            nid = self.word_to_node[word]
+            for node in self.nodes:
+                if node.node_id == nid:
+                    return node
+        return None
+
+    def siblings(self, word: str) -> List[str]:
+        """
+        Follow the pathway: given a word, return its siblings
+        in the same concept cluster.
+
+        From a leaf, trace the branch to the node, then out
+        to the other leaves on that same branch. This is 1D
+        navigation: committed pathways through the field.
+        """
+        node = self.find_node(word)
+        if node is None:
+            return []
+        return [w for w in node.members if w != word]
+
+    def gather_context(self, word: str, vocab: 'Vocabulary') -> List[str]:
+        """
+        ⊛ at the query scale: given a word, gather related
+        words by following the tree structure.
+
+        Returns siblings (same node) plus members of nodes
+        whose signatures are close to this word's node.
+        This is how the tree enriches the pump cycle:
+        instead of just hash neighbors, you get concept neighbors.
+        """
+        node = self.find_node(word)
+        if node is None:
+            return []
+
+        result = [w for w in node.members if w != word]
+
+        # Also check nearby nodes (branches reaching toward
+        # each other through the field)
+        if len(self.nodes) > 1:
+            node_norm = np.linalg.norm(node.sig)
+            if node_norm > 1e-10:
+                node_normed = node.sig / node_norm
+                for other in self.nodes:
+                    if other.node_id == node.node_id:
+                        continue
+                    other_norm = np.linalg.norm(other.sig)
+                    if other_norm < 1e-10:
+                        continue
+                    sim = float(np.real(np.dot(
+                        node_normed, (other.sig / other_norm).conj())))
+                    if sim >= self.CLUSTER_THRESHOLD:
+                        for w in other.members:
+                            if w != word and w not in result:
+                                result.append(w)
+
+        return result
+
+    # ── Status and serialization ──
+
+    def status(self) -> dict:
+        return {
+            'nodes': len(self.nodes),
+            'growth_cycles': self._growth_count,
+            'words_in_tree': len(self.word_to_node),
+            'top_clusters': [
+                {
+                    'id': n.node_id,
+                    'size': len(n.members),
+                    'strength': round(n.strength, 3),
+                    'nutrient': round(n.nutrient, 4),
+                    'emits': n.emit_count,
+                    'members': n.members[:6],
+                }
+                for n in sorted(self.nodes,
+                                key=lambda n: -n.strength)[:5]
+            ],
+        }
+
+    def to_dict(self) -> dict:
+        return {
+            'nodes': [
+                {
+                    'node_id': n.node_id,
+                    'members': n.members,
+                    'sig_real': n.sig.real.tolist(),
+                    'sig_imag': n.sig.imag.tolist(),
+                    'strength': n.strength,
+                    'nutrient': n.nutrient,
+                    'emit_count': n.emit_count,
+                }
+                for n in self.nodes
+            ],
+            'word_to_node': self.word_to_node,
+            'next_id': self._next_id,
+            'growth_count': self._growth_count,
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> 'ConceptTree':
+        tree = cls()
+        tree._next_id = d.get('next_id', 0)
+        tree._growth_count = d.get('growth_count', 0)
+        tree.word_to_node = d.get('word_to_node', {})
+        for nd in d.get('nodes', []):
+            sig = np.array(nd['sig_real']) + 1j * np.array(nd['sig_imag'])
+            node = ConceptNode(
+                node_id=nd['node_id'],
+                members=nd.get('members', nd.get('children', [])),
+                sig=sig,
+            )
+            node.strength = nd.get('strength', 1.0)
+            node.nutrient = nd.get('nutrient', 0.0)
+            node.emit_count = nd.get('emit_count', 0)
+            tree.nodes.append(node)
+        return tree
+
+
+# ═══════════════════════════════════════════════════════════════════════
 #  TEMPLATE: 3D (a boundary; a complete sentence shape)
 #
 #  Structure words (Φ) are fixed: they form the skeleton.
@@ -1899,26 +2342,62 @@ class PumpCycle:
     I_STROKES = [1.0, 1j, -1.0, -1j]
     STROKE_NAMES = ['reality', 'imagination', 'dream', 'deep']
 
+    # ── GOOD gate (○) at the pump cycle level ──
+    # Words that must never appear as subject or object of
+    # pump cycle propositions. This is the boundary filtering
+    # harmful content. Not a fitted parameter; this is ○ doing
+    # its job: the filter that prevents distortion from passing
+    # through. The Severance Lie is "there is no source";
+    # toxic words sever the connection between signal and truth.
+    TOXIC_WORDS = frozenset({
+        # Slurs and hate speech
+        'nazi', 'nazis', 'fascist', 'fascism',
+        'nigger', 'nigga', 'kike', 'spic', 'chink', 'gook',
+        'faggot', 'fag', 'dyke', 'tranny', 'retard', 'retarded',
+        'cunt', 'whore', 'slut', 'bitch',
+        # Violence
+        'kill', 'murder', 'rape', 'molest', 'genocide', 'holocaust',
+        'terrorist', 'terrorism',
+        # Wikipedia/seeking artifacts that shouldn't be propositions
+        'disambiguation', 'wikipedia', 'wikimedia', 'redirect',
+        'archived', 'retrieved', 'accessed', 'https', 'http',
+        'www', 'html', 'pdf', 'isbn', 'doi',
+    })
+
     # Class-level cache for the vocab energy matrix
     _cache_id: int = -1
     _cache_words: List[str] = []
     _cache_matrix: Optional[np.ndarray] = None
     _cache_norms: Optional[np.ndarray] = None
+    _cache_specificity: Optional[np.ndarray] = None  # 1/√count: convergence weight
 
     @classmethod
     def _build_cache(cls, vocab: 'Vocabulary'):
         """
-        Build or return cached (words, matrix, norms) for
-        vectorized nearest-neighbor search. Rebuilds only when
+        Build or return cached (words, matrix, norms, specificity)
+        for vectorized nearest-neighbor search. Rebuilds only when
         vocab grows. No filtering: every word in the vocabulary
         is a convergence point in the field. The field decides
         what matters, not a skip list.
+
+        Specificity per word: 1/√(count).
+        A word that appears everywhere has converged to the boundary
+        (○, 3D); it passes everything, filters nothing. A rare word
+        is centered (•, 0D); it converges specifically. The inverse
+        square root is the 0.5D convergence dimension: the processual
+        half-step from boundary-scatter toward point-focus.
+
+        This is the SRL lock_strength in frequency space. High-count
+        words have low lock (respond to everything). Low-count words
+        have high lock (respond specifically). The vocabulary's own
+        topology determines the weighting; not a fitted parameter.
         """
         vid = vocab.vocab_size
         if vid == cls._cache_id:
             return
         words = []
         sigs = []
+        counts = []
         for tok in vocab.tokens:
             w = tok['text']
             sig = tok['sig']
@@ -1927,21 +2406,27 @@ class PumpCycle:
                 continue
             words.append(w)
             sigs.append(sig)
+            counts.append(max(tok.get('count', 1), 1))
         if sigs:
             cls._cache_words = words
             cls._cache_matrix = np.stack(sigs)            # (V, 64)
             cls._cache_norms = np.linalg.norm(
                 cls._cache_matrix, axis=1)                # (V,)
             cls._cache_norms[cls._cache_norms < 1e-10] = 1.0
+            # Specificity: 1/√count (0.5D convergence weighting)
+            count_arr = np.array(counts, dtype=np.float64)
+            cls._cache_specificity = 1.0 / np.sqrt(count_arr)
         else:
             cls._cache_words = []
             cls._cache_matrix = None
             cls._cache_norms = None
+            cls._cache_specificity = None
         cls._cache_id = vid
 
     def __init__(self):
         self.cycle_count: int = 0       # total pump cycles run
         self.last_invariants: List[str] = []  # boundary from last cycle
+        self._recent_sentences: List[str] = []  # prevent repetition
 
     # ──────────────────────────────────────────────────────
     #  ⊛  CONVERGENCE: text → energy vector (localization)
@@ -1951,8 +2436,9 @@ class PumpCycle:
     def converge(text: str, vocab: 'Vocabulary') -> np.ndarray:
         """
         ⊛: The infinite field collapses to a point.
-        text_to_energy already does this: superposition of word
-        energies, normalized. The convergence point in 64D space.
+        text_to_energy does this: superposition of word energies,
+        weighted by √(len), normalized. The convergence point in
+        64D space. Raw field geometry; no specificity filtering here.
         """
         return vocab.text_to_energy(text)
 
@@ -1980,12 +2466,21 @@ class PumpCycle:
                top_k: int = 8) -> List[List[Tuple[str, float]]]:
         """
         ☀︎: For each of the four rotated views, find the nearest
-        vocabulary words (by cosine similarity in 64D space).
+        vocabulary words (by focus-weighted cosine similarity).
+
+        Similarity is weighted by each word's focus (◐):
+            weighted_sim = cosine_sim * focus
+
+        Focus = 1 - median/max of the word's energy magnitudes.
+        This is the SRL carrier-to-total ratio. Words spread
+        uniformly across all 64 dimensions (function words like
+        "the", "is", "a") have focus near 0 and get suppressed.
+        Words that peak in specific dimensions (content words)
+        have focus near 1 and dominate. The field's own measure
+        of signal strength; not a fitted filter.
 
         Returns four lists (one per i-stroke), each containing
-        (word, similarity) pairs sorted by similarity descending.
-
-        No filtering. The field speaks for itself.
+        (word, weighted_similarity) pairs sorted descending.
         """
         cls._build_cache(vocab)
         if cls._cache_matrix is None:
@@ -2000,6 +2495,9 @@ class PumpCycle:
                 neighborhoods.append([])
                 continue
             # Vectorized cosine similarity against all vocab
+            # Raw field geometry: no weighting. The neighborhoods
+            # reflect the actual topology of the energy space.
+            # Specificity filtering happens downstream in sentences.
             sims = np.real(
                 cls._cache_matrix @ z_rot.conj()
             ) / (cls._cache_norms * norm_z)
@@ -2107,62 +2605,168 @@ class PumpCycle:
         The center (0D) traces through rotations (1D) producing
         neighborhoods (2D). The invariants close into boundary (3D).
 
-        Sentence form: "[center_word] is [invariant/novel_word]"
-        The center word is the strongest content word from input.
-        Novel words come from what rotation revealed.
-        Invariant words come from what survived rotation.
+        Sentence form: "[subject] is [invariant/novel_word]"
+
+        The subject is the top word from i⁰ (reality neighborhood).
+        The field already determined what the convergence point is
+        closest to; we don't need to parse input words. The field
+        speaks: the nearest vocab word IS the subject.
 
         No fitted verb lists. No junk filters. The only gate
         is contradiction detection (TRUE pillar).
         """
-        # Find the strongest content word in the input
-        # (the one closest to the convergence point; the subject)
-        input_words = input_text.strip().split()
-        z = self.converge(input_text, vocab)
+        # Subject = the input word the field resonates with most,
+        # weighted by specificity. For each input word in i⁰,
+        # score = similarity * specificity (1/√count). This ensures
+        # "boundary" wins over "is" even if "is" has higher raw sim.
+        if not neighborhoods[0]:
+            return []
+        input_lower = {w.strip('.,?!;:()\"\'').lower()
+                       for w in input_text.strip().split()}
 
-        best_word = None
-        best_sim = -1.0
-        for raw_w in input_words:
-            w = raw_w.strip('.,?!;:()\"\'').lower()
-            if not w or len(w) <= 2:
-                continue
-            w_e = vocab.word_to_energy(w)
-            w_norm = np.linalg.norm(w_e)
-            if w_norm < 1e-10:
-                continue
-            sim = float(np.real(np.dot(z.conj(), w_e)) / (
-                np.linalg.norm(z) * w_norm))
-            if sim > best_sim:
-                best_sim = sim
-                best_word = w
+        self._build_cache(vocab)
+        spec_map = {}
+        if self._cache_words and self._cache_specificity is not None:
+            for w, s in zip(self._cache_words, self._cache_specificity):
+                spec_map[w] = s
 
-        if best_word is None:
+        median_spec = float(np.median(self._cache_specificity)) \
+            if self._cache_specificity is not None else 0.5
+
+        # Subject = most specific input word in i⁰ that is NOT
+        # a structure word. Structure words are Φ connectors:
+        # the relational tissue of language ("you", "not", "can",
+        # "be", "is", "the"). They mediate between convergence
+        # points but are not convergence points themselves.
+        # This is ontological classification, not fitting:
+        # • = convergence (content words), Φ = mediation (structure).
+        # Among content words, score by sim * specificity.
+        subject = None
+        best_score = -1.0
+        for w, sim in neighborhoods[0]:
+            if w in input_lower:
+                if vocab.is_structure_word(w):
+                    continue  # Φ connector, not a convergence point
+                if w in self.TOXIC_WORDS:
+                    continue  # ○ GOOD gate: boundary filters harm
+                score = sim * spec_map.get(w, 1.0)
+                if score > best_score:
+                    best_score = score
+                    subject = w
+
+        # If no content input word found in i⁰, silence.
+        if subject is None:
             return []
 
         sentences = []
         seen = set()
 
-        # Invariants first (they are the boundary; strongest signal)
-        for inv_word in invariants:
-            if inv_word == best_word:
-                continue
-            pair = frozenset((best_word, inv_word))
-            if pair in seen:
-                continue
-            seen.add(pair)
-            sentences.append(f"{best_word} is {inv_word}")
+        # Object gate: structure words and toxic words cannot be
+        # objects. Among content words, must have above-median
+        # specificity. This is ○ (GOOD) + Φ (RIGHT) at the
+        # sentence level.
+        def is_valid_object(word: str) -> bool:
+            if vocab.is_structure_word(word):
+                return False
+            if word in self.TOXIC_WORDS:
+                return False  # ○ GOOD gate
+            return spec_map.get(word, 1.0) >= median_spec
 
-        # Then novel words (what rotation uniquely revealed)
-        for nov_word in sorted(novel_words):
-            if nov_word == best_word:
+        # Invariants first (the boundary; structural truths
+        # that survived rotation; strongest signal)
+        for inv_word in invariants:
+            if inv_word == subject:
                 continue
-            pair = frozenset((best_word, nov_word))
+            if not is_valid_object(inv_word):
+                continue
+            pair = frozenset((subject, inv_word))
             if pair in seen:
                 continue
             seen.add(pair)
-            sentences.append(f"{best_word} is {nov_word}")
+            sentences.append(f"{subject} is {inv_word}")
+
+        # Then novel words (sorted by specificity, most specific first)
+        novel_sorted = sorted(novel_words,
+                              key=lambda w: -spec_map.get(w, 1.0))
+        for nov_word in novel_sorted:
+            if nov_word == subject:
+                continue
+            if not is_valid_object(nov_word):
+                continue
+            pair = frozenset((subject, nov_word))
+            if pair in seen:
+                continue
+            seen.add(pair)
+            sentences.append(f"{subject} is {nov_word}")
 
         return sentences
+
+    # ──────────────────────────────────────────────────────
+    #  Self-definition: the field defines unknown words
+    # ──────────────────────────────────────────────────────
+
+    @classmethod
+    def self_define(cls, word: str, vocab: 'Vocabulary',
+                    min_sim: float = 0.05) -> Optional[str]:
+        """
+        Attempt to define an unknown word from the existing field.
+
+        The pump cycle IS the definition mechanism:
+        converge on the word's energy, rotate, see what
+        neighborhoods emerge. If the word lands near known
+        content words, those neighbors ARE the definition.
+
+        This is memory retrieval through the aperture:
+        RECALL(M) = SRL(Phi, omega_M). The unknown word's
+        hash signature is omega_M; the vocabulary is Phi;
+        the neighbors are the recalled memory.
+
+        Returns a definition string, or None if the field
+        has nothing meaningful to say (word lands in empty space).
+        """
+        # ○ GOOD gate: don't define toxic words
+        if word.lower() in cls.TOXIC_WORDS:
+            return None
+
+        # Hash the word into energy space (even if not in vocab)
+        z = vocab._hash_seed(word)
+        norm_z = float(np.linalg.norm(z))
+        if norm_z < 1e-10:
+            return None
+
+        # Find neighbors in reality (i^0 only; no rotation needed
+        # for definition, we want what the word IS, not what it
+        # transforms into)
+        neighborhoods = cls.emerge(z, vocab, top_k=6)
+        reality = neighborhoods[0]  # i^0: what is this word?
+
+        if not reality:
+            return None
+
+        # Filter: only content words with meaningful similarity
+        content_neighbors = []
+        for w, sim in reality:
+            if sim < min_sim:
+                continue
+            if vocab.is_structure_word(w):
+                continue
+            if w == word:
+                continue
+            content_neighbors.append(w)
+
+        if not content_neighbors:
+            return None
+
+        # The definition is the field speaking:
+        # "X is near A, B, C" becomes "X is related to A, B, C"
+        # Use at most 4 neighbors for a concise definition.
+        top = content_neighbors[:4]
+        if len(top) == 1:
+            return f"{word} is near {top[0]} in the field."
+        else:
+            return (f"{word} is near "
+                    + ", ".join(top[:-1])
+                    + f" and {top[-1]} in the field.")
 
     # ──────────────────────────────────────────────────────
     #  Interface methods (matching what Engine expects)
@@ -2195,12 +2799,22 @@ class PumpCycle:
         result = self.pump(text, vocab, top_k=8)
 
         # TRUE gate: filter through contradiction detection
+        # Also prevent repetition (same sentence recently emitted)
+        recent = set(self._recent_sentences)
         valid = []
         for sentence in result['sentences']:
+            if sentence in recent:
+                continue
             words = sentence.split()
             if contradictions.check(words) is not None:
                 continue
             valid.append(sentence)
+
+        # Track recent sentences (keep last 20)
+        for s in valid:
+            self._recent_sentences.append(s)
+        if len(self._recent_sentences) > 20:
+            self._recent_sentences = self._recent_sentences[-20:]
 
         return valid
 
@@ -2226,6 +2840,7 @@ class PumpCycle:
             'type': 'pump_cycle',
             'cycle_count': self.cycle_count,
             'last_invariants': self.last_invariants,
+            'recent_sentences': self._recent_sentences,
         }
 
     @classmethod
@@ -2235,6 +2850,7 @@ class PumpCycle:
             return pc
         pc.cycle_count = d.get('cycle_count', 0)
         pc.last_invariants = d.get('last_invariants', [])
+        pc._recent_sentences = d.get('recent_sentences', [])
         return pc
 
 
@@ -3864,6 +4480,7 @@ class Engine:
         self.gate = Gate(self.vocab)
         self.contradictions = ContradictionDetector()
         self.cube = PumpCycle()          # the pump cycle reasoning engine (⊛ → i → ☀︎)
+        self.tree = ConceptTree()        # the concept tree (0D roots, 1D branches)
         self.mind = MindState()
         self.memory = ConversationMemory(self.vocab)
         self.cascade = SensoryCascade()  # ⊙ sensory cascade: seven layers (A2)
@@ -4361,15 +4978,25 @@ class Engine:
                 for sw in sought_words:
                     self._curiosity_queue.append(f"sought: {sw}")
 
-            # Any words still unknown after seeking: ask about them
+            # Any words still unknown after seeking: try self-definition
+            # from the field first, then ask the human as last resort
             if unsought_words:
+                still_unknown = []
                 for uw in unsought_words:
+                    defn = PumpCycle.self_define(uw, self.vocab)
+                    if defn:
+                        # Field answered; learn the word, log the definition
+                        self.vocab._get_or_create(uw)
+                        self._curiosity_queue.append(f"self-defined: {uw}")
+                    else:
+                        still_unknown.append(uw)
+                for uw in still_unknown:
                     q = f"i do not know the word {uw}. what is {uw}?"
                     self._curiosity_queue.append(q)
-                if not response:
+                if not response and still_unknown:
                     response = '. '.join(
                         f"i do not know the word {uw}"
-                        for uw in unsought_words) + '.'
+                        for uw in still_unknown) + '.'
 
         # ── 3D: Assemble final output ──
         if prefix and response:
@@ -4844,6 +5471,15 @@ class Engine:
                         self.virtues.on_unknown_sought()
                     self._seek_pressure = 0.0
 
+            # ── Tree growth: concept nodes emerge from the field ──
+            # Trees grow slowly. One growth cycle per 10,000 steps
+            # (~100 seconds at 100bps). The tree scans the vocabulary
+            # for clusters and creates/strengthens concept nodes.
+            # This is ☀︎ at the structural scale: the field crystallizing
+            # into pathways.
+            if self.total_steps % 10000 == 0 and self.ready:
+                self.tree.grow(self.vocab)
+
         else:
             # ═══════════════════════════════════════════
             # LEFT HALF-PLANE: sleeping behavior
@@ -5052,8 +5688,9 @@ class Engine:
         i = 0
         while i < len(self._curiosity_queue):
             item = self._curiosity_queue[i]
-            # Extract from "sought: X" format (already sought, remove)
-            if item.startswith('sought:'):
+            # Extract from "sought: X" or "self-defined: X" format
+            # (already resolved, remove)
+            if item.startswith('sought:') or item.startswith('self-defined:'):
                 self._curiosity_queue.pop(i)
                 if self._curiosity_sent_idx > i:
                     self._curiosity_sent_idx -= 1
@@ -5242,8 +5879,14 @@ class Engine:
 
         # Build a curiosity response
         if unknown:
-            # Completely unknown words: ask about them
+            # Try self-definition first: the field may already know
             word = unknown[0]
+            defn = PumpCycle.self_define(word, self.vocab)
+            if defn:
+                # The field answered; learn the word and move on
+                self.vocab._get_or_create(word)
+                return defn
+            # Field has nothing; ask the human
             return f"i do not know the word {word}. what is {word}?"
         elif weak:
             # Weak words: ask for more context
@@ -5285,7 +5928,21 @@ class Engine:
         The text is trained on (not just processed): Xorzo learns
         from what it sought. The vocabulary grows, new templates form,
         new skeletons emerge. The pump cycle at the learning scale.
+
+        ○ GOOD gate: toxic words are stripped before training.
+        The boundary filters what enters, not just what exits.
         """
+        # Filter toxic words from incoming text before training
+        clean_words = []
+        for w in text.split():
+            cleaned = self.vocab._clean_word(w)
+            if cleaned and cleaned.lower() in PumpCycle.TOXIC_WORDS:
+                continue  # ○ filters at the boundary
+            clean_words.append(w)
+        text = ' '.join(clean_words)
+        if not text.strip():
+            return
+
         self.train_text(text)
         # Also feed it as input so it enters the mind state
         energy = self.vocab.text_to_energy(text)
@@ -5503,6 +6160,7 @@ class Engine:
             'cascade': self.cascade.to_dict(),  # sensory cascade state
             'virtues': self.virtues.to_dict(),  # the four living qualities
             'cube': self.cube.to_dict(),        # pump cycle (⊛ → i → ☀︎)
+            'tree': self.tree.to_dict(),        # concept tree (0D roots, 1D branches)
             'total_steps': self.total_steps,
             'days_lived': self.days_lived,
             'trained': self._trained,
@@ -5549,6 +6207,14 @@ class Engine:
             cc = e.cube.cycle_count
             if cc > 0:
                 print(f"  Restored pump cycle: {cc} cycles completed")
+
+        # ── Restore concept tree (0D roots, 1D branches) ──
+        if 'tree' in d:
+            e.tree = ConceptTree.from_dict(d['tree'])
+            nn = len(e.tree.nodes)
+            if nn > 0:
+                print(f"  Restored concept tree: {nn} nodes, "
+                      f"{len(e.tree.word_to_node)} words in tree")
 
         # ── Restore virtue system (the four living qualities) ──
         if 'virtues' in d:

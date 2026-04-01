@@ -520,6 +520,7 @@ def _build_status():
         },
         "cascade": engine.cascade.status(),
         "pump_cycle": engine.cube.status(engine.vocab),
+        "concept_tree": engine.tree.status(),
         "virtues": engine.virtues.status(),
         "seeking": {
             "sought_count": len(engine._sought_words),

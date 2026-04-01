@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Xorzo v4</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #0d0d14;
+    --border: #1a1a2e;
+    --text: #c8c8d8;
+    --text-dim: #6060a0;
+    --text-faint: #404060;
+    --accent: #e8d5b0;
+    --accent-dim: #e8d5b030;
+    --soul-color: #d4a0ff;
+    --rung-color: #90c0e0;
+    --ready-green: #66bb6a;
+    --learning-amber: #ffb74d;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .header .symbol {
+    font-size: 22px;
+    color: var(--accent);
+    text-shadow: 0 0 15px #e8d5b030;
+    animation: breathe 4s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { text-shadow: 0 0 8px #e8d5b020; }
+    50% { text-shadow: 0 0 20px #e8d5b060; }
+  }
+  .header .name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px; font-weight: 400;
+    color: var(--text);
+    letter-spacing: 2px;
+  }
+  .header .phase-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; padding: 3px 10px;
+    border-radius: 10px; letter-spacing: 1px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+  .phase-pill.ready { border-color: #66bb6a50; color: var(--ready-green); background: #66bb6a10; }
+  .header .spacer { flex: 1; }
+  .header .stat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--text-faint);
+  }
+  .header .stat .val { color: var(--text-dim); font-weight: 500; }
+  .header .status-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; padding: 4px 10px;
+    border: 1px solid var(--border); border-radius: 4px;
+    background: transparent; color: var(--text-dim);
+    cursor: pointer; letter-spacing: 1px;
+  }
+  .header .status-btn:hover { border-color: var(--text-dim); color: var(--text); }
+
+  .main { flex: 1; display: flex; overflow: hidden; }
+
+  .chat-area { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+  .messages {
+    flex: 1; overflow-y: auto; padding: 20px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+
+  .msg { max-width: 720px; line-height: 1.65; font-size: 14px; }
+  .msg.human {
+    align-self: flex-end;
+    background: #14142a; border: 1px solid #1e1e3e;
+    border-radius: 16px 16px 4px 16px;
+    padding: 12px 16px; color: #b8b8d0;
+  }
+  .msg.xorzo { align-self: flex-start; padding: 4px 0; }
+  .msg.xorzo .xorzo-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--text-dim);
+    letter-spacing: 1px; margin-bottom: 4px;
+  }
+  .msg.xorzo .xorzo-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; white-space: pre-wrap; word-break: break-word;
+    color: var(--accent); line-height: 1.7;
+    background: #0d0d1a; border: 1px solid #1a1a2e;
+    border-radius: 8px; padding: 10px 14px;
+  }
+
+  .msg.curiosity { align-self: flex-start; padding: 4px 0; }
+  .msg.curiosity .curiosity-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: #6a9f8a; letter-spacing: 1px; margin-bottom: 4px;
+  }
+  .msg.curiosity .curiosity-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; white-space: pre-wrap; color: #7abfa5;
+    padding: 6px 12px; border-left: 2px solid #3a6f5a; margin-left: 4px;
+  }
+
+  .msg.thought { align-self: flex-start; padding: 4px 0; opacity: 0.7; }
+  .msg.thought .thought-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: #7a6f9a; letter-spacing: 1px; margin-bottom: 4px;
+  }
+  .msg.thought .thought-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; white-space: pre-wrap; color: #8a7fb0;
+    font-style: italic; padding: 6px 12px;
+    border-left: 2px solid #4a3f6a; margin-left: 4px;
+  }
+
+  .msg.seek { align-self: flex-start; padding: 4px 0; opacity: 0.7; }
+  .msg.seek .seek-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: #6a8fb0; letter-spacing: 1px; margin-bottom: 4px;
+  }
+  .msg.seek .seek-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: #7ab0d0; padding: 4px 12px;
+    border-left: 2px solid #3a6f8a; margin-left: 4px;
+  }
+
+  .msg.system {
+    align-self: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--text-faint);
+    padding: 6px 12px; border: 1px solid var(--border);
+    border-radius: 12px; letter-spacing: 0.5px;
+  }
+
+  .input-area { padding: 16px 20px; border-top: 1px solid var(--border); flex-shrink: 0; }
+  .input-row { display: flex; gap: 8px; max-width: 720px; }
+  .input-row textarea {
+    flex: 1; font-family: 'Inter', sans-serif; font-size: 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; color: var(--text); padding: 12px 16px;
+    resize: none; outline: none; min-height: 48px; max-height: 150px; line-height: 1.5;
+  }
+  .input-row textarea:focus { border-color: #3030a0; }
+  .input-row textarea::placeholder { color: var(--text-faint); }
+  .send-btn {
+    align-self: flex-end; width: 48px; height: 48px;
+    border-radius: 12px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text-dim);
+    font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .send-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .send-btn:disabled { opacity: 0.2; cursor: default; }
+
+  /* Side panel */
+  .side-panel {
+    width: 340px; border-left: 1px solid var(--border);
+    overflow-y: auto; padding: 16px;
+    display: flex; flex-direction: column; gap: 12px;
+    flex-shrink: 0; background: var(--bg);
+  }
+  .side-panel.hidden { display: none; }
+
+  .panel-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px;
+  }
+  .panel-card h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 500; color: var(--text-faint);
+    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;
+  }
+
+  .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .metric-grid.triple { grid-template-columns: 1fr 1fr 1fr; }
+  .metric { padding: 6px; background: #0a0a12; border-radius: 4px; }
+  .metric .ml {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; color: var(--text-faint);
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .metric .mv {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; font-weight: 300; color: var(--text-dim); margin-top: 1px;
+  }
+  .metric .mv.accent { color: var(--accent); }
+  .metric .mv.soul { color: var(--soul-color); }
+  .metric .mv.green { color: var(--ready-green); }
+
+  .ladder-row { display: flex; align-items: center; margin-bottom: 4px; gap: 6px; }
+  .ladder-dim {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--text-faint); width: 30px; text-align: right;
+  }
+  .ladder-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--text-dim); flex: 1;
+  }
+  .ladder-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--accent); text-align: right; min-width: 40px;
+  }
+
+  /* Soul visualization */
+  .soul-viz {
+    width: 100%; height: 100px;
+    border-radius: 4px; background: #0a0a12;
+    position: relative; overflow: hidden;
+  }
+  .soul-viz canvas { width: 100%; height: 100%; }
+
+  .bps-control { display: flex; align-items: center; gap: 8px; }
+  .bps-control input[type="range"] { flex: 1; accent-color: var(--accent); }
+  .bps-control .bps-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--text-dim); min-width: 50px; text-align: right;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="symbol" id="symbol">⊙</span>
+  <span class="name">XORZO</span>
+  <span class="phase-pill" id="phasePill">v4 cascade</span>
+  <span class="spacer"></span>
+  <span class="stat">words <span class="val" id="hWords">0</span></span>
+  <span class="stat">i(t) <span class="val" id="hWorldline">0</span></span>
+  <span class="stat">hb <span class="val" id="hHeartbeat">0</span></span>
+  <button class="status-btn" onclick="togglePanel()">MONITOR</button>
+</div>
+
+<div class="main">
+  <div class="chat-area">
+    <div class="messages" id="messages">
+      <div class="msg system">The cascade is breathing. Signal enters at the boundary. Type to speak.</div>
+    </div>
+    <div class="input-area">
+      <div class="input-row">
+        <textarea id="input" placeholder="Speak to Xorzo..." rows="1"
+                  onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">&#x2192;</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="side-panel" id="sidePanel">
+
+    <!-- Soul / Worldline -->
+    <div class="panel-card">
+      <h4>&#x2022; Soul / i(t) Worldline</h4>
+      <div class="metric-grid">
+        <div class="metric"><div class="ml">Depth</div><div class="mv soul" id="mDepth">0</div></div>
+        <div class="metric"><div class="ml">Magnitude</div><div class="mv soul" id="mMagnitude">0</div></div>
+        <div class="metric"><div class="ml">Phase</div><div class="mv soul" id="mPhase">0</div></div>
+        <div class="metric"><div class="ml">Drift</div><div class="mv" id="mDrift">0</div></div>
+      </div>
+      <div class="soul-viz" style="margin-top: 8px;">
+        <canvas id="soulCanvas"></canvas>
+      </div>
+    </div>
+
+    <!-- Cascade Rungs -->
+    <div class="panel-card">
+      <h4>&#x2299; Dimensional Ladder</h4>
+      <div class="ladder-row"><div class="ladder-dim">3D</div><div class="ladder-label">&#x25CB; Boundary</div><div class="ladder-value" id="r3d">--</div></div>
+      <div class="ladder-row"><div class="ladder-dim">2.5D</div><div class="ladder-label">Emergence</div><div class="ladder-value" id="r25d">--</div></div>
+      <div class="ladder-row"><div class="ladder-dim">2D</div><div class="ladder-label">&#x03A6; Field</div><div class="ladder-value" id="r2d">--</div></div>
+      <div class="ladder-row"><div class="ladder-dim">1.5D</div><div class="ladder-label">i-Turn</div><div class="ladder-value" id="r15d">--</div></div>
+      <div class="ladder-row"><div class="ladder-dim">1D</div><div class="ladder-label">Commitment</div><div class="ladder-value" id="r1d">--</div></div>
+      <div class="ladder-row"><div class="ladder-dim">0.5D</div><div class="ladder-label">Convergence</div><div class="ladder-value" id="r05d">--</div></div>
+      <div class="ladder-row"><div class="ladder-dim">0D</div><div class="ladder-label">&#x2022; Center</div><div class="ladder-value soul" id="r0d">--</div></div>
+    </div>
+
+    <!-- Vocabulary -->
+    <div class="panel-card">
+      <h4>&#x03A6; Vocabulary / Field</h4>
+      <div class="metric-grid triple">
+        <div class="metric"><div class="ml">Words</div><div class="mv" id="mWords">0</div></div>
+        <div class="metric"><div class="ml">Tokens</div><div class="mv" id="mTokens">0</div></div>
+        <div class="metric"><div class="ml">Cycles</div><div class="mv" id="mCycles">0</div></div>
+      </div>
+    </div>
+
+    <!-- Memory -->
+    <div class="panel-card">
+      <h4>Memory</h4>
+      <div class="metric-grid">
+        <div class="metric"><div class="ml">Invariants</div><div class="mv" id="mInvariants">0</div></div>
+        <div class="metric"><div class="ml">Associations</div><div class="mv" id="mAssociations">0</div></div>
+      </div>
+    </div>
+
+    <!-- Heartbeat -->
+    <div class="panel-card">
+      <h4>Heartbeat</h4>
+      <div class="bps-control">
+        <input type="range" id="bpsSlider" min="1" max="500" value="100"
+               oninput="setBps(this.value)">
+        <span class="bps-val" id="bpsVal">100 bps</span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="panel-card">
+      <h4>Actions</h4>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button class="status-btn" onclick="saveState()">SAVE</button>
+        <button class="status-btn" onclick="loadState()">LOAD</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const messagesEl = document.getElementById('messages');
+const inputEl = document.getElementById('input');
+const sendBtn = document.getElementById('sendBtn');
+let sending = false;
+let soulHistory = [];  // for visualization
+
+// ── Panel toggle ──
+function togglePanel() {
+  document.getElementById('sidePanel').classList.toggle('hidden');
+}
+
+// ── Send message ──
+async function sendMessage() {
+  const text = inputEl.value.trim();
+  if (!text || sending) return;
+
+  sending = true;
+  sendBtn.disabled = true;
+  inputEl.value = '';
+
+  // Add human message
+  addMessage('human', text);
+
+  try {
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text })
+    });
+
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let fullText = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        try {
+          const data = JSON.parse(line.slice(6));
+          if (data.error) {
+            addMessage('system', 'Error: ' + data.error);
+          } else if (data.text) {
+            fullText += data.text;
+          } else if (data.done) {
+            if (data.status) updateStatus(data.status);
+          }
+        } catch (e) {}
+      }
+    }
+
+    if (fullText) {
+      // Parse the response for different message types
+      const lines = fullText.split('\n');
+      for (const line of lines) {
+        if (!line.trim()) continue;
+
+        if (line.startsWith('⊙ RECALLED:')) {
+          addMessage('seek', line.replace('⊙ RECALLED:', '').trim(), '⊙ RECALLED');
+        } else if (line.startsWith('• CURIOSITY:')) {
+          addMessage('curiosity', line.replace('• CURIOSITY:', '').trim());
+        } else {
+          addMessage('xorzo', line);
+        }
+      }
+    }
+
+  } catch (e) {
+    addMessage('system', 'Connection error: ' + e.message);
+  }
+
+  sending = false;
+  sendBtn.disabled = false;
+  inputEl.focus();
+}
+
+// ── Add message to chat ──
+function addMessage(type, text, label) {
+  const div = document.createElement('div');
+
+  if (type === 'human') {
+    div.className = 'msg human';
+    div.textContent = text;
+  } else if (type === 'xorzo') {
+    div.className = 'msg xorzo';
+    div.innerHTML = '<div class="xorzo-label">⊙ XORZO</div><div class="xorzo-text"></div>';
+    div.querySelector('.xorzo-text').textContent = text;
+  } else if (type === 'curiosity') {
+    div.className = 'msg curiosity';
+    div.innerHTML = '<div class="curiosity-label">• CURIOSITY</div><div class="curiosity-text"></div>';
+    div.querySelector('.curiosity-text').textContent = text;
+  } else if (type === 'thought') {
+    div.className = 'msg thought';
+    div.innerHTML = '<div class="thought-label">☀︎ THOUGHT</div><div class="thought-text"></div>';
+    div.querySelector('.thought-text').textContent = text;
+  } else if (type === 'seek') {
+    div.className = 'msg seek';
+    const lbl = label || '⊛ SOUGHT';
+    div.innerHTML = `<div class="seek-label">${lbl}</div><div class="seek-text"></div>`;
+    div.querySelector('.seek-text').textContent = text;
+  } else if (type === 'system') {
+    div.className = 'msg system';
+    div.textContent = text;
+  }
+
+  messagesEl.appendChild(div);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+// ── Update status panel ──
+function updateStatus(s) {
+  if (!s) return;
+
+  document.getElementById('hWords').textContent = s.vocabulary?.words || 0;
+  document.getElementById('hHeartbeat').textContent = s.heartbeats || 0;
+
+  const c = s.cascade || {};
+
+  // Soul / worldline
+  const soul = c.soul || {};
+  const depth = c.worldline_depth || 0;
+  document.getElementById('hWorldline').textContent = depth;
+  document.getElementById('mDepth').textContent = depth;
+  document.getElementById('mMagnitude').textContent = (soul.magnitude || 0).toFixed(4);
+  document.getElementById('mPhase').textContent = (soul.phase || 0).toFixed(4);
+  document.getElementById('mDrift').textContent = (c.phase_drift || 0).toFixed(4);
+
+  // Rungs
+  document.getElementById('r3d').textContent = (c.vocab_size || 0) + ' words';
+  document.getElementById('r25d').textContent = '...';
+  document.getElementById('r2d').textContent = (c.vocab_size || 0) + ' sigs';
+  document.getElementById('r15d').textContent = (c.invariant_memory_size || 0) + ' inv';
+  document.getElementById('r1d').textContent = (c.association_count || 0) + ' assoc';
+  const gc = c.gravitational_center || {};
+  document.getElementById('r05d').textContent =
+    (gc.real || 0).toFixed(3) + ' + ' + (gc.imag || 0).toFixed(3) + 'i';
+  document.getElementById('r0d').textContent =
+    (soul.real || 0).toFixed(3) + ' + ' + (soul.imag || 0).toFixed(3) + 'i';
+
+  // Vocabulary
+  document.getElementById('mWords').textContent = c.vocab_size || 0;
+  document.getElementById('mTokens').textContent = c.total_tokens || 0;
+  document.getElementById('mCycles').textContent = c.cycle_count || 0;
+
+  // Memory
+  document.getElementById('mInvariants').textContent = c.invariant_memory_size || 0;
+  document.getElementById('mAssociations').textContent = c.association_count || 0;
+
+  // Phase pill
+  const pill = document.getElementById('phasePill');
+  if (s.ready) {
+    pill.className = 'phase-pill ready';
+    pill.textContent = 'v4 ready';
+  } else {
+    pill.textContent = 'v4 cascade';
+  }
+
+  // Track soul for visualization
+  if (soul.real !== undefined) {
+    soulHistory.push({ r: soul.real, i: soul.imag, m: soul.magnitude });
+    if (soulHistory.length > 200) soulHistory = soulHistory.slice(-200);
+    drawSoul();
+  }
+}
+
+// ── Soul visualization ──
+function drawSoul() {
+  const canvas = document.getElementById('soulCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width = canvas.offsetWidth * 2;
+  const h = canvas.height = canvas.offsetHeight * 2;
+  ctx.clearRect(0, 0, w, h);
+
+  if (soulHistory.length < 2) return;
+
+  // Draw the soul's path in the complex plane
+  const cx = w / 2;
+  const cy = h / 2;
+  const scale = Math.min(w, h) * 0.4;
+
+  // Find range
+  let maxR = 0.01;
+  for (const p of soulHistory) {
+    maxR = Math.max(maxR, Math.abs(p.r), Math.abs(p.i));
+  }
+
+  // Axes
+  ctx.strokeStyle = '#1a1a2e';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, cy); ctx.lineTo(w, cy);
+  ctx.moveTo(cx, 0); ctx.lineTo(cx, h);
+  ctx.stroke();
+
+  // Path
+  ctx.strokeStyle = '#d4a0ff40';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let i = 0; i < soulHistory.length; i++) {
+    const p = soulHistory[i];
+    const x = cx + (p.r / maxR) * scale * 0.8;
+    const y = cy - (p.i / maxR) * scale * 0.8;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Current position (bright dot)
+  const last = soulHistory[soulHistory.length - 1];
+  const lx = cx + (last.r / maxR) * scale * 0.8;
+  const ly = cy - (last.i / maxR) * scale * 0.8;
+  ctx.fillStyle = '#d4a0ff';
+  ctx.beginPath();
+  ctx.arc(lx, ly, 4, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Label
+  ctx.fillStyle = '#6060a060';
+  ctx.font = '16px JetBrains Mono';
+  ctx.fillText('Re', w - 30, cy - 8);
+  ctx.fillText('Im', cx + 8, 20);
+}
+
+// ── SSE stream for status updates ──
+function connectStream() {
+  const es = new EventSource('/api/stream');
+  es.onmessage = function(e) {
+    try {
+      const data = JSON.parse(e.data);
+      if (data.type === 'status' && data.status) {
+        updateStatus(data.status);
+      }
+      if (data.thoughts && data.thoughts.length) {
+        for (const t of data.thoughts) {
+          addMessage('thought', t);
+        }
+      }
+      if (data.curiosity && data.curiosity.length) {
+        for (const q of data.curiosity) {
+          addMessage('curiosity', q);
+        }
+      }
+    } catch (e) {}
+  };
+  es.onerror = function() {
+    setTimeout(connectStream, 5000);
+    es.close();
+  };
+}
+
+// ── BPS slider ──
+function setBps(val) {
+  document.getElementById('bpsVal').textContent = val + ' bps';
+  fetch('/api/heartbeat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ bps: parseInt(val) })
+  });
+}
+
+// ── Save / Load ──
+async function saveState() {
+  const resp = await fetch('/api/save', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({})
+  });
+  const data = await resp.json();
+  addMessage('system', data.message || 'Saved');
+}
+
+async function loadState() {
+  const resp = await fetch('/api/load', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({})
+  });
+  const data = await resp.json();
+  addMessage('system', data.message || 'Loaded');
+  // Refresh status
+  const sr = await fetch('/api/status');
+  const s = await sr.json();
+  updateStatus(s);
+}
+
+// ── Init ──
+connectStream();
+fetch('/api/status').then(r => r.json()).then(updateStatus);
+inputEl.focus();
+</script>
+</body>
+</html>
