@@ -183,6 +183,16 @@ class SRLState(nn.Module):
     """
     Tracks carrier frequency, lock strength, and bandwidth per head.
     Adapts during training via SRL dynamics from Xorzo.
+
+    NOTE ON GRADIENTS: lock_strength is intentionally updated outside
+    the gradient path (in srl_adapt() under torch.no_grad()). This is
+    by design, not a bug. SRL lock dynamics model experience-driven
+    habituation: lock strengthens when a channel consistently resonates
+    with incoming signal, weakens when it doesn't. This is a different
+    process from error-corrected optimization (backprop). Backprop would
+    optimize lock for loss minimization; SRL adapts lock for frequency
+    commitment. The carrier_freq follows the same pattern. Both are
+    adaptive parameters, not learned parameters.
     """
 
     def __init__(self, n_heads: int, carrier_phases: torch.Tensor,
@@ -1025,7 +1035,7 @@ if __name__ == '__main__':
 
     fake_T = torch.full((2, 32, nursery.n_active), 0.1)
     fake_phase = torch.full((2, 32), 2.5)
-    for step in range(60):
+    for step in range(150):
         result = nursery.step(fake_T, fake_phase, srl, step_number=step)
         if result is not None:
             print(f"  ** Head {result} woke at step {step} "
