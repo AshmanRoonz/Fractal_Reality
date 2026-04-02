@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Circumpunct Transistor Simulation</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0f;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow: hidden;
+  }
+  .container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+  }
+  .sim-panel {
+    flex: 1;
+    position: relative;
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .controls {
+    width: 320px;
+    background: #111118;
+    border-left: 1px solid #2a2a3a;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .controls h2 {
+    font-size: 16px;
+    color: #aab;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .control-group {
+    background: #1a1a24;
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .control-group label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #99a;
+    margin-bottom: 6px;
+  }
+  .control-group label span.val {
+    color: #f0c040;
+    font-family: monospace;
+    font-size: 13px;
+  }
+  input[type="range"] {
+    width: 100%;
+    accent-color: #f0c040;
+    cursor: pointer;
+  }
+  .phase-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .phase-card {
+    background: #12121a;
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #2a2a3a;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .phase-card.active {
+    border-color: #f0c040;
+    background: #1a1a10;
+  }
+  .phase-card .symbol {
+    font-size: 22px;
+    margin-bottom: 2px;
+  }
+  .phase-card .label {
+    font-size: 10px;
+    color: #778;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .phase-card .value {
+    font-size: 12px;
+    color: #ccd;
+    font-family: monospace;
+    margin-top: 2px;
+  }
+  .status-bar {
+    background: #1a1a24;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #99a;
+  }
+  .status-bar .highlight {
+    color: #f0c040;
+    font-family: monospace;
+  }
+  .ring-status {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .ring-indicator {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: #2a2a3a;
+    overflow: hidden;
+  }
+  .ring-indicator .fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.1s;
+  }
+  .btn {
+    background: #2a2a3a;
+    border: 1px solid #3a3a4a;
+    color: #ccd;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .btn:hover {
+    background: #3a3a4a;
+    border-color: #f0c040;
+    color: #f0c040;
+  }
+  .btn.active {
+    background: #2a2a10;
+    border-color: #f0c040;
+    color: #f0c040;
+  }
+  .legend {
+    font-size: 11px;
+    color: #667;
+    line-height: 1.6;
+    padding: 8px 0;
+  }
+  .legend span.dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="sim-panel">
+    <canvas id="canvas"></canvas>
+  </div>
+  <div class="controls">
+    <h2>Circumpunct Transistor</h2>
+
+    <div class="control-group">
+      <label>Input Power <span class="val" id="powerVal">0.50</span></label>
+      <input type="range" id="inputPower" min="0" max="1" step="0.01" value="0.5">
+      <label>Input Frequency <span class="val" id="freqVal">1.00</span></label>
+      <input type="range" id="inputFreq" min="0.5" max="2.0" step="0.01" value="1.0">
+    </div>
+
+    <div class="control-group">
+      <label>Outer Ring Radius <span class="val" id="outerRVal">1.00</span></label>
+      <input type="range" id="outerR" min="0.5" max="1.5" step="0.01" value="1.0">
+      <label>Coupling Gap <span class="val" id="couplingVal">0.50</span></label>
+      <input type="range" id="coupling" min="0.05" max="0.95" step="0.01" value="0.5">
+      <label>Kerr Nonlinearity <span class="val" id="kerrVal">0.30</span></label>
+      <input type="range" id="kerr" min="0.0" max="1.0" step="0.01" value="0.3">
+    </div>
+
+    <div class="control-group">
+      <label>Balance ◐</label>
+      <div class="ring-status">
+        <div class="ring-indicator"><div class="fill" id="balOuter" style="width:0%;background:#4488ff"></div></div>
+        <div class="ring-indicator"><div class="fill" id="balMiddle" style="width:0%;background:#44dd88"></div></div>
+        <div class="ring-indicator"><div class="fill" id="balInner" style="width:0%;background:#ff8844"></div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px;">
+        <span style="font-size:10px;color:#4488ff">○ Outer</span>
+        <span style="font-size:10px;color:#44dd88">Φ Middle</span>
+        <span style="font-size:10px;color:#ff8844">• Inner</span>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label>Phase State (i-cycle)</label>
+      <div class="phase-display">
+        <div class="phase-card" id="phase0">
+          <div class="symbol">i⁰</div>
+          <div class="label">+1 Reality</div>
+          <div class="value">transparent</div>
+        </div>
+        <div class="phase-card" id="phase1">
+          <div class="symbol">i¹</div>
+          <div class="label">+i Imagination</div>
+          <div class="value">reactive</div>
+        </div>
+        <div class="phase-card" id="phase2">
+          <div class="symbol">i²</div>
+          <div class="label">-1 Dream</div>
+          <div class="value">inverted</div>
+        </div>
+        <div class="phase-card" id="phase3">
+          <div class="symbol">i³</div>
+          <div class="label">-i Deep Sleep</div>
+          <div class="value">conjugate</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-bar" id="statusBar">
+      <div>Pump Stage: <span class="highlight" id="pumpStage">Idle</span></div>
+      <div>Output Phase: <span class="highlight" id="outPhase">0°</span></div>
+      <div>Output Power: <span class="highlight" id="outPower">0.00</span></div>
+      <div>Effective ◐: <span class="highlight" id="effBalance">0.00</span></div>
+    </div>
+
+    <button class="btn" id="resetBtn">Reset Simulation</button>
+    <button class="btn" id="pulseBtn">Send Pulse</button>
+
+    <div class="legend">
+      <span class="dot" style="background:#4488ff"></span>Outer ring (○ boundary)<br>
+      <span class="dot" style="background:#44dd88"></span>Middle ring (Φ field)<br>
+      <span class="dot" style="background:#ff8844"></span>Inner ring (• aperture)<br>
+      <span class="dot" style="background:#f0c040"></span>Photon energy packets<br>
+      <span class="dot" style="background:#ff4488"></span>Phase-shifted emergence
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+// Golden ratio
+const PHI = (1 + Math.sqrt(5)) / 2;
+
+// State
+let state = {
+  time: 0,
+  inputPower: 0.5,
+  inputFreq: 1.0,
+  outerR: 1.0,
+  coupling: 0.5,
+  kerr: 0.3,
+  // Ring energies
+  outerEnergy: 0,
+  middleEnergy: 0,
+  innerEnergy: 0,
+  // Phase accumulated at inner ring
+  innerPhase: 0,
+  // Output
+  outputPower: 0,
+  outputPhase: 0,
+  // Pump stage
+  pumpStage: 'idle',
+  // Photon particles for visualization
+  photons: [],
+  // Emergence particles
+  emergencePhotons: [],
+  // Continuous input
+  inputActive: true,
+  pulseMode: false,
+  pulseTime: 0,
+};
+
+// Photon class
+class Photon {
+  constructor(x, y, ring, angle, type) {
+    this.x = x;
+    this.y = y;
+    this.ring = ring; // 'outer', 'middle', 'inner', 'bus_in', 'bus_out'
+    this.angle = angle;
+    this.speed = 0.02 + Math.random() * 0.01;
+    this.type = type || 'normal'; // 'normal', 'emergence'
+    this.life = 1.0;
+    this.trail = [];
+    this.transitioning = false;
+    this.transitionProgress = 0;
+    this.targetRing = null;
+  }
+}
+
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', resize);
+resize();
+
+// Ring geometry
+function getRingRadii() {
+  const base = Math.min(canvas.width, canvas.height) * 0.28 / (window.devicePixelRatio || 1);
+  const outerScale = state.outerR;
+  return {
+    outer: base * outerScale,
+    middle: base * outerScale / PHI,
+    inner: base * outerScale / (PHI * PHI),
+  };
+}
+
+function getCenterX() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  return rect.width * 0.48;
+}
+function getCenterY() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  return rect.height * 0.5;
+}
+
+// Physics update
+function updatePhysics(dt) {
+  const coupling = state.coupling;
+  const kerr = state.kerr;
+  const freq = state.inputFreq;
+  const power = state.inputPower;
+
+  // Resonance: how close input freq is to ring's natural freq
+  // Outer ring resonance at freq=1.0, middle at PHI, inner at PHI^2
+  const outerRes = Math.exp(-2 * Math.pow(freq - 1.0, 2));
+  const middleRes = Math.exp(-2 * Math.pow(freq * PHI - 1.0, 2));
+  const innerRes = Math.exp(-2 * Math.pow(freq * PHI * PHI - 1.0, 2));
+
+  // Energy input to outer ring (from bus waveguide)
+  const inputRate = power * coupling * outerRes;
+
+  // Coupling between rings (evanescent field, depends on energy and coupling gap)
+  const outerToMiddle = state.outerEnergy * coupling * 0.3 * middleRes;
+  const middleToInner = state.middleEnergy * coupling * 0.3 * innerRes;
+
+  // Kerr phase shift at inner ring
+  const kerrPhaseShift = kerr * state.innerEnergy * Math.PI;
+
+  // Emergence: energy flowing back outward after i-turn
+  const emergenceRate = state.innerEnergy > 0.4 ? state.innerEnergy * 0.15 : state.innerEnergy * 0.02;
+  const innerToMiddleBack = emergenceRate * 0.5;
+  const middleToOuterBack = state.middleEnergy > 0.3 ? state.middleEnergy * 0.08 : 0;
+
+  // Loss (radiation, scattering)
+  const loss = 0.02;
+
+  // Update energies
+  state.outerEnergy += (inputRate - outerToMiddle - loss * state.outerEnergy + middleToOuterBack) * dt;
+  state.middleEnergy += (outerToMiddle - middleToInner - loss * state.middleEnergy + innerToMiddleBack - middleToOuterBack) * dt;
+  state.innerEnergy += (middleToInner - emergenceRate - loss * state.innerEnergy) * dt;
+
+  // Clamp
+  state.outerEnergy = Math.max(0, Math.min(1, state.outerEnergy));
+  state.middleEnergy = Math.max(0, Math.min(1, state.middleEnergy));
+  state.innerEnergy = Math.max(0, Math.min(1, state.innerEnergy));
+
+  // Phase accumulation
+  state.innerPhase += kerrPhaseShift * dt;
+  state.innerPhase = state.innerPhase % (2 * Math.PI);
+
+  // Output
+  state.outputPower = emergenceRate * (1 - loss);
+  state.outputPhase = state.innerPhase;
+
+  // Determine pump stage
+  const totalEnergy = state.outerEnergy + state.middleEnergy + state.innerEnergy;
+  if (totalEnergy < 0.05) {
+    state.pumpStage = 'idle';
+  } else if (state.outerEnergy > state.middleEnergy && state.outerEnergy > state.innerEnergy) {
+    state.pumpStage = '⊛ converging';
+  } else if (state.innerEnergy > 0.3 && emergenceRate > 0.05) {
+    state.pumpStage = '☀︎ emerging';
+  } else if (state.middleEnergy > state.outerEnergy * 0.8) {
+    state.pumpStage = 'i rotating';
+  } else {
+    state.pumpStage = '⊛ converging';
+  }
+
+  // Spawn input photons
+  if (state.inputActive && Math.random() < power * 0.3) {
+    const cx = getCenterX();
+    const cy = getCenterY();
+    const radii = getRingRadii();
+    const p = new Photon(
+      cx - radii.outer - 80,
+      cy,
+      'bus_in',
+      0,
+      'normal'
+    );
+    state.photons.push(p);
+  }
+
+  // Spawn ring photons based on energy
+  const cx = getCenterX();
+  const cy = getCenterY();
+  const radii = getRingRadii();
+
+  if (state.outerEnergy > 0.1 && Math.random() < state.outerEnergy * 0.4) {
+    const angle = Math.random() * Math.PI * 2;
+    state.photons.push(new Photon(
+      cx + Math.cos(angle) * radii.outer,
+      cy + Math.sin(angle) * radii.outer,
+      'outer', angle, 'normal'
+    ));
+  }
+  if (state.middleEnergy > 0.1 && Math.random() < state.middleEnergy * 0.4) {
+    const angle = Math.random() * Math.PI * 2;
+    state.photons.push(new Photon(
+      cx + Math.cos(angle) * radii.middle,
+      cy + Math.sin(angle) * radii.middle,
+      'middle', angle, 'normal'
+    ));
+  }
+  if (state.innerEnergy > 0.1 && Math.random() < state.innerEnergy * 0.5) {
+    const angle = Math.random() * Math.PI * 2;
+    state.photons.push(new Photon(
+      cx + Math.cos(angle) * radii.inner,
+      cy + Math.sin(angle) * radii.inner,
+      'inner', angle, 'normal'
+    ));
+  }
+
+  // Spawn emergence photons
+  if (state.outputPower > 0.05 && Math.random() < state.outputPower * 0.5) {
+    const angle = Math.random() * Math.PI * 2;
+    state.emergencePhotons.push(new Photon(
+      cx + Math.cos(angle) * radii.inner,
+      cy + Math.sin(angle) * radii.inner,
+      'emergence', angle, 'emergence'
+    ));
+  }
+
+  // Update photons
+  for (let i = state.photons.length - 1; i >= 0; i--) {
+    const p = state.photons[i];
+    if (p.ring === 'bus_in') {
+      p.x += 2.5;
+      if (p.x > cx - radii.outer + 5) {
+        p.ring = 'outer';
+        p.angle = Math.PI;
+      }
+      p.life -= 0.005;
+    } else if (p.ring === 'outer' || p.ring === 'middle' || p.ring === 'inner') {
+      const r = p.ring === 'outer' ? radii.outer : p.ring === 'middle' ? radii.middle : radii.inner;
+      const speed = p.ring === 'inner' ? 0.04 : p.ring === 'middle' ? 0.03 : 0.02;
+      p.angle += speed;
+      p.x = cx + Math.cos(p.angle) * r;
+      p.y = cy + Math.sin(p.angle) * r;
+      p.trail.push({ x: p.x, y: p.y });
+      if (p.trail.length > 20) p.trail.shift();
+      p.life -= 0.008;
+    }
+    if (p.life <= 0) state.photons.splice(i, 1);
+  }
+
+  // Update emergence photons (spiral outward)
+  for (let i = state.emergencePhotons.length - 1; i >= 0; i--) {
+    const p = state.emergencePhotons[i];
+    const r = radii.inner + (1 - p.life) * (radii.outer + 80);
+    p.angle += 0.03;
+    p.x = cx + Math.cos(p.angle) * r;
+    p.y = cy + Math.sin(p.angle) * r;
+    p.trail.push({ x: p.x, y: p.y });
+    if (p.trail.length > 15) p.trail.shift();
+    p.life -= 0.012;
+    if (p.life <= 0) state.emergencePhotons.splice(i, 1);
+  }
+
+  // Limit particles
+  if (state.photons.length > 200) state.photons.splice(0, state.photons.length - 200);
+  if (state.emergencePhotons.length > 100) state.emergencePhotons.splice(0, state.emergencePhotons.length - 100);
+}
+
+// Drawing
+function draw() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const w = rect.width;
+  const h = rect.height;
+  const cx = getCenterX();
+  const cy = getCenterY();
+  const radii = getRingRadii();
+
+  // Clear
+  ctx.fillStyle = '#0a0a0f';
+  ctx.fillRect(0, 0, w, h);
+
+  // Draw glass block (subtle)
+  const glassW = radii.outer * 2.8;
+  const glassH = radii.outer * 2.8;
+  ctx.save();
+  ctx.globalAlpha = 0.08;
+  ctx.fillStyle = '#aaccff';
+  ctx.beginPath();
+  ctx.roundRect(cx - glassW / 2, cy - glassH / 2, glassW, glassH, 12);
+  ctx.fill();
+  ctx.globalAlpha = 0.15;
+  ctx.strokeStyle = '#4466aa';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.restore();
+
+  // Label
+  ctx.save();
+  ctx.globalAlpha = 0.3;
+  ctx.fillStyle = '#6688aa';
+  ctx.font = '11px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('SiO\u2082 glass substrate', cx, cy - glassH / 2 - 8);
+  ctx.restore();
+
+  // Draw bus waveguide (input)
+  ctx.save();
+  ctx.strokeStyle = '#334466';
+  ctx.lineWidth = 3;
+  ctx.globalAlpha = 0.6;
+  ctx.beginPath();
+  ctx.moveTo(cx - radii.outer - 100, cy);
+  ctx.lineTo(cx - radii.outer + 5, cy);
+  ctx.stroke();
+  // Output bus
+  ctx.beginPath();
+  ctx.moveTo(cx + radii.outer - 5, cy);
+  ctx.lineTo(cx + radii.outer + 100, cy);
+  ctx.stroke();
+  ctx.restore();
+
+  // Draw input arrow label
+  ctx.save();
+  ctx.fillStyle = '#4488ff';
+  ctx.globalAlpha = 0.5;
+  ctx.font = '10px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('⊛ input', cx - radii.outer - 50, cy - 12);
+  ctx.fillStyle = '#ff4488';
+  ctx.fillText('☀\ufe0e output', cx + radii.outer + 50, cy - 12);
+  ctx.restore();
+
+  // Draw rings with glow based on energy
+  function drawRing(radius, energy, color, label) {
+    // Glow
+    if (energy > 0.01) {
+      ctx.save();
+      ctx.globalAlpha = energy * 0.4;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 8 + energy * 12;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 20 + energy * 40;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Ring itself
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.globalAlpha = 0.3 + energy * 0.7;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+
+    // Label
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 0.4;
+    ctx.font = '10px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, cx, cy - radius - 8);
+    ctx.restore();
+  }
+
+  drawRing(radii.outer, state.outerEnergy, '#4488ff', '○ boundary');
+  drawRing(radii.middle, state.middleEnergy, '#44dd88', 'Φ field');
+  drawRing(radii.inner, state.innerEnergy, '#ff8844', '• aperture');
+
+  // Draw center dot
+  ctx.save();
+  const centerGlow = state.innerEnergy;
+  ctx.globalAlpha = 0.3 + centerGlow * 0.7;
+  ctx.fillStyle = '#ff8844';
+  ctx.shadowColor = '#ff8844';
+  ctx.shadowBlur = 10 + centerGlow * 30;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 4 + centerGlow * 6, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // Draw circumpunct symbol when inner energy is high
+  if (state.innerEnergy > 0.5) {
+    ctx.save();
+    ctx.globalAlpha = (state.innerEnergy - 0.5) * 2;
+    ctx.strokeStyle = '#f0c040';
+    ctx.lineWidth = 1.5;
+    ctx.shadowColor = '#f0c040';
+    ctx.shadowBlur = 15;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 18, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.fillStyle = '#f0c040';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Draw photons
+  for (const p of state.photons) {
+    const color = p.ring === 'outer' ? '#4488ff' :
+                  p.ring === 'middle' ? '#44dd88' :
+                  p.ring === 'inner' ? '#ff8844' : '#4488ff';
+
+    // Trail
+    if (p.trail.length > 1) {
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      for (let t = 1; t < p.trail.length; t++) {
+        ctx.globalAlpha = (t / p.trail.length) * p.life * 0.3;
+        ctx.beginPath();
+        ctx.moveTo(p.trail[t - 1].x, p.trail[t - 1].y);
+        ctx.lineTo(p.trail[t].x, p.trail[t].y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // Photon dot
+    ctx.save();
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = color;
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 8;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Draw emergence photons
+  for (const p of state.emergencePhotons) {
+    // Phase-dependent color
+    const phaseHue = (state.outputPhase / (2 * Math.PI)) * 360;
+    const color = `hsl(${330 + phaseHue * 0.5}, 80%, 60%)`;
+
+    if (p.trail.length > 1) {
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      for (let t = 1; t < p.trail.length; t++) {
+        ctx.globalAlpha = (t / p.trail.length) * p.life * 0.4;
+        ctx.beginPath();
+        ctx.moveTo(p.trail[t - 1].x, p.trail[t - 1].y);
+        ctx.lineTo(p.trail[t].x, p.trail[t].y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    ctx.save();
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = color;
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 12;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Draw coupling arcs (energy jumping between rings)
+  if (state.outerEnergy > 0.3 && state.middleEnergy > 0.1) {
+    const jumpAlpha = (state.outerEnergy - 0.3) * 1.5;
+    ctx.save();
+    ctx.globalAlpha = jumpAlpha * 0.3;
+    ctx.strokeStyle = '#88aaff';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 6]);
+    const jumpAngle = state.time * 2;
+    for (let a = 0; a < 3; a++) {
+      const ang = jumpAngle + a * Math.PI * 2 / 3;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(ang) * radii.outer, cy + Math.sin(ang) * radii.outer);
+      ctx.lineTo(cx + Math.cos(ang) * radii.middle, cy + Math.sin(ang) * radii.middle);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  if (state.middleEnergy > 0.3 && state.innerEnergy > 0.1) {
+    const jumpAlpha = (state.middleEnergy - 0.3) * 1.5;
+    ctx.save();
+    ctx.globalAlpha = jumpAlpha * 0.3;
+    ctx.strokeStyle = '#88ffaa';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 6]);
+    const jumpAngle = state.time * 3;
+    for (let a = 0; a < 3; a++) {
+      const ang = jumpAngle + a * Math.PI * 2 / 3;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(ang) * radii.middle, cy + Math.sin(ang) * radii.middle);
+      ctx.lineTo(cx + Math.cos(ang) * radii.inner, cy + Math.sin(ang) * radii.inner);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // Draw phase indicator (bottom right of sim area)
+  const phaseX = cx + radii.outer + 60;
+  const phaseY = cy + 60;
+  ctx.save();
+  ctx.globalAlpha = 0.5;
+  ctx.strokeStyle = '#3a3a4a';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(phaseX, phaseY, 25, 0, Math.PI * 2);
+  ctx.stroke();
+  // Phase arrow
+  ctx.globalAlpha = 0.8;
+  ctx.strokeStyle = '#f0c040';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(phaseX, phaseY);
+  ctx.lineTo(
+    phaseX + Math.cos(state.outputPhase) * 22,
+    phaseY + Math.sin(state.outputPhase) * 22
+  );
+  ctx.stroke();
+  ctx.fillStyle = '#f0c040';
+  ctx.beginPath();
+  ctx.arc(
+    phaseX + Math.cos(state.outputPhase) * 22,
+    phaseY + Math.sin(state.outputPhase) * 22,
+    3, 0, Math.PI * 2
+  );
+  ctx.fill();
+  // Labels
+  ctx.fillStyle = '#667';
+  ctx.font = '9px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('phase', phaseX, phaseY + 40);
+  ctx.fillText('+1', phaseX + 32, phaseY + 4);
+  ctx.fillText('-1', phaseX - 32, phaseY + 4);
+  ctx.fillText('+i', phaseX, phaseY - 30);
+  ctx.fillText('-i', phaseX, phaseY + 34);
+  ctx.restore();
+}
+
+// UI updates
+function updateUI() {
+  document.getElementById('balOuter').style.width = (state.outerEnergy * 100) + '%';
+  document.getElementById('balMiddle').style.width = (state.middleEnergy * 100) + '%';
+  document.getElementById('balInner').style.width = (state.innerEnergy * 100) + '%';
+
+  document.getElementById('pumpStage').textContent = state.pumpStage;
+  document.getElementById('outPhase').textContent = (state.outputPhase * 180 / Math.PI).toFixed(1) + '°';
+  document.getElementById('outPower').textContent = state.outputPower.toFixed(3);
+  document.getElementById('effBalance').textContent =
+    ((state.outerEnergy + state.middleEnergy + state.innerEnergy) / 3).toFixed(3);
+
+  // Phase cards
+  const phaseDeg = ((state.outputPhase * 180 / Math.PI) % 360 + 360) % 360;
+  ['phase0', 'phase1', 'phase2', 'phase3'].forEach((id, i) => {
+    const card = document.getElementById(id);
+    const center = i * 90;
+    const dist = Math.min(Math.abs(phaseDeg - center), 360 - Math.abs(phaseDeg - center));
+    card.classList.toggle('active', dist < 45 && state.outputPower > 0.01);
+  });
+}
+
+// Input bindings
+document.getElementById('inputPower').addEventListener('input', e => {
+  state.inputPower = parseFloat(e.target.value);
+  document.getElementById('powerVal').textContent = state.inputPower.toFixed(2);
+});
+document.getElementById('inputFreq').addEventListener('input', e => {
+  state.inputFreq = parseFloat(e.target.value);
+  document.getElementById('freqVal').textContent = state.inputFreq.toFixed(2);
+});
+document.getElementById('outerR').addEventListener('input', e => {
+  state.outerR = parseFloat(e.target.value);
+  document.getElementById('outerRVal').textContent = state.outerR.toFixed(2);
+});
+document.getElementById('coupling').addEventListener('input', e => {
+  state.coupling = parseFloat(e.target.value);
+  document.getElementById('couplingVal').textContent = state.coupling.toFixed(2);
+});
+document.getElementById('kerr').addEventListener('input', e => {
+  state.kerr = parseFloat(e.target.value);
+  document.getElementById('kerrVal').textContent = state.kerr.toFixed(2);
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  state.outerEnergy = 0;
+  state.middleEnergy = 0;
+  state.innerEnergy = 0;
+  state.innerPhase = 0;
+  state.outputPower = 0;
+  state.outputPhase = 0;
+  state.photons = [];
+  state.emergencePhotons = [];
+});
+
+document.getElementById('pulseBtn').addEventListener('click', () => {
+  // Send a strong pulse
+  state.outerEnergy = Math.min(1, state.outerEnergy + 0.5);
+  // Spawn burst of photons
+  const cx = getCenterX();
+  const cy = getCenterY();
+  const radii = getRingRadii();
+  for (let i = 0; i < 15; i++) {
+    state.photons.push(new Photon(
+      cx - radii.outer - 80 + Math.random() * 20,
+      cy + (Math.random() - 0.5) * 10,
+      'bus_in', 0, 'normal'
+    ));
+  }
+});
+
+// Main loop
+let lastTime = performance.now();
+function loop(now) {
+  const dt = Math.min((now - lastTime) / 16.67, 3); // normalize to ~60fps
+  lastTime = now;
+  state.time += 0.016 * dt;
+
+  updatePhysics(dt);
+  draw();
+  updateUI();
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

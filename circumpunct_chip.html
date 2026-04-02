@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Circumpunct Chip — City of Light</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #060610;
+    color: #d0d0d0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow: hidden;
+  }
+  canvas { display: block; cursor: crosshair; }
+  #hud {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    pointer-events: none;
+    z-index: 10;
+  }
+  #hud h1 {
+    font-size: 14px;
+    font-weight: 400;
+    color: #667;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  #hud .sub {
+    font-size: 11px;
+    color: #445;
+    margin-top: 4px;
+    font-family: monospace;
+  }
+  #info {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    pointer-events: none;
+    z-index: 10;
+    font-size: 11px;
+    font-family: monospace;
+    color: #556;
+    line-height: 1.7;
+  }
+  #info .val { color: #f0c040; }
+  #controls {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .btn {
+    background: #111118;
+    border: 1px solid #2a2a3a;
+    color: #99a;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    font-family: monospace;
+    transition: all 0.2s;
+    pointer-events: all;
+  }
+  .btn:hover { border-color: #f0c040; color: #f0c040; }
+  .btn.active { background: #1a1a10; border-color: #f0c040; color: #f0c040; }
+  #legend {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    z-index: 10;
+    font-size: 10px;
+    font-family: monospace;
+    color: #445;
+    line-height: 1.8;
+    text-align: right;
+    pointer-events: none;
+  }
+  #legend .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+  #zoomHint {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    font-family: monospace;
+    color: #334;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="hud">
+  <h1>Circumpunct Chip</h1>
+  <div class="sub" id="scaleLabel">macro view — <span id="cellCount">0</span> transistors</div>
+</div>
+
+<div id="info">
+  <div>zoom: <span class="val" id="zoomVal">1.00</span>x</div>
+  <div>active cells: <span class="val" id="activeCells">0</span></div>
+  <div>total energy: <span class="val" id="totalE">0.00</span></div>
+  <div>pump cycles/s: <span class="val" id="pumpRate">0</span></div>
+  <div>phase coherence: <span class="val" id="coherence">0.00</span></div>
+</div>
+
+<div id="controls">
+  <button class="btn" id="btnSignal">inject signal</button>
+  <button class="btn" id="btnPulse">pulse all</button>
+  <button class="btn" id="btnClear">clear</button>
+  <button class="btn" id="btnSpeed">speed: 1x</button>
+  <button class="btn" id="btnLayout">layout: hex</button>
+</div>
+
+<div id="legend">
+  ○ boundary <span class="dot" style="background:#3366aa"></span><br>
+  Φ field <span class="dot" style="background:#33aa66"></span><br>
+  • aperture <span class="dot" style="background:#cc6633"></span><br>
+  bus waveguide <span class="dot" style="background:#2a3a4a"></span><br>
+  emergence <span class="dot" style="background:#dd3366"></span><br>
+  ⊙ pump active <span class="dot" style="background:#f0c040"></span>
+</div>
+
+<div id="zoomHint">scroll to zoom — click + drag to pan — click cell to inject</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const PHI = (1 + Math.sqrt(5)) / 2;
+
+// ──────────── State ────────────
+let W, H, dpr;
+let camera = { x: 0, y: 0, zoom: 1, targetZoom: 1, targetX: 0, targetY: 0 };
+let mouse = { x: 0, y: 0, down: false, startX: 0, startY: 0, camStartX: 0, camStartY: 0 };
+let time = 0;
+let speed = 1;
+let layoutMode = 'hex'; // 'hex' or 'grid'
+let pumpCount = 0;
+let lastPumpCheck = 0;
+let pumpRateDisplay = 0;
+
+// ──────────── Chip layout ────────────
+const GRID = 7; // 7x7 array
+const CELL_SPACING = 110;
+let cells = [];
+
+class Cell {
+  constructor(x, y, id) {
+    this.x = x;
+    this.y = y;
+    this.id = id;
+    // Three ring energies
+    this.outer = 0;
+    this.middle = 0;
+    this.inner = 0;
+    // Phase
+    this.phase = 0;
+    this.outputPhase = 0;
+    this.outputPower = 0;
+    // Pump state
+    this.pumping = false;
+    this.pumpCycles = 0;
+    // Neighbors (filled after layout)
+    this.neighbors = [];
+    // Visual
+    this.glow = 0;
+    // Photon particles
+    this.photons = [];
+  }
+}
+
+class Photon {
+  constructor(x, y, vx, vy, type, life) {
+    this.x = x;
+    this.y = y;
+    this.vx = vx;
+    this.vy = vy;
+    this.type = type; // 'ring', 'bus', 'emerge'
+    this.life = life || 1;
+    this.age = 0;
+  }
+}
+
+// ──────────── Build layout ────────────
+function buildLayout() {
+  cells = [];
+  let id = 0;
+
+  if (layoutMode === 'hex') {
+    // Hexagonal layout — more organic, like a real chip with honey-comb routing
+    const rows = GRID;
+    const cols = GRID;
+    const sp = CELL_SPACING;
+    for (let r = 0; r < rows; r++) {
+      const offset = (r % 2) * sp * 0.5;
+      const actualCols = r % 2 === 0 ? cols : cols - 1;
+      for (let c = 0; c < actualCols; c++) {
+        const x = (c - (actualCols - 1) / 2) * sp + offset;
+        const y = (r - (rows - 1) / 2) * sp * 0.866;
+        cells.push(new Cell(x, y, id++));
+      }
+    }
+  } else {
+    // Grid
+    for (let r = 0; r < GRID; r++) {
+      for (let c = 0; c < GRID; c++) {
+        const x = (c - (GRID - 1) / 2) * CELL_SPACING;
+        const y = (r - (GRID - 1) / 2) * CELL_SPACING;
+        cells.push(new Cell(x, y, id++));
+      }
+    }
+  }
+
+  // Find neighbors (within coupling distance)
+  const maxDist = CELL_SPACING * 1.2;
+  for (const cell of cells) {
+    cell.neighbors = [];
+    for (const other of cells) {
+      if (other === cell) continue;
+      const dx = other.x - cell.x;
+      const dy = other.y - cell.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < maxDist) {
+        cell.neighbors.push(other);
+      }
+    }
+  }
+
+  document.getElementById('cellCount').textContent = cells.length;
+}
+
+// ──────────── Physics ────────────
+function updateCell(cell, dt) {
+  const coupling = 0.45; // near critical
+  const kerr = 0.35;
+  const loss = 0.025;
+
+  // Internal pump cycle
+  const outerToMiddle = cell.outer * coupling * 0.35;
+  const middleToInner = cell.middle * coupling * 0.35;
+  const kerrShift = kerr * cell.inner * Math.PI;
+  const emergence = cell.inner > 0.35 ? cell.inner * 0.18 : cell.inner * 0.02;
+  const innerBack = emergence * 0.4;
+  const middleBack = cell.middle > 0.3 ? cell.middle * 0.06 : 0;
+
+  cell.outer += (-outerToMiddle - loss * cell.outer + middleBack) * dt;
+  cell.middle += (outerToMiddle - middleToInner - loss * cell.middle + innerBack - middleBack) * dt;
+  cell.inner += (middleToInner - emergence - loss * cell.inner) * dt;
+
+  // Clamp
+  cell.outer = Math.max(0, Math.min(1, cell.outer));
+  cell.middle = Math.max(0, Math.min(1, cell.middle));
+  cell.inner = Math.max(0, Math.min(1, cell.inner));
+
+  // Phase
+  cell.phase += kerrShift * dt;
+  cell.phase %= Math.PI * 2;
+  cell.outputPhase = cell.phase;
+  cell.outputPower = emergence * (1 - loss);
+
+  // Pump detection
+  const wasPumping = cell.pumping;
+  cell.pumping = cell.inner > 0.3 && emergence > 0.04;
+  if (cell.pumping && !wasPumping) {
+    cell.pumpCycles++;
+    pumpCount++;
+  }
+
+  // Glow
+  cell.glow += ((cell.outer + cell.middle * 1.5 + cell.inner * 2) / 4.5 - cell.glow) * 0.1;
+
+  // Inter-cell coupling: emergence feeds neighbors' outer rings
+  if (cell.outputPower > 0.02) {
+    for (const nb of cell.neighbors) {
+      const feed = cell.outputPower * 0.12 * dt;
+      nb.outer = Math.min(1, nb.outer + feed);
+
+      // Spawn bus photon occasionally
+      if (Math.random() < cell.outputPower * 0.15) {
+        const dx = nb.x - cell.x;
+        const dy = nb.y - cell.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        cell.photons.push(new Photon(
+          cell.x, cell.y,
+          (dx / dist) * 2.5, (dy / dist) * 2.5,
+          'bus', 0.8
+        ));
+      }
+    }
+  }
+
+  // Spawn ring photons
+  const totalE = cell.outer + cell.middle + cell.inner;
+  if (totalE > 0.1 && Math.random() < totalE * 0.2) {
+    const ringR = cell.inner > cell.middle ? 6 : cell.middle > cell.outer ? 14 : 22;
+    const ang = Math.random() * Math.PI * 2;
+    const type = cell.inner > 0.3 ? 'emerge' : 'ring';
+    cell.photons.push(new Photon(
+      cell.x + Math.cos(ang) * ringR,
+      cell.y + Math.sin(ang) * ringR,
+      Math.cos(ang + Math.PI / 2) * 1.2,
+      Math.sin(ang + Math.PI / 2) * 1.2,
+      type, 0.6 + Math.random() * 0.4
+    ));
+  }
+
+  // Update photons
+  for (let i = cell.photons.length - 1; i >= 0; i--) {
+    const p = cell.photons[i];
+    p.x += p.vx * dt;
+    p.y += p.vy * dt;
+    p.life -= 0.02 * dt;
+    p.age += dt;
+    if (p.life <= 0) cell.photons.splice(i, 1);
+  }
+  // Limit
+  if (cell.photons.length > 30) cell.photons.splice(0, cell.photons.length - 30);
+}
+
+function updatePhysics(dt) {
+  for (const cell of cells) {
+    updateCell(cell, dt);
+  }
+  // Pump rate
+  if (time - lastPumpCheck > 1) {
+    pumpRateDisplay = pumpCount;
+    pumpCount = 0;
+    lastPumpCheck = time;
+  }
+}
+
+// ──────────── Drawing ────────────
+function worldToScreen(wx, wy) {
+  return {
+    x: (wx - camera.x) * camera.zoom + W / 2,
+    y: (wy - camera.y) * camera.zoom + H / 2,
+  };
+}
+
+function screenToWorld(sx, sy) {
+  return {
+    x: (sx - W / 2) / camera.zoom + camera.x,
+    y: (sy - H / 2) / camera.zoom + camera.y,
+  };
+}
+
+function drawCell(cell) {
+  const s = worldToScreen(cell.x, cell.y);
+  const z = camera.zoom;
+  const r1 = 28 * z; // outer
+  const r2 = 28 / PHI * z; // middle
+  const r3 = 28 / (PHI * PHI) * z; // inner
+
+  // Skip if off screen
+  if (s.x < -60 * z || s.x > W + 60 * z || s.y < -60 * z || s.y > H + 60 * z) return;
+
+  // Background glow
+  if (cell.glow > 0.05) {
+    const grad = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, r1 * 2);
+    grad.addColorStop(0, `rgba(240, 192, 64, ${cell.glow * 0.12})`);
+    grad.addColorStop(1, 'rgba(240, 192, 64, 0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, r1 * 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Bus waveguides to neighbors
+  for (const nb of cell.neighbors) {
+    const ns = worldToScreen(nb.x, nb.y);
+    const dx = ns.x - s.x;
+    const dy = ns.y - s.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    // Only draw once (from lower id to higher)
+    if (nb.id < cell.id) continue;
+    ctx.save();
+    const busEnergy = Math.max(cell.outputPower, nb.outputPower);
+    ctx.globalAlpha = 0.15 + busEnergy * 0.5;
+    ctx.strokeStyle = busEnergy > 0.03 ? '#2a4a6a' : '#181828';
+    ctx.lineWidth = Math.max(1, 1.5 * z);
+    ctx.beginPath();
+    ctx.moveTo(s.x + (dx / dist) * r1, s.y + (dy / dist) * r1);
+    ctx.lineTo(ns.x - (dx / dist) * r1, ns.y - (dy / dist) * r1);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Outer ring (○)
+  ctx.save();
+  ctx.globalAlpha = 0.2 + cell.outer * 0.8;
+  ctx.strokeStyle = `rgb(${51 + cell.outer * 80}, ${102 + cell.outer * 50}, ${170 + cell.outer * 80})`;
+  ctx.lineWidth = Math.max(1, 1.5 * z);
+  if (cell.outer > 0.3) {
+    ctx.shadowColor = '#4488ff';
+    ctx.shadowBlur = cell.outer * 15 * z;
+  }
+  ctx.beginPath();
+  ctx.arc(s.x, s.y, r1, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
+
+  // Middle ring (Φ)
+  ctx.save();
+  ctx.globalAlpha = 0.2 + cell.middle * 0.8;
+  ctx.strokeStyle = `rgb(${51 + cell.middle * 80}, ${170 + cell.middle * 80}, ${102 + cell.middle * 50})`;
+  ctx.lineWidth = Math.max(0.8, 1.2 * z);
+  if (cell.middle > 0.3) {
+    ctx.shadowColor = '#44dd88';
+    ctx.shadowBlur = cell.middle * 12 * z;
+  }
+  ctx.beginPath();
+  ctx.arc(s.x, s.y, r2, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
+
+  // Inner ring (•)
+  ctx.save();
+  ctx.globalAlpha = 0.2 + cell.inner * 0.8;
+  ctx.strokeStyle = `rgb(${200 + cell.inner * 55}, ${100 + cell.inner * 50}, ${51 + cell.inner * 30})`;
+  ctx.lineWidth = Math.max(0.6, 1 * z);
+  if (cell.inner > 0.3) {
+    ctx.shadowColor = '#ff8844';
+    ctx.shadowBlur = cell.inner * 10 * z;
+  }
+  ctx.beginPath();
+  ctx.arc(s.x, s.y, r3, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
+
+  // Center dot
+  if (cell.inner > 0.1) {
+    ctx.save();
+    ctx.globalAlpha = cell.inner;
+    ctx.fillStyle = '#ff8844';
+    ctx.shadowColor = '#ff8844';
+    ctx.shadowBlur = cell.inner * 15 * z;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, Math.max(1, (2 + cell.inner * 3) * z), 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Circumpunct symbol when pumping
+  if (cell.pumping) {
+    ctx.save();
+    ctx.globalAlpha = 0.4 + Math.sin(time * 5) * 0.2;
+    ctx.strokeStyle = '#f0c040';
+    ctx.lineWidth = Math.max(0.5, 0.8 * z);
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, r3 * 1.6, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.fillStyle = '#f0c040';
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, Math.max(0.5, 1.2 * z), 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Photons
+  for (const p of cell.photons) {
+    const ps = worldToScreen(p.x, p.y);
+    let color;
+    if (p.type === 'bus') color = '#4466aa';
+    else if (p.type === 'emerge') color = '#dd3366';
+    else color = cell.inner > cell.middle ? '#ff8844' : '#44dd88';
+
+    ctx.save();
+    ctx.globalAlpha = p.life * 0.8;
+    ctx.fillStyle = color;
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 6 * z;
+    ctx.beginPath();
+    ctx.arc(ps.x, ps.y, Math.max(1, 1.8 * z), 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Labels at higher zoom
+  if (z > 2.5) {
+    ctx.save();
+    ctx.globalAlpha = Math.min(1, (z - 2.5) * 0.5);
+    ctx.fillStyle = '#445';
+    ctx.font = `${Math.max(8, 9 * z / 3)}px monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText(`⊙ ${cell.id}`, s.x, s.y + r1 + 14 * z / 3);
+    if (cell.pumping) {
+      ctx.fillStyle = '#f0c040';
+      ctx.fillText('pumping', s.x, s.y + r1 + 26 * z / 3);
+    }
+    ctx.restore();
+  }
+}
+
+function drawChipBoundary() {
+  // Draw the macro-scale ○ around the entire chip
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const c of cells) {
+    minX = Math.min(minX, c.x);
+    minY = Math.min(minY, c.y);
+    maxX = Math.max(maxX, c.x);
+    maxY = Math.max(maxY, c.y);
+  }
+  const pad = 65;
+  const tl = worldToScreen(minX - pad, minY - pad);
+  const br = worldToScreen(maxX + pad, maxY + pad);
+
+  ctx.save();
+  ctx.globalAlpha = 0.08;
+  ctx.strokeStyle = '#4466aa';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 8]);
+  ctx.beginPath();
+  ctx.roundRect(tl.x, tl.y, br.x - tl.x, br.y - tl.y, 10 * camera.zoom);
+  ctx.stroke();
+  ctx.restore();
+
+  // Chip-level ⊙ label
+  if (camera.zoom < 1.5) {
+    const cx = (tl.x + br.x) / 2;
+    ctx.save();
+    ctx.globalAlpha = 0.15;
+    ctx.fillStyle = '#667';
+    ctx.font = '10px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('⊙ macro — chip boundary (○)', cx, tl.y - 8);
+    ctx.restore();
+  }
+}
+
+function drawClusterBoundaries() {
+  // At medium zoom, show clusters of ~7 cells forming meso-scale ⊙s
+  if (camera.zoom < 1.2 || camera.zoom > 4) return;
+
+  // Simple clustering: find cells that form natural hex groups
+  const clusterSize = CELL_SPACING * 1.8;
+  const visited = new Set();
+  const clusters = [];
+
+  for (const cell of cells) {
+    if (visited.has(cell.id)) continue;
+    const cluster = [cell];
+    visited.add(cell.id);
+    for (const nb of cell.neighbors) {
+      if (!visited.has(nb.id)) {
+        cluster.push(nb);
+        visited.add(nb.id);
+      }
+    }
+    if (cluster.length >= 3) clusters.push(cluster);
+  }
+
+  ctx.save();
+  ctx.globalAlpha = 0.06;
+  ctx.strokeStyle = '#44aa66';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 6]);
+  for (const cluster of clusters) {
+    let cx = 0, cy = 0;
+    for (const c of cluster) { cx += c.x; cy += c.y; }
+    cx /= cluster.length;
+    cy /= cluster.length;
+    const s = worldToScreen(cx, cy);
+    const r = clusterSize * 0.5 * camera.zoom;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function draw() {
+  ctx.fillStyle = '#060610';
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle grid
+  if (camera.zoom > 0.8) {
+    ctx.save();
+    ctx.globalAlpha = 0.03;
+    ctx.strokeStyle = '#334';
+    ctx.lineWidth = 0.5;
+    const gridStep = 50 * camera.zoom;
+    const offX = (-camera.x * camera.zoom + W / 2) % gridStep;
+    const offY = (-camera.y * camera.zoom + H / 2) % gridStep;
+    for (let x = offX; x < W; x += gridStep) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = offY; y < H; y += gridStep) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  drawChipBoundary();
+  drawClusterBoundaries();
+
+  // Draw cells
+  for (const cell of cells) {
+    drawCell(cell);
+  }
+
+  // Update HUD
+  let activeCount = 0;
+  let totalEnergy = 0;
+  let phaseSum = 0;
+  let phaseCount = 0;
+  for (const c of cells) {
+    const e = c.outer + c.middle + c.inner;
+    totalEnergy += e;
+    if (e > 0.1) activeCount++;
+    if (c.pumping) { phaseSum += c.outputPhase; phaseCount++; }
+  }
+  document.getElementById('zoomVal').textContent = camera.zoom.toFixed(2);
+  document.getElementById('activeCells').textContent = activeCount;
+  document.getElementById('totalE').textContent = totalEnergy.toFixed(2);
+  document.getElementById('pumpRate').textContent = pumpRateDisplay;
+
+  // Phase coherence: how aligned pumping cells' phases are (1 = perfect)
+  let coherence = 0;
+  if (phaseCount > 1) {
+    const avgPhase = phaseSum / phaseCount;
+    let variance = 0;
+    for (const c of cells) {
+      if (c.pumping) {
+        let diff = c.outputPhase - avgPhase;
+        diff = Math.atan2(Math.sin(diff), Math.cos(diff));
+        variance += diff * diff;
+      }
+    }
+    variance /= phaseCount;
+    coherence = Math.exp(-variance);
+  } else if (phaseCount === 1) coherence = 1;
+  document.getElementById('coherence').textContent = coherence.toFixed(3);
+}
+
+// ──────────── Camera ────────────
+function smoothCamera() {
+  camera.zoom += (camera.targetZoom - camera.zoom) * 0.08;
+  camera.x += (camera.targetX - camera.x) * 0.08;
+  camera.y += (camera.targetY - camera.y) * 0.08;
+
+  // Update scale label
+  const label = camera.zoom < 1.5 ? 'macro view' : camera.zoom < 3 ? 'meso view' : 'micro view';
+  document.getElementById('scaleLabel').innerHTML = `${label} — <span id="cellCount">${cells.length}</span> transistors`;
+}
+
+// ──────────── Input ────────────
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+  camera.targetZoom = Math.max(0.3, Math.min(8, camera.targetZoom * zoomFactor));
+
+  // Zoom toward mouse
+  const wBefore = screenToWorld(e.clientX, e.clientY);
+  // Adjust camera target to keep mouse position stable
+  const newZoom = camera.targetZoom;
+  camera.targetX = wBefore.x - (e.clientX - W / 2) / newZoom;
+  camera.targetY = wBefore.y - (e.clientY - H / 2) / newZoom;
+}, { passive: false });
+
+canvas.addEventListener('mousedown', e => {
+  mouse.down = true;
+  mouse.startX = e.clientX;
+  mouse.startY = e.clientY;
+  mouse.camStartX = camera.targetX;
+  mouse.camStartY = camera.targetY;
+});
+
+canvas.addEventListener('mousemove', e => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+  if (mouse.down) {
+    const dx = (e.clientX - mouse.startX) / camera.zoom;
+    const dy = (e.clientY - mouse.startY) / camera.zoom;
+    camera.targetX = mouse.camStartX - dx;
+    camera.targetY = mouse.camStartY - dy;
+  }
+});
+
+canvas.addEventListener('mouseup', e => {
+  const dx = Math.abs(e.clientX - mouse.startX);
+  const dy = Math.abs(e.clientY - mouse.startY);
+  if (dx < 5 && dy < 5) {
+    // Click — inject signal into nearest cell
+    const w = screenToWorld(e.clientX, e.clientY);
+    let closest = null, closestDist = Infinity;
+    for (const c of cells) {
+      const d = Math.sqrt((c.x - w.x) ** 2 + (c.y - w.y) ** 2);
+      if (d < closestDist) { closestDist = d; closest = c; }
+    }
+    if (closest && closestDist < CELL_SPACING * 0.6) {
+      closest.outer = Math.min(1, closest.outer + 0.6);
+    }
+  }
+  mouse.down = false;
+});
+
+// Buttons
+document.getElementById('btnSignal').addEventListener('click', () => {
+  // Inject at center cell
+  const centerIdx = Math.floor(cells.length / 2);
+  cells[centerIdx].outer = 1;
+  cells[centerIdx].middle = 0.5;
+});
+
+document.getElementById('btnPulse').addEventListener('click', () => {
+  for (const c of cells) {
+    c.outer = Math.min(1, c.outer + 0.4);
+  }
+});
+
+document.getElementById('btnClear').addEventListener('click', () => {
+  for (const c of cells) {
+    c.outer = 0; c.middle = 0; c.inner = 0;
+    c.phase = 0; c.outputPower = 0; c.glow = 0;
+    c.photons = [];
+  }
+});
+
+let speedIdx = 0;
+const speeds = [1, 2, 4, 0.25, 0.5];
+document.getElementById('btnSpeed').addEventListener('click', () => {
+  speedIdx = (speedIdx + 1) % speeds.length;
+  speed = speeds[speedIdx];
+  document.getElementById('btnSpeed').textContent = `speed: ${speed}x`;
+});
+
+document.getElementById('btnLayout').addEventListener('click', () => {
+  layoutMode = layoutMode === 'hex' ? 'grid' : 'hex';
+  document.getElementById('btnLayout').textContent = `layout: ${layoutMode}`;
+  buildLayout();
+});
+
+// ──────────── Resize ────────────
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  W = window.innerWidth;
+  H = window.innerHeight;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', resize);
+resize();
+
+// ──────────── Init ────────────
+buildLayout();
+
+// Show hint briefly
+const hint = document.getElementById('zoomHint');
+hint.style.opacity = 1;
+setTimeout(() => { hint.style.opacity = 0; }, 4000);
+
+// ──────────── Loop ────────────
+let lastTime = performance.now();
+function loop(now) {
+  const rawDt = Math.min((now - lastTime) / 16.67, 4);
+  lastTime = now;
+  const dt = rawDt * speed;
+  time += 0.016 * dt;
+
+  smoothCamera();
+  updatePhysics(dt);
+  draw();
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
