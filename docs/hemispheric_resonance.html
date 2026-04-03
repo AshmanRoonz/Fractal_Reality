@@ -213,6 +213,7 @@
                     <button class="button secondary" onclick="resetParameters()">Reset</button>
                 </div>
                 <button class="button tertiary" onclick="downloadPNG()">Download PNG</button>
+                <button class="button" id="btn-engine" onclick="toggleEngineMode()" style="margin-top:8px;">Engine Mode (hide field)</button>
             </div>
         </div>
 
@@ -281,6 +282,9 @@
 
     // Stats for HUD
     let stats = { pruned: 0, frozen: 0, migrated: 0, woken: 0 };
+
+    // Engine mode: field computed but not rendered (like the real engine)
+    let engineMode = false;
 
     // ========================================================================
     //  LATTICE NODE (Left Brain, with FRT SRL mechanics)
@@ -804,29 +808,46 @@
             }
         }
 
-        // Draw particle trails
-        for (let p of particles) {
-            let speed = dist(p.prevX, p.prevY, p.x, p.y);
-            let speedNorm = constrain(speed / 3, 0, 1);
-
-            let r = lerp(flowCol[0], structCol[0], speedNorm);
-            let g = lerp(flowCol[1], structCol[1], speedNorm);
-            let b = lerp(flowCol[2], structCol[2], speedNorm);
-
-            // Matched particles glow bridge-color (moment of resonance)
-            if (p.matched && speedNorm > 0.2) {
-                r = lerp(r, bridgeCol[0], 0.6);
-                g = lerp(g, bridgeCol[1], 0.6);
-                b = lerp(b, bridgeCol[2], 0.6);
+        // Draw particle trails (skip in engine mode: field computed but not rendered)
+        if (engineMode) {
+            // In engine mode, we still SEE the boundary being shaped.
+            // Draw subtle "erosion marks" where flow is strongest
+            for (let node of nodes) {
+                if (!node.active || node.flowCount === 0) continue;
+                // Show the EFFECT of flow on structure (not the flow itself)
+                let erosionAlpha = min(20, node.flowCount * 2) * node.attention;
+                if (node.totalMigration > 3) {
+                    pg.stroke(bridgeCol[0], bridgeCol[1], bridgeCol[2], erosionAlpha * 0.5);
+                    pg.strokeWeight(1 + node.totalMigration * 0.05);
+                    pg.line(node.originX, node.originY, node.homeX, node.homeY);
+                }
             }
+        }
 
-            let alpha = p.life * p.attention * 55 * (1 - dynamicBalance * 0.3);
-            alpha = constrain(alpha, 0, 45);
+        if (!engineMode) {
+            for (let p of particles) {
+                let speed = dist(p.prevX, p.prevY, p.x, p.y);
+                let speedNorm = constrain(speed / 3, 0, 1);
 
-            pg.stroke(r, g, b, alpha);
-            pg.strokeWeight(0.5 + p.attention * 1.5 + speedNorm * 0.8);
-            if (speed > 0.3) {
-                pg.line(p.prevX, p.prevY, p.x, p.y);
+                let r = lerp(flowCol[0], structCol[0], speedNorm);
+                let g = lerp(flowCol[1], structCol[1], speedNorm);
+                let b = lerp(flowCol[2], structCol[2], speedNorm);
+
+                // Matched particles glow bridge-color (moment of resonance)
+                if (p.matched && speedNorm > 0.2) {
+                    r = lerp(r, bridgeCol[0], 0.6);
+                    g = lerp(g, bridgeCol[1], 0.6);
+                    b = lerp(b, bridgeCol[2], 0.6);
+                }
+
+                let alpha = p.life * p.attention * 55 * (1 - dynamicBalance * 0.3);
+                alpha = constrain(alpha, 0, 45);
+
+                pg.stroke(r, g, b, alpha);
+                pg.strokeWeight(0.5 + p.attention * 1.5 + speedNorm * 0.8);
+                if (speed > 0.3) {
+                    pg.line(p.prevX, p.prevY, p.x, p.y);
+                }
             }
         }
 
@@ -961,6 +982,14 @@
 
     function downloadPNG() {
         saveCanvas('hemispheric_resonance_' + params.seed, 'png');
+    }
+
+    function toggleEngineMode() {
+        engineMode = !engineMode;
+        let btn = document.getElementById('btn-engine');
+        btn.textContent = engineMode ? 'Art Mode (show field)' : 'Engine Mode (hide field)';
+        btn.style.background = engineMode ? 'var(--anthropic-orange)' : '';
+        pg.background(250, 249, 245);
     }
 
     window.addEventListener('load', function() { updateSeedDisplay(); });
