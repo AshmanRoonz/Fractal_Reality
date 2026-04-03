@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Circumpunct Engine v2: Foveated Reality</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #06060c; color: #d0d0d0; font-family: 'Courier New', monospace; overflow: hidden; }
+
+#hud {
+  position: fixed; top: 0; left: 0; z-index: 100; padding: 14px; pointer-events: none;
+}
+#hud > * { pointer-events: auto; }
+
+.panel {
+  background: rgba(6,6,14,0.92);
+  border: 1px solid rgba(200,168,78,0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  font-size: 11.5px;
+  line-height: 1.7;
+  min-width: 280px;
+  backdrop-filter: blur(8px);
+}
+.panel .head {
+  color: #c8a84e;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.lab { color: #666; }
+.val { color: #c8a84e; }
+.hi  { color: #e8d88e; }
+.lo  { color: #444; }
+
+.bar { width: 100%; height: 6px; background: rgba(255,255,255,0.04); border-radius: 3px; margin: 3px 0 6px; overflow: hidden; }
+.bar-inner { height: 100%; border-radius: 3px; transition: width 0.25s ease; }
+
+button.b {
+  background: rgba(200,168,78,0.1); border: 1px solid rgba(200,168,78,0.3);
+  color: #c8a84e; padding: 5px 11px; margin: 2px; border-radius: 4px;
+  cursor: pointer; font-family: inherit; font-size: 11px; transition: all 0.15s;
+}
+button.b:hover { background: rgba(200,168,78,0.25); border-color: rgba(200,168,78,0.6); }
+button.b.on { background: rgba(200,168,78,0.35); border-color: #c8a84e; }
+
+#inspector {
+  position: fixed; top: 14px; right: 14px;
+  z-index: 100; display: none;
+}
+#inspector .panel { min-width: 300px; }
+
+#budget-bar {
+  position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
+  width: 60%; max-width: 700px; z-index: 100;
+}
+#budget-bar .panel { padding: 8px 16px; }
+.budget-row { display: flex; align-items: center; gap: 8px; }
+.budget-seg { height: 12px; border-radius: 2px; transition: width 0.3s ease; }
+
+#help {
+  position: fixed; bottom: 14px; left: 14px;
+  font-size: 10.5px; color: #444; z-index: 100; line-height: 1.9;
+}
+#help kbd {
+  background: rgba(200,168,78,0.1); border: 1px solid rgba(200,168,78,0.2);
+  padding: 1px 5px; border-radius: 3px; color: #997a30; font-family: inherit;
+}
+
+#crosshair {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 20px; height: 20px; z-index: 50; pointer-events: none; display: none;
+}
+#crosshair::before, #crosshair::after {
+  content: ''; position: absolute; background: rgba(200,168,78,0.4);
+}
+#crosshair::before { width: 1px; height: 100%; left: 50%; }
+#crosshair::after { height: 1px; width: 100%; top: 50%; }
+</style>
+</head>
+<body>
+<div id="crosshair"></div>
+
+<div id="hud">
+  <div class="panel">
+    <div class="head">CIRCUMPUNCT ENGINE v2</div>
+    <div><span class="lab">Entities:</span> <span class="val" id="h-count">0</span>
+      <span class="lo"> (</span><span class="hi" id="h-full">0</span><span class="lo"> full /</span>
+      <span class="val" id="h-mid">0</span><span class="lo"> mid /</span>
+      <span class="lo" id="h-low">0</span><span class="lo"> low /</span>
+      <span class="lo" id="h-dormant">0</span><span class="lo"> dormant)</span>
+    </div>
+    <div><span class="lab">Attention Budget:</span> <span class="val" id="h-budget">1.000</span></div>
+    <div><span class="lab">Pump Cycle:</span> <span class="val" id="h-phase">⊛</span></div>
+    <div><span class="lab">World Time:</span> <span class="val" id="h-time">0.0</span></div>
+    <div><span class="lab">FPS:</span> <span class="val" id="h-fps">0</span></div>
+  </div>
+  <div class="panel">
+    <div class="head">TOOLS</div>
+    <button class="b on" id="t-spawn" onclick="T('spawn')">Spawn ⊙</button>
+    <button class="b" id="t-converge" onclick="T('converge')">⊛ Converge</button>
+    <button class="b" id="t-emerge" onclick="T('emerge')">☀︎ Emerge</button>
+    <button class="b" id="t-fracture" onclick="T('fracture')">Fracture</button>
+    <button class="b" id="t-fuse" onclick="T('fuse')">Fuse</button>
+    <br>
+    <button class="b" id="t-sleep" onclick="toggleSleep()">Sleep All</button>
+    <button class="b" id="t-pause" onclick="togglePause()">Pause</button>
+    <button class="b" onclick="resetWorld()">Reset</button>
+    <button class="b" id="t-debug" onclick="toggleDebug()">Debug</button>
+  </div>
+</div>
+
+<div id="inspector"><div class="panel"><div class="head">⊙ INSPECTOR</div><div id="insp"></div></div></div>
+
+<div id="budget-bar">
+  <div class="panel">
+    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+      <span class="lab">ATTENTION BUDGET (softmax, \u03a3=1)</span>
+      <span class="val" id="bb-usage">0%</span>
+    </div>
+    <div id="bb-segments" style="display:flex; width:100%; height:14px; gap:1px; border-radius:4px; overflow:hidden; background:rgba(255,255,255,0.02);"></div>
+  </div>
+</div>
+
+<div id="help">
+  <kbd>Click</kbd> tool action &nbsp;
+  <kbd>Right-drag</kbd> orbit &nbsp;
+  <kbd>Scroll</kbd> zoom &nbsp;
+  <kbd>1-5</kbd> tools &nbsp;
+  <kbd>Space</kbd> pause &nbsp;
+  <kbd>D</kbd> debug
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ================================================================
+//  CIRCUMPUNCT ENGINE v2: FOVEATED REALITY
+//
+//  Core principle: E = 1 at every scale.
+//  Softmax distributes a finite attention budget across all entities.
+//  Resolution scales with proximity to the player's aperture (gaze).
+//  The pump cycle (converge, rotate, emerge) is the universal update.
+//  Limited != False: low resolution is still true, just less detailed.
+// ================================================================
+
+const PHI = (1 + Math.sqrt(5)) / 2;
+
+// Resolution tiers (the balance parameter applied to compute)
+const TIER = { FULL: 3, MID: 2, LOW: 1, DORMANT: 0 };
+const TIER_NAMES = ['dormant', 'low', 'mid', 'full'];
+const TIER_COLORS = ['#333', '#665530', '#c8a84e', '#e8d88e'];
+
+// Geometry LODs
+const GEO_SEGMENTS = { [TIER.FULL]: 24, [TIER.MID]: 12, [TIER.LOW]: 6, [TIER.DORMANT]: 4 };
+
+// -- Softmax --
+function softmax(v, temp = 1.0) {
+  const mx = Math.max(...v);
+  const ex = v.map(x => Math.exp((x - mx) / temp));
+  const s = ex.reduce((a, b) => a + b, 0);
+  return ex.map(e => e / s);
+}
+
+// ================================================================
+//  CIRCUMPUNCT
+// ================================================================
+class Circumpunct {
+  static _id = 0;
+  constructor(pos, scale = 0.5) {
+    this.id = Circumpunct._id++;
+    this.pos = pos.clone();
+    this.vel = new THREE.Vector3();
+    this.acc = new THREE.Vector3();
+    this.spin = new THREE.Vector3(
+      (Math.random() - 0.5) * 0.4,
+      (Math.random() - 0.5) * 0.4,
+      (Math.random() - 0.5) * 0.4
+    );
+    this.scale = scale;
+    this.mass = scale * scale; // m = how tightly 1 wraps around 0s
+
+    // --- E = 1: the three constraints (softmax) ---
+    this.rawC = [1 + Math.random() * 0.3, 1 + Math.random() * 0.3, 1 + Math.random() * 0.3];
+    this.C = softmax(this.rawC); // [soul, field, boundary]; always sums to 1
+
+    // --- Balance parameter ---
+    this.balance = 0.5; // optimal
+
+    // --- Pump cycle ---
+    this.phase = Math.random() * Math.PI * 2;
+    this.pumpSpeed = 0.4 + Math.random() * 0.6;
+
+    // --- Resolution (foveated; set each frame by attention budget) ---
+    this.tier = TIER.FULL;
+    this.attention = 0; // share of the attention budget (softmax output)
+    this.distToCamera = 0;
+
+    // --- Resonance ---
+    this.freq = 0.2 + Math.random() * 2.8;
+    this.lock = 0.1 + Math.random() * 0.3;
+    this.sideband = 0.1;
+
+    // --- Integrity ---
+    this.integrity = 1.0;
+    this.fractureThreshold = 0.18;
+
+    // --- Sleep/wake ---
+    this.sleeping = false;
+    this.sleepTheta = 0;
+    this.awakeness = 1.0;
+
+    // --- Age ---
+    this.age = 0;
+
+    // --- Visuals (created by renderer) ---
+    this.group = null;
+    this.meshes = {}; // { boundary, field, aperture, glow, ring, aura }
+    this.currentGeoTier = -1; // track when we need to rebuild geometry
+  }
+
+  // --- PUMP: the universal update ---
+  // Full pump: all three stages
+  pumpFull(dt) {
+    this.age += dt;
+    this.phase += this.pumpSpeed * dt;
+
+    const sinP = Math.sin(this.phase);
+    const cosP = Math.cos(this.phase);
+
+    if (!this.sleeping) {
+      // Waking: right half-plane
+      this.rawC[0] += sinP * 0.08 * dt;
+      this.rawC[1] += cosP * 0.06 * dt;
+      this.rawC[2] -= sinP * 0.05 * dt;
+      this.lock = Math.min(1, this.lock + dt * 0.008);
+      this.awakeness = Math.min(1, this.awakeness + dt * 0.3);
+    } else {
+      // Sleeping: left half-plane oscillation
+      this.sleepTheta += dt * 1.5;
+      const dw = Math.abs(Math.sin(this.sleepTheta));
+      const dpw = Math.abs(Math.cos(this.sleepTheta));
+      if (dw > dpw) {
+        this.lock = Math.min(1, this.lock + dt * 0.004);
+      } else {
+        this.sideband *= (1 - dt * 0.4);
+      }
+      this.awakeness = Math.max(0, this.awakeness - dt * 0.15);
+      this.balance += (0.5 - this.balance) * dt * 0.1;
+    }
+
+    // Softmax (temperature from balance)
+    const temp = 0.5 + Math.abs(this.balance - 0.5) * 2;
+    this.C = softmax(this.rawC, temp);
+    this.balance = this.C[0] / (this.C[0] + this.C[2] + 0.001);
+
+    // Integrity from balance stress
+    const stress = Math.abs(this.balance - 0.5) * 2;
+    this.integrity += (1 - stress - this.integrity) * dt * 0.5;
+    this.integrity = Math.max(0, Math.min(1, this.integrity));
+  }
+
+  // Mid pump: simplified (skip sideband, sleep detail)
+  pumpMid(dt) {
+    this.age += dt;
+    this.phase += this.pumpSpeed * dt;
+    const sinP = Math.sin(this.phase);
+    this.rawC[0] += sinP * 0.05 * dt;
+    this.rawC[2] -= sinP * 0.03 * dt;
+    this.C = softmax(this.rawC, 1.0);
+    this.balance = this.C[0] / (this.C[0] + this.C[2] + 0.001);
+    this.integrity += (0.8 - this.integrity) * dt * 0.2;
+    this.integrity = Math.max(0, Math.min(1, this.integrity));
+  }
+
+  // Low pump: just age and a slow balance drift
+  pumpLow(dt) {
+    this.age += dt;
+    this.phase += this.pumpSpeed * dt * 0.3;
+    this.balance += (0.5 - this.balance) * dt * 0.05;
+  }
+
+  // Dormant: no pump at all. Frozen boundary. Still E = 1; just at lowest resolution.
+
+  // --- PUMP DISPATCH (resolution-scaled) ---
+  pump(dt) {
+    switch (this.tier) {
+      case TIER.FULL: this.pumpFull(dt); break;
+      case TIER.MID: this.pumpMid(dt); break;
+      case TIER.LOW: this.pumpLow(dt); break;
+      // DORMANT: nothing. Limited != false.
+    }
+  }
+
+  // --- FORCES ---
+  applyForce(f) {
+    this.acc.add(f.clone().divideScalar(this.mass));
+    const mag = f.length();
+    if (mag > this.mass * 4) {
+      this.integrity -= (mag / this.mass) * 0.008;
+    }
+  }
+
+  // Physics integration (only if not dormant)
+  integrate(dt) {
+    if (this.tier === TIER.DORMANT) return;
+
+    this.vel.add(this.acc.clone().multiplyScalar(dt));
+    const damping = this.tier === TIER.FULL ? 0.997 : 0.99;
+    this.vel.multiplyScalar(damping);
+    this.pos.add(this.vel.clone().multiplyScalar(dt));
+    this.acc.set(0, 0, 0);
+
+    // Floor
+    if (this.pos.y < this.scale * 0.5) {
+      this.pos.y = this.scale * 0.5;
+      this.vel.y *= -0.3;
+    }
+  }
+
+  // --- STATIC: inter-entity forces ---
+  // Convergence (gravity): inverse-square because Phi is 2D
+  static forceConverge(a, b) {
+    const d = new THREE.Vector3().subVectors(b.pos, a.pos);
+    const dist = d.length();
+    if (dist < 0.05) return new THREE.Vector3();
+    const G = 1.5;
+    // Resonance modulation
+    const res = Math.cos(Math.abs(a.freq - b.freq) * Math.PI * 0.5);
+    const resFactor = 0.5 + 0.5 * Math.max(0, res);
+    const str = G * a.mass * b.mass / (dist * dist) * resFactor;
+    return d.normalize().multiplyScalar(str);
+  }
+
+  // Emergence (short-range repulsion)
+  static forceEmerge(a, b) {
+    const d = new THREE.Vector3().subVectors(b.pos, a.pos);
+    const dist = d.length();
+    const minD = (a.scale + b.scale) * 0.7;
+    if (dist > minD || dist < 0.01) return new THREE.Vector3();
+    const overlap = minD - dist;
+    return d.normalize().multiplyScalar(-overlap * 18);
+  }
+
+  shouldFracture() { return this.integrity < this.fractureThreshold && this.scale > 0.12; }
+
+  fracture() {
+    const n = 2 + Math.floor(Math.random() * 3);
+    const raw = Array.from({length: n}, () => 0.5 + Math.random());
+    const dist = softmax(raw);
+    const children = [];
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2 + Math.random() * 0.5;
+      const el = (Math.random() - 0.5) * Math.PI * 0.8;
+      const off = new THREE.Vector3(
+        Math.cos(a) * Math.cos(el), Math.sin(el), Math.sin(a) * Math.cos(el)
+      ).multiplyScalar(this.scale * 0.5);
+      const cs = this.scale * Math.sqrt(dist[i]);
+      const c = new Circumpunct(this.pos.clone().add(off), cs);
+      c.vel.copy(this.vel).add(off.normalize().multiplyScalar(2.5 + Math.random()));
+      c.freq = this.freq + (Math.random() - 0.5) * 0.4;
+      c.integrity = 0.4 + Math.random() * 0.3;
+      children.push(c);
+    }
+    return children;
+  }
+
+  static canFuse(a, b) {
+    return a.pos.distanceTo(b.pos) < (a.scale + b.scale) * 0.4
+      && Math.abs(a.freq - b.freq) < 0.25
+      && a.integrity > 0.65 && b.integrity > 0.65;
+  }
+
+  static fuse(a, b) {
+    const tm = a.mass + b.mass;
+    const ns = Math.sqrt(a.scale * a.scale + b.scale * b.scale);
+    const np = a.pos.clone().lerp(b.pos, b.mass / tm);
+    const f = new Circumpunct(np, ns);
+    f.vel.copy(a.vel.clone().multiplyScalar(a.mass).add(b.vel.clone().multiplyScalar(b.mass)).divideScalar(tm));
+    f.freq = (a.freq * a.mass + b.freq * b.mass) / tm;
+    f.lock = Math.max(a.lock, b.lock);
+    f.integrity = Math.min(a.integrity, b.integrity) * 0.9;
+    return f;
+  }
+}
+
+
+// ================================================================
+//  ATTENTION BUDGET (the meta-softmax)
+//  Total compute budget = 1. Distributed across all entities
+//  based on inverse distance to camera. Softmax ensures sum = 1.
+// ================================================================
+function allocateAttention(entities, camPos) {
+  if (entities.length === 0) return;
+
+  // Raw attention: inverse distance (closer = more attention)
+  const rawAtt = entities.map(e => {
+    e.distToCamera = e.pos.distanceTo(camPos);
+    return 1.0 / (0.5 + e.distToCamera * 0.15);
+  });
+
+  // Softmax the attention budget
+  const att = softmax(rawAtt, 0.5);
+
+  // Assign tiers based on attention share
+  for (let i = 0; i < entities.length; i++) {
+    entities[i].attention = att[i];
+    const a = att[i] * entities.length; // normalized per-entity attention
+    if (a > 0.8) entities[i].tier = TIER.FULL;
+    else if (a > 0.4) entities[i].tier = TIER.MID;
+    else if (a > 0.15) entities[i].tier = TIER.LOW;
+    else entities[i].tier = TIER.DORMANT;
+  }
+}
+
+
+// ================================================================
+//  RENDERER
+// ================================================================
+let scene, camera, renderer, clock;
+let entities = [];
+let selected = null;
+let tool = 'spawn';
+let paused = false;
+let globalSleep = false;
+let debugMode = false;
+let worldTime = 0;
+let fc = 0, lastFT = 0, fps = 0;
+
+// Camera orbit
+let camTheta = Math.PI / 4, camPhi = Math.PI / 3, camR = 28;
+let camTarget = new THREE.Vector3(0, 1, 0);
+let dragging = false, lastM = { x: 0, y: 0 };
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+const groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+
+// Shared geometries (LOD pool)
+const geoPool = {};
+function getGeo(tier, type, scale) {
+  const seg = GEO_SEGMENTS[tier] || 4;
+  const key = `${type}_${seg}`;
+  if (!geoPool[key]) {
+    if (type === 'sphere') geoPool[key] = new THREE.SphereGeometry(1, seg, Math.ceil(seg * 0.75));
+    else if (type === 'torus') geoPool[key] = new THREE.TorusGeometry(1, 0.025, 6, seg);
+  }
+  return geoPool[key];
+}
+
+// Debug line material
+let debugLineMat;
+
+function init() {
+  scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x06060c, 0.018);
+
+  camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 200);
+  updateCam();
+
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.1;
+  document.body.appendChild(renderer.domElement);
+
+  clock = new THREE.Clock();
+  debugLineMat = new THREE.LineBasicMaterial({ color: 0x443320, transparent: true, opacity: 0.3 });
+
+  // Lights
+  scene.add(new THREE.AmbientLight(0x151525, 0.7));
+  const sun = new THREE.DirectionalLight(0xfff0d0, 0.9);
+  sun.position.set(8, 18, 8);
+  scene.add(sun);
+  scene.add(new THREE.DirectionalLight(0x304070, 0.25).position.set(-8, 4, -8) && scene.children[scene.children.length - 1] || new THREE.Object3D());
+
+  const fill = new THREE.DirectionalLight(0x304070, 0.25);
+  fill.position.set(-8, 4, -8);
+  scene.add(fill);
+
+  // Ground field (Phi, 2D)
+  const gGrid = new THREE.GridHelper(50, 50, 0x1a1520, 0x0e0e18);
+  gGrid.material.transparent = true;
+  gGrid.material.opacity = 0.2;
+  gGrid.position.y = -0.5;
+  scene.add(gGrid);
+
+  const gPlane = new THREE.Mesh(
+    new THREE.PlaneGeometry(50, 50).rotateX(-Math.PI / 2),
+    new THREE.MeshBasicMaterial({ color: 0x08060e, transparent: true, opacity: 0.9 })
+  );
+  gPlane.position.y = -0.52;
+  scene.add(gPlane);
+
+  // Spawn world
+  for (let i = 0; i < 20; i++) {
+    const p = new THREE.Vector3(
+      (Math.random() - 0.5) * 22,
+      0.5 + Math.random() * 4,
+      (Math.random() - 0.5) * 22
+    );
+    spawn(p, 0.2 + Math.random() * 0.8);
+  }
+
+  // Events
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+  renderer.domElement.addEventListener('mousedown', onDown);
+  renderer.domElement.addEventListener('mousemove', onMove);
+  renderer.domElement.addEventListener('mouseup', () => dragging = false);
+  renderer.domElement.addEventListener('wheel', e => {
+    camR *= 1 + e.deltaY * 0.001;
+    camR = Math.max(4, Math.min(80, camR));
+    updateCam();
+  });
+  renderer.domElement.addEventListener('contextmenu', e => e.preventDefault());
+  window.addEventListener('keydown', onKey);
+
+  animate();
+}
+
+function updateCam() {
+  camera.position.set(
+    camTarget.x + camR * Math.sin(camPhi) * Math.cos(camTheta),
+    camTarget.y + camR * Math.cos(camPhi),
+    camTarget.z + camR * Math.sin(camPhi) * Math.sin(camTheta)
+  );
+  camera.lookAt(camTarget);
+}
+
+// ================================================================
+//  ENTITY MESH MANAGEMENT (LOD-aware)
+// ================================================================
+function buildMesh(e) {
+  const g = new THREE.Group();
+  g.userData.eid = e.id;
+
+  rebuildGeo(e, g);
+
+  g.position.copy(e.pos);
+  scene.add(g);
+  e.group = g;
+}
+
+function rebuildGeo(e, g) {
+  // Clear old
+  while (g.children.length) {
+    const c = g.children[0];
+    g.remove(c);
+    if (c.geometry && !Object.values(geoPool).includes(c.geometry)) c.geometry.dispose();
+    if (c.material) c.material.dispose();
+  }
+  e.meshes = {};
+  e.currentGeoTier = e.tier;
+
+  const tier = e.tier;
+  const s = e.scale;
+  const col = new THREE.Color().setHSL((e.freq / 3) % 1, 0.5 + e.lock * 0.4, 0.35 + (1 - Math.abs(e.balance - 0.5) * 2) * 0.3);
+
+  // Boundary (outer sphere)
+  const bMesh = new THREE.Mesh(
+    getGeo(tier, 'sphere'),
+    new THREE.MeshPhongMaterial({ color: col, transparent: true, opacity: 0.2, shininess: 60, specular: 0x333333 })
+  );
+  bMesh.scale.setScalar(s);
+  g.add(bMesh);
+  e.meshes.boundary = bMesh;
+
+  if (tier >= TIER.LOW) {
+    // Wireframe
+    const wMesh = new THREE.Mesh(
+      getGeo(tier, 'sphere'),
+      new THREE.MeshBasicMaterial({ color: col, wireframe: true, transparent: true, opacity: 0.2 })
+    );
+    wMesh.scale.setScalar(s * 1.003);
+    g.add(wMesh);
+    e.meshes.wire = wMesh;
+  }
+
+  if (tier >= TIER.MID) {
+    // Field (inner glow)
+    const fMesh = new THREE.Mesh(
+      getGeo(tier, 'sphere'),
+      new THREE.MeshBasicMaterial({ color: col.clone().multiplyScalar(1.5), transparent: true, opacity: 0.35 })
+    );
+    fMesh.scale.setScalar(s * 0.55);
+    g.add(fMesh);
+    e.meshes.field = fMesh;
+
+    // Aperture (center point)
+    const aMesh = new THREE.Mesh(
+      getGeo(Math.max(tier, TIER.LOW), 'sphere'),
+      new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85 })
+    );
+    aMesh.scale.setScalar(s * 0.1);
+    g.add(aMesh);
+    e.meshes.aperture = aMesh;
+  }
+
+  if (tier >= TIER.FULL) {
+    // Outer glow
+    const glMesh = new THREE.Mesh(
+      getGeo(TIER.LOW, 'sphere'),
+      new THREE.MeshBasicMaterial({ color: col.clone().multiplyScalar(0.4), transparent: true, opacity: 0.06, side: THREE.BackSide })
+    );
+    glMesh.scale.setScalar(s * 1.4);
+    g.add(glMesh);
+    e.meshes.glow = glMesh;
+
+    // Orbit ring
+    const rMesh = new THREE.Mesh(
+      getGeo(tier, 'torus'),
+      new THREE.MeshBasicMaterial({ color: 0xc8a84e, transparent: true, opacity: 0.15 })
+    );
+    rMesh.scale.setScalar(s * 0.85);
+    rMesh.rotation.x = Math.PI / 2;
+    g.add(rMesh);
+    e.meshes.ring = rMesh;
+  }
+
+  // Debug: tier indicator
+  if (debugMode) {
+    const dMesh = new THREE.Mesh(
+      getGeo(TIER.DORMANT, 'sphere'),
+      new THREE.MeshBasicMaterial({ color: new THREE.Color(TIER_COLORS[tier]), transparent: true, opacity: 0.5 })
+    );
+    dMesh.scale.setScalar(s * 0.07);
+    dMesh.position.y = s * 1.3;
+    g.add(dMesh);
+    e.meshes.debug = dMesh;
+  }
+}
+
+function updateMesh(e, dt) {
+  if (!e.group) return;
+
+  // Rebuild geometry if tier changed
+  if (e.currentGeoTier !== e.tier) {
+    rebuildGeo(e, e.group);
+  }
+
+  e.group.position.copy(e.pos);
+
+  // Only rotate visually if not dormant
+  if (e.tier > TIER.DORMANT) {
+    e.group.rotation.x += e.spin.x * dt * (e.tier === TIER.FULL ? 1 : 0.3);
+    e.group.rotation.y += e.spin.y * dt * (e.tier === TIER.FULL ? 1 : 0.3);
+  }
+
+  // Update materials based on state (only for MID+ tiers)
+  const col = new THREE.Color().setHSL(
+    ((e.freq / 3) + (e.sleeping ? 0.15 : 0)) % 1,
+    0.4 + e.lock * 0.4,
+    0.3 + (1 - Math.abs(e.balance - 0.5) * 2) * 0.35
+  );
+
+  if (e.meshes.boundary) {
+    e.meshes.boundary.material.color.copy(col);
+    e.meshes.boundary.material.opacity = 0.08 + e.integrity * 0.2;
+  }
+  if (e.meshes.wire) {
+    e.meshes.wire.material.color.copy(col);
+  }
+  if (e.meshes.field) {
+    const pp = 0.5 + Math.sin(e.phase) * 0.1;
+    e.meshes.field.scale.setScalar(e.scale * pp);
+    e.meshes.field.material.color.copy(col).multiplyScalar(1.4);
+    e.meshes.field.material.opacity = 0.25 + e.balance * 0.25;
+  }
+  if (e.meshes.aperture) {
+    const ap = 0.8 + Math.sin(e.phase * 2) * 0.2;
+    e.meshes.aperture.scale.setScalar(e.scale * 0.1 * ap);
+    e.meshes.aperture.material.opacity = e.sleeping ? 0.25 : 0.85;
+  }
+  if (e.meshes.glow) {
+    const gs = 1.3 + e.awakeness * 0.3 + Math.sin(e.phase * 0.5) * 0.08;
+    e.meshes.glow.scale.setScalar(e.scale * gs);
+    e.meshes.glow.material.color.copy(col).multiplyScalar(0.4);
+  }
+}
+
+// ================================================================
+//  WORLD STEP
+// ================================================================
+function step(dt) {
+  if (paused) return;
+  worldTime += dt;
+
+  // 1. Allocate attention budget (softmax over distance)
+  allocateAttention(entities, camera.position);
+
+  // 2. Compute forces (skip dormant pairs)
+  for (let i = 0; i < entities.length; i++) {
+    if (entities[i].tier === TIER.DORMANT) continue;
+    for (let j = i + 1; j < entities.length; j++) {
+      if (entities[j].tier === TIER.DORMANT) continue;
+      const a = entities[i], b = entities[j];
+      const conv = Circumpunct.forceConverge(a, b);
+      a.applyForce(conv);
+      b.applyForce(conv.clone().negate());
+      const emrg = Circumpunct.forceEmerge(a, b);
+      a.applyForce(emrg);
+      b.applyForce(emrg.clone().negate());
+    }
+  }
+
+  // 3. Pump + integrate (resolution-scaled)
+  const toRemove = [], toAdd = [];
+  for (const e of entities) {
+    if (globalSleep && !e.sleeping) e.sleeping = true;
+    else if (!globalSleep && e.sleeping) e.sleeping = false;
+
+    e.pump(dt);
+    e.integrate(dt);
+
+    if (e.shouldFracture()) {
+      toRemove.push(e);
+      toAdd.push(...e.fracture());
+    }
+  }
+
+  // 4. Fusion (only check FULL/MID tier pairs)
+  for (let i = 0; i < entities.length; i++) {
+    if (entities[i].tier < TIER.MID) continue;
+    for (let j = i + 1; j < entities.length; j++) {
+      if (entities[j].tier < TIER.MID) continue;
+      if (Circumpunct.canFuse(entities[i], entities[j])) {
+        toRemove.push(entities[i], entities[j]);
+        toAdd.push(Circumpunct.fuse(entities[i], entities[j]));
+        break;
+      }
+    }
+  }
+
+  // 5. Apply changes
+  const removeSet = new Set(toRemove.map(e => e.id));
+  for (const e of toRemove) remove(e);
+  for (const e of toAdd) { entities.push(e); buildMesh(e); }
+}
+
+// ================================================================
+//  SPAWN / REMOVE
+// ================================================================
+function spawn(pos, scale) {
+  const e = new Circumpunct(pos, scale || 0.3 + Math.random() * 0.6);
+  entities.push(e);
+  buildMesh(e);
+  return e;
+}
+
+function remove(e) {
+  if (e.group) {
+    scene.remove(e.group);
+    e.group.traverse(c => {
+      if (c.geometry && !Object.values(geoPool).includes(c.geometry)) c.geometry.dispose();
+      if (c.material) c.material.dispose();
+    });
+  }
+  entities = entities.filter(x => x.id !== e.id);
+  if (selected === e) { selected = null; document.getElementById('inspector').style.display = 'none'; }
+}
+
+// ================================================================
+//  INTERACTION
+// ================================================================
+function worldPos(ev) {
+  mouse.x = (ev.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(ev.clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  const t = new THREE.Vector3();
+  raycaster.ray.intersectPlane(groundPlane, t);
+  if (t) t.y = 1.2;
+  return t;
+}
+
+function hitEntity(ev) {
+  mouse.x = (ev.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(ev.clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  let best = null, bestD = Infinity;
+  for (const e of entities) {
+    const d = raycaster.ray.distanceToPoint(e.pos);
+    if (d < e.scale * 1.5 && d < bestD) { bestD = d; best = e; }
+  }
+  return best;
+}
+
+function onDown(ev) {
+  if (ev.button === 2) { dragging = true; lastM = { x: ev.clientX, y: ev.clientY }; return; }
+  if (ev.button !== 0) return;
+  const hit = hitEntity(ev);
+
+  switch (tool) {
+    case 'spawn': { const p = worldPos(ev); if (p) spawn(p); break; }
+    case 'converge': if (hit) {
+      const f = new THREE.Vector3().subVectors(new THREE.Vector3(0,1,0), hit.pos).normalize().multiplyScalar(hit.mass * 12);
+      hit.applyForce(f); hit.rawC[0] += 0.5;
+    } break;
+    case 'emerge': if (hit) {
+      const f = hit.pos.clone().normalize().multiplyScalar(hit.mass * 18);
+      hit.applyForce(f); hit.rawC[2] += 0.5; hit.integrity -= 0.12;
+    } break;
+    case 'fracture': if (hit) hit.integrity = 0; break;
+    case 'fuse': if (hit) {
+      // Find nearest other entity and force-pull them together
+      let nearest = null, nd = Infinity;
+      for (const e of entities) {
+        if (e === hit) continue;
+        const d = e.pos.distanceTo(hit.pos);
+        if (d < nd) { nd = d; nearest = e; }
+      }
+      if (nearest) {
+        const pull = new THREE.Vector3().subVectors(hit.pos, nearest.pos).normalize().multiplyScalar(nearest.mass * 25);
+        nearest.applyForce(pull);
+        nearest.freq = hit.freq; // match frequencies to enable fusion
+      }
+    } break;
+  }
+  if (hit) selected = hit;
+}
+
+function onMove(ev) {
+  if (!dragging) return;
+  const dx = ev.clientX - lastM.x, dy = ev.clientY - lastM.y;
+  camTheta -= dx * 0.005;
+  camPhi = Math.max(0.1, Math.min(Math.PI - 0.1, camPhi - dy * 0.005));
+  updateCam();
+  lastM = { x: ev.clientX, y: ev.clientY };
+}
+
+function onKey(ev) {
+  switch (ev.key) {
+    case '1': T('spawn'); break;
+    case '2': T('converge'); break;
+    case '3': T('emerge'); break;
+    case '4': T('fracture'); break;
+    case '5': T('fuse'); break;
+    case ' ': togglePause(); ev.preventDefault(); break;
+    case 'd': case 'D': toggleDebug(); break;
+    case 'Escape': selected = null; document.getElementById('inspector').style.display = 'none'; break;
+  }
+}
+
+// ================================================================
+//  HUD
+// ================================================================
+function updateHUD() {
+  fc++;
+  const now = performance.now();
+  if (now - lastFT > 500) { fps = Math.round(fc / ((now - lastFT) / 1000)); fc = 0; lastFT = now; }
+
+  const tiers = [0, 0, 0, 0];
+  entities.forEach(e => tiers[e.tier]++);
+
+  document.getElementById('h-count').textContent = entities.length;
+  document.getElementById('h-full').textContent = tiers[3];
+  document.getElementById('h-mid').textContent = tiers[2];
+  document.getElementById('h-low').textContent = tiers[1];
+  document.getElementById('h-dormant').textContent = tiers[0];
+  document.getElementById('h-fps').textContent = fps;
+  document.getElementById('h-time').textContent = worldTime.toFixed(1);
+  document.getElementById('h-budget').textContent = '1.000'; // always 1 (softmax)
+
+  // Phase indicator
+  const phases = ['⊛', '⊛', 'i', 'i', '☀︎', '☀︎', '☀︎', '☀︎'];
+  document.getElementById('h-phase').textContent = phases[Math.floor(worldTime * 2) % 8] || '⊛';
+
+  // Budget bar (visualize attention distribution)
+  const segEl = document.getElementById('bb-segments');
+  // Only rebuild if entity count changed significantly
+  if (Math.abs(segEl.children.length - entities.length) > 2 || segEl.children.length === 0) {
+    segEl.innerHTML = '';
+    for (const e of entities) {
+      const seg = document.createElement('div');
+      seg.className = 'budget-seg';
+      seg.style.background = TIER_COLORS[e.tier];
+      seg.style.width = (e.attention * 100) + '%';
+      segEl.appendChild(seg);
+    }
+  } else {
+    const sorted = [...entities].sort((a, b) => b.attention - a.attention);
+    for (let i = 0; i < Math.min(segEl.children.length, sorted.length); i++) {
+      segEl.children[i].style.width = (sorted[i].attention * 100) + '%';
+      segEl.children[i].style.background = TIER_COLORS[sorted[i].tier];
+    }
+  }
+
+  // Inspector
+  if (selected) updateInspector(selected);
+}
+
+function updateInspector(e) {
+  const p = document.getElementById('inspector');
+  p.style.display = 'block';
+  const bc = e.balance > 0.4 && e.balance < 0.6 ? '#4a4' : e.balance > 0.3 && e.balance < 0.7 ? '#aa4' : '#a44';
+  const tc = TIER_COLORS[e.tier];
+  document.getElementById('insp').innerHTML = `
+    <div style="display:flex;justify-content:space-between"><span class="lab">ID #${e.id}</span><span style="color:${tc};font-weight:bold">${TIER_NAMES[e.tier].toUpperCase()}</span></div>
+    <div style="display:flex;justify-content:space-between"><span class="lab">Attention</span><span class="val">${(e.attention * 100).toFixed(1)}%</span></div>
+    <div style="display:flex;justify-content:space-between"><span class="lab">Dist to \u2022</span><span class="val">${e.distToCamera.toFixed(1)}</span></div>
+    <div style="margin-top:8px;color:#c8a84e;font-size:11px;">E = 1 (SOFTMAX)</div>
+    <div style="display:flex;justify-content:space-between"><span class="lab">\u2022 Soul</span><span class="val">${e.C[0].toFixed(4)}</span></div>
+    <div style="display:flex;justify-content:space-between"><span class="lab">\u03a6 Field</span><span class="val">${e.C[1].toFixed(4)}</span></div>
+    <div style="display:flex;justify-content:space-between"><span class="lab">\u25cb Boundary</span><span class="val">${e.C[2].toFixed(4)}</span></div>
+    <div style="display:flex;justify-content:space-between"><span class="lab">\u03a3</span><span class="hi">${(e.C[0]+e.C[1]+e.C[2]).toFixed(6)}</span></div>
+    <div style="margin-top:8px;color:#c8a84e;font-size:11px;">BALANCE (\u25d0)</div>
+    <div class="bar"><div class="bar-inner" style="width:${e.balance*100}%;background:${bc}"></div></div>
+    <div style="display:flex;justify-content:space-between"><span class="lab">\u25d0</span><span class="val">${e.balance.toFixed(4)}</span></div>
+    <div style="margin-top:8px;color:#c8a84e;font-size:11px;">RESONANCE</div>
+    <div style="display:flex;justify-content:space-between"><span class="lab">Carrier \u03c9</span><span class="val">${e.freq.toFixed(3)}</span></div>
+    <div style="display:flex;justify-content:space-between"><span class="lab">Lock</span><span class="val">${e.lock.toFixed(3)}</span></div>
+    <div style="margin-top:8px;color:#c8a84e;font-size:11px;">STATE</div>
+    <div style="display:flex;justify-content:space-between"><span class="lab">Integrity</span><span class="val">${e.integrity.toFixed(3)}</span></div>
+    <div class="bar"><div class="bar-inner" style="width:${e.integrity*100}%;background:${e.integrity>0.5?'#4a4':e.integrity>0.3?'#aa4':'#a44'}"></div></div>
+    <div style="display:flex;justify-content:space-between"><span class="lab">Sleep</span><span class="val">${e.sleeping?'left half-plane':'right half-plane'}</span></div>
+    <div style="display:flex;justify-content:space-between"><span class="lab">Scale</span><span class="val">${e.scale.toFixed(3)}</span></div>
+    <div style="display:flex;justify-content:space-between"><span class="lab">Age</span><span class="lo">${e.age.toFixed(1)}s</span></div>
+  `;
+}
+
+// ================================================================
+//  GLOBALS (for button handlers)
+// ================================================================
+window.T = function(t) {
+  tool = t;
+  document.querySelectorAll('.b').forEach(b => {
+    if (b.id && b.id.startsWith('t-')) b.classList.toggle('on', b.id === 't-' + t);
+  });
+};
+window.toggleSleep = function() {
+  globalSleep = !globalSleep;
+  const b = document.getElementById('t-sleep');
+  b.classList.toggle('on', globalSleep);
+  b.textContent = globalSleep ? 'Wake All' : 'Sleep All';
+};
+window.togglePause = function() {
+  paused = !paused;
+  const b = document.getElementById('t-pause');
+  b.classList.toggle('on', paused);
+  b.textContent = paused ? 'Resume' : 'Pause';
+};
+window.toggleDebug = function() {
+  debugMode = !debugMode;
+  document.getElementById('t-debug').classList.toggle('on', debugMode);
+  // Force rebuild all meshes to show/hide debug indicators
+  for (const e of entities) if (e.group) rebuildGeo(e, e.group);
+};
+window.resetWorld = function() {
+  while (entities.length) remove(entities[0]);
+  worldTime = 0;
+  globalSleep = false;
+  selected = null;
+  document.getElementById('inspector').style.display = 'none';
+  document.getElementById('t-sleep').textContent = 'Sleep All';
+  document.getElementById('t-sleep').classList.remove('on');
+  for (let i = 0; i < 20; i++) {
+    spawn(new THREE.Vector3(
+      (Math.random() - 0.5) * 22, 0.5 + Math.random() * 4, (Math.random() - 0.5) * 22
+    ), 0.2 + Math.random() * 0.8);
+  }
+};
+
+// ================================================================
+//  MAIN LOOP
+// ================================================================
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  step(dt);
+  for (const e of entities) updateMesh(e, dt);
+  updateHUD();
+  renderer.render(scene, camera);
+}
+
+init();
+</script>
+</body>
+</html>
