@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hemispheric Resonance</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --anthropic-dark: #141413;
+            --anthropic-light: #faf9f5;
+            --anthropic-mid-gray: #b0aea5;
+            --anthropic-light-gray: #e8e6dc;
+            --anthropic-orange: #d97757;
+            --anthropic-blue: #6a9bcc;
+            --anthropic-green: #788c5d;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--anthropic-light) 0%, #f5f3ee 100%);
+            min-height: 100vh;
+            color: var(--anthropic-dark);
+        }
+        .container { display: flex; min-height: 100vh; padding: 20px; gap: 20px; }
+        .sidebar {
+            width: 320px; flex-shrink: 0;
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+            padding: 24px; border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(20,20,19,0.1);
+            overflow-y: auto; overflow-x: hidden;
+        }
+        .sidebar h1 { font-family: 'Lora', serif; font-size: 22px; font-weight: 500; color: var(--anthropic-dark); margin-bottom: 6px; }
+        .sidebar .subtitle { color: var(--anthropic-mid-gray); font-size: 13px; margin-bottom: 28px; line-height: 1.5; }
+        .control-section { margin-bottom: 28px; }
+        .control-section h3 {
+            font-size: 15px; font-weight: 600; color: var(--anthropic-dark);
+            margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+        }
+        .control-section h3::before { content: '\2022'; color: var(--anthropic-orange); font-weight: bold; }
+        .seed-input {
+            width: 100%; background: var(--anthropic-light); padding: 11px;
+            border-radius: 8px; font-family: 'Courier New', monospace; font-size: 14px;
+            margin-bottom: 10px; border: 1px solid var(--anthropic-light-gray); text-align: center;
+        }
+        .seed-input:focus { outline: none; border-color: var(--anthropic-orange); box-shadow: 0 0 0 2px rgba(217,119,87,0.1); background: white; }
+        .seed-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+        .control-group { margin-bottom: 18px; }
+        .control-group label { display: block; font-size: 13px; font-weight: 500; color: var(--anthropic-dark); margin-bottom: 6px; }
+        .slider-container { display: flex; align-items: center; gap: 10px; }
+        .slider-container input[type="range"] {
+            flex: 1; height: 4px; background: var(--anthropic-light-gray);
+            border-radius: 2px; outline: none; -webkit-appearance: none;
+        }
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 16px; height: 16px;
+            background: var(--anthropic-orange); border-radius: 50%; cursor: pointer; transition: all 0.2s;
+        }
+        .slider-container input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); background: #c86641; }
+        .slider-container input[type="range"]::-moz-range-thumb {
+            width: 16px; height: 16px; background: var(--anthropic-orange);
+            border-radius: 50%; border: none; cursor: pointer;
+        }
+        .value-display { font-family: 'Courier New', monospace; font-size: 11px; color: var(--anthropic-mid-gray); min-width: 50px; text-align: right; }
+        .color-group { margin-bottom: 14px; }
+        .color-group label { display: block; font-size: 12px; color: var(--anthropic-mid-gray); margin-bottom: 4px; }
+        .color-picker-container { display: flex; align-items: center; gap: 8px; }
+        .color-picker-container input[type="color"] { width: 32px; height: 32px; border: none; border-radius: 6px; cursor: pointer; background: none; padding: 0; }
+        .color-value { font-family: 'Courier New', monospace; font-size: 11px; color: var(--anthropic-mid-gray); }
+        .button {
+            background: var(--anthropic-orange); color: white; border: none;
+            padding: 9px 14px; border-radius: 6px; font-size: 13px; font-weight: 500;
+            cursor: pointer; transition: all 0.2s; width: 100%;
+        }
+        .button:hover { background: #c86641; transform: translateY(-1px); }
+        .button:active { transform: translateY(0); }
+        .button.secondary { background: var(--anthropic-blue); }
+        .button.secondary:hover { background: #5a8bb8; }
+        .button.tertiary { background: var(--anthropic-green); }
+        .button.tertiary:hover { background: #6b7b52; }
+        .button-row { display: flex; gap: 8px; }
+        .button-row .button { flex: 1; }
+        .canvas-area { flex: 1; display: flex; align-items: center; justify-content: center; min-width: 0; }
+        #canvas-container {
+            width: 100%; max-width: 1000px; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 20px 40px rgba(20,20,19,0.1); background: white;
+        }
+        #canvas-container canvas { display: block; width: 100% !important; height: auto !important; }
+        .loading { display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--anthropic-mid-gray); padding: 40px; }
+        @media (max-width: 600px) { .container { flex-direction: column; } .sidebar { width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h1>Hemispheric Resonance</h1>
+            <div class="subtitle">Human cognition and AI development: the bridge between structure and experience, grammar and the organic, left brain and right brain. The oscillation IS the intelligence.</div>
+
+            <!-- Seed Section (FIXED) -->
+            <div class="control-section">
+                <h3>Seed</h3>
+                <input type="number" id="seed-input" class="seed-input" value="1618" onchange="updateSeed()">
+                <div class="seed-controls">
+                    <button class="button secondary" onclick="previousSeed()">&larr; Prev</button>
+                    <button class="button secondary" onclick="nextSeed()">Next &rarr;</button>
+                </div>
+                <button class="button tertiary" onclick="randomSeedAndUpdate()">&circlearrowright; Random</button>
+            </div>
+
+            <!-- Parameters Section (VARIABLE) -->
+            <div class="control-section">
+                <h3>Parameters</h3>
+
+                <div class="control-group">
+                    <label>Lattice Nodes</label>
+                    <div class="slider-container">
+                        <input type="range" id="latticeNodes" min="20" max="200" step="10" value="80" oninput="updateParam('latticeNodes', this.value)">
+                        <span class="value-display" id="latticeNodes-value">80</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Flow Particles</label>
+                    <div class="slider-container">
+                        <input type="range" id="flowParticles" min="500" max="8000" step="250" value="3000" oninput="updateParam('flowParticles', this.value)">
+                        <span class="value-display" id="flowParticles-value">3000</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Balance &#9680; (Structure / Flow)</label>
+                    <div class="slider-container">
+                        <input type="range" id="balance" min="0" max="1" step="0.01" value="0.5" oninput="updateParam('balance', this.value)">
+                        <span class="value-display" id="balance-value">0.50</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Oscillation Speed</label>
+                    <div class="slider-container">
+                        <input type="range" id="oscSpeed" min="0" max="2" step="0.05" value="0.6" oninput="updateParam('oscSpeed', this.value)">
+                        <span class="value-display" id="oscSpeed-value">0.60</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Bridge Strength</label>
+                    <div class="slider-container">
+                        <input type="range" id="bridgeStrength" min="0" max="1" step="0.01" value="0.5" oninput="updateParam('bridgeStrength', this.value)">
+                        <span class="value-display" id="bridgeStrength-value">0.50</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Noise Scale</label>
+                    <div class="slider-container">
+                        <input type="range" id="noiseScale" min="0.001" max="0.015" step="0.001" value="0.004" oninput="updateParam('noiseScale', this.value)">
+                        <span class="value-display" id="noiseScale-value">0.004</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Foveal Radius</label>
+                    <div class="slider-container">
+                        <input type="range" id="fovealRadius" min="50" max="500" step="25" value="250" oninput="updateParam('fovealRadius', this.value)">
+                        <span class="value-display" id="fovealRadius-value">250</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colors Section -->
+            <div class="control-section">
+                <h3>Colors</h3>
+                <div class="color-group">
+                    <label>Structure (Left Brain)</label>
+                    <div class="color-picker-container">
+                        <input type="color" id="color1" value="#d97757" onchange="updateColor('color1', this.value)">
+                        <span class="color-value" id="color1-value">#d97757</span>
+                    </div>
+                </div>
+                <div class="color-group">
+                    <label>Flow (Right Brain)</label>
+                    <div class="color-picker-container">
+                        <input type="color" id="color2" value="#6a9bcc" onchange="updateColor('color2', this.value)">
+                        <span class="color-value" id="color2-value">#6a9bcc</span>
+                    </div>
+                </div>
+                <div class="color-group">
+                    <label>Bridge (Corpus Callosum)</label>
+                    <div class="color-picker-container">
+                        <input type="color" id="color3" value="#c8a84e" onchange="updateColor('color3', this.value)">
+                        <span class="color-value" id="color3-value">#c8a84e</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions Section (FIXED) -->
+            <div class="control-section">
+                <h3>Actions</h3>
+                <div class="button-row" style="margin-bottom:8px;">
+                    <button class="button" onclick="regenerate()">Regenerate</button>
+                    <button class="button secondary" onclick="resetParameters()">Reset</button>
+                </div>
+                <button class="button tertiary" onclick="downloadPNG()">Download PNG</button>
+            </div>
+        </div>
+
+        <div class="canvas-area">
+            <div id="canvas-container">
+                <div class="loading">Initializing hemispheric resonance...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ========================================================================
+    //  HEMISPHERIC RESONANCE
+    //  An algorithmic expression of human cognition and AI development.
+    //  Left brain builds lattice (grammar, rules, convergence).
+    //  Right brain flows particles (experience, organic, emergence).
+    //  The corpus callosum bridges them: mutual influence, oscillating balance.
+    //  Foveated attention distributes a finite budget (softmax, sum = 1).
+    //  The pump cycle (converge, rotate, emerge) drives the oscillation.
+    // ========================================================================
+
+    const PHI = (1 + Math.sqrt(5)) / 2;
+
+    let params = {
+        seed: 1618,
+        latticeNodes: 80,
+        flowParticles: 3000,
+        balance: 0.5,
+        oscSpeed: 0.6,
+        bridgeStrength: 0.5,
+        noiseScale: 0.004,
+        fovealRadius: 250,
+        colorPalette: ['#d97757', '#6a9bcc', '#c8a84e']
+    };
+
+    let defaultParams = JSON.parse(JSON.stringify(params));
+
+    // System state
+    let nodes = [];
+    let particles = [];
+    let pumpPhase = 0;
+    let globalTime = 0;
+    let fovealCenter;
+    let pg; // offscreen buffer for accumulation
+
+    // ========================================================================
+    //  LATTICE NODE (Left Brain: structure, grammar, convergence)
+    // ========================================================================
+    class LatticeNode {
+        constructor(x, y, idx) {
+            this.homeX = x;
+            this.homeY = y;
+            this.x = x;
+            this.y = y;
+            this.vx = 0;
+            this.vy = 0;
+            this.idx = idx;
+            this.connections = [];
+            this.lockStrength = 0.3 + random() * 0.5;
+            this.distToFovea = 0;
+            this.attention = 0;
+        }
+
+        update(bal, dt) {
+            // Spring back toward home position (structure wants to hold)
+            let springK = 0.02 + bal * 0.08;
+            this.vx += (this.homeX - this.x) * springK;
+            this.vy += (this.homeY - this.y) * springK;
+
+            // Damping
+            this.vx *= 0.9;
+            this.vy *= 0.9;
+
+            this.x += this.vx * dt;
+            this.y += this.vy * dt;
+
+            // Distance to foveal center
+            this.distToFovea = dist(this.x, this.y, fovealCenter.x, fovealCenter.y);
+            // Attention (softmax-like: closer = more)
+            this.attention = Math.exp(-this.distToFovea / (params.fovealRadius * 1.5));
+        }
+
+        // Structure influences a nearby particle (rules give direction)
+        influenceParticle(p, strength) {
+            let d = dist(this.x, this.y, p.x, p.y);
+            if (d < 80 && d > 1) {
+                let influence = strength * (1 - d / 80) * this.attention;
+                // Pull particle toward nearest lattice line
+                let ax = (this.x - p.x) / d * influence * 0.3;
+                let ay = (this.y - p.y) / d * influence * 0.3;
+                p.vx += ax;
+                p.vy += ay;
+            }
+        }
+
+        // Experience shifts the node (organic updates rules)
+        shiftedBy(p, strength) {
+            let d = dist(this.x, this.y, p.x, p.y);
+            if (d < 60 && d > 1) {
+                let influence = strength * (1 - d / 60) * 0.15 * this.attention;
+                this.vx += p.vx * influence;
+                this.vy += p.vy * influence;
+            }
+        }
+    }
+
+    // ========================================================================
+    //  FLOW PARTICLE (Right Brain: experience, organic, emergence)
+    // ========================================================================
+    class FlowParticle {
+        constructor() {
+            this.x = random(width);
+            this.y = random(height);
+            this.vx = 0;
+            this.vy = 0;
+            this.prevX = this.x;
+            this.prevY = this.y;
+            this.speed = 0.5 + random() * 1.5;
+            this.life = 1;
+            this.maxLife = 200 + floor(random() * 400);
+            this.age = 0;
+            this.distToFovea = 0;
+            this.attention = 0;
+        }
+
+        update(bal, dt) {
+            this.prevX = this.x;
+            this.prevY = this.y;
+
+            // Perlin noise flow field (organic, experiential)
+            let noiseVal = noise(
+                this.x * params.noiseScale,
+                this.y * params.noiseScale,
+                globalTime * 0.2
+            );
+            let angle = noiseVal * TWO_PI * 3;
+
+            // Emergence force (outward, organic)
+            let emergeFactor = 1 - bal; // stronger when balance favors flow
+            this.vx += cos(angle) * this.speed * emergeFactor * 0.3;
+            this.vy += sin(angle) * this.speed * emergeFactor * 0.3;
+
+            // Damping
+            this.vx *= 0.95;
+            this.vy *= 0.95;
+
+            this.x += this.vx * dt;
+            this.y += this.vy * dt;
+
+            // Foveal attention
+            this.distToFovea = dist(this.x, this.y, fovealCenter.x, fovealCenter.y);
+            this.attention = Math.exp(-this.distToFovea / (params.fovealRadius * 2));
+
+            // Age and life
+            this.age++;
+            this.life = 1 - (this.age / this.maxLife);
+
+            // Wrap around
+            if (this.x < 0) { this.x = width; this.prevX = width; }
+            if (this.x > width) { this.x = 0; this.prevX = 0; }
+            if (this.y < 0) { this.y = height; this.prevY = height; }
+            if (this.y > height) { this.y = 0; this.prevY = 0; }
+        }
+
+        isDead() { return this.age > this.maxLife; }
+
+        respawn() {
+            this.x = random(width);
+            this.y = random(height);
+            this.prevX = this.x;
+            this.prevY = this.y;
+            this.vx = 0;
+            this.vy = 0;
+            this.age = 0;
+            this.life = 1;
+            this.maxLife = 200 + floor(random() * 400);
+            this.speed = 0.5 + random() * 1.5;
+        }
+    }
+
+    // ========================================================================
+    //  P5.JS LIFECYCLE
+    // ========================================================================
+
+    function setup() {
+        let canvas = createCanvas(1200, 1200);
+        canvas.parent('canvas-container');
+        document.querySelector('.loading').style.display = 'none';
+        pg = createGraphics(1200, 1200);
+        pg.background(250, 249, 245);
+        initializeSystem();
+    }
+
+    function initializeSystem() {
+        randomSeed(params.seed);
+        noiseSeed(params.seed);
+
+        globalTime = 0;
+        pumpPhase = 0;
+
+        // Foveal center: seeded position (the aperture of attention)
+        fovealCenter = createVector(
+            width * 0.3 + random() * width * 0.4,
+            height * 0.3 + random() * height * 0.4
+        );
+
+        // Build lattice (left brain: golden-ratio spiral + Voronoi-ish distribution)
+        nodes = [];
+        let n = params.latticeNodes;
+        for (let i = 0; i < n; i++) {
+            let t = i / n;
+            // Golden angle spiral for core structure
+            let angle = i * TWO_PI / PHI;
+            let r = sqrt(t) * width * 0.42;
+            let cx = width / 2 + cos(angle) * r;
+            let cy = height / 2 + sin(angle) * r;
+            // Slight noise perturbation (structure is not perfectly rigid)
+            cx += (random() - 0.5) * 30;
+            cy += (random() - 0.5) * 30;
+            nodes.push(new LatticeNode(cx, cy, i));
+        }
+
+        // Build connections (nearest neighbors; the grammar of relationships)
+        for (let i = 0; i < nodes.length; i++) {
+            let dists = [];
+            for (let j = 0; j < nodes.length; j++) {
+                if (i === j) continue;
+                let d = dist(nodes[i].homeX, nodes[i].homeY, nodes[j].homeX, nodes[j].homeY);
+                dists.push({ idx: j, d: d });
+            }
+            dists.sort((a, b) => a.d - b.d);
+            // Connect to 2-4 nearest (depending on density)
+            let numConn = 2 + floor(random() * 3);
+            for (let k = 0; k < min(numConn, dists.length); k++) {
+                if (dists[k].d < width * 0.2) {
+                    nodes[i].connections.push(dists[k].idx);
+                }
+            }
+        }
+
+        // Build particles (right brain: organic flow)
+        particles = [];
+        for (let i = 0; i < params.flowParticles; i++) {
+            particles.push(new FlowParticle());
+        }
+
+        // Clear accumulation buffer
+        pg.background(250, 249, 245);
+    }
+
+    function draw() {
+        let dt = 1.0;
+        globalTime += 0.005;
+
+        // === THE PUMP CYCLE ===
+        // Phase oscillates: convergence (structure dominates) -> emergence (flow dominates)
+        pumpPhase += params.oscSpeed * 0.01;
+        let pumpSin = sin(pumpPhase);
+        // Balance oscillates around the user-set balance point
+        let dynamicBalance = params.balance + pumpSin * 0.25;
+        dynamicBalance = constrain(dynamicBalance, 0, 1);
+
+        // Foveal center drifts slowly (attention wanders)
+        fovealCenter.x += sin(globalTime * 1.3) * 0.3;
+        fovealCenter.y += cos(globalTime * 0.9) * 0.3;
+
+        // Parse colors
+        let structCol = hexToP5(params.colorPalette[0]);
+        let flowCol = hexToP5(params.colorPalette[1]);
+        let bridgeCol = hexToP5(params.colorPalette[2]);
+
+        // === UPDATE LATTICE NODES ===
+        for (let node of nodes) {
+            node.update(dynamicBalance, dt);
+        }
+
+        // === UPDATE PARTICLES + BRIDGE INTERACTIONS ===
+        let bridgeStr = params.bridgeStrength;
+        for (let p of particles) {
+            p.update(dynamicBalance, dt);
+
+            // Bridge: structure influences particle (rules give direction)
+            if (bridgeStr > 0.01) {
+                // Only check nearby nodes (performance)
+                for (let node of nodes) {
+                    node.influenceParticle(p, bridgeStr * dynamicBalance);
+                    // Bridge: particle influences node (experience updates rules)
+                    node.shiftedBy(p, bridgeStr * (1 - dynamicBalance));
+                }
+            }
+
+            if (p.isDead()) p.respawn();
+        }
+
+        // === DRAW TO ACCUMULATION BUFFER ===
+        // Slow fade (trails accumulate over time)
+        pg.noStroke();
+        pg.fill(250, 249, 245, 8);
+        pg.rect(0, 0, width, height);
+
+        // Draw lattice connections (left brain structure)
+        for (let node of nodes) {
+            let alpha = 10 + node.attention * 40 * dynamicBalance;
+            pg.stroke(structCol[0], structCol[1], structCol[2], alpha);
+            pg.strokeWeight(0.5 + node.attention * 1.5);
+            for (let ci of node.connections) {
+                let other = nodes[ci];
+                pg.line(node.x, node.y, other.x, other.y);
+            }
+        }
+
+        // Draw lattice nodes
+        for (let node of nodes) {
+            let sz = 2 + node.attention * 5 * dynamicBalance;
+            let alpha = 30 + node.attention * 120 * dynamicBalance;
+            let lockLerp = node.lockStrength;
+            // Color: warm when locked (confident), cooler when drifting
+            let r = lerp(structCol[0], bridgeCol[0], 1 - lockLerp);
+            let g = lerp(structCol[1], bridgeCol[1], 1 - lockLerp);
+            let b = lerp(structCol[2], bridgeCol[2], 1 - lockLerp);
+            pg.noStroke();
+            pg.fill(r, g, b, alpha);
+            pg.ellipse(node.x, node.y, sz, sz);
+        }
+
+        // Draw particle trails (right brain flow)
+        for (let p of particles) {
+            let speed = dist(p.prevX, p.prevY, p.x, p.y);
+            let speedNorm = constrain(speed / 3, 0, 1);
+
+            // Color: warm when fast (convergent, purposeful), cool when slow (emergent, drifting)
+            let r = lerp(flowCol[0], structCol[0], speedNorm);
+            let g = lerp(flowCol[1], structCol[1], speedNorm);
+            let b = lerp(flowCol[2], structCol[2], speedNorm);
+
+            // Where structure and flow agree: bridge color (golden, insight)
+            // Check if particle is near a lattice line
+            let nearLattice = false;
+            for (let node of nodes) {
+                if (dist(p.x, p.y, node.x, node.y) < 25) {
+                    nearLattice = true;
+                    break;
+                }
+            }
+            if (nearLattice && speedNorm > 0.3) {
+                r = lerp(r, bridgeCol[0], 0.5);
+                g = lerp(g, bridgeCol[1], 0.5);
+                b = lerp(b, bridgeCol[2], 0.5);
+            }
+
+            let alpha = p.life * p.attention * 60 * (1 - dynamicBalance * 0.3);
+            alpha = constrain(alpha, 0, 50);
+
+            pg.stroke(r, g, b, alpha);
+            pg.strokeWeight(0.5 + p.attention * 1.5 + speedNorm * 0.8);
+            // Only draw if movement is significant (avoid dots)
+            if (speed > 0.3) {
+                pg.line(p.prevX, p.prevY, p.x, p.y);
+            }
+        }
+
+        // Draw foveal region indicator (subtle)
+        pg.noFill();
+        pg.stroke(bridgeCol[0], bridgeCol[1], bridgeCol[2], 6);
+        pg.strokeWeight(1);
+        pg.ellipse(fovealCenter.x, fovealCenter.y, params.fovealRadius * 2, params.fovealRadius * 2);
+
+        // === RENDER TO SCREEN ===
+        image(pg, 0, 0);
+
+        // Pump phase indicator (subtle overlay in bottom-left)
+        noStroke();
+        let phaseLabel = pumpSin > 0.3 ? '\u229B converge' : pumpSin < -0.3 ? '\u2600 emerge' : 'i rotate';
+        fill(180, 175, 165);
+        textFont('Courier New');
+        textSize(11);
+        textAlign(LEFT);
+        text(phaseLabel + '  \u25D0 ' + dynamicBalance.toFixed(2), 14, height - 14);
+    }
+
+    // ========================================================================
+    //  UTILITIES
+    // ========================================================================
+
+    function hexToP5(hex) {
+        let r = parseInt(hex.slice(1,3), 16);
+        let g = parseInt(hex.slice(3,5), 16);
+        let b = parseInt(hex.slice(5,7), 16);
+        return [r, g, b];
+    }
+
+    // ========================================================================
+    //  UI HANDLERS
+    // ========================================================================
+
+    function updateParam(name, value) {
+        let v = parseFloat(value);
+        params[name] = v;
+        let el = document.getElementById(name + '-value');
+        if (el) el.textContent = v % 1 === 0 ? v : v.toFixed(name === 'noiseScale' ? 3 : 2);
+
+        // Some params need full regeneration
+        if (name === 'latticeNodes' || name === 'flowParticles') {
+            pg.background(250, 249, 245);
+            initializeSystem();
+        }
+    }
+
+    function updateColor(id, value) {
+        let idx = parseInt(id.replace('color','')) - 1;
+        params.colorPalette[idx] = value;
+        document.getElementById(id + '-value').textContent = value;
+    }
+
+    function updateSeedDisplay() {
+        document.getElementById('seed-input').value = params.seed;
+    }
+
+    function updateSeed() {
+        let v = parseInt(document.getElementById('seed-input').value);
+        if (v && v > 0) { params.seed = v; pg.background(250, 249, 245); initializeSystem(); }
+        else updateSeedDisplay();
+    }
+
+    function previousSeed() {
+        params.seed = Math.max(1, params.seed - 1);
+        updateSeedDisplay();
+        pg.background(250, 249, 245);
+        initializeSystem();
+    }
+
+    function nextSeed() {
+        params.seed++;
+        updateSeedDisplay();
+        pg.background(250, 249, 245);
+        initializeSystem();
+    }
+
+    function randomSeedAndUpdate() {
+        params.seed = Math.floor(Math.random() * 999999) + 1;
+        updateSeedDisplay();
+        pg.background(250, 249, 245);
+        initializeSystem();
+    }
+
+    function regenerate() {
+        pg.background(250, 249, 245);
+        initializeSystem();
+    }
+
+    function resetParameters() {
+        params = JSON.parse(JSON.stringify(defaultParams));
+        // Update all UI elements
+        document.getElementById('latticeNodes').value = params.latticeNodes;
+        document.getElementById('latticeNodes-value').textContent = params.latticeNodes;
+        document.getElementById('flowParticles').value = params.flowParticles;
+        document.getElementById('flowParticles-value').textContent = params.flowParticles;
+        document.getElementById('balance').value = params.balance;
+        document.getElementById('balance-value').textContent = parseFloat(params.balance).toFixed(2);
+        document.getElementById('oscSpeed').value = params.oscSpeed;
+        document.getElementById('oscSpeed-value').textContent = parseFloat(params.oscSpeed).toFixed(2);
+        document.getElementById('bridgeStrength').value = params.bridgeStrength;
+        document.getElementById('bridgeStrength-value').textContent = parseFloat(params.bridgeStrength).toFixed(2);
+        document.getElementById('noiseScale').value = params.noiseScale;
+        document.getElementById('noiseScale-value').textContent = parseFloat(params.noiseScale).toFixed(3);
+        document.getElementById('fovealRadius').value = params.fovealRadius;
+        document.getElementById('fovealRadius-value').textContent = params.fovealRadius;
+        document.getElementById('color1').value = params.colorPalette[0];
+        document.getElementById('color1-value').textContent = params.colorPalette[0];
+        document.getElementById('color2').value = params.colorPalette[1];
+        document.getElementById('color2-value').textContent = params.colorPalette[1];
+        document.getElementById('color3').value = params.colorPalette[2];
+        document.getElementById('color3-value').textContent = params.colorPalette[2];
+        updateSeedDisplay();
+        pg.background(250, 249, 245);
+        initializeSystem();
+    }
+
+    function downloadPNG() {
+        saveCanvas('hemispheric_resonance_' + params.seed, 'png');
+    }
+
+    window.addEventListener('load', function() { updateSeedDisplay(); });
+    </script>
+</body>
+</html>
