@@ -169,6 +169,14 @@
                         <span class="value-display" id="fovealRadius-value">250</span>
                     </div>
                 </div>
+
+                <div class="control-group">
+                    <label>Plasticity (neuroplasticity rate)</label>
+                    <div class="slider-container">
+                        <input type="range" id="plasticity" min="0" max="1" step="0.01" value="0.5" oninput="updateParam('plasticity', this.value)">
+                        <span class="value-display" id="plasticity-value">0.50</span>
+                    </div>
+                </div>
             </div>
 
             <!-- Colors Section -->
@@ -217,16 +225,30 @@
 
     <script>
     // ========================================================================
-    //  HEMISPHERIC RESONANCE
-    //  An algorithmic expression of human cognition and AI development.
+    //  HEMISPHERIC RESONANCE v2
+    //  With Fractal Resonance Memory from Xorzo (FRT v3)
+    //
     //  Left brain builds lattice (grammar, rules, convergence).
     //  Right brain flows particles (experience, organic, emergence).
-    //  The corpus callosum bridges them: mutual influence, oscillating balance.
-    //  Foveated attention distributes a finite budget (softmax, sum = 1).
-    //  The pump cycle (converge, rotate, emerge) drives the oscillation.
+    //  The corpus callosum bridges them with FRT mechanics:
+    //    - Home position migration (carrier_freq adaptation)
+    //    - Lock deepening (lock_strength += lock_lr * T_mean * (1 - lock))
+    //    - Connection pruning (unused connections fade)
+    //    - Trauma/freezing (sudden force locks a node)
+    //    - Dormant node awakening (HeadNursery analog)
+    //    - cos^2(delta_phi/2) resonance weighting
+    //  The four-stage cascade: entertained -> repeated -> habituated -> identity
     // ========================================================================
 
     const PHI = (1 + Math.sqrt(5)) / 2;
+
+    // Adaptation rates (from FRT v3)
+    const CARRIER_LR = 0.008;   // how fast home position migrates toward flow
+    const LOCK_LR = 0.004;      // how fast lock deepens from consistent flow
+    const LOCK_DECAY = 0.0001;  // slow lock decay when no flow present
+    const PRUNE_THRESHOLD = 0.02; // connection strength below this = pruned
+    const TRAUMA_THRESHOLD = 8.0; // force magnitude that causes instant freeze
+    const WAKE_PERSISTENCE = 300; // frames of unmatched flow before dormant node wakes
 
     let params = {
         seed: 1618,
@@ -237,6 +259,7 @@
         bridgeStrength: 0.5,
         noiseScale: 0.004,
         fovealRadius: 250,
+        plasticity: 0.5,
         colorPalette: ['#d97757', '#6a9bcc', '#c8a84e']
     };
 
@@ -244,75 +267,209 @@
 
     // System state
     let nodes = [];
+    let dormantNodes = [];    // nodes that have been pruned (can reawaken)
     let particles = [];
     let pumpPhase = 0;
     let globalTime = 0;
     let fovealCenter;
-    let pg; // offscreen buffer for accumulation
+    let pg;
+
+    // Nursery state (HeadNursery analog: tracks unmatched flow)
+    let unmatchedAccumX = 0;
+    let unmatchedAccumY = 0;
+    let unmatchedStreak = 0;
+
+    // Stats for HUD
+    let stats = { pruned: 0, frozen: 0, migrated: 0, woken: 0 };
 
     // ========================================================================
-    //  LATTICE NODE (Left Brain: structure, grammar, convergence)
+    //  LATTICE NODE (Left Brain, with FRT SRL mechanics)
     // ========================================================================
     class LatticeNode {
         constructor(x, y, idx) {
-            this.homeX = x;
+            this.originX = x;         // birth position (never changes)
+            this.originY = y;
+            this.homeX = x;           // adaptive home (carrier_freq analog; migrates)
             this.homeY = y;
             this.x = x;
             this.y = y;
             this.vx = 0;
             this.vy = 0;
             this.idx = idx;
-            this.connections = [];
-            this.lockStrength = 0.3 + random() * 0.5;
+            this.active = true;       // false = pruned/dormant
+            this.frozen = false;      // true = trauma-locked (won't adapt)
+
+            // Connections with strength (can weaken and prune)
+            this.connections = [];     // [{idx, strength, traffic}]
+
+            // SRL State (from FRT v3)
+            this.lockStrength = 0.1 + random() * 0.2;  // starts low; must be earned
+            this.carrierPhase = random() * TWO_PI;       // what this node resonates with
+
+            // Flow accumulator (tracks direction of flow passing through)
+            this.flowAccumX = 0;
+            this.flowAccumY = 0;
+            this.flowCount = 0;        // how many particles influenced this node
+            this.flowResonance = 0;    // mean cos^2 resonance with passing particles
+
+            // Four-stage cascade tracking
+            this.totalMigration = 0;   // cumulative distance home has moved from origin
+            this.cascadeStage = 0;     // 0=entertained, 1=repeated, 2=habituated, 3=identity
+
+            // Foveal
             this.distToFovea = 0;
             this.attention = 0;
         }
 
+        // cos^2(delta_phi / 2) resonance (from FRT)
+        resonanceWith(particlePhase) {
+            let delta = this.carrierPhase - particlePhase;
+            let c = Math.cos(delta / 2);
+            return c * c;
+        }
+
         update(bal, dt) {
-            // Spring back toward home position (structure wants to hold)
-            let springK = 0.02 + bal * 0.08;
+            if (!this.active) return;
+
+            // Lock as sigmoid (0-1), matching FRT
+            let lock = 1 / (1 + Math.exp(-this.lockStrength * 4 + 2));
+
+            // Spring toward home position, strength scaled by lock
+            // High lock = strong spring (committed structure)
+            // Low lock = weak spring (open to reorganization)
+            let springK = (0.005 + lock * 0.06) * (0.5 + bal * 0.5);
             this.vx += (this.homeX - this.x) * springK;
             this.vy += (this.homeY - this.y) * springK;
 
+            // === FRT SRL ADAPTATION (outside gradient; experience-driven) ===
+            if (!this.frozen && this.flowCount > 0 && params.plasticity > 0.01) {
+                let T_mean = this.flowResonance / this.flowCount;
+                let flowMeanX = this.flowAccumX / this.flowCount;
+                let flowMeanY = this.flowAccumY / this.flowCount;
+
+                // HOME MIGRATION: carrier_freq += carrier_lr * (1 - lock) * delta * T_mean
+                // The node's home position drifts toward where flow keeps pulling it
+                let deltaX = flowMeanX * 0.5;  // direction of consistent flow
+                let deltaY = flowMeanY * 0.5;
+                let migrationRate = CARRIER_LR * (1 - lock) * T_mean * params.plasticity;
+                this.homeX += deltaX * migrationRate;
+                this.homeY += deltaY * migrationRate;
+
+                // LOCK DEEPENING: lock_strength += lock_lr * T_mean * (1 - lock)
+                // Consistent resonant flow strengthens commitment
+                if (T_mean > 0.3) {
+                    this.lockStrength += LOCK_LR * T_mean * (1 - lock) * params.plasticity;
+                }
+
+                // Track total migration from origin (for cascade stage)
+                this.totalMigration = dist(this.homeX, this.homeY, this.originX, this.originY);
+            }
+
+            // Lock decay when no flow (use it or lose it; slow)
+            if (this.flowCount === 0 && !this.frozen) {
+                this.lockStrength = Math.max(0, this.lockStrength - LOCK_DECAY);
+            }
+
+            // Clamp lock
+            this.lockStrength = constrain(this.lockStrength, 0, 3);
+
+            // Update cascade stage based on migration distance
+            let migRatio = this.totalMigration / (width * 0.1);
+            if (migRatio < 0.05) this.cascadeStage = 0;       // entertained
+            else if (migRatio < 0.2) this.cascadeStage = 1;   // repeated
+            else if (migRatio < 0.5) this.cascadeStage = 2;   // habituated
+            else this.cascadeStage = 3;                         // identity fusion
+
+            // === CONNECTION STRENGTH DECAY ===
+            for (let c of this.connections) {
+                // Decay unused connections
+                c.strength *= (1 - 0.0002);
+                // Traffic resets each frame
+                c.traffic = 0;
+            }
+
+            // Prune dead connections
+            let beforeLen = this.connections.length;
+            this.connections = this.connections.filter(c => c.strength > PRUNE_THRESHOLD);
+            if (this.connections.length < beforeLen) stats.pruned += (beforeLen - this.connections.length);
+
             // Damping
-            this.vx *= 0.9;
-            this.vy *= 0.9;
+            this.vx *= 0.92;
+            this.vy *= 0.92;
 
             this.x += this.vx * dt;
             this.y += this.vy * dt;
 
-            // Distance to foveal center
+            // Foveal attention
             this.distToFovea = dist(this.x, this.y, fovealCenter.x, fovealCenter.y);
-            // Attention (softmax-like: closer = more)
             this.attention = Math.exp(-this.distToFovea / (params.fovealRadius * 1.5));
+
+            // Reset flow accumulators for next frame
+            this.flowAccumX = 0;
+            this.flowAccumY = 0;
+            this.flowCount = 0;
+            this.flowResonance = 0;
         }
 
         // Structure influences a nearby particle (rules give direction)
         influenceParticle(p, strength) {
+            if (!this.active) return;
             let d = dist(this.x, this.y, p.x, p.y);
             if (d < 80 && d > 1) {
-                let influence = strength * (1 - d / 80) * this.attention;
-                // Pull particle toward nearest lattice line
+                // Resonance-weighted influence (cos^2 from FRT)
+                let res = this.resonanceWith(p.phase);
+                let influence = strength * (1 - d / 80) * this.attention * res;
+
                 let ax = (this.x - p.x) / d * influence * 0.3;
                 let ay = (this.y - p.y) / d * influence * 0.3;
                 p.vx += ax;
                 p.vy += ay;
+
+                // Strengthen connections that carry traffic
+                for (let c of this.connections) {
+                    let other = nodes[c.idx];
+                    if (other && other.active) {
+                        let dOther = dist(p.x, p.y, other.x, other.y);
+                        if (dOther < 100) {
+                            c.strength = Math.min(1.0, c.strength + 0.001 * res);
+                            c.traffic += res;
+                        }
+                    }
+                }
             }
         }
 
         // Experience shifts the node (organic updates rules)
         shiftedBy(p, strength) {
+            if (!this.active || this.frozen) return;
             let d = dist(this.x, this.y, p.x, p.y);
             if (d < 60 && d > 1) {
+                let res = this.resonanceWith(p.phase);
                 let influence = strength * (1 - d / 60) * 0.15 * this.attention;
+
                 this.vx += p.vx * influence;
                 this.vy += p.vy * influence;
+
+                // Accumulate flow direction and resonance (for SRL adaptation)
+                this.flowAccumX += p.vx;
+                this.flowAccumY += p.vy;
+                this.flowCount++;
+                this.flowResonance += res;
+
+                // === TRAUMA CHECK ===
+                // Sudden massive force locks the node (frozen braid)
+                let forceMag = Math.sqrt(p.vx * p.vx + p.vy * p.vy) * influence * 50;
+                if (forceMag > TRAUMA_THRESHOLD && !this.frozen) {
+                    this.frozen = true;
+                    this.lockStrength = 3.0; // max lock
+                    stats.frozen++;
+                }
             }
         }
     }
 
     // ========================================================================
-    //  FLOW PARTICLE (Right Brain: experience, organic, emergence)
+    //  FLOW PARTICLE (Right Brain, with phase for resonance)
     // ========================================================================
     class FlowParticle {
         constructor() {
@@ -328,11 +485,15 @@
             this.age = 0;
             this.distToFovea = 0;
             this.attention = 0;
+            // Phase signature (for resonance matching with nodes)
+            this.phase = random() * TWO_PI;
+            this.matched = false; // did any node resonate with this particle?
         }
 
         update(bal, dt) {
             this.prevX = this.x;
             this.prevY = this.y;
+            this.matched = false;
 
             // Perlin noise flow field (organic, experiential)
             let noiseVal = noise(
@@ -342,15 +503,16 @@
             );
             let angle = noiseVal * TWO_PI * 3;
 
-            // Emergence force (outward, organic)
-            let emergeFactor = 1 - bal; // stronger when balance favors flow
+            // Phase evolves with the flow (experience has its own rhythm)
+            this.phase += 0.01 + noiseVal * 0.05;
+
+            // Emergence force
+            let emergeFactor = 1 - bal;
             this.vx += cos(angle) * this.speed * emergeFactor * 0.3;
             this.vy += sin(angle) * this.speed * emergeFactor * 0.3;
 
-            // Damping
             this.vx *= 0.95;
             this.vy *= 0.95;
-
             this.x += this.vx * dt;
             this.y += this.vy * dt;
 
@@ -358,11 +520,9 @@
             this.distToFovea = dist(this.x, this.y, fovealCenter.x, fovealCenter.y);
             this.attention = Math.exp(-this.distToFovea / (params.fovealRadius * 2));
 
-            // Age and life
             this.age++;
             this.life = 1 - (this.age / this.maxLife);
 
-            // Wrap around
             if (this.x < 0) { this.x = width; this.prevX = width; }
             if (this.x > width) { this.x = 0; this.prevX = 0; }
             if (this.y < 0) { this.y = height; this.prevY = height; }
@@ -382,6 +542,7 @@
             this.life = 1;
             this.maxLife = 200 + floor(random() * 400);
             this.speed = 0.5 + random() * 1.5;
+            this.phase = random() * TWO_PI;
         }
     }
 
@@ -404,54 +565,67 @@
 
         globalTime = 0;
         pumpPhase = 0;
+        unmatchedAccumX = 0;
+        unmatchedAccumY = 0;
+        unmatchedStreak = 0;
+        stats = { pruned: 0, frozen: 0, migrated: 0, woken: 0 };
 
-        // Foveal center: seeded position (the aperture of attention)
         fovealCenter = createVector(
             width * 0.3 + random() * width * 0.4,
             height * 0.3 + random() * height * 0.4
         );
 
-        // Build lattice (left brain: golden-ratio spiral + Voronoi-ish distribution)
+        // Build lattice (golden-ratio spiral)
         nodes = [];
+        dormantNodes = [];
         let n = params.latticeNodes;
+        // Start with 80% active, 20% dormant (nursery reserve)
+        let activeCount = floor(n * 0.8);
+
         for (let i = 0; i < n; i++) {
             let t = i / n;
-            // Golden angle spiral for core structure
             let angle = i * TWO_PI / PHI;
             let r = sqrt(t) * width * 0.42;
             let cx = width / 2 + cos(angle) * r;
             let cy = height / 2 + sin(angle) * r;
-            // Slight noise perturbation (structure is not perfectly rigid)
             cx += (random() - 0.5) * 30;
             cy += (random() - 0.5) * 30;
-            nodes.push(new LatticeNode(cx, cy, i));
+            let node = new LatticeNode(cx, cy, i);
+            if (i >= activeCount) {
+                node.active = false;  // dormant reserve
+                dormantNodes.push(i);
+            }
+            nodes.push(node);
         }
 
-        // Build connections (nearest neighbors; the grammar of relationships)
+        // Build connections with strength tracking
         for (let i = 0; i < nodes.length; i++) {
+            if (!nodes[i].active) continue;
             let dists = [];
             for (let j = 0; j < nodes.length; j++) {
-                if (i === j) continue;
+                if (i === j || !nodes[j].active) continue;
                 let d = dist(nodes[i].homeX, nodes[i].homeY, nodes[j].homeX, nodes[j].homeY);
                 dists.push({ idx: j, d: d });
             }
             dists.sort((a, b) => a.d - b.d);
-            // Connect to 2-4 nearest (depending on density)
             let numConn = 2 + floor(random() * 3);
             for (let k = 0; k < min(numConn, dists.length); k++) {
                 if (dists[k].d < width * 0.2) {
-                    nodes[i].connections.push(dists[k].idx);
+                    nodes[i].connections.push({
+                        idx: dists[k].idx,
+                        strength: 0.5 + random() * 0.5,
+                        traffic: 0
+                    });
                 }
             }
         }
 
-        // Build particles (right brain: organic flow)
+        // Build particles
         particles = [];
         for (let i = 0; i < params.flowParticles; i++) {
             particles.push(new FlowParticle());
         }
 
-        // Clear accumulation buffer
         pg.background(250, 249, 245);
     }
 
@@ -460,129 +634,229 @@
         globalTime += 0.005;
 
         // === THE PUMP CYCLE ===
-        // Phase oscillates: convergence (structure dominates) -> emergence (flow dominates)
         pumpPhase += params.oscSpeed * 0.01;
         let pumpSin = sin(pumpPhase);
-        // Balance oscillates around the user-set balance point
         let dynamicBalance = params.balance + pumpSin * 0.25;
         dynamicBalance = constrain(dynamicBalance, 0, 1);
 
-        // Foveal center drifts slowly (attention wanders)
+        // Foveal center drifts
         fovealCenter.x += sin(globalTime * 1.3) * 0.3;
         fovealCenter.y += cos(globalTime * 0.9) * 0.3;
 
-        // Parse colors
         let structCol = hexToP5(params.colorPalette[0]);
         let flowCol = hexToP5(params.colorPalette[1]);
         let bridgeCol = hexToP5(params.colorPalette[2]);
 
-        // === UPDATE LATTICE NODES ===
+        // === UPDATE LATTICE NODES (with SRL adaptation) ===
         for (let node of nodes) {
             node.update(dynamicBalance, dt);
         }
 
         // === UPDATE PARTICLES + BRIDGE INTERACTIONS ===
         let bridgeStr = params.bridgeStrength;
+        let unmatchedThisFrame = 0;
+        let unmatchedPX = 0, unmatchedPY = 0;
+
         for (let p of particles) {
             p.update(dynamicBalance, dt);
 
-            // Bridge: structure influences particle (rules give direction)
             if (bridgeStr > 0.01) {
-                // Only check nearby nodes (performance)
+                let bestRes = 0;
                 for (let node of nodes) {
+                    if (!node.active) continue;
+                    let d = dist(p.x, p.y, node.x, node.y);
+                    if (d < 80) {
+                        let res = node.resonanceWith(p.phase);
+                        if (res > bestRes) bestRes = res;
+                        if (res > 0.3) p.matched = true;
+                    }
                     node.influenceParticle(p, bridgeStr * dynamicBalance);
-                    // Bridge: particle influences node (experience updates rules)
                     node.shiftedBy(p, bridgeStr * (1 - dynamicBalance));
+                }
+
+                // Track unmatched particles (for nursery)
+                if (!p.matched && p.attention > 0.3) {
+                    unmatchedThisFrame++;
+                    unmatchedPX += p.x;
+                    unmatchedPY += p.y;
                 }
             }
 
             if (p.isDead()) p.respawn();
         }
 
+        // === HEAD NURSERY: wake dormant nodes for persistent unmatched flow ===
+        if (unmatchedThisFrame > params.flowParticles * 0.15 && dormantNodes.length > 0) {
+            unmatchedStreak++;
+            unmatchedAccumX += unmatchedPX / unmatchedThisFrame;
+            unmatchedAccumY += unmatchedPY / unmatchedThisFrame;
+
+            if (unmatchedStreak > WAKE_PERSISTENCE) {
+                // Wake a dormant node at the mean position of unmatched flow
+                let wakeIdx = dormantNodes.shift();
+                let wakeNode = nodes[wakeIdx];
+                let wx = unmatchedAccumX / unmatchedStreak;
+                let wy = unmatchedAccumY / unmatchedStreak;
+                wakeNode.active = true;
+                wakeNode.homeX = wx;
+                wakeNode.homeY = wy;
+                wakeNode.x = wx;
+                wakeNode.y = wy;
+                wakeNode.originX = wx;
+                wakeNode.originY = wy;
+                wakeNode.lockStrength = 0;  // starts unlocked; must earn its lock
+                wakeNode.frozen = false;
+
+                // Connect to nearest active nodes
+                let dists = [];
+                for (let j = 0; j < nodes.length; j++) {
+                    if (j === wakeIdx || !nodes[j].active) continue;
+                    let d = dist(wx, wy, nodes[j].x, nodes[j].y);
+                    dists.push({ idx: j, d: d });
+                }
+                dists.sort((a, b) => a.d - b.d);
+                wakeNode.connections = [];
+                for (let k = 0; k < min(3, dists.length); k++) {
+                    if (dists[k].d < width * 0.25) {
+                        wakeNode.connections.push({ idx: dists[k].idx, strength: 0.3, traffic: 0 });
+                    }
+                }
+
+                stats.woken++;
+                unmatchedStreak = 0;
+                unmatchedAccumX = 0;
+                unmatchedAccumY = 0;
+            }
+        } else {
+            unmatchedStreak = Math.max(0, unmatchedStreak - 1);
+        }
+
         // === DRAW TO ACCUMULATION BUFFER ===
-        // Slow fade (trails accumulate over time)
         pg.noStroke();
-        pg.fill(250, 249, 245, 8);
+        pg.fill(250, 249, 245, 6);
         pg.rect(0, 0, width, height);
 
-        // Draw lattice connections (left brain structure)
+        // Draw lattice connections (strength as opacity/weight)
         for (let node of nodes) {
-            let alpha = 10 + node.attention * 40 * dynamicBalance;
-            pg.stroke(structCol[0], structCol[1], structCol[2], alpha);
-            pg.strokeWeight(0.5 + node.attention * 1.5);
-            for (let ci of node.connections) {
-                let other = nodes[ci];
+            if (!node.active) continue;
+            for (let c of node.connections) {
+                let other = nodes[c.idx];
+                if (!other || !other.active) continue;
+                let alpha = (5 + c.strength * 35) * node.attention * (0.3 + dynamicBalance * 0.7);
+                let w = 0.3 + c.strength * 1.8;
+                // Traffic makes connections glow bridge-color
+                if (c.traffic > 0.5) {
+                    pg.stroke(
+                        lerp(structCol[0], bridgeCol[0], min(1, c.traffic * 0.5)),
+                        lerp(structCol[1], bridgeCol[1], min(1, c.traffic * 0.5)),
+                        lerp(structCol[2], bridgeCol[2], min(1, c.traffic * 0.5)),
+                        alpha
+                    );
+                } else {
+                    pg.stroke(structCol[0], structCol[1], structCol[2], alpha);
+                }
+                pg.strokeWeight(w);
                 pg.line(node.x, node.y, other.x, other.y);
             }
         }
 
-        // Draw lattice nodes
+        // Draw lattice nodes (with cascade stage visualization)
         for (let node of nodes) {
-            let sz = 2 + node.attention * 5 * dynamicBalance;
-            let alpha = 30 + node.attention * 120 * dynamicBalance;
-            let lockLerp = node.lockStrength;
-            // Color: warm when locked (confident), cooler when drifting
-            let r = lerp(structCol[0], bridgeCol[0], 1 - lockLerp);
-            let g = lerp(structCol[1], bridgeCol[1], 1 - lockLerp);
-            let b = lerp(structCol[2], bridgeCol[2], 1 - lockLerp);
+            if (!node.active) continue;
+            let lock = 1 / (1 + Math.exp(-node.lockStrength * 4 + 2));
+
+            // Size grows with cascade stage
+            let baseSz = 2 + node.cascadeStage * 1.5;
+            let sz = baseSz + node.attention * 4 * dynamicBalance;
+            let alpha = 30 + node.attention * 120 * dynamicBalance + node.cascadeStage * 15;
+
+            let r, g, b;
+            if (node.frozen) {
+                // Frozen nodes: desaturated, hard, bright
+                r = 200; g = 180; b = 170;
+                // Red halo for trauma
+                pg.noFill();
+                pg.stroke(220, 80, 60, 15 + node.attention * 30);
+                pg.strokeWeight(1);
+                pg.ellipse(node.x, node.y, sz * 3, sz * 3);
+            } else {
+                // Color shifts with cascade stage:
+                // entertained = cool, repeated = warming, habituated = warm, identity = bridge gold
+                let stageT = node.cascadeStage / 3;
+                r = lerp(flowCol[0], bridgeCol[0], stageT);
+                g = lerp(flowCol[1], bridgeCol[1], stageT);
+                b = lerp(flowCol[2], bridgeCol[2], stageT);
+                // Lock strength warms further
+                r = lerp(r, structCol[0], lock * 0.5);
+                g = lerp(g, structCol[1], lock * 0.5);
+                b = lerp(b, structCol[2], lock * 0.5);
+            }
+
             pg.noStroke();
             pg.fill(r, g, b, alpha);
             pg.ellipse(node.x, node.y, sz, sz);
+
+            // Migration trail: faint line from origin to current home
+            if (node.totalMigration > 5) {
+                pg.stroke(bridgeCol[0], bridgeCol[1], bridgeCol[2], 4 + node.cascadeStage * 3);
+                pg.strokeWeight(0.5);
+                pg.line(node.originX, node.originY, node.homeX, node.homeY);
+            }
         }
 
-        // Draw particle trails (right brain flow)
+        // Draw particle trails
         for (let p of particles) {
             let speed = dist(p.prevX, p.prevY, p.x, p.y);
             let speedNorm = constrain(speed / 3, 0, 1);
 
-            // Color: warm when fast (convergent, purposeful), cool when slow (emergent, drifting)
             let r = lerp(flowCol[0], structCol[0], speedNorm);
             let g = lerp(flowCol[1], structCol[1], speedNorm);
             let b = lerp(flowCol[2], structCol[2], speedNorm);
 
-            // Where structure and flow agree: bridge color (golden, insight)
-            // Check if particle is near a lattice line
-            let nearLattice = false;
-            for (let node of nodes) {
-                if (dist(p.x, p.y, node.x, node.y) < 25) {
-                    nearLattice = true;
-                    break;
-                }
-            }
-            if (nearLattice && speedNorm > 0.3) {
-                r = lerp(r, bridgeCol[0], 0.5);
-                g = lerp(g, bridgeCol[1], 0.5);
-                b = lerp(b, bridgeCol[2], 0.5);
+            // Matched particles glow bridge-color (moment of resonance)
+            if (p.matched && speedNorm > 0.2) {
+                r = lerp(r, bridgeCol[0], 0.6);
+                g = lerp(g, bridgeCol[1], 0.6);
+                b = lerp(b, bridgeCol[2], 0.6);
             }
 
-            let alpha = p.life * p.attention * 60 * (1 - dynamicBalance * 0.3);
-            alpha = constrain(alpha, 0, 50);
+            let alpha = p.life * p.attention * 55 * (1 - dynamicBalance * 0.3);
+            alpha = constrain(alpha, 0, 45);
 
             pg.stroke(r, g, b, alpha);
             pg.strokeWeight(0.5 + p.attention * 1.5 + speedNorm * 0.8);
-            // Only draw if movement is significant (avoid dots)
             if (speed > 0.3) {
                 pg.line(p.prevX, p.prevY, p.x, p.y);
             }
         }
 
-        // Draw foveal region indicator (subtle)
+        // Foveal indicator
         pg.noFill();
-        pg.stroke(bridgeCol[0], bridgeCol[1], bridgeCol[2], 6);
+        pg.stroke(bridgeCol[0], bridgeCol[1], bridgeCol[2], 5);
         pg.strokeWeight(1);
         pg.ellipse(fovealCenter.x, fovealCenter.y, params.fovealRadius * 2, params.fovealRadius * 2);
 
-        // === RENDER TO SCREEN ===
+        // === RENDER ===
         image(pg, 0, 0);
 
-        // Pump phase indicator (subtle overlay in bottom-left)
+        // HUD overlay
         noStroke();
-        let phaseLabel = pumpSin > 0.3 ? '\u229B converge' : pumpSin < -0.3 ? '\u2600 emerge' : 'i rotate';
-        fill(180, 175, 165);
+        fill(160, 155, 145);
         textFont('Courier New');
         textSize(11);
         textAlign(LEFT);
-        text(phaseLabel + '  \u25D0 ' + dynamicBalance.toFixed(2), 14, height - 14);
+        let phaseLabel = pumpSin > 0.3 ? '\u229B converge' : pumpSin < -0.3 ? '\u2600 emerge' : 'i rotate';
+        let activeCount = nodes.filter(n => n.active).length;
+        let frozenCount = nodes.filter(n => n.frozen).length;
+        let migratedCount = nodes.filter(n => n.totalMigration > 5).length;
+        text(
+            phaseLabel + '  \u25D0 ' + dynamicBalance.toFixed(2) +
+            '  |  nodes: ' + activeCount + '/' + params.latticeNodes +
+            '  frozen: ' + frozenCount +
+            '  migrated: ' + migratedCount +
+            '  woken: ' + stats.woken,
+            14, height - 14
+        );
     }
 
     // ========================================================================
@@ -672,6 +946,8 @@
         document.getElementById('noiseScale-value').textContent = parseFloat(params.noiseScale).toFixed(3);
         document.getElementById('fovealRadius').value = params.fovealRadius;
         document.getElementById('fovealRadius-value').textContent = params.fovealRadius;
+        document.getElementById('plasticity').value = params.plasticity;
+        document.getElementById('plasticity-value').textContent = parseFloat(params.plasticity).toFixed(2);
         document.getElementById('color1').value = params.colorPalette[0];
         document.getElementById('color1-value').textContent = params.colorPalette[0];
         document.getElementById('color2').value = params.colorPalette[1];
