@@ -135,6 +135,51 @@ p { margin-bottom: 18px; }
   border: 1px solid rgba(77, 160, 200, 0.15);
 }
 .three-col .label { font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: var(--dim); margin-bottom: 10px; }
+
+/* Circumpunct diagram */
+.circ-wrap { text-align: center; margin: 40px auto 30px; }
+.circ {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin: 0 auto;
+}
+.circ-boundary {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 5px solid var(--cyan);
+  box-shadow: 0 0 25px rgba(77,160,200,0.22);
+  z-index: 1;
+}
+.circ-field {
+  position: absolute; inset: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 48%, rgba(77,184,160,0.55) 0%, rgba(77,184,160,0.22) 50%, rgba(77,184,160,0.06) 100%);
+  box-shadow: inset 0 0 40px rgba(77,184,160,0.15);
+  z-index: 2;
+}
+.circ-soul {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 26px; height: 26px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--pink);
+  box-shadow: 0 0 20px rgba(232,138,175,0.55);
+  z-index: 3;
+}
+.circ-label {
+  position: absolute;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  pointer-events: none;
+  font-family: 'EB Garamond', serif;
+}
+.circ-label-top { top: -24px; left: 50%; transform: translateX(-50%); color: var(--cyan); }
+.circ-label-mid { top: 28%; left: 50%; transform: translateX(28px); color: rgba(77,184,160,0.85); font-size: 11px; z-index: 4; }
+.circ-label-center { top: 50%; left: 50%; transform: translate(22px, -50%); color: var(--pink); font-size: 11px; z-index: 4; white-space: nowrap; }
+.circ-caption { margin-top: 24px; font-size: 14px; color: var(--dim); font-style: italic; letter-spacing: 0.05em; }
 .three-col .title { font-size: 22px; font-weight: 600; margin-bottom: 10px; }
 .three-col .desc { font-size: 16px; line-height: 1.55; }
 
@@ -221,6 +266,18 @@ p { margin-bottom: 18px; }
 <p>But there's one more thing. You have a <span class="wb s">soul</span>. Not in a religious sense necessarily; I just mean the center of your experience. The thing that makes you <span class="it">you</span> and not just a collection of organs. The part of you that's looking out at the world right now. The place where "I am" lives.</p>
 
 <p>Koestler gave us wholes and parts. But we are not just wholes and parts. We are not just minds and bodies. We have a soul too, and without it, nothing holds together.</p>
+
+<div class="circ-wrap">
+  <div class="circ">
+    <span class="circ-label circ-label-top">Body</span>
+    <span class="circ-label circ-label-mid">Mind</span>
+    <span class="circ-label circ-label-center">Soul</span>
+    <div class="circ-boundary"></div>
+    <div class="circ-field"></div>
+    <div class="circ-soul"></div>
+  </div>
+  <div class="circ-caption">A whole = a center, a field, and a boundary, held as one.</div>
+</div>
 
 <div class="three-col">
   <div class="col col-soul">
