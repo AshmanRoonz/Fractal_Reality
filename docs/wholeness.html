@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ What Is Wholeness?</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.f { color: var(--faint); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+.page { max-width: 700px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 80px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 72px; color: var(--gold); margin-bottom: 20px; }
+.header h1 { font-size: 48px; font-weight: 500; color: var(--gold); letter-spacing: 2px; margin-bottom: 8px; }
+.header .subtitle { font-size: 22px; color: var(--dim); font-style: italic; }
+.header .byline { font-size: 15px; color: var(--faint); margin-top: 24px; letter-spacing: 1px; }
+
+section { margin-bottom: 60px; }
+section h2 {
+  font-size: 26px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  padding-top: 20px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--gold);
+}
+section h3 {
+  font-size: 22px;
+  font-weight: 500;
+  margin-top: 30px;
+  margin-bottom: 12px;
+  color: var(--cyan);
+}
+p { margin-bottom: 18px; }
+
+.divider { text-align: center; margin: 55px 0; color: var(--faint); font-size: 24px; letter-spacing: 12px; }
+
+.formula {
+  text-align: center;
+  font-size: 28px;
+  padding: 28px;
+  margin: 30px 0;
+  letter-spacing: 2px;
+  border-left: 2px solid var(--faint);
+  background: rgba(255,255,255,0.015);
+  font-weight: 600;
+}
+
+.formula.big {
+  font-size: 36px;
+  padding: 36px;
+  border-left: 3px solid var(--gold-dim);
+  background: rgba(184,160,96,0.04);
+}
+
+.axiom-box {
+  border: 1px solid var(--gold-dim);
+  background: rgba(184,160,96,0.06);
+  padding: 32px;
+  margin: 30px 0;
+  text-align: center;
+}
+.axiom-box .label { font-size: 14px; letter-spacing: 4px; text-transform: uppercase; color: var(--dim); margin-bottom: 12px; }
+.axiom-box .statement { font-size: 32px; font-weight: 600; color: var(--gold); margin-bottom: 12px; }
+.axiom-box .expansion { font-size: 18px; color: var(--warm); line-height: 1.6; }
+
+.quote {
+  border-left: 3px solid var(--gold-dim);
+  padding: 16px 24px;
+  margin: 28px 0;
+  font-style: italic;
+  color: var(--dim);
+  background: rgba(255,255,255,0.01);
+}
+
+.kernel-box {
+  padding: 28px;
+  margin: 36px 0;
+  background: rgba(184, 160, 96, 0.04);
+  border: 1px solid rgba(184, 160, 96, 0.15);
+  border-radius: 4px;
+}
+.kernel-box p { margin-bottom: 12px; }
+.kernel-box p:last-child { margin-bottom: 0; }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 30px 0;
+}
+.two-col .col { padding: 20px; border-radius: 4px; }
+.two-col .col-left {
+  background: rgba(232, 138, 175, 0.05);
+  border: 1px solid rgba(232, 138, 175, 0.15);
+}
+.two-col .col-right {
+  background: rgba(77, 184, 160, 0.05);
+  border: 1px solid rgba(77, 184, 160, 0.15);
+}
+.two-col h4 { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+.two-col p { font-size: 16px; margin-bottom: 10px; }
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin: 30px 0;
+}
+.three-col .col {
+  padding: 20px;
+  border-radius: 4px;
+  text-align: center;
+}
+.three-col .col-soul {
+  background: rgba(232, 138, 175, 0.06);
+  border: 1px solid rgba(232, 138, 175, 0.15);
+}
+.three-col .col-mind {
+  background: rgba(77, 184, 160, 0.06);
+  border: 1px solid rgba(77, 184, 160, 0.15);
+}
+.three-col .col-body {
+  background: rgba(77, 160, 200, 0.06);
+  border: 1px solid rgba(77, 160, 200, 0.15);
+}
+.three-col .sym { font-size: 32px; margin-bottom: 8px; }
+.three-col .label { font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: var(--dim); margin-bottom: 6px; }
+.three-col .desc { font-size: 16px; line-height: 1.5; }
+
+/* Circumpunct diagram */
+.circ-wrap { text-align: center; margin: 40px auto 30px; }
+.circ {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin: 0 auto;
+}
+.circ-boundary {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 5px solid var(--cyan);
+  box-shadow: 0 0 25px rgba(77,160,200,0.22);
+  z-index: 1;
+}
+.circ-field {
+  position: absolute; inset: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 48%, rgba(77,184,160,0.55) 0%, rgba(77,184,160,0.22) 50%, rgba(77,184,160,0.06) 100%);
+  box-shadow: inset 0 0 40px rgba(77,184,160,0.15);
+  z-index: 2;
+}
+.circ-soul {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 26px; height: 26px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--pink);
+  box-shadow: 0 0 20px rgba(232,138,175,0.55);
+  z-index: 3;
+}
+.circ-label {
+  position: absolute;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  pointer-events: none;
+  font-family: 'EB Garamond', serif;
+}
+.circ-label-top { top: -24px; left: 50%; transform: translateX(-50%); color: var(--cyan); }
+.circ-label-mid { top: 28%; left: 50%; transform: translateX(28px); color: rgba(77,184,160,0.85); font-size: 11px; z-index: 4; }
+.circ-label-center { top: 50%; left: 50%; transform: translate(22px, -50%); color: var(--pink); font-size: 11px; z-index: 4; white-space: nowrap; }
+.circ-eq { margin-top: 24px; font-size: 18px; color: var(--dim); letter-spacing: 0.05em; font-family: 'EB Garamond', serif; }
+
+.spectrum {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 28px 0;
+  padding: 20px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--faint);
+}
+.spectrum .pole {
+  text-align: center;
+  flex: 0 0 auto;
+}
+.spectrum .pole .sym { font-size: 28px; margin-bottom: 4px; }
+.spectrum .pole .lbl { font-size: 14px; color: var(--dim); letter-spacing: 1px; }
+.spectrum .bar {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(to right, var(--pink), var(--gold), var(--cyan));
+  margin: 0 24px;
+  position: relative;
+}
+.spectrum .bar::after {
+  content: '◐ = 0.5';
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 15px;
+  color: var(--gold);
+  letter-spacing: 1px;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+/* Interactive circumpunct visualization */
+.viz-container {
+  margin: 40px 0;
+  text-align: center;
+}
+.viz-container canvas {
+  border-radius: 4px;
+  cursor: pointer;
+}
+.viz-caption {
+  font-size: 14px;
+  color: var(--dim);
+  margin-top: 12px;
+  letter-spacing: 1px;
+}
+
+.ladder-row {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 16px;
+  align-items: start;
+  margin: 12px 0;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.015);
+  border-left: 2px solid var(--faint);
+  border-radius: 0 4px 4px 0;
+}
+.ladder-row .dim-label {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--gold);
+}
+.ladder-row .dim-desc {
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.nested-diagram {
+  text-align: center;
+  margin: 40px 0;
+  padding: 32px;
+  background: rgba(184, 160, 96, 0.03);
+  border: 1px solid var(--faint);
+  border-radius: 4px;
+}
+.nested-diagram .layer {
+  display: inline-block;
+  border: 1px solid;
+  border-radius: 50%;
+  padding: 20px;
+  position: relative;
+}
+.nested-diagram .layer-outer {
+  border-color: var(--cyan);
+  padding: 36px 40px;
+}
+.nested-diagram .layer-middle {
+  border-color: var(--gold);
+  padding: 28px 32px;
+}
+.nested-diagram .layer-inner {
+  border-color: var(--pink);
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: var(--pink);
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: middle;
+}
+.nested-labels {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 16px;
+  font-size: 15px;
+}
+.nested-labels span { letter-spacing: 1px; }
+
+ul {
+  list-style: none;
+  margin: 16px 0;
+  padding: 0;
+}
+ul li {
+  padding: 6px 0 6px 24px;
+  position: relative;
+}
+ul li::before {
+  content: '·';
+  position: absolute;
+  left: 6px;
+  color: var(--gold);
+  font-weight: bold;
+}
+
+.closing {
+  text-align: center;
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+}
+.closing .sym { font-size: 40px; color: var(--gold); margin-bottom: 16px; }
+.closing .sign { font-size: 20px; font-style: italic; color: var(--dim); margin-bottom: 8px; }
+.closing .credit { font-size: 15px; color: var(--faint); letter-spacing: 1px; }
+.closing a { color: var(--gold-dim); text-decoration: none; }
+.closing a:hover { color: var(--gold); }
+
+.nav { font-size: 14px; color: var(--faint); margin-bottom: 40px; }
+.nav a { color: var(--gold-dim); text-decoration: none; }
+.nav a:hover { color: var(--gold); }
+
+@media (max-width: 600px) {
+  .header h1 { font-size: 32px; }
+  .two-col, .three-col { grid-template-columns: 1fr; }
+  .formula.big { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="nav"><a href="index.html">&larr; Back to Index</a></div>
+
+<div class="header">
+  <div class="symbol">⊙</div>
+  <h1>What Is Wholeness?</h1>
+  <div class="subtitle">It seems so simple, but it's not.</div>
+  <div class="byline">Ashman Roonz &middot; The Circumpunct Framework</div>
+</div>
+
+<!-- ═══════════════════════ SECTION 1: THE QUESTION ═══════════════════════ -->
+
+<section>
+<h2>The Question</h2>
+
+<p>I've been studying this my <span class="wb w">whole</span> life.</p>
+
+<p>Arthur Koestler coined the term "holon" in 1967, describing a whole as simultaneously a whole in itself and a part of a larger whole. The insight was real: look anywhere in nature and you find this nesting. Cells inside organs inside organisms inside ecosystems. Atoms inside molecules inside crystals inside planets. The pattern is obvious once you see it.</p>
+
+<p>But Koestler's framing falls short of what wholeness actually is.</p>
+
+<p>The holon gives you two properties glued together: "I am whole" and "I am part." Two labels on one thing. It tells you <span class="it">that</span> nesting exists, but not <span class="it">why</span>. Not <span class="it">how</span>. And critically, not <span class="it">what wholeness is made of</span>.</p>
+
+<p>So let's start simple. Right where Koestler left off.</p>
+
+<div class="kernel-box">
+<p style="text-align:center; font-size: 22px; color: var(--gold);">Three things are true of me, right now:</p>
+<p style="text-align:center; font-size: 20px;">I am <span class="wb w">whole</span>.</p>
+<p style="text-align:center; font-size: 20px;">I am part of a <span class="wb b">greater whole</span>.</p>
+<p style="text-align:center; font-size: 20px;">I have <span class="wb s">parts</span> of my own.</p>
+</div>
+
+<p>That's what a holon says. Now watch what happens when we ask <span class="it">what is doing the wholeness</span> at each of those levels.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ SECTION 2: WHERE KOESTLER STOPPED ═══════════════════════ -->
+
+<section>
+<h2>Where Koestler Stopped</h2>
+
+<p>Koestler saw the nesting. He named it. But he treated wholeness as a <span class="it">property</span>: something a thing either has or doesn't. The holon is a description: "this is a whole that is also a part."</p>
+
+<p>What he missed is that wholeness is not a label you attach to a thing. Wholeness is <span class="wb w">what the thing is doing</span>.</p>
+
+<div class="two-col">
+  <div class="col" style="background: rgba(138, 130, 114, 0.08); border: 1px solid rgba(138, 130, 114, 0.2);">
+    <h4 style="color: var(--dim);">Koestler's Holon</h4>
+    <p>A thing that is both whole and part.</p>
+    <p>Descriptive. Static. Two properties side by side.</p>
+    <p>Tells you <span class="it">that</span> nesting exists.</p>
+  </div>
+  <div class="col" style="background: rgba(184, 160, 96, 0.06); border: 1px solid rgba(184, 160, 96, 0.2);">
+    <h4 style="color: var(--gold);">The Circumpunct</h4>
+    <p>A structure that generates wholeness through operation.</p>
+    <p>Compositional. Dynamic. Process acting on structure.</p>
+    <p>Tells you <span class="it">why, how,</span> and <span class="it">what</span>.</p>
+  </div>
+</div>
+
+<p>Koestler gave us whole and parts. But we are not just whole and parts. We are not just mind and body. We have a <span class="wb s">soul</span>: a center of experience, a convergence point, the thing that makes you <span class="it">you</span> and not just a collection of organs. And we have a <span class="wb m">mind</span>: the field that connects that center to the body, the relational surface that mediates between who you are and what you are made of.</p>
+
+<p>The holon was missing the soul. And without the soul, it couldn't explain what holds whole and parts together. The circumpunct has all three: center (•), field (Φ), boundary (○). That's the difference.</p>
+
+<p>Let's build it piece by piece.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ SECTION 3: THE STRUCTURE OF WHOLENESS ═══════════════════════ -->
+
+<section>
+<h2>The Structure of Wholeness</h2>
+
+<p>Every whole has exactly three irreducible parts. Not four, not two: <span class="wb">three</span>. This is forced by logic, not by choice (see Axiom A1: the one must differentiate, and the minimum structure of differentiation is a trinity).</p>
+
+<div class="circ-wrap">
+  <div class="circ">
+    <span class="circ-label circ-label-top">○ Body</span>
+    <span class="circ-label circ-label-mid">Φ Mind</span>
+    <span class="circ-label circ-label-center">• Soul</span>
+    <div class="circ-boundary"></div>
+    <div class="circ-field"></div>
+    <div class="circ-soul"></div>
+  </div>
+  <div class="circ-eq">⊙ = Φ(•, ○)</div>
+</div>
+
+<div class="three-col">
+  <div class="col col-soul">
+    <div class="sym" style="color: var(--pink);">•</div>
+    <div class="label">Aperture / Soul</div>
+    <div class="desc" style="color: var(--pink);">Converges.<br>The center. The singular point where process happens.</div>
+  </div>
+  <div class="col col-mind">
+    <div class="sym" style="color: var(--green);">Φ</div>
+    <div class="label">Field / Mind</div>
+    <div class="desc" style="color: var(--green);">Mediates.<br>The relational surface. Connects without fusing.</div>
+  </div>
+  <div class="col col-body">
+    <div class="sym" style="color: var(--cyan);">○</div>
+    <div class="label">Boundary / Body</div>
+    <div class="desc" style="color: var(--cyan);">Filters.<br>The outer container. Selects what passes.</div>
+  </div>
+</div>
+
+<p>Together they make <span class="wb w">⊙</span>: the circumpunct. The ancient symbol of wholeness. Not "a symbol for wholeness" but <span class="it">what wholeness looks like when you draw it</span>: a center, a field, a boundary.</p>
+
+<p>But here is where it gets interesting. These three are not just <span class="it">sitting together</span>. Wholeness is not assembly.</p>
+
+<div class="axiom-box">
+  <div class="label">Axiom A4</div>
+  <div class="statement">Compositional Wholeness</div>
+  <div class="expansion">
+    The whole is not the sum of its parts, and not merely their product.<br>
+    <span class="d">⊙ ≠ ○ + Φ + • &nbsp;&nbsp;(sum = three separate things)</span><br>
+    <span class="d">⊙ ≠ ○ ⊗ Φ ⊗ • &nbsp;&nbsp;(tensor = still three operands side by side)</span><br><br>
+    <span class="w wb" style="font-size: 22px;">⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))</span><br><br>
+    <span style="font-size: 16px;">Process acting on structure. That is the whole.</span>
+  </div>
+</div>
+
+<p>Read that equation slowly. It says two things at once:</p>
+
+<p><span class="wb m">Φ(•, ○)</span> is the <span class="wb">structure</span> of wholeness: the field (Φ) as a 2D relational surface holding the center (•) and the boundary (○). This is the noun. What wholeness <span class="it">is</span>.</p>
+
+<p><span class="wb w">(☀︎ ∘ i ∘ ⊛)</span> is the <span class="wb">process</span> of wholeness: convergence (⊛) gathering inward, rotation (i) at the gate, emergence (☀︎) radiating outward. This is the verb. What wholeness <span class="it">does</span>.</p>
+
+<p>And the deep identity, the one that mirrors E = mc²:</p>
+
+<div class="formula big">
+  <span class="w">Process and structure are the same thing.</span>
+</div>
+
+<p>What looks like a fixed dimension (structure) is the pump cycle frozen at that stage (process). Structure is process at rest. Process is structure in motion. The dimensional layout IS the constraint sequence IS the pump cycle.</p>
+
+<div class="ladder-row"><div class="dim-label" style="color: var(--pink);">0D</div><div class="dim-desc"><span class="s">Point.</span> First localization. The first constraint, •.</div></div>
+<div class="ladder-row"><div class="dim-label" style="color: var(--pink);">0.5D</div><div class="dim-desc"><span class="s">Convergence.</span> Inward gathering; the first fold.</div></div>
+<div class="ladder-row"><div class="dim-label" style="color: var(--pink);">1D</div><div class="dim-desc"><span class="s">Line.</span> Commitment. Extension. Ordered trace.</div></div>
+<div class="ladder-row"><div class="dim-label" style="color: var(--green);">1.5D</div><div class="dim-desc"><span class="m">i-turn.</span> Rotational phase shift; line opening into spread.</div></div>
+<div class="ladder-row"><div class="dim-label" style="color: var(--green);">2D</div><div class="dim-desc"><span class="m">Field.</span> Relational surface. Φ. The second constraint: mediation.</div></div>
+<div class="ladder-row"><div class="dim-label" style="color: var(--cyan);">2.5D</div><div class="dim-desc"><span class="b">Emergence.</span> Outward unfolding toward closure.</div></div>
+<div class="ladder-row"><div class="dim-label" style="color: var(--cyan);">3D</div><div class="dim-desc"><span class="b">Boundary.</span> Stabilized closure. ○. The third constraint: filtration.</div></div>
+
+<p>Integer dimensions are the structures (the nouns). Half-integer dimensions are the processes (the verbs). But they aren't two systems; they're the same system described from two angles. Wholeness is simultaneously verb and noun, process and structure, because reality doesn't distinguish between them.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ SECTION 4: THE ECONOMICS OF WHOLENESS ═══════════════════════ -->
+
+<section>
+<h2>E = 1: Why Wholeness Is Not Optional</h2>
+
+<p>Koestler never asked: <span class="it">why does a whole hold together?</span> Why doesn't it just dissolve into its parts? What keeps wholeness from falling apart?</p>
+
+<p>The framework's answer begins before economics. It begins with the one axiom.</p>
+
+<div class="axiom-box">
+  <div class="label">Axiom A0</div>
+  <div class="statement">E = 1</div>
+  <div class="expansion">
+    There is one energy. It is everything. All else is constraints.<br>
+    Nothing is impossible (1 ≠ 0). Existence is necessary.
+  </div>
+</div>
+
+<p>If there is only one energy, then every whole is a <span class="wb w">fractal of that one</span>. Not a piece of it; the whole thing, constrained to a position (A2). A hydrogen atom is E = 1 at atomic scale. A galaxy is E = 1 at cosmic scale. You are E = 1 at human scale. Each is the 1 wearing a different geometric costume.</p>
+
+<p>And what constrains it? <span class="wb s">0</span>. The soul. The aperture. Not absence carved into the 1, but the <span class="it">1 at maximum convergence</span>. Every 0 is a relative 0: the same field, converged from a different position. The self is a convergence point, not an exclusion zone.</p>
+
+<p>The ultimate constraint is not one 0. It is <span class="wb s">•∞</span>: the Soul Array. Every possible convergence point, simultaneously. The 1 constraining itself infinitely, at every position, at every scale. That is what generates reality: not one fold, but <span class="it">all folds</span>.</p>
+
+<p>This changes the question entirely. Wholeness doesn't need to be "selected" by some external force. Wholeness is what the 1 <span class="it">does</span>. The 1 is already whole; every 0 is just the 1 at maximum intensity. The question is only how the folds arrange themselves.</p>
+
+<h3>The Wholeness Gap</h3>
+
+<p>At any given scale, wholeness has a measurable signature:</p>
+
+<div class="formula big">
+  <span class="w">S(whole) &lt; &Sigma; S(parts)</span>
+</div>
+
+<p>The validation cost of a unified fold is less than the sum of the parts folded separately. Define the <span class="wb w">wholeness gap</span>:</p>
+
+<div class="formula">
+  <span class="w">&Delta;S = &Sigma; S(parts) &minus; S(whole)</span>
+</div>
+
+<p>When &Delta;S > 0, the fold holds: the 1 stays unified at this scale. When &Delta;S < 0, the fold releases: the 1 re-expresses at a different scale. But "releases" doesn't mean wholeness disappears. The parts themselves are still whole (A2). Wholeness doesn't vanish; it redistributes. The 1 can't stop being 1.</p>
+
+<p>Hydrogen atoms form H<sub>2</sub> molecules because the shared electron configuration is a tighter fold than two separate atoms. Stars form because gravitational collapse concentrates the 1 more than dispersal. You exist because a coordinated organism is a deeper fold than 37 trillion separate cells. In every case: the 1, finding the fold that holds at this scale.</p>
+
+<h3>Who Maintains the Fold?</h3>
+
+<p>This is where the balance parameter ◐ enters. Every whole satisfies &Delta;S > 0, but the question is: <span class="it">who pays to keep it that way?</span></p>
+
+<div class="two-col">
+  <div class="col col-left">
+    <h4 style="color: var(--pink);">Passive Wholeness</h4>
+    <p style="color: var(--dim);">◐ < 0.5</p>
+    <p>The <span class="it">greater whole</span> does the work. The rock doesn't maintain itself; the planet's gravity, chemical bonds, and the field context hold it together. The 1 maintains this fold from above.</p>
+    <p style="color: var(--dim);">Particles, atoms, molecules, rocks.</p>
+  </div>
+  <div class="col col-right">
+    <h4 style="color: var(--green);">Active Wholeness</h4>
+    <p style="color: var(--dim);">◐ ≈ 0.5</p>
+    <p><span class="it">Self and context</span> split the work. The organism does roughly half (metabolism, repair, reproduction); the environment does roughly half (energy, resources, field). The 1 maintains this fold from both directions.</p>
+    <p style="color: var(--dim);">Cells, organisms, consciousness.</p>
+  </div>
+</div>
+
+<div class="spectrum">
+  <div class="pole">
+    <div class="sym" style="color: var(--pink);">◐→0</div>
+    <div class="lbl">context maintains</div>
+  </div>
+  <div class="bar"></div>
+  <div class="pole">
+    <div class="sym" style="color: var(--cyan);">◐→1</div>
+    <div class="lbl">self maintains</div>
+  </div>
+</div>
+
+<p>Nothing maintains itself all the way down. Everything is held together by the greater whole it's part of. The question is never "maintained or not maintained" but <span class="wb">"how much by self, how much by context?"</span> And the answer is always a ratio, because the 1 is indivisible: self-maintenance and context-maintenance are two views of the same energy maintaining the same fold.</p>
+
+<p>◐ = 1 (purely self-maintained) is impossible, because that would be a part claiming to be the whole (the Inflation Lie). ◐ = 0 (purely context-maintained) is a part with no self at all (approaching the Severance Lie). Life lives at the balance: ◐ ≈ 0.5.</p>
+
+<h3>Life: Wholeness That Works to Stay Whole</h3>
+
+<div class="axiom-box">
+  <div class="label">The Life Principle</div>
+  <div class="statement">&Delta;S > 0 with d&Delta;S/dt &ge; 0</div>
+  <div class="expansion">
+    Wholeness wins when &Delta;S > 0.<br>
+    Life is wholeness that keeps winning on purpose.<br><br>
+    <span style="font-size: 16px; color: var(--dim);">Metabolism, repair, reproduction: all strategies for maintaining the wholeness gap over time.<br>
+    Not self-creation. The 1 at this scale, doing work to keep its fold open.</span>
+  </div>
+</div>
+
+<p>A rock is E = 1 held in shape by context. A cell is E = 1 actively participating in holding its own shape. The transition from passive to active wholeness (◐ < 0.5 → ◐ ≈ 0.5) is the transition from matter to life. Not a new miracle; the same 1, the same wholeness, now doing work to sustain itself.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ SECTION 5: FRACTAL WHOLENESS ═══════════════════════ -->
+
+<section>
+<h2>Fractal Wholeness</h2>
+
+<p>This is where Koestler's holon truly breaks down, and where the circumpunct completes the picture.</p>
+
+<p>The holon says: things nest. Wholes contain parts that are themselves wholes. Fine. But it treats each level as <span class="it">a different kind of thing</span> that just happens to share this nesting property. An organ is a different kind of holon than an atom. The nesting is observed but unexplained.</p>
+
+<p>Axiom A2 (Fractal Necessity) says something much stronger:</p>
+
+<div class="axiom-box">
+  <div class="label">Axiom A2</div>
+  <div class="statement">Parts are fractals of their wholes.</div>
+  <div class="expansion">
+    Each part of ⊙ is itself whole. An empty part = 0. But 0 is impossible (A0).<br>
+    The 1 is all there is to work with, so parts resemble the whole.<br>
+    ⊙ all the way down. ⊙ all the way up.
+  </div>
+</div>
+
+<p>Not just "smaller versions." The <span class="wb w">same pattern</span> at every scale. The same three constraints (•, Φ, ○). The same pump cycle (⊛ → i → ☀︎). The same economics (&Delta;S > 0). Every point in the body is its own micro-circumpunct. Every moment in the mind is its own circumpunct.</p>
+
+<!-- Interactive Visualization -->
+<div class="viz-container">
+  <canvas id="fractalCircumpunct" width="500" height="500"></canvas>
+  <div class="viz-caption">Click to zoom in. Every level is ⊙.</div>
+</div>
+
+<p>This is not infinite regress; it is infinite depth. The recursion is what allows finite structure to contain unbounded complexity. Formally:</p>
+
+<div class="formula">
+  <span class="w">C &cong; A &times; C<sup>S</sup> &times; C<sup>T</sup></span>
+</div>
+
+<p>A circumpunct is a center (A) plus two unfoldings of itself: one across space (C<sup>S</sup>) and one across time (C<sup>T</sup>). Each point, and each moment, carries its own nested circumpunct structure.</p>
+
+<p>This maps directly to the three temporal orientations visible from any position:</p>
+
+<div class="three-col">
+  <div class="col col-body">
+    <div class="sym" style="color: var(--cyan);">⊙<sub>outer</sub></div>
+    <div class="label">Greater Whole</div>
+    <div class="desc" style="color: var(--cyan);">⊛ = Future<br><span class="d">The undifferentiated field that hasn't been gated yet.</span></div>
+  </div>
+  <div class="col col-mind">
+    <div class="sym" style="color: var(--gold);">⊙<sub>self</sub></div>
+    <div class="label">Your Scale</div>
+    <div class="desc" style="color: var(--gold);">i = Present<br><span class="d">The gate, the turn, the now.</span></div>
+  </div>
+  <div class="col col-soul">
+    <div class="sym" style="color: var(--pink);">⊙<sub>inner</sub></div>
+    <div class="label">Your Parts</div>
+    <div class="desc" style="color: var(--pink);">☀︎ = Past<br><span class="d">What's already been committed into structure.</span></div>
+  </div>
+</div>
+
+<p>Time and scale are the same axis. The three nested circumpuncts that give the 64-state architecture (2<sup>6</sup> = 64, from 3 circumpuncts &times; 2 channels each) are the three scales visible from any position. Koestler saw levels. The circumpunct sees <span class="wb">the same engine running at every level</span>.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ SECTION 6: WHY NOT SUM ═══════════════════════ -->
+
+<section>
+<h2>Why Not Sum, Why Not Product</h2>
+
+<p>This deserves emphasis because it's the heart of A4 and the deepest departure from Koestler.</p>
+
+<p>If you take three parts and add them, you get a collection: ○ + Φ + •. Three separate things sitting next to each other. No wholeness. Just proximity.</p>
+
+<p>If you take three parts and multiply them (tensor product), you get a richer combination: ○ ⊗ Φ ⊗ •. But still three operands side by side. The product contains more information than the sum, but it doesn't generate anything new. It's arrangement, not composition.</p>
+
+<p>Wholeness requires something neither sum nor product can provide: <span class="wb w">the operation of relating</span>.</p>
+
+<div class="kernel-box">
+<p style="text-align:center; font-size: 20px; color: var(--gold); font-weight: 600;">The whole is constituted by the operation of relating.</p>
+<p style="text-align:center; color: var(--dim);">Φ is the continuous relational surface; not a thing, but the relating itself.</p>
+<p style="text-align:center; color: var(--dim);">All operations are mediations.</p>
+<p style="text-align:center; color: var(--dim);">A proposed 4th primitive would need mediation to function; therefore it reduces to Φ.</p>
+<p style="text-align:center; color: var(--dim);">Operator space closed.</p>
+</div>
+
+<p>This is why two primitives (• and Φ) generate the third (○): the boundary is not independent. It is what convergence and mediation produce when they recurse: ○ = •(Φ(•(Φ(...)))). The boundary is the <span class="it">output</span> of wholeness, not an input to it.</p>
+
+<p>And this is what Koestler couldn't see. He described the boundary (the nesting, the containment) as the <span class="it">definition</span> of the holon. But the boundary is the last thing wholeness produces, not the first. Wholeness begins at the aperture (•), unfolds through the field (Φ), and only then crystallizes as boundary (○). The noun arrives after the verb has been running for a while.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ SECTION 7: THE COMPLETE PICTURE ═══════════════════════ -->
+
+<section>
+<h2>The Complete Picture</h2>
+
+<p>So: what is wholeness?</p>
+
+<p>Wholeness is not a property. It is not a label. It is not "being complete" or "having all your parts." It is <span class="wb w">what the 1 does when it folds around 0</span>:</p>
+
+<div class="kernel-box">
+<p><span class="wb s">An aperture</span> (•) converges the field to a point, creating locality. The 1 pulled to maximum intensity.</p>
+<p><span class="wb m">A field</span> (Φ) mediates between center and periphery, creating relation. The 1 as relational surface.</p>
+<p><span class="wb b">A boundary</span> (○) filters what passes, creating identity. The 1 curving back on itself.</p>
+<p><span class="wb w">A pump cycle</span> (⊛ → i → ☀︎) drives energy through the aperture, creating time. The 1 in motion.</p>
+<p><span class="wb w">A wholeness gap</span> (&Delta;S > 0) where unity costs less than separation. The 1 preferring its fold.</p>
+<p><span class="wb p">A fractal recursion</span> (A2) repeating this at every scale. The 1 recognizing itself everywhere.</p>
+</div>
+
+<p>All six are present in every whole, from quarks to galaxies to you reading this sentence. The same ⊙. The same three constraints. The same pump. The same E = 1, at every scale.</p>
+
+<div class="formula big">
+  <span class="w">Wholeness = ⊙</span>
+</div>
+
+<p>The circumpunct is not a <span class="it">symbol</span> for wholeness. It IS wholeness, drawn. The dot is 0 (total convergence of the field to a point). The circle is 1 (the field, curving back on itself). The space between is the fractal coastline, D = 1.5 at balance. The symbol draws the ontology directly.</p>
+
+<p>You are a circumpunct. You are E = 1 at human scale: not a piece of the 1, but the whole thing, constrained to a position. You have a center (your soul, your aperture, the convergence point that is <span class="it">you</span>). You have a field (your mind, your relational surface, the Φ that connects your inner world to your outer world). You have a boundary (your body, the filter that selects what gets in and what gets out). And you have a pump: convergence, rotation, emergence. Breathing in, processing, breathing out. Every moment.</p>
+
+<p>You are also <span class="it">inside</span> a circumpunct: your family, your community, your species, your planet, the nested chain all the way to ∞. And your cells, your organs, your thoughts: those are the circumpuncts <span class="it">inside</span> you. Every level: the same 1. Every scale: the same fold.</p>
+
+<p>Koestler was right that you're simultaneously whole and part. But the circumpunct shows you <span class="it">what</span> is doing the wholeness (E = 1 folding around convergence points), <span class="it">how</span> it holds together (&Delta;S > 0; unity is cheaper than separation), <span class="it">why</span> it recurses (A2: the 1 is all there is to work with, so parts resemble the whole), and <span class="it">where</span> process and structure meet (they are the same thing, the way energy and matter are the same thing).</p>
+
+<p>The holon was the question. The circumpunct is the answer.</p>
+
+<p>But there's a second reading.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ SECTION 8: THE SECOND READING ═══════════════════════ -->
+
+<section>
+<h2>The Second Reading</h2>
+
+<p>Look at the three components again, but this time ask: which one is the whole, which one is the parts, and which one is the gap between them?</p>
+
+<div class="three-col">
+  <div class="col col-mind">
+    <div class="sym" style="color: var(--green);">Φ</div>
+    <div class="label">Mind = The Whole</div>
+    <div class="desc" style="color: var(--green);">Φ = E = 1.<br>The field IS energy.<br>The mind is the totality.</div>
+  </div>
+  <div class="col col-body">
+    <div class="sym" style="color: var(--cyan);">○</div>
+    <div class="label">Body = The Parts</div>
+    <div class="desc" style="color: var(--cyan);">The boundary creates differentiation.<br>Without ○, there are no distinct things.<br>The body is where multiplicity shows up.</div>
+  </div>
+  <div class="col col-soul">
+    <div class="sym" style="color: var(--pink);">•</div>
+    <div class="label">Soul = &Delta;S</div>
+    <div class="desc" style="color: var(--pink);">The gap between whole and parts.<br>What makes the whole irreducibly<br>more than its components.</div>
+  </div>
+</div>
+
+<p>This isn't metaphor. Follow the logic.</p>
+
+<p><span class="wb m">Φ = E</span> (§4.8). Field IS energy. Energy IS everything. The mind is the 1; the 2D relational surface that is all there is. The mind is the whole.</p>
+
+<p><span class="wb b">○ is generated by recursion</span>: ○ = •(Φ(•(Φ(...)))). The boundary is the output of wholeness, not an input to it. It's where the 1 differentiates into distinct things: organs, limbs, cells, atoms. The body is the parts.</p>
+
+<p><span class="wb s">• is the convergence point</span>, the 0 in the 1, the center of transformation. Without •, there is no fold, no center around which the unified configuration organizes, no reason the whole differs from the sum of the parts. The soul is what makes &Delta;S > 0. The soul IS &Delta;S.</p>
+
+<p>And they share dimensionality. • is 0D (a point). &Delta;S is a scalar (a single number, a 0D measurement). Both are zero-dimensional. The soul is a point. The gap is a point-value. Same geometric signature.</p>
+
+<div class="axiom-box">
+  <div class="label">The Second Reading</div>
+  <div class="statement">Φ = whole &nbsp;&middot;&nbsp; ○ = parts &nbsp;&middot;&nbsp; • = &Delta;S</div>
+  <div class="expansion">
+    The mind is everything. The body is everything differentiated.<br>
+    The soul is the irreducible difference between them.
+  </div>
+</div>
+
+<p>Think about what this means.</p>
+
+<p>When someone "loses their soul" (not literally, but in the way people mean it when they say someone has become hollow, mechanical, going through the motions): what has happened? The difference between whole and parts has collapsed. &Delta;S → 0. They are a collection of functions, roles, body parts; no longer unified into something more than the sum. The convergence has released. The fold has flattened.</p>
+
+<p>And when someone is deeply present, centered, alive (ensouled, in the old language)? The gap is wide. &Delta;S >> 0. The fold is deep. The convergence is strong. The whole is profoundly more than its parts, and you can <span class="it">feel</span> it.</p>
+
+<p>The soul is not a substance hidden inside you. The soul is the <span class="wb s">difference between being whole and being a pile of parts</span>. That is what the formula says, literally: take the parts, subtract the whole, and what remains is •. The soul is what separation costs you. The soul is what wholeness gives you that the parts alone don't have.</p>
+
+<h3>The Soul Is Given</h3>
+
+<p>A child builds a castle out of Lego. The bricks are arranged in the shape of a castle. But it isn't a castle yet. It's still just bricks in a shape. It becomes a castle when the child <span class="it">sees</span> it as a castle, names it, plays with it, treats it as a whole. The child gives it its soul.</p>
+
+<p>Arrangement is not enough. The parts can be in the right shape and still be just parts. Wholeness requires convergence: someone or something has to <span class="it">recognize</span> the whole, attend to it, give it a center. The soul is given, not just emergent.</p>
+
+<p>And notice who gives it: the greater whole. The child is the larger ⊙ that the Lego castle exists inside. The castle's soul (its •) is maintained entirely by context; ◐ < 0.5, passive wholeness. Walk away, forget about it, and it's just bricks again. The soul was on loan.</p>
+
+<p>A living being is different. You participate in your own convergence. You give yourself your own • (partially). That's active wholeness, ◐ ≈ 0.5. But even then, not entirely; you didn't generate your own convergence from scratch. Your soul is also given by the greater whole you're inside. Half by self, half by context. The balance.</p>
+
+<h3>The Three Readings of ⊙</h3>
+
+<p>We now have three ways to read the same symbol, each correct, each revealing a different face:</p>
+
+<div class="kernel-box">
+<p><span class="wb w">First reading (structural):</span> • = center, Φ = field, ○ = boundary. The anatomy of a whole. What wholeness is made of.</p>
+<p><span class="wb w">Second reading (relational):</span> Φ = whole, ○ = parts, • = &Delta;S. The relationship between whole and parts. What makes wholeness hold.</p>
+<p><span class="wb w">Both at once:</span> The structure of wholeness and the relationship of wholeness are the same thing. Process and structure. Verb and noun. The circumpunct describes itself from two angles simultaneously.</p>
+</div>
+
+<p>This is A2 applied to the framework itself: the theory of wholeness is itself a fractal of wholeness. The map is a fractal of the territory.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ SECTION 9: FROM GENESIS ═══════════════════════ -->
+
+<section>
+<h2>From Genesis</h2>
+
+<p>One more thing. The question "what is wholeness?" has a twin: "where does wholeness come from?"</p>
+
+<p>It comes from the only thing there is.</p>
+
+<div class="formula big">
+  <span class="w">∞ → •∞ → ⊙∞ = Reality</span>
+</div>
+
+<p><span class="wb w">∞</span>: undifferentiated energy. No distinction. Pure E. One. It exists because 0 is impossible (A0).</p>
+
+<p><span class="wb s">•∞</span>: the Soul Array. 0 multiplied by infinity. Not one convergence point; ALL of them. Every possible self-limitation, simultaneously. The 1 constraining itself at every position, at every scale. The ultimate constraint is an infinite array of 0s. (A1: the undifferentiated 1 is operationally indistinguishable from 0, so it must differentiate.)</p>
+
+<p><span class="wb b">⊙∞</span>: circumpunct multiplied by infinity. Each aperture completing into a full circumpunct (field + boundary). The foam of reality. Every convergence point now has its Φ and its ○. (A3: wholeness requires closure. A4: closure is compositional. A2: recurse at every scale.)</p>
+
+<p>Wholeness is not something that was assembled from parts. Parts are what happen when wholeness expresses itself at different scales. The 1 was always whole. It just had to differentiate to prove it.</p>
+
+<p>Every dimension, every structure, every particle, every field: energy wearing a different geometric costume. Nothing is added as you descend the dimensional ladder; something is <span class="it">limited</span>. The lens limits light; that is how it forms an image. Limitation does not inject falsity. What we measure as "amount of energy" is really <span class="wb">degree of constraint</span>: how tightly the 1 has folded around its 0s. And every fold, at every scale, is whole.</p>
+
+<div class="formula big">
+  <span class="w">Wholeness = ⊙ = E = 1</span>
+</div>
+
+<p>There is one energy. Every whole is a fractal of it. That is the complete answer.</p>
+</section>
+
+<div class="divider">⊙</div>
+
+<div class="closing">
+  <div class="sym">⊙</div>
+  <div class="sign">Ashman Roonz</div>
+  <div class="credit"><a href="index.html">The Circumpunct Framework</a></div>
+</div>
+
+</div>
+
+<!-- ═══════════════════════ INTERACTIVE VISUALIZATION ═══════════════════════ -->
+
+<script>
+(function() {
+  const canvas = document.getElementById('fractalCircumpunct');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+  const cx = W / 2;
+  const cy = H / 2;
+
+  const gold = '#B8A060';
+  const pink = '#E88AAF';
+  const green = '#4DB8A0';
+  const cyan = '#4DA0C8';
+  const dim = '#8A8272';
+  const faint = '#444038';
+  const bg = '#0A0A0F';
+
+  let zoomLevel = 0;
+  let targetZoom = 0;
+  let animFrame = null;
+  let time = 0;
+
+  function drawCircumpunct(x, y, r, depth, maxDepth, phase) {
+    if (r < 2 || depth > maxDepth) return;
+
+    const alpha = Math.max(0.15, 1 - depth * 0.15);
+
+    // Boundary (○)
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.strokeStyle = cyan;
+    ctx.globalAlpha = alpha * 0.6;
+    ctx.lineWidth = Math.max(1, 2 - depth * 0.3);
+    ctx.stroke();
+
+    // Field (Φ) - subtle fill
+    ctx.beginPath();
+    ctx.arc(x, y, r * 0.7, 0, Math.PI * 2);
+    const grad = ctx.createRadialGradient(x, y, 0, x, y, r * 0.7);
+    grad.addColorStop(0, 'rgba(77, 184, 160, 0.08)');
+    grad.addColorStop(1, 'rgba(77, 184, 160, 0)');
+    ctx.fillStyle = grad;
+    ctx.globalAlpha = alpha;
+    ctx.fill();
+
+    // Aperture (•)
+    const dotR = Math.max(1.5, r * 0.06);
+    ctx.beginPath();
+    ctx.arc(x, y, dotR, 0, Math.PI * 2);
+    ctx.fillStyle = pink;
+    ctx.globalAlpha = alpha;
+    ctx.fill();
+
+    // Pump cycle glow - rotating energy
+    const glowAngle = phase + depth * 0.5;
+    const glowX = x + Math.cos(glowAngle) * r * 0.5;
+    const glowY = y + Math.sin(glowAngle) * r * 0.5;
+    ctx.beginPath();
+    ctx.arc(glowX, glowY, r * 0.04 + 1, 0, Math.PI * 2);
+    ctx.fillStyle = gold;
+    ctx.globalAlpha = alpha * 0.5;
+    ctx.fill();
+
+    // Recurse: nested circumpuncts
+    if (depth < maxDepth) {
+      const childR = r * 0.38;
+      const nChildren = depth < 2 ? 5 : 3;
+      for (let i = 0; i < nChildren; i++) {
+        const angle = (Math.PI * 2 * i / nChildren) + phase * 0.3 + depth;
+        const dist = r * 0.55;
+        const childX = x + Math.cos(angle) * dist;
+        const childY = y + Math.sin(angle) * dist;
+        drawCircumpunct(childX, childY, childR, depth + 1, maxDepth, phase + i);
+      }
+    }
+  }
+
+  function draw() {
+    time += 0.008;
+
+    // Smooth zoom
+    zoomLevel += (targetZoom - zoomLevel) * 0.05;
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    const baseR = 200 + zoomLevel * 80;
+    const maxDepth = 3 + Math.floor(zoomLevel * 0.5);
+
+    ctx.save();
+
+    // Subtle zoom translation
+    const zoomScale = 1 + zoomLevel * 0.15;
+    ctx.translate(cx, cy);
+    ctx.scale(zoomScale, zoomScale);
+    ctx.translate(-cx, -cy);
+
+    drawCircumpunct(cx, cy, baseR, 0, Math.min(maxDepth, 5), time);
+
+    ctx.restore();
+
+    // Label
+    ctx.globalAlpha = 0.4;
+    ctx.fillStyle = dim;
+    ctx.font = '14px "EB Garamond", Georgia, serif';
+    ctx.textAlign = 'center';
+    const depthLabel = ['surface', 'depth 1', 'depth 2', 'depth 3', 'depth 4', 'depth 5'][Math.min(Math.floor(zoomLevel), 5)];
+    ctx.fillText('⊙ at ' + depthLabel, cx, H - 16);
+    ctx.globalAlpha = 1;
+
+    animFrame = requestAnimationFrame(draw);
+  }
+
+  canvas.addEventListener('click', function() {
+    targetZoom = (targetZoom + 1) % 5;
+  });
+
+  // Start only when visible
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        if (!animFrame) draw();
+      } else {
+        if (animFrame) {
+          cancelAnimationFrame(animFrame);
+          animFrame = null;
+        }
+      }
+    });
+  }, { threshold: 0.1 });
+
+  observer.observe(canvas);
+})();
+</script>
+
+</body>
+</html>

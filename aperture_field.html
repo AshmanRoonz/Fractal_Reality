@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aperture Field</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { overflow: hidden; background: #000; font-family: 'Courier New', monospace; }
+canvas { display: block; }
+
+#crosshair {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 24px; height: 24px; pointer-events: none; z-index: 10; display: none;
+}
+#crosshair::before, #crosshair::after {
+    content: ''; position: absolute; background: rgba(255, 200, 100, 0.5);
+    border-radius: 1px;
+}
+#crosshair::before { width: 14px; height: 1px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+#crosshair::after { width: 1px; height: 14px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+#crosshair .dot {
+    position: absolute; width: 3px; height: 3px; background: rgba(255, 200, 100, 0.7);
+    border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%);
+}
+
+#hud {
+    position: fixed; top: 24px; left: 24px; z-index: 10;
+    color: rgba(255, 200, 100, 0.6); font-size: 12px; line-height: 1.8;
+    pointer-events: none; display: none; text-shadow: 0 0 8px rgba(0,0,0,0.8);
+}
+
+#instructions {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+    color: rgba(255, 200, 100, 0.4); font-size: 11px; text-align: center;
+    pointer-events: none; z-index: 10; display: none;
+    transition: opacity 3s; text-shadow: 0 0 8px rgba(0,0,0,0.8);
+}
+
+#title {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    color: rgba(255, 200, 100, 0.8); text-align: center; z-index: 20;
+    cursor: pointer; transition: opacity 1.5s;
+}
+#title .symbol { font-size: 56px; margin-bottom: 8px; }
+#title .name { font-family: Georgia, serif; font-size: 32px; letter-spacing: 4px; }
+#title .sub { font-size: 12px; color: rgba(255, 200, 100, 0.35); margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<div id="crosshair"><div class="dot"></div></div>
+
+<div id="hud">
+    <div>souls collected: <span id="hud-score">0</span></div>
+    <div>structures: <span id="hud-structs">0</span></div>
+    <div>balance (&#9684;): <span id="hud-balance">0.500</span></div>
+</div>
+
+<div id="title">
+    <div class="symbol">&#8857;</div>
+    <div class="name">APERTURE FIELD</div>
+    <div class="sub">click to enter the field</div>
+</div>
+
+<div id="instructions">
+    WASD move &nbsp;&middot;&nbsp; mouse look &nbsp;&middot;&nbsp; SPACE up &nbsp;&middot;&nbsp; SHIFT down &nbsp;&middot;&nbsp; click pulse &nbsp;&middot;&nbsp; ESC release
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function() {
+    'use strict';
+
+    // ==================== CONFIG ====================
+    const MOVE_SPEED = 9;
+    const LOOK_SENS = 0.002;
+    const WIRE_COLOR = 0xffaa44;
+    const WIRE_GLOW = 0xffcc66;
+    const BG = 0x06060c;
+    const COLLECT_DIST = 2.0;
+
+    // ==================== SHADERS ====================
+    const soapVert = `
+        varying vec3 vNormal;
+        varying vec3 vViewDir;
+        varying vec3 vWorldPos;
+        uniform float uTime;
+
+        void main() {
+            // gentle breathing; soap films are alive
+            vec3 pos = position + normal * sin(uTime * 0.6 + position.x * 2.0 + position.z * 1.5) * 0.012;
+            vec4 wPos = modelMatrix * vec4(pos, 1.0);
+            vWorldPos = wPos.xyz;
+            vNormal = normalize(normalMatrix * normal);
+            vViewDir = normalize(cameraPosition - wPos.xyz);
+            gl_Position = projectionMatrix * viewMatrix * wPos;
+        }
+    `;
+
+    const soapFrag = `
+        uniform float uTime;
+        uniform float uThickness;
+        uniform vec3 uPlayerPos;
+        uniform float uPulseTime;
+        uniform vec3 uPulsePos;
+
+        varying vec3 vNormal;
+        varying vec3 vViewDir;
+        varying vec3 vWorldPos;
+
+        vec3 thinFilm(float cosT, float thick) {
+            float n = 1.33;
+            float delta = 2.0 * n * thick * cosT;
+            float pR = 6.2832 * delta / 0.630;
+            float pG = 6.2832 * delta / 0.530;
+            float pB = 6.2832 * delta / 0.470;
+            vec3 c = vec3(
+                sin(pR * 0.5) * sin(pR * 0.5),
+                sin(pG * 0.5) * sin(pG * 0.5),
+                sin(pB * 0.5) * sin(pB * 0.5)
+            );
+            float gray = dot(c, vec3(0.299, 0.587, 0.114));
+            return mix(vec3(gray), c, 1.6);
+        }
+
+        void main() {
+            vec3 n = normalize(vNormal);
+            vec3 v = normalize(vViewDir);
+            float cosT = abs(dot(n, v));
+
+            // fresnel: edges catch light, center is transparent
+            float fresnel = pow(1.0 - cosT, 3.0);
+
+            // animated film thickness (the field flows)
+            float f1 = sin(vWorldPos.x * 1.2 + uTime * 0.4) * cos(vWorldPos.z * 0.9 + uTime * 0.3);
+            float f2 = sin(vWorldPos.y * 1.8 + uTime * 0.55) * cos(vWorldPos.x * 1.1 - uTime * 0.45);
+            float thick = uThickness + (f1 + f2) * 0.08;
+
+            vec3 color = thinFilm(cosT, thick);
+
+            // player proximity shimmer
+            float pDist = length(vWorldPos - uPlayerPos);
+            float prox = smoothstep(10.0, 2.0, pDist) * 0.08;
+
+            // click pulse wave
+            float pulseAge = uTime - uPulseTime;
+            float pulseDist = length(vWorldPos - uPulsePos);
+            float pulseWave = 0.0;
+            if (pulseAge > 0.0 && pulseAge < 3.5) {
+                float front = pulseAge * 12.0;
+                float ring = exp(-pow(pulseDist - front, 2.0) * 0.3);
+                pulseWave = ring * exp(-pulseAge * 1.2) * 0.5;
+            }
+
+            float alpha = 0.05 + fresnel * 0.45 + prox + pulseWave;
+            color += pulseWave * vec3(1.0, 0.8, 0.5);
+
+            gl_FragColor = vec4(color, alpha);
+        }
+    `;
+
+    // ==================== STATE ====================
+    let camera, scene, renderer, clock;
+    let isLocked = false, started = false;
+    let euler = new THREE.Euler(0, 0, 0, 'YXZ');
+    let velocity = new THREE.Vector3();
+    let keys = {};
+    let soapObjects = [];
+    let soulOrbs = [];
+    let score = 0, structCount = 0;
+    let playerLight;
+
+    // shared uniforms (all soap materials reference same objects)
+    const shared = {
+        uTime: { value: 0 },
+        uPlayerPos: { value: new THREE.Vector3() },
+        uPulseTime: { value: -100 },
+        uPulsePos: { value: new THREE.Vector3() }
+    };
+
+    // ==================== INIT ====================
+    function init() {
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor(BG);
+        document.body.appendChild(renderer.domElement);
+
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 250);
+        camera.position.set(0, 2, 28);
+
+        // attach light to camera (the aperture radiates)
+        playerLight = new THREE.PointLight(0xffaa44, 0.6, 20);
+        camera.add(playerLight);
+
+        scene = new THREE.Scene();
+        scene.add(camera);
+        scene.fog = new THREE.FogExp2(BG, 0.011);
+
+        // ambient
+        scene.add(new THREE.AmbientLight(0x181818));
+
+        // a warm overhead
+        const sun = new THREE.PointLight(0xffcc88, 0.4, 120);
+        sun.position.set(0, 30, 0);
+        scene.add(sun);
+
+        clock = new THREE.Clock();
+
+        buildScene();
+        spawnSoulOrbs(25);
+        createDust(600);
+        setupControls();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    }
+
+    // ==================== SOAP OBJECT FACTORY ====================
+    function makeSoap(geometry, pos, wireCol, thickness, rotSpeed) {
+        const group = new THREE.Group();
+
+        // soap film surface
+        const mat = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime: shared.uTime,
+                uPlayerPos: shared.uPlayerPos,
+                uPulseTime: shared.uPulseTime,
+                uPulsePos: shared.uPulsePos,
+                uThickness: { value: thickness || 0.4 }
+            },
+            vertexShader: soapVert,
+            fragmentShader: soapFrag,
+            transparent: true,
+            side: THREE.DoubleSide,
+            depthWrite: false
+        });
+        group.add(new THREE.Mesh(geometry, mat));
+
+        // wireframe edges (the boundary frame, the wand)
+        const edges = new THREE.EdgesGeometry(geometry, 15);
+        const wireMat = new THREE.LineBasicMaterial({
+            color: wireCol || WIRE_COLOR,
+            transparent: true,
+            opacity: 0.85
+        });
+        group.add(new THREE.LineSegments(edges, wireMat));
+
+        group.position.copy(pos);
+        group.userData.rotSpeed = rotSpeed || new THREE.Vector3();
+        group.userData.baseY = pos.y;
+
+        scene.add(group);
+        soapObjects.push(group);
+        structCount++;
+        updateHUD();
+        return group;
+    }
+
+    // ==================== SCENE CONSTRUCTION ====================
+    function buildScene() {
+        // floor grid
+        const grid = new THREE.GridHelper(120, 50, 0x2a1a08, 0x140c04);
+        grid.position.y = -6;
+        scene.add(grid);
+
+        // === CENTRAL CIRCUMPUNCT (nested spheres) ===
+        makeSoap(new THREE.IcosahedronGeometry(5.5, 1), new THREE.Vector3(0, 5, 0),
+            WIRE_GLOW, 0.35, new THREE.Vector3(0, 0.04, 0));
+        makeSoap(new THREE.IcosahedronGeometry(2.2, 1), new THREE.Vector3(0, 5, 0),
+            0xffeedd, 0.52, new THREE.Vector3(0, -0.07, 0.015));
+
+        // === PLATONIC SOLIDS ===
+        makeSoap(new THREE.TetrahedronGeometry(3.2, 0), new THREE.Vector3(16, 3, -14),
+            WIRE_COLOR, 0.45, new THREE.Vector3(0.025, 0.018, 0.008));
+        makeSoap(new THREE.BoxGeometry(4.5, 4.5, 4.5), new THREE.Vector3(-15, 7, 10),
+            WIRE_COLOR, 0.38, new THREE.Vector3(0.008, 0.025, 0.015));
+        makeSoap(new THREE.OctahedronGeometry(2.8, 0), new THREE.Vector3(12, -1, 16),
+            WIRE_COLOR, 0.42, new THREE.Vector3(0.018, 0.035, 0));
+        makeSoap(new THREE.DodecahedronGeometry(2.8, 0), new THREE.Vector3(-12, 11, -16),
+            WIRE_COLOR, 0.4, new THREE.Vector3(-0.015, 0.028, 0.01));
+        makeSoap(new THREE.IcosahedronGeometry(3.2, 0), new THREE.Vector3(22, 2, 6),
+            WIRE_COLOR, 0.36, new THREE.Vector3(0.01, -0.02, 0.025));
+
+        // === TORUS ARCHES (gateways) ===
+        let t1 = makeSoap(new THREE.TorusGeometry(7, 0.9, 8, 28), new THREE.Vector3(0, 4, -24),
+            0xddaa55, 0.3, new THREE.Vector3(0, 0.008, 0));
+
+        let t2 = makeSoap(new THREE.TorusGeometry(5.5, 0.7, 8, 22), new THREE.Vector3(-20, 6, 0),
+            0xddaa55, 0.32, new THREE.Vector3(0, 0, 0.012));
+        t2.rotation.y = Math.PI / 2;
+
+        let t3 = makeSoap(new THREE.TorusGeometry(4.5, 0.5, 8, 20), new THREE.Vector3(14, 9, 14),
+            0xddaa55, 0.28, new THREE.Vector3(0.015, 0.01, 0));
+        t3.rotation.set(0.4, 0.3, 0);
+
+        // === OUTER BOUNDARY (faint) ===
+        const bEdges = new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(60, 1), 15);
+        const bWire = new THREE.LineSegments(bEdges, new THREE.LineBasicMaterial({
+            color: 0x1a1005, transparent: true, opacity: 0.25
+        }));
+        scene.add(bWire);
+
+        // === SCATTERED DEBRIS ===
+        const geoMakers = [
+            () => new THREE.TetrahedronGeometry(0.7 + Math.random() * 0.5, 0),
+            () => new THREE.OctahedronGeometry(0.5 + Math.random() * 0.4, 0),
+            () => new THREE.BoxGeometry(1, 1, 1)
+        ];
+        for (let i = 0; i < 10; i++) {
+            const geo = geoMakers[Math.floor(Math.random() * 3)]();
+            const p = new THREE.Vector3(
+                (Math.random() - 0.5) * 60,
+                Math.random() * 18 - 4,
+                (Math.random() - 0.5) * 60
+            );
+            makeSoap(geo, p, 0xaa8844, 0.3 + Math.random() * 0.15,
+                new THREE.Vector3(
+                    (Math.random() - 0.5) * 0.04,
+                    (Math.random() - 0.5) * 0.04,
+                    (Math.random() - 0.5) * 0.04
+                ));
+        }
+    }
+
+    // ==================== SOUL ORBS ====================
+    function spawnSoulOrbs(count) {
+        for (let i = 0; i < count; i++) {
+            const pos = new THREE.Vector3(
+                (Math.random() - 0.5) * 70,
+                Math.random() * 20 - 3,
+                (Math.random() - 0.5) * 70
+            );
+            createOrb(pos);
+        }
+    }
+
+    function createOrb(pos) {
+        const group = new THREE.Group();
+
+        // core (bright point; the soul, the 0)
+        const core = new THREE.Mesh(
+            new THREE.SphereGeometry(0.18, 8, 8),
+            new THREE.MeshBasicMaterial({ color: 0xffffff })
+        );
+        group.add(core);
+
+        // glow halo
+        const glow = new THREE.Mesh(
+            new THREE.SphereGeometry(0.5, 8, 8),
+            new THREE.MeshBasicMaterial({
+                color: 0xffcc88, transparent: true, opacity: 0.12
+            })
+        );
+        group.add(glow);
+
+        // outer ring (circumpunct marker)
+        const ring = new THREE.Mesh(
+            new THREE.TorusGeometry(0.6, 0.04, 6, 16),
+            new THREE.MeshBasicMaterial({
+                color: 0xffaa44, transparent: true, opacity: 0.25
+            })
+        );
+        group.add(ring);
+
+        group.position.copy(pos);
+        group.userData.baseY = pos.y;
+        group.userData.phase = Math.random() * Math.PI * 2;
+        group.userData.collected = false;
+
+        scene.add(group);
+        soulOrbs.push(group);
+    }
+
+    // ==================== DUST PARTICLES ====================
+    function createDust(count) {
+        const positions = new Float32Array(count * 3);
+        for (let i = 0; i < count; i++) {
+            positions[i * 3]     = (Math.random() - 0.5) * 120;
+            positions[i * 3 + 1] = Math.random() * 35 - 6;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 120;
+        }
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const dust = new THREE.Points(geo, new THREE.PointsMaterial({
+            color: 0xffddaa, size: 0.06, transparent: true, opacity: 0.35
+        }));
+        scene.add(dust);
+    }
+
+    // ==================== FPS CONTROLS ====================
+    function setupControls() {
+        document.addEventListener('click', () => {
+            if (!isLocked) {
+                renderer.domElement.requestPointerLock();
+            } else {
+                // pulse (click while locked)
+                shared.uPulseTime.value = clock.getElapsedTime();
+                shared.uPulsePos.value.copy(camera.position);
+            }
+        });
+
+        document.addEventListener('pointerlockchange', () => {
+            isLocked = document.pointerLockElement === renderer.domElement;
+            document.getElementById('crosshair').style.display = isLocked ? 'block' : 'none';
+            document.getElementById('hud').style.display = isLocked ? 'block' : 'none';
+            document.getElementById('instructions').style.display = isLocked ? 'block' : 'none';
+
+            if (isLocked && !started) {
+                started = true;
+                const title = document.getElementById('title');
+                title.style.opacity = '0';
+                setTimeout(() => { title.style.display = 'none'; }, 1500);
+                setTimeout(() => {
+                    document.getElementById('instructions').style.opacity = '0';
+                }, 10000);
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isLocked) return;
+            euler.setFromQuaternion(camera.quaternion);
+            euler.y -= e.movementX * LOOK_SENS;
+            euler.x -= e.movementY * LOOK_SENS;
+            euler.x = Math.max(-Math.PI * 0.48, Math.min(Math.PI * 0.48, euler.x));
+            camera.quaternion.setFromEuler(euler);
+        });
+
+        document.addEventListener('keydown', (e) => { keys[e.code] = true; });
+        document.addEventListener('keyup', (e) => { keys[e.code] = false; });
+    }
+
+    function updateMovement(dt) {
+        if (!isLocked) return;
+
+        const forward = new THREE.Vector3();
+        camera.getWorldDirection(forward);
+        const right = new THREE.Vector3().crossVectors(forward, new THREE.Vector3(0, 1, 0)).normalize();
+
+        const move = new THREE.Vector3();
+        if (keys['KeyW']) move.add(forward);
+        if (keys['KeyS']) move.sub(forward);
+        if (keys['KeyD']) move.add(right);
+        if (keys['KeyA']) move.sub(right);
+        if (keys['Space']) move.y += 1;
+        if (keys['ShiftLeft'] || keys['ShiftRight']) move.y -= 1;
+
+        if (move.lengthSq() > 0) move.normalize().multiplyScalar(MOVE_SPEED);
+
+        // smooth acceleration/deceleration
+        velocity.lerp(move, 1 - Math.exp(-10 * dt));
+        camera.position.addScaledVector(velocity, dt);
+    }
+
+    // ==================== COLLECTIBLES ====================
+    function checkCollections() {
+        for (let orb of soulOrbs) {
+            if (orb.userData.collected) continue;
+            if (camera.position.distanceTo(orb.position) < COLLECT_DIST) {
+                orb.userData.collected = true;
+                scene.remove(orb);
+                score++;
+
+                // spawn a new structure (emergence from collection)
+                spawnRandomStructure();
+
+                // spawn a replacement orb elsewhere
+                const np = new THREE.Vector3(
+                    (Math.random() - 0.5) * 70,
+                    Math.random() * 20 - 3,
+                    (Math.random() - 0.5) * 70
+                );
+                createOrb(np);
+
+                updateHUD();
+            }
+        }
+    }
+
+    function spawnRandomStructure() {
+        const makers = [
+            () => new THREE.TetrahedronGeometry(1.2 + Math.random() * 1.5, 0),
+            () => new THREE.OctahedronGeometry(1 + Math.random(), 0),
+            () => new THREE.IcosahedronGeometry(1 + Math.random(), 0),
+            () => new THREE.BoxGeometry(2, 2, 2),
+            () => new THREE.DodecahedronGeometry(1 + Math.random(), 0),
+            () => new THREE.TorusGeometry(1.5 + Math.random(), 0.3, 6, 14)
+        ];
+        const geo = makers[Math.floor(Math.random() * makers.length)]();
+
+        // spawn near player but offset
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 10 + Math.random() * 20;
+        const pos = new THREE.Vector3(
+            camera.position.x + Math.cos(angle) * dist,
+            Math.random() * 14 - 3,
+            camera.position.z + Math.sin(angle) * dist
+        );
+
+        makeSoap(geo, pos, WIRE_COLOR, 0.3 + Math.random() * 0.15,
+            new THREE.Vector3(
+                (Math.random() - 0.5) * 0.04,
+                (Math.random() - 0.5) * 0.04,
+                (Math.random() - 0.5) * 0.04
+            ));
+    }
+
+    // ==================== HUD ====================
+    function updateHUD() {
+        document.getElementById('hud-score').textContent = score;
+        document.getElementById('hud-structs').textContent = structCount;
+    }
+
+    // ==================== ANIMATION LOOP ====================
+    function animate() {
+        requestAnimationFrame(animate);
+
+        const dt = Math.min(clock.getDelta(), 0.05);
+        const time = clock.getElapsedTime();
+
+        // update shared uniforms
+        shared.uTime.value = time;
+        shared.uPlayerPos.value.copy(camera.position);
+
+        // movement
+        updateMovement(dt);
+
+        // rotate soap objects
+        for (let obj of soapObjects) {
+            const rs = obj.userData.rotSpeed;
+            if (rs) {
+                obj.rotation.x += rs.x;
+                obj.rotation.y += rs.y;
+                obj.rotation.z += rs.z;
+            }
+        }
+
+        // animate soul orbs (bob and spin)
+        for (let orb of soulOrbs) {
+            if (orb.userData.collected) continue;
+            orb.position.y = orb.userData.baseY + Math.sin(time * 1.8 + orb.userData.phase) * 0.4;
+            orb.rotation.y = time * 1.5 + orb.userData.phase;
+            // ring tilts
+            if (orb.children[2]) {
+                orb.children[2].rotation.x = Math.sin(time * 0.7 + orb.userData.phase) * 0.4;
+            }
+        }
+
+        // collections
+        checkCollections();
+
+        // balance oscillation (cosmetic)
+        const bal = 0.5 + Math.sin(time * 0.25) * 0.03;
+        document.getElementById('hud-balance').textContent = bal.toFixed(3);
+
+        renderer.render(scene, camera);
+    }
+
+    // ==================== GO ====================
+    init();
+
+})();
+</script>
+</body>
+</html>

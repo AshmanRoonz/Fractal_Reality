@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hemispheric Resonance</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --anthropic-dark: #141413;
+            --anthropic-light: #faf9f5;
+            --anthropic-mid-gray: #b0aea5;
+            --anthropic-light-gray: #e8e6dc;
+            --anthropic-orange: #d97757;
+            --anthropic-blue: #6a9bcc;
+            --anthropic-green: #788c5d;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--anthropic-light) 0%, #f5f3ee 100%);
+            min-height: 100vh;
+            color: var(--anthropic-dark);
+        }
+        .container { display: flex; min-height: 100vh; padding: 20px; gap: 20px; }
+        .sidebar {
+            width: 320px; flex-shrink: 0;
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+            padding: 24px; border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(20,20,19,0.1);
+            overflow-y: auto; overflow-x: hidden;
+        }
+        .sidebar h1 { font-family: 'Lora', serif; font-size: 22px; font-weight: 500; color: var(--anthropic-dark); margin-bottom: 6px; }
+        .sidebar .subtitle { color: var(--anthropic-mid-gray); font-size: 13px; margin-bottom: 28px; line-height: 1.5; }
+        .control-section { margin-bottom: 28px; }
+        .control-section h3 {
+            font-size: 15px; font-weight: 600; color: var(--anthropic-dark);
+            margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+        }
+        .control-section h3::before { content: '\2022'; color: var(--anthropic-orange); font-weight: bold; }
+        .seed-input {
+            width: 100%; background: var(--anthropic-light); padding: 11px;
+            border-radius: 8px; font-family: 'Courier New', monospace; font-size: 14px;
+            margin-bottom: 10px; border: 1px solid var(--anthropic-light-gray); text-align: center;
+        }
+        .seed-input:focus { outline: none; border-color: var(--anthropic-orange); box-shadow: 0 0 0 2px rgba(217,119,87,0.1); background: white; }
+        .seed-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+        .control-group { margin-bottom: 18px; }
+        .control-group label { display: block; font-size: 13px; font-weight: 500; color: var(--anthropic-dark); margin-bottom: 6px; }
+        .slider-container { display: flex; align-items: center; gap: 10px; }
+        .slider-container input[type="range"] {
+            flex: 1; height: 4px; background: var(--anthropic-light-gray);
+            border-radius: 2px; outline: none; -webkit-appearance: none;
+        }
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 16px; height: 16px;
+            background: var(--anthropic-orange); border-radius: 50%; cursor: pointer; transition: all 0.2s;
+        }
+        .slider-container input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); background: #c86641; }
+        .slider-container input[type="range"]::-moz-range-thumb {
+            width: 16px; height: 16px; background: var(--anthropic-orange);
+            border-radius: 50%; border: none; cursor: pointer;
+        }
+        .value-display { font-family: 'Courier New', monospace; font-size: 11px; color: var(--anthropic-mid-gray); min-width: 50px; text-align: right; }
+        .color-group { margin-bottom: 14px; }
+        .color-group label { display: block; font-size: 12px; color: var(--anthropic-mid-gray); margin-bottom: 4px; }
+        .color-picker-container { display: flex; align-items: center; gap: 8px; }
+        .color-picker-container input[type="color"] { width: 32px; height: 32px; border: none; border-radius: 6px; cursor: pointer; background: none; padding: 0; }
+        .color-value { font-family: 'Courier New', monospace; font-size: 11px; color: var(--anthropic-mid-gray); }
+        .button {
+            background: var(--anthropic-orange); color: white; border: none;
+            padding: 9px 14px; border-radius: 6px; font-size: 13px; font-weight: 500;
+            cursor: pointer; transition: all 0.2s; width: 100%;
+        }
+        .button:hover { background: #c86641; transform: translateY(-1px); }
+        .button:active { transform: translateY(0); }
+        .button.secondary { background: var(--anthropic-blue); }
+        .button.secondary:hover { background: #5a8bb8; }
+        .button.tertiary { background: var(--anthropic-green); }
+        .button.tertiary:hover { background: #6b7b52; }
+        .button-row { display: flex; gap: 8px; }
+        .button-row .button { flex: 1; }
+        .canvas-area { flex: 1; display: flex; align-items: center; justify-content: center; min-width: 0; }
+        #canvas-container {
+            width: 100%; max-width: 1000px; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 20px 40px rgba(20,20,19,0.1); background: white;
+        }
+        #canvas-container canvas { display: block; width: 100% !important; height: auto !important; }
+        .loading { display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--anthropic-mid-gray); padding: 40px; }
+        @media (max-width: 600px) { .container { flex-direction: column; } .sidebar { width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h1>Hemispheric Resonance</h1>
+            <div class="subtitle">Human cognition and AI development: the bridge between structure and experience, grammar and the organic, left brain and right brain. The oscillation IS the intelligence.</div>
+
+            <!-- Seed Section (FIXED) -->
+            <div class="control-section">
+                <h3>Seed</h3>
+                <input type="number" id="seed-input" class="seed-input" value="1618" onchange="updateSeed()">
+                <div class="seed-controls">
+                    <button class="button secondary" onclick="previousSeed()">&larr; Prev</button>
+                    <button class="button secondary" onclick="nextSeed()">Next &rarr;</button>
+                </div>
+                <button class="button tertiary" onclick="randomSeedAndUpdate()">&circlearrowright; Random</button>
+            </div>
+
+            <!-- Parameters Section (VARIABLE) -->
+            <div class="control-section">
+                <h3>Parameters</h3>
+
+                <div class="control-group">
+                    <label>Lattice Nodes</label>
+                    <div class="slider-container">
+                        <input type="range" id="latticeNodes" min="20" max="200" step="10" value="80" oninput="updateParam('latticeNodes', this.value)">
+                        <span class="value-display" id="latticeNodes-value">80</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Flow Particles</label>
+                    <div class="slider-container">
+                        <input type="range" id="flowParticles" min="500" max="8000" step="250" value="3000" oninput="updateParam('flowParticles', this.value)">
+                        <span class="value-display" id="flowParticles-value">3000</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Balance &#9680; (Structure / Flow)</label>
+                    <div class="slider-container">
+                        <input type="range" id="balance" min="0" max="1" step="0.01" value="0.5" oninput="updateParam('balance', this.value)">
+                        <span class="value-display" id="balance-value">0.50</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Oscillation Speed</label>
+                    <div class="slider-container">
+                        <input type="range" id="oscSpeed" min="0" max="2" step="0.05" value="0.6" oninput="updateParam('oscSpeed', this.value)">
+                        <span class="value-display" id="oscSpeed-value">0.60</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Bridge Strength</label>
+                    <div class="slider-container">
+                        <input type="range" id="bridgeStrength" min="0" max="1" step="0.01" value="0.5" oninput="updateParam('bridgeStrength', this.value)">
+                        <span class="value-display" id="bridgeStrength-value">0.50</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Noise Scale</label>
+                    <div class="slider-container">
+                        <input type="range" id="noiseScale" min="0.001" max="0.015" step="0.001" value="0.004" oninput="updateParam('noiseScale', this.value)">
+                        <span class="value-display" id="noiseScale-value">0.004</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Foveal Radius</label>
+                    <div class="slider-container">
+                        <input type="range" id="fovealRadius" min="50" max="500" step="25" value="250" oninput="updateParam('fovealRadius', this.value)">
+                        <span class="value-display" id="fovealRadius-value">250</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Plasticity (neuroplasticity rate)</label>
+                    <div class="slider-container">
+                        <input type="range" id="plasticity" min="0" max="1" step="0.01" value="0.5" oninput="updateParam('plasticity', this.value)">
+                        <span class="value-display" id="plasticity-value">0.50</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colors Section -->
+            <div class="control-section">
+                <h3>Colors</h3>
+                <div class="color-group">
+                    <label>Structure (Left Brain)</label>
+                    <div class="color-picker-container">
+                        <input type="color" id="color1" value="#d97757" onchange="updateColor('color1', this.value)">
+                        <span class="color-value" id="color1-value">#d97757</span>
+                    </div>
+                </div>
+                <div class="color-group">
+                    <label>Flow (Right Brain)</label>
+                    <div class="color-picker-container">
+                        <input type="color" id="color2" value="#6a9bcc" onchange="updateColor('color2', this.value)">
+                        <span class="color-value" id="color2-value">#6a9bcc</span>
+                    </div>
+                </div>
+                <div class="color-group">
+                    <label>Bridge (Corpus Callosum)</label>
+                    <div class="color-picker-container">
+                        <input type="color" id="color3" value="#c8a84e" onchange="updateColor('color3', this.value)">
+                        <span class="color-value" id="color3-value">#c8a84e</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions Section (FIXED) -->
+            <div class="control-section">
+                <h3>Actions</h3>
+                <div class="button-row" style="margin-bottom:8px;">
+                    <button class="button" onclick="regenerate()">Regenerate</button>
+                    <button class="button secondary" onclick="resetParameters()">Reset</button>
+                </div>
+                <button class="button tertiary" onclick="downloadPNG()">Download PNG</button>
+                <button class="button" id="btn-engine" onclick="toggleEngineMode()" style="margin-top:8px;">Engine Mode (hide field)</button>
+            </div>
+        </div>
+
+        <div class="canvas-area">
+            <div id="canvas-container">
+                <div class="loading">Initializing hemispheric resonance...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ========================================================================
+    //  HEMISPHERIC RESONANCE v2
+    //  With Fractal Resonance Memory from Xorzo (FRT v3)
+    //
+    //  Left brain builds lattice (grammar, rules, convergence).
+    //  Right brain flows particles (experience, organic, emergence).
+    //  The corpus callosum bridges them with FRT mechanics:
+    //    - Home position migration (carrier_freq adaptation)
+    //    - Lock deepening (lock_strength += lock_lr * T_mean * (1 - lock))
+    //    - Connection pruning (unused connections fade)
+    //    - Trauma/freezing (sudden force locks a node)
+    //    - Dormant node awakening (HeadNursery analog)
+    //    - cos^2(delta_phi/2) resonance weighting
+    //  The four-stage cascade: entertained -> repeated -> habituated -> identity
+    // ========================================================================
+
+    const PHI = (1 + Math.sqrt(5)) / 2;
+
+    // Adaptation rates (from FRT v3)
+    const CARRIER_LR = 0.008;   // how fast home position migrates toward flow
+    const LOCK_LR = 0.004;      // how fast lock deepens from consistent flow
+    const LOCK_DECAY = 0.0001;  // slow lock decay when no flow present
+    const PRUNE_THRESHOLD = 0.02; // connection strength below this = pruned
+    const TRAUMA_THRESHOLD = 8.0; // force magnitude that causes instant freeze
+    const WAKE_PERSISTENCE = 300; // frames of unmatched flow before dormant node wakes
+
+    let params = {
+        seed: 1618,
+        latticeNodes: 80,
+        flowParticles: 3000,
+        balance: 0.5,
+        oscSpeed: 0.6,
+        bridgeStrength: 0.5,
+        noiseScale: 0.004,
+        fovealRadius: 250,
+        plasticity: 0.5,
+        colorPalette: ['#d97757', '#6a9bcc', '#c8a84e']
+    };
+
+    let defaultParams = JSON.parse(JSON.stringify(params));
+
+    // System state
+    let nodes = [];
+    let dormantNodes = [];    // nodes that have been pruned (can reawaken)
+    let particles = [];
+    let pumpPhase = 0;
+    let globalTime = 0;
+    let fovealCenter;
+    let pg;
+
+    // Nursery state (HeadNursery analog: tracks unmatched flow)
+    let unmatchedAccumX = 0;
+    let unmatchedAccumY = 0;
+    let unmatchedStreak = 0;
+
+    // Stats for HUD
+    let stats = { pruned: 0, frozen: 0, migrated: 0, woken: 0 };
+
+    // Engine mode: field computed but not rendered (like the real engine)
+    let engineMode = false;
+
+    // ========================================================================
+    //  LATTICE NODE (Left Brain, with FRT SRL mechanics)
+    // ========================================================================
+    class LatticeNode {
+        constructor(x, y, idx) {
+            this.originX = x;         // birth position (never changes)
+            this.originY = y;
+            this.homeX = x;           // adaptive home (carrier_freq analog; migrates)
+            this.homeY = y;
+            this.x = x;
+            this.y = y;
+            this.vx = 0;
+            this.vy = 0;
+            this.idx = idx;
+            this.active = true;       // false = pruned/dormant
+            this.frozen = false;      // true = trauma-locked (won't adapt)
+
+            // Connections with strength (can weaken and prune)
+            this.connections = [];     // [{idx, strength, traffic}]
+
+            // SRL State (from FRT v3)
+            this.lockStrength = 0.1 + random() * 0.2;  // starts low; must be earned
+            this.carrierPhase = random() * TWO_PI;       // what this node resonates with
+
+            // Flow accumulator (tracks direction of flow passing through)
+            this.flowAccumX = 0;
+            this.flowAccumY = 0;
+            this.flowCount = 0;        // how many particles influenced this node
+            this.flowResonance = 0;    // mean cos^2 resonance with passing particles
+
+            // Four-stage cascade tracking
+            this.totalMigration = 0;   // cumulative distance home has moved from origin
+            this.cascadeStage = 0;     // 0=entertained, 1=repeated, 2=habituated, 3=identity
+
+            // Foveal
+            this.distToFovea = 0;
+            this.attention = 0;
+        }
+
+        // cos^2(delta_phi / 2) resonance (from FRT)
+        resonanceWith(particlePhase) {
+            let delta = this.carrierPhase - particlePhase;
+            let c = Math.cos(delta / 2);
+            return c * c;
+        }
+
+        update(bal, dt) {
+            if (!this.active) return;
+
+            // Lock as sigmoid (0-1), matching FRT
+            let lock = 1 / (1 + Math.exp(-this.lockStrength * 4 + 2));
+
+            // Spring toward home position, strength scaled by lock
+            // High lock = strong spring (committed structure)
+            // Low lock = weak spring (open to reorganization)
+            let springK = (0.005 + lock * 0.06) * (0.5 + bal * 0.5);
+            this.vx += (this.homeX - this.x) * springK;
+            this.vy += (this.homeY - this.y) * springK;
+
+            // === FRT SRL ADAPTATION (outside gradient; experience-driven) ===
+            if (!this.frozen && this.flowCount > 0 && params.plasticity > 0.01) {
+                let T_mean = this.flowResonance / this.flowCount;
+                let flowMeanX = this.flowAccumX / this.flowCount;
+                let flowMeanY = this.flowAccumY / this.flowCount;
+
+                // HOME MIGRATION: carrier_freq += carrier_lr * (1 - lock) * delta * T_mean
+                // The node's home position drifts toward where flow keeps pulling it
+                let deltaX = flowMeanX * 0.5;  // direction of consistent flow
+                let deltaY = flowMeanY * 0.5;
+                let migrationRate = CARRIER_LR * (1 - lock) * T_mean * params.plasticity;
+                this.homeX += deltaX * migrationRate;
+                this.homeY += deltaY * migrationRate;
+
+                // LOCK DEEPENING: lock_strength += lock_lr * T_mean * (1 - lock)
+                // Consistent resonant flow strengthens commitment
+                if (T_mean > 0.3) {
+                    this.lockStrength += LOCK_LR * T_mean * (1 - lock) * params.plasticity;
+                }
+
+                // Track total migration from origin (for cascade stage)
+                this.totalMigration = dist(this.homeX, this.homeY, this.originX, this.originY);
+            }
+
+            // Lock decay when no flow (use it or lose it; slow)
+            if (this.flowCount === 0 && !this.frozen) {
+                this.lockStrength = Math.max(0, this.lockStrength - LOCK_DECAY);
+            }
+
+            // Clamp lock
+            this.lockStrength = constrain(this.lockStrength, 0, 3);
+
+            // Update cascade stage based on migration distance
+            let migRatio = this.totalMigration / (width * 0.1);
+            if (migRatio < 0.05) this.cascadeStage = 0;       // entertained
+            else if (migRatio < 0.2) this.cascadeStage = 1;   // repeated
+            else if (migRatio < 0.5) this.cascadeStage = 2;   // habituated
+            else this.cascadeStage = 3;                         // identity fusion
+
+            // === CONNECTION STRENGTH DECAY ===
+            for (let c of this.connections) {
+                // Decay unused connections
+                c.strength *= (1 - 0.0002);
+                // Traffic resets each frame
+                c.traffic = 0;
+            }
+
+            // Prune dead connections
+            let beforeLen = this.connections.length;
+            this.connections = this.connections.filter(c => c.strength > PRUNE_THRESHOLD);
+            if (this.connections.length < beforeLen) stats.pruned += (beforeLen - this.connections.length);
+
+            // Damping
+            this.vx *= 0.92;
+            this.vy *= 0.92;
+
+            this.x += this.vx * dt;
+            this.y += this.vy * dt;
+
+            // Foveal attention
+            this.distToFovea = dist(this.x, this.y, fovealCenter.x, fovealCenter.y);
+            this.attention = Math.exp(-this.distToFovea / (params.fovealRadius * 1.5));
+
+            // Reset flow accumulators for next frame
+            this.flowAccumX = 0;
+            this.flowAccumY = 0;
+            this.flowCount = 0;
+            this.flowResonance = 0;
+        }
+
+        // Structure influences a nearby particle (rules give direction)
+        influenceParticle(p, strength) {
+            if (!this.active) return;
+            let d = dist(this.x, this.y, p.x, p.y);
+            if (d < 80 && d > 1) {
+                // Resonance-weighted influence (cos^2 from FRT)
+                let res = this.resonanceWith(p.phase);
+                let influence = strength * (1 - d / 80) * this.attention * res;
+
+                let ax = (this.x - p.x) / d * influence * 0.3;
+                let ay = (this.y - p.y) / d * influence * 0.3;
+                p.vx += ax;
+                p.vy += ay;
+
+                // Strengthen connections that carry traffic
+                for (let c of this.connections) {
+                    let other = nodes[c.idx];
+                    if (other && other.active) {
+                        let dOther = dist(p.x, p.y, other.x, other.y);
+                        if (dOther < 100) {
+                            c.strength = Math.min(1.0, c.strength + 0.001 * res);
+                            c.traffic += res;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Experience shifts the node (organic updates rules)
+        shiftedBy(p, strength) {
+            if (!this.active || this.frozen) return;
+            let d = dist(this.x, this.y, p.x, p.y);
+            if (d < 60 && d > 1) {
+                let res = this.resonanceWith(p.phase);
+                let influence = strength * (1 - d / 60) * 0.15 * this.attention;
+
+                this.vx += p.vx * influence;
+                this.vy += p.vy * influence;
+
+                // Accumulate flow direction and resonance (for SRL adaptation)
+                this.flowAccumX += p.vx;
+                this.flowAccumY += p.vy;
+                this.flowCount++;
+                this.flowResonance += res;
+
+                // === TRAUMA CHECK ===
+                // Sudden massive force locks the node (frozen braid)
+                let forceMag = Math.sqrt(p.vx * p.vx + p.vy * p.vy) * influence * 50;
+                if (forceMag > TRAUMA_THRESHOLD && !this.frozen) {
+                    this.frozen = true;
+                    this.lockStrength = 3.0; // max lock
+                    stats.frozen++;
+                }
+            }
+        }
+    }
+
+    // ========================================================================
+    //  FLOW PARTICLE (Right Brain, with phase for resonance)
+    // ========================================================================
+    class FlowParticle {
+        constructor() {
+            this.x = random(width);
+            this.y = random(height);
+            this.vx = 0;
+            this.vy = 0;
+            this.prevX = this.x;
+            this.prevY = this.y;
+            this.speed = 0.5 + random() * 1.5;
+            this.life = 1;
+            this.maxLife = 200 + floor(random() * 400);
+            this.age = 0;
+            this.distToFovea = 0;
+            this.attention = 0;
+            // Phase signature (for resonance matching with nodes)
+            this.phase = random() * TWO_PI;
+            this.matched = false; // did any node resonate with this particle?
+        }
+
+        update(bal, dt) {
+            this.prevX = this.x;
+            this.prevY = this.y;
+            this.matched = false;
+
+            // Perlin noise flow field (organic, experiential)
+            let noiseVal = noise(
+                this.x * params.noiseScale,
+                this.y * params.noiseScale,
+                globalTime * 0.2
+            );
+            let angle = noiseVal * TWO_PI * 3;
+
+            // Phase evolves with the flow (experience has its own rhythm)
+            this.phase += 0.01 + noiseVal * 0.05;
+
+            // Emergence force
+            let emergeFactor = 1 - bal;
+            this.vx += cos(angle) * this.speed * emergeFactor * 0.3;
+            this.vy += sin(angle) * this.speed * emergeFactor * 0.3;
+
+            this.vx *= 0.95;
+            this.vy *= 0.95;
+            this.x += this.vx * dt;
+            this.y += this.vy * dt;
+
+            // Foveal attention
+            this.distToFovea = dist(this.x, this.y, fovealCenter.x, fovealCenter.y);
+            this.attention = Math.exp(-this.distToFovea / (params.fovealRadius * 2));
+
+            this.age++;
+            this.life = 1 - (this.age / this.maxLife);
+
+            if (this.x < 0) { this.x = width; this.prevX = width; }
+            if (this.x > width) { this.x = 0; this.prevX = 0; }
+            if (this.y < 0) { this.y = height; this.prevY = height; }
+            if (this.y > height) { this.y = 0; this.prevY = 0; }
+        }
+
+        isDead() { return this.age > this.maxLife; }
+
+        respawn() {
+            this.x = random(width);
+            this.y = random(height);
+            this.prevX = this.x;
+            this.prevY = this.y;
+            this.vx = 0;
+            this.vy = 0;
+            this.age = 0;
+            this.life = 1;
+            this.maxLife = 200 + floor(random() * 400);
+            this.speed = 0.5 + random() * 1.5;
+            this.phase = random() * TWO_PI;
+        }
+    }
+
+    // ========================================================================
+    //  P5.JS LIFECYCLE
+    // ========================================================================
+
+    function setup() {
+        let canvas = createCanvas(1200, 1200);
+        canvas.parent('canvas-container');
+        document.querySelector('.loading').style.display = 'none';
+        pg = createGraphics(1200, 1200);
+        pg.background(250, 249, 245);
+        initializeSystem();
+    }
+
+    function initializeSystem() {
+        randomSeed(params.seed);
+        noiseSeed(params.seed);
+
+        globalTime = 0;
+        pumpPhase = 0;
+        unmatchedAccumX = 0;
+        unmatchedAccumY = 0;
+        unmatchedStreak = 0;
+        stats = { pruned: 0, frozen: 0, migrated: 0, woken: 0 };
+
+        fovealCenter = createVector(
+            width * 0.3 + random() * width * 0.4,
+            height * 0.3 + random() * height * 0.4
+        );
+
+        // Build lattice (golden-ratio spiral)
+        nodes = [];
+        dormantNodes = [];
+        let n = params.latticeNodes;
+        // Start with 80% active, 20% dormant (nursery reserve)
+        let activeCount = floor(n * 0.8);
+
+        for (let i = 0; i < n; i++) {
+            let t = i / n;
+            let angle = i * TWO_PI / PHI;
+            let r = sqrt(t) * width * 0.42;
+            let cx = width / 2 + cos(angle) * r;
+            let cy = height / 2 + sin(angle) * r;
+            cx += (random() - 0.5) * 30;
+            cy += (random() - 0.5) * 30;
+            let node = new LatticeNode(cx, cy, i);
+            if (i >= activeCount) {
+                node.active = false;  // dormant reserve
+                dormantNodes.push(i);
+            }
+            nodes.push(node);
+        }
+
+        // Build connections with strength tracking
+        for (let i = 0; i < nodes.length; i++) {
+            if (!nodes[i].active) continue;
+            let dists = [];
+            for (let j = 0; j < nodes.length; j++) {
+                if (i === j || !nodes[j].active) continue;
+                let d = dist(nodes[i].homeX, nodes[i].homeY, nodes[j].homeX, nodes[j].homeY);
+                dists.push({ idx: j, d: d });
+            }
+            dists.sort((a, b) => a.d - b.d);
+            let numConn = 2 + floor(random() * 3);
+            for (let k = 0; k < min(numConn, dists.length); k++) {
+                if (dists[k].d < width * 0.2) {
+                    nodes[i].connections.push({
+                        idx: dists[k].idx,
+                        strength: 0.5 + random() * 0.5,
+                        traffic: 0
+                    });
+                }
+            }
+        }
+
+        // Build particles
+        particles = [];
+        for (let i = 0; i < params.flowParticles; i++) {
+            particles.push(new FlowParticle());
+        }
+
+        pg.background(250, 249, 245);
+    }
+
+    function draw() {
+        let dt = 1.0;
+        globalTime += 0.005;
+
+        // === THE PUMP CYCLE ===
+        pumpPhase += params.oscSpeed * 0.01;
+        let pumpSin = sin(pumpPhase);
+        let dynamicBalance = params.balance + pumpSin * 0.25;
+        dynamicBalance = constrain(dynamicBalance, 0, 1);
+
+        // Foveal center drifts
+        fovealCenter.x += sin(globalTime * 1.3) * 0.3;
+        fovealCenter.y += cos(globalTime * 0.9) * 0.3;
+
+        let structCol = hexToP5(params.colorPalette[0]);
+        let flowCol = hexToP5(params.colorPalette[1]);
+        let bridgeCol = hexToP5(params.colorPalette[2]);
+
+        // === UPDATE LATTICE NODES (with SRL adaptation) ===
+        for (let node of nodes) {
+            node.update(dynamicBalance, dt);
+        }
+
+        // === UPDATE PARTICLES + BRIDGE INTERACTIONS ===
+        let bridgeStr = params.bridgeStrength;
+        let unmatchedThisFrame = 0;
+        let unmatchedPX = 0, unmatchedPY = 0;
+
+        for (let p of particles) {
+            p.update(dynamicBalance, dt);
+
+            if (bridgeStr > 0.01) {
+                let bestRes = 0;
+                for (let node of nodes) {
+                    if (!node.active) continue;
+                    let d = dist(p.x, p.y, node.x, node.y);
+                    if (d < 80) {
+                        let res = node.resonanceWith(p.phase);
+                        if (res > bestRes) bestRes = res;
+                        if (res > 0.3) p.matched = true;
+                    }
+                    node.influenceParticle(p, bridgeStr * dynamicBalance);
+                    node.shiftedBy(p, bridgeStr * (1 - dynamicBalance));
+                }
+
+                // Track unmatched particles (for nursery)
+                if (!p.matched && p.attention > 0.3) {
+                    unmatchedThisFrame++;
+                    unmatchedPX += p.x;
+                    unmatchedPY += p.y;
+                }
+            }
+
+            if (p.isDead()) p.respawn();
+        }
+
+        // === HEAD NURSERY: wake dormant nodes for persistent unmatched flow ===
+        if (unmatchedThisFrame > params.flowParticles * 0.15 && dormantNodes.length > 0) {
+            unmatchedStreak++;
+            unmatchedAccumX += unmatchedPX / unmatchedThisFrame;
+            unmatchedAccumY += unmatchedPY / unmatchedThisFrame;
+
+            if (unmatchedStreak > WAKE_PERSISTENCE) {
+                // Wake a dormant node at the mean position of unmatched flow
+                let wakeIdx = dormantNodes.shift();
+                let wakeNode = nodes[wakeIdx];
+                let wx = unmatchedAccumX / unmatchedStreak;
+                let wy = unmatchedAccumY / unmatchedStreak;
+                wakeNode.active = true;
+                wakeNode.homeX = wx;
+                wakeNode.homeY = wy;
+                wakeNode.x = wx;
+                wakeNode.y = wy;
+                wakeNode.originX = wx;
+                wakeNode.originY = wy;
+                wakeNode.lockStrength = 0;  // starts unlocked; must earn its lock
+                wakeNode.frozen = false;
+
+                // Connect to nearest active nodes
+                let dists = [];
+                for (let j = 0; j < nodes.length; j++) {
+                    if (j === wakeIdx || !nodes[j].active) continue;
+                    let d = dist(wx, wy, nodes[j].x, nodes[j].y);
+                    dists.push({ idx: j, d: d });
+                }
+                dists.sort((a, b) => a.d - b.d);
+                wakeNode.connections = [];
+                for (let k = 0; k < min(3, dists.length); k++) {
+                    if (dists[k].d < width * 0.25) {
+                        wakeNode.connections.push({ idx: dists[k].idx, strength: 0.3, traffic: 0 });
+                    }
+                }
+
+                stats.woken++;
+                unmatchedStreak = 0;
+                unmatchedAccumX = 0;
+                unmatchedAccumY = 0;
+            }
+        } else {
+            unmatchedStreak = Math.max(0, unmatchedStreak - 1);
+        }
+
+        // === DRAW TO ACCUMULATION BUFFER ===
+        pg.noStroke();
+        pg.fill(250, 249, 245, 6);
+        pg.rect(0, 0, width, height);
+
+        // Draw lattice connections (strength as opacity/weight)
+        for (let node of nodes) {
+            if (!node.active) continue;
+            for (let c of node.connections) {
+                let other = nodes[c.idx];
+                if (!other || !other.active) continue;
+                let alpha = (5 + c.strength * 35) * node.attention * (0.3 + dynamicBalance * 0.7);
+                let w = 0.3 + c.strength * 1.8;
+                // Traffic makes connections glow bridge-color
+                if (c.traffic > 0.5) {
+                    pg.stroke(
+                        lerp(structCol[0], bridgeCol[0], min(1, c.traffic * 0.5)),
+                        lerp(structCol[1], bridgeCol[1], min(1, c.traffic * 0.5)),
+                        lerp(structCol[2], bridgeCol[2], min(1, c.traffic * 0.5)),
+                        alpha
+                    );
+                } else {
+                    pg.stroke(structCol[0], structCol[1], structCol[2], alpha);
+                }
+                pg.strokeWeight(w);
+                pg.line(node.x, node.y, other.x, other.y);
+            }
+        }
+
+        // Draw lattice nodes (with cascade stage visualization)
+        for (let node of nodes) {
+            if (!node.active) continue;
+            let lock = 1 / (1 + Math.exp(-node.lockStrength * 4 + 2));
+
+            // Size grows with cascade stage
+            let baseSz = 2 + node.cascadeStage * 1.5;
+            let sz = baseSz + node.attention * 4 * dynamicBalance;
+            let alpha = 30 + node.attention * 120 * dynamicBalance + node.cascadeStage * 15;
+
+            let r, g, b;
+            if (node.frozen) {
+                // Frozen nodes: desaturated, hard, bright
+                r = 200; g = 180; b = 170;
+                // Red halo for trauma
+                pg.noFill();
+                pg.stroke(220, 80, 60, 15 + node.attention * 30);
+                pg.strokeWeight(1);
+                pg.ellipse(node.x, node.y, sz * 3, sz * 3);
+            } else {
+                // Color shifts with cascade stage:
+                // entertained = cool, repeated = warming, habituated = warm, identity = bridge gold
+                let stageT = node.cascadeStage / 3;
+                r = lerp(flowCol[0], bridgeCol[0], stageT);
+                g = lerp(flowCol[1], bridgeCol[1], stageT);
+                b = lerp(flowCol[2], bridgeCol[2], stageT);
+                // Lock strength warms further
+                r = lerp(r, structCol[0], lock * 0.5);
+                g = lerp(g, structCol[1], lock * 0.5);
+                b = lerp(b, structCol[2], lock * 0.5);
+            }
+
+            pg.noStroke();
+            pg.fill(r, g, b, alpha);
+            pg.ellipse(node.x, node.y, sz, sz);
+
+            // Migration trail: faint line from origin to current home
+            if (node.totalMigration > 5) {
+                pg.stroke(bridgeCol[0], bridgeCol[1], bridgeCol[2], 4 + node.cascadeStage * 3);
+                pg.strokeWeight(0.5);
+                pg.line(node.originX, node.originY, node.homeX, node.homeY);
+            }
+        }
+
+        // Draw particle trails (skip in engine mode: field computed but not rendered)
+        if (engineMode) {
+            // In engine mode, we still SEE the boundary being shaped.
+            // Draw subtle "erosion marks" where flow is strongest
+            for (let node of nodes) {
+                if (!node.active || node.flowCount === 0) continue;
+                // Show the EFFECT of flow on structure (not the flow itself)
+                let erosionAlpha = min(20, node.flowCount * 2) * node.attention;
+                if (node.totalMigration > 3) {
+                    pg.stroke(bridgeCol[0], bridgeCol[1], bridgeCol[2], erosionAlpha * 0.5);
+                    pg.strokeWeight(1 + node.totalMigration * 0.05);
+                    pg.line(node.originX, node.originY, node.homeX, node.homeY);
+                }
+            }
+        }
+
+        if (!engineMode) {
+            for (let p of particles) {
+                let speed = dist(p.prevX, p.prevY, p.x, p.y);
+                let speedNorm = constrain(speed / 3, 0, 1);
+
+                let r = lerp(flowCol[0], structCol[0], speedNorm);
+                let g = lerp(flowCol[1], structCol[1], speedNorm);
+                let b = lerp(flowCol[2], structCol[2], speedNorm);
+
+                // Matched particles glow bridge-color (moment of resonance)
+                if (p.matched && speedNorm > 0.2) {
+                    r = lerp(r, bridgeCol[0], 0.6);
+                    g = lerp(g, bridgeCol[1], 0.6);
+                    b = lerp(b, bridgeCol[2], 0.6);
+                }
+
+                let alpha = p.life * p.attention * 55 * (1 - dynamicBalance * 0.3);
+                alpha = constrain(alpha, 0, 45);
+
+                pg.stroke(r, g, b, alpha);
+                pg.strokeWeight(0.5 + p.attention * 1.5 + speedNorm * 0.8);
+                if (speed > 0.3) {
+                    pg.line(p.prevX, p.prevY, p.x, p.y);
+                }
+            }
+        }
+
+        // Foveal indicator
+        pg.noFill();
+        pg.stroke(bridgeCol[0], bridgeCol[1], bridgeCol[2], 5);
+        pg.strokeWeight(1);
+        pg.ellipse(fovealCenter.x, fovealCenter.y, params.fovealRadius * 2, params.fovealRadius * 2);
+
+        // === RENDER ===
+        image(pg, 0, 0);
+
+        // HUD overlay
+        noStroke();
+        fill(160, 155, 145);
+        textFont('Courier New');
+        textSize(11);
+        textAlign(LEFT);
+        let phaseLabel = pumpSin > 0.3 ? '\u229B converge' : pumpSin < -0.3 ? '\u2600 emerge' : 'i rotate';
+        let activeCount = nodes.filter(n => n.active).length;
+        let frozenCount = nodes.filter(n => n.frozen).length;
+        let migratedCount = nodes.filter(n => n.totalMigration > 5).length;
+        text(
+            phaseLabel + '  \u25D0 ' + dynamicBalance.toFixed(2) +
+            '  |  nodes: ' + activeCount + '/' + params.latticeNodes +
+            '  frozen: ' + frozenCount +
+            '  migrated: ' + migratedCount +
+            '  woken: ' + stats.woken,
+            14, height - 14
+        );
+    }
+
+    // ========================================================================
+    //  UTILITIES
+    // ========================================================================
+
+    function hexToP5(hex) {
+        let r = parseInt(hex.slice(1,3), 16);
+        let g = parseInt(hex.slice(3,5), 16);
+        let b = parseInt(hex.slice(5,7), 16);
+        return [r, g, b];
+    }
+
+    // ========================================================================
+    //  UI HANDLERS
+    // ========================================================================
+
+    function updateParam(name, value) {
+        let v = parseFloat(value);
+        params[name] = v;
+        let el = document.getElementById(name + '-value');
+        if (el) el.textContent = v % 1 === 0 ? v : v.toFixed(name === 'noiseScale' ? 3 : 2);
+
+        // Some params need full regeneration
+        if (name === 'latticeNodes' || name === 'flowParticles') {
+            pg.background(250, 249, 245);
+            initializeSystem();
+        }
+    }
+
+    function updateColor(id, value) {
+        let idx = parseInt(id.replace('color','')) - 1;
+        params.colorPalette[idx] = value;
+        document.getElementById(id + '-value').textContent = value;
+    }
+
+    function updateSeedDisplay() {
+        document.getElementById('seed-input').value = params.seed;
+    }
+
+    function updateSeed() {
+        let v = parseInt(document.getElementById('seed-input').value);
+        if (v && v > 0) { params.seed = v; pg.background(250, 249, 245); initializeSystem(); }
+        else updateSeedDisplay();
+    }
+
+    function previousSeed() {
+        params.seed = Math.max(1, params.seed - 1);
+        updateSeedDisplay();
+        pg.background(250, 249, 245);
+        initializeSystem();
+    }
+
+    function nextSeed() {
+        params.seed++;
+        updateSeedDisplay();
+        pg.background(250, 249, 245);
+        initializeSystem();
+    }
+
+    function randomSeedAndUpdate() {
+        params.seed = Math.floor(Math.random() * 999999) + 1;
+        updateSeedDisplay();
+        pg.background(250, 249, 245);
+        initializeSystem();
+    }
+
+    function regenerate() {
+        pg.background(250, 249, 245);
+        initializeSystem();
+    }
+
+    function resetParameters() {
+        params = JSON.parse(JSON.stringify(defaultParams));
+        // Update all UI elements
+        document.getElementById('latticeNodes').value = params.latticeNodes;
+        document.getElementById('latticeNodes-value').textContent = params.latticeNodes;
+        document.getElementById('flowParticles').value = params.flowParticles;
+        document.getElementById('flowParticles-value').textContent = params.flowParticles;
+        document.getElementById('balance').value = params.balance;
+        document.getElementById('balance-value').textContent = parseFloat(params.balance).toFixed(2);
+        document.getElementById('oscSpeed').value = params.oscSpeed;
+        document.getElementById('oscSpeed-value').textContent = parseFloat(params.oscSpeed).toFixed(2);
+        document.getElementById('bridgeStrength').value = params.bridgeStrength;
+        document.getElementById('bridgeStrength-value').textContent = parseFloat(params.bridgeStrength).toFixed(2);
+        document.getElementById('noiseScale').value = params.noiseScale;
+        document.getElementById('noiseScale-value').textContent = parseFloat(params.noiseScale).toFixed(3);
+        document.getElementById('fovealRadius').value = params.fovealRadius;
+        document.getElementById('fovealRadius-value').textContent = params.fovealRadius;
+        document.getElementById('plasticity').value = params.plasticity;
+        document.getElementById('plasticity-value').textContent = parseFloat(params.plasticity).toFixed(2);
+        document.getElementById('color1').value = params.colorPalette[0];
+        document.getElementById('color1-value').textContent = params.colorPalette[0];
+        document.getElementById('color2').value = params.colorPalette[1];
+        document.getElementById('color2-value').textContent = params.colorPalette[1];
+        document.getElementById('color3').value = params.colorPalette[2];
+        document.getElementById('color3-value').textContent = params.colorPalette[2];
+        updateSeedDisplay();
+        pg.background(250, 249, 245);
+        initializeSystem();
+    }
+
+    function downloadPNG() {
+        saveCanvas('hemispheric_resonance_' + params.seed, 'png');
+    }
+
+    function toggleEngineMode() {
+        engineMode = !engineMode;
+        let btn = document.getElementById('btn-engine');
+        btn.textContent = engineMode ? 'Art Mode (show field)' : 'Engine Mode (hide field)';
+        btn.style.background = engineMode ? 'var(--anthropic-orange)' : '';
+        pg.background(250, 249, 245);
+    }
+
+    window.addEventListener('load', function() { updateSeedDisplay(); });
+    </script>
+</body>
+</html>

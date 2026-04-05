@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MICROBOT: Periodic Table of ⊙ v4</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { overflow: hidden; background: #020206; font-family: 'Courier New', monospace; color: #0ff; }
+canvas { display: block; cursor: crosshair; }
+
+#hud-top { position: fixed; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; pointer-events: none; z-index: 10; }
+#hud-top-left { font-size: 13px; }
+#hud-top-right { font-size: 12px; color: #446; text-align: right; }
+
+#chassis-select { position: fixed; top: 38px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10; }
+.chassis-btn { background: rgba(0,8,16,0.9); border: 1px solid #224; color: #668; padding: 6px 14px; font-family: 'Courier New', monospace; font-size: 11px; cursor: pointer; border-radius: 3px; transition: all 0.15s; letter-spacing: 0.5px; }
+.chassis-btn:hover { border-color: #0ff; color: #0ff; }
+.chassis-btn.active { border-color: #0ff; color: #0ff; background: rgba(0,20,30,0.9); box-shadow: 0 0 10px rgba(0,255,255,0.1); }
+
+#kit-select { position: fixed; top: 68px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 10; }
+.kit-btn { background: rgba(0,8,16,0.9); border: 1px solid #224; color: #446; padding: 4px 12px; font-family: 'Courier New', monospace; font-size: 10px; cursor: pointer; border-radius: 3px; transition: all 0.15s; letter-spacing: 0.5px; }
+.kit-btn:hover { border-color: #0ff; color: #0ff; }
+.kit-btn.active { border-color: #0ff; color: #0ff; background: rgba(0,20,30,0.9); box-shadow: 0 0 8px rgba(0,255,255,0.1); }
+
+#weapons { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 10; pointer-events: auto; }
+.weapon-btn { width: 72px; padding: 6px 3px; text-align: center; background: rgba(0,8,16,0.9); border: 1px solid #224; border-radius: 3px; cursor: pointer; transition: all 0.15s; font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: 0.3px; line-height: 1.4; }
+.weapon-btn:hover { border-color: #0ff; }
+.weapon-btn.active { border-color: #0ff; background: rgba(0,20,30,0.9); box-shadow: 0 0 8px rgba(0,255,255,0.12); }
+.weapon-btn .wname { font-size: 10px; font-weight: bold; display: block; margin-bottom: 1px; }
+
+#hud-bl { position: fixed; bottom: 12px; left: 12px; font-size: 11px; background: rgba(0,4,8,0.85); padding: 8px 12px; border: 1px solid #1a1a2e; border-radius: 4px; pointer-events: none; z-index: 10; line-height: 1.5; }
+#hud-br { position: fixed; bottom: 12px; right: 12px; font-size: 10px; background: rgba(0,4,8,0.85); padding: 6px 10px; border: 1px solid #1a1a2e; border-radius: 4px; pointer-events: none; z-index: 10; color: #335; line-height: 1.4; }
+#ctrl-info { position: fixed; top: 50%; right: 8px; transform: translateY(-50%); font-size: 9px; color: #1a1a2e; pointer-events: none; z-index: 10; line-height: 1.8; text-align: right; }
+#banner { position: fixed; top: 38%; left: 50%; transform: translate(-50%,-50%); font-size: 26px; color: #0ff; letter-spacing: 5px; text-shadow: 0 0 25px rgba(0,255,255,0.3); pointer-events: none; z-index: 20; opacity: 0; transition: opacity 0.3s; }
+#gp-indicator { position: fixed; top: 8px; left: 50%; transform: translateX(-50%); font-size: 9px; color: #224; pointer-events: none; z-index: 10; display: none; }
+
+/* Settings panel */
+#settings { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 420px; max-height: 85vh; overflow-y: auto; background: rgba(2,4,12,0.96); border: 1px solid #1a3040; border-radius: 8px; padding: 20px; z-index: 100; backdrop-filter: blur(8px); }
+#settings::-webkit-scrollbar { width: 4px; } #settings::-webkit-scrollbar-thumb { background: #224; border-radius: 2px; }
+.s-title { font-size: 14px; letter-spacing: 3px; color: #0ff; text-align: center; margin-bottom: 16px; }
+.s-header { font-size: 10px; letter-spacing: 2px; color: #335; text-transform: uppercase; margin: 14px 0 6px; border-bottom: 1px solid #112; padding-bottom: 4px; }
+.s-row { display: flex; align-items: center; justify-content: space-between; margin: 5px 0; font-size: 11px; }
+.s-row label { color: #668; min-width: 120px; }
+.s-row input[type="range"] { width: 120px; accent-color: #0ff; height: 3px; }
+.s-row span { color: #446; font-family: monospace; min-width: 40px; text-align: right; font-size: 10px; }
+.s-row select { background: #0a0e18; border: 1px solid #224; color: #668; font-family: 'Courier New', monospace; font-size: 10px; padding: 3px 6px; border-radius: 3px; }
+.s-row select:focus { border-color: #0ff; outline: none; }
+.s-row input[type="checkbox"] { accent-color: #0ff; }
+.s-close { display: block; margin: 16px auto 0; background: #0a1018; border: 1px solid #224; color: #668; padding: 8px 20px; font-family: 'Courier New', monospace; font-size: 11px; cursor: pointer; border-radius: 4px; letter-spacing: 1px; }
+.s-close:hover { border-color: #0ff; color: #0ff; }
+#settings-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+</style>
+</head>
+<body>
+
+<div id="hud-top">
+  <div id="hud-top-left">
+    <span style="color:#0ff;letter-spacing:2px">MICROBOT</span>
+    <span id="s-score" style="color:#446;margin-left:14px">0</span>
+    <span id="s-wave" style="color:#335;margin-left:14px">WAVE 1</span>
+  </div>
+  <div id="hud-top-right"><span id="s-threats">0</span></div>
+</div>
+<div id="chassis-select"></div>
+<div id="kit-select"></div>
+<div id="weapons"></div>
+<div id="hud-bl"></div>
+<div id="hud-br"></div>
+<div id="ctrl-info">
+  WASD move<br>AIM mouse<br>FIRE click<br>1-5 weapon<br>SPACE dash<br>Q vortex<br>E plasma<br>SHIFT singularity<br>F chaos<br>G cycle kit<br>TAB elements<br>ESC settings<br>R reset
+</div>
+<div id="banner"></div>
+<div id="gp-indicator">GAMEPAD</div>
+<div id="settings-overlay" onclick="toggleSettings()"></div>
+<div id="settings"></div>
+<canvas id="c"></canvas>
+
+<script>
+// ============================================================
+//  MICROBOT v4: Gamepad + Abilities + Stasis + Sound
+//  Everything is circumpuncts. Particles sing when struck.
+// ============================================================
+
+const C = document.getElementById('c');
+const X = C.getContext('2d');
+let W, H;
+function resize() { W = C.width = innerWidth; H = C.height = innerHeight; }
+addEventListener('resize', resize); resize();
+
+// ============================================================
+//  UTILITIES
+// ============================================================
+function resonance(a, b) { const c = Math.cos(Math.abs(a - b) * Math.PI); return c * c; }
+function hsl(h, s, l, a) { return `hsla(${h|0},${(s*100)|0}%,${(l*100)|0}%,${a===undefined?1:a})`; }
+function rnd(a, b) { return a + Math.random() * (b - a); }
+function dst(ax, ay, bx, by) { const dx = ax-bx, dy = ay-by; return Math.sqrt(dx*dx+dy*dy); }
+function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+function lerp(a, b, t) { return a + (b - a) * t; }
+function angleInArc(px, py, cx, cy, aim, half) {
+  const a = Math.atan2(py - cy, px - cx);
+  let d = a - aim;
+  while (d > Math.PI) d -= Math.PI * 2;
+  while (d < -Math.PI) d += Math.PI * 2;
+  return Math.abs(d) < half;
+}
+
+// ============================================================
+//  PERIODIC TABLE OF CIRCUMPUNCT ELEMENTS
+// ============================================================
+const ELEMENTS = {
+  void:   { name:'Void',   sym:'Vd', group:'ether', freq:0.05, bw:0.35, pump:8,   lock:0.02, mass:0.05, energy:0.5,  hue:260, sat:0.3, row:0, col:0 },
+  pyre:   { name:'Pyre',   sym:'Py', group:'ether', freq:0.30, bw:0.30, pump:14,  lock:0.01, mass:0.03, energy:1.8,  hue:15,  sat:1.0, row:0, col:1 },
+  aether: { name:'Aether', sym:'Ae', group:'ether', freq:0.60, bw:0.40, pump:10,  lock:0.00, mass:0.02, energy:1.2,  hue:280, sat:0.6, row:0, col:2 },
+  nova:   { name:'Nova',   sym:'Nv', group:'ether', freq:0.90, bw:0.45, pump:18,  lock:0.01, mass:0.01, energy:2.0,  hue:50,  sat:1.0, row:0, col:3 },
+  aqua:   { name:'Aqua',   sym:'Aq', group:'fluid', freq:0.15, bw:0.15, pump:2.5, lock:0.12, mass:0.8,  energy:0.8,  hue:200, sat:0.8, row:1, col:0 },
+  plasma: { name:'Plasma', sym:'Pl', group:'fluid', freq:0.40, bw:0.20, pump:5,   lock:0.08, mass:0.5,  energy:1.4,  hue:300, sat:0.9, row:1, col:1 },
+  nectar: { name:'Nectar', sym:'Nc', group:'fluid', freq:0.55, bw:0.12, pump:1.8, lock:0.20, mass:1.0,  energy:0.9,  hue:120, sat:0.7, row:1, col:2 },
+  ion:    { name:'Ion',    sym:'Io', group:'fluid', freq:0.80, bw:0.15, pump:4,   lock:0.15, mass:0.6,  energy:1.1,  hue:180, sat:0.9, row:1, col:3 },
+  ferro:  { name:'Ferro',  sym:'Fe', group:'solid', freq:0.10, bw:0.03, pump:0.5, lock:0.95, mass:5.0,  energy:0.4,  hue:25,  sat:0.4, row:2, col:0 },
+  lithos: { name:'Lithos', sym:'Li', group:'solid', freq:0.35, bw:0.04, pump:0.3, lock:0.90, mass:4.0,  energy:0.3,  hue:40,  sat:0.3, row:2, col:1 },
+  cryo:   { name:'Cryo',   sym:'Cr', group:'solid', freq:0.65, bw:0.02, pump:0.2, lock:0.98, mass:3.5,  energy:0.5,  hue:195, sat:0.5, row:2, col:2 },
+  aurum:  { name:'Aurum',  sym:'Au', group:'solid', freq:0.85, bw:0.05, pump:1.0, lock:0.80, mass:6.0,  energy:0.6,  hue:45,  sat:0.9, row:2, col:3 },
+};
+const ELEM_GRID = [['void','pyre','aether','nova'],['aqua','plasma','nectar','ion'],['ferro','lithos','cryo','aurum']];
+const GROUP_NAMES = ['ETHEREAL','FLUID','SOLID'];
+
+function getReaction(gA, gB) {
+  const key = [gA, gB].sort().join('+');
+  switch(key) {
+    case 'ether+ether': return { type:'amplify',  hue:280, strength:0.8 };
+    case 'ether+fluid': return { type:'catalyze', hue:180, strength:0.6 };
+    case 'ether+solid': return { type:'erode',    hue:30,  strength:0.5 };
+    case 'fluid+fluid': return { type:'merge',    hue:200, strength:0.4 };
+    case 'fluid+solid': return { type:'coat',     hue:150, strength:0.3 };
+    case 'solid+solid': return { type:'crystal',  hue:40,  strength:0.7 };
+    default: return null;
+  }
+}
+
+// ============================================================
+//  AUDIO SYSTEM: particles sing when struck
+// ============================================================
+let audioCtx = null;
+let masterGain = null;
+let activeVoices = 0;
+const MAX_VOICES = 14;
+
+function initAudio() {
+  if (audioCtx) return;
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = 0.25;
+    masterGain.connect(audioCtx.destination);
+  } catch(e) { audioCtx = null; }
+}
+
+// size: 0 = tiny (high pitch), 1 = huge (low pitch). Omit or undefined = neutral (0.5)
+function playNote(freq01, volume, panVal, waveType, size) {
+  if (!audioCtx || activeVoices >= MAX_VOICES) return;
+  activeVoices++;
+  // Base range: C2 (65Hz) to ~C5 (520Hz) for size=1..0
+  // Smaller particles shift up, larger shift down
+  const sizeF = size !== undefined ? size : 0.5;
+  const baseHz = 55 + (1 - sizeF) * 80; // 55-135Hz base depending on size
+  const hz = baseHz * Math.pow(2, freq01 * 2.8); // narrower range, lower overall
+  const osc = audioCtx.createOscillator();
+  const env = audioCtx.createGain();
+  const pan = audioCtx.createStereoPanner();
+
+  osc.type = waveType || 'triangle';
+  osc.frequency.value = hz * (1 + (Math.random() - 0.5) * 0.02);
+
+  const t = audioCtx.currentTime;
+  const vol = Math.min(0.3, volume);
+  env.gain.setValueAtTime(0, t);
+  env.gain.linearRampToValueAtTime(vol, t + 0.008);
+  env.gain.exponentialRampToValueAtTime(0.001, t + 0.15 + (1 - freq01) * 0.2 + sizeF * 0.15);
+
+  pan.pan.value = clamp(panVal || 0, -1, 1);
+
+  osc.connect(env); env.connect(pan); pan.connect(masterGain);
+  osc.start(t);
+  osc.stop(t + 0.6);
+  osc.onended = () => { activeVoices--; osc.disconnect(); env.disconnect(); pan.disconnect(); };
+}
+
+function groupToWave(g) { return g === 'ether' ? 'sine' : g === 'solid' ? 'sawtooth' : 'triangle'; }
+function panFromWorld(wx) { return player ? clamp((wx - player.x) / 400, -1, 1) : 0; }
+
+function playHit(el, wx, volume, baseR) {
+  // Hits play minor chords (tension); bigger = deeper root
+  const size = baseR ? clamp(baseR / 40, 0.1, 1.0) : 0.5;
+  const pan = panFromWorld(wx);
+  const wave = groupToWave(el.group);
+  const v = volume || 0.12;
+  playNote(el.freq, v, pan, wave, size);                          // root
+  playNote(el.freq * 1.2, v * 0.4, pan + 0.1, wave, size);       // minor third
+  playNote(el.freq * 1.5, v * 0.25, pan - 0.1, wave, size);      // fifth
+}
+function playChord(freq01, vol, major) {
+  // Major chord for kills/resolution; minor for damage/tension
+  const third = major !== false ? 1.25 : 1.2;
+  playNote(freq01, vol, 0, 'sine', 0.6);                          // root
+  playNote(freq01 * third, vol * 0.5, 0.15, 'sine', 0.5);        // third
+  playNote(freq01 * 1.5, vol * 0.35, -0.15, 'sine', 0.45);       // fifth
+  playNote(freq01 * 2, vol * 0.15, 0, 'sine', 0.3);              // octave
+}
+function playFire(freq01, size, wave) {
+  // Weapon fire: root + fifth (power chord)
+  playNote(freq01, 0.08, 0, wave, size);
+  playNote(freq01 * 1.5, 0.04, 0.05, wave, size * 0.9);
+}
+
+// ============================================================
+//  GAMEPAD SYSTEM
+// ============================================================
+const GP_BTN_NAMES = ['A','B','X','Y','LB','RB','LT','RT','Back','Start','L3','R3','D-Up','D-Down','D-Left','D-Right'];
+
+let gpConfig = {
+  deadzone: 0.0,
+  lookSens: 10.0,
+  moveSens: 10.0,
+  lookCurve: 1,
+  invertY: false,
+  // Button mapping (indices into gamepad.buttons)
+  fire: 7, dash: 0, vortex: 4, trap1: 5, trap2: 2, trap3: 3,
+  weapNext: 15, weapPrev: 14, settings: 8
+};
+
+const GP_ACTIONS = {
+  fire:'Fire', dash:'Dash', vortex:'Vortex Shield', trap1:'Plasma Trap',
+  trap2:'Singularity', trap3:'Chaos Field', weapNext:'Weapon Next', weapPrev:'Weapon Prev'
+};
+
+let gpState = { axes:[0,0,0,0], btns: new Array(17).fill(false), prev: new Array(17).fill(false), connected: false };
+
+function pollGamepad() {
+  const gps = navigator.getGamepads ? navigator.getGamepads() : [];
+  for (const gp of gps) {
+    if (!gp) continue;
+    gpState.connected = true;
+    document.getElementById('gp-indicator').style.display = 'block';
+    for (let i = 0; i < 4; i++) {
+      let v = gp.axes[i] || 0;
+      if (Math.abs(v) < gpConfig.deadzone) v = 0;
+      else {
+        const sign = v > 0 ? 1 : -1;
+        v = sign * Math.pow(Math.abs(v), gpConfig.lookCurve);
+      }
+      gpState.axes[i] = v;
+    }
+    gpState.prev = [...gpState.btns];
+    for (let i = 0; i < Math.min(gp.buttons.length, 17); i++) {
+      gpState.btns[i] = gp.buttons[i].pressed;
+    }
+    return;
+  }
+  gpState.connected = false;
+}
+
+function gpJust(action) {
+  const idx = gpConfig[action];
+  return gpState.btns[idx] && !gpState.prev[idx];
+}
+function gpHeld(action) { return gpState.btns[gpConfig[action]]; }
+
+// ============================================================
+//  VACUUM FIELD
+// ============================================================
+class VacuumField {
+  constructor(arenaR, spacing) {
+    this.particles = [];
+    this.spacing = spacing;
+    const rowH = spacing * 0.866;
+    for (let gy = -arenaR; gy <= arenaR; gy += rowH) {
+      const row = Math.round(gy / rowH);
+      const ox = (row & 1) * spacing * 0.5;
+      for (let gx = -arenaR; gx <= arenaR; gx += spacing) {
+        const px = gx + ox + rnd(-3, 3), py = gy + rnd(-3, 3);
+        if (px * px + py * py < arenaR * arenaR * 0.95) {
+          this.particles.push({ x: px, y: py, ex: 0, hue: 200, sat: 0.2, freq: 0.5 + rnd(-0.15, 0.15), phase: rnd(0, Math.PI * 2), nIdx: [] });
+        }
+      }
+    }
+    this._buildNeighbors();
+  }
+  _buildNeighbors() {
+    const cs = this.spacing * 1.3, grid = {}, ps = this.particles;
+    for (let i = 0; i < ps.length; i++) {
+      const key = Math.floor(ps[i].x / cs) + ',' + Math.floor(ps[i].y / cs);
+      if (!grid[key]) grid[key] = [];
+      grid[key].push(i);
+    }
+    for (let i = 0; i < ps.length; i++) {
+      const p = ps[i], gx = Math.floor(p.x / cs), gy = Math.floor(p.y / cs);
+      p.nIdx = [];
+      for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) {
+        const cell = grid[(gx + dx) + ',' + (gy + dy)];
+        if (!cell) continue;
+        for (const j of cell) {
+          if (j === i) continue;
+          const ddx = ps[j].x - p.x, ddy = ps[j].y - p.y;
+          if (ddx * ddx + ddy * ddy < cs * cs && p.nIdx.length < 6) p.nIdx.push(j);
+        }
+      }
+    }
+  }
+  excite(wx, wy, radius, intensity, hue, sat) {
+    const r2 = radius * radius;
+    for (const p of this.particles) {
+      const dx = p.x - wx, dy = p.y - wy, d2 = dx * dx + dy * dy;
+      if (d2 < r2) {
+        const ex = intensity * (1 - Math.sqrt(d2) / radius);
+        if (ex > p.ex) { p.ex = Math.min(1, ex); p.hue = hue; p.sat = sat; }
+      }
+    }
+  }
+  step(dt) {
+    const ps = this.particles;
+    for (let i = 0; i < ps.length; i++) {
+      const p = ps[i];
+      p.phase += 1.5 * dt;
+      if (p.ex < 0.005) { p.ex = 0; continue; }
+      for (const ni of p.nIdx) {
+        const n = ps[ni], spread = p.ex * 0.12;
+        if (spread > n.ex + 0.01) { n.ex = Math.max(n.ex, spread * 0.6); n.hue = lerp(n.hue, p.hue, 0.3); n.sat = lerp(n.sat, p.sat, 0.3); }
+      }
+      p.ex *= (1 - 3.0 * dt);
+    }
+  }
+}
+
+// ============================================================
+//  FRAGMENT + COMPOSITE
+// ============================================================
+class Frag {
+  constructor(lx, ly, r, mass, bind, phOff) {
+    this.lx = lx; this.ly = ly; this.r = r; this.mass = mass;
+    this.bind = bind; this.dmg = 0; this.alive = true; this.phOff = phOff || rnd(0, Math.PI * 2);
+  }
+}
+
+class Composite {
+  constructor(x, y, element, cfg) {
+    this.x = x; this.y = y; this.vx = 0; this.vy = 0;
+    this.el = element;
+    this.freq = element.freq + rnd(-1, 1) * element.bw * 0.2;
+    this.phase = rnd(0, Math.PI * 2);
+    this.energy = element.energy;
+    this.baseR = cfg.baseR || 15;
+    this.frags = [];
+    this.totalMass = cfg.mass || 1;
+    this.maxSpeed = cfg.maxSpeed || 200;
+    this.type = cfg.type || 'generic';
+    this.team = cfg.team || 0;
+    this.alive = true;
+    this.isStatic = cfg.isStatic || false;
+    this.doomThreshold = cfg.doomThreshold || 0.20;
+    this.isDoomed = false;
+    this.age = 0;
+    this.dashCharges = cfg.dashes || 0;
+    this.maxDashes = cfg.dashes || 0;
+    this.dashSpeed = cfg.dashSpeed || 0;
+    this.dashCooldown = cfg.dashCD || 0;
+    this.dashCDTimer = 0;
+    this.dashTimer = 0;
+    this.ai = cfg.ai || null;
+    this.aiTimer = 0;
+    this.scoreVal = cfg.scoreVal || 0;
+    this.shield = cfg.shield || 0;
+    this.maxShield = cfg.shield || 0;
+    this.shieldRegen = cfg.shieldRegen || 0;
+    this.shieldDelay = 0;
+    this.reactionTimer = 0;
+    this._buildFrags(cfg.fragCount || 8, cfg.layers || 2, cfg.bindE || 100);
+  }
+  _buildFrags(count, layers, bindE) {
+    const fragMass = this.totalMass / (count * layers + 1);
+    const fragR = this.baseR * 0.28;
+    this.frags.push(new Frag(0, 0, fragR * 1.4, fragMass * 2, bindE * 3));
+    for (let layer = 1; layer <= layers; layer++) {
+      const lr = this.baseR * (layer / (layers + 0.5));
+      const lc = Math.max(3, Math.floor(count * layer / layers));
+      const lb = bindE * (1 - (layer - 1) * 0.3 / layers);
+      for (let i = 0; i < lc; i++) {
+        const a = (i / lc) * Math.PI * 2, j = rnd(-1, 1) * lr * 0.12;
+        this.frags.push(new Frag(Math.cos(a) * (lr + j), Math.sin(a) * (lr + j), fragR * rnd(0.7, 1.2), fragMass, lb * rnd(0.6, 1.3)));
+      }
+    }
+    this.initFragCount = this.frags.length;
+  }
+  intactCount() { let c = 0; for (const f of this.frags) if (f.alive) c++; return c; }
+  integrity() { return this.intactCount() / (this.initFragCount || 1); }
+  radius() {
+    let mx = 5;
+    for (const f of this.frags) { if (!f.alive) continue; const d = Math.sqrt(f.lx*f.lx+f.ly*f.ly)+f.r; if (d>mx) mx=d; }
+    return mx;
+  }
+  hit(wx, wy, dmg, dmgR, attackFreq) {
+    if (!this.alive) return [];
+    dmgR = dmgR || this.baseR * 0.6;
+    const detached = [];
+    const T = attackFreq !== undefined ? resonance(attackFreq, this.freq) : 1;
+    const effDmg = dmg * (0.3 + T * 1.7);
+    for (const f of this.frags) {
+      if (!f.alive) continue;
+      const fx = this.x + f.lx, fy = this.y + f.ly;
+      const dx = fx - wx, dy = fy - wy;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < dmgR + f.r) {
+        f.dmg += effDmg * (1 - Math.min(d / (dmgR + f.r), 1));
+        if (f.dmg >= f.bind) {
+          f.alive = false;
+          const nx = d > 0.01 ? dx / d : rnd(-1, 1), ny = d > 0.01 ? dy / d : rnd(-1, 1);
+          detached.push({ x: fx, y: fy, vx: this.vx + nx * (40 + effDmg * 0.04), vy: this.vy + ny * (40 + effDmg * 0.04), r: f.r, hue: this.el.hue, sat: this.el.sat });
+        }
+      }
+    }
+    if (detached.length > 0) {
+      this.phase += effDmg * 0.003;
+      this.energy = Math.max(0.1, this.energy - effDmg * 0.001);
+      this._recalc();
+      // Sound: particle struck like a string
+      playHit(this.el, this.x, Math.min(0.2, detached.length * 0.06), this.baseR);
+    }
+    if (this.shield > 0 && detached.length === 0) {
+      this.shield = Math.max(0, this.shield - effDmg * 0.3);
+      this.shieldDelay = 2;
+    }
+    return detached;
+  }
+  _recalc() {
+    const integ = this.integrity();
+    if (!this.isDoomed && integ <= this.doomThreshold) this.isDoomed = true;
+    if (integ <= 0.05) this.alive = false;
+    let m = 0; for (const f of this.frags) if (f.alive) m += f.mass;
+    this.totalMass = Math.max(0.01, m);
+  }
+}
+
+// ============================================================
+//  CHASSIS / WEAPONS / ENEMIES
+// ============================================================
+const CHASSIS = {
+  FRIGATE:      { name:'Frigate',      el:ELEMENTS.ion,    mass:1.5, baseR:18, maxSpeed:380, fragCount:10, layers:2, bindE:60,  dashes:3, dashSpeed:650, dashCD:3, shield:60,  shieldRegen:6,  accel:1400 },
+  CORVETTE:     { name:'Corvette',     el:ELEMENTS.plasma, mass:3,   baseR:24, maxSpeed:300, fragCount:14, layers:2, bindE:100, dashes:2, dashSpeed:550, dashCD:4, shield:100, shieldRegen:8,  accel:1100 },
+  DREADNOUGHT:  { name:'Dreadnought',  el:ELEMENTS.ferro,  mass:7,   baseR:35, maxSpeed:200, fragCount:20, layers:3, bindE:160, dashes:1, dashSpeed:400, dashCD:6, shield:160, shieldRegen:5,  accel:700  }
+};
+const WEAPS = [
+  { name:'BEAM',    key:'1', el:ELEMENTS.aether, rate:.03,  spd:1800, dmg:10,  life:.25, r:2.5, spread:.02,  burst:1, auto:1, trail:1 },
+  { name:'PULSE',   key:'2', el:ELEMENTS.plasma, rate:.12,  spd:1200, dmg:30,  life:.5,  r:5,   spread:.06,  burst:3, auto:1, trail:0 },
+  { name:'RAIL',    key:'3', el:ELEMENTS.ferro,  rate:.55,  spd:2400, dmg:110, life:.8,  r:4,   spread:.01,  burst:1, auto:0, trail:1 },
+  { name:'CLUSTER', key:'4', el:ELEMENTS.lithos, rate:.35,  spd:800,  dmg:22,  life:.6,  r:4,   spread:.25,  burst:8, auto:0, trail:0 },
+  { name:'DISRUPT', key:'5', el:ELEMENTS.ion,    rate:.18,  spd:1000, dmg:18,  life:.4,  r:7,   spread:.15,  burst:5, auto:1, trail:1 },
+];
+const ENEMIES = [
+  { el:ELEMENTS.pyre,  type:'pathogen', baseR:12, mass:.8,  maxSpeed:300, fragCount:6,  layers:1, bindE:35,  ai:'chase', scoreVal:10, shield:0,  shieldRegen:0 },
+  { el:ELEMENTS.ferro, type:'guard',    baseR:28, mass:5,   maxSpeed:90,  fragCount:16, layers:2, bindE:120, ai:'patrol',scoreVal:30, shield:50, shieldRegen:3 },
+  { el:ELEMENTS.ion,   type:'runner',   baseR:9,  mass:.4,  maxSpeed:480, fragCount:5,  layers:1, bindE:25,  ai:'dash',  scoreVal:15, shield:0,  shieldRegen:0 },
+  { el:ELEMENTS.aqua,  type:'swarm',    baseR:7,  mass:.25, maxSpeed:220, fragCount:4,  layers:1, bindE:18,  ai:'swarm', scoreVal:5,  shield:0,  shieldRegen:0 },
+];
+
+// ============================================================
+//  ABILITIES
+// ============================================================
+let abilities = {
+  vortex:      { active: false, energy: 100, maxEnergy: 100, drainRate: 12, rechargeRate: 8, caught: [] },
+  plasma:      { cd: 0, maxCd: 7  },
+  singularity: { cd: 0, maxCd: 10 },
+  chaos:       { cd: 0, maxCd: 9  }
+};
+let traps = [];
+
+// ============================================================
+//  KITS: Burning (DoT) and Arcing (chain lightning)
+// ============================================================
+const KITS = {
+  none:    { name:'NONE',    desc:'+25% direct damage',             hue:180, sym:'-', dmgMult:1.25 },
+  burning: { name:'BURNING', desc:'Less direct, but burns over time', hue:15,  sym:'B', dmgMult:0.7, dotDps:22, dotDuration:3.0 },
+  arcing:  { name:'ARCING',  desc:'Less direct, arcs to nearby foes', hue:220, sym:'A', dmgMult:0.65, arcRange:130, arcDmgMult:0.45, maxArcs:3 }
+};
+let currentKit = 'none';
+let burnEffects = []; // {target, dps, timer, hue}
+
+const TRAP_DEFS = {
+  plasma:      { el: ELEMENTS.pyre,   baseR:15, fragCount:5, layers:1, bindE:50, duration:5, radius:50,  dps:40, pullForce:0 },
+  singularity: { el: ELEMENTS.void,   baseR:12, fragCount:3, layers:1, bindE:60, duration:4, radius:120, dps:0,  pullForce:300 },
+  chaos:       { el: ELEMENTS.aether, baseR:18, fragCount:8, layers:1, bindE:40, duration:6, radius:80,  dps:25, pullForce:0 }
+};
+
+function deployTrap(type) {
+  if (!player || !player.alive) return;
+  const ab = abilities[type];
+  if (ab.cd > 0) return;
+  ab.cd = ab.maxCd;
+
+  const wmx = (mouseX - W / 2) / zoom + camX;
+  const wmy = (mouseY - H / 2) / zoom + camY;
+  const def = TRAP_DEFS[type];
+
+  const trap = new Composite(wmx, wmy, def.el, {
+    baseR: def.baseR, mass: 1, maxSpeed: 0,
+    fragCount: def.fragCount, layers: def.layers, bindE: def.bindE,
+    type: 'trap', team: 1, isStatic: true, doomThreshold: 0
+  });
+  trap._trapType = type;
+  trap._trapTimer = def.duration;
+  trap._trapMaxTimer = def.duration;
+  trap._trapRadius = def.radius;
+  trap._trapDps = def.dps;
+  trap._trapPull = def.pullForce;
+  allComps.push(trap);
+  traps.push(trap);
+  vacuum.excite(wmx, wmy, def.radius, 0.6, def.el.hue, def.el.sat);
+  playNote(def.el.freq, 0.2, panFromWorld(wmx), 'sawtooth', 0.6);
+}
+
+function activateVortex() {
+  const v = abilities.vortex;
+  if (v.energy <= 0 || v.active || !player || !player.alive) return;
+  v.active = true;
+  v.caught = [];
+}
+
+function releaseVortex() {
+  const v = abilities.vortex;
+  if (!v.active) return;
+  v.active = false;
+  if (!player || !player.alive || v.caught.length === 0) { v.caught = []; return; }
+
+  const wmx = (mouseX - W / 2) / zoom + camX;
+  const wmy = (mouseY - H / 2) / zoom + camY;
+  const aim = Math.atan2(wmy - player.y, wmx - player.x);
+
+  for (const c of v.caught) {
+    projectiles.push({
+      x: player.x + Math.cos(aim) * 40, y: player.y + Math.sin(aim) * 40,
+      vx: Math.cos(aim) * 1200 + rnd(-80, 80), vy: Math.sin(aim) * 1200 + rnd(-80, 80),
+      life: 0.8, dmg: c.dmg * 1.5, r: c.r * 1.2,
+      freq: c.freq, hue: 180, sat: 1, trail: 1, team: 1, lock: 0.5
+    });
+  }
+  playChord(0.5, 0.2, true);  // major chord: vortex release = power
+  vacuum.excite(player.x, player.y, 80, 0.6, 180, 0.9);
+  v.caught = [];
+}
+
+function updateVortex(dt) {
+  const v = abilities.vortex;
+  // Recharge energy when not active
+  if (!v.active) {
+    v.energy = Math.min(v.maxEnergy, v.energy + v.rechargeRate * dt);
+    return;
+  }
+  if (!player || !player.alive) return;
+  // Drain energy while active
+  v.energy -= v.drainRate * dt;
+  if (v.energy <= 0) { v.energy = 0; releaseVortex(); return; }
+
+  const wmx = (mouseX - W / 2) / zoom + camX;
+  const wmy = (mouseY - H / 2) / zoom + camY;
+  const aim = Math.atan2(wmy - player.y, wmx - player.x);
+
+  for (let i = projectiles.length - 1; i >= 0; i--) {
+    const p = projectiles[i];
+    if (p.team === 1) continue;
+    const d = dst(p.x, p.y, player.x, player.y);
+    if (d > 70 || d < 10) continue;
+    if (angleInArc(p.x, p.y, player.x, player.y, aim, Math.PI / 5)) {
+      v.caught.push({ dmg: p.dmg, r: p.r, freq: p.freq, hue: p.hue, sat: p.sat });
+      projectiles.splice(i, 1);
+      playNote(p.freq, 0.12, 0, 'sine');
+    }
+  }
+}
+
+function updateTraps(dt) {
+  for (let i = traps.length - 1; i >= 0; i--) {
+    const t = traps[i];
+    if (!t.alive) { traps.splice(i, 1); continue; }
+    t._trapTimer -= dt;
+    if (t._trapTimer <= 0) { t.alive = false; traps.splice(i, 1); continue; }
+
+    for (const c of allComps) {
+      if (!c.alive || c.team !== 3 || c.isStatic) continue;
+      const d = dst(t.x, t.y, c.x, c.y);
+      if (d > t._trapRadius) continue;
+      const overlap = 1 - d / t._trapRadius;
+
+      if (t._trapType === 'plasma') {
+        const det = c.hit(t.x, t.y, t._trapDps * dt * overlap, t._trapRadius * 0.5, t.el.freq);
+        for (const d2 of det) debris.push({ ...d2, life: 1.5 });
+      } else if (t._trapType === 'singularity') {
+        const nx = (t.x - c.x) / (d || 1), ny = (t.y - c.y) / (d || 1);
+        c.vx += nx * t._trapPull * overlap * dt;
+        c.vy += ny * t._trapPull * overlap * dt;
+      } else if (t._trapType === 'chaos') {
+        if (Math.random() < 0.3) {
+          const det = c.hit(c.x + rnd(-20, 20), c.y + rnd(-20, 20), t._trapDps * dt * 3, 20, rnd(0, 1));
+          for (const d2 of det) debris.push({ ...d2, life: 1.5 });
+          c.phase += rnd(-0.5, 0.5);
+        }
+      }
+    }
+    vacuum.excite(t.x, t.y, t._trapRadius * 0.4, 0.15, t.el.hue, t.el.sat);
+  }
+}
+
+function updateAbilityCooldowns(dt) {
+  for (const key of ['plasma', 'singularity', 'chaos']) {
+    if (abilities[key].cd > 0) abilities[key].cd = Math.max(0, abilities[key].cd - dt);
+  }
+}
+
+function updateBurnEffects(dt) {
+  for (let i=burnEffects.length-1; i>=0; i--) {
+    const b=burnEffects[i];
+    b.timer -= dt;
+    if (b.timer<=0 || !b.target.alive) { burnEffects.splice(i,1); continue; }
+    const det=b.target.hit(b.target.x+rnd(-10,10), b.target.y+rnd(-10,10), b.dps*dt, b.target.baseR*0.4, b.freq);
+    for (const d2 of det) debris.push({...d2,life:1.5});
+    // Fire particle effect
+    if (Math.random()<0.3) effects.push({x:b.target.x+rnd(-15,15),y:b.target.y+rnd(-15,15),r:4,life:0.3,hue:b.hue,sat:1});
+  }
+}
+
+function updateArcFX(dt) {
+  for (let i=arcFX.length-1; i>=0; i--) {
+    arcFX[i].life -= dt;
+    if (arcFX[i].life<=0) arcFX.splice(i,1);
+  }
+}
+
+function drawArcFX() {
+  for (const a of arcFX) {
+    const [x1,y1]=worldToScreen(a.x1,a.y1);
+    const [x2,y2]=worldToScreen(a.x2,a.y2);
+    const alpha=a.life/0.2;
+    X.beginPath();
+    // Jagged lightning: midpoint offset
+    const mx=(x1+x2)/2+rnd(-15,15)*alpha, my=(y1+y2)/2+rnd(-15,15)*alpha;
+    X.moveTo(x1,y1); X.lineTo(mx,my); X.lineTo(x2,y2);
+    X.strokeStyle=hsl(a.hue,0.9,0.7,alpha*0.8); X.lineWidth=2*alpha; X.stroke();
+    // Glow line
+    X.beginPath(); X.moveTo(x1,y1); X.lineTo(mx,my); X.lineTo(x2,y2);
+    X.strokeStyle=hsl(a.hue,0.5,0.9,alpha*0.3); X.lineWidth=6*alpha; X.stroke();
+  }
+}
+
+// ============================================================
+//  STASIS RECHARGE
+// ============================================================
+let stasisTimer = rnd(20, 35);
+let stasisEntity = null;
+let stasisHumTimer = 0;
+
+function updateStasis(dt) {
+  // Spawn timer
+  if (!stasisEntity || !stasisEntity.alive) {
+    stasisTimer -= dt;
+    if (stasisTimer <= 0) {
+      stasisTimer = rnd(30, 50);
+      const angle = rnd(0, Math.PI * 2), r = rnd(200, ARENA_R * 0.65);
+      const sx = Math.cos(angle) * r, sy = Math.sin(angle) * r;
+      // Avoid walls
+      let blocked = false;
+      for (const c of allComps) {
+        if (c.type === 'wall' && dst(sx, sy, c.x, c.y) < 80) { blocked = true; break; }
+      }
+      if (!blocked) {
+        stasisEntity = new Composite(sx, sy, ELEMENTS.nova, {
+          baseR: 20, mass: 0.5, maxSpeed: 0, fragCount: 8, layers: 1, bindE: 999,
+          type: 'stasis', team: 0, isStatic: true, doomThreshold: 0
+        });
+        stasisEntity._stasisLife = 12;
+        allComps.push(stasisEntity);
+        vacuum.excite(sx, sy, 120, 0.5, 50, 1);
+        showBanner('STASIS FIELD');
+      }
+    }
+    return;
+  }
+
+  stasisEntity._stasisLife -= dt;
+  if (stasisEntity._stasisLife <= 0) { stasisEntity.alive = false; stasisEntity = null; return; }
+
+  // Heal player if nearby (slow: ~20% health over 4 seconds)
+  if (player && player.alive) {
+    const d = dst(player.x, player.y, stasisEntity.x, stasisEntity.y);
+    if (d < 80) {
+      // Slowly repair alive fragments (5% of bind per second)
+      for (const f of player.frags) {
+        if (f.alive && f.dmg > 0) { f.dmg = Math.max(0, f.dmg - f.bind * 0.05 * dt); }
+      }
+      // Revive one dead fragment every ~1.4s (slow trickle)
+      if (!stasisEntity._reviveCD) stasisEntity._reviveCD = 0;
+      stasisEntity._reviveCD -= dt;
+      if (stasisEntity._reviveCD <= 0) {
+        stasisEntity._reviveCD = 1.4;
+        const dead = player.frags.filter(f => !f.alive && f.dmg < f.bind * 1.8);
+        if (dead.length > 0) { dead[0].alive = true; dead[0].dmg = dead[0].bind * 0.6; }
+      }
+      // Shield regen at normal rate
+      player.shield = Math.min(player.maxShield, player.shield + player.shieldRegen * dt);
+      player._recalc();
+
+      // Gentle heal sound
+      stasisHumTimer -= dt;
+      if (stasisHumTimer <= 0) { stasisHumTimer = 0.6; playNote(0.55, 0.04, 0, 'sine'); }
+
+      vacuum.excite(stasisEntity.x, stasisEntity.y, 60, 0.2, 50, 1);
+    }
+  }
+}
+
+// ============================================================
+//  ARENA + WORLD
+// ============================================================
+const ARENA_R = 1200;
+let allComps = [];
+let projectiles = [];
+let debris = [];
+let effects = [];
+let reactionFX = [];
+let arcFX = [];
+let vacuum = null;
+
+function buildWorld() {
+  vacuum = new VacuumField(ARENA_R, 70);
+  const wallDefs = [
+    [0,0,50,50,24,3,300], [-350,0,20,180,16,2,200], [350,0,20,180,16,2,200],
+    [0,-350,180,20,16,2,200], [0,350,180,20,16,2,200],
+    [-700,0,35,60,12,2,180], [700,0,35,60,12,2,180], [0,-700,60,35,12,2,180], [0,700,60,35,12,2,180],
+    [-550,-550,60,15,10,1,150], [-535,-535,15,60,10,1,150],
+    [550,550,60,15,10,1,150], [535,535,15,60,10,1,150],
+    [-550,530,60,15,10,1,150], [550,-550,60,15,10,1,150],
+    [-900,-100,15,200,14,2,220], [900,-100,15,200,14,2,220],
+    [-100,-900,200,15,14,2,220], [-100,900,200,15,14,2,220],
+  ];
+  for (const [wx,wy,ww,wh,fc,ly,be] of wallDefs) {
+    const c = new Composite(wx, wy, ELEMENTS.cryo, {
+      baseR: Math.max(ww,wh)*0.5, mass: ww*wh*0.01, maxSpeed:0,
+      fragCount:fc, layers:ly, bindE:be, type:'wall', team:2, isStatic:true, doomThreshold:0.01
+    });
+    for (const f of c.frags) { f.lx = rnd(-ww*0.45, ww*0.45); f.ly = rnd(-wh*0.45, wh*0.45); f.r = Math.min(ww,wh)*0.12*rnd(0.7,1.2); }
+    c._wallW = ww; c._wallH = wh;
+    allComps.push(c);
+  }
+  const nodeAngles = [0, Math.PI/4, Math.PI/2, 3*Math.PI/4, Math.PI, 5*Math.PI/4, 3*Math.PI/2, 7*Math.PI/4];
+  for (const a of nodeAngles) for (const r of [300, 550, 850]) {
+    allComps.push(new Composite(Math.cos(a)*r, Math.sin(a)*r, ELEMENTS.nectar, {
+      baseR:12, mass:0.5, maxSpeed:0, fragCount:5, layers:1, bindE:80, type:'node', team:2, isStatic:true, doomThreshold:0.01
+    }));
+  }
+}
+
+// ============================================================
+//  GAME STATE
+// ============================================================
+let player = null, currentChassis = 'CORVETTE', currentWeap = 0, fireCd = 0;
+let score = 0, wave = 1, waveTimer = 0, bannerTimer = 0;
+let scanning = false, settingsOpen = false, gameOver = false;
+let camX = 0, camY = 0, zoom = 0.5;
+let mouseX = 0, mouseY = 0, mouseDown = false;
+let keys = {};
+let targetEnemy = null;
+
+function spawnPlayer() {
+  const ch = CHASSIS[currentChassis];
+  player = new Composite(0, -400, ch.el, {
+    baseR:ch.baseR, mass:ch.mass, maxSpeed:ch.maxSpeed,
+    fragCount:ch.fragCount, layers:ch.layers, bindE:ch.bindE,
+    type:'player', team:1, dashes:ch.dashes, dashSpeed:ch.dashSpeed, dashCD:ch.dashCD,
+    shield:ch.shield, shieldRegen:ch.shieldRegen, doomThreshold:0.15
+  });
+  player._accel = ch.accel;
+  allComps.push(player);
+}
+function spawnEnemy(t) {
+  const angle = rnd(0, Math.PI*2), r = rnd(ARENA_R*0.4, ARENA_R*0.85);
+  const ex = Math.cos(angle)*r, ey = Math.sin(angle)*r;
+  for (const c of allComps) { if ((c.type==='wall'||c.type==='node') && dst(ex,ey,c.x,c.y)<c.baseR*2) return; }
+  allComps.push(new Composite(ex, ey, t.el, {
+    baseR:t.baseR, mass:t.mass, maxSpeed:t.maxSpeed, fragCount:t.fragCount, layers:t.layers,
+    bindE:t.bindE, type:t.type, team:3, ai:t.ai, scoreVal:t.scoreVal, shield:t.shield, shieldRegen:t.shieldRegen
+  }));
+}
+function spawnWave() { const count = 3+wave*2, types = Math.min(wave, ENEMIES.length); for (let i=0;i<count;i++) spawnEnemy(ENEMIES[Math.floor(rnd(0,types))]); }
+
+function resetGame() {
+  allComps=[]; projectiles=[]; debris=[]; effects=[]; reactionFX=[]; traps=[]; arcFX=[];
+  player=null; score=0; wave=1; waveTimer=0; gameOver=false;
+  stasisEntity=null; stasisTimer=rnd(20,35);
+  abilities.vortex = { active:false, energy:100, maxEnergy:100, drainRate:12, rechargeRate:8, caught:[] };
+  burnEffects = [];
+  abilities.plasma.cd=0; abilities.singularity.cd=0; abilities.chaos.cd=0;
+  buildWorld(); spawnPlayer(); spawnWave(); showBanner('WAVE 1');
+}
+
+// ============================================================
+//  INPUT
+// ============================================================
+addEventListener('keydown', e => {
+  initAudio();
+  keys[e.key.toLowerCase()] = true;
+  if (e.key >= '1' && e.key <= '5') currentWeap = parseInt(e.key) - 1;
+  if (e.key.toLowerCase() === 'r' && !settingsOpen) resetGame();
+  if (e.key === 'Tab') { e.preventDefault(); scanning = true; }
+  if (e.key === ' ') { e.preventDefault(); tryDash(); }
+  if (e.key === 'Escape') { e.preventDefault(); toggleSettings(); }
+  if (e.key.toLowerCase() === 'q') activateVortex();
+  if (e.key.toLowerCase() === 'e') deployTrap('plasma');
+  if (e.key === 'Shift') deployTrap('singularity');
+  if (e.key.toLowerCase() === 'f') deployTrap('chaos');
+  if (e.key.toLowerCase() === 'g') {
+    const kitKeys = Object.keys(KITS);
+    currentKit = kitKeys[(kitKeys.indexOf(currentKit)+1) % kitKeys.length];
+    document.querySelectorAll('.kit-btn').forEach((b,i) => b.classList.toggle('active', kitKeys[i]===currentKit));
+  }
+});
+addEventListener('keyup', e => {
+  keys[e.key.toLowerCase()] = false;
+  if (e.key === 'Tab') scanning = false;
+  if (e.key.toLowerCase() === 'q') releaseVortex();
+});
+addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+addEventListener('mousedown', e => {
+  initAudio();
+  if (e.button === 0) {
+    // Don't fire weapon if clicking a UI element
+    if (e.target.closest('#weapons,#chassis-select,#kit-select,#settings,.s-close')) return;
+    mouseDown = true; keys._realMouseDown = true;
+  }
+});
+addEventListener('mouseup', e => { if (e.button === 0) { mouseDown = false; keys._realMouseDown = false; } });
+addEventListener('wheel', e => { zoom = clamp(zoom + (e.deltaY > 0 ? -0.05 : 0.05), 0.15, 1.5); });
+
+function tryDash() {
+  if (!player || !player.alive || player.dashCharges <= 0 || player.dashTimer > 0) return;
+  let dx = 0, dy = 0;
+  // Priority: current velocity (direction you're moving), then input keys, then mouse aim
+  const spd = Math.sqrt(player.vx*player.vx + player.vy*player.vy);
+  if (spd > 20) { dx = player.vx; dy = player.vy; }
+  else {
+    if (keys.w) dy -= 1; if (keys.s) dy += 1; if (keys.a) dx -= 1; if (keys.d) dx += 1;
+    // Gamepad left stick
+    if (dx === 0 && dy === 0 && keys._gpMoveX) dx = keys._gpMoveX;
+    if (dx === 0 && dy === 0 && keys._gpMoveY) dy = keys._gpMoveY;
+    if (dx === 0 && dy === 0) { const wmx = (mouseX-W/2)/zoom+camX, wmy = (mouseY-H/2)/zoom+camY; dx = wmx-player.x; dy = wmy-player.y; }
+  }
+  const len = Math.sqrt(dx*dx+dy*dy) || 1;
+  player.vx = (dx/len)*player.dashSpeed; player.vy = (dy/len)*player.dashSpeed;
+  player.dashCharges--; player.dashTimer = 0.15;
+  vacuum.excite(player.x, player.y, 80, 0.7, player.el.hue, player.el.sat);
+  effects.push({ x:player.x, y:player.y, r:30, life:0.3, hue:player.el.hue, sat:player.el.sat });
+  // Dash: deep power chord (root + fifth)
+  playNote(player.el.freq, 0.12, 0, 'triangle', 0.9);
+  playNote(player.el.freq * 1.5, 0.06, 0, 'triangle', 0.8);
+}
+
+function fireWeapon(dt) {
+  if (!player || !player.alive || !mouseDown) return;
+  if (abilities.vortex.active) return; // can't fire while vortexing
+  const w = WEAPS[currentWeap];
+  fireCd -= dt;
+  if (fireCd > 0) return;
+  fireCd = w.rate;
+  const wmx = (mouseX-W/2)/zoom+camX, wmy = (mouseY-H/2)/zoom+camY;
+  let ax = wmx-player.x, ay = wmy-player.y;
+  const al = Math.sqrt(ax*ax+ay*ay)||1; ax/=al; ay/=al;
+  for (let b = 0; b < w.burst; b++) {
+    const ang = Math.atan2(ay,ax) + rnd(-w.spread, w.spread);
+    projectiles.push({
+      x: player.x+ax*(player.baseR+5), y: player.y+ay*(player.baseR+5),
+      vx: Math.cos(ang)*w.spd+player.vx*0.3, vy: Math.sin(ang)*w.spd+player.vy*0.3,
+      life:w.life, dmg:w.dmg * (KITS[currentKit].dmgMult || 1), r:w.r, freq:w.el.freq, hue:w.el.hue, sat:w.el.sat,
+      trail:w.trail, team:1, lock:w.el.lock
+    });
+  }
+  playFire(w.el.freq, clamp(w.r / 6, 0.3, 1.0), groupToWave(w.el.group));
+}
+
+// ============================================================
+//  AI
+// ============================================================
+function runAI(e, dt) {
+  if (!e.alive || !player || !player.alive || e.isStatic) return;
+  const dx = player.x-e.x, dy = player.y-e.y;
+  const d = Math.sqrt(dx*dx+dy*dy)||1;
+  const nx = dx/d, ny = dy/d;
+  e.aiTimer -= dt;
+  switch (e.ai) {
+    case 'chase':
+      e.vx += nx*600*dt; e.vy += ny*600*dt;
+      if (d < 250 && e.aiTimer <= 0) {
+        e.aiTimer = 0.4;
+        const ang = Math.atan2(ny,nx)+rnd(-0.15,0.15);
+        projectiles.push({ x:e.x+nx*e.baseR, y:e.y+ny*e.baseR, vx:Math.cos(ang)*700, vy:Math.sin(ang)*700, life:0.5, dmg:12, r:3, freq:e.freq, hue:e.el.hue, sat:e.el.sat, trail:0, team:3, lock:e.el.lock });
+      }
+      break;
+    case 'patrol':
+      e.vx += (-ny*120+nx*30)*dt; e.vy += (nx*120+ny*30)*dt;
+      if (d < 400 && e.aiTimer <= 0) {
+        e.aiTimer = 0.8;
+        projectiles.push({ x:e.x+nx*e.baseR, y:e.y+ny*e.baseR, vx:nx*500, vy:ny*500, life:0.8, dmg:35, r:5, freq:e.freq, hue:e.el.hue, sat:e.el.sat, trail:1, team:3, lock:e.el.lock });
+      }
+      break;
+    case 'dash':
+      if (e.aiTimer <= 0 && d < 400) {
+        e.vx = nx*e.maxSpeed*2; e.vy = ny*e.maxSpeed*2;
+        e.aiTimer = 1.5;
+        vacuum.excite(e.x, e.y, 60, 0.5, e.el.hue, e.el.sat);
+      } else { e.vx += nx*200*dt; e.vy += ny*200*dt; }
+      break;
+    case 'swarm':
+      e.vx += nx*350*dt; e.vy += ny*350*dt;
+      for (const o of allComps) {
+        if (o===e || o.ai!=='swarm' || !o.alive) continue;
+        const sd = dst(e.x,e.y,o.x,o.y);
+        if (sd < 80) { e.vx += (o.vx-e.vx)*0.02; e.vy += (o.vy-e.vy)*0.02; if (sd<25) { e.vx -= (o.x-e.x)*0.5; e.vy -= (o.y-e.y)*0.5; } }
+      }
+      break;
+  }
+}
+
+// ============================================================
+//  REACTIONS
+// ============================================================
+function processReactions(dt) {
+  const active = allComps.filter(c => c.alive && !c.isStatic && c.team !== 1);
+  for (let i = 0; i < active.length; i++) {
+    const a = active[i];
+    for (let j = i+1; j < active.length; j++) {
+      const b = active[j];
+      const d = dst(a.x,a.y,b.x,b.y);
+      const fieldRange = (a.baseR+b.baseR)*2.5;
+      if (d > fieldRange) continue;
+      const T = resonance(a.freq, b.freq);
+      const rxn = getReaction(a.el.group, b.el.group);
+      if (!rxn) continue;
+      const overlap = 1-d/fieldRange;
+      const intensity = rxn.strength*overlap*T;
+      if (intensity < 0.05) continue;
+      const mx = (a.x+b.x)*0.5, my = (a.y+b.y)*0.5;
+      switch (rxn.type) {
+        case 'crystal': {
+          const fx = (b.x-a.x)/(d||1)*intensity*30*dt;
+          a.vx+=fx; a.vy+=(b.y-a.y)/(d||1)*intensity*30*dt;
+          b.vx-=fx; b.vy-=(b.y-a.y)/(d||1)*intensity*30*dt;
+          if (T>0.4) reactionFX.push({type:'bond',x1:a.x,y1:a.y,x2:b.x,y2:b.y,hue:rxn.hue,alpha:intensity*0.5,life:dt*2});
+          break;
+        }
+        case 'merge': {
+          const bl=intensity*0.05, avg=(a.vx+b.vx)*0.5, avy=(a.vy+b.vy)*0.5;
+          a.vx=lerp(a.vx,avg,bl); a.vy=lerp(a.vy,avy,bl);
+          b.vx=lerp(b.vx,avg,bl); b.vy=lerp(b.vy,avy,bl);
+          break;
+        }
+        case 'amplify':
+          a.energy=Math.min(2.5,a.energy+intensity*0.1*dt);
+          b.energy=Math.min(2.5,b.energy+intensity*0.1*dt);
+          vacuum.excite(mx,my,60,intensity*0.3,rxn.hue,0.6);
+          break;
+        case 'catalyze': {
+          const fluid = a.el.group==='fluid'?a:b;
+          fluid.maxSpeed *= (1+intensity*0.01*dt);
+          if (Math.random()<intensity*0.3) reactionFX.push({type:'spark',x:mx+rnd(-10,10),y:my+rnd(-10,10),vx:rnd(-60,60),vy:rnd(-60,60),hue:rxn.hue,life:0.4});
+          break;
+        }
+        case 'erode': {
+          const solid = a.el.group==='solid'?a:b;
+          if (Math.random()<intensity*0.1*dt) { const det=solid.hit(mx,my,5,solid.baseR*0.3,a.freq); for(const d2 of det) debris.push({...d2,life:2}); }
+          vacuum.excite(mx,my,40,intensity*0.2,rxn.hue,0.4);
+          break;
+        }
+        case 'coat':
+          if (Math.random()<intensity*0.5) reactionFX.push({type:'spark',x:mx+rnd(-15,15),y:my+rnd(-15,15),vx:rnd(-30,30),vy:rnd(-30,30),hue:rxn.hue,life:0.3});
+          break;
+      }
+    }
+  }
+}
+
+// ============================================================
+//  COLLISION
+// ============================================================
+function wallAABB(c, ox, oy, or2) {
+  if (!c._wallW) return false;
+  const hw=c._wallW*0.5, hh=c._wallH*0.5;
+  const cx=clamp(ox,c.x-hw,c.x+hw), cy=clamp(oy,c.y-hh,c.y+hh);
+  return (ox-cx)*(ox-cx)+(oy-cy)*(oy-cy) < or2;
+}
+
+function collideProjectiles(dt) {
+  for (let pi = projectiles.length-1; pi >= 0; pi--) {
+    const p = projectiles[pi];
+    p.x += p.vx*dt; p.y += p.vy*dt; p.life -= dt;
+    if (p.trail || Math.random()<0.3) vacuum.excite(p.x,p.y,25+p.r*2,0.3,p.hue,p.sat);
+    if (p.life<=0 || p.x*p.x+p.y*p.y>ARENA_R*ARENA_R) { projectiles.splice(pi,1); continue; }
+    let hit = false;
+    for (const c of allComps) {
+      if (!c.alive || c.team===p.team) continue;
+      if (c.type==='player' && p.team===1) continue;
+      if (c.type==='wall') {
+        if (p.lock < 0.3) continue;
+        if (wallAABB(c,p.x,p.y,p.r*p.r)) { hit=true; effects.push({x:p.x,y:p.y,r:p.r*2,life:0.15,hue:p.hue,sat:p.sat}); break; }
+        continue;
+      }
+      if (c.type==='node' || c.type==='trap' || c.type==='stasis') continue;
+      const d = dst(p.x,p.y,c.x,c.y);
+      if (d < c.radius()+p.r) {
+        const det = c.hit(p.x,p.y,p.dmg,p.r*3,p.freq);
+        for (const d2 of det) debris.push({...d2,life:2});
+        if (det.length>0) vacuum.excite(p.x,p.y,50,0.5,p.hue,p.sat);
+        effects.push({x:p.x,y:p.y,r:p.r*3,life:0.2,hue:p.hue,sat:p.sat});
+        // Kit effects (player projectiles only)
+        if (p.team===1 && c.alive) {
+          if (currentKit==='burning') {
+            const bk=KITS.burning;
+            // Stack burn if not already burning from this hit
+            burnEffects.push({target:c, dps:bk.dotDps, timer:bk.dotDuration, hue:bk.hue, freq:p.freq});
+          }
+          if (currentKit==='arcing') {
+            const ak=KITS.arcing;
+            // Chain lightning to nearby enemies
+            let arcSource=c, arced=new Set([c]);
+            for (let ai=0; ai<ak.maxArcs; ai++) {
+              let best=null, bestD=ak.arcRange;
+              for (const oc of allComps) {
+                if (!oc.alive || oc.team===1 || oc.type==='player' || oc.type==='wall' || oc.type==='node' || oc.type==='trap' || oc.type==='stasis' || arced.has(oc)) continue;
+                const ad=dst(arcSource.x,arcSource.y,oc.x,oc.y);
+                if (ad<bestD) { bestD=ad; best=oc; }
+              }
+              if (!best) break;
+              arced.add(best);
+              const arcDet=best.hit(best.x,best.y,p.dmg*ak.arcDmgMult,best.baseR*0.6,p.freq);
+              for (const d3 of arcDet) debris.push({...d3,life:1.5});
+              // Lightning visual
+              effects.push({x:best.x,y:best.y,r:best.baseR,life:0.15,hue:ak.hue,sat:0.9});
+              arcFX.push({x1:arcSource.x,y1:arcSource.y,x2:best.x,y2:best.y,life:0.2,hue:ak.hue});
+              playNote(best.freq||0.5, 0.06, panFromWorld(best.x), 'sawtooth', clamp(best.baseR/40, 0.1, 0.6));
+              arcSource=best;
+            }
+          }
+        }
+        hit=true; break;
+      }
+    }
+    if (hit) projectiles.splice(pi,1);
+  }
+}
+
+function collideEntities(dt) {
+  for (const c of allComps) {
+    if (!c.alive || c.isStatic) continue;
+    const ad = Math.sqrt(c.x*c.x+c.y*c.y);
+    if (ad+c.baseR>ARENA_R) {
+      const nx=c.x/(ad||1), ny=c.y/(ad||1);
+      c.x=(ARENA_R-c.baseR)*nx; c.y=(ARENA_R-c.baseR)*ny;
+      const vn=c.vx*nx+c.vy*ny;
+      if (vn>0) { c.vx-=vn*nx*1.5; c.vy-=vn*ny*1.5; }
+    }
+    for (const w of allComps) {
+      if (!w.alive || !w._wallW) continue;
+      if (c.el.group==='ether' && c.type!=='player') continue;
+      const hw=w._wallW*0.5, hh=w._wallH*0.5;
+      const cx2=clamp(c.x,w.x-hw,w.x+hw), cy2=clamp(c.y,w.y-hh,w.y+hh);
+      const dx=c.x-cx2, dy=c.y-cy2, d2=dx*dx+dy*dy, minD=c.baseR*0.8;
+      if (d2<minD*minD && d2>0.01) {
+        const d=Math.sqrt(d2), nx=dx/d, ny=dy/d;
+        c.x=cx2+nx*minD; c.y=cy2+ny*minD;
+        const vn=c.vx*nx+c.vy*ny;
+        if (vn<0) { c.vx-=vn*nx*1.3; c.vy-=vn*ny*1.3; }
+      }
+    }
+  }
+}
+
+// ============================================================
+//  GAME LOOP
+// ============================================================
+function showBanner(txt) { const el=document.getElementById('banner'); el.textContent=txt; el.style.opacity=1; bannerTimer=2; }
+
+function update(dt) {
+  if (gameOver || settingsOpen) return;
+  dt = Math.min(dt, 0.033);
+
+  if (bannerTimer>0) { bannerTimer-=dt; if(bannerTimer<=0) document.getElementById('banner').style.opacity=0; }
+
+  // Gamepad
+  pollGamepad();
+  if (gpState.connected && player && player.alive) {
+    // Left stick movement
+    const mx = gpState.axes[0] * gpConfig.moveSens * 0.1;
+    const my = gpState.axes[1] * gpConfig.moveSens * 0.1;
+    if (Math.abs(mx) > 0.01) keys._gpMoveX = mx; else keys._gpMoveX = 0;
+    if (Math.abs(my) > 0.01) keys._gpMoveY = my; else keys._gpMoveY = 0;
+    // Right stick aim: maps to visible arena circle, scales with zoom
+    const ax = gpState.axes[2], ay = gpState.axes[3] * (gpConfig.invertY ? -1 : 1);
+    if (Math.abs(ax) > 0.1 || Math.abs(ay) > 0.1) {
+      // Visible radius = arena radius in screen pixels, capped to half screen
+      const visR = Math.min(ARENA_R * zoom, Math.min(W, H) * 0.45);
+      const reach = visR * gpConfig.lookSens * 0.1;
+      mouseX = W / 2 + ax * reach;
+      mouseY = H / 2 + ay * reach;
+    }
+    // Buttons
+    if (gpHeld('fire')) mouseDown = true; else if (!keys._realMouseDown) mouseDown = false;
+    if (gpJust('dash')) tryDash();
+    if (gpJust('vortex')) activateVortex();
+    if (!gpHeld('vortex') && abilities.vortex.active) releaseVortex();
+    if (gpJust('trap1')) deployTrap('plasma');
+    if (gpJust('trap2')) deployTrap('singularity');
+    if (gpJust('trap3')) deployTrap('chaos');
+    if (gpJust('weapNext')) currentWeap = (currentWeap + 1) % WEAPS.length;
+    if (gpJust('weapPrev')) currentWeap = (currentWeap - 1 + WEAPS.length) % WEAPS.length;
+    // D-pad up/down cycle kits
+    const kk = Object.keys(KITS), ki = kk.indexOf(currentKit);
+    if (gpState.btns[12]&&!gpState.prev[12]) { currentKit = kk[(ki - 1 + kk.length) % kk.length]; document.querySelectorAll('.kit-btn').forEach((b,j)=>b.classList.toggle('active',kk[j]===currentKit)); }
+    if (gpState.btns[13]&&!gpState.prev[13]) { currentKit = kk[(ki + 1) % kk.length]; document.querySelectorAll('.kit-btn').forEach((b,j)=>b.classList.toggle('active',kk[j]===currentKit)); }
+    if (gpJust('settings')) toggleSettings();
+  }
+
+  // Player movement
+  if (player && player.alive) {
+    let ax = 0, ay = 0;
+    if (keys.w) ay -= 1; if (keys.s) ay += 1; if (keys.a) ax -= 1; if (keys.d) ax += 1;
+    // Gamepad supplement
+    if (keys._gpMoveX) ax += keys._gpMoveX;
+    if (keys._gpMoveY) ay += keys._gpMoveY;
+    const aLen = Math.sqrt(ax*ax+ay*ay);
+    if (aLen > 0) { ax/=aLen; ay/=aLen; player.vx+=ax*player._accel*dt; player.vy+=ay*player._accel*dt; }
+    player.vx *= (1-3.5*dt); player.vy *= (1-3.5*dt);
+    const spd = Math.sqrt(player.vx*player.vx+player.vy*player.vy);
+    if (player.dashTimer > 0) player.dashTimer -= dt;
+    else if (spd > player.maxSpeed) { player.vx=player.vx/spd*player.maxSpeed; player.vy=player.vy/spd*player.maxSpeed; }
+    player.x += player.vx*dt; player.y += player.vy*dt;
+    if (player.dashCharges < player.maxDashes) { player.dashCDTimer += dt; if (player.dashCDTimer >= player.dashCooldown) { player.dashCharges++; player.dashCDTimer = 0; } }
+    if (player.shieldDelay > 0) player.shieldDelay -= dt;
+    else if (player.shield < player.maxShield) player.shield = Math.min(player.maxShield, player.shield + player.shieldRegen * dt);
+    if (spd > 20) vacuum.excite(player.x, player.y, 40+spd*0.05, 0.15, player.el.hue, player.el.sat);
+    fireWeapon(dt);
+    camX = lerp(camX, player.x, 5*dt); camY = lerp(camY, player.y, 5*dt);
+  }
+
+  // Update composites
+  for (const c of allComps) {
+    if (!c.alive || c.isStatic || c===player) continue;
+    runAI(c, dt);
+    c.vx *= (1-2.5*dt); c.vy *= (1-2.5*dt);
+    const spd = Math.sqrt(c.vx*c.vx+c.vy*c.vy);
+    if (spd > c.maxSpeed) { c.vx=c.vx/spd*c.maxSpeed; c.vy=c.vy/spd*c.maxSpeed; }
+    c.x += c.vx*dt; c.y += c.vy*dt; c.age += dt;
+    c.phase += c.el.pump*dt;
+    c.energy += (c.el.energy-c.energy)*0.01;
+    if (c.shieldDelay>0) c.shieldDelay-=dt;
+    else if (c.shield<c.maxShield) c.shield=Math.min(c.maxShield,c.shield+c.shieldRegen*dt);
+    if (spd>10 && c.team===3) vacuum.excite(c.x,c.y,30,0.08,c.el.hue,c.el.sat);
+  }
+
+  collideProjectiles(dt);
+  collideEntities(dt);
+
+  // Contact damage
+  if (player && player.alive) {
+    for (const c of allComps) {
+      if (!c.alive || c.team!==3) continue;
+      const d = dst(player.x,player.y,c.x,c.y);
+      if (d < player.radius()+c.radius()) {
+        const det = player.hit(c.x,c.y,15*dt,c.baseR,c.freq);
+        for (const d2 of det) debris.push({...d2,life:2});
+        const nx=(player.x-c.x)/(d||1), ny=(player.y-c.y)/(d||1);
+        player.vx+=nx*100*dt; player.vy+=ny*100*dt;
+      }
+    }
+  }
+
+  // Abilities + traps + stasis
+  updateVortex(dt);
+  updateTraps(dt);
+  updateAbilityCooldowns(dt);
+  updateStasis(dt);
+  updateBurnEffects(dt);
+  updateArcFX(dt);
+  processReactions(dt);
+  vacuum.step(dt);
+
+  // Debris
+  for (let i=debris.length-1;i>=0;i--) { const d=debris[i]; d.x+=d.vx*dt; d.y+=d.vy*dt; d.vx*=0.97; d.vy*=0.97; d.life-=dt; if(d.life<=0)debris.splice(i,1); }
+  for (let i=effects.length-1;i>=0;i--) { effects[i].life-=dt; if(effects[i].life<=0)effects.splice(i,1); }
+  for (let i=reactionFX.length-1;i>=0;i--) { const r=reactionFX[i]; r.life-=dt; if(r.type==='spark'){r.x+=r.vx*dt;r.y+=r.vy*dt;} if(r.life<=0)reactionFX.splice(i,1); }
+
+  // Remove dead
+  for (let i=allComps.length-1;i>=0;i--) {
+    const c=allComps[i];
+    if (!c.alive) {
+      if (c.scoreVal>0) {
+        score+=c.scoreVal;
+        vacuum.excite(c.x,c.y,100,0.8,c.el.hue,c.el.sat);
+        playChord(c.freq, 0.15, true);  // major chord: kill = resolution
+        for (let j=0;j<6;j++) debris.push({x:c.x+rnd(-10,10),y:c.y+rnd(-10,10),vx:rnd(-120,120),vy:rnd(-120,120),r:rnd(1.5,3),hue:c.el.hue,sat:c.el.sat,life:1.5});
+      }
+      if (c===player) { gameOver=true; showBanner('DESTROYED'); playNote(0.1, 0.3, 0, 'sawtooth', 1.0); }
+      if (c===stasisEntity) stasisEntity=null;
+      allComps.splice(i,1);
+    }
+  }
+
+  // Wave
+  const enemyCount = allComps.filter(c=>c.team===3&&c.alive).length;
+  if (enemyCount===0 && !gameOver) {
+    waveTimer += dt;
+    if (waveTimer > 2) { wave++; waveTimer=0; spawnWave(); showBanner('WAVE '+wave); }
+  }
+
+  // Target
+  targetEnemy = null;
+  if (player && player.alive) {
+    const wmx=(mouseX-W/2)/zoom+camX, wmy=(mouseY-H/2)/zoom+camY;
+    let closest=200;
+    for (const c of allComps) { if (!c.alive||c.team!==3) continue; const d=dst(wmx,wmy,c.x,c.y); if(d<closest){closest=d;targetEnemy=c;} }
+  }
+}
+
+// ============================================================
+//  RENDERING
+// ============================================================
+function worldToScreen(wx, wy) { return [(wx-camX)*zoom+W/2, (wy-camY)*zoom+H/2]; }
+
+function drawCirc(sx, sy, r, hue, sat, energy, phase, alpha) {
+  const pulse = 0.8+0.2*Math.sin(phase);
+  const sz = r*zoom;
+  if (sz < 0.5) return;
+  X.beginPath(); X.arc(sx,sy,sz*2.2,0,Math.PI*2);
+  X.fillStyle=hsl(hue,sat,0.4,alpha*0.08*energy*pulse); X.fill();
+  X.beginPath(); X.arc(sx,sy,sz,0,Math.PI*2);
+  X.strokeStyle=hsl(hue,sat,0.55,alpha*0.6*energy); X.lineWidth=Math.max(0.5,sz*0.15); X.stroke();
+  if (sz>2) { X.beginPath(); X.arc(sx,sy,Math.max(0.5,sz*0.2),0,Math.PI*2); X.fillStyle=hsl(hue,sat*0.5,0.85,alpha*energy*pulse); X.fill(); }
+}
+
+function drawVacuum() {
+  const ps=vacuum.particles, invZ=1/zoom;
+  const vL=camX-W*0.5*invZ-10, vR=camX+W*0.5*invZ+10, vT=camY-H*0.5*invZ-10, vB=camY+H*0.5*invZ+10;
+  for (const p of ps) {
+    if (p.x<vL||p.x>vR||p.y<vT||p.y>vB) continue;
+    const [sx,sy]=worldToScreen(p.x,p.y);
+    const breathe=0.015+0.008*Math.sin(p.phase);
+    X.fillStyle=hsl(200,0.2,0.3,breathe); X.fillRect(sx,sy,1,1);
+    if (p.ex<0.01) continue;
+    const pulse=0.8+0.2*Math.sin(p.phase*3), alpha=p.ex*pulse;
+    if (p.ex>0.12) {
+      const r=(1.5+p.ex*2)*zoom;
+      X.beginPath(); X.arc(sx,sy,r*2,0,Math.PI*2); X.fillStyle=hsl(p.hue,p.sat,0.4,alpha*0.12); X.fill();
+      X.beginPath(); X.arc(sx,sy,r,0,Math.PI*2); X.strokeStyle=hsl(p.hue,p.sat,0.6,alpha*0.4); X.lineWidth=0.5; X.stroke();
+      X.beginPath(); X.arc(sx,sy,0.5,0,Math.PI*2); X.fillStyle=hsl(p.hue,p.sat,0.9,alpha*0.8); X.fill();
+    } else { X.fillStyle=hsl(p.hue,p.sat,0.5,alpha*0.3); X.fillRect(sx,sy,1,1); }
+  }
+}
+
+function drawComposite(c) {
+  if (!c.alive) return;
+  const pulse=0.85+0.15*Math.sin(c.phase);
+  for (const f of c.frags) {
+    if (!f.alive) continue;
+    const [sx,sy]=worldToScreen(c.x+f.lx,c.y+f.ly);
+    if (sx<-50||sx>W+50||sy<-50||sy>H+50) continue;
+    drawCirc(sx,sy,f.r,c.el.hue,c.el.sat,c.energy*pulse,c.phase+f.phOff,1);
+  }
+  if (c.shield>0 && c.maxShield>0) {
+    const [sx,sy]=worldToScreen(c.x,c.y);
+    X.beginPath(); X.arc(sx,sy,c.baseR*zoom*1.3,0,Math.PI*2);
+    X.strokeStyle=hsl(c.el.hue,0.8,0.7,(c.shield/c.maxShield)*0.2); X.lineWidth=1.5; X.stroke();
+  }
+  if (c.isDoomed) {
+    const [sx,sy]=worldToScreen(c.x,c.y);
+    X.beginPath(); X.arc(sx,sy,c.baseR*zoom,0,Math.PI*2);
+    X.strokeStyle=hsl(0,1,0.5,Math.sin(c.age*12)>0?0.3:0.05); X.lineWidth=1; X.stroke();
+  }
+}
+
+function drawVortexShield() {
+  if (!abilities.vortex.active || !player || !player.alive) return;
+  const [sx,sy]=worldToScreen(player.x,player.y);
+  const wmx=(mouseX-W/2)/zoom+camX, wmy=(mouseY-H/2)/zoom+camY;
+  const aim=Math.atan2(wmy-player.y,wmx-player.x);
+  const r=65*zoom, halfArc=Math.PI/5;
+  const remaining=abilities.vortex.energy/abilities.vortex.maxEnergy;
+  // Arc shield
+  X.beginPath(); X.arc(sx,sy,r,aim-halfArc,aim+halfArc);
+  X.strokeStyle=hsl(180,0.9,0.6,0.3+0.4*remaining); X.lineWidth=3; X.stroke();
+  // Inner fill
+  X.beginPath(); X.moveTo(sx,sy); X.arc(sx,sy,r,aim-halfArc,aim+halfArc); X.closePath();
+  X.fillStyle=hsl(180,0.6,0.4,0.04+0.08*remaining); X.fill();
+  // Caught projectile dots
+  const caught=abilities.vortex.caught;
+  for (let i=0;i<caught.length;i++) {
+    const a=aim-halfArc+(i+0.5)/Math.max(1,caught.length)*halfArc*2;
+    X.beginPath(); X.arc(sx+Math.cos(a)*r*0.7,sy+Math.sin(a)*r*0.7,3,0,Math.PI*2);
+    X.fillStyle=hsl(caught[i].hue,caught[i].sat,0.7,0.8); X.fill();
+  }
+}
+
+function drawTraps() {
+  for (const t of traps) {
+    if (!t.alive) continue;
+    const [sx,sy]=worldToScreen(t.x,t.y);
+    const remaining=t._trapTimer/t._trapMaxTimer;
+    const radius=t._trapRadius*zoom;
+    if (t._trapType==='plasma') {
+      X.beginPath(); X.arc(sx,sy,radius,0,Math.PI*2);
+      X.fillStyle=hsl(15,1,0.4,0.05*remaining); X.fill();
+      X.strokeStyle=hsl(15,1,0.5,0.2*remaining); X.lineWidth=1; X.stroke();
+      for (let i=0;i<3;i++) { const a=rnd(0,Math.PI*2),r2=rnd(0,radius*0.8); X.beginPath(); X.arc(sx+Math.cos(a)*r2,sy+Math.sin(a)*r2,rnd(1,3),0,Math.PI*2); X.fillStyle=hsl(rnd(5,30),1,0.6,0.3*remaining); X.fill(); }
+    } else if (t._trapType==='singularity') {
+      X.beginPath(); X.arc(sx,sy,radius,0,Math.PI*2);
+      X.strokeStyle=hsl(260,0.5,0.3,0.15*remaining); X.lineWidth=1; X.stroke();
+      const t2=performance.now()*0.003;
+      for (let i=0;i<6;i++) { const a=t2+i*Math.PI/3; X.beginPath(); X.moveTo(sx+Math.cos(a)*radius,sy+Math.sin(a)*radius); X.lineTo(sx+Math.cos(a+0.5)*radius*0.3,sy+Math.sin(a+0.5)*radius*0.3); X.strokeStyle=hsl(260,0.4,0.5,0.2*remaining); X.lineWidth=0.5; X.stroke(); }
+    } else if (t._trapType==='chaos') {
+      X.beginPath(); X.arc(sx,sy,radius,0,Math.PI*2);
+      X.fillStyle=hsl(rnd(0,360),0.8,0.3,0.04*remaining); X.fill();
+      for (let i=0;i<5;i++) { const a=rnd(0,Math.PI*2),r2=rnd(0,radius); X.beginPath(); X.arc(sx+Math.cos(a)*r2,sy+Math.sin(a)*r2,rnd(1,4),0,Math.PI*2); X.fillStyle=hsl(rnd(0,360),0.9,0.6,0.4*remaining); X.fill(); }
+    }
+    drawComposite(t);
+  }
+}
+
+function drawStasis() {
+  if (!stasisEntity || !stasisEntity.alive) return;
+  const [sx,sy]=worldToScreen(stasisEntity.x,stasisEntity.y);
+  const pulse=0.7+0.3*Math.sin(performance.now()*0.005);
+  const r=stasisEntity.baseR*zoom;
+  X.beginPath(); X.arc(sx,sy,r*4,0,Math.PI*2); X.fillStyle=hsl(50,1,0.5,0.03*pulse); X.fill();
+  X.beginPath(); X.arc(sx,sy,r*2,0,Math.PI*2); X.fillStyle=hsl(50,1,0.6,0.08*pulse); X.fill();
+  X.beginPath(); X.arc(sx,sy,r*1.5,0,Math.PI*2); X.strokeStyle=hsl(50,0.9,0.7,0.3*pulse); X.lineWidth=2; X.stroke();
+  // Particle fountain
+  const t=performance.now()*0.002;
+  for (let i=0;i<4;i++) { const py=sy-(t*20+i*15)%(r*3), px=sx+Math.sin(t+i)*5; X.beginPath(); X.arc(px,py,1.5,0,Math.PI*2); X.fillStyle=hsl(50,1,0.8,0.4); X.fill(); }
+  X.font='9px "Courier New"'; X.fillStyle=hsl(50,1,0.7,0.6*pulse); X.textAlign='center';
+  X.fillText('STASIS',sx,sy-r*2.5); X.textAlign='left';
+  drawComposite(stasisEntity);
+}
+
+function drawProjectiles() {
+  for (const p of projectiles) {
+    const [sx,sy]=worldToScreen(p.x,p.y);
+    if (sx<-20||sx>W+20||sy<-20||sy>H+20) continue;
+    const sz=p.r*zoom, pulse=0.8+0.2*Math.sin(p.life*30);
+    X.beginPath(); X.arc(sx,sy,sz*3,0,Math.PI*2); X.fillStyle=hsl(p.hue,p.sat,0.5,0.1*pulse); X.fill();
+    X.beginPath(); X.arc(sx,sy,sz,0,Math.PI*2); X.fillStyle=hsl(p.hue,p.sat,0.8,0.9); X.fill();
+  }
+}
+function drawDebris() {
+  for (const d of debris) {
+    const [sx,sy]=worldToScreen(d.x,d.y);
+    if (sx<-10||sx>W+10||sy<-10||sy>H+10) continue;
+    drawCirc(sx,sy,d.r,d.hue,d.sat,clamp(d.life/1.5,0,1),d.life*5,clamp(d.life/1.5,0,1));
+  }
+}
+function drawEffects() {
+  for (const e of effects) { const [sx,sy]=worldToScreen(e.x,e.y); const a=clamp(e.life/0.2,0,1); X.beginPath(); X.arc(sx,sy,e.r*zoom*(2-a),0,Math.PI*2); X.fillStyle=hsl(e.hue,e.sat,0.6,a*0.3); X.fill(); }
+  for (const r of reactionFX) {
+    if (r.type==='bond') { const [x1,y1]=worldToScreen(r.x1,r.y1),[x2,y2]=worldToScreen(r.x2,r.y2); X.beginPath(); X.moveTo(x1,y1); X.lineTo(x2,y2); X.strokeStyle=hsl(r.hue,0.5,0.6,r.alpha*clamp(r.life/0.05,0,1)); X.lineWidth=1; X.stroke(); }
+    else if (r.type==='spark') { const [sx,sy]=worldToScreen(r.x,r.y); X.beginPath(); X.arc(sx,sy,2*zoom,0,Math.PI*2); X.fillStyle=hsl(r.hue,0.9,0.7,clamp(r.life/0.3,0,1)*0.6); X.fill(); }
+  }
+}
+function drawArena() {
+  const [cx,cy]=worldToScreen(0,0); const r=ARENA_R*zoom;
+  X.beginPath(); X.arc(cx,cy,r,0,Math.PI*2); X.strokeStyle=hsl(200,0.3,0.15,0.3); X.lineWidth=2; X.stroke();
+  for (const rr of [300,550,850]) { X.beginPath(); X.arc(cx,cy,rr*zoom,0,Math.PI*2); X.strokeStyle=hsl(200,0.2,0.1,0.08); X.lineWidth=0.5; X.stroke(); }
+}
+
+// ============================================================
+//  HUD + ABILITY INDICATORS
+// ============================================================
+function drawHUD() {
+  document.getElementById('s-score').textContent=score;
+  document.getElementById('s-wave').textContent='WAVE '+wave;
+  document.getElementById('s-threats').textContent=allComps.filter(c=>c.team===3&&c.alive).length+' threats';
+  document.querySelectorAll('.weapon-btn').forEach((btn,i) => btn.classList.toggle('active', i===currentWeap));
+
+  if (player && player.alive) {
+    const ch=CHASSIS[currentChassis], integ=player.integrity();
+    const shPct=player.maxShield>0?(player.shield/player.maxShield*100)|0:0;
+    let dashes=''; for(let i=0;i<player.maxDashes;i++) dashes+=i<player.dashCharges?'>':'.';
+    const elKey=Object.keys(ELEMENTS).find(k=>ELEMENTS[k]===player.el);
+    document.getElementById('hud-bl').innerHTML=
+      `<span style="color:${hsl(player.el.hue,player.el.sat,0.7)}">${ch.name}</span> <span style="color:#335">[${ELEMENTS[elKey].sym}]</span><br>`+
+      `HULL <span style="color:${integ>0.5?'#0a8':integ>0.2?'#a80':'#f22'}">${(integ*100)|0}%</span> SHLD <span style="color:#48a">${shPct}%</span><br>DASH ${dashes}`;
+  }
+
+  const w=WEAPS[currentWeap];
+  let tgtInfo='';
+  if (targetEnemy) {
+    const T=resonance(w.el.freq,targetEnemy.freq);
+    const rxn=getReaction(w.el.group,targetEnemy.el.group);
+    tgtInfo=`<br><span style="color:${hsl(targetEnemy.el.hue,targetEnemy.el.sat,0.6)}">TGT: ${targetEnemy.el.name}</span><br>T=${T.toFixed(2)} DMG:x${(0.3+T*1.7).toFixed(1)}`+(rxn?`<br>RXN: ${rxn.type}`:'');
+  }
+  document.getElementById('hud-br').innerHTML=
+    `<span style="color:${hsl(w.el.hue,w.el.sat,0.7)}">${w.name}</span><span style="color:#335"> [${w.el.sym}]</span><br>f=${w.el.freq.toFixed(2)} ${w.el.group}`+tgtInfo;
+
+  // Element scanner near crosshair
+  if (targetEnemy) {
+    const [sx,sy]=worldToScreen(targetEnemy.x,targetEnemy.y);
+    X.font='10px "Courier New"'; X.fillStyle=hsl(targetEnemy.el.hue,targetEnemy.el.sat,0.6,0.8);
+    X.fillText(targetEnemy.el.name,sx+targetEnemy.baseR*zoom+5,sy-5);
+    const T=resonance(WEAPS[currentWeap].el.freq,targetEnemy.freq), bW=30;
+    X.fillStyle=hsl(0,0,0.3,0.5); X.fillRect(sx+targetEnemy.baseR*zoom+5,sy,bW,3);
+    X.fillStyle=hsl(T>0.7?120:T>0.3?60:0,0.9,0.5,0.8); X.fillRect(sx+targetEnemy.baseR*zoom+5,sy,bW*T,3);
+  }
+
+  // Ability cooldown indicators (canvas-drawn, above weapon bar)
+  const trapDefs=[
+    {key:'E',name:'PLASMA',ab:abilities.plasma,hue:15},
+    {key:'SHIFT',name:'SINGUL',ab:abilities.singularity,hue:260},
+    {key:'F',name:'CHAOS',ab:abilities.chaos,hue:280},
+  ];
+  const abX=W/2-180, abY=H-85;
+
+  // Vortex energy bar (first slot)
+  const vbx=abX, vby=abY, v=abilities.vortex;
+  const vPct=v.energy/v.maxEnergy;
+  X.fillStyle=hsl(180,0.3,0.06,0.8); X.fillRect(vbx,vby,80,22);
+  X.fillStyle=hsl(180,0.6,v.active?0.35:0.2,0.6); X.fillRect(vbx,vby,80*vPct,22);
+  X.strokeStyle=hsl(180,0.5,vPct>0.1?0.5:0.2,0.6); X.lineWidth=1; X.strokeRect(vbx,vby,80,22);
+  if (v.active) { X.strokeStyle=hsl(180,1,0.7,0.8); X.lineWidth=2; X.strokeRect(vbx-1,vby-1,82,24); }
+  X.font='9px "Courier New"'; X.textAlign='center';
+  X.fillStyle=hsl(180,0.7,vPct>0.1?0.7:0.3); X.fillText('VORTEX',vbx+40,vby+10);
+  X.font='8px "Courier New"'; X.fillStyle=hsl(0,0,0.4); X.fillText('Q',vbx+40,vby+19);
+
+  // Trap cooldowns (remaining 3 slots)
+  for (let i=0;i<trapDefs.length;i++) {
+    const ad=trapDefs[i], bx=abX+(i+1)*90, by=abY;
+    const ready=ad.ab.cd<=0;
+    const cdPct=ready?1:1-ad.ab.cd/ad.ab.maxCd;
+    X.fillStyle=hsl(ad.hue,0.3,0.06,0.8); X.fillRect(bx,by,80,22);
+    X.fillStyle=hsl(ad.hue,0.6,ready?0.25:0.1,0.5); X.fillRect(bx,by,80*cdPct,22);
+    X.strokeStyle=hsl(ad.hue,0.5,ready?0.5:0.2,0.6); X.lineWidth=1; X.strokeRect(bx,by,80,22);
+    X.font='9px "Courier New"'; X.textAlign='center';
+    X.fillStyle=hsl(ad.hue,0.7,ready?0.7:0.3); X.fillText(ad.name,bx+40,by+10);
+    X.font='8px "Courier New"'; X.fillStyle=hsl(0,0,0.4);
+    X.fillText(ad.key,bx+40,by+19);
+  }
+
+  // Kit indicator (below ability bars)
+  const kit=KITS[currentKit];
+  X.font='9px "Courier New"'; X.textAlign='center';
+  X.fillStyle=hsl(kit.hue,0.6,0.5,0.7); X.fillText('KIT: '+kit.name,W/2,abY+34);
+  X.textAlign='left';
+}
+
+// ============================================================
+//  PERIODIC TABLE OVERLAY
+// ============================================================
+function drawPeriodicTable() {
+  if (!scanning) return;
+  X.fillStyle='rgba(0,2,6,0.85)'; X.fillRect(0,0,W,H);
+  const cellW=110, cellH=80, cols=4, rows=3;
+  const tableW=cols*cellW+20, tableH=rows*cellH+80;
+  const ox=(W-tableW)/2, oy=(H-tableH)/2;
+  X.font='16px "Courier New"'; X.fillStyle='#0ff'; X.textAlign='center';
+  X.fillText('PERIODIC TABLE OF \u2299',W/2,oy-10);
+  X.font='9px "Courier New"'; X.fillStyle='#335';
+  X.fillText('LOW f',ox+10+cellW/2,oy+12); X.fillText('HIGH f',ox+10+3*cellW+cellW/2,oy+12);
+  X.textAlign='right';
+  for (let r=0;r<rows;r++) { X.fillStyle=hsl([260,200,40][r],0.5,0.5,0.6); X.fillText(GROUP_NAMES[r],ox-5,oy+30+r*cellH+cellH/2+3); }
+  X.textAlign='center';
+  const weapEl=WEAPS[currentWeap].el, tgtEl=targetEnemy?targetEnemy.el:null;
+  for (let r=0;r<rows;r++) for (let c=0;c<cols;c++) {
+    const el=ELEMENTS[ELEM_GRID[r][c]], cx=ox+10+c*cellW, cy=oy+25+r*cellH;
+    const isW=el===weapEl, isT=el===tgtEl;
+    X.fillStyle=hsl(el.hue,el.sat,0.08,0.8); X.fillRect(cx,cy,cellW-6,cellH-6);
+    X.strokeStyle=isW?'#0ff':isT?hsl(el.hue,el.sat,0.7):hsl(el.hue,el.sat,0.3,0.5); X.lineWidth=isW||isT?2:0.5; X.strokeRect(cx,cy,cellW-6,cellH-6);
+    X.font='bold 18px "Courier New"'; X.fillStyle=hsl(el.hue,el.sat,0.7); X.fillText(el.sym,cx+(cellW-6)/2,cy+22);
+    X.font='9px "Courier New"'; X.fillStyle=hsl(el.hue,el.sat,0.5,0.8); X.fillText(el.name,cx+(cellW-6)/2,cy+34);
+    const bY=cy+40, bW=cellW-20;
+    X.fillStyle=hsl(0,0,0.15); X.fillRect(cx+7,bY,bW,4);
+    X.fillStyle=hsl(el.hue,el.sat,0.5,0.7); X.fillRect(cx+7,bY,bW*el.freq,4);
+    X.font='7px "Courier New"'; X.fillStyle='#335'; X.textAlign='left';
+    X.fillText('f='+el.freq.toFixed(2),cx+7,bY+12);
+    X.fillStyle=hsl(0,0,0.15); X.fillRect(cx+55,bY+7,bW-48,4);
+    X.fillStyle=hsl(0,0,0.4,0.7); X.fillRect(cx+55,bY+7,(bW-48)*el.lock,4);
+    X.fillText('lk='+el.lock.toFixed(2),cx+55,bY+19);
+    X.textAlign='center';
+    if (isW) { X.font='8px "Courier New"'; X.fillStyle='#0ff'; X.fillText('WEAPON',cx+(cellW-6)/2,cy+cellH-10); }
+    if (isT) { X.font='8px "Courier New"'; X.fillStyle=hsl(el.hue,el.sat,0.8); X.fillText('TARGET',cx+(cellW-6)/2,cy+cellH-10); }
+  }
+  if (tgtEl) {
+    const T=resonance(weapEl.freq,tgtEl.freq), rxn=getReaction(weapEl.group,tgtEl.group);
+    X.font='12px "Courier New"'; X.fillStyle='#0ff'; X.textAlign='center';
+    X.fillText(`${weapEl.sym} vs ${tgtEl.sym}: T=${T.toFixed(2)} DMG:x${(0.3+T*1.7).toFixed(1)}`+(rxn?` RXN:${rxn.type}`:''),W/2,oy+tableH-25);
+  }
+  X.font='8px "Courier New"'; X.fillStyle='#224'; X.textAlign='center';
+  X.fillText('frequency \u2192',W/2,oy+tableH-5);
+  X.textAlign='left';
+}
+
+// ============================================================
+//  SETTINGS MENU
+// ============================================================
+let settingsBuilt = false;
+function buildSettings() {
+  if (settingsBuilt) return;
+  settingsBuilt = true;
+  const panel = document.getElementById('settings');
+  const actionEntries = Object.entries(GP_ACTIONS);
+  const btnOpts = GP_BTN_NAMES.map((n,i) => `<option value="${i}">${n}</option>`).join('');
+
+  panel.innerHTML = `
+    <div class="s-title">SETTINGS</div>
+    <div class="s-header">GAMEPAD</div>
+    <div class="s-row"><label>Deadzone</label><input type="range" id="gp-dz" min="0" max="0.5" step="0.01" value="${gpConfig.deadzone}"><span id="gp-dz-v">${gpConfig.deadzone.toFixed(2)}</span></div>
+    <div class="s-row"><label>Look Sensitivity</label><input type="range" id="gp-ls" min="1" max="10" step="0.5" value="${gpConfig.lookSens}"><span id="gp-ls-v">${gpConfig.lookSens.toFixed(1)}</span></div>
+    <div class="s-row"><label>Move Sensitivity</label><input type="range" id="gp-ms" min="1" max="10" step="0.5" value="${gpConfig.moveSens}"><span id="gp-ms-v">${gpConfig.moveSens.toFixed(1)}</span></div>
+    <div class="s-row"><label>Response Curve</label><select id="gp-curve"><option value="1" ${gpConfig.lookCurve===1?'selected':''}>Linear</option><option value="2" ${gpConfig.lookCurve===2?'selected':''}>Quadratic</option><option value="3" ${gpConfig.lookCurve===3?'selected':''}>Cubic</option></select></div>
+    <div class="s-row"><label>Invert Y</label><input type="checkbox" id="gp-inv" ${gpConfig.invertY?'checked':''}></div>
+    <div class="s-header">BUTTON MAPPING</div>
+    ${actionEntries.map(([a,label]) => `<div class="s-row"><label>${label}</label><select class="gp-bind" data-action="${a}">${btnOpts}</select></div>`).join('')}
+    <div class="s-header">AUDIO</div>
+    <div class="s-row"><label>Master Volume</label><input type="range" id="audio-vol" min="0" max="1" step="0.05" value="0.25"><span id="audio-vol-v">0.25</span></div>
+    <button class="s-close" onclick="toggleSettings()">CLOSE [ESC]</button>
+  `;
+
+  // Bind sliders
+  const bind = (id,valId,fn) => { const s=document.getElementById(id),v=document.getElementById(valId); s.oninput=()=>{v.textContent=parseFloat(s.value).toFixed(s.step.includes('.')?s.step.split('.')[1].length:0); fn(parseFloat(s.value));}; };
+  bind('gp-dz','gp-dz-v', v=>gpConfig.deadzone=v);
+  bind('gp-ls','gp-ls-v', v=>gpConfig.lookSens=v);
+  bind('gp-ms','gp-ms-v', v=>gpConfig.moveSens=v);
+  bind('audio-vol','audio-vol-v', v=>{ if(masterGain) masterGain.gain.value=v; });
+  document.getElementById('gp-curve').onchange = e => gpConfig.lookCurve = parseInt(e.target.value);
+  document.getElementById('gp-inv').onchange = e => gpConfig.invertY = e.target.checked;
+
+  // Button mapping dropdowns
+  document.querySelectorAll('.gp-bind').forEach(sel => {
+    const action = sel.dataset.action;
+    sel.value = gpConfig[action];
+    sel.onchange = () => { gpConfig[action] = parseInt(sel.value); };
+  });
+}
+
+function toggleSettings() {
+  settingsOpen = !settingsOpen;
+  buildSettings();
+  document.getElementById('settings').style.display = settingsOpen ? 'block' : 'none';
+  document.getElementById('settings-overlay').style.display = settingsOpen ? 'block' : 'none';
+}
+
+// ============================================================
+//  BUILD UI
+// ============================================================
+function buildUI() {
+  const cDiv = document.getElementById('chassis-select');
+  cDiv.innerHTML = '';
+  for (const key of Object.keys(CHASSIS)) {
+    const ch = CHASSIS[key], btn = document.createElement('div');
+    btn.className = 'chassis-btn' + (key===currentChassis?' active':'');
+    btn.textContent = ch.name;
+    btn.onclick = () => { currentChassis=key; document.querySelectorAll('.chassis-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); resetGame(); };
+    cDiv.appendChild(btn);
+  }
+  // Kit selector
+  const kDiv = document.getElementById('kit-select');
+  kDiv.innerHTML = '';
+  for (const key of Object.keys(KITS)) {
+    const kit = KITS[key], btn = document.createElement('div');
+    btn.className = 'kit-btn' + (key===currentKit?' active':'');
+    btn.innerHTML = `<span style="color:${hsl(kit.hue,0.7,0.6)}">${kit.name}</span>`;
+    btn.title = kit.desc;
+    btn.onclick = () => { currentKit=key; document.querySelectorAll('.kit-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); };
+    kDiv.appendChild(btn);
+  }
+
+  const wDiv = document.getElementById('weapons');
+  wDiv.innerHTML = '';
+  for (let i=0;i<WEAPS.length;i++) {
+    const w=WEAPS[i], btn=document.createElement('div');
+    btn.className='weapon-btn'+(i===currentWeap?' active':'');
+    btn.innerHTML=`<span class="wname" style="color:${hsl(w.el.hue,w.el.sat,0.7)}">${w.name}</span><span style="color:#335">[${w.el.sym}] ${w.key}</span>`;
+    btn.onclick=()=>{currentWeap=i;};
+    wDiv.appendChild(btn);
+  }
+}
+
+// ============================================================
+//  MAIN LOOP
+// ============================================================
+let lastTime = 0;
+function frame(time) {
+  const dt = Math.min((time - lastTime) / 1000, 0.05);
+  lastTime = time;
+  update(dt);
+  X.fillStyle = '#020206'; X.fillRect(0, 0, W, H);
+  drawArena(); drawVacuum();
+  for (const c of allComps) if (c.type==='wall'||c.type==='node') drawComposite(c);
+  drawDebris(); drawEffects();
+  drawTraps(); drawStasis();
+  for (const c of allComps) if (c.type!=='wall'&&c.type!=='node'&&c.type!=='trap'&&c.type!=='stasis') drawComposite(c);
+  drawProjectiles(); drawArcFX(); drawVortexShield();
+  // Crosshair (brighter when gamepad active)
+  const gpActive = gpState.connected && (Math.abs(gpState.axes[2]||0)>0.1 || Math.abs(gpState.axes[3]||0)>0.1);
+  const chAlpha = gpActive ? 0.7 : 0.15;
+  const chSize = gpActive ? 16 : 12;
+  X.strokeStyle=`rgba(0,255,255,${chAlpha})`; X.lineWidth = gpActive ? 1.5 : 0.5; X.beginPath();
+  X.moveTo(mouseX-chSize,mouseY); X.lineTo(mouseX+chSize,mouseY); X.moveTo(mouseX,mouseY-chSize); X.lineTo(mouseX,mouseY+chSize); X.stroke();
+  if (gpActive) { X.beginPath(); X.arc(mouseX,mouseY,4,0,Math.PI*2); X.strokeStyle='rgba(0,255,255,0.5)'; X.lineWidth=1; X.stroke(); }
+  drawHUD(); drawPeriodicTable();
+  if (gameOver) { X.fillStyle='rgba(0,0,0,0.5)'; X.fillRect(0,0,W,H); X.font='14px "Courier New"'; X.fillStyle='#446'; X.textAlign='center'; X.fillText('press R to restart',W/2,H/2+40); X.textAlign='left'; }
+  requestAnimationFrame(frame);
+}
+
+buildUI();
+resetGame();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
