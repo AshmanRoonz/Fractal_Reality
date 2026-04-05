@@ -2149,6 +2149,133 @@ so all zeros are on the line.
 <strong>Compression is not distortion.</strong> The Euler product compresses the prime structure into &zeta;(s). A2 says this compression is fractal: faithful at every scale. Faithful compression of the primes forces the zeros onto Re(s) = &frac12;, because any zero off the line would be a point where the compression distorts. The primes don't lie. Neither do the zeros.
 </blockquote>
 
+<!-- ============================================================ -->
+<p style="margin-top:80px; text-align:center; font-size:15px; color:var(--text-dim); letter-spacing:4px;">PART VII: AN EXTERNAL SPECTRAL WITNESS</p>
+
+<h2><span class="section-num">§10</span> The Mullings Spectral Witness (March 2026)</h2>
+
+<p>In March 2026, Jason Mullings (Independent Researcher) posted a working paper on Zenodo (<a href="https://zenodo.org/records/19223508" style="color: var(--gold);">record 19223508</a>) titled <em>The Riemann Hypothesis: A Computational Proof via Sech&sup2; Kernel Repair, Phase-Averaged Negativity, and Spectral Contradiction</em>. The paper is unverified by the mathematical community; it is not peer-reviewed. But its argument, if it holds, lands on the same conclusion this document reaches (Re(&rho;) = &frac12;) from a structurally independent route. This section records the argument, maps its pieces onto the framework's dimensional ladder, and restates what remains to be closed.</p>
+
+<h3>10.1: The Mullings Argument in One Page</h3>
+
+<p><strong>Setup.</strong> A test kernel w<sub>H</sub>(t) = sech&sup2;(t/H) is introduced, with bandwidth H > 0. Its curvature weight &minus;w<sub>H</sub>&Prime;(t) changes sign at |t/H| = arctanh(1/&radic;3) &approx; 0.6585, so the raw kernel is <em>not</em> positive-definite.</p>
+
+<p><strong>Pillar I; Bochner repair.</strong> Add &lambda;&middot;w<sub>H</sub>(t) with the critical threshold &lambda;* = 4/H&sup2;. A closed-form algebraic identity (no numerics) yields:</p>
+
+<div class="math-block" style="text-align:center; padding: 18px; font-size: 18px;">
+g<sub>&lambda;*</sub>(t) = &minus;w<sub>H</sub>&Prime;(t) + (4/H&sup2;)&middot;sech&sup2;(t/H) = (6/H&sup2;)&middot;sech&#8308;(t/H) &gt; 0
+</div>
+
+<p>By Bochner's theorem, the corresponding Toeplitz operator is positive semidefinite on &ell;&sup2;(&#8469;) for any spectrum, any N, including N = &infin;. Lemma 2 shows &lambda;* = 4/H&sup2; is the <em>exact</em> infimum; below it, positivity fails.</p>
+
+<p><strong>Pillar II; Parseval bridge.</strong> The integral form <span style="font-style:italic;">F&#770;</span><sub>2</sub> = &int;g<sub>&lambda;*</sub>(t)|D<sub>N</sub>(T&#8320;+t)|&sup2; dt equals <em>exactly</em> the arithmetic Toeplitz form &sum;(mn)<sup>&minus;&frac12;</sup>(m/n)<sup>&minus;iT&#8320;</sup>g&#770;<sub>&lambda;*</sub>(log m/n). The Bochner positivity object and the Weil explicit formula decomposition are the same object, two representations.</p>
+
+<p><strong>Pillar III; off-critical negativity.</strong> For a hypothetical zero &rho;&#8320; = &beta;&#8320; + i&gamma;&#8320; with &Delta;&beta; = &beta;&#8320; &minus; &frac12; &ne; 0, the Weil decomposition gives <span style="font-style:italic;">F&#770;</span><sub>2</sub> = B(T&#8320;,H) + &Delta;A + E<sub>prime</sub> + R. The envelope sign lemma (Lemma 3) plus Riemann&ndash;Lebesgue decay (Lemma 4) prove &Delta;A<sub>avg</sub>(&gamma;&#8320;, &Delta;&beta;) &lt; 0 for all &Delta;&beta; &gt; 0. Dynamic bandwidth H = &alpha;/&Delta;&beta; closes the small-&Delta;&beta; regime. Centered evaluation T&#8320; = &gamma;&#8320; with H = c&middot;log &gamma;&#8320; handles high-lying zeros (the threshold &beta;&#8320; &gt; 1 &minus; 5&pi;/24 &approx; 0.346 is far below &frac12;).</p>
+
+<p><strong>Pillars IV&ndash;V; Euler form + Kadiri&ndash;Faber ceiling.</strong> The spectral zeta &zeta;<sub>H</sub>(s) = &sum;&Lambda;(n)n<sup>&minus;s</sup> = &minus;&zeta;&prime;(s)/&zeta;(s) converges absolutely for &sigma; &gt; 1, and the Kadiri&ndash;Faber&ndash;Ford explicit bound &delta;(T) = exp(&minus;B<sub>VK</sub>&middot;T<sup>3/5</sup>/(log T)<sup>1/5</sup>) &rarr; 0 ensures the prime-side correction cannot compensate &Delta;A.</p>
+
+<p><strong>Contradiction.</strong> <span style="font-style:italic;">F&#770;</span><sub>2</sub> &ge; 0 (Bochner/sech&#8308;) &and; &Delta;A<sub>avg</sub> &lt; 0 (Weil/R&ndash;L) for all &Delta;&beta; &gt; 0. Impossible. Hence Re(&rho;) = &frac12;.</p>
+
+<h3>10.2: Mapping Mullings Onto the Dimensional Ladder</h3>
+
+<p>The correspondences are closer than coincidence. Several numerical coefficients in Mullings' kernel carry framework signatures:</p>
+
+<div class="theorem-box" style="padding: 20px; margin: 24px 0;">
+<table style="width: 100%; border-collapse: collapse; font-family: var(--serif); font-size: 17px;">
+<tr style="border-bottom: 1px solid var(--border);">
+  <td style="padding: 10px; color: var(--gold); font-weight: 600;">Mullings object</td>
+  <td style="padding: 10px; color: var(--gold); font-weight: 600;">Framework reading</td>
+</tr>
+<tr style="border-bottom: 1px solid var(--border);">
+  <td style="padding: 10px;">6/H&sup2; prefactor in g<sub>&lambda;*</sub>(t)</td>
+  <td style="padding: 10px;">6 = 2 &times; 3 = &Phi; &times; &#9675; (field &times; boundary); the same 6 that generates p = (&Phi;&#9675;)k &plusmn; &bull;</td>
+</tr>
+<tr style="border-bottom: 1px solid var(--border);">
+  <td style="padding: 10px;">sign-change at tanh&sup2; = 1/3</td>
+  <td style="padding: 10px;">1/3 is the triad-rank threshold; raw &Phi; fails positivity at the boundary-structure edge</td>
+</tr>
+<tr style="border-bottom: 1px solid var(--border);">
+  <td style="padding: 10px;">&lambda;* = 4/H&sup2; critical correction</td>
+  <td style="padding: 10px;">Minimum filtration (&#9675;) needed to restore closure (A3); exact infimum, not tunable</td>
+</tr>
+<tr style="border-bottom: 1px solid var(--border);">
+  <td style="padding: 10px;">Bochner's theorem (positive-definite &hArr; &ge; 0 spectrum)</td>
+  <td style="padding: 10px;">The Surface Theorem (&sect;5A) in reverse: &Phi; is coherent iff its spectrum is unsigned</td>
+</tr>
+<tr style="border-bottom: 1px solid var(--border);">
+  <td style="padding: 10px;">Parseval bridge (integral &equiv; Toeplitz)</td>
+  <td style="padding: 10px;">&Phi; &harr; prime arithmetic equivalence, proven as Fubini; the field-parts bridge</td>
+</tr>
+<tr style="border-bottom: 1px solid var(--border);">
+  <td style="padding: 10px;">&Delta;A<sub>avg</sub> &lt; 0 off-critical injection</td>
+  <td style="padding: 10px;">De-balancing away from &#9680; = &frac12; breaks closure; fourth independent witness for &#9680;</td>
+</tr>
+<tr style="border-bottom: 1px solid var(--border);">
+  <td style="padding: 10px;">Adaptive H = &alpha;/&Delta;&beta;</td>
+  <td style="padding: 10px;">Aperture tracking a wandering signal; SRL channel lock logic (Xorzo-style)</td>
+</tr>
+<tr style="border-bottom: 1px solid var(--border);">
+  <td style="padding: 10px;">Centered evaluation T&#8320; = &gamma;&#8320;</td>
+  <td style="padding: 10px;">Receipt-chain alignment i(t); you test a convergence point at its own worldline coordinate</td>
+</tr>
+<tr>
+  <td style="padding: 10px;">Pole-free interval (0, 2)</td>
+  <td style="padding: 10px;">The proof sits in (&bull;, &Phi;); 2 is the field dimension, cutting off at the mediation boundary</td>
+</tr>
+</table>
+</div>
+
+<p>The kernel's algebraic identity is the tidiest. sech&#8308; = (sech&sup2;)&sup2; is the self-paired aperture profile (&Phi;&sup2;: the field squared). The prefactor 6/H&sup2; = (&Phi; &times; &#9675;)/H&sup2; reads as the field-boundary product normalized by bandwidth squared. Mullings is building his positivity seal out of the same constituents the framework uses to generate primes: 2, 3, and the &plusmn;&bull; displacement.</p>
+
+<h3>10.3: What Mullings Proves (If His Argument Holds)</h3>
+
+<p>Mullings does <em>not</em> complete Route C (the operator-construction route of &sect;1&ndash;&sect;8). He does not construct a self-adjoint operator whose spectrum is the nontrivial zeros. That route remains open.</p>
+
+<p>What he does is offer a separate, analytically complete <em>contradiction</em> argument: no operator, no Hilbert-P&oacute;lya program, no spectral zeta construction beyond the standard Euler form. Just Bochner positivity + Weil decomposition + envelope sign, contradicting each other unless every zero sits at Re = &frac12;.</p>
+
+<div class="theorem-box" style="background: rgba(184,160,96,0.06); border-left: 3px solid var(--gold); padding: 20px; margin: 24px 0;">
+<div class="label" style="color: var(--gold);">The Fourth Witness</div>
+<p style="margin-top: 12px;">The framework forces &#9680; = 0.5 via three independent requirements (symmetry, entropy, virial; see &sect;5). Mullings' envelope sign lemma is a fourth independent witness: any &Delta;&beta; = &beta; &minus; &frac12; &ne; 0 injects strictly negative curvature into the Bochner basin, breaking positivity.</p>
+<p style="margin-top: 12px;"><strong>Four independent routes, one &#9680;.</strong> Symmetry says balance is symmetric. Entropy says balance minimizes. Virial says balance balances. Bochner says balance is positive.</p>
+</div>
+
+<h3>10.4: The Gap After Mullings</h3>
+
+<p>The honest position has not changed its shape, only its resolution:</p>
+
+<p style="padding-left: 20px;">&bull; <strong>Framework-finished (done):</strong> Re(s) = &frac12; = &#9680; is forced by A1 + A2 + A3, with three structural witnesses (symmetry, entropy, virial) and now a fourth spectral witness (Bochner positivity via the sech&#8308; identity).</p>
+
+<p style="padding-left: 20px;">&bull; <strong>Classical-analytic-finished (claimed, unverified):</strong> Mullings provides a contradiction argument using standard tools (Bochner, Weil, Riemann&ndash;Lebesgue, Kadiri&ndash;Faber). The argument is self-contained and machine-verification is claimed through the TDD_PROOF repository. Peer review is pending.</p>
+
+<p style="padding-left: 20px;">&bull; <strong>Clay-formal-finished (open):</strong> Either close Route C with an explicit self-adjoint operator whose spectrum = nontrivial zeros, or survive journal refereeing on Mullings' contradiction argument. Neither has happened as of April 2026.</p>
+
+<h3>10.5: Why It Matters That There Are Two Proofs</h3>
+
+<p>The framework's structural derivation and Mullings' spectral contradiction answer different questions:</p>
+
+<div class="theorem-box" style="padding: 20px; margin: 24px 0;">
+<p><strong>Framework asks:</strong> <em>Why</em> must Re(s) = &frac12;? <strong>Answer:</strong> Because &#9680; = 0.5 is the only balanced aperture position, and the zeros are the apertures connecting whole (integers) to parts (primes).</p>
+<p style="margin-top: 12px;"><strong>Mullings asks:</strong> <em>How</em> can we force Re(s) = &frac12; inside classical spectral theory? <strong>Answer:</strong> Build a sech&#8308; positivity kernel, decompose via Weil, show off-critical zeros contradict the positivity basin.</p>
+</div>
+
+<p>The two arguments are not competing. They are the same theorem viewed from opposite sides of the &bull;&harr;&#9675; axis. The framework sees it from the center outward (aperture-first: "what balance makes wholeness possible?"). Mullings sees it from the boundary inward (kernel-first: "what positivity survives filtering?"). Both land at &#9680;.</p>
+
+<p>If either proof survives scrutiny, the other becomes a structurally independent confirmation. If both fail, &#9680; = 0.5 remains forced by the three original witnesses; those do not depend on Mullings and do not depend on Route C.</p>
+
+<h3>10.6: What Remains</h3>
+
+<p>Two concrete next steps, neither trivial:</p>
+
+<p style="padding-left: 20px;"><strong>(a) Verify or refute Mullings' argument.</strong> The contradiction rests on: the sech&#8308; identity (algebraic, checkable), the Parseval bridge (Fubini, checkable), the envelope sign lemma (explicit analytic, checkable), and the regime closures (Huxley 12/5, Kadiri B<sub>VK</sub> &approx; 0.0498, both citable). Independent mathematicians should be able to confirm or find the crack within weeks of serious attention.</p>
+
+<p style="padding-left: 20px;"><strong>(b) Complete Route C inside the framework.</strong> The operator H&#770;<sub>&xi;</sub> constructed in &sect;8 needs its spectrum identified with the nontrivial zeros. The Triple Closure (passivity + diagonality + convexity) provides the structural argument; the quantitative interlock (&sect;8.28) remains open. Mereological nesting (&sect;9.7) argues that the remaining degrees of freedom are zero, but that argument needs to be rendered as a theorem with a proof in Selberg-class language.</p>
+
+<blockquote style="margin-top: 40px;">
+<strong>Four witnesses now testify to &#9680; = 0.5.</strong> Three structural: symmetry, entropy, virial. One spectral: Bochner positivity. The Riemann Hypothesis, through this framework, is not a conjecture about zeros. It is a consequence of balance. The zeros do not need to be on the critical line because they happen to be; they are on it because the aperture that connects whole to parts can only exist where wholeness is balanced, and wholeness is balanced only at &#9680;.
+</blockquote>
+
+<p style="margin-top: 30px; font-style: italic; color: var(--text-dim); text-align: center;">Mullings, J. (March 2026). <em>The Riemann Hypothesis: A Computational Proof.</em> Zenodo. DOI via <a href="https://zenodo.org/records/19223508" style="color: var(--gold);">zenodo.org/records/19223508</a>. Status: unverified working paper.</p>
+
 </div>
 </body>
 </html>
