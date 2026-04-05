@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Circumpunct Physics Engine</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #000; overflow: hidden; font-family: 'Segoe UI', system-ui, sans-serif; color: #ccc; }
+canvas { display: block; }
+
+#ui-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 20px; pointer-events: none; z-index: 10;
+}
+#title {
+    font-size: 18px; font-weight: 300; letter-spacing: 2px; color: #aaa;
+}
+#title span { color: #f0c060; font-weight: 600; }
+#stats { font-size: 13px; color: #666; font-family: monospace; }
+
+#materials {
+    position: fixed; left: 20px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 8px; z-index: 10;
+}
+.mat-btn {
+    width: 52px; height: 52px; border-radius: 50%; border: 2px solid #333;
+    background: #111; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.5px; transition: all 0.2s; position: relative;
+}
+.mat-btn:hover { border-color: #666; transform: scale(1.1); }
+.mat-btn.active { border-width: 3px; transform: scale(1.15); }
+.mat-btn .mat-label {
+    position: absolute; left: 62px; white-space: nowrap;
+    font-size: 12px; color: #888; opacity: 0; transition: opacity 0.2s;
+    pointer-events: none;
+}
+.mat-btn:hover .mat-label { opacity: 1; }
+
+#controls-right {
+    position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 12px; z-index: 10;
+    background: rgba(10,10,10,0.85); border: 1px solid #222; border-radius: 12px;
+    padding: 16px; width: 200px; backdrop-filter: blur(8px);
+}
+#controls-right h3 {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+    color: #555; margin-bottom: 4px;
+}
+.ctrl-row {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px;
+}
+.ctrl-row label { color: #777; }
+.ctrl-row span { color: #999; font-family: monospace; min-width: 35px; text-align: right; }
+.ctrl-row input[type="range"] {
+    width: 80px; accent-color: #f0c060; height: 3px;
+}
+
+#instructions {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    font-size: 12px; color: #444; text-align: center; z-index: 10;
+    pointer-events: none;
+}
+
+#world-label {
+    position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%);
+    font-size: 11px; color: #2a2a2a; letter-spacing: 3px;
+    text-transform: uppercase; pointer-events: none; z-index: 10;
+}
+
+.btn-sm {
+    background: #1a1a1a; border: 1px solid #333; color: #888;
+    padding: 6px 12px; border-radius: 6px; cursor: pointer;
+    font-size: 11px; transition: all 0.2s;
+}
+.btn-sm:hover { border-color: #666; color: #ccc; }
+</style>
+</head>
+<body>
+
+<div id="ui-top">
+    <div id="title"><span>&#x2299;</span> Circumpunct Engine</div>
+    <div id="stats">particles: 0 | fps: 60</div>
+</div>
+
+<div id="materials"></div>
+
+<div id="controls-right">
+    <h3>World</h3>
+    <div class="ctrl-row">
+        <label>Gravity</label>
+        <input type="range" id="sl-gravity" min="0" max="5" step="0.1" value="1">
+        <span id="v-gravity">1.0</span>
+    </div>
+    <div class="ctrl-row">
+        <label>Resonance</label>
+        <input type="range" id="sl-resonance" min="0" max="5" step="0.1" value="1">
+        <span id="v-resonance">1.0</span>
+    </div>
+    <div class="ctrl-row">
+        <label>Damping</label>
+        <input type="range" id="sl-damping" min="0.9" max="1" step="0.002" value="0.998">
+        <span id="v-damping">0.998</span>
+    </div>
+    <div class="ctrl-row">
+        <label>Pump Rate</label>
+        <input type="range" id="sl-pump" min="0.1" max="5" step="0.1" value="1">
+        <span id="v-pump">1.0</span>
+    </div>
+    <h3 style="margin-top:8px">Spawn</h3>
+    <div class="ctrl-row">
+        <label>Count</label>
+        <input type="range" id="sl-count" min="1" max="20" step="1" value="1">
+        <span id="v-count">1</span>
+    </div>
+    <div class="ctrl-row">
+        <label>Scatter</label>
+        <input type="range" id="sl-scatter" min="0" max="100" step="5" value="20">
+        <span id="v-scatter">20</span>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:8px">
+        <button class="btn-sm" id="btn-clear">Clear</button>
+        <button class="btn-sm" id="btn-pause">Pause</button>
+        <button class="btn-sm" id="btn-demo">Demo</button>
+    </div>
+</div>
+
+<div id="world-label">the world is a circumpunct</div>
+<div id="instructions">click to spawn | drag to attract | right-drag to repel | scroll to zoom | space to pause</div>
+
+<script>
+// ============================================================
+//  CIRCUMPUNCT PHYSICS ENGINE
+//  Every particle is a circumpunct. Every interaction emerges
+//  from the three operators: convergence, rotation, emergence.
+// ============================================================
+
+// ---------- CONFIGURATION ----------
+const MAX_PARTICLES = 600;
+const WORLD_RADIUS = 380;
+const SOFTENING = 4.0;
+const G_BASE = 800;
+const RES_BASE = 400;
+
+// ---------- MATERIAL PRESETS ----------
+const MATERIALS = {
+    rock:   { name:'Rock',   mass:4.0, fieldRadius:35,  carrierFreq:0.08, bandwidth:0.04, pumpRate:0.4,  boundaryRadius:14, lockStrength:0.95, restitution:0.3, balance:0.50, energy:0.6, hue:30,  sat:0.3 },
+    water:  { name:'Water',  mass:1.0, fieldRadius:50,  carrierFreq:0.58, bandwidth:0.12, pumpRate:2.0,  boundaryRadius:7,  lockStrength:0.12, restitution:0.05,balance:0.50, energy:0.8, hue:210, sat:0.7 },
+    fire:   { name:'Fire',   mass:0.3, fieldRadius:55,  carrierFreq:0.05, bandwidth:0.06, pumpRate:7.0,  boundaryRadius:6,  lockStrength:0.02, restitution:0.0, balance:0.30, energy:1.4, hue:15,  sat:0.9 },
+    air:    { name:'Air',    mass:0.1, fieldRadius:70,  carrierFreq:0.50, bandwidth:0.25, pumpRate:3.0,  boundaryRadius:4,  lockStrength:0.0,  restitution:0.85,balance:0.50, energy:0.7, hue:190, sat:0.3 },
+    aether: { name:'Aether', mass:0.05,fieldRadius:100, carrierFreq:0.82, bandwidth:0.40, pumpRate:10.0, boundaryRadius:3,  lockStrength:0.0,  restitution:1.0, balance:0.50, energy:1.8, hue:280, sat:0.6 }
+};
+let selectedMaterial = 'water';
+
+// ---------- HSL TO RGB ----------
+function hsl2rgb(h, s, l) {
+    h /= 360; s = Math.max(0, Math.min(1, s)); l = Math.max(0, Math.min(1, l));
+    if (s === 0) return [l, l, l];
+    const hue2rgb = (p, q, t) => {
+        if (t < 0) t += 1; if (t > 1) t -= 1;
+        if (t < 1/6) return p + (q - p) * 6 * t;
+        if (t < 1/2) return q;
+        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        return p;
+    };
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    return [hue2rgb(p, q, h + 1/3), hue2rgb(p, q, h), hue2rgb(p, q, h - 1/3)];
+}
+
+// ---------- CIRCUMPUNCT CLASS ----------
+class Circumpunct {
+    constructor(x, y, mat) {
+        // Soul (dot)
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 20;
+        this.vy = (Math.random() - 0.5) * 20;
+        this.mass = mat.mass;
+
+        // Field (Phi)
+        this.fieldRadius = mat.fieldRadius;
+        this.carrierFreq = mat.carrierFreq + (Math.random() - 0.5) * mat.bandwidth * 0.3;
+        this.bandwidth = mat.bandwidth;
+        this.phase = Math.random() * Math.PI * 2;
+        this.pumpRate = mat.pumpRate;
+
+        // Boundary (circle)
+        this.boundaryRadius = mat.boundaryRadius;
+        this.lockStrength = mat.lockStrength;
+        this.restitution = mat.restitution;
+
+        // State
+        this.balance = mat.balance;
+        this.energy = mat.energy;
+        this.age = 0;
+
+        // Visual
+        const rgb = hsl2rgb(mat.hue + (Math.random() - 0.5) * 15, mat.sat, 0.55);
+        this.r = rgb[0]; this.g = rgb[1]; this.b = rgb[2];
+
+        // Accumulator
+        this.fx = 0; this.fy = 0;
+    }
+}
+
+// ---------- ENGINE ----------
+class CircumpunctEngine {
+    constructor() {
+        this.particles = [];
+        this.gravityMul = 1.0;
+        this.resonanceMul = 1.0;
+        this.damping = 0.998;
+        this.pumpMul = 1.0;
+        this.paused = false;
+    }
+
+    add(x, y, matKey) {
+        if (this.particles.length >= MAX_PARTICLES) return null;
+        const mat = MATERIALS[matKey];
+        const p = new Circumpunct(x, y, mat);
+        this.particles.push(p);
+        return p;
+    }
+
+    clear() { this.particles.length = 0; }
+
+    step(dt) {
+        if (this.paused) return;
+        dt = Math.min(dt, 0.033); // cap at ~30fps equivalent
+        const N = this.particles.length;
+        const ps = this.particles;
+
+        // Reset forces
+        for (let i = 0; i < N; i++) { ps[i].fx = 0; ps[i].fy = 0; }
+
+        // --- CONVERGENCE + RESONANCE + COLLISION (pairwise) ---
+        for (let i = 0; i < N; i++) {
+            const a = ps[i];
+            for (let j = i + 1; j < N; j++) {
+                const b = ps[j];
+                const dx = b.x - a.x;
+                const dy = b.y - a.y;
+                const distSq = dx * dx + dy * dy;
+                const maxRange = a.fieldRadius + b.fieldRadius;
+
+                if (distSq > maxRange * maxRange) continue;
+
+                const dist = Math.sqrt(distSq);
+                if (dist < 0.01) continue;
+                const nx = dx / dist;
+                const ny = dy / dist;
+
+                // -- Convergence (gravity): inverse-square, Phi is 2D --
+                const Fg = G_BASE * this.gravityMul * a.mass * b.mass / (distSq + SOFTENING * SOFTENING);
+                a.fx += Fg * nx; a.fy += Fg * ny;
+                b.fx -= Fg * nx; b.fy -= Fg * ny;
+
+                // -- Field Resonance: frequency matching through SRL --
+                const freqDiff = Math.abs(a.carrierFreq - b.carrierFreq);
+                const resonance = Math.pow(Math.cos(freqDiff * Math.PI), 2);
+                const overlap = 1.0 - dist / maxRange;
+                const Fr = RES_BASE * this.resonanceMul * resonance * overlap * 0.5 *
+                           (a.energy + b.energy) / (dist + 10);
+                a.fx += Fr * nx; a.fy += Fr * ny;
+                b.fx -= Fr * nx; b.fy -= Fr * ny;
+
+                // -- Boundary Collision --
+                const bDist = a.boundaryRadius + b.boundaryRadius;
+                if (dist < bDist) {
+                    // Relative velocity along normal
+                    const dvx = b.vx - a.vx;
+                    const dvy = b.vy - a.vy;
+                    const dvn = dvx * nx + dvy * ny;
+
+                    if (dvn < 0) {
+                        const e = (a.restitution + b.restitution) * 0.5;
+                        const invMassSum = 1.0 / a.mass + 1.0 / b.mass;
+                        const impulse = -(1 + e) * dvn / invMassSum;
+                        a.vx -= impulse * nx / a.mass;
+                        a.vy -= impulse * ny / a.mass;
+                        b.vx += impulse * nx / b.mass;
+                        b.vy += impulse * ny / b.mass;
+                    }
+
+                    // Separate
+                    const penetration = bDist - dist;
+                    const sep = penetration * 0.5;
+                    a.x -= sep * nx; a.y -= sep * ny;
+                    b.x += sep * nx; b.y += sep * ny;
+
+                    // Energy transfer through boundary (low lock = more transfer)
+                    const transferRate = 1.0 - (a.lockStrength + b.lockStrength) * 0.5;
+                    const eDiff = b.energy - a.energy;
+                    const transfer = eDiff * transferRate * 0.05;
+                    a.energy += transfer;
+                    b.energy -= transfer;
+
+                    // Phase coupling on collision (the i-rotation at the gate)
+                    const phaseCoupling = 0.1 * (1.0 - (a.lockStrength + b.lockStrength) * 0.5);
+                    const phaseDiff = b.phase - a.phase;
+                    a.phase += phaseDiff * phaseCoupling;
+                    b.phase -= phaseDiff * phaseCoupling;
+                }
+            }
+        }
+
+        // --- PER-PARTICLE UPDATE ---
+        for (let i = 0; i < N; i++) {
+            const p = ps[i];
+
+            // Pump cycle: phase advances (the i-rotation)
+            p.phase += p.pumpRate * this.pumpMul * dt;
+
+            // Fire rises (emergence pushes upward), rock sinks (convergence pulls down)
+            if (p.lockStrength < 0.1 && p.energy > 1.0) {
+                p.fy -= p.energy * 15; // fire rises
+            }
+
+            // Apply forces (emergence: radiate outward from center of force)
+            p.vx += (p.fx / p.mass) * dt;
+            p.vy += (p.fy / p.mass) * dt;
+
+            // Damping
+            p.vx *= this.damping;
+            p.vy *= this.damping;
+
+            // Velocity limit
+            const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+            const maxSpeed = 600;
+            if (speed > maxSpeed) {
+                p.vx = p.vx / speed * maxSpeed;
+                p.vy = p.vy / speed * maxSpeed;
+            }
+
+            // Update position
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+
+            // Energy decay toward baseline (entropy: constraints relaxing)
+            p.energy += (0.8 - p.energy) * 0.001;
+
+            // Age
+            p.age += dt;
+
+            // Effective field radius pulses with pump cycle
+            p.effectiveField = p.fieldRadius * (0.92 + 0.08 * Math.sin(p.phase));
+        }
+
+        // --- WORLD BOUNDARY (the outermost circle) ---
+        for (let i = 0; i < N; i++) {
+            const p = ps[i];
+            const dist = Math.sqrt(p.x * p.x + p.y * p.y);
+            if (dist + p.boundaryRadius > WORLD_RADIUS) {
+                const nx = p.x / (dist || 1);
+                const ny = p.y / (dist || 1);
+                p.x = (WORLD_RADIUS - p.boundaryRadius) * nx;
+                p.y = (WORLD_RADIUS - p.boundaryRadius) * ny;
+                const vn = p.vx * nx + p.vy * ny;
+                if (vn > 0) {
+                    p.vx -= 2 * vn * nx * 0.85;
+                    p.vy -= 2 * vn * ny * 0.85;
+                }
+            }
+        }
+    }
+}
+
+// ---------- RENDERER (Three.js WebGL) ----------
+const engine = new CircumpunctEngine();
+
+const W = window.innerWidth;
+const H = window.innerHeight;
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(-W/2, W/2, H/2, -H/2, 0.1, 100);
+camera.position.z = 10;
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+renderer.setSize(W, H);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x050508, 1);
+document.body.insertBefore(renderer.domElement, document.body.firstChild);
+
+// Zoom state
+let zoomLevel = 1.0;
+function updateCamera() {
+    const hw = W / (2 * zoomLevel);
+    const hh = H / (2 * zoomLevel);
+    camera.left = -hw; camera.right = hw;
+    camera.top = hh; camera.bottom = -hh;
+    camera.updateProjectionMatrix();
+}
+
+// --- World boundary ring ---
+const ringGeo = new THREE.RingGeometry(WORLD_RADIUS - 1, WORLD_RADIUS + 1, 128);
+const ringMat = new THREE.MeshBasicMaterial({ color: 0x1a1a22, side: THREE.DoubleSide });
+const worldRing = new THREE.Mesh(ringGeo, ringMat);
+scene.add(worldRing);
+
+// Subtle inner glow for world
+const worldGlowGeo = new THREE.CircleGeometry(WORLD_RADIUS, 128);
+const worldGlowMat = new THREE.ShaderMaterial({
+    transparent: true,
+    uniforms: {},
+    vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+    fragmentShader: `
+        varying vec2 vUv;
+        void main(){
+            vec2 c = vUv - 0.5;
+            float d = length(c) * 2.0;
+            float edge = smoothstep(0.85, 1.0, d) * 0.08;
+            float center = (1.0 - d * d) * 0.015;
+            gl_FragColor = vec4(vec3(0.06, 0.06, 0.1), center + edge);
+        }
+    `
+});
+const worldGlow = new THREE.Mesh(worldGlowGeo, worldGlowMat);
+worldGlow.position.z = -1;
+scene.add(worldGlow);
+
+// --- Particle rendering system ---
+const vertexShader = `
+    attribute float a_energy;
+    attribute float a_phase;
+    attribute float a_balance;
+    attribute float a_fieldRadius;
+    attribute float a_boundaryRadius;
+
+    varying float v_energy;
+    varying float v_phase;
+    varying float v_balance;
+    varying float v_bRatio;
+    varying vec3 v_color;
+
+    uniform float u_zoom;
+
+    void main() {
+        v_energy = a_energy;
+        v_phase = a_phase;
+        v_balance = a_balance;
+        v_bRatio = a_boundaryRadius / a_fieldRadius;
+        v_color = color;
+
+        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = a_fieldRadius * 2.0 * u_zoom;
+        gl_Position = projectionMatrix * mvPosition;
+    }
+`;
+
+const fragmentShader = `
+    varying float v_energy;
+    varying float v_phase;
+    varying float v_balance;
+    varying float v_bRatio;
+    varying vec3 v_color;
+
+    void main() {
+        vec2 coord = gl_PointCoord - 0.5;
+        float dist = length(coord) * 2.0;
+
+        // Aperture (the dot; the soul; 0D convergence point)
+        float aperture = exp(-dist * dist * 45.0) * v_energy * 1.2;
+
+        // Field (Phi; the surface; 2D mediation)
+        float pulse = 0.82 + 0.18 * sin(v_phase);
+        float field = exp(-dist * dist * 2.8) * 0.35 * v_energy * pulse;
+
+        // Boundary (the circle; the body; 3D closure)
+        float ring = exp(-pow((dist - v_bRatio) * 18.0, 2.0)) * 0.7 * v_energy;
+
+        // Combine: balance controls dot-vs-ring brightness
+        vec3 apertureColor = mix(v_color * 1.5, vec3(1.0, 0.97, 0.9), 0.6);
+        vec3 color = apertureColor * aperture * (0.6 + v_balance * 0.8)
+                   + v_color * field
+                   + v_color * 1.4 * ring * (1.4 - v_balance * 0.8);
+
+        float alpha = aperture * 0.9 + field + ring * 0.7;
+        if (alpha < 0.005) discard;
+        gl_FragColor = vec4(color, min(alpha, 1.0));
+    }
+`;
+
+// Pre-allocate attribute arrays
+const posArr = new Float32Array(MAX_PARTICLES * 3);
+const colArr = new Float32Array(MAX_PARTICLES * 3);
+const energyArr = new Float32Array(MAX_PARTICLES);
+const phaseArr = new Float32Array(MAX_PARTICLES);
+const balanceArr = new Float32Array(MAX_PARTICLES);
+const fieldRadArr = new Float32Array(MAX_PARTICLES);
+const boundRadArr = new Float32Array(MAX_PARTICLES);
+
+const geom = new THREE.BufferGeometry();
+geom.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
+geom.setAttribute('color', new THREE.BufferAttribute(colArr, 3));
+geom.setAttribute('a_energy', new THREE.BufferAttribute(energyArr, 1));
+geom.setAttribute('a_phase', new THREE.BufferAttribute(phaseArr, 1));
+geom.setAttribute('a_balance', new THREE.BufferAttribute(balanceArr, 1));
+geom.setAttribute('a_fieldRadius', new THREE.BufferAttribute(fieldRadArr, 1));
+geom.setAttribute('a_boundaryRadius', new THREE.BufferAttribute(boundRadArr, 1));
+geom.setDrawRange(0, 0);
+
+const pointsMat = new THREE.ShaderMaterial({
+    vertexShader,
+    fragmentShader,
+    uniforms: { u_zoom: { value: 1.0 } },
+    vertexColors: true,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+});
+
+const points = new THREE.Points(geom, pointsMat);
+scene.add(points);
+
+// --- Connection lines between resonating particles ---
+const lineMaxPairs = 2000;
+const linePositions = new Float32Array(lineMaxPairs * 6);
+const lineColors = new Float32Array(lineMaxPairs * 6);
+const lineGeom = new THREE.BufferGeometry();
+lineGeom.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+lineGeom.setAttribute('color', new THREE.BufferAttribute(lineColors, 3));
+lineGeom.setDrawRange(0, 0);
+
+const lineMat = new THREE.LineBasicMaterial({
+    vertexColors: true,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    opacity: 0.4
+});
+const lines = new THREE.LineSegments(lineGeom, lineMat);
+scene.add(lines);
+
+// Sync engine particles to GPU attributes
+function syncAttributes() {
+    const ps = engine.particles;
+    const N = ps.length;
+
+    let lineIdx = 0;
+
+    for (let i = 0; i < N; i++) {
+        const p = ps[i];
+        posArr[i*3] = p.x;
+        posArr[i*3+1] = p.y;
+        posArr[i*3+2] = 0;
+        colArr[i*3] = p.r;
+        colArr[i*3+1] = p.g;
+        colArr[i*3+2] = p.b;
+        energyArr[i] = p.energy;
+        phaseArr[i] = p.phase;
+        balanceArr[i] = p.balance;
+        fieldRadArr[i] = p.effectiveField || p.fieldRadius;
+        boundRadArr[i] = p.boundaryRadius;
+
+        // Draw resonance lines for close, frequency-matched pairs
+        if (lineIdx < lineMaxPairs) {
+            for (let j = i + 1; j < N && lineIdx < lineMaxPairs; j++) {
+                const q = ps[j];
+                const dx = q.x - p.x;
+                const dy = q.y - p.y;
+                const dSq = dx*dx + dy*dy;
+                const maxR = (p.fieldRadius + q.fieldRadius) * 0.6;
+                if (dSq < maxR * maxR) {
+                    const freqDiff = Math.abs(p.carrierFreq - q.carrierFreq);
+                    const res = Math.pow(Math.cos(freqDiff * Math.PI), 2);
+                    if (res > 0.5) {
+                        const alpha = (res - 0.5) * 2.0 * 0.15;
+                        const idx = lineIdx * 6;
+                        linePositions[idx] = p.x; linePositions[idx+1] = p.y; linePositions[idx+2] = 0;
+                        linePositions[idx+3] = q.x; linePositions[idx+4] = q.y; linePositions[idx+5] = 0;
+                        const mr = (p.r+q.r)*0.5*alpha;
+                        const mg = (p.g+q.g)*0.5*alpha;
+                        const mb = (p.b+q.b)*0.5*alpha;
+                        lineColors[idx] = mr; lineColors[idx+1] = mg; lineColors[idx+2] = mb;
+                        lineColors[idx+3] = mr; lineColors[idx+4] = mg; lineColors[idx+5] = mb;
+                        lineIdx++;
+                    }
+                }
+            }
+        }
+    }
+
+    geom.setDrawRange(0, N);
+    geom.attributes.position.needsUpdate = true;
+    geom.attributes.color.needsUpdate = true;
+    geom.attributes.a_energy.needsUpdate = true;
+    geom.attributes.a_phase.needsUpdate = true;
+    geom.attributes.a_balance.needsUpdate = true;
+    geom.attributes.a_fieldRadius.needsUpdate = true;
+    geom.attributes.a_boundaryRadius.needsUpdate = true;
+
+    lineGeom.setDrawRange(0, lineIdx * 2);
+    lineGeom.attributes.position.needsUpdate = true;
+    lineGeom.attributes.color.needsUpdate = true;
+}
+
+// ---------- UI ----------
+const materialsDiv = document.getElementById('materials');
+const matColors = { rock:'#8b7355', water:'#4488cc', fire:'#ee6622', air:'#88bbcc', aether:'#9966dd' };
+
+Object.keys(MATERIALS).forEach(key => {
+    const btn = document.createElement('div');
+    btn.className = 'mat-btn' + (key === selectedMaterial ? ' active' : '');
+    btn.style.borderColor = matColors[key];
+    if (key === selectedMaterial) btn.style.borderColor = matColors[key];
+    btn.innerHTML = `<span style="color:${matColors[key]}">${MATERIALS[key].name[0]}</span><span class="mat-label">${MATERIALS[key].name}</span>`;
+    btn.onclick = () => {
+        document.querySelectorAll('.mat-btn').forEach(b => { b.classList.remove('active'); b.style.borderWidth = '2px'; });
+        btn.classList.add('active');
+        btn.style.borderWidth = '3px';
+        selectedMaterial = key;
+    };
+    materialsDiv.appendChild(btn);
+});
+
+// Sliders
+function bindSlider(id, valId, setter) {
+    const sl = document.getElementById(id);
+    const v = document.getElementById(valId);
+    sl.oninput = () => { v.textContent = parseFloat(sl.value).toFixed(sl.step.includes('.') ? sl.step.split('.')[1].length : 0); setter(parseFloat(sl.value)); };
+    setter(parseFloat(sl.value));
+}
+bindSlider('sl-gravity', 'v-gravity', v => engine.gravityMul = v);
+bindSlider('sl-resonance', 'v-resonance', v => engine.resonanceMul = v);
+bindSlider('sl-damping', 'v-damping', v => engine.damping = v);
+bindSlider('sl-pump', 'v-pump', v => engine.pumpMul = v);
+bindSlider('sl-count', 'v-count', () => {});
+bindSlider('sl-scatter', 'v-scatter', () => {});
+
+document.getElementById('btn-clear').onclick = () => engine.clear();
+document.getElementById('btn-pause').onclick = () => {
+    engine.paused = !engine.paused;
+    document.getElementById('btn-pause').textContent = engine.paused ? 'Play' : 'Pause';
+};
+
+// Demo: spawn a mix of materials
+document.getElementById('btn-demo').onclick = () => {
+    engine.clear();
+    const mats = Object.keys(MATERIALS);
+    for (let i = 0; i < 120; i++) {
+        const mat = mats[Math.floor(Math.random() * mats.length)];
+        const angle = Math.random() * Math.PI * 2;
+        const r = Math.random() * WORLD_RADIUS * 0.8;
+        engine.add(Math.cos(angle) * r, Math.sin(angle) * r, mat);
+    }
+};
+
+// ---------- INPUT ----------
+let mouseDown = false;
+let rightDown = false;
+let mouseX = 0, mouseY = 0;
+
+function screenToWorld(sx, sy) {
+    return {
+        x: (sx - W/2) / zoomLevel,
+        y: -(sy - H/2) / zoomLevel
+    };
+}
+
+renderer.domElement.addEventListener('mousedown', e => {
+    e.preventDefault();
+    if (e.button === 0) {
+        mouseDown = true;
+        const pos = screenToWorld(e.clientX, e.clientY);
+        const count = parseInt(document.getElementById('sl-count').value);
+        const scatter = parseInt(document.getElementById('sl-scatter').value);
+        for (let i = 0; i < count; i++) {
+            const ox = (Math.random() - 0.5) * scatter * 2;
+            const oy = (Math.random() - 0.5) * scatter * 2;
+            engine.add(pos.x + ox, pos.y + oy, selectedMaterial);
+        }
+    } else if (e.button === 2) {
+        rightDown = true;
+    }
+});
+
+renderer.domElement.addEventListener('mouseup', e => {
+    if (e.button === 0) mouseDown = false;
+    if (e.button === 2) rightDown = false;
+});
+
+renderer.domElement.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+
+    // Continuous spawn while dragging
+    if (mouseDown) {
+        const pos = screenToWorld(e.clientX, e.clientY);
+        if (Math.random() < 0.3) {
+            const scatter = parseInt(document.getElementById('sl-scatter').value);
+            engine.add(pos.x + (Math.random()-0.5)*scatter, pos.y + (Math.random()-0.5)*scatter, selectedMaterial);
+        }
+    }
+});
+
+// Attract/repel on right drag
+function applyMouseForce() {
+    if (!rightDown) return;
+    const pos = screenToWorld(mouseX, mouseY);
+    const range = 150;
+    const strength = 50000;
+    for (const p of engine.particles) {
+        const dx = pos.x - p.x;
+        const dy = pos.y - p.y;
+        const distSq = dx * dx + dy * dy;
+        if (distSq < range * range && distSq > 1) {
+            const dist = Math.sqrt(distSq);
+            // Right click = repel
+            const f = -strength / (distSq + 100);
+            p.vx += f * dx / dist;
+            p.vy += f * dy / dist;
+        }
+    }
+}
+
+renderer.domElement.addEventListener('contextmenu', e => e.preventDefault());
+
+renderer.domElement.addEventListener('wheel', e => {
+    e.preventDefault();
+    zoomLevel *= e.deltaY > 0 ? 0.92 : 1.08;
+    zoomLevel = Math.max(0.3, Math.min(5.0, zoomLevel));
+    updateCamera();
+    pointsMat.uniforms.u_zoom.value = zoomLevel;
+}, { passive: false });
+
+window.addEventListener('keydown', e => {
+    if (e.code === 'Space') {
+        e.preventDefault();
+        engine.paused = !engine.paused;
+        document.getElementById('btn-pause').textContent = engine.paused ? 'Play' : 'Pause';
+    }
+    if (e.code === 'KeyC') engine.clear();
+});
+
+window.addEventListener('resize', () => {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    renderer.setSize(w, h);
+    updateCamera();
+});
+
+// ---------- MAIN LOOP ----------
+let lastTime = performance.now();
+let fpsCounter = 0, fpsTime = 0;
+
+function animate(time) {
+    requestAnimationFrame(animate);
+
+    const dt = (time - lastTime) / 1000;
+    lastTime = time;
+
+    // FPS counter
+    fpsCounter++;
+    fpsTime += dt;
+    if (fpsTime >= 0.5) {
+        const fps = Math.round(fpsCounter / fpsTime);
+        document.getElementById('stats').textContent =
+            `particles: ${engine.particles.length} | fps: ${fps}`;
+        fpsCounter = 0;
+        fpsTime = 0;
+    }
+
+    applyMouseForce();
+    engine.step(dt);
+    syncAttributes();
+
+    // Pulse world ring color subtly
+    const ringPulse = 0.1 + 0.02 * Math.sin(time * 0.001);
+    ringMat.color.setRGB(ringPulse, ringPulse, ringPulse * 1.3);
+
+    renderer.render(scene, camera);
+}
+
+// Start
+updateCamera();
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>
