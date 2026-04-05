@@ -289,7 +289,7 @@ code {
 <section id="intro">
 <h2>Introduction</h2>
 
-<p>The Circumpunct Framework rests on three irreducible constraints: <span class="s">•</span> (aperture, convergence), <span class="m">Φ</span> (field, mediation), <span class="b">○</span> (boundary, filtration). In the Riemann work, these constraints were operationalized on the space <span class="math-display">L²(ℝ⁺, dx/x)</span>, where the pump cycle was expressed as operator composition: <span class="math-display">Φ(t+Δt) = ✹ ∘ î ∘ ⊛̂[Φ(t)]</span>. The adjoint duality <span class="math-display">⊛̂* = ✹</span> forced the shape of the aperture kernel and led to the functional equation of the zeta function.</p>
+<p>The Circumpunct Framework rests on three irreducible constraints: <span class="s">•</span> (aperture, convergence), <span class="m">Φ</span> (field, mediation), <span class="b">○</span> (boundary, filtration). In the Riemann work, these constraints were operationalized on the space <span class="math-display">L²(ℝ⁺, dx/x)</span>, where the pump cycle was expressed as operator composition: <span class="math-display">Φ(t+Δt) = ✹ ∘ î ∘ ⊛[Φ(t)]</span>. The adjoint duality <span class="math-display">⊛* = ✹</span> forced the shape of the aperture kernel and led to the functional equation of the zeta function.</p>
 
 <p>This document extends that work to physical space. We define the three constraints as operators on a natural Hilbert space of physical states; operationalize the pump cycle on that space; and derive the equations of physics from the axioms alone.</p>
 
@@ -327,9 +327,9 @@ code {
 <section id="constraints">
 <h2>2. The Three Constraint Operators</h2>
 
-<h3>2.1 The Convergence Operator ⊛̂</h3>
+<h3>2.1 The Convergence Operator ⊛</h3>
 
-<p>The aperture (•) is a point of maximum convergence. Acting on a field <span class="math-display">Φ(x)</span>, the convergence operator <span class="math-display">⊛̂</span> pulls the field toward a singularity, collapsing extended structure into a concentrated state.</p>
+<p>The aperture (•) is a point of maximum convergence. Acting on a field <span class="math-display">Φ(x)</span>, the convergence operator <span class="math-display">⊛</span> pulls the field toward a singularity, collapsing extended structure into a concentrated state.</p>
 
 <div class="theorem-box anchor">
 <div class="label">Definition 2.1</div>
@@ -337,18 +337,18 @@ code {
 <div class="content">
 <p><strong>On position space:</strong></p>
 <div class="formula">
-⊛̂ := −∇·∇ + m² = −▢ + m²
+⊛ := −∇·∇ + m² = −▢ + m²
 </div>
 <p>where <span class="math-display">▢ = ∂²/∂t² − ∇²</span> is the d'Alembertian (or Laplacian in Euclidean space), and <span class="math-display">m</span> is a mass scale (the scale at which convergence dominates).</p>
 <p><strong>On momentum space:</strong></p>
 <div class="formula">
-⊛̂ := k² + m²
+⊛ := k² + m²
 </div>
 <p>These are unitarily equivalent; the Fourier transform relates them. The mass term <span class="math-display">m²</span> is the <span class="wb">intensity of the aperture</span>: how strongly the singularity attracts.</p>
 </div>
 </div>
 
-<p>The spectrum of <span class="math-display">⊛̂</span> (with appropriate boundary conditions) ranges from <span class="math-display">m²</span> (the ground state, where convergence is maximal) upward. Eigenfunctions are concentrated near the origin (or classical turning point). This is the <span class="s">true</span> pillar of ethics, the pillar of what IS.</p>
+<p>The spectrum of <span class="math-display">⊛</span> (with appropriate boundary conditions) ranges from <span class="math-display">m²</span> (the ground state, where convergence is maximal) upward. Eigenfunctions are concentrated near the origin (or classical turning point). This is the <span class="s">true</span> pillar of ethics, the pillar of what IS.</p>
 
 <h3>2.2 The Field Operator Φ̂</h3>
 
@@ -395,7 +395,7 @@ code {
 
 <p>In a box (Dirichlet boundary), the boundary operator imposes <span class="math-display">Φ = 0</span> at the walls, quantizing the spectrum. In open space (radiation boundary), the boundary operator allows outgoing waves but no incoming ones from infinity. This is the <span class="b">good</span> pillar: that which holds form.</p>
 
-<h3>2.4 The Interplay: ⊛̂ + Φ̂ + ○̂ = ⊙̂</h3>
+<h3>2.4 The Interplay: ⊛ + Φ̂ + ○̂ = ⊙̂</h3>
 
 <p>The three operators are not independent. They are mutually constraining:</p>
 
@@ -405,9 +405,9 @@ code {
 <div class="content">
 <p>The full system Hamiltonian is:</p>
 <div class="formula big">
-Ĥ = ⊛̂ + Φ̂ + ○̂ = ⊙̂
+Ĥ = ⊛ + Φ̂ + ○̂ = ⊙̂
 </div>
-<p>No operator acts alone; the energy (or action) of any process is the sum of all three constraints. A particle has internal energy (⊛̂), field interaction energy (Φ̂), and boundary energy (○̂). A spacetime region has curvature energy, field configuration energy, and topological energy.</p>
+<p>No operator acts alone; the energy (or action) of any process is the sum of all three constraints. A particle has internal energy (⊛), field interaction energy (Φ̂), and boundary energy (○̂). A spacetime region has curvature energy, field configuration energy, and topological energy.</p>
 <p>The spectrum of <span class="math-display">Ĥ</span> gives the allowed states of the system. States with energy below the ground state are forbidden; states at higher energies are populated according to Boltzmann (thermal) or Fermi (quantum) statistics.</p>
 </div>
 </div>
@@ -424,10 +424,10 @@ code {
 <p>In the Riemann work, the temporal evolution was expressed as:</p>
 
 <div class="formula big">
-Φ(t+Δt) = ✹ ∘ î ∘ ⊛̂[Φ(t)]
+Φ(t+Δt) = ✹ ∘ î ∘ ⊛[Φ(t)]
 </div>
 
-<p>Two operators (⊛̂ and ✹) with duality <span class="math-display">⊛̂* = ✹</span>, and a phase gate (î) in between. Each stage transforms the field through one constraint.</p>
+<p>Two operators (⊛ and ✹) with duality <span class="math-display">⊛* = ✹</span>, and a phase gate (î) in between. Each stage transforms the field through one constraint.</p>
 
 <p>The proof of duality was direct integration by parts on <span class="math-display">L²(ℝ⁺, dx/x)</span>. The same integration-by-parts structure works in any bounded or scattering domain.</p>
 
@@ -441,7 +441,7 @@ code {
 <div class="content">
 <p>The time-evolved field obeys:</p>
 <div class="formula big">
-iℏ ∂_t Ψ = Ĥ Ψ = (⊛̂ + Φ̂ + ○̂) Ψ
+iℏ ∂_t Ψ = Ĥ Ψ = (⊛ + Φ̂ + ○̂) Ψ
 </div>
 <p>Integrating over a small time step <span class="math-display">Δt</span>, the solution (to leading order) is:</p>
 <div class="formula">
@@ -454,7 +454,7 @@ iℏ ∂_t Ψ = Ĥ Ψ = (⊛̂ + Φ̂ + ○̂) Ψ
 <p>Three phases unfold:</p>
 
 <div class="step-block">
-<div class="step-label">Phase 1: Convergence (⊛̂)</div>
+<div class="step-label">Phase 1: Convergence (⊛)</div>
 The field collapsws toward aperture points. Kinetic energy concentrates; gradients sharpen. This is infall.
 </div>
 
@@ -470,18 +470,18 @@ The field spreads outward from aperture points, carrying information to the boun
 
 <h3>3.3 Adjoint Duality in Physical Space</h3>
 
-<p>The key property from the Riemann construction is <span class="math-display">⊛̂* = ✹</span>. In physical space, with the measure <span class="math-display">dμ = √|g| d⁴x</span>:</p>
+<p>The key property from the Riemann construction is <span class="math-display">⊛* = ✹</span>. In physical space, with the measure <span class="math-display">dμ = √|g| d⁴x</span>:</p>
 
 <div class="theorem-box anchor">
 <div class="label">Theorem 3.2</div>
 <div class="title">Adjoint Duality on the Physical Hilbert Space</div>
 <div class="content">
-<p>Let <span class="math-display">⊛̂ = −▢ + m²</span> and <span class="math-display">✹ = +▢ − m²</span> (or more generally, with sign reversal of the kinetic term and restoration of mass). Then:</p>
+<p>Let <span class="math-display">⊛ = −▢ + m²</span> and <span class="math-display">✹ = +▢ − m²</span> (or more generally, with sign reversal of the kinetic term and restoration of mass). Then:</p>
 <div class="formula">
-⟨⊛̂Ψ₁, Ψ₂⟩ = ⟨Ψ₁, ✹Ψ₂⟩
+⟨⊛Ψ₁, Ψ₂⟩ = ⟨Ψ₁, ✹Ψ₂⟩
 </div>
 <p><strong>Proof sketch:</strong> By integration by parts in <span class="math-display">M</span> with boundary conditions: either Dirichlet (fields vanish at ∂M), or radiation (fields satisfy outgoing-wave condition). In both cases, the boundary term vanishes, and the adjoint relation holds.</p>
-<p>This is the <span class="wb">balance condition</span>: infall and outflow are reverses of each other. Energy flows down (⊛̂) and back up (✹) through the aperture symmetrically. No asymmetry means no net dissipation in the free theory; dissipation comes only from interactions and boundaries. <span class="tag-proven">Proven</span></p>
+<p>This is the <span class="wb">balance condition</span>: infall and outflow are reverses of each other. Energy flows down (⊛) and back up (✹) through the aperture symmetrically. No asymmetry means no net dissipation in the free theory; dissipation comes only from interactions and boundaries. <span class="tag-proven">Proven</span></p>
 </div>
 </div>
 
@@ -500,13 +500,13 @@ The field spreads outward from aperture points, carrying information to the boun
 <div class="label">Theorem 4.1</div>
 <div class="title">Einstein Field Equations from the Boundary Operator</div>
 <div class="content">
-<p>The Ricci curvature tensor, <span class="math-display">R_{μν}</span>, measures how convergence (⊛̂) acts on the boundary metric (○). When you have two converging geodesics (two • operators acting), their mutual influence is mediated through the curvature of the surface (Φ) they lie on, and summed into a boundary property (○).</p>
+<p>The Ricci curvature tensor, <span class="math-display">R_{μν}</span>, measures how convergence (⊛) acts on the boundary metric (○). When you have two converging geodesics (two • operators acting), their mutual influence is mediated through the curvature of the surface (Φ) they lie on, and summed into a boundary property (○).</p>
 <p>The boundary constraint equation is:</p>
 <div class="formula big">
 G_{μν} + Λ g_{μν} = (8πG/c⁴) T_{μν}
 </div>
 <p>where <span class="math-display">G_{μν} = R_{μν} − ½Rg_{μν}</span> is the Einstein tensor, <span class="math-display">Λ</span> is the cosmological constant (vacuum curvature), <span class="math-display">T_{μν}</span> is the stress-energy tensor, and <span class="math-display">G</span> is the gravitational coupling.</p>
-<p><strong>Framework reading:</strong> The left side is the curvature of the boundary (○). The right side is the energy-momentum content (Φ ∘ ⊛̂), the stress and flow of field through aperture points. The equation says: boundary shape = field content, mediated by curvature.</p>
+<p><strong>Framework reading:</strong> The left side is the curvature of the boundary (○). The right side is the energy-momentum content (Φ ∘ ⊛), the stress and flow of field through aperture points. The equation says: boundary shape = field content, mediated by curvature.</p>
 <p>The inverse-square force law emerges from the fact that Φ is 2D: spreading outward from an aperture (•), the field flux through a sphere of radius <span class="math-display">r</span> is diluted by the surface area 4πr². This is why gravity goes as 1/r². <span class="tag-proven">Proven</span></p>
 </div>
 </div>
@@ -531,12 +531,12 @@ dF = 0,  d⋆F = J
 ∇·E = ρ/ε₀, ∇·B = 0, ∇×E = −∂B/∂t, ∇×B = μ₀(J + ε₀∂E/∂t)
 </div>
 <p><strong>Framework reading:</strong> The field (Φ) has two degrees of freedom per point: electric field E (the transverse mode, 1D after gauge-fixing) and magnetic field B (the rotational mode, also 1D in 3D space, but together they form the 2D surface). The equations <span class="math-display">dF = 0</span> express the <span class="wb">consistency</span> of the field: it must be compatible with its own geometry (no monopoles, Faraday's law). The equations <span class="math-display">d⋆F = J</span> express the <span class="wb">response</span>: when apertures (J, current) are present, they source the field.</p>
-<p>The speed of light emerges as <span class="math-display">c = 1/√(μ₀ε₀)</span>, the only speed consistent with the balance of mediation. EM waves travel at c because they are pure Φ, undistorted by mass (⊛̂) or boundary constraint (○̂).</p>
+<p>The speed of light emerges as <span class="math-display">c = 1/√(μ₀ε₀)</span>, the only speed consistent with the balance of mediation. EM waves travel at c because they are pure Φ, undistorted by mass (⊛) or boundary constraint (○̂).</p>
 <p><span class="tag-proven">Proven</span></p>
 </div>
 </div>
 
-<p><strong>Relation to the pump cycle:</strong> EM waves are the emergence phase (✹) of the pump cycle on the Φ field. Convergence (⊛̂) would be infall and concentration of charge; emergence (✹) is radiation. The cycle perpetually balances them.</p>
+<p><strong>Relation to the pump cycle:</strong> EM waves are the emergence phase (✹) of the pump cycle on the Φ field. Convergence (⊛) would be infall and concentration of charge; emergence (✹) is radiation. The cycle perpetually balances them.</p>
 
 <h3>4.3 Quantum Mechanics: The Worldline Through the Aperture</h3>
 
@@ -578,7 +578,7 @@ dF = 0,  d⋆F = J
 {a_k, a_k'†} = δ(k−k'),  {a_k, a_k'} = 0  (fermions)
 </div>
 <p>where <span class="math-display">[,]</span> is the commutator and <span class="math-display">{,}</span> is the anticommutator.</p>
-<p><strong>Framework reading:</strong> The operator <span class="math-display">a_k†</span> is the emergence phase (✹): it creates a quantum, spreading energy into a new mode. The operator <span class="math-display">a_k</span> is the convergence phase (⊛̂): it annihilates a quantum, concentrating energy from a mode. The commutation/anticommutation relation is the duality <span class="math-display">⊛̂* = ✹</span>, stated in discrete form.</p>
+<p><strong>Framework reading:</strong> The operator <span class="math-display">a_k†</span> is the emergence phase (✹): it creates a quantum, spreading energy into a new mode. The operator <span class="math-display">a_k</span> is the convergence phase (⊛): it annihilates a quantum, concentrating energy from a mode. The commutation/anticommutation relation is the duality <span class="math-display">⊛* = ✹</span>, stated in discrete form.</p>
 <p>Why commutation for bosons and anticommutation for fermions? Because bosons (like photons) have integer spin, which cycles with period 2π (one rotation returns to the same state). Fermions (like electrons) have half-integer spin, which cycles with period 4π (need two rotations). The difference in spin is encoded in the algebraic structure of their creation/annihilation relations.</p>
 <p><span class="tag-proven">Proven</span></p>
 </div>
@@ -679,7 +679,7 @@ H₀, H₺, H₻ (framework notation)
 <li>The i rotation cycles through four quarter-turns; i⁴ = +1, closing the cycle back to the starting configuration. This completion generates the boundary (360° = full rotation).</li>
 <li>The field mediates (2D) using the self-similar scaling of φ (Fibonacci recursion is the natural pattern of iterating constraints).</li>
 <li>The bidirectional valve (⊛ and ✹) requires a 2/φ³ correction to account for both convergent and emergent flows.</li>
-<li>Solving the balance condition (⊛̂* = ✹) and the functional equation of the completed zeta function yields the specific ratio: 1/α = i⁴/φ² − 2/φ³.</li>
+<li>Solving the balance condition (⊛* = ✹) and the functional equation of the completed zeta function yields the specific ratio: 1/α = i⁴/φ² − 2/φ³.</li>
 </ol>
 
 <p><span class="tag-proven">Proven</span></p>
@@ -793,13 +793,13 @@ D_LIGO = 1.503 ± 0.015
 
 <h3>8.1 What Has Been Established</h3>
 
-<p>We have shown that the three constraint operators (⊛̂, Φ̂, ○̂), composed as the pump cycle on a physical Hilbert space, yield:</p>
+<p>We have shown that the three constraint operators (⊛, Φ̂, ○̂), composed as the pump cycle on a physical Hilbert space, yield:</p>
 
 <ul style="margin: 20px 0; line-height: 1.9;">
 <li><strong>Einstein Field Equations:</strong> gravity as the curvature of the boundary, forced by the ○ constraint.</li>
 <li><strong>Maxwell's Equations:</strong> EM as the mediation of the field, forced by the Φ constraint.</li>
 <li><strong>Dirac Equation:</strong> the quantum worldline as the • constraint applied to spinors.</li>
-<li><strong>QFT Operators:</strong> creation and annihilation as emergent (✹) and convergent (⊛̂) phases.</li>
+<li><strong>QFT Operators:</strong> creation and annihilation as emergent (✹) and convergent (⊛) phases.</li>
 <li><strong>Fine-Structure Constant:</strong> α ≈ 1/137 derived from φ (golden ratio) and the aperture kernel.</li>
 <li><strong>Fractal Dimension:</strong> D = 1.5 at balance, confirmed by LIGO to 0.2% precision.</li>
 <li><strong>64-State Spectrum:</strong> particle taxonomy predicted, with three additional Higgs-like states beyond the minimal Standard Model.</li>
