@@ -199,7 +199,7 @@ class HierarchicalWorldline(nn.Module):
     """
     Three nested worldlines at different compression depths.
 
-    d_fast:  ⊛^1 compression, high α_d   (parts = ☀︎ = past, recent)
+    d_fast:  ⊛^1 compression, high α_d   (parts = ✹ = past, recent)
     d_mid:   ⊛^2 compression, medium α_d  (self = i = present)
     d_deep:  ⊛^3 compression, low α_d     (whole = ⊛ = future, identity)
 

@@ -43,7 +43,7 @@ The pump cycle in arithmetic:
 
 - **⊛ (convergence/descent):** n-descent reduces rational points to simpler representatives; the Selmer group captures what converges locally
 - **i (rotation/modularity):** The modular parametrization X₀(N) → E is the rotation; it connects the analytic world (modular forms) to the algebraic world (elliptic curves). Modularity IS the aperture through which local becomes global.
-- **☀︎ (emergence/Heegner construction):** Building rational points FROM the analytic field; Heegner points emerge from the modular parametrization. This is the field becoming actual: Φ producing •.
+- **✹ (emergence/Heegner construction):** Building rational points FROM the analytic field; Heegner points emerge from the modular parametrization. This is the field becoming actual: Φ producing •.
 
 ---
 
@@ -61,7 +61,7 @@ Translation: If Φ is nonzero at the balance point, no aperture opens, no branch
 
 **Rank 1 (Gross-Zagier 1986 + Kolyvagin 1990):** If ord_{s=1} L(E, s) = 1 and the Heegner point P_K has infinite order, then rank E(Q) = 1 and Ш(E/Q) is finite.
 
-Translation: If Φ vanishes to first order, exactly one aperture opens, exactly one branch. Gross-Zagier provides the explicit construction: the Heegner point IS ☀︎ (emergence), built from the modular parametrization (i, rotation). The derivative L'(E/K, 1) is proportional to the Neron-Tate height ⟨P_K, P_K⟩_NT; the analytic branching rate equals the algebraic branch size.
+Translation: If Φ vanishes to first order, exactly one aperture opens, exactly one branch. Gross-Zagier provides the explicit construction: the Heegner point IS ✹ (emergence), built from the modular parametrization (i, rotation). The derivative L'(E/K, 1) is proportional to the Neron-Tate height ⟨P_K, P_K⟩_NT; the analytic branching rate equals the algebraic branch size.
 
 ### 1.3 What Needs Translation
 
@@ -194,7 +194,7 @@ In conventional terms:
 | ○ (Mordell-Weil group closes) | E(Q) ≅ Z^r ⊕ torsion; finitely generated |
 | A4: Φ faithfully mediates | ord_{s=1} L(E,s) = rank E(Q) |
 | A2: each prime's ⊙ is a fractal of the whole | Euler product is faithful compression |
-| ☀︎ (Heegner emergence) | Heegner points: algebraic points built from modular forms |
+| ✹ (Heegner emergence) | Heegner points: algebraic points built from modular forms |
 | r branches = r iterations of rank-1 | Higher Gross-Zagier: r independent Heegner-type constructions |
 
 ### Translation 2 (Step 7): A4 → Finiteness of Ш

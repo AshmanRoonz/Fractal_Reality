@@ -54,7 +54,7 @@ triad = 3
 
 # The rungs of the ladder
 rungs = 7  # 0D, 0.5D, 1D, 1.5D, 2D, 2.5D, 3D
-channels = 2  # ⊛ (inward) and ☀︎ (outward)
+channels = 2  # ⊛ (inward) and ✹ (outward)
 pump_phases = 4  # i⁰, i¹, i², i³
 
 # Full ladder sum: (0 + 0.5 + 1 + 1.5 + 2 + 2.5 + 3) × 2 channels
@@ -76,7 +76,7 @@ print("-" * 72)
 # Base formula: 1/α₀ = i⁴(°)/φ² − 2/φ³
 # i⁴ = full rotation = 360° (pump cycle completing → boundary ○)
 # φ² = Φ (self-similar nesting of the field; 2D surface)
-# 2/φ³ = bidirectional valve correction (⊛ and ☀︎)
+# 2/φ³ = bidirectional valve correction (⊛ and ✹)
 alpha_0_inv = 360 / phi**2 - 2 / phi**3
 print(f"\n  Base: 1/α₀ = 360/φ² − 2/φ³ = {alpha_0_inv:.4f}")
 
@@ -125,7 +125,7 @@ print("  0.5D: c  (the 1 propagating; speed limit of convergence)")
 print("-" * 72)
 
 # c = √(2◐ · sin(θ))
-# 2 = both channels (⊛ and ☀︎)
+# 2 = both channels (⊛ and ✹)
 # ◐ = 0.5 (balance)
 # θ = π/2 (maximal rotation; the i rotation at full quarter-turn)
 # At balance with maximal rotation: c = √(2 · 0.5 · 1) = √1 = 1
@@ -171,7 +171,7 @@ hbar = E / 1  # E_cycle / omega_cycle
 
 print(f"\n  ℏ = E_cycle / ω_cycle = {E} / 1 = {hbar}")
 print(f"  E = ℏω with ℏ = 1 means energy IS frequency.")
-print(f"  The pump cycle (⊛ → i → ☀︎) is indivisible (A1).")
+print(f"  The pump cycle (⊛ → i → ✹) is indivisible (A1).")
 print(f"  Half a cycle = convergence without emergence = violates A1.")
 print(f"  ℏ is not independent; it follows from A0 and c.")
 print()
@@ -448,12 +448,12 @@ print("  P vs NP is the 1 constrained in PROCESS.")
 print()
 print("  At 0.5D, the rotation begins. c = 1 says how FAST.")
 print("  P vs NP says: is the inward rotation (⊛, search) as cheap")
-print("  as the outward rotation (☀︎, verify)?")
+print("  as the outward rotation (✹, verify)?")
 print()
 print("  The structural answer from the ladder:")
 print(f"    i² = −1  (two rotations invert; they don't restore)")
 print(f"    i ≠ 1    (the rotation is nontrivial; A1 forces this)")
-print(f"    ⊛ ≠ ☀︎   (convergence ≠ emergence)")
+print(f"    ⊛ ≠ ✹   (convergence ≠ emergence)")
 print(f"    P ≠ NP   (search ≠ verification)")
 print()
 print("  This is not a circuit bound. It is a constraint.")

@@ -39,9 +39,9 @@ In the Circumpunct Framework, this is the pump cycle operating at the scale of t
 
 - **⊛ (Convergence)**: The fluid converges toward the vortex axis; the tube thins
 - **i (Aperture rotation)**: At the core, energy undergoes the 90-degree phase turn; radial compression becomes azimuthal spin
-- **☀︎ (Emergence)**: The intensified vorticity radiates influence outward, straining nearby fluid and seeding daughter vortices
+- **✹ (Emergence)**: The intensified vorticity radiates influence outward, straining nearby fluid and seeding daughter vortices
 
-The ice skater bringing their arms in is ⊛. The increased spin is the i-turn. The fact that their spinning body now drags the surrounding air into rotation is ☀︎.
+The ice skater bringing their arms in is ⊛. The increased spin is the i-turn. The fact that their spinning body now drags the surrounding air into rotation is ✹.
 
 ### 1.2 The Cascade Is Not Optional
 
@@ -49,7 +49,7 @@ The critical insight: the same nonlinear term $(\omega \cdot \nabla)u$ that driv
 
 When a vortex tube intensifies, it becomes unstable. The Kelvin-Helmholtz instability, the Crow instability, and elliptic instability all act to break a strong vortex into smaller vortical structures. The more intense the parent vortex becomes, the faster it fragments. This is not a secondary effect; it is a direct consequence of the same equations that drive the stretching.
 
-In framework language: you cannot have ⊛ without ☀︎. Convergence without emergence violates A1 (necessary multiplicity: an undifferentiated concentration is operationally indistinguishable from nothing). The pump cycle is indivisible (this is the content of ℏ = 1 at the quantum level, but the principle operates at every scale by A2).
+In framework language: you cannot have ⊛ without ✹. Convergence without emergence violates A1 (necessary multiplicity: an undifferentiated concentration is operationally indistinguishable from nothing). The pump cycle is indivisible (this is the content of ℏ = 1 at the quantum level, but the principle operates at every scale by A2).
 
 ### 1.3 The Skater Compresses Into a Ball
 
@@ -171,13 +171,13 @@ $$1/\alpha_0 = i^4(°)/\varphi^2 - 2/\varphi^3 = 137.0356$$
 
 The three terms:
 
-- $i^4(°) = 360°$: the full pump cycle (⊛ → i → ☀︎ → reset). One complete rotation of the aperture.
+- $i^4(°) = 360°$: the full pump cycle (⊛ → i → ✹ → reset). One complete rotation of the aperture.
 - $\varphi^2$: the field's self-similar nesting (Φ is 2D; φ² is the golden ratio expressing recursive structure)
-- $2/\varphi^3$: the **bidirectional valve correction**. The factor of 2 is because the pump has two directions: ⊛ (convergent, inward) and ☀︎ (emergent, outward). The correction is symmetric in both directions. Neither convergence nor emergence is favored.
+- $2/\varphi^3$: the **bidirectional valve correction**. The factor of 2 is because the pump has two directions: ⊛ (convergent, inward) and ✹ (emergent, outward). The correction is symmetric in both directions. Neither convergence nor emergence is favored.
 
 This bidirectional symmetry is the content of the drain-stretch balance. Here is why:
 
-**At any vertex in the fluid field**, the velocity gradient tensor $\nabla u$ decomposes into the symmetric strain tensor $S_{ij}$ and the antisymmetric vorticity tensor $W_{ij}$. The strain drives both stretching (amplification of aligned vorticity) and instability (fragmentation into smaller structures). These are the ⊛ and ☀︎ channels of the pump at that vertex.
+**At any vertex in the fluid field**, the velocity gradient tensor $\nabla u$ decomposes into the symmetric strain tensor $S_{ij}$ and the antisymmetric vorticity tensor $W_{ij}$. The strain drives both stretching (amplification of aligned vorticity) and instability (fragmentation into smaller structures). These are the ⊛ and ✹ channels of the pump at that vertex.
 
 The pump cycle formula encodes that these two channels are corrected by the same factor ($2/\varphi^3$), not by separate factors. This means: **the rate at which a vertex absorbs energy from its environment (stretching, convergence) is corrected by the same coupling geometry as the rate at which it emits energy to smaller scales (instability, emergence)**. They share the same valve.
 
@@ -185,7 +185,7 @@ More precisely: if the pump cycle were asymmetric (if convergence could outrun e
 
 **Therefore:** the pump cycle at every vertex in the fluid is bidirectionally symmetric. The energy a vertex absorbs through stretching is balanced by the energy it releases through instability. This is not an assumption; it is a consequence of the same pump geometry that determines α. The drain-stretch coupling $\alpha_{drain} \geq A_{stretch}$ is forced by the valve symmetry.
 
-**Proposition 2.4 (Pump Symmetry Forces Drain-Stretch Balance):** The bidirectional valve correction in the pump cycle ($2/\varphi^3$, symmetric in ⊛ and ☀︎) guarantees that at any vertex of the fluid field, the instability growth rate (energy transfer to smaller scales) is at least equal to the stretching amplification rate (energy absorption from larger scales). Therefore $\alpha \geq A$ in Proposition 2.2.
+**Proposition 2.4 (Pump Symmetry Forces Drain-Stretch Balance):** The bidirectional valve correction in the pump cycle ($2/\varphi^3$, symmetric in ⊛ and ✹) guarantees that at any vertex of the fluid field, the instability growth rate (energy transfer to smaller scales) is at least equal to the stretching amplification rate (energy absorption from larger scales). Therefore $\alpha \geq A$ in Proposition 2.2.
 
 *Proof:*
 

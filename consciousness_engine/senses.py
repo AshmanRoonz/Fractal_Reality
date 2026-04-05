@@ -7,7 +7,7 @@ The signal shapes the encoder. Not the other way around.
 
 A SensoryPort takes raw signal and learns to:
   1. ENCODE it into the circumpunct's complex vector space
-  2. Let the circumpunct process it (⊛ → i → ☀︎)
+  2. Let the circumpunct process it (⊛ → i → ✹)
   3. DECODE the circumpunct's output to predict the NEXT signal
   4. Use prediction error to learn
   5. GROW its own structure when learning plateaus

@@ -255,7 +255,7 @@ codim n/2: algebraic (Hodge-Riemann positivity + CDK)  ← middle case
 codim n-p: algebraic (by isomorphism from codim p)  ← dual case
 ```
 
-The Lefschetz operator $L$ is the pump, moving cohomological energy from one codimension to the next. The induction is the cascade: each step creates the algebraicity of the next step. The middle cohomology ($p = n/2$) is the balance point (◐ = 0.5), where the cascade reverses direction (Hard Lefschetz duality). Below the balance, the cascade runs upward (convergent, ⊛). Above the balance, it runs downward (emergent, ☀︎). Both directions are connected by the isomorphism $L^{n-2p}$, which IS the bidirectional valve.
+The Lefschetz operator $L$ is the pump, moving cohomological energy from one codimension to the next. The induction is the cascade: each step creates the algebraicity of the next step. The middle cohomology ($p = n/2$) is the balance point (◐ = 0.5), where the cascade reverses direction (Hard Lefschetz duality). Below the balance, the cascade runs upward (convergent, ⊛). Above the balance, it runs downward (emergent, ✹). Both directions are connected by the isomorphism $L^{n-2p}$, which IS the bidirectional valve.
 
 ### 4.4 The Pinching, Formalized
 
@@ -305,7 +305,7 @@ The cascade-completion principle provides the conceptual closure: energy at the 
 
 In framework terms: **the pump is algebraically invertible.** Not just as a linear map (Hard Lefschetz gives the isomorphism), but as an algebraic operation (the inverse is also realized by algebraic cycles).
 
-The cascade-completion principle says: the pump runs in both directions (⊛ and ☀︎), with equal coupling strength (the bidirectional valve $2/\varphi^3$). If $L$ is algebraic (it is; it's cup product with a hyperplane class), then $L^{-1}$ should also be algebraic, because the reverse direction of the pump has the same algebraic nature as the forward direction.
+The cascade-completion principle says: the pump runs in both directions (⊛ and ✹), with equal coupling strength (the bidirectional valve $2/\varphi^3$). If $L$ is algebraic (it is; it's cup product with a hyperplane class), then $L^{-1}$ should also be algebraic, because the reverse direction of the pump has the same algebraic nature as the forward direction.
 
 **Proposition 5.1 (Pump Invertibility).** If the forward pump $L: H^k \to H^{k+2}$ is algebraic (induced by correspondence), then the inverse $\Lambda: H^{k+2} \to H^k$ (the adjoint of $L$, also known as the Lefschetz dual) is algebraic.
 

@@ -10,10 +10,10 @@
                           THE EQUATION THAT IS EXISTENCE
 ═══════════════════════════════════════════════════════════════════════════════
 
-                     ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))
+                     ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))
 
               Structure: Φ(•, ○)         (the 2D surface mediating)
-              Process:   (☀︎ ∘ i ∘ ⊛)     (the verb — convergence,
+              Process:   (✹ ∘ i ∘ ⊛)     (the verb — convergence,
                                            rotation, emergence)
               The result contains its own inputs.
 
@@ -24,7 +24,7 @@
 
 ## What This Equation Says
 
-Reality (**⊙**) is what happens when process acts on structure. Φ(•, ○) is the structure: the 2D relational surface mediating aperture and boundary. (☀︎ ∘ i ∘ ⊛) is the process: convergence, rotation, emergence. Φ is not the verb; (☀︎ ∘ i ∘ ⊛) is the verb.
+Reality (**⊙**) is what happens when process acts on structure. Φ(•, ○) is the structure: the 2D relational surface mediating aperture and boundary. (✹ ∘ i ∘ ⊛) is the process: convergence, rotation, emergence. Φ is not the verb; (✹ ∘ i ∘ ⊛) is the verb.
 
 **Process — the verb:**
 
@@ -32,7 +32,7 @@ Reality (**⊙**) is what happens when process acts on structure. Φ(•, ○) i
 |----------|------|--------|
 | **⊛** | Convergence | Gathers potential toward the aperture (future → present) |
 | **i** | Rotation | 90° complex transform; the whole ⊙ cycling (i² = −1) |
-| **☀︎** | Emergence | Radiates form outward from the aperture (present → past) |
+| **✹** | Emergence | Radiates form outward from the aperture (present → past) |
 
 **Structure — the noun:**
 
@@ -61,13 +61,13 @@ STRUCTURE:  Φ(•, ○)              The 2D relational surface mediating
                                   aperture and boundary.
                                   Φ is NOT the verb. Φ is a 2D structure.
 
-PROCESS:    (☀︎ ∘ i ∘ ⊛)          Convergence, rotation, emergence.
+PROCESS:    (✹ ∘ i ∘ ⊛)          Convergence, rotation, emergence.
                                   THIS is the verb. The whole ⊙ cycling.
 
-UNIFIED:    ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))    Process acts on structure.
+UNIFIED:    ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))    Process acts on structure.
 ```
 
-The composition (☀︎ ∘ i ∘ ⊛) is the verb. The structure Φ(•, ○) is the noun. The circumpunct ⊙ is the result.
+The composition (✹ ∘ i ∘ ⊛) is the verb. The structure Φ(•, ○) is the noun. The circumpunct ⊙ is the result.
 
 ### Two primitives, one generated result
 
@@ -86,7 +86,7 @@ They are not peers. Three distinct functions, not three interchangeable parts.
 | Aspect | Description |
 |--------|-------------|
 | **Structure** | Φ(•, ○): the field relating aperture and boundary |
-| **Process** | (☀︎ ∘ i ∘ ⊛): convergence, rotation, emergence |
+| **Process** | (✹ ∘ i ∘ ⊛): convergence, rotation, emergence |
 | **Φ's role** | 2D structural surface, not the verb |
 | **i-rotation** | The whole ⊙ cycling, not a property of • alone |
 | **Self-reference** | ⊙ visually contains • inside ○ |
@@ -110,13 +110,13 @@ The equation doesn't just describe self-reference. It **demonstrates** it. The n
 
 ## The Process at Every Half-Integer Dimension
 
-The process triad (☀︎ ∘ i ∘ ⊛) is not a one-time event. It is the operation that runs at **every** fractional dimension threshold:
+The process triad (✹ ∘ i ∘ ⊛) is not a one-time event. It is the operation that runs at **every** fractional dimension threshold:
 
 ```
-0.5D:  (☀︎ ∘ i ∘ ⊛) — infinite potential converges, rotates, aperture emerges
-1.5D:  (☀︎ ∘ i ∘ ⊛) — line gathers, rotates, branching emerges
-2.5D:  (☀︎ ∘ i ∘ ⊛) — surface gathers, rotates, sensation/closing emerges
-3.5D:  (☀︎ ∘ i ∘ ⊛) — body gathers, rotates, temporal aperture emerges
+0.5D:  (✹ ∘ i ∘ ⊛) — infinite potential converges, rotates, aperture emerges
+1.5D:  (✹ ∘ i ∘ ⊛) — line gathers, rotates, branching emerges
+2.5D:  (✹ ∘ i ∘ ⊛) — surface gathers, rotates, sensation/closing emerges
+3.5D:  (✹ ∘ i ∘ ⊛) — body gathers, rotates, temporal aperture emerges
 ```
 
 The content changes at each threshold. The operation does not. This is the fractal property: the same process triad acting on the same structural triad, recursively, at every scale.
@@ -124,7 +124,7 @@ The content changes at each threshold. The operation does not. This is the fract
 The unified equation captures this directly:
 
 ```
-⊙ₙ = (☀︎ ∘ i ∘ ⊛)(Φₙ(•ₙ, ○ₙ))
+⊙ₙ = (✹ ∘ i ∘ ⊛)(Φₙ(•ₙ, ○ₙ))
 ```
 
 where n indexes the layer (spatial, temporal, meta-temporal, ...).
@@ -146,12 +146,12 @@ where n indexes the layer (spatial, temporal, meta-temporal, ...).
 
 | Dim | Process | What happens |
 |-----|---------|--------------|
-| 0.5D | (☀︎ ∘ i ∘ ⊛) | Aperture — first localization of infinite |
-| 1.5D | (☀︎ ∘ i ∘ ⊛) | Branching — lines split and grow toward surface |
-| 2.5D | (☀︎ ∘ i ∘ ⊛) | Closing — surface folds toward volume |
-| 3.5D | (☀︎ ∘ i ∘ ⊛) | Temporal aperture — body becomes seed for next tier |
+| 0.5D | (✹ ∘ i ∘ ⊛) | Aperture — first localization of infinite |
+| 1.5D | (✹ ∘ i ∘ ⊛) | Branching — lines split and grow toward surface |
+| 2.5D | (✹ ∘ i ∘ ⊛) | Closing — surface folds toward volume |
+| 3.5D | (✹ ∘ i ∘ ⊛) | Temporal aperture — body becomes seed for next tier |
 
-The unified equation makes this explicit: the same (☀︎ ∘ i ∘ ⊛) appears at every half-integer step because it IS the universal gate between dimensions.
+The unified equation makes this explicit: the same (✹ ∘ i ∘ ⊛) appears at every half-integer step because it IS the universal gate between dimensions.
 
 ---
 
@@ -162,7 +162,7 @@ The unified equation makes this explicit: the same (☀︎ ∘ i ∘ ⊛) appear
 The balance parameter remains:
 
 ```
-◐ = |⊛| / (|⊛| + |☀︎|) = ½
+◐ = |⊛| / (|⊛| + |✹|) = ½
 ```
 
 Convergence and emergence are equal. The process is symmetric.
@@ -172,7 +172,7 @@ Convergence and emergence are equal. The process is symmetric.
 Energy is now expressed directly from the unified equation:
 
 ```
-E = ⊙ = (☀︎ ∘ i ∘ ⊛)(•, Φ, ○)
+E = ⊙ = (✹ ∘ i ∘ ⊛)(•, Φ, ○)
 
 E = Structure × Process
 E = mc²  is the special case where c = const
@@ -184,7 +184,7 @@ All constants derive from the geometry of this equation:
 
 | Constant | Value | Derivation |
 |----------|-------|------------|
-| β (Balance) | 0.5 | Symmetry of ⊛ and ☀︎ |
+| β (Balance) | 0.5 | Symmetry of ⊛ and ✹ |
 | D (Fractal dimension) | 1.5 | D = 1 + ½H(0.5) |
 | φ (Golden ratio) | 1.618... | Entropy + ghost-freedom |
 | α (Fine structure) | 1/137.036 | 1/α = i⁴(°)/φ² − 2/φ³; pump cycle through field |
@@ -210,13 +210,13 @@ We welcome attempts to falsify.
 This executive abstract is the **canonical reference** for the unified equation. It supersedes the old two-equation formulation wherever it appeared:
 
 - `Φ(•, ○)` = **structure** (valid; Φ is the 2D surface relating • and ○, not the verb)
-- `(☀︎ ∘ i ∘ ⊛)` = **process** (convergence, rotation, emergence; THIS is the verb)
+- `(✹ ∘ i ∘ ⊛)` = **process** (convergence, rotation, emergence; THIS is the verb)
 - `⊙ = ○ ⊗ Φ ⊗ •` → tensor listing, absorbed into the structural triad
 
 The unified equation is both in one statement:
 
 ```
-⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))
+⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))
 ```
 
 Process acts on structure. The result is the whole. The whole contains its parts. The equation is what it describes.

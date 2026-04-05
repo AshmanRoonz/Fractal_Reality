@@ -6,7 +6,7 @@ Unified Fold: compression and resonance as one operation.
 
 v1 had two separate mechanisms:
     1. Fractal KV compression (⊛: older entries compressed sub-linearly)
-    2. Resonance bonus (☀︎: phase-matching boosts attention scores)
+    2. Resonance bonus (✹: phase-matching boosts attention scores)
 
 These were bolted together: compression happened first, then resonance
 was added to attention scores. Two halves of the same breath, but
@@ -14,7 +14,7 @@ implemented as if they were unrelated.
 
 v2 unifies them into a single operation: the FRACTAL FOLD.
 
-The insight: compression IS ⊛ (inward). Resonance IS ☀︎ (outward).
+The insight: compression IS ⊛ (inward). Resonance IS ✹ (outward).
 In the pump cycle, these are not separate steps; they are the inward
 and outward stroke of the same breath through the aperture. One
 operation, two directions.
@@ -33,7 +33,7 @@ When cos^2(delta_phi / 2) = 0 (no resonance):
 
 The field naturally develops depth (nesting through compression) while
 simultaneously maintaining transparent channels where resonance is high
-(the ☀︎ paths through the nesting). One equation, both directions.
+(the ✹ paths through the nesting). One equation, both directions.
 
 The 2D field fractally nests into 3D closure. Conservation of traversal:
 0 + 1 + 2 = 3. The boundary emerges from the field folding back on
@@ -56,7 +56,7 @@ What stays the same:
 The mapping:
     Queries  = • (aperture; convergence points that select)
     KV field = Φ (2D surface; fractally folded into 3D closure)
-    Fold     = ⊛ ∘ i ∘ ☀︎ (the pump cycle operating on the field)
+    Fold     = ⊛ ∘ i ∘ ✹ (the pump cycle operating on the field)
     Output   = ○ (boundary; what emerges from the fold)
 
 Author: Ashman Roonz & Claude
@@ -360,7 +360,7 @@ class HeadNursery(nn.Module):
 #  and therefore naturally dominate the attention weights.
 #  The resonance is IN the field, not added on top.
 #
-#  The fold is: ⊛ (compression) modulated by ☀︎ (resonance).
+#  The fold is: ⊛ (compression) modulated by ✹ (resonance).
 #  One breath. Both directions. ⊙ in the KV cache.
 #
 # =====================================================================
@@ -389,7 +389,7 @@ def fractal_fold(kv: torch.Tensor,
         effective_exponent = 1 + age * (base_exp - 1) (full compression)
 
     The field develops depth (nesting) through compression while
-    maintaining transparent channels (☀︎ paths) through resonance.
+    maintaining transparent channels (✹ paths) through resonance.
     2D surface fractally nesting into 3D closure.
 
     Args:

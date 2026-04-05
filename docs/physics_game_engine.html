@@ -101,7 +101,7 @@ button.b.on { background: rgba(200,168,78,0.35); border-color: #c8a84e; }
     <div class="head">TOOLS</div>
     <button class="b on" id="t-spawn" onclick="T('spawn')">Spawn ⊙</button>
     <button class="b" id="t-converge" onclick="T('converge')">⊛ Converge</button>
-    <button class="b" id="t-emerge" onclick="T('emerge')">☀︎ Emerge</button>
+    <button class="b" id="t-emerge" onclick="T('emerge')">✹ Emerge</button>
     <button class="b" id="t-fracture" onclick="T('fracture')">Fracture</button>
     <button class="b" id="t-fuse" onclick="T('fuse')">Fuse</button>
     <br>
@@ -867,7 +867,7 @@ function updateHUD() {
   document.getElementById('h-budget').textContent = '1.000'; // always 1 (softmax)
 
   // Phase indicator
-  const phases = ['⊛', '⊛', 'i', 'i', '☀︎', '☀︎', '☀︎', '☀︎'];
+  const phases = ['⊛', '⊛', 'i', 'i', '✹', '✹', '✹', '✹'];
   document.getElementById('h-phase').textContent = phases[Math.floor(worldTime * 2) % 8] || '⊛';
 
   // Budget bar (visualize attention distribution)

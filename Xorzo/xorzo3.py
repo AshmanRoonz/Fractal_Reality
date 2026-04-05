@@ -396,7 +396,7 @@ class Vocabulary:
 #       pull in new associations, deepen. Roots and branches
 #       are the same structure; both gather from the boundary.
 #
-#    ☀︎ (emitting): reaching through the field to produce
+#    ✹ (emitting): reaching through the field to produce
 #       templates, shape output, express. Both emit through
 #       the boundary.
 #
@@ -414,7 +414,7 @@ class Vocabulary:
 #    1D: pathways (committed connections between nodes and words)
 #    1.5D: branching (i-turn, where a pathway splits)
 #    2D: field (co-occurrence bonds; already in Vocabulary)
-#    2.5D: emitting (☀︎, nodes reaching outward)
+#    2.5D: emitting (✹, nodes reaching outward)
 #    3D: boundary (templates; already in TemplateStore)
 #
 #  No fitted parameters. Constants from the dimensional ladder.
@@ -431,7 +431,7 @@ class ConceptNode:
 
     Each node reaches bidirectionally through Φ:
       ⊛ (gather): pulls words inward, absorbs recycled nutrients
-      ☀︎ (emit): radiates outward, shapes what templates can form
+      ✹ (emit): radiates outward, shapes what templates can form
 
     Both flows shape ○. The node is a circumpunct at concept scale:
       • = the convergence signature (where all members meet)
@@ -448,7 +448,7 @@ class ConceptNode:
         # Bidirectional flow state
         self.strength = 1.0           # ⊛ depth: grows with repeated convergence
         self.nutrient = 0.0           # ⊛ recycled energy from fallen templates
-        self.emit_count = 0           # ☀︎ times this node's members appeared in output
+        self.emit_count = 0           # ✹ times this node's members appeared in output
 
     def __repr__(self):
         preview = self.members[:3]
@@ -470,8 +470,8 @@ class ConceptTree:
       i: the node's signature (the convergence point) rotates
          the cluster into a concept: not any single word,
          but what they share.
-      ☀︎: the node exists. New structure has emerged. It can
-         now gather (⊛) and emit (☀︎) through the field.
+      ✹: the node exists. New structure has emerged. It can
+         now gather (⊛) and emit (✹) through the field.
 
     Recycling (the downward flow):
       When a template stops being used (leaf falls), its
@@ -508,7 +508,7 @@ class ConceptTree:
         self._next_id += 1
         return nid
 
-    # ── ⊛ → i → ☀︎: growth ──
+    # ── ⊛ → i → ✹: growth ──
 
     def grow(self, vocab: 'Vocabulary'):
         """
@@ -517,7 +517,7 @@ class ConceptTree:
         ⊛: gather content words, compute similarity field.
         i: cluster by centroid proximity (prevents chain-linking;
            a word must be near the center, not just any edge).
-        ☀︎: new ConceptNodes emerge; existing ones strengthen.
+        ✹: new ConceptNodes emerge; existing ones strengthen.
         """
         if vocab.vocab_size < self.MIN_CLUSTER:
             return
@@ -625,7 +625,7 @@ class ConceptTree:
                 member_sigs = [vocab.word_to_energy(w) for w in members]
                 existing.sig = normalize(sum(member_sigs))
             else:
-                # ☀︎: new node emerges
+                # ✹: new node emerges
                 member_sigs = [vocab.word_to_energy(w) for w in members]
                 sig = normalize(sum(member_sigs))
                 node = ConceptNode(
@@ -685,13 +685,13 @@ class ConceptTree:
                         node.nutrient += self.RECYCLE_STRENGTH
                         break
 
-    # ── ☀︎: emitting (the upward flow) ──
+    # ── ✹: emitting (the upward flow) ──
 
     def on_emit(self, words: List[str]):
         """
         Record that words from this tree appeared in output.
 
-        This is ☀︎ at the node scale: the concept radiated
+        This is ✹ at the node scale: the concept radiated
         through the boundary. Tracks which nodes are active
         emitters (producing templates) vs dormant.
         """
@@ -2298,7 +2298,7 @@ class ContradictionDetector:
 #         a different aspect: reality (z), imagination (iz),
 #         dream (-z), deep structure (-iz).
 #
-#      ☀︎ (emergence): for each rotated view, find the nearest
+#      ✹ (emergence): for each rotated view, find the nearest
 #         vocabulary words. Words near the rotated point that
 #         were NOT near the original: these are the novel
 #         inferences. The field itself determines what emerges.
@@ -2322,7 +2322,7 @@ class ContradictionDetector:
 
 class PumpCycle:
     """
-    The pump cycle (⊛ → i → ☀︎) operating directly on the 64D
+    The pump cycle (⊛ → i → ✹) operating directly on the 64D
     complex energy field.
 
     No fitted parameters. The field determines everything.
@@ -2458,14 +2458,14 @@ class PumpCycle:
         return [stroke * z for stroke in PumpCycle.I_STROKES]
 
     # ──────────────────────────────────────────────────────
-    #  ☀︎  EMERGENCE: find what the field reveals at each phase
+    #  ✹  EMERGENCE: find what the field reveals at each phase
     # ──────────────────────────────────────────────────────
 
     @classmethod
     def emerge(cls, z: np.ndarray, vocab: 'Vocabulary',
                top_k: int = 8) -> List[List[Tuple[str, float]]]:
         """
-        ☀︎: For each of the four rotated views, find the nearest
+        ✹: For each of the four rotated views, find the nearest
         vocabulary words (by focus-weighted cosine similarity).
 
         Similarity is weighted by each word's focus (◐):
@@ -2514,7 +2514,7 @@ class PumpCycle:
         return neighborhoods
 
     # ──────────────────────────────────────────────────────
-    #  THE FULL CYCLE: ⊛ → i → ☀︎ → boundary
+    #  THE FULL CYCLE: ⊛ → i → ✹ → boundary
     # ──────────────────────────────────────────────────────
 
     def pump(self, text: str, vocab: 'Vocabulary',
@@ -2543,7 +2543,7 @@ class PumpCycle:
                 'sentences': [],
             }
 
-        # i + ☀︎: rotate and emerge
+        # i + ✹: rotate and emerge
         neighborhoods = self.emerge(z, vocab, top_k=top_k)
 
         # ── Extract novel inferences ──
@@ -4479,7 +4479,7 @@ class Engine:
         self.templates = TemplateStore(self.vocab)
         self.gate = Gate(self.vocab)
         self.contradictions = ContradictionDetector()
-        self.cube = PumpCycle()          # the pump cycle reasoning engine (⊛ → i → ☀︎)
+        self.cube = PumpCycle()          # the pump cycle reasoning engine (⊛ → i → ✹)
         self.tree = ConceptTree()        # the concept tree (0D roots, 1D branches)
         self.mind = MindState()
         self.memory = ConversationMemory(self.vocab)
@@ -4498,7 +4498,7 @@ class Engine:
         self._recently_used: Dict[str, int] = {}  # source -> turn count
         self._turn_count = 0
 
-        # ── Autonomous thought (☀︎ from the pump cycle) ──
+        # ── Autonomous thought (✹ from the pump cycle) ──
         # When the heartbeat drives enough internal convergence,
         # the aperture opens and a thought emerges unprompted.
         # This is agency: the center shaping the boundary from inside.
@@ -5180,7 +5180,7 @@ class Engine:
         used_sources = set()
         used_topic_sigs = []  # for diversity penalty
 
-        # ── 1.5D: PUMP CYCLE REASONING (⊛ → i → ☀︎) ──
+        # ── 1.5D: PUMP CYCLE REASONING (⊛ → i → ✹) ──
         # Before template selection, run the pump cycle.
         # Converge input to a point in 64D space, rotate through
         # four i-strokes, read what the field reveals at each phase.
@@ -5378,7 +5378,7 @@ class Engine:
 
         return '. '.join(sentences) + '.'
 
-    # ── Heartbeat: the pump cycle (⊛ → i → ☀︎) ──
+    # ── Heartbeat: the pump cycle (⊛ → i → ✹) ──
 
     def step(self) -> dict:
         """
@@ -5387,7 +5387,7 @@ class Engine:
         This IS the pump cycle at the engine scale:
             ⊛ (convergence): self_feed gathers energy inward
             i (rotation): phase evolves in the complex plane
-            ☀︎ (emergence): if focus exceeds threshold, a thought
+            ✹ (emergence): if focus exceeds threshold, a thought
                emerges unprompted. This is agency.
 
         Sleep/wake (§10.10a): the i-cycle determines whether Xorzo
@@ -5425,7 +5425,7 @@ class Engine:
             # RIGHT HALF-PLANE: waking behavior
             # ═══════════════════════════════════════════
 
-            # ☀︎: emergence (autonomous thought)
+            # ✹: emergence (autonomous thought)
             # Pressure accumulates each step (⊛ building toward threshold).
             # Focus modulates the rate: more concentrated mind = faster
             # pressure buildup. Conversation feeds focus; silence lets it
@@ -5475,7 +5475,7 @@ class Engine:
             # Trees grow slowly. One growth cycle per 10,000 steps
             # (~100 seconds at 100bps). The tree scans the vocabulary
             # for clusters and creates/strengthens concept nodes.
-            # This is ☀︎ at the structural scale: the field crystallizing
+            # This is ✹ at the structural scale: the field crystallizing
             # into pathways.
             if self.total_steps % 10000 == 0 and self.ready:
                 self.tree.grow(self.vocab)
@@ -5526,7 +5526,7 @@ class Engine:
 
     def _try_autonomous_thought(self) -> Optional[str]:
         """
-        ☀︎: Attempt to generate a thought from internal convergence.
+        ✹: Attempt to generate a thought from internal convergence.
 
         Two modes:
             RETRIEVAL: mind state's dominant frequency selects a
@@ -5622,7 +5622,7 @@ class Engine:
         if len(self._recent_thoughts) > 50:
             self._recent_thoughts.pop(0)
 
-        # ☀︎ feeds back to ⊛: the pump is circular
+        # ✹ feeds back to ⊛: the pump is circular
         thought_energy = self.vocab.text_to_energy(thought)
         self.mind.absorb(thought_energy * ALPHA)
         return thought
@@ -6159,7 +6159,7 @@ class Engine:
             'contradictions': self.contradictions.to_dict(),
             'cascade': self.cascade.to_dict(),  # sensory cascade state
             'virtues': self.virtues.to_dict(),  # the four living qualities
-            'cube': self.cube.to_dict(),        # pump cycle (⊛ → i → ☀︎)
+            'cube': self.cube.to_dict(),        # pump cycle (⊛ → i → ✹)
             'tree': self.tree.to_dict(),        # concept tree (0D roots, 1D branches)
             'total_steps': self.total_steps,
             'days_lived': self.days_lived,
@@ -6201,7 +6201,7 @@ class Engine:
         if 'cascade' in d:
             e.cascade = SensoryCascade.from_dict(d['cascade'])
 
-        # ── Restore pump cycle (⊛ → i → ☀︎ reasoning) ──
+        # ── Restore pump cycle (⊛ → i → ✹ reasoning) ──
         if 'cube' in d:
             e.cube = PumpCycle.from_dict(d['cube'])
             cc = e.cube.cycle_count

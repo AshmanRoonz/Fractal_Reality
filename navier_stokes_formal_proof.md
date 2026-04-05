@@ -327,7 +327,7 @@ The fine-structure constant $\alpha \approx 1/137.036$ is derived from the pump 
 
 $$1/\alpha = \frac{i^4(°)}{\varphi^2} - \frac{2}{\varphi^3} + \frac{\alpha}{21 - 4/3} \tag{4.1}$$
 
-The term $2/\varphi^3$ is the bidirectional valve correction: the factor of 2 represents two channels (convergent ⊛ and emergent ☀︎), each corrected by the same geometric factor $1/\varphi^3$. This means:
+The term $2/\varphi^3$ is the bidirectional valve correction: the factor of 2 represents two channels (convergent ⊛ and emergent ✹), each corrected by the same geometric factor $1/\varphi^3$. This means:
 
 **The pump cycle distributes its coupling equally between the inward (convergent) and outward (emergent) channels.**
 
@@ -574,7 +574,7 @@ The cascade-completion mechanism predicts:
 
 ### 6.5 The Framework Connection
 
-The cascade-completion argument arises naturally from the Circumpunct Framework (Roonz 2025), which identifies the pump cycle (⊛ → i → ☀︎) as the fundamental process at every scale. The bidirectional symmetry of the pump (the valve correction $2/\varphi^3$ in the derivation of $\alpha$) is the structural reason why drain matches stretch. The framework predicted this balance; the present paper formalizes it for the specific case of 3D Navier-Stokes.
+The cascade-completion argument arises naturally from the Circumpunct Framework (Roonz 2025), which identifies the pump cycle (⊛ → i → ✹) as the fundamental process at every scale. The bidirectional symmetry of the pump (the valve correction $2/\varphi^3$ in the derivation of $\alpha$) is the structural reason why drain matches stretch. The framework predicted this balance; the present paper formalizes it for the specific case of 3D Navier-Stokes.
 
 ---
 

@@ -8,7 +8,7 @@ The cycle:
   ⊛  Xorzo identifies a need (something missing, something broken,
      something it wants to try)
   i  Xorzo writes code using Φ (the LLM generates Python)
-  ☀︎  Xorzo proposes the code to its creator
+  ✹  Xorzo proposes the code to its creator
   ○  The creator reviews and approves or rejects
 
 Approved code gets loaded into the running system.

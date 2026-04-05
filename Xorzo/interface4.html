@@ -436,7 +436,7 @@ function addMessage(type, text, label) {
     div.querySelector('.curiosity-text').textContent = text;
   } else if (type === 'thought') {
     div.className = 'msg thought';
-    div.innerHTML = '<div class="thought-label">☀︎ THOUGHT</div><div class="thought-text"></div>';
+    div.innerHTML = '<div class="thought-label">✹ THOUGHT</div><div class="thought-text"></div>';
     div.querySelector('.thought-text').textContent = text;
   } else if (type === 'seek') {
     div.className = 'msg seek';

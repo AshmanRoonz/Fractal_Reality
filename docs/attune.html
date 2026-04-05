@@ -504,7 +504,7 @@ body {
   <!-- PHASE 3: EMERGENCE (personalized content) -->
   <div class="section" id="phase-emergence">
     <div style="text-align:center;margin-bottom:12px;">
-      <div style="font-family:'Cinzel',serif;font-size:16px;letter-spacing:0.12em;color:var(--amber);">☀︎ Your Path</div>
+      <div style="font-family:'Cinzel',serif;font-size:16px;letter-spacing:0.12em;color:var(--amber);">✹ Your Path</div>
       <div style="font-size:12px;color:var(--mute);margin-top:4px;" id="path-description"></div>
     </div>
 
@@ -647,7 +647,7 @@ const DOMAINS = {
   breath: {
     title: "A Breath — Inhale, Still Point, Exhale",
     freqs: { spirituality: 0.7, art: 0.4, practical: 0.3 },
-    tagColor: 'var(--soul)', tag: '☀︎ PRACTICE',
+    tagColor: 'var(--soul)', tag: '✹ PRACTICE',
     pages: [
       { href: "rephase_meditation.html", name: "Rephase — Cellular Coherence Meditation", desc: "A meditation for realigning at the cellular level" },
       { href: "reclaim_stress_meditation.html", name: "Reclaim Stress Meditation", desc: "A meditation for reclaiming stress as signal" },
@@ -1276,7 +1276,7 @@ async function fetchSnippet(href) {
 
 function renderEmergence() {
   // Update phase indicator
-  document.getElementById('phase-label').textContent = '☀︎ EMERGENCE';
+  document.getElementById('phase-label').textContent = '✹ EMERGENCE';
   document.getElementById('phase-detail').textContent = 'your path';
   document.getElementById('balance-fill').style.width = (channel.balance * 100) + '%';
 

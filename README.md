@@ -37,11 +37,11 @@ The soul is composite: the 0D singularity (the timeless gate where transformatio
 The pump cycle equation describes the temporal process:
 
 ```
-    Φ(t+Δt) = ☀︎ ∘ i ∘ ⊛[Φ(t)]
+    Φ(t+Δt) = ✹ ∘ i ∘ ⊛[Φ(t)]
 
     ⊛   Convergence (inward)
     i   Aperture rotation (90° gate)
-    ☀︎   Emergence (outward)
+    ✹   Emergence (outward)
 ```
 
 ---
@@ -237,7 +237,7 @@ We welcome attempts to falsify.
 | ○ | Boundary/body (3D outer container) |
 | ⊛ | Convergence operator (inward) |
 | i | Aperture rotation (90° quarter-turn) |
-| ☀︎ | Emergence operator (outward) |
+| ✹ | Emergence operator (outward) |
 | ◐ | Balance parameter (optimal at 0.5) |
 | i(t) | Worldline (1D string through time) |
 | ⊙λ | Circumpunct at scale λ |

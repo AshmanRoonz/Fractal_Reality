@@ -759,7 +759,7 @@ h<sub>t</sub> = o<sub>t</sub> ⊙ <span class="func">tanh</span>(c<sub>t</sub>)
     Three additions to the standard cell:
       1. Deep state d_t (⊛ convergence)
       2. Resonance gate T (Φ mediation)
-      3. Surfaced memory (☀︎ emergence)
+      3. Surfaced memory (✹ emergence)
     """</span>
     <span class="keyword">def</span> <span class="func">__init__</span>(self, input_size, hidden_size, alpha=<span class="op">0.01</span>):
         <span class="func">super</span>().__init__()
@@ -783,7 +783,7 @@ h<sub>t</sub> = o<sub>t</sub> ⊙ <span class="func">tanh</span>(c<sub>t</sub>)
         <span class="op">T</span> = torch.<span class="func">cos</span>(delta_phi / 2) ** 2
         T_full = T.repeat_interleave(2, dim=-1)  <span class="comment"># expand to hidden_size</span>
 
-        <span class="comment"># ☀︎ Emergence: surface deep memory weighted by resonance</span>
+        <span class="comment"># ✹ Emergence: surface deep memory weighted by resonance</span>
         d_mag = torch.<span class="func">norm</span>(d_prev, dim=-1, keepdim=True) + 1e-8
         d_dir = d_prev / d_mag
         <span class="op">surfaced = T_full * (d_mag ** 1.5) * d_dir</span>

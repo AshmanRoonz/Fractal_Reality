@@ -324,7 +324,7 @@
         <header>
             <div class="logo">⊙</div>
             <h1>Circumpunct Swarm</h1>
-            <div class="subtitle">Φ' = ☀︎ ∘ i ∘ ⊛[Φ] — Hybrid P2P File Transfer (WebRTC + Relay)</div>
+            <div class="subtitle">Φ' = ✹ ∘ i ∘ ⊛[Φ] — Hybrid P2P File Transfer (WebRTC + Relay)</div>
         </header>
         
         <!-- LOBBY -->
@@ -409,7 +409,7 @@
         
         <footer>
             <p>⊙ Circumpunct Swarm Protocol v0.3</p>
-            <p style="margin-top: 0.5rem;">Reality self-references: the future converges inward (⊛), rotates into existence (i), and emerges outward as pattern (☀︎)</p>
+            <p style="margin-top: 0.5rem;">Reality self-references: the future converges inward (⊛), rotates into existence (i), and emerges outward as pattern (✹)</p>
         </footer>
     </div>
 
@@ -441,7 +441,7 @@
             const logEl = document.getElementById('log');
             const entry = document.createElement('div');
             entry.className = `log-entry ${type}`;
-            const symbols = { convergence: '⊛', aperture: 'i', emergence: '☀︎', error: '✗' };
+            const symbols = { convergence: '⊛', aperture: 'i', emergence: '✹', error: '✗' };
             entry.textContent = `[${symbols[type] || '⊙'}] ${message}`;
             logEl.appendChild(entry);
             logEl.scrollTop = logEl.scrollHeight;
@@ -1032,7 +1032,7 @@
                 item.style.alignItems = 'stretch';
                 item.innerHTML = `
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="color: var(--center);">☀︎</span>
+                        <span style="color: var(--center);">✹</span>
                         <span class="name">${transfer.name}</span>
                         <span class="size">${Math.round(progress)}%</span>
                     </div>

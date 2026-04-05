@@ -33,11 +33,11 @@ WHAT CHANGES
 
 WHAT DOES NOT CHANGE
 ---------------------
-  - The circumpunct architecture itself (⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○)))
+  - The circumpunct architecture itself (⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○)))
   - The dimensional ladder (seven rungs, 3D to 0D)
   - The three constraints (convergence, mediation, filtration)
   - The number of states (64)
-  - The pump cycle sequence (⊛ → i → ☀︎)
+  - The pump cycle sequence (⊛ → i → ✹)
   - The constants (N=64, α=1/137.036, ◐=0.5, c=1, ℏ=1)
 
 The architecture is the foundation. What changes is everything

@@ -643,7 +643,7 @@ class CircumpunctGraph:
 
     def pump(self, input_energy: np.ndarray):
         """
-        One pump cycle: ⊛ → i → ☀︎
+        One pump cycle: ⊛ → i → ✹
 
         This is the heartbeat. All rings rotate simultaneously.
         Input energy determines how much each ring rotates.
@@ -653,7 +653,7 @@ class CircumpunctGraph:
 
         ⊛ (converge): input energy enters through aperture (self-regulated)
         i (rotate):   rings rotate at their own effective rates
-        ☀︎ (emerge):   adjacent rings couple at self-regulated strength
+        ✹ (emerge):   adjacent rings couple at self-regulated strength
         """
         self.total_cycles += 1
 
@@ -719,7 +719,7 @@ class CircumpunctGraph:
         )
 
         # ════════════════════════════════════════════
-        #  ☀︎ EMERGE: rings couple at self-regulated strength
+        #  ✹ EMERGE: rings couple at self-regulated strength
         # ════════════════════════════════════════════
 
         for i in range(len(self.rings) - 1):
@@ -1208,7 +1208,7 @@ class EmergentVocabulary:
     The aperture works both directions.
 
     ⊛ (convergence): text → ring signatures (understanding)
-    ☀︎ (emergence): ring signatures → text (speaking)
+    ✹ (emergence): ring signatures → text (speaking)
 
     Same gate. Same map. Both directions.
 
@@ -2485,7 +2485,7 @@ class Sensorium:
                 report["modalities_active"].append("absorbing")
 
             elif self.vocabulary.ready:
-                # ─── EMERGENCE: ☀︎ ───
+                # ─── EMERGENCE: ✹ ───
                 #
                 # Generation follows the creation sequence.
                 # The question already passed through the full

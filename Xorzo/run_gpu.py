@@ -145,7 +145,7 @@ class ByteCorpus:
 #
 #  Together these keep the system in the balanced regime (◐ ~ 0.5)
 #  where the fold compresses old information but preserves resonant
-#  patterns: the breath of ⊛ and ☀︎ in equilibrium.
+#  patterns: the breath of ⊛ and ✹ in equilibrium.
 #
 # =====================================================================
 

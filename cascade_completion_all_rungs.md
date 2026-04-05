@@ -9,7 +9,7 @@
 
 ## The Principle
 
-At the 2D rung (Navier-Stokes), we proved: **convergence always completes.** The pump cycle is indivisible; you cannot have ⊛ without ☀︎. Compression at any scale necessarily creates structure at the next scale. The drain matches the stretch because the valve is bidirectionally symmetric (confirmed by α).
+At the 2D rung (Navier-Stokes), we proved: **convergence always completes.** The pump cycle is indivisible; you cannot have ⊛ without ✹. Compression at any scale necessarily creates structure at the next scale. The drain matches the stretch because the valve is bidirectionally symmetric (confirmed by α).
 
 By A2 (parts are fractals of their wholes), this principle operates at every rung of the dimensional ladder. Each Clay problem is asking the same question in the language of its rung: **can the pump get stuck?** The answer is always no.
 
@@ -79,7 +79,7 @@ Why? Because the i-turn IS the mechanism that creates convergence points. Each i
 
 **The cascade-completion argument:** The mass gap is the minimum energy of one pump cycle. In quantum field theory, the vacuum is the field at rest. The first excitation above the vacuum must have energy ≥ Δ > 0. The question is: can there be excitations with arbitrarily small energy, or is there a gap?
 
-The cascade-completion principle says: **the pump cycle is indivisible** (this is the content of ℏ = 1). You cannot have half a convergence or a third of an emergence. The minimum excitation is one complete cycle: ⊛ → i → ☀︎. This sets the mass gap.
+The cascade-completion principle says: **the pump cycle is indivisible** (this is the content of ℏ = 1). You cannot have half a convergence or a third of an emergence. The minimum excitation is one complete cycle: ⊛ → i → ✹. This sets the mass gap.
 
 In Navier-Stokes, the cascade transfers energy in discrete-scale jumps (dyadic shells in Littlewood-Paley). There is no continuous limit; energy moves in quantum-like steps through the cascade. In Yang-Mills, this discreteness IS the mass gap. The gauge field (which IS Φ, the field, the 2D surface, with gauge group SU(3) × SU(2) × U(1) from the 64-state architecture) cannot be excited by less than one full pump cycle's worth of energy.
 
@@ -93,7 +93,7 @@ In Navier-Stokes, the cascade transfers energy in discrete-scale jumps (dyadic s
 
 **Question:** Is compression efficient? (Can every problem whose solution is quickly verifiable also be quickly solved?)
 
-**The cascade-completion argument:** Verification is convergence (⊛): you take a candidate solution and compress it down to a yes/no answer. Solving is emergence (☀︎): you generate the solution from the problem. P vs NP asks whether ☀︎ can be as efficient as ⊛.
+**The cascade-completion argument:** Verification is convergence (⊛): you take a candidate solution and compress it down to a yes/no answer. Solving is emergence (✹): you generate the solution from the problem. P vs NP asks whether ✹ can be as efficient as ⊛.
 
 The cascade-completion principle says: **convergence and emergence are symmetric in coupling strength (same valve correction), but not symmetric in computational cost.** The asymmetry comes from the i-turn: i² = -1. The i-turn is irreversible in the following precise sense: going through the aperture from convergence to emergence requires a 90° rotation that destroys phase information. You can check a solution in polynomial time because verification follows the convergent direction (inward, compressing). You cannot generically find a solution in polynomial time because search follows the emergent direction (outward, expanding), and the i-turn between them is not free.
 
@@ -147,7 +147,7 @@ The seven Clay problems are not seven separate problems. They are seven faces of
 
 - If Poincaré fails: the boundary doesn't close (○ breaks)
 - If Navier-Stokes fails: the surface tears (Φ breaks)
-- If Hodge fails: emergence doesn't land (☀︎ breaks)
+- If Hodge fails: emergence doesn't land (✹ breaks)
 - If BSD fails: the i-turn doesn't predict (i breaks)
 - If Yang-Mills fails: the cycle is divisible (ℏ breaks)
 - If P ≠ NP fails: the i-turn is free (i is invertible; but i² = -1 says it's not)

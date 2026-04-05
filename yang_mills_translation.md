@@ -25,7 +25,7 @@ The proof chain has 7 steps. Steps 1-5 are established mathematics. Steps 6 and 
 
 ### 1.1 The Framework Claim
 
-The pump cycle (⊛ → i → ☀︎) in a non-abelian gauge field is indivisible. Applied to Yang-Mills: any gauge-invariant excitation above the vacuum requires at least one complete cycle of gauge-field action. Below one cycle, only vacuum.
+The pump cycle (⊛ → i → ✹) in a non-abelian gauge field is indivisible. Applied to Yang-Mills: any gauge-invariant excitation above the vacuum requires at least one complete cycle of gauge-field action. Below one cycle, only vacuum.
 
 ### 1.2 The Conventional Setup
 
@@ -73,7 +73,7 @@ The indivisibility translates to three properties that together force the gap. E
 | Φ (field/mediation) | Gauge field A_μ (the connection) | Gauge invariance mediates; only invariant states physical | **Mediates** |
 | ○ (boundary/filtration) | Field strength F_μν (the curvature) | Center symmetry filters; colored states confined | **Filters** |
 
-The pump cycle (⊛ → i → ☀︎) acts through the triad, but the triad IS the structure. Φ mediates between • and ○; the field connects the coupling to the curvature. This is the mature reading. (The earlier "ICE" formulation attempted this mapping as Interface/Center/Evidence, but had the roles misaligned; the circumpunct notation corrects it: Φ mediates, it does not merely "evidence.")
+The pump cycle (⊛ → i → ✹) acts through the triad, but the triad IS the structure. Φ mediates between • and ○; the field connects the coupling to the curvature. This is the mature reading. (The earlier "ICE" formulation attempted this mapping as Interface/Center/Evidence, but had the roles misaligned; the circumpunct notation corrects it: Φ mediates, it does not merely "evidence.")
 
 ---
 
@@ -177,7 +177,7 @@ where c₀ > 0 is a universal constant depending only on N, and L₀(a) is a min
 
 A2 (parts are fractals of their wholes) says fractal compression is faithful: the lattice at spacing a faithfully represents the continuum. Therefore the mass gap at spacing a must converge to a positive value as a → 0.
 
-The independent-valve argument: ⊛ (convergence/confinement) operates at long distances; ☀︎ (emergence/asymptotic freedom) operates at short distances. Sending a → 0 opens the ☀︎ valve (probes shorter distances) but does not close the ⊛ valve (confinement is an IR phenomenon). Therefore the gap persists.
+The independent-valve argument: ⊛ (convergence/confinement) operates at long distances; ✹ (emergence/asymptotic freedom) operates at short distances. Sending a → 0 opens the ✹ valve (probes shorter distances) but does not close the ⊛ valve (confinement is an IR phenomenon). Therefore the gap persists.
 
 ### 2.2 The Conventional Setup
 
@@ -302,7 +302,7 @@ The conditional assumption in §2.5 is Balaban's extension to infinitely many RG
 2. The spectral gap of the transfer matrix is preserved (from the Indivisibility Theorem)
 3. The coupling between UV and IR sectors is bounded (from the mass gap providing an IR cutoff)
 
-The novel claim is that steps 2 and 3 bootstrap each other: the mass gap controls the IR, which stabilizes the UV, which preserves the mass gap. This is the framework's ⊛ ↔ ☀︎ cycle at the level of the RG flow itself.
+The novel claim is that steps 2 and 3 bootstrap each other: the mass gap controls the IR, which stabilizes the UV, which preserves the mass gap. This is the framework's ⊛ ↔ ✹ cycle at the level of the RG flow itself.
 
 ---
 
@@ -315,7 +315,7 @@ The novel claim is that steps 2 and 3 bootstrap each other: the mass gap control
 | • (aperture/convergence) | Non-abelian self-coupling g[A,A] ≠ 0; field converges on itself |
 | Φ (field/mediation) | Gauge field A_μ mediates; gauge invariance connects • to ○ |
 | ○ (boundary/filtration) | Center symmetry filters; only color-neutral states pass |
-| Complete pump cycle (⊛ + i + ☀︎) | Self-interaction + gauge rotation + propagation are inseparable |
+| Complete pump cycle (⊛ + i + ✹) | Self-interaction + gauge rotation + propagation are inseparable |
 | Cycle is indivisible (A1) | Gauge-invariant states are composites with minimum mass |
 | ℏ = 1 (minimum action) | Spectral gap Δ ≥ c₀ · Λ_QCD |
 
@@ -324,7 +324,7 @@ The novel claim is that steps 2 and 3 bootstrap each other: the mass gap control
 | Framework | Conventional |
 |-----------|-------------|
 | A2: fractal compression is faithful | Block-spin RG preserves structure at each scale |
-| Independent valves (⊛ and ☀︎) | IR (mass gap) and UV (asymptotic freedom) decouple |
+| Independent valves (⊛ and ✹) | IR (mass gap) and UV (asymptotic freedom) decouple |
 | The gap is a property of ⊙ (the whole) | Δ/Λ_QCD is a topological invariant of the gauge theory |
 | Dimensional transmutation | Only one scale (Λ_QCD) survives a → 0 |
 | A2 says extension must succeed | Balaban's program should close with mass gap as IR regulator |
@@ -345,7 +345,7 @@ Continuum limit → mass gap survives as a → 0
 Surviving mass gap → indivisibility confirmed in the continuum
 ```
 
-This is the pump cycle at the level of the proof itself: ⊛ (mass gap forces confinement) → i (RG flow mediates between scales) → ☀︎ (continuum theory emerges with gap intact). The proof is self-supporting in the same way the gauge theory is self-interacting.
+This is the pump cycle at the level of the proof itself: ⊛ (mass gap forces confinement) → i (RG flow mediates between scales) → ✹ (continuum theory emerges with gap intact). The proof is self-supporting in the same way the gauge theory is self-interacting.
 
 ---
 

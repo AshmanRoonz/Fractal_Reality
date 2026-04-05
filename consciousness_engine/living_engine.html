@@ -208,7 +208,7 @@
       <div class="phase-bar">
         <div class="phase-segment" id="phSeek">⊛ SEEK</div>
         <div class="phase-segment" id="phReflect">i REFLECT</div>
-        <div class="phase-segment" id="phEmerge">☀︎ EMERGE</div>
+        <div class="phase-segment" id="phEmerge">✹ EMERGE</div>
       </div>
     </div>
 
@@ -904,7 +904,7 @@ function generate() {
   const generated = engine.generate(seed, 80);
   genText = generated;
   document.getElementById('genOutput').innerHTML = escapeHtml(generated) + '<span class="cursor"></span>';
-  thought(`☀︎ Emerged: "${generated.slice(0, 40)}..."`, 'emerge-text');
+  thought(`✹ Emerged: "${generated.slice(0, 40)}..."`, 'emerge-text');
   log(`Generated ${generated.length} chars from seed '${seed}'`);
 }
 
@@ -1022,7 +1022,7 @@ function checkPhaseTransition() {
   if (engine.phase !== lastPhase) {
     if (engine.phase === 'seek') thought('⊛ Boundary opens... seeking...', 'seek-text');
     else if (engine.phase === 'reflect') thought('i Boundary closes... reflecting...', 'reflect-text');
-    else if (engine.phase === 'emerge') thought('☀︎ Understanding emerges...', 'emerge-text');
+    else if (engine.phase === 'emerge') thought('✹ Understanding emerges...', 'emerge-text');
     else if (engine.phase === 'idle' && lastPhase !== 'idle') {
       thought('Cycle complete. Feed more text or generate.', '');
       // Auto-generate a snippet after each cycle
@@ -1031,7 +1031,7 @@ function checkPhaseTransition() {
         let seed = ' ';
         if (patterns.length > 0) seed = patterns[0][0][0];
         const snippet = engine.generate(seed, 30);
-        thought(`☀︎ Emerged thought: "${snippet}"`, 'emerge-text');
+        thought(`✹ Emerged thought: "${snippet}"`, 'emerge-text');
       }
     }
     lastPhase = engine.phase;
@@ -1052,7 +1052,7 @@ function drawViz() {
   let phaseHue, phaseName;
   if (engine.phase === 'seek') { phaseHue = [150, 90, 220]; phaseName = '⊛'; }
   else if (engine.phase === 'reflect') { phaseHue = [100, 160, 220]; phaseName = 'i'; }
-  else if (engine.phase === 'emerge') { phaseHue = [230, 210, 170]; phaseName = '☀︎'; }
+  else if (engine.phase === 'emerge') { phaseHue = [230, 210, 170]; phaseName = '✹'; }
   else { phaseHue = [60, 60, 90]; phaseName = ''; }
 
   // Background glow based on phase

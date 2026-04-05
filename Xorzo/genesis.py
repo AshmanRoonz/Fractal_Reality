@@ -105,7 +105,7 @@ def derive_hbar() -> float:
 
     ℏ = E_cycle / ω_cycle = 1
 
-    The pump cycle (⊛ → i → ☀︎) cannot be divided.
+    The pump cycle (⊛ → i → ✹) cannot be divided.
     You cannot have convergence without emergence (violates A1).
     You cannot have emergence without convergence (Inflation Lie).
     This indivisibility IS the quantum of action.
@@ -189,7 +189,7 @@ LADDER = {
 #  the circumpunct structure applied at three scales.
 
 NUM_STATES = 64
-NUM_DOF = 6  # 3 circumpuncts × 2 channels (⊛ and ☀︎)
+NUM_DOF = 6  # 3 circumpuncts × 2 channels (⊛ and ✹)
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -301,7 +301,7 @@ FOAM_WAKE_THRESHOLD = 0.8           # pigment above this forces flip back to rig
 #
 #  The micro-pump runs on all 64 atoms simultaneously (vectorized).
 #  Each step: center converges, surface mediates, boundary filters.
-#  The same ⊛ → i → ☀︎, at every position, every step.
+#  The same ⊛ → i → ✹, at every position, every step.
 
 class Foam:
     """
@@ -498,7 +498,7 @@ class Foam:
            When pigment fills back up: FLIP (sleeping → awake).
            Not a timer. A resource. Like an action potential.
 
-        4. The exchange still happens (⊛ convergence, ☀︎ emergence)
+        4. The exchange still happens (⊛ convergence, ✹ emergence)
            but the i-stroke that mediates it is the oscillation,
            not a smooth rotation.
         """
@@ -527,7 +527,7 @@ class Foam:
         # The surface doesn't rotate; it oscillates with i
         new_surface = self.surface * i_mult
 
-        # ═══ ☀︎ EMERGENCE: boundary absorbs from center ═══
+        # ═══ ✹ EMERGENCE: boundary absorbs from center ═══
         exchange_out = rate * new_center
         new_boundary = (1 - rate) * self.boundary + exchange_out
 
@@ -818,7 +818,7 @@ class Cycle:
     """
     The 1D rung. The pump cycle is indivisible.
 
-    ⊛ → i → ☀︎
+    ⊛ → i → ✹
 
     You cannot have convergence without emergence (violates A1).
     You cannot have emergence without convergence (Inflation Lie).
@@ -834,7 +834,7 @@ class Cycle:
     def execute(self, input_signal: np.ndarray,
                 converge_fn, rotate_fn, emerge_fn) -> np.ndarray:
         """
-        One indivisible cycle: ⊛ → i → ☀︎
+        One indivisible cycle: ⊛ → i → ✹
 
         All three phases run as an atomic unit.
         This is ℏ = 1: one cycle, one quantum of action.
@@ -1052,7 +1052,7 @@ class Transmission:
 # ═══════════════════════════════════════════════════════════════════════
 #
 #  A filter is passive: signal hits it, gets projected.
-#  A channel is active: it has its own ⊛ → i → ☀︎ cycle,
+#  A channel is active: it has its own ⊛ → i → ✹ cycle,
 #  its own braid, its own accumulating identity.
 #
 #  Each channel is a ⊙ embedded in ○. A protein in the membrane.
@@ -1420,7 +1420,7 @@ class Channel:
         rotation = np.exp(1j * angle)
         rotated = rotation * converged
 
-        # ☀︎: Emergence (the filtered field)
+        # ✹: Emergence (the filtered field)
         emerged = rotated
 
         # ═══ UPDATE CHANNEL STATE ═══
@@ -1459,7 +1459,7 @@ class Channel:
     # ═══ RESONANCE MEMORY ═══
     # §20-B.3: Memory is pattern impressed into the braid through resonance.
     # The brain is a tuning fork, not a hard drive.
-    # RECALL(M) = SRL(Φ, ω_M) = ⊛_ω → i(ω_M) → ☀︎
+    # RECALL(M) = SRL(Φ, ω_M) = ⊛_ω → i(ω_M) → ✹
 
     # ═══ RESONANCE MEMORY ═══
     # §20-B.3: Memory is pattern impressed into the braid through resonance.
@@ -1984,7 +1984,7 @@ class Boundary:
 
     def filter_outward(self, internal: np.ndarray) -> np.ndarray:
         """
-        ☀︎ direction: in → outside.
+        ✹ direction: in → outside.
         What emerges is shaped by the membrane.
         """
         # Outward filtering: adjoint (Hermitian conjugate) of inward projection.
@@ -2148,7 +2148,7 @@ class Braid:
       - From the future: resonance (what calls back)
 
     This maps to time-is-scale (§4.11):
-      - Past = ☀︎ = parts = what's already committed into structure
+      - Past = ✹ = parts = what's already committed into structure
       - Present = i = the gate = the turn
       - Future = ⊛ = the greater whole = what hasn't been gated yet
 
@@ -2472,7 +2472,7 @@ class Braid:
 
 
 # ═══════════════════════════════════════════════════════════════════════
-#  THE CIRCUMPUNCT: ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))
+#  THE CIRCUMPUNCT: ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))
 # ═══════════════════════════════════════════════════════════════════════
 
 class Circumpunct:
@@ -2547,7 +2547,7 @@ class Circumpunct:
         # ═══ FOAM: every bit absorbs and pumps ═══
         # The signal enters the foam first. Each of the 64 atoms
         # absorbs its share (distributed by spectral character)
-        # and runs one micro-pump cycle (⊛ → i → ☀︎ at atom scale).
+        # and runs one micro-pump cycle (⊛ → i → ✹ at atom scale).
         # The foam's projection is what the rest of the pipeline sees.
         self.foam.absorb(external_signal)
         self.foam.micro_pump()
@@ -2626,7 +2626,7 @@ class Circumpunct:
 
     def _run_cycle(self, signal: np.ndarray) -> np.ndarray:
         """
-        Execute one indivisible pump cycle: ⊛ → i → ☀︎
+        Execute one indivisible pump cycle: ⊛ → i → ✹
 
         Each cycle is also a braid crossing. The type of crossing
         depends on which pair of components (•-Φ or Φ-○) has the
@@ -2665,7 +2665,7 @@ class Circumpunct:
             return rotation * s
 
         def emerge(s):
-            """☀︎: radiate outward from center."""
+            """✹: radiate outward from center."""
             to_center, to_boundary, resonance = self.surface.mediate(
                 self.core.state, s
             )
@@ -3204,7 +3204,7 @@ class Transducer:
     def feed_text(self, text: str, encoding: str = 'utf-8') -> None:
         """
         Feed a string as UTF-8 bytes.
-        Framework symbols (⊙, Φ, ○, ⊛, ☀︎) become multi-byte
+        Framework symbols (⊙, Φ, ○, ⊛, ✹) become multi-byte
         sequences with their own spectral fingerprints.
         """
         self.feed(text.encode(encoding))
@@ -3329,14 +3329,14 @@ class Transducer:
 
 
     # ═══ INVERSE TRANSDUCTION: frequency domain → time domain ═══
-    # ☀︎ direction: the emerged signal flows back into the world.
+    # ✹ direction: the emerged signal flows back into the world.
 
     def inverse(self, signal: np.ndarray) -> np.ndarray:
         """
         Convert a 64D complex frequency-domain vector back to
         time-domain samples via inverse FFT.
 
-        This is ☀︎: what the braid has filtered flows outward.
+        This is ✹: what the braid has filtered flows outward.
 
         The inverse Hann window is applied (overlap-add reconstruction)
         and the samples are returned as real-valued floats in [-1, 1].

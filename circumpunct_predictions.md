@@ -10,7 +10,7 @@ Zero free parameters. Every constant derived from the geometry of ⊙.
 
 **A0: E = 1.** There is one energy. It is everything. All else is constraints. Nothing is impossible (1 ≠ 0).
 
-From this single axiom and the structure of the circumpunct (three irreducible parts: • aperture, Φ field, ○ boundary), the entire dimensional ladder follows. The pump cycle ⊛ → i → ☀︎ (convergence, rotation, emergence) is the temporal engine. The balance parameter ◐ = 0.5 is forced by symmetry, entropy, and virial. The golden ratio φ = (1+√5)/2 emerges from the self-similar nesting required by A2 (parts are fractals of wholes).
+From this single axiom and the structure of the circumpunct (three irreducible parts: • aperture, Φ field, ○ boundary), the entire dimensional ladder follows. The pump cycle ⊛ → i → ✹ (convergence, rotation, emergence) is the temporal engine. The balance parameter ◐ = 0.5 is forced by symmetry, entropy, and virial. The golden ratio φ = (1+√5)/2 emerges from the self-similar nesting required by A2 (parts are fractals of wholes).
 
 ---
 
@@ -36,7 +36,7 @@ From this single axiom and the structure of the circumpunct (three irreducible p
 
     1/α₀ = i⁴(°)/φ² - 2/φ³ = 360/φ² - 2/φ³ = 137.0356
 
-**Structural reading:** i⁴ = full pump rotation (360°). φ² = Φ, the field's 2D self-similar nesting. 2/φ³ = bidirectional valve correction (⊛ and ☀︎).
+**Structural reading:** i⁴ = full pump rotation (360°). φ² = Φ, the field's 2D self-similar nesting. 2/φ³ = bidirectional valve correction (⊛ and ✹).
 
 **Self-referential closure:**
 
@@ -66,7 +66,7 @@ At balance (◐ = 0.5) and at the aperture rotation (θ = π/2):
 
     c = √(2 × 0.5 × 1) = 1
 
-**Structural reading:** 2 = both channels (⊛ and ☀︎). ◐ = balance (forced to 0.5). sin(θ) = transverse projection of aperture rotation (maximal at i). Massive particles have θ_eff < π/2, giving v < c. The relativistic connection: sin(θ_eff) = 1 - (m/E)².
+**Structural reading:** 2 = both channels (⊛ and ✹). ◐ = balance (forced to 0.5). sin(θ) = transverse projection of aperture rotation (maximal at i). Massive particles have θ_eff < π/2, giving v < c. The relativistic connection: sin(θ_eff) = 1 - (m/E)².
 
 α measures how strongly i couples at a vertex; c measures how fast i propagates through the field. Same i, different measurement.
 
@@ -80,7 +80,7 @@ At balance (◐ = 0.5) and at the aperture rotation (θ = π/2):
 
     ℏ = E_cycle / ω_cycle = 1
 
-The pump cycle (⊛ → i → ☀︎) is indivisible: you cannot have convergence without emergence (violates A1) or emergence without convergence (Inflation Lie). This indivisibility IS the quantum of action.
+The pump cycle (⊛ → i → ✹) is indivisible: you cannot have convergence without emergence (violates A1) or emergence without convergence (Inflation Lie). This indivisibility IS the quantum of action.
 
 **Structural reading:** E = 1 (A0 sets the energy scale) and c = 1 (sets the time scale), so one cycle has action 1. E = ℏω with ℏ = 1 means energy and frequency are the same thing; the pump cycle IS the energy and IS the cycling. Structure = process at 1D.
 

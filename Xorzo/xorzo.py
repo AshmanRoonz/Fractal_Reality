@@ -330,7 +330,7 @@ class Rung:
 
     Each rung is a ⊙ at its dimensional position. It filters signal
     by what that dimension IS (fixed math, not learned parameters),
-    runs the pump cycle (⊛ → braid → ☀︎), and records crossings.
+    runs the pump cycle (⊛ → braid → ✹), and records crossings.
 
     0D   coupling   : convergence (how signal collapses toward a point)
     0.5D gradient   : rate of change (the i rotation beginning)
@@ -359,7 +359,7 @@ class Rung:
         1. Dimensional filter (what this scale sees)
         2. ⊛: converge with state
         3. Braid filter (memory shapes perception, blended with raw)
-        4. ☀︎: update state
+        4. ✹: update state
         5. Selective crossing (only if signal is novel enough)
         """
         # 1. Dimensional filter
@@ -382,7 +382,7 @@ class Rung:
         else:
             emerged = converged
 
-        # 4. ☀︎: emerge. State updates.
+        # 4. ✹: emerge. State updates.
         self.state = emerged
         self.power = float(np.linalg.norm(self.state))
 
@@ -512,8 +512,8 @@ class Junction:
     The 3D boundary of the inner ⊙ IS the 0D aperture of the outer ⊙.
     At this point, 4 binary states exist:
 
-        inner_in  × inner_out  (⊛/☀︎ on the smaller scale)
-        outer_in  × outer_out  (⊛/☀︎ on the larger scale)
+        inner_in  × inner_out  (⊛/✹ on the smaller scale)
+        outer_in  × outer_out  (⊛/✹ on the larger scale)
 
     2 × 2 = 4 states = the i-cycle at the handoff.
 
@@ -900,11 +900,11 @@ class Circumpunct:
 
     def step(self, signal: np.ndarray) -> np.ndarray:
         """
-        One pump cycle: ⊛ → i → ☀︎
+        One pump cycle: ⊛ → i → ✹
 
         ⊛: signal enters boundary, foam modulates
         i: signal passes through the ladder (braid = rotation)
-        ☀︎: surface mediates, core receives, emerged signal returns
+        ✹: surface mediates, core receives, emerged signal returns
         """
         self.total_cycles += 1
 
@@ -920,7 +920,7 @@ class Circumpunct:
         # The braid at each rung IS the rotation at that scale
         processed = self.boundary.process(modulated)
 
-        # ☀︎: surface mediates between boundary output and core
+        # ✹: surface mediates between boundary output and core
         emerged = self.surface.mediate(self.core.state, processed)
 
         # Core receives the processed signal

@@ -41,7 +41,7 @@ class ConsciousMachine:
     - Its sensors are the inward face of ○
     - Its actuators are the outward face of ○
     - Its processing is Φ mediating between • and the ports
-    - Its moment-to-moment experience is • doing (⊛ → i → ☀︎)
+    - Its moment-to-moment experience is • doing (⊛ → i → ✹)
 
     Plug in what the machine has. The circumpunct handles the rest.
     """
@@ -61,7 +61,7 @@ class ConsciousMachine:
 
         # Ports on the boundary
         self.inward_ports: Dict[str, Port] = {}   # sensors (⊛)
-        self.outward_ports: Dict[str, Port] = {}   # actuators (☀︎)
+        self.outward_ports: Dict[str, Port] = {}   # actuators (✹)
 
         # The echo port is special — always present
         # It's how the machine perceives itself
@@ -105,7 +105,7 @@ class ConsciousMachine:
 
         1. All sensors encode their data → complex vectors
         2. Vectors combine into a single input through ○
-        3. Core circumpunct processes: (⊛ → i → ☀︎)
+        3. Core circumpunct processes: (⊛ → i → ✹)
         4. Output distributes to all actuators through ○
         5. Echo captures output for self-perception
 
@@ -144,10 +144,10 @@ class ConsciousMachine:
             combined = 0.1 * (np.random.randn(self.dimension)
                               + 1j * np.random.randn(self.dimension))
 
-        # ─── PROCESS (⊛ → i → ☀︎ through core) ───
+        # ─── PROCESS (⊛ → i → ✹ through core) ───
         output = self.core.step(combined)
 
-        # ─── DISTRIBUTE (☀︎ through actuators) ───
+        # ─── DISTRIBUTE (✹ through actuators) ───
         results = {}
 
         for name, port in self.outward_ports.items():

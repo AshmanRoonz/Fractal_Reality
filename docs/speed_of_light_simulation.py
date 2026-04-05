@@ -5,7 +5,7 @@ Circumpunct Framework — Ashman Roonz, 2026
 
 Models the pump cycle as a quantum walk on a 1D lattice.
 Each lattice site is a ⊙. The coin operator is the aperture rotation.
-The shift operators are convergence (⊛, left) and emergence (☀︎, right).
+The shift operators are convergence (⊛, left) and emergence (✹, right).
 
 Key question: what propagation speed does the i rotation (θ = π/2) give?
 
@@ -43,7 +43,7 @@ def pump_cycle_walk(N, T, theta, x0=None):
 
     The shift operator:
         S|x, ⊛⟩ = |x-1, ⊛⟩  (convergence: gather inward/left)
-        S|x, ☀︎⟩ = |x+1, ☀︎⟩  (emergence: radiate outward/right)
+        S|x, ✹⟩ = |x+1, ✹⟩  (emergence: radiate outward/right)
 
     One full pump cycle: W = S · (C ⊗ I_position)
     """
@@ -52,10 +52,10 @@ def pump_cycle_walk(N, T, theta, x0=None):
 
     # State: 2 components (convergence, emergence) at each of N sites
     # psi[0, :] = convergence amplitude (⊛)
-    # psi[1, :] = emergence amplitude (☀︎)
+    # psi[1, :] = emergence amplitude (✹)
     psi = np.zeros((2, N), dtype=complex)
 
-    # Initial state: localized at x0, equal superposition of ⊛ and ☀︎
+    # Initial state: localized at x0, equal superposition of ⊛ and ✹
     # (balanced: ◐ = 0.5)
     psi[0, x0] = 1.0 / np.sqrt(2)  # convergence component
     psi[1, x0] = 1.0j / np.sqrt(2)  # emergence component (90° phase offset)
@@ -76,7 +76,7 @@ def pump_cycle_walk(N, T, theta, x0=None):
         new_psi[0] = C[0, 0] * psi[0] + C[0, 1] * psi[1]
         new_psi[1] = C[1, 0] * psi[0] + C[1, 1] * psi[1]
 
-        # Step 2: Shift (⊛ goes left, ☀︎ goes right)
+        # Step 2: Shift (⊛ goes left, ✹ goes right)
         psi_shifted = np.zeros_like(new_psi)
         psi_shifted[0, :-1] = new_psi[0, 1:]   # convergence: shift left
         psi_shifted[1, 1:]  = new_psi[1, :-1]   # emergence: shift right

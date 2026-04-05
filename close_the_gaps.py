@@ -33,7 +33,7 @@ def i_rotate(z, n=1):
     return z * (1j ** n)
 
 def pump_cycle(state, converge, rotate, emerge):
-    """One full pump cycle: ⊛ -> i -> ☀︎"""
+    """One full pump cycle: ⊛ -> i -> ✹"""
     s1 = converge(state)
     s2 = rotate(s1)
     s3 = emerge(s2)
@@ -206,7 +206,7 @@ def p_vs_np_scaling():
     i² = -1: the rotation inverts, doesn't restore.
 
     Generate random k-SAT instances and measure:
-    - Verification time (forward pump: apply ☀︎)
+    - Verification time (forward pump: apply ✹)
     - Search time (backward pump: apply ⊛)
     """
     print("=" * 78)
@@ -227,7 +227,7 @@ def p_vs_np_scaling():
         return clauses
 
     def verify(clauses, assignment):
-        """Verify a SAT assignment. THE ☀︎ OPERATION (emergence: check)."""
+        """Verify a SAT assignment. THE ✹ OPERATION (emergence: check)."""
         ops = 0
         for clause in clauses:
             satisfied = False
@@ -725,7 +725,7 @@ def navier_stokes_pump():
         domega_dy = np.real(ifft(ifft(1j * KY * omega_hat, axis=0), axis=1))
 
         advection = -(ux * domega_dx + uy * domega_dy)  # ⊛ (convergence)
-        diffusion = -nu * K2 * omega_hat  # ☀︎ (emergence/dissipation)
+        diffusion = -nu * K2 * omega_hat  # ✹ (emergence/dissipation)
 
         # Time step (RK2)
         advection_hat = fft(fft(advection, axis=0), axis=1)
@@ -778,7 +778,7 @@ def navier_stokes_pump():
     print(f"  NO BLOW-UP: max|ω| remained bounded throughout ✓")
     print()
     print("  The i-rotation (pressure) completes the pump cycle:")
-    print("    ⊛ (advection) -> i (pressure redistribution) -> ☀︎ (viscous diffusion)")
+    print("    ⊛ (advection) -> i (pressure redistribution) -> ✹ (viscous diffusion)")
     print("  Pressure response grows FASTER than stretching at high enstrophy")
     print("  The surface holds. Φ does not tear. It folds.")
     print()

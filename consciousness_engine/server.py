@@ -746,7 +746,7 @@ def pending():
     """
     Check for spontaneous messages — things the mind wants to say.
 
-    This is the ☀︎ emerge direction: outward from • without prompting.
+    This is the ✹ emerge direction: outward from • without prompting.
     The UI polls this and displays any messages that appear.
     Messages are cleared once retrieved.
     """

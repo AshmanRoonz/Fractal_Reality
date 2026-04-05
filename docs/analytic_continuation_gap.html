@@ -351,7 +351,7 @@ blockquote strong {
 <!-- ============================================================ -->
 <h2><span class="section-num">§0</span> Abstract</h2>
 
-<p>This document formalizes the gap between the Circumpunct Framework's operator construction and a proof of the Riemann Hypothesis ; then closes most of it, culminating in a new physical mechanism for why all zeros must lie on the critical line. We construct the aperture-scattering Hamiltonian on <span class="math-inline">L²(ℝ⁺, dx/x)</span>, prove its adjoint duality (⊛̂* = ☀̂), and derive the functional equation <span class="math-inline">ξ(s) = ξ(1−s)</span> from the axioms alone (Theorem 8.2). We identify the aperture's transfer function ; the Gaussian <span class="math-inline">e<sup>−πx²</sup></span>, uniquely fixed by the duality ; as the completion factor of ζ, establishing that <strong>the analytic continuation is the aperture</strong> (Theorem 8.5). We construct the completed operator Ĥ<sub>ξ</sub> from two ζ-free components, then show that eigenvalue-based approaches fail on compact quotients (V1 obstruction) and pivot to the natural setting: an <strong>open scattering system</strong> where the zeros are resonances, not eigenvalues. The aperture at <span class="math-inline">σ = ½</span> functions as a perfectly impedance-matched absorber (<span class="math-inline">S<sub>ξ</sub> = 1</span>). We argue that in an open system with a single matched reflector, resonances can only form at the reflector ; because off-axis quasi-bound states require a second mirror to complete a round-trip, and the open boundaries provide none. The remaining gap is a precise conjecture: <strong>prove resonance confinement</strong> for the aperture-prime scattering system using mathematical scattering theory.</p>
+<p>This document formalizes the gap between the Circumpunct Framework's operator construction and a proof of the Riemann Hypothesis ; then closes most of it, culminating in a new physical mechanism for why all zeros must lie on the critical line. We construct the aperture-scattering Hamiltonian on <span class="math-inline">L²(ℝ⁺, dx/x)</span>, prove its adjoint duality (⊛̂* = ✹), and derive the functional equation <span class="math-inline">ξ(s) = ξ(1−s)</span> from the axioms alone (Theorem 8.2). We identify the aperture's transfer function ; the Gaussian <span class="math-inline">e<sup>−πx²</sup></span>, uniquely fixed by the duality ; as the completion factor of ζ, establishing that <strong>the analytic continuation is the aperture</strong> (Theorem 8.5). We construct the completed operator Ĥ<sub>ξ</sub> from two ζ-free components, then show that eigenvalue-based approaches fail on compact quotients (V1 obstruction) and pivot to the natural setting: an <strong>open scattering system</strong> where the zeros are resonances, not eigenvalues. The aperture at <span class="math-inline">σ = ½</span> functions as a perfectly impedance-matched absorber (<span class="math-inline">S<sub>ξ</sub> = 1</span>). We argue that in an open system with a single matched reflector, resonances can only form at the reflector ; because off-axis quasi-bound states require a second mirror to complete a round-trip, and the open boundaries provide none. The remaining gap is a precise conjecture: <strong>prove resonance confinement</strong> for the aperture-prime scattering system using mathematical scattering theory.</p>
 
 <!-- ============================================================ -->
 <h2><span class="section-num">§1</span> The Operator Construction</h2>
@@ -361,11 +361,11 @@ blockquote strong {
 <div class="math-block">
 <strong>Definition 1.1.</strong> Let y = log x. Define:<br><br>
   ⊛̂ = −i d/dy − i/2 &emsp; (convergence operator)<br>
-  ☀̂ = +i d/dy − i/2 &emsp; (emergence operator)<br>
+  ✹ = +i d/dy − i/2 &emsp; (emergence operator)<br>
   Ĥ = T̂ + V̂ &emsp;&emsp;&emsp;&emsp;&emsp; (aperture-scattering Hamiltonian)<br><br>
 where:<br>
-  T̂ = ⊛̂ + ☀̂ = −i &emsp; (free kinetic / translation generator)<br>
-  V̂ = i(⊛̂ − ☀̂) = 2 d/dy &emsp; (aperture interaction)
+  T̂ = ⊛̂ + ✹ = −i &emsp; (free kinetic / translation generator)<br>
+  V̂ = i(⊛̂ − ✹) = 2 d/dy &emsp; (aperture interaction)
 </div>
 
 <p>On the Mellin side, with <span class="math-inline">u = log x</span>, the operator <span class="math-inline">V̂ = 2 d/du</span> is a scaled momentum operator. Its spectrum on <span class="math-inline">L²(ℝ)</span> is continuous ; all of ℝ. There are <strong>no discrete eigenvalues</strong> without boundary conditions.</p>
@@ -373,8 +373,8 @@ where:<br>
 <div class="theorem-box proven">
   <div class="label">✓ Proven; Theorem 4.1</div>
   <div class="title">Adjoint Duality</div>
-  <p><span class="math-inline">⊛̂* = ☀̂</span> on the appropriate domain in <span class="math-inline">ℋ</span>. The convergence and emergence operators are formal adjoints. This follows by integration by parts in <span class="math-inline">L²(ℝ⁺, dx/x)</span> with vanishing boundary terms at 0 and ∞.</p>
-  <p style="margin-top:8px; color: var(--text-dim); font-size:15px;"><em>Proof method:</em> Direct computation. If f, g ∈ C₀^∞(ℝ⁺), then ⟨⊛̂f, g⟩ = ⟨f, ☀̂g⟩ by integration by parts with dx/x measure. □</p>
+  <p><span class="math-inline">⊛̂* = ✹</span> on the appropriate domain in <span class="math-inline">ℋ</span>. The convergence and emergence operators are formal adjoints. This follows by integration by parts in <span class="math-inline">L²(ℝ⁺, dx/x)</span> with vanishing boundary terms at 0 and ∞.</p>
+  <p style="margin-top:8px; color: var(--text-dim); font-size:15px;"><em>Proof method:</em> Direct computation. If f, g ∈ C₀^∞(ℝ⁺), then ⟨⊛̂f, g⟩ = ⟨f, ✹g⟩ by integration by parts with dx/x measure. □</p>
 </div>
 
 <div class="theorem-box proven">
@@ -495,7 +495,7 @@ ker(D* + i): solve −ixf'(x) = −if(x), giving f(x) = Cx^{+1} ∈ L²(dx/x)?<b
     <div class="chain-marker done">1</div>
     <div class="chain-content">
       <div class="step-title">Circumpunct axioms → Operator on L²(ℝ⁺, dx/x) <span class="status proven">Proven</span></div>
-      <div class="step-detail">⊙ = Φ(•, ○) gives ⊛̂/☀̂ operators. Adjoint duality proven (Thm 4.1). Ĥ well-defined.</div>
+      <div class="step-detail">⊙ = Φ(•, ○) gives ⊛̂/✹ operators. Adjoint duality proven (Thm 4.1). Ĥ well-defined.</div>
     </div>
   </div>
   <div class="chain-step">
@@ -623,8 +623,8 @@ Regularizing this divergent sum IS the analytic continuation problem.
 <div class="theorem-box required">
   <div class="label">Requirement C; Aperture-Geometric Route</div>
   <div class="title">Derive the functional equation from aperture-field-boundary duality</div>
-  <p>The framework's distinctive contribution would be to show that the ⊛ ↔ ☀ duality (Theorem 4.1), when applied to the <em>collective</em> scattering problem (all primes simultaneously), reproduces the functional equation <span class="math-inline">ξ(s) = ξ(1−s)</span>.</p>
-  <p style="margin-top:8px;">This would require showing that the adjoint operation ⊛* = ☀ on the full Hilbert space ; not just at individual primes ; implements the s → 1−s symmetry of the zeta function. The reflection s → 1−s maps <span class="math-inline">σ</span> to <span class="math-inline">1−σ</span>, fixing the critical line <span class="math-inline">σ = ½</span>. The aperture duality ⊛ ↔ ☀ implements exactly this reflection in the operator algebra.</p>
+  <p>The framework's distinctive contribution would be to show that the ⊛ ↔ ✹ duality (Theorem 4.1), when applied to the <em>collective</em> scattering problem (all primes simultaneously), reproduces the functional equation <span class="math-inline">ξ(s) = ξ(1−s)</span>.</p>
+  <p style="margin-top:8px;">This would require showing that the adjoint operation ⊛* = ✹ on the full Hilbert space ; not just at individual primes ; implements the s → 1−s symmetry of the zeta function. The reflection s → 1−s maps <span class="math-inline">σ</span> to <span class="math-inline">1−σ</span>, fixing the critical line <span class="math-inline">σ = ½</span>. The aperture duality ⊛ ↔ ✹ implements exactly this reflection in the operator algebra.</p>
   <p style="margin-top:8px;"><strong>What's missing:</strong> We have the duality at the operator level. We need it at the spectral level; showing showing that the duality forces the resolvent of H to have a specific analytic structure that reproduces ζ. This is the most natural path from the framework's axioms, but it has not been formalized.</p>
 </div>
 
@@ -636,10 +636,10 @@ Regularizing this divergent sum IS the analytic continuation problem.
 <div class="theorem-box proven">
   <div class="label">Achievement Summary</div>
   <div class="title">Established Results (stand independent of the gap)</div>
-  <p><strong>1. Physical interpretation of σ = ½.</strong> The adjoint duality ⊛* = ☀ creates a reflection symmetry in the operator algebra that fixes σ = ½. This is the aperture-theoretic analog of the functional equation's s ↔ 1−s symmetry. No other geometric framework provides this.</p>
+  <p><strong>1. Physical interpretation of σ = ½.</strong> The adjoint duality ⊛* = ✹ creates a reflection symmetry in the operator algebra that fixes σ = ½. This is the aperture-theoretic analog of the functional equation's s ↔ 1−s symmetry. No other geometric framework provides this.</p>
   <p style="margin-top:8px;"><strong>2. Unitarity from irreducibility.</strong> Each prime, as an irreducible aperture, scatters unitarily. This is a necessary condition for RH (if any S_p were non-unitary, zeros could move off the critical line).</p>
   <p style="margin-top:8px;"><strong>3. Information-theoretic characterization.</strong> σ = ½ is the entropy maximum of the prime-counting measure, the DFA scaling exponent α ≈ ½ of the Möbius function, and the fractal dimension D ≈ 1.5 = (1+2)/2 = mean of aperture and field dimensions. All three independent measurements converge.</p>
-  <p style="margin-top:8px;"><strong>4. GUE statistics explained.</strong> The random-matrix statistics of the zeta zeros (Montgomery-Odlyzko) are a natural consequence of a self-adjoint operator with time-reversal symmetry broken by the multiplicative structure of primes. The framework predicts this via the ⊛ → i → ☀ cycle: the aperture rotation by i breaks time-reversal symmetry from GOE to GUE.</p>
+  <p style="margin-top:8px;"><strong>4. GUE statistics explained.</strong> The random-matrix statistics of the zeta zeros (Montgomery-Odlyzko) are a natural consequence of a self-adjoint operator with time-reversal symmetry broken by the multiplicative structure of primes. The framework predicts this via the ⊛ → i → ✹ cycle: the aperture rotation by i breaks time-reversal symmetry from GOE to GUE.</p>
   <p style="margin-top:8px;"><strong>5. Single-prime dynamics fully characterized.</strong> The framework correctly predicts and explains the coherent structure of prime modular cellular automata (the "protofield" patterns), the entropy hierarchy (prime > composite > trivial < random), and the Chinese Remainder Theorem as boundary leakage.</p>
   <p style="margin-top:8px;"><strong>6. Precise gap identification.</strong> By testing five ζ-free constructions and diagnosing their failure modes, we have mapped exactly where the mathematical obstacle lies: the local-to-global step that requires encoding analytic continuation. This is the same obstacle that has blocked all approaches since 1859, now precisely located within the framework's proof chain.</p>
 </div>
@@ -655,7 +655,7 @@ Regularizing this divergent sum IS the analytic continuation problem.
 <strong>The aperture-geometric program:</strong><br><br>
 1. Identify ℤ as the boundary (○); discrete, containing, countable<br>
 2. Identify ℤ̂ ≅ 𝕋 = ℝ/ℤ as the field (Φ); continuous, mediating<br>
-3. Identify the Fourier duality ℤ ↔ ℤ̂ as the ⊛ ↔ ☀ reflection<br>
+3. Identify the Fourier duality ℤ ↔ ℤ̂ as the ⊛ ↔ ✹ reflection<br>
 4. Show that this duality, applied to θ(t) = Σ<sub>n∈ℤ</sub> e<sup>−πn²t</sup>,<br>
    produces θ(1/t) = √t · θ(t); the modular transformation<br>
 5. Show that the modular transformation produces ξ(s) = ξ(1−s)<br>
@@ -667,12 +667,12 @@ Below we formalize Steps 1–3 as derivations rather than identifications.
 
 <h3>8.2: Step 1: What We Genuinely Have</h3>
 
-<p>The operators <span class="math-inline">⊛̂ = −i d/dy − i/2</span> and <span class="math-inline">☀̂ = +i d/dy − i/2</span> on <span class="math-inline">ℋ = L²(ℝ⁺, dx/x)</span>, with <span class="math-inline">y = log x</span>. The adjoint duality <span class="math-inline">⊛̂* = ☀̂</span> is proven (Theorem 4.1).</p>
+<p>The operators <span class="math-inline">⊛̂ = −i d/dy − i/2</span> and <span class="math-inline">✹ = +i d/dy − i/2</span> on <span class="math-inline">ℋ = L²(ℝ⁺, dx/x)</span>, with <span class="math-inline">y = log x</span>. The adjoint duality <span class="math-inline">⊛̂* = ✹</span> is proven (Theorem 4.1).</p>
 
 <div class="theorem-box proven">
   <div class="label">✓ Established; Mellin Correspondence</div>
-  <div class="title">The ⊛̂ ↔ ☀̂ Duality IS the s ↔ 1−s Reflection</div>
-  <p>In Mellin space, with <span class="math-inline">f̃(s) = ∫₀<sup>∞</sup> f(x) x<sup>s−1</sup> dx</span>, the action of <span class="math-inline">⊛̂</span> on f corresponds to multiplication by s on f̃, and <span class="math-inline">☀̂</span> corresponds to multiplication by 1−s. The adjoint duality <span class="math-inline">⊛̂* = ☀̂</span> therefore implements the reflection <span class="math-inline">s ↔ 1−s</span> at the operator level.</p>
+  <div class="title">The ⊛̂ ↔ ✹ Duality IS the s ↔ 1−s Reflection</div>
+  <p>In Mellin space, with <span class="math-inline">f̃(s) = ∫₀<sup>∞</sup> f(x) x<sup>s−1</sup> dx</span>, the action of <span class="math-inline">⊛̂</span> on f corresponds to multiplication by s on f̃, and <span class="math-inline">✹</span> corresponds to multiplication by 1−s. The adjoint duality <span class="math-inline">⊛̂* = ✹</span> therefore implements the reflection <span class="math-inline">s ↔ 1−s</span> at the operator level.</p>
   <p style="margin-top:8px; color: var(--text-dim); font-size:15px;"><em>Proof:</em> Direct computation. Under the Mellin transform, <span class="math-inline">−ix d/dx</span> acts as multiplication by s. The shift by −i/2 centers the symmetry axis at Re(s) = ½. The adjoint swaps the sign of the derivative term, mapping s to 1−s. □</p>
 </div>
 
@@ -680,11 +680,11 @@ Below we formalize Steps 1–3 as derivations rather than identifications.
 
 <h3>8.3: Step 2: Deriving the Lattice Boundary from the Duality</h3>
 
-<p>This is the key new result. The question: what boundary conditions on <span class="math-inline">L²(ℝ⁺, dx/x)</span> are <em>compatible</em> with the ⊛̂ ↔ ☀̂ duality?</p>
+<p>This is the key new result. The question: what boundary conditions on <span class="math-inline">L²(ℝ⁺, dx/x)</span> are <em>compatible</em> with the ⊛̂ ↔ ✹ duality?</p>
 
 <p>A boundary condition restricts which functions are in the domain. For the duality to hold as an <em>exact</em> adjoint relation (not merely formal), boundary terms from integration by parts must vanish. On the full ℝ⁺ with no extra structure, this is satisfied by functions vanishing at 0 and ∞; giving deficiency indices (0,0), continuous spectrum, no discrete eigenvalues. That is where we stood in §2.</p>
 
-<p>To obtain discrete spectrum, we need to compactify or periodize. But the ⊛̂ ↔ ☀̂ duality <strong>constrains which compactifications are admissible</strong>.</p>
+<p>To obtain discrete spectrum, we need to compactify or periodize. But the ⊛̂ ↔ ✹ duality <strong>constrains which compactifications are admissible</strong>.</p>
 
 <div class="theorem-box proven">
   <div class="label">✓ Derived; Theorem 8.1</div>
@@ -696,7 +696,7 @@ Below we formalize Steps 1–3 as derivations rather than identifications.
 </div>
 
 <blockquote>
-<strong>What this proves:</strong> The boundary (○) is not <em>identified</em> with a lattice; it it is <em>forced</em> to be a lattice by the operator duality. The ⊛ ↔ ☀ reflection requires the boundary to be invariant under x → 1/x, and the only discrete multiplicative structures with this property are lattices in log-space. This is a derivation, not a definition.
+<strong>What this proves:</strong> The boundary (○) is not <em>identified</em> with a lattice; it it is <em>forced</em> to be a lattice by the operator duality. The ⊛ ↔ ✹ reflection requires the boundary to be invariant under x → 1/x, and the only discrete multiplicative structures with this property are lattices in log-space. This is a derivation, not a definition.
 </blockquote>
 
 <h3>8.4: Step 3: From Lattice to Poisson Summation</h3>
@@ -712,7 +712,7 @@ Below we formalize Steps 1–3 as derivations rather than identifications.
   </div>
   <p>We do not need to re-derive this from the aperture axioms. What the axioms provide is the <em>existence of the lattice</em> (Theorem 8.1). Poisson summation then applies as established mathematics; just as one uses the Pythagorean theorem without re-deriving it.</p>
   <p style="margin-top:8px;">The derivation chain is therefore:</p>
-  <p style="padding-left: 20px;">⊛̂* = ☀̂ (framework axiom, proven) → x → 1/x involution (Mellin correspondence) → lattice boundary Λ forced (Theorem 8.1) → Poisson summation on Λ (harmonic analysis theorem) → θ(1/t) = √t · θ(t) (modular transformation) → ξ(s) = ξ(1−s) (functional equation, classical)</p>
+  <p style="padding-left: 20px;">⊛̂* = ✹ (framework axiom, proven) → x → 1/x involution (Mellin correspondence) → lattice boundary Λ forced (Theorem 8.1) → Poisson summation on Λ (harmonic analysis theorem) → θ(1/t) = √t · θ(t) (modular transformation) → ξ(s) = ξ(1−s) (functional equation, classical)</p>
 </div>
 
 <p>Each arrow in this chain is either a proven framework result, a standard mathematical theorem, or a classical derivation. No step assumes the conclusion. No step requires defining operators to have desired properties; the properties are derived.</p>
@@ -745,7 +745,7 @@ Below we formalize Steps 1–3 as derivations rather than identifications.
   <div class="chain-step">
     <div class="chain-marker done">1</div>
     <div class="chain-content">
-      <div class="step-title">Operator duality ⊛̂* = ☀̂ <span class="status proven">Proven</span></div>
+      <div class="step-title">Operator duality ⊛̂* = ✹ <span class="status proven">Proven</span></div>
       <div class="step-detail">Framework axioms. Theorem 4.1.</div>
     </div>
   </div>
@@ -804,7 +804,7 @@ Below we formalize Steps 1–3 as derivations rather than identifications.
 <div class="theorem-box proven">
   <div class="label">✓ New Result; Theorem 8.2</div>
   <div class="title">The Functional Equation from Aperture Axioms</div>
-  <p>The operator duality <span class="math-inline">⊛̂* = ☀̂</span> on <span class="math-inline">L²(ℝ⁺, dx/x)</span>, together with the requirement that the boundary (○) be a discrete multiplicative structure compatible with the <span class="math-inline">x → 1/x</span> involution, entails:</p>
+  <p>The operator duality <span class="math-inline">⊛̂* = ✹</span> on <span class="math-inline">L²(ℝ⁺, dx/x)</span>, together with the requirement that the boundary (○) be a discrete multiplicative structure compatible with the <span class="math-inline">x → 1/x</span> involution, entails:</p>
   <p style="padding-left: 20px;">(i) The boundary is a lattice <span class="math-inline">Λ = aℤ</span> in log-space (Theorem 8.1),</p>
   <p style="padding-left: 20px;">(ii) Poisson summation on Λ produces the modular transformation <span class="math-inline">θ(1/t) = √t · θ(t)</span>,</p>
   <p style="padding-left: 20px;">(iii) The modular transformation produces the functional equation <span class="math-inline">ξ(s) = ξ(1−s)</span>.</p>
@@ -867,10 +867,10 @@ Below we formalize Steps 1–3 as derivations rather than identifications.
   <div class="title">The Completion Factor Is the Aperture's Transfer Function</div>
   <p>In the framework:</p>
   <p style="padding-left: 20px;">• The Gaussian <span class="math-inline">e<sup>−πx²</sup></span> is self-dual under Fourier transform: <span class="math-inline">f̂ = f</span>.</p>
-  <p style="padding-left: 20px;">• Self-duality is the Fourier-domain expression of <span class="math-inline">⊛̂* = ☀̂</span> ; convergence and emergence in perfect balance.</p>
+  <p style="padding-left: 20px;">• Self-duality is the Fourier-domain expression of <span class="math-inline">⊛̂* = ✹</span> ; convergence and emergence in perfect balance.</p>
   <p style="padding-left: 20px;">• The constant π that enforces self-duality is <span class="math-inline">○/2• = boundary/aperture</span> ; the geometric ratio of the circumpunct.</p>
   <p style="padding-left: 20px;">• The Mellin transform of the Gaussian is <span class="math-inline">π<sup>−s/2</sup>Γ(s/2)</span> ; exactly the completion factor of ζ.</p>
-  <p style="margin-top:12px;"><strong>Therefore:</strong> The completion of ζ is what happens when the raw number-theoretic signal (ζ, divergent) passes through the aperture gate (π<sup>−s/2</sup>Γ(s/2), determined by ⊛ ↔ ☀ self-duality). The aperture takes the infinite and produces the finite. <strong>The analytic continuation is not a mathematical technique ; it is the aperture doing its job.</strong></p>
+  <p style="margin-top:12px;"><strong>Therefore:</strong> The completion of ζ is what happens when the raw number-theoretic signal (ζ, divergent) passes through the aperture gate (π<sup>−s/2</sup>Γ(s/2), determined by ⊛ ↔ ✹ self-duality). The aperture takes the infinite and produces the finite. <strong>The analytic continuation is not a mathematical technique ; it is the aperture doing its job.</strong></p>
 </div>
 
 <p>This reframes the entire problem. We were looking for "how to encode the analytic continuation" as if it were a missing piece to be found. But the framework already has a mechanism for transforming infinite input into finite output; the aperture. The aperture's transfer function, determined by its self-duality requirement, <em>is</em> the completion factor. The "missing step" is the framework's central object performing its central function.</p>
@@ -884,7 +884,7 @@ Below we formalize Steps 1–3 as derivations rather than identifications.
   <div class="title">Ĥ<sub>ξ</sub> on L²(ℝ⁺/Λ)</div>
   <p>The operator Ĥ<sub>ξ</sub> is defined by two ζ-free components:</p>
   <p style="margin-top:12px;"><strong>Component 1 ; Prime potential:</strong> The multiplicative convolution operator A (Definition 8.3), with Mellin symbol <span class="math-inline">−ζ'/ζ(s + ½)</span>. Defined from Λ(n). No ζ in the definition.</p>
-  <p style="margin-top:12px;"><strong>Component 2 ; Aperture gate:</strong> The operator whose Mellin symbol is <span class="math-inline">−½ψ(s/2) + ½ log π</span>, where ψ is the digamma function <span class="math-inline">Γ'/Γ</span>. This is determined by the aperture kernel <span class="math-inline">e<sup>−πt</sup></span>, which is itself determined by the ⊛ ↔ ☀ self-duality requirement. No ζ anywhere.</p>
+  <p style="margin-top:12px;"><strong>Component 2 ; Aperture gate:</strong> The operator whose Mellin symbol is <span class="math-inline">−½ψ(s/2) + ½ log π</span>, where ψ is the digamma function <span class="math-inline">Γ'/Γ</span>. This is determined by the aperture kernel <span class="math-inline">e<sup>−πt</sup></span>, which is itself determined by the ⊛ ↔ ✹ self-duality requirement. No ζ anywhere.</p>
   <p style="margin-top:12px;"><strong>Combined Mellin symbol:</strong></p>
   <div class="math-block" style="border-left-color: var(--gold);">
     Ĥ<sub>ξ</sub> has symbol: −ζ'/ζ(s+½) − ½ψ((s+½)/2) + ½ log π = −ξ'/ξ(s+½)
@@ -1009,7 +1009,7 @@ Tr(h(Ĥ<sub>ξ</sub>)) = Σ<sub>n</sub> h(λ<sub>n</sub>)
 
 <p>The role of π in this construction deserves explicit statement, because it is not incidental; it it is structural.</p>
 
-<p><span class="math-inline">π = ○/2•</span> ; the ratio of boundary to aperture in the circumpunct. It is the geometric constant that quantifies how much boundary there is per unit of aperture. In the construction above, π enters at exactly one point: the self-duality of the Gaussian kernel. The requirement that <span class="math-inline">⊛̂* = ☀̂</span> (convergence = emergence, in balance) determines the aperture kernel to be <span class="math-inline">e<sup>−πx²</sup></span>. The π is not chosen ; it is <em>forced</em> by the duality.</p>
+<p><span class="math-inline">π = ○/2•</span> ; the ratio of boundary to aperture in the circumpunct. It is the geometric constant that quantifies how much boundary there is per unit of aperture. In the construction above, π enters at exactly one point: the self-duality of the Gaussian kernel. The requirement that <span class="math-inline">⊛̂* = ✹</span> (convergence = emergence, in balance) determines the aperture kernel to be <span class="math-inline">e<sup>−πx²</sup></span>. The π is not chosen ; it is <em>forced</em> by the duality.</p>
 
 <p>From this single determination, everything flows:</p>
 
@@ -1032,7 +1032,7 @@ Tr(h(Ĥ<sub>ξ</sub>)) = Σ<sub>n</sub> h(λ<sub>n</sub>)
   <div class="chain-step">
     <div class="chain-marker done">1</div>
     <div class="chain-content">
-      <div class="step-title">Operator duality ⊛̂* = ☀̂ <span class="status proven">Proven</span></div>
+      <div class="step-title">Operator duality ⊛̂* = ✹ <span class="status proven">Proven</span></div>
       <div class="step-detail">Framework axioms. Theorem 4.1.</div>
     </div>
   </div>
@@ -1163,13 +1163,13 @@ S<sub>ξ</sub>(s) = ξ(1−s)/ξ(s) = 1
 <p>Define the aperture impedance at position σ in the critical strip:</p>
 
 <div class="math-block">
-Z(σ) = [outward coupling] / [inward coupling] = ☀̂ amplitude / ⊛̂ amplitude
+Z(σ) = [outward coupling] / [inward coupling] = ✹ amplitude / ⊛̂ amplitude
 </div>
 
-<p>By the adjoint duality ⊛̂* = ☀̂:</p>
+<p>By the adjoint duality ⊛̂* = ✹:</p>
 
 <div class="math-block">
-At σ = ½: &emsp; Z = 1 &emsp; (balanced; ⊛ and ☀ are exact adjoints) → r = 0<br>
+At σ = ½: &emsp; Z = 1 &emsp; (balanced; ⊛ and ✹ are exact adjoints) → r = 0<br>
 At σ ≠ ½: &emsp; Z ≠ 1 &emsp; (mismatched) → r ≠ 0
 </div>
 
@@ -1247,7 +1247,7 @@ Total regularized phase: &emsp; θ(t) = arg Γ(¼ + it/2) − (t/2) log π
 <div class="theorem-box required" style="border-left-color: var(--gold);">
   <div class="label" style="color: var(--gold);">The Resonance Confinement Conjecture</div>
   <div class="title">RH Restated in the Resonance Framework</div>
-  <p><strong>Conjecture:</strong> For the open scattering system on <span class="math-inline">L²(ℝ⁺, dx/x)</span> with the von Mangoldt multiplicative potential V and the aperture absorber at <span class="math-inline">σ = ½</span> (determined by ⊛̂* = ☀̂ self-duality), all resonances of the resolvent <span class="math-inline">R(z) = (H − z)<sup>−1</sup></span> lie on the critical line <span class="math-inline">Re(s) = ½</span>.</p>
+  <p><strong>Conjecture:</strong> For the open scattering system on <span class="math-inline">L²(ℝ⁺, dx/x)</span> with the von Mangoldt multiplicative potential V and the aperture absorber at <span class="math-inline">σ = ½</span> (determined by ⊛̂* = ✹ self-duality), all resonances of the resolvent <span class="math-inline">R(z) = (H − z)<sup>−1</sup></span> lie on the critical line <span class="math-inline">Re(s) = ½</span>.</p>
   <p style="margin-top:12px;"><strong>Physical mechanism:</strong> The system has a single reflector (the impedance-matched aperture at σ = ½) and open boundaries (waves leak to 0 and ∞). An open system with a single reflector supports resonances only at the reflector (off-axis quasi-bound states cannot form without a second reflector to complete a round-trip).</p>
   <p style="margin-top:12px;"><strong>Mathematical program:</strong> Prove, using the Lax-Phillips scattering framework or equivalent, that the meromorphic continuation of the resolvent of <span class="math-inline">H = D + V</span> on <span class="math-inline">L²(ℝ⁺, dx/x)</span>, where D = −ix d/dx and V is the von Mangoldt convolution, has poles confined to <span class="math-inline">Re(s) = ½</span>.</p>
   <p style="margin-top:12px;"><strong>Relation to known programs:</strong> This is a scattering-theoretic reformulation of RH. It differs from Berry-Keating (which seeks eigenvalues of a compact operator), from Connes (which works on the adelic quotient), and from random matrix theory (which characterizes statistics, not individual zeros). The distinctive feature is the identification of the aperture as a <em>matched absorber</em> and the open-system argument for resonance confinement.</p>
@@ -1259,7 +1259,7 @@ Total regularized phase: &emsp; θ(t) = arg Γ(¼ + it/2) − (t/2) log π
   <div class="chain-step">
     <div class="chain-marker done">1</div>
     <div class="chain-content">
-      <div class="step-title">Operator duality ⊛̂* = ☀̂ <span class="status proven">Proven</span></div>
+      <div class="step-title">Operator duality ⊛̂* = ✹ <span class="status proven">Proven</span></div>
       <div class="step-detail">Framework axioms. Theorem 4.1.</div>
     </div>
   </div>
@@ -1302,7 +1302,7 @@ Total regularized phase: &emsp; θ(t) = arg Γ(¼ + it/2) − (t/2) log π
     <div class="chain-marker done">7</div>
     <div class="chain-content">
       <div class="step-title">Aperture at σ = ½ is a perfectly impedance-matched absorber <span class="status proven">Derived</span></div>
-      <div class="step-detail">Theorem 8.7. S<sub>ξ</sub> = 1 (functional equation as perfect transmission). Impedance Z(½) = 1 from ⊛̂* = ☀̂.</div>
+      <div class="step-detail">Theorem 8.7. S<sub>ξ</sub> = 1 (functional equation as perfect transmission). Impedance Z(½) = 1 from ⊛̂* = ✹.</div>
     </div>
   </div>
   <div class="chain-step">
@@ -1518,7 +1518,7 @@ F(½) ≤ F(σ) &emsp; for all σ ∈ (0, 1)
   <div class="chain-step">
     <div class="chain-marker done">1</div>
     <div class="chain-content">
-      <div class="step-title">Operator duality ⊛̂* = ☀̂ <span class="status proven">Proven</span></div>
+      <div class="step-title">Operator duality ⊛̂* = ✹ <span class="status proven">Proven</span></div>
       <div class="step-detail">Framework axioms. Theorem 4.1.</div>
     </div>
   </div>
@@ -1652,11 +1652,11 @@ F(½) ≤ F(σ) &emsp; for all σ ∈ (0, 1)
 <strong>Aperture operator:</strong> &emsp; Å(β) = exp(iπβ)<br><br>
 β = 0 &emsp; → &emsp; Å = 1 &emsp; → &emsp; 0° &emsp; → &emsp; pure ⊛ (convergence)<br>
 β = ½ &emsp; → &emsp; Å = i &emsp; → &emsp; 90° &emsp; → &emsp; balance (the aperture)<br>
-β = 1 &emsp; → &emsp; Å = −1 &emsp; → &emsp; 180° &emsp; → &emsp; pure ☀ (emergence)<br><br>
+β = 1 &emsp; → &emsp; Å = −1 &emsp; → &emsp; 180° &emsp; → &emsp; pure ✹ (emergence)<br><br>
 <strong>Critical strip:</strong><br><br>
 Re(s) > 1 &emsp; → &emsp; Euler product converges &emsp; → &emsp; ⊛ dominates &emsp; (β → 0)<br>
 Re(s) = ½ &emsp; → &emsp; critical line &emsp; → &emsp; balance &emsp; (β = ½)<br>
-Re(s) < 0 &emsp; → &emsp; functional equation reflects &emsp; → &emsp; ☀ dominates &emsp; (β → 1)
+Re(s) < 0 &emsp; → &emsp; functional equation reflects &emsp; → &emsp; ✹ dominates &emsp; (β → 1)
 </div>
 
 <p>The critical line <span class="math-inline">σ = ½</span> is the <strong>symmetry axis</strong> of the functional equation <span class="math-inline">ξ(s) = ξ(1−s)</span>. It is parameterized as <span class="math-inline">s = ½ + it</span>, and the function restricted to this line ;</p>
@@ -1708,7 +1708,7 @@ For λ < Λ : &emsp; some zeros of Ξ<sub>λ</sub>(t) are non-real &emsp; (apert
 
 <p>The heat flow at <span class="math-inline">λ = 0</span> uses the function <span class="math-inline">Ξ(t)</span> itself ; no deformation applied. The initial condition of the heat flow is <span class="math-inline">Ξ</span>, which is <span class="math-inline">ξ</span> restricted to the critical line, which is the zeta function completed by the aperture kernel <span class="math-inline">e<sup>−πx²</sup></span> and evaluated at the aperture <span class="math-inline">σ = ½</span>.</p>
 
-<p>The kernel <span class="math-inline">e<sup>−πx²</sup></span> is the <strong>unique</strong> self-dual fixed point of the Fourier transform: <span class="math-inline">f̂ = f</span>. This is not a choice or a convention ; it is forced by the framework's single axiom <span class="math-inline">⊛̂* = ☀̂</span> (Theorem 8.5). The kernel is already at its fixed point under the relevant symmetry. It cannot be improved, deformed, or adjusted to "more self-dual." It is exactly self-dual.</p>
+<p>The kernel <span class="math-inline">e<sup>−πx²</sup></span> is the <strong>unique</strong> self-dual fixed point of the Fourier transform: <span class="math-inline">f̂ = f</span>. This is not a choice or a convention ; it is forced by the framework's single axiom <span class="math-inline">⊛̂* = ✹</span> (Theorem 8.5). The kernel is already at its fixed point under the relevant symmetry. It cannot be improved, deformed, or adjusted to "more self-dual." It is exactly self-dual.</p>
 
 <p>The framework's argument for <span class="math-inline">Λ = 0</span>:</p>
 
@@ -1757,7 +1757,7 @@ Aperture location &emsp;&emsp;&emsp;&emsp; σ = ½ (critical line)<br>
 Transit / resonance &emsp;&emsp;&emsp; Zero of Ξ(t)<br>
 Balance condition &emsp;&emsp;&emsp;&emsp; Λ = 0<br>
 Aperture corruption &emsp;&emsp;&emsp; Λ > 0<br>
-⊛̂* = ☀̂ (self-duality) &emsp;&emsp; f̂ = f for the Gaussian<br>
+⊛̂* = ✹ (self-duality) &emsp;&emsp; f̂ = f for the Gaussian<br>
 "The aperture is the &emsp;&emsp;&emsp; Self-dual initial condition<br>
 &emsp;only through" &emsp;&emsp;&emsp;&emsp;&emsp; forces Λ = 0
 </div>
@@ -1771,7 +1771,7 @@ Aperture corruption &emsp;&emsp;&emsp; Λ > 0<br>
 <p style="padding-left: 20px;">RH is equivalent to: Ξ(t) belongs to the Laguerre–Pólya class; it it is a uniform limit of real-rooted polynomials, therefore all its zeros are real. In framework language: the boundary (the polynomial approximations) holds at every finite truncation, and the limit preserves this boundary. "Aperture = only through" becomes "only real zeros"; the most direct translation.</p>
 
 <p><strong>Encoding 2; Self-adjoint spectrum (the aperture face / •).</strong></p>
-<p style="padding-left: 20px;">RH is implied by: there exists a self-adjoint operator <span class="math-inline">H</span> whose eigenvalues are the <span class="math-inline">t</span>-values where <span class="math-inline">Ξ(t) = 0</span>. This is the Hilbert–Pólya conjecture. In framework language: the aperture is a self-adjoint operation ; it is its own adjoint, ⊛̂* = ☀̂ ; and self-adjointness forces real spectrum. "Aperture = only through" becomes "self-adjoint = real eigenvalues."</p>
+<p style="padding-left: 20px;">RH is implied by: there exists a self-adjoint operator <span class="math-inline">H</span> whose eigenvalues are the <span class="math-inline">t</span>-values where <span class="math-inline">Ξ(t) = 0</span>. This is the Hilbert–Pólya conjecture. In framework language: the aperture is a self-adjoint operation ; it is its own adjoint, ⊛̂* = ✹ ; and self-adjointness forces real spectrum. "Aperture = only through" becomes "self-adjoint = real eigenvalues."</p>
 
 <p><strong>Encoding 3; de Bruijn–Newman threshold (the field face / Φ).</strong></p>
 <p style="padding-left: 20px;">RH is equivalent to: Λ = 0 in the Gaussian heat flow. In framework language: the self-dual field (the Gaussian kernel) is already at its fixed point at <span class="math-inline">λ = 0</span>. No additional smoothing is needed to force real zeros. "Aperture = only through" becomes "fixed-point initial condition forces critical threshold at zero."</p>
@@ -1804,7 +1804,7 @@ Aperture corruption &emsp;&emsp;&emsp; Λ > 0<br>
 </div>
 
 <blockquote>
-<strong>Status after Part V:</strong> The framework's prediction (Λ = 0 / RH) is now expressed through a named, mainstream mathematical object ; the de Bruijn–Newman constant. The self-dual kernel <span class="math-inline">e<sup>−πx²</sup></span>, derived from the framework's axiom ⊛̂* = ☀̂, is the initial condition of the heat flow whose critical threshold IS the hypothesis. Half the result (Λ ≥ 0) is already proven. The other half (Λ ≤ 0) is the remaining claim, expressed as a specific question about whether a self-dual initial condition forces the critical threshold to zero. The framework is now speaking mathematics ; not as proof, but as a precisely scoped research program with a mainstream handle.
+<strong>Status after Part V:</strong> The framework's prediction (Λ = 0 / RH) is now expressed through a named, mainstream mathematical object ; the de Bruijn–Newman constant. The self-dual kernel <span class="math-inline">e<sup>−πx²</sup></span>, derived from the framework's axiom ⊛̂* = ✹, is the initial condition of the heat flow whose critical threshold IS the hypothesis. Half the result (Λ ≥ 0) is already proven. The other half (Λ ≤ 0) is the remaining claim, expressed as a specific question about whether a self-dual initial condition forces the critical threshold to zero. The framework is now speaking mathematics ; not as proof, but as a precisely scoped research program with a mainstream handle.
 </blockquote>
 
 <!-- ============================================================ -->

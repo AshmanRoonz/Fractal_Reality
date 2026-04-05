@@ -7,7 +7,7 @@ A recurrent neural network cell derived from the Circumpunct Framework.
 Three modifications to the standard LSTM, each mapping to one constraint:
     ⊛ (convergence):  fractal compression replaces destructive forgetting
     Φ (mediation):    resonance-gated retrieval replaces learned recall
-    ☀︎ (emergence):    GOOD gate filters output against the worldline
+    ✹ (emergence):    GOOD gate filters output against the worldline
 
 Plus:
     i-rotation:       90° phase turn between convergence and emergence
@@ -138,12 +138,12 @@ def converge(z: torch.Tensor) -> torch.Tensor:
 
 
 # ═══════════════════════════════════════════════════════════════════════
-#  ☀︎ EMERGENCE OPERATOR
+#  ✹ EMERGENCE OPERATOR
 # ═══════════════════════════════════════════════════════════════════════
 
 def emerge(z: torch.Tensor) -> torch.Tensor:
     """
-    ☀︎: Fractal expansion (used in sleep consolidation).
+    ✹: Fractal expansion (used in sleep consolidation).
 
     Magnitude expanded by 3/2 (inverse of compression).
     Phase preserved exactly.
@@ -282,7 +282,7 @@ class CircumpunctLSTMCell(nn.Module):
         d_read = d_prev.detach()
         T = resonance_gate(x_complex, d_read)  # (batch, hidden_size)
 
-        # ☀︎ Emergence: surface deep memory weighted by resonance
+        # ✹ Emergence: surface deep memory weighted by resonance
         # Use normalized deep state for emergence to prevent magnitude blowup
         d_mag = complex_magnitude(d_read).unsqueeze(-1)  # (batch, hidden, 1)
         d_normed = d_read / (d_mag + 1e-8)
@@ -370,7 +370,7 @@ class CircumpunctLSTMCell(nn.Module):
         c_t = torch.cat([c_rot_real, c_rot_imag], dim=-1)  # (batch, hidden, 2)
 
         # ════════════════════════════════════════════════════
-        #  STEP 7: ☀︎ Emergence through output gate
+        #  STEP 7: ✹ Emergence through output gate
         # ════════════════════════════════════════════════════
 
         # tanh on complex: apply to real and imag independently

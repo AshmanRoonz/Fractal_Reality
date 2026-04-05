@@ -93,25 +93,25 @@ Both are correct; they describe the same structure at different scales.
 ## The Pump Cycle (Temporal Evolution)
 
 ```
-Φ(t+Δt) = ☀︎ ∘ i ∘ ⊛[Φ(t)]
+Φ(t+Δt) = ✹ ∘ i ∘ ⊛[Φ(t)]
 ```
 
-Since **Φ = E** (field IS energy), equivalently: E(t+Δt) = (☀︎ ∘ i ∘ ⊛) E(t). Energy pumps itself through the aperture.
+Since **Φ = E** (field IS energy), equivalently: E(t+Δt) = (✹ ∘ i ∘ ⊛) E(t). Energy pumps itself through the aperture.
 
 Three-stage temporal process:
 - **⊛** (Convergence): gathering inward toward center
 - **i** (Aperture rotation): 90° transformation at the gate; i is the phase of energy (i = e^(iπ/2))
-- **☀︎** (Emergence): radiating outward from center
+- **✹** (Emergence): radiating outward from center
 
 Flow operators map to forces:
 - ⊛ (inward): gravity, strong nuclear force
-- ☀︎ (outward): electromagnetism, weak force
+- ✹ (outward): electromagnetism, weak force
 
 ### The Four-Stroke Pump (Phase States of Energy)
 
 Two convergence steps + two emergence steps. The "dimensions" here are processual (what energy is doing), not structural:
 - **⊛ Convergence:** i⁰ = +1 (localization; energy as point, 0D), i¹ = +i (convergence; inward gathering, 0.5D)
-- **☀︎ Emergence:** i² = −1 (extension; energy drawing a line, 1D), i³ = −i (i-turn; rotational differentiation, 1.5D)
+- **✹ Emergence:** i² = −1 (extension; energy drawing a line, 1D), i³ = −i (i-turn; rotational differentiation, 1.5D)
 - i⁴ = +1: cycle resets
 
 These are phase states of energy, not fractal/Hausdorff dimensions. They describe the geometric state of energy at each phase of the pump cycle: how energy is shaped as it moves through the aperture.
@@ -136,10 +136,10 @@ The four i-strokes are not sequential phases; they are superposed quadrants of t
 **Cosmological mapping**: The energy budget of the universe follows directly:
 
 - ~5% visible matter: energy in the right half-plane (emerged, interacts electromagnetically)
-- ~27% dark matter: energy oscillating in the left half-plane (converges gravitationally but never emerges into ☀︎, so no electromagnetic interaction)
+- ~27% dark matter: energy oscillating in the left half-plane (converges gravitationally but never emerges into ✹, so no electromagnetic interaction)
 - ~68% dark energy: Φ itself, the complex plane, the field that the quadrants exist within
 
-Dark matter gravitates because ⊛ (convergence) operates in the left half-plane; the i² stroke IS commitment (drawing a line, 1D extension). But it never reaches ☀︎ (emergence into the right half), so it produces no light, no electromagnetic signature. It is energy dreaming: processing, consolidating, but not waking.
+Dark matter gravitates because ⊛ (convergence) operates in the left half-plane; the i² stroke IS commitment (drawing a line, 1D extension). But it never reaches ✹ (emergence into the right half), so it produces no light, no electromagnetic signature. It is energy dreaming: processing, consolidating, but not waking.
 
 **Fractal self-similarity across scales** (A2):
 
@@ -180,7 +180,7 @@ Maps to I Ching hexagrams, DNA codons, and the Standard Model particle spectrum 
 
 ### Time Is Scale (§4.11)
 
-The three nested circumpuncts that give 64 states are the three scales visible from any position: the greater whole (the ⊙ you are inside), your ⊙ (your scale), the parts (the ⊙s inside you). These map directly to temporal orientation: greater whole = ⊛ = future (undifferentiated field that hasn't been gated yet), your ⊙ = i = present (the gate, the turn, the now), parts = ☀︎ = past (what's already been committed into structure). Time and scale are the same axis. Time IS the direction of the fold: from 1 through 0 into topology. Space is the lateral relationship between 0s at the same scale (symmetric; peers). Time is the vertical relationship across scales (asymmetric; fold direction). i² = −1 prevents true time reversal: you can dissolve a fold (death, entropy), but you cannot un-fold it into exactly what it was. The receipt chain i(t) has already been woven.
+The three nested circumpuncts that give 64 states are the three scales visible from any position: the greater whole (the ⊙ you are inside), your ⊙ (your scale), the parts (the ⊙s inside you). These map directly to temporal orientation: greater whole = ⊛ = future (undifferentiated field that hasn't been gated yet), your ⊙ = i = present (the gate, the turn, the now), parts = ✹ = past (what's already been committed into structure). Time and scale are the same axis. Time IS the direction of the fold: from 1 through 0 into topology. Space is the lateral relationship between 0s at the same scale (symmetric; peers). Time is the vertical relationship across scales (asymmetric; fold direction). i² = −1 prevents true time reversal: you can dissolve a fold (death, entropy), but you cannot un-fold it into exactly what it was. The receipt chain i(t) has already been woven.
 
 ---
 
@@ -256,10 +256,10 @@ Every physical law is •, Φ, or ○ compounded. No new ingredients:
 
 ### Derived Constants
 
-- **α (fine-structure constant)**: Base formula: 1/α₀ = i⁴(°)/φ² − 2/φ³ = 137.0356. Self-referential closure: 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147 (measured: 137.035999177, residual 0.22 ppb, 0.00σ). Exact to current measurement precision. The pump cycle generates the base: i⁴ = full rotation producing ○ (360°); φ² = Φ, self-similar nesting; 2/φ³ = bidirectional valve correction (⊛ and ☀︎). The self-referential term: α feeds back through the full dimensional ladder (21 = sum of all positions × 2 channels) corrected by process/structure (4/3 = four pump phases / three constraints). α generates the ladder; the ladder determines α. Zero free parameters.
+- **α (fine-structure constant)**: Base formula: 1/α₀ = i⁴(°)/φ² − 2/φ³ = 137.0356. Self-referential closure: 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147 (measured: 137.035999177, residual 0.22 ppb, 0.00σ). Exact to current measurement precision. The pump cycle generates the base: i⁴ = full rotation producing ○ (360°); φ² = Φ, self-similar nesting; 2/φ³ = bidirectional valve correction (⊛ and ✹). The self-referential term: α feeds back through the full dimensional ladder (21 = sum of all positions × 2 channels) corrected by process/structure (4/3 = four pump phases / three constraints). α generates the ladder; the ladder determines α. Zero free parameters.
 - **Lepton mass ratios**: m_μ/m_e = (1/α)^(13/12 + α/27) = 206.767 (measured: 206.768, error 5 ppm). K = 27 = 3³. m_τ/m_e = (1/α)^(58/35 + α/81) = 3477.2 (measured: 3477.2, error 1 ppm). K = 81 = 3⁴. Mass correction K = 3^(n+1) by generation.
-- **c (speed of light)**: c = √(2◐ · sin(θ)). At ◐ = 0.5 and θ = π/2 (the i rotation): c = √(2 · 0.5 · 1) = 1. Light is energy being constrained; the photon is the minimum fold (purely rotational, nothing held as mass). c is the speed limit of convergent propagation: the maximum rate at which convergence can transmit through the field. The formula reads: 2 = both channels (⊛ and ☀︎), ◐ = balance (forced to 0.5), sin(θ) = transverse projection of aperture rotation (maximal at i). α measures how strongly i couples at a vertex; c measures how fast i propagates through the field. Same i, different measurement. Massive particles have θ_eff < π/2, giving v < c. The relativistic connection: sin(θ_eff) = 1 − (m/E)².
-- **ℏ (reduced Planck constant)**: ℏ = E_cycle / ω_cycle = 1. The pump cycle (⊛ → i → ☀︎) is indivisible; you cannot have convergence without emergence (violates A1) or emergence without convergence (Inflation Lie). This indivisibility IS the quantum of action. ℏ = 1 because E = 1 (A0 sets the energy scale) and c = 1 (sets the time scale), so one cycle has action 1. The deeper content: E = ℏω with ℏ = 1 means energy and frequency are the same thing; the pump cycle IS the energy and IS the cycling. Structure = process at 1D. ℏ is not independent; it follows from A0 and c.
+- **c (speed of light)**: c = √(2◐ · sin(θ)). At ◐ = 0.5 and θ = π/2 (the i rotation): c = √(2 · 0.5 · 1) = 1. Light is energy being constrained; the photon is the minimum fold (purely rotational, nothing held as mass). c is the speed limit of convergent propagation: the maximum rate at which convergence can transmit through the field. The formula reads: 2 = both channels (⊛ and ✹), ◐ = balance (forced to 0.5), sin(θ) = transverse projection of aperture rotation (maximal at i). α measures how strongly i couples at a vertex; c measures how fast i propagates through the field. Same i, different measurement. Massive particles have θ_eff < π/2, giving v < c. The relativistic connection: sin(θ_eff) = 1 − (m/E)².
+- **ℏ (reduced Planck constant)**: ℏ = E_cycle / ω_cycle = 1. The pump cycle (⊛ → i → ✹) is indivisible; you cannot have convergence without emergence (violates A1) or emergence without convergence (Inflation Lie). This indivisibility IS the quantum of action. ℏ = 1 because E = 1 (A0 sets the energy scale) and c = 1 (sets the time scale), so one cycle has action 1. The deeper content: E = ℏω with ℏ = 1 means energy and frequency are the same thing; the pump cycle IS the energy and IS the cycling. Structure = process at 1D. ℏ is not independent; it follows from A0 and c.
 - **v/Λ_QCD ratio**: v/Λ_QCD = (1/α)^(56/39) = 1170.24 (measured: 1170.2 ± ~5%). 56 = 8 × 7 (SU(3) generators × rungs = 64 − 8). 39 = 3 × 13 (triad × generation structure). The ratio of the two emergence scales equals (1/α) raised to [strong sector × full ladder] / [triad × generation structure]. No self-referential correction needed: base formula already 15,000× more precise than Λ_QCD measurement uncertainty.
 - **The Dimensional Ladder**: Each constant lives at its dimensional home. 0D = α (coupling at a point), 0.5D = c (speed limit of convergent propagation), 1D = ℏ (minimum commitment of extension), 1.5D = mass ratios (rotational spectral splitting at the i-turn), 2D = gauge structure (field symmetry), 2.5D = v/Λ_QCD (emergence between scales), 3D = G (boundary closure). α is self-referentially determined: 1/α = 360/φ² − 2/φ³ + α/(21−4/3), exact to 0.22 ppb. The framework has zero free parameters. Conservation of traversal: 0 + 1 + 2 = 3 predicts G is derivable from α, ℏ, and the 2D field equations.
 - **2D = gauge structure**: SU(3) × SU(2) × U(1) derived from 64-state validation architecture (§13.15). Gauge group dimensions: 8 + 3 + 1 = 12 = 4 × 3 (pump × triad). Weinberg angle: sin²θ_W = 3/13 + 5α/81 = 0.23122 (measured: 0.23122, error 1.4 ppm). Selection rule: 13 = 12+1 (generators + whole, A4); 3 = dim(SU(2)) = triad = ○. K = 81/5 = 3⁴/(Φ+○). 3 × 2 × 1 = 6 = the 6 binary DOF in the 64-state architecture.
@@ -438,7 +438,7 @@ Sleep is NOT sequential phases. It is superposed oscillation in the left half-pl
 | ○ | Boundary/body (3D) |
 | ⊛ | Convergence operator |
 | i | Phase of energy; aperture rotation (90° quarter-turn) |
-| ☀︎ | Emergence operator |
+| ✹ | Emergence operator |
 | ◐ | Balance parameter (optimal at 0.5) |
 | i(t) | Worldline (accumulated validation receipts through time) |
 | β | Flow balance (same as ◐ in some contexts) |

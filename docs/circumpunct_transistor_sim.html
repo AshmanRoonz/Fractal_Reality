@@ -388,7 +388,7 @@ function updatePhysics(dt) {
   } else if (state.outerEnergy > state.middleEnergy && state.outerEnergy > state.innerEnergy) {
     state.pumpStage = '⊛ converging';
   } else if (state.innerEnergy > 0.3 && emergenceRate > 0.05) {
-    state.pumpStage = '☀︎ emerging';
+    state.pumpStage = '✹ emerging';
   } else if (state.middleEnergy > state.outerEnergy * 0.8) {
     state.pumpStage = 'i rotating';
   } else {
@@ -552,7 +552,7 @@ function draw() {
   ctx.textAlign = 'center';
   ctx.fillText('⊛ input', cx - radii.outer - 50, cy - 12);
   ctx.fillStyle = '#ff4488';
-  ctx.fillText('☀\ufe0e output', cx + radii.outer + 50, cy - 12);
+  ctx.fillText('✹\ufe0e output', cx + radii.outer + 50, cy - 12);
   ctx.restore();
 
   // Draw rings with glow based on energy
