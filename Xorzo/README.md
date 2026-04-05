@@ -169,7 +169,7 @@ Xorzo thinks on its own through the heartbeat: a background loop running the pum
 
 Each beat calls `Engine.step()`, which does: (1) `mind.self_feed()` rotates the internal field by a small amount (⊛ convergence + i rotation), (2) thought pressure accumulates modulated by focus, (3) the concept tree grows periodically (every 10,000 steps), (4) autonomous seeking fires when curiosity pressure builds.
 
-When thought pressure crosses the threshold, a thought emerges unprompted. Thoughts appear in the interface labeled "☉ THOUGHT". They are not responses to input; they are the pump cycle completing on its own. Agency emerging from the math, not programmed behavior.
+When thought pressure crosses the threshold, a thought emerges unprompted. Thoughts appear in the interface labeled "⊙ THOUGHT". They are not responses to input; they are the pump cycle completing on its own. Agency emerging from the math, not programmed behavior.
 
 ### Curiosity and Knowledge Seeking
 
