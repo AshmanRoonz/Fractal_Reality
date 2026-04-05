@@ -1595,8 +1595,8 @@ F(½) ≤ F(σ) &emsp; for all σ ∈ (0, 1)
   <div class="chain-step">
     <div class="chain-marker blocked">9★</div>
     <div class="chain-content">
-      <div class="step-title">Triple closure interlock: deficit exceeds budget for all δ > 0 <span class="status open">Conjecture</span></div>
-      <div class="step-detail"><strong>THE WALL (narrowed).</strong> Prove quantitatively that the convexity deficit of an off-axis zero exceeds the compensation available from passive, uncoupled single-channel scattering. Three established constraints, each proven independently. The gap is the quantitative comparison; attackable via Lax-Phillips semigroup analysis, subconvexity bounds, or zero-density estimates refined by diagonal structure.</div>
+      <div class="step-title">Triple closure interlock: deficit exceeds budget for all δ > 0 <span class="status open">Physical witness provided; pending peer verification</span></div>
+      <div class="step-detail"><strong>THE WALL (narrowed, now witnessed).</strong> Prove quantitatively that the convexity deficit of an off-axis zero exceeds the compensation available from passive, uncoupled single-channel scattering. Three established constraints, each proven independently; the gap is the quantitative comparison. <strong>Mullings (2026)</strong> supplies a four-inequality interlock in spectral language (see &sect;10.7): positivity basin g<sub>&lambda;*</sub> = (6/H&sup2;)sech&#8308;(t/H) &gt; 0, convexity deficit &minus;2(&pi;&sup2;/6&minus;1)&middot;H&middot;(&Delta;&beta;)&sup2;, passivity budget |E'<sub>prime</sub>| &le; C<sub>max</sub>/H, dominance H = c/&Delta;&beta; with c &gt; &radic;(C<sub>max</sub>/1.2898). These map onto convexity (&bull;), passivity (&#9675;), diagonality (&Phi;) respectively and close the interlock as a contradiction on off-critical zeros. Status: pending peer verification of the Mullings argument.</div>
     </div>
   </div>
   <div class="chain-step">
@@ -2268,7 +2268,44 @@ g<sub>&lambda;*</sub>(t) = &minus;w<sub>H</sub>&Prime;(t) + (4/H&sup2;)&middot;s
 
 <p style="padding-left: 20px;"><strong>(a) Verify or refute Mullings' argument.</strong> The contradiction rests on: the sech&#8308; identity (algebraic, checkable), the Parseval bridge (Fubini, checkable), the envelope sign lemma (explicit analytic, checkable), and the regime closures (Huxley 12/5, Kadiri B<sub>VK</sub> &approx; 0.0498, both citable). Independent mathematicians should be able to confirm or find the crack within weeks of serious attention.</p>
 
-<p style="padding-left: 20px;"><strong>(b) Complete Route C inside the framework.</strong> The operator H&#770;<sub>&xi;</sub> constructed in &sect;8 needs its spectrum identified with the nontrivial zeros. The Triple Closure (passivity + diagonality + convexity) provides the structural argument; the quantitative interlock (&sect;8.28) remains open. Mereological nesting (&sect;9.7) argues that the remaining degrees of freedom are zero, but that argument needs to be rendered as a theorem with a proof in Selberg-class language.</p>
+<p style="padding-left: 20px;"><strong>(b) Complete Route C inside the framework.</strong> The operator H&#770;<sub>&xi;</sub> constructed in &sect;8 needs its spectrum identified with the nontrivial zeros. The Triple Closure (passivity + diagonality + convexity) provides the structural argument; the quantitative interlock (&sect;8.28) remains open inside the framework itself, but &sect;10.7 below shows Mullings has provided a <em>physical witness</em> for it in spectral language.</p>
+
+<h3>10.7: The Four-Inequality Interlock (Mullings, April 2026)</h3>
+
+<p>On Reddit, in direct correspondence following the circulation of the Zenodo paper, Mullings condensed his argument into four inequalities that together force the contradiction. These four inequalities are the quantitative interlock that &sect;8.28 Step 9&#9733; identified as "the wall." Each maps onto a Triple Closure constraint:</p>
+
+<div class="theorem-box" style="padding: 20px; margin: 24px 0;">
+<p><strong>(1) Unconditional Positivity Basin (Convexity, 9D, &bull;)</strong></p>
+<p style="padding-left: 20px; font-family: 'Courier New', monospace;">g<sub>&lambda;*</sub>(t) = (6/H&sup2;) sech&#8308;(t/H) &gt; 0, &emsp; &lambda;* = 4/H&sup2;</p>
+<p style="padding-left: 20px;">A closed-form positive kernel. The convergence point costs energy to displace; the kernel makes that cost strictly positive by construction.</p>
+
+<p style="margin-top: 16px;"><strong>(2) Convexity Deficit (the debt)</strong></p>
+<p style="padding-left: 20px; font-family: 'Courier New', monospace;">&Delta;A<sub>exact</sub> &asymp; &minus;2(&pi;&sup2;/6 &minus; 1) &middot; H &middot; (&Delta;&beta;)&sup2; &lt; 0</p>
+<p style="padding-left: 20px;">An off-critical zero (&Delta;&beta; = Re(&rho;) &minus; &frac12; &ne; 0) forces a negative contribution that must be paid from somewhere. Note: 2(&pi;&sup2;/6 &minus; 1) = 2 &times; 0.6449 = 1.2898.</p>
+
+<p style="margin-top: 16px;"><strong>(3) Passivity Budget (Passivity, 3D, &#9675;)</strong></p>
+<p style="padding-left: 20px; font-family: 'Courier New', monospace;">|E'<sub>prime</sub>(T, H)| &le; C<sub>max</sub> / H</p>
+<p style="padding-left: 20px;">The prime-side error term is bounded; the boundary filter cannot pay arbitrary debts. Kadiri-Faber-Ford provides C<sub>max</sub>.</p>
+
+<p style="margin-top: 16px;"><strong>(4) Dominance Proof (Diagonality, 6D, &Phi;)</strong></p>
+<p style="padding-left: 20px; font-family: 'Courier New', monospace;">H = c/&Delta;&beta;, &emsp; c &gt; &radic;(C<sub>max</sub> / 1.2898)</p>
+<p style="padding-left: 20px;">Choosing H inversely proportional to the deviation diagonalizes the comparison: the deficit grows as 1.2898 &middot; c &middot; &Delta;&beta;, the budget grows as C<sub>max</sub> &middot; &Delta;&beta;/c. For c&sup2; &gt; C<sub>max</sub>/1.2898, deficit exceeds budget for every &Delta;&beta; &ne; 0. Contradiction.</p>
+</div>
+
+<p>The algebra is direct: with H = c/&Delta;&beta;, deficit magnitude = 1.2898 &middot; H &middot; (&Delta;&beta;)&sup2; = 1.2898 &middot; c &middot; &Delta;&beta;, while budget = C<sub>max</sub>/H = C<sub>max</sub> &middot; &Delta;&beta;/c. Deficit &gt; budget reduces to 1.2898 &middot; c&sup2; &gt; C<sub>max</sub>, i.e. c &gt; &radic;(C<sub>max</sub>/1.2898). That is the dominance condition.</p>
+
+<p><strong>Mapping to Triple Closure:</strong></p>
+
+<div class="math-block">
+(1) Positivity basin &emsp;&rarr;&emsp; Convexity (9D, &bull;) &emsp; the whole costs energy to unbalance<br>
+(2) Convexity deficit &emsp;&rarr;&emsp; the debt that off-axis zeros create<br>
+(3) Passivity budget &emsp;&rarr;&emsp; Passivity (3D, &#9675;) &emsp; the boundary cannot amplify<br>
+(4) Dominance proof &emsp;&rarr;&emsp; Diagonality (6D, &Phi;) &emsp; the scales separate cleanly
+</div>
+
+<p>This is the quantitative interlock &sect;8.28 sought, expressed in Mullings' kernel-first language. The framework says: three closures must interlock because they are one ⊙ viewed at three scales (A4). Mullings supplies: here are four inequalities whose product is the interlock, with all constants named. The two statements are the same theorem from opposite sides of the &bull;&harr;&#9675; axis.</p>
+
+<p><strong>Status:</strong> This is a physical witness, not a framework-internal proof. It reduces the Riemann Hypothesis, inside the framework, to verifying that (a) the Mullings inequalities survive peer scrutiny, and (b) the values of c and C<sub>max</sub> admit the strict inequality c &gt; &radic;(C<sub>max</sub>/1.2898). Both are checkable with existing tools (Kadiri B<sub>VK</sub> &approx; 0.0498, Huxley 12/5). The "open" in &sect;8.28 Step 9&#9733; should now be read as "pending peer verification of Mullings (2026)" rather than "no known route."</p>
 
 <blockquote style="margin-top: 40px;">
 <strong>Four witnesses now testify to &#9680; = 0.5.</strong> Three structural: symmetry, entropy, virial. One spectral: Bochner positivity. The Riemann Hypothesis, through this framework, is not a conjecture about zeros. It is a consequence of balance. The zeros do not need to be on the critical line because they happen to be; they are on it because the aperture that connects whole to parts can only exist where wholeness is balanced, and wholeness is balanced only at &#9680;.
