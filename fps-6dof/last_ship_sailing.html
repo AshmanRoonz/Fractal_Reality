@@ -1817,13 +1817,41 @@ class Projectile {
     this.age += dt;
     if (this.age > this.lifetime) { this.destroy(); return; }
 
-    // Tracking projectiles (TONE Tracker Rockets) steer toward target
+    // Homing missiles (Descent 3 style two-tier tracking)
+    // Close range: aggressive tracking (loose FOV constraint)
+    // Far range: tighter FOV, gentler turns (can be dodged at distance)
     if (this.tracking && this.trackTarget && this.trackTarget.alive) {
-      const toTarget = new THREE.Vector3().subVectors(this.trackTarget.position, this.position).normalize();
+      const toTarget = new THREE.Vector3().subVectors(this.trackTarget.position, this.position);
+      const dist = toTarget.length();
+      const toTargetDir = toTarget.normalize();
       const speed = this.velocity.length();
-      const turnRate = 3.0; // radians per second of steering
-      this.velocity.lerp(toTarget.multiplyScalar(speed), turnRate * dt);
-      this.velocity.normalize().multiplyScalar(speed);
+      const curDir = this.velocity.clone().normalize();
+      const dot = curDir.dot(toTargetDir);
+
+      const CLOSE_DIST = 800;
+      const MAX_DIST = 3000;
+      let turnRate, fovThreshold;
+
+      if (dist < CLOSE_DIST) {
+        // Close range: aggressive tracking, loose FOV
+        turnRate = 5.0;
+        fovThreshold = -0.3; // can track even behind (almost 180 degrees)
+      } else if (dist < MAX_DIST) {
+        // Mid range: moderate
+        turnRate = 3.0;
+        fovThreshold = 0.2;
+      } else {
+        // Far range: gentle, tight FOV
+        turnRate = 1.5;
+        fovThreshold = 0.5;
+      }
+
+      if (dot > fovThreshold) {
+        // Within tracking FOV: steer toward target
+        this.velocity.lerp(toTargetDir.multiplyScalar(speed), turnRate * dt);
+        this.velocity.normalize().multiplyScalar(speed);
+      }
+      // Outside FOV: missile flies straight (can be outmaneuvered)
     }
 
     const prevPos = this.position.clone();
@@ -1873,6 +1901,7 @@ class Projectile {
               if (eff.type === 'particle_wall' && eff.team !== player.team && this.position.distanceTo(eff.position) < 400) {
                 eff.hp = 0; eff.timer = 0;
                 if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh);
+                if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh);
                 spawnExplosion(eff.position, 20);
               }
             }
@@ -2120,6 +2149,9 @@ function selectLoadout(key) {
   player.afterburnerActive = false;
   player.afterburnerSpeedMult = 1.0;
   player.railgunCharge = 0;
+  // Clean up shield visual meshes from previous loadout
+  if (player.vortexShieldMesh) { scene.remove(player.vortexShieldMesh); player.vortexShieldMesh = null; }
+  if (player.gunShieldMesh) { scene.remove(player.gunShieldMesh); player.gunShieldMesh = null; }
 
   if (player.mesh) scene.remove(player.mesh);
   player.mesh = createShipMesh(ch, 0xff4444);
@@ -2489,15 +2521,45 @@ function updatePlayerMovement(dt) {
     if (player.doomTimer <= 0) playerDie(null);
   }
 
-  // Apply velocity with substep collision (prevents tunneling through walls at high speed)
-  const collRadius = ch.hullLength * 0.4;
-  const moveLen = player.velocity.length() * dt;
-  const MAX_STEP = collRadius * 0.8; // never move more than ~80% of collision radius per substep
-  const subSteps = Math.max(1, Math.ceil(moveLen / MAX_STEP));
-  const subDt = dt / subSteps;
-  for (let ss = 0; ss < subSteps; ss++) {
-    player.position.add(player.velocity.clone().multiplyScalar(subDt));
-    resolveCollision(player.position, player.velocity, collRadius);
+  // Multi-iteration collision loop (Descent 3 style: detect, resolve, continue with remaining time)
+  // Up to 9 iterations for players; each resolves one collision and continues simulating.
+  {
+    const collRadius = ch.hullLength * 0.4;
+    const MAX_PLAYER_SIM_LOOPS = 9;
+    let simTimeRemaining = dt;
+    let loopCount = 0;
+
+    while (simTimeRemaining > 0.0001 && loopCount < MAX_PLAYER_SIM_LOOPS) {
+      const moveLen = player.velocity.length() * simTimeRemaining;
+      const MAX_STEP = collRadius * 0.8;
+      const subSteps = Math.max(1, Math.ceil(moveLen / MAX_STEP));
+      const subDt = simTimeRemaining / subSteps;
+
+      let collided = false;
+      for (let ss = 0; ss < subSteps; ss++) {
+        const prevPos = player.position.clone();
+        player.position.add(player.velocity.clone().multiplyScalar(subDt));
+
+        // Check if collision occurred
+        const prevVelLen = player.velocity.length();
+        resolveCollision(player.position, player.velocity, collRadius);
+        const postVelLen = player.velocity.length();
+
+        // Detect if velocity changed significantly (collision response happened)
+        if (prevVelLen > 10 && Math.abs(postVelLen - prevVelLen) / prevVelLen > 0.1) {
+          // Collision detected; consume time up to this point, then re-iterate
+          simTimeRemaining -= subDt * (ss + 1);
+          collided = true;
+          break;
+        }
+      }
+
+      if (!collided) {
+        // No collision in this pass; done
+        simTimeRemaining = 0;
+      }
+      loopCount++;
+    }
   }
 
   // Boundary clamp + soft push
@@ -2738,12 +2800,16 @@ function fireProjectile(origin, dir, w) {
 
 function fireSpread(origin, dir, w) {
   for (let i = 0; i < w.pellets; i++) {
-    const spread = 0.08;
-    const spreadDir = dir.clone();
-    spreadDir.x += (Math.random() - 0.5) * spread;
-    spreadDir.y += (Math.random() - 0.5) * spread;
-    spreadDir.z += (Math.random() - 0.5) * spread;
-    spreadDir.normalize();
+    // Descent 3 style: rotation matrix spread (random pitch, heading, bank)
+    // Creates a more natural cone pattern than additive noise
+    const spreadAngle = 0.08; // radians max spread
+    const pitch = (Math.random() - 0.5) * spreadAngle;
+    const heading = (Math.random() - 0.5) * spreadAngle;
+    const bank = (Math.random() - 0.5) * spreadAngle * 0.5;
+    const rotQ = new THREE.Quaternion();
+    const euler = new THREE.Euler(pitch, heading, bank, 'YXZ');
+    rotQ.setFromEuler(euler);
+    const spreadDir = dir.clone().applyQuaternion(rotQ).normalize();
 
     const levelDist = raycastLevel(origin, spreadDir, w.range);
     const end = origin.clone().add(spreadDir.clone().multiplyScalar(levelDist));
@@ -2992,22 +3058,31 @@ function executeAbility(slot, ability) {
     else if (ability.name === 'Thermal Shield') {
       player.thermalShieldHP = player.thermalShieldMaxHP;
     }
-    // Particle Wall (TONE): deploy a one-way shield in front of the player
+    // Particle Wall (TONE): deploy a floating rectangle shield that stays in place
     else if (ability.name === 'Particle Wall') {
       const wallPos = player.position.clone().add(forward.clone().multiplyScalar(200));
-      const wallDir = forward.clone(); // normal facing away from player
-      // Visual: a flat translucent plane
+      const wallDir = forward.clone();
+      // Translucent rainbow membrane rectangle
       const wallGeo = new THREE.PlaneGeometry(400, 300);
       const wallMat = new THREE.MeshBasicMaterial({
-        color: 0x44aaff, transparent: true, opacity: 0.35, side: THREE.DoubleSide
+        color: 0x44ccff, transparent: true, opacity: 0.25,
+        side: THREE.DoubleSide, blending: THREE.AdditiveBlending
       });
       const wallMesh = new THREE.Mesh(wallGeo, wallMat);
       wallMesh.position.copy(wallPos);
       wallMesh.lookAt(wallPos.clone().add(wallDir));
       scene.add(wallMesh);
+      // Edge border for visibility
+      const edgeGeo = new THREE.EdgesGeometry(wallGeo);
+      const edgeMat = new THREE.LineBasicMaterial({ color: 0x66ddff, transparent: true, opacity: 0.6 });
+      const edgeMesh = new THREE.LineSegments(edgeGeo, edgeMat);
+      edgeMesh.position.copy(wallPos);
+      edgeMesh.lookAt(wallPos.clone().add(wallDir));
+      scene.add(edgeMesh);
       game.worldEffects.push({
         type: 'particle_wall', position: wallPos.clone(), direction: wallDir.clone(),
-        hp: 2000, maxHp: 2000, timer: 12, owner: 'player', team: player.team, mesh: wallMesh,
+        hp: 2000, maxHp: 2000, timer: 12, owner: 'player', team: player.team,
+        mesh: wallMesh, edgeMesh: edgeMesh, spawnTime: game.time,
       });
     }
     // Sword Block, Vortex Shield
@@ -3228,7 +3303,130 @@ function activateCore() {
   }
 }
 
+// ---- SHIELD VISUAL MESHES ----
+// Create and manage the 3D shield meshes for Ion (rainbow circle), Tone (rectangle), Legion (octagon)
+
+function updateShieldVisuals(dt) {
+  const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+
+  // ---- ION: Vortex Shield (translucent rainbow circle held in front) ----
+  const vortexActive = player.loadoutKey === 'ION' &&
+    player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Vortex Shield';
+
+  if (vortexActive) {
+    if (!player.vortexShieldMesh) {
+      const geo = new THREE.CircleGeometry(120, 32);
+      // Rainbow iridescent material: use additive blending with animated color
+      const mat = new THREE.MeshBasicMaterial({
+        color: 0x44ccff, transparent: true, opacity: 0.25,
+        side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+      });
+      player.vortexShieldMesh = new THREE.Mesh(geo, mat);
+      scene.add(player.vortexShieldMesh);
+      // Add a second ring (outer glow)
+      const ringGeo = new THREE.RingGeometry(110, 125, 32);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0xffffff, transparent: true, opacity: 0.15,
+        side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+      });
+      player.vortexShieldRing = new THREE.Mesh(ringGeo, ringMat);
+      scene.add(player.vortexShieldRing);
+    }
+    // Position in front of player
+    const shieldPos = player.position.clone().add(forward.clone().multiplyScalar(80));
+    player.vortexShieldMesh.position.copy(shieldPos);
+    player.vortexShieldMesh.lookAt(shieldPos.clone().add(forward));
+    // Rainbow color cycling
+    const hue = (game.time * 0.3) % 1;
+    player.vortexShieldMesh.material.color.setHSL(hue, 0.7, 0.6);
+    player.vortexShieldMesh.material.opacity = 0.2 + Math.sin(game.time * 4) * 0.08;
+    // Outer ring
+    if (player.vortexShieldRing) {
+      player.vortexShieldRing.position.copy(shieldPos);
+      player.vortexShieldRing.lookAt(shieldPos.clone().add(forward));
+      player.vortexShieldRing.material.color.setHSL((hue + 0.3) % 1, 0.5, 0.7);
+      player.vortexShieldRing.material.opacity = 0.1 + Math.sin(game.time * 6) * 0.06;
+    }
+  } else {
+    if (player.vortexShieldMesh) {
+      scene.remove(player.vortexShieldMesh);
+      if (player.vortexShieldMesh.geometry) player.vortexShieldMesh.geometry.dispose();
+      if (player.vortexShieldMesh.material) player.vortexShieldMesh.material.dispose();
+      player.vortexShieldMesh = null;
+    }
+    if (player.vortexShieldRing) {
+      scene.remove(player.vortexShieldRing);
+      if (player.vortexShieldRing.geometry) player.vortexShieldRing.geometry.dispose();
+      if (player.vortexShieldRing.material) player.vortexShieldRing.material.dispose();
+      player.vortexShieldRing = null;
+    }
+  }
+
+  // ---- LEGION: Gun Shield (octagon attached to guns) ----
+  const gunShieldActive = player.loadoutKey === 'LEGION' &&
+    player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Gun Shield' &&
+    player.gunShieldHP > 0;
+
+  if (gunShieldActive) {
+    if (!player.gunShieldMesh) {
+      // Octagonal shield geometry
+      const shape = new THREE.Shape();
+      const sides = 8;
+      const shieldR = 100;
+      for (let i = 0; i <= sides; i++) {
+        const angle = (i / sides) * Math.PI * 2 - Math.PI / 2;
+        const x = Math.cos(angle) * shieldR;
+        const y = Math.sin(angle) * shieldR;
+        if (i === 0) shape.moveTo(x, y);
+        else shape.lineTo(x, y);
+      }
+      const geo = new THREE.ShapeGeometry(shape);
+      const mat = new THREE.MeshBasicMaterial({
+        color: 0xff6644, transparent: true, opacity: 0.2,
+        side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+      });
+      player.gunShieldMesh = new THREE.Mesh(geo, mat);
+      scene.add(player.gunShieldMesh);
+      // Edge wireframe
+      const edgeGeo = new THREE.EdgesGeometry(geo);
+      const edgeMat = new THREE.LineBasicMaterial({ color: 0xff8866, transparent: true, opacity: 0.5 });
+      player.gunShieldEdge = new THREE.LineSegments(edgeGeo, edgeMat);
+      scene.add(player.gunShieldEdge);
+    }
+    // Position close to player guns (slightly forward and down)
+    const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+    const shieldPos = player.position.clone().add(forward.clone().multiplyScalar(60));
+    player.gunShieldMesh.position.copy(shieldPos);
+    player.gunShieldMesh.lookAt(shieldPos.clone().add(forward));
+    // Opacity based on remaining HP
+    const hpPct = player.gunShieldHP / player.gunShieldMaxHP;
+    player.gunShieldMesh.material.opacity = 0.12 + hpPct * 0.18;
+    player.gunShieldMesh.material.color.setHSL(0.05 + hpPct * 0.05, 0.8, 0.5 + hpPct * 0.2);
+    if (player.gunShieldEdge) {
+      player.gunShieldEdge.position.copy(shieldPos);
+      player.gunShieldEdge.lookAt(shieldPos.clone().add(forward));
+      player.gunShieldEdge.material.opacity = 0.3 + hpPct * 0.4;
+    }
+  } else {
+    if (player.gunShieldMesh) {
+      scene.remove(player.gunShieldMesh);
+      if (player.gunShieldMesh.geometry) player.gunShieldMesh.geometry.dispose();
+      if (player.gunShieldMesh.material) player.gunShieldMesh.material.dispose();
+      player.gunShieldMesh = null;
+    }
+    if (player.gunShieldEdge) {
+      scene.remove(player.gunShieldEdge);
+      if (player.gunShieldEdge.geometry) player.gunShieldEdge.geometry.dispose();
+      if (player.gunShieldEdge.material) player.gunShieldEdge.material.dispose();
+      player.gunShieldEdge = null;
+    }
+  }
+}
+
 function updateAbilities(dt) {
+  // Update shield visuals each frame
+  updateShieldVisuals(dt);
+
   // Hold-to-use abilities: auto-deactivate when button released
   const holdNames = ['Vortex Shield', 'Sword Block', 'Thermal Shield'];
   const holdKey = !input.keys['e'] && !(input.gpAbility1); // E key or gamepad RB
@@ -3547,10 +3745,18 @@ function updateAbilities(dt) {
       }
     }
 
-    // Particle Wall: update visual opacity based on HP
+    // Particle Wall: animate rainbow membrane and update opacity based on HP
     else if (eff.type === 'particle_wall') {
       if (eff.mesh && eff.hp > 0) {
-        eff.mesh.material.opacity = 0.15 + 0.25 * (eff.hp / eff.maxHp);
+        const hpPct = eff.hp / eff.maxHp;
+        const age = game.time - (eff.spawnTime || 0);
+        const hue = (age * 0.2) % 1;
+        eff.mesh.material.color.setHSL(hue, 0.6, 0.55);
+        eff.mesh.material.opacity = 0.12 + 0.2 * hpPct + Math.sin(age * 3) * 0.04;
+        if (eff.edgeMesh) {
+          eff.edgeMesh.material.color.setHSL((hue + 0.3) % 1, 0.5, 0.7);
+          eff.edgeMesh.material.opacity = 0.3 + 0.4 * hpPct;
+        }
       }
     }
 
@@ -3576,6 +3782,7 @@ function updateAbilities(dt) {
     // Remove expired effects
     if (eff.timer <= 0) {
       if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh);
+      if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh);
       game.worldEffects.splice(e, 1);
     }
   }
@@ -3650,7 +3857,7 @@ function updateRoundSystem(dt) {
         game.stasisFirstBatch = true;
         game.playerInStasis = false;
         // Clean up world effects
-        for (const eff of game.worldEffects) { if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh); }
+        for (const eff of game.worldEffects) { if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh); if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh); }
         game.worldEffects = [];
         respawnPlayer();
         spawnBots();
@@ -4374,6 +4581,82 @@ function drawCircumpunctHUD() {
   const flashR = player.muzzleFlashTimer > 0 && player.muzzleFlashSide === 1;
   drawGun(0, player.gunRecoilL, flashL);
   drawGun(1, player.gunRecoilR, flashR);
+
+  // ---- TONE LOCK-ON CIRCUMPUNCT INDICATORS (over locked enemies) ----
+  if (player.loadoutKey === 'TONE') {
+    const halfW = W / 2;
+    const halfH = H / 2;
+    for (const bot of game.entities) {
+      if (!bot.alive || bot.team === player.team) continue;
+      const locks = player.toneLocks[bot.id] || 0;
+      if (locks <= 0) continue;
+
+      // Project enemy position to screen
+      const worldPos = bot.position.clone();
+      const projected = worldPos.clone().project(camera);
+      if (projected.z > 1) continue;
+      const sx = (projected.x * halfW) + halfW;
+      const sy = -(projected.y * halfH) + halfH;
+      if (sx < -100 || sx > W + 100 || sy < -100 || sy > H + 100) continue;
+
+      // Draw circumpunct lock rings: 1, 2, or 3 concentric circles
+      // Each ring is a circumpunct: dot at center, ring(s) around it
+      const baseR = 30;
+      const lockAlpha = locks >= 3 ? (0.7 + Math.sin(t * 8) * 0.3) : 0.5;
+      const lockColor = locks >= 3 ? `rgba(255,170,0,${lockAlpha})` : `rgba(255,170,0,${lockAlpha})`;
+      const fullLockColor = `rgba(255,80,0,${lockAlpha})`;
+
+      // Center dot (the aperture)
+      ctx.fillStyle = locks >= 3 ? fullLockColor : lockColor;
+      ctx.beginPath();
+      ctx.arc(sx, sy, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Concentric rings (one per lock)
+      for (let ring = 0; ring < locks; ring++) {
+        const ringR = baseR * (0.5 + ring * 0.4);
+        const ringRotation = t * (2 + ring) * (ring % 2 === 0 ? 1 : -1);
+        const dashLen = ring === 2 ? 0 : 0.15; // full circle on 3rd ring
+
+        ctx.strokeStyle = ring === 2 && locks >= 3 ? fullLockColor : lockColor;
+        ctx.lineWidth = ring === 2 && locks >= 3 ? 2.5 : 1.5;
+
+        if (dashLen > 0) {
+          // Dashed ring with rotating gap
+          const gapStart = ringRotation % (Math.PI * 2);
+          const gapSize = dashLen * Math.PI * 2;
+          ctx.beginPath();
+          ctx.arc(sx, sy, ringR, gapStart + gapSize, gapStart + Math.PI * 2);
+          ctx.stroke();
+        } else {
+          // Full ring (complete lock)
+          ctx.beginPath();
+          ctx.arc(sx, sy, ringR, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        // Tick marks at cardinal points (rotating)
+        if (ring < 2) {
+          const tickLen = 6;
+          for (let ti = 0; ti < 4; ti++) {
+            const ta = ringRotation + (ti / 4) * Math.PI * 2;
+            ctx.beginPath();
+            ctx.moveTo(sx + Math.cos(ta) * (ringR - tickLen), sy + Math.sin(ta) * (ringR - tickLen));
+            ctx.lineTo(sx + Math.cos(ta) * (ringR + tickLen), sy + Math.sin(ta) * (ringR + tickLen));
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Full lock text
+      if (locks >= 3) {
+        ctx.fillStyle = fullLockColor;
+        ctx.font = 'bold 10px Courier New';
+        ctx.textAlign = 'center';
+        ctx.fillText('LOCKED', sx, sy + baseR * 1.8 + 8);
+      }
+    }
+  }
 
   // ---- DOOMED: red pulse on inner ring ----
   if (isDoomed) {
