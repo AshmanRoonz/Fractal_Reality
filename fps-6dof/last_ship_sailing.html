@@ -508,7 +508,7 @@ const LOADOUTS = {
     weapon: { name: '40mm Tracker', mode: 'projectile', damage: 660, fireRate: 0.6, clipSize: 20, range: 3500, splash: 0, projSpeed: 900, pellets: 1, spinup: 0 },
     abilities: [
       { name: 'Tracker Rockets', cooldown: 6, duration: 0.5, desc: 'Lock-on: 5 rockets (3 locks)', type: 'offensive', dmg: 5000 },
-      { name: 'Particle Wall', cooldown: 14, duration: 0.1, desc: 'Deploy one-way shield (4000 HP)', type: 'defensive' },
+      { name: 'Particle Wall', cooldown: 14, duration: 0.1, desc: 'Deploy one-way shield (5000 HP, 10s)', type: 'defensive' },
       { name: 'Sonar Lock', cooldown: 12, duration: 8, desc: 'Reveal + partial lock (1 mark)', type: 'utility' },
     ],
     core: { name: 'Salvo Core', desc: 'Massive missile barrage', duration: 3, damage: 11000, cooldown: 60 },
@@ -518,7 +518,7 @@ const LOADOUTS = {
     weapon: { name: 'Predator Cannon', mode: 'hitscan', damage: 170, fireRate: 0.05, clipSize: 999, range: 2000, splash: 0, projSpeed: 0, pellets: 1, spinup: 1.2 },
     abilities: [
       { name: 'Power Shot', cooldown: 8, duration: 0.1, desc: 'High-power: 3200 damage', type: 'offensive', dmg: 3200 },
-      { name: 'Gun Shield', cooldown: 0, duration: 999, desc: 'Frontal shield (2500 HP)', type: 'defensive' },
+      { name: 'Gun Shield', cooldown: 0, duration: 999, desc: 'Frontal shield (5000 HP, 10s)', type: 'defensive' },
       { name: 'Mode Switch', cooldown: 2, duration: 999, desc: 'Close/long range modes', type: 'utility' },
     ],
     core: { name: 'Smart Core', desc: 'Auto-aim + max accuracy', duration: 8, damage: 10000, cooldown: 60 },
@@ -613,7 +613,7 @@ const player = {
   toneLockedTarget: null, // current target with 3+ locks
   // LEGION mode switch
   legionMode: 'close', // 'close' or 'long'
-  gunShieldHP: 0, gunShieldMaxHP: 2500, // Legion Gun Shield HP pool (TF2)
+  gunShieldHP: 0, gunShieldMaxHP: 5000, gunShieldTimer: 0, // Legion Gun Shield: 5000 HP, 10s duration
   // MONARCH upgrade tiers
   monarchTier: 0, // 0-3, each core activation upgrades
   monarchDmgMult: 1.0,
@@ -1854,6 +1854,15 @@ class Projectile {
       // Outside FOV: missile flies straight (can be outmaneuvered)
     }
 
+    // Salvo Core remote guidance: missile steers toward player's crosshair aim point
+    if (this.salvoGuided) {
+      const aimDir = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+      const speed = this.velocity.length();
+      // Aggressive turn rate (player has full control)
+      this.velocity.lerp(aimDir.multiplyScalar(speed), 6.0 * dt);
+      this.velocity.normalize().multiplyScalar(speed);
+    }
+
     const prevPos = this.position.clone();
     this.position.add(this.velocity.clone().multiplyScalar(dt));
     this.mesh.position.copy(this.position);
@@ -2135,7 +2144,7 @@ function selectLoadout(key) {
   player.toneLocks = {};
   player.toneLockedTarget = null;
   player.legionMode = 'close';
-  player.gunShieldHP = 0;
+  player.gunShieldHP = 0; player.gunShieldTimer = 0;
   player.thermalShieldHP = 0;
   player.monarchTier = 0;
   player.monarchDmgMult = 1.0;
@@ -2151,7 +2160,9 @@ function selectLoadout(key) {
   player.railgunCharge = 0;
   // Clean up shield visual meshes from previous loadout
   if (player.vortexShieldMesh) { scene.remove(player.vortexShieldMesh); player.vortexShieldMesh = null; }
+  if (player.vortexShieldRing) { scene.remove(player.vortexShieldRing); player.vortexShieldRing = null; }
   if (player.gunShieldMesh) { scene.remove(player.gunShieldMesh); player.gunShieldMesh = null; }
+  if (player.gunShieldEdge) { scene.remove(player.gunShieldEdge); player.gunShieldEdge = null; }
 
   if (player.mesh) scene.remove(player.mesh);
   player.mesh = createShipMesh(ch, 0xff4444);
@@ -2245,7 +2256,7 @@ function playerTakeDamage(amount, attacker, projectile) {
     }
     // Destroy player's Gun Shield
     if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Gun Shield') {
-      player.gunShieldHP = 0;
+      player.gunShieldHP = 0; player.gunShieldTimer = 0;
       player.abilityActive[1] = false;
       player.abilityCooldowns[1] = 15;
     }
@@ -2386,7 +2397,7 @@ function respawnPlayer() {
   player.vortexStored = 0;
   player.ionEnergy = player.ionMaxEnergy;
   player.ionAdsActive = false;
-  player.gunShieldHP = 0;
+  player.gunShieldHP = 0; player.gunShieldTimer = 0;
   player.thermalShieldHP = 0;
   player.abilityActive = [false, false, false];
   player.abilityTimers = [0, 0, 0];
@@ -2932,31 +2943,31 @@ function executeAbility(slot, ability) {
       proj.isArcWave = true; // applies slow on hit
       game.projectiles.push(proj);
     }
-    // TONE: Tracker Rockets (requires 3 locks from Sonar Lock, fire seeking missiles)
+    // TONE: Tracker Rockets (fire homing salvo at ALL fully-locked targets; locks persist)
     else if (ability.name === 'Tracker Rockets') {
-      // Find a target with 3+ locks
-      let target = null;
+      // Gather all targets with 3+ locks
+      const lockedTargets = [];
       for (const [botId, locks] of Object.entries(player.toneLocks)) {
         if (locks >= 3) {
           const bot = game.entities.find(b => b.id == botId && b.alive);
-          if (bot) { target = bot; break; }
+          if (bot) lockedTargets.push(bot);
         }
       }
-      if (target) {
-        // Fire 5 tracking missiles (~1000 dmg each = 5000 total)
-        for (let m = 0; m < 5; m++) {
-          const spread = new THREE.Vector3((Math.random()-0.5)*0.2, (Math.random()-0.5)*0.2, 0);
-          const vel = forward.clone().add(spread).normalize().multiplyScalar(900);
-          const proj = new Projectile(player.position.clone(), vel, 1000, 80, 'player', 0xffaa00);
-          proj.tracking = true;
-          proj.trackTarget = target;
-          game.projectiles.push(proj);
+      if (lockedTargets.length > 0) {
+        // Fire 5 tracking missiles at EACH fully-locked target
+        for (const target of lockedTargets) {
+          for (let m = 0; m < 5; m++) {
+            const spread = new THREE.Vector3((Math.random()-0.5)*0.2, (Math.random()-0.5)*0.2, 0);
+            const vel = forward.clone().add(spread).normalize().multiplyScalar(900);
+            const proj = new Projectile(player.position.clone(), vel, 1000, 80, 'player', 0xffaa00);
+            proj.tracking = true;
+            proj.trackTarget = target;
+            game.projectiles.push(proj);
+          }
+          // Locks persist: do NOT delete them
         }
-        // Consume locks
-        delete player.toneLocks[target.id];
-        player.toneLockedTarget = null;
       } else {
-        // No locks: fire unguided salvo (5 weaker rockets)
+        // No full locks: fire unguided salvo (5 weaker rockets)
         for (let m = 0; m < 5; m++) {
           const spread = new THREE.Vector3((Math.random()-0.5)*0.15, (Math.random()-0.5)*0.15, 0);
           const vel = forward.clone().add(spread).normalize().multiplyScalar(900);
@@ -3050,9 +3061,10 @@ function executeAbility(slot, ability) {
       player.afterburnerActive = true;
       player.afterburnerSpeedMult = 1.5; // 50% speed boost
     }
-    // Gun Shield (LEGION): activate with full HP
+    // Gun Shield (LEGION): activate with full HP, 10s duration
     else if (ability.name === 'Gun Shield') {
       player.gunShieldHP = player.gunShieldMaxHP;
+      player.gunShieldTimer = 10;
     }
     // Thermal Shield (SCORCH): activate with full HP
     else if (ability.name === 'Thermal Shield') {
@@ -3081,7 +3093,7 @@ function executeAbility(slot, ability) {
       scene.add(edgeMesh);
       game.worldEffects.push({
         type: 'particle_wall', position: wallPos.clone(), direction: wallDir.clone(),
-        hp: 2000, maxHp: 2000, timer: 12, owner: 'player', team: player.team,
+        hp: 5000, maxHp: 5000, timer: 10, owner: 'player', team: player.team,
         mesh: wallMesh, edgeMesh: edgeMesh, spawnTime: game.time,
       });
     }
@@ -3264,13 +3276,15 @@ function activateCore() {
     }
     spawnExplosion(player.position, 40);
   }
-  // TONE: Salvo Core (massive missile barrage, 4000 dmg over 3s)
+  // TONE: Salvo Core (remote-guided missile volley; all missiles steer toward crosshair in real time)
   else if (coreName === 'Salvo Core') {
-    // Fire initial volley; more missiles per tick in updateAbilities
+    // Fire initial burst; more spawn per tick in updateAbilities
     for (let m = 0; m < 8; m++) {
       const spread = new THREE.Vector3((Math.random()-0.5)*0.3, (Math.random()-0.5)*0.3, 0);
-      const vel = forward.clone().add(spread).normalize().multiplyScalar(1000);
-      game.projectiles.push(new Projectile(player.position.clone(), vel, 250, 120, 'player', 0xffcc00));
+      const vel = forward.clone().add(spread).normalize().multiplyScalar(700);
+      const proj = new Projectile(player.position.clone(), vel, 250, 120, 'player', 0xffcc00);
+      proj.salvoGuided = true; // remote-guided: follows player crosshair
+      game.projectiles.push(proj);
     }
   }
   // LEGION: Smart Core (auto-aim + max accuracy, 3500 dmg over 8s)
@@ -3421,6 +3435,7 @@ function updateShieldVisuals(dt) {
       player.gunShieldEdge = null;
     }
   }
+
 }
 
 function updateAbilities(dt) {
@@ -3490,6 +3505,15 @@ function updateAbilities(dt) {
           player.afterburnerActive = false;
           player.afterburnerSpeedMult = 1.0;
         }
+      }
+    }
+    // Gun Shield: 10s duration timer (expires even if not depleted by damage)
+    if (player.abilityActive[i] && player.abilities[i] && player.abilities[i].name === 'Gun Shield' && player.gunShieldHP > 0) {
+      player.gunShieldTimer -= dt;
+      if (player.gunShieldTimer <= 0) {
+        player.gunShieldHP = 0; player.gunShieldTimer = 0;
+        player.abilityActive[i] = false;
+        player.abilityCooldowns[i] = 15;
       }
     }
     // Thermal Shield: hold-to-use, drains shield HP over time, burns nearby enemies
@@ -3606,18 +3630,14 @@ function updateAbilities(dt) {
         game.projectiles.push(proj);
       }
     }
-    // TONE Salvo Core: guided missile barrage (follows player aim, prioritizes locked targets)
+    // TONE Salvo Core: keep spawning remote-guided missiles during duration
     else if (coreName === 'Salvo Core') {
-      if (Math.random() < dt * 6) {
-        const spread = new THREE.Vector3((Math.random()-0.5)*0.2, (Math.random()-0.5)*0.2, 0);
+      if (Math.random() < dt * 10) {
+        const spread = new THREE.Vector3((Math.random()-0.5)*0.25, (Math.random()-0.5)*0.25, 0);
         const aimDir = forward.clone().add(spread).normalize();
-        const vel = aimDir.multiplyScalar(1000);
-        const missile = new Projectile(player.position.clone(), vel, 200, 100, 'player', 0xffcc00);
-        // Seek locked targets if any exist
-        if (player.toneLockedTarget && player.toneLockedTarget.alive) {
-          missile.tracking = true;
-          missile.trackTarget = player.toneLockedTarget;
-        }
+        const vel = aimDir.multiplyScalar(700);
+        const missile = new Projectile(player.position.clone(), vel, 200, 120, 'player', 0xffcc00);
+        missile.salvoGuided = true;
         game.projectiles.push(missile);
       }
     }
