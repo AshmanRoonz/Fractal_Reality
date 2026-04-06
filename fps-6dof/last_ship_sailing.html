@@ -1,0 +1,4805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Last Ship Sailing</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { overflow: hidden; background: #000; font-family: 'Courier New', monospace; cursor: none; }
+canvas { display: block; }
+
+#hud { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+
+/* Crosshair */
+#crosshair {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px; height: 24px; z-index: 20; pointer-events: none;
+}
+#crosshair::before, #crosshair::after {
+  content: ''; position: absolute; background: rgba(255,255,255,0.8);
+}
+#crosshair::before { width: 2px; height: 24px; left: 11px; top: 0; }
+#crosshair::after { width: 24px; height: 2px; top: 11px; left: 0; }
+#crosshair-dot {
+  position: absolute; width: 4px; height: 4px; background: #fff;
+  border-radius: 50%; top: 10px; left: 10px;
+}
+
+.hit-marker {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 30px; height: 30px; z-index: 21; pointer-events: none; opacity: 0;
+}
+.hit-marker.active { animation: hitFlash 0.25s ease-out; }
+@keyframes hitFlash {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+  50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.0); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+}
+.hit-marker-kill {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 40px; height: 40px; z-index: 21; pointer-events: none; opacity: 0;
+}
+.hit-marker-kill.active { animation: killFlash 0.5s ease-out; }
+@keyframes killFlash {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+  30% { opacity: 1; transform: translate(-50%, -50%) scale(1.0); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+}
+
+/* TF2-style health bar canvas (bottom center) */
+#health-canvas {
+  position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+  z-index: 15; pointer-events: none;
+}
+
+/* Ship info (bottom left) */
+#ship-status {
+  position: fixed; bottom: 20px; left: 20px; z-index: 10; pointer-events: none;
+  color: #fff; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+}
+#ship-name { font-size: 14px; color: #fff; font-weight: bold; }
+#ship-class { font-size: 10px; color: #888; }
+
+/* Core meter (bottom left, below ship info) */
+#core-container {
+  margin-top: 6px; width: 180px; height: 16px;
+  background: rgba(20,20,30,0.85); border: 1px solid rgba(100,100,120,0.4);
+  position: relative;
+}
+#core-fill { height: 100%; background: linear-gradient(90deg, #cc8800, #ffaa00); transition: width 0.15s; }
+#core-container.ready #core-fill { background: linear-gradient(90deg, #ffaa00, #ffdd44); animation: coreGlow 0.6s infinite alternate; }
+#core-label { position: absolute; top: 1px; left: 6px; font-size: 9px; color: #fff; text-shadow: 1px 1px 2px #000; }
+#core-value { position: absolute; top: 1px; right: 6px; font-size: 9px; color: #fff; text-shadow: 1px 1px 2px #000; }
+@keyframes coreGlow { from { filter: brightness(1); } to { filter: brightness(1.4); } }
+
+/* Abilities (bottom left) */
+#abilities { display: flex; gap: 6px; margin: 6px 0; }
+.ability-slot {
+  width: 54px; height: 54px; background: rgba(20,20,30,0.85);
+  border: 1px solid rgba(100,100,120,0.4); position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 8px; color: #ccc;
+}
+.ability-slot .key { font-size: 13px; font-weight: bold; color: #fff; }
+.ability-slot .name { font-size: 7px; margin-top: 2px; text-align: center; }
+.ability-slot .cd-overlay {
+  position: absolute; bottom: 0; left: 0; width: 100%;
+  background: rgba(0,0,0,0.7); transition: height 0.1s;
+}
+.ability-slot.active { border-color: #ffaa00; box-shadow: 0 0 8px rgba(255,170,0,0.5); }
+.ability-slot.ready { border-color: rgba(100,200,255,0.6); }
+
+/* Weapon Info (bottom right) */
+#weapon-info { position: fixed; bottom: 20px; right: 20px; z-index: 10; pointer-events: none; color: #fff; text-align: right; font-size: 11px; }
+#ammo-display { font-size: 30px; font-weight: bold; }
+#weapon-name { font-size: 10px; color: #888; }
+#reload-indicator { color: #ffaa00; font-size: 12px; display: none; }
+
+/* Round Info (top center) */
+#round-info {
+  position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+  z-index: 10; pointer-events: none; color: #fff; text-align: center; font-size: 11px;
+}
+#round-timer { font-size: 32px; font-weight: bold; }
+#round-state { font-size: 12px; color: #ffaa00; margin-top: 2px; }
+#score-display { display: flex; gap: 20px; justify-content: center; margin-top: 4px; }
+.team-score { padding: 2px 12px; font-size: 14px; font-weight: bold; }
+.team-a { color: #ff6666; border-bottom: 2px solid #ff6666; }
+.team-b { color: #6699ff; border-bottom: 2px solid #6699ff; }
+
+/* Kill Feed */
+#kill-feed {
+  position: fixed; top: 60px; right: 20px; z-index: 10; pointer-events: none;
+  color: #fff; font-size: 11px; text-align: right;
+}
+.kill-entry { padding: 2px 0; opacity: 1; transition: opacity 0.5s; }
+
+/* Ship Select */
+#ship-select {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(5,5,15,0.95); z-index: 100; display: flex;
+  flex-direction: column; align-items: center; justify-content: center;
+  color: #fff; cursor: default;
+}
+#ship-select h1 { font-size: 36px; margin-bottom: 8px; letter-spacing: 4px; color: #ffaa00; }
+#ship-select h2 { font-size: 14px; margin-bottom: 30px; color: #888; letter-spacing: 2px; }
+#ship-grid { display: grid; grid-template-columns: repeat(4, 200px); gap: 12px; }
+.ship-card {
+  background: rgba(20,20,40,0.9); border: 1px solid rgba(80,80,120,0.4);
+  padding: 16px; cursor: pointer; transition: all 0.2s; pointer-events: all;
+}
+.ship-card:hover { border-color: #ffaa00; background: rgba(30,30,50,0.9); transform: translateY(-2px); }
+.ship-card .loadout-name { font-size: 18px; font-weight: bold; color: #ffaa00; }
+.ship-card .chassis-name { font-size: 11px; color: #888; margin-bottom: 8px; }
+.ship-card .stat { font-size: 10px; color: #aaa; margin: 2px 0; }
+.ship-card .stat span { color: #fff; }
+.ship-card .weapon-name { font-size: 10px; color: #6699ff; margin-top: 6px; }
+.ship-card .abilities-list { font-size: 9px; color: #66cc66; margin-top: 4px; }
+
+/* Doomed Warning */
+#doomed-warning {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -80px);
+  z-index: 15; pointer-events: none; color: #ff2200; font-size: 18px;
+  font-weight: bold; letter-spacing: 3px; display: none;
+  animation: doomedFlash 0.4s infinite alternate;
+}
+@keyframes doomedFlash { from { opacity: 0.5; } to { opacity: 1; } }
+
+/* Red vignette for doomed state */
+#doomed-vignette {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 14; display: none;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(255,0,0,0.3) 100%);
+}
+
+/* Minimap */
+#minimap {
+  position: fixed; top: 20px; left: 20px; width: 150px; height: 150px;
+  background: rgba(10,10,20,0.8); border: 1px solid rgba(80,80,120,0.4);
+  z-index: 10; pointer-events: none;
+}
+
+/* Speed */
+#speed-display {
+  position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+  z-index: 10; pointer-events: none; color: rgba(255,255,255,0.4); font-size: 10px;
+}
+
+/* Gamepad indicator */
+#gamepad-indicator {
+  position: fixed; top: 20px; right: 20px; z-index: 10; pointer-events: none;
+  color: rgba(100,200,255,0.6); font-size: 9px; display: none;
+}
+
+/* Settings overlay */
+#settings-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(5,5,15,0.95); z-index: 200; display: none;
+  overflow-y: auto; cursor: default; color: #fff;
+  font-family: 'Courier New', monospace;
+}
+#settings-overlay.open { display: flex; flex-direction: column; align-items: center; padding: 30px 20px; }
+#settings-overlay h1 { font-size: 28px; color: #ffaa00; letter-spacing: 3px; margin-bottom: 6px; }
+#settings-overlay h2 { font-size: 13px; color: #888; letter-spacing: 2px; margin-bottom: 20px; }
+.settings-section { width: 100%; max-width: 700px; margin-bottom: 24px; }
+.settings-section h3 {
+  font-size: 14px; color: #ffaa00; letter-spacing: 2px; border-bottom: 1px solid rgba(255,170,0,0.3);
+  padding-bottom: 6px; margin-bottom: 12px; text-transform: uppercase;
+}
+.setting-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 0; border-bottom: 1px solid rgba(60,60,80,0.3);
+}
+.setting-row label { font-size: 12px; color: #ccc; flex: 1; }
+.setting-row input[type="range"] {
+  width: 180px; accent-color: #ffaa00; background: transparent; cursor: pointer;
+}
+.setting-row .value-display { width: 50px; text-align: right; font-size: 11px; color: #ffaa00; }
+.setting-row select {
+  background: rgba(20,20,40,0.9); color: #fff; border: 1px solid rgba(100,100,120,0.5);
+  padding: 4px 8px; font-family: 'Courier New', monospace; font-size: 11px; cursor: pointer;
+}
+.setting-row input[type="checkbox"] { accent-color: #ffaa00; cursor: pointer; width: 16px; height: 16px; }
+.bind-select {
+  background: rgba(20,20,40,0.9); color: #fff; border: 1px solid rgba(100,100,120,0.5);
+  padding: 4px 8px; font-family: 'Courier New', monospace; font-size: 11px;
+  cursor: pointer; min-width: 110px;
+}
+.bind-select:hover, .bind-select:focus { border-color: #ffaa00; outline: none; }
+#settings-close {
+  margin-top: 16px; padding: 10px 40px; background: rgba(255,170,0,0.15);
+  border: 1px solid #ffaa00; color: #ffaa00; font-family: 'Courier New', monospace;
+  font-size: 14px; cursor: pointer; letter-spacing: 2px; transition: all 0.2s;
+}
+#settings-close:hover { background: rgba(255,170,0,0.3); }
+#settings-reset {
+  margin-top: 8px; padding: 6px 24px; background: transparent;
+  border: 1px solid rgba(255,60,60,0.4); color: #ff6666; font-family: 'Courier New', monospace;
+  font-size: 11px; cursor: pointer; letter-spacing: 1px;
+}
+#settings-reset:hover { background: rgba(255,60,60,0.15); }
+
+/* Damage direction indicators */
+.damage-indicator {
+  position: fixed; z-index: 16; pointer-events: none; opacity: 0;
+  width: 60px; height: 20px;
+}
+#dmg-top { top: 15%; left: 50%; transform: translateX(-50%); }
+#dmg-bottom { bottom: 15%; left: 50%; transform: translateX(-50%) rotate(180deg); }
+#dmg-left { top: 50%; left: 8%; transform: translateY(-50%) rotate(-90deg); }
+#dmg-right { top: 50%; right: 8%; transform: translateY(-50%) rotate(90deg); }
+
+/* Enemy health bars container */
+#enemy-healthbars {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 12;
+}
+.enemy-hbar {
+  position: absolute; pointer-events: none; text-align: center;
+}
+.enemy-hbar-name { font-size: 9px; color: #fff; text-shadow: 1px 1px 2px #000; margin-bottom: 1px; }
+.enemy-hbar-bg { width: 80px; height: 6px; background: rgba(0,0,0,0.6); border: 1px solid rgba(100,100,120,0.4); position: relative; }
+.enemy-hbar-fill { height: 100%; transition: width 0.1s; }
+.enemy-hbar-shield { height: 2px; background: rgba(60,160,255,0.7); margin-top: 1px; }
+
+/* Stasis field HUD indicator */
+#stasis-warning {
+  position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
+  z-index: 16; pointer-events: none; color: #00ccff; font-size: 16px;
+  font-weight: bold; letter-spacing: 3px; display: none; text-align: center;
+}
+#stasis-warning .stasis-bar { width: 200px; height: 6px; background: rgba(0,0,0,0.5); margin: 8px auto 0; border: 1px solid rgba(0,200,255,0.4); }
+#stasis-warning .stasis-fill { height: 100%; background: linear-gradient(90deg, #0088cc, #00ddff); transition: width 0.1s; }
+
+/* Stasis vignette */
+#stasis-vignette {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 13; display: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,150,255,0.25) 100%);
+}
+
+/* Execution prompt */
+#execution-prompt {
+  position: fixed; top: 55%; left: 50%; transform: translate(-50%, -50%);
+  z-index: 16; pointer-events: none; display: none;
+  color: #ff4400; font-size: 13px; font-weight: bold; letter-spacing: 2px;
+  text-shadow: 0 0 8px rgba(255,68,0,0.5);
+}
+
+/* Stasis field world markers */
+.stasis-marker {
+  position: absolute; pointer-events: none; text-align: center;
+  color: #00ccff; font-size: 8px; font-weight: bold; letter-spacing: 1px;
+}
+.stasis-marker-icon { width: 16px; height: 16px; border: 2px solid #00ccff; border-radius: 50%; margin: 0 auto 2px; animation: stasisPulse 1.2s infinite; }
+@keyframes stasisPulse { 0%,100% { box-shadow: 0 0 4px rgba(0,200,255,0.3); } 50% { box-shadow: 0 0 12px rgba(0,200,255,0.7); } }
+</style>
+</head>
+<body>
+
+<div id="crosshair"><div id="crosshair-dot"></div></div>
+<div class="hit-marker" id="hit-marker">
+  <svg width="30" height="30">
+    <line x1="4" y1="4" x2="11" y2="11" stroke="#fff" stroke-width="2.5"/>
+    <line x1="19" y1="4" x2="26" y2="11" stroke="#fff" stroke-width="2.5"/>
+    <line x1="4" y1="26" x2="11" y2="19" stroke="#fff" stroke-width="2.5"/>
+    <line x1="19" y1="26" x2="26" y2="19" stroke="#fff" stroke-width="2.5"/>
+  </svg>
+</div>
+<div class="hit-marker-kill" id="hit-marker-kill">
+  <svg width="40" height="40">
+    <line x1="8" y1="8" x2="18" y2="18" stroke="#ff2200" stroke-width="3"/>
+    <line x1="22" y1="8" x2="32" y2="18" stroke="#ff2200" stroke-width="3"/>
+    <line x1="8" y1="32" x2="18" y2="22" stroke="#ff2200" stroke-width="3"/>
+    <line x1="22" y1="32" x2="32" y2="22" stroke="#ff2200" stroke-width="3"/>
+    <line x1="10" y1="20" x2="30" y2="20" stroke="#ff2200" stroke-width="2" opacity="0.6"/>
+  </svg>
+</div>
+
+<div id="hud">
+  <canvas id="health-canvas" width="500" height="70"></canvas>
+
+  <div id="ship-status">
+    <div id="ship-name">ION</div>
+    <div id="ship-class">Corvette MkII</div>
+    <div id="core-container">
+      <div id="core-fill" style="width:0%"></div>
+      <div id="core-label">CORE</div>
+      <div id="core-value">0%</div>
+    </div>
+    <div id="abilities"></div>
+  </div>
+
+  <div id="weapon-info">
+    <div id="weapon-name">Splitter Rifle</div>
+    <div id="ammo-display">30 / 30</div>
+    <div id="reload-indicator">RELOADING...</div>
+  </div>
+
+  <div id="round-info">
+    <div id="round-timer">3:00</div>
+    <div id="round-state">WARMUP</div>
+    <div id="score-display">
+      <div class="team-score team-a">FLEET A: 0</div>
+      <div class="team-score team-b">FLEET B: 0</div>
+    </div>
+  </div>
+
+  <div id="kill-feed"></div>
+  <canvas id="minimap"></canvas>
+  <div id="speed-display">0 m/s</div>
+  <div id="gamepad-indicator">GAMEPAD</div>
+  <div id="doomed-warning">! HULL CRITICAL !</div>
+  <div id="doomed-vignette"></div>
+</div>
+
+<!-- Damage direction indicators -->
+<svg class="damage-indicator" id="dmg-top" viewBox="0 0 60 20">
+  <polygon points="10,20 30,2 50,20" fill="rgba(255,40,0,0.8)" stroke="rgba(255,100,50,0.6)" stroke-width="1"/>
+</svg>
+<svg class="damage-indicator" id="dmg-bottom" viewBox="0 0 60 20">
+  <polygon points="10,20 30,2 50,20" fill="rgba(255,40,0,0.8)" stroke="rgba(255,100,50,0.6)" stroke-width="1"/>
+</svg>
+<svg class="damage-indicator" id="dmg-left" viewBox="0 0 60 20">
+  <polygon points="10,20 30,2 50,20" fill="rgba(255,40,0,0.8)" stroke="rgba(255,100,50,0.6)" stroke-width="1"/>
+</svg>
+<svg class="damage-indicator" id="dmg-right" viewBox="0 0 60 20">
+  <polygon points="10,20 30,2 50,20" fill="rgba(255,40,0,0.8)" stroke="rgba(255,100,50,0.6)" stroke-width="1"/>
+</svg>
+
+<!-- Enemy health bars overlay -->
+<div id="enemy-healthbars"></div>
+
+<!-- Stasis field HUD -->
+<div id="stasis-warning">
+  STASIS FIELD: SHIELDS RECHARGING
+  <div class="stasis-bar"><div class="stasis-fill" id="stasis-fill" style="width:0%"></div></div>
+</div>
+<div id="stasis-vignette"></div>
+<div id="execution-prompt">RAM TO EXECUTE</div>
+
+<!-- Settings overlay -->
+<div id="settings-overlay"></div>
+
+<div id="ship-select">
+  <h1>LAST SHIP SAILING</h1>
+  <h2>CHOOSE YOUR SHIP</h2>
+  <div id="ship-grid"></div>
+  <div style="margin-top:20px;color:#555;font-size:10px;letter-spacing:1px;">WASD: Move | SPACE/CTRL: Up/Down | MOUSE: Aim | SHIFT: Dash | Q/E/F: Abilities | V: Core | ESC: Settings</div>
+  <div style="margin-top:4px;color:#444;font-size:9px;letter-spacing:1px;">GAMEPAD: D-Pad Up/Down for vertical movement</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ============================================================================
+// LAST SHIP SAILING ; Zero-gravity ship combat
+// All 7 loadouts, weapons, abilities, HUD, bots, rounds, gamepad, geometry
+// ============================================================================
+
+'use strict';
+
+// ---- GAME CONSTANTS ----
+
+const LSS = {
+  MAX_PLAYERS: 12, TEAM_FLEET_A: 2, TEAM_FLEET_B: 3,
+  ROUND_TIME: 180, WARMUP_TIME: 5, ROUNDS_TO_WIN: 4,
+  SPAWN_PROTECTION: 3, DOOMED_HEALTH_PCT: 0.15, DOOMED_TIMER: 10,
+  GRAVITY: 0, ARENA_SIZE: 25000, TICK_RATE: 60,
+};
+
+// ---- CHASSIS DEFINITIONS ----
+
+const CHASSIS = {
+  FRIGATE: {
+    name: 'Frigate', maxHealth: 7500, maxShield: 2500,
+    shieldRegenRate: 200, shieldRegenDelay: 5,
+    flightSpeed: 450, strafeSpeed: 350, verticalSpeed: 300,
+    acceleration: 1200, deceleration: 800,
+    turnRate: 180, pitchRate: 120,
+    maxDashes: 3, dashSpeed: 900, dashDuration: 0.4, dashCooldown: 4,
+    hullWidth: 60, hullHeight: 25, hullLength: 80, mass: 5000,
+    color: 0x44aaff, healthSegments: 3,
+  },
+  CORVETTE: {
+    name: 'Corvette', maxHealth: 10000, maxShield: 3500,
+    shieldRegenRate: 175, shieldRegenDelay: 6,
+    flightSpeed: 350, strafeSpeed: 280, verticalSpeed: 250,
+    acceleration: 800, deceleration: 600,
+    turnRate: 140, pitchRate: 100,
+    maxDashes: 2, dashSpeed: 750, dashDuration: 0.5, dashCooldown: 5,
+    hullWidth: 80, hullHeight: 30, hullLength: 100, mass: 8000,
+    color: 0x44cc44, healthSegments: 4,
+  },
+  DREADNOUGHT: {
+    name: 'Dreadnought', maxHealth: 15000, maxShield: 5000,
+    shieldRegenRate: 150, shieldRegenDelay: 8,
+    flightSpeed: 250, strafeSpeed: 180, verticalSpeed: 160,
+    acceleration: 500, deceleration: 400,
+    turnRate: 100, pitchRate: 70,
+    maxDashes: 1, dashSpeed: 550, dashDuration: 0.6, dashCooldown: 7,
+    hullWidth: 110, hullHeight: 45, hullLength: 140, mass: 15000,
+    color: 0xff6644, healthSegments: 5,
+  }
+};
+
+// ---- LOADOUT DEFINITIONS (ported from SDK lss_loadout_data.cpp) ----
+
+const LOADOUTS = {
+  ION: {
+    name: 'ION', className: 'Corvette MkII', chassis: 'CORVETTE',
+    weapon: { name: 'Splitter Rifle', mode: 'hitscan', damage: 120, fireRate: 0.3, clipSize: 30, range: 3000, splash: 0, projSpeed: 0, pellets: 1, spinup: 0 },
+    abilities: [
+      { name: 'Laser Shot', cooldown: 12, duration: 0.5, desc: 'Massive beam: 1200 damage', type: 'offensive', dmg: 1200 },
+      { name: 'Vortex Shield', cooldown: 8, duration: 4, desc: 'Absorb and return projectiles', type: 'defensive' },
+      { name: 'Trip Wire', cooldown: 15, duration: 12, desc: 'Proximity mines on contact', type: 'utility' },
+    ],
+    core: { name: 'Laser Core', desc: 'Continuous high-power laser', duration: 3, damage: 4500, cooldown: 60 },
+  },
+  SCORCH: {
+    name: 'SCORCH', className: 'Dreadnought Incinerator', chassis: 'DREADNOUGHT',
+    weapon: { name: 'T-203 Thermite', mode: 'projectile', damage: 400, fireRate: 1.2, clipSize: 12, range: 2500, splash: 200, projSpeed: 600, pellets: 1, spinup: 0 },
+    abilities: [
+      { name: 'Firewall', cooldown: 12, duration: 6, desc: 'Ground fire line', type: 'offensive', dmg: 800 },
+      { name: 'Thermal Shield', cooldown: 10, duration: 3, desc: 'Melts projectiles, burns nearby', type: 'defensive' },
+      { name: 'Incendiary Trap', cooldown: 18, duration: 10, desc: 'Area denial fire', type: 'utility' },
+    ],
+    core: { name: 'Flame Core', desc: 'Massive AoE incendiary', duration: 2, damage: 2500, cooldown: 60 },
+  },
+  NORTHSTAR: {
+    name: 'NORTHSTAR', className: 'Frigate Starcaster', chassis: 'FRIGATE',
+    weapon: { name: 'Plasma Railgun', mode: 'hitscan', damage: 250, fireRate: 1.5, clipSize: 16, range: 4000, splash: 50, projSpeed: 0, pellets: 1, spinup: 2.0 },
+    abilities: [
+      { name: 'Cluster Missile', cooldown: 10, duration: 0.3, desc: 'Splitting missiles: 600 total', type: 'offensive', dmg: 600 },
+      { name: 'Afterburner', cooldown: 10, duration: 4, desc: 'Speed boost (1.5x)', type: 'defensive' },
+      { name: 'Tether Trap', cooldown: 15, duration: 4, desc: 'Slow and root enemies', type: 'utility' },
+    ],
+    core: { name: 'Afterburner Core', desc: 'Speed boost + rocket barrage', duration: 5, damage: 2000, cooldown: 60 },
+  },
+  RONIN: {
+    name: 'RONIN', className: 'Frigate Blade', chassis: 'FRIGATE',
+    weapon: { name: 'Leadwall', mode: 'spread', damage: 175, fireRate: 1.0, clipSize: 8, range: 800, splash: 0, projSpeed: 300, pellets: 4, spinup: 0 },
+    abilities: [
+      { name: 'Arc Wave', cooldown: 10, duration: 0.1, desc: 'Electric proj: 500 damage', type: 'offensive', dmg: 500 },
+      { name: 'Sword Block', cooldown: 0, duration: 999, desc: 'Block 50% incoming damage', type: 'defensive' },
+      { name: 'Phase Dash', cooldown: 8, duration: 0.2, desc: 'Teleport dash', type: 'utility' },
+    ],
+    core: { name: 'Sword Core', desc: 'Empowered melee + arc waves', duration: 4, damage: 3000, cooldown: 60 },
+  },
+  TONE: {
+    name: 'TONE', className: 'Corvette Tracker', chassis: 'CORVETTE',
+    weapon: { name: '40mm Tracker', mode: 'projectile', damage: 330, fireRate: 0.7, clipSize: 20, range: 3500, splash: 0, projSpeed: 800, pellets: 1, spinup: 0 },
+    abilities: [
+      { name: 'Tracker Rockets', cooldown: 8, duration: 0.5, desc: 'Lock-on missiles (3 locks)', type: 'offensive', dmg: 600 },
+      { name: 'Particle Wall', cooldown: 12, duration: 5, desc: 'One-way barrier (fire through)', type: 'defensive' },
+      { name: 'Sonar Lock', cooldown: 14, duration: 8, desc: 'Reveal + partial lock (1 mark)', type: 'utility' },
+    ],
+    core: { name: 'Salvo Core', desc: 'Massive missile barrage', duration: 3, damage: 4000, cooldown: 60 },
+  },
+  LEGION: {
+    name: 'LEGION', className: 'Dreadnought Siege', chassis: 'DREADNOUGHT',
+    weapon: { name: 'Predator Cannon', mode: 'hitscan', damage: 55, fireRate: 0.05, clipSize: 999, range: 2000, splash: 0, projSpeed: 0, pellets: 1, spinup: 1.5 },
+    abilities: [
+      { name: 'Power Shot', cooldown: 10, duration: 0.1, desc: 'High-power: 1100 damage', type: 'offensive', dmg: 1100 },
+      { name: 'Gun Shield', cooldown: 0, duration: 999, desc: 'Frontal shield while firing', type: 'defensive' },
+      { name: 'Mode Switch', cooldown: 2, duration: 999, desc: 'Close/long range modes', type: 'utility' },
+    ],
+    core: { name: 'Smart Core', desc: 'Auto-aim + max accuracy', duration: 8, damage: 3500, cooldown: 60 },
+  },
+  MONARCH: {
+    name: 'MONARCH', className: 'Corvette Sovereign', chassis: 'CORVETTE',
+    weapon: { name: 'XO-16 Chaingun', mode: 'hitscan', damage: 80, fireRate: 0.1, clipSize: 40, range: 3000, splash: 0, projSpeed: 0, pellets: 1, spinup: 0.5 },
+    abilities: [
+      { name: 'Rocket Salvo', cooldown: 10, duration: 0.3, desc: '4 rockets: 250 dmg each', type: 'offensive', dmg: 1000 },
+      { name: 'Energy Siphon', cooldown: 10, duration: 2, desc: 'Drain shields: 400 heal', type: 'defensive' },
+      { name: 'Rearm', cooldown: 14, duration: 0.1, desc: 'Reset ability cooldowns', type: 'utility' },
+    ],
+    core: { name: 'Upgrade Core', desc: '3 tiers of permanent upgrades', duration: 12, damage: 1500, cooldown: 60 },
+  },
+};
+
+// ---- GAME STATE ----
+
+const game = {
+  state: 'select', // select, warmup, playing, roundEnd, matchEnd
+  roundTimer: LSS.ROUND_TIME,
+  warmupTimer: LSS.WARMUP_TIME,
+  scoreA: 0, scoreB: 0,
+  currentRound: 1,
+  entities: [],
+  projectiles: [],
+  particles: [],  // muzzle flash particles, sparks, etc.
+  effects: [],
+  killFeed: [],
+  levelBoxes: [], // AABB collision boxes for level geometry
+  deltaTime: 0,
+  time: 0,
+  lastTime: 0,
+  // Screen shake
+  shakeIntensity: 0,
+  shakeDecay: 8,
+  shakeOffset: { x: 0, y: 0 },
+  // Damage indicators
+  damageIndicators: { top: 0, bottom: 0, left: 0, right: 0 },
+  // Stasis fields
+  stasisFields: [],
+  stasisSpawnTimer: 30, // first batch spawns at 30s
+  stasisFirstBatch: true,
+  stasisInterval: 30, // one every 30s after first batch
+  // Player stasis state
+  playerInStasis: false,
+  playerStasisTimer: 0,
+  playerStasisDuration: 3,
+  playerPreStasisVelocity: null,
+  // Map/level for current round
+  mapWord: '',
+  mapMeshes: [],
+  currentLevel: null,
+  corridorPoints: [],
+  // Persistent world effects (firewalls, trip wires, traps, tethers)
+  worldEffects: [],
+};
+
+// ---- PLAYER STATE ----
+
+const player = {
+  loadout: null, loadoutKey: null,
+  chassis: null,
+  team: LSS.TEAM_FLEET_A,
+  health: 0, maxHealth: 0,
+  shield: 0, maxShield: 0,
+  coreMeter: 0,
+  shipState: 'flying',
+  doomed: false, doomTimer: 0,
+  dashCharges: 0, maxDashes: 0,
+  dashCooldownTimer: 0,
+  dashActive: false, dashTimer: 0,
+  velocity: null, position: null, euler: null,
+  weapon: null,
+  clipAmmo: 0, maxClip: 0,
+  fireTimer: 0,
+  reloading: false, reloadTimer: 0,
+  spinupTimer: 0, spunUp: false,
+  abilities: [],
+  abilityCooldowns: [0, 0, 0],
+  abilityActive: [false, false, false],
+  abilityTimers: [0, 0, 0],
+  coreReady: false, coreActive: false, coreTimer: 0,
+  vortexStored: 0,
+  // ION energy pool (shared across all abilities)
+  ionEnergy: 1000, ionMaxEnergy: 1000, ionEnergyRegen: 50, // per second
+  // TONE lock-on system
+  toneLocks: {}, // { botId: lockCount } (max 3 per target)
+  toneLockedTarget: null, // current target with 3+ locks
+  // LEGION mode switch
+  legionMode: 'close', // 'close' or 'long'
+  // MONARCH upgrade tiers
+  monarchTier: 0, // 0-3, each core activation upgrades
+  monarchDmgMult: 1.0,
+  monarchCooldownMult: 1.0,
+  monarchShieldBonus: 0,
+  // RONIN phase dash invulnerability
+  phaseInvuln: false,
+  phaseInvulnTimer: 0,
+  // NORTHSTAR
+  afterburnerActive: false,
+  afterburnerSpeedMult: 1.0,
+  railgunCharge: 0, // 0-1 charge level (hold alt-fire to charge)
+  spawnProtection: 0,
+  shieldRegenDelay: 0,
+  kills: 0, deaths: 0, damageDealt: 0,
+  lastDamageTime: 0,
+  mesh: null,
+};
+
+// ---- INPUT ----
+
+const input = {
+  keys: {},
+  mouseDown: false, rightMouseDown: false,
+  mouseDX: 0, mouseDY: 0,
+  sensitivity: 0.002,
+  locked: false,
+  // Gamepad
+  gpConnected: false,
+  gpFire: false, gpFirePrev: false,
+  gpDash: false, gpDashPrev: false,
+  gpReload: false, gpReloadPrev: false,
+  gpAbility0: false, gpAbility0Prev: false,
+  gpAbility1: false, gpAbility1Prev: false,
+  gpAbility2: false, gpAbility2Prev: false,
+  gpCore: false, gpCorePrev: false,
+  gpMoveX: 0, gpMoveY: 0,
+  gpLookX: 0, gpLookY: 0,
+  gpMoveUp: false, gpMoveDown: false,
+  gpDeadzone: 0.0,
+  gpLookSensitivity: 10.0,
+  gpMoveSensitivity: 10.0,
+  gpLookCurve: 1.0,
+  gpMoveCurve: 1.0,
+  invertLookY: false,
+  swapSticks: false,
+  triggerThreshold: 0.3,
+  // Button mappings (gamepad button indices): -1 = unbound
+  gpBindings: {
+    fire: 7,       // RT
+    altFire: 6,    // LT (zoom)
+    dash: 0,       // A
+    reload: 2,     // X
+    ability0: 4,   // LB (offensive)
+    ability1: 5,   // RB (defensive)
+    ability2: 3,   // Y (utility)
+    core: 12,      // D-pad Up
+    moveUp: 10,    // L3 (left stick click)
+    moveDown: 11,  // R3 (right stick click)
+    scoreboard: 8, // Back
+    menu: 9,       // Start
+  },
+};
+
+// ---- THREE.JS SETUP ----
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x0a0520, 0.00004); // Deeper purple-tinted fog for cartoon space
+
+const camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 25000);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x0a0520); // Dark purple-black (cartoon space)
+renderer.outputEncoding = THREE.sRGBEncoding || 3001; // Vivid color output
+document.body.appendChild(renderer.domElement);
+
+// Cartoon-style lighting (bright, high-contrast, minimal shadow)
+const ambientLight = new THREE.AmbientLight(0x445577, 0.8); // Brighter ambient for flat look
+scene.add(ambientLight);
+const dirLight = new THREE.DirectionalLight(0xffeedd, 1.2); // Stronger directional for hard toon edges
+dirLight.position.set(1000, 3000, 1500);
+scene.add(dirLight);
+const dirLight2 = new THREE.DirectionalLight(0x8888ff, 0.4); // Cool fill light from below
+dirLight2.position.set(-500, -1000, -500);
+scene.add(dirLight2);
+const pointLight = new THREE.PointLight(0x6699ff, 0.5, 12000);
+pointLight.position.set(0, 500, 0);
+scene.add(pointLight);
+
+// Hemisphere light for cartoon-style ambient (sky/ground color split)
+const hemiLight = new THREE.HemisphereLight(0x6688cc, 0x224466, 0.6);
+scene.add(hemiLight);
+
+// ---- STARFIELD ----
+
+(function createStarfield() {
+  const geo = new THREE.BufferGeometry();
+  const count = 4000;
+  const positions = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
+  const sizes = new Float32Array(count);
+  // Cartoon starfield: bigger, more colorful stars with twinkling feel
+  const starColors = [
+    [1.0, 0.9, 0.7], [0.7, 0.8, 1.0], [1.0, 0.6, 0.8],
+    [0.6, 1.0, 0.8], [1.0, 1.0, 0.5], [0.8, 0.7, 1.0]
+  ];
+  for (let i = 0; i < count; i++) {
+    positions[i*3]   = (Math.random() - 0.5) * 20000;
+    positions[i*3+1] = (Math.random() - 0.5) * 20000;
+    positions[i*3+2] = (Math.random() - 0.5) * 20000;
+    const brightness = 0.5 + Math.random() * 0.5;
+    const c = starColors[Math.floor(Math.random() * starColors.length)];
+    colors[i*3]   = c[0] * brightness;
+    colors[i*3+1] = c[1] * brightness;
+    colors[i*3+2] = c[2] * brightness;
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  const mat = new THREE.PointsMaterial({ size: 5, vertexColors: true, transparent: true, opacity: 0.9 });
+  scene.add(new THREE.Points(geo, mat));
+})();
+
+// ---- ARENA BOUNDARY GRID ----
+
+(function createArenaGrid() {
+  const s = LSS.ARENA_SIZE;
+  const gridMat = new THREE.LineBasicMaterial({ color: 0x112244, transparent: true, opacity: 0.15 });
+  const step = 500;
+  for (let axis = 0; axis < 3; axis++) {
+    for (let sign = -1; sign <= 1; sign += 2) {
+      const lines = [];
+      for (let i = -s; i <= s; i += step) {
+        for (let j = -s; j <= s; j += step) {
+          const a = new THREE.Vector3(), b = new THREE.Vector3();
+          if (axis === 0) { a.set(sign * s, i, j); b.set(sign * s, i + step, j); }
+          else if (axis === 1) { a.set(i, sign * s, j); b.set(i + step, sign * s, j); }
+          else { a.set(i, j, sign * s); b.set(i, j + step, sign * s); }
+          lines.push(a, b);
+        }
+      }
+      const geo = new THREE.BufferGeometry().setFromPoints(lines);
+      scene.add(new THREE.LineSegments(geo, gridMat));
+    }
+  }
+})();
+
+// ---- LEVEL GEOMETRY ----
+
+function buildLevelGeometry() {
+  const wallMat = new THREE.MeshPhongMaterial({ color: 0x334455, emissive: 0x0a1122, emissiveIntensity: 0.2, flatShading: true });
+  const pillarMat = new THREE.MeshPhongMaterial({ color: 0x445566, emissive: 0x112233, emissiveIntensity: 0.15, flatShading: true });
+  const debrisMat = new THREE.MeshPhongMaterial({ color: 0x556677, emissive: 0x111522, emissiveIntensity: 0.05, flatShading: true });
+  const containerMat = new THREE.MeshPhongMaterial({ color: 0x664433, emissive: 0x221100, emissiveIntensity: 0.08, flatShading: true });
+  const beaconMat = new THREE.MeshBasicMaterial({ color: 0x00ff88 });
+  const edgeMat = new THREE.MeshBasicMaterial({ color: 0x2244aa, transparent: true, opacity: 0.4 });
+
+  function addBox(x, y, z, w, h, d, mat, addCollision) {
+    const geo = new THREE.BoxGeometry(w, h, d);
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(x, y, z);
+    scene.add(mesh);
+    if (addCollision !== false) {
+      game.levelBoxes.push({
+        min: new THREE.Vector3(x - w/2, y - h/2, z - d/2),
+        max: new THREE.Vector3(x + w/2, y + h/2, z + d/2),
+      });
+    }
+    return mesh;
+  }
+
+  function addCylinder(x, y, z, r, h, mat) {
+    const geo = new THREE.CylinderGeometry(r, r, h, 16);
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(x, y, z);
+    scene.add(mesh);
+    // Approximate cylinder as box for collision
+    game.levelBoxes.push({
+      min: new THREE.Vector3(x - r, y - h/2, z - r),
+      max: new THREE.Vector3(x + r, y + h/2, z + r),
+    });
+    return mesh;
+  }
+
+  // Central hub: octagonal platform
+  const hubR = 300;
+  addBox(0, -160, 0, hubR * 2, 20, hubR * 2, wallMat); // floor
+  addBox(0, 160, 0, hubR * 2, 20, hubR * 2, wallMat);   // ceiling
+
+  // Hub walls with openings (4 walls with gaps)
+  const wallH = 320, wallT = 20;
+  // North wall (gap in center)
+  addBox(-200, 0, -hubR, 200, wallH, wallT, wallMat);
+  addBox(200, 0, -hubR, 200, wallH, wallT, wallMat);
+  // South wall
+  addBox(-200, 0, hubR, 200, wallH, wallT, wallMat);
+  addBox(200, 0, hubR, 200, wallH, wallT, wallMat);
+  // East wall
+  addBox(hubR, 0, -200, wallT, wallH, 200, wallMat);
+  addBox(hubR, 0, 200, wallT, wallH, 200, wallMat);
+  // West wall
+  addBox(-hubR, 0, -200, wallT, wallH, 200, wallMat);
+  addBox(-hubR, 0, 200, wallT, wallH, 200, wallMat);
+
+  // Edge lights on hub
+  for (let i = 0; i < 8; i++) {
+    const angle = (Math.PI / 4) * i;
+    const ex = Math.cos(angle) * (hubR - 10);
+    const ez = Math.sin(angle) * (hubR - 10);
+    addBox(ex, -148, ez, 8, 4, 8, edgeMat, false);
+    addBox(ex, 148, ez, 8, 4, 8, edgeMat, false);
+  }
+
+  // 4 cardinal corridors
+  const corrLen = 800, corrW = 200, corrH = 300;
+  const corrDirs = [
+    { x: 0, z: -(hubR + corrLen / 2), rx: 0 },  // North
+    { x: 0, z: (hubR + corrLen / 2), rx: 0 },   // South
+    { x: (hubR + corrLen / 2), z: 0, rx: 1 },   // East
+    { x: -(hubR + corrLen / 2), z: 0, rx: 1 },  // West
+  ];
+  corrDirs.forEach(c => {
+    const cw = c.rx ? corrLen : corrW;
+    const cd = c.rx ? corrW : corrLen;
+    // Floor
+    addBox(c.x, -150, c.z, cw, 20, cd, wallMat);
+    // Ceiling
+    addBox(c.x, 150, c.z, cw, 20, cd, wallMat);
+    // Left wall
+    if (c.rx) {
+      addBox(c.x, 0, c.z - corrW / 2, cw, corrH, wallT, wallMat);
+      addBox(c.x, 0, c.z + corrW / 2, cw, corrH, wallT, wallMat);
+    } else {
+      addBox(c.x - corrW / 2, 0, c.z, wallT, corrH, cd, wallMat);
+      addBox(c.x + corrW / 2, 0, c.z, wallT, corrH, cd, wallMat);
+    }
+  });
+
+  // 4 side rooms branching from corridor midpoints
+  const roomSize = 400, roomH = 300;
+  const rooms = [
+    { x: -500, z: -(hubR + corrLen / 2) },
+    { x: 500, z: -(hubR + corrLen / 2) },
+    { x: -(hubR + corrLen / 2), z: -500 },
+    { x: (hubR + corrLen / 2), z: 500 },
+  ];
+  rooms.forEach(r => {
+    addBox(r.x, -150, r.z, roomSize, 20, roomSize, wallMat);  // floor
+    addBox(r.x, 150, r.z, roomSize, 20, roomSize, wallMat);   // ceiling
+    // Walls with one opening
+    addBox(r.x - roomSize / 2, 0, r.z, wallT, roomH, roomSize, wallMat); // left
+    addBox(r.x + roomSize / 2, 0, r.z, wallT, roomH, roomSize, wallMat); // right
+    addBox(r.x, 0, r.z - roomSize / 2, roomSize, roomH, wallT, wallMat); // front
+    // back wall has gap (opening to corridor)
+    addBox(r.x - 120, 0, r.z + roomSize / 2, 160, roomH, wallT, wallMat);
+    addBox(r.x + 120, 0, r.z + roomSize / 2, 160, roomH, wallT, wallMat);
+  });
+
+  // Structural pillars
+  const pillarPositions = [
+    [0, 0, 0], [600, 0, 600], [-600, 0, 600], [600, 0, -600], [-600, 0, -600],
+    [800, 0, 0], [-800, 0, 0], [0, 0, 800], [0, 0, -800],
+  ];
+  pillarPositions.forEach(p => addCylinder(p[0], p[1], p[2], 30, 300, pillarMat));
+
+  // Scattered debris (asteroids)
+  for (let i = 0; i < 25; i++) {
+    const x = (Math.random() - 0.5) * 4000;
+    const y = (Math.random() - 0.5) * 2000;
+    const z = (Math.random() - 0.5) * 4000;
+    if (Math.abs(x) < 500 && Math.abs(z) < 500) continue;
+    const size = 15 + Math.random() * 35;
+    const geo = new THREE.IcosahedronGeometry(size, 1);
+    const mesh = new THREE.Mesh(geo, debrisMat);
+    mesh.position.set(x, y, z);
+    mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+    scene.add(mesh);
+    game.levelBoxes.push({
+      min: new THREE.Vector3(x - size, y - size, z - size),
+      max: new THREE.Vector3(x + size, y + size, z + size),
+    });
+  }
+
+  // Cargo containers
+  for (let i = 0; i < 15; i++) {
+    const x = (Math.random() - 0.5) * 3500;
+    const y = (Math.random() - 0.5) * 1200;
+    const z = (Math.random() - 0.5) * 3500;
+    if (Math.abs(x) < 400 && Math.abs(z) < 400) continue;
+    addBox(x, y, z, 50 + Math.random() * 30, 30 + Math.random() * 20, 60 + Math.random() * 40, containerMat);
+  }
+
+  // Platforms at various heights
+  const platforms = [
+    { x: 1200, y: 200, z: 0 }, { x: -1200, y: -200, z: 0 },
+    { x: 0, y: 300, z: 1200 }, { x: 0, y: -300, z: -1200 },
+    { x: 800, y: 100, z: 800 }, { x: -800, y: -100, z: -800 },
+  ];
+  platforms.forEach(p => addBox(p.x, p.y, p.z, 200, 15, 200, wallMat));
+
+  // Navigation beacons
+  const beaconPositions = [
+    [1200, 0, 1200], [-1200, 0, 1200], [1200, 0, -1200], [-1200, 0, -1200],
+    [0, 0, 1500], [1500, 0, 0], [0, 0, -1500], [-1500, 0, 0],
+  ];
+  beaconPositions.forEach(p => {
+    const geo = new THREE.SphereGeometry(10, 12, 8);
+    const mesh = new THREE.Mesh(geo, beaconMat);
+    mesh.position.set(p[0], p[1], p[2]);
+    scene.add(mesh);
+    // Point light at beacon
+    const light = new THREE.PointLight(0x00ff88, 0.3, 400);
+    light.position.set(p[0], p[1], p[2]);
+    scene.add(light);
+  });
+}
+// Old static geometry replaced by procedural cursive map
+// buildLevelGeometry(); // kept for reference but not called
+
+// ---- COLLISION HELPERS ----
+
+function checkBoxCollision(pos, radius) {
+  // Check if a sphere at pos with given radius intersects any level box
+  for (const box of game.levelBoxes) {
+    const cx = Math.max(box.min.x, Math.min(pos.x, box.max.x));
+    const cy = Math.max(box.min.y, Math.min(pos.y, box.max.y));
+    const cz = Math.max(box.min.z, Math.min(pos.z, box.max.z));
+    const dx = pos.x - cx, dy = pos.y - cy, dz = pos.z - cz;
+    if (dx * dx + dy * dy + dz * dz < radius * radius) {
+      return { box, closest: new THREE.Vector3(cx, cy, cz) };
+    }
+  }
+  return null;
+}
+
+function resolveCollision(pos, velocity, radius) {
+  const hit = checkBoxCollision(pos, radius);
+  if (hit) {
+    const normal = new THREE.Vector3().subVectors(pos, hit.closest);
+    const dist = normal.length();
+    if (dist < 0.01) { normal.set(0, 1, 0); }
+    else { normal.divideScalar(dist); }
+    // Push out
+    pos.add(normal.clone().multiplyScalar(radius - dist + 1));
+    // Reflect velocity
+    const vDotN = velocity.dot(normal);
+    if (vDotN < 0) {
+      velocity.sub(normal.clone().multiplyScalar(vDotN * 1.2));
+    }
+  }
+}
+
+function raycastLevel(origin, dir, maxDist) {
+  // Simple ray vs AABB test, returns distance to nearest hit (or maxDist)
+  let nearest = maxDist;
+  for (const box of game.levelBoxes) {
+    const tmin = new THREE.Vector3(), tmax = new THREE.Vector3();
+    const invD = new THREE.Vector3(1/dir.x, 1/dir.y, 1/dir.z);
+    const t1 = new THREE.Vector3().subVectors(box.min, origin).multiply(invD);
+    const t2 = new THREE.Vector3().subVectors(box.max, origin).multiply(invD);
+    tmin.set(Math.min(t1.x, t2.x), Math.min(t1.y, t2.y), Math.min(t1.z, t2.z));
+    tmax.set(Math.max(t1.x, t2.x), Math.max(t1.y, t2.y), Math.max(t1.z, t2.z));
+    const enter = Math.max(tmin.x, tmin.y, tmin.z);
+    const exit = Math.min(tmax.x, tmax.y, tmax.z);
+    if (enter < exit && enter > 0 && enter < nearest) {
+      nearest = enter;
+    }
+  }
+  return nearest;
+}
+
+// ---- SHIP MESH CREATION ----
+
+function createShipMesh(chassisData, teamColor) {
+  const group = new THREE.Group();
+  const w = chassisData.hullWidth * 0.5;
+  const h = chassisData.hullHeight * 0.5;
+  const l = chassisData.hullLength * 0.5;
+
+  // Cartoon-style ship: bold colors, toon shading, thick outlines
+  const hullGeo = new THREE.BoxGeometry(w * 2, h * 1.2, l * 2.4);
+  const hullMat = new THREE.MeshToonMaterial({ color: teamColor });
+  const hull = new THREE.Mesh(hullGeo, hullMat);
+  group.add(hull);
+  // Hull outline
+  const hullOutline = new THREE.LineSegments(new THREE.EdgesGeometry(hullGeo), new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 }));
+  group.add(hullOutline);
+
+  const cockpitGeo = new THREE.BoxGeometry(w * 0.8, h * 0.8, l * 0.6);
+  const cockpitMat = new THREE.MeshToonMaterial({ color: 0x3366aa });
+  const cockpit = new THREE.Mesh(cockpitGeo, cockpitMat);
+  cockpit.position.set(0, h * 0.6, -l * 0.4);
+  group.add(cockpit);
+  const cockpitOutline = new THREE.LineSegments(new THREE.EdgesGeometry(cockpitGeo), new THREE.LineBasicMaterial({ color: 0x000000 }));
+  cockpitOutline.position.copy(cockpit.position);
+  group.add(cockpitOutline);
+
+  const engineGeo = new THREE.BoxGeometry(w * 1.4, h * 0.6, l * 0.3);
+  const engineMat = new THREE.MeshBasicMaterial({ color: 0x22aaff, transparent: true, opacity: 0.8 });
+  const engine = new THREE.Mesh(engineGeo, engineMat);
+  engine.position.set(0, 0, l * 1.1);
+  group.add(engine);
+
+  const wingGeo = new THREE.BoxGeometry(w * 2.5, h * 0.2, l * 1.2);
+  const wingMat = new THREE.MeshToonMaterial({ color: teamColor });
+  const wingL = new THREE.Mesh(wingGeo, wingMat);
+  wingL.position.set(-w * 1.2, 0, l * 0.2);
+  group.add(wingL);
+  const wingOutlineL = new THREE.LineSegments(new THREE.EdgesGeometry(wingGeo), new THREE.LineBasicMaterial({ color: 0x000000 }));
+  wingOutlineL.position.copy(wingL.position);
+  group.add(wingOutlineL);
+  const wingR = wingL.clone();
+  wingR.position.set(w * 1.2, 0, l * 0.2);
+  group.add(wingR);
+
+  const shieldGeo = new THREE.SphereGeometry(Math.max(w, l) * 2, 16, 12);
+  const shieldMat = new THREE.MeshBasicMaterial({ color: 0x44ccff, transparent: true, opacity: 0, side: THREE.DoubleSide });
+  const shield = new THREE.Mesh(shieldGeo, shieldMat);
+  shield.name = 'shield';
+  group.add(shield);
+
+  group.userData = { engineMesh: engine, shieldMesh: shield };
+  return group;
+}
+
+// ---- BOT AI ----
+
+class Bot {
+  constructor(loadoutKey, team, id) {
+    const loadout = LOADOUTS[loadoutKey];
+    const chassisData = CHASSIS[loadout.chassis];
+    this.id = id;
+    this.loadoutKey = loadoutKey;
+    this.loadout = loadout;
+    this.chassis = chassisData;
+    this.team = team;
+    this.health = chassisData.maxHealth;
+    this.maxHealth = chassisData.maxHealth;
+    this.shield = chassisData.maxShield;
+    this.maxShield = chassisData.maxShield;
+    this.alive = true;
+    this.position = new THREE.Vector3(
+      (Math.random() - 0.5) * 3000,
+      (Math.random() - 0.5) * 1000,
+      (Math.random() - 0.5) * 3000
+    );
+    this.velocity = new THREE.Vector3();
+    this.targetDir = new THREE.Vector3(0, 0, -1);
+    this.fireTimer = 0;
+    this.shieldRegenDelay = 0;
+    this.spawnProtection = LSS.SPAWN_PROTECTION;
+    this.doomed = false;
+    this.doomTimer = 0;
+    this.coreMeter = 0;
+
+    const teamColor = team === LSS.TEAM_FLEET_A ? 0xff4444 : 0x4488ff;
+    this.mesh = createShipMesh(chassisData, teamColor);
+    this.mesh.position.copy(this.position);
+    this.mesh.userData.bot = this;
+    scene.add(this.mesh);
+
+    this.aiTarget = null;
+    this.aiTimer = 0;
+    this.aiWanderDir = new THREE.Vector3(Math.random()-0.5, Math.random()-0.5, Math.random()-0.5).normalize();
+  }
+
+  update(dt) {
+    if (!this.alive) return;
+
+    this.spawnProtection = Math.max(0, this.spawnProtection - dt);
+
+    // Shield does NOT regen naturally; only via stasis fields and executions
+
+    // Doomed timer
+    if (this.doomed) {
+      this.doomTimer -= dt;
+      if (this.doomTimer <= 0) { this.die(null); return; }
+    }
+
+    // AI: find target
+    this.aiTimer -= dt;
+    if (this.aiTimer <= 0) {
+      this.aiTimer = 1 + Math.random() * 2;
+      this.findTarget();
+      this.aiWanderDir.set(Math.random()-0.5, Math.random()-0.5, Math.random()-0.5).normalize();
+    }
+
+    let moveDir = this.aiWanderDir.clone();
+    if (this.aiTarget) {
+      const toTarget = new THREE.Vector3().subVectors(this.aiTarget, this.position);
+      const dist = toTarget.length();
+      if (dist > 100) moveDir = toTarget.normalize();
+    }
+
+    this.targetDir.lerp(moveDir, dt * 2);
+    this.targetDir.normalize();
+
+    // Arc slow effect (from RONIN Arc Wave)
+    if (this.arcSlowTimer > 0) {
+      this.arcSlowTimer -= dt;
+      // Slowed: reduce acceleration significantly
+      const accel = this.targetDir.clone().multiplyScalar(this.chassis.acceleration * dt * 0.3);
+      this.velocity.add(accel);
+    } else {
+      const accel = this.targetDir.clone().multiplyScalar(this.chassis.acceleration * dt);
+      this.velocity.add(accel);
+    }
+
+    const speed = this.velocity.length();
+    const maxSpd = this.arcSlowTimer > 0 ? this.chassis.flightSpeed * 0.3 : this.chassis.flightSpeed;
+    if (speed > maxSpd) {
+      this.velocity.multiplyScalar(maxSpd / speed);
+    }
+    this.velocity.multiplyScalar(1 - this.chassis.deceleration * dt / Math.max(speed, 1));
+
+    this.position.add(this.velocity.clone().multiplyScalar(dt));
+
+    // Collision with level geometry
+    resolveCollision(this.position, this.velocity, this.chassis.hullLength * 0.5);
+
+    // Boundary clamp
+    const s = LSS.ARENA_SIZE * 0.9;
+    this.position.clamp(new THREE.Vector3(-s,-s,-s), new THREE.Vector3(s,s,s));
+
+    this.mesh.position.copy(this.position);
+    if (speed > 1) {
+      const lookAt = this.position.clone().add(this.targetDir);
+      this.mesh.lookAt(lookAt);
+    }
+
+    // AI: fire at player
+    this.fireTimer -= dt;
+    if (this.fireTimer <= 0 && game.state === 'playing') {
+      const toPlayer = new THREE.Vector3().subVectors(player.position, this.position);
+      const distToPlayer = toPlayer.length();
+      if (distToPlayer < this.loadout.weapon.range && player.shipState !== 'dead') {
+        const dot = toPlayer.normalize().dot(this.targetDir);
+        if (dot > 0.7) {
+          this.fireAtPlayer(toPlayer, distToPlayer);
+          this.fireTimer = this.loadout.weapon.fireRate * (1 + Math.random() * 0.5);
+        }
+      }
+    }
+
+    this.coreMeter = Math.min(100, this.coreMeter + dt * 1.5);
+  }
+
+  findTarget() {
+    if (player.shipState !== 'dead' && player.team !== this.team) {
+      this.aiTarget = player.position.clone();
+    } else {
+      this.aiTarget = new THREE.Vector3(
+        (Math.random() - 0.5) * 3000,
+        (Math.random() - 0.5) * 1000,
+        (Math.random() - 0.5) * 3000
+      );
+    }
+  }
+
+  fireAtPlayer(dir, dist) {
+    if (player.shipState === 'dead') return;
+    const weapon = this.loadout.weapon;
+    // Distance-based accuracy: better up close, worse at range
+    const rangeRatio = Math.max(0, 1 - dist / weapon.range);
+    const accuracy = 0.25 + rangeRatio * 0.45; // 25%-70% hit chance based on range
+    if (Math.random() > accuracy) return;
+
+    let damage = weapon.damage;
+    if (weapon.mode === 'spread') {
+      // Spread weapons: pellet count scales with accuracy (distance)
+      const hittingPellets = Math.max(1, Math.floor(weapon.pellets * (0.3 + rangeRatio * 0.5)));
+      damage = weapon.damage * hittingPellets;
+    }
+
+    // Bot damage scaling: 60% of full damage (bots are less precise, not nerfed to nothing)
+    damage *= 0.6;
+
+    // Range falloff for hitscan (TF2 style: full damage up close, 70% at max range)
+    if (weapon.mode === 'hitscan') {
+      const falloff = 0.7 + rangeRatio * 0.3;
+      damage *= falloff;
+    }
+
+    playerTakeDamage(damage, this);
+    // Bot core meter charges from dealing damage
+    this.coreMeter = Math.min(100, this.coreMeter + damage / 100);
+  }
+
+  takeDamage(amount, attacker) {
+    if (!this.alive || this.spawnProtection > 0) return 0;
+
+    if (this.shield > 0) {
+      if (amount <= this.shield) { this.shield -= amount; }
+      else { const overflow = amount - this.shield; this.shield = 0; this.health -= overflow; }
+    } else {
+      this.health -= amount;
+    }
+
+    // Flash shield
+    const shieldMesh = this.mesh.userData.shieldMesh;
+    if (shieldMesh && this.shield > 0) {
+      shieldMesh.material.opacity = 0.3;
+      setTimeout(() => { if (shieldMesh) shieldMesh.material.opacity = 0; }, 150);
+    }
+
+    if (!this.doomed && this.health > 0 && this.health / this.maxHealth <= LSS.DOOMED_HEALTH_PCT) {
+      this.doomed = true;
+      this.doomTimer = LSS.DOOMED_TIMER;
+    }
+
+    if (this.health <= 0) { this.die(attacker); }
+    return amount;
+  }
+
+  die(attacker) {
+    this.alive = false;
+    this.health = 0;
+    scene.remove(this.mesh);
+    spawnExplosion(this.position, this.chassis.hullLength);
+    if (attacker === 'player') {
+      player.kills++;
+      player.coreMeter = Math.min(100, player.coreMeter + 15);
+      addKillFeed('You', this.loadout.name);
+      showKillMarker();
+    }
+  }
+
+  destroy() { if (this.mesh && this.mesh.parent) scene.remove(this.mesh); }
+}
+
+// ---- PROJECTILE SYSTEM ----
+
+class Projectile {
+  constructor(origin, velocity, damage, splash, owner, color) {
+    this.position = origin.clone();
+    this.velocity = velocity.clone();
+    this.damage = damage;
+    this.splash = splash;
+    this.owner = owner;
+    this.alive = true;
+    this.lifetime = 5;
+    this.age = 0;
+
+    const geo = new THREE.SphereGeometry(3, 6, 4);
+    const mat = new THREE.MeshBasicMaterial({ color: color || 0xffaa00 });
+    this.mesh = new THREE.Mesh(geo, mat);
+    this.mesh.position.copy(origin);
+    scene.add(this.mesh);
+
+    const trailGeo = new THREE.BufferGeometry();
+    const trailPos = new Float32Array(6);
+    trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPos, 3));
+    const trailMat = new THREE.LineBasicMaterial({ color: color || 0xffaa00, transparent: true, opacity: 0.5 });
+    this.trail = new THREE.Line(trailGeo, trailMat);
+    scene.add(this.trail);
+  }
+
+  update(dt) {
+    if (!this.alive) return;
+    this.age += dt;
+    if (this.age > this.lifetime) { this.destroy(); return; }
+
+    // Tracking projectiles (TONE Tracker Rockets) steer toward target
+    if (this.tracking && this.trackTarget && this.trackTarget.alive) {
+      const toTarget = new THREE.Vector3().subVectors(this.trackTarget.position, this.position).normalize();
+      const speed = this.velocity.length();
+      const turnRate = 3.0; // radians per second of steering
+      this.velocity.lerp(toTarget.multiplyScalar(speed), turnRate * dt);
+      this.velocity.normalize().multiplyScalar(speed);
+    }
+
+    const prevPos = this.position.clone();
+    this.position.add(this.velocity.clone().multiplyScalar(dt));
+    this.mesh.position.copy(this.position);
+
+    const positions = this.trail.geometry.attributes.position.array;
+    positions[0] = prevPos.x; positions[1] = prevPos.y; positions[2] = prevPos.z;
+    positions[3] = this.position.x; positions[4] = this.position.y; positions[5] = this.position.z;
+    this.trail.geometry.attributes.position.needsUpdate = true;
+
+    // Check level collision
+    const levelHit = checkBoxCollision(this.position, 5);
+    if (levelHit) {
+      if (this.isCluster) this.spawnClusterChildren();
+      if (this.splash > 0) this.splashDamage();
+      this.destroy();
+      return;
+    }
+
+    if (this.owner === 'player') {
+      for (const bot of game.entities) {
+        if (!bot.alive || bot.team === player.team) continue;
+        const dist = this.position.distanceTo(bot.position);
+        if (dist < bot.chassis.hullLength * 0.8) {
+          const dealt = bot.takeDamage(this.damage, 'player');
+          if (dealt > 0) {
+            player.damageDealt += dealt;
+            player.coreMeter = Math.min(100, player.coreMeter + dealt / 100);
+            showHitMarker();
+            spawnImpactSparks(this.position, 5);
+          }
+          // TONE 40mm Tracker Cannon: weapon hits build lock marks
+          if (player.loadoutKey === 'TONE' && !this.isArcWave && !this.isCluster) {
+            player.toneLocks[bot.id] = Math.min(3, (player.toneLocks[bot.id] || 0) + 1);
+            if (player.toneLocks[bot.id] >= 3) player.toneLockedTarget = bot;
+          }
+          // Arc Wave: apply slow effect to hit targets
+          if (this.isArcWave && bot.velocity) {
+            bot.velocity.multiplyScalar(0.3); // 70% speed reduction
+            bot.arcSlowTimer = 2.0; // slowed for 2 seconds
+          }
+          if (!bot.alive) showKillMarker();
+          // Cluster Missile: spawn child projectiles on impact
+          if (this.isCluster) this.spawnClusterChildren();
+          if (this.splash > 0) this.splashDamage();
+          this.destroy();
+          return;
+        }
+      }
+    } else if (this.owner !== 'player' && player.shipState !== 'dead') {
+      const dist = this.position.distanceTo(player.position);
+      if (dist < player.chassis.hullLength * 0.8) {
+        playerTakeDamage(this.damage, this.owner);
+        if (this.isCluster) this.spawnClusterChildren();
+        this.destroy();
+        return;
+      }
+    }
+
+    const s = LSS.ARENA_SIZE;
+    if (Math.abs(this.position.x) > s || Math.abs(this.position.y) > s || Math.abs(this.position.z) > s) {
+      this.destroy();
+    }
+  }
+
+  spawnClusterChildren() {
+    // NORTHSTAR Cluster Missile: creates sustained explosion zone on impact
+    const dmgPerSec = this.clusterDmg || 80;
+    const duration = this.clusterDuration || 3;
+    game.worldEffects.push({
+      type: 'cluster', position: this.position.clone(),
+      timer: duration, dmgPerSec: dmgPerSec, radius: 250,
+      owner: this.owner, team: player.team, fxTimer: 0,
+    });
+    spawnExplosion(this.position, 25);
+  }
+
+  splashDamage() {
+    for (const bot of game.entities) {
+      if (!bot.alive || bot.team === player.team) continue;
+      const dist = this.position.distanceTo(bot.position);
+      if (dist < this.splash && dist > 0) {
+        const falloff = 1 - dist / this.splash;
+        const dealt = bot.takeDamage(this.damage * 0.75 * falloff, 'player');
+        if (dealt > 0) {
+          player.damageDealt += dealt;
+          player.coreMeter = Math.min(100, player.coreMeter + dealt / 100);
+          showHitMarker();
+        }
+      }
+    }
+  }
+
+  destroy() {
+    this.alive = false;
+    if (this.mesh.parent) scene.remove(this.mesh);
+    if (this.trail.parent) scene.remove(this.trail);
+    spawnExplosion(this.position, 15);
+  }
+}
+
+// ---- EFFECTS ----
+
+function spawnExplosion(pos, size) {
+  const geo = new THREE.SphereGeometry(size || 20, 8, 6);
+  const mat = new THREE.MeshBasicMaterial({ color: 0xff8800, transparent: true, opacity: 0.8 });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.copy(pos);
+  scene.add(mesh);
+  game.effects.push({ mesh, lifetime: 0.4, age: 0, type: 'explosion', maxSize: size * 3 });
+}
+
+function spawnTracer(from, to, color) {
+  color = color || 0xffff00;
+  // Bright visible beam (cylinder between two points)
+  const dir = new THREE.Vector3().subVectors(to, from);
+  const len = dir.length();
+  if (len < 1) return;
+  const mid = new THREE.Vector3().addVectors(from, to).multiplyScalar(0.5);
+  const beamGeo = new THREE.CylinderGeometry(1.5, 1.5, len, 4, 1);
+  beamGeo.rotateX(Math.PI / 2);
+  const beamMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
+  const beam = new THREE.Mesh(beamGeo, beamMat);
+  beam.position.copy(mid);
+  beam.lookAt(to);
+  scene.add(beam);
+  game.effects.push({ mesh: beam, lifetime: 0.08, age: 0, type: 'tracer' });
+  // Glow line on top (wider, softer)
+  const glowGeo = new THREE.CylinderGeometry(4, 4, len, 4, 1);
+  glowGeo.rotateX(Math.PI / 2);
+  const glowMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending });
+  const glow = new THREE.Mesh(glowGeo, glowMat);
+  glow.position.copy(mid);
+  glow.lookAt(to);
+  scene.add(glow);
+  game.effects.push({ mesh: glow, lifetime: 0.12, age: 0, type: 'tracer' });
+}
+
+function updateParticles(dt) {
+  for (let i = game.particles.length - 1; i >= 0; i--) {
+    const p = game.particles[i];
+    p.life -= dt;
+    if (p.life <= 0) {
+      if (p.mesh) { scene.remove(p.mesh); p.mesh.material.dispose(); p.mesh.geometry.dispose(); }
+      game.particles.splice(i, 1);
+      continue;
+    }
+    p.position.x += p.velocity.x * dt;
+    p.position.y += p.velocity.y * dt;
+    p.position.z += p.velocity.z * dt;
+    p.velocity.multiplyScalar(0.95); // drag on particles
+    const alpha = p.life / p.maxLife;
+    if (!p.mesh) {
+      const mat = new THREE.MeshBasicMaterial({ color: p.color, transparent: true, opacity: alpha, blending: THREE.AdditiveBlending });
+      p.mesh = new THREE.Mesh(new THREE.SphereGeometry(p.size, 4, 3), mat);
+      scene.add(p.mesh);
+    }
+    p.mesh.position.copy(p.position);
+    p.mesh.material.opacity = alpha;
+    p.mesh.scale.setScalar(0.5 + alpha * 0.5);
+  }
+}
+
+function updateEffects(dt) {
+  for (let i = game.effects.length - 1; i >= 0; i--) {
+    const e = game.effects[i];
+    e.age += dt;
+    if (e.age >= e.lifetime) {
+      scene.remove(e.mesh);
+      game.effects.splice(i, 1);
+      continue;
+    }
+    const t = e.age / e.lifetime;
+    if (e.type === 'explosion') {
+      const s = 1 + t * 2;
+      e.mesh.scale.set(s, s, s);
+      e.mesh.material.opacity = 0.8 * (1 - t);
+    } else if (e.type === 'tracer') {
+      e.mesh.material.opacity = 0.8 * (1 - t);
+    } else if (e.type === 'spark' && e.vel) {
+      e.mesh.position.add(e.vel.clone().multiplyScalar(game.deltaTime));
+      e.vel.multiplyScalar(0.95);
+      e.mesh.material.opacity = 1 - t;
+      const s = 1 - t * 0.5;
+      e.mesh.scale.set(s, s, s);
+    }
+  }
+}
+
+function showHitMarker() {
+  const el = document.getElementById('hit-marker');
+  el.classList.remove('active');
+  void el.offsetWidth;
+  el.classList.add('active');
+}
+
+function showKillMarker() {
+  const el = document.getElementById('hit-marker-kill');
+  el.classList.remove('active');
+  void el.offsetWidth;
+  el.classList.add('active');
+}
+
+// Spawn impact sparks at a hit location (small fast-moving particles)
+function spawnImpactSparks(pos, count) {
+  count = count || 6;
+  for (let i = 0; i < count; i++) {
+    const geo = new THREE.SphereGeometry(1.5, 4, 3);
+    const brightness = 0.7 + Math.random() * 0.3;
+    const mat = new THREE.MeshBasicMaterial({ color: new THREE.Color(brightness, brightness * 0.7, brightness * 0.2), transparent: true, opacity: 1 });
+    const spark = new THREE.Mesh(geo, mat);
+    spark.position.copy(pos);
+    scene.add(spark);
+    const vel = new THREE.Vector3((Math.random()-0.5)*400, (Math.random()-0.5)*400, (Math.random()-0.5)*400);
+    game.effects.push({ mesh: spark, lifetime: 0.3 + Math.random() * 0.2, age: 0, type: 'spark', vel });
+  }
+}
+
+// ---- PLAYER FUNCTIONS ----
+
+function selectLoadout(key) {
+  const loadout = LOADOUTS[key];
+  const ch = CHASSIS[loadout.chassis];
+
+  player.loadout = loadout;
+  player.loadoutKey = key;
+  player.chassis = ch;
+  player.health = ch.maxHealth;
+  player.maxHealth = ch.maxHealth;
+  player.shield = ch.maxShield;
+  player.maxShield = ch.maxShield;
+  player.coreMeter = 0;
+  player.shipState = 'spawning';
+  player.spawnProtection = LSS.SPAWN_PROTECTION;
+  player.doomed = false;
+  player.doomTimer = 0;
+  player.dashCharges = ch.maxDashes;
+  player.maxDashes = ch.maxDashes;
+  player.dashCooldownTimer = 0;
+  player.dashActive = false;
+  player.weapon = loadout.weapon;
+  player.clipAmmo = loadout.weapon.clipSize;
+  player.maxClip = loadout.weapon.clipSize;
+  player.fireTimer = 0;
+  player.reloading = false;
+  player.spinupTimer = 0;
+  player.spunUp = false;
+  player.abilities = loadout.abilities;
+  player.abilityCooldowns = [0, 0, 0];
+  player.abilityActive = [false, false, false];
+  player.abilityTimers = [0, 0, 0];
+  player.coreReady = false;
+  player.coreActive = false;
+  player.coreTimer = 0;
+  player.velocity = new THREE.Vector3(0, 0, 0);
+  player.position = new THREE.Vector3(0, 0, 0); // placeholder; set properly after map build
+  player.euler = new THREE.Euler(0, 0, 0, 'YXZ');
+  player.kills = 0;
+  player.deaths = 0;
+  player.damageDealt = 0;
+  player.shieldRegenDelay = 0;
+  // Reset titan-specific state
+  player.ionEnergy = 1000;
+  player.vortexStored = 0;
+  player.toneLocks = {};
+  player.toneLockedTarget = null;
+  player.legionMode = 'close';
+  player.monarchTier = 0;
+  player.monarchDmgMult = 1.0;
+  player.monarchCooldownMult = 1.0;
+  player.monarchShieldBonus = 0;
+  player.phaseInvuln = false;
+  player.phaseInvulnTimer = 0;
+  player.afterburnerActive = false;
+  player.afterburnerSpeedMult = 1.0;
+  player.railgunCharge = 0;
+
+  if (player.mesh) scene.remove(player.mesh);
+  player.mesh = createShipMesh(ch, 0xff4444);
+  player.mesh.visible = false;
+  scene.add(player.mesh);
+
+  document.getElementById('ship-name').textContent = loadout.name;
+  document.getElementById('ship-class').textContent = loadout.className;
+  document.getElementById('weapon-name').textContent = loadout.weapon.name;
+
+  buildAbilityHUD();
+  document.getElementById('ship-select').style.display = 'none';
+  renderer.domElement.requestPointerLock();
+
+  // Load map from rotation (handcrafted maps + procedural)
+  shuffleMapRotation();
+  const level = getNextMap();
+  buildRoomGraphLevel(level);
+
+  // Place player inside the letter corridors (Fleet A territory)
+  player.position.copy(getValidSpawnPoint('A'));
+
+  // Reset stasis field state
+  game.stasisFields.forEach(f => f.destroy());
+  game.stasisFields = [];
+  game.stasisSpawnTimer = 30;
+  game.stasisFirstBatch = true;
+  game.playerInStasis = false;
+  game.playerStasisTimer = 0;
+
+  spawnBots();
+  game.state = 'warmup';
+  game.warmupTimer = LSS.WARMUP_TIME;
+  game.roundTimer = LSS.ROUND_TIME;
+  game.scoreA = 0;
+  game.scoreB = 0;
+  game.currentRound = 1;
+
+  console.log('Map: ' + game.mapWord);
+}
+
+function spawnBots() {
+  for (const bot of game.entities) bot.destroy();
+  game.entities = [];
+
+  const enemyLoadouts = ['SCORCH', 'RONIN', 'TONE'];
+  for (let i = 0; i < 3; i++) {
+    const bot = new Bot(enemyLoadouts[i], LSS.TEAM_FLEET_B, i + 1);
+    const sp = getValidSpawnPoint('B');
+    bot.position.copy(sp);
+    game.entities.push(bot);
+  }
+
+  const friendlyLoadouts = ['NORTHSTAR', 'LEGION'];
+  for (let i = 0; i < 2; i++) {
+    const bot = new Bot(friendlyLoadouts[i], LSS.TEAM_FLEET_A, i + 10);
+    const sp = getValidSpawnPoint('A');
+    bot.position.copy(sp);
+    game.entities.push(bot);
+  }
+}
+
+function playerTakeDamage(amount, attacker) {
+  if (player.shipState === 'dead' || player.spawnProtection > 0) return;
+  // Phase Dash invulnerability (RONIN)
+  if (player.phaseInvuln) return;
+  player.lastDamageTime = game.time;
+
+  // Defensive ability damage modifiers (from TF2 SDK)
+  // Sword Block (RONIN): 50% damage reduction while active
+  if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Sword Block') {
+    amount *= 0.5;
+  }
+  // Gun Shield (LEGION): 60% frontal damage reduction while active
+  if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Gun Shield') {
+    if (attacker && attacker.position) {
+      const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+      const toAttacker = new THREE.Vector3().subVectors(attacker.position, player.position).normalize();
+      if (forward.dot(toAttacker) > 0.3) {
+        amount *= 0.4; // 60% reduction from frontal attacks
+      }
+    }
+  }
+  // Thermal Shield (SCORCH): absorbs 70% of melee-range damage, reflects some back
+  if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Thermal Shield') {
+    if (attacker && attacker.position) {
+      const dist = player.position.distanceTo(attacker.position);
+      if (dist < 500) {
+        const absorbed = amount * 0.7;
+        amount *= 0.3;
+        // Reflect damage back to attacker
+        if (attacker.takeDamage) {
+          attacker.takeDamage(absorbed * 0.5, 'player');
+          player.damageDealt += absorbed * 0.5;
+        }
+      }
+    }
+  }
+  // Vortex Shield (ION): absorbs projectile damage, stores it for burst release
+  if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Vortex Shield') {
+    const stored = Math.min(amount, 500 - (player.vortexStored || 0));
+    player.vortexStored = (player.vortexStored || 0) + stored;
+    amount -= stored;
+    if (amount <= 0) return; // fully absorbed
+  }
+  // Particle Wall (TONE): blocks frontal damage while wall is active
+  if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Particle Wall') {
+    if (attacker && attacker.position) {
+      const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+      const toAttacker = new THREE.Vector3().subVectors(attacker.position, player.position).normalize();
+      if (forward.dot(toAttacker) > 0.2) {
+        amount *= 0.15; // wall blocks 85% of frontal damage
+      }
+    }
+  }
+
+  // Screen shake proportional to damage
+  const shakeAmt = Math.min(8, amount / 150);
+  triggerScreenShake(shakeAmt);
+
+  // Damage direction indicator
+  if (attacker && attacker.position) {
+    showDamageIndicator(attacker.position);
+  }
+
+  if (player.shield > 0) {
+    if (amount <= player.shield) { player.shield -= amount; return; }
+    else { amount -= player.shield; player.shield = 0; }
+  }
+  player.health -= amount;
+
+  // Shield does NOT regen in doomed state
+  if (!player.doomed && player.health > 0 && player.health / player.maxHealth <= LSS.DOOMED_HEALTH_PCT) {
+    player.doomed = true;
+    player.doomTimer = LSS.DOOMED_TIMER;
+    player.shipState = 'doomed';
+  }
+  if (player.health <= 0) playerDie(attacker);
+}
+
+function playerDie(attacker) {
+  player.health = 0;
+  player.shipState = 'dead';
+  player.deaths++;
+  spawnExplosion(player.position, player.chassis.hullLength);
+  if (attacker && attacker.loadout) addKillFeed(attacker.loadout.name, 'You');
+  setTimeout(() => {
+    if (game.state === 'playing' || game.state === 'warmup') respawnPlayer();
+  }, 3000);
+}
+
+function respawnPlayer() {
+  if (!player.loadout) return;
+  const ch = player.chassis;
+  player.health = ch.maxHealth;
+  player.shield = ch.maxShield;
+  player.shipState = 'spawning';
+  player.spawnProtection = LSS.SPAWN_PROTECTION;
+  player.doomed = false;
+  player.doomTimer = 0;
+  player.dashCharges = ch.maxDashes;
+  player.clipAmmo = player.maxClip;
+  player.reloading = false;
+  player.velocity.set(0, 0, 0);
+  // Reset ability state
+  player.toneLocks = {};
+  player.toneLockedTarget = null;
+  player.legionMode = 'close';
+  player.phaseInvuln = false;
+  player.phaseInvulnTimer = 0;
+  player.afterburnerActive = false;
+  player.afterburnerSpeedMult = 1.0;
+  player.railgunCharge = 0;
+  player.vortexStored = 0;
+  player.abilityActive = [false, false, false];
+  player.abilityTimers = [0, 0, 0];
+  player.abilityCooldowns = [0, 0, 0];
+  player.coreActive = false;
+  player.coreTimer = 0;
+  // Monarch upgrades persist across respawns
+  // Spawn at a valid corridor position near Fleet A's territory
+  const sp = getValidSpawnPoint('A');
+  player.position.copy(sp);
+}
+
+// ---- PLAYER MOVEMENT ----
+
+function updatePlayerMovement(dt) {
+  if (player.shipState === 'dead' || !player.chassis) return;
+  // Immobilized during stasis field recharge
+  if (game.playerInStasis) {
+    // Still allow looking around but no movement
+    if (input.locked) {
+      player.euler.y -= input.mouseDX * input.sensitivity;
+      player.euler.x -= input.mouseDY * input.sensitivity;
+    }
+    if (input.gpConnected) {
+      player.euler.y -= input.gpLookX * input.gpLookSensitivity * dt;
+      player.euler.x -= input.gpLookY * input.gpLookSensitivity * dt;
+    }
+    player.euler.x = Math.max(-Math.PI * 0.45, Math.min(Math.PI * 0.45, player.euler.x));
+    input.mouseDX = 0; input.mouseDY = 0;
+    camera.quaternion.setFromEuler(player.euler);
+    camera.position.copy(player.position);
+    return;
+  }
+
+  const ch = player.chassis;
+
+  // Mouse look + gamepad look
+  if (input.locked) {
+    player.euler.y -= input.mouseDX * input.sensitivity;
+    player.euler.x -= input.mouseDY * input.sensitivity;
+  }
+  // Gamepad look (curve already applied in pollGamepad)
+  if (input.gpConnected) {
+    player.euler.y -= input.gpLookX * input.gpLookSensitivity * dt;
+    player.euler.x -= input.gpLookY * input.gpLookSensitivity * dt;
+  }
+  player.euler.x = Math.max(-Math.PI * 0.45, Math.min(Math.PI * 0.45, player.euler.x));
+  input.mouseDX = 0;
+  input.mouseDY = 0;
+
+  camera.quaternion.setFromEuler(player.euler);
+  const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+  const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+  const up = new THREE.Vector3(0, 1, 0);
+
+  // Movement input (keyboard)
+  const moveDir = new THREE.Vector3();
+  if (input.keys['w'] || input.keys['arrowup']) moveDir.add(forward.clone().multiplyScalar(ch.flightSpeed));
+  if (input.keys['s'] || input.keys['arrowdown']) moveDir.add(forward.clone().multiplyScalar(-ch.flightSpeed * 0.6));
+  if (input.keys['a'] || input.keys['arrowleft']) moveDir.add(right.clone().multiplyScalar(-ch.strafeSpeed));
+  if (input.keys['d'] || input.keys['arrowright']) moveDir.add(right.clone().multiplyScalar(ch.strafeSpeed));
+  if (input.keys[' ']) moveDir.add(up.clone().multiplyScalar(ch.verticalSpeed));
+  if (input.keys['control']) moveDir.add(up.clone().multiplyScalar(-ch.verticalSpeed));
+
+  // Gamepad movement (uses configured curve and sensitivity)
+  if (input.gpConnected) {
+    const gpMoveMult = input.gpMoveSensitivity / 10.0;
+    if (Math.abs(input.gpMoveY) > 0.01) {
+      moveDir.add(forward.clone().multiplyScalar(-input.gpMoveY * ch.flightSpeed * gpMoveMult));
+    }
+    if (Math.abs(input.gpMoveX) > 0.01) {
+      moveDir.add(right.clone().multiplyScalar(input.gpMoveX * ch.strafeSpeed * gpMoveMult));
+    }
+    // D-pad up/down for vertical movement
+    if (input.gpMoveUp) moveDir.add(up.clone().multiplyScalar(ch.verticalSpeed));
+    if (input.gpMoveDown) moveDir.add(up.clone().multiplyScalar(-ch.verticalSpeed));
+  }
+
+  // Northstar Afterburner speed boost
+  if (player.afterburnerActive) moveDir.multiplyScalar(player.afterburnerSpeedMult);
+
+  // Acceleration
+  if (moveDir.length() > 0) {
+    const accelDir = moveDir.clone().sub(player.velocity);
+    const accelMag = Math.min(accelDir.length(), ch.acceleration * dt);
+    if (accelMag > 0.01) player.velocity.add(accelDir.normalize().multiplyScalar(accelMag));
+  } else {
+    const speed = player.velocity.length();
+    if (speed > 1) {
+      const drag = Math.min(speed, ch.deceleration * dt);
+      player.velocity.sub(player.velocity.clone().normalize().multiplyScalar(drag));
+    } else {
+      player.velocity.set(0, 0, 0);
+    }
+  }
+
+  // Speed cap
+  const maxSpeed = player.dashActive ? ch.dashSpeed : ch.flightSpeed;
+  if (player.velocity.length() > maxSpeed) {
+    player.velocity.normalize().multiplyScalar(maxSpeed);
+  }
+
+  // Dash update
+  if (player.dashActive) {
+    player.dashTimer -= dt;
+    if (player.dashTimer <= 0) {
+      player.dashActive = false;
+      player.shipState = player.doomed ? 'doomed' : 'flying';
+    }
+  }
+
+  // Dash cooldown regen
+  if (player.dashCooldownTimer > 0) {
+    player.dashCooldownTimer -= dt;
+    if (player.dashCooldownTimer <= 0 && player.dashCharges < ch.maxDashes) {
+      player.dashCharges++;
+      if (player.dashCharges < ch.maxDashes) player.dashCooldownTimer = ch.dashCooldown;
+    }
+  }
+
+  // Spawn protection
+  if (player.spawnProtection > 0) {
+    player.spawnProtection -= dt;
+    if (player.spawnProtection <= 0 && player.shipState === 'spawning') player.shipState = 'flying';
+  }
+
+  // Shield does NOT regen naturally; only via stasis fields and executions
+
+  // Doomed timer
+  if (player.doomed && player.shipState !== 'dead') {
+    player.doomTimer -= dt;
+    if (player.doomTimer <= 0) playerDie(null);
+  }
+
+  // Apply velocity
+  player.position.add(player.velocity.clone().multiplyScalar(dt));
+
+  // Collision with level geometry
+  resolveCollision(player.position, player.velocity, ch.hullLength * 0.4);
+
+  // Boundary clamp + soft push
+  const s = LSS.ARENA_SIZE * 0.9;
+  const softEdge = LSS.ARENA_SIZE * 0.8;
+  ['x', 'y', 'z'].forEach(axis => {
+    if (player.position[axis] > softEdge) {
+      player.velocity[axis] -= (player.position[axis] - softEdge) * 0.5 * dt;
+    } else if (player.position[axis] < -softEdge) {
+      player.velocity[axis] -= (player.position[axis] + softEdge) * 0.5 * dt;
+    }
+  });
+  player.position.clamp(new THREE.Vector3(-s,-s,-s), new THREE.Vector3(s,s,s));
+
+  camera.position.copy(player.position);
+}
+
+// ---- WEAPON FIRING ----
+
+function updateWeapon(dt) {
+  if (player.shipState === 'dead' || !player.weapon) return;
+  const w = player.weapon;
+
+  if (player.reloading) {
+    player.reloadTimer -= dt;
+    if (player.reloadTimer <= 0) {
+      player.clipAmmo = player.maxClip;
+      player.reloading = false;
+      document.getElementById('reload-indicator').style.display = 'none';
+    }
+    return;
+  }
+
+  // ION Vortex Shield: can't shoot while holding it up
+  if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Vortex Shield') {
+    return; // no firing while vortex is active
+  }
+
+  // Northstar Railgun charge: hold alt-fire to charge, release or fire for boosted damage
+  const aiming = input.rightMouseDown || input.gpAltFire;
+  if (player.loadoutKey === 'NORTHSTAR') {
+    if (aiming) {
+      player.railgunCharge = Math.min(1.0, player.railgunCharge + dt / 2.0); // full charge in 2s
+    } else if (!aiming && player.railgunCharge > 0 && player.railgunCharge < 0.05) {
+      player.railgunCharge = 0; // quick tap resets
+    }
+    // Charge decays slowly if not aiming
+    if (!aiming) player.railgunCharge = Math.max(0, player.railgunCharge - dt * 0.3);
+  }
+
+  // Spinup
+  const firing = input.mouseDown || input.gpFire;
+  if (w.spinup > 0 && firing) {
+    if (!player.spunUp) {
+      player.spinupTimer += dt;
+      if (player.spinupTimer >= w.spinup) player.spunUp = true;
+      return;
+    }
+  } else if (w.spinup > 0) {
+    player.spinupTimer = Math.max(0, player.spinupTimer - dt * 2);
+    player.spunUp = false;
+  }
+
+  player.fireTimer -= dt;
+  if (firing && player.fireTimer <= 0) {
+    if (player.clipAmmo <= 0) { startReload(); return; }
+    fireWeapon();
+    player.fireTimer = w.fireRate;
+    player.clipAmmo--;
+    if (player.clipAmmo <= 0 && w.clipSize < 999) startReload();
+  }
+
+  // Manual reload
+  const reloadPressed = input.keys['r'] || (input.gpReload && !input.gpReloadPrev);
+  if (reloadPressed && player.clipAmmo < player.maxClip && !player.reloading && w.clipSize < 999) {
+    startReload();
+  }
+}
+
+function startReload() {
+  if (player.weapon.clipSize >= 999) return;
+  player.reloading = true;
+  player.reloadTimer = 2.0;
+  document.getElementById('reload-indicator').style.display = 'block';
+}
+
+function fireWeapon() {
+  const w = player.weapon;
+  const origin = player.position.clone();
+  const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+
+  if (w.mode === 'hitscan') fireHitscan(origin, forward, w);
+  else if (w.mode === 'projectile') fireProjectile(origin, forward, w);
+  else if (w.mode === 'spread') fireSpread(origin, forward, w);
+
+  // ---- WEAPON FEEDBACK ----
+  // Muzzle flash (bright point light at weapon position, fades fast)
+  const flashPos = origin.clone().add(forward.clone().multiplyScalar(30));
+  const flashColor = w.mode === 'hitscan' ? 0xffdd44 : 0xff8833;
+  const flash = new THREE.PointLight(flashColor, 3.0, 400);
+  flash.position.copy(flashPos);
+  scene.add(flash);
+  game.mapMeshes.push(flash); // track for cleanup
+  const flashStart = performance.now();
+  (function fadeFlash() {
+    const elapsed = (performance.now() - flashStart) / 1000;
+    if (elapsed > 0.08) { scene.remove(flash); return; }
+    flash.intensity = 3.0 * (1 - elapsed / 0.08);
+    requestAnimationFrame(fadeFlash);
+  })();
+
+  // Muzzle flash sprite (visible bright quad)
+  const spriteMat = new THREE.SpriteMaterial({ color: flashColor, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
+  const sprite = new THREE.Sprite(spriteMat);
+  sprite.scale.set(25, 25, 1);
+  sprite.position.copy(flashPos);
+  scene.add(sprite);
+  const spriteStart = performance.now();
+  (function fadeSprite() {
+    const elapsed = (performance.now() - spriteStart) / 1000;
+    if (elapsed > 0.06) { scene.remove(sprite); sprite.material.dispose(); return; }
+    sprite.material.opacity = 0.9 * (1 - elapsed / 0.06);
+    sprite.scale.set(25 + elapsed * 200, 25 + elapsed * 200, 1);
+    requestAnimationFrame(fadeSprite);
+  })();
+
+  // Camera recoil (small pitch kick upward, recovers naturally)
+  const recoilAmount = w.mode === 'spread' ? 0.015 : (w.fireRate > 0.5 ? 0.025 : 0.005);
+  player.euler.x -= recoilAmount;
+
+  // Screen shake (tiny per-shot)
+  triggerScreenShake(w.mode === 'spread' ? 1.5 : (w.fireRate > 0.5 ? 1.0 : 0.3));
+
+  // Muzzle particles (small bright dots ejected forward)
+  for (let i = 0; i < 3; i++) {
+    const pVel = forward.clone().multiplyScalar(300 + Math.random() * 200);
+    pVel.x += (Math.random() - 0.5) * 80;
+    pVel.y += (Math.random() - 0.5) * 80;
+    pVel.z += (Math.random() - 0.5) * 80;
+    game.particles.push({
+      position: flashPos.clone(),
+      velocity: pVel,
+      life: 0.1 + Math.random() * 0.05,
+      maxLife: 0.15,
+      color: flashColor,
+      size: 3 + Math.random() * 3
+    });
+  }
+}
+
+function fireHitscan(origin, dir, w) {
+  // Check level geometry first
+  const levelDist = raycastLevel(origin, dir, w.range);
+  const end = origin.clone().add(dir.clone().multiplyScalar(levelDist));
+  spawnTracer(origin, end, 0xffff44);
+
+  let bestHit = null, bestDist = Infinity;
+  for (const bot of game.entities) {
+    if (!bot.alive || bot.team === player.team) continue;
+    const toBot = new THREE.Vector3().subVectors(bot.position, origin);
+    const proj = toBot.dot(dir);
+    if (proj < 0 || proj > Math.min(w.range, levelDist)) continue;
+    const closest = origin.clone().add(dir.clone().multiplyScalar(proj));
+    const dist = closest.distanceTo(bot.position);
+    if (dist < bot.chassis.hullLength * 0.7 && proj < bestDist) {
+      bestHit = bot;
+      bestDist = proj;
+    }
+  }
+
+  if (bestHit) {
+    // Hitscan range falloff: full damage up close, 70% at max range
+    const hitDist = bestDist;
+    const rangeFalloff = 0.7 + 0.3 * Math.max(0, 1 - hitDist / w.range);
+    let finalDmg = w.damage * rangeFalloff;
+    // Northstar Railgun charge: up to 3x damage at full charge
+    if (player.loadoutKey === 'NORTHSTAR' && player.railgunCharge > 0) {
+      finalDmg *= 1.0 + player.railgunCharge * 2.0; // 1x at 0 charge, 3x at full
+      player.railgunCharge = 0; // consume charge on hit
+    }
+    // Monarch upgrade tier 1: +20% weapon damage
+    if (player.monarchDmgMult > 1) finalDmg *= player.monarchDmgMult;
+
+    const dealt = bestHit.takeDamage(finalDmg, 'player');
+    if (dealt > 0) {
+      player.damageDealt += dealt;
+      player.coreMeter = Math.min(100, player.coreMeter + dealt / 100); // ~1% per 100 dmg
+      showHitMarker();
+    }
+    const hitPoint = bestHit.position.clone().add(dir.clone().multiplyScalar(-20));
+    spawnExplosion(hitPoint, 8);
+    spawnImpactSparks(hitPoint, 4);
+    if (!bestHit.alive) showKillMarker();
+  }
+}
+
+function fireProjectile(origin, dir, w) {
+  const vel = dir.clone().multiplyScalar(w.projSpeed);
+  game.projectiles.push(new Projectile(origin, vel, w.damage, w.splash, 'player', 0xff8800));
+}
+
+function fireSpread(origin, dir, w) {
+  for (let i = 0; i < w.pellets; i++) {
+    const spread = 0.08;
+    const spreadDir = dir.clone();
+    spreadDir.x += (Math.random() - 0.5) * spread;
+    spreadDir.y += (Math.random() - 0.5) * spread;
+    spreadDir.z += (Math.random() - 0.5) * spread;
+    spreadDir.normalize();
+
+    const levelDist = raycastLevel(origin, spreadDir, w.range);
+    const end = origin.clone().add(spreadDir.clone().multiplyScalar(levelDist));
+    spawnTracer(origin, end, 0xffaa44);
+
+    for (const bot of game.entities) {
+      if (!bot.alive || bot.team === player.team) continue;
+      const toBot = new THREE.Vector3().subVectors(bot.position, origin);
+      const proj = toBot.dot(spreadDir);
+      if (proj < 0 || proj > Math.min(w.range, levelDist)) continue;
+      const closest = origin.clone().add(spreadDir.clone().multiplyScalar(proj));
+      if (closest.distanceTo(bot.position) < bot.chassis.hullLength * 0.8) {
+        // Spread damage falloff: significant drop-off at range (shotgun behavior)
+        const rangeFalloff = Math.max(0.3, 1 - (proj / w.range) * 0.7);
+        let finalDmg = w.damage * rangeFalloff;
+        if (player.monarchDmgMult > 1) finalDmg *= player.monarchDmgMult;
+        const dealt = bot.takeDamage(finalDmg, 'player');
+        if (dealt > 0) {
+          player.damageDealt += dealt;
+          player.coreMeter = Math.min(100, player.coreMeter + dealt / 100);
+          showHitMarker();
+          spawnImpactSparks(closest, 3);
+        }
+        break;
+      }
+    }
+  }
+}
+
+// ---- ABILITIES ----
+
+function activateAbility(slot) {
+  if (player.shipState === 'dead' || !player.abilities[slot]) return;
+  if (player.abilityCooldowns[slot] > 0) return;
+
+  const ability = player.abilities[slot];
+
+  // Vortex Shield: can't reactivate if ION energy is depleted
+  if (ability.name === 'Vortex Shield' && player.ionEnergy <= 0) return;
+
+  // Toggle abilities (Sword Block, Gun Shield, Vortex Shield)
+  if (ability.cooldown === 0 && player.abilityActive[slot]) {
+    player.abilityActive[slot] = false;
+    return;
+  }
+
+  player.abilityActive[slot] = true;
+  player.abilityTimers[slot] = ability.duration;
+  executeAbility(slot, ability);
+  if (ability.cooldown > 0) {
+    let cd = ability.cooldown;
+    // Monarch tier 3: 30% cooldown reduction
+    if (player.monarchCooldownMult < 1) cd *= player.monarchCooldownMult;
+    player.abilityCooldowns[slot] = cd;
+  }
+}
+
+function executeAbility(slot, ability) {
+  const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+
+  // ION energy cost check (all ION abilities share one energy pool)
+  const ionEnergyCosts = { 'Laser Shot': 350, 'Vortex Shield': 200, 'Trip Wire': 250 };
+  if (player.loadoutKey === 'ION' && ionEnergyCosts[ability.name]) {
+    if (player.ionEnergy < ionEnergyCosts[ability.name]) return; // not enough energy
+    player.ionEnergy -= ionEnergyCosts[ability.name];
+  }
+
+  // ---- OFFENSIVE ABILITIES ----
+  if (ability.type === 'offensive') {
+    // ION: Laser Shot (concentrated beam, 1200 dmg in a line)
+    if (ability.name === 'Laser Shot') {
+      const range = 2500;
+      const beamEnd = player.position.clone().add(forward.clone().multiplyScalar(range));
+      spawnTracer(player.position, beamEnd, 0xff2200);
+      spawnTracer(player.position.clone().add(new THREE.Vector3(0,3,0)), beamEnd.clone().add(new THREE.Vector3(0,3,0)), 0xff4400);
+      for (const bot of game.entities) {
+        if (!bot.alive || bot.team === player.team) continue;
+        const toBot = new THREE.Vector3().subVectors(bot.position, player.position);
+        const proj = toBot.dot(forward);
+        if (proj < 0 || proj > range) continue;
+        const closest = player.position.clone().add(forward.clone().multiplyScalar(proj));
+        if (closest.distanceTo(bot.position) < bot.chassis.hullLength * 1.0) {
+          const dealt = bot.takeDamage(1200, 'player');
+          if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 100); showHitMarker(); }
+          spawnExplosion(bot.position, 15);
+        }
+      }
+    }
+    // SCORCH: Firewall (persistent ground fire line, 6s duration, 800 dmg/tick)
+    else if (ability.name === 'Firewall') {
+      const wallLen = 800;
+      const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+      const center = player.position.clone().add(forward.clone().multiplyScalar(300));
+      game.worldEffects.push({
+        type: 'firewall', position: center.clone(), direction: right.clone(),
+        length: wallLen, timer: 6, dmgPerSec: 133, owner: 'player', team: player.team,
+      });
+      // Visual: fire line particles
+      for (let t = -wallLen/2; t <= wallLen/2; t += 80) {
+        const pt = center.clone().add(right.clone().multiplyScalar(t));
+        spawnExplosion(pt, 10);
+      }
+    }
+    // NORTHSTAR: Cluster Missile (impact + sustained explosions in area for 3s)
+    else if (ability.name === 'Cluster Missile') {
+      const vel = forward.clone().multiplyScalar(1000);
+      const proj = new Projectile(player.position.clone(), vel, 200, 150, 'player', 0xff6600);
+      proj.isCluster = true; // on impact, creates sustained explosion zone
+      proj.clusterDmg = 80; // DPS of the sustained cluster area
+      proj.clusterDuration = 3; // seconds of sustained explosions
+      game.projectiles.push(proj);
+    }
+    // RONIN: Arc Wave (electric projectile, 500 dmg, slows enemies hit)
+    else if (ability.name === 'Arc Wave') {
+      const vel = forward.clone().multiplyScalar(800);
+      const proj = new Projectile(player.position.clone(), vel, 500, 150, 'player', 0x44aaff);
+      proj.isArcWave = true; // applies slow on hit
+      game.projectiles.push(proj);
+    }
+    // TONE: Tracker Rockets (requires 3 locks from Sonar Lock, fire seeking missiles)
+    else if (ability.name === 'Tracker Rockets') {
+      // Find a target with 3+ locks
+      let target = null;
+      for (const [botId, locks] of Object.entries(player.toneLocks)) {
+        if (locks >= 3) {
+          const bot = game.entities.find(b => b.id == botId && b.alive);
+          if (bot) { target = bot; break; }
+        }
+      }
+      if (target) {
+        // Fire 3 tracking missiles
+        for (let m = 0; m < 3; m++) {
+          const spread = new THREE.Vector3((Math.random()-0.5)*0.2, (Math.random()-0.5)*0.2, 0);
+          const vel = forward.clone().add(spread).normalize().multiplyScalar(900);
+          const proj = new Projectile(player.position.clone(), vel, 200, 80, 'player', 0xffaa00);
+          proj.tracking = true;
+          proj.trackTarget = target;
+          game.projectiles.push(proj);
+        }
+        // Consume locks
+        delete player.toneLocks[target.id];
+        player.toneLockedTarget = null;
+      } else {
+        // No locks: fire unguided salvo
+        for (let m = 0; m < 3; m++) {
+          const spread = new THREE.Vector3((Math.random()-0.5)*0.15, (Math.random()-0.5)*0.15, 0);
+          const vel = forward.clone().add(spread).normalize().multiplyScalar(900);
+          game.projectiles.push(new Projectile(player.position.clone(), vel, 150, 60, 'player', 0xffaa00));
+        }
+      }
+    }
+    // LEGION: Power Shot (mode-dependent: close = knockback AoE, long = line damage)
+    else if (ability.name === 'Power Shot') {
+      if (player.legionMode === 'close') {
+        // Close-range Power Shot: wide cone knockback + damage
+        const range = 1200;
+        for (const bot of game.entities) {
+          if (!bot.alive || bot.team === player.team) continue;
+          const toBot = new THREE.Vector3().subVectors(bot.position, player.position);
+          const dist = toBot.length();
+          if (dist > range) continue;
+          const dot = toBot.normalize().dot(forward);
+          if (dot > 0.3) {
+            const dealt = bot.takeDamage(1100, 'player');
+            if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 100); showHitMarker(); }
+            // Knockback
+            if (bot.velocity) bot.velocity.add(toBot.clone().multiplyScalar(500));
+            spawnExplosion(bot.position, 20);
+          }
+        }
+        spawnTracer(player.position, player.position.clone().add(forward.clone().multiplyScalar(range)), 0xff8800);
+        triggerScreenShake(4);
+      } else {
+        // Long-range Power Shot: precision line damage (pierces through targets)
+        const range = 3500;
+        const end = player.position.clone().add(forward.clone().multiplyScalar(range));
+        spawnTracer(player.position, end, 0xff8800);
+        spawnTracer(player.position.clone().add(new THREE.Vector3(0,2,0)), end.clone().add(new THREE.Vector3(0,2,0)), 0xffaa44);
+        for (const bot of game.entities) {
+          if (!bot.alive || bot.team === player.team) continue;
+          const toBot = new THREE.Vector3().subVectors(bot.position, player.position);
+          const proj = toBot.dot(forward);
+          if (proj < 0 || proj > range) continue;
+          const closest = player.position.clone().add(forward.clone().multiplyScalar(proj));
+          if (closest.distanceTo(bot.position) < bot.chassis.hullLength * 1.0) {
+            const dealt = bot.takeDamage(1100, 'player');
+            if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 100); showHitMarker(); }
+            spawnExplosion(bot.position, 20);
+          }
+        }
+        triggerScreenShake(3);
+      }
+    }
+    // MONARCH: Rocket Salvo (4 rockets, 250 dmg each)
+    else if (ability.name === 'Rocket Salvo') {
+      for (let r = 0; r < 4; r++) {
+        const spread = new THREE.Vector3((Math.random()-0.5)*0.1, (Math.random()-0.5)*0.1, 0);
+        const vel = forward.clone().add(spread).normalize().multiplyScalar(800);
+        game.projectiles.push(new Projectile(player.position.clone(), vel, 250, 100, 'player', 0xff4400));
+      }
+    }
+  }
+
+  // ---- DEFENSIVE ABILITIES ----
+  else if (ability.type === 'defensive') {
+    // Most defensive abilities are handled passively in playerTakeDamage
+    // Energy Siphon (MONARCH): actively drains enemy shields and heals player
+    if (ability.name === 'Energy Siphon') {
+      let bestBot = null, bestDist = Infinity;
+      for (const bot of game.entities) {
+        if (!bot.alive || bot.team === player.team) continue;
+        const dist = player.position.distanceTo(bot.position);
+        const toBot = new THREE.Vector3().subVectors(bot.position, player.position).normalize();
+        if (dist < 1500 && forward.dot(toBot) > 0.5 && dist < bestDist) {
+          bestBot = bot; bestDist = dist;
+        }
+      }
+      if (bestBot) {
+        const drainAmt = Math.min(bestBot.shield || 0, 400);
+        if (drainAmt > 0 && bestBot.takeDamage) {
+          bestBot.shield = Math.max(0, (bestBot.shield || 0) - drainAmt);
+        }
+        // Slow the target (per wiki: Energy Siphon slows enemies)
+        if (bestBot.velocity) bestBot.velocity.multiplyScalar(0.4);
+        bestBot.arcSlowTimer = Math.max(bestBot.arcSlowTimer || 0, 2.0); // 2s slow
+        // Heal player (capped at max shield since shields don't regen naturally)
+        player.shield = Math.min(player.maxShield, player.shield + 400);
+        spawnTracer(player.position, bestBot.position, 0x44ff88);
+        showHitMarker();
+      }
+    }
+    // Afterburner (NORTHSTAR): speed boost for the duration
+    else if (ability.name === 'Afterburner') {
+      player.afterburnerActive = true;
+      player.afterburnerSpeedMult = 1.5; // 50% speed boost
+    }
+    // Sword Block, Gun Shield, Thermal Shield, Vortex Shield, Particle Wall
+    // are all handled passively in playerTakeDamage (already implemented)
+  }
+
+  // ---- UTILITY ABILITIES ----
+  else if (ability.type === 'utility') {
+    // RONIN: Phase Dash (teleport + brief invulnerability)
+    if (ability.name === 'Phase Dash') {
+      player.phaseInvuln = true;
+      player.phaseInvulnTimer = 0.3; // 0.3s i-frames
+      player.position.add(forward.clone().multiplyScalar(400));
+      // Phase visual effect
+      spawnExplosion(player.position.clone().add(forward.clone().multiplyScalar(-200)), 15);
+    }
+    // MONARCH: Rearm (reset Dash, Ordnance, and Defensive cooldowns)
+    else if (ability.name === 'Rearm') {
+      for (let i = 0; i < 3; i++) {
+        if (i !== slot) player.abilityCooldowns[i] = 0;
+      }
+      // Also resets dash charges (per wiki)
+      player.dashCharges = player.maxDashes;
+      player.dashCooldownTimer = 0;
+    }
+    // ION: Trip Wire (deploy proximity mines that persist 12s)
+    else if (ability.name === 'Trip Wire') {
+      const minePos = player.position.clone().add(forward.clone().multiplyScalar(200));
+      game.worldEffects.push({
+        type: 'tripwire', position: minePos.clone(),
+        timer: 12, dmg: 400, radius: 200, owner: 'player', team: player.team, armed: false, armTimer: 1.0,
+      });
+      // Visual mine marker
+      const mineGeo = new THREE.SphereGeometry(8, 6, 4);
+      const mineMat = new THREE.MeshBasicMaterial({ color: 0xff4444 });
+      const mineMesh = new THREE.Mesh(mineGeo, mineMat);
+      mineMesh.position.copy(minePos);
+      scene.add(mineMesh);
+      game.worldEffects[game.worldEffects.length - 1].mesh = mineMesh;
+    }
+    // SCORCH: Incendiary Trap (gas canisters that ignite on contact with fire/thermite)
+    else if (ability.name === 'Incendiary Trap') {
+      const trapPos = player.position.clone().add(forward.clone().multiplyScalar(400));
+      game.worldEffects.push({
+        type: 'incendiary_gas', position: trapPos.clone(),
+        timer: 15, radius: 350, owner: 'player', team: player.team,
+        ignited: false, igniteDmgPerSec: 120, igniteTimer: 0, igniteDuration: 8, slowFactor: 0.5,
+      });
+      // Visual: gas canister marker
+      const gasGeo = new THREE.CylinderGeometry(6, 6, 20, 6);
+      const gasMat = new THREE.MeshBasicMaterial({ color: 0x88aa44, transparent: true, opacity: 0.7 });
+      const gasMesh = new THREE.Mesh(gasGeo, gasMat);
+      gasMesh.position.copy(trapPos);
+      scene.add(gasMesh);
+      game.worldEffects[game.worldEffects.length - 1].mesh = gasMesh;
+    }
+    // NORTHSTAR: Tether Trap (slow + root enemies for 4s)
+    else if (ability.name === 'Tether Trap') {
+      const trapPos = player.position.clone().add(forward.clone().multiplyScalar(300));
+      game.worldEffects.push({
+        type: 'tether', position: trapPos.clone(),
+        timer: 15, rootDuration: 4, radius: 250, owner: 'player', team: player.team, triggered: false,
+      });
+      const tetherGeo = new THREE.OctahedronGeometry(12, 0);
+      const tetherMat = new THREE.MeshBasicMaterial({ color: 0x44aaff, transparent: true, opacity: 0.7 });
+      const tetherMesh = new THREE.Mesh(tetherGeo, tetherMat);
+      tetherMesh.position.copy(trapPos);
+      scene.add(tetherMesh);
+      game.worldEffects[game.worldEffects.length - 1].mesh = tetherMesh;
+    }
+    // TONE: Sonar Lock (reveal enemies + build lock stacks for Tracker Rockets)
+    else if (ability.name === 'Sonar Lock') {
+      // Pulse that reveals and locks enemies in a cone
+      const lockRange = 2000;
+      for (const bot of game.entities) {
+        if (!bot.alive || bot.team === player.team) continue;
+        const dist = player.position.distanceTo(bot.position);
+        if (dist > lockRange) continue;
+        const toBot = new THREE.Vector3().subVectors(bot.position, player.position).normalize();
+        if (forward.dot(toBot) > 0.3) {
+          // Add lock stack (max 3)
+          const id = bot.id;
+          player.toneLocks[id] = Math.min(3, (player.toneLocks[id] || 0) + 1);
+          if (player.toneLocks[id] >= 3) player.toneLockedTarget = bot;
+          // Visual lock indicator
+          spawnTracer(player.position, bot.position, 0xffaa00);
+        }
+      }
+    }
+    // LEGION: Mode Switch (toggle close/long range)
+    else if (ability.name === 'Mode Switch') {
+      player.legionMode = player.legionMode === 'close' ? 'long' : 'close';
+      // Modify weapon stats based on mode
+      if (player.weapon) {
+        if (player.legionMode === 'close') {
+          player.weapon.fireRate = 0.05; // fast ROF
+          player.weapon.range = 1500;
+          player.weapon.damage = 55;
+        } else {
+          player.weapon.fireRate = 0.08; // slower ROF
+          player.weapon.range = 3000; // extended range
+          player.weapon.damage = 65; // slightly more per shot
+        }
+      }
+    }
+  }
+
+  // Small core bonus for ability use
+  player.coreMeter = Math.min(100, player.coreMeter + 2);
+}
+
+function activateCore() {
+  if (player.coreMeter < 100 || player.coreActive || player.shipState === 'dead') return;
+  player.coreActive = true;
+  player.coreTimer = player.loadout.core.duration;
+  player.coreMeter = 0;
+
+  const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+  const coreName = player.loadout.core.name;
+
+  // ION: Laser Core (continuous high-power laser, 4500 dmg over 3s; dealt per tick in updateAbilities)
+  if (coreName === 'Laser Core') {
+    // Initial burst visual
+    spawnTracer(player.position, player.position.clone().add(forward.clone().multiplyScalar(3000)), 0xff0000);
+  }
+  // SCORCH: Flame Core (massive AoE incendiary, 2500 dmg instant around player)
+  else if (coreName === 'Flame Core') {
+    const radius = 1200;
+    for (const bot of game.entities) {
+      if (!bot.alive || bot.team === player.team) continue;
+      const dist = player.position.distanceTo(bot.position);
+      if (dist < radius) {
+        const falloff = 1 - dist / radius;
+        const dealt = bot.takeDamage(2500 * falloff, 'player');
+        if (dealt > 0) { player.damageDealt += dealt; showHitMarker(); }
+      }
+    }
+    spawnExplosion(player.position, 80);
+    triggerScreenShake(8);
+  }
+  // NORTHSTAR: Afterburner Core (speed boost + rocket barrage over 5s)
+  else if (coreName === 'Afterburner Core') {
+    // Speed boost is handled in updateAbilities; initial rocket volley
+    player.velocity.add(forward.clone().multiplyScalar(600));
+  }
+  // RONIN: Sword Core (empowered melee + rapid arc waves over 4s)
+  else if (coreName === 'Sword Core') {
+    // Handled in updateAbilities; initial shockwave
+    const radius = 600;
+    for (const bot of game.entities) {
+      if (!bot.alive || bot.team === player.team) continue;
+      if (player.position.distanceTo(bot.position) < radius) {
+        const dealt = bot.takeDamage(500, 'player');
+        if (dealt > 0) { player.damageDealt += dealt; showHitMarker(); }
+      }
+    }
+    spawnExplosion(player.position, 40);
+  }
+  // TONE: Salvo Core (massive missile barrage, 4000 dmg over 3s)
+  else if (coreName === 'Salvo Core') {
+    // Fire initial volley; more missiles per tick in updateAbilities
+    for (let m = 0; m < 8; m++) {
+      const spread = new THREE.Vector3((Math.random()-0.5)*0.3, (Math.random()-0.5)*0.3, 0);
+      const vel = forward.clone().add(spread).normalize().multiplyScalar(1000);
+      game.projectiles.push(new Projectile(player.position.clone(), vel, 250, 120, 'player', 0xffcc00));
+    }
+  }
+  // LEGION: Smart Core (auto-aim + max accuracy, 3500 dmg over 8s)
+  else if (coreName === 'Smart Core') {
+    // Handled per-tick in updateAbilities (auto-aim firing)
+  }
+  // MONARCH: Upgrade Core (permanent tier upgrade, 3 tiers)
+  else if (coreName === 'Upgrade Core') {
+    player.monarchTier = Math.min(3, player.monarchTier + 1);
+    switch (player.monarchTier) {
+      case 1: // Tier 1: weapon damage +20%
+        player.monarchDmgMult = 1.2;
+        break;
+      case 2: // Tier 2: shield bonus +500
+        player.monarchShieldBonus = 500;
+        player.maxShield = player.chassis.maxShield + 500;
+        player.shield = Math.min(player.shield + 500, player.maxShield);
+        break;
+      case 3: // Tier 3: ability cooldowns -30%
+        player.monarchCooldownMult = 0.7;
+        break;
+    }
+  }
+}
+
+function updateAbilities(dt) {
+  // Cooldown ticking
+  for (let i = 0; i < 3; i++) {
+    if (player.abilityCooldowns[i] > 0) player.abilityCooldowns[i] = Math.max(0, player.abilityCooldowns[i] - dt);
+    if (player.abilityActive[i] && player.abilityTimers[i] < 999) {
+      player.abilityTimers[i] -= dt;
+      if (player.abilityTimers[i] <= 0) {
+        player.abilityActive[i] = false;
+        // Vortex Shield: release stored damage as burst on deactivation
+        if (player.abilities[i] && player.abilities[i].name === 'Vortex Shield' && player.vortexStored > 0) {
+          const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+          const burstRadius = 300;
+          for (const bot of game.entities) {
+            if (!bot.alive || bot.team === player.team) continue;
+            const dist = player.position.distanceTo(bot.position);
+            if (dist < burstRadius) {
+              const toBot = new THREE.Vector3().subVectors(bot.position, player.position).normalize();
+              if (forward.dot(toBot) > 0.2) {
+                const dealt = bot.takeDamage(player.vortexStored, 'player');
+                if (dealt > 0) { player.damageDealt += dealt; showHitMarker(); }
+              }
+            }
+          }
+          spawnExplosion(player.position.clone().add(forward.multiplyScalar(100)), 30);
+          player.vortexStored = 0;
+        }
+        // Afterburner: deactivate speed boost
+        if (player.abilities[i] && player.abilities[i].name === 'Afterburner') {
+          player.afterburnerActive = false;
+          player.afterburnerSpeedMult = 1.0;
+        }
+      }
+    }
+    // Thermal Shield: deal damage to nearby enemies while active
+    if (player.abilityActive[i] && player.abilities[i] && player.abilities[i].name === 'Thermal Shield') {
+      for (const bot of game.entities) {
+        if (!bot.alive || bot.team === player.team) continue;
+        const dist = player.position.distanceTo(bot.position);
+        if (dist < 400) {
+          const dmgPerSec = 250;
+          const dealt = bot.takeDamage(dmgPerSec * dt, 'player');
+          if (dealt > 0) player.damageDealt += dealt;
+        }
+      }
+    }
+    // Vortex Shield: drains ION energy while held up; auto-drops when depleted
+    if (player.abilityActive[i] && player.abilities[i] && player.abilities[i].name === 'Vortex Shield') {
+      const drainRate = 120; // energy per second while held
+      player.ionEnergy -= drainRate * dt;
+      if (player.ionEnergy <= 0) {
+        player.ionEnergy = 0;
+        // Force deactivate: release burst and drop shield
+        player.abilityActive[i] = false;
+        player.abilityTimers[i] = 0;
+        if (player.vortexStored > 0) {
+          const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+          const burstR = 300;
+          for (const bot of game.entities) {
+            if (!bot.alive || bot.team === player.team) continue;
+            const dist = player.position.distanceTo(bot.position);
+            if (dist < burstR) {
+              const toBot = new THREE.Vector3().subVectors(bot.position, player.position).normalize();
+              if (fwd.dot(toBot) > 0.2) {
+                const dealt = bot.takeDamage(player.vortexStored, 'player');
+                if (dealt > 0) { player.damageDealt += dealt; showHitMarker(); }
+              }
+            }
+          }
+          spawnExplosion(player.position.clone().add(fwd.multiplyScalar(100)), 30);
+          player.vortexStored = 0;
+        }
+      }
+    }
+  }
+
+  // Phase Dash invulnerability timer
+  if (player.phaseInvuln) {
+    player.phaseInvulnTimer -= dt;
+    if (player.phaseInvulnTimer <= 0) player.phaseInvuln = false;
+  }
+
+  // ---- CORE ABILITY TICK EFFECTS ----
+  if (player.coreActive) {
+    player.coreTimer -= dt;
+    const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+    const coreName = player.loadout ? player.loadout.core.name : '';
+
+    // ION Laser Core: continuous laser beam (1500 DPS over 3s)
+    if (coreName === 'Laser Core') {
+      const range = 3000;
+      const end = player.position.clone().add(forward.clone().multiplyScalar(range));
+      spawnTracer(player.position, end, 0xff0000);
+      for (const bot of game.entities) {
+        if (!bot.alive || bot.team === player.team) continue;
+        const toBot = new THREE.Vector3().subVectors(bot.position, player.position);
+        const proj = toBot.dot(forward);
+        if (proj > 0 && proj < range) {
+          const closest = player.position.clone().add(forward.clone().multiplyScalar(proj));
+          if (closest.distanceTo(bot.position) < bot.chassis.hullLength * 1.2) {
+            const dealt = bot.takeDamage(1500 * dt, 'player');
+            if (dealt > 0) { player.damageDealt += dealt; }
+          }
+        }
+      }
+    }
+    // NORTHSTAR Afterburner Core: speed boost + rockets every 0.5s
+    else if (coreName === 'Afterburner Core') {
+      // Speed boost
+      const curSpeed = player.velocity.length();
+      if (curSpeed < player.chassis.flightSpeed * 2) {
+        player.velocity.add(forward.clone().multiplyScalar(200 * dt));
+      }
+      // Fire rockets periodically
+      if (Math.random() < dt * 3) {
+        const spread = new THREE.Vector3((Math.random()-0.5)*0.2, (Math.random()-0.5)*0.2, 0);
+        const vel = forward.clone().add(spread).normalize().multiplyScalar(1200);
+        game.projectiles.push(new Projectile(player.position.clone(), vel, 200, 100, 'player', 0xff6600));
+      }
+    }
+    // RONIN Sword Core: melee damage aura + periodic arc waves
+    else if (coreName === 'Sword Core') {
+      // Melee damage aura
+      for (const bot of game.entities) {
+        if (!bot.alive || bot.team === player.team) continue;
+        const dist = player.position.distanceTo(bot.position);
+        if (dist < 500) {
+          const dealt = bot.takeDamage(750 * dt, 'player');
+          if (dealt > 0) player.damageDealt += dealt;
+        }
+      }
+      // Periodic arc wave
+      if (Math.random() < dt * 2) {
+        const vel = forward.clone().multiplyScalar(800);
+        const proj = new Projectile(player.position.clone(), vel, 300, 150, 'player', 0x44aaff);
+        proj.isArcWave = true;
+        game.projectiles.push(proj);
+      }
+    }
+    // TONE Salvo Core: guided missile barrage (follows player aim, prioritizes locked targets)
+    else if (coreName === 'Salvo Core') {
+      if (Math.random() < dt * 6) {
+        const spread = new THREE.Vector3((Math.random()-0.5)*0.2, (Math.random()-0.5)*0.2, 0);
+        const aimDir = forward.clone().add(spread).normalize();
+        const vel = aimDir.multiplyScalar(1000);
+        const missile = new Projectile(player.position.clone(), vel, 200, 100, 'player', 0xffcc00);
+        // Seek locked targets if any exist
+        if (player.toneLockedTarget && player.toneLockedTarget.alive) {
+          missile.tracking = true;
+          missile.trackTarget = player.toneLockedTarget;
+        }
+        game.projectiles.push(missile);
+      }
+    }
+    // LEGION Smart Core: auto-aim rapid fire at nearest enemy
+    else if (coreName === 'Smart Core') {
+      let nearest = null, nearDist = Infinity;
+      for (const bot of game.entities) {
+        if (!bot.alive || bot.team === player.team) continue;
+        const dist = player.position.distanceTo(bot.position);
+        if (dist < 3000 && dist < nearDist) { nearest = bot; nearDist = dist; }
+      }
+      if (nearest) {
+        // Auto-aim: fire at nearest enemy with perfect accuracy
+        const toTarget = new THREE.Vector3().subVectors(nearest.position, player.position).normalize();
+        if (Math.random() < dt * 20) { // 20 shots/sec
+          const end = player.position.clone().add(toTarget.clone().multiplyScalar(3000));
+          spawnTracer(player.position, end, 0xffaa00);
+          const dealt = nearest.takeDamage(55, 'player');
+          if (dealt > 0) { player.damageDealt += dealt; showHitMarker(); }
+        }
+      }
+    }
+
+    if (player.coreTimer <= 0) player.coreActive = false;
+  }
+
+  // ---- WORLD EFFECTS UPDATE (firewalls, trip wires, traps, tethers) ----
+  for (let e = game.worldEffects.length - 1; e >= 0; e--) {
+    const eff = game.worldEffects[e];
+    eff.timer -= dt;
+
+    if (eff.type === 'firewall') {
+      // Damage enemies crossing the fire line
+      for (const bot of game.entities) {
+        if (!bot.alive || bot.team === eff.team) continue;
+        const toBot = new THREE.Vector3().subVectors(bot.position, eff.position);
+        const along = toBot.dot(eff.direction);
+        if (Math.abs(along) < eff.length / 2) {
+          const perp = toBot.clone().sub(eff.direction.clone().multiplyScalar(along));
+          if (perp.length() < 150) {
+            const dealt = bot.takeDamage(eff.dmgPerSec * dt, eff.owner);
+            if (dealt > 0 && eff.owner === 'player') player.damageDealt += dealt;
+          }
+        }
+      }
+    }
+
+    else if (eff.type === 'tripwire') {
+      if (eff.armTimer > 0) { eff.armTimer -= dt; }
+      else {
+        eff.armed = true;
+        // Check for enemy proximity
+        for (const bot of game.entities) {
+          if (!bot.alive || bot.team === eff.team) continue;
+          if (bot.position.distanceTo(eff.position) < eff.radius) {
+            // Detonate
+            const dealt = bot.takeDamage(eff.dmg, eff.owner);
+            if (dealt > 0 && eff.owner === 'player') { player.damageDealt += dealt; showHitMarker(); }
+            spawnExplosion(eff.position, 20);
+            eff.timer = 0; // remove
+            break;
+          }
+        }
+      }
+    }
+
+    else if (eff.type === 'incendiary_gas') {
+      // Check if a firewall, thermite projectile, or other fire source ignites the gas
+      if (!eff.ignited) {
+        // Auto-ignite if an enemy walks through (contact detonation) or if firewall is nearby
+        let shouldIgnite = false;
+        // Check proximity to firewalls
+        for (const other of game.worldEffects) {
+          if (other.type === 'firewall' && other.position.distanceTo(eff.position) < eff.radius + other.length/2) {
+            shouldIgnite = true; break;
+          }
+        }
+        // Check proximity to any enemy (acts as proximity trigger)
+        for (const bot of game.entities) {
+          if (!bot.alive || bot.team === eff.team) continue;
+          if (bot.position.distanceTo(eff.position) < eff.radius * 0.6) {
+            shouldIgnite = true; break;
+          }
+        }
+        if (shouldIgnite) {
+          eff.ignited = true;
+          eff.igniteTimer = eff.igniteDuration;
+          spawnExplosion(eff.position, 25);
+          // Change mesh color to fire
+          if (eff.mesh) eff.mesh.material.color.setHex(0xff4400);
+        }
+      }
+      if (eff.ignited) {
+        eff.igniteTimer -= dt;
+        // Damage and slow enemies in the burning area
+        for (const bot of game.entities) {
+          if (!bot.alive || bot.team === eff.team) continue;
+          if (bot.position.distanceTo(eff.position) < eff.radius) {
+            const dealt = bot.takeDamage(eff.igniteDmgPerSec * dt, eff.owner);
+            if (dealt > 0 && eff.owner === 'player') player.damageDealt += dealt;
+            if (bot.velocity) bot.velocity.multiplyScalar(1 - eff.slowFactor * dt);
+          }
+        }
+        if (eff.igniteTimer <= 0) eff.timer = 0; // burned out
+      }
+    }
+
+    else if (eff.type === 'tether') {
+      if (!eff.triggered) {
+        for (const bot of game.entities) {
+          if (!bot.alive || bot.team === eff.team) continue;
+          if (bot.position.distanceTo(eff.position) < eff.radius) {
+            eff.triggered = true;
+            eff.rootTarget = bot;
+            eff.rootTimer = eff.rootDuration;
+            break;
+          }
+        }
+      }
+      if (eff.triggered && eff.rootTarget && eff.rootTarget.alive) {
+        eff.rootTimer -= dt;
+        // Root the target (stop movement)
+        if (eff.rootTarget.velocity) eff.rootTarget.velocity.set(0, 0, 0);
+        if (eff.rootTimer <= 0) eff.timer = 0; // done
+      }
+    }
+
+    // Cluster Missile sustained explosion zone
+    else if (eff.type === 'cluster') {
+      // Damage enemies in the blast zone
+      for (const bot of game.entities) {
+        if (!bot.alive || bot.team === eff.team) continue;
+        if (bot.position.distanceTo(eff.position) < eff.radius) {
+          const dealt = bot.takeDamage(eff.dmgPerSec * dt, eff.owner);
+          if (dealt > 0 && eff.owner === 'player') { player.damageDealt += dealt; }
+        }
+      }
+      // Periodic explosion visuals
+      eff.fxTimer -= dt;
+      if (eff.fxTimer <= 0) {
+        const offset = new THREE.Vector3((Math.random()-0.5)*eff.radius, (Math.random()-0.5)*eff.radius, (Math.random()-0.5)*eff.radius);
+        spawnExplosion(eff.position.clone().add(offset), 12);
+        eff.fxTimer = 0.3;
+      }
+    }
+
+    // Remove expired effects
+    if (eff.timer <= 0) {
+      if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh);
+      game.worldEffects.splice(e, 1);
+    }
+  }
+
+  // ION energy regen
+  if (player.loadoutKey === 'ION') {
+    player.ionEnergy = Math.min(player.ionMaxEnergy, player.ionEnergy + player.ionEnergyRegen * dt);
+  }
+
+  player.coreReady = player.coreMeter >= 100;
+}
+
+// ---- DASH ----
+
+function dash() {
+  if (player.shipState === 'dead' || player.dashCharges <= 0 || player.dashActive) return;
+  const ch = player.chassis;
+  const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+  let dashDir = player.velocity.clone();
+  if (dashDir.length() < 10) dashDir = forward;
+  dashDir.normalize();
+  player.velocity.copy(dashDir.multiplyScalar(ch.dashSpeed));
+  player.dashActive = true;
+  player.dashTimer = ch.dashDuration;
+  player.dashCharges--;
+  player.shipState = 'dashing';
+  if (player.dashCooldownTimer <= 0) player.dashCooldownTimer = ch.dashCooldown;
+}
+
+// ---- ROUND SYSTEM ----
+
+function updateRoundSystem(dt) {
+  if (game.state === 'warmup') {
+    game.warmupTimer -= dt;
+    if (game.warmupTimer <= 0) { game.state = 'playing'; game.roundTimer = LSS.ROUND_TIME; }
+  } else if (game.state === 'playing') {
+    game.roundTimer -= dt;
+    const aliveA = (player.shipState !== 'dead' ? 1 : 0) +
+      game.entities.filter(b => b.alive && b.team === LSS.TEAM_FLEET_A).length;
+    const aliveB = game.entities.filter(b => b.alive && b.team === LSS.TEAM_FLEET_B).length;
+
+    if (aliveB === 0 || game.roundTimer <= 0) {
+      if (aliveB === 0) game.scoreA++;
+      else if (aliveA === 0) game.scoreB++;
+      else game.scoreA++;
+      game.state = 'roundEnd';
+      game.roundEndTimer = 5;
+    } else if (aliveA === 0) {
+      game.scoreB++;
+      game.state = 'roundEnd';
+      game.roundEndTimer = 5;
+    }
+  } else if (game.state === 'roundEnd') {
+    game.roundEndTimer -= dt;
+    if (game.roundEndTimer <= 0) {
+      if (game.scoreA >= LSS.ROUNDS_TO_WIN || game.scoreB >= LSS.ROUNDS_TO_WIN) {
+        game.state = 'matchEnd';
+      } else {
+        game.currentRound++;
+        game.state = 'warmup';
+        game.warmupTimer = LSS.WARMUP_TIME;
+        // Next map from rotation each round
+        const level = getNextMap();
+        buildRoomGraphLevel(level);
+        // Reset stasis fields
+        game.stasisFields.forEach(f => { if (f.alive) f.destroy(); });
+        game.stasisFields = [];
+        game.stasisSpawnTimer = 30;
+        game.stasisFirstBatch = true;
+        game.playerInStasis = false;
+        // Clean up world effects
+        for (const eff of game.worldEffects) { if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh); }
+        game.worldEffects = [];
+        respawnPlayer();
+        spawnBots();
+      }
+    }
+  }
+}
+
+// ---- GAMEPAD POLLING ----
+
+function pollGamepad() {
+  const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+  let gp = null;
+  for (let i = 0; i < gamepads.length; i++) {
+    if (gamepads[i]) { gp = gamepads[i]; break; }
+  }
+
+  if (!gp) {
+    input.gpConnected = false;
+    document.getElementById('gamepad-indicator').style.display = 'none';
+    return;
+  }
+
+  input.gpConnected = true;
+  document.getElementById('gamepad-indicator').style.display = 'block';
+
+  const dz = input.gpDeadzone;
+
+  // Sticks (apply deadzone)
+  function applyDeadzone(val, deadzone) {
+    const d = deadzone !== undefined ? deadzone : dz;
+    if (Math.abs(val) < d) return 0;
+    return (val - Math.sign(val) * d) / (1 - d);
+  }
+
+  // Stick axes (respect swap sticks setting)
+  const moveStickX = input.swapSticks ? 2 : 0;
+  const moveStickY = input.swapSticks ? 3 : 1;
+  const lookStickX = input.swapSticks ? 0 : 2;
+  const lookStickY = input.swapSticks ? 1 : 3;
+
+  // Left stick: movement (apply move curve)
+  let rawMX = applyDeadzone(gp.axes[moveStickX] || 0);
+  let rawMY = applyDeadzone(gp.axes[moveStickY] || 0);
+  const mc = input.gpMoveCurve;
+  input.gpMoveX = Math.sign(rawMX) * Math.pow(Math.abs(rawMX), mc);
+  input.gpMoveY = Math.sign(rawMY) * Math.pow(Math.abs(rawMY), mc);
+
+  // Right stick: look (apply look curve)
+  let rawLX = applyDeadzone(gp.axes[lookStickX] || 0);
+  let rawLY = applyDeadzone(gp.axes[lookStickY] || 0);
+  const lc = input.gpLookCurve;
+  input.gpLookX = Math.sign(rawLX) * Math.pow(Math.abs(rawLX), lc);
+  input.gpLookY = Math.sign(rawLY) * Math.pow(Math.abs(rawLY), lc);
+  if (input.invertLookY) input.gpLookY = -input.gpLookY;
+
+  // Helper to read a bound button
+  function gpBtn(actionName) {
+    const idx = input.gpBindings[actionName];
+    if (idx < 0 || !gp.buttons[idx]) return false;
+    return gp.buttons[idx].pressed || gp.buttons[idx].value > input.triggerThreshold;
+  }
+
+  // Save previous state for edge detection
+  input.gpFirePrev = input.gpFire;
+  input.gpDashPrev = input.gpDash;
+  input.gpReloadPrev = input.gpReload;
+  input.gpAbility0Prev = input.gpAbility0;
+  input.gpAbility1Prev = input.gpAbility1;
+  input.gpAbility2Prev = input.gpAbility2;
+  input.gpCorePrev = input.gpCore;
+
+  // Buttons (via configurable bindings)
+  input.gpFire = gpBtn('fire');
+  input.gpAltFire = gpBtn('altFire');
+  input.gpDash = gpBtn('dash');
+  input.gpReload = gpBtn('reload');
+  input.gpAbility0 = gpBtn('ability0');
+  input.gpAbility1 = gpBtn('ability1');
+  input.gpAbility2 = gpBtn('ability2');
+  input.gpCore = gpBtn('core');
+  input.gpMoveUp = gpBtn('moveUp');
+  input.gpMoveDown = gpBtn('moveDown');
+
+  // Edge-triggered actions
+  if (input.gpDash && !input.gpDashPrev) dash();
+  if (input.gpAbility0 && !input.gpAbility0Prev) activateAbility(0);
+  if (input.gpAbility1 && !input.gpAbility1Prev) activateAbility(1);
+  if (input.gpAbility2 && !input.gpAbility2Prev) activateAbility(2);
+  if (input.gpCore && !input.gpCorePrev) activateCore();
+}
+
+// ---- TF2-STYLE HUD DRAWING ----
+
+function drawHealthBar() {
+  const canvas = document.getElementById('health-canvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const cw = 500, ch = 70;
+  canvas.width = cw * dpr;
+  canvas.height = ch * dpr;
+  canvas.style.width = cw + 'px';
+  canvas.style.height = ch + 'px';
+  ctx.scale(dpr, dpr);
+
+  if (!player.chassis) return;
+
+  const segments = player.chassis.healthSegments;
+  const barW = 440, barH = 30;
+  const barX = (cw - barW) / 2, barY = 5;
+  const segGap = 3;
+  const segW = (barW - segGap * (segments - 1)) / segments;
+
+  const healthPct = Math.max(0, player.health / player.maxHealth);
+
+  // Draw segments
+  for (let i = 0; i < segments; i++) {
+    const sx = barX + i * (segW + segGap);
+
+    // Background
+    ctx.fillStyle = 'rgba(15,15,25,0.9)';
+    ctx.fillRect(sx, barY, segW, barH);
+    ctx.strokeStyle = 'rgba(60,60,80,0.5)';
+    ctx.strokeRect(sx, barY, segW, barH);
+
+    // Fill amount for this segment
+    const segStart = i / segments;
+    const segEnd = (i + 1) / segments;
+
+    if (healthPct > segStart) {
+      const fillPct = Math.min(1, (healthPct - segStart) / (1 / segments));
+      const fillW = segW * fillPct;
+
+      // Color based on health state
+      if (player.doomed) {
+        // Flashing red when doomed
+        const flash = Math.sin(game.time * 8) > 0 ? 1 : 0.4;
+        ctx.fillStyle = `rgba(255,30,0,${flash})`;
+      } else if (healthPct < 0.33) {
+        ctx.fillStyle = 'rgba(255,80,0,0.9)';
+      } else if (healthPct < 0.6) {
+        ctx.fillStyle = 'rgba(220,200,0,0.9)';
+      } else {
+        ctx.fillStyle = 'rgba(0,200,80,0.9)';
+      }
+      ctx.fillRect(sx + 1, barY + 1, fillW - 2, barH - 2);
+
+      // Inner glow
+      const gradient = ctx.createLinearGradient(sx, barY, sx, barY + barH);
+      gradient.addColorStop(0, 'rgba(255,255,255,0.15)');
+      gradient.addColorStop(0.5, 'rgba(255,255,255,0)');
+      gradient.addColorStop(1, 'rgba(0,0,0,0.1)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(sx + 1, barY + 1, fillW - 2, barH - 2);
+    }
+  }
+
+  // Hull text
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 10px Courier New';
+  ctx.textAlign = 'left';
+  ctx.fillText('HULL', barX, barY + barH + 14);
+  ctx.textAlign = 'right';
+  ctx.fillText(Math.ceil(player.health) + ' / ' + player.maxHealth, barX + barW, barY + barH + 14);
+
+  // Shield line (thin bar across top of health segments)
+  const shieldPct = Math.max(0, player.shield / player.maxShield);
+  const shieldW = barW * shieldPct;
+  const shieldH = 4;
+  const shieldY = barY - shieldH - 2;
+
+  // Shield background
+  ctx.fillStyle = 'rgba(15,15,30,0.6)';
+  ctx.fillRect(barX, shieldY, barW, shieldH);
+
+  // Shield fill
+  if (shieldPct > 0) {
+    ctx.fillStyle = 'rgba(60,160,255,0.85)';
+    ctx.fillRect(barX, shieldY, shieldW, shieldH);
+    // Shine
+    ctx.fillStyle = 'rgba(120,200,255,0.3)';
+    ctx.fillRect(barX, shieldY, shieldW, shieldH / 2);
+  }
+
+  // Dash pips (below health bar, centered)
+  const pipW = 22, pipH = 8, pipGap = 6;
+  const totalPipW = player.maxDashes * pipW + (player.maxDashes - 1) * pipGap;
+  const pipStartX = (cw - totalPipW) / 2;
+  const pipY = barY + barH + 22;
+
+  for (let i = 0; i < player.maxDashes; i++) {
+    const px = pipStartX + i * (pipW + pipGap);
+    if (i < player.dashCharges) {
+      ctx.fillStyle = 'rgba(80,180,255,0.9)';
+      ctx.fillRect(px, pipY, pipW, pipH);
+      ctx.fillStyle = 'rgba(140,220,255,0.4)';
+      ctx.fillRect(px, pipY, pipW, pipH / 2);
+    } else {
+      ctx.fillStyle = 'rgba(30,30,50,0.6)';
+      ctx.fillRect(px, pipY, pipW, pipH);
+    }
+    ctx.strokeStyle = 'rgba(80,120,180,0.3)';
+    ctx.strokeRect(px, pipY, pipW, pipH);
+  }
+}
+
+function updateHUD() {
+  if (!player.chassis) return;
+
+  // Draw the TF2-style health/shield/dash canvas
+  drawHealthBar();
+
+  // Core meter
+  const corePct = Math.min(100, player.coreMeter);
+  document.getElementById('core-fill').style.width = corePct + '%';
+  document.getElementById('core-value').textContent = Math.floor(corePct) + '%';
+  const coreContainer = document.getElementById('core-container');
+  coreContainer.className = corePct >= 100 ? 'ready' : '';
+
+  // Ammo
+  let ammoStr = player.weapon.clipSize >= 999 ? 'INF' : player.clipAmmo + ' / ' + player.maxClip;
+  // Northstar railgun charge indicator
+  if (player.loadoutKey === 'NORTHSTAR' && player.railgunCharge > 0.01) {
+    const chPct = Math.round(player.railgunCharge * 100);
+    const dmgMult = (1.0 + player.railgunCharge * 2.0).toFixed(1);
+    ammoStr += '  CHARGE: ' + chPct + '% (' + dmgMult + 'x)';
+  }
+  document.getElementById('ammo-display').textContent = ammoStr;
+
+  // Abilities
+  const slots = document.querySelectorAll('.ability-slot');
+  slots.forEach((slot, i) => {
+    if (i >= 3) return; // skip core slot
+    const cd = player.abilityCooldowns[i];
+    const active = player.abilityActive[i];
+    const maxCd = player.abilities[i] ? player.abilities[i].cooldown : 1;
+    const overlay = slot.querySelector('.cd-overlay');
+    if (overlay) overlay.style.height = cd > 0 ? (cd / maxCd * 100) + '%' : '0%';
+    slot.className = 'ability-slot' + (active ? ' active' : cd <= 0 ? ' ready' : '');
+  });
+
+  // Doomed warning + vignette
+  const isDoomed = player.doomed && player.shipState !== 'dead';
+  document.getElementById('doomed-warning').style.display = isDoomed ? 'block' : 'none';
+  document.getElementById('doomed-vignette').style.display = isDoomed ? 'block' : 'none';
+
+  // Round info
+  let timerValue = game.state === 'warmup' ? game.warmupTimer : game.roundTimer;
+  const minutes = Math.floor(Math.max(0, timerValue) / 60);
+  const seconds = Math.floor(Math.max(0, timerValue) % 60);
+  document.getElementById('round-timer').textContent = minutes + ':' + String(seconds).padStart(2, '0');
+
+  const stateText = game.state === 'warmup' ? 'WARMUP' :
+    game.state === 'playing' ? 'ROUND ' + game.currentRound :
+    game.state === 'roundEnd' ? 'ROUND OVER' :
+    game.state === 'matchEnd' ? (game.scoreA >= LSS.ROUNDS_TO_WIN ? 'FLEET A WINS' : 'FLEET B WINS') : '';
+  document.getElementById('round-state').textContent = stateText;
+
+  document.querySelector('.team-a').textContent = 'FLEET A: ' + game.scoreA;
+  document.querySelector('.team-b').textContent = 'FLEET B: ' + game.scoreB;
+
+  // Speed
+  document.getElementById('speed-display').textContent = Math.floor(player.velocity.length()) + ' m/s';
+
+  // Controls hint (briefly on first few seconds)
+  // (ESC = settings is shown via the gamepad indicator area)
+}
+
+// ---- MINIMAP ----
+
+function updateMinimap() {
+  const canvas = document.getElementById('minimap');
+  const ctx = canvas.getContext('2d');
+  canvas.width = 150;
+  canvas.height = 150;
+  ctx.clearRect(0, 0, 150, 150);
+
+  ctx.strokeStyle = 'rgba(80,80,120,0.4)';
+  ctx.strokeRect(0, 0, 150, 150);
+
+  const scale = 150 / (LSS.ARENA_SIZE * 2);
+  const cx = 75, cy = 75;
+
+  // Level geometry outlines
+  ctx.fillStyle = 'rgba(80,80,120,0.2)';
+  for (const box of game.levelBoxes) {
+    const x1 = cx + box.min.x * scale;
+    const y1 = cy - box.max.z * scale;
+    const x2 = cx + box.max.x * scale;
+    const y2 = cy - box.min.z * scale;
+    ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
+  }
+
+  // Player
+  const px = cx + player.position.x * scale;
+  const py = cy - player.position.z * scale;
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(px - 2, py - 2, 4, 4);
+
+  // Direction line
+  const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+  ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+  ctx.beginPath();
+  ctx.moveTo(px, py);
+  ctx.lineTo(px + forward.x * 15, py - forward.z * 15);
+  ctx.stroke();
+
+  // Bots
+  for (const bot of game.entities) {
+    if (!bot.alive) continue;
+    const bx = cx + bot.position.x * scale;
+    const by = cy - bot.position.z * scale;
+    ctx.fillStyle = bot.team === LSS.TEAM_FLEET_A ? '#ff4444' : '#4488ff';
+    ctx.fillRect(bx - 2, by - 2, 3, 3);
+    // Doomed indicator on minimap
+    if (bot.doomed) {
+      ctx.strokeStyle = '#ff2200';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(bx, by, 4, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
+  // Stasis fields (pulsing cyan diamonds)
+  for (const field of game.stasisFields) {
+    if (!field.alive) continue;
+    const fx = cx + field.position.x * scale;
+    const fy = cy - field.position.z * scale;
+    const pulse = 0.5 + Math.sin(game.time * 4) * 0.3;
+    ctx.fillStyle = `rgba(0,200,255,${pulse})`;
+    ctx.beginPath();
+    ctx.moveTo(fx, fy - 4);
+    ctx.lineTo(fx + 3, fy);
+    ctx.lineTo(fx, fy + 4);
+    ctx.lineTo(fx - 3, fy);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // Map word label
+  if (game.mapWord) {
+    ctx.fillStyle = 'rgba(255,170,0,0.4)';
+    ctx.font = '8px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText(game.mapWord, 75, 145);
+  }
+}
+
+// ---- KILL FEED ----
+
+function addKillFeed(killer, victim) {
+  game.killFeed.unshift({ killer, victim, time: game.time });
+  if (game.killFeed.length > 5) game.killFeed.pop();
+
+  const container = document.getElementById('kill-feed');
+  container.innerHTML = '';
+  for (const entry of game.killFeed) {
+    const div = document.createElement('div');
+    div.className = 'kill-entry';
+    div.innerHTML = `<span style="color:#ff6666">${entry.killer}</span> destroyed <span style="color:#6699ff">${entry.victim}</span>`;
+    container.appendChild(div);
+  }
+}
+
+// ---- HUD BUILDING ----
+
+function buildAbilityHUD() {
+  const container = document.getElementById('abilities');
+  container.innerHTML = '';
+  const keys = ['Q', 'E', 'F'];
+  for (let i = 0; i < 3; i++) {
+    const ability = player.abilities[i];
+    const slot = document.createElement('div');
+    slot.className = 'ability-slot ready';
+    slot.innerHTML = `
+      <div class="key">${keys[i]}</div>
+      <div class="name">${ability ? ability.name : ''}</div>
+      <div class="cd-overlay" style="height:0%"></div>
+    `;
+    container.appendChild(slot);
+  }
+  const coreSlot = document.createElement('div');
+  coreSlot.className = 'ability-slot';
+  coreSlot.innerHTML = `
+    <div class="key">V</div>
+    <div class="name">${player.loadout.core.name}</div>
+    <div class="cd-overlay" style="height:100%"></div>
+  `;
+  container.appendChild(coreSlot);
+}
+
+// ---- SHIP SELECT SCREEN ----
+
+function buildShipSelect() {
+  const grid = document.getElementById('ship-grid');
+  grid.innerHTML = '';
+
+  for (const [key, loadout] of Object.entries(LOADOUTS)) {
+    const ch = CHASSIS[loadout.chassis];
+    const card = document.createElement('div');
+    card.className = 'ship-card';
+    card.innerHTML = `
+      <div class="loadout-name">${loadout.name}</div>
+      <div class="chassis-name">${loadout.className} (${ch.name})</div>
+      <div class="stat">Hull: <span>${ch.maxHealth}</span></div>
+      <div class="stat">Shield: <span>${ch.maxShield}</span></div>
+      <div class="stat">Speed: <span>${ch.flightSpeed}</span></div>
+      <div class="stat">Dashes: <span>${ch.maxDashes}</span></div>
+      <div class="weapon-name">${loadout.weapon.name} (${loadout.weapon.damage} dmg)</div>
+      <div class="abilities-list">${loadout.abilities.map(a => a.name).join(' / ')}</div>
+    `;
+    card.addEventListener('click', () => selectLoadout(key));
+    grid.appendChild(card);
+  }
+}
+
+// ---- INPUT HANDLERS ----
+
+document.addEventListener('keydown', e => {
+  if (settingsOpen) {
+    if (e.key === 'Escape') closeSettings();
+    return;
+  }
+
+  input.keys[e.key.toLowerCase()] = true;
+  if (e.key.toLowerCase() === 'q') activateAbility(0);
+  if (e.key.toLowerCase() === 'e') activateAbility(1);
+  if (e.key.toLowerCase() === 'f') activateAbility(2);
+  if (e.key.toLowerCase() === 'v') activateCore();
+  if (e.key === 'Shift') dash();
+  if (e.key === 'Escape' && game.state !== 'select') {
+    openSettings();
+    buildSettingsPage();
+  }
+  if (e.key === 'Tab') e.preventDefault();
+});
+
+document.addEventListener('keyup', e => { input.keys[e.key.toLowerCase()] = false; });
+
+document.addEventListener('mousedown', e => {
+  if (e.button === 0) input.mouseDown = true;
+  if (e.button === 2) input.rightMouseDown = true;
+  if (!input.locked && game.state !== 'select') renderer.domElement.requestPointerLock();
+});
+
+document.addEventListener('mouseup', e => {
+  if (e.button === 0) input.mouseDown = false;
+  if (e.button === 2) input.rightMouseDown = false;
+});
+
+document.addEventListener('mousemove', e => {
+  if (input.locked) { input.mouseDX += e.movementX; input.mouseDY += e.movementY; }
+});
+
+document.addEventListener('pointerlockchange', () => {
+  input.locked = document.pointerLockElement === renderer.domElement;
+});
+
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ---- SETTINGS PAGE ----
+
+const GAMEPAD_BUTTON_NAMES = {
+  0: 'A', 1: 'B', 2: 'X', 3: 'Y', 4: 'LB', 5: 'RB', 6: 'LT', 7: 'RT',
+  8: 'Back', 9: 'Start', 10: 'L3', 11: 'R3', 12: 'D-Up', 13: 'D-Down', 14: 'D-Left', 15: 'D-Right',
+  '-1': 'None',
+};
+
+const ACTION_LABELS = {
+  fire: 'Fire Weapon', altFire: 'Alt Fire / Zoom', dash: 'Dash',
+  reload: 'Reload', ability0: 'Ability 1 (Offensive)', ability1: 'Ability 2 (Defensive)',
+  ability2: 'Ability 3 (Utility)', core: 'Core Ability',
+  moveUp: 'Move Up', moveDown: 'Move Down', scoreboard: 'Scoreboard', menu: 'Menu',
+};
+
+let settingsOpen = false;
+
+function buildSettingsPage() {
+  const overlay = document.getElementById('settings-overlay');
+  overlay.innerHTML = `
+    <h1>SETTINGS</h1>
+    <h2>CONTROLS & INPUT</h2>
+
+    <div class="settings-section">
+      <h3>Mouse</h3>
+      <div class="setting-row">
+        <label>Mouse Sensitivity</label>
+        <input type="range" id="set-mouse-sens" min="0.0005" max="0.01" step="0.0005" value="${input.sensitivity}">
+        <div class="value-display" id="val-mouse-sens">${input.sensitivity.toFixed(4)}</div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Gamepad - Sensitivity</h3>
+      <div class="setting-row">
+        <label>Look Sensitivity</label>
+        <input type="range" id="set-gp-look-sens" min="1" max="10" step="0.5" value="${input.gpLookSensitivity}">
+        <div class="value-display" id="val-gp-look-sens">${input.gpLookSensitivity.toFixed(1)}</div>
+      </div>
+      <div class="setting-row">
+        <label>Move Sensitivity</label>
+        <input type="range" id="set-gp-move-sens" min="1" max="10" step="0.5" value="${input.gpMoveSensitivity}">
+        <div class="value-display" id="val-gp-move-sens">${input.gpMoveSensitivity.toFixed(1)}</div>
+      </div>
+      <div class="setting-row">
+        <label>Look Response Curve</label>
+        <input type="range" id="set-gp-look-curve" min="1" max="3" step="0.1" value="${input.gpLookCurve}">
+        <div class="value-display" id="val-gp-look-curve">${input.gpLookCurve.toFixed(1)}</div>
+      </div>
+      <div class="setting-row">
+        <label>Move Response Curve</label>
+        <input type="range" id="set-gp-move-curve" min="1" max="3" step="0.1" value="${input.gpMoveCurve}">
+        <div class="value-display" id="val-gp-move-curve">${input.gpMoveCurve.toFixed(1)}</div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Gamepad - Deadzone</h3>
+      <div class="setting-row">
+        <label>Stick Deadzone</label>
+        <input type="range" id="set-gp-deadzone" min="0" max="0.5" step="0.01" value="${input.gpDeadzone}">
+        <div class="value-display" id="val-gp-deadzone">${input.gpDeadzone.toFixed(2)}</div>
+      </div>
+      <div class="setting-row">
+        <label>Trigger Threshold</label>
+        <input type="range" id="set-gp-trigger" min="0.05" max="0.9" step="0.05" value="${input.triggerThreshold}">
+        <div class="value-display" id="val-gp-trigger">${input.triggerThreshold.toFixed(2)}</div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Gamepad - Options</h3>
+      <div class="setting-row">
+        <label>Invert Look Y</label>
+        <input type="checkbox" id="set-gp-invert-y" ${input.invertLookY ? 'checked' : ''}>
+      </div>
+      <div class="setting-row">
+        <label>Swap Sticks (Southpaw)</label>
+        <input type="checkbox" id="set-gp-swap" ${input.swapSticks ? 'checked' : ''}>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Gamepad - Button Mapping</h3>
+      <div id="bind-rows"></div>
+    </div>
+
+    <button id="settings-close">CLOSE</button>
+    <button id="settings-reset">RESET TO DEFAULTS</button>
+  `;
+
+  // Build bind rows with dropdown selects
+  const bindContainer = overlay.querySelector('#bind-rows');
+  for (const [action, label] of Object.entries(ACTION_LABELS)) {
+    const row = document.createElement('div');
+    row.className = 'setting-row';
+    const currentIdx = input.gpBindings[action];
+
+    let optionsHtml = '<option value="-1">None</option>';
+    for (let i = 0; i <= 15; i++) {
+      const selected = (i === currentIdx) ? ' selected' : '';
+      optionsHtml += `<option value="${i}"${selected}>${GAMEPAD_BUTTON_NAMES[i] || 'Btn ' + i}</option>`;
+    }
+    // If currentIdx is -1 (None), select that
+    if (currentIdx === -1) {
+      optionsHtml = optionsHtml.replace('value="-1">', 'value="-1" selected>');
+    }
+
+    row.innerHTML = `
+      <label>${label}</label>
+      <select class="bind-select" data-action="${action}">${optionsHtml}</select>
+    `;
+    bindContainer.appendChild(row);
+  }
+
+  // Wire up slider events
+  const sliders = [
+    ['set-mouse-sens', 'val-mouse-sens', v => { input.sensitivity = v; }, 4],
+    ['set-gp-look-sens', 'val-gp-look-sens', v => { input.gpLookSensitivity = v; }, 1],
+    ['set-gp-move-sens', 'val-gp-move-sens', v => { input.gpMoveSensitivity = v; }, 1],
+    ['set-gp-look-curve', 'val-gp-look-curve', v => { input.gpLookCurve = v; }, 1],
+    ['set-gp-move-curve', 'val-gp-move-curve', v => { input.gpMoveCurve = v; }, 1],
+    ['set-gp-deadzone', 'val-gp-deadzone', v => { input.gpDeadzone = v; }, 2],
+    ['set-gp-trigger', 'val-gp-trigger', v => { input.triggerThreshold = v; }, 2],
+  ];
+  sliders.forEach(([id, valId, setter, decimals]) => {
+    const slider = overlay.querySelector('#' + id);
+    const valEl = overlay.querySelector('#' + valId);
+    slider.addEventListener('input', () => {
+      const v = parseFloat(slider.value);
+      setter(v);
+      valEl.textContent = v.toFixed(decimals);
+      saveSettings();
+    });
+  });
+
+  // Checkboxes
+  overlay.querySelector('#set-gp-invert-y').addEventListener('change', e => { input.invertLookY = e.target.checked; saveSettings(); });
+  overlay.querySelector('#set-gp-swap').addEventListener('change', e => { input.swapSticks = e.target.checked; saveSettings(); });
+
+  // Bind dropdowns
+  overlay.querySelectorAll('.bind-select').forEach(sel => {
+    sel.addEventListener('change', () => {
+      const action = sel.dataset.action;
+      input.gpBindings[action] = parseInt(sel.value, 10);
+      saveSettings();
+    });
+  });
+
+  // Close button
+  overlay.querySelector('#settings-close').addEventListener('click', closeSettings);
+
+  // Reset button
+  overlay.querySelector('#settings-reset').addEventListener('click', () => {
+    resetSettingsToDefaults();
+    buildSettingsPage(); // Rebuild with new values
+    openSettings(); // Re-show
+  });
+}
+
+function openSettings() {
+  settingsOpen = true;
+  const overlay = document.getElementById('settings-overlay');
+  overlay.classList.add('open');
+  overlay.style.display = '';
+  document.exitPointerLock();
+}
+
+function closeSettings() {
+  settingsOpen = false;
+  const overlay = document.getElementById('settings-overlay');
+  overlay.classList.remove('open');
+  overlay.style.display = 'none';
+  if (game.state !== 'select') renderer.domElement.requestPointerLock();
+}
+
+function resetSettingsToDefaults() {
+  input.sensitivity = 0.002;
+  input.gpDeadzone = 0.0;
+  input.gpLookSensitivity = 10.0;
+  input.gpMoveSensitivity = 10.0;
+  input.gpLookCurve = 1.0;
+  input.gpMoveCurve = 1.0;
+  input.invertLookY = false;
+  input.swapSticks = false;
+  input.triggerThreshold = 0.3;
+  input.gpBindings = {
+    fire: 7, altFire: 6, dash: 0, reload: 2,
+    ability0: 4, ability1: 5, ability2: 3, core: 12,
+    moveUp: 10, moveDown: 11, scoreboard: 8, menu: 9,
+  };
+  saveSettings();
+}
+
+function saveSettings() {
+  try {
+    const data = {
+      sensitivity: input.sensitivity,
+      gpDeadzone: input.gpDeadzone,
+      gpLookSensitivity: input.gpLookSensitivity,
+      gpMoveSensitivity: input.gpMoveSensitivity,
+      gpLookCurve: input.gpLookCurve,
+      gpMoveCurve: input.gpMoveCurve,
+      invertLookY: input.invertLookY,
+      swapSticks: input.swapSticks,
+      triggerThreshold: input.triggerThreshold,
+      gpBindings: input.gpBindings,
+    };
+    localStorage.setItem('lss_settings', JSON.stringify(data));
+  } catch(e) {}
+}
+
+function loadSettings() {
+  try {
+    const raw = localStorage.getItem('lss_settings');
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (data.sensitivity !== undefined) input.sensitivity = data.sensitivity;
+    if (data.gpDeadzone !== undefined) input.gpDeadzone = data.gpDeadzone;
+    if (data.gpLookSensitivity !== undefined) input.gpLookSensitivity = data.gpLookSensitivity;
+    if (data.gpMoveSensitivity !== undefined) input.gpMoveSensitivity = data.gpMoveSensitivity;
+    if (data.gpLookCurve !== undefined) input.gpLookCurve = data.gpLookCurve;
+    if (data.gpMoveCurve !== undefined) input.gpMoveCurve = data.gpMoveCurve;
+    if (data.invertLookY !== undefined) input.invertLookY = data.invertLookY;
+    if (data.swapSticks !== undefined) input.swapSticks = data.swapSticks;
+    if (data.triggerThreshold !== undefined) input.triggerThreshold = data.triggerThreshold;
+    if (data.gpBindings) Object.assign(input.gpBindings, data.gpBindings);
+  } catch(e) {}
+}
+
+// ---- STASIS FIELD SYSTEM ----
+
+class StasisField {
+  constructor(position) {
+    this.position = position.clone();
+    this.alive = true;
+    this.radius = 120;
+    this.pulseTime = 0;
+
+    // Visual: glowing sphere with rotating ring
+    this.group = new THREE.Group();
+    const coreMat = new THREE.MeshBasicMaterial({ color: 0x00ccff, transparent: true, opacity: 0.6 });
+    const coreGeo = new THREE.SphereGeometry(15, 12, 8);
+    this.core = new THREE.Mesh(coreGeo, coreMat);
+    this.group.add(this.core);
+
+    const ringGeo = new THREE.TorusGeometry(40, 2, 8, 32);
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0x0088ff, transparent: true, opacity: 0.4 });
+    this.ring = new THREE.Mesh(ringGeo, ringMat);
+    this.group.add(this.ring);
+
+    const ring2 = new THREE.Mesh(ringGeo, ringMat.clone());
+    ring2.rotation.x = Math.PI / 2;
+    this.ring2 = ring2;
+    this.group.add(ring2);
+
+    // Point light
+    this.light = new THREE.PointLight(0x00ccff, 0.6, 400);
+    this.group.add(this.light);
+
+    this.group.position.copy(position);
+    scene.add(this.group);
+  }
+
+  update(dt) {
+    if (!this.alive) return;
+    this.pulseTime += dt;
+    // Rotate rings
+    this.ring.rotation.z += dt * 1.5;
+    this.ring2.rotation.y += dt * 1.2;
+    // Pulse glow
+    const pulse = 0.4 + Math.sin(this.pulseTime * 3) * 0.2;
+    this.core.material.opacity = pulse + 0.2;
+    this.light.intensity = pulse;
+    const s = 1 + Math.sin(this.pulseTime * 2) * 0.1;
+    this.core.scale.set(s, s, s);
+  }
+
+  destroy() {
+    this.alive = false;
+    if (this.group.parent) scene.remove(this.group);
+    // Pickup effect: expanding ring
+    const ringGeo = new THREE.TorusGeometry(20, 3, 8, 32);
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0x00ddff, transparent: true, opacity: 0.8 });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.position.copy(this.position);
+    scene.add(ring);
+    game.effects.push({ mesh: ring, lifetime: 0.6, age: 0, type: 'stasis_pickup', startScale: 1 });
+  }
+}
+
+function spawnStasisField() {
+  // Spawn inside a random corridor position (guaranteed to be inside the letters)
+  const pos = getValidSpawnPoint(null, 80);
+  const field = new StasisField(pos);
+  game.stasisFields.push(field);
+}
+
+function updateStasisFields(dt) {
+  // Spawn timer
+  if (game.state === 'playing') {
+    game.stasisSpawnTimer -= dt;
+    if (game.stasisSpawnTimer <= 0) {
+      if (game.stasisFirstBatch) {
+        // First batch: spawn 2
+        spawnStasisField();
+        spawnStasisField();
+        game.stasisFirstBatch = false;
+      } else {
+        // After that: 1 every interval
+        spawnStasisField();
+      }
+      game.stasisSpawnTimer = game.stasisInterval;
+    }
+  }
+
+  // Update existing fields
+  for (let i = game.stasisFields.length - 1; i >= 0; i--) {
+    const field = game.stasisFields[i];
+    if (!field.alive) { game.stasisFields.splice(i, 1); continue; }
+    field.update(dt);
+
+    // Check player pickup (if not already in stasis and not dead)
+    if (!game.playerInStasis && player.shipState !== 'dead' && player.position) {
+      const dist = player.position.distanceTo(field.position);
+      if (dist < field.radius) {
+        enterStasis(field);
+      }
+    }
+
+    // Check bot pickup
+    for (const bot of game.entities) {
+      if (!bot.alive) continue;
+      const dist = bot.position.distanceTo(field.position);
+      if (dist < field.radius && bot.shield < bot.maxShield) {
+        // Bots instantly grab it (simplified)
+        bot.shield = bot.maxShield;
+        field.destroy();
+        break;
+      }
+    }
+  }
+
+  // Update stasis_pickup effects
+  for (const e of game.effects) {
+    if (e.type === 'stasis_pickup') {
+      const t = e.age / e.lifetime;
+      const s = 1 + t * 6;
+      e.mesh.scale.set(s, s, s);
+      e.mesh.material.opacity = 0.8 * (1 - t);
+    }
+  }
+}
+
+function enterStasis(field) {
+  game.playerInStasis = true;
+  game.playerStasisTimer = game.playerStasisDuration;
+  game.playerPreStasisVelocity = player.velocity.clone();
+  player.velocity.set(0, 0, 0); // Immobilize
+  field.destroy();
+
+  document.getElementById('stasis-warning').style.display = 'block';
+  document.getElementById('stasis-vignette').style.display = 'block';
+}
+
+function updatePlayerStasis(dt) {
+  if (!game.playerInStasis) return;
+
+  game.playerStasisTimer -= dt;
+  const progress = 1 - (game.playerStasisTimer / game.playerStasisDuration);
+
+  // Gradually recharge shield over the stasis duration
+  const rechargePerSec = player.maxShield / game.playerStasisDuration;
+  player.shield = Math.min(player.maxShield, player.shield + rechargePerSec * dt);
+
+  // Force immobility (override any movement input)
+  player.velocity.set(0, 0, 0);
+
+  // Update HUD progress bar
+  const fill = document.getElementById('stasis-fill');
+  if (fill) fill.style.width = (progress * 100) + '%';
+
+  if (game.playerStasisTimer <= 0) {
+    // Exit stasis
+    game.playerInStasis = false;
+    player.shield = player.maxShield; // ensure full
+    document.getElementById('stasis-warning').style.display = 'none';
+    document.getElementById('stasis-vignette').style.display = 'none';
+  }
+}
+
+// ---- EXECUTION SYSTEM ----
+
+function checkExecutions(dt) {
+  if (player.shipState === 'dead' || !player.position) return;
+
+  const execRadius = player.chassis ? player.chassis.hullLength * 1.2 : 100;
+
+  for (const bot of game.entities) {
+    if (!bot.alive || bot.team === player.team) continue;
+
+    const dist = player.position.distanceTo(bot.position);
+
+    // Show execution prompt when near a doomed enemy
+    const promptEl = document.getElementById('execution-prompt');
+    if (bot.doomed && dist < execRadius * 2.5) {
+      promptEl.style.display = 'block';
+    }
+
+    // Execute on contact with doomed enemy
+    if (bot.doomed && dist < execRadius) {
+      // Destroy the doomed enemy
+      const dealt = bot.health; // finish them off
+      bot.takeDamage(bot.health + 1, 'player');
+      player.damageDealt += dealt;
+      player.coreMeter = Math.min(100, player.coreMeter + 20);
+
+      // Recharge player shields
+      player.shield = player.maxShield;
+
+      // Big execution effect
+      spawnExplosion(bot.position, bot.chassis.hullLength * 1.5);
+      spawnImpactSparks(bot.position, 15);
+      triggerScreenShake(4);
+      showKillMarker();
+
+      addKillFeed('You', bot.loadout.name + ' [EXEC]');
+      promptEl.style.display = 'none';
+      return;
+    }
+  }
+
+  // Also check if player is doomed and an enemy rams them
+  if (player.doomed) {
+    for (const bot of game.entities) {
+      if (!bot.alive || bot.team === player.team) continue;
+      const dist = player.position.distanceTo(bot.position);
+      if (dist < execRadius) {
+        // Bot executes player
+        bot.shield = bot.maxShield;
+        playerDie(bot);
+        addKillFeed(bot.loadout.name + ' [EXEC]', 'You');
+        spawnExplosion(player.position, player.chassis.hullLength * 1.5);
+        return;
+      }
+    }
+  }
+
+  // Hide prompt if no doomed enemies nearby
+  let anyDoomed = false;
+  for (const bot of game.entities) {
+    if (bot.alive && bot.doomed && bot.team !== player.team) {
+      const dist = player.position.distanceTo(bot.position);
+      if (dist < (player.chassis ? player.chassis.hullLength * 3 : 300)) { anyDoomed = true; break; }
+    }
+  }
+  if (!anyDoomed) document.getElementById('execution-prompt').style.display = 'none';
+}
+
+// ---- PROCEDURAL CURSIVE LETTER MAP ----
+
+// Generate a random 3-4 letter word from consonant-vowel patterns
+// ---- PROCEDURAL LEVEL GENERATOR (Room Graph + Softmax Sampling) ----
+// JS port of level_generator.py: learns from embedded training data, generates
+// room-graph levels, validates connectivity, then builds 3D geometry.
+
+const ROOM_TYPES = ['spawn', 'hub', 'corridor', 'arena', 'flank', 'sniper', 'cover', 'objective'];
+
+const ROOM_SIZE_RANGES = {
+  spawn:     { wMin: 800, wMax: 1200, dMin: 700, dMax: 1000, hMin: 1200, hMax: 1600 },
+  hub:       { wMin: 1200, wMax: 2200, dMin: 1200, dMax: 2200, hMin: 1600, hMax: 2200 },
+  corridor:  { wMin: 400, wMax: 600,  dMin: 300, dMax: 450,  hMin: 800,  hMax: 1200 },
+  arena:     { wMin: 1000, wMax: 2800, dMin: 1000, dMax: 2800, hMin: 1400, hMax: 2200 },
+  flank:     { wMin: 500, wMax: 800,  dMin: 400, dMax: 600,  hMin: 800,  hMax: 1000 },
+  sniper:    { wMin: 400, wMax: 600,  dMin: 350, dMax: 450,  hMin: 600,  hMax: 800 },
+  cover:     { wMin: 400, wMax: 800,  dMin: 400, dMax: 600,  hMin: 900,  hMax: 1300 },
+  objective: { wMin: 500, wMax: 900,  dMin: 500, dMax: 900,  hMin: 1600, hMax: 2200 },
+};
+
+// Embedded training data (compact): transition counts learned from 6 hand-crafted levels
+const TRAINED_TRANSITIONS = {
+  spawn: { corridor: 8, flank: 3, hub: 1 },
+  corridor: { spawn: 8, hub: 10, flank: 6, sniper: 4, cover: 4, arena: 6 },
+  hub: { corridor: 10, arena: 6, cover: 5, flank: 4, sniper: 2, objective: 2 },
+  arena: { hub: 6, cover: 3, corridor: 6, flank: 2 },
+  flank: { corridor: 6, hub: 4, sniper: 4, arena: 2 },
+  sniper: { corridor: 4, flank: 4, hub: 2 },
+  cover: { hub: 5, corridor: 4, arena: 3 },
+  objective: { hub: 2, arena: 1 },
+};
+
+const TRAINED_DEPTH_TYPES = {
+  0: { spawn: 6 },
+  1: { corridor: 8, flank: 3 },
+  2: { hub: 5, corridor: 4, flank: 3, cover: 2, arena: 2 },
+  3: { arena: 5, hub: 3, cover: 3, sniper: 3, corridor: 2, flank: 2 },
+  4: { corridor: 4, cover: 3, sniper: 2, flank: 2, arena: 1 },
+  5: { spawn: 3, corridor: 2, flank: 1 },
+};
+
+function softmax(logits, temperature) {
+  temperature = Math.max(temperature, 0.01);
+  const scaled = logits.map(x => x / temperature);
+  const maxV = Math.max(...scaled);
+  const exps = scaled.map(x => Math.exp(x - maxV));
+  const total = exps.reduce((a, b) => a + b, 0);
+  return exps.map(e => e / total);
+}
+
+function sampleFromProbs(items, probs) {
+  let r = Math.random(), cum = 0;
+  for (let i = 0; i < items.length; i++) {
+    cum += probs[i];
+    if (r <= cum) return items[i];
+  }
+  return items[items.length - 1];
+}
+
+function getTransitionProbs(fromType) {
+  const counts = TRAINED_TRANSITIONS[fromType] || {};
+  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+  if (total === 0) return Object.fromEntries(ROOM_TYPES.map(t => [t, 1 / ROOM_TYPES.length]));
+  return Object.fromEntries(ROOM_TYPES.map(t => [t, (counts[t] || 0) / total]));
+}
+
+function getDepthProbs(depth) {
+  const counts = TRAINED_DEPTH_TYPES[Math.min(depth, 5)] || {};
+  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+  if (total === 0) return Object.fromEntries(ROOM_TYPES.map(t => [t, 1 / ROOM_TYPES.length]));
+  return Object.fromEntries(ROOM_TYPES.map(t => [t, (counts[t] || 0) / total]));
+}
+
+function sampleRoomType(fromType, depth, temperature) {
+  const trans = getTransitionProbs(fromType);
+  const depthP = getDepthProbs(depth);
+  const combined = {};
+  ROOM_TYPES.forEach(t => { combined[t] = 0.6 * (trans[t] || 0) + 0.4 * (depthP[t] || 0); });
+  const types = Object.keys(combined);
+  const logits = types.map(t => Math.log(Math.max(combined[t], 1e-8)));
+  const probs = softmax(logits, temperature);
+  return sampleFromProbs(types, probs);
+}
+
+function sampleRoomSize(type) {
+  const r = ROOM_SIZE_RANGES[type] || ROOM_SIZE_RANGES.corridor;
+  const rInt = (lo, hi) => lo + Math.floor(Math.random() * (hi - lo + 1));
+  return { width: rInt(r.wMin, r.wMax), depth: rInt(r.dMin, r.dMax), height: rInt(r.hMin, r.hMax) };
+}
+
+function generateProceduralLevel(temperature) {
+  temperature = temperature || 1.0;
+  const targetRooms = 12 + Math.floor(Math.random() * 6); // 12-17 rooms
+  const mapHalfW = 3000 + Math.floor(Math.random() * 1500);
+
+  const rooms = [];
+  const edges = [];
+  const roomIds = new Set();
+
+  // Always start with two spawns
+  const spawnA = { id: 'spawn_a', type: 'spawn', team: 'A', x: -mapHalfW, z: Math.floor((Math.random() - 0.5) * 1600), ...sampleRoomSize('spawn') };
+  const spawnB = { id: 'spawn_b', type: 'spawn', team: 'B', x: mapHalfW, z: Math.floor((Math.random() - 0.5) * 1600), ...sampleRoomSize('spawn') };
+  rooms.push(spawnA, spawnB);
+  roomIds.add('spawn_a'); roomIds.add('spawn_b');
+
+  // BFS growth from both spawns
+  const frontier = [['spawn_a', 0], ['spawn_b', 0]];
+  const placedTypes = { spawn: 2 };
+  let counter = 0;
+
+  for (let attempts = 0; attempts < 200 && rooms.length < targetRooms && frontier.length > 0; attempts++) {
+    frontier.sort((a, b) => a[1] - b[1]);
+    const [parentId, parentDepth] = frontier.shift();
+    const parent = rooms.find(r => r.id === parentId);
+    const existingConns = edges.filter(e => e.from === parentId || e.to === parentId).length;
+    const branchTarget = 2 + Math.floor(Math.random() * 2); // 2-3 branches
+    const numChildren = Math.max(0, branchTarget - existingConns);
+
+    for (let c = 0; c < numChildren && rooms.length < targetRooms; c++) {
+      const newDepth = parentDepth + 1;
+      let newType = sampleRoomType(parent.type, newDepth, temperature);
+      if ((placedTypes[newType] || 0) >= 4 && newType !== 'corridor' && newType !== 'cover') {
+        newType = sampleRoomType(parent.type, newDepth, temperature * 1.5);
+      }
+      if (newType === 'spawn') newType = 'corridor';
+
+      counter++;
+      let newId = newType + '_' + counter;
+      while (roomIds.has(newId)) { counter++; newId = newType + '_' + counter; }
+
+      const dirToCenter = parent.x > 0 ? -1 : 1;
+      let nx = parent.x + dirToCenter * (800 + Math.floor(Math.random() * 800));
+      let nz = parent.z + Math.floor((Math.random() - 0.5) * 2400);
+      nx = Math.max(-mapHalfW + 400, Math.min(mapHalfW - 400, nx));
+      nz = Math.max(-3000, Math.min(3000, nz));
+
+      const size = sampleRoomSize(newType);
+      const newRoom = { id: newId, type: newType, x: nx, z: nz, ...size };
+      rooms.push(newRoom);
+      roomIds.add(newId);
+      placedTypes[newType] = (placedTypes[newType] || 0) + 1;
+
+      const edgeW = 250 + Math.floor(Math.random() * 200);
+      edges.push({ from: parentId, to: newId, width: edgeW });
+      frontier.push([newId, newDepth]);
+    }
+  }
+
+  // Cross-connections for flanking routes
+  for (let i = 0; i < rooms.length; i++) {
+    for (let j = i + 1; j < rooms.length; j++) {
+      const ri = rooms[i], rj = rooms[j];
+      const dist = Math.sqrt((ri.x - rj.x) ** 2 + (ri.z - rj.z) ** 2);
+      const already = edges.some(e => (e.from === ri.id && e.to === rj.id) || (e.from === rj.id && e.to === ri.id));
+      if (!already && dist < 2000 && Math.random() < 0.25) {
+        edges.push({ from: ri.id, to: rj.id, width: 250 + Math.floor(Math.random() * 150) });
+      }
+    }
+  }
+
+  // Generate name
+  const prefixes = ['Orbital', 'Derelict', 'Frozen', 'Burning', 'Shattered', 'Lost', 'Dark', 'Iron', 'Crystal', 'Void', 'Neon', 'Plasma'];
+  const suffixes = ['Station', 'Shipyard', 'Nexus', 'Arena', 'Crucible', 'Ring', 'Foundry', 'Spire', 'Bastion', 'Outpost', 'Dock', 'Core'];
+  const name = prefixes[Math.floor(Math.random() * prefixes.length)] + ' ' + suffixes[Math.floor(Math.random() * suffixes.length)];
+
+  return { name, rooms, edges };
+}
+
+function validateLevel(level) {
+  const rooms = {};
+  level.rooms.forEach(r => { rooms[r.id] = r; });
+  const spawns = level.rooms.filter(r => r.type === 'spawn');
+  if (spawns.length < 2) return false;
+  // BFS connectivity
+  const adj = {};
+  level.rooms.forEach(r => { adj[r.id] = []; });
+  level.edges.forEach(e => { if (adj[e.from]) adj[e.from].push(e.to); if (adj[e.to]) adj[e.to].push(e.from); });
+  const visited = new Set();
+  const queue = ['spawn_a'];
+  while (queue.length > 0) {
+    const cur = queue.shift();
+    if (visited.has(cur)) continue;
+    visited.add(cur);
+    (adj[cur] || []).forEach(n => { if (!visited.has(n)) queue.push(n); });
+  }
+  return visited.has('spawn_b') && level.rooms.some(r => r.type === 'arena' || r.type === 'hub');
+}
+
+function generateValidLevel(temperature) {
+  for (let i = 0; i < 30; i++) {
+    const level = generateProceduralLevel(temperature || 1.0);
+    if (validateLevel(level)) return level;
+  }
+  return generateProceduralLevel(0.5); // fallback with low variety
+}
+
+// LETTER_GRIDS removed: now using room-graph procedural levels
+const LETTER_GRIDS_REMOVED = true; // placeholder so old references don't crash
+const _OLD_LETTER_GRIDS = {
+  _note: 'Letter grids replaced by procedural room-graph system'
+};
+
+// ---- HAND-CRAFTED MAPS (Titanfall 2 style) ----
+// Three maps inspired by TF2 lane structure: two spawns, 3 routes, central hub,
+// mix of tight corridors and open arenas, low ceilings with vertical variety.
+
+function getHandcraftedMaps() {
+  return [
+
+    // ============================================================
+    // MAP 1: IRON TERMINUS - Space Station Interior
+    // Inspired by Complex/Boomtown: research facility with distinct rooms,
+    // central atrium, flanking corridors, sniper perches, cover-heavy wings.
+    // Layout: symmetric two-spawn with 3-lane structure.
+    //   Spawn A (west) -- corridors --> Central Hub <-- corridors -- Spawn B (east)
+    //   North flank route through Reactor + Sniper Nest
+    //   South flank route through Cargo Bay + Server Room
+    // ============================================================
+    {
+      name: 'Iron Terminus',
+      rooms: [
+        // Spawns (far left and right)
+        { id: 'spawn_a', type: 'spawn', team: 'A', x: -3800, z: 0, width: 1000, depth: 900, height: 1400 },
+        { id: 'spawn_b', type: 'spawn', team: 'B', x: 3800, z: 0, width: 1000, depth: 900, height: 1400 },
+
+        // Central hub (the Main Hall / atrium - biggest open space)
+        { id: 'hub_central', type: 'hub', x: 0, z: 0, width: 2000, depth: 1800, height: 2000 },
+
+        // Mid-lane rooms (connecting spawns to center)
+        { id: 'corridor_a1', type: 'corridor', x: -2600, z: 0, width: 500, depth: 400, height: 1000 },
+        { id: 'cover_a1', type: 'cover', x: -1600, z: 0, width: 700, depth: 600, height: 1200 },
+        { id: 'corridor_b1', type: 'corridor', x: 2600, z: 0, width: 500, depth: 400, height: 1000 },
+        { id: 'cover_b1', type: 'cover', x: 1600, z: 0, width: 700, depth: 600, height: 1200 },
+
+        // North flank route
+        { id: 'flank_a_north', type: 'flank', x: -2800, z: -1400, width: 600, depth: 500, height: 900 },
+        { id: 'arena_reactor', type: 'arena', x: -1200, z: -1800, width: 1400, depth: 1200, height: 1800 },
+        { id: 'sniper_north', type: 'sniper', x: 0, z: -1600, width: 500, depth: 400, height: 700 },
+        { id: 'arena_lab', type: 'arena', x: 1200, z: -1800, width: 1400, depth: 1200, height: 1800 },
+        { id: 'flank_b_north', type: 'flank', x: 2800, z: -1400, width: 600, depth: 500, height: 900 },
+
+        // South flank route
+        { id: 'flank_a_south', type: 'flank', x: -2800, z: 1400, width: 600, depth: 500, height: 900 },
+        { id: 'arena_cargo', type: 'arena', x: -1200, z: 1800, width: 1600, depth: 1000, height: 1600 },
+        { id: 'cover_south', type: 'cover', x: 0, z: 1600, width: 600, depth: 500, height: 1100 },
+        { id: 'arena_server', type: 'arena', x: 1200, z: 1800, width: 1600, depth: 1000, height: 1600 },
+        { id: 'flank_b_south', type: 'flank', x: 2800, z: 1400, width: 600, depth: 500, height: 900 },
+
+        // Objective room (elevated platform above central hub)
+        { id: 'objective_top', type: 'objective', x: 0, z: -600, width: 800, depth: 600, height: 2000 },
+      ],
+      edges: [
+        // Mid lane: Spawn A -> corridor -> cover -> hub -> cover -> corridor -> Spawn B
+        { from: 'spawn_a', to: 'corridor_a1', width: 350 },
+        { from: 'corridor_a1', to: 'cover_a1', width: 300 },
+        { from: 'cover_a1', to: 'hub_central', width: 400 },
+        { from: 'hub_central', to: 'cover_b1', width: 400 },
+        { from: 'cover_b1', to: 'corridor_b1', width: 300 },
+        { from: 'corridor_b1', to: 'spawn_b', width: 350 },
+
+        // North flank: Spawn A -> flank -> reactor -> sniper -> lab -> flank -> Spawn B
+        { from: 'spawn_a', to: 'flank_a_north', width: 300 },
+        { from: 'flank_a_north', to: 'arena_reactor', width: 350 },
+        { from: 'arena_reactor', to: 'sniper_north', width: 280 },
+        { from: 'sniper_north', to: 'arena_lab', width: 280 },
+        { from: 'arena_lab', to: 'flank_b_north', width: 350 },
+        { from: 'flank_b_north', to: 'spawn_b', width: 300 },
+
+        // South flank: Spawn A -> flank -> cargo -> cover -> server -> flank -> Spawn B
+        { from: 'spawn_a', to: 'flank_a_south', width: 300 },
+        { from: 'flank_a_south', to: 'arena_cargo', width: 350 },
+        { from: 'arena_cargo', to: 'cover_south', width: 300 },
+        { from: 'cover_south', to: 'arena_server', width: 300 },
+        { from: 'arena_server', to: 'flank_b_south', width: 350 },
+        { from: 'flank_b_south', to: 'spawn_b', width: 300 },
+
+        // Cross-connections (flanking between lanes)
+        { from: 'hub_central', to: 'sniper_north', width: 250 },
+        { from: 'hub_central', to: 'cover_south', width: 250 },
+        { from: 'hub_central', to: 'objective_top', width: 300 },
+        { from: 'cover_a1', to: 'arena_reactor', width: 250 },
+        { from: 'cover_a1', to: 'arena_cargo', width: 250 },
+        { from: 'cover_b1', to: 'arena_lab', width: 250 },
+        { from: 'cover_b1', to: 'arena_server', width: 250 },
+      ]
+    },
+
+    // ============================================================
+    // MAP 2: NEON DOCKYARD - Shipyard / Hangar Complex
+    // Inspired by Angel City: urban lanes between large structures,
+    // wide "streets" (hangar bays), tighter back alleys (maintenance tunnels),
+    // rooftop equivalent (gantry level). More rectangular, lane-heavy.
+    // Layout: 3 parallel lanes (north/center/south) with cross-cuts.
+    // ============================================================
+    {
+      name: 'Neon Dockyard',
+      rooms: [
+        // Spawns
+        { id: 'spawn_a', type: 'spawn', team: 'A', x: -4000, z: 0, width: 1100, depth: 1000, height: 1500 },
+        { id: 'spawn_b', type: 'spawn', team: 'B', x: 4000, z: 0, width: 1100, depth: 1000, height: 1500 },
+
+        // North lane (wide hangar bays - good for Dreadnoughts, long sightlines)
+        { id: 'hangar_a', type: 'arena', x: -2400, z: -1600, width: 1800, depth: 1400, height: 1800 },
+        { id: 'corridor_n1', type: 'corridor', x: -800, z: -1600, width: 500, depth: 400, height: 1000 },
+        { id: 'hangar_mid', type: 'arena', x: 0, z: -1800, width: 2200, depth: 1600, height: 2000 },
+        { id: 'corridor_n2', type: 'corridor', x: 800, z: -1600, width: 500, depth: 400, height: 1000 },
+        { id: 'hangar_b', type: 'arena', x: 2400, z: -1600, width: 1800, depth: 1400, height: 1800 },
+
+        // Center lane (maintenance corridor - tight, CQC, Ronin territory)
+        { id: 'cover_a_mid', type: 'cover', x: -2400, z: 0, width: 600, depth: 500, height: 1000 },
+        { id: 'flank_center1', type: 'flank', x: -1200, z: 200, width: 500, depth: 450, height: 900 },
+        { id: 'hub_ops', type: 'hub', x: 0, z: 0, width: 1800, depth: 1400, height: 1800 },
+        { id: 'flank_center2', type: 'flank', x: 1200, z: 200, width: 500, depth: 450, height: 900 },
+        { id: 'cover_b_mid', type: 'cover', x: 2400, z: 0, width: 600, depth: 500, height: 1000 },
+
+        // South lane (cargo loading - medium width, lots of cover objects)
+        { id: 'cover_a_south', type: 'cover', x: -2400, z: 1600, width: 800, depth: 600, height: 1200 },
+        { id: 'arena_loading', type: 'arena', x: -800, z: 1800, width: 1200, depth: 1000, height: 1400 },
+        { id: 'objective_crane', type: 'objective', x: 0, z: 1800, width: 900, depth: 800, height: 2000 },
+        { id: 'arena_storage', type: 'arena', x: 800, z: 1800, width: 1200, depth: 1000, height: 1400 },
+        { id: 'cover_b_south', type: 'cover', x: 2400, z: 1600, width: 800, depth: 600, height: 1200 },
+
+        // Sniper perches (elevated alcoves overlooking hangar lane)
+        { id: 'sniper_a', type: 'sniper', x: -1800, z: -800, width: 400, depth: 350, height: 700 },
+        { id: 'sniper_b', type: 'sniper', x: 1800, z: -800, width: 400, depth: 350, height: 700 },
+      ],
+      edges: [
+        // Spawn connections (each spawn connects to all 3 lanes)
+        { from: 'spawn_a', to: 'hangar_a', width: 400 },
+        { from: 'spawn_a', to: 'cover_a_mid', width: 300 },
+        { from: 'spawn_a', to: 'cover_a_south', width: 300 },
+        { from: 'spawn_b', to: 'hangar_b', width: 400 },
+        { from: 'spawn_b', to: 'cover_b_mid', width: 300 },
+        { from: 'spawn_b', to: 'cover_b_south', width: 300 },
+
+        // North lane
+        { from: 'hangar_a', to: 'corridor_n1', width: 400 },
+        { from: 'corridor_n1', to: 'hangar_mid', width: 400 },
+        { from: 'hangar_mid', to: 'corridor_n2', width: 400 },
+        { from: 'corridor_n2', to: 'hangar_b', width: 400 },
+
+        // Center lane
+        { from: 'cover_a_mid', to: 'flank_center1', width: 280 },
+        { from: 'flank_center1', to: 'hub_ops', width: 350 },
+        { from: 'hub_ops', to: 'flank_center2', width: 350 },
+        { from: 'flank_center2', to: 'cover_b_mid', width: 280 },
+
+        // South lane
+        { from: 'cover_a_south', to: 'arena_loading', width: 350 },
+        { from: 'arena_loading', to: 'objective_crane', width: 300 },
+        { from: 'objective_crane', to: 'arena_storage', width: 300 },
+        { from: 'arena_storage', to: 'cover_b_south', width: 350 },
+
+        // Cross-connections between lanes
+        { from: 'hangar_a', to: 'sniper_a', width: 250 },
+        { from: 'sniper_a', to: 'cover_a_mid', width: 220 },
+        { from: 'sniper_a', to: 'hub_ops', width: 250 },
+        { from: 'hangar_b', to: 'sniper_b', width: 250 },
+        { from: 'sniper_b', to: 'cover_b_mid', width: 220 },
+        { from: 'sniper_b', to: 'hub_ops', width: 250 },
+        { from: 'hub_ops', to: 'objective_crane', width: 300 },
+        { from: 'flank_center1', to: 'arena_loading', width: 250 },
+        { from: 'flank_center2', to: 'arena_storage', width: 250 },
+        { from: 'corridor_n1', to: 'flank_center1', width: 250 },
+        { from: 'corridor_n2', to: 'flank_center2', width: 250 },
+      ]
+    },
+
+    // ============================================================
+    // MAP 3: SHATTERED LEVIATHAN - Wrecked Capital Ship
+    // Inspired by Crash Site: asymmetric, organic flow, tight wrecked
+    // corridors opening into torn hull breaches, a massive engine room,
+    // exposed bridge section. Less symmetric than the other two.
+    // Layout: elongated north-south with the wreck listing to one side.
+    // ============================================================
+    {
+      name: 'Shattered Leviathan',
+      rooms: [
+        // Spawns (north/south of the wreck, offset from center)
+        { id: 'spawn_a', type: 'spawn', team: 'A', x: -3600, z: -800, width: 1000, depth: 800, height: 1300 },
+        { id: 'spawn_b', type: 'spawn', team: 'B', x: 3400, z: 600, width: 1000, depth: 800, height: 1300 },
+
+        // Bow section (Spawn A side)
+        { id: 'corridor_bow1', type: 'corridor', x: -2600, z: -600, width: 450, depth: 380, height: 900 },
+        { id: 'arena_bridge', type: 'arena', x: -1800, z: -1200, width: 1600, depth: 1200, height: 1600 },
+        { id: 'flank_ventral', type: 'flank', x: -2200, z: 400, width: 550, depth: 450, height: 850 },
+
+        // Mid-ship (central contested zone)
+        { id: 'hub_atrium', type: 'hub', x: -400, z: -200, width: 2000, depth: 1600, height: 2200 },
+        { id: 'cover_debris1', type: 'cover', x: -800, z: -1000, width: 600, depth: 500, height: 1000 },
+        { id: 'corridor_dorsal', type: 'corridor', x: 0, z: -1600, width: 500, depth: 400, height: 1000 },
+        { id: 'sniper_catwalk', type: 'sniper', x: 200, z: -1000, width: 450, depth: 380, height: 650 },
+
+        // Hull breach (open area with torn walls - the "Crash Site" zone)
+        { id: 'arena_breach', type: 'arena', x: 400, z: 1200, width: 2200, depth: 1800, height: 2000 },
+        { id: 'cover_wreckage', type: 'cover', x: -400, z: 1400, width: 700, depth: 500, height: 1100 },
+        { id: 'flank_crawlspace', type: 'flank', x: -800, z: 800, width: 500, depth: 400, height: 800 },
+
+        // Engine room (Spawn B side - tall, industrial)
+        { id: 'arena_engine', type: 'arena', x: 1800, z: 200, width: 1800, depth: 1400, height: 2200 },
+        { id: 'corridor_stern1', type: 'corridor', x: 2600, z: 400, width: 450, depth: 380, height: 900 },
+        { id: 'cover_pipes', type: 'cover', x: 1400, z: -800, width: 600, depth: 500, height: 1000 },
+        { id: 'flank_maintenance', type: 'flank', x: 2200, z: -600, width: 550, depth: 450, height: 850 },
+
+        // Objective: the ship's core (deep in the wreck)
+        { id: 'objective_core', type: 'objective', x: 800, z: -400, width: 800, depth: 700, height: 1800 },
+      ],
+      edges: [
+        // Main route: Bow -> Atrium -> Engine -> Stern
+        { from: 'spawn_a', to: 'corridor_bow1', width: 320 },
+        { from: 'corridor_bow1', to: 'arena_bridge', width: 350 },
+        { from: 'arena_bridge', to: 'cover_debris1', width: 300 },
+        { from: 'cover_debris1', to: 'hub_atrium', width: 350 },
+        { from: 'hub_atrium', to: 'objective_core', width: 300 },
+        { from: 'objective_core', to: 'arena_engine', width: 350 },
+        { from: 'arena_engine', to: 'corridor_stern1', width: 320 },
+        { from: 'corridor_stern1', to: 'spawn_b', width: 320 },
+
+        // North flank (dorsal route along the top of the hull)
+        { from: 'arena_bridge', to: 'corridor_dorsal', width: 280 },
+        { from: 'corridor_dorsal', to: 'sniper_catwalk', width: 250 },
+        { from: 'sniper_catwalk', to: 'cover_pipes', width: 260 },
+        { from: 'cover_pipes', to: 'flank_maintenance', width: 280 },
+        { from: 'flank_maintenance', to: 'arena_engine', width: 300 },
+
+        // South flank (ventral route through hull breach)
+        { from: 'spawn_a', to: 'flank_ventral', width: 280 },
+        { from: 'flank_ventral', to: 'flank_crawlspace', width: 260 },
+        { from: 'flank_crawlspace', to: 'cover_wreckage', width: 260 },
+        { from: 'cover_wreckage', to: 'arena_breach', width: 350 },
+        { from: 'arena_breach', to: 'arena_engine', width: 380 },
+        { from: 'arena_breach', to: 'spawn_b', width: 350 },
+
+        // Cross-connections
+        { from: 'hub_atrium', to: 'flank_crawlspace', width: 250 },
+        { from: 'hub_atrium', to: 'sniper_catwalk', width: 250 },
+        { from: 'arena_breach', to: 'hub_atrium', width: 300 },
+        { from: 'objective_core', to: 'cover_pipes', width: 250 },
+        { from: 'flank_maintenance', to: 'spawn_b', width: 280 },
+        { from: 'cover_wreckage', to: 'hub_atrium', width: 260 },
+      ]
+    },
+
+  ];
+}
+
+// Map rotation state
+let HANDCRAFTED_MAPS = null;
+let currentMapIndex = -1; // -1 = use procedural
+
+function getNextMap() {
+  if (!HANDCRAFTED_MAPS) HANDCRAFTED_MAPS = getHandcraftedMaps();
+  // Rotate: 3 handcrafted maps, then 1 procedural, repeat
+  currentMapIndex++;
+  if (currentMapIndex < HANDCRAFTED_MAPS.length) {
+    return HANDCRAFTED_MAPS[currentMapIndex];
+  } else {
+    // Procedural round, then reset rotation
+    currentMapIndex = -1;
+    return generateValidLevel(1.0);
+  }
+}
+
+// Shuffle the map order each match
+function shuffleMapRotation() {
+  if (!HANDCRAFTED_MAPS) HANDCRAFTED_MAPS = getHandcraftedMaps();
+  for (let i = HANDCRAFTED_MAPS.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [HANDCRAFTED_MAPS[i], HANDCRAFTED_MAPS[j]] = [HANDCRAFTED_MAPS[j], HANDCRAFTED_MAPS[i]];
+  }
+  currentMapIndex = -1;
+}
+
+// ---- ROOM-GRAPH GEOMETRY BUILDER ----
+// Builds 3D level geometry from a room-graph (procedurally generated or loaded)
+
+function buildRoomGraphLevel(level) {
+  // Clear old geometry
+  for (const m of game.mapMeshes) { if (m.parent) scene.remove(m); }
+  game.mapMeshes = [];
+  game.levelBoxes = [];
+  game.corridorPoints = [];
+  game.currentLevel = level;
+  game.mapWord = level.name; // for minimap label
+
+  const WALL = 50;
+  const rooms = level.rooms;
+  const edges = level.edges;
+
+  // Cartoon-style materials (bright, flat colors with outlines)
+  const roomColors = {
+    spawn:     { main: 0x44cc88, emissive: 0x116633 },
+    hub:       { main: 0x6688ff, emissive: 0x223388 },
+    corridor:  { main: 0x5577cc, emissive: 0x1a3366 },
+    arena:     { main: 0xff7744, emissive: 0x882211 },
+    flank:     { main: 0xcc66ff, emissive: 0x552288 },
+    sniper:    { main: 0xffcc44, emissive: 0x885500 },
+    cover:     { main: 0x55aa88, emissive: 0x224433 },
+    objective: { main: 0xff4466, emissive: 0x881122 },
+  };
+
+  // Toon materials (flat shading, high saturation, thick geometric feel)
+  function makeToonMat(type, variant) {
+    const c = roomColors[type] || roomColors.corridor;
+    if (variant === 'floor') {
+      return new THREE.MeshToonMaterial({ color: new THREE.Color(c.main).multiplyScalar(0.6) });
+    } else if (variant === 'ceiling') {
+      return new THREE.MeshToonMaterial({ color: new THREE.Color(c.main).multiplyScalar(0.4) });
+    } else if (variant === 'wall') {
+      return new THREE.MeshToonMaterial({ color: c.main });
+    }
+    return new THREE.MeshToonMaterial({ color: c.main });
+  }
+
+  const windowMat = new THREE.MeshToonMaterial({
+    color: 0x44aaff, transparent: true, opacity: 0.2, side: THREE.DoubleSide
+  });
+  const edgeMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.15 });
+  const outlineMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
+  const beaconMat = new THREE.MeshBasicMaterial({ color: 0x00ff88 });
+  const coverMat = new THREE.MeshToonMaterial({ color: 0x667799 });
+
+  // Helper: add a box with collision and cartoon outline
+  function addToonBox(x, y, z, w, h, d, mat, addCollision) {
+    const geo = new THREE.BoxGeometry(w, h, d);
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(x, y, z);
+    scene.add(mesh);
+    game.mapMeshes.push(mesh);
+
+    // Cartoon edge outline
+    const edgeGeo = new THREE.EdgesGeometry(geo);
+    const outline = new THREE.LineSegments(edgeGeo, outlineMat);
+    outline.position.copy(mesh.position);
+    scene.add(outline);
+    game.mapMeshes.push(outline);
+
+    if (addCollision !== false) {
+      game.levelBoxes.push({
+        min: new THREE.Vector3(x - w/2, y - h/2, z - d/2),
+        max: new THREE.Vector3(x + w/2, y + h/2, z + d/2),
+      });
+    }
+    return mesh;
+  }
+
+  // Build each room
+  for (const room of rooms) {
+    const rx = room.x, rz = room.z;
+    const rw = room.width, rd = room.depth, rh = room.height;
+    const type = room.type;
+
+    // Floor
+    addToonBox(rx, -rh/2 - WALL/2, rz, rw + WALL*2, WALL, rd + WALL*2, makeToonMat(type, 'floor'));
+    // Ceiling
+    addToonBox(rx, rh/2 + WALL/2, rz, rw + WALL*2, WALL, rd + WALL*2, makeToonMat(type, 'ceiling'));
+
+    // Walls (4 sides, with gaps for connections)
+    const wallGaps = { north: [], south: [], east: [], west: [] };
+
+    // Find edges connected to this room and compute gap positions
+    for (const edge of edges) {
+      let otherRoom = null;
+      if (edge.from === room.id) otherRoom = rooms.find(r => r.id === edge.to);
+      else if (edge.to === room.id) otherRoom = rooms.find(r => r.id === edge.from);
+      if (!otherRoom) continue;
+
+      const dx = otherRoom.x - room.x;
+      const dz = otherRoom.z - room.z;
+      const gapW = edge.width || 350;
+
+      // Determine which wall the connection pierces
+      if (Math.abs(dx) > Math.abs(dz)) {
+        // East or West wall
+        const gapZ = room.z + (dz * 0.3); // offset toward other room
+        if (dx > 0) wallGaps.east.push({ center: gapZ, width: gapW });
+        else wallGaps.west.push({ center: gapZ, width: gapW });
+      } else {
+        // North or South wall
+        const gapX = room.x + (dx * 0.3);
+        if (dz > 0) wallGaps.south.push({ center: gapX, width: gapW });
+        else wallGaps.north.push({ center: gapX, width: gapW });
+      }
+    }
+
+    // Build walls with gaps
+    function buildWallWithGaps(wallX, wallZ, wallW, wallD, isXWall, gaps) {
+      if (gaps.length === 0) {
+        // Check if this is a perimeter wall (potential window)
+        const isWindow = Math.random() < 0.15;
+        addToonBox(wallX, 0, wallZ, wallW, rh, wallD, isWindow ? windowMat : makeToonMat(type, 'wall'));
+        return;
+      }
+
+      // Sort gaps and build wall segments between them
+      const axis = isXWall ? 'z' : 'x';
+      const wallLength = isXWall ? rd : rw;
+      const wallStart = isXWall ? (rz - rd/2) : (rx - rw/2);
+      const wallEnd = isXWall ? (rz + rd/2) : (rx + rw/2);
+
+      // Convert gaps to sorted intervals
+      const intervals = gaps.map(g => ({
+        lo: g.center - g.width/2,
+        hi: g.center + g.width/2
+      })).sort((a, b) => a.lo - b.lo);
+
+      let cursor = wallStart;
+      for (const gap of intervals) {
+        const gapLo = Math.max(wallStart, gap.lo);
+        const gapHi = Math.min(wallEnd, gap.hi);
+        if (cursor < gapLo) {
+          const segLen = gapLo - cursor;
+          if (isXWall) {
+            addToonBox(wallX, 0, cursor + segLen/2, wallW, rh, segLen, makeToonMat(type, 'wall'));
+          } else {
+            addToonBox(cursor + segLen/2, 0, wallZ, segLen, rh, wallD, makeToonMat(type, 'wall'));
+          }
+        }
+        cursor = gapHi;
+      }
+      if (cursor < wallEnd) {
+        const segLen = wallEnd - cursor;
+        if (isXWall) {
+          addToonBox(wallX, 0, cursor + segLen/2, wallW, rh, segLen, makeToonMat(type, 'wall'));
+        } else {
+          addToonBox(cursor + segLen/2, 0, wallZ, segLen, rh, wallD, makeToonMat(type, 'wall'));
+        }
+      }
+    }
+
+    // North wall (low Z side)
+    buildWallWithGaps(rx, rz - rd/2 - WALL/2, rw + WALL*2, WALL, false, wallGaps.north);
+    // South wall (high Z side)
+    buildWallWithGaps(rx, rz + rd/2 + WALL/2, rw + WALL*2, WALL, false, wallGaps.south);
+    // West wall (low X side)
+    buildWallWithGaps(rx - rw/2 - WALL/2, rz, WALL, rd, true, wallGaps.west);
+    // East wall (high X side)
+    buildWallWithGaps(rx + rw/2 + WALL/2, rz, WALL, rd, true, wallGaps.east);
+
+    // Floor accent strips (colored by room type)
+    const accentColor = new THREE.Color(roomColors[type].main).multiplyScalar(1.5);
+    const accentMat = new THREE.MeshBasicMaterial({ color: accentColor, transparent: true, opacity: 0.3 });
+    for (let i = 0; i < 3; i++) {
+      const sx = rx + (Math.random() - 0.5) * rw * 0.6;
+      const sz = rz + (Math.random() - 0.5) * rd * 0.6;
+      const stripe = new THREE.Mesh(new THREE.BoxGeometry(rw * 0.15, 3, rd * 0.15), accentMat);
+      stripe.position.set(sx, -rh/2 + 2, sz);
+      stripe.rotation.y = Math.random() * Math.PI;
+      scene.add(stripe); game.mapMeshes.push(stripe);
+    }
+
+    // Register corridor points for spawning (grid of points inside room)
+    const step = 200;
+    for (let sx = rx - rw/2 + step/2; sx <= rx + rw/2 - step/2; sx += step) {
+      for (let sz = rz - rd/2 + step/2; sz <= rz + rd/2 - step/2; sz += step) {
+        game.corridorPoints.push({ x: sx, y: 0, z: sz, roomId: room.id, roomType: type, team: room.team || null });
+      }
+    }
+
+    // Cover obstacles inside larger rooms
+    if ((type === 'arena' || type === 'hub' || type === 'cover') && rw > 600) {
+      const numObstacles = Math.floor((rw * rd) / 400000) + 1;
+      for (let i = 0; i < numObstacles; i++) {
+        const ox = rx + (Math.random() - 0.5) * rw * 0.6;
+        const oz = rz + (Math.random() - 0.5) * rd * 0.6;
+        const t = Math.random();
+        let cw, ch, cd;
+        if (t < 0.35) {
+          // Pillar
+          const pr = 30 + Math.random() * 50;
+          ch = rh * (0.2 + Math.random() * 0.3);
+          const geo = new THREE.CylinderGeometry(pr, pr, ch, 8);
+          const mesh = new THREE.Mesh(geo, coverMat);
+          mesh.position.set(ox, (Math.random() - 0.5) * rh * 0.3, oz);
+          scene.add(mesh); game.mapMeshes.push(mesh);
+          game.levelBoxes.push({
+            min: new THREE.Vector3(ox - pr, mesh.position.y - ch/2, oz - pr),
+            max: new THREE.Vector3(ox + pr, mesh.position.y + ch/2, oz + pr)
+          });
+          // Outline
+          const edgeGeo = new THREE.EdgesGeometry(geo);
+          const outline = new THREE.LineSegments(edgeGeo, outlineMat);
+          outline.position.copy(mesh.position);
+          scene.add(outline); game.mapMeshes.push(outline);
+        } else {
+          // Box obstacle
+          cw = 40 + Math.random() * 80;
+          ch = rh * (0.1 + Math.random() * 0.2);
+          cd = 40 + Math.random() * 80;
+          const mesh = addToonBox(ox, (Math.random() - 0.5) * rh * 0.3, oz, cw, ch, cd, coverMat);
+        }
+      }
+    }
+
+    // Room beacon (navigation light)
+    if (type === 'hub' || type === 'arena' || type === 'objective') {
+      const b = new THREE.Mesh(new THREE.SphereGeometry(15, 8, 6), beaconMat);
+      b.position.set(rx, 0, rz);
+      scene.add(b); game.mapMeshes.push(b);
+      const light = new THREE.PointLight(roomColors[type].main, 0.8, rw * 1.5);
+      light.position.set(rx, rh * 0.2, rz);
+      scene.add(light); game.mapMeshes.push(light);
+    }
+  }
+
+  // Build corridor geometry between connected rooms
+  for (const edge of edges) {
+    const roomA = rooms.find(r => r.id === edge.from);
+    const roomB = rooms.find(r => r.id === edge.to);
+    if (!roomA || !roomB) continue;
+
+    const ax = roomA.x, az = roomA.z;
+    const bx = roomB.x, bz = roomB.z;
+    const dx = bx - ax, dz = bz - az;
+    const dist = Math.sqrt(dx * dx + dz * dz);
+
+    // Only build corridor geometry if rooms aren't overlapping
+    const minSep = (roomA.width + roomB.width) / 2 * 0.5;
+    if (dist < minSep) continue;
+
+    const corrW = edge.width || 350;
+    const corrH = Math.min(roomA.height, roomB.height) * 0.8;
+    const midX = (ax + bx) / 2;
+    const midZ = (az + bz) / 2;
+    const angle = Math.atan2(dz, dx);
+
+    // Corridor as a rotated box
+    const corrLen = dist - (roomA.width + roomB.width) / 4;
+    if (corrLen > 50) {
+      const corrGeo = new THREE.BoxGeometry(corrLen, WALL, corrW);
+      // Floor
+      const floorMesh = new THREE.Mesh(corrGeo, makeToonMat('corridor', 'floor'));
+      floorMesh.position.set(midX, -corrH/2 - WALL/2, midZ);
+      floorMesh.rotation.y = -angle;
+      scene.add(floorMesh); game.mapMeshes.push(floorMesh);
+      // Ceiling
+      const ceilMesh = new THREE.Mesh(corrGeo.clone(), makeToonMat('corridor', 'ceiling'));
+      ceilMesh.position.set(midX, corrH/2 + WALL/2, midZ);
+      ceilMesh.rotation.y = -angle;
+      scene.add(ceilMesh); game.mapMeshes.push(ceilMesh);
+
+      // Corridor walls (two sides)
+      const wallGeo = new THREE.BoxGeometry(corrLen, corrH, WALL);
+      const perpX = Math.sin(angle) * corrW/2;
+      const perpZ = -Math.cos(angle) * corrW/2;
+
+      const w1 = new THREE.Mesh(wallGeo, makeToonMat('corridor', 'wall'));
+      w1.position.set(midX + perpX, 0, midZ + perpZ);
+      w1.rotation.y = -angle;
+      scene.add(w1); game.mapMeshes.push(w1);
+
+      const w2 = new THREE.Mesh(wallGeo.clone(), makeToonMat('corridor', 'wall'));
+      w2.position.set(midX - perpX, 0, midZ - perpZ);
+      w2.rotation.y = -angle;
+      scene.add(w2); game.mapMeshes.push(w2);
+
+      // Outline edges for corridor walls
+      const wallEdgeGeo = new THREE.EdgesGeometry(wallGeo);
+      const o1 = new THREE.LineSegments(wallEdgeGeo, outlineMat);
+      o1.position.copy(w1.position); o1.rotation.copy(w1.rotation);
+      scene.add(o1); game.mapMeshes.push(o1);
+      const o2 = new THREE.LineSegments(wallEdgeGeo.clone(), outlineMat);
+      o2.position.copy(w2.position); o2.rotation.copy(w2.rotation);
+      scene.add(o2); game.mapMeshes.push(o2);
+
+      // Corridor collision (approximate as axis-aligned)
+      const hw = corrLen/2, hd = corrW/2;
+      game.levelBoxes.push({
+        min: new THREE.Vector3(midX - hw, -corrH/2 - WALL, midZ - hd),
+        max: new THREE.Vector3(midX + hw, -corrH/2, midZ + hd)
+      });
+      game.levelBoxes.push({
+        min: new THREE.Vector3(midX - hw, corrH/2, midZ - hd),
+        max: new THREE.Vector3(midX + hw, corrH/2 + WALL, midZ + hd)
+      });
+
+      // Corridor spawn points
+      const steps = Math.max(2, Math.floor(corrLen / 300));
+      for (let s = 0; s <= steps; s++) {
+        const t = s / steps;
+        game.corridorPoints.push({
+          x: ax + dx * t, y: 0, z: az + dz * t,
+          roomId: 'corridor_' + edge.from + '_' + edge.to,
+          roomType: 'corridor', team: null
+        });
+      }
+    }
+  }
+
+  // Ambient lighting spread throughout the level
+  const allRooms = level.rooms;
+  for (let i = 0; i < allRooms.length; i += 2) {
+    const r = allRooms[i];
+    const al = new THREE.PointLight(0x6688cc, 0.5, r.width * 3);
+    al.position.set(r.x, r.height * 0.3, r.z);
+    scene.add(al); game.mapMeshes.push(al);
+  }
+
+  console.log('Built room-graph level: ' + level.name + ' (' + rooms.length + ' rooms, ' + edges.length + ' edges)');
+}
+
+// ---- SPAWN HELPERS ----
+// Returns a random position guaranteed to be inside a room.
+function getValidSpawnPoint(team, spread) {
+  spread = spread || 80;
+  const pts = game.corridorPoints;
+  if (!pts || pts.length === 0) return new THREE.Vector3(0, 0, 0);
+
+  let pool = pts;
+  if (team === 'A') {
+    pool = pts.filter(p => p.team === 'A');
+    if (pool.length === 0) pool = pts.filter(p => p.x < 0).sort((a, b) => a.x - b.x).slice(0, Math.max(10, Math.floor(pts.length * 0.2)));
+    if (pool.length === 0) pool = pts.slice(0, Math.max(1, Math.floor(pts.length * 0.25)));
+  } else if (team === 'B') {
+    pool = pts.filter(p => p.team === 'B');
+    if (pool.length === 0) pool = pts.filter(p => p.x > 0).sort((a, b) => b.x - a.x).slice(0, Math.max(10, Math.floor(pts.length * 0.2)));
+    if (pool.length === 0) pool = pts.slice(Math.floor(pts.length * 0.75));
+  }
+
+  const base = pool[Math.floor(Math.random() * pool.length)];
+  return new THREE.Vector3(
+    base.x + (Math.random() - 0.5) * spread,
+    (Math.random() - 0.5) * 400,
+    base.z + (Math.random() - 0.5) * spread
+  );
+}
+
+// ---- SCREEN SHAKE ----
+
+function triggerScreenShake(intensity) {
+  game.shakeIntensity = Math.min(game.shakeIntensity + intensity, 15);
+}
+
+function updateScreenShake(dt) {
+  if (game.shakeIntensity > 0.1) {
+    game.shakeOffset.x = (Math.random() - 0.5) * game.shakeIntensity * 2;
+    game.shakeOffset.y = (Math.random() - 0.5) * game.shakeIntensity * 2;
+    game.shakeIntensity *= Math.pow(0.5, dt * game.shakeDecay);
+  } else {
+    game.shakeIntensity = 0;
+    game.shakeOffset.x = 0;
+    game.shakeOffset.y = 0;
+  }
+}
+
+// ---- DAMAGE DIRECTION INDICATORS ----
+
+function showDamageIndicator(attackerPos) {
+  if (!attackerPos || !player.position) return;
+  const toAttacker = new THREE.Vector3().subVectors(attackerPos, player.position);
+  const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+  const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+  const up = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
+
+  const fDot = forward.dot(toAttacker.clone().normalize());
+  const rDot = right.dot(toAttacker.clone().normalize());
+  const uDot = up.dot(toAttacker.clone().normalize());
+
+  // Determine strongest direction (screen-space)
+  const absR = Math.abs(rDot), absU = Math.abs(uDot), absF = Math.abs(fDot);
+
+  if (fDot < -0.3) {
+    // Behind: show bottom indicator
+    game.damageIndicators.bottom = 1.0;
+  }
+  if (fDot > 0.3) {
+    game.damageIndicators.top = 1.0;
+  }
+  if (rDot > 0.3) {
+    game.damageIndicators.right = 1.0;
+  }
+  if (rDot < -0.3) {
+    game.damageIndicators.left = 1.0;
+  }
+  // If roughly straight ahead or behind, also show left/right based on secondary
+  if (absF > 0.7) {
+    if (rDot > 0.15) game.damageIndicators.right = Math.max(game.damageIndicators.right, 0.5);
+    if (rDot < -0.15) game.damageIndicators.left = Math.max(game.damageIndicators.left, 0.5);
+  }
+}
+
+function updateDamageIndicators(dt) {
+  const dirs = ['top', 'bottom', 'left', 'right'];
+  for (const dir of dirs) {
+    if (game.damageIndicators[dir] > 0) {
+      game.damageIndicators[dir] = Math.max(0, game.damageIndicators[dir] - dt * 2.5);
+    }
+    const el = document.getElementById('dmg-' + dir);
+    if (el) el.style.opacity = game.damageIndicators[dir];
+  }
+}
+
+// ---- ENEMY HEALTH BARS ----
+
+function updateEnemyHealthBars() {
+  const container = document.getElementById('enemy-healthbars');
+  // Clear old bars
+  container.innerHTML = '';
+
+  if (!player.position || player.shipState === 'dead') return;
+
+  const halfW = window.innerWidth / 2;
+  const halfH = window.innerHeight / 2;
+
+  for (const bot of game.entities) {
+    if (!bot.alive || bot.team === player.team) continue;
+    const dist = player.position.distanceTo(bot.position);
+    if (dist > 3000) continue; // too far to show
+
+    // Project 3D position to screen (slightly above the ship)
+    const worldPos = bot.position.clone();
+    worldPos.y += bot.chassis.hullHeight + 30;
+    const projected = worldPos.clone().project(camera);
+
+    // Check if in front of camera
+    if (projected.z > 1) continue;
+
+    const sx = (projected.x * halfW) + halfW;
+    const sy = -(projected.y * halfH) + halfH;
+
+    // Off screen check
+    if (sx < -60 || sx > window.innerWidth + 60 || sy < -30 || sy > window.innerHeight + 30) continue;
+
+    const healthPct = Math.max(0, bot.health / bot.maxHealth);
+    const shieldPct = Math.max(0, bot.shield / bot.maxShield);
+
+    // Scale bar size by distance (closer = bigger)
+    const scale = Math.max(0.5, Math.min(1.2, 800 / dist));
+    const barW = Math.round(80 * scale);
+
+    // Color based on health
+    let hColor = '#00c850';
+    if (healthPct < 0.33) hColor = '#ff5000';
+    else if (healthPct < 0.6) hColor = '#ddc800';
+    if (bot.doomed) hColor = '#ff2200';
+
+    const div = document.createElement('div');
+    div.className = 'enemy-hbar';
+    div.style.left = (sx - barW / 2) + 'px';
+    div.style.top = (sy - 20) + 'px';
+    div.innerHTML = `
+      <div class="enemy-hbar-name" style="font-size:${Math.round(9 * scale)}px">${bot.loadout.name}</div>
+      <div class="enemy-hbar-bg" style="width:${barW}px">
+        <div class="enemy-hbar-fill" style="width:${healthPct * 100}%;background:${hColor}"></div>
+      </div>
+      <div class="enemy-hbar-shield" style="width:${barW * shieldPct}px"></div>
+    `;
+    container.appendChild(div);
+  }
+
+  // Stasis field world markers
+  for (const field of game.stasisFields) {
+    if (!field.alive) continue;
+    const dist = player.position.distanceTo(field.position);
+    if (dist > 4000) continue;
+
+    const worldPos = field.position.clone();
+    worldPos.y += 60;
+    const projected = worldPos.clone().project(camera);
+    if (projected.z > 1) continue;
+
+    const sx = (projected.x * halfW) + halfW;
+    const sy = -(projected.y * halfH) + halfH;
+    if (sx < -30 || sx > window.innerWidth + 30 || sy < -30 || sy > window.innerHeight + 30) continue;
+
+    const div = document.createElement('div');
+    div.className = 'stasis-marker';
+    div.style.left = (sx - 20) + 'px';
+    div.style.top = (sy - 20) + 'px';
+    div.innerHTML = `
+      <div class="stasis-marker-icon"></div>
+      <div>${Math.round(dist)}m</div>
+    `;
+    container.appendChild(div);
+  }
+}
+
+// ---- MAIN GAME LOOP ----
+
+function gameLoop(timestamp) {
+  requestAnimationFrame(gameLoop);
+
+  if (!game.lastTime) game.lastTime = timestamp;
+  game.deltaTime = Math.min(0.05, (timestamp - game.lastTime) / 1000);
+  game.lastTime = timestamp;
+  game.time += game.deltaTime;
+
+  if (game.state === 'select') { renderer.render(scene, camera); return; }
+
+  // Pause gameplay while settings are open
+  if (settingsOpen) {
+    renderer.render(scene, camera);
+    return;
+  }
+
+  const dt = game.deltaTime;
+
+  // Poll gamepad
+  pollGamepad();
+
+  // Update systems
+  updatePlayerStasis(dt);
+  updatePlayerMovement(dt);
+  updateWeapon(dt);
+  updateAbilities(dt);
+  updateRoundSystem(dt);
+  updateStasisFields(dt);
+  checkExecutions(dt);
+
+  for (const bot of game.entities) bot.update(dt);
+
+  for (let i = game.projectiles.length - 1; i >= 0; i--) {
+    game.projectiles[i].update(dt);
+    if (!game.projectiles[i].alive) game.projectiles.splice(i, 1);
+  }
+
+  updateParticles(dt);
+  updateEffects(dt);
+  updateScreenShake(dt);
+  updateDamageIndicators(dt);
+  updateHUD();
+  updateMinimap();
+  updateEnemyHealthBars();
+
+  // Apply screen shake offset to camera
+  camera.position.x += game.shakeOffset.x;
+  camera.position.y += game.shakeOffset.y;
+
+  game.killFeed = game.killFeed.filter(e => game.time - e.time < 8);
+
+  renderer.render(scene, camera);
+}
+
+// ---- INIT ----
+
+loadSettings();
+buildShipSelect();
+buildSettingsPage();
+requestAnimationFrame(gameLoop);
+
+</script>
+</body>
+</html>
