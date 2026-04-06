@@ -488,7 +488,7 @@ const LOADOUTS = {
     weapon: { name: 'Plasma Railgun', mode: 'hitscan', damage: 1000, fireRate: 1.5, clipSize: 6, range: 4500, splash: 50, projSpeed: 0, pellets: 1, spinup: 0 },
     abilities: [
       { name: 'Cluster Missile', cooldown: 8, duration: 0.3, desc: 'Impact 800 + 500 DPS for 5s', type: 'offensive', dmg: 3300 },
-      { name: 'Afterburner', cooldown: 10, duration: 4, desc: 'Speed boost (1.5x)', type: 'defensive' },
+      { name: 'Afterburner', cooldown: 10, duration: 3, desc: 'Speed boost to 600', type: 'defensive' },
       { name: 'Tether Trap', cooldown: 12, duration: 4, desc: 'Slow and root enemies', type: 'utility' },
     ],
     core: { name: 'Afterburner Core', desc: 'Speed boost + rocket barrage', duration: 5, damage: 7000, cooldown: 60 },
@@ -1639,9 +1639,38 @@ function resolveCollision(pos, velocity, radius) {
   }
 }
 
+// Helper: is a point inside any cylinder (tunnel)?
+function pointInAnyCylinder(px, py, pz) {
+  for (const cyl of (game.levelCylinders || [])) {
+    const ax = cyl.ax, ay = cyl.ay, az = cyl.az;
+    const abx = cyl.bx - ax, aby = cyl.by - ay, abz = cyl.bz - az;
+    const abLen2 = abx*abx + aby*aby + abz*abz;
+    if (abLen2 < 1) continue;
+    const dx = px - ax, dy = py - ay, dz = pz - az;
+    const t = (dx*abx + dy*aby + dz*abz) / abLen2;
+    // Extend generously past endpoints to cover sphere-cylinder CSG overlap region
+    const abLen = Math.sqrt(abLen2);
+    const ext = (cyl.r * 3) / abLen; // extend by 3 radii on each end
+    if (t < -ext || t > 1 + ext) continue;
+    const cx = ax + abx*t, cy = ay + aby*t, cz = az + abz*t;
+    const ex = px - cx, ey = py - cy, ez = pz - cz;
+    if (ex*ex + ey*ey + ez*ez < cyl.r * cyl.r) return true;
+  }
+  return false;
+}
+// Helper: is a point inside any sphere (room)?
+function pointInAnySphere(px, py, pz) {
+  for (const s of (game.levelSpheres || [])) {
+    const dx = px - s.cx, dy = py - s.cy, dz = pz - s.cz;
+    if (dx*dx + dy*dy + dz*dz < s.r * s.r) return true;
+  }
+  return false;
+}
+
 function raycastLevel(origin, dir, maxDist) {
-  // Ray vs obstacles (AABB boxes) + ray vs sphere/cylinder walls (containment boundaries).
-  // Returns distance to nearest wall/obstacle hit (or maxDist if clear path).
+  // Ray vs sphere/cylinder walls with CSG awareness:
+  // Sphere wall hits that land inside a cylinder (tunnel opening) are skipped.
+  // Cylinder wall hits that land inside a sphere (room opening) are skipped.
   let nearest = maxDist;
 
   // 1) Ray vs obstacle boxes
@@ -1656,7 +1685,8 @@ function raycastLevel(origin, dir, maxDist) {
     if (enter < exit && enter > 0 && enter < nearest) nearest = enter;
   }
 
-  // 2) Ray vs sphere walls (ray exits sphere = hits wall from inside)
+  // 2) Ray vs sphere walls (both entry AND exit intersections)
+  // Skip hits that land inside a cylinder (the tunnel opening)
   for (const s of (game.levelSpheres || [])) {
     const ocx = origin.x - s.cx, ocy = origin.y - s.cy, ocz = origin.z - s.cz;
     const a = dir.x*dir.x + dir.y*dir.y + dir.z*dir.z;
@@ -1665,22 +1695,35 @@ function raycastLevel(origin, dir, maxDist) {
     const disc = b*b - 4*a*c;
     if (disc < 0) continue;
     const sqrtD = Math.sqrt(disc);
-    // We want the EXIT point (farther intersection, since we're inside)
-    const t2 = (-b + sqrtD) / (2 * a);
-    if (t2 > 0 && t2 < nearest) nearest = t2;
+    const inv2a = 1 / (2 * a);
+    const t1 = (-b - sqrtD) * inv2a; // entry (near intersection)
+    const t2 = (-b + sqrtD) * inv2a; // exit (far intersection)
+    // Check entry point (ray entering sphere from outside = wall)
+    if (t1 > 1 && t1 < nearest) {
+      const hx = origin.x + dir.x * t1, hy = origin.y + dir.y * t1, hz = origin.z + dir.z * t1;
+      if (!pointInAnyCylinder(hx, hy, hz)) {
+        nearest = t1;
+      }
+    }
+    // Check exit point (ray exiting sphere from inside = wall)
+    if (t2 > 1 && t2 < nearest) {
+      const hx = origin.x + dir.x * t2, hy = origin.y + dir.y * t2, hz = origin.z + dir.z * t2;
+      if (!pointInAnyCylinder(hx, hy, hz)) {
+        nearest = t2;
+      }
+    }
   }
 
-  // 3) Ray vs cylinder walls (infinite cylinder, clamped to segment)
+  // 3) Ray vs cylinder walls (both entry AND exit, clamped to segment)
+  // Skip hits that land inside a sphere (room opening)
   for (const cyl of (game.levelCylinders || [])) {
     const ax = cyl.ax, ay = cyl.ay, az = cyl.az;
     const abx = cyl.bx - ax, aby = cyl.by - ay, abz = cyl.bz - az;
     const abLen = Math.sqrt(abx*abx + aby*aby + abz*abz);
     if (abLen < 1) continue;
-    // Solve for ray-cylinder intersection (infinite cylinder along axis)
     const dax = dir.x, day = dir.y, daz = dir.z;
     const ocx = origin.x - ax, ocy = origin.y - ay, ocz = origin.z - az;
     const nax = abx/abLen, nay = aby/abLen, naz = abz/abLen;
-    // d_perp = dir - (dir.n)n, oc_perp = oc - (oc.n)n
     const dn = dax*nax + day*nay + daz*naz;
     const dpx = dax - dn*nax, dpy = day - dn*nay, dpz = daz - dn*naz;
     const ocn = ocx*nax + ocy*nay + ocz*naz;
@@ -1691,17 +1734,81 @@ function raycastLevel(origin, dir, maxDist) {
     const disc = B*B - 4*A*C;
     if (disc < 0 || A < 1e-10) continue;
     const sqrtD = Math.sqrt(disc);
-    const t2 = (-B + sqrtD) / (2*A); // exit point
-    if (t2 > 0 && t2 < nearest) {
-      // Check that hit point is within cylinder segment length
-      const hitT = ocn + dn * t2;
-      if (hitT >= -cyl.r * 0.1 && hitT <= abLen + cyl.r * 0.1) {
-        nearest = t2;
+    const inv2A = 1 / (2*A);
+    const ct1 = (-B - sqrtD) * inv2A; // entry (near)
+    const ct2 = (-B + sqrtD) * inv2A; // exit (far)
+    // Check both entry and exit intersections
+    const tVals = [ct1, ct2];
+    for (const tv of tVals) {
+      if (tv > 1 && tv < nearest) {
+        const hitT = ocn + dn * tv;
+        if (hitT >= -cyl.r * 3 && hitT <= abLen + cyl.r * 3) {
+          const hx = origin.x + dir.x * tv, hy = origin.y + dir.y * tv, hz = origin.z + dir.z * tv;
+          if (!pointInAnySphere(hx, hy, hz)) {
+            nearest = tv;
+          }
+        }
       }
     }
   }
 
   return nearest;
+}
+
+// Get wall surface normal at a point (for projectile bouncing)
+function getWallNormal(point) {
+  const spheres = game.levelSpheres || [];
+  const cylinders = game.levelCylinders || [];
+  let bestDist = Infinity;
+  let bestNormal = new THREE.Vector3(0, 1, 0);
+
+  // Check spheres: normal points inward (toward center) since we're inside
+  for (const s of spheres) {
+    const dx = point.x - s.cx, dy = point.y - s.cy, dz = point.z - s.cz;
+    const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    const wallDist = Math.abs(dist - s.r);
+    // Skip if this point is at a tunnel opening (CSG hole)
+    if (pointInAnyCylinder(point.x, point.y, point.z)) continue;
+    if (wallDist < bestDist) {
+      bestDist = wallDist;
+      if (dist > 0.1) bestNormal = new THREE.Vector3(-dx/dist, -dy/dist, -dz/dist);
+    }
+  }
+
+  // Check cylinders: normal points inward (toward axis)
+  for (const c of cylinders) {
+    const abx = c.bx - c.ax, aby = c.by - c.ay, abz = c.bz - c.az;
+    const abLen2 = abx*abx + aby*aby + abz*abz;
+    if (abLen2 < 1) continue;
+    const apx = point.x - c.ax, apy = point.y - c.ay, apz = point.z - c.az;
+    const t = (apx*abx + apy*aby + apz*abz) / abLen2;
+    if (t < -0.05 || t > 1.05) continue;
+    const cpx = c.ax + abx*t, cpy = c.ay + aby*t, cpz = c.az + abz*t;
+    const dx = point.x - cpx, dy = point.y - cpy, dz = point.z - cpz;
+    const radDist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    const wallDist = Math.abs(radDist - c.r);
+    // Skip if at a room opening (CSG hole)
+    if (pointInAnySphere(point.x, point.y, point.z)) continue;
+    if (wallDist < bestDist) {
+      bestDist = wallDist;
+      if (radDist > 0.1) bestNormal = new THREE.Vector3(-dx/radDist, -dy/radDist, -dz/radDist);
+    }
+  }
+
+  // Check obstacle boxes: normal points away from box surface
+  for (const box of game.levelBoxes) {
+    const cx = Math.max(box.min.x, Math.min(point.x, box.max.x));
+    const cy = Math.max(box.min.y, Math.min(point.y, box.max.y));
+    const cz = Math.max(box.min.z, Math.min(point.z, box.max.z));
+    const dx = point.x - cx, dy = point.y - cy, dz = point.z - cz;
+    const d = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    if (d < bestDist && d > 0.01) {
+      bestDist = d;
+      bestNormal = new THREE.Vector3(dx/d, dy/d, dz/d);
+    }
+  }
+
+  return bestNormal;
 }
 
 // ---- SHIP MESH CREATION ----
@@ -2082,8 +2189,8 @@ class Bot {
         if (dot > 0.7) {
           // LOS check: raycast toward player, only fire if path is clear
           const losDir = toPlayer.clone().normalize();
-          const losDist = raycastLevel(this.position, losDir, distToPlayer);
-          if (losDist >= distToPlayer * 0.95) {
+          const losDist = raycastLevel(this.position, losDir, distToPlayer + 10);
+          if (losDist >= distToPlayer - 5) {
             this.fireAtPlayer(toPlayer, distToPlayer);
             this.fireTimer = this.loadout.weapon.fireRate * (1 + Math.random() * 0.5);
           }
@@ -2100,8 +2207,8 @@ class Bot {
       const toPlayer = new THREE.Vector3().subVectors(player.position, this.position);
       const dist = toPlayer.length();
       const dir = toPlayer.clone().normalize();
-      const losDist = raycastLevel(this.position, dir, dist);
-      if (losDist >= dist * 0.95) {
+      const losDist = raycastLevel(this.position, dir, dist + 10);
+      if (losDist >= dist - 5) {
         // Can see the player; target them
         this.aiTarget = player.position.clone();
       } else {
@@ -2132,6 +2239,9 @@ class Bot {
 
   fireAtPlayer(dir, dist) {
     if (player.shipState === 'dead') return;
+    // Line-of-sight check: can't shoot through walls
+    const wallDist = raycastLevel(this.position, dir.clone().normalize(), dist + 10);
+    if (wallDist < dist - 5) return; // wall blocks the shot
     this.isFiring = true; this.fireFlashTimer = 0.15; // for animation
     const weapon = this.loadout.weapon;
     // Distance-based accuracy: better up close, worse at range
@@ -2287,6 +2397,7 @@ class Projectile {
     this.alive = true;
     this.lifetime = 5;
     this.age = 0;
+    this.bounceCount = 0;
 
     const geo = new THREE.SphereGeometry(3, 6, 4);
     const mat = new THREE.MeshBasicMaterial({ color: color || 0xffaa00 });
@@ -2400,7 +2511,40 @@ class Projectile {
       }
     }
 
-    // Check level collision
+    // Check wall collision via CSG-aware raycast (projectiles bounce or explode on walls)
+    const moveDir = this.velocity.clone().normalize();
+    const moveDist = prevPos.distanceTo(this.position);
+    if (moveDist > 0.1) {
+      const wallDist = raycastLevel(prevPos, moveDir, moveDist + 5);
+      if (wallDist < moveDist) {
+        // Hit a wall; determine bounce vs explode
+        const hitPoint = prevPos.clone().add(moveDir.clone().multiplyScalar(Math.max(0, wallDist - 2)));
+        const shouldExplode = this.isCluster || this.isArcWave || this.tracking || this.salvoGuided || (this.splash > 0 && !this.isFireSource);
+
+        if (shouldExplode) {
+          this.position.copy(hitPoint);
+          this.mesh.position.copy(hitPoint);
+          if (this.isCluster) this.spawnClusterChildren();
+          if (this.splash > 0) this.splashDamage();
+          spawnImpactSparks(hitPoint, 8);
+          playSound('damage');
+          this.destroy();
+          return;
+        } else {
+          // Bounce: reflect velocity off wall normal
+          this.bounceCount++;
+          if (this.bounceCount > 3) { this.destroy(); return; }
+          const normal = getWallNormal(hitPoint);
+          const vn = this.velocity.dot(normal);
+          this.velocity.sub(normal.clone().multiplyScalar(2 * vn));
+          this.velocity.multiplyScalar(this.isFireSource ? 0.75 : 0.5); // energy loss
+          this.position.copy(hitPoint.clone().add(normal.clone().multiplyScalar(3)));
+          this.mesh.position.copy(this.position);
+          spawnImpactSparks(hitPoint, 4);
+        }
+      }
+    }
+    // Fallback: obstacle box collision (in case raycast missed a box edge)
     const levelHit = checkBoxCollision(this.position, 5);
     if (levelHit) {
       if (this.isCluster) this.spawnClusterChildren();
@@ -2413,7 +2557,7 @@ class Projectile {
       for (const bot of game.entities) {
         if (!bot.alive || bot.team === player.team) continue;
         const dist = this.position.distanceTo(bot.position);
-        if (dist < bot.chassis.hullLength * 0.8) {
+        if (dist < bot.chassis.hullLength * 1.2) {
           const dealt = bot.takeDamage(this.damage, 'player');
           if (dealt > 0) {
             player.damageDealt += dealt;
@@ -2422,7 +2566,7 @@ class Projectile {
             spawnImpactSparks(this.position, 5);
           }
           // TONE 40mm Tracker Cannon: weapon hits build lock marks
-          if (player.loadoutKey === 'TONE' && !this.isArcWave && !this.isCluster) {
+          if (player.loadoutKey === 'TONE' && !this.isArcWave && !this.isCluster && !this.tracking) {
             player.toneLocks[bot.id] = Math.min(3, (player.toneLocks[bot.id] || 0) + 1);
             if (player.toneLocks[bot.id] >= 3) player.toneLockedTarget = bot;
           }
@@ -2453,7 +2597,7 @@ class Projectile {
       }
     } else if (this.owner !== 'player' && player.shipState !== 'dead') {
       const dist = this.position.distanceTo(player.position);
-      if (dist < player.chassis.hullLength * 0.8) {
+      if (dist < player.chassis.hullLength * 1.2) {
         playerTakeDamage(this.damage, this.owner, this);
         if (this.isCluster) this.spawnClusterChildren();
         this.destroy();
@@ -3206,8 +3350,8 @@ function updatePlayerMovement(dt) {
     }
   }
 
-  // Speed cap
-  const maxSpeed = player.dashActive ? ch.dashSpeed : ch.flightSpeed;
+  // Speed cap (afterburner raises the cap to 600)
+  const maxSpeed = player.dashActive ? ch.dashSpeed : (player.afterburnerActive ? 600 : ch.flightSpeed);
   if (player.velocity.length() > maxSpeed) {
     player.velocity.normalize().multiplyScalar(maxSpeed);
   }
@@ -3596,7 +3740,7 @@ function fireSpread(origin, dir, w) {
       const proj = toBot.dot(spreadDir);
       if (proj < 0 || proj > Math.min(w.range, levelDist)) continue;
       const closest = origin.clone().add(spreadDir.clone().multiplyScalar(proj));
-      if (closest.distanceTo(bot.position) < bot.chassis.hullLength * 0.8) {
+      if (closest.distanceTo(bot.position) < bot.chassis.hullLength * 1.2) {
         // Spread damage falloff: significant drop-off at range (shotgun behavior)
         const rangeFalloff = Math.max(0.3, 1 - (proj / w.range) * 0.7);
         let finalDmg = w.damage * rangeFalloff;
@@ -4045,7 +4189,7 @@ function firePowerShot() {
         const proj = toBot.dot(pelletDir);
         if (proj < 0 || proj > range) continue;
         const closest = player.position.clone().add(pelletDir.clone().multiplyScalar(proj));
-        if (closest.distanceTo(bot.position) < bot.chassis.hullLength * 0.8) {
+        if (closest.distanceTo(bot.position) < bot.chassis.hullLength * 1.2) {
           const dealt = bot.takeDamage(270, 'player');
           if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 100); showHitMarker(); }
           if (bot.velocity) bot.velocity.add(pelletDir.clone().multiplyScalar(400));
@@ -6758,7 +6902,8 @@ function buildRoomGraphLevel(level) {
     '  float t = clamp(dot(p - cA[idx], ab) / len2, 0.0, 1.0);',
     '  vec3 cl = cA[idx] + ab * t;',
     '  vec3 d = p - cl;',
-    '  return dot(d, d) < cR[idx] * cR[idx];',
+    '  float r = cR[idx] - 5.0;',  // small bias to prevent floating-point seam gaps
+    '  return dot(d, d) < r * r;',
     '}'
   ].join('\n');
 
@@ -6860,7 +7005,8 @@ function buildRoomGraphLevel(level) {
     '  for (int i = 0; i < MS; i++) {',
     '    if (sR[i] < 1.0) continue;',
     '    vec3 d = vWorldPos - sC[i];',
-    '    if (dot(d, d) < sR[i] * sR[i]) discard;',
+    '    float sr = sR[i] - 5.0;',  // small bias to prevent floating-point seam gaps
+    '    if (dot(d, d) < sr * sr) discard;',
     '  }',
     '  for (int i = 0; i < MC; i++) {',
     '    if (cR[i] < 1.0) continue;',
@@ -6986,8 +7132,8 @@ function buildRoomGraphLevel(level) {
     const seg = cylSegs[ci];
     const segLen = seg.len;
 
-    // Open-ended cylinder; slight overlap so geometry fills sphere openings fully
-    const geo = new THREE.CylinderGeometry(TR, TR, segLen + TR * 0.3, 16, 1, true);
+    // Open-ended cylinder; extend well past sphere surfaces to prevent gaps at intersections
+    const geo = new THREE.CylinderGeometry(TR, TR, segLen + TR * 2.0, 16, 1, true);
     const midX = (seg.a.x + seg.b.x) / 2, midY = (seg.a.y + seg.b.y) / 2, midZ = (seg.a.z + seg.b.z) / 2;
     const dir = new THREE.Vector3(seg.dx, seg.dy, seg.dz).normalize();
     const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
@@ -7172,6 +7318,11 @@ function updateEnemyHealthBars() {
     if (!bot.alive || bot.team === player.team) continue;
     const dist = player.position.distanceTo(bot.position);
     if (dist > 3000) continue;
+
+    // Line-of-sight check: hide health bars behind walls
+    const toBot = new THREE.Vector3().subVectors(bot.position, player.position).normalize();
+    const wallDist = raycastLevel(player.position, toBot, dist + 50);
+    if (wallDist < dist - 30) continue; // wall blocks view
 
     const worldPos = bot.position.clone();
     worldPos.y += bot.chassis.hullHeight + 30;
@@ -7694,11 +7845,27 @@ function playSound(type) {
       { attack: 0.005, hold: rr(0.05, 0.2), decay: rr(0.35, 0.15) });
   }
   else if (type === 'damage') {
-    const p = rr(1, 0.12);
-    triChord([ri(55*p,0), ri(62*p,0), ri(73*p,0)], rWave(['sawtooth','square']),
-      rr(0.20, 0.2), rr(0.25, 0.2), [ri(30*p,0), ri(35*p,0), ri(40*p,0)], rr(0.20, 0.2), 0,
-      { attack: rr(0.008, 0.3), hold: rr(0.02, 0.3), decay: rr(0.22, 0.2) });
-    playNoiseBurst(rr(0.06, 0.3), rr(0.05, 0.3), now + 0.005, ri(400, 0.3), rr(1.5, 0.3));
+    // Rapid-fire dissonant pulses: 3-5 short staccato hits with clashing intervals
+    const pulses = 3 + Math.floor(r() * 3);
+    const baseP = rr(1, 0.20);
+    // Dissonant intervals: minor 2nds, tritones, minor 7ths
+    const dissonant = [1.0, 1.059, 1.122, 1.414, 1.498, 1.682, 1.888];
+    for (let i = 0; i < pulses; i++) {
+      const offset = i * rr(0.025, 0.3); // ~25ms between pulses, slightly irregular
+      const d1 = dissonant[Math.floor(r() * dissonant.length)];
+      const d2 = dissonant[Math.floor(r() * dissonant.length)];
+      const d3 = dissonant[Math.floor(r() * dissonant.length)];
+      const vol = rr(0.14, 0.25) * (1 - i * 0.12); // each pulse slightly quieter
+      triChord(
+        [ri(50*baseP*d1,0), ri(63*baseP*d2,0), ri(78*baseP*d3,0)],
+        rWave(['sawtooth','square','square']),
+        vol, rr(0.04, 0.3), // very short duration per pulse
+        [ri(25*baseP*d1,0), ri(32*baseP*d2,0), ri(40*baseP*d3,0)],
+        rr(0.03, 0.3), offset,
+        { attack: 0.001, hold: 0.005, decay: rr(0.035, 0.3) }
+      );
+      playNoiseBurst(rr(0.025, 0.3), rr(0.04, 0.3), now + offset, ri(300 + r() * 600, 0.3), rr(0.7, 0.3));
+    }
   }
   else if (type === 'dash') {
     const p = rr(1, 0.10);
@@ -7727,35 +7894,54 @@ function playSound(type) {
     playNoiseBurst(rr(0.50, 0.15), rr(0.12, 0.15), now, ri(600, 0.2), rr(0.5, 0.3));
   }
   else if (type === 'explosion') {
-    // Explosion: multi-layered noise with heavy randomization.
-    // Every explosion sounds different: random filter freqs, timings, and bonus layers.
-    const size = rr(1, 0.25); // overall size variation
-    // Layer 1: sub-bass pressure wave
-    playNoiseBurst(rr(0.50, 0.3) * size, rr(0.35, 0.2), now, ri(80, 0.3), rr(0.3, 0.3));
-    // Layer 2: main blast
-    playNoiseBurst(rr(0.30, 0.3) * size, rr(0.30, 0.2), now + r() * 0.01, ri(500, 0.35), rr(0.5, 0.3));
-    // Layer 3: debris crackle
-    playNoiseBurst(rr(0.20, 0.3), rr(0.10, 0.25), now + 0.01 + r() * 0.02, ri(1400, 0.3), rr(1.0, 0.3));
-    // Layer 4: sub-rumble tail
-    playNoiseBurst(rr(0.60, 0.25) * size, rr(0.18, 0.2), now + r() * 0.015, ri(40, 0.3), rr(0.2, 0.3));
-    // Tonal growl (randomized pitch and waveform)
-    const gp = rr(1, 0.3);
-    triChord([ri(25*gp,0), ri(30*gp,0), ri(35*gp,0)], rWave(['sawtooth','square']),
-      rr(0.10, 0.25), rr(0.40, 0.2) * size, [ri(12*gp,0), ri(15*gp,0), ri(18*gp,0)], rr(0.35, 0.15), r() * 0.02,
-      { attack: rr(0.01, 0.3), hold: rr(0.02, 0.3), decay: rr(0.37, 0.15) });
-    // Random bonus layers (0 to 2 extra bursts for unique character)
-    const extras = Math.floor(r() * 3);
-    for (let i = 0; i < extras; i++) {
-      const freq = ri(150 + r() * 800, 0.2);
-      playNoiseBurst(rr(0.15, 0.4), rr(0.06, 0.3), now + r() * 0.04, freq, rr(0.8, 0.4));
+    // Rapid-fire destruction: 5-8 dissonant staccato pulses layered with noise blasts
+    const size = rr(1, 0.25);
+    const pulses = 5 + Math.floor(r() * 4);
+    const baseP = rr(1, 0.25);
+    const dissonant = [1.0, 1.059, 1.122, 1.335, 1.414, 1.498, 1.682, 1.888];
+
+    // Initial sub-bass pressure hit (the "thud" before the rapid fire)
+    playNoiseBurst(rr(0.08, 0.3) * size, rr(0.40, 0.2), now, ri(60, 0.3), rr(0.3, 0.3));
+
+    // Rapid-fire dissonant chord pulses
+    for (let i = 0; i < pulses; i++) {
+      const offset = 0.01 + i * rr(0.022, 0.35); // ~22ms spacing, irregular
+      const d1 = dissonant[Math.floor(r() * dissonant.length)];
+      const d2 = dissonant[Math.floor(r() * dissonant.length)];
+      const d3 = dissonant[Math.floor(r() * dissonant.length)];
+      const vol = rr(0.12, 0.3) * size * (1 - i * 0.08);
+      const wave = rWave(['sawtooth','square','square','sawtooth']);
+
+      // Each pulse: a dissonant chord (clashing tritones, minor 2nds)
+      triChord(
+        [ri(30*baseP*d1,0), ri(42*baseP*d2,0), ri(55*baseP*d3,0)],
+        wave, vol, rr(0.04, 0.3),
+        [ri(15*baseP*d1,0), ri(21*baseP*d2,0), ri(28*baseP*d3,0)],
+        rr(0.03, 0.3), offset,
+        { attack: 0.001, hold: 0.003, decay: rr(0.04, 0.3) }
+      );
+      // Paired noise burst per pulse (crackle/debris)
+      playNoiseBurst(rr(0.03, 0.3), rr(0.06, 0.3) * size, now + offset,
+        ri(200 + r() * 1200, 0.3), rr(0.6, 0.4));
     }
-    // Occasional metallic shrapnel ring
-    if (r() > 0.5) {
-      const sp = rr(1, 0.25);
-      triChord([ri(200*sp,0), ri(280*sp,0)], rWave(['triangle','square']), rr(0.04, 0.3),
-        rr(0.20, 0.3), [ri(100*sp,0), ri(140*sp,0)], rr(0.15, 0.3), rr(0.03, 0.3),
-        { attack: 0.001, hold: 0, decay: rr(0.20, 0.3) });
+
+    // High-frequency shrapnel rattle (rapid tiny hits)
+    const shrapnelCount = 3 + Math.floor(r() * 4);
+    for (let i = 0; i < shrapnelCount; i++) {
+      const offset = r() * 0.15;
+      const sp = rr(1, 0.30);
+      triChord(
+        [ri(180*sp,0), ri(240*sp * dissonant[Math.floor(r()*dissonant.length)],0)],
+        rWave(['triangle','square']),
+        rr(0.03, 0.4), rr(0.02, 0.3),
+        [ri(90*sp,0), ri(120*sp,0)],
+        rr(0.015, 0.3), offset,
+        { attack: 0.001, hold: 0, decay: rr(0.02, 0.3) }
+      );
     }
+
+    // Sub-rumble tail (fading low growl after the burst)
+    playNoiseBurst(rr(0.25, 0.3) * size, rr(0.20, 0.2), now + 0.12, ri(45, 0.3), rr(0.2, 0.3));
   }
   else if (type === 'stasis') {
     // Full 3-second charging sound: rising harmonic sweep that builds to release
