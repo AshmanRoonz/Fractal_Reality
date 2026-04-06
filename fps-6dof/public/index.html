@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>6DOF FPS</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; overflow: hidden; font-family: 'Courier New', monospace; cursor: crosshair; }
+  canvas { display: block; }
+
+  #hud {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none; color: #0f0; font-size: 14px;
+  }
+  #crosshair {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 24px; opacity: 0.7;
+  }
+  #health-bar {
+    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+    width: 200px; height: 8px; border: 1px solid #0f0; background: rgba(0,0,0,0.5);
+  }
+  #health-fill {
+    height: 100%; background: #0f0; transition: width 0.1s;
+  }
+  #stats {
+    position: absolute; top: 15px; right: 15px; text-align: right;
+    font-size: 13px; line-height: 1.6;
+  }
+  #scoreboard {
+    position: absolute; top: 15px; left: 15px;
+    font-size: 12px; line-height: 1.5; opacity: 0.8;
+  }
+  #dead-screen {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 28px; color: #f00; display: none; text-align: center;
+  }
+  #controls-hint {
+    position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
+    font-size: 11px; opacity: 0.4; text-align: center; white-space: pre;
+  }
+  #gamepad-indicator {
+    position: absolute; bottom: 15px; right: 15px; font-size: 11px; opacity: 0.5;
+  }
+  #velocity {
+    position: absolute; bottom: 30px; right: 15px; font-size: 12px;
+  }
+</style>
+</head>
+<body>
+
+<div id="hud">
+  <div id="crosshair">+</div>
+  <div id="health-bar"><div id="health-fill"></div></div>
+  <div id="stats"></div>
+  <div id="scoreboard"></div>
+  <div id="dead-screen">DESTROYED<br><span style="font-size:14px;color:#888">respawning...</span></div>
+  <div id="controls-hint">
+WASD: thrust  |  Mouse: pitch/yaw  |  Q/E: roll  |  Space/Shift: up/down  |  Click: fire
+Gamepad: sticks + triggers + bumpers + A/RT to fire</div>
+  <div id="gamepad-indicator"></div>
+  <div id="velocity"></div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+// ─── CONNECT ──────────────────────────────────────────────────────
+const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+const ws = new WebSocket(`${protocol}//${location.host}`);
+let myId = null;
+let arena = { x: 80, y: 60, z: 80 };
+let serverState = { players: [], projectiles: [] };
+
+ws.onmessage = (e) => {
+  const msg = JSON.parse(e.data);
+  if (msg.type === 'welcome') {
+    myId = msg.id;
+    arena = msg.arena;
+    buildArena();
+  } else if (msg.type === 'state') {
+    serverState = msg;
+  }
+};
+
+// ─── THREE.JS SETUP ───────────────────────────────────────────────
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+document.body.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x050510);
+scene.fog = new THREE.FogExp2(0x050510, 0.008);
+
+const camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 500);
+
+// Lighting (minimal)
+scene.add(new THREE.AmbientLight(0x333355, 1.0));
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+dirLight.position.set(20, 40, 20);
+scene.add(dirLight);
+
+// ─── ARENA ────────────────────────────────────────────────────────
+function buildArena() {
+  // Wireframe box
+  const geo = new THREE.BoxGeometry(arena.x, arena.y, arena.z);
+  const edges = new THREE.EdgesGeometry(geo);
+  const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x1a3a1a }));
+  scene.add(line);
+
+  // Grid on floor
+  const gridSize = Math.max(arena.x, arena.z);
+  const grid = new THREE.GridHelper(gridSize, 20, 0x0a2a0a, 0x0a1a0a);
+  grid.position.y = -arena.y / 2;
+  scene.add(grid);
+
+  // Grid on ceiling
+  const gridCeil = new THREE.GridHelper(gridSize, 20, 0x0a2a0a, 0x0a1a0a);
+  gridCeil.position.y = arena.y / 2;
+  scene.add(gridCeil);
+
+  // Floating obstacles (flat-shaded geometric shapes)
+  const obstacleMat = new THREE.MeshLambertMaterial({
+    color: 0x224422,
+    wireframe: false,
+    flatShading: true,
+    transparent: true,
+    opacity: 0.6
+  });
+
+  const shapes = [
+    new THREE.OctahedronGeometry(3, 0),
+    new THREE.TetrahedronGeometry(3, 0),
+    new THREE.IcosahedronGeometry(2.5, 0),
+    new THREE.BoxGeometry(4, 4, 4),
+    new THREE.DodecahedronGeometry(3, 0),
+  ];
+
+  for (let i = 0; i < 15; i++) {
+    const geo = shapes[i % shapes.length];
+    const mesh = new THREE.Mesh(geo, obstacleMat.clone());
+    mesh.position.set(
+      (Math.random() - 0.5) * arena.x * 0.7,
+      (Math.random() - 0.5) * arena.y * 0.7,
+      (Math.random() - 0.5) * arena.z * 0.7
+    );
+    mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+    // Wireframe overlay
+    const wireGeo = new THREE.EdgesGeometry(geo);
+    const wireMesh = new THREE.LineSegments(wireGeo, new THREE.LineBasicMaterial({ color: 0x33ff33, transparent: true, opacity: 0.3 }));
+    mesh.add(wireMesh);
+    scene.add(mesh);
+  }
+
+  // Axis pillars for orientation
+  const pillarGeo = new THREE.CylinderGeometry(0.3, 0.3, arena.y, 6);
+  const positions = [
+    { x: arena.x * 0.4, z: arena.z * 0.4, color: 0xff2222 },
+    { x: -arena.x * 0.4, z: arena.z * 0.4, color: 0x2222ff },
+    { x: arena.x * 0.4, z: -arena.z * 0.4, color: 0xffff22 },
+    { x: -arena.x * 0.4, z: -arena.z * 0.4, color: 0x22ffff },
+  ];
+  positions.forEach(p => {
+    const mat = new THREE.MeshLambertMaterial({ color: p.color, wireframe: true, transparent: true, opacity: 0.3 });
+    const pillar = new THREE.Mesh(pillarGeo, mat);
+    pillar.position.set(p.x, 0, p.z);
+    scene.add(pillar);
+  });
+}
+
+// ─── PLAYER MESHES ────────────────────────────────────────────────
+const playerMeshes = new Map();
+const projectileMeshes = new Map();
+
+function getPlayerMesh(id, color) {
+  if (playerMeshes.has(id)) return playerMeshes.get(id);
+
+  const group = new THREE.Group();
+
+  // Ship body (flat-shaded octahedron, stretched)
+  const bodyGeo = new THREE.OctahedronGeometry(1, 0);
+  bodyGeo.scale(1.2, 0.6, 1.8);
+  const bodyMat = new THREE.MeshLambertMaterial({ color: new THREE.Color(color), flatShading: true });
+  const body = new THREE.Mesh(bodyGeo, bodyMat);
+  group.add(body);
+
+  // Wireframe overlay
+  const wireGeo = new THREE.EdgesGeometry(bodyGeo);
+  const wire = new THREE.LineSegments(wireGeo, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4 }));
+  group.add(wire);
+
+  // Engine glow (point light)
+  const glow = new THREE.PointLight(new THREE.Color(color), 2, 8);
+  glow.position.set(0, 0, 1.5);
+  group.add(glow);
+
+  // Forward indicator (small cone)
+  const noseGeo = new THREE.ConeGeometry(0.2, 0.6, 4);
+  noseGeo.rotateX(Math.PI / 2);
+  noseGeo.translate(0, 0, -2);
+  const noseMat = new THREE.MeshLambertMaterial({ color: 0xffffff, emissive: new THREE.Color(color), emissiveIntensity: 0.5 });
+  const nose = new THREE.Mesh(noseGeo, noseMat);
+  group.add(nose);
+
+  scene.add(group);
+  playerMeshes.set(id, group);
+  return group;
+}
+
+function getProjectileMesh(id, color) {
+  if (projectileMeshes.has(id)) return projectileMeshes.get(id);
+  const geo = new THREE.SphereGeometry(0.3, 4, 4);
+  const mat = new THREE.MeshBasicMaterial({ color: new THREE.Color(color) });
+  const mesh = new THREE.Mesh(geo, mat);
+  // Glow
+  const glow = new THREE.PointLight(new THREE.Color(color), 1, 6);
+  mesh.add(glow);
+  scene.add(mesh);
+  projectileMeshes.set(id, mesh);
+  return mesh;
+}
+
+// ─── INPUT ────────────────────────────────────────────────────────
+const keys = {};
+let mouseX = 0, mouseY = 0;
+let pointerLocked = false;
+let firing = false;
+
+document.addEventListener('keydown', e => { keys[e.code] = true; });
+document.addEventListener('keyup', e => { keys[e.code] = false; });
+document.addEventListener('mousedown', e => { if (e.button === 0) firing = true; });
+document.addEventListener('mouseup', e => { if (e.button === 0) firing = false; });
+
+document.addEventListener('mousemove', e => {
+  if (pointerLocked) {
+    mouseX += e.movementX;
+    mouseY += e.movementY;
+  }
+});
+
+renderer.domElement.addEventListener('click', () => {
+  renderer.domElement.requestPointerLock();
+});
+document.addEventListener('pointerlockchange', () => {
+  pointerLocked = document.pointerLockElement === renderer.domElement;
+});
+
+// ─── GAMEPAD ──────────────────────────────────────────────────────
+let gamepadIndex = null;
+
+window.addEventListener('gamepadconnected', (e) => {
+  gamepadIndex = e.gamepad.index;
+  document.getElementById('gamepad-indicator').textContent = 'GAMEPAD: ' + e.gamepad.id.substring(0, 30);
+});
+window.addEventListener('gamepaddisconnected', () => {
+  gamepadIndex = null;
+  document.getElementById('gamepad-indicator').textContent = '';
+});
+
+function deadzone(val, threshold = 0.12) {
+  if (Math.abs(val) < threshold) return 0;
+  return (val - Math.sign(val) * threshold) / (1 - threshold);
+}
+
+function getGamepadInput() {
+  if (gamepadIndex === null) return null;
+  const gp = navigator.getGamepads()[gamepadIndex];
+  if (!gp) return null;
+
+  // Standard mapping:
+  // Left stick:  axes[0] = X (strafe), axes[1] = Y (forward/back)
+  // Right stick: axes[2] = X (yaw),    axes[3] = Y (pitch)
+  // L2/R2 (triggers): buttons[6]/buttons[7] for roll
+  // L1/R1 (bumpers): buttons[4]/buttons[5] for up/down
+  // A button (0) or R2 trigger: fire
+
+  const leftX = deadzone(gp.axes[0] || 0);
+  const leftY = deadzone(gp.axes[1] || 0);
+  const rightX = deadzone(gp.axes[2] || 0);
+  const rightY = deadzone(gp.axes[3] || 0);
+
+  const l2 = gp.buttons[6] ? gp.buttons[6].value : 0;
+  const r2 = gp.buttons[7] ? gp.buttons[7].value : 0;
+  const l1 = gp.buttons[4] ? gp.buttons[4].pressed : false;
+  const r1 = gp.buttons[5] ? gp.buttons[5].pressed : false;
+  const btnA = gp.buttons[0] ? gp.buttons[0].pressed : false;
+
+  return {
+    thrust: {
+      x: leftX,                                   // strafe left/right
+      y: (r1 ? 1 : 0) - (l1 ? 1 : 0),           // up/down
+      z: -leftY                                    // forward/back (inverted; push up = forward = -Z)
+    },
+    torque: {
+      x: -rightY,                                  // pitch (inverted; push up = look up)
+      y: -rightX,                                  // yaw (inverted for flight-sim feel)
+      z: l2 - r2                                   // roll: L2 = roll left, R2 = roll right
+    },
+    fire: btnA || r2 > 0.8
+  };
+}
+
+function getKeyboardInput() {
+  const thrust = { x: 0, y: 0, z: 0 };
+  const torque = { x: 0, y: 0, z: 0 };
+
+  // Thrust
+  if (keys['KeyW']) thrust.z = -1;
+  if (keys['KeyS']) thrust.z = 1;
+  if (keys['KeyA']) thrust.x = -1;
+  if (keys['KeyD']) thrust.x = 1;
+  if (keys['Space']) thrust.y = 1;
+  if (keys['ShiftLeft'] || keys['ShiftRight']) thrust.y = -1;
+
+  // Torque from mouse
+  const sensitivity = 0.003;
+  torque.y = -mouseX * sensitivity;
+  torque.x = -mouseY * sensitivity;
+  mouseX = 0;
+  mouseY = 0;
+
+  // Roll
+  if (keys['KeyQ']) torque.z = 1;
+  if (keys['KeyE']) torque.z = -1;
+
+  return { thrust, torque, fire: firing };
+}
+
+// ─── GAME LOOP ────────────────────────────────────────────────────
+const clock = new THREE.Clock();
+
+function gameLoop() {
+  requestAnimationFrame(gameLoop);
+  const dt = Math.min(clock.getDelta(), 0.05);
+
+  // Merge inputs (gamepad overrides keyboard if present and active)
+  const gpInput = getGamepadInput();
+  const kbInput = getKeyboardInput();
+
+  let input;
+  if (gpInput && (Math.abs(gpInput.thrust.x) > 0 || Math.abs(gpInput.thrust.y) > 0 || Math.abs(gpInput.thrust.z) > 0 ||
+                   Math.abs(gpInput.torque.x) > 0 || Math.abs(gpInput.torque.y) > 0 || Math.abs(gpInput.torque.z) > 0 || gpInput.fire)) {
+    input = gpInput;
+  } else {
+    input = kbInput;
+  }
+
+  // Send input to server
+  if (ws.readyState === 1) {
+    ws.send(JSON.stringify({ type: 'input', input }));
+  }
+
+  // ─── RENDER FROM SERVER STATE ─────────────────────────────────
+  const me = serverState.players?.find(p => p.id === myId);
+
+  // Track which meshes are still alive
+  const activePlayerIds = new Set();
+  const activeProjectileIds = new Set();
+
+  if (serverState.players) {
+    for (const p of serverState.players) {
+      activePlayerIds.add(p.id);
+
+      if (p.id === myId) {
+        // First person: position camera at player
+        camera.position.set(p.pos.x, p.pos.y, p.pos.z);
+        camera.quaternion.set(p.quat.x, p.quat.y, p.quat.z, p.quat.w);
+
+        // HUD updates
+        document.getElementById('health-fill').style.width = Math.max(0, p.hp) + '%';
+        document.getElementById('health-fill').style.background =
+          p.hp > 60 ? '#0f0' : p.hp > 30 ? '#ff0' : '#f00';
+        document.getElementById('stats').innerHTML =
+          `HP: ${p.hp}<br>K: ${p.kills} / D: ${p.deaths}`;
+        document.getElementById('dead-screen').style.display = p.dead ? 'block' : 'none';
+
+        // Velocity readout
+        const speed = Math.sqrt(p.vel.x ** 2 + p.vel.y ** 2 + p.vel.z ** 2);
+        document.getElementById('velocity').textContent = `SPD: ${speed.toFixed(1)}`;
+
+        // Don't render own ship in first person
+        if (playerMeshes.has(p.id)) {
+          playerMeshes.get(p.id).visible = false;
+        }
+      } else {
+        // Other players
+        const mesh = getPlayerMesh(p.id, p.color);
+        mesh.visible = !p.dead;
+        mesh.position.set(p.pos.x, p.pos.y, p.pos.z);
+        mesh.quaternion.set(p.quat.x, p.quat.y, p.quat.z, p.quat.w);
+      }
+    }
+  }
+
+  // Projectiles
+  if (serverState.projectiles) {
+    for (const pr of serverState.projectiles) {
+      activeProjectileIds.add(pr.id);
+      const mesh = getProjectileMesh(pr.id, pr.color);
+      mesh.position.set(pr.pos.x, pr.pos.y, pr.pos.z);
+    }
+  }
+
+  // Cleanup dead meshes
+  for (const [id, mesh] of playerMeshes) {
+    if (!activePlayerIds.has(id)) {
+      scene.remove(mesh);
+      playerMeshes.delete(id);
+    }
+  }
+  for (const [id, mesh] of projectileMeshes) {
+    if (!activeProjectileIds.has(id)) {
+      scene.remove(mesh);
+      projectileMeshes.delete(id);
+    }
+  }
+
+  // Scoreboard
+  if (serverState.players) {
+    const sorted = [...serverState.players].sort((a, b) => b.kills - a.kills);
+    document.getElementById('scoreboard').innerHTML =
+      sorted.map(p => {
+        const tag = p.id === myId ? ' (you)' : '';
+        const dead = p.dead ? ' [DEAD]' : '';
+        return `<span style="color:${p.color}">${p.id}${tag}: ${p.kills}K/${p.deaths}D${dead}</span>`;
+      }).join('<br>');
+  }
+
+  renderer.render(scene, camera);
+}
+
+// ─── RESIZE ───────────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+gameLoop();
+</script>
+</body>
+</html>
