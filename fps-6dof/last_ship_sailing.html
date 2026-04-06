@@ -100,7 +100,7 @@ canvas { display: block; }
 #score-display { display: flex; gap: 20px; justify-content: center; margin-top: 4px; }
 .team-score { padding: 2px 12px; font-size: 14px; font-weight: bold; }
 .team-a { color: #ff6666; border-bottom: 2px solid #ff6666; }
-.team-b { color: #6699ff; border-bottom: 2px solid #6699ff; }
+.team-b { color: #66bb66; border-bottom: 2px solid #66bb66; }
 
 /* Kill Feed */
 #kill-feed {
@@ -128,7 +128,7 @@ canvas { display: block; }
 .ship-card .chassis-name { font-size: 11px; color: #888; margin-bottom: 8px; }
 .ship-card .stat { font-size: 10px; color: #aaa; margin: 2px 0; }
 .ship-card .stat span { color: #fff; }
-.ship-card .weapon-name { font-size: 10px; color: #6699ff; margin-top: 6px; }
+.ship-card .weapon-name { font-size: 10px; color: #66bb66; margin-top: 6px; }
 .ship-card .abilities-list { font-size: 9px; color: #66cc66; margin-top: 4px; }
 
 /* Doomed Warning */
@@ -378,7 +378,7 @@ canvas { display: block; }
         onmouseout="this.style.background='rgba(255,170,0,0.15)'">JOIN</button>
     </div>
     <div id="lobby-status" style="font-size:10px;color:#555;min-height:16px;letter-spacing:1px;"></div>
-    <div id="lobby-peers" style="font-size:10px;color:#6699ff;min-height:16px;"></div>
+    <div id="lobby-peers" style="font-size:10px;color:#66bb66;min-height:16px;"></div>
 
     <div style="margin:20px 0;color:#333;font-size:10px;letter-spacing:3px;">; OR ;</div>
 
@@ -475,7 +475,7 @@ const LOADOUTS = {
   },
   SCORCH: {
     name: 'SCORCH', className: 'Dreadnought Incinerator', chassis: 'DREADNOUGHT',
-    weapon: { name: 'T-203 Thermite', mode: 'projectile', damage: 1600, fireRate: 1.2, clipSize: 12, range: 2500, splash: 300, projSpeed: 600, pellets: 1, spinup: 0 },
+    weapon: { name: 'T-203 Thermite', mode: 'projectile', damage: 900, fireRate: 1.2, clipSize: 12, range: 2500, splash: 300, projSpeed: 600, pellets: 1, spinup: 0 },
     abilities: [
       { name: 'Firewall', cooldown: 10, duration: 6, desc: 'Fire line: 400 DPS', type: 'offensive', dmg: 2400 },
       { name: 'Thermal Shield', cooldown: 0, duration: 999, desc: 'Hold to burn close enemies (drains shield HP)', type: 'defensive' },
@@ -487,7 +487,7 @@ const LOADOUTS = {
     name: 'NORTHSTAR', className: 'Frigate Starcaster', chassis: 'FRIGATE',
     weapon: { name: 'Plasma Railgun', mode: 'hitscan', damage: 1000, fireRate: 1.5, clipSize: 6, range: 4500, splash: 50, projSpeed: 0, pellets: 1, spinup: 0 },
     abilities: [
-      { name: 'Cluster Missile', cooldown: 8, duration: 0.3, desc: 'Impact + 5s area damage', type: 'offensive', dmg: 1800 },
+      { name: 'Cluster Missile', cooldown: 8, duration: 0.3, desc: 'Impact 800 + 500 DPS for 5s', type: 'offensive', dmg: 3300 },
       { name: 'Afterburner', cooldown: 10, duration: 4, desc: 'Speed boost (1.5x)', type: 'defensive' },
       { name: 'Tether Trap', cooldown: 12, duration: 4, desc: 'Slow and root enemies', type: 'utility' },
     ],
@@ -515,13 +515,13 @@ const LOADOUTS = {
   },
   LEGION: {
     name: 'LEGION', className: 'Dreadnought Siege', chassis: 'DREADNOUGHT',
-    weapon: { name: 'Predator Cannon', mode: 'hitscan', damage: 170, fireRate: 0.05, clipSize: 999, range: 2000, splash: 0, projSpeed: 0, pellets: 1, spinup: 1.2 },
+    weapon: { name: 'Predator Cannon', mode: 'hitscan', damage: 85, fireRate: 0.05, clipSize: 150, range: 1500, splash: 0, projSpeed: 0, pellets: 1, spinup: 1.2, spread: 0.04 }, // close range defaults
     abilities: [
       { name: 'Power Shot', cooldown: 8, duration: 0.1, desc: 'High-power: 3200 damage', type: 'offensive', dmg: 3200 },
       { name: 'Gun Shield', cooldown: 0, duration: 999, desc: 'Frontal shield (5000 HP, 10s)', type: 'defensive' },
       { name: 'Mode Switch', cooldown: 2, duration: 999, desc: 'Close/long range modes', type: 'utility' },
     ],
-    core: { name: 'Smart Core', desc: 'Auto-aim + max accuracy', duration: 8, damage: 10000, cooldown: 60 },
+    core: { name: 'Smart Core', desc: 'Auto-aim + unlimited ammo', duration: 10, damage: 10000, cooldown: 60 },
   },
   MONARCH: {
     name: 'MONARCH', className: 'Corvette Sovereign', chassis: 'CORVETTE',
@@ -606,7 +606,7 @@ const player = {
   coreReady: false, coreActive: false, coreTimer: 0,
   vortexStored: 0,
   // ION energy pool (shared across all abilities)
-  ionEnergy: 1000, ionMaxEnergy: 1000, ionEnergyRegen: 80, // per second (only when NOT using abilities)
+  ionEnergy: 1000, ionMaxEnergy: 1000, ionEnergyRegen: 150, // per second (always regens, no delay)
   ionAdsActive: false, // true when ION is ADS (drains energy, boosts damage)
   // TONE lock-on system
   toneLocks: {}, // { botId: lockCount } (max 3 per target)
@@ -614,6 +614,8 @@ const player = {
   // LEGION mode switch
   legionMode: 'close', // 'close' or 'long'
   gunShieldHP: 0, gunShieldMaxHP: 5000, gunShieldTimer: 0, // Legion Gun Shield: 5000 HP, 10s duration
+  powerShotCharging: false, powerShotCharge: 0, // Legion Power Shot: 1s charge before firing
+  legionSwitchTimer: 0, // 1s delay when switching gun modes
   // MONARCH upgrade tiers
   monarchTier: 0, // 0-3, each core activation upgrades
   monarchDmgMult: 1.0,
@@ -926,7 +928,7 @@ class NetworkPlayer {
     this.coreMeter = 0;
     this.arcSlowTimer = 0;
 
-    const teamColor = team === LSS.TEAM_FLEET_A ? 0xff4444 : 0x4488ff;
+    const teamColor = team === LSS.TEAM_FLEET_A ? 0xff4444 : 0x44bb44;
     this.mesh = createShipMesh(chassisData, teamColor);
     this.mesh.position.copy(this.position);
     this.mesh.userData.bot = this; // reuse existing hit detection that checks .bot
@@ -1572,7 +1574,7 @@ class Bot {
     this.doomTimer = 0;
     this.coreMeter = 0;
 
-    const teamColor = team === LSS.TEAM_FLEET_A ? 0xff4444 : 0x4488ff;
+    const teamColor = team === LSS.TEAM_FLEET_A ? 0xff4444 : 0x44bb44;
     this.mesh = createShipMesh(chassisData, teamColor);
     this.mesh.position.copy(this.position);
     this.mesh.userData.bot = this;
@@ -1965,6 +1967,8 @@ class Projectile {
         }
       }
     }
+    // Fire ignites Incendiary Traps: thermite splash, firewalls, any fire source
+    igniteNearbyGas(this.position, this.splash);
   }
 
   destroy() {
@@ -1972,6 +1976,18 @@ class Projectile {
     if (this.mesh.parent) scene.remove(this.mesh);
     if (this.trail.parent) scene.remove(this.trail);
     spawnExplosion(this.position, 15);
+  }
+}
+
+// Ignite any Incendiary Trap gas clouds near a fire source position
+function igniteNearbyGas(pos, radius) {
+  for (const eff of game.worldEffects) {
+    if (eff.type === 'incendiary_gas' && !eff.ignited && pos.distanceTo(eff.position) < eff.radius + radius) {
+      eff.ignited = true;
+      eff.igniteTimer = eff.igniteDuration;
+      if (eff.mesh) eff.mesh.material.color.setHex(0xff4400);
+      spawnExplosion(eff.position, 25);
+    }
   }
 }
 
@@ -2145,6 +2161,8 @@ function selectLoadout(key) {
   player.toneLockedTarget = null;
   player.legionMode = 'close';
   player.gunShieldHP = 0; player.gunShieldTimer = 0;
+  player.powerShotCharging = false; player.powerShotCharge = 0;
+  player.legionSwitchTimer = 0;
   player.thermalShieldHP = 0;
   player.monarchTier = 0;
   player.monarchDmgMult = 1.0;
@@ -2389,6 +2407,8 @@ function respawnPlayer() {
   player.toneLocks = {};
   player.toneLockedTarget = null;
   player.legionMode = 'close';
+  player.powerShotCharging = false; player.powerShotCharge = 0;
+  player.legionSwitchTimer = 0;
   player.phaseInvuln = false;
   player.phaseInvulnTimer = 0;
   player.afterburnerActive = false;
@@ -2615,11 +2635,14 @@ function updateWeapon(dt) {
   // ADS (aim down sights) state
   const aiming = input.rightMouseDown || input.gpAltFire;
 
-  // ION ADS: zoom in, drain energy for bonus weapon damage
+  // ION ADS: zoom in, bonus damage on shots (energy only drains when firing while ADS)
   if (player.loadoutKey === 'ION') {
     if (aiming && player.ionEnergy > 0) {
       player.ionAdsActive = true;
-      player.ionEnergy = Math.max(0, player.ionEnergy - 150 * dt); // drains 150/s while ADS
+      const firing = input.mouseDown || input.gpFire;
+      if (firing) {
+        player.ionEnergy = Math.max(0, player.ionEnergy - 350 * dt); // drains 350/s only while ADS + firing
+      }
     } else {
       player.ionAdsActive = false;
     }
@@ -2648,7 +2671,7 @@ function updateWeapon(dt) {
   camera.updateProjectionMatrix();
 
   // Spinup
-  const firing = input.mouseDown || input.gpFire;
+  let firing = input.mouseDown || input.gpFire;
   if (w.spinup > 0 && firing) {
     if (!player.spunUp) {
       player.spinupTimer += dt;
@@ -2661,12 +2684,18 @@ function updateWeapon(dt) {
   }
 
   player.fireTimer -= dt;
+  // Block firing during Legion mode switch transition
+  if (player.legionSwitchTimer > 0) firing = false;
   if (firing && player.fireTimer <= 0) {
-    if (player.clipAmmo <= 0) { startReload(); return; }
+    // Smart Core: unlimited ammo (no consumption, no reload needed)
+    const smartCoreActive = player.coreActive && player.loadoutKey === 'LEGION';
+    if (!smartCoreActive && player.clipAmmo <= 0) { startReload(); return; }
     fireWeapon();
     player.fireTimer = w.fireRate;
-    player.clipAmmo--;
-    if (player.clipAmmo <= 0 && w.clipSize < 999) startReload();
+    if (!smartCoreActive) {
+      player.clipAmmo--;
+      if (player.clipAmmo <= 0 && w.clipSize < 999) startReload();
+    }
   }
 
   // Manual reload
@@ -2713,20 +2742,7 @@ function fireWeapon() {
     requestAnimationFrame(fadeFlash);
   })();
 
-  // Muzzle flash sprite (visible bright quad)
-  const spriteMat = new THREE.SpriteMaterial({ color: flashColor, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
-  const sprite = new THREE.Sprite(spriteMat);
-  sprite.scale.set(25, 25, 1);
-  sprite.position.copy(flashPos);
-  scene.add(sprite);
-  const spriteStart = performance.now();
-  (function fadeSprite() {
-    const elapsed = (performance.now() - spriteStart) / 1000;
-    if (elapsed > 0.06) { scene.remove(sprite); sprite.material.dispose(); return; }
-    sprite.material.opacity = 0.9 * (1 - elapsed / 0.06);
-    sprite.scale.set(25 + elapsed * 200, 25 + elapsed * 200, 1);
-    requestAnimationFrame(fadeSprite);
-  })();
+  // Muzzle flash: concentric warm circles (drawn on HUD canvas via muzzleFlashTimer)
 
   // Camera recoil (small pitch kick upward, recovers naturally)
   const recoilAmount = w.mode === 'spread' ? 0.015 : (w.fireRate > 0.5 ? 0.025 : 0.005);
@@ -2753,18 +2769,26 @@ function fireWeapon() {
 }
 
 function fireHitscan(origin, dir, w) {
+  // Apply weapon spread (Legion Predator Cannon has mode-dependent spread)
+  let aimDir = dir.clone();
+  if (w.spread && w.spread > 0) {
+    aimDir.x += (Math.random() - 0.5) * w.spread;
+    aimDir.y += (Math.random() - 0.5) * w.spread;
+    aimDir.z += (Math.random() - 0.5) * w.spread;
+    aimDir.normalize();
+  }
   // Check level geometry first
-  const levelDist = raycastLevel(origin, dir, w.range);
-  const end = origin.clone().add(dir.clone().multiplyScalar(levelDist));
+  const levelDist = raycastLevel(origin, aimDir, w.range);
+  const end = origin.clone().add(aimDir.clone().multiplyScalar(levelDist));
   spawnTracer(origin, end, 0xffff44);
 
   let bestHit = null, bestDist = Infinity;
   for (const bot of game.entities) {
     if (!bot.alive || bot.team === player.team) continue;
     const toBot = new THREE.Vector3().subVectors(bot.position, origin);
-    const proj = toBot.dot(dir);
+    const proj = toBot.dot(aimDir);
     if (proj < 0 || proj > Math.min(w.range, levelDist)) continue;
-    const closest = origin.clone().add(dir.clone().multiplyScalar(proj));
+    const closest = origin.clone().add(aimDir.clone().multiplyScalar(proj));
     const dist = closest.distanceTo(bot.position);
     if (dist < bot.chassis.hullLength * 0.7 && proj < bestDist) {
       bestHit = bot;
@@ -2797,7 +2821,7 @@ function fireHitscan(origin, dir, w) {
       player.coreMeter = Math.min(100, player.coreMeter + dealt / 100); // ~1% per 100 dmg
       showHitMarker();
     }
-    const hitPoint = bestHit.position.clone().add(dir.clone().multiplyScalar(-20));
+    const hitPoint = bestHit.position.clone().add(aimDir.clone().multiplyScalar(-20));
     spawnExplosion(hitPoint, 8);
     spawnImpactSparks(hitPoint, 4);
     if (!bestHit.alive) showKillMarker();
@@ -2911,27 +2935,26 @@ function executeAbility(slot, ability) {
         }
       }
     }
-    // SCORCH: Firewall (persistent ground fire line, 6s duration)
+    // SCORCH: Firewall (path of fire laid forward from player, 6s duration)
     else if (ability.name === 'Firewall') {
       const wallLen = 800;
-      const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
-      const center = player.position.clone().add(forward.clone().multiplyScalar(300));
+      const start = player.position.clone().add(forward.clone().multiplyScalar(100));
       game.worldEffects.push({
-        type: 'firewall', position: center.clone(), direction: right.clone(),
+        type: 'firewall', position: start.clone(), direction: forward.clone(),
         length: wallLen, timer: 6, dmgPerSec: 400, owner: 'player', team: player.team,
       });
-      // Visual: fire line particles
-      for (let t = -wallLen/2; t <= wallLen/2; t += 80) {
-        const pt = center.clone().add(right.clone().multiplyScalar(t));
+      // Visual: fire path particles along the forward direction
+      for (let t = 0; t <= wallLen; t += 80) {
+        const pt = start.clone().add(forward.clone().multiplyScalar(t));
         spawnExplosion(pt, 10);
       }
     }
     // NORTHSTAR: Cluster Missile (impact + sustained explosions in area for 3s)
     else if (ability.name === 'Cluster Missile') {
       const vel = forward.clone().multiplyScalar(1000);
-      const proj = new Projectile(player.position.clone(), vel, 350, 200, 'player', 0xff6600);
+      const proj = new Projectile(player.position.clone(), vel, 800, 250, 'player', 0xff6600);
       proj.isCluster = true; // on impact, creates sustained explosion zone
-      proj.clusterDmg = 240; // DPS of the sustained cluster area
+      proj.clusterDmg = 500; // DPS of the sustained cluster area
       proj.clusterDuration = 5; // seconds of sustained explosions
       game.projectiles.push(proj);
     }
@@ -2964,8 +2987,10 @@ function executeAbility(slot, ability) {
             proj.trackTarget = target;
             game.projectiles.push(proj);
           }
-          // Locks persist: do NOT delete them
+          // Consume locks: reset to 0 so player must re-lock
+          delete player.toneLocks[target.id];
         }
+        player.toneLockedTarget = null;
       } else {
         // No full locks: fire unguided salvo (5 weaker rockets)
         for (let m = 0; m < 5; m++) {
@@ -2975,47 +3000,11 @@ function executeAbility(slot, ability) {
         }
       }
     }
-    // LEGION: Power Shot (mode-dependent: close = knockback AoE, long = line damage)
+    // LEGION: Power Shot (1s charge, then fires; mode-dependent)
     else if (ability.name === 'Power Shot') {
-      if (player.legionMode === 'close') {
-        // Close-range Power Shot: wide cone knockback + damage
-        const range = 1200;
-        for (const bot of game.entities) {
-          if (!bot.alive || bot.team === player.team) continue;
-          const toBot = new THREE.Vector3().subVectors(bot.position, player.position);
-          const dist = toBot.length();
-          if (dist > range) continue;
-          const dot = toBot.normalize().dot(forward);
-          if (dot > 0.3) {
-            const dealt = bot.takeDamage(3200, 'player');
-            if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 100); showHitMarker(); }
-            // Knockback
-            if (bot.velocity) bot.velocity.add(toBot.clone().multiplyScalar(600));
-            spawnExplosion(bot.position, 20);
-          }
-        }
-        spawnTracer(player.position, player.position.clone().add(forward.clone().multiplyScalar(range)), 0xff8800);
-        triggerScreenShake(4);
-      } else {
-        // Long-range Power Shot: precision line damage (pierces through targets)
-        const range = 3500;
-        const end = player.position.clone().add(forward.clone().multiplyScalar(range));
-        spawnTracer(player.position, end, 0xff8800);
-        spawnTracer(player.position.clone().add(new THREE.Vector3(0,2,0)), end.clone().add(new THREE.Vector3(0,2,0)), 0xffaa44);
-        for (const bot of game.entities) {
-          if (!bot.alive || bot.team === player.team) continue;
-          const toBot = new THREE.Vector3().subVectors(bot.position, player.position);
-          const proj = toBot.dot(forward);
-          if (proj < 0 || proj > range) continue;
-          const closest = player.position.clone().add(forward.clone().multiplyScalar(proj));
-          if (closest.distanceTo(bot.position) < bot.chassis.hullLength * 1.0) {
-            const dealt = bot.takeDamage(3200, 'player');
-            if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 100); showHitMarker(); }
-            spawnExplosion(bot.position, 20);
-          }
-        }
-        triggerScreenShake(3);
-      }
+      // Start charging; actual fire happens in updateAbilities when charge reaches 1.0
+      player.powerShotCharging = true;
+      player.powerShotCharge = 0;
     }
     // MONARCH: Rocket Salvo (5 rockets, 350 dmg each; doubled with Missile Racks upgrade)
     else if (ability.name === 'Rocket Salvo') {
@@ -3198,26 +3187,70 @@ function executeAbility(slot, ability) {
         }
       }
     }
-    // LEGION: Mode Switch (toggle close/long range)
+    // LEGION: Mode Switch (toggle close/long range, 1s transition delay)
     else if (ability.name === 'Mode Switch') {
-      player.legionMode = player.legionMode === 'close' ? 'long' : 'close';
-      // Modify weapon stats based on mode
-      if (player.weapon) {
-        if (player.legionMode === 'close') {
-          player.weapon.fireRate = 0.05; // fast ROF
-          player.weapon.range = 1500;
-          player.weapon.damage = 85;
-        } else {
-          player.weapon.fireRate = 0.08; // slower ROF
-          player.weapon.range = 3000; // extended range
-          player.weapon.damage = 100; // more per shot at range
-        }
-      }
+      player.legionSwitchTimer = 1.0; // 1s delay before mode activates
+      player.legionPendingMode = player.legionMode === 'close' ? 'long' : 'close';
     }
   }
 
   // Small core bonus for ability use
   player.coreMeter = Math.min(100, player.coreMeter + 2);
+}
+
+function firePowerShot() {
+  const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+  if (player.legionMode === 'close') {
+    // Close-range Power Shot: shotgun blast (12 pellets, wide spread, knockback)
+    const range = 1200;
+    const pelletCount = 12;
+    const spreadAngle = 0.12;
+    for (let p = 0; p < pelletCount; p++) {
+      const pelletDir = forward.clone();
+      pelletDir.x += (Math.random() - 0.5) * spreadAngle;
+      pelletDir.y += (Math.random() - 0.5) * spreadAngle;
+      pelletDir.z += (Math.random() - 0.5) * spreadAngle;
+      pelletDir.normalize();
+      const pelletEnd = player.position.clone().add(pelletDir.clone().multiplyScalar(range));
+      spawnTracer(player.position, pelletEnd, 0xff8800);
+      for (const bot of game.entities) {
+        if (!bot.alive || bot.team === player.team) continue;
+        const toBot = new THREE.Vector3().subVectors(bot.position, player.position);
+        const proj = toBot.dot(pelletDir);
+        if (proj < 0 || proj > range) continue;
+        const closest = player.position.clone().add(pelletDir.clone().multiplyScalar(proj));
+        if (closest.distanceTo(bot.position) < bot.chassis.hullLength * 0.8) {
+          const dealt = bot.takeDamage(270, 'player');
+          if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 100); showHitMarker(); }
+          if (bot.velocity) bot.velocity.add(pelletDir.clone().multiplyScalar(400));
+          spawnExplosion(bot.position, 12);
+        }
+      }
+    }
+    triggerScreenShake(5);
+  } else {
+    // Long-range Power Shot: precision piercing shot (travels through all enemies)
+    const range = 3500;
+    const end = player.position.clone().add(forward.clone().multiplyScalar(range));
+    spawnTracer(player.position, end, 0xff8800);
+    spawnTracer(player.position.clone().add(new THREE.Vector3(0,2,0)), end.clone().add(new THREE.Vector3(0,2,0)), 0xffaa44);
+    for (const bot of game.entities) {
+      if (!bot.alive || bot.team === player.team) continue;
+      const toBot = new THREE.Vector3().subVectors(bot.position, player.position);
+      const proj = toBot.dot(forward);
+      if (proj < 0 || proj > range) continue;
+      const closest = player.position.clone().add(forward.clone().multiplyScalar(proj));
+      if (closest.distanceTo(bot.position) < bot.chassis.hullLength * 1.0) {
+        const dealt = bot.takeDamage(3200, 'player');
+        if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 100); showHitMarker(); }
+        spawnExplosion(bot.position, 20);
+      }
+    }
+    triggerScreenShake(3);
+  }
+  player.powerShotCharging = false;
+  player.powerShotCharge = 0;
+  player.abilityCooldowns[0] = 8; // Power Shot is slot 0 (offensive)
 }
 
 function activateCore() {
@@ -3247,14 +3280,7 @@ function activateCore() {
       }
     }
     // Flame Core ignites any deployed Incendiary Traps in radius (TF2 synergy)
-    for (const eff of game.worldEffects) {
-      if (eff.type === 'incendiary_gas' && !eff.ignited && player.position.distanceTo(eff.position) < radius) {
-        eff.ignited = true;
-        eff.igniteTimer = eff.igniteDuration;
-        if (eff.mesh) eff.mesh.material.color.setHex(0xff4400);
-        spawnExplosion(eff.position, 25);
-      }
-    }
+    igniteNearbyGas(player.position, radius);
     spawnExplosion(player.position, 80);
     triggerScreenShake(8);
   }
@@ -3670,12 +3696,12 @@ function updateAbilities(dt) {
     eff.timer -= dt;
 
     if (eff.type === 'firewall') {
-      // Damage enemies crossing the fire line
+      // Damage enemies crossing the fire path (position = start, direction = forward, length = extent)
       for (const bot of game.entities) {
         if (!bot.alive || bot.team === eff.team) continue;
         const toBot = new THREE.Vector3().subVectors(bot.position, eff.position);
         const along = toBot.dot(eff.direction);
-        if (Math.abs(along) < eff.length / 2) {
+        if (along > -50 && along < eff.length + 50) {
           const perp = toBot.clone().sub(eff.direction.clone().multiplyScalar(along));
           if (perp.length() < 150) {
             const dealt = bot.takeDamage(eff.dmgPerSec * dt, eff.owner);
@@ -3705,29 +3731,26 @@ function updateAbilities(dt) {
     }
 
     else if (eff.type === 'incendiary_gas') {
-      // Check if a firewall, thermite projectile, or other fire source ignites the gas
+      // Gas cloud ignites ONLY from fire sources (firewall proximity, thermite splash, Flame Core)
+      // Thermite splash ignition is handled in Projectile.splashDamage() via igniteNearbyGas()
       if (!eff.ignited) {
-        // Auto-ignite if an enemy walks through (contact detonation) or if firewall is nearby
-        let shouldIgnite = false;
-        // Check proximity to firewalls
+        // Check proximity to active firewalls
         for (const other of game.worldEffects) {
-          if (other.type === 'firewall' && other.position.distanceTo(eff.position) < eff.radius + other.length/2) {
-            shouldIgnite = true; break;
+          if (other.type === 'firewall') {
+            // Check if gas cloud overlaps the fire path
+            const toGas = new THREE.Vector3().subVectors(eff.position, other.position);
+            const along = toGas.dot(other.direction);
+            if (along > -50 && along < other.length + 50) {
+              const perp = toGas.clone().sub(other.direction.clone().multiplyScalar(along));
+              if (perp.length() < eff.radius + 150) {
+                eff.ignited = true;
+                eff.igniteTimer = eff.igniteDuration;
+                spawnExplosion(eff.position, 25);
+                if (eff.mesh) eff.mesh.material.color.setHex(0xff4400);
+                break;
+              }
+            }
           }
-        }
-        // Check proximity to any enemy (acts as proximity trigger)
-        for (const bot of game.entities) {
-          if (!bot.alive || bot.team === eff.team) continue;
-          if (bot.position.distanceTo(eff.position) < eff.radius * 0.6) {
-            shouldIgnite = true; break;
-          }
-        }
-        if (shouldIgnite) {
-          eff.ignited = true;
-          eff.igniteTimer = eff.igniteDuration;
-          spawnExplosion(eff.position, 25);
-          // Change mesh color to fire
-          if (eff.mesh) eff.mesh.material.color.setHex(0xff4400);
         }
       }
       if (eff.ignited) {
@@ -3807,11 +3830,44 @@ function updateAbilities(dt) {
     }
   }
 
-  // ION energy regen: only when NOT using any abilities and NOT ADS
+  // ION energy regen: always regens, no delay
   if (player.loadoutKey === 'ION') {
-    const anyAbilityActive = player.abilityActive[0] || player.abilityActive[1] || player.abilityActive[2];
-    if (!anyAbilityActive && !player.ionAdsActive) {
-      player.ionEnergy = Math.min(player.ionMaxEnergy, player.ionEnergy + player.ionEnergyRegen * dt);
+    player.ionEnergy = Math.min(player.ionMaxEnergy, player.ionEnergy + player.ionEnergyRegen * dt);
+  }
+
+  // Legion Mode Switch: 1s transition delay
+  if (player.legionSwitchTimer > 0) {
+    player.legionSwitchTimer -= dt;
+    if (player.legionSwitchTimer <= 0) {
+      player.legionSwitchTimer = 0;
+      player.legionMode = player.legionPendingMode;
+      if (player.weapon) {
+        // Scale ammo proportionally between modes (long = 2/3 of short)
+        const ammoPct = player.maxClip > 0 ? player.clipAmmo / player.maxClip : 1;
+        if (player.legionMode === 'close') {
+          player.weapon.fireRate = 0.05;
+          player.weapon.range = 1500;
+          player.weapon.damage = 85;
+          player.weapon.spread = 0.04; // cone spread
+          player.maxClip = 150;
+          player.clipAmmo = Math.round(ammoPct * 150);
+        } else {
+          player.weapon.fireRate = 0.08;
+          player.weapon.range = 3000;
+          player.weapon.damage = 100;
+          player.weapon.spread = 0.005; // very tight, nearly a line
+          player.maxClip = 100;
+          player.clipAmmo = Math.round(ammoPct * 100);
+        }
+      }
+    }
+  }
+
+  // Legion Power Shot: charge up over 1s, then auto-fire
+  if (player.powerShotCharging) {
+    player.powerShotCharge = Math.min(1.0, player.powerShotCharge + dt / 1.0);
+    if (player.powerShotCharge >= 1.0) {
+      firePowerShot();
     }
   }
 
@@ -3879,6 +3935,11 @@ function updateRoundSystem(dt) {
         // Clean up world effects
         for (const eff of game.worldEffects) { if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh); if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh); }
         game.worldEffects = [];
+        // Reset cores each round (builds with damage dealt)
+        player.coreMeter = 0;
+        player.coreReady = false;
+        player.coreActive = false;
+        player.coreTimer = 0;
         respawnPlayer();
         spawnBots();
       }
@@ -4019,22 +4080,57 @@ function drawCircumpunctHUD() {
   else if (healthPct < 0.6) hCol = amber + '0.8)';
   else hCol = green + '0.7)';
 
-  // ---- LAYER 0: CENTER DOT (the aperture) ----
-  ctx.fillStyle = white + '0.9)';
-  ctx.beginPath();
-  ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
-  ctx.fill();
+  // ---- LAYER 0: CENTER DOT + CROSSHAIR ----
+  // Legion close range: circle crosshair (O); all others: standard + crosshair
+  if (player.loadoutKey === 'LEGION' && player.legionMode === 'close') {
+    // Circle crosshair for close range (roughly same size as the + crosshair)
+    ctx.strokeStyle = white + '0.6)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 22, 0, Math.PI * 2);
+    ctx.stroke();
+    // Small center dot
+    ctx.fillStyle = white + '0.7)';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  } else {
+    // Standard + crosshair
+    ctx.fillStyle = white + '0.9)';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
+    ctx.fill();
 
-  // Small crosshair lines (subtle)
-  ctx.strokeStyle = white + '0.4)';
-  ctx.lineWidth = 1.5;
-  const chGap = 10, chLen = 28;
-  ctx.beginPath();
-  ctx.moveTo(cx - chGap - chLen, cy); ctx.lineTo(cx - chGap, cy);
-  ctx.moveTo(cx + chGap, cy); ctx.lineTo(cx + chGap + chLen, cy);
-  ctx.moveTo(cx, cy - chGap - chLen); ctx.lineTo(cx, cy - chGap);
-  ctx.moveTo(cx, cy + chGap); ctx.lineTo(cx, cy + chGap + chLen);
-  ctx.stroke();
+    ctx.strokeStyle = white + '0.4)';
+    ctx.lineWidth = 1.5;
+    const chGap = 10, chLen = 28;
+    ctx.beginPath();
+    ctx.moveTo(cx - chGap - chLen, cy); ctx.lineTo(cx - chGap, cy);
+    ctx.moveTo(cx + chGap, cy); ctx.lineTo(cx + chGap + chLen, cy);
+    ctx.moveTo(cx, cy - chGap - chLen); ctx.lineTo(cx, cy - chGap);
+    ctx.moveTo(cx, cy + chGap); ctx.lineTo(cx, cy + chGap + chLen);
+    ctx.stroke();
+  }
+
+  // Legion mode indicator (below crosshair)
+  if (player.loadoutKey === 'LEGION') {
+    if (player.legionSwitchTimer > 0) {
+      // Switching animation: blink between modes
+      const blinkOn = Math.floor(t * 6) % 2 === 0;
+      ctx.fillStyle = amber + (blinkOn ? '0.7)' : '0.3)');
+      ctx.font = '10px Courier New';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText('SWITCHING', cx, cy + 32);
+    } else {
+      const modeLabel = player.legionMode === 'close' ? 'CLOSE' : 'LONG';
+      ctx.fillStyle = white + '0.4)';
+      ctx.font = '10px Courier New';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText(modeLabel, cx, cy + 32);
+    }
+  }
 
   // ---- LAYER 1: INNER RING (Health) ----
   // Segmented arc, bottom half (from 7 o'clock to 5 o'clock)
@@ -4164,7 +4260,8 @@ function drawCircumpunctHUD() {
   ctx.fillText(Math.floor(player.velocity.length()), speedTx, speedTy);
 
   // ---- LAYER 4: AMMO ARC (right side) ----
-  const ammoPct = player.weapon.clipSize >= 999 ? 1 : player.clipAmmo / player.maxClip;
+  const smartCoreAmmo = player.coreActive && player.loadoutKey === 'LEGION';
+  const ammoPct = (player.weapon.clipSize >= 999 || smartCoreAmmo) ? 1 : player.clipAmmo / player.maxClip;
   const ammoArcStart = Math.PI * 0.05;
   const ammoArcEnd = Math.PI * 0.45;
   const ammoSpan = ammoArcEnd - ammoArcStart;
@@ -4191,7 +4288,7 @@ function drawCircumpunctHUD() {
   ctx.fillStyle = white + '0.45)';
   ctx.font = '11px Courier New';
   ctx.textAlign = 'center';
-  const ammoStr = player.weapon.clipSize >= 999 ? 'INF' : player.clipAmmo + '';
+  const ammoStr = (player.weapon.clipSize >= 999 || smartCoreAmmo) ? 'INF' : player.clipAmmo + '';
   ctx.fillText(ammoStr, ammoTx, ammoTy);
 
   // ---- LAYER 5: OUTER RING (Core meter) ----
@@ -4406,6 +4503,35 @@ function drawCircumpunctHUD() {
     ctx.fillText(chgPct >= 1 ? 'MAX' : Math.floor(chgPct * 100) + '%', cx, cy + chgR + 16);
   }
 
+  // ---- LEGION POWER SHOT CHARGE INDICATOR ----
+  if (player.loadoutKey === 'LEGION' && player.powerShotCharging) {
+    const chgPct = player.powerShotCharge;
+    const chgR = r1 - 25;
+    const chgStart = Math.PI * 0.85;
+    const chgEnd = Math.PI * 1.15;
+    const chgSpan = chgEnd - chgStart;
+    // Background
+    ctx.strokeStyle = 'rgba(255,100,30,0.12)';
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.arc(cx, cy, chgR, chgStart, chgEnd);
+    ctx.stroke();
+    // Fill
+    if (chgPct > 0) {
+      const chgCol = chgPct >= 1 ? `rgba(255,80,20,${0.6 + Math.sin(t * 8) * 0.3})` : 'rgba(255,120,40,0.7)';
+      ctx.strokeStyle = chgCol;
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.arc(cx, cy, chgR, chgStart, chgStart + chgSpan * chgPct);
+      ctx.stroke();
+    }
+    // Label
+    ctx.fillStyle = chgPct >= 1 ? 'rgba(255,80,20,0.9)' : 'rgba(255,120,40,0.5)';
+    ctx.font = '10px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText('PWR', cx, cy + chgR + 16);
+  }
+
   // ---- ION ENERGY INDICATOR ----
   if (player.loadoutKey === 'ION') {
     const nrgPct = player.ionEnergy / player.ionMaxEnergy;
@@ -4602,6 +4728,37 @@ function drawCircumpunctHUD() {
   drawGun(0, player.gunRecoilL, flashL);
   drawGun(1, player.gunRecoilR, flashR);
 
+  // ---- CENTER MUZZLE FLASH: concentric warm circles ----
+  if (player.muzzleFlashTimer > 0) {
+    const fi = player.muzzleFlashTimer / 0.08; // 1.0 at start, fades to 0
+    const cx = W / 2;
+    const cy = H / 2;
+    const warmColors = [
+      [255, 255, 220], // white-hot
+      [255, 220, 100], // bright yellow
+      [255, 160, 40],  // orange
+      [255, 100, 20],  // deep orange
+      [220, 60, 10],   // red-orange
+    ];
+    // Draw 3-5 concentric rings, random radii each shot
+    const ringCount = 3 + Math.floor(Math.random() * 3);
+    for (let r = 0; r < ringCount; r++) {
+      const radius = (8 + r * 12) * fi;
+      const c = warmColors[r % warmColors.length];
+      const alpha = (0.6 - r * 0.1) * fi;
+      ctx.strokeStyle = `rgba(${c[0]},${c[1]},${c[2]},${Math.max(0, alpha)})`;
+      ctx.lineWidth = (3 - r * 0.4) * fi;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    // Bright center dot
+    ctx.fillStyle = `rgba(255,255,240,${0.8 * fi})`;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 4 * fi, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
   // ---- TONE LOCK-ON CIRCUMPUNCT INDICATORS (over locked enemies) ----
   if (player.loadoutKey === 'TONE') {
     const halfW = W / 2;
@@ -4785,7 +4942,7 @@ function updateMinimap() {
     if (!bot.alive) continue;
     const bx = cx + bot.position.x * scale;
     const by = cy - bot.position.z * scale;
-    ctx.fillStyle = bot.team === LSS.TEAM_FLEET_A ? '#ff4444' : '#4488ff';
+    ctx.fillStyle = bot.team === LSS.TEAM_FLEET_A ? '#ff4444' : '#44bb44';
     ctx.fillRect(bx - 2, by - 2, 3, 3);
     // Doomed indicator on minimap
     if (bot.doomed) {
@@ -4833,7 +4990,7 @@ function addKillFeed(killer, victim) {
   for (const entry of game.killFeed) {
     const div = document.createElement('div');
     div.className = 'kill-entry';
-    div.innerHTML = `<span style="color:#ff6666">${entry.killer}</span> destroyed <span style="color:#6699ff">${entry.victim}</span>`;
+    div.innerHTML = `<span style="color:#ff6666">${entry.killer}</span> destroyed <span style="color:#66bb66">${entry.victim}</span>`;
     container.appendChild(div);
   }
 }
@@ -6322,7 +6479,7 @@ scoreboardCSS.textContent = `
 #scoreboard h2 { text-align: center; color: #ffaa00; font-size: 16px; letter-spacing: 3px; margin-bottom: 12px; }
 .sb-team-header { font-size: 12px; letter-spacing: 2px; padding: 4px 8px; margin-top: 10px; }
 .sb-team-a { color: #ff6666; border-bottom: 1px solid rgba(255,100,100,0.3); }
-.sb-team-b { color: #6699ff; border-bottom: 1px solid rgba(100,150,255,0.3); }
+.sb-team-b { color: #66bb66; border-bottom: 1px solid rgba(100,200,100,0.3); }
 .sb-row { display: flex; justify-content: space-between; padding: 3px 12px; font-size: 11px; }
 .sb-row.player-row { color: #ffcc00; }
 .sb-row .sb-name { flex: 2; }
