@@ -2434,8 +2434,10 @@ function igniteNearbyGas(pos, radius) {
     if (eff.type === 'incendiary_gas' && !eff.ignited && pos.distanceTo(eff.position) < eff.radius + radius) {
       eff.ignited = true;
       eff.igniteTimer = eff.igniteDuration;
-      if (eff.mesh) eff.mesh.material.color.setHex(0xff4400);
-      spawnExplosion(eff.position, 25);
+      if (eff.mesh) { eff.mesh.material.color.setHex(0xff4400); eff.mesh.material.opacity = 0.18; }
+      if (eff.coreMesh) { eff.coreMesh.material.color.setHex(0xff6600); eff.coreMesh.material.opacity = 0.15; }
+      spawnExplosion(eff.position, 30);
+      spawnDynamicLight(eff.position, 0xff4400, 3.0, 500, 0.5);
     }
   }
 }
@@ -3797,13 +3799,23 @@ function executeAbility(slot, ability) {
         ignited: false, igniteDmgPerSec: 120, igniteTimer: 0, igniteDuration: 8, slowFactor: 0.5,
         fxTimer: 0,
       });
-      // Visual: semi-transparent gas cloud sphere (sickly green-yellow)
-      const gasGeo = new THREE.SphereGeometry(45, 8, 6);
-      const gasMat = new THREE.MeshBasicMaterial({ color: 0x88aa33, transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending });
+      // Visual: large semi-transparent gas cloud (matches actual 350-unit radius)
+      const gasGeo = new THREE.SphereGeometry(1, 12, 8);
+      const gasMat = new THREE.MeshBasicMaterial({ color: 0x88aa33, transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending, depthWrite: false });
       const gasMesh = new THREE.Mesh(gasGeo, gasMat);
       gasMesh.position.copy(trapPos);
+      gasMesh.scale.setScalar(350); // match actual effect radius
       scene.add(gasMesh);
-      game.worldEffects[game.worldEffects.length - 1].mesh = gasMesh;
+      // Inner denser core for depth
+      const coreGeo = new THREE.SphereGeometry(1, 8, 6);
+      const coreMat = new THREE.MeshBasicMaterial({ color: 0x99bb44, transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending, depthWrite: false });
+      const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+      coreMesh.position.copy(trapPos);
+      coreMesh.scale.setScalar(200); // denser inner cloud
+      scene.add(coreMesh);
+      const effRef = game.worldEffects[game.worldEffects.length - 1];
+      effRef.mesh = gasMesh;
+      effRef.coreMesh = coreMesh;
     }
     // NORTHSTAR: Tether Trap (slow + root enemies for 4s)
     else if (ability.name === 'Tether Trap') {
@@ -4213,6 +4225,8 @@ function updateAbilities(dt) {
           if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 200); }
         }
       }
+      // Thermal Shield is a fire source: ignite nearby Incendiary Traps
+      igniteNearbyGas(player.position, 500);
     }
     // Vortex Shield: drains ION energy while held up; auto-drops when depleted
     if (player.abilityActive[i] && player.abilities[i] && player.abilities[i].name === 'Vortex Shield') {
@@ -4419,36 +4433,54 @@ function updateAbilities(dt) {
               if (perp.length() < eff.radius + 150) {
                 eff.ignited = true;
                 eff.igniteTimer = eff.igniteDuration;
-                spawnExplosion(eff.position, 25);
-                if (eff.mesh) eff.mesh.material.color.setHex(0xff4400);
+                spawnExplosion(eff.position, 30);
+                if (eff.mesh) { eff.mesh.material.color.setHex(0xff4400); eff.mesh.material.opacity = 0.18; }
+                if (eff.coreMesh) { eff.coreMesh.material.color.setHex(0xff6600); eff.coreMesh.material.opacity = 0.15; }
+                spawnDynamicLight(eff.position, 0xff4400, 3.0, 500, 0.5);
                 break;
               }
             }
           }
         }
 
-        // Periodic gas drift effect (not ignited)
+        // Animate gas cloud: slow pulse (breathing)
+        if (eff.mesh) {
+          const pulse = 350 + Math.sin(game.time * 1.5) * 20;
+          eff.mesh.scale.setScalar(pulse);
+          eff.mesh.material.opacity = 0.10 + Math.sin(game.time * 0.8) * 0.03;
+        }
+        if (eff.coreMesh) {
+          const corePulse = 200 + Math.sin(game.time * 2.0 + 1.0) * 15;
+          eff.coreMesh.scale.setScalar(corePulse);
+        }
+        // Periodic gas drift particles (not ignited)
         eff.fxTimer -= dt;
         if (eff.fxTimer <= 0) {
-          const gasParticlePt = eff.position.clone().add(new THREE.Vector3(
-            (Math.random() - 0.5) * eff.radius,
-            0,
-            (Math.random() - 0.5) * eff.radius
-          ));
-          const gasDrift = new THREE.Vector3(
-            (Math.random() - 0.5) * 40,
-            60 + Math.random() * 40,
-            (Math.random() - 0.5) * 40
-          );
-          game.particles.push({
-            position: gasParticlePt,
-            velocity: gasDrift,
-            life: 0.5 + Math.random() * 0.3,
-            maxLife: 0.8,
-            color: 0x88aa33,
-            size: 2 + Math.random() * 1.5
-          });
-          eff.fxTimer = 0.5;
+          // Spawn 2-3 particles drifting from within the cloud
+          const gasCount = 2 + Math.floor(Math.random() * 2);
+          for (let gi = 0; gi < gasCount; gi++) {
+            const theta = Math.random() * Math.PI * 2;
+            const r = Math.random() * eff.radius * 0.7;
+            const gasParticlePt = eff.position.clone().add(new THREE.Vector3(
+              Math.cos(theta) * r,
+              (Math.random() - 0.5) * eff.radius * 0.4,
+              Math.sin(theta) * r
+            ));
+            const gasDrift = new THREE.Vector3(
+              (Math.random() - 0.5) * 50,
+              40 + Math.random() * 60,
+              (Math.random() - 0.5) * 50
+            );
+            game.particles.push({
+              position: gasParticlePt,
+              velocity: gasDrift,
+              life: 0.6 + Math.random() * 0.4,
+              maxLife: 1.0,
+              color: Math.random() > 0.5 ? 0x88aa33 : 0x99bb44,
+              size: 4 + Math.random() * 3
+            });
+          }
+          eff.fxTimer = 0.4;
         }
       }
 
@@ -4464,31 +4496,48 @@ function updateAbilities(dt) {
           }
         }
 
-        // Spawn fire particles while ignited
+        // Animate ignited cloud: flicker and pulse
+        if (eff.mesh) {
+          const flicker = 0.14 + Math.sin(game.time * 8 + Math.random()) * 0.04;
+          eff.mesh.material.opacity = flicker;
+          eff.mesh.scale.setScalar(350 + Math.sin(game.time * 3) * 30);
+        }
+        if (eff.coreMesh) {
+          eff.coreMesh.material.opacity = 0.12 + Math.sin(game.time * 6) * 0.04;
+        }
+        // Spawn fire particles throughout the burning volume
         eff.fxTimer -= dt;
         if (eff.fxTimer <= 0) {
-          const firePt = eff.position.clone().add(new THREE.Vector3(
-            (Math.random() - 0.5) * eff.radius * 0.8,
-            Math.random() * eff.radius * 0.5,
-            (Math.random() - 0.5) * eff.radius * 0.8
-          ));
-          const fireColors = [0xff4400, 0xff6600, 0xff8833];
-          for (let i = 0; i < 2; i++) {
+          const fireColors = [0xff4400, 0xff6600, 0xff8833, 0xffaa00];
+          // 4-6 particles per tick, spread across the full cloud
+          const fireCount = 4 + Math.floor(Math.random() * 3);
+          for (let i = 0; i < fireCount; i++) {
+            const theta = Math.random() * Math.PI * 2;
+            const r = Math.random() * eff.radius * 0.8;
+            const firePt = eff.position.clone().add(new THREE.Vector3(
+              Math.cos(theta) * r,
+              (Math.random() - 0.3) * eff.radius * 0.5,
+              Math.sin(theta) * r
+            ));
             const pVel = new THREE.Vector3(
-              (Math.random() - 0.5) * 80,
-              100 + Math.random() * 120,
-              (Math.random() - 0.5) * 80
+              (Math.random() - 0.5) * 120,
+              80 + Math.random() * 160,
+              (Math.random() - 0.5) * 120
             );
             game.particles.push({
-              position: firePt.clone(),
+              position: firePt,
               velocity: pVel,
-              life: 0.4 + Math.random() * 0.2,
-              maxLife: 0.6,
+              life: 0.5 + Math.random() * 0.3,
+              maxLife: 0.8,
               color: fireColors[Math.floor(Math.random() * fireColors.length)],
-              size: 3 + Math.random() * 2
+              size: 5 + Math.random() * 4
             });
           }
-          eff.fxTimer = 0.3;
+          // Periodic dynamic light for fire glow
+          if (Math.random() > 0.5) {
+            spawnDynamicLight(eff.position, 0xff4400, 2.0, 400, 0.3);
+          }
+          eff.fxTimer = 0.25;
         }
 
         if (eff.igniteTimer <= 0) eff.timer = 0; // burned out
@@ -4551,7 +4600,8 @@ function updateAbilities(dt) {
 
     // Remove expired effects
     if (eff.timer <= 0) {
-      if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh);
+      if (eff.mesh && eff.mesh.parent) { scene.remove(eff.mesh); eff.mesh.geometry.dispose(); eff.mesh.material.dispose(); }
+      if (eff.coreMesh && eff.coreMesh.parent) { scene.remove(eff.coreMesh); eff.coreMesh.geometry.dispose(); eff.coreMesh.material.dispose(); }
       if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh);
       game.worldEffects.splice(e, 1);
     }
@@ -4660,7 +4710,7 @@ function updateRoundSystem(dt) {
         game.stasisFirstBatch = true;
         game.playerInStasis = false;
         // Clean up world effects
-        for (const eff of game.worldEffects) { if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh); if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh); }
+        for (const eff of game.worldEffects) { if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh); if (eff.coreMesh && eff.coreMesh.parent) scene.remove(eff.coreMesh); if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh); }
         game.worldEffects = [];
         // Reset cores each round (builds with damage dealt)
         player.coreMeter = 0;
@@ -6580,14 +6630,14 @@ function buildRoomGraphLevel(level) {
     '    weight *= 0.45;',      // diminishing contribution
     '  }',
     '  pattern = clamp(pattern, 0.0, 1.0);',
-    // Color: base wall color mixed with two accent tones at different pattern thresholds
-    // Fine detail (high pattern) gets brighter accent; broad structure gets subtle glow
-    '  vec3 accent1 = vec3(0.05, 0.14, 0.30);', // deep blue for broad structure
-    '  vec3 accent2 = vec3(0.10, 0.28, 0.45);',  // bright blue for fine detail
+    // Color: fractal accents derived from the base wall color (so red rooms glow red, green glow green)
+    // Accent 1: base brightened 3x for broad structure; accent 2: base brightened 5x for fine detail
+    '  vec3 accent1 = base * 3.0 + vec3(0.02, 0.04, 0.08);',
+    '  vec3 accent2 = base * 5.0 + vec3(0.04, 0.08, 0.12);',
     '  vec3 c = mix(base, accent1, pattern * 0.5);',
     '  c = mix(c, accent2, smoothstep(0.35, 0.8, pattern) * 0.6);',
-    // Subtle glow on the finest fractal edges
-    '  c += vec3(0.02, 0.06, 0.12) * smoothstep(0.6, 1.0, pattern);',
+    // Subtle glow on the finest fractal edges (tinted toward the base hue)
+    '  c += (base * 2.0 + vec3(0.01, 0.03, 0.06)) * smoothstep(0.6, 1.0, pattern);',
     '  return c;',
     '}'
   ].join('\n');
@@ -6648,11 +6698,38 @@ function buildRoomGraphLevel(level) {
   }
   while (sphCArr.length < 8) { sphCArr.push(new THREE.Vector3()); sphRArr.push(0); }
 
-  // --- CREATE SHADER MATERIALS ---
-  const sphereMat = new THREE.ShaderMaterial({
-    vertexShader: vertSrc, fragmentShader: fragSphereSrc, side: THREE.BackSide,
-    uniforms: { cA: {value: cylAArr}, cB: {value: cylBArr}, cR: {value: cylRArr}, wCol: {value: new THREE.Color(0x0c1822)} }
-  });
+  // --- ROOM AND TUNNEL COLOR SCHEME ---
+  // Each room gets a distinct wall color; halls inherit from the side they serve
+  const roomColors = {
+    center:  new THREE.Color(0x0c1828), // deep blue-gray (neutral center)
+    spawn_a: new THREE.Color(0x1a0808), // dark red (team A spawn)
+    spawn_b: new THREE.Color(0x081a08), // dark green (team B spawn)
+    ready_a: new THREE.Color(0x180c14), // dark magenta-red (team A side)
+    ready_b: new THREE.Color(0x0c1810), // dark teal-green (team B side)
+  };
+
+  // Per-room shader materials (each sphere gets its own wCol)
+  function makeSphereMat(roomId) {
+    return new THREE.ShaderMaterial({
+      vertexShader: vertSrc, fragmentShader: fragSphereSrc, side: THREE.BackSide,
+      uniforms: { cA: {value: cylAArr}, cB: {value: cylBArr}, cR: {value: cylRArr}, wCol: {value: roomColors[roomId] || new THREE.Color(0x0c1822)} }
+    });
+  }
+
+  // Determine tunnel color from its endpoints: red side (team A, negative X), green side (team B, positive X), or neutral
+  function getTunnelColor(seg) {
+    const midX = (seg.a.x + seg.b.x) / 2;
+    // Strong team A side (far negative X)
+    if (midX < -SU * 3) return new THREE.Color(0x140a0a); // dark red hall
+    // Strong team B side (far positive X)
+    if (midX > SU * 3) return new THREE.Color(0x0a140a);  // dark green hall
+    // Near center: blend based on X position
+    const t = (midX / (SU * 3) + 1) * 0.5; // 0 = full A side, 1 = full B side
+    const colA = new THREE.Color(0x140a0a);
+    const colB = new THREE.Color(0x0a140a);
+    return colA.lerp(colB, t);
+  }
+
   // Cylinder materials: one per segment (each knows its own index to skip self-check)
   function makeCylMat(idx) {
     return new THREE.ShaderMaterial({
@@ -6660,7 +6737,7 @@ function buildRoomGraphLevel(level) {
       uniforms: {
         sC: {value: sphCArr}, sR: {value: sphRArr},
         cA: {value: cylAArr}, cB: {value: cylBArr}, cR: {value: cylRArr},
-        selfIdx: {value: idx}, wCol: {value: new THREE.Color(0x0a1320)}
+        selfIdx: {value: idx}, wCol: {value: getTunnelColor(cylSegs[idx])}
       }
     });
   }
@@ -6669,7 +6746,7 @@ function buildRoomGraphLevel(level) {
   for (const rm of rooms) {
     const geo = new THREE.SphereGeometry(rm.r, 32, 24);
 
-    const mesh = new THREE.Mesh(geo, sphereMat);
+    const mesh = new THREE.Mesh(geo, makeSphereMat(rm.id));
     mesh.position.set(rm.x, rm.y, rm.z);
     mesh.renderOrder = -10;
     scene.add(mesh); game.mapMeshes.push(mesh);
@@ -6677,18 +6754,26 @@ function buildRoomGraphLevel(level) {
     // Containment collision (full sphere for physics)
     game.levelSpheres.push({ cx: rm.x, cy: rm.y, cz: rm.z, r: rm.r });
 
-    // Lights
-    const intensity = rm.id === 'center' ? 1.2 : 0.8;
-    const li = new THREE.PointLight(0x6699cc, intensity, rm.r * 4);
+    // Lights: color-matched to each room's identity
+    const lightConfigs = {
+      center:  { color: 0x6699cc, intensity: 1.2 },
+      spawn_a: { color: 0xcc6666, intensity: 1.0 },
+      spawn_b: { color: 0x66cc66, intensity: 1.0 },
+      ready_a: { color: 0xbb77aa, intensity: 0.9 },
+      ready_b: { color: 0x77bbaa, intensity: 0.9 },
+    };
+    const lc = lightConfigs[rm.id] || { color: 0x6699cc, intensity: 0.8 };
+    const li = new THREE.PointLight(lc.color, lc.intensity, rm.r * 4);
     li.position.set(rm.x, rm.y, rm.z);
     scene.add(li); game.mapMeshes.push(li);
 
-    if (rm.id === 'spawn_a') {
-      const al = new THREE.PointLight(0xff4444, 0.4, rm.r * 2);
+    // Team accent lights (brighter team color wash)
+    if (rm.id === 'spawn_a' || rm.id === 'ready_a') {
+      const al = new THREE.PointLight(0xff4444, 0.5, rm.r * 2.5);
       al.position.set(rm.x, rm.y, rm.z);
       scene.add(al); game.mapMeshes.push(al);
-    } else if (rm.id === 'spawn_b') {
-      const al = new THREE.PointLight(0x44ff44, 0.4, rm.r * 2);
+    } else if (rm.id === 'spawn_b' || rm.id === 'ready_b') {
+      const al = new THREE.PointLight(0x44ff44, 0.5, rm.r * 2.5);
       al.position.set(rm.x, rm.y, rm.z);
       scene.add(al); game.mapMeshes.push(al);
     }
@@ -7084,10 +7169,17 @@ function initAudio() {
   try {
     audio.ctx = new (window.AudioContext || window.webkitAudioContext)();
 
-    // Master output
+    // High-frequency rolloff: gentle lowpass to tame harsh highs across all sounds
+    audio.hiCut = audio.ctx.createBiquadFilter();
+    audio.hiCut.type = 'lowpass';
+    audio.hiCut.frequency.value = 3500; // roll off above 3.5kHz
+    audio.hiCut.Q.value = 0.7; // gentle slope (no resonance peak)
+    audio.hiCut.connect(audio.ctx.destination);
+
+    // Master output (routes through the hi-cut filter)
     audio.masterGain = audio.ctx.createGain();
-    audio.masterGain.gain.value = 0.50;
-    audio.masterGain.connect(audio.ctx.destination);
+    audio.masterGain.gain.value = 0.85;
+    audio.masterGain.connect(audio.hiCut);
 
     // Reverb chain: dry + wet mixed into master
     audio.dryGain = audio.ctx.createGain();
@@ -7106,7 +7198,7 @@ function initAudio() {
     // Ambient sound bed gain (separate from SFX)
     audio.ambientGain = audio.ctx.createGain();
     audio.ambientGain.gain.value = 0; // starts silent, fades in when playing
-    audio.ambientGain.connect(audio.ctx.destination);
+    audio.ambientGain.connect(audio.hiCut); // through same hi-cut as master
 
     audio.initialized = true;
   } catch(e) { console.warn('Audio init failed:', e); }
@@ -7124,53 +7216,32 @@ function resumeAudio() {
 let ambientStarted = false;
 
 // ---- PHI-CASCADE BINAURAL AMBIENT ----
-// Adapted from phi_resonance.html: 4 layers of phi-spaced frequencies,
-// each creating a binaural beat of phi Hz (1.618 Hz). Left ear gets
-// the base frequency, right ear gets base + phi. Each layer is phi
-// times the previous, creating maximal distinction without resonance
-// overlap. LFO modulation at phi-derived rates gives it a breathing,
-// alive quality. The reactor drone sits underneath as a sub-bass anchor.
+// Ship ambient sound: phi-cascade binaural adapted from phi_resonance.html "Deep Rest" preset.
+// At rest: base 144Hz, 6 layers centered via base * PHI^(i-3), beat = PHI * 0.25 (~0.4Hz).
+// At full speed: base winds up to 200Hz. The whole cascade shifts proportionally.
+// This is the exact same architecture as the standalone phi_resonance tool.
 
 const PHI = (1 + Math.sqrt(5)) / 2; // 1.6180339887...
-const PHI_LAYERS = 4; // fewer than the standalone tool (6) to save CPU
-const PHI_BEAT = PHI; // 1.618 Hz binaural beat difference
+const PHI_LAYERS = 6; // full 6-layer phi cascade (matching phi_resonance.html Deep Rest)
+const PHI_REST_BASE = 69; // idle base frequency (deep hum at rest)
+const PHI_SPEED_BASE = 144; // max speed base frequency (winds up to Deep Rest range)
+const PHI_BEAT_STRENGTH = 0.25; // Deep Rest beat strength
+const PHI_BEAT = PHI * PHI_BEAT_STRENGTH; // ~0.4045 Hz binaural beat
 
 function startAmbientBed() {
   if (ambientStarted || !audio.ctx) return;
   ambientStarted = true;
   const ctx = audio.ctx;
 
-  // Sub-bass reactor drone (anchor; not part of the phi cascade)
-  const drone1 = ctx.createOscillator();
-  drone1.type = 'sine';
-  drone1.frequency.value = 32;
-  const drone1Gain = ctx.createGain();
-  drone1Gain.gain.value = 0.05;
-  drone1.connect(drone1Gain);
-  drone1Gain.connect(audio.ambientGain);
-  drone1.start();
-  audio.ambientNodes.push(drone1);
-
-  // Slow LFO breathing on the reactor drone
-  const droneLfo = ctx.createOscillator();
-  droneLfo.type = 'sine';
-  droneLfo.frequency.value = PHI / 10; // ~0.16 Hz, very slow
-  const droneLfoGain = ctx.createGain();
-  droneLfoGain.gain.value = 3;
-  droneLfo.connect(droneLfoGain);
-  droneLfoGain.connect(drone1.frequency);
-  droneLfo.start();
-  audio.ambientNodes.push(droneLfo);
-
-  // Phi-cascade binaural layers
-  // Base frequency centered at 100Hz; layers spread by powers of phi
-  // i=0: 100/phi = ~61.8 Hz, i=1: 100 Hz, i=2: ~161.8 Hz, i=3: ~261.8 Hz
-  const phiBase = 100;
+  // Phi-cascade binaural layers (exact phi_resonance.html architecture)
+  // 6 layers: base * PHI^(i-3), centered around the base frequency
+  // At rest (69Hz): ~16Hz, ~26Hz, ~43Hz, 69Hz, ~112Hz, ~181Hz
+  // At full speed (144Hz): ~34Hz, ~55Hz, ~89Hz, 144Hz, ~233Hz, ~377Hz
   audio.phiLayers = [];
 
   for (let i = 0; i < PHI_LAYERS; i++) {
-    const layerFreq = phiBase * Math.pow(PHI, i - 1); // center around phiBase
-    const layerVol = 0.02 / PHI_LAYERS; // very quiet; sits well under gameplay
+    const layerFreq = PHI_REST_BASE * Math.pow(PHI, i - 3);
+    const layerVol = 0.50 / PHI_LAYERS;
 
     // Left ear: carrier at layerFreq
     const oscL = ctx.createOscillator();
@@ -7181,12 +7252,12 @@ function startAmbientBed() {
     const panL = ctx.createStereoPanner();
     panL.pan.value = -1;
 
-    // LFO modulation at phi-derived rate (different per layer, all phi-related)
+    // LFO modulation at phi-derived rate (matching phi_resonance.html)
     const lfoL = ctx.createOscillator();
     lfoL.type = 'sine';
-    lfoL.frequency.value = PHI / Math.pow(PHI, i); // slower for lower layers
+    lfoL.frequency.value = PHI / Math.pow(PHI, i);
     const lfoLGain = ctx.createGain();
-    lfoLGain.gain.value = layerVol * 0.3;
+    lfoLGain.gain.value = layerVol * 0.5; // modulation depth 0.5 (matched to Deep Rest)
     lfoL.connect(lfoLGain);
     lfoLGain.connect(gainL.gain);
     lfoL.start();
@@ -7197,7 +7268,7 @@ function startAmbientBed() {
     oscL.start();
     audio.ambientNodes.push(oscL, lfoL);
 
-    // Right ear: carrier at layerFreq + phi Hz (creates the binaural beat)
+    // Right ear: carrier at layerFreq + PHI_BEAT (creates the binaural beat)
     const oscR = ctx.createOscillator();
     oscR.type = 'sine';
     oscR.frequency.value = layerFreq + PHI_BEAT;
@@ -7210,7 +7281,7 @@ function startAmbientBed() {
     lfoR.type = 'sine';
     lfoR.frequency.value = PHI / Math.pow(PHI, i);
     const lfoRGain = ctx.createGain();
-    lfoRGain.gain.value = layerVol * 0.3;
+    lfoRGain.gain.value = layerVol * 0.5;
     lfoR.connect(lfoRGain);
     lfoRGain.connect(gainR.gain);
     lfoR.start();
@@ -7223,18 +7294,15 @@ function startAmbientBed() {
 
     audio.phiLayers.push({
       oscL, oscR, gainL, gainR,
-      baseFreq: layerFreq,
+      layerIndex: i,
       layerVol: layerVol
     });
   }
-
-  // Store drone reference for speed modulation
-  audio.ambientDrone1 = drone1;
-  audio.ambientDrone1Gain = drone1Gain;
 }
 
 // Modulate ambient bed based on player speed.
-// Faster movement raises drone pitch and phi-cascade intensity.
+// The entire phi cascade shifts from 144Hz base (rest) to 200Hz base (full speed).
+// This makes the whole harmonic structure wind up together, like an engine spooling.
 function updateAmbientBed() {
   if (!ambientStarted || !audio.ctx || !player.velocity) return;
   const speed = player.velocity ? player.velocity.length() : 0;
@@ -7242,22 +7310,20 @@ function updateAmbientBed() {
   const t = Math.min(1, speed / maxSpeed);
 
   // Fade ambient in when game is active
-  const targetVol = (game.state === 'playing' || game.state === 'warmup') ? 0.25 : 0.03;
+  const targetVol = (game.state === 'playing' || game.state === 'warmup') ? 1.0 : 0.08;
   audio.ambientGain.gain.value += (targetVol - audio.ambientGain.gain.value) * 0.02;
 
-  // Reactor drone pitch rises with speed
-  if (audio.ambientDrone1) {
-    audio.ambientDrone1.frequency.value = 32 + t * 18;
-  }
+  // Current base frequency: lerp from rest to speed
+  const currentBase = PHI_REST_BASE + t * (PHI_SPEED_BASE - PHI_REST_BASE);
 
-  // Phi layers: carrier frequencies shift up with speed, volume swells
+  // Shift all phi layers proportionally (the whole cascade winds up together)
   if (audio.phiLayers) {
     for (const layer of audio.phiLayers) {
-      const freqShift = layer.baseFreq + t * 20; // subtle upward shift
-      layer.oscL.frequency.value = freqShift;
-      layer.oscR.frequency.value = freqShift + PHI_BEAT;
-      // Volume increases with speed (phi cascade becomes more present)
-      const vol = layer.layerVol * (1 + t * 1.5);
+      const layerFreq = currentBase * Math.pow(PHI, layer.layerIndex - 3);
+      layer.oscL.frequency.value = layerFreq;
+      layer.oscR.frequency.value = layerFreq + PHI_BEAT;
+      // Volume swells gently with speed (pitch shift carries most of the energy)
+      const vol = layer.layerVol * (1 + t * 0.8);
       layer.gainL.gain.value = vol;
       layer.gainR.gain.value = vol;
     }
@@ -7313,9 +7379,9 @@ function playNoiseBurst(duration, volume, startTime, filterFreq, filterQ) {
 
   if (filterFreq) {
     const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass';
+    filter.type = 'lowpass';
     filter.frequency.value = filterFreq;
-    filter.Q.value = filterQ || 1.0;
+    filter.Q.value = Math.min(filterQ || 0.7, 1.0); // cap Q at 1.0 to prevent ringing
     src.connect(filter);
     filter.connect(gain);
   } else {
@@ -7333,129 +7399,222 @@ function playSound(type) {
   resumeAudio();
   const ctx = audio.ctx;
   const now = ctx.currentTime;
-  const dest = audio.masterGain;
+
+  // Randomization helpers: every shot, explosion, death sounds unique
+  const r = () => Math.random(); // 0 to 1
+  const rr = (base, spread) => base * (1 + (r() - 0.5) * spread); // base +/- spread%
+  const ri = (base, spread) => Math.round(rr(base, spread)); // integer version
+  const rWave = (options) => options[Math.floor(r() * options.length)]; // random waveform pick
 
   if (type === 'fire_hitscan') {
-    // Sharp transient crack: very fast attack, near-instant decay. Snappy and percussive.
-    // Distinct from projectile by being short and bright.
-    triChord([55, 82, 110], 'sawtooth', 0.30, 0.10, [30, 45, 55], 0.08, 0,
-      { attack: 0.001, hold: 0, decay: 0.10 });
-    playNoiseBurst(0.04, 0.18, now, 3000, 0.8); // high-frequency filtered crack
+    // Sharp transient crack with per-shot variation
+    const p = rr(1, 0.15); // pitch multiplier (+/-7.5%)
+    triChord([ri(55*p,0), ri(82*p,0), ri(110*p,0)], rWave(['sawtooth','triangle']),
+      rr(0.30, 0.2), rr(0.10, 0.2), [ri(30*p,0), ri(45*p,0), ri(55*p,0)], 0.08, 0,
+      { attack: 0.001, hold: 0, decay: rr(0.10, 0.2) });
+    playNoiseBurst(rr(0.04, 0.3), rr(0.14, 0.2), now, ri(1800, 0.25), rr(0.8, 0.3));
+    // Random chance of an extra sub-thump for weight
+    if (r() > 0.6) playNoiseBurst(rr(0.03, 0.2), 0.06, now, ri(300, 0.3), 0.5);
   }
   else if (type === 'fire_projectile') {
-    // Longer swell with body: slower attack builds into a thump, then sustains briefly.
-    // Sounds "launched" rather than "shot".
-    triChord([80, 100, 130], 'sine', 0.35, 0.28, [25, 35, 45], 0.22, 0,
-      { attack: 0.015, hold: 0.04, decay: 0.22 });
-    playNoiseBurst(0.08, 0.06, now + 0.01, 600, 1.2); // low rumble on launch
+    // Thump + launch with randomized body
+    const p = rr(1, 0.12);
+    triChord([ri(80*p,0), ri(100*p,0), ri(130*p,0)], rWave(['sine','triangle']),
+      rr(0.35, 0.15), rr(0.28, 0.15), [ri(25*p,0), ri(35*p,0), ri(45*p,0)], rr(0.22, 0.15), 0,
+      { attack: rr(0.015, 0.3), hold: rr(0.04, 0.3), decay: rr(0.22, 0.15) });
+    playNoiseBurst(rr(0.08, 0.3), rr(0.06, 0.3), now + 0.01, ri(600, 0.3), rr(1.2, 0.3));
+    // Occasional secondary ignition pop
+    if (r() > 0.5) {
+      playNoiseBurst(rr(0.05, 0.2), 0.04, now + rr(0.03, 0.3), ri(900, 0.3), 1.0);
+    }
   }
   else if (type === 'fire_spread') {
-    // Shotgun blast: instant attack, wide noise burst with low-mid emphasis.
-    triChord([45, 67, 90], 'sawtooth', 0.35, 0.14, [20, 30, 40], 0.11, 0,
-      { attack: 0.001, hold: 0.01, decay: 0.13 });
-    playNoiseBurst(0.10, 0.28, now, 1200, 0.5); // wide bandpass for scatter feel
+    // Shotgun: random pellet scatter sound
+    const p = rr(1, 0.12);
+    triChord([ri(45*p,0), ri(67*p,0), ri(90*p,0)], 'sawtooth',
+      rr(0.35, 0.15), rr(0.14, 0.2), [ri(20*p,0), ri(30*p,0), ri(40*p,0)], rr(0.11, 0.2), 0,
+      { attack: 0.001, hold: rr(0.01, 0.3), decay: rr(0.13, 0.2) });
+    playNoiseBurst(rr(0.10, 0.25), rr(0.28, 0.15), now, ri(1200, 0.2), rr(0.5, 0.3));
+    // Random extra scatter pops (1 to 3)
+    const pops = 1 + Math.floor(r() * 3);
+    for (let i = 0; i < pops; i++) {
+      playNoiseBurst(rr(0.02, 0.3), rr(0.05, 0.3), now + r() * 0.04, ri(1500, 0.4), rr(1.5, 0.3));
+    }
   }
   else if (type === 'fire_minigun') {
-    // Ultra-short tick: almost click-like. Designed to sound good at rapid fire rates.
-    triChord([90, 113, 135], 'square', 0.14, 0.04, [60, 75, 90], 0.03, 0,
-      { attack: 0.001, hold: 0, decay: 0.04 });
-    playNoiseBurst(0.015, 0.06, now, 4000, 2.0); // tiny high-freq click
+    // Ultra-short tick with micro-variation (never identical at rapid fire)
+    const p = rr(1, 0.08);
+    triChord([ri(90*p,0), ri(113*p,0), ri(135*p,0)], rWave(['square','sawtooth']),
+      rr(0.14, 0.2), rr(0.04, 0.15), [ri(60*p,0), ri(75*p,0), ri(90*p,0)], 0.03, 0,
+      { attack: 0.001, hold: 0, decay: rr(0.04, 0.2) });
+    playNoiseBurst(rr(0.015, 0.2), rr(0.05, 0.2), now, ri(2200, 0.15), rr(2.0, 0.2));
   }
   else if (type === 'fire_railgun') {
-    // Charged weapon: slow swell into a metallic ring. Feels powerful and deliberate.
-    triChord([40, 60, 80], 'sine', 0.25, 0.15, [120, 180, 240], 0.12, 0,
-      { attack: 0.02, hold: 0.03, decay: 0.10 });
-    // Metallic ring tail (triangle wave, high partials)
-    triChord([220, 330, 440], 'triangle', 0.08, 0.45, [180, 270, 360], 0.40, 0.05,
-      { attack: 0.001, hold: 0, decay: 0.45 });
-    playNoiseBurst(0.12, 0.10, now, 2500, 3.0); // sharp filtered transient
+    // Charged weapon: randomized swell + metallic ring
+    const p = rr(1, 0.08);
+    triChord([ri(40*p,0), ri(60*p,0), ri(80*p,0)], 'sine',
+      rr(0.25, 0.15), rr(0.15, 0.15), [ri(120*p,0), ri(180*p,0), ri(240*p,0)], rr(0.12, 0.2), 0,
+      { attack: rr(0.02, 0.3), hold: rr(0.03, 0.3), decay: rr(0.10, 0.2) });
+    // Metallic ring tail: randomized harmonics
+    const ringP = rr(1, 0.10);
+    triChord([ri(165*ringP,0), ri(247*ringP,0), ri(330*ringP,0)], rWave(['triangle','sine']),
+      rr(0.07, 0.2), rr(0.45, 0.15), [ri(135*ringP,0), ri(200*ringP,0), ri(270*ringP,0)], rr(0.40, 0.15), rr(0.05, 0.3),
+      { attack: 0.001, hold: 0, decay: rr(0.45, 0.15) });
+    playNoiseBurst(rr(0.12, 0.2), rr(0.08, 0.2), now, ri(1600, 0.2), rr(3.0, 0.2));
+    // Random electric zap overtone
+    if (r() > 0.4) triChord([ri(400,0.2)], 'sine', 0.03, rr(0.08, 0.3), [ri(200,0.2)], 0.06, rr(0.02, 0.3),
+      { attack: 0.001, hold: 0, decay: rr(0.08, 0.3) });
   }
   else if (type === 'fire_salvo') {
-    // Missile launch: whoosh with rising pitch. Distinct "leaving the tube" sound.
-    triChord([50, 63, 75], 'sine', 0.22, 0.35, [150, 190, 225], 0.30, 0,
-      { attack: 0.008, hold: 0.05, decay: 0.30 });
-    playNoiseBurst(0.20, 0.12, now + 0.01, 800, 0.6); // low whoosh
+    // Missile launch: whoosh with random pitch rise
+    const p = rr(1, 0.15);
+    const riseP = rr(1, 0.15);
+    triChord([ri(50*p,0), ri(63*p,0), ri(75*p,0)], rWave(['sine','triangle']),
+      rr(0.22, 0.15), rr(0.35, 0.15), [ri(150*riseP,0), ri(190*riseP,0), ri(225*riseP,0)], rr(0.30, 0.15), 0,
+      { attack: rr(0.008, 0.3), hold: rr(0.05, 0.3), decay: rr(0.30, 0.15) });
+    playNoiseBurst(rr(0.20, 0.2), rr(0.12, 0.2), now + 0.01, ri(800, 0.25), rr(0.6, 0.3));
+    // Occasional secondary thruster ignition
+    if (r() > 0.5) triChord([ri(100,0.2), ri(130,0.2)], 'sawtooth', 0.04, rr(0.15, 0.2), null, null, rr(0.08, 0.3),
+      { attack: 0.005, hold: 0.02, decay: rr(0.12, 0.2) });
   }
   else if (type === 'hit') {
-    // Metallic ring confirmation: fast attack, medium ring-out.
-    triChord([130, 164, 196], 'triangle', 0.18, 0.12, [80, 100, 120], 0.10, 0,
-      { attack: 0.001, hold: 0, decay: 0.12 });
+    const p = rr(1, 0.10);
+    triChord([ri(130*p,0), ri(164*p,0), ri(196*p,0)], rWave(['triangle','sine']),
+      rr(0.18, 0.15), rr(0.12, 0.2), [ri(80*p,0), ri(100*p,0), ri(120*p,0)], rr(0.10, 0.2), 0,
+      { attack: 0.001, hold: 0, decay: rr(0.12, 0.2) });
   }
   else if (type === 'kill') {
-    // Descending minor triad: satisfying two-stage confirmation.
-    triChord([130, 156, 196], 'sine', 0.18, 0.35, null, null, 0,
-      { attack: 0.005, hold: 0.05, decay: 0.30 });
-    triChord([65, 78, 98], 'sine', 0.15, 0.40, null, null, 0.12,
-      { attack: 0.005, hold: 0.05, decay: 0.35 });
+    const p = rr(1, 0.08);
+    triChord([ri(130*p,0), ri(156*p,0), ri(196*p,0)], 'sine',
+      rr(0.18, 0.12), rr(0.35, 0.12), null, null, 0,
+      { attack: 0.005, hold: rr(0.05, 0.2), decay: rr(0.30, 0.15) });
+    triChord([ri(65*p,0), ri(78*p,0), ri(98*p,0)], 'sine',
+      rr(0.15, 0.12), rr(0.40, 0.12), null, null, rr(0.12, 0.15),
+      { attack: 0.005, hold: rr(0.05, 0.2), decay: rr(0.35, 0.15) });
   }
   else if (type === 'damage') {
-    // Dissonant low rumble: slower attack so it doesn't mask hit sounds.
-    triChord([55, 62, 73], 'sawtooth', 0.20, 0.25, [30, 35, 40], 0.20, 0,
-      { attack: 0.008, hold: 0.02, decay: 0.22 });
-    playNoiseBurst(0.06, 0.05, now + 0.005, 400, 1.5); // sub-rumble
+    const p = rr(1, 0.12);
+    triChord([ri(55*p,0), ri(62*p,0), ri(73*p,0)], rWave(['sawtooth','square']),
+      rr(0.20, 0.2), rr(0.25, 0.2), [ri(30*p,0), ri(35*p,0), ri(40*p,0)], rr(0.20, 0.2), 0,
+      { attack: rr(0.008, 0.3), hold: rr(0.02, 0.3), decay: rr(0.22, 0.2) });
+    playNoiseBurst(rr(0.06, 0.3), rr(0.05, 0.3), now + 0.005, ri(400, 0.3), rr(1.5, 0.3));
   }
   else if (type === 'dash') {
-    // Rising thrust: builds quickly, noise burst for the whoosh.
-    triChord([55, 69, 82], 'sine', 0.15, 0.30, [110, 138, 165], 0.25, 0,
-      { attack: 0.005, hold: 0.03, decay: 0.27 });
-    playNoiseBurst(0.20, 0.10, now, 1500, 0.8); // mid-freq whoosh
+    const p = rr(1, 0.10);
+    triChord([ri(55*p,0), ri(69*p,0), ri(82*p,0)], 'sine',
+      rr(0.15, 0.15), rr(0.30, 0.15), [ri(110*p,0), ri(138*p,0), ri(165*p,0)], rr(0.25, 0.15), 0,
+      { attack: 0.005, hold: rr(0.03, 0.3), decay: rr(0.27, 0.15) });
+    playNoiseBurst(rr(0.20, 0.2), rr(0.10, 0.2), now, ri(1500, 0.2), rr(0.8, 0.3));
   }
   else if (type === 'ability') {
-    // Tech activation: two clean pulses with a gap.
-    triChord([82, 103, 123], 'sine', 0.18, 0.15, null, null, 0,
-      { attack: 0.003, hold: 0.03, decay: 0.12 });
-    triChord([98, 123, 147], 'sine', 0.15, 0.18, null, null, 0.08,
-      { attack: 0.003, hold: 0.03, decay: 0.15 });
+    const p = rr(1, 0.08);
+    triChord([ri(82*p,0), ri(103*p,0), ri(123*p,0)], 'sine',
+      rr(0.18, 0.12), rr(0.15, 0.15), null, null, 0,
+      { attack: 0.003, hold: rr(0.03, 0.2), decay: rr(0.12, 0.15) });
+    triChord([ri(98*p,0), ri(123*p,0), ri(147*p,0)], 'sine',
+      rr(0.15, 0.12), rr(0.18, 0.15), null, null, rr(0.08, 0.15),
+      { attack: 0.003, hold: rr(0.03, 0.2), decay: rr(0.15, 0.15) });
   }
   else if (type === 'core') {
-    // Epic power-up: long swell from sub-bass, layered with growl and noise.
-    triChord([40, 50, 60], 'sawtooth', 0.30, 0.70, [110, 138, 165], 0.55, 0,
-      { attack: 0.05, hold: 0.10, decay: 0.55 });
-    triChord([55, 69, 82], 'sine', 0.20, 0.60, [130, 164, 196], 0.50, 0.15,
-      { attack: 0.04, hold: 0.08, decay: 0.48 });
-    playNoiseBurst(0.50, 0.12, now, 600, 0.5);
+    const p = rr(1, 0.06);
+    triChord([ri(40*p,0), ri(50*p,0), ri(60*p,0)], 'sawtooth',
+      rr(0.30, 0.12), rr(0.70, 0.10), [ri(110*p,0), ri(138*p,0), ri(165*p,0)], rr(0.55, 0.10), 0,
+      { attack: rr(0.05, 0.2), hold: rr(0.10, 0.2), decay: rr(0.55, 0.10) });
+    triChord([ri(55*p,0), ri(69*p,0), ri(82*p,0)], 'sine',
+      rr(0.20, 0.12), rr(0.60, 0.10), [ri(130*p,0), ri(164*p,0), ri(196*p,0)], rr(0.50, 0.10), rr(0.15, 0.15),
+      { attack: rr(0.04, 0.2), hold: rr(0.08, 0.2), decay: rr(0.48, 0.10) });
+    playNoiseBurst(rr(0.50, 0.15), rr(0.12, 0.15), now, ri(600, 0.2), rr(0.5, 0.3));
   }
   else if (type === 'explosion') {
-    // Explosion: noise-dominant layered burst. Sub-bass pressure wave first,
-    // then mid-range crackle, then high debris scatter. No pitched tones (avoids bongo).
-    // Layer 1: sub-bass pressure wave (low filtered noise, slow attack for weight)
-    playNoiseBurst(0.50, 0.35, now, 80, 0.3);
-    // Layer 2: main blast (wide mid-range noise burst, sharp transient)
-    playNoiseBurst(0.30, 0.30, now + 0.005, 500, 0.5);
-    // Layer 3: high-frequency debris crackle (delayed slightly, thinner)
-    playNoiseBurst(0.20, 0.12, now + 0.02, 2500, 1.2);
-    // Layer 4: very low sub-rumble tail (gives sense of scale)
-    playNoiseBurst(0.60, 0.18, now + 0.01, 40, 0.2);
-    // Tiny tonal hint (very quiet sawtooth growl, not a chord; just adds body)
-    triChord([25, 30, 35], 'sawtooth', 0.10, 0.40, [12, 15, 18], 0.35, 0.01,
-      { attack: 0.01, hold: 0.02, decay: 0.37 });
+    // Explosion: multi-layered noise with heavy randomization.
+    // Every explosion sounds different: random filter freqs, timings, and bonus layers.
+    const size = rr(1, 0.25); // overall size variation
+    // Layer 1: sub-bass pressure wave
+    playNoiseBurst(rr(0.50, 0.3) * size, rr(0.35, 0.2), now, ri(80, 0.3), rr(0.3, 0.3));
+    // Layer 2: main blast
+    playNoiseBurst(rr(0.30, 0.3) * size, rr(0.30, 0.2), now + r() * 0.01, ri(500, 0.35), rr(0.5, 0.3));
+    // Layer 3: debris crackle
+    playNoiseBurst(rr(0.20, 0.3), rr(0.10, 0.25), now + 0.01 + r() * 0.02, ri(1400, 0.3), rr(1.0, 0.3));
+    // Layer 4: sub-rumble tail
+    playNoiseBurst(rr(0.60, 0.25) * size, rr(0.18, 0.2), now + r() * 0.015, ri(40, 0.3), rr(0.2, 0.3));
+    // Tonal growl (randomized pitch and waveform)
+    const gp = rr(1, 0.3);
+    triChord([ri(25*gp,0), ri(30*gp,0), ri(35*gp,0)], rWave(['sawtooth','square']),
+      rr(0.10, 0.25), rr(0.40, 0.2) * size, [ri(12*gp,0), ri(15*gp,0), ri(18*gp,0)], rr(0.35, 0.15), r() * 0.02,
+      { attack: rr(0.01, 0.3), hold: rr(0.02, 0.3), decay: rr(0.37, 0.15) });
+    // Random bonus layers (0 to 2 extra bursts for unique character)
+    const extras = Math.floor(r() * 3);
+    for (let i = 0; i < extras; i++) {
+      const freq = ri(150 + r() * 800, 0.2);
+      playNoiseBurst(rr(0.15, 0.4), rr(0.06, 0.3), now + r() * 0.04, freq, rr(0.8, 0.4));
+    }
+    // Occasional metallic shrapnel ring
+    if (r() > 0.5) {
+      const sp = rr(1, 0.25);
+      triChord([ri(200*sp,0), ri(280*sp,0)], rWave(['triangle','square']), rr(0.04, 0.3),
+        rr(0.20, 0.3), [ri(100*sp,0), ri(140*sp,0)], rr(0.15, 0.3), rr(0.03, 0.3),
+        { attack: 0.001, hold: 0, decay: rr(0.20, 0.3) });
+    }
   }
   else if (type === 'stasis') {
-    // Eerie frozen triad: glass-like shimmer with filtered noise hiss.
-    triChord([82, 87, 98], 'sine', 0.14, 0.50, null, null, 0,
-      { attack: 0.02, hold: 0.08, decay: 0.40 });
-    triChord([61, 65, 73], 'triangle', 0.10, 0.55, null, null, 0.10,
-      { attack: 0.02, hold: 0.08, decay: 0.45 });
-    playNoiseBurst(0.30, 0.04, now + 0.05, 6000, 4.0); // high crystalline hiss
+    const p = rr(1, 0.06);
+    triChord([ri(82*p,0), ri(87*p,0), ri(98*p,0)], 'sine',
+      rr(0.14, 0.15), rr(0.50, 0.12), null, null, 0,
+      { attack: 0.02, hold: rr(0.08, 0.2), decay: rr(0.40, 0.12) });
+    triChord([ri(61*p,0), ri(65*p,0), ri(73*p,0)], 'triangle',
+      rr(0.10, 0.15), rr(0.55, 0.12), null, null, rr(0.10, 0.15),
+      { attack: 0.02, hold: rr(0.08, 0.2), decay: rr(0.45, 0.12) });
+    playNoiseBurst(rr(0.30, 0.2), rr(0.03, 0.3), now + rr(0.05, 0.2), ri(3000, 0.15), rr(4.0, 0.2));
   }
   else if (type === 'reload') {
-    // Mechanical click: two sharp pulses with metallic ring.
-    triChord([110, 138, 165], 'square', 0.10, 0.06, null, null, 0,
-      { attack: 0.001, hold: 0, decay: 0.06 });
-    triChord([82, 103, 123], 'square', 0.10, 0.06, null, null, 0.07,
-      { attack: 0.001, hold: 0, decay: 0.06 });
-    playNoiseBurst(0.02, 0.08, now, 5000, 3.0); // metallic click
+    const p = rr(1, 0.08);
+    triChord([ri(110*p,0), ri(138*p,0), ri(165*p,0)], 'square',
+      rr(0.10, 0.15), rr(0.06, 0.2), null, null, 0,
+      { attack: 0.001, hold: 0, decay: rr(0.06, 0.2) });
+    triChord([ri(82*p,0), ri(103*p,0), ri(123*p,0)], 'square',
+      rr(0.10, 0.15), rr(0.06, 0.2), null, null, rr(0.07, 0.15),
+      { attack: 0.001, hold: 0, decay: rr(0.06, 0.2) });
+    playNoiseBurst(rr(0.02, 0.2), rr(0.06, 0.2), now, ri(2800, 0.15), rr(3.0, 0.2));
   }
   else if (type === 'death') {
-    // Long descending drone: slow attack into heavy decay, plus debris noise.
-    triChord([82, 98, 123], 'sawtooth', 0.25, 1.30, [20, 25, 30], 1.10, 0,
-      { attack: 0.03, hold: 0.10, decay: 1.17 });
-    triChord([55, 65, 82], 'sine', 0.15, 1.00, [15, 18, 22], 0.90, 0.20,
-      { attack: 0.03, hold: 0.08, decay: 0.89 });
-    playNoiseBurst(0.80, 0.15, now, 200, 0.6); // low rumble debris
+    // Ship death: dramatic descending drone with heavy randomization.
+    // Multiple overlapping layers, random metallic debris, and a bass drop.
+    const p = rr(1, 0.15); // large pitch variation per death
+    const size = rr(1, 0.2);
+    // Primary descending drone (sawtooth for grit)
+    triChord([ri(82*p,0), ri(98*p,0), ri(123*p,0)], rWave(['sawtooth','square']),
+      rr(0.25, 0.15), rr(1.30, 0.15) * size, [ri(20*p,0), ri(25*p,0), ri(30*p,0)], rr(1.10, 0.15), 0,
+      { attack: rr(0.03, 0.3), hold: rr(0.10, 0.3), decay: rr(1.17, 0.12) });
+    // Secondary descending layer (sine for depth)
+    triChord([ri(55*p,0), ri(65*p,0), ri(82*p,0)], 'sine',
+      rr(0.15, 0.15), rr(1.00, 0.15) * size, [ri(15*p,0), ri(18*p,0), ri(22*p,0)], rr(0.90, 0.15), rr(0.20, 0.2),
+      { attack: rr(0.03, 0.3), hold: rr(0.08, 0.3), decay: rr(0.89, 0.12) });
+    // Debris noise (randomized filter)
+    playNoiseBurst(rr(0.80, 0.25) * size, rr(0.15, 0.2), now, ri(200, 0.35), rr(0.6, 0.3));
+    // Heavy sub-bass drop (the hull crunching)
+    playNoiseBurst(rr(0.60, 0.2) * size, rr(0.25, 0.2), now + r() * 0.05, ri(50, 0.3), rr(0.3, 0.3));
+    // Delayed secondary explosion (reactor breach)
+    const delay2 = 0.15 + r() * 0.25;
+    playNoiseBurst(rr(0.40, 0.3), rr(0.20, 0.2), now + delay2, ri(400, 0.4), rr(0.5, 0.3));
+    playNoiseBurst(rr(0.25, 0.3), rr(0.08, 0.3), now + delay2 + 0.01, ri(1000, 0.3), rr(0.8, 0.3));
+    // Random metallic shrapnel (0 to 3 pieces)
+    const shrapnel = Math.floor(r() * 4);
+    for (let i = 0; i < shrapnel; i++) {
+      const sp = rr(1, 0.3);
+      const t = 0.1 + r() * 0.5;
+      triChord([ri(180*sp,0), ri(260*sp,0)], rWave(['triangle','square','sawtooth']),
+        rr(0.03, 0.3), rr(0.15, 0.3), [ri(80*sp,0), ri(120*sp,0)], rr(0.12, 0.3), t,
+        { attack: 0.001, hold: 0, decay: rr(0.15, 0.3) });
+    }
+    // Occasional deep groan (structural failure)
+    if (r() > 0.4) {
+      const gp = rr(1, 0.25);
+      triChord([ri(30*gp,0), ri(38*gp,0), ri(45*gp,0)], 'sawtooth',
+        rr(0.08, 0.3), rr(0.80, 0.2), [ri(10*gp,0), ri(13*gp,0), ri(15*gp,0)], rr(0.70, 0.2), rr(0.30, 0.3),
+        { attack: rr(0.05, 0.3), hold: rr(0.05, 0.3), decay: rr(0.70, 0.15) });
+    }
   }
   else if (type === 'round_start') {
-    // Three ascending triads: clean and ceremonial.
     triChord([65, 82, 98], 'sine', 0.18, 0.35, null, null, 0,
       { attack: 0.01, hold: 0.08, decay: 0.26 });
     triChord([73, 92, 110], 'sine', 0.18, 0.35, null, null, 0.18,
