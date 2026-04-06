@@ -40,14 +40,8 @@ canvas { display: block; }
   100% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
 }
 
-/* TF2-style health bar canvas (hidden; replaced by circumpunct rings) */
-#health-canvas { display: none; }
-
-/* Ship info (hidden; integrated into circumpunct HUD) */
-#ship-status { display: none; }
-
-/* Core meter (hidden; shown as outer ring in circumpunct HUD) */
-#core-container { display: none; }
+/* Legacy HUD elements (integrated into circumpunct ring HUD) */
+#health-canvas, #ship-status, #core-container { display: none; }
 
 /* Abilities (hidden; in circumpunct ring brackets) */
 #abilities {
@@ -94,7 +88,6 @@ canvas { display: block; }
 }
 .ability-slot.ready .ab-cd-text { display: none; }
 
-/* Weapon Info (hidden; ammo in circumpunct rings) */
 #weapon-info { display: none; }
 
 /* Round Info (top center) */
@@ -161,7 +154,6 @@ canvas { display: block; }
   z-index: 10; pointer-events: none;
 }
 
-/* Speed (hidden; in circumpunct rings) */
 #speed-display { display: none; }
 
 /* Gamepad indicator */
@@ -457,7 +449,7 @@ const CHASSIS = {
     color: 0x44cc44, healthSegments: 4,
   },
   DREADNOUGHT: {
-    name: 'Dreadnought', maxHealth: 15000, maxShield: 5000,
+    name: 'Dreadnought', maxHealth: 12500, maxShield: 5000,
     shieldRegenRate: 150, shieldRegenDelay: 8,
     flightSpeed: 250, strafeSpeed: 180, verticalSpeed: 160,
     acceleration: 500, deceleration: 400,
@@ -473,73 +465,73 @@ const CHASSIS = {
 const LOADOUTS = {
   ION: {
     name: 'ION', className: 'Corvette MkII', chassis: 'CORVETTE',
-    weapon: { name: 'Splitter Rifle', mode: 'hitscan', damage: 120, fireRate: 0.3, clipSize: 30, range: 3000, splash: 0, projSpeed: 0, pellets: 1, spinup: 0 },
+    weapon: { name: 'Splitter Rifle', mode: 'hitscan', damage: 380, fireRate: 0.25, clipSize: 30, range: 3000, splash: 0, projSpeed: 0, pellets: 1, spinup: 0 },
     abilities: [
-      { name: 'Laser Shot', cooldown: 12, duration: 0.5, desc: 'Massive beam: 1200 damage', type: 'offensive', dmg: 1200 },
-      { name: 'Vortex Shield', cooldown: 8, duration: 4, desc: 'Absorb and return projectiles', type: 'defensive' },
-      { name: 'Trip Wire', cooldown: 15, duration: 12, desc: 'Proximity mines on contact', type: 'utility' },
+      { name: 'Laser Shot', cooldown: 10, duration: 0.5, desc: 'Massive beam: 2400 damage', type: 'offensive', dmg: 2400 },
+      { name: 'Vortex Shield', cooldown: 0, duration: 999, desc: 'Hold to absorb and return projectiles', type: 'defensive' },
+      { name: 'Trip Wire', cooldown: 12, duration: 12, desc: 'Proximity mines on contact', type: 'utility' },
     ],
-    core: { name: 'Laser Core', desc: 'Continuous high-power laser', duration: 3, damage: 4500, cooldown: 60 },
+    core: { name: 'Laser Core', desc: 'Continuous high-power laser', duration: 4, damage: 12000, cooldown: 60 },
   },
   SCORCH: {
     name: 'SCORCH', className: 'Dreadnought Incinerator', chassis: 'DREADNOUGHT',
-    weapon: { name: 'T-203 Thermite', mode: 'projectile', damage: 400, fireRate: 1.2, clipSize: 12, range: 2500, splash: 200, projSpeed: 600, pellets: 1, spinup: 0 },
+    weapon: { name: 'T-203 Thermite', mode: 'projectile', damage: 1600, fireRate: 1.2, clipSize: 12, range: 2500, splash: 300, projSpeed: 600, pellets: 1, spinup: 0 },
     abilities: [
-      { name: 'Firewall', cooldown: 12, duration: 6, desc: 'Ground fire line', type: 'offensive', dmg: 800 },
-      { name: 'Thermal Shield', cooldown: 10, duration: 3, desc: 'Melts projectiles, burns nearby', type: 'defensive' },
-      { name: 'Incendiary Trap', cooldown: 18, duration: 10, desc: 'Area denial fire', type: 'utility' },
+      { name: 'Firewall', cooldown: 10, duration: 6, desc: 'Fire line: 400 DPS', type: 'offensive', dmg: 2400 },
+      { name: 'Thermal Shield', cooldown: 0, duration: 999, desc: 'Hold to burn close enemies (drains shield HP)', type: 'defensive' },
+      { name: 'Incendiary Trap', cooldown: 15, duration: 10, desc: 'Area denial fire', type: 'utility' },
     ],
-    core: { name: 'Flame Core', desc: 'Massive AoE incendiary', duration: 2, damage: 2500, cooldown: 60 },
+    core: { name: 'Flame Core', desc: 'Massive AoE incendiary', duration: 2, damage: 9000, cooldown: 60 },
   },
   NORTHSTAR: {
     name: 'NORTHSTAR', className: 'Frigate Starcaster', chassis: 'FRIGATE',
-    weapon: { name: 'Plasma Railgun', mode: 'hitscan', damage: 250, fireRate: 1.5, clipSize: 16, range: 4000, splash: 50, projSpeed: 0, pellets: 1, spinup: 2.0 },
+    weapon: { name: 'Plasma Railgun', mode: 'hitscan', damage: 1000, fireRate: 1.5, clipSize: 6, range: 4500, splash: 50, projSpeed: 0, pellets: 1, spinup: 0 },
     abilities: [
-      { name: 'Cluster Missile', cooldown: 10, duration: 0.3, desc: 'Splitting missiles: 600 total', type: 'offensive', dmg: 600 },
+      { name: 'Cluster Missile', cooldown: 8, duration: 0.3, desc: 'Impact + 5s area damage', type: 'offensive', dmg: 1800 },
       { name: 'Afterburner', cooldown: 10, duration: 4, desc: 'Speed boost (1.5x)', type: 'defensive' },
-      { name: 'Tether Trap', cooldown: 15, duration: 4, desc: 'Slow and root enemies', type: 'utility' },
+      { name: 'Tether Trap', cooldown: 12, duration: 4, desc: 'Slow and root enemies', type: 'utility' },
     ],
-    core: { name: 'Afterburner Core', desc: 'Speed boost + rocket barrage', duration: 5, damage: 2000, cooldown: 60 },
+    core: { name: 'Afterburner Core', desc: 'Speed boost + rocket barrage', duration: 5, damage: 7000, cooldown: 60 },
   },
   RONIN: {
     name: 'RONIN', className: 'Frigate Blade', chassis: 'FRIGATE',
-    weapon: { name: 'Leadwall', mode: 'spread', damage: 175, fireRate: 1.0, clipSize: 8, range: 800, splash: 0, projSpeed: 300, pellets: 4, spinup: 0 },
+    weapon: { name: 'Leadwall', mode: 'spread', damage: 200, fireRate: 0.85, clipSize: 4, range: 900, splash: 0, projSpeed: 350, pellets: 8, spinup: 0 },
     abilities: [
-      { name: 'Arc Wave', cooldown: 10, duration: 0.1, desc: 'Electric proj: 500 damage', type: 'offensive', dmg: 500 },
-      { name: 'Sword Block', cooldown: 0, duration: 999, desc: 'Block 50% incoming damage', type: 'defensive' },
-      { name: 'Phase Dash', cooldown: 8, duration: 0.2, desc: 'Teleport dash', type: 'utility' },
+      { name: 'Arc Wave', cooldown: 8, duration: 0.1, desc: 'Electric proj: 2000 damage', type: 'offensive', dmg: 2000 },
+      { name: 'Sword Block', cooldown: 0, duration: 999, desc: 'Block 70% incoming (85% Sword Core); can\'t shoot', type: 'defensive' },
+      { name: 'Phase Dash', cooldown: 6, duration: 0.2, desc: 'Teleport dash', type: 'utility' },
     ],
-    core: { name: 'Sword Core', desc: 'Empowered melee + arc waves', duration: 4, damage: 3000, cooldown: 60 },
+    core: { name: 'Sword Core', desc: 'Empowered melee + arc waves', duration: 5, damage: 9000, cooldown: 60 },
   },
   TONE: {
     name: 'TONE', className: 'Corvette Tracker', chassis: 'CORVETTE',
-    weapon: { name: '40mm Tracker', mode: 'projectile', damage: 330, fireRate: 0.7, clipSize: 20, range: 3500, splash: 0, projSpeed: 800, pellets: 1, spinup: 0 },
+    weapon: { name: '40mm Tracker', mode: 'projectile', damage: 660, fireRate: 0.6, clipSize: 20, range: 3500, splash: 0, projSpeed: 900, pellets: 1, spinup: 0 },
     abilities: [
-      { name: 'Tracker Rockets', cooldown: 8, duration: 0.5, desc: 'Lock-on missiles (3 locks)', type: 'offensive', dmg: 600 },
-      { name: 'Particle Wall', cooldown: 12, duration: 5, desc: 'One-way barrier (fire through)', type: 'defensive' },
-      { name: 'Sonar Lock', cooldown: 14, duration: 8, desc: 'Reveal + partial lock (1 mark)', type: 'utility' },
+      { name: 'Tracker Rockets', cooldown: 6, duration: 0.5, desc: 'Lock-on: 5 rockets (3 locks)', type: 'offensive', dmg: 5000 },
+      { name: 'Particle Wall', cooldown: 14, duration: 0.1, desc: 'Deploy one-way shield (4000 HP)', type: 'defensive' },
+      { name: 'Sonar Lock', cooldown: 12, duration: 8, desc: 'Reveal + partial lock (1 mark)', type: 'utility' },
     ],
-    core: { name: 'Salvo Core', desc: 'Massive missile barrage', duration: 3, damage: 4000, cooldown: 60 },
+    core: { name: 'Salvo Core', desc: 'Massive missile barrage', duration: 3, damage: 11000, cooldown: 60 },
   },
   LEGION: {
     name: 'LEGION', className: 'Dreadnought Siege', chassis: 'DREADNOUGHT',
-    weapon: { name: 'Predator Cannon', mode: 'hitscan', damage: 55, fireRate: 0.05, clipSize: 999, range: 2000, splash: 0, projSpeed: 0, pellets: 1, spinup: 1.5 },
+    weapon: { name: 'Predator Cannon', mode: 'hitscan', damage: 170, fireRate: 0.05, clipSize: 999, range: 2000, splash: 0, projSpeed: 0, pellets: 1, spinup: 1.2 },
     abilities: [
-      { name: 'Power Shot', cooldown: 10, duration: 0.1, desc: 'High-power: 1100 damage', type: 'offensive', dmg: 1100 },
-      { name: 'Gun Shield', cooldown: 0, duration: 999, desc: 'Frontal shield while firing', type: 'defensive' },
+      { name: 'Power Shot', cooldown: 8, duration: 0.1, desc: 'High-power: 3200 damage', type: 'offensive', dmg: 3200 },
+      { name: 'Gun Shield', cooldown: 0, duration: 999, desc: 'Frontal shield (2500 HP)', type: 'defensive' },
       { name: 'Mode Switch', cooldown: 2, duration: 999, desc: 'Close/long range modes', type: 'utility' },
     ],
-    core: { name: 'Smart Core', desc: 'Auto-aim + max accuracy', duration: 8, damage: 3500, cooldown: 60 },
+    core: { name: 'Smart Core', desc: 'Auto-aim + max accuracy', duration: 8, damage: 10000, cooldown: 60 },
   },
   MONARCH: {
     name: 'MONARCH', className: 'Corvette Sovereign', chassis: 'CORVETTE',
-    weapon: { name: 'XO-16 Chaingun', mode: 'hitscan', damage: 80, fireRate: 0.1, clipSize: 40, range: 3000, splash: 0, projSpeed: 0, pellets: 1, spinup: 0.5 },
+    weapon: { name: 'XO-16 Chaingun', mode: 'hitscan', damage: 240, fireRate: 0.09, clipSize: 40, range: 3000, splash: 0, projSpeed: 0, pellets: 1, spinup: 0.4 },
     abilities: [
-      { name: 'Rocket Salvo', cooldown: 10, duration: 0.3, desc: '4 rockets: 250 dmg each', type: 'offensive', dmg: 1000 },
-      { name: 'Energy Siphon', cooldown: 10, duration: 2, desc: 'Drain shields: 400 heal', type: 'defensive' },
-      { name: 'Rearm', cooldown: 14, duration: 0.1, desc: 'Reset ability cooldowns', type: 'utility' },
+      { name: 'Rocket Salvo', cooldown: 6, duration: 0.3, desc: '5 rockets (10 with Missile Racks)', type: 'offensive', dmg: 3500 },
+      { name: 'Energy Siphon', cooldown: 8, duration: 2, desc: 'Drain shields: 800 heal', type: 'defensive' },
+      { name: 'Rearm', cooldown: 12, duration: 0.1, desc: 'Reset ability cooldowns', type: 'utility' },
     ],
-    core: { name: 'Upgrade Core', desc: '3 tiers of permanent upgrades', duration: 12, damage: 1500, cooldown: 60 },
+    core: { name: 'Upgrade Core', desc: '3 tiers of permanent upgrades', duration: 12, damage: 3000, cooldown: 60 },
   },
 };
 
@@ -614,21 +606,27 @@ const player = {
   coreReady: false, coreActive: false, coreTimer: 0,
   vortexStored: 0,
   // ION energy pool (shared across all abilities)
-  ionEnergy: 1000, ionMaxEnergy: 1000, ionEnergyRegen: 50, // per second
+  ionEnergy: 1000, ionMaxEnergy: 1000, ionEnergyRegen: 80, // per second (only when NOT using abilities)
+  ionAdsActive: false, // true when ION is ADS (drains energy, boosts damage)
   // TONE lock-on system
   toneLocks: {}, // { botId: lockCount } (max 3 per target)
   toneLockedTarget: null, // current target with 3+ locks
   // LEGION mode switch
   legionMode: 'close', // 'close' or 'long'
+  gunShieldHP: 0, gunShieldMaxHP: 2500, // Legion Gun Shield HP pool (TF2)
   // MONARCH upgrade tiers
   monarchTier: 0, // 0-3, each core activation upgrades
   monarchDmgMult: 1.0,
   monarchCooldownMult: 1.0,
   monarchShieldBonus: 0,
+  monarchArcRounds: false,     // Tier 1 choice: +50% vs shields/walls, +10 ammo
+  monarchMissileRacks: false,  // Tier 1 choice: double Rocket Salvo missiles
+  monarchXO16Accel: false,     // Tier 3 choice: +25% damage, faster ROF
   // RONIN phase dash invulnerability
   phaseInvuln: false,
   phaseInvulnTimer: 0,
   // NORTHSTAR
+  thermalShieldHP: 0, thermalShieldMaxHP: 2500, // Scorch Thermal Shield HP pool
   afterburnerActive: false,
   afterburnerSpeedMult: 1.0,
   railgunCharge: 0, // 0-1 charge level (hold alt-fire to charge)
@@ -653,6 +651,7 @@ const input = {
   // Gamepad
   gpConnected: false,
   gpFire: false, gpFirePrev: false,
+  gpAltFire: false,
   gpDash: false, gpDashPrev: false,
   gpReload: false, gpReloadPrev: false,
   gpAbility0: false, gpAbility0Prev: false,
@@ -1262,175 +1261,7 @@ scene.add(hemiLight);
 
 // ---- LEVEL GEOMETRY ----
 
-function buildLevelGeometry() {
-  const wallMat = new THREE.MeshPhongMaterial({ color: 0x334455, emissive: 0x0a1122, emissiveIntensity: 0.2, flatShading: true });
-  const pillarMat = new THREE.MeshPhongMaterial({ color: 0x445566, emissive: 0x112233, emissiveIntensity: 0.15, flatShading: true });
-  const debrisMat = new THREE.MeshPhongMaterial({ color: 0x556677, emissive: 0x111522, emissiveIntensity: 0.05, flatShading: true });
-  const containerMat = new THREE.MeshPhongMaterial({ color: 0x664433, emissive: 0x221100, emissiveIntensity: 0.08, flatShading: true });
-  const beaconMat = new THREE.MeshBasicMaterial({ color: 0x00ff88 });
-  const edgeMat = new THREE.MeshBasicMaterial({ color: 0x2244aa, transparent: true, opacity: 0.4 });
-
-  function addBox(x, y, z, w, h, d, mat, addCollision) {
-    const geo = new THREE.BoxGeometry(w, h, d);
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(x, y, z);
-    scene.add(mesh);
-    if (addCollision !== false) {
-      game.levelBoxes.push({
-        min: new THREE.Vector3(x - w/2, y - h/2, z - d/2),
-        max: new THREE.Vector3(x + w/2, y + h/2, z + d/2),
-      });
-    }
-    return mesh;
-  }
-
-  function addCylinder(x, y, z, r, h, mat) {
-    const geo = new THREE.CylinderGeometry(r, r, h, 16);
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(x, y, z);
-    scene.add(mesh);
-    // Approximate cylinder as box for collision
-    game.levelBoxes.push({
-      min: new THREE.Vector3(x - r, y - h/2, z - r),
-      max: new THREE.Vector3(x + r, y + h/2, z + r),
-    });
-    return mesh;
-  }
-
-  // Central hub: octagonal platform
-  const hubR = 300;
-  addBox(0, -160, 0, hubR * 2, 20, hubR * 2, wallMat); // floor
-  addBox(0, 160, 0, hubR * 2, 20, hubR * 2, wallMat);   // ceiling
-
-  // Hub walls with openings (4 walls with gaps)
-  const wallH = 320, wallT = 20;
-  // North wall (gap in center)
-  addBox(-200, 0, -hubR, 200, wallH, wallT, wallMat);
-  addBox(200, 0, -hubR, 200, wallH, wallT, wallMat);
-  // South wall
-  addBox(-200, 0, hubR, 200, wallH, wallT, wallMat);
-  addBox(200, 0, hubR, 200, wallH, wallT, wallMat);
-  // East wall
-  addBox(hubR, 0, -200, wallT, wallH, 200, wallMat);
-  addBox(hubR, 0, 200, wallT, wallH, 200, wallMat);
-  // West wall
-  addBox(-hubR, 0, -200, wallT, wallH, 200, wallMat);
-  addBox(-hubR, 0, 200, wallT, wallH, 200, wallMat);
-
-  // Edge lights on hub
-  for (let i = 0; i < 8; i++) {
-    const angle = (Math.PI / 4) * i;
-    const ex = Math.cos(angle) * (hubR - 10);
-    const ez = Math.sin(angle) * (hubR - 10);
-    addBox(ex, -148, ez, 8, 4, 8, edgeMat, false);
-    addBox(ex, 148, ez, 8, 4, 8, edgeMat, false);
-  }
-
-  // 4 cardinal corridors
-  const corrLen = 800, corrW = 200, corrH = 300;
-  const corrDirs = [
-    { x: 0, z: -(hubR + corrLen / 2), rx: 0 },  // North
-    { x: 0, z: (hubR + corrLen / 2), rx: 0 },   // South
-    { x: (hubR + corrLen / 2), z: 0, rx: 1 },   // East
-    { x: -(hubR + corrLen / 2), z: 0, rx: 1 },  // West
-  ];
-  corrDirs.forEach(c => {
-    const cw = c.rx ? corrLen : corrW;
-    const cd = c.rx ? corrW : corrLen;
-    // Floor
-    addBox(c.x, -150, c.z, cw, 20, cd, wallMat);
-    // Ceiling
-    addBox(c.x, 150, c.z, cw, 20, cd, wallMat);
-    // Left wall
-    if (c.rx) {
-      addBox(c.x, 0, c.z - corrW / 2, cw, corrH, wallT, wallMat);
-      addBox(c.x, 0, c.z + corrW / 2, cw, corrH, wallT, wallMat);
-    } else {
-      addBox(c.x - corrW / 2, 0, c.z, wallT, corrH, cd, wallMat);
-      addBox(c.x + corrW / 2, 0, c.z, wallT, corrH, cd, wallMat);
-    }
-  });
-
-  // 4 side rooms branching from corridor midpoints
-  const roomSize = 400, roomH = 300;
-  const rooms = [
-    { x: -500, z: -(hubR + corrLen / 2) },
-    { x: 500, z: -(hubR + corrLen / 2) },
-    { x: -(hubR + corrLen / 2), z: -500 },
-    { x: (hubR + corrLen / 2), z: 500 },
-  ];
-  rooms.forEach(r => {
-    addBox(r.x, -150, r.z, roomSize, 20, roomSize, wallMat);  // floor
-    addBox(r.x, 150, r.z, roomSize, 20, roomSize, wallMat);   // ceiling
-    // Walls with one opening
-    addBox(r.x - roomSize / 2, 0, r.z, wallT, roomH, roomSize, wallMat); // left
-    addBox(r.x + roomSize / 2, 0, r.z, wallT, roomH, roomSize, wallMat); // right
-    addBox(r.x, 0, r.z - roomSize / 2, roomSize, roomH, wallT, wallMat); // front
-    // back wall has gap (opening to corridor)
-    addBox(r.x - 120, 0, r.z + roomSize / 2, 160, roomH, wallT, wallMat);
-    addBox(r.x + 120, 0, r.z + roomSize / 2, 160, roomH, wallT, wallMat);
-  });
-
-  // Structural pillars
-  const pillarPositions = [
-    [0, 0, 0], [600, 0, 600], [-600, 0, 600], [600, 0, -600], [-600, 0, -600],
-    [800, 0, 0], [-800, 0, 0], [0, 0, 800], [0, 0, -800],
-  ];
-  pillarPositions.forEach(p => addCylinder(p[0], p[1], p[2], 30, 300, pillarMat));
-
-  // Scattered debris (asteroids)
-  for (let i = 0; i < 25; i++) {
-    const x = (Math.random() - 0.5) * 4000;
-    const y = (Math.random() - 0.5) * 2000;
-    const z = (Math.random() - 0.5) * 4000;
-    if (Math.abs(x) < 500 && Math.abs(z) < 500) continue;
-    const size = 15 + Math.random() * 35;
-    const geo = new THREE.IcosahedronGeometry(size, 1);
-    const mesh = new THREE.Mesh(geo, debrisMat);
-    mesh.position.set(x, y, z);
-    mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
-    scene.add(mesh);
-    game.levelBoxes.push({
-      min: new THREE.Vector3(x - size, y - size, z - size),
-      max: new THREE.Vector3(x + size, y + size, z + size),
-    });
-  }
-
-  // Cargo containers
-  for (let i = 0; i < 15; i++) {
-    const x = (Math.random() - 0.5) * 3500;
-    const y = (Math.random() - 0.5) * 1200;
-    const z = (Math.random() - 0.5) * 3500;
-    if (Math.abs(x) < 400 && Math.abs(z) < 400) continue;
-    addBox(x, y, z, 50 + Math.random() * 30, 30 + Math.random() * 20, 60 + Math.random() * 40, containerMat);
-  }
-
-  // Platforms at various heights
-  const platforms = [
-    { x: 1200, y: 200, z: 0 }, { x: -1200, y: -200, z: 0 },
-    { x: 0, y: 300, z: 1200 }, { x: 0, y: -300, z: -1200 },
-    { x: 800, y: 100, z: 800 }, { x: -800, y: -100, z: -800 },
-  ];
-  platforms.forEach(p => addBox(p.x, p.y, p.z, 200, 15, 200, wallMat));
-
-  // Navigation beacons
-  const beaconPositions = [
-    [1200, 0, 1200], [-1200, 0, 1200], [1200, 0, -1200], [-1200, 0, -1200],
-    [0, 0, 1500], [1500, 0, 0], [0, 0, -1500], [-1500, 0, 0],
-  ];
-  beaconPositions.forEach(p => {
-    const geo = new THREE.SphereGeometry(10, 12, 8);
-    const mesh = new THREE.Mesh(geo, beaconMat);
-    mesh.position.set(p[0], p[1], p[2]);
-    scene.add(mesh);
-    // Point light at beacon
-    const light = new THREE.PointLight(0x00ff88, 0.3, 400);
-    light.position.set(p[0], p[1], p[2]);
-    scene.add(light);
-  });
-}
-// Old static geometry replaced by procedural cursive map
-// buildLevelGeometry(); // kept for reference but not called
+// (Old static buildLevelGeometry removed; replaced by buildRoomGraphLevel)
 
 // ---- COLLISION HELPERS ----
 
@@ -1940,6 +1771,9 @@ class Bot {
     this.health = 0;
     scene.remove(this.mesh);
     spawnExplosion(this.position, this.chassis.hullLength);
+    // Clean up TONE lock marks for this bot
+    delete player.toneLocks[this.id];
+    if (player.toneLockedTarget === this) player.toneLockedTarget = null;
     if (attacker === 'player') {
       player.kills++;
       player.coreMeter = Math.min(100, player.coreMeter + 15);
@@ -2032,6 +1866,17 @@ class Projectile {
             bot.velocity.multiplyScalar(0.3); // 70% speed reduction
             bot.arcSlowTimer = 2.0; // slowed for 2 seconds
           }
+          // Arc Wave counters: destroy Particle Walls and Gun Shields it passes near
+          if (this.isArcWave) {
+            for (let we = game.worldEffects.length - 1; we >= 0; we--) {
+              const eff = game.worldEffects[we];
+              if (eff.type === 'particle_wall' && eff.team !== player.team && this.position.distanceTo(eff.position) < 400) {
+                eff.hp = 0; eff.timer = 0;
+                if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh);
+                spawnExplosion(eff.position, 20);
+              }
+            }
+          }
           if (!bot.alive) showKillMarker();
           // Cluster Missile: spawn child projectiles on impact
           if (this.isCluster) this.spawnClusterChildren();
@@ -2043,7 +1888,7 @@ class Projectile {
     } else if (this.owner !== 'player' && player.shipState !== 'dead') {
       const dist = this.position.distanceTo(player.position);
       if (dist < player.chassis.hullLength * 0.8) {
-        playerTakeDamage(this.damage, this.owner);
+        playerTakeDamage(this.damage, this.owner, this);
         if (this.isCluster) this.spawnClusterChildren();
         this.destroy();
         return;
@@ -2160,6 +2005,8 @@ function updateEffects(dt) {
     e.age += dt;
     if (e.age >= e.lifetime) {
       scene.remove(e.mesh);
+      if (e.mesh.geometry) e.mesh.geometry.dispose();
+      if (e.mesh.material) e.mesh.material.dispose();
       game.effects.splice(i, 1);
       continue;
     }
@@ -2254,14 +2101,20 @@ function selectLoadout(key) {
   player.shieldRegenDelay = 0;
   // Reset titan-specific state
   player.ionEnergy = 1000;
+  player.ionAdsActive = false;
   player.vortexStored = 0;
   player.toneLocks = {};
   player.toneLockedTarget = null;
   player.legionMode = 'close';
+  player.gunShieldHP = 0;
+  player.thermalShieldHP = 0;
   player.monarchTier = 0;
   player.monarchDmgMult = 1.0;
   player.monarchCooldownMult = 1.0;
   player.monarchShieldBonus = 0;
+  player.monarchArcRounds = false;
+  player.monarchMissileRacks = false;
+  player.monarchXO16Accel = false;
   player.phaseInvuln = false;
   player.phaseInvulnTimer = 0;
   player.afterburnerActive = false;
@@ -2340,40 +2193,68 @@ function spawnBots() {
   }
 }
 
-function playerTakeDamage(amount, attacker) {
+function playerTakeDamage(amount, attacker, projectile) {
   if (player.shipState === 'dead' || player.spawnProtection > 0) return;
   // Phase Dash invulnerability (RONIN)
   if (player.phaseInvuln) return;
   player.lastDamageTime = game.time;
 
-  // Defensive ability damage modifiers (from TF2 SDK)
-  // Sword Block (RONIN): 50% damage reduction while active
-  if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Sword Block') {
-    amount *= 0.5;
+  // Arc Wave counter: instantly destroys Particle Wall and Gun Shield (TF2 interaction)
+  const isArcWaveHit = projectile && projectile.isArcWave;
+  if (isArcWaveHit) {
+    // Destroy player's Particle Wall
+    for (let we = game.worldEffects.length - 1; we >= 0; we--) {
+      const eff = game.worldEffects[we];
+      if (eff.type === 'particle_wall' && eff.owner === 'player' && eff.hp > 0) {
+        eff.hp = 0; eff.timer = 0;
+        if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh);
+        spawnExplosion(eff.position, 20);
+      }
+    }
+    // Destroy player's Gun Shield
+    if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Gun Shield') {
+      player.gunShieldHP = 0;
+      player.abilityActive[1] = false;
+      player.abilityCooldowns[1] = 15;
+    }
   }
-  // Gun Shield (LEGION): 60% frontal damage reduction while active
+
+  // Defensive ability damage modifiers (from TF2 SDK)
+  // Sword Block (RONIN): 70% damage reduction (85% during Sword Core); blocks Arc Wave damage but not slow
+  if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Sword Block') {
+    const swordCoreActive = player.coreActive && player.loadout && player.loadout.core.name === 'Sword Core';
+    amount *= swordCoreActive ? 0.15 : 0.30;
+  }
+  // Gun Shield (LEGION): frontal shield with HP pool; absorbs damage until depleted (destroyed by Arc Wave above)
   if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Gun Shield') {
     if (attacker && attacker.position) {
       const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
       const toAttacker = new THREE.Vector3().subVectors(attacker.position, player.position).normalize();
-      if (forward.dot(toAttacker) > 0.3) {
-        amount *= 0.4; // 60% reduction from frontal attacks
+      if (forward.dot(toAttacker) > 0.3 && player.gunShieldHP > 0) {
+        const absorbed = Math.min(amount, player.gunShieldHP);
+        player.gunShieldHP -= absorbed;
+        amount -= absorbed;
+        if (player.gunShieldHP <= 0) {
+          // Shield destroyed: auto-deactivate
+          player.abilityActive[1] = false;
+          player.abilityCooldowns[1] = 15; // cooldown on destruction
+        }
+        if (amount <= 0) return;
       }
     }
   }
-  // Thermal Shield (SCORCH): absorbs 70% of melee-range damage, reflects some back
+  // Thermal Shield (SCORCH): absorbs damage with HP pool; burns nearby enemies (handled in tick)
   if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Thermal Shield') {
-    if (attacker && attacker.position) {
-      const dist = player.position.distanceTo(attacker.position);
-      if (dist < 500) {
-        const absorbed = amount * 0.7;
-        amount *= 0.3;
-        // Reflect damage back to attacker
-        if (attacker.takeDamage) {
-          attacker.takeDamage(absorbed * 0.5, 'player');
-          player.damageDealt += absorbed * 0.5;
-        }
+    if (player.thermalShieldHP > 0) {
+      const absorbed = Math.min(amount, player.thermalShieldHP);
+      player.thermalShieldHP -= absorbed;
+      amount -= absorbed;
+      if (player.thermalShieldHP <= 0) {
+        // Shield destroyed: auto-deactivate with cooldown
+        player.abilityActive[1] = false;
+        player.abilityCooldowns[1] = 12;
       }
+      if (amount <= 0) return;
     }
   }
   // Vortex Shield (ION): absorbs projectile damage, stores it for burst release
@@ -2383,13 +2264,32 @@ function playerTakeDamage(amount, attacker) {
     amount -= stored;
     if (amount <= 0) return; // fully absorbed
   }
-  // Particle Wall (TONE): blocks frontal damage while wall is active
-  if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Particle Wall') {
-    if (attacker && attacker.position) {
-      const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
-      const toAttacker = new THREE.Vector3().subVectors(attacker.position, player.position).normalize();
-      if (forward.dot(toAttacker) > 0.2) {
-        amount *= 0.15; // wall blocks 85% of frontal damage
+  // Particle Wall (TONE): deployed one-way shield with HP; check if attacker shot hits the wall
+  // The wall is a world effect, damage absorption is handled here for simplicity
+  if (player.loadoutKey === 'TONE') {
+    for (const eff of game.worldEffects) {
+      if (eff.type === 'particle_wall' && eff.owner === 'player' && eff.hp > 0) {
+        // Check if the attacker is on the far side of the wall (wall blocks incoming)
+        if (attacker && attacker.position) {
+          const toAttacker = new THREE.Vector3().subVectors(attacker.position, eff.position);
+          const wallFacing = eff.direction.clone();
+          // Wall blocks shots from the front (positive dot product with wall normal)
+          if (toAttacker.dot(wallFacing) > 0) {
+            // Check if player is behind the wall (within range)
+            const playerToWall = new THREE.Vector3().subVectors(eff.position, player.position);
+            if (playerToWall.dot(wallFacing) > 0 && player.position.distanceTo(eff.position) < 600) {
+              const absorbed = Math.min(amount, eff.hp);
+              eff.hp -= absorbed;
+              amount -= absorbed;
+              if (eff.hp <= 0) {
+                // Wall destroyed
+                if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh);
+                eff.timer = 0;
+              }
+              if (amount <= 0) return;
+            }
+          }
+        }
       }
     }
   }
@@ -2452,6 +2352,10 @@ function respawnPlayer() {
   player.afterburnerSpeedMult = 1.0;
   player.railgunCharge = 0;
   player.vortexStored = 0;
+  player.ionEnergy = player.ionMaxEnergy;
+  player.ionAdsActive = false;
+  player.gunShieldHP = 0;
+  player.thermalShieldHP = 0;
   player.abilityActive = [false, false, false];
   player.abilityTimers = [0, 0, 0];
   player.abilityCooldowns = [0, 0, 0];
@@ -2627,22 +2531,48 @@ function updateWeapon(dt) {
     return;
   }
 
-  // ION Vortex Shield: can't shoot while holding it up
-  if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Vortex Shield') {
-    return; // no firing while vortex is active
+  // Hold-to-use defensive abilities: can't shoot while active
+  if (player.abilityActive[1] && player.abilities[1]) {
+    const defName = player.abilities[1].name;
+    if (defName === 'Vortex Shield' || defName === 'Sword Block' || defName === 'Thermal Shield') {
+      return; // no firing while holding defensive ability
+    }
   }
 
-  // Northstar Railgun charge: hold alt-fire to charge, release or fire for boosted damage
+  // ADS (aim down sights) state
   const aiming = input.rightMouseDown || input.gpAltFire;
+
+  // ION ADS: zoom in, drain energy for bonus weapon damage
+  if (player.loadoutKey === 'ION') {
+    if (aiming && player.ionEnergy > 0) {
+      player.ionAdsActive = true;
+      player.ionEnergy = Math.max(0, player.ionEnergy - 150 * dt); // drains 150/s while ADS
+    } else {
+      player.ionAdsActive = false;
+    }
+  }
+
+  // Northstar Railgun charge: hold alt-fire to charge over 3s, boosted damage
   if (player.loadoutKey === 'NORTHSTAR') {
     if (aiming) {
-      player.railgunCharge = Math.min(1.0, player.railgunCharge + dt / 2.0); // full charge in 2s
+      player.railgunCharge = Math.min(1.0, player.railgunCharge + dt / 2.5); // full charge in 2.5s (TF2)
     } else if (!aiming && player.railgunCharge > 0 && player.railgunCharge < 0.05) {
       player.railgunCharge = 0; // quick tap resets
     }
     // Charge decays slowly if not aiming
-    if (!aiming) player.railgunCharge = Math.max(0, player.railgunCharge - dt * 0.3);
+    if (!aiming) player.railgunCharge = Math.max(0, player.railgunCharge - dt * 0.2);
   }
+
+  // ADS zoom (FOV change)
+  const baseFov = 90;
+  let targetFov = baseFov;
+  if (aiming) {
+    if (player.loadoutKey === 'NORTHSTAR') targetFov = 40; // sniper zoom
+    else if (player.loadoutKey === 'ION') targetFov = 55;
+    else targetFov = 65; // general ADS
+  }
+  camera.fov += (targetFov - camera.fov) * Math.min(1, dt * 12);
+  camera.updateProjectionMatrix();
 
   // Spinup
   const firing = input.mouseDown || input.gpFire;
@@ -2702,11 +2632,10 @@ function fireWeapon() {
   const flash = new THREE.PointLight(flashColor, 3.0, 400);
   flash.position.copy(flashPos);
   scene.add(flash);
-  game.mapMeshes.push(flash); // track for cleanup
   const flashStart = performance.now();
   (function fadeFlash() {
     const elapsed = (performance.now() - flashStart) / 1000;
-    if (elapsed > 0.08) { scene.remove(flash); return; }
+    if (elapsed > 0.08) { scene.remove(flash); flash.dispose(); return; }
     flash.intensity = 3.0 * (1 - elapsed / 0.08);
     requestAnimationFrame(fadeFlash);
   })();
@@ -2775,13 +2704,19 @@ function fireHitscan(origin, dir, w) {
     const hitDist = bestDist;
     const rangeFalloff = 0.7 + 0.3 * Math.max(0, 1 - hitDist / w.range);
     let finalDmg = w.damage * rangeFalloff;
-    // Northstar Railgun charge: up to 3x damage at full charge
+    // ION ADS: 1.75x damage while aiming (drains energy pool)
+    if (player.loadoutKey === 'ION' && player.ionAdsActive) {
+      finalDmg *= 1.75;
+    }
+    // Northstar Railgun charge: up to 4x damage at full charge (3s to fully charge)
     if (player.loadoutKey === 'NORTHSTAR' && player.railgunCharge > 0) {
-      finalDmg *= 1.0 + player.railgunCharge * 2.0; // 1x at 0 charge, 3x at full
+      finalDmg *= 1.0 + player.railgunCharge * 3.0; // 1x at 0 charge, 4x at full
       player.railgunCharge = 0; // consume charge on hit
     }
-    // Monarch upgrade tier 1: +20% weapon damage
+    // Monarch upgrade tier damage multiplier (Tier 3 XO-16 Accelerator: +25%)
     if (player.monarchDmgMult > 1) finalDmg *= player.monarchDmgMult;
+    // Monarch Arc Rounds (Tier 1): +50% damage vs shielded targets, Particle Walls, Gun Shields
+    if (player.monarchArcRounds && bestHit.shield > 0) finalDmg *= 1.5;
 
     const dealt = bestHit.takeDamage(finalDmg, 'player');
     if (dealt > 0) {
@@ -2849,9 +2784,11 @@ function activateAbility(slot) {
   // Vortex Shield: can't reactivate if ION energy is depleted
   if (ability.name === 'Vortex Shield' && player.ionEnergy <= 0) return;
 
-  // Toggle abilities (Sword Block, Gun Shield, Vortex Shield)
+  // Hold-to-use abilities: pressing while already held does nothing (release handles deactivation)
+  const isHoldAbility = ['Vortex Shield', 'Sword Block', 'Thermal Shield'].includes(ability.name);
   if (ability.cooldown === 0 && player.abilityActive[slot]) {
-    player.abilityActive[slot] = false;
+    if (isHoldAbility) return; // hold abilities deactivate on key release, not re-press
+    player.abilityActive[slot] = false; // toggle abilities (Gun Shield, Mode Switch)
     return;
   }
 
@@ -2891,20 +2828,20 @@ function executeAbility(slot, ability) {
         if (proj < 0 || proj > range) continue;
         const closest = player.position.clone().add(forward.clone().multiplyScalar(proj));
         if (closest.distanceTo(bot.position) < bot.chassis.hullLength * 1.0) {
-          const dealt = bot.takeDamage(1200, 'player');
+          const dealt = bot.takeDamage(2400, 'player');
           if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 100); showHitMarker(); }
           spawnExplosion(bot.position, 15);
         }
       }
     }
-    // SCORCH: Firewall (persistent ground fire line, 6s duration, 800 dmg/tick)
+    // SCORCH: Firewall (persistent ground fire line, 6s duration)
     else if (ability.name === 'Firewall') {
       const wallLen = 800;
       const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
       const center = player.position.clone().add(forward.clone().multiplyScalar(300));
       game.worldEffects.push({
         type: 'firewall', position: center.clone(), direction: right.clone(),
-        length: wallLen, timer: 6, dmgPerSec: 133, owner: 'player', team: player.team,
+        length: wallLen, timer: 6, dmgPerSec: 400, owner: 'player', team: player.team,
       });
       // Visual: fire line particles
       for (let t = -wallLen/2; t <= wallLen/2; t += 80) {
@@ -2915,16 +2852,17 @@ function executeAbility(slot, ability) {
     // NORTHSTAR: Cluster Missile (impact + sustained explosions in area for 3s)
     else if (ability.name === 'Cluster Missile') {
       const vel = forward.clone().multiplyScalar(1000);
-      const proj = new Projectile(player.position.clone(), vel, 200, 150, 'player', 0xff6600);
+      const proj = new Projectile(player.position.clone(), vel, 350, 200, 'player', 0xff6600);
       proj.isCluster = true; // on impact, creates sustained explosion zone
-      proj.clusterDmg = 80; // DPS of the sustained cluster area
-      proj.clusterDuration = 3; // seconds of sustained explosions
+      proj.clusterDmg = 240; // DPS of the sustained cluster area
+      proj.clusterDuration = 5; // seconds of sustained explosions
       game.projectiles.push(proj);
     }
-    // RONIN: Arc Wave (electric projectile, 500 dmg, slows enemies hit)
+    // RONIN: Arc Wave (electric projectile, 1000 dmg, slows enemies hit; 1500 in Sword Core)
     else if (ability.name === 'Arc Wave') {
+      const arcDmg = player.coreActive && player.loadout.core.name === 'Sword Core' ? 3000 : 2000;
       const vel = forward.clone().multiplyScalar(800);
-      const proj = new Projectile(player.position.clone(), vel, 500, 150, 'player', 0x44aaff);
+      const proj = new Projectile(player.position.clone(), vel, arcDmg, 150, 'player', 0x44aaff);
       proj.isArcWave = true; // applies slow on hit
       game.projectiles.push(proj);
     }
@@ -2939,11 +2877,11 @@ function executeAbility(slot, ability) {
         }
       }
       if (target) {
-        // Fire 3 tracking missiles
-        for (let m = 0; m < 3; m++) {
+        // Fire 5 tracking missiles (~1000 dmg each = 5000 total)
+        for (let m = 0; m < 5; m++) {
           const spread = new THREE.Vector3((Math.random()-0.5)*0.2, (Math.random()-0.5)*0.2, 0);
           const vel = forward.clone().add(spread).normalize().multiplyScalar(900);
-          const proj = new Projectile(player.position.clone(), vel, 200, 80, 'player', 0xffaa00);
+          const proj = new Projectile(player.position.clone(), vel, 1000, 80, 'player', 0xffaa00);
           proj.tracking = true;
           proj.trackTarget = target;
           game.projectiles.push(proj);
@@ -2952,11 +2890,11 @@ function executeAbility(slot, ability) {
         delete player.toneLocks[target.id];
         player.toneLockedTarget = null;
       } else {
-        // No locks: fire unguided salvo
-        for (let m = 0; m < 3; m++) {
+        // No locks: fire unguided salvo (5 weaker rockets)
+        for (let m = 0; m < 5; m++) {
           const spread = new THREE.Vector3((Math.random()-0.5)*0.15, (Math.random()-0.5)*0.15, 0);
           const vel = forward.clone().add(spread).normalize().multiplyScalar(900);
-          game.projectiles.push(new Projectile(player.position.clone(), vel, 150, 60, 'player', 0xffaa00));
+          game.projectiles.push(new Projectile(player.position.clone(), vel, 500, 60, 'player', 0xffaa00));
         }
       }
     }
@@ -2972,10 +2910,10 @@ function executeAbility(slot, ability) {
           if (dist > range) continue;
           const dot = toBot.normalize().dot(forward);
           if (dot > 0.3) {
-            const dealt = bot.takeDamage(1100, 'player');
+            const dealt = bot.takeDamage(3200, 'player');
             if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 100); showHitMarker(); }
             // Knockback
-            if (bot.velocity) bot.velocity.add(toBot.clone().multiplyScalar(500));
+            if (bot.velocity) bot.velocity.add(toBot.clone().multiplyScalar(600));
             spawnExplosion(bot.position, 20);
           }
         }
@@ -2994,7 +2932,7 @@ function executeAbility(slot, ability) {
           if (proj < 0 || proj > range) continue;
           const closest = player.position.clone().add(forward.clone().multiplyScalar(proj));
           if (closest.distanceTo(bot.position) < bot.chassis.hullLength * 1.0) {
-            const dealt = bot.takeDamage(1100, 'player');
+            const dealt = bot.takeDamage(3200, 'player');
             if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 100); showHitMarker(); }
             spawnExplosion(bot.position, 20);
           }
@@ -3002,12 +2940,13 @@ function executeAbility(slot, ability) {
         triggerScreenShake(3);
       }
     }
-    // MONARCH: Rocket Salvo (4 rockets, 250 dmg each)
+    // MONARCH: Rocket Salvo (5 rockets, 350 dmg each; doubled with Missile Racks upgrade)
     else if (ability.name === 'Rocket Salvo') {
-      for (let r = 0; r < 4; r++) {
-        const spread = new THREE.Vector3((Math.random()-0.5)*0.1, (Math.random()-0.5)*0.1, 0);
+      const rocketCount = player.monarchMissileRacks ? 10 : 5;
+      for (let r = 0; r < rocketCount; r++) {
+        const spread = new THREE.Vector3((Math.random()-0.5)*0.12, (Math.random()-0.5)*0.12, 0);
         const vel = forward.clone().add(spread).normalize().multiplyScalar(800);
-        game.projectiles.push(new Projectile(player.position.clone(), vel, 250, 100, 'player', 0xff4400));
+        game.projectiles.push(new Projectile(player.position.clone(), vel, 700, 100, 'player', 0xff4400));
       }
     }
   }
@@ -3027,15 +2966,15 @@ function executeAbility(slot, ability) {
         }
       }
       if (bestBot) {
-        const drainAmt = Math.min(bestBot.shield || 0, 400);
+        const drainAmt = Math.min(bestBot.shield || 0, 800);
         if (drainAmt > 0 && bestBot.takeDamage) {
           bestBot.shield = Math.max(0, (bestBot.shield || 0) - drainAmt);
         }
         // Slow the target (per wiki: Energy Siphon slows enemies)
         if (bestBot.velocity) bestBot.velocity.multiplyScalar(0.4);
         bestBot.arcSlowTimer = Math.max(bestBot.arcSlowTimer || 0, 2.0); // 2s slow
-        // Heal player (capped at max shield since shields don't regen naturally)
-        player.shield = Math.min(player.maxShield, player.shield + 400);
+        // Heal player
+        player.shield = Math.min(player.maxShield, player.shield + 800);
         spawnTracer(player.position, bestBot.position, 0x44ff88);
         showHitMarker();
       }
@@ -3045,19 +2984,54 @@ function executeAbility(slot, ability) {
       player.afterburnerActive = true;
       player.afterburnerSpeedMult = 1.5; // 50% speed boost
     }
-    // Sword Block, Gun Shield, Thermal Shield, Vortex Shield, Particle Wall
-    // are all handled passively in playerTakeDamage (already implemented)
+    // Gun Shield (LEGION): activate with full HP
+    else if (ability.name === 'Gun Shield') {
+      player.gunShieldHP = player.gunShieldMaxHP;
+    }
+    // Thermal Shield (SCORCH): activate with full HP
+    else if (ability.name === 'Thermal Shield') {
+      player.thermalShieldHP = player.thermalShieldMaxHP;
+    }
+    // Particle Wall (TONE): deploy a one-way shield in front of the player
+    else if (ability.name === 'Particle Wall') {
+      const wallPos = player.position.clone().add(forward.clone().multiplyScalar(200));
+      const wallDir = forward.clone(); // normal facing away from player
+      // Visual: a flat translucent plane
+      const wallGeo = new THREE.PlaneGeometry(400, 300);
+      const wallMat = new THREE.MeshBasicMaterial({
+        color: 0x44aaff, transparent: true, opacity: 0.35, side: THREE.DoubleSide
+      });
+      const wallMesh = new THREE.Mesh(wallGeo, wallMat);
+      wallMesh.position.copy(wallPos);
+      wallMesh.lookAt(wallPos.clone().add(wallDir));
+      scene.add(wallMesh);
+      game.worldEffects.push({
+        type: 'particle_wall', position: wallPos.clone(), direction: wallDir.clone(),
+        hp: 2000, maxHp: 2000, timer: 12, owner: 'player', team: player.team, mesh: wallMesh,
+      });
+    }
+    // Sword Block, Vortex Shield
+    // are handled passively in playerTakeDamage
   }
 
   // ---- UTILITY ABILITIES ----
   else if (ability.type === 'utility') {
-    // RONIN: Phase Dash (teleport + brief invulnerability)
+    // RONIN: Phase Dash (movement direction + brief invulnerability)
+    // Goes in the direction you're moving; if stationary, phase in place
     if (ability.name === 'Phase Dash') {
       player.phaseInvuln = true;
-      player.phaseInvulnTimer = 0.3; // 0.3s i-frames
-      player.position.add(forward.clone().multiplyScalar(400));
-      // Phase visual effect
-      spawnExplosion(player.position.clone().add(forward.clone().multiplyScalar(-200)), 15);
+      const speed = player.velocity ? player.velocity.length() : 0;
+      if (speed > 5) {
+        // Dash in movement direction
+        const moveDir = player.velocity.clone().normalize();
+        player.phaseInvulnTimer = 0.3; // 0.3s i-frames
+        player.position.add(moveDir.multiplyScalar(400));
+        spawnExplosion(player.position.clone().add(moveDir.clone().multiplyScalar(-200)), 15);
+      } else {
+        // Stationary: phase in place (longer invulnerability, no movement)
+        player.phaseInvulnTimer = 1.0; // 1s phase-out in place
+        spawnExplosion(player.position.clone(), 10);
+      }
     }
     // MONARCH: Rearm (reset Dash, Ordnance, and Defensive cooldowns)
     else if (ability.name === 'Rearm') {
@@ -3068,20 +3042,25 @@ function executeAbility(slot, ability) {
       player.dashCharges = player.maxDashes;
       player.dashCooldownTimer = 0;
     }
-    // ION: Trip Wire (deploy proximity mines that persist 12s)
+    // ION: Trip Wire (deploy 3 proximity orbs in a wide spread for area coverage)
     else if (ability.name === 'Trip Wire') {
-      const minePos = player.position.clone().add(forward.clone().multiplyScalar(200));
-      game.worldEffects.push({
-        type: 'tripwire', position: minePos.clone(),
-        timer: 12, dmg: 400, radius: 200, owner: 'player', team: player.team, armed: false, armTimer: 1.0,
-      });
-      // Visual mine marker
-      const mineGeo = new THREE.SphereGeometry(8, 6, 4);
-      const mineMat = new THREE.MeshBasicMaterial({ color: 0xff4444 });
-      const mineMesh = new THREE.Mesh(mineGeo, mineMat);
-      mineMesh.position.copy(minePos);
-      scene.add(mineMesh);
-      game.worldEffects[game.worldEffects.length - 1].mesh = mineMesh;
+      const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+      const offsets = [-180, 0, 180]; // lateral spread
+      for (let ti = 0; ti < 3; ti++) {
+        const minePos = player.position.clone()
+          .add(forward.clone().multiplyScalar(250))
+          .add(right.clone().multiplyScalar(offsets[ti]));
+        game.worldEffects.push({
+          type: 'tripwire', position: minePos.clone(),
+          timer: 12, dmg: 350, radius: 220, owner: 'player', team: player.team, armed: false, armTimer: 1.0,
+        });
+        const mineGeo = new THREE.SphereGeometry(10, 6, 4);
+        const mineMat = new THREE.MeshBasicMaterial({ color: 0xff4444 });
+        const mineMesh = new THREE.Mesh(mineGeo, mineMat);
+        mineMesh.position.copy(minePos);
+        scene.add(mineMesh);
+        game.worldEffects[game.worldEffects.length - 1].mesh = mineMesh;
+      }
     }
     // SCORCH: Incendiary Trap (gas canisters that ignite on contact with fire/thermite)
     else if (ability.name === 'Incendiary Trap') {
@@ -3140,11 +3119,11 @@ function executeAbility(slot, ability) {
         if (player.legionMode === 'close') {
           player.weapon.fireRate = 0.05; // fast ROF
           player.weapon.range = 1500;
-          player.weapon.damage = 55;
+          player.weapon.damage = 85;
         } else {
           player.weapon.fireRate = 0.08; // slower ROF
           player.weapon.range = 3000; // extended range
-          player.weapon.damage = 65; // slightly more per shot
+          player.weapon.damage = 100; // more per shot at range
         }
       }
     }
@@ -3168,7 +3147,7 @@ function activateCore() {
     // Initial burst visual
     spawnTracer(player.position, player.position.clone().add(forward.clone().multiplyScalar(3000)), 0xff0000);
   }
-  // SCORCH: Flame Core (massive AoE incendiary, 2500 dmg instant around player)
+  // SCORCH: Flame Core (massive AoE incendiary, 4500 dmg instant around player; TF2)
   else if (coreName === 'Flame Core') {
     const radius = 1200;
     for (const bot of game.entities) {
@@ -3176,8 +3155,17 @@ function activateCore() {
       const dist = player.position.distanceTo(bot.position);
       if (dist < radius) {
         const falloff = 1 - dist / radius;
-        const dealt = bot.takeDamage(2500 * falloff, 'player');
+        const dealt = bot.takeDamage(9000 * falloff, 'player');
         if (dealt > 0) { player.damageDealt += dealt; showHitMarker(); }
+      }
+    }
+    // Flame Core ignites any deployed Incendiary Traps in radius (TF2 synergy)
+    for (const eff of game.worldEffects) {
+      if (eff.type === 'incendiary_gas' && !eff.ignited && player.position.distanceTo(eff.position) < radius) {
+        eff.ignited = true;
+        eff.igniteTimer = eff.igniteDuration;
+        if (eff.mesh) eff.mesh.material.color.setHex(0xff4400);
+        spawnExplosion(eff.position, 25);
       }
     }
     spawnExplosion(player.position, 80);
@@ -3214,26 +3202,66 @@ function activateCore() {
   else if (coreName === 'Smart Core') {
     // Handled per-tick in updateAbilities (auto-aim firing)
   }
-  // MONARCH: Upgrade Core (permanent tier upgrade, 3 tiers)
+  // MONARCH: Upgrade Core (permanent tier upgrade, 3 tiers; TF2-style choices auto-applied)
   else if (coreName === 'Upgrade Core') {
     player.monarchTier = Math.min(3, player.monarchTier + 1);
     switch (player.monarchTier) {
-      case 1: // Tier 1: weapon damage +20%
-        player.monarchDmgMult = 1.2;
+      case 1: // Tier 1: Arc Rounds (+50% vs shields/walls/Gun Shield, +10 ammo)
+        player.monarchArcRounds = true;
+        player.maxClip = 50;
+        player.clipAmmo = Math.min(player.clipAmmo + 10, 50);
         break;
-      case 2: // Tier 2: shield bonus +500
+      case 2: // Tier 2: Maelstrom (shield recharge + 500 bonus shield HP)
         player.monarchShieldBonus = 500;
         player.maxShield = player.chassis.maxShield + 500;
         player.shield = Math.min(player.shield + 500, player.maxShield);
-        break;
-      case 3: // Tier 3: ability cooldowns -30%
+        // Also reset ability cooldowns (Rearm bonus at Tier 2)
         player.monarchCooldownMult = 0.7;
+        break;
+      case 3: // Tier 3: XO-16 Accelerator (+25% damage, faster fire rate)
+        player.monarchXO16Accel = true;
+        player.monarchDmgMult = 1.25;
+        // Increase fire rate by reducing interval
+        if (player.weapon) player.weapon.fireRate = Math.max(0.06, player.weapon.fireRate * 0.75);
         break;
     }
   }
 }
 
 function updateAbilities(dt) {
+  // Hold-to-use abilities: auto-deactivate when button released
+  const holdNames = ['Vortex Shield', 'Sword Block', 'Thermal Shield'];
+  const holdKey = !input.keys['e'] && !(input.gpAbility1); // E key or gamepad RB
+  for (let i = 0; i < 3; i++) {
+    if (player.abilityActive[i] && player.abilities[i] && holdNames.includes(player.abilities[i].name)) {
+      if (holdKey) {
+        player.abilityActive[i] = false;
+        // Trigger Vortex Shield burst release on drop
+        if (player.abilities[i].name === 'Vortex Shield' && player.vortexStored > 0) {
+          const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+          for (const bot of game.entities) {
+            if (!bot.alive || bot.team === player.team) continue;
+            const dist = player.position.distanceTo(bot.position);
+            if (dist < 300) {
+              const toBot = new THREE.Vector3().subVectors(bot.position, player.position).normalize();
+              if (fwd.dot(toBot) > 0.2) {
+                const dealt = bot.takeDamage(player.vortexStored, 'player');
+                if (dealt > 0) { player.damageDealt += dealt; showHitMarker(); }
+              }
+            }
+          }
+          spawnExplosion(player.position.clone().add(fwd.multiplyScalar(100)), 30);
+          player.vortexStored = 0;
+        }
+        // Afterburner deactivation
+        if (player.abilities[i].name === 'Afterburner') {
+          player.afterburnerActive = false;
+          player.afterburnerSpeedMult = 1.0;
+        }
+      }
+    }
+  }
+
   // Cooldown ticking
   for (let i = 0; i < 3; i++) {
     if (player.abilityCooldowns[i] > 0) player.abilityCooldowns[i] = Math.max(0, player.abilityCooldowns[i] - dt);
@@ -3266,15 +3294,24 @@ function updateAbilities(dt) {
         }
       }
     }
-    // Thermal Shield: deal damage to nearby enemies while active
+    // Thermal Shield: hold-to-use, drains shield HP over time, burns nearby enemies
     if (player.abilityActive[i] && player.abilities[i] && player.abilities[i].name === 'Thermal Shield') {
+      // Drain shield HP while held (resource cost)
+      const shieldDrainRate = 300; // HP per second drain
+      player.thermalShieldHP -= shieldDrainRate * dt;
+      if (player.thermalShieldHP <= 0) {
+        player.thermalShieldHP = 0;
+        player.abilityActive[i] = false;
+        player.abilityCooldowns[i] = 12; // cooldown when depleted
+      }
+      // Burn nearby enemies
       for (const bot of game.entities) {
         if (!bot.alive || bot.team === player.team) continue;
         const dist = player.position.distanceTo(bot.position);
-        if (dist < 400) {
-          const dmgPerSec = 250;
+        if (dist < 500) {
+          const dmgPerSec = 800;
           const dealt = bot.takeDamage(dmgPerSec * dt, 'player');
-          if (dealt > 0) player.damageDealt += dealt;
+          if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 200); }
         }
       }
     }
@@ -3332,7 +3369,7 @@ function updateAbilities(dt) {
         if (proj > 0 && proj < range) {
           const closest = player.position.clone().add(forward.clone().multiplyScalar(proj));
           if (closest.distanceTo(bot.position) < bot.chassis.hullLength * 1.2) {
-            const dealt = bot.takeDamage(1500 * dt, 'player');
+            const dealt = bot.takeDamage(3000 * dt, 'player');
             if (dealt > 0) { player.damageDealt += dealt; }
           }
         }
@@ -3359,14 +3396,14 @@ function updateAbilities(dt) {
         if (!bot.alive || bot.team === player.team) continue;
         const dist = player.position.distanceTo(bot.position);
         if (dist < 500) {
-          const dealt = bot.takeDamage(750 * dt, 'player');
+          const dealt = bot.takeDamage(1800 * dt, 'player');
           if (dealt > 0) player.damageDealt += dealt;
         }
       }
       // Periodic arc wave
       if (Math.random() < dt * 2) {
         const vel = forward.clone().multiplyScalar(800);
-        const proj = new Projectile(player.position.clone(), vel, 300, 150, 'player', 0x44aaff);
+        const proj = new Projectile(player.position.clone(), vel, 600, 150, 'player', 0x44aaff);
         proj.isArcWave = true;
         game.projectiles.push(proj);
       }
@@ -3400,7 +3437,7 @@ function updateAbilities(dt) {
         if (Math.random() < dt * 20) { // 20 shots/sec
           const end = player.position.clone().add(toTarget.clone().multiplyScalar(3000));
           spawnTracer(player.position, end, 0xffaa00);
-          const dealt = nearest.takeDamage(55, 'player');
+          const dealt = nearest.takeDamage(110 * 1.2, 'player'); // hidden +20% damage (TF2)
           if (dealt > 0) { player.damageDealt += dealt; showHitMarker(); }
         }
       }
@@ -3510,6 +3547,13 @@ function updateAbilities(dt) {
       }
     }
 
+    // Particle Wall: update visual opacity based on HP
+    else if (eff.type === 'particle_wall') {
+      if (eff.mesh && eff.hp > 0) {
+        eff.mesh.material.opacity = 0.15 + 0.25 * (eff.hp / eff.maxHp);
+      }
+    }
+
     // Cluster Missile sustained explosion zone
     else if (eff.type === 'cluster') {
       // Damage enemies in the blast zone
@@ -3536,9 +3580,12 @@ function updateAbilities(dt) {
     }
   }
 
-  // ION energy regen
+  // ION energy regen: only when NOT using any abilities and NOT ADS
   if (player.loadoutKey === 'ION') {
-    player.ionEnergy = Math.min(player.ionMaxEnergy, player.ionEnergy + player.ionEnergyRegen * dt);
+    const anyAbilityActive = player.abilityActive[0] || player.abilityActive[1] || player.abilityActive[2];
+    if (!anyAbilityActive && !player.ionAdsActive) {
+      player.ionEnergy = Math.min(player.ionMaxEnergy, player.ionEnergy + player.ionEnergyRegen * dt);
+    }
   }
 
   player.coreReady = player.coreMeter >= 100;
@@ -3566,7 +3613,7 @@ function dash() {
 function updateRoundSystem(dt) {
   if (game.state === 'warmup') {
     game.warmupTimer -= dt;
-    if (game.warmupTimer <= 0) { game.state = 'playing'; game.roundTimer = LSS.ROUND_TIME; }
+    if (game.warmupTimer <= 0) { game.state = 'playing'; game.roundTimer = LSS.ROUND_TIME; playSound('round_start'); }
   } else if (game.state === 'playing') {
     game.roundTimer -= dt;
     const aliveA = (player.shipState !== 'dead' ? 1 : 0) +
@@ -4103,6 +4150,64 @@ function drawCircumpunctHUD() {
     ctx.restore();
   }
 
+  // ---- NORTHSTAR RAILGUN CHARGE INDICATOR ----
+  if (player.loadoutKey === 'NORTHSTAR') {
+    const chgPct = player.railgunCharge;
+    const chgR = r1 - 25; // inside the health ring
+    const chgStart = Math.PI * 0.85;
+    const chgEnd = Math.PI * 1.15;
+    const chgSpan = chgEnd - chgStart;
+    // Background
+    ctx.strokeStyle = 'rgba(255,100,30,0.12)';
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.arc(cx, cy, chgR, chgStart, chgEnd);
+    ctx.stroke();
+    // Fill
+    if (chgPct > 0) {
+      const chgCol = chgPct >= 1 ? `rgba(255,80,20,${0.6 + Math.sin(t * 8) * 0.3})` : 'rgba(255,120,40,0.7)';
+      ctx.strokeStyle = chgCol;
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.arc(cx, cy, chgR, chgStart, chgStart + chgSpan * chgPct);
+      ctx.stroke();
+    }
+    // Label
+    ctx.fillStyle = chgPct >= 1 ? 'rgba(255,80,20,0.9)' : 'rgba(255,120,40,0.5)';
+    ctx.font = '10px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText(chgPct >= 1 ? 'MAX' : Math.floor(chgPct * 100) + '%', cx, cy + chgR + 16);
+  }
+
+  // ---- ION ENERGY INDICATOR ----
+  if (player.loadoutKey === 'ION') {
+    const nrgPct = player.ionEnergy / player.ionMaxEnergy;
+    const nrgR = r1 - 25;
+    const nrgStart = Math.PI * 0.85;
+    const nrgEnd = Math.PI * 1.15;
+    const nrgSpan = nrgEnd - nrgStart;
+    // Background
+    ctx.strokeStyle = 'rgba(60,180,255,0.12)';
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.arc(cx, cy, nrgR, nrgStart, nrgEnd);
+    ctx.stroke();
+    // Fill
+    if (nrgPct > 0) {
+      const nrgCol = nrgPct < 0.2 ? `rgba(255,60,30,${0.5 + Math.sin(t * 6) * 0.3})` : 'rgba(60,180,255,0.7)';
+      ctx.strokeStyle = nrgCol;
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.arc(cx, cy, nrgR, nrgStart, nrgStart + nrgSpan * nrgPct);
+      ctx.stroke();
+    }
+    // Label
+    ctx.fillStyle = nrgPct < 0.2 ? 'rgba(255,60,30,0.8)' : 'rgba(60,180,255,0.5)';
+    ctx.font = '10px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText('NRG ' + Math.floor(nrgPct * 100) + '%', cx, cy + nrgR + 16);
+  }
+
   // ---- DASH PIPS (small dots below center) ----
   const dashY = cy + r1 + 35;
   const pipR = 5;
@@ -4487,12 +4592,27 @@ function updateAbilityHUD() {
     const bar = slot.querySelector('.ab-cd-bar');
     if (bar) bar.style.width = (cd > 0 ? ((1 - cd / maxCd) * 100) : 100) + '%';
 
-    // Cooldown text
+    // Cooldown text (with special displays for ION energy, shield HP)
     const cdText = slot.querySelector('.ab-cd-text');
     if (cdText) {
-      if (active) { cdText.textContent = ''; }
+      if (active && ability.name === 'Gun Shield' && player.gunShieldHP > 0) {
+        cdText.textContent = Math.ceil(player.gunShieldHP);
+      } else if (active && ability.name === 'Thermal Shield' && player.thermalShieldHP > 0) {
+        cdText.textContent = Math.ceil(player.thermalShieldHP);
+      } else if (active) { cdText.textContent = ''; }
       else if (cd > 0) { cdText.textContent = Math.ceil(cd) + 's'; }
       else { cdText.textContent = ''; }
+    }
+
+    // ION energy: override bar to show energy level instead of cooldown for all ION abilities
+    if (player.loadoutKey === 'ION') {
+      const energyPct = player.ionEnergy / player.ionMaxEnergy;
+      const bar2 = slot.querySelector('.ab-cd-bar');
+      if (bar2 && cd <= 0) bar2.style.width = (energyPct * 100) + '%';
+      // Show energy on idle slots
+      if (cdText && cd <= 0 && !active) {
+        cdText.textContent = Math.floor(player.ionEnergy);
+      }
     }
   }
 
@@ -4884,28 +5004,74 @@ class StasisField {
   }
 }
 
+function getStasisSphereIndex(pos) {
+  // Return which sphere index a position is inside (or -1 if none)
+  for (let i = 0; i < game.levelSpheres.length; i++) {
+    const s = game.levelSpheres[i];
+    const dx = pos.x - s.cx, dy = pos.y - s.cy, dz = pos.z - s.cz;
+    if (dx * dx + dy * dy + dz * dz < s.r * s.r) return i;
+  }
+  return -1;
+}
+
 function spawnStasisField() {
-  // Spawn inside a random corridor position (guaranteed to be inside the letters)
-  const pos = getValidSpawnPoint(null, 80);
-  const field = new StasisField(pos);
-  game.stasisFields.push(field);
+  // Max 3 on the map at once
+  const aliveFields = game.stasisFields.filter(f => f.alive);
+  if (aliveFields.length >= 3) return;
+
+  // Get sphere indices already occupied by existing stasis fields
+  const occupiedSpheres = new Set();
+  for (const f of aliveFields) {
+    const idx = getStasisSphereIndex(f.position);
+    if (idx >= 0) occupiedSpheres.add(idx);
+  }
+
+  // Try to find a spawn point in an unoccupied sphere (up to 50 attempts)
+  const minDist = 300; // minimum distance from any existing field
+  for (let attempt = 0; attempt < 50; attempt++) {
+    const pos = getValidSpawnPoint(null, 80);
+    const sphereIdx = getStasisSphereIndex(pos);
+
+    // Must be inside a sphere
+    if (sphereIdx < 0) continue;
+
+    // Must be in an unoccupied sphere
+    if (occupiedSpheres.has(sphereIdx)) continue;
+
+    // Must not overlap (minimum distance check)
+    let tooClose = false;
+    for (const f of aliveFields) {
+      if (pos.distanceTo(f.position) < minDist) { tooClose = true; break; }
+    }
+    if (tooClose) continue;
+
+    // Valid spawn
+    const field = new StasisField(pos);
+    game.stasisFields.push(field);
+    return;
+  }
+  // If 50 attempts fail, skip this spawn cycle (will retry next interval)
 }
 
 function updateStasisFields(dt) {
   // Spawn timer
   if (game.state === 'playing') {
-    game.stasisSpawnTimer -= dt;
-    if (game.stasisSpawnTimer <= 0) {
-      if (game.stasisFirstBatch) {
-        // First batch: spawn 2
-        spawnStasisField();
-        spawnStasisField();
-        game.stasisFirstBatch = false;
-      } else {
-        // After that: 1 every interval
-        spawnStasisField();
+    const aliveCount = game.stasisFields.filter(f => f.alive).length;
+    if (aliveCount < 3) {
+      game.stasisSpawnTimer -= dt;
+      if (game.stasisSpawnTimer <= 0) {
+        if (game.stasisFirstBatch) {
+          // First batch: try to spawn up to 3 in separate spheres
+          spawnStasisField();
+          spawnStasisField();
+          spawnStasisField();
+          game.stasisFirstBatch = false;
+        } else {
+          // Replenish one at a time
+          spawnStasisField();
+        }
+        game.stasisSpawnTimer = game.stasisInterval;
       }
-      game.stasisSpawnTimer = game.stasisInterval;
     }
   }
 
@@ -4996,10 +5162,14 @@ function checkExecutions(dt) {
 
     const dist = player.position.distanceTo(bot.position);
 
-    // Show execution prompt when near a doomed enemy
+    // Show execution prompt when near a doomed enemy AND looking at them
     const promptEl = document.getElementById('execution-prompt');
     if (bot.doomed && dist < execRadius * 2.5) {
-      promptEl.style.display = 'block';
+      const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+      const toBot = new THREE.Vector3().subVectors(bot.position, player.position).normalize();
+      if (forward.dot(toBot) > 0.3) {
+        promptEl.style.display = 'block';
+      }
     }
 
     // Execute on contact with doomed enemy
@@ -5184,16 +5354,24 @@ function buildRoomGraphLevel(level) {
     '}'
   ].join('\n');
 
-  // Shared: procedural grid for depth perception
+  // Shared: procedural grid for depth perception (two scales for detail)
   const gridFunc = [
     'vec3 grid(vec3 wp, vec3 base) {',
-    '  float s = 0.00667;',
-    '  vec3 g = wp * s;',
-    '  float lx = abs(fract(g.x) - 0.5);',
-    '  float ly = abs(fract(g.y) - 0.5);',
-    '  float lz = abs(fract(g.z) - 0.5);',
-    '  float m = 1.0 - smoothstep(0.0, 0.02, min(min(lx, ly), lz));',
-    '  return mix(base, vec3(0.08, 0.18, 0.3), m * 0.5);',
+    '  float s1 = 0.0133;',
+    '  vec3 g1 = wp * s1;',
+    '  float l1x = abs(fract(g1.x) - 0.5);',
+    '  float l1y = abs(fract(g1.y) - 0.5);',
+    '  float l1z = abs(fract(g1.z) - 0.5);',
+    '  float m1 = 1.0 - smoothstep(0.0, 0.025, min(min(l1x, l1y), l1z));',
+    '  float s2 = 0.00333;',
+    '  vec3 g2 = wp * s2;',
+    '  float l2x = abs(fract(g2.x) - 0.5);',
+    '  float l2y = abs(fract(g2.y) - 0.5);',
+    '  float l2z = abs(fract(g2.z) - 0.5);',
+    '  float m2 = 1.0 - smoothstep(0.0, 0.015, min(min(l2x, l2y), l2z));',
+    '  vec3 c = mix(base, vec3(0.06, 0.15, 0.28), m1 * 0.45);',
+    '  c = mix(c, vec3(0.1, 0.22, 0.38), m2 * 0.55);',
+    '  return c;',
     '}'
   ].join('\n');
 
@@ -5317,8 +5495,8 @@ function buildRoomGraphLevel(level) {
     const seg = cylSegs[ci];
     const segLen = seg.len;
 
-    // Open-ended cylinder; exact length (shader handles carving at sphere boundaries)
-    const geo = new THREE.CylinderGeometry(TR, TR, segLen, 16, 1, true);
+    // Open-ended cylinder; slight overlap so geometry fills sphere openings fully
+    const geo = new THREE.CylinderGeometry(TR, TR, segLen + TR * 0.3, 16, 1, true);
     const midX = (seg.a.x + seg.b.x) / 2, midY = (seg.a.y + seg.b.y) / 2, midZ = (seg.a.z + seg.b.z) / 2;
     const dir = new THREE.Vector3(seg.dx, seg.dy, seg.dz).normalize();
     const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
@@ -5380,7 +5558,7 @@ function getValidSpawnPoint(team, spread) {
   const base = pool[Math.floor(Math.random() * pool.length)];
   return new THREE.Vector3(
     base.x + (Math.random() - 0.5) * spread,
-    (Math.random() - 0.5) * 400,
+    base.y + (Math.random() - 0.5) * spread,
     base.z + (Math.random() - 0.5) * spread
   );
 }
@@ -5560,9 +5738,13 @@ function gameLoop(timestamp) {
 
   // Update systems
   updatePlayerStasis(dt);
-  updatePlayerMovement(dt);
-  updateWeapon(dt);
-  updateAbilities(dt);
+  if (deathCam.active) {
+    updateDeathCam(dt);
+  } else {
+    updatePlayerMovement(dt);
+    updateWeapon(dt);
+    updateAbilities(dt);
+  }
   updateRoundSystem(dt);
   updateStasisFields(dt);
   checkExecutions(dt);
@@ -5587,20 +5769,374 @@ function gameLoop(timestamp) {
   updateMinimap();
   updateEnemyHealthBars();
 
-  // Apply screen shake offset to camera
-  camera.position.x += game.shakeOffset.x;
-  camera.position.y += game.shakeOffset.y;
+  // Apply screen shake offset to camera (skip during death cam)
+  if (!deathCam.active) {
+    camera.position.x += game.shakeOffset.x;
+    camera.position.y += game.shakeOffset.y;
+  }
 
   game.killFeed = game.killFeed.filter(e => game.time - e.time < 8);
 
   renderer.render(scene, camera);
 }
 
+// ---- WEB AUDIO SOUND SYSTEM ----
+// Procedural sounds using oscillators and noise; no external files needed.
+
+const audio = {
+  ctx: null,
+  masterGain: null,
+  initialized: false,
+};
+
+function initAudio() {
+  if (audio.initialized) return;
+  try {
+    audio.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    audio.masterGain = audio.ctx.createGain();
+    audio.masterGain.gain.value = 0.35;
+    audio.masterGain.connect(audio.ctx.destination);
+    audio.initialized = true;
+  } catch(e) { console.warn('Audio init failed:', e); }
+}
+
+// Resume audio context on user interaction (browser autoplay policy)
+function resumeAudio() {
+  if (audio.ctx && audio.ctx.state === 'suspended') audio.ctx.resume();
+}
+
+// Tri-chord helper: plays 3 simultaneous low-pitched tones
+// freqs = [f1, f2, f3], waveform, vol, duration, optional freq ramp targets
+function triChord(freqs, wave, vol, dur, rampFreqs, rampTime, startOffset) {
+  const ctx = audio.ctx;
+  const now = ctx.currentTime + (startOffset || 0);
+  const dest = audio.masterGain;
+  freqs.forEach((freq, i) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = wave;
+    osc.frequency.setValueAtTime(freq, now);
+    if (rampFreqs && rampFreqs[i] !== undefined) {
+      osc.frequency.exponentialRampToValueAtTime(Math.max(1, rampFreqs[i]), now + (rampTime || dur));
+    }
+    gain.gain.setValueAtTime(vol / 3, now); // divide vol across 3 voices
+    gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+    osc.connect(gain); gain.connect(dest);
+    osc.start(now); osc.stop(now + dur + 0.01);
+  });
+}
+
+function playSound(type) {
+  if (!audio.initialized || !audio.ctx) return;
+  resumeAudio();
+  const ctx = audio.ctx;
+  const now = ctx.currentTime;
+  const dest = audio.masterGain;
+
+  if (type === 'fire_hitscan') {
+    // Low tri-chord crack: root + fifth + octave, fast decay
+    triChord([55, 82, 110], 'sawtooth', 0.30, 0.12, [30, 45, 55], 0.10);
+    playNoiseBurst(0.06, 0.15, now);
+  }
+  else if (type === 'fire_projectile') {
+    // Deep thump triad: sub-bass chord descending
+    triChord([80, 100, 130], 'sine', 0.35, 0.20, [25, 35, 45], 0.18);
+  }
+  else if (type === 'fire_spread') {
+    // Shotgun: low open fifth chord + noise
+    triChord([45, 67, 90], 'sawtooth', 0.35, 0.15, [20, 30, 40], 0.12);
+    playNoiseBurst(0.10, 0.25, now);
+  }
+  else if (type === 'fire_minigun') {
+    // Rapid low tri-chord tick
+    triChord([90, 113, 135], 'square', 0.14, 0.05, [60, 75, 90], 0.04);
+  }
+  else if (type === 'hit') {
+    // Low metallic confirmation triad
+    triChord([130, 164, 196], 'triangle', 0.18, 0.10, [80, 100, 120], 0.08);
+  }
+  else if (type === 'kill') {
+    // Descending minor triad: low and heavy, staggered
+    triChord([130, 156, 196], 'sine', 0.18, 0.35);
+    // Second chord, lower, delayed
+    triChord([65, 78, 98], 'sine', 0.15, 0.40, null, null, 0.12);
+  }
+  else if (type === 'damage') {
+    // Dissonant low rumble triad
+    triChord([55, 62, 73], 'sawtooth', 0.20, 0.22, [30, 35, 40], 0.18);
+  }
+  else if (type === 'dash') {
+    // Rising low triad (thrust feel)
+    triChord([55, 69, 82], 'sine', 0.15, 0.30, [110, 138, 165], 0.25);
+    playNoiseBurst(0.20, 0.08, now);
+  }
+  else if (type === 'ability') {
+    // Tech activation: low major triad, two pulses
+    triChord([82, 103, 123], 'sine', 0.18, 0.15);
+    triChord([98, 123, 147], 'sine', 0.15, 0.18, null, null, 0.08);
+  }
+  else if (type === 'core') {
+    // Epic low power-up: rising sub-bass triad with sawtooth growl
+    triChord([40, 50, 60], 'sawtooth', 0.30, 0.70, [110, 138, 165], 0.55);
+    triChord([55, 69, 82], 'sine', 0.20, 0.60, [130, 164, 196], 0.50, 0.15);
+    playNoiseBurst(0.50, 0.12, now);
+  }
+  else if (type === 'explosion') {
+    // Massive low triad boom descending to sub
+    triChord([60, 75, 90], 'sine', 0.35, 0.55, [15, 20, 25], 0.45);
+    triChord([45, 55, 65], 'sawtooth', 0.20, 0.40, [10, 15, 18], 0.35);
+    playNoiseBurst(0.35, 0.25, now);
+  }
+  else if (type === 'stasis') {
+    // Eerie low frozen triad (minor second cluster, glass-like)
+    triChord([82, 87, 98], 'sine', 0.14, 0.50);
+    triChord([61, 65, 73], 'triangle', 0.10, 0.55, null, null, 0.10);
+  }
+  else if (type === 'reload') {
+    // Mechanical low triad click: two quick chord pulses
+    triChord([110, 138, 165], 'square', 0.10, 0.06);
+    triChord([82, 103, 123], 'square', 0.10, 0.06, null, null, 0.07);
+  }
+  else if (type === 'death') {
+    // Long descending low drone triad
+    triChord([82, 98, 123], 'sawtooth', 0.25, 1.30, [20, 25, 30], 1.10);
+    triChord([55, 65, 82], 'sine', 0.15, 1.00, [15, 18, 22], 0.90, 0.20);
+    playNoiseBurst(0.80, 0.15, now);
+  }
+  else if (type === 'round_start') {
+    // Three ascending low triads, each a step up
+    triChord([65, 82, 98], 'sine', 0.18, 0.35);
+    triChord([73, 92, 110], 'sine', 0.18, 0.35, null, null, 0.18);
+    triChord([82, 103, 130], 'sine', 0.20, 0.40, null, null, 0.36);
+  }
+}
+
+function playNoiseBurst(duration, volume, startTime) {
+  if (!audio.ctx) return;
+  const ctx = audio.ctx;
+  const bufSize = Math.floor(ctx.sampleRate * duration);
+  const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / bufSize);
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(volume, startTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+  src.connect(gain);
+  gain.connect(audio.masterGain);
+  src.start(startTime);
+}
+
+// ---- HOOK AUDIO INTO EXISTING FUNCTIONS ----
+// Override key functions to add sound triggers
+
+const _origFireWeapon = fireWeapon;
+fireWeapon = function() {
+  _origFireWeapon();
+  const w = player.weapon;
+  if (!w) return;
+  if (w.mode === 'hitscan' && w.fireRate < 0.08) playSound('fire_minigun');
+  else if (w.mode === 'hitscan') playSound('fire_hitscan');
+  else if (w.mode === 'projectile') playSound('fire_projectile');
+  else if (w.mode === 'spread') playSound('fire_spread');
+};
+
+const _origShowHitMarker = showHitMarker;
+showHitMarker = function() {
+  _origShowHitMarker();
+  playSound('hit');
+};
+
+const _origShowKillMarker = showKillMarker;
+showKillMarker = function() {
+  _origShowKillMarker();
+  playSound('kill');
+};
+
+const _origPlayerTakeDamage = playerTakeDamage;
+playerTakeDamage = function(amount, attacker, projectile) {
+  _origPlayerTakeDamage(amount, attacker, projectile);
+  playSound('damage');
+};
+
+const _origPlayerDie = playerDie;
+playerDie = function(attacker) {
+  _origPlayerDie(attacker);
+  playSound('death');
+};
+
+const _origDash = dash;
+dash = function() {
+  const hadCharges = player.dashCharges > 0;
+  _origDash();
+  if (hadCharges) playSound('dash');
+};
+
+const _origActivateAbility = activateAbility;
+activateAbility = function(slot) {
+  const wasCd = player.abilityCooldowns[slot];
+  _origActivateAbility(slot);
+  if (wasCd <= 0) playSound('ability');
+};
+
+const _origActivateCore = activateCore;
+activateCore = function() {
+  const wasMeter = player.coreMeter;
+  _origActivateCore();
+  if (wasMeter >= 100) playSound('core');
+};
+
+const _origStartReload = startReload;
+startReload = function() {
+  _origStartReload();
+  playSound('reload');
+};
+
+const _origEnterStasis = enterStasis;
+enterStasis = function(field) {
+  _origEnterStasis(field);
+  playSound('stasis');
+};
+
+const _origSpawnExplosion = spawnExplosion;
+spawnExplosion = function(pos, size) {
+  _origSpawnExplosion(pos, size);
+  if (size > 30) playSound('explosion'); // only big explosions get sound
+};
+
+// ---- SCOREBOARD OVERLAY (Tab key) ----
+
+const scoreboardCSS = document.createElement('style');
+scoreboardCSS.textContent = `
+#scoreboard {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 600px; background: rgba(5,8,18,0.92); border: 1px solid rgba(100,180,255,0.2);
+  z-index: 50; pointer-events: none; display: none; color: #fff;
+  font-family: 'Courier New', monospace; padding: 20px;
+}
+#scoreboard.visible { display: block; }
+#scoreboard h2 { text-align: center; color: #ffaa00; font-size: 16px; letter-spacing: 3px; margin-bottom: 12px; }
+.sb-team-header { font-size: 12px; letter-spacing: 2px; padding: 4px 8px; margin-top: 10px; }
+.sb-team-a { color: #ff6666; border-bottom: 1px solid rgba(255,100,100,0.3); }
+.sb-team-b { color: #6699ff; border-bottom: 1px solid rgba(100,150,255,0.3); }
+.sb-row { display: flex; justify-content: space-between; padding: 3px 12px; font-size: 11px; }
+.sb-row.player-row { color: #ffcc00; }
+.sb-row .sb-name { flex: 2; }
+.sb-row .sb-stat { flex: 1; text-align: center; color: #aaa; }
+.sb-row .sb-stat-header { flex: 1; text-align: center; color: #666; font-size: 9px; text-transform: uppercase; }
+.sb-header-row { display: flex; justify-content: space-between; padding: 2px 12px; margin-bottom: 4px; }
+`;
+document.head.appendChild(scoreboardCSS);
+
+const scoreboardDiv = document.createElement('div');
+scoreboardDiv.id = 'scoreboard';
+document.body.appendChild(scoreboardDiv);
+
+let scoreboardVisible = false;
+
+function updateScoreboard() {
+  const sb = scoreboardDiv;
+  if (!scoreboardVisible || !player.loadout) { sb.classList.remove('visible'); return; }
+  sb.classList.add('visible');
+
+  const teamA = game.entities.filter(b => b.team === LSS.TEAM_FLEET_A);
+  const teamB = game.entities.filter(b => b.team === LSS.TEAM_FLEET_B);
+
+  let html = '<h2>SCOREBOARD</h2>';
+  html += '<div class="sb-header-row"><div class="sb-name sb-stat-header">SHIP</div><div class="sb-stat-header">STATUS</div><div class="sb-stat-header">HEALTH</div><div class="sb-stat-header">SHIELD</div></div>';
+
+  html += '<div class="sb-team-header sb-team-a">FLEET A (' + game.scoreA + ' rounds)</div>';
+  // Player
+  const pStatus = player.shipState === 'dead' ? 'DEAD' : player.doomed ? 'DOOMED' : 'ALIVE';
+  html += '<div class="sb-row player-row"><div class="sb-name">YOU (' + (player.loadout ? player.loadout.name : '?') + ')</div><div class="sb-stat">' + pStatus + '</div><div class="sb-stat">' + Math.ceil(player.health) + '</div><div class="sb-stat">' + Math.ceil(player.shield) + '</div></div>';
+  for (const bot of teamA) {
+    const st = !bot.alive ? 'DEAD' : bot.doomed ? 'DOOMED' : 'ALIVE';
+    html += '<div class="sb-row"><div class="sb-name">' + bot.loadout.name + '</div><div class="sb-stat">' + st + '</div><div class="sb-stat">' + Math.ceil(bot.health) + '</div><div class="sb-stat">' + Math.ceil(bot.shield) + '</div></div>';
+  }
+
+  html += '<div class="sb-team-header sb-team-b">FLEET B (' + game.scoreB + ' rounds)</div>';
+  for (const bot of teamB) {
+    const st = !bot.alive ? 'DEAD' : bot.doomed ? 'DOOMED' : 'ALIVE';
+    html += '<div class="sb-row"><div class="sb-name">' + bot.loadout.name + '</div><div class="sb-stat">' + st + '</div><div class="sb-stat">' + Math.ceil(bot.health) + '</div><div class="sb-stat">' + Math.ceil(bot.shield) + '</div></div>';
+  }
+
+  // Network players
+  for (const np of net.networkPlayers) {
+    const st = !np.alive ? 'DEAD' : np.doomed ? 'DOOMED' : 'ALIVE';
+    const teamLabel = np.team === LSS.TEAM_FLEET_A ? 'A' : 'B';
+    html += '<div class="sb-row"><div class="sb-name">[NET] ' + (np.loadout ? np.loadout.name : '?') + '</div><div class="sb-stat">' + st + '</div><div class="sb-stat">' + Math.ceil(np.health) + '</div><div class="sb-stat">' + Math.ceil(np.shield) + '</div></div>';
+  }
+
+  html += '<div style="text-align:center;color:#555;font-size:9px;margin-top:12px;">K: ' + player.kills + ' / D: ' + player.deaths + ' / DMG: ' + Math.floor(player.damageDealt) + '</div>';
+  sb.innerHTML = html;
+}
+
+// Tab key handler for scoreboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'Tab' && game.state !== 'select') {
+    scoreboardVisible = true;
+    updateScoreboard();
+  }
+});
+document.addEventListener('keyup', e => {
+  if (e.key === 'Tab') {
+    scoreboardVisible = false;
+    updateScoreboard();
+  }
+});
+
+// ---- DEATH CAMERA (orbit spectator) ----
+
+const deathCam = {
+  active: false,
+  angle: 0,
+  radius: 400,
+  height: 150,
+  target: null, // position to orbit around (death location)
+};
+
+function startDeathCam() {
+  deathCam.active = true;
+  deathCam.target = player.position.clone();
+  deathCam.angle = player.euler.y;
+  deathCam.radius = player.chassis ? player.chassis.hullLength * 4 : 400;
+}
+
+function updateDeathCam(dt) {
+  if (!deathCam.active || !deathCam.target) return;
+  deathCam.angle += dt * 0.4; // slow orbit
+  const camX = deathCam.target.x + Math.cos(deathCam.angle) * deathCam.radius;
+  const camY = deathCam.target.y + deathCam.height;
+  const camZ = deathCam.target.z + Math.sin(deathCam.angle) * deathCam.radius;
+  camera.position.set(camX, camY, camZ);
+  camera.lookAt(deathCam.target);
+}
+
+// Hook death camera into playerDie and respawnPlayer
+const _origPlayerDie2 = playerDie;
+playerDie = function(attacker) {
+  _origPlayerDie2(attacker);
+  startDeathCam();
+};
+
+const _origRespawnPlayer = respawnPlayer;
+respawnPlayer = function() {
+  deathCam.active = false;
+  _origRespawnPlayer();
+};
+
 // ---- INIT ----
 
+initAudio();
 loadSettings();
 buildShipSelect();
 buildSettingsPage();
+
+// Hook audio init on first user interaction
+document.addEventListener('click', initAudio, { once: false });
+document.addEventListener('keydown', initAudio, { once: false });
+
 requestAnimationFrame(gameLoop);
 
 </script>
