@@ -1712,16 +1712,20 @@ function createShipMesh(chassisData, teamColor) {
   const h = chassisData.hullHeight * 0.5;
   const l = chassisData.hullLength * 0.5;
 
-  // Shared materials
-  const hullMat = new THREE.MeshToonMaterial({ color: teamColor });
-  const darkMat = new THREE.MeshToonMaterial({ color: 0x222233 });
-  const accentMat = new THREE.MeshToonMaterial({ color: new THREE.Color(teamColor).offsetHSL(0, 0, -0.15) });
-  const cockpitMat = new THREE.MeshToonMaterial({ color: 0x1a3355 });
+  // Shared materials (shiny hull with specular highlights, glowing accents)
+  const hullMat = new THREE.MeshPhongMaterial({ color: teamColor, specular: 0x444444, shininess: 60 });
+  const darkMat = new THREE.MeshPhongMaterial({ color: 0x222233, specular: 0x222222, shininess: 40 });
+  const accentMat = new THREE.MeshPhongMaterial({ color: new THREE.Color(teamColor).offsetHSL(0, 0, -0.15), specular: 0x666666, shininess: 80 });
+  const cockpitMat = new THREE.MeshPhongMaterial({ color: 0x1a3355, specular: 0x88bbff, shininess: 120, emissive: 0x0a1a33, emissiveIntensity: 0.4 });
   const engineGlowMat = new THREE.MeshBasicMaterial({
     color: teamColor, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending
   });
   const thrusterMat = new THREE.MeshBasicMaterial({
     color: 0x44ddff, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending
+  });
+  // Glowing panel strips (emissive accent along hull seams)
+  const panelGlowMat = new THREE.MeshBasicMaterial({
+    color: teamColor, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending
   });
   const outlineMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
 
@@ -1895,8 +1899,63 @@ function createShipMesh(chassisData, teamColor) {
   shield.name = 'shield';
   group.add(shield);
 
-  group.userData = { engineMesh: engineMesh, shieldMesh: shield };
+  // Collect all engine glow meshes for thrust animation
+  const engineGlows = [];
+  group.traverse(child => {
+    if (child.material === engineGlowMat || child.material === thrusterMat) engineGlows.push(child);
+  });
+  // Collect barrel meshes for muzzle flash animation
+  const barrelMeshes = [];
+  group.traverse(child => {
+    if (child.geometry && child.geometry.type === 'CylinderGeometry' && child.material === darkMat) {
+      barrelMeshes.push(child);
+    }
+  });
+  group.userData = { engineMesh, shieldMesh: shield, engineGlows, barrelMeshes, panelGlowMat, engineGlowMat };
   return group;
+}
+
+// ---- SHIP ANIMATION ----
+// Animate engine glow based on speed (pulse + scale), gun barrels on fire
+function animateShipMesh(mesh, speed, maxSpeed, isFiring, dt) {
+  if (!mesh || !mesh.userData) return;
+  const t = Math.min(1, speed / maxSpeed);
+  const time = game.time;
+  // Engines: pulse opacity and scale with speed
+  if (mesh.userData.engineGlows) {
+    for (const glow of mesh.userData.engineGlows) {
+      const baseOp = 0.3 + t * 0.6;
+      const pulse = Math.sin(time * 12 + Math.random() * 0.1) * 0.08 * t;
+      glow.material.opacity = baseOp + pulse;
+      const baseScale = 0.6 + t * 0.8;
+      const flicker = 1 + Math.sin(time * 18) * 0.05 * t;
+      glow.scale.setScalar(baseScale * flicker);
+    }
+  }
+  // Barrels: brief recoil + flash when firing
+  if (mesh.userData.barrelMeshes && isFiring) {
+    for (const barrel of mesh.userData.barrelMeshes) {
+      if (!barrel.userData.recoil) barrel.userData.recoil = 0;
+      barrel.userData.recoil = 1.0; // trigger recoil
+    }
+  }
+  // Decay barrel recoil
+  if (mesh.userData.barrelMeshes) {
+    for (const barrel of mesh.userData.barrelMeshes) {
+      if (barrel.userData.recoil > 0) {
+        barrel.userData.recoil -= dt * 8;
+        if (barrel.userData.recoil < 0) barrel.userData.recoil = 0;
+        barrel.position.z = barrel.userData.originalZ !== undefined ? barrel.userData.originalZ : barrel.position.z;
+        if (barrel.userData.originalZ === undefined) barrel.userData.originalZ = barrel.position.z;
+        barrel.position.z = barrel.userData.originalZ + barrel.userData.recoil * 3; // kick back
+        // Brief emissive flash
+        if (barrel.material.emissive) {
+          barrel.material.emissive.setHex(barrel.userData.recoil > 0.5 ? 0xff8800 : 0x000000);
+          barrel.material.emissiveIntensity = barrel.userData.recoil;
+        }
+      }
+    }
+  }
 }
 
 // ---- BOT AI ----
@@ -1942,6 +2001,9 @@ class Bot {
 
   update(dt) {
     if (!this.alive) return;
+
+    // Decay fire flash for gun animation
+    if (this.fireFlashTimer > 0) { this.fireFlashTimer -= dt; if (this.fireFlashTimer <= 0) this.isFiring = false; }
 
     this.spawnProtection = Math.max(0, this.spawnProtection - dt);
 
@@ -2070,6 +2132,7 @@ class Bot {
 
   fireAtPlayer(dir, dist) {
     if (player.shipState === 'dead') return;
+    this.isFiring = true; this.fireFlashTimer = 0.15; // for animation
     const weapon = this.loadout.weapon;
     // Distance-based accuracy: better up close, worse at range
     const rangeRatio = Math.max(0, 1 - dist / weapon.range);
@@ -2294,32 +2357,46 @@ class Projectile {
     this.position.add(this.velocity.clone().multiplyScalar(dt));
     this.mesh.position.copy(this.position);
 
+    // Fire projectiles ignite gas clouds as they fly through (not just on splash)
+    if (this.isFireSource) {
+      igniteNearbyGas(this.position, 80);
+    }
+
     const positions = this.trail.geometry.attributes.position.array;
     positions[0] = prevPos.x; positions[1] = prevPos.y; positions[2] = prevPos.z;
     positions[3] = this.position.x; positions[4] = this.position.y; positions[5] = this.position.z;
     this.trail.geometry.attributes.position.needsUpdate = true;
 
-    // Arc Wave electrical trail particles
+    // Arc Wave: lightning arcing forward from the projectile
     if (this.isArcWave) {
-      const sparkVel = new THREE.Vector3(
-        (Math.random() - 0.5) * 150,
-        (Math.random() - 0.5) * 150,
-        (Math.random() - 0.5) * 150
-      );
-      game.particles.push({
-        position: this.position.clone(),
-        velocity: sparkVel,
-        life: 0.12,
-        maxLife: 0.12,
-        color: 0x44aaff,
-        size: 1 + Math.random() * 0.5
-      });
-      // Periodic cyan point light following arc wave
       if (!this.arcLightTimer) this.arcLightTimer = 0;
       this.arcLightTimer -= dt;
       if (this.arcLightTimer <= 0) {
-        spawnDynamicLight(this.position, 0x44aaff, 1.5, 350, 0.15);
-        this.arcLightTimer = 0.1;
+        // Spawn a short lightning bolt arcing ahead of the projectile
+        const ahead = this.velocity.clone().normalize().multiplyScalar(120 + Math.random() * 80);
+        const boltEnd = this.position.clone().add(ahead).add(
+          new THREE.Vector3((Math.random()-0.5)*80, (Math.random()-0.5)*80, (Math.random()-0.5)*80)
+        );
+        spawnLightningBolt(this.position, boltEnd, 0x44aaff, 0.12, 2, 1.5);
+        // Also arc to nearby walls/floor for dramatic effect
+        if (Math.random() > 0.5) {
+          const wallArc = this.position.clone().add(
+            new THREE.Vector3((Math.random()-0.5)*200, (Math.random()-0.5)*200, (Math.random()-0.5)*200)
+          );
+          spawnLightningBolt(this.position, wallArc, 0x2288cc, 0.08, 1, 0.8);
+        }
+        this.arcLightTimer = 0.04 + Math.random() * 0.03; // frequent arcs
+      }
+      // Spark particles along the path
+      for (let sp = 0; sp < 2; sp++) {
+        game.particles.push({
+          position: this.position.clone(),
+          velocity: new THREE.Vector3((Math.random()-0.5)*200, (Math.random()-0.5)*200, (Math.random()-0.5)*200),
+          life: 0.08 + Math.random() * 0.06,
+          maxLife: 0.14,
+          color: Math.random() > 0.5 ? 0x44aaff : 0xaaddff,
+          size: 1 + Math.random() * 1.5
+        });
       }
     }
 
@@ -2536,6 +2613,87 @@ function spawnTracer(from, to, color) {
   glow.lookAt(to);
   scene.add(glow);
   game.effects.push({ mesh: glow, lifetime: 0.12, age: 0, type: 'tracer' });
+}
+
+// Lightning bolt: jagged branching line from A to B with forks
+function spawnLightningBolt(from, to, color, lifetime, branches, thickness) {
+  color = color || 0x44aaff;
+  lifetime = lifetime || 0.2;
+  branches = branches || 3;
+  thickness = thickness || 2;
+  const dir = new THREE.Vector3().subVectors(to, from);
+  const len = dir.length();
+  if (len < 5) return;
+  const steps = Math.max(6, Math.floor(len / 40));
+  const step = dir.clone().divideScalar(steps);
+  // Main bolt: jitter each segment perpendicular to direction
+  const up = new THREE.Vector3(0, 1, 0);
+  const right = new THREE.Vector3().crossVectors(dir.clone().normalize(), up);
+  if (right.length() < 0.1) right.set(1, 0, 0);
+  right.normalize();
+  const upPerp = new THREE.Vector3().crossVectors(dir.clone().normalize(), right).normalize();
+  const points = [from.clone()];
+  for (let i = 1; i < steps; i++) {
+    const base = from.clone().add(step.clone().multiplyScalar(i));
+    const jitter = (1 - Math.abs(i / steps - 0.5) * 2) * len * 0.08; // max jitter at midpoint
+    base.add(right.clone().multiplyScalar((Math.random() - 0.5) * jitter));
+    base.add(upPerp.clone().multiplyScalar((Math.random() - 0.5) * jitter));
+    points.push(base);
+  }
+  points.push(to.clone());
+  // Draw main bolt as connected line segments (cylinders)
+  for (let i = 0; i < points.length - 1; i++) {
+    const segFrom = points[i], segTo = points[i + 1];
+    const segDir = new THREE.Vector3().subVectors(segTo, segFrom);
+    const segLen = segDir.length();
+    const mid = new THREE.Vector3().addVectors(segFrom, segTo).multiplyScalar(0.5);
+    // Core (bright thin)
+    const coreGeo = new THREE.CylinderGeometry(thickness * 0.5, thickness * 0.5, segLen, 3, 1);
+    coreGeo.rotateX(Math.PI / 2);
+    const coreMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending });
+    const core = new THREE.Mesh(coreGeo, coreMat);
+    core.position.copy(mid); core.lookAt(segTo);
+    scene.add(core);
+    game.effects.push({ mesh: core, lifetime: lifetime, age: 0, type: 'tracer' });
+    // Glow (wider, colored)
+    const glowGeo = new THREE.CylinderGeometry(thickness * 2.5, thickness * 2.5, segLen, 3, 1);
+    glowGeo.rotateX(Math.PI / 2);
+    const glowMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending });
+    const glow = new THREE.Mesh(glowGeo, glowMat);
+    glow.position.copy(mid); glow.lookAt(segTo);
+    scene.add(glow);
+    game.effects.push({ mesh: glow, lifetime: lifetime * 1.5, age: 0, type: 'tracer' });
+  }
+  // Branch forks: shorter bolts splitting off from random midpoints
+  for (let b = 0; b < branches; b++) {
+    const idx = 1 + Math.floor(Math.random() * (points.length - 2));
+    const forkDir = new THREE.Vector3(
+      (Math.random() - 0.5), (Math.random() - 0.5), (Math.random() - 0.5)
+    ).normalize().multiplyScalar(len * (0.1 + Math.random() * 0.15));
+    const forkEnd = points[idx].clone().add(forkDir);
+    // Mini bolt (2-3 segments)
+    const forkSteps = 2 + Math.floor(Math.random() * 2);
+    const forkStep = forkDir.clone().divideScalar(forkSteps);
+    let prev = points[idx].clone();
+    for (let f = 0; f < forkSteps; f++) {
+      const next = prev.clone().add(forkStep).add(
+        new THREE.Vector3((Math.random()-0.5)*20, (Math.random()-0.5)*20, (Math.random()-0.5)*20)
+      );
+      const fLen = prev.distanceTo(next);
+      const fMid = new THREE.Vector3().addVectors(prev, next).multiplyScalar(0.5);
+      const fGeo = new THREE.CylinderGeometry(thickness * 0.3, thickness * 0.3, fLen, 3, 1);
+      fGeo.rotateX(Math.PI / 2);
+      const fMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+      const fMesh = new THREE.Mesh(fGeo, fMat);
+      fMesh.position.copy(fMid); fMesh.lookAt(next);
+      scene.add(fMesh);
+      game.effects.push({ mesh: fMesh, lifetime: lifetime * 0.8, age: 0, type: 'tracer' });
+      prev = next;
+    }
+  }
+  // Bright point light at the bolt midpoint
+  const boltMid = points[Math.floor(points.length / 2)];
+  spawnDynamicLight(boltMid, color, 2.5, 500, lifetime);
 }
 
 const MAX_PARTICLES = 500;
@@ -3146,6 +3304,8 @@ function updatePlayerMovement(dt) {
 
 function updateWeapon(dt) {
   if (player.shipState === 'dead' || !player.weapon) return;
+  // Decay fire flash for player gun animation
+  if (player.fireFlashTimer > 0) { player.fireFlashTimer -= dt; if (player.fireFlashTimer <= 0) player.isFiring = false; }
   const w = player.weapon;
 
   if (player.reloading) {
@@ -3225,6 +3385,7 @@ function updateWeapon(dt) {
     const smartCoreActive = player.coreActive && player.loadoutKey === 'LEGION';
     if (!smartCoreActive && player.clipAmmo <= 0) { startReload(); return; }
     fireWeapon();
+    player.isFiring = true; player.fireFlashTimer = 0.12;
     player.fireTimer = w.fireRate;
     if (!smartCoreActive) {
       player.clipAmmo--;
@@ -3406,7 +3567,10 @@ function fireHitscan(origin, dir, w) {
 
 function fireProjectile(origin, dir, w) {
   const vel = dir.clone().multiplyScalar(w.projSpeed);
-  game.projectiles.push(new Projectile(origin, vel, w.damage, w.splash, 'player', 0xff8800));
+  const proj = new Projectile(origin, vel, w.damage, w.splash, 'player', 0xff8800);
+  // Scorch projectiles are fire sources (ignite gas clouds on pass-through)
+  if (player.loadoutKey === 'SCORCH') proj.isFireSource = true;
+  game.projectiles.push(proj);
 }
 
 function fireSpread(origin, dir, w) {
@@ -3647,12 +3811,11 @@ function executeAbility(slot, ability) {
         // Heal player
         player.shield = Math.min(player.maxShield, player.shield + 800);
 
-        // Main tracer
-        spawnTracer(player.position, bestBot.position, 0x44ff88);
-
-        // Secondary forking tracer (electrical lightning bolt effect)
-        const offset = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(50);
-        spawnTracer(player.position.clone().add(offset), bestBot.position.clone().add(offset), 0x44ffaa);
+        // Lightning bolt to target (actual branching lightning, not a straight tracer)
+        spawnLightningBolt(player.position, bestBot.position, 0x44ff88, 0.25, 4, 2.5);
+        // Secondary parallel bolt for thickness
+        const offset = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(30);
+        spawnLightningBolt(player.position.clone().add(offset), bestBot.position.clone().add(offset), 0x44ffaa, 0.18, 2, 1.5);
 
         // Electrical particles at the target bot's position
         for (let i = 0; i < 5; i++) {
@@ -6604,40 +6767,66 @@ function buildRoomGraphLevel(level) {
   // like a Menger sponge cross-section projected onto the walls.
   // Each iteration doubles the frequency and halves the amplitude,
   // creating detail at every scale as you approach the surface.
+  // Dense glowing branching veins (D=1.5 fractal coastline) with vertical gradient
   const gridFunc = [
-    'vec3 grid(vec3 wp, vec3 base) {',
-    // Fractal accumulator: iterate 4 octaves of folded space
+    'float hash(vec2 p) {',
+    '  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);',
+    '}',
+    'float noise(vec2 p) {',
+    '  vec2 i = floor(p);',
+    '  vec2 f = fract(p);',
+    '  f = f * f * (3.0 - 2.0 * f);',
+    '  float a = hash(i);',
+    '  float b = hash(i + vec2(1.0, 0.0));',
+    '  float c = hash(i + vec2(0.0, 1.0));',
+    '  float d = hash(i + vec2(1.0, 1.0));',
+    '  return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);',
+    '}',
+    // Dense fractal branching: 6 octaves, wide veins, D~1.5 coastline density
+    'float branches(vec3 wp) {',
     '  float pattern = 0.0;',
-    '  float scale = 0.006;',  // starting scale
-    '  float weight = 0.5;',   // first octave is brightest
-    '  vec3 p = wp;',
-    '  for (int i = 0; i < 4; i++) {',
-    '    vec3 g = p * scale;',
-    // Fold: abs(fract - 0.5) creates mirror symmetry at cell boundaries
-    '    vec3 f = abs(fract(g) - 0.5);',
-    // Distance to nearest edge in all 3 axes
-    '    float edge = min(min(f.x, f.y), f.z);',
-    // Cross pattern: distance to nearest axis-aligned line through cell center
-    '    float cross = min(min(f.x + f.y, f.y + f.z), f.x + f.z);',
-    // Combine edge grid and cross pattern (cross creates the fractal branching)
-    '    float line = 1.0 - smoothstep(0.0, 0.03, edge);',
-    '    float branch = 1.0 - smoothstep(0.0, 0.06, cross - 0.25);',
-    '    pattern += (line * 0.7 + branch * 0.3) * weight;',
-    // Rotate domain slightly per octave (breaks alignment, creates organic feel)
-    // Using a simple axis swap + offset instead of a matrix multiply
-    '    p = vec3(p.z + p.x * 0.3, p.x + p.y * 0.3, p.y + p.z * 0.3);',
-    '    scale *= 2.2;',        // each octave is ~2.2x finer (phi-adjacent ratio)
-    '    weight *= 0.45;',      // diminishing contribution
+    '  float scale = 0.002;',         // start coarser for big trunks
+    '  float weight = 0.7;',          // first octave dominant
+    '  vec2 p = vec2(wp.x + wp.z * 0.7, wp.y);',
+    '  for (int i = 0; i < 6; i++) {', // 6 octaves for dense fractal detail
+    '    vec2 g = p * scale;',
+    '    float n = noise(g * 2.5 + float(i) * 1.3);',
+    '    float n2 = noise(g * 4.0 + float(i) * 2.7);',
+    '    g.x += sin(g.y * 1.5 + n * 4.0) * 0.4;',  // wider horizontal wander
+    '    g.y += cos(g.x * 0.8 + n2 * 2.0) * 0.15;', // slight vertical warp too
+    '    vec2 f = abs(fract(g) - 0.5);',
+    // Wide veins (0.09 smoothstep) and wide branches (0.14) for dense coverage
+    '    float vein = 1.0 - smoothstep(0.0, 0.09, f.x);',
+    '    float branch = 1.0 - smoothstep(0.0, 0.14, f.x + f.y * 0.4);',
+    // Cross-veins at finer scales (creates the 1.5D fractal coastline density)
+    '    float cross = 1.0 - smoothstep(0.0, 0.10, f.y);',
+    '    float mix1 = (vein * 0.45 + branch * 0.35 + cross * 0.2);',
+    '    pattern += mix1 * weight;',
+    '    p = vec2(p.y * 0.7 + p.x * 0.7, -p.x * 0.5 + p.y * 0.85 + n * 40.0);',
+    '    scale *= 1.9;',              // gentler scaling = more overlap between octaves
+    '    weight *= 0.50;',            // slower falloff = finer details stay visible
     '  }',
-    '  pattern = clamp(pattern, 0.0, 1.0);',
-    // Color: fractal accents derived from the base wall color (so red rooms glow red, green glow green)
-    // Accent 1: base brightened 3x for broad structure; accent 2: base brightened 5x for fine detail
-    '  vec3 accent1 = base * 3.0 + vec3(0.02, 0.04, 0.08);',
-    '  vec3 accent2 = base * 5.0 + vec3(0.04, 0.08, 0.12);',
-    '  vec3 c = mix(base, accent1, pattern * 0.5);',
-    '  c = mix(c, accent2, smoothstep(0.35, 0.8, pattern) * 0.6);',
-    // Subtle glow on the finest fractal edges (tinted toward the base hue)
-    '  c += (base * 2.0 + vec3(0.01, 0.03, 0.06)) * smoothstep(0.6, 1.0, pattern);',
+    '  return clamp(pattern, 0.0, 1.0);',
+    '}',
+    'vec3 grid(vec3 wp, vec3 base) {',
+    '  float yNorm = clamp((wp.y + 2000.0) / 4000.0, 0.0, 1.0);',
+    // Gentler gradient: bottom is 60% brightness (not 30%), top is 100%
+    '  float gradientDark = 0.6 + yNorm * 0.4;',
+    // Brighten the base color itself so walls are never near-black
+    '  vec3 brightBase = base * 2.5 + vec3(0.03, 0.04, 0.06);',
+    '  vec3 gradBase = brightBase * gradientDark;',
+    '  float branchPattern = branches(wp);',
+    // Branches everywhere, slightly stronger at bottom
+    '  float branchStrength = 0.7 + (1.0 - yNorm) * 0.3;',
+    '  branchPattern *= branchStrength;',
+    // Glow colors: much brighter multipliers so veins really pop
+    '  vec3 glow1 = base * 10.0 + vec3(0.05, 0.08, 0.15);',  // broad glow (very bright)
+    '  vec3 glow2 = base * 18.0 + vec3(0.10, 0.15, 0.25);',  // vein tips (blazing)
+    '  vec3 c = gradBase;',
+    '  c = mix(c, glow1, branchPattern * 0.6);',              // more glow coverage
+    '  c = mix(c, glow2, smoothstep(0.25, 0.65, branchPattern) * 0.8);', // wider glow range
+    // Strong emissive bloom on the brightest veins
+    '  c += (base * 8.0 + vec3(0.04, 0.06, 0.12)) * smoothstep(0.5, 0.9, branchPattern);',
     '  return c;',
     '}'
   ].join('\n');
@@ -6701,11 +6890,11 @@ function buildRoomGraphLevel(level) {
   // --- ROOM AND TUNNEL COLOR SCHEME ---
   // Each room gets a distinct wall color; halls inherit from the side they serve
   const roomColors = {
-    center:  new THREE.Color(0x0c1828), // deep blue-gray (neutral center)
-    spawn_a: new THREE.Color(0x1a0808), // dark red (team A spawn)
-    spawn_b: new THREE.Color(0x081a08), // dark green (team B spawn)
-    ready_a: new THREE.Color(0x180c14), // dark magenta-red (team A side)
-    ready_b: new THREE.Color(0x0c1810), // dark teal-green (team B side)
+    center:  new THREE.Color(0x1a3050), // blue-gray (neutral center)
+    spawn_a: new THREE.Color(0x3a1010), // warm red (team A spawn)
+    spawn_b: new THREE.Color(0x103a10), // rich green (team B spawn)
+    ready_a: new THREE.Color(0x351828), // magenta-red (team A side)
+    ready_b: new THREE.Color(0x183520), // teal-green (team B side)
   };
 
   // Per-room shader materials (each sphere gets its own wCol)
@@ -6720,13 +6909,13 @@ function buildRoomGraphLevel(level) {
   function getTunnelColor(seg) {
     const midX = (seg.a.x + seg.b.x) / 2;
     // Strong team A side (far negative X)
-    if (midX < -SU * 3) return new THREE.Color(0x140a0a); // dark red hall
+    if (midX < -SU * 3) return new THREE.Color(0x2a1212); // red hall
     // Strong team B side (far positive X)
-    if (midX > SU * 3) return new THREE.Color(0x0a140a);  // dark green hall
+    if (midX > SU * 3) return new THREE.Color(0x122a12);  // green hall
     // Near center: blend based on X position
     const t = (midX / (SU * 3) + 1) * 0.5; // 0 = full A side, 1 = full B side
-    const colA = new THREE.Color(0x140a0a);
-    const colB = new THREE.Color(0x0a140a);
+    const colA = new THREE.Color(0x2a1212);
+    const colB = new THREE.Color(0x122a12);
     return colA.lerp(colB, t);
   }
 
@@ -7093,7 +7282,19 @@ function gameLoop(timestamp) {
   // Network: clean up stale hit claims
   if (net.active && game.time % 1 < dt) cleanupPendingHits();
 
-  for (const bot of game.entities) bot.update(dt);
+  for (const bot of game.entities) {
+    bot.update(dt);
+    // Animate bot ship: engine glow + gun recoil
+    const botSpeed = bot.velocity ? bot.velocity.length() : 0;
+    const botMaxSpeed = bot.chassis ? bot.chassis.maxSpeed : 400;
+    animateShipMesh(bot.mesh, botSpeed, botMaxSpeed, bot.isFiring, dt);
+  }
+  // Animate player ship (visible in 3rd person / death cam)
+  if (player.mesh) {
+    const pSpeed = player.velocity ? player.velocity.length() : 0;
+    const pMaxSpeed = player.chassis ? player.chassis.maxSpeed : 400;
+    animateShipMesh(player.mesh, pSpeed, pMaxSpeed, player.isFiring, dt);
+  }
 
   for (let i = game.projectiles.length - 1; i >= 0; i--) {
     game.projectiles[i].update(dt);
@@ -7557,14 +7758,29 @@ function playSound(type) {
     }
   }
   else if (type === 'stasis') {
-    const p = rr(1, 0.06);
-    triChord([ri(82*p,0), ri(87*p,0), ri(98*p,0)], 'sine',
-      rr(0.14, 0.15), rr(0.50, 0.12), null, null, 0,
-      { attack: 0.02, hold: rr(0.08, 0.2), decay: rr(0.40, 0.12) });
-    triChord([ri(61*p,0), ri(65*p,0), ri(73*p,0)], 'triangle',
-      rr(0.10, 0.15), rr(0.55, 0.12), null, null, rr(0.10, 0.15),
-      { attack: 0.02, hold: rr(0.08, 0.2), decay: rr(0.45, 0.12) });
-    playNoiseBurst(rr(0.30, 0.2), rr(0.03, 0.3), now + rr(0.05, 0.2), ri(3000, 0.15), rr(4.0, 0.2));
+    // Full 3-second charging sound: rising harmonic sweep that builds to release
+    const dur = game.playerStasisDuration || 3.0;
+    const p = rr(1, 0.04);
+    // Layer 1: deep foundation sweep (sine, rises from 50Hz to 200Hz)
+    triChord([ri(50*p,0), ri(63*p,0), ri(75*p,0)], 'sine',
+      rr(0.20, 0.10), dur, [ri(200*p,0), ri(250*p,0), ri(300*p,0)], dur * 0.95, 0,
+      { attack: 0.3, hold: dur * 0.5, decay: dur * 0.2 });
+    // Layer 2: mid harmonic sweep (triangle, rises from 100Hz to 400Hz, starts 0.3s in)
+    triChord([ri(100*p,0), ri(126*p,0), ri(150*p,0)], 'triangle',
+      rr(0.12, 0.10), dur * 0.85, [ri(400*p,0), ri(500*p,0), ri(600*p,0)], dur * 0.8, 0.3,
+      { attack: 0.5, hold: dur * 0.35, decay: dur * 0.15 });
+    // Layer 3: bright upper sweep (sine, rises from 200Hz to 800Hz, fades in slowly)
+    triChord([ri(200*p,0), ri(252*p,0), ri(300*p,0)], 'sine',
+      rr(0.06, 0.10), dur * 0.7, [ri(800*p,0), ri(1000*p,0), ri(1200*p,0)], dur * 0.65, 0.6,
+      { attack: 0.8, hold: dur * 0.15, decay: dur * 0.1 });
+    // Layer 4: shimmer (soft filtered noise that rises in pitch with the charge)
+    playNoiseBurst(dur * 0.8, rr(0.04, 0.2), now, ri(200, 0.15), rr(0.5, 0.2));
+    playNoiseBurst(dur * 0.5, rr(0.03, 0.2), now + 0.8, ri(600, 0.2), rr(0.6, 0.2));
+    playNoiseBurst(dur * 0.3, rr(0.02, 0.2), now + 1.6, ri(1200, 0.2), rr(0.5, 0.2));
+    // Release tone: bright chord at the end when fully charged
+    triChord([ri(300*p,0), ri(378*p,0), ri(450*p,0)], 'sine',
+      rr(0.15, 0.10), 0.6, null, null, dur - 0.1,
+      { attack: 0.02, hold: 0.15, decay: 0.43 });
   }
   else if (type === 'reload') {
     const p = rr(1, 0.08);
