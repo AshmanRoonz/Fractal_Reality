@@ -1712,49 +1712,190 @@ function createShipMesh(chassisData, teamColor) {
   const h = chassisData.hullHeight * 0.5;
   const l = chassisData.hullLength * 0.5;
 
-  // Cartoon-style ship: bold colors, toon shading, thick outlines
-  const hullGeo = new THREE.BoxGeometry(w * 2, h * 1.2, l * 2.4);
+  // Shared materials
   const hullMat = new THREE.MeshToonMaterial({ color: teamColor });
-  const hull = new THREE.Mesh(hullGeo, hullMat);
-  group.add(hull);
-  // Hull outline
-  const hullOutline = new THREE.LineSegments(new THREE.EdgesGeometry(hullGeo), new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 }));
-  group.add(hullOutline);
+  const darkMat = new THREE.MeshToonMaterial({ color: 0x222233 });
+  const accentMat = new THREE.MeshToonMaterial({ color: new THREE.Color(teamColor).offsetHSL(0, 0, -0.15) });
+  const cockpitMat = new THREE.MeshToonMaterial({ color: 0x1a3355 });
+  const engineGlowMat = new THREE.MeshBasicMaterial({
+    color: teamColor, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending
+  });
+  const thrusterMat = new THREE.MeshBasicMaterial({
+    color: 0x44ddff, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending
+  });
+  const outlineMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
 
-  const cockpitGeo = new THREE.BoxGeometry(w * 0.8, h * 0.8, l * 0.6);
-  const cockpitMat = new THREE.MeshToonMaterial({ color: 0x3366aa });
-  const cockpit = new THREE.Mesh(cockpitGeo, cockpitMat);
-  cockpit.position.set(0, h * 0.6, -l * 0.4);
-  group.add(cockpit);
-  const cockpitOutline = new THREE.LineSegments(new THREE.EdgesGeometry(cockpitGeo), new THREE.LineBasicMaterial({ color: 0x000000 }));
-  cockpitOutline.position.copy(cockpit.position);
-  group.add(cockpitOutline);
+  // Helper: add mesh + outline to group
+  function addPart(geo, mat, pos, rot) {
+    const mesh = new THREE.Mesh(geo, mat);
+    if (pos) mesh.position.set(pos[0], pos[1], pos[2]);
+    if (rot) mesh.rotation.set(rot[0], rot[1], rot[2]);
+    group.add(mesh);
+    const outline = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 20), outlineMat);
+    if (pos) outline.position.set(pos[0], pos[1], pos[2]);
+    if (rot) outline.rotation.set(rot[0], rot[1], rot[2]);
+    group.add(outline);
+    return mesh;
+  }
 
-  const engineGeo = new THREE.BoxGeometry(w * 1.4, h * 0.6, l * 0.3);
-  const engineMat = new THREE.MeshBasicMaterial({ color: 0x22aaff, transparent: true, opacity: 0.8 });
-  const engine = new THREE.Mesh(engineGeo, engineMat);
-  engine.position.set(0, 0, l * 1.1);
-  group.add(engine);
+  let engineMesh;
+  const chassisName = chassisData.name;
 
-  const wingGeo = new THREE.BoxGeometry(w * 2.5, h * 0.2, l * 1.2);
-  const wingMat = new THREE.MeshToonMaterial({ color: teamColor });
-  const wingL = new THREE.Mesh(wingGeo, wingMat);
-  wingL.position.set(-w * 1.2, 0, l * 0.2);
-  group.add(wingL);
-  const wingOutlineL = new THREE.LineSegments(new THREE.EdgesGeometry(wingGeo), new THREE.LineBasicMaterial({ color: 0x000000 }));
-  wingOutlineL.position.copy(wingL.position);
-  group.add(wingOutlineL);
-  const wingR = wingL.clone();
-  wingR.position.set(w * 1.2, 0, l * 0.2);
-  group.add(wingR);
+  if (chassisName === 'Frigate') {
+    // FRIGATE: Sleek, angular, fast. Pointed nose, swept wings, twin engines.
+    // Main fuselage: tapered wedge shape (narrow front, wider back)
+    const noseGeo = new THREE.ConeGeometry(w * 0.6, l * 1.2, 4);
+    noseGeo.rotateX(Math.PI / 2);
+    addPart(noseGeo, hullMat, [0, 0, -l * 0.3]);
 
+    // Mid hull
+    const midGeo = new THREE.BoxGeometry(w * 1.2, h * 1.0, l * 1.4);
+    addPart(midGeo, hullMat, [0, 0, l * 0.3]);
+
+    // Cockpit: angular canopy
+    const canopyGeo = new THREE.BoxGeometry(w * 0.5, h * 0.5, l * 0.5);
+    addPart(canopyGeo, cockpitMat, [0, h * 0.55, -l * 0.2]);
+
+    // Swept wings (angled back)
+    const wingGeo = new THREE.BoxGeometry(w * 2.0, h * 0.12, l * 1.0);
+    const wingL = addPart(wingGeo, accentMat, [-w * 1.1, 0, l * 0.3]);
+    wingL.rotation.z = -0.12; // swept angle
+    const wingR = addPart(wingGeo, accentMat, [w * 1.1, 0, l * 0.3]);
+    wingR.rotation.z = 0.12;
+
+    // Wing tips (vertical stabilizers)
+    const tipGeo = new THREE.BoxGeometry(w * 0.15, h * 0.8, l * 0.4);
+    addPart(tipGeo, darkMat, [-w * 2.0, h * 0.2, l * 0.5]);
+    addPart(tipGeo, darkMat, [w * 2.0, h * 0.2, l * 0.5]);
+
+    // Twin engine pods
+    const podGeo = new THREE.CylinderGeometry(h * 0.35, h * 0.45, l * 0.6, 6);
+    podGeo.rotateX(Math.PI / 2);
+    addPart(podGeo, darkMat, [-w * 0.5, -h * 0.15, l * 0.9]);
+    addPart(podGeo, darkMat, [w * 0.5, -h * 0.15, l * 0.9]);
+
+    // Engine glow (visible from behind)
+    const glowGeo = new THREE.CircleGeometry(h * 0.35, 8);
+    const glow1 = new THREE.Mesh(glowGeo, engineGlowMat);
+    glow1.position.set(-w * 0.5, -h * 0.15, l * 1.2);
+    group.add(glow1);
+    const glow2 = new THREE.Mesh(glowGeo, engineGlowMat);
+    glow2.position.set(w * 0.5, -h * 0.15, l * 1.2);
+    group.add(glow2);
+
+    engineMesh = glow1;
+
+  } else if (chassisName === 'Corvette') {
+    // CORVETTE: Balanced military workhorse. Boxy but purposeful, armored bridge,
+    // weapon hardpoints visible, single large engine.
+
+    // Main hull: chunky central body
+    const bodyGeo = new THREE.BoxGeometry(w * 1.6, h * 1.4, l * 2.0);
+    addPart(bodyGeo, hullMat, [0, 0, 0]);
+
+    // Forward prow: angled front plate
+    const prowGeo = new THREE.BoxGeometry(w * 1.4, h * 1.0, l * 0.5);
+    const prow = addPart(prowGeo, accentMat, [0, h * 0.1, -l * 1.1]);
+    prow.rotation.x = 0.15;
+
+    // Bridge (raised command section)
+    const bridgeGeo = new THREE.BoxGeometry(w * 0.9, h * 0.7, l * 0.7);
+    addPart(bridgeGeo, cockpitMat, [0, h * 0.9, -l * 0.1]);
+
+    // Shoulder armor plates
+    const armorGeo = new THREE.BoxGeometry(w * 0.5, h * 1.2, l * 1.0);
+    addPart(armorGeo, darkMat, [-w * 0.95, h * 0.1, l * 0.1]);
+    addPart(armorGeo, darkMat, [w * 0.95, h * 0.1, l * 0.1]);
+
+    // Weapon hardpoints (stubby barrels on shoulders)
+    const barrelGeo = new THREE.CylinderGeometry(h * 0.12, h * 0.12, l * 0.5, 6);
+    barrelGeo.rotateX(Math.PI / 2);
+    addPart(barrelGeo, darkMat, [-w * 0.95, h * 0.5, -l * 0.7]);
+    addPart(barrelGeo, darkMat, [w * 0.95, h * 0.5, -l * 0.7]);
+
+    // Rear engine block
+    const engineBlockGeo = new THREE.BoxGeometry(w * 1.2, h * 0.8, l * 0.4);
+    addPart(engineBlockGeo, darkMat, [0, 0, l * 1.1]);
+
+    // Engine glow (large single)
+    const glowGeo = new THREE.CircleGeometry(h * 0.6, 8);
+    engineMesh = new THREE.Mesh(glowGeo, engineGlowMat);
+    engineMesh.position.set(0, 0, l * 1.3);
+    group.add(engineMesh);
+
+    // Small maneuvering thrusters (4 corners)
+    const thrGeo = new THREE.CircleGeometry(h * 0.12, 6);
+    [-1, 1].forEach(sx => [-1, 1].forEach(sy => {
+      const thr = new THREE.Mesh(thrGeo, thrusterMat);
+      thr.position.set(sx * w * 0.7, sy * h * 0.5, l * 1.0);
+      group.add(thr);
+    }));
+
+  } else {
+    // DREADNOUGHT: Heavy, imposing, slow. Wide hull, layered armor,
+    // multiple engine banks, weapons everywhere.
+
+    // Core hull: massive central block
+    const coreGeo = new THREE.BoxGeometry(w * 2.0, h * 1.6, l * 2.2);
+    addPart(coreGeo, hullMat, [0, 0, 0]);
+
+    // Upper armor deck
+    const deckGeo = new THREE.BoxGeometry(w * 2.2, h * 0.3, l * 1.8);
+    addPart(deckGeo, accentMat, [0, h * 0.9, 0]);
+
+    // Lower keel plate
+    addPart(deckGeo, accentMat, [0, -h * 0.9, 0]);
+
+    // Forward ram prow (armored wedge)
+    const ramGeo = new THREE.BoxGeometry(w * 1.6, h * 1.0, l * 0.8);
+    const ram = addPart(ramGeo, darkMat, [0, 0, -l * 1.3]);
+    ram.rotation.x = 0.1;
+
+    // Bridge tower (raised, armored)
+    const towerGeo = new THREE.BoxGeometry(w * 0.8, h * 1.0, l * 0.5);
+    addPart(towerGeo, cockpitMat, [0, h * 1.3, -l * 0.3]);
+
+    // Side armor blisters (weapons nacelles)
+    const blisterGeo = new THREE.BoxGeometry(w * 0.6, h * 0.9, l * 1.4);
+    addPart(blisterGeo, darkMat, [-w * 1.2, 0, l * 0.1]);
+    addPart(blisterGeo, darkMat, [w * 1.2, 0, l * 0.1]);
+
+    // Heavy weapon barrels
+    const heavyBarrelGeo = new THREE.CylinderGeometry(h * 0.15, h * 0.18, l * 0.8, 6);
+    heavyBarrelGeo.rotateX(Math.PI / 2);
+    addPart(heavyBarrelGeo, darkMat, [-w * 1.2, h * 0.2, -l * 0.8]);
+    addPart(heavyBarrelGeo, darkMat, [w * 1.2, h * 0.2, -l * 0.8]);
+    // Dorsal turret barrel
+    addPart(heavyBarrelGeo, darkMat, [0, h * 1.6, -l * 0.6]);
+
+    // Rear engine bank: 3 large + 4 small
+    const engineBankGeo = new THREE.BoxGeometry(w * 1.8, h * 1.2, l * 0.3);
+    addPart(engineBankGeo, darkMat, [0, 0, l * 1.2]);
+
+    const bigGlowGeo = new THREE.CircleGeometry(h * 0.35, 8);
+    [-1, 0, 1].forEach(i => {
+      const g = new THREE.Mesh(bigGlowGeo, engineGlowMat);
+      g.position.set(i * w * 0.5, 0, l * 1.35);
+      group.add(g);
+    });
+    const smGlowGeo = new THREE.CircleGeometry(h * 0.15, 6);
+    [-1.5, -0.5, 0.5, 1.5].forEach(i => {
+      const g = new THREE.Mesh(smGlowGeo, thrusterMat);
+      g.position.set(i * w * 0.35, h * 0.5, l * 1.2);
+      group.add(g);
+    });
+
+    engineMesh = group.children[group.children.length - 5]; // middle big glow
+  }
+
+  // Shield bubble (shared across all chassis)
   const shieldGeo = new THREE.SphereGeometry(Math.max(w, l) * 2, 16, 12);
   const shieldMat = new THREE.MeshBasicMaterial({ color: 0x44ccff, transparent: true, opacity: 0, side: THREE.DoubleSide });
   const shield = new THREE.Mesh(shieldGeo, shieldMat);
   shield.name = 'shield';
   group.add(shield);
 
-  group.userData = { engineMesh: engine, shieldMesh: shield };
+  group.userData = { engineMesh: engineMesh, shieldMesh: shield };
   return group;
 }
 
@@ -1951,6 +2092,76 @@ class Bot {
       damage *= falloff;
     }
 
+    // ---- BOT FIRING VFX ----
+    const fireOrigin = this.position.clone();
+    const fireDir = dir.clone().normalize();
+
+    // Color scheme per loadout
+    const loadoutColors = {
+      'ION': 0x44ddff,
+      'SCORCH': 0xff4400,
+      'NORTHSTAR': 0x88aaff,
+      'RONIN': 0xffaa44,
+      'TONE': 0xffaa00,
+      'LEGION': 0xffdd44,
+      'MONARCH': 0xffdd44
+    };
+    const flashColor = loadoutColors[this.loadout.name] || 0xffdd44;
+
+    if (weapon.mode === 'hitscan') {
+      // Hitscan weapons: tracer, muzzle particles, muzzle flash light
+      spawnTracer(fireOrigin, player.position, flashColor);
+
+      // Muzzle particles
+      for (let i = 0; i < 2; i++) {
+        const pVel = fireDir.clone().multiplyScalar(250 + Math.random() * 150);
+        pVel.x += (Math.random() - 0.5) * 100;
+        pVel.y += (Math.random() - 0.5) * 100;
+        pVel.z += (Math.random() - 0.5) * 100;
+        game.particles.push({
+          position: fireOrigin.clone(),
+          velocity: pVel,
+          life: 0.12 + Math.random() * 0.08,
+          maxLife: 0.2,
+          color: flashColor,
+          size: 2 + Math.random() * 2
+        });
+      }
+
+      // Muzzle flash light
+      spawnDynamicLight(fireOrigin, flashColor, 2.0, 300, 0.1);
+    } else if (weapon.mode === 'spread') {
+      // Spread weapons: multiple shorter tracers with spread
+      for (let i = 0; i < weapon.pellets * 0.3; i++) {
+        const spreadDir = fireDir.clone();
+        spreadDir.x += (Math.random() - 0.5) * 0.15;
+        spreadDir.y += (Math.random() - 0.5) * 0.15;
+        spreadDir.z += (Math.random() - 0.5) * 0.15;
+        spreadDir.normalize();
+        const tracerEnd = fireOrigin.clone().add(spreadDir.clone().multiplyScalar(Math.min(dist, weapon.range * 0.8)));
+        spawnTracer(fireOrigin, tracerEnd, flashColor);
+      }
+
+      // Muzzle particles for spread
+      for (let i = 0; i < 3; i++) {
+        const pVel = fireDir.clone().multiplyScalar(200 + Math.random() * 100);
+        pVel.x += (Math.random() - 0.5) * 120;
+        pVel.y += (Math.random() - 0.5) * 120;
+        pVel.z += (Math.random() - 0.5) * 120;
+        game.particles.push({
+          position: fireOrigin.clone(),
+          velocity: pVel,
+          life: 0.1 + Math.random() * 0.1,
+          maxLife: 0.2,
+          color: flashColor,
+          size: 2 + Math.random() * 3
+        });
+      }
+
+      // Muzzle flash light
+      spawnDynamicLight(fireOrigin, flashColor, 1.5, 250, 0.12);
+    }
+
     playerTakeDamage(damage, this);
     // Bot core meter charges from dealing damage
     this.coreMeter = Math.min(100, this.coreMeter + damage / 100);
@@ -2087,6 +2298,30 @@ class Projectile {
     positions[0] = prevPos.x; positions[1] = prevPos.y; positions[2] = prevPos.z;
     positions[3] = this.position.x; positions[4] = this.position.y; positions[5] = this.position.z;
     this.trail.geometry.attributes.position.needsUpdate = true;
+
+    // Arc Wave electrical trail particles
+    if (this.isArcWave) {
+      const sparkVel = new THREE.Vector3(
+        (Math.random() - 0.5) * 150,
+        (Math.random() - 0.5) * 150,
+        (Math.random() - 0.5) * 150
+      );
+      game.particles.push({
+        position: this.position.clone(),
+        velocity: sparkVel,
+        life: 0.12,
+        maxLife: 0.12,
+        color: 0x44aaff,
+        size: 1 + Math.random() * 0.5
+      });
+      // Periodic cyan point light following arc wave
+      if (!this.arcLightTimer) this.arcLightTimer = 0;
+      this.arcLightTimer -= dt;
+      if (this.arcLightTimer <= 0) {
+        spawnDynamicLight(this.position, 0x44aaff, 1.5, 350, 0.15);
+        this.arcLightTimer = 0.1;
+      }
+    }
 
     // Check level collision
     const levelHit = checkBoxCollision(this.position, 5);
@@ -3063,6 +3298,25 @@ function fireWeapon() {
       size: 3 + Math.random() * 3
     });
   }
+
+  // SCORCH specific: extra fire particles for projectile weapons
+  if (player.loadoutKey === 'SCORCH' && w.mode === 'projectile') {
+    const fireColors = [0xff4400, 0xff6600, 0xff8833];
+    for (let i = 0; i < 4; i++) {
+      const pVel = forward.clone().multiplyScalar(250 + Math.random() * 150);
+      pVel.x += (Math.random() - 0.5) * 100;
+      pVel.y += (Math.random() - 0.5) * 100;
+      pVel.z += (Math.random() - 0.5) * 100;
+      game.particles.push({
+        position: flashPos.clone(),
+        velocity: pVel,
+        life: 0.15 + Math.random() * 0.1,
+        maxLife: 0.25,
+        color: fireColors[Math.floor(Math.random() * fireColors.length)],
+        size: 4 + Math.random() * 3
+      });
+    }
+  }
 }
 
 function fireHitscan(origin, dir, w) {
@@ -3077,7 +3331,9 @@ function fireHitscan(origin, dir, w) {
   // Check level geometry first
   const levelDist = raycastLevel(origin, aimDir, w.range);
   const end = origin.clone().add(aimDir.clone().multiplyScalar(levelDist));
-  spawnTracer(origin, end, 0xffff44);
+  // Color depends on loadout: ION uses cyan, otherwise yellow
+  const tracerColor = player.loadoutKey === 'ION' ? 0x44ddff : 0xffff44;
+  spawnTracer(origin, end, tracerColor);
 
   let bestHit = null, bestDist = Infinity;
   for (const bot of game.entities) {
@@ -3121,6 +3377,27 @@ function fireHitscan(origin, dir, w) {
     const hitPoint = bestHit.position.clone().add(aimDir.clone().multiplyScalar(-20));
     spawnExplosion(hitPoint, 8);
     spawnImpactSparks(hitPoint, 4);
+
+    // ION specific hit effects: electrical sparks
+    if (player.loadoutKey === 'ION') {
+      for (let i = 0; i < 3; i++) {
+        const sparkDir = new THREE.Vector3(
+          (Math.random() - 0.5) * 0.8,
+          (Math.random() - 0.5) * 0.8,
+          (Math.random() - 0.5) * 0.8
+        ).normalize();
+        const sparkVel = sparkDir.multiplyScalar(150 + Math.random() * 100);
+        game.particles.push({
+          position: hitPoint.clone(),
+          velocity: sparkVel,
+          life: 0.15 + Math.random() * 0.1,
+          maxLife: 0.25,
+          color: 0x44ddff,
+          size: 1.5 + Math.random() * 1.5
+        });
+      }
+    }
+
     if (!bestHit.alive) showKillMarker();
   }
 }
@@ -3219,6 +3496,29 @@ function executeAbility(slot, ability) {
       const beamEnd = player.position.clone().add(forward.clone().multiplyScalar(range));
       spawnTracer(player.position, beamEnd, 0xff2200);
       spawnTracer(player.position.clone().add(new THREE.Vector3(0,3,0)), beamEnd.clone().add(new THREE.Vector3(0,3,0)), 0xff4400);
+
+      // Electrical crackle particles along the beam path
+      const beamSteps = 8;
+      for (let step = 1; step < beamSteps; step++) {
+        const t = step / beamSteps;
+        const sparkPos = player.position.clone().add(forward.clone().multiplyScalar(range * t));
+        for (let i = 0; i < 2; i++) {
+          const sparkVel = new THREE.Vector3(
+            (Math.random() - 0.5) * 200,
+            (Math.random() - 0.5) * 200,
+            (Math.random() - 0.5) * 200
+          );
+          game.particles.push({
+            position: sparkPos.clone(),
+            velocity: sparkVel,
+            life: 0.15,
+            maxLife: 0.15,
+            color: 0x44ddff,
+            size: 1 + Math.random() * 1
+          });
+        }
+      }
+
       for (const bot of game.entities) {
         if (!bot.alive || bot.team === player.team) continue;
         const toBot = new THREE.Vector3().subVectors(bot.position, player.position);
@@ -3229,6 +3529,8 @@ function executeAbility(slot, ability) {
           const dealt = bot.takeDamage(2400, 'player');
           if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 100); showHitMarker(); }
           spawnExplosion(bot.position, 15);
+          // White-blue dynamic light at impact point
+          spawnDynamicLight(bot.position, 0xccddff, 2.5, 500, 0.3);
         }
       }
     }
@@ -3239,12 +3541,16 @@ function executeAbility(slot, ability) {
       game.worldEffects.push({
         type: 'firewall', position: start.clone(), direction: forward.clone(),
         length: wallLen, timer: 6, dmgPerSec: 400, owner: 'player', team: player.team,
+        fxTimer: 0,
       });
       // Visual: fire path particles along the forward direction
       for (let t = 0; t <= wallLen; t += 80) {
         const pt = start.clone().add(forward.clone().multiplyScalar(t));
         spawnExplosion(pt, 10);
       }
+      // Add a faint warm dynamic light at the wall's center
+      const wallCenter = start.clone().add(forward.clone().multiplyScalar(wallLen * 0.5));
+      spawnDynamicLight(wallCenter, 0xff6600, 1.5, 600, 0.3);
     }
     // NORTHSTAR: Cluster Missile (impact + sustained explosions in area for 3s)
     else if (ability.name === 'Cluster Missile') {
@@ -3338,7 +3644,54 @@ function executeAbility(slot, ability) {
         bestBot.arcSlowTimer = Math.max(bestBot.arcSlowTimer || 0, 2.0); // 2s slow
         // Heal player
         player.shield = Math.min(player.maxShield, player.shield + 800);
+
+        // Main tracer
         spawnTracer(player.position, bestBot.position, 0x44ff88);
+
+        // Secondary forking tracer (electrical lightning bolt effect)
+        const offset = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(50);
+        spawnTracer(player.position.clone().add(offset), bestBot.position.clone().add(offset), 0x44ffaa);
+
+        // Electrical particles at the target bot's position
+        for (let i = 0; i < 5; i++) {
+          const sparkDir = new THREE.Vector3(
+            (Math.random() - 0.5) * 0.8,
+            (Math.random() - 0.5) * 0.8,
+            (Math.random() - 0.5) * 0.8
+          ).normalize();
+          const sparkVel = sparkDir.multiplyScalar(120 + Math.random() * 80);
+          game.particles.push({
+            position: bestBot.position.clone(),
+            velocity: sparkVel,
+            life: 0.2,
+            maxLife: 0.2,
+            color: 0x44ffaa,
+            size: 1.5 + Math.random() * 1
+          });
+        }
+
+        // Electrical particles at the player's position (energy flowing in)
+        for (let i = 0; i < 4; i++) {
+          const sparkDir = new THREE.Vector3(
+            (Math.random() - 0.5) * 0.8,
+            (Math.random() - 0.5) * 0.8,
+            (Math.random() - 0.5) * 0.8
+          ).normalize();
+          const sparkVel = sparkDir.multiplyScalar(100 + Math.random() * 60);
+          game.particles.push({
+            position: player.position.clone(),
+            velocity: sparkVel,
+            life: 0.15,
+            maxLife: 0.15,
+            color: 0x44ffaa,
+            size: 1 + Math.random() * 0.8
+          });
+        }
+
+        // Dynamic lights at both ends: cyan-green, intensity 2.0, range 400, duration 0.3
+        spawnDynamicLight(player.position, 0x44ffaa, 2.0, 400, 0.3);
+        spawnDynamicLight(bestBot.position, 0x44ffaa, 2.0, 400, 0.3);
+
         showHitMarker();
       }
     }
@@ -3442,10 +3795,11 @@ function executeAbility(slot, ability) {
         type: 'incendiary_gas', position: trapPos.clone(),
         timer: 15, radius: 350, owner: 'player', team: player.team,
         ignited: false, igniteDmgPerSec: 120, igniteTimer: 0, igniteDuration: 8, slowFactor: 0.5,
+        fxTimer: 0,
       });
-      // Visual: gas canister marker
-      const gasGeo = new THREE.CylinderGeometry(6, 6, 20, 6);
-      const gasMat = new THREE.MeshBasicMaterial({ color: 0x88aa44, transparent: true, opacity: 0.7 });
+      // Visual: semi-transparent gas cloud sphere (sickly green-yellow)
+      const gasGeo = new THREE.SphereGeometry(45, 8, 6);
+      const gasMat = new THREE.MeshBasicMaterial({ color: 0x88aa33, transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending });
       const gasMesh = new THREE.Mesh(gasGeo, gasMat);
       gasMesh.position.copy(trapPos);
       scene.add(gasMesh);
@@ -4006,6 +4360,29 @@ function updateAbilities(dt) {
           }
         }
       }
+      // Periodic fire particles along the firewall's length
+      eff.fxTimer -= dt;
+      if (eff.fxTimer <= 0) {
+        const randT = Math.random() * eff.length;
+        const firePt = eff.position.clone().add(eff.direction.clone().multiplyScalar(randT));
+        const fireColors = [0xff4400, 0xff6600, 0xff8833];
+        for (let i = 0; i < 2; i++) {
+          const pVel = new THREE.Vector3(
+            (Math.random() - 0.5) * 100,
+            80 + Math.random() * 100,
+            (Math.random() - 0.5) * 100
+          );
+          game.particles.push({
+            position: firePt.clone().add(new THREE.Vector3((Math.random() - 0.5) * 80, 0, (Math.random() - 0.5) * 80)),
+            velocity: pVel,
+            life: 0.3 + Math.random() * 0.2,
+            maxLife: 0.5,
+            color: fireColors[Math.floor(Math.random() * fireColors.length)],
+            size: 3 + Math.random() * 2
+          });
+        }
+        eff.fxTimer = 0.3;
+      }
     }
 
     else if (eff.type === 'tripwire') {
@@ -4049,7 +4426,32 @@ function updateAbilities(dt) {
             }
           }
         }
+
+        // Periodic gas drift effect (not ignited)
+        eff.fxTimer -= dt;
+        if (eff.fxTimer <= 0) {
+          const gasParticlePt = eff.position.clone().add(new THREE.Vector3(
+            (Math.random() - 0.5) * eff.radius,
+            0,
+            (Math.random() - 0.5) * eff.radius
+          ));
+          const gasDrift = new THREE.Vector3(
+            (Math.random() - 0.5) * 40,
+            60 + Math.random() * 40,
+            (Math.random() - 0.5) * 40
+          );
+          game.particles.push({
+            position: gasParticlePt,
+            velocity: gasDrift,
+            life: 0.5 + Math.random() * 0.3,
+            maxLife: 0.8,
+            color: 0x88aa33,
+            size: 2 + Math.random() * 1.5
+          });
+          eff.fxTimer = 0.5;
+        }
       }
+
       if (eff.ignited) {
         eff.igniteTimer -= dt;
         // Damage and slow enemies in the burning area
@@ -4061,6 +4463,34 @@ function updateAbilities(dt) {
             if (bot.velocity) bot.velocity.multiplyScalar(1 - eff.slowFactor * dt);
           }
         }
+
+        // Spawn fire particles while ignited
+        eff.fxTimer -= dt;
+        if (eff.fxTimer <= 0) {
+          const firePt = eff.position.clone().add(new THREE.Vector3(
+            (Math.random() - 0.5) * eff.radius * 0.8,
+            Math.random() * eff.radius * 0.5,
+            (Math.random() - 0.5) * eff.radius * 0.8
+          ));
+          const fireColors = [0xff4400, 0xff6600, 0xff8833];
+          for (let i = 0; i < 2; i++) {
+            const pVel = new THREE.Vector3(
+              (Math.random() - 0.5) * 80,
+              100 + Math.random() * 120,
+              (Math.random() - 0.5) * 80
+            );
+            game.particles.push({
+              position: firePt.clone(),
+              velocity: pVel,
+              life: 0.4 + Math.random() * 0.2,
+              maxLife: 0.6,
+              color: fireColors[Math.floor(Math.random() * fireColors.length)],
+              size: 3 + Math.random() * 2
+            });
+          }
+          eff.fxTimer = 0.3;
+        }
+
         if (eff.igniteTimer <= 0) eff.timer = 0; // burned out
       }
     }
@@ -6119,23 +6549,45 @@ function buildRoomGraphLevel(level) {
     '}'
   ].join('\n');
 
-  // Shared: procedural grid for depth perception (two scales for detail)
+  // Shared: fractal wall pattern for depth perception.
+  // Uses iterated domain folding to create a self-similar recursive grid,
+  // like a Menger sponge cross-section projected onto the walls.
+  // Each iteration doubles the frequency and halves the amplitude,
+  // creating detail at every scale as you approach the surface.
   const gridFunc = [
     'vec3 grid(vec3 wp, vec3 base) {',
-    '  float s1 = 0.0133;',
-    '  vec3 g1 = wp * s1;',
-    '  float l1x = abs(fract(g1.x) - 0.5);',
-    '  float l1y = abs(fract(g1.y) - 0.5);',
-    '  float l1z = abs(fract(g1.z) - 0.5);',
-    '  float m1 = 1.0 - smoothstep(0.0, 0.025, min(min(l1x, l1y), l1z));',
-    '  float s2 = 0.00333;',
-    '  vec3 g2 = wp * s2;',
-    '  float l2x = abs(fract(g2.x) - 0.5);',
-    '  float l2y = abs(fract(g2.y) - 0.5);',
-    '  float l2z = abs(fract(g2.z) - 0.5);',
-    '  float m2 = 1.0 - smoothstep(0.0, 0.015, min(min(l2x, l2y), l2z));',
-    '  vec3 c = mix(base, vec3(0.06, 0.15, 0.28), m1 * 0.45);',
-    '  c = mix(c, vec3(0.1, 0.22, 0.38), m2 * 0.55);',
+    // Fractal accumulator: iterate 4 octaves of folded space
+    '  float pattern = 0.0;',
+    '  float scale = 0.006;',  // starting scale
+    '  float weight = 0.5;',   // first octave is brightest
+    '  vec3 p = wp;',
+    '  for (int i = 0; i < 4; i++) {',
+    '    vec3 g = p * scale;',
+    // Fold: abs(fract - 0.5) creates mirror symmetry at cell boundaries
+    '    vec3 f = abs(fract(g) - 0.5);',
+    // Distance to nearest edge in all 3 axes
+    '    float edge = min(min(f.x, f.y), f.z);',
+    // Cross pattern: distance to nearest axis-aligned line through cell center
+    '    float cross = min(min(f.x + f.y, f.y + f.z), f.x + f.z);',
+    // Combine edge grid and cross pattern (cross creates the fractal branching)
+    '    float line = 1.0 - smoothstep(0.0, 0.03, edge);',
+    '    float branch = 1.0 - smoothstep(0.0, 0.06, cross - 0.25);',
+    '    pattern += (line * 0.7 + branch * 0.3) * weight;',
+    // Rotate domain slightly per octave (breaks alignment, creates organic feel)
+    // Using a simple axis swap + offset instead of a matrix multiply
+    '    p = vec3(p.z + p.x * 0.3, p.x + p.y * 0.3, p.y + p.z * 0.3);',
+    '    scale *= 2.2;',        // each octave is ~2.2x finer (phi-adjacent ratio)
+    '    weight *= 0.45;',      // diminishing contribution
+    '  }',
+    '  pattern = clamp(pattern, 0.0, 1.0);',
+    // Color: base wall color mixed with two accent tones at different pattern thresholds
+    // Fine detail (high pattern) gets brighter accent; broad structure gets subtle glow
+    '  vec3 accent1 = vec3(0.05, 0.14, 0.30);', // deep blue for broad structure
+    '  vec3 accent2 = vec3(0.10, 0.28, 0.45);',  // bright blue for fine detail
+    '  vec3 c = mix(base, accent1, pattern * 0.5);',
+    '  c = mix(c, accent2, smoothstep(0.35, 0.8, pattern) * 0.6);',
+    // Subtle glow on the finest fractal edges
+    '  c += vec3(0.02, 0.06, 0.12) * smoothstep(0.6, 1.0, pattern);',
     '  return c;',
     '}'
   ].join('\n');
@@ -6634,21 +7086,21 @@ function initAudio() {
 
     // Master output
     audio.masterGain = audio.ctx.createGain();
-    audio.masterGain.gain.value = 0.35;
+    audio.masterGain.gain.value = 0.50;
     audio.masterGain.connect(audio.ctx.destination);
 
     // Reverb chain: dry + wet mixed into master
     audio.dryGain = audio.ctx.createGain();
-    audio.dryGain.gain.value = 0.75; // most signal is dry
+    audio.dryGain.gain.value = 0.80; // dry signal (most of the punch)
     audio.dryGain.connect(audio.masterGain);
 
     audio.reverbGain = audio.ctx.createGain();
-    audio.reverbGain.gain.value = 0.35; // reverb is subtle
+    audio.reverbGain.gain.value = 0.55; // prominent reverb for futuristic echo
     audio.reverbGain.connect(audio.masterGain);
 
-    // Convolver with synthetic impulse response
+    // Convolver with synthetic impulse response (longer tail for spacious echo)
     audio.convolver = audio.ctx.createConvolver();
-    audio.convolver.buffer = generateImpulseResponse(audio.ctx, 1.8, 4.5, 0.012);
+    audio.convolver.buffer = generateImpulseResponse(audio.ctx, 2.4, 3.5, 0.015);
     audio.convolver.connect(audio.reverbGain);
 
     // Ambient sound bed gain (separate from SFX)
@@ -6671,92 +7123,144 @@ function resumeAudio() {
 
 let ambientStarted = false;
 
+// ---- PHI-CASCADE BINAURAL AMBIENT ----
+// Adapted from phi_resonance.html: 4 layers of phi-spaced frequencies,
+// each creating a binaural beat of phi Hz (1.618 Hz). Left ear gets
+// the base frequency, right ear gets base + phi. Each layer is phi
+// times the previous, creating maximal distinction without resonance
+// overlap. LFO modulation at phi-derived rates gives it a breathing,
+// alive quality. The reactor drone sits underneath as a sub-bass anchor.
+
+const PHI = (1 + Math.sqrt(5)) / 2; // 1.6180339887...
+const PHI_LAYERS = 4; // fewer than the standalone tool (6) to save CPU
+const PHI_BEAT = PHI; // 1.618 Hz binaural beat difference
+
 function startAmbientBed() {
   if (ambientStarted || !audio.ctx) return;
   ambientStarted = true;
   const ctx = audio.ctx;
 
-  // Layer 1: Sub-bass drone (deep hum of the ship's reactor)
+  // Sub-bass reactor drone (anchor; not part of the phi cascade)
   const drone1 = ctx.createOscillator();
   drone1.type = 'sine';
-  drone1.frequency.value = 32; // barely audible fundamental
+  drone1.frequency.value = 32;
   const drone1Gain = ctx.createGain();
-  drone1Gain.gain.value = 0.12;
+  drone1Gain.gain.value = 0.05;
   drone1.connect(drone1Gain);
   drone1Gain.connect(audio.ambientGain);
   drone1.start();
   audio.ambientNodes.push(drone1);
 
-  // Layer 2: Low sine fifth above (adds body)
-  const drone2 = ctx.createOscillator();
-  drone2.type = 'sine';
-  drone2.frequency.value = 48;
-  const drone2Gain = ctx.createGain();
-  drone2Gain.gain.value = 0.06;
-  drone2.connect(drone2Gain);
-  drone2Gain.connect(audio.ambientGain);
-  drone2.start();
-  audio.ambientNodes.push(drone2);
+  // Slow LFO breathing on the reactor drone
+  const droneLfo = ctx.createOscillator();
+  droneLfo.type = 'sine';
+  droneLfo.frequency.value = PHI / 10; // ~0.16 Hz, very slow
+  const droneLfoGain = ctx.createGain();
+  droneLfoGain.gain.value = 3;
+  droneLfo.connect(droneLfoGain);
+  droneLfoGain.connect(drone1.frequency);
+  droneLfo.start();
+  audio.ambientNodes.push(droneLfo);
 
-  // Layer 3: Slow LFO modulating the drone (breathing, alive feel)
-  const lfo = ctx.createOscillator();
-  lfo.type = 'sine';
-  lfo.frequency.value = 0.15; // very slow
-  const lfoGain = ctx.createGain();
-  lfoGain.gain.value = 4; // modulates drone freq by +/- 4Hz
-  lfo.connect(lfoGain);
-  lfoGain.connect(drone1.frequency);
-  lfo.start();
-  audio.ambientNodes.push(lfo);
+  // Phi-cascade binaural layers
+  // Base frequency centered at 100Hz; layers spread by powers of phi
+  // i=0: 100/phi = ~61.8 Hz, i=1: 100 Hz, i=2: ~161.8 Hz, i=3: ~261.8 Hz
+  const phiBase = 100;
+  audio.phiLayers = [];
 
-  // Layer 4: Filtered white noise (life support / air circulation hiss)
-  const noiseLen = ctx.sampleRate * 4;
-  const noiseBuf = ctx.createBuffer(1, noiseLen, ctx.sampleRate);
-  const noiseData = noiseBuf.getChannelData(0);
-  for (let i = 0; i < noiseLen; i++) noiseData[i] = Math.random() * 2 - 1;
-  const noiseSrc = ctx.createBufferSource();
-  noiseSrc.buffer = noiseBuf;
-  noiseSrc.loop = true;
-  const noiseFilter = ctx.createBiquadFilter();
-  noiseFilter.type = 'bandpass';
-  noiseFilter.frequency.value = 400;
-  noiseFilter.Q.value = 0.5;
-  const noiseGain = ctx.createGain();
-  noiseGain.gain.value = 0.04;
-  noiseSrc.connect(noiseFilter);
-  noiseFilter.connect(noiseGain);
-  noiseGain.connect(audio.ambientGain);
-  noiseSrc.start();
-  audio.ambientNodes.push(noiseSrc);
+  for (let i = 0; i < PHI_LAYERS; i++) {
+    const layerFreq = phiBase * Math.pow(PHI, i - 1); // center around phiBase
+    const layerVol = 0.02 / PHI_LAYERS; // very quiet; sits well under gameplay
 
-  // Store references for speed modulation
+    // Left ear: carrier at layerFreq
+    const oscL = ctx.createOscillator();
+    oscL.type = 'sine';
+    oscL.frequency.value = layerFreq;
+    const gainL = ctx.createGain();
+    gainL.gain.value = layerVol;
+    const panL = ctx.createStereoPanner();
+    panL.pan.value = -1;
+
+    // LFO modulation at phi-derived rate (different per layer, all phi-related)
+    const lfoL = ctx.createOscillator();
+    lfoL.type = 'sine';
+    lfoL.frequency.value = PHI / Math.pow(PHI, i); // slower for lower layers
+    const lfoLGain = ctx.createGain();
+    lfoLGain.gain.value = layerVol * 0.3;
+    lfoL.connect(lfoLGain);
+    lfoLGain.connect(gainL.gain);
+    lfoL.start();
+
+    oscL.connect(gainL);
+    gainL.connect(panL);
+    panL.connect(audio.ambientGain);
+    oscL.start();
+    audio.ambientNodes.push(oscL, lfoL);
+
+    // Right ear: carrier at layerFreq + phi Hz (creates the binaural beat)
+    const oscR = ctx.createOscillator();
+    oscR.type = 'sine';
+    oscR.frequency.value = layerFreq + PHI_BEAT;
+    const gainR = ctx.createGain();
+    gainR.gain.value = layerVol;
+    const panR = ctx.createStereoPanner();
+    panR.pan.value = 1;
+
+    const lfoR = ctx.createOscillator();
+    lfoR.type = 'sine';
+    lfoR.frequency.value = PHI / Math.pow(PHI, i);
+    const lfoRGain = ctx.createGain();
+    lfoRGain.gain.value = layerVol * 0.3;
+    lfoR.connect(lfoRGain);
+    lfoRGain.connect(gainR.gain);
+    lfoR.start();
+
+    oscR.connect(gainR);
+    gainR.connect(panR);
+    panR.connect(audio.ambientGain);
+    oscR.start();
+    audio.ambientNodes.push(oscR, lfoR);
+
+    audio.phiLayers.push({
+      oscL, oscR, gainL, gainR,
+      baseFreq: layerFreq,
+      layerVol: layerVol
+    });
+  }
+
+  // Store drone reference for speed modulation
   audio.ambientDrone1 = drone1;
   audio.ambientDrone1Gain = drone1Gain;
-  audio.ambientNoiseFilter = noiseFilter;
-  audio.ambientNoiseGain = noiseGain;
 }
 
-// Modulate ambient bed based on player speed (faster = higher pitch, more noise)
+// Modulate ambient bed based on player speed.
+// Faster movement raises drone pitch and phi-cascade intensity.
 function updateAmbientBed() {
   if (!ambientStarted || !audio.ctx || !player.velocity) return;
   const speed = player.velocity ? player.velocity.length() : 0;
-  const maxSpeed = 800; // roughly max with afterburner
+  const maxSpeed = 800;
   const t = Math.min(1, speed / maxSpeed);
 
   // Fade ambient in when game is active
-  const targetVol = (game.state === 'playing' || game.state === 'warmup') ? 0.5 : 0.05;
+  const targetVol = (game.state === 'playing' || game.state === 'warmup') ? 0.25 : 0.03;
   audio.ambientGain.gain.value += (targetVol - audio.ambientGain.gain.value) * 0.02;
 
-  // Drone pitch rises slightly with speed
+  // Reactor drone pitch rises with speed
   if (audio.ambientDrone1) {
     audio.ambientDrone1.frequency.value = 32 + t * 18;
   }
-  // Noise gets louder and higher-pitched with speed (wind/engine whine)
-  if (audio.ambientNoiseFilter) {
-    audio.ambientNoiseFilter.frequency.value = 400 + t * 1200;
-  }
-  if (audio.ambientNoiseGain) {
-    audio.ambientNoiseGain.gain.value = 0.04 + t * 0.08;
+
+  // Phi layers: carrier frequencies shift up with speed, volume swells
+  if (audio.phiLayers) {
+    for (const layer of audio.phiLayers) {
+      const freqShift = layer.baseFreq + t * 20; // subtle upward shift
+      layer.oscL.frequency.value = freqShift;
+      layer.oscR.frequency.value = freqShift + PHI_BEAT;
+      // Volume increases with speed (phi cascade becomes more present)
+      const vol = layer.layerVol * (1 + t * 1.5);
+      layer.gainL.gain.value = vol;
+      layer.gainR.gain.value = vol;
+    }
   }
 }
 
@@ -6912,12 +7416,19 @@ function playSound(type) {
     playNoiseBurst(0.50, 0.12, now, 600, 0.5);
   }
   else if (type === 'explosion') {
-    // Massive boom: heavy sub-bass with slow attack for weight, plus noise debris.
-    triChord([60, 75, 90], 'sine', 0.35, 0.55, [15, 20, 25], 0.45, 0,
-      { attack: 0.008, hold: 0.05, decay: 0.50 });
-    triChord([45, 55, 65], 'sawtooth', 0.20, 0.40, [10, 15, 18], 0.35, 0.02,
-      { attack: 0.003, hold: 0.03, decay: 0.37 });
-    playNoiseBurst(0.35, 0.25, now, 300, 0.4); // low-filtered debris rumble
+    // Explosion: noise-dominant layered burst. Sub-bass pressure wave first,
+    // then mid-range crackle, then high debris scatter. No pitched tones (avoids bongo).
+    // Layer 1: sub-bass pressure wave (low filtered noise, slow attack for weight)
+    playNoiseBurst(0.50, 0.35, now, 80, 0.3);
+    // Layer 2: main blast (wide mid-range noise burst, sharp transient)
+    playNoiseBurst(0.30, 0.30, now + 0.005, 500, 0.5);
+    // Layer 3: high-frequency debris crackle (delayed slightly, thinner)
+    playNoiseBurst(0.20, 0.12, now + 0.02, 2500, 1.2);
+    // Layer 4: very low sub-rumble tail (gives sense of scale)
+    playNoiseBurst(0.60, 0.18, now + 0.01, 40, 0.2);
+    // Tiny tonal hint (very quiet sawtooth growl, not a chord; just adds body)
+    triChord([25, 30, 35], 'sawtooth', 0.10, 0.40, [12, 15, 18], 0.35, 0.01,
+      { attack: 0.01, hold: 0.02, decay: 0.37 });
   }
   else if (type === 'stasis') {
     // Eerie frozen triad: glass-like shimmer with filtered noise hiss.
