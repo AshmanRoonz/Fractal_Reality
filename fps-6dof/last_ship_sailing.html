@@ -1236,6 +1236,175 @@ renderer.setClearColor(0x0a0520); // Dark purple-black (cartoon space)
 renderer.outputEncoding = THREE.sRGBEncoding || 3001; // Vivid color output
 document.body.appendChild(renderer.domElement);
 
+// ---- POST-PROCESSING PIPELINE ----
+// Bloom + Vignette + Chromatic Aberration (on damage) via custom shader passes.
+// Uses render targets and fullscreen quads; no external postprocessing library needed.
+
+const postFX = { enabled: true };
+
+// Render target: scene renders here first, then post-processed to screen
+postFX.rtScene = new THREE.WebGLRenderTarget(
+  window.innerWidth * Math.min(window.devicePixelRatio, 2),
+  window.innerHeight * Math.min(window.devicePixelRatio, 2),
+  { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat }
+);
+
+// Bloom: extract bright pixels, blur, composite
+postFX.rtBright = new THREE.WebGLRenderTarget(
+  Math.floor(postFX.rtScene.width / 2), Math.floor(postFX.rtScene.height / 2),
+  { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat }
+);
+postFX.rtBlurH = new THREE.WebGLRenderTarget(
+  postFX.rtBright.width, postFX.rtBright.height,
+  { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat }
+);
+postFX.rtBlurV = new THREE.WebGLRenderTarget(
+  postFX.rtBright.width, postFX.rtBright.height,
+  { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat }
+);
+
+// Fullscreen quad for shader passes
+postFX.quadGeo = new THREE.PlaneGeometry(2, 2);
+postFX.quadCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+// Brightness threshold extraction shader
+postFX.brightMat = new THREE.ShaderMaterial({
+  uniforms: { tDiffuse: { value: null }, threshold: { value: 0.7 } },
+  vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }`,
+  fragmentShader: `
+    uniform sampler2D tDiffuse;
+    uniform float threshold;
+    varying vec2 vUv;
+    void main() {
+      vec4 c = texture2D(tDiffuse, vUv);
+      float brightness = dot(c.rgb, vec3(0.2126, 0.7152, 0.0722));
+      gl_FragColor = brightness > threshold ? c : vec4(0.0, 0.0, 0.0, 1.0);
+    }
+  `
+});
+
+// Gaussian blur shader (direction set per pass)
+postFX.blurMat = new THREE.ShaderMaterial({
+  uniforms: {
+    tDiffuse: { value: null },
+    direction: { value: new THREE.Vector2(1, 0) },
+    resolution: { value: new THREE.Vector2(postFX.rtBright.width, postFX.rtBright.height) }
+  },
+  vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }`,
+  fragmentShader: `
+    uniform sampler2D tDiffuse;
+    uniform vec2 direction;
+    uniform vec2 resolution;
+    varying vec2 vUv;
+    void main() {
+      vec2 off = direction / resolution;
+      vec4 c = vec4(0.0);
+      c += texture2D(tDiffuse, vUv - 4.0 * off) * 0.0162;
+      c += texture2D(tDiffuse, vUv - 3.0 * off) * 0.0540;
+      c += texture2D(tDiffuse, vUv - 2.0 * off) * 0.1216;
+      c += texture2D(tDiffuse, vUv - 1.0 * off) * 0.1945;
+      c += texture2D(tDiffuse, vUv)              * 0.2270;
+      c += texture2D(tDiffuse, vUv + 1.0 * off) * 0.1945;
+      c += texture2D(tDiffuse, vUv + 2.0 * off) * 0.1216;
+      c += texture2D(tDiffuse, vUv + 3.0 * off) * 0.0540;
+      c += texture2D(tDiffuse, vUv + 4.0 * off) * 0.0162;
+      gl_FragColor = c;
+    }
+  `
+});
+
+// Final composite: scene + bloom + vignette + chromatic aberration
+postFX.compositeMat = new THREE.ShaderMaterial({
+  uniforms: {
+    tScene: { value: null },
+    tBloom: { value: null },
+    bloomStrength: { value: 0.45 },
+    vignetteIntensity: { value: 0.35 },
+    vignetteSize: { value: 0.45 },
+    chromAb: { value: 0.0 }, // driven by damage indicator intensity
+    time: { value: 0.0 }
+  },
+  vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }`,
+  fragmentShader: `
+    uniform sampler2D tScene;
+    uniform sampler2D tBloom;
+    uniform float bloomStrength;
+    uniform float vignetteIntensity;
+    uniform float vignetteSize;
+    uniform float chromAb;
+    uniform float time;
+    varying vec2 vUv;
+    void main() {
+      // Chromatic aberration (shifts RGB channels apart when taking damage)
+      vec2 center = vUv - 0.5;
+      float dist = length(center);
+      float abAmount = chromAb * dist * 0.02;
+      vec3 col;
+      col.r = texture2D(tScene, vUv + center * abAmount).r;
+      col.g = texture2D(tScene, vUv).g;
+      col.b = texture2D(tScene, vUv - center * abAmount).b;
+      // Add bloom
+      vec3 bloom = texture2D(tBloom, vUv).rgb;
+      col += bloom * bloomStrength;
+      // Vignette
+      float vignette = 1.0 - smoothstep(vignetteSize, vignetteSize + 0.55, dist * 1.4);
+      col *= mix(1.0, vignette, vignetteIntensity);
+      // Subtle film grain (very light, adds texture)
+      float grain = (fract(sin(dot(vUv * time * 100.0, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.03;
+      col += grain;
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `
+});
+
+postFX.brightQuad = new THREE.Mesh(postFX.quadGeo, postFX.brightMat);
+postFX.blurQuad = new THREE.Mesh(postFX.quadGeo, postFX.blurMat);
+postFX.compositeQuad = new THREE.Mesh(postFX.quadGeo, postFX.compositeMat);
+postFX.passScene = new THREE.Scene();
+postFX.passScene.add(postFX.brightQuad);
+
+function renderPostFX() {
+  const damageMax = Math.max(
+    game.damageIndicators.top, game.damageIndicators.bottom,
+    game.damageIndicators.left, game.damageIndicators.right
+  );
+  postFX.compositeMat.uniforms.chromAb.value = damageMax * 3.0;
+  postFX.compositeMat.uniforms.time.value = game.time;
+
+  // 1. Render scene to offscreen target
+  renderer.setRenderTarget(postFX.rtScene);
+  renderer.render(scene, camera);
+
+  // 2. Extract bright pixels
+  postFX.brightMat.uniforms.tDiffuse.value = postFX.rtScene.texture;
+  postFX.passScene.remove(postFX.blurQuad, postFX.compositeQuad);
+  postFX.passScene.add(postFX.brightQuad);
+  renderer.setRenderTarget(postFX.rtBright);
+  renderer.render(postFX.passScene, postFX.quadCamera);
+
+  // 3. Horizontal blur
+  postFX.blurMat.uniforms.tDiffuse.value = postFX.rtBright.texture;
+  postFX.blurMat.uniforms.direction.value.set(1, 0);
+  postFX.passScene.remove(postFX.brightQuad, postFX.compositeQuad);
+  postFX.passScene.add(postFX.blurQuad);
+  renderer.setRenderTarget(postFX.rtBlurH);
+  renderer.render(postFX.passScene, postFX.quadCamera);
+
+  // 4. Vertical blur
+  postFX.blurMat.uniforms.tDiffuse.value = postFX.rtBlurH.texture;
+  postFX.blurMat.uniforms.direction.value.set(0, 1);
+  renderer.setRenderTarget(postFX.rtBlurV);
+  renderer.render(postFX.passScene, postFX.quadCamera);
+
+  // 5. Composite to screen
+  postFX.compositeMat.uniforms.tScene.value = postFX.rtScene.texture;
+  postFX.compositeMat.uniforms.tBloom.value = postFX.rtBlurV.texture;
+  postFX.passScene.remove(postFX.brightQuad, postFX.blurQuad);
+  postFX.passScene.add(postFX.compositeQuad);
+  renderer.setRenderTarget(null);
+  renderer.render(postFX.passScene, postFX.quadCamera);
+}
+
 // Cartoon-style lighting (bright, high-contrast, minimal shadow)
 const ambientLight = new THREE.AmbientLight(0x445577, 0.8); // Brighter ambient for flat look
 scene.add(ambientLight);
@@ -2036,6 +2205,61 @@ function igniteNearbyGas(pos, radius) {
   }
 }
 
+// ---- DYNAMIC LIGHT POOL ----
+// Reusable pool of PointLights for explosions, impacts, etc.
+// Avoids creating/destroying lights every frame.
+
+const dynamicLights = {
+  pool: [],
+  active: [],
+  MAX_LIGHTS: 8,
+};
+
+(function initDynamicLights() {
+  for (let i = 0; i < dynamicLights.MAX_LIGHTS; i++) {
+    const light = new THREE.PointLight(0xff8800, 0, 600);
+    light.visible = false;
+    scene.add(light);
+    dynamicLights.pool.push(light);
+  }
+})();
+
+function spawnDynamicLight(pos, color, intensity, range, duration) {
+  let light;
+  if (dynamicLights.pool.length > 0) {
+    light = dynamicLights.pool.pop();
+  } else {
+    // Steal the oldest active light
+    const oldest = dynamicLights.active.shift();
+    if (oldest) { oldest.light.visible = false; light = oldest.light; }
+    else return; // shouldn't happen
+  }
+  light.color.setHex(color);
+  light.intensity = intensity;
+  light.distance = range;
+  light.position.copy(pos);
+  light.visible = true;
+  dynamicLights.active.push({ light, intensity, duration, age: 0 });
+}
+
+function updateDynamicLights() {
+  const dt = game.deltaTime;
+  for (let i = dynamicLights.active.length - 1; i >= 0; i--) {
+    const entry = dynamicLights.active[i];
+    entry.age += dt;
+    if (entry.age >= entry.duration) {
+      entry.light.intensity = 0;
+      entry.light.visible = false;
+      dynamicLights.pool.push(entry.light);
+      dynamicLights.active.splice(i, 1);
+    } else {
+      // Fade out over lifetime
+      const t = entry.age / entry.duration;
+      entry.light.intensity = entry.intensity * (1 - t * t); // quadratic falloff for punch
+    }
+  }
+}
+
 // ---- EFFECTS ----
 
 function spawnExplosion(pos, size) {
@@ -2045,6 +2269,10 @@ function spawnExplosion(pos, size) {
   mesh.position.copy(pos);
   scene.add(mesh);
   game.effects.push({ mesh, lifetime: 0.4, age: 0, type: 'explosion', maxSize: size * 3 });
+  // Dynamic light: big explosions get brighter, wider lights
+  const lightIntensity = Math.min(6.0, (size || 20) * 0.15);
+  const lightRange = Math.min(1200, (size || 20) * 15);
+  spawnDynamicLight(pos, 0xff6600, lightIntensity, lightRange, 0.35);
 }
 
 function spawnTracer(from, to, color) {
@@ -2172,6 +2400,8 @@ function spawnImpactSparks(pos, count) {
     const vel = new THREE.Vector3((Math.random()-0.5)*400, (Math.random()-0.5)*400, (Math.random()-0.5)*400);
     game.effects.push({ mesh: spark, lifetime: 0.3 + Math.random() * 0.2, age: 0, type: 'spark', vel });
   }
+  // Small bright flash at impact point
+  spawnDynamicLight(pos, 0xffcc44, 2.0, 300, 0.15);
 }
 
 // ---- PLAYER FUNCTIONS ----
@@ -5235,6 +5465,14 @@ window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
+  // Resize post-processing render targets
+  const dpr = Math.min(window.devicePixelRatio, 2);
+  const w = window.innerWidth * dpr, h = window.innerHeight * dpr;
+  postFX.rtScene.setSize(w, h);
+  postFX.rtBright.setSize(Math.floor(w / 2), Math.floor(h / 2));
+  postFX.rtBlurH.setSize(Math.floor(w / 2), Math.floor(h / 2));
+  postFX.rtBlurV.setSize(Math.floor(w / 2), Math.floor(h / 2));
+  postFX.blurMat.uniforms.resolution.value.set(Math.floor(w / 2), Math.floor(h / 2));
 });
 
 // ---- SETTINGS PAGE ----
@@ -6284,11 +6522,11 @@ function gameLoop(timestamp) {
   game.lastTime = timestamp;
   game.time += game.deltaTime;
 
-  if (game.state === 'select') { renderer.render(scene, camera); return; }
+  if (game.state === 'select') { renderPostFX(); return; }
 
   // Pause gameplay while settings are open
   if (settingsOpen) {
-    renderer.render(scene, camera);
+    renderPostFX();
     return;
   }
 
@@ -6338,7 +6576,13 @@ function gameLoop(timestamp) {
 
   game.killFeed = game.killFeed.filter(e => game.time - e.time < 8);
 
-  renderer.render(scene, camera);
+  // Update dynamic explosion lights
+  updateDynamicLights();
+
+  // Update ambient sound bed (speed-reactive)
+  updateAmbientBed();
+
+  renderPostFX();
 }
 
 // ---- WEB AUDIO SOUND SYSTEM ----
@@ -6347,16 +6591,68 @@ function gameLoop(timestamp) {
 const audio = {
   ctx: null,
   masterGain: null,
+  reverbGain: null,     // wet reverb signal
+  dryGain: null,        // dry signal
+  convolver: null,      // impulse response reverb
+  ambientGain: null,    // ambient sound bed volume
+  ambientNodes: [],     // oscillator nodes for ambient bed
   initialized: false,
 };
+
+// Generate a synthetic impulse response for metallic interior reverb.
+// Simulates a large enclosed metal space (like the inside of a sphere/tunnel).
+function generateImpulseResponse(ctx, duration, decay, preDelay) {
+  const rate = ctx.sampleRate;
+  const len = Math.floor(rate * duration);
+  const preLen = Math.floor(rate * (preDelay || 0.01));
+  const buf = ctx.createBuffer(2, len, rate);
+  for (let ch = 0; ch < 2; ch++) {
+    const data = buf.getChannelData(ch);
+    for (let i = 0; i < len; i++) {
+      if (i < preLen) { data[i] = 0; continue; }
+      const t = (i - preLen) / (len - preLen);
+      // Exponential decay with early reflection bumps
+      let env = Math.exp(-t * decay);
+      // Early reflections: sharp spikes that give sense of enclosed space
+      if (t < 0.08) env += Math.exp(-t * 30) * 0.5 * (Math.random() > 0.7 ? 1 : 0);
+      // Metallic coloring: slight resonance
+      const noise = Math.random() * 2 - 1;
+      const metallic = noise * 0.7 + Math.sin(i * 0.15) * 0.2 + Math.sin(i * 0.37) * 0.1;
+      data[i] = metallic * env;
+    }
+  }
+  return buf;
+}
 
 function initAudio() {
   if (audio.initialized) return;
   try {
     audio.ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Master output
     audio.masterGain = audio.ctx.createGain();
     audio.masterGain.gain.value = 0.35;
     audio.masterGain.connect(audio.ctx.destination);
+
+    // Reverb chain: dry + wet mixed into master
+    audio.dryGain = audio.ctx.createGain();
+    audio.dryGain.gain.value = 0.75; // most signal is dry
+    audio.dryGain.connect(audio.masterGain);
+
+    audio.reverbGain = audio.ctx.createGain();
+    audio.reverbGain.gain.value = 0.35; // reverb is subtle
+    audio.reverbGain.connect(audio.masterGain);
+
+    // Convolver with synthetic impulse response
+    audio.convolver = audio.ctx.createConvolver();
+    audio.convolver.buffer = generateImpulseResponse(audio.ctx, 1.8, 4.5, 0.012);
+    audio.convolver.connect(audio.reverbGain);
+
+    // Ambient sound bed gain (separate from SFX)
+    audio.ambientGain = audio.ctx.createGain();
+    audio.ambientGain.gain.value = 0; // starts silent, fades in when playing
+    audio.ambientGain.connect(audio.ctx.destination);
+
     audio.initialized = true;
   } catch(e) { console.warn('Audio init failed:', e); }
 }
@@ -6366,12 +6662,107 @@ function resumeAudio() {
   if (audio.ctx && audio.ctx.state === 'suspended') audio.ctx.resume();
 }
 
+// ---- AMBIENT SOUND BED ----
+// Low-frequency drone + filtered noise hiss that modulates with player speed.
+// Creates sense of existing in a physical space.
+
+let ambientStarted = false;
+
+function startAmbientBed() {
+  if (ambientStarted || !audio.ctx) return;
+  ambientStarted = true;
+  const ctx = audio.ctx;
+
+  // Layer 1: Sub-bass drone (deep hum of the ship's reactor)
+  const drone1 = ctx.createOscillator();
+  drone1.type = 'sine';
+  drone1.frequency.value = 32; // barely audible fundamental
+  const drone1Gain = ctx.createGain();
+  drone1Gain.gain.value = 0.12;
+  drone1.connect(drone1Gain);
+  drone1Gain.connect(audio.ambientGain);
+  drone1.start();
+  audio.ambientNodes.push(drone1);
+
+  // Layer 2: Low sine fifth above (adds body)
+  const drone2 = ctx.createOscillator();
+  drone2.type = 'sine';
+  drone2.frequency.value = 48;
+  const drone2Gain = ctx.createGain();
+  drone2Gain.gain.value = 0.06;
+  drone2.connect(drone2Gain);
+  drone2Gain.connect(audio.ambientGain);
+  drone2.start();
+  audio.ambientNodes.push(drone2);
+
+  // Layer 3: Slow LFO modulating the drone (breathing, alive feel)
+  const lfo = ctx.createOscillator();
+  lfo.type = 'sine';
+  lfo.frequency.value = 0.15; // very slow
+  const lfoGain = ctx.createGain();
+  lfoGain.gain.value = 4; // modulates drone freq by +/- 4Hz
+  lfo.connect(lfoGain);
+  lfoGain.connect(drone1.frequency);
+  lfo.start();
+  audio.ambientNodes.push(lfo);
+
+  // Layer 4: Filtered white noise (life support / air circulation hiss)
+  const noiseLen = ctx.sampleRate * 4;
+  const noiseBuf = ctx.createBuffer(1, noiseLen, ctx.sampleRate);
+  const noiseData = noiseBuf.getChannelData(0);
+  for (let i = 0; i < noiseLen; i++) noiseData[i] = Math.random() * 2 - 1;
+  const noiseSrc = ctx.createBufferSource();
+  noiseSrc.buffer = noiseBuf;
+  noiseSrc.loop = true;
+  const noiseFilter = ctx.createBiquadFilter();
+  noiseFilter.type = 'bandpass';
+  noiseFilter.frequency.value = 400;
+  noiseFilter.Q.value = 0.5;
+  const noiseGain = ctx.createGain();
+  noiseGain.gain.value = 0.04;
+  noiseSrc.connect(noiseFilter);
+  noiseFilter.connect(noiseGain);
+  noiseGain.connect(audio.ambientGain);
+  noiseSrc.start();
+  audio.ambientNodes.push(noiseSrc);
+
+  // Store references for speed modulation
+  audio.ambientDrone1 = drone1;
+  audio.ambientDrone1Gain = drone1Gain;
+  audio.ambientNoiseFilter = noiseFilter;
+  audio.ambientNoiseGain = noiseGain;
+}
+
+// Modulate ambient bed based on player speed (faster = higher pitch, more noise)
+function updateAmbientBed() {
+  if (!ambientStarted || !audio.ctx || !player.velocity) return;
+  const speed = player.velocity ? player.velocity.length() : 0;
+  const maxSpeed = 800; // roughly max with afterburner
+  const t = Math.min(1, speed / maxSpeed);
+
+  // Fade ambient in when game is active
+  const targetVol = (game.state === 'playing' || game.state === 'warmup') ? 0.5 : 0.05;
+  audio.ambientGain.gain.value += (targetVol - audio.ambientGain.gain.value) * 0.02;
+
+  // Drone pitch rises slightly with speed
+  if (audio.ambientDrone1) {
+    audio.ambientDrone1.frequency.value = 32 + t * 18;
+  }
+  // Noise gets louder and higher-pitched with speed (wind/engine whine)
+  if (audio.ambientNoiseFilter) {
+    audio.ambientNoiseFilter.frequency.value = 400 + t * 1200;
+  }
+  if (audio.ambientNoiseGain) {
+    audio.ambientNoiseGain.gain.value = 0.04 + t * 0.08;
+  }
+}
+
 // Enhanced tri-chord helper with configurable ADSR envelopes.
 // envelope = { attack, hold, decay } (in seconds). Defaults to instant attack + exponential decay.
+// All SFX route through both dry and reverb (convolver) for spatial presence.
 function triChord(freqs, wave, vol, dur, rampFreqs, rampTime, startOffset, envelope) {
   const ctx = audio.ctx;
   const now = ctx.currentTime + (startOffset || 0);
-  const dest = audio.masterGain;
   const env = envelope || { attack: 0.003, hold: 0, decay: dur };
   freqs.forEach((freq, i) => {
     const osc = ctx.createOscillator();
@@ -6389,7 +6780,11 @@ function triChord(freqs, wave, vol, dur, rampFreqs, rampTime, startOffset, envel
       gain.gain.setValueAtTime(peakVol, now + env.attack + env.hold);
     }
     gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
-    osc.connect(gain); gain.connect(dest);
+    osc.connect(gain);
+    // Route to dry + reverb for spatial presence
+    if (audio.dryGain) gain.connect(audio.dryGain);
+    else gain.connect(audio.masterGain);
+    if (audio.convolver) gain.connect(audio.convolver);
     osc.start(now); osc.stop(now + dur + 0.01);
   });
 }
@@ -6419,7 +6814,10 @@ function playNoiseBurst(duration, volume, startTime, filterFreq, filterQ) {
   } else {
     src.connect(gain);
   }
-  gain.connect(audio.masterGain);
+  // Route to dry + reverb
+  if (audio.dryGain) gain.connect(audio.dryGain);
+  else gain.connect(audio.masterGain);
+  if (audio.convolver) gain.connect(audio.convolver);
   src.start(startTime);
 }
 
