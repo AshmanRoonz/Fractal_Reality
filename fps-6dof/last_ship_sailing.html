@@ -50,8 +50,49 @@ canvas { display: block; }
 #core-container { display: none; }
 
 /* Abilities (hidden; in circumpunct ring brackets) */
-#abilities { display: none; }
-.ability-slot { display: none; }
+#abilities {
+  position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px; z-index: 30; pointer-events: none;
+}
+.ability-slot {
+  position: relative; width: 72px; height: 52px;
+  border: 1px solid rgba(100,180,255,0.25); border-radius: 4px;
+  background: rgba(6,12,20,0.75); overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.ability-slot.on-cooldown { border-color: rgba(100,180,255,0.08); }
+.ability-slot.active-now { border-color: rgba(255,180,50,0.6); background: rgba(40,30,10,0.7); }
+.ability-slot.ready { border-color: rgba(80,220,255,0.4); }
+.ability-slot .ab-name {
+  font: bold 9px 'Courier New', monospace; color: rgba(180,220,255,0.8);
+  text-transform: uppercase; letter-spacing: 0.5px; text-align: center;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 68px;
+}
+.ability-slot.on-cooldown .ab-name { color: rgba(120,140,160,0.4); }
+.ability-slot.active-now .ab-name { color: rgba(255,200,80,0.9); }
+.ability-slot .ab-keys {
+  display: flex; gap: 4px; align-items: center; margin-top: 2px;
+}
+.ability-slot .ab-key {
+  font: bold 10px 'Courier New', monospace; color: rgba(180,220,255,0.5);
+  background: rgba(80,140,200,0.12); border: 1px solid rgba(100,180,255,0.2);
+  border-radius: 2px; padding: 0 3px; line-height: 14px;
+}
+.ability-slot.on-cooldown .ab-key { color: rgba(100,120,140,0.3); border-color: rgba(100,180,255,0.08); }
+.ability-slot.active-now .ab-key { color: rgba(255,200,80,0.7); border-color: rgba(255,180,50,0.3); }
+.ability-slot .ab-gp {
+  font: 8px 'Courier New', monospace; color: rgba(140,160,180,0.35);
+}
+.ability-slot .ab-cd-bar {
+  position: absolute; bottom: 0; left: 0; height: 3px;
+  background: rgba(80,200,255,0.6); transition: width 0.1s linear;
+}
+.ability-slot.active-now .ab-cd-bar { background: rgba(255,180,50,0.7); }
+.ability-slot .ab-cd-text {
+  font: bold 11px 'Courier New', monospace; color: rgba(200,220,240,0.5);
+  position: absolute; top: 2px; right: 4px;
+}
+.ability-slot.ready .ab-cd-text { display: none; }
 
 /* Weapon Info (hidden; ammo in circumpunct rings) */
 #weapon-info { display: none; }
@@ -266,8 +307,8 @@ canvas { display: block; }
       <div id="core-label">CORE</div>
       <div id="core-value">0%</div>
     </div>
-    <div id="abilities"></div>
   </div>
+  <div id="abilities"></div>
 
   <div id="weapon-info">
     <div id="weapon-name">Splitter Rifle</div>
@@ -515,7 +556,9 @@ const game = {
   particles: [],  // muzzle flash particles, sparks, etc.
   effects: [],
   killFeed: [],
-  levelBoxes: [], // AABB collision boxes for level geometry
+  levelBoxes: [],     // AABB collision boxes for obstacles
+  levelSpheres: [],   // sphere containment volumes (rooms)
+  levelCylinders: [], // cylinder containment volumes (tunnels)
   deltaTime: 0,
   time: 0,
   lastTime: 0,
@@ -1137,7 +1180,7 @@ function cleanupPendingHits() {
 // ---- THREE.JS SETUP ----
 
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x0a0520, 0.00004); // Deeper purple-tinted fog for cartoon space
+scene.fog = new THREE.FogExp2(0x0a0520, 0.000015); // Light fog; low density so indoor walls stay visible
 
 const camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 25000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -1406,16 +1449,11 @@ function checkBoxCollision(pos, radius) {
 }
 
 function resolveCollision(pos, velocity, radius) {
-  // Anti-magnetic wall repulsion: walls generate a strong short-range repulsive force.
-  // As you approach, the force ramps up steeply (inverse-square), pushing you away
-  // before you ever touch the surface. No clipping possible.
-  // Also includes a hard backstop if somehow inside the wall.
-  const REPULSE_RANGE = radius * 2.5; // force field starts at 2.5x radius from surface
-  const REPULSE_STRENGTH = 8000;      // base repulsion force
-  const HARD_PUSH = radius + 2;       // hard push-out distance (safety net)
+  // 1) Obstacle repulsion: push AWAY from obstacle boxes (pillars, platforms, etc.)
+  const REPULSE_RANGE = radius * 2.5;
+  const REPULSE_STRENGTH = 8000;
 
   for (const box of game.levelBoxes) {
-    // Closest point on box surface to our position
     const cx = Math.max(box.min.x, Math.min(pos.x, box.max.x));
     const cy = Math.max(box.min.y, Math.min(pos.y, box.max.y));
     const cz = Math.max(box.min.z, Math.min(pos.z, box.max.z));
@@ -1425,31 +1463,22 @@ function resolveCollision(pos, velocity, radius) {
     if (distSq < REPULSE_RANGE * REPULSE_RANGE) {
       const dist = Math.sqrt(distSq);
       const normal = new THREE.Vector3();
-
       if (dist < 0.1) {
-        // Inside or on the surface: push out along dominant axis
         const bx = (box.min.x + box.max.x) / 2;
         const by = (box.min.y + box.max.y) / 2;
         const bz = (box.min.z + box.max.z) / 2;
         normal.set(pos.x - bx, pos.y - by, pos.z - bz);
         if (normal.lengthSq() < 0.01) normal.set(0, 1, 0);
         normal.normalize();
-        pos.add(normal.clone().multiplyScalar(HARD_PUSH));
-        // Kill velocity into wall
+        pos.add(normal.clone().multiplyScalar(radius + 2));
         const vn = velocity.dot(normal);
         if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
       } else {
         normal.set(dx / dist, dy / dist, dz / dist);
-
-        // Repulsive force: inverse-square, very strong close up, gentle at range
         const penetration = REPULSE_RANGE - dist;
-        const ratio = penetration / REPULSE_RANGE; // 0 at edge, 1 at surface
-        const force = REPULSE_STRENGTH * ratio * ratio; // quadratic ramp
-
-        // Apply force as velocity change (frame-rate independent via dt approximation)
+        const ratio = penetration / REPULSE_RANGE;
+        const force = REPULSE_STRENGTH * ratio * ratio;
         velocity.add(normal.clone().multiplyScalar(force * (1/60)));
-
-        // Hard backstop: if actually overlapping, push out immediately
         if (dist < radius) {
           pos.add(normal.clone().multiplyScalar(radius - dist + 1));
           const vn = velocity.dot(normal);
@@ -1458,24 +1487,173 @@ function resolveCollision(pos, velocity, radius) {
       }
     }
   }
+
+  // 2) Containment: push INWARD to keep player inside the sphere/cylinder union.
+  // The player is "contained" if inside ANY sphere OR inside ANY cylinder.
+  // If near the wall of the current container, apply inward repulsion.
+  // If outside everything, hard-push to nearest interior.
+
+  const CONTAIN_RANGE = radius * 3;    // start pushing when this close to wall
+  const CONTAIN_STRENGTH = 12000;      // strong containment force
+  const spheres = game.levelSpheres || [];
+  const cylinders = game.levelCylinders || [];
+
+  // Find which containers the player is inside, and how close to each wall
+  let bestInside = null; // the container we're deepest inside (most margin from wall)
+  let bestMargin = -Infinity;
+
+  // Check spheres
+  for (const s of spheres) {
+    const dx = pos.x - s.cx, dy = pos.y - s.cy, dz = pos.z - s.cz;
+    const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+    const margin = s.r - dist; // positive = inside, negative = outside
+    if (margin > bestMargin) {
+      bestMargin = margin;
+      bestInside = { type: 'sphere', s, dist, dx, dy, dz };
+    }
+  }
+
+  // Check cylinders
+  for (const c of cylinders) {
+    // Project pos onto cylinder axis (a→b)
+    const abx = c.bx - c.ax, aby = c.by - c.ay, abz = c.bz - c.az;
+    const abLenSq = abx*abx + aby*aby + abz*abz;
+    if (abLenSq < 1) continue;
+    const apx = pos.x - c.ax, apy = pos.y - c.ay, apz = pos.z - c.az;
+    let t = (apx*abx + apy*aby + apz*abz) / abLenSq;
+    t = Math.max(-0.05, Math.min(1.05, t)); // slight overrun allowed at ends
+    // Closest point on axis
+    const cpx = c.ax + abx * t, cpy = c.ay + aby * t, cpz = c.az + abz * t;
+    const dx = pos.x - cpx, dy = pos.y - cpy, dz = pos.z - cpz;
+    const radDist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+    const margin = c.r - radDist;
+    if (margin > bestMargin) {
+      bestMargin = margin;
+      bestInside = { type: 'cylinder', c, radDist, dx, dy, dz, t };
+    }
+  }
+
+  if (!bestInside) return; // no geometry yet
+
+  if (bestMargin < CONTAIN_RANGE) {
+    // Near the wall (or outside): push inward
+    const normal = new THREE.Vector3();
+
+    if (bestInside.type === 'sphere') {
+      const s = bestInside.s;
+      const dist = bestInside.dist;
+      if (dist < 0.1) {
+        // At center; no push needed
+      } else {
+        // Normal points from pos toward center (inward)
+        normal.set(-bestInside.dx / dist, -bestInside.dy / dist, -bestInside.dz / dist);
+
+        if (bestMargin < 0) {
+          // Outside sphere: hard push inside
+          pos.add(normal.clone().multiplyScalar(-bestMargin + radius + 2));
+          const vn = velocity.dot(normal);
+          if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
+        } else {
+          // Inside but near wall: gentle containment force
+          const ratio = 1 - (bestMargin / CONTAIN_RANGE); // 0 at safe distance, 1 at wall
+          const force = CONTAIN_STRENGTH * ratio * ratio;
+          velocity.add(normal.clone().multiplyScalar(force * (1/60)));
+          if (bestMargin < radius) {
+            pos.add(normal.clone().multiplyScalar(radius - bestMargin + 1));
+            const vn = velocity.dot(normal);
+            if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
+          }
+        }
+      }
+    } else {
+      // Cylinder: push toward axis
+      const radDist = bestInside.radDist;
+      if (radDist < 0.1) {
+        // On axis; no radial push needed
+      } else {
+        normal.set(-bestInside.dx / radDist, -bestInside.dy / radDist, -bestInside.dz / radDist);
+
+        if (bestMargin < 0) {
+          pos.add(normal.clone().multiplyScalar(-bestMargin + radius + 2));
+          const vn = velocity.dot(normal);
+          if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
+        } else {
+          const ratio = 1 - (bestMargin / CONTAIN_RANGE);
+          const force = CONTAIN_STRENGTH * ratio * ratio;
+          velocity.add(normal.clone().multiplyScalar(force * (1/60)));
+          if (bestMargin < radius) {
+            pos.add(normal.clone().multiplyScalar(radius - bestMargin + 1));
+            const vn = velocity.dot(normal);
+            if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
+          }
+        }
+      }
+    }
+  }
 }
 
 function raycastLevel(origin, dir, maxDist) {
-  // Simple ray vs AABB test, returns distance to nearest hit (or maxDist)
+  // Ray vs obstacles (AABB boxes) + ray vs sphere/cylinder walls (containment boundaries).
+  // Returns distance to nearest wall/obstacle hit (or maxDist if clear path).
   let nearest = maxDist;
+
+  // 1) Ray vs obstacle boxes
   for (const box of game.levelBoxes) {
-    const tmin = new THREE.Vector3(), tmax = new THREE.Vector3();
     const invD = new THREE.Vector3(1/dir.x, 1/dir.y, 1/dir.z);
     const t1 = new THREE.Vector3().subVectors(box.min, origin).multiply(invD);
     const t2 = new THREE.Vector3().subVectors(box.max, origin).multiply(invD);
-    tmin.set(Math.min(t1.x, t2.x), Math.min(t1.y, t2.y), Math.min(t1.z, t2.z));
-    tmax.set(Math.max(t1.x, t2.x), Math.max(t1.y, t2.y), Math.max(t1.z, t2.z));
+    const tmin = new THREE.Vector3(Math.min(t1.x, t2.x), Math.min(t1.y, t2.y), Math.min(t1.z, t2.z));
+    const tmax = new THREE.Vector3(Math.max(t1.x, t2.x), Math.max(t1.y, t2.y), Math.max(t1.z, t2.z));
     const enter = Math.max(tmin.x, tmin.y, tmin.z);
     const exit = Math.min(tmax.x, tmax.y, tmax.z);
-    if (enter < exit && enter > 0 && enter < nearest) {
-      nearest = enter;
+    if (enter < exit && enter > 0 && enter < nearest) nearest = enter;
+  }
+
+  // 2) Ray vs sphere walls (ray exits sphere = hits wall from inside)
+  for (const s of (game.levelSpheres || [])) {
+    const ocx = origin.x - s.cx, ocy = origin.y - s.cy, ocz = origin.z - s.cz;
+    const a = dir.x*dir.x + dir.y*dir.y + dir.z*dir.z;
+    const b = 2 * (ocx*dir.x + ocy*dir.y + ocz*dir.z);
+    const c = ocx*ocx + ocy*ocy + ocz*ocz - s.r*s.r;
+    const disc = b*b - 4*a*c;
+    if (disc < 0) continue;
+    const sqrtD = Math.sqrt(disc);
+    // We want the EXIT point (farther intersection, since we're inside)
+    const t2 = (-b + sqrtD) / (2 * a);
+    if (t2 > 0 && t2 < nearest) nearest = t2;
+  }
+
+  // 3) Ray vs cylinder walls (infinite cylinder, clamped to segment)
+  for (const cyl of (game.levelCylinders || [])) {
+    const ax = cyl.ax, ay = cyl.ay, az = cyl.az;
+    const abx = cyl.bx - ax, aby = cyl.by - ay, abz = cyl.bz - az;
+    const abLen = Math.sqrt(abx*abx + aby*aby + abz*abz);
+    if (abLen < 1) continue;
+    // Solve for ray-cylinder intersection (infinite cylinder along axis)
+    const dax = dir.x, day = dir.y, daz = dir.z;
+    const ocx = origin.x - ax, ocy = origin.y - ay, ocz = origin.z - az;
+    const nax = abx/abLen, nay = aby/abLen, naz = abz/abLen;
+    // d_perp = dir - (dir.n)n, oc_perp = oc - (oc.n)n
+    const dn = dax*nax + day*nay + daz*naz;
+    const dpx = dax - dn*nax, dpy = day - dn*nay, dpz = daz - dn*naz;
+    const ocn = ocx*nax + ocy*nay + ocz*naz;
+    const opx = ocx - ocn*nax, opy = ocy - ocn*nay, opz = ocz - ocn*naz;
+    const A = dpx*dpx + dpy*dpy + dpz*dpz;
+    const B = 2*(dpx*opx + dpy*opy + dpz*opz);
+    const C = opx*opx + opy*opy + opz*opz - cyl.r*cyl.r;
+    const disc = B*B - 4*A*C;
+    if (disc < 0 || A < 1e-10) continue;
+    const sqrtD = Math.sqrt(disc);
+    const t2 = (-B + sqrtD) / (2*A); // exit point
+    if (t2 > 0 && t2 < nearest) {
+      // Check that hit point is within cylinder segment length
+      const hitT = ocn + dn * t2;
+      if (hitT >= -cyl.r * 0.1 && hitT <= abLen + cyl.r * 0.1) {
+        nearest = t2;
+      }
     }
   }
+
   return nearest;
 }
 
@@ -3972,19 +4150,21 @@ function drawCircumpunctHUD() {
     const baseY = H + 20 + recoilAmt + sway; // bottom (offscreen slightly)
     const tipY = H - gunLen + recoilAmt + sway; // top of gun (barrel end)
 
+    // Slide guns outward so ~2/3 of the base hangs off-screen
+    const gunSlide = gunBaseW * 0.66;
     let baseOuterX, baseInnerX, tipOuterX, tipInnerX;
     if (side === 0) {
-      // Left gun
-      baseOuterX = -10;                       // flush with left edge
-      baseInnerX = gunBaseW - 10;             // wide base
-      tipOuterX = tipInset - gunTipW;         // narrow tip, outer edge
-      tipInnerX = tipInset;                   // narrow tip, inner edge
+      // Left gun (shifted left)
+      baseOuterX = -10 - gunSlide;
+      baseInnerX = gunBaseW - 10 - gunSlide;
+      tipOuterX = tipInset - gunTipW - gunSlide * 0.35;
+      tipInnerX = tipInset - gunSlide * 0.35;
     } else {
-      // Right gun (mirrored)
-      baseOuterX = W + 10;                    // flush with right edge
-      baseInnerX = W - gunBaseW + 10;         // wide base
-      tipOuterX = W - tipInset + gunTipW;     // narrow tip, outer edge
-      tipInnerX = W - tipInset;               // narrow tip, inner edge
+      // Right gun (shifted right)
+      baseOuterX = W + 10 + gunSlide;
+      baseInnerX = W - gunBaseW + 10 + gunSlide;
+      tipOuterX = W - tipInset + gunTipW + gunSlide * 0.35;
+      tipInnerX = W - tipInset + gunSlide * 0.35;
     }
 
     // Main gun body (trapezoid: wide at bottom corner, narrow at barrel tip)
@@ -4131,6 +4311,9 @@ function updateHUD() {
 
   document.querySelector('.team-a').textContent = 'FLEET A: ' + game.scoreA;
   document.querySelector('.team-b').textContent = 'FLEET B: ' + game.scoreB;
+
+  // Update ability bar
+  updateAbilityHUD();
 }
 
 // ---- MINIMAP ----
@@ -4145,17 +4328,34 @@ function updateMinimap() {
   ctx.strokeStyle = 'rgba(80,80,120,0.4)';
   ctx.strokeRect(0, 0, 150, 150);
 
-  const scale = 150 / (LSS.ARENA_SIZE * 2);
+  // Auto-fit radar to actual level geometry
+  let mapExtent = 1000;
+  for (const s of (game.levelSpheres || [])) {
+    mapExtent = Math.max(mapExtent, Math.abs(s.cx) + s.r, Math.abs(s.cz) + s.r);
+  }
+  for (const c of (game.levelCylinders || [])) {
+    mapExtent = Math.max(mapExtent, Math.abs(c.ax) + c.r, Math.abs(c.bx) + c.r, Math.abs(c.az) + c.r, Math.abs(c.bz) + c.r);
+  }
+  mapExtent *= 1.15;
+  const scale = 150 / (mapExtent * 2);
   const cx = 75, cy = 75;
 
-  // Level geometry outlines
+  // Draw tunnel cylinders as lines
+  ctx.strokeStyle = 'rgba(60,70,100,0.35)';
+  ctx.lineWidth = 2;
+  for (const c of (game.levelCylinders || [])) {
+    const x1 = cx + c.ax * scale, y1 = cy - c.az * scale;
+    const x2 = cx + c.bx * scale, y2 = cy - c.bz * scale;
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  }
+
+  // Draw room spheres as circles
   ctx.fillStyle = 'rgba(80,80,120,0.2)';
-  for (const box of game.levelBoxes) {
-    const x1 = cx + box.min.x * scale;
-    const y1 = cy - box.max.z * scale;
-    const x2 = cx + box.max.x * scale;
-    const y2 = cy - box.min.z * scale;
-    ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
+  ctx.strokeStyle = 'rgba(80,90,130,0.4)';
+  ctx.lineWidth = 1;
+  for (const s of (game.levelSpheres || [])) {
+    const sx = cx + s.cx * scale, sy = cy - s.cz * scale, sr = s.r * scale;
+    ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
   }
 
   // Player
@@ -4236,25 +4436,86 @@ function buildAbilityHUD() {
   const container = document.getElementById('abilities');
   container.innerHTML = '';
   const keys = ['Q', 'E', 'F'];
+  const gpLabels = ['LB', 'RB', 'Y'];
+  const typeLabels = ['OFF', 'DEF', 'UTL'];
   for (let i = 0; i < 3; i++) {
     const ability = player.abilities[i];
     const slot = document.createElement('div');
     slot.className = 'ability-slot ready';
-    slot.innerHTML = `
-      <div class="key">${keys[i]}</div>
-      <div class="name">${ability ? ability.name : ''}</div>
-      <div class="cd-overlay" style="height:0%"></div>
-    `;
+    slot.id = 'ab-slot-' + i;
+    slot.innerHTML =
+      '<div class="ab-cd-text"></div>' +
+      '<div class="ab-name">' + (ability ? ability.name : '') + '</div>' +
+      '<div class="ab-keys">' +
+        '<span class="ab-key">' + keys[i] + '</span>' +
+        '<span class="ab-gp">' + gpLabels[i] + '</span>' +
+      '</div>' +
+      '<div class="ab-cd-bar" style="width:100%"></div>';
     container.appendChild(slot);
   }
+  // Core ability
   const coreSlot = document.createElement('div');
   coreSlot.className = 'ability-slot';
-  coreSlot.innerHTML = `
-    <div class="key">V</div>
-    <div class="name">${player.loadout.core.name}</div>
-    <div class="cd-overlay" style="height:100%"></div>
-  `;
+  coreSlot.id = 'ab-slot-core';
+  coreSlot.innerHTML =
+    '<div class="ab-cd-text"></div>' +
+    '<div class="ab-name">' + (player.loadout ? player.loadout.core.name : 'CORE') + '</div>' +
+    '<div class="ab-keys">' +
+      '<span class="ab-key">V</span>' +
+      '<span class="ab-gp">D^</span>' +
+    '</div>' +
+    '<div class="ab-cd-bar" style="width:0%"></div>';
   container.appendChild(coreSlot);
+}
+
+function updateAbilityHUD() {
+  for (let i = 0; i < 3; i++) {
+    const slot = document.getElementById('ab-slot-' + i);
+    if (!slot) continue;
+    const ability = player.abilities[i];
+    if (!ability) continue;
+    const cd = player.abilityCooldowns[i];
+    const active = player.abilityActive[i];
+    const maxCd = ability.cooldown || 1;
+    const ready = cd <= 0 && !active;
+
+    // Update class
+    slot.className = 'ability-slot' +
+      (active ? ' active-now' : cd > 0 ? ' on-cooldown' : ' ready');
+
+    // Cooldown bar (fills as it recharges; full = ready)
+    const bar = slot.querySelector('.ab-cd-bar');
+    if (bar) bar.style.width = (cd > 0 ? ((1 - cd / maxCd) * 100) : 100) + '%';
+
+    // Cooldown text
+    const cdText = slot.querySelector('.ab-cd-text');
+    if (cdText) {
+      if (active) { cdText.textContent = ''; }
+      else if (cd > 0) { cdText.textContent = Math.ceil(cd) + 's'; }
+      else { cdText.textContent = ''; }
+    }
+  }
+
+  // Core slot
+  const coreSlot = document.getElementById('ab-slot-core');
+  if (coreSlot) {
+    const corePct = Math.min(100, player.coreMeter) / 100;
+    const coreActive = player.coreActive;
+    const coreReady = player.coreReady && !coreActive;
+
+    coreSlot.className = 'ability-slot' +
+      (coreActive ? ' active-now' : coreReady ? ' ready' : ' on-cooldown');
+
+    const bar = coreSlot.querySelector('.ab-cd-bar');
+    if (bar) bar.style.width = (corePct * 100) + '%';
+
+    const cdText = coreSlot.querySelector('.ab-cd-text');
+    if (cdText) {
+      if (coreActive) { cdText.textContent = ''; }
+      else if (!coreReady) { cdText.textContent = Math.floor(player.coreMeter) + '%'; }
+      else { cdText.textContent = ''; }
+    }
+  }
 }
 
 // ---- SHIP SELECT SCREEN ----
@@ -4791,527 +5052,311 @@ function checkExecutions(dt) {
   if (!anyDoomed) document.getElementById('execution-prompt').style.display = 'none';
 }
 
-// ---- UNDERGROUND CITY MAP GENERATOR ----
-// Feng shui rules for multiplayer arenas, applied to underground cavern cities.
-// Rules: circuit flow, compression/release rhythm, volume variation,
-// 3-second rule, vertical layering, sightline control, spawn safety, center principle.
-// Chamber types: cavern (open), tunnel (connector), spawn (team start)
-// Sizes: small (skirmish), medium (firefight), large (arena)
+// ---- MAP: Carved from E=1 ----
+// Hard-coded symmetric arena. 5 hollow spheres + 8 hollow cylinders.
+// No randomness, no generation. Just clean geometry.
 
-// === UNDERGROUND CITY GENERATOR (feng shui rules) ===
-// 5v5 team combat; maps sized for 10 players.
+const SU = 150; // ship unit (Dreadnought hull + margin)
 
-// Ship unit = 150 (Dreadnought hull length + margin)
-// Chambers: 5x5x5 to 6x6x6 ships
-// Tunnels: 8-10 ships cross-section, variable aspect ratios
-const SHIP_UNIT = 150;
-
-const CAVERN_SIZES = {
-  small:  { rMin: SHIP_UNIT * 2.5, rMax: SHIP_UNIT * 3,   hMin: SHIP_UNIT * 2.5, hMax: SHIP_UNIT * 3 },
-  medium: { rMin: SHIP_UNIT * 2.5, rMax: SHIP_UNIT * 3,   hMin: SHIP_UNIT * 2.5, hMax: SHIP_UNIT * 3 },
-  large:  { rMin: SHIP_UNIT * 3,   rMax: SHIP_UNIT * 3.5, hMin: SHIP_UNIT * 3,   hMax: SHIP_UNIT * 3.5 },
-  spawn:  { rMin: SHIP_UNIT * 2.5, rMax: SHIP_UNIT * 3,   hMin: SHIP_UNIT * 2.5, hMax: SHIP_UNIT * 3 },
-};
-
-// Tunnel cross-section profiles (width x height in ship units, total area ~8-10 ships)
-const TUNNEL_PROFILES = [
-  { w: 3, h: 3 },   // square: 9 ships
-  { w: 4, h: 2 },   // wide flat: 8 ships
-  { w: 2, h: 4 },   // tall narrow: 8 ships
-  { w: 3, h: 3 },   // square again (weighted)
-  { w: 5, h: 2 },   // very wide: 10 ships
-  { w: 2, h: 5 },   // very tall: 10 ships
-  { w: 4, h: 3 },   // wide: 12 ships (generous)
-  { w: 1, h: 8 },   // slit: 8 ships (extreme)
-];
-
-// Embedded training data (compact): transition counts learned from 6 hand-crafted levels
-// --- Graph generation ---
-
-function rInt(lo, hi) { return lo + Math.floor(Math.random() * (hi - lo + 1)); }
-function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-function generateCavernGraph() {
-  // Layout: ring of chambers around a central hub, with spawn pockets on opposite ends.
-  // Guarantees circuit flow (Rule 1), rhythm (Rule 2), volume variation (Rule 3).
-  const nodes = []; // { id, type, size, x, y, z, radius, height }
-  const edges = []; // { from, to }
-
-  // Center hub (Rule 8: most connected node)
-  const hubS = CAVERN_SIZES.large;
-  const hubR = rInt(hubS.rMin, hubS.rMax);
-  const hubH = rInt(hubS.hMin, hubS.hMax);
-  nodes.push({ id: 'center', type: 'large', x: 0, y: 0, z: 0, radius: hubR, height: hubH });
-
-  // Ring of chambers around center (6-8 chambers forming a circuit)
-  const ringCount = 6 + Math.floor(Math.random() * 3); // 6-8
-  // Ring radius: hub + average chamber radius + tunnel length (~3s of flight)
-  const ringRadius = hubR + SHIP_UNIT * 3 + rInt(SHIP_UNIT * 5, SHIP_UNIT * 7);
-  const sizePattern = ['medium', 'small', 'medium', 'small', 'medium', 'small', 'medium', 'small'];
-
-  for (let i = 0; i < ringCount; i++) {
-    const angle = (i / ringCount) * Math.PI * 2;
-    const sz = sizePattern[i % sizePattern.length];
-    const s = CAVERN_SIZES[sz];
-    const r = rInt(s.rMin, s.rMax);
-    const h = rInt(s.hMin, s.hMax);
-    // Vertical variation: alternate heights
-    const yOff = (i % 3 === 0) ? rInt(-300, -100) : (i % 3 === 1) ? rInt(100, 300) : 0;
-    nodes.push({
-      id: 'ring_' + i, type: sz,
-      x: Math.round(Math.cos(angle) * ringRadius),
-      y: yOff,
-      z: Math.round(Math.sin(angle) * ringRadius),
-      radius: r, height: h
-    });
-
-    // Connect to center (Rule 1: flow; Rule 8: center is most connected)
-    edges.push({ from: 'center', to: 'ring_' + i });
-
-    // Connect to previous ring node (creates the circuit, Rule 1)
-    if (i > 0) {
-      edges.push({ from: 'ring_' + (i - 1), to: 'ring_' + i });
-    }
-  }
-  // Close the ring
-  edges.push({ from: 'ring_' + (ringCount - 1), to: 'ring_0' });
-
-  // Add 1-2 cross-connections across the ring for flanking routes
-  for (let c = 0; c < 2; c++) {
-    const i = Math.floor(Math.random() * ringCount);
-    const j = (i + Math.floor(ringCount / 2) + rInt(-1, 1) + ringCount) % ringCount;
-    if (i !== j) {
-      const eId = 'ring_' + i;
-      const eId2 = 'ring_' + j;
-      const exists = edges.some(e => (e.from === eId && e.to === eId2) || (e.from === eId2 && e.to === eId));
-      if (!exists) edges.push({ from: eId, to: eId2 });
-    }
-  }
-
-  // Spawn chambers: on opposite sides, connected to nearest ring nodes (Rule 7)
-  const spawnAS = CAVERN_SIZES.spawn;
-  const spawnDist = ringRadius + rInt(SHIP_UNIT * 4, SHIP_UNIT * 7);
-  nodes.push({
-    id: 'spawn_a', type: 'spawn', team: 'A',
-    x: -spawnDist, y: 0, z: rInt(-200, 200),
-    radius: rInt(spawnAS.rMin, spawnAS.rMax), height: rInt(spawnAS.hMin, spawnAS.hMax)
-  });
-  nodes.push({
-    id: 'spawn_b', type: 'spawn', team: 'B',
-    x: spawnDist, y: 0, z: rInt(-200, 200),
-    radius: rInt(spawnAS.rMin, spawnAS.rMax), height: rInt(spawnAS.hMin, spawnAS.hMax)
-  });
-
-  // Connect spawns to 2 nearest ring nodes each
-  const byDistA = [...nodes.filter(n => n.id.startsWith('ring_'))].sort((a, b) => {
-    const da = (a.x - nodes.find(n => n.id === 'spawn_a').x) ** 2 + (a.z - nodes.find(n => n.id === 'spawn_a').z) ** 2;
-    const db = (b.x - nodes.find(n => n.id === 'spawn_a').x) ** 2 + (b.z - nodes.find(n => n.id === 'spawn_a').z) ** 2;
-    return da - db;
-  });
-  edges.push({ from: 'spawn_a', to: byDistA[0].id });
-  edges.push({ from: 'spawn_a', to: byDistA[1].id });
-
-  const byDistB = [...nodes.filter(n => n.id.startsWith('ring_'))].sort((a, b) => {
-    const da = (a.x - nodes.find(n => n.id === 'spawn_b').x) ** 2 + (a.z - nodes.find(n => n.id === 'spawn_b').z) ** 2;
-    const db = (b.x - nodes.find(n => n.id === 'spawn_b').x) ** 2 + (b.z - nodes.find(n => n.id === 'spawn_b').z) ** 2;
-    return da - db;
-  });
-  edges.push({ from: 'spawn_b', to: byDistB[0].id });
-  edges.push({ from: 'spawn_b', to: byDistB[1].id });
-
-  // Optional: 1-2 small side-chambers hanging off ring nodes (dead-end pockets for ambush)
-  const sideCount = 1 + Math.floor(Math.random() * 2);
-  for (let s = 0; s < sideCount; s++) {
-    const parent = pick(nodes.filter(n => n.type === 'medium'));
-    if (!parent) continue;
-    const angle = Math.random() * Math.PI * 2;
-    const dist = parent.radius + rInt(SHIP_UNIT * 4, SHIP_UNIT * 6);
-    const ss = CAVERN_SIZES.small;
-    nodes.push({
-      id: 'side_' + s, type: 'small',
-      x: Math.round(parent.x + Math.cos(angle) * dist),
-      y: parent.y + rInt(-200, 200),
-      z: Math.round(parent.z + Math.sin(angle) * dist),
-      radius: rInt(ss.rMin, ss.rMax), height: rInt(ss.hMin, ss.hMax)
-    });
-    edges.push({ from: parent.id, to: 'side_' + s });
-    // Rule 1 exception: side pockets can have 1 exit (ambush spots)
-    // But connect to another ring node if close enough for flow
-    const nearby = nodes.filter(n => n.id !== parent.id && n.id !== 'side_' + s && !n.id.startsWith('spawn'));
-    for (const nb of nearby) {
-      const d = Math.sqrt((nb.x - nodes[nodes.length - 1].x) ** 2 + (nb.z - nodes[nodes.length - 1].z) ** 2);
-      if (d < SHIP_UNIT * 10 && Math.random() < 0.4) {
-        edges.push({ from: 'side_' + s, to: nb.id });
-        break;
-      }
-    }
-  }
-
-  // Name generation (underground city themed)
-  const prefixes = ['Deep', 'Hollow', 'Buried', 'Sunken', 'Lost', 'Iron', 'Crystal', 'Obsidian', 'Ember', 'Void', 'Ancient', 'Frozen'];
-  const suffixes = ['Citadel', 'Warren', 'Depths', 'Catacombs', 'Hollows', 'Undercity', 'Caverns', 'Mines', 'Abyss', 'Forge', 'Grotto', 'Sanctum'];
-  const name = pick(prefixes) + ' ' + pick(suffixes);
-
-  // Assign tunnel profiles to each edge (start and end profiles can differ for morphing)
-  for (const edge of edges) {
-    edge.profileStart = pick(TUNNEL_PROFILES);
-    // 50% chance the tunnel morphs to a different cross-section
-    edge.profileEnd = Math.random() < 0.5 ? pick(TUNNEL_PROFILES) : edge.profileStart;
-  }
-
-  return { name, nodes, edges };
-}
-
-function validateCavernGraph(graph) {
-  // BFS: all nodes reachable from spawn_a, and spawn_b is reachable
-  const adj = {};
-  graph.nodes.forEach(n => { adj[n.id] = []; });
-  graph.edges.forEach(e => {
-    if (adj[e.from]) adj[e.from].push(e.to);
-    if (adj[e.to]) adj[e.to].push(e.from);
-  });
-  const visited = new Set();
-  const queue = ['spawn_a'];
-  while (queue.length > 0) {
-    const cur = queue.shift();
-    if (visited.has(cur)) continue;
-    visited.add(cur);
-    (adj[cur] || []).forEach(n => { if (!visited.has(n)) queue.push(n); });
-  }
-  return visited.has('spawn_b') && visited.size === graph.nodes.length;
-}
-
-// ---- MAP GENERATION (Underground City) ----
+// Hard-coded map: "The Circumpunct"
+// 5 hollow spheres + 8 hollow cylinder tunnels. Zero obstacles.
+// Layout matches Ashman's hand-drawn diagram (viewed from above):
+//
+//       readyA -------- readyB        (top row, two parallel short tunnels)
+//       / |  \        / |  \
+//      /  |   \      /  |   \
+//  spawnA |  center  | spawnB         (bottom row)
+//      \  |          |  /
+//       \_|_curved___|_/              (long curved tunnels to center)
 
 function getNextMap() {
-  // Generate a fresh underground city each round
-  for (let i = 0; i < 30; i++) {
-    const graph = generateCavernGraph();
-    if (validateCavernGraph(graph)) return graph;
-  }
-  return generateCavernGraph(); // fallback
+  return { name: 'The Circumpunct' };
 }
-
-function shuffleMapRotation() {
-  // No-op; each round generates a new map
-}
-
-// ---- UNDERGROUND CITY GEOMETRY BUILDER ----
-// Converts a cavern graph into 3D geometry (collision boxes, meshes, spawn points).
-// Caverns are irregular volumes (beveled boxes). Tunnels are box corridors.
-// Internal structures provide cover and height variation (Rule 5).
+function shuffleMapRotation() {}
 
 function buildRoomGraphLevel(level) {
-  // Clear old geometry
+  // Nuke old geometry
   for (const m of game.mapMeshes) { if (m.parent) scene.remove(m); }
   game.mapMeshes = [];
   game.levelBoxes = [];
+  game.levelSpheres = [];
+  game.levelCylinders = [];
   game.corridorPoints = [];
   game.currentLevel = level;
   game.mapWord = level.name;
 
-  const WALL = 60;
-  const nodes = level.nodes;
-  const edges = level.edges;
+  // --- ROOM POSITIONS (matching the diagram) ---
+  // X = left/right, Z = forward/back (top of diagram = +Z)
+  // Using Z as the "up" axis in the top-down view
+  const rooms = [
+    { id: 'center',  team: null, x: 0,       y: 0, z: 0,       r: SU * 3.5 },
+    { id: 'spawn_a', team: 'A',  x: -SU * 9, y: 0, z: -SU * 4, r: SU * 2.5 },
+    { id: 'spawn_b', team: 'B',  x:  SU * 9, y: 0, z: -SU * 4, r: SU * 2.5 },
+    { id: 'ready_a', team: null, x: -SU * 5, y: 0, z:  SU * 7, r: SU * 2.5 },
+    { id: 'ready_b', team: null, x:  SU * 5, y: 0, z:  SU * 7, r: SU * 2.5 },
+  ];
 
-  // Underground city palette: dark stone, glowing accents
-  const cavernColors = {
-    large:  { main: 0x334455, emissive: 0x112233, accent: 0x4488cc },
-    medium: { main: 0x3a3a4a, emissive: 0x1a1a2a, accent: 0x66aadd },
-    small:  { main: 0x404050, emissive: 0x202030, accent: 0x55cc88 },
-    spawn:  { main: 0x2a3a2a, emissive: 0x0a1a0a, accent: 0x44ff88 },
-  };
+  // --- TUNNEL DEFINITIONS ---
+  const TR = SU * 1.2; // tunnel radius (slightly tighter than rooms)
 
-  const outlineMat = new THREE.LineBasicMaterial({ color: 0x556677, linewidth: 1 });
-  const coverMat = new THREE.MeshToonMaterial({ color: 0x556666 });
-  const glowMat = new THREE.MeshBasicMaterial({ color: 0x4488cc, transparent: true, opacity: 0.3 });
+  const tunnels = [
+    // 1: Spawn A → Center (long CURVED; 3 segments so you can't see through)
+    { path: [
+      {x: -SU*9, y: 0, z: -SU*4},
+      {x: -SU*7, y: 0, z:  SU*2},
+      {x: -SU*3, y: 0, z:  SU*3},
+      {x:  0,    y: 0, z:  0}
+    ]},
+    // 2: Spawn B → Center (long CURVED; mirror of above)
+    { path: [
+      {x:  SU*9, y: 0, z: -SU*4},
+      {x:  SU*7, y: 0, z:  SU*2},
+      {x:  SU*3, y: 0, z:  SU*3},
+      {x:  0,    y: 0, z:  0}
+    ]},
+    // 3: Spawn A → Ready A (medium, diagonal)
+    { path: [
+      {x: -SU*9, y: 0, z: -SU*4},
+      {x: -SU*5, y: 0, z:  SU*7}
+    ]},
+    // 4: Spawn B → Ready B (medium, diagonal)
+    { path: [
+      {x:  SU*9, y: 0, z: -SU*4},
+      {x:  SU*5, y: 0, z:  SU*7}
+    ]},
+    // 5: Ready A → Ready B (short, upper parallel path; slight +Y offset)
+    { path: [
+      {x: -SU*5, y:  SU*1.2, z: SU*7},
+      {x:  SU*5, y:  SU*1.2, z: SU*7}
+    ]},
+    // 6: Ready A → Ready B (short, lower parallel path; slight -Y offset)
+    { path: [
+      {x: -SU*5, y: -SU*1.2, z: SU*7},
+      {x:  SU*5, y: -SU*1.2, z: SU*7}
+    ]},
+    // 7: Ready A → Center (short, diagonal down)
+    { path: [
+      {x: -SU*5, y: 0, z: SU*7},
+      {x:  0,    y: 0, z: 0}
+    ]},
+    // 8: Ready B → Center (short, diagonal down)
+    { path: [
+      {x:  SU*5, y: 0, z: SU*7},
+      {x:  0,    y: 0, z: 0}
+    ]},
+  ];
 
-  function makeCavernMat(type, variant) {
-    const c = cavernColors[type] || cavernColors.medium;
-    if (variant === 'floor') return new THREE.MeshToonMaterial({ color: new THREE.Color(c.main).multiplyScalar(0.5) });
-    if (variant === 'ceiling') return new THREE.MeshToonMaterial({ color: new THREE.Color(c.main).multiplyScalar(0.35) });
-    return new THREE.MeshToonMaterial({ color: c.main });
-  }
-
-  // Helper: add a box with collision and outline
-  function addBox(x, y, z, w, h, d, mat, addCollision) {
-    const geo = new THREE.BoxGeometry(w, h, d);
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(x, y, z);
-    scene.add(mesh);
-    game.mapMeshes.push(mesh);
-
-    const edgeGeo = new THREE.EdgesGeometry(geo);
-    const outline = new THREE.LineSegments(edgeGeo, outlineMat);
-    outline.position.copy(mesh.position);
-    scene.add(outline);
-    game.mapMeshes.push(outline);
-
-    if (addCollision !== false) {
-      game.levelBoxes.push({
-        min: new THREE.Vector3(x - w/2, y - h/2, z - d/2),
-        max: new THREE.Vector3(x + w/2, y + h/2, z + d/2),
-      });
+  // --- PRE-COMPUTE CYLINDER SEGMENTS (world-space endpoints) ---
+  const cylSegs = [];
+  for (const tun of tunnels) {
+    for (let p = 0; p < tun.path.length - 1; p++) {
+      const a = tun.path[p], b = tun.path[p + 1];
+      const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z;
+      const len = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      if (len > 10) cylSegs.push({ a, b, dx, dy, dz, len, r: TR });
     }
-    return mesh;
   }
 
-  // Build lookup for adjacency (which nodes connect to each node)
-  const adj = {};
-  nodes.forEach(n => { adj[n.id] = []; });
-  edges.forEach(e => {
-    adj[e.from].push(e.to);
-    adj[e.to].push(e.from);
+  // --- SHADER SOURCE (pixel-perfect carving; clean flat walls) ---
+  const vertSrc = [
+    'varying vec3 vWorldPos;',
+    'void main() {',
+    '  vec4 wp = modelMatrix * vec4(position, 1.0);',
+    '  vWorldPos = wp.xyz;',
+    '  gl_Position = projectionMatrix * viewMatrix * wp;',
+    '}'
+  ].join('\n');
+
+  // Shared: cylinder-inside test (used by both shaders)
+  const cylTestFunc = [
+    '#define MC 16',
+    'uniform vec3 cA[MC];',
+    'uniform vec3 cB[MC];',
+    'uniform float cR[MC];',
+    'bool inCyl(vec3 p, int idx) {',
+    '  vec3 ab = cB[idx] - cA[idx];',
+    '  float len2 = dot(ab, ab);',
+    '  if (len2 < 1.0) return false;',
+    '  float t = clamp(dot(p - cA[idx], ab) / len2, 0.0, 1.0);',
+    '  vec3 cl = cA[idx] + ab * t;',
+    '  vec3 d = p - cl;',
+    '  return dot(d, d) < cR[idx] * cR[idx];',
+    '}'
+  ].join('\n');
+
+  // Shared: procedural grid for depth perception
+  const gridFunc = [
+    'vec3 grid(vec3 wp, vec3 base) {',
+    '  float s = 0.00667;',
+    '  vec3 g = wp * s;',
+    '  float lx = abs(fract(g.x) - 0.5);',
+    '  float ly = abs(fract(g.y) - 0.5);',
+    '  float lz = abs(fract(g.z) - 0.5);',
+    '  float m = 1.0 - smoothstep(0.0, 0.02, min(min(lx, ly), lz));',
+    '  return mix(base, vec3(0.08, 0.18, 0.3), m * 0.5);',
+    '}'
+  ].join('\n');
+
+  // Fragment for SPHERE meshes: discard if inside any cylinder
+  const fragSphereSrc = [
+    'uniform vec3 wCol;',
+    'varying vec3 vWorldPos;',
+    cylTestFunc,
+    gridFunc,
+    'void main() {',
+    '  for (int i = 0; i < MC; i++) {',
+    '    if (cR[i] < 1.0) continue;',
+    '    if (inCyl(vWorldPos, i)) discard;',
+    '  }',
+    '  gl_FragColor = vec4(grid(vWorldPos, wCol), 1.0);',
+    '}'
+  ].join('\n');
+
+  // Fragment for CYLINDER meshes: discard if inside any sphere OR any OTHER cylinder
+  const fragCylSrc = [
+    '#define MS 8',
+    'uniform vec3 sC[MS];',
+    'uniform float sR[MS];',
+    'uniform float selfIdx;',
+    'uniform vec3 wCol;',
+    'varying vec3 vWorldPos;',
+    cylTestFunc,
+    gridFunc,
+    'void main() {',
+    '  for (int i = 0; i < MS; i++) {',
+    '    if (sR[i] < 1.0) continue;',
+    '    vec3 d = vWorldPos - sC[i];',
+    '    if (dot(d, d) < sR[i] * sR[i]) discard;',
+    '  }',
+    '  for (int i = 0; i < MC; i++) {',
+    '    if (cR[i] < 1.0) continue;',
+    '    if (abs(float(i) - selfIdx) < 0.5) continue;',
+    '    if (inCyl(vWorldPos, i)) discard;',
+    '  }',
+    '  gl_FragColor = vec4(grid(vWorldPos, wCol), 1.0);',
+    '}'
+  ].join('\n');
+
+  // --- BUILD UNIFORM ARRAYS ---
+  const cylAArr = [], cylBArr = [], cylRArr = [];
+  for (const seg of cylSegs) {
+    cylAArr.push(new THREE.Vector3(seg.a.x, seg.a.y, seg.a.z));
+    cylBArr.push(new THREE.Vector3(seg.b.x, seg.b.y, seg.b.z));
+    cylRArr.push(seg.r);
+  }
+  while (cylAArr.length < 16) { cylAArr.push(new THREE.Vector3()); cylBArr.push(new THREE.Vector3()); cylRArr.push(0); }
+
+  const sphCArr = [], sphRArr = [];
+  for (const rm of rooms) {
+    sphCArr.push(new THREE.Vector3(rm.x, rm.y, rm.z));
+    sphRArr.push(rm.r);
+  }
+  while (sphCArr.length < 8) { sphCArr.push(new THREE.Vector3()); sphRArr.push(0); }
+
+  // --- CREATE SHADER MATERIALS ---
+  const sphereMat = new THREE.ShaderMaterial({
+    vertexShader: vertSrc, fragmentShader: fragSphereSrc, side: THREE.BackSide,
+    uniforms: { cA: {value: cylAArr}, cB: {value: cylBArr}, cR: {value: cylRArr}, wCol: {value: new THREE.Color(0x0c1822)} }
   });
-
-  // --- Build each cavern chamber ---
-  for (const node of nodes) {
-    const cx = node.x, cy = node.y, cz = node.z;
-    const r = node.radius, h = node.height;
-    const type = node.type;
-
-    // Cavern shell: floor, ceiling, and walls
-    // Floor
-    addBox(cx, cy - h/2 - WALL/2, cz, r * 2 + WALL * 2, WALL, r * 2 + WALL * 2, makeCavernMat(type, 'floor'));
-    // Ceiling
-    addBox(cx, cy + h/2 + WALL/2, cz, r * 2 + WALL * 2, WALL, r * 2 + WALL * 2, makeCavernMat(type, 'ceiling'));
-
-    // Walls: 4 sides, with gaps for connected tunnels
-    const wallGaps = { north: [], south: [], east: [], west: [] };
-
-    // Compute gap positions for each connected edge (gap matches tunnel profile)
-    for (const neighborId of (adj[node.id] || [])) {
-      const neighbor = nodes.find(n => n.id === neighborId);
-      if (!neighbor) continue;
-
-      // Find the edge to get its tunnel profile
-      const edge = edges.find(e =>
-        (e.from === node.id && e.to === neighborId) ||
-        (e.to === node.id && e.from === neighborId));
-      // Use the profile at this node's end
-      const prof = edge ? (edge.from === node.id ? edge.profileStart : edge.profileEnd) : { w: 3, h: 3 };
-
-      const dx = neighbor.x - node.x;
-      const dz = neighbor.z - node.z;
-      const isXDir = Math.abs(dx) > Math.abs(dz);
-      // Gap width on the wall = the tunnel's lateral dimension at this end
-      const gapSize = (isXDir ? prof.w : prof.w) * SHIP_UNIT + 40;
-
-      if (isXDir) {
-        const gapZ = node.z + dz * 0.2;
-        if (dx > 0) wallGaps.east.push({ center: gapZ, width: gapSize });
-        else wallGaps.west.push({ center: gapZ, width: gapSize });
-      } else {
-        const gapX = node.x + dx * 0.2;
-        if (dz > 0) wallGaps.south.push({ center: gapX, width: gapSize });
-        else wallGaps.north.push({ center: gapX, width: gapSize });
+  // Cylinder materials: one per segment (each knows its own index to skip self-check)
+  function makeCylMat(idx) {
+    return new THREE.ShaderMaterial({
+      vertexShader: vertSrc, fragmentShader: fragCylSrc, side: THREE.BackSide,
+      uniforms: {
+        sC: {value: sphCArr}, sR: {value: sphRArr},
+        cA: {value: cylAArr}, cB: {value: cylBArr}, cR: {value: cylRArr},
+        selfIdx: {value: idx}, wCol: {value: new THREE.Color(0x0a1320)}
       }
+    });
+  }
+
+  // --- BUILD SPHERES (no wireframe overlays) ---
+  for (const rm of rooms) {
+    const geo = new THREE.SphereGeometry(rm.r, 32, 24);
+
+    const mesh = new THREE.Mesh(geo, sphereMat);
+    mesh.position.set(rm.x, rm.y, rm.z);
+    mesh.renderOrder = -10;
+    scene.add(mesh); game.mapMeshes.push(mesh);
+
+    // Containment collision (full sphere for physics)
+    game.levelSpheres.push({ cx: rm.x, cy: rm.y, cz: rm.z, r: rm.r });
+
+    // Lights
+    const intensity = rm.id === 'center' ? 1.2 : 0.8;
+    const li = new THREE.PointLight(0x6699cc, intensity, rm.r * 4);
+    li.position.set(rm.x, rm.y, rm.z);
+    scene.add(li); game.mapMeshes.push(li);
+
+    if (rm.id === 'spawn_a') {
+      const al = new THREE.PointLight(0xff4444, 0.4, rm.r * 2);
+      al.position.set(rm.x, rm.y, rm.z);
+      scene.add(al); game.mapMeshes.push(al);
+    } else if (rm.id === 'spawn_b') {
+      const al = new THREE.PointLight(0x44ff44, 0.4, rm.r * 2);
+      al.position.set(rm.x, rm.y, rm.z);
+      scene.add(al); game.mapMeshes.push(al);
     }
 
-    // Build walls with gaps
-    function buildWall(wallX, wallZ, wallW, wallD, isXWall, gaps) {
-      if (gaps.length === 0) {
-        addBox(wallX, cy, wallZ, wallW, h, wallD, makeCavernMat(type, 'wall'));
-        return;
-      }
-      const wallStart = isXWall ? (cz - r) : (cx - r);
-      const wallEnd = isXWall ? (cz + r) : (cx + r);
-      const intervals = gaps.map(g => ({
-        lo: g.center - g.width / 2,
-        hi: g.center + g.width / 2
-      })).sort((a, b) => a.lo - b.lo);
-
-      const MIN_GAP = SHIP_UNIT * 2; // minimum 2 ships wide gap
-      let cursor = wallStart;
-      for (const gap of intervals) {
-        let gapLo = Math.max(wallStart, gap.lo);
-        let gapHi = Math.min(wallEnd, gap.hi);
-        if (gapHi - gapLo < MIN_GAP) {
-          const mid = (gapLo + gapHi) / 2;
-          gapLo = Math.max(wallStart, mid - MIN_GAP / 2);
-          gapHi = Math.min(wallEnd, gapLo + MIN_GAP);
-          gapLo = Math.max(wallStart, gapHi - MIN_GAP);
-        }
-        if (cursor < gapLo - 10) {
-          const segLen = gapLo - cursor;
-          if (isXWall) {
-            addBox(wallX, cy, cursor + segLen / 2, wallW, h, segLen, makeCavernMat(type, 'wall'));
-          } else {
-            addBox(cursor + segLen / 2, cy, wallZ, segLen, h, wallD, makeCavernMat(type, 'wall'));
+    // Spawn/corridor points inside sphere (3D grid within 50% of radius)
+    const innerR = rm.r * 0.5;
+    const step = SU * 1.2;
+    for (let sx = rm.x - innerR; sx <= rm.x + innerR; sx += step) {
+      for (let sy = rm.y - innerR; sy <= rm.y + innerR; sy += step) {
+        for (let sz = rm.z - innerR; sz <= rm.z + innerR; sz += step) {
+          if ((sx - rm.x) ** 2 + (sy - rm.y) ** 2 + (sz - rm.z) ** 2 < innerR * innerR) {
+            game.corridorPoints.push({ x: sx, y: sy, z: sz, roomId: rm.id, roomType: rm.id, team: rm.team });
           }
         }
-        cursor = gapHi;
-      }
-      if (cursor < wallEnd - 10) {
-        const segLen = wallEnd - cursor;
-        if (isXWall) {
-          addBox(wallX, cy, cursor + segLen / 2, wallW, h, segLen, makeCavernMat(type, 'wall'));
-        } else {
-          addBox(cursor + segLen / 2, cy, wallZ, segLen, h, wallD, makeCavernMat(type, 'wall'));
-        }
-      }
-    }
-
-    buildWall(cx, cz - r - WALL / 2, r * 2 + WALL * 2, WALL, false, wallGaps.north);
-    buildWall(cx, cz + r + WALL / 2, r * 2 + WALL * 2, WALL, false, wallGaps.south);
-    buildWall(cx - r - WALL / 2, cz, WALL, r * 2, true, wallGaps.west);
-    buildWall(cx + r + WALL / 2, cz, WALL, r * 2, true, wallGaps.east);
-
-    // --- Internal cover structures (Rule 5: vertical layering, 30%+ volume occupied) ---
-    if (type === 'large' || type === 'medium') {
-      const numStructures = type === 'large' ? rInt(5, 8) : rInt(2, 4);
-      for (let i = 0; i < numStructures; i++) {
-        const ox = cx + (Math.random() - 0.5) * r * 1.2;
-        const oz = cz + (Math.random() - 0.5) * r * 1.2;
-        const kind = Math.random();
-
-        if (kind < 0.3) {
-          // Pillar (floor to ceiling)
-          const pr = 25 + Math.random() * 40;
-          const geo = new THREE.CylinderGeometry(pr, pr, h * 0.9, 8);
-          const mesh = new THREE.Mesh(geo, coverMat);
-          mesh.position.set(ox, cy, oz);
-          scene.add(mesh); game.mapMeshes.push(mesh);
-          game.levelBoxes.push({
-            min: new THREE.Vector3(ox - pr, cy - h * 0.45, oz - pr),
-            max: new THREE.Vector3(ox + pr, cy + h * 0.45, oz + pr),
-          });
-        } else if (kind < 0.6) {
-          // Platform (floating slab)
-          const pw = rInt(80, 200), pd = rInt(80, 200), ph = 30;
-          const py = cy + (Math.random() - 0.5) * h * 0.5;
-          addBox(ox, py, oz, pw, ph, pd, coverMat);
-        } else if (kind < 0.8) {
-          // Wall segment / barricade
-          const bw = rInt(100, 250), bh = rInt(150, 400), bd = 40;
-          const angle = Math.random() * Math.PI;
-          addBox(ox, cy, oz, bw, bh, bd, coverMat);
-        } else {
-          // Building block (multi-story cover)
-          const bw = rInt(120, 250), bh = rInt(200, h * 0.6), bd = rInt(120, 250);
-          addBox(ox, cy - h / 2 + bh / 2 + WALL, oz, bw, bh, bd, coverMat);
-        }
-      }
-    }
-
-    // Small caverns get 1-2 cover pieces
-    if (type === 'small') {
-      const nc = rInt(1, 2);
-      for (let i = 0; i < nc; i++) {
-        const ox = cx + (Math.random() - 0.5) * r * 0.8;
-        const oz = cz + (Math.random() - 0.5) * r * 0.8;
-        const bw = rInt(60, 120), bh = rInt(100, 300), bd = rInt(60, 120);
-        addBox(ox, cy, oz, bw, bh, bd, coverMat);
-      }
-    }
-
-    // Glowing accent strips on floor (city lights)
-    const accentColor = cavernColors[type] ? cavernColors[type].accent : 0x4488cc;
-    const accentMat = new THREE.MeshBasicMaterial({ color: accentColor, transparent: true, opacity: 0.25 });
-    for (let i = 0; i < 4; i++) {
-      const sx = cx + (Math.random() - 0.5) * r * 1.2;
-      const sz = cz + (Math.random() - 0.5) * r * 1.2;
-      const stripe = new THREE.Mesh(new THREE.BoxGeometry(r * 0.12, 3, r * 0.12), accentMat);
-      stripe.position.set(sx, cy - h / 2 + 2, sz);
-      stripe.rotation.y = Math.random() * Math.PI;
-      scene.add(stripe); game.mapMeshes.push(stripe);
-    }
-
-    // Register spawn/corridor points inside this chamber
-    const step = 180;
-    for (let sx = cx - r + step / 2; sx <= cx + r - step / 2; sx += step) {
-      for (let sz = cz - r + step / 2; sz <= cz + r - step / 2; sz += step) {
-        game.corridorPoints.push({
-          x: sx, y: cy, z: sz,
-          roomId: node.id, roomType: type, team: node.team || null
-        });
       }
     }
   }
 
-  // --- Build tunnels with variable cross-sections ---
-  const builtTunnels = new Set();
-  for (const edge of edges) {
-    const key = [edge.from, edge.to].sort().join('_');
-    if (builtTunnels.has(key)) continue;
-    builtTunnels.add(key);
+  // --- BUILD CYLINDERS (no wireframe overlays, no overlap) ---
+  for (let ci = 0; ci < cylSegs.length; ci++) {
+    const seg = cylSegs[ci];
+    const segLen = seg.len;
 
-    const a = nodes.find(n => n.id === edge.from);
-    const b = nodes.find(n => n.id === edge.to);
-    if (!a || !b) continue;
+    // Open-ended cylinder; exact length (shader handles carving at sphere boundaries)
+    const geo = new THREE.CylinderGeometry(TR, TR, segLen, 16, 1, true);
+    const midX = (seg.a.x + seg.b.x) / 2, midY = (seg.a.y + seg.b.y) / 2, midZ = (seg.a.z + seg.b.z) / 2;
+    const dir = new THREE.Vector3(seg.dx, seg.dy, seg.dz).normalize();
+    const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
 
-    const dx = b.x - a.x, dz = b.z - a.z;
-    const dist = Math.sqrt(dx * dx + dz * dz);
-    if (dist < 1) continue;
-    const dirX = dx / dist, dirZ = dz / dist;
+    const mesh = new THREE.Mesh(geo, makeCylMat(ci));
+    mesh.position.set(midX, midY, midZ);
+    mesh.quaternion.copy(quat);
+    mesh.renderOrder = -10;
+    scene.add(mesh); game.mapMeshes.push(mesh);
 
-    const startX = a.x + dirX * a.radius;
-    const startZ = a.z + dirZ * a.radius;
-    const endX = b.x - dirX * b.radius;
-    const endZ = b.z - dirZ * b.radius;
-    const startY = a.y, endY = b.y;
+    // Containment collision (full cylinder for physics)
+    game.levelCylinders.push({ ax: seg.a.x, ay: seg.a.y, az: seg.a.z, bx: seg.b.x, by: seg.b.y, bz: seg.b.z, r: TR });
 
-    const tunDx = endX - startX, tunDz = endZ - startZ, tunDy = endY - startY;
-    const tunDist = Math.sqrt(tunDx * tunDx + tunDz * tunDz + tunDy * tunDy);
-    if (tunDist < 50) continue;
-
-    // Profile at start and end (width x height in ship units, morphs along length)
-    const pS = edge.profileStart || { w: 3, h: 3 };
-    const pE = edge.profileEnd || pS;
-    const isXDir = Math.abs(tunDx) > Math.abs(tunDz);
-
-    // Build as segments, each with interpolated cross-section
-    const segments = Math.max(2, Math.ceil(tunDist / (SHIP_UNIT * 2)));
-    for (let s = 0; s < segments; s++) {
-      const t0 = s / segments, t1 = (s + 1) / segments;
-      const tMid = (t0 + t1) / 2;
-      const sx = startX + tunDx * tMid;
-      const sy = startY + tunDy * tMid;
-      const sz = startZ + tunDz * tMid;
-      const segLen = tunDist / segments + 20;
-
-      // Lerp the cross-section between start and end profiles
-      const curW = (pS.w + (pE.w - pS.w) * tMid) * SHIP_UNIT;
-      const curH = (pS.h + (pE.h - pS.h) * tMid) * SHIP_UNIT;
-
-      // segW/segD: along-tunnel dimension vs cross-tunnel dimension
-      const segAlong = segLen;
-      const segCross = curW; // lateral width of tunnel
-
-      const floorCeilW = isXDir ? segAlong + WALL : segCross + WALL * 2;
-      const floorCeilD = isXDir ? segCross + WALL * 2 : segAlong + WALL;
-
-      // Floor
-      addBox(sx, sy - curH / 2 - WALL / 2, sz, floorCeilW, WALL, floorCeilD, makeCavernMat('small', 'floor'));
-      // Ceiling
-      addBox(sx, sy + curH / 2 + WALL / 2, sz, floorCeilW, WALL, floorCeilD, makeCavernMat('small', 'ceiling'));
-      // Side walls
-      if (isXDir) {
-        addBox(sx, sy, sz - segCross / 2 - WALL / 2, segAlong + WALL, curH, WALL, makeCavernMat('small', 'wall'));
-        addBox(sx, sy, sz + segCross / 2 + WALL / 2, segAlong + WALL, curH, WALL, makeCavernMat('small', 'wall'));
-      } else {
-        addBox(sx - segCross / 2 - WALL / 2, sy, sz, WALL, curH, segAlong + WALL, makeCavernMat('small', 'wall'));
-        addBox(sx + segCross / 2 + WALL / 2, sy, sz, WALL, curH, segAlong + WALL, makeCavernMat('small', 'wall'));
+    // Spawn points along tunnel center (skip points inside room spheres)
+    const steps = Math.max(2, Math.floor(segLen / (SU * 1.5)));
+    for (let s = 1; s < steps; s++) {
+      const t = s / steps;
+      const px = seg.a.x + seg.dx * t, py = seg.a.y + seg.dy * t, pz = seg.a.z + seg.dz * t;
+      let inRoom = false;
+      for (const rm of rooms) {
+        if ((px - rm.x) ** 2 + (py - rm.y) ** 2 + (pz - rm.z) ** 2 < rm.r * rm.r * 0.6) { inRoom = true; break; }
       }
-
-      // Corridor spawn points
-      game.corridorPoints.push({
-        x: sx, y: sy, z: sz,
-        roomId: 'tunnel_' + key, roomType: 'tunnel', team: null
-      });
+      if (!inRoom) {
+        game.corridorPoints.push({ x: px, y: py, z: pz, roomId: 'tun_' + ci, roomType: 'tunnel', team: null });
+      }
     }
+
+    // Light at segment midpoint
+    const tl = new THREE.PointLight(0x5588aa, 0.5, TR * 6);
+    tl.position.set(midX, midY, midZ);
+    scene.add(tl); game.mapMeshes.push(tl);
   }
 
-  // Ambient lighting
-  for (let i = 0; i < nodes.length; i++) {
-    const n = nodes[i];
-    const intensity = n.type === 'large' ? 0.7 : n.type === 'medium' ? 0.5 : 0.4;
-    const al = new THREE.PointLight(0x6688cc, intensity, n.radius * 4);
-    al.position.set(n.x, n.y + n.height * 0.3, n.z);
-    scene.add(al); game.mapMeshes.push(al);
-  }
+  // Ambient fill
+  const amb = new THREE.AmbientLight(0x223344, 0.3);
+  scene.add(amb); game.mapMeshes.push(amb);
 
-  console.log('Built underground city: ' + level.name + ' (' + nodes.length + ' chambers, ' + edges.length + ' tunnels)');
+  console.log('Built: ' + level.name + ' | ' + game.levelSpheres.length + ' spheres, ' + game.levelCylinders.length + ' cylinders, ' + game.corridorPoints.length + ' nav points');
 }
 
 // ---- SPAWN HELPERS ----
