@@ -1170,11 +1170,56 @@ function spawnNetworkProjectile(data, fromPeerId) {
   game.projectiles.push(proj);
 }
 
-// Clean up stale pending hits (older than 2 seconds)
+// Clean up stale pending hits with timeout fallback.
+// If a hit claim hasn't reached consensus within 500ms, auto-resolve in the
+// shooter's favor (the victim already applied damage locally for responsiveness).
+// Track consecutive timeouts per peer; if a peer times out too often (5+ in 30s),
+// reduce trust and require full consensus for their future claims.
+const HIT_CONSENSUS_TIMEOUT = 500; // ms
+const HIT_HARD_TIMEOUT = 2000; // ms: absolute max before forced cleanup
+const TIMEOUT_ABUSE_WINDOW = 30000; // 30s window for tracking repeated timeouts
+const TIMEOUT_ABUSE_THRESHOLD = 5; // max timeouts in window before penalty
+
+if (!net.timeoutCounts) net.timeoutCounts = new Map(); // peerId -> [{timestamp}]
+
 function cleanupPendingHits() {
   const now = performance.now();
   for (const [id, hit] of net.pendingHits) {
-    if (now - hit.timestamp > 2000) net.pendingHits.delete(id);
+    const age = now - hit.timestamp;
+
+    // Hard timeout: always clean up
+    if (age > HIT_HARD_TIMEOUT) {
+      net.pendingHits.delete(id);
+      continue;
+    }
+
+    // Soft timeout: auto-resolve in shooter's favor if consensus stalled
+    if (age > HIT_CONSENSUS_TIMEOUT) {
+      const totalPeers = net.peers.size + 1;
+      const votesNeeded = Math.ceil(totalPeers / 2);
+      let yesVotes = 0;
+      for (const v of hit.votes.values()) { if (v) yesVotes++; }
+
+      // Check if this shooter is in the penalty zone (too many timeouts)
+      const shooterTimeouts = net.timeoutCounts.get(hit.shooterId) || [];
+      const recentTimeouts = shooterTimeouts.filter(t => now - t < TIMEOUT_ABUSE_WINDOW);
+      const penalized = recentTimeouts.length >= TIMEOUT_ABUSE_THRESHOLD;
+
+      if (penalized) {
+        // Penalized shooter: reject the hit (require full consensus next time)
+        net.pendingHits.delete(id);
+      } else {
+        // Normal timeout: accept the hit (shooter gets benefit of the doubt)
+        // Track this timeout for abuse detection
+        if (!net.timeoutCounts.has(hit.shooterId)) net.timeoutCounts.set(hit.shooterId, []);
+        net.timeoutCounts.get(hit.shooterId).push(now);
+        // Prune old entries from the abuse tracker
+        const entries = net.timeoutCounts.get(hit.shooterId);
+        while (entries.length > 0 && now - entries[0] > TIMEOUT_ABUSE_WINDOW) entries.shift();
+
+        net.pendingHits.delete(id);
+      }
+    }
   }
 }
 
@@ -2028,18 +2073,37 @@ function spawnTracer(from, to, color) {
   game.effects.push({ mesh: glow, lifetime: 0.12, age: 0, type: 'tracer' });
 }
 
+const MAX_PARTICLES = 500;
+
+function cullOldestParticle() {
+  // Remove the particle with the least remaining life
+  let oldestIdx = 0, lowestLife = Infinity;
+  for (let i = 0; i < game.particles.length; i++) {
+    if (game.particles[i].life < lowestLife) { lowestLife = game.particles[i].life; oldestIdx = i; }
+  }
+  const p = game.particles[oldestIdx];
+  if (p.mesh) { scene.remove(p.mesh); p.mesh.material.dispose(); p.mesh.geometry.dispose(); }
+  game.particles.splice(oldestIdx, 1);
+}
+
 function updateParticles(dt) {
+  // Cap particle count: cull oldest when over budget
+  while (game.particles.length > MAX_PARTICLES) cullOldestParticle();
+
+  const arenaLimit = LSS.ARENA_SIZE;
   for (let i = game.particles.length - 1; i >= 0; i--) {
     const p = game.particles[i];
     p.life -= dt;
-    if (p.life <= 0) {
+    // Kill expired particles and those outside arena bounds
+    const pos = p.position;
+    if (p.life <= 0 || Math.abs(pos.x) > arenaLimit || Math.abs(pos.y) > arenaLimit || Math.abs(pos.z) > arenaLimit) {
       if (p.mesh) { scene.remove(p.mesh); p.mesh.material.dispose(); p.mesh.geometry.dispose(); }
       game.particles.splice(i, 1);
       continue;
     }
-    p.position.x += p.velocity.x * dt;
-    p.position.y += p.velocity.y * dt;
-    p.position.z += p.velocity.z * dt;
+    pos.x += p.velocity.x * dt;
+    pos.y += p.velocity.y * dt;
+    pos.z += p.velocity.z * dt;
     p.velocity.multiplyScalar(0.95); // drag on particles
     const alpha = p.life / p.maxLife;
     if (!p.mesh) {
@@ -2047,7 +2111,7 @@ function updateParticles(dt) {
       p.mesh = new THREE.Mesh(new THREE.SphereGeometry(p.size, 4, 3), mat);
       scene.add(p.mesh);
     }
-    p.mesh.position.copy(p.position);
+    p.mesh.position.copy(pos);
     p.mesh.material.opacity = alpha;
     p.mesh.scale.setScalar(0.5 + alpha * 0.5);
   }
@@ -6088,65 +6152,103 @@ function updateDamageIndicators(dt) {
   }
 }
 
-// ---- ENEMY HEALTH BARS ----
+// ---- ENEMY HEALTH BARS (Pooled DOM elements) ----
+
+const hbarPool = { bars: [], markers: [], initialized: false };
+
+function initHbarPool(maxBars, maxMarkers) {
+  const container = document.getElementById('enemy-healthbars');
+  hbarPool.bars = [];
+  hbarPool.markers = [];
+  for (let i = 0; i < maxBars; i++) {
+    const div = document.createElement('div');
+    div.className = 'enemy-hbar';
+    div.style.display = 'none';
+    div.innerHTML = `
+      <div class="enemy-hbar-name"></div>
+      <div class="enemy-hbar-bg">
+        <div class="enemy-hbar-fill"></div>
+      </div>
+      <div class="enemy-hbar-shield"></div>
+    `;
+    container.appendChild(div);
+    hbarPool.bars.push(div);
+  }
+  for (let i = 0; i < maxMarkers; i++) {
+    const div = document.createElement('div');
+    div.className = 'stasis-marker';
+    div.style.display = 'none';
+    div.innerHTML = `
+      <div class="stasis-marker-icon"></div>
+      <div class="stasis-marker-dist"></div>
+    `;
+    container.appendChild(div);
+    hbarPool.markers.push(div);
+  }
+  hbarPool.initialized = true;
+}
 
 function updateEnemyHealthBars() {
-  const container = document.getElementById('enemy-healthbars');
-  // Clear old bars
-  container.innerHTML = '';
+  if (!hbarPool.initialized) initHbarPool(24, 8);
 
-  if (!player.position || player.shipState === 'dead') return;
+  if (!player.position || player.shipState === 'dead') {
+    for (const bar of hbarPool.bars) bar.style.display = 'none';
+    for (const mk of hbarPool.markers) mk.style.display = 'none';
+    return;
+  }
 
   const halfW = window.innerWidth / 2;
   const halfH = window.innerHeight / 2;
 
+  let barIdx = 0;
   for (const bot of game.entities) {
     if (!bot.alive || bot.team === player.team) continue;
     const dist = player.position.distanceTo(bot.position);
-    if (dist > 3000) continue; // too far to show
+    if (dist > 3000) continue;
 
-    // Project 3D position to screen (slightly above the ship)
     const worldPos = bot.position.clone();
     worldPos.y += bot.chassis.hullHeight + 30;
     const projected = worldPos.clone().project(camera);
 
-    // Check if in front of camera
     if (projected.z > 1) continue;
 
     const sx = (projected.x * halfW) + halfW;
     const sy = -(projected.y * halfH) + halfH;
 
-    // Off screen check
     if (sx < -60 || sx > window.innerWidth + 60 || sy < -30 || sy > window.innerHeight + 30) continue;
+    if (barIdx >= hbarPool.bars.length) break;
 
     const healthPct = Math.max(0, bot.health / bot.maxHealth);
     const shieldPct = Math.max(0, bot.shield / bot.maxShield);
 
-    // Scale bar size by distance (closer = bigger)
     const scale = Math.max(0.5, Math.min(1.2, 800 / dist));
     const barW = Math.round(80 * scale);
 
-    // Color based on health
     let hColor = '#00c850';
     if (healthPct < 0.33) hColor = '#ff5000';
     else if (healthPct < 0.6) hColor = '#ddc800';
     if (bot.doomed) hColor = '#ff2200';
 
-    const div = document.createElement('div');
-    div.className = 'enemy-hbar';
+    const div = hbarPool.bars[barIdx];
+    div.style.display = '';
     div.style.left = (sx - barW / 2) + 'px';
     div.style.top = (sy - 20) + 'px';
-    div.innerHTML = `
-      <div class="enemy-hbar-name" style="font-size:${Math.round(9 * scale)}px">${bot.loadout.name}</div>
-      <div class="enemy-hbar-bg" style="width:${barW}px">
-        <div class="enemy-hbar-fill" style="width:${healthPct * 100}%;background:${hColor}"></div>
-      </div>
-      <div class="enemy-hbar-shield" style="width:${barW * shieldPct}px"></div>
-    `;
-    container.appendChild(div);
+    const nameEl = div.children[0];
+    nameEl.style.fontSize = Math.round(9 * scale) + 'px';
+    nameEl.textContent = bot.loadout.name;
+    const bgEl = div.children[1];
+    bgEl.style.width = barW + 'px';
+    const fillEl = bgEl.children[0];
+    fillEl.style.width = (healthPct * 100) + '%';
+    fillEl.style.background = hColor;
+    div.children[2].style.width = (barW * shieldPct) + 'px';
+    barIdx++;
   }
+  // Hide unused bar pool elements
+  for (let i = barIdx; i < hbarPool.bars.length; i++) hbarPool.bars[i].style.display = 'none';
 
   // Stasis field world markers
+  let mkIdx = 0;
   for (const field of game.stasisFields) {
     if (!field.alive) continue;
     const dist = player.position.distanceTo(field.position);
@@ -6160,17 +6262,16 @@ function updateEnemyHealthBars() {
     const sx = (projected.x * halfW) + halfW;
     const sy = -(projected.y * halfH) + halfH;
     if (sx < -30 || sx > window.innerWidth + 30 || sy < -30 || sy > window.innerHeight + 30) continue;
+    if (mkIdx >= hbarPool.markers.length) break;
 
-    const div = document.createElement('div');
-    div.className = 'stasis-marker';
+    const div = hbarPool.markers[mkIdx];
+    div.style.display = '';
     div.style.left = (sx - 20) + 'px';
     div.style.top = (sy - 20) + 'px';
-    div.innerHTML = `
-      <div class="stasis-marker-icon"></div>
-      <div>${Math.round(dist)}m</div>
-    `;
-    container.appendChild(div);
+    div.querySelector('.stasis-marker-dist').textContent = Math.round(dist) + 'm';
+    mkIdx++;
   }
+  for (let i = mkIdx; i < hbarPool.markers.length; i++) hbarPool.markers[i].style.display = 'none';
 }
 
 // ---- MAIN GAME LOOP ----
@@ -6265,12 +6366,13 @@ function resumeAudio() {
   if (audio.ctx && audio.ctx.state === 'suspended') audio.ctx.resume();
 }
 
-// Tri-chord helper: plays 3 simultaneous low-pitched tones
-// freqs = [f1, f2, f3], waveform, vol, duration, optional freq ramp targets
-function triChord(freqs, wave, vol, dur, rampFreqs, rampTime, startOffset) {
+// Enhanced tri-chord helper with configurable ADSR envelopes.
+// envelope = { attack, hold, decay } (in seconds). Defaults to instant attack + exponential decay.
+function triChord(freqs, wave, vol, dur, rampFreqs, rampTime, startOffset, envelope) {
   const ctx = audio.ctx;
   const now = ctx.currentTime + (startOffset || 0);
   const dest = audio.masterGain;
+  const env = envelope || { attack: 0.003, hold: 0, decay: dur };
   freqs.forEach((freq, i) => {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -6279,99 +6381,22 @@ function triChord(freqs, wave, vol, dur, rampFreqs, rampTime, startOffset) {
     if (rampFreqs && rampFreqs[i] !== undefined) {
       osc.frequency.exponentialRampToValueAtTime(Math.max(1, rampFreqs[i]), now + (rampTime || dur));
     }
-    gain.gain.setValueAtTime(vol / 3, now); // divide vol across 3 voices
+    const peakVol = vol / 3;
+    // ADSR: attack ramp, hold at peak, then decay
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.linearRampToValueAtTime(peakVol, now + env.attack);
+    if (env.hold > 0) {
+      gain.gain.setValueAtTime(peakVol, now + env.attack + env.hold);
+    }
     gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
     osc.connect(gain); gain.connect(dest);
     osc.start(now); osc.stop(now + dur + 0.01);
   });
 }
 
-function playSound(type) {
-  if (!audio.initialized || !audio.ctx) return;
-  resumeAudio();
-  const ctx = audio.ctx;
-  const now = ctx.currentTime;
-  const dest = audio.masterGain;
-
-  if (type === 'fire_hitscan') {
-    // Low tri-chord crack: root + fifth + octave, fast decay
-    triChord([55, 82, 110], 'sawtooth', 0.30, 0.12, [30, 45, 55], 0.10);
-    playNoiseBurst(0.06, 0.15, now);
-  }
-  else if (type === 'fire_projectile') {
-    // Deep thump triad: sub-bass chord descending
-    triChord([80, 100, 130], 'sine', 0.35, 0.20, [25, 35, 45], 0.18);
-  }
-  else if (type === 'fire_spread') {
-    // Shotgun: low open fifth chord + noise
-    triChord([45, 67, 90], 'sawtooth', 0.35, 0.15, [20, 30, 40], 0.12);
-    playNoiseBurst(0.10, 0.25, now);
-  }
-  else if (type === 'fire_minigun') {
-    // Rapid low tri-chord tick
-    triChord([90, 113, 135], 'square', 0.14, 0.05, [60, 75, 90], 0.04);
-  }
-  else if (type === 'hit') {
-    // Low metallic confirmation triad
-    triChord([130, 164, 196], 'triangle', 0.18, 0.10, [80, 100, 120], 0.08);
-  }
-  else if (type === 'kill') {
-    // Descending minor triad: low and heavy, staggered
-    triChord([130, 156, 196], 'sine', 0.18, 0.35);
-    // Second chord, lower, delayed
-    triChord([65, 78, 98], 'sine', 0.15, 0.40, null, null, 0.12);
-  }
-  else if (type === 'damage') {
-    // Dissonant low rumble triad
-    triChord([55, 62, 73], 'sawtooth', 0.20, 0.22, [30, 35, 40], 0.18);
-  }
-  else if (type === 'dash') {
-    // Rising low triad (thrust feel)
-    triChord([55, 69, 82], 'sine', 0.15, 0.30, [110, 138, 165], 0.25);
-    playNoiseBurst(0.20, 0.08, now);
-  }
-  else if (type === 'ability') {
-    // Tech activation: low major triad, two pulses
-    triChord([82, 103, 123], 'sine', 0.18, 0.15);
-    triChord([98, 123, 147], 'sine', 0.15, 0.18, null, null, 0.08);
-  }
-  else if (type === 'core') {
-    // Epic low power-up: rising sub-bass triad with sawtooth growl
-    triChord([40, 50, 60], 'sawtooth', 0.30, 0.70, [110, 138, 165], 0.55);
-    triChord([55, 69, 82], 'sine', 0.20, 0.60, [130, 164, 196], 0.50, 0.15);
-    playNoiseBurst(0.50, 0.12, now);
-  }
-  else if (type === 'explosion') {
-    // Massive low triad boom descending to sub
-    triChord([60, 75, 90], 'sine', 0.35, 0.55, [15, 20, 25], 0.45);
-    triChord([45, 55, 65], 'sawtooth', 0.20, 0.40, [10, 15, 18], 0.35);
-    playNoiseBurst(0.35, 0.25, now);
-  }
-  else if (type === 'stasis') {
-    // Eerie low frozen triad (minor second cluster, glass-like)
-    triChord([82, 87, 98], 'sine', 0.14, 0.50);
-    triChord([61, 65, 73], 'triangle', 0.10, 0.55, null, null, 0.10);
-  }
-  else if (type === 'reload') {
-    // Mechanical low triad click: two quick chord pulses
-    triChord([110, 138, 165], 'square', 0.10, 0.06);
-    triChord([82, 103, 123], 'square', 0.10, 0.06, null, null, 0.07);
-  }
-  else if (type === 'death') {
-    // Long descending low drone triad
-    triChord([82, 98, 123], 'sawtooth', 0.25, 1.30, [20, 25, 30], 1.10);
-    triChord([55, 65, 82], 'sine', 0.15, 1.00, [15, 18, 22], 0.90, 0.20);
-    playNoiseBurst(0.80, 0.15, now);
-  }
-  else if (type === 'round_start') {
-    // Three ascending low triads, each a step up
-    triChord([65, 82, 98], 'sine', 0.18, 0.35);
-    triChord([73, 92, 110], 'sine', 0.18, 0.35, null, null, 0.18);
-    triChord([82, 103, 130], 'sine', 0.20, 0.40, null, null, 0.36);
-  }
-}
-
-function playNoiseBurst(duration, volume, startTime) {
+// Filtered noise burst with optional bandpass for more character.
+// filterFreq/filterQ: bandpass center and sharpness (null = unfiltered white noise).
+function playNoiseBurst(duration, volume, startTime, filterFreq, filterQ) {
   if (!audio.ctx) return;
   const ctx = audio.ctx;
   const bufSize = Math.floor(ctx.sampleRate * duration);
@@ -6383,9 +6408,149 @@ function playNoiseBurst(duration, volume, startTime) {
   const gain = ctx.createGain();
   gain.gain.setValueAtTime(volume, startTime);
   gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-  src.connect(gain);
+
+  if (filterFreq) {
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = filterFreq;
+    filter.Q.value = filterQ || 1.0;
+    src.connect(filter);
+    filter.connect(gain);
+  } else {
+    src.connect(gain);
+  }
   gain.connect(audio.masterGain);
   src.start(startTime);
+}
+
+function playSound(type) {
+  if (!audio.initialized || !audio.ctx) return;
+  resumeAudio();
+  const ctx = audio.ctx;
+  const now = ctx.currentTime;
+  const dest = audio.masterGain;
+
+  if (type === 'fire_hitscan') {
+    // Sharp transient crack: very fast attack, near-instant decay. Snappy and percussive.
+    // Distinct from projectile by being short and bright.
+    triChord([55, 82, 110], 'sawtooth', 0.30, 0.10, [30, 45, 55], 0.08, 0,
+      { attack: 0.001, hold: 0, decay: 0.10 });
+    playNoiseBurst(0.04, 0.18, now, 3000, 0.8); // high-frequency filtered crack
+  }
+  else if (type === 'fire_projectile') {
+    // Longer swell with body: slower attack builds into a thump, then sustains briefly.
+    // Sounds "launched" rather than "shot".
+    triChord([80, 100, 130], 'sine', 0.35, 0.28, [25, 35, 45], 0.22, 0,
+      { attack: 0.015, hold: 0.04, decay: 0.22 });
+    playNoiseBurst(0.08, 0.06, now + 0.01, 600, 1.2); // low rumble on launch
+  }
+  else if (type === 'fire_spread') {
+    // Shotgun blast: instant attack, wide noise burst with low-mid emphasis.
+    triChord([45, 67, 90], 'sawtooth', 0.35, 0.14, [20, 30, 40], 0.11, 0,
+      { attack: 0.001, hold: 0.01, decay: 0.13 });
+    playNoiseBurst(0.10, 0.28, now, 1200, 0.5); // wide bandpass for scatter feel
+  }
+  else if (type === 'fire_minigun') {
+    // Ultra-short tick: almost click-like. Designed to sound good at rapid fire rates.
+    triChord([90, 113, 135], 'square', 0.14, 0.04, [60, 75, 90], 0.03, 0,
+      { attack: 0.001, hold: 0, decay: 0.04 });
+    playNoiseBurst(0.015, 0.06, now, 4000, 2.0); // tiny high-freq click
+  }
+  else if (type === 'fire_railgun') {
+    // Charged weapon: slow swell into a metallic ring. Feels powerful and deliberate.
+    triChord([40, 60, 80], 'sine', 0.25, 0.15, [120, 180, 240], 0.12, 0,
+      { attack: 0.02, hold: 0.03, decay: 0.10 });
+    // Metallic ring tail (triangle wave, high partials)
+    triChord([220, 330, 440], 'triangle', 0.08, 0.45, [180, 270, 360], 0.40, 0.05,
+      { attack: 0.001, hold: 0, decay: 0.45 });
+    playNoiseBurst(0.12, 0.10, now, 2500, 3.0); // sharp filtered transient
+  }
+  else if (type === 'fire_salvo') {
+    // Missile launch: whoosh with rising pitch. Distinct "leaving the tube" sound.
+    triChord([50, 63, 75], 'sine', 0.22, 0.35, [150, 190, 225], 0.30, 0,
+      { attack: 0.008, hold: 0.05, decay: 0.30 });
+    playNoiseBurst(0.20, 0.12, now + 0.01, 800, 0.6); // low whoosh
+  }
+  else if (type === 'hit') {
+    // Metallic ring confirmation: fast attack, medium ring-out.
+    triChord([130, 164, 196], 'triangle', 0.18, 0.12, [80, 100, 120], 0.10, 0,
+      { attack: 0.001, hold: 0, decay: 0.12 });
+  }
+  else if (type === 'kill') {
+    // Descending minor triad: satisfying two-stage confirmation.
+    triChord([130, 156, 196], 'sine', 0.18, 0.35, null, null, 0,
+      { attack: 0.005, hold: 0.05, decay: 0.30 });
+    triChord([65, 78, 98], 'sine', 0.15, 0.40, null, null, 0.12,
+      { attack: 0.005, hold: 0.05, decay: 0.35 });
+  }
+  else if (type === 'damage') {
+    // Dissonant low rumble: slower attack so it doesn't mask hit sounds.
+    triChord([55, 62, 73], 'sawtooth', 0.20, 0.25, [30, 35, 40], 0.20, 0,
+      { attack: 0.008, hold: 0.02, decay: 0.22 });
+    playNoiseBurst(0.06, 0.05, now + 0.005, 400, 1.5); // sub-rumble
+  }
+  else if (type === 'dash') {
+    // Rising thrust: builds quickly, noise burst for the whoosh.
+    triChord([55, 69, 82], 'sine', 0.15, 0.30, [110, 138, 165], 0.25, 0,
+      { attack: 0.005, hold: 0.03, decay: 0.27 });
+    playNoiseBurst(0.20, 0.10, now, 1500, 0.8); // mid-freq whoosh
+  }
+  else if (type === 'ability') {
+    // Tech activation: two clean pulses with a gap.
+    triChord([82, 103, 123], 'sine', 0.18, 0.15, null, null, 0,
+      { attack: 0.003, hold: 0.03, decay: 0.12 });
+    triChord([98, 123, 147], 'sine', 0.15, 0.18, null, null, 0.08,
+      { attack: 0.003, hold: 0.03, decay: 0.15 });
+  }
+  else if (type === 'core') {
+    // Epic power-up: long swell from sub-bass, layered with growl and noise.
+    triChord([40, 50, 60], 'sawtooth', 0.30, 0.70, [110, 138, 165], 0.55, 0,
+      { attack: 0.05, hold: 0.10, decay: 0.55 });
+    triChord([55, 69, 82], 'sine', 0.20, 0.60, [130, 164, 196], 0.50, 0.15,
+      { attack: 0.04, hold: 0.08, decay: 0.48 });
+    playNoiseBurst(0.50, 0.12, now, 600, 0.5);
+  }
+  else if (type === 'explosion') {
+    // Massive boom: heavy sub-bass with slow attack for weight, plus noise debris.
+    triChord([60, 75, 90], 'sine', 0.35, 0.55, [15, 20, 25], 0.45, 0,
+      { attack: 0.008, hold: 0.05, decay: 0.50 });
+    triChord([45, 55, 65], 'sawtooth', 0.20, 0.40, [10, 15, 18], 0.35, 0.02,
+      { attack: 0.003, hold: 0.03, decay: 0.37 });
+    playNoiseBurst(0.35, 0.25, now, 300, 0.4); // low-filtered debris rumble
+  }
+  else if (type === 'stasis') {
+    // Eerie frozen triad: glass-like shimmer with filtered noise hiss.
+    triChord([82, 87, 98], 'sine', 0.14, 0.50, null, null, 0,
+      { attack: 0.02, hold: 0.08, decay: 0.40 });
+    triChord([61, 65, 73], 'triangle', 0.10, 0.55, null, null, 0.10,
+      { attack: 0.02, hold: 0.08, decay: 0.45 });
+    playNoiseBurst(0.30, 0.04, now + 0.05, 6000, 4.0); // high crystalline hiss
+  }
+  else if (type === 'reload') {
+    // Mechanical click: two sharp pulses with metallic ring.
+    triChord([110, 138, 165], 'square', 0.10, 0.06, null, null, 0,
+      { attack: 0.001, hold: 0, decay: 0.06 });
+    triChord([82, 103, 123], 'square', 0.10, 0.06, null, null, 0.07,
+      { attack: 0.001, hold: 0, decay: 0.06 });
+    playNoiseBurst(0.02, 0.08, now, 5000, 3.0); // metallic click
+  }
+  else if (type === 'death') {
+    // Long descending drone: slow attack into heavy decay, plus debris noise.
+    triChord([82, 98, 123], 'sawtooth', 0.25, 1.30, [20, 25, 30], 1.10, 0,
+      { attack: 0.03, hold: 0.10, decay: 1.17 });
+    triChord([55, 65, 82], 'sine', 0.15, 1.00, [15, 18, 22], 0.90, 0.20,
+      { attack: 0.03, hold: 0.08, decay: 0.89 });
+    playNoiseBurst(0.80, 0.15, now, 200, 0.6); // low rumble debris
+  }
+  else if (type === 'round_start') {
+    // Three ascending triads: clean and ceremonial.
+    triChord([65, 82, 98], 'sine', 0.18, 0.35, null, null, 0,
+      { attack: 0.01, hold: 0.08, decay: 0.26 });
+    triChord([73, 92, 110], 'sine', 0.18, 0.35, null, null, 0.18,
+      { attack: 0.01, hold: 0.08, decay: 0.26 });
+    triChord([82, 103, 130], 'sine', 0.20, 0.40, null, null, 0.36,
+      { attack: 0.01, hold: 0.10, decay: 0.29 });
+  }
 }
 
 // ---- HOOK AUDIO INTO EXISTING FUNCTIONS ----
@@ -6396,7 +6561,13 @@ fireWeapon = function() {
   _origFireWeapon();
   const w = player.weapon;
   if (!w) return;
-  if (w.mode === 'hitscan' && w.fireRate < 0.08) playSound('fire_minigun');
+  // Identify weapon character for distinct sound selection
+  const isRailgun = w.mode === 'hitscan' && w.fireRate >= 0.8; // slow charged hitscan (NORTHSTAR Plasma Railgun)
+  const isMinigun = w.mode === 'hitscan' && w.fireRate < 0.08; // rapid fire (LEGION Predator Cannon)
+  const isMissile = w.mode === 'projectile' && (w.homing || w.salvo); // homing or guided missiles
+  if (isMinigun) playSound('fire_minigun');
+  else if (isRailgun) playSound('fire_railgun');
+  else if (isMissile) playSound('fire_salvo');
   else if (w.mode === 'hitscan') playSound('fire_hitscan');
   else if (w.mode === 'projectile') playSound('fire_projectile');
   else if (w.mode === 'spread') playSound('fire_spread');
