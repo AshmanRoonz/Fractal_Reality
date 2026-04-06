@@ -10,20 +10,13 @@ canvas { display: block; }
 
 #hud { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
 
-/* Crosshair */
-#crosshair {
-  position: fixed; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 24px; height: 24px; z-index: 20; pointer-events: none;
-}
-#crosshair::before, #crosshair::after {
-  content: ''; position: absolute; background: rgba(255,255,255,0.8);
-}
-#crosshair::before { width: 2px; height: 24px; left: 11px; top: 0; }
-#crosshair::after { width: 24px; height: 2px; top: 11px; left: 0; }
-#crosshair-dot {
-  position: absolute; width: 4px; height: 4px; background: #fff;
-  border-radius: 50%; top: 10px; left: 10px;
+/* Old crosshair hidden; replaced by circumpunct HUD canvas */
+#crosshair { display: none; }
+
+/* Circumpunct HUD canvas (full viewport, centered) */
+#circumpunct-hud {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 20;
 }
 
 .hit-marker {
@@ -47,54 +40,21 @@ canvas { display: block; }
   100% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
 }
 
-/* TF2-style health bar canvas (bottom center) */
-#health-canvas {
-  position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-  z-index: 15; pointer-events: none;
-}
+/* TF2-style health bar canvas (hidden; replaced by circumpunct rings) */
+#health-canvas { display: none; }
 
-/* Ship info (bottom left) */
-#ship-status {
-  position: fixed; bottom: 20px; left: 20px; z-index: 10; pointer-events: none;
-  color: #fff; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
-}
-#ship-name { font-size: 14px; color: #fff; font-weight: bold; }
-#ship-class { font-size: 10px; color: #888; }
+/* Ship info (hidden; integrated into circumpunct HUD) */
+#ship-status { display: none; }
 
-/* Core meter (bottom left, below ship info) */
-#core-container {
-  margin-top: 6px; width: 180px; height: 16px;
-  background: rgba(20,20,30,0.85); border: 1px solid rgba(100,100,120,0.4);
-  position: relative;
-}
-#core-fill { height: 100%; background: linear-gradient(90deg, #cc8800, #ffaa00); transition: width 0.15s; }
-#core-container.ready #core-fill { background: linear-gradient(90deg, #ffaa00, #ffdd44); animation: coreGlow 0.6s infinite alternate; }
-#core-label { position: absolute; top: 1px; left: 6px; font-size: 9px; color: #fff; text-shadow: 1px 1px 2px #000; }
-#core-value { position: absolute; top: 1px; right: 6px; font-size: 9px; color: #fff; text-shadow: 1px 1px 2px #000; }
-@keyframes coreGlow { from { filter: brightness(1); } to { filter: brightness(1.4); } }
+/* Core meter (hidden; shown as outer ring in circumpunct HUD) */
+#core-container { display: none; }
 
-/* Abilities (bottom left) */
-#abilities { display: flex; gap: 6px; margin: 6px 0; }
-.ability-slot {
-  width: 54px; height: 54px; background: rgba(20,20,30,0.85);
-  border: 1px solid rgba(100,100,120,0.4); position: relative;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  font-size: 8px; color: #ccc;
-}
-.ability-slot .key { font-size: 13px; font-weight: bold; color: #fff; }
-.ability-slot .name { font-size: 7px; margin-top: 2px; text-align: center; }
-.ability-slot .cd-overlay {
-  position: absolute; bottom: 0; left: 0; width: 100%;
-  background: rgba(0,0,0,0.7); transition: height 0.1s;
-}
-.ability-slot.active { border-color: #ffaa00; box-shadow: 0 0 8px rgba(255,170,0,0.5); }
-.ability-slot.ready { border-color: rgba(100,200,255,0.6); }
+/* Abilities (hidden; in circumpunct ring brackets) */
+#abilities { display: none; }
+.ability-slot { display: none; }
 
-/* Weapon Info (bottom right) */
-#weapon-info { position: fixed; bottom: 20px; right: 20px; z-index: 10; pointer-events: none; color: #fff; text-align: right; font-size: 11px; }
-#ammo-display { font-size: 30px; font-weight: bold; }
-#weapon-name { font-size: 10px; color: #888; }
-#reload-indicator { color: #ffaa00; font-size: 12px; display: none; }
+/* Weapon Info (hidden; ammo in circumpunct rings) */
+#weapon-info { display: none; }
 
 /* Round Info (top center) */
 #round-info {
@@ -160,11 +120,8 @@ canvas { display: block; }
   z-index: 10; pointer-events: none;
 }
 
-/* Speed */
-#speed-display {
-  position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
-  z-index: 10; pointer-events: none; color: rgba(255,255,255,0.4); font-size: 10px;
-}
+/* Speed (hidden; in circumpunct rings) */
+#speed-display { display: none; }
 
 /* Gamepad indicator */
 #gamepad-indicator {
@@ -279,6 +236,7 @@ canvas { display: block; }
 <body>
 
 <div id="crosshair"><div id="crosshair-dot"></div></div>
+<canvas id="circumpunct-hud"></canvas>
 <div class="hit-marker" id="hit-marker">
   <svg width="30" height="30">
     <line x1="4" y1="4" x2="11" y2="11" stroke="#fff" stroke-width="2.5"/>
@@ -362,7 +320,51 @@ canvas { display: block; }
 <!-- Settings overlay -->
 <div id="settings-overlay"></div>
 
-<div id="ship-select">
+<!-- Lobby (room code / solo) -->
+<div id="lobby" style="
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(5,5,15,0.97);z-index:150;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;
+  color:#fff;font-family:'Courier New',monospace;cursor:default;">
+  <h1 style="font-size:36px;letter-spacing:4px;color:#ffaa00;margin-bottom:4px;">LAST SHIP SAILING</h1>
+  <h2 style="font-size:12px;color:#888;letter-spacing:2px;margin-bottom:30px;">ZERO-GRAVITY SHIP COMBAT</h2>
+
+  <div style="display:flex;flex-direction:column;gap:12px;align-items:center;">
+    <div style="font-size:11px;color:#aaa;letter-spacing:1px;margin-bottom:4px;">MULTIPLAYER (P2P MESH NETWORK)</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <input id="room-code" type="text" placeholder="ROOM CODE" maxlength="20"
+        style="background:rgba(20,20,40,0.9);border:1px solid rgba(100,100,120,0.5);
+        color:#ffaa00;padding:10px 16px;font-family:'Courier New',monospace;font-size:16px;
+        letter-spacing:2px;text-transform:uppercase;width:220px;text-align:center;outline:none;"
+        onfocus="this.style.borderColor='#ffaa00'" onblur="this.style.borderColor='rgba(100,100,120,0.5)'">
+      <button id="btn-join" onclick="joinRoom()" style="
+        background:rgba(255,170,0,0.15);border:1px solid #ffaa00;color:#ffaa00;
+        padding:10px 20px;font-family:'Courier New',monospace;font-size:14px;
+        cursor:pointer;letter-spacing:2px;transition:all 0.2s;"
+        onmouseover="this.style.background='rgba(255,170,0,0.3)'"
+        onmouseout="this.style.background='rgba(255,170,0,0.15)'">JOIN</button>
+    </div>
+    <div id="lobby-status" style="font-size:10px;color:#555;min-height:16px;letter-spacing:1px;"></div>
+    <div id="lobby-peers" style="font-size:10px;color:#6699ff;min-height:16px;"></div>
+
+    <div style="margin:20px 0;color:#333;font-size:10px;letter-spacing:3px;">; OR ;</div>
+
+    <button id="btn-solo" onclick="startSolo()" style="
+      background:rgba(60,60,80,0.3);border:1px solid rgba(100,100,120,0.4);color:#888;
+      padding:10px 30px;font-family:'Courier New',monospace;font-size:13px;
+      cursor:pointer;letter-spacing:2px;transition:all 0.2s;"
+      onmouseover="this.style.borderColor='#888';this.style.color='#ccc'"
+      onmouseout="this.style.borderColor='rgba(100,100,120,0.4)';this.style.color='#888'">SOLO + BOTS</button>
+  </div>
+
+  <div style="margin-top:40px;color:#333;font-size:9px;letter-spacing:1px;text-align:center;max-width:400px;line-height:1.6;">
+    Multiplayer uses WebTorrent trackers for peer discovery.<br>
+    No servers. No accounts. Just a room code.<br>
+    Share the code; anyone who enters it joins your mesh.
+  </div>
+</div>
+
+<div id="ship-select" style="display:none;">
   <h1>LAST SHIP SAILING</h1>
   <h2>CHOOSE YOUR SHIP</h2>
   <div id="ship-grid"></div>
@@ -371,10 +373,12 @@ canvas { display: block; }
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- trystero loaded via dynamic import() in joinRoom(); uses BitTorrent trackers for P2P signaling -->
 <script>
 // ============================================================================
 // LAST SHIP SAILING ; Zero-gravity ship combat
 // All 7 loadouts, weapons, abilities, HUD, bots, rounds, gamepad, geometry
+// + P2P mesh networking via WebTorrent (trystero)
 // ============================================================================
 
 'use strict';
@@ -585,6 +589,9 @@ const player = {
   afterburnerActive: false,
   afterburnerSpeedMult: 1.0,
   railgunCharge: 0, // 0-1 charge level (hold alt-fire to charge)
+  muzzleFlashTimer: 0, // >0 means flash is active (decays each frame)
+  muzzleFlashSide: 0,  // alternates 0=left, 1=right
+  gunRecoilL: 0, gunRecoilR: 0, // recoil animation per gun
   spawnProtection: 0,
   shieldRegenDelay: 0,
   kills: 0, deaths: 0, damageDealt: 0,
@@ -636,6 +643,496 @@ const input = {
     menu: 9,       // Start
   },
 };
+
+// ---- P2P MESH NETWORK ----
+// Uses trystero (BitTorrent tracker signaling) for truly serverless multiplayer.
+// Architecture:
+//   Tier 1 (broadcast, 20Hz): position, quaternion, velocity, health, shield, loadout, team
+//   Tier 2 (foveal, 60Hz):    precise aim, projectile data (between engaged players)
+//   Tier 3 (event-driven):    hit claims, kills, round events (consensus validated)
+
+const net = {
+  active: false,
+  solo: false,
+  room: null,
+  myPeerId: null,
+  peers: new Map(),           // peerId -> { state, mesh, lastUpdate, interpolation }
+  networkPlayers: [],         // NetworkPlayer instances (mirrors game.entities for bots)
+
+  // Trystero actions (set up on room join)
+  sendState: null,            // broadcast own state
+  sendHitClaim: null,         // claim a hit on another player
+  sendHitVote: null,          // vote on a hit claim
+  sendEvent: null,            // round events, chat, etc.
+  sendLoadout: null,          // announce chosen loadout
+  sendProjectile: null,       // broadcast projectile spawn
+
+  // Broadcast config
+  broadcastHz: 20,
+  broadcastAccum: 0,
+  fovealHz: 60,
+  fovealAccum: 0,
+
+  // Hit consensus
+  pendingHits: new Map(),     // hitId -> { claimerId, targetId, damage, votes: Map<peerId, bool>, timestamp }
+  hitIdCounter: 0,
+
+  // Stats
+  bytesSent: 0,
+  bytesReceived: 0,
+};
+
+// Generate a short random ID
+function generatePeerId() {
+  return 'p' + Math.random().toString(36).substring(2, 8);
+}
+
+// ---- LOBBY FUNCTIONS ----
+
+async function joinRoom() {
+  const codeInput = document.getElementById('room-code');
+  const code = codeInput.value.trim().toUpperCase();
+  if (!code) {
+    document.getElementById('lobby-status').textContent = 'ENTER A ROOM CODE';
+    document.getElementById('lobby-status').style.color = '#ff6666';
+    return;
+  }
+
+  document.getElementById('lobby-status').textContent = 'CONNECTING TO MESH...';
+  document.getElementById('lobby-status').style.color = '#ffaa00';
+  document.getElementById('btn-join').disabled = true;
+  document.getElementById('btn-solo').disabled = true;
+
+  try {
+    // Dynamic import of trystero (loaded via module script tag)
+    const trystero = await import('https://esm.sh/trystero/torrent');
+    const { joinRoom: trysteroJoin } = trystero;
+
+    net.myPeerId = generatePeerId();
+    net.active = true;
+    net.solo = false;
+
+    // Join the room via BitTorrent trackers
+    net.room = trysteroJoin({ appId: 'last-ship-sailing-v1' }, code);
+
+    // Set up data channels
+    const [sendState, onState] = net.room.makeAction('state');
+    const [sendHitClaim, onHitClaim] = net.room.makeAction('hit');
+    const [sendHitVote, onHitVote] = net.room.makeAction('vote');
+    const [sendEvent, onEvent] = net.room.makeAction('event');
+    const [sendLoadout, onLoadout] = net.room.makeAction('loadout');
+    const [sendProjectile, onProjectile] = net.room.makeAction('proj');
+
+    net.sendState = sendState;
+    net.sendHitClaim = sendHitClaim;
+    net.sendHitVote = sendHitVote;
+    net.sendEvent = sendEvent;
+    net.sendLoadout = sendLoadout;
+    net.sendProjectile = sendProjectile;
+
+    // Peer state updates (Tier 1 broadcast)
+    onState((data, peerId) => {
+      net.bytesReceived += JSON.stringify(data).length;
+      const peer = net.peers.get(peerId);
+      if (peer) {
+        peer.prevState = peer.state ? { ...peer.state } : null;
+        peer.state = data;
+        peer.lastUpdate = performance.now();
+        peer.interpT = 0;
+      }
+    });
+
+    // Hit claims (Tier 3: consensus)
+    onHitClaim((claim, peerId) => {
+      handleHitClaim(claim, peerId);
+    });
+
+    // Hit votes
+    onHitVote((vote, peerId) => {
+      handleHitVote(vote, peerId);
+    });
+
+    // Events (round sync, kills, etc.)
+    onEvent((evt, peerId) => {
+      handleNetEvent(evt, peerId);
+    });
+
+    // Loadout announcements
+    onLoadout((data, peerId) => {
+      const peer = net.peers.get(peerId);
+      if (peer) {
+        peer.loadoutKey = data.loadoutKey;
+        peer.team = data.team;
+        // Create or update their NetworkPlayer
+        updateNetworkPlayer(peerId, data);
+      }
+    });
+
+    // Projectile broadcasts
+    onProjectile((data, peerId) => {
+      spawnNetworkProjectile(data, peerId);
+    });
+
+    // Peer joins
+    net.room.onPeerJoin(peerId => {
+      console.log('Peer joined:', peerId);
+      net.peers.set(peerId, {
+        state: null,
+        prevState: null,
+        lastUpdate: 0,
+        interpT: 0,
+        loadoutKey: null,
+        team: null,
+        networkPlayer: null,
+      });
+      updateLobbyPeers();
+
+      // If we already have a loadout, announce it
+      if (player.loadoutKey && net.sendLoadout) {
+        net.sendLoadout({
+          loadoutKey: player.loadoutKey,
+          team: player.team,
+          peerId: net.myPeerId,
+        });
+      }
+    });
+
+    // Peer leaves
+    net.room.onPeerLeave(peerId => {
+      console.log('Peer left:', peerId);
+      const peer = net.peers.get(peerId);
+      if (peer && peer.networkPlayer) {
+        peer.networkPlayer.destroy();
+        const idx = net.networkPlayers.indexOf(peer.networkPlayer);
+        if (idx >= 0) net.networkPlayers.splice(idx, 1);
+        const eidx = game.entities.indexOf(peer.networkPlayer);
+        if (eidx >= 0) game.entities.splice(eidx, 1);
+      }
+      net.peers.delete(peerId);
+      updateLobbyPeers();
+    });
+
+    document.getElementById('lobby-status').textContent = 'CONNECTED: ROOM ' + code;
+    document.getElementById('lobby-status').style.color = '#66cc66';
+    updateLobbyPeers();
+
+    // Show "start" button after connecting
+    setTimeout(() => {
+      document.getElementById('btn-join').disabled = false;
+      document.getElementById('btn-join').textContent = 'START';
+      document.getElementById('btn-join').onclick = () => enterShipSelect();
+    }, 500);
+
+  } catch(err) {
+    console.error('Network error:', err);
+    document.getElementById('lobby-status').textContent = 'CONNECTION FAILED: ' + err.message;
+    document.getElementById('lobby-status').style.color = '#ff6666';
+    document.getElementById('btn-join').disabled = false;
+    document.getElementById('btn-solo').disabled = false;
+  }
+}
+
+function startSolo() {
+  net.active = false;
+  net.solo = true;
+  enterShipSelect();
+}
+
+function enterShipSelect() {
+  document.getElementById('lobby').style.display = 'none';
+  document.getElementById('ship-select').style.display = 'flex';
+}
+
+function updateLobbyPeers() {
+  const count = net.peers.size;
+  const el = document.getElementById('lobby-peers');
+  if (el) {
+    el.textContent = count > 0
+      ? count + ' PEER' + (count > 1 ? 'S' : '') + ' IN MESH'
+      : 'WAITING FOR PEERS...';
+  }
+}
+
+// ---- NETWORK PLAYER CLASS ----
+// Mirrors Bot interface; driven by peer state updates instead of AI
+
+class NetworkPlayer {
+  constructor(peerId, loadoutKey, team) {
+    const loadout = LOADOUTS[loadoutKey];
+    if (!loadout) return;
+    const chassisData = CHASSIS[loadout.chassis];
+
+    this.peerId = peerId;
+    this.id = 'net_' + peerId;
+    this.loadoutKey = loadoutKey;
+    this.loadout = loadout;
+    this.chassis = chassisData;
+    this.team = team;
+    this.health = chassisData.maxHealth;
+    this.maxHealth = chassisData.maxHealth;
+    this.shield = chassisData.maxShield;
+    this.maxShield = chassisData.maxShield;
+    this.alive = true;
+    this.position = new THREE.Vector3(0, 0, 0);
+    this.velocity = new THREE.Vector3();
+    this.targetDir = new THREE.Vector3(0, 0, -1);
+    this.fireTimer = 0;
+    this.shieldRegenDelay = 0;
+    this.spawnProtection = 0;
+    this.doomed = false;
+    this.doomTimer = 0;
+    this.coreMeter = 0;
+    this.arcSlowTimer = 0;
+
+    const teamColor = team === LSS.TEAM_FLEET_A ? 0xff4444 : 0x4488ff;
+    this.mesh = createShipMesh(chassisData, teamColor);
+    this.mesh.position.copy(this.position);
+    this.mesh.userData.bot = this; // reuse existing hit detection that checks .bot
+    scene.add(this.mesh);
+
+    // Interpolation state
+    this.interpPos = new THREE.Vector3();
+    this.interpQuat = new THREE.Quaternion();
+    this.targetPos = new THREE.Vector3();
+    this.targetQuat = new THREE.Quaternion();
+  }
+
+  update(dt) {
+    if (!this.alive) return;
+
+    // Get latest peer data
+    const peer = net.peers.get(this.peerId);
+    if (!peer || !peer.state) return;
+
+    const s = peer.state;
+
+    // Update health/shield from network
+    this.health = s.hp || this.health;
+    this.shield = s.shield || 0;
+    this.doomed = s.doomed || false;
+
+    // Smooth interpolation toward target position/rotation
+    this.targetPos.set(s.px || 0, s.py || 0, s.pz || 0);
+    if (s.qx !== undefined) {
+      this.targetQuat.set(s.qx, s.qy, s.qz, s.qw);
+    }
+
+    // Interpolation (lerp toward target; snaps if too far)
+    const dist = this.position.distanceTo(this.targetPos);
+    if (dist > 500) {
+      // Teleport if way out of sync
+      this.position.copy(this.targetPos);
+    } else {
+      this.position.lerp(this.targetPos, Math.min(1, dt * 15));
+    }
+    this.mesh.position.copy(this.position);
+
+    // Quaternion slerp
+    this.mesh.quaternion.slerp(this.targetQuat, Math.min(1, dt * 15));
+
+    // Velocity (for projectile inheritance, damage calcs)
+    this.velocity.set(s.vx || 0, s.vy || 0, s.vz || 0);
+
+    // Shield visual
+    if (this.mesh.userData.shieldMesh) {
+      this.mesh.userData.shieldMesh.material.opacity = this.shield > 0 ? 0.08 : 0;
+    }
+  }
+
+  takeDamage(amount, attacker) {
+    // For network players, damage is handled via consensus.
+    // Local hit detection creates a claim; actual HP change comes from network state.
+    // But we still need this method for compatibility with existing code.
+    return amount;
+  }
+
+  die(attacker) {
+    this.alive = false;
+    this.health = 0;
+    if (this.mesh && this.mesh.parent) scene.remove(this.mesh);
+    spawnExplosion(this.position, this.chassis.hullLength);
+  }
+
+  destroy() {
+    if (this.mesh && this.mesh.parent) scene.remove(this.mesh);
+  }
+}
+
+function updateNetworkPlayer(peerId, data) {
+  const peer = net.peers.get(peerId);
+  if (!peer) return;
+
+  // Remove old NetworkPlayer if loadout changed
+  if (peer.networkPlayer) {
+    peer.networkPlayer.destroy();
+    const idx = net.networkPlayers.indexOf(peer.networkPlayer);
+    if (idx >= 0) net.networkPlayers.splice(idx, 1);
+    const eidx = game.entities.indexOf(peer.networkPlayer);
+    if (eidx >= 0) game.entities.splice(eidx, 1);
+  }
+
+  // Create new NetworkPlayer
+  const np = new NetworkPlayer(peerId, data.loadoutKey, data.team || LSS.TEAM_FLEET_B);
+  peer.networkPlayer = np;
+  net.networkPlayers.push(np);
+  game.entities.push(np);
+}
+
+// ---- NETWORK BROADCAST ----
+
+function broadcastPlayerState(dt) {
+  if (!net.active || !net.sendState) return;
+
+  net.broadcastAccum += dt;
+  if (net.broadcastAccum < 1 / net.broadcastHz) return;
+  net.broadcastAccum = 0;
+
+  // Pack state tightly (short keys to reduce bandwidth)
+  const state = {
+    px: Math.round(player.position.x * 10) / 10,
+    py: Math.round(player.position.y * 10) / 10,
+    pz: Math.round(player.position.z * 10) / 10,
+    vx: Math.round(player.velocity.x * 10) / 10,
+    vy: Math.round(player.velocity.y * 10) / 10,
+    vz: Math.round(player.velocity.z * 10) / 10,
+    qx: Math.round(camera.quaternion.x * 1000) / 1000,
+    qy: Math.round(camera.quaternion.y * 1000) / 1000,
+    qz: Math.round(camera.quaternion.z * 1000) / 1000,
+    qw: Math.round(camera.quaternion.w * 1000) / 1000,
+    hp: player.health,
+    shield: player.shield,
+    doomed: player.doomed,
+    dead: player.shipState === 'dead',
+  };
+
+  const msg = JSON.stringify(state);
+  net.bytesSent += msg.length;
+  net.sendState(state);
+}
+
+// ---- HIT CONSENSUS ----
+// Shooter claims a hit. Nearest peers validate against their spatial data.
+// Majority confirms. If only 2 players, victim authority (victim confirms).
+
+function claimHit(targetPeerId, damage, weaponName) {
+  if (!net.active || !net.sendHitClaim) return;
+
+  const hitId = net.myPeerId + '_' + (net.hitIdCounter++);
+  const claim = {
+    hitId,
+    shooterId: net.myPeerId,
+    targetId: targetPeerId,
+    damage,
+    weapon: weaponName,
+    // Include shooter position for validation
+    sx: player.position.x,
+    sy: player.position.y,
+    sz: player.position.z,
+  };
+
+  // Track locally
+  net.pendingHits.set(hitId, {
+    ...claim,
+    votes: new Map(),
+    timestamp: performance.now(),
+  });
+
+  // Self-vote (shooter votes yes)
+  net.pendingHits.get(hitId).votes.set(net.myPeerId, true);
+
+  net.sendHitClaim(claim);
+}
+
+function handleHitClaim(claim, fromPeerId) {
+  // Validate: was the target plausibly in the shooter's line of fire?
+  // Check using our local spatial data (the broadcast tier gives us everyone's position)
+  const shooter = net.peers.get(claim.shooterId);
+  const target = net.peers.get(claim.targetId);
+
+  // If the target is us, we have the most accurate data
+  let valid = true;
+  if (claim.targetId === net.myPeerId) {
+    // Am I near where the shooter claims? (generous tolerance: 200 units)
+    const dist = Math.sqrt(
+      (player.position.x - claim.sx) ** 2 +
+      (player.position.y - claim.sy) ** 2 +
+      (player.position.z - claim.sz) ** 2
+    );
+    // If shooter was within weapon range, plausible
+    valid = dist < 4000;
+  } else if (shooter && shooter.state && target && target.state) {
+    // Third-party validation: check if target was near shooter based on our data
+    const dx = (shooter.state.px || 0) - (target.state.px || 0);
+    const dy = (shooter.state.py || 0) - (target.state.py || 0);
+    const dz = (shooter.state.pz || 0) - (target.state.pz || 0);
+    const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    valid = dist < 4000;
+  }
+
+  // Send vote
+  if (net.sendHitVote) {
+    net.sendHitVote({
+      hitId: claim.hitId,
+      valid,
+      voterId: net.myPeerId,
+    });
+  }
+
+  // If we are the target and the hit is valid, apply damage locally
+  // (gives responsive feel; consensus can override if vote fails)
+  if (claim.targetId === net.myPeerId && valid) {
+    playerTakeDamage(claim.damage, null);
+  }
+}
+
+function handleHitVote(vote, fromPeerId) {
+  const hit = net.pendingHits.get(vote.hitId);
+  if (!hit) return;
+  hit.votes.set(vote.voterId, vote.valid);
+
+  // Check consensus (majority of peers who voted)
+  const totalPeers = net.peers.size + 1; // +1 for self
+  const votesNeeded = Math.ceil(totalPeers / 2);
+  let yesVotes = 0, noVotes = 0;
+  for (const v of hit.votes.values()) {
+    if (v) yesVotes++; else noVotes++;
+  }
+
+  if (yesVotes >= votesNeeded) {
+    // Hit confirmed by consensus
+    net.pendingHits.delete(vote.hitId);
+  } else if (noVotes >= votesNeeded) {
+    // Hit rejected; if we already applied damage, we'd need to reverse
+    // (for now, accept some imprecision; damage was already applied on victim side)
+    net.pendingHits.delete(vote.hitId);
+  }
+}
+
+function handleNetEvent(evt, fromPeerId) {
+  if (evt.type === 'kill') {
+    addKillFeed(evt.killerName || 'Peer', evt.victimName || 'Peer');
+  }
+}
+
+function spawnNetworkProjectile(data, fromPeerId) {
+  // Spawn a visual-only projectile from a network peer's fire event
+  if (!data || !data.ox) return;
+  const origin = new THREE.Vector3(data.ox, data.oy, data.oz);
+  const vel = new THREE.Vector3(data.vx, data.vy, data.vz);
+  const color = data.color || 0xffaa00;
+  // Reuse existing Projectile class but mark as network (no local damage)
+  const proj = new Projectile(origin, vel, 0, 0, 'network', color);
+  proj.isNetwork = true;
+  game.projectiles.push(proj);
+}
+
+// Clean up stale pending hits (older than 2 seconds)
+function cleanupPendingHits() {
+  const now = performance.now();
+  for (const [id, hit] of net.pendingHits) {
+    if (now - hit.timestamp > 2000) net.pendingHits.delete(id);
+  }
+}
 
 // ---- THREE.JS SETUP ----
 
@@ -909,18 +1406,56 @@ function checkBoxCollision(pos, radius) {
 }
 
 function resolveCollision(pos, velocity, radius) {
-  const hit = checkBoxCollision(pos, radius);
-  if (hit) {
-    const normal = new THREE.Vector3().subVectors(pos, hit.closest);
-    const dist = normal.length();
-    if (dist < 0.01) { normal.set(0, 1, 0); }
-    else { normal.divideScalar(dist); }
-    // Push out
-    pos.add(normal.clone().multiplyScalar(radius - dist + 1));
-    // Reflect velocity
-    const vDotN = velocity.dot(normal);
-    if (vDotN < 0) {
-      velocity.sub(normal.clone().multiplyScalar(vDotN * 1.2));
+  // Anti-magnetic wall repulsion: walls generate a strong short-range repulsive force.
+  // As you approach, the force ramps up steeply (inverse-square), pushing you away
+  // before you ever touch the surface. No clipping possible.
+  // Also includes a hard backstop if somehow inside the wall.
+  const REPULSE_RANGE = radius * 2.5; // force field starts at 2.5x radius from surface
+  const REPULSE_STRENGTH = 8000;      // base repulsion force
+  const HARD_PUSH = radius + 2;       // hard push-out distance (safety net)
+
+  for (const box of game.levelBoxes) {
+    // Closest point on box surface to our position
+    const cx = Math.max(box.min.x, Math.min(pos.x, box.max.x));
+    const cy = Math.max(box.min.y, Math.min(pos.y, box.max.y));
+    const cz = Math.max(box.min.z, Math.min(pos.z, box.max.z));
+    const dx = pos.x - cx, dy = pos.y - cy, dz = pos.z - cz;
+    const distSq = dx * dx + dy * dy + dz * dz;
+
+    if (distSq < REPULSE_RANGE * REPULSE_RANGE) {
+      const dist = Math.sqrt(distSq);
+      const normal = new THREE.Vector3();
+
+      if (dist < 0.1) {
+        // Inside or on the surface: push out along dominant axis
+        const bx = (box.min.x + box.max.x) / 2;
+        const by = (box.min.y + box.max.y) / 2;
+        const bz = (box.min.z + box.max.z) / 2;
+        normal.set(pos.x - bx, pos.y - by, pos.z - bz);
+        if (normal.lengthSq() < 0.01) normal.set(0, 1, 0);
+        normal.normalize();
+        pos.add(normal.clone().multiplyScalar(HARD_PUSH));
+        // Kill velocity into wall
+        const vn = velocity.dot(normal);
+        if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
+      } else {
+        normal.set(dx / dist, dy / dist, dz / dist);
+
+        // Repulsive force: inverse-square, very strong close up, gentle at range
+        const penetration = REPULSE_RANGE - dist;
+        const ratio = penetration / REPULSE_RANGE; // 0 at edge, 1 at surface
+        const force = REPULSE_STRENGTH * ratio * ratio; // quadratic ramp
+
+        // Apply force as velocity change (frame-rate independent via dt approximation)
+        velocity.add(normal.clone().multiplyScalar(force * (1/60)));
+
+        // Hard backstop: if actually overlapping, push out immediately
+        if (dist < radius) {
+          pos.add(normal.clone().multiplyScalar(radius - dist + 1));
+          const vn = velocity.dot(normal);
+          if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
+        }
+      }
     }
   }
 }
@@ -1088,10 +1623,16 @@ class Bot {
     }
     this.velocity.multiplyScalar(1 - this.chassis.deceleration * dt / Math.max(speed, 1));
 
-    this.position.add(this.velocity.clone().multiplyScalar(dt));
-
-    // Collision with level geometry
-    resolveCollision(this.position, this.velocity, this.chassis.hullLength * 0.5);
+    // Substep movement + collision (prevents tunneling at high speed)
+    const botCollR = this.chassis.hullLength * 0.5;
+    const botMoveLen = this.velocity.length() * dt;
+    const botMaxStep = botCollR * 0.8;
+    const botSubs = Math.max(1, Math.ceil(botMoveLen / botMaxStep));
+    const botSubDt = dt / botSubs;
+    for (let ss = 0; ss < botSubs; ss++) {
+      this.position.add(this.velocity.clone().multiplyScalar(botSubDt));
+      resolveCollision(this.position, this.velocity, botCollR);
+    }
 
     // Boundary clamp
     const s = LSS.ARENA_SIZE * 0.9;
@@ -1103,7 +1644,7 @@ class Bot {
       this.mesh.lookAt(lookAt);
     }
 
-    // AI: fire at player
+    // AI: fire at player (with line-of-sight check)
     this.fireTimer -= dt;
     if (this.fireTimer <= 0 && game.state === 'playing') {
       const toPlayer = new THREE.Vector3().subVectors(player.position, this.position);
@@ -1111,8 +1652,13 @@ class Bot {
       if (distToPlayer < this.loadout.weapon.range && player.shipState !== 'dead') {
         const dot = toPlayer.normalize().dot(this.targetDir);
         if (dot > 0.7) {
-          this.fireAtPlayer(toPlayer, distToPlayer);
-          this.fireTimer = this.loadout.weapon.fireRate * (1 + Math.random() * 0.5);
+          // LOS check: raycast toward player, only fire if path is clear
+          const losDir = toPlayer.clone().normalize();
+          const losDist = raycastLevel(this.position, losDir, distToPlayer);
+          if (losDist >= distToPlayer * 0.95) {
+            this.fireAtPlayer(toPlayer, distToPlayer);
+            this.fireTimer = this.loadout.weapon.fireRate * (1 + Math.random() * 0.5);
+          }
         }
       }
     }
@@ -1122,7 +1668,31 @@ class Bot {
 
   findTarget() {
     if (player.shipState !== 'dead' && player.team !== this.team) {
-      this.aiTarget = player.position.clone();
+      // LOS check: only track player if line of sight is clear
+      const toPlayer = new THREE.Vector3().subVectors(player.position, this.position);
+      const dist = toPlayer.length();
+      const dir = toPlayer.clone().normalize();
+      const losDist = raycastLevel(this.position, dir, dist);
+      if (losDist >= dist * 0.95) {
+        // Can see the player; target them
+        this.aiTarget = player.position.clone();
+      } else {
+        // Can't see through walls; last known position fades, wander instead
+        if (this.aiTarget) {
+          // Keep old target briefly (simulate memory), but add drift
+          this.aiTarget.add(new THREE.Vector3(
+            (Math.random() - 0.5) * 200,
+            (Math.random() - 0.5) * 100,
+            (Math.random() - 0.5) * 200
+          ));
+        } else {
+          this.aiTarget = new THREE.Vector3(
+            (Math.random() - 0.5) * 3000,
+            (Math.random() - 0.5) * 1000,
+            (Math.random() - 0.5) * 3000
+          );
+        }
+      }
     } else {
       this.aiTarget = new THREE.Vector3(
         (Math.random() - 0.5) * 3000,
@@ -1549,7 +2119,18 @@ function selectLoadout(key) {
   game.playerInStasis = false;
   game.playerStasisTimer = 0;
 
+  // In multiplayer, still spawn bots to fill slots; network players coexist
   spawnBots();
+
+  // Announce our loadout to peers
+  if (net.active && net.sendLoadout) {
+    net.sendLoadout({
+      loadoutKey: player.loadoutKey,
+      team: player.team,
+      peerId: net.myPeerId,
+    });
+  }
+
   game.state = 'warmup';
   game.warmupTimer = LSS.WARMUP_TIME;
   game.roundTimer = LSS.ROUND_TIME;
@@ -1826,11 +2407,16 @@ function updatePlayerMovement(dt) {
     if (player.doomTimer <= 0) playerDie(null);
   }
 
-  // Apply velocity
-  player.position.add(player.velocity.clone().multiplyScalar(dt));
-
-  // Collision with level geometry
-  resolveCollision(player.position, player.velocity, ch.hullLength * 0.4);
+  // Apply velocity with substep collision (prevents tunneling through walls at high speed)
+  const collRadius = ch.hullLength * 0.4;
+  const moveLen = player.velocity.length() * dt;
+  const MAX_STEP = collRadius * 0.8; // never move more than ~80% of collision radius per substep
+  const subSteps = Math.max(1, Math.ceil(moveLen / MAX_STEP));
+  const subDt = dt / subSteps;
+  for (let ss = 0; ss < subSteps; ss++) {
+    player.position.add(player.velocity.clone().multiplyScalar(subDt));
+    resolveCollision(player.position, player.velocity, collRadius);
+  }
 
   // Boundary clamp + soft push
   const s = LSS.ARENA_SIZE * 0.9;
@@ -1924,6 +2510,12 @@ function fireWeapon() {
   if (w.mode === 'hitscan') fireHitscan(origin, forward, w);
   else if (w.mode === 'projectile') fireProjectile(origin, forward, w);
   else if (w.mode === 'spread') fireSpread(origin, forward, w);
+
+  // Trigger HUD gun muzzle flash
+  player.muzzleFlashTimer = 0.08;
+  player.muzzleFlashSide = 1 - player.muzzleFlashSide; // alternate left/right
+  if (player.muzzleFlashSide === 0) player.gunRecoilL = 1.0;
+  else player.gunRecoilR = 1.0;
 
   // ---- WEAPON FEEDBACK ----
   // Muzzle flash (bright point light at weapon position, fades fast)
@@ -2926,154 +3518,599 @@ function pollGamepad() {
   if (input.gpCore && !input.gpCorePrev) activateCore();
 }
 
-// ---- TF2-STYLE HUD DRAWING ----
+// ---- CIRCUMPUNCT HUD ----
+// Concentric rings centered on crosshair. Health, shield, core, abilities, ammo, speed
+// all mapped into ring arcs, tick marks, and bracket geometry.
+// The HUD is the circumpunct: dot (crosshair), field (rings), boundary (outer brackets).
 
-function drawHealthBar() {
-  const canvas = document.getElementById('health-canvas');
-  const ctx = canvas.getContext('2d');
-  const dpr = window.devicePixelRatio || 1;
-  const cw = 500, ch = 70;
-  canvas.width = cw * dpr;
-  canvas.height = ch * dpr;
-  canvas.style.width = cw + 'px';
-  canvas.style.height = ch + 'px';
-  ctx.scale(dpr, dpr);
+const hudCanvas = document.getElementById('circumpunct-hud');
+const hudCtx = hudCanvas.getContext('2d');
 
+function drawCircumpunctHUD() {
   if (!player.chassis) return;
 
-  const segments = player.chassis.healthSegments;
-  const barW = 440, barH = 30;
-  const barX = (cw - barW) / 2, barY = 5;
-  const segGap = 3;
-  const segW = (barW - segGap * (segments - 1)) / segments;
+  const dpr = window.devicePixelRatio || 1;
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  hudCanvas.width = W * dpr;
+  hudCanvas.height = H * dpr;
+  hudCanvas.style.width = W + 'px';
+  hudCanvas.style.height = H + 'px';
+  const ctx = hudCtx;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, W, H);
 
+  const cx = W / 2;
+  const cy = H / 2;
+  const t = game.time;
+
+  // ---- Derived values ----
   const healthPct = Math.max(0, player.health / player.maxHealth);
+  const shieldPct = player.maxShield > 0 ? Math.max(0, player.shield / player.maxShield) : 0;
+  const corePct = Math.min(1, player.coreMeter / 100);
+  const speedPct = Math.min(1, player.velocity.length() / (player.chassis.flightSpeed * 1.5));
+  const isDoomed = player.doomed && player.shipState !== 'dead';
 
-  // Draw segments
+  // ---- Color palette ----
+  const white = 'rgba(255,255,255,';
+  const cyan = 'rgba(100,200,255,';
+  const amber = 'rgba(255,170,0,';
+  const red = 'rgba(255,50,30,';
+  const green = 'rgba(100,255,150,';
+
+  // Health color
+  let hCol;
+  if (isDoomed) {
+    const flash = 0.4 + Math.abs(Math.sin(t * 6)) * 0.6;
+    hCol = `rgba(255,30,0,${flash})`;
+  } else if (healthPct < 0.3) hCol = red + '0.9)';
+  else if (healthPct < 0.6) hCol = amber + '0.8)';
+  else hCol = green + '0.7)';
+
+  // ---- LAYER 0: CENTER DOT (the aperture) ----
+  ctx.fillStyle = white + '0.9)';
+  ctx.beginPath();
+  ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Small crosshair lines (subtle)
+  ctx.strokeStyle = white + '0.4)';
+  ctx.lineWidth = 1.5;
+  const chGap = 10, chLen = 28;
+  ctx.beginPath();
+  ctx.moveTo(cx - chGap - chLen, cy); ctx.lineTo(cx - chGap, cy);
+  ctx.moveTo(cx + chGap, cy); ctx.lineTo(cx + chGap + chLen, cy);
+  ctx.moveTo(cx, cy - chGap - chLen); ctx.lineTo(cx, cy - chGap);
+  ctx.moveTo(cx, cy + chGap); ctx.lineTo(cx, cy + chGap + chLen);
+  ctx.stroke();
+
+  // ---- LAYER 1: INNER RING (Health) ----
+  // Segmented arc, bottom half (from 7 o'clock to 5 o'clock)
+  const r1 = 150;
+  const healthArcStart = Math.PI * 0.65;   // ~117 degrees (lower left)
+  const healthArcEnd = Math.PI * 2.35;     // ~423 degrees (lower right, wrapping)
+  const healthArcSpan = healthArcEnd - healthArcStart;
+  const segments = player.chassis.healthSegments;
+  const segGap = 0.04; // radians gap between segments
+
+  // Background ring (faint)
+  ctx.strokeStyle = white + '0.1)';
+  ctx.lineWidth = 8;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r1, healthArcStart, healthArcEnd);
+  ctx.stroke();
+
+  // Health segments
   for (let i = 0; i < segments; i++) {
-    const sx = barX + i * (segW + segGap);
+    const segStart = healthArcStart + (healthArcSpan / segments) * i + segGap / 2;
+    const segEnd = healthArcStart + (healthArcSpan / segments) * (i + 1) - segGap / 2;
+    const segStartPct = i / segments;
 
-    // Background
-    ctx.fillStyle = 'rgba(15,15,25,0.9)';
-    ctx.fillRect(sx, barY, segW, barH);
-    ctx.strokeStyle = 'rgba(60,60,80,0.5)';
-    ctx.strokeRect(sx, barY, segW, barH);
+    if (healthPct > segStartPct) {
+      const fillPct = Math.min(1, (healthPct - segStartPct) / (1 / segments));
+      const fillEnd = segStart + (segEnd - segStart) * fillPct;
 
-    // Fill amount for this segment
-    const segStart = i / segments;
-    const segEnd = (i + 1) / segments;
+      ctx.strokeStyle = hCol;
+      ctx.lineWidth = 8;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r1, segStart, fillEnd);
+      ctx.stroke();
 
-    if (healthPct > segStart) {
-      const fillPct = Math.min(1, (healthPct - segStart) / (1 / segments));
-      const fillW = segW * fillPct;
+      // Brighter inner edge
+      ctx.strokeStyle = white + '0.15)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r1 - 5, segStart, fillEnd);
+      ctx.stroke();
+    }
 
-      // Color based on health state
-      if (player.doomed) {
-        // Flashing red when doomed
-        const flash = Math.sin(game.time * 8) > 0 ? 1 : 0.4;
-        ctx.fillStyle = `rgba(255,30,0,${flash})`;
-      } else if (healthPct < 0.33) {
-        ctx.fillStyle = 'rgba(255,80,0,0.9)';
-      } else if (healthPct < 0.6) {
-        ctx.fillStyle = 'rgba(220,200,0,0.9)';
-      } else {
-        ctx.fillStyle = 'rgba(0,200,80,0.9)';
-      }
-      ctx.fillRect(sx + 1, barY + 1, fillW - 2, barH - 2);
-
-      // Inner glow
-      const gradient = ctx.createLinearGradient(sx, barY, sx, barY + barH);
-      gradient.addColorStop(0, 'rgba(255,255,255,0.15)');
-      gradient.addColorStop(0.5, 'rgba(255,255,255,0)');
-      gradient.addColorStop(1, 'rgba(0,0,0,0.1)');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(sx + 1, barY + 1, fillW - 2, barH - 2);
+    // Segment boundary tick
+    if (i > 0) {
+      const tickAngle = healthArcStart + (healthArcSpan / segments) * i;
+      const tx1 = cx + Math.cos(tickAngle) * (r1 - 14);
+      const ty1 = cy + Math.sin(tickAngle) * (r1 - 14);
+      const tx2 = cx + Math.cos(tickAngle) * (r1 + 14);
+      const ty2 = cy + Math.sin(tickAngle) * (r1 + 14);
+      ctx.strokeStyle = white + '0.12)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(tx1, ty1); ctx.lineTo(tx2, ty2);
+      ctx.stroke();
     }
   }
 
-  // Hull text
-  ctx.fillStyle = '#fff';
-  ctx.font = 'bold 10px Courier New';
-  ctx.textAlign = 'left';
-  ctx.fillText('HULL', barX, barY + barH + 14);
-  ctx.textAlign = 'right';
-  ctx.fillText(Math.ceil(player.health) + ' / ' + player.maxHealth, barX + barW, barY + barH + 14);
+  // Health text (below ring)
+  ctx.fillStyle = white + '0.6)';
+  ctx.font = '13px Courier New';
+  ctx.textAlign = 'center';
+  ctx.fillText(Math.ceil(player.health) + '', cx, cy + r1 + 24);
 
-  // Shield line (thin bar across top of health segments)
-  const shieldPct = Math.max(0, player.shield / player.maxShield);
-  const shieldW = barW * shieldPct;
-  const shieldH = 4;
-  const shieldY = barY - shieldH - 2;
+  // ---- LAYER 2: SHIELD RING ----
+  // Thinner ring, upper half (from 11 o'clock to 1 o'clock)
+  const r2 = 190;
+  const shieldArcStart = -Math.PI * 0.85;
+  const shieldArcEnd = -Math.PI * 0.15;
+  const shieldArcSpan = shieldArcEnd - shieldArcStart;
 
-  // Shield background
-  ctx.fillStyle = 'rgba(15,15,30,0.6)';
-  ctx.fillRect(barX, shieldY, barW, shieldH);
+  // Background
+  ctx.strokeStyle = cyan + '0.1)';
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r2, shieldArcStart, shieldArcEnd);
+  ctx.stroke();
 
   // Shield fill
   if (shieldPct > 0) {
-    ctx.fillStyle = 'rgba(60,160,255,0.85)';
-    ctx.fillRect(barX, shieldY, shieldW, shieldH);
-    // Shine
-    ctx.fillStyle = 'rgba(120,200,255,0.3)';
-    ctx.fillRect(barX, shieldY, shieldW, shieldH / 2);
+    const fillEnd = shieldArcStart + shieldArcSpan * shieldPct;
+    ctx.strokeStyle = cyan + '0.6)';
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r2, shieldArcStart, fillEnd);
+    ctx.stroke();
   }
 
-  // Dash pips (below health bar, centered)
-  const pipW = 22, pipH = 8, pipGap = 6;
-  const totalPipW = player.maxDashes * pipW + (player.maxDashes - 1) * pipGap;
-  const pipStartX = (cw - totalPipW) / 2;
-  const pipY = barY + barH + 22;
+  // Tick marks along shield arc (every 10%)
+  for (let i = 0; i <= 10; i++) {
+    const angle = shieldArcStart + shieldArcSpan * (i / 10);
+    const inner = i % 5 === 0 ? r2 - 12 : r2 - 6;
+    const outer = i % 5 === 0 ? r2 + 12 : r2 + 6;
+    ctx.strokeStyle = cyan + (i % 5 === 0 ? '0.15)' : '0.08)');
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(angle) * inner, cy + Math.sin(angle) * inner);
+    ctx.lineTo(cx + Math.cos(angle) * outer, cy + Math.sin(angle) * outer);
+    ctx.stroke();
+  }
+
+  // ---- LAYER 3: SPEED ARC (left side) ----
+  const r3 = 240;
+  const speedArcStart = Math.PI * 0.55;
+  const speedArcEnd = Math.PI * 0.95;
+  const speedSpan = speedArcEnd - speedArcStart;
+
+  ctx.strokeStyle = white + '0.08)';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r3, speedArcStart, speedArcEnd);
+  ctx.stroke();
+
+  if (speedPct > 0) {
+    ctx.strokeStyle = white + '0.45)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r3, speedArcStart, speedArcStart + speedSpan * speedPct);
+    ctx.stroke();
+  }
+
+  // Speed text
+  const speedAngle = (speedArcStart + speedArcEnd) / 2;
+  const speedTx = cx + Math.cos(speedAngle) * (r3 + 22);
+  const speedTy = cy + Math.sin(speedAngle) * (r3 + 22);
+  ctx.fillStyle = white + '0.45)';
+  ctx.font = '11px Courier New';
+  ctx.textAlign = 'center';
+  ctx.fillText(Math.floor(player.velocity.length()), speedTx, speedTy);
+
+  // ---- LAYER 4: AMMO ARC (right side) ----
+  const ammoPct = player.weapon.clipSize >= 999 ? 1 : player.clipAmmo / player.maxClip;
+  const ammoArcStart = Math.PI * 0.05;
+  const ammoArcEnd = Math.PI * 0.45;
+  const ammoSpan = ammoArcEnd - ammoArcStart;
+
+  ctx.strokeStyle = white + '0.08)';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r3, ammoArcStart, ammoArcEnd);
+  ctx.stroke();
+
+  if (ammoPct > 0) {
+    const ammoCol = player.reloading ? amber + '0.55)' : white + '0.45)';
+    ctx.strokeStyle = ammoCol;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r3, ammoArcStart, ammoArcStart + ammoSpan * ammoPct);
+    ctx.stroke();
+  }
+
+  // Ammo text
+  const ammoAngle = (ammoArcStart + ammoArcEnd) / 2;
+  const ammoTx = cx + Math.cos(ammoAngle) * (r3 + 22);
+  const ammoTy = cy + Math.sin(ammoAngle) * (r3 + 22);
+  ctx.fillStyle = white + '0.45)';
+  ctx.font = '11px Courier New';
+  ctx.textAlign = 'center';
+  const ammoStr = player.weapon.clipSize >= 999 ? 'INF' : player.clipAmmo + '';
+  ctx.fillText(ammoStr, ammoTx, ammoTy);
+
+  // ---- LAYER 5: OUTER RING (Core meter) ----
+  // Dotted/dashed ring with bracket elements that fill clockwise
+  const r4 = 290;
+
+  // Subtle outer circle (always visible, very faint)
+  ctx.strokeStyle = white + '0.06)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([4, 14]);
+  ctx.beginPath();
+  ctx.arc(cx, cy, r4, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Core fill arc (full circle, clockwise from top)
+  if (corePct > 0) {
+    const coreStart = -Math.PI / 2;
+    const coreEnd = coreStart + Math.PI * 2 * corePct;
+    const coreCol = corePct >= 1 ? amber + (0.4 + Math.sin(t * 4) * 0.2) + ')' : amber + '0.25)';
+    ctx.strokeStyle = coreCol;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r4, coreStart, coreEnd);
+    ctx.stroke();
+  }
+
+  // Core ready pulse
+  if (corePct >= 1) {
+    const pulse = 0.05 + Math.sin(t * 3) * 0.05;
+    ctx.strokeStyle = amber + pulse + ')';
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r4, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  // ---- LAYER 6: FLOATING BRACKETS (Abilities) ----
+  // Three bracket pairs at cardinal positions around the outer ring
+  const r5 = 340;
+  const bracketAngleWidth = 0.22; // radians each bracket spans
+  const abilityAngles = [
+    -Math.PI / 2 - 0.8,   // Q: upper-left area
+    -Math.PI / 2,          // E: top center
+    -Math.PI / 2 + 0.8,   // F: upper-right area
+  ];
+  const abilityKeys = ['Q', 'E', 'F'];
+
+  for (let i = 0; i < 3; i++) {
+    const angle = abilityAngles[i];
+    const cd = player.abilityCooldowns[i];
+    const active = player.abilityActive[i];
+    const maxCd = player.abilities[i] ? player.abilities[i].cooldown : 1;
+    const cdPct = cd > 0 ? cd / maxCd : 0;
+    const ready = cd <= 0;
+
+    // Bracket shape: two short arcs with endcap lines
+    const bStart = angle - bracketAngleWidth / 2;
+    const bEnd = angle + bracketAngleWidth / 2;
+
+    // Background bracket (always visible)
+    ctx.strokeStyle = white + '0.12)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r5, bStart, bEnd);
+    ctx.stroke();
+
+    // Endcap ticks
+    for (const a of [bStart, bEnd]) {
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * (r5 - 12), cy + Math.sin(a) * (r5 - 12));
+      ctx.lineTo(cx + Math.cos(a) * (r5 + 12), cy + Math.sin(a) * (r5 + 12));
+      ctx.stroke();
+    }
+
+    // Cooldown sweep (fills as ability recharges; empty = on cooldown)
+    if (cdPct > 0) {
+      // Dark overlay (cooldown remaining)
+      const sweepEnd = bStart + (bEnd - bStart) * (1 - cdPct);
+      ctx.strokeStyle = white + '0.35)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r5, bStart, sweepEnd);
+      ctx.stroke();
+    } else {
+      // Ready glow
+      ctx.strokeStyle = active ? amber + '0.85)' : cyan + '0.4)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r5, bStart, bEnd);
+      ctx.stroke();
+    }
+
+    // Key label
+    const labelAngle = angle;
+    const labelR = r5 + 22;
+    ctx.fillStyle = ready ? (active ? amber + '0.9)' : white + '0.5)') : white + '0.2)';
+    ctx.font = '11px Courier New';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(abilityKeys[i], cx + Math.cos(labelAngle) * labelR, cy + Math.sin(labelAngle) * labelR);
+  }
+
+  // ---- LAYER 7: OUTERMOST DECORATION (rotating tick ring) ----
+  const r6 = 390;
+  const tickCount = 96;
+  const rotOffset = t * 0.08; // slow rotation
+
+  for (let i = 0; i < tickCount; i++) {
+    const angle = (Math.PI * 2 / tickCount) * i + rotOffset;
+    const isMajor = i % 12 === 0;
+    const isMid = i % 4 === 0;
+    const len = isMajor ? 16 : isMid ? 8 : 4;
+    const opacity = isMajor ? 0.18 : isMid ? 0.1 : 0.05;
+
+    ctx.strokeStyle = white + opacity + ')';
+    ctx.lineWidth = isMajor ? 2 : 1;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(angle) * (r6 - len), cy + Math.sin(angle) * (r6 - len));
+    ctx.lineTo(cx + Math.cos(angle) * (r6 + len), cy + Math.sin(angle) * (r6 + len));
+    ctx.stroke();
+  }
+
+  // ---- LAYER 8: CORNER BRACKETS (floating, like the reference image) ----
+  const r7 = 420;
+  const bracketSize = 40;
+  const cornerAngles = [Math.PI * 0.25, Math.PI * 0.75, Math.PI * 1.25, Math.PI * 1.75];
+  const rot2 = -t * 0.05; // counter-rotate
+
+  ctx.strokeStyle = white + '0.12)';
+  ctx.lineWidth = 2;
+  for (const base of cornerAngles) {
+    const a = base + rot2;
+    const bx = cx + Math.cos(a) * r7;
+    const by = cy + Math.sin(a) * r7;
+
+    // L-shaped bracket
+    const perpA = a + Math.PI / 2;
+    const radA = a;
+
+    ctx.beginPath();
+    // Radial arm
+    ctx.moveTo(bx - Math.cos(radA) * bracketSize * 0.5, by - Math.sin(radA) * bracketSize * 0.5);
+    ctx.lineTo(bx + Math.cos(radA) * bracketSize * 0.5, by + Math.sin(radA) * bracketSize * 0.5);
+    ctx.stroke();
+
+    ctx.beginPath();
+    // Perpendicular arm
+    ctx.moveTo(bx + Math.cos(radA) * bracketSize * 0.5, by + Math.sin(radA) * bracketSize * 0.5);
+    ctx.lineTo(
+      bx + Math.cos(radA) * bracketSize * 0.5 + Math.cos(perpA) * bracketSize * 0.4,
+      by + Math.sin(radA) * bracketSize * 0.5 + Math.sin(perpA) * bracketSize * 0.4
+    );
+    ctx.stroke();
+  }
+
+  // ---- LAYER 9: LARGE BRACKET ELEMENTS (quadrant markers) ----
+  // Larger translucent bracket shapes like in the reference, at 45-degree intervals
+  const r8 = 460;
+  const qAngles = [0, Math.PI / 2, Math.PI, Math.PI * 1.5];
+  const rot3 = t * 0.03;
+
+  for (let qi = 0; qi < 4; qi++) {
+    const qa = qAngles[qi] + rot3;
+    const qx = cx + Math.cos(qa) * r8;
+    const qy = cy + Math.sin(qa) * r8;
+    const size = 28 + Math.sin(t * 0.5 + qi) * 6;
+
+    ctx.fillStyle = white + '0.05)';
+    ctx.save();
+    ctx.translate(qx, qy);
+    ctx.rotate(qa + Math.PI / 4);
+    ctx.fillRect(-size / 2, -size / 2, size, size);
+    ctx.restore();
+
+    // Border
+    ctx.strokeStyle = white + '0.1)';
+    ctx.lineWidth = 1;
+    ctx.save();
+    ctx.translate(qx, qy);
+    ctx.rotate(qa + Math.PI / 4);
+    ctx.strokeRect(-size / 2, -size / 2, size, size);
+    ctx.restore();
+  }
+
+  // ---- DASH PIPS (small dots below center) ----
+  const dashY = cy + r1 + 35;
+  const pipR = 5;
+  const pipGap = 14;
+  const totalPipW = player.maxDashes * (pipR * 2 + pipGap) - pipGap;
+  const pipStartX = cx - totalPipW / 2;
 
   for (let i = 0; i < player.maxDashes; i++) {
-    const px = pipStartX + i * (pipW + pipGap);
+    const px = pipStartX + i * (pipR * 2 + pipGap) + pipR;
+    ctx.beginPath();
+    ctx.arc(px, dashY, pipR, 0, Math.PI * 2);
     if (i < player.dashCharges) {
-      ctx.fillStyle = 'rgba(80,180,255,0.9)';
-      ctx.fillRect(px, pipY, pipW, pipH);
-      ctx.fillStyle = 'rgba(140,220,255,0.4)';
-      ctx.fillRect(px, pipY, pipW, pipH / 2);
+      ctx.fillStyle = cyan + '0.8)';
+      ctx.fill();
     } else {
-      ctx.fillStyle = 'rgba(30,30,50,0.6)';
-      ctx.fillRect(px, pipY, pipW, pipH);
+      ctx.strokeStyle = white + '0.18)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
     }
-    ctx.strokeStyle = 'rgba(80,120,180,0.3)';
-    ctx.strokeRect(px, pipY, pipW, pipH);
+  }
+
+  // ---- COCKPIT GUNS (corner-anchored, angled inward toward crosshair) ----
+  player.muzzleFlashTimer = Math.max(0, player.muzzleFlashTimer - (1/60));
+  player.gunRecoilL = Math.max(0, player.gunRecoilL - (1/60) * 12);
+  player.gunRecoilR = Math.max(0, player.gunRecoilR - (1/60) * 12);
+
+  // Gun dimensions: wide base anchored in corners, barrel points toward center
+  const gunLen = H * 0.45;       // how far the gun extends up from bottom
+  const gunBaseW = W * 0.18;     // width of the gun at the bottom (screen edge)
+  const gunTipW = W * 0.04;      // narrow barrel tip
+  // Angle: barrels aim slightly wider than center (not dead center)
+  const tipInset = W * 0.22;     // how far from center the barrel tip sits
+
+  const gunAccentCol = player.team === 'A' ? 'rgba(60,200,120,' : 'rgba(200,80,60,';
+
+  function drawGun(side, recoil, flashActive) {
+    const recoilAmt = recoil * 22;
+    const sway = Math.sin(t * 1.2 + side * Math.PI) * 2;
+
+    ctx.save();
+
+    // Anchor points: bottom corner (wide) to upper-inner (narrow barrel tip)
+    // Left gun: bottom-left corner -> up and inward
+    // Right gun: bottom-right corner -> up and inward
+    const baseY = H + 20 + recoilAmt + sway; // bottom (offscreen slightly)
+    const tipY = H - gunLen + recoilAmt + sway; // top of gun (barrel end)
+
+    let baseOuterX, baseInnerX, tipOuterX, tipInnerX;
+    if (side === 0) {
+      // Left gun
+      baseOuterX = -10;                       // flush with left edge
+      baseInnerX = gunBaseW - 10;             // wide base
+      tipOuterX = tipInset - gunTipW;         // narrow tip, outer edge
+      tipInnerX = tipInset;                   // narrow tip, inner edge
+    } else {
+      // Right gun (mirrored)
+      baseOuterX = W + 10;                    // flush with right edge
+      baseInnerX = W - gunBaseW + 10;         // wide base
+      tipOuterX = W - tipInset + gunTipW;     // narrow tip, outer edge
+      tipInnerX = W - tipInset;               // narrow tip, inner edge
+    }
+
+    // Main gun body (trapezoid: wide at bottom corner, narrow at barrel tip)
+    ctx.fillStyle = 'rgba(55,62,78,0.92)';
+    ctx.beginPath();
+    ctx.moveTo(baseOuterX, baseY);
+    ctx.lineTo(baseInnerX, baseY);
+    ctx.lineTo(tipInnerX, tipY);
+    ctx.lineTo(tipOuterX, tipY);
+    ctx.closePath();
+    ctx.fill();
+
+    // Darker barrel core (inner strip running along the gun)
+    ctx.fillStyle = 'rgba(35,40,50,0.9)';
+    ctx.beginPath();
+    const bFrac = 0.3; // barrel is 30% of gun width
+    if (side === 0) {
+      const bBaseO = baseOuterX + (baseInnerX - baseOuterX) * 0.35;
+      const bBaseI = baseOuterX + (baseInnerX - baseOuterX) * 0.65;
+      const bTipO = tipOuterX + (tipInnerX - tipOuterX) * 0.25;
+      const bTipI = tipOuterX + (tipInnerX - tipOuterX) * 0.75;
+      ctx.moveTo(bBaseO, baseY); ctx.lineTo(bBaseI, baseY);
+      ctx.lineTo(bTipI, tipY); ctx.lineTo(bTipO, tipY);
+    } else {
+      const bBaseO = baseInnerX + (baseOuterX - baseInnerX) * 0.35;
+      const bBaseI = baseInnerX + (baseOuterX - baseInnerX) * 0.65;
+      const bTipO = tipInnerX + (tipOuterX - tipInnerX) * 0.25;
+      const bTipI = tipInnerX + (tipOuterX - tipInnerX) * 0.75;
+      ctx.moveTo(bBaseO, baseY); ctx.lineTo(bBaseI, baseY);
+      ctx.lineTo(bTipI, tipY); ctx.lineTo(bTipO, tipY);
+    }
+    ctx.closePath();
+    ctx.fill();
+
+    // Team-colored accent line (runs along inner edge of gun)
+    ctx.strokeStyle = gunAccentCol + '0.6)';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(baseInnerX, baseY);
+    ctx.lineTo(tipInnerX, tipY);
+    ctx.stroke();
+
+    // Outer edge highlight
+    ctx.strokeStyle = 'rgba(120,130,150,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(baseOuterX, baseY);
+    ctx.lineTo(tipOuterX, tipY);
+    ctx.stroke();
+
+    // Panel seam lines (horizontal across the gun body)
+    ctx.strokeStyle = 'rgba(30,35,45,0.5)';
+    ctx.lineWidth = 1;
+    for (let i = 1; i <= 4; i++) {
+      const frac = i / 5;
+      const ly = baseY + (tipY - baseY) * frac;
+      const lxO = baseOuterX + (tipOuterX - baseOuterX) * frac;
+      const lxI = baseInnerX + (tipInnerX - baseInnerX) * frac;
+      ctx.beginPath(); ctx.moveTo(lxO, ly); ctx.lineTo(lxI, ly); ctx.stroke();
+    }
+
+    // Power indicator dot (near barrel tip)
+    const dotFrac = 0.85;
+    const dotX = (baseOuterX + baseInnerX) / 2 + ((tipOuterX + tipInnerX) / 2 - (baseOuterX + baseInnerX) / 2) * dotFrac;
+    const dotY = baseY + (tipY - baseY) * dotFrac;
+    ctx.fillStyle = player.clipAmmo > 0 ? 'rgba(0,255,120,0.8)' : 'rgba(255,50,30,0.8)';
+    ctx.beginPath(); ctx.arc(dotX, dotY, 3.5, 0, Math.PI * 2); ctx.fill();
+
+    // ---- MUZZLE FLASH (at barrel tip) ----
+    if (flashActive) {
+      const muzzleX = (tipOuterX + tipInnerX) / 2;
+      const muzzleY = tipY - 8;
+      const fi = player.muzzleFlashTimer / 0.08;
+
+      // Outer glow
+      const grad = ctx.createRadialGradient(muzzleX, muzzleY, 0, muzzleX, muzzleY, 100 * fi);
+      grad.addColorStop(0, `rgba(255,200,80,${0.9 * fi})`);
+      grad.addColorStop(0.25, `rgba(255,120,30,${0.6 * fi})`);
+      grad.addColorStop(1, 'rgba(255,80,0,0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath(); ctx.arc(muzzleX, muzzleY, 100 * fi, 0, Math.PI * 2); ctx.fill();
+
+      // Bright core
+      ctx.fillStyle = `rgba(255,255,220,${fi})`;
+      ctx.beginPath(); ctx.arc(muzzleX, muzzleY, 18 * fi, 0, Math.PI * 2); ctx.fill();
+
+      // Flash spikes
+      ctx.strokeStyle = `rgba(255,220,100,${0.7 * fi})`;
+      ctx.lineWidth = 2.5;
+      for (let spike = 0; spike < 8; spike++) {
+        const a = (spike / 8) * Math.PI * 2 + t * 25;
+        const sLen = (30 + Math.random() * 30) * fi;
+        ctx.beginPath(); ctx.moveTo(muzzleX, muzzleY);
+        ctx.lineTo(muzzleX + Math.cos(a) * sLen, muzzleY + Math.sin(a) * sLen); ctx.stroke();
+      }
+    }
+
+    ctx.restore();
+  }
+
+  const flashL = player.muzzleFlashTimer > 0 && player.muzzleFlashSide === 0;
+  const flashR = player.muzzleFlashTimer > 0 && player.muzzleFlashSide === 1;
+  drawGun(0, player.gunRecoilL, flashL);
+  drawGun(1, player.gunRecoilR, flashR);
+
+  // ---- DOOMED: red pulse on inner ring ----
+  if (isDoomed) {
+    const doomPulse = 0.15 + Math.abs(Math.sin(t * 5)) * 0.2;
+    ctx.strokeStyle = red + doomPulse + ')';
+    ctx.lineWidth = 30;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r1, 0, Math.PI * 2);
+    ctx.stroke();
   }
 }
 
 function updateHUD() {
   if (!player.chassis) return;
 
-  // Draw the TF2-style health/shield/dash canvas
-  drawHealthBar();
+  // Draw the circumpunct ring HUD
+  drawCircumpunctHUD();
 
-  // Core meter
+  // Core meter (keep DOM element updated for backward compat)
   const corePct = Math.min(100, player.coreMeter);
   document.getElementById('core-fill').style.width = corePct + '%';
   document.getElementById('core-value').textContent = Math.floor(corePct) + '%';
-  const coreContainer = document.getElementById('core-container');
-  coreContainer.className = corePct >= 100 ? 'ready' : '';
-
-  // Ammo
-  let ammoStr = player.weapon.clipSize >= 999 ? 'INF' : player.clipAmmo + ' / ' + player.maxClip;
-  // Northstar railgun charge indicator
-  if (player.loadoutKey === 'NORTHSTAR' && player.railgunCharge > 0.01) {
-    const chPct = Math.round(player.railgunCharge * 100);
-    const dmgMult = (1.0 + player.railgunCharge * 2.0).toFixed(1);
-    ammoStr += '  CHARGE: ' + chPct + '% (' + dmgMult + 'x)';
-  }
-  document.getElementById('ammo-display').textContent = ammoStr;
-
-  // Abilities
-  const slots = document.querySelectorAll('.ability-slot');
-  slots.forEach((slot, i) => {
-    if (i >= 3) return; // skip core slot
-    const cd = player.abilityCooldowns[i];
-    const active = player.abilityActive[i];
-    const maxCd = player.abilities[i] ? player.abilities[i].cooldown : 1;
-    const overlay = slot.querySelector('.cd-overlay');
-    if (overlay) overlay.style.height = cd > 0 ? (cd / maxCd * 100) + '%' : '0%';
-    slot.className = 'ability-slot' + (active ? ' active' : cd <= 0 ? ' ready' : '');
-  });
 
   // Doomed warning + vignette
   const isDoomed = player.doomed && player.shipState !== 'dead';
@@ -3094,12 +4131,6 @@ function updateHUD() {
 
   document.querySelector('.team-a').textContent = 'FLEET A: ' + game.scoreA;
   document.querySelector('.team-b').textContent = 'FLEET B: ' + game.scoreB;
-
-  // Speed
-  document.getElementById('speed-display').textContent = Math.floor(player.velocity.length()) + ' m/s';
-
-  // Controls hint (briefly on first few seconds)
-  // (ESC = settings is shown via the gamepad indicator area)
 }
 
 // ---- MINIMAP ----
@@ -3760,183 +4791,185 @@ function checkExecutions(dt) {
   if (!anyDoomed) document.getElementById('execution-prompt').style.display = 'none';
 }
 
-// ---- PROCEDURAL CURSIVE LETTER MAP ----
+// ---- UNDERGROUND CITY MAP GENERATOR ----
+// Feng shui rules for multiplayer arenas, applied to underground cavern cities.
+// Rules: circuit flow, compression/release rhythm, volume variation,
+// 3-second rule, vertical layering, sightline control, spawn safety, center principle.
+// Chamber types: cavern (open), tunnel (connector), spawn (team start)
+// Sizes: small (skirmish), medium (firefight), large (arena)
 
-// Generate a random 3-4 letter word from consonant-vowel patterns
-// ---- PROCEDURAL LEVEL GENERATOR (Room Graph + Softmax Sampling) ----
-// JS port of level_generator.py: learns from embedded training data, generates
-// room-graph levels, validates connectivity, then builds 3D geometry.
+// === UNDERGROUND CITY GENERATOR (feng shui rules) ===
+// 5v5 team combat; maps sized for 10 players.
 
-const ROOM_TYPES = ['spawn', 'hub', 'corridor', 'arena', 'flank', 'sniper', 'cover', 'objective'];
+// Ship unit = 150 (Dreadnought hull length + margin)
+// Chambers: 5x5x5 to 6x6x6 ships
+// Tunnels: 8-10 ships cross-section, variable aspect ratios
+const SHIP_UNIT = 150;
 
-const ROOM_SIZE_RANGES = {
-  spawn:     { wMin: 800, wMax: 1200, dMin: 700, dMax: 1000, hMin: 1200, hMax: 1600 },
-  hub:       { wMin: 1200, wMax: 2200, dMin: 1200, dMax: 2200, hMin: 1600, hMax: 2200 },
-  corridor:  { wMin: 400, wMax: 600,  dMin: 300, dMax: 450,  hMin: 800,  hMax: 1200 },
-  arena:     { wMin: 1000, wMax: 2800, dMin: 1000, dMax: 2800, hMin: 1400, hMax: 2200 },
-  flank:     { wMin: 500, wMax: 800,  dMin: 400, dMax: 600,  hMin: 800,  hMax: 1000 },
-  sniper:    { wMin: 400, wMax: 600,  dMin: 350, dMax: 450,  hMin: 600,  hMax: 800 },
-  cover:     { wMin: 400, wMax: 800,  dMin: 400, dMax: 600,  hMin: 900,  hMax: 1300 },
-  objective: { wMin: 500, wMax: 900,  dMin: 500, dMax: 900,  hMin: 1600, hMax: 2200 },
+const CAVERN_SIZES = {
+  small:  { rMin: SHIP_UNIT * 2.5, rMax: SHIP_UNIT * 3,   hMin: SHIP_UNIT * 2.5, hMax: SHIP_UNIT * 3 },
+  medium: { rMin: SHIP_UNIT * 2.5, rMax: SHIP_UNIT * 3,   hMin: SHIP_UNIT * 2.5, hMax: SHIP_UNIT * 3 },
+  large:  { rMin: SHIP_UNIT * 3,   rMax: SHIP_UNIT * 3.5, hMin: SHIP_UNIT * 3,   hMax: SHIP_UNIT * 3.5 },
+  spawn:  { rMin: SHIP_UNIT * 2.5, rMax: SHIP_UNIT * 3,   hMin: SHIP_UNIT * 2.5, hMax: SHIP_UNIT * 3 },
 };
+
+// Tunnel cross-section profiles (width x height in ship units, total area ~8-10 ships)
+const TUNNEL_PROFILES = [
+  { w: 3, h: 3 },   // square: 9 ships
+  { w: 4, h: 2 },   // wide flat: 8 ships
+  { w: 2, h: 4 },   // tall narrow: 8 ships
+  { w: 3, h: 3 },   // square again (weighted)
+  { w: 5, h: 2 },   // very wide: 10 ships
+  { w: 2, h: 5 },   // very tall: 10 ships
+  { w: 4, h: 3 },   // wide: 12 ships (generous)
+  { w: 1, h: 8 },   // slit: 8 ships (extreme)
+];
 
 // Embedded training data (compact): transition counts learned from 6 hand-crafted levels
-const TRAINED_TRANSITIONS = {
-  spawn: { corridor: 8, flank: 3, hub: 1 },
-  corridor: { spawn: 8, hub: 10, flank: 6, sniper: 4, cover: 4, arena: 6 },
-  hub: { corridor: 10, arena: 6, cover: 5, flank: 4, sniper: 2, objective: 2 },
-  arena: { hub: 6, cover: 3, corridor: 6, flank: 2 },
-  flank: { corridor: 6, hub: 4, sniper: 4, arena: 2 },
-  sniper: { corridor: 4, flank: 4, hub: 2 },
-  cover: { hub: 5, corridor: 4, arena: 3 },
-  objective: { hub: 2, arena: 1 },
-};
+// --- Graph generation ---
 
-const TRAINED_DEPTH_TYPES = {
-  0: { spawn: 6 },
-  1: { corridor: 8, flank: 3 },
-  2: { hub: 5, corridor: 4, flank: 3, cover: 2, arena: 2 },
-  3: { arena: 5, hub: 3, cover: 3, sniper: 3, corridor: 2, flank: 2 },
-  4: { corridor: 4, cover: 3, sniper: 2, flank: 2, arena: 1 },
-  5: { spawn: 3, corridor: 2, flank: 1 },
-};
+function rInt(lo, hi) { return lo + Math.floor(Math.random() * (hi - lo + 1)); }
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-function softmax(logits, temperature) {
-  temperature = Math.max(temperature, 0.01);
-  const scaled = logits.map(x => x / temperature);
-  const maxV = Math.max(...scaled);
-  const exps = scaled.map(x => Math.exp(x - maxV));
-  const total = exps.reduce((a, b) => a + b, 0);
-  return exps.map(e => e / total);
-}
+function generateCavernGraph() {
+  // Layout: ring of chambers around a central hub, with spawn pockets on opposite ends.
+  // Guarantees circuit flow (Rule 1), rhythm (Rule 2), volume variation (Rule 3).
+  const nodes = []; // { id, type, size, x, y, z, radius, height }
+  const edges = []; // { from, to }
 
-function sampleFromProbs(items, probs) {
-  let r = Math.random(), cum = 0;
-  for (let i = 0; i < items.length; i++) {
-    cum += probs[i];
-    if (r <= cum) return items[i];
+  // Center hub (Rule 8: most connected node)
+  const hubS = CAVERN_SIZES.large;
+  const hubR = rInt(hubS.rMin, hubS.rMax);
+  const hubH = rInt(hubS.hMin, hubS.hMax);
+  nodes.push({ id: 'center', type: 'large', x: 0, y: 0, z: 0, radius: hubR, height: hubH });
+
+  // Ring of chambers around center (6-8 chambers forming a circuit)
+  const ringCount = 6 + Math.floor(Math.random() * 3); // 6-8
+  // Ring radius: hub + average chamber radius + tunnel length (~3s of flight)
+  const ringRadius = hubR + SHIP_UNIT * 3 + rInt(SHIP_UNIT * 5, SHIP_UNIT * 7);
+  const sizePattern = ['medium', 'small', 'medium', 'small', 'medium', 'small', 'medium', 'small'];
+
+  for (let i = 0; i < ringCount; i++) {
+    const angle = (i / ringCount) * Math.PI * 2;
+    const sz = sizePattern[i % sizePattern.length];
+    const s = CAVERN_SIZES[sz];
+    const r = rInt(s.rMin, s.rMax);
+    const h = rInt(s.hMin, s.hMax);
+    // Vertical variation: alternate heights
+    const yOff = (i % 3 === 0) ? rInt(-300, -100) : (i % 3 === 1) ? rInt(100, 300) : 0;
+    nodes.push({
+      id: 'ring_' + i, type: sz,
+      x: Math.round(Math.cos(angle) * ringRadius),
+      y: yOff,
+      z: Math.round(Math.sin(angle) * ringRadius),
+      radius: r, height: h
+    });
+
+    // Connect to center (Rule 1: flow; Rule 8: center is most connected)
+    edges.push({ from: 'center', to: 'ring_' + i });
+
+    // Connect to previous ring node (creates the circuit, Rule 1)
+    if (i > 0) {
+      edges.push({ from: 'ring_' + (i - 1), to: 'ring_' + i });
+    }
   }
-  return items[items.length - 1];
-}
+  // Close the ring
+  edges.push({ from: 'ring_' + (ringCount - 1), to: 'ring_0' });
 
-function getTransitionProbs(fromType) {
-  const counts = TRAINED_TRANSITIONS[fromType] || {};
-  const total = Object.values(counts).reduce((a, b) => a + b, 0);
-  if (total === 0) return Object.fromEntries(ROOM_TYPES.map(t => [t, 1 / ROOM_TYPES.length]));
-  return Object.fromEntries(ROOM_TYPES.map(t => [t, (counts[t] || 0) / total]));
-}
-
-function getDepthProbs(depth) {
-  const counts = TRAINED_DEPTH_TYPES[Math.min(depth, 5)] || {};
-  const total = Object.values(counts).reduce((a, b) => a + b, 0);
-  if (total === 0) return Object.fromEntries(ROOM_TYPES.map(t => [t, 1 / ROOM_TYPES.length]));
-  return Object.fromEntries(ROOM_TYPES.map(t => [t, (counts[t] || 0) / total]));
-}
-
-function sampleRoomType(fromType, depth, temperature) {
-  const trans = getTransitionProbs(fromType);
-  const depthP = getDepthProbs(depth);
-  const combined = {};
-  ROOM_TYPES.forEach(t => { combined[t] = 0.6 * (trans[t] || 0) + 0.4 * (depthP[t] || 0); });
-  const types = Object.keys(combined);
-  const logits = types.map(t => Math.log(Math.max(combined[t], 1e-8)));
-  const probs = softmax(logits, temperature);
-  return sampleFromProbs(types, probs);
-}
-
-function sampleRoomSize(type) {
-  const r = ROOM_SIZE_RANGES[type] || ROOM_SIZE_RANGES.corridor;
-  const rInt = (lo, hi) => lo + Math.floor(Math.random() * (hi - lo + 1));
-  return { width: rInt(r.wMin, r.wMax), depth: rInt(r.dMin, r.dMax), height: rInt(r.hMin, r.hMax) };
-}
-
-function generateProceduralLevel(temperature) {
-  temperature = temperature || 1.0;
-  const targetRooms = 12 + Math.floor(Math.random() * 6); // 12-17 rooms
-  const mapHalfW = 3000 + Math.floor(Math.random() * 1500);
-
-  const rooms = [];
-  const edges = [];
-  const roomIds = new Set();
-
-  // Always start with two spawns
-  const spawnA = { id: 'spawn_a', type: 'spawn', team: 'A', x: -mapHalfW, z: Math.floor((Math.random() - 0.5) * 1600), ...sampleRoomSize('spawn') };
-  const spawnB = { id: 'spawn_b', type: 'spawn', team: 'B', x: mapHalfW, z: Math.floor((Math.random() - 0.5) * 1600), ...sampleRoomSize('spawn') };
-  rooms.push(spawnA, spawnB);
-  roomIds.add('spawn_a'); roomIds.add('spawn_b');
-
-  // BFS growth from both spawns
-  const frontier = [['spawn_a', 0], ['spawn_b', 0]];
-  const placedTypes = { spawn: 2 };
-  let counter = 0;
-
-  for (let attempts = 0; attempts < 200 && rooms.length < targetRooms && frontier.length > 0; attempts++) {
-    frontier.sort((a, b) => a[1] - b[1]);
-    const [parentId, parentDepth] = frontier.shift();
-    const parent = rooms.find(r => r.id === parentId);
-    const existingConns = edges.filter(e => e.from === parentId || e.to === parentId).length;
-    const branchTarget = 2 + Math.floor(Math.random() * 2); // 2-3 branches
-    const numChildren = Math.max(0, branchTarget - existingConns);
-
-    for (let c = 0; c < numChildren && rooms.length < targetRooms; c++) {
-      const newDepth = parentDepth + 1;
-      let newType = sampleRoomType(parent.type, newDepth, temperature);
-      if ((placedTypes[newType] || 0) >= 4 && newType !== 'corridor' && newType !== 'cover') {
-        newType = sampleRoomType(parent.type, newDepth, temperature * 1.5);
-      }
-      if (newType === 'spawn') newType = 'corridor';
-
-      counter++;
-      let newId = newType + '_' + counter;
-      while (roomIds.has(newId)) { counter++; newId = newType + '_' + counter; }
-
-      const dirToCenter = parent.x > 0 ? -1 : 1;
-      let nx = parent.x + dirToCenter * (800 + Math.floor(Math.random() * 800));
-      let nz = parent.z + Math.floor((Math.random() - 0.5) * 2400);
-      nx = Math.max(-mapHalfW + 400, Math.min(mapHalfW - 400, nx));
-      nz = Math.max(-3000, Math.min(3000, nz));
-
-      const size = sampleRoomSize(newType);
-      const newRoom = { id: newId, type: newType, x: nx, z: nz, ...size };
-      rooms.push(newRoom);
-      roomIds.add(newId);
-      placedTypes[newType] = (placedTypes[newType] || 0) + 1;
-
-      const edgeW = 250 + Math.floor(Math.random() * 200);
-      edges.push({ from: parentId, to: newId, width: edgeW });
-      frontier.push([newId, newDepth]);
+  // Add 1-2 cross-connections across the ring for flanking routes
+  for (let c = 0; c < 2; c++) {
+    const i = Math.floor(Math.random() * ringCount);
+    const j = (i + Math.floor(ringCount / 2) + rInt(-1, 1) + ringCount) % ringCount;
+    if (i !== j) {
+      const eId = 'ring_' + i;
+      const eId2 = 'ring_' + j;
+      const exists = edges.some(e => (e.from === eId && e.to === eId2) || (e.from === eId2 && e.to === eId));
+      if (!exists) edges.push({ from: eId, to: eId2 });
     }
   }
 
-  // Cross-connections for flanking routes
-  for (let i = 0; i < rooms.length; i++) {
-    for (let j = i + 1; j < rooms.length; j++) {
-      const ri = rooms[i], rj = rooms[j];
-      const dist = Math.sqrt((ri.x - rj.x) ** 2 + (ri.z - rj.z) ** 2);
-      const already = edges.some(e => (e.from === ri.id && e.to === rj.id) || (e.from === rj.id && e.to === ri.id));
-      if (!already && dist < 2000 && Math.random() < 0.25) {
-        edges.push({ from: ri.id, to: rj.id, width: 250 + Math.floor(Math.random() * 150) });
+  // Spawn chambers: on opposite sides, connected to nearest ring nodes (Rule 7)
+  const spawnAS = CAVERN_SIZES.spawn;
+  const spawnDist = ringRadius + rInt(SHIP_UNIT * 4, SHIP_UNIT * 7);
+  nodes.push({
+    id: 'spawn_a', type: 'spawn', team: 'A',
+    x: -spawnDist, y: 0, z: rInt(-200, 200),
+    radius: rInt(spawnAS.rMin, spawnAS.rMax), height: rInt(spawnAS.hMin, spawnAS.hMax)
+  });
+  nodes.push({
+    id: 'spawn_b', type: 'spawn', team: 'B',
+    x: spawnDist, y: 0, z: rInt(-200, 200),
+    radius: rInt(spawnAS.rMin, spawnAS.rMax), height: rInt(spawnAS.hMin, spawnAS.hMax)
+  });
+
+  // Connect spawns to 2 nearest ring nodes each
+  const byDistA = [...nodes.filter(n => n.id.startsWith('ring_'))].sort((a, b) => {
+    const da = (a.x - nodes.find(n => n.id === 'spawn_a').x) ** 2 + (a.z - nodes.find(n => n.id === 'spawn_a').z) ** 2;
+    const db = (b.x - nodes.find(n => n.id === 'spawn_a').x) ** 2 + (b.z - nodes.find(n => n.id === 'spawn_a').z) ** 2;
+    return da - db;
+  });
+  edges.push({ from: 'spawn_a', to: byDistA[0].id });
+  edges.push({ from: 'spawn_a', to: byDistA[1].id });
+
+  const byDistB = [...nodes.filter(n => n.id.startsWith('ring_'))].sort((a, b) => {
+    const da = (a.x - nodes.find(n => n.id === 'spawn_b').x) ** 2 + (a.z - nodes.find(n => n.id === 'spawn_b').z) ** 2;
+    const db = (b.x - nodes.find(n => n.id === 'spawn_b').x) ** 2 + (b.z - nodes.find(n => n.id === 'spawn_b').z) ** 2;
+    return da - db;
+  });
+  edges.push({ from: 'spawn_b', to: byDistB[0].id });
+  edges.push({ from: 'spawn_b', to: byDistB[1].id });
+
+  // Optional: 1-2 small side-chambers hanging off ring nodes (dead-end pockets for ambush)
+  const sideCount = 1 + Math.floor(Math.random() * 2);
+  for (let s = 0; s < sideCount; s++) {
+    const parent = pick(nodes.filter(n => n.type === 'medium'));
+    if (!parent) continue;
+    const angle = Math.random() * Math.PI * 2;
+    const dist = parent.radius + rInt(SHIP_UNIT * 4, SHIP_UNIT * 6);
+    const ss = CAVERN_SIZES.small;
+    nodes.push({
+      id: 'side_' + s, type: 'small',
+      x: Math.round(parent.x + Math.cos(angle) * dist),
+      y: parent.y + rInt(-200, 200),
+      z: Math.round(parent.z + Math.sin(angle) * dist),
+      radius: rInt(ss.rMin, ss.rMax), height: rInt(ss.hMin, ss.hMax)
+    });
+    edges.push({ from: parent.id, to: 'side_' + s });
+    // Rule 1 exception: side pockets can have 1 exit (ambush spots)
+    // But connect to another ring node if close enough for flow
+    const nearby = nodes.filter(n => n.id !== parent.id && n.id !== 'side_' + s && !n.id.startsWith('spawn'));
+    for (const nb of nearby) {
+      const d = Math.sqrt((nb.x - nodes[nodes.length - 1].x) ** 2 + (nb.z - nodes[nodes.length - 1].z) ** 2);
+      if (d < SHIP_UNIT * 10 && Math.random() < 0.4) {
+        edges.push({ from: 'side_' + s, to: nb.id });
+        break;
       }
     }
   }
 
-  // Generate name
-  const prefixes = ['Orbital', 'Derelict', 'Frozen', 'Burning', 'Shattered', 'Lost', 'Dark', 'Iron', 'Crystal', 'Void', 'Neon', 'Plasma'];
-  const suffixes = ['Station', 'Shipyard', 'Nexus', 'Arena', 'Crucible', 'Ring', 'Foundry', 'Spire', 'Bastion', 'Outpost', 'Dock', 'Core'];
-  const name = prefixes[Math.floor(Math.random() * prefixes.length)] + ' ' + suffixes[Math.floor(Math.random() * suffixes.length)];
+  // Name generation (underground city themed)
+  const prefixes = ['Deep', 'Hollow', 'Buried', 'Sunken', 'Lost', 'Iron', 'Crystal', 'Obsidian', 'Ember', 'Void', 'Ancient', 'Frozen'];
+  const suffixes = ['Citadel', 'Warren', 'Depths', 'Catacombs', 'Hollows', 'Undercity', 'Caverns', 'Mines', 'Abyss', 'Forge', 'Grotto', 'Sanctum'];
+  const name = pick(prefixes) + ' ' + pick(suffixes);
 
-  return { name, rooms, edges };
+  // Assign tunnel profiles to each edge (start and end profiles can differ for morphing)
+  for (const edge of edges) {
+    edge.profileStart = pick(TUNNEL_PROFILES);
+    // 50% chance the tunnel morphs to a different cross-section
+    edge.profileEnd = Math.random() < 0.5 ? pick(TUNNEL_PROFILES) : edge.profileStart;
+  }
+
+  return { name, nodes, edges };
 }
 
-function validateLevel(level) {
-  const rooms = {};
-  level.rooms.forEach(r => { rooms[r.id] = r; });
-  const spawns = level.rooms.filter(r => r.type === 'spawn');
-  if (spawns.length < 2) return false;
-  // BFS connectivity
+function validateCavernGraph(graph) {
+  // BFS: all nodes reachable from spawn_a, and spawn_b is reachable
   const adj = {};
-  level.rooms.forEach(r => { adj[r.id] = []; });
-  level.edges.forEach(e => { if (adj[e.from]) adj[e.from].push(e.to); if (adj[e.to]) adj[e.to].push(e.from); });
+  graph.nodes.forEach(n => { adj[n.id] = []; });
+  graph.edges.forEach(e => {
+    if (adj[e.from]) adj[e.from].push(e.to);
+    if (adj[e.to]) adj[e.to].push(e.from);
+  });
   const visited = new Set();
   const queue = ['spawn_a'];
   while (queue.length > 0) {
@@ -3945,296 +4978,28 @@ function validateLevel(level) {
     visited.add(cur);
     (adj[cur] || []).forEach(n => { if (!visited.has(n)) queue.push(n); });
   }
-  return visited.has('spawn_b') && level.rooms.some(r => r.type === 'arena' || r.type === 'hub');
+  return visited.has('spawn_b') && visited.size === graph.nodes.length;
 }
 
-function generateValidLevel(temperature) {
-  for (let i = 0; i < 30; i++) {
-    const level = generateProceduralLevel(temperature || 1.0);
-    if (validateLevel(level)) return level;
-  }
-  return generateProceduralLevel(0.5); // fallback with low variety
-}
-
-// LETTER_GRIDS removed: now using room-graph procedural levels
-const LETTER_GRIDS_REMOVED = true; // placeholder so old references don't crash
-const _OLD_LETTER_GRIDS = {
-  _note: 'Letter grids replaced by procedural room-graph system'
-};
-
-// ---- HAND-CRAFTED MAPS (Titanfall 2 style) ----
-// Three maps inspired by TF2 lane structure: two spawns, 3 routes, central hub,
-// mix of tight corridors and open arenas, low ceilings with vertical variety.
-
-function getHandcraftedMaps() {
-  return [
-
-    // ============================================================
-    // MAP 1: IRON TERMINUS - Space Station Interior
-    // Inspired by Complex/Boomtown: research facility with distinct rooms,
-    // central atrium, flanking corridors, sniper perches, cover-heavy wings.
-    // Layout: symmetric two-spawn with 3-lane structure.
-    //   Spawn A (west) -- corridors --> Central Hub <-- corridors -- Spawn B (east)
-    //   North flank route through Reactor + Sniper Nest
-    //   South flank route through Cargo Bay + Server Room
-    // ============================================================
-    {
-      name: 'Iron Terminus',
-      rooms: [
-        // Spawns (far left and right)
-        { id: 'spawn_a', type: 'spawn', team: 'A', x: -3800, z: 0, width: 1000, depth: 900, height: 1400 },
-        { id: 'spawn_b', type: 'spawn', team: 'B', x: 3800, z: 0, width: 1000, depth: 900, height: 1400 },
-
-        // Central hub (the Main Hall / atrium - biggest open space)
-        { id: 'hub_central', type: 'hub', x: 0, z: 0, width: 2000, depth: 1800, height: 2000 },
-
-        // Mid-lane rooms (connecting spawns to center)
-        { id: 'corridor_a1', type: 'corridor', x: -2600, z: 0, width: 500, depth: 400, height: 1000 },
-        { id: 'cover_a1', type: 'cover', x: -1600, z: 0, width: 700, depth: 600, height: 1200 },
-        { id: 'corridor_b1', type: 'corridor', x: 2600, z: 0, width: 500, depth: 400, height: 1000 },
-        { id: 'cover_b1', type: 'cover', x: 1600, z: 0, width: 700, depth: 600, height: 1200 },
-
-        // North flank route
-        { id: 'flank_a_north', type: 'flank', x: -2800, z: -1400, width: 600, depth: 500, height: 900 },
-        { id: 'arena_reactor', type: 'arena', x: -1200, z: -1800, width: 1400, depth: 1200, height: 1800 },
-        { id: 'sniper_north', type: 'sniper', x: 0, z: -1600, width: 500, depth: 400, height: 700 },
-        { id: 'arena_lab', type: 'arena', x: 1200, z: -1800, width: 1400, depth: 1200, height: 1800 },
-        { id: 'flank_b_north', type: 'flank', x: 2800, z: -1400, width: 600, depth: 500, height: 900 },
-
-        // South flank route
-        { id: 'flank_a_south', type: 'flank', x: -2800, z: 1400, width: 600, depth: 500, height: 900 },
-        { id: 'arena_cargo', type: 'arena', x: -1200, z: 1800, width: 1600, depth: 1000, height: 1600 },
-        { id: 'cover_south', type: 'cover', x: 0, z: 1600, width: 600, depth: 500, height: 1100 },
-        { id: 'arena_server', type: 'arena', x: 1200, z: 1800, width: 1600, depth: 1000, height: 1600 },
-        { id: 'flank_b_south', type: 'flank', x: 2800, z: 1400, width: 600, depth: 500, height: 900 },
-
-        // Objective room (elevated platform above central hub)
-        { id: 'objective_top', type: 'objective', x: 0, z: -600, width: 800, depth: 600, height: 2000 },
-      ],
-      edges: [
-        // Mid lane: Spawn A -> corridor -> cover -> hub -> cover -> corridor -> Spawn B
-        { from: 'spawn_a', to: 'corridor_a1', width: 350 },
-        { from: 'corridor_a1', to: 'cover_a1', width: 300 },
-        { from: 'cover_a1', to: 'hub_central', width: 400 },
-        { from: 'hub_central', to: 'cover_b1', width: 400 },
-        { from: 'cover_b1', to: 'corridor_b1', width: 300 },
-        { from: 'corridor_b1', to: 'spawn_b', width: 350 },
-
-        // North flank: Spawn A -> flank -> reactor -> sniper -> lab -> flank -> Spawn B
-        { from: 'spawn_a', to: 'flank_a_north', width: 300 },
-        { from: 'flank_a_north', to: 'arena_reactor', width: 350 },
-        { from: 'arena_reactor', to: 'sniper_north', width: 280 },
-        { from: 'sniper_north', to: 'arena_lab', width: 280 },
-        { from: 'arena_lab', to: 'flank_b_north', width: 350 },
-        { from: 'flank_b_north', to: 'spawn_b', width: 300 },
-
-        // South flank: Spawn A -> flank -> cargo -> cover -> server -> flank -> Spawn B
-        { from: 'spawn_a', to: 'flank_a_south', width: 300 },
-        { from: 'flank_a_south', to: 'arena_cargo', width: 350 },
-        { from: 'arena_cargo', to: 'cover_south', width: 300 },
-        { from: 'cover_south', to: 'arena_server', width: 300 },
-        { from: 'arena_server', to: 'flank_b_south', width: 350 },
-        { from: 'flank_b_south', to: 'spawn_b', width: 300 },
-
-        // Cross-connections (flanking between lanes)
-        { from: 'hub_central', to: 'sniper_north', width: 250 },
-        { from: 'hub_central', to: 'cover_south', width: 250 },
-        { from: 'hub_central', to: 'objective_top', width: 300 },
-        { from: 'cover_a1', to: 'arena_reactor', width: 250 },
-        { from: 'cover_a1', to: 'arena_cargo', width: 250 },
-        { from: 'cover_b1', to: 'arena_lab', width: 250 },
-        { from: 'cover_b1', to: 'arena_server', width: 250 },
-      ]
-    },
-
-    // ============================================================
-    // MAP 2: NEON DOCKYARD - Shipyard / Hangar Complex
-    // Inspired by Angel City: urban lanes between large structures,
-    // wide "streets" (hangar bays), tighter back alleys (maintenance tunnels),
-    // rooftop equivalent (gantry level). More rectangular, lane-heavy.
-    // Layout: 3 parallel lanes (north/center/south) with cross-cuts.
-    // ============================================================
-    {
-      name: 'Neon Dockyard',
-      rooms: [
-        // Spawns
-        { id: 'spawn_a', type: 'spawn', team: 'A', x: -4000, z: 0, width: 1100, depth: 1000, height: 1500 },
-        { id: 'spawn_b', type: 'spawn', team: 'B', x: 4000, z: 0, width: 1100, depth: 1000, height: 1500 },
-
-        // North lane (wide hangar bays - good for Dreadnoughts, long sightlines)
-        { id: 'hangar_a', type: 'arena', x: -2400, z: -1600, width: 1800, depth: 1400, height: 1800 },
-        { id: 'corridor_n1', type: 'corridor', x: -800, z: -1600, width: 500, depth: 400, height: 1000 },
-        { id: 'hangar_mid', type: 'arena', x: 0, z: -1800, width: 2200, depth: 1600, height: 2000 },
-        { id: 'corridor_n2', type: 'corridor', x: 800, z: -1600, width: 500, depth: 400, height: 1000 },
-        { id: 'hangar_b', type: 'arena', x: 2400, z: -1600, width: 1800, depth: 1400, height: 1800 },
-
-        // Center lane (maintenance corridor - tight, CQC, Ronin territory)
-        { id: 'cover_a_mid', type: 'cover', x: -2400, z: 0, width: 600, depth: 500, height: 1000 },
-        { id: 'flank_center1', type: 'flank', x: -1200, z: 200, width: 500, depth: 450, height: 900 },
-        { id: 'hub_ops', type: 'hub', x: 0, z: 0, width: 1800, depth: 1400, height: 1800 },
-        { id: 'flank_center2', type: 'flank', x: 1200, z: 200, width: 500, depth: 450, height: 900 },
-        { id: 'cover_b_mid', type: 'cover', x: 2400, z: 0, width: 600, depth: 500, height: 1000 },
-
-        // South lane (cargo loading - medium width, lots of cover objects)
-        { id: 'cover_a_south', type: 'cover', x: -2400, z: 1600, width: 800, depth: 600, height: 1200 },
-        { id: 'arena_loading', type: 'arena', x: -800, z: 1800, width: 1200, depth: 1000, height: 1400 },
-        { id: 'objective_crane', type: 'objective', x: 0, z: 1800, width: 900, depth: 800, height: 2000 },
-        { id: 'arena_storage', type: 'arena', x: 800, z: 1800, width: 1200, depth: 1000, height: 1400 },
-        { id: 'cover_b_south', type: 'cover', x: 2400, z: 1600, width: 800, depth: 600, height: 1200 },
-
-        // Sniper perches (elevated alcoves overlooking hangar lane)
-        { id: 'sniper_a', type: 'sniper', x: -1800, z: -800, width: 400, depth: 350, height: 700 },
-        { id: 'sniper_b', type: 'sniper', x: 1800, z: -800, width: 400, depth: 350, height: 700 },
-      ],
-      edges: [
-        // Spawn connections (each spawn connects to all 3 lanes)
-        { from: 'spawn_a', to: 'hangar_a', width: 400 },
-        { from: 'spawn_a', to: 'cover_a_mid', width: 300 },
-        { from: 'spawn_a', to: 'cover_a_south', width: 300 },
-        { from: 'spawn_b', to: 'hangar_b', width: 400 },
-        { from: 'spawn_b', to: 'cover_b_mid', width: 300 },
-        { from: 'spawn_b', to: 'cover_b_south', width: 300 },
-
-        // North lane
-        { from: 'hangar_a', to: 'corridor_n1', width: 400 },
-        { from: 'corridor_n1', to: 'hangar_mid', width: 400 },
-        { from: 'hangar_mid', to: 'corridor_n2', width: 400 },
-        { from: 'corridor_n2', to: 'hangar_b', width: 400 },
-
-        // Center lane
-        { from: 'cover_a_mid', to: 'flank_center1', width: 280 },
-        { from: 'flank_center1', to: 'hub_ops', width: 350 },
-        { from: 'hub_ops', to: 'flank_center2', width: 350 },
-        { from: 'flank_center2', to: 'cover_b_mid', width: 280 },
-
-        // South lane
-        { from: 'cover_a_south', to: 'arena_loading', width: 350 },
-        { from: 'arena_loading', to: 'objective_crane', width: 300 },
-        { from: 'objective_crane', to: 'arena_storage', width: 300 },
-        { from: 'arena_storage', to: 'cover_b_south', width: 350 },
-
-        // Cross-connections between lanes
-        { from: 'hangar_a', to: 'sniper_a', width: 250 },
-        { from: 'sniper_a', to: 'cover_a_mid', width: 220 },
-        { from: 'sniper_a', to: 'hub_ops', width: 250 },
-        { from: 'hangar_b', to: 'sniper_b', width: 250 },
-        { from: 'sniper_b', to: 'cover_b_mid', width: 220 },
-        { from: 'sniper_b', to: 'hub_ops', width: 250 },
-        { from: 'hub_ops', to: 'objective_crane', width: 300 },
-        { from: 'flank_center1', to: 'arena_loading', width: 250 },
-        { from: 'flank_center2', to: 'arena_storage', width: 250 },
-        { from: 'corridor_n1', to: 'flank_center1', width: 250 },
-        { from: 'corridor_n2', to: 'flank_center2', width: 250 },
-      ]
-    },
-
-    // ============================================================
-    // MAP 3: SHATTERED LEVIATHAN - Wrecked Capital Ship
-    // Inspired by Crash Site: asymmetric, organic flow, tight wrecked
-    // corridors opening into torn hull breaches, a massive engine room,
-    // exposed bridge section. Less symmetric than the other two.
-    // Layout: elongated north-south with the wreck listing to one side.
-    // ============================================================
-    {
-      name: 'Shattered Leviathan',
-      rooms: [
-        // Spawns (north/south of the wreck, offset from center)
-        { id: 'spawn_a', type: 'spawn', team: 'A', x: -3600, z: -800, width: 1000, depth: 800, height: 1300 },
-        { id: 'spawn_b', type: 'spawn', team: 'B', x: 3400, z: 600, width: 1000, depth: 800, height: 1300 },
-
-        // Bow section (Spawn A side)
-        { id: 'corridor_bow1', type: 'corridor', x: -2600, z: -600, width: 450, depth: 380, height: 900 },
-        { id: 'arena_bridge', type: 'arena', x: -1800, z: -1200, width: 1600, depth: 1200, height: 1600 },
-        { id: 'flank_ventral', type: 'flank', x: -2200, z: 400, width: 550, depth: 450, height: 850 },
-
-        // Mid-ship (central contested zone)
-        { id: 'hub_atrium', type: 'hub', x: -400, z: -200, width: 2000, depth: 1600, height: 2200 },
-        { id: 'cover_debris1', type: 'cover', x: -800, z: -1000, width: 600, depth: 500, height: 1000 },
-        { id: 'corridor_dorsal', type: 'corridor', x: 0, z: -1600, width: 500, depth: 400, height: 1000 },
-        { id: 'sniper_catwalk', type: 'sniper', x: 200, z: -1000, width: 450, depth: 380, height: 650 },
-
-        // Hull breach (open area with torn walls - the "Crash Site" zone)
-        { id: 'arena_breach', type: 'arena', x: 400, z: 1200, width: 2200, depth: 1800, height: 2000 },
-        { id: 'cover_wreckage', type: 'cover', x: -400, z: 1400, width: 700, depth: 500, height: 1100 },
-        { id: 'flank_crawlspace', type: 'flank', x: -800, z: 800, width: 500, depth: 400, height: 800 },
-
-        // Engine room (Spawn B side - tall, industrial)
-        { id: 'arena_engine', type: 'arena', x: 1800, z: 200, width: 1800, depth: 1400, height: 2200 },
-        { id: 'corridor_stern1', type: 'corridor', x: 2600, z: 400, width: 450, depth: 380, height: 900 },
-        { id: 'cover_pipes', type: 'cover', x: 1400, z: -800, width: 600, depth: 500, height: 1000 },
-        { id: 'flank_maintenance', type: 'flank', x: 2200, z: -600, width: 550, depth: 450, height: 850 },
-
-        // Objective: the ship's core (deep in the wreck)
-        { id: 'objective_core', type: 'objective', x: 800, z: -400, width: 800, depth: 700, height: 1800 },
-      ],
-      edges: [
-        // Main route: Bow -> Atrium -> Engine -> Stern
-        { from: 'spawn_a', to: 'corridor_bow1', width: 320 },
-        { from: 'corridor_bow1', to: 'arena_bridge', width: 350 },
-        { from: 'arena_bridge', to: 'cover_debris1', width: 300 },
-        { from: 'cover_debris1', to: 'hub_atrium', width: 350 },
-        { from: 'hub_atrium', to: 'objective_core', width: 300 },
-        { from: 'objective_core', to: 'arena_engine', width: 350 },
-        { from: 'arena_engine', to: 'corridor_stern1', width: 320 },
-        { from: 'corridor_stern1', to: 'spawn_b', width: 320 },
-
-        // North flank (dorsal route along the top of the hull)
-        { from: 'arena_bridge', to: 'corridor_dorsal', width: 280 },
-        { from: 'corridor_dorsal', to: 'sniper_catwalk', width: 250 },
-        { from: 'sniper_catwalk', to: 'cover_pipes', width: 260 },
-        { from: 'cover_pipes', to: 'flank_maintenance', width: 280 },
-        { from: 'flank_maintenance', to: 'arena_engine', width: 300 },
-
-        // South flank (ventral route through hull breach)
-        { from: 'spawn_a', to: 'flank_ventral', width: 280 },
-        { from: 'flank_ventral', to: 'flank_crawlspace', width: 260 },
-        { from: 'flank_crawlspace', to: 'cover_wreckage', width: 260 },
-        { from: 'cover_wreckage', to: 'arena_breach', width: 350 },
-        { from: 'arena_breach', to: 'arena_engine', width: 380 },
-        { from: 'arena_breach', to: 'spawn_b', width: 350 },
-
-        // Cross-connections
-        { from: 'hub_atrium', to: 'flank_crawlspace', width: 250 },
-        { from: 'hub_atrium', to: 'sniper_catwalk', width: 250 },
-        { from: 'arena_breach', to: 'hub_atrium', width: 300 },
-        { from: 'objective_core', to: 'cover_pipes', width: 250 },
-        { from: 'flank_maintenance', to: 'spawn_b', width: 280 },
-        { from: 'cover_wreckage', to: 'hub_atrium', width: 260 },
-      ]
-    },
-
-  ];
-}
-
-// Map rotation state
-let HANDCRAFTED_MAPS = null;
-let currentMapIndex = -1; // -1 = use procedural
+// ---- MAP GENERATION (Underground City) ----
 
 function getNextMap() {
-  if (!HANDCRAFTED_MAPS) HANDCRAFTED_MAPS = getHandcraftedMaps();
-  // Rotate: 3 handcrafted maps, then 1 procedural, repeat
-  currentMapIndex++;
-  if (currentMapIndex < HANDCRAFTED_MAPS.length) {
-    return HANDCRAFTED_MAPS[currentMapIndex];
-  } else {
-    // Procedural round, then reset rotation
-    currentMapIndex = -1;
-    return generateValidLevel(1.0);
+  // Generate a fresh underground city each round
+  for (let i = 0; i < 30; i++) {
+    const graph = generateCavernGraph();
+    if (validateCavernGraph(graph)) return graph;
   }
+  return generateCavernGraph(); // fallback
 }
 
-// Shuffle the map order each match
 function shuffleMapRotation() {
-  if (!HANDCRAFTED_MAPS) HANDCRAFTED_MAPS = getHandcraftedMaps();
-  for (let i = HANDCRAFTED_MAPS.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [HANDCRAFTED_MAPS[i], HANDCRAFTED_MAPS[j]] = [HANDCRAFTED_MAPS[j], HANDCRAFTED_MAPS[i]];
-  }
-  currentMapIndex = -1;
+  // No-op; each round generates a new map
 }
 
-// ---- ROOM-GRAPH GEOMETRY BUILDER ----
-// Builds 3D level geometry from a room-graph (procedurally generated or loaded)
+// ---- UNDERGROUND CITY GEOMETRY BUILDER ----
+// Converts a cavern graph into 3D geometry (collision boxes, meshes, spawn points).
+// Caverns are irregular volumes (beveled boxes). Tunnels are box corridors.
+// Internal structures provide cover and height variation (Rule 5).
 
 function buildRoomGraphLevel(level) {
   // Clear old geometry
@@ -4243,54 +5008,39 @@ function buildRoomGraphLevel(level) {
   game.levelBoxes = [];
   game.corridorPoints = [];
   game.currentLevel = level;
-  game.mapWord = level.name; // for minimap label
+  game.mapWord = level.name;
 
-  const WALL = 50;
-  const rooms = level.rooms;
+  const WALL = 60;
+  const nodes = level.nodes;
   const edges = level.edges;
 
-  // Cartoon-style materials (bright, flat colors with outlines)
-  const roomColors = {
-    spawn:     { main: 0x44cc88, emissive: 0x116633 },
-    hub:       { main: 0x6688ff, emissive: 0x223388 },
-    corridor:  { main: 0x5577cc, emissive: 0x1a3366 },
-    arena:     { main: 0xff7744, emissive: 0x882211 },
-    flank:     { main: 0xcc66ff, emissive: 0x552288 },
-    sniper:    { main: 0xffcc44, emissive: 0x885500 },
-    cover:     { main: 0x55aa88, emissive: 0x224433 },
-    objective: { main: 0xff4466, emissive: 0x881122 },
+  // Underground city palette: dark stone, glowing accents
+  const cavernColors = {
+    large:  { main: 0x334455, emissive: 0x112233, accent: 0x4488cc },
+    medium: { main: 0x3a3a4a, emissive: 0x1a1a2a, accent: 0x66aadd },
+    small:  { main: 0x404050, emissive: 0x202030, accent: 0x55cc88 },
+    spawn:  { main: 0x2a3a2a, emissive: 0x0a1a0a, accent: 0x44ff88 },
   };
 
-  // Toon materials (flat shading, high saturation, thick geometric feel)
-  function makeToonMat(type, variant) {
-    const c = roomColors[type] || roomColors.corridor;
-    if (variant === 'floor') {
-      return new THREE.MeshToonMaterial({ color: new THREE.Color(c.main).multiplyScalar(0.6) });
-    } else if (variant === 'ceiling') {
-      return new THREE.MeshToonMaterial({ color: new THREE.Color(c.main).multiplyScalar(0.4) });
-    } else if (variant === 'wall') {
-      return new THREE.MeshToonMaterial({ color: c.main });
-    }
+  const outlineMat = new THREE.LineBasicMaterial({ color: 0x556677, linewidth: 1 });
+  const coverMat = new THREE.MeshToonMaterial({ color: 0x556666 });
+  const glowMat = new THREE.MeshBasicMaterial({ color: 0x4488cc, transparent: true, opacity: 0.3 });
+
+  function makeCavernMat(type, variant) {
+    const c = cavernColors[type] || cavernColors.medium;
+    if (variant === 'floor') return new THREE.MeshToonMaterial({ color: new THREE.Color(c.main).multiplyScalar(0.5) });
+    if (variant === 'ceiling') return new THREE.MeshToonMaterial({ color: new THREE.Color(c.main).multiplyScalar(0.35) });
     return new THREE.MeshToonMaterial({ color: c.main });
   }
 
-  const windowMat = new THREE.MeshToonMaterial({
-    color: 0x44aaff, transparent: true, opacity: 0.2, side: THREE.DoubleSide
-  });
-  const edgeMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.15 });
-  const outlineMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
-  const beaconMat = new THREE.MeshBasicMaterial({ color: 0x00ff88 });
-  const coverMat = new THREE.MeshToonMaterial({ color: 0x667799 });
-
-  // Helper: add a box with collision and cartoon outline
-  function addToonBox(x, y, z, w, h, d, mat, addCollision) {
+  // Helper: add a box with collision and outline
+  function addBox(x, y, z, w, h, d, mat, addCollision) {
     const geo = new THREE.BoxGeometry(w, h, d);
     const mesh = new THREE.Mesh(geo, mat);
     mesh.position.set(x, y, z);
     scene.add(mesh);
     game.mapMeshes.push(mesh);
 
-    // Cartoon edge outline
     const edgeGeo = new THREE.EdgesGeometry(geo);
     const outline = new THREE.LineSegments(edgeGeo, outlineMat);
     outline.position.copy(mesh.position);
@@ -4306,259 +5056,262 @@ function buildRoomGraphLevel(level) {
     return mesh;
   }
 
-  // Build each room
-  for (const room of rooms) {
-    const rx = room.x, rz = room.z;
-    const rw = room.width, rd = room.depth, rh = room.height;
-    const type = room.type;
+  // Build lookup for adjacency (which nodes connect to each node)
+  const adj = {};
+  nodes.forEach(n => { adj[n.id] = []; });
+  edges.forEach(e => {
+    adj[e.from].push(e.to);
+    adj[e.to].push(e.from);
+  });
 
+  // --- Build each cavern chamber ---
+  for (const node of nodes) {
+    const cx = node.x, cy = node.y, cz = node.z;
+    const r = node.radius, h = node.height;
+    const type = node.type;
+
+    // Cavern shell: floor, ceiling, and walls
     // Floor
-    addToonBox(rx, -rh/2 - WALL/2, rz, rw + WALL*2, WALL, rd + WALL*2, makeToonMat(type, 'floor'));
+    addBox(cx, cy - h/2 - WALL/2, cz, r * 2 + WALL * 2, WALL, r * 2 + WALL * 2, makeCavernMat(type, 'floor'));
     // Ceiling
-    addToonBox(rx, rh/2 + WALL/2, rz, rw + WALL*2, WALL, rd + WALL*2, makeToonMat(type, 'ceiling'));
+    addBox(cx, cy + h/2 + WALL/2, cz, r * 2 + WALL * 2, WALL, r * 2 + WALL * 2, makeCavernMat(type, 'ceiling'));
 
-    // Walls (4 sides, with gaps for connections)
+    // Walls: 4 sides, with gaps for connected tunnels
     const wallGaps = { north: [], south: [], east: [], west: [] };
 
-    // Find edges connected to this room and compute gap positions
-    for (const edge of edges) {
-      let otherRoom = null;
-      if (edge.from === room.id) otherRoom = rooms.find(r => r.id === edge.to);
-      else if (edge.to === room.id) otherRoom = rooms.find(r => r.id === edge.from);
-      if (!otherRoom) continue;
+    // Compute gap positions for each connected edge (gap matches tunnel profile)
+    for (const neighborId of (adj[node.id] || [])) {
+      const neighbor = nodes.find(n => n.id === neighborId);
+      if (!neighbor) continue;
 
-      const dx = otherRoom.x - room.x;
-      const dz = otherRoom.z - room.z;
-      const gapW = edge.width || 350;
+      // Find the edge to get its tunnel profile
+      const edge = edges.find(e =>
+        (e.from === node.id && e.to === neighborId) ||
+        (e.to === node.id && e.from === neighborId));
+      // Use the profile at this node's end
+      const prof = edge ? (edge.from === node.id ? edge.profileStart : edge.profileEnd) : { w: 3, h: 3 };
 
-      // Determine which wall the connection pierces
-      if (Math.abs(dx) > Math.abs(dz)) {
-        // East or West wall
-        const gapZ = room.z + (dz * 0.3); // offset toward other room
-        if (dx > 0) wallGaps.east.push({ center: gapZ, width: gapW });
-        else wallGaps.west.push({ center: gapZ, width: gapW });
+      const dx = neighbor.x - node.x;
+      const dz = neighbor.z - node.z;
+      const isXDir = Math.abs(dx) > Math.abs(dz);
+      // Gap width on the wall = the tunnel's lateral dimension at this end
+      const gapSize = (isXDir ? prof.w : prof.w) * SHIP_UNIT + 40;
+
+      if (isXDir) {
+        const gapZ = node.z + dz * 0.2;
+        if (dx > 0) wallGaps.east.push({ center: gapZ, width: gapSize });
+        else wallGaps.west.push({ center: gapZ, width: gapSize });
       } else {
-        // North or South wall
-        const gapX = room.x + (dx * 0.3);
-        if (dz > 0) wallGaps.south.push({ center: gapX, width: gapW });
-        else wallGaps.north.push({ center: gapX, width: gapW });
+        const gapX = node.x + dx * 0.2;
+        if (dz > 0) wallGaps.south.push({ center: gapX, width: gapSize });
+        else wallGaps.north.push({ center: gapX, width: gapSize });
       }
     }
 
     // Build walls with gaps
-    function buildWallWithGaps(wallX, wallZ, wallW, wallD, isXWall, gaps) {
+    function buildWall(wallX, wallZ, wallW, wallD, isXWall, gaps) {
       if (gaps.length === 0) {
-        // Check if this is a perimeter wall (potential window)
-        const isWindow = Math.random() < 0.15;
-        addToonBox(wallX, 0, wallZ, wallW, rh, wallD, isWindow ? windowMat : makeToonMat(type, 'wall'));
+        addBox(wallX, cy, wallZ, wallW, h, wallD, makeCavernMat(type, 'wall'));
         return;
       }
-
-      // Sort gaps and build wall segments between them
-      const axis = isXWall ? 'z' : 'x';
-      const wallLength = isXWall ? rd : rw;
-      const wallStart = isXWall ? (rz - rd/2) : (rx - rw/2);
-      const wallEnd = isXWall ? (rz + rd/2) : (rx + rw/2);
-
-      // Convert gaps to sorted intervals
+      const wallStart = isXWall ? (cz - r) : (cx - r);
+      const wallEnd = isXWall ? (cz + r) : (cx + r);
       const intervals = gaps.map(g => ({
-        lo: g.center - g.width/2,
-        hi: g.center + g.width/2
+        lo: g.center - g.width / 2,
+        hi: g.center + g.width / 2
       })).sort((a, b) => a.lo - b.lo);
 
+      const MIN_GAP = SHIP_UNIT * 2; // minimum 2 ships wide gap
       let cursor = wallStart;
       for (const gap of intervals) {
-        const gapLo = Math.max(wallStart, gap.lo);
-        const gapHi = Math.min(wallEnd, gap.hi);
-        if (cursor < gapLo) {
+        let gapLo = Math.max(wallStart, gap.lo);
+        let gapHi = Math.min(wallEnd, gap.hi);
+        if (gapHi - gapLo < MIN_GAP) {
+          const mid = (gapLo + gapHi) / 2;
+          gapLo = Math.max(wallStart, mid - MIN_GAP / 2);
+          gapHi = Math.min(wallEnd, gapLo + MIN_GAP);
+          gapLo = Math.max(wallStart, gapHi - MIN_GAP);
+        }
+        if (cursor < gapLo - 10) {
           const segLen = gapLo - cursor;
           if (isXWall) {
-            addToonBox(wallX, 0, cursor + segLen/2, wallW, rh, segLen, makeToonMat(type, 'wall'));
+            addBox(wallX, cy, cursor + segLen / 2, wallW, h, segLen, makeCavernMat(type, 'wall'));
           } else {
-            addToonBox(cursor + segLen/2, 0, wallZ, segLen, rh, wallD, makeToonMat(type, 'wall'));
+            addBox(cursor + segLen / 2, cy, wallZ, segLen, h, wallD, makeCavernMat(type, 'wall'));
           }
         }
         cursor = gapHi;
       }
-      if (cursor < wallEnd) {
+      if (cursor < wallEnd - 10) {
         const segLen = wallEnd - cursor;
         if (isXWall) {
-          addToonBox(wallX, 0, cursor + segLen/2, wallW, rh, segLen, makeToonMat(type, 'wall'));
+          addBox(wallX, cy, cursor + segLen / 2, wallW, h, segLen, makeCavernMat(type, 'wall'));
         } else {
-          addToonBox(cursor + segLen/2, 0, wallZ, segLen, rh, wallD, makeToonMat(type, 'wall'));
+          addBox(cursor + segLen / 2, cy, wallZ, segLen, h, wallD, makeCavernMat(type, 'wall'));
         }
       }
     }
 
-    // North wall (low Z side)
-    buildWallWithGaps(rx, rz - rd/2 - WALL/2, rw + WALL*2, WALL, false, wallGaps.north);
-    // South wall (high Z side)
-    buildWallWithGaps(rx, rz + rd/2 + WALL/2, rw + WALL*2, WALL, false, wallGaps.south);
-    // West wall (low X side)
-    buildWallWithGaps(rx - rw/2 - WALL/2, rz, WALL, rd, true, wallGaps.west);
-    // East wall (high X side)
-    buildWallWithGaps(rx + rw/2 + WALL/2, rz, WALL, rd, true, wallGaps.east);
+    buildWall(cx, cz - r - WALL / 2, r * 2 + WALL * 2, WALL, false, wallGaps.north);
+    buildWall(cx, cz + r + WALL / 2, r * 2 + WALL * 2, WALL, false, wallGaps.south);
+    buildWall(cx - r - WALL / 2, cz, WALL, r * 2, true, wallGaps.west);
+    buildWall(cx + r + WALL / 2, cz, WALL, r * 2, true, wallGaps.east);
 
-    // Floor accent strips (colored by room type)
-    const accentColor = new THREE.Color(roomColors[type].main).multiplyScalar(1.5);
-    const accentMat = new THREE.MeshBasicMaterial({ color: accentColor, transparent: true, opacity: 0.3 });
-    for (let i = 0; i < 3; i++) {
-      const sx = rx + (Math.random() - 0.5) * rw * 0.6;
-      const sz = rz + (Math.random() - 0.5) * rd * 0.6;
-      const stripe = new THREE.Mesh(new THREE.BoxGeometry(rw * 0.15, 3, rd * 0.15), accentMat);
-      stripe.position.set(sx, -rh/2 + 2, sz);
+    // --- Internal cover structures (Rule 5: vertical layering, 30%+ volume occupied) ---
+    if (type === 'large' || type === 'medium') {
+      const numStructures = type === 'large' ? rInt(5, 8) : rInt(2, 4);
+      for (let i = 0; i < numStructures; i++) {
+        const ox = cx + (Math.random() - 0.5) * r * 1.2;
+        const oz = cz + (Math.random() - 0.5) * r * 1.2;
+        const kind = Math.random();
+
+        if (kind < 0.3) {
+          // Pillar (floor to ceiling)
+          const pr = 25 + Math.random() * 40;
+          const geo = new THREE.CylinderGeometry(pr, pr, h * 0.9, 8);
+          const mesh = new THREE.Mesh(geo, coverMat);
+          mesh.position.set(ox, cy, oz);
+          scene.add(mesh); game.mapMeshes.push(mesh);
+          game.levelBoxes.push({
+            min: new THREE.Vector3(ox - pr, cy - h * 0.45, oz - pr),
+            max: new THREE.Vector3(ox + pr, cy + h * 0.45, oz + pr),
+          });
+        } else if (kind < 0.6) {
+          // Platform (floating slab)
+          const pw = rInt(80, 200), pd = rInt(80, 200), ph = 30;
+          const py = cy + (Math.random() - 0.5) * h * 0.5;
+          addBox(ox, py, oz, pw, ph, pd, coverMat);
+        } else if (kind < 0.8) {
+          // Wall segment / barricade
+          const bw = rInt(100, 250), bh = rInt(150, 400), bd = 40;
+          const angle = Math.random() * Math.PI;
+          addBox(ox, cy, oz, bw, bh, bd, coverMat);
+        } else {
+          // Building block (multi-story cover)
+          const bw = rInt(120, 250), bh = rInt(200, h * 0.6), bd = rInt(120, 250);
+          addBox(ox, cy - h / 2 + bh / 2 + WALL, oz, bw, bh, bd, coverMat);
+        }
+      }
+    }
+
+    // Small caverns get 1-2 cover pieces
+    if (type === 'small') {
+      const nc = rInt(1, 2);
+      for (let i = 0; i < nc; i++) {
+        const ox = cx + (Math.random() - 0.5) * r * 0.8;
+        const oz = cz + (Math.random() - 0.5) * r * 0.8;
+        const bw = rInt(60, 120), bh = rInt(100, 300), bd = rInt(60, 120);
+        addBox(ox, cy, oz, bw, bh, bd, coverMat);
+      }
+    }
+
+    // Glowing accent strips on floor (city lights)
+    const accentColor = cavernColors[type] ? cavernColors[type].accent : 0x4488cc;
+    const accentMat = new THREE.MeshBasicMaterial({ color: accentColor, transparent: true, opacity: 0.25 });
+    for (let i = 0; i < 4; i++) {
+      const sx = cx + (Math.random() - 0.5) * r * 1.2;
+      const sz = cz + (Math.random() - 0.5) * r * 1.2;
+      const stripe = new THREE.Mesh(new THREE.BoxGeometry(r * 0.12, 3, r * 0.12), accentMat);
+      stripe.position.set(sx, cy - h / 2 + 2, sz);
       stripe.rotation.y = Math.random() * Math.PI;
       scene.add(stripe); game.mapMeshes.push(stripe);
     }
 
-    // Register corridor points for spawning (grid of points inside room)
-    const step = 200;
-    for (let sx = rx - rw/2 + step/2; sx <= rx + rw/2 - step/2; sx += step) {
-      for (let sz = rz - rd/2 + step/2; sz <= rz + rd/2 - step/2; sz += step) {
-        game.corridorPoints.push({ x: sx, y: 0, z: sz, roomId: room.id, roomType: type, team: room.team || null });
-      }
-    }
-
-    // Cover obstacles inside larger rooms
-    if ((type === 'arena' || type === 'hub' || type === 'cover') && rw > 600) {
-      const numObstacles = Math.floor((rw * rd) / 400000) + 1;
-      for (let i = 0; i < numObstacles; i++) {
-        const ox = rx + (Math.random() - 0.5) * rw * 0.6;
-        const oz = rz + (Math.random() - 0.5) * rd * 0.6;
-        const t = Math.random();
-        let cw, ch, cd;
-        if (t < 0.35) {
-          // Pillar
-          const pr = 30 + Math.random() * 50;
-          ch = rh * (0.2 + Math.random() * 0.3);
-          const geo = new THREE.CylinderGeometry(pr, pr, ch, 8);
-          const mesh = new THREE.Mesh(geo, coverMat);
-          mesh.position.set(ox, (Math.random() - 0.5) * rh * 0.3, oz);
-          scene.add(mesh); game.mapMeshes.push(mesh);
-          game.levelBoxes.push({
-            min: new THREE.Vector3(ox - pr, mesh.position.y - ch/2, oz - pr),
-            max: new THREE.Vector3(ox + pr, mesh.position.y + ch/2, oz + pr)
-          });
-          // Outline
-          const edgeGeo = new THREE.EdgesGeometry(geo);
-          const outline = new THREE.LineSegments(edgeGeo, outlineMat);
-          outline.position.copy(mesh.position);
-          scene.add(outline); game.mapMeshes.push(outline);
-        } else {
-          // Box obstacle
-          cw = 40 + Math.random() * 80;
-          ch = rh * (0.1 + Math.random() * 0.2);
-          cd = 40 + Math.random() * 80;
-          const mesh = addToonBox(ox, (Math.random() - 0.5) * rh * 0.3, oz, cw, ch, cd, coverMat);
-        }
-      }
-    }
-
-    // Room beacon (navigation light)
-    if (type === 'hub' || type === 'arena' || type === 'objective') {
-      const b = new THREE.Mesh(new THREE.SphereGeometry(15, 8, 6), beaconMat);
-      b.position.set(rx, 0, rz);
-      scene.add(b); game.mapMeshes.push(b);
-      const light = new THREE.PointLight(roomColors[type].main, 0.8, rw * 1.5);
-      light.position.set(rx, rh * 0.2, rz);
-      scene.add(light); game.mapMeshes.push(light);
-    }
-  }
-
-  // Build corridor geometry between connected rooms
-  for (const edge of edges) {
-    const roomA = rooms.find(r => r.id === edge.from);
-    const roomB = rooms.find(r => r.id === edge.to);
-    if (!roomA || !roomB) continue;
-
-    const ax = roomA.x, az = roomA.z;
-    const bx = roomB.x, bz = roomB.z;
-    const dx = bx - ax, dz = bz - az;
-    const dist = Math.sqrt(dx * dx + dz * dz);
-
-    // Only build corridor geometry if rooms aren't overlapping
-    const minSep = (roomA.width + roomB.width) / 2 * 0.5;
-    if (dist < minSep) continue;
-
-    const corrW = edge.width || 350;
-    const corrH = Math.min(roomA.height, roomB.height) * 0.8;
-    const midX = (ax + bx) / 2;
-    const midZ = (az + bz) / 2;
-    const angle = Math.atan2(dz, dx);
-
-    // Corridor as a rotated box
-    const corrLen = dist - (roomA.width + roomB.width) / 4;
-    if (corrLen > 50) {
-      const corrGeo = new THREE.BoxGeometry(corrLen, WALL, corrW);
-      // Floor
-      const floorMesh = new THREE.Mesh(corrGeo, makeToonMat('corridor', 'floor'));
-      floorMesh.position.set(midX, -corrH/2 - WALL/2, midZ);
-      floorMesh.rotation.y = -angle;
-      scene.add(floorMesh); game.mapMeshes.push(floorMesh);
-      // Ceiling
-      const ceilMesh = new THREE.Mesh(corrGeo.clone(), makeToonMat('corridor', 'ceiling'));
-      ceilMesh.position.set(midX, corrH/2 + WALL/2, midZ);
-      ceilMesh.rotation.y = -angle;
-      scene.add(ceilMesh); game.mapMeshes.push(ceilMesh);
-
-      // Corridor walls (two sides)
-      const wallGeo = new THREE.BoxGeometry(corrLen, corrH, WALL);
-      const perpX = Math.sin(angle) * corrW/2;
-      const perpZ = -Math.cos(angle) * corrW/2;
-
-      const w1 = new THREE.Mesh(wallGeo, makeToonMat('corridor', 'wall'));
-      w1.position.set(midX + perpX, 0, midZ + perpZ);
-      w1.rotation.y = -angle;
-      scene.add(w1); game.mapMeshes.push(w1);
-
-      const w2 = new THREE.Mesh(wallGeo.clone(), makeToonMat('corridor', 'wall'));
-      w2.position.set(midX - perpX, 0, midZ - perpZ);
-      w2.rotation.y = -angle;
-      scene.add(w2); game.mapMeshes.push(w2);
-
-      // Outline edges for corridor walls
-      const wallEdgeGeo = new THREE.EdgesGeometry(wallGeo);
-      const o1 = new THREE.LineSegments(wallEdgeGeo, outlineMat);
-      o1.position.copy(w1.position); o1.rotation.copy(w1.rotation);
-      scene.add(o1); game.mapMeshes.push(o1);
-      const o2 = new THREE.LineSegments(wallEdgeGeo.clone(), outlineMat);
-      o2.position.copy(w2.position); o2.rotation.copy(w2.rotation);
-      scene.add(o2); game.mapMeshes.push(o2);
-
-      // Corridor collision (approximate as axis-aligned)
-      const hw = corrLen/2, hd = corrW/2;
-      game.levelBoxes.push({
-        min: new THREE.Vector3(midX - hw, -corrH/2 - WALL, midZ - hd),
-        max: new THREE.Vector3(midX + hw, -corrH/2, midZ + hd)
-      });
-      game.levelBoxes.push({
-        min: new THREE.Vector3(midX - hw, corrH/2, midZ - hd),
-        max: new THREE.Vector3(midX + hw, corrH/2 + WALL, midZ + hd)
-      });
-
-      // Corridor spawn points
-      const steps = Math.max(2, Math.floor(corrLen / 300));
-      for (let s = 0; s <= steps; s++) {
-        const t = s / steps;
+    // Register spawn/corridor points inside this chamber
+    const step = 180;
+    for (let sx = cx - r + step / 2; sx <= cx + r - step / 2; sx += step) {
+      for (let sz = cz - r + step / 2; sz <= cz + r - step / 2; sz += step) {
         game.corridorPoints.push({
-          x: ax + dx * t, y: 0, z: az + dz * t,
-          roomId: 'corridor_' + edge.from + '_' + edge.to,
-          roomType: 'corridor', team: null
+          x: sx, y: cy, z: sz,
+          roomId: node.id, roomType: type, team: node.team || null
         });
       }
     }
   }
 
-  // Ambient lighting spread throughout the level
-  const allRooms = level.rooms;
-  for (let i = 0; i < allRooms.length; i += 2) {
-    const r = allRooms[i];
-    const al = new THREE.PointLight(0x6688cc, 0.5, r.width * 3);
-    al.position.set(r.x, r.height * 0.3, r.z);
+  // --- Build tunnels with variable cross-sections ---
+  const builtTunnels = new Set();
+  for (const edge of edges) {
+    const key = [edge.from, edge.to].sort().join('_');
+    if (builtTunnels.has(key)) continue;
+    builtTunnels.add(key);
+
+    const a = nodes.find(n => n.id === edge.from);
+    const b = nodes.find(n => n.id === edge.to);
+    if (!a || !b) continue;
+
+    const dx = b.x - a.x, dz = b.z - a.z;
+    const dist = Math.sqrt(dx * dx + dz * dz);
+    if (dist < 1) continue;
+    const dirX = dx / dist, dirZ = dz / dist;
+
+    const startX = a.x + dirX * a.radius;
+    const startZ = a.z + dirZ * a.radius;
+    const endX = b.x - dirX * b.radius;
+    const endZ = b.z - dirZ * b.radius;
+    const startY = a.y, endY = b.y;
+
+    const tunDx = endX - startX, tunDz = endZ - startZ, tunDy = endY - startY;
+    const tunDist = Math.sqrt(tunDx * tunDx + tunDz * tunDz + tunDy * tunDy);
+    if (tunDist < 50) continue;
+
+    // Profile at start and end (width x height in ship units, morphs along length)
+    const pS = edge.profileStart || { w: 3, h: 3 };
+    const pE = edge.profileEnd || pS;
+    const isXDir = Math.abs(tunDx) > Math.abs(tunDz);
+
+    // Build as segments, each with interpolated cross-section
+    const segments = Math.max(2, Math.ceil(tunDist / (SHIP_UNIT * 2)));
+    for (let s = 0; s < segments; s++) {
+      const t0 = s / segments, t1 = (s + 1) / segments;
+      const tMid = (t0 + t1) / 2;
+      const sx = startX + tunDx * tMid;
+      const sy = startY + tunDy * tMid;
+      const sz = startZ + tunDz * tMid;
+      const segLen = tunDist / segments + 20;
+
+      // Lerp the cross-section between start and end profiles
+      const curW = (pS.w + (pE.w - pS.w) * tMid) * SHIP_UNIT;
+      const curH = (pS.h + (pE.h - pS.h) * tMid) * SHIP_UNIT;
+
+      // segW/segD: along-tunnel dimension vs cross-tunnel dimension
+      const segAlong = segLen;
+      const segCross = curW; // lateral width of tunnel
+
+      const floorCeilW = isXDir ? segAlong + WALL : segCross + WALL * 2;
+      const floorCeilD = isXDir ? segCross + WALL * 2 : segAlong + WALL;
+
+      // Floor
+      addBox(sx, sy - curH / 2 - WALL / 2, sz, floorCeilW, WALL, floorCeilD, makeCavernMat('small', 'floor'));
+      // Ceiling
+      addBox(sx, sy + curH / 2 + WALL / 2, sz, floorCeilW, WALL, floorCeilD, makeCavernMat('small', 'ceiling'));
+      // Side walls
+      if (isXDir) {
+        addBox(sx, sy, sz - segCross / 2 - WALL / 2, segAlong + WALL, curH, WALL, makeCavernMat('small', 'wall'));
+        addBox(sx, sy, sz + segCross / 2 + WALL / 2, segAlong + WALL, curH, WALL, makeCavernMat('small', 'wall'));
+      } else {
+        addBox(sx - segCross / 2 - WALL / 2, sy, sz, WALL, curH, segAlong + WALL, makeCavernMat('small', 'wall'));
+        addBox(sx + segCross / 2 + WALL / 2, sy, sz, WALL, curH, segAlong + WALL, makeCavernMat('small', 'wall'));
+      }
+
+      // Corridor spawn points
+      game.corridorPoints.push({
+        x: sx, y: sy, z: sz,
+        roomId: 'tunnel_' + key, roomType: 'tunnel', team: null
+      });
+    }
+  }
+
+  // Ambient lighting
+  for (let i = 0; i < nodes.length; i++) {
+    const n = nodes[i];
+    const intensity = n.type === 'large' ? 0.7 : n.type === 'medium' ? 0.5 : 0.4;
+    const al = new THREE.PointLight(0x6688cc, intensity, n.radius * 4);
+    al.position.set(n.x, n.y + n.height * 0.3, n.z);
     scene.add(al); game.mapMeshes.push(al);
   }
 
-  console.log('Built room-graph level: ' + level.name + ' (' + rooms.length + ' rooms, ' + edges.length + ' edges)');
+  console.log('Built underground city: ' + level.name + ' (' + nodes.length + ' chambers, ' + edges.length + ' tunnels)');
 }
 
 // ---- SPAWN HELPERS ----
@@ -4768,6 +5521,11 @@ function gameLoop(timestamp) {
   updateRoundSystem(dt);
   updateStasisFields(dt);
   checkExecutions(dt);
+
+  // Network: broadcast our state to all peers
+  broadcastPlayerState(dt);
+  // Network: clean up stale hit claims
+  if (net.active && game.time % 1 < dt) cleanupPendingHits();
 
   for (const bot of game.entities) bot.update(dt);
 
