@@ -3288,6 +3288,308 @@ function updateDynamicObjects(dt) {
   }
 }
 
+// ---- ORGANIC LIFE: glowing alien flora that makes maps feel alive ----
+// Neon bioluminescent growths: tendrils, polyp clusters, spore clouds, coral fans, vein networks
+
+const ORGANIC_PALETTE = [
+  0xff00ff, 0x00ffff, 0xff4488, 0x44ff88, 0x8844ff,
+  0xff8800, 0x00ff44, 0xff0066, 0x66ffcc, 0xaa44ff,
+  0xff66aa, 0x44ffff, 0xffaa00, 0x00ffaa, 0xcc44ff,
+  0xff2266, 0x22ff88, 0x8866ff, 0xff6622, 0x22ffcc
+];
+
+function createOrganicMesh(type, scale, color) {
+  let geo, meshGroup;
+  const mat = new THREE.MeshBasicMaterial({
+    color: color, transparent: true, opacity: 0.7,
+    blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
+  });
+
+  switch (type) {
+    case 'tendril': {
+      // Twisting vine: chain of small spheres/cones along a curve
+      meshGroup = new THREE.Group();
+      const segments = 6 + Math.floor(Math.random() * 6);
+      const totalLen = scale * (1.5 + Math.random());
+      let px = 0, py = 0, pz = 0;
+      let dirX = (Math.random() - 0.5), dirY = 0.5 + Math.random() * 0.5, dirZ = (Math.random() - 0.5);
+      const dLen = Math.sqrt(dirX * dirX + dirY * dirY + dirZ * dirZ);
+      dirX /= dLen; dirY /= dLen; dirZ /= dLen;
+      for (let s = 0; s < segments; s++) {
+        const t = s / segments;
+        const segR = scale * 0.12 * (1 - t * 0.6);
+        const segGeo = new THREE.SphereGeometry(segR, 5, 4);
+        const segMat = mat.clone();
+        segMat.opacity = 0.5 + (1 - t) * 0.4;
+        const seg = new THREE.Mesh(segGeo, segMat);
+        seg.position.set(px, py, pz);
+        meshGroup.add(seg);
+        // Advance with organic curve
+        const step = totalLen / segments;
+        dirX += (Math.random() - 0.5) * 0.4;
+        dirZ += (Math.random() - 0.5) * 0.4;
+        const dl = Math.sqrt(dirX * dirX + dirY * dirY + dirZ * dirZ);
+        dirX /= dl; dirY /= dl; dirZ /= dl;
+        px += dirX * step; py += dirY * step; pz += dirZ * step;
+      }
+      // Tip: bright glowing bulb
+      const tipGeo = new THREE.SphereGeometry(scale * 0.18, 6, 5);
+      const tipMat = mat.clone();
+      tipMat.opacity = 0.9;
+      const tip = new THREE.Mesh(tipGeo, tipMat);
+      tip.position.set(px, py, pz);
+      meshGroup.add(tip);
+      return meshGroup;
+    }
+
+    case 'polyp': {
+      // Cluster of bulbous shapes
+      meshGroup = new THREE.Group();
+      const count = 3 + Math.floor(Math.random() * 5);
+      for (let i = 0; i < count; i++) {
+        const bR = scale * (0.15 + Math.random() * 0.25);
+        const bGeo = new THREE.SphereGeometry(bR, 6, 5);
+        const bMat = mat.clone();
+        bMat.color = new THREE.Color(ORGANIC_PALETTE[Math.floor(Math.random() * ORGANIC_PALETTE.length)]);
+        bMat.opacity = 0.5 + Math.random() * 0.4;
+        const bulb = new THREE.Mesh(bGeo, bMat);
+        const angle = Math.random() * Math.PI * 2;
+        const spread = Math.random() * scale * 0.5;
+        bulb.position.set(
+          Math.cos(angle) * spread,
+          Math.random() * scale * 0.4,
+          Math.sin(angle) * spread
+        );
+        meshGroup.add(bulb);
+      }
+      return meshGroup;
+    }
+
+    case 'coral': {
+      // Fan-shaped coral plate
+      meshGroup = new THREE.Group();
+      const fanCount = 2 + Math.floor(Math.random() * 3);
+      for (let f = 0; f < fanCount; f++) {
+        const fW = scale * (0.5 + Math.random() * 0.6);
+        const fH = scale * (0.6 + Math.random() * 0.5);
+        const fGeo = new THREE.PlaneGeometry(fW, fH, 3, 3);
+        // Warp vertices for organic feel
+        const posAttr = fGeo.attributes.position;
+        for (let v = 0; v < posAttr.count; v++) {
+          posAttr.setZ(v, (Math.random() - 0.5) * scale * 0.15);
+        }
+        posAttr.needsUpdate = true;
+        fGeo.computeVertexNormals();
+        const fMat = mat.clone();
+        fMat.color = new THREE.Color(ORGANIC_PALETTE[Math.floor(Math.random() * ORGANIC_PALETTE.length)]);
+        fMat.opacity = 0.4 + Math.random() * 0.3;
+        const fan = new THREE.Mesh(fGeo, fMat);
+        fan.rotation.set(
+          (Math.random() - 0.5) * 0.8,
+          Math.random() * Math.PI * 2,
+          (Math.random() - 0.5) * 0.4
+        );
+        fan.position.set(
+          (Math.random() - 0.5) * scale * 0.3,
+          Math.random() * scale * 0.3,
+          (Math.random() - 0.5) * scale * 0.3
+        );
+        meshGroup.add(fan);
+      }
+      return meshGroup;
+    }
+
+    case 'spore': {
+      // Floating glowing particles (tiny spheres in a cloud)
+      meshGroup = new THREE.Group();
+      const pCount = 8 + Math.floor(Math.random() * 12);
+      for (let p = 0; p < pCount; p++) {
+        const sR = scale * (0.03 + Math.random() * 0.06);
+        const sGeo = new THREE.SphereGeometry(sR, 4, 3);
+        const sMat = mat.clone();
+        sMat.color = new THREE.Color(ORGANIC_PALETTE[Math.floor(Math.random() * ORGANIC_PALETTE.length)]);
+        sMat.opacity = 0.6 + Math.random() * 0.4;
+        const spore = new THREE.Mesh(sGeo, sMat);
+        spore.position.set(
+          (Math.random() - 0.5) * scale * 1.2,
+          (Math.random() - 0.5) * scale * 1.2,
+          (Math.random() - 0.5) * scale * 1.2
+        );
+        // Store drift data on each spore mesh
+        spore.userData.driftSpeed = 0.3 + Math.random() * 0.8;
+        spore.userData.driftPhase = Math.random() * Math.PI * 2;
+        spore.userData.driftRadius = scale * (0.1 + Math.random() * 0.2);
+        meshGroup.add(spore);
+      }
+      return meshGroup;
+    }
+
+    case 'vein': {
+      // Branching vein network: line segments that glow
+      meshGroup = new THREE.Group();
+      const branches = 3 + Math.floor(Math.random() * 4);
+      for (let b = 0; b < branches; b++) {
+        const pts = [];
+        let vx = 0, vy = 0, vz = 0;
+        const segs = 4 + Math.floor(Math.random() * 4);
+        for (let s = 0; s <= segs; s++) {
+          pts.push(new THREE.Vector3(vx, vy, vz));
+          vx += (Math.random() - 0.5) * scale * 0.4;
+          vy += (Math.random() - 0.3) * scale * 0.3;
+          vz += (Math.random() - 0.5) * scale * 0.4;
+        }
+        const lineGeo = new THREE.BufferGeometry().setFromPoints(pts);
+        const lineMat = new THREE.LineBasicMaterial({
+          color: ORGANIC_PALETTE[Math.floor(Math.random() * ORGANIC_PALETTE.length)],
+          transparent: true, opacity: 0.6,
+          blending: THREE.AdditiveBlending
+        });
+        meshGroup.add(new THREE.Line(lineGeo, lineMat));
+
+        // Glow nodes at branch points
+        for (let s = 0; s < pts.length; s += 2) {
+          const nR = scale * (0.04 + Math.random() * 0.08);
+          const nGeo = new THREE.SphereGeometry(nR, 4, 3);
+          const nMat = mat.clone();
+          nMat.opacity = 0.7;
+          const node = new THREE.Mesh(nGeo, nMat);
+          node.position.copy(pts[s]);
+          meshGroup.add(node);
+        }
+      }
+      return meshGroup;
+    }
+
+    default: {
+      geo = new THREE.SphereGeometry(scale * 0.2, 6, 5);
+      return new THREE.Mesh(geo, mat);
+    }
+  }
+}
+
+const ORGANIC_TYPES = ['tendril', 'polyp', 'coral', 'spore', 'vein'];
+
+function spawnOrganics(rooms) {
+  // Clean up old organics
+  if (game.organics) {
+    for (const org of game.organics) {
+      if (org.mesh && org.mesh.parent) scene.remove(org.mesh);
+    }
+  }
+  game.organics = [];
+
+  // Spawn organics in every room (more in larger rooms)
+  for (const rm of rooms) {
+    const count = Math.max(3, Math.floor(rm.r / 60));
+    for (let i = 0; i < count; i++) {
+      // Position: on the inner surface of the room sphere (near walls)
+      const u = Math.random(), v = Math.random();
+      const theta = 2 * Math.PI * u;
+      const phi = Math.acos(2 * v - 1);
+      const surfaceDist = rm.r * (0.65 + Math.random() * 0.25); // near wall
+      const px = rm.x + surfaceDist * Math.sin(phi) * Math.cos(theta);
+      const py = rm.y + surfaceDist * Math.sin(phi) * Math.sin(theta);
+      const pz = rm.z + surfaceDist * Math.cos(phi);
+
+      const type = ORGANIC_TYPES[Math.floor(Math.random() * ORGANIC_TYPES.length)];
+      const scale = 15 + Math.random() * 40;
+      const color = ORGANIC_PALETTE[Math.floor(Math.random() * ORGANIC_PALETTE.length)];
+      const mesh = createOrganicMesh(type, scale, color);
+
+      mesh.position.set(px, py, pz);
+      // Orient toward room center (growths face inward)
+      mesh.lookAt(rm.x, rm.y, rm.z);
+      scene.add(mesh);
+
+      game.organics.push({
+        mesh: mesh,
+        type: type,
+        basePos: new THREE.Vector3(px, py, pz),
+        pulseSpeed: 0.5 + Math.random() * 2.0,
+        pulsePhase: Math.random() * Math.PI * 2,
+        swaySpeed: 0.2 + Math.random() * 0.6,
+        swayAmount: 1 + Math.random() * 3,
+      });
+    }
+  }
+
+  // Also spawn some along tunnels
+  const tunnelPts = game.corridorPoints.filter(p => p.roomType === 'tunnel');
+  const tunnelOrgCount = Math.min(20, Math.floor(tunnelPts.length / 2));
+  for (let i = 0; i < tunnelOrgCount; i++) {
+    const idx = Math.floor(Math.random() * tunnelPts.length);
+    const pt = tunnelPts[idx];
+    // Offset to sides of tunnel (near walls)
+    const offsetAngle = Math.random() * Math.PI * 2;
+    const offsetDist = 100 + Math.random() * 60;
+    const px = pt.x + Math.cos(offsetAngle) * offsetDist;
+    const py = pt.y + Math.sin(offsetAngle) * offsetDist * 0.5;
+    const pz = pt.z + Math.sin(offsetAngle) * offsetDist;
+
+    const type = ORGANIC_TYPES[Math.floor(Math.random() * ORGANIC_TYPES.length)];
+    const scale = 10 + Math.random() * 25;
+    const color = ORGANIC_PALETTE[Math.floor(Math.random() * ORGANIC_PALETTE.length)];
+    const mesh = createOrganicMesh(type, scale, color);
+
+    mesh.position.set(px, py, pz);
+    scene.add(mesh);
+
+    game.organics.push({
+      mesh: mesh,
+      type: type,
+      basePos: new THREE.Vector3(px, py, pz),
+      pulseSpeed: 0.5 + Math.random() * 2.0,
+      pulsePhase: Math.random() * Math.PI * 2,
+      swaySpeed: 0.2 + Math.random() * 0.6,
+      swayAmount: 1 + Math.random() * 3,
+    });
+  }
+}
+
+function updateOrganics(dt) {
+  if (!game.organics) return;
+  const t = game.time;
+  for (const org of game.organics) {
+    if (!org.mesh || !org.mesh.parent) continue;
+
+    // Pulse glow: cycle opacity/emissive
+    const pulse = 0.5 + 0.5 * Math.sin(t * org.pulseSpeed + org.pulsePhase);
+
+    // Apply to all child meshes in group
+    org.mesh.traverse(child => {
+      if (child.material) {
+        if (child.material.opacity !== undefined) {
+          child.material.opacity = (child.material.userData_baseOpacity || child.material.opacity) * (0.5 + pulse * 0.5);
+        }
+      }
+    });
+
+    // Gentle sway
+    const swayX = Math.sin(t * org.swaySpeed + org.pulsePhase) * org.swayAmount;
+    const swayY = Math.cos(t * org.swaySpeed * 0.7 + org.pulsePhase * 1.3) * org.swayAmount * 0.5;
+    org.mesh.position.set(
+      org.basePos.x + swayX,
+      org.basePos.y + swayY,
+      org.basePos.z + Math.sin(t * org.swaySpeed * 0.5) * org.swayAmount * 0.3
+    );
+
+    // Spore type: drift individual particles
+    if (org.type === 'spore') {
+      org.mesh.children.forEach(spore => {
+        if (spore.userData.driftSpeed) {
+          const ds = spore.userData;
+          const ox = Math.sin(t * ds.driftSpeed + ds.driftPhase) * ds.driftRadius;
+          const oy = Math.cos(t * ds.driftSpeed * 0.6 + ds.driftPhase) * ds.driftRadius;
+          const oz = Math.sin(t * ds.driftSpeed * 0.4 + ds.driftPhase * 1.5) * ds.driftRadius;
+          spore.position.x += ox * dt;
+          spore.position.y += oy * dt;
+          spore.position.z += oz * dt;
+        }
+      });
+    }
+  }
+}
+
 function spawnTracer(from, to, color) {
   color = color || 0xffff00;
   // Bright visible beam (cylinder between two points)
@@ -3586,6 +3888,7 @@ function selectLoadout(key) {
   const level = getNextMap();
   buildRoomGraphLevel(level);
   spawnDynamicObjects(game.sdfRoomData);
+  spawnOrganics(game.sdfRoomData);
 
   // Place player inside the letter corridors (Fleet A territory)
   player.position.copy(getValidSpawnPoint('A'));
@@ -5701,6 +6004,7 @@ function updateRoundSystem(dt) {
         const level = getNextMap();
         buildRoomGraphLevel(level);
         spawnDynamicObjects(game.sdfRoomData);
+        spawnOrganics(game.sdfRoomData);
         // Reset stasis fields
         game.stasisFields.forEach(f => { if (f.alive) f.destroy(); });
         game.stasisFields = [];
@@ -7542,13 +7846,156 @@ const MAP_DATA = {
       { path: [{x: -SU*7, y: -SU*2, z:  SU*4}, {x: 0, y: 0, z: 0}]},   // sw -> center
       { path: [{x: -SU*7, y: SU*2, z: -SU*4}, {x: 0, y: 0, z: 0}]},    // nw -> center
     ]
+  },
+  procedural: {
+    name: 'Deep Random',
+    description: 'Procedurally generated. New layout every match.',
+    procedural: true // flag: generate on load
   }
 };
+
+// Procedural map generator: random spheres + cylinders, guaranteed connectivity, no dead ends
+function generateProceduralMap() {
+  const roomCount = 5 + Math.floor(Math.random() * 3); // 5-7 rooms
+  const rooms = [];
+  const tunnels = [];
+
+  // Place spawn rooms on opposite sides
+  const spawnDist = SU * 8 + Math.random() * SU * 3;
+  const spawnAngle = Math.random() * Math.PI * 2;
+  const spawnAx = Math.cos(spawnAngle) * spawnDist;
+  const spawnAz = Math.sin(spawnAngle) * spawnDist;
+  const spawnAy = (Math.random() - 0.5) * SU * 2;
+  rooms.push({ id: 'spawn_a', team: 'A', x: spawnAx, y: spawnAy, z: spawnAz, r: SU * (2.0 + Math.random() * 0.8) });
+  rooms.push({ id: 'spawn_b', team: 'B', x: -spawnAx, y: -spawnAy, z: -spawnAz, r: SU * (2.0 + Math.random() * 0.8) });
+
+  // Place neutral rooms scattered in between
+  const neutralCount = roomCount - 2;
+  for (let i = 0; i < neutralCount; i++) {
+    let px, py, pz, rr, valid;
+    for (let attempt = 0; attempt < 80; attempt++) {
+      px = (Math.random() - 0.5) * spawnDist * 1.4;
+      py = (Math.random() - 0.5) * SU * 4;
+      pz = (Math.random() - 0.5) * spawnDist * 1.4;
+      rr = SU * (1.2 + Math.random() * 1.5);
+      // Must not overlap too much with existing rooms
+      valid = true;
+      for (const r of rooms) {
+        const d = Math.sqrt((px - r.x) ** 2 + (py - r.y) ** 2 + (pz - r.z) ** 2);
+        if (d < (rr + r.r) * 0.4) { valid = false; break; }
+      }
+      if (valid) break;
+    }
+    if (valid) {
+      rooms.push({ id: 'room_' + i, team: null, x: px, y: py, z: pz, r: rr });
+    }
+  }
+
+  // Build connectivity graph: minimum spanning tree (Prim's) for guaranteed connectivity
+  const n = rooms.length;
+  const connected = new Set([0]);
+  const edges = []; // {from, to, dist}
+
+  while (connected.size < n) {
+    let bestEdge = null, bestDist = Infinity;
+    for (const ci of connected) {
+      for (let j = 0; j < n; j++) {
+        if (connected.has(j)) continue;
+        const a = rooms[ci], b = rooms[j];
+        const d = Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);
+        if (d < bestDist) { bestDist = d; bestEdge = { from: ci, to: j }; }
+      }
+    }
+    if (!bestEdge) break;
+    edges.push(bestEdge);
+    connected.add(bestEdge.to);
+  }
+
+  // Add extra random edges for loops (no dead ends, feng shui flow)
+  // Every room should have at least 2 connections
+  const connectionCount = new Array(n).fill(0);
+  for (const e of edges) { connectionCount[e.from]++; connectionCount[e.to]++; }
+
+  // Add edges until every room has 2+ connections
+  for (let i = 0; i < n; i++) {
+    while (connectionCount[i] < 2) {
+      // Find nearest room not already directly connected
+      let bestJ = -1, bestD = Infinity;
+      for (let j = 0; j < n; j++) {
+        if (j === i) continue;
+        const alreadyConnected = edges.some(e =>
+          (e.from === i && e.to === j) || (e.from === j && e.to === i));
+        if (alreadyConnected) continue;
+        const a = rooms[i], b = rooms[j];
+        const d = Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);
+        if (d < bestD) { bestD = d; bestJ = j; }
+      }
+      if (bestJ >= 0) {
+        edges.push({ from: i, to: bestJ });
+        connectionCount[i]++;
+        connectionCount[bestJ]++;
+      } else break;
+    }
+  }
+
+  // Also sprinkle 1-2 extra random loops for variety
+  const extraLoops = 1 + Math.floor(Math.random() * 2);
+  for (let l = 0; l < extraLoops; l++) {
+    const ri = Math.floor(Math.random() * n);
+    const rj = Math.floor(Math.random() * n);
+    if (ri === rj) continue;
+    const already = edges.some(e =>
+      (e.from === ri && e.to === rj) || (e.from === rj && e.to === ri));
+    if (!already) {
+      edges.push({ from: ri, to: rj });
+      connectionCount[ri]++;
+      connectionCount[rj]++;
+    }
+  }
+
+  // Convert edges to tunnels (with optional midpoint curve for longer connections)
+  // Procedural tunnels: minimum 3 ships wide (diameter = 3 * SU, so radius = 1.5 * SU)
+  // Plus some random variation up to 2.0 * SU for variety
+  for (const e of edges) {
+    const a = rooms[e.from], b = rooms[e.to];
+    const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z;
+    const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+    const tunR = SU * (1.5 + Math.random() * 0.5); // 3-4 ships across diameter
+
+    if (dist > SU * 8) {
+      // Long tunnel: add a curved midpoint
+      const mx = (a.x + b.x) / 2 + (Math.random() - 0.5) * SU * 3;
+      const my = (a.y + b.y) / 2 + (Math.random() - 0.5) * SU * 2;
+      const mz = (a.z + b.z) / 2 + (Math.random() - 0.5) * SU * 3;
+      tunnels.push({ r: tunR, path: [
+        { x: a.x, y: a.y, z: a.z },
+        { x: mx, y: my, z: mz },
+        { x: b.x, y: b.y, z: b.z }
+      ]});
+    } else {
+      // Short tunnel: direct
+      tunnels.push({ r: tunR, path: [
+        { x: a.x, y: a.y, z: a.z },
+        { x: b.x, y: b.y, z: b.z }
+      ]});
+    }
+  }
+
+  return {
+    name: 'Deep Random',
+    description: 'Procedurally generated. New layout every match.',
+    rooms: rooms,
+    tunnels: tunnels
+  };
+}
 
 function getNextMap() {
   const selectedMapKey = game.selectedMap || 'circumpunct';
   const mapData = MAP_DATA[selectedMapKey];
-  return mapData || MAP_DATA.circumpunct;
+  if (!mapData) return MAP_DATA.circumpunct;
+  // Procedural maps: generate fresh layout each time
+  if (mapData.procedural) return generateProceduralMap();
+  return mapData;
 }
 function shuffleMapRotation() {}
 
@@ -7571,16 +8018,17 @@ function buildRoomGraphLevel(level) {
   // --- READ ROOMS AND TUNNELS FROM LEVEL DATA ---
   const rooms = level.rooms;
   const tunnels = level.tunnels;
-  const TR = SU * 1.2;
+  const TR = SU * 1.2; // default tunnel radius (handcrafted maps)
 
   // --- PRE-COMPUTE CYLINDER SEGMENTS ---
   const cylSegs = [];
   for (const tun of tunnels) {
+    const tunR = tun.r || TR; // per-tunnel radius override, or default
     for (let p = 0; p < tun.path.length - 1; p++) {
       const a = tun.path[p], b = tun.path[p + 1];
       const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z;
       const len = Math.sqrt(dx * dx + dy * dy + dz * dz);
-      if (len > 10) cylSegs.push({ a, b, dx, dy, dz, len, r: TR });
+      if (len > 10) cylSegs.push({ a, b, dx, dy, dz, len, r: tunR });
     }
   }
 
@@ -7590,7 +8038,7 @@ function buildRoomGraphLevel(level) {
     game.levelSpheres.push({ cx: rm.x, cy: rm.y, cz: rm.z, r: rm.r });
   }
   for (const seg of cylSegs) {
-    game.levelCylinders.push({ ax: seg.a.x, ay: seg.a.y, az: seg.a.z, bx: seg.b.x, by: seg.b.y, bz: seg.b.z, r: TR });
+    game.levelCylinders.push({ ax: seg.a.x, ay: seg.a.y, az: seg.a.z, bx: seg.b.x, by: seg.b.y, bz: seg.b.z, r: seg.r });
   }
   game.sdfRoomData = rooms;
 
@@ -7619,9 +8067,9 @@ function buildRoomGraphLevel(level) {
     for (let i = 0; i <= steps; i++) {
       const t = i / steps;
       game.corridorPoints.push({
-        x: seg.a.x + seg.dx * t + (Math.random() - 0.5) * TR * 0.4,
-        y: seg.a.y + seg.dy * t + (Math.random() - 0.5) * TR * 0.4,
-        z: seg.a.z + seg.dz * t + (Math.random() - 0.5) * TR * 0.4,
+        x: seg.a.x + seg.dx * t + (Math.random() - 0.5) * seg.r * 0.4,
+        y: seg.a.y + seg.dy * t + (Math.random() - 0.5) * seg.r * 0.4,
+        z: seg.a.z + seg.dz * t + (Math.random() - 0.5) * seg.r * 0.4,
         team: null,
         roomType: 'tunnel'
       });
@@ -8182,6 +8630,7 @@ function gameLoop(timestamp) {
   }
 
   updateDynamicObjects(dt);
+  updateOrganics(dt);
 
   updateParticles(dt);
   updateEffects(dt);
