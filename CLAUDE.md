@@ -415,6 +415,7 @@ Sleep is NOT sequential phases. It is superposed oscillation in the left half-pl
 | `docs/gravity.html` | 3D: the boundary closes, G from the dimensional ladder, α_G = α²¹ × φ²/2, hierarchy problem |
 | `docs/dimensional_ladder.html` | The complete dimensional ladder: all seven rungs linked, accuracy summary, open problems |
 | `docs/clay_millennium.html` | The seven Clay Millennium Problems mapped to the seven rungs of the dimensional ladder |
+| `docs/wv_decomposition.html` | The W-V Decomposition: why the exponent formula is irreducibly three-part, factor migration, A'(d) sequence, three self-determinations |
 | `docs/circumpunct_physics.html` | Working-physicists formalization |
 | `docs/aperture_falsification_presentation.html` | Falsification criteria, ρ = ω/α parameter |
 | `docs/the_bridge_presentation.html` | Constructor ethics, λ (The Law), wanting |
