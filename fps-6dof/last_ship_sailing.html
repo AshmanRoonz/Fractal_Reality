@@ -3763,37 +3763,33 @@ function executeAbility(slot, ability) {
       proj.isArcWave = true; // applies slow on hit
       game.projectiles.push(proj);
     }
-    // TONE: Tracker Rockets (fire homing salvo; damage scales with lock count)
+    // TONE: Tracker Rockets (fire homing salvo at fully-locked targets; partial locks preserved)
     else if (ability.name === 'Tracker Rockets') {
-      // Gather all targets with any locks, sorted by lock count descending
-      const lockEntries = [];
+      // Gather only targets with full 3 locks
+      const lockedTargets = [];
       for (const [botId, locks] of Object.entries(player.toneLocks)) {
-        if (locks > 0) {
+        if (locks >= 3) {
           const bot = game.entities.find(b => b.id == botId && b.alive);
-          if (bot) lockEntries.push({ bot, locks });
+          if (bot) lockedTargets.push(bot);
         }
       }
-      lockEntries.sort((a, b) => b.locks - a.locks);
-
-      if (lockEntries.length > 0) {
-        // Fire homing rockets at locked targets; more locks = more rockets + damage
-        for (const entry of lockEntries) {
-          const rocketCount = entry.locks >= 3 ? 5 : entry.locks >= 2 ? 3 : 2;
-          const rocketDmg = entry.locks >= 3 ? 1000 : entry.locks >= 2 ? 700 : 400;
-          for (let m = 0; m < rocketCount; m++) {
+      if (lockedTargets.length > 0) {
+        // Fire 5 tracking missiles at each fully-locked target
+        for (const target of lockedTargets) {
+          for (let m = 0; m < 5; m++) {
             const spread = new THREE.Vector3((Math.random()-0.5)*0.2, (Math.random()-0.5)*0.2, 0);
             const vel = forward.clone().add(spread).normalize().multiplyScalar(900);
-            const proj = new Projectile(player.position.clone(), vel, rocketDmg, 80, 'player', 0xffaa00);
+            const proj = new Projectile(player.position.clone(), vel, 1000, 80, 'player', 0xffaa00);
             proj.tracking = true;
-            proj.trackTarget = entry.bot;
+            proj.trackTarget = target;
             game.projectiles.push(proj);
           }
-          // Consume locks
-          delete player.toneLocks[entry.bot.id];
+          // Only consume full locks; partial locks on other targets stay
+          delete player.toneLocks[target.id];
         }
         player.toneLockedTarget = null;
       } else {
-        // No locks at all: fire unguided salvo (5 weaker rockets)
+        // No full locks: fire unguided salvo (partial locks preserved for next volley)
         for (let m = 0; m < 5; m++) {
           const spread = new THREE.Vector3((Math.random()-0.5)*0.15, (Math.random()-0.5)*0.15, 0);
           const vel = forward.clone().add(spread).normalize().multiplyScalar(900);
