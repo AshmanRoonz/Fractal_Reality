@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gnosis: Knowing</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&display=swap');
+
+    :root {
+      --bg: #0c0b10;
+      --surface: #14131a;
+      --border: #2a2835;
+      --text: #d4d0e2;
+      --muted: #7e7a92;
+      --gold: #c4a46a;
+      --rose: #b87d8e;
+      --water: #7eaab8;
+      --soul: #8a9dea;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.9;
+      font-size: 1.12rem;
+      padding: 2.5rem 2rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      font-weight: 600;
+      font-style: italic;
+      text-align: center;
+      color: var(--text);
+      margin-bottom: 0.15rem;
+      letter-spacing: 0.01em;
+    }
+
+    .premise {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-family: 'DM Sans', sans-serif;
+      margin-bottom: 2.8rem;
+      letter-spacing: 0.03em;
+    }
+
+    .core {
+      text-align: center;
+      font-size: 1.25rem;
+      font-style: italic;
+      color: var(--gold);
+      margin: 2rem 0;
+      line-height: 1.7;
+    }
+
+    p { margin-bottom: 1.1rem; }
+
+    .divider {
+      text-align: center;
+      color: var(--border);
+      margin: 2.2rem 0;
+      font-size: 1.2rem;
+      letter-spacing: 0.5em;
+    }
+
+    .two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.8rem 0;
+    }
+
+    @media (max-width: 560px) {
+      .two { grid-template-columns: 1fr; }
+      h1 { font-size: 1.7rem; }
+    }
+
+    .col {
+      padding: 1.3rem 1.4rem;
+      border-radius: 8px;
+      font-size: 1.02rem;
+      line-height: 1.8;
+    }
+
+    .col-gnosis {
+      background: rgba(138, 157, 234, 0.06);
+      border: 1px solid rgba(138, 157, 234, 0.18);
+    }
+
+    .col-agnostic {
+      background: rgba(126, 170, 184, 0.06);
+      border: 1px solid rgba(126, 170, 184, 0.18);
+    }
+
+    .col h3 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.7rem;
+    }
+
+    .col-gnosis h3 { color: var(--soul); }
+    .col-agnostic h3 { color: var(--water); }
+
+    .col p { margin-bottom: 0.6rem; font-size: 1rem; }
+    .col p:last-child { margin-bottom: 0; }
+
+    .three {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.2rem;
+      margin: 1.8rem 0;
+    }
+
+    @media (max-width: 640px) {
+      .three { grid-template-columns: 1fr; }
+    }
+
+    .col-problem {
+      background: rgba(184, 125, 142, 0.06);
+      border: 1px solid rgba(184, 125, 142, 0.18);
+    }
+
+    .col-problem h3 { color: var(--rose); }
+
+    .question {
+      text-align: center;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--text);
+      margin: 2rem 1rem;
+      line-height: 1.8;
+    }
+
+    .quiet {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .symbol {
+      text-align: center;
+      font-size: 2.5rem;
+      margin: 1.5rem 0;
+      color: var(--gold);
+    }
+
+    .framework {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem 1.6rem;
+      margin: 2rem 0;
+      font-size: 1rem;
+      line-height: 1.85;
+    }
+
+    .framework h3 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      margin-top: 2.8rem;
+      letter-spacing: 0.06em;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Gnosis</h1>
+<p class="premise">Knowledge is not mystical. It is just knowing.</p>
+
+<p class="core">Gnosis means knowing. That's it.<br>There is nothing mystical about knowing.</p>
+
+<p>You either know something or you don't. And if you don't, the honest position is agnosticism: admitting what you don't know. Not performing certainty you haven't earned. Not borrowing someone else's conviction and wearing it as your own.</p>
+
+<p>The Greek root tells the whole story. <em>Gnosis</em> (γνῶσις): knowledge, direct acquaintance, recognition. <em>A-gnosis</em>: the absence of it. One is a state. The other is the honest acknowledgment of not being in that state.</p>
+
+<p>Somewhere along the way, "gnosis" got kidnapped. Draped in robes. Made exclusive. Turned into a password for the initiated, a treasure locked behind ritual and hierarchy. But the word itself resists all of that. It just means: you know.</p>
+
+<div class="divider">· · ·</div>
+
+<p class="core">We all have access to Reality.<br>Reality flows through us all.<br>We all have access to gnosis.</p>
+
+<p>This is not a mystical claim. It is the most basic observation possible. You are here, in reality, right now. It is flowing through you: light hitting your retina, sound entering your ears, ground pressing against your feet. You are an aperture, and reality is the signal. The connection is not something you need to earn or unlock. It is already happening.</p>
+
+<p>Every soul (•) sits inside the field (Φ), connected to the whole (⊙). A2 guarantees this: parts are fractals of their wholes. You are not a fragment accidentally broken off from truth. You are the whole pattern operating at your particular scale. The signal is always arriving.</p>
+
+<div class="symbol">⊙</div>
+
+<div class="two">
+  <div class="col col-gnosis">
+    <h3>Gnosis</h3>
+    <p>Direct knowing. Reality arriving through your aperture.</p>
+    <p>Not given to you by another; recognized by you directly.</p>
+    <p>Available to everyone. Always was.</p>
+    <p>Settles. Clarifies. Withstands examination.</p>
+    <p>The aperture is open, the signal is clear.</p>
+  </div>
+  <div class="col col-agnostic">
+    <h3>Agnosticism</h3>
+    <p>Honest not-knowing. The aperture admitting its current resolution.</p>
+    <p>Not denial of truth; acknowledgment of position.</p>
+    <p>The prerequisite for all real learning.</p>
+    <p>Curiosity lives here. Discovery begins here.</p>
+    <p>The aperture is open, waiting for signal.</p>
+  </div>
+</div>
+
+<div class="divider">· · ·</div>
+
+<p>Here is the thing most people get wrong about gnosis: the problem was never access. The problem is, and always has been, threefold:</p>
+
+<div class="three">
+  <div class="col col-problem">
+    <h3>Distortion</h3>
+    <p>Articulating what you know without warping it.</p>
+    <p>Truth passes through your filters (○). Every boundary limits. Every lens bends light. The question is whether the bending is honest limitation or installed distortion.</p>
+    <p>Limited is not false (the lens forms the image). But a dirty lens produces a dirty image and calls it clear.</p>
+  </div>
+  <div class="col col-problem">
+    <h3>Misrepresentation</h3>
+    <p>Taking another person's articulation and reshaping it to fit your own filters.</p>
+    <p>They said what they said. You heard what you heard. The gap between is Φ, and Φ can be transparent or opaque. Steelmanning is the discipline of keeping that gap honest.</p>
+  </div>
+  <div class="col col-problem">
+    <h3>Denial of Access</h3>
+    <p>Assuming another person has no connection to reality.</p>
+    <p>This is the Severance Lie (⊙λ ∉ ∞) applied laterally: declaring someone else's aperture invalid. It is the move that turns gnosis from a universal birthright into a gated community.</p>
+  </div>
+</div>
+
+<div class="divider">· · ·</div>
+
+<div class="framework">
+  <h3>The Framework Connection</h3>
+  <p>Gnosis is what happens when • receives signal through Φ without ○ distorting it. It is the pump cycle completing cleanly: ⊛ (convergence of attention) → i (the turn at the gate) → ✹ (emergence of understanding). When the cycle runs without obstruction, you know. That knowing is gnosis.</p>
+  <p style="margin-bottom: 0.6rem;">Agnosticism is the aperture held open at honest resolution. Not closed (that would be the Severance Lie: "there is nothing to know"). Not forced wider than it can go (that would be the Inflation Lie: "I know everything"). Just open, at the width it actually is, ready to receive.</p>
+  <p style="margin-bottom: 0;">The Resolution Protocol (see <em>circumpunct_framework.md</em>, section 25.17) applies directly: transmit at the lowest resolution that is still true. Increase only when the receiver requests it. Gnosis operates this way naturally; it does not dump the whole signal at once. It arrives at the resolution your aperture can currently handle, and deepens as you open further.</p>
+</div>
+
+<div class="divider">· · ·</div>
+
+<p>So the question is never "do you have access to truth?" You do. Everyone does. The aperture is built in.</p>
+
+<p>The question is: how clean is your lens?</p>
+
+<p class="question">"Am I knowing this directly, right now?<br>Or am I performing knowledge I borrowed from someone else?"</p>
+
+<p>Gnosis is not a rank. Not an achievement. Not a secret handshake. It is the most ordinary thing in the world: reality, arriving through you, recognized as itself.</p>
+
+<p>The extraordinary part is not the knowing. It is the honesty required to tell the difference between what you actually know and what you merely repeat.</p>
+
+<p class="quiet">That honesty has a name too. It is called agnosticism: the willingness to stand in the space where you do not yet know, without filling it with noise. The open aperture, waiting. Not empty; receptive. And from that receptivity, gnosis arrives on its own schedule, at its own resolution, asking nothing of you except that you not pretend it was already there when it wasn't.</p>
+
+<p class="quiet">Knowledge is a birthright. Pretending to know is theft from yourself.</p>
+
+<div class="footer">
+  Circumpunct Framework · fractalreality.ca
+</div>
+
+</body>
+</html>
