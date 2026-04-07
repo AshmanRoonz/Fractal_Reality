@@ -140,6 +140,33 @@ canvas { display: block; }
 }
 @keyframes doomedFlash { from { opacity: 0.5; } to { opacity: 1; } }
 
+/* Enemy TONE Lock-on Warning */
+#enemy-lockon-warning {
+  position: fixed; top: 12%; left: 50%; transform: translateX(-50%);
+  z-index: 15; pointer-events: none; display: none; text-align: center;
+  font-family: 'Courier New', monospace; letter-spacing: 2px;
+}
+#enemy-lockon-warning .lockon-text {
+  color: #ffaa00; font-size: 13px; font-weight: bold;
+  text-shadow: 0 0 6px rgba(255,170,0,0.6);
+}
+#enemy-lockon-warning.full-lock .lockon-text {
+  color: #ff4400; font-size: 14px;
+  animation: lockonPulse 0.3s infinite alternate;
+  text-shadow: 0 0 10px rgba(255,68,0,0.8);
+}
+#enemy-lockon-warning .lockon-pips {
+  display: flex; justify-content: center; gap: 6px; margin-top: 4px;
+}
+#enemy-lockon-warning .lockon-pip {
+  width: 8px; height: 8px; border: 1px solid #ffaa00; border-radius: 50%;
+  background: transparent; transition: background 0.15s;
+}
+#enemy-lockon-warning .lockon-pip.filled { background: #ffaa00; }
+#enemy-lockon-warning.full-lock .lockon-pip { border-color: #ff4400; }
+#enemy-lockon-warning.full-lock .lockon-pip.filled { background: #ff4400; }
+@keyframes lockonPulse { from { opacity: 0.6; } to { opacity: 1; } }
+
 /* Red vignette for doomed state */
 #doomed-vignette {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -334,6 +361,14 @@ canvas { display: block; }
   <div id="gamepad-indicator">GAMEPAD</div>
   <div id="doomed-warning">! HULL CRITICAL !</div>
   <div id="doomed-vignette"></div>
+  <div id="enemy-lockon-warning">
+    <div class="lockon-text">WARNING: ENEMY LOCKED-ON</div>
+    <div class="lockon-pips">
+      <div class="lockon-pip" id="lockon-pip-1"></div>
+      <div class="lockon-pip" id="lockon-pip-2"></div>
+      <div class="lockon-pip" id="lockon-pip-3"></div>
+    </div>
+  </div>
 </div>
 
 <!-- Damage direction indicators -->
@@ -633,6 +668,9 @@ const player = {
   // TONE lock-on system
   toneLocks: {}, // { botId: lockCount } (max 3 per target)
   toneLockedTarget: null, // current target with 3+ locks
+  // Enemy TONE lock-on tracking (bots locking onto player)
+  enemyToneLocks: {}, // { botId: lockCount } (max 3 per bot)
+  enemyToneLockMax: 0, // highest lock count any enemy currently has on player
   // LEGION mode switch
   legionMode: 'close', // 'close' or 'long'
   gunShieldHP: 0, gunShieldMaxHP: 5000, gunShieldTimer: 0, // Legion Gun Shield: 5000 HP, 10s duration
@@ -1815,8 +1853,9 @@ function resolveCollision(pos, velocity, radius) {
     } else if (margin < radius * 0.8) {
       // Dangerously close: hard clamp position, kill velocity into wall
       pos.add(normal.clone().multiplyScalar(radius * 0.8 - margin + 2));
+      // Wall sliding: strip velocity component INTO the wall, keep the rest
       const vn = velocity.dot(normal);
-      if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.4));
+      if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.05)); // slight bounce (1.05x)
     } else {
       // Inside but near wall: progressive containment force
       const ratio = 1 - (margin / CONTAIN_RANGE);
@@ -1825,7 +1864,45 @@ function resolveCollision(pos, velocity, radius) {
     }
   }
 
-  // 3) Destructible obstacle collision (solid bounce until broken)
+  // 3) Unstick: detect if entity is stuck (very low speed near a wall or in a pinch).
+  // Instead of heavy probing, use a simpler check: if near wall AND velocity is nearly zero
+  // AND there's input (entity wants to move), find the nearest open direction and nudge.
+  if (margin > 0 && margin < radius * 2.0 && velocity.lengthSq() < 100) {
+    // Find the direction of steepest descent into open space (gradient ascent of -SDF = more room)
+    // We already have the inward normal from the SDF; the entity should slide along the wall.
+    // But if truly stuck (pinched), push toward the nearest corridor/room center.
+    const normal = sdfNormal(pos.x, pos.y, pos.z).negate();
+    // Check if there's more room ahead in the normal direction
+    const aheadMargin = -worldSDF(pos.x + normal.x * radius * 2, pos.y + normal.y * radius * 2, pos.z + normal.z * radius * 2);
+    if (aheadMargin < radius) {
+      // Normal direction also blocked: we're in a crevice. Find nearest open space.
+      if (game.levelSpheres && game.levelSpheres.length > 0) {
+        // Find nearest room center that has open space along the path
+        let bestRoom = null, bestScore = Infinity;
+        for (const rm of game.levelSpheres) {
+          const dx = rm.cx - pos.x, dy = rm.cy - pos.y, dz = rm.cz - pos.z;
+          const d = Math.sqrt(dx * dx + dy * dy + dz * dz);
+          // Prefer rooms where the midpoint is also inside playable space
+          const mx = (pos.x + rm.cx) / 2, my = (pos.y + rm.cy) / 2, mz = (pos.z + rm.cz) / 2;
+          const midMargin = -worldSDF(mx, my, mz);
+          const score = d + (midMargin < radius ? 5000 : 0); // penalize rooms behind walls
+          if (score < bestScore) { bestScore = score; bestRoom = rm; }
+        }
+        if (bestRoom) {
+          const escapeDir = new THREE.Vector3(bestRoom.cx - pos.x, bestRoom.cy - pos.y, bestRoom.cz - pos.z);
+          if (escapeDir.lengthSq() > 1) {
+            escapeDir.normalize();
+            // Firm push toward open space
+            velocity.add(escapeDir.multiplyScalar(600 * (1/60)));
+            // Also nudge position slightly to break free of the crevice
+            pos.add(escapeDir.clone().multiplyScalar(2));
+          }
+        }
+      }
+    }
+  }
+
+  // 4) Destructible obstacle collision (solid bounce until broken)
   for (const obj of game.dynamicObjects) {
     if (obj.collideEntity) obj.collideEntity(pos, velocity, radius);
   }
@@ -2646,6 +2723,11 @@ class Bot {
     }
 
     playerTakeDamage(damage, this);
+    // TONE bot lock-on: hits build lock marks on the player (max 3)
+    if (this.loadoutKey === 'TONE') {
+      player.enemyToneLocks[this.id] = Math.min(3, (player.enemyToneLocks[this.id] || 0) + 1);
+      if (player._enemyLockDecayTimers) player._enemyLockDecayTimers[this.id] = 0; // reset decay
+    }
     // Bot core meter charges from dealing damage
     this.coreMeter = Math.min(100, this.coreMeter + damage / 100);
   }
@@ -2684,6 +2766,8 @@ class Bot {
     // Clean up TONE lock marks for this bot
     delete player.toneLocks[this.id];
     if (player.toneLockedTarget === this) player.toneLockedTarget = null;
+    // Clean up enemy TONE locks on player from this bot
+    delete player.enemyToneLocks[this.id];
     if (attacker === 'player') {
       player.kills++;
       player.coreMeter = Math.min(100, player.coreMeter + 15);
@@ -3847,6 +3931,8 @@ function selectLoadout(key) {
   player.vortexStored = 0;
   player.toneLocks = {};
   player.toneLockedTarget = null;
+  player.enemyToneLocks = {};
+  player.enemyToneLockMax = 0;
   player.legionMode = 'close';
   player.gunShieldHP = 0; player.gunShieldTimer = 0;
   player.powerShotCharging = false; player.powerShotCharge = 0;
@@ -4101,6 +4187,8 @@ function respawnPlayer() {
   // Reset ability state
   player.toneLocks = {};
   player.toneLockedTarget = null;
+  player.enemyToneLocks = {};
+  player.enemyToneLockMax = 0;
   player.legionMode = 'close';
   player.powerShotCharging = false; player.powerShotCharge = 0;
   player.legionSwitchTimer = 0;
@@ -6943,6 +7031,30 @@ function updateHUD() {
   document.getElementById('doomed-warning').style.display = isDoomed ? 'block' : 'none';
   document.getElementById('doomed-vignette').style.display = isDoomed ? 'block' : 'none';
 
+  // Enemy TONE lock-on warning (decay locks over time, show warning)
+  let maxEnemyLocks = 0;
+  for (const botId in player.enemyToneLocks) {
+    const bot = game.entities.find(b => b.id === parseInt(botId));
+    if (!bot || !bot.alive) { delete player.enemyToneLocks[botId]; continue; }
+    // Decay locks: lose 1 lock per 4 seconds if the TONE bot hasn't hit recently
+    // (handled by not decaying here; locks auto-clear on bot death or round reset)
+    if (player.enemyToneLocks[botId] > maxEnemyLocks) maxEnemyLocks = player.enemyToneLocks[botId];
+  }
+  player.enemyToneLockMax = maxEnemyLocks;
+  const lockonEl = document.getElementById('enemy-lockon-warning');
+  if (maxEnemyLocks > 0 && player.shipState !== 'dead') {
+    lockonEl.style.display = 'block';
+    lockonEl.className = maxEnemyLocks >= 3 ? 'full-lock' : '';
+    const textEl = lockonEl.querySelector('.lockon-text');
+    textEl.textContent = maxEnemyLocks >= 3 ? 'WARNING: ENEMY LOCKED-ON' : 'WARNING: ENEMY LOCKING';
+    for (let p = 1; p <= 3; p++) {
+      const pip = document.getElementById('lockon-pip-' + p);
+      pip.className = p <= maxEnemyLocks ? 'lockon-pip filled' : 'lockon-pip';
+    }
+  } else {
+    lockonEl.style.display = 'none';
+  }
+
   // Round info
   let timerValue = game.state === 'warmup' ? game.warmupTimer : game.roundTimer;
   const minutes = Math.floor(Math.max(0, timerValue) / 60);
@@ -8608,6 +8720,22 @@ function gameLoop(timestamp) {
   // Network: clean up stale hit claims
   if (net.active && game.time % 1 < dt) cleanupPendingHits();
 
+  // Decay enemy TONE locks on player (lose all locks after 5 seconds of no new hits)
+  if (!player._enemyLockDecayTimers) player._enemyLockDecayTimers = {};
+  for (const botId in player.enemyToneLocks) {
+    if (!player._enemyLockDecayTimers[botId]) player._enemyLockDecayTimers[botId] = 0;
+    player._enemyLockDecayTimers[botId] += dt;
+    if (player._enemyLockDecayTimers[botId] >= 5) {
+      // Decay one lock level
+      player.enemyToneLocks[botId]--;
+      player._enemyLockDecayTimers[botId] = 0;
+      if (player.enemyToneLocks[botId] <= 0) {
+        delete player.enemyToneLocks[botId];
+        delete player._enemyLockDecayTimers[botId];
+      }
+    }
+  }
+
   for (const bot of game.entities) {
     bot.update(dt);
     // Animate bot ship: engine glow + gun recoil
@@ -8687,10 +8815,9 @@ function generateImpulseResponse(ctx, duration, decay, preDelay) {
       let env = Math.exp(-t * decay);
       // Early reflections: sharp spikes that give sense of enclosed space
       if (t < 0.08) env += Math.exp(-t * 30) * 0.5 * (Math.random() > 0.7 ? 1 : 0);
-      // Metallic coloring: slight resonance
+      // Pure noise reverb (no tonal sine components; avoids high-pitch ringing)
       const noise = Math.random() * 2 - 1;
-      const metallic = noise * 0.7 + Math.sin(i * 0.15) * 0.2 + Math.sin(i * 0.37) * 0.1;
-      data[i] = metallic * env;
+      data[i] = noise * env;
     }
   }
   return buf;
@@ -8719,7 +8846,7 @@ function initAudio() {
     audio.dryGain.connect(audio.masterGain);
 
     audio.reverbGain = audio.ctx.createGain();
-    audio.reverbGain.gain.value = 0.55; // prominent reverb for futuristic echo
+    audio.reverbGain.gain.value = 0.40; // reverb for futuristic echo (tamed to avoid ringing)
     audio.reverbGain.connect(audio.masterGain);
 
     // Convolver with synthetic impulse response (longer tail for spacious echo)
