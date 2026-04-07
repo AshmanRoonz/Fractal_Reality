@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Last Ship Sailing - Lobby</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a12 0%, #0d0d1a 100%);
+            color: #e0e0e0;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        /* Animated star field background */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        /* Main container with z-index above stars */
+        .container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header section */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            border-bottom: 2px solid #00e5ff;
+            padding-bottom: 2rem;
+            position: relative;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .title-section h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 0.5rem;
+            color: #00e5ff;
+            text-shadow: 0 0 20px #00e5ff, 0 0 40px #0080ff, 0 0 60px #00e5ff;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% {
+                text-shadow: 0 0 20px #00e5ff, 0 0 40px #0080ff, 0 0 60px #00e5ff;
+            }
+            50% {
+                text-shadow: 0 0 30px #00e5ff, 0 0 50px #0080ff, 0 0 80px #00e5ff;
+            }
+        }
+
+        .title-section h2 {
+            font-size: 1.1rem;
+            color: #ff6b35;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .callsign-section {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .callsign-section label {
+            color: #00e5ff;
+            font-size: 0.9rem;
+        }
+
+        .callsign-section input {
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid #00e5ff;
+            color: #00e5ff;
+            padding: 0.5rem 1rem;
+            font-family: 'Courier New', monospace;
+            border-radius: 2px;
+            width: 150px;
+            font-size: 0.9rem;
+            transition: box-shadow 0.3s;
+        }
+
+        .callsign-section input:focus {
+            outline: none;
+            box-shadow: 0 0 15px #00e5ff;
+        }
+
+        /* Main content area */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 2rem;
+            flex: 1;
+        }
+
+        /* Match browser section */
+        .matches-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .section-header {
+            font-size: 1.3rem;
+            color: #00e5ff;
+            text-shadow: 0 0 10px #00e5ff;
+            border-bottom: 2px solid #ff6b35;
+            padding-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .matches-container {
+            background: rgba(10, 10, 18, 0.7);
+            border: 1px solid #00e5ff;
+            border-radius: 4px;
+            overflow: hidden;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-height: 600px;
+        }
+
+        .matches-table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .matches-table thead {
+            position: sticky;
+            top: 0;
+            background: rgba(0, 229, 255, 0.1);
+            border-bottom: 2px solid #00e5ff;
+        }
+
+        .matches-table th {
+            padding: 1rem;
+            text-align: left;
+            color: #00e5ff;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .matches-table tbody {
+            overflow-y: auto;
+            display: block;
+            max-height: 450px;
+        }
+
+        .matches-table thead tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .matches-table tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+            transition: background 0.2s;
+        }
+
+        .matches-table tbody tr:hover {
+            background: rgba(0, 229, 255, 0.05);
+        }
+
+        .matches-table td {
+            padding: 1rem;
+            font-size: 0.9rem;
+            word-break: break-word;
+        }
+
+        .match-name {
+            color: #00e5ff;
+            font-weight: bold;
+        }
+
+        .match-map {
+            color: #b0b0ff;
+        }
+
+        .match-players {
+            color: #00e5ff;
+        }
+
+        .match-state {
+            font-size: 0.85rem;
+        }
+
+        .state-waiting {
+            color: #ffeb3b;
+        }
+
+        .state-playing {
+            color: #ff6b35;
+        }
+
+        .state-finished {
+            color: #888;
+        }
+
+        .match-lock {
+            color: #ff6b35;
+            font-size: 1.1rem;
+        }
+
+        .btn-join {
+            background: rgba(0, 229, 255, 0.2);
+            border: 1px solid #00e5ff;
+            color: #00e5ff;
+            padding: 0.5rem 1.2rem;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            border-radius: 2px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .btn-join:hover {
+            background: rgba(0, 229, 255, 0.4);
+            box-shadow: 0 0 15px #00e5ff;
+        }
+
+        .btn-join:active {
+            transform: scale(0.98);
+        }
+
+        .no-matches {
+            padding: 3rem;
+            text-align: center;
+            color: #888;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #00e5ff;
+        }
+
+        /* Sidebar panels */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .panel {
+            background: rgba(10, 10, 18, 0.8);
+            border: 1px solid #ff6b35;
+            border-radius: 4px;
+            padding: 1.5rem;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.2);
+        }
+
+        .panel.create {
+            border-color: #00e5ff;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+        }
+
+        .panel .section-header {
+            margin-bottom: 1.2rem;
+            border: none;
+            padding-bottom: 0;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: #00e5ff;
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group select {
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid #00e5ff;
+            color: #e0e0e0;
+            padding: 0.6rem;
+            font-family: 'Courier New', monospace;
+            border-radius: 2px;
+            font-size: 0.9rem;
+            transition: box-shadow 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            box-shadow: 0 0 15px #00e5ff;
+        }
+
+        .form-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            margin-right: 0.5rem;
+            accent-color: #00e5ff;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            margin-top: 0.8rem;
+        }
+
+        .checkbox-wrapper label {
+            margin: 0;
+            margin-left: 0.5rem;
+            color: #e0e0e0;
+            cursor: pointer;
+        }
+
+        .btn-create {
+            background: linear-gradient(135deg, #00e5ff, #0080ff);
+            border: none;
+            color: #0a0a12;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            border-radius: 2px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .btn-create:hover {
+            box-shadow: 0 0 20px #00e5ff;
+            transform: translateY(-2px);
+        }
+
+        .btn-create:active {
+            transform: translateY(0);
+        }
+
+        /* Join by code section */
+        .join-code-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .join-code-input-wrapper {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .join-code-input-wrapper input {
+            flex: 1;
+        }
+
+        .btn-join-code {
+            background: rgba(255, 107, 53, 0.2);
+            border: 1px solid #ff6b35;
+            color: #ff6b35;
+            padding: 0.6rem 1rem;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            border-radius: 2px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .btn-join-code:hover {
+            background: rgba(255, 107, 53, 0.3);
+            box-shadow: 0 0 15px #ff6b35;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 3rem;
+            border-top: 1px solid #00e5ff;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-text {
+            flex: 1;
+        }
+
+        .version {
+            color: #00e5ff;
+            font-weight: bold;
+        }
+
+        /* Modal for password prompt */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(2px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #0a0a12;
+            border: 2px solid #00e5ff;
+            border-radius: 4px;
+            padding: 2rem;
+            min-width: 300px;
+            box-shadow: 0 0 40px #00e5ff;
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            color: #00e5ff;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .modal-content input {
+            width: 100%;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid #00e5ff;
+            color: #e0e0e0;
+            padding: 0.8rem;
+            font-family: 'Courier New', monospace;
+            border-radius: 2px;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-content input:focus {
+            outline: none;
+            box-shadow: 0 0 15px #00e5ff;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 2px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .modal-buttons .btn-confirm {
+            background: linear-gradient(135deg, #00e5ff, #0080ff);
+            color: #0a0a12;
+        }
+
+        .modal-buttons .btn-confirm:hover {
+            box-shadow: 0 0 20px #00e5ff;
+        }
+
+        .modal-buttons .btn-cancel {
+            background: rgba(255, 107, 53, 0.2);
+            border: 1px solid #ff6b35;
+            color: #ff6b35;
+        }
+
+        .modal-buttons .btn-cancel:hover {
+            background: rgba(255, 107, 53, 0.3);
+            box-shadow: 0 0 15px #ff6b35;
+        }
+
+        /* Responsive design */
+        @media (max-width: 1024px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                flex-direction: row;
+                gap: 1rem;
+            }
+
+            .panel {
+                flex: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title-section h1 {
+                font-size: 2rem;
+            }
+
+            .title-section h2 {
+                font-size: 0.9rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .callsign-section {
+                width: 100%;
+            }
+
+            .callsign-section input {
+                width: 100%;
+            }
+
+            .matches-table {
+                font-size: 0.8rem;
+            }
+
+            .matches-table th,
+            .matches-table td {
+                padding: 0.7rem;
+            }
+
+            .sidebar {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Star field background -->
+    <canvas id="starfield"></canvas>
+
+    <!-- Main container -->
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-content">
+                <div class="title-section">
+                    <h1>LAST SHIP SAILING</h1>
+                    <h2>6DOF Zero-Gravity Ship Combat</h2>
+                </div>
+                <div class="callsign-section">
+                    <label for="callsign">Call Sign:</label>
+                    <input type="text" id="callsign" placeholder="Enter your name">
+                </div>
+            </div>
+        </header>
+
+        <!-- Main content -->
+        <div class="content">
+            <!-- Match browser -->
+            <div class="matches-section">
+                <div class="section-header">Active Matches</div>
+                <div class="matches-container">
+                    <table class="matches-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">Name</th>
+                                <th style="width: 25%;">Map</th>
+                                <th style="width: 15%;">Players</th>
+                                <th style="width: 15%;">State</th>
+                                <th style="width: 15%;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matches-list">
+                            <tr>
+                                <td colspan="5" class="loading">Loading matches...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Create match panel -->
+                <div class="panel create">
+                    <div class="section-header">Create Match</div>
+                    <form id="create-form">
+                        <div class="form-group">
+                            <label for="match-name">Match Name</label>
+                            <input type="text" id="match-name" value="Ship Combat">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="map-select">Map</label>
+                            <select id="map-select">
+                                <option value="circumpunct">The Circumpunct</option>
+                                <option value="nexus">The Nexus</option>
+                                <option value="random">Deep Random</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="max-players">Max Players</label>
+                            <input type="number" id="max-players" min="2" max="10" value="10">
+                        </div>
+
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="bot-backfill" checked>
+                            <label for="bot-backfill">Bot Backfill</label>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password (Optional)</label>
+                            <input type="password" id="password" placeholder="Leave empty for public">
+                        </div>
+
+                        <button type="submit" class="btn-create">Create Match</button>
+                    </form>
+                </div>
+
+                <!-- Join by code panel -->
+                <div class="panel">
+                    <div class="section-header">Join By Code</div>
+                    <div class="join-code-group">
+                        <div class="join-code-input-wrapper">
+                            <input type="text" id="join-code" placeholder="6-char code" maxlength="6" style="flex: 1;">
+                            <button type="button" class="btn-join-code" onclick="joinByCode()">Join</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-text">Built with Three.js and WebSockets</div>
+                <div class="version">Alpha 0.2.0</div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Password modal -->
+    <div id="password-modal" class="modal">
+        <div class="modal-content">
+            <h3>Match Protected</h3>
+            <input type="password" id="password-input" placeholder="Enter password">
+            <div class="modal-buttons">
+                <button type="button" class="btn-confirm" onclick="submitPassword()">Submit</button>
+                <button type="button" class="btn-cancel" onclick="cancelPassword()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let playerName = '';
+        let pendingJoinMatch = null;
+
+        // Initialize stars background
+        function initializeStarfield() {
+            const canvas = document.getElementById('starfield');
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const stars = [];
+            const starCount = 100;
+
+            for (let i = 0; i < starCount; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 1.5,
+                    opacity: Math.random() * 0.7 + 0.3,
+                    twinkleSpeed: Math.random() * 0.02 + 0.01
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#00e5ff';
+
+                stars.forEach(star => {
+                    star.opacity += (Math.random() - 0.5) * star.twinkleSpeed;
+                    star.opacity = Math.max(0.2, Math.min(1, star.opacity));
+
+                    ctx.globalAlpha = star.opacity * 0.3;
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                ctx.globalAlpha = 1;
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const canvas = document.getElementById('starfield');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Load and save player name
+        function loadPlayerName() {
+            const saved = localStorage.getItem('playerName');
+            if (saved) {
+                playerName = saved;
+                document.getElementById('callsign').value = playerName;
+            }
+        }
+
+        document.getElementById('callsign').addEventListener('change', (e) => {
+            playerName = e.target.value.trim();
+            if (playerName) {
+                localStorage.setItem('playerName', playerName);
+            }
+        });
+
+        // Fetch and display matches
+        async function loadMatches() {
+            try {
+                const response = await fetch('/api/matches');
+                const matches = await response.json();
+
+                const tbody = document.getElementById('matches-list');
+
+                if (!matches || matches.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="no-matches">No active matches. Create one!</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = matches.map(match => {
+                    const playerCount = (match.playerCount || 0) + (match.spectatorCount || 0);
+                    const maxPlayers = match.maxPlayers || 10;
+                    const isPassword = match.hasPassword ? '🔒' : '';
+                    const stateBadge = getStateBadge(match.state);
+
+                    return `
+                        <tr>
+                            <td class="match-name">${isPassword} ${escapeHtml(match.name)}</td>
+                            <td class="match-map">${escapeHtml(match.map || 'Unknown')}</td>
+                            <td class="match-players">${playerCount}/${maxPlayers}</td>
+                            <td class="match-state ${stateBadge.class}">${stateBadge.label}</td>
+                            <td><button class="btn-join" onclick="joinMatch('${match.id}', ${match.hasPassword})">Join</button></td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Failed to load matches:', error);
+                document.getElementById('matches-list').innerHTML =
+                    '<tr><td colspan="5" class="no-matches">Failed to load matches</td></tr>';
+            }
+        }
+
+        // Get state badge for display
+        function getStateBadge(state) {
+            const badges = {
+                'waiting': { label: 'Waiting', class: 'state-waiting' },
+                'playing': { label: 'Playing', class: 'state-playing' },
+                'finished': { label: 'Finished', class: 'state-finished' }
+            };
+            return badges[state] || { label: 'Unknown', class: 'state-waiting' };
+        }
+
+        // Join a match
+        function joinMatch(matchId, requiresPassword) {
+            if (requiresPassword) {
+                pendingJoinMatch = matchId;
+                document.getElementById('password-modal').classList.add('active');
+            } else {
+                window.location.href = `/game.html?matchId=${matchId}`;
+            }
+        }
+
+        // Handle password submission
+        function submitPassword() {
+            const password = document.getElementById('password-input').value;
+            document.getElementById('password-input').value = '';
+            document.getElementById('password-modal').classList.remove('active');
+
+            if (pendingJoinMatch && password) {
+                window.location.href = `/game.html?matchId=${pendingJoinMatch}&password=${encodeURIComponent(password)}`;
+            }
+        }
+
+        // Cancel password entry
+        function cancelPassword() {
+            document.getElementById('password-input').value = '';
+            document.getElementById('password-modal').classList.remove('active');
+            pendingJoinMatch = null;
+        }
+
+        // Allow Enter key in password modal
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('password-modal').classList.contains('active')) {
+                if (e.key === 'Enter') {
+                    submitPassword();
+                } else if (e.key === 'Escape') {
+                    cancelPassword();
+                }
+            }
+        });
+
+        // Create match
+        document.getElementById('create-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!playerName) {
+                alert('Please enter your call sign first');
+                return;
+            }
+
+            const name = document.getElementById('match-name').value.trim();
+            const map = document.getElementById('map-select').value;
+            const maxPlayers = parseInt(document.getElementById('max-players').value);
+            const botBackfill = document.getElementById('bot-backfill').checked;
+            const password = document.getElementById('password').value.trim() || null;
+
+            try {
+                const response = await fetch('/api/matches', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        map: map,
+                        maxPlayers: maxPlayers,
+                        botBackfill: botBackfill,
+                        password: password,
+                        creatorName: playerName
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to create match: ${response.statusText}`);
+                }
+
+                const match = await response.json();
+                window.location.href = `/game.html?matchId=${match.id}`;
+            } catch (error) {
+                console.error('Error creating match:', error);
+                alert('Failed to create match. Please try again.');
+            }
+        });
+
+        // Join by code
+        function joinByCode() {
+            const code = document.getElementById('join-code').value.trim().toUpperCase();
+            document.getElementById('join-code').value = '';
+
+            if (!code || code.length !== 6) {
+                alert('Please enter a valid 6-character code');
+                return;
+            }
+
+            window.location.href = `/game.html?code=${code}`;
+        }
+
+        // Allow Enter key in join code input
+        document.getElementById('join-code').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                joinByCode();
+            }
+        });
+
+        // HTML escape helper
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            initializeStarfield();
+            loadPlayerName();
+            loadMatches();
+
+            // Refresh matches every 3 seconds
+            setInterval(loadMatches, 3000);
+        });
+    </script>
+</body>
+</html>

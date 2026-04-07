@@ -2,9 +2,9 @@
   "name": "fps-6dof",
   "version": "0.1.0",
   "description": "Bare-bones 6DOF multiplayer FPS — physics and mechanics over graphics",
-  "main": "server.js",
+  "main": "server/index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server/index.js"
   },
   "dependencies": {
     "express": "^4.18.2",
