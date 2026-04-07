@@ -1831,6 +1831,104 @@ function resolveCollision(pos, velocity, radius) {
   }
 }
 
+// 4) Ship-ship collision: magnetic repulsion + bounce + ram damage
+// Runs once per frame after all movement; pushes overlapping ships apart symmetrically.
+function resolveShipShipCollisions(dt) {
+  // Build list of all active ships (player + alive bots)
+  const ships = [];
+  if (player.shipState !== 'dead' && player.chassis) {
+    ships.push({ pos: player.position, vel: player.velocity, r: player.chassis.hullLength * 0.45, isPlayer: true, hp: player.health + player.shield });
+  }
+  for (const bot of game.entities) {
+    if (!bot.alive || !bot.chassis) continue;
+    ships.push({ pos: bot.position, vel: bot.velocity, r: bot.chassis.hullLength * 0.45, isPlayer: false, bot: bot });
+  }
+
+  const SHIP_REPULSE_RANGE = 2.2; // multiplier on combined radii for soft push
+  const SHIP_REPULSE_STRENGTH = 10000;
+  const RAM_DAMAGE_MULT = 0.3; // damage = impactSpeed * this
+
+  for (let i = 0; i < ships.length; i++) {
+    for (let j = i + 1; j < ships.length; j++) {
+      const a = ships[i], b = ships[j];
+      const dx = a.pos.x - b.pos.x;
+      const dy = a.pos.y - b.pos.y;
+      const dz = a.pos.z - b.pos.z;
+      const distSq = dx * dx + dy * dy + dz * dz;
+      const minDist = a.r + b.r;
+      const repulseDist = minDist * SHIP_REPULSE_RANGE;
+
+      if (distSq < repulseDist * repulseDist) {
+        const dist = Math.sqrt(distSq);
+        if (dist < 0.1) {
+          // Directly overlapping: push apart on arbitrary axis
+          a.pos.y += minDist * 0.5;
+          b.pos.y -= minDist * 0.5;
+          continue;
+        }
+
+        const nx = dx / dist, ny = dy / dist, nz = dz / dist;
+
+        if (dist < minDist) {
+          // Hard overlap: push apart and reflect velocities
+          const pen = minDist - dist;
+          const halfPen = pen * 0.5 + 1;
+          a.pos.x += nx * halfPen;
+          a.pos.y += ny * halfPen;
+          a.pos.z += nz * halfPen;
+          b.pos.x -= nx * halfPen;
+          b.pos.y -= ny * halfPen;
+          b.pos.z -= nz * halfPen;
+
+          // Relative velocity along collision normal
+          const relVx = a.vel.x - b.vel.x;
+          const relVy = a.vel.y - b.vel.y;
+          const relVz = a.vel.z - b.vel.z;
+          const relVn = relVx * nx + relVy * ny + relVz * nz;
+
+          if (relVn < 0) {
+            // Bounce: each ship gets half the impulse
+            const impulse = relVn * 0.6;
+            a.vel.x -= nx * impulse;
+            a.vel.y -= ny * impulse;
+            a.vel.z -= nz * impulse;
+            b.vel.x += nx * impulse;
+            b.vel.y += ny * impulse;
+            b.vel.z += nz * impulse;
+
+            // Ram damage based on impact speed
+            const impactSpeed = Math.abs(relVn);
+            if (impactSpeed > 80) {
+              const ramDmg = impactSpeed * RAM_DAMAGE_MULT;
+              if (a.isPlayer) {
+                playerTakeDamage(ramDmg, b.bot ? b.bot : 'world', null);
+                if (b.bot) b.bot.takeDamage(ramDmg, 'player');
+              } else if (b.isPlayer) {
+                playerTakeDamage(ramDmg, a.bot ? a.bot : 'world', null);
+                if (a.bot) a.bot.takeDamage(ramDmg, 'player');
+              } else {
+                // Bot vs bot
+                if (a.bot) a.bot.takeDamage(ramDmg, b.bot);
+                if (b.bot) b.bot.takeDamage(ramDmg, a.bot);
+              }
+            }
+          }
+        } else {
+          // Soft repulsion zone: gentle push before contact
+          const ratio = 1 - (dist / repulseDist);
+          const force = SHIP_REPULSE_STRENGTH * ratio * ratio * dt;
+          a.vel.x += nx * force * 0.5;
+          a.vel.y += ny * force * 0.5;
+          a.vel.z += nz * force * 0.5;
+          b.vel.x -= nx * force * 0.5;
+          b.vel.y -= ny * force * 0.5;
+          b.vel.z -= nz * force * 0.5;
+        }
+      }
+    }
+  }
+}
+
 // Helper: is a point inside any cylinder (tunnel)?
 function pointInAnyCylinder(px, py, pz) {
   // SDF-based: point is "in a cylinder" if it's inside the level but not inside any sphere
@@ -8068,6 +8166,8 @@ function gameLoop(timestamp) {
     const botMaxSpeed = bot.chassis ? bot.chassis.maxSpeed : 400;
     animateShipMesh(bot.mesh, botSpeed, botMaxSpeed, bot.isFiring, dt);
   }
+  // Ship-ship collision: after all movement, push overlapping ships apart
+  resolveShipShipCollisions(dt);
   // Animate player ship (visible in 3rd person / death cam)
   if (player.mesh) {
     const pSpeed = player.velocity ? player.velocity.length() : 0;
