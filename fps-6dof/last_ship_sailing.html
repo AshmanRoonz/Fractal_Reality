@@ -264,6 +264,16 @@ canvas { display: block; }
 }
 .stasis-marker-icon { width: 16px; height: 16px; border: 2px solid #00ccff; border-radius: 50%; margin: 0 auto 2px; animation: stasisPulse 1.2s infinite; }
 @keyframes stasisPulse { 0%,100% { box-shadow: 0 0 4px rgba(0,200,255,0.3); } 50% { box-shadow: 0 0 12px rgba(0,200,255,0.7); } }
+
+/* Map Selector */
+#map-select { display: none; margin-bottom: 30px; text-align: center; }
+#map-select h3 { font-size: 16px; color: #ffaa00; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; }
+#map-select-grid { display: flex; gap: 12px; justify-content: center; }
+.map-card { background: rgba(20,20,40,0.9); border: 2px solid rgba(80,80,120,0.4); padding: 16px 24px; cursor: pointer; transition: all 0.2s; width: 220px; }
+.map-card:hover { border-color: #ffaa00; background: rgba(30,30,50,0.9); transform: translateY(-2px); }
+.map-card.selected { border-color: #ffff00; background: rgba(40,40,60,0.95); }
+.map-card .map-name { font-size: 16px; font-weight: bold; color: #ffaa00; margin-bottom: 8px; }
+.map-card .map-desc { font-size: 11px; color: #aaa; line-height: 1.4; }
 </style>
 </head>
 <body>
@@ -308,7 +318,8 @@ canvas { display: block; }
     <div id="reload-indicator">RELOADING...</div>
   </div>
 
-  <div id="round-info">
+  <div id="map-gen-hud" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: #0f0; display: none; z-index: 100; text-align: center;">GENERATING MAP...</div>
+<div id="round-info">
     <div id="round-timer">3:00</div>
     <div id="round-state">WARMUP</div>
     <div id="score-display">
@@ -401,6 +412,11 @@ canvas { display: block; }
   <h1>LAST SHIP SAILING</h1>
   <h2>CHOOSE YOUR SHIP</h2>
   <div id="ship-grid"></div>
+
+  <div id="map-select">
+    <h3>SELECT MAP</h3>
+    <div id="map-select-grid"></div>
+  </div>
   <div style="margin-top:20px;color:#555;font-size:10px;letter-spacing:1px;">WASD: Move | SPACE/CTRL: Up/Down | MOUSE: Aim | SHIFT: Dash | Q/E/F: Abilities | V: Core | ESC: Settings</div>
   <div style="margin-top:4px;color:#444;font-size:9px;letter-spacing:1px;">GAMEPAD: D-Pad Up/Down for vertical movement</div>
 </div>
@@ -571,12 +587,18 @@ const game = {
   playerStasisDuration: 3,
   playerPreStasisVelocity: null,
   // Map/level for current round
+  selectedMap: 'circumpunct', // map key; changed via selectMap()
   mapWord: '',
   mapMeshes: [],
   currentLevel: null,
   corridorPoints: [],
   // Persistent world effects (firewalls, trip wires, traps, tethers)
   worldEffects: [],
+  // Destructible moving geometry
+  dynamicObjects: [],
+  // Web Worker for marching cubes
+  levelWorker: null,
+  levelWorkerCallbacks: [],
 };
 
 // ---- PLAYER STATE ----
@@ -885,6 +907,42 @@ function startSolo() {
 function enterShipSelect() {
   document.getElementById('lobby').style.display = 'none';
   document.getElementById('ship-select').style.display = 'flex';
+  buildMapSelector();
+}
+
+function buildMapSelector() {
+  const grid = document.getElementById('map-select-grid');
+  grid.innerHTML = '';
+  
+  const mapSelectDiv = document.getElementById('map-select');
+  mapSelectDiv.style.display = 'block';
+  
+  for (const [key, mapData] of Object.entries(MAP_DATA)) {
+    const card = document.createElement('div');
+    card.className = 'map-card';
+    if (game.selectedMap === key) {
+      card.classList.add('selected');
+    }
+    card.innerHTML = `
+      <div class="map-name">${mapData.name}</div>
+      <div class="map-desc">${mapData.description}</div>
+    `;
+    card.addEventListener('click', () => selectMap(key));
+    grid.appendChild(card);
+  }
+}
+
+function selectMap(mapKey) {
+  game.selectedMap = mapKey;
+  
+  // Update visual selection
+  const cards = document.querySelectorAll('.map-card');
+  cards.forEach(card => card.classList.remove('selected'));
+  
+  const selectedCard = event.currentTarget;
+  if (selectedCard) {
+    selectedCard.classList.add('selected');
+  }
 }
 
 function updateLobbyPeers() {
@@ -1226,6 +1284,14 @@ function cleanupPendingHits() {
 // ---- THREE.JS SETUP ----
 
 const scene = new THREE.Scene();
+
+// Initialize marching cubes worker
+try {
+  game.levelWorker = initializeMarchingCubesWorker();
+} catch(e) {
+  console.warn('Web Worker unavailable, will fall back to sync marching cubes:', e);
+  game.levelWorker = null;
+}
 scene.fog = new THREE.FogExp2(0x0a0520, 0.000015); // Light fog; low density so indoor walls stay visible
 
 const camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 25000);
@@ -1479,6 +1545,115 @@ scene.add(hemiLight);
 
 // (Old static buildLevelGeometry removed; replaced by buildRoomGraphLevel)
 
+// ---- MARCHING CUBES WEB WORKER ----
+// Inline worker for parallel marching cubes mesh generation
+
+function initializeMarchingCubesWorker() {
+  const workerCode = `
+// Marching cubes worker: pure math functions plus tables
+
+function sdSphere(px,py,pz,cx,cy,cz,r) {
+  const dx=px-cx,dy=py-cy,dz=pz-cz;
+  return Math.sqrt(dx*dx+dy*dy+dz*dz)-r;
+}
+
+function sdCylinder(px,py,pz,ax,ay,az,bx,by,bz,r) {
+  const bax=bx-ax,bay=by-ay,baz=bz-az;
+  const pax=px-ax,pay=py-ay,paz=pz-az;
+  const baLen2=bax*bax+bay*bay+baz*baz;
+  if(baLen2<0.001) return sdSphere(px,py,pz,ax,ay,az,r);
+  const t=Math.max(0,Math.min(1,(pax*bax+pay*bay+paz*baz)/baLen2));
+  const cx2=ax+bax*t,cy2=ay+bay*t,cz2=az+baz*t;
+  const dx=px-cx2,dy=py-cy2,dz=pz-cz2;
+  const perpDist=Math.sqrt(dx*dx+dy*dy+dz*dz);
+  const baLen=Math.sqrt(baLen2);
+  const axialFromMid=Math.abs(t-0.5)*baLen;
+  const halfLen=baLen*0.5;
+  const dAxial=axialFromMid-halfLen;
+  const dPerp=perpDist-r;
+  if(dPerp>0&&dAxial>0) return Math.sqrt(dPerp*dPerp+dAxial*dAxial);
+  return Math.max(dPerp,dAxial);
+}
+
+function sdfSmin(a,b,k) {
+  if(k<=0.001) return Math.min(a,b);
+  const h=Math.max(0,Math.min(1,0.5+0.5*(b-a)/k));
+  return b*(1-h)+a*h-k*h*(1-h);
+}
+
+function worldSDF(px,py,pz,spheres,cylinders,smoothK) {
+  let roomD = 99999;
+  for(const s of spheres) roomD = sdfSmin(roomD, sdSphere(px,py,pz,s.cx,s.cy,s.cz,s.r), smoothK);
+  let d = roomD;
+  for(const c of cylinders) {
+    const cd = sdCylinder(px,py,pz,c.ax,c.ay,c.az,c.bx,c.by,c.bz,c.r);
+    d = Math.min(d, sdfSmin(roomD, cd, smoothK));
+  }
+  return d;
+}
+
+const mcEdgeTable = new Uint16Array([0x0,0x109,0x203,0x30a,0x406,0x50f,0x605,0x70c,0x80c,0x905,0xa0f,0xb06,0xc0a,0xd03,0xe09,0xf00,0x190,0x99,0x393,0x29a,0x596,0x49f,0x795,0x69c,0x99c,0x895,0xb9f,0xa96,0xd9a,0xc93,0xf99,0xe90,0x230,0x339,0x33,0x13a,0x636,0x73f,0x435,0x53c,0xa3c,0xb35,0x83f,0x936,0xe3a,0xf33,0xc39,0xd30,0x3a0,0x2a9,0x1a3,0xaa,0x7a6,0x6af,0x5a5,0x4ac,0xbac,0xaa5,0x9af,0x8a6,0xfaa,0xea3,0xda9,0xca0,0x460,0x569,0x663,0x76a,0x66,0x16f,0x265,0x36c,0xc6c,0xd65,0xe6f,0xf66,0x86a,0x963,0xa69,0xb60,0x5f0,0x4f9,0x7f3,0x6fa,0x1f6,0xff,0x3f5,0x2fc,0xdfc,0xcf5,0xfff,0xef6,0x9fa,0x8f3,0xbf9,0xaf0,0x650,0x759,0x453,0x55a,0x256,0x35f,0x55,0x15c,0xe5c,0xf55,0xc5f,0xd56,0xa5a,0xb53,0x859,0x950,0x7c0,0x6c9,0x5c3,0x4ca,0x3c6,0x2cf,0x1c5,0xcc,0xfcc,0xec5,0xdcf,0xcc6,0xbca,0xac3,0x9c9,0x8c0,0x8c0,0x9c9,0xac3,0xbca,0xcc6,0xdcf,0xec5,0xfcc,0xcc,0x1c5,0x2cf,0x3c6,0x4ca,0x5c3,0x6c9,0x7c0,0x950,0x859,0xb53,0xa5a,0xd56,0xc5f,0xf55,0xe5c,0x15c,0x55,0x35f,0x256,0x55a,0x453,0x759,0x650,0xaf0,0xbf9,0x8f3,0x9fa,0xef6,0xfff,0xcf5,0xdfc,0x2fc,0x3f5,0xff,0x1f6,0x6fa,0x7f3,0x4f9,0x5f0,0xb60,0xa69,0x963,0x86a,0xf66,0xe6f,0xd65,0xc6c,0x36c,0x265,0x16f,0x66,0x76a,0x663,0x569,0x460,0xca0,0xda9,0xea3,0xfaa,0x8a6,0x9af,0xaa5,0xbac,0x4ac,0x5a5,0x6af,0x7a6,0xaa,0x1a3,0x2a9,0x3a0,0xd30,0xc39,0xf33,0xe3a,0x936,0x83f,0xb35,0xa3c,0x53c,0x435,0x73f,0x636,0x13a,0x33,0x339,0x230,0xe90,0xf99,0xc93,0xd9a,0xa96,0xb9f,0x895,0x99c,0x69c,0x795,0x49f,0x596,0x29a,0x393,0x99,0x190,0xf00,0xe09,0xd03,0xc0a,0xb06,0xa0f,0x905,0x80c,0x70c,0x605,0x50f,0x406,0x30a,0x203,0x109,0x0]);
+
+const mcTriTable=[[-1],[0,8,3,-1],[0,1,9,-1],[1,8,3,9,8,1,-1],[1,2,10,-1],[0,8,3,1,2,10,-1],[9,2,10,0,2,9,-1],[2,8,3,2,10,8,10,9,8,-1],[3,11,2,-1],[0,11,2,8,11,0,-1],[1,9,0,2,3,11,-1],[1,11,2,1,9,11,9,8,11,-1],[3,10,1,11,10,3,-1],[0,10,1,0,8,10,8,11,10,-1],[3,9,0,3,11,9,11,10,9,-1],[9,8,10,10,8,11,-1],[4,7,8,-1],[4,3,0,7,3,4,-1],[0,1,9,8,4,7,-1],[4,1,9,4,7,1,7,3,1,-1],[1,2,10,8,4,7,-1],[3,4,7,3,0,4,1,2,10,-1],[9,2,10,9,0,2,8,4,7,-1],[2,10,9,2,9,7,2,7,3,7,9,4,-1],[8,4,7,3,11,2,-1],[11,4,7,11,2,4,2,0,4,-1],[9,0,1,8,4,7,2,3,11,-1],[4,7,11,9,4,11,9,11,2,9,2,1,-1],[3,10,1,3,11,10,7,8,4,-1],[1,11,10,1,4,11,1,0,4,7,11,4,-1],[4,7,8,9,0,11,9,11,10,11,0,3,-1],[4,7,11,4,11,9,9,11,10,-1],[9,5,4,-1],[9,5,4,0,8,3,-1],[0,5,4,1,5,0,-1],[8,5,4,8,3,5,3,1,5,-1],[1,2,10,9,5,4,-1],[3,0,8,1,2,10,4,9,5,-1],[5,2,10,5,4,2,4,0,2,-1],[2,10,5,3,2,5,3,5,4,3,4,8,-1],[9,5,4,2,3,11,-1],[0,11,2,0,8,11,4,9,5,-1],[0,5,4,0,1,5,2,3,11,-1],[2,1,5,2,5,8,2,8,11,4,8,5,-1],[10,3,11,10,1,3,9,5,4,-1],[4,9,5,0,8,1,8,10,1,8,11,10,-1],[5,4,0,5,0,11,5,11,10,11,0,3,-1],[5,4,8,5,8,10,10,8,11,-1],[9,7,8,5,7,9,-1],[9,3,0,9,5,3,5,7,3,-1],[0,7,8,0,1,7,1,5,7,-1],[1,5,3,3,5,7,-1],[9,7,8,9,5,7,10,1,2,-1],[10,1,0,10,0,7,10,7,5,7,0,3,-1],[8,0,2,8,2,5,8,5,7,10,5,2,-1],[2,10,5,2,5,3,3,5,7,-1],[7,9,5,7,8,9,3,11,2,-1],[9,5,7,9,7,2,9,2,0,2,7,11,-1],[2,3,11,0,1,8,1,7,8,1,5,7,-1],[11,2,1,11,1,7,7,1,5,-1],[9,5,8,8,5,7,10,1,3,10,3,11,-1],[5,7,0,5,0,9,7,11,0,1,0,10,11,10,0,-1],[11,10,0,11,0,3,10,5,0,8,0,7,5,7,0,-1],[11,10,5,7,11,5,-1],[10,6,5,-1],[0,8,3,5,10,6,-1],[9,0,1,5,10,6,-1],[1,8,3,1,9,8,5,10,6,-1],[1,6,5,2,6,1,-1],[1,6,5,1,2,6,3,0,8,-1],[9,6,5,9,0,6,0,2,6,-1],[5,9,8,5,8,2,5,2,6,3,2,8,-1],[2,3,11,10,6,5,-1],[11,0,8,11,2,0,10,6,5,-1],[0,1,9,2,3,11,5,10,6,-1],[5,10,6,1,9,2,9,11,2,9,8,11,-1],[6,3,11,6,5,3,5,1,3,-1],[0,8,11,0,11,5,0,5,1,5,11,6,-1],[3,11,6,0,3,6,0,6,5,0,5,9,-1],[6,5,9,6,9,11,11,9,8,-1],[5,10,6,4,7,8,-1],[4,3,0,4,7,3,6,5,10,-1],[1,9,0,5,10,6,8,4,7,-1],[10,6,5,1,9,7,1,7,3,7,9,4,-1],[6,1,2,6,5,1,4,7,8,-1],[1,2,5,5,2,6,3,0,4,3,4,7,-1],[8,4,7,9,0,5,0,6,5,0,2,6,-1],[7,3,9,7,9,4,3,2,9,5,9,6,2,6,9,-1],[3,11,2,7,8,4,10,6,5,-1],[5,10,6,4,7,2,4,2,0,2,7,11,-1],[0,1,9,4,7,8,2,3,11,5,10,6,-1],[9,2,1,9,11,2,9,4,11,7,11,4,5,10,6,-1],[8,4,7,3,11,5,3,5,1,5,11,6,-1],[5,1,11,5,11,6,1,0,11,7,11,4,0,4,11,-1],[0,5,9,0,6,5,0,3,6,11,6,3,8,4,7,-1],[6,5,9,6,9,11,4,7,9,7,11,9,-1],[10,4,9,6,4,10,-1],[4,10,6,4,9,10,0,8,3,-1],[10,0,1,10,6,0,6,4,0,-1],[8,3,1,8,1,6,8,6,4,6,1,10,-1],[1,4,9,1,2,4,2,6,4,-1],[3,0,8,1,2,9,2,4,9,2,6,4,-1],[0,2,4,4,2,6,-1],[8,3,2,8,2,4,4,2,6,-1],[10,4,9,10,6,4,11,2,3,-1],[0,8,2,2,8,11,4,9,10,4,10,6,-1],[3,11,2,0,1,6,0,6,4,6,1,10,-1],[6,4,1,6,1,10,4,8,1,2,1,11,8,11,1,-1],[9,6,4,9,3,6,9,1,3,11,6,3,-1],[8,11,1,8,1,0,11,6,1,9,1,4,6,4,1,-1],[3,11,6,3,6,0,0,6,4,-1],[6,4,8,11,6,8,-1],[7,10,6,7,8,10,8,9,10,-1],[0,7,3,0,10,7,0,9,10,6,7,10,-1],[10,6,7,1,10,7,1,7,8,1,8,0,-1],[10,6,7,10,7,1,1,7,3,-1],[1,2,6,1,6,8,1,8,9,8,6,7,-1],[2,6,9,2,9,1,6,7,9,0,9,3,7,3,9,-1],[7,8,0,7,0,6,6,0,2,-1],[7,3,2,6,7,2,-1],[2,3,11,10,6,8,10,8,9,8,6,7,-1],[2,0,7,2,7,11,0,9,7,6,7,10,9,10,7,-1],[1,8,0,1,7,8,1,10,7,6,7,10,2,3,11,-1],[11,2,1,11,1,7,10,6,1,6,7,1,-1],[8,9,6,8,6,7,9,1,6,11,6,3,1,3,6,-1],[0,9,1,11,6,7,-1],[7,8,0,7,0,6,3,11,0,11,6,0,-1],[7,11,6,-1],[7,6,11,-1],[3,0,8,11,7,6,-1],[0,1,9,11,7,6,-1],[8,1,9,8,3,1,11,7,6,-1],[10,1,2,6,11,7,-1],[1,2,10,3,0,8,6,11,7,-1],[2,9,0,2,10,9,6,11,7,-1],[6,11,7,2,10,3,10,8,3,10,9,8,-1],[7,2,3,6,2,7,-1],[7,0,8,7,6,0,6,2,0,-1],[2,7,6,2,3,7,0,1,9,-1],[1,6,2,1,8,6,1,9,8,8,7,6,-1],[10,7,6,10,1,7,1,3,7,-1],[10,7,6,1,7,10,1,8,7,1,0,8,-1],[0,3,7,0,7,10,0,10,9,6,10,7,-1],[7,6,10,7,10,8,8,10,9,-1],[6,8,4,11,8,6,-1],[3,6,11,3,0,6,0,4,6,-1],[8,6,11,8,4,6,9,0,1,-1],[9,4,6,9,6,3,9,3,1,11,3,6,-1],[6,8,4,6,11,8,2,10,1,-1],[1,2,10,3,0,11,0,6,11,0,4,6,-1],[4,11,8,4,6,11,0,2,9,2,10,9,-1],[10,9,3,10,3,2,9,4,3,11,3,6,4,6,3,-1],[8,2,3,8,4,2,4,6,2,-1],[0,4,2,4,6,2,-1],[1,9,0,2,3,4,2,4,6,4,3,8,-1],[1,9,4,1,4,2,2,4,6,-1],[8,1,3,8,6,1,8,4,6,6,10,1,-1],[10,1,0,10,0,6,6,0,4,-1],[4,6,3,4,3,8,6,10,3,0,3,9,10,9,3,-1],[10,9,4,6,10,4,-1],[4,9,5,7,6,11,-1],[0,8,3,4,9,5,11,7,6,-1],[5,0,1,5,4,0,7,6,11,-1],[11,7,6,8,3,4,3,5,4,3,1,5,-1],[9,5,4,10,1,2,7,6,11,-1],[6,11,7,1,2,10,0,8,3,4,9,5,-1],[7,6,11,5,4,10,4,2,10,4,0,2,-1],[3,4,8,3,5,4,3,2,5,10,5,2,11,7,6,-1],[7,2,3,7,6,2,5,4,9,-1],[9,5,4,0,8,6,0,6,2,6,8,7,-1],[3,6,2,3,7,6,1,5,0,5,4,0,-1],[6,2,8,6,8,7,2,1,8,4,8,5,1,5,8,-1],[9,5,4,10,1,6,1,7,6,1,3,7,-1],[1,6,10,1,7,6,1,0,7,8,7,0,9,5,4,-1],[4,0,10,4,10,5,0,3,10,6,10,7,3,7,10,-1],[7,6,10,7,10,8,5,4,10,4,8,10,-1],[6,9,5,6,11,9,11,8,9,-1],[3,6,11,0,6,3,0,5,6,0,9,5,-1],[0,11,8,0,5,11,0,1,5,5,6,11,-1],[6,11,3,6,3,5,5,3,1,-1],[1,2,10,9,5,11,9,11,8,11,5,6,-1],[0,11,3,0,6,11,0,9,6,5,6,9,1,2,10,-1],[11,8,5,11,5,6,8,0,5,10,5,2,0,2,5,-1],[6,11,3,6,3,5,2,10,3,10,5,3,-1],[5,8,9,5,2,8,5,6,2,3,8,2,-1],[9,5,6,9,6,0,0,6,2,-1],[1,5,8,1,8,0,5,6,8,3,8,2,6,2,8,-1],[1,5,6,2,1,6,-1],[1,3,6,1,6,10,3,8,6,5,6,9,8,9,6,-1],[10,1,0,10,0,6,9,5,0,5,6,0,-1],[0,3,8,5,6,10,-1],[10,5,6,-1],[11,5,10,7,5,11,-1],[11,5,10,11,7,5,8,3,0,-1],[5,11,7,5,10,11,1,9,0,-1],[10,7,5,10,11,7,9,8,1,8,3,1,-1],[11,1,2,11,7,1,7,5,1,-1],[0,8,3,1,2,7,1,7,5,7,2,11,-1],[9,7,5,9,2,7,9,0,2,2,11,7,-1],[7,5,2,7,2,11,5,9,2,3,2,8,9,8,2,-1],[2,5,10,2,3,5,3,7,5,-1],[8,2,0,8,5,2,8,7,5,10,2,5,-1],[9,0,1,5,10,3,5,3,7,3,10,2,-1],[9,8,2,9,2,1,8,7,2,10,2,5,7,5,2,-1],[1,3,5,3,7,5,-1],[0,8,7,0,7,1,1,7,5,-1],[9,0,3,9,3,5,5,3,7,-1],[9,8,7,5,9,7,-1],[5,8,4,5,10,8,10,11,8,-1],[5,0,4,5,11,0,5,10,11,11,3,0,-1],[0,1,9,8,4,10,8,10,11,10,4,5,-1],[10,11,4,10,4,5,11,3,4,9,4,1,3,1,4,-1],[2,5,1,2,8,5,2,11,8,4,5,8,-1],[0,4,11,0,11,3,4,5,11,2,11,1,5,1,11,-1],[0,2,5,0,5,9,2,11,5,4,5,8,11,8,5,-1],[9,4,5,2,11,3,-1],[2,5,10,3,5,2,3,4,5,3,8,4,-1],[5,10,2,5,2,4,4,2,0,-1],[3,10,2,3,5,10,3,8,5,4,5,8,0,1,9,-1],[5,10,2,5,2,4,1,9,2,9,4,2,-1],[8,4,5,8,5,3,3,5,1,-1],[0,4,5,1,0,5,-1],[8,4,5,8,5,3,9,0,5,0,3,5,-1],[9,4,5,-1],[4,11,7,4,9,11,9,10,11,-1],[0,8,3,4,9,7,9,11,7,9,10,11,-1],[1,10,11,1,11,4,1,4,0,7,4,11,-1],[3,1,4,3,4,8,1,10,4,7,4,11,10,11,4,-1],[4,11,7,9,11,4,9,2,11,9,1,2,-1],[9,7,4,9,11,7,9,1,11,2,11,1,0,8,3,-1],[11,7,4,11,4,2,2,4,0,-1],[11,7,4,11,4,2,8,3,4,3,2,4,-1],[2,9,10,2,7,9,2,3,7,7,4,9,-1],[9,10,7,9,7,4,10,2,7,8,7,0,2,0,7,-1],[3,7,10,3,10,2,7,4,10,1,10,0,4,0,10,-1],[1,10,2,8,7,4,-1],[4,9,1,4,1,7,7,1,3,-1],[4,9,1,4,1,7,0,8,1,8,7,1,-1],[4,0,3,7,4,3,-1],[4,8,7,-1],[9,10,8,10,11,8,-1],[3,0,9,3,9,11,11,9,10,-1],[0,1,10,0,10,8,8,10,11,-1],[3,1,10,11,3,10,-1],[1,2,11,1,11,9,9,11,8,-1],[3,0,9,3,9,11,1,2,9,2,11,9,-1],[0,2,11,8,0,11,-1],[3,2,11,-1],[2,3,8,2,8,10,10,8,9,-1],[9,10,2,0,9,2,-1],[2,3,8,2,8,10,0,1,8,1,10,8,-1],[1,10,2,-1],[1,3,8,9,1,8,-1],[0,9,1,-1],[0,3,8,-1],[-1]];
+
+const mcEdgeVerts=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+
+self.onmessage = function(e) {
+  const {bounds, gridRes, spheres, cylinders, smoothK} = e.data;
+  const nx=gridRes,ny=gridRes,nz=gridRes;
+  const dx=(bounds.maxX-bounds.minX)/nx;
+  const dy=(bounds.maxY-bounds.minY)/ny;
+  const dz=(bounds.maxZ-bounds.minZ)/nz;
+
+  const vals=new Float32Array((nx+1)*(ny+1)*(nz+1));
+  const gi=(i,j,k)=>i+(nx+1)*(j+(ny+1)*k);
+  for(let k=0;k<=nz;k++)for(let j=0;j<=ny;j++)for(let i=0;i<=nx;i++){
+    vals[gi(i,j,k)]=worldSDF(bounds.minX+i*dx,bounds.minY+j*dy,bounds.minZ+k*dz,spheres,cylinders,smoothK);
+  }
+
+  function mcInterp(i1,j1,k1,i2,j2,k2){
+    const v1=vals[gi(i1,j1,k1)],v2=vals[gi(i2,j2,k2)];
+    if(Math.abs(v1)<0.00001)return[bounds.minX+i1*dx,bounds.minY+j1*dy,bounds.minZ+k1*dz];
+    if(Math.abs(v2)<0.00001)return[bounds.minX+i2*dx,bounds.minY+j2*dy,bounds.minZ+k2*dz];
+    if(Math.abs(v1-v2)<0.00001)return[bounds.minX+i1*dx,bounds.minY+j1*dy,bounds.minZ+k1*dz];
+    const t=v1/(v1-v2);
+    return[bounds.minX+(i1+t*(i2-i1))*dx,bounds.minY+(j1+t*(j2-j1))*dy,bounds.minZ+(k1+t*(k2-k1))*dz];
+  }
+
+  const positions=[];
+  for(let k=0;k<nz;k++)for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){
+    const v=[vals[gi(i,j,k)],vals[gi(i+1,j,k)],vals[gi(i+1,j+1,k)],vals[gi(i,j+1,k)],vals[gi(i,j,k+1)],vals[gi(i+1,j,k+1)],vals[gi(i+1,j+1,k+1)],vals[gi(i,j+1,k+1)]];
+    let cubeIdx=0;
+    for(let c=0;c<8;c++)if(v[c]<0)cubeIdx|=(1<<c);
+    if(mcEdgeTable[cubeIdx]===0)continue;
+    const ci=[i,i+1,i+1,i,i,i+1,i+1,i];
+    const cj=[j,j,j+1,j+1,j,j,j+1,j+1];
+    const ck=[k,k,k,k,k+1,k+1,k+1,k+1];
+    const ev=new Array(12);
+    for(let e=0;e<12;e++){
+      if(mcEdgeTable[cubeIdx]&(1<<e)){
+        const[a,b]=mcEdgeVerts[e];
+        ev[e]=mcInterp(ci[a],cj[a],ck[a],ci[b],cj[b],ck[b]);
+      }
+    }
+    const tris=mcTriTable[cubeIdx];
+    for(let t=0;t<tris.length;t+=3){
+      if(tris[t]===-1)break;
+      const a=ev[tris[t]],b=ev[tris[t+1]],c=ev[tris[t+2]];
+      if(a&&b&&c){positions.push(a[0],a[1],a[2],c[0],c[1],c[2],b[0],b[1],b[2]);}
+    }
+  }
+
+  const posF32 = new Float32Array(positions);
+  self.postMessage({gridRes, positions: posF32}, [posF32.buffer]);
+};
+`;
+
+  const blob = new Blob([workerCode], {type: 'text/javascript'});
+  return new Worker(URL.createObjectURL(blob));
+}
+
+
 // ---- SDF LEVEL SYSTEM ----
 // Global SDF functions for the level geometry.
 // These replace the CSG shader approach with real geometry.
@@ -1648,6 +1823,11 @@ function resolveCollision(pos, velocity, radius) {
         if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
       }
     }
+  }
+
+  // 3) Destructible obstacle collision (solid bounce until broken)
+  for (const obj of game.dynamicObjects) {
+    if (obj.collideEntity) obj.collideEntity(pos, velocity, radius);
   }
 }
 
@@ -1985,9 +2165,40 @@ class Bot {
     this.mesh.userData.bot = this;
     scene.add(this.mesh);
 
+    // AI enhancement: squad tactics and navigation
     this.aiTarget = null;
     this.aiTimer = 0;
     this.aiWanderDir = new THREE.Vector3(Math.random()-0.5, Math.random()-0.5, Math.random()-0.5).normalize();
+
+    // Squad coordination: 1 in 3 bots flanks, others engage
+    this.aiRole = Math.random() < 0.33 ? 'flank' : 'engage';
+    this.aiLastKnownPlayer = null;
+    this.aiLastKnownTime = 0;
+    this.aiSharedTargetAge = 0;
+    this.aiStrafe = false;
+    this.aiStrafeTimer = 0;
+    this.aiStrafeDir = 0; // 1 for left, -1 for right
+    this.aiNavTarget = null;
+    this.aiNavPathTimeout = 0;
+    this.aiRangePreference = this.getLoadoutRangePreference();
+    this.aiRetreating = false;
+
+    // Temp vectors for reuse (performance optimization)
+    this._tempVec3a = new THREE.Vector3();
+    this._tempVec3b = new THREE.Vector3();
+  }
+
+  getLoadoutRangePreference() {
+    switch (this.loadoutKey) {
+      case 'SCORCH': return 500;    // Close range (short range assault)
+      case 'RONIN': return 500;     // Close range (sword range)
+      case 'NORTHSTAR': return 1500; // Medium range (sniper)
+      case 'TONE': return 1200;     // Medium range (balanced)
+      case 'LEGION': return 1000;   // Medium range (minigun effective)
+      case 'MONARCH': return 800;   // Medium-close (versatile)
+      case 'ION': return 1000;      // Medium (energy efficient at range)
+      default: return 800;
+    }
   }
 
   update(dt) {
@@ -2006,6 +2217,11 @@ class Bot {
       if (this.doomTimer <= 0) { this.die(null); return; }
     }
 
+    // Retreat behavior when doomed
+    if (this.doomed && !this.aiRetreating) {
+      this.aiRetreating = true;
+    }
+
     // AI: find target
     this.aiTimer -= dt;
     if (this.aiTimer <= 0) {
@@ -2014,11 +2230,47 @@ class Bot {
       this.aiWanderDir.set(Math.random()-0.5, Math.random()-0.5, Math.random()-0.5).normalize();
     }
 
+    // Strafe timer for combat movement
+    this.aiStrafeTimer -= dt;
+    if (this.aiStrafeTimer <= 0) {
+      this.aiStrafe = Math.random() < 0.5;
+      this.aiStrafeDir = Math.random() < 0.5 ? 1 : -1;
+      this.aiStrafeTimer = 1 + Math.random() * 2; // Strafe for 1-3 seconds
+    }
+
     let moveDir = this.aiWanderDir.clone();
     if (this.aiTarget) {
-      const toTarget = new THREE.Vector3().subVectors(this.aiTarget, this.position);
+      const toTarget = this._tempVec3a.subVectors(this.aiTarget, this.position);
       const dist = toTarget.length();
-      if (dist > 100) moveDir = toTarget.normalize();
+
+      if (this.aiRetreating) {
+        // Retreat at max speed away from player
+        moveDir = this._tempVec3b.subVectors(this.position, player.position).normalize();
+      } else if (dist > 100) {
+        moveDir = toTarget.normalize();
+
+        // Flanking behavior: offset movement perpendicular to player angle
+        const toPlayer = this._tempVec3b.subVectors(player.position, this.position);
+        const distToPlayer = toPlayer.length();
+
+        if (this.aiRole === 'flank' && distToPlayer < 3000 && distToPlayer > 300) {
+          // Build orthogonal direction for flanking (perpendicular to player facing)
+          const playerDir = toPlayer.normalize();
+          const right = new THREE.Vector3(0, 1, 0).cross(playerDir).normalize();
+          const flankOffset = right.multiplyScalar(600); // 600 units to the side
+          const flankTarget = player.position.clone().add(flankOffset);
+          const toFlank = this._tempVec3b.subVectors(flankTarget, this.position).normalize();
+          moveDir.lerp(toFlank, 0.6); // Blend toward flanking position
+          moveDir.normalize();
+        }
+
+        // Combat strafing: lateral movement when in engagement range
+        if (this.aiStrafe && distToPlayer < this.aiRangePreference * 1.5 && !this.doomed) {
+          const perpendicular = new THREE.Vector3(0, 1, 0).cross(toPlayer).normalize();
+          moveDir.add(perpendicular.clone().multiplyScalar(this.aiStrafeDir * 0.5));
+          moveDir.normalize();
+        }
+      }
     }
 
     this.targetDir.lerp(moveDir, dt * 2);
@@ -2063,14 +2315,18 @@ class Bot {
       this.mesh.lookAt(lookAt);
     }
 
-    // AI: fire at player (with line-of-sight check and team check)
+    // AI: fire at player (with range preference, LOS check, and doomed suppression)
     this.fireTimer -= dt;
-    if (this.fireTimer <= 0 && game.state === 'playing') {
-      const toPlayer = new THREE.Vector3().subVectors(player.position, this.position);
+    if (this.fireTimer <= 0 && game.state === 'playing' && !this.aiRetreating) {
+      const toPlayer = this._tempVec3a.subVectors(player.position, this.position);
       const distToPlayer = toPlayer.length();
       if (distToPlayer < this.loadout.weapon.range && player.shipState !== 'dead' && player.team !== this.team) {
+        // Range preference check: only fire if within optimal range or close enough (range * 1.3)
+        const preferredDist = this.aiRangePreference;
+        const withinRange = distToPlayer <= preferredDist * 1.3;
+
         const dot = toPlayer.normalize().dot(this.targetDir);
-        if (dot > 0.7) {
+        if (dot > 0.7 && withinRange) {
           // LOS check: raycast toward player, only fire if path is clear
           const losDir = toPlayer.clone().normalize();
           const losDist = raycastLevel(this.position, losDir, distToPlayer + 10);
@@ -2087,37 +2343,108 @@ class Bot {
 
   findTarget() {
     if (player.shipState !== 'dead' && player.team !== this.team) {
-      // LOS check: only track player if line of sight is clear
-      const toPlayer = new THREE.Vector3().subVectors(player.position, this.position);
+      // Direct line of sight check
+      const toPlayer = this._tempVec3a.subVectors(player.position, this.position);
       const dist = toPlayer.length();
       const dir = toPlayer.clone().normalize();
       const losDist = raycastLevel(this.position, dir, dist + 10);
       if (losDist >= dist - 5) {
-        // Can see the player; target them
+        // Can see the player; update last known position and share with squad
+        this.aiLastKnownPlayer = player.position.clone();
+        this.aiLastKnownTime = game.time;
         this.aiTarget = player.position.clone();
+        this.aiSharedTargetAge = 0;
+
+        // Enemy bots share player position via game state (simple broadcast)
+        if (this.team === LSS.TEAM_FLEET_B) {
+          if (!game.botSharedTarget) game.botSharedTarget = {};
+          game.botSharedTarget.pos = player.position.clone();
+          game.botSharedTarget.time = game.time;
+        }
       } else {
-        // Can't see through walls; last known position fades, wander instead
-        if (this.aiTarget) {
-          // Keep old target briefly (simulate memory), but add drift
-          this.aiTarget.add(new THREE.Vector3(
-            (Math.random() - 0.5) * 200,
-            (Math.random() - 0.5) * 100,
-            (Math.random() - 0.5) * 200
-          ));
+        // Cannot see player; use last known or squad shared target
+        let targetPos = null;
+
+        // Check if squad has recent shared target info (within 5 to 8 seconds)
+        if (this.team === LSS.TEAM_FLEET_B && game.botSharedTarget && game.botSharedTarget.time) {
+          const targetAge = game.time - game.botSharedTarget.time;
+          if (targetAge < 7) {
+            targetPos = game.botSharedTarget.pos.clone();
+            this.aiSharedTargetAge = targetAge;
+          }
+        }
+
+        // Fallback: use own last known position (memory decay)
+        if (!targetPos && this.aiLastKnownPlayer) {
+          const memoryAge = game.time - this.aiLastKnownTime;
+          if (memoryAge < 5) {
+            // Add drift to simulate memory fade
+            targetPos = this.aiLastKnownPlayer.clone().add(
+              this._tempVec3b.set(
+                (Math.random() - 0.5) * (memoryAge * 80),
+                (Math.random() - 0.5) * (memoryAge * 40),
+                (Math.random() - 0.5) * (memoryAge * 80)
+              )
+            );
+          }
+        }
+
+        if (targetPos) {
+          this.aiTarget = targetPos;
         } else {
-          this.aiTarget = new THREE.Vector3(
-            (Math.random() - 0.5) * 3000,
-            (Math.random() - 0.5) * 1000,
-            (Math.random() - 0.5) * 3000
-          );
+          // No info; navigate to nearest corridor point toward enemy area
+          this.navigateToEnemyTerritory();
         }
       }
+    } else if (this.team === LSS.TEAM_FLEET_A) {
+      // Friendly bot: protect player if alive, hold position otherwise
+      if (player.shipState !== 'dead') {
+        this.aiTarget = player.position.clone().add(
+          this._tempVec3b.set(
+            (Math.random() - 0.5) * 400,
+            (Math.random() - 0.5) * 200,
+            (Math.random() - 0.5) * 400
+          )
+        );
+      } else {
+        this.navigateToEnemyTerritory();
+      }
     } else {
-      this.aiTarget = new THREE.Vector3(
+      // Fallback: navigate via corridor points
+      this.navigateToEnemyTerritory();
+    }
+  }
+
+  navigateToEnemyTerritory() {
+    // Find nearest corridor point and navigate toward enemy spawn area
+    if (!game.corridorPoints || game.corridorPoints.length === 0) {
+      // No nav points; random wander
+      this.aiTarget = this._tempVec3a.set(
         (Math.random() - 0.5) * 3000,
         (Math.random() - 0.5) * 1000,
         (Math.random() - 0.5) * 3000
       );
+      return;
+    }
+
+    const goal = this.team === LSS.TEAM_FLEET_A ? 'B' : 'A';
+    let bestNav = null;
+    let bestScore = Infinity;
+
+    for (const nav of game.corridorPoints) {
+      // Prefer points in enemy territory or leading toward it
+      const distToNav = this._tempVec3a.set(nav.x, nav.y, nav.z).distanceTo(this.position);
+      let score = distToNav;
+      if (nav.team && nav.team !== goal) score -= 500; // Discount points in wrong territory
+      if (score < bestScore) {
+        bestScore = score;
+        bestNav = nav;
+      }
+    }
+
+    if (bestNav) {
+      this.aiNavTarget = this._tempVec3a.set(bestNav.x, bestNav.y, bestNav.z);
+      this.aiTarget = this.aiNavTarget.clone();
     }
   }
 
@@ -2479,6 +2806,26 @@ class Projectile {
           return;
         }
       }
+
+      // Check collisions with dynamic objects (destructible obstacles)
+      for (const dynObj of game.dynamicObjects) {
+        if (!dynObj.alive) continue;
+        const dist = this.position.distanceTo(dynObj.position);
+        const checkDist = dynObj.collisionRadius || 60;
+        if (dist < checkDist) {
+          const dealt = dynObj.takeDamage(this.damage);
+          if (dealt > 0) {
+            player.damageDealt += dealt;
+            player.coreMeter = Math.min(100, player.coreMeter + dealt / 100);
+            showHitMarker();
+            spawnImpactSparks(this.position, 3);
+          }
+          if (this.isCluster) this.spawnClusterChildren();
+          if (this.splash > 0) this.splashDamage();
+          this.destroy();
+          return;
+        }
+      }
     } else if (this.owner !== 'player' && player.shipState !== 'dead') {
       const dist = this.position.distanceTo(player.position);
       if (dist < player.chassis.hullLength * 1.2) {
@@ -2615,6 +2962,231 @@ function spawnExplosion(pos, size) {
   const lightIntensity = Math.min(6.0, (size || 20) * 0.15);
   const lightRange = Math.min(1200, (size || 20) * 15);
   spawnDynamicLight(pos, 0xff6600, lightIntensity, lightRange, 0.35);
+}
+
+// ---- DESTRUCTIBLE DYNAMIC GEOMETRY ----
+
+// ---- DESTRUCTIBLE OBSTACLES ----
+// Random shapes that act as solid walls until destroyed, then respawn after a delay.
+// Ships and projectiles bounce off them. They take damage from projectiles and eventually shatter.
+
+const OBSTACLE_SHAPES = ['box', 'diamond', 'cross', 'wedge', 'ring'];
+const OBSTACLE_COLORS = [0x4a6a8a, 0x6a4a7a, 0x3a7a5a, 0x7a5a3a, 0x5a3a6a];
+
+class DestructibleObstacle {
+  constructor(pos, shapeType, scale) {
+    this.position = pos.clone();
+    this.originalPos = pos.clone();
+    this.shapeType = shapeType || OBSTACLE_SHAPES[Math.floor(Math.random() * OBSTACLE_SHAPES.length)];
+    this.scale = scale || 40 + Math.random() * 60; // 40 to 100 units
+    this.hp = 250 + this.scale * 3; // ~370-550 HP; a few weapon hits or rams will break them
+    this.maxHp = this.hp;
+    this.alive = true;
+    this.respawnTimer = 0;
+    this.respawnTime = 25;
+    this.collisionRadius = this.scale * 0.7;
+
+    // Random slow rotation
+    this.rotSpeed = new THREE.Vector3(
+      (Math.random() - 0.5) * 0.3,
+      (Math.random() - 0.5) * 0.5,
+      (Math.random() - 0.5) * 0.3
+    );
+    this.rotation = new THREE.Euler(
+      Math.random() * Math.PI * 2,
+      Math.random() * Math.PI * 2,
+      Math.random() * Math.PI * 2
+    );
+
+    const colorIdx = Math.floor(Math.random() * OBSTACLE_COLORS.length);
+    this.baseColor = OBSTACLE_COLORS[colorIdx];
+
+    this._buildMesh();
+  }
+
+  _buildMesh() {
+    let geo;
+    const s = this.scale;
+    switch (this.shapeType) {
+      case 'diamond': {
+        // Octahedron (diamond shape)
+        geo = new THREE.OctahedronGeometry(s, 0);
+        break;
+      }
+      case 'cross': {
+        // Three intersecting boxes forming a cross/jack
+        const arm = s * 0.35;
+        const len = s;
+        const g1 = new THREE.BoxGeometry(len, arm, arm);
+        const g2 = new THREE.BoxGeometry(arm, len, arm);
+        const g3 = new THREE.BoxGeometry(arm, arm, len);
+        geo = new THREE.BufferGeometry();
+        // Merge: just use the biggest box and add extra detail with a dodecahedron
+        geo = new THREE.DodecahedronGeometry(s * 0.75, 0);
+        break;
+      }
+      case 'wedge': {
+        // Cone-like shape
+        geo = new THREE.ConeGeometry(s * 0.7, s * 1.4, 5);
+        break;
+      }
+      case 'ring': {
+        // Torus
+        geo = new THREE.TorusGeometry(s * 0.6, s * 0.25, 8, 12);
+        break;
+      }
+      default: { // 'box'
+        // Irregular box
+        const sx = s * (0.6 + Math.random() * 0.8);
+        const sy = s * (0.6 + Math.random() * 0.8);
+        const sz = s * (0.6 + Math.random() * 0.8);
+        geo = new THREE.BoxGeometry(sx, sy, sz);
+        break;
+      }
+    }
+
+    const mat = new THREE.MeshStandardMaterial({
+      color: this.baseColor, metalness: 0.7, roughness: 0.3,
+      emissive: this.baseColor, emissiveIntensity: 0.15
+    });
+    this.mesh = new THREE.Mesh(geo, mat);
+    this.mesh.position.copy(this.position);
+    this.mesh.rotation.copy(this.rotation);
+    scene.add(this.mesh);
+
+    // Glow outline
+    const edgeMat = new THREE.MeshBasicMaterial({
+      color: 0x00ddff, transparent: true, opacity: 0.08
+    });
+    this.edgeMesh = new THREE.Mesh(geo.clone(), edgeMat);
+    this.edgeMesh.position.copy(this.position);
+    this.edgeMesh.rotation.copy(this.rotation);
+    this.edgeMesh.scale.setScalar(1.06);
+    scene.add(this.edgeMesh);
+  }
+
+  update(dt) {
+    if (!this.alive) {
+      this.respawnTimer -= dt;
+      if (this.respawnTimer <= 0) this.respawn();
+      return;
+    }
+    // Slow rotation
+    this.rotation.x += this.rotSpeed.x * dt;
+    this.rotation.y += this.rotSpeed.y * dt;
+    this.rotation.z += this.rotSpeed.z * dt;
+    this.mesh.rotation.copy(this.rotation);
+    this.edgeMesh.rotation.copy(this.rotation);
+
+    // Damage flash
+    const hpRatio = this.hp / this.maxHp;
+    if (hpRatio < 0.5) {
+      const flash = 0.15 + (1 - hpRatio) * 0.4;
+      this.mesh.material.emissiveIntensity = flash;
+    }
+  }
+
+  // Sphere-based collision: push entity away from center
+  collideEntity(pos, velocity, radius) {
+    if (!this.alive) return;
+    const dx = pos.x - this.position.x;
+    const dy = pos.y - this.position.y;
+    const dz = pos.z - this.position.z;
+    const distSq = dx * dx + dy * dy + dz * dz;
+    const minDist = this.collisionRadius + radius;
+    if (distSq < minDist * minDist) {
+      const dist = Math.sqrt(distSq);
+      if (dist < 0.1) {
+        pos.y += minDist;
+        return;
+      }
+      const nx = dx / dist, ny = dy / dist, nz = dz / dist;
+      // Push out
+      const pen = minDist - dist;
+      pos.x += nx * (pen + 1);
+      pos.y += ny * (pen + 1);
+      pos.z += nz * (pen + 1);
+      // Reflect velocity
+      const vDotN = velocity.x * nx + velocity.y * ny + velocity.z * nz;
+      if (vDotN < 0) {
+        // Ram damage: proportional to impact speed
+        const impactSpeed = Math.abs(vDotN);
+        if (impactSpeed > 50) {
+          this.takeDamage(impactSpeed * 0.4);
+        }
+        velocity.x -= nx * vDotN * 1.3;
+        velocity.y -= ny * vDotN * 1.3;
+        velocity.z -= nz * vDotN * 1.3;
+      }
+    }
+  }
+
+  takeDamage(dmg) {
+    this.hp -= dmg;
+    if (this.hp <= 0) {
+      this.destroy();
+      return dmg;
+    }
+    return dmg;
+  }
+
+  destroy() {
+    this.alive = false;
+    if (this.mesh && this.mesh.parent) scene.remove(this.mesh);
+    if (this.edgeMesh && this.edgeMesh.parent) scene.remove(this.edgeMesh);
+    spawnExplosion(this.position, Math.ceil(this.scale / 8));
+    this.respawnTimer = this.respawnTime;
+  }
+
+  respawn() {
+    this.alive = true;
+    this.hp = this.maxHp;
+    this.position.copy(this.originalPos);
+    this._buildMesh();
+  }
+}
+
+function spawnDynamicObjects(rooms) {
+  for (const obj of game.dynamicObjects) {
+    if (obj.mesh && obj.mesh.parent) scene.remove(obj.mesh);
+    if (obj.edgeMesh && obj.edgeMesh.parent) scene.remove(obj.edgeMesh);
+  }
+  game.dynamicObjects = [];
+
+  // Place obstacles in non-spawn rooms (center, flanking, etc.)
+  const nonSpawnRooms = rooms.filter(r => !r.team);
+  for (const rm of nonSpawnRooms) {
+    const count = 2 + Math.floor(Math.random() * 2); // 2-3 per room
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = rm.r * (0.15 + Math.random() * 0.45);
+      const yOff = (Math.random() - 0.5) * rm.r * 0.6;
+      const pos = new THREE.Vector3(
+        rm.x + Math.cos(angle) * dist,
+        rm.y + yOff,
+        rm.z + Math.sin(angle) * dist
+      );
+      const scale = 35 + Math.random() * 55;
+      game.dynamicObjects.push(new DestructibleObstacle(pos, null, scale));
+    }
+  }
+
+  // Place a few in tunnels
+  const tunnelPoints = game.corridorPoints.filter(p => p.roomType === 'tunnel');
+  const crateCount = Math.min(6, Math.max(3, Math.floor(tunnelPoints.length / 5)));
+  for (let c = 0; c < crateCount && tunnelPoints.length > 0; c++) {
+    const idx = Math.floor(Math.random() * tunnelPoints.length);
+    const pt = tunnelPoints.splice(idx, 1)[0];
+    const pos = new THREE.Vector3(pt.x, pt.y, pt.z);
+    const scale = 25 + Math.random() * 35;
+    game.dynamicObjects.push(new DestructibleObstacle(pos, null, scale));
+  }
+}
+
+function updateDynamicObjects(dt) {
+  for (const obj of game.dynamicObjects) {
+    obj.update(dt);
+  }
 }
 
 function spawnTracer(from, to, color) {
@@ -2914,6 +3486,7 @@ function selectLoadout(key) {
   shuffleMapRotation();
   const level = getNextMap();
   buildRoomGraphLevel(level);
+  spawnDynamicObjects(game.sdfRoomData);
 
   // Place player inside the letter corridors (Fleet A territory)
   player.position.copy(getValidSpawnPoint('A'));
@@ -3145,8 +3718,8 @@ function respawnPlayer() {
   player.coreActive = false;
   player.coreTimer = 0;
   // Monarch upgrades persist across respawns
-  // Spawn at a valid corridor position near Fleet A's territory
-  const sp = getValidSpawnPoint('A');
+  // Spawn at a valid corridor position in the player's team territory
+  const sp = getValidSpawnPoint(player.team === LSS.TEAM_FLEET_B ? 'B' : 'A');
   player.position.copy(sp);
 }
 
@@ -3526,6 +4099,21 @@ function fireHitscan(origin, dir, w) {
   const tracerColor = player.loadoutKey === 'ION' ? 0x44ddff : 0xffff44;
   spawnTracer(origin, end, tracerColor);
 
+  // Check destructible obstacles (hitscan can damage them too)
+  let bestObstacle = null, bestObstDist = Infinity;
+  for (const obj of game.dynamicObjects) {
+    if (!obj.alive) continue;
+    const toObj = new THREE.Vector3().subVectors(obj.position, origin);
+    const proj = toObj.dot(aimDir);
+    if (proj < 0 || proj > Math.min(w.range, levelDist)) continue;
+    const closest = origin.clone().add(aimDir.clone().multiplyScalar(proj));
+    const dist = closest.distanceTo(obj.position);
+    if (dist < (obj.collisionRadius || 60) && proj < bestObstDist) {
+      bestObstacle = obj;
+      bestObstDist = proj;
+    }
+  }
+
   let bestHit = null, bestDist = Infinity;
   for (const bot of game.entities) {
     if (!bot.alive || bot.team === player.team) continue;
@@ -3538,6 +4126,26 @@ function fireHitscan(origin, dir, w) {
       bestHit = bot;
       bestDist = proj;
     }
+  }
+
+  // If obstacle is closer than any bot, hit the obstacle instead
+  if (bestObstacle && bestObstDist < bestDist) {
+    let finalDmg = w.damage;
+    if (player.loadoutKey === 'NORTHSTAR' && player.railgunCharge > 0) {
+      finalDmg *= 1.0 + player.railgunCharge * 3.0;
+      player.railgunCharge = 0;
+    }
+    if (player.monarchDmgMult > 1) finalDmg *= player.monarchDmgMult;
+    const dealt = bestObstacle.takeDamage(finalDmg);
+    if (dealt > 0) {
+      player.damageDealt += dealt;
+      player.coreMeter = Math.min(100, player.coreMeter + dealt / 100);
+      showHitMarker();
+    }
+    const hitPt = origin.clone().add(aimDir.clone().multiplyScalar(bestObstDist));
+    spawnExplosion(hitPt, 8);
+    spawnImpactSparks(hitPt, 4);
+    return; // obstacle blocked the shot
   }
 
   if (bestHit) {
@@ -3728,23 +4336,45 @@ function executeAbility(slot, ability) {
         }
       }
     }
-    // SCORCH: Firewall (path of fire laid forward from player, 6s duration)
+    // SCORCH: Firewall (path of fire laid forward from player, 5s duration)
     else if (ability.name === 'Firewall') {
       const wallLen = 800;
       const start = player.position.clone().add(forward.clone().multiplyScalar(100));
-      game.worldEffects.push({
+      const effData = {
         type: 'firewall', position: start.clone(), direction: forward.clone(),
-        length: wallLen, timer: 6, dmgPerSec: 400, owner: 'player', team: player.team,
-        fxTimer: 0,
-      });
-      // Visual: fire path particles along the forward direction
-      for (let t = 0; t <= wallLen; t += 80) {
-        const pt = start.clone().add(forward.clone().multiplyScalar(t));
-        spawnExplosion(pt, 10);
+        length: wallLen, timer: 5, dmgPerSec: 400, owner: 'player', team: player.team,
+        fxTimer: 0, meshes: [],
+      };
+      game.worldEffects.push(effData);
+      // Persistent visual: glowing fire line mesh (visible wall of flames)
+      const segCount = 8;
+      for (let s = 0; s < segCount; s++) {
+        const t0 = (s / segCount) * wallLen;
+        const t1 = ((s + 1) / segCount) * wallLen;
+        const p0 = start.clone().add(forward.clone().multiplyScalar(t0));
+        const p1 = start.clone().add(forward.clone().multiplyScalar(t1));
+        const mid = p0.clone().add(p1).multiplyScalar(0.5);
+        // Flat plane segment for the fire wall
+        const planeGeo = new THREE.PlaneGeometry(wallLen / segCount, 120);
+        const planeMat = new THREE.MeshBasicMaterial({
+          color: 0xff5500, transparent: true, opacity: 0.25,
+          blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
+        });
+        const planeMesh = new THREE.Mesh(planeGeo, planeMat);
+        planeMesh.position.copy(mid);
+        // Orient plane to face perpendicular to the firewall direction
+        planeMesh.lookAt(mid.clone().add(new THREE.Vector3(-forward.z, 0, forward.x)));
+        scene.add(planeMesh);
+        effData.meshes.push(planeMesh);
       }
-      // Add a faint warm dynamic light at the wall's center
+      // Initial burst along the line
+      for (let t = 0; t <= wallLen; t += 60) {
+        const pt = start.clone().add(forward.clone().multiplyScalar(t));
+        spawnExplosion(pt, 12);
+      }
+      // Warm dynamic light at center
       const wallCenter = start.clone().add(forward.clone().multiplyScalar(wallLen * 0.5));
-      spawnDynamicLight(wallCenter, 0xff6600, 1.5, 600, 0.3);
+      spawnDynamicLight(wallCenter, 0xff6600, 2.5, 800, 0.5);
     }
     // NORTHSTAR: Cluster Missile (impact + sustained explosions in area for 3s)
     else if (ability.name === 'Cluster Missile') {
@@ -4109,6 +4739,8 @@ function firePowerShot() {
 
 function activateCore() {
   if (player.coreMeter < 100 || player.coreActive || player.shipState === 'dead') return;
+  // Monarch: block activation if already at max tier (3)
+  if (player.loadout && player.loadout.core.name === 'Upgrade Core' && player.monarchTier >= 3) return;
   player.coreActive = true;
   player.coreTimer = player.loadout.core.duration;
   player.coreMeter = 0;
@@ -4553,6 +5185,7 @@ function updateAbilities(dt) {
 
     if (eff.type === 'firewall') {
       // Damage enemies crossing the fire path (position = start, direction = forward, length = extent)
+      // Check bots
       for (const bot of game.entities) {
         if (!bot.alive || bot.team === eff.team) continue;
         const toBot = new THREE.Vector3().subVectors(bot.position, eff.position);
@@ -4565,28 +5198,41 @@ function updateAbilities(dt) {
           }
         }
       }
-      // Periodic fire particles along the firewall's length
+      // Check player (enemy firewalls hurt the player too)
+      if (eff.team !== player.team && player.shipState !== 'dead') {
+        const toPlayer = new THREE.Vector3().subVectors(player.position, eff.position);
+        const along = toPlayer.dot(eff.direction);
+        if (along > -50 && along < eff.length + 50) {
+          const perp = toPlayer.clone().sub(eff.direction.clone().multiplyScalar(along));
+          if (perp.length() < 150) {
+            playerTakeDamage(eff.dmgPerSec * dt, eff.owner, null);
+          }
+        }
+      }
+      // Persistent fire visuals: multiple fire columns along the line, refreshed every tick
       eff.fxTimer -= dt;
       if (eff.fxTimer <= 0) {
-        const randT = Math.random() * eff.length;
-        const firePt = eff.position.clone().add(eff.direction.clone().multiplyScalar(randT));
-        const fireColors = [0xff4400, 0xff6600, 0xff8833];
-        for (let i = 0; i < 2; i++) {
+        const fireColors = [0xff4400, 0xff6600, 0xff8833, 0xffaa00];
+        // Spawn 4-6 fire particles spread along the full length
+        const count = 4 + Math.floor(Math.random() * 3);
+        for (let i = 0; i < count; i++) {
+          const randT = Math.random() * eff.length;
+          const firePt = eff.position.clone().add(eff.direction.clone().multiplyScalar(randT));
           const pVel = new THREE.Vector3(
-            (Math.random() - 0.5) * 100,
-            80 + Math.random() * 100,
-            (Math.random() - 0.5) * 100
+            (Math.random() - 0.5) * 80,
+            60 + Math.random() * 120,
+            (Math.random() - 0.5) * 80
           );
           game.particles.push({
-            position: firePt.clone().add(new THREE.Vector3((Math.random() - 0.5) * 80, 0, (Math.random() - 0.5) * 80)),
+            position: firePt.clone().add(new THREE.Vector3((Math.random() - 0.5) * 60, 0, (Math.random() - 0.5) * 60)),
             velocity: pVel,
-            life: 0.3 + Math.random() * 0.2,
-            maxLife: 0.5,
+            life: 0.4 + Math.random() * 0.3,
+            maxLife: 0.7,
             color: fireColors[Math.floor(Math.random() * fireColors.length)],
-            size: 3 + Math.random() * 2
+            size: 4 + Math.random() * 4
           });
         }
-        eff.fxTimer = 0.3;
+        eff.fxTimer = 0.15; // faster refresh for denser flames
       }
     }
 
@@ -4677,13 +5323,21 @@ function updateAbilities(dt) {
 
       if (eff.ignited) {
         eff.igniteTimer -= dt;
-        // Damage and slow enemies in the burning area
+        // Damage and slow ALL enemies in the burning area (bots + player)
         for (const bot of game.entities) {
           if (!bot.alive || bot.team === eff.team) continue;
           if (bot.position.distanceTo(eff.position) < eff.radius) {
             const dealt = bot.takeDamage(eff.igniteDmgPerSec * dt, eff.owner);
             if (dealt > 0 && eff.owner === 'player') player.damageDealt += dealt;
             if (bot.velocity) bot.velocity.multiplyScalar(1 - eff.slowFactor * dt);
+          }
+        }
+        // Also damage player if they are standing in an enemy trap
+        if (eff.team !== player.team && player.shipState !== 'dead') {
+          if (player.position.distanceTo(eff.position) < eff.radius) {
+            playerTakeDamage(eff.igniteDmgPerSec * dt, eff.owner, null);
+            // Slow player too
+            player.velocity.multiplyScalar(1 - eff.slowFactor * dt);
           }
         }
 
@@ -4789,11 +5443,27 @@ function updateAbilities(dt) {
       }
     }
 
+    // Animate firewall meshes (flicker opacity)
+    if (eff.type === 'firewall' && eff.meshes) {
+      const fade = Math.max(0, Math.min(1, eff.timer / 1.0)); // fade out in last second
+      for (const m of eff.meshes) {
+        m.material.opacity = (0.15 + Math.sin(game.time * 12 + Math.random()) * 0.1) * fade;
+      }
+    }
+
     // Remove expired effects
     if (eff.timer <= 0) {
       if (eff.mesh && eff.mesh.parent) { scene.remove(eff.mesh); eff.mesh.geometry.dispose(); eff.mesh.material.dispose(); }
       if (eff.coreMesh && eff.coreMesh.parent) { scene.remove(eff.coreMesh); eff.coreMesh.geometry.dispose(); eff.coreMesh.material.dispose(); }
       if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh);
+      // Clean up firewall line meshes
+      if (eff.meshes) {
+        for (const m of eff.meshes) {
+          if (m.parent) scene.remove(m);
+          m.geometry.dispose();
+          m.material.dispose();
+        }
+      }
       game.worldEffects.splice(e, 1);
     }
   }
@@ -4839,6 +5509,9 @@ function updateAbilities(dt) {
     }
   }
 
+  // Freeze core meter while core is active, and cap at 0 for maxed Monarch
+  if (player.coreActive) player.coreMeter = 0;
+  if (player.loadout && player.loadout.core.name === 'Upgrade Core' && player.monarchTier >= 3) player.coreMeter = 0;
   player.coreReady = player.coreMeter >= 100;
 }
 
@@ -4894,6 +5567,7 @@ function updateRoundSystem(dt) {
         // Next map from rotation each round
         const level = getNextMap();
         buildRoomGraphLevel(level);
+        spawnDynamicObjects(game.sdfRoomData);
         // Reset stasis fields
         game.stasisFields.forEach(f => { if (f.alive) f.destroy(); });
         game.stasisFields = [];
@@ -6678,8 +7352,70 @@ const SU = 150; // ship unit (Dreadnought hull + margin)
 //      \  |          |  /
 //       \_|_curved___|_/              (long curved tunnels to center)
 
+// ---- MAP DATA DEFINITIONS ----
+// Each map contains: name, description, rooms array, tunnels array
+const MAP_DATA = {
+  circumpunct: {
+    name: 'The Circumpunct',
+    description: 'Symmetrical dual spawn. Central citadel. Classic engagement.',
+    rooms: [
+      { id: 'center',  team: null, x: 0,       y: 0, z: 0,       r: SU * 3.5 },
+      { id: 'spawn_a', team: 'A',  x: -SU * 9, y: 0, z: -SU * 4, r: SU * 2.5 },
+      { id: 'spawn_b', team: 'B',  x:  SU * 9, y: 0, z: -SU * 4, r: SU * 2.5 },
+      { id: 'ready_a', team: null, x: -SU * 5, y: 0, z:  SU * 7, r: SU * 2.5 },
+      { id: 'ready_b', team: null, x:  SU * 5, y: 0, z:  SU * 7, r: SU * 2.5 },
+    ],
+    tunnels: [
+      { path: [{x: -SU*9, y: 0, z: -SU*4}, {x: -SU*7, y: 0, z:  SU*2}, {x: -SU*3, y: 0, z:  SU*3}, {x:  0,    y: 0, z:  0}]},
+      { path: [{x:  SU*9, y: 0, z: -SU*4}, {x:  SU*7, y: 0, z:  SU*2}, {x:  SU*3, y: 0, z:  SU*3}, {x:  0,    y: 0, z:  0}]},
+      { path: [{x: -SU*9, y: 0, z: -SU*4}, {x: -SU*5, y: 0, z:  SU*7}]},
+      { path: [{x:  SU*9, y: 0, z: -SU*4}, {x:  SU*5, y: 0, z:  SU*7}]},
+      { path: [{x: -SU*5, y:  SU*1.2, z: SU*7}, {x:  SU*5, y:  SU*1.2, z: SU*7}]},
+      { path: [{x: -SU*5, y: -SU*1.2, z: SU*7}, {x:  SU*5, y: -SU*1.2, z: SU*7}]},
+      { path: [{x: -SU*5, y: 0, z: SU*7}, {x:  0,    y: 0, z: 0}]},
+      { path: [{x:  SU*5, y: 0, z: SU*7}, {x:  0,    y: 0, z: 0}]},
+    ]
+  },
+  hourglass: {
+    name: 'The Nexus',
+    description: 'Ring layout. Six chambers. Every room connects to two others; no dead ends.',
+    // Feng shui arena design: circular flow, multiple flanking routes, no camping corners,
+    // every room has 2+ exits, spawns on opposite sides of the ring, power position in center.
+    // Layout: hexagonal ring of 6 chambers with a central hub. Spawns at north and south.
+    // Every chamber connects to its neighbors AND to the center, giving 3 exits per room.
+    rooms: [
+      { id: 'center',  team: null, x: 0, y: 0, z: 0, r: SU * 2.5 },
+      // Ring: 6 chambers at 60-degree intervals; spawns at top and bottom
+      { id: 'spawn_a', team: 'A',  x: 0,             y: 0, z: -SU * 8,   r: SU * 2.2 },  // north
+      { id: 'ne',      team: null, x:  SU * 7,        y: SU * 2, z: -SU * 4,   r: SU * 1.8 },
+      { id: 'se',      team: null, x:  SU * 7,        y: -SU * 2, z:  SU * 4,   r: SU * 1.8 },
+      { id: 'spawn_b', team: 'B',  x: 0,             y: 0, z:  SU * 8,   r: SU * 2.2 },  // south
+      { id: 'sw',      team: null, x: -SU * 7,        y: -SU * 2, z:  SU * 4,   r: SU * 1.8 },
+      { id: 'nw',      team: null, x: -SU * 7,        y: SU * 2, z: -SU * 4,   r: SU * 1.8 },
+    ],
+    tunnels: [
+      // Outer ring (hexagon): each chamber to its neighbor (circular flow, no dead ends)
+      { path: [{x: 0, y: 0, z: -SU*8}, {x:  SU*7, y: SU*2, z: -SU*4}]},           // spawn_a -> ne
+      { path: [{x:  SU*7, y: SU*2, z: -SU*4}, {x:  SU*7, y: -SU*2, z:  SU*4}]},   // ne -> se
+      { path: [{x:  SU*7, y: -SU*2, z:  SU*4}, {x: 0, y: 0, z:  SU*8}]},           // se -> spawn_b
+      { path: [{x: 0, y: 0, z:  SU*8}, {x: -SU*7, y: -SU*2, z:  SU*4}]},           // spawn_b -> sw
+      { path: [{x: -SU*7, y: -SU*2, z:  SU*4}, {x: -SU*7, y: SU*2, z: -SU*4}]},   // sw -> nw
+      { path: [{x: -SU*7, y: SU*2, z: -SU*4}, {x: 0, y: 0, z: -SU*8}]},           // nw -> spawn_a
+      // Spokes to center (every chamber connects to hub; 3 exits per room)
+      { path: [{x: 0, y: 0, z: -SU*8}, {x: 0, y: 0, z: 0}]},           // spawn_a -> center
+      { path: [{x:  SU*7, y: SU*2, z: -SU*4}, {x: 0, y: 0, z: 0}]},    // ne -> center
+      { path: [{x:  SU*7, y: -SU*2, z:  SU*4}, {x: 0, y: 0, z: 0}]},   // se -> center
+      { path: [{x: 0, y: 0, z:  SU*8}, {x: 0, y: 0, z: 0}]},           // spawn_b -> center
+      { path: [{x: -SU*7, y: -SU*2, z:  SU*4}, {x: 0, y: 0, z: 0}]},   // sw -> center
+      { path: [{x: -SU*7, y: SU*2, z: -SU*4}, {x: 0, y: 0, z: 0}]},    // nw -> center
+    ]
+  }
+};
+
 function getNextMap() {
-  return { name: 'The Circumpunct' };
+  const selectedMapKey = game.selectedMap || 'circumpunct';
+  const mapData = MAP_DATA[selectedMapKey];
+  return mapData || MAP_DATA.circumpunct;
 }
 function shuffleMapRotation() {}
 
@@ -6694,68 +7430,17 @@ function buildRoomGraphLevel(level) {
   game.currentLevel = level;
   game.mapWord = level.name;
 
-  // --- ROOM POSITIONS (matching the diagram) ---
-  // X = left/right, Z = forward/back (top of diagram = +Z)
-  // Using Z as the "up" axis in the top-down view
-  const rooms = [
-    { id: 'center',  team: null, x: 0,       y: 0, z: 0,       r: SU * 3.5 },
-    { id: 'spawn_a', team: 'A',  x: -SU * 9, y: 0, z: -SU * 4, r: SU * 2.5 },
-    { id: 'spawn_b', team: 'B',  x:  SU * 9, y: 0, z: -SU * 4, r: SU * 2.5 },
-    { id: 'ready_a', team: null, x: -SU * 5, y: 0, z:  SU * 7, r: SU * 2.5 },
-    { id: 'ready_b', team: null, x:  SU * 5, y: 0, z:  SU * 7, r: SU * 2.5 },
-  ];
+  // Terminate old worker if still running
+  if (game.levelWorker && game.levelWorkerCallbacks.length > 0) {
+    game.levelWorkerCallbacks = [];
+  }
 
-  // --- TUNNEL DEFINITIONS ---
-  const TR = SU * 1.2; // tunnel radius (slightly tighter than rooms)
+  // --- READ ROOMS AND TUNNELS FROM LEVEL DATA ---
+  const rooms = level.rooms;
+  const tunnels = level.tunnels;
+  const TR = SU * 1.2;
 
-  const tunnels = [
-    // 1: Spawn A → Center (long CURVED; 3 segments so you can't see through)
-    { path: [
-      {x: -SU*9, y: 0, z: -SU*4},
-      {x: -SU*7, y: 0, z:  SU*2},
-      {x: -SU*3, y: 0, z:  SU*3},
-      {x:  0,    y: 0, z:  0}
-    ]},
-    // 2: Spawn B → Center (long CURVED; mirror of above)
-    { path: [
-      {x:  SU*9, y: 0, z: -SU*4},
-      {x:  SU*7, y: 0, z:  SU*2},
-      {x:  SU*3, y: 0, z:  SU*3},
-      {x:  0,    y: 0, z:  0}
-    ]},
-    // 3: Spawn A → Ready A (medium, diagonal)
-    { path: [
-      {x: -SU*9, y: 0, z: -SU*4},
-      {x: -SU*5, y: 0, z:  SU*7}
-    ]},
-    // 4: Spawn B → Ready B (medium, diagonal)
-    { path: [
-      {x:  SU*9, y: 0, z: -SU*4},
-      {x:  SU*5, y: 0, z:  SU*7}
-    ]},
-    // 5: Ready A → Ready B (short, upper parallel path; slight +Y offset)
-    { path: [
-      {x: -SU*5, y:  SU*1.2, z: SU*7},
-      {x:  SU*5, y:  SU*1.2, z: SU*7}
-    ]},
-    // 6: Ready A → Ready B (short, lower parallel path; slight -Y offset)
-    { path: [
-      {x: -SU*5, y: -SU*1.2, z: SU*7},
-      {x:  SU*5, y: -SU*1.2, z: SU*7}
-    ]},
-    // 7: Ready A → Center (short, diagonal down)
-    { path: [
-      {x: -SU*5, y: 0, z: SU*7},
-      {x:  0,    y: 0, z: 0}
-    ]},
-    // 8: Ready B → Center (short, diagonal down)
-    { path: [
-      {x:  SU*5, y: 0, z: SU*7},
-      {x:  0,    y: 0, z: 0}
-    ]},
-  ];
-
-  // --- PRE-COMPUTE CYLINDER SEGMENTS (world-space endpoints) ---
+  // --- PRE-COMPUTE CYLINDER SEGMENTS ---
   const cylSegs = [];
   for (const tun of tunnels) {
     for (let p = 0; p < tun.path.length - 1; p++) {
@@ -6767,22 +7452,50 @@ function buildRoomGraphLevel(level) {
   }
 
   // --- POPULATE SDF DATA (must happen BEFORE marching cubes) ---
-  game.sdfSmoothK = 45; // smooth junction blend: 45 = clean junctions without melting nearby geometry together
-
-  // Populate levelSpheres from rooms
+  game.sdfSmoothK = 45;
   for (const rm of rooms) {
     game.levelSpheres.push({ cx: rm.x, cy: rm.y, cz: rm.z, r: rm.r });
   }
-  // Populate levelCylinders from tunnel segments
   for (const seg of cylSegs) {
     game.levelCylinders.push({ ax: seg.a.x, ay: seg.a.y, az: seg.a.z, bx: seg.b.x, by: seg.b.y, bz: seg.b.z, r: TR });
   }
-
-  // Store room data for SDF color lookup
   game.sdfRoomData = rooms;
 
-  // --- SDF MARCHING CUBES ---
-  // Compute world bounds from rooms AND tunnel endpoints
+  // --- GENERATE CORRIDOR POINTS (for spawning, bot navigation, dynamic object placement) ---
+  // Sample points inside rooms (tagged with team)
+  for (const rm of rooms) {
+    const numPts = Math.max(8, Math.floor(rm.r / 30));
+    for (let i = 0; i < numPts; i++) {
+      // Random point inside sphere
+      const u = Math.random(), v = Math.random(), theta = 2 * Math.PI * u, phi = Math.acos(2 * v - 1);
+      const rr = rm.r * 0.7 * Math.cbrt(Math.random());
+      game.corridorPoints.push({
+        x: rm.x + rr * Math.sin(phi) * Math.cos(theta),
+        y: rm.y + rr * Math.sin(phi) * Math.sin(theta),
+        z: rm.z + rr * Math.cos(phi),
+        team: rm.team || null,
+        roomType: 'room',
+        roomId: rm.id
+      });
+    }
+  }
+  // Sample points along tunnels
+  for (const seg of cylSegs) {
+    const len = seg.len;
+    const steps = Math.max(3, Math.floor(len / 80));
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      game.corridorPoints.push({
+        x: seg.a.x + seg.dx * t + (Math.random() - 0.5) * TR * 0.4,
+        y: seg.a.y + seg.dy * t + (Math.random() - 0.5) * TR * 0.4,
+        z: seg.a.z + seg.dz * t + (Math.random() - 0.5) * TR * 0.4,
+        team: null,
+        roomType: 'tunnel'
+      });
+    }
+  }
+
+  // --- COMPUTE BOUNDS ---
   let bMinX=Infinity,bMinY=Infinity,bMinZ=Infinity;
   let bMaxX=-Infinity,bMaxY=-Infinity,bMaxZ=-Infinity;
   const pad = 50;
@@ -6799,250 +7512,258 @@ function buildRoomGraphLevel(level) {
   }
   const bounds={minX:bMinX,minY:bMinY,minZ:bMinZ,maxX:bMaxX,maxY:bMaxY,maxZ:bMaxZ};
 
-  // Marching cubes tables
+  // Show loading UI
+  const mapGenHud = document.getElementById('map-gen-hud');
+  if (mapGenHud) {
+    mapGenHud.textContent = 'GENERATING MAP...';
+    mapGenHud.style.display = 'block';
+  }
+
+  // Marching cubes tables (same as worker)
   const mcEdgeTable = new Uint16Array([0x0,0x109,0x203,0x30a,0x406,0x50f,0x605,0x70c,0x80c,0x905,0xa0f,0xb06,0xc0a,0xd03,0xe09,0xf00,0x190,0x99,0x393,0x29a,0x596,0x49f,0x795,0x69c,0x99c,0x895,0xb9f,0xa96,0xd9a,0xc93,0xf99,0xe90,0x230,0x339,0x33,0x13a,0x636,0x73f,0x435,0x53c,0xa3c,0xb35,0x83f,0x936,0xe3a,0xf33,0xc39,0xd30,0x3a0,0x2a9,0x1a3,0xaa,0x7a6,0x6af,0x5a5,0x4ac,0xbac,0xaa5,0x9af,0x8a6,0xfaa,0xea3,0xda9,0xca0,0x460,0x569,0x663,0x76a,0x66,0x16f,0x265,0x36c,0xc6c,0xd65,0xe6f,0xf66,0x86a,0x963,0xa69,0xb60,0x5f0,0x4f9,0x7f3,0x6fa,0x1f6,0xff,0x3f5,0x2fc,0xdfc,0xcf5,0xfff,0xef6,0x9fa,0x8f3,0xbf9,0xaf0,0x650,0x759,0x453,0x55a,0x256,0x35f,0x55,0x15c,0xe5c,0xf55,0xc5f,0xd56,0xa5a,0xb53,0x859,0x950,0x7c0,0x6c9,0x5c3,0x4ca,0x3c6,0x2cf,0x1c5,0xcc,0xfcc,0xec5,0xdcf,0xcc6,0xbca,0xac3,0x9c9,0x8c0,0x8c0,0x9c9,0xac3,0xbca,0xcc6,0xdcf,0xec5,0xfcc,0xcc,0x1c5,0x2cf,0x3c6,0x4ca,0x5c3,0x6c9,0x7c0,0x950,0x859,0xb53,0xa5a,0xd56,0xc5f,0xf55,0xe5c,0x15c,0x55,0x35f,0x256,0x55a,0x453,0x759,0x650,0xaf0,0xbf9,0x8f3,0x9fa,0xef6,0xfff,0xcf5,0xdfc,0x2fc,0x3f5,0xff,0x1f6,0x6fa,0x7f3,0x4f9,0x5f0,0xb60,0xa69,0x963,0x86a,0xf66,0xe6f,0xd65,0xc6c,0x36c,0x265,0x16f,0x66,0x76a,0x663,0x569,0x460,0xca0,0xda9,0xea3,0xfaa,0x8a6,0x9af,0xaa5,0xbac,0x4ac,0x5a5,0x6af,0x7a6,0xaa,0x1a3,0x2a9,0x3a0,0xd30,0xc39,0xf33,0xe3a,0x936,0x83f,0xb35,0xa3c,0x53c,0x435,0x73f,0x636,0x13a,0x33,0x339,0x230,0xe90,0xf99,0xc93,0xd9a,0xa96,0xb9f,0x895,0x99c,0x69c,0x795,0x49f,0x596,0x29a,0x393,0x99,0x190,0xf00,0xe09,0xd03,0xc0a,0xb06,0xa0f,0x905,0x80c,0x70c,0x605,0x50f,0x406,0x30a,0x203,0x109,0x0]);
-
   const mcTriTable=[[-1],[0,8,3,-1],[0,1,9,-1],[1,8,3,9,8,1,-1],[1,2,10,-1],[0,8,3,1,2,10,-1],[9,2,10,0,2,9,-1],[2,8,3,2,10,8,10,9,8,-1],[3,11,2,-1],[0,11,2,8,11,0,-1],[1,9,0,2,3,11,-1],[1,11,2,1,9,11,9,8,11,-1],[3,10,1,11,10,3,-1],[0,10,1,0,8,10,8,11,10,-1],[3,9,0,3,11,9,11,10,9,-1],[9,8,10,10,8,11,-1],[4,7,8,-1],[4,3,0,7,3,4,-1],[0,1,9,8,4,7,-1],[4,1,9,4,7,1,7,3,1,-1],[1,2,10,8,4,7,-1],[3,4,7,3,0,4,1,2,10,-1],[9,2,10,9,0,2,8,4,7,-1],[2,10,9,2,9,7,2,7,3,7,9,4,-1],[8,4,7,3,11,2,-1],[11,4,7,11,2,4,2,0,4,-1],[9,0,1,8,4,7,2,3,11,-1],[4,7,11,9,4,11,9,11,2,9,2,1,-1],[3,10,1,3,11,10,7,8,4,-1],[1,11,10,1,4,11,1,0,4,7,11,4,-1],[4,7,8,9,0,11,9,11,10,11,0,3,-1],[4,7,11,4,11,9,9,11,10,-1],[9,5,4,-1],[9,5,4,0,8,3,-1],[0,5,4,1,5,0,-1],[8,5,4,8,3,5,3,1,5,-1],[1,2,10,9,5,4,-1],[3,0,8,1,2,10,4,9,5,-1],[5,2,10,5,4,2,4,0,2,-1],[2,10,5,3,2,5,3,5,4,3,4,8,-1],[9,5,4,2,3,11,-1],[0,11,2,0,8,11,4,9,5,-1],[0,5,4,0,1,5,2,3,11,-1],[2,1,5,2,5,8,2,8,11,4,8,5,-1],[10,3,11,10,1,3,9,5,4,-1],[4,9,5,0,8,1,8,10,1,8,11,10,-1],[5,4,0,5,0,11,5,11,10,11,0,3,-1],[5,4,8,5,8,10,10,8,11,-1],[9,7,8,5,7,9,-1],[9,3,0,9,5,3,5,7,3,-1],[0,7,8,0,1,7,1,5,7,-1],[1,5,3,3,5,7,-1],[9,7,8,9,5,7,10,1,2,-1],[10,1,0,10,0,7,10,7,5,7,0,3,-1],[8,0,2,8,2,5,8,5,7,10,5,2,-1],[2,10,5,2,5,3,3,5,7,-1],[7,9,5,7,8,9,3,11,2,-1],[9,5,7,9,7,2,9,2,0,2,7,11,-1],[2,3,11,0,1,8,1,7,8,1,5,7,-1],[11,2,1,11,1,7,7,1,5,-1],[9,5,8,8,5,7,10,1,3,10,3,11,-1],[5,7,0,5,0,9,7,11,0,1,0,10,11,10,0,-1],[11,10,0,11,0,3,10,5,0,8,0,7,5,7,0,-1],[11,10,5,7,11,5,-1],[10,6,5,-1],[0,8,3,5,10,6,-1],[9,0,1,5,10,6,-1],[1,8,3,1,9,8,5,10,6,-1],[1,6,5,2,6,1,-1],[1,6,5,1,2,6,3,0,8,-1],[9,6,5,9,0,6,0,2,6,-1],[5,9,8,5,8,2,5,2,6,3,2,8,-1],[2,3,11,10,6,5,-1],[11,0,8,11,2,0,10,6,5,-1],[0,1,9,2,3,11,5,10,6,-1],[5,10,6,1,9,2,9,11,2,9,8,11,-1],[6,3,11,6,5,3,5,1,3,-1],[0,8,11,0,11,5,0,5,1,5,11,6,-1],[3,11,6,0,3,6,0,6,5,0,5,9,-1],[6,5,9,6,9,11,11,9,8,-1],[5,10,6,4,7,8,-1],[4,3,0,4,7,3,6,5,10,-1],[1,9,0,5,10,6,8,4,7,-1],[10,6,5,1,9,7,1,7,3,7,9,4,-1],[6,1,2,6,5,1,4,7,8,-1],[1,2,5,5,2,6,3,0,4,3,4,7,-1],[8,4,7,9,0,5,0,6,5,0,2,6,-1],[7,3,9,7,9,4,3,2,9,5,9,6,2,6,9,-1],[3,11,2,7,8,4,10,6,5,-1],[5,10,6,4,7,2,4,2,0,2,7,11,-1],[0,1,9,4,7,8,2,3,11,5,10,6,-1],[9,2,1,9,11,2,9,4,11,7,11,4,5,10,6,-1],[8,4,7,3,11,5,3,5,1,5,11,6,-1],[5,1,11,5,11,6,1,0,11,7,11,4,0,4,11,-1],[0,5,9,0,6,5,0,3,6,11,6,3,8,4,7,-1],[6,5,9,6,9,11,4,7,9,7,11,9,-1],[10,4,9,6,4,10,-1],[4,10,6,4,9,10,0,8,3,-1],[10,0,1,10,6,0,6,4,0,-1],[8,3,1,8,1,6,8,6,4,6,1,10,-1],[1,4,9,1,2,4,2,6,4,-1],[3,0,8,1,2,9,2,4,9,2,6,4,-1],[0,2,4,4,2,6,-1],[8,3,2,8,2,4,4,2,6,-1],[10,4,9,10,6,4,11,2,3,-1],[0,8,2,2,8,11,4,9,10,4,10,6,-1],[3,11,2,0,1,6,0,6,4,6,1,10,-1],[6,4,1,6,1,10,4,8,1,2,1,11,8,11,1,-1],[9,6,4,9,3,6,9,1,3,11,6,3,-1],[8,11,1,8,1,0,11,6,1,9,1,4,6,4,1,-1],[3,11,6,3,6,0,0,6,4,-1],[6,4,8,11,6,8,-1],[7,10,6,7,8,10,8,9,10,-1],[0,7,3,0,10,7,0,9,10,6,7,10,-1],[10,6,7,1,10,7,1,7,8,1,8,0,-1],[10,6,7,10,7,1,1,7,3,-1],[1,2,6,1,6,8,1,8,9,8,6,7,-1],[2,6,9,2,9,1,6,7,9,0,9,3,7,3,9,-1],[7,8,0,7,0,6,6,0,2,-1],[7,3,2,6,7,2,-1],[2,3,11,10,6,8,10,8,9,8,6,7,-1],[2,0,7,2,7,11,0,9,7,6,7,10,9,10,7,-1],[1,8,0,1,7,8,1,10,7,6,7,10,2,3,11,-1],[11,2,1,11,1,7,10,6,1,6,7,1,-1],[8,9,6,8,6,7,9,1,6,11,6,3,1,3,6,-1],[0,9,1,11,6,7,-1],[7,8,0,7,0,6,3,11,0,11,6,0,-1],[7,11,6,-1],[7,6,11,-1],[3,0,8,11,7,6,-1],[0,1,9,11,7,6,-1],[8,1,9,8,3,1,11,7,6,-1],[10,1,2,6,11,7,-1],[1,2,10,3,0,8,6,11,7,-1],[2,9,0,2,10,9,6,11,7,-1],[6,11,7,2,10,3,10,8,3,10,9,8,-1],[7,2,3,6,2,7,-1],[7,0,8,7,6,0,6,2,0,-1],[2,7,6,2,3,7,0,1,9,-1],[1,6,2,1,8,6,1,9,8,8,7,6,-1],[10,7,6,10,1,7,1,3,7,-1],[10,7,6,1,7,10,1,8,7,1,0,8,-1],[0,3,7,0,7,10,0,10,9,6,10,7,-1],[7,6,10,7,10,8,8,10,9,-1],[6,8,4,11,8,6,-1],[3,6,11,3,0,6,0,4,6,-1],[8,6,11,8,4,6,9,0,1,-1],[9,4,6,9,6,3,9,3,1,11,3,6,-1],[6,8,4,6,11,8,2,10,1,-1],[1,2,10,3,0,11,0,6,11,0,4,6,-1],[4,11,8,4,6,11,0,2,9,2,10,9,-1],[10,9,3,10,3,2,9,4,3,11,3,6,4,6,3,-1],[8,2,3,8,4,2,4,6,2,-1],[0,4,2,4,6,2,-1],[1,9,0,2,3,4,2,4,6,4,3,8,-1],[1,9,4,1,4,2,2,4,6,-1],[8,1,3,8,6,1,8,4,6,6,10,1,-1],[10,1,0,10,0,6,6,0,4,-1],[4,6,3,4,3,8,6,10,3,0,3,9,10,9,3,-1],[10,9,4,6,10,4,-1],[4,9,5,7,6,11,-1],[0,8,3,4,9,5,11,7,6,-1],[5,0,1,5,4,0,7,6,11,-1],[11,7,6,8,3,4,3,5,4,3,1,5,-1],[9,5,4,10,1,2,7,6,11,-1],[6,11,7,1,2,10,0,8,3,4,9,5,-1],[7,6,11,5,4,10,4,2,10,4,0,2,-1],[3,4,8,3,5,4,3,2,5,10,5,2,11,7,6,-1],[7,2,3,7,6,2,5,4,9,-1],[9,5,4,0,8,6,0,6,2,6,8,7,-1],[3,6,2,3,7,6,1,5,0,5,4,0,-1],[6,2,8,6,8,7,2,1,8,4,8,5,1,5,8,-1],[9,5,4,10,1,6,1,7,6,1,3,7,-1],[1,6,10,1,7,6,1,0,7,8,7,0,9,5,4,-1],[4,0,10,4,10,5,0,3,10,6,10,7,3,7,10,-1],[7,6,10,7,10,8,5,4,10,4,8,10,-1],[6,9,5,6,11,9,11,8,9,-1],[3,6,11,0,6,3,0,5,6,0,9,5,-1],[0,11,8,0,5,11,0,1,5,5,6,11,-1],[6,11,3,6,3,5,5,3,1,-1],[1,2,10,9,5,11,9,11,8,11,5,6,-1],[0,11,3,0,6,11,0,9,6,5,6,9,1,2,10,-1],[11,8,5,11,5,6,8,0,5,10,5,2,0,2,5,-1],[6,11,3,6,3,5,2,10,3,10,5,3,-1],[5,8,9,5,2,8,5,6,2,3,8,2,-1],[9,5,6,9,6,0,0,6,2,-1],[1,5,8,1,8,0,5,6,8,3,8,2,6,2,8,-1],[1,5,6,2,1,6,-1],[1,3,6,1,6,10,3,8,6,5,6,9,8,9,6,-1],[10,1,0,10,0,6,9,5,0,5,6,0,-1],[0,3,8,5,6,10,-1],[10,5,6,-1],[11,5,10,7,5,11,-1],[11,5,10,11,7,5,8,3,0,-1],[5,11,7,5,10,11,1,9,0,-1],[10,7,5,10,11,7,9,8,1,8,3,1,-1],[11,1,2,11,7,1,7,5,1,-1],[0,8,3,1,2,7,1,7,5,7,2,11,-1],[9,7,5,9,2,7,9,0,2,2,11,7,-1],[7,5,2,7,2,11,5,9,2,3,2,8,9,8,2,-1],[2,5,10,2,3,5,3,7,5,-1],[8,2,0,8,5,2,8,7,5,10,2,5,-1],[9,0,1,5,10,3,5,3,7,3,10,2,-1],[9,8,2,9,2,1,8,7,2,10,2,5,7,5,2,-1],[1,3,5,3,7,5,-1],[0,8,7,0,7,1,1,7,5,-1],[9,0,3,9,3,5,5,3,7,-1],[9,8,7,5,9,7,-1],[5,8,4,5,10,8,10,11,8,-1],[5,0,4,5,11,0,5,10,11,11,3,0,-1],[0,1,9,8,4,10,8,10,11,10,4,5,-1],[10,11,4,10,4,5,11,3,4,9,4,1,3,1,4,-1],[2,5,1,2,8,5,2,11,8,4,5,8,-1],[0,4,11,0,11,3,4,5,11,2,11,1,5,1,11,-1],[0,2,5,0,5,9,2,11,5,4,5,8,11,8,5,-1],[9,4,5,2,11,3,-1],[2,5,10,3,5,2,3,4,5,3,8,4,-1],[5,10,2,5,2,4,4,2,0,-1],[3,10,2,3,5,10,3,8,5,4,5,8,0,1,9,-1],[5,10,2,5,2,4,1,9,2,9,4,2,-1],[8,4,5,8,5,3,3,5,1,-1],[0,4,5,1,0,5,-1],[8,4,5,8,5,3,9,0,5,0,3,5,-1],[9,4,5,-1],[4,11,7,4,9,11,9,10,11,-1],[0,8,3,4,9,7,9,11,7,9,10,11,-1],[1,10,11,1,11,4,1,4,0,7,4,11,-1],[3,1,4,3,4,8,1,10,4,7,4,11,10,11,4,-1],[4,11,7,9,11,4,9,2,11,9,1,2,-1],[9,7,4,9,11,7,9,1,11,2,11,1,0,8,3,-1],[11,7,4,11,4,2,2,4,0,-1],[11,7,4,11,4,2,8,3,4,3,2,4,-1],[2,9,10,2,7,9,2,3,7,7,4,9,-1],[9,10,7,9,7,4,10,2,7,8,7,0,2,0,7,-1],[3,7,10,3,10,2,7,4,10,1,10,0,4,0,10,-1],[1,10,2,8,7,4,-1],[4,9,1,4,1,7,7,1,3,-1],[4,9,1,4,1,7,0,8,1,8,7,1,-1],[4,0,3,7,4,3,-1],[4,8,7,-1],[9,10,8,10,11,8,-1],[3,0,9,3,9,11,11,9,10,-1],[0,1,10,0,10,8,8,10,11,-1],[3,1,10,11,3,10,-1],[1,2,11,1,11,9,9,11,8,-1],[3,0,9,3,9,11,1,2,9,2,11,9,-1],[0,2,11,8,0,11,-1],[3,2,11,-1],[2,3,8,2,8,10,10,8,9,-1],[9,10,2,0,9,2,-1],[2,3,8,2,8,10,0,1,8,1,10,8,-1],[1,10,2,-1],[1,3,8,9,1,8,-1],[0,9,1,-1],[0,3,8,-1],[-1]];
-
   const mcEdgeVerts=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
-  const mcCubeVerts=[[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,1],[1,0,1],[1,1,1],[0,1,1]];
 
-  // Run marching cubes on the world SDF
-  const gridRes = 96; // higher res for cleaner junctions
-  const nx=gridRes,ny=gridRes,nz=gridRes;
-  const dx=(bounds.maxX-bounds.minX)/nx;
-  const dy=(bounds.maxY-bounds.minY)/ny;
-  const dz=(bounds.maxZ-bounds.minZ)/nz;
+  function createMeshFromPositions(posArray, gridRes) {
+    const levelGeo = new THREE.BufferGeometry();
+    levelGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    levelGeo.computeVertexNormals();
 
-  // Sample SDF
-  const vals=new Float32Array((nx+1)*(ny+1)*(nz+1));
-  const gi=(i,j,k)=>i+(nx+1)*(j+(ny+1)*k);
-  for(let k=0;k<=nz;k++)for(let j=0;j<=ny;j++)for(let i=0;i<=nx;i++){
-    vals[gi(i,j,k)]=worldSDF(bounds.minX+i*dx,bounds.minY+j*dy,bounds.minZ+k*dz);
-  }
+    // Wall shader
+    const sdfVertSrc = [
+      'varying vec3 vWorldPos;',
+      'varying vec3 vNormal;',
+      'varying float vAO;',
+      'void main() {',
+      '  vec4 wp = modelMatrix * vec4(position, 1.0);',
+      '  vWorldPos = wp.xyz;',
+      '  vNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);',
+      '  vec3 upVec = vec3(0.0, 1.0, 0.0);',
+      '  float normalUpDot = dot(vNormal, upVec);',
+      '  float aoFromNormal = 0.85 + normalUpDot * 0.15;',
+      '  vAO = clamp(aoFromNormal, 0.7, 1.0);',
+      '  gl_Position = projectionMatrix * viewMatrix * wp;',
+      '}'
+    ].join('\n');
 
-  function mcInterp(i1,j1,k1,i2,j2,k2){
-    const v1=vals[gi(i1,j1,k1)],v2=vals[gi(i2,j2,k2)];
-    if(Math.abs(v1)<0.00001)return[bounds.minX+i1*dx,bounds.minY+j1*dy,bounds.minZ+k1*dz];
-    if(Math.abs(v2)<0.00001)return[bounds.minX+i2*dx,bounds.minY+j2*dy,bounds.minZ+k2*dz];
-    if(Math.abs(v1-v2)<0.00001)return[bounds.minX+i1*dx,bounds.minY+j1*dy,bounds.minZ+k1*dz];
-    const t=v1/(v1-v2);
-    return[bounds.minX+(i1+t*(i2-i1))*dx,bounds.minY+(j1+t*(j2-j1))*dy,bounds.minZ+(k1+t*(k2-k1))*dz];
-  }
+    const sdfFragSrc = [
+      'uniform float time;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vNormal;',
+      'varying float vAO;',
+      'uniform vec3 roomCenters[8];',
+      'uniform vec3 roomColorsU[8];',
+      'uniform float roomRadii[8];',
+      'uniform int roomCount;',
+      '',
+      'float hash(vec2 p) {',
+      '  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);',
+      '}',
+      'float hash3(vec3 p) {',
+      '  return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);',
+      '}',
+      'float noise(vec2 p) {',
+      '  vec2 i = floor(p), f = fract(p);',
+      '  f = f * f * (3.0 - 2.0 * f);',
+      '  return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y);',
+      '}',
+      'float branches(vec3 wp) {',
+      '  float pattern = 0.0;',
+      '  float scale = 0.002;',
+      '  float weight = 0.7;',
+      '  vec2 p = vec2(wp.x + wp.z * 0.7, wp.y);',
+      '  for (int i = 0; i < 6; i++) {',
+      '    vec2 g = p * scale;',
+      '    float n = noise(g * 2.5 + float(i) * 1.3);',
+      '    float n2 = noise(g * 4.0 + float(i) * 2.7);',
+      '    g.x += sin(g.y * 1.5 + n * 4.0) * 0.4;',
+      '    g.y += cos(g.x * 0.8 + n2 * 2.0) * 0.15;',
+      '    vec2 f = abs(fract(g) - 0.5);',
+      '    float vein = 1.0 - smoothstep(0.0, 0.09, f.x);',
+      '    float branch = 1.0 - smoothstep(0.0, 0.14, f.x + f.y * 0.4);',
+      '    float cross1 = 1.0 - smoothstep(0.0, 0.10, f.y);',
+      '    pattern += (vein * 0.45 + branch * 0.35 + cross1 * 0.2) * weight;',
+      '    p = vec2(p.y * 0.7 + p.x * 0.7, -p.x * 0.5 + p.y * 0.85 + n * 40.0);',
+      '    scale *= 1.9;',
+      '    weight *= 0.50;',
+      '  }',
+      '  return clamp(pattern, 0.0, 1.0);',
+      '}',
+      'float panelGrid(vec3 wp) {',
+      '  vec3 gridPos = floor(wp / 400.0) * 400.0;',
+      '  vec3 localPos = mod(wp, 400.0);',
+      '  float gridX = abs(fract(localPos.x / 400.0 + 0.5) - 0.5) < 0.015 ? 1.0 : 0.0;',
+      '  float gridY = abs(fract(localPos.y / 400.0 + 0.5) - 0.5) < 0.012 ? 1.0 : 0.0;',
+      '  float gridZ = abs(fract(localPos.z / 400.0 + 0.5) - 0.5) < 0.015 ? 1.0 : 0.0;',
+      '  return max(gridX, max(gridY, gridZ));',
+      '}',
+      'float greebles(vec3 wp, float fade) {',
+      '  vec3 gp = wp * 0.05;',
+      '  float h1 = hash3(floor(gp));',
+      '  float h2 = hash3(floor(gp * 3.7) + 0.1);',
+      '  float detail = sin(gp.x * 8.0) * sin(gp.y * 7.0) * sin(gp.z * 6.0);',
+      '  detail = abs(detail) * 0.5 + 0.5;',
+      '  float greeble = detail * 0.3 + (h2 * 0.3);',
+      '  return greeble * fade;',
+      '}',
+      'void main() {',
+      '  vec3 base = vec3(0.06, 0.08, 0.12);',
+      '  float minD = 99999.0;',
+      '  for (int i = 0; i < 8; i++) {',
+      '    if (i >= roomCount) break;',
+      '    float d = length(vWorldPos - roomCenters[i]);',
+      '    if (d < minD) { minD = d; base = roomColorsU[i]; }',
+      '  }',
+      '  float yNorm = clamp((vWorldPos.y + 2000.0) / 4000.0, 0.0, 1.0);',
+      '  float gradientDark = 0.6 + yNorm * 0.4;',
+      '  vec3 brightBase = base * 2.5 + vec3(0.03, 0.04, 0.06);',
+      '  vec3 gradBase = brightBase * gradientDark;',
+      '  float branchPattern = branches(vWorldPos);',
+      '  float branchStrength = 0.7 + (1.0 - yNorm) * 0.3;',
+      '  branchPattern *= branchStrength;',
+      '  float branchPulse = 0.95 + 0.05 * sin(time * 0.3);',
+      '  vec3 glow1 = base * 10.0 + vec3(0.05, 0.08, 0.15);',
+      '  vec3 glow2 = base * 18.0 + vec3(0.10, 0.15, 0.25);',
+      '  vec3 c = gradBase;',
+      '  c = mix(c, glow1, branchPattern * 0.6 * branchPulse);',
+      '  c = mix(c, glow2, smoothstep(0.25, 0.65, branchPattern) * 0.8 * branchPulse);',
+      '  c += (base * 8.0 + vec3(0.04, 0.06, 0.12)) * smoothstep(0.5, 0.9, branchPattern) * branchPulse;',
+      '  vec3 vd = normalize(cameraPosition - vWorldPos);',
+      '  float diff = max(dot(vNormal, vd), 0.0) * 0.4 + 0.6;',
+      '  float fresnelFactor = pow(1.0 - abs(dot(vNormal, vd)), 3.0);',
+      '  vec3 rimGlow = vec3(0.1, 0.15, 0.25) * fresnelFactor * 0.6;',
+      '  c += rimGlow;',
+      '  c *= diff;',
+      '  float panelStrength = panelGrid(vWorldPos) * 0.08;',
+      '  c *= (1.0 - panelStrength);',
+      '  float greebleDistance = 1.0 - clamp(length(cameraPosition - vWorldPos) / 3000.0, 0.0, 1.0);',
+      '  float greebleDetail = greebles(vWorldPos, greebleDistance);',
+      '  c = mix(c, c * (1.0 - greebleDetail * 0.25), greebleDistance);',
+      '  c *= vAO;',
+      '  gl_FragColor = vec4(c, 1.0);',
+      '}'
+    ].join('\n');
 
-  const positions=[];
-  for(let k=0;k<nz;k++)for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){
-    const v=[vals[gi(i,j,k)],vals[gi(i+1,j,k)],vals[gi(i+1,j+1,k)],vals[gi(i,j+1,k)],vals[gi(i,j,k+1)],vals[gi(i+1,j,k+1)],vals[gi(i+1,j+1,k+1)],vals[gi(i,j+1,k+1)]];
-    let cubeIdx=0;
-    for(let c=0;c<8;c++)if(v[c]<0)cubeIdx|=(1<<c);
-    if(mcEdgeTable[cubeIdx]===0)continue;
-    const ci=[i,i+1,i+1,i,i,i+1,i+1,i];
-    const cj=[j,j,j+1,j+1,j,j,j+1,j+1];
-    const ck=[k,k,k,k,k+1,k+1,k+1,k+1];
-    const ev=new Array(12);
-    for(let e=0;e<12;e++){
-      if(mcEdgeTable[cubeIdx]&(1<<e)){
-        const[a,b]=mcEdgeVerts[e];
-        ev[e]=mcInterp(ci[a],cj[a],ck[a],ci[b],cj[b],ck[b]);
+    // Dynamic room uniforms (pad to 8 elements for shader array)
+    const roomPalette = [
+      0x1a3050, 0x3a1010, 0x103a10, 0x351828, 0x183520, 0x2a2040, 0x1a4030, 0x402020
+    ];
+    const numRooms = Math.min(game.sdfRoomData.length, 8);
+    const roomCentersArr = [];
+    const roomColorsArr = [];
+    const roomRadiiArr = [];
+    for (let i = 0; i < 8; i++) {
+      if (i < numRooms) {
+        const r = game.sdfRoomData[i];
+        roomCentersArr.push(new THREE.Vector3(r.x, r.y, r.z));
+        roomColorsArr.push(new THREE.Color(roomPalette[i % roomPalette.length]));
+        roomRadiiArr.push(r.r);
+      } else {
+        roomCentersArr.push(new THREE.Vector3(0, 99999, 0));
+        roomColorsArr.push(new THREE.Color(0x000000));
+        roomRadiiArr.push(0);
       }
     }
-    const tris=mcTriTable[cubeIdx];
-    for(let t=0;t<tris.length;t+=3){
-      if(tris[t]===-1)break;
-      const a=ev[tris[t]],b=ev[tris[t+1]],c=ev[tris[t+2]];
-      if(a&&b&&c){positions.push(a[0],a[1],a[2],c[0],c[1],c[2],b[0],b[1],b[2]);}
-    }
+
+    const sdfMat = new THREE.ShaderMaterial({
+      vertexShader: sdfVertSrc,
+      fragmentShader: sdfFragSrc,
+      side: THREE.DoubleSide,
+      uniforms: {
+        time: { value: 0 },
+        roomCenters: { value: roomCentersArr },
+        roomColorsU: { value: roomColorsArr },
+        roomRadii: { value: roomRadiiArr },
+        roomCount: { value: numRooms }
+      }
+    });
+
+    game.levelMaterial = sdfMat;
+
+    const mesh = new THREE.Mesh(levelGeo, sdfMat);
+    scene.add(mesh);
+    game.mapMeshes.push(mesh);
+    return mesh;
   }
 
-  const levelGeo=new THREE.BufferGeometry();
-  levelGeo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
-  levelGeo.computeVertexNormals();
+  // Worker available and enabled
+  if (game.levelWorker && typeof(game.levelWorker) !== 'string') {
+    // Dispatch low-res job first (gridRes=48)
+    game.levelWorker.onmessage = (e) => {
+      const {gridRes, positions} = e.data;
 
-  // Wall shader with branching vein pattern
-  const sdfVertSrc = [
-    'varying vec3 vWorldPos;',
-    'varying vec3 vNormal;',
-    'void main() {',
-    '  vec4 wp = modelMatrix * vec4(position, 1.0);',
-    '  vWorldPos = wp.xyz;',
-    '  vNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);',
-    '  gl_Position = projectionMatrix * viewMatrix * wp;',
-    '}'
-  ].join('\n');
-
-  const sdfFragSrc = [
-    'uniform float time;',
-    'varying vec3 vWorldPos;',
-    'varying vec3 vNormal;',
-    // Room color uniforms
-    'uniform vec3 roomCenters[5];',
-    'uniform vec3 roomColorsU[5];',
-    'uniform float roomRadii[5];',
-    '',
-    'float hash(vec2 p) {',
-    '  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);',
-    '}',
-    'float noise(vec2 p) {',
-    '  vec2 i = floor(p), f = fract(p);',
-    '  f = f * f * (3.0 - 2.0 * f);',
-    '  return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y);',
-    '}',
-    'float branches(vec3 wp) {',
-    '  float pattern = 0.0;',
-    '  float scale = 0.002;',
-    '  float weight = 0.7;',
-    '  vec2 p = vec2(wp.x + wp.z * 0.7, wp.y);',
-    '  for (int i = 0; i < 6; i++) {',
-    '    vec2 g = p * scale;',
-    '    float n = noise(g * 2.5 + float(i) * 1.3);',
-    '    float n2 = noise(g * 4.0 + float(i) * 2.7);',
-    '    g.x += sin(g.y * 1.5 + n * 4.0) * 0.4;',
-    '    g.y += cos(g.x * 0.8 + n2 * 2.0) * 0.15;',
-    '    vec2 f = abs(fract(g) - 0.5);',
-    '    float vein = 1.0 - smoothstep(0.0, 0.09, f.x);',
-    '    float branch = 1.0 - smoothstep(0.0, 0.14, f.x + f.y * 0.4);',
-    '    float cross1 = 1.0 - smoothstep(0.0, 0.10, f.y);',
-    '    pattern += (vein * 0.45 + branch * 0.35 + cross1 * 0.2) * weight;',
-    '    p = vec2(p.y * 0.7 + p.x * 0.7, -p.x * 0.5 + p.y * 0.85 + n * 40.0);',
-    '    scale *= 1.9;',
-    '    weight *= 0.50;',
-    '  }',
-    '  return clamp(pattern, 0.0, 1.0);',
-    '}',
-    '',
-    'void main() {',
-    // Determine wall color by distance to nearest room center
-    '  vec3 base = vec3(0.06, 0.08, 0.12);',
-    '  float minD = 99999.0;',
-    '  for (int i = 0; i < 5; i++) {',
-    '    float d = length(vWorldPos - roomCenters[i]);',
-    '    if (d < minD) { minD = d; base = roomColorsU[i]; }',
-    '  }',
-    // Vertical gradient
-    '  float yNorm = clamp((vWorldPos.y + 2000.0) / 4000.0, 0.0, 1.0);',
-    '  float gradientDark = 0.6 + yNorm * 0.4;',
-    '  vec3 brightBase = base * 2.5 + vec3(0.03, 0.04, 0.06);',
-    '  vec3 gradBase = brightBase * gradientDark;',
-    '  float branchPattern = branches(vWorldPos);',
-    '  float branchStrength = 0.7 + (1.0 - yNorm) * 0.3;',
-    '  branchPattern *= branchStrength;',
-    '  vec3 glow1 = base * 10.0 + vec3(0.05, 0.08, 0.15);',
-    '  vec3 glow2 = base * 18.0 + vec3(0.10, 0.15, 0.25);',
-    '  vec3 c = gradBase;',
-    '  c = mix(c, glow1, branchPattern * 0.6);',
-    '  c = mix(c, glow2, smoothstep(0.25, 0.65, branchPattern) * 0.8);',
-    '  c += (base * 8.0 + vec3(0.04, 0.06, 0.12)) * smoothstep(0.5, 0.9, branchPattern);',
-    // Lighting from view and normals
-    '  vec3 vd = normalize(cameraPosition - vWorldPos);',
-    '  float diff = max(dot(vNormal, vd), 0.0) * 0.4 + 0.6;',
-    '  c *= diff;',
-    '  gl_FragColor = vec4(c, 1.0);',
-    '}'
-  ].join('\n');
-
-  // Build room center and color uniform arrays
-  const roomCentersArr = rooms.map(r => new THREE.Vector3(r.x, r.y, r.z));
-  const roomColorsArr = [
-    new THREE.Color(0x1a3050), // center
-    new THREE.Color(0x3a1010), // spawn_a
-    new THREE.Color(0x103a10), // spawn_b
-    new THREE.Color(0x351828), // ready_a
-    new THREE.Color(0x183520), // ready_b
-  ];
-  const roomRadiiArr = rooms.map(r => r.r);
-
-  const levelMat = new THREE.ShaderMaterial({
-    vertexShader: sdfVertSrc,
-    fragmentShader: sdfFragSrc,
-    side: THREE.DoubleSide,
-    uniforms: {
-      time: { value: 0 },
-      roomCenters: { value: roomCentersArr },
-      roomColorsU: { value: roomColorsArr },
-      roomRadii: { value: roomRadiiArr }
-    }
-  });
-
-  // Store material for time updates
-  game.levelMaterial = levelMat;
-
-  const levelMesh = new THREE.Mesh(levelGeo, levelMat);
-  levelMesh.renderOrder = -10;
-  scene.add(levelMesh);
-  game.mapMeshes.push(levelMesh);
-
-  // --- ADD LIGHTS AND SPAWN POINTS FOR ROOMS AND TUNNELS ---
-  for (const rm of rooms) {
-    // Lights: color-matched to each room's identity
-    const lightConfigs = {
-      center:  { color: 0x6699cc, intensity: 1.2 },
-      spawn_a: { color: 0xcc6666, intensity: 1.0 },
-      spawn_b: { color: 0x66cc66, intensity: 1.0 },
-      ready_a: { color: 0xbb77aa, intensity: 0.9 },
-      ready_b: { color: 0x77bbaa, intensity: 0.9 },
+      if (gridRes === 48) {
+        const lowResMesh = createMeshFromPositions(positions, 48);
+        // Dispatch high-res job (gridRes=96)
+        game.levelWorker.postMessage({bounds, gridRes: 96, spheres: game.levelSpheres, cylinders: game.levelCylinders, smoothK: game.sdfSmoothK});
+      } else if (gridRes === 96) {
+        // Remove low-res, add high-res
+        if (game.mapMeshes.length > 0) {
+          const oldMesh = game.mapMeshes[0];
+          scene.remove(oldMesh);
+          game.mapMeshes.splice(0, 1);
+        }
+        createMeshFromPositions(positions, 96);
+        // Hide loading UI
+        if (mapGenHud) mapGenHud.style.display = 'none';
+      }
     };
-    const lc = lightConfigs[rm.id] || { color: 0x6699cc, intensity: 0.8 };
-    const li = new THREE.PointLight(lc.color, lc.intensity, rm.r * 4);
-    li.position.set(rm.x, rm.y, rm.z);
-    scene.add(li); game.mapMeshes.push(li);
 
-    // Team accent lights (brighter team color wash)
-    if (rm.id === 'spawn_a' || rm.id === 'ready_a') {
-      const al = new THREE.PointLight(0xff4444, 0.5, rm.r * 2.5);
-      al.position.set(rm.x, rm.y, rm.z);
-      scene.add(al); game.mapMeshes.push(al);
-    } else if (rm.id === 'spawn_b' || rm.id === 'ready_b') {
-      const al = new THREE.PointLight(0x44ff44, 0.5, rm.r * 2.5);
-      al.position.set(rm.x, rm.y, rm.z);
-      scene.add(al); game.mapMeshes.push(al);
+    // Start with low-res
+    game.levelWorker.postMessage({bounds, gridRes: 48, spheres: game.levelSpheres, cylinders: game.levelCylinders, smoothK: game.sdfSmoothK});
+  } else {
+    // Fallback: synchronous marching cubes (no worker)
+    const gridRes = 96;
+    const nx=gridRes,ny=gridRes,nz=gridRes;
+    const dx=(bounds.maxX-bounds.minX)/nx;
+    const dy=(bounds.maxY-bounds.minY)/ny;
+    const dz=(bounds.maxZ-bounds.minZ)/nz;
+
+    const vals=new Float32Array((nx+1)*(ny+1)*(nz+1));
+    const gi=(i,j,k)=>i+(nx+1)*(j+(ny+1)*k);
+    for(let k=0;k<=nz;k++)for(let j=0;j<=ny;j++)for(let i=0;i<=nx;i++){
+      vals[gi(i,j,k)]=worldSDF(bounds.minX+i*dx,bounds.minY+j*dy,bounds.minZ+k*dz);
     }
 
-    // Spawn/corridor points inside sphere (3D grid within 50% of radius)
-    const innerR = rm.r * 0.5;
-    const step = SU * 1.2;
-    for (let sx = rm.x - innerR; sx <= rm.x + innerR; sx += step) {
-      for (let sy = rm.y - innerR; sy <= rm.y + innerR; sy += step) {
-        for (let sz = rm.z - innerR; sz <= rm.z + innerR; sz += step) {
-          if ((sx - rm.x) ** 2 + (sy - rm.y) ** 2 + (sz - rm.z) ** 2 < innerR * innerR) {
-            game.corridorPoints.push({ x: sx, y: sy, z: sz, roomId: rm.id, roomType: rm.id, team: rm.team });
-          }
+    function mcInterp(i1,j1,k1,i2,j2,k2){
+      const v1=vals[gi(i1,j1,k1)],v2=vals[gi(i2,j2,k2)];
+      if(Math.abs(v1)<0.00001)return[bounds.minX+i1*dx,bounds.minY+j1*dy,bounds.minZ+k1*dz];
+      if(Math.abs(v2)<0.00001)return[bounds.minX+i2*dx,bounds.minY+j2*dy,bounds.minZ+k2*dz];
+      if(Math.abs(v1-v2)<0.00001)return[bounds.minX+i1*dx,bounds.minY+j1*dy,bounds.minZ+k1*dz];
+      const t=v1/(v1-v2);
+      return[bounds.minX+(i1+t*(i2-i1))*dx,bounds.minY+(j1+t*(j2-j1))*dy,bounds.minZ+(k1+t*(k2-k1))*dz];
+    }
+
+    const positions=[];
+    for(let k=0;k<nz;k++)for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){
+      const v=[vals[gi(i,j,k)],vals[gi(i+1,j,k)],vals[gi(i+1,j+1,k)],vals[gi(i,j+1,k)],vals[gi(i,j,k+1)],vals[gi(i+1,j,k+1)],vals[gi(i+1,j+1,k+1)],vals[gi(i,j+1,k+1)]];
+      let cubeIdx=0;
+      for(let c=0;c<8;c++)if(v[c]<0)cubeIdx|=(1<<c);
+      if(mcEdgeTable[cubeIdx]===0)continue;
+      const ci=[i,i+1,i+1,i,i,i+1,i+1,i];
+      const cj=[j,j,j+1,j+1,j,j,j+1,j+1];
+      const ck=[k,k,k,k,k+1,k+1,k+1,k+1];
+      const ev=new Array(12);
+      for(let e=0;e<12;e++){
+        if(mcEdgeTable[cubeIdx]&(1<<e)){
+          const[a,b]=mcEdgeVerts[e];
+          ev[e]=mcInterp(ci[a],cj[a],ck[a],ci[b],cj[b],ck[b]);
         }
       }
-    }
-  }
-
-  // Add spawn points and lights for tunnels (cylinders already populated above for SDF)
-  for (let ci = 0; ci < cylSegs.length; ci++) {
-    const seg = cylSegs[ci];
-    const segLen = seg.len;
-
-    // Spawn points along tunnel center (skip points inside room spheres)
-    const steps = Math.max(2, Math.floor(segLen / (SU * 1.5)));
-    for (let s = 1; s < steps; s++) {
-      const t = s / steps;
-      const px = seg.a.x + seg.dx * t, py = seg.a.y + seg.dy * t, pz = seg.a.z + seg.dz * t;
-      let inRoom = false;
-      for (const rm of rooms) {
-        if ((px - rm.x) ** 2 + (py - rm.y) ** 2 + (pz - rm.z) ** 2 < rm.r * rm.r * 0.6) { inRoom = true; break; }
-      }
-      if (!inRoom) {
-        game.corridorPoints.push({ x: px, y: py, z: pz, roomId: 'tun_' + ci, roomType: 'tunnel', team: null });
+      const tris=mcTriTable[cubeIdx];
+      for(let t=0;t<tris.length;t+=3){
+        if(tris[t]===-1)break;
+        const a=ev[tris[t]],b=ev[tris[t+1]],c=ev[tris[t+2]];
+        if(a&&b&&c){positions.push(a[0],a[1],a[2],c[0],c[1],c[2],b[0],b[1],b[2]);}
       }
     }
 
-    // Light at segment midpoint
-    const midX = (seg.a.x + seg.b.x) / 2, midY = (seg.a.y + seg.b.y) / 2, midZ = (seg.a.z + seg.b.z) / 2;
-    const tl = new THREE.PointLight(0x5588aa, 0.5, TR * 6);
-    tl.position.set(midX, midY, midZ);
-    scene.add(tl); game.mapMeshes.push(tl);
+    const posArray = new Float32Array(positions);
+    createMeshFromPositions(posArray, gridRes);
+    if (mapGenHud) mapGenHud.style.display = 'none';
   }
-
-  // Ambient fill
-  const amb = new THREE.AmbientLight(0x223344, 0.3);
-  scene.add(amb); game.mapMeshes.push(amb);
-
-  console.log('Built: ' + level.name + ' | ' + game.levelSpheres.length + ' spheres, ' + game.levelCylinders.length + ' cylinders, ' + game.corridorPoints.length + ' nav points');
 }
+
 
 // ---- SPAWN HELPERS ----
 // Returns a random position guaranteed to be inside a room.
@@ -7324,6 +8045,8 @@ function gameLoop(timestamp) {
     game.projectiles[i].update(dt);
     if (!game.projectiles[i].alive) game.projectiles.splice(i, 1);
   }
+
+  updateDynamicObjects(dt);
 
   updateParticles(dt);
   updateEffects(dt);
