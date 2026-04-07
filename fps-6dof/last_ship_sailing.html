@@ -1900,11 +1900,12 @@ function resolveShipShipCollisions(dt) {
             const impactSpeed = Math.abs(relVn);
             if (impactSpeed > 80) {
               const ramDmg = impactSpeed * RAM_DAMAGE_MULT;
+              // Dash ramming: the dasher takes no damage, target takes full
               if (a.isPlayer) {
-                playerTakeDamage(ramDmg, b.bot ? b.bot : 'world', null);
+                if (!player.dashActive) playerTakeDamage(ramDmg, b.bot ? b.bot : 'world', null);
                 if (b.bot) b.bot.takeDamage(ramDmg, 'player');
               } else if (b.isPlayer) {
-                playerTakeDamage(ramDmg, a.bot ? a.bot : 'world', null);
+                if (!player.dashActive) playerTakeDamage(ramDmg, a.bot ? a.bot : 'world', null);
                 if (a.bot) a.bot.takeDamage(ramDmg, 'player');
               } else {
                 // Bot vs bot
