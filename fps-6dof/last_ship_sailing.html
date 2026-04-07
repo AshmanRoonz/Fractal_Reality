@@ -1513,11 +1513,19 @@ function sdfSmin(a,b,k) {
 }
 
 // Evaluate the world SDF: negative = inside playable space, positive = solid wall
+// Rooms blend smoothly with each other and with tunnels (smin),
+// but tunnels use hard union (min) between each other so parallel tunnels stay separate.
 function worldSDF(px,py,pz) {
-  const sk = game.sdfSmoothK || 15;
-  let d = 99999;
-  for(const s of (game.levelSpheres||[])) d=sdfSmin(d,sdSphere(px,py,pz,s.cx,s.cy,s.cz,s.r),sk);
-  for(const c of (game.levelCylinders||[])) d=sdfSmin(d,sdCylinder(px,py,pz,c.ax,c.ay,c.az,c.bx,c.by,c.bz,c.r),sk);
+  const sk = game.sdfSmoothK || 45;
+  // 1) Room-only SDF (smooth blend between rooms)
+  let roomD = 99999;
+  for(const s of (game.levelSpheres||[])) roomD = sdfSmin(roomD, sdSphere(px,py,pz,s.cx,s.cy,s.cz,s.r), sk);
+  // 2) Each tunnel blends with rooms (smooth junctions), but tunnels don't blend with each other
+  let d = roomD;
+  for(const c of (game.levelCylinders||[])) {
+    const cd = sdCylinder(px,py,pz,c.ax,c.ay,c.az,c.bx,c.by,c.bz,c.r);
+    d = Math.min(d, sdfSmin(roomD, cd, sk));
+  }
   return d;
 }
 
