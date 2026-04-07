@@ -749,7 +749,7 @@ async function joinRoom() {
 
   try {
     // Dynamic import of trystero (loaded via module script tag)
-    const trystero = await import('https://esm.sh/trystero/torrent');
+    const trystero = await import('https://esm.sh/@trystero-p2p/torrent');
     const { joinRoom: trysteroJoin } = trystero;
 
     net.myPeerId = generatePeerId();
