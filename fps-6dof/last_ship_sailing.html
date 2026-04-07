@@ -1796,8 +1796,8 @@ function resolveCollision(pos, velocity, radius) {
   // If SDF > 0, we're outside; push back in.
   // If SDF is small positive or near zero, we're near a wall; push inward.
 
-  const CONTAIN_RANGE = radius * 1.8;
-  const CONTAIN_STRENGTH = 6000;
+  const CONTAIN_RANGE = radius * 2.5;
+  const CONTAIN_STRENGTH = 12000;
 
   const sdfVal = worldSDF(pos.x, pos.y, pos.z);
   // sdfVal < 0 means inside (negative = inside the union of shapes)
@@ -1809,19 +1809,19 @@ function resolveCollision(pos, velocity, radius) {
 
     if (margin < 0) {
       // Outside the level: hard push inside
-      pos.add(normal.clone().multiplyScalar(-margin + radius + 2));
+      pos.add(normal.clone().multiplyScalar(-margin + radius + 4));
       const vn = velocity.dot(normal);
-      if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
+      if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.5));
+    } else if (margin < radius * 0.8) {
+      // Dangerously close: hard clamp position, kill velocity into wall
+      pos.add(normal.clone().multiplyScalar(radius * 0.8 - margin + 2));
+      const vn = velocity.dot(normal);
+      if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.4));
     } else {
-      // Inside but near wall: gentle containment force
+      // Inside but near wall: progressive containment force
       const ratio = 1 - (margin / CONTAIN_RANGE);
       const force = CONTAIN_STRENGTH * ratio * ratio;
       velocity.add(normal.clone().multiplyScalar(force * (1/60)));
-      if (margin < radius) {
-        pos.add(normal.clone().multiplyScalar(radius - margin + 1));
-        const vn = velocity.dot(normal);
-        if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
-      }
     }
   }
 
@@ -3855,7 +3855,7 @@ function updatePlayerMovement(dt) {
 
     while (simTimeRemaining > 0.0001 && loopCount < MAX_PLAYER_SIM_LOOPS) {
       const moveLen = player.velocity.length() * simTimeRemaining;
-      const MAX_STEP = collRadius * 0.8;
+      const MAX_STEP = collRadius * 0.5;
       const subSteps = Math.max(1, Math.ceil(moveLen / MAX_STEP));
       const subDt = simTimeRemaining / subSteps;
 
@@ -4226,6 +4226,23 @@ function fireSpread(origin, dir, w) {
     const end = origin.clone().add(spreadDir.clone().multiplyScalar(levelDist));
     spawnTracer(origin, end, 0xffaa44);
 
+    // Check destructible obstacles first
+    let hitObstacle = false;
+    let bestObstDist = Infinity;
+    let bestObst = null;
+    for (const obj of game.dynamicObjects) {
+      if (!obj.alive) continue;
+      const toObj = new THREE.Vector3().subVectors(obj.position, origin);
+      const proj = toObj.dot(spreadDir);
+      if (proj < 0 || proj > Math.min(w.range, levelDist)) continue;
+      const closest = origin.clone().add(spreadDir.clone().multiplyScalar(proj));
+      if (closest.distanceTo(obj.position) < (obj.collisionRadius || 60) && proj < bestObstDist) {
+        bestObst = obj;
+        bestObstDist = proj;
+      }
+    }
+
+    let hitBot = false;
     for (const bot of game.entities) {
       if (!bot.alive || bot.team === player.team) continue;
       const toBot = new THREE.Vector3().subVectors(bot.position, origin);
@@ -4233,6 +4250,8 @@ function fireSpread(origin, dir, w) {
       if (proj < 0 || proj > Math.min(w.range, levelDist)) continue;
       const closest = origin.clone().add(spreadDir.clone().multiplyScalar(proj));
       if (closest.distanceTo(bot.position) < bot.chassis.hullLength * 1.2) {
+        // Obstacle blocks this pellet if it's closer
+        if (bestObst && bestObstDist < proj) break;
         // Spread damage falloff: significant drop-off at range (shotgun behavior)
         const rangeFalloff = Math.max(0.3, 1 - (proj / w.range) * 0.7);
         let finalDmg = w.damage * rangeFalloff;
@@ -4244,7 +4263,22 @@ function fireSpread(origin, dir, w) {
           showHitMarker();
           spawnImpactSparks(closest, 3);
         }
+        hitBot = true;
         break;
+      }
+    }
+
+    // If obstacle was closer and no bot was hit, damage the obstacle
+    if (bestObst && !hitBot) {
+      const rangeRatio = bestObstDist / w.range;
+      const proximityBoost = Math.max(0.3, 1 - rangeRatio * 0.7);
+      const dealt = bestObst.takeDamage(w.damage * proximityBoost);
+      if (dealt > 0) {
+        player.damageDealt += dealt;
+        player.coreMeter = Math.min(100, player.coreMeter + dealt / 100);
+        showHitMarker();
+        const hitPt = origin.clone().add(spreadDir.clone().multiplyScalar(bestObstDist));
+        spawnImpactSparks(hitPt, 2);
       }
     }
   }
