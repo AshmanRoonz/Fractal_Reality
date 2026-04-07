@@ -1479,80 +1479,6 @@ scene.add(hemiLight);
 
 // (Old static buildLevelGeometry removed; replaced by buildRoomGraphLevel)
 
-// ---- SDF LEVEL SYSTEM ----
-// Global SDF functions for the level geometry.
-// These replace the CSG shader approach with real geometry.
-
-function sdSphere(px,py,pz,cx,cy,cz,r) {
-  const dx=px-cx,dy=py-cy,dz=pz-cz;
-  return Math.sqrt(dx*dx+dy*dy+dz*dz)-r;
-}
-
-function sdCylinder(px,py,pz,ax,ay,az,bx,by,bz,r) {
-  const bax=bx-ax,bay=by-ay,baz=bz-az;
-  const pax=px-ax,pay=py-ay,paz=pz-az;
-  const baLen2=bax*bax+bay*bay+baz*baz;
-  if(baLen2<0.001) return sdSphere(px,py,pz,ax,ay,az,r);
-  const t=Math.max(0,Math.min(1,(pax*bax+pay*bay+paz*baz)/baLen2));
-  const cx2=ax+bax*t,cy2=ay+bay*t,cz2=az+baz*t;
-  const dx=px-cx2,dy=py-cy2,dz=pz-cz2;
-  const perpDist=Math.sqrt(dx*dx+dy*dy+dz*dz);
-  const baLen=Math.sqrt(baLen2);
-  const axialFromMid=Math.abs(t-0.5)*baLen;
-  const halfLen=baLen*0.5;
-  const dAxial=axialFromMid-halfLen;
-  const dPerp=perpDist-r;
-  if(dPerp>0&&dAxial>0) return Math.sqrt(dPerp*dPerp+dAxial*dAxial);
-  return Math.max(dPerp,dAxial);
-}
-
-function sdfSmin(a,b,k) {
-  if(k<=0.001) return Math.min(a,b);
-  const h=Math.max(0,Math.min(1,0.5+0.5*(b-a)/k));
-  return b*(1-h)+a*h-k*h*(1-h);
-}
-
-// Evaluate the world SDF: negative = inside playable space, positive = solid wall
-function worldSDF(px,py,pz) {
-  const sk = game.sdfSmoothK || 15;
-  let d = 99999;
-  for(const s of (game.levelSpheres||[])) d=sdfSmin(d,sdSphere(px,py,pz,s.cx,s.cy,s.cz,s.r),sk);
-  for(const c of (game.levelCylinders||[])) d=sdfSmin(d,sdCylinder(px,py,pz,c.ax,c.ay,c.az,c.bx,c.by,c.bz,c.r),sk);
-  return d;
-}
-
-// SDF gradient (surface normal) via central differences
-function sdfNormal(px,py,pz) {
-  const e = 2.0;
-  const nx = worldSDF(px+e,py,pz) - worldSDF(px-e,py,pz);
-  const ny = worldSDF(px,py+e,pz) - worldSDF(px,py-e,pz);
-  const nz = worldSDF(px,py,pz+e) - worldSDF(px,py,pz-e);
-  const len = Math.sqrt(nx*nx+ny*ny+nz*nz) || 1;
-  return new THREE.Vector3(nx/len, ny/len, nz/len);
-}
-
-// SDF ray marching: find where a ray hits the wall (SDF crosses from negative to positive)
-function sdfRaycast(ox,oy,oz,dx,dy,dz,maxDist) {
-  // Sphere tracing through the SDF; finds where ray exits playable space
-  let t = 4.0; // start ahead to avoid self-hits near walls
-  const MAX_STEPS = 80;
-  let prevD = -999;
-  for(let i=0;i<MAX_STEPS;i++){
-    if(t>=maxDist) return maxDist;
-    const px=ox+dx*t, py=oy+dy*t, pz=oz+dz*t;
-    const d = worldSDF(px,py,pz);
-    // Wall hit: SDF crossed from negative (inside) to positive (outside)
-    if(d > 0 && prevD < 0) return t;
-    // Also catch near-surface hits when SDF is very small positive
-    if(d > 0 && d < 1.5) return t;
-    prevD = d;
-    // Step by |d| (sphere tracing) but enforce minimum step to avoid stalling
-    const step = Math.max(Math.abs(d) * 0.85, 8.0);
-    t += step;
-  }
-  return maxDist;
-}
-
 // ---- COLLISION HELPERS ----
 
 function checkBoxCollision(pos, radius) {
@@ -1609,35 +1535,105 @@ function resolveCollision(pos, velocity, radius) {
     }
   }
 
-  // 2) Containment: push INWARD using SDF.
-  // If SDF > 0, we're outside; push back in.
-  // If SDF is small positive or near zero, we're near a wall; push inward.
+  // 2) Containment: push INWARD to keep player inside the sphere/cylinder union.
+  // The player is "contained" if inside ANY sphere OR inside ANY cylinder.
+  // If near the wall of the current container, apply inward repulsion.
+  // If outside everything, hard-push to nearest interior.
 
-  const CONTAIN_RANGE = radius * 1.8;
-  const CONTAIN_STRENGTH = 6000;
+  const CONTAIN_RANGE = radius * 3;    // start pushing when this close to wall
+  const CONTAIN_STRENGTH = 12000;      // strong containment force
+  const spheres = game.levelSpheres || [];
+  const cylinders = game.levelCylinders || [];
 
-  const sdfVal = worldSDF(pos.x, pos.y, pos.z);
-  // sdfVal < 0 means inside (negative = inside the union of shapes)
-  // The "margin" from the wall is -sdfVal when inside
-  const margin = -sdfVal;
+  // Find which containers the player is inside, and how close to each wall
+  let bestInside = null; // the container we're deepest inside (most margin from wall)
+  let bestMargin = -Infinity;
 
-  if (margin < CONTAIN_RANGE) {
-    const normal = sdfNormal(pos.x, pos.y, pos.z).negate(); // inward normal
+  // Check spheres
+  for (const s of spheres) {
+    const dx = pos.x - s.cx, dy = pos.y - s.cy, dz = pos.z - s.cz;
+    const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+    const margin = s.r - dist; // positive = inside, negative = outside
+    if (margin > bestMargin) {
+      bestMargin = margin;
+      bestInside = { type: 'sphere', s, dist, dx, dy, dz };
+    }
+  }
 
-    if (margin < 0) {
-      // Outside the level: hard push inside
-      pos.add(normal.clone().multiplyScalar(-margin + radius + 2));
-      const vn = velocity.dot(normal);
-      if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
+  // Check cylinders
+  for (const c of cylinders) {
+    // Project pos onto cylinder axis (a→b)
+    const abx = c.bx - c.ax, aby = c.by - c.ay, abz = c.bz - c.az;
+    const abLenSq = abx*abx + aby*aby + abz*abz;
+    if (abLenSq < 1) continue;
+    const apx = pos.x - c.ax, apy = pos.y - c.ay, apz = pos.z - c.az;
+    let t = (apx*abx + apy*aby + apz*abz) / abLenSq;
+    t = Math.max(-0.05, Math.min(1.05, t)); // slight overrun allowed at ends
+    // Closest point on axis
+    const cpx = c.ax + abx * t, cpy = c.ay + aby * t, cpz = c.az + abz * t;
+    const dx = pos.x - cpx, dy = pos.y - cpy, dz = pos.z - cpz;
+    const radDist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+    const margin = c.r - radDist;
+    if (margin > bestMargin) {
+      bestMargin = margin;
+      bestInside = { type: 'cylinder', c, radDist, dx, dy, dz, t };
+    }
+  }
+
+  if (!bestInside) return; // no geometry yet
+
+  if (bestMargin < CONTAIN_RANGE) {
+    // Near the wall (or outside): push inward
+    const normal = new THREE.Vector3();
+
+    if (bestInside.type === 'sphere') {
+      const s = bestInside.s;
+      const dist = bestInside.dist;
+      if (dist < 0.1) {
+        // At center; no push needed
+      } else {
+        // Normal points from pos toward center (inward)
+        normal.set(-bestInside.dx / dist, -bestInside.dy / dist, -bestInside.dz / dist);
+
+        if (bestMargin < 0) {
+          // Outside sphere: hard push inside
+          pos.add(normal.clone().multiplyScalar(-bestMargin + radius + 2));
+          const vn = velocity.dot(normal);
+          if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
+        } else {
+          // Inside but near wall: gentle containment force
+          const ratio = 1 - (bestMargin / CONTAIN_RANGE); // 0 at safe distance, 1 at wall
+          const force = CONTAIN_STRENGTH * ratio * ratio;
+          velocity.add(normal.clone().multiplyScalar(force * (1/60)));
+          if (bestMargin < radius) {
+            pos.add(normal.clone().multiplyScalar(radius - bestMargin + 1));
+            const vn = velocity.dot(normal);
+            if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
+          }
+        }
+      }
     } else {
-      // Inside but near wall: gentle containment force
-      const ratio = 1 - (margin / CONTAIN_RANGE);
-      const force = CONTAIN_STRENGTH * ratio * ratio;
-      velocity.add(normal.clone().multiplyScalar(force * (1/60)));
-      if (margin < radius) {
-        pos.add(normal.clone().multiplyScalar(radius - margin + 1));
-        const vn = velocity.dot(normal);
-        if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
+      // Cylinder: push toward axis
+      const radDist = bestInside.radDist;
+      if (radDist < 0.1) {
+        // On axis; no radial push needed
+      } else {
+        normal.set(-bestInside.dx / radDist, -bestInside.dy / radDist, -bestInside.dz / radDist);
+
+        if (bestMargin < 0) {
+          pos.add(normal.clone().multiplyScalar(-bestMargin + radius + 2));
+          const vn = velocity.dot(normal);
+          if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
+        } else {
+          const ratio = 1 - (bestMargin / CONTAIN_RANGE);
+          const force = CONTAIN_STRENGTH * ratio * ratio;
+          velocity.add(normal.clone().multiplyScalar(force * (1/60)));
+          if (bestMargin < radius) {
+            pos.add(normal.clone().multiplyScalar(radius - bestMargin + 1));
+            const vn = velocity.dot(normal);
+            if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
+          }
+        }
       }
     }
   }
@@ -1645,9 +1641,22 @@ function resolveCollision(pos, velocity, radius) {
 
 // Helper: is a point inside any cylinder (tunnel)?
 function pointInAnyCylinder(px, py, pz) {
-  // SDF-based: point is "in a cylinder" if it's inside the level but not inside any sphere
-  // This is used for CSG hole detection; with SDF we just check if inside the level
-  return worldSDF(px, py, pz) < 0;
+  for (const cyl of (game.levelCylinders || [])) {
+    const ax = cyl.ax, ay = cyl.ay, az = cyl.az;
+    const abx = cyl.bx - ax, aby = cyl.by - ay, abz = cyl.bz - az;
+    const abLen2 = abx*abx + aby*aby + abz*abz;
+    if (abLen2 < 1) continue;
+    const dx = px - ax, dy = py - ay, dz = pz - az;
+    const t = (dx*abx + dy*aby + dz*abz) / abLen2;
+    // Extend generously past endpoints to cover sphere-cylinder CSG overlap region
+    const abLen = Math.sqrt(abLen2);
+    const ext = (cyl.r * 3) / abLen; // extend by 3 radii on each end
+    if (t < -ext || t > 1 + ext) continue;
+    const cx = ax + abx*t, cy = ay + aby*t, cz = az + abz*t;
+    const ex = px - cx, ey = py - cy, ez = pz - cz;
+    if (ex*ex + ey*ey + ez*ez < cyl.r * cyl.r) return true;
+  }
+  return false;
 }
 // Helper: is a point inside any sphere (room)?
 function pointInAnySphere(px, py, pz) {
@@ -1659,10 +1668,12 @@ function pointInAnySphere(px, py, pz) {
 }
 
 function raycastLevel(origin, dir, maxDist) {
-  // SDF ray march: no CSG awareness needed, the SDF handles junctions naturally
+  // Ray vs sphere/cylinder walls with CSG awareness:
+  // Sphere wall hits that land inside a cylinder (tunnel opening) are skipped.
+  // Cylinder wall hits that land inside a sphere (room opening) are skipped.
   let nearest = maxDist;
 
-  // Still check obstacle boxes (if any exist in future)
+  // 1) Ray vs obstacle boxes (zero-alloc: use scalars instead of Vector3)
   const idx = 1/dir.x, idy = 1/dir.y, idz = 1/dir.z;
   for (const box of game.levelBoxes) {
     const t1x = (box.min.x - origin.x) * idx, t1y = (box.min.y - origin.y) * idy, t1z = (box.min.z - origin.z) * idz;
@@ -1672,19 +1683,130 @@ function raycastLevel(origin, dir, maxDist) {
     if (enter < exit && enter > 0 && enter < nearest) nearest = enter;
   }
 
-  // SDF ray march for sphere/cylinder walls
-  const sdfHit = sdfRaycast(origin.x, origin.y, origin.z, dir.x, dir.y, dir.z, nearest);
-  if (sdfHit < nearest) nearest = sdfHit;
+  // 2) Ray vs sphere walls (both entry AND exit intersections)
+  // Skip hits that land inside a cylinder (the tunnel opening)
+  for (const s of (game.levelSpheres || [])) {
+    const ocx = origin.x - s.cx, ocy = origin.y - s.cy, ocz = origin.z - s.cz;
+    const a = dir.x*dir.x + dir.y*dir.y + dir.z*dir.z;
+    const b = 2 * (ocx*dir.x + ocy*dir.y + ocz*dir.z);
+    const c = ocx*ocx + ocy*ocy + ocz*ocz - s.r*s.r;
+    const disc = b*b - 4*a*c;
+    if (disc < 0) continue;
+    const sqrtD = Math.sqrt(disc);
+    const inv2a = 1 / (2 * a);
+    const t1 = (-b - sqrtD) * inv2a; // entry (near intersection)
+    const t2 = (-b + sqrtD) * inv2a; // exit (far intersection)
+    // Check entry point (ray entering sphere from outside = wall)
+    if (t1 > 1 && t1 < nearest) {
+      const hx = origin.x + dir.x * t1, hy = origin.y + dir.y * t1, hz = origin.z + dir.z * t1;
+      if (!pointInAnyCylinder(hx, hy, hz)) {
+        nearest = t1;
+      }
+    }
+    // Check exit point (ray exiting sphere from inside = wall)
+    if (t2 > 1 && t2 < nearest) {
+      const hx = origin.x + dir.x * t2, hy = origin.y + dir.y * t2, hz = origin.z + dir.z * t2;
+      if (!pointInAnyCylinder(hx, hy, hz)) {
+        nearest = t2;
+      }
+    }
+  }
+
+  // 3) Ray vs cylinder walls (both entry AND exit, clamped to segment)
+  // Skip hits that land inside a sphere (room opening)
+  for (const cyl of (game.levelCylinders || [])) {
+    const ax = cyl.ax, ay = cyl.ay, az = cyl.az;
+    const abx = cyl.bx - ax, aby = cyl.by - ay, abz = cyl.bz - az;
+    const abLen = Math.sqrt(abx*abx + aby*aby + abz*abz);
+    if (abLen < 1) continue;
+    const dax = dir.x, day = dir.y, daz = dir.z;
+    const ocx = origin.x - ax, ocy = origin.y - ay, ocz = origin.z - az;
+    const nax = abx/abLen, nay = aby/abLen, naz = abz/abLen;
+    const dn = dax*nax + day*nay + daz*naz;
+    const dpx = dax - dn*nax, dpy = day - dn*nay, dpz = daz - dn*naz;
+    const ocn = ocx*nax + ocy*nay + ocz*naz;
+    const opx = ocx - ocn*nax, opy = ocy - ocn*nay, opz = ocz - ocn*naz;
+    const A = dpx*dpx + dpy*dpy + dpz*dpz;
+    const B = 2*(dpx*opx + dpy*opy + dpz*opz);
+    const C = opx*opx + opy*opy + opz*opz - cyl.r*cyl.r;
+    const disc = B*B - 4*A*C;
+    if (disc < 0 || A < 1e-10) continue;
+    const sqrtD = Math.sqrt(disc);
+    const inv2A = 1 / (2*A);
+    const ct1 = (-B - sqrtD) * inv2A; // entry (near)
+    const ct2 = (-B + sqrtD) * inv2A; // exit (far)
+    // Check both entry and exit intersections
+    const tVals = [ct1, ct2];
+    for (const tv of tVals) {
+      if (tv > 1 && tv < nearest) {
+        const hitT = ocn + dn * tv;
+        if (hitT >= -cyl.r * 3 && hitT <= abLen + cyl.r * 3) {
+          const hx = origin.x + dir.x * tv, hy = origin.y + dir.y * tv, hz = origin.z + dir.z * tv;
+          if (!pointInAnySphere(hx, hy, hz)) {
+            nearest = tv;
+          }
+        }
+      }
+    }
+  }
 
   return nearest;
 }
 
 // Get wall surface normal at a point (for projectile bouncing)
 function getWallNormal(point) {
-  // SDF gradient gives the exact surface normal; no CSG hole detection needed
-  const n = sdfNormal(point.x, point.y, point.z);
-  // Negate because we want inward-facing normal (SDF gradient points outward)
-  return n.negate();
+  const spheres = game.levelSpheres || [];
+  const cylinders = game.levelCylinders || [];
+  let bestDist = Infinity;
+  let bestNormal = new THREE.Vector3(0, 1, 0);
+
+  // Check spheres: normal points inward (toward center) since we're inside
+  for (const s of spheres) {
+    const dx = point.x - s.cx, dy = point.y - s.cy, dz = point.z - s.cz;
+    const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    const wallDist = Math.abs(dist - s.r);
+    // Skip if this point is at a tunnel opening (CSG hole)
+    if (pointInAnyCylinder(point.x, point.y, point.z)) continue;
+    if (wallDist < bestDist) {
+      bestDist = wallDist;
+      if (dist > 0.1) bestNormal = new THREE.Vector3(-dx/dist, -dy/dist, -dz/dist);
+    }
+  }
+
+  // Check cylinders: normal points inward (toward axis)
+  for (const c of cylinders) {
+    const abx = c.bx - c.ax, aby = c.by - c.ay, abz = c.bz - c.az;
+    const abLen2 = abx*abx + aby*aby + abz*abz;
+    if (abLen2 < 1) continue;
+    const apx = point.x - c.ax, apy = point.y - c.ay, apz = point.z - c.az;
+    const t = (apx*abx + apy*aby + apz*abz) / abLen2;
+    if (t < -0.05 || t > 1.05) continue;
+    const cpx = c.ax + abx*t, cpy = c.ay + aby*t, cpz = c.az + abz*t;
+    const dx = point.x - cpx, dy = point.y - cpy, dz = point.z - cpz;
+    const radDist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    const wallDist = Math.abs(radDist - c.r);
+    // Skip if at a room opening (CSG hole)
+    if (pointInAnySphere(point.x, point.y, point.z)) continue;
+    if (wallDist < bestDist) {
+      bestDist = wallDist;
+      if (radDist > 0.1) bestNormal = new THREE.Vector3(-dx/radDist, -dy/radDist, -dz/radDist);
+    }
+  }
+
+  // Check obstacle boxes: normal points away from box surface
+  for (const box of game.levelBoxes) {
+    const cx = Math.max(box.min.x, Math.min(point.x, box.max.x));
+    const cy = Math.max(box.min.y, Math.min(point.y, box.max.y));
+    const cz = Math.max(box.min.z, Math.min(point.z, box.max.z));
+    const dx = point.x - cx, dy = point.y - cy, dz = point.z - cz;
+    const d = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    if (d < bestDist && d > 0.01) {
+      bestDist = d;
+      bestNormal = new THREE.Vector3(dx/d, dy/d, dz/d);
+    }
+  }
+
+  return bestNormal;
 }
 
 // ---- SHIP MESH CREATION ----
@@ -2055,12 +2177,12 @@ class Bot {
       this.mesh.lookAt(lookAt);
     }
 
-    // AI: fire at player (with line-of-sight check and team check)
+    // AI: fire at player (with line-of-sight check)
     this.fireTimer -= dt;
     if (this.fireTimer <= 0 && game.state === 'playing') {
       const toPlayer = new THREE.Vector3().subVectors(player.position, this.position);
       const distToPlayer = toPlayer.length();
-      if (distToPlayer < this.loadout.weapon.range && player.shipState !== 'dead' && player.team !== this.team) {
+      if (distToPlayer < this.loadout.weapon.range && player.shipState !== 'dead') {
         const dot = toPlayer.normalize().dot(this.targetDir);
         if (dot > 0.7) {
           // LOS check: raycast toward player, only fire if path is clear
@@ -2372,7 +2494,7 @@ class Projectile {
           );
           spawnLightningBolt(this.position, wallArc, 0x2288cc, 0.08, 0, 0.8);
         }
-        this.arcLightTimer = 0.14 + Math.random() * 0.08; // ~4-7 bolts/sec
+        this.arcLightTimer = 0.10 + Math.random() * 0.06; // ~6-10 bolts/sec (was 14-25)
       }
       // Spark particles along the path
       for (let sp = 0; sp < 2; sp++) {
@@ -2635,73 +2757,85 @@ function spawnTracer(from, to, color) {
   game.effects.push({ mesh: glow, lifetime: 0.12, age: 0, type: 'tracer' });
 }
 
-// Lightning bolt: jagged line from A to B using a single merged BufferGeometry (1 draw call)
+// Lightning bolt: jagged branching line from A to B with forks
 function spawnLightningBolt(from, to, color, lifetime, branches, thickness) {
   color = color || 0x44aaff;
   lifetime = lifetime || 0.2;
-  branches = Math.min(branches || 3, 2); // cap branches for perf
+  branches = branches || 3;
   thickness = thickness || 2;
   const dir = new THREE.Vector3().subVectors(to, from);
   const len = dir.length();
   if (len < 5) return;
-  const steps = Math.max(3, Math.floor(len / 100)); // coarser segments for perf
+  const steps = Math.max(4, Math.floor(len / 70)); // fewer segments (was /40)
   const step = dir.clone().divideScalar(steps);
+  // Main bolt: jitter each segment perpendicular to direction
   const up = new THREE.Vector3(0, 1, 0);
   const right = new THREE.Vector3().crossVectors(dir.clone().normalize(), up);
   if (right.length() < 0.1) right.set(1, 0, 0);
   right.normalize();
   const upPerp = new THREE.Vector3().crossVectors(dir.clone().normalize(), right).normalize();
-  // Build jagged point chain
   const points = [from.clone()];
   for (let i = 1; i < steps; i++) {
     const base = from.clone().add(step.clone().multiplyScalar(i));
-    const jitter = (1 - Math.abs(i / steps - 0.5) * 2) * len * 0.08;
+    const jitter = (1 - Math.abs(i / steps - 0.5) * 2) * len * 0.08; // max jitter at midpoint
     base.add(right.clone().multiplyScalar((Math.random() - 0.5) * jitter));
     base.add(upPerp.clone().multiplyScalar((Math.random() - 0.5) * jitter));
     points.push(base);
   }
   points.push(to.clone());
-  // Add branch fork points
-  const allChains = [points];
+  // Draw main bolt as connected line segments (cylinders)
+  for (let i = 0; i < points.length - 1; i++) {
+    const segFrom = points[i], segTo = points[i + 1];
+    const segDir = new THREE.Vector3().subVectors(segTo, segFrom);
+    const segLen = segDir.length();
+    const mid = new THREE.Vector3().addVectors(segFrom, segTo).multiplyScalar(0.5);
+    // Core (bright thin)
+    const coreGeo = new THREE.CylinderGeometry(thickness * 0.5, thickness * 0.5, segLen, 3, 1);
+    coreGeo.rotateX(Math.PI / 2);
+    const coreMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending });
+    const core = new THREE.Mesh(coreGeo, coreMat);
+    core.position.copy(mid); core.lookAt(segTo);
+    scene.add(core);
+    game.effects.push({ mesh: core, lifetime: lifetime, age: 0, type: 'tracer' });
+    // Glow (wider, colored)
+    const glowGeo = new THREE.CylinderGeometry(thickness * 2.5, thickness * 2.5, segLen, 3, 1);
+    glowGeo.rotateX(Math.PI / 2);
+    const glowMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending });
+    const glow = new THREE.Mesh(glowGeo, glowMat);
+    glow.position.copy(mid); glow.lookAt(segTo);
+    scene.add(glow);
+    game.effects.push({ mesh: glow, lifetime: lifetime * 1.5, age: 0, type: 'tracer' });
+  }
+  // Branch forks: shorter bolts splitting off from random midpoints
   for (let b = 0; b < branches; b++) {
     const idx = 1 + Math.floor(Math.random() * (points.length - 2));
     const forkDir = new THREE.Vector3(
-      (Math.random()-0.5), (Math.random()-0.5), (Math.random()-0.5)
-    ).normalize().multiplyScalar(len * (0.08 + Math.random() * 0.12));
-    const forkPts = [points[idx].clone()];
-    const forkSteps = 2;
-    const fStep = forkDir.clone().divideScalar(forkSteps);
+      (Math.random() - 0.5), (Math.random() - 0.5), (Math.random() - 0.5)
+    ).normalize().multiplyScalar(len * (0.1 + Math.random() * 0.15));
+    const forkEnd = points[idx].clone().add(forkDir);
+    // Mini bolt (2-3 segments)
+    const forkSteps = 2 + Math.floor(Math.random() * 2);
+    const forkStep = forkDir.clone().divideScalar(forkSteps);
+    let prev = points[idx].clone();
     for (let f = 0; f < forkSteps; f++) {
-      const prev = forkPts[forkPts.length - 1];
-      forkPts.push(prev.clone().add(fStep).add(
-        new THREE.Vector3((Math.random()-0.5)*15, (Math.random()-0.5)*15, (Math.random()-0.5)*15)
-      ));
+      const next = prev.clone().add(forkStep).add(
+        new THREE.Vector3((Math.random()-0.5)*20, (Math.random()-0.5)*20, (Math.random()-0.5)*20)
+      );
+      const fLen = prev.distanceTo(next);
+      const fMid = new THREE.Vector3().addVectors(prev, next).multiplyScalar(0.5);
+      const fGeo = new THREE.CylinderGeometry(thickness * 0.3, thickness * 0.3, fLen, 3, 1);
+      fGeo.rotateX(Math.PI / 2);
+      const fMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+      const fMesh = new THREE.Mesh(fGeo, fMat);
+      fMesh.position.copy(fMid); fMesh.lookAt(next);
+      scene.add(fMesh);
+      game.effects.push({ mesh: fMesh, lifetime: lifetime * 0.8, age: 0, type: 'tracer' });
+      prev = next;
     }
-    allChains.push(forkPts);
   }
-  // Build a single line geometry from all chains (uses GL_LINE; very cheap)
-  const lineVerts = [];
-  for (const chain of allChains) {
-    for (let i = 0; i < chain.length - 1; i++) {
-      lineVerts.push(chain[i].x, chain[i].y, chain[i].z);
-      lineVerts.push(chain[i+1].x, chain[i+1].y, chain[i+1].z);
-    }
-  }
-  const lineGeo = new THREE.BufferGeometry();
-  lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(lineVerts, 3));
-  // Core line (bright white)
-  const coreMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, linewidth: 1 });
-  const coreLine = new THREE.LineSegments(lineGeo, coreMat);
-  scene.add(coreLine);
-  game.effects.push({ mesh: coreLine, lifetime: lifetime, age: 0, type: 'tracer' });
-  // Glow line (wider colored; uses same geo, different material)
-  const glowMat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, linewidth: 1 });
-  const glowLine = new THREE.LineSegments(lineGeo.clone(), glowMat);
-  scene.add(glowLine);
-  game.effects.push({ mesh: glowLine, lifetime: lifetime * 1.3, age: 0, type: 'tracer' });
-  // Dynamic light (reuse pooled)
+  // Bright point light at the bolt midpoint
   const boltMid = points[Math.floor(points.length / 2)];
-  spawnDynamicLight(boltMid, color, 2.0, 400, lifetime);
+  spawnDynamicLight(boltMid, color, 2.5, 500, lifetime);
 }
 
 const MAX_PARTICLES = 300;
@@ -2917,8 +3051,6 @@ function selectLoadout(key) {
   game.stasisFirstBatch = true;
   game.playerInStasis = false;
   game.playerStasisTimer = 0;
-  document.getElementById('stasis-warning').style.display = 'none';
-  document.getElementById('stasis-vignette').style.display = 'none';
 
   // In multiplayer, still spawn bots to fill slots; network players coexist
   spawnBots();
@@ -3755,37 +3887,33 @@ function executeAbility(slot, ability) {
       proj.isArcWave = true; // applies slow on hit
       game.projectiles.push(proj);
     }
-    // TONE: Tracker Rockets (fire homing salvo; damage scales with lock count)
+    // TONE: Tracker Rockets (fire homing salvo at ALL fully-locked targets; locks persist)
     else if (ability.name === 'Tracker Rockets') {
-      // Gather all targets with any locks, sorted by lock count descending
-      const lockEntries = [];
+      // Gather all targets with 3+ locks
+      const lockedTargets = [];
       for (const [botId, locks] of Object.entries(player.toneLocks)) {
-        if (locks > 0) {
+        if (locks >= 3) {
           const bot = game.entities.find(b => b.id == botId && b.alive);
-          if (bot) lockEntries.push({ bot, locks });
+          if (bot) lockedTargets.push(bot);
         }
       }
-      lockEntries.sort((a, b) => b.locks - a.locks);
-
-      if (lockEntries.length > 0) {
-        // Fire homing rockets at locked targets; more locks = more rockets + damage
-        for (const entry of lockEntries) {
-          const rocketCount = entry.locks >= 3 ? 5 : entry.locks >= 2 ? 3 : 2;
-          const rocketDmg = entry.locks >= 3 ? 1000 : entry.locks >= 2 ? 700 : 400;
-          for (let m = 0; m < rocketCount; m++) {
+      if (lockedTargets.length > 0) {
+        // Fire 5 tracking missiles at EACH fully-locked target
+        for (const target of lockedTargets) {
+          for (let m = 0; m < 5; m++) {
             const spread = new THREE.Vector3((Math.random()-0.5)*0.2, (Math.random()-0.5)*0.2, 0);
             const vel = forward.clone().add(spread).normalize().multiplyScalar(900);
-            const proj = new Projectile(player.position.clone(), vel, rocketDmg, 80, 'player', 0xffaa00);
+            const proj = new Projectile(player.position.clone(), vel, 1000, 80, 'player', 0xffaa00);
             proj.tracking = true;
-            proj.trackTarget = entry.bot;
+            proj.trackTarget = target;
             game.projectiles.push(proj);
           }
-          // Consume locks
-          delete player.toneLocks[entry.bot.id];
+          // Consume locks: reset to 0 so player must re-lock
+          delete player.toneLocks[target.id];
         }
         player.toneLockedTarget = null;
       } else {
-        // No locks at all: fire unguided salvo (5 weaker rockets)
+        // No full locks: fire unguided salvo (5 weaker rockets)
         for (let m = 0; m < 5; m++) {
           const spread = new THREE.Vector3((Math.random()-0.5)*0.15, (Math.random()-0.5)*0.15, 0);
           const vel = forward.clone().add(spread).normalize().multiplyScalar(900);
@@ -4896,8 +5024,6 @@ function updateRoundSystem(dt) {
         game.stasisSpawnTimer = 30;
         game.stasisFirstBatch = true;
         game.playerInStasis = false;
-        document.getElementById('stasis-warning').style.display = 'none';
-        document.getElementById('stasis-vignette').style.display = 'none';
         // Clean up world effects
         for (const eff of game.worldEffects) { if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh); if (eff.coreMesh && eff.coreMesh.parent) scene.remove(eff.coreMesh); if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh); }
         game.worldEffects = [];
@@ -6098,7 +6224,6 @@ document.addEventListener('keydown', e => {
   }
 
   input.keys[e.key.toLowerCase()] = true;
-  if (e.repeat) return; // prevent key repeat from double-firing abilities
   if (e.key.toLowerCase() === 'q') activateAbility(0);
   if (e.key.toLowerCase() === 'e') activateAbility(1);
   if (e.key.toLowerCase() === 'f') activateAbility(2);
@@ -6762,213 +6887,216 @@ function buildRoomGraphLevel(level) {
     }
   }
 
-  // --- POPULATE SDF DATA (must happen BEFORE marching cubes) ---
-  game.sdfSmoothK = 45; // smooth junction blend: 45 = clean junctions without melting nearby geometry together
-
-  // Populate levelSpheres from rooms
-  for (const rm of rooms) {
-    game.levelSpheres.push({ cx: rm.x, cy: rm.y, cz: rm.z, r: rm.r });
-  }
-  // Populate levelCylinders from tunnel segments
-  for (const seg of cylSegs) {
-    game.levelCylinders.push({ ax: seg.a.x, ay: seg.a.y, az: seg.a.z, bx: seg.b.x, by: seg.b.y, bz: seg.b.z, r: TR });
-  }
-
-  // Store room data for SDF color lookup
-  game.sdfRoomData = rooms;
-
-  // --- SDF MARCHING CUBES ---
-  // Compute world bounds from rooms AND tunnel endpoints
-  let bMinX=Infinity,bMinY=Infinity,bMinZ=Infinity;
-  let bMaxX=-Infinity,bMaxY=-Infinity,bMaxZ=-Infinity;
-  const pad = 50;
-  for(const rm of rooms){
-    bMinX=Math.min(bMinX,rm.x-rm.r-pad);bMaxX=Math.max(bMaxX,rm.x+rm.r+pad);
-    bMinY=Math.min(bMinY,rm.y-rm.r-pad);bMaxY=Math.max(bMaxY,rm.y+rm.r+pad);
-    bMinZ=Math.min(bMinZ,rm.z-rm.r-pad);bMaxZ=Math.max(bMaxZ,rm.z+rm.r+pad);
-  }
-  for(const seg of cylSegs){
-    const sr = TR + pad;
-    bMinX=Math.min(bMinX,seg.a.x-sr,seg.b.x-sr);bMaxX=Math.max(bMaxX,seg.a.x+sr,seg.b.x+sr);
-    bMinY=Math.min(bMinY,seg.a.y-sr,seg.b.y-sr);bMaxY=Math.max(bMaxY,seg.a.y+sr,seg.b.y+sr);
-    bMinZ=Math.min(bMinZ,seg.a.z-sr,seg.b.z-sr);bMaxZ=Math.max(bMaxZ,seg.a.z+sr,seg.b.z+sr);
-  }
-  const bounds={minX:bMinX,minY:bMinY,minZ:bMinZ,maxX:bMaxX,maxY:bMaxY,maxZ:bMaxZ};
-
-  // Marching cubes tables
-  const mcEdgeTable = new Uint16Array([0x0,0x109,0x203,0x30a,0x406,0x50f,0x605,0x70c,0x80c,0x905,0xa0f,0xb06,0xc0a,0xd03,0xe09,0xf00,0x190,0x99,0x393,0x29a,0x596,0x49f,0x795,0x69c,0x99c,0x895,0xb9f,0xa96,0xd9a,0xc93,0xf99,0xe90,0x230,0x339,0x33,0x13a,0x636,0x73f,0x435,0x53c,0xa3c,0xb35,0x83f,0x936,0xe3a,0xf33,0xc39,0xd30,0x3a0,0x2a9,0x1a3,0xaa,0x7a6,0x6af,0x5a5,0x4ac,0xbac,0xaa5,0x9af,0x8a6,0xfaa,0xea3,0xda9,0xca0,0x460,0x569,0x663,0x76a,0x66,0x16f,0x265,0x36c,0xc6c,0xd65,0xe6f,0xf66,0x86a,0x963,0xa69,0xb60,0x5f0,0x4f9,0x7f3,0x6fa,0x1f6,0xff,0x3f5,0x2fc,0xdfc,0xcf5,0xfff,0xef6,0x9fa,0x8f3,0xbf9,0xaf0,0x650,0x759,0x453,0x55a,0x256,0x35f,0x55,0x15c,0xe5c,0xf55,0xc5f,0xd56,0xa5a,0xb53,0x859,0x950,0x7c0,0x6c9,0x5c3,0x4ca,0x3c6,0x2cf,0x1c5,0xcc,0xfcc,0xec5,0xdcf,0xcc6,0xbca,0xac3,0x9c9,0x8c0,0x8c0,0x9c9,0xac3,0xbca,0xcc6,0xdcf,0xec5,0xfcc,0xcc,0x1c5,0x2cf,0x3c6,0x4ca,0x5c3,0x6c9,0x7c0,0x950,0x859,0xb53,0xa5a,0xd56,0xc5f,0xf55,0xe5c,0x15c,0x55,0x35f,0x256,0x55a,0x453,0x759,0x650,0xaf0,0xbf9,0x8f3,0x9fa,0xef6,0xfff,0xcf5,0xdfc,0x2fc,0x3f5,0xff,0x1f6,0x6fa,0x7f3,0x4f9,0x5f0,0xb60,0xa69,0x963,0x86a,0xf66,0xe6f,0xd65,0xc6c,0x36c,0x265,0x16f,0x66,0x76a,0x663,0x569,0x460,0xca0,0xda9,0xea3,0xfaa,0x8a6,0x9af,0xaa5,0xbac,0x4ac,0x5a5,0x6af,0x7a6,0xaa,0x1a3,0x2a9,0x3a0,0xd30,0xc39,0xf33,0xe3a,0x936,0x83f,0xb35,0xa3c,0x53c,0x435,0x73f,0x636,0x13a,0x33,0x339,0x230,0xe90,0xf99,0xc93,0xd9a,0xa96,0xb9f,0x895,0x99c,0x69c,0x795,0x49f,0x596,0x29a,0x393,0x99,0x190,0xf00,0xe09,0xd03,0xc0a,0xb06,0xa0f,0x905,0x80c,0x70c,0x605,0x50f,0x406,0x30a,0x203,0x109,0x0]);
-
-  const mcTriTable=[[-1],[0,8,3,-1],[0,1,9,-1],[1,8,3,9,8,1,-1],[1,2,10,-1],[0,8,3,1,2,10,-1],[9,2,10,0,2,9,-1],[2,8,3,2,10,8,10,9,8,-1],[3,11,2,-1],[0,11,2,8,11,0,-1],[1,9,0,2,3,11,-1],[1,11,2,1,9,11,9,8,11,-1],[3,10,1,11,10,3,-1],[0,10,1,0,8,10,8,11,10,-1],[3,9,0,3,11,9,11,10,9,-1],[9,8,10,10,8,11,-1],[4,7,8,-1],[4,3,0,7,3,4,-1],[0,1,9,8,4,7,-1],[4,1,9,4,7,1,7,3,1,-1],[1,2,10,8,4,7,-1],[3,4,7,3,0,4,1,2,10,-1],[9,2,10,9,0,2,8,4,7,-1],[2,10,9,2,9,7,2,7,3,7,9,4,-1],[8,4,7,3,11,2,-1],[11,4,7,11,2,4,2,0,4,-1],[9,0,1,8,4,7,2,3,11,-1],[4,7,11,9,4,11,9,11,2,9,2,1,-1],[3,10,1,3,11,10,7,8,4,-1],[1,11,10,1,4,11,1,0,4,7,11,4,-1],[4,7,8,9,0,11,9,11,10,11,0,3,-1],[4,7,11,4,11,9,9,11,10,-1],[9,5,4,-1],[9,5,4,0,8,3,-1],[0,5,4,1,5,0,-1],[8,5,4,8,3,5,3,1,5,-1],[1,2,10,9,5,4,-1],[3,0,8,1,2,10,4,9,5,-1],[5,2,10,5,4,2,4,0,2,-1],[2,10,5,3,2,5,3,5,4,3,4,8,-1],[9,5,4,2,3,11,-1],[0,11,2,0,8,11,4,9,5,-1],[0,5,4,0,1,5,2,3,11,-1],[2,1,5,2,5,8,2,8,11,4,8,5,-1],[10,3,11,10,1,3,9,5,4,-1],[4,9,5,0,8,1,8,10,1,8,11,10,-1],[5,4,0,5,0,11,5,11,10,11,0,3,-1],[5,4,8,5,8,10,10,8,11,-1],[9,7,8,5,7,9,-1],[9,3,0,9,5,3,5,7,3,-1],[0,7,8,0,1,7,1,5,7,-1],[1,5,3,3,5,7,-1],[9,7,8,9,5,7,10,1,2,-1],[10,1,0,10,0,7,10,7,5,7,0,3,-1],[8,0,2,8,2,5,8,5,7,10,5,2,-1],[2,10,5,2,5,3,3,5,7,-1],[7,9,5,7,8,9,3,11,2,-1],[9,5,7,9,7,2,9,2,0,2,7,11,-1],[2,3,11,0,1,8,1,7,8,1,5,7,-1],[11,2,1,11,1,7,7,1,5,-1],[9,5,8,8,5,7,10,1,3,10,3,11,-1],[5,7,0,5,0,9,7,11,0,1,0,10,11,10,0,-1],[11,10,0,11,0,3,10,5,0,8,0,7,5,7,0,-1],[11,10,5,7,11,5,-1],[10,6,5,-1],[0,8,3,5,10,6,-1],[9,0,1,5,10,6,-1],[1,8,3,1,9,8,5,10,6,-1],[1,6,5,2,6,1,-1],[1,6,5,1,2,6,3,0,8,-1],[9,6,5,9,0,6,0,2,6,-1],[5,9,8,5,8,2,5,2,6,3,2,8,-1],[2,3,11,10,6,5,-1],[11,0,8,11,2,0,10,6,5,-1],[0,1,9,2,3,11,5,10,6,-1],[5,10,6,1,9,2,9,11,2,9,8,11,-1],[6,3,11,6,5,3,5,1,3,-1],[0,8,11,0,11,5,0,5,1,5,11,6,-1],[3,11,6,0,3,6,0,6,5,0,5,9,-1],[6,5,9,6,9,11,11,9,8,-1],[5,10,6,4,7,8,-1],[4,3,0,4,7,3,6,5,10,-1],[1,9,0,5,10,6,8,4,7,-1],[10,6,5,1,9,7,1,7,3,7,9,4,-1],[6,1,2,6,5,1,4,7,8,-1],[1,2,5,5,2,6,3,0,4,3,4,7,-1],[8,4,7,9,0,5,0,6,5,0,2,6,-1],[7,3,9,7,9,4,3,2,9,5,9,6,2,6,9,-1],[3,11,2,7,8,4,10,6,5,-1],[5,10,6,4,7,2,4,2,0,2,7,11,-1],[0,1,9,4,7,8,2,3,11,5,10,6,-1],[9,2,1,9,11,2,9,4,11,7,11,4,5,10,6,-1],[8,4,7,3,11,5,3,5,1,5,11,6,-1],[5,1,11,5,11,6,1,0,11,7,11,4,0,4,11,-1],[0,5,9,0,6,5,0,3,6,11,6,3,8,4,7,-1],[6,5,9,6,9,11,4,7,9,7,11,9,-1],[10,4,9,6,4,10,-1],[4,10,6,4,9,10,0,8,3,-1],[10,0,1,10,6,0,6,4,0,-1],[8,3,1,8,1,6,8,6,4,6,1,10,-1],[1,4,9,1,2,4,2,6,4,-1],[3,0,8,1,2,9,2,4,9,2,6,4,-1],[0,2,4,4,2,6,-1],[8,3,2,8,2,4,4,2,6,-1],[10,4,9,10,6,4,11,2,3,-1],[0,8,2,2,8,11,4,9,10,4,10,6,-1],[3,11,2,0,1,6,0,6,4,6,1,10,-1],[6,4,1,6,1,10,4,8,1,2,1,11,8,11,1,-1],[9,6,4,9,3,6,9,1,3,11,6,3,-1],[8,11,1,8,1,0,11,6,1,9,1,4,6,4,1,-1],[3,11,6,3,6,0,0,6,4,-1],[6,4,8,11,6,8,-1],[7,10,6,7,8,10,8,9,10,-1],[0,7,3,0,10,7,0,9,10,6,7,10,-1],[10,6,7,1,10,7,1,7,8,1,8,0,-1],[10,6,7,10,7,1,1,7,3,-1],[1,2,6,1,6,8,1,8,9,8,6,7,-1],[2,6,9,2,9,1,6,7,9,0,9,3,7,3,9,-1],[7,8,0,7,0,6,6,0,2,-1],[7,3,2,6,7,2,-1],[2,3,11,10,6,8,10,8,9,8,6,7,-1],[2,0,7,2,7,11,0,9,7,6,7,10,9,10,7,-1],[1,8,0,1,7,8,1,10,7,6,7,10,2,3,11,-1],[11,2,1,11,1,7,10,6,1,6,7,1,-1],[8,9,6,8,6,7,9,1,6,11,6,3,1,3,6,-1],[0,9,1,11,6,7,-1],[7,8,0,7,0,6,3,11,0,11,6,0,-1],[7,11,6,-1],[7,6,11,-1],[3,0,8,11,7,6,-1],[0,1,9,11,7,6,-1],[8,1,9,8,3,1,11,7,6,-1],[10,1,2,6,11,7,-1],[1,2,10,3,0,8,6,11,7,-1],[2,9,0,2,10,9,6,11,7,-1],[6,11,7,2,10,3,10,8,3,10,9,8,-1],[7,2,3,6,2,7,-1],[7,0,8,7,6,0,6,2,0,-1],[2,7,6,2,3,7,0,1,9,-1],[1,6,2,1,8,6,1,9,8,8,7,6,-1],[10,7,6,10,1,7,1,3,7,-1],[10,7,6,1,7,10,1,8,7,1,0,8,-1],[0,3,7,0,7,10,0,10,9,6,10,7,-1],[7,6,10,7,10,8,8,10,9,-1],[6,8,4,11,8,6,-1],[3,6,11,3,0,6,0,4,6,-1],[8,6,11,8,4,6,9,0,1,-1],[9,4,6,9,6,3,9,3,1,11,3,6,-1],[6,8,4,6,11,8,2,10,1,-1],[1,2,10,3,0,11,0,6,11,0,4,6,-1],[4,11,8,4,6,11,0,2,9,2,10,9,-1],[10,9,3,10,3,2,9,4,3,11,3,6,4,6,3,-1],[8,2,3,8,4,2,4,6,2,-1],[0,4,2,4,6,2,-1],[1,9,0,2,3,4,2,4,6,4,3,8,-1],[1,9,4,1,4,2,2,4,6,-1],[8,1,3,8,6,1,8,4,6,6,10,1,-1],[10,1,0,10,0,6,6,0,4,-1],[4,6,3,4,3,8,6,10,3,0,3,9,10,9,3,-1],[10,9,4,6,10,4,-1],[4,9,5,7,6,11,-1],[0,8,3,4,9,5,11,7,6,-1],[5,0,1,5,4,0,7,6,11,-1],[11,7,6,8,3,4,3,5,4,3,1,5,-1],[9,5,4,10,1,2,7,6,11,-1],[6,11,7,1,2,10,0,8,3,4,9,5,-1],[7,6,11,5,4,10,4,2,10,4,0,2,-1],[3,4,8,3,5,4,3,2,5,10,5,2,11,7,6,-1],[7,2,3,7,6,2,5,4,9,-1],[9,5,4,0,8,6,0,6,2,6,8,7,-1],[3,6,2,3,7,6,1,5,0,5,4,0,-1],[6,2,8,6,8,7,2,1,8,4,8,5,1,5,8,-1],[9,5,4,10,1,6,1,7,6,1,3,7,-1],[1,6,10,1,7,6,1,0,7,8,7,0,9,5,4,-1],[4,0,10,4,10,5,0,3,10,6,10,7,3,7,10,-1],[7,6,10,7,10,8,5,4,10,4,8,10,-1],[6,9,5,6,11,9,11,8,9,-1],[3,6,11,0,6,3,0,5,6,0,9,5,-1],[0,11,8,0,5,11,0,1,5,5,6,11,-1],[6,11,3,6,3,5,5,3,1,-1],[1,2,10,9,5,11,9,11,8,11,5,6,-1],[0,11,3,0,6,11,0,9,6,5,6,9,1,2,10,-1],[11,8,5,11,5,6,8,0,5,10,5,2,0,2,5,-1],[6,11,3,6,3,5,2,10,3,10,5,3,-1],[5,8,9,5,2,8,5,6,2,3,8,2,-1],[9,5,6,9,6,0,0,6,2,-1],[1,5,8,1,8,0,5,6,8,3,8,2,6,2,8,-1],[1,5,6,2,1,6,-1],[1,3,6,1,6,10,3,8,6,5,6,9,8,9,6,-1],[10,1,0,10,0,6,9,5,0,5,6,0,-1],[0,3,8,5,6,10,-1],[10,5,6,-1],[11,5,10,7,5,11,-1],[11,5,10,11,7,5,8,3,0,-1],[5,11,7,5,10,11,1,9,0,-1],[10,7,5,10,11,7,9,8,1,8,3,1,-1],[11,1,2,11,7,1,7,5,1,-1],[0,8,3,1,2,7,1,7,5,7,2,11,-1],[9,7,5,9,2,7,9,0,2,2,11,7,-1],[7,5,2,7,2,11,5,9,2,3,2,8,9,8,2,-1],[2,5,10,2,3,5,3,7,5,-1],[8,2,0,8,5,2,8,7,5,10,2,5,-1],[9,0,1,5,10,3,5,3,7,3,10,2,-1],[9,8,2,9,2,1,8,7,2,10,2,5,7,5,2,-1],[1,3,5,3,7,5,-1],[0,8,7,0,7,1,1,7,5,-1],[9,0,3,9,3,5,5,3,7,-1],[9,8,7,5,9,7,-1],[5,8,4,5,10,8,10,11,8,-1],[5,0,4,5,11,0,5,10,11,11,3,0,-1],[0,1,9,8,4,10,8,10,11,10,4,5,-1],[10,11,4,10,4,5,11,3,4,9,4,1,3,1,4,-1],[2,5,1,2,8,5,2,11,8,4,5,8,-1],[0,4,11,0,11,3,4,5,11,2,11,1,5,1,11,-1],[0,2,5,0,5,9,2,11,5,4,5,8,11,8,5,-1],[9,4,5,2,11,3,-1],[2,5,10,3,5,2,3,4,5,3,8,4,-1],[5,10,2,5,2,4,4,2,0,-1],[3,10,2,3,5,10,3,8,5,4,5,8,0,1,9,-1],[5,10,2,5,2,4,1,9,2,9,4,2,-1],[8,4,5,8,5,3,3,5,1,-1],[0,4,5,1,0,5,-1],[8,4,5,8,5,3,9,0,5,0,3,5,-1],[9,4,5,-1],[4,11,7,4,9,11,9,10,11,-1],[0,8,3,4,9,7,9,11,7,9,10,11,-1],[1,10,11,1,11,4,1,4,0,7,4,11,-1],[3,1,4,3,4,8,1,10,4,7,4,11,10,11,4,-1],[4,11,7,9,11,4,9,2,11,9,1,2,-1],[9,7,4,9,11,7,9,1,11,2,11,1,0,8,3,-1],[11,7,4,11,4,2,2,4,0,-1],[11,7,4,11,4,2,8,3,4,3,2,4,-1],[2,9,10,2,7,9,2,3,7,7,4,9,-1],[9,10,7,9,7,4,10,2,7,8,7,0,2,0,7,-1],[3,7,10,3,10,2,7,4,10,1,10,0,4,0,10,-1],[1,10,2,8,7,4,-1],[4,9,1,4,1,7,7,1,3,-1],[4,9,1,4,1,7,0,8,1,8,7,1,-1],[4,0,3,7,4,3,-1],[4,8,7,-1],[9,10,8,10,11,8,-1],[3,0,9,3,9,11,11,9,10,-1],[0,1,10,0,10,8,8,10,11,-1],[3,1,10,11,3,10,-1],[1,2,11,1,11,9,9,11,8,-1],[3,0,9,3,9,11,1,2,9,2,11,9,-1],[0,2,11,8,0,11,-1],[3,2,11,-1],[2,3,8,2,8,10,10,8,9,-1],[9,10,2,0,9,2,-1],[2,3,8,2,8,10,0,1,8,1,10,8,-1],[1,10,2,-1],[1,3,8,9,1,8,-1],[0,9,1,-1],[0,3,8,-1],[-1]];
-
-  const mcEdgeVerts=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
-  const mcCubeVerts=[[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,1],[1,0,1],[1,1,1],[0,1,1]];
-
-  // Run marching cubes on the world SDF
-  const gridRes = 96; // higher res for cleaner junctions
-  const nx=gridRes,ny=gridRes,nz=gridRes;
-  const dx=(bounds.maxX-bounds.minX)/nx;
-  const dy=(bounds.maxY-bounds.minY)/ny;
-  const dz=(bounds.maxZ-bounds.minZ)/nz;
-
-  // Sample SDF
-  const vals=new Float32Array((nx+1)*(ny+1)*(nz+1));
-  const gi=(i,j,k)=>i+(nx+1)*(j+(ny+1)*k);
-  for(let k=0;k<=nz;k++)for(let j=0;j<=ny;j++)for(let i=0;i<=nx;i++){
-    vals[gi(i,j,k)]=worldSDF(bounds.minX+i*dx,bounds.minY+j*dy,bounds.minZ+k*dz);
-  }
-
-  function mcInterp(i1,j1,k1,i2,j2,k2){
-    const v1=vals[gi(i1,j1,k1)],v2=vals[gi(i2,j2,k2)];
-    if(Math.abs(v1)<0.00001)return[bounds.minX+i1*dx,bounds.minY+j1*dy,bounds.minZ+k1*dz];
-    if(Math.abs(v2)<0.00001)return[bounds.minX+i2*dx,bounds.minY+j2*dy,bounds.minZ+k2*dz];
-    if(Math.abs(v1-v2)<0.00001)return[bounds.minX+i1*dx,bounds.minY+j1*dy,bounds.minZ+k1*dz];
-    const t=v1/(v1-v2);
-    return[bounds.minX+(i1+t*(i2-i1))*dx,bounds.minY+(j1+t*(j2-j1))*dy,bounds.minZ+(k1+t*(k2-k1))*dz];
-  }
-
-  const positions=[];
-  for(let k=0;k<nz;k++)for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){
-    const v=[vals[gi(i,j,k)],vals[gi(i+1,j,k)],vals[gi(i+1,j+1,k)],vals[gi(i,j+1,k)],vals[gi(i,j,k+1)],vals[gi(i+1,j,k+1)],vals[gi(i+1,j+1,k+1)],vals[gi(i,j+1,k+1)]];
-    let cubeIdx=0;
-    for(let c=0;c<8;c++)if(v[c]<0)cubeIdx|=(1<<c);
-    if(mcEdgeTable[cubeIdx]===0)continue;
-    const ci=[i,i+1,i+1,i,i,i+1,i+1,i];
-    const cj=[j,j,j+1,j+1,j,j,j+1,j+1];
-    const ck=[k,k,k,k,k+1,k+1,k+1,k+1];
-    const ev=new Array(12);
-    for(let e=0;e<12;e++){
-      if(mcEdgeTable[cubeIdx]&(1<<e)){
-        const[a,b]=mcEdgeVerts[e];
-        ev[e]=mcInterp(ci[a],cj[a],ck[a],ci[b],cj[b],ck[b]);
-      }
-    }
-    const tris=mcTriTable[cubeIdx];
-    for(let t=0;t<tris.length;t+=3){
-      if(tris[t]===-1)break;
-      const a=ev[tris[t]],b=ev[tris[t+1]],c=ev[tris[t+2]];
-      if(a&&b&&c){positions.push(a[0],a[1],a[2],c[0],c[1],c[2],b[0],b[1],b[2]);}
-    }
-  }
-
-  const levelGeo=new THREE.BufferGeometry();
-  levelGeo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
-  levelGeo.computeVertexNormals();
-
-  // Wall shader with branching vein pattern
-  const sdfVertSrc = [
+  // --- SHADER SOURCE (pixel-perfect carving; clean flat walls) ---
+  const vertSrc = [
     'varying vec3 vWorldPos;',
-    'varying vec3 vNormal;',
     'void main() {',
     '  vec4 wp = modelMatrix * vec4(position, 1.0);',
     '  vWorldPos = wp.xyz;',
-    '  vNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);',
     '  gl_Position = projectionMatrix * viewMatrix * wp;',
     '}'
   ].join('\n');
 
-  const sdfFragSrc = [
-    'uniform float time;',
-    'varying vec3 vWorldPos;',
-    'varying vec3 vNormal;',
-    // Room color uniforms
-    'uniform vec3 roomCenters[5];',
-    'uniform vec3 roomColorsU[5];',
-    'uniform float roomRadii[5];',
-    '',
+  // Shared: cylinder-inside test (used by both shaders)
+  const cylTestFunc = [
+    '#define MC 16',
+    'uniform vec3 cA[MC];',
+    'uniform vec3 cB[MC];',
+    'uniform float cR[MC];',
+    'bool inCyl(vec3 p, int idx) {',
+    '  vec3 ab = cB[idx] - cA[idx];',
+    '  float len2 = dot(ab, ab);',
+    '  if (len2 < 1.0) return false;',
+    '  float t = clamp(dot(p - cA[idx], ab) / len2, 0.0, 1.0);',
+    '  vec3 cl = cA[idx] + ab * t;',
+    '  vec3 d = p - cl;',
+    '  float r = cR[idx] - 5.0;',  // small bias to prevent floating-point seam gaps
+    '  return dot(d, d) < r * r;',
+    '}'
+  ].join('\n');
+
+  // Shared: fractal wall pattern for depth perception.
+  // Uses iterated domain folding to create a self-similar recursive grid,
+  // like a Menger sponge cross-section projected onto the walls.
+  // Each iteration doubles the frequency and halves the amplitude,
+  // creating detail at every scale as you approach the surface.
+  // Dense glowing branching veins (D=1.5 fractal coastline) with vertical gradient
+  const gridFunc = [
     'float hash(vec2 p) {',
     '  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);',
     '}',
     'float noise(vec2 p) {',
-    '  vec2 i = floor(p), f = fract(p);',
+    '  vec2 i = floor(p);',
+    '  vec2 f = fract(p);',
     '  f = f * f * (3.0 - 2.0 * f);',
-    '  return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y);',
+    '  float a = hash(i);',
+    '  float b = hash(i + vec2(1.0, 0.0));',
+    '  float c = hash(i + vec2(0.0, 1.0));',
+    '  float d = hash(i + vec2(1.0, 1.0));',
+    '  return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);',
     '}',
+    // Dense fractal branching: 6 octaves, wide veins, D~1.5 coastline density
     'float branches(vec3 wp) {',
     '  float pattern = 0.0;',
-    '  float scale = 0.002;',
-    '  float weight = 0.7;',
+    '  float scale = 0.002;',         // start coarser for big trunks
+    '  float weight = 0.7;',          // first octave dominant
     '  vec2 p = vec2(wp.x + wp.z * 0.7, wp.y);',
-    '  for (int i = 0; i < 6; i++) {',
+    '  for (int i = 0; i < 6; i++) {', // 6 octaves for dense fractal detail
     '    vec2 g = p * scale;',
     '    float n = noise(g * 2.5 + float(i) * 1.3);',
     '    float n2 = noise(g * 4.0 + float(i) * 2.7);',
-    '    g.x += sin(g.y * 1.5 + n * 4.0) * 0.4;',
-    '    g.y += cos(g.x * 0.8 + n2 * 2.0) * 0.15;',
+    '    g.x += sin(g.y * 1.5 + n * 4.0) * 0.4;',  // wider horizontal wander
+    '    g.y += cos(g.x * 0.8 + n2 * 2.0) * 0.15;', // slight vertical warp too
     '    vec2 f = abs(fract(g) - 0.5);',
+    // Wide veins (0.09 smoothstep) and wide branches (0.14) for dense coverage
     '    float vein = 1.0 - smoothstep(0.0, 0.09, f.x);',
     '    float branch = 1.0 - smoothstep(0.0, 0.14, f.x + f.y * 0.4);',
-    '    float cross1 = 1.0 - smoothstep(0.0, 0.10, f.y);',
-    '    pattern += (vein * 0.45 + branch * 0.35 + cross1 * 0.2) * weight;',
+    // Cross-veins at finer scales (creates the 1.5D fractal coastline density)
+    '    float cross = 1.0 - smoothstep(0.0, 0.10, f.y);',
+    '    float mix1 = (vein * 0.45 + branch * 0.35 + cross * 0.2);',
+    '    pattern += mix1 * weight;',
     '    p = vec2(p.y * 0.7 + p.x * 0.7, -p.x * 0.5 + p.y * 0.85 + n * 40.0);',
-    '    scale *= 1.9;',
-    '    weight *= 0.50;',
+    '    scale *= 1.9;',              // gentler scaling = more overlap between octaves
+    '    weight *= 0.50;',            // slower falloff = finer details stay visible
     '  }',
     '  return clamp(pattern, 0.0, 1.0);',
     '}',
-    '',
-    'void main() {',
-    // Determine wall color by distance to nearest room center
-    '  vec3 base = vec3(0.06, 0.08, 0.12);',
-    '  float minD = 99999.0;',
-    '  for (int i = 0; i < 5; i++) {',
-    '    float d = length(vWorldPos - roomCenters[i]);',
-    '    if (d < minD) { minD = d; base = roomColorsU[i]; }',
-    '  }',
-    // Vertical gradient
-    '  float yNorm = clamp((vWorldPos.y + 2000.0) / 4000.0, 0.0, 1.0);',
+    'vec3 grid(vec3 wp, vec3 base) {',
+    '  float yNorm = clamp((wp.y + 2000.0) / 4000.0, 0.0, 1.0);',
+    // Gentler gradient: bottom is 60% brightness (not 30%), top is 100%
     '  float gradientDark = 0.6 + yNorm * 0.4;',
+    // Brighten the base color itself so walls are never near-black
     '  vec3 brightBase = base * 2.5 + vec3(0.03, 0.04, 0.06);',
     '  vec3 gradBase = brightBase * gradientDark;',
-    '  float branchPattern = branches(vWorldPos);',
+    '  float branchPattern = branches(wp);',
+    // Branches everywhere, slightly stronger at bottom
     '  float branchStrength = 0.7 + (1.0 - yNorm) * 0.3;',
     '  branchPattern *= branchStrength;',
-    '  vec3 glow1 = base * 10.0 + vec3(0.05, 0.08, 0.15);',
-    '  vec3 glow2 = base * 18.0 + vec3(0.10, 0.15, 0.25);',
+    // Glow colors: much brighter multipliers so veins really pop
+    '  vec3 glow1 = base * 10.0 + vec3(0.05, 0.08, 0.15);',  // broad glow (very bright)
+    '  vec3 glow2 = base * 18.0 + vec3(0.10, 0.15, 0.25);',  // vein tips (blazing)
     '  vec3 c = gradBase;',
-    '  c = mix(c, glow1, branchPattern * 0.6);',
-    '  c = mix(c, glow2, smoothstep(0.25, 0.65, branchPattern) * 0.8);',
+    '  c = mix(c, glow1, branchPattern * 0.6);',              // more glow coverage
+    '  c = mix(c, glow2, smoothstep(0.25, 0.65, branchPattern) * 0.8);', // wider glow range
+    // Strong emissive bloom on the brightest veins
     '  c += (base * 8.0 + vec3(0.04, 0.06, 0.12)) * smoothstep(0.5, 0.9, branchPattern);',
-    // Lighting from view and normals
-    '  vec3 vd = normalize(cameraPosition - vWorldPos);',
-    '  float diff = max(dot(vNormal, vd), 0.0) * 0.4 + 0.6;',
-    '  c *= diff;',
-    '  gl_FragColor = vec4(c, 1.0);',
+    '  return c;',
     '}'
   ].join('\n');
 
-  // Build room center and color uniform arrays
-  const roomCentersArr = rooms.map(r => new THREE.Vector3(r.x, r.y, r.z));
-  const roomColorsArr = [
-    new THREE.Color(0x1a3050), // center
-    new THREE.Color(0x3a1010), // spawn_a
-    new THREE.Color(0x103a10), // spawn_b
-    new THREE.Color(0x351828), // ready_a
-    new THREE.Color(0x183520), // ready_b
-  ];
-  const roomRadiiArr = rooms.map(r => r.r);
+  // Fragment for SPHERE meshes: discard if inside any cylinder
+  const fragSphereSrc = [
+    'uniform vec3 wCol;',
+    'varying vec3 vWorldPos;',
+    cylTestFunc,
+    gridFunc,
+    'void main() {',
+    '  for (int i = 0; i < MC; i++) {',
+    '    if (cR[i] < 1.0) continue;',
+    '    if (inCyl(vWorldPos, i)) discard;',
+    '  }',
+    '  gl_FragColor = vec4(grid(vWorldPos, wCol), 1.0);',
+    '}'
+  ].join('\n');
 
-  const levelMat = new THREE.ShaderMaterial({
-    vertexShader: sdfVertSrc,
-    fragmentShader: sdfFragSrc,
-    side: THREE.DoubleSide,
-    uniforms: {
-      time: { value: 0 },
-      roomCenters: { value: roomCentersArr },
-      roomColorsU: { value: roomColorsArr },
-      roomRadii: { value: roomRadiiArr }
-    }
-  });
+  // Fragment for CYLINDER meshes: discard if inside any sphere OR any OTHER cylinder
+  const fragCylSrc = [
+    '#define MS 8',
+    'uniform vec3 sC[MS];',
+    'uniform float sR[MS];',
+    'uniform float selfIdx;',
+    'uniform vec3 wCol;',
+    'varying vec3 vWorldPos;',
+    cylTestFunc,
+    gridFunc,
+    'void main() {',
+    '  for (int i = 0; i < MS; i++) {',
+    '    if (sR[i] < 1.0) continue;',
+    '    vec3 d = vWorldPos - sC[i];',
+    '    float sr = sR[i] - 5.0;',  // small bias to prevent floating-point seam gaps
+    '    if (dot(d, d) < sr * sr) discard;',
+    '  }',
+    '  for (int i = 0; i < MC; i++) {',
+    '    if (cR[i] < 1.0) continue;',
+    '    if (abs(float(i) - selfIdx) < 0.5) continue;',
+    '    if (inCyl(vWorldPos, i)) discard;',
+    '  }',
+    '  gl_FragColor = vec4(grid(vWorldPos, wCol), 1.0);',
+    '}'
+  ].join('\n');
 
-  // Store material for time updates
-  game.levelMaterial = levelMat;
+  // --- BUILD UNIFORM ARRAYS ---
+  const cylAArr = [], cylBArr = [], cylRArr = [];
+  for (const seg of cylSegs) {
+    cylAArr.push(new THREE.Vector3(seg.a.x, seg.a.y, seg.a.z));
+    cylBArr.push(new THREE.Vector3(seg.b.x, seg.b.y, seg.b.z));
+    cylRArr.push(seg.r);
+  }
+  while (cylAArr.length < 16) { cylAArr.push(new THREE.Vector3()); cylBArr.push(new THREE.Vector3()); cylRArr.push(0); }
 
-  const levelMesh = new THREE.Mesh(levelGeo, levelMat);
-  levelMesh.renderOrder = -10;
-  scene.add(levelMesh);
-  game.mapMeshes.push(levelMesh);
-
-  // --- ADD LIGHTS AND SPAWN POINTS FOR ROOMS AND TUNNELS ---
+  const sphCArr = [], sphRArr = [];
   for (const rm of rooms) {
+    sphCArr.push(new THREE.Vector3(rm.x, rm.y, rm.z));
+    sphRArr.push(rm.r);
+  }
+  while (sphCArr.length < 8) { sphCArr.push(new THREE.Vector3()); sphRArr.push(0); }
+
+  // --- ROOM AND TUNNEL COLOR SCHEME ---
+  // Each room gets a distinct wall color; halls inherit from the side they serve
+  const roomColors = {
+    center:  new THREE.Color(0x1a3050), // blue-gray (neutral center)
+    spawn_a: new THREE.Color(0x3a1010), // warm red (team A spawn)
+    spawn_b: new THREE.Color(0x103a10), // rich green (team B spawn)
+    ready_a: new THREE.Color(0x351828), // magenta-red (team A side)
+    ready_b: new THREE.Color(0x183520), // teal-green (team B side)
+  };
+
+  // Per-room shader materials (each sphere gets its own wCol)
+  function makeSphereMat(roomId) {
+    return new THREE.ShaderMaterial({
+      vertexShader: vertSrc, fragmentShader: fragSphereSrc, side: THREE.BackSide,
+      uniforms: { cA: {value: cylAArr}, cB: {value: cylBArr}, cR: {value: cylRArr}, wCol: {value: roomColors[roomId] || new THREE.Color(0x0c1822)} }
+    });
+  }
+
+  // Determine tunnel color from its endpoints: red side (team A, negative X), green side (team B, positive X), or neutral
+  function getTunnelColor(seg) {
+    const midX = (seg.a.x + seg.b.x) / 2;
+    // Strong team A side (far negative X)
+    if (midX < -SU * 3) return new THREE.Color(0x2a1212); // red hall
+    // Strong team B side (far positive X)
+    if (midX > SU * 3) return new THREE.Color(0x122a12);  // green hall
+    // Near center: blend based on X position
+    const t = (midX / (SU * 3) + 1) * 0.5; // 0 = full A side, 1 = full B side
+    const colA = new THREE.Color(0x2a1212);
+    const colB = new THREE.Color(0x122a12);
+    return colA.lerp(colB, t);
+  }
+
+  // Cylinder materials: one per segment (each knows its own index to skip self-check)
+  function makeCylMat(idx) {
+    return new THREE.ShaderMaterial({
+      vertexShader: vertSrc, fragmentShader: fragCylSrc, side: THREE.BackSide,
+      uniforms: {
+        sC: {value: sphCArr}, sR: {value: sphRArr},
+        cA: {value: cylAArr}, cB: {value: cylBArr}, cR: {value: cylRArr},
+        selfIdx: {value: idx}, wCol: {value: getTunnelColor(cylSegs[idx])}
+      }
+    });
+  }
+
+  // --- BUILD SPHERES (no wireframe overlays) ---
+  for (const rm of rooms) {
+    const geo = new THREE.SphereGeometry(rm.r, 32, 24);
+
+    const mesh = new THREE.Mesh(geo, makeSphereMat(rm.id));
+    mesh.position.set(rm.x, rm.y, rm.z);
+    mesh.renderOrder = -10;
+    scene.add(mesh); game.mapMeshes.push(mesh);
+
+    // Containment collision (full sphere for physics)
+    game.levelSpheres.push({ cx: rm.x, cy: rm.y, cz: rm.z, r: rm.r });
+
     // Lights: color-matched to each room's identity
     const lightConfigs = {
       center:  { color: 0x6699cc, intensity: 1.2 },
@@ -7007,10 +7135,25 @@ function buildRoomGraphLevel(level) {
     }
   }
 
-  // Add spawn points and lights for tunnels (cylinders already populated above for SDF)
+  // --- BUILD CYLINDERS (no wireframe overlays, no overlap) ---
   for (let ci = 0; ci < cylSegs.length; ci++) {
     const seg = cylSegs[ci];
     const segLen = seg.len;
+
+    // Open-ended cylinder; extend well past sphere surfaces to prevent gaps at intersections
+    const geo = new THREE.CylinderGeometry(TR, TR, segLen + TR * 2.0, 16, 1, true);
+    const midX = (seg.a.x + seg.b.x) / 2, midY = (seg.a.y + seg.b.y) / 2, midZ = (seg.a.z + seg.b.z) / 2;
+    const dir = new THREE.Vector3(seg.dx, seg.dy, seg.dz).normalize();
+    const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+
+    const mesh = new THREE.Mesh(geo, makeCylMat(ci));
+    mesh.position.set(midX, midY, midZ);
+    mesh.quaternion.copy(quat);
+    mesh.renderOrder = -10;
+    scene.add(mesh); game.mapMeshes.push(mesh);
+
+    // Containment collision (full cylinder for physics)
+    game.levelCylinders.push({ ax: seg.a.x, ay: seg.a.y, az: seg.a.z, bx: seg.b.x, by: seg.b.y, bz: seg.b.z, r: TR });
 
     // Spawn points along tunnel center (skip points inside room spheres)
     const steps = Math.max(2, Math.floor(segLen / (SU * 1.5)));
@@ -7027,7 +7170,6 @@ function buildRoomGraphLevel(level) {
     }
 
     // Light at segment midpoint
-    const midX = (seg.a.x + seg.b.x) / 2, midY = (seg.a.y + seg.b.y) / 2, midZ = (seg.a.z + seg.b.z) / 2;
     const tl = new THREE.PointLight(0x5588aa, 0.5, TR * 6);
     tl.position.set(midX, midY, midZ);
     scene.add(tl); game.mapMeshes.push(tl);
@@ -7267,9 +7409,6 @@ function gameLoop(timestamp) {
   game.deltaTime = Math.min(0.05, (timestamp - game.lastTime) / 1000);
   game.lastTime = timestamp;
   game.time += game.deltaTime;
-
-  // Update level shader time for vein animations
-  if (game.levelMaterial) game.levelMaterial.uniforms.time.value = game.time;
 
   if (game.state === 'select') { renderPostFX(); return; }
 
