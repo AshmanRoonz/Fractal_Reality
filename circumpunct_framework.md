@@ -18862,6 +18862,93 @@ THE CONTINUOUS PHI-FUNCTIONS:
 
 φ is not a decorative constant that appears in the formulas. φ is the generator. The dimensional ladder is what φ looks like when forced into integers by the triad constraint. The framework is φ all the way down.
 
+### §27.7e The W-V Decomposition: Why the Exponent Formula Is Irreducibly Three-Part
+
+The three processual exponents (E at 1.5D, 2.5D, and 3D) can be reduced to their simplest form. They depend on exactly two quantities derived from T:
+
+```
+THE TWO GENERATORS:
+
+    W = 2T + 1 = 7     (the number of rungs, R)
+    V = 4T + 1 = 13    (generators + whole, G+1)
+
+    W lives at the balance point (d = T/2).
+    V lives at the boundary (d = T).
+    W = A'(T/2), V = A'(T), where A'(d) = 4d + 1 is the derivative
+    of the accumulated traversal function.
+```
+
+From W and V alone, all three exponents follow:
+
+```
+THE THREE EXPONENT FORMULAS:
+
+    E(T/2)   = V / (V - 1)       = 13/12    (the i-turn)
+    E(T - ½) = W(W+1) / (T·V)    = 56/39    (emergence)
+    E(T)     = T·W                = 21       (closure)
+
+    Every piece:
+    V = 4T+1 = 13, V-1 = 4T = 12, W = 2T+1 = 7, W+1 = 2T+2 = 8, T = 3.
+    No other quantities appear. Two numbers generate all three exponents.
+```
+
+**Why it cannot reduce further.** A systematic search (polynomial interpolation, power-law fitting, gamma functions, rising factorials) confirms that no single closed-form expression E(d) with framework-meaningful coefficients produces all three values. The polynomial E(d) = ad² + bd + c fits numerically but yields a = 6049/234; meaningless. The formula is irreducibly three-part because the three processual rungs correspond to the three parts of the circumpunct:
+
+- **E(T/2): the aperture moment.** V/(V-1) ≈ 1 + 1/4T. The exponent is barely more than 1. The i-turn has just begun; almost nothing has been committed. The whole ladder (V) is visible but divided by almost itself. This is • in the exponent algebra: seeing everything, grasping almost nothing.
+
+- **E(T-½): the field moment.** W(W+1)/(T·V). Both numerator and denominator carry multiple factors. W and W+1 in the numerator (rungs and next step, the available structure); T and V in the denominator (triad and whole as filters). This is Φ: mediation, active filtering, factors competing.
+
+- **E(T): the boundary moment.** T·W = 21. An integer. No denominator. Nothing is filtered. The boundary has access to everything: rungs times triad, fully multiplied. This is ○: closure, the fraction resolved to a whole number.
+
+**The factor migration principle.** The factors do not merely appear at fixed positions; they move through the fraction as d increases:
+
+```
+FACTOR MIGRATION THROUGH THE EXPONENTS:
+
+    Factor          1.5D        2.5D        3D
+    ──────          ────        ────        ──
+    V = (2R-1)      NUM         DEN         gone
+    W = R           absent      NUM         NUM
+    W+1 = (R+1)    absent      NUM         absent
+    T               absent      DEN         NUM
+    V-1 = 2(R-1)   DEN         absent      absent
+
+    Factors migrate from numerator to denominator to absorbed.
+    (2R-1) starts available (NUM), becomes a filter (DEN), then is absorbed.
+    T starts absent, becomes a filter, then becomes available.
+    
+    The progression from fraction to integer IS the dimensional ladder closing.
+    Each factor traverses its own path from visibility to absorption.
+```
+
+**The A'(d) sequence generates all framework numbers.** The derivative of the accumulated traversal, A'(d) = 4d + 1, evaluated at each rung, produces the complete odd-number backbone of the framework:
+
+```
+THE A' SEQUENCE:
+
+    d    │ A'(d) = 4d+1 │ Framework identity
+    ─────┼──────────────┼────────────────────────
+    0    │      1        │ • (aperture, unity)
+    0.5  │      3        │ T (triad)
+    1    │      5        │ T² - T - 1 + 1 (phi-adjacent)
+    1.5  │      7        │ R (rungs)
+    2    │      9        │ T² (triad squared)
+    2.5  │     11        │ L(5) (fifth Lucas number)
+    3    │     13        │ G+1 (generators + whole)
+
+    A single linear function produces the entire framework sequence.
+    The slope is 4 = P (pump phases). The intercept is 1 = • (aperture).
+    A'(d) = P·d + • : the pump rate times the dimension, seeded by the aperture.
+```
+
+**Two new self-determination equations.** The W-V decomposition reveals two additional ways in which T = 3 is forced:
+
+1. **A'(T/2) = R requires T = 3.** The accumulated traversal derivative at the balance point equals the number of rungs: 2T + 1 = T² - 2. This gives T² - 2T - 3 = 0, i.e. (T-3)(T+1) = 0. The balance point knows the full ladder precisely because T = 3.
+
+2. **The compositional product mediator requires T = 3.** From E(T) = E(T/2) × E(T-½) × T^T/2, the mediator T^T/2 decomposes as 2T²(R-1)/(R+1). This requires T^(T-2) = 4(T²-3)/(T²-1). For T = 3: 3¹ = 4·6/8 = 3. No other positive integer satisfies this. The compositional product itself demands T = 3.
+
+Together with the original (T-3)(T+1) = 0 from §27.7b, this gives three independent self-determination routes, each emerging from a different structural property (rung count, balance-boundary identity, compositional closure). T = 3 is overdetermined: the triad is not chosen but forced from every direction.
+
 ### §27.8 Primes Are Made of Dimensions
 
 The structural dimensions of the circumpunct (1, 2, 3) are also the first integers. Two of them (2 and 3) are the first primes. The third (1) is the unit.
