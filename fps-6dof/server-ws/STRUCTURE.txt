@@ -1,0 +1,43 @@
+Last Ship Sailing WebSocket Server
+===================================
+
+Directory: /sessions/zealous-funny-brahmagupta/mnt/Fractal_Reality/fps-6dof/server-ws/
+
+File Structure:
+  server-ws/
+    ├── index.js              [74 lines]  Express + WebSocket entry point
+    ├── game.js               [1220 lines] Complete game logic (GameRoom, ServerPlayer, ServerBot, ServerProjectile)
+    ├── shared.js             [237 lines]  Shared constants, data, Vec3, Quat (exact copy from original)
+    ├── collision.js          [533 lines]  SDF collision system (exact copy from original)
+    ├── package.json          [13 lines]   Dependencies: ws, express
+    ├── README.md             [6.4 KB]    Full documentation
+    ├── QUICK_START.md        [7.1 KB]    Quick start guide, examples, extensions
+    ├── PORTED.md             [4.4 KB]    Porting details from Colyseus
+    └── STRUCTURE.txt         [This file]
+
+Total: 8 files, 2064 lines of game code, 27.9 KB total
+
+Installation:
+  cd server-ws
+  npm install
+  npm start
+
+The server will:
+  1. Start Express HTTP server on http://localhost:2567 (serves client)
+  2. Start WebSocket server on ws://localhost:2567
+  3. Create a single GameRoom instance (persistent across rounds)
+  4. Accept up to 12 player connections
+  5. Spawn 4 bots (2 per team) at round start
+  6. Run at 66 Hz with state broadcasts at 33 Hz
+
+Architecture:
+  - index.js: HTTP + WebSocket setup, connection/message/close handlers
+  - game.js: Single GameRoom with all game logic, physics, AI, collision
+  - shared.js: Constants, ship/weapon/ability data, vector math
+  - collision.js: Level geometry (SDF), collision detection/resolution
+
+No external databases or authentication. Single-match gameplay.
+
+For client connection, see QUICK_START.md "Message Flow" section.
+For gameplay mechanics, see README.md and QUICK_START.md "Combat Mechanics".
+For how this port differs from Colyseus, see PORTED.md.

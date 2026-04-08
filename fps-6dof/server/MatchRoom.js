@@ -539,8 +539,11 @@ class MatchRoom extends Room {
     // ---- Sync all internal state to Colyseus schema ----
     this.syncAllToSchema();
 
-    // ---- Broadcast raw JSON state (bypasses schema version mismatch) ----
-    this.broadcastRawState();
+    // ---- Broadcast raw JSON state every other tick (33Hz at 66Hz tick) ----
+    this.stateSyncCounter = (this.stateSyncCounter || 0) + 1;
+    if (this.stateSyncCounter % 2 === 0) {
+      this.broadcastRawState();
+    }
   }
 
   // ------------------------------------------------------------------
@@ -1432,16 +1435,19 @@ class MatchRoom extends Room {
     }
 
     const bots = {};
+    const _tempQ = new Quat();
     for (const bot of this.serverBots.values()) {
-      const fwd = bot.targetDir.clone().normalize();
-      const yaw = Math.atan2(-fwd.x, -fwd.z);
-      const pitch = Math.asin(Math.max(-1, Math.min(1, fwd.y)));
-      const q = new Quat().setFromEuler(pitch, yaw, 0);
+      const td = bot.targetDir;
+      const len = Math.sqrt(td.x * td.x + td.y * td.y + td.z * td.z) || 1;
+      const fx = td.x / len, fy = td.y / len, fz = td.z / len;
+      const yaw = Math.atan2(-fx, -fz);
+      const pitch = Math.asin(Math.max(-1, Math.min(1, fy)));
+      _tempQ.setFromEuler(pitch, yaw, 0);
       bots[bot.id] = {
         id: bot.id, loadoutKey: bot.loadoutKey, team: bot.team,
         px: bot.pos.x, py: bot.pos.y, pz: bot.pos.z,
         vx: bot.vel.x, vy: bot.vel.y, vz: bot.vel.z,
-        qx: q.x, qy: q.y, qz: q.z, qw: q.w,
+        qx: _tempQ.x, qy: _tempQ.y, qz: _tempQ.z, qw: _tempQ.w,
         health: bot.health, maxHealth: bot.maxHealth,
         shield: bot.shield, maxShield: bot.maxShield,
         alive: bot.alive, doomed: bot.doomed, doomTimer: bot.doomTimer,

@@ -228,6 +228,10 @@ function getRight(quat) {
   return quat.applyToVec3(new Vec3(1, 0, 0));
 }
 
+function getUp(quat) {
+  return quat.applyToVec3(new Vec3(0, 1, 0));
+}
+
 if (typeof module !== 'undefined') {
-  module.exports = { LSS, CHASSIS, LOADOUTS, Vec3, Quat, getForward, getRight };
+  module.exports = { LSS, CHASSIS, LOADOUTS, Vec3, Quat, getForward, getRight, getUp };
 }

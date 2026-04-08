@@ -411,12 +411,11 @@ canvas { display: block; }
   <div style="display:flex;flex-direction:column;gap:12px;align-items:center;">
     <div style="font-size:11px;color:#aaa;letter-spacing:1px;margin-bottom:4px;">MULTIPLAYER (DEDICATED SERVER)</div>
     <div style="display:flex;gap:8px;align-items:center;">
-      <input id="server-url" type="text" placeholder="SERVER URL" maxlength="100"
-        value="ws://localhost:2567"
+      <input id="server-url" type="text" placeholder="ws://localhost:2567" maxlength="256"
         style="background:rgba(20,20,40,0.9);border:1px solid rgba(100,100,120,0.5);
         color:#ffaa00;padding:10px 16px;font-family:'Courier New',monospace;font-size:14px;
-        letter-spacing:1px;width:280px;text-align:center;outline:none;"
-        onfocus="this.style.borderColor='#ffaa00'" onblur="this.style.borderColor='rgba(100,100,120,0.5)'">
+        letter-spacing:1px;width:260px;text-align:center;outline:none;"
+        onfocus="this.style.borderColor='#ffaa00'" onblur="this.style.borderColor='rgba(100,100,120,0.5)'" value="ws://localhost:2567">
       <button id="btn-join" onclick="connectToServer()" style="
         background:rgba(255,170,0,0.15);border:1px solid #ffaa00;color:#ffaa00;
         padding:10px 20px;font-family:'Courier New',monospace;font-size:14px;
@@ -425,7 +424,6 @@ canvas { display: block; }
         onmouseout="this.style.background='rgba(255,170,0,0.15)'">CONNECT</button>
     </div>
     <div id="lobby-status" style="font-size:10px;color:#555;min-height:16px;letter-spacing:1px;"></div>
-    <div id="lobby-peers" style="font-size:10px;color:#66bb66;min-height:16px;"></div>
 
     <div style="margin:20px 0;color:#333;font-size:10px;letter-spacing:3px;">; OR ;</div>
 
@@ -438,9 +436,7 @@ canvas { display: block; }
   </div>
 
   <div style="margin-top:40px;color:#333;font-size:9px;letter-spacing:1px;text-align:center;max-width:400px;line-height:1.6;">
-    Connect to a dedicated server.<br>
-    Run the server with: node server/index.js<br>
-    Default: ws://localhost:2567
+    Dedicated server. Low latency. Authoritative physics.
   </div>
 </div>
 
@@ -458,12 +454,12 @@ canvas { display: block; }
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://unpkg.com/colyseus.js@0.16/dist/colyseus.js"></script>
+<!-- trystero loaded via dynamic import() in joinRoom(); uses BitTorrent trackers for P2P signaling -->
 <script>
 // ============================================================================
 // LAST SHIP SAILING ; Zero-gravity ship combat
 // All 7 loadouts, weapons, abilities, HUD, bots, rounds, gamepad, geometry
-// + Colyseus dedicated server multiplayer
+// + P2P mesh networking via WebTorrent (trystero)
 // ============================================================================
 
 'use strict';
@@ -749,143 +745,107 @@ const input = {
   },
 };
 
-// ---- COLYSEUS MULTIPLAYER NETWORK ----
-// Connects to a Colyseus dedicated server for authoritative multiplayer.
-// Client sends inputs at 30Hz; server runs simulation at 20Hz tick rate.
-// All damage, spawning, round logic is server-authoritative.
+// ---- P2P MESH NETWORK ----
+// Uses trystero (BitTorrent tracker signaling) for truly serverless multiplayer.
+// Architecture:
+//   Tier 1 (broadcast, 20Hz): position, quaternion, velocity, health, shield, loadout, team
+//   Tier 2 (foveal, 60Hz):    precise aim, projectile data (between engaged players)
+//   Tier 3 (event-driven):    hit claims, kills, round events (consensus validated)
 
 const net = {
   active: false,
   solo: false,
-  client: null,       // Colyseus.Client
-  room: null,         // Colyseus room
-  sessionId: null,    // our session ID from server
-  connected: false,
-  networkPlayers: [], // NetworkPlayer instances
-  lastServerState: null, // latest state_sync message from server
-
-  // Input send rate limiting
+  ws: null,           // WebSocket connection
+  sessionId: null,    // assigned by server on connect
+  networkPlayers: [], // NetworkPlayer instances for remote players
+  lastServerState: null,
   inputSendAccum: 0,
-  INPUT_SEND_HZ: 30,
+  INPUT_SEND_HZ: 66,
 };
 
 // ---- LOBBY FUNCTIONS ----
 
 async function connectToServer() {
   const urlInput = document.getElementById('server-url');
-  let url = urlInput.value.trim();
+  const url = urlInput.value.trim();
   if (!url) {
-    document.getElementById('lobby-status').textContent = 'ENTER A SERVER URL';
+    document.getElementById('lobby-status').textContent = 'ENTER SERVER URL';
     document.getElementById('lobby-status').style.color = '#ff6666';
     return;
   }
 
-  document.getElementById('lobby-status').textContent = 'CONNECTING TO SERVER...';
+  document.getElementById('lobby-status').textContent = 'CONNECTING...';
   document.getElementById('lobby-status').style.color = '#ffaa00';
   document.getElementById('btn-join').disabled = true;
-  document.getElementById('btn-solo').disabled = true;
 
   try {
-    net.client = new Colyseus.Client(url);
+    net.ws = new WebSocket(url);
 
-    // Manual matchmaking: Colyseus server 0.17 returns a flat response format
-    // that the 0.16 client doesn't understand. We do the HTTP POST ourselves
-    // and adapt the response before handing it to the client.
-    const httpUrl = url.replace('ws://', 'http://').replace('wss://', 'https://');
-    const matchRes = await fetch(httpUrl + '/matchmake/joinOrCreate/match', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: 'Player' }),
-    });
-    if (!matchRes.ok) throw new Error('Matchmaking failed: ' + matchRes.status);
-    const seatData = await matchRes.json();
-
-    // Adapt 0.17 flat format to 0.16 nested format if needed
-    let seatReservation;
-    if (seatData.room) {
-      seatReservation = seatData; // already in 0.16 format
-    } else {
-      seatReservation = {
-        room: { name: seatData.name, roomId: seatData.roomId, processId: seatData.processId || '' },
-        sessionId: seatData.sessionId,
-      };
-    }
-
-    net.room = await net.client.consumeSeatReservation(seatReservation);
-    net.sessionId = net.room.sessionId;
-    net.connected = true;
-    net.active = true;
-    net.solo = false;
-
-    console.log('[LSS] Connected to server. Session:', net.sessionId);
-
-    const room = net.room;
-
-    // --- Message-based state sync (bypasses schema version mismatch) ---
-    // Server broadcasts 'state_sync' every tick with full game state as raw JSON.
-
-    room.onMessage('state_sync', (data) => {
-      net.lastServerState = data;
-    });
-
-    room.onMessage('fire', (data) => {
-      if (data.sid !== net.sessionId) {
-        playRemoteFireEffect(data);
-      }
-    });
-
-    room.onMessage('death', (data) => {
-      if (data.victimSid === net.sessionId) {
-        playerDie(null);
-      }
-      addKillFeed(data.killerName || 'Unknown', data.victimName || 'Unknown');
-    });
-
-    room.onMessage('impact', (data) => {
-      const impactPos = new THREE.Vector3(data.px, data.py, data.pz);
-      spawnExplosion(impactPos, data.splash || 10);
-    });
-
-    room.onMessage('round_start', (data) => {
-      playSound('round_start');
-    });
-
-    room.onMessage('round_end', (data) => {
-      // Scores updated via state_sync
-    });
-
-    room.onMessage('match_end', (data) => {
-      // Match results
-    });
-
-    // --- Room lifecycle ---
-    room.onLeave((code) => {
-      console.log('[LSS] Disconnected from server. Code:', code);
-      net.connected = false;
-      net.active = false;
-    });
-
-    room.onError((code, message) => {
-      console.error('[LSS] Server error:', code, message);
-    });
-
-    document.getElementById('lobby-status').textContent = 'CONNECTED TO SERVER';
-    document.getElementById('lobby-status').style.color = '#66cc66';
-    updateLobbyPeers();
-
-    // Show "start" button
-    setTimeout(() => {
+    net.ws.onopen = () => {
+      console.log('[LSS] WebSocket connected');
+      document.getElementById('lobby-status').textContent = 'CONNECTED';
+      document.getElementById('lobby-status').style.color = '#66cc66';
       document.getElementById('btn-join').disabled = false;
       document.getElementById('btn-join').textContent = 'START';
       document.getElementById('btn-join').onclick = () => enterShipSelect();
-    }, 500);
+    };
 
+    net.ws.onmessage = (event) => {
+      const msg = JSON.parse(event.data);
+      handleServerMessage(msg);
+    };
+
+    net.ws.onclose = () => {
+      console.log('[LSS] Disconnected');
+      net.active = false;
+    };
+
+    net.ws.onerror = (err) => {
+      document.getElementById('lobby-status').textContent = 'CONNECTION FAILED';
+      document.getElementById('lobby-status').style.color = '#ff6666';
+      document.getElementById('btn-join').disabled = false;
+    };
   } catch(err) {
-    console.error('[LSS] Connection failed:', err);
-    document.getElementById('lobby-status').textContent = 'CONNECTION FAILED: ' + err.message;
+    document.getElementById('lobby-status').textContent = 'ERROR: ' + err.message;
     document.getElementById('lobby-status').style.color = '#ff6666';
     document.getElementById('btn-join').disabled = false;
-    document.getElementById('btn-solo').disabled = false;
+  }
+}
+
+function handleServerMessage(msg) {
+  switch(msg.type) {
+    case 'welcome':
+      net.sessionId = msg.sessionId;
+      net.active = true;
+      net.solo = false;
+      console.log('[LSS] Session:', net.sessionId);
+      break;
+    case 'state_sync':
+      net.lastServerState = msg;
+      break;
+    case 'fire':
+      if (msg.sid !== net.sessionId) playRemoteFireEffect(msg);
+      break;
+    case 'death':
+      if (msg.victimSid === net.sessionId) playerDie(null);
+      addKillFeed(msg.killerName || 'Unknown', msg.victimName || 'Unknown');
+      break;
+    case 'impact':
+      spawnImpactSparks(new THREE.Vector3(msg.px, msg.py, msg.pz), msg.size || 6);
+      break;
+    case 'round_start':
+      game.state = 'warmup';
+      game.currentRound = msg.round;
+      playSound('round_start');
+      break;
+    case 'round_end':
+      game.scoreA = msg.scoreA;
+      game.scoreB = msg.scoreB;
+      break;
+    case 'match_end':
+      game.scoreA = msg.scoreA;
+      game.scoreB = msg.scoreB;
+      break;
   }
 }
 
@@ -936,23 +896,9 @@ function selectMap(mapKey) {
   }
 }
 
-function updateLobbyPeers() {
-  const el = document.getElementById('lobby-peers');
-  if (!el) return;
-  if (net.lastServerState && net.lastServerState.players) {
-    const count = Object.keys(net.lastServerState.players).length - 1; // exclude self
-    el.textContent = count > 0
-      ? count + ' OTHER PLAYER' + (count > 1 ? 'S' : '') + ' CONNECTED'
-      : 'WAITING FOR PLAYERS...';
-  } else if (net.connected) {
-    el.textContent = 'CONNECTED ; WAITING FOR STATE...';
-  } else {
-    el.textContent = '';
-  }
-}
 
 // ---- NETWORK PLAYER CLASS ----
-// Reads position/health/etc from Colyseus PlayerState schema
+// Mirrors Bot interface; driven by peer state updates instead of AI
 
 class NetworkPlayer {
   constructor(sessionId, loadoutKey, team) {
@@ -980,8 +926,8 @@ class NetworkPlayer {
     this.doomed = false;
     this.doomTimer = 0;
     this.coreMeter = 0;
-    this.isFiring = false;
     this.arcSlowTimer = 0;
+    this.isFiring = false;
 
     const teamColor = team === LSS.TEAM_FLEET_A ? 0xff4444 : 0x44bb44;
     this.mesh = createShipMesh(chassisData, teamColor);
@@ -989,19 +935,11 @@ class NetworkPlayer {
     this.mesh.userData.bot = this;
     scene.add(this.mesh);
 
-    // Interpolation
     this.targetPos = new THREE.Vector3();
     this.targetQuat = new THREE.Quaternion();
   }
 
-  updateFromSchema(ps) {
-    // ps = Colyseus PlayerState schema
-    if (!this.alive && ps.alive) {
-      // Respawned
-      this.alive = true;
-      if (!this.mesh.parent) scene.add(this.mesh);
-    }
-
+  updateFromServer(ps) {
     this.health = ps.health;
     this.maxHealth = ps.maxHealth;
     this.shield = ps.shield;
@@ -1011,39 +949,26 @@ class NetworkPlayer {
     this.isFiring = ps.isFiring;
     this.coreMeter = ps.coreMeter;
     this.spawnProtection = ps.spawnProtection;
-
     this.targetPos.set(ps.px, ps.py, ps.pz);
     this.targetQuat.set(ps.qx, ps.qy, ps.qz, ps.qw);
-    this.velocity.set(ps.vx, ps.vy, ps.vz);
-
-    if (!this.alive && this.mesh.parent) {
-      scene.remove(this.mesh);
-    }
+    this.velocity.set(ps.vx || 0, ps.vy || 0, ps.vz || 0);
+    if (!this.alive && this.mesh.parent) scene.remove(this.mesh);
+    if (this.alive && !this.mesh.parent) scene.add(this.mesh);
   }
 
   update(dt) {
     if (!this.alive) return;
-
-    // Smooth interpolation toward server position
     const dist = this.position.distanceTo(this.targetPos);
-    if (dist > 500) {
-      this.position.copy(this.targetPos);
-    } else {
-      this.position.lerp(this.targetPos, Math.min(1, dt * 15));
-    }
+    if (dist > 500) this.position.copy(this.targetPos);
+    else this.position.lerp(this.targetPos, Math.min(1, dt * 15));
     this.mesh.position.copy(this.position);
-
-    // Quaternion slerp
     this.mesh.quaternion.slerp(this.targetQuat, Math.min(1, dt * 15));
-
-    // Shield visual
     if (this.mesh.userData.shieldMesh) {
       this.mesh.userData.shieldMesh.material.opacity = this.shield > 0 ? 0.08 : 0;
     }
   }
 
   takeDamage(amount, attacker) {
-    // Damage is server-authoritative; this is a no-op on client
     return amount;
   }
 
@@ -1059,32 +984,11 @@ class NetworkPlayer {
   }
 }
 
-function updateNetworkPlayer(sessionId, loadoutKey, team) {
-  // Remove old NetworkPlayer if exists
-  const existIdx = net.networkPlayers.findIndex(np => np.sessionId === sessionId);
-  if (existIdx >= 0) {
-    net.networkPlayers[existIdx].destroy();
-    const eidx = game.entities.indexOf(net.networkPlayers[existIdx]);
-    if (eidx >= 0) game.entities.splice(eidx, 1);
-    net.networkPlayers.splice(existIdx, 1);
-  }
-
-  const np = new NetworkPlayer(sessionId, loadoutKey, team);
-  net.networkPlayers.push(np);
-  game.entities.push(np);
-  return np;
-}
-
-// ---- SERVER BOT PROXY ----
-// Visual representation of a server-controlled bot.
-// Similar to NetworkPlayer but for bots; creates mesh, interpolates position.
-
 class ServerBotProxy {
   constructor(botId, loadoutKey, team) {
     const loadout = LOADOUTS[loadoutKey];
     if (!loadout) return;
     const chassisData = CHASSIS[loadout.chassis];
-
     this.id = botId;
     this.loadoutKey = loadoutKey;
     this.loadout = loadout;
@@ -1104,12 +1008,10 @@ class ServerBotProxy {
     this.isFiring = false;
     this.spawnProtection = 0;
     this.arcSlowTimer = 0;
-
     const teamColor = team === LSS.TEAM_FLEET_A ? 0xff4444 : 0x44bb44;
     this.mesh = createShipMesh(chassisData, teamColor);
     this.mesh.userData.bot = this;
     scene.add(this.mesh);
-
     this.targetPos = new THREE.Vector3();
     this.targetQuat = new THREE.Quaternion();
   }
@@ -1119,7 +1021,6 @@ class ServerBotProxy {
       this.alive = true;
       if (!this.mesh.parent) scene.add(this.mesh);
     }
-
     this.health = bs.health;
     this.maxHealth = bs.maxHealth;
     this.shield = bs.shield;
@@ -1129,57 +1030,44 @@ class ServerBotProxy {
     this.doomTimer = bs.doomTimer;
     this.isFiring = bs.isFiring;
     this.coreMeter = bs.coreMeter;
-
     this.targetPos.set(bs.px, bs.py, bs.pz);
     this.targetQuat.set(bs.qx, bs.qy, bs.qz, bs.qw);
     this.velocity.set(bs.vx || 0, bs.vy || 0, bs.vz || 0);
-
-    if (!this.alive && this.mesh.parent) {
-      scene.remove(this.mesh);
-    }
+    if (!this.alive && this.mesh.parent) scene.remove(this.mesh);
   }
 
   update(dt) {
     if (!this.alive) return;
-
     const dist = this.position.distanceTo(this.targetPos);
-    if (dist > 500) {
-      this.position.copy(this.targetPos);
-    } else {
-      this.position.lerp(this.targetPos, Math.min(1, dt * 15));
-    }
+    if (dist > 500) this.position.copy(this.targetPos);
+    else this.position.lerp(this.targetPos, Math.min(1, dt * 15));
     this.mesh.position.copy(this.position);
     this.mesh.quaternion.slerp(this.targetQuat, Math.min(1, dt * 15));
-
     if (this.mesh.userData.shieldMesh) {
       this.mesh.userData.shieldMesh.material.opacity = this.shield > 0 ? 0.08 : 0;
     }
   }
 
   takeDamage(amount, attacker) { return amount; }
-
   die(attacker) {
     this.alive = false;
     this.health = 0;
     if (this.mesh && this.mesh.parent) scene.remove(this.mesh);
     spawnExplosion(this.position, this.chassis.hullLength);
   }
-
   destroy() {
     if (this.mesh && this.mesh.parent) scene.remove(this.mesh);
   }
 }
 
-// ---- NETWORK INPUT ----
+// ---- NETWORK BROADCAST ----
 
 function broadcastInput(dt) {
-  if (!net.active || !net.room) return;
-
+  if (!net.active || !net.ws || net.ws.readyState !== WebSocket.OPEN) return;
   net.inputSendAccum += dt;
   if (net.inputSendAccum < 1 / net.INPUT_SEND_HZ) return;
   net.inputSendAccum = 0;
 
-  // Compute normalized movement inputs
   let mx = 0, my = 0, mz = 0;
   if (input.keys['w'] || input.keys['arrowup']) my = 1;
   if (input.keys['s'] || input.keys['arrowdown']) my = -1;
@@ -1188,15 +1076,15 @@ function broadcastInput(dt) {
   if (input.keys[' ']) mz = 1;
   if (input.keys['control']) mz = -1;
 
-  // Gamepad overrides
   if (input.gpConnected) {
     if (Math.abs(input.gpMoveX) > 0.01) mx = input.gpMoveX;
-    if (Math.abs(input.gpMoveY) > 0.01) my = -input.gpMoveY; // inverted
+    if (Math.abs(input.gpMoveY) > 0.01) my = -input.gpMoveY;
     if (input.gpMoveUp) mz = 1;
     if (input.gpMoveDown) mz = -1;
   }
 
-  const data = {
+  net.ws.send(JSON.stringify({
+    type: 'input',
     mx, my, mz,
     fire: input.mouseDown || input.gpFire,
     alt: input.rightMouseDown || input.gpAltFire,
@@ -1205,51 +1093,36 @@ function broadcastInput(dt) {
     qy: Math.round(camera.quaternion.y * 1000) / 1000,
     qz: Math.round(camera.quaternion.z * 1000) / 1000,
     qw: Math.round(camera.quaternion.w * 1000) / 1000,
-  };
-
-  net.room.send('input', data);
-}
-
-// ---- SERVER EVENT HANDLERS ----
-
-function spawnServerProjectile(projState, projId) {
-  // Visual-only projectile from server state
-  const origin = new THREE.Vector3(projState.px, projState.py, projState.pz);
-  const vel = new THREE.Vector3(projState.vx, projState.vy, projState.vz);
-  const color = 0xffaa00;
-  const proj = new Projectile(origin, vel, 0, 0, 'network', color);
-  proj.isNetwork = true;
-  proj.serverId = projId;
-  game.projectiles.push(proj);
+  }));
 }
 
 function playRemoteFireEffect(data) {
-  // Play fire sound for remote player shots (positional)
-  if (data.type === 'hitscan' || data.type === 'spread') {
+  if (data.weaponType === 'hitscan' || data.weaponType === 'spread') {
     playSound('fire_hitscan');
-  } else if (data.type === 'projectile') {
+  } else {
     playSound('fire_projectile');
   }
 }
 
+// Softmax-based server reconciliation with worldSDF collision checking
 function syncServerState() {
   if (!net.active || !net.lastServerState) return;
-
   const state = net.lastServerState;
 
-  // Update game state from server
+  // Update game state
   if (state.gameState === 'playing' && game.state === 'warmup') {
     game.state = 'playing';
     playSound('round_start');
   }
+  if (state.gameState) game.state = state.gameState;
   game.roundTimer = state.roundTimer;
   game.warmupTimer = state.warmupTimer;
   game.scoreA = state.scoreA;
   game.scoreB = state.scoreB;
   game.currentRound = state.currentRound;
 
-  // Sync our own player state from server (authoritative health, etc.)
-  const myState = state.players[net.sessionId];
+  // Sync local player state from server
+  const myState = state.players && state.players[net.sessionId];
   if (myState && player.loadout) {
     player.health = myState.health;
     player.maxHealth = myState.maxHealth;
@@ -1275,18 +1148,51 @@ function syncServerState() {
     player.damageDealt = myState.damageDealt;
     player.alive = myState.alive;
 
-    // Server-authoritative position: blend gently (client prediction)
-    if (myState.alive) {
-      const serverPos = new THREE.Vector3(myState.px, myState.py, myState.pz);
-      const drift = player.position.distanceTo(serverPos);
+    // ================================================================
+    // SOFTMAX RECONCILIATION v2 (damped)
+    // ================================================================
+    if (myState.alive && player.chassis) {
+      const sx = myState.px, sy = myState.py, sz = myState.pz;
+      const cx = player.position.x, cy = player.position.y, cz = player.position.z;
+      const ddx = sx - cx, ddy = sy - cy, ddz = sz - cz;
+      const drift = Math.sqrt(ddx * ddx + ddy * ddy + ddz * ddz);
+      const collRadius = player.chassis.hullLength * 0.4;
+
       if (drift > 200) {
-        player.position.copy(serverPos);
-      } else if (drift > 5) {
-        player.position.lerp(serverPos, 0.1);
+        player.position.set(sx, sy, sz);
+      } else if (drift > 0.5) {
+        let t = 0.15;
+        const clientMargin = -worldSDF(cx, cy, cz);
+        const safeZone = collRadius * 3;
+        if (clientMargin < safeZone) {
+          const wallFactor = Math.max(0, clientMargin / safeZone);
+          t *= wallFactor * wallFactor;
+        }
+        const serverMargin = -worldSDF(sx, sy, sz);
+        if (serverMargin < collRadius * 0.8) {
+          t = 0;
+        }
+        if (drift > 80 && clientMargin > safeZone && serverMargin > collRadius) {
+          t = Math.min(0.8, drift / 200);
+        }
+        if (t > 0.001) {
+          player.position.x += ddx * t;
+          player.position.y += ddy * t;
+          player.position.z += ddz * t;
+          if (myState.vx !== undefined) {
+            player.velocity.x += (myState.vx - player.velocity.x) * t;
+            player.velocity.y += (myState.vy - player.velocity.y) * t;
+            player.velocity.z += (myState.vz - player.velocity.z) * t;
+          }
+          const finalMargin = -worldSDF(player.position.x, player.position.y, player.position.z);
+          if (finalMargin < collRadius * 0.5) {
+            player.position.set(cx, cy, cz);
+          }
+        }
       }
+      camera.position.copy(player.position);
     }
 
-    // Handle death from server
     if (!myState.alive && player.shipState !== 'dead') {
       playerDie(null);
     }
@@ -1294,47 +1200,45 @@ function syncServerState() {
 
   // Sync other players
   const seenSessions = new Set();
-  for (const sessionId in state.players) {
-    if (sessionId === net.sessionId) continue;
-    const ps = state.players[sessionId];
-    if (!ps.loadoutKey) continue;
-    seenSessions.add(sessionId);
-
-    let np = net.networkPlayers.find(n => n.sessionId === sessionId);
-    if (!np) {
-      np = updateNetworkPlayer(sessionId, ps.loadoutKey, ps.team);
+  if (state.players) {
+    for (const sessionId in state.players) {
+      if (sessionId === net.sessionId) continue;
+      const ps = state.players[sessionId];
+      if (!ps.loadoutKey) continue;
+      seenSessions.add(sessionId);
+      let np = net.networkPlayers.find(n => n.sessionId === sessionId);
+      if (!np) {
+        np = new NetworkPlayer(sessionId, ps.loadoutKey, ps.team);
+        net.networkPlayers.push(np);
+        game.entities.push(np);
+      }
+      np.updateFromServer(ps);
     }
-    if (np) np.updateFromSchema(ps);
   }
-
-  // Remove NetworkPlayers that left
+  // Remove disconnected players
   for (let i = net.networkPlayers.length - 1; i >= 0; i--) {
-    const np = net.networkPlayers[i];
-    if (!seenSessions.has(np.sessionId)) {
-      np.destroy();
-      const eidx = game.entities.indexOf(np);
+    if (!seenSessions.has(net.networkPlayers[i].sessionId)) {
+      net.networkPlayers[i].destroy();
+      const eidx = game.entities.indexOf(net.networkPlayers[i]);
       if (eidx >= 0) game.entities.splice(eidx, 1);
       net.networkPlayers.splice(i, 1);
     }
   }
 
-  // Sync bots from server state (create proxy if needed, update existing)
+  // Sync bots
   const seenBots = new Set();
-  for (const botId in state.bots) {
-    seenBots.add(botId);
-    const bs = state.bots[botId];
-    let bot = game.entities.find(e => e.id === botId);
-    if (!bot && bs.loadoutKey) {
-      // Create visual proxy for this server bot
-      bot = new ServerBotProxy(botId, bs.loadoutKey, bs.team);
-      game.entities.push(bot);
-    }
-    if (bot && bot.updateFromServerState) {
-      bot.updateFromServerState(bs);
+  if (state.bots) {
+    for (const botId in state.bots) {
+      seenBots.add(botId);
+      const bs = state.bots[botId];
+      let bot = game.entities.find(e => e.id === botId);
+      if (!bot && bs.loadoutKey) {
+        bot = new ServerBotProxy(botId, bs.loadoutKey, bs.team);
+        game.entities.push(bot);
+      }
+      if (bot && bot.updateFromServerState) bot.updateFromServerState(bs);
     }
   }
-
-  // Remove bots that no longer exist on server
   for (let i = game.entities.length - 1; i >= 0; i--) {
     const e = game.entities[i];
     if (e instanceof ServerBotProxy && !seenBots.has(e.id)) {
@@ -4017,9 +3921,9 @@ function selectLoadout(key) {
   // In multiplayer, still spawn bots to fill slots; network players coexist
   spawnBots();
 
-  // Tell server our loadout choice
-  if (net.active && net.room) {
-    net.room.send('select_loadout', { loadoutKey: player.loadoutKey });
+  // Announce our loadout to server
+  if (net.active && net.ws && net.ws.readyState === WebSocket.OPEN) {
+    net.ws.send(JSON.stringify({ type: 'select_loadout', loadoutKey: player.loadoutKey }));
   }
 
   game.state = 'warmup';
@@ -4036,11 +3940,9 @@ function selectLoadout(key) {
 }
 
 function spawnBots() {
+  if (net.active) return;
   for (const bot of game.entities) bot.destroy();
   game.entities = [];
-
-  // In multiplayer, server manages bots; don't spawn local ones
-  if (net.active) return;
 
   const enemyLoadouts = ['SCORCH', 'RONIN', 'TONE'];
   for (let i = 0; i < 3; i++) {
@@ -4826,9 +4728,6 @@ function activateAbility(slot) {
     if (player.monarchCooldownMult < 1) cd *= player.monarchCooldownMult;
     player.abilityCooldowns[slot] = cd;
   }
-
-  // Tell server we activated an ability
-  if (net.active && net.room) net.room.send('ability', { index: slot });
 }
 
 function executeAbility(slot, ability) {
@@ -5378,9 +5277,6 @@ function activateCore() {
         break;
     }
   }
-
-  // Tell server we activated core
-  if (net.active && net.room) net.room.send('core', {});
 }
 
 // ---- SHIELD VISUAL MESHES ----
@@ -6084,18 +5980,12 @@ function dash() {
   player.dashCharges--;
   player.shipState = 'dashing';
   if (player.dashCooldownTimer <= 0) player.dashCooldownTimer = ch.dashCooldown;
-
-  // Tell server we dashed
-  if (net.active && net.room) net.room.send('dash', {});
 }
 
 // ---- ROUND SYSTEM ----
 
 function updateRoundSystem(dt) {
-  // In multiplayer, the server controls all round logic.
-  // The client only runs round logic in solo mode.
   if (net.active) return;
-
   if (game.state === 'warmup') {
     game.warmupTimer -= dt;
     if (game.warmupTimer <= 0) { game.state = 'playing'; game.roundTimer = LSS.ROUND_TIME; playSound('round_start'); }
@@ -8752,10 +8642,10 @@ function gameLoop(timestamp) {
   updateStasisFields(dt);
   checkExecutions(dt);
 
-  // Network: send our input to server
-  broadcastInput(dt);
-  // Network: sync server state to local entities
-  syncServerState();
+  // Network: broadcast our state to all peers
+  broadcastPlayerState(dt);
+  // Network: clean up stale hit claims
+  if (net.active && game.time % 1 < dt) cleanupPendingHits();
 
   // Decay enemy TONE locks on player (lose all locks after 5 seconds of no new hits)
   if (!player._enemyLockDecayTimers) player._enemyLockDecayTimers = {};
