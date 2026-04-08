@@ -334,7 +334,7 @@ Every circumpunct at every scale carries the same three constraints: <span class
 The genetic code contains exactly 64 codons (triplet sequences). This is not coincidence. The 64-state architecture is derived from the dimensional ladder itself: three nested circumpuncts, each with two binary channels, gives 2<sup>6</sup> = 64 possible states. Applied to DNA, this becomes three bases per codon times four possible bases: P<sup>T</sup> = 4<sup>3</sup> = 64.
 </p>
 
-<div class="eq">S = P<span class="wb">T</span> = 4<span class="wb">3</span> = 64 codons</div>
+<div class="eq">S = P<sup>T</sup> = 4<sup>3</sup> = 64 codons</div>
 
 <p>
 Where:</p>
@@ -366,13 +366,15 @@ Where:</p>
 <div class="table-wrap">
 <table>
   <thead>
-    <tr><th>Codons</th><th>Count</th><th>Maps To</th><th>Framework Value</th><th>Role</th></tr>
+    <tr><th>Feature</th><th>Count</th><th>Maps To</th><th>Framework Value</th><th>Role</th></tr>
   </thead>
   <tbody>
-    <tr class="highlight"><td>20 amino acids</td><td>61 codons</td><td>P(P+1)</td><td>4 × 5 = 20</td><td><span class="accuracy exact">EXACT</span></td></tr>
-    <tr><td>Stop codons</td><td>3 codons (UAA, UAG, UGA)</td><td>T</td><td>3</td><td><span class="accuracy exact">EXACT</span></td></tr>
-    <tr class="highlight"><td>Start codon</td><td>1 codon (AUG)</td><td>•</td><td>aperture</td><td><span class="accuracy exact">EXACT</span></td></tr>
-    <tr><td>Total</td><td>64 codons</td><td>P<span class="wb">T</span></td><td>4<span class="wb">3</span> = 64</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr><td>Total codons</td><td>64</td><td>P<sup>T</sup> = S</td><td>4<sup>3</sup> = 64</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr class="highlight"><td>Coding codons</td><td>61</td><td>S − T</td><td>64 − 3 = 61</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr><td>Stop codons</td><td>3 (UAA, UAG, UGA)</td><td>T</td><td>3</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr class="highlight"><td>Amino acids</td><td>20</td><td>P(P+1)</td><td>4 × 5 = 20</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr><td>Start codon</td><td>1 (AUG, within the 61)</td><td>•</td><td>aperture</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr class="highlight"><td>Avg degeneracy</td><td>61/20 = 3.05</td><td>≈ T</td><td>≈ 3</td><td><span class="accuracy exact">EXACT</span></td></tr>
   </tbody>
 </table>
 </div>
@@ -666,7 +668,7 @@ Below is a summary of all framework predictions tested against biological experi
     <tr><th>Biological Property</th><th>Framework Prediction</th><th>Measured Value</th><th>Accuracy</th><th>Status</th></tr>
   </thead>
   <tbody>
-    <tr class="highlight"><td>Genetic code size</td><td>P<span class="wb">T</span> = 4³ = 64 codons</td><td>64 codons</td><td>Exact</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr class="highlight"><td>Genetic code size</td><td>P<sup>T</sup> = 4<sup>3</sup> = 64 codons</td><td>64 codons</td><td>Exact</td><td><span class="accuracy exact">EXACT</span></td></tr>
     <tr><td>Amino acid count</td><td>P(P+1) = 4 × 5 = 20</td><td>20 amino acids</td><td>Exact</td><td><span class="accuracy exact">EXACT</span></td></tr>
     <tr class="highlight"><td>Stop codons</td><td>T = 3</td><td>3 stop codons (UAA, UAG, UGA)</td><td>Exact</td><td><span class="accuracy exact">EXACT</span></td></tr>
     <tr><td>Start codon</td><td>• (aperture, uniqueness)</td><td>1 start codon (AUG)</td><td>Exact</td><td><span class="accuracy exact">EXACT</span></td></tr>
