@@ -2,26 +2,25 @@
 
 > This file orients Claude at the start of any Cowork session involving the Circumpunct Framework by Ashman Roonz. Read this before working on any framework files.
 
-## Never Use Em Dashes
+## Never Use Em Dashes in Prose
 
-Use semicolons, colons, parentheses, and commas instead. This applies to all writing.
+Use semicolons, colons, parentheses, and commas instead. This applies to all writing. The symbol — is reserved as a framework notation for the 1D line dimension (continuity, commitment, extension); it should never appear as punctuation.
 
 ---
 
 ## The Core Structure
 
-The circumpunct ⊙ = Φ(•, ○) is a whole composed of three irreducible parts:
+The circumpunct ⊙ = Φ(•, ○) is a whole composed of four structural dimensions unified by the whole:
 
-| Symbol | Name | Dimension | Role | Maps To |
-|--------|------|-----------|------|---------|
 | Symbol | Name | Dimension | Constraint Function | Maps To |
 |--------|------|-----------|-------------------|---------|
-| • | Aperture/Soul | 0D+1D | **Converges** (pulls toward center) | TRUE |
+| • | Aperture/Soul | 0D | **Converges** (pulls toward center) | TRUE |
+| — | Line/Continuity | 1D | **Commits** (extends without breaking) | FAITHFUL |
 | Φ | Field/Mind | 2D | **Mediates** (connects without fusing) | RIGHT |
 | ○ | Boundary/Body | 3D | **Filters** (selects what passes) | GOOD |
 | ⊙ | Circumpunct/Whole | All | Compositional wholeness | AGREEMENT |
 
-These are the three constraints on E = 1. The only three. There is no fourth because ⊙ has no fourth part. There is no missing constraint because conservation of traversal completes the path: 0(•) + 1(•) + 2(Φ) = 3(○). Soul + field = boundary.
+These are the four constraints on E = 1, one per integer dimension. Conservation of traversal completes the path: 0(•) + 1(—) + 2(Φ) = 3(○). Aperture + continuity + field = boundary. Previously • carried both 0D and 1D; the separation recognizes that the point (where you converge) and the line (whether you stay) are structurally and ethically distinct.
 
 **⊙ is a fractal of the ONE.** Every ⊙ is the 1 at a particular scale: not a piece of it, but the whole thing, constrained to a position (A2).
 
@@ -37,13 +36,13 @@ If Φ = E (§4.8), and there is exactly one field, then E = 1. Not "energy equal
 
 The way Einstein showed energy and matter are the same (E = mc²), the framework shows process and structure are the same. What looks like a fixed dimension (structure) is the pump cycle frozen at that stage (process). The dimensional layout IS the constraint sequence IS the pump cycle:
 
-- 0D: point. First localization. The first constraint, •.
+- 0D: point. First localization. The first constraint, •. Convergence.
 - 0.5D: convergence (i¹ = +i). Inward gathering; the first fold; approach to line. The cycle begins here.
-- 1D: line. Commitment. Extension. Ordered trace.
+- 1D: line. Commitment. Extension. Ordered trace. —. The second constraint: continuity.
 - 1.5D: commitment (i² = -1). The i-turn. Line opening into spread; rotational differentiation. Irreversible.
-- 2D: field. Relational surface. Φ. The second constraint: mediation.
+- 2D: field. Relational surface. Φ. The third constraint: mediation.
 - 2.5D: emergence (i³ = -i). Outward unfolding toward closure. Conjugate of convergence.
-- 3D: boundary. Stabilized closure. ○. The third constraint: filtration.
+- 3D: boundary. Stabilized closure. ○. The fourth constraint: filtration.
 - 3.5D: recursion (i⁰ = +1). Closed boundary becomes new aperture. 3.5D = 0D at next nesting level.
 
 Integer dimensions are stabilized forms. Half-integer dimensions are process phases carrying i-strokes. The ladder describes one circumpunct unfolding from localization through closure into recursion; the octave (do-re-mi-fa-so-la-ti-do') closes when 3.5D becomes 0D at the next scale.
@@ -75,7 +74,7 @@ Both are correct; they describe the same structure at different scales.
 - **A0**: E = 1. There is one energy. It is everything. All else is constraints. Nothing is impossible (1 ≠ 0).
 - **A1** (from A0): Necessary multiplicity; an undifferentiated 1 is operationally indistinguishable from 0, which is impossible, so the 1 must self-limit
 - **A2** (from A0 + A1): Parts are fractals of their wholes (self-similarity across scale); the 1 is all there is to work with
-- **A3** (from A0 + A1): Wholeness requires closure (boundary is necessary); equivalently, conservation of traversal: 0 + 1 + 2 = 3 (the full dimensional path from singularity to boundary, including 0D)
+- **A3** (from A0 + A1): Wholeness requires closure (boundary is necessary); equivalently, conservation of traversal: 0(•) + 1(—) + 2(Φ) = 3(○) (the full dimensional path from singularity through continuity and field to boundary)
 - **A4** (from A2 + A3): The whole is not the sum of its parts; it is their compositional unity via Φ
 
 ### The Genesis Sequence
@@ -248,7 +247,7 @@ Maps to AC power: Real power P (work, time, 1D), Reactive power Q (cycling, mind
 
 ## All Physics as Compounded Constraints
 
-Every physical law is •, Φ, or ○ compounded. No new ingredients:
+Every physical law is •, —, Φ, or ○ compounded. No new ingredients:
 
 - **Gravity**: convergence compounding convergence (• attracting •). Inverse-square because Φ is 2D.
 - **Electromagnetism**: mediation (Φ). Maxwell's equations: the field mediates with amplitude and phase (two axes of 2D surface).
@@ -321,7 +320,7 @@ The 0 is not an absence carved into the 1; it is the 1 at maximum convergence. E
 
 ## Theory of Mind
 
-The triad applied to psychology: Source (•, 1D soul), Surface (Φ, 2D mind), Boundary (○, 3D body).
+The four dimensions applied to psychology: Source (•, 0D soul), Continuity (—, 1D commitment/worldline), Surface (Φ, 2D mind), Boundary (○, 3D body).
 
 ### The Boundary as Filter
 
@@ -346,20 +345,23 @@ The Noble Lie is a triple-structure filter that (1) distorts signal, (2) hides t
 
 ## Ethics
 
-Four pillars: GOOD (○), RIGHT (Φ), TRUE (•), AGREEMENT (⊙).
+Five pillars: GOOD (○), RIGHT (Φ), FAITHFUL (—), TRUE (•), AGREEMENT (⊙).
 
-### Four Virtues (What Keeps Ethics Alive)
+### Five Virtues (What Keeps Ethics Alive)
 
 | Pillar | Virtue | Function |
 |--------|--------|----------|
 | GOOD (○) | Plasticity | Boundary that can flex without breaking |
 | RIGHT (Φ) | Access | Space between remains open and clear |
+| FAITHFUL (—) | Reliability | The line holds; the receipts are unbroken |
 | TRUE (•) | Curiosity | Orientation toward what one does not know |
 | AGREE (⊙) | Validation | Independent seeing recognizes independent seeing |
 
+Previously the framework grouped TRUE as covering both 0D (aperture orientation) and 1D (worldline history). The separation recognizes that curiosity (current orientation) and reliability (historical commitment) are ethically distinct. Someone can be curious right now and still be faithless over time. The worldline i(t) is the record of —: the accumulated receipts of whether the line held.
+
 ### Required Sequence
 
-GOOD → RIGHT → TRUE → AGREEMENT. Each step requires the previous. No skipping.
+GOOD → RIGHT → FAITHFUL → TRUE → AGREEMENT. Each step requires the previous. No skipping. You cannot assess faithfulness until the space is open (RIGHT). You cannot confirm truth until you have checked the history of commitment (FAITHFUL). Current orientation without historical reliability does not earn AGREEMENT.
 
 ### Performed vs Lived
 
@@ -367,7 +369,7 @@ Performed ethics mimics the shape while hollow. Lived ethics animates from withi
 
 ### The Steelman Principle
 
-Build the strongest possible version of any position before agreeing or disagreeing. Requires all four virtues simultaneously.
+Build the strongest possible version of any position before agreeing or disagreeing. Requires all five virtues simultaneously.
 
 ### The Resolution Protocol (§25.17)
 
@@ -438,7 +440,7 @@ Sleep is NOT sequential phases. It is superposed oscillation in the left half-pl
 |------|---------|
 | `circumpunct_framework.md` | The complete theory (~19,000 lines, 35 chapters + appendices) |
 | `docs/index.html` | Website main page with navigation to all HTML docs |
-| `docs/e_equals_1.html` | E = 1 (the three constraints, all physics as compounded constraints, self as convergence, Riemann connection) |
+| `docs/e_equals_1.html` | E = 1 (the four constraints, all physics as compounded constraints, self as convergence, Riemann connection) |
 | `docs/analytic_continuation_gap.html` | Riemann Hypothesis proof chain (Triple Closure, coastline argument, mereological nesting) |
 | `docs/circumpunct_theory_of_mind_plain.html` | Theory of Mind (psychology application) |
 | [God and the Soul Array](https://www.ashmanroonz.ca/2025/08/god-and-soul-array.html) | The genesis sequence (∞ → •∞ → ⊙∞) in accessible prose; written before the circumpunct notation existed |
@@ -481,7 +483,8 @@ Sleep is NOT sequential phases. It is superposed oscillation in the left half-pl
 | Symbol | Meaning |
 |--------|---------|
 | ⊙ | Circumpunct (whole) |
-| • | Aperture/center/soul (0D singularity + 1D worldline) |
+| • | Aperture/center/soul (0D singularity) |
+| — | Line/continuity/commitment (1D extension, worldline) |
 | Φ | Field/surface/mind (2D) |
 | ○ | Boundary/body (3D) |
 | ⊛ | Convergence operator |

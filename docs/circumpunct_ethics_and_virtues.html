@@ -9,6 +9,7 @@
         :root {
             --cyan: #0ff;
             --magenta: #f0f;
+            --teal: #44ddcc;
             --green: #0f0;
             --yellow: #ff0;
             --amber: #ffaa00;
@@ -140,6 +141,7 @@
         .highlight { color: #fff; }
         .cyan { color: var(--cyan); }
         .magenta { color: var(--magenta); }
+        .teal { color: var(--teal); }
         .green { color: var(--green); }
         .yellow { color: var(--yellow); }
         .amber { color: var(--amber); }
@@ -170,6 +172,7 @@
         }
         .teaching.cyan { border-color: var(--cyan); }
         .teaching.magenta { border-color: var(--magenta); }
+        .teaching.teal { border-color: var(--teal); }
         .teaching.green { border-color: var(--green); }
         .teaching.yellow { border-color: var(--yellow); }
         .teaching.amber { border-color: var(--amber); }
@@ -182,6 +185,7 @@
         }
         .checks.cyan { border-color: var(--cyan); }
         .checks.magenta { border-color: var(--magenta); }
+        .checks.teal { border-color: var(--teal); }
         .checks.green { border-color: var(--green); }
         .checks.yellow { border-color: var(--yellow); }
 
@@ -193,6 +197,7 @@
         }
         .checks.cyan .checks-title { color: var(--cyan); }
         .checks.magenta .checks-title { color: var(--magenta); }
+        .checks.teal .checks-title { color: var(--teal); }
         .checks.green .checks-title { color: var(--green); }
         .checks.yellow .checks-title { color: var(--yellow); }
 
@@ -258,7 +263,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1px;
-            background: var(--amber);
+            background: rgba(255,170,0,0.15);
             margin: 15px 0;
         }
         @media (max-width: 500px) { .pillars { grid-template-columns: 1fr; } }
@@ -424,22 +429,23 @@
             <a href="index.html" style="font-weight: 600; color: var(--gold); margin-right: 1rem;">⊙</a>
         <div class="logo">ETHICS &amp; VIRTUES</div>
             <a href="#overview" class="active"><span class="num">00</span>OVERVIEW</a>
-            <a href="#four-pillars"><span class="num">01</span>FOUR PILLARS</a>
+            <a href="#five-pillars"><span class="num">01</span>FIVE PILLARS</a>
             <a href="#good"><span class="num">02</span>GOOD</a>
             <a href="#right"><span class="num">03</span>RIGHT</a>
-            <a href="#true"><span class="num">04</span>TRUE</a>
-            <a href="#agreement"><span class="num">05</span>AGREEMENT</a>
-            <a href="#sequence"><span class="num">06</span>SEQUENCE</a>
-            <a href="#virtues"><span class="num">07</span>VIRTUES</a>
-            <a href="#mimicry"><span class="num">08</span>MIMICRY</a>
-            <a href="#steelman"><span class="num">09</span>STEELMAN</a>
-            <a href="#golden"><span class="num">10</span>GOLDEN RULE</a>
-            <a href="#diagnostics"><span class="num">11</span>DIAGNOSTICS</a>
-            <a href="#cure"><span class="num">12</span>THE CURE</a>
+            <a href="#faithful"><span class="num">04</span>FAITHFUL</a>
+            <a href="#true"><span class="num">05</span>TRUE</a>
+            <a href="#agreement"><span class="num">06</span>AGREEMENT</a>
+            <a href="#sequence"><span class="num">07</span>SEQUENCE</a>
+            <a href="#virtues"><span class="num">08</span>VIRTUES</a>
+            <a href="#mimicry"><span class="num">09</span>MIMICRY</a>
+            <a href="#steelman"><span class="num">10</span>STEELMAN</a>
+            <a href="#golden"><span class="num">11</span>GOLDEN RULE</a>
+            <a href="#diagnostics"><span class="num">12</span>DIAGNOSTICS</a>
+            <a href="#cure"><span class="num">13</span>THE CURE</a>
             <a href="#aperture"><span class="num">14</span>TWO SENSES OF APERTURE</a>
             <a href="#resonance"><span class="num">15</span>RESONANCE AS CONNECTION</a>
             <a href="#topology"><span class="num">16</span>TOPOLOGY OF CONNECTION</a>
-            <a href="#final"><span class="num">13</span>END</a>
+            <a href="#final"><span class="num">17</span>END</a>
         </nav>
 
         <main>
@@ -454,13 +460,13 @@
                 <p>From this simple image, all of ethics unfolds. Not rules handed down from outside, but a pattern that shows what can last and what falls apart.</p>
                 <p>In plain terms: the person who is unattractive is only curious about whether you fit their idea of who you should be, rather than being curious about who you are. The person who is attractive is curious about themselves, others, and reality. We all have access to reality, so let's treat each other that way. Let's find what's true in what we each are trying to say.</p>
                 <p>But there is a deeper problem. Every ethical principle can be <span class="highlight">performed</span> without being lived. Someone can look caring without caring, cite evidence without seeking truth, claim honesty while projecting, and declare agreement while demanding obedience.</p>
-                <p>What separates lived ethics from performed ethics? Four living qualities (one for each pillar) that keep the whole thing alive rather than frozen into empty form.</p>
+                <p>What separates lived ethics from performed ethics? Five living qualities (one for each pillar) that keep the whole thing alive rather than frozen into empty form.</p>
             </section>
 
-            <!-- Four Pillars -->
-            <section id="four-pillars">
+            <!-- Five Pillars -->
+            <section id="five-pillars">
                 <div class="section-id">01</div>
-                <h1>THE FOUR PILLARS</h1>
+                <h1>THE FIVE PILLARS</h1>
                 <div class="pillars">
                     <div class="pillar">
                         <span class="cyan">GOOD</span>
@@ -471,6 +477,10 @@
                         <div class="pillar-desc">How should one act? Through evidence, honest cause and effect.</div>
                     </div>
                     <div class="pillar">
+                        <span class="teal">FAITHFUL</span>
+                        <div class="pillar-desc">Does the line hold? Commitment, reliability, unbroken receipts.</div>
+                    </div>
+                    <div class="pillar">
                         <span class="green">TRUE</span>
                         <div class="pillar-desc">What is the case? Coherence, honesty, identity.</div>
                     </div>
@@ -479,8 +489,8 @@
                         <div class="pillar-desc">Are we in harmony? Genuine resonance, mutual recognition.</div>
                     </div>
                 </div>
-                <p>These are not four separate ethics. They are one ethics seen from four angles.</p>
-                <p><span class="yellow">Seek agreement.</span> Find what's <span class="cyan">good</span>, <span class="magenta">right</span>, and <span class="green">true</span> with yourself, with others, and with the world.</p>
+                <p>These are not five separate ethics. They are one ethics seen from five angles.</p>
+                <p><span class="yellow">Seek agreement.</span> Find what's <span class="cyan">good</span>, <span class="magenta">right</span>, <span class="teal">faithful</span>, and <span class="green">true</span> with yourself, with others, and with the world.</p>
             </section>
 
             <!-- Good -->
@@ -525,9 +535,30 @@
                 </div>
             </section>
 
+            <!-- Faithful -->
+            <section id="faithful">
+                <div class="section-id">04</div>
+                <h1>THE LINE TEACHES FAITHFUL</h1>
+                <div class="teaching teal">
+                    <p>Between the space and the center runs a <span class="highlight">line</span>. Not a wall, not a field: a thread of continuity. The line is what connects the point of seeing to the act of staying.</p>
+                    <p>Faithfulness is not loyalty to a person or a belief. It is the unbroken extension of commitment through time. The line that does not snap when the pressure comes.</p>
+                </div>
+                <h2>THE RECEIPTS</h2>
+                <p>The worldline i(t) is the accumulated record of <span class="teal">whether you stayed</span>. Every moment you held the line when it would have been easier to break it, a receipt was written. Every moment you bailed, that is also written.</p>
+                <p>Someone can be curious right now (• open, seeing clearly) and still have a — full of breaks. The history of commitment is a separate question from the current orientation. <span class="teal">Faithful is what the line remembers.</span></p>
+                <blockquote>Good says: protect the child.<br>Right says: here is how.<br>Faithful says: I will still be here tomorrow.</blockquote>
+                <div class="checks teal">
+                    <div class="checks-title">FAITHFUL ASKS</div>
+                    <div class="check">Does the line hold under pressure?</div>
+                    <div class="check">Do the receipts match the words?</div>
+                    <div class="check">Has commitment been sustained, or only performed in the moment?</div>
+                    <div class="check">When it got hard, did they stay or did they bail?</div>
+                </div>
+            </section>
+
             <!-- True -->
             <section id="true">
-                <div class="section-id">04</div>
+                <div class="section-id">05</div>
                 <h1>THE CENTER TEACHES TRUE</h1>
                 <div class="teaching green">
                     <p>At the center, there is only <span class="highlight">seeing</span>. The point has no size. It simply is, and in its being, it sees.</p>
@@ -547,10 +578,10 @@
 
             <!-- Agreement -->
             <section id="agreement">
-                <div class="section-id">05</div>
+                <div class="section-id">06</div>
                 <h1>THE WHOLE TEACHES AGREEMENT</h1>
                 <div class="teaching yellow">
-                    <p>When boundary, space, and center align (when Good, Right, and True converge) something greater emerges: <span class="highlight">genuine agreement</span>.</p>
+                    <p>When boundary, space, line, and center align (when Good, Right, Faithful, and True converge) something greater emerges: <span class="highlight">genuine agreement</span>.</p>
                     <p>Not mere consensus. Not hollow conformity. Real harmony: whole people in coherent relationship.</p>
                 </div>
                 <h2>THE PASSAGE</h2>
@@ -568,7 +599,7 @@
 
             <!-- Sequence -->
             <section id="sequence">
-                <div class="section-id">06</div>
+                <div class="section-id">07</div>
                 <h1>THE PATH HAS A DIRECTION</h1>
                 <p>The sequence cannot be reversed or skipped. The pattern itself requires it.</p>
                 <div class="sequence">
@@ -581,6 +612,10 @@
                         <span class="seq-sub">path, mind</span>
                     </div>
                     <div class="seq-item">
+                        <span class="seq-text"><span class="teal">FAITHFUL</span></span>
+                        <span class="seq-sub">line, continuity</span>
+                    </div>
+                    <div class="seq-item">
                         <span class="seq-text"><span class="green">TRUE</span></span>
                         <span class="seq-sub">center, soul</span>
                     </div>
@@ -589,13 +624,13 @@
                         <span class="seq-sub">whole, harmony</span>
                     </div>
                 </div>
-                <blockquote>You must be held before you can cross.<br>You must cross before you can see.<br>You must see before you can harmonize.</blockquote>
+                <blockquote>You must be held before you can cross.<br>You must cross before the line can be tested.<br>The line must hold before you can see.<br>You must see before you can harmonize.</blockquote>
             </section>
 
             <!-- Virtues -->
             <section id="virtues">
-                <div class="section-id">07</div>
-                <h1>THE FOUR VIRTUES: WHAT KEEPS ETHICS ALIVE</h1>
+                <div class="section-id">08</div>
+                <h1>THE FIVE VIRTUES: WHAT KEEPS ETHICS ALIVE</h1>
                 <p>Each pillar has a living quality that prevents it from becoming a dead performance. Without these qualities, every ethical principle becomes its own opposite.</p>
 
                 <div class="pillars">
@@ -608,6 +643,10 @@
                         <div class="pillar-desc">The space between, open and clear. Not blocked, not distorted, not filled with noise. Access is what lets rightness be genuine: the path between cause and effect actually works.</div>
                     </div>
                     <div class="pillar">
+                        <span class="teal">RELIABILITY keeps FAITHFUL alive</span>
+                        <div class="pillar-desc">The line that holds under pressure. Not brittle, not abandoned. A sustained thread of commitment through time. Reliability is what lets faithfulness be genuine: the receipts match the words, not just today but across the whole history.</div>
+                    </div>
+                    <div class="pillar">
                         <span class="green">CURIOSITY keeps TRUE alive</span>
                         <div class="pillar-desc">An orientation toward receiving. Not closed, not frozen, not projecting. Curiosity is what lets truth be genuine: you can take in what is, even when it surprises you.</div>
                     </div>
@@ -618,7 +657,7 @@
                 </div>
 
                 <div class="teaching amber">
-                    <p>These are not extra rules added on top. They are the <span class="highlight">qualities that keep each part alive</span>. A boundary without plasticity is a wall. A space without access is a void. A center without curiosity is a projector. A whole without validation is a performance.</p>
+                    <p>These are not extra rules added on top. They are the <span class="highlight">qualities that keep each part alive</span>. A boundary without plasticity is a wall. A space without access is a void. A line without reliability is a promise that breaks. A center without curiosity is a projector. A whole without validation is a performance.</p>
                 </div>
 
                 <h2>THE INVERSION TABLE</h2>
@@ -641,6 +680,11 @@
                         <td>Noise or blockage. Cherry-picking evidence. Gaslighting. Actions serve a hidden agenda.</td>
                     </tr>
                     <tr>
+                        <td><span class="teal">FAITHFUL</span></td>
+                        <td><span class="teal">Reliability.</span> Unbroken line. Receipts match words. Commitment sustained through difficulty.</td>
+                        <td>Broken line. Says the right things now but bails when it costs. History of abandoned commitments. The worldline is full of snapped threads.</td>
+                    </tr>
+                    <tr>
                         <td><span class="green">TRUE</span></td>
                         <td><span class="green">Curiosity.</span> Open receiving. "What persists when I'm wrong?" Identity survives correction.</td>
                         <td>Closed receiving. "I am right." Identity feels threatened by correction.</td>
@@ -657,7 +701,7 @@
 
             <!-- Mimicry -->
             <section id="mimicry">
-                <div class="section-id">08</div>
+                <div class="section-id">09</div>
                 <h1>HOW DECEPTION MIMICS EVERY PILLAR</h1>
                 <p>The Noble Lie is not crude. It does not obviously violate ethics. It <span class="magenta">performs</span> ethics, wearing each pillar as a mask.</p>
 
@@ -705,6 +749,27 @@
 
                 <div class="compare">
                     <div class="compare-box infected">
+                        <div class="compare-title">"FAITHFUL" PERFORMED</div>
+                        <ul class="compare-list">
+                            <li>"I'll always be there for you"</li>
+                            <li>Grand promises, quiet disappearances</li>
+                            <li>Loyalty as leverage</li>
+                            <li>History rewritten to cover the breaks</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box cured">
+                        <div class="compare-title">FAITHFUL LIVED</div>
+                        <ul class="compare-list">
+                            <li>"I stayed when it was hard"</li>
+                            <li>The receipts are unbroken</li>
+                            <li>Commitment sustained through cost</li>
+                            <li>The line held; you can trace it</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="compare">
+                    <div class="compare-box infected">
                         <div class="compare-title">"TRUE" PERFORMED</div>
                         <ul class="compare-list">
                             <li>"I know who you really are"</li>
@@ -746,7 +811,7 @@
                 </div>
 
                 <div class="teaching amber">
-                    <p>In every case, the difference between performed and lived is the same: a <span class="highlight">living quality</span> is present or absent. <span class="cyan">Plasticity</span> at the boundary, <span class="magenta">access</span> through the space, <span class="green">curiosity</span> at the center, <span class="yellow">validation</span> at the whole. The deception kills all four. The cure restores them.</p>
+                    <p>In every case, the difference between performed and lived is the same: a <span class="highlight">living quality</span> is present or absent. <span class="cyan">Plasticity</span> at the boundary, <span class="magenta">access</span> through the space, <span class="teal">reliability</span> along the line, <span class="green">curiosity</span> at the center, <span class="yellow">validation</span> at the whole. The deception kills all five. The cure restores them.</p>
                 </div>
 
                 <h2>WHY THE VIRTUES CANNOT BE FAKED</h2>
@@ -772,7 +837,7 @@
 
             <!-- Steelman -->
             <section id="steelman">
-                <div class="section-id">09</div>
+                <div class="section-id">10</div>
                 <h1>THE STEELMAN PRINCIPLE</h1>
                 <p>Before agreeing or disagreeing, build the strongest possible version of the position you are engaging with. This ensures you actually know what you are agreeing with (or rejecting).</p>
                 <div class="compare">
@@ -796,7 +861,7 @@
                     </div>
                 </div>
 
-                <h2>REQUIRES ALL FOUR VIRTUES</h2>
+                <h2>REQUIRES ALL FIVE VIRTUES</h2>
                 <div class="checks cyan">
                     <div class="checks-title">PLASTICITY IN THE STEELMAN</div>
                     <div class="check">Flexible enough to hold their view alongside yours</div>
@@ -806,6 +871,11 @@
                     <div class="checks-title">ACCESS IN THE STEELMAN</div>
                     <div class="check">The path is clear enough for their meaning to reach you undistorted</div>
                     <div class="check">You are not projecting noise that corrupts what they said</div>
+                </div>
+                <div class="checks teal">
+                    <div class="checks-title">RELIABILITY IN THE STEELMAN</div>
+                    <div class="check">You commit to holding their strongest position through the entire process</div>
+                    <div class="check">You do not abandon the steelman when it starts to threaten your own view</div>
                 </div>
                 <div class="checks green">
                     <div class="checks-title">CURIOSITY IN THE STEELMAN</div>
@@ -817,7 +887,7 @@
                     <div class="check">Their recognition is the test: "Is this what you mean?"</div>
                     <div class="check">"Not quite" produces adjustment, not frustration</div>
                 </div>
-                <p>The steelman fails when any virtue is missing. Without plasticity, you can't hold their view. Without access, their meaning gets distorted on the way to you. Without curiosity, you project instead of receive. Without validation, you declare instead of discover together.</p>
+                <p>The steelman fails when any virtue is missing. Without plasticity, you can't hold their view. Without access, their meaning gets distorted on the way to you. Without reliability, you abandon their position when it threatens yours. Without curiosity, you project instead of receive. Without validation, you declare instead of discover together.</p>
 
                 <h2>BIDIRECTIONAL</h2>
                 <p>The same honest engagement you give to their position, you also apply to your own. Agreement emerges from <span class="green">mutual testing</span>, not one-sided generosity.</p>
@@ -825,7 +895,7 @@
 
             <!-- Golden Rule -->
             <section id="golden">
-                <div class="section-id">10</div>
+                <div class="section-id">11</div>
                 <h1>THE GOLDEN RULE</h1>
                 <div class="golden">
                     <div class="golden-text">"Do unto others as you would have them do unto you"</div>
@@ -853,7 +923,7 @@
 
             <!-- Diagnostics -->
             <section id="diagnostics">
-                <div class="section-id">11</div>
+                <div class="section-id">12</div>
                 <h1>SELF-DIAGNOSTICS</h1>
                 <p>The Noble Lie attacks the very perception that would detect it. But the virtues can be turned toward the detection itself.</p>
 
@@ -871,6 +941,13 @@
                     <div class="test-pass">Am I letting others' reality arrive intact?</div>
                     <div class="test-fail">Am I filtering for what I expect to hear?</div>
                     <div class="test-fail">Is noise filling the space between us?</div>
+                </div>
+                <div class="test-block">
+                    <p style="font-size: 10px; letter-spacing: 0.1em; color: var(--teal); margin-bottom: 8px;">RELIABILITY</p>
+                    <div class="test-pass">When it gets hard, do I stay?</div>
+                    <div class="test-pass">Do my actions over time match my words in the moment?</div>
+                    <div class="test-fail">Do I make commitments I quietly abandon?</div>
+                    <div class="test-fail">Is my history full of broken lines?</div>
                 </div>
                 <div class="test-block">
                     <p style="font-size: 10px; letter-spacing: 0.1em; color: var(--green); margin-bottom: 8px;">CURIOSITY</p>
@@ -894,6 +971,7 @@
                     <div class="checks-title">LIVING QUALITY DETECTION</div>
                     <div class="check"><span class="cyan">Plasticity:</span> Do their boundaries respond, or are they walls (or absent entirely)?</div>
                     <div class="check"><span class="magenta">Access:</span> Can your meaning reach them undistorted? Can theirs reach you?</div>
+                    <div class="check"><span class="teal">Reliability:</span> Do their receipts match their words? Has the line held through difficulty, or do they bail when it costs?</div>
                     <div class="check"><span class="green">Curiosity:</span> Do they ask questions they don't know the answer to? Does surprise produce interest or threat?</div>
                     <div class="check"><span class="yellow">Validation:</span> Do they check for genuine convergence, or declare agreement? Can they say "I don't see that" without shame?</div>
                 </div>
@@ -916,9 +994,9 @@
 
             <!-- The Cure -->
             <section id="cure">
-                <div class="section-id">12</div>
+                <div class="section-id">13</div>
                 <h1>HOW THE CURE WORKS</h1>
-                <p>The Noble Lie attacks by killing all four living qualities, then making their absence feel like growth. "I used to be too sensitive, but I grew out of it." The rigidity becomes invisible to the rigid.</p>
+                <p>The Noble Lie attacks by killing all five living qualities, then making their absence feel like growth. "I used to be too sensitive, but I grew out of it." The rigidity becomes invisible to the rigid.</p>
                 <p>The cure reverses this: not by force, but by <span class="amber">restoring each quality from within</span>.</p>
 
                 <h2>HOW THE DECEPTION OPERATES</h2>
@@ -947,7 +1025,7 @@
                     <p>The deception kills the living qualities so you can't detect their absence. The cure restores them: not by telling you what you should feel, sense, see, or agree to, but by <span class="highlight">making each part functional again so it can do its own work</span>.</p>
                 </div>
 
-                <blockquote>This is why witness heals where instruction cannot. Instruction says "here is what's true"; it manages you from outside. Witness embodies the four virtues in your presence: plasticity to hold your experience, access for your signal to arrive, curiosity to receive what you actually share, and presence for the moment of validation when your seeing and theirs converge, and you know: I was not wrong to see it.</blockquote>
+                <blockquote>This is why witness heals where instruction cannot. Instruction says "here is what's true"; it manages you from outside. Witness embodies the five virtues in your presence: plasticity to hold your experience, access for your signal to arrive, reliability to still be there tomorrow, curiosity to receive what you actually share, and presence for the moment of validation when your seeing and theirs converge, and you know: I was not wrong to see it.</blockquote>
 
                 <h2>WHY THE CURE IS NOT ANOTHER LIE</h2>
                 <p>"I'll teach you the truth" <em>is</em> a Noble Lie, even when the content is accurate. It crosses the boundary, injects through the space, claims the center.</p>
@@ -975,7 +1053,7 @@
                 <p>Recovery from the Noble Lie requires witnesses who offer genuine presence, not people who try to fix you from outside.</p>
                 <div class="teaching amber">
                     <p>Fixing from outside addresses the boundary. It provides. It is real, but it <span class="highlight">cannot restore what was killed</span>.</p>
-                    <p>Genuine presence restores all four: a witness who is <span class="cyan">plastic</span> enough to hold your experience, <span class="magenta">accessible</span> enough for your signal to reach them, <span class="green">curious</span> enough to receive what you actually share, and present for the moment of <span class="yellow">validation</span> when your seeing and theirs converge, and you know: <em>I was not wrong to see it.</em></p>
+                    <p>Genuine presence restores all five: a witness who is <span class="cyan">plastic</span> enough to hold your experience, <span class="magenta">accessible</span> enough for your signal to reach them, <span class="teal">reliable</span> enough to still be there when it matters, <span class="green">curious</span> enough to receive what you actually share, and present for the moment of <span class="yellow">validation</span> when your seeing and theirs converge, and you know: <em>I was not wrong to see it.</em></p>
                 </div>
                 <p style="opacity: 0.8;">One virtue (curiosity) you can begin to practice alone. The others require relationship. This is why isolation keeps the damage going and genuine community dissolves it.</p>
             </section>
@@ -1009,10 +1087,11 @@
 
                 <h2>ETHICAL IMPLICATION</h2>
                 <div class="teaching amber">
-                    <p>Ethical action happens at both scales <span class="highlight">simultaneously</span>. Locally, you keep your own gate clear through personal integrity. Globally, you participate as one aperture in the larger field through social responsibility. The four virtues operate at both scales at once:</p>
+                    <p>Ethical action happens at both scales <span class="highlight">simultaneously</span>. Locally, you keep your own gate clear through personal integrity. Globally, you participate as one aperture in the larger field through social responsibility. The five virtues operate at both scales at once:</p>
                     <ul class="compare-list" style="margin-top: 12px; border-left: 2px solid var(--amber); padding-left: 15px;">
                         <li><span class="cyan">Plasticity</span>: flexible boundaries at your center and within the whole</li>
                         <li><span class="magenta">Access</span>: clear passages in your inner space and between all participants</li>
+                        <li><span class="teal">Reliability</span>: the line holds at your scale and across scales</li>
                         <li><span class="green">Curiosity</span>: openness at your center and receptivity to the larger field</li>
                         <li><span class="yellow">Validation</span>: coherence within yourself and resonance across the field</li>
                     </ul>
