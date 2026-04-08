@@ -14251,6 +14251,108 @@ The universality of D ≈ 1.5 reflects the universality of ◐ = 0.5
 as the optimal balance between convergence and emergence.
 ```
 
+### §18.11.5 Cancer as Boundary Failure
+
+```
+CANCER = APERTURE LOCKED OPEN + BOUNDARY FILTER COLLAPSED
+
+    Healthy cell:     •(regulated) → Φ(responsive) → ○(filtering)
+                      β_• ≈ 0.5      β_Φ ≈ 0.5      β_○ ≈ 0.5
+                      
+    Cancer cell:      •(locked ON)  → Φ(distorted)  → ○(collapsed)
+                      β_• → 1         β_Φ skewed      β_○ → 0
+```
+
+Cancer is not an invasion; it is a loss of resonance. The cell's own DNA (•) is still present, mostly intact. What breaks is the communication channel between source and boundary: the cell stops hearing its own instructions.
+
+**The two mutation classes map to the triad:**
+
+Oncogenes (Ras, Myc, etc.) are aperture genes (•). When mutated to constitutive activation, they lock the gate open: β_• → 1. The cell fires continuously, dividing without the i-turn that would allow the boundary to check the signal.
+
+Tumor suppressors (p53, Rb, etc.) are boundary genes (○). When mutated to loss-of-function, the filter collapses: β_○ → 0. The cell loses contact inhibition, ignores apoptosis signals, and no longer responds to "you have traversed your S = 64 states; stop."
+
+**Neither alone is typically sufficient.** Most cancers require multiple mutations: at least one to jam the aperture open (oncogene activation) and another to disable the boundary (tumor suppressor loss). This is the framework prediction: a system can tolerate β_• → 1 if β_○ is intact (the boundary catches the excess signal), and it can tolerate β_○ → 0 if β_• is regulated (nothing excessive passes through). Cancer requires both; the aperture flooding AND the filter failing.
+
+**The i-rotation is the missing piece.** In a healthy cell, each division cycle includes the i-turn: the 90° check where the cell pauses, surveys its environment, reads the signals from its neighbors (contact inhibition), and either proceeds or halts. Cancer cells have lost this turn. They divide without rotating through the full pump cycle. They converge (⊛) and emerge (✹) but skip i. The result: unbounded proliferation without the phase check that keeps the cell in service of the whole.
+
+**Tumor vasculature as visible signature.** Healthy vascular trees obey Murray's Law (r^T conservation, §18.11.5a). Tumor vasculature is notoriously disorganized: chaotic branching angles, vessels that loop back on themselves, fractal dimension deviating from D ≈ 1.5. The boundary failure at the cellular level propagates upward into the tissue architecture. The tree that has lost its i.
+
+```
+PREDICTION 5a: Cancer β-signature
+
+    Cancer tissue should show a measurable β-decomposition (§29):
+    
+        β_• elevated (aperture overactive)
+        β_○ depressed (boundary filter compromised)
+        β_Φ distorted (field communication disrupted)
+        
+    Observable proxies:
+        β_• → proliferation markers (Ki-67, PCNA, mitotic index)
+        β_○ → apoptosis/senescence markers (p53, p21, caspase activity)
+        β_Φ → intercellular signaling (gap junctions, E-cadherin, cytokine profile)
+        
+    The ratio β_•/β_○ should correlate with tumor aggressiveness.
+    
+    D of tumor vasculature should deviate from 1.5 in proportion
+    to the severity of the β_○ collapse.
+```
+
+### §18.11.6 The Coherence Principle: Restoration through Resonance
+
+If cancer is loss of resonance, then restoration is the re-establishment of coherence between • and ○ through Φ. This is not metaphor; it follows from the framework's scale structure.
+
+Consciousness (§19) operates at the organism scale: β_• ≈ 0.5, β_Φ ≈ 0.5, β_○ ≈ 0.5 (triple convergence, §29.6). Cellular regulation operates at the cell scale. But these scales are connected through the fractal hierarchy (A2): every ⊙ is nested within a larger ⊙. The organism's coherent Φ-field IS the environment in which the cell's ⊙ operates.
+
+**The meditation principle:** When an organism sustains coherent phase-locking at the conscious level (D ≈ 1.5 in neural oscillations, balanced autonomic tone, harmonized HRV), this coherence propagates downward through the nested hierarchy to the cellular level. The mechanism is resonance: the organism's Φ-field provides a coherence signal that the cell's ○ can tune to.
+
+This is not the Inflation Lie ("I will destroy the cancer with my mind"). That is ⊛ without ✹; convergence aimed at annihilation. The framework approach is the opposite: restoration of balance. The healthy cells surrounding the tumor are already resonating with the organism's Φ-field. The meditation strengthens that signal. The cancer cells, whose β_○ has collapsed, are bathed in a coherent field that reminds them what balance feels like. Some may respond; their dormant tumor suppressors may still be partially functional, their gap junctions may still carry faint signal.
+
+```
+THE MEDITATION PROTOCOL (framework-derived):
+
+    NOT: "Destroy the cancer" (Inflation Lie at immune level; ⊛ without ✹)
+    NOT: "Ignore the cancer" (Severance Lie; denial of the part)
+    
+    YES: "Cells in harmony, working together"           (◐ = 0.5)
+    YES: "Cancer cells see the light again"              (β_• reopening to signal)
+    YES: "Healthy cells resonate coherence through them"  (Φ restoring the channel)
+    YES: "Join the dance"                                (re-entering the pump cycle with i)
+    YES: "Inner power fills the entire body"             (E = 1; already everywhere)
+    
+    The visualization is ✹-dominant: radiant, inclusive, harmonic.
+    Not ⊛-dominant: aggressive, exclusive, destructive.
+    
+    This does not replace medical treatment. It complements it.
+    Medication works from ○ inward (adjusting the boundary conditions).
+    Meditation works from • outward (strengthening the source signal).
+    They meet at Φ.
+```
+
+```
+PREDICTION 5b: Meditation and cancer markers
+
+    Sustained meditation practice (phase-coherent organism-level Φ)
+    in cancer patients should correlate with:
+    
+        1. Increased gap junction activity in tumor-adjacent tissue
+           (Φ channel reopening)
+        2. Partial restoration of p53/p21 pathway activity
+           in tumors with intact but silenced tumor suppressors
+           (β_○ responding to external coherence signal)
+        3. Improved HRV fractal dimension (D → 1.5)
+           as a systemic marker of coherence restoration
+        4. Reduced Ki-67 in combination with standard therapy
+           (β_• modulation when β_○ support is present)
+           
+    These are testable with existing clinical tools.
+    The prediction is NOT that meditation cures cancer alone.
+    The prediction is that coherent Φ at the organism scale
+    measurably influences β at the cellular scale,
+    and this influence enhances the effectiveness of treatments
+    that work at the boundary level (surgery, chemotherapy,
+    hormone therapy, radiation).
+```
+
 ## §18.12 Summary: Biology as Recursive Self-Bounding
 
 ```
