@@ -516,9 +516,17 @@
                 to   { opacity: 1; transform: translateY(0); }
             }
         }
+
+        /* When loaded inside an iframe, hide the home link and tighten header */
+        @media all {
+            .in-iframe .home-link { display: none; }
+            .in-iframe header { position: static; }
+            .in-iframe .search-container { top: 0; position: sticky; }
+        }
     </style>
 </head>
 <body>
+    <script>if (window.self !== window.top) document.body.classList.add('in-iframe');</script>
     <header>
         <div class="header-inner">
             <div class="header-left">
@@ -606,6 +614,14 @@
                 { href: "Is_This_Mine.html", name: "Is This Mine?", desc: "Distinguishing your signal from installed noise" },
                 { href: "attune.html", name: "Attune", desc: "Coming back into phase with yourself" },
                 { href: "hemispheric_resonance.html", name: "Hemispheric Resonance", desc: "The two hemispheres as paired circumpuncts" },
+                { href: "aperture_field.html", name: "Aperture Field", desc: "Field dynamics at the aperture; convergence and emergence" },
+                { href: "circumpunct_seed.html", name: "The Circumpunct Seed", desc: "The minimal seed that unfolds the whole framework" },
+                { href: "circumpunct_visual_dimensions.html", name: "The Circumpunct (Visual Dimensions)", desc: "Visual exploration of the circumpunct across dimensions" },
+                { href: "dimensions_of_experience.html", name: "The Dimensions of Experience", desc: "How experience maps onto the dimensional ladder" },
+                { href: "finite_gate.html", name: "The Finite Gate", desc: "Finitude as the necessary gate for infinite expression" },
+                { href: "gnosis.html", name: "Gnosis: Knowing", desc: "Direct knowing through the aperture" },
+                { href: "seven_as_one.html", name: "The Seven as One", desc: "E = 1 and the Millennium Problems as a unified whole" },
+                { href: "j_diagnosis_weed.html", name: "Geometric Analysis: J", desc: "A Circumpunct Framework diagnosis of J" },
             ]
         },
         cell: {
@@ -681,6 +697,7 @@
                 { href: "path_narrated.html", name: "The Path of the Circumpunct", desc: "Narrated spiritual journey through the framework" },
                 { href: "circumpunct_schumann.html", name: "Schumann-Circumpunct Resonance Theory", desc: "Earth's resonant frequencies and the circumpunct" },
                 { href: "chakras.html", name: "Chakras — Frequency Bands of the One Aperture", desc: "Ancient energy centers as circumpunct frequencies" },
+                { href: "circumpunct_schumann_v2.html", name: "Schumann-Circumpunct Resonance Theory v2", desc: "Updated Schumann resonance and circumpunct mapping" },
             ]
         },
         physics: {
@@ -724,6 +741,17 @@
                 { href: "scale_correspondence.html", name: "Scale Correspondence", desc: "How structures correspond across scales" },
                 { href: "supershape_stability.html", name: "Supershape Stability", desc: "Stability analysis of boundary supershapes" },
                 { href: "vault_particles_essay.html", name: "The Vault of Particles", desc: "Essay on particle structure from the framework" },
+                { href: "bsd_proof_chain.html", name: "Birch and Swinnerton-Dyer Proof Chain", desc: "Analytic predicts branching; the 1.5D Clay problem" },
+                { href: "circumpunct_engine.html", name: "Circumpunct Physics Engine", desc: "Interactive physics engine built on circumpunct dynamics" },
+                { href: "circumpunct_operators.html", name: "Operators on the Physical Hilbert Space", desc: "Circumpunct framework operator formalization" },
+                { href: "circumpunct_physics.html", name: "Circumpunct Physics", desc: "Working-physicists formalization of the framework" },
+                { href: "circumpunct_predictions.html", name: "Predictions from Zero Free Parameters", desc: "Testable predictions derived from the framework" },
+                { href: "hodge_proof_chain.html", name: "The Hodge Conjecture Proof Chain", desc: "Transmission at balance; the 2.5D Clay problem" },
+                { href: "navier_stokes_proof_chain.html", name: "Navier-Stokes Proof Chain", desc: "The surface holds; the 2D Clay problem" },
+                { href: "p_vs_np_proof_chain.html", name: "P vs NP Proof Chain", desc: "Convergence is not emergence; the 0.5D Clay problem" },
+                { href: "photon_wake.html", name: "The Photon Wake", desc: "No empty space, no smallest particle" },
+                { href: "wv_decomposition.html", name: "The W-V Decomposition", desc: "Why the exponent formula is irreducibly three-part" },
+                { href: "yang_mills_proof_chain.html", name: "Yang-Mills Mass Gap Proof Chain", desc: "The indivisible cycle; the 1D Clay problem" },
             ]
         },
         story: {
@@ -745,7 +773,8 @@
                 { href: "varpet_tribute.html", name: "The Balance of Hard and Soft", desc: "Tribute to Varpet's Nerkin Ouj" },
                 { href: "city_of_resonance.html", name: "City of Resonance", desc: "A vision of aligned community" },
                 { href: "everybody_picks_their_nose.html", name: "Everybody Picks Their Nose", desc: "Universal human behaviors we hide" },
-                { href: "the_first_lie.html", name: "The First Lie — Genesis as Narcissism", desc: "The serpent's opening move — how shame was installed before the apple" },
+                { href: "the_first_lie.html", name: "The First Lie, Genesis as Narcissism", desc: "The serpent's opening move; how shame was installed before the apple" },
+                { href: "last_ship_sailing.html", name: "Last Ship Sailing", desc: "A story of departure and what remains" },
             ]
         },
         ethics: {
@@ -781,6 +810,7 @@
                 { href: "The_Lore_of_Empathy.html", name: "The Lore of Empathy", desc: "Deep exploration of empathy through the framework" },
                 { href: "care_killed_the_cat.html", name: "Care Killed the Cat", desc: "When caring becomes weaponized" },
                 { href: "bully_defense_ask_why.html", name: "Bully Defense: Ask Why", desc: "Using curiosity as defense against bullying" },
+                { href: "belief_virus.html", name: "The Belief Virus", desc: "How beliefs propagate as viral cognitive structures" },
             ]
         },
         cosmos: {
@@ -809,6 +839,19 @@
                 { href: "toe_map.html", name: "Theory of Everything Map", desc: "Visual map of the complete framework" },
                 { href: "wholeness.html", name: "What Is Wholeness?", desc: "The foundational question: what makes a whole whole" },
                 { href: "wholeness_plain.html", name: "What Is Wholeness? (Plain Language)", desc: "Accessible exploration of wholeness" },
+                { href: "belief_circumpunct.html", name: "The Circumpunct Framework (Belief)", desc: "Core framework applied to belief systems" },
+                { href: "boundary_consolidation_analysis.html", name: "Boundary Consolidation Analysis", desc: "Pattern analysis of boundary consolidation dynamics" },
+                { href: "bridge_to_xi.html", name: "The Bridge: Circumpunct x Xi", desc: "Connecting the circumpunct framework with Xi" },
+                { href: "circumpunct_AI.html", name: "The Circumpunct Framework (AI)", desc: "The geometry of everything applied to artificial intelligence" },
+                { href: "circumpunct_theory.html", name: "Circumpunct Theory", desc: "Core theoretical exposition of the circumpunct" },
+                { href: "cross_scale_braid.html", name: "Dimensional Braid Theory", desc: "One circumpunct braiding across scales" },
+                { href: "euler_circumpunct.html", name: "Euler and the Circumpunct", desc: "Euler's mathematics through the circumpunct lens" },
+                { href: "flickering_circumpuncts.html", name: "Flickering Circumpuncts", desc: "Dynamic circumpunct behavior at threshold states" },
+                { href: "hidden_order.html", name: "The Hidden Order Prediction", desc: "Predictions arising from hidden structural order" },
+                { href: "scale_strip.html", name: "Scale Strip and Scale Wrap", desc: "Circumpunct framework scale topology" },
+                { href: "shut_up_and_calculate.html", name: "Shut Up and Calculate", desc: "When the math speaks for itself" },
+                { href: "six_plus_one_bridge.html", name: "The 6+1 Kernel Bridge", desc: "Six dimensions plus one: the kernel bridge structure" },
+                { href: "the_weight_of_the_field.html", name: "The Weight of the Field", desc: "What the field weighs and why it matters" },
             ]
         },
         tools: {
@@ -834,6 +877,9 @@
                 { href: "machine_language.html", name: "Machine Language: The Aperture Between Mind and Matter", desc: "A language for circumpunct-native computation" },
                 { href: "microbot4.html", name: "MICROBOT: Periodic Table of ⊙ v4", desc: "Interactive periodic table of circumpunct states" },
                 { href: "physics_game_engine.html", name: "Circumpunct Engine v2: Foveated Reality", desc: "Physics game engine built on circumpunct principles" },
+                { href: "circumpunct_device_spec.html", name: "Circumpunct Resonance Device Spec", desc: "Design specification for a circumpunct resonance device" },
+                { href: "hacking_article.html", name: "Hacking in Multiplayer Video Games", desc: "Analysis of hacking through the circumpunct lens" },
+                { href: "piezo_drone_spec.html", name: "Piezo Disc Drone Concept Spec", desc: "Concept specification for a piezo disc drone" },
             ]
         }
     };

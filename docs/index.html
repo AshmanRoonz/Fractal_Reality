@@ -478,12 +478,94 @@
         .c-amber { color: var(--amber); }
         .c-mute { color: var(--mute); }
         .c-dim { color: rgba(255,255,255,0.35); }
+
+        /* Search bar in top bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+        }
+        .search-trigger {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,170,0,0.2);
+            border-radius: 6px;
+            padding: 5px 12px;
+            color: var(--mute);
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.04em;
+        }
+        .search-trigger:hover {
+            border-color: var(--amber);
+            color: var(--amber);
+            background: rgba(255,170,0,0.06);
+        }
+        .search-trigger kbd {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 3px;
+            padding: 1px 5px;
+            font-size: 10px;
+            font-family: inherit;
+            color: rgba(255,255,255,0.35);
+            margin-left: 6px;
+        }
+
+        /* Pages overlay */
+        .pages-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+        .pages-overlay.open { display: flex; flex-direction: column; }
+        .pages-overlay-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 10001;
+            line-height: 1;
+            padding: 4px 8px;
+            transition: color 0.15s;
+        }
+        .pages-overlay-close:hover { color: #fff; }
+        .pages-overlay iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+            border-radius: 0;
+        }
     </style>
 </head>
 <body>
 
 <div class="top-bar">
     <a href="https://www.fractalreality.ca" style="color:var(--amber)">FRACTALREALITY.CA</a>
+    <button class="search-trigger" onclick="openPagesOverlay()" title="Search all pages">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Search all pages
+        <kbd>/</kbd>
+    </button>
+</div>
+
+<!-- Pages overlay (loads pages.html in iframe) -->
+<div class="pages-overlay" id="pagesOverlay">
+    <button class="pages-overlay-close" onclick="closePagesOverlay()">&times;</button>
+    <iframe id="pagesFrame" src="about:blank"></iframe>
 </div>
 
 <!-- =============================================
@@ -1280,7 +1362,7 @@
 
     <!-- BOTTOM LINKS -->
     <div style="text-align:center;margin-top:16px;font-size:10px;line-height:2.2">
-        <a href="pages.html" style="color:var(--amber)">All Pages</a> · <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" style="color:var(--mute)">GitHub</a> · <a href="https://www.ashmanroonz.ca/2025/08/god-and-soul-array.html" target="_blank" style="color:var(--mute)">Blog</a> · <a href="simulators.html" style="color:var(--mute)">Interactive Demos</a> · <a href="circumpunct_encyclopedia.html" style="color:var(--mute)">Encyclopedia</a> · <a href="mailto:email@ashmanroonz.ca" style="color:var(--mute)">Contact</a>
+        <a href="javascript:void(0)" onclick="openPagesOverlay()" style="color:var(--amber)">All Pages</a> · <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" style="color:var(--mute)">GitHub</a> · <a href="https://www.ashmanroonz.ca/2025/08/god-and-soul-array.html" target="_blank" style="color:var(--mute)">Blog</a> · <a href="simulators.html" style="color:var(--mute)">Interactive Demos</a> · <a href="circumpunct_encyclopedia.html" style="color:var(--mute)">Encyclopedia</a> · <a href="mailto:email@ashmanroonz.ca" style="color:var(--mute)">Contact</a>
     </div>
 
     <!-- CLOSING QUOTE -->
@@ -1364,6 +1446,46 @@ document.querySelectorAll('.sd-pill').forEach(function(pill) {
             else { target.classList.remove('open'); pill.classList.remove('active'); }
         }, 300);
     });
+});
+
+// Pages overlay (search)
+function openPagesOverlay() {
+    var overlay = document.getElementById('pagesOverlay');
+    var frame = document.getElementById('pagesFrame');
+    overlay.classList.add('open');
+    if (frame.src === 'about:blank' || !frame.src.includes('pages.html')) {
+        frame.src = 'pages.html';
+    }
+    // Focus the search input inside the iframe once loaded
+    frame.onload = function() {
+        try {
+            var input = frame.contentDocument.getElementById('searchInput');
+            if (input) input.focus();
+        } catch(e) {}
+    };
+    document.body.style.overflow = 'hidden';
+}
+function closePagesOverlay() {
+    var overlay = document.getElementById('pagesOverlay');
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+}
+// Keyboard shortcut: / to open, Escape to close
+document.addEventListener('keydown', function(e) {
+    var overlay = document.getElementById('pagesOverlay');
+    if (e.key === '/' && !overlay.classList.contains('open') && !e.ctrlKey && !e.metaKey) {
+        var tag = (e.target.tagName || '').toLowerCase();
+        if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+        e.preventDefault();
+        openPagesOverlay();
+    }
+    if (e.key === 'Escape' && overlay.classList.contains('open')) {
+        closePagesOverlay();
+    }
+});
+// Click backdrop to close
+document.getElementById('pagesOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closePagesOverlay();
 });
 </script>
 </body>
