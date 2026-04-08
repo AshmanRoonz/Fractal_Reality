@@ -19039,6 +19039,136 @@ THE A' SEQUENCE:
 
 Together with the original (T-3)(T+1) = 0 from §27.7b, this gives three independent self-determination routes, each emerging from a different structural property (rung count, balance-boundary identity, compositional closure). T = 3 is overdetermined: the triad is not chosen but forced from every direction.
 
+### §27.7f The Four-Station Processual Product
+
+The reordering of i-strokes to processual dimensions (§4.9) reveals a fourth exponent station (3.5D, recursion) and a zeroth station (0.5D, genesis). The accumulated traversal function A(d) = d(2d+1) now spans all four processual coastlines:
+
+```
+    E(0.5) = 0.5 × 2  = 1         genesis         i¹ = +i
+    E(1.5) = 13/12                 commitment      i² = -1
+    E(2.5) = 56/39                 emergence       i³ = -i
+    E(3.5) = 3.5 × 8  = 28        recursion       i⁰ = +1
+```
+
+Their product:
+
+```
+    Π = E(0.5) × E(1.5) × E(2.5) × E(3.5)
+      = 1 × (13/12) × (56/39) × 28
+      = 392/9
+
+    PURE T FORM:      Π = (T²-1)(T²-2)² / T²
+    GAUGE FORM:        Π = SU(3) · R² / T²
+    HALF-PLANE FORM:   Π = (P·R) × (2R/T²)
+```
+
+Zero free parameters. Everything derives from T = 3.
+
+**The self-mediating product (A4 in the exponent algebra).**
+
+The three-part compositional product (§27.7c) needed an external mediator:
+
+```
+    E(3) = E(1.5) × E(2.5) × T^T/2
+```
+
+The T^T/2 = 27/2 played the role of Φ: connecting the two interior parts into a whole. Without it, E(1.5) × E(2.5) = 14/9 ≠ 21.
+
+The four-part product needs no mediator:
+
+```
+    Π = [E(0.5) × E(3.5)] × [E(1.5) × E(2.5)]
+      = frame × interior
+      = (P·R) × (2R/T²)
+      = 28 × (14/9)
+```
+
+The frame (genesis + recursion) IS the mediator. E(0.5) = 1 contributes identity (the axiom, A0). E(3.5) = P·R = 28 contributes the full pump-times-rung product (the completed ladder). Together they play the role that T^T/2 played externally. The mediator was not missing from the formula; it was missing from the station list. Once genesis and recursion are recognized as processual stations, the mediator dissolves into the product.
+
+This is A4 completing itself in the exponent algebra: the whole is not the sum of its parts but their compositional unity via Φ. In the four-station product, Φ is no longer added from outside; it is the frame (the right half-plane, the inter-scale interface) that naturally mediates the interior (the left half-plane, the mid-process phases).
+
+The bridge identity confirms consistency with the old formula:
+
+```
+    Π × T^T/2 = E(3) × E(3.5)
+    (392/9) × (27/2) = 21 × 28 = 588    ✓
+```
+
+The old mediator equals E(3) divided by the left half-plane product: T^T/2 = E(3) / (2R/T²) = 21 × T²/(2R) = 189/14 = 27/2. It was compensating for two absent stations.
+
+**The half-plane decomposition.**
+
+The cosmological visible/dark split (§10.10a) appears in the exponent algebra:
+
+```
+    Right half-plane (visible):   E(0.5) × E(3.5) = 28 = P·R     (integer)
+    Left half-plane (dark):       E(1.5) × E(2.5) = 14/9 = 2R/T²  (fraction)
+
+    Ratio: right/left = P·T²/2 = 2T² = 18
+```
+
+The visible sector's exponent product is exactly 2T² times the dark sector's. Integers vs fractions: complete vs mid-process. The same distinction the cosmological budget draws in energy, the exponent algebra draws in number type.
+
+**The conjugate pair products.**
+
+Grouped by i-conjugation (imaginary axis reflection) instead of by half-plane (real axis):
+
+```
+    (+i, -i) pair:   E(0.5) × E(2.5) = W(W+1)/(T·V) = 56/39
+    (-1, +1) pair:   E(1.5) × E(3.5) = R·V/T = 91/3
+
+    Ratio: real/imaginary = V²/SU(3) = 169/8
+```
+
+The imaginary conjugates (convergence and emergence, the two vertical poles of the i-plane) produce the emergence numerator W(W+1). The real conjugates (commitment and recursion, the two horizontal poles) produce the coupling product R·V. Their ratio V²/SU(3) = 169/8 measures how much more "work" the real axis does relative to the imaginary axis.
+
+**The asymmetry ratio identity.**
+
+The ratio of the two asymmetries (conjugate ratio divided by half-plane ratio) equals the aperture exponent squared:
+
+```
+    [V²/SU(3)] / [2T²] = (V/G)² = (13/12)² = E(1.5)²
+    (169/8) / 18 = 169/144     ✓
+```
+
+The commitment rung (1.5D, the i-turn, where irreversibility enters) mediates between the i-conjugate asymmetry and the cosmological asymmetry. E(1.5)² is the conversion factor.
+
+**The S-Π identity: connecting states to gauge structure.**
+
+```
+    S = Π × SU(3) × T² / R²
+    64 = (392/9) × 8 × 9 / 49 = (392/9) × (72/49) = 64    ✓
+
+    Equivalently:  Π = S × R² / (G × T!)
+                   392/9 = 64 × 49 / (12 × 6) = 3136/72 = 392/9    ✓
+```
+
+The 64-state architecture (§7) equals the processual product scaled by the gauge-to-ladder ratio SU(3)·T²/R². This is the algebraic bridge between Part II (the state architecture) and Part III (the Standard Model): the pump cycle's total work, measured as the product of all four processual exponents, is exactly what converts between the state count and the gauge structure.
+
+Note that SU(3)·T² = G·T! = 72: the gauge-triad product equals the generators times the triad factorial, a structural identity forced by T = 3.
+
+**The triangular number completion.**
+
+A(d) at the eight stations of the octave produces the first 8 triangular numbers:
+
+```
+    A(0)=0  A(0.5)=1  A(1)=3  A(1.5)=6  A(2)=10  A(2.5)=15  A(3)=21  A(3.5)=28
+    T₀      T₁        T₂      T₃        T₄       T₅         T₆       T₇
+```
+
+The sequence contains exactly two perfect numbers (numbers equal to the sum of their proper divisors): 6 at 1.5D (commitment) and 28 at 3.5D (recursion). These mark the two points where accumulated traversal achieves number-theoretic self-completion. Both are processual (half-integer) dimensions. Both sit on the real axis of the i-plane (i² = -1 and i⁰ = +1).
+
+The sum of the full octave: 0+1+3+6+10+15+21+28 = 84 = G×R = P×E(3). The total traversal summed across all eight stations equals generators times rungs.
+
+**The frame-quotes-interior pattern in A'(d).**
+
+```
+    A'(0)   = 1  = A(0.5)       the structural origin quotes genesis
+    A'(3.5) = 15 = A(2.5)       recursion's rate quotes emergence's total
+```
+
+The derivative at the two boundary stations (0D and 3.5D) equals the accumulated traversal at specific interior stations. The frame quotes the interior: the rate of change at the edge of the cycle references the total work done inside the cycle.
+
 ### §27.8 Primes Are Made of Dimensions
 
 The structural dimensions of the circumpunct (1, 2, 3) are also the first integers. Two of them (2 and 3) are the first primes. The third (1) is the unit.
