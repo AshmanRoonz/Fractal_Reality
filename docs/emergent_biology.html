@@ -532,7 +532,7 @@ Two kinds of dimension are at work here. The structural dimensions (integer: 1D,
     <tr class="highlight"><td>Primary</td><td>1D (line)</td><td><span class="p">i¹ = +i</span> at 0.5D (convergence)</td><td>DNA converges into a linear chain</td><td>Amino acid sequence</td></tr>
     <tr><td>Secondary</td><td>2D (surface)</td><td><span class="p">i² = -1</span> at 1.5D (commitment)</td><td>Chain commits to local planar patterns</td><td>α-helix, β-sheet</td></tr>
     <tr class="highlight"><td>Tertiary</td><td>3D (boundary)</td><td><span class="p">i³ = -i</span> at 2.5D (emergence)</td><td>Surfaces emerge into full 3D shape</td><td>Folded domain</td></tr>
-    <tr><td>Quaternary</td><td>3.5D (recursion)</td><td><span class="p">i⁰ = +1</span> at 3.5D (recursion)</td><td>Closed domain becomes new aperture</td><td>Enzyme complex</td></tr>
+    <tr><td>Quaternary</td><td>3.5D = 0D at next scale</td><td><span class="p">i⁰ = +1</span> at 3.5D (recursion)</td><td>Closed domain becomes new aperture</td><td>Enzyme complex</td></tr>
   </tbody>
 </table>
 </div>
@@ -1044,7 +1044,7 @@ const codons = {
     },
     {
       name: 'Quaternary',
-      dim: '3.5D (process = structure)',
+      dim: '3.5D = 0D (next scale)',
       phase: 'i⁰ at 3.5D',
       meaning: 'Recursion → new aperture',
       draw: (ctx, w, h) => {
