@@ -29,6 +29,12 @@ const MIME_TYPES = {
 };
 
 const httpServer = http.createServer((req, res) => {
+  // Skip Colyseus internal routes (matchmake, etc.)
+  if (req.url.startsWith('/matchmake') || req.url.startsWith('/colyseus')) {
+    // Colyseus handles these; do nothing (transport will respond)
+    return;
+  }
+
   // Serve the client HTML at root
   let filePath;
   if (req.url === '/' || req.url === '/index.html') {
@@ -39,8 +45,9 @@ const httpServer = http.createServer((req, res) => {
       filePath = path.join(__dirname, '..', 'last_ship_sailing.html');
     }
   } else {
-    // Serve static files from parent directory
-    filePath = path.join(__dirname, '..', req.url);
+    // Serve static files from parent directory (sanitize path)
+    const safePath = path.normalize(req.url).replace(/^(\.\.[\/\\])+/, '');
+    filePath = path.join(__dirname, '..', safePath);
   }
 
   const ext = path.extname(filePath);
@@ -48,12 +55,16 @@ const httpServer = http.createServer((req, res) => {
 
   fs.readFile(filePath, (err, content) => {
     if (err) {
-      res.writeHead(404);
-      res.end('Not found');
+      if (!res.headersSent) {
+        res.writeHead(404);
+        res.end('Not found');
+      }
       return;
     }
-    res.writeHead(200, { 'Content-Type': contentType });
-    res.end(content);
+    if (!res.headersSent) {
+      res.writeHead(200, { 'Content-Type': contentType });
+      res.end(content);
+    }
   });
 });
 

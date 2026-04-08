@@ -19497,6 +19497,150 @@ CORRECTION STRUCTURE ACROSS CONSTANTS:
     opposite signs.
 ```
 
+### §27.7j The Selection Rule: Why These Exponents
+
+The ad-hoc critique asks: with building blocks {1, 2, 3, 4, 5, 7, 8, 12, 13, 21, 64} and operations {+, -, ×, ÷, ^}, the combinatorial space is enormous. Why does the cosmological constant care about SU(3) × R specifically? Why does gravity live at exponent 21? The accumulated traversal function A(d) answers this: the framework does not choose the exponents; the ladder computes them.
+
+#### The Hierarchy Rule
+
+A(d) = d(2d+1) at the seven main stations produces the triangular numbers:
+
+```
+    d     A(d)    A'(d)
+    ---   ----    -----
+    0     0       1  (aperture)
+    0.5   1       3  (T, triad)
+    1     3       5  (Φ+○)
+    1.5   6       7  (R, rungs)
+    2     10      9  (T²)
+    2.5   15      11 (R+P)
+    3     21      13 (V, generators+whole)
+    3.5   28      15 (emergence traversal)
+```
+
+These are triangular numbers: A(d) = T_{2d} where T_n = n(n+1)/2. Their sum over the seven main stations (0 through 3) is:
+
+```
+    Σ A(d) = 0 + 1 + 3 + 6 + 10 + 15 + 21 = 56
+```
+
+This is a theorem, not a choice: the sum of the first R triangular numbers equals R(R-1)(R+1)/6 = 7·6·8/6 = 56 = SU(3)·R. The identification SU(3) = (R²-1)/6 is combinatorial; it follows from R = 2T+1.
+
+The hierarchy of coupling constants is orders of A:
+
+```
+    ORDER 0:  A(0.5) = 1    → α   (point coupling)
+    ORDER 1:  A(3)   = 21   → G   (boundary coupling)
+    ORDER 2:  Σ A    = 56   → Λ   (field energy density)
+    
+    Separations:
+    G/α  = A(3)/A(0.5) = 21  = E(3)
+    Λ/G  = Σ A / A(3)  = 8/3 = SU(3)/T
+```
+
+Each level is one order of accumulation deeper. α is coupling at a single station. G is accumulated coupling to the boundary. Λ is the total accumulated coupling across the entire ladder. The "hierarchy problem" (why is gravity so weak?) has the same answer as the "cosmological constant problem" (why is Λ so small): 21 α-steps to the boundary, 56 to the field. These numbers are not parameters; they are the accumulated traversal function evaluated at the boundary and summed across the ladder.
+
+#### The Constraint-Operation Mapping
+
+The local exponents E(d) at processual rungs follow a deeper pattern. Each constraint type accesses A(d) through the operation that matches its function:
+
+```
+    • (aperture) CONVERGES → differentiates
+        E(1.5) = A'(3) / G = V / (V-1) = 13/12
+        
+    Φ (field) MEDIATES → integrates
+        E(2.5) = Σ A / (T·V) = 56/39
+        
+    ○ (boundary) FILTERS → evaluates
+        E(3) = A(3) = 21
+```
+
+This is the selection rule. The aperture differentiates because convergence collapses to a point (it sees rate). The field integrates because mediation connects across all scales (it sees total). The boundary evaluates because filtration selects at a position (it sees its own level).
+
+The rule reads: **E(d) = OPERATION(A) / GENERATOR**, where the operation is determined by which constraint the rung instantiates, and the generator is the structure that produces the degrees of freedom at that rung.
+
+For 1.5D: the aperture differentiates A at the boundary, giving A'(3) = V = 13. The generator is G = V - 1 = 12 (the generators without the whole). The excess of V over G is +1: the whole (A4). E(1.5) is a fraction barely above 1 because the first splitting is minimal.
+
+For 2.5D: the field integrates A across all stations, giving Σ A = 56. The generator is T·V = 39 (the triad times the full vertex count). E(2.5) is a larger fraction because emergence accesses everything but divides by what generated it.
+
+For 3D: the boundary evaluates A at its own position, giving A(3) = 21. The generator is 1 (implicit; closure IS the generating structure). E(3) is an integer because at the boundary, access and generation are the same thing. The progression from fraction to integer is dimensional closure in the exponent algebra.
+
+Note: A''(d) = 4 = P at every rung. The second derivative of the traversal function is the pump. The pump is universal; it does not depend on position.
+
+#### The Correction Coefficient Rule
+
+The α/K correction terms in mass formulas also follow from the selection rule. The pattern:
+
+```
+    CORRECTION STRUCTURE:
+    
+    First-order coefficient  = closure count at the constant's home scale
+    Second-order coefficient = process count at the constant's home scale
+    Their ratio              = dimensional balance at that scale
+    
+    Λ (below ladder):    T!/P         = 6/4     ratio Φ/○ = 2/3
+    λ_H (gauge level):   (Φ+○)/SU(3) = 5/8     ratio inverted
+    
+    MASS CORRECTIONS:
+    
+    Intra-generation: K = T^(nesting depth)     T³ for μ, T⁴ for τ
+    Inter-generation: K = ladder ratio           R/T for Cabibbo
+```
+
+The distinction between elementary and composite particles follows from which order of A they access:
+
+```
+    ELEMENTARY (leptons):
+        Base uses A' (derivative; convergent, point-like)
+        Correction = α / T^n (powers of triad; intra-scale nesting)
+        One correction term (single-scale physics)
+    
+    COMPOSITE (baryons):
+        Base uses A (function value; accumulated, extended)
+        Correction = α·A'(rung)/T + α²·A'(rung) (derivatives at binding rungs)
+        Two correction terms (multi-scale binding)
+```
+
+#### Prediction: The Proton-to-Electron Mass Ratio
+
+As a test of the selection rule, we derive the proton mass from scratch. The proton is a composite of T quarks bound by the strong force (SU(3)). The selection rule says:
+
+Base exponent: A(1.5)/P = 6/4 = 3/2. The proton is a mass (1.5D) produced by accumulated binding, so the base is A (function value), not A' (derivative). Divided by P because the pump cycle normalizes all mass production.
+
+First-order correction: A'(2.5)/T = 11/3. The proton binds via emergence (2.5D, the strong scale), so the first correction uses the derivative of A at the emergence rung. Divided by T because there are T constituent quarks. Note: 11 = R + P = A'(2.5), the rate of traversal at the rung where the strong force lives.
+
+Second-order correction: A'(3) = V = 13. The boundary rung, where the proton exists as a resolved particle. This is the self-referential term: the proton's mass feeds back through the complete vertex structure.
+
+```
+    THE PROTON MASS RATIO:
+    
+    m_p/m_e = (1/α)^(A(1.5)/P + A'(2.5)·α/T + A'(3)·α²)
+            = (1/α)^(3/2 + (11/3)α + 13α²)
+            = 1836.143
+    
+    Measured: 1836.153 ± 0.001
+    Accuracy: 5.35 ppm
+    
+    Reading:
+        3/2    = traversal at commitment / pump     (where mass lives)
+        11/3   = emergence rate / triad             (how it binds)
+        13     = full vertex count                  (self-referential closure)
+```
+
+Every term is A(d) or A'(d) evaluated at a specific rung of the dimensional ladder. No number is chosen; each is computed from the traversal function at the rung where the physics lives. The selection rule is: differentiate for point-like, evaluate for accumulated, integrate for total. The operation matches the constraint.
+
+#### The Completeness Argument
+
+The full octave sum (all 8 stations including 3.5D) is:
+
+```
+    Σ A(d) for d = 0 to 3.5 = 56 + 28 = 84 = G × R = P × A(3)
+```
+
+84 = generators × rungs = pump × closure. The complete octave, when accumulated, equals the product of the generating structure (G) and the ladder (R). This is not a coincidence; it is conservation of traversal (A3) applied to the accumulated traversal itself. The 7-station sum (56) and the recursion term (28) split as SU(3)·R and P·R, giving R·(SU(3) + P) = R·G = 84.
+
+The sequence A(d) contains exactly two perfect numbers: 6 at 1.5D and 28 at 3.5D. These are the two "turn" stations of the pump cycle: commitment (i² = -1) and recursion (i⁰ = +1). Perfect numbers are those equal to the sum of their proper divisors; at the turn stations, the accumulated traversal is self-contained. The only known even perfect numbers have the form 2^(p-1)(2^p - 1) where 2^p - 1 is prime; 6 = 2¹·3 and 28 = 2²·7. The primes involved are T = 3 and R = 7.
+
 ### §27.8 Primes Are Made of Dimensions
 
 The structural dimensions of the circumpunct (1, 2, 3) are also the first integers. Two of them (2 and 3) are the first primes. The third (1) is the unit.

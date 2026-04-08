@@ -11,6 +11,11 @@ const {
   WorldEffectState, KillEntry,
 } = require('./schema');
 const { LSS, CHASSIS, LOADOUTS, Vec3, Quat, getForward, getRight } = require('./shared');
+const {
+  worldSDF, sdfNormal, sdfRaycast,
+  resolveCollision, resolveShipShipCollisions,
+  buildLevelData, getValidSpawnPoint,
+} = require('./collision');
 
 // ------------------------------------------------------------------
 // Internal (non-synced) state for simulation
@@ -190,11 +195,15 @@ class MatchRoom extends Room {
     this.botIdCounter = 0;
     this.gameTime = 0;
 
+    // Level geometry and collision
+    this.levelData = buildLevelData('circumpunct');
+
     // Max clients
     this.maxClients = LSS.MAX_PLAYERS;
 
-    // Set simulation interval (server tick)
+    // Set simulation interval (server tick) and state patch rate
     this.setSimulationInterval((dt) => this.serverTick(dt), 1000 / LSS.TICK_RATE);
+    this.setPatchRate(1000 / LSS.TICK_RATE); // sync state patches at same rate as tick
 
     // ---- Message handlers ----
 
@@ -329,6 +338,11 @@ class MatchRoom extends Room {
     }
     this.state.currentRound++;
 
+    // Optional: rotate to different map every 2 rounds
+    const mapKeys = ['circumpunct', 'hourglass'];
+    const mapIndex = (this.state.currentRound - 1) % mapKeys.length;
+    this.levelData = buildLevelData(mapKeys[mapIndex]);
+
     // Respawn everyone
     for (const sp of this.serverPlayers.values()) {
       if (sp.loadoutKey) this.respawnPlayer(sp);
@@ -384,13 +398,10 @@ class MatchRoom extends Room {
     sp.vel.set(0, 0, 0);
     sp.ionEnergy = sp.ionMaxEnergy;
 
-    // Spawn position (team-based, random offset)
-    const teamSign = sp.team === LSS.TEAM_FLEET_A ? -1 : 1;
-    sp.pos.set(
-      teamSign * (1000 + Math.random() * 500),
-      (Math.random() - 0.5) * 500,
-      (Math.random() - 0.5) * 1000
-    );
+    // Spawn position using team-aware spawn function
+    const teamTag = sp.team === LSS.TEAM_FLEET_A ? 'A' : 'B';
+    const spawnPos = getValidSpawnPoint(this.levelData, teamTag);
+    sp.pos.copy(spawnPos);
   }
 
   spawnBots() {
@@ -400,18 +411,15 @@ class MatchRoom extends Room {
 
     for (let t = 0; t < 2; t++) {
       const team = t === 0 ? LSS.TEAM_FLEET_A : LSS.TEAM_FLEET_B;
+      const teamTag = team === LSS.TEAM_FLEET_A ? 'A' : 'B';
       for (let i = 0; i < botsPerTeam; i++) {
         const id = 'bot_' + (this.botIdCounter++);
         const loadoutKey = loadoutKeys[Math.floor(Math.random() * loadoutKeys.length)];
         const bot = new ServerBot(id, loadoutKey, team);
 
-        // Position bots in their team's territory
-        const teamSign = team === LSS.TEAM_FLEET_A ? -1 : 1;
-        bot.pos.set(
-          teamSign * (800 + Math.random() * 1500),
-          (Math.random() - 0.5) * 800,
-          (Math.random() - 0.5) * 2000
-        );
+        // Position bots using team-aware spawn function
+        const spawnPos = getValidSpawnPoint(this.levelData, teamTag);
+        bot.pos.copy(spawnPos);
 
         this.serverBots.set(id, bot);
 
@@ -469,6 +477,54 @@ class MatchRoom extends Room {
       if (!bot.alive) continue;
       this.updateBotAI(bot, dt);
       this.updateBotDoom(bot, dt);
+    }
+
+    // ---- Level collision resolution ----
+    for (const sp of this.serverPlayers.values()) {
+      if (!sp.alive || !sp.chassis) continue;
+      const shipRadius = sp.chassis.hullLength * 0.4;
+      resolveCollision(sp.pos, sp.vel, shipRadius, this.levelData);
+    }
+
+    for (const bot of this.serverBots.values()) {
+      if (!bot.alive) continue;
+      const shipRadius = bot.chassis.hullLength * 0.5;
+      resolveCollision(bot.pos, bot.vel, shipRadius, this.levelData);
+    }
+
+    // ---- Ship-to-ship collision resolution ----
+    const allEntities = [];
+    for (const sp of this.serverPlayers.values()) {
+      if (sp.alive && sp.chassis) {
+        allEntities.push({
+          id: sp.sessionId,
+          pos: sp.pos,
+          vel: sp.vel,
+          radius: sp.chassis.hullLength * 0.4,
+          health: sp.health,
+          shield: sp.shield,
+          dashActive: sp.dashActive,
+        });
+      }
+    }
+    for (const bot of this.serverBots.values()) {
+      if (bot.alive) {
+        allEntities.push({
+          id: bot.id,
+          pos: bot.pos,
+          vel: bot.vel,
+          radius: bot.chassis.hullLength * 0.5,
+          health: bot.health,
+          shield: bot.shield,
+          dashActive: false,
+        });
+      }
+    }
+
+    const ramDamages = resolveShipShipCollisions(allEntities, dt);
+    for (const dmgEvent of ramDamages) {
+      const target = this.serverPlayers.get(dmgEvent.targetId) || this.serverBots.get(dmgEvent.targetId);
+      if (target) this.applyDamage(target, dmgEvent.damage, null);
     }
 
     // ---- Update projectiles ----
@@ -694,8 +750,12 @@ class MatchRoom extends Room {
       aimDir.normalize();
     }
 
+    // Check level geometry raycast to limit hitscan range
+    const wallDist = sdfRaycast(origin.x, origin.y, origin.z, aimDir.x, aimDir.y, aimDir.z, w.range, this.levelData);
+    const effectiveRange = Math.min(w.range, wallDist);
+
     // Find closest hit (players + bots, excluding friendly)
-    let bestTarget = null, bestDist = w.range;
+    let bestTarget = null, bestDist = effectiveRange;
 
     // Check other players
     for (const [sid, other] of this.serverPlayers) {
@@ -712,7 +772,7 @@ class MatchRoom extends Room {
     }
 
     if (bestTarget) {
-      const rangeFalloff = 0.7 + 0.3 * Math.max(0, 1 - bestDist / w.range);
+      const rangeFalloff = 0.7 + 0.3 * Math.max(0, 1 - bestDist / effectiveRange);
       let finalDmg = w.damage * rangeFalloff;
 
       // ION ADS bonus
