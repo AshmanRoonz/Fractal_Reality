@@ -424,30 +424,73 @@ canvas {
 
 <p>The three-layer model handles homonuclear bonds (A-A) with sub-percent accuracy. Heteronuclear bonds (A-B) require a fourth layer: ionic resonance from the balance parameter.</p>
 
-<h3>Electronegativity as Convergence Strength</h3>
+<h3>Framework Electronegativity</h3>
 
-<p>Each atom is a ⊙ with a characteristic convergence strength. The framework derives this from Z<sub>eff</sub>: within a period, EN &prop; Z<sub>eff</sub>/n (where n is the principal quantum number). This gives C, N, O, F within 4% of Pauling values, using only the screening constants above and the atomic number Z.</p>
+<p>Each atom is a ⊙ with a characteristic convergence strength. The framework derives this from Z<sub>eff</sub> using a power law that captures both ionization energy and electron affinity effects:</p>
+
+<div class="eq">EN = Z<sub>eff</sub><sup>R/A(2)</sup> / n = Z<sub>eff</sub><sup>7/10</sup> / n</div>
+
+<p>The power R/A(2) = 7/10 is the rungs-to-accumulated-traversal ratio at the field station (2D). EN does not feel the full nuclear charge; 7/10 of it "gets through" the field's mediation, the rest is screened by the 2D surface. The fractional power compresses the Z<sub>eff</sub> scale, expanding low-Z<sub>eff</sub> values (H, period 3) relative to high-Z<sub>eff</sub> (F, O); this naturally weights electron affinity alongside ionization energy.</p>
+
+<table>
+<tr><th>Element</th><th>Z<sub>eff</sub></th><th>n</th><th>EN<sub>fw</sub></th><th>Pauling</th></tr>
+<tr><td>H</td><td>1.000</td><td>1</td><td>1.000</td><td>2.20</td></tr>
+<tr><td>C</td><td>3.250</td><td>2</td><td>1.141</td><td>2.55</td></tr>
+<tr><td>N</td><td>3.900</td><td>2</td><td>1.296</td><td>3.04</td></tr>
+<tr><td>O</td><td>4.550</td><td>2</td><td>1.444</td><td>3.44</td></tr>
+<tr><td>F</td><td>5.200</td><td>2</td><td>1.586</td><td>3.98</td></tr>
+<tr><td>Si</td><td>4.150</td><td>3</td><td>0.903</td><td>1.90</td></tr>
+<tr><td>P</td><td>4.800</td><td>3</td><td>0.999</td><td>2.19</td></tr>
+<tr><td>S</td><td>5.450</td><td>3</td><td>1.092</td><td>2.58</td></tr>
+<tr><td>Cl</td><td>6.100</td><td>3</td><td>1.182</td><td>3.16</td></tr>
+</table>
+
+<h3>The Heteronuclear Bond Formula</h3>
 
 <p>When two different atoms bond, the balance parameter ◐ deviates from 0.5: the more electronegative atom pulls convergence toward itself. This asymmetry stores energy, just as a capacitor stores energy in charge separation.</p>
 
-<div class="eq">D(A-B) = &radic;(D<sub>AA</sub> &times; D<sub>BB</sub>) &times; (1 + k &times; &Delta;EN<sup>2</sup>)</div>
+<div class="eq">D(A-B) = &radic;(D<sub>AA</sub> &times; D<sub>BB</sub>) &times; [1 + (&Phi;+T) &times; &Delta;EN<sup>2</sup>]</div>
 
 <p>The covalent baseline is the geometric mean: &Phi;-mediation (the field carries the multiplicative average of the two sigma strengths). The &Delta;EN<sup>2</sup> term is field polarization energy: asymmetric convergence stores energy proportional to the square of the deviation (the field is 2D, so energy goes as displacement squared).</p>
 
+<p>The coupling constant is &Phi; + T = 5 (field + triad). This has five equivalent framework expressions: P+1 (pump + aperture), R&minus;&Phi; (rungs minus field), P(P+1)/P (common denominator per pump), A(2)/&Phi; (accumulated traversal per field dimension).</p>
+
+<p><strong>The derivation chain is fully framework-native:</strong> A0 &rarr; T = 3 &rarr; screening constants &rarr; Z<sub>eff</sub> &rarr; EN = Z<sub>eff</sub><sup>7/10</sup>/n &rarr; D(A-B). Zero empirical electronegativity data.</p>
+
+<h3>Results: 23 Heteronuclear Bonds</h3>
+
+<table>
+<tr><th>Bond</th><th>Pred</th><th>Meas</th><th>Error</th><th>Bond</th><th>Pred</th><th>Meas</th><th>Error</th></tr>
+<tr><td>C-H</td><td>427</td><td>413</td><td>3.4%</td><td>Cl-S</td><td>264</td><td>255</td><td>3.5%</td></tr>
+<tr><td>H-N</td><td>384</td><td>391</td><td>1.9%</td><td>C-Cl</td><td>292</td><td>339</td><td>13.9%</td></tr>
+<tr><td>H-O</td><td>501</td><td>463</td><td>8.2%</td><td>Si-O</td><td>448</td><td>452</td><td>0.9%</td></tr>
+<tr><td>H-F</td><td>715</td><td>568</td><td>25.8%</td><td>Si-F</td><td>632</td><td>565</td><td>11.8%</td></tr>
+<tr><td>H-Si</td><td>329</td><td>318</td><td>3.4%</td><td>Si-Cl</td><td>325</td><td>381</td><td>14.7%</td></tr>
+<tr><td>H-P</td><td>296</td><td>322</td><td>8.1%</td><td>F-P</td><td>486</td><td>490</td><td>0.9%</td></tr>
+<tr><td>H-S</td><td>355</td><td>363</td><td>2.2%</td><td>F-S</td><td>456</td><td>327</td><td>39.4%</td></tr>
+<tr><td>H-Cl</td><td>379</td><td>431</td><td>12.2%</td><td>F-N</td><td>228</td><td>272</td><td>16.1%</td></tr>
+<tr><td>C-N</td><td>266</td><td>305</td><td>12.7%</td><td>Cl-P</td><td>257</td><td>326</td><td>21.1%</td></tr>
+<tr><td>C-O</td><td>328</td><td>358</td><td>8.4%</td><td>N-O</td><td>171</td><td>201</td><td>14.9%</td></tr>
+<tr><td>C-F</td><td>466</td><td>485</td><td>3.9%</td><td>F-O</td><td>168</td><td>190</td><td>11.8%</td></tr>
+<tr><td>C-S</td><td>307</td><td>272</td><td>12.9%</td><td></td><td></td><td></td><td></td></tr>
+</table>
+
+<p>Average error: <strong>10.9%</strong> across 23 bonds. Pauling's formula with his empirical EN gives 9.0% on the same set.</p>
+
 <h3>Two Overlaid Effects</h3>
 
-<p>The best framework coefficient is k = 1/&Phi; = 1/2, giving ~10% average error across 10 heteronuclear bonds. The residuals reveal two distinct layers:</p>
+<p>The remaining 11% error conflates two distinct corrections:</p>
 
 <table>
 <tr><th>Effect</th><th>Constraint</th><th>What It Controls</th></tr>
-<tr><td class="label">Polarity</td><td class="s">&Phi; (field)</td><td>How asymmetric the convergence is (&Delta;EN)</td></tr>
-<tr><td class="label">Overlap</td><td class="b">○ (boundary)</td><td>How effectively the boundary filters (atomic size)</td></tr>
+<tr><td class="label">Polarity</td><td class="s">&Phi; (field, 2D)</td><td>How asymmetric the convergence is (&Delta;EN); captured by the formula</td></tr>
+<tr><td class="label">Overlap</td><td class="b">○ (boundary, 3D)</td><td>How effectively the boundary filters (atomic size); partially absorbed into the power law</td></tr>
 </table>
 
-<p>Small atoms (hydrogen) have tighter boundaries, concentrating convergence and strengthening the ionic contribution. Atoms with many lone pairs (fluorine, n<sub>LP</sub> = 3) have weakened boundaries; F-F = 159 kJ/mol is anomalously weak despite fluorine's extreme electronegativity. A complete framework formula for heteronuclear bonds needs both the field-level polarity and the boundary-level overlap.</p>
+<p>The worst predictions (S-F at 39%, H-F at 26%) involve extreme &Delta;EN where the power law compression over- or under-estimates the ionic term. These are bonds where boundary overlap effects (3D) significantly modify the 2D field polarization.</p>
 
 <div class="note open">
-  <span class="wb">Open problem:</span> Deriving electronegativity from the framework requires predicting screening constants and effective nuclear charges from the 64-state architecture applied to electron configurations. This is the framework derivation of the periodic table; a major project beyond the current scope. The FORM of the heteronuclear correction is framework-native (geometric mean from &Phi;-mediation, &Delta;EN<sup>2</sup> from field polarization), but the COEFFICIENTS await this deeper derivation.
+  <span class="wb">Open refinement:</span> Deriving electron affinity directly from the framework would sharpen the EN power from 7/10 (which implicitly averages IE and EA effects) to a formula that treats them independently, resolving the S-F and H-F outliers. The O=O paramagnetic exchange energy (2.3%) remains a separate open problem.
 </div>
 
 <!-- ============================================================ -->
@@ -470,6 +513,7 @@ canvas {
     <a href="dimensional_ladder.html">Ladder</a> &middot;
     <a href="molecular_geometry.html">Geometry</a> &middot;
     <a href="emergent_biology.html">Biology</a> &middot;
+    <a href="biology_predictions.html">Biology Predictions</a> &middot;
     <a href="meson_mass_law.html">Mesons</a> &middot;
     <a href="circumpunct_predictions.html">Predictions</a>
   </p>
