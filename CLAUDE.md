@@ -143,7 +143,7 @@ The four i-strokes are not sequential phases; they are superposed quadrants of t
 - ~27% dark matter: energy in the left half-plane (mid-process; committed but not yet completed; gravitates but does not radiate)
 - ~68% dark energy: Φ itself, the complex plane, the 2D field that the quadrants exist within
 
-Dark matter gravitates because commitment (i² at 1.5D) gives mass (folded energy has trajectory). But it never reaches the right half-plane (recursion at 3.5D), so it produces no light, no electromagnetic signature. It is energy mid-process: committed but not yet arrived at the inter-scale interface.
+Dark matter is not a particle, because nothing is a particle at bottom. The field is structure all the way down (A2): nested ⊙s inside ⊙s. A "particle" is where the boundary at our scale resolves a fold. Dark matter is energy folded (gravitating, because commitment at 1.5D gives mass) but at the wrong phase for our boundary to catch: the field between folds. Not invisible because it is exotic; invisible because it is between the scales where our detectors filter. The boundary is a filter with a passband; visible matter is in the passband (right half-plane); dark matter is in the stopband (left half-plane). Three phase states of one thing: ~5% visible (Φ at the interface), ~27% dark matter (Φ between folds), ~68% dark energy (Φ itself, unfolded).
 
 **Fractal self-similarity across scales** (A2):
 
