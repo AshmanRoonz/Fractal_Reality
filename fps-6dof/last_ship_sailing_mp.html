@@ -8642,10 +8642,10 @@ function gameLoop(timestamp) {
   updateStasisFields(dt);
   checkExecutions(dt);
 
-  // Network: broadcast our state to all peers
-  broadcastPlayerState(dt);
-  // Network: clean up stale hit claims
-  if (net.active && game.time % 1 < dt) cleanupPendingHits();
+  // Network: broadcast input to server
+  broadcastInput(dt);
+  // Network: sync server state
+  syncServerState();
 
   // Decay enemy TONE locks on player (lose all locks after 5 seconds of no new hits)
   if (!player._enemyLockDecayTimers) player._enemyLockDecayTimers = {};
