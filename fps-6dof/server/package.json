@@ -1,0 +1,16 @@
+{
+  "name": "last-ship-sailing-server",
+  "version": "1.0.0",
+  "description": "Last Ship Sailing dedicated multiplayer server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "keywords": ["game", "multiplayer", "colyseus"],
+  "author": "Ashman Roonz",
+  "license": "ISC",
+  "dependencies": {
+    "colyseus": "^0.17.8"
+  }
+}
