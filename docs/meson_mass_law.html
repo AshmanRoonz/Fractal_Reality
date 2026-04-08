@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ The Meson Mass Law: Mesons as Φ-Level Composites</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --red: #E06060;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.f { color: var(--faint); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+.page { max-width: 780px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 80px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 64px; color: var(--gold); margin-bottom: 20px; }
+.header h1 { font-size: 36px; color: var(--gold); font-weight: 600; line-height: 1.3; margin-bottom: 12px; }
+.header .subtitle { font-size: 20px; color: var(--dim); font-style: italic; }
+
+h2 { font-size: 26px; color: var(--gold); font-weight: 600; margin: 60px 0 20px; }
+h3 { font-size: 21px; color: var(--green); font-weight: 600; margin: 40px 0 16px; }
+
+p { margin-bottom: 18px; }
+
+.eq {
+  text-align: center;
+  font-size: 28px;
+  color: var(--gold);
+  font-weight: 600;
+  margin: 32px 0;
+  padding: 20px;
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  background: rgba(184, 160, 96, 0.04);
+}
+.eq-small {
+  text-align: center;
+  font-size: 22px;
+  color: var(--cyan);
+  margin: 20px 0;
+  padding: 14px;
+}
+
+.note {
+  background: rgba(184, 160, 96, 0.06);
+  border-left: 3px solid var(--gold-dim);
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-style: italic;
+  color: var(--dim);
+}
+
+.note.insight {
+  border-left-color: var(--green);
+  background: rgba(77, 184, 160, 0.04);
+}
+
+.note.open {
+  border-left-color: var(--red);
+  background: rgba(224, 96, 96, 0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+}
+th, td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--faint);
+  text-align: left;
+}
+th { color: var(--gold); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+td { color: var(--warm); }
+td.num { text-align: center; font-family: monospace; color: var(--cyan); }
+td.good { color: var(--green); text-align: center; font-family: monospace; }
+td.open { color: var(--red); text-align: center; font-family: monospace; }
+td.label { color: var(--gold); font-weight: 600; }
+
+.regime-box {
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  background: rgba(10, 10, 20, 0.5);
+}
+.regime-box h4 {
+  font-size: 18px;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.regime-box .regime-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-right: 8px;
+}
+.regime-box .regime-tag.trav { background: rgba(232, 138, 175, 0.12); color: var(--pink); border: 1px solid rgba(232, 138, 175, 0.25); }
+.regime-box .regime-tag.field { background: rgba(77, 184, 160, 0.12); color: var(--green); border: 1px solid rgba(77, 184, 160, 0.25); }
+.regime-box .regime-tag.gauge { background: rgba(155, 122, 216, 0.12); color: var(--purple); border: 1px solid rgba(155, 122, 216, 0.25); }
+
+.sim-container {
+  background: rgba(10, 10, 20, 0.9);
+  border: 1px solid var(--faint);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 40px 0;
+}
+.sim-container h3 { margin-top: 0; }
+
+canvas {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.controls button {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--faint);
+  border-radius: 6px;
+  color: var(--dim);
+  font-family: 'EB Garamond', serif;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.controls button:hover { border-color: var(--gold); color: var(--gold); }
+.controls button.active { border-color: var(--gold); color: var(--gold); background: rgba(184, 160, 96, 0.1); }
+
+.footer {
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+  text-align: center;
+  color: var(--dim);
+  font-style: italic;
+}
+.footer a { color: var(--gold-dim); text-decoration: none; }
+.footer a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<a href="index.html" style="display: inline-block; font-weight: 600; color: var(--gold); padding: 10px 20px; margin: 10px;">⊙</a>
+<div class="page">
+
+<div class="header">
+  <div class="symbol">Φ</div>
+  <h1>The Meson Mass Law</h1>
+  <div class="subtitle">Mesons as Φ-Level Composites; m/m<sub>e</sub> = F/&alpha;, where F is a Framework Integer<br>Circumpunct Framework &sect;27.7j&ndash;k, Ashman Roonz, 2026</div>
+</div>
+
+<!-- ============================================================ -->
+<h2>Two Mass Regimes</h2>
+
+<p>Leptons and baryons live in the <span class="s wb">traversal regime</span>: their masses grow exponentially as (1/&alpha;)<sup>E(d)</sup>, where E(d) is computed from the accumulated traversal function A(d). These particles climb the dimensional ladder. But mesons reveal something different: a second regime, governed by the field itself.</p>
+
+<p>A baryon is a boundary-level composite: T = 3 quarks forming a color singlet via the full triad (&bigcirc;, 3D closure). A meson is a <span class="m wb">field-level composite</span>: &Phi; = 2 constituents (a quark-antiquark pair) bound via field pairing (&Phi;, 2D). The structural difference produces a different mass law entirely.</p>
+
+<div class="eq">m<sub>meson</sub> / m<sub>e</sub> = F / &alpha;</div>
+
+<p>where F is a framework integer determined by the meson's quantum numbers and structural role. The base mass quantum is m<sub>e</sub>/&alpha; &asymp; 70 MeV. Every meson is an integer multiple of this quantum.</p>
+
+<p>The law is multiplicative, not exponential. Mesons do not traverse the ladder; they vibrate within the field. The field mediates, and mediation is multiplication.</p>
+
+<div class="note insight">
+  The field regime IS the traversal regime frozen at exponent &asymp; 1. The base mass quantum m<sub>e</sub>/&alpha; &asymp; 70 MeV is (1/&alpha;)<sup>1</sup> &times; m<sub>e</sub>: the traversal at the first station.
+</div>
+
+<!-- ============================================================ -->
+<h2>Three Constraints, Three Particle Classes</h2>
+
+<p>The three constraints of the circumpunct produce three mass regimes, each with its own mathematical form:</p>
+
+<div class="regime-box">
+  <h4><span class="regime-tag trav">Traversal</span> Leptons (&bull;, aperture)</h4>
+  <p style="margin-bottom: 0;">m/m<sub>e</sub> = (1/&alpha;)<sup>E(d)</sup>, base from A&prime; (derivative). Point-like particles that differentiate the ladder. Exponential growth.</p>
+</div>
+
+<div class="regime-box">
+  <h4><span class="regime-tag trav">Traversal</span> Baryons (&bigcirc;, boundary)</h4>
+  <p style="margin-bottom: 0;">m/m<sub>e</sub> = (1/&alpha;)<sup>E(d)</sup>, base from A (function). Closed composites that evaluate the ladder. Exponential growth.</p>
+</div>
+
+<div class="regime-box">
+  <h4><span class="regime-tag field">Field</span> Mesons (&Phi;, field)</h4>
+  <p style="margin-bottom: 0;">m/m<sub>e</sub> = F/&alpha;, where F is a framework integer. Paired composites that vibrate within the field. Linear (multiplicative).</p>
+</div>
+
+<p>Each constraint produces its own mass regime. The framework predicts not just the masses but the <span class="it">mathematical form</span> of the mass law for each class.</p>
+
+<!-- ============================================================ -->
+<h2>Light Pseudo-Scalar Mesons (J = 0)</h2>
+
+<p>Pseudo-scalar mesons (spin 0) use <span class="w wb">structural numbers</span>: the integers that describe what a component IS (0D, 1D, 2D, 3D). Spin 0 is the ground state; structure without process.</p>
+
+<table>
+<tr><th>Meson</th><th>F</th><th>Framework Source</th><th>Predicted</th><th>Measured</th><th>Error</th></tr>
+<tr><td class="label">&pi;&plusmn;</td><td class="num">&Phi; = 2</td><td>Field dimension</td><td class="num">140.05 MeV</td><td class="num">139.57 MeV</td><td class="good">0.34%</td></tr>
+<tr><td class="label">K&plusmn;</td><td class="num">R = 7</td><td>Rungs of the ladder</td><td class="num">490.18 MeV</td><td class="num">493.68 MeV</td><td class="good">0.71%</td></tr>
+<tr><td class="label">&eta;</td><td class="num">SU(3) = 8</td><td>Color gauge generators</td><td class="num">560.20 MeV</td><td class="num">547.86 MeV</td><td class="good">2.25%</td></tr>
+</table>
+
+<p>The <span class="b wb">pion</span> carries &Phi; units of field-mass: it IS the field quantum, the lightest possible meson, because the field dimension (2) is the smallest structural number. The <span class="b wb">kaon</span> carries R units: it spans the full ladder via strangeness (a second-generation quantum number; R is the ladder's extent). The <span class="b wb">eta</span> carries SU(3) units: it IS the flavor-singlet of the gauge group.</p>
+
+<!-- ============================================================ -->
+<h2>Vector Mesons (J = 1)</h2>
+
+<table>
+<tr><th>Meson</th><th>F</th><th>Framework Source</th><th>Predicted</th><th>Measured</th><th>Error</th></tr>
+<tr><td class="label">&rho;</td><td class="num">A&prime;(2.5) = 11</td><td>Emergence derivative</td><td class="num">770.28 MeV</td><td class="num">775.26 MeV</td><td class="good">0.64%</td></tr>
+</table>
+
+<p>The rho carries A&prime;(2.5) = 11 units of field-mass: the derivative of the traversal at the emergence rung. <span class="m wb">Vector mesons</span> (spin 1) use <span class="m wb">processual numbers</span> (derivatives, half-integer-associated); pseudo-scalar mesons (spin 0) use structural numbers (integers). Spin maps to structural vs. processual, exactly as integer and half-integer dimensions do.</p>
+
+<div class="note insight">
+  Spin 0 = structural (what a component IS). Spin 1 = processual (what energy is DOING). The distinction between integer and half-integer dimensions, applied to particles.
+</div>
+
+<!-- ============================================================ -->
+<h2>Heavy Mesons: Charm and Bottom Sectors</h2>
+
+<table>
+<tr><th>Meson</th><th>F</th><th>Framework Source</th><th>Predicted</th><th>Measured</th><th>Error</th></tr>
+<tr><td class="label">D&plusmn;</td><td class="num">T&sup3; = 27</td><td>Generation cube</td><td class="num">1890.68 MeV</td><td class="num">1869.66 MeV</td><td class="good">1.12%</td></tr>
+<tr><td class="label">D<sub>s</sub></td><td class="num">A(3.5) = 28</td><td>Recursion station</td><td class="num">1960.71 MeV</td><td class="num">1968.35 MeV</td><td class="good">0.39%</td></tr>
+<tr><td class="label">B&plusmn;</td><td class="num">S + A&prime;(2.5) = 75</td><td>States + emergence</td><td class="num">5252.0 MeV</td><td class="num">5279.34 MeV</td><td class="good">0.52%</td></tr>
+<tr><td class="label">&Upsilon;</td><td class="num">1/&alpha; &minus; &Phi;</td><td>Ceiling of field regime</td><td class="num">9456.2 MeV</td><td class="num">9460.30 MeV</td><td class="good">0.05%</td></tr>
+</table>
+
+<p>The <span class="b wb">D meson</span> carries T<sup>3</sup> = 27 units: the generation cube (charm is the second-generation quark; T<sup>3</sup> is the mass correction for generation 2, now appearing as the multiplicative factor). The <span class="b wb">D<sub>s</sub></span> carries A(3.5) = 28 units: the recursion station, where charm meets strangeness at the octave boundary. The <span class="b wb">B meson</span> carries S + A&prime;(2.5) = 75 units: the total state space (64) plus the emergence derivative (11). The <span class="b wb">Upsilon</span> carries (1/&alpha; &minus; &Phi;) units: it sits at the ceiling of the multiplicative regime, where F approaches 1/&alpha; itself.</p>
+
+<div class="note">
+  Beyond the Upsilon, F would exceed 1/&alpha;, which means (1/&alpha;)<sup>E</sup> with E &gt; 1: the exponential regime takes over. The Upsilon marks the boundary between the field regime and the traversal regime.
+</div>
+
+<!-- ============================================================ -->
+<h2>The Neutral Pion Correction</h2>
+
+<p>The charged pion mass follows the field regime: m(&pi;&plusmn;)/m<sub>e</sub> = &Phi;/&alpha; (0.34%). The neutral pion is lighter because electromagnetic self-energy splits the isospin multiplet:</p>
+
+<div class="eq">m(&pi;<sup>0</sup>) / m<sub>e</sub> = (&Phi; &minus; SU(3)&middot;&alpha;) / &alpha;</div>
+
+<table>
+<tr><th>Pion</th><th>Formula</th><th>Predicted</th><th>Measured</th><th>Error</th></tr>
+<tr><td class="label">&pi;&plusmn;</td><td>&Phi;/&alpha;</td><td class="num">140.05 MeV</td><td class="num">139.57 MeV</td><td class="good">0.34%</td></tr>
+<tr><td class="label">&pi;<sup>0</sup></td><td>(&Phi; &minus; SU(3)&middot;&alpha;)/&alpha;</td><td class="num">135.96 MeV</td><td class="num">134.98 MeV</td><td class="good">0.73%</td></tr>
+</table>
+
+<p>The &pi;&plusmn;/&pi;<sup>0</sup> splitting is an electromagnetic effect (the charged pion is heavier because it has charge). In the framework, this appears as the strong sector (SU(3) = 8 generators) modulating the field quantum by one coupling. The neutral pion carries &Phi; minus one gauge coupling's worth of color generators.</p>
+
+<!-- ============================================================ -->
+<h2>From Mesons to the Electroweak Scale</h2>
+
+<p>The meson mass law establishes the field regime. The electroweak bosons live one level above: they are gauge quanta of the field itself (not composites vibrating within it). The transition from mesons to gauge bosons is the transition from &Phi;-as-medium to &Phi;-as-source.</p>
+
+<div class="regime-box">
+  <h4><span class="regime-tag gauge">Gauge</span> Electroweak Bosons</h4>
+  <p style="margin-bottom: 0;">The field's own self-quanta. One step beyond the meson regime: the field asserting itself at boundary level.</p>
+</div>
+
+<h3>The Higgs VEV</h3>
+
+<p>The vacuum expectation value sets the electroweak scale. It connects directly to the meson sector: the D&plusmn; meson has F = T<sup>3</sup> = 27, and the VEV is that same meson mass quantum divided by one more power of &alpha;, corrected.</p>
+
+<div class="eq">v / m<sub>e</sub> = T<sup>3</sup> / &alpha;<sup>2</sup> &times; (1 &minus; R&middot;&alpha;)</div>
+
+<p>T<sup>3</sup> = 27: the triad compounded to its own depth. 1/&alpha;<sup>2</sup>: two powers of the coupling, because the field is 2D and asserting itself at boundary level. (1 &minus; R&middot;&alpha;): the seven rungs each subtract one coupling's worth; the ladder's own weight pulling the VEV slightly below the bare value.</p>
+
+<table>
+<tr><th>Quantity</th><th>Formula</th><th>Predicted</th><th>Measured</th><th>Error</th></tr>
+<tr><td class="label">VEV (v)</td><td>T<sup>3</sup>&middot;m<sub>e</sub>/&alpha;<sup>2</sup>&middot;(1&minus;R&alpha;)</td><td class="num">245,857 MeV</td><td class="num">246,220 MeV</td><td class="good">0.15%</td></tr>
+</table>
+
+<h3>The W Boson</h3>
+
+<p>The W boson mediates weak transitions (flavor change). It lives at 2.5D: the emergence rung, where information transmits between scales.</p>
+
+<div class="eq">m<sub>W</sub> / m<sub>e</sub> = (1/&alpha;)<sup>(E(2.5) + 1 &minus; &alpha;/&Phi;)</sup></div>
+
+<p>The W boson exponent is the emergence exponent (56/39) shifted by exactly one unit. It sits one full step above the meson/baryon emergence scale. The correction &minus;&alpha;/&Phi; accounts for the gauge boson coupling back to its own field (pulling the exponent down by &alpha;/2).</p>
+
+<table>
+<tr><th>Quantity</th><th>Predicted</th><th>Measured</th><th>Error</th></tr>
+<tr><td class="label">W boson</td><td class="num">80,488 MeV</td><td class="num">80,369 MeV</td><td class="good">0.15%</td></tr>
+</table>
+
+<h3>The Z Boson</h3>
+
+<p>No new formula is needed. The Z boson mass is entirely determined by two existing framework results: the W boson mass and the Weinberg angle (derived in &sect;13.15).</p>
+
+<div class="eq-small">m<sub>Z</sub> = m<sub>W</sub> / cos(&theta;<sub>W</sub>), &nbsp; where sin<sup>2</sup>(&theta;<sub>W</sub>) = 3/13 + 5&alpha;/81</div>
+
+<table>
+<tr><th>Quantity</th><th>Predicted</th><th>Measured</th><th>Error</th></tr>
+<tr><td class="label">Z boson</td><td class="num">91,798 MeV</td><td class="num">91,188 MeV</td><td class="good">0.67%</td></tr>
+</table>
+
+<h3>The Higgs Boson</h3>
+
+<p>The Higgs mass is a chain result: it requires no new parameters, only the composition of &lambda; (the quartic self-coupling of the field, &sect;27.7i) with v (the VEV). This is the compositional principle (A4) in action: the whole (m<sub>H</sub>) is not a separate prediction but the compositional unity of the field's self-coupling and its vacuum energy.</p>
+
+<div class="eq-small">m<sub>H</sub> = &radic;(2&lambda;) &middot; v, &nbsp; where &lambda; = (1/8)(1 + 5&alpha; &minus; 8&alpha;<sup>2</sup>)</div>
+
+<table>
+<tr><th>Quantity</th><th>Predicted</th><th>Measured</th><th>Error</th></tr>
+<tr><td class="label">Higgs boson</td><td class="num">125,125 MeV</td><td class="num">125,250 MeV</td><td class="good">0.10%</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>The Electroweak Ladder</h2>
+
+<p>The pattern: the meson sector uses one power of 1/&alpha; (field regime). The VEV uses two powers (the field asserting itself at boundary level). The W boson uses a fractional power (the emergence exponent plus one). Each step up the electroweak ladder is one more layer of the field's self-organization.</p>
+
+<table>
+<tr><th>Sector</th><th>Formula Type</th><th>&alpha;-Dependence</th></tr>
+<tr><td class="label">Mesons</td><td>m/m<sub>e</sub> = F/&alpha;</td><td class="num">~&alpha;<sup>&minus;1</sup></td></tr>
+<tr><td class="label">VEV</td><td>v/m<sub>e</sub> = T<sup>3</sup>/&alpha;<sup>2</sup>&middot;(...)</td><td class="num">~&alpha;<sup>&minus;2</sup></td></tr>
+<tr><td class="label">W boson</td><td>m<sub>W</sub>/m<sub>e</sub> = (1/&alpha;)<sup>E(2.5)+1</sup></td><td class="num">~&alpha;<sup>&minus;2.44</sup></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>Interactive: The Meson Spectrum</h2>
+
+<div class="sim-container">
+  <h3>Meson Mass Spectrum</h3>
+  <p class="d" style="font-size: 16px;">Each bar shows the predicted mass (gold) overlaid on the measured value (dim). The framework integer F is labeled at left. All masses are integer multiples of m<sub>e</sub>/&alpha; &asymp; 70 MeV.</p>
+
+  <div class="controls">
+    <button class="active" onclick="setView('light', this)">Light Mesons</button>
+    <button onclick="setView('heavy', this)">Heavy Mesons</button>
+    <button onclick="setView('electroweak', this)">Electroweak</button>
+    <button onclick="setView('all', this)">Full Spectrum</button>
+  </div>
+
+  <canvas id="spectrumCanvas" height="400"></canvas>
+</div>
+
+<!-- ============================================================ -->
+<h2>Summary</h2>
+
+<p>The meson mass law completes the particle mass picture. Three constraints produce three regimes: leptons use &bull; (differentiation, exponential with A&prime;), baryons use &bigcirc; (evaluation, exponential with A), mesons use &Phi; (multiplication, linear with F). Each regime follows from the structural role of its constraint. No free parameters are introduced; every F is a framework constant that appears elsewhere in the architecture.</p>
+
+<table>
+<tr><th>Particle</th><th>F</th><th>Predicted</th><th>Measured</th><th>Error</th></tr>
+<tr><td class="label">&pi;&plusmn;</td><td class="num">2</td><td class="num">140.05</td><td class="num">139.57</td><td class="good">0.34%</td></tr>
+<tr><td class="label">&pi;<sup>0</sup></td><td class="num">2 &minus; 8&alpha;</td><td class="num">135.96</td><td class="num">134.98</td><td class="good">0.73%</td></tr>
+<tr><td class="label">K&plusmn;</td><td class="num">7</td><td class="num">490.18</td><td class="num">493.68</td><td class="good">0.71%</td></tr>
+<tr><td class="label">&eta;</td><td class="num">8</td><td class="num">560.20</td><td class="num">547.86</td><td class="good">2.25%</td></tr>
+<tr><td class="label">&rho;</td><td class="num">11</td><td class="num">770.28</td><td class="num">775.26</td><td class="good">0.64%</td></tr>
+<tr><td class="label">D&plusmn;</td><td class="num">27</td><td class="num">1890.68</td><td class="num">1869.66</td><td class="good">1.12%</td></tr>
+<tr><td class="label">D<sub>s</sub></td><td class="num">28</td><td class="num">1960.71</td><td class="num">1968.35</td><td class="good">0.39%</td></tr>
+<tr><td class="label">B&plusmn;</td><td class="num">75</td><td class="num">5252.0</td><td class="num">5279.34</td><td class="good">0.52%</td></tr>
+<tr><td class="label">&Upsilon;</td><td class="num">135</td><td class="num">9456.2</td><td class="num">9460.30</td><td class="good">0.05%</td></tr>
+</table>
+
+<div class="note insight">
+  The pion is the field quantum (&Phi; = 2). The Upsilon is the field ceiling (1/&alpha; &minus; &Phi; &asymp; 135). Between them, every meson mass is a framework integer times 70 MeV. The field counts in integers.
+</div>
+
+<div class="footer">
+  <p><a href="index.html">⊙ Circumpunct Framework</a></p>
+  <p>Ashman Roonz, 2026</p>
+  <p style="margin-top: 12px;"><a href="emergent_chemistry.html">&larr; Bond Energy from the Ladder</a> &nbsp;&middot;&nbsp; <a href="dimensional_ladder.html">The Complete Dimensional Ladder &rarr;</a></p>
+</div>
+
+</div>
+
+<script>
+// Framework constants
+const T = 3, P = 4, R = 7, G = 12, V = 13, S = 64;
+const Phi = 2, SU3 = 8;
+const alpha = 1 / 137.035999;
+const m_e = 0.51099895; // MeV
+const baseQ = m_e / alpha; // ~70 MeV
+
+// Meson data: [name, F, predicted MeV, measured MeV]
+const lightMesons = [
+  ['\u03C0\u00B1', Phi, 140.05, 139.57],
+  ['\u03C0\u2070', Phi - SU3 * alpha, 135.96, 134.98],
+  ['K\u00B1', R, 490.18, 493.68],
+  ['\u03B7', SU3, 560.20, 547.86],
+  ['\u03C1', 11, 770.28, 775.26],
+];
+
+const heavyMesons = [
+  ['D\u00B1', 27, 1890.68, 1869.66],
+  ['D\u209B', 28, 1960.71, 1968.35],
+  ['B\u00B1', 75, 5252.0, 5279.34],
+  ['\u03A5', 135, 9456.2, 9460.30],
+];
+
+const ewBosons = [
+  ['VEV (v)', null, 245857, 246220],
+  ['W', null, 80488, 80369],
+  ['Z', null, 91798, 91188],
+  ['Higgs', null, 125125, 125250],
+];
+
+let currentView = 'light';
+
+function setView(view, btn) {
+  currentView = view;
+  document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  drawSpectrum();
+}
+
+function drawSpectrum() {
+  const canvas = document.getElementById('spectrumCanvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+
+  canvas.width = canvas.offsetWidth * dpr;
+  canvas.height = 400 * dpr;
+  ctx.scale(dpr, dpr);
+
+  const W = canvas.offsetWidth;
+  const H = 400;
+  ctx.clearRect(0, 0, W, H);
+
+  let data;
+  let maxMass;
+  if (currentView === 'light') {
+    data = lightMesons;
+    maxMass = 900;
+  } else if (currentView === 'heavy') {
+    data = heavyMesons;
+    maxMass = 10500;
+  } else if (currentView === 'electroweak') {
+    data = ewBosons;
+    maxMass = 270000;
+  } else {
+    data = [...lightMesons, ...heavyMesons];
+    maxMass = 10500;
+  }
+
+  const marginLeft = 70;
+  const marginRight = 30;
+  const marginTop = 30;
+  const marginBottom = 40;
+  const barH = Math.min(30, (H - marginTop - marginBottom) / data.length - 8);
+  const gap = (H - marginTop - marginBottom - barH * data.length) / (data.length + 1);
+
+  // Draw axis
+  ctx.strokeStyle = '#444038';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(marginLeft, marginTop);
+  ctx.lineTo(marginLeft, H - marginBottom);
+  ctx.lineTo(W - marginRight, H - marginBottom);
+  ctx.stroke();
+
+  // Axis label
+  ctx.fillStyle = '#8A8272';
+  ctx.font = '13px "EB Garamond", serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Mass (MeV)', (marginLeft + W - marginRight) / 2, H - 8);
+
+  // Tick marks
+  const nTicks = 5;
+  for (let i = 0; i <= nTicks; i++) {
+    const x = marginLeft + (W - marginLeft - marginRight) * i / nTicks;
+    const val = (maxMass * i / nTicks).toFixed(0);
+    ctx.fillStyle = '#444038';
+    ctx.fillRect(x, H - marginBottom, 1, 6);
+    ctx.fillStyle = '#8A8272';
+    ctx.font = '12px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(val, x, H - marginBottom + 18);
+  }
+
+  // Draw bars
+  data.forEach((d, i) => {
+    const y = marginTop + gap + i * (barH + gap);
+    const measW = (d[3] / maxMass) * (W - marginLeft - marginRight);
+    const predW = (d[2] / maxMass) * (W - marginLeft - marginRight);
+
+    // Measured (dim)
+    ctx.fillStyle = 'rgba(138, 130, 114, 0.25)';
+    ctx.fillRect(marginLeft, y, measW, barH);
+
+    // Predicted (gold)
+    ctx.fillStyle = 'rgba(184, 160, 96, 0.55)';
+    ctx.fillRect(marginLeft, y + 2, predW, barH - 4);
+
+    // Label
+    ctx.fillStyle = '#B8A060';
+    ctx.font = '600 16px "EB Garamond", serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(d[0], marginLeft - 8, y + barH / 2 + 5);
+
+    // Error
+    const err = Math.abs(d[2] - d[3]) / d[3] * 100;
+    ctx.fillStyle = '#4DB8A0';
+    ctx.font = '12px monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(err.toFixed(2) + '%', marginLeft + Math.max(measW, predW) + 8, y + barH / 2 + 4);
+  });
+}
+
+window.addEventListener('resize', drawSpectrum);
+window.addEventListener('load', drawSpectrum);
+</script>
+
+</body>
+</html>
