@@ -21,11 +21,17 @@ let sessionIdCounter = 0;
 // Single game room
 const gameRoom = new GameRoom();
 
-// Serve static files
+// Serve game HTML at root
 const clientPath = path.join(__dirname, '..', 'last_ship_sailing_mp.html');
 app.get('/', (req, res) => {
   res.sendFile(clientPath);
 });
+app.get('/index.html', (req, res) => {
+  res.sendFile(clientPath);
+});
+
+// Serve static assets from parent directory (textures, audio, etc.)
+app.use(express.static(path.join(__dirname, '..')));
 
 // WebSocket connection handler
 wss.on('connection', (ws) => {

@@ -4728,6 +4728,7 @@ function activateAbility(slot) {
     if (player.monarchCooldownMult < 1) cd *= player.monarchCooldownMult;
     player.abilityCooldowns[slot] = cd;
   }
+  if (net.active && net.ws) net.ws.send(JSON.stringify({type:'ability', index: slot}));
 }
 
 function executeAbility(slot, ability) {
@@ -5194,6 +5195,7 @@ function activateCore() {
   player.coreActive = true;
   player.coreTimer = player.loadout.core.duration;
   player.coreMeter = 0;
+  if (net.active && net.ws) net.ws.send(JSON.stringify({type:'core'}));
 
   const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
   const coreName = player.loadout.core.name;
@@ -5980,6 +5982,7 @@ function dash() {
   player.dashCharges--;
   player.shipState = 'dashing';
   if (player.dashCooldownTimer <= 0) player.dashCooldownTimer = ch.dashCooldown;
+  if (net.active && net.ws) net.ws.send(JSON.stringify({type:'dash'}));
 }
 
 // ---- ROUND SYSTEM ----
