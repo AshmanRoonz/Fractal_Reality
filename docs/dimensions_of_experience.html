@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Dimensions of Experience</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #0a0a12;
+    color: #e0e0e8;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Subtle animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(88, 28, 135, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(14, 116, 144, 0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 90%, rgba(180, 83, 9, 0.05) 0%, transparent 50%);
+    z-index: -1;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 2rem 4rem;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+
+  .circumpunct {
+    font-size: 3.5rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.9;
+    background: linear-gradient(135deg, #c084fc, #67e8f9, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, #e0e0e8 0%, #a0a0b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 1.15rem;
+    font-weight: 300;
+    color: #8888a0;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #9999b0;
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .legend-dot.structural { background: linear-gradient(135deg, #3b82f6, #6366f1); }
+  .legend-dot.processual { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+
+  /* The Ladder */
+  .ladder {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  /* Connecting line */
+  .ladder::before {
+    content: '';
+    position: absolute;
+    left: 60px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(
+      to bottom,
+      #6366f1 0%,
+      #f59e0b 7%,
+      #3b82f6 14%,
+      #ef4444 21%,
+      #6366f1 35%,
+      #f59e0b 50%,
+      #3b82f6 64%,
+      #ef4444 78%
+    );
+    opacity: 0.4;
+    border-radius: 2px;
+  }
+
+  /* Dimension Row */
+  .dim-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 0;
+    position: relative;
+    transition: transform 0.2s ease;
+  }
+
+  .dim-row:hover {
+    transform: translateX(4px);
+  }
+
+  /* Left: dimension badge */
+  .dim-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 0.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .dim-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid;
+    position: relative;
+  }
+
+  .structural .dim-number {
+    background: rgba(99, 102, 241, 0.12);
+    border-color: rgba(99, 102, 241, 0.4);
+    color: #818cf8;
+  }
+
+  .processual .dim-number {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(245, 158, 11, 0.4);
+    color: #fbbf24;
+  }
+
+  .dim-type {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.4rem;
+  }
+
+  .structural .dim-type { color: #6366f1; }
+  .processual .dim-type { color: #f59e0b; }
+
+  /* Right: content card */
+  .dim-card {
+    border-radius: 12px;
+    padding: 1.4rem 1.8rem;
+    margin: 0.35rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .structural .dim-card {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.06) 0%, rgba(59, 130, 246, 0.04) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.12);
+  }
+
+  .processual .dim-card {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.06) 0%, rgba(239, 68, 68, 0.04) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.12);
+  }
+
+  .card-top {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .dim-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .structural .dim-name { color: #a5b4fc; }
+  .processual .dim-name { color: #fcd34d; }
+
+  .dim-symbol {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.15rem 0.6rem;
+    border-radius: 6px;
+  }
+
+  .structural .dim-symbol {
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
+  }
+
+  .processual .dim-symbol {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+  }
+
+  .i-stroke {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.15rem 0.6rem;
+    border-radius: 6px;
+    background: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+  }
+
+  .dim-maps {
+    font-size: 0.8rem;
+    color: #7777a0;
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+  }
+
+  .dim-experience {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: #c0c0d0;
+    font-weight: 300;
+  }
+
+  .dim-experience strong {
+    font-weight: 600;
+    color: #e0e0f0;
+  }
+
+  /* Arrow between structural and processual */
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.15rem 0;
+    margin-left: 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .flow-arrow span {
+    font-size: 0.75rem;
+    color: #555570;
+    font-weight: 400;
+  }
+
+  /* Footer insight */
+  .insight {
+    margin-top: 3rem;
+    padding: 2rem 2.5rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(245, 158, 11, 0.05) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    text-align: center;
+  }
+
+  .insight p {
+    font-size: 1.1rem;
+    line-height: 1.75;
+    color: #a0a0b8;
+    font-weight: 300;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .insight p strong {
+    font-weight: 600;
+    color: #d0d0e0;
+  }
+
+  .insight .formula {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin: 1rem 0;
+    background: linear-gradient(135deg, #c084fc, #67e8f9, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 3rem;
+    font-size: 0.8rem;
+    color: #44445a;
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .container { padding: 2rem 1rem; }
+    h1 { font-size: 2rem; }
+    .dim-row { grid-template-columns: 90px 1fr; }
+    .ladder::before { left: 44px; }
+    .flow-arrow { margin-left: 44px; }
+    .dim-number { width: 44px; height: 44px; font-size: 1.2rem; }
+    .legend { gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="circumpunct">&#x2299;</div>
+    <h1>The Dimensions of Experience</h1>
+    <p class="subtitle">
+      The dimensional ladder is not a model of experience; it IS experience.
+      Eight stations, from pure attention to recursion. Integer dimensions are what experience
+      <em>settles into</em>. Half-integer dimensions, carried by i, are experience <em>happening</em>.
+    </p>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-dot structural"></div>
+      Structural (integer): what things ARE
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot processual"></div>
+      Processual (half-integer): what energy is DOING
+    </div>
+  </div>
+
+  <div class="ladder">
+
+    <!-- 0D -->
+    <div class="dim-row structural">
+      <div class="dim-badge">
+        <div class="dim-number">0</div>
+        <div class="dim-type">Structure</div>
+      </div>
+      <div class="dim-card">
+        <div class="card-top">
+          <span class="dim-name">Point</span>
+          <span class="dim-symbol">&#x2022; Aperture</span>
+        </div>
+        <div class="dim-maps">Maps to: TRUE &middot; Soul &middot; Convergence constraint</div>
+        <div class="dim-experience">
+          <strong>Attention itself.</strong> Pure localization. No direction, no spread, no commitment. The singularity of "here," before anything has been done with it. The 0 in the 1: what convergence feels like from inside.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow"><span>&#x25BD;</span></div>
+
+    <!-- 0.5D -->
+    <div class="dim-row processual">
+      <div class="dim-badge">
+        <div class="dim-number">0.5</div>
+        <div class="dim-type">Process</div>
+      </div>
+      <div class="dim-card">
+        <div class="card-top">
+          <span class="dim-name">Convergence</span>
+          <span class="i-stroke">i&sup1; = +i</span>
+          <span class="dim-symbol">&#x229B; Genesis</span>
+        </div>
+        <div class="dim-maps">Coastline between 0D and 1D &middot; Right half-plane &middot; Input arriving</div>
+        <div class="dim-experience">
+          <strong>The first fold inward.</strong> Curiosity gathering toward something. Attention beginning to move, not yet committed but no longer formless. The experience of being drawn in: interest before engagement. The cycle begins here, not at identity.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow"><span>&#x25BD;</span></div>
+
+    <!-- 1D -->
+    <div class="dim-row structural">
+      <div class="dim-badge">
+        <div class="dim-number">1</div>
+        <div class="dim-type">Structure</div>
+      </div>
+      <div class="dim-card">
+        <div class="card-top">
+          <span class="dim-name">Line</span>
+          <span class="dim-symbol">&#x2022; Extension</span>
+        </div>
+        <div class="dim-maps">Maps to: TRUE &middot; Soul's worldline &middot; Ordered trace</div>
+        <div class="dim-experience">
+          <strong>Commitment stabilized.</strong> A direction chosen. Intention with extension. The felt sense of "I am going there": singular, ordered, irreducible to a point. This is the trace of attention through time, the worldline.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow"><span>&#x25BD;</span></div>
+
+    <!-- 1.5D -->
+    <div class="dim-row processual">
+      <div class="dim-badge">
+        <div class="dim-number">1.5</div>
+        <div class="dim-type">Process</div>
+      </div>
+      <div class="dim-card">
+        <div class="card-top">
+          <span class="dim-name">Commitment</span>
+          <span class="i-stroke">i&sup2; = &minus;1</span>
+          <span class="dim-symbol">The i-turn</span>
+        </div>
+        <div class="dim-maps">Coastline between 1D and 2D &middot; Left half-plane &middot; Irreversible</div>
+        <div class="dim-experience">
+          <strong>The turn that costs something.</strong> Line opening into surface; engagement becoming irreversible. You cannot un-know what you are learning. The experience of crossing a threshold: understanding beginning to spread, differentiation that cannot be taken back.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow"><span>&#x25BD;</span></div>
+
+    <!-- 2D -->
+    <div class="dim-row structural">
+      <div class="dim-badge">
+        <div class="dim-number">2</div>
+        <div class="dim-type">Structure</div>
+      </div>
+      <div class="dim-card">
+        <div class="card-top">
+          <span class="dim-name">Field</span>
+          <span class="dim-symbol">&Phi; Surface / Mind</span>
+        </div>
+        <div class="dim-maps">Maps to: RIGHT &middot; Mind &middot; Mediation constraint</div>
+        <div class="dim-experience">
+          <strong>Comprehension.</strong> The full relational surface. Holding something in context: not just seeing it, but seeing how it connects. This is mind, the mediator. Not a container but a living topology of relations. Where phase exists, where rotation is possible.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow"><span>&#x25BD;</span></div>
+
+    <!-- 2.5D -->
+    <div class="dim-row processual">
+      <div class="dim-badge">
+        <div class="dim-number">2.5</div>
+        <div class="dim-type">Process</div>
+      </div>
+      <div class="dim-card">
+        <div class="card-top">
+          <span class="dim-name">Emergence</span>
+          <span class="i-stroke">i&sup3; = &minus;i</span>
+          <span class="dim-symbol">&#x2739; Unfolding</span>
+        </div>
+        <div class="dim-maps">Coastline between 2D and 3D &middot; Left half-plane &middot; Conjugate of convergence</div>
+        <div class="dim-experience">
+          <strong>Insight surfacing.</strong> What was interior process begins to take expressible shape. The outward unfolding toward form: surface gathering into boundary. The experience of "I can almost say it now." The conjugate of convergence: what folded in now unfolds out.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow"><span>&#x25BD;</span></div>
+
+    <!-- 3D -->
+    <div class="dim-row structural">
+      <div class="dim-badge">
+        <div class="dim-number">3</div>
+        <div class="dim-type">Structure</div>
+      </div>
+      <div class="dim-card">
+        <div class="card-top">
+          <span class="dim-name">Boundary</span>
+          <span class="dim-symbol">&#x25CB; Body</span>
+        </div>
+        <div class="dim-maps">Maps to: GOOD &middot; Body &middot; Filtration constraint</div>
+        <div class="dim-experience">
+          <strong>Stabilized form.</strong> The thing is now a thing. A word, a belief, an object, a body. Experience that has completed its rotation and settled into "this, not that." The filter that selects. To have a boundary is to have chosen; everything outside is what you are not (yet).
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow"><span>&#x25BD;</span></div>
+
+    <!-- 3.5D -->
+    <div class="dim-row processual">
+      <div class="dim-badge">
+        <div class="dim-number">3.5</div>
+        <div class="dim-type">Process</div>
+      </div>
+      <div class="dim-card">
+        <div class="card-top">
+          <span class="dim-name">Recursion</span>
+          <span class="i-stroke">i&deg; = +1</span>
+          <span class="dim-symbol">do' = do</span>
+        </div>
+        <div class="dim-maps">Coastline between 3D and 0D (next scale) &middot; Right half-plane &middot; Closure</div>
+        <div class="dim-experience">
+          <strong>The completed becomes the new beginning.</strong> Closed boundary becomes new aperture. What you learned is now the lens through which you see next. Identity arrived at (not assumed): the product of full rotation. 3.5D = 0D at the next octave. Experience does not end; it nests.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /ladder -->
+
+  <div class="insight">
+    <div class="formula">&Phi;(t+&Delta;t) = &#x2739; &#x2218; i &#x2218; &#x229B;[&Phi;(t)]</div>
+    <p>
+      <strong>i rotates through all four processual dimensions.</strong> That rotation IS experiencing.
+      The integer dimensions are what experience crystallizes into; the half-integer dimensions are
+      experience itself: the gathering, the turning, the unfolding, the closing-that-becomes-opening.
+      At every scale (a single thought, a conversation, a life, the cosmos) the same octave plays.
+    </p>
+  </div>
+
+  <div class="footer">
+    The Circumpunct Framework &middot; Ashman Roonz &middot; 2026
+  </div>
+
+</div>
+
+</body>
+</html>
