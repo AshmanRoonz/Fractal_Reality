@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CircumpunctGPU: Full Pipeline Demo</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #050404; color: #e0d8c8; font-family: 'Courier New', monospace; overflow: hidden; }
+canvas { display: block; width: 100vw; height: 100vh; }
+
+#hud {
+  position: fixed; top: 12px; right: 12px; z-index: 100;
+  background: rgba(10,8,6,0.92); border: 1px solid rgba(200,180,140,0.2);
+  border-radius: 8px; padding: 16px; width: 240px;
+  backdrop-filter: blur(10px);
+}
+#hud h2 { font-size: 10px; color: #c8b478; margin-bottom: 4px; letter-spacing: 3px; }
+#hud .sub { font-size: 8px; color: #605840; margin-bottom: 12px; }
+.ctrl { margin-bottom: 8px; }
+.ctrl label { display: block; font-size: 9px; color: #a09880; margin-bottom: 2px; letter-spacing: 1px; }
+.ctrl input[type="range"] { width: 100%; accent-color: #c8b478; }
+.ctrl .val { float: right; font-size: 9px; color: #c8b478; }
+
+#stats {
+  position: fixed; bottom: 12px; left: 12px; z-index: 100;
+  background: rgba(10,8,6,0.92); border: 1px solid rgba(200,180,140,0.12);
+  border-radius: 8px; padding: 10px 14px; font-size: 9px; line-height: 1.8;
+  backdrop-filter: blur(10px);
+}
+#stats .label { color: #606050; }
+#stats .value { color: #c8b478; }
+
+#log {
+  position: fixed; bottom: 12px; right: 12px; z-index: 100;
+  background: rgba(10,8,6,0.95); border: 1px solid rgba(200,180,140,0.15);
+  border-radius: 6px; padding: 10px 14px; font-size: 8px; line-height: 1.6;
+  max-height: 200px; overflow-y: auto; min-width: 300px;
+}
+.ok { color: #4DB8A0; }
+.err { color: #E88AAF; }
+.info { color: #c8b478; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="hud">
+  <h2>CIRCUMPUNCTGPU</h2>
+  <div class="sub">full pipeline: compute pump + LOD + indirect render</div>
+  <div class="ctrl">
+    <label>PUMP SPEED <span class="val" id="v-pump">1.00</span></label>
+    <input type="range" id="pump-speed" min="0" max="3" step="0.01" value="1">
+  </div>
+  <div class="ctrl">
+    <label>BALANCE <span class="val" id="v-bal">0.500</span></label>
+    <input type="range" id="balance" min="0.01" max="0.99" step="0.001" value="0.5">
+  </div>
+  <div class="ctrl">
+    <label>FRACTAL DEPTH <span class="val" id="v-depth">4</span></label>
+    <input type="range" id="depth" min="1" max="6" step="1" value="4">
+  </div>
+</div>
+
+<div id="stats">
+  <span class="label">NODES:</span> <span class="value" id="s-nodes">0</span>
+  <span class="label" style="margin-left:8px">VISIBLE:</span> <span class="value" id="s-visible">0</span>
+  <span class="label" style="margin-left:8px">FPS:</span> <span class="value" id="s-fps">0</span><br>
+  <span class="label">PIPELINE:</span>
+  <span style="color:#E88AAF">compute:pump</span> ->
+  <span style="color:#4DB8A0">compute:LOD</span> ->
+  <span style="color:#4DA0C8">render:indirect</span><br>
+  <span class="label">W-V:</span>
+  <span style="color:#E88AAF">V/(V-1)=13/12</span> ->
+  <span style="color:#4DB8A0">W(W+1)/TV=56/39</span> ->
+  <span style="color:#4DA0C8">TW=21</span>
+</div>
+
+<div id="log"></div>
+
+<script>
+// ================================================================
+// CircumpunctGPU: Full Pipeline Demo (self-contained)
+// Compute pass 1: pump cycle (convergence, i-turn, emergence)
+// Compute pass 2: LOD eval, visibility cull, repr selection, indirect draw
+// Render pass: instanced billboards, SDF per pixel, dimensional switching
+// ================================================================
+
+const PHI = (1 + Math.sqrt(5)) / 2;
+const PHI_INV = 1 / PHI;
+const T = 3, W = 7, V = 13;
+const E_AP = V / (V - 1);           // 13/12
+const E_FI = W * (W + 1) / (T * V); // 56/39
+const E_BO = T * W;                  // 21
+const FOV_RAD = 2 * Math.atan(12 / 13);
+const NEAR = 1 / E_BO;
+const FAR = 12 / 13 * 40;
+
+const CIRC_NODE_SIZE = 64;
+const MAX_NODES = 4096;
+
+const log = (msg, cls = 'info') => {
+  const el = document.getElementById('log');
+  el.innerHTML += `<span class="${cls}">${msg}</span><br>`;
+  el.scrollTop = el.scrollHeight;
+};
+
+// ============================================================
+// WGSL SHARED PREAMBLE
+// ============================================================
+const PREAMBLE = /* wgsl */`
+const PHI: f32 = 1.6180339887;
+const PHI_INV: f32 = 0.6180339887;
+const PI: f32 = 3.14159265359;
+const TAU: f32 = 6.28318530718;
+const Tc: f32 = 3.0;
+const Wc: f32 = 7.0;
+const Vc: f32 = 13.0;
+const E_AP: f32 = 1.0833333;
+const E_FI: f32 = 1.4358974;
+const E_BO: f32 = 21.0;
+
+struct CircNode {
+  position: vec4f,   // xyz = pos, w = scale
+  state: vec4f,      // x = balance, y = phase, z = dim_depth, w = visibility
+  hierarchy: vec4u,  // x = parent, y = child_start, z = child_count, w = flags
+  derived: vec4f,    // x = repr, y = error, z = conv_weight, w = emer_weight
+};
+
+struct FrameUniforms {
+  time: f32,
+  dt: f32,
+  pump_speed: f32,
+  node_count: u32,
+  cam_pos: vec4f,
+  cam_fwd: vec4f,
+  cam_up: vec4f,
+  cam_right: vec4f,
+  proj: mat4x4f,
+  view: mat4x4f,
+};
+`;
+
+// ============================================================
+// COMPUTE SHADER 1: PUMP CYCLE
+// The pump has equilibrium: convergence pulls in, emergence pushes out.
+// At rest distance, forces balance. Children orbit their parents.
+// ============================================================
+const SHADER_PUMP = PREAMBLE + /* wgsl */`
+@group(0) @binding(0) var<storage, read_write> nodes: array<CircNode>;
+@group(0) @binding(1) var<uniform> frame: FrameUniforms;
+
+@compute @workgroup_size(64)
+fn pump(@builtin(global_invocation_id) id: vec3u) {
+  let idx = id.x;
+  if (idx >= frame.node_count) { return; }
+
+  var node = nodes[idx];
+  let dt = frame.dt;
+  let speed = frame.pump_speed;
+
+  // Advance pump phase: 0..1 cycling through four strokes
+  let phase = fract(node.state.y + dt * speed * 0.2);
+  node.state.y = phase;
+
+  // Convergence/emergence weights from pump phase
+  let conv = max(0.0, cos(phase * TAU));
+  let emer = max(0.0, -cos(phase * TAU));
+  node.derived.z = conv;
+  node.derived.w = emer;
+
+  let scale = node.position.w;
+  let balance = node.state.x;
+
+  // CONVERGENCE + EMERGENCE with equilibrium orbit
+  let parentIdx = node.hierarchy.x;
+  if (parentIdx != 0xFFFFFFFFu) {
+    let parent = nodes[parentIdx];
+    let toParent = parent.position.xyz - node.position.xyz;
+    let dist = length(toParent);
+
+    if (dist > 0.0001) {
+      // Rest distance: parent scale * PHI_INV (golden ratio nesting)
+      let restDist = parent.position.w * PHI_INV * 1.2;
+      let dir = toParent / dist;
+
+      // Radial force: spring toward rest distance
+      // Positive = toward parent, negative = away
+      let displacement = dist - restDist;
+      let springForce = displacement * 2.0 * dt * speed;
+
+      // Modulate by pump: convergence strengthens inward pull,
+      // emergence strengthens outward push
+      let pumpBias = (conv - emer) * 0.3 * dt * speed;
+
+      let radialMove = (springForce + pumpBias) * scale;
+      node.position = vec4f(
+        node.position.xyz + dir * radialMove,
+        node.position.w
+      );
+
+      // Tangential orbit: i-turn drives rotation around parent
+      // Cross product with up vector gives tangential direction
+      let tangent = normalize(cross(dir, vec3f(0.0, 1.0, 0.0)));
+      let tangentAlt = normalize(cross(dir, vec3f(1.0, 0.0, 0.0)));
+      // Use whichever is more perpendicular
+      var orbitDir = tangent;
+      if (length(cross(dir, vec3f(0.0, 1.0, 0.0))) < 0.1) {
+        orbitDir = tangentAlt;
+      }
+      let orbitSpeed = speed * dt * 0.5 * (1.0 + sin(phase * TAU) * 0.3);
+      node.position = vec4f(
+        node.position.xyz + orbitDir * orbitSpeed * scale,
+        node.position.w
+      );
+    }
+  }
+
+  // EMERGENCE: scale breathes with pump (gentle)
+  let baseScale = scale;
+  let breathe = 1.0 + 0.015 * sin(phase * TAU) * speed;
+  node.position.w = baseScale * breathe;
+
+  // Balance drift toward 0.5
+  let balDrift = (0.5 - balance) * dt * 0.1;
+  node.state.x = clamp(balance + balDrift, 0.01, 0.99);
+
+  nodes[idx] = node;
+}
+`;
+
+// ============================================================
+// COMPUTE SHADER 2: LOD + VISIBILITY + INDIRECT DRAW
+// ============================================================
+const SHADER_LOD = PREAMBLE + /* wgsl */`
+struct DrawInstance {
+  pos_scale: vec4f,
+  state: vec4f,
+  color: vec4f,
+};
+
+struct IndirectArgs {
+  vertex_count: u32,
+  instance_count: atomic<u32>,
+  first_vertex: u32,
+  first_instance: u32,
+};
+
+@group(0) @binding(0) var<storage, read> nodes: array<CircNode>;
+@group(0) @binding(1) var<uniform> frame: FrameUniforms;
+@group(0) @binding(2) var<storage, read_write> instances: array<DrawInstance>;
+@group(0) @binding(3) var<storage, read_write> indirect: IndirectArgs;
+
+@compute @workgroup_size(64)
+fn evaluate(@builtin(global_invocation_id) id: vec3u) {
+  let idx = id.x;
+  if (idx >= frame.node_count) { return; }
+
+  let node = nodes[idx];
+  let pos = node.position.xyz;
+  let scale = node.position.w;
+  let d = node.state.z;
+  let balance = node.state.x;
+  let phase = node.state.y;
+  let conv = node.derived.z;
+  let emer = node.derived.w;
+
+  // Projected size
+  let toNode = pos - frame.cam_pos.xyz;
+  let dist = length(toNode);
+  let projected = scale / max(dist, 0.01);
+
+  // Visibility
+  var vis = smoothstep(40.0, 30.0, dist);
+  let parentIdx = node.hierarchy.x;
+  if (parentIdx != 0xFFFFFFFFu) {
+    vis *= nodes[parentIdx].state.w;
+  }
+
+  if (vis < 0.01 || projected < 0.002) { return; }
+
+  // Representation mode from projected size (the dimensional ladder IS the LOD)
+  var repr: u32 = 0u;
+  if (projected > 0.008) { repr = 1u; }
+  if (projected > 0.03)  { repr = 2u; }
+  if (projected > 0.12)  { repr = 3u; }
+  let maxRepr = u32(floor(d));
+  repr = min(repr, maxRepr);
+
+  // Color from dimensional depth
+  let colAperture = vec3f(0.91, 0.54, 0.69);
+  let colField = vec3f(0.30, 0.72, 0.63);
+  let colBoundary = vec3f(0.30, 0.63, 0.78);
+  let colGold = vec3f(0.78, 0.72, 0.47);
+
+  let t1 = smoothstep(0.0, 1.0, d);
+  let t2 = smoothstep(1.0, 2.0, d);
+  let t3 = smoothstep(2.0, 3.0, d);
+  var col = mix(colAperture, colField, t1);
+  col = mix(col, colBoundary, t2);
+  col = mix(col, colGold, t3 * 0.3);
+
+  // Pump pulse
+  col *= 0.8 + 0.2 * cos(phase * TAU);
+  col += colAperture * conv * 0.15;
+  col += colBoundary * emer * 0.1;
+
+  // Write visible instance (atomic slot allocation)
+  let slot = atomicAdd(&indirect.instance_count, 1u);
+  instances[slot].pos_scale = vec4f(pos, scale);
+  instances[slot].state = vec4f(balance, phase, d, f32(repr));
+  instances[slot].color = vec4f(col * vis, vis);
+}
+`;
+
+// ============================================================
+// RENDER SHADERS (vertex + fragment, same module)
+// ============================================================
+const SHADER_RENDER = PREAMBLE + /* wgsl */`
+struct DrawInstance {
+  pos_scale: vec4f,
+  state: vec4f,
+  color: vec4f,
+};
+
+struct VSOut {
+  @builtin(position) pos: vec4f,
+  @location(0) uv: vec2f,
+  @location(1) @interpolate(flat) color: vec4f,
+  @location(2) @interpolate(flat) state: vec4f,
+};
+
+@group(0) @binding(0) var<uniform> frame: FrameUniforms;
+@group(0) @binding(1) var<storage, read> instances: array<DrawInstance>;
+
+const QP = array<vec2f, 6>(
+  vec2f(-1, -1), vec2f(1, -1), vec2f(-1, 1),
+  vec2f(-1, 1),  vec2f(1, -1), vec2f(1, 1),
+);
+
+@vertex
+fn vs(
+  @builtin(vertex_index) vid: u32,
+  @builtin(instance_index) iid: u32,
+) -> VSOut {
+  let inst = instances[iid];
+  let qp = QP[vid];
+
+  let worldPos = inst.pos_scale.xyz;
+  let scale = inst.pos_scale.w;
+  let repr = u32(inst.state.w + 0.5);
+  let phase = inst.state.y;
+
+  // Billboard size by repr
+  var bs: f32;
+  switch repr {
+    case 0u: { bs = scale * 0.2; }
+    case 1u: { bs = scale * 0.5; }
+    case 2u: { bs = scale * 0.8; }
+    default: { bs = scale * 1.2; }
+  }
+
+  // i-turn rotation (field operator)
+  let iTurn = sin(phase * TAU) * 0.15;
+  let cosI = cos(iTurn);
+  let sinI = sin(iTurn);
+  let rotUV = vec2f(qp.x * cosI - qp.y * sinI, qp.x * sinI + qp.y * cosI);
+
+  // Aperture stretch along convergence axis
+  let right = frame.cam_right.xyz * E_AP;
+  let up = frame.cam_up.xyz;
+  let offset = (right * rotUV.x + up * rotUV.y) * bs;
+  let finalPos = worldPos + offset;
+
+  let viewPos = frame.view * vec4f(finalPos, 1.0);
+  let clipPos = frame.proj * viewPos;
+
+  var out: VSOut;
+  out.pos = clipPos;
+  out.uv = qp * 0.5 + 0.5;
+  out.color = inst.color;
+  out.state = inst.state;
+  return out;
+}
+
+@fragment
+fn fs(
+  @location(0) uv: vec2f,
+  @location(1) @interpolate(flat) color: vec4f,
+  @location(2) @interpolate(flat) state: vec4f,
+) -> @location(0) vec4f {
+  let p = uv * 2.0 - 1.0;
+  let r = length(p);
+  let repr = u32(state.w + 0.5);
+  let phase = state.y;
+  let balance = state.x;
+
+  var col = color.rgb;
+  var alpha = color.a;
+
+  switch repr {
+    // 0D: APERTURE (glowing point)
+    case 0u: {
+      let glow = exp(-r * r * 8.0);
+      col *= glow * 1.5;
+      alpha *= glow;
+    }
+    // 1D: WORLDLINE (vertical line + center dot)
+    case 1u: {
+      let lineW = 0.08 + 0.04 * sin(phase * TAU);
+      let lineDist = abs(p.x);
+      let lineA = smoothstep(lineW, lineW * 0.3, lineDist);
+      let ptGlow = exp(-r * r * 12.0) * 0.6;
+      col *= lineA + ptGlow;
+      alpha *= max(lineA, ptGlow);
+    }
+    // 2D: FIELD (disk with rings, aperture glow)
+    case 2u: {
+      let diskR = 0.7 + balance * 0.2;
+      let diskA = smoothstep(diskR, diskR - 0.15, r);
+      let density = mix(1.0 - r * 0.5, exp(-r * r * 2.0), balance);
+      let apGlow = exp(-r * r * 16.0) * 0.5;
+      let rings = 0.8 + 0.2 * sin(r * 12.0 - phase * TAU * 2.0);
+      col *= (density * rings * diskA + apGlow);
+      alpha *= max(diskA * density * 0.7, apGlow);
+    }
+    // 3D: FULL CIRCUMPUNCT (aperture + field + boundary)
+    default: {
+      let apGlow = exp(-r * r * 20.0);
+      let fieldR = 0.5 + balance * 0.2;
+      let fieldA = smoothstep(fieldR, fieldR - 0.12, r);
+      let fieldD = mix(1.0 - r * 0.7, exp(-r * r * 3.0), balance);
+      let fieldRings = 0.85 + 0.15 * sin(r * 16.0 - phase * TAU * 3.0);
+      let boundR = 0.82;
+      let boundW = 0.06;
+      let boundA = smoothstep(boundW, boundW * 0.2, abs(r - boundR));
+      let conv = max(0.0, cos(phase * TAU));
+      let emer = max(0.0, -cos(phase * TAU));
+      let centerCol = col * 1.3 + vec3f(0.2, 0.1, 0.05) * conv;
+      let edgeCol = col * 0.8 + vec3f(0.05, 0.1, 0.2) * emer;
+      var fc = edgeCol * boundA * 0.7;
+      fc += col * fieldA * fieldD * fieldRings * 0.5;
+      fc += centerCol * apGlow * 1.5;
+      col = fc;
+      alpha *= max(max(apGlow * 0.8, fieldA * fieldD * 0.5), boundA * 0.6);
+    }
+  }
+
+  alpha *= smoothstep(1.0, 0.85, r);
+  if (alpha < 0.01) { discard; }
+  return vec4f(col, alpha);
+}
+`;
+
+// ============================================================
+// MAIN
+// ============================================================
+(async () => {
+  if (!navigator.gpu) { log('WebGPU not available', 'err'); return; }
+  log('WebGPU: available', 'ok');
+
+  const adapter = await navigator.gpu.requestAdapter();
+  if (!adapter) { log('No adapter', 'err'); return; }
+
+  const device = await adapter.requestDevice();
+  log('Device: created', 'ok');
+
+  const canvas = document.getElementById('c');
+  const dpr = Math.min(window.devicePixelRatio, 2);
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
+
+  const ctx = canvas.getContext('webgpu');
+  const format = navigator.gpu.getPreferredCanvasFormat();
+  ctx.configure({ device, format, alphaMode: 'premultiplied' });
+  log('Canvas: ' + canvas.width + 'x' + canvas.height, 'ok');
+
+  // ============ BUFFERS ============
+  const nodeBuffer = device.createBuffer({
+    size: MAX_NODES * CIRC_NODE_SIZE,
+    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+  });
+  const instanceBuffer = device.createBuffer({
+    size: MAX_NODES * 48,
+    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+  });
+  const indirectBuffer = device.createBuffer({
+    size: 16,
+    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.INDIRECT | GPUBufferUsage.COPY_DST,
+  });
+  const uniformBuffer = device.createBuffer({
+    size: 256,
+    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+  });
+  // Readback buffer for indirect args (to display visible count)
+  const readbackBuffer = device.createBuffer({
+    size: 16,
+    usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
+  });
+
+  let depthTex = device.createTexture({
+    size: [canvas.width, canvas.height],
+    format: 'depth24plus',
+    usage: GPUTextureUsage.RENDER_ATTACHMENT,
+  });
+  log('Buffers: allocated (max ' + MAX_NODES + ' nodes)', 'ok');
+
+  // ============ COMPILE SHADERS ============
+  async function compileShader(code, label) {
+    const mod = device.createShaderModule({ code });
+    const info = await mod.getCompilationInfo();
+    for (const msg of info.messages) {
+      if (msg.type === 'error') {
+        log(label + ' error L' + msg.lineNum + ': ' + msg.message, 'err');
+        return null;
+      }
+    }
+    log(label + ': compiled', 'ok');
+    return mod;
+  }
+
+  const pumpMod = await compileShader(SHADER_PUMP, 'Pump shader');
+  const lodMod = await compileShader(SHADER_LOD, 'LOD shader');
+  const renderMod = await compileShader(SHADER_RENDER, 'Render shader');
+  if (!pumpMod || !lodMod || !renderMod) { log('Shader compilation failed', 'err'); return; }
+
+  // ============ PUMP COMPUTE PIPELINE ============
+  const pumpBGL = device.createBindGroupLayout({
+    entries: [
+      { binding: 0, visibility: GPUShaderStage.COMPUTE, buffer: { type: 'storage' } },
+      { binding: 1, visibility: GPUShaderStage.COMPUTE, buffer: { type: 'uniform' } },
+    ]
+  });
+  const pumpPipeline = device.createComputePipeline({
+    layout: device.createPipelineLayout({ bindGroupLayouts: [pumpBGL] }),
+    compute: { module: pumpMod, entryPoint: 'pump' },
+  });
+  const pumpBG = device.createBindGroup({
+    layout: pumpBGL,
+    entries: [
+      { binding: 0, resource: { buffer: nodeBuffer } },
+      { binding: 1, resource: { buffer: uniformBuffer } },
+    ]
+  });
+  log('Pump pipeline: created', 'ok');
+
+  // ============ LOD COMPUTE PIPELINE ============
+  const lodBGL = device.createBindGroupLayout({
+    entries: [
+      { binding: 0, visibility: GPUShaderStage.COMPUTE, buffer: { type: 'read-only-storage' } },
+      { binding: 1, visibility: GPUShaderStage.COMPUTE, buffer: { type: 'uniform' } },
+      { binding: 2, visibility: GPUShaderStage.COMPUTE, buffer: { type: 'storage' } },
+      { binding: 3, visibility: GPUShaderStage.COMPUTE, buffer: { type: 'storage' } },
+    ]
+  });
+  const lodPipeline = device.createComputePipeline({
+    layout: device.createPipelineLayout({ bindGroupLayouts: [lodBGL] }),
+    compute: { module: lodMod, entryPoint: 'evaluate' },
+  });
+  const lodBG = device.createBindGroup({
+    layout: lodBGL,
+    entries: [
+      { binding: 0, resource: { buffer: nodeBuffer } },
+      { binding: 1, resource: { buffer: uniformBuffer } },
+      { binding: 2, resource: { buffer: instanceBuffer } },
+      { binding: 3, resource: { buffer: indirectBuffer } },
+    ]
+  });
+  log('LOD pipeline: created', 'ok');
+
+  // ============ RENDER PIPELINE ============
+  const renderBGL = device.createBindGroupLayout({
+    entries: [
+      { binding: 0, visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT, buffer: { type: 'uniform' } },
+      { binding: 1, visibility: GPUShaderStage.VERTEX, buffer: { type: 'read-only-storage' } },
+    ]
+  });
+  const renderPipeline = device.createRenderPipeline({
+    layout: device.createPipelineLayout({ bindGroupLayouts: [renderBGL] }),
+    vertex: { module: renderMod, entryPoint: 'vs' },
+    fragment: {
+      module: renderMod, entryPoint: 'fs',
+      targets: [{
+        format,
+        blend: {
+          color: { srcFactor: 'src-alpha', dstFactor: 'one', operation: 'add' },
+          alpha: { srcFactor: 'one', dstFactor: 'one', operation: 'add' },
+        },
+      }],
+    },
+    primitive: { topology: 'triangle-list' },
+    depthStencil: { format: 'depth24plus', depthWriteEnabled: false, depthCompare: 'less' },
+  });
+  const renderBG = device.createBindGroup({
+    layout: renderBGL,
+    entries: [
+      { binding: 0, resource: { buffer: uniformBuffer } },
+      { binding: 1, resource: { buffer: instanceBuffer } },
+    ],
+  });
+  log('Render pipeline: created', 'ok');
+
+  // ============ SCENE: FRACTAL TREE ============
+  let nodes = [];
+  let nodeCount = 0;
+
+  function createNode(opts) {
+    const idx = nodeCount++;
+    nodes.push({
+      pos: opts.pos || [0, 0, 0],
+      scale: opts.scale || 1.0,
+      balance: opts.balance || 0.5,
+      phase: opts.phase || 0,
+      dimDepth: opts.dimDepth || 1.5,
+      parent: opts.parent !== undefined ? opts.parent : 0xFFFFFFFF,
+      childStart: 0, childCount: 0, flags: 1,
+    });
+    return idx;
+  }
+
+  function buildTree(pos, scale, balance, depth, maxDepth, parent, phaseOff) {
+    // Dimensional depth: root is 3.0, gets lower with each level
+    const level = maxDepth - depth;
+    const d = Math.max(0, 3.0 - level * 0.7);
+    const idx = createNode({ pos, scale, balance, phase: phaseOff, dimDepth: d, parent });
+
+    if (depth <= 0) return idx;
+
+    const childScale = scale * PHI_INV;
+    // Wider orbit: PHI ratio of parent scale (golden nesting)
+    const orbitR = scale * PHI_INV * 1.2;
+    const childStart = nodeCount;
+    let childCount = 0;
+
+    for (let c = 0; c < T; c++) {
+      const angle = (c / T) * Math.PI * 2 + level * 0.4; // rotate each level
+      // 3D distribution: alternate elevation per child and level
+      const elev = (c - (T - 1) / 2) * 0.6; // spread vertically
+      const tilt = level * 0.3; // tilt orbit plane at deeper levels
+      const cx = pos[0] + Math.cos(angle) * orbitR * Math.cos(tilt);
+      const cy = pos[1] + elev * orbitR * 0.5 + Math.sin(tilt) * orbitR * 0.3;
+      const cz = pos[2] + Math.sin(angle) * orbitR;
+      const childPhase = (phaseOff + c / T) % 1.0;
+
+      buildTree([cx, cy, cz], childScale, balance, depth - 1, maxDepth, idx, childPhase);
+      childCount++;
+    }
+
+    nodes[idx].childStart = childStart;
+    nodes[idx].childCount = childCount;
+    return idx;
+  }
+
+  let currentDepth = 4;
+  let currentBalance = 0.5;
+
+  function rebuildScene(depth, bal) {
+    nodes = [];
+    nodeCount = 0;
+    currentBalance = bal;
+    buildTree([0, 0, 0], 2.5, bal, depth, depth, 0xFFFFFFFF, 0);
+    uploadNodes();
+    document.getElementById('s-nodes').textContent = nodeCount;
+    log('Scene: ' + nodeCount + ' nodes, depth ' + depth, 'ok');
+  }
+
+  function uploadNodes() {
+    const data = new ArrayBuffer(nodeCount * CIRC_NODE_SIZE);
+    const f32 = new Float32Array(data);
+    const u32 = new Uint32Array(data);
+
+    for (let i = 0; i < nodeCount; i++) {
+      const n = nodes[i];
+      const off = i * 16;
+      f32[off + 0] = n.pos[0]; f32[off + 1] = n.pos[1]; f32[off + 2] = n.pos[2];
+      f32[off + 3] = n.scale;
+      f32[off + 4] = n.balance; f32[off + 5] = n.phase; f32[off + 6] = n.dimDepth;
+      f32[off + 7] = 1.0; // visibility
+      u32[off + 8] = n.parent; u32[off + 9] = n.childStart;
+      u32[off + 10] = n.childCount; u32[off + 11] = n.flags;
+      f32[off + 12] = 0; f32[off + 13] = 0; f32[off + 14] = 0; f32[off + 15] = 0;
+    }
+
+    device.queue.writeBuffer(nodeBuffer, 0, data, 0, nodeCount * CIRC_NODE_SIZE);
+  }
+
+  rebuildScene(currentDepth, currentBalance);
+
+  // ============ MATH ============
+  function normalize(v) {
+    const l = Math.sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);
+    return l > 0 ? [v[0]/l,v[1]/l,v[2]/l] : [0,0,0];
+  }
+  function sub(a,b) { return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
+  function cross(a,b) { return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]; }
+  function dot(a,b) { return a[0]*b[0]+a[1]*b[1]+a[2]*b[2]; }
+
+  function lookAt(eye, target, up) {
+    const z = normalize(sub(eye, target));
+    const x = normalize(cross(up, z));
+    const y = cross(z, x);
+    return new Float32Array([
+      x[0],y[0],z[0],0, x[1],y[1],z[1],0, x[2],y[2],z[2],0,
+      -dot(x,eye),-dot(y,eye),-dot(z,eye),1
+    ]);
+  }
+  function perspective(fov, aspect, near, far) {
+    const f = 1/Math.tan(fov/2), nf = 1/(near-far);
+    return new Float32Array([f/aspect,0,0,0, 0,f,0,0, 0,0,far*nf,-1, 0,0,far*near*nf,0]);
+  }
+
+  // ============ CAMERA ============
+  let camTheta = 0.5, camPhi = 0.3, camDist = 10;
+  let targetTheta = 0.5, targetPhi = 0.3;
+  let mouseDown = false, lastMX = 0, lastMY = 0;
+  let pumpSpeed = 1.0;
+
+  canvas.addEventListener('mousedown', e => { mouseDown=true; lastMX=e.clientX; lastMY=e.clientY; });
+  window.addEventListener('mouseup', () => { mouseDown=false; });
+  window.addEventListener('mousemove', e => {
+    if (!mouseDown) return;
+    targetTheta -= (e.clientX-lastMX)*0.005;
+    targetPhi = Math.max(-1.2, Math.min(1.2, targetPhi+(e.clientY-lastMY)*0.005));
+    lastMX=e.clientX; lastMY=e.clientY;
+  });
+  canvas.addEventListener('wheel', e => {
+    camDist = Math.max(1.5, Math.min(20, camDist+e.deltaY*0.005));
+    e.preventDefault();
+  }, {passive:false});
+
+  // Touch
+  canvas.addEventListener('touchstart', e => {
+    if (e.touches.length===1) { mouseDown=true; lastMX=e.touches[0].clientX; lastMY=e.touches[0].clientY; }
+    e.preventDefault();
+  }, {passive:false});
+  canvas.addEventListener('touchmove', e => {
+    if (e.touches.length===1 && mouseDown) {
+      targetTheta -= (e.touches[0].clientX-lastMX)*0.005;
+      targetPhi = Math.max(-1.2, Math.min(1.2, targetPhi+(e.touches[0].clientY-lastMY)*0.005));
+      lastMX=e.touches[0].clientX; lastMY=e.touches[0].clientY;
+    }
+    e.preventDefault();
+  }, {passive:false});
+  canvas.addEventListener('touchend', () => { mouseDown=false; });
+
+  // ============ CONTROLS ============
+  document.getElementById('pump-speed').addEventListener('input', e => {
+    pumpSpeed = parseFloat(e.target.value);
+    document.getElementById('v-pump').textContent = pumpSpeed.toFixed(2);
+  });
+  document.getElementById('balance').addEventListener('input', e => {
+    currentBalance = parseFloat(e.target.value);
+    document.getElementById('v-bal').textContent = currentBalance.toFixed(3);
+    // Push balance update to all nodes on GPU via rebuild
+    rebuildScene(currentDepth, currentBalance);
+  });
+  document.getElementById('depth').addEventListener('input', e => {
+    const d = parseInt(e.target.value);
+    document.getElementById('v-depth').textContent = d;
+    if (d !== currentDepth) { currentDepth = d; rebuildScene(d, currentBalance); }
+  });
+
+  // ============ RESIZE ============
+  window.addEventListener('resize', () => {
+    const dpr = Math.min(window.devicePixelRatio, 2);
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    depthTex.destroy();
+    depthTex = device.createTexture({
+      size: [canvas.width, canvas.height],
+      format: 'depth24plus',
+      usage: GPUTextureUsage.RENDER_ATTACHMENT,
+    });
+  });
+
+  // ============ READBACK (for visible count display) ============
+  let lastVisibleCount = 0;
+  let readbackPending = false;
+  let doReadbackThisFrame = false;
+
+  async function processReadback() {
+    if (readbackPending) return;
+    readbackPending = true;
+    try {
+      await readbackBuffer.mapAsync(GPUMapMode.READ);
+      const data = new Uint32Array(readbackBuffer.getMappedRange().slice(0));
+      readbackBuffer.unmap();
+      lastVisibleCount = data[1]; // instance_count
+    } catch (e) { /* ignore */ }
+    readbackPending = false;
+  }
+
+  // ============ RENDER LOOP ============
+  let time = 0;
+  let frameCount = 0, lastFpsTime = performance.now();
+
+  log('Starting full pipeline render loop...', 'ok');
+
+  function frame(ts) {
+    requestAnimationFrame(frame);
+    const dt = Math.min(0.05, 0.016);
+    time += dt;
+
+    // Auto-rotate
+    if (!mouseDown) targetTheta += dt * 0.15;
+    camTheta += (targetTheta - camTheta) * 0.06;
+    camPhi += (targetPhi - camPhi) * 0.06;
+
+    const cx = camDist * Math.cos(camPhi) * Math.sin(camTheta);
+    const cy = camDist * Math.sin(camPhi);
+    const cz = camDist * Math.cos(camPhi) * Math.cos(camTheta);
+    const eye = [cx, cy, cz];
+    const target = [0, 0, 0];
+    const up = [0, 1, 0];
+
+    const fwd = normalize(sub(target, eye));
+    const right = normalize(cross(fwd, up));
+    const camUp = cross(right, fwd);
+    const aspect = canvas.width / canvas.height;
+    const viewMat = lookAt(eye, target, up);
+    const projMat = perspective(FOV_RAD, aspect, NEAR, FAR);
+
+    // Write uniforms
+    const ubuf = new ArrayBuffer(256);
+    const uf = new Float32Array(ubuf);
+    const uu = new Uint32Array(ubuf);
+    uf[0] = time; uf[1] = dt; uf[2] = pumpSpeed; uu[3] = nodeCount;
+    uf[4]=cx; uf[5]=cy; uf[6]=cz; uf[7]=0;
+    uf[8]=fwd[0]; uf[9]=fwd[1]; uf[10]=fwd[2]; uf[11]=0;
+    uf[12]=camUp[0]; uf[13]=camUp[1]; uf[14]=camUp[2]; uf[15]=0;
+    uf[16]=right[0]; uf[17]=right[1]; uf[18]=right[2]; uf[19]=0;
+    for (let i=0;i<16;i++) uf[20+i] = projMat[i];
+    for (let i=0;i<16;i++) uf[36+i] = viewMat[i];
+    device.queue.writeBuffer(uniformBuffer, 0, ubuf);
+
+    // Reset indirect: vertex_count=6, instance_count=0 (atomic counter)
+    device.queue.writeBuffer(indirectBuffer, 0, new Uint32Array([6, 0, 0, 0]));
+
+    // === COMMAND BUFFER ===
+    const encoder = device.createCommandEncoder();
+
+    // COMPUTE PASS 1: PUMP (convergence, i-turn, emergence)
+    const pumpPass = encoder.beginComputePass();
+    pumpPass.setPipeline(pumpPipeline);
+    pumpPass.setBindGroup(0, pumpBG);
+    pumpPass.dispatchWorkgroups(Math.ceil(nodeCount / 64));
+    pumpPass.end();
+
+    // COMPUTE PASS 2: LOD (visibility, repr, indirect draw args)
+    const lodPass = encoder.beginComputePass();
+    lodPass.setPipeline(lodPipeline);
+    lodPass.setBindGroup(0, lodBG);
+    lodPass.dispatchWorkgroups(Math.ceil(nodeCount / 64));
+    lodPass.end();
+
+    // RENDER PASS: consume computed instances via indirect draw
+    const renderPass = encoder.beginRenderPass({
+      colorAttachments: [{
+        view: ctx.getCurrentTexture().createView(),
+        clearValue: { r: 0.02, g: 0.015, b: 0.025, a: 1 },
+        loadOp: 'clear', storeOp: 'store',
+      }],
+      depthStencilAttachment: {
+        view: depthTex.createView(),
+        depthClearValue: 1.0,
+        depthLoadOp: 'clear', depthStoreOp: 'store',
+      },
+    });
+    renderPass.setPipeline(renderPipeline);
+    renderPass.setBindGroup(0, renderBG);
+    renderPass.drawIndirect(indirectBuffer, 0);
+    renderPass.end();
+
+    // Copy indirect args to readback buffer (same encoder, after LOD wrote them)
+    doReadbackThisFrame = (frameCount % 30 === 0) && !readbackPending;
+    if (doReadbackThisFrame) {
+      encoder.copyBufferToBuffer(indirectBuffer, 0, readbackBuffer, 0, 16);
+    }
+
+    device.queue.submit([encoder.finish()]);
+
+    // Process readback asynchronously
+    if (doReadbackThisFrame) processReadback();
+    document.getElementById('s-visible').textContent = lastVisibleCount;
+
+    // FPS
+    frameCount++;
+    if (ts - lastFpsTime > 1000) {
+      document.getElementById('s-fps').textContent =
+        Math.round(frameCount * 1000 / (ts - lastFpsTime));
+      frameCount = 0;
+      lastFpsTime = ts;
+    }
+  }
+
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

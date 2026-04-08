@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Last Ship Sailing (CircumpunctGPU)</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { overflow: hidden; background: #000; font-family: 'Courier New', monospace; cursor: none; }
+canvas#game { display: block; width: 100vw; height: 100vh; }
+
+#error {
+  display: none; position: fixed; inset: 0; z-index: 1000;
+  background: #0a0806; align-items: center; justify-content: center;
+  flex-direction: column; gap: 16px; padding: 40px;
+}
+#error h1 { color: #c8b478; font-size: 16px; letter-spacing: 3px; }
+#error p { color: #807060; font-size: 12px; max-width: 500px; text-align: center; line-height: 1.6; }
+
+/* Circumpunct HUD canvas */
+#circumpunct-hud {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 20;
+}
+
+/* Ship select overlay */
+#ship-select {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(5, 4, 4, 0.95);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 20px;
+}
+#ship-select h1 { color: #c8b478; font-size: 14px; letter-spacing: 4px; }
+#ship-select .ships { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.ship-card {
+  width: 120px; padding: 16px 12px; text-align: center;
+  background: rgba(200,180,140,0.04); border: 1px solid rgba(200,180,140,0.15);
+  border-radius: 6px; cursor: pointer; transition: all 0.2s;
+}
+.ship-card:hover { background: rgba(200,180,140,0.1); border-color: rgba(200,180,140,0.4); }
+.ship-card .name { color: #c8b478; font-size: 11px; letter-spacing: 2px; margin-bottom: 6px; }
+.ship-card .chassis { color: #605840; font-size: 8px; text-transform: uppercase; letter-spacing: 1px; }
+.ship-card .stats { color: #807060; font-size: 8px; margin-top: 8px; line-height: 1.5; }
+
+/* HUD elements */
+#game-hud {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 15; display: none;
+}
+#speed-display {
+  position: fixed; bottom: 20px; left: 20px;
+  color: #c8b478; font-size: 10px; letter-spacing: 2px; z-index: 15;
+}
+#health-display {
+  position: fixed; bottom: 20px; right: 20px;
+  color: #c8b478; font-size: 10px; letter-spacing: 2px; z-index: 15; text-align: right;
+}
+#crosshair {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 20px; height: 20px; z-index: 25; pointer-events: none; display: none;
+}
+#crosshair::before, #crosshair::after {
+  content: ''; position: absolute; background: rgba(200,180,140,0.5);
+}
+#crosshair::before { width: 1px; height: 100%; left: 50%; top: 0; }
+#crosshair::after { width: 100%; height: 1px; top: 50%; left: 0; }
+
+#instructions {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  color: #605840; font-size: 10px; text-align: center; line-height: 2;
+  z-index: 30; display: none;
+}
+</style>
+</head>
+<body>
+
+<canvas id="game"></canvas>
+<canvas id="circumpunct-hud"></canvas>
+
+<div id="error">
+  <h1>WEBGPU REQUIRED</h1>
+  <p>Last Ship Sailing (CircumpunctGPU) requires WebGPU. Chrome 113+, Edge 113+, or Safari 18+.</p>
+</div>
+
+<div id="ship-select">
+  <h1>LAST SHIP SAILING</h1>
+  <div class="sub" style="color:#605840; font-size:9px; letter-spacing:2px; margin-bottom:8px;">
+    CIRCUMPUNCTGPU ENGINE
+  </div>
+  <div class="ships" id="ship-cards"></div>
+</div>
+
+<div id="game-hud">
+  <div id="crosshair"></div>
+  <div id="speed-display">SPD: 0</div>
+  <div id="health-display">HP: 0 / 0</div>
+</div>
+
+<div id="instructions">
+  CLICK TO CAPTURE MOUSE<br>
+  WASD: THRUST &nbsp; MOUSE: AIM &nbsp; Q/E: ROLL<br>
+  SPACE: UP &nbsp; CTRL: DOWN &nbsp; SHIFT: BOOST<br>
+  LMB: FIRE
+</div>
+
+<script src="circumpunct-gpu.js"></script>
+<script src="lss-game.js"></script>
+<script>
+(async function() {
+  const canvas = document.getElementById('game');
+  const hudCanvas = document.getElementById('circumpunct-hud');
+  const errorDiv = document.getElementById('error');
+  const selectDiv = document.getElementById('ship-select');
+  const gameHud = document.getElementById('game-hud');
+  const instrDiv = document.getElementById('instructions');
+
+  // Check WebGPU
+  if (!navigator.gpu) {
+    errorDiv.style.display = 'flex';
+    selectDiv.style.display = 'none';
+    return;
+  }
+  errorDiv.style.display = 'none';
+
+  // --- SHIP SELECT SCREEN ---
+  const cardsDiv = document.getElementById('ship-cards');
+  Object.keys(LSS.CLASSES).forEach(key => {
+    const cls = LSS.CLASSES[key];
+    const card = document.createElement('div');
+    card.className = 'ship-card';
+    card.innerHTML = `
+      <div class="name">${cls.name}</div>
+      <div class="chassis">${cls.chassis}</div>
+      <div class="stats">
+        HP: ${cls.hp}<br>
+        SHIELD: ${cls.shield}<br>
+        SPEED: ${cls.speed}<br>
+        ACCEL: ${cls.accel}
+      </div>
+    `;
+    card.addEventListener('click', () => startGame(key));
+    cardsDiv.appendChild(card);
+  });
+
+  // --- CIRCUMPUNCTGPU INIT ---
+  const cg = new CircumpunctGPU();
+  let cgReady = false;
+
+  // --- GAME STATE ---
+  const game = new GameState();
+  const input = new InputSystem();
+
+  // --- BUILD SHIP CIRCNODE HIERARCHY ---
+  function buildShipNodes(player) {
+    const chassis = LSS.CHASSIS[player.chassisType];
+    const s = chassis.baseScale * 0.02; // scale down for CircNode units
+
+    // Root node: the ship itself
+    const rootIdx = cg.createNode({
+      position: player.position,
+      scale: s,
+      balance: 0.5,
+      dimDepth: 3.0,
+      phase: 0,
+    });
+    player.rootNodeIdx = rootIdx;
+    player.childNodeIndices = [];
+
+    // Hull (center mass)
+    const hullIdx = cg.createNode({
+      position: player.position,
+      scale: s * 0.6,
+      balance: 0.45,
+      dimDepth: 3.0,
+      parent: rootIdx,
+    });
+    player.childNodeIndices.push(hullIdx);
+
+    if (player.chassisType === 'frigate') {
+      // Nose cone
+      const noseIdx = cg.createNode({
+        position: Vec3.add(player.position, [0, 0, -s * 0.8]),
+        scale: s * 0.25,
+        balance: 0.6,
+        dimDepth: 2.0,
+        parent: rootIdx,
+      });
+      player.childNodeIndices.push(noseIdx);
+
+      // Wings
+      for (let side = -1; side <= 1; side += 2) {
+        const wingIdx = cg.createNode({
+          position: Vec3.add(player.position, [side * s * 0.6, 0, s * 0.1]),
+          scale: s * 0.35,
+          balance: 0.55,
+          dimDepth: 2.0,
+          parent: rootIdx,
+        });
+        player.childNodeIndices.push(wingIdx);
+      }
+
+      // Engine
+      const engIdx = cg.createNode({
+        position: Vec3.add(player.position, [0, 0, s * 0.7]),
+        scale: s * 0.2,
+        balance: 0.3,
+        dimDepth: 1.0,
+        parent: rootIdx,
+      });
+      player.childNodeIndices.push(engIdx);
+
+    } else if (player.chassisType === 'corvette') {
+      // Bridge
+      const bridgeIdx = cg.createNode({
+        position: Vec3.add(player.position, [0, s * 0.2, -s * 0.3]),
+        scale: s * 0.2,
+        balance: 0.5,
+        dimDepth: 2.0,
+        parent: rootIdx,
+      });
+      player.childNodeIndices.push(bridgeIdx);
+
+      // Shoulders
+      for (let side = -1; side <= 1; side += 2) {
+        const shIdx = cg.createNode({
+          position: Vec3.add(player.position, [side * s * 0.5, 0, 0]),
+          scale: s * 0.3,
+          balance: 0.5,
+          dimDepth: 3.0,
+          parent: rootIdx,
+        });
+        player.childNodeIndices.push(shIdx);
+      }
+
+      // Barrel
+      const barIdx = cg.createNode({
+        position: Vec3.add(player.position, [0, 0, -s * 0.6]),
+        scale: s * 0.1,
+        balance: 0.5,
+        dimDepth: 1.0,
+        parent: rootIdx,
+      });
+      player.childNodeIndices.push(barIdx);
+
+      // Engine
+      const engIdx = cg.createNode({
+        position: Vec3.add(player.position, [0, 0, s * 0.6]),
+        scale: s * 0.25,
+        balance: 0.3,
+        dimDepth: 1.0,
+        parent: rootIdx,
+      });
+      player.childNodeIndices.push(engIdx);
+
+    } else { // dreadnought
+      // Armor top
+      const armorIdx = cg.createNode({
+        position: Vec3.add(player.position, [0, s * 0.2, 0]),
+        scale: s * 0.5,
+        balance: 0.4,
+        dimDepth: 3.0,
+        parent: rootIdx,
+      });
+      player.childNodeIndices.push(armorIdx);
+
+      // Keel
+      const keelIdx = cg.createNode({
+        position: Vec3.add(player.position, [0, -s * 0.25, s * 0.1]),
+        scale: s * 0.4,
+        balance: 0.4,
+        dimDepth: 3.0,
+        parent: rootIdx,
+      });
+      player.childNodeIndices.push(keelIdx);
+
+      // Twin engines
+      for (let side = -1; side <= 1; side += 2) {
+        const engIdx = cg.createNode({
+          position: Vec3.add(player.position, [side * s * 0.35, 0, s * 0.6]),
+          scale: s * 0.2,
+          balance: 0.3,
+          dimDepth: 1.0,
+          parent: rootIdx,
+        });
+        player.childNodeIndices.push(engIdx);
+      }
+    }
+  }
+
+  // --- BUILD ARENA BOUNDARY NODES ---
+  function buildArenaNodes() {
+    // The arena is the root circumpunct at the largest scale
+    const arenaScale = LSS.ARENA_SIZE * 0.0004;
+
+    // Arena boundary: 8 corner markers
+    const half = LSS.ARENA_SIZE * 0.4;
+    for (let x = -1; x <= 1; x += 2) {
+      for (let y = -1; y <= 1; y += 2) {
+        for (let z = -1; z <= 1; z += 2) {
+          cg.createNode({
+            position: [x * half, y * half, z * half],
+            scale: arenaScale * 0.15,
+            balance: 0.3,
+            dimDepth: 2.0,
+            phase: Math.random(),
+          });
+        }
+      }
+    }
+
+    // Scattered field points (the void between ships)
+    for (let i = 0; i < 200; i++) {
+      const r = 2000 + Math.random() * 8000;
+      const th = Math.random() * Math.PI * 2;
+      const ph = Math.acos(2 * Math.random() - 1);
+      cg.createNode({
+        position: [
+          r * Math.sin(ph) * Math.cos(th),
+          r * Math.sin(ph) * Math.sin(th),
+          r * Math.cos(ph),
+        ],
+        scale: 0.3 + Math.random() * 0.6,
+        balance: 0.5,
+        dimDepth: 0.0, // just points (0D)
+        phase: Math.random(),
+      });
+    }
+  }
+
+  // --- UPDATE SHIP NODES FROM GAME STATE ---
+  function syncShipNodes(player) {
+    if (player.rootNodeIdx < 0) return;
+    const n = cg.nodes[player.rootNodeIdx];
+    n.position = [...player.position];
+    // Scale breathing with speed
+    n.scale = player.baseScale * 0.02 * (1.0 + player.speedFraction * 0.05);
+    // Phase driven by speed (engine pump)
+    n.phase = (n.phase + player.speedFraction * 0.02) % 1.0;
+
+    // Update child positions relative to parent (rotated)
+    const fwd = Quat.forward(player.rotation);
+    const right = Quat.right(player.rotation);
+    const up = Quat.up(player.rotation);
+
+    player.childNodeIndices.forEach((idx, i) => {
+      const child = cg.nodes[idx];
+      // Get the original offset from build time (stored as initial offset from parent)
+      // For now, just keep them near the parent with some offset
+      const offsets = getChildOffsets(player.chassisType);
+      if (i < offsets.length) {
+        const off = offsets[i];
+        child.position = Vec3.add(player.position,
+          Vec3.add(Vec3.scale(right, off[0]),
+            Vec3.add(Vec3.scale(up, off[1]),
+              Vec3.scale(fwd, -off[2]))));
+      }
+      // Engine nodes: phase locked to speed
+      if (child.dimDepth <= 1.0) {
+        child.phase = (child.phase + player.speedFraction * 0.05) % 1.0;
+        child.balance = 0.3 + player.speedFraction * 0.4;
+      }
+    });
+  }
+
+  function getChildOffsets(chassisType) {
+    const s = LSS.CHASSIS[chassisType].baseScale * 0.02;
+    if (chassisType === 'frigate') {
+      return [
+        [0, 0, 0],              // hull
+        [0, 0, s * 0.8],        // nose
+        [-s * 0.6, 0, -s * 0.1], // wing L
+        [s * 0.6, 0, -s * 0.1],  // wing R
+        [0, 0, -s * 0.7],       // engine
+      ];
+    } else if (chassisType === 'corvette') {
+      return [
+        [0, 0, 0],              // hull
+        [0, s * 0.2, s * 0.3],  // bridge
+        [-s * 0.5, 0, 0],       // shoulder L
+        [s * 0.5, 0, 0],        // shoulder R
+        [0, 0, s * 0.6],        // barrel
+        [0, 0, -s * 0.6],       // engine
+      ];
+    } else {
+      return [
+        [0, 0, 0],              // hull
+        [0, s * 0.2, 0],        // armor
+        [0, -s * 0.25, -s * 0.1], // keel
+        [-s * 0.35, 0, -s * 0.6], // engine L
+        [s * 0.35, 0, -s * 0.6],  // engine R
+      ];
+    }
+  }
+
+  // --- START GAME ---
+  async function startGame(shipClass) {
+    selectDiv.style.display = 'none';
+    gameHud.style.display = 'block';
+    instrDiv.style.display = 'block';
+
+    // Init CircumpunctGPU
+    try {
+      const dpr = Math.min(window.devicePixelRatio, 2);
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      await cg.init(canvas);
+      cgReady = true;
+    } catch (e) {
+      console.error(e);
+      errorDiv.style.display = 'flex';
+      errorDiv.querySelector('p').textContent = e.message;
+      return;
+    }
+
+    // Init game state
+    game.init(shipClass);
+
+    // Build CircNodes
+    buildArenaNodes();
+    buildShipNodes(game.player);
+    cg.uploadNodes();
+
+    // Setup input
+    input.requestLock(canvas);
+    canvas.addEventListener('click', () => {
+      instrDiv.style.display = 'none';
+      document.getElementById('crosshair').style.display = 'block';
+    });
+
+    // HUD canvas sizing
+    hudCanvas.width = window.innerWidth;
+    hudCanvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      const dpr = Math.min(window.devicePixelRatio, 2);
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      cg.resize(canvas.width, canvas.height);
+      hudCanvas.width = window.innerWidth;
+      hudCanvas.height = window.innerHeight;
+    });
+
+    // Start loop
+    requestAnimationFrame(gameLoop);
+  }
+
+  // --- MAIN GAME LOOP ---
+  let lastTime = 0;
+
+  function gameLoop(ts) {
+    requestAnimationFrame(gameLoop);
+    const dt = Math.min((ts - lastTime) / 1000, 0.05);
+    lastTime = ts;
+
+    // Update game logic
+    game.update(dt, input);
+
+    // Sync ship nodes to game state
+    syncShipNodes(game.player);
+    // Re-upload changed nodes
+    cg.uploadNodes();
+
+    // Set camera from player
+    const p = game.player;
+    const camBack = Vec3.add(p.position, Vec3.scale(Quat.forward(p.rotation), 3));
+    const camUp = Quat.up(p.rotation);
+
+    cg.camDist = 3;
+    // Override camera directly from player quaternion
+    const fwd = Quat.forward(p.rotation);
+    const eye = Vec3.add(p.position, Vec3.scale(fwd, 5));
+    // For first-person: camera IS at player position, looking forward
+    // We override the orbit camera with direct position
+    cg._overrideCamera = {
+      eye: p.position,
+      target: Vec3.add(p.position, Vec3.scale(fwd, -100)),
+      up: camUp,
+    };
+
+    // Pump (compute + render)
+    if (cgReady) {
+      cg.pump(dt);
+    }
+
+    // Update HUD
+    updateHUD();
+  }
+
+  // --- HUD ---
+  function updateHUD() {
+    const p = game.player;
+    if (!p) return;
+
+    const speed = Vec3.length(p.velocity);
+    document.getElementById('speed-display').textContent =
+      `SPD: ${Math.round(speed)} / ${p.maxSpeed}`;
+    document.getElementById('health-display').textContent =
+      `HP: ${Math.round(p.health)} / ${p.maxHealth}` +
+      (p.maxShield > 0 ? `  SH: ${Math.round(p.shield)}` : '');
+
+    // Draw circumpunct HUD rings
+    drawCircumpunctHUD();
+  }
+
+  function drawCircumpunctHUD() {
+    const ctx = hudCanvas.getContext('2d');
+    const w = hudCanvas.width;
+    const h = hudCanvas.height;
+    const cx = w / 2;
+    const cy = h / 2;
+    const p = game.player;
+    if (!p) return;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Ring 1: Health arc
+    const r1 = Math.min(w, h) * 0.14;
+    const healthFrac = p.health / p.maxHealth;
+    const healthAngle = healthFrac * Math.PI * 1.5;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r1, -Math.PI * 0.75, -Math.PI * 0.75 + healthAngle);
+    ctx.strokeStyle = healthFrac > 0.5 ? 'rgba(80,220,120,0.6)' :
+                      healthFrac > 0.25 ? 'rgba(220,180,40,0.6)' :
+                      'rgba(220,60,40,0.6)';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Shield arc (if applicable)
+    if (p.maxShield > 0) {
+      const shieldFrac = p.shield / p.maxShield;
+      const shieldAngle = shieldFrac * Math.PI * 1.5;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r1 + 6, -Math.PI * 0.75, -Math.PI * 0.75 + shieldAngle);
+      ctx.strokeStyle = 'rgba(80,160,255,0.4)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    // Ring 2: Speed arc (left side)
+    const r2 = r1 + 20;
+    const speedFrac = p.speedFraction;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r2, Math.PI * 0.6, Math.PI * 0.6 + speedFrac * Math.PI * 0.8);
+    ctx.strokeStyle = 'rgba(200,180,140,0.3)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Ring 3: Core meter (outer)
+    const r3 = r2 + 20;
+    const coreFrac = p.coreMeter / 100;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r3, 0, coreFrac * Math.PI * 2);
+    ctx.strokeStyle = coreFrac >= 1.0 ? 'rgba(255,200,80,0.6)' : 'rgba(100,80,60,0.3)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Rotating tick ring
+    const r4 = r3 + 16;
+    const tickCount = 48;
+    const rot = game.time * 0.3;
+    for (let i = 0; i < tickCount; i++) {
+      const angle = (i / tickCount) * Math.PI * 2 + rot;
+      const isMajor = i % 12 === 0;
+      const len = isMajor ? 8 : 3;
+      const x1 = cx + Math.cos(angle) * r4;
+      const y1 = cy + Math.sin(angle) * r4;
+      const x2 = cx + Math.cos(angle) * (r4 + len);
+      const y2 = cy + Math.sin(angle) * (r4 + len);
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.strokeStyle = isMajor ? 'rgba(200,180,140,0.25)' : 'rgba(200,180,140,0.1)';
+      ctx.lineWidth = isMajor ? 1.5 : 0.5;
+      ctx.stroke();
+    }
+
+    // Center dot (the aperture)
+    ctx.beginPath();
+    ctx.arc(cx, cy, 2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(200,180,140,0.5)';
+    ctx.fill();
+  }
+
+  // --- CAMERA OVERRIDE SUPPORT IN CIRCUMPUNCTGPU ---
+  // Patch the pump method to support first-person camera
+  const originalPump = CircumpunctGPU.prototype.pump;
+  CircumpunctGPU.prototype.pump = function(dt) {
+    if (this._overrideCamera) {
+      // Skip orbit camera; use direct position
+      const cam = this._overrideCamera;
+      this.time += dt;
+
+      // Build view/proj from override
+      const viewMat = lookAt(cam.eye, cam.target, cam.up);
+      const aspect = this.canvas.width / this.canvas.height;
+      const projMat = perspective(FOV_RAD, aspect, NEAR, FAR);
+
+      const fwd = normalize(sub(cam.target, cam.eye));
+      const right = normalize(cross(fwd, cam.up));
+      const camUp = cross(right, fwd);
+
+      const buf = new ArrayBuffer(256);
+      const f = new Float32Array(buf);
+      const u = new Uint32Array(buf);
+
+      f[0] = this.time;
+      f[1] = dt;
+      f[2] = this.pumpSpeed;
+      u[3] = this.nodeCount;
+
+      f[4] = cam.eye[0]; f[5] = cam.eye[1]; f[6] = cam.eye[2]; f[7] = 0;
+      f[8] = fwd[0]; f[9] = fwd[1]; f[10] = fwd[2]; f[11] = 0;
+      f[12] = camUp[0]; f[13] = camUp[1]; f[14] = camUp[2]; f[15] = 0;
+      f[16] = right[0]; f[17] = right[1]; f[18] = right[2]; f[19] = 0;
+
+      for (let i = 0; i < 16; i++) f[20 + i] = projMat[i];
+      for (let i = 0; i < 16; i++) f[36 + i] = viewMat[i];
+
+      this.device.queue.writeBuffer(this.frameUniformBuffer, 0, buf);
+
+      const indirectReset = new Uint32Array([6, 0, 0, 0]);
+      this.device.queue.writeBuffer(this.indirectBuffer, 0, indirectReset);
+
+      const encoder = this.device.createCommandEncoder();
+
+      const pumpPass = encoder.beginComputePass();
+      pumpPass.setPipeline(this.pumpPipeline);
+      pumpPass.setBindGroup(0, this.pumpBindGroup);
+      pumpPass.dispatchWorkgroups(Math.ceil(this.nodeCount / 64));
+      pumpPass.end();
+
+      const lodPass = encoder.beginComputePass();
+      lodPass.setPipeline(this.lodPipeline);
+      lodPass.setBindGroup(0, this.lodBindGroup);
+      lodPass.dispatchWorkgroups(Math.ceil(this.nodeCount / 64));
+      lodPass.end();
+
+      const textureView = this.context.getCurrentTexture().createView();
+      const renderPass = encoder.beginRenderPass({
+        colorAttachments: [{
+          view: textureView,
+          clearValue: { r: 0.01, g: 0.005, b: 0.015, a: 1 },
+          loadOp: 'clear',
+          storeOp: 'store',
+        }],
+        depthStencilAttachment: {
+          view: this.depthTexture.createView(),
+          depthClearValue: 1.0,
+          depthLoadOp: 'clear',
+          depthStoreOp: 'store',
+        },
+      });
+      renderPass.setPipeline(this.renderPipeline);
+      renderPass.setBindGroup(0, this.renderBindGroup);
+      renderPass.drawIndirect(this.indirectBuffer, 0);
+      renderPass.end();
+
+      this.device.queue.submit([encoder.finish()]);
+    } else {
+      originalPump.call(this, dt);
+    }
+  };
+
+})();
+</script>
+</body>
+</html>
