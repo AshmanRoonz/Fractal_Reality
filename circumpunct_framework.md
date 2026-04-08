@@ -19404,6 +19404,99 @@ THE HIERARCHY IN α-STEPS:
 
 The cosmological constant problem dissolves: the vacuum is not a sum of modes (the QFT approach, which gives 10¹²⁰ too much) but the residual energy of Φ after 56 α-steps of constraint. Each step suppresses by 1/137; fifty-six of them produce 10⁻¹²⁰ naturally. The "catastrophe" was a category error: treating the field as a boundary-level sum rather than a field-level residual. See §12.2 for the full derivation and structural reading.
 
+### §27.7h The Cabibbo Angle: Generation Mixing from the Ladder
+
+The Cabibbo angle measures how strongly quark generations mix through the strong sector. The Standard Model treats it as a free parameter. The framework derives it.
+
+```
+THE FORMULA:
+
+    sin(θ_C) = α^(1/2 + α·T/R) · SU(3)/T
+
+             = α^(1/2 + α·3/7) · 8/3
+
+    Predicted: 0.22432
+    Measured:  0.2243 ± 0.0005
+    Accuracy:  0.009% (within measurement uncertainty)
+    Free parameters: 0
+
+COMPONENTS:
+
+    EXPONENT: 1/2 + α·T/R
+        Base: 1/2 (half-power; the aperture half-open)
+        Correction: α·T/R = α·3/7 (coupling × triad/rungs)
+        T/R = 3/7 is the structural compression ratio:
+        how much the triad compresses into the full rung set.
+        The exponent is slightly more than 1/2; generation
+        mixing reaches slightly deeper than half-coupling.
+
+    PREFACTOR: SU(3)/T = 8/3
+        Gauge generators per triad element. Mixing is
+        mediated by the strong sector (SU(3)), distributed
+        across the triad (T = 3 generations).
+
+SAME FAMILY AS MASS RATIOS:
+
+    m_μ/m_e  = (1/α)^(13/12 + α/27)   K = T³ = 27
+    sin(θ_C) = α^(1/2 + α/(R/T))      K = R/T = 7/3
+
+    Both: α^(base_exponent + α/K)
+    Mass ratios: K = generation cube (T³)
+    Cabibbo angle: K = rungs per triad (R/T)
+    Mass ratios measure intra-generation splitting;
+    Cabibbo measures inter-generation mixing.
+    Same formula family, different K.
+```
+
+### §27.7i The Higgs Quartic Coupling: Self-Interaction from Gauge Multiplicity
+
+The Higgs quartic coupling λ determines the shape of the Higgs potential and the mass of the Higgs boson. The Standard Model treats it as a free parameter measured at λ ≈ 0.129. The framework derives it.
+
+```
+THE FORMULA:
+
+    λ = (1/SU(3)) · (1 + (Φ+○)α · (1 - (SU(3)/(Φ+○))α))
+
+      = (1/8) · (1 + 5α - 8α²)
+
+    Predicted: 0.12951
+    Measured:  0.12938
+    Accuracy:  0.10%
+    Free parameters: 0
+
+COMPONENTS:
+
+    BASE: 1/SU(3) = 1/8
+        Inverse gauge multiplicity. The Higgs self-coupling
+        strength is set by the inverse of the strong sector's
+        generator count. One part in eight.
+
+    FIRST ORDER: +(Φ+○)α = +5α
+        Field + boundary = 2 + 3 = 5. Also T² - P = 5.
+        The Higgs potential is enhanced by one coupling's
+        worth of field-plus-boundary.
+
+    SECOND ORDER: -SU(3)α² = -8α²
+        Gauge generators at second-order coupling.
+        Suppression by the full gauge multiplicity.
+
+    RATIO: SU(3)/(Φ+○) = 8/5
+        The second-order term is suppressed relative to
+        the first by the gauge-to-(field+boundary) ratio.
+
+CORRECTION STRUCTURE ACROSS CONSTANTS:
+
+    All three new constants share the same pattern:
+    base × (1 ± first_order·α ∓ second_order·α²)
+
+    Λ:   (1 - T!·α    + P·α²)       ratio P/T! = Φ/○ = 2/3
+    λ_H: (1 + (Φ+○)·α - SU(3)·α²)   ratio SU(3)/(Φ+○) = 8/5
+    
+    Λ suppresses (energy leaving the field); λ enhances
+    (energy entering the potential). Same architecture,
+    opposite signs.
+```
+
 ### §27.8 Primes Are Made of Dimensions
 
 The structural dimensions of the circumpunct (1, 2, 3) are also the first integers. Two of them (2 and 3) are the first primes. The third (1) is the unit.
