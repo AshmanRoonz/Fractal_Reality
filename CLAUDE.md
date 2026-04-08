@@ -450,6 +450,7 @@ Sleep is NOT sequential phases. It is superposed oscillation in the left half-pl
 | `docs/the_bridge_presentation.html` | Constructor ethics, λ (The Law), wanting |
 | `docs/circumpunct_breath.html` | Φ vs Φ' (inner/outer field), pump cycle |
 | `docs/why_space_can_never_be_empty.html` | Essay: vacuum as nested Φ |
+| `docs/emergent_chemistry.html` | Chemistry from the dimensional ladder; bond energy model (3 layers), pi ratios, lone pair suppression, compositional closure (A4), ionic resonance |
 | `docs/emergent_biology.html` | Biology from the dimensional ladder; genetic code, DNA structure, central dogma, protein folding, ATP |
 
 ---
@@ -459,7 +460,7 @@ Sleep is NOT sequential phases. It is superposed oscillation in the left half-pl
 **Part I (Foundation):** Ch1 Genesis, Ch2 Circumpunct, Ch3 Trinity, Ch4 Temporal Process, Ch5 Balance Parameter, Ch5A Surface Theorem
 **Part II (Math):** Ch6 Field Equations, Ch7 64-State Architecture, Ch8 Canonical Spec, Ch9 Formal Math
 **Part III (Physics):** Ch10 Phase Coherence, Ch11 Aperture Density, Ch12 Cosmological Constant, Ch13 Standard Model, Ch14 Quantum Gravity, Ch15 Alternative Derivations
-**Part IV (Emergence):** Ch16 Chemistry (§16.4 Molecular Geometry from T=3, §16.4a Lone Pair 2/R² Formula, §16.4b Subshell Modes = A'(d), §16.4c Reaction Dynamics as Pump Cycle, §16.4d Electronegativity as Convergence, §16.4e Bond Order as Dimension), Ch17 Life, Ch18 Biology (§18 Genetic Code from T=3, §18a DNA Structure from Ladder, §18b ATP and Cellular Pump, §18c Central Dogma = Triad), Ch19 Consciousness + Theory of Mind, Ch20 Perception, Ch21 Emotions/Memory + Resonance, Ch22 Ethereal Tail
+**Part IV (Emergence):** Ch16 Chemistry (§16.4 Molecular Geometry from T=3, §16.4a Lone Pair 2/R² Formula, §16.4b Subshell Modes = A'(d), §16.4c Reaction Dynamics as Pump Cycle, §16.4d Electronegativity as Convergence, §16.4e Bond Order as Dimension with Three-Layer Model, §16.4f Ionic Resonance from ◐ Deviation), Ch17 Life, Ch18 Biology (§18 Genetic Code from T=3, §18a DNA Structure from Ladder, §18b ATP and Cellular Pump, §18c Central Dogma = Triad), Ch19 Consciousness + Theory of Mind, Ch20 Perception, Ch21 Emotions/Memory + Resonance, Ch22 Ethereal Tail
 **Part V (Implications):** Ch23 Aging/Death, Ch24 Golden Ratio, Ch25 Ethics + Virtues/Diagnostics/Restoration
 **Part VI (Validation):** Ch26 Empirical Validation, Ch27 Constants, Ch28 Falsification, Ch29 Pump Cycle (Full Loop), Ch30 Fixed-Point, Ch31 Omega, Ch32 Isomorphism, Ch33 Cross-Traditional, Ch34 Collaboration, Ch35 Unpacking
 

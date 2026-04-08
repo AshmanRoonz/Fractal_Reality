@@ -768,13 +768,13 @@ button.active { background: var(--gold); color: var(--bg); }
 <!-- Visualization: Murray branching -->
 <div class="sim-container">
   <h3 style="color: var(--gold);">Interactive: Vascular Branching</h3>
-  <p style="color: var(--dim); font-size: 16px;">A branching tree obeying Murray's Law. The parent radius cubed equals the sum of child radii cubed. Adjust the branching asymmetry to see how the tree redistributes.</p>
+  <p style="color: var(--dim); font-size: 16px;">A branching tree obeying Murray's Law (r<sup>3</sup> conservation). At low asymmetry the tree is symmetric; at high asymmetry one child dominates. Branch angles are derived from Murray's minimum-power condition.</p>
   <canvas id="murrayCanvas" width="720" height="400"></canvas>
   <div class="controls">
     <div class="control-group">
-      <label>Asymmetry ratio</label>
-      <input type="range" id="murrayRatio" min="0.3" max="1.0" step="0.01" value="0.8" oninput="drawMurray()">
-      <span class="val" id="murrayRatioVal">0.80</span>
+      <label>Asymmetry</label>
+      <input type="range" id="murrayRatio" min="0.5" max="1.0" step="0.01" value="0.7" oninput="drawMurray()">
+      <span class="val" id="murrayRatioVal">0.70</span>
     </div>
     <div class="control-group">
       <label>Generations</label>
@@ -1157,58 +1157,83 @@ function drawMurray() {
   if (!canvas) return;
   var ctx = canvas.getContext('2d');
   var W = canvas.width, H = canvas.height;
-  var ratio = parseFloat(document.getElementById('murrayRatio').value);
+  // Ratio slider: 0.5 = symmetric, 1.0 = maximally asymmetric (one child dominates)
+  var asymmetry = parseFloat(document.getElementById('murrayRatio').value);
   var gens = parseInt(document.getElementById('murrayGens').value);
 
-  document.getElementById('murrayRatioVal').textContent = ratio.toFixed(2);
+  document.getElementById('murrayRatioVal').textContent = asymmetry.toFixed(2);
   document.getElementById('murrayGensVal').textContent = gens;
 
   ctx.fillStyle = BG;
   ctx.fillRect(0, 0, W, H);
 
   // Murray's law: r_parent^3 = r_1^3 + r_2^3
-  // With asymmetry ratio k: r_1 = k*r_parent_derived, r_2 = (1-k^3)^(1/3)*r_parent_derived
-  function drawBranch(x, y, angle, r, gen) {
-    if (gen >= gens || r < 0.5) return;
+  // We parameterize by a split fraction f (0.5 = symmetric, approaching 1 = all to child 1).
+  // The slider "asymmetry" maps: 0.5 = symmetric branching, 1.0 = one child gets everything.
+  // f = fraction of r^3 going to child 1.
+  var f = 0.5 + (asymmetry - 0.5) * 0.9; // range: 0.5 to 0.95
 
-    var len = r * 15 + 20;
+  function drawBranch(x, y, angle, r, gen) {
+    if (gen >= gens || r < 0.3) return;
+
+    // Length proportional to radius (thicker vessels are longer)
+    var len = r * 8 + 12;
 
     var x2 = x + len * Math.cos(angle);
     var y2 = y + len * Math.sin(angle);
 
-    // Draw vessel
-    var hue = gen / gens;
-    ctx.strokeStyle = lerpColor(PINK, CYAN, hue);
-    ctx.lineWidth = Math.max(r * 2, 0.5);
+    // Draw vessel segment
+    var t = gen / gens;
+    ctx.strokeStyle = lerpColor(PINK, CYAN, t);
+    ctx.lineWidth = Math.max(r * 2.5, 0.5);
     ctx.lineCap = 'round';
     ctx.beginPath();
     ctx.moveTo(x, y);
     ctx.lineTo(x2, y2);
     ctx.stroke();
 
-    // Murray's law: r_parent^3 = r_1^3 + r_2^3
-    var r1 = r * Math.pow(ratio, 1);
-    var r2 = r * Math.pow(1 - Math.pow(ratio, 3), 1/3);
+    // Murray's law: r_p^3 = r_1^3 + r_2^3
+    // Child radii from the split fraction f:
+    var r1 = r * Math.pow(f, 1/3);
+    var r2 = r * Math.pow(1 - f, 1/3);
 
-    var spread = 0.4 + (1 - ratio) * 0.6;
+    // Branching angles from Murray's law (derived from minimum power):
+    // cos(theta_1) = (r_p^4 + r_1^4 - r_2^4) / (2 * r_p^2 * r_1^2)
+    // Simplified: wider angle for the smaller child, narrower for the larger.
+    var r14 = Math.pow(r1, 4), r24 = Math.pow(r2, 4), rp4 = Math.pow(r, 4);
+    var rp2 = r * r, r12 = r1 * r1, r22 = r2 * r2;
 
-    drawBranch(x2, y2, angle - spread, r1, gen + 1);
-    drawBranch(x2, y2, angle + spread, r2, gen + 1);
+    var cosA1 = (rp4 + r14 - r24) / (2 * rp2 * r12);
+    var cosA2 = (rp4 + r24 - r14) / (2 * rp2 * r22);
+    cosA1 = Math.max(-1, Math.min(1, cosA1));
+    cosA2 = Math.max(-1, Math.min(1, cosA2));
+
+    var a1 = Math.acos(cosA1);
+    var a2 = Math.acos(cosA2);
+
+    // Child 1 branches to the left (negative angle), child 2 to the right
+    drawBranch(x2, y2, angle - a1, r1, gen + 1);
+    drawBranch(x2, y2, angle + a2, r2, gen + 1);
   }
 
-  // Start from left
-  var startR = 8;
-  drawBranch(40, H / 2, 0, startR, 0);
+  // Draw tree starting from bottom center, growing upward
+  var startR = 10;
+  drawBranch(W / 2, H - 30, -Math.PI / 2, startR, 0);
 
-  // Label
+  // Labels
   ctx.fillStyle = GOLD;
   ctx.font = '16px "EB Garamond", serif';
   ctx.textAlign = 'left';
-  ctx.fillText('r³parent = r³₁ + r³₂  (T = 3)', 40, 30);
+  ctx.fillText('r\u00B3parent = r\u00B3\u2081 + r\u00B3\u2082  (T = 3)', 20, 28);
 
   ctx.fillStyle = DIM;
   ctx.font = '14px "EB Garamond", serif';
-  ctx.fillText('Murray\'s Law: cubic conservation at each branch point', 40, 52);
+  ctx.fillText('Murray\'s Law: cubic conservation at each branch point', 20, 48);
+
+  // Show split fraction
+  ctx.fillStyle = GOLD_DIM;
+  ctx.textAlign = 'right';
+  ctx.fillText('Split: ' + (f * 100).toFixed(0) + '% / ' + ((1 - f) * 100).toFixed(0) + '%', W - 20, 28);
 }
 
 function lerpColor(c1, c2, t) {
