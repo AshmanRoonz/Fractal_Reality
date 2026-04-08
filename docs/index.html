@@ -230,6 +230,7 @@
         }
         .rung-header:hover { background: rgba(255,255,255,0.02); margin: 0 -8px; padding: 8px 8px; border-radius: 3px; }
         .rung-dim { font-weight: 700; font-size: 14px; min-width: 40px; }
+        .rung-sym { font-size: 18px; min-width: 22px; text-align: center; line-height: 1; }
         .rung-name { font-size: 14px; flex: 1; }
         .rung-desc { font-size: 12px; color: var(--mute); }
         .rung-acc { font-size: 12px; flex-shrink: 0; }
@@ -239,7 +240,7 @@
 
         .rung-body {
             display: none;
-            padding: 4px 0 10px 42px;
+            padding: 4px 0 10px 72px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
         .rung.open .rung-body { display: block; }
@@ -664,9 +665,31 @@
     <div class="section-title"><a href="dimensional_ladder.html" style="color:#fff">THE DIMENSIONAL LADDER</a></div>
     <div class="section-intro">Seven rungs. Every constant derived from <a href="e_equals_1.html" style="color:var(--soul)">α</a> and <span class="whole-text">⊙</span> geometry. Click any rung.</div>
 
+    <!-- Symbol chain: the dimensional octave -->
+    <div style="text-align:center;margin:16px 0 12px;font-size:20px;letter-spacing:2px;line-height:1.8">
+        <span style="color:var(--amber);font-size:15px">∞</span>
+        <span style="color:var(--mute);font-size:11px"> → </span>
+        <span style="color:var(--soul)" title="0D aperture">•</span>
+        <span style="color:var(--mute);font-size:11px"> → </span>
+        <span style="color:var(--soul)" title="0.5D convergence">⊛</span>
+        <span style="color:var(--mute);font-size:11px"> → </span>
+        <span style="color:var(--line)" title="1D line">—</span>
+        <span style="color:var(--mute);font-size:11px"> → </span>
+        <span style="color:#44aa88" title="1.5D commitment (i-turn)">⑂</span>
+        <span style="color:var(--mute);font-size:11px"> → </span>
+        <span style="color:var(--mind)" title="2D field">Φ</span>
+        <span style="color:var(--mute);font-size:11px"> → </span>
+        <span style="color:#cc8833" title="2.5D emergence">✹</span>
+        <span style="color:var(--mute);font-size:11px"> → </span>
+        <span style="color:var(--body)" title="3D boundary">○</span>
+        <span style="color:var(--mute);font-size:11px"> → </span>
+        <span style="color:var(--amber)" title="3.5D recursion">↻</span>
+    </div>
+
     <div class="rung" id="r0">
         <div class="rung-header" onclick="toggleRung('r0')">
             <span class="rung-dim" style="color:var(--soul)">0D</span>
+            <span class="rung-sym" style="color:var(--soul)">•</span>
             <span class="rung-name">α <span class="rung-desc">(fine-structure)</span></span>
             <span class="rung-acc" style="color:var(--soul)">0.22 ppb</span>
             <span class="rung-arrow">▶</span>
@@ -681,6 +704,7 @@
     <div class="rung" id="r05">
         <div class="rung-header" onclick="toggleRung('r05')">
             <span class="rung-dim" style="color:var(--soul)">0.5D</span>
+            <span class="rung-sym" style="color:var(--soul)">⊛</span>
             <span class="rung-name">c <span class="rung-desc">(speed of light)</span></span>
             <span class="rung-acc" style="color:var(--soul)">exact</span>
             <span class="rung-arrow">▶</span>
@@ -694,21 +718,23 @@
 
     <div class="rung" id="r1">
         <div class="rung-header" onclick="toggleRung('r1')">
-            <span class="rung-dim" style="color:#44aa88">1D</span>
+            <span class="rung-dim" style="color:var(--line)">1D</span>
+            <span class="rung-sym" style="color:var(--line)">—</span>
             <span class="rung-name">ℏ <span class="rung-desc">(quantum of action)</span></span>
-            <span class="rung-acc" style="color:#44aa88">exact</span>
+            <span class="rung-acc" style="color:var(--line)">exact</span>
             <span class="rung-arrow">▶</span>
         </div>
         <div class="rung-body">
-            <div class="rung-formula" style="border-color:#44aa88">ℏ = E_cycle / ω_cycle = 1</div>
-            <div class="rung-detail">The <a href="how_reality_is_built.html" style="color:#44aa88">pump cycle</a> is indivisible. You cannot have convergence without emergence. This indivisibility IS the quantum of action.</div>
-            <a href="planck_constant.html" class="rung-link" style="color:#44aa88">the indivisible cycle →</a>
+            <div class="rung-formula" style="border-color:var(--line)">ℏ = E_cycle / ω_cycle = 1</div>
+            <div class="rung-detail">The <a href="how_reality_is_built.html" style="color:var(--line)">pump cycle</a> is indivisible. You cannot have convergence without emergence. This indivisibility IS the quantum of action.</div>
+            <a href="planck_constant.html" class="rung-link" style="color:var(--line)">the indivisible cycle →</a>
         </div>
     </div>
 
     <div class="rung" id="r15">
         <div class="rung-header" onclick="toggleRung('r15')">
             <span class="rung-dim" style="color:#44aa88">1.5D</span>
+            <span class="rung-sym" style="color:#44aa88">⑂</span>
             <span class="rung-name">masses <span class="rung-desc">(i-turn)</span></span>
             <span class="rung-acc" style="color:#44aa88">1-5 ppm</span>
             <span class="rung-arrow">▶</span>
@@ -723,6 +749,7 @@
     <div class="rung" id="r2">
         <div class="rung-header" onclick="toggleRung('r2')">
             <span class="rung-dim" style="color:var(--mind)">2D</span>
+            <span class="rung-sym" style="color:var(--mind)">Φ</span>
             <span class="rung-name">gauge <span class="rung-desc">(forces)</span></span>
             <span class="rung-acc" style="color:var(--mind)">1.4 ppm</span>
             <span class="rung-arrow">▶</span>
@@ -737,6 +764,7 @@
     <div class="rung" id="r25">
         <div class="rung-header" onclick="toggleRung('r25')">
             <span class="rung-dim" style="color:#cc8833">2.5D</span>
+            <span class="rung-sym" style="color:#cc8833">✹</span>
             <span class="rung-name">emergence <span class="rung-desc">(scales)</span></span>
             <span class="rung-acc" style="color:#cc8833">3.4 ppm*</span>
             <span class="rung-arrow">▶</span>
@@ -751,6 +779,7 @@
     <div class="rung" id="r3">
         <div class="rung-header" onclick="toggleRung('r3')">
             <span class="rung-dim" style="color:var(--body)">3D</span>
+            <span class="rung-sym" style="color:var(--body)">○</span>
             <span class="rung-name">G <span class="rung-desc">(gravity)</span></span>
             <span class="rung-acc" style="color:var(--body)">0.04 ppm</span>
             <span class="rung-arrow">▶</span>
@@ -852,15 +881,15 @@
         <div class="sd-body"><div class="sd-inner">
             <div class="sd-text">The way Einstein showed energy and matter are the same (E = mc²), the framework shows process and structure are the same. What looks like a fixed dimension (structure) is the pump cycle frozen at that stage (process).</div>
             <table class="sd-table">
-                <tr><th>Dim</th><th>Type</th><th>Role</th><th>i-stroke</th></tr>
-                <tr><td>0D</td><td>structural</td><td>point; first constraint, •</td><td></td></tr>
-                <tr><td>0.5D</td><td>processual</td><td>convergence; the first fold</td><td>i¹ = +i</td></tr>
-                <tr><td>1D</td><td>structural</td><td>line; commitment, extension</td><td></td></tr>
-                <tr><td>1.5D</td><td>processual</td><td>commitment; the i-turn (irreversible)</td><td>i² = −1</td></tr>
-                <tr><td>2D</td><td>structural</td><td>field; Φ, second constraint: mediation</td><td></td></tr>
-                <tr><td>2.5D</td><td>processual</td><td>emergence; outward unfolding</td><td>i³ = −i</td></tr>
-                <tr><td>3D</td><td>structural</td><td>boundary; ○, third constraint: filtration</td><td></td></tr>
-                <tr><td>3.5D</td><td>processual</td><td>recursion; boundary becomes new aperture</td><td>i⁰ = +1</td></tr>
+                <tr><th></th><th>Dim</th><th>Type</th><th>Role</th><th>i-stroke</th></tr>
+                <tr><td style="color:var(--soul);font-size:16px">•</td><td>0D</td><td>structural</td><td>point; first constraint: convergence</td><td></td></tr>
+                <tr><td style="color:var(--soul);font-size:16px">⊛</td><td>0.5D</td><td>processual</td><td>convergence; the first fold</td><td>i¹ = +i</td></tr>
+                <tr><td style="color:var(--line);font-size:16px">—</td><td>1D</td><td>structural</td><td>line; second constraint: commitment</td><td></td></tr>
+                <tr><td style="color:#44aa88;font-size:16px">⑂</td><td>1.5D</td><td>processual</td><td>commitment; the i-turn (irreversible)</td><td>i² = −1</td></tr>
+                <tr><td style="color:var(--mind);font-size:16px">Φ</td><td>2D</td><td>structural</td><td>field; third constraint: mediation</td><td></td></tr>
+                <tr><td style="color:#cc8833;font-size:16px">✹</td><td>2.5D</td><td>processual</td><td>emergence; outward unfolding</td><td>i³ = −i</td></tr>
+                <tr><td style="color:var(--body);font-size:16px">○</td><td>3D</td><td>structural</td><td>boundary; fourth constraint: filtration</td><td></td></tr>
+                <tr><td style="color:var(--amber);font-size:16px">↻</td><td>3.5D</td><td>processual</td><td>recursion; boundary becomes new aperture</td><td>i⁰ = +1</td></tr>
             </table>
             <div class="sd-heading">THE DIMENSIONAL OCTAVE</div>
             <div class="sd-text">0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5 = do, re, mi, fa, so, la, ti, do'. Structure and process alternate. The octave closes: 3.5D IS 0D at the next nesting level. The cycle begins at i¹ (+i), not i⁰ (+1); identity is earned through full rotation.</div>
