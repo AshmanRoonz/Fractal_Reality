@@ -8717,6 +8717,124 @@ EQUATION OF STATE:
 TESTABLE: DESI 2026 (6σ signal expected)
 ```
 
+### §12.2 The Cosmological Constant from the Dimensional Ladder
+
+```
+THE DERIVATION:
+
+The cosmological constant measures the energy density of Φ itself:
+the 2D field that the dimensional ladder exists within. It must
+therefore be expressible entirely in terms of α and framework
+structure constants (zero free parameters).
+
+ROUTE: Gravity lives at exponent 21 (= E(3), the full dimensional
+traversal from 0D to 3D). The cosmological constant lives BELOW
+the ladder; it is the residual energy of the field after all
+constraints have been applied. How much deeper?
+
+    α_G = α^21 × φ²/2 × (1 + 2α/91)        [§27.7, gravity]
+
+    Λ ~ α_G^(SU(3)/T) = (α^21)^(8/3) = α^56
+
+The ratio SU(3)/T = 8/3 is the gauge-to-triad ratio: how many
+gauge generators per triad element. Gravity traverses the ladder
+once (21 steps); the vacuum traverses it SU(3)/T times (56 steps).
+
+    56 = SU(3) · R = 8 × 7
+
+The exponent is gauge generators × rungs: the FULL gauge-rung
+product, counting every α-step through the complete gauge
+structure at every rung.
+
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║    Λ = α^(SU(3)·R) · (1 - α·T!·(1 - (Φ/○)α)) / (SU(3)·T²) ║
+║                                                               ║
+║    = α^56 · (1 - 6α + 4α²) / 72                              ║
+║                                                               ║
+║    Predicted: 2.8879 × 10⁻¹²² (Planck units)                 ║
+║    Observed:  2.888  × 10⁻¹²² ± 2%                           ║
+║    Accuracy:  0.004% (0.00σ)                                  ║
+║    Free parameters: 0                                         ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+COMPONENT READING:
+
+    EXPONENT: SU(3)·R = 56
+        Gauge generators (8) × rungs (7). The full product of
+        how many α-steps separate 0D from 3D through the complete
+        gauge structure. Compare: G uses exponent 21 = E(3), the
+        dimensional traversal without gauge multiplicity.
+
+    PREFACTOR: 1/(SU(3)·T²) = 1/72 = 1/(G·T!)
+        Generators (12) × closure (6). The normalization per
+        degree of freedom at full closure. Equivalently: gauge
+        generators (8) × triad² (9).
+
+    CORRECTION: 1 - α·T!·(1 - (Φ/○)α)
+        First order:  -α·T! = -6α
+            Closure (6 = 3!) × coupling (α): the boundary's
+            one-loop contribution. T! is the product of all
+            triad elements (3·2·1), the signature of complete
+            dimensional closure.
+
+        Second order: +α²·P = +4α²
+            Pump phases (4) × coupling²: the pump cycle's
+            two-loop contribution.
+
+        Ratio of corrections: P/T! = 4/6 = 2/3 = Φ/○
+            The second-order term is suppressed by the
+            field-to-boundary ratio. This is the same Φ/○
+            that appears everywhere: field mediates, boundary
+            filters, and their ratio (2/3) controls the
+            perturbative structure.
+
+PARALLEL WITH α (§27.7):
+    1/α = 360/φ² - 2/φ³ + α/(E(3) - P/T)
+    Λ   = α^56 / (SU(3)·T²) · (1 - α·(T! - α·P))
+
+    Both formulas share the structure:
+        base + α · (integer - α · integer/integer)
+    For α: the self-referential denominator is P/T = P/○
+    For Λ: the correction ratio is P/T! = Φ/○
+    Same boundary normalization, different level of closure.
+
+WHERE Λ LIVES:
+    Λ is not a rung on the dimensional ladder; it is the energy
+    density of the field (Φ) that the ladder exists within.
+    The exponent ratio tells the story:
+
+        56/21 = SU(3)·R / E(3) = SU(3)/T = 8/3
+
+    Λ is SU(3)/T times deeper than G in the α hierarchy. This
+    is why the cosmological constant problem exists: the vacuum
+    is separated from ordinary physics by the FULL gauge
+    multiplicity of the ladder, not just the ladder itself.
+
+    The hierarchy of depths (in α-steps):
+        α    at 0D:    1 step   (coupling at a point)
+        G    at 3D:   21 steps  (boundary closure)
+        Λ    below:   56 steps  (the field itself)
+
+    Each level is separated from the next by a framework ratio:
+        G/α: 21/1 = E(3) (dimensional traversal)
+        Λ/G: 56/21 = SU(3)/T (gauge-to-triad)
+
+SOLVING THE COSMOLOGICAL CONSTANT PROBLEM:
+
+    QFT predicts Λ ~ 10⁶⁹ (in Planck units) by summing vacuum
+    modes up to the Planck scale. The error: 10¹²⁰ orders of
+    magnitude. The worst prediction in physics.
+
+    The framework dissolves the problem: the vacuum is not a sum
+    of modes but the residual energy of Φ after 56 α-steps of
+    constraint. Each α-step suppresses by 1/137; fifty-six of
+    them produce 10⁻¹²⁰ naturally. The "catastrophe" was never
+    a catastrophe; it was a category error (treating the field
+    as a boundary-level sum rather than a field-level residual).
+```
+
 [← Back to Table of Contents](#table-of-contents)
 
 ---
@@ -19219,6 +19337,70 @@ Setting A'(d₁) = A(d₁ + δ) for various shifts δ and solving:
 Only two quote types exist. The forward half-step marks the beginning of the octave (d = 0 and d = 1/2). The backward full-step marks the end (d = 0 and d = R/2 = 3.5). The origin participates in both.
 
 The backward equation d(2d - R) = 0 is the key: the recursion dimension d = R/2 = 3.5 is determined by the rungs. R = T² - 2 = 7 forces the backward quoting station to be 3.5D. This is not an independent fact about 3.5D; it is a consequence of R/2 landing on the last processual station. The rungs and the recursion dimension are algebraically linked through the quoting pattern.
+
+### §27.7g The Cosmological Constant: The Field's Own Energy
+
+The dimensional ladder derives constants at each rung. But the cosmological constant Λ is not a rung; it is the energy density of Φ itself, the 2D field that the ladder exists within. Its derivation requires the full ladder.
+
+```
+ROUTE: GRAVITY TO THE VACUUM
+
+Gravity lives at exponent 21 = E(3), the full dimensional traversal.
+The vacuum is deeper by the gauge-to-triad ratio:
+
+    56/21 = SU(3)/T = 8/3
+
+So: Λ ~ α_G^(SU(3)/T) = (α^21)^(8/3) = α^56
+
+    56 = SU(3) · R = (T² - 1)(T² - 2)
+
+Gauge generators × rungs: the full product of α-steps through
+the complete gauge structure at every rung.
+
+THE FORMULA:
+
+    Λ = α^(SU(3)·R) · (1 - α·T!·(1 - (Φ/○)α)) / (SU(3)·T²)
+
+    = α^56 · (1 - 6α + 4α²) / 72
+
+    Predicted: 2.8879 × 10⁻¹²² (Planck units)
+    Observed:  2.888  × 10⁻¹²² ± 2%
+    Accuracy:  0.004% (0.00σ)
+    Free parameters: 0
+
+COMPONENTS:
+
+    Exponent: SU(3)·R = 56
+        The full gauge-rung product.
+
+    Prefactor: 1/(SU(3)·T²) = 1/72 = 1/(G·T!)
+        Generators × closure. The normalization per degree
+        of freedom at full closure.
+
+    Correction: 1 - α·T!·(1 - (Φ/○)α)
+        First order:  -6α   (closure × coupling; one-loop)
+        Second order: +4α²  (pump × coupling²; two-loop)
+        Ratio: P/T! = 4/6 = 2/3 = Φ/○
+
+STRUCTURAL PARALLEL WITH α (§27.7a):
+
+    α:  1/α = 360/φ² - 2/φ³ + α/(E(3) - P/T)
+    Λ:  Λ   = α^56/(SU(3)·T²) · (1 - α·(T! - α·P))
+
+    Both have the form: base + α·(integer - α·ratio)
+    α uses P/T = P/○ (pump/boundary)
+    Λ uses P/T! = Φ/○ (pump/closure)
+
+THE HIERARCHY IN α-STEPS:
+
+    α at 0D:     1 step    (coupling at a point)
+    G at 3D:    21 steps   (boundary closure)
+    Λ below:    56 steps   (the field itself)
+
+    Separations: G/α = 21 = E(3), Λ/G = 56/21 = SU(3)/T
+```
+
+The cosmological constant problem dissolves: the vacuum is not a sum of modes (the QFT approach, which gives 10¹²⁰ too much) but the residual energy of Φ after 56 α-steps of constraint. Each step suppresses by 1/137; fifty-six of them produce 10⁻¹²⁰ naturally. The "catastrophe" was a category error: treating the field as a boundary-level sum rather than a field-level residual. See §12.2 for the full derivation and structural reading.
 
 ### §27.8 Primes Are Made of Dimensions
 
