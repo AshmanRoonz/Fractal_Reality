@@ -510,35 +510,35 @@ The cell itself is a circumpunct:</p>
 <!-- ========================================== -->
 
 <p>
-A protein does not fold randomly. The primary sequence (1D line of amino acids) folds through increasing dimensional complexity, visiting each rung of the dimensional ladder:
+A protein does not fold randomly. The primary sequence (1D line of amino acids) folds through increasing structural dimensions, visiting each integer rung of the dimensional ladder. The process that carries the chain from one structural level to the next lives at the half-integer stations: the processual dimensions where i-strokes do their work.
 </p>
 
 <div class="level-diagram">
   <div><span class="dim" style="color:var(--gold);">1D</span><span class="arrow">→</span>Primary: amino acid sequence (linear chain)</div>
   <div><span class="dim" style="color:var(--green);">2D</span><span class="arrow">→</span>Secondary: α-helices and β-sheets (planar local structures)</div>
   <div><span class="dim" style="color:var(--cyan);">3D</span><span class="arrow">→</span>Tertiary: 3D fold (compact domain with active sites)</div>
-  <div><span class="dim" style="color:var(--purple);">3.5D</span><span class="arrow">→</span>Quaternary: multi-subunit assembly (recursion back to aperture)</div>
+  <div><span class="dim" style="color:var(--purple);">3.5D</span><span class="arrow">→</span>Quaternary: multi-subunit assembly (recursion; structure becomes new aperture)</div>
 </div>
 
 <p>
-Each dimensional stage corresponds to one of the four pump phases:</p>
+Two kinds of dimension are at work here. The structural dimensions (integer: 1D, 2D, 3D) describe what each folding level IS. The processual dimensions (half-integer: 0.5D, 1.5D, 2.5D, 3.5D) describe the i-phase that FORMS each level from the previous one:</p>
 
 <div class="table-wrap">
 <table>
   <thead>
-    <tr><th>Stage</th><th>Dimension</th><th>Pump Phase</th><th>Framework Meaning</th><th>Example</th></tr>
+    <tr><th>Stage</th><th>Structure (integer)</th><th>Forming Process (half-integer)</th><th>What Happens</th><th>Example</th></tr>
   </thead>
   <tbody>
-    <tr class="highlight"><td>Primary</td><td>1D</td><td><span class="p">i¹ = +i</span> (convergence)</td><td>Linear descent from DNA</td><td>Amino acid chain</td></tr>
-    <tr><td>Secondary</td><td>2D</td><td><span class="p">i² = -1</span> (commitment)</td><td>Hydrogen bonding forms local patterns</td><td>α-helix, β-sheet</td></tr>
-    <tr class="highlight"><td>Tertiary</td><td>3D</td><td><span class="p">i³ = -i</span> (emergence)</td><td>Hydrophobic collapse, disulfide bonds form 3D shape</td><td>Folded domain</td></tr>
-    <tr><td>Quaternary</td><td>3.5D</td><td><span class="p">i⁰ = +1</span> (recursion)</td><td>Closed domain becomes aperture for next protein</td><td>Enzyme complex</td></tr>
+    <tr class="highlight"><td>Primary</td><td>1D (line)</td><td><span class="p">i¹ = +i</span> at 0.5D (convergence)</td><td>DNA converges into a linear chain</td><td>Amino acid sequence</td></tr>
+    <tr><td>Secondary</td><td>2D (surface)</td><td><span class="p">i² = -1</span> at 1.5D (commitment)</td><td>Chain commits to local planar patterns</td><td>α-helix, β-sheet</td></tr>
+    <tr class="highlight"><td>Tertiary</td><td>3D (boundary)</td><td><span class="p">i³ = -i</span> at 2.5D (emergence)</td><td>Surfaces emerge into full 3D shape</td><td>Folded domain</td></tr>
+    <tr><td>Quaternary</td><td>3.5D (recursion)</td><td><span class="p">i⁰ = +1</span> at 3.5D (recursion)</td><td>Closed domain becomes new aperture</td><td>Enzyme complex</td></tr>
   </tbody>
 </table>
 </div>
 
 <p>
-The pump cycle does not care about biological language. Primary structure CONVERGES (1D coming from 0D DNA). It COMMITS to local structure (2D patterns emerge). It EMERGES into full 3D shape. It then RECURSES: the completed protein becomes an aperture (catalytic site, channel, binding pocket) through which energy flows.
+The pattern is clean: i¹ at 0.5D is the process that produces 1D structure. i² at 1.5D is the process that produces 2D structure. i³ at 2.5D is the process that produces 3D structure. And i⁰ at 3.5D is where structure and process reunite: the completed boundary becomes a new aperture, and 3.5D = 0D at the next scale. The pump cycle walks the half-integer ladder; the protein's form stabilizes at the integer stations.
 </p>
 
 <div class="sim-container">
@@ -560,16 +560,16 @@ The pump cycle does not care about biological language. Primary structure CONVER
       <div class="value" id="proteinStageVal">Primary</div>
     </div>
     <div class="readout-item">
-      <div class="label">Dimension</div>
-      <div class="value" id="proteinDimVal">1D</div>
+      <div class="label">Structure</div>
+      <div class="value" id="proteinDimVal">1D (structure)</div>
     </div>
     <div class="readout-item">
-      <div class="label">Pump Phase</div>
-      <div class="value" id="proteinPhaseVal">i¹</div>
+      <div class="label">Process</div>
+      <div class="value" id="proteinPhaseVal">i¹ at 0.5D</div>
     </div>
     <div class="readout-item">
       <div class="label">Meaning</div>
-      <div class="value" id="proteinMeaningVal">Convergence</div>
+      <div class="value" id="proteinMeaningVal">Convergence → line</div>
     </div>
   </div>
 </div>
@@ -975,9 +975,9 @@ const codons = {
   const stageData = [
     {
       name: 'Primary',
-      dim: '1D',
-      phase: 'i¹ = +i',
-      meaning: 'Convergence',
+      dim: '1D (structure)',
+      phase: 'i¹ at 0.5D',
+      meaning: 'Convergence → line',
       draw: (ctx, w, h) => {
         ctx.strokeStyle = '#E0D8C8';
         ctx.lineWidth = 3;
@@ -998,9 +998,9 @@ const codons = {
     },
     {
       name: 'Secondary',
-      dim: '2D',
-      phase: 'i² = -1',
-      meaning: 'Commitment',
+      dim: '2D (structure)',
+      phase: 'i² at 1.5D',
+      meaning: 'Commitment → surface',
       draw: (ctx, w, h) => {
         ctx.fillStyle = 'rgba(77, 184, 160, 0.3)';
         ctx.fillRect(80, h / 2 - 40, 120, 80);
@@ -1019,9 +1019,9 @@ const codons = {
     },
     {
       name: 'Tertiary',
-      dim: '3D',
-      phase: 'i³ = -i',
-      meaning: 'Emergence',
+      dim: '3D (structure)',
+      phase: 'i³ at 2.5D',
+      meaning: 'Emergence → boundary',
       draw: (ctx, w, h) => {
         ctx.fillStyle = 'rgba(77, 160, 200, 0.3)';
         ctx.beginPath();
@@ -1044,9 +1044,9 @@ const codons = {
     },
     {
       name: 'Quaternary',
-      dim: '3.5D',
-      phase: 'i⁰ = +1',
-      meaning: 'Recursion',
+      dim: '3.5D (process = structure)',
+      phase: 'i⁰ at 3.5D',
+      meaning: 'Recursion → new aperture',
       draw: (ctx, w, h) => {
         const positions = [
           { x: w / 2 - 60, y: h / 2 - 40 },

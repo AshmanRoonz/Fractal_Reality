@@ -19941,6 +19941,136 @@ The D meson carries T³ = 27 units: the generation cube (charm is the second-gen
 
 The three particle classes map to the three constraints: leptons to • (aperture, differentiation, exponential with A'), baryons to ○ (boundary, evaluation, exponential with A), mesons to Φ (field, multiplication, linear with F). Each constraint produces its own mass regime. The framework predicts not just the masses but the mathematical form of the mass law for each class.
 
+### §27.7k The Gauge Boson Sector: From Mesons to the Electroweak Scale
+
+The meson mass law (§27.7j) establishes the field regime: m/m_e = F/α for Φ-level composites. The electroweak bosons live one level above: they are gauge quanta of the field itself (not composites vibrating within it). The transition from mesons to gauge bosons is the transition from Φ-as-medium to Φ-as-source.
+
+**The Higgs VEV (vacuum expectation value)**
+
+The VEV sets the electroweak scale. It is the field's self-energy at the boundary:
+
+```
+    v / m_e  =  T³ / α²  ×  (1 − R·α)
+
+    T³ = 27       Three cubed: the triad compounded to its own depth.
+                    This IS the meson base (T³/α = D± mass quantum)
+                    squared up by one more factor of 1/α.
+
+    1/α²            Two powers of the coupling: the field (2D) asserting
+                    itself at boundary level. Φ = 2D, so α appears
+                    squared.
+
+    (1 − R·α)      First-order correction: the seven rungs each
+                    subtract one coupling's worth. The ladder's own
+                    weight pulling the VEV slightly below the bare value.
+
+    PREDICTED:  v = 245,857 MeV
+    MEASURED:   v = 246,220 MeV
+    ACCURACY:   0.15%
+```
+
+Reading: The VEV is 27 copies of the inverse-square coupling, corrected by R rungs. It connects directly to the meson sector: the D± meson has F = T³ = 27, so v = (D± mass quantum) / α, corrected. The electroweak scale IS the meson scale divided by one more power of α.
+
+**The W boson mass**
+
+The W boson mediates weak transitions (flavor change). It lives at 2.5D: the emergence rung, where information transmits between scales.
+
+```
+    m_W / m_e  =  (1/α)^(95/39 − α/Φ)
+
+    95/39:  The W exponent. Decomposition:
+            95  =  Σ A + T·V  =  56 + 3×13  =  56 + 39
+            39  =  T · V  =  T · (G + 1)  =  3 × 13
+
+            So 95/39 = (Σ A + T·V) / (T·V) = Σ A/(T·V) + 1
+                     = E(2.5) + 1
+
+            The W boson exponent is the emergence exponent (56/39)
+            shifted by exactly one unit. It sits one full step above
+            the meson/baryon emergence scale.
+
+    −α/Φ:  First-order correction. Φ = 2 (the field dimension).
+            The gauge boson couples back to its own field, pulling
+            the exponent down by α/2.
+
+    PREDICTED:  m_W = 80,488 MeV
+    MEASURED:   m_W = 80,369 MeV
+    ACCURACY:   0.15%
+```
+
+Reading: The W boson is the emergence operator (2.5D) promoted by one unit. E(2.5) = 56/39 describes how energy transmits between scales; the W boson is that transmission mechanism made manifest as a particle. The "+1" is the gauge boson's own unit of existence: it is the field's self-quantum at the emergence rung, not a composite vibrating within the field.
+
+**The Z boson mass**
+
+The Z boson is the neutral partner of the W. Its mass follows from the W mass and the Weinberg angle (already derived in §13.15):
+
+```
+    m_Z  =  m_W / cos(θ_W)
+
+    where sin²(θ_W) = 3/13 + 5·α/81  (from §13.15)
+                    = T/V + (Φ+T)·α/T⁴
+
+    PREDICTED:  m_Z = 91,798 MeV
+    MEASURED:   m_Z = 91,188 MeV
+    ACCURACY:   0.67%
+```
+
+Reading: No new formula is needed. The Z boson mass is entirely determined by two existing framework results: the W boson mass (§27.7k) and the Weinberg angle (§13.15). The 0.67% residual is dominated by the Weinberg angle correction; as the angle formula sharpens, the Z prediction will tighten automatically.
+
+**The Higgs boson mass**
+
+The Higgs boson is the scalar excitation of the field that gives the VEV. Its mass is determined by the quartic coupling λ (§27.7i) and the VEV:
+
+```
+    m_H  =  √(2·λ) · v
+
+    λ = (1/SU(3)) · (1 + (Φ+○)·α − SU(3)·α²)
+      = (1/8)(1 + 5·α − 8·α²)          (from §27.7i)
+
+    v = T³ · m_e / α² · (1 − R·α)      (from above)
+
+    PREDICTED:  m_H = 125,125 MeV
+    MEASURED:   m_H = 125,250 MeV
+    ACCURACY:   0.10%
+```
+
+Reading: The Higgs mass is a CHAIN result: it requires no new parameters, only the composition of λ (§27.7i, the quartic self-coupling of the field) with v (the VEV derived above). The framework predicts the Higgs mass to 0.10% from two independently derived quantities. This is the compositional principle (A4) in action: the whole (m_H) is not a separate prediction but the compositional unity of the field's self-coupling and its vacuum energy.
+
+**The neutral pion correction**
+
+The charged pion mass follows the field regime: m(π±)/m_e = Φ/α (0.34%, §27.7j). The neutral pion is lighter because electromagnetic self-energy splits the isospin multiplet:
+
+```
+    m(π⁰) / m_e  =  (Φ − SU(3)·α) / α
+
+    Φ = 2          The pion's field quantum number
+    SU(3)·α        The strong coupling correction: 8 color generators
+                    times one power of α. The neutral pion lacks the
+                    electromagnetic self-energy that props up the charged
+                    pion; the correction is negative.
+
+    PREDICTED:  m(π⁰) = 135.96 MeV
+    MEASURED:   m(π⁰) = 134.98 MeV
+    ACCURACY:   0.73%
+```
+
+Reading: The π±/π⁰ splitting is an electromagnetic effect (the charged pion is heavier because it has charge). In the framework, this appears as the strong sector (SU(3) = 8 generators) modulating the field quantum by one coupling. The formula reads: the neutral pion carries Φ minus one gauge coupling's worth of color generators.
+
+**Summary: The Electroweak Ladder**
+
+```
+    MESON SECTOR (field regime, §27.7j):
+        m/m_e = F/α,  F = framework integer
+
+    ELECTROWEAK SECTOR (gauge regime, §27.7k):
+        VEV:    v/m_e   = T³/α² × (1 − R·α)                   0.15%
+        W:      m_W/m_e = (1/α)^(E(2.5)+1 − α/Φ)              0.15%
+        Z:      m_Z     = m_W / cos(θ_W)                       0.67%
+        Higgs:  m_H     = √(2·λ) · v                           0.10%
+```
+
+The pattern: the meson sector uses one power of 1/α (field regime). The VEV uses two powers of 1/α (the field asserting itself at boundary level). The W boson uses a fractional power of 1/α (the emergence exponent plus one). Each step up the electroweak ladder is one more layer of the field's self-organization.
+
 ### §27.8 Primes Are Made of Dimensions
 
 The structural dimensions of the circumpunct (1, 2, 3) are also the first integers. Two of them (2 and 3) are the first primes. The third (1) is the unit.
