@@ -347,92 +347,104 @@ p { margin-bottom: 18px; }
   <!-- ============================================================ -->
   <h2>The Question</h2>
 
-  <p>The <a href="dimensional_ladder.html">dimensional ladder</a> has seven rungs from 0D to 3D, each with an associated physical constant. Three of these rungs (the processual, half-integer ones at 1.5D, 2.5D, and 3D) carry exponents that determine how strongly &alpha; couples at that scale. The Lucas-Fibonacci bridge (&sect;27.7d) showed that these exponents are ratios of Fibonacci and Lucas numbers. But the question remained: <span class="it">can we write a single formula E(d) that produces all three?</span></p>
+  <p>The <a href="dimensional_ladder.html">dimensional ladder</a> has seven rungs from 0D to 3D, each with an associated physical constant. Four of these rungs (the processual, half-integer and three-rung ones at 0.5D, 1.5D, 2.5D, and 3.5D) carry exponents that determine how strongly &alpha; couples at that scale. The Lucas-Fibonacci bridge (&sect;27.7d) showed that the three middle exponents are ratios of Fibonacci and Lucas numbers. But the question remained: <span class="it">can we write a single formula E(d) that produces all four?</span></p>
 
-  <p>The answer, after systematic search (polynomial interpolation, gamma functions, rising factorials, power-law fitting): <span class="wb w">no</span>. The formula is irreducibly three-part. And that is not a failure to unify; it is the circumpunct declaring itself in the exponent algebra.</p>
+  <p>The answer: E(0.5) = 1 begins the cycle; E(1.5), E(2.5) follow the W-V decomposition; E(3.5) = 28 closes it. The four together form an irreducibly composite system. This is not a failure to unify; it is the pump cycle declaring itself in the exponent algebra.</p>
 
   <!-- ============================================================ -->
   <h2>Two Quantities Generate Everything</h2>
 
-  <p>All three processual exponents reduce to exactly two derived quantities:</p>
+  <p>The four processual exponents form a complete sequence. Two begin outside W-V; two are generated from W and V:</p>
 
   <div class="eq">
-    <span class="label">The two generators</span>
-    <span class="b">W</span> = 2T + 1 = <span class="b">7</span> &nbsp;&nbsp;&nbsp;&nbsp;
-    <span class="s">V</span> = 4T + 1 = <span class="s">13</span>
+    <span class="label">The complete exponent sequence</span>
+    E(0.5) = 1 &nbsp;&nbsp;&nbsp;
+    E(1.5) and E(2.5) from W-V &nbsp;&nbsp;&nbsp;
+    E(3.5) = 28
   </div>
 
-  <p><span class="b wb">W</span> is the number of rungs (R = 7). It lives at the balance point, d = T/2 = 1.5. It equals A&prime;(T/2), the derivative of the accumulated traversal evaluated at the center of the ladder.</p>
+  <p><span class="wb">E(0.5) = 1:</span> Genesis. The cycle begins with the full energy (E = 1, A0). The aperture opens; the first processual station carries no reduction. This is the foundation on which all subsequent constraints build.</p>
 
-  <p><span class="s wb">V</span> is generators+whole (G+1 = 13). It lives at the boundary, d = T = 3. It equals A&prime;(T), the derivative evaluated at closure.</p>
+  <p><span class="b wb">W</span> = 2T + 1 = <span class="b">7</span> is the number of rungs. It lives at the balance point, d = T/2 = 1.5.</p>
 
-  <p>From W and V alone, every exponent follows:</p>
+  <p><span class="s wb">V</span> = 4T + 1 = <span class="s">13</span> is generators+whole. It lives at the boundary interior, d = T = 3.</p>
+
+  <p><span class="wb">E(3.5) = 28:</span> Closure. The cycle returns: 28 = 4 × 7 = P × R (pump phases × rungs). The recursion at 3.5D becomes the new aperture at the next scale. The sequence completes itself compositionally.</p>
+
+  <p>From this architecture, the three W-V exponents follow:</p>
 
   <div class="three-formulas">
     <div class="formula-card aperture">
-      <div class="fc-label">The Aperture Moment</div>
-      <div class="fc-dim">d = T/2 = 1.5</div>
+      <div class="fc-label">The i-Turn Moment</div>
+      <div class="fc-dim">d = T/2 = 1.5 (i²)</div>
       <div class="fc-eq">V / (V &minus; 1)</div>
       <div class="fc-val">13 / 12</div>
-      <div class="fc-desc">Sees everything, commits almost nothing. The exponent is barely more than 1.</div>
+      <div class="fc-desc">The commitment begins. Sees everything but holds almost nothing. The exponent barely above 1.</div>
     </div>
     <div class="formula-card field">
-      <div class="fc-label">The Field Moment</div>
-      <div class="fc-dim">d = T &minus; &frac12; = 2.5</div>
+      <div class="fc-label">The Emergence Moment</div>
+      <div class="fc-dim">d = T &minus; &frac12; = 2.5 (i³)</div>
       <div class="fc-eq">W(W+1) / (T&middot;V)</div>
       <div class="fc-val">56 / 39</div>
-      <div class="fc-desc">Active mediation. Numerator and denominator compete; factors filter.</div>
+      <div class="fc-desc">Unfolding outward. Active mediation. Numerator and denominator compete; factors filter.</div>
     </div>
     <div class="formula-card boundary">
-      <div class="fc-label">The Boundary Moment</div>
-      <div class="fc-dim">d = T = 3</div>
+      <div class="fc-label">The Closure Moment</div>
+      <div class="fc-dim">d = T = 3 (i⁰)</div>
       <div class="fc-eq">T &middot; W</div>
       <div class="fc-val">21</div>
-      <div class="fc-desc">No denominator. Nothing filtered. The fraction has become an integer: closure.</div>
+      <div class="fc-desc">No denominator. Nothing filtered. The fraction becomes an integer; closure.</div>
     </div>
   </div>
 
   <!-- ============================================================ -->
-  <h2>The Convergence to Integer</h2>
+  <h2>The Four-Station Pump</h2>
 
-  <p>The three exponents are not three separate formulas; they are one process observed at three stages. Watch the fraction resolve:</p>
+  <p>The four exponents are not separate formulas; they are one process at four stations: convergence (0.5D), i-turn (1.5D), emergence (2.5D), recursion (3.5D). Watch energy move through the cycle:</p>
 
   <div class="convergence-viz">
     <div class="cv-step">
+      <div class="cv-frac" style="color:var(--purple);">1</div>
+      <div class="cv-label" style="color:var(--purple);">0.5D: genesis</div>
+    </div>
+    <div class="cv-arrow">&longrightarrow;</div>
+    <div class="cv-step">
       <div class="cv-frac" style="color:var(--pink);">13/12</div>
-      <div class="cv-label" style="color:var(--pink);">1.5D: fraction &asymp; 1</div>
+      <div class="cv-label" style="color:var(--pink);">1.5D: i-turn</div>
     </div>
     <div class="cv-arrow">&longrightarrow;</div>
     <div class="cv-step">
       <div class="cv-frac" style="color:var(--green);">56/39</div>
-      <div class="cv-label" style="color:var(--green);">2.5D: fraction growing</div>
+      <div class="cv-label" style="color:var(--green);">2.5D: emerge</div>
     </div>
     <div class="cv-arrow">&longrightarrow;</div>
     <div class="cv-step">
-      <div class="cv-frac" style="color:var(--cyan);">21</div>
-      <div class="cv-label" style="color:var(--cyan);">3D: integer (closure)</div>
+      <div class="cv-frac" style="color:var(--cyan);">28</div>
+      <div class="cv-label" style="color:var(--cyan);">3.5D: return</div>
     </div>
   </div>
 
-  <p>At the i-turn (1.5D), the exponent is V/(V-1) &asymp; 1 + 1/4T. Almost identity. The pump cycle has just begun; energy is barely committed. The whole ladder is visible in the numerator but divided by almost itself.</p>
+  <p>At genesis (0.5D, i¹), the exponent is E = 1. The full energy enters; no constraint yet. The aperture opens; this is the first fold, where the 1 differentiates from point toward line. The cycle does not begin at identity (i⁰) but at the first rotation (i¹).</p>
 
-  <p>At emergence (2.5D), the exponent is a proper fraction with multiple factors in both numerator and denominator. This is &Phi; at work: mediation, selection, active filtering. W and W+1 push outward (what is available); T and V pull inward (the constraints that filter).</p>
+  <p>At the i-turn (1.5D, i²), the exponent is V/(V-1) &asymp; 1 + 1/4T. Almost identity. Energy is barely committed. The whole ladder is visible in the numerator but divided by almost itself; this is the moment where line opens into surface.</p>
 
-  <p>At closure (3D), the exponent is T&middot;W = 21. An integer. No denominator at all. Nothing is withheld, nothing is filtered. The boundary has access to everything. The progression from fraction to integer IS the dimensional ladder closing.</p>
+  <p>At emergence (2.5D, i³), the exponent is a proper fraction with multiple factors: W(W+1)/(T&middot;V). This is &Phi; at work: mediation, selection, active filtering. W and W+1 push outward (availability); T and V pull inward (constraints). Surface gathers toward closure.</p>
+
+  <p>At recursion (3.5D, i⁰), the exponent is 28 = P × R (pump phases × rungs). The pattern completes; the closed boundary at this scale becomes the new aperture at the next scale. The cycle returns to E(0.5) = 1 at the next nesting level. Identity is the product of completed closure, not the starting condition.</p>
 
   <!-- ============================================================ -->
   <h2>Factor Migration</h2>
 
-  <p>The factors do not sit at fixed positions in the fraction. They <span class="it">move through</span> as d increases, from numerator to denominator to absorbed:</p>
+  <p>The factors do not sit at fixed positions in the fraction. They <span class="it">move through</span> as d increases, from numerator to denominator to absorbed. Watch them traverse from 1.5D through closure:</p>
 
   <table class="migration-table">
     <thead>
       <tr>
         <th style="text-align:left">Factor</th>
         <th>Value</th>
-        <th>1.5D</th>
-        <th>2.5D</th>
-        <th>3D</th>
+        <th>1.5D (i²)</th>
+        <th>2.5D (i³)</th>
+        <th>3.5D (i⁰)</th>
       </tr>
     </thead>
     <tbody>
@@ -474,7 +486,7 @@ p { margin-bottom: 18px; }
     </tbody>
   </table>
 
-  <p>V = 13 starts <span class="m">available</span> (numerator), becomes a <span class="s">filter</span> (denominator), then is <span class="d">absorbed</span>. T starts absent, passes through the denominator, then emerges into the numerator. Each factor traverses its own path from visibility through filtration to absorption. This is the pump cycle operating in the algebra: convergence (&oplus;), i-turn, emergence (&#10039;).</p>
+  <p>V = 13 starts available (numerator at 1.5D), becomes a filter (denominator at 2.5D), then is absorbed (gone at 3.5D). T starts absent, passes through the denominator, then emerges into the numerator. Each factor traverses its own path from visibility through filtration to absorption. This is the pump cycle operating in the algebra: convergence (⊛) at 0.5D, i-turn (i) at 1.5D, emergence (✹) at 2.5D, recursion at 3.5D. The four stations mirror the four i-strokes: i¹, i², i³, i⁰.</p>
 
   <!-- ============================================================ -->
   <h2>The A&prime;(d) Sequence</h2>
@@ -569,26 +581,29 @@ p { margin-bottom: 18px; }
   <canvas id="factor-canvas" width="760" height="320"></canvas>
 
   <!-- ============================================================ -->
-  <h2>Why Three, Not One</h2>
+  <h2>Why the Exponent Sequence Is Four-Fold</h2>
 
-  <p>The systematic search confirmed: no single polynomial, power law, gamma function, or F/L expression with framework-meaningful coefficients reproduces all three exponents. A polynomial through the three points yields E(d) = (6049/234)d&sup2; + ...; the coefficients are meaningless fractions. The formula refuses to compress.</p>
+  <p>The four processual exponents do not collapse to a single formula because they correspond to the four i-strokes at different scales. E(0.5) = 1 and E(3.5) = 28 frame the cycle; E(1.5) and E(2.5) are determined by W-V. This is not a weakness; it reflects the pump cycle's irreducible structure.</p>
 
-  <p>This is not a gap in the theory. The formula is three-part because the circumpunct is three-part. The three processual exponents correspond to the three components of &oplus;:</p>
+  <p>The middle three exponents at 1.5D, 2.5D, and 3D can be understood through the W-V decomposition, but the sequence only makes complete sense when extended to include genesis (E(0.5) = 1) and recursion (E(3.5) = 28). The cycle begins at i¹ = +i (convergence), not at i⁰ = +1 (identity):</p>
 
   <div class="note">
-    <strong>&bull; (aperture):</strong> E(T/2) = V/(V-1). Sees everything, holds almost nothing. A fraction barely above 1.<br><br>
-    <strong>&Phi; (field):</strong> E(T-&frac12;) = W(W+1)/(T&middot;V). Active mediation. Multiple factors competing in numerator and denominator.<br><br>
-    <strong>&cir; (boundary):</strong> E(T) = T&middot;W. An integer. No division. Complete closure.
+    <strong>i¹ at 0.5D (convergence):</strong> E = 1. The full energy. No constraint yet. Genesis.<br><br>
+    <strong>i² at 1.5D (i-turn/commitment):</strong> E(T/2) = V/(V-1). Sees everything, holds almost nothing. The i-turn begins.<br><br>
+    <strong>i³ at 2.5D (emergence/unfolding):</strong> E(T-&frac12;) = W(W+1)/(T&middot;V). Active mediation. Multiple factors competing.<br><br>
+    <strong>i⁰ at 3.5D (recursion/closure):</strong> E(3.5) = 28 = P &times; R. The cycle returns; closed boundary becomes new aperture at next scale.
   </div>
 
-  <p>The whole is not the sum of its parts (13/12 + 56/39 = 2.52 &ne; 21). It is not even reducible to one expression with d plugged in. The whole is the <span class="it">compositional product</span> mediated by T<sup>T</sup>/2:</p>
+  <p>The cycle does not end at 3D (where the exponent would be E(3) = 21; that is the boundary closure). The exponent sequence extends to 3.5D, where recursion completes the pump and the pattern nests. Identity (i⁰) is the product of finished closure, not the starting condition.</p>
+
+  <p>The three middle exponents (which W-V captures) live inside this larger four-beat pattern. The compositional product of the three W-V exponents, mediated by T<sup>T</sup>/2, produces the boundary exponent 21:</p>
 
   <div class="eq">
     E(T/2) &times; E(T&minus;&frac12;) &times; T<sup>T</sup>/2 = E(T)
     <br><span style="font-size:20px; color:var(--dim);">(13/12) &times; (56/39) &times; 13.5 = 21</span>
   </div>
 
-  <p>This is A4 (&sect;2.8) operating in the exponent algebra: the whole is the compositional unity of its parts via &Phi;. The mediator T<sup>T</sup>/2 = 13.5 IS &Phi; in this context: the field that makes parts into a whole.</p>
+  <p>This is A4 (&sect;2.8) operating in the exponent algebra: the whole is the compositional unity of its parts via &Phi;. But that whole (E(3) = 21) then feeds into the recursion at 3.5D, where the constraint structure (now solidified as 3D) becomes the gating mechanism for the next scale's convergence. E(3.5) = 28 is the confirmation that the loop can restart: 28 = 4 &times; 7 = P &times; R (pump × rungs). The exponent carries the signature of having traversed the full ladder.</p>
 
   <!-- ============================================================ -->
   <h2>Connection to the Clay Problems</h2>

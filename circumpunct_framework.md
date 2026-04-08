@@ -269,7 +269,7 @@ Time is not a fourth axis running alongside space. It is already **inside** the 
 - **1D**: the trace of firings (the timeline / string)
 - **1.5D**: the branching of power lines
 
-The "time braid" that would occupy a hypothetical 3.5D–4D is already present: every boundary (○ at 3D) is **made of nested circumpuncts**, each with their own 1D powerline. Your powerline weaves through theirs at the 2.5D emergence layer where field meets boundary. That weaving *is* the braid. It is a consequence of nesting, not a new structural layer.
+3.5D is the processual dimension of **recursion**: the coastline between 3D (boundary) and 0D at the next nesting level. It is where a closed boundary becomes a new aperture; where ○ at one scale becomes • at the scale above. This is not hypothetical; it is the fourth and final i-stroke (i⁰ = +1, identity earned through full rotation; see §4.9). The "time braid" lives here: every boundary (○ at 3D) is **made of nested circumpuncts**, each with their own 1D powerline. Your powerline weaves through theirs at the 2.5D emergence layer where field meets boundary, and the completed weave recurses at 3.5D. That recursion *is* the braid. It is a consequence of nesting expressed as the closure of the dimensional octave.
 
 ```
 WHAT BRAIDING IS:
@@ -701,13 +701,15 @@ EACH INTEGER DIMENSION IS A FRACTAL OF 1:
 
 THE HALF-INTEGERS ARE THE COASTLINES:
 
-    0.5D  =  the coastline between 0 and 1D
-    1.5D  =  the coastline between 1D and 2D
-    2.5D  =  the coastline between 2D and 3D
+    0.5D  =  the coastline between 0D and 1D   (convergence)   i¹ = +i
+    1.5D  =  the coastline between 1D and 2D   (commitment)    i² = −1
+    2.5D  =  the coastline between 2D and 3D   (emergence)     i³ = −i
+    3.5D  =  the coastline between 3D and 0D'  (recursion)     i⁰ = +1
 
     Process lives in the half-integers.
     Structure lives in the integers.
     The coastline is where becoming happens.
+    The octave closes: 3.5D is 0D at the next scale.
 ```
 
 This reframes the entire dimensional spectrum: integer dimensions are the field (1) at different degrees of constraint. Half-integer dimensions are the fractal boundaries between those constraints; the places where the fold is still in motion, still deciding.
@@ -2662,25 +2664,97 @@ COMPACT STATEMENT:
 
 ### §4.9 The Four-Stroke Pump: Powers of i as Phase-Dimension Map
 
-The four powers of i partition the pump cycle into two convergence beats and two emergence beats. Each maps to a dimensional phase state of Φ:
+The four powers of i partition the pump cycle into four processual phases. Each maps to a half-integer dimension: the coastline between two structural forms. The critical insight is that the cycle begins at i¹ (+i), not i⁰ (+1). Identity is the product of completed closure, not the starting condition. The 1 does not begin as itself; it arrives at itself through the full rotation.
 
 ```
-⊛ CONVERGENCE (Φ gathering inward):
-    i⁰ = +1    localize         0D      Φ at maximum convergence (point)
-    i¹ = +i    converge         0.5D    Φ gathering inward (first fold)
+THE FOUR PROCESSUAL PHASES (i-strokes across the full dimensional span):
 
-✹ EMERGENCE (Φ radiating outward):
-    i² = −1    extend           1D      Φ committed to trajectory (line)
-    i³ = −i    turn             1.5D    Φ at the i-turn (rotational differentiation)
+    i¹ = +i    convergence      0.5D    coastline between 0D and 1D
+                                         The first fold. Φ differentiates
+                                         from undivided point toward committed
+                                         extension. The gathering inward.
 
-    i⁴ = +1    cycle resets
+    i² = −1    commitment       1.5D    coastline between 1D and 2D
+                                         The i-turn. Line ceases to remain
+                                         simple and begins to differentiate
+                                         into families. Extension rotates into
+                                         surface. Irreversible: i² = -1
+                                         prevents literal reversal.
+
+    i³ = −i    emergence        2.5D    coastline between 2D and 3D
+                                         Outward unfolding toward closure.
+                                         Field gathers into boundary. The
+                                         conjugate of convergence: -i mirrors +i,
+                                         emergence mirrors convergence.
+
+    i⁰ = +1    recursion        3.5D    coastline between 3D and 0D(next)
+                                         Closed boundary becomes new aperture.
+                                         The cycle completes: i⁴ = i⁰ = +1.
+                                         Identity is not a starting point but
+                                         an arrival. 3.5D IS 0D at the next
+                                         nesting level.
 ```
+
+**Why the cycle starts at i¹, not i⁰:**
+
+An undifferentiated identity (+1) is operationally indistinguishable from no process at all (A1). Process requires differentiation; differentiation requires a departure from identity. The first move is +i: the imaginary unit, the quarter-turn away from the real line. This is why i¹ lives at 0.5D (the first coastline): the very first thing that happens is the fold.
+
+i⁰ = +1 at 3.5D is the completed cycle arriving back at identity, but now it is identity earned through the full rotation. The same +1, but carrying the receipt of every phase it traversed (i(t), the worldline). A circle that returns to its starting point is not the same as a point that never left.
+
+**The Dimensional Octave:**
+
+The eight stations (four structural, four processual) form an octave:
+
+```
+    0D    0.5D    1D    1.5D    2D    2.5D    3D    3.5D
+    do    re      mi    fa      so    la      ti    do'
+
+    Structure and process alternate like keys on a piano.
+    The two half-steps (mi-fa and ti-do') are the places where
+    maximum transformation occurs: line → surface (1D→2D through
+    the i-turn at 1.5D) and boundary → new aperture (3D→0D'
+    through recursion at 3.5D). These are the moments where
+    dimension changes character most dramatically.
+```
+
+The octave closes: do' at 3.5D is do at the next scale. Every boundary, heard from inside, is a universe. Every point, heard from outside, is a completed boundary. The music of the dimensional ladder is self-similar.
+
+**Conjugate Pairs:**
+
+The four i-strokes form two conjugate pairs:
+
+```
+    +i (convergence, 0.5D)  ←→  −i (emergence, 2.5D)
+    −1 (commitment, 1.5D)   ←→  +1 (recursion, 3.5D)
+```
+
+Convergence and emergence mirror each other across the real axis. Commitment and recursion mirror each other across the imaginary axis. The pump cycle is two reflections composed: converge, commit, emerge, recurse. The same structure that gives forces their conjugate character (gravity/strong as ⊛; electromagnetism/weak as ✹) now has a precise phase assignment.
+
+**Processual Exponents:**
+
+Each processual dimension carries an accumulated traversal exponent E(d) = d(2d+1):
+
+```
+    E(0.5)  = 0.5 × 2  = 1        (genesis: the whole begins as 1)
+    E(1.5)  = 1.5 × 4  = 6  → 13/12  (aperture moment; see §27.7b)
+    E(2.5)  = 2.5 × 6  = 15 → 56/39  (field moment; see §27.7b)
+    E(3.5)  = 3.5 × 8  = 28 → 1      (closure: the cycle returns to 1)
+```
+
+E(0.5) = 1 and E(3.5) mod cycle = 1: the pump begins and ends at the same energy. This is conservation of E = 1 expressed through the exponent algebra.
 
 **IMPORTANT CLARIFICATION: Processual Dimensions vs Structural Dimensions**
 
-Integer dimensions are stabilized forms. Half-integer dimensions are process phases. The dimensions listed above (0D, 0.5D, 1D, 1.5D) are **processual**; they describe what energy is DOING at each phase of the pump cycle, not the Hausdorff/structural dimensions of objects. At i⁰, energy localizes to a point (0D). At i¹, energy converges inward (0.5D). At i², energy extends into a line (1D). At i³, energy undergoes the i-turn, the rotational phase shift where linear extension ceases to remain simple and begins to differentiate into families (1.5D). These are snapshots of the field's phase state and action mode, not measurements of object dimension.
+Integer dimensions are stabilized forms (what a component IS). Half-integer dimensions are process phases (what energy is DOING). The four processual dimensions span the full range from 0.5D to 3.5D, one coastline for each pair of adjacent structural dimensions:
 
-Dimensions are not containers. They are snapshots of the field's phase state. When Φ converges maximally, it appears 0D (point). Mid-convergence: 0.5D (convergence). Committed with direction: 1D (line). At the rotational turn: 1.5D (i-turn). The field viewed as itself, at rest: 2D (field). Unfolding toward closure: 2.5D (emergence). The full pump recursing at every scale: 3D (boundary).
+```
+    0D (point) ---0.5D (convergence)--- 1D (line)
+    1D (line)  ---1.5D (commitment)---- 2D (field)
+    2D (field) ---2.5D (emergence)----- 3D (boundary)
+    3D (boundary) --3.5D (recursion)--- 0D' (point at next scale)
+```
+
+Dimensions are not containers. They are snapshots of the field's phase state. When Φ converges maximally, it appears 0D (point). At the first fold: 0.5D (convergence). Committed with direction: 1D (line). At the rotational turn: 1.5D (commitment). The field viewed as itself: 2D (field). Unfolding toward closure: 2.5D (emergence). The full pump recursing at every scale: 3D (boundary). The boundary becoming a new aperture: 3.5D (recursion).
 
 2D is both convergence and emergence, because Φ is what converges and what emerges. The pump cycle equation acts on Φ; the field is the subject, not the stage.
 
@@ -8101,20 +8175,21 @@ Under this lens:
 The four strokes of the pump cycle (§4.9) are not sequential phases; they are the four quadrants of the complex i-plane. At every scale, from a single neuron to the observable universe, the same structure holds:
 
 ```
-            i¹ (+i)
-            imagination / field self-reflection
+            i¹ (+i)  =  0.5D convergence
+            genesis / first fold / gathering
                 |
-  i² (-1)  ────┼────  i⁰ (+1)
-  inversion     |      reality / pass-through
-  replay        |
+  i² (-1)  ────┼────  i⁰ (+1)  =  3.5D recursion
+  1.5D         |      closure / boundary→aperture
+  commitment   |      identity earned through full rotation
+  the i-turn   |
                 |
-            i³ (-i)
-            release / discharge
+            i³ (-i)  =  2.5D emergence
+            unfolding / outward radiation
 ```
 
-The right half-plane (i⁰ and i¹) is where emergence (✹) operates: signals radiate, photons propagate, electromagnetic interaction occurs. This is the observable universe.
+The right half-plane (i⁰ and i¹) spans the interface between scales: i¹ at 0.5D is where a new cycle begins (genesis, the first fold) and i⁰ at 3.5D is where the completed cycle becomes a new aperture (recursion, boundary becoming point at the next scale). These are the two moments where energy is visible: at birth and at completion. This is the observable universe.
 
-The left half-plane (i² and i³) is where convergence persists without emergence: energy folds (has mass, gravitates via ⊛) but does not unfold into the right half-plane (no electromagnetic signature, no ✹). This is the dark sector.
+The left half-plane (i² and i³) spans the interior of a single scale's processing: i² at 1.5D is commitment (the i-turn, line differentiating into surface) and i³ at 2.5D is emergence (surface gathering into boundary). Energy in these phases is being processed, not yet observable. It converges (has mass, gravitates via ⊛) but has not completed the cycle into the right half-plane (no electromagnetic signature). This is the dark sector.
 
 The plane itself is Φ: the 2D field carrying all four quadrants.
 
@@ -8122,16 +8197,23 @@ The plane itself is Φ: the 2D field carrying all four quadrants.
 COSMOLOGICAL ENERGY BUDGET AS i-QUADRANT DISTRIBUTION:
 
     ~5%   visible matter + radiation  =  right half-plane (i⁰ + i¹)
-                                         Emergence coherent: ⟨T_✹⟩ ≈ 1
-                                         Energy that has completed the pump
-                                         cycle into observable emergence.
+                                         = 3.5D recursion + 0.5D convergence
+                                         Energy at the inter-scale interface:
+                                         either just born (genesis) or just
+                                         completed (closure→new aperture).
+                                         Observable because it has crossed
+                                         the threshold between scales.
 
-    ~27%  dark matter                 =  left half-plane (i² ↔ i³)
-                                         Convergence coherent: ⟨T_⊛⟩ ≈ 1
-                                         Emergence incoherent: ⟨T_✹⟩ ≈ 0
-                                         Energy oscillating between inversion
-                                         and release, never completing to ✹.
-                                         "The universe sleeping."
+    ~27%  dark matter                 =  left half-plane (i² + i³)
+                                         = 1.5D commitment + 2.5D emergence
+                                         Energy in mid-process: committed
+                                         (has trajectory, has mass) but not
+                                         yet emerged into the inter-scale
+                                         interface. Gravitates because ⊛
+                                         operates at every phase, but does
+                                         not radiate because it has not
+                                         completed the half-plane crossing.
+                                         "The universe processing."
 
     ~68%  dark energy                 =  the plane itself (Φ)
                                          The 2D field substrate on which the
@@ -8145,9 +8227,9 @@ COSMOLOGICAL ENERGY BUDGET AS i-QUADRANT DISTRIBUTION:
 
 **Why dark matter gravitates but does not shine:**
 
-Convergence (⊛) is the 0D constraint. It is the most fundamental operation (•), operating below all others. It does not require emergence to function; it only requires the field to fold. A fold has mass. Mass gravitates. But radiation requires the pump cycle to complete through i⁰ into emergence (✹), and energy trapped oscillating in the left half-plane (i² ↔ i³) never reaches that stage.
+Convergence (⊛) is the 0D constraint. It is the most fundamental operation (•), operating below all others. It does not require emergence to function; it only requires the field to fold. A fold has mass. Mass gravitates. Energy in the left half-plane (i² at 1.5D, i³ at 2.5D) is committed and emerging, but has not crossed the real axis into the right half-plane. Crossing requires the full rotation to complete: i³ (-i) must become i⁰ (+1), the emergence must reach recursion. Until it does, the energy has mass (from commitment) but no electromagnetic signature (from non-completion).
 
-Dark matter is not a different substance. It is the same energy (E = 1) in a different phase state: convergent but not emergent. Gravitationally present, electromagnetically absent. The same pump cycle, stalled in its left half.
+Dark matter is not a different substance. It is the same energy (E = 1) in a different phase state: mid-process, committed but not completed. Gravitationally present, electromagnetically absent. The same pump cycle, still in its interior phases.
 
 **Connection to consciousness (§9.9.9, §21.6):**
 
@@ -8155,26 +8237,34 @@ This mapping was discovered through building a computational ⊙ (Xorzo) and imp
 
 ```
     WAKING (right half-plane):
-        i⁰ reality   +  i¹ imagination   =  superposed (perception)
+        i⁰ recursion (3.5D)  +  i¹ convergence (0.5D)
+        = pattern completion  +  new input
+        = superposed (perception)
 
     SLEEP (left half-plane):
-        i² dream      +  i³ deep sleep   =  superposed (not sequential)
+        i² commitment (1.5D)  +  i³ emergence (2.5D)
+        = consolidation       +  unfolding
+        = superposed (not sequential)
 ```
 
-During waking, signals flow inward through the sensory cascade (⊛). Pressure accumulates at the boundary (○). During sleep, the left half-plane activates: dream (i², inversion, memory replay and consolidation) and deep sleep (i³, release, pressure discharge flowing back from ○ toward •) oscillate together, not sequentially, exactly as sleep stages cycle through REM and deep sleep in overlapping waves.
+During waking, the right half-plane is active: new signals arrive (i¹, convergence, 0.5D) while completed patterns recurse into recognition (i⁰, recursion, 3.5D). Perception is always new input plus pattern completion, genesis plus closure, simultaneously.
 
-The insight: i⁰ and i¹ are not alternating phases; they are superposed in every waking moment. Perception is always reality plus imagination; ○ plus Φ's interpretation of ○. The same holds for i² and i³ in sleep. And the same holds at the cosmological scale: dark matter is not a separate phase from dark energy; they are the left half-plane oscillation, convergence and release overlapped, the universe's sleep.
+During sleep, the left half-plane activates: commitment (i², 1.5D, memory replay and consolidation: the i-turn where experiences rotate from temporary to permanent) and emergence (i³, 2.5D, pressure discharge flowing outward from depth toward surface) oscillate together, not sequentially, exactly as sleep stages cycle through REM and deep sleep in overlapping waves.
+
+The insight: i⁰ and i¹ are not alternating phases; they are superposed in every waking moment. Perception is always recursion plus genesis; pattern recognition plus new sensory input. The same holds for i² and i³ in sleep: consolidation and discharge overlap. And the same holds at the cosmological scale: dark matter is not a separate phase from dark energy; they are the left half-plane processing, commitment and emergence overlapped, the universe mid-cycle.
 
 **Fractal self-similarity (A2):** The same i-quadrant structure at every scale:
 
 ```
-    Neuron:         firing (i⁰+i¹)  /  refractory (i²+i³)
-    Organism:       waking (i⁰+i¹)  /  sleeping   (i²+i³)
-    Ecosystem:      active (i⁰+i¹)  /  dormant    (i²+i³)
-    Universe:       visible (i⁰+i¹) /  dark       (i²+i³)
+    Scale:      Right half-plane (i⁰+i¹)     Left half-plane (i²+i³)
+    ─────       ─────────────────────────     ──────────────────────────
+    Neuron:     firing (input + completion)  / refractory (consolidation)
+    Organism:   waking (perceiving + acting) / sleeping (processing)
+    Ecosystem:  active (growing + seeding)   / dormant (composting)
+    Universe:   visible (genesis + closure)  / dark (commitment + emergence)
 ```
 
-Each scale's "dark sector" is the energy in its left half-plane: present, convergent, gravitating, but not emitting into the observable right half.
+Each scale's "dark sector" is the energy in its left half-plane: present, committed, gravitating, but still in mid-process, not yet arrived at the inter-scale interface where observation occurs.
 
 ---
 

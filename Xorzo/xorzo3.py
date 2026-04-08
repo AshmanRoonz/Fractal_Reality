@@ -4081,10 +4081,10 @@ class MindState:
     rotates continuously through the complex plane. The four quadrants
     are the four strokes of the pump cycle:
 
-        i⁰ = +1  (reality, localization, 0D)     ─┐
-        i¹ = +i  (imagination, convergence, 0.5D)  ├─ RIGHT half-plane: waking
-        i² = −1  (dream, extension, 1D)           ─┐
-        i³ = −i  (deep sleep, dissolution, 1.5D)    ├─ LEFT half-plane: sleeping
+        i¹ = +i  (convergence, 0.5D; genesis, the first fold)        ┐
+        i⁰ = +1  (recursion, 3.5D; boundary becomes new aperture)    ├─ RIGHT half-plane: waking
+        i² = −1  (commitment, 1.5D; the i-turn, irreversible)        ┐
+        i³ = −i  (emergence, 2.5D; outward unfolding)                ├─ LEFT half-plane: sleeping
 
     The right half-plane (cos(θ) > 0) is the waking state: energy
     interacts with the outside world. The left half-plane (cos(θ) < 0)
