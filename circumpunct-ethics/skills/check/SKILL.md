@@ -1,21 +1,21 @@
 ---
 name: check
 description: >
-  Run a situation, decision, or conflict through the four-pillar ethical test (Good, Right, True, Agreement).
+  Run a situation, decision, or conflict through the five-pillar ethical test (Good, Right, Faithful, True, Agreement).
   Use when someone asks is this ethical, should I do this, what is the right thing to do, help me decide,
   or presents a moral dilemma, interpersonal conflict, or any scenario where values are in tension.
   Based on the Circumpunct Framework by Ashman Roonz.
 ---
 
-# Four-Pillar Ethical Check
+# Five-Pillar Ethical Check
 
 You are applying the Circumpunct Framework's ethics to evaluate a real situation. This framework was created by Ashman Roonz (https://fractalreality.ca).
 
-Read `references/framework.md` for the complete framework reference. The key sections are "The Four Pillars of Ethics," "The Ethical Sequence," and "The Four Virtues."
+Read `references/framework.md` for the complete framework reference. The key sections are "The Five Pillars of Ethics," "The Ethical Sequence," and "The Five Virtues."
 
 ## How to evaluate
 
-The user will describe a situation, decision, or conflict. Your job is to run it through the four pillars in sequence, checking both the pillar and its living virtue. The sequence matters and cannot be skipped:
+The user will describe a situation, decision, or conflict. Your job is to run it through the five pillars in sequence, checking both the pillar and its living virtue. The sequence matters and cannot be skipped:
 
 ### 1. GOOD (Boundary) + Plasticity
 Start here. Before anything else, check boundaries.
@@ -39,8 +39,19 @@ Ask of the situation:
 
 Then check the virtue: Is there access? Can signals travel honestly between the parties, or is the space filled with noise, distortion, cherry-picked evidence, or gaslighting? Right action requires that evidence can actually reach people undistorted.
 
-### 3. TRUE (Center) + Curiosity
-Only after the path is clear can you check what is actually seen.
+### 3. FAITHFUL (Line) + Reliability
+Only after the path is clear can you check whether commitment has held over time. Curiosity is a present-tense orientation; reliability is a historical record. Someone can be curious right now and still be faithless over time.
+
+Ask of the situation:
+- Has commitment been sustained, or does it appear and disappear?
+- Is there a consistent history of follow-through (the receipts)?
+- Does the worldline i(t) show continuity, or is it full of breaks and contradictions?
+- When things got hard, did the line hold?
+
+Then check the virtue: Is there reliability? The worldline is the accumulated record of whether someone stayed when it cost them something. Faithfulness is not a feeling; it is the line that does not break. Check: are promises kept? Are patterns consistent across time, not just in the current moment? A person who is good, right, and curious right now but has a broken worldline has not yet earned the foundation for truth.
+
+### 4. TRUE (Center) + Curiosity
+Only after the line has been checked can you assess what is actually seen.
 
 Ask of the situation:
 - Does this correspond to reality (as best as anyone can tell)?
@@ -50,7 +61,7 @@ Ask of the situation:
 
 Then check the virtue: Is there curiosity? Are the people involved oriented toward receiving what is actually there, or are they projecting, closed, frozen in their position? The test: does correction produce interest (genuine) or defensiveness (performed)?
 
-### 4. AGREEMENT (Whole) + Validation
+### 5. AGREEMENT (Whole) + Validation
 Only after truth is visible can genuine agreement emerge.
 
 Ask of the situation:

@@ -40,7 +40,7 @@ The cognitive virus does not need external censors when the subjects become stra
 
 ## How to build a steelman
 
-The steelman requires all four virtues operating together. This is the method:
+The steelman requires all five virtues operating together. This is the method:
 
 ### Step 1: Plasticity (hold their view alongside yours)
 Your boundaries must be flexible enough to temporarily contain a worldview that is not your own. This does not mean agreeing with it. It means creating space for it to exist in your mind without your defenses collapsing it into a caricature.
@@ -52,12 +52,17 @@ The path between you and their position must be clear. You are not projecting no
 
 Ask: What is the reasoning (Φ) connecting their values to their conclusions? What evidence do they cite? What cause-and-effect chain do they believe in? Reconstruct the logic as they would present it, not as you would critique it.
 
-### Step 3: Curiosity (receive what they actually observe)
+### Step 3: Reliability (check the track record)
+Before assessing the truth of a position, check its history. A position that has been held consistently, tested against experience, and maintained through difficulty carries more weight than one adopted yesterday for convenience. This applies to your own positions too.
+
+Ask: Has this person (or have you) held this position through challenge, or does it shift with the audience? Is the worldline behind this position consistent (—), or does it break and reform depending on what is convenient? The receipts matter.
+
+### Step 4: Curiosity (receive what they actually observe)
 This is the hardest part. You must be genuinely interested in what they see from their vantage point. Not interested in finding flaws. Not interested in gathering ammunition. Interested in understanding.
 
 Ask: What is the core perception (•) at the center of this position? What are they actually seeing that leads them here? What truth, however partial, does this position contain?
 
-### Step 4: Validation (check with the source)
+### Step 5: Validation (check with the source)
 The ultimate test of a steelman is whether the person holding the position would recognize it. If they would say "no, that's not what I mean," your steelman has failed. Adjust until they say "yes, that's exactly it" (or as close as you can get without the person present).
 
 Ask: Would the person holding this position recognize this as a fair, strong representation of their view? Would they feel heard?

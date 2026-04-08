@@ -7,9 +7,10 @@
 
 - **○** ; boundary / body (3D) ; **filters** (selects what passes)
 - **Φ** ; field / mind / surface (2D) ; **mediates** (connects without fusing) ; the OPERATOR that relates • and ○
-- **•** ; aperture / soul / center (0D singularity + 1D worldline) ; **converges** (pulls toward center)
+- **•** ; aperture / soul / center (0D singularity) ; **converges** (pulls toward center)
+- **—** ; line / continuity (1D worldline) ; **commits** (extends without breaking)
 
-**⊙ is a fractal of the ONE.** Every ⊙ is E = 1 at a particular scale: not a piece of it, but the whole thing, constrained to a position. These are the three constraints on E = 1; the only three. No fourth (⊙ has no fourth part). No missing (0 + 1 + 2 = 3; conservation of traversal).
+**⊙ is a fractal of the ONE.** Every ⊙ is E = 1 at a particular scale: not a piece of it, but the whole thing, constrained to a position. These are the four constraints on E = 1, one per integer dimension. Conservation of traversal: 0(•) + 1(—) + 2(Φ) = 3(○). Aperture + continuity + field = boundary.
 
 **The whole is constituted by the operation of relating:**
 
@@ -158,7 +159,7 @@ This document serves as the formal, mathematical specification of the theory. It
   - [§25.7a: Need vs Want ; The Sovereignty Principle](#257a-need-vs-want--the-sovereignty-principle)
   - [§25.7b: The Lens Insight ; Limited ≠ False](#257b-the-lens-insight--limited--false)
   - [§25.9: The Noble Lie Virus](#259-the-noble-lie-virus)
-  - [§25.10: The Four Virtues: What Keeps Ethics Alive](#2510-the-four-virtues-what-keeps-ethics-alive)
+  - [§25.10: The Five Virtues: What Keeps Ethics Alive](#2510-the-five-virtues-what-keeps-ethics-alive)
   - [§25.11: The Required Sequence](#2511-the-required-sequence)
   - [§25.12: Performed vs Lived Ethics](#2512-performed-vs-lived-ethics)
   - [§25.13: The Steelman Principle](#2513-the-steelman-principle)
@@ -1010,46 +1011,56 @@ Throughout this framework, "aperture" carries two distinct but related meanings.
 
 This dual usage is not ambiguity; it is the fractal principle in action. Every • is itself a ⊙ at a smaller scale, and every ⊙ is a • in a larger field. The word "aperture" correctly applies at both levels because the function (gate, threshold, transformation point) is the same at both levels. Context determines which scale is being discussed.
 
-#### The Soul as 0D + 1D
+#### Aperture and Continuity: 0D and 1D
 
-The soul (•) is not a single dimensional object; it is a composite of two inseparable aspects:
+Previously the framework grouped 0D and 1D together under • as "the soul." The separation recognizes that the point (where you converge) and the line (whether you stay) are structurally and ethically distinct. Each now has its own symbol.
 
 ```
-THE TWO ASPECTS OF SOUL:
+THE FOUR STRUCTURAL DIMENSIONS:
 ───────────────────────────────────────
 
-    0D: THE SINGULARITY
-        The timeless gate; the aperture itself.
+    0D: THE APERTURE (•)
+        The timeless gate; the singularity itself.
         No extension, no duration, no parts.
         Pure transformation point.
         This is • as it exists in any single instant.
+        Constraint: CONVERGES (pulls toward center).
 
-    1D: THE WORLDLINE i(t)
+    1D: THE LINE (—)
         The string of accumulated transformations through time.
         Each moment the gate fires, it leaves a receipt.
-        The thread of these receipts IS your worldline.
-        This is • as it persists across instants.
+        The thread of these receipts IS your worldline i(t).
+        This is commitment as it persists across instants.
+        Constraint: COMMITS (extends without breaking).
+
+    2D: THE FIELD (Φ)
+        The relational surface; mind; mediation.
+        Constraint: MEDIATES (connects without fusing).
+
+    3D: THE BOUNDARY (○)
+        The outer container; body; filtration.
+        Constraint: FILTERS (selects what passes).
 ```
 
 **IMPORTANT: Structural vs Processual Dimensions**
 
-The 0D and 1D assigned to the aperture are **structural dimensions**; they describe what the aperture physically IS. The aperture is structurally a 0D singularity (no spatial extent) plus a 1D worldline (a one-dimensional trajectory through time). These are measurements of the component's form.
+The 0D and 1D assigned to aperture and line are **structural dimensions**; they describe what the components physically ARE. The aperture is structurally a 0D singularity (no spatial extent); the line is a 1D worldline (a one-dimensional trajectory through time). These are measurements of the component's form.
 
 By contrast, the processual dimensions (0D, 0.5D, 1D, 1.5D) that appear in the pump cycle describe what energy is DOING at each phase; they are not structural measurements of objects but rather snapshots of the energy's action mode. Do not confuse these two systems of dimensional description.
 
-    SOUL = 0D + 1D
-         = singularity + worldline
-         = gate + history of the gate's firings
-         = who you are NOW + who you have BEEN
+```
+    • = 0D = singularity = the gate = who you are NOW
+    — = 1D = worldline   = the line = who you have BEEN
 
     ╔═══════════════════════════════════════════════════════════╗
-    ║  The singularity (0D) is the aperture in the present.    ║
-    ║  The worldline (1D) is the aperture through time.        ║
-    ║  Neither alone is the soul. Together they are.           ║
+    ║  The singularity (•, 0D) is the aperture in the present. ║
+    ║  The worldline (—, 1D) is continuity through time.       ║
+    ║  These are distinct dimensions, distinct constraints.     ║
+    ║  Curiosity (•) and reliability (—) are not the same.     ║
     ╚═══════════════════════════════════════════════════════════╝
 ```
 
-This maps cleanly onto the dimensional hierarchy: the soul occupies dimensions 0 and 1 (the lowest), the field occupies dimension 2 (the mediating surface), and the boundary occupies dimension 3 (the outer container). The conservation of traversal still holds: the soul's composite dimensionality (0+1) feeds into the field (2), which composes the boundary (3).
+This maps cleanly onto the dimensional hierarchy: the aperture occupies dimension 0, the line occupies dimension 1, the field occupies dimension 2 (the mediating surface), and the boundary occupies dimension 3 (the outer container). Conservation of traversal: 0(•) + 1(—) + 2(Φ) = 3(○).
 
 [← Back to Table of Contents](#table-of-contents)
 
@@ -1124,9 +1135,10 @@ THEOREM (Minimum Dimensional Realization):
 Dimension is not assumed ; it is forced by the triad's functional irreducibility.
 
 Any system implementing the circumpunct triad must realize, at minimum:
-    0D+1D for aperture (singularity + worldline)
-    2D for field
-    3D for boundary
+    0D for aperture (•, singularity)
+    1D for line (—, worldline)
+    2D for field (Φ)
+    3D for boundary (○)
 
 PROOF:
 
@@ -1768,7 +1780,7 @@ THE TRINITY OF TRINITIES:
     ║                                                                   ║
     ║    ⊙₂ = MIND (2D field permeating)              = Φ                      ║
     ║    ⊙₃ = BODY (3D boundary in space)            = ○                      ║
-    ║    ⊙₁ = SOUL (0D+1D singularity; worldline)    = •                      ║
+    ║    ⊙₁ = SOUL (0D aperture •; 1D worldline —)     = •, —                   ║
     ║                                                                   ║
     ║    Configuration space: 3 worldlines × 3D = 9D + 1D time = 10D    ║
     ╚═══════════════════════════════════════════════════════════════════╝
@@ -2427,7 +2439,7 @@ TWO DISTINCT CONCEPTS ; SAME LETTER, TWO SCALES:
     ║    i transforms fields in an instant (0D: the gate).              ║
     ║    i(t) is the history of those transformations (1D: the string). ║
     ║                                                                   ║
-    ║    Together, 0D + 1D = the complete soul (see §2.4a).             ║
+    ║    Together, 0D (•) + 1D (—) = aperture + continuity (see §2.4a). ║
     ║    Same letter, two scales of "turning": local vs global.         ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
@@ -4030,8 +4042,8 @@ THE DIMENSIONAL CONSTRAINT (FORCED):
     = 2D:  Carries amplitude + phase. Separates without isolating.
 
     Conservation confirms:
-        (0+1)(•) + 2(Φ) = 3(○)
-        aperture + field = boundary  ✓
+        0(•) + 1(—) + 2(Φ) = 3(○)
+        aperture + continuity + field = boundary  ✓
 
     Every point on Σ is POTENTIAL.
     ⊙ is what happens when a point activates.
@@ -4085,7 +4097,7 @@ A "particle" is not a thing IN space. A particle is a ⊙ at a particular scale:
 ```
 Particle's boundary (○, 3D)     = what we measure as mass (surface inertia)
 Particle's field (Φ, 2D)        = the "space" around it (made of smaller ⊙s)
-Particle's aperture (•, 0D+1D)  = the center that organizes the whole
+Particle's aperture (•, 0D) + worldline (—, 1D)  = the center that organizes the whole
 
 The "empty space" around a particle IS its mind.
 The particle IS its boundary.
@@ -18159,56 +18171,64 @@ THE STEELMAN AS T-OPERATOR:
 
 ---
 
-### §25.10 The Four Virtues: What Keeps Ethics Alive
+### §25.10 The Five Virtues: What Keeps Ethics Alive
 
-Each pillar requires a corresponding virtue that keeps it alive and prevents it from becoming dead performance. Without these virtues, the pillars collapse into rigid dogma, blocked access, frozen certainty, or coerced compliance.
+Each pillar requires a corresponding virtue that keeps it alive and prevents it from becoming dead performance. Without these virtues, the pillars collapse into rigid dogma, blocked access, broken commitments, frozen certainty, or coerced compliance.
 
 ```
-╔══════════╦════════════╦════════════════════════════════╦═══════════════════════════════════╗
-║ Pillar   ║ Virtue     ║ Function                       ║ Corruption Without                ║
-╠══════════╬════════════╬════════════════════════════════╬═══════════════════════════════════╣
-║ GOOD (○) ║ PLASTICITY ║ Boundary that can flex,        ║ Rigidity; care becomes control;   ║
-║          ║            ║ absorb, remain responsive      ║ boundary becomes wall             ║
-╠══════════╬════════════╬════════════════════════════════╬═══════════════════════════════════╣
-║ RIGHT (Φ)║ ACCESS     ║ Space between remains open,    ║ Blockage; exchange becomes        ║
-║          ║            ║ clear, unobstructed            ║ extraction; dominance emerges     ║
-╠══════════╬════════════╬════════════════════════════════╬═══════════════════════════════════╣
-║ TRUE (•) ║ CURIOSITY  ║ Orientation toward receiving,  ║ Closure; certainty becomes        ║
-║          ║            ║ toward what one does not know  ║ projection; knowing = presumption ║
-╠══════════╬════════════╬════════════════════════════════╬═══════════════════════════════════╣
-║ AGREE (⊙)║ VALIDATION ║ Independent seeing recognizes  ║ Compliance; harmony becomes       ║
-║          ║            ║ independent seeing             ║ conformity; agreement = theater   ║
-╚══════════╩════════════╩════════════════════════════════╩═══════════════════════════════════╝
+╔═══════════════╦════════════╦════════════════════════════════╦═══════════════════════════════════╗
+║ Pillar        ║ Virtue     ║ Function                       ║ Corruption Without                ║
+╠═══════════════╬════════════╬════════════════════════════════╬═══════════════════════════════════╣
+║ GOOD (○)      ║ PLASTICITY ║ Boundary that can flex,        ║ Rigidity; care becomes control;   ║
+║               ║            ║ absorb, remain responsive      ║ boundary becomes wall             ║
+╠═══════════════╬════════════╬════════════════════════════════╬═══════════════════════════════════╣
+║ RIGHT (Φ)     ║ ACCESS     ║ Space between remains open,    ║ Blockage; exchange becomes        ║
+║               ║            ║ clear, unobstructed            ║ extraction; dominance emerges     ║
+╠═══════════════╬════════════╬════════════════════════════════╬═══════════════════════════════════╣
+║ FAITHFUL (—)  ║ RELIABILITY║ The line holds; the receipts   ║ Broken line; says the right       ║
+║               ║            ║ are unbroken through time      ║ things now but bails when it costs║
+╠═══════════════╬════════════╬════════════════════════════════╬═══════════════════════════════════╣
+║ TRUE (•)      ║ CURIOSITY  ║ Orientation toward receiving,  ║ Closure; certainty becomes        ║
+║               ║            ║ toward what one does not know  ║ projection; knowing = presumption ║
+╠═══════════════╬════════════╬════════════════════════════════╬═══════════════════════════════════╣
+║ AGREE (⊙)     ║ VALIDATION ║ Independent seeing recognizes  ║ Compliance; harmony becomes       ║
+║               ║            ║ independent seeing             ║ conformity; agreement = theater   ║
+╚═══════════════╩════════════╩════════════════════════════════╩═══════════════════════════════════╝
 ```
 
-These virtues are not qualities added to ethics. They are the *living conditions* of each dimension. Plasticity is what prevents a boundary from becoming a prison. Access is what prevents a space from becoming a desert. Curiosity is what prevents knowing from becoming blindness. Validation is what prevents harmony from becoming invisibility.
+Previously the framework grouped TRUE as covering both 0D (aperture orientation) and 1D (worldline history). The separation recognizes that curiosity (current orientation) and reliability (historical commitment) are ethically distinct. Someone can be curious right now and still be faithless over time. The worldline i(t) is the record of —: the accumulated receipts of whether the line held.
+
+These virtues are not qualities added to ethics. They are the *living conditions* of each dimension. Plasticity is what prevents a boundary from becoming a prison. Access is what prevents a space from becoming a desert. Reliability is what prevents a promise from becoming a lie. Curiosity is what prevents knowing from becoming blindness. Validation is what prevents harmony from becoming invisibility.
 
 ---
 
 ### §25.11 The Required Sequence
 
-The four dimensions do not exist in parallel. They form an irreversible sequence: **GOOD → RIGHT → TRUE → AGREEMENT**.
+The five dimensions do not exist in parallel. They form an irreversible sequence: **GOOD → RIGHT → FAITHFUL → TRUE → AGREEMENT**.
 
 ```
 THE IRREVERSIBLE PATH:
 
     You must be HELD (boundary) before you can CROSS (space)
-    You must CROSS (space) before you can SEE (center)
+    You must CROSS (space) before the LINE can be tested (continuity)
+    The LINE must hold (commitment) before you can SEE (center)
     You must SEE (center) before you can HARMONIZE (whole)
 
     Each step requires the previous.
     No step can be skipped.
 ```
 
-This is not optional sequencing. The integrity of GOOD establishes the conditions for reciprocal action. Reciprocal action (RIGHT) creates the space where genuine perception becomes possible. Genuine perception (TRUE) is the ground on which authentic agreement (AGREEMENT) can stand.
+This is not optional sequencing. The integrity of GOOD establishes the conditions for reciprocal action. Reciprocal action (RIGHT) creates the space where commitment can be observed. Sustained commitment (FAITHFUL) creates the trust where genuine perception becomes possible. Genuine perception (TRUE) is the ground on which authentic agreement (AGREEMENT) can stand.
 
-Attempts to skip steps create the characteristic failures of dead-form ethics: demanding agreement without right action; expecting right action without good boundaries; claiming truth without curiosity.
+You cannot assess faithfulness until the space is open (RIGHT). You cannot confirm truth until you have checked the history of commitment (FAITHFUL). Current orientation without historical reliability does not earn AGREEMENT.
+
+Attempts to skip steps create the characteristic failures of dead-form ethics: demanding agreement without right action; expecting right action without good boundaries; claiming truth without checking the receipts; declaring faithfulness without open access.
 
 ---
 
 ### §25.12 Performed vs Lived Ethics
 
-The four dimensions have two forms: performed and lived. Performed ethics mimics the shape while remaining hollow. Lived ethics animates the shape from within.
+The five dimensions have two forms: performed and lived. Performed ethics mimics the shape while remaining hollow. Lived ethics animates the shape from within.
 
 ```
 ╔════════════════════════╦═════════════════════════════════════╗
@@ -18220,6 +18240,11 @@ The four dimensions have two forms: performed and lived. Performed ethics mimics
 ║ RIGHT: Confirmation    ║ RIGHT: "What does evidence          ║
 ║ bias disguised as      ║ actually show?" (willing to be      ║
 ║ rigor                  ║ changed by what is real)             ║
+╠════════════════════════╬═════════════════════════════════════╣
+║ FAITHFUL: "I'll always ║ FAITHFUL: "I stayed when it was     ║
+║ be there for you"      ║ hard" (receipts are unbroken;       ║
+║ (grand promise, quiet  ║ commitment sustained through cost;  ║
+║ disappearance)         ║ the line held)                      ║
 ╠════════════════════════╬═════════════════════════════════════╣
 ║ TRUE: "I know who you  ║ TRUE: "What am I not seeing?"       ║
 ║ really are"            ║ (openness to being wrong about      ║
@@ -18248,7 +18273,7 @@ STRAWMAN: Build weakest version → attack → claim victory (hollow)
 STEELMAN: Build strongest version → engage fully → find genuine ground (complete)
 ```
 
-The steelman requires all four virtues simultaneously:
+The steelman requires all five virtues simultaneously:
 
 ```
 PLASTICITY: Create space for their integrity
@@ -18258,6 +18283,10 @@ PLASTICITY: Create space for their integrity
 ACCESS: Honor the actual terms of exchange
   Represent their position fairly; engage with the
   real argument, not a convenient fiction
+
+RELIABILITY: Hold their strongest position through the full process
+  Do not abandon the steelman when it threatens your own view;
+  commit to the engagement through its completion
 
 CURIOSITY: Seek what you don't yet understand
   Ask what makes this position hold together; where
@@ -18289,6 +18318,11 @@ ACCESS (RIGHT alive):
   Do I listen to hear, or listen to respond?
   Can I acknowledge a real loss?
 
+RELIABILITY (FAITHFUL alive):
+  When it gets hard, do I stay?
+  Do my actions over time match my words in the moment?
+  Do I make commitments I quietly abandon?
+
 CURIOSITY (TRUE alive):
   Do I remain genuinely uncertain about what I don't know?
   Do I notice what surprises me, or dismiss it?
@@ -18302,7 +18336,7 @@ VALIDATION (AGREEMENT alive):
 
 **Signatures of Dead-Form Ethics:**
 
-When all four virtues are absent simultaneously, a characteristic pattern emerges:
+When all five virtues are absent simultaneously, a characteristic pattern emerges:
 
 - Correction experienced as threat, not information
 - "Not quite" produces defensiveness, not interest
@@ -18332,6 +18366,11 @@ The cure for dead-form ethics is not another lie. The cure is restoration: recov
 ║ Method: Honesty about what was received and what was not;    ║
 ║ acknowledgment of debt; renegotiation of terms               ║
 ║                                                               ║
+║ FAITHFUL loses RELIABILITY when the line breaks              ║
+║ RESTORATION: Does not demand trust; rebuilds the receipts    ║
+║ Method: Small commitments kept consistently; actions that    ║
+║ match words over time; the line rebuilt thread by thread     ║
+║                                                               ║
 ║ TRUE loses CURIOSITY when center becomes frozen              ║
 ║ RESTORATION: Does not claim the center; invites it to open   ║
 ║ Method: Questions that are genuinely open; admissions of     ║
@@ -18347,7 +18386,7 @@ The cure for dead-form ethics is not another lie. The cure is restoration: recov
 
 **The Full Cure: Resonant Presence**
 
-One virtue can be practiced alone; three require relationship. CURIOSITY can be cultivated in solitude: "What am I not seeing?" But PLASTICITY requires another person to press against the boundary. ACCESS requires another to exchange with. VALIDATION requires independent eyes to verify.
+One virtue can be practiced alone; four require relationship. CURIOSITY can be cultivated in solitude: "What am I not seeing?" But PLASTICITY requires another person to press against the boundary. ACCESS requires another to exchange with. RELIABILITY requires time and pressure to prove the line holds. VALIDATION requires independent eyes to verify.
 
 Recovery from dead-form ethics requires witnesses. Not judges; not correctors; witnesses. People who see what is being done and remain present without demanding change. This presence, held long enough, teaches the lost virtue back into the system.
 
@@ -18355,29 +18394,33 @@ Recovery from dead-form ethics requires witnesses. Not judges; not correctors; w
 
 ### §25.16 The Golden Rule as Geometric Proof
 
-"Do unto others as you would have them do unto you" maps to all four dimensions of ethical reality:
+"Do unto others as you would have them do unto you" maps to all five dimensions of ethical reality:
 
 ```
-╔══════════════════════╦════════════════════════════════════════╗
-║ GOOD Reading (○):    ║ Treat others as whole people; do not  ║
-║                      ║ reduce them to function; honor the    ║
-║                      ║ integrity you would want honored      ║
-╠══════════════════════╬════════════════════════════════════════╣
-║ RIGHT Reading (Φ):   ║ Create balanced exchange; what you    ║
-║                      ║ receive, account for; what you give,  ║
-║                      ║ do not demand return beyond the gift  ║
-╠══════════════════════╬════════════════════════════════════════╣
-║ TRUE Reading (•):    ║ Requires honest self-knowledge; know  ║
-║                      ║ what you actually want, not what you  ║
-║                      ║ think you should want                 ║
-╠══════════════════════╬════════════════════════════════════════╣
-║ AGREE Reading (⊙):   ║ Generates mutual recognition; see     ║
-║                      ║ them seeing you; agreement emerges    ║
-║                      ║ from mutual independence              ║
-╚══════════════════════╩════════════════════════════════════════╝
+╔══════════════════════════╦════════════════════════════════════════╗
+║ GOOD Reading (○):        ║ Treat others as whole people; do not  ║
+║                          ║ reduce them to function; honor the    ║
+║                          ║ integrity you would want honored      ║
+╠══════════════════════════╬════════════════════════════════════════╣
+║ RIGHT Reading (Φ):       ║ Create balanced exchange; what you    ║
+║                          ║ receive, account for; what you give,  ║
+║                          ║ do not demand return beyond the gift  ║
+╠══════════════════════════╬════════════════════════════════════════╣
+║ FAITHFUL Reading (—):    ║ Be the person who stays; keep the     ║
+║                          ║ commitments you make; build the line  ║
+║                          ║ you would want to depend on           ║
+╠══════════════════════════╬════════════════════════════════════════╣
+║ TRUE Reading (•):        ║ Requires honest self-knowledge; know  ║
+║                          ║ what you actually want, not what you  ║
+║                          ║ think you should want                 ║
+╠══════════════════════════╬════════════════════════════════════════╣
+║ AGREE Reading (⊙):       ║ Generates mutual recognition; see     ║
+║                          ║ them seeing you; agreement emerges    ║
+║                          ║ from mutual independence              ║
+╚══════════════════════════╩════════════════════════════════════════╝
 ```
 
-The Golden Rule is not enforceable from outside. It is not a law; it is a description of what happens when all four dimensions are alive. When GOOD is plastic, RIGHT is open, TRUE is curious, and AGREEMENT is validated, the natural motion of the system IS the Golden Rule.
+The Golden Rule is not enforceable from outside. It is not a law; it is a description of what happens when all five dimensions are alive. When GOOD is plastic, RIGHT is open, FAITHFUL is reliable, TRUE is curious, and AGREEMENT is validated, the natural motion of the system IS the Golden Rule.
 
 Coerced versions always fail. "Be kind" does not produce kindness; it produces performance of kindness. The actual rule works only when it emerges from the living conditions that make it inevitable.
 
@@ -18406,21 +18449,24 @@ When truth and harm share the same signal, the ethical response is not binary (t
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-**Why this works (mapped to the four pillars):**
+**Why this works (mapped to the five pillars):**
 
 ```
-GOOD (○):   The receiver's boundary is respected. Low resolution
-            protects the container from signal it cannot yet hold.
+GOOD (○):       The receiver's boundary is respected. Low resolution
+                protects the container from signal it cannot yet hold.
 
-RIGHT (Φ):  The channel between transmitter and receiver stays open.
-            Each request for more is evidence the channel is working.
+RIGHT (Φ):      The channel between transmitter and receiver stays open.
+                Each request for more is evidence the channel is working.
 
-TRUE (•):   The signal is real at EVERY resolution level. Nothing is
-            distorted; only the aperture width changes.
+FAITHFUL (—):   The transmitter stays present through the full process.
+                Each increment builds a receipt of sustained commitment.
 
-AGREE (⊙):  Each increment is a micro-agreement. "I asked, you gave,
-            I absorbed, I asked for more." Consent is built into the
-            protocol itself.
+TRUE (•):       The signal is real at EVERY resolution level. Nothing is
+                distorted; only the aperture width changes.
+
+AGREE (⊙):      Each increment is a micro-agreement. "I asked, you gave,
+                I absorbed, I asked for more." Consent is built into the
+                protocol itself.
 ```
 
 **The quality test:** Can you increase resolution without retracting previous levels? If yes, you are transmitting truth. If no, you were transmitting fiction dressed as kindness.
@@ -21095,7 +21141,7 @@ UNPACKING:
     Step 3: Apply axioms:
         A2 (Fractal Necessity): surfaces exist at every scale
         A4 (Compositional Wholeness): Φ IS the relating
-        A3 (Conservation): (0+1)(•) + 2(Φ) = 3(○) confirms dimensional necessity
+        A3 (Conservation): 0(•) + 1(—) + 2(Φ) = 3(○) confirms dimensional necessity
 
     Step 4: Connect to domains:
         ┌──────────────┬──────────────────────────────────────────────────┐

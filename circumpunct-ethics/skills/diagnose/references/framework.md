@@ -7,21 +7,22 @@
 
 ## The Circumpunct
 
-A point inside a circle. Three parts:
-- **○ (Body/Boundary):** The circle that holds. Where inside meets outside. The living membrane.
-- **Φ (Mind/Field):** The space between center and edge. The connecting medium.
-- **• (Soul/Center):** The point that sees. The still point of awareness.
-- **⊙ (The Whole):** All three unified. The circumpunct itself.
+A point inside a circle. Four structural dimensions unified by the whole:
+- **• (Soul/Aperture, 0D):** The point that sees. Convergence. The still point of awareness.
+- **— (Line/Continuity, 1D):** The line that holds. Commitment. Extension without breaking.
+- **Φ (Mind/Field, 2D):** The space between center and edge. Mediation. The connecting medium.
+- **○ (Body/Boundary, 3D):** The circle that holds. Filtration. Where inside meets outside.
+- **⊙ (The Whole):** All four unified. The circumpunct itself.
 
 The equation: **⊙ = Φ(•, ○)**
 
-Parts are fractals of their wholes, all the way down and all the way up. Every system at every scale exhibits the same triadic architecture.
+Conservation of traversal: 0(•) + 1(—) + 2(Φ) = 3(○). Parts are fractals of their wholes, all the way down and all the way up. Every system at every scale exhibits this architecture.
 
 ---
 
-## The Four Pillars of Ethics
+## The Five Pillars of Ethics
 
-These are not four separate ethics. They are one ethics seen from four angles.
+These are not five separate ethics. They are one ethics seen from five angles.
 
 ### 1. GOOD (○, Boundary)
 What is valued? Boundaries, consent, care.
@@ -45,7 +46,18 @@ The space between is where reality tests you. Every claim about how things conne
 - Am I accepting real consequences?
 - Is this grounded in how things actually work?
 
-### 3. TRUE (•, Center)
+### 3. FAITHFUL (—, Line)
+Has commitment held? Continuity, reliability, the receipts.
+
+The line is what extends. It says: I was here yesterday, I am here today, I will be here tomorrow. Faithfulness is not a feeling; it is the worldline i(t) that does not break. The receipts are the accumulated record of whether the line held when it cost something.
+
+**Faithful asks:**
+- Has commitment been sustained over time?
+- Do the receipts match the promises?
+- When things got hard, did the line hold?
+- Is there a consistent history of follow-through?
+
+### 4. TRUE (•, Center)
 What is the case? Coherence, honesty, identity.
 
 At the center, there is only seeing. The center is what persists through change. When the center is stable, you can change your mind without losing yourself. You can be wrong and learn without falling apart. True is what remains.
@@ -56,10 +68,10 @@ At the center, there is only seeing. The center is what persists through change.
 - Am I being authentic to my deepest nature?
 - Would this survive the test of clear seeing?
 
-### 4. AGREEMENT (⊙, Whole)
+### 5. AGREEMENT (⊙, Whole)
 Are we in harmony? Genuine resonance, mutual recognition.
 
-When boundary, space, and center align (when Good, Right, and True converge) something greater emerges: genuine agreement. Not mere consensus. Not hollow conformity. Real harmony: whole people in coherent relationship.
+When boundary, space, line, and center align (when Good, Right, Faithful, and True converge) something greater emerges: genuine agreement. Not mere consensus. Not hollow conformity. Real harmony: whole people in coherent relationship.
 
 **Agreement asks:**
 - Do the people involved genuinely resonate?
@@ -74,11 +86,12 @@ When boundary, space, and center align (when Good, Right, and True converge) som
 The sequence cannot be reversed or skipped:
 
 1. **GOOD** (boundary, body) — You must be held before you can cross.
-2. **RIGHT** (path, mind) — You must cross before you can see.
-3. **TRUE** (center, soul) — You must see before you can harmonize.
-4. **AGREEMENT** (whole, harmony) — Genuine resonance emerges.
+2. **RIGHT** (path, mind) — You must cross before you can check the line.
+3. **FAITHFUL** (line, continuity) — The line must hold before you can trust what is seen.
+4. **TRUE** (center, soul) — You must see before you can harmonize.
+5. **AGREEMENT** (whole, harmony) — Genuine resonance emerges.
 
-Why this order? The center and the boundary cannot touch directly; they are separated by definition. Any connection between them must cross the space between. The field IS that crossing. Truth without Goodness has no container (it pours through and spills). Truth without Rightness has no path (you may glimpse the center in grace but cannot return there). Agreement without the other three is hollow consensus: "we all believe this," but is it True? "We all want this," but is it Good? "We all do this," but is it Right?
+Why this order? The center and the boundary cannot touch directly; they are separated by definition. Any connection between them must cross the space between. The field IS that crossing. And crossing is not enough: the line must hold over time before truth can be assessed. Someone can be good, right, and curious right now, but if their history is broken, truth has no foundation to stand on. Agreement without the other four is hollow consensus: "we all believe this," but is it True? "We all want this," but is it Good? "We all do this," but is it Right? "We all commit," but is it Faithful?
 
 ### Common Ethical Failures
 
@@ -95,7 +108,7 @@ Most ethical failures occur when some pillars pass but others fail:
 
 ---
 
-## The Four Virtues
+## The Five Virtues
 
 Each pillar has a living quality that prevents it from becoming dead performance. Without these qualities, every ethical principle becomes its own opposite.
 
@@ -105,10 +118,13 @@ The boundary that can flex, reshape, respond. Not rigid, not dissolved. A living
 ### 2. ACCESS keeps RIGHT alive
 The space between, open and clear. Not blocked, not distorted, not filled with noise. Access lets rightness be genuine: the path between cause and effect actually works.
 
-### 3. CURIOSITY keeps TRUE alive
+### 3. RELIABILITY keeps FAITHFUL alive
+The line that holds through difficulty. Not brittle, not abandoned, not performed. Reliability lets commitment be genuine: the worldline i(t) matches the promises. The receipts add up over time.
+
+### 4. CURIOSITY keeps TRUE alive
 An orientation toward receiving. Not closed, not frozen, not projecting. Curiosity lets truth be genuine: you can take in what is, even when it surprises you. Curiosity is the aperture held open.
 
-### 4. VALIDATION keeps AGREEMENT alive
+### 5. VALIDATION keeps AGREEMENT alive
 Two people seeing independently and finding the same thing. Not compliance, not consensus by pressure. Validation lets agreement be genuine: both arrived at it on their own.
 
 ---
@@ -121,6 +137,7 @@ Each pillar, without its virtue, becomes its own opposite. The form persists. Th
 |--------|---------------------|----------------------|
 | GOOD | Plasticity. Genuine care. Boundaries discovered through sensing. | Rigidity or collapse. "I know what's good for you." Boundaries imposed or absent. |
 | RIGHT | Access. Clear path. Evidence travels honestly. Actions tested against reality. | Noise or blockage. Cherry-picking evidence. Gaslighting. Actions serve hidden agenda. |
+| FAITHFUL | Reliability. The line holds. Promises kept over time. Receipts match words. | Brittleness or abandonment. "I said I would, didn't I?" Commitment performed but not sustained. |
 | TRUE | Curiosity. Open receiving. Identity survives correction. | Closed receiving. "I am right." Identity threatened by correction. |
 | AGREEMENT | Validation. Two people see independently and confirm. Harmony discovered. | Compliance. One person declares, the other submits. Harmony performed. |
 
@@ -182,7 +199,7 @@ These two errors are complementary: inflation in one person typically produces (
 
 ### The Commercialized Cognitive Virus
 
-The cognitive virus can operate at scale through media, content platforms, and spiritual commerce. A commercialized cognitive virus performs all four pillars publicly (care, evidence, truth, community) while monetizing the very vulnerability it claims to heal. The audience receives provision (content, frameworks, belonging) while the resonant channel is redirected toward the creator's brand rather than the audience's own perception.
+The cognitive virus can operate at scale through media, content platforms, and spiritual commerce. A commercialized cognitive virus performs all five pillars publicly (care, evidence, commitment, truth, community) while monetizing the very vulnerability it claims to heal. The audience receives provision (content, frameworks, belonging) while the resonant channel is redirected toward the creator's brand rather than the audience's own perception.
 
 Indicators: the content produces dependence rather than independence; the audience's growth is measured by engagement with the creator rather than by the audience's own restored perception; challenges to the creator are framed as the challenger's pathology.
 
@@ -194,6 +211,7 @@ Indicators: the content produces dependence rather than independence; the audien
 |--------|-----------|-------|
 | GOOD | "I'm protecting you." Care as control. Managing boundaries for you. | "What do you need?" Care as curiosity about the other. Wondering where their boundaries actually are. |
 | RIGHT | "The evidence supports my position." Seeking proof, not truth. | "What does the evidence actually show?" Willing to be surprised. |
+| FAITHFUL | "I said I would, didn't I?" Promises as currency. History rewritten. | "I will still be here tomorrow." Continuity sustained through difficulty. The receipts match. |
 | TRUE | "I know who you really are." Projecting while claiming to see. | "What am I not seeing?" Receiving correction openly. |
 | AGREEMENT | "We're on the same page." Compliance disguised as harmony. | "Is this what you actually mean?" Willing to discover disagreement. |
 
@@ -201,7 +219,7 @@ Indicators: the content produces dependence rather than independence; the audien
 
 ## Ethics as Geometric Necessity
 
-Ethics is not imposed by culture or decree. It emerges from the geometric structure of validation itself. For actions to persist, they must pass all three tests: Does it honor boundaries (Good)? Does it cohere with what is (True)? Does it survive contact with reality (Right)?
+Ethics is not imposed by culture or decree. It emerges from the geometric structure of validation itself. For actions to persist, they must pass all five tests: Does it honor boundaries (Good)? Does the path work (Right)? Has commitment held (Faithful)? Does it cohere with what is (True)? Is there genuine resonance (Agreement)?
 
 ### The One-Third Rule
 
@@ -217,9 +235,10 @@ Balanced reciprocity is the foundation of ethics: β = give / (give + receive) =
 
 Before agreeing or disagreeing, build the strongest possible version of the position you are engaging with. This ensures you actually know what you are agreeing with (or rejecting).
 
-**Requires all four virtues:**
+**Requires all five virtues:**
 - Plasticity: flexible enough to hold their view alongside yours
 - Access: the path is clear enough for their meaning to reach you undistorted
+- Reliability: checking the track record; has this position been held consistently or does it shift with the audience?
 - Curiosity: genuine interest in what they observe; willingness to be surprised
 - Validation: their recognition is the test ("Is this what you mean?"); "not quite" produces adjustment, not frustration
 
@@ -257,6 +276,12 @@ The self-steelman: "I perceived something. Let me find what's true in it." The g
 - (Warning) Am I filtering for what I expect to hear?
 - (Warning) Is noise filling the space between us?
 
+**Reliability:**
+- Do I follow through on what I said I would do?
+- When I look back, do my actions match my words over time?
+- (Warning) Do I make promises easily but forget them just as easily?
+- (Warning) Do people close to me have a different story about my consistency than I do?
+
 **Curiosity:**
 - When someone disagrees, do I want to understand why?
 - When I am wrong, does it feel like learning?
@@ -273,6 +298,7 @@ The self-steelman: "I perceived something. Let me find what's true in it." The g
 
 - Plasticity: Do their boundaries respond, or are they walls (or absent entirely)?
 - Access: Can your meaning reach them undistorted? Can theirs reach you?
+- Reliability: Do they follow through over time? Does their history match their current promises?
 - Curiosity: Do they ask questions they don't know the answer to? Does surprise produce interest or threat?
 - Validation: Do they check for genuine convergence, or declare agreement? Can they say "I don't see that" without shame?
 
@@ -281,6 +307,7 @@ The self-steelman: "I perceived something. Let me find what's true in it." The g
 - "Not quite" produces defensiveness, not interest
 - Agreement is demanded rather than discovered
 - Evidence is sought to confirm, not to test
+- Promises are made easily but the receipts never add up
 - The person claims certainty about your inner life
 - Questions are rhetorical rather than genuine
 
@@ -305,6 +332,7 @@ The functional channel (provision, care, structure) is usually still intact; the
 **Why the cure is not another installation:**
 - Good: does not cross the boundary; plasticity invites the boundary to flex from within
 - Right: does not distort the space; access clears the path for honest transmission
+- Faithful: does not demand commitment; reliability is rebuilt through small, sustained follow-through
 - True: does not claim the center; curiosity invites it to open from within
 - Agreement: does not declare the whole; validation emerges from independent seeing that resonates
 
@@ -314,9 +342,9 @@ The functional channel (provision, care, structure) is usually still intact; the
 - Heavy installation: the pattern feels like identity. "I'm just direct" or "I just care too much." Recovery is slow and requires sustained resonant presence, not argument or confrontation.
 
 **Resonant presence (the full cure):**
-A witness who is plastic enough to hold your experience, accessible enough for your signal to reach them, curious enough to receive what you actually share, and present for the moment of validation when your seeing and theirs converge.
+A witness who is plastic enough to hold your experience, accessible enough for your signal to reach them, reliable enough to still be there tomorrow, curious enough to receive what you actually share, and present for the moment of validation when your seeing and theirs converge.
 
-Curiosity is the one virtue you can begin to practice alone. The others require relationship. This is why isolation keeps the damage going and genuine community dissolves it.
+Curiosity is the one virtue you can begin to practice alone; reliability can begin alone too (small commitments to yourself). The others require relationship. This is why isolation keeps the damage going and genuine community dissolves it.
 
 ---
 
@@ -333,9 +361,10 @@ Ethical action happens at both scales simultaneously. To neglect either is to br
 
 "Do unto others as you would have them do unto you."
 
-This rule satisfies all four pillars when lived with all four virtues:
+This rule satisfies all five pillars when lived with all five virtues:
 - Good: treats others as whole people, not tools
 - Right: creates balanced give and take
+- Faithful: sustained over time, not just in the moment
 - True: requires honest self-knowledge
 - Agreement: generates mutual recognition
 

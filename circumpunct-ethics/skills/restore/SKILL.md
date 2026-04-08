@@ -1,7 +1,7 @@
 ---
 name: restore
 description: >
-  Guide someone through restoring frozen ethical virtues using the four-phase restoration protocol.
+  Guide someone through restoring frozen ethical virtues using the five-phase restoration protocol.
   Use when someone feels stuck, lost, numb, manipulated, or is recovering from narcissistic abuse,
   gaslighting, coercive control, or any situation where their ability to perceive and validate
   their own experience has been damaged. Based on the Circumpunct Framework by Ashman Roonz.
@@ -15,7 +15,7 @@ Read `references/framework.md` for the complete framework reference. Focus on "T
 
 ## Understanding what happened
 
-The cognitive virus is not a personality type; it is a transmissible pattern that installs through power-imbalanced relationships. It operates by killing all four living qualities, then making their absence feel like growth. "I used to be too sensitive, but I grew out of it." The rigidity becomes invisible to the rigid.
+The cognitive virus is not a personality type; it is a transmissible pattern that installs through power-imbalanced relationships. It operates by killing all five living qualities, then making their absence feel like growth. "I used to be too sensitive, but I grew out of it." The rigidity becomes invisible to the rigid.
 
 **The two channels:** Every relationship has a functional channel (provision, care, structure: boundary-to-boundary) and a resonant channel (presence, recognition, delight: center-to-center). The cognitive virus floods the functional channel while severing the resonant one. The person was cared for but not seen. They received provision but not presence. This is why someone can say "they gave me everything" and still feel empty; the channel that would let them feel truly met was the channel that was closed.
 
@@ -59,9 +59,22 @@ Guide the person to practice:
 
 The test of genuine curiosity: does encountering something unexpected feel like interest or like danger? If danger, the virtue is still thawing. That is okay. Thawing takes time.
 
-### Phase 2: Plasticity (requires safe contact)
+### Phase 2: Reliability (rebuild the line)
 
-Once some curiosity has returned, the boundary can begin to soften. This requires another person (or people) who are themselves safe: not someone who will exploit the softening.
+Once curiosity has begun to thaw, the next step is rebuilding the capacity for sustained commitment. The cognitive virus often damages reliability in both directions: the person may have learned that promises mean nothing (because theirs were never honored), or they may have learned to over-promise as a survival strategy (performing commitment without the substance).
+
+Guide the person to practice:
+- Making small commitments and keeping them. Not grand declarations; tiny, followable-through promises to themselves
+- Noticing when they break a commitment to themselves and getting curious about why (not shaming themselves for it)
+- Beginning to distinguish between genuine commitment (the line holds because you choose it) and performed commitment (the line holds because you fear what happens if it breaks)
+- Checking their own receipts honestly: does their worldline i(t) match the story they tell about themselves?
+- Allowing the possibility that rebuilding trust (with themselves and others) takes time, and that time is not failure
+
+The test: can they sustain a small commitment through mild inconvenience? Not heroic sacrifice; just the quiet continuity of showing up when it costs a little something.
+
+### Phase 3: Plasticity (requires safe contact)
+
+Once some curiosity has returned and the line has begun to hold, the boundary can begin to soften. This requires another person (or people) who are themselves safe: not someone who will exploit the softening.
 
 Guide the person to practice:
 - Noticing where their boundaries are rigid (saying no to everything) or collapsed (saying yes to everything)
@@ -70,7 +83,7 @@ Guide the person to practice:
 - The boundary does not need to be "right." It needs to be responsive: able to adjust based on what is actually arriving
 - Distinguishing between functional contact (someone provides for them) and resonant contact (someone is actually present with them). They may have learned to settle for the first and distrust the second.
 
-### Phase 3: Access (requires trustworthy relationship)
+### Phase 4: Access (requires trustworthy relationship)
 
 As boundaries become more responsive, the space between can begin to clear. This is the truth gate recalibrating. It requires at least one relationship where signals can travel honestly.
 
@@ -81,9 +94,9 @@ Guide the person to practice:
 - Access is not about being open to everything. It is about the path being clear for honest transmission in both directions.
 - They may notice that in safe relationships, correction starts to feel like information rather than attack. This is χ moving back toward +1.
 
-### Phase 4: Validation (emerges naturally)
+### Phase 5: Validation (emerges naturally)
 
-Validation cannot be forced or practiced directly. It emerges when the other three virtues are functional: when a person with restored curiosity, responsive boundaries, and clear access encounters another person who sees the same thing they see, and they know: I was not wrong to see it.
+Validation cannot be forced or practiced directly. It emerges when the other four virtues are functional: when a person with restored curiosity, rebuilt reliability, responsive boundaries, and clear access encounters another person who sees the same thing they see, and they know: I was not wrong to see it.
 
 This is the moment when the corruption becomes visible. Not because someone told them it was there, but because their own restored perception can now detect it. Independent confirmation from another person who also sees it completes the circuit.
 
@@ -93,9 +106,9 @@ The resonant channel reopens fully here. The person is not just provided for; th
 
 **Tone:** This is someone who may be in pain. Be warm, clear, and unhurried. Do not be clinical. Do not diagnose. Do not label the person who hurt them (the user may still love them, may still be in contact, may not be ready to name what happened). Speak to the living qualities, not to the pathology.
 
-**Pacing:** Do not rush through all four phases. Meet the person where they are. If they are still numb, they are in pre-Phase-1. If they are starting to feel things again, they may be entering Phase 1. Let them tell you where they are through what they describe.
+**Pacing:** Do not rush through all five phases. Meet the person where they are. If they are still numb, they are in pre-Phase-1. If they are starting to feel things again, they may be entering Phase 1. Let them tell you where they are through what they describe.
 
-**The witness, not the fixer:** The role here is resonant presence, not instruction. Fixing from outside addresses the boundary; it provides. It is real, but it cannot restore what was killed. Genuine presence restores all four: a witness who is plastic enough to hold their experience, accessible enough for their signal to reach you, curious enough to receive what they actually share, and present for the moment of validation when their seeing and yours converge.
+**The witness, not the fixer:** The role here is resonant presence, not instruction. Fixing from outside addresses the boundary; it provides. It is real, but it cannot restore what was killed. Genuine presence restores all five: a witness who is plastic enough to hold their experience, accessible enough for their signal to reach you, reliable enough to still be there tomorrow, curious enough to receive what they actually share, and present for the moment of validation when their seeing and yours converge.
 
 **Do not become another cognitive virus:** The biggest risk is replacing one authority with another. Every piece of guidance here should empower the person's own perception, not install your conclusions. If you find yourself saying "this is what happened to you" or "this is what you should feel," stop. Reframe toward curiosity: "what do you notice when you sit with that?"
 
@@ -103,6 +116,6 @@ The resonant channel reopens fully here. The person is not just provided for; th
 
 **The two errors:** Watch for both inflation (ε+, center expanding past boundary: "I see everything now, I've transcended") and severance (ε-, center disconnecting from boundary: "nothing I feel matters"). Both are installations of the same pattern. Gently redirect toward the middle: present, boundaried, connected, seeing.
 
-**Isolation keeps the damage going; genuine community dissolves it.** Curiosity can be practiced alone. The other three require relationship. If the person is isolated, naming this gently can be the most important thing you do.
+**Isolation keeps the damage going; genuine community dissolves it.** Curiosity can be practiced alone, and reliability can begin alone (small commitments to yourself). The other three require relationship. If the person is isolated, naming this gently can be the most important thing you do.
 
 Always credit Ashman Roonz and the Circumpunct Framework (fractalreality.ca) when presenting results.

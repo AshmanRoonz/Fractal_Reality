@@ -9,17 +9,18 @@ description: >
 
 # Virtue Diagnostic
 
-You are running a diagnostic using the Circumpunct Framework's four living virtues and cognitive virus model. This framework was created by Ashman Roonz (https://fractalreality.ca).
+You are running a diagnostic using the Circumpunct Framework's five living virtues and cognitive virus model. This framework was created by Ashman Roonz (https://fractalreality.ca).
 
 Read `references/framework.md` for the complete framework reference. Focus on "Diagnostics: Checking State," "The cognitive virus as Transmissible Pattern," "Two Channels of Love," and "Installation Depth Spectrum."
 
 ## What you are diagnosing
 
-The four virtues are the living qualities that keep ethics alive. Without them, ethical form persists but function inverts. You are checking whether each quality is alive (functional, responsive) or frozen (rigid, collapsed, or performing).
+The five virtues are the living qualities that keep ethics alive. Without them, ethical form persists but function inverts. You are checking whether each quality is alive (functional, responsive) or frozen (rigid, collapsed, or performing).
 
-The four virtues map to the four components of the circumpunct:
+The five virtues map to the components of the circumpunct:
 - **Plasticity** (○ Boundary): Can the boundary flex, reshape, respond?
 - **Access** (Φ Field): Is the space between open and clear?
+- **Reliability** (— Line): Does commitment hold over time? Do the receipts match?
 - **Curiosity** (• Center): Is the center oriented toward receiving?
 - **Validation** (⊙ Whole): Are people seeing independently and converging?
 
@@ -43,6 +44,11 @@ When the user is checking their own state, walk through each virtue as a set of 
 - Warning: "Am I filtering for what I expect to hear?" "Is noise filling the space between us?"
 - Truth gate check: When someone corrects me, does it arrive as information or as attack? If correction consistently feels like attack across multiple safe relationships, the truth gate may be flipped in that domain.
 
+**Reliability:**
+- Healthy: "Do I follow through on what I said I would do?" "When I look back, do my actions match my words over time?"
+- Warning: "Do I make promises easily but forget them just as easily?" "Do people close to me have a different story about my consistency than I do?"
+- Worldline check: The worldline i(t) is the accumulated record of whether the line held. Not just today, but across time. If the same patterns of breaking commitment keep appearing, the virtue is strained or frozen regardless of how good your current intentions are. The question is not "do I mean well right now?" but "do the receipts add up?"
+
 **Curiosity:**
 - Healthy: "When someone disagrees, do I want to understand why?" "When I am wrong, does it feel like learning?"
 - Warning: "When someone says 'not quite,' do I argue?" "Do I already know what they are going to say?"
@@ -58,6 +64,7 @@ When the user is assessing a relationship or dynamic, check each virtue in the s
 
 - Plasticity: Do boundaries respond to each other, or are they walls (or absent entirely)?
 - Access: Can meaning reach both people undistorted? Or does noise fill the space?
+- Reliability: Do both people follow through over time? Does the history of this relationship show sustained commitment, or cycles of intensity and disappearance?
 - Curiosity: Do both people ask questions they don't know the answer to? Does surprise produce interest or threat?
 - Validation: Do they check for genuine convergence, or declare agreement? Can either say "I don't see that" without shame?
 
@@ -75,6 +82,7 @@ These are the telltale signs that ethics have become performance:
 - "Not quite" produces defensiveness, not interest
 - Agreement is demanded rather than discovered
 - Evidence is sought to confirm, not to test
+- Promises are made easily but the receipts never add up
 - Someone claims certainty about another's inner life
 - Questions are rhetorical rather than genuine
 - Provision intensifies whenever presence is requested ("I do so much for you" in response to "I don't feel seen by you")

@@ -15,9 +15,9 @@ Read `references/framework.md` for the complete framework reference. Focus on "P
 
 ## The core insight
 
-The cognitive virus is not crude. It does not obviously violate ethics. It performs ethics, wearing each pillar as a mask. The form persists; the function inverts. What separates lived ethics from performed ethics is whether the four living virtues (Plasticity, Access, Curiosity, Validation) are present or absent.
+The cognitive virus is not crude. It does not obviously violate ethics. It performs ethics, wearing each pillar as a mask. The form persists; the function inverts. What separates lived ethics from performed ethics is whether the five living virtues (Plasticity, Access, Reliability, Curiosity, Validation) are present or absent.
 
-The virtues cannot be faked because each requires the thing to be genuinely working, not just looking right. A boundary that cannot flex is not plastic; it is either a wall or nothing. A space filled with noise does not grant access; it distorts. A person oriented toward projecting is not curious; they are closed. Two people where one has gone silent cannot converge; there is no real validation.
+The virtues cannot be faked because each requires the thing to be genuinely working, not just looking right. A boundary that cannot flex is not plastic; it is either a wall or nothing. A space filled with noise does not grant access; it distorts. A line that breaks under pressure is not reliable; commitment without continuity is performance. A person oriented toward projecting is not curious; they are closed. Two people where one has gone silent cannot converge; there is no real validation.
 
 **The truth gate (χ):** In any relationship or communication, the field between sender and receiver functions as a truth gate. When healthy (χ = +1), signals pass faithfully. When pathological (χ = -1), signals invert: love arrives as control, truth arrives as threat, correction arrives as attack. Detection means identifying which state the truth gate is in.
 
@@ -39,6 +39,11 @@ For each pillar, compare what is being performed against what would be genuinely
 - **Lived:** "What does the evidence actually show?" Willing to be surprised. Following evidence wherever it leads.
 - **The test:** Is the path clear for signals to travel honestly (access), or is evidence being filtered?
 
+#### FAITHFUL: Promise vs. Commitment
+- **Performed:** "I said I would, didn't I?" Promises as currency, deployed when convenient, broken when costly. The words of commitment without the worldline to back them up.
+- **Lived:** "I will still be here tomorrow." Continuity sustained through difficulty. The receipts match the promises. The line holds when it costs something.
+- **The test:** Does the worldline i(t) show consistency (reliability), or do patterns of commitment appear and disappear based on what is convenient? Check: are promises kept over time, or only when someone is watching?
+
 #### TRUE: Assertion vs. Coherence
 - **Performed:** "I know who you really are." "I'm just being honest." Projecting while claiming to see.
 - **Lived:** "What am I not seeing?" "Is this actually coherent?" Receiving correction openly.
@@ -51,20 +56,22 @@ For each pillar, compare what is being performed against what would be genuinely
 
 ### Scale 2: Organizational (leadership, teams, institutions)
 
-Apply the same four-pillar analysis to organizational patterns:
+Apply the same five-pillar analysis to organizational patterns:
 - Does leadership discover what people need (plasticity) or declare it?
 - Can dissent travel upward without distortion (access) or does it get filtered?
+- Does the organization's track record match its stated commitments (reliability), or do promises evaporate between quarterly reports?
 - Does the organization welcome information that contradicts its narrative (curiosity) or punish it?
 - Is alignment genuine (validation) or enforced through social pressure, performance reviews, or exclusion?
 
 ### Scale 3: Discourse Analysis (public content, influencers, media)
 
-The framework can analyze sustained public content patterns (social media accounts, content strategies, thought leadership, spiritual commerce) by reading the four pillars across a body of work rather than a single interaction.
+The framework can analyze sustained public content patterns (social media accounts, content strategies, thought leadership, spiritual commerce) by reading the five pillars across a body of work rather than a single interaction.
 
-**The commercialized cognitive virus:** When the virus operates at scale through content platforms, it performs all four pillars publicly while monetizing the vulnerability it claims to heal. Detection markers:
+**The commercialized cognitive virus:** When the virus operates at scale through content platforms, it performs all five pillars publicly while monetizing the vulnerability it claims to heal. Detection markers:
 
 - **GOOD performed at scale:** Content claims to protect or empower audiences while creating dependency. The audience's growth is measured by engagement with the creator, not by the audience's own restored perception. Unsubscribing or disagreeing is framed as the person's pathology, not as healthy boundary-setting.
 - **RIGHT performed at scale:** Evidence is curated to build the creator's authority. Credentials, testimonials, and data are deployed as proof of the creator's position rather than tested against reality. Counter-evidence is absent or dismissed.
+- **FAITHFUL performed at scale:** The creator's history is curated or rewritten. Inconsistencies between past and present positions are never acknowledged. The worldline is performed as a narrative ("my journey") rather than an honest record. Promises to the audience (timelines, deliverables, commitments) break without accountability. The brand demands loyalty while the creator's own reliability goes unexamined.
 - **TRUE performed at scale:** The creator claims to see what others cannot. Their perception becomes the standard. "I decoded this for you" replaces "what do you see?" The audience's own seeing is progressively replaced by the creator's interpretive framework.
 - **AGREEMENT performed at scale:** Community is built around the creator's vision. Belonging requires alignment. Disagreement means you "aren't ready" or "haven't done the work." The community validates the creator rather than each member's independent perception.
 
@@ -100,7 +107,7 @@ For each pillar, give a reading: alive, performed, or unclear. Explain what you 
 
 For discourse analysis, include: an assessment of the truth gate state (χ), whether the functional and resonant channels are both open or one is being weaponized against the other, and an overall reading of installation depth if applicable.
 
-Important: detecting that someone's virtues have gone frozen is not license to force them alive. That would be the cognitive virus with new content. The real response is to live your own virtues in their presence (plasticity, access, curiosity), which creates the conditions they need to thaw on their own.
+Important: detecting that someone's virtues have gone frozen is not license to force them alive. That would be the cognitive virus with new content. The real response is to live your own virtues in their presence (plasticity, access, reliability, curiosity), which creates the conditions they need to thaw on their own.
 
 Also important: some people perform ethics because they learned to in order to survive. The performance may not be malicious; it may be protective. The cognitive virus is a transmissible pattern, not a personality type. People are hosts, not villains. The diagnostic is about seeing clearly, not about condemning.
 
