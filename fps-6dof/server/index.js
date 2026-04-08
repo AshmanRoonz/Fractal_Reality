@@ -46,44 +46,7 @@ app.use(express.static(path.join(__dirname, '..')));
 // Colyseus server 0.17 returns flat: {name, sessionId, roomId, processId}
 // Colyseus client 0.16 expects nested: {room: {name, roomId, processId}, sessionId}
 
-const httpServer = http.createServer((req, res) => {
-  // For matchmake requests, intercept the response to adapt format
-  // Server 0.17 returns flat: {name, sessionId, roomId, processId}
-  // Client 0.16 expects nested: {room: {name, roomId, processId}, sessionId}
-  if (req.url && req.url.startsWith('/matchmake')) {
-    const originalEnd = res.end.bind(res);
-    const chunks = [];
-
-    res.write = function(chunk, encoding) {
-      if (chunk) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk, encoding));
-      return true;
-    };
-
-    res.end = function(chunk, encoding) {
-      if (chunk) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk, encoding));
-      const fullBody = Buffer.concat(chunks).toString('utf8');
-      try {
-        const data = JSON.parse(fullBody);
-        if (data && data.name && data.roomId && !data.room) {
-          const adapted = {
-            room: {
-              name: data.name,
-              roomId: data.roomId,
-              processId: data.processId || '',
-            },
-            sessionId: data.sessionId,
-          };
-          const out = JSON.stringify(adapted);
-          res.setHeader('Content-Length', Buffer.byteLength(out));
-          return originalEnd(out);
-        }
-      } catch(e) { /* not JSON, pass through */ }
-      return originalEnd(fullBody);
-    };
-  }
-  // Pass to Express
-  app(req, res);
-});
+const httpServer = http.createServer(app);
 
 const gameServer = new Server({
   transport: new WebSocketTransport({ server: httpServer }),

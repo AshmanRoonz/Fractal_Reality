@@ -19716,6 +19716,82 @@ The full octave sum (all 8 stations including 3.5D) is:
 
 The sequence A(d) contains exactly two perfect numbers: 6 at 1.5D and 28 at 3.5D. These are the two "turn" stations of the pump cycle: commitment (i² = -1) and recursion (i⁰ = +1). Perfect numbers are those equal to the sum of their proper divisors; at the turn stations, the accumulated traversal is self-contained. The only known even perfect numbers have the form 2^(p-1)(2^p - 1) where 2^p - 1 is prime; 6 = 2¹·3 and 28 = 2²·7. The primes involved are T = 3 and R = 7.
 
+#### The Meson Mass Law: The Field Regime
+
+Leptons and baryons live in the **traversal regime**: their masses grow as (1/α)^E(d), where E(d) is an exponent computed from the accumulated traversal function A(d). Mesons reveal a second regime.
+
+A baryon is a boundary-level composite: T = 3 quarks forming a color singlet via the full triad (○, 3D closure). A meson is a field-level composite: Φ = 2 constituents (quark-antiquark pair) bound via field pairing (Φ, 2D). The structural difference produces a different mass law.
+
+```
+    THE MESON MASS LAW:
+    
+    m_meson / m_e = F / α
+    
+    where F is a framework integer determined by the meson's
+    quantum numbers and structural role.
+    
+    The base mass quantum is m_e/α ≈ 70 MeV.
+    Every meson is an integer multiple of this quantum.
+```
+
+The law is multiplicative, not exponential. Mesons do not traverse the ladder; they vibrate within the field. The field mediates, and mediation is multiplication.
+
+**Light pseudo-scalar mesons (Goldstone sector):**
+
+```
+    PSEUDO-SCALAR MESONS (J = 0):
+    
+    π± :  F = Φ = 2         pred 140.05 MeV   meas 139.57 MeV   0.34%
+    K± :  F = R = 7         pred 490.18 MeV   meas 493.68 MeV   0.71%
+    η  :  F = SU(3) = 8     pred 560.20 MeV   meas 547.86 MeV   2.25%
+```
+
+The pion carries Φ units of field-mass: it IS the field quantum, the lightest possible meson, because the field dimension (2) is the smallest structural number. The kaon carries R units: it spans the full ladder via strangeness (a second-generation quantum number; R = the ladder's extent). The eta carries SU(3) units: it IS the flavor-singlet of the gauge group.
+
+**Vector mesons:**
+
+```
+    VECTOR MESONS (J = 1):
+    
+    ρ  :  F = A'(2.5) = 11  pred 770.28 MeV   meas 775.26 MeV   0.64%
+```
+
+The rho carries A'(2.5) = 11 units of field-mass: the derivative of the traversal at the emergence rung. Vector mesons (spin 1) use processual numbers (derivatives, half-integer-associated); pseudo-scalar mesons (spin 0) use structural numbers (integers). Spin maps to structural vs processual, exactly as integer and half-integer dimensions do.
+
+**Heavy mesons (charm and bottom sectors):**
+
+```
+    HEAVY MESONS:
+    
+    D± :  F = T³ = 27       pred 1890.68 MeV  meas 1869.66 MeV  1.12%
+    Ds :  F = A(3.5) = 28   pred 1960.71 MeV  meas 1968.35 MeV  0.39%
+    B± :  F = S+A'(2.5) = 75  pred 5252.0 MeV meas 5279.34 MeV  0.52%
+    Υ  :  F = 1/α − Φ       pred 9456.2 MeV   meas 9460.30 MeV  0.05%
+```
+
+The D meson carries T³ = 27 units: the generation cube (charm is the second-generation quark; T³ is the mass correction for generation 2, now appearing as the multiplicative factor). The D_s carries A(3.5) = 28 units: the recursion station, where charm meets strangeness at the octave boundary. The B meson carries S + A'(2.5) = 75 units: the total state space (64) plus the emergence derivative (11). The Upsilon carries (1/α − Φ) units: it sits at the ceiling of the multiplicative regime, where F approaches 1/α itself. Beyond this, the exponential regime takes over.
+
+**The two regimes and why they differ:**
+
+```
+    MASS REGIMES:
+    
+    TRAVERSAL (exponential):    m/m_e = (1/α)^E(d)
+        Leptons (point-like, •):    base from A' (derivative)
+        Baryons (closed, ○):        base from A (function)
+        These particles TRAVERSE the ladder.
+        
+    FIELD (multiplicative):     m/m_e = F/α
+        Mesons (paired, Φ):         F is a framework integer
+        These particles VIBRATE within the field.
+    
+    The field regime IS the traversal regime frozen at exponent ≈ 1.
+    The base mass quantum m_e/α ≈ 70 MeV is (1/α)^1 × m_e:
+    the traversal at the first station.
+```
+
+The three particle classes map to the three constraints: leptons to • (aperture, differentiation, exponential with A'), baryons to ○ (boundary, evaluation, exponential with A), mesons to Φ (field, multiplication, linear with F). Each constraint produces its own mass regime. The framework predicts not just the masses but the mathematical form of the mass law for each class.
+
 ### §27.8 Primes Are Made of Dimensions
 
 The structural dimensions of the circumpunct (1, 2, 3) are also the first integers. Two of them (2 and 3) are the first primes. The third (1) is the unit.

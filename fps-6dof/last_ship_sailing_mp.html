@@ -762,6 +762,7 @@ const net = {
   sessionId: null,    // our session ID from server
   connected: false,
   networkPlayers: [], // NetworkPlayer instances
+  lastServerState: null, // latest state_sync message from server
 
   // Input send rate limiting
   inputSendAccum: 0,
@@ -786,7 +787,31 @@ async function connectToServer() {
 
   try {
     net.client = new Colyseus.Client(url);
-    net.room = await net.client.joinOrCreate('match', { name: 'Player' });
+
+    // Manual matchmaking: Colyseus server 0.17 returns a flat response format
+    // that the 0.16 client doesn't understand. We do the HTTP POST ourselves
+    // and adapt the response before handing it to the client.
+    const httpUrl = url.replace('ws://', 'http://').replace('wss://', 'https://');
+    const matchRes = await fetch(httpUrl + '/matchmake/joinOrCreate/match', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: 'Player' }),
+    });
+    if (!matchRes.ok) throw new Error('Matchmaking failed: ' + matchRes.status);
+    const seatData = await matchRes.json();
+
+    // Adapt 0.17 flat format to 0.16 nested format if needed
+    let seatReservation;
+    if (seatData.room) {
+      seatReservation = seatData; // already in 0.16 format
+    } else {
+      seatReservation = {
+        room: { name: seatData.name, roomId: seatData.roomId, processId: seatData.processId || '' },
+        sessionId: seatData.sessionId,
+      };
+    }
+
+    net.room = await net.client.consumeSeatReservation(seatReservation);
     net.sessionId = net.room.sessionId;
     net.connected = true;
     net.active = true;
@@ -796,49 +821,14 @@ async function connectToServer() {
 
     const room = net.room;
 
-    // --- State change listeners ---
+    // --- Message-based state sync (bypasses schema version mismatch) ---
+    // Server broadcasts 'state_sync' every tick with full game state as raw JSON.
 
-    // Players added/removed
-    room.state.players.onAdd((playerState, sessionId) => {
-      console.log('[LSS] Player added:', sessionId);
-      if (sessionId === net.sessionId) return; // skip ourselves
-      updateLobbyPeers();
+    room.onMessage('state_sync', (data) => {
+      net.lastServerState = data;
     });
-
-    room.state.players.onRemove((playerState, sessionId) => {
-      console.log('[LSS] Player removed:', sessionId);
-      // Remove their NetworkPlayer
-      const idx = net.networkPlayers.findIndex(np => np.sessionId === sessionId);
-      if (idx >= 0) {
-        net.networkPlayers[idx].destroy();
-        const eidx = game.entities.indexOf(net.networkPlayers[idx]);
-        if (eidx >= 0) game.entities.splice(eidx, 1);
-        net.networkPlayers.splice(idx, 1);
-      }
-      updateLobbyPeers();
-    });
-
-    // Bots added/removed (server-controlled)
-    room.state.bots.onAdd((botState, botId) => {
-      console.log('[LSS] Bot added:', botId);
-    });
-
-    room.state.bots.onRemove((botState, botId) => {
-      console.log('[LSS] Bot removed:', botId);
-    });
-
-    // Projectile state changes (server-side projectiles we need to render)
-    room.state.projectiles.onAdd((projState, projId) => {
-      // Spawn visual projectile for remote fire events
-      if (projState.owner !== net.sessionId) {
-        spawnServerProjectile(projState, projId);
-      }
-    });
-
-    // --- Message listeners ---
 
     room.onMessage('fire', (data) => {
-      // Fire visual/audio effects for other players' shots
       if (data.sid !== net.sessionId) {
         playRemoteFireEffect(data);
       }
@@ -846,14 +836,12 @@ async function connectToServer() {
 
     room.onMessage('death', (data) => {
       if (data.victimSid === net.sessionId) {
-        // Server says we died
         playerDie(null);
       }
       addKillFeed(data.killerName || 'Unknown', data.victimName || 'Unknown');
     });
 
     room.onMessage('impact', (data) => {
-      // Spawn explosion at impact point
       const impactPos = new THREE.Vector3(data.px, data.py, data.pz);
       spawnExplosion(impactPos, data.splash || 10);
     });
@@ -863,11 +851,11 @@ async function connectToServer() {
     });
 
     room.onMessage('round_end', (data) => {
-      // Update scores from server
+      // Scores updated via state_sync
     });
 
     room.onMessage('match_end', (data) => {
-      // Show match results
+      // Match results
     });
 
     // --- Room lifecycle ---
@@ -951,11 +939,13 @@ function selectMap(mapKey) {
 function updateLobbyPeers() {
   const el = document.getElementById('lobby-peers');
   if (!el) return;
-  if (net.room && net.room.state && net.room.state.players) {
-    const count = net.room.state.players.size - 1; // exclude self
+  if (net.lastServerState && net.lastServerState.players) {
+    const count = Object.keys(net.lastServerState.players).length - 1; // exclude self
     el.textContent = count > 0
       ? count + ' OTHER PLAYER' + (count > 1 ? 'S' : '') + ' CONNECTED'
       : 'WAITING FOR PLAYERS...';
+  } else if (net.connected) {
+    el.textContent = 'CONNECTED ; WAITING FOR STATE...';
   } else {
     el.textContent = '';
   }
@@ -1085,6 +1075,101 @@ function updateNetworkPlayer(sessionId, loadoutKey, team) {
   return np;
 }
 
+// ---- SERVER BOT PROXY ----
+// Visual representation of a server-controlled bot.
+// Similar to NetworkPlayer but for bots; creates mesh, interpolates position.
+
+class ServerBotProxy {
+  constructor(botId, loadoutKey, team) {
+    const loadout = LOADOUTS[loadoutKey];
+    if (!loadout) return;
+    const chassisData = CHASSIS[loadout.chassis];
+
+    this.id = botId;
+    this.loadoutKey = loadoutKey;
+    this.loadout = loadout;
+    this.chassis = chassisData;
+    this.team = team;
+    this.health = chassisData.maxHealth;
+    this.maxHealth = chassisData.maxHealth;
+    this.shield = chassisData.maxShield;
+    this.maxShield = chassisData.maxShield;
+    this.alive = true;
+    this.position = new THREE.Vector3();
+    this.velocity = new THREE.Vector3();
+    this.targetDir = new THREE.Vector3(0, 0, -1);
+    this.doomed = false;
+    this.doomTimer = 0;
+    this.coreMeter = 0;
+    this.isFiring = false;
+    this.spawnProtection = 0;
+    this.arcSlowTimer = 0;
+
+    const teamColor = team === LSS.TEAM_FLEET_A ? 0xff4444 : 0x44bb44;
+    this.mesh = createShipMesh(chassisData, teamColor);
+    this.mesh.userData.bot = this;
+    scene.add(this.mesh);
+
+    this.targetPos = new THREE.Vector3();
+    this.targetQuat = new THREE.Quaternion();
+  }
+
+  updateFromServerState(bs) {
+    if (!this.alive && bs.alive) {
+      this.alive = true;
+      if (!this.mesh.parent) scene.add(this.mesh);
+    }
+
+    this.health = bs.health;
+    this.maxHealth = bs.maxHealth;
+    this.shield = bs.shield;
+    this.maxShield = bs.maxShield;
+    this.alive = bs.alive;
+    this.doomed = bs.doomed;
+    this.doomTimer = bs.doomTimer;
+    this.isFiring = bs.isFiring;
+    this.coreMeter = bs.coreMeter;
+
+    this.targetPos.set(bs.px, bs.py, bs.pz);
+    this.targetQuat.set(bs.qx, bs.qy, bs.qz, bs.qw);
+    this.velocity.set(bs.vx || 0, bs.vy || 0, bs.vz || 0);
+
+    if (!this.alive && this.mesh.parent) {
+      scene.remove(this.mesh);
+    }
+  }
+
+  update(dt) {
+    if (!this.alive) return;
+
+    const dist = this.position.distanceTo(this.targetPos);
+    if (dist > 500) {
+      this.position.copy(this.targetPos);
+    } else {
+      this.position.lerp(this.targetPos, Math.min(1, dt * 15));
+    }
+    this.mesh.position.copy(this.position);
+    this.mesh.quaternion.slerp(this.targetQuat, Math.min(1, dt * 15));
+
+    if (this.mesh.userData.shieldMesh) {
+      this.mesh.userData.shieldMesh.material.opacity = this.shield > 0 ? 0.08 : 0;
+    }
+  }
+
+  takeDamage(amount, attacker) { return amount; }
+
+  die(attacker) {
+    this.alive = false;
+    this.health = 0;
+    if (this.mesh && this.mesh.parent) scene.remove(this.mesh);
+    spawnExplosion(this.position, this.chassis.hullLength);
+  }
+
+  destroy() {
+    if (this.mesh && this.mesh.parent) scene.remove(this.mesh);
+  }
+}
+
 // ---- NETWORK INPUT ----
 
 function broadcastInput(dt) {
@@ -1148,9 +1233,9 @@ function playRemoteFireEffect(data) {
 }
 
 function syncServerState() {
-  if (!net.active || !net.room || !net.room.state) return;
+  if (!net.active || !net.lastServerState) return;
 
-  const state = net.room.state;
+  const state = net.lastServerState;
 
   // Update game state from server
   if (state.gameState === 'playing' && game.state === 'warmup') {
@@ -1164,7 +1249,7 @@ function syncServerState() {
   game.currentRound = state.currentRound;
 
   // Sync our own player state from server (authoritative health, etc.)
-  const myState = state.players.get(net.sessionId);
+  const myState = state.players[net.sessionId];
   if (myState && player.loadout) {
     player.health = myState.health;
     player.maxHealth = myState.maxHealth;
@@ -1177,7 +1262,6 @@ function syncServerState() {
     player.coreMeter = myState.coreMeter;
     player.dashCharges = myState.dashCharges;
     player.spawnProtection = myState.spawnProtection;
-    // Ability cooldowns from server
     player.abilityCooldowns[0] = myState.abilityCd0;
     player.abilityCooldowns[1] = myState.abilityCd1;
     player.abilityCooldowns[2] = myState.abilityCd2;
@@ -1209,24 +1293,55 @@ function syncServerState() {
   }
 
   // Sync other players
-  state.players.forEach((ps, sessionId) => {
-    if (sessionId === net.sessionId) return;
-    if (!ps.loadoutKey) return;
+  const seenSessions = new Set();
+  for (const sessionId in state.players) {
+    if (sessionId === net.sessionId) continue;
+    const ps = state.players[sessionId];
+    if (!ps.loadoutKey) continue;
+    seenSessions.add(sessionId);
 
     let np = net.networkPlayers.find(n => n.sessionId === sessionId);
     if (!np) {
       np = updateNetworkPlayer(sessionId, ps.loadoutKey, ps.team);
     }
     if (np) np.updateFromSchema(ps);
-  });
+  }
 
-  // Sync bots from server state
-  state.bots.forEach((bs, botId) => {
-    let bot = game.entities.find(e => e.id === botId || e.id === 'bot_' + botId);
+  // Remove NetworkPlayers that left
+  for (let i = net.networkPlayers.length - 1; i >= 0; i--) {
+    const np = net.networkPlayers[i];
+    if (!seenSessions.has(np.sessionId)) {
+      np.destroy();
+      const eidx = game.entities.indexOf(np);
+      if (eidx >= 0) game.entities.splice(eidx, 1);
+      net.networkPlayers.splice(i, 1);
+    }
+  }
+
+  // Sync bots from server state (create proxy if needed, update existing)
+  const seenBots = new Set();
+  for (const botId in state.bots) {
+    seenBots.add(botId);
+    const bs = state.bots[botId];
+    let bot = game.entities.find(e => e.id === botId);
+    if (!bot && bs.loadoutKey) {
+      // Create visual proxy for this server bot
+      bot = new ServerBotProxy(botId, bs.loadoutKey, bs.team);
+      game.entities.push(bot);
+    }
     if (bot && bot.updateFromServerState) {
       bot.updateFromServerState(bs);
     }
-  });
+  }
+
+  // Remove bots that no longer exist on server
+  for (let i = game.entities.length - 1; i >= 0; i--) {
+    const e = game.entities[i];
+    if (e instanceof ServerBotProxy && !seenBots.has(e.id)) {
+      e.destroy();
+      game.entities.splice(i, 1);
+    }
+  }
 }
 
 // ---- THREE.JS SETUP ----
@@ -5977,6 +6092,10 @@ function dash() {
 // ---- ROUND SYSTEM ----
 
 function updateRoundSystem(dt) {
+  // In multiplayer, the server controls all round logic.
+  // The client only runs round logic in solo mode.
+  if (net.active) return;
+
   if (game.state === 'warmup') {
     game.warmupTimer -= dt;
     if (game.warmupTimer <= 0) { game.state = 'playing'; game.roundTimer = LSS.ROUND_TIME; playSound('round_start'); }

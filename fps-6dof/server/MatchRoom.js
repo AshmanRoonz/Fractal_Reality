@@ -538,6 +538,9 @@ class MatchRoom extends Room {
 
     // ---- Sync all internal state to Colyseus schema ----
     this.syncAllToSchema();
+
+    // ---- Broadcast raw JSON state (bypasses schema version mismatch) ----
+    this.broadcastRawState();
   }
 
   // ------------------------------------------------------------------
@@ -1404,6 +1407,58 @@ class MatchRoom extends Room {
     ps.kills = sp.kills;
     ps.deaths = sp.deaths;
     ps.damageDealt = sp.damageDealt;
+  }
+
+  broadcastRawState() {
+    const players = {};
+    for (const sp of this.serverPlayers.values()) {
+      players[sp.sessionId] = {
+        sid: sp.sessionId, loadoutKey: sp.loadoutKey || '', team: sp.team,
+        px: sp.pos.x, py: sp.pos.y, pz: sp.pos.z,
+        vx: sp.vel.x, vy: sp.vel.y, vz: sp.vel.z,
+        qx: sp.quat.x, qy: sp.quat.y, qz: sp.quat.z, qw: sp.quat.w,
+        health: sp.health, maxHealth: sp.maxHealth,
+        shield: sp.shield, maxShield: sp.maxShield,
+        coreMeter: sp.coreMeter, alive: sp.alive,
+        doomed: sp.doomed, doomTimer: sp.doomTimer,
+        spawnProtection: sp.spawnProtection,
+        clipAmmo: sp.clipAmmo, reloading: sp.reloading, isFiring: sp.isFiring,
+        abilityCd0: sp.abilityCooldowns[0], abilityCd1: sp.abilityCooldowns[1], abilityCd2: sp.abilityCooldowns[2],
+        abilityActive0: sp.abilityActive[0], abilityActive1: sp.abilityActive[1], abilityActive2: sp.abilityActive[2],
+        coreActive: sp.coreActive, coreTimer: sp.coreTimer,
+        dashCharges: sp.dashCharges, dashActive: sp.dashActive,
+        kills: sp.kills, deaths: sp.deaths, damageDealt: sp.damageDealt,
+      };
+    }
+
+    const bots = {};
+    for (const bot of this.serverBots.values()) {
+      const fwd = bot.targetDir.clone().normalize();
+      const yaw = Math.atan2(-fwd.x, -fwd.z);
+      const pitch = Math.asin(Math.max(-1, Math.min(1, fwd.y)));
+      const q = new Quat().setFromEuler(pitch, yaw, 0);
+      bots[bot.id] = {
+        id: bot.id, loadoutKey: bot.loadoutKey, team: bot.team,
+        px: bot.pos.x, py: bot.pos.y, pz: bot.pos.z,
+        vx: bot.vel.x, vy: bot.vel.y, vz: bot.vel.z,
+        qx: q.x, qy: q.y, qz: q.z, qw: q.w,
+        health: bot.health, maxHealth: bot.maxHealth,
+        shield: bot.shield, maxShield: bot.maxShield,
+        alive: bot.alive, doomed: bot.doomed, doomTimer: bot.doomTimer,
+        isFiring: bot.isFiring, coreMeter: bot.coreMeter,
+      };
+    }
+
+    this.broadcast('state_sync', {
+      gameState: this.state.gameState,
+      roundTimer: this.state.roundTimer,
+      warmupTimer: this.state.warmupTimer,
+      scoreA: this.state.scoreA,
+      scoreB: this.state.scoreB,
+      currentRound: this.state.currentRound,
+      serverTime: this.gameTime,
+      players, bots,
+    });
   }
 
   syncBotToSchema(bot) {
