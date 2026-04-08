@@ -7,10 +7,15 @@
     "start": "node index.js",
     "dev": "node --watch index.js"
   },
-  "keywords": ["game", "multiplayer", "colyseus"],
+  "keywords": [
+    "game",
+    "multiplayer",
+    "colyseus"
+  ],
   "author": "Ashman Roonz",
   "license": "ISC",
   "dependencies": {
-    "colyseus": "^0.17.8"
+    "colyseus": "^0.17.8",
+    "express": "^5.2.1"
   }
 }

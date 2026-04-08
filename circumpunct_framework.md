@@ -19629,6 +19629,81 @@ Second-order correction: A'(3) = V = 13. The boundary rung, where the proton exi
 
 Every term is A(d) or A'(d) evaluated at a specific rung of the dimensional ladder. No number is chosen; each is computed from the traversal function at the rung where the physics lives. The selection rule is: differentiate for point-like, evaluate for accumulated, integrate for total. The operation matches the constraint.
 
+#### The Pascal Diagonal
+
+The hierarchy exponents sit on a diagonal of Pascal's triangle. This follows from the hockey stick identity applied iteratively.
+
+The accumulated traversal A(d) at station k (where k = 0,...,6 for d = 0, 0.5, ..., 3) equals the kth triangular number: A(d_k) = T_k = C(k+1, 2). By the hockey stick identity:
+
+```
+    sum_{k=0}^{6} C(k+1, 2) = C(8, 3) = 56    (Lambda's exponent)
+```
+
+The running sums S_j = sum_{k=0}^{j} T_k are tetrahedral numbers: S_j = C(j+2, 3). Applying hockey stick again:
+
+```
+    sum_{j=0}^{6} C(j+2, 3) = C(9, 4) = 126   (level 3)
+```
+
+The hierarchy is iterated hockey stick, and the exponents follow:
+
+```
+    THE PASCAL DIAGONAL:
+    
+    Level m exponent = C(R + m, m + 2)
+    
+    m=0:  C(7, 2) = 21   → G
+    m=1:  C(8, 3) = 56   → Λ
+    m=2:  C(9, 4) = 126  → (open; see note)
+    m=3:  C(10, 5) = 252
+    m=4:  C(11, 6) = 462
+    
+    Ratio between successive levels:
+    C(R+m+1, m+3) / C(R+m, m+2) = (R + m + 1) / (m + 3)
+    
+    m=0 → 1:  8/3  = SU(3)/T
+    m=1 → 2:  9/4  = T²/P
+    m=2 → 3:  10/5 = 2 = channels
+    m=3 → 4:  11/6 = A'(2.5)/A(1.5)
+```
+
+The ratios are not framework assignments; they are consequences of the binomial coefficient recursion. The framework READS them as SU(3)/T, T²/P, etc., and these readings are correct because the framework constants themselves arise from the same combinatorial source.
+
+Alpha fits as the start of the triangular sequence: α at C(2, 2) = 1, G at C(7, 2) = 21. Both sit on the same row of Pascal's triangle (the C(k, 2) row). The separation G/α = C(R, 2)/C(2, 2) = R(R-1)/2 = T·R = E(3) = 21.
+
+Note on level 3 (exponent 126): the sum of running sums yields C(9, 4) = 126, which is the dimension of the SO(10) representation in GUT physics responsible for Majorana neutrino masses. Whether there is a physical scale at α^126 is an open question; the structural coincidence is noted but not yet derived.
+
+#### The Generation Structure
+
+The lepton mass bases reveal a generation-operation map. Each generation accesses one deeper level of A(d):
+
+```
+    GENERATION-OPERATION MAP:
+    
+    Gen 1 (electron): identity (reference; no exponent formula)
+    Gen 2 (muon):     DIFFERENTIAL: A'(3)/G = V/(V-1) = 13/12
+    Gen 3 (tau):      INTEGRAL: (Σ A + 2)/((Φ+○)·R) = 58/35
+```
+
+The muon base involves the derivative A'(3) = V = 13 (rate at the boundary), divided by G = 12 (generators). The tau base involves the integral Σ A = 56 (total accumulation) plus channels (2), divided by (Φ+○)·R = 35 (span times rungs). Each generation reaches one level deeper into the ladder's structure: gen 2 is local (rate at a point), gen 3 is global (total across all scales).
+
+The tau base decomposes in Pascal's triangle:
+
+```
+    TAU IN BINOMIAL FORM:
+    
+    Numerator:   C(R+1, 3) + C(2, 1) = 56 + 2 = 58
+    Denominator: C(R, 3) = 35
+    
+    Equivalently: 58 = S - A(1.5) = 64 - 6
+    (total states minus commitment-traversal)
+    
+    Identity: S = Σ A + A(1.5) + 2  →  64 = 56 + 6 + 2
+    States = accumulated traversal + commitment + duality
+```
+
+Correction K follows T^(gen+1): K = T³ = 27 for the muon (generation 2), K = T⁴ = 81 for the tau (generation 3). Each generation adds one T-fold nesting depth.
+
 #### The Completeness Argument
 
 The full octave sum (all 8 stations including 3.5D) is:

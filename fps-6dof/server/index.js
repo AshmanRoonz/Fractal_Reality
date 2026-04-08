@@ -8,67 +8,82 @@
 
 const { Server } = require('colyseus');
 const { WebSocketTransport } = require('@colyseus/ws-transport');
+const express = require('express');
 const http = require('http');
-const fs = require('fs');
 const path = require('path');
+const fs = require('fs');
 const { MatchRoom } = require('./MatchRoom');
 
 const PORT = parseInt(process.env.PORT) || 2567;
 
-// ---- Simple static file server for the game client ----
-// Serves the HTML file so players only need the server URL
+// ---- Express app for static file serving ----
+// Express routes are checked BEFORE Colyseus's catch-all status page
 
-const MIME_TYPES = {
-  '.html': 'text/html',
-  '.js': 'text/javascript',
-  '.css': 'text/css',
-  '.json': 'application/json',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.svg': 'image/svg+xml',
-};
+const app = express();
 
-const httpServer = http.createServer((req, res) => {
-  // Skip Colyseus internal routes (matchmake, etc.)
-  if (req.url.startsWith('/matchmake') || req.url.startsWith('/colyseus')) {
-    // Colyseus handles these; do nothing (transport will respond)
-    return;
+// Serve the MP client at root
+app.get('/', (req, res) => {
+  let filePath = path.join(__dirname, '..', 'last_ship_sailing_mp.html');
+  if (!fs.existsSync(filePath)) {
+    filePath = path.join(__dirname, '..', 'last_ship_sailing.html');
   }
-
-  // Serve the client HTML at root
-  let filePath;
-  if (req.url === '/' || req.url === '/index.html') {
-    // Serve the multiplayer client version
-    filePath = path.join(__dirname, '..', 'last_ship_sailing_mp.html');
-    if (!fs.existsSync(filePath)) {
-      // Fallback to original
-      filePath = path.join(__dirname, '..', 'last_ship_sailing.html');
-    }
-  } else {
-    // Serve static files from parent directory (sanitize path)
-    const safePath = path.normalize(req.url).replace(/^(\.\.[\/\\])+/, '');
-    filePath = path.join(__dirname, '..', safePath);
-  }
-
-  const ext = path.extname(filePath);
-  const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-
-  fs.readFile(filePath, (err, content) => {
-    if (err) {
-      if (!res.headersSent) {
-        res.writeHead(404);
-        res.end('Not found');
-      }
-      return;
-    }
-    if (!res.headersSent) {
-      res.writeHead(200, { 'Content-Type': contentType });
-      res.end(content);
-    }
-  });
+  res.sendFile(filePath);
 });
 
-// ---- Colyseus game server ----
+app.get('/index.html', (req, res) => {
+  let filePath = path.join(__dirname, '..', 'last_ship_sailing_mp.html');
+  if (!fs.existsSync(filePath)) {
+    filePath = path.join(__dirname, '..', 'last_ship_sailing.html');
+  }
+  res.sendFile(filePath);
+});
+
+// Serve static files from the game directory (for any assets)
+app.use(express.static(path.join(__dirname, '..')));
+
+// ---- HTTP + Colyseus game server ----
+// Wrap Express app in an http server, then patch matchmaking responses.
+// Colyseus server 0.17 returns flat: {name, sessionId, roomId, processId}
+// Colyseus client 0.16 expects nested: {room: {name, roomId, processId}, sessionId}
+
+const httpServer = http.createServer((req, res) => {
+  // For matchmake requests, intercept the response to adapt format
+  // Server 0.17 returns flat: {name, sessionId, roomId, processId}
+  // Client 0.16 expects nested: {room: {name, roomId, processId}, sessionId}
+  if (req.url && req.url.startsWith('/matchmake')) {
+    const originalEnd = res.end.bind(res);
+    const chunks = [];
+
+    res.write = function(chunk, encoding) {
+      if (chunk) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk, encoding));
+      return true;
+    };
+
+    res.end = function(chunk, encoding) {
+      if (chunk) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk, encoding));
+      const fullBody = Buffer.concat(chunks).toString('utf8');
+      try {
+        const data = JSON.parse(fullBody);
+        if (data && data.name && data.roomId && !data.room) {
+          const adapted = {
+            room: {
+              name: data.name,
+              roomId: data.roomId,
+              processId: data.processId || '',
+            },
+            sessionId: data.sessionId,
+          };
+          const out = JSON.stringify(adapted);
+          res.setHeader('Content-Length', Buffer.byteLength(out));
+          return originalEnd(out);
+        }
+      } catch(e) { /* not JSON, pass through */ }
+      return originalEnd(fullBody);
+    };
+  }
+  // Pass to Express
+  app(req, res);
+});
 
 const gameServer = new Server({
   transport: new WebSocketTransport({ server: httpServer }),
