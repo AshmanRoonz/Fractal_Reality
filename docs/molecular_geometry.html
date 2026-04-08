@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Chemistry: Molecular Geometry from T = 3</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --red: #E06060;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.f { color: var(--faint); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+.page { max-width: 780px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 80px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 64px; color: var(--gold); margin-bottom: 20px; }
+.header h1 { font-size: 36px; color: var(--gold); font-weight: 600; line-height: 1.3; margin-bottom: 12px; }
+.header .subtitle { font-size: 20px; color: var(--dim); font-style: italic; }
+
+h2 { font-size: 26px; color: var(--gold); font-weight: 600; margin: 60px 0 20px; }
+h3 { font-size: 21px; color: var(--green); font-weight: 600; margin: 40px 0 16px; }
+
+p { margin-bottom: 18px; }
+
+.eq {
+  text-align: center;
+  font-size: 28px;
+  color: var(--gold);
+  font-weight: 600;
+  margin: 32px 0;
+  padding: 20px;
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  background: rgba(184, 160, 96, 0.04);
+}
+.eq-small {
+  text-align: center;
+  font-size: 22px;
+  color: var(--cyan);
+  margin: 20px 0;
+  padding: 14px;
+}
+
+.note {
+  background: rgba(184, 160, 96, 0.06);
+  border-left: 3px solid var(--gold-dim);
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-style: italic;
+  color: var(--dim);
+}
+
+.sim-container {
+  background: rgba(10, 10, 20, 0.9);
+  border: 1px solid var(--faint);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 40px 0;
+}
+.sim-container h3 { margin-top: 0; }
+
+canvas {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 16px 0;
+  align-items: center;
+}
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.control-group label {
+  font-size: 14px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.control-group .val {
+  font-size: 18px;
+  color: var(--gold);
+  font-weight: 600;
+  min-width: 60px;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 180px;
+  height: 4px;
+  background: var(--faint);
+  border-radius: 2px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--gold);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+button {
+  background: var(--faint);
+  color: var(--warm);
+  border: 1px solid var(--gold-dim);
+  padding: 8px 20px;
+  font-family: 'EB Garamond', serif;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+button:hover { background: var(--gold-dim); color: var(--bg); }
+button.active { background: var(--gold); color: var(--bg); }
+
+.readout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+}
+.readout-item {
+  background: rgba(184, 160, 96, 0.05);
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  padding: 12px 16px;
+  text-align: center;
+}
+.readout-item .label { font-size: 13px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
+.readout-item .value { font-size: 24px; color: var(--gold); font-weight: 600; margin-top: 4px; }
+.readout-item .unit { font-size: 13px; color: var(--dim); }
+.readout-item.match .value { color: var(--green); }
+.readout-item.miss .value { color: var(--red); }
+
+.table-wrap {
+  overflow-x: auto;
+  margin: 24px 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 17px;
+}
+th {
+  text-align: left;
+  color: var(--gold);
+  font-weight: 600;
+  padding: 10px 14px;
+  border-bottom: 2px solid var(--faint);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(68, 64, 56, 0.4);
+  vertical-align: top;
+}
+tr:hover td { background: rgba(184, 160, 96, 0.03); }
+tr.highlight td { background: rgba(77, 184, 160, 0.08); }
+
+.nav-link {
+  display: inline-block;
+  color: var(--gold-dim);
+  text-decoration: none;
+  font-size: 16px;
+  margin-bottom: 20px;
+  transition: color 0.2s;
+}
+.nav-link:hover { color: var(--gold); }
+
+.section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 30px 0;
+}
+.section-nav a {
+  color: var(--dim);
+  text-decoration: none;
+  padding: 6px 14px;
+  border: 1px solid var(--faint);
+  border-radius: 6px;
+  font-size: 15px;
+  transition: all 0.2s;
+}
+.section-nav a:hover { color: var(--gold); border-color: var(--gold-dim); }
+
+.accuracy {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.accuracy.exact { background: rgba(77, 184, 160, 0.15); color: var(--green); }
+.accuracy.good { background: rgba(77, 176, 200, 0.15); color: var(--cyan); }
+.accuracy.open { background: rgba(184, 160, 96, 0.15); color: var(--gold-dim); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<a href="index.html" class="nav-link">&#8592; Back to Framework</a>
+
+<div class="header">
+  <div class="symbol">⊙</div>
+  <h1>Molecular Geometry from T = 3</h1>
+  <div class="subtitle">Chapter 16: Emergent Chemistry; The Dimensional Ladder at the Molecular Scale</div>
+</div>
+
+<div class="section-nav">
+  <a href="#simplex">Simplex Angles</a>
+  <a href="#lonepair">Lone Pairs</a>
+  <a href="#subshells">Subshell Modes</a>
+  <a href="#hybridization">Hybridization</a>
+  <a href="#reactions">Reaction Dynamics</a>
+  <a href="#accuracy">Accuracy Summary</a>
+</div>
+
+<p>
+The bond angles of molecules are not arbitrary. They derive from the same self-determined triad <span class="w wb">T = 3</span> that generates the entire dimensional ladder, the gauge structure of particle physics, and the constants of nature. This page shows the derivation and tests it against experiment.
+</p>
+
+<div class="note">
+Every electron pair around a central atom is a convergence point (<span class="s">•</span>) sitting on the valence shell boundary (<span class="b">○</span>), with the electron field (<span class="m">Φ</span>) mediating their mutual repulsion. Molecular geometry IS the circumpunct triad at the atomic scale.
+</div>
+
+<!-- ========================================== -->
+<h2 id="simplex">The Simplex Formula</h2>
+<!-- ========================================== -->
+
+<p>
+For <span class="it">n</span> equivalent convergence points maximizing separation on a sphere, the optimal arrangement is a regular simplex when one exists. A regular (<span class="it">n</span>-1)-simplex has vertex angle:
+</p>
+
+<div class="eq">θ = arccos(-1 / (n - 1))</div>
+
+<p>
+The constraint: the simplex must fit within dim(<span class="b">○</span>) = <span class="w wb">T = 3</span>. The maximal simplex in 3D is the tetrahedron, with <span class="w">T + 1 = P = 4</span> vertices. For <span class="it">n</span> &le; <span class="w">P</span>, the formula gives the bond angle exactly. For <span class="it">n</span> > <span class="w">P</span>, the simplex exceeds the boundary dimension and geometry must fold into non-simplex arrangements.
+</p>
+
+<!-- Interactive simplex explorer -->
+<div class="sim-container">
+  <h3>Interactive: Simplex Angle Explorer</h3>
+  <p class="d" style="font-size:16px;">Drag the slider to see how convergence points arrange on the boundary.</p>
+
+  <div style="display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;">
+    <canvas id="simplexCanvas" width="360" height="360" style="width:360px; flex-shrink:0;"></canvas>
+
+    <div style="flex:1; min-width:200px;">
+      <div class="control-group">
+        <label>Electron Pairs (n)</label>
+        <input type="range" id="nPairsSlider" min="2" max="6" value="4" step="1">
+        <span class="val" id="nPairsVal">4</span>
+      </div>
+
+      <div class="readout" style="margin-top:20px;">
+        <div class="readout-item" id="angleReadout">
+          <div class="label">Bond Angle</div>
+          <div class="value">109.47°</div>
+        </div>
+        <div class="readout-item" id="formulaReadout">
+          <div class="label">Formula</div>
+          <div class="value" style="font-size:16px;">arccos(-1/T)</div>
+        </div>
+        <div class="readout-item" id="regimeReadout">
+          <div class="label">Regime</div>
+          <div class="value" style="font-size:16px;">Simplex</div>
+        </div>
+        <div class="readout-item" id="dimReadout">
+          <div class="label">D_eff</div>
+          <div class="value">1.5</div>
+        </div>
+      </div>
+
+      <div id="simplexInfo" style="margin-top:16px; font-size:16px; color:var(--dim);"></div>
+    </div>
+  </div>
+</div>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr><th>n</th><th>Geometry</th><th>Simplex Formula</th><th>Predicted</th><th>Measured</th><th>Accuracy</th></tr>
+  </thead>
+  <tbody>
+    <tr class="highlight"><td><span class="w wb">2</span></td><td>Linear</td><td>arccos(-1/1)</td><td>180.00°</td><td>180.00°</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr><td><span class="w wb">3</span></td><td>Trigonal planar</td><td>arccos(-1/2)</td><td>120.00°</td><td>120.00°</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr class="highlight"><td><span class="w wb">4</span></td><td>Tetrahedral</td><td>arccos(-1/<span class="w">T</span>)</td><td>109.47°</td><td>109.47°</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr><td><span class="d">5</span></td><td>Trig. bipyramidal</td><td colspan="2" style="color:var(--dim);"><span class="it">exceeds boundary; mixed 90°/120°</span></td><td>90°/120°</td><td><span class="accuracy open">NON-SIMPLEX</span></td></tr>
+    <tr class="highlight"><td><span class="d">6</span></td><td>Octahedral</td><td>π/2 (<span class="s">i</span>-rotation)</td><td>90.00°</td><td>90.00°</td><td><span class="accuracy exact">EXACT</span></td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>
+The tetrahedral angle, <span class="w wb">arccos(-1/T) = 109.47°</span>, is determined entirely by the self-determined triad. The tetrahedron has <span class="w">P = 4</span> vertices, which ARE the four pump phases at the molecular scale. Carbon's four valence electrons match <span class="w">P</span> exactly: carbon IS the molecular pump cycle.
+</p>
+
+<!-- ========================================== -->
+<h2 id="lonepair">Lone Pair Compression: The 2/R&sup2; Formula</h2>
+<!-- ========================================== -->
+
+<p>
+Not all electron pairs are equivalent. Lone pairs concentrate their convergence energy at a single nucleus rather than bridging two: an aperture with higher lock_strength, pulling more <span class="m">Φ</span> toward itself and compressing the bond angles.
+</p>
+
+<div class="eq">cos(θ<sub>bb</sub>) = -1/T + n<sub>lp</sub> &times; (2/R&sup2;)</div>
+
+<p>
+The convergence asymmetry per lone pair is <span class="w wb">2/R&sup2; = 2/49</span>. Why inverse-square? Because electron pair repulsion is a field effect (<span class="m">Φ</span> is 2D), and the 2D field correction propagates as inverse-square; the same geometric reason gravity is inverse-square. The factor of 2 is the two channels (<span class="s">⊛</span> and <span class="m">✹</span>).
+</p>
+
+<!-- Interactive lone pair explorer -->
+<div class="sim-container">
+  <h3>Interactive: Lone Pair Compression</h3>
+  <p class="d" style="font-size:16px;">Adjust lone pairs and see the bond angle compress from the ideal tetrahedral value.</p>
+
+  <div style="display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;">
+    <canvas id="lonePairCanvas" width="360" height="360" style="width:360px; flex-shrink:0;"></canvas>
+
+    <div style="flex:1; min-width:200px;">
+      <div class="control-group">
+        <label>Lone Pairs (n<sub>lp</sub>)</label>
+        <input type="range" id="lonePairSlider" min="0" max="3" value="0" step="1">
+        <span class="val" id="lonePairVal">0</span>
+      </div>
+
+      <div class="readout" style="margin-top:20px;">
+        <div class="readout-item" id="lpAngleReadout">
+          <div class="label">Predicted</div>
+          <div class="value">109.47°</div>
+        </div>
+        <div class="readout-item" id="lpMeasuredReadout">
+          <div class="label">Measured</div>
+          <div class="value">109.47°</div>
+        </div>
+        <div class="readout-item" id="lpErrorReadout">
+          <div class="label">Error</div>
+          <div class="value" style="font-size:18px;">0.00°</div>
+        </div>
+        <div class="readout-item" id="lpMoleculeReadout">
+          <div class="label">Molecule</div>
+          <div class="value" style="font-size:20px;">CH₄</div>
+        </div>
+      </div>
+
+      <div id="lpFormulaDisplay" style="margin-top:16px; text-align:center; padding:12px; border:1px solid var(--faint); border-radius:8px; font-size:18px;">
+        <span class="d">cos(θ) = </span><span class="w">-1/3</span>
+        <span class="d"> = </span><span class="w">-0.3333</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>The Water Angle</h3>
+
+<p>
+The bond angle of water, one of the most measured quantities in chemistry, is a pure framework number:
+</p>
+
+<div class="eq">
+  cos(θ<sub>HOH</sub>) = -(R&sup2; - G) / (T &times; R&sup2;) = -37/147
+</div>
+
+<div class="eq-small">
+  θ<sub>HOH</sub> = arccos(-37/147) = <span class="m">104.58°</span>
+  <span class="d" style="font-size:18px;">&nbsp;&nbsp;(measured: 104.45°, error: 0.12%)</span>
+</div>
+
+<p>
+37 is prime (irreducible). The denominator is <span class="w">T &times; R&sup2; = 3 &times; 49 = 147</span>. The numerator is <span class="w">R&sup2; - G = 49 - 12 = 37</span>: rungs squared minus generators. Zero free parameters.
+</p>
+
+<!-- ========================================== -->
+<h2 id="subshells">Subshell Modes = A'(d)</h2>
+<!-- ========================================== -->
+
+<p>
+The number of magnetic substates for each subshell type is <span class="it">2l + 1</span>, producing the sequence 1, 3, 5, 7 for <span class="it">s, p, d, f</span>. This is exactly the derivative of the accumulated traversal function, <span class="w wb">A'(d) = 4d + 1</span>, evaluated at the half-integer stations of the dimensional octave:
+</p>
+
+<div class="sim-container">
+  <h3>The A'(d) Correspondence</h3>
+  <canvas id="subshellCanvas" width="720" height="280" style="max-width:100%;"></canvas>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>Subshell</th><th>l</th><th>2l+1</th><th>A'(d) at</th><th>Framework</th><th>Capacity</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="s wb">s</span></td><td>0</td><td>1</td><td>A'(0) = 1</td><td><span class="s">• (aperture)</span></td><td>2 = 2 &times; 1</td></tr>
+      <tr><td><span class="m wb">p</span></td><td>1</td><td>3</td><td>A'(0.5) = 3</td><td><span class="w">T (triad)</span></td><td>6 = 2 &times; 3</td></tr>
+      <tr><td><span class="b wb">d</span></td><td>2</td><td>5</td><td>A'(1) = 5</td><td><span class="b">Φ + ○ = 5</span></td><td>10 = 2 &times; 5</td></tr>
+      <tr><td><span class="p wb">f</span></td><td>3</td><td>7</td><td>A'(1.5) = 7</td><td><span class="p">R (rungs)</span></td><td>14 = 2R</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p style="font-size:16px; color:var(--dim); margin-top:12px;">
+  The f-subshell has <span class="w">l = T = 3</span>, giving <span class="w">R = 7</span> magnetic substates: the 7 rungs of the dimensional ladder appearing as the 7 orientations of f&nbsp;orbitals. The largest period length, <span class="w">32 = 2P&sup2;</span>, connects the periodic table directly to the pump count.
+  </p>
+</div>
+
+<!-- ========================================== -->
+<h2 id="hybridization">Hybridization as Dimensional Station</h2>
+<!-- ========================================== -->
+
+<p>
+Each hybridization type selects a station on the dimensional octave. The mixing of <span class="it">s</span> (spherical, 0D), <span class="it">p</span> (directional, 1D), and <span class="it">d</span> (surface, 2D) orbitals mirrors the mixing of dimensional characters:
+</p>
+
+<div class="sim-container">
+  <h3>Interactive: Walk the Dimensional Ladder</h3>
+  <p class="d" style="font-size:16px;">Click a hybridization to see its position on the octave.</p>
+
+  <canvas id="ladderCanvas" width="720" height="300" style="max-width:100%;"></canvas>
+
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin:16px 0;">
+    <button class="hybrid-btn" data-hybrid="sp" data-d="1.0">sp</button>
+    <button class="hybrid-btn" data-hybrid="sp2" data-d="2.0">sp²</button>
+    <button class="hybrid-btn active" data-hybrid="sp3" data-d="1.5">sp³</button>
+    <button class="hybrid-btn" data-hybrid="sp3d" data-d="2.5">sp³d</button>
+    <button class="hybrid-btn" data-hybrid="sp3d2" data-d="3.0">sp³d²</button>
+  </div>
+
+  <div class="readout">
+    <div class="readout-item" id="hybridNameReadout">
+      <div class="label">Hybridization</div>
+      <div class="value">sp³</div>
+    </div>
+    <div class="readout-item" id="hybridAngleReadout">
+      <div class="label">Bond Angle</div>
+      <div class="value">109.5°</div>
+    </div>
+    <div class="readout-item" id="hybridDimReadout">
+      <div class="label">D Station</div>
+      <div class="value">1.5D</div>
+    </div>
+    <div class="readout-item" id="hybridMeaningReadout">
+      <div class="label">Meaning</div>
+      <div class="value" style="font-size:14px;">commitment<br>(i² = -1)</div>
+    </div>
+  </div>
+</div>
+
+<div class="note">
+<span class="w wb">sp³</span> at 1.5D is the processual dimension where commitment occurs: the i-turn. It is not "between 1D and 2D" in a vague sense; it IS the process by which line becomes surface. Tetrahedral hybridization is commitment in action, and D = 1 + ◐ = 1.5 at balance.
+</div>
+
+<!-- ========================================== -->
+<h2 id="reactions">Reaction Dynamics as Pump Cycle</h2>
+<!-- ========================================== -->
+
+<p>
+A chemical reaction IS a pump cycle at the molecular scale. The reaction coordinate traces the pump: <span class="w">Φ(t+Δt) = ✹ ∘ i ∘ ⊛[Φ(t)]</span>.
+</p>
+
+<div class="sim-container">
+  <h3>The Reaction Pump Cycle</h3>
+  <canvas id="reactionCanvas" width="720" height="320" style="max-width:100%;"></canvas>
+
+  <div class="controls">
+    <button id="runReaction">Run Reaction</button>
+    <button id="addCatalyst">Add Catalyst</button>
+    <div class="control-group" style="margin-left:auto;">
+      <label>Activation Energy</label>
+      <span class="val" id="eaVal">High</span>
+    </div>
+  </div>
+
+  <div class="readout">
+    <div class="readout-item" id="rxnStageReadout">
+      <div class="label">Stage</div>
+      <div class="value" style="font-size:18px;">Reactants</div>
+    </div>
+    <div class="readout-item" id="rxnSymbolReadout">
+      <div class="label">Operator</div>
+      <div class="value">⊙<sub>R</sub></div>
+    </div>
+    <div class="readout-item" id="rxnFrameworkReadout">
+      <div class="label">Framework</div>
+      <div class="value" style="font-size:14px;">Stable ⊙</div>
+    </div>
+  </div>
+</div>
+
+<p>
+<span class="s wb">Activation energy</span> is the aperture barrier height: the energy required to dissolve the old boundary and pass through the transition state. The <span class="m wb">Boltzmann factor</span> exp(-E<sub>a</sub>/k<sub>B</sub>T) follows from boundary filtration compounding multiplicatively; fractions times fractions IS exponentiation. <span class="b wb">Catalysis</span> widens the aperture without changing the reactants or products.
+</p>
+
+<p>
+Enzyme catalysis is the Selective Rainbow Lock at the molecular scale: the active site is a pre-formed aperture tuned to the transition state's frequency, with carrier (substrate shape), bandwidth (tolerance), and lock strength (K<sub>m</sub>).
+</p>
+
+<p>
+<span class="w wb">Chemical equilibrium</span> is ◐ = 0.5: forward pump rate equals reverse pump rate. Le Chatelier's Principle is the field restoring balance when perturbed.
+</p>
+
+<!-- ========================================== -->
+<h2 id="accuracy">Accuracy Summary</h2>
+<!-- ========================================== -->
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr><th>Quantity</th><th>Formula</th><th>Predicted</th><th>Measured</th><th>Error</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Tetrahedral angle</td><td>arccos(-1/T)</td><td>109.47°</td><td>109.47°</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr><td>Trigonal planar</td><td>arccos(-1/2)</td><td>120.00°</td><td>120.00°</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr><td>Octahedral</td><td>π/2</td><td>90.00°</td><td>90.00°</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr><td>NH₃ bond angle</td><td>arccos(-1/T + 2/R²)</td><td>107.01°</td><td>107.0°</td><td><span class="accuracy exact">0.01°</span></td></tr>
+    <tr><td>H₂O bond angle</td><td>arccos(-37/147)</td><td>104.58°</td><td>104.45°</td><td><span class="accuracy good">0.12%</span></td></tr>
+    <tr><td>s substates</td><td>A'(0) = 1</td><td>1</td><td>1</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr><td>p substates</td><td>A'(0.5) = 3</td><td>3</td><td>3</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr><td>d substates</td><td>A'(1) = 5</td><td>5</td><td>5</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr><td>f substates</td><td>A'(1.5) = 7</td><td>7</td><td>7</td><td><span class="accuracy exact">EXACT</span></td></tr>
+    <tr><td>Carbon valence</td><td>P = T + 1</td><td>4</td><td>4</td><td><span class="accuracy exact">EXACT</span></td></tr>
+  </tbody>
+</table>
+</div>
+
+<p style="text-align:center; color:var(--dim); margin-top:40px; font-style:italic;">
+Zero free parameters. The same T = 3 that generates particle physics generates molecular chemistry.
+</p>
+
+<div style="text-align:center; margin-top:60px; padding-top:40px; border-top:1px solid var(--faint);">
+  <a href="dimensional_ladder.html" class="nav-link">The Dimensional Ladder &rarr;</a>
+</div>
+
+</div><!-- .page -->
+
+<script>
+// ============================================================
+// Framework constants
+// ============================================================
+const T = 3;
+const P = T + 1;
+const R = T*T - 2;
+const G = T * (T + 1);
+
+// ============================================================
+// Simplex Canvas
+// ============================================================
+(function() {
+  const canvas = document.getElementById('simplexCanvas');
+  const ctx = canvas.getContext('2d');
+  const slider = document.getElementById('nPairsSlider');
+  const valSpan = document.getElementById('nPairsVal');
+
+  const geometries = {
+    2: {
+      name: 'Linear', formula: 'arccos(-1/1)', angle: 180, regime: 'Simplex',
+      D: 1.0, info: '1-simplex in 1D. Two points, maximum separation: antipodal.',
+      // 2 points on a circle (projected from sphere)
+      pts: () => [[0, -1], [0, 1]]
+    },
+    3: {
+      name: 'Trigonal Planar', formula: 'arccos(-1/2)', angle: 120, regime: 'Simplex',
+      D: 2.0, info: '2-simplex in 2D. Equilateral triangle on the equatorial plane.',
+      pts: () => {
+        const a = [];
+        for (let i = 0; i < 3; i++) {
+          const th = i * 2 * Math.PI / 3 - Math.PI / 2;
+          a.push([Math.cos(th), Math.sin(th)]);
+        }
+        return a;
+      }
+    },
+    4: {
+      name: 'Tetrahedral', formula: 'arccos(-1/T)', angle: 109.47, regime: 'Simplex',
+      D: 1.5, info: 'Maximal 3-simplex in dim(○) = T = 3. The pump cycle: P = 4 vertices.',
+      pts: () => {
+        // Tetrahedron projected onto 2D (slight rotation for visual clarity)
+        const raw = [
+          [0, 0, 1],
+          [0.943, 0, -0.333],
+          [-0.471, 0.816, -0.333],
+          [-0.471, -0.816, -0.333]
+        ];
+        const angle = 0.3;
+        return raw.map(([x, y, z]) => {
+          const xr = x * Math.cos(angle) - z * Math.sin(angle);
+          const yr = y;
+          return [xr, yr];
+        });
+      }
+    },
+    5: {
+      name: 'Trig. Bipyramidal', formula: 'non-simplex (mixed)', angle: null, regime: 'Non-simplex',
+      D: 2.5, info: 'First geometry exceeding dim(○) = 3. Mixed 90°/120° angles. Simplex requires 4D.',
+      pts: () => {
+        return [
+          [0, -1],  // axial top
+          [0, 1],   // axial bottom
+          [1, 0],   // equatorial
+          [-0.5, 0.3],
+          [-0.5, -0.3]
+        ];
+      }
+    },
+    6: {
+      name: 'Octahedral', formula: 'π/2 (i-rotation)', angle: 90, regime: 'Non-simplex',
+      D: 3.0, info: 'Six vertices at 90° = the i-rotation. The boundary fills 3D.',
+      pts: () => {
+        return [
+          [0, -1], [0, 1], [1, 0], [-1, 0],
+          [0.5, 0.5], [-0.5, -0.5]  // hint of 3D projection
+        ];
+      }
+    }
+  };
+
+  function draw(n) {
+    const w = canvas.width, h = canvas.height;
+    const cx = w / 2, cy = h / 2, radius = 130;
+    ctx.clearRect(0, 0, w, h);
+
+    // Background circle (the boundary ○)
+    ctx.strokeStyle = '#444038';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    // Label the boundary
+    ctx.fillStyle = '#4DA0C8';
+    ctx.font = '14px "EB Garamond"';
+    ctx.textAlign = 'right';
+    ctx.fillText('○ (boundary)', w - 16, 20);
+
+    const geo = geometries[n];
+    const pts = geo.pts().map(([x, y]) => [cx + x * radius * 0.85, cy + y * radius * 0.85]);
+
+    // Draw connections (bonds)
+    ctx.strokeStyle = n <= P ? 'rgba(184, 160, 96, 0.3)' : 'rgba(136, 120, 80, 0.2)';
+    ctx.lineWidth = 1.5;
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i + 1; j < pts.length; j++) {
+        ctx.beginPath();
+        ctx.moveTo(pts[i][0], pts[i][1]);
+        ctx.lineTo(pts[j][0], pts[j][1]);
+        ctx.stroke();
+      }
+    }
+
+    // Draw center (nucleus)
+    ctx.fillStyle = '#887850';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 6, 0, 2 * Math.PI);
+    ctx.fill();
+
+    // Draw electron pair dots
+    const dotColor = n <= P ? '#E88AAF' : '#9B7AD8';
+    pts.forEach(([x, y], i) => {
+      ctx.fillStyle = dotColor;
+      ctx.beginPath();
+      ctx.arc(x, y, 8, 0, 2 * Math.PI);
+      ctx.fill();
+
+      // Label
+      ctx.fillStyle = '#8A8272';
+      ctx.font = '13px "EB Garamond"';
+      ctx.textAlign = 'center';
+      ctx.fillText('•', x, y - 14);
+    });
+
+    // Draw angle arc if applicable
+    if (pts.length >= 2 && geo.angle) {
+      const angleRad = geo.angle * Math.PI / 180;
+      ctx.strokeStyle = '#B8A060';
+      ctx.lineWidth = 2;
+      const a1 = Math.atan2(pts[0][1] - cy, pts[0][0] - cx);
+      const a2 = Math.atan2(pts[1][1] - cy, pts[1][0] - cx);
+      ctx.beginPath();
+      ctx.arc(cx, cy, 40, Math.min(a1, a2), Math.max(a1, a2));
+      ctx.stroke();
+
+      // Angle label
+      const midA = (a1 + a2) / 2;
+      ctx.fillStyle = '#B8A060';
+      ctx.font = '16px "EB Garamond"';
+      ctx.textAlign = 'center';
+      ctx.fillText(geo.angle.toFixed(1) + '°', cx + 60 * Math.cos(midA), cy + 60 * Math.sin(midA));
+    }
+
+    // Regime indicator
+    ctx.fillStyle = n <= P ? '#4DB8A0' : '#E06060';
+    ctx.font = '15px "EB Garamond"';
+    ctx.textAlign = 'left';
+    ctx.fillText(n <= P ? 'n ≤ P: simplex' : 'n > P: non-simplex', 12, h - 12);
+
+    // Update readouts
+    document.querySelector('#angleReadout .value').textContent = geo.angle ? geo.angle.toFixed(2) + '°' : 'mixed';
+    document.querySelector('#formulaReadout .value').textContent = geo.formula;
+    document.querySelector('#regimeReadout .value').textContent = geo.regime;
+    document.querySelector('#regimeReadout .value').style.color = n <= P ? 'var(--green)' : 'var(--red)';
+    document.querySelector('#dimReadout .value').textContent = geo.D.toFixed(1);
+    document.getElementById('simplexInfo').textContent = geo.info;
+  }
+
+  slider.addEventListener('input', () => {
+    const n = parseInt(slider.value);
+    valSpan.textContent = n;
+    draw(n);
+  });
+  draw(4);
+})();
+
+// ============================================================
+// Lone Pair Canvas
+// ============================================================
+(function() {
+  const canvas = document.getElementById('lonePairCanvas');
+  const ctx = canvas.getContext('2d');
+  const slider = document.getElementById('lonePairSlider');
+  const valSpan = document.getElementById('lonePairVal');
+
+  const molecules = [
+    { nlp: 0, name: 'CH₄', measured: 109.47, bonds: 4 },
+    { nlp: 1, name: 'NH₃', measured: 107.0, bonds: 3 },
+    { nlp: 2, name: 'H₂O', measured: 104.45, bonds: 2 },
+    { nlp: 3, name: 'HF (limit)', measured: null, bonds: 1 }
+  ];
+
+  function predict(nlp) {
+    const cosVal = -1/T + nlp * (2 / (R*R));
+    return Math.acos(cosVal) * 180 / Math.PI;
+  }
+
+  function draw(nlp) {
+    const w = canvas.width, h = canvas.height;
+    const cx = w / 2, cy = h / 2, radius = 130;
+    ctx.clearRect(0, 0, w, h);
+
+    const mol = molecules[nlp];
+    const predicted = predict(nlp);
+
+    // Background sphere
+    ctx.strokeStyle = '#444038';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    // Compute 4 tetrahedral directions (projected)
+    // Then color-code: first (4-nlp) are bonds, rest are lone pairs
+    const raw = [
+      [0, 0, 1],
+      [0.943, 0, -0.333],
+      [-0.471, 0.816, -0.333],
+      [-0.471, -0.816, -0.333]
+    ];
+    const angle = 0.35;
+    const pts2d = raw.map(([x, y, z]) => {
+      const xr = x * Math.cos(angle) - z * Math.sin(angle);
+      const yr = y;
+      return [cx + xr * radius * 0.8, cy + yr * radius * 0.8];
+    });
+
+    // If lone pairs > 0, adjust bond pair positions to show compression
+    // (Visual approximation: squeeze the bond directions closer together)
+    const bondPts = pts2d.slice(0, 4 - nlp);
+    const lonePts = pts2d.slice(4 - nlp);
+
+    // Draw connections from center
+    // Bonds
+    bondPts.forEach(([x, y]) => {
+      ctx.strokeStyle = 'rgba(77, 184, 160, 0.5)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    });
+
+    // Lone pairs (dashed)
+    lonePts.forEach(([x, y]) => {
+      ctx.strokeStyle = 'rgba(155, 122, 216, 0.4)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 4]);
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    });
+
+    // Center atom
+    ctx.fillStyle = '#B8A060';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 10, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.fillStyle = '#0A0A0F';
+    ctx.font = '12px "EB Garamond"';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const centerLabels = ['C', 'N', 'O', 'F'];
+    ctx.fillText(centerLabels[nlp], cx, cy);
+
+    // Bond pair dots (H atoms)
+    bondPts.forEach(([x, y]) => {
+      ctx.fillStyle = '#4DB8A0';
+      ctx.beginPath();
+      ctx.arc(x, y, 7, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.fillStyle = '#0A0A0F';
+      ctx.font = '11px "EB Garamond"';
+      ctx.fillText('H', x, y);
+    });
+
+    // Lone pair clouds
+    lonePts.forEach(([x, y]) => {
+      ctx.fillStyle = 'rgba(155, 122, 216, 0.3)';
+      ctx.beginPath();
+      ctx.ellipse(x, y, 14, 10, Math.atan2(y - cy, x - cx), 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.strokeStyle = '#9B7AD8';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+
+    // Angle arc between first two bond pairs
+    if (bondPts.length >= 2) {
+      const a1 = Math.atan2(bondPts[0][1] - cy, bondPts[0][0] - cx);
+      const a2 = Math.atan2(bondPts[1][1] - cy, bondPts[1][0] - cx);
+      ctx.strokeStyle = '#B8A060';
+      ctx.lineWidth = 2;
+      let start = Math.min(a1, a2);
+      let end = Math.max(a1, a2);
+      if (end - start > Math.PI) { const tmp = start; start = end; end = tmp + 2 * Math.PI; }
+      ctx.beginPath();
+      ctx.arc(cx, cy, 45, start, end);
+      ctx.stroke();
+
+      const midA = (start + end) / 2;
+      ctx.fillStyle = '#B8A060';
+      ctx.font = '15px "EB Garamond"';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(predicted.toFixed(1) + '°', cx + 65 * Math.cos(midA), cy + 65 * Math.sin(midA));
+    }
+
+    // Legend
+    ctx.font = '13px "EB Garamond"';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillStyle = '#4DB8A0';
+    ctx.fillText('● Bond pair', 10, h - 36);
+    ctx.fillStyle = '#9B7AD8';
+    ctx.fillText('● Lone pair', 10, h - 18);
+
+    // Update readouts
+    document.querySelector('#lpAngleReadout .value').textContent = predicted.toFixed(2) + '°';
+    const measured = mol.measured;
+    document.querySelector('#lpMeasuredReadout .value').textContent = measured ? measured.toFixed(2) + '°' : 'N/A';
+    const error = measured ? Math.abs(predicted - measured) : 0;
+    document.querySelector('#lpErrorReadout .value').textContent = measured ? error.toFixed(2) + '°' : 'N/A';
+    document.querySelector('#lpMoleculeReadout .value').textContent = mol.name;
+
+    // Formula display
+    const cosVal = -1/T + nlp * (2 / (R*R));
+    let formulaHTML = '<span class="d">cos(θ) = </span><span class="w">-1/3</span>';
+    if (nlp > 0) {
+      formulaHTML += ' <span class="d">+</span> <span class="p">' + nlp + '</span><span class="d"> × </span><span class="w">2/49</span>';
+    }
+    formulaHTML += '<span class="d"> = </span><span class="w">' + cosVal.toFixed(5) + '</span>';
+    document.getElementById('lpFormulaDisplay').innerHTML = formulaHTML;
+  }
+
+  slider.addEventListener('input', () => {
+    const n = parseInt(slider.value);
+    valSpan.textContent = n;
+    draw(n);
+  });
+  draw(0);
+})();
+
+// ============================================================
+// Subshell Canvas
+// ============================================================
+(function() {
+  const canvas = document.getElementById('subshellCanvas');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+
+  const subshells = [
+    { name: 's', l: 0, d: 0, modes: 1, color: '#E88AAF', fw: '•' },
+    { name: 'p', l: 1, d: 0.5, modes: 3, color: '#4DB8A0', fw: 'T' },
+    { name: 'd', l: 2, d: 1.0, modes: 5, color: '#4DA0C8', fw: 'Φ+○' },
+    { name: 'f', l: 3, d: 1.5, modes: 7, color: '#9B7AD8', fw: 'R' },
+  ];
+
+  // Draw A'(d) function as a line, with subshell points marked
+  const margin = { top: 30, right: 40, bottom: 50, left: 60 };
+  const plotW = w - margin.left - margin.right;
+  const plotH = h - margin.top - margin.bottom;
+
+  function xScale(d) { return margin.left + (d / 2) * plotW; }
+  function yScale(v) { return margin.top + plotH - (v / 9) * plotH; }
+
+  // Axes
+  ctx.strokeStyle = '#444038';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(margin.left, margin.top);
+  ctx.lineTo(margin.left, h - margin.bottom);
+  ctx.lineTo(w - margin.right, h - margin.bottom);
+  ctx.stroke();
+
+  // A'(d) line
+  ctx.strokeStyle = 'rgba(184, 160, 96, 0.4)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let d = 0; d <= 2; d += 0.05) {
+    const x = xScale(d);
+    const y = yScale(4 * d + 1);
+    if (d === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Label the line
+  ctx.fillStyle = '#887850';
+  ctx.font = '15px "EB Garamond"';
+  ctx.textAlign = 'left';
+  ctx.fillText("A'(d) = 4d + 1", xScale(1.6), yScale(4 * 1.6 + 1) - 14);
+
+  // Plot subshell points
+  subshells.forEach(ss => {
+    const x = xScale(ss.d);
+    const y = yScale(ss.modes);
+
+    // Dot
+    ctx.fillStyle = ss.color;
+    ctx.beginPath();
+    ctx.arc(x, y, 8, 0, 2 * Math.PI);
+    ctx.fill();
+
+    // Value label
+    ctx.fillStyle = '#E0D8C8';
+    ctx.font = '18px "EB Garamond"';
+    ctx.textAlign = 'center';
+    ctx.fillText(ss.modes, x, y - 16);
+
+    // Subshell name below
+    ctx.fillStyle = ss.color;
+    ctx.font = '16px "EB Garamond"';
+    ctx.fillText(ss.name, x, y + 24);
+
+    // Framework constant
+    ctx.fillStyle = '#8A8272';
+    ctx.font = '13px "EB Garamond"';
+    ctx.fillText('= ' + ss.fw, x, y + 40);
+  });
+
+  // X axis labels
+  ctx.fillStyle = '#8A8272';
+  ctx.font = '14px "EB Garamond"';
+  ctx.textAlign = 'center';
+  [0, 0.5, 1.0, 1.5, 2.0].forEach(d => {
+    ctx.fillText(d.toString() + 'D', xScale(d), h - margin.bottom + 20);
+  });
+
+  // Y axis label
+  ctx.save();
+  ctx.translate(18, margin.top + plotH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center';
+  ctx.fillText('substates (2l+1)', 0, 0);
+  ctx.restore();
+})();
+
+// ============================================================
+// Hybridization Ladder Canvas
+// ============================================================
+(function() {
+  const canvas = document.getElementById('ladderCanvas');
+  const ctx = canvas.getContext('2d');
+
+  const hybrids = {
+    'sp':    { d: 1.0, angle: '180°', meaning: 'extension\n(commitment)', color: '#4DB8A0', examples: 'CO₂, C₂H₂' },
+    'sp2':   { d: 2.0, angle: '120°', meaning: 'relational surface\n(Φ)', color: '#4DA0C8', examples: 'BF₃, graphene' },
+    'sp3':   { d: 1.5, angle: '109.5°', meaning: 'commitment\n(i² = -1)', color: '#B8A060', examples: 'CH₄, diamond' },
+    'sp3d':  { d: 2.5, angle: 'mixed', meaning: 'emergence\n(i³ = -i)', color: '#9B7AD8', examples: 'PCl₅' },
+    'sp3d2': { d: 3.0, angle: '90°', meaning: 'boundary closure\n(○)', color: '#E88AAF', examples: 'SF₆' }
+  };
+
+  let activeHybrid = 'sp3';
+
+  function draw() {
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    const margin = { left: 60, right: 40, top: 40, bottom: 60 };
+    const plotW = w - margin.left - margin.right;
+    const plotH = h - margin.top - margin.bottom;
+
+    function xPos(d) { return margin.left + (d / 3.5) * plotW; }
+    function yMid() { return margin.top + plotH / 2; }
+
+    // Draw the dimensional ladder as a horizontal line
+    ctx.strokeStyle = '#444038';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(xPos(0), yMid());
+    ctx.lineTo(xPos(3.5), yMid());
+    ctx.stroke();
+
+    // Tick marks for all stations
+    const stations = [0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5];
+    const stationLabels = ['0D', '0.5D', '1D', '1.5D', '2D', '2.5D', '3D', '3.5D'];
+    stations.forEach((d, i) => {
+      const x = xPos(d);
+      const isInteger = d === Math.floor(d);
+      ctx.strokeStyle = isInteger ? '#887850' : '#444038';
+      ctx.lineWidth = isInteger ? 2 : 1;
+      ctx.beginPath();
+      ctx.moveTo(x, yMid() - 10);
+      ctx.lineTo(x, yMid() + 10);
+      ctx.stroke();
+
+      ctx.fillStyle = '#8A8272';
+      ctx.font = '12px "EB Garamond"';
+      ctx.textAlign = 'center';
+      ctx.fillText(stationLabels[i], x, yMid() + 28);
+    });
+
+    // Draw each hybridization as a marker
+    Object.entries(hybrids).forEach(([name, data]) => {
+      const x = xPos(data.d);
+      const isActive = name === activeHybrid;
+      const y = yMid();
+
+      // Marker
+      ctx.fillStyle = isActive ? data.color : 'rgba(68, 64, 56, 0.6)';
+      ctx.beginPath();
+      ctx.arc(x, y, isActive ? 14 : 8, 0, 2 * Math.PI);
+      ctx.fill();
+
+      if (isActive) {
+        ctx.strokeStyle = data.color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(x, y, 20, 0, 2 * Math.PI);
+        ctx.stroke();
+      }
+
+      // Label above
+      ctx.fillStyle = isActive ? data.color : '#8A8272';
+      ctx.font = (isActive ? '18px' : '14px') + ' "EB Garamond"';
+      ctx.textAlign = 'center';
+      const label = name.replace('sp3d2', 'sp³d²').replace('sp3d', 'sp³d').replace('sp3', 'sp³').replace('sp2', 'sp²');
+      ctx.fillText(label, x, y - (isActive ? 32 : 20));
+
+      // Angle below
+      if (isActive) {
+        ctx.fillStyle = '#E0D8C8';
+        ctx.font = '16px "EB Garamond"';
+        ctx.fillText(data.angle, x, y + 50);
+        ctx.fillStyle = '#8A8272';
+        ctx.font = '13px "EB Garamond"';
+        ctx.fillText(data.examples, x, y + 68);
+      }
+    });
+  }
+
+  // Button handling
+  document.querySelectorAll('.hybrid-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.hybrid-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeHybrid = btn.dataset.hybrid;
+      const data = hybrids[activeHybrid];
+      draw();
+
+      const label = activeHybrid.replace('sp3d2', 'sp³d²').replace('sp3d', 'sp³d').replace('sp3', 'sp³').replace('sp2', 'sp²');
+      document.querySelector('#hybridNameReadout .value').textContent = label;
+      document.querySelector('#hybridAngleReadout .value').textContent = data.angle;
+      document.querySelector('#hybridDimReadout .value').textContent = data.d.toFixed(1) + 'D';
+      document.querySelector('#hybridMeaningReadout .value').innerHTML = data.meaning.replace('\n', '<br>');
+    });
+  });
+
+  draw();
+})();
+
+// ============================================================
+// Reaction Dynamics Canvas
+// ============================================================
+(function() {
+  const canvas = document.getElementById('reactionCanvas');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+
+  let progress = 0;  // 0 to 1
+  let running = false;
+  let catalyzed = false;
+  let animFrame;
+
+  const stages = [
+    { at: 0.0, name: 'Reactants', symbol: '⊙ᴿ', meaning: 'Stable circumpunct', color: '#4DB8A0' },
+    { at: 0.3, name: 'Convergence', symbol: '⊛', meaning: 'Bonds breaking, approaching aperture', color: '#4DA0C8' },
+    { at: 0.5, name: 'Transition State', symbol: '•', meaning: 'The aperture; max energy, min stability', color: '#E88AAF' },
+    { at: 0.7, name: 'Emergence', symbol: '✹', meaning: 'New bonds forming, energy released', color: '#9B7AD8' },
+    { at: 1.0, name: 'Products', symbol: '⊙ᴾ', meaning: 'New stable circumpunct', color: '#B8A060' },
+  ];
+
+  function getStage(p) {
+    for (let i = stages.length - 1; i >= 0; i--) {
+      if (p >= stages[i].at) return stages[i];
+    }
+    return stages[0];
+  }
+
+  function drawCurve() {
+    ctx.clearRect(0, 0, w, h);
+    const margin = { left: 60, right: 40, top: 30, bottom: 50 };
+    const plotW = w - margin.left - margin.right;
+    const plotH = h - margin.top - margin.bottom;
+
+    function xPos(t) { return margin.left + t * plotW; }
+    function yPos(e) { return margin.top + (1 - e) * plotH; }
+
+    // Energy curve (Gaussian barrier)
+    const barrierH = catalyzed ? 0.4 : 0.8;
+    const productE = 0.15;
+
+    function energy(t) {
+      const barrier = barrierH * Math.exp(-(Math.pow((t - 0.5) * 4, 2)));
+      const baseline = t < 0.5 ? 0.2 : 0.2 - productE * (t - 0.5) * 2;
+      return baseline + barrier;
+    }
+
+    // Axes
+    ctx.strokeStyle = '#444038';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(margin.left, margin.top);
+    ctx.lineTo(margin.left, h - margin.bottom);
+    ctx.lineTo(w - margin.right, h - margin.bottom);
+    ctx.stroke();
+
+    // Axis labels
+    ctx.fillStyle = '#8A8272';
+    ctx.font = '14px "EB Garamond"';
+    ctx.textAlign = 'center';
+    ctx.fillText('Reaction Coordinate (⊛ → i → ✹)', margin.left + plotW / 2, h - 10);
+    ctx.save();
+    ctx.translate(16, margin.top + plotH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Energy', 0, 0);
+    ctx.restore();
+
+    // Draw catalyzed curve (if active, draw faded original first)
+    if (catalyzed) {
+      ctx.strokeStyle = 'rgba(68, 64, 56, 0.3)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      for (let t = 0; t <= 1; t += 0.005) {
+        const uncatBarrier = 0.8 * Math.exp(-(Math.pow((t - 0.5) * 4, 2)));
+        const uncatBase = t < 0.5 ? 0.2 : 0.2 - productE * (t - 0.5) * 2;
+        const x = xPos(t), y = yPos(uncatBase + uncatBarrier);
+        if (t === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Main energy curve
+    ctx.strokeStyle = '#B8A060';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let t = 0; t <= 1; t += 0.005) {
+      const x = xPos(t), y = yPos(energy(t));
+      if (t === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Ea arrow
+    const reactantE = energy(0);
+    const peakE = energy(0.5);
+    ctx.strokeStyle = '#E88AAF';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.moveTo(xPos(0.5), yPos(reactantE));
+    ctx.lineTo(xPos(0.5), yPos(peakE));
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = '#E88AAF';
+    ctx.font = '15px "EB Garamond"';
+    ctx.textAlign = 'left';
+    ctx.fillText('Eₐ' + (catalyzed ? ' (lowered)' : ''), xPos(0.52), yPos((reactantE + peakE) / 2));
+
+    // Stage markers
+    stages.forEach(s => {
+      const x = xPos(s.at);
+      const y = yPos(energy(s.at));
+      ctx.fillStyle = 'rgba(10, 10, 15, 0.7)';
+      ctx.beginPath();
+      ctx.arc(x, y, 5, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.fillStyle = s.color;
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, 2 * Math.PI);
+      ctx.fill();
+    });
+
+    // Progress dot
+    if (running || progress > 0) {
+      const x = xPos(progress);
+      const y = yPos(energy(progress));
+      const stage = getStage(progress);
+
+      // Glow
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, 20);
+      grad.addColorStop(0, stage.color + '88');
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(x, y, 20, 0, 2 * Math.PI);
+      ctx.fill();
+
+      // Dot
+      ctx.fillStyle = stage.color;
+      ctx.beginPath();
+      ctx.arc(x, y, 7, 0, 2 * Math.PI);
+      ctx.fill();
+
+      // Symbol above
+      ctx.fillStyle = stage.color;
+      ctx.font = '22px "EB Garamond"';
+      ctx.textAlign = 'center';
+      ctx.fillText(stage.symbol, x, y - 20);
+
+      // Update readouts
+      document.querySelector('#rxnStageReadout .value').textContent = stage.name;
+      document.querySelector('#rxnStageReadout .value').style.color = stage.color;
+      document.querySelector('#rxnSymbolReadout .value').textContent = stage.symbol;
+      document.querySelector('#rxnSymbolReadout .value').style.color = stage.color;
+      document.querySelector('#rxnFrameworkReadout .value').textContent = stage.meaning;
+    }
+
+    // Catalyst label
+    if (catalyzed) {
+      ctx.fillStyle = '#4DB8A0';
+      ctx.font = '14px "EB Garamond"';
+      ctx.textAlign = 'right';
+      ctx.fillText('Catalyst: aperture widened', w - margin.right, margin.top + 16);
+    }
+
+    document.getElementById('eaVal').textContent = catalyzed ? 'Low (catalyzed)' : 'High';
+  }
+
+  function animate() {
+    if (!running) return;
+    progress += 0.005;
+    if (progress >= 1) {
+      progress = 1;
+      running = false;
+    }
+    drawCurve();
+    if (running) animFrame = requestAnimationFrame(animate);
+  }
+
+  document.getElementById('runReaction').addEventListener('click', () => {
+    progress = 0;
+    running = true;
+    animate();
+  });
+
+  document.getElementById('addCatalyst').addEventListener('click', () => {
+    catalyzed = !catalyzed;
+    document.getElementById('addCatalyst').classList.toggle('active', catalyzed);
+    document.getElementById('addCatalyst').textContent = catalyzed ? 'Remove Catalyst' : 'Add Catalyst';
+    drawCurve();
+  });
+
+  drawCurve();
+})();
+</script>
+</body>
+</html>
