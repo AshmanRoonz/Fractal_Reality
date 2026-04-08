@@ -19158,16 +19158,67 @@ A(d) at the eight stations of the octave produces the first 8 triangular numbers
 
 The sequence contains exactly two perfect numbers (numbers equal to the sum of their proper divisors): 6 at 1.5D (commitment) and 28 at 3.5D (recursion). These mark the two points where accumulated traversal achieves number-theoretic self-completion. Both are processual (half-integer) dimensions. Both sit on the real axis of the i-plane (i² = -1 and i⁰ = +1).
 
-The sum of the full octave: 0+1+3+6+10+15+21+28 = 84 = G×R = P×E(3). The total traversal summed across all eight stations equals generators times rungs.
+**The octave sum is a tetrahedral number.**
 
-**The frame-quotes-interior pattern in A'(d).**
+The sum of the full octave: 0+1+3+6+10+15+21+28 = 84. This is the 7th tetrahedral number:
 
 ```
-    A'(0)   = 1  = A(0.5)       the structural origin quotes genesis
-    A'(3.5) = 15 = A(2.5)       recursion's rate quotes emergence's total
+    Tet(7) = 7 × 8 × 9 / 6 = 84
+
+    In framework terms:
+        7 = R              (rungs)
+        8 = R+1 = SU(3)    (strong gauge dimension)
+        9 = R+2 = T²       (triad squared)
+        6 = T!             (triad factorial)
+
+    Tet(R) = R · SU(3) · T² / T!
 ```
 
-The derivative at the two boundary stations (0D and 3.5D) equals the accumulated traversal at specific interior stations. The frame quotes the interior: the rate of change at the edge of the cycle references the total work done inside the cycle.
+Why does this equal G × R = 84? Because SU(3)·T²/T! = G. This is the structural identity (T²-1)·T²/T! = T(T+1), which reduces to the tautology (T+1)·T = T(T+1). The identity SU(3)·T² = G·T! is forced by T = 3.
+
+Why does it also equal P × E(3) = 4 × 21 = 84? Because P/G = R/E(3) = 1/T. The pump phases are to the generators as the rungs are to the closure exponent; both ratios equal 1/T. The triad is the scaling factor.
+
+The number of stations in the octave is 8 = SU(3) = R+1. So the tetrahedral index is R, and the sum is Tet(R) = R·G. The gauge dimension determines how many stations the octave has; the rungs determine the tetrahedral index; and their interaction produces the generator-rung product.
+
+Connection to Π: Sum/Π = T^T/(2R). Equivalently:
+
+```
+    Π = Sum × 2R/T^T = (G·R) × (2R/T^T) = 2G·R²/T^T
+    392/9 = 84 × 14/27 = 1176/27 = 392/9    ✓
+```
+
+This gives a fifth equivalent form: Π = 2G·R²/T^T.
+
+**The derivative-quoting pattern in A'(d).**
+
+A'(d) = 4d+1 sometimes equals A(d₂) for another station d₂. When?
+
+Setting A'(d₁) = A(d₁ + δ) for various shifts δ and solving:
+
+```
+    FORWARD HALF-STEP: A'(d) = A(d + 1/2)
+        Requires d(2d - 1) = 0
+        Solutions: d = 0  and  d = 1/2
+        A'(0)   = 1 = A(0.5)    ✓
+        A'(0.5) = 3 = A(1)      ✓
+
+    BACKWARD FULL-STEP: A'(d) = A(d - 1)
+        Requires d(2d - 7) = 0  →  d(2d - R) = 0
+        Solutions: d = 0  and  d = R/2 = 3.5
+        A'(3.5) = 15 = A(2.5)   ✓
+
+    BACKWARD HALF-STEP: A'(d) = A(d - 1/2)
+        Requires 2d² - 5d - 1 = 0
+        Solutions irrational. No station satisfies this.
+
+    FORWARD FULL-STEP: A'(d) = A(d + 1)
+        Requires 2d² + d + 2 = 0
+        Discriminant < 0. No real solutions.
+```
+
+Only two quote types exist. The forward half-step marks the beginning of the octave (d = 0 and d = 1/2). The backward full-step marks the end (d = 0 and d = R/2 = 3.5). The origin participates in both.
+
+The backward equation d(2d - R) = 0 is the key: the recursion dimension d = R/2 = 3.5 is determined by the rungs. R = T² - 2 = 7 forces the backward quoting station to be 3.5D. This is not an independent fact about 3.5D; it is a consequence of R/2 landing on the last processual station. The rungs and the recursion dimension are algebraically linked through the quoting pattern.
 
 ### §27.8 Primes Are Made of Dimensions
 
