@@ -27,6 +27,16 @@ The framework has **ten stations** forming a dimensional octave: ∞, •, ⊛, 
 
 **Lucas-Fibonacci bridge**: Structural constants are Lucas numbers L(n) = φⁿ + φ⁻ⁿ: L(0)=2 (channels), L(1)=1 (aperture), L(2)=3 (T), L(3)=4 (P), L(4)=7 (R). Fibonacci numbers carry asymmetric quantities: F(7)=13 (V), F(8)=21 (full ladder). Lucas = convergence + emergence (both channels summed). Fibonacci = net flow.
 
+### Derivation Chain Status
+
+Every prediction in this document traces back to axioms A0-A4 through derivations D1-D5. The chain status describes how complete that trace is:
+
+- **⊙ Derived**: Complete chain from axioms to prediction. Every step is proven; no gaps. The formula is a necessary consequence of the axioms.
+- **◐ Structured**: The framework numbers in the formula are derived (the exponents, correction terms, and structural constants all have proven framework identities). The algebraic form (why this particular function of those numbers) is not yet proven unique. The numbers are right; the proof that this is the ONLY arrangement that works is incomplete.
+- **• Mapped**: The framework explains the numbers IF the pattern exists (e.g., "if there is a genetic code, it must use T = 3 bases per codon"), but does not yet derive the pattern's existence from axioms alone. The mapping is structural, not contingent; it follows from A3 (self-similarity) applied at a specific scale.
+
+These are not confidence levels. They describe where the derivation chain currently stands. A ◐ Structured prediction with 0.22 ppb accuracy is not less trustworthy than a ⊙ Derived one; it means the formula works and the numbers are justified, but the proof of uniqueness is still being closed. The framework's goal is to move every prediction to ⊙ Derived.
+
 ---
 
 ## ∞ — INFINITY (Source, ∞D)
@@ -106,7 +116,7 @@ Since 1 ≠ 0 (A0), the 1 cannot remain undifferentiated. Self-limitation is for
 - φ² = Φ, self-similar nesting
 - 2/φ³ = bidirectional valve correction (⊛ and ✹)
 
-**Self-referential closure (exact)**:
+**Self-referential closure (exact)**: ◐ Structured
 ```
 1/α = 360/φ² - 2/φ³ + α/(21 - 4/3) = 137.035999147
 ```
@@ -158,7 +168,7 @@ From A1: if the 1 must self-limit, the act of self-limitation is convergence, an
 
 ### Physics at 0.5D: The Speed of Light c
 
-c lives at 0.5D (speed limit of convergent propagation).
+c lives at 0.5D (speed limit of convergent propagation). ◐ Structured
 
 ```
 c = √(2◐ · sin(θ))
@@ -215,7 +225,7 @@ From A0 + A1: if convergence is real (D1), it must hold. A line that breaks is n
 
 ### Physics at 1D: The Reduced Planck Constant ℏ
 
-ℏ lives at 1D (minimum commitment of extension).
+ℏ lives at 1D (minimum commitment of extension). ⊙ Derived
 
 ```
 ℏ = E_cycle / ω_cycle = 1
@@ -285,7 +295,7 @@ From A2 → A3: the line must differentiate to become a field. This is the i-tur
 
 Mass ratios live at 1.5D (rotational spectral splitting at the i-turn).
 
-**Muon-to-electron mass ratio**:
+**Muon-to-electron mass ratio**: ◐ Structured
 ```
 m_μ/m_e = (1/α)^(13/12 + α/27) = 206.767
 ```
@@ -293,7 +303,7 @@ m_μ/m_e = (1/α)^(13/12 + α/27) = 206.767
 - Exponent: V/(V-1) = 13/12 (the first splitting; local differentiation)
 - Correction: K = 27 = 3³ = T³ (generation cube)
 
-**Tau-to-electron mass ratio**:
+**Tau-to-electron mass ratio**: ◐ Structured
 ```
 m_τ/m_e = (1/α)^(58/35 + α/81) = 3477.2
 ```
@@ -317,10 +327,10 @@ m_τ/m_e = (1/α)^(58/35 + α/81) = 3477.2
 ### Chemistry at 1.5D
 - sp³ hybridization maps to 1.5D (tetrahedral geometry)
 - Bond angle from simplex formula: θ = arccos(-1/(n-1)) for n ≤ P = 4
-- Tetrahedral angle = arccos(-1/T) = arccos(-1/3) = 109.47° (exact)
+- Tetrahedral angle = arccos(-1/T) = arccos(-1/3) = 109.47° (exact) ⊙ Derived
 - Secondary protein structure = 1.5D (the i-turn literally; alpha helices, beta sheets)
 
-**Pi ratios (universal constants at the 1.5D station)**:
+**Pi ratios (universal constants at the 1.5D station)**: ◐ Structured
 ```
 pi_1/sigma_true = R/T² = 7/9
 ```
@@ -335,7 +345,7 @@ The second pi bond adds V/P(P+1) of the true sigma energy.
 - C≡C/C-C = 1 + 7/9 + 13/20 = 437/180 = 2.428 (measured 2.425, 0.12%)
 - Bond length ratio C≡C/C-C = 120/154 = 0.779 ≈ R/T² = 7/9 (0.19%)
 
-**Three-layer bond energy model**:
+**Three-layer bond energy model**: ◐ Structured
 - Layer 1: Pi ratios (universal; R/T² and V/P(P+1))
 - Layer 2: Lone pair suppression: f = 1/(1 + n_LP)
   - sigma_measured = sigma_true × f
@@ -381,7 +391,7 @@ Gauge structure lives at 2D (field symmetry).
 - Gauge group dimensions: 8 + 3 + 1 = 12 = G = 4 × 3 = P × T
 - 3 × 2 × 1 = 6 = the 6 binary DOF in the 64-state architecture
 
-**Weinberg angle**:
+**Weinberg angle**: ◐ Structured
 ```
 sin²θ_W = 3/13 + 5α/81 = 3/V + (Φ+○)α/T⁴ = 0.23122
 ```
@@ -413,7 +423,7 @@ sin²θ_W = 3/13 + 5α/81 = 3/V + (Φ+○)α/T⁴ = 0.23122
 - Octahedral angle = π/2 (the i-rotation)
 - Molten globule in protein folding = Φ station (native 2° structure but no 3°)
 
-**Screening constants from the dimensional ladder**:
+**Screening constants from the dimensional ladder**: ⊙ Derived
 Common denominator P(P+1) = 20:
 ```
 s(1s)   = T!/P(P+1)      = 6/20  = 0.30  (1s pair; closure permutations)
@@ -423,7 +433,7 @@ s(deep) = P(P+1)/P(P+1)   = 20/20 = 1.00  (deep inner; complete screening)
 ```
 These are exact, not fits. Framework Z_eff = Z minus screening gives 3.0% average error across H through Ar.
 
-**Electronegativity as convergence strength**:
+**Electronegativity as convergence strength**: ◐ Structured
 ```
 EN = Z_eff^(R/A(2)) / n = Z_eff^(7/10) / n
 ```
@@ -475,7 +485,7 @@ From A3 → A4: the field cannot remain an open surface forever; self-similarity
 
 ### Physics at 2.5D: Emergence Between Scales
 
-**v/Λ_QCD ratio**:
+**v/Λ_QCD ratio**: ◐ Structured
 ```
 v/Λ_QCD = (1/α)^(56/39) = 1170.24
 ```
@@ -486,7 +496,7 @@ v/Λ_QCD = (1/α)^(56/39) = 1170.24
 
 **Exponent formula**: E((T+2)/2) = E(2.5) = (S - SU8)/(T·V) = 56/39
 
-**Cabibbo angle**:
+**Cabibbo angle**: ◐ Structured
 ```
 sin(θ_C) = α^(1/2 + α·T/R) · SU(3)/T = α^(1/2 + 3α/7) · 8/3 = 0.22432
 ```
@@ -543,7 +553,7 @@ From A0 + A1: the three constraints must close into a boundary. Aperture + conti
 
 G lives at 3D (boundary closure).
 
-**Gravitational coupling**:
+**Gravitational coupling**: ⊙ Derived
 ```
 α_G = α²¹ × φ²/2 × (1 + 2α/91)
 ```
@@ -578,7 +588,7 @@ Every physical law is •, —, Φ, or ○ compounded:
 - **General relativity**: geometry of convergence. Spacetime curvature IS • shaping Φ.
 - **Thermodynamics**: constraints relaxing. Second law = the 1 tending back toward itself.
 
-### The Cosmological Constant Λ
+### The Cosmological Constant Λ: ◐ Structured
 ```
 Λ = α^56 · (1 - 6α + 4α²) / 72
 ```
@@ -591,7 +601,7 @@ Every physical law is •, —, Φ, or ○ compounded:
 - Each separation is a framework ratio: G/α = E(3), Λ/G = SU(3)/T
 - **The cosmological constant problem dissolves**: 56 α-steps naturally produce 10⁻¹²⁰
 
-### The Higgs Quartic Coupling λ
+### The Higgs Quartic Coupling λ: ◐ Structured
 ```
 λ = (1/8)(1 + 5α - 8α²)
 ```
@@ -600,13 +610,13 @@ Every physical law is •, —, Φ, or ○ compounded:
 - First order +(Φ+○)α = +5α (field+boundary coupling)
 - Second order -SU(3)α² = -8α² (gauge suppression)
 
-### Gauge Boson Sector
+### Gauge Boson Sector: ◐ Structured
 - **Higgs VEV**: v/m_e = T³/α² × (1 - R·α) = 245,857 MeV (measured 246,220, 0.15%)
 - **W boson**: m_W/m_e = (1/α)^(95/39 - α/Φ); predicted 80,488 MeV (measured 80,369, 0.15%)
 - **Z boson**: m_Z = m_W/cos(θ_W); predicted 91,798 MeV (measured 91,188, 0.67%)
 - **Higgs mass**: m_H = √(2λ)·v; predicted 125,125 MeV (measured 125,250, 0.10%)
 
-### The Proton-to-Electron Mass Ratio
+### The Proton-to-Electron Mass Ratio: ◐ Structured
 ```
 m_p/m_e = (1/α)^(3/2 + (11/3)α + 13α²) = 1836.143
 ```
@@ -616,7 +626,7 @@ m_p/m_e = (1/α)^(3/2 + (11/3)α + 13α²) = 1836.143
 - Second order 13 = A'(3) = V (boundary vertex count; self-referential)
 - Elementary vs composite: leptons use A' (derivative, point-like), baryons use A (function, accumulated)
 
-### The Meson Mass Law
+### The Meson Mass Law: ◐ Structured
 Two mass regimes:
 - **Traversal** (exponential): m/m_e = (1/α)^E(d) for leptons and baryons
 - **Field** (multiplicative): m/m_e = F/α for mesons
@@ -633,7 +643,7 @@ Base mass quantum: m_e/α ≈ 70 MeV. Every meson is F copies of this quantum:
 
 Three particle classes map to three constraints: leptons to • (differentiation, exponential with A'), baryons to ○ (evaluation, exponential with A), mesons to Φ (multiplication, linear with F).
 
-### The Neutral Pion
+### The Neutral Pion: ◐ Structured
 ```
 m_π⁰/m_e = (Φ - SU(3)·α)/α = 135.96 MeV
 ```
@@ -660,7 +670,7 @@ Hierarchy exponents on a diagonal of Pascal's triangle via iterated hockey stick
 - Bond order as dimensional character: single→1D, double→2D, triple→~3D
 - The boundary as filter in reaction dynamics: Boltzmann factor from boundary filtration compounding multiplicatively
 
-**Ionic resonance from ◐ deviation**:
+**Ionic resonance from ◐ deviation**: ◐ Structured
 ```
 D(A-B) = √(D_AA × D_BB) × [1 + (Φ+T) × ΔEN²]
 ```
@@ -672,7 +682,7 @@ D(A-B) = √(D_AA × D_BB) × [1 + (Φ+T) × ΔEN²]
 - Derivation chain: A0 → T=3 → screening → Z_eff → EN = Z_eff^(7/10)/n → D(A-B)
 - Open refinements: deriving electron affinity directly (sharpens EN power from 7/10), O=O paramagnetic exchange energy, S-F and H-F outliers
 
-**Lone pair compression**:
+**Lone pair compression**: ◐ Structured
 ```
 cos(θ_bb) = -1/T + n_lp × (2/R²)
 ```
@@ -686,11 +696,11 @@ cos(θ_bb) = -1/T + n_lp × (2/R²)
 - Cell membrane = ○ in the cell circumpunct
 - Native protein state = 3D (○ closes)
 - f-subshell has l = T = 3, giving R = 7 substates
-- Murray's Law: vascular branching conserves r^T = r³ because boundary is 3D
+- Murray's Law: ⊙ Derived. Vascular branching conserves r^T = r³ because boundary is 3D
   - **Derives from**: A4 (boundary is 3D; the volume it encloses has T = 3 spatial dimensions) → A3 (vascular network is nested ⊙s; each vessel = ⊙ with lumen = •, wall = Φ, outer surface = ○) → A2 (flow must persist without breaking through the network) → optimization: minimum dissipation in a volume-filling branching network requires Σr_child^T = r_parent^T, where the exponent equals the spatial dimension of the boundary the network must fill → exponent = T because ○ provides exactly T dimensions
 - Leaf venation (2D target): exponent = Φ = 2 (the network fills a surface, not a volume; confirms the exponent tracks the target dimension)
 
-**Genetic code from T = 3**:
+**Genetic code from T = 3**: • Mapped
 - P = T+1 = 4 nucleotide bases
 - T = 3 bases per codon
 - S = P^T = 64 codons = the 64-state architecture at molecular scale
@@ -699,20 +709,20 @@ cos(θ_bb) = -1/T + n_lp × (2/R²)
 - 20 standard amino acids = P(P+1) = 4 × 5
 - Average codon degeneracy = 61/20 = 3.05 ≈ T
 
-**DNA structure**:
+**DNA structure**: • Mapped
 - Base pairs per turn = A(2) = 10
 - Twist per base pair = (T!)² = 36°
 - DNA fractal dimension D = 1.51 ± 0.02 (predicted: 1 + ◐ = 1.5)
 - Pitch/diameter = 34/20 = 1.7 ≈ φ
 - Major groove + minor groove = 22 + 12 = 34 = pitch
 
-**ATP and the cellular pump**:
+**ATP and the cellular pump**: • Mapped
 - ATP has T = 3 phosphate groups
 - ATP synthase rotates 360/T = 120° per ATP synthesized
 - Three binding sites cycle through T conformations
 - ATP (3 = ○) → ADP (2 = Φ) → AMP (1 = •) walks down the triad
 
-**Allometric scaling (Kleiber's Law)**:
+**Allometric scaling (Kleiber's Law)**: ◐ Structured
 ```
 Metabolic rate ∝ M^(T/P) = M^(3/4)
 ```
@@ -721,20 +731,20 @@ Metabolic rate ∝ M^(T/P) = M^(3/4)
 - Total heartbeats per lifetime = mass-invariant (~1-1.5 × 10⁹)
 - **Derives from**: A4 (the organism's boundary provides T = 3 spatial dimensions through which energy must be distributed) → the pump cycle has P = 4 temporal phases (⊛, i, ✹, and the return) → metabolic rate = energy throughput = how fast the pump cycles through the boundary → the boundary's volume scales as M (mass ∝ length^T); the pump cycle distributes energy through P temporal phases, each servicing one fractional dimension of the spatial boundary → scaling exponent = T/P = 3/4: the rate at which P phases service T dimensions → **Open**: formal derivation of why the ratio T/P (not product or difference) is the exponent; the current argument is dimensional but not yet axiomatic
 
-**Protein helix H-bond spans**: 3₁₀ helix = T = 3, α-helix = P = 4, π-helix = Φ+○ = 5. α-helix dominates because P = 4 is the pump cycle. Rise per residue = D = 1.5 Å.
+**Protein helix H-bond spans**: • Mapped. 3₁₀ helix = T = 3, α-helix = P = 4, π-helix = Φ+○ = 5. α-helix dominates because P = 4 is the pump cycle. Rise per residue = D = 1.5 Å.
 - **Derives from**: A2 (commitment: H-bonds must persist to stabilize the helix) → A3 (self-similarity: helix periodicities reflect framework structural numbers at molecular scale) → backbone geometry constrains which residue spans form stable H-bonds → 3₁₀ helix (span T = 3): the triad; minimum stable cycle (tight geometry, strained) → α-helix (span P = 4): the pump cycle; four phases give optimal H-bond geometry (3.6 residues per turn ≈ P); dominates because P is the complete pump cycle → π-helix (span Φ+○ = 5): field + boundary; one step beyond the pump; possible but rare because it exceeds the optimal cycle length → rise per residue = D = 1 + ◐ = 1.5 Å: the balanced fractal dimension appears as the literal step size → **Open**: formal derivation from peptide bond angles and H-bond geometry showing why P is the energy minimum
 
-**Hayflick limit ≈ S = 64**: Cell division capacity = 64-state architecture. Measured range 50-70, centered on 64.
+**Hayflick limit ≈ S = 64**: • Mapped. Cell division capacity = 64-state architecture. Measured range 50-70, centered on 64.
 - **Derives from**: A3 (self-similarity: the 64-state architecture applies at every scale) → at cellular scale, 3 nested ⊙s × 2 channels = 6 binary DOF = 2⁶ = 64 states → A2 (persistence: each division must traverse a distinct state; a repeated state violates commitment because no new constraint is applied) → A4 (closure: when all 64 states have been traversed, the boundary is complete; the cell has expressed its full configurational space) → D4 (recursion: exhausted ⊙ becomes aperture at organism level via apoptosis; the cell's closure opens into the whole it serves)
 
-**Cancer as boundary failure**:
+**Cancer as boundary failure**: ⊙ Derived
 - Cancer = aperture locked open (β_• → 1, oncogene) + boundary filter collapsed (β_○ → 0, tumor suppressor)
 - Neither alone is typically sufficient
 - Cancer cells skip the i-rotation (90° phase check)
 - Testable: β_•/β_○ ratio (Ki-67 / caspase activity) should correlate with aggressiveness
 - **Derives from**: A3 (self-similarity: cell is ⊙ at biological scale; nucleus = •, cytoplasm = Φ, membrane = ○) → A4 (○ filters what passes; this is what the membrane does) → oncogene activation = • locked convergent (β_• → 1): the aperture gathers without releasing, so proliferation signal never stops (the pump cycle jams at ⊛) → tumor suppressor loss = ○ filter collapsed (β_○ → 0): the boundary stops selecting, so nothing is filtered out → both required because: a single constraint failure is compensated by the remaining constraints (conservation of traversal: 0+1+2 = 3; two of three interior constraints still hold the boundary); dual failure collapses ○ → the 90° phase check: the pump cycle requires ⊛ → i → ✹; cancer cells skip i (going from convergence to emergence without the phase rotation that checks alignment; proliferation without differentiation)
 
-**Microtubule architecture**: Four exact framework integers:
+**Microtubule architecture**: • Mapped. Four exact framework integers:
 - V = 13 protofilaments
 - Φ = 2 subunit types (α, β tubulin)
 - T = 3-start helix
@@ -884,7 +894,7 @@ A(d) IS the selection rule; the framework does not choose exponents, the ladder 
 - Local exponents: • differentiates A → E(1.5) = A'(3)/G; Φ integrates A → E(2.5) = Σ A/(T·V); ○ evaluates A → E(3) = A(3)
 - Elementary particles use A' (derivative; point-like); composites use A (function; accumulated)
 
-### The Cosmological Energy Budget
+### The Cosmological Energy Budget: ◐ Structured
 The four i-strokes are superposed quadrants of the complex plane:
 - **~5% visible matter**: energy in the right half-plane (i⁰ and i¹; inter-scale interface: genesis + closure)
 - **~27% dark matter**: energy in the left half-plane (i² and i³; mid-process: committed but not completed; gravitates but does not radiate)
@@ -894,7 +904,7 @@ Dark matter is ⊙s at phases our boundary doesn't resolve: folded but at the wr
 
 **Derives from**: A0 (E = 1; there is one energy) → the i-cycle partitions this one energy into four phase states (i⁰, i¹, i², i³) within the complex plane (Φ) → A4 (the boundary ○ is a filter): our cosmological boundary has a passband; it detects energy at phases where the i-cycle crosses the inter-scale interface (right half-plane) → right half-plane energy (i⁰ + i¹) = visible matter: at the interface, energy interacts with our detectors → left half-plane energy (i² + i³) = dark matter: committed (1.5D gives mass, so it gravitates) but not yet emerged to the right half-plane (so it does not radiate) → Φ itself = dark energy: the 2D field that the quadrants exist within; the substrate, not a phase state → the THREE-PART structure (visible/dark matter/dark energy) and their QUALITATIVE character (interface/processing/field) are derived from the i-cycle + boundary filtration → **Open**: the specific percentages (5%, 27%, 68%) are empirical; deriving the passband width of our cosmological ○ from first principles would predict these ratios.
 
-### Fractal Self-Similarity Across Scales (A3)
+### Fractal Self-Similarity Across Scales (A3): ⊙ Derived
 
 | Scale | Right half-plane (i⁰+i¹) | Left half-plane (i²+i³) | Field |
 |-------|--------------------------|-------------------------|-------|
@@ -1062,7 +1072,7 @@ The same i-cycle quadrant structure maps across scales:
 | MT helix | T-start | 3 | 3 | Exact |
 | Dimer length | SU(3) | 8 nm | 8 nm | Exact |
 
-### Clay Millennium Problem Mapping
+### Clay Millennium Problem Mapping: • Mapped
 
 | Rung | Dim | Problem | Status |
 |------|-----|---------|--------|

@@ -546,6 +546,39 @@ body {
   .accuracy-table th, .accuracy-table td { padding: 0.4rem 0.5rem; }
 }
 
+/* chain-status badges */
+.chain-status {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.65em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.25em 0.6em;
+  margin-left: 0.5em;
+  border-radius: 4px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.chain-status.derived {
+  background: rgba(74, 158, 106, 0.2);
+  color: var(--accent-green);
+  border: 1px solid rgba(74, 158, 106, 0.4);
+}
+
+.chain-status.structured {
+  background: rgba(74, 123, 189, 0.2);
+  color: var(--accent-blue);
+  border: 1px solid rgba(74, 123, 189, 0.4);
+}
+
+.chain-status.mapped {
+  background: rgba(200, 120, 48, 0.2);
+  color: var(--accent-orange);
+  border: 1px solid rgba(200, 120, 48, 0.4);
+}
+
 /* progress bar */
 .progress-bar {
   position: fixed;
@@ -672,7 +705,7 @@ m = 1/c²  (mass = inverse surface signature)
 
     <div class="res-1">
       <div class="domain-layer">
-        <div class="domain-label physics">Physics at 0D · The Fine-Structure Constant α</div>
+        <div class="domain-label physics">Physics at 0D · The Fine-Structure Constant α <span class="chain-status structured">◐ Structured</span></div>
         <div class="domain-content">
           <div class="formula-block">1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147</div>
           <div class="result">Measured: <span class="measured">137.035999177</span> · Error: <span class="error">0.22 ppb (0.00σ)</span></div>
@@ -733,7 +766,7 @@ m = 1/c²  (mass = inverse surface signature)
 
     <div class="res-1">
       <div class="domain-layer">
-        <div class="domain-label physics">Physics at 0.5D · The Speed of Light c</div>
+        <div class="domain-label physics">Physics at 0.5D · The Speed of Light c <span class="chain-status structured">◐ Structured</span></div>
         <div class="domain-content">
           <div class="formula-block">c = √(2◐ · sin(θ))   →   at ◐ = 0.5, θ = π/2:   c = 1</div>
           <p>2 = both channels (⊛ and ✹). ◐ = balance (forced to 0.5). sin(θ) = transverse projection of aperture rotation (maximal at i). Light is energy being constrained; the photon is the minimum fold (purely rotational, nothing held as mass). c is the maximum rate at which convergence can transmit through the field.</p>
@@ -790,7 +823,7 @@ E(t+Δt) = (✹ ∘ i ∘ ⊛) E(t)</div>
 
     <div class="res-1">
       <div class="domain-layer">
-        <div class="domain-label physics">Physics at 1D · The Reduced Planck Constant ℏ</div>
+        <div class="domain-label physics">Physics at 1D · The Reduced Planck Constant ℏ <span class="chain-status derived">⊙ Derived</span></div>
         <div class="domain-content">
           <div class="formula-block">ℏ = E_cycle / ω_cycle = 1</div>
           <p>The pump cycle (⊛ → i → ✹) is indivisible. You cannot have convergence without emergence (violates A1) or emergence without convergence (Inflation Lie). This indivisibility IS the quantum of action. E = ℏω with ℏ = 1 means energy and frequency are the same thing. The pump cycle IS the energy and IS the cycling. Structure = process at 1D.</p>
@@ -847,7 +880,7 @@ E(t+Δt) = (✹ ∘ i ∘ ⊛) E(t)</div>
 
     <div class="res-1">
       <div class="domain-layer">
-        <div class="domain-label physics">Physics at 1.5D · Mass Ratios</div>
+        <div class="domain-label physics">Physics at 1.5D · Mass Ratios <span class="chain-status structured">◐ Structured</span></div>
         <div class="domain-content">
           <div class="formula-block">m_μ/m_e = (1/α)^(13/12 + α/27) = 206.767    [measured: 206.768, 5 ppm]
 m_τ/m_e = (1/α)^(58/35 + α/81) = 3477.2     [measured: 3477.2, 1 ppm]</div>
@@ -862,13 +895,13 @@ m_τ/m_e = (1/α)^(58/35 + α/81) = 3477.2     [measured: 3477.2, 1 ppm]</div>
 
     <div class="res-2">
       <div class="domain-layer">
-        <div class="domain-label chemistry">Chemistry at 1.5D · Pi Ratios &amp; Bond Energies</div>
+        <div class="domain-label chemistry">Chemistry at 1.5D · Pi Ratios &amp; Bond Energies <span class="chain-status structured">◐ Structured</span></div>
         <div class="domain-content">
           <div class="formula-block">pi_1 / sigma_true = R/T² = 7/9
 pi_2 / sigma_true = V/P(P+1) = 13/20</div>
           <p>Carbon verification: C=C/C-C = 1 + 7/9 = 16/9 = 1.778 (measured 1.775, 0.18%). C≡C/C-C = 1 + 7/9 + 13/20 = 437/180 = 2.428 (measured 2.425, 0.12%).</p>
           <div class="detail-item">
-            <div class="item-title">Three-Layer Bond Energy Model</div>
+            <div class="item-title">Three-Layer Bond Energy Model <span class="chain-status structured">◐ Structured</span></div>
             <div class="item-body">Layer 1: Pi ratios (universal; R/T² and V/P(P+1)). Layer 2: Lone pair suppression, f = 1/(1 + n_LP). Layer 3: Compositional closure (D5), E_triple = (σ + π₁ + π₂) × T/Φ for full closure with lone pairs. Average error across C and N bonds: 0.15%.</div>
           </div>
           <p>sp³ hybridization maps to 1.5D. Tetrahedral angle = arccos(−1/T) = 109.47° (exact). Bond length ratio C≡C/C-C = 120/154 ≈ R/T² = 7/9.</p>
@@ -913,7 +946,7 @@ pi_2 / sigma_true = V/P(P+1) = 13/20</div>
 
     <div class="res-1">
       <div class="domain-layer">
-        <div class="domain-label physics">Physics at 2D · Gauge Structure</div>
+        <div class="domain-label physics">Physics at 2D · Gauge Structure <span class="chain-status structured">◐ Structured</span></div>
         <div class="domain-content">
           <div class="formula-block">SU(3) × SU(2) × U(1)    →    8 + 3 + 1 = 12 = G = P × T
 sin²θ_W = 3/13 + 5α/81 = 0.23122   [measured: 0.23122, 1.4 ppm]</div>
@@ -925,7 +958,7 @@ sin²θ_W = 3/13 + 5α/81 = 0.23122   [measured: 0.23122, 1.4 ppm]</div>
 
     <div class="res-2">
       <div class="domain-layer">
-        <div class="domain-label chemistry">Chemistry at 2D · Screening Constants &amp; Electronegativity</div>
+        <div class="domain-label chemistry">Chemistry at 2D · Screening Constants &amp; Electronegativity <span class="chain-status structured">◐ Structured</span></div>
         <div class="domain-content">
           <div class="formula-block">Common denominator: P(P+1) = 20
 s(1s)   = T!/P(P+1)   = 6/20  = 0.30   (exact)
@@ -983,7 +1016,7 @@ s(deep) = P(P+1)/P(P+1)= 1.00          (exact)</div>
 
     <div class="res-1">
       <div class="domain-layer">
-        <div class="domain-label physics">Physics at 2.5D · Emergence Between Scales</div>
+        <div class="domain-label physics">Physics at 2.5D · Emergence Between Scales <span class="chain-status structured">◐ Structured</span></div>
         <div class="domain-content">
           <div class="formula-block">v/Λ_QCD = (1/α)^(56/39) = 1170.24     [measured: 1170.2 ± ~5%]
 sin(θ_C) = α^(1/2 + 3α/7) · 8/3 = 0.22432   [measured: 0.2243, 0.009%]</div>
@@ -1038,25 +1071,25 @@ sin(θ_C) = α^(1/2 + 3α/7) · 8/3 = 0.22432   [measured: 0.2243, 0.009%]</div>
 
     <div class="res-1">
       <div class="domain-layer">
-        <div class="domain-label physics">Physics at 3D · Gravity &amp; The Dimensional Ladder Closes</div>
+        <div class="domain-label physics">Physics at 3D · Gravity &amp; The Dimensional Ladder Closes <span class="chain-status derived">⊙ Derived</span></div>
         <div class="domain-content">
           <div class="formula-block">α_G = α²¹ × φ²/2 × (1 + 2α/91)
 Predicted G = 6.67430 × 10⁻¹¹   [measured: 6.67430 × 10⁻¹¹, 0.04 ppm]</div>
           <p>Exponent 21 = A(3) = sum of all dimensional positions × 2 channels. φ²/2 = golden nesting correction. K = 91 = R × V. Solves the hierarchy problem: gravity is weak because 21 α-steps separate the point (0D) from the boundary (3D).</p>
           <div class="detail-item">
-            <div class="item-title">Cosmological Constant</div>
+            <div class="item-title">Cosmological Constant <span class="chain-status structured">◐ Structured</span></div>
             <div class="item-body">Λ = α⁵⁶ · (1 − 6α + 4α²) / 72. Predicted: 2.8879 × 10⁻¹²² (measured: 2.888 × 10⁻¹²², 0.004%). The cosmological constant problem dissolves: 56 α-steps naturally produce 10⁻¹²⁰.</div>
           </div>
           <div class="detail-item">
-            <div class="item-title">Higgs Quartic Coupling</div>
+            <div class="item-title">Higgs Quartic Coupling <span class="chain-status structured">◐ Structured</span></div>
             <div class="item-body">λ = (1/8)(1 + 5α − 8α²) = 0.12951 (measured: 0.12938, 0.10%).</div>
           </div>
           <div class="detail-item">
-            <div class="item-title">Proton-to-Electron Mass Ratio</div>
+            <div class="item-title">Proton-to-Electron Mass Ratio <span class="chain-status structured">◐ Structured</span></div>
             <div class="item-body">m_p/m_e = (1/α)^(3/2 + (11/3)α + 13α²) = 1836.143 (measured: 1836.153, 5.35 ppm). Leptons use A' (derivative, point-like); baryons use A (function, accumulated).</div>
           </div>
           <div class="detail-item">
-            <div class="item-title">Gauge Bosons</div>
+            <div class="item-title">Gauge Bosons <span class="chain-status structured">◐ Structured</span></div>
             <div class="item-body">Higgs VEV: v/m_e = T³/α² × (1 − R·α), 0.15%. W boson: (1/α)^(95/39 − α/Φ), 0.15%. Z boson via Weinberg angle, 0.67%. Higgs mass: √(2λ)·v, 0.10%.</div>
           </div>
         </div>
@@ -1082,7 +1115,7 @@ Predicted G = 6.67430 × 10⁻¹¹   [measured: 6.67430 × 10⁻¹¹, 0.04 ppm]<
 
     <div class="res-2">
       <div class="domain-layer">
-        <div class="domain-label chemistry">Chemistry at 3D · Closure</div>
+        <div class="domain-label chemistry">Chemistry at 3D · Closure <span class="chain-status structured">◐ Structured</span></div>
         <div class="domain-content">
           <div class="formula-block">Lone pair: cos(θ_bb) = -1/T + n_lp × (2/R²)
 Water: 104.58° (measured 104.45°, 0.12%)   NH₃: 107.01° (measured 107.0°, 0.01%)
@@ -1104,7 +1137,7 @@ Coupling constant Φ+T = 5.  Average error 10.9% across 23 bonds, zero empirical
 
     <div class="res-3">
       <div class="domain-layer">
-        <div class="domain-label biology">Biology at 3D · The Boundary Closes</div>
+        <div class="domain-label biology">Biology at 3D · The Boundary Closes <span class="chain-status mapped">• Mapped</span></div>
         <div class="domain-content">
           <div class="formula-block">Genetic code: P = 4 bases, T = 3 per codon, S = P^T = 64 codons
 20 amino acids = P(P+1) = 4×5.  3 stops = T.  1 start = •.
@@ -1120,7 +1153,7 @@ Heart rate ∝ M^(-1/P).  Lifespan ∝ M^(1/P).  Total beats ≈ 10⁹.</div>
             <div class="open-problem">Open: formal derivation of why the ratio T/P (not product or difference) is the exponent.</div>
           </div>
           <div class="detail-item">
-            <div class="item-title">Hayflick Limit</div>
+            <div class="item-title">Hayflick Limit <span class="chain-status mapped">• Mapped</span></div>
             <div class="item-body">Cell division capacity = S = 64 states. Measured range 50-70, centered on 64. Senescence is state-space exhaustion.</div>
             <div class="derives-from">
               <div class="derives-label">Derives from</div>
@@ -1128,7 +1161,7 @@ Heart rate ∝ M^(-1/P).  Lifespan ∝ M^(1/P).  Total beats ≈ 10⁹.</div>
             </div>
           </div>
           <div class="detail-item">
-            <div class="item-title">Microtubule Architecture</div>
+            <div class="item-title">Microtubule Architecture <span class="chain-status mapped">• Mapped</span></div>
             <div class="item-body">V = 13 protofilaments, Φ = 2 subunit types, T = 3-start helix, SU(3) = 8 nm dimer/step. The same SU(3) = 8 governing quark confinement sets every molecular motor's step size.</div>
             <div class="derives-from">
               <div class="derives-label">Derives from</div>
@@ -1137,7 +1170,7 @@ Heart rate ∝ M^(-1/P).  Lifespan ∝ M^(1/P).  Total beats ≈ 10⁹.</div>
             </div>
           </div>
           <div class="detail-item">
-            <div class="item-title">Cancer as Boundary Failure</div>
+            <div class="item-title">Cancer as Boundary Failure <span class="chain-status derived">⊙ Derived</span></div>
             <div class="item-body">Aperture locked open (β_• → 1) + boundary filter collapsed (β_○ → 0). Neither alone sufficient. Cancer cells skip the 90° phase check. Testable: Ki-67/caspase ratio should correlate with aggressiveness.</div>
             <div class="derives-from">
               <div class="derives-label">Derives from</div>
@@ -1280,7 +1313,7 @@ W = 2T+1 = 7,  V = 4T+1 = 13    (W-V decomposition)
         </div>
       </div>
       <div class="domain-layer">
-        <div class="domain-label structure">The Cosmological Energy Budget</div>
+        <div class="domain-label structure">The Cosmological Energy Budget <span class="chain-status structured">◐ Structured</span></div>
         <div class="domain-content">
           <table class="mapping-table">
             <tr><th>Scale</th><th>Right half-plane (i⁰+i¹) ~5%</th><th>Left half-plane (i²+i³) ~27%</th><th>Field ~68%</th></tr>
