@@ -203,17 +203,7 @@ class GameRoom {
       this.updateBotAI(bot, dt);
     }
 
-    // Collision with level
-    for (const sp of this.playersBySessionId.values()) {
-      if (!sp.alive || !sp.chassis) continue;
-      const shipRadius = sp.chassis.hullLength * 0.5;
-      resolveCollision(sp.pos, sp.vel, shipRadius, this.levelData);
-    }
-    for (const bot of this.bots.values()) {
-      if (!bot.alive) continue;
-      const shipRadius = bot.chassis.hullLength * 0.5;
-      resolveCollision(bot.pos, bot.vel, shipRadius, this.levelData);
-    }
+    // Note: collision is now handled inside updatePlayerMovement (players) and updateBotAI (bots)
 
     // Weapon updates
     for (const sp of this.playersBySessionId.values()) {
@@ -283,9 +273,9 @@ class GameRoom {
     const ch = sp.chassis;
     const forward = getForward(sp.quat);
     const right = getRight(sp.quat);
-    const up = getUp(sp.quat);
+    const up = new Vec3(0, 1, 0); // Client uses WORLD up, not quaternion-rotated up
 
-    // Build movement vector
+    // Build target velocity vector (matches client's updatePlayerMovement exactly)
     const moveDir = new Vec3();
     if (sp.input.moveY > 0.1) moveDir.add(forward.clone().multiplyScalar(ch.flightSpeed));
     if (sp.input.moveY < -0.1) moveDir.add(forward.clone().multiplyScalar(-ch.flightSpeed * 0.6));
@@ -296,40 +286,60 @@ class GameRoom {
 
     if (sp.afterburnerActive) moveDir.multiplyScalar(sp.afterburnerSpeedMult);
 
-    // Accelerate
+    // Acceleration: steer velocity TOWARD target (moveDir - velocity), not just in input direction
     if (moveDir.length() > 0) {
-      const accelDir = moveDir.clone().normalize();
-      const accelMag = Math.min(moveDir.length(), ch.acceleration * dt);
+      const accelDir = moveDir.clone().sub(sp.vel);
+      const accelMag = Math.min(accelDir.length(), ch.acceleration * dt);
       if (accelMag > 0.01) sp.vel.add(accelDir.normalize().multiplyScalar(accelMag));
-    }
-
-    // Deceleration when no input
-    if (moveDir.length() < 0.1) {
+    } else {
+      // Deceleration: subtract speed along velocity direction
       const speed = sp.vel.length();
       if (speed > 1) {
-        const decel = Math.min(speed, ch.deceleration * dt);
-        sp.vel.multiplyScalar(1 - decel / Math.max(speed, 1));
+        const drag = Math.min(speed, ch.deceleration * dt);
+        sp.vel.sub(sp.vel.clone().normalize().multiplyScalar(drag));
+      } else {
+        sp.vel.set(0, 0, 0);
       }
     }
 
-    // Max speed cap
-    const maxSpeed = ch.flightSpeed * 1.5;
+    // Speed cap (matches client: flightSpeed normally, dashSpeed during dash, 600 during afterburner)
+    const maxSpeed = sp.dashActive ? ch.dashSpeed : (sp.afterburnerActive ? 600 : ch.flightSpeed);
     if (sp.vel.length() > maxSpeed) {
       sp.vel.normalize().multiplyScalar(maxSpeed);
     }
 
-    // Apply drag
-    sp.vel.multiplyScalar(1 - 0.02 * dt);
-
-    // Soft boundary
+    // Soft boundary push (matches client)
     const soft = LSS.ARENA_SIZE * 0.8;
     for (const axis of ['x', 'y', 'z']) {
       if (sp.pos[axis] > soft) sp.vel[axis] -= (sp.pos[axis] - soft) * 0.5 * dt;
       if (sp.pos[axis] < -soft) sp.vel[axis] += (-soft - sp.pos[axis]) * 0.5 * dt;
     }
 
-    // Integrate
-    sp.pos.add(sp.vel.clone().multiplyScalar(dt));
+    // Sub-stepped integration with collision (matches client's Descent 3 style loop)
+    const collRadius = ch.hullLength * 0.4;
+    const MAX_SIM_LOOPS = 4; // fewer iterations than client (server is 66Hz, smaller dt)
+    let simTime = dt;
+    let loops = 0;
+    while (simTime > 0.0001 && loops < MAX_SIM_LOOPS) {
+      const moveLen = sp.vel.length() * simTime;
+      const MAX_STEP = collRadius * 0.5;
+      const subSteps = Math.max(1, Math.ceil(moveLen / MAX_STEP));
+      const subDt = simTime / subSteps;
+      let collided = false;
+      for (let ss = 0; ss < subSteps; ss++) {
+        sp.pos.add(sp.vel.clone().multiplyScalar(subDt));
+        const prevSpeed = sp.vel.length();
+        resolveCollision(sp.pos, sp.vel, collRadius, this.levelData);
+        const postSpeed = sp.vel.length();
+        if (prevSpeed > 10 && Math.abs(postSpeed - prevSpeed) / prevSpeed > 0.1) {
+          simTime -= subDt * (ss + 1);
+          collided = true;
+          break;
+        }
+      }
+      if (!collided) simTime = 0;
+      loops++;
+    }
   }
 
   // ========================================================================
@@ -792,15 +802,28 @@ class GameRoom {
     const accelMult = bot.arcSlowTimer > 0 ? 0.3 : 1.0;
     bot.arcSlowTimer = Math.max(0, bot.arcSlowTimer - dt);
 
-    const accel = bot.targetDir.clone().multiplyScalar(bot.chassis.acceleration * dt * accelMult);
-    bot.vel.add(accel);
-
-    const speed = bot.vel.length();
+    // Target velocity: move toward targetDir at flightSpeed
     const maxSpd = bot.arcSlowTimer > 0 ? bot.chassis.flightSpeed * 0.3 : bot.chassis.flightSpeed;
-    if (speed > maxSpd) bot.vel.multiplyScalar(maxSpd / speed);
-    bot.vel.multiplyScalar(1 - bot.chassis.deceleration * dt / Math.max(speed, 1));
+    const targetVel = bot.targetDir.clone().multiplyScalar(maxSpd);
+    // Steer velocity toward target (same formula as player movement)
+    const accelDir = targetVel.clone().sub(bot.vel);
+    const accelMag = Math.min(accelDir.length(), bot.chassis.acceleration * dt * accelMult);
+    if (accelMag > 0.01) bot.vel.add(accelDir.normalize().multiplyScalar(accelMag));
 
-    bot.pos.add(bot.vel.clone().multiplyScalar(dt));
+    // Speed cap
+    const speed = bot.vel.length();
+    if (speed > maxSpd) bot.vel.multiplyScalar(maxSpd / speed);
+
+    // Sub-stepped movement + collision (matches client bot physics)
+    const botCollR = bot.chassis.hullLength * 0.4;
+    const botMoveLen = bot.vel.length() * dt;
+    const botMaxStep = botCollR * 0.8;
+    const botSubs = Math.max(1, Math.ceil(botMoveLen / botMaxStep));
+    const botSubDt = dt / botSubs;
+    for (let ss = 0; ss < botSubs; ss++) {
+      bot.pos.add(bot.vel.clone().multiplyScalar(botSubDt));
+      resolveCollision(bot.pos, bot.vel, botCollR, this.levelData);
+    }
 
     const s = LSS.ARENA_SIZE * 0.9;
     bot.pos.clampScalar(-s, s);
@@ -1075,6 +1098,7 @@ class GameRoom {
       players[sp.sessionId] = {
         sid: sp.sessionId, loadoutKey: sp.loadoutKey || '', team: sp.team,
         px: sp.pos.x, py: sp.pos.y, pz: sp.pos.z,
+        sdfMargin: -worldSDF(sp.pos.x, sp.pos.y, sp.pos.z, this.levelData), // positive = inside, free grid lookup
         vx: sp.vel.x, vy: sp.vel.y, vz: sp.vel.z,
         qx: sp.quat.x, qy: sp.quat.y, qz: sp.quat.z, qw: sp.quat.w,
         health: sp.health, maxHealth: sp.maxHealth,
@@ -1126,6 +1150,12 @@ class GameRoom {
     this.broadcast(null, msg);
   }
 
+  send(sp, type, data) {
+    if (sp.ws && sp.ws.readyState === 1) {
+      sp.ws.send(JSON.stringify({ type, ...data }));
+    }
+  }
+
   broadcast(type, data) {
     const msg = type ? { type, ...data } : data;
     const json = JSON.stringify(msg);
@@ -1149,7 +1179,7 @@ class GameRoom {
     const sp = this.players.get(ws);
     if (!sp) return;
 
-    const msg = typeof data === 'string' ? JSON.parse(data) : data;
+    const msg = JSON.parse(typeof data === 'string' ? data : data.toString());
 
     switch (msg.type) {
       case 'select_loadout': {
@@ -1173,6 +1203,12 @@ class GameRoom {
         }
 
         this.respawnPlayer(sp);
+
+        // Send spawn info immediately so client doesn't sit at (0,0,0)
+        this.send(sp, 'spawn', {
+          px: sp.pos.x, py: sp.pos.y, pz: sp.pos.z,
+          team: sp.team,
+        });
         break;
       }
       case 'input': {

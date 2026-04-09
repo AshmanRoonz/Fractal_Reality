@@ -830,6 +830,14 @@ function handleServerMessage(msg) {
       if (msg.victimSid === net.sessionId) playerDie(null);
       addKillFeed(msg.killerName || 'Unknown', msg.victimName || 'Unknown');
       break;
+    case 'spawn':
+      player.position.set(msg.px, msg.py, msg.pz);
+      camera.position.copy(player.position);
+      player.velocity.set(0, 0, 0);
+      player.team = msg.team;
+      player.alive = true;
+      player.shipState = 'spawning';
+      break;
     case 'impact':
       spawnImpactSparks(new THREE.Vector3(msg.px, msg.py, msg.pz), msg.size || 6);
       break;
@@ -1149,7 +1157,9 @@ function syncServerState() {
     player.alive = myState.alive;
 
     // ================================================================
-    // SOFTMAX RECONCILIATION v2 (damped)
+    // SOFTMAX RECONCILIATION v2 (grid-informed)
+    // Server sends sdfMargin (from pre-computed grid); client checks its own.
+    // Single blend factor t: near walls, trust client; open space, trust server.
     // ================================================================
     if (myState.alive && player.chassis) {
       const sx = myState.px, sy = myState.py, sz = myState.pz;
@@ -1159,22 +1169,33 @@ function syncServerState() {
       const collRadius = player.chassis.hullLength * 0.4;
 
       if (drift > 200) {
+        // Snap: too far apart
         player.position.set(sx, sy, sz);
       } else if (drift > 0.5) {
-        let t = 0.15;
+        // Server margin comes free from the grid; client evaluates locally
+        const serverMargin = myState.sdfMargin !== undefined ? myState.sdfMargin : collRadius * 2;
         const clientMargin = -worldSDF(cx, cy, cz);
         const safeZone = collRadius * 3;
+
+        // Base blend: 15% toward server
+        let t = 0.15;
+
+        // Near walls on client side: reduce server trust (client has fresher collision truth)
         if (clientMargin < safeZone) {
           const wallFactor = Math.max(0, clientMargin / safeZone);
           t *= wallFactor * wallFactor;
         }
-        const serverMargin = -worldSDF(sx, sy, sz);
+
+        // Server position inside wall: reject entirely
         if (serverMargin < collRadius * 0.8) {
           t = 0;
         }
+
+        // Large drift in open space: ramp up correction
         if (drift > 80 && clientMargin > safeZone && serverMargin > collRadius) {
           t = Math.min(0.8, drift / 200);
         }
+
         if (t > 0.001) {
           player.position.x += ddx * t;
           player.position.y += ddy * t;
@@ -1184,6 +1205,7 @@ function syncServerState() {
             player.velocity.y += (myState.vy - player.velocity.y) * t;
             player.velocity.z += (myState.vz - player.velocity.z) * t;
           }
+          // Safety check: did we blend into a wall?
           const finalMargin = -worldSDF(player.position.x, player.position.y, player.position.z);
           if (finalMargin < collRadius * 0.5) {
             player.position.set(cx, cy, cz);
@@ -1840,6 +1862,8 @@ function resolveCollision(pos, velocity, radius) {
 // 4) Ship-ship collision: magnetic repulsion + bounce + ram damage
 // Runs once per frame after all movement; pushes overlapping ships apart symmetrically.
 function resolveShipShipCollisions(dt) {
+  // In MP, server handles ship-ship collisions; skip local sim to avoid jitter with proxy positions
+  if (net.active) return;
   // Build list of all active ships (player + alive bots)
   const ships = [];
   if (player.shipState !== 'dead' && player.chassis) {
@@ -3898,15 +3922,23 @@ function selectLoadout(key) {
   document.getElementById('ship-select').style.display = 'none';
   renderer.domElement.requestPointerLock();
 
-  // Load map from rotation (handcrafted maps + procedural)
-  shuffleMapRotation();
-  const level = getNextMap();
+  // Load map: in multiplayer, use server's map (circumpunct); in solo, use selected map
+  let level;
+  if (net.active) {
+    level = MAP_DATA['circumpunct']; // Must match server's map
+  } else {
+    shuffleMapRotation();
+    level = getNextMap();
+  }
   buildRoomGraphLevel(level);
   spawnDynamicObjects(game.sdfRoomData);
   spawnOrganics(game.sdfRoomData);
 
-  // Place player inside the letter corridors (Fleet A territory)
-  player.position.copy(getValidSpawnPoint('A'));
+  // Place player: in multiplayer, server assigns spawn; in solo, pick locally
+  if (!net.active) {
+    player.position.copy(getValidSpawnPoint('A'));
+  }
+  // In MP, position stays at (0,0,0) until first state_sync snaps it to server's spawn
 
   // Reset stasis field state
   game.stasisFields.forEach(f => f.destroy());
@@ -4325,7 +4357,17 @@ function updateWeapon(dt) {
   if (player.fireFlashTimer > 0) { player.fireFlashTimer -= dt; if (player.fireFlashTimer <= 0) player.isFiring = false; }
   const w = player.weapon;
 
+  // In multiplayer, server handles damage and ammo authoritatively.
+  // Client runs full weapon update for responsive visuals, audio, ADS, spinup, etc.
+  // Damage/hit detection is skipped inside fireHitscan/fireProjectile/fireSpread (net.active guard).
+  // Server overrides clipAmmo, reloading, etc. via syncServerState every frame.
+
   if (player.reloading) {
+    if (net.active) {
+      // In MP, server controls reload state; just show/hide indicator based on server-synced flag
+      document.getElementById('reload-indicator').style.display = 'block';
+      return;
+    }
     player.reloadTimer -= dt;
     if (player.reloadTimer <= 0) {
       player.clipAmmo = player.maxClip;
@@ -4333,6 +4375,9 @@ function updateWeapon(dt) {
       document.getElementById('reload-indicator').style.display = 'none';
     }
     return;
+  } else if (net.active) {
+    // Server says not reloading; make sure indicator is hidden
+    document.getElementById('reload-indicator').style.display = 'none';
   }
 
   // Hold-to-use defensive abilities: can't shoot while active
@@ -4400,20 +4445,27 @@ function updateWeapon(dt) {
   if (firing && player.fireTimer <= 0) {
     // Smart Core: unlimited ammo (no consumption, no reload needed)
     const smartCoreActive = player.coreActive && player.loadoutKey === 'LEGION';
-    if (!smartCoreActive && player.clipAmmo <= 0) { startReload(); return; }
+    if (!smartCoreActive && player.clipAmmo <= 0) {
+      if (!net.active) startReload(); // In MP, server handles reload trigger
+      return;
+    }
     fireWeapon();
     player.isFiring = true; player.fireFlashTimer = 0.12;
     player.fireTimer = w.fireRate;
-    if (!smartCoreActive) {
-      player.clipAmmo--;
-      if (player.clipAmmo <= 0 && w.clipSize < 999) startReload();
+    // In MP, server handles ammo decrement and reload; skip local changes to avoid UI jitter
+    if (!net.active) {
+      if (!smartCoreActive) {
+        player.clipAmmo--;
+        if (player.clipAmmo <= 0 && w.clipSize < 999) startReload();
+      }
     }
   }
 
-  // Manual reload
+  // Manual reload (send to server in MP, handled locally in SP)
   const reloadPressed = input.keys['r'] || (input.gpReload && !input.gpReloadPrev);
   if (reloadPressed && player.clipAmmo < player.maxClip && !player.reloading && w.clipSize < 999) {
-    startReload();
+    if (!net.active) startReload();
+    // In MP, reload input is already sent via broadcastInput
   }
 }
 
@@ -4514,6 +4566,9 @@ function fireHitscan(origin, dir, w) {
   // Color depends on loadout: ION uses cyan, otherwise yellow
   const tracerColor = player.loadoutKey === 'ION' ? 0x44ddff : 0xffff44;
   spawnTracer(origin, end, tracerColor);
+
+  // In MP, server handles all damage; client only spawns visuals (tracer already spawned above)
+  if (net.active) return;
 
   // Check destructible obstacles (hitscan can damage them too)
   let bestObstacle = null, bestObstDist = Infinity;
@@ -4619,7 +4674,10 @@ function fireHitscan(origin, dir, w) {
 
 function fireProjectile(origin, dir, w) {
   const vel = dir.clone().multiplyScalar(w.projSpeed);
-  const proj = new Projectile(origin, vel, w.damage, w.splash, 'player', 0xff8800);
+  // In MP, spawn visual-only projectile (no damage on hit; server handles damage)
+  const dmg = net.active ? 0 : w.damage;
+  const splash = net.active ? 0 : w.splash;
+  const proj = new Projectile(origin, vel, dmg, splash, 'player', 0xff8800);
   // Scorch projectiles are fire sources (ignite gas clouds on pass-through)
   if (player.loadoutKey === 'SCORCH') proj.isFireSource = true;
   game.projectiles.push(proj);
@@ -4641,6 +4699,9 @@ function fireSpread(origin, dir, w) {
     const levelDist = raycastLevel(origin, spreadDir, w.range);
     const end = origin.clone().add(spreadDir.clone().multiplyScalar(levelDist));
     spawnTracer(origin, end, 0xffaa44);
+
+    // In MP, server handles all damage; client only spawns tracers (above)
+    if (net.active) continue;
 
     // Check destructible obstacles first
     let hitObstacle = false;

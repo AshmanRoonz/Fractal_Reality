@@ -110,36 +110,114 @@ function sdfHmin(a, b) {
 // SIGNED DISTANCE FIELD (SDF) EVALUATION
 // ============================================================================
 
-function worldSDF(px, py, pz, levelData) {
+// Raw SDF evaluation (used only during grid pre-computation)
+function worldSDFRaw(px, py, pz, levelData) {
   if (!levelData || !levelData.spheres) return 10000;
-
   let dist = 10000;
   const smoothK = levelData.smoothK || 45;
-
-  // Blend all spheres (rooms) with smooth min
   for (const sphere of levelData.spheres) {
     const sd = sdSphere(px, py, pz, sphere.cx, sphere.cy, sphere.cz, sphere.r);
     dist = sdfSmin(dist, sd, smoothK);
   }
-
-  // Blend all cylinders (tunnels) with smooth min
   for (const cyl of levelData.cylinders) {
     const sd = sdCylinder(px, py, pz, cyl.ax, cyl.ay, cyl.az, cyl.bx, cyl.by, cyl.bz, cyl.r);
     dist = sdfSmin(dist, sd, smoothK);
   }
-
   return dist;
 }
 
+// Pre-computed SDF grid: one Float32Array lookup replaces 17 distance calcs
+const SDF_CELL = 20; // Grid cell size in world units
+const SDF_PAD = 250; // Padding around geometry bounds
+
+let sdfGrid = null;   // Float32Array
+let sdfNX = 0, sdfNY = 0, sdfNZ = 0;
+let sdfMinX = 0, sdfMinY = 0, sdfMinZ = 0;
+
+function buildSDFGrid(levelData) {
+  // Find bounds of all geometry
+  let bMinX = Infinity, bMinY = Infinity, bMinZ = Infinity;
+  let bMaxX = -Infinity, bMaxY = -Infinity, bMaxZ = -Infinity;
+  for (const s of levelData.spheres) {
+    bMinX = Math.min(bMinX, s.cx - s.r); bMaxX = Math.max(bMaxX, s.cx + s.r);
+    bMinY = Math.min(bMinY, s.cy - s.r); bMaxY = Math.max(bMaxY, s.cy + s.r);
+    bMinZ = Math.min(bMinZ, s.cz - s.r); bMaxZ = Math.max(bMaxZ, s.cz + s.r);
+  }
+  for (const c of levelData.cylinders) {
+    for (const p of [{x:c.ax,y:c.ay,z:c.az},{x:c.bx,y:c.by,z:c.bz}]) {
+      bMinX = Math.min(bMinX, p.x - c.r); bMaxX = Math.max(bMaxX, p.x + c.r);
+      bMinY = Math.min(bMinY, p.y - c.r); bMaxY = Math.max(bMaxY, p.y + c.r);
+      bMinZ = Math.min(bMinZ, p.z - c.r); bMaxZ = Math.max(bMaxZ, p.z + c.r);
+    }
+  }
+
+  sdfMinX = bMinX - SDF_PAD;
+  sdfMinY = bMinY - SDF_PAD;
+  sdfMinZ = bMinZ - SDF_PAD;
+  sdfNX = Math.ceil((bMaxX + SDF_PAD - sdfMinX) / SDF_CELL) + 1;
+  sdfNY = Math.ceil((bMaxY + SDF_PAD - sdfMinY) / SDF_CELL) + 1;
+  sdfNZ = Math.ceil((bMaxZ + SDF_PAD - sdfMinZ) / SDF_CELL) + 1;
+
+  sdfGrid = new Float32Array(sdfNX * sdfNY * sdfNZ);
+
+  console.log(`[SDF Grid] ${sdfNX}x${sdfNY}x${sdfNZ} = ${sdfGrid.length} cells (${(sdfGrid.length * 4 / 1024 / 1024).toFixed(1)} MB)`);
+
+  const t0 = Date.now();
+  for (let iz = 0; iz < sdfNZ; iz++) {
+    const pz = sdfMinZ + iz * SDF_CELL;
+    for (let iy = 0; iy < sdfNY; iy++) {
+      const py = sdfMinY + iy * SDF_CELL;
+      for (let ix = 0; ix < sdfNX; ix++) {
+        const px = sdfMinX + ix * SDF_CELL;
+        sdfGrid[ix + iy * sdfNX + iz * sdfNX * sdfNY] = worldSDFRaw(px, py, pz, levelData);
+      }
+    }
+  }
+  console.log(`[SDF Grid] Built in ${Date.now() - t0}ms`);
+}
+
+// Trilinear interpolation from the pre-computed grid
+function worldSDF(px, py, pz, levelData) {
+  if (!sdfGrid) return worldSDFRaw(px, py, pz, levelData);
+
+  // Convert world coords to grid coords
+  const gx = (px - sdfMinX) / SDF_CELL;
+  const gy = (py - sdfMinY) / SDF_CELL;
+  const gz = (pz - sdfMinZ) / SDF_CELL;
+
+  // Clamp to grid bounds
+  const ix = Math.max(0, Math.min(sdfNX - 2, Math.floor(gx)));
+  const iy = Math.max(0, Math.min(sdfNY - 2, Math.floor(gy)));
+  const iz = Math.max(0, Math.min(sdfNZ - 2, Math.floor(gz)));
+
+  const fx = gx - ix, fy = gy - iy, fz = gz - iz;
+  const fx1 = 1 - fx, fy1 = 1 - fy, fz1 = 1 - fz;
+
+  const idx = ix + iy * sdfNX + iz * sdfNX * sdfNY;
+  const sX = 1, sY = sdfNX, sZ = sdfNX * sdfNY;
+
+  // 8-point trilinear interpolation
+  return (
+    sdfGrid[idx]             * fx1 * fy1 * fz1 +
+    sdfGrid[idx + sX]        * fx  * fy1 * fz1 +
+    sdfGrid[idx + sY]        * fx1 * fy  * fz1 +
+    sdfGrid[idx + sX + sY]   * fx  * fy  * fz1 +
+    sdfGrid[idx + sZ]        * fx1 * fy1 * fz  +
+    sdfGrid[idx + sX + sZ]   * fx  * fy1 * fz  +
+    sdfGrid[idx + sY + sZ]   * fx1 * fy  * fz  +
+    sdfGrid[idx + sX+sY+sZ]  * fx  * fy  * fz
+  );
+}
+
+// Normal from grid: central differences on the grid (6 lookups instead of 102 primitive evals)
 function sdfNormal(px, py, pz, levelData) {
-  const eps = 2.0;
+  const eps = SDF_CELL * 0.6;
   const dx = worldSDF(px + eps, py, pz, levelData) - worldSDF(px - eps, py, pz, levelData);
   const dy = worldSDF(px, py + eps, pz, levelData) - worldSDF(px, py - eps, pz, levelData);
   const dz = worldSDF(px, py, pz + eps, levelData) - worldSDF(px, py, pz - eps, levelData);
-
-  const normal = new Vec3(dx, dy, dz);
-  normal.normalize();
-  return normal;
+  const len = Math.sqrt(dx*dx + dy*dy + dz*dz);
+  if (len < 0.0001) return new Vec3(0, 1, 0);
+  return new Vec3(dx / len, dy / len, dz / len);
 }
 
 // ============================================================================
@@ -174,67 +252,63 @@ function sdfRaycast(ox, oy, oz, dx, dy, dz, maxDist, levelData) {
 }
 
 // ============================================================================
-// COLLISION RESOLUTION
+// COLLISION RESOLUTION (matches client exactly)
 // ============================================================================
 
-// Constants for collision
-const CONTAIN_RANGE = 1.0; // Multiplier on radius for containment zone
-const CONTAIN_STRENGTH = 12000; // Force strength for containment
-const UNSTICK_RANGE = 1.2; // Distance to trigger unsticking
+const CONTAIN_STRENGTH = 12000;
 
 function resolveCollision(pos, vel, radius, levelData) {
   if (!levelData || !levelData.spheres) return;
 
   const sdfVal = worldSDF(pos.x, pos.y, pos.z, levelData);
-  const margin = -sdfVal; // Positive margin means inside; negative means outside
+  // sdfVal < 0 means inside (negative = inside the union of shapes)
+  // margin = -sdfVal: positive means inside, negative means outside
+  const margin = -sdfVal;
 
-  // Phase 1: CONTAINMENT - Push inward if outside or near wall
-  if (margin < radius * CONTAIN_RANGE) {
-    const normal = sdfNormal(pos.x, pos.y, pos.z, levelData);
+  const CONTAIN_RANGE_R = radius * 2.5;
+
+  if (margin < CONTAIN_RANGE_R) {
+    // NEGATE the SDF normal to get INWARD normal (pointing into room, away from walls)
+    // This matches the client's convention: sdfNormal(...).negate()
+    const rawNormal = sdfNormal(pos.x, pos.y, pos.z, levelData);
+    const normal = new Vec3(-rawNormal.x, -rawNormal.y, -rawNormal.z);
 
     if (margin < 0) {
-      // Outside level: hard push inward
-      const push = normal.clone().multiplyScalar((0.1 - margin) * CONTAIN_STRENGTH);
-      vel.add(push.multiplyScalar(1.0 / 60.0)); // Assume ~60Hz integration
-      pos.add(normal.clone().multiplyScalar(-margin * 1.1));
+      // Outside the level: hard push inside (matches client)
+      pos.add(normal.clone().multiplyScalar(-margin + radius + 4));
+      const vn = vel.dot(normal);
+      if (vn < 0) vel.sub(normal.clone().multiplyScalar(vn * 1.5));
     } else if (margin < radius * 0.8) {
-      // Very close to wall: hard clamp + wall sliding
-      const push = normal.clone().multiplyScalar((radius * 0.8 - margin) * CONTAIN_STRENGTH);
-      vel.add(push.multiplyScalar(1.0 / 60.0));
-
-      // Strip velocity component into wall (wall sliding)
-      const velDotNormal = vel.dot(normal);
-      if (velDotNormal < 0) {
-        vel.add(normal.clone().multiplyScalar(-velDotNormal * 0.5));
-      }
+      // Very close to wall: hard clamp position + wall sliding (matches client)
+      pos.add(normal.clone().multiplyScalar(radius * 0.8 - margin + 2));
+      const vn = vel.dot(normal);
+      if (vn < 0) vel.sub(normal.clone().multiplyScalar(vn * 1.05));
     } else {
-      // Progressive containment force
-      const alpha = 1.0 - (margin / (radius * CONTAIN_RANGE));
-      const force = alpha * alpha * CONTAIN_STRENGTH;
-      const push = normal.clone().multiplyScalar(force);
-      vel.add(push.multiplyScalar(1.0 / 60.0));
+      // Inside but near wall: progressive containment force (matches client)
+      const ratio = 1 - (margin / CONTAIN_RANGE_R);
+      const force = CONTAIN_STRENGTH * ratio * ratio;
+      vel.add(normal.clone().multiplyScalar(force * (1.0 / 60.0)));
     }
   }
 
-  // Phase 2: UNSTICK - If near wall and nearly stationary, nudge toward nearest room
-  if (margin < UNSTICK_RANGE * radius && vel.length() < 50) {
+  // Unstick: if near wall and nearly stationary, nudge toward nearest room
+  if (margin > 0 && margin < radius * 2.0 && vel.lengthSq() < 100) {
     if (levelData.rooms && levelData.rooms.length > 0) {
-      // Find nearest room center
       let nearestRoom = levelData.rooms[0];
       let nearestDist = pos.distanceTo(nearestRoom.center);
-
       for (const room of levelData.rooms) {
         const dist = pos.distanceTo(room.center);
-        if (dist < nearestDist) {
-          nearestDist = dist;
-          nearestRoom = room;
-        }
+        if (dist < nearestDist) { nearestDist = dist; nearestRoom = room; }
       }
-
-      // Nudge toward room center
-      const nudgeDir = new Vec3(nearestRoom.center.x, nearestRoom.center.y, nearestRoom.center.z);
-      nudgeDir.sub(pos).normalize();
-      vel.add(nudgeDir.multiplyScalar(100));
+      const nudgeDir = new Vec3(
+        nearestRoom.center.x - pos.x,
+        nearestRoom.center.y - pos.y,
+        nearestRoom.center.z - pos.z
+      );
+      if (nudgeDir.lengthSq() > 1) {
+        nudgeDir.normalize();
+        vel.add(nudgeDir.multiplyScalar(100));
+      }
     }
   }
 }
@@ -368,20 +442,22 @@ function buildLevelData(mapKey) {
     for (let i = 0; i < path.length - 1; i++) {
       const a = path[i];
       const b = path[i + 1];
-      const cyl = {
+      levelData.cylinders.push({
         ax: a.x, ay: a.y, az: a.z,
         bx: b.x, by: b.y, bz: b.z,
         r: tunnelRadius,
-      };
-      levelData.cylinders.push(cyl);
+      });
     }
   }
+
+  // Pre-compute the SDF grid for fast lookups
+  buildSDFGrid(levelData);
 
   return levelData;
 }
 
 // ============================================================================
-// SPAWN POINT FINDER
+// SPAWN POINTS
 // ============================================================================
 
 function getValidSpawnPoint(levelData, teamTag) {
@@ -408,51 +484,53 @@ function getValidSpawnPoint(levelData, teamTag) {
     );
   }
 
-  // Pick a random spawn room
   const room = spawnRooms[Math.floor(Math.random() * spawnRooms.length)];
-
-  // Pick a random point inside the room
   const angle = Math.random() * Math.PI * 2;
-  const elevation = (Math.random() - 0.5) * Math.PI;
-  const radius = Math.random() * (room.radius * 0.6);
-
+  const r = Math.random() * (room.radius * 0.4);
   return new Vec3(
-    room.center.x + Math.cos(angle) * Math.cos(elevation) * radius,
-    room.center.y + Math.sin(elevation) * radius,
-    room.center.z + Math.sin(angle) * Math.cos(elevation) * radius
+    room.center.x + Math.cos(angle) * r,
+    room.center.y + (Math.random() - 0.5) * 80,
+    room.center.z + Math.sin(angle) * r
   );
 }
 
 // ============================================================================
-// PROCEDURAL MAP GENERATOR
+// PROCEDURAL MAP GENERATION (not used for circumpunct but kept for future)
 // ============================================================================
 
-function generateProceduralMap(seed = Math.random()) {
-  // Simple seeded random
-  const rng = () => {
-    seed = (seed * 9301 + 49297) % 233280;
-    return seed / 233280;
+function generateProceduralMap() {
+  const numRooms = 5 + Math.floor(Math.random() * 4);
+  const map = {
+    name: 'Procedural Arena',
+    rooms: [],
+    tunnels: [],
+    procedural: true,
   };
 
-  const map = { rooms: [], tunnels: [] };
-  const numRooms = 5 + Math.floor(rng() * 3); // 5-7 rooms
-
-  // Generate room centers using random placement
-  const rooms = [];
+  // Generate rooms with minimum separation
+  const minSep = SU * 5;
   for (let i = 0; i < numRooms; i++) {
-    const angle = (i / numRooms) * Math.PI * 2 + rng() * 0.3;
-    const dist = SU * (4 + rng() * 6);
-    rooms.push({
-      id: `room_${i}`,
-      team: i === 0 ? 'A' : i === 1 ? 'B' : null,
-      x: Math.cos(angle) * dist,
-      y: (rng() - 0.5) * SU * 2,
-      z: Math.sin(angle) * dist,
-      r: SU * (1.5 + rng() * 1.5),
-    });
+    let x, y, z, valid;
+    let attempts = 0;
+    do {
+      x = (Math.random() - 0.5) * SU * 18;
+      y = (Math.random() - 0.5) * SU * 6;
+      z = (Math.random() - 0.5) * SU * 18;
+      valid = true;
+      for (const r of map.rooms) {
+        const dx = r.x - x, dy = r.y - y, dz = r.z - z;
+        if (Math.sqrt(dx*dx + dy*dy + dz*dz) < minSep) { valid = false; break; }
+      }
+      attempts++;
+    } while (!valid && attempts < 100);
+
+    const team = i === 0 ? 'A' : (i === 1 ? 'B' : null);
+    const r = SU * (1.5 + Math.random() * 1.5);
+    map.rooms.push({ id: `room_${i}`, team, x, y, z, r });
   }
 
-  // Connect with Minimum Spanning Tree-ish approach
+  // Connect rooms with MST
+  const rooms = map.rooms;
   const connected = new Set([0]);
   const edges = [];
 
