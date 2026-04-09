@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 10 Dimensions of Reality</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #060608;
+    --text: #E0D8C8;
+    --dim: #C8C0B0;
+    --faint: #908878;
+    --sans: 'Inter', -apple-system, sans-serif;
+    --serif: 'Crimson Pro', Georgia, serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+  }
+
+  /* === DESKTOP: single-screen 5x2 === */
+  @media (min-width: 900px) {
+    body {
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1vh 1.2vw;
+    }
+  }
+
+  /* === MOBILE: scrollable === */
+  @media (max-width: 899px) {
+    body {
+      min-height: 100vh;
+      padding: 1.5rem 1rem;
+    }
+  }
+
+  /* === TITLE === */
+  .title {
+    font-family: var(--sans);
+    font-size: clamp(0.75rem, 1.4vw, 1.1rem);
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #B8A060;
+    margin-bottom: 1vh;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  /* === GRID === */
+  .grid {
+    display: grid;
+    gap: clamp(4px, 0.4vw, 7px);
+    width: 100%;
+    max-width: 1700px;
+  }
+
+  @media (min-width: 900px) {
+    .grid {
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: 1fr 1fr;
+      flex: 1;
+      min-height: 0;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .grid {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  /* === CARD === */
+  .card {
+    --c: #fff;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    cursor: default;
+    overflow: hidden;
+    opacity: 0;
+    animation: card-in 0.4s ease forwards;
+    transition: filter 0.3s ease;
+    position: relative;
+  }
+
+  @media (min-width: 900px) {
+    .card { padding: 1.3vh 0.75vw; }
+  }
+  @media (max-width: 899px) {
+    .card { padding: 1.2rem 1rem; }
+  }
+
+  .card:hover { filter: brightness(1.25); }
+
+  /* === CARD TOP: symbol row === */
+  .card-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5em;
+    margin-bottom: 0.3em;
+    flex-shrink: 0;
+  }
+
+  .card-symbol {
+    font-size: clamp(1.8rem, 3.8vh, 3rem);
+    color: var(--c);
+    line-height: 1;
+    font-family: var(--serif);
+    font-weight: 300;
+  }
+
+  .card:hover .card-symbol { text-shadow: 0 0 24px var(--c); }
+
+  .card-dim {
+    font-size: clamp(0.6rem, 1.1vh, 0.82rem);
+    font-weight: 400;
+    color: color-mix(in srgb, var(--c) 70%, white);
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+
+  .card-note {
+    font-size: clamp(0.55rem, 1vh, 0.75rem);
+    color: color-mix(in srgb, var(--c) 60%, white);
+    font-style: italic;
+    font-family: var(--serif);
+    margin-left: auto;
+  }
+
+  /* === NAME === */
+  .card-name {
+    font-family: var(--sans);
+    font-size: clamp(0.7rem, 1.2vh, 0.95rem);
+    color: rgba(255,255,255,0.85);
+    line-height: 1.35;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    flex-shrink: 0;
+  }
+
+  /* === AXIOM / DERIVATION === */
+  .card-axiom {
+    border-top: 1px solid color-mix(in srgb, var(--c) 18%, transparent);
+    padding-top: 0.7vh;
+    margin-top: 0.7vh;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-axiom-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4em;
+    margin-bottom: 0.25em;
+    flex-shrink: 0;
+  }
+
+  .card-axiom-id {
+    font-family: var(--sans);
+    font-size: clamp(0.7rem, 1.2vh, 0.9rem);
+    font-weight: 600;
+    color: var(--c);
+    letter-spacing: 0.05em;
+  }
+
+  .card-axiom-from {
+    font-family: var(--sans);
+    font-size: clamp(0.52rem, 0.9vh, 0.68rem);
+    color: var(--dim);
+    font-weight: 300;
+  }
+
+  .card-axiom-text {
+    font-family: var(--serif);
+    font-size: clamp(1rem, 2vh, 1.55rem);
+    color: rgba(255,255,255,0.82);
+    line-height: 1.3;
+    font-weight: 400;
+    letter-spacing: -0.005em;
+  }
+
+  /* === ETHICS === */
+  .card-ethics {
+    font-family: var(--sans);
+    font-size: clamp(0.62rem, 1.05vh, 0.82rem);
+    color: color-mix(in srgb, var(--c) 75%, white);
+    margin-top: 0.6vh;
+    padding-top: 0.5vh;
+    border-top: 1px solid color-mix(in srgb, var(--c) 15%, transparent);
+    line-height: 1.35;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  /* === DOCS BUTTON === */
+  .card-docs-btn {
+    position: absolute;
+    bottom: 0.6vh;
+    right: 0.5vw;
+    width: clamp(18px, 2vh, 24px);
+    height: clamp(18px, 2vh, 24px);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--c) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--c) 20%, transparent);
+    color: color-mix(in srgb, var(--c) 55%, white);
+    font-size: clamp(9px, 1.2vh, 13px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    opacity: 0.4;
+    text-decoration: none;
+    font-family: var(--sans);
+    font-weight: 600;
+  }
+
+  .card:hover .card-docs-btn { opacity: 1; }
+  .card-docs-btn:hover {
+    background: color-mix(in srgb, var(--c) 22%, transparent);
+    border-color: color-mix(in srgb, var(--c) 45%, transparent);
+    transform: scale(1.15);
+  }
+
+  @media (max-width: 899px) {
+    .card-docs-btn {
+      bottom: 0.8rem;
+      right: 0.8rem;
+      opacity: 0.7;
+    }
+  }
+
+  /* === COLORS === */
+  .card[data-d="infinity"]    { --c: rgba(255,255,255,0.9);  background: linear-gradient(160deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%); }
+  .card[data-d="soul"]        { --c: #4488ff;   background: linear-gradient(160deg, rgba(68,136,255,0.12) 0%, rgba(68,136,255,0.025) 100%); }
+  .card[data-d="convergence"] { --c: #6B5BFF;   background: linear-gradient(160deg, rgba(107,91,255,0.12) 0%, rgba(107,91,255,0.025) 100%); }
+  .card[data-d="line"]        { --c: #44ddcc;   background: linear-gradient(160deg, rgba(68,221,204,0.12) 0%, rgba(68,221,204,0.025) 100%); }
+  .card[data-d="branch"]      { --c: #E88AAF;   background: linear-gradient(160deg, rgba(232,138,175,0.12) 0%, rgba(232,138,175,0.025) 100%); }
+  .card[data-d="field"]       { --c: #44cc44;   background: linear-gradient(160deg, rgba(68,204,68,0.12) 0%, rgba(68,204,68,0.025) 100%); }
+  .card[data-d="emerge"]      { --c: #ffaa00;   background: linear-gradient(160deg, rgba(255,170,0,0.12) 0%, rgba(255,170,0,0.025) 100%); }
+  .card[data-d="boundary"]    { --c: #ff4444;   background: linear-gradient(160deg, rgba(255,68,68,0.12) 0%, rgba(255,68,68,0.025) 100%); }
+  .card[data-d="recurse"]     { --c: #9B7AD8;   background: linear-gradient(160deg, rgba(155,122,216,0.12) 0%, rgba(155,122,216,0.025) 100%); }
+  .card[data-d="whole"]       { --c: #B8A060;   background: linear-gradient(160deg, rgba(184,160,96,0.12) 0%, rgba(184,160,96,0.025) 100%); }
+
+  /* === FOOTER === */
+  .footer {
+    text-align: center;
+    margin-top: 0.6vh;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 899px) {
+    .footer { margin-top: 1.5rem; padding-bottom: 1rem; }
+  }
+
+  .footer-framework {
+    font-family: var(--sans);
+    font-size: clamp(0.5rem, 0.8vh, 0.65rem);
+    color: var(--dim);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  .footer-author {
+    font-family: var(--serif);
+    font-size: clamp(0.65rem, 1vh, 0.85rem);
+    color: var(--text);
+    letter-spacing: 0.04em;
+    font-weight: 400;
+  }
+
+  .footer-site a {
+    font-family: var(--sans);
+    font-size: clamp(0.5rem, 0.8vh, 0.6rem);
+    color: var(--faint);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: color 0.3s;
+    font-weight: 300;
+  }
+
+  .footer-site a:hover { color: #B8A060; }
+
+  /* === MODAL === */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.78);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: #0c0c12;
+    border: 1px solid color-mix(in srgb, var(--modal-c, #fff) 22%, transparent);
+    border-radius: 10px;
+    padding: 1.8rem 2.2rem;
+    max-width: 460px;
+    width: 90vw;
+    position: relative;
+    box-shadow: 0 0 60px color-mix(in srgb, var(--modal-c, #fff) 8%, transparent);
+    animation: modal-in 0.2s ease;
+  }
+
+  @keyframes modal-in {
+    from { opacity: 0; transform: scale(0.96) translateY(8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.9rem;
+    background: none;
+    border: none;
+    color: #706858;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .modal-close:hover { color: #E0D8C8; }
+
+  .modal-symbol {
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    color: var(--modal-c, #fff);
+    margin-bottom: 0.2rem;
+  }
+
+  .modal-title {
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    color: var(--modal-c, #fff);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    margin-bottom: 1rem;
+  }
+
+  .modal-links { list-style: none; }
+
+  .modal-links li { margin-bottom: 0.5rem; }
+
+  .modal-links a {
+    font-family: var(--sans);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 400;
+    padding: 0.5rem 0.65rem;
+    display: block;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+  }
+
+  .modal-links a:hover {
+    background: color-mix(in srgb, var(--modal-c, #fff) 7%, transparent);
+    border-color: color-mix(in srgb, var(--modal-c, #fff) 18%, transparent);
+    color: #fff;
+  }
+
+  .modal-links .link-desc {
+    font-family: var(--serif);
+    font-size: 0.78rem;
+    color: var(--faint);
+    margin-top: 0.1rem;
+    font-weight: 300;
+  }
+
+  /* === ANIMATION === */
+  .card:nth-child(1)  { animation-delay: 0.00s; }
+  .card:nth-child(2)  { animation-delay: 0.04s; }
+  .card:nth-child(3)  { animation-delay: 0.06s; }
+  .card:nth-child(4)  { animation-delay: 0.08s; }
+  .card:nth-child(5)  { animation-delay: 0.10s; }
+  .card:nth-child(6)  { animation-delay: 0.12s; }
+  .card:nth-child(7)  { animation-delay: 0.14s; }
+  .card:nth-child(8)  { animation-delay: 0.16s; }
+  .card:nth-child(9)  { animation-delay: 0.18s; }
+  .card:nth-child(10) { animation-delay: 0.20s; }
+
+  @keyframes card-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="title">The 10 Dimensions of Reality</div>
+
+<div class="grid">
+
+  <!-- 1. Infinity -->
+  <div class="card" data-d="infinity">
+    <div class="card-head">
+      <span class="card-symbol">&#x221E;</span>
+    </div>
+    <div class="card-name">undifferentiated energy; E = 1</div>
+    <div class="card-axiom">
+      <div class="card-axiom-head">
+        <span class="card-axiom-id">A0</span>
+      </div>
+      <div class="card-axiom-text">There is one energy. It is everything. All else is constraints. (1 &ne; 0)</div>
+      <div class="card-ethics">The source of all constraint. Everything that follows is E wearing a different geometric costume.</div>
+    </div>
+    <span class="card-docs-btn" onclick="openDocs('infinity')" title="Related documents">&#x25B8;</span>
+  </div>
+
+  <!-- 2. Soul -->
+  <div class="card" data-d="soul">
+    <div class="card-head">
+      <span class="card-symbol">&bull;</span>
+      <span class="card-dim">0D</span>
+      <span class="card-note">do</span>
+    </div>
+    <div class="card-name">point, singularity, soul, localization</div>
+    <div class="card-axiom">
+      <div class="card-axiom-head">
+        <span class="card-axiom-id">A1</span>
+        <span class="card-axiom-from">from A0</span>
+      </div>
+      <div class="card-axiom-text">The 1 must self-limit; an undifferentiated 1 is indistinguishable from 0, which is impossible</div>
+      <div class="card-ethics">Converges &middot; TRUE &middot; Curiosity: orientation toward what one does not know</div>
+    </div>
+    <span class="card-docs-btn" onclick="openDocs('soul')" title="Related documents">&#x25B8;</span>
+  </div>
+
+  <!-- 3. Convergence -->
+  <div class="card" data-d="convergence">
+    <div class="card-head">
+      <span class="card-symbol">&#x229B;</span>
+      <span class="card-dim">0.5D &ensp; i&sup1; = +i</span>
+      <span class="card-note">re</span>
+    </div>
+    <div class="card-name">convergence</div>
+    <div class="card-axiom">
+      <div class="card-axiom-head">
+        <span class="card-axiom-id">D1</span>
+        <span class="card-axiom-from">from A1</span>
+      </div>
+      <div class="card-axiom-text">Self-limitation requires convergence; localization is a process, not an instant</div>
+      <div class="card-ethics">The first fold: inward gathering toward center. Conjugate of emergence (&minus;i).</div>
+    </div>
+    <span class="card-docs-btn" onclick="openDocs('convergence')" title="Related documents">&#x25B8;</span>
+  </div>
+
+  <!-- 4. Line -->
+  <div class="card" data-d="line">
+    <div class="card-head">
+      <span class="card-symbol">&mdash;</span>
+      <span class="card-dim">1D</span>
+      <span class="card-note">mi</span>
+    </div>
+    <div class="card-name">line, string, timeline, extension</div>
+    <div class="card-axiom">
+      <div class="card-axiom-head">
+        <span class="card-axiom-id">A2</span>
+        <span class="card-axiom-from">from A0 + A1</span>
+      </div>
+      <div class="card-axiom-text">Self-limitation must persist; a convergence that does not hold collapses back to &infin;, violating A1</div>
+      <div class="card-ethics">Commits &middot; FAITHFUL &middot; Reliability: the line holds; the receipts are unbroken</div>
+    </div>
+    <span class="card-docs-btn" onclick="openDocs('line')" title="Related documents">&#x25B8;</span>
+  </div>
+
+  <!-- 5. Branch -->
+  <div class="card" data-d="branch">
+    <div class="card-head">
+      <span class="card-symbol">&#x2387;</span>
+      <span class="card-dim">1.5D &ensp; i&sup2; = &minus;1</span>
+      <span class="card-note">fa</span>
+    </div>
+    <div class="card-name">branching, fractal coastlines</div>
+    <div class="card-axiom">
+      <div class="card-axiom-head">
+        <span class="card-axiom-id">D2</span>
+        <span class="card-axiom-from">from A2 &rarr; A3</span>
+      </div>
+      <div class="card-axiom-text">Extension must branch to reach the field; a single line never becomes a surface</div>
+      <div class="card-ethics">The i-turn: line opens into spread. Irreversible differentiation. Conjugate of recursion (+1).</div>
+    </div>
+    <span class="card-docs-btn" onclick="openDocs('branch')" title="Related documents">&#x25B8;</span>
+  </div>
+
+  <!-- 6. Field -->
+  <div class="card" data-d="field">
+    <div class="card-head">
+      <span class="card-symbol">&Phi;</span>
+      <span class="card-dim">2D</span>
+      <span class="card-note">so</span>
+    </div>
+    <div class="card-name">field, mind, surface, mediation</div>
+    <div class="card-axiom">
+      <div class="card-axiom-head">
+        <span class="card-axiom-id">A3</span>
+        <span class="card-axiom-from">from A0 + A1</span>
+      </div>
+      <div class="card-axiom-text">Parts are fractals of their wholes; the 1 is all there is to work with (self-similarity across scale)</div>
+      <div class="card-ethics">Mediates &middot; RIGHT &middot; Access: the space between remains open and clear</div>
+    </div>
+    <span class="card-docs-btn" onclick="openDocs('field')" title="Related documents">&#x25B8;</span>
+  </div>
+
+  <!-- 7. Emergence -->
+  <div class="card" data-d="emerge">
+    <div class="card-head">
+      <span class="card-symbol">&#x2739;</span>
+      <span class="card-dim">2.5D &ensp; i&sup3; = &minus;i</span>
+      <span class="card-note">la</span>
+    </div>
+    <div class="card-name">emergence</div>
+    <div class="card-axiom">
+      <div class="card-axiom-head">
+        <span class="card-axiom-id">D3</span>
+        <span class="card-axiom-from">from A3 &rarr; A4</span>
+      </div>
+      <div class="card-axiom-text">Self-similarity requires emergence toward closure; the field must fold toward boundary</div>
+      <div class="card-ethics">Outward unfolding: surface gathers into boundary. Conjugate of convergence (+i).</div>
+    </div>
+    <span class="card-docs-btn" onclick="openDocs('emerge')" title="Related documents">&#x25B8;</span>
+  </div>
+
+  <!-- 8. Boundary -->
+  <div class="card" data-d="boundary">
+    <div class="card-head">
+      <span class="card-symbol">&#x25CB;</span>
+      <span class="card-dim">3D</span>
+      <span class="card-note">ti</span>
+    </div>
+    <div class="card-name">boundary, body, nested parts, interface</div>
+    <div class="card-axiom">
+      <div class="card-axiom-head">
+        <span class="card-axiom-id">A4</span>
+        <span class="card-axiom-from">from A0 + A1</span>
+      </div>
+      <div class="card-axiom-text">Wholeness requires closure; 0(&bull;) + 1(&mdash;) + 2(&Phi;) = 3(&#x25CB;)</div>
+      <div class="card-ethics">Filters &middot; GOOD &middot; Plasticity: boundary that can flex without breaking</div>
+    </div>
+    <span class="card-docs-btn" onclick="openDocs('boundary')" title="Related documents">&#x25B8;</span>
+  </div>
+
+  <!-- 9. Recursion -->
+  <div class="card" data-d="recurse">
+    <div class="card-head">
+      <span class="card-symbol">&#x27F3;</span>
+      <span class="card-dim">3.5D &ensp; i&#x2070; = +1</span>
+      <span class="card-note">do&prime;</span>
+    </div>
+    <div class="card-name">recursion</div>
+    <div class="card-axiom">
+      <div class="card-axiom-head">
+        <span class="card-axiom-id">D4</span>
+        <span class="card-axiom-from">from A3 + A4</span>
+      </div>
+      <div class="card-axiom-text">Closure opens into &Phi;&prime;; the part discovers it is inside a whole</div>
+      <div class="card-ethics">Closed boundary becomes new aperture. 3.5D = 0D at the next scale. Conjugate of branching (&minus;1).</div>
+    </div>
+    <span class="card-docs-btn" onclick="openDocs('recurse')" title="Related documents">&#x25B8;</span>
+  </div>
+
+  <!-- 10. Whole -->
+  <div class="card" data-d="whole">
+    <div class="card-head">
+      <span class="card-symbol">&#x2299;</span>
+    </div>
+    <div class="card-name">the whole, consciousness, being, experience</div>
+    <div class="card-axiom">
+      <div class="card-axiom-head">
+        <span class="card-axiom-id">D5</span>
+        <span class="card-axiom-from">from all</span>
+      </div>
+      <div class="card-axiom-text">The whole is not the sum of its parts; it is their compositional unity via &Phi;</div>
+      <div class="card-ethics">Compositional unity &middot; AGREEMENT &middot; Validation: independent seeing recognizes independent seeing</div>
+    </div>
+    <span class="card-docs-btn" onclick="openDocs('whole')" title="Related documents">&#x25B8;</span>
+  </div>
+
+</div>
+
+<div class="footer">
+  <span class="footer-framework">The Circumpunct Framework</span>
+  &ensp;&middot;&ensp;
+  <span class="footer-author">Ashman Roonz</span>
+  &ensp;&middot;&ensp;
+  <span class="footer-site"><a href="https://FractalReality.ca">FractalReality.ca</a></span>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeDocs(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeDocs()">&times;</button>
+    <div class="modal-symbol" id="modalSymbol"></div>
+    <div class="modal-title" id="modalTitle"></div>
+    <ul class="modal-links" id="modalLinks"></ul>
+  </div>
+</div>
+
+<script>
+const docData = {
+  infinity: {
+    symbol: '\u221E',
+    title: 'Infinity: E = 1',
+    color: 'rgba(255,255,255,0.9)',
+    links: [
+      { href: 'e_equals_1.html', name: 'E = 1', desc: 'The four constraints, all physics as compounded constraints' },
+      { href: 'truth_and_god.html', name: 'Truth and God', desc: 'Ontological and theological reading' },
+      { href: 'how_reality_is_built.html', name: 'How Reality Is Built', desc: 'Foundational construction: dimensions, power, isomorphisms' },
+      { href: 'genesis_sequence.html', name: 'The Genesis Sequence', desc: '\u221E \u2192 \u2022\u221E \u2192 \u2299\u221E = Reality' }
+    ]
+  },
+  soul: {
+    symbol: '\u2022',
+    title: '0D: Aperture / Soul',
+    color: '#4488ff',
+    links: [
+      { href: 'truth_and_god.html', name: 'Truth and God', desc: 'The self as convergence point' },
+      { href: 'soul_array_visualization.html', name: 'The Soul Array', desc: '\u2022\u221E: every possible self-limitation, simultaneously' },
+      { href: 'circumpunct_ontology.html', name: 'Circumpunct Ontology', desc: '0 is not absence but the 1 at maximum convergence' },
+      { href: 'curiosity_is_the_cure_v2.html', name: 'Curiosity Is the Cure', desc: 'The virtue of TRUE: orientation toward what one does not know' }
+    ]
+  },
+  convergence: {
+    symbol: '\u229B',
+    title: '0.5D: Convergence',
+    color: '#6B5BFF',
+    links: [
+      { href: 'circumpunct_breath.html', name: 'The Breath', desc: '\u03A6 vs \u03A6\u2032: the pump cycle, inner and outer field' },
+      { href: 'speed_of_light.html', name: 'Speed of Light', desc: 'c = sin(i): speed limit of convergent propagation' },
+      { href: 'e_equals_1.html', name: 'E = 1', desc: 'Gravity: convergence compounding convergence' }
+    ]
+  },
+  line: {
+    symbol: '\u2014',
+    title: '1D: Line / Continuity',
+    color: '#44ddcc',
+    links: [
+      { href: 'planck_constant.html', name: '\u210F = 1', desc: 'The indivisible cycle, minimum commitment of extension' },
+      { href: 'how_reality_is_built.html', name: 'How Reality Is Built', desc: 'Structure = process at 1D' },
+      { href: 'circumpunct_ethics_and_virtues.html', name: 'Ethics and Virtues', desc: 'FAITHFUL: the line holds; the receipts are unbroken' }
+    ]
+  },
+  branch: {
+    symbol: '\u2387',
+    title: '1.5D: Branching',
+    color: '#E88AAF',
+    links: [
+      { href: 'mass_ratios.html', name: 'Mass Ratios', desc: '1.5D: rotational spectral splitting at the i-turn' },
+      { href: 'wv_decomposition.html', name: 'The W-V Decomposition', desc: 'Why the exponent formula is irreducibly three-part' },
+      { href: 'emergent_chemistry.html', name: 'Emergent Chemistry', desc: 'Bond energy model: pi ratios, lone pair suppression, D5 closure' }
+    ]
+  },
+  field: {
+    symbol: '\u03A6',
+    title: '2D: Field / Mind',
+    color: '#44cc44',
+    links: [
+      { href: 'gauge_structure.html', name: 'Gauge Structure', desc: 'SU(3)\u00D7SU(2)\u00D7U(1) from validation architecture' },
+      { href: 'circumpunct_theory_of_mind_plain.html', name: 'Theory of Mind', desc: 'Surface = Field = Mind (the Surface Theorem)' },
+      { href: 'why_space_can_never_be_empty.html', name: 'Why Space Is Never Empty', desc: 'Vacuum = \u03A6 at scales below measurement threshold' }
+    ]
+  },
+  emerge: {
+    symbol: '\u2739',
+    title: '2.5D: Emergence',
+    color: '#ffaa00',
+    links: [
+      { href: 'infolding.html', name: 'Infolding', desc: 'Emergence, transmission between scales, triad of force closure' },
+      { href: 'emergent_biology.html', name: 'Emergent Biology', desc: 'Genetic code, DNA structure, central dogma, protein folding' },
+      { href: 'emergent_chemistry.html', name: 'Emergent Chemistry', desc: 'Chemistry from the dimensional ladder' }
+    ]
+  },
+  boundary: {
+    symbol: '\u25CB',
+    title: '3D: Boundary / Body',
+    color: '#ff4444',
+    links: [
+      { href: 'gravity.html', name: 'Gravity', desc: 'The boundary closes: G from the dimensional ladder' },
+      { href: 'circumpunct_ethics_and_virtues.html', name: 'Ethics and Virtues', desc: 'GOOD: boundary that can flex without breaking' },
+      { href: 'biology_predictions.html', name: 'Biology Predictions', desc: 'Eight quantitative biological predictions from T = 3' },
+      { href: 'circumpunct_theory_of_mind_plain.html', name: 'Theory of Mind', desc: 'The boundary as filter; filters compound' }
+    ]
+  },
+  recurse: {
+    symbol: '\u27F3',
+    title: '3.5D: Recursion',
+    color: '#9B7AD8',
+    links: [
+      { href: 'dimensional_ladder.html', name: 'The Dimensional Ladder', desc: 'All seven rungs linked: the complete architecture' },
+      { href: 'wholeness.html', name: 'Wholeness', desc: '3.5D = 0D at the next nesting level' },
+      { href: 'circumpunct_breath.html', name: 'The Breath', desc: 'Closed boundary becomes new aperture' }
+    ]
+  },
+  whole: {
+    symbol: '\u2299',
+    title: 'The Circumpunct: \u2299',
+    color: '#B8A060',
+    links: [
+      { href: 'circumpunct_physics.html', name: 'Circumpunct Physics', desc: 'Working-physicists formalization' },
+      { href: 'circumpunct_ethics_and_virtues.html', name: 'Ethics and Virtues', desc: 'AGREEMENT: independent seeing recognizes independent seeing' },
+      { href: 'how_reality_is_built.html', name: 'How Reality Is Built', desc: 'Compositional unity via \u03A6' },
+      { href: 'clay_millennium.html', name: 'Clay Millennium Problems', desc: 'Seven problems mapped to seven rungs' }
+    ]
+  }
+};
+
+function openDocs(key) {
+  const data = docData[key];
+  if (!data) return;
+  const overlay = document.getElementById('modalOverlay');
+  const modal = overlay.querySelector('.modal');
+  modal.style.setProperty('--modal-c', data.color);
+  document.getElementById('modalSymbol').textContent = data.symbol;
+  document.getElementById('modalSymbol').style.color = data.color;
+  document.getElementById('modalTitle').textContent = data.title;
+  document.getElementById('modalTitle').style.color = data.color;
+  const list = document.getElementById('modalLinks');
+  list.innerHTML = data.links.map(l =>
+    `<li><a href="${l.href}" target="_blank">${l.name}<div class="link-desc">${l.desc}</div></a></li>`
+  ).join('');
+  overlay.classList.add('active');
+}
+
+function closeDocs(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeDocs();
+});
+</script>
+
+</body>
+</html>
