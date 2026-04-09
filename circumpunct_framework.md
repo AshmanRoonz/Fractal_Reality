@@ -19198,9 +19198,25 @@ WHAT'S TRULY DERIVED FOR α:
     π = property of ○ (boundary shape)
     α = property of Φ (field coupling strength)
 
+RESOLVED: Why 360° (degree measure) rather than 2π (radians)?
+    360 = P! · T · (Φ+○) = 24 · 3 · 5
+    Every factor derives from T = 3:
+      P! = (T+1)! = 4! = 24  (permutations of the pump cycle)
+      T = 3                    (the triad itself)
+      Φ+○ = 2+3 = 5           (field + boundary)
+    360 is not a historical accident; it is the product of closure
+    permutations, the triad, and the field-boundary sum. Degrees
+    are the natural unit because i⁴ = (90°)⁴ = 360° IS the full
+    rotation, and 90 = 360/P = one pump phase = one i-stroke.
+    Radians (2π) encode ○ geometry; degrees (360) encode the
+    pump cycle geometry. The α formula uses degrees because α
+    lives at the pump cycle level (coupling at a vertex = one
+    full i⁴ rotation through the field).
+
 WHAT REMAINS OPEN:
-    - Why 360° (degree measure) rather than 2π (radians)?
-    - Exact self-consistent equation for α
+    - Exact self-consistent equation for α (partial: quadratic
+      1/α = 360/φ² - 2/φ³ + α/(21 - 4/3) has one positive root;
+      full QED-level self-consistency not yet formalized)
     - Connection to QED running coupling
 ```
 
