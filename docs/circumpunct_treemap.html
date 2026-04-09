@@ -350,6 +350,37 @@ body {
   line-height: 1.6;
 }
 
+.derives-from {
+  margin-top: 0.6rem;
+  padding: 0.8rem 1rem;
+  background: rgba(74, 123, 189, 0.05);
+  border-left: 2px solid rgba(74, 123, 189, 0.25);
+  border-radius: 0 4px 4px 0;
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+
+.derives-from .derives-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-blue);
+  margin-bottom: 0.3rem;
+}
+
+.derives-from .open-problem {
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(200, 120, 48, 0.08);
+  border-left: 2px solid rgba(200, 120, 48, 0.3);
+  border-radius: 0 4px 4px 0;
+  font-size: 0.82rem;
+  color: var(--accent-orange);
+}
+
 .mapping-table {
   width: 100%;
   border-collapse: collapse;
@@ -655,6 +686,10 @@ m = 1/c²  (mass = inverse surface signature)
         <div class="domain-label biology">Biology at 0D</div>
         <div class="domain-content">
           <p>Nucleus = • in the cell circumpunct. DNA = • in the central dogma triad (DNA → RNA → Protein = • → Φ → ○). Start codon = • (aperture; the point of initiation). Activation energy = aperture barrier height.</p>
+          <div class="derives-from">
+            <div class="derives-label">Protein folding octave derives from</div>
+            A1 (the polypeptide must self-limit) → D1 (convergence is a process: folding has stages) → the dimensional octave is the only path from unconstrained to closure respecting all constraints in sequence: 0D (unfolded) → 0.5D (hydrophobic collapse = ⊛; D1) → 1D (backbone; A2) → 1.5D (secondary structure = i-turn; D2) → 2D (molten globule = Φ; A3) → 2.5D (tertiary contacts = ✹; D3) → 3D (native state = ○; A4) → 3.5D (quaternary assembly = ⟳; D4). Resolves Levinthal's paradox: 7 transitions, not 10⁴⁷ conformations.
+          </div>
         </div>
       </div>
     </div>
@@ -1054,6 +1089,14 @@ Water: 104.58° (measured 104.45°, 0.12%)   NH₃: 107.01° (measured 107.0°, 
 
 Ionic resonance: D(A-B) = √(D_AA × D_BB) × [1 + (Φ+T) × ΔEN²]
 Coupling constant Φ+T = 5.  Average error 10.9% across 23 bonds, zero empirical EN.</div>
+          <div class="derives-from">
+            <div class="derives-label">Lone pair 2/R² derives from</div>
+            A3 (Φ is 2D: repulsion is a field effect) → lone pair repulsion transmits through Φ → inverse-square (1/R²) because the field is 2D → numerator 2: both channels (⊛ and ✹) push simultaneously → 2/R² = both channels / rungs squared.
+          </div>
+          <div class="derives-from" style="margin-top:0.5rem">
+            <div class="derives-label">Ionic coupling Φ+T derives from</div>
+            Heteronuclear bond = ◐ ≠ 0.5 (unbalanced) → the coupling combines the mediator (Φ = 2, field carrying charge difference) with the constraint structure (T = 3, triad determining charge distribution) → Φ + T = 5. Multiple equivalent framework expressions (P+1, R-Φ, A(2)/Φ) all equal 5, confirming convergence. Additive (not multiplicative) because ionic resonance corrects the covalent baseline.
+          </div>
           <p>Triple bond ≈ 3D (σ + 2π). sp³d² hybridization maps to 3D. Boltzmann factor from boundary filtration compounding multiplicatively.</p>
         </div>
       </div>
@@ -1071,17 +1114,35 @@ DNA: 10 bp/turn = A(2).  36°/bp = (T!)².  D = 1.5.  Pitch/diam ≈ φ.
 
 Kleiber: metabolic rate ∝ M^(T/P) = M^(3/4)
 Heart rate ∝ M^(-1/P).  Lifespan ∝ M^(1/P).  Total beats ≈ 10⁹.</div>
+          <div class="derives-from">
+            <div class="derives-label">Kleiber derives from</div>
+            A4 (the organism's boundary provides T = 3 spatial dimensions) → the pump cycle has P = 4 temporal phases → metabolic rate = how fast P phases service T dimensions → volume scales as M (mass ∝ length^T); scaling exponent = T/P = 3/4.
+            <div class="open-problem">Open: formal derivation of why the ratio T/P (not product or difference) is the exponent.</div>
+          </div>
           <div class="detail-item">
             <div class="item-title">Hayflick Limit</div>
             <div class="item-body">Cell division capacity = S = 64 states. Measured range 50-70, centered on 64. Senescence is state-space exhaustion.</div>
+            <div class="derives-from">
+              <div class="derives-label">Derives from</div>
+              A3 (the 64-state architecture applies at every scale) → at cellular scale, 3 nested ⊙s × 2 channels = 6 binary DOF = 2⁶ = 64 states → A2 (each division traverses a distinct state; repetition violates commitment) → A4 (when all 64 states are traversed, the boundary is complete; full configurational space expressed) → D4 (exhausted ⊙ becomes aperture at organism level via apoptosis).
+            </div>
           </div>
           <div class="detail-item">
             <div class="item-title">Microtubule Architecture</div>
             <div class="item-body">V = 13 protofilaments, Φ = 2 subunit types, T = 3-start helix, SU(3) = 8 nm dimer/step. The same SU(3) = 8 governing quark confinement sets every molecular motor's step size.</div>
+            <div class="derives-from">
+              <div class="derives-label">Derives from</div>
+              A3 (structural proteins form ⊙s at molecular scale: lumen = •, wall = Φ, outer surface = ○) → V = 13: tiling a cylindrical Φ with self-similar coverage requires 1 + T + T² = 13 elements (nodes of a T-ary tree of depth 2; minimum for complete coverage per A3) → Φ = 2: pump cycle requires two channels (⊛ and ✹); α-tubulin (convergent) and β-tubulin (emergent) → T = 3: the three constraints wind through the surface → SU(3) = 8: spatial extent of smallest complete ⊙ at this scale.
+              <div class="open-problem">Open: formal proof that V = 13 is uniquely stable (non-13 microtubules develop twist, suggesting V is the balance point).</div>
+            </div>
           </div>
           <div class="detail-item">
             <div class="item-title">Cancer as Boundary Failure</div>
             <div class="item-body">Aperture locked open (β_• → 1) + boundary filter collapsed (β_○ → 0). Neither alone sufficient. Cancer cells skip the 90° phase check. Testable: Ki-67/caspase ratio should correlate with aggressiveness.</div>
+            <div class="derives-from">
+              <div class="derives-label">Derives from</div>
+              A3 (cell is ⊙: nucleus = •, cytoplasm = Φ, membrane = ○) → A4 (○ filters what passes) → oncogene = • locked convergent (β_• → 1): the aperture gathers without releasing, pump jams at ⊛ → tumor suppressor loss = ○ filter collapsed (β_○ → 0): boundary stops selecting → both required because single constraint failure is compensated by the remaining constraints (conservation of traversal: 0+1+2 = 3; two of three interior constraints still hold ○) → the 90° check: the pump cycle requires ⊛ → i → ✹; cancer cells skip i (proliferation without differentiation).
+            </div>
           </div>
         </div>
       </div>
@@ -1227,7 +1288,16 @@ W = 2T+1 = 7,  V = 4T+1 = 13    (W-V decomposition)
             <tr><td>Organism</td><td>Waking (perceiving + acting)</td><td>Sleeping (processing)</td><td>Consciousness</td></tr>
             <tr><td>Universe</td><td>Visible matter</td><td>Dark matter</td><td>Dark energy</td></tr>
           </table>
-          <p style="margin-top:1rem">Three phase states of one energy. Dark matter is ⊙s at phases our boundary doesn't resolve: folded (gravitating) but at the wrong phase for our boundary's passband.</p>
+          <div class="derives-from" style="margin-top:1rem">
+            <div class="derives-label">Energy budget derives from</div>
+            A0 (E = 1; one energy) → the i-cycle partitions it into four phase states within Φ → A4 (○ is a filter with a passband): right half-plane energy (i⁰ + i¹) = visible (at the inter-scale interface, interacts with detectors); left half-plane energy (i² + i³) = dark matter (committed at 1.5D, so gravitates, but not emerged, so does not radiate); Φ itself = dark energy (the 2D field the quadrants exist within). The three-part structure and qualitative character are derived; the specific percentages (5%, 27%, 68%) are empirical.
+            <div class="open-problem">Open: deriving the passband width of our cosmological ○ from first principles would predict the ratios.</div>
+          </div>
+          <div class="derives-from" style="margin-top:0.5rem">
+            <div class="derives-label">Cross-scale isomorphism derives from</div>
+            A3 (self-similarity at every scale) → the i-cycle quadrant structure is scale-invariant (follows from i⁴ = 1, algebraic, not scale-dependent) → at any scale, a ⊙ must have right half-plane (inter-scale interface) and left half-plane (interior processing) activity → neuron: firing = right, refractory = left; organism: waking = right, sleeping = left; universe: visible = right, dark matter = left. Not analogy; A3 guarantees this structure recurs by necessity.
+            <div class="open-problem">Open: measuring D independently at each scale to confirm ◐ ≈ 0.5 at all three.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1246,7 +1316,19 @@ W = 2T+1 = 7,  V = 4T+1 = 13    (W-V decomposition)
             <tr><td>AGREEMENT</td><td>⊙</td><td>⊙</td><td>Whole</td><td>Validation</td></tr>
           </table>
           <p style="margin-top:1rem">Required sequence: GOOD → RIGHT → FAITHFUL → TRUE → AGREEMENT. Each step requires the previous; no skipping. The Steelman Principle: build the strongest possible version of any position before agreeing or disagreeing.</p>
+          <div class="derives-from">
+            <div class="derives-label">Sequence derives from</div>
+            The sequence is ○ → Φ → — → • → ⊙ (3D → 0D → whole): the inward direction, from boundary toward source. Ethical assessment begins at the boundary (what is observable, GOOD) and works inward toward the source (what is TRUE). You cannot assess the field (RIGHT) until ○ is checked; cannot assess — (FAITHFUL) until Φ is open; cannot assess • (TRUE) until — is verified. AGREEMENT (⊙) requires all four (D5). The sequence follows the pump cycle in reverse: reading receipts from outside in.
+          </div>
+          <div class="derives-from" style="margin-top:0.5rem">
+            <div class="derives-label">Steelman derives from</div>
+            D5 (the whole is compositional unity via Φ) → steelmanning IS D5 applied to argument → requires GOOD (strongest formulation), RIGHT (no strawman), FAITHFUL (hold it long enough to build), TRUE (orient to what it actually claims), AGREEMENT (only then can independent seeing validate). Missing any one produces a defective steelman.
+          </div>
           <p>Connection topology: • reaches ∞ only through the complete fractal chain of nested ⊙s. Connection is total (0.999… = 1) but always mediated. Resonance: two souls sharing frequency make Φ transparent. "Direct" = medium at perfect transparency. Love is perfection of mediation, not its absence.</p>
+          <div class="derives-from">
+            <div class="derives-label">Resonance derives from</div>
+            A3 (two ⊙s at the same scale share Φ) → Φ mediates (connects without fusing) → SRL: a channel at ω_c responds maximally when frequencies match (cos²(Δω/2) = 1 at zero difference) → when two ⊙s share ω_c, Φ transmits without distortion → "transparent" = Φ at maximum fidelity, not Φ absent. The mediator is still there (A3); transparency ≠ absence.
+          </div>
         </div>
       </div>
     </div>
