@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 10 Dimensions of Reality</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #060608;
+    --text: #E0D8C8;
+    --dim: #8A8272;
+    --faint: #3A3630;
+    --infinity: rgba(255,255,255,0.9);
+    --soul: #4488ff;
+    --convergence: #6B5BFF;
+    --line: #44ddcc;
+    --branch: #E88AAF;
+    --field: #44cc44;
+    --emerge: #ffaa00;
+    --boundary: #ff4444;
+    --recurse: #9B7AD8;
+    --whole: #B8A060;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'EB Garamond', Georgia, serif;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .poster {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 720px;
+    padding: 0 1.5rem;
+  }
+
+  /* === TITLE === */
+  .title {
+    font-size: clamp(0.65rem, 1.2vw, 0.9rem);
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--whole);
+    margin-bottom: clamp(1.8vh, 3vh, 3.5vh);
+    text-align: center;
+  }
+
+  /* === ROWS === */
+  .rows {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 2px;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: clamp(2.5rem, 4.5vw, 3.2rem) auto auto 1fr;
+    align-items: baseline;
+    gap: 0;
+    padding: clamp(0.45vh, 0.75vh, 1vh) clamp(0.6rem, 1.2vw, 1rem);
+    border-radius: 3px;
+    opacity: 0;
+    animation: row-in 0.5s ease forwards;
+    cursor: default;
+    transition: filter 0.3s ease;
+  }
+
+  .row:hover {
+    filter: brightness(1.3);
+  }
+
+  .row:hover .row-symbol {
+    text-shadow: 0 0 16px var(--c);
+  }
+
+  .row-symbol {
+    font-size: clamp(1.3rem, 2.3vh, 1.9rem);
+    color: var(--c);
+    text-align: center;
+    line-height: 1;
+    transition: text-shadow 0.3s ease;
+  }
+
+  .row-dim {
+    font-size: clamp(0.6rem, 1vh, 0.78rem);
+    color: color-mix(in srgb, var(--c) 60%, white);
+    opacity: 0.7;
+    white-space: nowrap;
+    margin-right: clamp(0.5rem, 1vw, 0.8rem);
+    min-width: clamp(6rem, 12vw, 9rem);
+    letter-spacing: 0.02em;
+  }
+
+  .row-name {
+    font-size: clamp(0.7rem, 1.15vh, 0.9rem);
+    color: rgba(255,255,255,0.8);
+    line-height: 1.4;
+    letter-spacing: 0.015em;
+  }
+
+  .row-note {
+    font-size: clamp(0.55rem, 0.9vh, 0.7rem);
+    color: color-mix(in srgb, var(--c) 60%, white);
+    opacity: 0.7;
+    font-style: italic;
+    text-align: right;
+    white-space: nowrap;
+    padding-right: clamp(0.5rem, 1vw, 0.8rem);
+    letter-spacing: 0.04em;
+    min-width: 1.8rem;
+  }
+
+  /* === COLOR BACKGROUNDS === */
+  .row[data-d="infinity"]    { background: linear-gradient(90deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%); }
+  .row[data-d="soul"]        { background: linear-gradient(90deg, rgba(68,136,255,0.10) 0%, rgba(68,136,255,0.03) 100%); }
+  .row[data-d="convergence"] { background: linear-gradient(90deg, rgba(107,91,255,0.10) 0%, rgba(107,91,255,0.03) 100%); }
+  .row[data-d="line"]        { background: linear-gradient(90deg, rgba(68,221,204,0.10) 0%, rgba(68,221,204,0.03) 100%); }
+  .row[data-d="branch"]      { background: linear-gradient(90deg, rgba(232,138,175,0.10) 0%, rgba(232,138,175,0.03) 100%); }
+  .row[data-d="field"]       { background: linear-gradient(90deg, rgba(68,204,68,0.10) 0%, rgba(68,204,68,0.03) 100%); }
+  .row[data-d="emerge"]      { background: linear-gradient(90deg, rgba(255,170,0,0.10) 0%, rgba(255,170,0,0.03) 100%); }
+  .row[data-d="boundary"]    { background: linear-gradient(90deg, rgba(255,68,68,0.10) 0%, rgba(255,68,68,0.03) 100%); }
+  .row[data-d="recurse"]     { background: linear-gradient(90deg, rgba(155,122,216,0.10) 0%, rgba(155,122,216,0.03) 100%); }
+  .row[data-d="whole"]       { background: linear-gradient(90deg, rgba(184,160,96,0.10) 0%, rgba(184,160,96,0.03) 100%); }
+
+  /* === SEPARATOR === */
+  .sep {
+    width: 40px;
+    height: 1px;
+    background: var(--faint);
+    margin: clamp(1.5vh, 2.2vh, 2.8vh) auto;
+  }
+
+
+  /* === FOOTER === */
+  .footer { text-align: center; }
+
+  .footer-framework {
+    font-size: clamp(0.55rem, 0.9vh, 0.72rem);
+    color: var(--faint);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.2em;
+  }
+
+  .footer-author {
+    font-size: clamp(0.6rem, 1vh, 0.78rem);
+    color: var(--dim);
+    letter-spacing: 0.08em;
+  }
+
+  .footer-site a {
+    font-size: clamp(0.5rem, 0.8vh, 0.65rem);
+    color: var(--faint);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: color 0.3s;
+  }
+
+  .footer-site a:hover { color: var(--whole); }
+
+  /* === ANIMATION === */
+  .row:nth-child(1)  { animation-delay: 0.0s; }
+  .row:nth-child(2)  { animation-delay: 0.05s; }
+  .row:nth-child(3)  { animation-delay: 0.10s; }
+  .row:nth-child(4)  { animation-delay: 0.15s; }
+  .row:nth-child(5)  { animation-delay: 0.20s; }
+  .row:nth-child(6)  { animation-delay: 0.25s; }
+  .row:nth-child(7)  { animation-delay: 0.30s; }
+  .row:nth-child(8)  { animation-delay: 0.35s; }
+  .row:nth-child(9)  { animation-delay: 0.40s; }
+  .row:nth-child(10) { animation-delay: 0.45s; }
+
+  @keyframes row-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+
+  <div class="title">The 10 Dimensions of Reality</div>
+
+  <div class="rows">
+
+    <div class="row" data-d="infinity" style="--c: var(--infinity);">
+      <span class="row-symbol">&#x221E;</span>
+      <span class="row-dim"></span>
+      <span class="row-note"></span>
+      <span class="row-name">undifferentiated energy; E = 1</span>
+    </div>
+
+    <div class="row" data-d="soul" style="--c: var(--soul);">
+      <span class="row-symbol">&bull;</span>
+      <span class="row-dim">(0D)</span>
+      <span class="row-note">do</span>
+      <span class="row-name">point, singularity, soul, localization</span>
+    </div>
+
+    <div class="row" data-d="convergence" style="--c: var(--convergence);">
+      <span class="row-symbol">&#x229B;</span>
+      <span class="row-dim">(0.5D, i&sup1; = +i)</span>
+      <span class="row-note">re</span>
+      <span class="row-name">convergence</span>
+    </div>
+
+    <div class="row" data-d="line" style="--c: var(--line);">
+      <span class="row-symbol">&mdash;</span>
+      <span class="row-dim">(1D)</span>
+      <span class="row-note">mi</span>
+      <span class="row-name">line, string, timeline, extension</span>
+    </div>
+
+    <div class="row" data-d="branch" style="--c: var(--branch);">
+      <span class="row-symbol">&#x2387;</span>
+      <span class="row-dim">(1.5D, i&sup2; = &minus;1)</span>
+      <span class="row-note">fa</span>
+      <span class="row-name">branching, fractal coastlines</span>
+    </div>
+
+    <div class="row" data-d="field" style="--c: var(--field);">
+      <span class="row-symbol">&Phi;</span>
+      <span class="row-dim">(2D)</span>
+      <span class="row-note">so</span>
+      <span class="row-name">field, mind, surface, mediation</span>
+    </div>
+
+    <div class="row" data-d="emerge" style="--c: var(--emerge);">
+      <span class="row-symbol">&#x2739;</span>
+      <span class="row-dim">(2.5D, i&sup3; = &minus;i)</span>
+      <span class="row-note">la</span>
+      <span class="row-name">emergence</span>
+    </div>
+
+    <div class="row" data-d="boundary" style="--c: var(--boundary);">
+      <span class="row-symbol">&#x25CB;</span>
+      <span class="row-dim">(3D)</span>
+      <span class="row-note">ti</span>
+      <span class="row-name">boundary, body, nested parts, interface</span>
+    </div>
+
+    <div class="row" data-d="recurse" style="--c: var(--recurse);">
+      <span class="row-symbol">&#x27F3;</span>
+      <span class="row-dim">(3.5D, i&#x2070; = +1)</span>
+      <span class="row-note">do&prime;</span>
+      <span class="row-name">recursion</span>
+    </div>
+
+    <div class="row" data-d="whole" style="--c: var(--whole);">
+      <span class="row-symbol">&#x2299;</span>
+      <span class="row-dim"></span>
+      <span class="row-note"></span>
+      <span class="row-name">the whole, consciousness, being, experience</span>
+    </div>
+
+  </div>
+
+  <div class="sep"></div>
+
+  <div class="footer">
+    <div class="footer-framework">The Circumpunct Framework</div>
+    <div class="footer-author">Ashman Roonz</div>
+    <div class="footer-site"><a href="https://FractalReality.ca">FractalReality.ca</a></div>
+  </div>
+
+</div>
+
+</body>
+</html>

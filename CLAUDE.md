@@ -39,11 +39,11 @@ The way Einstein showed energy and matter are the same (E = mc²), the framework
 - 0D: point. First localization. The first constraint, •. Convergence.
 - 0.5D: convergence (i¹ = +i). Inward gathering; the first fold; approach to line. The cycle begins here.
 - 1D: line. Commitment. Extension. Ordered trace. —. The second constraint: continuity.
-- 1.5D: commitment (i² = -1). The i-turn. Line opening into spread; rotational differentiation. Irreversible.
+- 1.5D: branching (i² = -1). ⎇. The i-turn. Line opening into spread; fractal coastlines; rotational differentiation. Irreversible.
 - 2D: field. Relational surface. Φ. The third constraint: mediation.
 - 2.5D: emergence (i³ = -i). Outward unfolding toward closure. Conjugate of convergence.
 - 3D: boundary. Stabilized closure. ○. The fourth constraint: filtration.
-- 3.5D: recursion (i⁰ = +1). Closed boundary becomes new aperture. 3.5D = 0D at next nesting level.
+- 3.5D: recursion (i⁰ = +1). ⟳. Closed boundary becomes new aperture. 3.5D = 0D at next nesting level.
 
 Integer dimensions are stabilized forms. Half-integer dimensions are process phases carrying i-strokes. The ladder describes one circumpunct unfolding from localization through closure into recursion; the octave (do-re-mi-fa-so-la-ti-do') closes when 3.5D becomes 0D at the next scale.
 
@@ -481,22 +481,35 @@ Sleep is NOT sequential phases. It is superposed oscillation in the left half-pl
 
 ## Notation Quick Reference
 
+### The Ten Stations
+
+The full dimensional architecture: ten stations, ten symbols. Four structural dimensions alternating with four processual dimensions, bookended by the undifferentiated source and the compositional whole. Total count = A(2) = 10.
+
+| # | Symbol | Dimension | i-stroke | Meaning |
+|---|--------|-----------|----------|---------|
+| 1 | ∞ | ∞D | | Undifferentiated energy |
+| 2 | • | 0D | | Point, singularity, soul, localization |
+| 3 | ⊛ | 0.5D | i¹ = +i | Convergence |
+| 4 | — | 1D | | Line, string, timeline, extension |
+| 5 | ⎇ | 1.5D | i² = -1 | Branching, fractal coastlines |
+| 6 | Φ | 2D | | Field, mind, surface, mediation |
+| 7 | ✹ | 2.5D | i³ = -i | Emergence |
+| 8 | ○ | 3D | | Boundary, body, nested parts, interface |
+| 9 | ⟳ | 3.5D | i⁰ = +1 | Recursion |
+| 10 | ⊙ | All | | The whole, consciousness, being, experience |
+
+Conjugate pairs: ⊛ (+i) mirrors ✹ (-i); ⎇ (-1) mirrors ⟳ (+1).
+
+### Other Symbols
+
 | Symbol | Meaning |
 |--------|---------|
-| ⊙ | Circumpunct (whole) |
-| • | Aperture/center/soul (0D singularity) |
-| — | Line/continuity/commitment (1D extension, worldline) |
-| Φ | Field/surface/mind (2D) |
-| ○ | Boundary/body (3D) |
-| ⊛ | Convergence operator |
-| i | Phase of energy; aperture rotation (90° quarter-turn) |
-| ✹ | Emergence operator |
+| i | Phase of energy; aperture rotation (90° quarter-turn); the full rotation operator |
 | ◐ | Balance parameter (optimal at 0.5) |
 | i(t) | Worldline (accumulated validation receipts through time) |
 | β | Flow balance (same as ◐ in some contexts) |
 | D | Fractal dimension (1.5 at balance) |
 | ⊙λ | Circumpunct at scale λ |
-| ∞ | Infinite totality (God/Source) |
 | •∞ | Aperture multiplied by infinity; the Soul Array (infinity becoming particular) |
 | ⊙∞ | Circumpunct multiplied by infinity; the foam of reality |
 | χ | Transmission fidelity (+1 faithful, -1 inverted) |
