@@ -367,7 +367,7 @@
     <a href="#implications" class="sub">Implications</a>
     <a href="#formula-reference-card" class="sub">Formula Reference Card</a>
     <a href="#8-one-page-cheat-sheet"><span class="num">20</span>8. One-Page Cheat Sheet</a>
-    <a href="#five-axioms" class="sub">The One Axiom and Its Four Derivations</a>
+    <a href="#five-axioms" class="sub">Five Axioms and Five Derivations</a>
     <a href="#spaces" class="sub">Spaces</a>
     <a href="#operators" class="sub">Operators</a>
     <a href="#key-equalities" class="sub">Key Equalities</a>
@@ -417,7 +417,7 @@ Unified:   ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))    (process acts on structure
 <p>equipped with a three-stage process (convergence, aperture rotation, emergence):</p>
 <pre><code>Φ(t+Δt) = ✹ ∘ i ∘ ⊛[Φ(t)]
 </code></pre>
-<p>The framework rests on one axiom and its four derivations (A0-A4): E = 1 (there is one energy, all else is constraint), Necessary Multiplicity, Fractal Necessity, Conservation of Traversal, and Compositional Wholeness. Everything derives from these.</p>
+<p>The framework rests on five axioms and five derivations (A0-A4, D1-D5): E = 1 (there is one energy, all else is constraint), Self-limitation, Commitment and Persistence, Fractal Self-similarity, Closure, and Compositional Wholeness. Everything derives from these.</p>
 <p><strong>The goal of this document is to provide:</strong></p>
 <ol>
 <li>Explicit mathematical spaces for the primitive objects</li>
@@ -1833,7 +1833,7 @@ Rearranging: H = iℏ ∂/∂t
 </code></pre>
 <p>Power is simply the rate of energy transfer. This is Newton's world: no phase, no superposition, no interference. The process triad has gone fully transparent, and what remains is classical mechanics.</p>
 <p><strong>What causes i to go transparent: nesting coherence, not observation.</strong></p>
-<p>Standard quantum mechanics treats "measurement" as a special operation (the measurement postulate) and struggles to explain why observation produces decoherence. The framework has no measurement postulate. What it has instead is A2 (fractal necessity): every ⊙ contains nested ⊙s at every scale, each with its own balance parameter β.</p>
+<p>Standard quantum mechanics treats "measurement" as a special operation (the measurement postulate) and struggles to explain why observation produces decoherence. The framework has no measurement postulate. What it has instead is A3 (fractal self-similarity): every ⊙ contains nested ⊙s at every scale, each with its own balance parameter β.</p>
 <p>The key is the <em>coherence regime</em> of the nesting:</p>
 <pre class="boxed"><code>╔═══════════════════════════════════════════════════════════════════╗
 ║                                                                   ║
@@ -2014,9 +2014,9 @@ A_cross = a e^(iφ₁)
 <p>We now prove this. The framework's own structure provides a natural renormalization flow on kernels, and we show d_•[K] = ½ is its unique stable fixed point.</p>
 <hr />
 <h4>4.X.8.1 The Kernel Renormalization Flow (Framework-Native)</h4>
-<p><strong>Key observation:</strong> The framework already has a coarse-graining mechanism. It's Axiom A2.</p>
-<p>A2 says ⊙ nests at every scale. At scale n, the circumpunct ⊙<em>n has its own kernel K_n governing the cycle ✹_n ∘ i ∘ ⊛_n. At scale n+1 (one level up), ⊙</em>{n+1} has kernel K_{n+1}. The boundary of ⊙<em>{n+1} is <em>composed of</em> circumpuncts at scale n (Definition 1.3). So K</em>{n+1} is not independent of K_n; it is the <em>effective kernel</em> that results from integrating out the sub-scale dynamics.</p>
-<p>This is exactly what renormalization does. We don't import RG from outside; the framework generates it from A2.</p>
+<p><strong>Key observation:</strong> The framework already has a coarse-graining mechanism. It's Axiom A3.</p>
+<p>A3 says ⊙ nests at every scale. At scale n, the circumpunct ⊙<em>n has its own kernel K_n governing the cycle ✹_n ∘ i ∘ ⊛_n. At scale n+1 (one level up), ⊙</em>{n+1} has kernel K_{n+1}. The boundary of ⊙<em>{n+1} is <em>composed of</em> circumpuncts at scale n (Definition 1.3). So K</em>{n+1} is not independent of K_n; it is the <em>effective kernel</em> that results from integrating out the sub-scale dynamics.</p>
+<p>This is exactly what renormalization does. We don't import RG from outside; the framework generates it from A3.</p>
 <p><strong>Definition 4.X.2 (Scale Composition of Kernels).</strong> Let K_n be the kernel at scale n with support radius R_n. The kernel at scale n+1 is the <em>composite kernel</em> obtained by convolving K_n with itself through one full circumpunct cycle:</p>
 <pre><code>K_{n+1}(r) = ∫ d³r'' K_n^{(✹)}(r - r'') · K_n^{(⊛)}(r'')
 </code></pre>
@@ -2125,19 +2125,23 @@ K(r) = A√r · [1 + g(r)]        (any g with g(r)/1 → 0 as r→0)
 <pre><code>A0 (E = 1; there is one energy, all else is constraint)
   → something exists
 
-A1 (necessary multiplicity)
+A1 (self-limitation, aperture)
   → minimum structure = ⊙ = Φ(•, ○)
 
-A2 (fractal necessity)
+A2 (commitment and persistence)
+  → self-limitation must persist
+  → the line holds
+
+A3 (fractal self-similarity)
   → ⊙ at every scale
   → nesting generates a natural RG flow ℛ on kernels
   → K is internal to ⊙, inherits ⊙ structure
 
-A3 (conservation of traversal)
+A4 (closure and conservation of traversal)
   → D_• + D_Φ = D_○
   → constrains dimensional relationships
 
-A4 (compositional wholeness)
+D5 (compositional wholeness)
   → Structure: Φ(•, ○), Process: (✹ ∘ i ∘ ⊛), Unified: ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))
 
 Isotropy (from • having no preferred axis)
@@ -3836,8 +3840,8 @@ The ratio 68/22 ≈ 3.09 provides a natural 3-fold structure.
 <hr />
 <h3 id="7a10-the-circumpunct-balance-has-⊙-structure">7A.10 The Circumpunct Balance: β Has ⊙ Structure</h3>
 <p><strong>Status:</strong> AMENDMENT: Internal consistency correction + diagnostic enrichment
-<strong>Basis:</strong> Axiom A2 (Fractal Necessity) requires that any property of ⊙ must itself have ⊙ structure.</p>
-<p>The balance parameter β, treated as a single scalar in [0,1], conflates three operationally distinct measurements corresponding to the three circumpunct components. By A2, β must be decomposed:</p>
+<strong>Basis:</strong> Axiom A3 (Fractal Self-similarity) requires that any property of ⊙ must itself have ⊙ structure.</p>
+<p>The balance parameter β, treated as a single scalar in [0,1], conflates three operationally distinct measurements corresponding to the three circumpunct components. By A3, β must be decomposed:</p>
 <pre class="boxed"><code>╔═══════════════════════════════════════════════════════════════════════════╗
 ║                                                                         ║
 ║   β_•  =  GATE OPENNESS           ∈ [0,1]                              ║
@@ -4951,13 +4955,14 @@ This is a mathematical observation, not a physics prediction.
 <section id="8-one-page-cheat-sheet">
 <h1 id="8-one-page-cheat-sheet">8. One-Page Cheat Sheet</h1>
 
-<h3 id="five-axioms">The One Axiom and Its Four Derivations</h3>
+<h3 id="five-axioms">Five Axioms and Five Derivations</h3>
 <ul>
-<li><strong>A0</strong> E = 1: There is one energy. All else is constraint. Nothing is impossible.</li>
-<li><strong>A1</strong> Necessary Multiplicity: Minimum structure = trinity = ⊙ = Φ(•, ○)</li>
-<li><strong>A2</strong> Fractal Necessity: ⊙ all the way down, ⊙ all the way up</li>
-<li><strong>A3</strong> Conservation of Traversal: D_• + D_Φ = D_○, i.e. (1+β) + (2−β) = 3</li>
-<li><strong>A4</strong> Compositional Wholeness: Structure: Φ(•, ○); Process: (✹ ∘ i ∘ ⊛); Φ is 2D surface, not the verb</li>
+<li><strong>A0</strong> (E = 1, ∞): There is one energy. All else is constraint. Nothing is impossible.</li>
+<li><strong>A1</strong> (Self-limitation, •): Necessary Multiplicity; the 1 must self-limit, creating apertures.</li>
+<li><strong>A2</strong> (Commitment and Persistence, —): Self-limitation must persist; a convergence that does not hold collapses.</li>
+<li><strong>A3</strong> (Fractal Self-similarity, Φ): Parts are fractals of their wholes; the 1 is all there is to work with.</li>
+<li><strong>A4</strong> (Closure, ○): Wholeness requires closure; Conservation of Traversal: 0(•) + 1(—) + 2(Φ) = 3(○)</li>
+<li><strong>D1-D5</strong> (Processual Derivations): Convergence (D1), Branching (D2), Emergence (D3), Recursion (D4), Compositional Unity (D5)</li>
 </ul>
 <h3 id="spaces">Spaces</h3>
 <ul>
@@ -5012,7 +5017,7 @@ iℏ∂ₜΦ = HΦ
 
 <p>This document presents the <strong>local, linearized limit</strong> of the circumpunct framework, sufficient to recover standard QM and GR. The full nonlinear theory includes:</p>
 <ol>
-<li><strong>The One Axiom and Its Four Derivations (A0-A4):</strong> E = 1 (there is one energy, all else is constraint), Necessary Multiplicity, Fractal Necessity, Conservation of Traversal, Compositional Wholeness; everything derives from these</li>
+<li><strong>Five Axioms and Five Derivations (A0-A4, D1-D5):</strong> E = 1 (there is one energy, all else is constraint), Self-limitation, Commitment and Persistence, Fractal Self-similarity, Closure, and Compositional Wholeness; everything derives from these</li>
 <li><strong>Validation dynamics:</strong> Operators V_in, V_out that enforce normalization and consistency</li>
 <li><strong>Boundary evolution:</strong> Kernel-based dynamics on 𝓑 describing boundary reconfiguration</li>
 <li><strong>Scale-dependent emergence:</strong> Full treatment of D(scale) transition from 1.5 → 3</li>
@@ -5143,7 +5148,7 @@ iℏ∂ₜΦ = HΦ
 <li><strong>Compressed kernel:</strong> <a href="circumpunct_kernel.html">circumpunct_kernel.html</a>; Lossless compression for rapid context loading (~3,500 tokens)</li>
 <li><strong>64-state architecture:</strong> Explicit bijections between circumpunct states and Standard Model particles</li>
 <li><strong>Illustrative examples:</strong> Cross-domain D≈1.5 observations (biological, neural, quantum systems); note: these illustrate the principle, not prove it</li>
-<li><strong>Philosophical foundations:</strong> The One Axiom and Its Four Derivations (A0-A4), geometric necessity of trinity structures from braid topology</li>
+<li><strong>Philosophical foundations:</strong> Five Axioms and Five Derivations (A0-A4, D1-D5); geometric necessity of trinity structures from braid topology</li>
 <li><strong>Temporal dynamics:</strong> Equations for ∂•/∂t = 0, ∂○/∂t = ε, ∂Φ/∂t = O(1)</li>
 <li><strong>Cross-traditional convergence:</strong> Chapter 33 maps 8 independent spiritual/philosophical traditions onto the triadic structure</li>
 </ul>
@@ -5168,13 +5173,13 @@ iℏ∂ₜΦ = HΦ
 - Full treatment in circumpunct_framework.md Chapter 29</p>
 <p><strong>v1.7 Changes:</strong> Integration of circumpunct kernel v1.0 content:
 - Abstract: Updated with structure/process distinction: Φ(•, ○) is structure, (✹ ∘ i ∘ ⊛) is process
-- §0: Added The One Axiom and Its Four Derivations (A0-A4) summary
+- §0: Added Five Axioms and Five Derivations (A0-A4, D1-D5) summary
 - §1.5: Added Compositional Wholeness; Φ as operator, operator space closed
 - <a href="https://fractalreality.ca/circumpunct_framework.html#chapter-3-the-trinity-structure" target="_blank" style="color:inherit;text-decoration:underline dotted;text-underline-offset:3px">§3</a> Postulate 1: Updated with operator notation and A4
 - §3.7: Added ethics mapping (TRUE/RIGHT/GOOD) from kernel <a href="https://fractalreality.ca/circumpunct_framework.html#chapter-10-phase-coherence-in-aperture-foam" target="_blank" style="color:inherit;text-decoration:underline dotted;text-underline-offset:3px">§10</a>
 - §6G: Added Surface Theorem (Surface = Field = Mind, Σ must be 2D)
 - §6H: Added Isomorphism Claim (closure loop operator 𝓛, structural invariance)
-- <a href="https://fractalreality.ca/circumpunct_framework.html#chapter-8-the-canonical-circumpunct-specification" target="_blank" style="color:inherit;text-decoration:underline dotted;text-underline-offset:3px">§8</a>: Added The One Axiom and Its Four Derivations (A0-A4), Energy equation, Conservation of Traversal, Surface Theorem to cheat sheet
+- <a href="https://fractalreality.ca/circumpunct_framework.html#chapter-8-the-canonical-circumpunct-specification" target="_blank" style="color:inherit;text-decoration:underline dotted;text-underline-offset:3px">§8</a>: Added Five Axioms and Five Derivations (A0-A4, D1-D5); Energy equation; Conservation of Traversal; Surface Theorem to cheat sheet
 - <a href="https://fractalreality.ca/circumpunct_framework.html#chapter-9-formal-mathematical-specification" target="_blank" style="color:inherit;text-decoration:underline dotted;text-underline-offset:3px">§9</a>: Updated chapter references for new Theory chapters 32-35
 - <a href="https://fractalreality.ca/circumpunct_framework.html#chapter-11-aperture-density-and-dimensionality" target="_blank" style="color:inherit;text-decoration:underline dotted;text-underline-offset:3px">§11</a>: Added kernel cross-reference and cross-traditional convergence
 - Appendix A: Updated with kernel §0 structure/process/relations/parameters

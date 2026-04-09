@@ -307,15 +307,15 @@ canvas {
 
 <!-- Layer 3 -->
 <div class="layer-box">
-<h4><span class="layer-num">3</span> Compositional Closure (A4)</h4>
+<h4><span class="layer-num">3</span> Compositional Closure (D5)</h4>
 
 <div class="eq">E<sub>triple</sub> = (&sigma;<sub>meas</sub> + &pi;<sub>1</sub> + &pi;<sub>2</sub>) &times; T/&Phi;</div>
 
-<p>A4 says: the whole is not the sum of its parts; it is their compositional unity via &Phi;. For a triple bond, three constraints (&sigma; + &pi;<sub>1</sub> + &pi;<sub>2</sub>) are mediated by the 2D field, giving factor T/&Phi; = 3/2.</p>
+<p>D5 says: the whole is not the sum of its parts; it is their compositional unity via &Phi;. For a triple bond, three constraints (&sigma; + &pi;<sub>1</sub> + &pi;<sub>2</sub>) are mediated by the 2D field, giving factor T/&Phi; = 3/2.</p>
 
-<p>This boost applies <span class="wb">only</span> when all three conditions hold: (1) full dimensional closure (all three bond types present), (2) lone pairs present (n<sub>LP</sub> &gt; 0), and (3) sp hybridization clears the aperture. At carbon (0 LP), parts sum to whole naturally; A4 is trivially satisfied and C = 1.</p>
+<p>This boost applies <span class="wb">only</span> when all three conditions hold: (1) full dimensional closure (all three bond types present), (2) lone pairs present (n<sub>LP</sub> &gt; 0), and (3) sp hybridization clears the aperture. At carbon (0 LP), parts sum to whole naturally; D5 is trivially satisfied and C = 1.</p>
 
-<p><span class="wb">N&equiv;N:</span> sum of parts = 628.5, &times; 3/2 = 942.7 (measured 945, <span class="m">0.25%</span>). The 50% gap between sum and measurement is not error; it is A4 declaring itself at the molecular level.</p>
+<p><span class="wb">N&equiv;N:</span> sum of parts = 628.5, &times; 3/2 = 942.7 (measured 945, <span class="m">0.25%</span>). The 50% gap between sum and measurement is not error; it is D5 declaring itself at the molecular level.</p>
 
 <div class="note insight">
   Alternative precision formula: N&equiv;N = &sigma;<sub>true</sub> &times; (A(3.5) + •) / A(2) = 326 &times; 29/10 = 945.4 (<span class="m">0.042%</span>). Here 29 = A(3.5) + 1 = 28 + 1 (full octave traversal + aperture) and 10 = A(2) (accumulated traversal at the field station). The triple bond energy spans from the aperture through the full octave over the field baseline.
@@ -349,7 +349,7 @@ canvas {
     <div class="readout-label">&sigma;<sub>measured</sub>:</div><div class="readout-value" id="r-sigma-meas">346 kJ/mol</div>
     <div class="readout-label">&pi;<sub>1</sub> (R/T<sup>2</sup>):</div><div class="readout-value" id="r-pi1">&mdash;</div>
     <div class="readout-label">&pi;<sub>2</sub> (V/P(P+1)):</div><div class="readout-value" id="r-pi2">&mdash;</div>
-    <div class="readout-label">A4 boost (T/&Phi;):</div><div class="readout-value" id="r-boost">&mdash;</div>
+    <div class="readout-label">D5 boost (T/&Phi;):</div><div class="readout-value" id="r-boost">&mdash;</div>
     <div class="readout-label">Predicted:</div><div class="readout-value" id="r-pred" style="color: var(--gold); font-weight: 600;">346 kJ/mol</div>
     <div class="readout-label">Measured:</div><div class="readout-value" id="r-meas">346 kJ/mol</div>
     <div class="readout-label">Error:</div><div class="readout-value" id="r-err" style="color: var(--green);">0.0%</div>
@@ -390,11 +390,11 @@ canvas {
 
 <p>Pi bonds are unaffected because they are orthogonal to the sigma direction. They see the full &sigma;<sub>true</sub>, not the suppressed &sigma;<sub>measured</sub>. This is why pi_1 = &sigma;<sub>true</sub> &times; R/T<sup>2</sup> uses the uncorrected value.</p>
 
-<h3>Compositional Closure: A4 at the Molecular Level</h3>
+<h3>Compositional Closure: D5 at the Molecular Level</h3>
 
-<p>Axiom A4: the whole is not the sum of its parts; it is their compositional unity via &Phi;. For homonuclear triple bonds with lone pairs, the sum of the three components (&sigma; + &pi;<sub>1</sub> + &pi;<sub>2</sub>) understates the actual bond energy by exactly T/&Phi; = 3/2. The three constraints mediated by the 2D field yield a compositional boost of 50%.</p>
+<p>Derivation D5: the whole is not the sum of its parts; it is their compositional unity via &Phi;. For homonuclear triple bonds with lone pairs, the sum of the three components (&sigma; + &pi;<sub>1</sub> + &pi;<sub>2</sub>) understates the actual bond energy by exactly T/&Phi; = 3/2. The three constraints mediated by the 2D field yield a compositional boost of 50%.</p>
 
-<p>At carbon (n<sub>LP</sub> = 0), the sum already equals the whole: A4 is trivially satisfied. The boost only appears when lone pairs suppress the sigma, creating a gap between the parts and the whole that A4 fills.</p>
+<p>At carbon (n<sub>LP</sub> = 0), the sum already equals the whole: D5 is trivially satisfied. The boost only appears when lone pairs suppress the sigma, creating a gap between the parts and the whole that D5 fills.</p>
 
 <!-- ============================================================ -->
 <h2>Screening Constants from the Dimensional Ladder</h2>
@@ -615,7 +615,7 @@ function drawBond() {
   components.push({ label: '\u03C3', value: r.sigma_m, color: '#4DA0C8' });
   if (currentBond >= 2) components.push({ label: '\u03C0\u2081', value: r.pi1, color: '#E88AAF' });
   if (currentBond >= 3) components.push({ label: '\u03C0\u2082', value: r.pi2, color: '#9B7AD8' });
-  if (currentBond === 3 && d.nLP > 0) components.push({ label: 'A4', value: r.pred - (r.sigma_m + r.pi1 + r.pi2), color: '#B8A060' });
+  if (currentBond === 3 && d.nLP > 0) components.push({ label: 'D5', value: r.pred - (r.sigma_m + r.pi1 + r.pi2), color: '#B8A060' });
 
   const totalBars = components.length + 2; // + predicted + measured
   const startX = (W - totalBars * (barW + barGap)) / 2;
