@@ -8804,6 +8804,29 @@ COMPONENT READING:
             filters, and their ratio (2/3) controls the
             perturbative structure.
 
+    STRUCTURAL FORM (factored):
+
+        The correction polynomial factors over the golden ratio:
+
+        1 - 6α + 4α² = P · (α - φ²/2)(α - 1/(2φ²))
+
+        So the full formula becomes:
+
+        Λ = α^(SU(3)·R) · P · (α - φ²/2)(α - 1/(2φ²)) / (SU(3)·T²)
+
+        Root properties:
+            r₁ = φ²/2 (golden nesting; same factor in G)
+            r₂ = 1/(2φ²) (golden conjugate; forced by A3)
+            Product: r₁·r₂ = 1/P = one i-stroke
+            Sum: r₁+r₂ = T/Φ = D5 compositional closure
+            Discriminant: P(Φ+T) = 20 = P(P+1)
+
+        Uniqueness: Vieta's formulas with product 1/P and sum
+        T/Φ determine both roots. No other quadratic satisfies
+        all three constraints simultaneously. The correction is
+        not fitted; it is the only polynomial consistent with
+        the pump cycle. See §27.7g for the full structural reading.
+
 PARALLEL WITH α (§27.7):
     1/α = 360/φ² - 2/φ³ + α/(E(3) - P/T)
     Λ   = α^56 / (SU(3)·T²) · (1 - α·(T! - α·P))
@@ -19947,6 +19970,39 @@ COMPONENTS:
         First order:  -6α   (closure × coupling; one-loop)
         Second order: +4α²  (pump × coupling²; two-loop)
         Ratio: P/T! = 4/6 = 2/3 = Φ/○
+
+STRUCTURAL FORM (factored):
+
+    The correction polynomial factors over the golden ratio:
+
+    1 - 6α + 4α² = P · (α - φ²/2)(α - 1/(2φ²))
+
+    So the full formula becomes:
+
+    Λ = α^(SU(3)·R) · P · (α - φ²/2)(α - 1/(2φ²)) / (SU(3)·T²)
+
+    ROOT ANALYSIS:
+        r₁ = φ²/2 = (φ+1)/2 = the golden nesting factor
+            (same factor appearing in G: α_G = α²¹ × φ²/2)
+        r₂ = 1/(2φ²) = the golden conjugate
+            (forced by A3: self-similarity requires both roots
+             to be golden; r₂ = 1/(P·r₁))
+
+        Root product: r₁ · r₂ = 1/P = 1/4 = one i-stroke
+            (the indivisible quarter-turn; same ◐(1-◐) coupling
+             that appears in c at 0.5D)
+        Root sum: r₁ + r₂ = T/Φ = 3/2 = D5 compositional closure
+            (the whole exceeds the sum of parts by T/Φ; same
+             factor that closes triple bonds in §16.4e)
+        Discriminant: (r₁ - r₂)² = P(Φ+T) = 4·5 = 20 = P(P+1)
+            (pump phases times pump-plus-aperture; the same
+             P(P+1) = 20 that gives amino acid count in §18)
+
+    UNIQUENESS: Given root product = 1/P (forced by the i-stroke)
+    and root sum = T/Φ (forced by D5 closure), Vieta's formulas
+    determine both roots uniquely. No other quadratic satisfies
+    all three constraints. The correction is not fitted; it is
+    the only polynomial consistent with the pump cycle.
 
 STRUCTURAL PARALLEL WITH α (§27.7a):
 
