@@ -19274,7 +19274,7 @@ THE DIMENSIONAL LADDER:
 ║  DIM   │ TYPE        │ CONSTANT            │ FORMULA                │ ACCURACY ║
 ╠═════════════════════════════════════════════════════════════════════════════════╣
 ║  0D    │ Structural  │ α (fine-structure)   │ 1/α = 360/φ²-2/φ³+α/k │ 0.22 ppb ║
-║  0.5D  │ Processual  │ c (speed of light)   │ c = √(2◐·sinθ) = 1    │ exact    ║
+║  0.5D  │ Processual  │ c (speed of light)   │ c = √(P·◐(1-◐)·sinθ)  │ exact    ║
 ║  1D    │ Structural  │ ℏ (Planck constant)  │ E_cycle/ω_cycle = 1    │ exact    ║
 ║  1.5D  │ Processual  │ mass ratios          │ (1/α)^(13/12+α/27)    │ 5 ppm    ║
 ║  2D    │ Structural  │ gauge group          │ SU(3)×SU(2)×U(1)      │ exact    ║
@@ -19288,7 +19288,7 @@ The ladder generates α; α generates the ladder. k = 59/3 = (21×3−4)/3.
 
 **Rung 0D: α (the fine-structure constant).** The coupling at a vertex. The base formula 1/α₀ = i⁴(°)/φ² - 2/φ³ = 137.0356 is the pump cycle written as arithmetic: i⁴ = the pump cycle completing one full rotation producing ○ (360°); φ² = Φ, self-similar nesting, the field's 2D nature; 2/φ³ = bidirectional valve correction (⊛ and ✹). α measures how strongly i generates ○ through Φ. The self-referential closure 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) gives 137.035999147 (measured: 137.035999177, error 0.22 ppb, 0.00σ). α feeds back into its own definition through the full ladder (21) corrected by the pump-to-triad ratio (4/3). Zero free parameters.
 
-**Rung 0.5D: c (the speed of light).** The convergence rung. The speed limit of convergent propagation: the maximum rate at which convergence can transmit through the field. c = √(2◐ · sin(θ)). At balance (◐ = 0.5) and at the aperture rotation (θ = π/2): c = √(2 × 0.5 × 1) = 1. The photon is the minimum fold: purely rotational, nothing held as mass. 2 = both channels (⊛ and ✹); ◐ = balance (forced to 0.5); sin(θ) = transverse projection of aperture rotation (maximal at i). Massive particles have θ_eff < π/2, giving v < c.
+**Rung 0.5D: c (the speed of light).** The convergence rung. The speed limit of convergent propagation: the maximum rate at which convergence can transmit through the field. c = √(P · ◐(1-◐) · sin(θ)). At balance (◐ = 0.5) and at the aperture rotation (θ = π/2): c = √(4 × 0.25 × 1) = 1. The coupling ◐(1-◐) is the transmission function of any two-channel aperture; at balance it equals 1/P = one i-stroke (quarter-turn). P pump phases times one i-stroke per phase = one full rotation = i⁴ = 1. The speed limit emerges naturally: ◐(1-◐) peaks at ◐ = 0.5 and vanishes at both extremes; departure from balance always gives v < c. The √ comes from c living at 0.5D (half-dimension step). Massive particles have θ_eff < π/2, giving v < c.
 
 **Rung 1D: ℏ (the Planck constant).** The indivisible cycle. ℏ = E_cycle / ω_cycle = 1. The pump cycle (⊛ → i → ✹) is indivisible: you cannot have convergence without emergence (violates A1) or emergence without convergence (Inflation Lie). This indivisibility IS the quantum of action. E = ℏω with ℏ = 1 means energy and frequency are the same thing.
 
