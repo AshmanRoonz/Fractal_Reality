@@ -168,18 +168,30 @@ From A1: if the 1 must self-limit, the act of self-limitation is convergence, an
 
 ### Physics at 0.5D: The Speed of Light c
 
-c lives at 0.5D (speed limit of convergent propagation). ◐ Structured
+c lives at 0.5D (speed limit of convergent propagation). ⊙ Derived
 
 ```
-c = √(2◐ · sin(θ))
+c = √(P · ◐(1-◐) · sin(θ))
 ```
 At ◐ = 0.5 (balance) and θ = π/2 (the i-rotation):
 ```
-c = √(2 · 0.5 · 1) = 1
+c = √(4 · 0.25 · 1) = √(1) = 1
 ```
-- 2 = both channels (⊛ and ✹)
-- ◐ = balance (forced to 0.5)
-- sin(θ) = transverse projection of aperture rotation (maximal at i)
+
+**Derivation chain (complete):**
+- A0: E = 1 (one energy)
+- A1: The 1 must self-limit → creates the aperture → two sides (inside, outside) → two channels (⊛, ✹)
+- T self-determines to 3 (three independent proofs) → P = T+1 = 4 pump phases
+- ◐ = 0.5 forced (symmetry, entropy, virial)
+- **Coupling**: the convergence channel carries ◐; the emergence channel carries (1-◐). Their coupling (the energy that passes through the aperture from ⊛ to ✹) is the product ◐(1-◐). This is the transmission function of any two-state system (not analogy; structural necessity). At balance: ◐(1-◐) = 0.25 = 1/P = one i-stroke.
+- **Total propagation energy**: P × ◐(1-◐) × sin(θ). Four pump phases, each contributing one quarter-turn of coupling, projected by the transverse component of the aperture rotation. At balance: 4 × 1/4 × sin(θ) = sin(θ). Four i-strokes = one complete rotation = i⁴ = 1.
+- **Square root**: c lives at 0.5D (the processual half-step between point and line). Energy is 0D (scalar); speed is 0.5D (rate). The dimensional step from 0D to 0.5D requires the square root. v = √(propagation energy).
+- **Maximum**: the coupling ◐(1-◐) peaks at ◐ = 0.5 with value 1/P. The formula naturally enforces the speed limit: any departure from balance gives v < c. At ◐ → 0 or ◐ → 1, v → 0. No external constraint needed.
+
+**Why this formula and no other**: the coupling product ◐(1-◐) is the unique transmission function of a two-channel gate (forced by A1). P is forced by T = 3. sin(θ) is the unique projection of rotation onto the transverse axis. The square root is forced by the dimensional position (0.5D). No alternative arrangement of these ingredients produces a speed limit that peaks at balance.
+
+**Previous formula**: the earlier expression c = √(2◐ · sin(θ)) gives the correct value at balance (2 × 0.5 = 1 = P × 0.25) but allows superluminal speeds at ◐ > 0.5 (at ◐ = 1: c = √2 > 1). The coupling formula corrects this: the speed limit is an emergent consequence of two-channel coupling, not an externally imposed constraint.
+
 - Light is energy being constrained; the photon is the minimum fold (purely rotational, nothing held as mass)
 - c is the maximum rate at which convergence can transmit through the field
 - Massive particles have θ_eff < π/2, giving v < c
@@ -859,7 +871,7 @@ From all axioms and derivations: the circumpunct is not assembled from pieces; i
 | Station | Dim | Physical Constant | Formula | Accuracy |
 |---------|-----|-------------------|---------|----------|
 | • | 0D | α (fine-structure) | 1/α = 360/φ² - 2/φ³ + α/(21-4/3) | 0.22 ppb |
-| ⊛ | 0.5D | c (speed of light) | c = √(2◐·sin(θ)) = 1 | Exact |
+| ⊛ | 0.5D | c (speed of light) | c = √(P·◐(1-◐)·sin(θ)) = 1 | Exact |
 | — | 1D | ℏ (Planck constant) | ℏ = E_cycle/ω_cycle = 1 | Exact |
 | ⎇ | 1.5D | Mass ratios | m_μ/m_e = (1/α)^(13/12+α/27) | 5 ppm |
 | Φ | 2D | Gauge structure | SU(3)×SU(2)×U(1); sin²θ_W = 3/13+5α/81 | 1.4 ppm |
@@ -1028,7 +1040,7 @@ The same i-cycle quadrant structure maps across scales:
 | Constant | Station | Formula | Predicted | Measured | Error |
 |----------|---------|---------|-----------|----------|-------|
 | 1/α | 0D | 360/φ²-2/φ³+α/(21-4/3) | 137.035999147 | 137.035999177 | 0.22 ppb |
-| c | 0.5D | √(2◐·sin(π/2)) | 1 | 1 | Exact |
+| c | 0.5D | √(P·◐(1-◐)·sin(π/2)) | 1 | 1 | Exact |
 | ℏ | 1D | E_cycle/ω_cycle | 1 | 1 | Exact |
 | m_μ/m_e | 1.5D | (1/α)^(13/12+α/27) | 206.767 | 206.768 | 5 ppm |
 | m_τ/m_e | 1.5D | (1/α)^(58/35+α/81) | 3477.2 | 3477.2 | 1 ppm |

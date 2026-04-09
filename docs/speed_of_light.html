@@ -318,15 +318,15 @@ td.num { text-align: center; font-family: monospace; color: var(--cyan); }
 
 <div class="eq-small">v = √(0.5 · sin(π/2)) = √(0.5 · 1) = √0.5 = 1/√2 ≈ 0.707</div>
 
-<p>That is not 1. But we have not yet accounted for the fact that the pump cycle operates in <span class="it">both</span> channels simultaneously. The ⊛ channel and the ✹ channel each carry half the coupling. The total effective coupling for a signal propagating through both channels:</p>
+<p>That is not 1. But we have not yet accounted for the full pump cycle structure. The convergence channel carries ◐ of the energy; the emergence channel carries (1-◐). Their coupling is the product ◐(1-◐): the transmission function of any two-state gate. At balance: ◐(1-◐) = 0.25 = 1/P = one i-stroke (one quarter-turn). The total coupling across all P = 4 pump phases:</p>
 
-<div class="eq">κ<sub>total</sub> = 2◐ · sin(θ)</div>
+<div class="eq">κ<sub>total</sub> = P · ◐(1-◐) · sin(θ)</div>
 
 <p>At ◐ = 0.5, θ = π/2:</p>
 
-<div class="eq" style="font-size: 32px;">c = √(2 · 0.5 · sin(π/2)) = √(1 · 1) = <span class="w">1</span></div>
+<div class="eq" style="font-size: 32px;">c = √(4 · 0.25 · sin(π/2)) = √(1 · 1) = <span class="w">1</span></div>
 
-<p class="note">c = 1 requires three things simultaneously: (1) the rotation is maximal (θ = π/2, the i rotation), (2) the balance is perfect (◐ = 0.5), and (3) both channels are active (factor of 2). Remove any one and c &lt; 1.</p>
+<p class="note">The speed limit is emergent, not imposed. The coupling ◐(1-◐) peaks at ◐ = 0.5 with maximum value 1/P. Any departure from balance gives v &lt; c. At the extremes (◐ → 0 or ◐ → 1), coupling → 0 and speed → 0. The photon travels at the maximum because it sits at perfect balance with maximal rotation (θ = π/2). Four pump phases × one quarter-turn of coupling per phase = one complete rotation = i⁴ = 1.</p>
 
 <!-- ============================================================ -->
 <h2>Interactive Simulation</h2>
@@ -361,7 +361,7 @@ td.num { text-align: center; font-family: monospace; color: var(--cyan); }
     <div class="value" id="sinVal">1.000</div>
   </div>
   <div class="readout-item">
-    <div class="label">κ = 2◐·sin(θ)</div>
+    <div class="label">κ = P·◐(1-◐)·sin(θ)</div>
     <div class="value" id="kappaVal">1.000</div>
   </div>
   <div class="readout-item">
@@ -410,30 +410,26 @@ td.num { text-align: center; font-family: monospace; color: var(--cyan); }
 
 <p>The derivation reads structurally:</p>
 
-<div class="eq">c = √(2◐ · sin θ)</div>
+<div class="eq">c = √(P · ◐(1-◐) · sin θ)</div>
 
-<p>Set ◐ = 0.5 (forced by symmetry, entropy, virial):<br>
-c = √(2 · ½ · sin θ) = √(sin θ)</p>
+<p>The three factors:</p>
 
-<p>Set θ = π/2 (the i rotation; minimal constraint, purely rotational):<br>
-c = √(sin π/2) = √1 = <span class="w wb">1</span></p>
+<p><span class="s wb">◐(1-◐) = 0.25 = 1/P</span>: the coupling between the two channels. The convergence channel carries ◐ of the energy; the emergence channel carries (1-◐). Their coupling (the energy that passes through the aperture from ⊛ to ✹) is the product ◐(1-◐). This is the transmission function of any two-state gate; not analogy, structural necessity. At balance: ◐(1-◐) = 0.5 × 0.5 = 0.25 = 1/P = <em>one i-stroke</em>. One quarter-turn of the pump cycle.</p>
 
-<p>The speed of light is 1 because:</p>
+<p><span class="m wb">P × (1/P) = 4 × 0.25 = 1</span>: four pump phases, each contributing one i-stroke of coupling. The total is one complete rotation: i⁴ = 1. P = T+1 = 4 is forced (T self-determines to 3). The earlier formula used "2 channels × 0.5 balance = 1"; the coupling formula reveals the deeper structure: 4 pump phases × 1/4 coupling per phase = 1.</p>
 
-<p><span class="s wb">sin(π/2) = 1</span>: the i rotation transfers ALL of the transverse component. No rotation angle can do more (sin θ ≤ 1 for all θ, equality only at π/2). This is why c is maximum: the photon's fold is purely rotational, nothing held back as mass. i is the maximum rotation, so the photon is the maximum speed.</p>
+<p><span class="s wb">sin(π/2) = 1</span>: the i rotation transfers ALL of the transverse component. No rotation angle can do more (sin θ ≤ 1 for all θ, equality only at π/2). The photon's fold is purely rotational, nothing held back as mass. i is the maximum rotation, so the photon is the maximum speed.</p>
 
-<p><span class="m wb">2 × 0.5 = 1</span>: perfect balance means the two channels (⊛ and ✹) together carry exactly one full coupling unit. The factor of 2 comes from both channels; the 0.5 comes from balance distributing equally between them. Their product is unity.</p>
+<p><span class="b wb">√1 = 1</span>: the square root appears because c lives at 0.5D on the dimensional ladder. Energy is 0D (scalar); speed is 0.5D (rate). The half-dimension step from 0D to 0.5D requires the square root.</p>
 
-<p><span class="b wb">√1 = 1</span>: the square root appears because propagation speed scales as the square root of coupling (just as sound speed scales as √(modulus/density)). When coupling is exactly 1, the root is trivially 1.</p>
-
-<div class="note">c is not a free parameter. It is forced to 1 by the same three requirements that force ◐ = 0.5. Light is energy being constrained; c is the speed of the minimum constraint (the first fold). No fold can travel faster because no rotation can exceed sin(π/2) = 1, and no balance can exceed ◐ = 0.5 while remaining balanced.</div>
+<div class="note"><strong>The speed limit is emergent.</strong> The coupling ◐(1-◐) peaks at ◐ = 0.5 with maximum value 1/P. At ◐ → 0 (all boundary, no center): coupling → 0, speed → 0. At ◐ → 1 (all center, no boundary): coupling → 0, speed → 0. The maximum speed occurs at balance, and at balance c = 1 exactly. No external constraint needed to enforce the speed limit; it is a consequence of two-channel coupling geometry. (The earlier formula c = √(2◐·sinθ) gives the correct value at balance but allows superluminal speeds at ◐ > 0.5; the coupling formula corrects this.)</div>
 
 <!-- ============================================================ -->
 <h2>Why Massive Particles Are Slower</h2>
 
 <p>Mass constrains the aperture rotation. A massive particle has an effective rotation angle θ<sub>eff</sub> &lt; π/2. The heavier the particle, the more constrained the rotation, the smaller sin(θ<sub>eff</sub>), the slower the propagation:</p>
 
-<div class="eq">v = √(2◐ · sin θ<sub>eff</sub>) &lt; c</div>
+<div class="eq">v = √(P · ◐(1-◐) · sin θ<sub>eff</sub>) &lt; c</div>
 
 <p>A photon is the minimum fold: purely rotational, nothing held. A massive particle is a deeper fold: the pump cycle rotates less than π/2 per tick because some of the energy stays as internal cycling rather than propagating laterally. The deeper the fold, the more energy is held inside, the slower the propagation. That internal cycling IS the rest mass energy: E₀ = mc².</p>
 
@@ -478,7 +474,7 @@ c = √(sin π/2) = √1 = <span class="w wb">1</span></p>
 </tr>
 <tr>
   <td><span class="w wb">c</span></td>
-  <td class="num">c = √(2◐ · sin(i))</td>
+  <td class="num">c = √(P·◐(1-◐)·sin(i))</td>
   <td>Propagation speed</td>
   <td>How fast i propagates through Φ between vertices</td>
 </tr>
@@ -575,7 +571,7 @@ function initPulse() {
 }
 
 function stepWave() {
-  const kappa = 2 * balance * Math.sin(theta);
+  const kappa = 4 * balance * (1 - balance) * Math.sin(theta);
   // Clamp kappa to stability limit for discrete wave equation
   const k = Math.min(kappa, 0.5) * dt * dt;
 
@@ -621,7 +617,7 @@ function getMeasuredSpeed() {
   const n = recent.length;
   const slope = (n * sumTX - sumT * sumX) / (n * sumTT - sumT * sumT);
   // Normalize: theoretical c=1 corresponds to slope = sqrt(kappa) * dt
-  const kappa = 2 * balance * Math.sin(theta);
+  const kappa = 4 * balance * (1 - balance) * Math.sin(theta);
   const theoreticalSlope = Math.sqrt(Math.min(kappa, 0.5)) * dt;
   if (theoreticalSlope < 0.001) return 0;
   return slope / (Math.sqrt(0.5) * dt); // normalize so c=1 at kappa=1
@@ -829,7 +825,7 @@ function drawSpeedCurve() {
 
   // Current theta marker
   const currentX = pad.left + (theta / (Math.PI / 2)) * plotW;
-  const currentV = Math.sqrt(2 * balance * Math.sin(theta));
+  const currentV = Math.sqrt(4 * balance * (1 - balance) * Math.sin(theta));
   const currentY = pad.top + plotH * (1 - Math.min(currentV, 1));
 
   sCtx.beginPath();
@@ -881,7 +877,7 @@ function drawSurface() {
     for (let py = 0; py < plotH; py += res) {
       const t = (px / plotW) * (Math.PI / 2);
       const b = 1 - (py / plotH); // balance: 0 at bottom, 1 at top
-      const v = Math.sqrt(2 * b * Math.sin(t));
+      const v = Math.sqrt(4 * b * (1 - b) * Math.sin(t));
       const vClamped = Math.min(v, 1.2);
 
       // Color: dark blue (slow) to gold (c) to red (superluminal, shouldn't happen)
@@ -1030,7 +1026,7 @@ function formatTheta(t) {
 
 function updateReadouts() {
   const sinT = Math.sin(theta);
-  const kappa = 2 * balance * sinT;
+  const kappa = 4 * balance * (1 - balance) * sinT;
   const v = Math.sqrt(kappa);
 
   thetaVal.textContent = formatTheta(theta);
