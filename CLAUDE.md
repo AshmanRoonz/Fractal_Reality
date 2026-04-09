@@ -464,6 +464,7 @@ Sleep is NOT sequential phases. It is superposed oscillation in the left half-pl
 | `docs/emergent_chemistry.html` | Chemistry from the dimensional ladder; bond energy model (3 layers), pi ratios, lone pair suppression, compositional closure (A4), ionic resonance |
 | `docs/emergent_biology.html` | Biology from the dimensional ladder; genetic code, DNA structure, central dogma, protein folding, ATP |
 | `docs/biology_predictions.html` | Eight quantitative biological predictions: Kleiber's Law (T/P), helix spans (T,P,Φ+○), helix rise (D=1.5), Hayflick (S=64), Murray's Law (T), cancer (β-decomposition), microtubules (V,Φ,T,SU(3)), protein folding (dimensional octave) |
+| `docs/circumpunct_battery.html` | Energy storage from the dimensional ladder; ATP as proof of concept; i-cycle quadrants as superposed dynamics; 2.5D plasma electrolyte; chemistry derived from A0→T=3→screening→EN; exponent algebra of storage; processual product efficiency ceiling (Π = 392/9); seven testable predictions |
 
 ---
 

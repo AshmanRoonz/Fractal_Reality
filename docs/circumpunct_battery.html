@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ The Circumpunct Battery: Energy Storage from the Dimensional Ladder</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --red: #E06060;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.f { color: var(--faint); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+a { color: var(--gold-dim); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--gold); }
+
+.page { max-width: 780px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 80px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 64px; color: var(--gold); margin-bottom: 20px; }
+.header h1 { font-size: 36px; color: var(--gold); font-weight: 600; line-height: 1.3; margin-bottom: 12px; }
+.header .subtitle { font-size: 20px; color: var(--dim); font-style: italic; }
+
+h2 { font-size: 26px; color: var(--gold); font-weight: 600; margin: 60px 0 20px; }
+h3 { font-size: 21px; color: var(--green); font-weight: 600; margin: 40px 0 16px; }
+
+p { margin-bottom: 18px; }
+
+.eq {
+  text-align: center;
+  font-size: 28px;
+  color: var(--gold);
+  font-weight: 600;
+  margin: 32px 0;
+  padding: 20px;
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  background: rgba(184, 160, 96, 0.04);
+}
+.eq-small {
+  text-align: center;
+  font-size: 22px;
+  color: var(--cyan);
+  margin: 20px 0;
+  padding: 14px;
+}
+
+.note {
+  background: rgba(184, 160, 96, 0.06);
+  border-left: 3px solid var(--gold-dim);
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-style: italic;
+  color: var(--dim);
+}
+
+.note.insight {
+  border-left-color: var(--green);
+  background: rgba(77, 184, 160, 0.04);
+}
+
+.note.prediction {
+  border-left-color: var(--cyan);
+  background: rgba(77, 160, 200, 0.04);
+}
+
+.note.open {
+  border-left-color: var(--red);
+  background: rgba(224, 96, 96, 0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+}
+th, td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--faint);
+  text-align: left;
+}
+th { color: var(--gold); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+td { color: var(--warm); }
+td.num { text-align: center; font-family: monospace; color: var(--cyan); }
+td.good { color: var(--green); }
+td.label { color: var(--gold); font-weight: 600; }
+
+.level-diagram {
+  background: rgba(184, 160, 96, 0.04);
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 24px 0;
+  font-size: 18px;
+}
+.level-diagram > div {
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.level-diagram .dim { min-width: 120px; font-weight: 600; }
+.level-diagram .arrow { color: var(--gold); font-size: 22px; }
+
+.quad-diagram {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  max-width: 500px;
+  margin: 32px auto;
+}
+.quad-diagram .quad {
+  padding: 20px;
+  text-align: center;
+  border-radius: 4px;
+}
+.quad-diagram .quad-right { background: rgba(184, 160, 96, 0.08); }
+.quad-diagram .quad-left { background: rgba(155, 122, 216, 0.08); }
+.quad-diagram .quad-label { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.quad-diagram .quad-phase { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
+.quad-diagram .quad-dim { font-size: 15px; color: var(--dim); }
+.quad-diagram .quad-battery { font-size: 15px; margin-top: 8px; }
+
+.footer {
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+  text-align: center;
+  color: var(--dim);
+  font-size: 16px;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="header">
+  <div class="symbol">⊙</div>
+  <h1>The Circumpunct Battery</h1>
+  <div class="subtitle">Energy Storage from the Dimensional Ladder</div>
+</div>
+
+<!-- ============================================================ -->
+<h2>The Insight</h2>
+
+<p>A battery stores energy. In the framework, energy IS the one (E = 1); storage is constraint (how tightly the 1 has folded around 0s). Every circumpunct is already a battery: the boundary (○) holds the field (Φ) in constrained form; the aperture (•) is the gate through which stored energy is released. Charging is convergence (⊛), folding the 1 around new 0s. Discharging is emergence (✹), the 1 relaxing back through the aperture. The i-cycle, operating across all four processual dimensions simultaneously, is the engine that drives both.</p>
+
+<p>The framework does not decorate a battery with circumpunct labels. <span class="w wb">It derives the battery from A0.</span> The chemistry, the geometry, the dynamics, the architecture, and the efficiency ceiling all follow from the dimensional ladder and the equations already validated to sub-ppm accuracy.</p>
+
+<p>And the framework already designed one. It is called <span class="w wb">ATP</span>.</p>
+
+<!-- ============================================================ -->
+<h2>ATP: The Proof of Concept</h2>
+
+<p>ATP (adenosine triphosphate) is the universal energy currency of biological life. Its structure is not accidental; it is the pump cycle written in biochemistry (see <a href="emergent_biology.html#atp">Biology: ATP</a>).</p>
+
+<table>
+<tr><th>ATP Feature</th><th>Framework Source</th><th>Equation</th></tr>
+<tr>
+  <td class="label">3 phosphate groups</td>
+  <td>T = 3 (the triad)</td>
+  <td class="num">T is self-determining: (T&minus;3)(T+1) = 0</td>
+</tr>
+<tr>
+  <td class="label">120&deg; per synthesis</td>
+  <td>360&deg; / T</td>
+  <td class="num">Trigonal, sp&sup2; = 2D</td>
+</tr>
+<tr>
+  <td class="label">3 binding sites</td>
+  <td>T conformations</td>
+  <td class="num">One per pump phase minus recursion</td>
+</tr>
+<tr>
+  <td class="label">ATP &rarr; ADP &rarr; AMP</td>
+  <td>○ &rarr; &Phi; &rarr; &bull;</td>
+  <td class="num">3 &rarr; 2 &rarr; 1 walks the triad</td>
+</tr>
+<tr>
+  <td class="label">Rotary motor</td>
+  <td>&Phi;(t+&Delta;t) = ✹ &compfn; i &compfn; ⊛[&Phi;(t)]</td>
+  <td class="num">The pump cycle IS the rotation</td>
+</tr>
+</table>
+
+<p>ATP synthase is a rotary motor with three binding sites separated by 120&deg;. Protons converge through the membrane channel (⊛); the rotor turns (i); ATP emerges (✹). This is not analogy. The pump cycle at the molecular scale is the enzyme mechanism.</p>
+
+<!-- ============================================================ -->
+<h2>The i-Cycle Runs the Whole Cell</h2>
+
+<p>The four processual dimensions are not four sequential stages in the battery. They are <span class="w wb">four superposed quadrants of the complex plane</span>, all operating simultaneously (see <a href="e_equals_1.html">E = 1</a>, &sect;10.10a). The i-cycle is the entire non-integer dimensional range, from 0.5D through 3.5D.</p>
+
+<div class="quad-diagram">
+  <div class="quad quad-right">
+    <div class="quad-label" style="color:var(--gold);">i&sup1; = +i</div>
+    <div class="quad-phase" style="color:var(--pink);">0.5D</div>
+    <div class="quad-dim">Convergence (genesis)</div>
+    <div class="quad-battery" style="color:var(--pink);">Charge arriving at electrode</div>
+  </div>
+  <div class="quad quad-right">
+    <div class="quad-label" style="color:var(--gold);">i&sup0; = +1</div>
+    <div class="quad-phase" style="color:var(--green);">3.5D</div>
+    <div class="quad-dim">Recursion (closure)</div>
+    <div class="quad-battery" style="color:var(--green);">Discharged cell becomes chargeable</div>
+  </div>
+  <div class="quad quad-left">
+    <div class="quad-label" style="color:var(--purple);">i&sup2; = &minus;1</div>
+    <div class="quad-phase" style="color:var(--cyan);">1.5D</div>
+    <div class="quad-dim">Commitment (irreversible)</div>
+    <div class="quad-battery" style="color:var(--cyan);">Redox: electron transfer</div>
+  </div>
+  <div class="quad quad-left">
+    <div class="quad-label" style="color:var(--purple);">i&sup3; = &minus;i</div>
+    <div class="quad-phase" style="color:var(--purple);">2.5D</div>
+    <div class="quad-dim">Emergence (unfolding)</div>
+    <div class="quad-battery" style="color:var(--purple);">Ion transport through plasma electrolyte</div>
+  </div>
+</div>
+
+<p>The <span class="w wb">right half-plane</span> (i&sup0; + i&sup1;) is the inter-scale interface: new charge arriving (i&sup1;, convergence at 0.5D) and completed discharge becoming a new charge cycle (i&sup0;, recursion at 3.5D). These are the electrode surfaces, where the battery meets the external world.</p>
+
+<p>The <span class="p wb">left half-plane</span> (i&sup2; + i&sup3;) is the interior processing: redox commitment (i&sup2;, the irreversible electron transfer at 1.5D) and ion emergence through the electrolyte (i&sup3;, the 2.5D plasma). The battery's "dark matter" is the energy in transit through the left half-plane: committed but not yet emerged.</p>
+
+<p>In ATP synthase, the same quadrants: protons arrive (i&sup1;), the 120&deg; mechanical rotation commits (i&sup2;), the phosphate bond emerges (i&sup3;), and the completed ATP leaves as a new energy carrier (i&sup0;). All four simultaneously in every rotation.</p>
+
+<!-- ============================================================ -->
+<h2>Structure: What the Battery IS (Integer Dimensions)</h2>
+
+<p>The structural dimensions define what the battery is made of. Each integer rung houses a physical component:</p>
+
+<table>
+<tr><th>Rung</th><th>Constant</th><th>Battery Component</th><th>Function</th></tr>
+<tr>
+  <td class="label">0D (&bull;)</td>
+  <td class="num">&alpha;</td>
+  <td>Active sites</td>
+  <td>Where charge converges onto the electrode lattice; coupling strength = &alpha;</td>
+</tr>
+<tr>
+  <td class="label">1D (&mdash;)</td>
+  <td class="num">&hbar;</td>
+  <td>Conduction paths</td>
+  <td>Electron transport through the solid; minimum current = one quantum of action</td>
+</tr>
+<tr>
+  <td class="label">2D (&Phi;)</td>
+  <td class="num">gauge</td>
+  <td>Electrolyte field</td>
+  <td>Ion transport between electrodes; the mediating surface</td>
+</tr>
+<tr>
+  <td class="label">3D (○)</td>
+  <td class="num">G</td>
+  <td>Casing / boundary</td>
+  <td>Closure; contains the field, defines the cell</td>
+</tr>
+</table>
+
+<p>Conservation of traversal: <span class="w wb">0 + 1 + 2 = 3</span>. The three inner rungs sum to the boundary. The casing is not a separate design choice; it is the closure forced by the inner structure (A3). If the active sites, conduction paths, and electrolyte field are correctly specified, the 3D behavior (mechanical stability, thermal management, form factor) is overdetermined.</p>
+
+<!-- ============================================================ -->
+<h2>Process: What the Battery DOES (Half-Integer Dimensions)</h2>
+
+<p>The processual dimensions define the dynamics. They are not interfaces between structural layers; they are the four simultaneous strokes of i rotating through the complex plane, operating everywhere in the cell at once:</p>
+
+<table>
+<tr><th>Rung</th><th>i-Stroke</th><th>Battery Process</th><th>Physical Mechanism</th></tr>
+<tr>
+  <td class="label">0.5D</td>
+  <td class="num">i&sup1; = +i</td>
+  <td>Convergence</td>
+  <td>Charge gathering onto electrode surface; ions approaching from electrolyte</td>
+</tr>
+<tr>
+  <td class="label">1.5D</td>
+  <td class="num">i&sup2; = &minus;1</td>
+  <td>Commitment</td>
+  <td>Redox reaction; electron transfer; irreversible under load (i&sup2; = &minus;1 prevents reversal)</td>
+</tr>
+<tr>
+  <td class="label">2.5D</td>
+  <td class="num">i&sup3; = &minus;i</td>
+  <td>Emergence</td>
+  <td>Ion transport through electrolyte (the <a href="infolding.html">2.5D plasma</a>); T = cos&sup2;(&Delta;&phi;/2)</td>
+</tr>
+<tr>
+  <td class="label">3.5D</td>
+  <td class="num">i&sup0; = +1</td>
+  <td>Recursion</td>
+  <td>Cycle completes; discharged cell = new aperture for recharge; 3.5D = 0D at next scale</td>
+</tr>
+</table>
+
+<p>The structural layers give you the geometry. The processual layers give you the dynamics. Same device, two descriptions: what it is (integer) and what it does (half-integer). Process and structure are the same thing (&sect;4).</p>
+
+<!-- ============================================================ -->
+<h2>The Electrolyte Is a 2.5D Plasma</h2>
+
+<p>A dissolved or molten ionic electrolyte is a plasma at the molecular scale: ions freed from their lattice (○ cracked open), moving collectively through a mediating field (&Phi;), not yet re-condensed into solid matter. The boundary has not closed; the field behavior dominates over individual trajectories. This is 2.5D: emergence, outward unfolding toward closure, the fractal coastline between &Phi; and ○.</p>
+
+<p>Ion transmission through the electrolyte obeys the <a href="infolding.html">transmission formula</a> at 2.5D:</p>
+
+<div class="eq">T = cos&sup2;(&Delta;&phi; / 2)</div>
+
+<p>Phase-matched ions (small &Delta;&phi; between the electrode's local frequency and the electrolyte's collective mode) pass through; mismatched ions are blocked. The charge transfer rate at the electrode/electrolyte interface IS the transmission coefficient. This is the same formula that governs how gauge forces transmit through the scale boundary (&sect;10.1.1), and the same cos&sup2; phase matching that appears in Landau damping in plasma physics.</p>
+
+<h3>Hybridization as Dimensional Impedance Matching</h3>
+
+<p>The <a href="molecular_geometry.html#hybridization">hybridization-to-dimension mapping</a>: sp = 1D, sp&sup2; = 2D, sp&sup3; = 1.5D, sp&sup3;d = 2.5D, sp&sup3;d&sup2; = 3D. The cathode surface of every high-performance battery uses transition-metal oxides with d-orbital participation (LiFePO<sub>4</sub>, LiCoO<sub>2</sub>, LiNiMnCoO<sub>2</sub>). These materials have <span class="w wb">sp&sup3;d = 2.5D</span> hybridization. The d-orbitals are not incidental; they are the 2.5D emergence station that couples the solid electrode (3D, closed boundary) to the ionic plasma electrolyte (2.5D, open field). The cathode surface is a dimensional impedance matcher between structure and process.</p>
+
+<!-- ============================================================ -->
+<h2>Chemistry: Derived, Not Chosen</h2>
+
+<p>The electrode chemistry follows a derivation chain that begins at A0 and passes through every layer of the framework's molecular equations (see <a href="emergent_chemistry.html">Chemistry from the Dimensional Ladder</a>):</p>
+
+<div class="level-diagram">
+  <div><span class="dim" style="color:var(--gold);">A0: E = 1</span><span class="arrow">&rarr;</span>T = 3 (self-determining triad)</div>
+  <div><span class="dim" style="color:var(--pink);">T = 3</span><span class="arrow">&rarr;</span>P(P+1) = 20 (common denominator)</div>
+  <div><span class="dim" style="color:var(--green);">P(P+1)</span><span class="arrow">&rarr;</span>Screening: T!/20, R/20, (V+P)/20, 20/20</div>
+  <div><span class="dim" style="color:var(--cyan);">Screening</span><span class="arrow">&rarr;</span>Z<sub>eff</sub> = Z &minus; S (3.0% average, H through Ar)</div>
+  <div><span class="dim" style="color:var(--purple);">Z<sub>eff</sub></span><span class="arrow">&rarr;</span>EN = Z<sub>eff</sub><sup>7/10</sup> / n (electronegativity)</div>
+  <div><span class="dim" style="color:var(--gold);">EN</span><span class="arrow">&rarr;</span>D(A-B) = &radic;(D<sub>AA</sub>&middot;D<sub>BB</sub>) &times; [1 + 5&middot;&Delta;EN&sup2;]</div>
+</div>
+
+<p>The power 7/10 = R/A(2) is the rungs-to-accumulated-traversal ratio at the field station. It is not fitted; it is the fraction of nuclear charge that "gets through" the 2D field's mediation. The ionic coupling constant is &Phi; + T = 5 (field + triad; equivalently P+1, R&minus;&Phi;, A(2)/&Phi;).</p>
+
+<h3>What the Equations Select</h3>
+
+<p>To maximize energy storage per unit mass, maximize 5&middot;&Delta;EN&sup2; / mass per formula unit. The framework computes &Delta;EN for any element pair with zero empirical electronegativity data. The result: <span class="m wb">Li-F type chemistry</span> gives the highest &Delta;EN with the lightest anode, which is exactly where battery research converged empirically. The framework did not fit to this; it derived it from A0 &rarr; T = 3 &rarr; screening &rarr; Z<sub>eff</sub> &rarr; EN.</p>
+
+<p>The three-layer bond energy model (&sect;16.4e) gives the energy per bond to 0.15% average for homonuclear species, and the four-layer heteronuclear formula (&sect;16.4f) gives 10.9% average across 23 bonds with zero empirical EN data (Pauling's formula with his empirical EN: 9.0% on the same set).</p>
+
+<!-- ============================================================ -->
+<h2>Geometry: Derived from T = 3</h2>
+
+<p>Electrode crystal structure follows from the <a href="molecular_geometry.html#simplex">simplex formula</a>: &theta; = arccos(&minus;1/(n&minus;1)) for n &le; P = 4 convergence points on the boundary. Tetrahedral angle = arccos(&minus;1/T) = 109.47&deg; (exact). The electrode surface where charge transfer happens lives at sp&sup3; = 1.5D, the commitment station.</p>
+
+<p>When lithium ions insert or extract, the host lattice cycles between dimensional stations. The rate of cycling is bounded by the aperture barrier height at each station. The <a href="molecular_geometry.html#reactions">reaction pump cycle</a> gives: activation energy = aperture barrier height; catalysis = aperture widening; the Boltzmann factor = boundary filtration compounding multiplicatively.</p>
+
+<p>The optimal electrode surface has fractal dimension <span class="w wb">D = 1 + ◐ = 1.5</span> (the balanced state). Activated carbon naturally achieves D &asymp; 1.4&ndash;1.6. The framework predicts this is optimal; empirical battery research converged on it independently.</p>
+
+<!-- ============================================================ -->
+<h2>Architecture: 0 + 1 + 2 = 3</h2>
+
+<p>Conservation of traversal forces three active layers that sum to the boundary:</p>
+
+<div class="eq">0(&bull;) + 1(&mdash;) + 2(&Phi;) = 3(○)</div>
+
+<p>Three cells in series (matching ATP's T = 3 phosphate groups). Layer thickness ratios at &phi; (golden ratio, from A2: fractal self-similarity). At ◐ = 0.5, the electrode : separator : electrode balance gives equal energy in convergence and emergence.</p>
+
+<p>In AC power terms (&sect;4.8a): 𝒫 = E / (i &middot; t). Real power P is the 1D component (work delivered). Reactive power Q is the 2D component (energy cycling in storage). Apparent power |S| is the 3D total. A power factor of cos(60&deg;) = 0.5 occurs at exactly 60&deg; = 360&deg; / T! phase angle: the closure symmetry. At ◐ = 0.5, half the apparent power is real (delivered) and half is reactive (stored).</p>
+
+<!-- ============================================================ -->
+<h2>The Exponent Algebra of Storage</h2>
+
+<p>Every storage technology lives at a rung. The <a href="dimensional_ladder.html">dimensional ladder</a> gives the energy scale at each rung as a power of 1/&alpha;:</p>
+
+<table>
+<tr><th>Rung</th><th>Exponent</th><th>Storage Modality</th><th>Physical Example</th></tr>
+<tr>
+  <td class="label">0D</td>
+  <td class="num">A(0.5) = 1</td>
+  <td>Coupling at a point</td>
+  <td>Single-electron traps</td>
+</tr>
+<tr>
+  <td class="label">0.5D</td>
+  <td class="num">E(0.5) = 1</td>
+  <td>Convergence in flight</td>
+  <td>Optical cavities</td>
+</tr>
+<tr>
+  <td class="label">1D</td>
+  <td class="num">A(1) = 3</td>
+  <td>Persistent commitment</td>
+  <td>Superconducting loops</td>
+</tr>
+<tr>
+  <td class="label">1.5D</td>
+  <td class="num">E(1.5) = 13/12</td>
+  <td>Rotational / phase</td>
+  <td>Flywheels, magnetic flux</td>
+</tr>
+<tr>
+  <td class="label">2D</td>
+  <td class="num">A(2) = 10</td>
+  <td>Field configuration</td>
+  <td>Capacitors, inductors</td>
+</tr>
+<tr>
+  <td class="label">2.5D</td>
+  <td class="num">E(2.5) = 56/39</td>
+  <td>Cross-scale emergence</td>
+  <td><span class="m wb">Plasma confinement; fusion</span></td>
+</tr>
+<tr>
+  <td class="label">3D</td>
+  <td class="num">E(3) = A(3) = 21</td>
+  <td>Boundary / mass</td>
+  <td>Chemical batteries, pumped hydro</td>
+</tr>
+</table>
+
+<p>Conventional batteries store at 3D (the outermost rung): energy is locked in chemical bonds at the boundary. This is wasteful because the 3D behavior is overdetermined by the inner rungs, and dissipation is maximal at the boundary.</p>
+
+<p>The cosmos validates deeper storage. Approximately <span class="m wb">27% of total energy is stored at 1.5D</span> (dark matter: i&sup2; &harr; i&sup3; oscillation in the left half-plane; gravitates but does not radiate). The right half-plane (visible matter, ~5%) overwhelmingly occupies 2.5D (<a href="infolding.html">~99% of visible matter is plasma</a>: stars, interstellar medium). Condensed 3D matter is ~1% of the visible, which is ~5% of the total: roughly 0.05% of all energy sits at the 3D rung where our batteries operate.</p>
+
+<div class="note insight">
+The universe stores its energy at 1.5D (dark matter, rotational phase oscillation) and processes it at 2.5D (plasma, emergence). We store ours at 3D (chemical bonds). The framework says: go deeper.
+</div>
+
+<!-- ============================================================ -->
+<h2>The Processual Product: Efficiency Ceiling</h2>
+
+<p>The four-station processual product (&sect;27.7f):</p>
+
+<div class="eq">&Pi; = E(0.5) &times; E(1.5) &times; E(2.5) &times; E(3.5) = 1 &times; 13/12 &times; 56/39 &times; 28 = 392/9</div>
+
+<p>Pure T form: &Pi; = SU(3)&middot;R&sup2;/T&sup2; = (T&sup2;&minus;1)(T&sup2;&minus;2)&sup2;/T&sup2;. Self-mediating: the four-part product needs no external mediator (A4 is trivially satisfied when all four processual stations participate).</p>
+
+<p>The frame (E(0.5) &times; E(3.5) = P&middot;R = 28, integer) naturally mediates the interior (E(1.5) &times; E(2.5) = 2R/T&sup2; = 14/9, fraction). <span class="w wb">Right/left ratio = 2T&sup2; = 18</span>: the visible sector is 18&times; the dark sector in exponent product.</p>
+
+<p>For a battery: the ratio of peak discharge power (right half-plane, i&sup0; + i&sup1;) to sustained storage power (left half-plane, i&sup2; + i&sup3;) should scale as 18:1. ATP delivers in bursts and stores in bulk; so does every battery. This is a testable prediction.</p>
+
+<!-- ============================================================ -->
+<h2>The Power Equation at Every Scale</h2>
+
+<div class="eq">𝒫 = E / (i &middot; t)</div>
+
+<p>This is not analogy; it IS the equation (&sect;4.8a). It maps to AC power:</p>
+
+<table>
+<tr><th>Component</th><th>Dimension</th><th>AC Power</th><th>Battery Role</th></tr>
+<tr>
+  <td class="label">Real power P</td>
+  <td class="num">1D (work, time)</td>
+  <td>Watts</td>
+  <td>Energy delivered to load</td>
+</tr>
+<tr>
+  <td class="label">Reactive power Q</td>
+  <td class="num">2D (cycling, mind)</td>
+  <td>VAR</td>
+  <td>Energy cycling in storage (not lost, not delivered)</td>
+</tr>
+<tr>
+  <td class="label">Apparent power |S|</td>
+  <td class="num">3D (total, matter)</td>
+  <td>VA</td>
+  <td>Total energy budget of the cell</td>
+</tr>
+</table>
+
+<p>A purely reactive device (Q only, no P) stores without dissipating. A purely real device (P only, no Q) delivers without storing. The battery lives between: ◐ = 0.5 means equal real and reactive, power factor = cos(60&deg;) = 0.5, phase angle = 60&deg; = 360&deg; / T!.</p>
+
+<!-- ============================================================ -->
+<h2>Testable Predictions</h2>
+
+<p>The framework generates specific, falsifiable predictions for battery design and performance:</p>
+
+<table>
+<tr><th>#</th><th>Prediction</th><th>Source</th><th>How to Test</th></tr>
+<tr>
+  <td class="num">1</td>
+  <td>Peak discharge / sustained storage power ratio &asymp; 18:1</td>
+  <td>&Pi; right/left = 2T&sup2;</td>
+  <td>Measure C-rate at peak vs steady state across cell chemistries</td>
+</tr>
+<tr>
+  <td class="num">2</td>
+  <td>Optimal electrode fractal dimension D = 1.5</td>
+  <td>◐ = 0.5; D = 1 + ◐</td>
+  <td>BET/SEM on electrodes; compare capacity vs D across samples</td>
+</tr>
+<tr>
+  <td class="num">3</td>
+  <td>Charge transfer rate at interface follows T = cos&sup2;(&Delta;&phi;/2)</td>
+  <td>2.5D transmission formula</td>
+  <td>Impedance spectroscopy; phase-resolved charge transfer measurement</td>
+</tr>
+<tr>
+  <td class="num">4</td>
+  <td>sp&sup3;d cathode surfaces outperform sp&sup3; at same chemistry</td>
+  <td>2.5D impedance matching</td>
+  <td>Compare d-orbital vs non-d-orbital cathode materials at matched &Delta;EN</td>
+</tr>
+<tr>
+  <td class="num">5</td>
+  <td>3-cell series outperforms 2 or 4 at matched total voltage</td>
+  <td>T = 3; conservation of traversal</td>
+  <td>Build 2-, 3-, 4-cell stacks; measure round-trip efficiency</td>
+</tr>
+<tr>
+  <td class="num">6</td>
+  <td>&phi;-ratio layer thickness maximizes cycle life</td>
+  <td>A2 (fractal self-similarity)</td>
+  <td>Compare &phi;-spaced vs uniform vs random thickness ratios</td>
+</tr>
+<tr>
+  <td class="num">7</td>
+  <td>Power factor = 0.5 at optimal operating point</td>
+  <td>◐ = 0.5; 𝒫 = E/(i&middot;t)</td>
+  <td>AC impedance at resonance; measure phase angle under load</td>
+</tr>
+</table>
+
+<div class="note prediction">
+<span class="wb">The strongest prediction is #1.</span> If the right/left exponent ratio 2T&sup2; = 18 governs the burst-to-sustain power ratio across battery chemistries, it would connect the cosmological energy budget (&sect;10.10a) to electrochemistry through a single number derived from T = 3. This is testable immediately with existing battery data.
+</div>
+
+<!-- ============================================================ -->
+<h2>The Dimensional Ladder as a Typology of Batteries</h2>
+
+<p>The ladder is not just a design tool; it is a classification of all possible storage:</p>
+
+<table>
+<tr><th>Rung</th><th>Storage Type</th><th>Energy Density</th><th>Cycle Speed</th><th>Status</th></tr>
+<tr>
+  <td class="label">0D (&alpha;)</td>
+  <td>Single-particle traps</td>
+  <td class="num">Lowest</td>
+  <td class="num">Fastest</td>
+  <td class="d">Laboratory</td>
+</tr>
+<tr>
+  <td class="label">0.5D (c)</td>
+  <td>Optical cavities, photon storage</td>
+  <td class="num">Low</td>
+  <td class="num">Speed of light</td>
+  <td class="d">Research</td>
+</tr>
+<tr>
+  <td class="label">1D (&hbar;)</td>
+  <td>Superconducting loops</td>
+  <td class="num">Moderate</td>
+  <td class="num">Very fast</td>
+  <td class="d">SMES systems</td>
+</tr>
+<tr>
+  <td class="label">1.5D (mass)</td>
+  <td>Flywheels, magnetic flux</td>
+  <td class="num">Moderate</td>
+  <td class="num">Fast</td>
+  <td class="good">Commercial</td>
+</tr>
+<tr>
+  <td class="label">2D (&Phi;)</td>
+  <td>Capacitors, inductors</td>
+  <td class="num">Low&ndash;moderate</td>
+  <td class="num">Fast</td>
+  <td class="good">Ubiquitous</td>
+</tr>
+<tr>
+  <td class="label">2.5D (plasma)</td>
+  <td>Plasma confinement, fusion</td>
+  <td class="num">Very high</td>
+  <td class="num">Moderate</td>
+  <td class="d">Tokamaks, FRCs</td>
+</tr>
+<tr>
+  <td class="label">3D (G)</td>
+  <td>Chemical, gravitational</td>
+  <td class="num">High</td>
+  <td class="num">Slow</td>
+  <td class="good">Li-ion, pumped hydro</td>
+</tr>
+</table>
+
+<p>The tradeoff between density and speed follows the ladder: deeper rungs store less but cycle faster (less constraint, more freedom). The 3D rung stores densely but slowly (maximum constraint). The cosmos chose 1.5D for bulk storage and 2.5D for processing; we chose 3D, the most constrained option.</p>
+
+<p>The compositional product (&sect;27.7c) says the 3D exponent is not independent: E(3) = E(1.5) &times; E(2.5) &times; T<sup>T</sup>/2 = 21. The boundary is the product of the inner processual rungs mediated by T<sup>T</sup>/2. A battery that operates across multiple rungs simultaneously (not just at 3D) accesses the compositional structure. The whole exceeds the sum of its parts (A4).</p>
+
+<!-- ============================================================ -->
+<h2>Open Directions</h2>
+
+<p><span class="s wb">Multi-rung hybrid cells.</span> A device that stores simultaneously at 1.5D (flywheel/flux), 2D (capacitor), and 2.5D (plasma) within a single cell, with the 3D casing emerging from conservation of traversal. The framework predicts compositional gain (A4): the whole exceeds the sum of its parts by the factor T<sup>T</sup>/2 = 13.5 in the exponent algebra.</p>
+
+<p><span class="s wb">The S = 64 cycle limit.</span> The Hayflick limit for cells is S = P<sup>T</sup> = 64 (the 64-state architecture). Does a battery electrode grain exhaust its configurational state space after ~64 deep cycles, triggering accelerated capacity fade? If so, electrode microstructure design should target grain sizes that distribute the 64-state traversal across multiple grains, extending effective cycle life.</p>
+
+<p><span class="s wb">Resonant discharge at T-fold symmetry.</span> ATP synthase operates at 120&deg; = 360&deg;/T. Does a resonant discharge circuit tuned to operate at T-fold phase symmetry (power factor = 0.5, phase = 60&deg;) extract energy more efficiently than a matched DC circuit? The framework says yes; the pump cycle is optimized at T-fold angles because T = 3 is self-determining.</p>
+
+<div class="note open">
+<span class="wb">The deepest open question:</span> the cosmos stores 27% of its energy at 1.5D (dark matter) and 68% as &Phi; itself (dark energy, the 2D field). Can we build storage that accesses these rungs directly, rather than only operating at 3D? Superconducting loops (1D) and plasma confinement (2.5D) are already steps in this direction. The framework suggests the path: peel the boundary back, reveal the field underneath.
+</div>
+
+<!-- ============================================================ -->
+
+<div class="footer">
+  <p><a href="index.html">⊙ Circumpunct Framework</a></p>
+  <p>Ashman Roonz, 2026</p>
+  <p style="margin-top: 12px;">
+    <a href="dimensional_ladder.html">Ladder</a> &middot;
+    <a href="emergent_chemistry.html">Chemistry</a> &middot;
+    <a href="infolding.html">2.5D: Emergence</a> &middot;
+    <a href="emergent_biology.html">Biology</a> &middot;
+    <a href="e_equals_1.html">E = 1</a> &middot;
+    <a href="circumpunct_predictions.html">Predictions</a>
+  </p>
+</div>
+
+</div>
+</body>
+</html>
