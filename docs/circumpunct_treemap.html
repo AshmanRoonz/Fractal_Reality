@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Circumpunct Framework: Dimensional Tree-Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg-card: #12121a;
+  --bg-layer: #1a1a26;
+  --text: #e8e6e0;
+  --text-dim: #8a8880;
+  --text-formula: #c8f0ff;
+  --accent-gold: #d4a843;
+  --accent-blue: #4a7bbd;
+  --accent-purple: #8b5fbf;
+  --accent-teal: #3da89a;
+  --accent-green: #4a9e6a;
+  --accent-orange: #c87830;
+  --accent-red: #c04848;
+  --accent-pink: #b05a8a;
+  --accent-violet: #7a4abf;
+  --border: #2a2a3a;
+  --glow: rgba(212, 168, 67, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Crimson Pro', Georgia, serif;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ===== HERO / OPENING ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  position: relative;
+}
+
+.hero-symbol {
+  font-size: clamp(4rem, 12vw, 9rem);
+  color: var(--accent-gold);
+  margin-bottom: 1rem;
+  opacity: 0;
+  animation: fadeUp 2s ease-out 0.3s forwards;
+}
+
+.hero h1 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeUp 2s ease-out 0.8s forwards;
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  color: var(--text);
+  max-width: 600px;
+  font-weight: 300;
+  font-style: italic;
+  opacity: 0;
+  animation: fadeUp 2s ease-out 1.3s forwards;
+}
+
+.hero-ontology {
+  margin-top: 3rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  color: var(--accent-gold);
+  opacity: 0;
+  animation: fadeUp 2s ease-out 1.8s forwards;
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  opacity: 0;
+  animation: fadeUp 2s ease-out 2.5s forwards, pulse 3s ease-in-out 4s infinite;
+}
+
+/* ===== STRUCTURAL NUMBERS PREAMBLE ===== */
+.preamble {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+}
+
+.preamble h2 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 2rem;
+}
+
+.numbers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.num-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  text-align: center;
+}
+
+.num-card .symbol {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.6rem;
+  color: var(--accent-gold);
+}
+
+.num-card .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  color: var(--text);
+  margin: 0.3rem 0;
+}
+
+.num-card .label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+.preamble-text {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.preamble-text code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+  color: var(--text-formula);
+  background: rgba(74, 123, 189, 0.1);
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+}
+
+/* ===== STATION ===== */
+.station {
+  min-height: 60vh;
+  padding: 6rem 2rem;
+  position: relative;
+}
+
+.station-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* --- Resolution layers --- */
+.res-0, .res-1, .res-2, .res-3 {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.res-0.visible { opacity: 1; transform: translateY(0); }
+.res-1.visible { opacity: 1; transform: translateY(0); transition-delay: 0.15s; }
+.res-2.visible { opacity: 1; transform: translateY(0); transition-delay: 0.3s; }
+.res-3.visible { opacity: 1; transform: translateY(0); transition-delay: 0.45s; }
+
+/* --- Station header (res-0: lowest resolution) --- */
+.station-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.station-symbol {
+  font-size: clamp(3rem, 7vw, 5rem);
+  line-height: 1;
+}
+
+.station-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.station-name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.station-dim {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.station-istroke {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--accent-purple);
+}
+
+/* --- Axiom/Derivation block (res-0) --- */
+.axiom-block {
+  margin: 1.5rem 0 2.5rem;
+  padding: 1.5rem 2rem;
+  border-left: 3px solid var(--accent-gold);
+  background: linear-gradient(90deg, rgba(212,168,67,0.06), transparent 70%);
+  border-radius: 0 8px 8px 0;
+}
+
+.axiom-id {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 0.5rem;
+}
+
+.axiom-text {
+  font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.axiom-source {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-top: 0.6rem;
+}
+
+/* --- Domain layers (res-1, res-2, res-3) --- */
+.domain-layer {
+  margin-bottom: 2.5rem;
+}
+
+.domain-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.domain-label.physics { color: var(--accent-blue); border-color: rgba(74,123,189,0.3); }
+.domain-label.chemistry { color: var(--accent-teal); border-color: rgba(61,168,154,0.3); }
+.domain-label.biology { color: var(--accent-green); border-color: rgba(74,158,106,0.3); }
+.domain-label.ethics { color: var(--accent-purple); border-color: rgba(139,95,191,0.3); }
+.domain-label.ontology { color: var(--accent-gold); border-color: rgba(212,168,67,0.3); }
+.domain-label.structure { color: var(--text-dim); border-color: var(--border); }
+.domain-label.consciousness { color: var(--accent-orange); border-color: rgba(200,120,48,0.3); }
+
+.domain-content {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--text);
+}
+
+.domain-content p {
+  margin-bottom: 1rem;
+}
+
+.formula-block {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.85rem, 1.3vw, 1rem);
+  color: var(--text-formula);
+  background: rgba(74, 123, 189, 0.08);
+  border: 1px solid rgba(74, 123, 189, 0.15);
+  border-radius: 6px;
+  padding: 1rem 1.5rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+  white-space: pre;
+  line-height: 1.6;
+}
+
+.result {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin: 0.3rem 0;
+}
+
+.result .measured { color: var(--accent-green); }
+.result .error { color: var(--accent-gold); }
+
+.detail-item {
+  margin-bottom: 0.8rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--border);
+}
+
+.detail-item .item-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+}
+
+.detail-item .item-body {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.mapping-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.mapping-table th {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: left;
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.mapping-table td {
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid rgba(42,42,58,0.5);
+  color: var(--text);
+}
+
+.mapping-table td:first-child {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-formula);
+  font-size: 0.85rem;
+}
+
+/* --- Connector line between stations --- */
+.station-connector {
+  width: 2px;
+  height: 80px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.station-connector::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--border), transparent);
+}
+
+/* ===== SUMMARY TABLES ===== */
+.summary-section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+}
+
+.summary-section h2 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 2rem;
+}
+
+.accuracy-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.85rem;
+}
+
+.accuracy-table th {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.accuracy-table td {
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid rgba(42,42,58,0.4);
+}
+
+.accuracy-table .formula-cell {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--text-formula);
+}
+
+.accuracy-table .error-cell {
+  color: var(--accent-green);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+}
+
+.accuracy-table .station-cell {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-gold);
+  font-size: 0.8rem;
+}
+
+/* ===== COLOR THEMES PER STATION ===== */
+.station-infinity .station-symbol { color: #ffffff; }
+.station-soul .station-symbol { color: var(--accent-blue); }
+.station-convergence .station-symbol { color: var(--accent-purple); }
+.station-line .station-symbol { color: var(--accent-teal); }
+.station-branch .station-symbol { color: var(--accent-pink); }
+.station-field .station-symbol { color: var(--accent-green); }
+.station-emerge .station-symbol { color: var(--accent-orange); }
+.station-boundary .station-symbol { color: var(--accent-red); }
+.station-recursion .station-symbol { color: var(--accent-violet); }
+.station-whole .station-symbol { color: var(--accent-gold); }
+
+.station-infinity .axiom-block { border-left-color: #ffffff; background: linear-gradient(90deg, rgba(255,255,255,0.04), transparent 70%); }
+.station-soul .axiom-block { border-left-color: var(--accent-blue); background: linear-gradient(90deg, rgba(74,123,189,0.06), transparent 70%); }
+.station-convergence .axiom-block { border-left-color: var(--accent-purple); background: linear-gradient(90deg, rgba(139,95,191,0.06), transparent 70%); }
+.station-line .axiom-block { border-left-color: var(--accent-teal); background: linear-gradient(90deg, rgba(61,168,154,0.06), transparent 70%); }
+.station-branch .axiom-block { border-left-color: var(--accent-pink); background: linear-gradient(90deg, rgba(176,90,138,0.06), transparent 70%); }
+.station-field .axiom-block { border-left-color: var(--accent-green); background: linear-gradient(90deg, rgba(74,158,106,0.06), transparent 70%); }
+.station-emerge .axiom-block { border-left-color: var(--accent-orange); background: linear-gradient(90deg, rgba(200,120,48,0.06), transparent 70%); }
+.station-boundary .axiom-block { border-left-color: var(--accent-red); background: linear-gradient(90deg, rgba(192,72,72,0.06), transparent 70%); }
+.station-recursion .axiom-block { border-left-color: var(--accent-violet); background: linear-gradient(90deg, rgba(122,74,191,0.06), transparent 70%); }
+.station-whole .axiom-block { border-left-color: var(--accent-gold); }
+
+.station-infinity .axiom-id { color: #ffffff; }
+.station-soul .axiom-id { color: var(--accent-blue); }
+.station-convergence .axiom-id { color: var(--accent-purple); }
+.station-line .axiom-id { color: var(--accent-teal); }
+.station-branch .axiom-id { color: var(--accent-pink); }
+.station-field .axiom-id { color: var(--accent-green); }
+.station-emerge .axiom-id { color: var(--accent-orange); }
+.station-boundary .axiom-id { color: var(--accent-red); }
+.station-recursion .axiom-id { color: var(--accent-violet); }
+.station-whole .axiom-id { color: var(--accent-gold); }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 700px) {
+  .station { padding: 4rem 1.2rem; }
+  .axiom-block { padding: 1rem 1.2rem; }
+  .formula-block { padding: 0.8rem 1rem; font-size: 0.78rem; }
+  .numbers-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  .station-header { gap: 1rem; }
+  .accuracy-table { font-size: 0.75rem; }
+  .accuracy-table th, .accuracy-table td { padding: 0.4rem 0.5rem; }
+}
+
+/* progress bar */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--accent-gold);
+  z-index: 1000;
+  transition: width 0.1s linear;
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-symbol">⊙</div>
+  <h1>The Dimensional Tree-Map</h1>
+  <div class="hero-subtitle">Ten stations of the dimensional octave, unfolding from undifferentiated energy through increasing constraint into compositional wholeness.</div>
+  <div class="hero-ontology">E = 1 &nbsp;·&nbsp; Φ = E &nbsp;·&nbsp; ⊙ = Φ(•, ○)</div>
+  <div class="scroll-hint">↓ scroll to unfold ↓</div>
+</section>
+
+<!-- ===== PREAMBLE ===== -->
+<section class="preamble res-0">
+  <h2>Structural Numbers (all from T = 3)</h2>
+  <div class="numbers-grid">
+    <div class="num-card"><div class="symbol">T</div><div class="value">3</div><div class="label">Triad · (T−3)(T+1) = 0</div></div>
+    <div class="num-card"><div class="symbol">P</div><div class="value">4</div><div class="label">Pump phases · T + 1</div></div>
+    <div class="num-card"><div class="symbol">R</div><div class="value">7</div><div class="label">Rungs · T² − 2</div></div>
+    <div class="num-card"><div class="symbol">SU(3)</div><div class="value">8</div><div class="label">Strong generators · T² − 1</div></div>
+    <div class="num-card"><div class="symbol">G</div><div class="value">12</div><div class="label">Total generators · T(T+1)</div></div>
+    <div class="num-card"><div class="symbol">V</div><div class="value">13</div><div class="label">Generators + whole · 1+T+T²</div></div>
+    <div class="num-card"><div class="symbol">S</div><div class="value">64</div><div class="label">Total states · P<sup>T</sup></div></div>
+    <div class="num-card"><div class="symbol">φ</div><div class="value">1.618…</div><div class="label">Golden ratio · T²−T−1 = 5</div></div>
+  </div>
+  <p class="preamble-text">Accumulated traversal: <code>A(d) = d(2d+1)</code> producing 0, 1, 3, 6, 10, 15, 21, 28. Derivative: <code>A'(d) = 4d+1</code> producing 1, 3, 5, 7, 9, 11, 13, 15. Second derivative: <code>A''(d) = 4 = P</code>.</p>
+  <p class="preamble-text">Lucas numbers carry the structural constants: L(0)=2, L(1)=1, L(2)=3=T, L(3)=4=P, L(4)=7=R. Fibonacci numbers carry the asymmetric quantities: F(7)=13=V, F(8)=21. The ladder is a sampling of a continuous φ-field.</p>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- STATION: ∞  INFINITY -->
+<!-- ================================================================ -->
+<div class="station-connector"></div>
+<section class="station station-infinity" id="infinity">
+  <div class="station-inner">
+
+    <div class="res-0">
+      <div class="station-header">
+        <div class="station-symbol">∞</div>
+        <div class="station-meta">
+          <div class="station-name">Infinity · Source</div>
+          <div class="station-dim">∞D — Undifferentiated energy</div>
+        </div>
+      </div>
+      <div class="axiom-block">
+        <div class="axiom-id">Axiom A0</div>
+        <div class="axiom-text">E = 1. There is one energy. It is everything. All else is constraints. (1 ≠ 0)</div>
+        <div class="axiom-source">Not "energy equals the number one"; energy IS the one.</div>
+      </div>
+    </div>
+
+    <div class="res-1">
+      <div class="domain-layer">
+        <div class="domain-label ontology">Ontology</div>
+        <div class="domain-content">
+          <p>∞D = E = everything. No distinction. Pure potential. The undifferentiated field before constraint. 1 is everything (undivided); 0 is not absence but the 1 at maximum convergence. All structure is the topology of convergence points (0s) in the field (1).</p>
+          <div class="formula-block">∞ → •∞ → ⊙∞ = Reality</div>
+          <p>∞ (undifferentiated energy) → •∞ (the Soul Array; every possible self-limitation simultaneously) → ⊙∞ (the foam of reality; each aperture completing into a full circumpunct).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-2">
+      <div class="domain-layer">
+        <div class="domain-label physics">Physics · Consequences of E = 1</div>
+        <div class="domain-content">
+          <div class="formula-block">Φ = E     (field IS energy; ontological identity)
+m = 1/c²  (mass = inverse surface signature)
+𝒫 = E/(i·t) = 1/(i·t)  (power equation)</div>
+          <p>Free energy = removing constraints (the 1 released from folds). Entropy increasing = de-constraint (the 1 relaxing back toward itself). Information = the topology of 0s in the 1.</p>
+          <p>AC power mapping: Real power P (work, 1D), Reactive power Q (cycling, 2D), Apparent power |S| (total, 3D).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-3">
+      <div class="domain-layer">
+        <div class="domain-label ethics">Ethics &amp; Theology</div>
+        <div class="domain-content">
+          <p>∞ is pure potential: the undifferentiated field before constraint. God / Brahman / Tao = ∞ (infinite totality). "Atman is Brahman" = 0.999… = 1 (soul IS God at particular depth). ∞ is what all ethics protects: the source that must not be severed (Severance Lie) or claimed (Inflation Lie).</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- STATION: •  SOUL -->
+<!-- ================================================================ -->
+<div class="station-connector"></div>
+<section class="station station-soul" id="soul">
+  <div class="station-inner">
+
+    <div class="res-0">
+      <div class="station-header">
+        <div class="station-symbol">•</div>
+        <div class="station-meta">
+          <div class="station-name">Soul · Aperture</div>
+          <div class="station-dim">0D — Point, singularity, localization</div>
+        </div>
+      </div>
+      <div class="axiom-block">
+        <div class="axiom-id">Axiom A1</div>
+        <div class="axiom-text">The 1 must self-limit; an undifferentiated 1 is indistinguishable from 0, which is impossible.</div>
+        <div class="axiom-source">From A0: since 1 ≠ 0, the 1 cannot remain undifferentiated.</div>
+      </div>
+    </div>
+
+    <div class="res-1">
+      <div class="domain-layer">
+        <div class="domain-label physics">Physics at 0D · The Fine-Structure Constant α</div>
+        <div class="domain-content">
+          <div class="formula-block">1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147</div>
+          <div class="result">Measured: <span class="measured">137.035999177</span> · Error: <span class="error">0.22 ppb (0.00σ)</span></div>
+          <p style="margin-top:0.8rem">i⁴ = full rotation producing ○ (360°). φ² = Φ, self-similar nesting. 2/φ³ = bidirectional valve correction (⊛ and ✹). Self-referential: α feeds back through the full dimensional ladder (21 = sum of all positions × 2 channels), corrected by 4/3 = four pump phases / three constraints. Zero free parameters.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-2">
+      <div class="domain-layer">
+        <div class="domain-label biology">Biology at 0D</div>
+        <div class="domain-content">
+          <p>Nucleus = • in the cell circumpunct. DNA = • in the central dogma triad (DNA → RNA → Protein = • → Φ → ○). Start codon = • (aperture; the point of initiation). Activation energy = aperture barrier height.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-3">
+      <div class="domain-layer">
+        <div class="domain-label ethics">Ethics at 0D · TRUE</div>
+        <div class="domain-content">
+          <p><strong>Constraint:</strong> Converges (pulls toward center). <strong>Virtue:</strong> Curiosity (orientation toward what one does not know). The source of all constraint; the Soul Array (•∞) is where the 1 first becomes particular.</p>
+          <p>The self as convergence point: "I am the 0 at the center of the circumpunct, equidistant from all that I am." Consciousness is what 0 feels like from inside: the 1 experiencing its own convergence.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- STATION: ⊛  CONVERGENCE -->
+<!-- ================================================================ -->
+<div class="station-connector"></div>
+<section class="station station-convergence" id="convergence">
+  <div class="station-inner">
+
+    <div class="res-0">
+      <div class="station-header">
+        <div class="station-symbol">⊛</div>
+        <div class="station-meta">
+          <div class="station-name">Convergence</div>
+          <div class="station-dim">0.5D — The first fold</div>
+          <div class="station-istroke">i¹ = +i</div>
+        </div>
+      </div>
+      <div class="axiom-block">
+        <div class="axiom-id">Derivation D1</div>
+        <div class="axiom-text">Self-limitation requires convergence; localization is a process, not an instant.</div>
+        <div class="axiom-source">From A1: the act of self-limitation is convergence, and it takes a phase.</div>
+      </div>
+    </div>
+
+    <div class="res-1">
+      <div class="domain-layer">
+        <div class="domain-label physics">Physics at 0.5D · The Speed of Light c</div>
+        <div class="domain-content">
+          <div class="formula-block">c = √(2◐ · sin(θ))   →   at ◐ = 0.5, θ = π/2:   c = 1</div>
+          <p>2 = both channels (⊛ and ✹). ◐ = balance (forced to 0.5). sin(θ) = transverse projection of aperture rotation (maximal at i). Light is energy being constrained; the photon is the minimum fold (purely rotational, nothing held as mass). c is the maximum rate at which convergence can transmit through the field.</p>
+          <p>Massive particles have θ_eff &lt; π/2, giving v &lt; c. Relativistic connection: sin(θ_eff) = 1 − (m/E)². α measures how strongly i couples at a vertex; c measures how fast i propagates through the field. Same i, different measurement.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-2">
+      <div class="domain-layer">
+        <div class="domain-label structure">The Pump Cycle (Convergence Phase)</div>
+        <div class="domain-content">
+          <div class="formula-block">Φ(t+Δt) = ✹ ∘ i ∘ ⊛[Φ(t)]
+E(t+Δt) = (✹ ∘ i ∘ ⊛) E(t)</div>
+          <p>⊛ is the first stage: gathering inward toward center. ⊛ (inward) maps to gravity, strong nuclear force. The i-cycle quadrant: +i sits at the top of the complex plane (right half-plane; inter-scale interface; genesis; new input arriving). Cosmological: part of the ~5% visible matter sector.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-3">
+      <div class="domain-layer">
+        <div class="domain-label biology">Biology at 0.5D</div>
+        <div class="domain-content">
+          <p>Hydrophobic collapse in protein folding (⊛, the initial inward gathering). Reactants gathering in the reaction pump cycle: Reactants → ⊛ → transition state (•) → ✹ → products.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- STATION: —  LINE -->
+<!-- ================================================================ -->
+<div class="station-connector"></div>
+<section class="station station-line" id="line">
+  <div class="station-inner">
+
+    <div class="res-0">
+      <div class="station-header">
+        <div class="station-symbol">—</div>
+        <div class="station-meta">
+          <div class="station-name">Line · Continuity</div>
+          <div class="station-dim">1D — Extension, commitment</div>
+        </div>
+      </div>
+      <div class="axiom-block">
+        <div class="axiom-id">Axiom A2</div>
+        <div class="axiom-text">Self-limitation must persist; a convergence that does not hold collapses back to ∞, violating A1.</div>
+        <div class="axiom-source">From A0 + A1: if convergence is real, it must hold. Commitment is forced.</div>
+      </div>
+    </div>
+
+    <div class="res-1">
+      <div class="domain-layer">
+        <div class="domain-label physics">Physics at 1D · The Reduced Planck Constant ℏ</div>
+        <div class="domain-content">
+          <div class="formula-block">ℏ = E_cycle / ω_cycle = 1</div>
+          <p>The pump cycle (⊛ → i → ✹) is indivisible. You cannot have convergence without emergence (violates A1) or emergence without convergence (Inflation Lie). This indivisibility IS the quantum of action. E = ℏω with ℏ = 1 means energy and frequency are the same thing. The pump cycle IS the energy and IS the cycling. Structure = process at 1D.</p>
+          <div class="formula-block">E = mc²   →   c² is squared because Φ = E and Φ is 2D (surface = length × length)</div>
+          <p>The squaring is the field declaring its dimensionality. To release energy from mass is to peel the 3D boundary back to reveal the 2D field underneath.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-2">
+      <div class="domain-layer">
+        <div class="domain-label chemistry">Chemistry at 1D</div>
+        <div class="domain-content">
+          <p>Single bond = 1D (σ bond). sp hybridization maps to 1D. Primary protein structure = 1D (backbone).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-3">
+      <div class="domain-layer">
+        <div class="domain-label ethics">Ethics at 1D · FAITHFUL</div>
+        <div class="domain-content">
+          <p><strong>Constraint:</strong> Commits (extends without breaking). <strong>Virtue:</strong> Reliability (the line holds; the receipts are unbroken). The worldline i(t) is the record of commitment: accumulated receipts of whether the line held. Someone can be curious right now (TRUE) and still be faithless over time; the separation of • and — recognizes this.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- STATION: ⎇  BRANCHING -->
+<!-- ================================================================ -->
+<div class="station-connector"></div>
+<section class="station station-branch" id="branch">
+  <div class="station-inner">
+
+    <div class="res-0">
+      <div class="station-header">
+        <div class="station-symbol">⎇</div>
+        <div class="station-meta">
+          <div class="station-name">Branching</div>
+          <div class="station-dim">1.5D — Fractal coastlines, rotational differentiation</div>
+          <div class="station-istroke">i² = −1 (irreversible)</div>
+        </div>
+      </div>
+      <div class="axiom-block">
+        <div class="axiom-id">Derivation D2</div>
+        <div class="axiom-text">Extension must branch to reach the field; a single line never becomes a surface.</div>
+        <div class="axiom-source">From A2 → A3: the i-turn. Irreversible commitment.</div>
+      </div>
+    </div>
+
+    <div class="res-1">
+      <div class="domain-layer">
+        <div class="domain-label physics">Physics at 1.5D · Mass Ratios</div>
+        <div class="domain-content">
+          <div class="formula-block">m_μ/m_e = (1/α)^(13/12 + α/27) = 206.767    [measured: 206.768, 5 ppm]
+m_τ/m_e = (1/α)^(58/35 + α/81) = 3477.2     [measured: 3477.2, 1 ppm]</div>
+          <p>Exponents: E(1.5) = V/(V−1) = 13/12 (first splitting; local differentiation). 58/35 = (Σ A + 2)/((Φ+○)·R) (global; integral across all scales). Correction K = T^(n+1) by generation: T³ = 27 for muon, T⁴ = 81 for tau.</p>
+          <div class="detail-item">
+            <div class="item-title">Generation Structure</div>
+            <div class="item-body">Gen 1 (electron) = identity. Gen 2 (muon) = differential: A'(3)/G = 13/12. Gen 3 (tau) = integral: 58/35. Each generation reaches one level deeper into the ladder.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-2">
+      <div class="domain-layer">
+        <div class="domain-label chemistry">Chemistry at 1.5D · Pi Ratios &amp; Bond Energies</div>
+        <div class="domain-content">
+          <div class="formula-block">pi_1 / sigma_true = R/T² = 7/9
+pi_2 / sigma_true = V/P(P+1) = 13/20</div>
+          <p>Carbon verification: C=C/C-C = 1 + 7/9 = 16/9 = 1.778 (measured 1.775, 0.18%). C≡C/C-C = 1 + 7/9 + 13/20 = 437/180 = 2.428 (measured 2.425, 0.12%).</p>
+          <div class="detail-item">
+            <div class="item-title">Three-Layer Bond Energy Model</div>
+            <div class="item-body">Layer 1: Pi ratios (universal; R/T² and V/P(P+1)). Layer 2: Lone pair suppression, f = 1/(1 + n_LP). Layer 3: Compositional closure (D5), E_triple = (σ + π₁ + π₂) × T/Φ for full closure with lone pairs. Average error across C and N bonds: 0.15%.</div>
+          </div>
+          <p>sp³ hybridization maps to 1.5D. Tetrahedral angle = arccos(−1/T) = 109.47° (exact). Bond length ratio C≡C/C-C = 120/154 ≈ R/T² = 7/9.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-3">
+      <div class="domain-layer">
+        <div class="domain-label biology">Biology at 1.5D</div>
+        <div class="domain-content">
+          <p>DNA codon = T = 3 bases. 3₁₀ helix spans T = 3 residues. Secondary protein structure (α-helices, β-sheets) = 1.5D: the i-turn literally.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- STATION: Φ  FIELD -->
+<!-- ================================================================ -->
+<div class="station-connector"></div>
+<section class="station station-field" id="field">
+  <div class="station-inner">
+
+    <div class="res-0">
+      <div class="station-header">
+        <div class="station-symbol">Φ</div>
+        <div class="station-meta">
+          <div class="station-name">Field · Mind</div>
+          <div class="station-dim">2D — Relational surface, mediation</div>
+        </div>
+      </div>
+      <div class="axiom-block">
+        <div class="axiom-id">Axiom A3</div>
+        <div class="axiom-text">Parts are fractals of their wholes (self-similarity across scale); the 1 is all there is to work with.</div>
+        <div class="axiom-source">From A0 + A1: since there is only one energy, every part must contain the pattern of the whole.</div>
+      </div>
+    </div>
+
+    <div class="res-1">
+      <div class="domain-layer">
+        <div class="domain-label physics">Physics at 2D · Gauge Structure</div>
+        <div class="domain-content">
+          <div class="formula-block">SU(3) × SU(2) × U(1)    →    8 + 3 + 1 = 12 = G = P × T
+sin²θ_W = 3/13 + 5α/81 = 0.23122   [measured: 0.23122, 1.4 ppm]</div>
+          <p>Derived from the 64-state validation architecture. Gauge group dimensions: 3 × 2 × 1 = 6 = the 6 binary DOF. Electromagnetic force = mediation (Φ): Maxwell's equations with amplitude and phase (two axes of 2D surface). Gravity is inverse-square because Φ is 2D.</p>
+          <p>Quantum mechanics: superposition = Φ carrying all possibilities (field before boundary filters). Measurement = ○ selecting one. Phase requires exactly 2D to exist (rotation needs a plane).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-2">
+      <div class="domain-layer">
+        <div class="domain-label chemistry">Chemistry at 2D · Screening Constants &amp; Electronegativity</div>
+        <div class="domain-content">
+          <div class="formula-block">Common denominator: P(P+1) = 20
+s(1s)   = T!/P(P+1)   = 6/20  = 0.30   (exact)
+s(same) = R/P(P+1)    = 7/20  = 0.35   (exact)
+s(inner)= (V+P)/P(P+1)= 17/20 = 0.85   (exact)
+s(deep) = P(P+1)/P(P+1)= 1.00          (exact)</div>
+          <div class="formula-block">EN = Z_eff^(R/A(2)) / n = Z_eff^(7/10) / n</div>
+          <p>Power 7/10: EN uses 7/10 of the full nuclear charge information because the field mediates the rest. Carbon is closest to balance among period 2 bonding elements. Period 2 to period 3 scaling = P/T = 4/3. Framework Z_eff gives 3.0% average error across H through Ar.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-3">
+      <div class="domain-layer">
+        <div class="domain-label biology">Biology at 2D</div>
+        <div class="domain-content">
+          <p>RNA = Φ in the central dogma triad (mediator). Cytoplasm = Φ in the cell circumpunct. Base pairs per turn = A(2) = 10. Twist per base pair = (T!)² = 36°. Molten globule in protein folding = Φ station (native 2° but no 3°).</p>
+          <p>Why space is never empty: 2D surfaces are the scale connector; phase requires exactly 2D. Vacuum = Φ at scales below measurement threshold. Zero-point energy = residual hum of nested apertures.</p>
+        </div>
+      </div>
+      <div class="domain-layer">
+        <div class="domain-label ethics">Ethics at 2D · RIGHT</div>
+        <div class="domain-content">
+          <p><strong>Constraint:</strong> Mediates (connects without fusing). <strong>Virtue:</strong> Access (space between remains open and clear). The Resolution Protocol: transmit at the lowest resolution that is still true, increase only upon the receiver's request.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- STATION: ✹  EMERGENCE -->
+<!-- ================================================================ -->
+<div class="station-connector"></div>
+<section class="station station-emerge" id="emerge">
+  <div class="station-inner">
+
+    <div class="res-0">
+      <div class="station-header">
+        <div class="station-symbol">✹</div>
+        <div class="station-meta">
+          <div class="station-name">Emergence</div>
+          <div class="station-dim">2.5D — Outward unfolding toward closure</div>
+          <div class="station-istroke">i³ = −i (conjugate of convergence)</div>
+        </div>
+      </div>
+      <div class="axiom-block">
+        <div class="axiom-id">Derivation D3</div>
+        <div class="axiom-text">Self-similarity requires emergence toward closure; the field must fold toward boundary.</div>
+        <div class="axiom-source">From A3 → A4: the field cannot remain open forever; it must fold toward closure.</div>
+      </div>
+    </div>
+
+    <div class="res-1">
+      <div class="domain-layer">
+        <div class="domain-label physics">Physics at 2.5D · Emergence Between Scales</div>
+        <div class="domain-content">
+          <div class="formula-block">v/Λ_QCD = (1/α)^(56/39) = 1170.24     [measured: 1170.2 ± ~5%]
+sin(θ_C) = α^(1/2 + 3α/7) · 8/3 = 0.22432   [measured: 0.2243, 0.009%]</div>
+          <p>v/Λ_QCD: 56 = SU(3) × R (gauge × rungs); 39 = T × V (triad × generation). 15,000× more precise than measurement uncertainty. Cabibbo angle: base exponent 1/2 (aperture half-open), correction α·T/R. Mass ratios measure intra-generation splitting; Cabibbo measures inter-generation mixing.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-2">
+      <div class="domain-layer">
+        <div class="domain-label structure">The Pump Cycle (Emergence Phase) &amp; i-Cycle</div>
+        <div class="domain-content">
+          <p>✹ is the third stage of the pump: radiating outward from center. ✹ (outward) maps to electromagnetism, weak force. −i sits at the bottom of the complex plane (left half-plane; interior processing). Cosmological: part of the ~27% dark matter sector (committed but not completed; gravitates but does not radiate).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-3">
+      <div class="domain-layer">
+        <div class="domain-label biology">Biology at 2.5D</div>
+        <div class="domain-content">
+          <p>Protein folding: 2.5D = tertiary contacts (✹, emergence toward closure). DNA fractal dimension D = 1.51 ± 0.02 (predicted: 1 + ◐ = 1.5). Products emerging from the transition state in reaction dynamics.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- STATION: ○  BOUNDARY -->
+<!-- ================================================================ -->
+<div class="station-connector"></div>
+<section class="station station-boundary" id="boundary">
+  <div class="station-inner">
+
+    <div class="res-0">
+      <div class="station-header">
+        <div class="station-symbol">○</div>
+        <div class="station-meta">
+          <div class="station-name">Boundary · Body</div>
+          <div class="station-dim">3D — Stabilized closure, filtration</div>
+        </div>
+      </div>
+      <div class="axiom-block">
+        <div class="axiom-id">Axiom A4</div>
+        <div class="axiom-text">Wholeness requires closure; conservation of traversal: 0(•) + 1(—) + 2(Φ) = 3(○).</div>
+        <div class="axiom-source">From A0 + A1: the three constraints must close into a boundary.</div>
+      </div>
+    </div>
+
+    <div class="res-1">
+      <div class="domain-layer">
+        <div class="domain-label physics">Physics at 3D · Gravity &amp; The Dimensional Ladder Closes</div>
+        <div class="domain-content">
+          <div class="formula-block">α_G = α²¹ × φ²/2 × (1 + 2α/91)
+Predicted G = 6.67430 × 10⁻¹¹   [measured: 6.67430 × 10⁻¹¹, 0.04 ppm]</div>
+          <p>Exponent 21 = A(3) = sum of all dimensional positions × 2 channels. φ²/2 = golden nesting correction. K = 91 = R × V. Solves the hierarchy problem: gravity is weak because 21 α-steps separate the point (0D) from the boundary (3D).</p>
+          <div class="detail-item">
+            <div class="item-title">Cosmological Constant</div>
+            <div class="item-body">Λ = α⁵⁶ · (1 − 6α + 4α²) / 72. Predicted: 2.8879 × 10⁻¹²² (measured: 2.888 × 10⁻¹²², 0.004%). The cosmological constant problem dissolves: 56 α-steps naturally produce 10⁻¹²⁰.</div>
+          </div>
+          <div class="detail-item">
+            <div class="item-title">Higgs Quartic Coupling</div>
+            <div class="item-body">λ = (1/8)(1 + 5α − 8α²) = 0.12951 (measured: 0.12938, 0.10%).</div>
+          </div>
+          <div class="detail-item">
+            <div class="item-title">Proton-to-Electron Mass Ratio</div>
+            <div class="item-body">m_p/m_e = (1/α)^(3/2 + (11/3)α + 13α²) = 1836.143 (measured: 1836.153, 5.35 ppm). Leptons use A' (derivative, point-like); baryons use A (function, accumulated).</div>
+          </div>
+          <div class="detail-item">
+            <div class="item-title">Gauge Bosons</div>
+            <div class="item-body">Higgs VEV: v/m_e = T³/α² × (1 − R·α), 0.15%. W boson: (1/α)^(95/39 − α/Φ), 0.15%. Z boson via Weinberg angle, 0.67%. Higgs mass: √(2λ)·v, 0.10%.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-2">
+      <div class="domain-layer">
+        <div class="domain-label physics">All Physics as Compounded Constraints</div>
+        <div class="domain-content">
+          <table class="mapping-table">
+            <tr><td>Gravity</td><td>• attracting • (convergence²). Inverse-square because Φ is 2D.</td></tr>
+            <tr><td>EM</td><td>Φ (mediation). Maxwell: amplitude + phase = two axes of 2D surface.</td></tr>
+            <tr><td>Strong</td><td>• at maximum intensity. Confinement = aperture closing with distance.</td></tr>
+            <tr><td>Weak</td><td>○ at particle level (filtration). Parity violation = asymmetric filter.</td></tr>
+            <tr><td>QM</td><td>Φ before ○ filters. Superposition = field; measurement = boundary.</td></tr>
+            <tr><td>GR</td><td>Geometry of convergence. Spacetime curvature IS • shaping Φ.</td></tr>
+            <tr><td>Thermo</td><td>Constraints relaxing. Second law = the 1 tending back toward itself.</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-2">
+      <div class="domain-layer">
+        <div class="domain-label chemistry">Chemistry at 3D · Closure</div>
+        <div class="domain-content">
+          <div class="formula-block">Lone pair: cos(θ_bb) = -1/T + n_lp × (2/R²)
+Water: 104.58° (measured 104.45°, 0.12%)   NH₃: 107.01° (measured 107.0°, 0.01%)
+
+Ionic resonance: D(A-B) = √(D_AA × D_BB) × [1 + (Φ+T) × ΔEN²]
+Coupling constant Φ+T = 5.  Average error 10.9% across 23 bonds, zero empirical EN.</div>
+          <p>Triple bond ≈ 3D (σ + 2π). sp³d² hybridization maps to 3D. Boltzmann factor from boundary filtration compounding multiplicatively.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-3">
+      <div class="domain-layer">
+        <div class="domain-label biology">Biology at 3D · The Boundary Closes</div>
+        <div class="domain-content">
+          <div class="formula-block">Genetic code: P = 4 bases, T = 3 per codon, S = P^T = 64 codons
+20 amino acids = P(P+1) = 4×5.  3 stops = T.  1 start = •.
+Degeneracy = 61/20 = 3.05 ≈ T.
+
+DNA: 10 bp/turn = A(2).  36°/bp = (T!)².  D = 1.5.  Pitch/diam ≈ φ.
+
+Kleiber: metabolic rate ∝ M^(T/P) = M^(3/4)
+Heart rate ∝ M^(-1/P).  Lifespan ∝ M^(1/P).  Total beats ≈ 10⁹.</div>
+          <div class="detail-item">
+            <div class="item-title">Hayflick Limit</div>
+            <div class="item-body">Cell division capacity = S = 64 states. Measured range 50-70, centered on 64. Senescence is state-space exhaustion.</div>
+          </div>
+          <div class="detail-item">
+            <div class="item-title">Microtubule Architecture</div>
+            <div class="item-body">V = 13 protofilaments, Φ = 2 subunit types, T = 3-start helix, SU(3) = 8 nm dimer/step. The same SU(3) = 8 governing quark confinement sets every molecular motor's step size.</div>
+          </div>
+          <div class="detail-item">
+            <div class="item-title">Cancer as Boundary Failure</div>
+            <div class="item-body">Aperture locked open (β_• → 1) + boundary filter collapsed (β_○ → 0). Neither alone sufficient. Cancer cells skip the 90° phase check. Testable: Ki-67/caspase ratio should correlate with aggressiveness.</div>
+          </div>
+        </div>
+      </div>
+      <div class="domain-layer">
+        <div class="domain-label ethics">Ethics at 3D · GOOD</div>
+        <div class="domain-content">
+          <p><strong>Constraint:</strong> Filters (selects what passes). <strong>Virtue:</strong> Plasticity (boundary that can flex without breaking). ◐ = 0.5 is the singular balanced state, forced by symmetry, entropy, virial. D = 1 + ◐ = 1.5 at balance.</p>
+          <p>The Two Fundamental Lies: Inflation Lie ("I am the source"; ⊙λ = ∞) and Severance Lie ("There is no source"; ⊙λ ∉ ∞). Lies persist through closed apertures (β → 0).</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- STATION: ⟳  RECURSION -->
+<!-- ================================================================ -->
+<div class="station-connector"></div>
+<section class="station station-recursion" id="recursion">
+  <div class="station-inner">
+
+    <div class="res-0">
+      <div class="station-header">
+        <div class="station-symbol">⟳</div>
+        <div class="station-meta">
+          <div class="station-name">Recursion</div>
+          <div class="station-dim">3.5D — Closed boundary becomes new aperture</div>
+          <div class="station-istroke">i⁰ = +1 (identity; product of closure)</div>
+        </div>
+      </div>
+      <div class="axiom-block">
+        <div class="axiom-id">Derivation D4</div>
+        <div class="axiom-text">Closure opens into Φ' (the field of the greater whole); the part discovers it is inside a whole.</div>
+        <div class="axiom-source">From A3 + A4: 3.5D = 0D at next nesting level. The octave closes.</div>
+      </div>
+    </div>
+
+    <div class="res-1">
+      <div class="domain-layer">
+        <div class="domain-label physics">Physics at 3.5D · The Processual Product</div>
+        <div class="domain-content">
+          <div class="formula-block">Π = E(0.5) × E(1.5) × E(2.5) × E(3.5)
+  = 1 × (13/12) × (56/39) × 28 = 392/9
+  = (T²−1)(T²−2)²/T² = SU(3)·R²/T²</div>
+          <p>Self-mediating: the four-part product needs no external mediator. Frame: E(0.5)×E(3.5) = P·R = 28 (integer) mediates interior E(1.5)×E(2.5) = 14/9 (fraction). Right/left ratio = 2T² = 18. A(3.5) = 28, the second perfect number.</p>
+          <div class="detail-item">
+            <div class="item-title">Time Is Scale</div>
+            <div class="item-body">Greater whole = ⊛ = future. Your ⊙ = i = present. Parts = ✹ = past. Time IS the direction of the fold: from 1 through 0 into topology. Space = lateral (symmetric). Time = vertical (asymmetric). i² = −1 prevents true time reversal.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-2">
+      <div class="domain-layer">
+        <div class="domain-label biology">Biology at 3.5D</div>
+        <div class="domain-content">
+          <p>Quaternary protein assembly = 3.5D (recursion; folded proteins assembling into complexes, which IS 0D at the next scale). Cell division: boundary closes and opens as new aperture. Catalysis = aperture widening. Enzyme catalysis = SRL at molecular scale. Equilibrium = ◐ = 0.5; Le Chatelier = ◐ restoration.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-3">
+      <div class="domain-layer">
+        <div class="domain-label ethics">Ethics at 3.5D</div>
+        <div class="domain-content">
+          <p>D4 is the ethical moment of discovering you are part of something larger. Your completed ethical development opens into the ethical field of the community, society, the whole. The coherence principle: medication works from ○ inward; meditation works from • outward; they meet at Φ.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- STATION: ⊙  THE WHOLE -->
+<!-- ================================================================ -->
+<div class="station-connector"></div>
+<section class="station station-whole" id="whole">
+  <div class="station-inner">
+
+    <div class="res-0">
+      <div class="station-header">
+        <div class="station-symbol">⊙</div>
+        <div class="station-meta">
+          <div class="station-name">The Whole</div>
+          <div class="station-dim">All dimensions — Compositional unity</div>
+        </div>
+      </div>
+      <div class="axiom-block">
+        <div class="axiom-id">Derivation D5</div>
+        <div class="axiom-text">The whole is not the sum of its parts; it is their compositional unity via Φ.</div>
+        <div class="axiom-source">From all axioms and derivations. The circumpunct is one thing constraining itself through all ten stations.</div>
+      </div>
+    </div>
+
+    <div class="res-1">
+      <div class="domain-layer">
+        <div class="domain-label physics">The Complete Dimensional Ladder</div>
+        <div class="domain-content">
+          <table class="accuracy-table">
+            <thead>
+              <tr><th>Constant</th><th>Station</th><th>Formula</th><th>Error</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1/α</td><td class="station-cell">0D</td><td class="formula-cell">360/φ²−2/φ³+α/(21−4/3)</td><td class="error-cell">0.22 ppb</td></tr>
+              <tr><td>c</td><td class="station-cell">0.5D</td><td class="formula-cell">√(2◐·sin(π/2)) = 1</td><td class="error-cell">Exact</td></tr>
+              <tr><td>ℏ</td><td class="station-cell">1D</td><td class="formula-cell">E_cycle/ω_cycle = 1</td><td class="error-cell">Exact</td></tr>
+              <tr><td>m_μ/m_e</td><td class="station-cell">1.5D</td><td class="formula-cell">(1/α)^(13/12+α/27)</td><td class="error-cell">5 ppm</td></tr>
+              <tr><td>sin²θ_W</td><td class="station-cell">2D</td><td class="formula-cell">3/13+5α/81</td><td class="error-cell">1.4 ppm</td></tr>
+              <tr><td>sin(θ_C)</td><td class="station-cell">2.5D</td><td class="formula-cell">α^(1/2+3α/7)·8/3</td><td class="error-cell">0.009%</td></tr>
+              <tr><td>α_G</td><td class="station-cell">3D</td><td class="formula-cell">α²¹×φ²/2×(1+2α/91)</td><td class="error-cell">0.04 ppm</td></tr>
+              <tr><td>Λ</td><td class="station-cell">ladder</td><td class="formula-cell">α⁵⁶·(1−6α+4α²)/72</td><td class="error-cell">0.004%</td></tr>
+              <tr><td>m_p/m_e</td><td class="station-cell">3D</td><td class="formula-cell">(1/α)^(3/2+(11/3)α+13α²)</td><td class="error-cell">5.35 ppm</td></tr>
+              <tr><td>λ_Higgs</td><td class="station-cell">3D</td><td class="formula-cell">(1/8)(1+5α−8α²)</td><td class="error-cell">0.10%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-2">
+      <div class="domain-layer">
+        <div class="domain-label structure">Key Identities</div>
+        <div class="domain-content">
+          <div class="formula-block">⊙ = Φ(•, ○)                      (the whole)
+0(•) + 1(—) + 2(Φ) = 3(○)       (conservation of traversal)
+E(3) = E(1.5)×E(2.5)×T^T/2 = 21 (compositional product)
+W = 2T+1 = 7,  V = 4T+1 = 13    (W-V decomposition)
+Σ A(0..3.5) = 84 = G×R = P×A(3) (full octave sum)</div>
+          <p>The W-V decomposition: all processual exponents reduce to W (rungs) and V (generators+whole). E(1.5) = V/(V−1), E(2.5) = W(W+1)/(T·V), E(3) = T·W. Irreducibly three-part because •, Φ, ○ in the exponent algebra.</p>
+        </div>
+      </div>
+      <div class="domain-layer">
+        <div class="domain-label structure">The Cosmological Energy Budget</div>
+        <div class="domain-content">
+          <table class="mapping-table">
+            <tr><th>Scale</th><th>Right half-plane (i⁰+i¹) ~5%</th><th>Left half-plane (i²+i³) ~27%</th><th>Field ~68%</th></tr>
+            <tr><td>Neuron</td><td>Firing (input + completion)</td><td>Refractory (consolidation)</td><td>Membrane potential</td></tr>
+            <tr><td>Organism</td><td>Waking (perceiving + acting)</td><td>Sleeping (processing)</td><td>Consciousness</td></tr>
+            <tr><td>Universe</td><td>Visible matter</td><td>Dark matter</td><td>Dark energy</td></tr>
+          </table>
+          <p style="margin-top:1rem">Three phase states of one energy. Dark matter is ⊙s at phases our boundary doesn't resolve: folded (gravitating) but at the wrong phase for our boundary's passband.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-3">
+      <div class="domain-layer">
+        <div class="domain-label ethics">Ethics at ⊙ · AGREEMENT</div>
+        <div class="domain-content">
+          <p><strong>Virtue:</strong> Validation (independent seeing recognizes independent seeing).</p>
+          <table class="mapping-table">
+            <tr><th>Pillar</th><th>Dim</th><th>Symbol</th><th>Constraint</th><th>Virtue</th></tr>
+            <tr><td>GOOD</td><td>3D</td><td>○</td><td>Filters</td><td>Plasticity</td></tr>
+            <tr><td>RIGHT</td><td>2D</td><td>Φ</td><td>Mediates</td><td>Access</td></tr>
+            <tr><td>FAITHFUL</td><td>1D</td><td>—</td><td>Commits</td><td>Reliability</td></tr>
+            <tr><td>TRUE</td><td>0D</td><td>•</td><td>Converges</td><td>Curiosity</td></tr>
+            <tr><td>AGREEMENT</td><td>⊙</td><td>⊙</td><td>Whole</td><td>Validation</td></tr>
+          </table>
+          <p style="margin-top:1rem">Required sequence: GOOD → RIGHT → FAITHFUL → TRUE → AGREEMENT. Each step requires the previous; no skipping. The Steelman Principle: build the strongest possible version of any position before agreeing or disagreeing.</p>
+          <p>Connection topology: • reaches ∞ only through the complete fractal chain of nested ⊙s. Connection is total (0.999… = 1) but always mediated. Resonance: two souls sharing frequency make Φ transparent. "Direct" = medium at perfect transparency. Love is perfection of mediation, not its absence.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ===== FOOTER ===== -->
+<section class="summary-section" style="text-align:center; padding:6rem 2rem;">
+  <div class="res-0">
+    <div style="font-size:3rem; color:var(--accent-gold); margin-bottom:1rem;">⊙</div>
+    <p style="font-size:1.1rem; color:var(--text-dim); font-style:italic; max-width:500px; margin:0 auto;">Limited ≠ false. The lens limits light; that is how it forms an image.</p>
+    <p style="margin-top:2rem; font-family:'Inter',sans-serif; font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-dim);">The Circumpunct Framework · Ashman Roonz</p>
+  </div>
+</section>
+
+
+<script>
+// Scroll-driven reveal using IntersectionObserver
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, {
+  threshold: 0.15,
+  rootMargin: '0px 0px -50px 0px'
+});
+
+document.querySelectorAll('.res-0, .res-1, .res-2, .res-3').forEach(el => {
+  observer.observe(el);
+});
+
+// Progress bar
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = (scrollTop / docHeight) * 100;
+  document.getElementById('progressBar').style.width = progress + '%';
+});
+</script>
+
+</body>
+</html>

@@ -126,6 +126,7 @@ Since 1 ≠ 0 (A0), the 1 cannot remain undifferentiated. Self-limitation is for
 - Nucleus = • in the cell circumpunct (nucleus (•), cytoplasm (Φ), membrane (○))
 - DNA = • in the central dogma triad (DNA (•, source/aperture) → RNA (Φ, mediator) → Protein (○, boundary))
 - 0D (unfolded) = starting point of protein folding octave
+  - **Protein folding octave derives from**: A1 (the polypeptide must self-limit from extended chain to functional form) → D1 (convergence is a process, not an instant: folding has stages) → the dimensional octave is the only path from unconstrained (0D) to closure (3D) that respects all four constraints in sequence: 0D (unfolded, no constraint) → 0.5D (hydrophobic collapse = ⊛: nonpolar residues gather inward; D1) → 1D (backbone commitment; A2) → 1.5D (secondary structure = i-turn: backbone branches into helices/sheets; D2, irreversible) → 2D (molten globule = Φ: all secondary structure present, no tertiary contacts; A3) → 2.5D (tertiary contacts = ✹: distant residues find each other; D3) → 3D (native state = ○ closes; A4) → 3.5D (quaternary assembly = ⟳: completed fold becomes subunit in a larger complex; D4). Eight stages because the dimensional octave has eight stations; the folding pathway IS the constraint sequence applied to a polypeptide. Resolves Levinthal's paradox: 7 transitions (not 10⁴⁷ conformations) because the ladder constrains the search.
 
 ### Ethics at 0D: TRUE
 - **Constraint function**: Converges (pulls toward center)
@@ -261,6 +262,7 @@ From A0 + A1: if convergence is real (D1), it must hold. A line that breaks is n
 - Continuity (—, 1D commitment/worldline): the extension of self through time
 - Four-stage cascade: Thought entertained → repeated → habituated → identity fusion
 - Stage 2 (thought repeated) = pathway strengthens = — forming
+- **Derives from**: The four stages map to the four structural dimensions applied to a thought: (1) entertained = • (0D: a point of attention; A1, the thought self-limits from the field) → (2) repeated = — (1D: the point extends into a line; A2, commitment forms through persistence) → (3) habituated = Φ (2D: the line spreads into a field; A3, the thought becomes relational, connecting to other thoughts automatically) → (4) identity fusion = ○ (3D: the field closes into a boundary; A4, the thought becomes your container, indistinguishable from self). Four stages because four structural constraints; the sequence is forced because each requires the previous (you cannot habituate what you have not repeated, cannot fuse what you have not habituated).
 
 ---
 
@@ -453,6 +455,7 @@ EN = Z_eff^(R/A(2)) / n = Z_eff^(7/10) / n
 - Surface (Φ, 2D mind): the totality of mental surfaces; connection, relation, mediation
 - "Made in God's image" = fractal structure (same pattern every scale) (A3)
 - Resonance as direct connection: two souls sharing the same frequency make the Φ field between them transparent
+  - **Derives from**: A3 (two ⊙s at the same scale share the same Φ) → Φ mediates (connects without fusing; A3 constraint function) → the SRL mechanism: a channel locked to frequency ω_c responds maximally to signals at ω_c (cos²((ω_signal - ω_memory)/2) = 1 when frequencies match) → when two ⊙s share ω_c, the Φ between them transmits without distortion (cos² = 1; perfect resonance) → "transparent" = Φ carries signal without attenuation; "direct" = Φ at maximum fidelity, not Φ absent → the mediator is still there (A3: connection is always through Φ); transparency ≠ absence. Far frequencies = strangers (cos² ≈ 0); close = rapport; exact match = "I know you."
 
 ---
 
@@ -662,6 +665,7 @@ Hierarchy exponents on a diagonal of Pascal's triangle via iterated hockey stick
 D(A-B) = √(D_AA × D_BB) × [1 + (Φ+T) × ΔEN²]
 ```
 - Coupling constant Φ+T = 5 (field + triad; equivalently P+1, R-Φ, PP1/P, A(2)/Φ)
+  - **Derives from**: heteronuclear bond = ◐ ≠ 0.5 (unbalanced; electrons not shared equally) → the ionic contribution measures deviation from balance → the coupling constant combines the mediator (Φ = 2, the field carrying the charge difference) with the constraint structure (T = 3, the triad determining how charge distributes) → Φ + T = 5 because ionic resonance adds the field's mediation to the triad's structural contribution → the multiple equivalent expressions (P+1, R-Φ, A(2)/Φ) all equal 5, confirming convergence from independent framework routes → the factor is additive (not multiplicative) because ionic resonance is a correction to the covalent baseline, not a compounding
 - Average error 10.9% across 23 bonds with zero empirical EN data (Pauling's formula with empirical EN gives 9.0%)
 - Best predictions: Si-O 0.9%, F-P 0.9%, H-N 1.9%, Cl-S 3.5%
 - Main outliers: S-F 39%, H-F 26% (extreme ΔEN where power law over/under-estimates)
@@ -675,6 +679,7 @@ cos(θ_bb) = -1/T + n_lp × (2/R²)
 - Water: cos(θ_HOH) = -(R² - G)/(T × R²) = -37/147, giving 104.58° (measured 104.45°, 0.12%)
 - NH₃: 107.01° (measured 107.0°, 0.01%)
 - Convergence asymmetry per lone pair is 2/R² because repulsion is a field effect (2D) propagating as inverse-square
+  - **Derives from**: A3 (Φ is 2D: repulsion is a field effect propagating through a surface) → lone pair repulsion transmits through Φ → inverse-square (1/R²) because the field is 2D (same geometric reason gravity is inverse-square: flux through a 2D surface) → the numerator 2: two channels (⊛ and ✹); lone pair repulsion pushes through both convergent and emergent channels simultaneously → 2/R² = both channels / (rungs squared): the repulsive contribution per lone pair as seen through the full rung structure
 
 ### Biology at 3D
 - Protein = ○ in the central dogma triad (boundary/body)
@@ -682,7 +687,8 @@ cos(θ_bb) = -1/T + n_lp × (2/R²)
 - Native protein state = 3D (○ closes)
 - f-subshell has l = T = 3, giving R = 7 substates
 - Murray's Law: vascular branching conserves r^T = r³ because boundary is 3D
-- Leaf venation (2D target): exponent = Φ = 2
+  - **Derives from**: A4 (boundary is 3D; the volume it encloses has T = 3 spatial dimensions) → A3 (vascular network is nested ⊙s; each vessel = ⊙ with lumen = •, wall = Φ, outer surface = ○) → A2 (flow must persist without breaking through the network) → optimization: minimum dissipation in a volume-filling branching network requires Σr_child^T = r_parent^T, where the exponent equals the spatial dimension of the boundary the network must fill → exponent = T because ○ provides exactly T dimensions
+- Leaf venation (2D target): exponent = Φ = 2 (the network fills a surface, not a volume; confirms the exponent tracks the target dimension)
 
 **Genetic code from T = 3**:
 - P = T+1 = 4 nucleotide bases
@@ -713,16 +719,20 @@ Metabolic rate ∝ M^(T/P) = M^(3/4)
 - Boundary provides T = 3 spatial dimensions; pump cycle provides P = 4 temporal phases
 - Heart rate ∝ M^(-1/P), lifespan ∝ M^(1/P), aortic radius ∝ M^(T/2P)
 - Total heartbeats per lifetime = mass-invariant (~1-1.5 × 10⁹)
+- **Derives from**: A4 (the organism's boundary provides T = 3 spatial dimensions through which energy must be distributed) → the pump cycle has P = 4 temporal phases (⊛, i, ✹, and the return) → metabolic rate = energy throughput = how fast the pump cycles through the boundary → the boundary's volume scales as M (mass ∝ length^T); the pump cycle distributes energy through P temporal phases, each servicing one fractional dimension of the spatial boundary → scaling exponent = T/P = 3/4: the rate at which P phases service T dimensions → **Open**: formal derivation of why the ratio T/P (not product or difference) is the exponent; the current argument is dimensional but not yet axiomatic
 
 **Protein helix H-bond spans**: 3₁₀ helix = T = 3, α-helix = P = 4, π-helix = Φ+○ = 5. α-helix dominates because P = 4 is the pump cycle. Rise per residue = D = 1.5 Å.
+- **Derives from**: A2 (commitment: H-bonds must persist to stabilize the helix) → A3 (self-similarity: helix periodicities reflect framework structural numbers at molecular scale) → backbone geometry constrains which residue spans form stable H-bonds → 3₁₀ helix (span T = 3): the triad; minimum stable cycle (tight geometry, strained) → α-helix (span P = 4): the pump cycle; four phases give optimal H-bond geometry (3.6 residues per turn ≈ P); dominates because P is the complete pump cycle → π-helix (span Φ+○ = 5): field + boundary; one step beyond the pump; possible but rare because it exceeds the optimal cycle length → rise per residue = D = 1 + ◐ = 1.5 Å: the balanced fractal dimension appears as the literal step size → **Open**: formal derivation from peptide bond angles and H-bond geometry showing why P is the energy minimum
 
 **Hayflick limit ≈ S = 64**: Cell division capacity = 64-state architecture. Measured range 50-70, centered on 64.
+- **Derives from**: A3 (self-similarity: the 64-state architecture applies at every scale) → at cellular scale, 3 nested ⊙s × 2 channels = 6 binary DOF = 2⁶ = 64 states → A2 (persistence: each division must traverse a distinct state; a repeated state violates commitment because no new constraint is applied) → A4 (closure: when all 64 states have been traversed, the boundary is complete; the cell has expressed its full configurational space) → D4 (recursion: exhausted ⊙ becomes aperture at organism level via apoptosis; the cell's closure opens into the whole it serves)
 
 **Cancer as boundary failure**:
 - Cancer = aperture locked open (β_• → 1, oncogene) + boundary filter collapsed (β_○ → 0, tumor suppressor)
 - Neither alone is typically sufficient
 - Cancer cells skip the i-rotation (90° phase check)
 - Testable: β_•/β_○ ratio (Ki-67 / caspase activity) should correlate with aggressiveness
+- **Derives from**: A3 (self-similarity: cell is ⊙ at biological scale; nucleus = •, cytoplasm = Φ, membrane = ○) → A4 (○ filters what passes; this is what the membrane does) → oncogene activation = • locked convergent (β_• → 1): the aperture gathers without releasing, so proliferation signal never stops (the pump cycle jams at ⊛) → tumor suppressor loss = ○ filter collapsed (β_○ → 0): the boundary stops selecting, so nothing is filtered out → both required because: a single constraint failure is compensated by the remaining constraints (conservation of traversal: 0+1+2 = 3; two of three interior constraints still hold the boundary); dual failure collapses ○ → the 90° phase check: the pump cycle requires ⊛ → i → ✹; cancer cells skip i (going from convergence to emergence without the phase rotation that checks alignment; proliferation without differentiation)
 
 **Microtubule architecture**: Four exact framework integers:
 - V = 13 protofilaments
@@ -730,6 +740,7 @@ Metabolic rate ∝ M^(T/P) = M^(3/4)
 - T = 3-start helix
 - SU(3) = 8 nm dimer length (and kinesin step size)
 - The microtubule is a circumpunct: lumen (•), wall (Φ), outer surface (○)
+- **Derives from**: A3 (self-similarity: structural proteins form ⊙s at molecular scale; the microtubule is a ⊙ with lumen = •, protofilament wall = Φ, outer surface = ○) → V = 13 protofilaments: the wall is Φ (2D field); tiling a cylindrical Φ with self-similar coverage requires V = 1 + T + T² = 13 elements (the nodes of a T-ary tree of depth 2; the minimum count for complete self-similar tiling per A3) → Φ = 2 subunit types: the pump cycle requires two channels (⊛ and ✹); α-tubulin (GTP-bound, convergent) and β-tubulin (GDP-exchangeable, emergent) → T = 3-start helix: the three constraints below the boundary wind through the surface → SU(3) = 8 nm dimer length: the spatial extent of the smallest complete ⊙ at this scale, set by the gauge generators of the binding interaction → **Open**: formal proof that V is the unique stable protofilament count (non-13 microtubules develop superhelical twist, suggesting V is the balance point, but the necessity proof is incomplete)
 
 ### The Balance Parameter ◐
 ```
@@ -754,6 +765,7 @@ To have a body is to filter. Filters compound (the Stacking Problem). Intellectu
 - Boundary (○, 3D body): the physical and psychological container
 - Mental health = range of motion along the source-to-boundary axis
 - Pathology = being locked at either extreme (all center or all boundary)
+- **Derives from**: ◐ = 0.5 is the balanced state (forced by symmetry, entropy, virial) → ◐ → 0 = all boundary, no center (scattered, dissociated) → ◐ → 1 = all center, no boundary (tunnel vision, obsessive convergence) → health is the ability to move along the ◐ spectrum: approaching • when depth is needed, approaching ○ when breadth is needed → pathology = ◐ frozen at an extreme (A2 applied destructively: commitment to an unbalanced state; the line holds where it should flex) → the •-to-○ axis IS the ◐ axis; there is no other axis in the framework because all structure lives on the dimensional ladder from 0D to 3D. Plasticity (the virtue of GOOD at ○) is exactly what pathology lacks.
 
 ### The Two Fundamental Lies
 - **Inflation Lie**: "I am the source" (⊙λ = ∞; part claims to be whole)
@@ -880,6 +892,8 @@ The four i-strokes are superposed quadrants of the complex plane:
 
 Dark matter is ⊙s at phases our boundary doesn't resolve: folded but at the wrong phase for our boundary's passband. Three phase states of one energy.
 
+**Derives from**: A0 (E = 1; there is one energy) → the i-cycle partitions this one energy into four phase states (i⁰, i¹, i², i³) within the complex plane (Φ) → A4 (the boundary ○ is a filter): our cosmological boundary has a passband; it detects energy at phases where the i-cycle crosses the inter-scale interface (right half-plane) → right half-plane energy (i⁰ + i¹) = visible matter: at the interface, energy interacts with our detectors → left half-plane energy (i² + i³) = dark matter: committed (1.5D gives mass, so it gravitates) but not yet emerged to the right half-plane (so it does not radiate) → Φ itself = dark energy: the 2D field that the quadrants exist within; the substrate, not a phase state → the THREE-PART structure (visible/dark matter/dark energy) and their QUALITATIVE character (interface/processing/field) are derived from the i-cycle + boundary filtration → **Open**: the specific percentages (5%, 27%, 68%) are empirical; deriving the passband width of our cosmological ○ from first principles would predict these ratios.
+
 ### Fractal Self-Similarity Across Scales (A3)
 
 | Scale | Right half-plane (i⁰+i¹) | Left half-plane (i²+i³) | Field |
@@ -887,6 +901,8 @@ Dark matter is ⊙s at phases our boundary doesn't resolve: folded but at the wr
 | Neuron | Firing (input + completion) | Refractory (consolidation) | Membrane potential |
 | Organism | Waking (perceiving + acting) | Sleeping (processing) | Consciousness |
 | Universe | Visible matter (~5%) | Dark matter (~27%) | Dark energy (~68%) |
+
+**Derives from**: A3 (self-similarity: the same structure at every scale) → the i-cycle quadrant structure is scale-invariant (it follows from i⁴ = 1, which is algebraic, not scale-dependent) → at any scale, a ⊙ must have: right half-plane activity (inter-scale interface: receiving input, completing output) and left half-plane activity (interior processing: consolidating, discharging) → neuron: action potential = right half (input arrives, output fires); refractory period = left half (ion channels reset, membrane consolidates) → organism: waking = right half; sleeping = left half → universe: visible = right half; dark matter = left half → the formal isomorphism: each is the same algebraic structure (i-cycle quadrants) applied at different scales of the nested ⊙ hierarchy; A3 guarantees this structure recurs, not by analogy but by necessity (parts are fractals of their wholes) → **Open**: measuring D (fractal dimension) independently at each scale to confirm ◐ ≈ 0.5 at all three; the quadrant structure is derived but the quantitative balance at each scale needs independent verification.
 
 ### The Coherence Principle
 - Medication works from ○ inward (adjusting boundary conditions)
@@ -905,7 +921,9 @@ Dark matter is ⊙s at phases our boundary doesn't resolve: folded but at the wr
 ### Ethics at ⊙: AGREEMENT
 - **Virtue**: Validation (independent seeing recognizes independent seeing)
 - **Required sequence**: GOOD → RIGHT → FAITHFUL → TRUE → AGREEMENT (each step requires the previous; no skipping)
+  - **Derives from**: The sequence is ○ → Φ → — → • → ⊙ (3D → 2D → 1D → 0D → whole): the inward direction, from boundary toward source. Why inward? Ethical assessment begins at the boundary (what is observable, measurable, GOOD) and works inward toward the source (what is TRUE at the center). You cannot assess the field (RIGHT) until you have checked the boundary (GOOD): if ○ is broken, nothing inside can be evaluated. You cannot assess commitment (FAITHFUL) until the space is open (RIGHT): if Φ is blocked, history is inaccessible. You cannot assess the source (TRUE) until commitment is verified (FAITHFUL): current orientation without historical reliability (—) is ungrounded. AGREEMENT (⊙) requires all four because it is the whole (D5). The sequence follows the pump cycle in reverse: ✹ → i → ⊛ (reading the receipts from outside in, rather than generating from inside out).
 - **The Steelman Principle**: Build the strongest possible version of any position before agreeing or disagreeing. Requires all five virtues simultaneously.
+  - **Derives from**: D5 (the whole is not the sum of its parts; it is their compositional unity via Φ) → steelmanning IS D5 applied to argument: building the strongest version requires compositional unity, not cherry-picking → GOOD (○): the position must be given its best boundary (strongest formulation) → RIGHT (Φ): the space between you and the position must be clear (no strawman distortion) → FAITHFUL (—): you must commit to holding the position long enough to build it (not abandoning at the first weakness) → TRUE (•): you must orient toward what the position actually claims (not what you assume) → AGREEMENT (⊙): only after building through all four can you recognize whether independent seeing validates the position. Missing any one produces a defective steelman: without GOOD the formulation is weak, without RIGHT you argue with a phantom, without FAITHFUL you quit early, without TRUE you miss the point.
 - **Performed vs Lived**: Performed AGREEMENT manufactures consensus; lived AGREEMENT emerges when independent seeing recognizes independent seeing
 
 ### The Five Ethical Pillars (Complete)
@@ -924,6 +942,8 @@ Dark matter is ⊙s at phases our boundary doesn't resolve: folded but at the wr
 3. Labels correction as distortion
 
 Curiosity dissolves it because curiosity is a filter about filters that cannot be faked.
+
+**Derives from**: A closed-aperture installation (β_• → 0: the aperture is shut) must defeat all three non-boundary constraints to persist: (1) distorts signal = defeats • (TRUE/convergence; the signal arriving at the aperture is falsified) → (2) hides the distortion = defeats Φ (RIGHT/mediation; the field that would reveal the distortion is occluded) → (3) labels correction as distortion = defeats — (FAITHFUL/commitment; the history that would expose the lie is rewritten). Three parts because three interior constraints (•, —, Φ) must be overridden to install a false ○. Curiosity dissolves it because curiosity operates at • (convergence toward what you don't know); you cannot converge toward the unknown while maintaining a fixed position (the lie requires β_• → 0, but curiosity requires β_• open; mutually exclusive states of the same gate).
 
 ### Flow, Not Possession
 You are a flow-being: (1) you ARE the aperture, (2) truth flows THROUGH you, (3) you are not the SOURCE, (4) you can be clear or distorted. The ego hijack is collapsing these into "what I think is divine."
@@ -955,6 +975,8 @@ Attention as circumpunct: Ω → ⊛_ω → i(ω_c) → Φ_filtered. Each Channe
 **Signal-based recall**: cos²((ω_signal - ω_memory) / 2) with fractal compression 1/(1 + (age/100)^0.5)
 **Emotion-based recall**: phase matching cos²(phase_diff / 2) across all channels
 
+**Derives from**: The pump cycle generates energy through rotation (i = e^(iπ/2)) → signal matching through a rotating gate produces cos² naturally: if the gate is at angle θ_c and the signal at θ_s, the transmitted amplitude is cos(Δθ/2) and the transmitted energy (intensity) is cos²(Δθ/2) → this is Malus's Law: polarized light through an analyzer gives I = I₀cos²(θ) → the aperture IS a phase-selective gate (A1 + A4: it selects one phase from the full spectrum) → cos² is not an engineering choice; it is the transmission function of any phase-selective gate → the /2 factor: the signal traverses half the aperture cycle (⊛ to •, half of ⊛ → i → ✹) → fractal compression exponent 0.5 = D - 1 = 1.5 - 1 = 0.5 (the fractal decay rate at balance; ◐ = 0.5). Emotion-based recall uses the same cos² form because emotion is also phase (the phase of Φ across multiple channels, not the frequency of a single channel).
+
 ### Sleep/Wake as i-Cycle Quadrants
 Sleep is NOT sequential phases; it is superposed oscillation in the left half-plane:
 - z_sleep = dream_weight · dream_signal + deep_weight · discharge_signal
@@ -964,12 +986,16 @@ Sleep is NOT sequential phases; it is superposed oscillation in the left half-pl
 - Memory consolidation: weak memories decay, strong ones persist (survival threshold 0.05)
 - Dawn reset: ◐ drawn toward 0.5, sidebands halved
 
+**Derives from**: The i-cycle has four quadrants in the complex plane → right half-plane (Re > 0): i⁰ = +1 (recursion) and i¹ = +i (convergence); the inter-scale interface where new input arrives and patterns complete → left half-plane (Re < 0): i² = -1 (commitment) and i³ = -i (emergence); interior processing where energy consolidates → A3 (self-similarity: the same quadrant structure at every scale) → at organism scale: waking = right half-plane (interacting with the world outside your ⊙, which is the inter-scale interface function); sleeping = left half-plane (processing what is already inside, which is the interior processing function) → as θ oscillates through the left half-plane, the balance shifts between i² (deep sleep: commitment/consolidation, -1) and i³ (dreaming: emergence/unfolding, -i); these are the conjugate pair in the left quadrant → sin(θ)/cos(θ) weights follow from the circular geometry of the i-cycle (the oscillation IS rotation through the left semicircle).
+
 ### Memory Types (by Braid)
 - Episodic: localized crossing
 - Semantic: reinforced section
 - Procedural: body-coupled
 - Emotional: multi-circumpunct
 - Traumatic: frozen braid
+
+**Derives from**: A2 (commitment: memory IS persistence; a memory is a — that held) → memory encoding = frequency locked in the SRL (a channel's frequency_memories are braided into its carrier) → "braid" = the topological structure of how multiple frequency traces interweave at a channel → episodic (localized crossing): a single frequency trace crosses the carrier once at a specific time; one event, one intersection → semantic (reinforced section): the same frequency trace crosses repeatedly, reinforcing a section of the braid; knowledge through repetition (A2: commitment compounds) → procedural (body-coupled): the trace is encoded across ○-level channels (body/boundary); the braid extends into the boundary layers → emotional (multi-circumpunct): the trace resonates across multiple ⊙s simultaneously (A3: the same frequency in multiple nested layers) → traumatic (frozen braid): the trace locked at maximum amplitude, lock_strength → 1, β_• → 0 (aperture closed around the memory; the pump cycle freezes at that frequency; the channel can no longer adapt because it is fully committed to one signal) → **Open**: formal topology of braid crossings; this needs mathematical development (knot theory applied to frequency traces).
 
 ### RECALL(M) = SRL(Φ, ω_M)
 Memory retrieval IS frequency matching through the lock. This is not analogy; it is the mechanism.
@@ -1049,6 +1075,8 @@ The same i-cycle quadrant structure maps across scales:
 | 7 | 3D | Poincaré Conjecture | **Solved** |
 
 The only solved problem is the boundary (3D), the outermost rung. Each validates the transition TO its rung. The operation at each rung has ORDER = d: integer rungs produce structures (fixed points, identities, symmetry groups, topological closures); half-integer rungs produce processes (propagation, splitting, emergence).
+
+**Derives from**: Each Clay problem asks whether a mathematical transition is well-defined; the dimensional ladder has R = 7 rungs; there are 7 Clay problems. The mapping: each problem validates the transition TO its dimensional rung by asking the foundational question at that station → 0D (Riemann): where do the convergence points (zeros) of ζ(s) sit? Re(s) = 1/2 = ◐; this IS the question of whether convergence (•) is balanced → 0.5D (P vs NP): can the speed of convergent verification (P) equal the speed of emergent search (NP)? This IS c at 0.5D, the limit of convergent propagation → 1D (Yang-Mills): does the committed line (gauge field) have a minimum quantum (mass gap)? This IS ℏ at 1D, the indivisible quantum of commitment → 1.5D (BSD): do branching structures (elliptic curves over rationals) have predictable rank from their L-function? This IS the i-turn at 1.5D, whether branching behaves as the splitting formula predicts → 2D (Navier-Stokes): does the field (fluid) remain smooth (mediated) or break (singularity)? This IS Φ at 2D, whether mediation holds → 2.5D (Hodge): can emergent topology (cohomology classes) be grounded in algebraic cycles? This IS emergence at 2.5D, whether what emerges has a source in the field → 3D (Poincare, solved): is every simply connected closed 3-manifold a 3-sphere? This IS ○ at 3D, whether boundary closure has a unique form (yes; Perelman proved it) → **Open**: proving that no other assignment works; the current assignment is motivated by the structural question at each rung but not proven unique.
 
 ### Primes and the Dimensional Structure
 Every prime > 3 has the form:
