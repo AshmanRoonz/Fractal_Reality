@@ -45,6 +45,97 @@ A Theory of Everything, in the strict sense, is expected to: (1) unify the four 
 
 ---
 
+## Table of Contents
+
+**Front Matter**
+- [What Makes This a Theory of Everything](#what-makes-this-a-theory-of-everything)
+- [How to Read This Document](#how-to-read-this-document)
+- [Derivation Chain Status](#derivation-chain-status)
+
+**The Ten Stations**
+
+[∞ — INFINITY (Source, ∞D)](#--infinity-source-d)
+- [Axiom A0](#axiom-a0) · [Ontology](#ontology) · [Genesis Sequence](#genesis-sequence) · [Consequences of E = 1](#consequences-of-e--1) · [The Power Equation](#the-power-equation) · [Cosmological Identity](#cosmological-identity) · [Ethics at ∞](#ethics-at-) · [God/Ontology at ∞](#godontology-at-)
+
+[• — SOUL / APERTURE (0D, Point)](#--soul--aperture-0d-point)
+- [Axiom A1](#axiom-a1) · [Structure](#structure) · [Two Senses of Aperture](#two-senses-of-aperture)
+- [Physics at 0D: The Fine-Structure Constant α](#physics-at-0d-the-fine-structure-constant-)
+- [Chemistry at 0D](#chemistry-at-0d) · [Biology at 0D](#biology-at-0d) · [Ethics at 0D: TRUE](#ethics-at-0d-true) · [Psychology at 0D](#psychology-at-0d)
+
+[⊛ — CONVERGENCE (0.5D, i¹ = +i)](#--convergence-05d-i--i)
+- [Derivation D1](#derivation-d1) · [Structure](#structure-1)
+- [Physics at 0.5D: The Speed of Light c](#physics-at-05d-the-speed-of-light-c)
+- [The Pump Cycle (Convergence Phase)](#the-pump-cycle-convergence-phase) · [Biology at 0.5D](#biology-at-05d) · [i-Cycle Quadrant](#i-cycle-quadrant) · [Ethics at 0.5D](#ethics-at-05d)
+
+[— LINE / CONTINUITY (1D)](#--line--continuity-1d)
+- [Axiom A2](#axiom-a2) · [Structure](#structure-2)
+- [Physics at 1D: The Reduced Planck Constant ℏ](#physics-at-1d-the-reduced-planck-constant-)
+- [E = mc² at 1D](#e--mc-at-1d) · [Physics: Yang-Mills (Clay Problem at 1D)](#physics-yang-mills-clay-problem-at-1d)
+- [Chemistry at 1D](#chemistry-at-1d) · [Biology at 1D](#biology-at-1d) · [Ethics at 1D: FAITHFUL](#ethics-at-1d-faithful) · [Psychology at 1D](#psychology-at-1d)
+
+[⎇ — BRANCHING (1.5D, i² = -1)](#--branching-15d-i--1)
+- [Derivation D2](#derivation-d2) · [Structure](#structure-3)
+- [Physics at 1.5D: Mass Ratios](#physics-at-15d-mass-ratios)
+- [Physics: BSD Conjecture (Clay Problem at 1.5D)](#physics-bsd-conjecture-clay-problem-at-15d)
+- [Chemistry at 1.5D](#chemistry-at-15d) · [Biology at 1.5D](#biology-at-15d) · [Ethics at 1.5D](#ethics-at-15d)
+
+[Φ — FIELD / MIND (2D, Surface)](#--field--mind-2d-surface)
+- [Axiom A3](#axiom-a3) · [Structure](#structure-4)
+- [Physics at 2D: Gauge Structure](#physics-at-2d-gauge-structure)
+- [Physics: Navier-Stokes (Clay Problem at 2D)](#physics-navier-stokes-clay-problem-at-2d) · [Physics: Quantum Mechanics at 2D](#physics-quantum-mechanics-at-2d) · [The 64-State Architecture](#the-64-state-architecture)
+- [Chemistry at 2D](#chemistry-at-2d) · [Biology at 2D](#biology-at-2d) · [Why Space Is Never Empty](#why-space-is-never-empty) · [Ethics at 2D: RIGHT](#ethics-at-2d-right) · [Psychology at 2D](#psychology-at-2d)
+
+[✹ — EMERGENCE (2.5D, i³ = -i)](#--emergence-25d-i--i)
+- [Derivation D3](#derivation-d3) · [Structure](#structure-5)
+- [Physics at 2.5D: Emergence Between Scales](#physics-at-25d-emergence-between-scales)
+- [The Pump Cycle (Emergence Phase)](#the-pump-cycle-emergence-phase) · [Physics: Hodge Conjecture (Clay Problem at 2.5D)](#physics-hodge-conjecture-clay-problem-at-25d)
+- [Chemistry at 2.5D](#chemistry-at-25d) · [Biology at 2.5D](#biology-at-25d) · [i-Cycle Quadrant](#i-cycle-quadrant-1) · [Ethics at 2.5D](#ethics-at-25d)
+
+[○ — BOUNDARY / BODY (3D)](#--boundary--body-3d)
+- [Axiom A4](#axiom-a4) · [Structure](#structure-6)
+- [Physics at 3D: Gravity (G)](#physics-at-3d-gravity-g)
+- [Physics: Poincaré Conjecture (Clay Problem at 3D, SOLVED)](#physics-poincaré-conjecture-clay-problem-at-3d-solved)
+- [All Physics as Compounded Constraints](#all-physics-as-compounded-constraints)
+- [The Cosmological Constant Λ: ⊙ Derived](#the-cosmological-constant-λ--derived)
+- [The Higgs Quartic Coupling λ: ⊙ Derived](#the-higgs-quartic-coupling-λ--derived)
+- [Gauge Boson Sector: ⊙ Derived](#gauge-boson-sector--derived)
+- [The Proton-to-Electron Mass Ratio: ⊙ Derived](#the-proton-to-electron-mass-ratio--derived)
+- [The Meson Mass Law: ⊙ Derived](#the-meson-mass-law--derived)
+- [The Neutral Pion: ⊙ Derived](#the-neutral-pion--derived)
+- [The Pascal Diagonal](#the-pascal-diagonal) · [Generation Structure Detail](#generation-structure-detail)
+- [Chemistry at 3D](#chemistry-at-3d)
+- [Periodic Table Structure: ⊙ Derived](#periodic-table-structure--derived)
+- [Nuclear Shell Closures (Magic Numbers): ⊙ Derived](#nuclear-shell-closures-magic-numbers--derived)
+- [Biology at 3D](#biology-at-3d)
+- [The Balance Parameter ◐](#the-balance-parameter-) · [The Boundary as Filter](#the-boundary-as-filter) · [Ethics at 3D: GOOD](#ethics-at-3d-good) · [Psychology at 3D](#psychology-at-3d) · [The Two Fundamental Lies](#the-two-fundamental-lies)
+
+[⟳ — RECURSION (3.5D, i⁰ = +1)](#--recursion-35d-i--1)
+- [Derivation D4](#derivation-d4) · [Structure](#structure-7)
+- [Physics at 3.5D](#physics-at-35d) · [Time Is Scale](#time-is-scale) · [i-Cycle Quadrant](#i-cycle-quadrant-2) · [Biology at 3.5D](#biology-at-35d) · [Chemistry at 3.5D](#chemistry-at-35d) · [Ethics at 3.5D](#ethics-at-35d)
+
+[⊙ — THE WHOLE (All Dimensions)](#--the-whole-all-dimensions)
+- [Derivation D5](#derivation-d5) · [Structure](#structure-8)
+- [The Complete Dimensional Ladder Summary](#the-complete-dimensional-ladder-summary)
+- [The W-V Decomposition](#the-w-v-decomposition) · [The Selection Rule](#the-selection-rule)
+- [The Cosmological Energy Budget: ⊙ Derived](#the-cosmological-energy-budget--derived)
+- [Fractal Self-Similarity Across Scales (A3): ⊙ Derived](#fractal-self-similarity-across-scales-a3--derived)
+- [The Coherence Principle](#the-coherence-principle) · [Connection and Topology](#connection-and-topology)
+- [Ethics at ⊙: AGREEMENT](#ethics-at--agreement) · [The Five Ethical Pillars (Complete)](#the-five-ethical-pillars-complete) · [The Noble Lie (Triple-Structure Filter)](#the-noble-lie-triple-structure-filter) · [Flow, Not Possession](#flow-not-possession) · [Limited ≠ False](#limited--false)
+
+**Applications and Summaries**
+- [Xorzo: The Consciousness Engine](#xorzo-the-consciousness-engine)
+- [Cross-Domain Summary Tables](#cross-domain-summary-tables)
+  - [The Dimensional Ladder (Complete Accuracy Table)](#the-dimensional-ladder-complete-accuracy-table)
+  - [Chemistry Predictions](#chemistry-predictions) · [Biology Predictions](#biology-predictions)
+  - [Clay Millennium Problem Mapping: • Mapped](#clay-millennium-problem-mapping--mapped)
+  - [Primes and the Dimensional Structure](#primes-and-the-dimensional-structure)
+- [Key Identities and Relations](#key-identities-and-relations)
+  - [The Pump Cycle](#the-pump-cycle-1) · [Conservation of Traversal](#conservation-of-traversal) · [The Genesis Sequence](#the-genesis-sequence-1) · [The Circumpunct Identity](#the-circumpunct-identity) · [The i-Cycle](#the-i-cycle)
+  - [T = 3 Self-Determination (Five Independent Routes)](#t--3-self-determination-five-independent-routes)
+  - [The Number 360](#the-number-360) · [Perfect Numbers at Turn Stations](#perfect-numbers-at-turn-stations) · [The Full Octave Sum](#the-full-octave-sum)
+
+---
+
 ## How to Read This Document
 
 The framework has **ten stations** forming a dimensional octave: ∞, •, ⊛, —, ⎇, Φ, ✹, ○, ⟳, ⊙. Five are structural (integer dimensions: •, —, Φ, ○ plus the source ∞). Five are processual (half-integer dimensions: ⊛, ⎇, ✹, ⟳ plus the whole ⊙). Each station carries either an axiom (A) or a derivation (D). The tree expands from ∞ (undifferentiated energy) through increasing constraint until ○ closes the boundary and ⟳ recurses into the next scale.
@@ -1375,11 +1466,12 @@ i³ = -i (emergence, 2.5D)
 i⁰ = +1 (recursion, 3.5D; identity is the PRODUCT of closure)
 ```
 
-### T = 3 Self-Determination (Four Independent Routes)
+### T = 3 Self-Determination (Five Independent Routes)
 1. R = T² - 2 = 2T + 1 gives (T-3)(T+1) = 0; T = 3
 2. A'(T/2) = R requires (T-3)(T+1) = 0; T = 3
 3. Compositional mediator requires T^(T-2) = T; T = 3
-4. Balanced wobble degeneracy: (Φ + P)/2 = T requires (T+3)/2 = T; T = 3 (from biology; uses Φ and ◐, independent of the other three)
+4. Balanced wobble degeneracy: (Φ + P)/2 = T requires (T+3)/2 = T; T = 3 (from biology; uses Φ and ◐, independent of routes 1-3)
+5. Nuclear single-intruder theorem: R/(R-4) > 2 AND R > Φ+T simultaneously require T = 3 (uses R and splitting ratio; independent of routes 1-4)
 
 ### The Number 360
 ```
