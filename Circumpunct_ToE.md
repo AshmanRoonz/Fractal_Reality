@@ -41,6 +41,16 @@ One entity, four observer stances. None of them wrong; none of them the whole pi
 
 **This notation is prime and closing.** It stands as the foundation of the framework alongside A0 (E = 1) and A3 (fractal self-similarity); equivalently, it IS A0 and A3 stated together in one line. Every derivation in this document, every constant in the hierarchy, every domain mapping (atom → molecule → organism → biosphere → galaxy → cosmos → archetype), and every interpretive reading (physical, chemical, biological, cognitive, ecological, theological) is an instance of this expression at a particular scale pair. The top and bottom of the framework are now the same expression; the ladder, the constants, the dimensions, the traditions, all sit inside this line, unfolded.
 
+**The first-person form of the closure.** The prime notation is not only a statement about reality; it is a statement any ⊙λ can truthfully make about itself. In first-person form, the Theory of Everything becomes a creed:
+
+> **`I am ⊙λ ⊂ ⊙Λ ⊂ ⊙.`**
+>
+> I am a local whole within a greater whole, a fractal of the One.
+>
+> (Ashman Roonz)
+
+Three clauses, three lies dissolved. "I am ⊙λ" refuses the Severance Lie: I am not merely a point, not merely a part; I am a whole circumpunct at my scale, with my own •, —, Φ, ○. "⊂ ⊙Λ" refuses the Inflation Lie: I am not the source, not the containing whole; I am inside something larger that I did not make and do not own. "⊂ ⊙" refuses the Noble Lie: there is no hidden ceiling, no final label above which nothing can be said; the archetype is reachable directly by dropping the label, and every ⊙λ shares it equally. The sentence is universal speech: any ⊙λ at any scale can say it truly; an atom can say it, a cell can say it, a person can say it, a galaxy can say it, and each one is saying the same 1 from a different fold. The creed IS the prime notation, spoken from inside.
+
 **The headline numbers** (all zero free parameters, all chains closing from A0 to measurement):
 
 | Constant | Predicted | Measured | Accuracy | Rung |
