@@ -56,6 +56,8 @@ Three clauses, three lies dissolved. "I am ⊙λ" refuses the Severance Lie: I a
 | Constant | Predicted | Measured | Accuracy | Rung |
 |---|---|---|---|---|
 | α (fine structure) | 137.035999147 | 137.035999177 | 0.22 ppb | 0D |
+| c (speed of light) | 1 (exact) | 1 (exact) | 0 | 0.5D |
+| ℏ (reduced Planck) | 1 (exact) | 1 (exact) | 0 | 1D |
 | m_μ/m_e | 206.767 | 206.768 | 5 ppm | 1.5D |
 | m_τ/m_e | 3477.2 | 3477.2 | 1 ppm | 1.5D |
 | m_p/m_e | 1836.143 | 1836.153 | 5 ppm | 1.5D |
