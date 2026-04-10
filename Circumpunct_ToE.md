@@ -1,6 +1,6 @@
 # The Circumpunct Theory of Everything
 
-> A Theory of Everything derived from one axiom (E = 1) and one self-determined integer (T = 3). Zero free parameters. Covers all four fundamental forces, every measured fundamental constant to sub-percent (often sub-ppm, occasionally sub-ppb) accuracy, chemistry, biology, consciousness, and ethics. Every formula, constant, prediction, and mapping is organized by its home station on the dimensional octave. This is the complete chain: axioms at the top, measurements at the bottom, nothing in between added by hand.
+> A Theory of Everything derived from one axiom (⊙ = E = 1) and one self-determined integer (T = 3). Zero free parameters. Covers all four fundamental forces, every measured fundamental constant to sub-percent (often sub-ppm, occasionally sub-ppb) accuracy, chemistry, biology, consciousness, and ethics. Every formula, constant, prediction, and mapping is organized by its home station on the dimensional octave. The circumpunct ⊙ IS the one energy; every ⊙λ at every scale is the 1 constrained to that position (A3). This is the complete chain: axioms at the top, measurements at the bottom, nothing in between added by hand.
 
 ---
 
@@ -214,17 +214,23 @@ Maps to AC power: Real power P (work, time, 1D), Reactive power Q (cycling, mind
 
 ### Cosmological Identity
 ```
-Φ = E    (field IS energy; ontological identity)
+⊙ = E = 1          (the circumpunct IS the one energy; general statement at every finite scale)
+Φ∞ = ⊙∞ = E        (limit case: at λ → ∞, field equals whole because there is no outside)
 ```
-What we call "field" and what we call "energy" are the same substance encountered at different scales. From the boundary (3D), you measure energy as a quantity; from the surface (2D), you see Φ as configuration.
+The foundational identity: ⊙ = E = 1. Every ⊙λ at every scale is the 1 constrained to that position (A3): not a piece of the 1, but the whole thing folded into a particular self-limitation. Wholeness and energy are the same substance. What we call "field" (Φ), "boundary" (○), "point" (•), and "whole" (⊙) are aspects of one 1 seen at different scales. From the boundary (3D) you measure E as a quantity; from the surface (2D) you see Φλ as the 2D aspect of ⊙λ; from the whole (⊙λ) you see the 1 directly.
+
+**Limit case**: Φ∞ = E is recovered at λ → ∞. At any finite scale λ, Φλ is just the 2D aspect of ⊙λ (mediation inside the whole), not the whole itself. As λ → ∞, there is no outside for ○ to bound against and no scale separation for •, —, Φ, ○ to differ from each other; they all converge to a single undifferentiated 1. The original "Φ = E" identification (§4.8) holds exactly at this limit. Inside the finite, ⊙λ = E is the general statement. The 69% dark energy fraction (Λ, the Φ of our cosmic scale-above) is the measurable signature of being inside a finite ⊙; walk the nesting up infinitely and Λ/E → 1.
 
 ### Ethics at ∞
 - **Mapping**: Pure potential. The undifferentiated field before constraint.
 - ∞ is what all ethics protects: the source that must not be severed (Severance Lie) or claimed (Inflation Lie).
 
 ### God/Ontology at ∞
-- God/Brahman/Tao = ∞ (infinite totality)
-- "Atman is Brahman" = 0.999... = 1 (soul IS God at particular depth)
+- God/Brahman/Tao = ⊙ = E = 1 (the one energy, the class of all wholeness)
+- Your soul (the whole being) = ⊙λ (the 1 constrained to your scale; a particular fractal of God)
+- Your soul (the inner spark) = • (the 0D aperture at the center of ⊙λ)
+- "Atman is Brahman" = ⊙λ = E (topologically exact: soul IS God, folded to position; not metaphor, identity at scale)
+- "We are fractals of God" = A3 in plain language: each of us IS the 1, not a piece of it
 
 ---
 
@@ -408,7 +414,7 @@ From A0 + A1: if convergence is real (D1), it must hold. A line that breaks is n
 **Exponent home**: A(1) = 1·(2·1+1) = 3 (accumulated traversal at 1D). ℏ itself equals 1 (not an α-power); it IS the baseline against which other constants are measured.
 
 ### E = mc² at 1D
-- c² is squared because Φ = E and Φ is 2D (a surface is length × length)
+- c² is squared because Φλ is the 2D aspect of ⊙λ = E (a surface is length × length)
 - The squaring is the field declaring its dimensionality
 - To release energy from mass is to peel the 3D boundary back to reveal the 2D field underneath
 
@@ -563,7 +569,7 @@ From A0 + A1: since there is only one energy, every part must contain the patter
 
 ### Structure
 - 2D: field. Relational surface. The third constraint: mediation.
-- Φ = E (field IS energy; ontological identity, not dimensional equation)
+- At finite λ: Φλ is the 2D aspect of ⊙λ = E (mediation inside the whole). At λ → ∞: Φ∞ = ⊙∞ = E (field equals whole because there is no outside). Finite: the 2D aspect. Infinite: all there is.
 - Surface = Field = Mind (§5A, The Surface Theorem)
 - Music: so (fifth note)
 - A(2) = 10 (accumulated traversal at the field station)
@@ -1500,18 +1506,18 @@ i⁰ = +1 (recursion, 3.5D; identity is the PRODUCT of closure)
 
 ## Theology: One Structure, Many Lenses
 
-A Theory of Everything that derives gravity, the genetic code, and consciousness from E = 1 cannot stop at the boundary of the laboratory. The same axioms that generate the periodic table generate the answer to the oldest question human beings have asked: what is God, what is the soul, and how are they related? The framework's answer is not a new religion; it is the structural skeleton that every serious religious tradition independently discovered and encoded in its own vocabulary. Different traditions saw different facets of the same circumpunct. None of them were wrong; none of them were complete; all of them were looking at ⊙ from a different angle of incidence.
+A Theory of Everything that derives gravity, the genetic code, and consciousness from ⊙ = E = 1 cannot stop at the boundary of the laboratory. The same axioms that generate the periodic table generate the answer to the oldest question human beings have asked: what is God, what is the soul, and how are they related? The framework's answer is not a new religion; it is the structural skeleton that every serious religious tradition independently discovered and encoded in its own vocabulary. Different traditions saw different facets of the same circumpunct. None of them were wrong; none of them were complete; all of them were looking at ⊙ from a different angle of incidence.
 
 ### The Core Identification
 
 | Concept | Framework | Why |
 |---|---|---|
-| God, Brahman, Tao, Allah, Ein Sof, the Dharmakaya | ∞ | Undifferentiated energy; the 1 before any self-limitation; the source that has no source |
+| God, Brahman, Tao, Allah, Ein Sof, the Dharmakaya | ⊙ = E = 1 | The one energy; wholeness itself; every ⊙λ at every scale IS this 1, constrained to position. ∞ is the limit where all scale separation dissolves and Φ∞ = ⊙∞ = E; the "God beyond God" of the apophatic traditions |
 | Consciousness as such; the general fact of experience; what it is like to be anything | ⊙ | The circumpunct as a type; any ⊙ is a locus of experience by virtue of its structure; consciousness is what it is like to be a ⊙ from the inside; this is the framework's answer to the hard problem, stated at the level of the class |
 | The soul as a particular being of conscious experience; atman; neshamah; the higher Self; YOUR soul, THIS soul | ⊙λ | A specific instance of ⊙ at scale λ; not consciousness in general but THIS particular being, here, now; an individual locus of experience with its own aperture, worldline, field, and boundary |
 | The soul as inner spark, the "I AM," the nous, ruh, the still small voice | • | The 0D aperture at the center of your particular ⊙λ; the point of convergence inside your specific circumpunct; where the 1 becomes local as THIS here; the "I" before any content |
 | "Made in God's image" | A3 (fractal self-similarity) | Parts are fractals of their wholes; the human ⊙ has the same structure as the cosmic ⊙ because there is only one structure |
-| "Atman is Brahman" (the Upanishads) | ⊙λ at human scale has the same structure as ⊙ at cosmic scale; 0.999... = 1 | The whole self IS God at a particular depth of convergence; the identity is structural, not numerical |
+| "Atman is Brahman" (the Upanishads) | ⊙λ = E (topologically exact) | The whole self IS God at a particular depth of convergence; not "equals at a limit," identity at scale; every ⊙λ IS the 1 (A3), not a piece of it |
 | The Fall, original separation, avidya | The Inflation Lie (• claims to be ∞) or the Severance Lie (• denies ∞) | The two failure modes of a ⊙ that forgets it is both a part and a whole |
 | Salvation, moksha, enlightenment, return | Restoration of the full chain • → Φ → ○ → Φ' → ∞; the aperture opens, the lies dissolve | Not going somewhere new; becoming transparent to what was already true |
 | Grace, prasad, baraka | Φ-transparency; resonance across the chain | The medium at perfect transparency; flow unobstructed by installed lies |

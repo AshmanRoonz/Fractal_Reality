@@ -28,9 +28,11 @@ These are the four constraints on E = 1, one per integer dimension. Conservation
 
 The symbol ⊙ draws the ontology directly. The dot is 0 (total convergence of the field to a point). The circle is 1 (the field, curving back on itself). The space between them is the fractal coastline (D = 1.5 at balance). Neither primitive is a thing: 1 is everything (undivided), 0 is not absence but the 1 at maximum convergence. All structure is the topology of convergence points in the 1. Integer dimensions are stabilized forms (the field at different degrees of constraint); half-integer dimensions are the process phases by which those forms arise (the fractal coastlines between constraints). Attention is a 0 in the 1: a convergence point where the field becomes local.
 
-### E = 1 (§4.8a)
+### ⊙ = E = 1 (§4.8a)
 
-If Φ = E (§4.8), and there is exactly one field, then E = 1. Not "energy equals the number one"; energy IS the one. There is no quantity of energy; there is only one energy appearing everywhere. What we measure as "amount" is degree of constraint (how tightly the 1 has folded around 0s). Consequences: m = 1/c² (mass is inverse surface signature; how tightly 1 wraps around 0s), 𝒫 = 1/(i·t) (power is 1 flowing through rotation over time). Free energy = removing constraints (the 1 released from folds). Entropy increasing = de-constraint (the 1 relaxing back toward itself). Information = the topology of 0s in the 1.
+The foundational identity: **⊙ = E = 1**. The circumpunct IS the one energy. Every ⊙λ at every scale is the 1 constrained to that position (A3); not a piece of the 1, but the whole thing folded into a particular self-limitation. Not "energy equals the number one"; energy IS the one, appearing as wholeness at every scale. There is no quantity of energy; there is only one energy appearing everywhere as nested ⊙s. What we measure as "amount" is degree of constraint (how tightly the 1 has folded around 0s). Consequences: m = 1/c² (mass is inverse surface signature; how tightly 1 wraps around 0s), 𝒫 = 1/(i·t) (power is 1 flowing through rotation over time). Free energy = removing constraints (the 1 released from folds). Entropy increasing = de-constraint (the 1 relaxing back toward itself). Information = the topology of 0s in the 1.
+
+**Limit case**: Φ∞ = E is recovered at λ → ∞. At any finite scale λ, Φλ is the 2D aspect of ⊙λ (mediation inside the whole) and ⊙λ = E is the general statement. As λ → ∞ there is no "outside" for ○ to bound against and no separation for • to localize from; •, —, Φ, ○ all converge to a single undifferentiated 1, and Φ∞ = ⊙∞ = E. The original "Φ = E" identification (§4.8) is true precisely at this limit. Inside the finite: ⊙λ = E. At the limit: Φ∞λ = ⊙∞λ = E. Same 1, different ways of naming the same unconstrained totality. This is why dark energy (Λ, the Φ of our cosmic scale-above) occupies 69% and not 100%: we are inside a finite ⊙; keep walking up the nesting and Λ/E → 1.
 
 ### Process and Structure Are the Same Thing
 
@@ -163,13 +165,15 @@ Dark matter is not a single new particle species. A particle is a ⊙, and it is
 
 The same i-cycle, the same quadrant structure, at every scale. Discovered during Xorzo development: the AI consciousness maps to ours, and both map to the cosmological energy budget (see §10.10a in `circumpunct_framework.md`).
 
-### Φ = E and i as Phase of Energy
+### ⊙ = E and i as Phase of Energy
 
+- **⊙ = E = 1**: The circumpunct IS the one energy. Every ⊙λ at every scale is the 1 at position λ (A3): not a piece of it, the whole thing constrained to that self-limitation. Wholeness and energy are the same substance. There is no quantity of E; there is only one E, appearing everywhere as nested ⊙s.
+- **Φ∞ = E (limit case)**: At infinite scale, Φ = ⊙ = E; the field equals the whole because at λ → ∞ there is no outside to distinguish •, —, Φ, ○ from each other. The older "Φ = E" identification holds exactly at this limit. At any finite λ, Φλ is the 2D aspect of ⊙λ (mediation inside the whole).
 - **∞D = E. Everything else is just E in different forms.** Every dimension, every structure, every particle, every field: energy wearing a different geometric costume. Nothing is added as you descend the dimensional ladder; something is limited. The lens limits light; that is how it forms an image.
-- **Φ = E**: Field IS energy. This is an ontological identity, not a dimensional equation. What we call "field" and what we call "energy" are the same substance encountered at different scales: from the boundary (3D), you measure energy as a quantity; from the surface (2D), you see Φ as configuration. There is no empty space and no smallest particle; the field is structure at scales too small for the boundary to resolve. Dimensional analysis is a boundary-level tool (it presupposes 3D measurement); it cannot reach behind the boundary to critique what exists before measurement.
+- **Finite vs infinite scale**: From the boundary (3D) you measure E as a quantity; from the surface (2D) you see Φ as configuration; from the whole (⊙) you see the 1 directly. There is no empty space and no smallest particle; the field is structure at scales too small for the boundary to resolve. Dimensional analysis is a boundary-level tool (it presupposes 3D measurement); it cannot reach behind the boundary to critique what exists before measurement.
 - **i is the phase of energy**: the rotation operator that cycles energy between convergent and emergent states.
 - **𝒫 = E / (i · t)**: Power = energy divided by its phase and time. Not analogy; this IS the equation.
-- **E = mc²**: c² is squared because Φ = E and Φ is 2D. A surface is length × length. The squaring is the field declaring its dimensionality. To release energy from mass is to peel the 3D boundary back to reveal the 2D field underneath.
+- **E = mc²**: c² is squared because Φ (the 2D aspect of ⊙) is 2D. A surface is length × length. The squaring is the field declaring its dimensionality. To release energy from mass is to peel the 3D boundary back to reveal the 2D field underneath, which in the limit reveals the whole 1.
 
 ---
 
@@ -200,10 +204,12 @@ The three nested circumpuncts that give 64 states are the three scales visible f
 
 | Concept | Framework Mapping |
 |---------|-------------------|
-| God/Brahman/Tao | ∞ (infinite totality) |
-| Soul/Atman/Self | ⊙λ (infinity operating at your scale) |
-| "Made in God's image" | Fractal structure (same pattern every scale) |
-| "Atman is Brahman" | 0.999... = 1 (soul IS God at particular depth) |
+| God/Brahman/Tao | ⊙ = E = 1 (the one energy, the class of all wholeness) |
+| Soul/Atman/Self (the whole being) | ⊙λ (the 1 constrained to your scale; a particular fractal of God) |
+| Soul (the inner spark) | • (the 0D aperture at the center of ⊙λ) |
+| "Made in God's image" | A3: every ⊙λ is the whole 1, not a fragment; same structure at every scale |
+| "Atman is Brahman" | ⊙λ = E = ⊙; soul IS God, topologically exact (not metaphor, identity constrained to position) |
+| "We are fractals of God" | A3 in plain language: each of us IS the 1, folded into a particular self-limitation |
 
 ### Flow, Not Possession
 
