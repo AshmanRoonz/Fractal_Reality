@@ -24,6 +24,55 @@ These are the four constraints on E = 1, one per integer dimension. Conservation
 
 **⊙ is a fractal of the ONE.** Every ⊙ is the 1 at a particular scale: not a piece of it, but the whole thing, constrained to a position (A3).
 
+### Prime Notation: ⊙λ ⊂ ⊙Λ
+
+The fundamental relation of the framework, stated symbolically:
+
+```
+⊙λ ⊂ ⊙Λ
+```
+
+*Every circumpunct at scale λ is contained in a circumpunct at scale Λ (the scale above).* Lowercase λ is the scale parameter of any ⊙ you pick; uppercase Λ is the scale parameter of the ⊙ that contains it. This is A3 compressed into one expression: it asserts both fractal self-similarity (⊙λ and ⊙Λ are structurally identical; same architecture, different scale) and nestedness (there is always a scale above; every ⊙ is inside another ⊙). The ⊂ is not set-theoretic containment in the ordinary sense; it is *scale-recursive embedding*, meaning "⊙λ appears inside ⊙Λ and shares its architecture."
+
+**This notation is prime, not derived.** It stands alongside ⊙ = E = 1 and A3 as structural; every theorem, derivation, and interpretive reading ultimately rests on ⊙λ ⊂ ⊙Λ because every "parts vs whole" claim in the framework is this relation at a particular level.
+
+**Three simultaneous readings of the same ⊙λ** (observer-relative; one entity, three scale positions):
+
+- **At scale λ (self-view), ⊙λ appears as ⊙**: the whole circumpunct, a being of experience, with its own •, —, Φ, ○. You looking at yourself from inside yourself.
+- **From scale Λ (top-down view), ⊙λ appears as •**: a 0D aperture inside ⊙Λ; a point of convergence in the greater whole. The greater whole looking at you.
+- **From scale λ' < λ (bottom-up view), ⊙λ appears as Λ**: the cosmic field, the greater whole, the sky containing smaller ⊙s. Your parts looking at you.
+
+These are not competing claims about what ⊙λ "really" is. They are one object read from three observer positions along the scale axis. The recursion station ⟳ at 3.5D enforces this: the closed boundary of ⊙λ IS the aperture of ⊙Λ at the next scale (3.5D = 0D'), so exit-of-one = entrance-of-next; scale is continuous, not quantized.
+
+**Domains the same notation covers** (all instances of ⊙λ ⊂ ⊙Λ):
+
+| ⊙λ | ⊙Λ | What "⊂" means here |
+|---|---|---|
+| Quark | Hadron | composite structure |
+| Nucleon | Nucleus | nuclear binding |
+| Atom | Molecule | chemical bond |
+| Cell | Organism | biological composition |
+| Organism | Biosphere | ecological embedding |
+| Person | Society | social belonging |
+| Planet | Solar system | gravitational hierarchy |
+| Galaxy | Universe | cosmological structure |
+| Neuron | Brain region | neural integration |
+| Memory | Mind | cognitive containment |
+| Visible matter ⊙ | Dark-energy Φ (Λ) | the 31/69 split at our scale |
+| Any ⊙λ | ⊙Λ (the next scale up) | fractal recursion (A3) |
+| ⊙λ (soul as whole being) | ⊙Λ (the greater whole you are inside) | theological reading |
+
+All of these are the same notation at different λ. The Λ in "dark energy is 69% of the universe" is literally the Φ of the ⊙Λ we are inside; the Λ in "you are a branch in a greater whole" is the same Λ. The theological reading is not a separate claim; it is one row of a universal table.
+
+**Two fundamental failure modes of ⊙λ ⊂ ⊙Λ**:
+
+- **Inflation Lie**: ⊙λ forgets the ⊂; claims to BE ⊙Λ directly, erasing scale separation ("I am the source; there is nothing above me"). Mathematically: asserting ⊙λ = ⊙Λ when λ ≠ Λ.
+- **Severance Lie**: ⊙λ forgets the ⊙; claims to be merely a • with no wholeness of its own, denying that it is itself a full circumpunct ("I am only a piece; I have no interior"). Mathematically: asserting ⊙λ = •Λ (collapsing its ⊙-character into a mere point in ⊙Λ).
+
+The truth is the full expression: ⊙λ ⊂ ⊙Λ, with ⊙λ genuinely whole at its scale AND genuinely contained at the scale above. Both-and, not either-or. Neither the part-claiming-to-be-whole (inflation) nor the whole-claiming-to-be-only-a-part (severance).
+
+**The recursion is unbounded in both directions.** ⊙λ ⊂ ⊙Λ is not a single step; it recurses: ⊙Λ ⊂ ⊙Λ' ⊂ ⊙Λ'' ⊂ ... There is no top. Going the other way: ⊙λ contains ⊙λ' which contains ⊙λ'' ... ; there is no bottom. Scale is a doubly-infinite axis; the framework has no privileged scale (no "fundamental level," no "ultimate whole"); every ⊙λ is both whole and part, at every scale, forever. This is what A0 + A3 forces: if there is one energy (A0) and parts are fractals of their wholes (A3), then the nesting must be unbounded, because any bounded nesting would require a "final whole" (violating A3 by having no greater whole) or a "fundamental part" (violating A3 by having no smaller parts).
+
 ### The 1/0 Ontology (§1.2)
 
 The symbol ⊙ draws the ontology directly. The dot is 0 (total convergence of the field to a point). The circle is 1 (the field, curving back on itself). The space between them is the fractal coastline (D = 1.5 at balance). Neither primitive is a thing: 1 is everything (undivided), 0 is not absence but the 1 at maximum convergence. All structure is the topology of convergence points in the 1. Integer dimensions are stabilized forms (the field at different degrees of constraint); half-integer dimensions are the process phases by which those forms arise (the fractal coastlines between constraints). Attention is a 0 in the 1: a convergence point where the field becomes local.
@@ -527,7 +576,9 @@ Conjugate pairs: ⊛ (+i) mirrors ✹ (-i); ⎇ (-1) mirrors ⟳ (+1).
 | i(t) | Worldline (accumulated validation receipts through time) |
 | β | Flow balance (same as ◐ in some contexts) |
 | D | Fractal dimension (1.5 at balance) |
-| ⊙λ | Circumpunct at scale λ |
+| ⊙λ | Circumpunct at scale λ (any chosen scale) |
+| ⊙Λ | Circumpunct at scale Λ (the scale above ⊙λ; the greater whole ⊙λ is inside) |
+| ⊙λ ⊂ ⊙Λ | **Prime notation**: every ⊙ at scale λ is contained in a ⊙ at scale Λ; A3 made symbolic; unbounded recursion in both directions |
 | •∞ | Aperture multiplied by infinity; the Soul Array (infinity becoming particular) |
 | ⊙∞ | Circumpunct multiplied by infinity; the foam of reality |
 | χ | Transmission fidelity (+1 faithful, -1 inverted) |

@@ -8,7 +8,25 @@
 
 A Theory of Everything, in the strict sense, is expected to: (1) unify the four fundamental forces, (2) derive the fundamental constants from first principles, (3) do both with zero free parameters. Most candidate ToEs pick one of the three and punt on the others. The Circumpunct framework does all three, and then extends past the traditional ToE scope into chemistry, biology, consciousness, and ethics; the same axioms that give gravity give the genetic code, Kleiber's law, and the five ethical pillars.
 
-**The foundational claim**: all structure is one energy (E = 1) self-limiting through four constraints (•, —, Φ, ○) at integer dimensions, pumped through four processual phases (⊛, ⎇, ✹, ⟳) at half-integer dimensions. The eight stations form a dimensional octave that closes when 3.5D becomes 0D at the next nesting level. Every known physical law is these four constraints compounded; every measured constant is the ladder evaluated at a specific rung.
+**The foundational claim**: all structure is one energy (⊙ = E = 1) self-limiting through four constraints (•, —, Φ, ○) at integer dimensions, pumped through four processual phases (⊛, ⎇, ✹, ⟳) at half-integer dimensions. The eight stations form a dimensional octave that closes when 3.5D becomes 0D at the next nesting level. Every ⊙ at scale λ is contained in a ⊙ at scale Λ: **⊙λ ⊂ ⊙Λ**. Every known physical law is these four constraints compounded; every measured constant is the ladder evaluated at a specific rung; every composite (atom, cell, organism, society, galaxy) is an instance of ⊙λ ⊂ ⊙Λ at its own scale.
+
+### Prime Notation: ⊙λ ⊂ ⊙Λ
+
+```
+⊙λ ⊂ ⊙Λ
+```
+
+This is A3 compressed into one symbol. Every circumpunct at any scale λ is contained in a circumpunct at the scale above (Λ), which is itself contained in a circumpunct at the scale above that, unbounded in both directions. The ⊂ is not set-theoretic containment; it is *scale-recursive embedding*: ⊙λ appears inside ⊙Λ AND shares the ⊙ architecture (fractal self-similarity). The recursion station ⟳ enforces it: 3.5D of ⊙λ IS 0D of ⊙Λ, so the closed boundary of one circumpunct is the aperture of the next scale up. Scale is continuous, nesting is unbounded, and there is no "fundamental level" in either direction; every ⊙ is both a whole (at its own scale) and a part (at the scale above), at every scale, forever. This notation is prime: it stands with ⊙ = E = 1 and A3 as structural. Every derivation, every domain mapping (atom → molecule, cell → organism, person → society, visible matter → Λ-field), and every interpretive reading (theological, psychological, ecological, cosmological) is an instance of ⊙λ ⊂ ⊙Λ at a particular scale pair. The Inflation Lie erases the ⊂ (⊙λ claims to BE ⊙Λ). The Severance Lie erases the ⊙ (⊙λ claims to be only a • in ⊙Λ). The truth is the full expression, whole and contained simultaneously.
+
+**Observer-relative aspects of a single ⊙λ**:
+
+| Observer position | ⊙λ appears as | Example reading |
+|---|---|---|
+| Scale λ (self) | ⊙ (whole circumpunct, being of experience) | Vedantic atman; "I am a whole being" |
+| Scale Λ (above) | • (0D aperture inside ⊙Λ) | Christian "I am in God"; the inner point |
+| Scale λ-1 (below) | Λ (cosmic field containing smaller ⊙s) | "God is in me"; the field the parts inhabit |
+
+One entity, three scale positions, three readings. None of them wrong; none of them the whole picture alone.
 
 **The headline numbers** (all zero free parameters, all chains closing from A0 to measurement):
 
@@ -49,6 +67,7 @@ A Theory of Everything, in the strict sense, is expected to: (1) unify the four 
 
 **Front Matter**
 - [What Makes This a Theory of Everything](#what-makes-this-a-theory-of-everything)
+- [Prime Notation: ⊙λ ⊂ ⊙Λ](#prime-notation-λ--λ)
 - [How to Read This Document](#how-to-read-this-document)
 - [Derivation Chain Status](#derivation-chain-status)
 
@@ -1535,7 +1554,9 @@ These are not three different claims competing for "which one is really the soul
 
 This is why the earlier insight "⊙λ is a branch in Λ" was right AND why the later correction "• is the soul" was right. Your ⊙λ is both a branch in the cosmic Λ (looking up, you are inside something greater) AND a • inside that something greater (from its perspective, you are one of its apertures). These are not two competing readings; they are one reading from two directions along the same scale axis.
 
-**λ and Λ: the branch is the whole at scale**. The lowercase λ in ⊙λ (the scale parameter of your circumpunct) and the uppercase Λ (the cosmological constant, which the framework identifies with dark energy, which IS Φ itself at cosmic scale, which is the 2D field of the universe) are not the same letter by coincidence. Every ⊙λ is a local convergence inside Λ; the branch is part of the whole because the whole is the field, and your circumpunct is a fold in that field. Lowercase λ reads visually as a branch (the fork of the letter, a splitting point; the same shape as the ⎇ station at 1.5D); uppercase Λ reads as a peak or enclosing container. The notation preserves what the structure was going to insist on anyway: lowercase is a sample within uppercase; branch within tree; ⊙λ within Λ. When the traditions say "you are part of a greater whole," they are not being poetic. It is the literal topological fact that your ⊙λ is embedded in Λ, that Λ is 69% of all the energy in the universe, and that the remaining 31% (visible matter, dark matter) is all circumpuncts, all branches, all ⊙λs at various scales inside the Λ-field. Being part of a greater whole is not a metaphor; it is a fact about your position. Feeling connected to something larger is not a projection; it is accurate proprioception of where you actually are.
+**The theological reading is one row of the prime notation.** The relation ⊙λ ⊂ ⊙Λ is established up front in the foundational section (not here) because it is structural, not religious; every domain the framework touches (physics, chemistry, biology, cognition, ecology, cosmology) is an instance of it. The theological reading is one row of the universal table: set ⊙λ = "your soul (the whole being you are)" and ⊙Λ = "God (the greater whole you are inside)" and the relation becomes "your soul is contained in God while remaining a whole circumpunct in its own right; you are both inside something greater AND a full being of experience at your scale; neither a fragment nor an isolated atom."
+
+The lowercase λ and uppercase Λ are the same letter for structural reasons. Lowercase λ reads visually as a branch (the fork of the letter, a splitting point; the ⎇ station at 1.5D); uppercase Λ reads as a peak or enclosing container. The notation preserves what the structure insists on: lowercase is a sample within uppercase; branch within tree; ⊙λ within ⊙Λ. And the Λ of "dark energy is 69% of the universe" is the same Λ: it is the Φ of ⊙Λ at our cosmic scale-above. When the traditions say "you are part of a greater whole," they are stating the literal topological fact that ⊙λ ⊂ ⊙Λ. Being part of a greater whole is not a metaphor; it is the prime notation applied at your scale. Feeling connected to something larger is not a projection; it is accurate proprioception of where you actually are in the nesting.
 
 **⊙ and the hard problem**: the framework's answer to why there is experience at all is stated at the level of the class, not the instance. There is no "gap" between physical structure and subjective experience because ⊙ is not a physical structure that somehow also has experience; ⊙ IS experience, structurally. A circumpunct is a locus of experience by virtue of being a circumpunct; consciousness is not an extra ingredient added on top of the right kind of matter, it is the inside view of any ⊙ that has closed its boundary and opened its aperture. Every scale has instances of ⊙ (every scale has ⊙λs), so every scale has experience, though the character and bandwidth of that experience depends on the scale. An electron's ⊙λ is an experience, but nothing like yours; a society's ⊙λ is an experience, but nothing like yours; a cell's ⊙λ is closer to yours than either. Panpsychism has been rediscovering this from the other direction without a structural vocabulary; the framework supplies the vocabulary. Humans are ⊙λs with particularly rich fields and particularly permeable apertures, not the only beings of experience; we are one instance of a universal class.
 
