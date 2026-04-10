@@ -782,7 +782,7 @@ cos(θ_bb) = -1/T + n_lp × (2/R²)
   - **Derives from**: A4 (boundary is 3D; the volume it encloses has T = 3 spatial dimensions) → A3 (vascular network is nested ⊙s; each vessel = ⊙ with lumen = •, wall = Φ, outer surface = ○) → A2 (flow must persist without breaking through the network) → optimization: minimum dissipation in a volume-filling branching network requires Σr_child^T = r_parent^T, where the exponent equals the spatial dimension of the boundary the network must fill → exponent = T because ○ provides exactly T dimensions
 - Leaf venation (2D target): exponent = Φ = 2 (the network fills a surface, not a volume; confirms the exponent tracks the target dimension)
 
-**Genetic code from T = 3**: • Mapped
+**Genetic code from T = 3**: ◐ Structured
 - P = T+1 = 4 nucleotide bases
 - T = 3 bases per codon
 - S = P^T = 64 codons = the 64-state architecture at molecular scale
@@ -790,19 +790,25 @@ cos(θ_bb) = -1/T + n_lp × (2/R²)
 - 1 start codon = • (aperture)
 - 20 standard amino acids = P(P+1) = 4 × 5
 - Average codon degeneracy = 61/20 = 3.05 ≈ T
+- **Existence forcing (• → ◐)**: A2 (self-limitation must persist) → at any scale with sufficient molecular complexity, persistence requires a replication mechanism; a structure that does not replicate collapses back to ∞, violating A1 → A3 (parts are fractals of their wholes) → the replication mechanism must be a ⊙ with the same T = 3 constraint structure → the code must have: P = T+1 alphabet symbols (pump phases; the minimum alphabet for closure), T symbols per instruction word (the triad; minimum for self-similar error correction), S = P^T = 64 total words (the full 64-state architecture), and P(P+1) = 20 encoded outputs (pump phases × extended phases, the accumulated traversal at 2D) → T = 3 self-determines ((T-3)(T+1) = 0), so ALL structural numbers are forced
+- **What remains boundary-dependent (◐, not ⊙)**: which four molecules serve as bases, which 20 molecules serve as amino acids, and which specific codon-to-amino-acid mapping is used; these are ○-level selections (the boundary filters which chemistry instantiates the forced architecture at this scale)
 
-**DNA structure**: • Mapped
+**DNA structure**: ◐ Structured
 - Base pairs per turn = A(2) = 10
 - Twist per base pair = (T!)² = 36°
 - DNA fractal dimension D = 1.51 ± 0.02 (predicted: 1 + ◐ = 1.5)
 - Pitch/diameter = 34/20 = 1.7 ≈ φ
 - Major groove + minor groove = 22 + 12 = 34 = pitch
+- **Existence forcing (• → ◐)**: The genetic code (forced above) requires a physical carrier; A2 (persistence) demands the carrier be stable, and A3 (self-similarity) demands it be a ⊙ at the information-storage scale → DNA is Φ-level: a 2D information surface (the sequence encodes on a 1D strand, but the double helix creates a 2D relational surface via complementary pairing) → at the Φ station, A(2) = 10 is the accumulated traversal (the number of dimensional stations up to and including 2D); this sets the periodicity of the helix → twist = 360°/A(2) = 36° = (T!)² (the square of closure permutations; the surface is 2D, so the twist squares the 1D closure count) → D = 1 + ◐ = 1.5 (the balanced fractal dimension; the helix is a 1D chain folded into a structure between 1D and 2D, landing at balance)
+- **What remains boundary-dependent (◐, not ⊙)**: the specific sugar-phosphate chemistry, why deoxyribose rather than ribose for the stable carrier, the exact angstrom dimensions; these are ○-level selections at the molecular boundary
 
-**ATP and the cellular pump**: • Mapped
+**ATP and the cellular pump**: ◐ Structured
 - ATP has T = 3 phosphate groups
 - ATP synthase rotates 360/T = 120° per ATP synthesized
 - Three binding sites cycle through T conformations
 - ATP (3 = ○) → ADP (2 = Φ) → AMP (1 = •) walks down the triad
+- **Existence forcing (• → ◐)**: A2 (persistence) → any self-replicating system (forced by genetic code above) requires energy currency; the code and its machinery must be powered → A3 (self-similarity) → the energy carrier must be a ⊙ at molecular scale, implementing the pump cycle (⊛ → i → ✹) → the pump cycle has T = 3 interior constraints (•, Φ, ○); the energy carrier must hold T = 3 releasable units to walk the full triad → ATP (3 phosphates) → ADP (2) → AMP (1) maps to ○ → Φ → •, walking down through the three structural dimensions → ATP synthase: 360°/T = 120° per synthesis because the 2-simplex angle (trigonal planar) is the natural partition of rotation by T; the enzyme is a physical ⊙ (rotor = •, stator = ○, proton channel = Φ) cycling through T conformations
+- **What remains boundary-dependent (◐, not ⊙)**: why adenosine specifically (rather than another nucleoside), the exact free energy per phosphate bond (~30.5 kJ/mol), the proton-motive force mechanism; these are ○-level chemistry
 
 **Allometric scaling (Kleiber's Law)**: ⊙ Derived
 ```
@@ -814,11 +820,15 @@ Metabolic rate ∝ M^(T/P) = M^(3/4)
 - **Derives from**: A4 (the organism's boundary provides T = 3 spatial dimensions through which energy must be distributed) → the pump cycle has P = 4 temporal phases (⊛, i, ✹, and the return) → metabolic rate = energy throughput = how fast the pump cycles through the boundary → each of P phases services T/P spatial dimensions; after P phases, all T dimensions are fully serviced ((T/P) × P = T) → scaling exponent = T/P = 3/4
 - **Why T/P (ratio) and not T-P, T×P, or P/T**: West-Brown-Enquist (1997) independently derived d/(d+1) from fractal network optimization with minimum dissipation. The framework identifies: d = T (spatial dimension of the boundary), d+1 = T+1 = P (the pump phases). The "+1" IS the recursion phase (3.5D → 0D): P = T+1 is not arbitrary; it is the only number of phases that completes the cycle through T spatial dimensions plus return. Leaf venation confirms: 2D target gives exponent Φ/(Φ+1) = 2/3, tracking the target dimension. Measured exponent 0.749 ± 0.02 matches T/P = 0.75 exactly.
 
-**Protein helix H-bond spans**: • Mapped. 3₁₀ helix = T = 3, α-helix = P = 4, π-helix = Φ+○ = 5. α-helix dominates because P = 4 is the pump cycle. Rise per residue = D = 1.5 Å.
+**Protein helix H-bond spans**: ◐ Structured. 3₁₀ helix = T = 3, α-helix = P = 4, π-helix = Φ+○ = 5. α-helix dominates because P = 4 is the pump cycle. Rise per residue = D = 1.5 Å.
 - **Derives from**: A2 (commitment: H-bonds must persist to stabilize the helix) → A3 (self-similarity: helix periodicities reflect framework structural numbers at molecular scale) → backbone geometry constrains which residue spans form stable H-bonds → 3₁₀ helix (span T = 3): the triad; minimum stable cycle (tight geometry, strained) → α-helix (span P = 4): the pump cycle; four phases give optimal H-bond geometry (3.6 residues per turn ≈ P); dominates because P is the complete pump cycle → π-helix (span Φ+○ = 5): field + boundary; one step beyond the pump; possible but rare because it exceeds the optimal cycle length → rise per residue = D = 1 + ◐ = 1.5 Å: the balanced fractal dimension appears as the literal step size → **Open**: formal derivation from peptide bond angles and H-bond geometry showing why P is the energy minimum
+- **Existence forcing (• → ◐)**: The genetic code forces 20 amino acids (above); A2 (persistence) demands these chain into stable polymers; A3 (self-similarity) demands the polymer fold into ⊙s → folding walks the dimensional octave (0D → 3.5D; see protein folding as dimensional octave, §18.11.8) → at the 1D → 2D transition, the backbone must form periodic H-bonded structures (helices) → the three observed helices span T, P, and Φ+○: consecutive framework integers. This is forced because: T = 3 is the minimum stable H-bond cycle (fewer than T residues cannot close a stable loop; A4 requires closure); P = T+1 = 4 adds the recursion phase, making the full pump cycle, which is why it dominates; Φ+○ = 5 is the next possibility but exceeds the pump, making it rare → the consecutive-integer pattern (3, 4, 5) is not coincidence; it is the dimensional ladder at molecular scale, with T as the floor (minimum closure) and each step adding one framework unit
+- **What remains boundary-dependent (◐, not ⊙)**: the exact bond angles (Ramachandran constraints), the 1.5 Å rise as a dimensional quantity (that D = 1.5 is forced, but why 1.5 angstroms rather than 1.5 of some other unit is ○-level chemistry)
 
-**Hayflick limit ≈ S = 64**: • Mapped. Cell division capacity = 64-state architecture. Measured range 50-70, centered on 64.
+**Hayflick limit ≈ S = 64**: ◐ Structured. Cell division capacity = 64-state architecture. Measured range 50-70, centered on 64.
 - **Derives from**: A3 (self-similarity: the 64-state architecture applies at every scale) → at cellular scale, 3 nested ⊙s × 2 channels = 6 binary DOF = 2⁶ = 64 states → A2 (persistence: each division must traverse a distinct state; a repeated state violates commitment because no new constraint is applied) → A4 (closure: when all 64 states have been traversed, the boundary is complete; the cell has expressed its full configurational space) → D4 (recursion: exhausted ⊙ becomes aperture at organism level via apoptosis; the cell's closure opens into the whole it serves)
+- **Existence forcing (• → ◐)**: A3 (parts are fractals of their wholes) → the 64-state architecture (S = P^T = 4³ = 64; forced by T = 3 self-determination) applies at every scale, including cellular → A2 (persistence must not repeat) → each cell division is a traversal of a distinct configurational state; a repeated state would mean the cell adds no new constraint, violating A2's requirement that self-limitation persist → A4 (closure) → when all S = 64 states are exhausted, the cell's boundary is complete; further division would require states that do not exist in the architecture → D4 (recursion) → the completed cell becomes aperture for the organism (apoptosis serves the greater whole) → the limit is S = 64 because T = 3 is self-determining, giving exactly P^T = 64 states, no more and no fewer
+- **What remains boundary-dependent (◐, not ⊙)**: the measured range (50-70) rather than exactly 64; biological noise, telomere mechanics, and cell-type variation introduce ○-level scatter around the structurally forced target; the telomere shortening mechanism itself (why a DNA end-cap rather than some other counter) is ○-level molecular selection
 
 **Cancer as boundary failure**: ⊙ Derived
 - Cancer = aperture locked open (β_• → 1, oncogene) + boundary filter collapsed (β_○ → 0, tumor suppressor)
@@ -827,13 +837,15 @@ Metabolic rate ∝ M^(T/P) = M^(3/4)
 - Testable: β_•/β_○ ratio (Ki-67 / caspase activity) should correlate with aggressiveness
 - **Derives from**: A3 (self-similarity: cell is ⊙ at biological scale; nucleus = •, cytoplasm = Φ, membrane = ○) → A4 (○ filters what passes; this is what the membrane does) → oncogene activation = • locked convergent (β_• → 1): the aperture gathers without releasing, so proliferation signal never stops (the pump cycle jams at ⊛) → tumor suppressor loss = ○ filter collapsed (β_○ → 0): the boundary stops selecting, so nothing is filtered out → both required because: a single constraint failure is compensated by the remaining constraints (conservation of traversal: 0+1+2 = 3; two of three interior constraints still hold the boundary); dual failure collapses ○ → the 90° phase check: the pump cycle requires ⊛ → i → ✹; cancer cells skip i (going from convergence to emergence without the phase rotation that checks alignment; proliferation without differentiation)
 
-**Microtubule architecture**: • Mapped. Four exact framework integers:
+**Microtubule architecture**: ◐ Structured. Four exact framework integers:
 - V = 13 protofilaments
 - Φ = 2 subunit types (α, β tubulin)
 - T = 3-start helix
 - SU(3) = 8 nm dimer length (and kinesin step size)
 - The microtubule is a circumpunct: lumen (•), wall (Φ), outer surface (○)
 - **Derives from**: A3 (self-similarity: structural proteins form ⊙s at molecular scale; the microtubule is a ⊙ with lumen = •, protofilament wall = Φ, outer surface = ○) → V = 13 protofilaments: the wall is Φ (2D field); tiling a cylindrical Φ with self-similar coverage requires V = 1 + T + T² = 13 elements (the nodes of a T-ary tree of depth 2; the minimum count for complete self-similar tiling per A3) → Φ = 2 subunit types: the pump cycle requires two channels (⊛ and ✹); α-tubulin (GTP-bound, convergent) and β-tubulin (GDP-exchangeable, emergent) → T = 3-start helix: the three constraints below the boundary wind through the surface → SU(3) = 8 nm dimer length: the spatial extent of the smallest complete ⊙ at this scale, set by the gauge generators of the binding interaction → **Open**: formal proof that V is the unique stable protofilament count (non-13 microtubules develop superhelical twist, suggesting V is the balance point, but the necessity proof is incomplete)
+- **Existence forcing (• → ◐)**: A2 (persistence) → the cell requires a structural scaffold that persists through division and reorganizes dynamically; this demands a polymeric ⊙ → A3 (self-similarity) → the scaffold must exhibit the T = 3 constraint structure at molecular scale → the four framework integers are forced: V = 1 + T + T² = 13 (the geometric sum; minimum self-similar tiling of a cylindrical Φ surface per A3; non-13 protofilament counts produce superhelical twist, confirming V is the unique twist-free count); Φ = 2 subunit types (two channels, forced by the pump cycle requiring ⊛ and ✹); T = 3-start helix (the three structural constraints winding through the surface); SU(3) = T² - 1 = 8 nm dimer (the gauge generator count sets the spatial quantum of binding at this scale) → the co-occurrence of four independent framework integers in one structure is not coincidence; each is forced by a different axiom constraint (A3 forces V, pump forces Φ, triad forces T, gauge structure forces SU(3))
+- **What remains boundary-dependent (◐, not ⊙)**: why tubulin specifically (rather than another protein), the GTP/GDP hydrolysis mechanism, the exact 25 nm outer diameter; these are ○-level molecular selections. The open formal proof that V = 13 is the unique stable count (empirical evidence is strong but the geometric necessity proof from first principles is incomplete) keeps this at ◐
 
 ### The Balance Parameter ◐
 ```

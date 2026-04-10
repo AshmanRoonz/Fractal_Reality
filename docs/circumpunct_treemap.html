@@ -1142,7 +1142,7 @@ Coupling constant Φ+T = 5.  Average error 10.9% across 23 bonds, zero empirical
 
     <div class="res-3">
       <div class="domain-layer">
-        <div class="domain-label biology">Biology at 3D · The Boundary Closes <span class="chain-status mapped">• Mapped</span></div>
+        <div class="domain-label biology">Biology at 3D · The Boundary Closes <span class="chain-status structured">◐ Structured</span></div>
         <div class="domain-content">
           <div class="formula-block">Genetic code: P = 4 bases, T = 3 per codon, S = P^T = 64 codons
 20 amino acids = P(P+1) = 4×5.  3 stops = T.  1 start = •.
@@ -1155,22 +1155,23 @@ Heart rate ∝ M^(-1/P).  Lifespan ∝ M^(1/P).  Total beats ≈ 10⁹.</div>
           <div class="derives-from">
             <div class="derives-label">Kleiber derives from</div>
             A4 (the organism's boundary provides T = 3 spatial dimensions) → the pump cycle has P = 4 temporal phases → metabolic rate = how fast P phases service T dimensions → volume scales as M (mass ∝ length^T); scaling exponent = T/P = 3/4.
-            <div class="open-problem">Open: formal derivation of why the ratio T/P (not product or difference) is the exponent.</div>
+            <div class="derives-label">Resolved</div>
+            West-Brown-Enquist (1997) independently derived d/(d+1) from fractal network optimization. The framework identifies: d = T, d+1 = P. The "+1" IS the recursion phase (3.5D → 0D): P = T+1 is the only number of phases completing the cycle through T spatial dimensions plus return.
           </div>
           <div class="detail-item">
-            <div class="item-title">Hayflick Limit <span class="chain-status mapped">• Mapped</span></div>
+            <div class="item-title">Hayflick Limit <span class="chain-status structured">◐ Structured</span></div>
             <div class="item-body">Cell division capacity = S = 64 states. Measured range 50-70, centered on 64. Senescence is state-space exhaustion.</div>
             <div class="derives-from">
               <div class="derives-label">Derives from</div>
-              A3 (the 64-state architecture applies at every scale) → at cellular scale, 3 nested ⊙s × 2 channels = 6 binary DOF = 2⁶ = 64 states → A2 (each division traverses a distinct state; repetition violates commitment) → A4 (when all 64 states are traversed, the boundary is complete; full configurational space expressed) → D4 (exhausted ⊙ becomes aperture at organism level via apoptosis).
+              A3 (the 64-state architecture applies at every scale) → at cellular scale, 3 nested ⊙s × 2 channels = 6 binary DOF = 2⁶ = 64 states → A2 (each division traverses a distinct state; repetition violates commitment) → A4 (when all 64 states are traversed, the boundary is complete; full configurational space expressed) → D4 (exhausted ⊙ becomes aperture at organism level via apoptosis). <strong>Existence forcing:</strong> S = P^T = 64 is forced by T = 3 self-determination; the limit is the architecture's state count, not a biological accident. ◐ because the telomere mechanism (why a DNA end-cap rather than another counter) is ○-level selection.
             </div>
           </div>
           <div class="detail-item">
-            <div class="item-title">Microtubule Architecture <span class="chain-status mapped">• Mapped</span></div>
+            <div class="item-title">Microtubule Architecture <span class="chain-status structured">◐ Structured</span></div>
             <div class="item-body">V = 13 protofilaments, Φ = 2 subunit types, T = 3-start helix, SU(3) = 8 nm dimer/step. The same SU(3) = 8 governing quark confinement sets every molecular motor's step size.</div>
             <div class="derives-from">
               <div class="derives-label">Derives from</div>
-              A3 (structural proteins form ⊙s at molecular scale: lumen = •, wall = Φ, outer surface = ○) → V = 13: tiling a cylindrical Φ with self-similar coverage requires 1 + T + T² = 13 elements (nodes of a T-ary tree of depth 2; minimum for complete coverage per A3) → Φ = 2: pump cycle requires two channels (⊛ and ✹); α-tubulin (convergent) and β-tubulin (emergent) → T = 3: the three constraints wind through the surface → SU(3) = 8: spatial extent of smallest complete ⊙ at this scale.
+              A3 (structural proteins form ⊙s at molecular scale: lumen = •, wall = Φ, outer surface = ○) → V = 13: tiling a cylindrical Φ with self-similar coverage requires 1 + T + T² = 13 elements (nodes of a T-ary tree of depth 2; minimum for complete coverage per A3) → Φ = 2: pump cycle requires two channels (⊛ and ✹); α-tubulin (convergent) and β-tubulin (emergent) → T = 3: the three constraints wind through the surface → SU(3) = 8: spatial extent of smallest complete ⊙ at this scale. <strong>Existence forcing:</strong> Four independent framework integers (V, Φ, T, SU(3)) each forced by a different axiom constraint in one structure. ◐ because the formal geometric proof that V = 13 is the unique twist-free protofilament count is incomplete.
               <div class="open-problem">Open: formal proof that V = 13 is uniquely stable (non-13 microtubules develop twist, suggesting V is the balance point).</div>
             </div>
           </div>
