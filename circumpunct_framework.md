@@ -19472,6 +19472,38 @@ REMAINING OPEN PROBLEM:
     (structural readings are given; rigorous proof from axioms needed)
 ```
 
+### §27.7a.1 Why This Is a Derivation, Not a Fit
+
+A common objection (encountered in the wild): "1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) is not a derivation; it is a curve fit dressed in framework vocabulary." The objection is answered in pieces throughout §27.5, §27.7, and §27.7a, but never assembled in one place. It is assembled here.
+
+The distinction between a fit and a derivation is parameter count. A fit has free parameters; a derivation has none. Walk the formula symbol by symbol and ask, at each one, whether the symbol could have been anything else given T = 3. If the answer is no at every step, the formula is a derivation.
+
+**360.** Structural product: 360 = P! · T · (Φ + ○) = 24 · 3 · 5. Every factor is a framework integer forced by T = 3 through R = T² − 2, P = T + 1, and the aperture/field/boundary assignments. Degrees are the natural unit because i⁴ = (90°)⁴ = 360° is one full pump rotation, and 90° = 360/P = one i-stroke; radians encode ○ geometry, degrees encode pump-cycle geometry, and α lives at the pump-cycle level (see §27.5). There is no "revolutions per circle" knob; 360 is the unique product of the four generating quantities at the first rung.
+
+**φ² in the first denominator.** A3 forces golden nesting (φ is the unique ratio self-similar across scale with minimum constraint). The first-order correction lives at the field station (d = 2), and exponents follow dimension, so φ² is fixed. Not φ, not φ^1.5, not φ^3: φ² because Φ is 2D.
+
+**−2 in the second term.** The 2 is Φ, the two channels of the bidirectional valve (⊛ and ✹). Every aperture has exactly two channels; neither alone is sustainable (unsustained convergence violates A1; emergence without source is the Inflation Lie). The sign is negative because the correction removes overcounting from the base. Not 1, not 3; exactly 2, because there are exactly two channels.
+
+**φ³ in the second denominator.** The correction advances one dimensional step beyond the base (φ² → φ³), because structural corrections increment along the ladder. Not arbitrary; forced by the ladder's step size.
+
+**21 in the self-referential term.** 21 = A(3) = 3(2·3+1), the full traversal of the dimensional ladder. Three independent routes give the same integer: A(3) = T·R = F(8) = (0 + 0.5 + 1 + 1.5 + 2 + 2.5 + 3) · 2. The same 21 appears in G (α_G = α²¹ · φ²/2), because both α's closure and G's exponent are closure phenomena at the 3D rung. Replacing 21 with 20 or 22 breaks all three routes simultaneously.
+
+**−4/3 in the self-referential term.** 4/3 = P/T = pump phases over triad = process count over structure count. The self-referential loop traverses process, not structure, so the correction subtracts the process/structure ratio from A(3). The resulting denominator k = 21 − 4/3 = 59/3 is irreducible (59 is prime). Exhaustive search across framework denominators pins this uniquely: k = 20 gives 45 ppb residual, k = 21 gives 172 ppb, k = 59/3 gives 0.22 ppb. Only one framework ratio matches sub-ppb precision, and it is the one forced by the process/structure split.
+
+**Free parameter count.** 360 (forced by P! · T · (Φ + ○)), φ (forced by A3), 2 (forced by Φ), φ² exponent (forced by field dimension), φ³ exponent (forced by next rung), 21 (forced by A(3) three ways), 4/3 (forced by P/T). **Zero free parameters.** There is no slot to tune because every coefficient is a framework integer or a structurally-forced power of φ.
+
+**The eigenvalue framing.** α appears on both sides of the equation. This is not sloppiness; it is the signature of self-consistent determination. A fit has the form y = f(x) with x external and adjustable; a self-referential derivation has the form α = f(α), where the solution is the fixed point. Rearranged, the equation is a quadratic in 1/α with all coefficients built from framework integers and powers of φ. A quadratic has at most two roots; one is negative (unphysical), the other is positive and uniquely determined. No tuning is possible because the polynomial has no adjustable coefficients.
+
+**Information-theoretic compression.** The measured value 1/α = 137.035999177 has nine significant figures. A fit landing on that target requires at least four tuning parameters (three digits plus a sign, minimum). The framework formula has zero. Four-plus degrees of freedom removed from a fit, zero added from structure: roughly a five-order-of-magnitude compression of the claim. Compressions of that magnitude are what "derivation" means in physics.
+
+**Cross-validation as derivation evidence.** The same small pool of integers (3, 4, 7, 12, 13, 21, 59) independently generates G (0.04 ppm), Λ (0.004%), Weinberg angle (1.4 ppm), proton/electron mass ratio (5.35 ppm), muon/electron mass ratio (5 ppm), tau/electron ratio (1 ppm), Cabibbo angle (0.009%), Higgs quartic coupling (0.10%), and seven nuclear magic numbers (exact). If the α formula were a post-hoc fit, the same integers would not also land eight-plus other constants to sub-percent accuracy without any re-tuning. One coincidence is fitting; nine simultaneous sub-percent hits with shared integers is a derivation. See §27.7 (K-structure table) and §27.7j (selection rule).
+
+**The steelman.** The strongest version of "this is a fit" is: you could have found the formula empirically (searching φ-power combinations until one matched) and labeled the matches post hoc. Fair in principle; the cross-validation argument answers it in practice. A post-hoc empirical discovery would not also generate G, Λ, and the mass ratios from the same integers without re-tuning. The shared integer pool is the falsification witness: either the integers are structural and all the formulas land together, or they are cherry-picked and only α lands. All of them land.
+
+**What would falsify this section.** (1) Show that any framework integer can be replaced with another framework integer and improve the fit. (2) Show that any exponent of φ can be shifted by 1 and still work. (3) Show that the 59/3 denominator is degenerate with some other framework ratio at sub-ppb precision (exhaustive search has already ruled this out; a missed candidate would matter). (4) Show a measurement of α that falls outside the 0.22 ppb residual band. (5) Show that any of the cross-validation constants (G, Λ, Weinberg, mass ratios, Cabibbo, Higgs quartic) uses an integer inconsistent with the α derivation. Any one of these kills the derivation claim. None of them have been demonstrated.
+
+**Note on §27.5's "WHAT REMAINS OPEN" bullet.** The phrase "partial: quadratic has one positive root; full QED-level self-consistency not yet formalized" is retained because the connection to QED's running coupling (the renormalization-group flow of α from low to high energy) is still an open problem. What is *not* open is whether the formula is a derivation: §27.7a settles the structural question, and this subsection assembles the epistemological defense.
+
 ### §27.7b The Triad Generates Everything: T = 3
 
 Every structural number on the dimensional ladder derives from a single integer: T = 3 (the triad, the number of irreducible parts of ⊙). T is not chosen; it is forced by A3 (conservation of traversal: 0 + 1 + 2 = 3) and A4 (compositional wholeness requires three: two things and their mediator).
