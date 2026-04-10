@@ -57,7 +57,7 @@ A Theory of Everything, in the strict sense, is expected to: (1) unify the four 
 [∞ — INFINITY (Source, ∞D)](#--infinity-source-d)
 - [Axiom A0](#axiom-a0) · [Ontology](#ontology) · [Genesis Sequence](#genesis-sequence) · [Consequences of E = 1](#consequences-of-e--1) · [The Power Equation](#the-power-equation) · [Cosmological Identity](#cosmological-identity) · [Ethics at ∞](#ethics-at-) · [God/Ontology at ∞](#godontology-at-)
 
-[• — SOUL / APERTURE (0D, Point)](#--soul--aperture-0d-point)
+[• — SINGULARITY / SOUL / APERTURE (0D, Point)](#--singularity--soul--aperture-0d-point)
 - [Axiom A1](#axiom-a1) · [Structure](#structure) · [Two Senses of Aperture](#two-senses-of-aperture)
 - [Physics at 0D: The Fine-Structure Constant α](#physics-at-0d-the-fine-structure-constant-)
 - [Chemistry at 0D](#chemistry-at-0d) · [Biology at 0D](#biology-at-0d) · [Ethics at 0D: TRUE](#ethics-at-0d-true) · [Psychology at 0D](#psychology-at-0d)
@@ -219,7 +219,7 @@ What we call "field" and what we call "energy" are the same substance encountere
 
 ---
 
-## • — SOUL / APERTURE (0D, Point)
+## • — SINGULARITY / SOUL / APERTURE (0D, Point)
 
 ### Axiom A1
 **The 1 must self-limit; an undifferentiated 1 is indistinguishable from 0, which is impossible.**
