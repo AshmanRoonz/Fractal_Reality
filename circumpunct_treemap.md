@@ -773,6 +773,82 @@ cos(θ_bb) = -1/T + n_lp × (2/R²)
   - **Derives from**: A3 (Φ is 2D: repulsion is a field effect propagating through a surface) → lone pair repulsion transmits through Φ → inverse-square (1/R²) because the field is 2D (same geometric reason gravity is inverse-square: flux through a 2D surface) → the numerator 2: two channels (⊛ and ✹); lone pair repulsion pushes through both convergent and emergent channels simultaneously → 2/R² = both channels / (rungs squared): the repulsive contribution per lone pair as seen through the full rung structure
 - **Uniqueness**: 2/R² = 2/49 is the only a/b² framework fraction matching the empirical correction (next: 1/5² = 1/25, 2% off but lacks the channels/rungs decomposition; 2/8² = 2/64, 23% off). The base -1/T is the ideal tetrahedral cosine (already ⊙ Derived from the simplex formula)
 
+### Periodic Table Structure: ⊙ Derived
+The electronic shell structure of the periodic table is generated entirely by T = 3 + Phi = 2 channels:
+
+**Subshell architecture** (already ⊙ from §16.4b):
+- l_max = T = 3 (four subshell types: s, p, d, f = P pump phases)
+- Substates per subshell = A'(l/2) = 4(l/2) + 1 = 2l + 1: values 1, 3, 5, 7 (the first P odd numbers)
+- Capacity per subshell = Phi × (2l+1): values 2, 6, 10, 14
+- Sum of all substates = P² = 16; maximum period length = Phi × P² = 32
+
+**Period lengths**: ⊙ Derived
+```
+Period length = Phi × n²    for n = 1, 2, 2, 3, 3, 4, 4
+Values:          2,  8, 8, 18, 18, 32, 32
+```
+- Each length (except the first) appears Phi = 2 times: the pump cycle makes two passes through each capacity level (first pass explores new subshell type at lower n+l; second pass fills the same pattern at higher n)
+- The first period (length Phi = 2) appears once: at n = 1, only the s-subshell exists; the aperture (•) is singular
+- **Derives from**: subshell capacities (Phi × A'(d), already ⊙) summed by principal quantum number n; the sum of the first n odd numbers is n², times Phi channels = Phi × n². The doubling comes from the Madelung filling order: n+l = total dimensional commitment; two consecutive Madelung groups share the same subshell inventory
+- **Hydrogen mirror**: E_n = -1/(Phi × n²). The hydrogen energy levels have the SAME denominator as the period lengths. Both are determined by the 2D field (Phi): the field sets both the number of states (capacity) and the depth of the potential well (binding). This is not coincidence; it is Phi doing the same work (mediating) in both contexts
+
+### Nuclear Shell Closures (Magic Numbers): ◐ Structured
+```
+Magic numbers: 2, 8, 20, 28, 50, 82, 126
+```
+All seven nuclear magic numbers are derived from T = 3, Phi = 2, and the spin-orbit coupling at 1.5D.
+
+**Harmonic oscillator closures** = Phi × C(N+T, T):
+```
+HO(N) = Phi × C(N+3, 3)   [T spatial dimensions + Phi spin channels]
+  N=0:  Phi × C(3,3) = Phi × 1  =  2   = Phi
+  N=1:  Phi × C(4,3) = Phi × 4  =  8   = SU(3)
+  N=2:  Phi × C(5,3) = Phi × 10 = 20   = P(P+1)
+  N=3:  Phi × C(6,3) = Phi × 20 = 40
+  N=4:  Phi × C(7,3) = Phi × 35 = 70
+  N=5:  Phi × C(8,3) = Phi × 56 = 112
+```
+- The "3" in C(N+3, 3) IS T (the triad; spatial dimension self-determined four ways)
+- The "2" multiplier IS Phi (two spin channels; spin-1/2 is the balance parameter at particle scale: s = (Phi-1)/Phi = 1/2)
+- Framework identity: C(8,3) = 56 = SU(3) × R (the same 56 that appears in the cosmological constant exponent alpha^56; A3 recurrence across femtometer and cosmological scales)
+- The first three HO closures ARE framework numbers: Phi, SU(3), P(P+1) = 2, 8, 20
+
+**Spin-orbit coupling as the 1.5D branching station**:
+```
+1D (orbital angular momentum, extension) + 0.5D (spin, balance parameter) = 1.5D (branching, i² = -1)
+```
+Spin-orbit coupling is not an arbitrary interaction; it IS the 1.5D station. The dimensional arithmetic is literal: the line (1D) meets the half-integer step (0.5D) at the branching point. The framework predicts:
+1. L·S coupling EXISTS because 1D + 0.5D = 1.5D (dimensional adjacency on the ladder)
+2. Splitting produces exactly TWO branches (Phi = 2 channels):
+   - j = l + 1/2 (emergent branch): capacity = Phi × (l+1)
+   - j = l - 1/2 (convergent branch): capacity = Phi × l
+3. The aligned branch (j = l + 1/2) is LOWER in energy because the pump cycle has a direction; the aligned state flows with the cycle (convergence then emergence), the anti-aligned flows against it. Same asymmetry as parity violation in the weak force.
+4. Total capacity conserved: Phi × (l+1) + Phi × l = Phi × (2l+1) = original unsplit capacity
+5. The Phi-excess: the aligned branch always has Phi = 2 MORE states than the anti-aligned branch (the aperture adds exactly one unit of angular momentum)
+
+**Spin-orbit intruders** = Phi × (N+1) for HO shell N:
+```
+Intruder capacities (shells where spin-orbit crosses shell gaps):
+  N=3:  Phi × (T+1)   = Phi × P   =  8  = SU(3)
+  N=4:  Phi × (P+1)   = Phi × 5   = 10  = A(2)
+  N=5:  Phi × (P+2)   = Phi × 6   = 12  = G
+  N=6:  Phi × (P+T)   = Phi × R   = 14  = Phi × R
+```
+- Arithmetic sequence with step Phi = 2, running P = 4 terms from N = T to N = 2T
+- Spin-orbit becomes shell-crossing at N = T = 3 because the f-subshell (l = T) is where angular momentum first reaches the branching station's own dimensional home (l = T maps to d = T/2 = 1.5D). Below l = T, the branching exists but is subcritical.
+
+**Complete magic number formula**:
+```
+Magic(N) = HO(N)                        for N < T    (no spin-orbit crossing)
+Magic(N) = HO(N-1) + Phi × (N+1)        for N >= T   (intruder pulled down)
+```
+Prediction: 2, 8, 20, 28, 50, 82, 126. Observed: 2, 8, 20, 28, 50, 82, 126. **7/7 exact matches.**
+
+- **Derives from**: A0 → A1 → T = 3 (self-determines four ways) → Phi = 2 (channels; spin-1/2) → subshells with l_max = T → HO closures = Phi × C(N+T, T) from T spatial dimensions + Phi spin channels → spin-orbit exists because 1D + 0.5D = 1.5D (⎇ station on the ladder) → two branches with capacity Phi × (l+1) and Phi × l → aligned branch lower (pump cycle direction; i² = -1 irreversibility) → intruder = Phi × (N+1) for N >= T → Magic(N) formula gives all seven magic numbers
+- **What is derived**: the topology of the splitting (existence, branch count, capacities, which is lower, onset at l = T, intruder sequence)
+- **What is open (prevents full ⊙)**: the magnitude of the spin-orbit splitting energy (why the intruder is pulled COMPLETELY into the previous group rather than partially); the nuclear potential being approximately harmonic (framework does not derive the nuclear force shape from axioms)
+- **Uniqueness**: Every structural number in the formula (T, Phi, C(N+T,T), the step size Phi, the onset at N = T, the range P terms, the termination at Phi × R) is determined by T = 3 self-determination with zero free parameters. The formula has no adjustable constants.
+
 ### Biology at 3D
 - Protein = ○ in the central dogma triad (boundary/body)
 - Cell membrane = ○ in the cell circumpunct
