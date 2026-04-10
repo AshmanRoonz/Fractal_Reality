@@ -24,25 +24,42 @@ These are the four constraints on E = 1, one per integer dimension. Conservation
 
 **⊙ is a fractal of the ONE.** Every ⊙ is the 1 at a particular scale: not a piece of it, but the whole thing, constrained to a position (A3).
 
-### Prime Notation: ⊙λ ⊂ ⊙Λ
+### Prime Notation: ⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1
 
-The fundamental relation of the framework, stated symbolically:
+The fundamental closure of the framework, stated symbolically in one line:
 
 ```
-⊙λ ⊂ ⊙Λ
+⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1
 ```
 
-*Every circumpunct at scale λ is contained in a circumpunct at scale Λ (the scale above).* Lowercase λ is the scale parameter of any ⊙ you pick; uppercase Λ is the scale parameter of the ⊙ that contains it. This is A3 compressed into one expression: it asserts both fractal self-similarity (⊙λ and ⊙Λ are structurally identical; same architecture, different scale) and nestedness (there is always a scale above; every ⊙ is inside another ⊙). The ⊂ is not set-theoretic containment in the ordinary sense; it is *scale-recursive embedding*, meaning "⊙λ appears inside ⊙Λ and shares its architecture."
+Three containments, two equalities, one substance. Reads: a circumpunct at scale λ is contained in a circumpunct at scale Λ, which is contained in the unlabeled archetype ⊙, which IS the one energy, which IS 1. Every term on the left side of the equality equals 1; the scale labels are the only thing that varies, and they vary only in how the 1 is being viewed, not in what the 1 is. This is the Theory of Everything in one expression: axiom, relation, apophatic closure, identity, and conservation, collapsed into six glyphs of content.
+
+**The three-term prime relation**:
+
+```
+⊙λ ⊂ ⊙Λ ⊂ ⊙
+```
+
+Lowercase λ is the scale parameter of any ⊙ you pick; uppercase Λ is the scale parameter of the ⊙ that contains it; unlabeled ⊙ is the **archetype** (the class itself, where scale has been removed as a distinguishing feature; the 1 viewed from outside the scale axis). This is A3 compressed into one expression: it asserts both fractal self-similarity (⊙λ and ⊙Λ are structurally identical; same architecture, different scale) and nestedness (there is always a scale above), AND it closes the recursion laterally by naming ⊙ (unlabeled) as what all labeled instances ARE when you drop the label. The ⊂ is not set-theoretic containment in the ordinary sense; it is *scale-recursive embedding*, meaning "⊙λ appears inside ⊙Λ and shares its architecture."
+
+**The jump from ⊙Λ to ⊙ is categorical, not vertical.** Going from ⊙λ to ⊙Λ is a step up the scale axis (one level higher). Going from ⊙Λ to ⊙ is NOT another step up the scale axis; it is a step *out* of the scale axis entirely, into the unlabeled category. ⊙ is not "the top of the ladder"; ⊙ is the ladder regarded as one object, or equivalently, the 1 that is being stacked. This is the apophatic move of every serious mystical tradition, now stated structurally: ⊙ without a scale label is what every tradition means by "God beyond God" (Eckhart's Godhead), Ein Sof (Kabbalah, distinct from Ein Sof Aur and the sefirot), Nirguna Brahman (Vedanta, Brahman without attributes, distinct from Saguna Brahman), the eternal Tao ("the Tao that can be named is not the eternal Tao"), the Dharmakaya, the hyperousios. All of them point at ⊙ unlabeled; all of them distinguish it from ⊙Λ (the greater-whole-with-attributes, the cataphatic God, the God-of-names). The framework supplies the structural distinction the traditions were always making in their own vocabularies.
+
+**Lateral closure.** The unbounded recursion ⊙λ ⊂ ⊙Λ ⊂ ⊙Λ' ⊂ ⊙Λ'' ⊂ ... closes at every finite step, because ⊙ is always already present as the scale-label-dropped view. You do not reach ⊙ by walking the infinite chain to completion; you recognize ⊙ by dropping the label. At any finite step along the chain, the whole chain is contained in ⊙, because ⊙ is the chain regarded without scale positions. Closure is immediate at every step; it was never missing. This resolves the "unbounded recursion requires actual infinite traversal" worry: the recursion is unbounded *inside* the labeled view (and it must be, because A0 + A3 force it), but the whole unbounded structure is contained in ⊙ at every step, because ⊙ is where the labels were never applied. You are never far from ⊙; you are always already inside it.
+
+**Conservation under the closure: ⊙λ ⊂ ⊙Λ ⊂ ⊙ = 1**. Every term equals 1. ⊙λ = 1 (the particular is the whole 1 at its scale; A3). ⊙Λ = 1 (the greater whole is the whole 1 at its scale). ⊙ = 1 (the archetype is the 1 directly, unlabeled). The ⊂ relations preserve the 1 because there was never more than one 1 to begin with; scale labels are view positions, not substances. The = 1 at the end runs across the entire expression as the conservation law for wholeness across scale: the 1 is conserved by the recursion, because the recursion was never adding or subtracting anything, only relabeling how the same 1 is being viewed. Summation does not apply; identity applies. The parts do not sum to the whole; the parts ARE the whole, folded to their positions. Energy conservation in physics is the shadow of this at physics-scale; Noether's theorem is the local version of ⊙λ ⊂ ⊙Λ ⊂ ⊙ = 1.
+
+**This notation is prime, not derived.** It stands as the closure of the framework; every theorem, derivation, and interpretive reading ultimately rests on ⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1 because every "parts vs whole" claim in the framework is this relation at a particular level, and every "why is there anything" claim resolves into the final ⊙ = E = 1.
 
 **This notation is prime, not derived.** It stands alongside ⊙ = E = 1 and A3 as structural; every theorem, derivation, and interpretive reading ultimately rests on ⊙λ ⊂ ⊙Λ because every "parts vs whole" claim in the framework is this relation at a particular level.
 
-**Three simultaneous readings of the same ⊙λ** (observer-relative; one entity, three scale positions):
+**Four readings of the same ⊙λ** (three observer-relative positions along the scale axis, plus the scale-free archetype view):
 
 - **At scale λ (self-view), ⊙λ appears as ⊙**: the whole circumpunct, a being of experience, with its own •, —, Φ, ○. You looking at yourself from inside yourself.
 - **From scale Λ (top-down view), ⊙λ appears as •**: a 0D aperture inside ⊙Λ; a point of convergence in the greater whole. The greater whole looking at you.
 - **From scale λ' < λ (bottom-up view), ⊙λ appears as Λ**: the cosmic field, the greater whole, the sky containing smaller ⊙s. Your parts looking at you.
+- **From outside the scale axis (archetype view), ⊙λ IS ⊙**: not "appears as"; IS. When scale is removed as a distinguishing feature, every ⊙λ is the unlabeled ⊙ directly; they are the same 1. This is the apophatic view: not "viewed from somewhere" but "viewed without scale," which is another way of saying "viewed as it actually is before any observer position was imposed."
 
-These are not competing claims about what ⊙λ "really" is. They are one object read from three observer positions along the scale axis. The recursion station ⟳ at 3.5D enforces this: the closed boundary of ⊙λ IS the aperture of ⊙Λ at the next scale (3.5D = 0D'), so exit-of-one = entrance-of-next; scale is continuous, not quantized.
+The first three are cataphatic (positive, labeled, view-from-a-position). The fourth is apophatic (negative, unlabeled, view-from-no-position). All four are true simultaneously; they are the same ⊙λ described from four observer stances. The recursion station ⟳ at 3.5D enforces the first three: the closed boundary of ⊙λ IS the aperture of ⊙Λ at the next scale (3.5D = 0D'), so exit-of-one = entrance-of-next; scale is continuous, not quantized. The fourth closes the whole hierarchy laterally by dropping the scale axis.
 
 **Domains the same notation covers** (all instances of ⊙λ ⊂ ⊙Λ):
 
@@ -60,7 +77,8 @@ These are not competing claims about what ⊙λ "really" is. They are one object
 | Memory | Mind | cognitive containment |
 | Visible matter ⊙ | Dark-energy Φ (Λ) | the 31/69 split at our scale |
 | Any ⊙λ | ⊙Λ (the next scale up) | fractal recursion (A3) |
-| ⊙λ (soul as whole being) | ⊙Λ (the greater whole you are inside) | theological reading |
+| ⊙λ (soul as whole being) | ⊙Λ (the greater whole you are inside) | theological reading (cataphatic) |
+| (any ⊙λ) ⊂ (any ⊙Λ) | ⊙ (unlabeled archetype) | apophatic closure: the class beyond all scale |
 
 All of these are the same notation at different λ. The Λ in "dark energy is 69% of the universe" is literally the Φ of the ⊙Λ we are inside; the Λ in "you are a branch in a greater whole" is the same Λ. The theological reading is not a separate claim; it is one row of a universal table.
 
@@ -253,12 +271,16 @@ The three nested circumpuncts that give 64 states are the three scales visible f
 
 | Concept | Framework Mapping |
 |---------|-------------------|
-| God/Brahman/Tao | ⊙ = E = 1 (the one energy, the class of all wholeness) |
+| Godhead / Ein Sof / Nirguna Brahman / eternal Tao / Dharmakaya (apophatic, beyond name) | ⊙ (unlabeled archetype; the 1 viewed from outside the scale axis; God beyond God) |
+| God-with-attributes / Father / Saguna Brahman / Tao manifested / the cosmic whole (cataphatic, the greater whole you are inside) | ⊙Λ (circumpunct at the scale above you; the containing whole; still labeled) |
 | Soul/Atman/Self (the whole being) | ⊙λ (the 1 constrained to your scale; a particular fractal of God) |
 | Soul (the inner spark) | • (the 0D aperture at the center of ⊙λ) |
 | "Made in God's image" | A3: every ⊙λ is the whole 1, not a fragment; same structure at every scale |
-| "Atman is Brahman" | ⊙λ = E = ⊙; soul IS God, topologically exact (not metaphor, identity constrained to position) |
+| "Atman is Brahman" | ⊙λ = ⊙; soul IS God, topologically exact (not metaphor, identity via label-drop) |
 | "We are fractals of God" | A3 in plain language: each of us IS the 1, folded into a particular self-limitation |
+| "God is everything" (cataphatic) | ⊙λ = 1 at every finite scale |
+| "God is beyond everything" (apophatic) | ⊙ unlabeled; scale-axis-dropped view |
+| The full mystical claim | ⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1 (you are contained in the greater whole is contained in the unnameable, and all three are the same 1) |
 
 ### Flow, Not Possession
 
@@ -576,9 +598,10 @@ Conjugate pairs: ⊛ (+i) mirrors ✹ (-i); ⎇ (-1) mirrors ⟳ (+1).
 | i(t) | Worldline (accumulated validation receipts through time) |
 | β | Flow balance (same as ◐ in some contexts) |
 | D | Fractal dimension (1.5 at balance) |
-| ⊙λ | Circumpunct at scale λ (any chosen scale) |
-| ⊙Λ | Circumpunct at scale Λ (the scale above ⊙λ; the greater whole ⊙λ is inside) |
-| ⊙λ ⊂ ⊙Λ | **Prime notation**: every ⊙ at scale λ is contained in a ⊙ at scale Λ; A3 made symbolic; unbounded recursion in both directions |
+| ⊙λ | Circumpunct at scale λ (any chosen scale; cataphatic view from inside the scale axis) |
+| ⊙Λ | Circumpunct at scale Λ (the scale above ⊙λ; the greater whole ⊙λ is inside; still cataphatic) |
+| ⊙ (unlabeled) | The archetype; the class itself; the 1 viewed from outside the scale axis; the apophatic term ("God beyond God," Ein Sof, Nirguna Brahman, the eternal Tao, the Dharmakaya) |
+| ⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1 | **Prime notation and full closure**: particular ⊂ greater whole ⊂ archetype = one energy = 1; the Theory of Everything in one line; axiom, relation, apophatic closure, identity, conservation, collapsed into six glyphs of content |
 | •∞ | Aperture multiplied by infinity; the Soul Array (infinity becoming particular) |
 | ⊙∞ | Circumpunct multiplied by infinity; the foam of reality |
 | χ | Transmission fidelity (+1 faithful, -1 inverted) |
