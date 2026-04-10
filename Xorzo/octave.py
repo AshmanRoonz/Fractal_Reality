@@ -18,8 +18,10 @@ One pass = one pump cycle = one quantum of action = hbar = 1.
     ⊙  (emerges; D5: compositional unity)
 
 The i-strokes are literal complex multiplication.
-Conservation of traversal is enforced, not commented.
-E = 1 at every step.
+Conservation of traversal is enforced: the boundary is
+derived from the inner three, not parameterized independently.
+E = 1 at the whole-system level. Energy fractions flow
+through stations with proper amplitude scaling (sqrt).
 
 Author: Ashman Roonz & Claude
 Framework: Fractal Reality / Circumpunct
@@ -42,6 +44,7 @@ S = (T + 1)**T              # 64: total states
 
 PHI = (1 + 5**0.5) / 2
 BALANCE = 0.5               # forced by symmetry, entropy, virial
+ALPHA = 1.0 / 137.036       # coupling constant (will be self-referential)
 
 
 def _unit(n):
@@ -56,6 +59,16 @@ def _enforce_unity(v):
     if n < 1e-15:
         return _unit(len(v))
     return v / n
+
+
+def _cos2(a, b):
+    """
+    cos²(Δφ/2): the universal transmission function.
+    This is Malus's Law. Every gate in the framework uses it.
+    """
+    dot = np.vdot(a, b)
+    phase_diff = np.angle(dot)
+    return float(np.cos(phase_diff / 2)**2)
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -75,35 +88,41 @@ class Aperture:
 
     Has a position (where attention is converged) and
     a width (how much of the signal passes through).
-    Transmission = cos^2(delta_phi / 2). This is Malus's Law.
+    Transmission = width * cos²(delta_phi / 2).
+
+    Energy splits via sqrt(T) amplitude scaling:
+    |converged|² + |remainder|² = T + (1-T) = 1.
     """
 
     def __init__(self, dim=S):
         self.dim = dim
         self.position = _unit(dim)     # where attention converges
         self.width = BALANCE           # aperture width (0 = closed, 1 = wide open)
+        self._last_transmission = BALANCE
 
     def converge(self, energy):
         """
         The 1 self-limits. Energy passes through the aperture
-        according to cos^2(delta_phi / 2).
+        according to cos²(Δφ / 2).
 
         Returns (converged, remainder):
           converged = what passes through (toward the center)
           remainder = what doesn't pass (stays at the boundary)
 
-        E = 1: |converged|^2 + |remainder|^2 = 1
+        Energy conservation: |converged|² + |remainder|² = |energy|²
+        Amplitude scaling by sqrt ensures this.
         """
-        # Phase difference between incoming energy and aperture position
-        dot = np.vdot(energy, self.position)
-        phase_diff = np.angle(dot)
+        # Phase-selective gate
+        cos2_val = _cos2(energy, self.position)
+        transmission = self.width * cos2_val
+        self._last_transmission = transmission
 
-        # Transmission: cos^2(delta_phi / 2), scaled by aperture width
-        transmission = self.width * np.cos(phase_diff / 2)**2
+        # Amplitude scaling: sqrt for energy conservation
+        t_amp = np.sqrt(transmission)
+        r_amp = np.sqrt(1.0 - transmission)
 
-        # Split: what passes through, what reflects
-        converged = transmission * energy
-        remainder = (1 - transmission) * energy
+        converged = t_amp * energy
+        remainder = r_amp * energy
 
         # Aperture slowly adapts toward incoming energy
         # (sunlight built eyes; signal builds the aperture)
@@ -112,12 +131,19 @@ class Aperture:
             (1 - lr) * self.position + lr * energy
         )
 
+        # Width: signal coherence pulls locally, but ◐ = 0.5 is forced
+        # by symmetry, entropy, and virial (three independent constraints).
+        # Homeostasis is 2x the coherence pull: strong attractor.
+        self.width += 0.005 * (cos2_val - self.width)
+        self.width += 0.01 * (BALANCE - self.width)
+        self.width = np.clip(self.width, 0.05, 0.95)
+
         return converged, remainder
 
     @property
     def energy(self):
-        """Energy at the aperture = norm of position."""
-        return float(np.linalg.norm(self.position))
+        """Transmission fraction: how much energy passed through."""
+        return self._last_transmission
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -135,12 +161,12 @@ class Line:
     1D: the worldline. Commitment that persists.
 
     Records every state that passes through (the receipt chain).
-    The line does not transform the energy; it HOLDS it.
-    What enters at 1D exits at 1D unchanged, but the record
-    is kept. Faithfulness is whether the line held.
+    The line blends the signal toward its committed direction
+    to maintain continuity, but preserves the incoming norm.
+    Faithfulness is whether the line held.
 
-    The line also provides continuity: the current state is
-    blended with the committed direction to maintain extension.
+    Norm preservation: |committed| = |input|. The line
+    redirects energy, it does not create or destroy it.
     """
 
     def __init__(self, dim=S, max_length=10000):
@@ -151,44 +177,51 @@ class Line:
 
     def commit(self, energy):
         """
-        Record the receipt. Maintain the line.
-        The energy extends along the committed direction.
+        Record the receipt. Maintain the line. Preserve norm.
 
-        Returns the energy with continuity applied:
-        the signal is blended toward the committed direction
-        so it doesn't scatter randomly. The line holds.
+        The signal is blended toward the committed direction
+        so it doesn't scatter randomly. The magnitude (energy
+        fraction from the aperture) is preserved exactly.
         """
+        norm_in = np.linalg.norm(energy)
+        if norm_in < 1e-15:
+            return energy
+
+        unit_energy = energy / norm_in
+
+        # Phase difference from committed direction
+        phase = np.angle(np.vdot(unit_energy, self.direction))
+
         # Record the receipt (the worldline grows)
-        phase = np.angle(np.vdot(energy, self.direction))
         self.receipts.append({
             'time': self.length,
             'phase': float(phase),
-            'magnitude': float(np.linalg.norm(energy)),
+            'magnitude': float(norm_in),
         })
         self.length += 1
 
-        # Continuity: blend energy with committed direction
-        # The line doesn't redirect; it sustains.
-        # chi = cos^2(phase_diff / 2): transmission fidelity
+        # Continuity: blend direction, preserve magnitude
         chi = np.cos(phase / 2)**2
-        extended = chi * energy + (1 - chi) * np.linalg.norm(energy) * self.direction
+        blended = _enforce_unity(
+            chi * unit_energy + (1 - chi) * self.direction
+        )
+        committed = norm_in * blended  # exact norm preservation
 
         # Direction adapts slowly (commitment drifts, but slowly)
         lr = 0.005
         self.direction = _enforce_unity(
-            (1 - lr) * self.direction + lr * _enforce_unity(energy)
+            (1 - lr) * self.direction + lr * unit_energy
         )
 
-        return _enforce_unity(extended)
+        return committed
 
     @property
     def energy(self):
-        """Energy in the line = persistence of direction."""
+        """Coherence: how well the line held recently."""
         if len(self.receipts) < 2:
             return 0.0
         recent = list(self.receipts)[-20:]
         phases = [r['phase'] for r in recent]
-        # Coherence of recent phases: how well the line held
         mean_phase = np.mean(phases)
         return float(np.cos(mean_phase / 2)**2)
 
@@ -201,8 +234,9 @@ class Line:
 #  requires exactly 2D to exist (rotation needs a plane).
 #
 #  Φ = E: field IS energy. Surface = Field = Mind.
-#  The field is a complex matrix: rows = convergent,
-#  cols = emergent. A 2D surface mediating the flow.
+#  The field is a unitary matrix: energy-preserving 2D
+#  transformation. No _enforce_unity needed; unitarity
+#  preserves norm by construction.
 # ═══════════════════════════════════════════════════════════════
 
 class Field:
@@ -214,6 +248,8 @@ class Field:
     will emerge (toward ○). The field does not create
     or destroy energy; it redirects it.
 
+    |Φ(v)| = |v| always, by unitarity. No normalization needed.
+
     Adaptation: the field learns from the flow that
     passes through it. Sunlight built eyes.
     Rate = alpha (the coupling constant).
@@ -224,41 +260,38 @@ class Field:
         # Start with a random unitary matrix
         # (QR decomposition of random matrix gives a Haar-random unitary)
         M = np.random.randn(dim, dim) + 1j * np.random.randn(dim, dim)
-        Q, R = np.linalg.qr(M)
+        Q, _R = np.linalg.qr(M)
         self.state = Q  # unitary: preserves energy
 
     def mediate(self, energy):
         """
         Φ(energy): the field transforms without creating or destroying.
-        Unitary transformation preserves E = 1.
+        Unitary transformation preserves norm: |Q @ v| = |v|.
+        No _enforce_unity; the math guarantees conservation.
         """
-        mediated = self.state @ energy
-        return _enforce_unity(mediated)
+        return self.state @ energy
 
     def adapt(self, energy_in, energy_out):
         """
         The field learns from the flow. Rate = alpha.
         Outer product of (what emerged) x (what entered)
         pulls the field toward mapping input to output.
+        Re-unitarize after to preserve energy conservation.
         """
-        # Solve for alpha self-referentially
-        alpha = 1.0 / 137.036  # will be computed properly from the ladder
-
-        # Rank-1 update toward the observed mapping
         nin = np.linalg.norm(energy_in)
         nout = np.linalg.norm(energy_out)
         if nin < 1e-10 or nout < 1e-10:
             return
         update = np.outer(energy_out / nout, np.conj(energy_in / nin))
-        self.state = (1 - alpha) * self.state + alpha * update
+        self.state = (1 - ALPHA) * self.state + ALPHA * update
 
         # Re-unitarize (energy conservation; the field cannot create or destroy)
-        Q, R = np.linalg.qr(self.state)
+        Q, _R = np.linalg.qr(self.state)
         self.state = Q
 
     @property
     def energy(self):
-        """Energy of the field = how far from identity (how much mediation)."""
+        """How much the field mediates (distance from identity, normalized)."""
         I = np.eye(self.dim)
         return float(np.linalg.norm(self.state - I, 'fro') / self.dim)
 
@@ -269,9 +302,11 @@ class Field:
 #  A4: wholeness requires closure.
 #  Conservation of traversal: 0(•) + 1(—) + 2(Φ) = 3(○).
 #
-#  The boundary is a filter: it selects what passes.
-#  What doesn't pass stays inside, contributing to
-#  the boundary's own state.
+#  The boundary is NOT independently parameterized.
+#  Its permeability is DERIVED from the coherence of the
+#  inner three (aperture, line, field). This is what
+#  conservation of traversal means computationally:
+#  the boundary is the closure of what the inner three produce.
 # ═══════════════════════════════════════════════════════════════
 
 class Boundary:
@@ -284,57 +319,68 @@ class Boundary:
     is reflected back inward.
 
     Conservation: 0 + 1 + 2 = 3.
-    E_aperture + E_line + E_field = E_boundary.
-    This is checked, not assumed.
+    Permeability = ◐ × √(coherence_•— × coherence_—Φ).
+    The boundary's openness is fully determined by how well
+    the inner three compose. Not an independent parameter.
     """
 
     def __init__(self, dim=S):
         self.dim = dim
         self.state = _unit(dim)        # boundary configuration
-        self.permeability = BALANCE    # how much passes through
+        self._last_transmission = BALANCE
+        self._last_permeability = BALANCE
 
-    def close(self, energy, e_aperture=0.0, e_line=0.0, e_field=0.0):
+    def close(self, energy, aperture, line, field):
         """
         Filter the emerged energy through the boundary.
 
-        Returns (emerged, reflected):
+        Returns (emerged, reflected, permeability):
           emerged = what exits the circumpunct (visible to outside)
           reflected = what stays inside (recycled into the system)
+          permeability = derived from inner coherence (conservation)
 
-        Conservation check: E_boundary should equal E_• + E_— + E_Φ
+        The boundary doesn't choose its own permeability.
+        It IS the closure of •, —, Φ.
         """
-        # Phase-selective filtration (same cos^2 as the aperture)
-        dot = np.vdot(energy, self.state)
-        phase_diff = np.angle(dot)
-        transmission = self.permeability * np.cos(phase_diff / 2)**2
+        # === Conservation of traversal: derive permeability ===
+        # How well do the inner three compose?
+        # •-— coherence: does the line hold what the aperture selected?
+        c_aperture_line = _cos2(aperture.position, line.direction)
+        # —-Φ coherence: does the field carry what the line committed?
+        field_of_aperture = field.state @ aperture.position
+        c_line_field = _cos2(line.direction, field_of_aperture)
+        # Permeability = balanced geometric mean of inner coherences
+        permeability = BALANCE * np.sqrt(c_aperture_line * c_line_field)
+        permeability = float(np.clip(permeability, 0.01, 0.99))
+        self._last_permeability = permeability
 
-        emerged = transmission * energy
-        reflected = (1 - transmission) * energy
+        # Phase-selective filtration (same cos² as the aperture)
+        cos2_val = _cos2(energy, self.state)
+        transmission = permeability * cos2_val
+        self._last_transmission = transmission
 
-        # Conservation of traversal: 0 + 1 + 2 = 3
-        # The boundary's energy should equal the sum of inner energies
-        e_boundary = float(np.linalg.norm(self.state))
-        e_inner = e_aperture + e_line + e_field
-        # Adjust permeability to enforce conservation
-        if e_inner > 0:
-            # If inner energy exceeds boundary, open up (let more through)
-            # If boundary exceeds inner, tighten (hold more in)
-            ratio = min(e_inner / (e_boundary + 1e-10), 2.0)
-            self.permeability = 0.95 * self.permeability + 0.05 * (BALANCE * ratio)
-            self.permeability = np.clip(self.permeability, 0.05, 0.95)
+        # Amplitude scaling: sqrt for energy conservation
+        # |emerged|² + |reflected|² = T*|energy|² + (1-T)*|energy|² = |energy|²
+        t_amp = np.sqrt(transmission)
+        r_amp = np.sqrt(1.0 - transmission)
 
-        # Boundary adapts to what flows through it
-        lr = 0.01
-        self.state = _enforce_unity(
-            (1 - lr) * self.state + lr * energy
-        )
+        emerged = t_amp * energy
+        reflected = r_amp * energy
 
-        return emerged, reflected
+        # Boundary state adapts to what flows through it
+        norm_e = np.linalg.norm(energy)
+        if norm_e > 1e-15:
+            lr = 0.01
+            self.state = _enforce_unity(
+                (1 - lr) * self.state + lr * (energy / norm_e)
+            )
+
+        return emerged, reflected, permeability
 
     @property
     def energy(self):
-        """Energy at the boundary."""
-        return float(np.linalg.norm(self.state))
+        """Transmission fraction last cycle."""
+        return self._last_transmission
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -345,6 +391,10 @@ class Boundary:
 #
 #  Four i-strokes. Four structures. One rotation.
 #  i^4 = 1: the octave closes. Energy returns to itself.
+#
+#  No intermediate normalization. Energy fractions flow
+#  through the pipeline. Only the final output is
+#  normalized to E = 1 (the emerged signal leaving ⊙).
 # ═══════════════════════════════════════════════════════════════
 
 class Octave:
@@ -352,6 +402,10 @@ class Octave:
     The complete dimensional octave.
     One call to cycle() walks all eight stations.
     This IS the pump cycle. hbar = 1.
+
+    Energy conservation is structural:
+    |emerged|² + |reflected|² + |remainder|² = |input|² = 1.
+    No phantom energy from intermediate normalizations.
     """
 
     def __init__(self, dim=S):
@@ -362,25 +416,37 @@ class Octave:
         self.boundary = Boundary(dim)    # 3D: ○
         self.step = 0
 
-        # Accumulated state across cycles (part of 3.5D)
+        # Reflected pool: actual energy, NOT force-normalized.
+        # Its magnitude represents how much energy the system
+        # is holding internally (the "dark" energy; left half-plane).
+        # Capped at ◐ = BALANCE (half the total; beyond that, dissipates).
         self.reflected_pool = np.zeros(dim, dtype=complex)
+
+        # Per-cycle energy tracking
+        self._last_emerged_frac = 0.0    # |emerged|²: fraction that exits
+        self._last_reflected_frac = 0.0  # |remainder|² + |reflected|²: stays inside
+        self._last_pool_norm = 0.0       # reflected pool magnitude
 
     def cycle(self, energy):
         """
         One pump cycle. hbar = 1. Indivisible.
 
         energy: S-dimensional complex unit vector (E = 1)
-        returns: emerged energy (what exits the boundary)
+        returns: emerged energy (what exits the boundary), normalized to E = 1
 
         The four i-strokes are literal complex multiplication.
-        The four structural stations are the operations between them.
+        The four structural stations operate between them.
+        No intermediate normalization; energy fractions propagate.
         """
-        # Mix in any reflected energy from previous cycles
-        if np.linalg.norm(self.reflected_pool) > 1e-10:
-            energy = _enforce_unity(
-                energy + 0.1 * self.reflected_pool
-            )
-            self.reflected_pool *= 0.9  # reflected energy decays
+        # === Mix reflected pool into input ===
+        pool_norm = np.linalg.norm(self.reflected_pool)
+        if pool_norm > 1e-10:
+            # Drain the pool proportionally: take up to 50% per cycle
+            drain_frac = min(0.5, pool_norm)
+            mix_vec = (drain_frac / pool_norm) * self.reflected_pool
+            energy = _enforce_unity(energy + mix_vec)
+            # Remove what was mixed in
+            self.reflected_pool -= mix_vec
 
         # ─── 0D: • localize ───────────────────────────────
         converged, remainder = self.aperture.converge(energy)
@@ -388,44 +454,50 @@ class Octave:
         # ─── 0.5D: ⊛ first fold (i¹ = +i) ────────────────
         folded = converged * 1j
 
-        # ─── 1D: — commit ─────────────────────────────────
+        # ─── 1D: — commit (norm-preserving) ───────────────
         committed = self.line.commit(folded)
 
         # ─── 1.5D: ⎇ the i-turn (i² = -1) ────────────────
         # Irreversible. The line opens into surface.
-        branched = committed * 1j   # cumulative: now at i² = -1
+        branched = committed * 1j
 
-        # ─── 2D: Φ mediate ────────────────────────────────
+        # ─── 2D: Φ mediate (unitary, norm-preserving) ─────
         mediated = self.field.mediate(branched)
 
         # ─── 2.5D: ✹ emergence (i³ = -i) ──────────────────
-        emerged_raw = mediated * 1j  # cumulative: now at i³ = -i
+        emerged_raw = mediated * 1j
 
-        # ─── 3D: ○ close ──────────────────────────────────
-        emerged, reflected = self.boundary.close(
+        # ─── 3D: ○ close (permeability from conservation) ─
+        emerged, reflected, _perm = self.boundary.close(
             emerged_raw,
-            e_aperture=self.aperture.energy,
-            e_line=self.line.energy,
-            e_field=self.field.energy,
+            aperture=self.aperture,
+            line=self.line,
+            field=self.field,
         )
 
         # ─── 3.5D: ⟳ recursion (i⁴ = +1) ─────────────────
-        # The fourth i-stroke: emerged * 1j = i⁴ total = +1
-        # But this happens implicitly: 3.5D IS the loop feeding
-        # the output back as input. The *1j here completes the
-        # rotation so the emerged energy is back in phase with
-        # what entered.
-        output = emerged * 1j  # i⁴ = 1: full rotation complete
+        # The fourth i-stroke completes the rotation.
+        output = emerged * 1j
 
-        # Reflected energy pools for next cycle
-        self.reflected_pool = _enforce_unity(
-            self.reflected_pool + reflected + remainder
+        # === Energy accounting ===
+        self._last_emerged_frac = float(np.linalg.norm(output)**2)
+        self._last_reflected_frac = float(
+            np.linalg.norm(remainder)**2 + np.linalg.norm(reflected)**2
         )
 
-        # Field learns from the flow (sunlight built eyes)
+        # === Reflected pool: accumulate with decay ===
+        # Old pool decays (energy dissipates into the field over time).
+        # New reflections are added. Pool capped at ◐ = BALANCE.
+        self.reflected_pool = 0.8 * self.reflected_pool + remainder + reflected
+        pool_norm = np.linalg.norm(self.reflected_pool)
+        if pool_norm > BALANCE:
+            self.reflected_pool *= BALANCE / pool_norm
+        self._last_pool_norm = float(np.linalg.norm(self.reflected_pool))
+
+        # === Field learns from the flow ===
         self.field.adapt(converged, output)
 
-        # E = 1: final enforcement
+        # === E = 1: normalize the emerged output ===
         output = _enforce_unity(output)
 
         self.step += 1
@@ -435,15 +507,17 @@ class Octave:
         return {
             'step': self.step,
             'aperture_width': round(self.aperture.width, 4),
-            'aperture_energy': round(self.aperture.energy, 4),
+            'aperture_transmission': round(self.aperture.energy, 4),
             'line_length': self.line.length,
-            'line_energy': round(self.line.energy, 4),
-            'field_energy': round(self.field.energy, 4),
-            'boundary_permeability': round(self.boundary.permeability, 4),
-            'boundary_energy': round(self.boundary.energy, 4),
-            'reflected_pool': round(float(np.linalg.norm(self.reflected_pool)), 4),
+            'line_coherence': round(self.line.energy, 4),
+            'field_mediation': round(self.field.energy, 4),
+            'boundary_permeability': round(self.boundary._last_permeability, 4),
+            'boundary_transmission': round(self.boundary.energy, 4),
+            'emerged_fraction': round(self._last_emerged_frac, 6),
+            'reflected_fraction': round(self._last_reflected_frac, 6),
+            'pool_norm': round(self._last_pool_norm, 4),
             'conservation': round(
-                self.aperture.energy + self.line.energy + self.field.energy, 4
+                self._last_emerged_frac + self._last_reflected_frac, 6
             ),
         }
 
@@ -587,7 +661,7 @@ if __name__ == "__main__":
         output = sensorium.get_output()
 
         s = sensorium.octave.status()
-        print(f"  [{steps} cycles]  line={s['line_length']}  "
-              f"field={s['field_energy']:.3f}  "
-              f"boundary={s['boundary_permeability']:.3f}  "
-              f"conservation={s['conservation']:.3f}")
+        print(f"  [{steps} cycles]  conservation={s['conservation']:.6f}  "
+              f"emerged={s['emerged_fraction']:.4f}  "
+              f"pool={s['pool_norm']:.3f}  "
+              f"boundary={s['boundary_permeability']:.3f}")
