@@ -168,6 +168,7 @@ This document serves as the formal, mathematical specification of the theory. It
   - [§25.16: The Golden Rule as Geometric Proof](#2516-the-golden-rule-as-geometric-proof)
   - [§25.17: The Resolution Protocol: Truth at Variable Aperture](#2517-the-resolution-protocol-truth-at-variable-aperture)
   - [§25.18: The Four Freedoms ; ⧖ as the Structural Location of Free Will](#2518-the-four-freedoms--⧖-as-the-structural-location-of-free-will)
+  - [§25.18a: The Weighing Step ; ◐ as State, 𓍝 as Act](#2518a-the-weighing-step--◐-as-state-𓍝-as-act)
 
 ### Part VI: Validation & Synthesis
 - [Chapter 26: Empirical Validation](#chapter-26-empirical-validation)
@@ -18707,6 +18708,53 @@ The five pillars are the stable phases an agent can occupy. The four ⧖-holds a
 ```
 
 The framework's account of free will is therefore: not a single decision, but a four-fold capacity; not a fight against necessity, but a hold within necessity; not a moment, but a practice. Freedom is what ⊙s do at ⧖. The pump cycles whether you exist or not; what you can do, as a ⊙ with a worldline, is hold the four phases of i long enough to bridge the pillars in their proper sequence and earn the AGREEMENT that closes the cycle as a whole worth recursing.
+
+[← Back to Table of Contents](#table-of-contents)
+
+---
+
+### §25.18a The Weighing Step: ◐ as State, 𓍝 as Act
+
+The four ⧖-holds in §25.18 produce dwell at the half-integer stations, but dwell alone does not produce coherence. A held threshold can be balanced or unbalanced, and the difference between them determines whether the next pillar opens or whether the hold collapses into one of its two failure modes. The operator that decides which is the **weighing step**: the act by which a worldline reads off the balance of the dwell it has just performed.
+
+This step has two faces, structural and processual, and they are the same fact named from two sides of the dimensional ladder. ◐ is the structural face: a number between 0 and 1, a property of the system's current state, the noun. 𓍝 is the processual face: the act of weighing, the verb the worldline performs in the dwell to find out what ◐ currently is. The framework has carried ◐ since its earliest formalization (the balance parameter, optimal at 0.5; see Chapter 5). What was missing was the explicit naming of the verb that reads ◐, performed by the worldline at the half-integer station. Dalton caught this in the corridor protocol he was developing in parallel: he inserted a weighing glyph between the held threshold and the field-coherence and gave the corridor its missing rightness-check. The catch lands cleanly inside the framework's existing structural-processual lattice as a new row.
+
+| Structural (integer) | Processual (half-integer) |
+|---|---|
+| • | ⊛ |
+| — | ⎇ |
+| Φ | ✹ |
+| ○ | ⟳ |
+| ◐ | 𓍝 |
+
+The first four rows are the dimensional ladder (states paired with the processes that produce them). The fifth row is the cross-cutting balance pair: ◐ describes the state achieved by any of the four processes, and 𓍝 is the act of measuring it. ◐ is what is currently true; 𓍝 is the worldline's act of finding out whether what is currently true is balanced.
+
+This makes the bridge structure of §25.18 three-step rather than two-step. Each ⧖-hold delivers the worldline to the next pillar only after the weighing has been performed and ◐ has been read at 0.5. The full bridge becomes:
+
+```
+    • (TRUE)      ── ⧖ at i¹ ── 𓍝 ──> — (FAITHFUL)
+    — (FAITHFUL)  ── ⧖ at i² ── 𓍝 ──> Φ (RIGHT)
+    Φ (RIGHT)     ── ⧖ at i³ ── 𓍝 ──> ○ (GOOD)
+    ○ (GOOD)      ── ⧖ at i⁰ ── 𓍝 ──> ⊙ (AGREEMENT)
+```
+
+The hold creates the dwell. The weighing reads the balance. The pillar opens only if ◐ = 0.5. The two failure modes of §25.18 (under-hold = impulse, over-hold = pathology) are precisely what the weighing detects: ◐ → 0 in the first case, ◐ → 1 in the second. Without 𓍝, the hold has no way of distinguishing the balanced dwell from either failure; the worldline performs ⧖ but never finds out whether the ⧖ achieved its purpose, so the next pillar is entered blind or not entered at all.
+
+The same parallelism that distinguishes i (necessity) from ⧖ (freedom) now distinguishes ◐ (the necessary fact) from 𓍝 (the free act). The pump cycles whether you weigh or not; whether the weighing actually happens at any particular cycle is up to the worldline. ◐ as a structural fact is what the framework has always claimed; 𓍝 as the worldline's discipline of reading it is what the corridor protocol now makes explicit. Central structural facts do not perform themselves; only worldlines perform them.
+
+**Formal addition to §25.18.** The free will set expands from four operators to four operators each carrying an embedded weighing:
+
+```
+    Free will = {(⧖₁, 𓍝₁), (⧖₂, 𓍝₂), (⧖₃, 𓍝₃), (⧖₀, 𓍝₀)}
+
+    where for each i:
+        ⧖ᵢ creates the dwell at the half-integer station
+        𓍝ᵢ reads ◐ during the dwell
+        if 𓍝ᵢ → ◐ = 0.5, the next pillar opens
+        if 𓍝ᵢ → ◐ ≠ 0.5, the hold has failed at one of its two modes
+```
+
+The four freedoms are therefore not just hold-and-release; they are hold-weigh-release, with the weighing as the discipline that turns dwell into delivery. The framework's earlier formalization had a single global β-check on the consciousness cycle; the corridor protocol now makes the check local to every half-integer station, giving four separate weighings per cycle, one per ⧖-hold. This is the fractal recurrence of the same balance fact at every position where a hold occurs (A3 applied to ◐).
 
 [← Back to Table of Contents](#table-of-contents)
 
