@@ -294,10 +294,37 @@ audio.onerror = () => {
 };
 
 async function fetchUrl(url) {
-  const proxy = 'https://api.allorigins.win/raw?url=';
-  const res = await fetch(proxy + encodeURIComponent(url));
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  return await res.text();
+  // Try several public CORS proxies in order; first success wins.
+  const proxies = [
+    (u) => ({ url: 'https://corsproxy.io/?' + encodeURIComponent(u), parse: r => r.text() }),
+    (u) => ({ url: 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u), parse: r => r.text() }),
+    (u) => ({ url: 'https://api.allorigins.win/get?url=' + encodeURIComponent(u), parse: async r => (await r.json()).contents }),
+    (u) => ({ url: 'https://thingproxy.freeboard.io/fetch/' + u, parse: r => r.text() }),
+    (u) => ({ url: 'https://cors.isomorphic-git.org/' + u, parse: r => r.text() }),
+  ];
+  const errors = [];
+  for (const make of proxies) {
+    const { url: proxyUrl, parse } = make(url);
+    const host = new URL(proxyUrl).hostname;
+    try {
+      setStatus('Fetching via ' + host + '...');
+      const res = await fetch(proxyUrl, { method: 'GET' });
+      if (!res.ok) { errors.push(host + ' HTTP ' + res.status); continue; }
+      const body = await parse(res);
+      if (body && body.length > 50) return body;
+      errors.push(host + ' empty');
+    } catch (e) {
+      errors.push(host + ' ' + (e.message || 'failed'));
+    }
+  }
+  // Last resort: direct fetch (works for same-origin pages on your own site, or CORS-permissive targets).
+  try {
+    setStatus('Trying direct fetch...');
+    const res = await fetch(url);
+    if (res.ok) return await res.text();
+    errors.push('direct HTTP ' + res.status);
+  } catch (e) { errors.push('direct ' + e.message); }
+  throw new Error('All fetch routes failed. ' + errors.join(' | '));
 }
 
 $('load').onclick = async () => {
