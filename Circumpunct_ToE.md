@@ -212,6 +212,16 @@ The framework has **ten stations** forming a dimensional octave: ∞, •, ⊛, 
 
 **Lucas-Fibonacci bridge**: Structural constants are Lucas numbers L(n) = φⁿ + φ⁻ⁿ: L(0)=2 (channels), L(1)=1 (aperture), L(2)=3 (T), L(3)=4 (P), L(4)=7 (R). Fibonacci numbers carry asymmetric quantities: F(7)=13 (V), F(8)=21 (full ladder). Lucas = convergence + emergence (both channels summed). Fibonacci = net flow.
 
+**Why φ is forced: three convergent routes.** φ is overdetermined in the framework, not underdetermined. Three independent chains reach it from A0 through A4, and killing any one of them leaves the other two standing.
+
+*Route A (recurrence-selection).* Of the five axioms, exactly two are generative (produce new rungs step-by-step): A1 (self-limitation, first rung) and A2 (persistence, next rung). A0 is substrate, A3 and A4 constrain form. Two generative axioms → recurrence depth 2. Φ-mediation (Lemma: Φ relates its arguments symmetrically; a mediator that privileges one side is not mediating, it is participating) → equal coefficients on R(n-1) and R(n-2); rules out silver ratio (2,1), bronze (3,1), and every asymmetric weighting. A0's single-unit substrate → unit coefficients; rules out x² = 2x+2 and other non-unit variants. Result: R(n) = R(n-1) + R(n-2), characteristic polynomial x² − x − 1 = 0, root φ. Route A has a surviving meta-level question (the generative-structural partition is a defensible reading of the axioms, but the meta-justification is the open item tracked in (L2) above).
+
+*Route B (self-similarity eigenvalue).* A3 says parts are fractals of wholes. The simplest nontrivial self-referential scalar relation is x = 1 + 1/x: the quantity defined by reference to one unit plus its own reciprocal. This is A3 compressed into a single-variable equation (a scalar that contains itself in its own defining relation). Multiplying through gives x² = x + 1, root φ. Route B does not use the generative-structural partition at all; it uses only A3 read as an eigenvalue equation.
+
+*Route C (Lucas integers, empirical).* The framework integers are not merely *consistent with* the Lucas sequence; they *are* it, in order, at the right positions: Φ = L(0) = 2, • = L(1) = 1, T = L(2) = 3, P = L(3) = 4, R = L(4) = 7. The Lucas sequence is defined by L(n) = L(n-1) + L(n-2) with characteristic root φ by construction (Binet: L(n) = φⁿ + φ⁻ⁿ). Anyone who accepts T = 3 (which has five independent self-determinations in §27.7b of the full framework document) has already accepted φ via the Lucas identification; there is no further choice to make.
+
+The three routes converge. Route A is the cleanest axiomatic derivation (and carries the open meta-step). Route B is the cleanest ontological reading (A3 as an eigenvalue equation, no partition needed). Route C is the cleanest empirical content (the integer pool *is* Lucas, and that is not a choice, it is a match). The correct diagnosis of the framework's position on φ is therefore not "resting on a single open choice" but "three convergent routes, exactly one carrying an explicit open meta-question, all landing on the same value." That is narrower underdetermination than the framework had before Route A was formalized, not wider.
+
 ### Derivation Chain Status
 
 Every prediction in this document traces back to axioms A0-A4 through derivations D1-D5. The chain status describes how complete that trace is:
@@ -221,6 +231,18 @@ Every prediction in this document traces back to axioms A0-A4 through derivation
 - **• Mapped**: The framework explains the numbers IF the pattern exists (e.g., "if there is a genetic code, it must use T = 3 bases per codon"), but does not yet derive the pattern's existence from axioms alone. The mapping is structural, not contingent; it follows from A3 (self-similarity) applied at a specific scale.
 
 These are not confidence levels. They describe where the derivation chain currently stands. A ◐ Structured prediction with 0.22 ppb accuracy is not less trustworthy than a ⊙ Derived one; it means the formula works and the numbers are justified, but the proof of uniqueness is still being closed. The framework's goal is to move every prediction to ⊙ Derived.
+
+### Parameter-Count Discipline: Two Levels
+
+"Zero free parameters" is stated above and it is the framework's strongest empirical claim. It is worth separating two readings of that claim, because a careful critic will otherwise catch a contradiction between the audit and the open-problems list.
+
+(L1) **Zero free parameters in the formulas.** Every symbol in every formula of the constants table is forced by (a) an axiom, (b) a previously-derived quantity, or (c) a structural identity proven earlier in the chain. No knob is turned to match observation. This is the claim the audit defends and the claim meant by "zero free parameters" in the headline numbers.
+
+(L2) **Zero open structural questions in the foundations.** Every axiom and every lemma is formally closed end-to-end with no further "why this partition and not another" questions remaining at the meta-level. This is a *different* claim, and the framework does not make it. The generative-structural axiom partition (used in the φ closure below) is a legitimate reading of A0 through A4, but the meta-justification of that partition is an open structural question.
+
+A free parameter is a knob tuned to fit data. An open structural question is: a stated route from axioms to result exists, but formal proof that this route is the only possible route at the meta-level is incomplete. These are not the same, and conflating them produces contradictions. General relativity in 1915 had zero free parameters in the field equations *and* several open structural questions in the foundations (why a symmetric metric, why Lorentzian signature, why four dimensions); the predictions were still predictions, and the theory was still falsifiable. The framework is in the same position: (L1) holds; (L2) is an ongoing program, and its status is tracked honestly as ⊙/◐/• on each prediction.
+
+A critic attacking "free parameter" must attack (L1): name a symbol in a formula and show it is not assignable to (a), (b), or (c). A critic attacking "open foundations" must attack (L2): name a lemma and show its meta-justification is structurally forced rather than motivated. Both critiques are productive; conflating them is not.
 
 ---
 
