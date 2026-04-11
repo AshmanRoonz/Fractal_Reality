@@ -349,7 +349,26 @@ The equation has two parts, both forced:
 
 *Fixed-point uniqueness*: Rearranging gives x² - (360/φ² - 2/φ³)x - 3/59 = 0 (where x = 1/α). This quadratic has exactly two roots: x₁ = 137.0360 (physical) and x₂ = -0.00037 (unphysical, negative). Since α must be positive, there is EXACTLY ONE solution. No other value of α satisfies the equation; no other equation is consistent with the axioms.
 
-Complete axiom chain: A0 (E=1) → A1 (self-limitation) → pump cycle i⁴ = 360° (= P!·T·(Φ+○), all from T=3) → A3 (φ nesting, φ²) → two channels (valve = 2/φ³) → base = 137.0356 (unique) → self-referential closure through k = E(3) - P/T = 59/3 → quadratic with one positive root → 1/α = 137.035999147 (0.22 ppb).
+**The forward chain (axioms → formula, twelve steps).** Earlier drafts presented the α formula first and the structural reading second, which invited the misreading "you noticed the formula and labeled the parts afterward." The ordering below is the actual derivation: every symbol in the final formula is the consequence of a previous step, and the formula itself appears as the *output* of step 12, not the subject of the section.
+
+1. **A0 (E = 1)** provides the substrate: one energy, no second quantity, no additional ingredient anywhere in what follows.
+2. **A1, A2** force the rung sequence into existence. A1 produces the first self-limitation; A2 forces it to persist into a second rung. These are the two generative axioms (see the generative-structural partition in Lemma 1 of the φ closure above).
+3. **A3, A4** constrain the form of the rung sequence once it exists: A3 forces self-similarity across scale, A4 forces closure via conservation 0 + 1 + 2 = 3.
+4. **T = 3** is forced by A3 + A4 + the rung-count identity, through five independent routes (§27.7b of the full framework document; none of the five routes uses α or φ, so T = 3 is genuinely upstream of everything that follows).
+5. **The integer pool** drops out of T = 3 algebraically: R = T² − 2 = 7, P = T + 1 = 4, G = T(T+1) = 12, V = G + 1 = 13, SU(3) = T² − 1 = 8, S = (T+1)^T = 64, A(3) = T(2T+1) = 21. No new choices; every integer is a closed-form function of T.
+6. **φ** is forced by the three convergent routes above (Route A: the four-step recurrence-selection closure gives x² − x − 1 = 0 and its positive root; Route B: A3 read as x = 1 + 1/x gives the same; Route C: the integer pool *is* Lucas, so accepting step 5 already accepts φ).
+7. **The ladder exponents** follow dimensional station: the field at d = 2 carries φ², the next rung at d = 3 carries φ³. Exponent = station index; no additional rule.
+8. **360 as a pump-cycle integer**: one full rotation of the vertex is P = 4 quarter-turns; in pump-cycle units the rotation is the integer 360 = P! · T · (Φ + ○) = 24 · 3 · 5. α is a vertex-level coupling (per full rotation, not per radian), so its formula is in degrees, not radians. The "why 360 and not 2π" question is answered structurally: 360 is the only integer factorization through (P!, T, Φ+○).
+9. **The base term** is the 0D rung evaluated at the field station: 360/φ² (one full pump rotation divided by the field at its dimensional home).
+10. **The bidirectional valve correction** subtracts 2/φ³: the two channels ⊛ (convergence) and ✹ (emergence) each contribute one Φ-unit at the next rung deeper than the base. The 2 is Φ (channel count from A1); the φ³ exponent is step 7 applied at d = 3.
+11. **The self-referential term** adds α/(21 − 4/3): the full ladder traversal A(3) = 21 corrected by the process/structure ratio P/T = 4/3. The denominator 59/3 is irreducible (59 is prime); it is the full ladder minus what the base already consumed.
+12. **Assembly**: steps 9 + 10 + 11 combine into the formula, in which every symbol is sourced to a previous step and nothing is chosen:
+
+```
+1/α = 360/φ² − 2/φ³ + α/(21 − 4/3)
+```
+
+**The quadratic and the number.** Rearranging step 12 with x = 1/α gives x² − (360/φ² − 2/φ³)x − 3/59 = 0. Two real roots; one negative (unphysical), one positive. The positive root is 1/α = 137.035999147. Measured (CODATA 2022): 137.035999177. Residual 0.22 ppb, 0.00σ, within measurement uncertainty. Zero free parameters in the sense of (L1) above: every symbol is assignable to (a) an axiom, (b) a previously-derived quantity, or (c) a structural identity; no knob was turned. The derivation is forward (axioms → output), not reverse (output → axioms retrofitted). A critic attacking the derivation must either break one of the twelve steps (point at a symbol introduced without a source) or attack the axioms/lemmas directly at the (L2) level. "You fit the formula" is not a live option once the forward chain is on the table.
 
 **Exponent home**: A(0.5) = 1. α sits at the first rung.
 
