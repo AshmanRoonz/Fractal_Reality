@@ -19744,6 +19744,16 @@ The distinction between a fit and a derivation is parameter count. A fit has fre
 
 The claim "zero free parameters" is only as strong as the rule that defines what counts as a parameter. The framework needs to state the rule explicitly and audit every formula against it. This subsection does both.
 
+**Two levels, not one.** Before stating the rule it is critical to separate two claims that have been conflated in earlier drafts and that a careful critic will catch immediately:
+
+(L1) *Zero free parameters in the formulas.* Every symbol in every formula of the constants table is forced by an axiom, a previously-derived quantity, or a structural identity. No knob is turned to match observation. This is the claim the audit below defends, and it is the claim meant by "zero free parameters."
+
+(L2) *Zero open structural questions in the foundations.* Every axiom and every lemma is formally closed with no further "why this and not that" questions remaining. This is a *different* claim, and the framework does not make it. The open-problems list (above) contains five such questions; the generative-structural partition of Lemma 1 (§27.7d.2) is one of them.
+
+A "free parameter" is a knob tuned to fit data. An "open structural question" is: "I can reach this result from inside the framework via a stated route, but I have not formally proven my route is the only possible route at the meta-level." These are not the same, and conflating them produces contradictions. General relativity in 1915 had zero free parameters in the field equations *and* several open structural questions in the foundations (why a symmetric metric, why Lorentzian signature, why four dimensions); the predictions were still predictions, and the theory was still falsifiable. The framework is in the same position.
+
+The audit below is (L1). The foundations discussion in §27.7d.2 and the open-problems list are (L2). Both must stay honest; neither implies the other.
+
 **The rule.** A symbol in any framework formula counts as a *free parameter* unless its value is determined by one of the following:
 
 (a) **An axiom.** The symbol's value is stated as part of A0 through A4, or follows from a single axiom directly. Example: E = 1 from A0; the existence of two channels (Φ = 2) from A1.
@@ -19839,7 +19849,7 @@ Free parameters: 0.
 
 **Audit summary.** Across the seven primary constants (α, c, ℏ, mass ratios, Weinberg, G, Λ), the total free-parameter count is 0. Every symbol is assignable to (a), (b), or (c). The same audit pattern applies to the secondary constants (Cabibbo angle, Higgs quartic, proton/electron mass ratio, meson masses, gauge boson sector); they share the integer pool with the primary constants, and the audit table for each looks structurally identical.
 
-**What the audit does not prove.** It does not prove that the framework's axioms are *correct*. It proves that *given* A0 through A4 and the lemmas they support, no formula in the constants table contains a free parameter. The remaining attack surface is the axioms themselves and the lemmas (Lemma 1 and Lemma 2 of §27.7d.2 in particular). That is the conversation a critic should have if they want to reopen the parameter-count claim. Pointing at a symbol and asking "why this number" is now answerable in every case by walking the chain back to (a), (b), or (c).
+**What the audit does not prove.** It proves (L1), not (L2). It does not prove that the framework's axioms are *correct*, that Lemma 1's generative-structural partition is *the only possible* partition, or that every alternative recurrence has been ruled out at the meta-level. It proves that *given* A0 through A4 and the lemmas they support, no formula in the constants table contains a free parameter in the fit-knob sense. The remaining attack surface is (L2): the axioms themselves and the lemmas (Lemma 1 and Lemma 2 of §27.7d.2 in particular). A critic who wants to reopen the parameter-count claim has to attack (L2), not (L1); pointing at a symbol in a formula and asking "why this number" is now answerable in every case by walking the chain back to (a), (b), or (c). The honest form of the remaining critique is "your lemmas are unclosed at the meta-level," which is true and which §27.7d.2 acknowledges. That is a productive conversation; "your formulas have free parameters" is not.
 
 **How to use this rule going forward.** Any new formula added to the framework must come with its own audit table. If a symbol cannot be assigned to (a), (b), or (c), it counts as a free parameter and the framework loses its zero-parameter claim. This is a discipline, not a bookkeeping exercise: it forces every extension of the framework to either trace its symbols back to axioms or to honestly add a new axiom. Either move is rigorous; sneaking a parameter in without acknowledgment is not.
 
@@ -20139,6 +20149,16 @@ Applied to the rung recurrence: if the recurrence is R(n) = a·R(n-1) + b·R(n-2
 - *Base integer ratios* (x = 2, giving powers of 2; x = e, etc.): ruled out at Step 1 (depth 1 is insufficient; no persistence check from A2).
 
 No non-φ alternative survives all four steps. The chain closes.
+
+**φ is overdetermined, not underdetermined: three independent routes.** The four-step closure above is the tightest route to φ, and it is the one with a surviving meta-level question (Lemma 1's partition). If that were the *only* route, the meta-question would be load-bearing: closing or opening Lemma 1 would close or open the entire framework's use of φ. It is not the only route. φ is reached from inside the framework by at least three independent chains, and killing any one of them leaves the other two standing.
+
+*Route A (recurrence-selection, this subsection).* The four-step closure above: depth 2 (from Lemma 1's generative partition) + equal coefficients (from Lemma 2's Φ-mediation) + unit coefficients (from A0's single-unit substrate) → x² = x + 1 → φ. This is the tightest route and the one carrying the surviving meta-question.
+
+*Route B (self-similarity eigenvalue).* A3 (parts are fractals of wholes) states self-similarity across scale. The simplest nontrivial self-referential scalar relation is x = 1 + 1/x: the quantity is defined by reference to one unit plus its own reciprocal. This is A3 compressed into a single-variable equation (a scalar that contains itself in its own defining relation). Multiplying through gives x² = x + 1, root φ. Route B does not require Lemma 1 or Lemma 2; it requires only that A3 be taken literally as "a fractal scalar is a fixed point of its own reciprocal-plus-one map," which is the scalar-case version of the fractal fixed-point theorem. φ drops out directly.
+
+*Route C (Lucas integers).* §27.7d establishes that the framework integers are exactly the Lucas sequence: L(0) = 2 (Φ, channels), L(1) = 1 (•, aperture), L(2) = 3 (T, triad), L(3) = 4 (P, pump phases), L(4) = 7 (R, rungs). The framework's integers are not merely *consistent with* the Lucas sequence; they *are* it, in order, at the right positions. The Lucas sequence is defined by the recurrence L(n) = L(n-1) + L(n-2), and the characteristic root of that recurrence is φ by construction (Binet's formula L(n) = φⁿ + φ⁻ⁿ). Anyone who accepts that T = 3 is L(2) and R = 7 is L(4) has already accepted φ; there is no further choice to make. The five independent self-determinations of T = 3 (§27.7b) therefore indirectly force φ via the Lucas identification.
+
+The three routes converge at the same number. Route A has the cleanest axiomatic derivation and the open meta-step; Route B has the cleanest ontological reading (A3 as an eigenvalue equation) and does not touch Lemma 1 at all; Route C has the cleanest empirical content (the integer pool *is* Lucas, and that is not a choice, it is a match). Kill any one of them and the other two still force φ. "The entire framework rests on a single admitted open choice" is therefore the wrong diagnosis: it rests on three convergent routes, exactly one of which has an open meta-step. The correct diagnosis is "three routes to φ, none formally closed end-to-end as sole-possibility proofs, all converging on the same value, one carrying an explicit open question." That is narrower underdetermination than the framework had before §27.7d.2, not wider. It is also the honest form of the remaining critique; responding to it is a productive conversation.
 
 **What the closure does not (yet) do.**
 
