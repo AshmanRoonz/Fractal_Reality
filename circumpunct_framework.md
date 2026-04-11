@@ -12696,11 +12696,11 @@ Bond length ratio C≡C/C-C = 120/154 = 0.779 ≈ R/T² = 7/9 = 0.778 (0.19%). T
 
 In framework notation: f = 1/(• + n_LP), where • = 1 is the aperture itself. Sigma is suppressed because lone pairs compete for the σ orbital direction; pi bonds are orthogonal and unaffected. N-N: f = 1/2, σ_true = 326 (measured σ = 163). O-O: f = 1/3, σ_true = 438 (measured σ = 146).
 
-**Layer 3: Compositional closure (A4).** For triple bonds with lone pairs, the whole exceeds the sum of its parts.
+**Layer 3: Compositional closure (D5).** For triple bonds with lone pairs, the whole exceeds the sum of its parts.
 
   E_triple = (σ_meas + π₁ + π₂) × T/Φ
 
-Compositional factor C = T/Φ = 3/2. This is A4 at the molecular level: three constraints (σ + π₁ + π₂) mediated by the 2D field. N≡N: sum of parts = 628.5, × 3/2 = 942.7 (measured 945, 0.25%). The boost applies ONLY when: (1) full dimensional closure (all three bond types present), (2) lone pairs present (n_LP > 0), (3) sp hybridization clears the aperture. At carbon (0 LP), parts sum to whole naturally (A4 trivially satisfied).
+Compositional factor C = T/Φ = 3/2. This is D5 at the molecular level: three constraints (σ + π₁ + π₂) mediated by the 2D field; the whole is not the sum of its parts but their compositional unity via Φ. Note: in legacy framework text this principle was labeled "A4 (Compositional Wholeness)"; under the current five-axiom / five-derivation scheme (see CLAUDE.md and §2.2), compositional wholeness is the derivation D5 that follows from A0–A4, and A4 is reserved for closure (conservation of traversal 0+1+2=3). N≡N: sum of parts = 628.5, × 3/2 = 942.7 (measured 945, 0.25%). The boost applies ONLY when: (1) full dimensional closure (all three bond types present), (2) lone pairs present (n_LP > 0), (3) sp hybridization clears the aperture. At carbon (0 LP), parts sum to whole naturally (D5 trivially satisfied).
 
 Alternative precision formula: N≡N = σ_true × (A(3.5) + •)/A(2) = 326 × 29/10 = 945.4 (0.042%). Here 29 = A(3.5) + 1 (full octave traversal + aperture) and 10 = A(2) (accumulated traversal at the field station).
 
@@ -12816,7 +12816,7 @@ The worst predictions (S-F, H-F) involve extreme ΔEN where the power law compre
 ║  Z_eff from framework: 3% avg error, H through Ar.               ║
 ║  EN = Z_eff^(7/10)/n: power law from R/A(2), no Pauling data.   ║
 ║  Bond energies: π₁/σ = R/T² = 7/9, π₂/σ = V/P(P+1) = 13/20.  ║
-║  LP suppression: f = 1/(1+n_LP). N≡N boost: T/Φ = 3/2 (A4).    ║
+║  LP suppression: f = 1/(1+n_LP). N≡N boost: T/Φ = 3/2 (D5).    ║
 ║  Homonuclear avg error 0.13% across 6 bonds, 0 free parameters.  ║
 ║  Heteronuclear: D = geo × [1+(Φ+T)×ΔEN²], 10.9% avg, 23 bonds.║
 ║  Reaction dynamics = pump cycle. Catalysis = SRL.                ║
