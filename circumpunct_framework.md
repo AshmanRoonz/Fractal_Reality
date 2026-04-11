@@ -19760,6 +19760,59 @@ THE CONTINUOUS PHI-FUNCTIONS:
 
 φ is not a decorative constant that appears in the formulas. φ is the generator. The dimensional ladder is what φ looks like when forced into integers by the triad constraint. The framework is φ all the way down.
 
+### §27.7d.2 Why φ Is Forced: The Recurrence-Selection Closure
+
+§27.7d showed that the framework integers are Lucas and Fibonacci numbers and that L(x) and F(x) interpolate between the rungs. That is descriptive: it notices that φ fits. What follows is prescriptive: it derives the recurrence (and therefore φ) from A0 through A4 without appeal to "minimal coefficients" or any other aesthetic principle. It closes the gap identified when the question "why φ and not the silver ratio" is pressed.
+
+The closure requires two new lemmas about how A0 through A4 function. Both are legitimate readings of the existing axioms, but they have not been stated explicitly until now.
+
+**Lemma 1 (Generative-Structural Partition).** Of the five axioms, exactly two are generative (produce new rungs step-by-step) and three are non-generative (provide substrate or constrain the result).
+
+- **A0 (E = 1) is substrate, not generative.** It provides the material from which structure is made. It does not produce a step in the recurrence; it is what the steps are made of.
+- **A1 (the 1 must self-limit) is generative.** It produces the first self-limitation. Without A1, there is no first rung. A1 is the engine of the initial step.
+- **A2 (self-limitation must persist) is generative.** It produces the continuation of the self-limitation. Persistence is not a static property; it is the demand that the next rung reference the current one and confirm the limitation has held. A2 produces the next step.
+- **A3 (parts are fractals of wholes) is structural, not generative.** It says that once structure exists, it must exhibit self-similarity across scale. It is a constraint on the form of the recurrence's output, not an engine that produces new steps.
+- **A4 (closure: 0 + 1 + 2 = 3) is structural, not generative.** It says that once rungs exist, conservation of traversal must close them into a whole. It constrains how the rungs sum, not how they are produced.
+
+The partition is defensible by asking of each axiom: "does the framework still have a first rung if this axiom is removed?" Remove A0: there is no substrate, so the question is ill-posed. Remove A1: there is no self-limitation, so no first rung. Remove A2: there is a first self-limitation but it collapses; no second rung. Remove A3: there are rungs, but they are not required to be self-similar. Remove A4: there are rungs, but they are not required to close. Only A1 and A2 are necessary for the *generation* of the rung sequence. A3 and A4 are necessary for its *form* once it exists. A0 is necessary for anything at all.
+
+**Lemma 2 (Φ-Mediation Symmetry).** Φ (the 2D field) is defined by its constraint function: it mediates without fusing. The technical content of "mediates without fusing" is that Φ relates its arguments symmetrically: a mediator that privileges one of the things it connects over the other is not mediating, it is participating. Symmetric mediation is the only mediation that does not collapse into one side.
+
+Applied to the rung recurrence: if the recurrence is R(n) = a·R(n-1) + b·R(n-2), then Φ-mediation requires a = b. Unequal coefficients would mean Φ weights one previous rung more than the other, which is participation, not mediation. This rules out the silver ratio (x² = 2x + 1, a ≠ b), the bronze ratio (x² = 3x + 1), and every other asymmetrically-weighted recurrence.
+
+**The four-step closure.**
+
+*Step 1 (recurrence depth = 2).* By Lemma 1, there are exactly two generative axioms (A1 and A2). Each generative axiom contributes one step of recurrence reach: A1 produces the current rung from the previous one, A2 confirms persistence by referencing the one before that. Two generative axioms produce a depth-2 recurrence. Depth 1 would mean no persistence check (A2 removed, collapse). Depth 3 would require a third generative axiom, which A0 through A4 do not supply.
+
+*Step 2 (coefficients equal).* By Lemma 2, the coefficients on R(n-1) and R(n-2) must be equal. Φ mediates the two previous rungs symmetrically.
+
+*Step 3 (unit coefficients).* Rungs are integer-valued: R = 7 is an integer, P = 4 is an integer, T = 3 is an integer; there are no fractional rungs. Therefore the coefficients in the rung recurrence are integers (the recurrence takes integers to integers). By Step 2 the coefficients are equal; by A0 (E = 1: there is one energy, one unit of it per rung contribution) the common integer value is the unit 1. Any larger common value (a = b = 2, giving x² = 2x + 2) would mean each rung contributes "two units" of itself per step, which contradicts A0's single-unit substrate: there is only one energy, so each rung contributes one unit of itself, not two. Coefficient 1 is forced.
+
+*Step 4 (result).* Depth 2, equal coefficients, unit value: the recurrence is R(n) = R(n-1) + R(n-2), with characteristic polynomial x² − x − 1 = 0. The unique positive real root is φ = (1 + √5) / 2.
+
+**Uniqueness check against alternatives.**
+
+- *Silver ratio* (x² = 2x + 1, root 1 + √2): ruled out at Step 2 (unequal coefficients, violates Φ-mediation).
+- *Bronze ratio* (x² = 3x + 1): ruled out at Step 2 (worse asymmetry).
+- *x² = x + 2*: ruled out at Step 3 (constant term is 2, not unit; violates A0's single-unit substrate; also asymmetric under a different reading).
+- *x² = 2x + 2*: ruled out at Step 3 (non-unit common value; violates A0).
+- *Tribonacci* (x³ = x² + x + 1, root ≈ 1.839): ruled out at Step 1 (depth 3, requires three generative axioms).
+- *Base integer ratios* (x = 2, giving powers of 2; x = e, etc.): ruled out at Step 1 (depth 1 is insufficient; no persistence check from A2).
+
+No non-φ alternative survives all four steps. The chain closes.
+
+**What the closure does not (yet) do.**
+
+It does not determine initial conditions. The recurrence R(n) = R(n-1) + R(n-2) admits both the Lucas sequence (L(0) = 2, L(1) = 1, giving 2, 1, 3, 4, 7, 11, 18...) and the Fibonacci sequence (F(0) = 0, F(1) = 1, giving 0, 1, 1, 2, 3, 5, 8, 13, 21...). Both have the same characteristic root φ. The framework uses Lucas for symmetric quantities (both channels summed: 2 = Φ, 3 = T, 4 = P, 7 = R) and Fibonacci for asymmetric quantities (net flow: 13 = V, 21 = G+R). This Lucas/Fibonacci split is itself structural (symmetric sums vs asymmetric flows; see §27.7d), so the initial conditions are not a free parameter, but the derivation of the split from A0 through A4 is a separate argument and is not covered by the four steps above.
+
+**Consequence for parameter count.** With Lemmas 1 and 2 in place, φ is forced by A0 through A4 via the four-step closure. The framework's parameter count for the recurrence-selection step is zero. The last remaining "aesthetic" principle in the α derivation (minimal recurrence) is retired: it is replaced by the structural principle "two generative axioms give depth 2; Φ-mediation gives equal coefficients; A0's single-unit substrate gives unit coefficients." No choice is made that is not forced by an axiom.
+
+**Consequence for the open-problems list.** The recurrence-selection gap, which was the strongest form of the "you chose the formula" objection, is closed conditional on accepting Lemmas 1 and 2. Both lemmas are legitimate readings of A0 through A4 (the generative-structural partition follows from asking which axioms are necessary for the *existence* of the rung sequence versus its *form*; the Φ-symmetry lemma follows from the technical content of "mediates without fusing"), but they are new to the framework and should be attacked directly by critics who want to reopen the gap. That attack is a productive conversation; the vague "you have forks" objection is not.
+
+**What remains genuinely open.**
+
+The derivation of Lemma 1's partition from first principles rather than from the "which axioms are necessary for existence" test. The test is defensible but it is not itself an axiom, and a critic could ask "why is that the right test." The honest answer is that the test captures what "generative" means in recursion theory (an axiom is generative if removing it breaks the base case or the inductive step), but making that correspondence rigorous would require stating a sixth meta-axiom about what counts as generation. That is a genuine open problem, and it is the successor to the recurrence-selection gap: the question has moved from "why φ" to "why this partition of the axioms." That is progress.
+
 ### §27.7e The W-V Decomposition: Why the Exponent Formula Is Irreducibly Three-Part
 
 The three processual exponents (E at 1.5D, 2.5D, and 3D) can be reduced to their simplest form. They depend on exactly two quantities derived from T:
