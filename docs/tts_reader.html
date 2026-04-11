@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TTS Reader: read any page aloud</title>
+<script src="https://js.puter.com/v2/"></script>
 <style>
   :root {
     --bg: #0f1115;
@@ -22,7 +24,7 @@
   .sub { color: var(--mute); margin-bottom: 20px; font-size: 13px; }
   .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
   label { display: block; font-size: 12px; color: var(--mute); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-  input[type=text], textarea, select {
+  input[type=text], input[type=password], textarea, select {
     width: 100%; background: #0b0d12; color: var(--ink); border: 1px solid var(--line);
     border-radius: 6px; padding: 10px 12px; font: inherit; outline: none;
   }
@@ -48,20 +50,20 @@
     border-radius: 6px; padding: 12px; font-size: 13px; white-space: pre-wrap;
   }
   .preview mark { background: var(--accent); color: #061226; padding: 0 2px; border-radius: 2px; }
-  .tabs { display: flex; gap: 4px; margin-bottom: 12px; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
   .tabs button { background: transparent; color: var(--mute); border: 1px solid var(--line); padding: 6px 14px; font-weight: 500; border-radius: 6px; }
   .tabs button.active { color: var(--ink); border-color: var(--accent); background: rgba(106,169,255,0.1); }
   .hint { font-size: 12px; color: var(--mute); margin-top: 6px; }
   .hint code { background: #0b0d12; padding: 1px 5px; border-radius: 3px; color: var(--ink); }
   a { color: var(--accent); }
-  details { margin-top: 8px; }
-  summary { cursor: pointer; color: var(--mute); font-size: 12px; }
+  .engine-info { display: none; font-size: 12px; color: var(--mute); margin-top: 6px; padding: 8px 10px; background: #0b0d12; border: 1px solid var(--line); border-radius: 6px; }
+  .engine-info.show { display: block; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>TTS Reader</h1>
-  <p class="sub">Reads any web page, HTML file, or pasted text aloud. Primary engine uses your browser and OS voices (free, offline, no limits); the best-sounding picks are highlighted in the voice list.</p>
+  <p class="sub">Reads any web page, HTML file, or pasted text aloud using cloud neural voices. Works from any device.</p>
 
   <div class="panel">
     <div class="tabs">
@@ -73,7 +75,7 @@
     <div data-panel="url">
       <label>Page URL</label>
       <input type="text" id="url" placeholder="https://example.com/article">
-      <div class="hint">Fetching a URL from <code>file://</code> is blocked by Chrome. Host this file on a server, or use the <b>Paste HTML</b> tab.</div>
+      <div class="hint">Fetched through a CORS proxy; works from any hosted page. If you open this file via <code>file://</code>, use the Paste HTML tab instead.</div>
     </div>
 
     <div data-panel="html" style="display:none">
@@ -92,8 +94,9 @@
       <div>
         <label>Engine</label>
         <select id="engine">
-          <option value="web" selected>Browser / OS voices (recommended)</option>
-          <option value="stream">StreamElements cloud (Amazon Polly)</option>
+          <option value="puter" selected>Puter.js (AWS Polly neural, free)</option>
+          <option value="eleven">ElevenLabs (your API key; best quality)</option>
+          <option value="web">Device built-in voices (offline, quality varies)</option>
         </select>
       </div>
       <div>
@@ -102,14 +105,19 @@
       </div>
     </div>
 
-    <details>
-      <summary>How to get voices that actually sound human</summary>
-      <div class="hint" style="margin-top:8px">
-        <b>Windows 11:</b> Settings → Time & Language → Language & region → Add a language with "Speech" pack, or Settings → Accessibility → Narrator → Add natural voices. Install <i>Microsoft Aria (Natural)</i>, <i>Guy (Natural)</i>, <i>Jenny (Natural)</i>, or <i>Ryan (Natural)</i>. Restart the browser and they will appear in the list above.<br>
-        <b>macOS:</b> System Settings → Accessibility → Spoken Content → System Voice → Manage Voices. Download any voice marked "(Premium)" or "(Enhanced)"; Siri voices like Evan, Ava, and Zoe are the most human.<br>
-        <b>Chrome on any OS:</b> Voices whose name starts with "Google" are decent cloud voices and appear automatically.
-      </div>
-    </details>
+    <div class="engine-info" id="info-puter">
+      Uses <a href="https://puter.com" target="_blank">Puter.js</a>, a free cloud SDK that proxies AWS Polly neural voices. First use triggers a one-time sign-in popup (free account; no API key needed afterward). Works on any device with a browser.
+    </div>
+    <div class="engine-info" id="info-eleven">
+      ElevenLabs has the most human-sounding voices on the internet. Sign up free at <a href="https://elevenlabs.io" target="_blank">elevenlabs.io</a> (10,000 characters/month free, ~10 minutes of audio), copy your API key from Profile → API Keys, and paste it below. It stays in your browser only.
+      <div style="height:8px"></div>
+      <input type="password" id="elevenKey" placeholder="ElevenLabs API key (sk_...)">
+      <div style="height:6px"></div>
+      <input type="text" id="elevenVoiceId" placeholder="Voice ID (default: Rachel)" value="21m00Tcm4TlvDq8ikWAM">
+    </div>
+    <div class="engine-info" id="info-web">
+      Uses the browser's built-in <code>speechSynthesis</code>. On Windows 11 install Microsoft Natural voices; on macOS download Siri Premium voices; on iOS/Android quality varies. No network, no sign-in.
+    </div>
 
     <div style="height:12px"></div>
 
@@ -128,7 +136,7 @@
         </select>
       </div>
       <div>
-        <label>Pitch</label>
+        <label>Pitch (device voices only)</label>
         <select id="pitch">
           <option value="0.8">Low</option>
           <option value="1" selected>Normal</option>
@@ -165,7 +173,7 @@ let chunks = [];
 let chunkSpans = [];
 let currentIdx = 0;
 let stopped = true;
-let voices = [];
+let webVoices = [];
 
 function setStatus(msg, kind='') {
   statusEl.textContent = msg;
@@ -182,75 +190,94 @@ document.querySelectorAll('.tabs button').forEach(btn => {
   };
 });
 
-// ---------- Voice list ----------
-function rankVoice(v) {
+// ---------- Engine voice lists ----------
+const POLLY_VOICES = [
+  { v: 'Joanna',    label: 'Joanna (US female, neural)',  lang: 'en-US' },
+  { v: 'Matthew',   label: 'Matthew (US male, neural)',   lang: 'en-US' },
+  { v: 'Ruth',      label: 'Ruth (US female, neural)',    lang: 'en-US' },
+  { v: 'Stephen',   label: 'Stephen (US male, neural)',   lang: 'en-US' },
+  { v: 'Danielle',  label: 'Danielle (US female, neural)',lang: 'en-US' },
+  { v: 'Gregory',   label: 'Gregory (US male, neural)',   lang: 'en-US' },
+  { v: 'Kendra',    label: 'Kendra (US female, neural)',  lang: 'en-US' },
+  { v: 'Kimberly',  label: 'Kimberly (US female, neural)',lang: 'en-US' },
+  { v: 'Salli',     label: 'Salli (US female, neural)',   lang: 'en-US' },
+  { v: 'Joey',      label: 'Joey (US male, neural)',      lang: 'en-US' },
+  { v: 'Kevin',     label: 'Kevin (US male, neural)',     lang: 'en-US' },
+  { v: 'Ivy',       label: 'Ivy (US child, neural)',      lang: 'en-US' },
+  { v: 'Amy',       label: 'Amy (UK female, neural)',     lang: 'en-GB' },
+  { v: 'Emma',      label: 'Emma (UK female, neural)',    lang: 'en-GB' },
+  { v: 'Brian',     label: 'Brian (UK male, neural)',     lang: 'en-GB' },
+  { v: 'Arthur',    label: 'Arthur (UK male, neural)',    lang: 'en-GB' },
+  { v: 'Olivia',    label: 'Olivia (AU female, neural)',  lang: 'en-AU' },
+];
+
+const ELEVEN_VOICES = [
+  { id: '21m00Tcm4TlvDq8ikWAM', label: 'Rachel (US female, warm)' },
+  { id: 'AZnzlk1XvdvUeBnXmlld', label: 'Domi (US female, strong)' },
+  { id: 'EXAVITQu4vr4xnSDxMaL', label: 'Bella (US female, soft)' },
+  { id: 'ErXwobaYiN019PkySvjV', label: 'Antoni (US male, well-rounded)' },
+  { id: 'VR6AewLTigWG4xSOukaG', label: 'Arnold (US male, crisp)' },
+  { id: 'pNInz6obpgDQGcFmaJgB', label: 'Adam (US male, deep)' },
+  { id: 'yoZ06aMxZJJ28mfd3POQ', label: 'Sam (US male, raspy)' },
+  { id: 'onwK4e9ZLuTAKqWW03F9', label: 'Daniel (UK male, authoritative)' },
+];
+
+function rankWebVoice(v) {
   const n = (v.name || '').toLowerCase();
   let score = 0;
   if (/natural|neural|premium|enhanced/.test(n)) score += 100;
-  if (/aria|guy|jenny|ryan|davis|jane|tony|nancy|amber|ana/.test(n)) score += 40;
-  if (/siri|ava|evan|zoe|samantha|daniel|karen|moira/.test(n)) score += 50;
+  if (/aria|guy|jenny|ryan|davis|ava|evan|zoe|samantha/.test(n)) score += 40;
   if (/google/.test(n)) score += 30;
   if (/microsoft/.test(n)) score += 10;
-  if (/en-?us|en_us|english \(united states\)/i.test(v.lang + ' ' + v.name)) score += 5;
   return score;
 }
 
 function loadVoices() {
-  voices = (window.speechSynthesis?.getVoices() || []).filter(v => /^en/i.test(v.lang));
-  voices.sort((a, b) => rankVoice(b) - rankVoice(a));
+  const engine = $('engine').value;
   const sel = $('voice');
   sel.innerHTML = '';
 
-  if ($('engine').value === 'web') {
-    if (!voices.length) {
-      const opt = document.createElement('option');
-      opt.textContent = 'No voices detected yet (wait a moment or switch engine)';
-      sel.appendChild(opt);
-      return;
-    }
-    const natural = voices.filter(v => /natural|neural|premium|enhanced/i.test(v.name));
-    const other = voices.filter(v => !/natural|neural|premium|enhanced/i.test(v.name));
-    if (natural.length) {
-      const g = document.createElement('optgroup'); g.label = 'Natural / Neural (recommended)';
-      natural.forEach(v => {
-        const o = document.createElement('option');
-        o.value = v.name; o.textContent = `${v.name} (${v.lang})`;
-        g.appendChild(o);
-      });
-      sel.appendChild(g);
-    }
-    if (other.length) {
-      const g = document.createElement('optgroup'); g.label = 'Standard';
-      other.forEach(v => {
-        const o = document.createElement('option');
-        o.value = v.name; o.textContent = `${v.name} (${v.lang})`;
-        g.appendChild(o);
-      });
-      sel.appendChild(g);
-    }
-  } else {
-    // StreamElements / Polly voices
-    const polly = [
-      ['Brian', 'UK male (natural)'], ['Amy', 'UK female (natural)'], ['Emma', 'UK female'],
-      ['Matthew', 'US male (natural)'], ['Joanna', 'US female (natural)'],
-      ['Joey', 'US male'], ['Kendra', 'US female'], ['Kimberly', 'US female'],
-      ['Salli', 'US female'], ['Ivy', 'US child'], ['Justin', 'US child'],
-      ['Russell', 'AU male'], ['Nicole', 'AU female'],
-    ];
-    polly.forEach(([name, desc]) => {
+  document.querySelectorAll('.engine-info').forEach(e => e.classList.remove('show'));
+  $('info-' + engine).classList.add('show');
+
+  if (engine === 'puter') {
+    POLLY_VOICES.forEach(v => {
       const o = document.createElement('option');
-      o.value = name; o.textContent = `${name} (${desc})`;
+      o.value = v.v; o.textContent = v.label; o.dataset.lang = v.lang;
       sel.appendChild(o);
     });
-    sel.value = 'Brian';
+    sel.value = 'Joanna';
+  } else if (engine === 'eleven') {
+    ELEVEN_VOICES.forEach(v => {
+      const o = document.createElement('option');
+      o.value = v.id; o.textContent = v.label;
+      sel.appendChild(o);
+    });
+    sel.onchange = () => { $('elevenVoiceId').value = sel.value; };
+  } else {
+    webVoices = (window.speechSynthesis?.getVoices() || []).filter(v => /^en/i.test(v.lang));
+    webVoices.sort((a, b) => rankWebVoice(b) - rankWebVoice(a));
+    if (!webVoices.length) {
+      const o = document.createElement('option');
+      o.textContent = 'No voices detected yet (wait or switch engine)';
+      sel.appendChild(o);
+      return;
+    }
+    webVoices.forEach(v => {
+      const o = document.createElement('option');
+      o.value = v.name; o.textContent = `${v.name} (${v.lang})`;
+      sel.appendChild(o);
+    });
   }
 }
 
-if (window.speechSynthesis) {
-  speechSynthesis.onvoiceschanged = loadVoices;
-  loadVoices();
-}
+if (window.speechSynthesis) speechSynthesis.onvoiceschanged = loadVoices;
 $('engine').onchange = loadVoices;
+loadVoices();
+
+// Restore saved ElevenLabs key
+$('elevenKey').value = localStorage.getItem('elevenKey') || '';
+$('elevenKey').onchange = () => localStorage.setItem('elevenKey', $('elevenKey').value);
 
 // ---------- Text extraction + chunking ----------
 function extractText(html) {
@@ -263,7 +290,7 @@ function extractText(html) {
   return text;
 }
 
-function chunkText(text, maxLen = 400) {
+function chunkText(text, maxLen = 500) {
   const sentences = text.match(/[^.!?\n]+[.!?]+["')\]]*|[^.!?\n]+$/g) || [text];
   const out = [];
   let buf = '';
@@ -294,7 +321,7 @@ function chunkText(text, maxLen = 400) {
   return out;
 }
 
-// ---------- Preview rendering ----------
+// ---------- Preview ----------
 function renderPreview() {
   previewEl.innerHTML = '';
   chunkSpans = [];
@@ -335,16 +362,57 @@ function updateBar() {
 
 // ---------- Playback engines ----------
 const audio = new Audio();
-let currentUtter = null;
+let nextAudio = null; // pre-buffered next chunk
 
 function stopAll() {
   stopped = true;
   try { window.speechSynthesis?.cancel(); } catch (e) {}
   try { audio.pause(); audio.src = ''; } catch (e) {}
-  currentUtter = null;
+  if (nextAudio) { try { nextAudio.pause(); } catch (e) {} nextAudio = null; }
 }
 
-function playChunk() {
+async function fetchEleven(text, voiceId) {
+  const key = $('elevenKey').value.trim();
+  if (!key) throw new Error('Paste your ElevenLabs API key first.');
+  const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: 'POST',
+    headers: { 'xi-api-key': key, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_turbo_v2_5',
+      voice_settings: { stability: 0.5, similarity_boost: 0.75 }
+    })
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error('ElevenLabs ' + res.status + ': ' + err.slice(0, 200));
+  }
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
+}
+
+async function fetchPuter(text, voice) {
+  if (!window.puter?.ai?.txt2speech) throw new Error('Puter.js not loaded. Check your connection.');
+  const lang = POLLY_VOICES.find(p => p.v === voice)?.lang || 'en-US';
+  const el = await puter.ai.txt2speech(text, { voice, engine: 'neural', language: lang });
+  return el; // Puter returns an HTMLAudioElement
+}
+
+async function getAudioFor(idx) {
+  if (idx >= chunks.length || idx < 0) return null;
+  const engine = $('engine').value;
+  const text = chunks[idx];
+  if (engine === 'puter') {
+    return await fetchPuter(text, $('voice').value);
+  } else if (engine === 'eleven') {
+    const url = await fetchEleven(text, $('voice').value || $('elevenVoiceId').value);
+    const a = new Audio(url);
+    return a;
+  }
+  return null;
+}
+
+async function playChunk() {
   if (stopped || currentIdx >= chunks.length) {
     $('play').disabled = false;
     $('pause').disabled = true;
@@ -359,61 +427,56 @@ function playChunk() {
 
   highlight(currentIdx);
   updateBar();
-  setStatus(`Playing chunk ${currentIdx + 1} of ${chunks.length}`);
-
   const engine = $('engine').value;
   const rate = parseFloat($('rate').value);
+  setStatus(`Playing chunk ${currentIdx + 1} of ${chunks.length} via ${engine}`);
 
   if (engine === 'web') {
     const u = new SpeechSynthesisUtterance(chunks[currentIdx]);
-    const pickedName = $('voice').value;
-    const v = voices.find(x => x.name === pickedName);
+    const v = webVoices.find(x => x.name === $('voice').value);
     if (v) u.voice = v;
     u.rate = rate;
     u.pitch = parseFloat($('pitch').value);
-    u.volume = 1;
-    u.onend = () => {
-      if (stopped) return;
-      currentIdx++;
-      playChunk();
-    };
-    u.onerror = (e) => {
-      console.warn('speech error', e);
-      if (stopped) return;
-      currentIdx++;
-      playChunk();
-    };
-    currentUtter = u;
+    u.onend = () => { if (!stopped) { currentIdx++; playChunk(); } };
+    u.onerror = () => { if (!stopped) { currentIdx++; playChunk(); } };
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(u);
     $('play').disabled = true;
     $('pause').disabled = false;
     $('resume').disabled = true;
-  } else {
-    const voice = $('voice').value;
-    const url = `https://api.streamelements.com/kappa/v2/speech?voice=${encodeURIComponent(voice)}&text=${encodeURIComponent(chunks[currentIdx])}`;
-    audio.src = url;
-    audio.playbackRate = rate;
-    audio.onended = () => {
-      if (stopped) return;
-      currentIdx++;
-      playChunk();
+    return;
+  }
+
+  try {
+    let current = nextAudio;
+    if (!current) current = await getAudioFor(currentIdx);
+    nextAudio = null;
+
+    // Pre-buffer next chunk while this one plays
+    if (currentIdx + 1 < chunks.length) {
+      getAudioFor(currentIdx + 1).then(a => { nextAudio = a; }).catch(() => {});
+    }
+
+    current.playbackRate = rate;
+    current.onended = () => { if (!stopped) { currentIdx++; playChunk(); } };
+    current.onerror = () => {
+      setStatus(`Audio failed at chunk ${currentIdx + 1}; skipping.`, 'warn');
+      if (!stopped) { currentIdx++; playChunk(); }
     };
-    audio.onerror = () => {
-      setStatus(`Cloud voice failed at chunk ${currentIdx + 1} (the free endpoint may be rate-limiting). Switch engine to "Browser / OS voices".`, 'err');
-      stopAll();
-    };
-    audio.play().then(() => {
-      $('play').disabled = true;
-      $('pause').disabled = false;
-      $('resume').disabled = true;
-    }).catch(err => {
-      setStatus('Playback error: ' + err.message, 'err');
-    });
+    await current.play();
+    $('play').disabled = true;
+    $('pause').disabled = false;
+    $('resume').disabled = true;
+    window._currentAudio = current;
+  } catch (err) {
+    console.error(err);
+    setStatus('Playback error: ' + err.message, 'err');
+    $('play').disabled = false;
+    $('pause').disabled = true;
   }
 }
 
-// Chrome cuts speechSynthesis off at ~15s silently; keepalive ping prevents it.
+// Keepalive for Chrome's speechSynthesis 15s cutoff bug
 setInterval(() => {
   if (window.speechSynthesis && speechSynthesis.speaking && !speechSynthesis.paused) {
     speechSynthesis.pause();
@@ -500,8 +563,8 @@ $('play').onclick = () => {
 $('pause').onclick = () => {
   if ($('engine').value === 'web') {
     try { window.speechSynthesis.pause(); } catch (e) {}
-  } else {
-    audio.pause();
+  } else if (window._currentAudio) {
+    window._currentAudio.pause();
   }
   $('play').disabled = false;
   $('pause').disabled = true;
@@ -512,8 +575,8 @@ $('pause').onclick = () => {
 $('resume').onclick = () => {
   if ($('engine').value === 'web') {
     try { window.speechSynthesis.resume(); } catch (e) {}
-  } else {
-    audio.play();
+  } else if (window._currentAudio) {
+    window._currentAudio.play();
   }
   $('play').disabled = true;
   $('pause').disabled = false;
@@ -533,20 +596,11 @@ $('stop').onclick = () => {
 };
 
 $('rate').onchange = () => {
-  audio.playbackRate = parseFloat($('rate').value);
-  // Web Speech rate change requires restart of current utterance.
-  if ($('engine').value === 'web' && window.speechSynthesis?.speaking) {
-    const idx = currentIdx;
-    stopAll();
-    currentIdx = idx;
-    stopped = false;
-    playChunk();
-  }
+  if (window._currentAudio) window._currentAudio.playbackRate = parseFloat($('rate').value);
 };
 
-// Warn if running from file:// about URL tab
 if (location.protocol === 'file:') {
-  setStatus('Running from file://. URL fetching is disabled; use the Paste HTML or Plain text tab. Speech works fine.', 'warn');
+  setStatus('Running from file://. URL tab will not work here; use Paste HTML. Speech engines still work.', 'warn');
 }
 </script>
 </body>
