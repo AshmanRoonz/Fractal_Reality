@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TTS Reader: read any page aloud</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #181b22;
+    --ink: #e8ecf1;
+    --mute: #8a93a6;
+    --accent: #6aa9ff;
+    --ok: #4ade80;
+    --warn: #fbbf24;
+    --err: #f87171;
+    --line: #262a34;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 -apple-system, Segoe UI, Roboto, sans-serif; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 24px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .sub { color: var(--mute); margin-bottom: 20px; font-size: 13px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+  label { display: block; font-size: 12px; color: var(--mute); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  input[type=text], textarea, select {
+    width: 100%; background: #0b0d12; color: var(--ink); border: 1px solid var(--line);
+    border-radius: 6px; padding: 10px 12px; font: inherit; outline: none;
+  }
+  textarea { min-height: 140px; resize: vertical; font-family: ui-monospace, Menlo, monospace; font-size: 13px; }
+  input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .row > * { flex: 1; min-width: 140px; }
+  button {
+    background: var(--accent); color: #061226; border: 0; border-radius: 6px;
+    padding: 10px 16px; font: inherit; font-weight: 600; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .status { font-size: 13px; color: var(--mute); margin-top: 8px; }
+  .status.ok { color: var(--ok); }
+  .status.err { color: var(--err); }
+  .progress { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; margin-top: 10px; }
+  .progress > div { height: 100%; background: var(--accent); width: 0%; transition: width 0.25s; }
+  .preview {
+    max-height: 220px; overflow: auto; background: #0b0d12; border: 1px solid var(--line);
+    border-radius: 6px; padding: 12px; font-size: 13px; white-space: pre-wrap;
+  }
+  .preview mark { background: var(--accent); color: #061226; padding: 0 2px; border-radius: 2px; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 12px; }
+  .tabs button { background: transparent; color: var(--mute); border: 1px solid var(--line); padding: 6px 14px; font-weight: 500; border-radius: 6px; }
+  .tabs button.active { color: var(--ink); border-color: var(--accent); background: rgba(106,169,255,0.1); }
+  .hint { font-size: 12px; color: var(--mute); margin-top: 6px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>TTS Reader</h1>
+  <p class="sub">Reads any web page, HTML file, or pasted text aloud using Amazon Polly voices (via the free StreamElements endpoint). No API key, no signup.</p>
+
+  <div class="panel">
+    <div class="tabs">
+      <button class="active" data-tab="url">URL</button>
+      <button data-tab="html">Paste HTML</button>
+      <button data-tab="text">Plain text</button>
+    </div>
+
+    <div data-panel="url">
+      <label>Page URL</label>
+      <input type="text" id="url" placeholder="https://example.com/article">
+      <div class="hint">Uses a public CORS proxy (allorigins) to fetch cross-origin pages.</div>
+    </div>
+
+    <div data-panel="html" style="display:none">
+      <label>HTML source</label>
+      <textarea id="html" placeholder="<html>...</html>"></textarea>
+    </div>
+
+    <div data-panel="text" style="display:none">
+      <label>Text</label>
+      <textarea id="text" placeholder="Paste anything readable"></textarea>
+    </div>
+
+    <div style="height:12px"></div>
+    <div class="row">
+      <div>
+        <label>Voice</label>
+        <select id="voice">
+          <optgroup label="English (US)">
+            <option value="Matthew">Matthew (male, natural)</option>
+            <option value="Joanna">Joanna (female, natural)</option>
+            <option value="Joey">Joey (male)</option>
+            <option value="Kendra">Kendra (female)</option>
+            <option value="Kimberly">Kimberly (female)</option>
+            <option value="Justin">Justin (child)</option>
+            <option value="Ivy">Ivy (child)</option>
+            <option value="Salli">Salli (female)</option>
+          </optgroup>
+          <optgroup label="English (UK)">
+            <option value="Brian" selected>Brian (male, UK)</option>
+            <option value="Amy">Amy (female, UK)</option>
+            <option value="Emma">Emma (female, UK)</option>
+          </optgroup>
+          <optgroup label="English (AU)">
+            <option value="Russell">Russell (male, AU)</option>
+            <option value="Nicole">Nicole (female, AU)</option>
+          </optgroup>
+        </select>
+      </div>
+      <div>
+        <label>Playback speed</label>
+        <select id="rate">
+          <option value="0.75">0.75x</option>
+          <option value="0.9">0.9x</option>
+          <option value="1" selected>1x</option>
+          <option value="1.15">1.15x</option>
+          <option value="1.3">1.3x</option>
+          <option value="1.5">1.5x</option>
+          <option value="1.75">1.75x</option>
+          <option value="2">2x</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="height:14px"></div>
+    <div class="controls">
+      <button id="load">Load & preview</button>
+      <button id="play" class="ghost" disabled>Play</button>
+      <button id="pause" class="ghost" disabled>Pause</button>
+      <button id="stop" class="ghost" disabled>Stop</button>
+    </div>
+    <div class="status" id="status">Ready.</div>
+    <div class="progress"><div id="bar"></div></div>
+  </div>
+
+  <div class="panel">
+    <label>Extracted text (click a sentence to start from there)</label>
+    <div class="preview" id="preview">Nothing loaded yet.</div>
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const statusEl = $('status');
+const barEl = $('bar');
+const previewEl = $('preview');
+
+let chunks = [];        // array of text chunks
+let chunkSpans = [];    // DOM spans, one per chunk
+let currentIdx = 0;
+let audio = new Audio();
+let playing = false;
+let stopped = true;
+
+// Tabs
+document.querySelectorAll('.tabs button').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('[data-panel]').forEach(p => p.style.display = 'none');
+    document.querySelector(`[data-panel="${btn.dataset.tab}"]`).style.display = '';
+  };
+});
+
+function setStatus(msg, kind='') {
+  statusEl.textContent = msg;
+  statusEl.className = 'status ' + kind;
+}
+
+// Extract readable text from an HTML string
+function extractText(html) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  doc.querySelectorAll('script, style, noscript, iframe, svg, nav, footer, header, aside, form, button, input, select, textarea').forEach(n => n.remove());
+  // Prefer article/main if present
+  const main = doc.querySelector('article') || doc.querySelector('main') || doc.body;
+  if (!main) return '';
+  // Normalize whitespace
+  let text = main.innerText || main.textContent || '';
+  text = text.replace(/\s+\n/g, '\n').replace(/\n{3,}/g, '\n\n').replace(/[ \t]+/g, ' ').trim();
+  return text;
+}
+
+// Split text into TTS-friendly chunks (<=475 chars, sentence-aligned)
+function chunkText(text, maxLen = 475) {
+  const sentences = text.match(/[^.!?\n]+[.!?]+["')\]]*|[^.!?\n]+$/g) || [text];
+  const out = [];
+  let buf = '';
+  for (const s of sentences) {
+    const piece = s.trim();
+    if (!piece) continue;
+    if (piece.length > maxLen) {
+      // Hard-split long pieces on commas or spaces
+      if (buf) { out.push(buf); buf = ''; }
+      let rest = piece;
+      while (rest.length > maxLen) {
+        let cut = rest.lastIndexOf(',', maxLen);
+        if (cut < maxLen * 0.5) cut = rest.lastIndexOf(' ', maxLen);
+        if (cut < 1) cut = maxLen;
+        out.push(rest.slice(0, cut).trim());
+        rest = rest.slice(cut).trim();
+      }
+      if (rest) buf = rest;
+      continue;
+    }
+    if ((buf + ' ' + piece).trim().length > maxLen) {
+      if (buf) out.push(buf);
+      buf = piece;
+    } else {
+      buf = (buf ? buf + ' ' : '') + piece;
+    }
+  }
+  if (buf) out.push(buf);
+  return out;
+}
+
+function renderPreview() {
+  previewEl.innerHTML = '';
+  chunkSpans = [];
+  chunks.forEach((c, i) => {
+    const span = document.createElement('span');
+    span.textContent = c + ' ';
+    span.style.cursor = 'pointer';
+    span.onclick = () => {
+      if (!chunks.length) return;
+      currentIdx = i;
+      stopped = false;
+      playChunk();
+    };
+    previewEl.appendChild(span);
+    chunkSpans.push(span);
+  });
+}
+
+function highlight(i) {
+  chunkSpans.forEach((s, k) => {
+    s.innerHTML = '';
+    if (k === i) {
+      const m = document.createElement('mark');
+      m.textContent = chunks[k] + ' ';
+      s.appendChild(m);
+    } else {
+      s.textContent = chunks[k] + ' ';
+    }
+  });
+  const target = chunkSpans[i];
+  if (target) target.scrollIntoView({ block: 'center', behavior: 'smooth' });
+}
+
+function updateBar() {
+  const pct = chunks.length ? (currentIdx / chunks.length) * 100 : 0;
+  barEl.style.width = pct + '%';
+}
+
+function ttsUrl(text, voice) {
+  return `https://api.streamelements.com/kappa/v2/speech?voice=${encodeURIComponent(voice)}&text=${encodeURIComponent(text)}`;
+}
+
+function playChunk() {
+  if (stopped || currentIdx >= chunks.length) {
+    playing = false;
+    $('play').disabled = false;
+    $('pause').disabled = true;
+    if (currentIdx >= chunks.length) {
+      setStatus('Finished.', 'ok');
+      barEl.style.width = '100%';
+    }
+    return;
+  }
+  const voice = $('voice').value;
+  const rate = parseFloat($('rate').value);
+  highlight(currentIdx);
+  updateBar();
+  setStatus(`Playing chunk ${currentIdx + 1} of ${chunks.length}`);
+  audio.src = ttsUrl(chunks[currentIdx], voice);
+  audio.playbackRate = rate;
+  audio.play().then(() => {
+    playing = true;
+    $('play').disabled = true;
+    $('pause').disabled = false;
+  }).catch(err => {
+    setStatus('Playback error: ' + err.message, 'err');
+  });
+}
+
+audio.onended = () => {
+  currentIdx++;
+  playChunk();
+};
+audio.onerror = () => {
+  setStatus('Audio load error at chunk ' + (currentIdx + 1) + '. Skipping.', 'err');
+  currentIdx++;
+  setTimeout(playChunk, 500);
+};
+
+async function fetchUrl(url) {
+  const proxy = 'https://api.allorigins.win/raw?url=';
+  const res = await fetch(proxy + encodeURIComponent(url));
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return await res.text();
+}
+
+$('load').onclick = async () => {
+  const activeTab = document.querySelector('.tabs button.active').dataset.tab;
+  setStatus('Loading...');
+  try {
+    let raw = '';
+    if (activeTab === 'url') {
+      let url = $('url').value.trim();
+      if (!url) throw new Error('Enter a URL');
+      if (!/^https?:\/\//.test(url)) url = 'https://' + url;
+      raw = await fetchUrl(url);
+      chunks = chunkText(extractText(raw));
+    } else if (activeTab === 'html') {
+      raw = $('html').value;
+      if (!raw.trim()) throw new Error('Paste some HTML');
+      chunks = chunkText(extractText(raw));
+    } else {
+      raw = $('text').value;
+      if (!raw.trim()) throw new Error('Paste some text');
+      chunks = chunkText(raw.replace(/\s+/g, ' ').trim());
+    }
+    if (!chunks.length) throw new Error('No readable text found');
+    currentIdx = 0;
+    stopped = true;
+    renderPreview();
+    setStatus(`Loaded ${chunks.length} chunks (${chunks.reduce((a,c)=>a+c.length,0)} chars). Press play.`, 'ok');
+    $('play').disabled = false;
+    $('stop').disabled = false;
+    barEl.style.width = '0%';
+  } catch (err) {
+    setStatus('Error: ' + err.message, 'err');
+  }
+};
+
+$('play').onclick = () => {
+  if (!chunks.length) return;
+  if (audio.paused && playing) {
+    audio.play();
+    $('play').disabled = true;
+    $('pause').disabled = false;
+    return;
+  }
+  stopped = false;
+  playChunk();
+};
+
+$('pause').onclick = () => {
+  if (!audio.paused) {
+    audio.pause();
+    $('play').disabled = false;
+    $('pause').disabled = true;
+    setStatus('Paused.');
+  }
+};
+
+$('stop').onclick = () => {
+  stopped = true;
+  audio.pause();
+  audio.currentTime = 0;
+  currentIdx = 0;
+  playing = false;
+  $('play').disabled = false;
+  $('pause').disabled = true;
+  updateBar();
+  highlight(-1);
+  setStatus('Stopped.');
+};
+
+$('rate').onchange = () => { audio.playbackRate = parseFloat($('rate').value); };
+</script>
+</body>
+</html>
