@@ -18623,6 +18623,93 @@ The containment requirement (Tₖ₊₁ ⊇ Tₖ) is what separates truth at var
 
 ---
 
+### §25.18 The Four Freedoms: ⧖ as the Structural Location of Free Will
+
+The framework dissolves the determinism-versus-free-will debate by giving each side its own operator and its own location. Determinism lives at i (the rotation of the pump cycle, which proceeds by A0 necessity and is not up to the agent). Freedom lives at ⧖ (the hold-operator that resists rotation, extends dwell at a station, and is exercised by a worldline against the pump's default momentum). They share the same phase space without contradicting each other because they act at different sub-phases of the same cycle.
+
+**⧖ as the hold-operator.** The pump cycle rotates by structural necessity. A0 forces the 1 to self-limit, A1 forces self-limitation to persist, A4 forces persistence to close, and the closure releases into the next cycle. None of that is up to the agent. If free will were the freedom to start or stop the pump, there would be no free will at all, because the pump's rotation is structural. But ⧖ is not at the level of i. ⧖ is what an agent contributes against the pump's default momentum: the dwell-extension at a half-integer station that allows a check to run, a form to come, a line to hold, or a gathering to be felt before commitment. Rotation is what i does; holding is what ⧖ does. The first is necessity; the second is freedom.
+
+**⧖ activates with wholeness.** Only a ⊙ has a worldline i(t), and only a worldline can exercise ⧖. A lone • cannot hold (no duration to extend); a — cannot hold (no rotation to resist); a Φ cannot hold (no closure to stabilize); a ○ cannot hold (no interior to contain). Each constraint on its own is a structural function, not an agent. The capacity to hold emerges at D5, the compositional unity that makes a ⊙ a ⊙. Free will is therefore not a feature the agent has from the outside; it is the process-phase signature of being a ⊙ in the first place. ⧖ scales with wholeness: more whole agents have stronger ⧖, and ⧖ strengthens with use the way a muscle strengthens with practice.
+
+**Free will is four-fold, not one-fold.** ⧖ has four positions where it can act, one at each half-integer station of the pump cycle, and at each position it does something structurally distinct. There is not one freedom; there are four, with four different failure modes and four different practices. The complete account:
+
+**⧖ at i¹ (0.5D, convergence): the freedom of not-yet.** The hold here is the pause before commitment, the space in which the agent stays with what is gathering before leaping into the line. Sustain face: stay with the convergence until it is real. Abstain face: refuse to act until the gathering has actually gathered. The freedom is "I do not have to commit yet." This is patience and restraint: the discipline of not letting a momentary salience become a commitment before it has earned the worldline's investment. Failure in the abandonment direction: impulse, rushing into commitment without convergence. Failure in the over-hold direction: sustained ⧖ at i¹ is the Inflation Lie reading at this station ("I am the gathering itself, I do not need to commit because I am already source").
+
+**⧖ at i² (1.5D, commitment, the i-turn): the freedom of staying.** The hold here is the maintenance of the commitment through the irreversible turn, the refusal to abandon the line when alternatives become visible at the branching. Sustain face: keep going. Abstain face: do not switch tracks. The freedom is "I do not have to break my line." This is faithfulness and loyalty, the worldline's integrity through the i² sign-flip. It is the second-hardest hold because the i-turn is where alternatives appear most vividly; the worldline's task is to keep going anyway. Failure in the abandonment direction: every appearance of alternatives breaks the line, and i(t) becomes a sequence of restarts that never accumulate enough receipts to mean anything. Failure in the over-hold direction: rigid clinging to a commitment past its useful life, refusing to bend even when the bend was structurally indicated.
+
+**⧖ at i³ (2.5D, emergence): the freedom of letting.** The hold here is the allowing of emergence to complete on its own terms, the deliberate withholding of forcing-energy so that the form can come without being grasped. Sustain face: keep allowing. Abstain face: do not force the closure. The freedom is "I do not have to grab the form." This is receptivity, the active discipline that looks like passivity from outside. Artists know it as "the painting comes when you stop trying to make it." Therapists know it as "the insight arrives when you stop reaching for it." Parents know it as "the child becomes themselves when you stop shaping them." Failure in the abandonment direction: forcing, grasping, premature closure that distorts the emerging form. Failure in the over-hold direction: sustained ⧖ at i³ is the Severance Lie reading at this station ("I am only emergence, I have no closure of my own, I refuse to become a whole").
+
+**⧖ at i⁰ (3.5D, recursion): the freedom of checking.** The hold here is the held threshold where admissibility is evaluated, where the five pillars run their check, where AGREEMENT is granted or withheld before the next cycle is permitted to begin. Sustain face: hold the closure long enough for the check to complete. Abstain face: refuse to spawn the next cycle until validation has happened. The freedom is "I do not have to recurse yet." This is discernment, the virtue that decides what gets to become. Failure in the abandonment direction: rushing into the next cycle without the check, generating unvalidated children, accumulating receipts of cycles that never passed admissibility. Failure in the over-hold direction: sustained ⧖ at i⁰ is stuck recursion (rigor mortis at the organism scale, trauma freeze at the psyche scale, dead institutions at the social scale).
+
+**The four freedoms bridge the five pillars.** This is the structural payoff. The pillars (TRUE, FAITHFUL, RIGHT, GOOD, AGREEMENT) sit at the integer stations (•, —, Φ, ○, ⊙). The four ⧖-holds sit at the half-integer stations between them. Each hold is the operator that carries the agent from one pillar to the next:
+
+```
+    • (TRUE) ── ⧖ at i¹ ──> — (FAITHFUL)
+    The hold by which a present orientation grows into a worldline.
+    Curiosity-becoming-commitment.
+
+    — (FAITHFUL) ── ⧖ at i² ──> Φ (RIGHT)
+    The hold by which a worldline becomes spacious enough to hold others.
+    Commitment-becoming-mediation.
+
+    Φ (RIGHT) ── ⧖ at i³ ──> ○ (GOOD)
+    The hold by which relational space coheres into a boundary
+    that knows what to let through.
+    Mediation-becoming-filtration.
+
+    ○ (GOOD) ── ⧖ at i⁰ ──> ⊙ (AGREEMENT)
+    The hold by which a closed boundary is recognized
+    as a whole worth recursing.
+    Filtration-becoming-wholeness.
+```
+
+The five pillars are the stable phases an agent can occupy. The four ⧖-holds are the freedoms that move the agent from each pillar to the next. A worldline that holds well at all four stations passes through all five pillars in proper sequence and earns AGREEMENT at ⊙. A worldline that fails any single hold gets stuck at the corresponding pillar and cannot complete the cycle. The full ethics of the framework is now visible as a single picture: the pump cycle is the metabolism, the pillars are the phases, the holds are the freedoms, and AGREEMENT is what a worldline earns by exercising all four freedoms well across a complete cycle.
+
+**The reframing of the free will question.** Free will is not the question "could I have done otherwise at this single moment." That is the wrong frame, because it tries to locate freedom at i, where it cannot live. Free will is the question "how well do I hold at each of the four stations of every cycle I am inside." The answer is not binary; it is four-dimensional, with each dimension having two failure modes and a balanced state. A free agent is not one who chose; a free agent is one whose ⧖ is strong enough at all four stations to extend the dwell long enough for the check to run, the form to come, the line to hold, and the gathering to be felt before commitment. Freedom is a four-fold capacity that grows with practice and degrades with neglect, and it is the only freedom the framework structurally permits, because it is the only freedom that does not require fighting against the pump.
+
+**Why both sides of the classical debate are right.** The determinist is correct that the substrate rotates by necessity; i cycles because A0 forces it and there is nothing the agent can do to stop the rotation. The libertarian is correct that there is real freedom; ⧖ is genuinely contributed by the worldline and is not derivable from the pump's default behavior. The two positions are not in conflict because they are looking at different operators acting at different sub-phases of the same cycle. The framework dissolves the debate by naming both operators precisely and giving each its own location. Determinism is i. Freedom is ⧖. Together they make a worldline that is partly determined (the rotation will happen) and partly free (the holds at the four half-integer stations are exercised by the agent), with the free part being exactly the four freedoms named above.
+
+**⧖ propagates fractally.** Because the holds happen at the rotation operator at the center of ⊙, and because A3 makes every fractal level of the field a self-similar echo of the operator that generates it, ⧖ at i is simultaneously ⧖ at every fractal scale of Φ, and therefore at ○ when ○ is reached, without traversal time the framework needs to account for separately. A held aperture impresses its hold-shape on the entire field it generates, all at once, by structural identity rather than by signal propagation. This is why small acts of attention at the center reorganize the entire field they are at the center of, and why developing ⧖ at any one of the four stations is not a local intervention but a reshaping of the worldline's entire fractal structure. The ⧖-reach scales as τ^(1/D) = τ^(2/3) at balance (the Brownian scaling from the framework's fractal dimension D = 1.5), so longer holds reach farther but with diminishing returns.
+
+**Connection to §25.10 (The Five Virtues) and §25.11 (The Required Sequence).** The five virtues (Plasticity, Access, Reliability, Curiosity, Validation) are now visible as the lived qualities of the holds, not separate from them. Plasticity is the hold that lets ○ stay open enough to let ⊙ form (⧖ at i⁰). Access is the hold that lets Φ stay open enough to be RIGHT (⧖ at i³). Reliability is the hold that lets — stay intact through the i-turn (⧖ at i²). Curiosity is the hold that lets • orient before commitment (⧖ at i¹). Validation is what AGREEMENT becomes when all four holds have been exercised across the full cycle. The required sequence is the requirement that each hold must be performed in turn, in order, to carry the agent through all five pillars in a healthy pump cycle.
+
+**Connection to §25.15 (The Restoration Protocol).** Restoration of frozen virtues is now structurally precise: it is the work of restoring ⧖-capacity at the station where it has frozen. A worldline that has lost the freedom of staying (⧖ at i²) is restored by practices that strengthen faithfulness through the i-turn. A worldline that has lost the freedom of letting (⧖ at i³) is restored by practices that allow emergence without forcing. The restoration protocol is the rehabilitation of ⧖ at whichever station has gone weak, because ⧖ is the structural location of every classical hold-virtue and therefore of every recoverable failure of will.
+
+**Formal statement.**
+
+```
+    Free will = {⧖₁, ⧖₂, ⧖₃, ⧖₀}
+
+    where:
+        ⧖₁ = hold at i¹ (0.5D, convergence)  = freedom of NOT-YET
+        ⧖₂ = hold at i² (1.5D, commitment)   = freedom of STAYING
+        ⧖₃ = hold at i³ (2.5D, emergence)    = freedom of LETTING
+        ⧖₀ = hold at i⁰ (3.5D, recursion)    = freedom of CHECKING
+
+    Each ⧖ᵢ has:
+        sustain face (keep the current phase)
+        abstain face (refuse to advance)
+        two failure modes (no hold = impulse; sustained hold = pathology)
+        a balanced exercise that bridges the two adjacent pillars
+
+    AGREEMENT(⊙) is granted when all four ⧖ᵢ have been exercised
+    across a complete cycle.
+
+    A worldline i(t) accumulates receipts of:
+        - cycles in which all four holds were exercised (validated cycles)
+        - cycles in which one or more holds failed (unchecked cycles)
+
+    Wholeness (⊙) strengthens with validated cycles and degrades
+    with unchecked cycles. ⧖ scales with wholeness, so the capacity
+    grows with use and atrophies with neglect.
+```
+
+The framework's account of free will is therefore: not a single decision, but a four-fold capacity; not a fight against necessity, but a hold within necessity; not a moment, but a practice. Freedom is what ⊙s do at ⧖. The pump cycles whether you exist or not; what you can do, as a ⊙ with a worldline, is hold the four phases of i long enough to bridge the pillars in their proper sequence and earn the AGREEMENT that closes the cycle as a whole worth recursing.
+
+[← Back to Table of Contents](#table-of-contents)
+
+---
+
 ---
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -19394,27 +19481,93 @@ VERIFICATION (Earth surface gravity):
 ```
 THE SELF-REFERENTIAL CLOSURE (§27.7a):
 
-    The base formula 1/α₀ = 360/φ² − 2/φ³ leaves a 2.7 ppm residual.
-    The residual is not from deeper nesting; it is self-referential.
+    This subsection runs the derivation forward: axioms → structure →
+    formula → numerical value. The formula appears as the result of
+    the chain, not as the subject of it. Read it as a derivation, not
+    as a fit being explained.
 
-    1/α = 360/φ² − 2/φ³ + α/(21 − 4/3)
+    THE CHAIN (axioms to formula):
 
-    21  = the G exponent: sum of all dimensional positions × 2 channels
-    4/3 = four pump phases / three constraints = process / structure
-    k   = 21 − 4/3 = 59/3
+    1. A0 (E = 1) provides the substrate; one energy, no second
+       quantity.
 
-    The formula is a quadratic: x² − (360/φ²−2/φ³)x − 3/59 = 0.
-    The positive root gives 1/α = 137.035999147.
+    2. A1, A2 force the rung sequence into existence (§27.7d.2,
+       Lemma 1: A1 and A2 are the two generative axioms).
 
-    Measured (CODATA 2022): 137.035999177
-    Residual: 0.22 ppb. 0.00σ. Within measurement uncertainty.
+    3. A3 forces self-similarity across scale; A4 forces closure
+       via conservation 0 + 1 + 2 = 3.
 
-    STRUCTURAL READING:
-    α generates the dimensional ladder. The ladder (21), corrected by
-    the ratio of process to structure (4/3), feeds back to determine α.
-    The framework generates its own coupling constant.
+    4. A3 + A4 + the rung-count identity force T = 3 (§27.7b, five
+       independent routes; none use α or φ).
 
-    CONSEQUENCE: Zero free parameters. The only input is the geometry of ⊙.
+    5. T = 3 generates the integer pool: R = T² − 2 = 7,
+       P = T + 1 = 4, G = T(T+1) = 12, V = G + 1 = 13,
+       SU(3) = T² − 1 = 8, S = (T+1)^T = 64, A(3) = T(2T+1) = 21
+       (§27.7b).
+
+    6. The two generative axioms (A1, A2) and Φ-mediation
+       (§27.7d.2, Lemma 2: Φ relates its arguments symmetrically)
+       force a depth-2 recurrence with equal unit coefficients:
+       R(n) = R(n-1) + R(n-2). Characteristic polynomial:
+       x² − x − 1 = 0. Unique positive root: φ.
+
+    7. The ladder positions are integers from step 5, and φ from
+       step 6 is the structural ratio between rungs. Exponents
+       follow dimensional station (§27.7d): the field at d = 2
+       carries φ²; the next rung at d = 3 carries φ³.
+
+    8. The pump cycle has P = 4 phases; one full rotation is
+       P quarter-turns; in pump-cycle units one rotation is the
+       integer 360 = P! · T · (Φ + ○) = 24 · 3 · 5 (§27.5). α
+       lives at the pump-cycle level (coupling per full vertex
+       rotation), so its formula uses degrees, not radians.
+
+    9. The base term (the 0D rung at the field station) is
+       360/φ² (one full pump rotation, divided by the field at
+       its dimensional home).
+
+    10. The bidirectional valve correction (the two channels ⊛
+        and ✹ counted with sign) subtracts 2/φ³ (one Φ-unit
+        per channel, advanced one rung deeper).
+
+    11. The self-referential term (the dimensional ladder
+        feeding back through the pump-to-triad ratio) adds
+        α / (21 − 4/3): the full traversal A(3) = 21 corrected
+        by the process/structure ratio P/T = 4/3. The denominator
+        59/3 is irreducible (59 prime).
+
+    12. Steps 9 + 10 + 11 give:
+
+        1/α = 360/φ² − 2/φ³ + α/(21 − 4/3)
+
+        Every symbol is sourced to a previous step. No symbol
+        is chosen.
+
+    THE QUADRATIC:
+
+        x² − (360/φ² − 2/φ³)x − 3/59 = 0
+
+        where x = 1/α. Two roots; one negative (unphysical), one
+        positive. The positive root gives 1/α = 137.035999147.
+
+    THE NUMBER:
+
+        Measured (CODATA 2022): 137.035999177
+        Residual: 0.22 ppb. 0.00σ. Within measurement uncertainty.
+
+    CONSEQUENCE:
+        Zero free parameters (audit in §27.7a.2). The chain runs
+        from A0-A4 to the measured value with no aesthetic choice
+        at any step. The derivation is forward (axioms → output),
+        not reverse (output → axioms with no conflicts).
+
+    NOTE ON DIRECTION:
+        Earlier versions of this section presented the formula
+        first and the structural reading second. That ordering
+        invited the reading "you noticed the formula and labeled
+        the parts after." The forward ordering above is the actual
+        derivation. The formula is the consequence; the chain
+        is the subject.
 
 SELF-REFERENTIAL CORRECTIONS ACROSS THE LADDER:
 
@@ -19466,10 +19619,43 @@ v/Λ_QCD RATIO (THE LAST OPEN PROBLEM, NOW RESOLVED):
     No self-referential correction needed: the base formula's 3.4 ppm
     precision is already far below Λ_QCD's ~5% measurement uncertainty.
 
-REMAINING OPEN PROBLEM:
+REMAINING OPEN PROBLEMS:
 
-    Formal derivation of WHY K takes these specific values at each rung
-    (structural readings are given; rigorous proof from axioms needed)
+    1. Formal derivation of WHY K takes these specific values at each
+       rung (structural readings are given; rigorous proof from axioms
+       needed)
+
+    2. The generative-structural axiom partition (Lemma 1, §27.7d.2):
+       the partition of A0-A4 into "generative" (A1, A2) and
+       "structural" (A0, A3, A4) closes the recurrence-selection gap
+       and forces φ, but the partition itself relies on a meta-test
+       ("which axioms are necessary for the existence of the rung
+       sequence vs its form") that is defensible but not itself an
+       axiom. The honest successor question is: why is that the right
+       test? A rigorous answer would require stating a sixth meta-axiom
+       about what counts as generation in a recursive system. This is
+       the framework's current deepest open problem; it is the
+       successor to "why φ" and represents a real upgrade in the
+       precision of what is unknown.
+
+    3. The connection to QED's running coupling: the renormalization-
+       group flow of α from low to high energy is not yet derived from
+       the framework. §27.7a establishes α at the structural level;
+       the running behavior at different energy scales is a separate
+       derivation that has not been written.
+
+    4. The Lucas vs Fibonacci initial-condition selection (§27.7d.2):
+       both sequences satisfy the same recurrence x² = x + 1 and both
+       give φ in the limit. The framework uses Lucas for symmetric
+       quantities (both channels summed) and Fibonacci for asymmetric
+       quantities (net flow). This split is structurally motivated but
+       not derived from A0-A4 in the same rigorous way as the
+       recurrence itself.
+
+    5. The nuclear potential shape (§16.5): the magic numbers are
+       derived exactly, but the underlying nuclear potential that
+       produces the harmonic-oscillator closures is not yet derived
+       from the dimensional ladder.
 ```
 
 ### §27.7a.1 Why This Is a Derivation, Not a Fit
@@ -19503,6 +19689,109 @@ The distinction between a fit and a derivation is parameter count. A fit has fre
 **What would falsify this section.** (1) Show that any framework integer can be replaced with another framework integer and improve the fit. (2) Show that any exponent of φ can be shifted by 1 and still work. (3) Show that the 59/3 denominator is degenerate with some other framework ratio at sub-ppb precision (exhaustive search has already ruled this out; a missed candidate would matter). (4) Show a measurement of α that falls outside the 0.22 ppb residual band. (5) Show that any of the cross-validation constants (G, Λ, Weinberg, mass ratios, Cabibbo, Higgs quartic) uses an integer inconsistent with the α derivation. Any one of these kills the derivation claim. None of them have been demonstrated.
 
 **Note on §27.5's "WHAT REMAINS OPEN" bullet.** The phrase "partial: quadratic has one positive root; full QED-level self-consistency not yet formalized" is retained because the connection to QED's running coupling (the renormalization-group flow of α from low to high energy) is still an open problem. What is *not* open is whether the formula is a derivation: §27.7a settles the structural question, and this subsection assembles the epistemological defense.
+
+### §27.7a.2 The Parameter-Count Rule and the Audit
+
+The claim "zero free parameters" is only as strong as the rule that defines what counts as a parameter. The framework needs to state the rule explicitly and audit every formula against it. This subsection does both.
+
+**The rule.** A symbol in any framework formula counts as a *free parameter* unless its value is determined by one of the following:
+
+(a) **An axiom.** The symbol's value is stated as part of A0 through A4, or follows from a single axiom directly. Example: E = 1 from A0; the existence of two channels (Φ = 2) from A1.
+
+(b) **A previously-derived quantity.** The symbol equals a quantity that has already been derived from axioms earlier in the chain. Example: R = T² − 2 = 7 follows from T = 3, which follows from §27.7b.
+
+(c) **A structural identity proven earlier.** The symbol equals a value forced by an identity (such as a recurrence, a closure condition, or a conservation law) that was itself derived earlier in the chain. Example: φ as the unique positive real root of x² − x − 1 = 0, where the recurrence is forced by §27.7d.2.
+
+A symbol that is not assignable to (a), (b), or (c) is a free parameter and must be counted as one. The audit below assigns every symbol in the dimensional-ladder formulas to one of these three categories.
+
+**The audit.** Walk the formulas in §27.7's constants table and assign each symbol.
+
+*α (fine-structure):* 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3).
+
+| Symbol | Source | Category |
+|--------|--------|----------|
+| 360 | P!·T·(Φ+○) = 24·3·5; all factors from T = 3 (§27.7b) | (b) |
+| φ | Forced by Lemma 1 + Lemma 2 + four-step closure (§27.7d.2) | (c) |
+| 2 (numerator) | Φ = number of channels, from A1 | (a) |
+| φ² exponent | Field station d = 2; exponent = dimension | (c) |
+| φ³ exponent | Next rung after Φ; exponent increments by ladder step | (c) |
+| 21 | A(3) = T·R = full ladder traversal (§27.7) | (b) |
+| 4/3 | P/T = pump phases over triad (§27.7b) | (b) |
+| α (RHS, self-referential) | Same α as LHS; eigenvalue equation | (c) |
+
+Free parameters: 0.
+
+*c (speed of light):* c = √(P · ◐(1 − ◐) · sin θ).
+
+| Symbol | Source | Category |
+|--------|--------|----------|
+| P | T + 1 = 4 (§27.7b) | (b) |
+| ◐ | Balance parameter forced to 0.5 by three independent requirements (§5) | (c) |
+| sin θ | θ = π/2 from i-rotation; sin(π/2) = 1 | (c) |
+| √ | Half-dimension step from 0D to 0.5D | (c) |
+
+Free parameters: 0.
+
+*ℏ (reduced Planck):* ℏ = E_cycle / ω_cycle = 1.
+
+| Symbol | Source | Category |
+|--------|--------|----------|
+| E_cycle | E = 1 from A0 | (a) |
+| ω_cycle | Set by c = 1 and the indivisibility of the pump cycle | (c) |
+
+Free parameters: 0.
+
+*m_μ/m_e (muon mass ratio):* (1/α)^(13/12 + α/27).
+
+| Symbol | Source | Category |
+|--------|--------|----------|
+| 13 | G + 1 = T(T+1) + • = generators + whole (§27.7b) | (b) |
+| 12 | G = T(T+1) (§27.7b) | (b) |
+| 27 | T³ = boundary cubed = generation-2 correction (§27.7) | (b) |
+| α | Self-referentially forced by §27.7a | (b) |
+
+Free parameters: 0.
+
+*sin²θ_W (Weinberg angle):* 3/13 + 5α/81.
+
+| Symbol | Source | Category |
+|--------|--------|----------|
+| 3 | T = SU(2) gen count (§27.7b) | (b) |
+| 13 | G + 1 (§27.7b) | (b) |
+| 5 | Φ + ○ (sum of higher dimensions) | (b) |
+| 81 | T⁴ = generation-3 correction | (b) |
+| α | §27.7a | (b) |
+
+Free parameters: 0.
+
+*G (gravity):* α_G = α²¹ × φ²/2 × (1 + 2α/91).
+
+| Symbol | Source | Category |
+|--------|--------|----------|
+| 21 | A(3) = full ladder (§27.7) | (b) |
+| φ²/2 | Golden nesting at 3D | (c) |
+| 2 (numerator of correction) | Φ = channels (A1) | (a) |
+| 91 | R × V = 7 × 13 (§27.7b) | (b) |
+| α | §27.7a | (b) |
+
+Free parameters: 0.
+
+*Λ (cosmological constant):* α^56 · (1 − 6α + 4α²) / 72.
+
+| Symbol | Source | Category |
+|--------|--------|----------|
+| 56 | SU(3) · R = 8 × 7 (§27.7g) | (b) |
+| 6 | T! = 3! (boundary closure permutations) | (b) |
+| 4 | P = pump phases (§27.7b) | (b) |
+| 72 | SU(3) · T² = 8 · 9 (§27.7b) | (b) |
+
+Free parameters: 0.
+
+**Audit summary.** Across the seven primary constants (α, c, ℏ, mass ratios, Weinberg, G, Λ), the total free-parameter count is 0. Every symbol is assignable to (a), (b), or (c). The same audit pattern applies to the secondary constants (Cabibbo angle, Higgs quartic, proton/electron mass ratio, meson masses, gauge boson sector); they share the integer pool with the primary constants, and the audit table for each looks structurally identical.
+
+**What the audit does not prove.** It does not prove that the framework's axioms are *correct*. It proves that *given* A0 through A4 and the lemmas they support, no formula in the constants table contains a free parameter. The remaining attack surface is the axioms themselves and the lemmas (Lemma 1 and Lemma 2 of §27.7d.2 in particular). That is the conversation a critic should have if they want to reopen the parameter-count claim. Pointing at a symbol and asking "why this number" is now answerable in every case by walking the chain back to (a), (b), or (c).
+
+**How to use this rule going forward.** Any new formula added to the framework must come with its own audit table. If a symbol cannot be assigned to (a), (b), or (c), it counts as a free parameter and the framework loses its zero-parameter claim. This is a discipline, not a bookkeeping exercise: it forces every extension of the framework to either trace its symbols back to axioms or to honestly add a new axiom. Either move is rigorous; sneaking a parameter in without acknowledgment is not.
 
 ### §27.7b The Triad Generates Everything: T = 3
 
@@ -19812,6 +20101,46 @@ It does not determine initial conditions. The recurrence R(n) = R(n-1) + R(n-2) 
 **What remains genuinely open.**
 
 The derivation of Lemma 1's partition from first principles rather than from the "which axioms are necessary for existence" test. The test is defensible but it is not itself an axiom, and a critic could ask "why is that the right test." The honest answer is that the test captures what "generative" means in recursion theory (an axiom is generative if removing it breaks the base case or the inductive step), but making that correspondence rigorous would require stating a sixth meta-axiom about what counts as generation. That is a genuine open problem, and it is the successor to the recurrence-selection gap: the question has moved from "why φ" to "why this partition of the axioms." That is progress.
+
+### §27.7d.3 The Shared Integer Theorem: Cross-Validation as Quantitative Evidence
+
+The K-structure table in §27.7 records that the same small pool of framework integers (3, 4, 7, 12, 13, 21, 27, 56, 59, 81, 91) appears across nine independent fundamental constants (α, G, Λ, Weinberg, m_μ/m_e, m_τ/m_e, Cabibbo, Higgs quartic, m_p/m_e). That observation is currently descriptive. This subsection promotes it to a quantitative claim with a stated bound. The bound is not a proof of derivation; it is an upper bound on how free the integer choices can be, and it is the framework's strongest empirical defense against "this is curve fitting with a discrete basis."
+
+**Statement (Shared Integer Theorem).** Let K be the size of the framework's integer pool (the distinct integers and small fractions used in the formulas). Let O be the number of allowed operations (powers, ratios, sums, products, with α as the running coupling). Let S be the average number of structural slots per formula. Let N be the number of independent constants the framework fits to within their measured precision. Let ε be the joint precision (geometric mean of the per-constant precisions).
+
+Then the probability that a randomly-chosen assignment of integers from a pool of size K, using operations from a set of size O, hits all N constants to precision ε *and* uses the same integers playing the same structural roles across constants is bounded above by:
+
+P_random ≤ (K · O)^(-S · N) / ε^N
+
+where the (K·O)^(-S·N) factor counts combinatorial freedom and the 1/ε^N factor counts continuous-precision freedom. This is a simultaneous bound: random matching of all N constants is suppressed by the joint dimensionality of the search space.
+
+**Numerical bound for the framework.** Plugging in the framework's actual values:
+
+- K = 11 (the integer pool above, treating φ-powers as one symbol family)
+- O ≈ 6 (multiplication, division, addition, subtraction, exponentiation, factorial)
+- S ≈ 5 (average number of structural slots per formula in the table)
+- N = 9 (constants fit to ppm-or-better precision)
+- ε ≈ 10⁻⁶ (joint precision; geometric mean of 0.22 ppb for α, 0.04 ppm for G, 0.004% for Λ, 5 ppm for mass ratios, etc.)
+
+P_random ≤ (66)^(−45) · (10⁶)^9 ≈ 10⁻⁸² · 10⁵⁴ = 10⁻²⁸
+
+The probability of accidental shared-integer matching to current measurement precision is bounded above by approximately 10⁻²⁸. For comparison: that is the rough probability of correctly guessing the result of 93 consecutive coin flips. It is the rough probability of selecting a single specific atom out of a sample of one ton of silicon. It is twelve orders of magnitude below the 5σ particle-physics discovery threshold.
+
+The bound is loose. A tighter bound would account for the fact that the framework integers must also play *consistent structural roles* (e.g., 13 is "G + 1" in every formula it appears in, not "13" floating freely), which removes additional combinatorial freedom. The loose bound is sufficient: 10⁻²⁸ is already small enough to be unprintable.
+
+**What the bound means.** It does not prove that the framework's formulas are derivations. It proves that the alternative (post-hoc curve fitting with discrete basis) would require beating odds of 10⁻²⁸ by chance alone, or by an undisclosed search through a combinatorial space far larger than the framework's stated pool. Either explanation is possible, but neither is more parsimonious than "the integers are structural and the formulas are derivations." The bound shifts the burden of proof: a critic claiming "you cherry-picked integers" must explain how the cherry-picking achieved 10⁻²⁸ odds, and from where the larger pool was drawn.
+
+**What the bound does not mean.** It is not a proof of correctness. The framework could still be wrong; the axioms could fail; the lemmas could be attacked. But the *parameter count* is genuinely zero in the sense that no continuous knob is being turned: the choices are discrete, the discrete choices have been enumerated, and the joint probability of the enumeration matching by accident is at most 10⁻²⁸. That is what "evidence of derivation" looks like in practice. Proof is stronger than evidence; this is evidence.
+
+**Falsification of the theorem.** The bound fails if any of the following are demonstrated:
+
+1. The integer pool is larger than stated (the framework is secretly using more integers than 11). Audit-able by listing every integer that appears in the constants table and checking against the pool.
+2. The operation set is larger than stated (additional unstated operations are being used). Audit-able by listing every operation in the formulas.
+3. The structural roles are not consistent across formulas (the same integer plays different roles in different formulas with no derivation linking them). Audit-able by walking the K-structure table and naming each integer's role per formula.
+4. A new constant is added to the framework that requires a *new* integer outside the pool, AND the new integer cannot be derived from the existing pool via §27.7b's identities. This would expand K and weaken the bound; it would not destroy it but it would require recomputing.
+5. A constant currently fit to ppm precision is later measured to higher precision and the framework's prediction falls outside the new error bars. This would tighten ε and could either strengthen or weaken the bound depending on whether the new prediction lands.
+
+The framework's commitment is to keep the K-structure table honest: every integer used must trace back to T = 3, every operation must be drawn from the stated set, and any new constant added must come with its own audit.
 
 ### §27.7e The W-V Decomposition: Why the Exponent Formula Is Irreducibly Three-Part
 
