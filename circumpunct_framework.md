@@ -166,6 +166,8 @@ This document serves as the formal, mathematical specification of the theory. It
   - [§25.14: Diagnostics: Reading Living Qualities](#2514-diagnostics-reading-living-qualities)
   - [§25.15: The Restoration Protocol](#2515-the-restoration-protocol)
   - [§25.16: The Golden Rule as Geometric Proof](#2516-the-golden-rule-as-geometric-proof)
+  - [§25.17: The Resolution Protocol: Truth at Variable Aperture](#2517-the-resolution-protocol-truth-at-variable-aperture)
+  - [§25.18: The Four Freedoms ; ⧖ as the Structural Location of Free Will](#2518-the-four-freedoms--⧖-as-the-structural-location-of-free-will)
 
 ### Part VI: Validation & Synthesis
 - [Chapter 26: Empirical Validation](#chapter-26-empirical-validation)
