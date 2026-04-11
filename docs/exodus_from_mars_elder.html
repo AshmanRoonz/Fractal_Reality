@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exodus from Mars: The Elder Witnesses</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg-section: #0e0e16;
+    --gold: #d4a843;
+    --gold-dim: #9a7a30;
+    --cyan: #4ecdc4;
+    --magenta: #e84393;
+    --green: #55efc4;
+    --text: #d0cec8;
+    --text-dim: #8a8880;
+    --border: #1a1a28;
+    --red: #c0392b;
+    --sumer: #c89b5a;
+    --egypt: #5ac8a8;
+    --vedic: #c85a9b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px 30px 100px;
+  }
+
+  .title-block {
+    text-align: center;
+    padding: 80px 0 60px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 50px;
+    position: relative;
+  }
+
+  .title-block::before {
+    content: '⊙';
+    display: block;
+    font-size: 48px;
+    color: var(--gold);
+    margin-bottom: 30px;
+    opacity: 0.6;
+  }
+
+  .title-block h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 2.6em;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.25em;
+    color: var(--text-dim);
+    margin-bottom: 30px;
+  }
+
+  .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65em;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+    line-height: 1.8;
+  }
+
+  .meta .label { color: var(--gold-dim); }
+
+  h2 {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 1.4em;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    margin: 55px 0 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h2 .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7em;
+    color: var(--gold-dim);
+    margin-right: 10px;
+  }
+
+  h3 {
+    font-family: 'Cinzel', serif;
+    font-weight: 400;
+    font-size: 1.1em;
+    color: var(--cyan);
+    margin: 35px 0 12px;
+    letter-spacing: 0.03em;
+  }
+
+  h4 {
+    font-family: 'Cinzel', serif;
+    font-weight: 400;
+    font-size: 0.95em;
+    color: var(--gold-dim);
+    margin: 25px 0 10px;
+    letter-spacing: 0.04em;
+  }
+
+  p { margin-bottom: 16px; }
+
+  .abstract {
+    border-left: 3px solid var(--gold-dim);
+    padding: 20px 25px;
+    background: rgba(212, 168, 67, 0.03);
+    margin: 30px 0;
+    font-style: italic;
+    color: var(--text);
+  }
+
+  .scripture {
+    border-left: 3px solid var(--red);
+    padding: 12px 20px;
+    margin: 20px 0;
+    background: rgba(192, 57, 43, 0.05);
+    font-size: 0.95em;
+  }
+
+  .scripture.sumer { border-left-color: var(--sumer); background: rgba(200, 155, 90, 0.05); }
+  .scripture.egypt { border-left-color: var(--egypt); background: rgba(90, 200, 168, 0.05); }
+  .scripture.vedic { border-left-color: var(--vedic); background: rgba(200, 90, 155, 0.05); }
+
+  .scripture .ref {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72em;
+    display: block;
+    margin-bottom: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  .scripture.sumer .ref { color: var(--sumer); }
+  .scripture.egypt .ref { color: var(--egypt); }
+  .scripture.vedic .ref { color: var(--vedic); }
+
+  .scripture .text {
+    font-style: italic;
+    color: #c8b89a;
+  }
+
+  .interp {
+    padding: 8px 0 8px 20px;
+    margin: 10px 0 20px;
+    color: var(--cyan);
+    font-size: 0.95em;
+    position: relative;
+  }
+
+  .interp::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--gold-dim);
+  }
+
+  .phase-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7em;
+    color: var(--magenta);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .sequence {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72em;
+    color: var(--cyan);
+    background: rgba(78, 205, 196, 0.04);
+    border: 1px solid rgba(78, 205, 196, 0.12);
+    padding: 20px 24px;
+    margin: 25px 0;
+    line-height: 2;
+    white-space: pre-wrap;
+    overflow-x: auto;
+  }
+
+  .sequence .arrow { color: var(--gold); }
+  .sequence .node { color: var(--text); }
+  .sequence .event { color: var(--magenta); }
+
+  .framework-note {
+    border: 1px solid rgba(212, 168, 67, 0.15);
+    background: rgba(212, 168, 67, 0.03);
+    padding: 16px 20px;
+    margin: 25px 0;
+    font-size: 0.9em;
+  }
+
+  .framework-note .fn-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72em;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.88em;
+  }
+
+  th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7em;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  td:first-child {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78em;
+    color: var(--gold-dim);
+    white-space: nowrap;
+  }
+
+  .tradition-chip {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6em;
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+    margin-right: 8px;
+    text-transform: uppercase;
+  }
+
+  .tradition-chip.sumer { background: rgba(200, 155, 90, 0.15); color: var(--sumer); }
+  .tradition-chip.egypt { background: rgba(90, 200, 168, 0.15); color: var(--egypt); }
+  .tradition-chip.vedic { background: rgba(200, 90, 155, 0.15); color: var(--vedic); }
+
+  .disclaimer {
+    margin-top: 60px;
+    padding-top: 30px;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65em;
+    color: var(--text-dim);
+    text-align: center;
+    letter-spacing: 0.03em;
+    line-height: 1.9;
+  }
+
+  strong { color: var(--gold); font-weight: 600; }
+  em { color: inherit; }
+
+  @media (max-width: 600px) {
+    .container { padding: 30px 18px 60px; }
+    .title-block h1 { font-size: 1.8em; }
+    body { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ═══════════ TITLE ═══════════ -->
+  <div class="title-block">
+    <h1>Exodus from Mars</h1>
+    <div class="subtitle">The Elder Witnesses: A Re-reading of Sumerian, Egyptian, and Vedic Sources<br>as Species-Level Trauma Memory</div>
+    <div class="meta">
+      <span class="label">Author:</span> Ashman Roonz<br>
+      <span class="label">Framework:</span> Circumpunct ⊙ = Φ(•, ○)<br>
+      <span class="label">Status:</span> Speculative / Exegetical Play<br>
+      <span class="label">Companion to:</span> Exodus from Mars (Revelation reading)<br>
+      <span class="label">Version:</span> 1.0 : April 2026
+    </div>
+  </div>
+
+  <!-- ═══════════ ABSTRACT ═══════════ -->
+  <div class="abstract">
+    <strong>Abstract.</strong> The companion paper used the Book of Revelation as a witness to a hypothetical species-level migration event. Revelation is a late text (ca. 95 CE); any signal it carries has already been compressed through Hellenistic, Second Temple Jewish, and early Christian filters. This paper goes further upstream. The Sumerian corpus (ca. 2100 BCE), the Egyptian Pyramid Texts (ca. 2400 BCE), and the Vedic tradition (ca. 1500 BCE, oral layers older) sit closer to any putative origin event and were compressed through fewer theological reformations. Fourteen exhibits are presented, grouped by phase of the migration sequence. The convergence of three independent lineages on the same structural narrative is offered as the stronger form of the argument; Revelation becomes a late coda, not the primary witness.
+  </div>
+
+  <!-- ═══════════ §1 THESIS ═══════════ -->
+  <h2><span class="section-num">§1</span> Why the Elder Texts</h2>
+
+  <p>Christianity is roughly 2,000 years old. The Sumerian tablets are 4,000. The Pyramid Texts are closer to 4,500. The oldest oral layers of the Vedas reach back further still, possibly 5,000 to 7,000 years by the most defensible estimates, and the traditions themselves claim recitation chains far older than that. If a species-level trauma was encoded in symbolic language, the encoding should be clearer the closer one moves to the event.</p>
+
+  <p>Three independent lineages matter more than one. Sumer, Egypt, and the Vedic world were not in continuous cultural contact; their pantheons, languages, and cosmologies developed along separate trajectories. Where they nevertheless agree on structural details (sky-descent, a prior golden world, seven underworld levels, a flood that ends the old order, cyclical ages, a navigation axis connecting earth to heaven), the shared signal is harder to dismiss as literary borrowing.</p>
+
+  <p>The migration sequence reconstructed from these sources follows the same six phases as the companion paper:</p>
+
+  <div class="sequence"><span class="event">PHASE 1</span>  <span class="node">The first world ends</span> <span class="arrow">→</span> planetary death, waters withdraw
+<span class="event">PHASE 2</span>  <span class="node">Evacuation</span> <span class="arrow">→</span> the sky-ones descend; an ark is built
+<span class="event">PHASE 3</span>  <span class="node">Transit</span> <span class="arrow">→</span> passage through the sky-body; vimanas and barges
+<span class="event">PHASE 4</span>  <span class="node">Landing</span> <span class="arrow">→</span> the first city, the geodetic grid, the axis mountain
+<span class="event">PHASE 5</span>  <span class="node">Adaptation</span> <span class="arrow">→</span> descent through seven gates into subterranean realms
+<span class="event">PHASE 6</span>  <span class="node">Forgetting</span> <span class="arrow">→</span> the ages compress; the king lists become impossible</div>
+
+  <!-- ═══════════ §2 EVIDENCE ═══════════ -->
+  <h2><span class="section-num">§2</span> Textual Evidence by Phase</h2>
+
+  <p>Exhibits are grouped by the phase they support, and each phase draws on multiple traditions where possible. The point is not that any one tradition encodes the full story; the point is that the three of them, taken together, outline it.</p>
+
+  <!-- PHASE 1 -->
+  <h3>Phase 1 : The First World Ends</h3>
+
+  <!-- A -->
+  <h4>Exhibit A : The Flood That Drowned the Old Order</h4>
+  <div class="phase-label"><span class="tradition-chip sumer">Sumerian</span> Atrahasis / Eridu Genesis</div>
+
+  <div class="scripture sumer">
+    <span class="ref">Eridu Genesis, tablet fragment</span>
+    <span class="text">"The flood swept over the land... for seven days and seven nights the flood swept over, and the huge boat was tossed about on the great waters."</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> Mesopotamian flood myth, a local inundation of the Tigris-Euphrates plain, later borrowed into Genesis.</div>
+  <div class="interp"><strong>Migration reading:</strong> A flood that "swept over the land" and required a sealed vessel to survive is structurally a planetary death event, not a river overflow. The detail that matters: the protagonist (Ziusudra) is not saved on the old world; he is the last of it. The flood narrative is the memory of losing the first planet, preserved as the memory of losing the first civilization.</div>
+
+  <!-- B -->
+  <h4>Exhibit B : The Withdrawing Waters</h4>
+  <div class="phase-label"><span class="tradition-chip vedic">Vedic</span> The drying of the Sarasvati</div>
+
+  <div class="scripture vedic">
+    <span class="ref">Rig Veda 7.95 (summary)</span>
+    <span class="text">The Sarasvati is praised as "best of rivers," "surpassing in majesty and might all other waters," flowing from the mountains to the sea, pure in her course.</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> Poetic hymn to a sacred Indian river whose hydrology shifted over millennia; satellite imagery has in fact mapped a paleo-channel (the Ghaggar-Hakra) that once flowed where the Vedas describe.</div>
+  <div class="interp"><strong>Migration reading:</strong> A "best of rivers" that is sung as present tense in the oldest layers and vanished by the later ones is the same literary object as Mars's lost hydrosphere. The Vedic tradition did not invent the drying; it remembered it. The question is only which world the remembered river was on.</div>
+
+  <!-- C -->
+  <h4>Exhibit C : Zep Tepi, the First Time</h4>
+  <div class="phase-label"><span class="tradition-chip egypt">Egyptian</span> The First Time</div>
+
+  <div class="scripture egypt">
+    <span class="ref">Pyramid Texts / Edfu building texts</span>
+    <span class="text">"The primeval ones came forth in Zep Tepi, the First Time, when the world was established by the gods before their departure."</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> Mythic prehistory; the golden age when the neteru (gods) ruled directly, before the first human pharaoh.</div>
+  <div class="interp"><strong>Migration reading:</strong> "Zep Tepi" is not Earth's early history; it is the <em>prior</em> world. The Edfu texts explicitly describe a catastrophe ending the First Time, with the surviving "Seven Sages" (Shebtiu) migrating and establishing the current order elsewhere. An ending-of-world followed by a migration of sages is the migration story, named for what it was.</div>
+
+  <!-- PHASE 2 -->
+  <h3>Phase 2 : Evacuation</h3>
+
+  <!-- D -->
+  <h4>Exhibit D : Those Who From Heaven Came Down</h4>
+  <div class="phase-label"><span class="tradition-chip sumer">Sumerian</span> The Anunnaki</div>
+
+  <div class="scripture sumer">
+    <span class="ref">Sumerian cuneiform (standard gloss)</span>
+    <span class="text">"Anunnaki": literally "those of royal (anu) seed (naki)," commonly rendered "those who from heaven came to earth."</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> A divine assembly, the high gods of the Sumerian pantheon, with "heaven" meaning the abstract celestial realm.</div>
+  <div class="interp"><strong>Migration reading:</strong> The etymology is blunt: they are named for the motion from heaven to earth. Not beings who live in heaven and bless earth from there; beings whose defining trait is the arrival itself. The Sumerian word encodes Phase 2 as a proper noun. These are the migrants, and their first generation is still named for the crossing.</div>
+
+  <!-- E -->
+  <h4>Exhibit E : Manu's Ark and the Horned Fish</h4>
+  <div class="phase-label"><span class="tradition-chip vedic">Vedic</span> Matsya Avatar</div>
+
+  <div class="scripture vedic">
+    <span class="ref">Shatapatha Brahmana 1.8.1 (summary)</span>
+    <span class="text">A small fish warns Manu of a coming flood, grows enormous, and tows Manu's ship by its horn to the northern mountain, saving him alone of all beings from destruction.</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> Indian flood myth; Manu is the first man of the current age; the fish is Vishnu's first avatar.</div>
+  <div class="interp"><strong>Migration reading:</strong> A guided vessel, towed by a being "with a horn" (a mast, an antenna, a steering signal) through catastrophic waters to a northern mountain that happens to survive. The structural match with the Sumerian flood ark and the Egyptian sky-barque is exact. Three traditions, three vessels, one crossing.</div>
+
+  <!-- F -->
+  <h4>Exhibit F : The Benben Stone Falls from the Sky</h4>
+  <div class="phase-label"><span class="tradition-chip egypt">Egyptian</span> The Fallen Stone</div>
+
+  <div class="scripture egypt">
+    <span class="ref">Heliopolis tradition (Pyramid Texts)</span>
+    <span class="text">The Benben is a conical or pyramidal stone that fell from the sky and came to rest on the primordial mound at Heliopolis; it becomes the pattern for every pyramidion and obelisk cap.</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> A meteoric iron object venerated as a solar relic; the archetype of the pyramidion.</div>
+  <div class="interp"><strong>Migration reading:</strong> An object falls from the sky and becomes the template for every subsequent pyramid peak. Every pyramidion on Earth is then a copy of the first landing object. The Egyptians did not hide this; they announced it, built gilded copies of it, and placed them on the roofs of their most important structures. Phase 2 ends when the first craft touches down.</div>
+
+  <!-- PHASE 3 -->
+  <h3>Phase 3 : Transit</h3>
+
+  <!-- G -->
+  <h4>Exhibit G : Vimanas, the Craft of the Sky</h4>
+  <div class="phase-label"><span class="tradition-chip vedic">Vedic</span> Flying Vessels</div>
+
+  <div class="scripture vedic">
+    <span class="ref">Mahabharata, Ramayana (multiple passages)</span>
+    <span class="text">The vimana is described as a self-moving aerial vehicle, sometimes single-seat and sometimes city-sized ("Pushpaka"), capable of interplanetary passage, with specific descriptions of pilots, ports, and propulsion.</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> Mythological flying chariots of the gods; literary embellishment of royal transport imagery.</div>
+  <div class="interp"><strong>Migration reading:</strong> The vimana corpus is the most engineering-specific sky-vehicle literature in the ancient world. Cities fly. Ports receive them. Multiple models exist. The language is mechanical, not metaphorical. If any ancient text should be read as the retained technical memory of the transit phase, it is this one. The Sanskrit tradition preserved what the others could only gesture toward.</div>
+
+  <!-- H -->
+  <h4>Exhibit H : Nut, the Sky-Body</h4>
+  <div class="phase-label"><span class="tradition-chip egypt">Egyptian</span> The Arched Goddess</div>
+
+  <div class="scripture egypt">
+    <span class="ref">Pyramid Texts, utterance 245</span>
+    <span class="text">Nut is depicted as a woman arched over the earth, her body the vault of heaven, swallowing the sun each evening and birthing it each morning; the dead pharaoh travels through her body to be reborn among the imperishable stars.</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> Cosmological personification; the sky as a divine female body.</div>
+  <div class="interp"><strong>Migration reading:</strong> Nut is the transit itself. A body one enters on one side, passes through, and exits elsewhere, reborn among the stars that do not set. This is a passage through a vessel, preserved as a passage through a goddess because "vessel" was not yet a word the receivers had. The pharaoh's funerary journey is a re-enactment of the species crossing.</div>
+
+  <!-- I -->
+  <h4>Exhibit I : Inanna Descends Through Seven Gates</h4>
+  <div class="phase-label"><span class="tradition-chip sumer">Sumerian</span> The Descent</div>
+
+  <div class="scripture sumer">
+    <span class="ref">Inanna's Descent to the Underworld</span>
+    <span class="text">At each of the seven gates of the underworld, Inanna is required to remove one article of her royal regalia, until she stands naked and powerless before the throne of Ereshkigal, queen of the dead.</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> Sumerian descent myth, vegetation cycle, ritual stripping as initiation.</div>
+  <div class="interp"><strong>Migration reading:</strong> Seven gates. Progressive stripping. Descent from a high-status position to the deepest realm. This is the staged atmospheric-and-gravitational adaptation of an off-world traveler: at each gate, a further layer of the old-world life-support is removed. The stripping is not symbolic humiliation; it is decompression. The same "seven" reappears in the Revelation seals, the Patala levels, and the Duat's hours of the night.</div>
+
+  <!-- PHASE 4 -->
+  <h3>Phase 4 : Landing and the Grid</h3>
+
+  <!-- J -->
+  <h4>Exhibit J : Mount Meru, the Axis</h4>
+  <div class="phase-label"><span class="tradition-chip vedic">Vedic</span> The Cosmic Axis</div>
+
+  <div class="scripture vedic">
+    <span class="ref">Vishnu Purana, Surya Siddhanta</span>
+    <span class="text">Meru is the central mountain of all world-systems, with the sun, moon, and stars circling it; the gods dwell at its peak; its base extends into the seven subterranean realms; it is the axis on which creation turns.</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> Mythic cosmology; a sacred axial mountain of the sort found in many traditions.</div>
+  <div class="interp"><strong>Migration reading:</strong> A central axis connecting sky-realms above to seven tunnel levels below, with a precise geodetic function (celestial bodies measured against it). This is a navigation landmark, not a mountain. The first landing party needed a reference axis; Mount Meru is the memory of that reference. The peaked geometry is the same geometry the Benben inherited.</div>
+
+  <!-- K -->
+  <h4>Exhibit K : Eridu, the First City</h4>
+  <div class="phase-label"><span class="tradition-chip sumer">Sumerian</span> The First Settlement</div>
+
+  <div class="scripture sumer">
+    <span class="ref">Sumerian King List, opening line</span>
+    <span class="text">"When kingship was lowered from heaven, kingship was in Eridu."</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> A foundational statement of divine legitimacy; Eridu as the mythologized earliest city.</div>
+  <div class="interp"><strong>Migration reading:</strong> Kingship is "lowered from heaven" (past tense, specific geometry: downward motion) and its first terrestrial location is named. This is not abstract theology; it is a landing report compressed into two clauses. Eridu is where the first ship put down its people. The ziggurat (a stepped pyramidal platform) is the Sumerian cousin of Giza and Teotihuacan: a docking mound for something that descended.</div>
+
+  <!-- L -->
+  <h4>Exhibit L : The Orion Alignment</h4>
+  <div class="phase-label"><span class="tradition-chip egypt">Egyptian</span> The Star Shafts</div>
+
+  <div class="scripture egypt">
+    <span class="ref">Pyramid Texts, utterance 442 (gloss)</span>
+    <span class="text">The dead king "ascends to the sky" and "takes his place among the imperishable stars"; the southern shaft of the Great Pyramid's King's Chamber points (at the epoch of construction) to Orion's belt, the home of Osiris.</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> Stellar religion; the pharaoh's soul rejoins Osiris in Orion after death.</div>
+  <div class="interp"><strong>Migration reading:</strong> A shaft, cut through solid stone at the exact angle required to target a specific star at a specific historical epoch, and aimed at the constellation the tradition names as the home of the First One. The shaft is not metaphorical. It is a return-vector. The pyramid knows which direction home is, and it tells the dead which way to go. Every pyramid on Earth that has similar alignments is telling the same story.</div>
+
+  <!-- PHASE 5 -->
+  <h3>Phase 5 : Descent Underground</h3>
+
+  <!-- M -->
+  <h4>Exhibit M : The Seven Patalas</h4>
+  <div class="phase-label"><span class="tradition-chip vedic">Vedic</span> The Subterranean Worlds</div>
+
+  <div class="scripture vedic">
+    <span class="ref">Bhagavata Purana 5.24</span>
+    <span class="text">Below the earth are seven subterranean realms (Atala, Vitala, Sutala, Talatala, Mahatala, Rasatala, Patala), each lit not by the sun but by jewels on the hoods of great serpents; they are described as more beautiful and prosperous than the surface.</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> Mythic underworld cosmography; seven nether realms populated by nagas and asuras.</div>
+  <div class="interp"><strong>Migration reading:</strong> Seven tunnel levels. Lit by non-solar sources ("jewels," which is what one would call bioluminescent or engineered lighting without the vocabulary). Described as <em>more</em> prosperous than the surface. This is not a hell; it is a home. The Vedic tradition preserved the subterranean phase as a functioning civilization, which is precisely what a Martian-adapted colony would build underground and precisely what "the underworld" became in later traditions once the memory had dimmed into horror.</div>
+
+  <!-- N -->
+  <h4>Exhibit N : The Duat, the Engineered Underworld</h4>
+  <div class="phase-label"><span class="tradition-chip egypt">Egyptian</span> Twelve Hours of the Night</div>
+
+  <div class="scripture egypt">
+    <span class="ref">Amduat ("That Which Is in the Underworld"), 18th Dynasty</span>
+    <span class="text">The Duat is divided into twelve regions traversed by the sun-barque during the twelve hours of the night; each region has precise geography, named guardians, required passwords, and depicted machinery including ropes, sledges, and serpent-shaped conduits.</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> A funerary roadmap for the dead king's nightly journey through the afterlife alongside the sun god.</div>
+  <div class="interp"><strong>Migration reading:</strong> The Duat is mapped with engineering-manual specificity. Twelve zones, gates, mechanical conveyances, named personnel at each station. This is not a dreamt afterlife; this is the layout of the tunnel system written in the only genre ancient Egypt had for recording layouts: the funerary text. Inanna descended through seven gates; the pharaoh descends through twelve zones; same infrastructure, different scale of resolution.</div>
+
+  <!-- O -->
+  <h4>Exhibit O : Enki's Abzu</h4>
+  <div class="phase-label"><span class="tradition-chip sumer">Sumerian</span> The Subterranean Waters</div>
+
+  <div class="scripture sumer">
+    <span class="ref">Enuma Elish and Enki myth-cycle</span>
+    <span class="text">Enki, the god of wisdom and crafts, dwells in the Abzu: a realm of fresh water beneath the earth, from which all civilization, writing, metallurgy, and agriculture originate.</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> The deep aquifer personified; Enki as patron of knowledge and craftsmanship.</div>
+  <div class="interp"><strong>Migration reading:</strong> The god who brings <em>all technology</em> lives <em>underground</em>. Not on a mountaintop, not in the sky, not in a temple: beneath. Every civilizing gift (cuneiform, bronze, irrigation, the plow) emerges from the Abzu. This is the tradition stating flatly that the deep dwellers were the engineers and that the surface world received its infrastructure from the tunnels. The surface-dwellers eventually forgot; the names remained.</div>
+
+  <!-- PHASE 6 -->
+  <h3>Phase 6 : The Forgetting</h3>
+
+  <!-- P -->
+  <h4>Exhibit P : The Impossible King List</h4>
+  <div class="phase-label"><span class="tradition-chip sumer">Sumerian</span> Antediluvian Reigns</div>
+
+  <div class="scripture sumer">
+    <span class="ref">Sumerian King List (antediluvian section)</span>
+    <span class="text">"Alulim became king and ruled 28,800 years. Alalgar ruled 36,000 years. In Bad-tibira, En-men-lu-ana ruled 43,200 years. Total: eight kings, 241,200 years, before the flood swept over."</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> Legendary or symbolic reign-lengths; a pious inflation of the pre-flood era's duration.</div>
+  <div class="interp"><strong>Migration reading:</strong> Reign lengths that are absurd on Earth become comprehensible if "years" were once measured against a different planetary cycle and the conversion was lost. Mars orbits the sun in 687 Earth days, almost exactly 1.88 Earth years; a "year" on the old world was not the same quantity. More importantly, the very act of listing reigns so long they cannot be processed is how a culture preserves "this was before our clock" when the clock itself is no longer remembered. The lie is not in the numbers; the lie is in the unit.</div>
+
+  <!-- Q -->
+  <h4>Exhibit Q : The Ages of the World</h4>
+  <div class="phase-label"><span class="tradition-chip vedic">Vedic</span> The Yugas</div>
+
+  <div class="scripture vedic">
+    <span class="ref">Manu Smriti 1.68-71 (summary)</span>
+    <span class="text">Four ages (Satya, Treta, Dvapara, Kali) of descending length and virtue cycle endlessly; we live at the end of Kali, the shortest and darkest; the Satya Yuga was a golden age when truth was whole and beings were different in kind.</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> Cyclical cosmology shared with Greek and other Indo-European traditions; a theological framing of moral decline.</div>
+  <div class="interp"><strong>Migration reading:</strong> A descending sequence of world-ages in which the first age had beings who were <em>different in kind</em> and a world that was <em>whole</em>, followed by progressive collapse. This is the memory of losing the first world encoded as a cycle so the loss can be processed without naming it directly. The Kali Yuga is the long compression: the phase in which the signal fades and the receivers can no longer read it. We are in the forgetting now, and we remember forgetting.</div>
+
+  <!-- R -->
+  <h4>Exhibit R : The Followers of Horus</h4>
+  <div class="phase-label"><span class="tradition-chip egypt">Egyptian</span> Pre-dynastic Rulers</div>
+
+  <div class="scripture egypt">
+    <span class="ref">Turin King List, Manetho's fragments</span>
+    <span class="text">Before the first human pharaoh (Menes), Egypt was ruled by the neteru (gods) for thousands of years, followed by the Shemsu Hor, the "Followers of Horus": a lineage of semi-divine beings who bridged the age of gods and the age of men.</span>
+  </div>
+
+  <div class="interp"><strong>Orthodox:</strong> Mythological prehistory manufactured to extend Egyptian royal legitimacy backward in time.</div>
+  <div class="interp"><strong>Migration reading:</strong> The Shemsu Hor are the transition generation: the ones who remembered the old world directly, then the ones who remembered remembering, then the ones who inherited only the memory of the memory. The Turin papyrus names them explicitly as a distinct caste between gods and humans, with rule-lengths that decline toward historical scales. This is the tradition drawing the fadeout curve of the signal itself, generation by generation, until ordinary kings take over and the record becomes mundane.</div>
+
+  <!-- ═══════════ §3 SYNTHESIS ═══════════ -->
+  <h2><span class="section-num">§3</span> Composite Reconstruction Across Traditions</h2>
+
+  <table>
+    <tr><th>Phase</th><th>Event</th><th>Sumerian</th><th>Egyptian</th><th>Vedic</th></tr>
+    <tr><td>1</td><td>First world ends</td><td>Eridu Genesis flood</td><td>Zep Tepi ends</td><td>Sarasvati dries</td></tr>
+    <tr><td>2</td><td>Evacuation</td><td>Anunnaki descend</td><td>Benben falls</td><td>Matsya tows Manu</td></tr>
+    <tr><td>3</td><td>Transit</td><td>Inanna's descent</td><td>Nut the sky-body</td><td>Vimanas</td></tr>
+    <tr><td>4</td><td>Landing grid</td><td>Eridu, ziggurats</td><td>Orion shafts</td><td>Mount Meru</td></tr>
+    <tr><td>5</td><td>Descent underground</td><td>Enki's Abzu</td><td>The Duat</td><td>Seven Patalas</td></tr>
+    <tr><td>6</td><td>Forgetting</td><td>Impossible king list</td><td>Shemsu Hor fadeout</td><td>Yugas cycling down</td></tr>
+  </table>
+
+  <p>Each row is independently attested in a tradition that was not copying the others. The rows align structurally: same sequence, same geometry, three different symbolic vocabularies. This is the convergence argument in its strongest form. A single witness (Revelation, or any one tradition) can be explained as literary invention; three independent witnesses agreeing on both sequence and detail cannot be so easily dismissed.</p>
+
+  <!-- ═══════════ §4 THE SEVEN ═══════════ -->
+  <h2><span class="section-num">§4</span> The Recurring Seven</h2>
+
+  <p>One structural detail deserves its own note: the number seven appears at the descent phase in every tradition surveyed, including the Revelation reading from the companion paper.</p>
+
+  <p>Sumerian: Inanna passes through <strong>seven</strong> gates, removing a garment at each. Vedic: <strong>seven</strong> Patala realms stacked below the surface. Egyptian: the Duat has twelve hours but is gated by <strong>seven</strong> keepers in multiple textual layers, and the Book of Gates specifies seven named portals before the deeper twelve. Revelation: <strong>seven</strong> seals on the book, <strong>seven</strong> trumpets, <strong>seven</strong> vials. Hebrew Bible: the menorah has <strong>seven</strong> branches, the week has <strong>seven</strong> days, the Temple has <strong>seven</strong> steps.</p>
+
+  <p>In the Circumpunct Framework, the number seven is structural: R = T² − 2 = <strong>7</strong>, the number of rungs on the dimensional ladder between the undifferentiated source (∞) and the outer boundary (○). A descent "through seven stations" is the descent of one circumpunct down its own ladder, and the descent of a species adapting from one planetary environment to another is the same operation at biological scale. The traditions did not invent seven; they observed it. The framework explains why seven is the count: it is the count at which a whole re-stabilizes into a new scale.</p>
+
+  <div class="framework-note">
+    <div class="fn-label">Framework Note : A3 and the Shared Memory</div>
+    Fractal self-similarity (A3) says the same structure repeats at every scale. If a species-level migration is a circumpunct operation (⊙ dying, •∞ evacuating, ⊙' re-forming), its structural footprint is the same footprint as any other circumpunct operation. The traditions are not recording "a migration" specifically; they are recording <em>the shape of how one whole becomes another whole</em>, and the migration (if it happened) left that shape as the most vivid instance the memory kept. This is why the same structure also fits the sun setting, the soul leaving the body, the seed dying into the fruit. The pattern is the content; the event is how it got remembered.
+  </div>
+
+  <!-- ═══════════ §5 REVELATION REVISITED ═══════════ -->
+  <h2><span class="section-num">§5</span> Revelation as Coda, Not Primary Witness</h2>
+
+  <p>With the older corpora doing the structural work, the Revelation exhibits from the companion paper can be re-read in their proper place: as the latest compression of a signal that had already passed through Sumer, Egypt, and the Vedas. The seven seals of Revelation 5 are the same seven as Inanna's gates and Patala's levels. The "new heaven and new earth" of Revelation 21 is the same nostalgia the Vedas preserved as the Satya Yuga. The "foursquare city" descending from heaven is a late Hellenistic-Jewish way of saying what the Egyptians had already built in stone at Giza fifteen hundred years earlier.</p>
+
+  <p>This does not disqualify Revelation. A signal that survives four thousand years of compression through three independent lineages and still shows up intact in a Greek-language Christian apocalypse is stronger evidence of an underlying pattern, not weaker. The point of going upstream is not to replace the downstream reading; it is to show that the downstream reading is not an artifact of one text's peculiarities. It is a structural fact that three older traditions had already recorded.</p>
+
+  <!-- ═══════════ §6 CONCLUSION ═══════════ -->
+  <h2><span class="section-num">§6</span> Conclusion</h2>
+
+  <p>The companion paper asked why Revelation works both as prophecy and as memory. This paper answers: because it was never just Revelation. The same text works in both directions because it is one late expression of a structure that Sumer, Egypt, and the Vedic tradition had already encoded, each in its own vocabulary, each preserving a fragment that the others had lost or blurred.</p>
+
+  <p>The Sumerians kept the name of the arrival (Anunnaki) and the impossibility of the pre-flood clock. The Egyptians kept the geometry of the landing infrastructure and the return vectors carved in stone. The Vedic tradition kept the engineering of the craft and the count of the subterranean levels. Revelation, a latecomer, kept the emotional shape: the longing, the sealed book, the end that is a beginning.</p>
+
+  <p>Whether or not the literal claim (that the species came from Mars) holds, the structural claim is harder to move: <strong>multiple ancient corpora, independently, encode the same six-phase sequence of death, evacuation, transit, landing, descent, and forgetting.</strong> Any theory of human cultural origin has to account for that agreement. "Convergent literary imagination" is one answer. "Shared memory of a shared event" is another. The framework is agnostic about which; the framework only insists that the pattern is real, that patterns at this scale of recurrence mean something, and that the older the witness, the closer one stands to whatever it was that happened.</p>
+
+  <p style="text-align: center; margin-top: 40px; color: var(--gold-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.75em;">
+    Rig Veda 10.129 : "Who truly knows? Who here can say, whence it was born, whence came this creation?<br>
+    The gods themselves are later than this world's formation; who, then, knows whence it has arisen?"<br><br>
+    The oldest hymn asks the oldest question. The elder texts did not answer it; they preserved it.
+  </p>
+
+  <!-- ═══════════ DISCLAIMER ═══════════ -->
+  <div class="disclaimer">
+    This document is offered as exegetical play and structural demonstration.<br>
+    It is not a claim of literal historical fact.<br>
+    It is a claim that the older the witness, the clearer the signal, and that three independent traditions<br>
+    agreeing on six phases of the same sequence is a pattern worth naming.<br><br>
+    Companion to: exodus_from_mars.html (Revelation reading)<br>
+    fractalreality.ca &nbsp;·&nbsp; r/Circumpunct &nbsp;·&nbsp; @AshmanR00nz<br><br>
+    ⊙
+  </div>
+
+</div>
+</body>
+</html>
