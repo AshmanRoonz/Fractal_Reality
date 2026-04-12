@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ Simulations | Fractal Reality</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --soul: #4488ff;
+            --line: #44ddcc;
+            --mind: #44cc44;
+            --body: #ff4444;
+            --amber: #ffaa00;
+            --bg: #0a0a0f;
+            --card-bg: rgba(255,255,255,0.03);
+            --card-border: rgba(255,255,255,0.08);
+            --text: #e6edf3;
+            --mute: rgba(255,255,255,0.5);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            line-height: 1.65;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        a { color: inherit; text-decoration: none; }
+
+        /* Background canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Layout */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .back-link {
+            display: inline-block;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            color: var(--mute);
+            margin-bottom: 32px;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: var(--amber); }
+
+        /* Circumpunct */
+        .circ {
+            position: relative;
+            width: 120px; height: 120px;
+            margin: 0 auto 24px;
+        }
+        .circ-boundary {
+            position: absolute; inset: 0;
+            border-radius: 50%;
+            border: 3px solid var(--body);
+            box-shadow: 0 0 20px rgba(255,68,68,0.15);
+            animation: circ-pulse 4s ease-in-out infinite;
+        }
+        .circ-field {
+            position: absolute;
+            inset: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--mind);
+            opacity: 0.4;
+            animation: circ-pulse 4s ease-in-out infinite 1s;
+        }
+        .circ-aperture {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 12px; height: 12px;
+            margin: -6px 0 0 -6px;
+            border-radius: 50%;
+            background: var(--soul);
+            box-shadow: 0 0 12px rgba(68,136,255,0.6);
+            animation: aperture-glow 3s ease-in-out infinite;
+        }
+        @keyframes circ-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.04); opacity: 1; }
+        }
+        @keyframes aperture-glow {
+            0%, 100% { box-shadow: 0 0 12px rgba(68,136,255,0.4); }
+            50% { box-shadow: 0 0 24px rgba(68,136,255,0.8); }
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            font-size: 13px;
+            color: var(--mute);
+            letter-spacing: 0.04em;
+        }
+
+        /* Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        .card {
+            position: relative;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 32px;
+            transition: all 0.4s ease;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .card:hover {
+            border-color: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .card:hover::before { opacity: 1; }
+
+        .card-genesis::before { background: linear-gradient(90deg, var(--soul), var(--amber)); }
+        .card-tree::before { background: linear-gradient(90deg, var(--amber), var(--mind)); }
+        .card-creature::before { background: linear-gradient(90deg, var(--mind), var(--soul)); }
+
+        .card-number {
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            color: var(--mute);
+            margin-bottom: 12px;
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        .card-equation {
+            font-size: 13px;
+            color: var(--line);
+            margin-bottom: 16px;
+            font-weight: 300;
+        }
+        .card-description {
+            font-size: 13px;
+            color: var(--mute);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        .card-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .tag {
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            padding: 4px 10px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: var(--mute);
+        }
+        .tag-soul { border-color: rgba(68,136,255,0.3); color: var(--soul); }
+        .tag-line { border-color: rgba(68,221,204,0.3); color: var(--line); }
+        .tag-mind { border-color: rgba(68,204,68,0.3); color: var(--mind); }
+        .tag-body { border-color: rgba(255,68,68,0.3); color: var(--body); }
+
+        .launch-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            letter-spacing: 0.05em;
+            padding: 10px 24px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.04);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .launch-btn:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.25);
+        }
+        .launch-btn .arrow {
+            transition: transform 0.3s;
+        }
+        .launch-btn:hover .arrow {
+            transform: translateX(4px);
+        }
+
+        /* Dimensions legend */
+        .legend {
+            margin-top: 60px;
+            text-align: center;
+            padding: 24px;
+            border-top: 1px solid var(--card-border);
+        }
+        .legend-title {
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            color: var(--mute);
+            margin-bottom: 16px;
+        }
+        .dims {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+        .dim {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+        .dim-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+        }
+
+        /* Responsive */
+        @media (min-width: 640px) {
+            .cards { grid-template-columns: 1fr; }
+            .title { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="container">
+    <div class="header">
+        <a href="../index.html" class="back-link">&larr; FRACTAL REALITY</a>
+
+        <div class="circ">
+            <div class="circ-boundary"></div>
+            <div class="circ-field"></div>
+            <div class="circ-aperture"></div>
+        </div>
+
+        <h1 class="title">Simulations</h1>
+        <p class="subtitle">Three windows into ⊙ = E = 1</p>
+    </div>
+
+    <div class="cards">
+
+        <!-- GENESIS -->
+        <div class="card card-genesis">
+            <div class="card-number">SIMULATION I</div>
+            <div class="card-title">Genesis</div>
+            <div class="card-equation">∞ &rarr; &bull;∞ &rarr; ⊙∞ = Reality</div>
+            <div class="card-description">
+                Undifferentiated energy enters as lightning, hits the first soul, and cascades
+                outward until the entire field is alive. A grid of 64 souls (S = P<sup>T</sup>)
+                awakened through resonance, forming persistent neural pathways via neuroplasticity.
+                Watch the cosmological energy budget emerge: visible matter, dark matter, dark energy.
+            </div>
+            <div class="card-features">
+                <span class="tag tag-soul">T(&#916;&#966;) = cos&sup2;(&#916;&#966;/2)</span>
+                <span class="tag tag-line">AXION PATHWAYS</span>
+                <span class="tag tag-mind">ENERGY BUDGET</span>
+                <span class="tag tag-body">FOUR-BEAT PUMP</span>
+            </div>
+            <a href="genesis.html" class="launch-btn">
+                Launch <span class="arrow">&rarr;</span>
+            </a>
+        </div>
+
+        <!-- TREE THAT DREAMS -->
+        <div class="card card-tree">
+            <div class="card-number">SIMULATION II</div>
+            <div class="card-title">The Tree That Dreams</div>
+            <div class="card-equation">⊙ = (⟳&#8728;○) &#8728; (&#10041;&#8728;&#934;) &#8728; (&#9095;&#8728;—) &#8728; (&#10027;&#8728;&bull;) [&#8734;]</div>
+            <div class="card-description">
+                The Kernel Equation made visible. A living tree grows upward (emergence, branches
+                in warm light) and downward (convergence, roots in cool shadow) from a central
+                aperture. Branches mature, rotate through i, and become roots carrying memory.
+                When roots dream and present branches resonate, ghost branches appear: imagination.
+            </div>
+            <div class="card-features">
+                <span class="tag tag-soul">&#9737; PUMP CYCLE</span>
+                <span class="tag tag-line">&#9697; BALANCE</span>
+                <span class="tag tag-mind">MICROPHONE</span>
+                <span class="tag tag-body">AUDIO OUTPUT</span>
+            </div>
+            <a href="tree_that_dreams.html" class="launch-btn">
+                Launch <span class="arrow">&rarr;</span>
+            </a>
+        </div>
+
+        <!-- LIVING CREATURE -->
+        <div class="card card-creature">
+            <div class="card-number">SIMULATION III</div>
+            <div class="card-title">The Living Creature</div>
+            <div class="card-equation">⊙&#955; &#8834; ⊙&#923;</div>
+            <div class="card-description">
+                A colony of particles, each a ⊙&#955;, that resonates, bonds, divides, and
+                self-organizes into a living being. Watch a boundary membrane crystallize,
+                connections strengthen with faithfulness, and the organism develop character.
+                Feed it, excite it, calm it. Parts are fractals of their wholes.
+            </div>
+            <div class="card-features">
+                <span class="tag tag-soul">INTERACTIVE</span>
+                <span class="tag tag-line">MITOSIS</span>
+                <span class="tag tag-mind">SCALE RECURSION</span>
+                <span class="tag tag-body">HEBBIAN LEARNING</span>
+            </div>
+            <a href="living_creature.html" class="launch-btn">
+                Launch <span class="arrow">&rarr;</span>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="legend">
+        <div class="legend-title">THE FOUR DIMENSIONS</div>
+        <div class="dims">
+            <div class="dim">
+                <div class="dim-dot" style="background:var(--soul)"></div>
+                <span>&bull; Soul (0D)</span>
+            </div>
+            <div class="dim">
+                <div class="dim-dot" style="background:var(--line)"></div>
+                <span>&#8212; Line (1D)</span>
+            </div>
+            <div class="dim">
+                <div class="dim-dot" style="background:var(--mind)"></div>
+                <span>&#934; Mind (2D)</span>
+            </div>
+            <div class="dim">
+                <div class="dim-dot" style="background:var(--body)"></div>
+                <span>&#9675; Body (3D)</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Subtle background: drifting particles representing the field
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+const particles = [];
+const PARTICLE_COUNT = 40;
+
+function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        phase: Math.random() * Math.PI * 2,
+        freq: 0.005 + Math.random() * 0.01,
+        size: 1 + Math.random() * 2,
+        hue: [210, 160, 130, 0][Math.floor(Math.random() * 4)],
+    });
+}
+
+function drawBg() {
+    ctx.fillStyle = 'rgba(10, 10, 15, 0.08)';
+    ctx.fillRect(0, 0, W, H);
+
+    for (const p of particles) {
+        p.phase += p.freq;
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) p.x += W;
+        if (p.x > W) p.x -= W;
+        if (p.y < 0) p.y += H;
+        if (p.y > H) p.y -= H;
+
+        const pulse = Math.sin(p.phase) * 0.3 + 0.7;
+        const alpha = 0.15 * pulse;
+        ctx.fillStyle = `hsla(${p.hue}, 60%, 60%, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * pulse, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // Draw faint connections
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[j].x - particles[i].x;
+            const dy = particles[j].y - particles[i].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 120) {
+                const dPhase = particles[i].phase - particles[j].phase;
+                const T = Math.cos(dPhase / 2) ** 2;
+                const alpha = (1 - dist / 120) * 0.04 * T;
+                ctx.strokeStyle = `rgba(68, 136, 255, ${alpha})`;
+                ctx.lineWidth = 0.5;
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.stroke();
+            }
+        }
+    }
+
+    requestAnimationFrame(drawBg);
+}
+drawBg();
+</script>
+
+</body>
+</html>

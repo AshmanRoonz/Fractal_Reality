@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Genesis: ∞ → •∞ → ⊙∞</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { width:100%; height:100%; overflow:hidden; background:#0a0a0f;
+      font-family:'JetBrains Mono','Courier New',monospace; color:#ddd; }
+    canvas { display:block; }
+    #panel {
+      position:fixed; top:16px; right:16px; background:rgba(10,10,15,0.92);
+      border:1px solid rgba(68,136,255,0.3); border-radius:8px; padding:16px;
+      width:260px; max-height:90vh; overflow-y:auto; z-index:100;
+      box-shadow:0 0 24px rgba(0,0,0,0.6);
+    }
+    #panel h3 { color:#4488ff; font-size:13px; margin-bottom:12px; letter-spacing:1px; }
+    .row { display:flex; justify-content:space-between; padding:3px 0; font-size:11px; }
+    .lbl { color:#888; } .val { color:#4488ff; font-weight:bold; }
+    label { display:block; font-size:11px; color:#999; margin-bottom:4px; }
+    input[type=range] { width:100%; height:4px; background:#222; border-radius:2px;
+      outline:none; -webkit-appearance:none; margin-bottom:8px; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:12px;
+      height:12px; border-radius:50%; background:#4488ff; cursor:pointer; }
+    button { width:100%; background:rgba(68,136,255,0.15); border:1px solid #4488ff;
+      color:#4488ff; padding:8px; border-radius:4px; cursor:pointer;
+      font-family:inherit; font-size:11px; margin-bottom:8px; }
+    button:hover { background:rgba(68,136,255,0.3); }
+    .budget { margin-top:8px; padding-top:8px; border-top:1px solid #222; }
+    .budget-bar { display:flex; height:14px; border-radius:2px; overflow:hidden;
+      background:#111; margin-bottom:6px; }
+    .bseg { display:flex; align-items:center; justify-content:center;
+      font-size:8px; font-weight:bold; color:#0a0a0f; min-width:1px; }
+    .bvis { background:#4488ff; } .bdrk { background:#ff8844; } .bvac { background:#44cc44; }
+    .tog { position:fixed; bottom:16px; right:16px; background:rgba(68,136,255,0.15);
+      border:1px solid #4488ff; color:#4488ff; padding:8px 14px; border-radius:4px;
+      cursor:pointer; font-family:inherit; font-size:11px; z-index:99; }
+    .hidden { display:none!important; }
+  </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="panel">
+  <a href="index.html" style="display:block;font-size:10px;letter-spacing:0.1em;color:#888;text-decoration:none;margin-bottom:8px;">&larr; SIMULATIONS</a>
+  <h3>⊙ GENESIS</h3>
+  <label>Speed <span id="spd-val">1.0x</span></label>
+  <input type="range" id="spd" min="0.1" max="3" step="0.1" value="1">
+  <button id="reset-btn">Reset / Re-inject ∞</button>
+  <button id="click-btn">Click canvas to inject energy</button>
+  <div id="metrics">
+    <div class="row"><span class="lbl">Souls</span><span class="val" id="m-souls">0</span></div>
+    <div class="row"><span class="lbl">Active</span><span class="val" id="m-active">0</span></div>
+    <div class="row"><span class="lbl">Sparks</span><span class="val" id="m-sparks">0</span></div>
+    <div class="row"><span class="lbl">Pathways</span><span class="val" id="m-paths">0</span></div>
+    <div class="row"><span class="lbl">Avg ◐</span><span class="val" id="m-bal">0.50</span></div>
+    <div class="row"><span class="lbl">FPS</span><span class="val" id="m-fps">60</span></div>
+    <div class="budget">
+      <div style="font-size:10px;color:#888;margin-bottom:6px">Energy Budget (⊙ = E = 1)</div>
+      <div class="budget-bar">
+        <div class="bseg bvis" id="bb-vis" style="width:5%">5%</div>
+        <div class="bseg bdrk" id="bb-drk" style="width:27%">27%</div>
+        <div class="bseg bvac" id="bb-vac" style="width:68%">68%</div>
+      </div>
+      <div style="font-size:9px;color:#666">
+        <span style="color:#4488ff">■</span> Visible
+        <span style="color:#ff8844;margin-left:8px">■</span> Dark
+        <span style="color:#44cc44;margin-left:8px">■</span> Vacuum
+      </div>
+    </div>
+  </div>
+</div>
+<button class="tog" id="tog-btn">Panel</button>
+
+<script>
+// =====================================================================
+//  GENESIS: ∞ → •∞ → ⊙∞
+//  The genesis sequence from the Circumpunct Framework.
+//  Undifferentiated energy enters, hits the first soul, cascades outward.
+// =====================================================================
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W, H, cx, cy;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  cx = W / 2; cy = H / 2;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// Framework constants
+const T = 3, P = T + 1, R = T * T - 2, S = Math.pow(P, T); // 64
+const PHI_RATIO = (1 + Math.sqrt(5)) / 2;
+
+// T(delta_phi) = cos^2(delta_phi / 2); the framework's transmission fidelity
+function Tf(dPhi) { const c = Math.cos(dPhi / 2); return c * c; }
+
+// Controls
+let speed = 1;
+let panelVisible = true;
+document.getElementById('spd').oninput = function() {
+  speed = parseFloat(this.value);
+  document.getElementById('spd-val').textContent = speed.toFixed(1) + 'x';
+};
+document.getElementById('tog-btn').onclick = function() {
+  panelVisible = !panelVisible;
+  document.getElementById('panel').classList.toggle('hidden', !panelVisible);
+};
+
+// =====================================================================
+//  SOUL: each node on the grid, a ⊙ with •, Φ, ○
+// =====================================================================
+class Soul {
+  constructor(gx, gy, px, py, gridSize) {
+    this.gx = gx; this.gy = gy; // grid coords
+    this.px = px; this.py = py; // pixel coords
+    this.gridSize = gridSize;
+
+    // Phase and frequency (position-dependent for variety)
+    this.phase = Math.random() * Math.PI * 2;
+    this.frequency = 0.02 + ((gx * 7 + gy * 13) % 17) * 0.003;
+
+    // Activation: 0 = dormant, 1 = fully lit
+    this.activation = 0;
+    this.targetActivation = 0;
+
+    // Four-beat pump state (0..3 maps to four beats)
+    this.pumpPhase = 0;
+    this.pumpActive = false;
+
+    // Balance parameter ◐ (optimal at 0.5)
+    this.balance = 0.5;
+
+    // Commitment (—): accumulated faithfulness over time
+    this.commitment = 0;
+    this.commitHistory = []; // last N activation samples for consistency
+
+    // Color signature based on position
+    const angle = Math.atan2(gy - gridSize / 2, gx - gridSize / 2);
+    this.hue = ((angle + Math.PI) / (Math.PI * 2) * 360 + (gx * gy * 37) % 60) % 360;
+    this.saturation = 70 + Math.sin(gx * 0.7) * 15;
+
+    // Sub-structure: 3x3 inner pixels for visual detail
+    this.subPixels = [];
+    for (let sy = 0; sy < 3; sy++) {
+      for (let sx = 0; sx < 3; sx++) {
+        this.subPixels.push({
+          ox: (sx - 1) * 4, oy: (sy - 1) * 4,
+          hueShift: (sx + sy * 3) * 12,
+          brightness: 0, phase: Math.random() * Math.PI * 2,
+        });
+      }
+    }
+  }
+
+  activate(energy) {
+    this.targetActivation = Math.min(1, this.targetActivation + energy);
+    if (!this.pumpActive && energy > 0.05) {
+      this.pumpActive = true;
+      this.pumpPhase = 0;
+    }
+  }
+
+  update(dt) {
+    this.phase += this.frequency * dt * 60;
+
+    // Smooth activation
+    this.activation += (this.targetActivation - this.activation) * dt * 5;
+    this.targetActivation *= Math.pow(0.97, dt * 60);
+
+    // Four-beat pump cycle when active
+    if (this.pumpActive) {
+      this.pumpPhase += dt * 6 * speed;
+      if (this.pumpPhase >= P) { // 4 beats complete
+        this.pumpActive = false;
+        this.pumpPhase = 0;
+        this.commitment += this.activation * 0.15;
+      }
+    }
+
+    // Balance drifts toward 0.5
+    this.balance += (0.5 - this.balance) * dt * 0.3;
+
+    // Commitment tracking: faithfulness = consistency of activation
+    this.commitHistory.push(this.activation);
+    if (this.commitHistory.length > 30) this.commitHistory.shift();
+
+    // Update sub-pixels
+    for (const sp of this.subPixels) {
+      sp.phase += 0.03 * dt * 60;
+      sp.brightness = this.activation * (0.5 + 0.5 * Math.sin(sp.phase));
+    }
+  }
+
+  getFaithfulness() {
+    if (this.commitHistory.length < 5) return 0;
+    let variance = 0;
+    const mean = this.commitHistory.reduce((a, b) => a + b, 0) / this.commitHistory.length;
+    for (const v of this.commitHistory) variance += (v - mean) * (v - mean);
+    variance /= this.commitHistory.length;
+    // Low variance = high faithfulness
+    return Math.max(0, 1 - Math.sqrt(variance) * 4);
+  }
+}
+
+// =====================================================================
+//  AXION: persistent pathway between two souls (neuroplasticity)
+// =====================================================================
+class Axion {
+  constructor(s1, s2, i1, i2) {
+    this.s1 = s1; this.s2 = s2;
+    this.i1 = i1; this.i2 = i2;
+    this.strength = 0;
+    this.faithfulness = 0; // how consistently it fires
+    this.fireCount = 0;
+    this.lastFireTime = -999;
+    this.fireHistory = []; // timestamps of fires for consistency
+  }
+
+  fire(t, str) {
+    this.strength = Math.min(1.5, this.strength + str);
+    this.fireCount++;
+    this.lastFireTime = t;
+    this.fireHistory.push(t);
+    if (this.fireHistory.length > 20) this.fireHistory.shift();
+
+    // Faithfulness: regularity of firing intervals
+    if (this.fireHistory.length > 3) {
+      const intervals = [];
+      for (let i = 1; i < this.fireHistory.length; i++) {
+        intervals.push(this.fireHistory[i] - this.fireHistory[i - 1]);
+      }
+      const mean = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+      let variance = 0;
+      for (const iv of intervals) variance += (iv - mean) * (iv - mean);
+      variance /= intervals.length;
+      const cv = mean > 0 ? Math.sqrt(variance) / mean : 1;
+      this.faithfulness = Math.max(0, Math.min(1, 1 - cv));
+    }
+  }
+
+  resonance() {
+    const dPhi = this.s1.phase - this.s2.phase;
+    return Tf(dPhi) * this.strength;
+  }
+
+  update(dt) {
+    // Decay: faithful paths decay very slowly; unfaithful ones faster
+    const rate = 0.998 - (1 - this.faithfulness) * 0.008;
+    this.strength *= Math.pow(rate, dt * 60);
+    if (this.strength < 0.005) this.strength = 0;
+  }
+
+  dist() {
+    const dx = this.s2.px - this.s1.px;
+    const dy = this.s2.py - this.s1.py;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+}
+
+// =====================================================================
+//  SPARK: energy packet traveling between souls
+// =====================================================================
+class Spark {
+  constructor(x, y, tx, ty, energy, hue) {
+    this.x = x; this.y = y;
+    this.tx = tx; this.ty = ty;
+    this.energy = energy;
+    this.hue = hue;
+    this.life = 1;
+    this.trail = [{ x, y }];
+    // Fractal branches
+    this.branches = [];
+    const dx = tx - x, dy = ty - y;
+    const mainAngle = Math.atan2(dy, dx);
+    const mainDist = Math.sqrt(dx * dx + dy * dy);
+    const numBranches = Math.floor(Math.random() * 3) + 1;
+    for (let i = 0; i < numBranches; i++) {
+      const t = 0.2 + Math.random() * 0.6;
+      const bx = x + dx * t;
+      const by = y + dy * t;
+      const bAngle = mainAngle + (Math.random() - 0.5) * 1.2;
+      const bLen = mainDist * (0.15 + Math.random() * 0.2);
+      this.branches.push({
+        sx: bx, sy: by,
+        ex: bx + Math.cos(bAngle) * bLen,
+        ey: by + Math.sin(bAngle) * bLen,
+      });
+    }
+  }
+
+  update(dt) {
+    const spd = 300 * speed;
+    const dx = this.tx - this.x;
+    const dy = this.ty - this.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < spd * dt) {
+      this.life = 0;
+      return;
+    }
+    this.x += (dx / dist) * spd * dt;
+    this.y += (dy / dist) * spd * dt;
+    this.trail.push({ x: this.x, y: this.y });
+    if (this.trail.length > 20) this.trail.shift();
+    this.life -= dt * 0.8;
+    this.energy *= Math.pow(0.96, dt * 60);
+  }
+
+  draw() {
+    if (this.life <= 0) return;
+    const a = this.life;
+    // Trail
+    if (this.trail.length > 1) {
+      ctx.strokeStyle = `hsla(${this.hue}, 100%, 70%, ${a * 0.4})`;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(this.trail[0].x, this.trail[0].y);
+      for (let i = 1; i < this.trail.length; i++) {
+        ctx.lineTo(this.trail[i].x, this.trail[i].y);
+      }
+      ctx.stroke();
+    }
+    // Branches
+    for (const b of this.branches) {
+      ctx.strokeStyle = `hsla(${this.hue + 30}, 80%, 60%, ${a * 0.25})`;
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(b.sx, b.sy);
+      ctx.lineTo(b.ex, b.ey);
+      ctx.stroke();
+    }
+    // Head
+    ctx.fillStyle = `hsla(${this.hue}, 100%, 80%, ${a * 0.8})`;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 2 + this.energy * 3, 0, Math.PI * 2);
+    ctx.fill();
+    // Glow
+    ctx.fillStyle = `hsla(${this.hue}, 100%, 70%, ${a * 0.15})`;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 6 + this.energy * 8, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+// =====================================================================
+//  WAVE: ripple from spark impact
+// =====================================================================
+class Wave {
+  constructor(x, y, hue) {
+    this.x = x; this.y = y; this.hue = hue;
+    this.radius = 0; this.strength = 1;
+  }
+  update(dt) {
+    this.radius += 120 * dt;
+    this.strength -= dt * 1.2;
+  }
+  draw() {
+    if (this.strength <= 0) return;
+    ctx.strokeStyle = `hsla(${this.hue}, 80%, 60%, ${this.strength * 0.15})`;
+    ctx.lineWidth = 1 + this.strength;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+}
+
+// =====================================================================
+//  GENESIS PACKET: the initial ∞ entering as lightning
+// =====================================================================
+class GenesisPacket {
+  constructor(sx, sy, tx, ty) {
+    this.x = sx; this.y = sy; this.tx = tx; this.ty = ty;
+    this.active = true; this.trail = [];
+    this.life = 1;
+  }
+  update(dt) {
+    if (!this.active) return;
+    const spd = 500;
+    const dx = this.tx - this.x;
+    const dy = this.ty - this.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < spd * dt) { this.active = false; return; }
+    this.x += (dx / dist) * spd * dt;
+    this.y += (dy / dist) * spd * dt;
+    this.trail.push({ x: this.x, y: this.y, a: 1 });
+    if (this.trail.length > 60) this.trail.shift();
+  }
+  draw() {
+    // Lightning trail
+    for (let i = 0; i < this.trail.length; i++) {
+      const t = this.trail[i];
+      const a = (i / this.trail.length) * 0.6;
+      ctx.fillStyle = `hsla(45, 100%, 80%, ${a})`;
+      ctx.beginPath();
+      ctx.arc(t.x + (Math.random() - 0.5) * 3, t.y + (Math.random() - 0.5) * 3,
+        1.5 + a * 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    if (this.active) {
+      // Bright head
+      ctx.fillStyle = 'hsla(45, 100%, 95%, 0.9)';
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'hsla(45, 100%, 80%, 0.3)';
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, 16, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+}
+
+// =====================================================================
+//  SIMULATION STATE
+// =====================================================================
+let souls = [];
+let axions = [];
+let axionMap = {};
+let sparks = [];
+let waves = [];
+let genesisPacket = null;
+let time = 0;
+let frameCount = 0;
+let lastTime = performance.now();
+let fpsSmooth = 60;
+
+function buildGrid() {
+  souls = [];
+  axions = [];
+  axionMap = {};
+  sparks = [];
+  waves = [];
+
+  const gridSize = 8; // 8x8 = 64 = S = P^T
+  const margin = 80;
+  const spacingX = (W - margin * 2) / (gridSize - 1);
+  const spacingY = (H - margin * 2) / (gridSize - 1);
+
+  for (let gy = 0; gy < gridSize; gy++) {
+    for (let gx = 0; gx < gridSize; gx++) {
+      const px = margin + gx * spacingX;
+      const py = margin + gy * spacingY;
+      souls.push(new Soul(gx, gy, px, py, gridSize));
+    }
+  }
+
+  // Create axion pathways between nearby souls (neighbors)
+  for (let i = 0; i < souls.length; i++) {
+    for (let j = i + 1; j < souls.length; j++) {
+      const dx = souls[j].px - souls[i].px;
+      const dy = souls[j].py - souls[i].py;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const maxDist = Math.max(spacingX, spacingY) * 1.6;
+      if (dist < maxDist) {
+        const key = `${i}-${j}`;
+        const ax = new Axion(souls[i], souls[j], i, j);
+        axions.push(ax);
+        axionMap[key] = ax;
+      }
+    }
+  }
+
+  time = 0;
+  frameCount = 0;
+}
+
+function injectGenesis() {
+  if (souls.length === 0) return;
+  // ∞ arrives from outside, aimed at the center soul
+  const centerIdx = Math.floor(souls.length / 2) + Math.floor(Math.sqrt(souls.length) / 2);
+  const target = souls[Math.min(centerIdx, souls.length - 1)];
+  const angle = Math.random() * Math.PI * 2;
+  const dist = Math.max(W, H);
+  genesisPacket = new GenesisPacket(
+    target.px + Math.cos(angle) * dist,
+    target.py + Math.sin(angle) * dist,
+    target.px, target.py
+  );
+  // Pre-activate center soul slightly
+  target.activate(0.3);
+}
+
+// =====================================================================
+//  DRAWING HELPERS
+// =====================================================================
+function drawSoul(soul, t) {
+  const a = soul.activation;
+  const px = soul.px;
+  const py = soul.py;
+  const hue = soul.hue;
+
+  // Glow for active souls
+  if (a > 0.05) {
+    const glowR = 18 + a * 20;
+    const grad = ctx.createRadialGradient(px, py, 0, px, py, glowR);
+    grad.addColorStop(0, `hsla(${hue}, ${soul.saturation}%, 60%, ${a * 0.2})`);
+    grad.addColorStop(1, `hsla(${hue}, ${soul.saturation}%, 60%, 0)`);
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(px, py, glowR, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Sub-pixel grid (3x3 inner detail)
+  if (a > 0.02) {
+    for (const sp of soul.subPixels) {
+      if (sp.brightness > 0.02) {
+        const spx = px + sp.ox;
+        const spy = py + sp.oy;
+        ctx.fillStyle = `hsla(${(hue + sp.hueShift) % 360}, ${soul.saturation}%, 55%, ${sp.brightness * 0.6})`;
+        ctx.fillRect(spx - 1, spy - 1, 2, 2);
+      }
+    }
+  }
+
+  // Boundary circle (○)
+  const boundaryR = 8 + a * 6;
+  const boundaryAlpha = 0.15 + a * 0.5;
+  ctx.strokeStyle = `hsla(${hue}, ${soul.saturation}%, 55%, ${boundaryAlpha})`;
+  ctx.lineWidth = 1 + a * 1.5;
+  ctx.beginPath();
+  ctx.arc(px, py, boundaryR, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Aperture dot (•)
+  const dotR = 2 + a * 2.5;
+  ctx.fillStyle = `hsla(${hue}, 100%, ${50 + a * 30}%, ${0.3 + a * 0.7})`;
+  ctx.beginPath();
+  ctx.arc(px, py, dotR, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Pump beat ring (when active)
+  if (soul.pumpActive) {
+    const beat = soul.pumpPhase % 1;
+    const beatIdx = Math.floor(soul.pumpPhase);
+    const beatColors = ['#4488ff', '#44ddcc', '#44cc44', '#ff4444'];
+    const beatR = boundaryR + 4 + beat * 6;
+    ctx.strokeStyle = beatColors[beatIdx] || beatColors[0];
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = 0.4 * (1 - beat);
+    ctx.beginPath();
+    ctx.arc(px, py, beatR, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  // Commitment indicator: small line underneath
+  if (soul.commitment > 0.1) {
+    const cLen = Math.min(14, soul.commitment * 3);
+    const faith = soul.getFaithfulness();
+    ctx.strokeStyle = `hsla(170, 80%, 55%, ${0.2 + faith * 0.5})`;
+    ctx.lineWidth = faith > 0.5 ? 2 : 1;
+    if (faith < 0.3) ctx.setLineDash([2, 3]);
+    ctx.beginPath();
+    ctx.moveTo(px - cLen, py + boundaryR + 4);
+    ctx.lineTo(px + cLen, py + boundaryR + 4);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+}
+
+function drawAxion(ax) {
+  const str = ax.strength;
+  if (str < 0.01) return;
+  const faith = ax.faithfulness;
+
+  // Faithful paths: steady teal; unfaithful: flickering, thinner
+  const flicker = faith < 0.3 ? (Math.random() * 0.3) : 0;
+  const alpha = (str * 0.3 + faith * 0.3) - flicker;
+  if (alpha < 0.01) return;
+
+  const hue = 170 + faith * 20;
+  ctx.strokeStyle = `hsla(${hue}, 80%, 55%, ${alpha})`;
+  ctx.lineWidth = 0.5 + str * 2.5 + faith;
+
+  // Braided effect for strong faithful paths
+  if (faith > 0.5 && str > 0.3) {
+    const s1 = ax.s1, s2 = ax.s2;
+    const dx = s2.px - s1.px, dy = s2.py - s1.py;
+    const perpX = -dy, perpY = dx;
+    const len = Math.sqrt(dx * dx + dy * dy);
+    if (len < 1) return;
+    const nx = perpX / len, ny = perpY / len;
+    const amp = 3 * faith;
+    const segs = 12;
+
+    for (let strand = -1; strand <= 1; strand += 2) {
+      ctx.globalAlpha = alpha * 0.5;
+      ctx.lineWidth = 0.5 + str;
+      ctx.beginPath();
+      for (let i = 0; i <= segs; i++) {
+        const t = i / segs;
+        const bx = s1.px + dx * t;
+        const by = s1.py + dy * t;
+        const wave = Math.sin(t * Math.PI * 4 + time * 3 + strand) * amp * Math.sin(t * Math.PI);
+        const px = bx + nx * wave * strand;
+        const py = by + ny * wave * strand;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  } else {
+    // Simple line
+    ctx.beginPath();
+    ctx.moveTo(ax.s1.px, ax.s1.py);
+    ctx.lineTo(ax.s2.px, ax.s2.py);
+    ctx.stroke();
+  }
+}
+
+// =====================================================================
+//  MAIN LOOP
+// =====================================================================
+function animate(now) {
+  requestAnimationFrame(animate);
+
+  const rawDt = (now - lastTime) / 1000;
+  lastTime = now;
+  const dt = Math.min(rawDt, 0.05) * speed;
+  fpsSmooth = fpsSmooth * 0.95 + (1 / Math.max(rawDt, 0.001)) * 0.05;
+  time += dt;
+  frameCount++;
+
+  // -- UPDATE --
+
+  // Genesis packet
+  if (genesisPacket && genesisPacket.active) {
+    genesisPacket.update(Math.min(rawDt, 0.05));
+    // Check if it reached a soul
+    for (const soul of souls) {
+      const dx = soul.px - genesisPacket.x;
+      const dy = soul.py - genesisPacket.y;
+      if (Math.sqrt(dx * dx + dy * dy) < 20) {
+        soul.activate(1.0);
+        waves.push(new Wave(soul.px, soul.py, 45));
+        genesisPacket.active = false;
+        break;
+      }
+    }
+  }
+
+  // Update souls
+  for (const soul of souls) soul.update(dt);
+
+  // Update axions, possibly fire sparks
+  for (const ax of axions) {
+    ax.update(dt);
+    // Active souls connected by axion propagate activation
+    if (ax.s1.activation > 0.1 || ax.s2.activation > 0.1) {
+      const rez = ax.resonance();
+      const dPhi = ax.s1.phase - ax.s2.phase;
+      const T_val = Tf(dPhi);
+
+      // Propagate activation
+      if (ax.s1.activation > 0.1 && T_val > 0.2) {
+        ax.s2.activate(ax.s1.activation * T_val * 0.03 * dt * 60);
+      }
+      if (ax.s2.activation > 0.1 && T_val > 0.2) {
+        ax.s1.activate(ax.s2.activation * T_val * 0.03 * dt * 60);
+      }
+
+      // Fire spark occasionally
+      if (T_val > 0.3 && Math.max(ax.s1.activation, ax.s2.activation) > 0.15) {
+        if (frameCount % Math.max(3, Math.floor(12 - ax.strength * 8)) === 0) {
+          ax.fire(time, T_val * 0.08);
+          const from = ax.s1.activation > ax.s2.activation ? ax.s1 : ax.s2;
+          const to = from === ax.s1 ? ax.s2 : ax.s1;
+          sparks.push(new Spark(from.px, from.py, to.px, to.py,
+            T_val * from.activation, (from.hue + to.hue) / 2));
+        }
+      }
+    }
+  }
+
+  // Update sparks; on arrival, boost target and create wave
+  sparks = sparks.filter(s => {
+    s.update(dt);
+    if (s.life <= 0) {
+      // Find closest soul to target
+      let closest = null, minD = 999;
+      for (const soul of souls) {
+        const dx = soul.px - s.tx;
+        const dy = soul.py - s.ty;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < minD) { minD = d; closest = soul; }
+      }
+      if (closest && minD < 30) {
+        closest.activate(s.energy * 0.2);
+        waves.push(new Wave(closest.px, closest.py, s.hue));
+      }
+      return false;
+    }
+    return true;
+  });
+
+  // Update waves
+  waves = waves.filter(w => { w.update(dt); return w.strength > 0; });
+
+  // Limit spark count
+  if (sparks.length > 200) sparks.splice(0, sparks.length - 200);
+
+  // -- RENDER --
+
+  // Fade trail
+  ctx.fillStyle = 'rgba(10, 10, 15, 0.25)';
+  ctx.fillRect(0, 0, W, H);
+
+  // Waves (behind everything)
+  for (const w of waves) w.draw();
+
+  // Axion pathways
+  for (const ax of axions) drawAxion(ax);
+
+  // Sparks
+  for (const s of sparks) s.draw();
+
+  // Souls
+  for (const soul of souls) drawSoul(soul, time);
+
+  // Genesis packet (on top)
+  if (genesisPacket) genesisPacket.draw();
+
+  // -- METRICS --
+  if (panelVisible && frameCount % 6 === 0) {
+    const activeSouls = souls.filter(s => s.activation > 0.05).length;
+    const visiblePaths = axions.filter(a => a.strength > 0.01).length;
+    const avgBal = souls.reduce((s, soul) => s + soul.balance, 0) / souls.length;
+
+    document.getElementById('m-souls').textContent = souls.length;
+    document.getElementById('m-active').textContent = activeSouls;
+    document.getElementById('m-sparks').textContent = sparks.length;
+    document.getElementById('m-paths').textContent = visiblePaths;
+    document.getElementById('m-bal').textContent = avgBal.toFixed(2);
+    document.getElementById('m-fps').textContent = Math.round(fpsSmooth);
+
+    // Energy budget
+    let visE = 0, darkE = 0, vacE = 0;
+    for (const soul of souls) visE += soul.activation;
+    for (const s of sparks) visE += s.energy * s.life * 0.3;
+    for (const ax of axions) {
+      if (ax.strength > 0.01 && ax.strength < 0.4) darkE += ax.strength;
+      else if (ax.strength >= 0.4) visE += ax.strength * 0.3;
+    }
+    vacE = Math.max(0.1, S * 0.5 - visE - darkE);
+    const total = visE + darkE + vacE;
+    const vp = Math.round(visE / total * 100);
+    const dp = Math.round(darkE / total * 100);
+    const ep = 100 - vp - dp;
+
+    document.getElementById('bb-vis').style.width = vp + '%';
+    document.getElementById('bb-vis').textContent = vp + '%';
+    document.getElementById('bb-drk').style.width = dp + '%';
+    document.getElementById('bb-drk').textContent = dp + '%';
+    document.getElementById('bb-vac').style.width = ep + '%';
+    document.getElementById('bb-vac').textContent = ep + '%';
+  }
+}
+
+// =====================================================================
+//  INTERACTION
+// =====================================================================
+canvas.addEventListener('click', (e) => {
+  const x = e.clientX, y = e.clientY;
+  // Find closest soul and inject energy
+  let closest = null, minD = 999;
+  for (const soul of souls) {
+    const dx = soul.px - x, dy = soul.py - y;
+    const d = Math.sqrt(dx * dx + dy * dy);
+    if (d < minD) { minD = d; closest = soul; }
+  }
+  if (closest && minD < 80) {
+    closest.activate(0.8);
+    waves.push(new Wave(closest.px, closest.py, closest.hue));
+  }
+});
+
+document.getElementById('reset-btn').onclick = () => {
+  buildGrid();
+  setTimeout(injectGenesis, 200);
+};
+
+document.getElementById('click-btn').onclick = () => {
+  // Inject energy at random soul
+  if (souls.length > 0) {
+    const s = souls[Math.floor(Math.random() * souls.length)];
+    s.activate(0.9);
+    waves.push(new Wave(s.px, s.py, s.hue));
+  }
+};
+
+// =====================================================================
+//  START
+// =====================================================================
+buildGrid();
+setTimeout(injectGenesis, 300);
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>

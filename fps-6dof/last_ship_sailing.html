@@ -2385,6 +2385,11 @@ class Bot {
 
     this.spawnProtection = Math.max(0, this.spawnProtection - dt);
 
+    // Damage smoke/fire when hull is damaged
+    if (this.health < this.maxHealth * 0.5) {
+      spawnDamageSmoke(this.position, this.health / this.maxHealth);
+    }
+
     // Shield does NOT regen naturally; only via stasis fields and executions
 
     // Doomed timer
@@ -2742,11 +2747,12 @@ class Bot {
       this.health -= amount;
     }
 
-    // Flash shield
+    // Flash shield + shimmer effect
     const shieldMesh = this.mesh.userData.shieldMesh;
     if (shieldMesh && this.shield > 0) {
       shieldMesh.material.opacity = 0.3;
       setTimeout(() => { if (shieldMesh) shieldMesh.material.opacity = 0; }, 150);
+      spawnShieldHit(this.position, this.chassis.hullLength * 0.8, 0x4488ff);
     }
 
     if (!this.doomed && this.health > 0 && this.health / this.maxHealth <= LSS.DOOMED_HEALTH_PCT) {
@@ -2799,12 +2805,28 @@ class Projectile {
     this.mesh.position.copy(origin);
     scene.add(this.mesh);
 
+    // --- Enhanced multi-segment trail ---
+    this.trailColor = color || 0xffaa00;
+    const trailSegs = 12;
+    this.trailPositions = new Float32Array(trailSegs * 3);
+    for (let i = 0; i < trailSegs; i++) {
+      this.trailPositions[i*3] = origin.x;
+      this.trailPositions[i*3+1] = origin.y;
+      this.trailPositions[i*3+2] = origin.z;
+    }
     const trailGeo = new THREE.BufferGeometry();
-    const trailPos = new Float32Array(6);
-    trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPos, 3));
-    const trailMat = new THREE.LineBasicMaterial({ color: color || 0xffaa00, transparent: true, opacity: 0.5 });
+    trailGeo.setAttribute('position', new THREE.BufferAttribute(this.trailPositions, 3));
+    const trailMat = new THREE.LineBasicMaterial({ color: this.trailColor, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
     this.trail = new THREE.Line(trailGeo, trailMat);
     scene.add(this.trail);
+    this.trailTimer = 0;
+
+    // Glow trail (wider, softer)
+    const glowGeo = new THREE.SphereGeometry(5, 4, 3);
+    const glowMat = new THREE.MeshBasicMaterial({ color: this.trailColor, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending });
+    this.glowMesh = new THREE.Mesh(glowGeo, glowMat);
+    this.glowMesh.position.copy(origin);
+    scene.add(this.glowMesh);
   }
 
   update(dt) {
@@ -2867,10 +2889,41 @@ class Projectile {
       igniteNearbyGas(this.position, 80);
     }
 
-    const positions = this.trail.geometry.attributes.position.array;
-    positions[0] = prevPos.x; positions[1] = prevPos.y; positions[2] = prevPos.z;
-    positions[3] = this.position.x; positions[4] = this.position.y; positions[5] = this.position.z;
-    this.trail.geometry.attributes.position.needsUpdate = true;
+    // --- Shift trail positions forward and add current pos at head ---
+    this.trailTimer += dt;
+    if (this.trailTimer > 0.016) { // ~60fps trail updates
+      this.trailTimer = 0;
+      const positions = this.trail.geometry.attributes.position.array;
+      const segs = positions.length / 3;
+      // Shift all positions back by one slot
+      for (let i = segs - 1; i > 0; i--) {
+        positions[i*3]   = positions[(i-1)*3];
+        positions[i*3+1] = positions[(i-1)*3+1];
+        positions[i*3+2] = positions[(i-1)*3+2];
+      }
+      positions[0] = this.position.x;
+      positions[1] = this.position.y;
+      positions[2] = this.position.z;
+      this.trail.geometry.attributes.position.needsUpdate = true;
+    }
+    // Update glow mesh position
+    if (this.glowMesh) {
+      this.glowMesh.position.copy(this.position);
+      // Pulse glow slightly
+      const pulse = 1 + Math.sin(this.age * 20) * 0.15;
+      this.glowMesh.scale.setScalar(pulse);
+    }
+    // Emit trail particles (sparse; weapon color)
+    if (Math.random() < 0.3) {
+      game.particles.push({
+        position: this.position.clone(),
+        velocity: new THREE.Vector3((Math.random()-0.5)*20, (Math.random()-0.5)*20, (Math.random()-0.5)*20),
+        life: 0.1 + Math.random() * 0.1,
+        maxLife: 0.2,
+        color: this.trailColor,
+        size: 1.5 + Math.random()
+      });
+    }
 
     // Arc Wave: lightning arcing forward from the projectile
     if (this.isArcWave) {
@@ -3059,6 +3112,7 @@ class Projectile {
     this.alive = false;
     if (this.mesh.parent) scene.remove(this.mesh);
     if (this.trail.parent) scene.remove(this.trail);
+    if (this.glowMesh && this.glowMesh.parent) { scene.remove(this.glowMesh); this.glowMesh.geometry.dispose(); this.glowMesh.material.dispose(); }
     spawnExplosion(this.position, 15);
   }
 }
@@ -3135,16 +3189,114 @@ function updateDynamicLights() {
 // ---- EFFECTS ----
 
 function spawnExplosion(pos, size) {
-  const geo = new THREE.SphereGeometry(size || 20, 8, 6);
-  const mat = new THREE.MeshBasicMaterial({ color: 0xff8800, transparent: true, opacity: 0.8 });
-  const mesh = new THREE.Mesh(geo, mat);
-  mesh.position.copy(pos);
-  scene.add(mesh);
-  game.effects.push({ mesh, lifetime: 0.4, age: 0, type: 'explosion', maxSize: size * 3 });
-  // Dynamic light: big explosions get brighter, wider lights
-  const lightIntensity = Math.min(6.0, (size || 20) * 0.15);
-  const lightRange = Math.min(1200, (size || 20) * 15);
-  spawnDynamicLight(pos, 0xff6600, lightIntensity, lightRange, 0.35);
+  size = size || 20;
+
+  // --- Phase 1: White-hot flash core (instant, tiny, bright) ---
+  const flashGeo = new THREE.SphereGeometry(size * 0.4, 6, 4);
+  const flashMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending });
+  const flashMesh = new THREE.Mesh(flashGeo, flashMat);
+  flashMesh.position.copy(pos);
+  scene.add(flashMesh);
+  game.effects.push({ mesh: flashMesh, lifetime: 0.08, age: 0, type: 'explosionFlash' });
+
+  // --- Phase 2: Expanding fireball (orange-red, multi-layer) ---
+  const fireGeo = new THREE.SphereGeometry(size, 8, 6);
+  const fireMat = new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending });
+  const fireMesh = new THREE.Mesh(fireGeo, fireMat);
+  fireMesh.position.copy(pos);
+  scene.add(fireMesh);
+  game.effects.push({ mesh: fireMesh, lifetime: 0.5, age: 0, type: 'explosionFire', maxSize: size * 2.5 });
+
+  // Inner darker core (red, slightly delayed expansion)
+  const coreGeo = new THREE.SphereGeometry(size * 0.7, 6, 4);
+  const coreMat = new THREE.MeshBasicMaterial({ color: 0xff2200, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+  const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+  coreMesh.position.copy(pos);
+  scene.add(coreMesh);
+  game.effects.push({ mesh: coreMesh, lifetime: 0.35, age: 0, type: 'explosionFire', maxSize: size * 1.8 });
+
+  // --- Phase 3: Shockwave ring (expanding torus, fast) ---
+  if (size > 12) {
+    const ringGeo = new THREE.TorusGeometry(size * 0.5, size * 0.08, 6, 24);
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0xffaa44, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending });
+    const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+    ringMesh.position.copy(pos);
+    // Random orientation for variety
+    ringMesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+    scene.add(ringMesh);
+    game.effects.push({ mesh: ringMesh, lifetime: 0.4, age: 0, type: 'shockwave', maxSize: size * 5 });
+
+    // Second ring, perpendicular
+    if (size > 30) {
+      const ring2Geo = new THREE.TorusGeometry(size * 0.5, size * 0.06, 6, 24);
+      const ring2Mat = new THREE.MeshBasicMaterial({ color: 0xff8833, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending });
+      const ring2Mesh = new THREE.Mesh(ring2Geo, ring2Mat);
+      ring2Mesh.position.copy(pos);
+      ring2Mesh.rotation.set(Math.random() * Math.PI + 1.5, Math.random() * Math.PI, 0);
+      scene.add(ring2Mesh);
+      game.effects.push({ mesh: ring2Mesh, lifetime: 0.5, age: 0, type: 'shockwave', maxSize: size * 6 });
+    }
+  }
+
+  // --- Phase 4: Smoke cloud (dark, slow expansion, longer life) ---
+  if (size > 15) {
+    const smokeGeo = new THREE.IcosahedronGeometry(size * 0.6, 1);
+    const smokeMat = new THREE.MeshBasicMaterial({ color: 0x221100, transparent: true, opacity: 0.4 });
+    const smokeMesh = new THREE.Mesh(smokeGeo, smokeMat);
+    smokeMesh.position.copy(pos);
+    smokeMesh.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
+    scene.add(smokeMesh);
+    game.effects.push({ mesh: smokeMesh, lifetime: 1.2, age: 0, type: 'smoke', maxSize: size * 4,
+      rotVel: new THREE.Vector3((Math.random()-0.5)*2, (Math.random()-0.5)*2, (Math.random()-0.5)*2) });
+  }
+
+  // --- Phase 5: Ember/debris particles (many small, fast, varied colors) ---
+  const emberCount = Math.min(Math.ceil(size * 0.6), 18);
+  const emberColors = [0xff8800, 0xff4400, 0xffcc00, 0xff6600, 0xffaa22];
+  for (let i = 0; i < emberCount; i++) {
+    const speed = 200 + Math.random() * 400;
+    const vel = new THREE.Vector3(
+      (Math.random() - 0.5) * speed,
+      (Math.random() - 0.5) * speed,
+      (Math.random() - 0.5) * speed
+    );
+    game.particles.push({
+      position: pos.clone(),
+      velocity: vel,
+      life: 0.3 + Math.random() * 0.5,
+      maxLife: 0.8,
+      color: emberColors[Math.floor(Math.random() * emberColors.length)],
+      size: 2 + Math.random() * 3
+    });
+  }
+
+  // --- Chunk debris (larger pieces that spin, for big explosions) ---
+  if (size > 25) {
+    const chunkCount = Math.min(Math.ceil(size * 0.1), 6);
+    for (let i = 0; i < chunkCount; i++) {
+      const chunkSize = 2 + Math.random() * 4;
+      const chunkGeo = new THREE.TetrahedronGeometry(chunkSize, 0);
+      const chunkMat = new THREE.MeshBasicMaterial({ color: 0x443322, transparent: true, opacity: 0.8 });
+      const chunk = new THREE.Mesh(chunkGeo, chunkMat);
+      chunk.position.copy(pos);
+      scene.add(chunk);
+      const cVel = new THREE.Vector3(
+        (Math.random() - 0.5) * 350,
+        (Math.random() - 0.5) * 350,
+        (Math.random() - 0.5) * 350
+      );
+      game.effects.push({
+        mesh: chunk, lifetime: 0.8 + Math.random() * 0.6, age: 0, type: 'debris', vel: cVel,
+        rotVel: new THREE.Vector3((Math.random()-0.5)*10, (Math.random()-0.5)*10, (Math.random()-0.5)*10)
+      });
+    }
+  }
+
+  // --- Dynamic lighting: two-phase (bright flash then warm glow) ---
+  const lightIntensity = Math.min(8.0, size * 0.2);
+  const lightRange = Math.min(1500, size * 18);
+  spawnDynamicLight(pos, 0xffcc88, lightIntensity * 1.5, lightRange * 0.6, 0.1);  // flash
+  spawnDynamicLight(pos, 0xff5500, lightIntensity, lightRange, 0.45);              // glow
 }
 
 // ---- DESTRUCTIBLE DYNAMIC GEOMETRY ----
@@ -3676,12 +3828,23 @@ function updateOrganics(dt) {
 
 function spawnTracer(from, to, color) {
   color = color || 0xffff00;
-  // Bright visible beam (cylinder between two points)
   const dir = new THREE.Vector3().subVectors(to, from);
   const len = dir.length();
   if (len < 1) return;
   const mid = new THREE.Vector3().addVectors(from, to).multiplyScalar(0.5);
-  const beamGeo = new THREE.CylinderGeometry(1.5, 1.5, len, 4, 1);
+
+  // --- Hot core beam (thin, bright, short-lived) ---
+  const coreGeo = new THREE.CylinderGeometry(1.2, 1.2, len, 4, 1);
+  coreGeo.rotateX(Math.PI / 2);
+  const coreMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending });
+  const core = new THREE.Mesh(coreGeo, coreMat);
+  core.position.copy(mid);
+  core.lookAt(to);
+  scene.add(core);
+  game.effects.push({ mesh: core, lifetime: 0.05, age: 0, type: 'tracer' });
+
+  // --- Main beam (weapon color) ---
+  const beamGeo = new THREE.CylinderGeometry(2.0, 1.5, len, 4, 1);
   beamGeo.rotateX(Math.PI / 2);
   const beamMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
   const beam = new THREE.Mesh(beamGeo, beamMat);
@@ -3689,15 +3852,45 @@ function spawnTracer(from, to, color) {
   beam.lookAt(to);
   scene.add(beam);
   game.effects.push({ mesh: beam, lifetime: 0.08, age: 0, type: 'tracer' });
-  // Glow line on top (wider, softer)
-  const glowGeo = new THREE.CylinderGeometry(4, 4, len, 4, 1);
+
+  // --- Outer glow (wider, softer, lingering) ---
+  const glowGeo = new THREE.CylinderGeometry(6, 5, len, 4, 1);
   glowGeo.rotateX(Math.PI / 2);
-  const glowMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending });
+  const glowMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.2, blending: THREE.AdditiveBlending });
   const glow = new THREE.Mesh(glowGeo, glowMat);
   glow.position.copy(mid);
   glow.lookAt(to);
   scene.add(glow);
-  game.effects.push({ mesh: glow, lifetime: 0.12, age: 0, type: 'tracer' });
+  game.effects.push({ mesh: glow, lifetime: 0.15, age: 0, type: 'tracer' });
+
+  // --- Muzzle-end flare (bright sphere at origin) ---
+  const flareGeo = new THREE.SphereGeometry(4, 6, 4);
+  const flareMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+  const flare = new THREE.Mesh(flareGeo, flareMat);
+  flare.position.copy(from);
+  scene.add(flare);
+  game.effects.push({ mesh: flare, lifetime: 0.06, age: 0, type: 'explosionFlash' });
+
+  // --- Tracer particles along the beam (sparkle trail) ---
+  const particleCount = Math.min(Math.ceil(len / 200), 6);
+  const dirNorm = dir.clone().normalize();
+  for (let i = 0; i < particleCount; i++) {
+    const t = 0.2 + Math.random() * 0.6;
+    const pPos = from.clone().add(dir.clone().multiplyScalar(t));
+    pPos.x += (Math.random() - 0.5) * 8;
+    pPos.y += (Math.random() - 0.5) * 8;
+    pPos.z += (Math.random() - 0.5) * 8;
+    const pVel = new THREE.Vector3(
+      (Math.random() - 0.5) * 60,
+      (Math.random() - 0.5) * 60,
+      (Math.random() - 0.5) * 60
+    );
+    game.particles.push({
+      position: pPos, velocity: pVel,
+      life: 0.08 + Math.random() * 0.06, maxLife: 0.14,
+      color, size: 1 + Math.random() * 1.5
+    });
+  }
 }
 
 // Lightning bolt: jagged line from A to B using a single merged BufferGeometry (1 draw call)
@@ -3769,7 +3962,7 @@ function spawnLightningBolt(from, to, color, lifetime, branches, thickness) {
   spawnDynamicLight(boltMid, color, 2.0, 400, lifetime);
 }
 
-const MAX_PARTICLES = 300;
+const MAX_PARTICLES = 500;
 const _sharedParticleGeo = new THREE.SphereGeometry(1, 4, 3); // shared; scale per particle
 
 function cullOldestParticle() {
@@ -3815,7 +4008,7 @@ function updateParticles(dt) {
   }
 }
 
-const MAX_EFFECTS = 200;
+const MAX_EFFECTS = 350;
 function updateEffects(dt) {
   // Cap effects: cull oldest when over budget
   while (game.effects.length > MAX_EFFECTS) {
@@ -3835,19 +4028,138 @@ function updateEffects(dt) {
       continue;
     }
     const t = e.age / e.lifetime;
+
+    // --- Legacy explosion (keep for any old callers) ---
     if (e.type === 'explosion') {
       const s = 1 + t * 2;
       e.mesh.scale.set(s, s, s);
       e.mesh.material.opacity = 0.8 * (1 - t);
-    } else if (e.type === 'tracer') {
+    }
+    // --- White-hot flash core: rapid shrink + fade ---
+    else if (e.type === 'explosionFlash') {
+      const s = 1 + t * 0.5;
+      e.mesh.scale.set(s, s, s);
+      e.mesh.material.opacity = 1.0 * (1 - t * t); // fast quadratic fade
+    }
+    // --- Fireball: expand + color shift orange->red->dark ---
+    else if (e.type === 'explosionFire') {
+      const expand = 1 + t * 2.2;
+      e.mesh.scale.set(expand, expand, expand);
+      // Color shift: white-orange -> red -> dark red
+      const r = 1.0;
+      const g = Math.max(0, 0.4 * (1 - t * 1.5));
+      const b = 0;
+      e.mesh.material.color.setRGB(r, g, b);
+      e.mesh.material.opacity = 0.85 * (1 - t * t);
+    }
+    // --- Shockwave ring: rapid radial expansion ---
+    else if (e.type === 'shockwave') {
+      const ringScale = 1 + t * (e.maxSize || 5);
+      e.mesh.scale.set(ringScale, ringScale, ringScale);
+      e.mesh.material.opacity = 0.7 * (1 - t);
+    }
+    // --- Smoke cloud: slow expand, drift, rotate, long fade ---
+    else if (e.type === 'smoke') {
+      const smokeExpand = 1 + t * ((e.maxSize || 4) - 1);
+      e.mesh.scale.set(smokeExpand, smokeExpand, smokeExpand);
+      e.mesh.material.opacity = 0.4 * (1 - t) * (1 - t); // slow quadratic fade
+      // Gentle rotation
+      if (e.rotVel) {
+        e.mesh.rotation.x += e.rotVel.x * dt;
+        e.mesh.rotation.y += e.rotVel.y * dt;
+        e.mesh.rotation.z += e.rotVel.z * dt;
+      }
+    }
+    // --- Debris chunks: fly outward, spin, fade ---
+    else if (e.type === 'debris') {
+      if (e.vel) {
+        e.mesh.position.add(e.vel.clone().multiplyScalar(dt));
+        e.vel.multiplyScalar(0.97); // slight drag
+      }
+      if (e.rotVel) {
+        e.mesh.rotation.x += e.rotVel.x * dt;
+        e.mesh.rotation.y += e.rotVel.y * dt;
+        e.mesh.rotation.z += e.rotVel.z * dt;
+      }
       e.mesh.material.opacity = 0.8 * (1 - t);
-    } else if (e.type === 'spark' && e.vel) {
-      e.mesh.position.add(e.vel.clone().multiplyScalar(game.deltaTime));
-      e.vel.multiplyScalar(0.95);
+      const shrink = 1 - t * 0.3;
+      e.mesh.scale.set(shrink, shrink, shrink);
+    }
+    // --- Tracers: fade ---
+    else if (e.type === 'tracer') {
+      e.mesh.material.opacity = (e.mesh.material.opacity || 0.8) * (1 - t);
+    }
+    // --- Sparks: fly, drag, shrink, fade ---
+    else if (e.type === 'spark' && e.vel) {
+      e.mesh.position.add(e.vel.clone().multiplyScalar(dt));
+      e.vel.multiplyScalar(0.93);
       e.mesh.material.opacity = 1 - t;
-      const s = 1 - t * 0.5;
+      const s = 1 - t * 0.6;
       e.mesh.scale.set(s, s, s);
     }
+    // --- Shield shimmer (for shield hits) ---
+    else if (e.type === 'shieldHit') {
+      const shimmer = 1 + t * 0.3;
+      e.mesh.scale.set(shimmer, shimmer, shimmer);
+      e.mesh.material.opacity = 0.6 * (1 - t);
+    }
+  }
+}
+
+// --- Shield impact shimmer effect (call when shields take a hit) ---
+function spawnShieldHit(pos, radius, color) {
+  color = color || 0x4488ff;
+  radius = radius || 40;
+  const geo = new THREE.SphereGeometry(radius, 12, 8);
+  const mat = new THREE.MeshBasicMaterial({
+    color, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending,
+    wireframe: true
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.copy(pos);
+  scene.add(mesh);
+  game.effects.push({ mesh, lifetime: 0.3, age: 0, type: 'shieldHit' });
+  // Blue flash light
+  spawnDynamicLight(pos, color, 2.5, 400, 0.15);
+}
+
+// --- Ship damage state effects (smoke + fire trailing from damaged ships) ---
+function spawnDamageSmoke(pos, healthPct) {
+  // Only emit when below 50% health; intensity scales with damage
+  if (healthPct > 0.5) return;
+  const intensity = 1 - (healthPct / 0.5); // 0 at 50%, 1 at 0%
+  // Smoke puff
+  if (Math.random() < intensity * 0.4) {
+    const pVel = new THREE.Vector3(
+      (Math.random()-0.5) * 30,
+      20 + Math.random() * 30,
+      (Math.random()-0.5) * 30
+    );
+    game.particles.push({
+      position: pos.clone().add(new THREE.Vector3((Math.random()-0.5)*20, (Math.random()-0.5)*10, (Math.random()-0.5)*20)),
+      velocity: pVel,
+      life: 0.4 + Math.random() * 0.4,
+      maxLife: 0.8,
+      color: 0x222222,
+      size: 4 + Math.random() * 4
+    });
+  }
+  // Fire particles when critically low
+  if (healthPct < 0.25 && Math.random() < intensity * 0.3) {
+    const fVel = new THREE.Vector3(
+      (Math.random()-0.5) * 40,
+      30 + Math.random() * 40,
+      (Math.random()-0.5) * 40
+    );
+    const fireColors = [0xff4400, 0xff6600, 0xff8800];
+    game.particles.push({
+      position: pos.clone().add(new THREE.Vector3((Math.random()-0.5)*15, (Math.random()-0.5)*8, (Math.random()-0.5)*15)),
+      velocity: fVel,
+      life: 0.15 + Math.random() * 0.15,
+      maxLife: 0.3,
+      color: fireColors[Math.floor(Math.random() * fireColors.length)],
+      size: 2 + Math.random() * 3
+    });
   }
 }
 
@@ -3868,18 +4180,61 @@ function showKillMarker() {
 // Spawn impact sparks at a hit location (small fast-moving particles)
 function spawnImpactSparks(pos, count) {
   count = count || 6;
+
+  // --- Bright impact flash (white-hot center) ---
+  const flashGeo = new THREE.SphereGeometry(3, 6, 4);
+  const flashMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
+  const flashMesh = new THREE.Mesh(flashGeo, flashMat);
+  flashMesh.position.copy(pos);
+  scene.add(flashMesh);
+  game.effects.push({ mesh: flashMesh, lifetime: 0.06, age: 0, type: 'explosionFlash' });
+
+  // --- Spark streaks (fast, bright, varied angles) ---
   for (let i = 0; i < count; i++) {
-    const geo = new THREE.SphereGeometry(1.5, 4, 3);
-    const brightness = 0.7 + Math.random() * 0.3;
-    const mat = new THREE.MeshBasicMaterial({ color: new THREE.Color(brightness, brightness * 0.7, brightness * 0.2), transparent: true, opacity: 1 });
+    const brightness = 0.8 + Math.random() * 0.2;
+    const sparkColor = new THREE.Color(brightness, brightness * 0.6 + Math.random() * 0.2, brightness * 0.15);
+    const geo = new THREE.SphereGeometry(1.2 + Math.random() * 0.8, 4, 3);
+    const mat = new THREE.MeshBasicMaterial({ color: sparkColor, transparent: true, opacity: 1, blending: THREE.AdditiveBlending });
     const spark = new THREE.Mesh(geo, mat);
     spark.position.copy(pos);
     scene.add(spark);
-    const vel = new THREE.Vector3((Math.random()-0.5)*400, (Math.random()-0.5)*400, (Math.random()-0.5)*400);
-    game.effects.push({ mesh: spark, lifetime: 0.3 + Math.random() * 0.2, age: 0, type: 'spark', vel });
+    const speed = 300 + Math.random() * 500;
+    const vel = new THREE.Vector3(
+      (Math.random()-0.5) * speed,
+      (Math.random()-0.5) * speed,
+      (Math.random()-0.5) * speed
+    );
+    game.effects.push({ mesh: spark, lifetime: 0.2 + Math.random() * 0.3, age: 0, type: 'spark', vel });
   }
-  // Small bright flash at impact point
-  spawnDynamicLight(pos, 0xffcc44, 2.0, 300, 0.15);
+
+  // --- Tiny secondary sparks (ember spray, more numerous, slower) ---
+  const secondaryCount = Math.ceil(count * 0.6);
+  for (let i = 0; i < secondaryCount; i++) {
+    const speed = 100 + Math.random() * 200;
+    game.particles.push({
+      position: pos.clone(),
+      velocity: new THREE.Vector3((Math.random()-0.5)*speed, (Math.random()-0.5)*speed, (Math.random()-0.5)*speed),
+      life: 0.15 + Math.random() * 0.2,
+      maxLife: 0.35,
+      color: Math.random() > 0.5 ? 0xff8800 : 0xffcc44,
+      size: 1 + Math.random() * 1
+    });
+  }
+
+  // --- Small scorch puff (dark smoke wisp) ---
+  if (count > 3) {
+    const puffGeo = new THREE.IcosahedronGeometry(4, 0);
+    const puffMat = new THREE.MeshBasicMaterial({ color: 0x111111, transparent: true, opacity: 0.3 });
+    const puff = new THREE.Mesh(puffGeo, puffMat);
+    puff.position.copy(pos);
+    scene.add(puff);
+    game.effects.push({ mesh: puff, lifetime: 0.6, age: 0, type: 'smoke', maxSize: 12,
+      rotVel: new THREE.Vector3((Math.random()-0.5)*3, (Math.random()-0.5)*3, (Math.random()-0.5)*3) });
+  }
+
+  // --- Dynamic lights: impact flash + warm glow ---
+  spawnDynamicLight(pos, 0xffffff, 3.0, 200, 0.05);   // white flash
+  spawnDynamicLight(pos, 0xffcc44, 2.0, 300, 0.2);     // warm afterglow
 }
 
 // ---- PLAYER FUNCTIONS ----
@@ -4146,6 +4501,8 @@ function playerTakeDamage(amount, attacker, projectile) {
   }
 
   if (player.shield > 0) {
+    // Shield shimmer on hit
+    spawnShieldHit(player.position, player.chassis.hullLength * 0.9, 0x44aaff);
     if (amount <= player.shield) { player.shield -= amount; return; }
     else { amount -= player.shield; player.shield = 0; }
   }

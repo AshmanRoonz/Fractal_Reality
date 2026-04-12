@@ -20486,7 +20486,13 @@ THE A' SEQUENCE:
 
 2. **The compositional product mediator requires T = 3.** From E(T) = E(T/2) × E(T-½) × T^T/2, the mediator T^T/2 decomposes as 2T²(R-1)/(R+1). This requires T^(T-2) = 4(T²-3)/(T²-1). For T = 3: 3¹ = 4·6/8 = 3. No other positive integer satisfies this. The compositional product itself demands T = 3.
 
-Together with the original (T-3)(T+1) = 0 from §27.7b, this gives three independent self-determination routes, each emerging from a different structural property (rung count, balance-boundary identity, compositional closure). T = 3 is overdetermined: the triad is not chosen but forced from every direction.
+Together with the original (T-3)(T+1) = 0 from §27.7b, this gives three independent self-determination routes. Two more emerge from downstream domains:
+
+3. **Wobble degeneracy balance (§18).** The genetic code has 61 sense codons encoding 20 amino acids, giving average degeneracy 61/20 ≈ 3.05 ≈ T. The wobble mechanism balances between Φ = 2 (purine/pyrimidine classes) and P = T + 1 (full alphabet). At balance (◐ = 0.5), average degeneracy = (Φ + P)/2 = (2 + (T+1))/2 = (T + 3)/2. Setting this equal to T: (T + 3)/2 = T, giving T = 3. This route uses Φ and ◐, which none of the first three routes use.
+
+4. **Single-intruder nuclear theorem (§16.5).** Nuclear magic numbers require spin-orbit coupling to split exactly one intruder state per shell group. The splitting ratio between the highest-l subshell and the next candidate is R/(R - 4). For exactly one intruder: R/(R - 4) > 2, which requires R < 8, i.e. T < √10. Combined with the onset condition R > Φ + T (spin-orbit crossing only occurs when angular momentum reaches its dimensional home; requires T ≥ 3): T = 3 is the unique integer satisfying both constraints simultaneously. For T = 3: R = 7, R/(R-4) = 7/3 > 2 ✓, and R = 7 > 5 = Φ+T ✓. For T = 2: R = 2 < 5 (onset fails). For T = 4: R = 14, R/(R-4) = 1.4 < 2 (multiple intruders). This route uses R and the splitting ratio; independent of the first four.
+
+Five independent routes, five different structural properties (rung count, balance-boundary identity, compositional closure, biological information encoding, nuclear shell stability), all forcing T = 3. The triad is not chosen but forced from every direction.
 
 ### §27.7f The Four-Station Processual Product
 

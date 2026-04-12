@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Living Creature: ⊙λ ⊂ ⊙Λ</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --soul: #4488ff;
+            --line: #44ddcc;
+            --mind: #44cc44;
+            --body: #ff4444;
+            --amber: #ffaa00;
+            --bg: #0a0a0f;
+            --text: #e6edf3;
+            --mute: rgba(255,255,255,0.5);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+            user-select: none;
+        }
+        canvas { display: block; }
+        .panel {
+            position: absolute; top: 12px; right: 12px;
+            background: rgba(10,10,20,0.92);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 16px;
+            width: 260px;
+            max-height: 94vh;
+            overflow-y: auto;
+            backdrop-filter: blur(8px);
+            z-index: 10;
+        }
+        .panel h2 {
+            font-size: 13px; font-weight: 500;
+            letter-spacing: 0.08em;
+            color: var(--soul);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
+        .back-link {
+            display: block;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            color: var(--mute);
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: var(--amber); }
+        .mode-row { display: flex; gap: 4px; margin-bottom: 10px; }
+        .mode-btn {
+            flex: 1;
+            padding: 6px 4px;
+            font-family: inherit; font-size: 10px;
+            letter-spacing: 0.04em;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 5px;
+            color: var(--mute);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .mode-btn:hover { border-color: rgba(255,255,255,0.2); }
+        .mode-btn.active { background: var(--soul); color: #0a0a0f; border-color: var(--soul); }
+        .ctrl-row { display: flex; gap: 4px; margin-bottom: 10px; }
+        .ctrl-btn {
+            flex: 1;
+            padding: 6px 4px;
+            font-family: inherit; font-size: 10px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 5px;
+            color: var(--mute);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .ctrl-btn:hover { border-color: rgba(255,255,255,0.2); }
+        .metric {
+            font-size: 10px;
+            padding: 3px 0 3px 8px;
+            margin: 3px 0;
+            border-left: 2px solid rgba(68,136,255,0.3);
+            color: var(--mute);
+        }
+        .metric strong { color: var(--text); }
+        .stage-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            margin-top: 6px;
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 0.08em;
+            background: var(--soul);
+            color: #0a0a0f;
+            border-radius: 3px;
+        }
+        .budget-bar {
+            display: flex; height: 10px;
+            margin: 6px 0 2px;
+            border-radius: 3px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.04);
+        }
+        .budget-vis { background: var(--body); }
+        .budget-dm { background: var(--line); }
+        .budget-de { background: var(--soul); }
+        .budget-label {
+            font-size: 8px;
+            color: var(--mute);
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div class="panel">
+    <a href="index.html" class="back-link">&larr; SIMULATIONS</a>
+    <h2>⊙ Living Creature</h2>
+
+    <div style="font-size:10px;color:var(--mute);margin-bottom:10px;">
+        INTERACTION MODE
+    </div>
+    <div class="mode-row">
+        <button class="mode-btn active" data-mode="feed">Feed</button>
+        <button class="mode-btn" data-mode="excite">Excite</button>
+        <button class="mode-btn" data-mode="calm">Calm</button>
+    </div>
+
+    <div class="ctrl-row">
+        <button class="ctrl-btn" id="btn-pause">Pause</button>
+        <button class="ctrl-btn" id="btn-reset">Reset</button>
+    </div>
+
+    <h2 style="margin-top:8px;">Metrics</h2>
+    <div class="metric">Particles: <strong id="m-particles">0</strong></div>
+    <div class="metric">Bonds: <strong id="m-bonds">0</strong></div>
+    <div class="metric">Coherence: <strong id="m-coherence">0%</strong></div>
+    <div class="metric">Avg Energy: <strong id="m-energy">0</strong></div>
+    <div class="metric">Balance (◐): <strong id="m-balance">0.500</strong></div>
+    <div class="metric">Boundary: <strong id="m-boundary">0%</strong></div>
+    <div class="metric">D (fractal): <strong id="m-fractal">1.500</strong></div>
+    <div class="stage-badge" id="m-stage">SEED</div>
+
+    <h2 style="margin-top:12px;">Energy Budget</h2>
+    <div class="budget-bar">
+        <div class="budget-vis" id="bar-vis" style="width:5%"></div>
+        <div class="budget-dm" id="bar-dm" style="width:27%"></div>
+        <div class="budget-de" id="bar-de" style="width:68%"></div>
+    </div>
+    <div class="budget-label">
+        <span id="lbl-vis">Vis 5%</span> &middot;
+        <span id="lbl-dm">Dark 27%</span> &middot;
+        <span id="lbl-de">Field 68%</span>
+    </div>
+</div>
+
+<script>
+// =====================================================================
+// THE LIVING CREATURE: ⊙λ ⊂ ⊙Λ
+// A colony of particles, each a ⊙λ, that resonates, bonds, divides,
+// and self-organizes into a living being.
+// Circumpunct Framework: ⊙ = Φ(•, ○)
+// T(Δφ) = cos²(Δφ/2), ◐ = 0.5, S = P^T = 64
+// =====================================================================
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+// --- Resize ---
+let W, H;
+function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// --- Framework constants ---
+const T = 3;            // triad
+const P = T + 1;        // pump phases
+const S = Math.pow(P, T); // 64 states
+const PHI = (1 + Math.sqrt(5)) / 2;
+
+// Transmission fidelity: T(Δφ) = cos²(Δφ/2)
+function Tf(dPhi) {
+    return Math.pow(Math.cos(dPhi / 2), 2);
+}
+
+// --- Physics constants ---
+const PHYS = {
+    COUPLING_RANGE: 200,
+    COUPLING_STRENGTH: 1.5,
+    MIN_SPACING: 25,
+    REPULSION: 150,
+    DAMPING: 0.88,
+    LEARNING_RATE: 0.035,
+    WEIGHT_DECAY: 0.0003,
+    BOND_THRESHOLD: 0.35,
+    PRUNE_THRESHOLD: 0.06,
+    MITOSIS_ENERGY: 0.8,
+    MITOSIS_STABILITY: 80,
+    MAX_PARTICLES: S,       // 64
+    ENERGY_DECAY: 0.0003,
+    BASELINE_ENERGY: 0.0006,
+    FEED_AMOUNT: 0.35,
+    CENTER_PULL: 0.025,
+};
+
+// --- State ---
+let particles = [];
+let bonds = [];
+let energyTrails = [];
+let boundaryPts = [];
+let boundaryStrength = 0;
+let nextId = 0;
+let time = 0;
+let paused = false;
+let mode = 'feed';
+
+// --- Particle class ---
+class Particle {
+    constructor(id, x, y, freq, amp) {
+        this.id = id;
+        this.x = x; this.y = y;
+        this.vx = 0; this.vy = 0;
+        this.phase = Math.random() * Math.PI * 2;
+        this.frequency = freq;
+        this.amplitude = amp;
+        this.age = 0;
+        this.stability = 0;
+
+        // Framework dimensions
+        this.balance = 0.5;     // ◐
+        this.commitment = 0.5;  // 1D faithfulness
+        this.pumpBeat = 0;      // 0..3 (four-beat cycle)
+
+        // Learning and memory
+        this.connectionWeights = new Map();
+        this.resonanceMemory = new Map();
+        this.gravitationalMass = 0;
+
+        // Visual identity
+        this.hue = Math.random() * 360;
+        this.geometryType = Math.random() * 6;
+        this.evolutionStage = 0;
+        this.phaseOffset = Math.random() * Math.PI * 2;
+        this.isBoundary = false;
+
+        // Probability cloud (quantum haze around each particle)
+        this.cloud = [];
+        for (let i = 0; i < 8; i++) {
+            this.cloud.push({
+                angle: Math.random() * Math.PI * 2,
+                dist: 8 + Math.random() * 18,
+                phase: Math.random() * Math.PI * 2,
+                size: 1 + Math.random() * 2.5,
+            });
+        }
+    }
+
+    update(dt) {
+        this.phase += this.frequency * dt;
+        this.age += dt;
+
+        // Four-beat pump cycle: convergence, commitment, emergence, recursion
+        this.pumpBeat = Math.floor((this.phase / (Math.PI * 2)) * P) % P;
+
+        // Evolution (geometry morphs over time)
+        this.evolutionStage += 0.002 * dt;
+        this.geometryType = (this.geometryType + Math.sin(this.evolutionStage) * 0.008) % 6;
+        if (this.geometryType < 0) this.geometryType += 6;
+
+        // Gravitational mass from connections
+        this.gravitationalMass = 0;
+        for (let [, w] of this.connectionWeights) {
+            this.gravitationalMass += w;
+        }
+        this.gravitationalMass = Math.min(2.5, this.gravitationalMass / 4);
+
+        // Balance: ratio of amplitude to theoretical max
+        this.balance = 0.3 + this.amplitude * 0.4 + (1 - Math.abs(this.amplitude - 0.5)) * 0.3;
+        this.balance = Math.max(0, Math.min(1, this.balance));
+
+        // Commitment tracks stability over time
+        if (this.stability > 50) {
+            this.commitment = Math.min(1, this.commitment + 0.001 * dt);
+        } else {
+            this.commitment = Math.max(0.1, this.commitment - 0.0005 * dt);
+        }
+    }
+}
+
+// --- Bond class ---
+class Bond {
+    constructor(id1, id2) {
+        this.id1 = id1;
+        this.id2 = id2;
+        this.weight = 0.35;
+        this.age = 0;
+        this.resonanceHistory = [];
+        this.faithfulness = 0.3;
+    }
+
+    avgResonance() {
+        if (this.resonanceHistory.length === 0) return 0;
+        let s = 0;
+        for (let i = 0; i < this.resonanceHistory.length; i++) s += this.resonanceHistory[i];
+        return s / this.resonanceHistory.length;
+    }
+}
+
+// --- Energy trail class ---
+class EnergyTrail {
+    constructor(x1, y1, x2, y2) {
+        this.x1 = x1; this.y1 = y1;
+        this.x2 = x2; this.y2 = y2;
+        this.life = 1;
+    }
+}
+
+// --- Initialization ---
+function initSeed() {
+    particles = [];
+    bonds = [];
+    energyTrails = [];
+    boundaryPts = [];
+    boundaryStrength = 0;
+    nextId = 0;
+    time = 0;
+
+    const cx = W / 2, cy = H / 2;
+    const seedCount = 5 + Math.floor(Math.random() * 3);
+    const baseFreq = 0.045;
+
+    for (let i = 0; i < seedCount; i++) {
+        const angle = (Math.PI * 2 * i) / seedCount;
+        const r = 30 + Math.random() * 25;
+        const x = cx + Math.cos(angle) * r;
+        const y = cy + Math.sin(angle) * r;
+        const freq = baseFreq * (0.9 + Math.random() * 0.2);
+        particles.push(new Particle(nextId++, x, y, freq, 0.6 + Math.random() * 0.2));
+    }
+}
+
+// --- Find particle by id ---
+function findP(id) {
+    for (let i = 0; i < particles.length; i++) {
+        if (particles[i].id === id) return particles[i];
+    }
+    return null;
+}
+
+// --- Find bond between two ids ---
+function findBond(id1, id2) {
+    for (let i = 0; i < bonds.length; i++) {
+        const b = bonds[i];
+        if ((b.id1 === id1 && b.id2 === id2) || (b.id1 === id2 && b.id2 === id1)) return b;
+    }
+    return null;
+}
+
+// --- Center of mass ---
+function centerOfMass() {
+    if (particles.length === 0) return { x: W / 2, y: H / 2 };
+    let cx = 0, cy = 0;
+    for (let i = 0; i < particles.length; i++) {
+        cx += particles[i].x;
+        cy += particles[i].y;
+    }
+    return { x: cx / particles.length, y: cy / particles.length };
+}
+
+// --- Mitosis (cell division, four-beat pump cycle) ---
+function mitosis(p) {
+    const angle = Math.random() * Math.PI * 2;
+    const offset = 22;
+
+    // Beat 1: convergence (⊛∘•): parent gathers energy
+    p.amplitude *= 0.6;
+    p.stability = 0;
+
+    // Beat 2: commitment (⎇∘—): extension toward division axis
+    const child = new Particle(
+        nextId++,
+        p.x + Math.cos(angle) * offset,
+        p.y + Math.sin(angle) * offset,
+        p.frequency * (0.95 + Math.random() * 0.1),
+        p.amplitude * 0.85
+    );
+
+    // Beat 3: emergence (✹∘Φ): child emerges with inherited traits
+    child.hue = (p.hue + 15 + Math.random() * 30) % 360;
+    child.geometryType = p.geometryType;
+    child.commitment = p.commitment * 0.7;
+
+    // Beat 4: recursion (⟳∘○): parent recoils, new bond forms
+    p.vx -= Math.cos(angle) * 2;
+    p.vy -= Math.sin(angle) * 2;
+    child.vx = Math.cos(angle) * 2;
+    child.vy = Math.sin(angle) * 2;
+
+    particles.push(child);
+    bonds.push(new Bond(p.id, child.id));
+}
+
+// --- Physics update ---
+function updatePhysics(dt) {
+    time += dt;
+
+    // Update all particles
+    for (let i = 0; i < particles.length; i++) {
+        particles[i].update(dt);
+    }
+
+    // Pairwise forces, resonance, Hebbian learning
+    for (let i = 0; i < particles.length; i++) {
+        const p1 = particles[i];
+        let fx = 0, fy = 0;
+        let resonanceGain = 0;
+
+        for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < PHYS.COUPLING_RANGE && dist > 0) {
+                const dPhase = p1.phase - p2.phase;
+                const resonance = Tf(dPhase);
+
+                // Coupling force (attraction when in phase, mild repulsion when out)
+                const strength = PHYS.COUPLING_STRENGTH *
+                    (p1.amplitude * p2.amplitude) / (dist * dist + 1);
+                const force = strength * (resonance - 0.3);
+                fx += force * dx / dist;
+                fy += force * dy / dist;
+
+                // Frequency synchronization through resonance
+                if (resonance > 0.4) {
+                    const sync = 0.012 * Math.sin(dPhase);
+                    p1.frequency += sync * p2.amplitude;
+                    p2.frequency -= sync * p1.amplitude;
+
+                    resonanceGain += 0.003 * resonance * p2.amplitude;
+
+                    // Hebbian bond learning
+                    if (resonance > PHYS.BOND_THRESHOLD) {
+                        let bond = findBond(p1.id, p2.id);
+                        if (!bond && bonds.length < 200) {
+                            bond = new Bond(p1.id, p2.id);
+                            bonds.push(bond);
+                        }
+                        if (bond) {
+                            const boost = bond.age < 40 ? 1.5 : 1;
+                            bond.weight = Math.min(1, bond.weight + PHYS.LEARNING_RATE * resonance * boost);
+                            bond.age++;
+                            bond.resonanceHistory.push(resonance);
+                            if (bond.resonanceHistory.length > 40) bond.resonanceHistory.shift();
+
+                            // Faithfulness: how consistent is this bond?
+                            bond.faithfulness += (resonance > 0.6 ? 0.008 : -0.004) * dt;
+                            bond.faithfulness = Math.max(0, Math.min(1, bond.faithfulness));
+
+                            // Update particle connection weights
+                            p1.connectionWeights.set(p2.id, bond.weight);
+                            p2.connectionWeights.set(p1.id, bond.weight);
+
+                            // Resonance memory
+                            const m1 = p1.resonanceMemory.get(p2.id) || { count: 0, avg: 0 };
+                            m1.count++;
+                            m1.avg = (m1.avg * (m1.count - 1) + resonance) / m1.count;
+                            p1.resonanceMemory.set(p2.id, m1);
+                        }
+                    }
+                }
+
+                // Amplitude coupling (energy sharing through field)
+                const aDiff = p2.amplitude - p1.amplitude;
+                p1.amplitude += aDiff * resonance * 0.005;
+                p2.amplitude -= aDiff * resonance * 0.005;
+            }
+
+            // Close-range repulsion
+            if (dist < PHYS.MIN_SPACING && dist > 0) {
+                const rep = PHYS.REPULSION / Math.pow(dist + 1, 3);
+                fx -= rep * dx / dist;
+                fy -= rep * dy / dist;
+            }
+        }
+
+        p1.amplitude += resonanceGain;
+        p1.vx += fx * dt;
+        p1.vy += fy * dt;
+
+        // Center-of-mass pull (colony cohesion)
+        const cm = centerOfMass();
+        const dcx = cm.x - p1.x;
+        const dcy = cm.y - p1.y;
+        const dcd = Math.sqrt(dcx * dcx + dcy * dcy);
+        if (dcd > 60) {
+            const pull = PHYS.CENTER_PULL * (1 + p1.gravitationalMass * 0.3);
+            p1.vx += pull * dcx / dcd;
+            p1.vy += pull * dcy / dcd;
+        }
+
+        // Damping
+        p1.vx *= PHYS.DAMPING;
+        p1.vy *= PHYS.DAMPING;
+
+        // Move
+        p1.x += p1.vx * dt;
+        p1.y += p1.vy * dt;
+
+        // Soft walls
+        const margin = 60;
+        if (p1.x < margin) p1.vx += 0.4;
+        if (p1.x > W - margin) p1.vx -= 0.4;
+        if (p1.y < margin) p1.vy += 0.4;
+        if (p1.y > H - margin) p1.vy -= 0.4;
+    }
+
+    // Energy dynamics
+    for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.amplitude += PHYS.BASELINE_ENERGY * dt;
+        const ageFactor = 1 + (p.age / 8000) * 0.2;
+        p.amplitude -= PHYS.ENERGY_DECAY * ageFactor * dt;
+        p.amplitude = Math.max(0.12, Math.min(1, p.amplitude));
+
+        // Stability tracking
+        const vel = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+        if (vel < 0.6 && p.amplitude > 0.6) {
+            p.stability++;
+        } else {
+            p.stability = Math.max(0, p.stability - 1);
+        }
+    }
+
+    // Bond spring forces (bonds act like springs at preferred distance)
+    for (let i = 0; i < bonds.length; i++) {
+        const b = bonds[i];
+        const p1 = findP(b.id1);
+        const p2 = findP(b.id2);
+        if (!p1 || !p2) continue;
+
+        const dx = p2.x - p1.x;
+        const dy = p2.y - p1.y;
+        const d = Math.sqrt(dx * dx + dy * dy) + 0.01;
+        const target = 45 * (0.6 + b.weight * 0.5);
+        const force = (target - d) * b.weight * 0.003;
+        p1.vx += (dx / d) * force;
+        p1.vy += (dy / d) * force;
+        p2.vx -= (dx / d) * force;
+        p2.vy -= (dy / d) * force;
+    }
+
+    // Bond decay and pruning
+    bonds = bonds.filter(b => {
+        b.weight -= PHYS.WEIGHT_DECAY * dt;
+        return b.weight > PHYS.PRUNE_THRESHOLD && findP(b.id1) && findP(b.id2);
+    });
+
+    // Mitosis
+    if (particles.length < PHYS.MAX_PARTICLES) {
+        for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+            if (p.amplitude > PHYS.MITOSIS_ENERGY && p.stability > PHYS.MITOSIS_STABILITY) {
+                mitosis(p);
+                break; // one per frame
+            }
+        }
+    }
+
+    // Particle pruning (only truly dead)
+    particles = particles.filter(p => p.amplitude > 0.04);
+
+    // Boundary crystallization
+    computeBoundary();
+
+    // Energy trails fade
+    energyTrails = energyTrails.filter(t => {
+        t.life -= 0.02;
+        return t.life > 0;
+    });
+}
+
+// --- Boundary detection and strengthening ---
+function computeBoundary() {
+    if (particles.length < 8) { boundaryStrength *= 0.99; return; }
+
+    const cm = centerOfMass();
+    let avgDist = 0;
+    for (let i = 0; i < particles.length; i++) {
+        const dx = particles[i].x - cm.x;
+        const dy = particles[i].y - cm.y;
+        avgDist += Math.sqrt(dx * dx + dy * dy);
+    }
+    avgDist /= particles.length;
+
+    boundaryPts = [];
+    for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        const dx = p.x - cm.x;
+        const dy = p.y - cm.y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+
+        if (d > avgDist * 0.65 && p.gravitationalMass > 0.2) {
+            boundaryPts.push(p);
+            p.isBoundary = true;
+
+            // Surface tension: gentle inward pull
+            const pullStr = 0.008 * boundaryStrength;
+            p.vx -= pullStr * dx / d;
+            p.vy -= pullStr * dy / d;
+        } else {
+            p.isBoundary = false;
+        }
+    }
+
+    if (boundaryPts.length > 5) {
+        let boundaryBonds = 0, totalPairs = 0;
+        for (let i = 0; i < boundaryPts.length; i++) {
+            for (let j = i + 1; j < boundaryPts.length; j++) {
+                totalPairs++;
+                const b = findBond(boundaryPts[i].id, boundaryPts[j].id);
+                if (b && b.weight > 0.35) boundaryBonds++;
+            }
+        }
+        const coherence = totalPairs > 0 ? boundaryBonds / totalPairs : 0;
+        if (coherence > 0.15) {
+            boundaryStrength = Math.min(1, boundaryStrength + 0.0015);
+        } else {
+            boundaryStrength = Math.max(0, boundaryStrength - 0.001);
+        }
+    }
+}
+
+// --- Render ---
+function render() {
+    // Trail background
+    ctx.fillStyle = 'rgba(10, 10, 15, 0.12)';
+    ctx.fillRect(0, 0, W, H);
+
+    if (particles.length === 0) {
+        ctx.fillStyle = 'rgba(100,150,200,0.4)';
+        ctx.font = '16px JetBrains Mono';
+        ctx.textAlign = 'center';
+        ctx.fillText('Click to awaken...', W / 2, H / 2);
+        return;
+    }
+
+    const cm = centerOfMass();
+
+    // --- Draw boundary membrane (○, 3D, body) ---
+    if (boundaryPts.length > 4 && boundaryStrength > 0.05) {
+        const sorted = boundaryPts.slice().sort((a, b) =>
+            Math.atan2(a.y - cm.y, a.x - cm.x) - Math.atan2(b.y - cm.y, b.x - cm.x)
+        );
+
+        // Membrane fill
+        ctx.fillStyle = `rgba(68, 136, 255, ${boundaryStrength * 0.04})`;
+        ctx.strokeStyle = `rgba(68, 221, 204, ${boundaryStrength * 0.35})`;
+        ctx.lineWidth = 1.5 + boundaryStrength * 2.5;
+        ctx.beginPath();
+        for (let i = 0; i < sorted.length; i++) {
+            const p = sorted[i];
+            const next = sorted[(i + 1) % sorted.length];
+            if (i === 0) {
+                ctx.moveTo(p.x, p.y);
+            }
+            const mx = (p.x + next.x) / 2;
+            const my = (p.y + next.y) / 2;
+            ctx.quadraticCurveTo(p.x, p.y, mx, my);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Boundary node highlights
+        for (let i = 0; i < sorted.length; i++) {
+            const p = sorted[i];
+            const pulse = Math.sin(time * 0.03 + p.phase) * 0.3 + 0.7;
+            ctx.fillStyle = `rgba(68, 221, 204, ${pulse * boundaryStrength * 0.5})`;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 3 + boundaryStrength * 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    // --- Draw energy trails ---
+    for (let i = 0; i < energyTrails.length; i++) {
+        const t = energyTrails[i];
+        ctx.strokeStyle = `rgba(255, 170, 0, ${t.life * 0.4})`;
+        ctx.lineWidth = 1.5 * t.life;
+        ctx.beginPath();
+        ctx.moveTo(t.x1, t.y1);
+        ctx.lineTo(t.x2, t.y2);
+        ctx.stroke();
+    }
+
+    // --- Draw bonds ---
+    for (let i = 0; i < bonds.length; i++) {
+        const b = bonds[i];
+        const p1 = findP(b.id1);
+        const p2 = findP(b.id2);
+        if (!p1 || !p2) continue;
+
+        const avgRes = b.avgResonance();
+        const hue1 = p1.hue, hue2 = p2.hue;
+
+        // Bond line: gradient between the two particles' hues
+        const grad = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+        const alpha = 0.15 + b.weight * 0.35 + b.faithfulness * 0.15;
+        grad.addColorStop(0, `hsla(${hue1}, 70%, 55%, ${alpha})`);
+        grad.addColorStop(1, `hsla(${hue2}, 70%, 55%, ${alpha})`);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 0.8 + b.weight * 3;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+
+        // Strong bond: midpoint resonance node
+        if (b.weight > 0.65) {
+            const mx = (p1.x + p2.x) / 2;
+            const my = (p1.y + p2.y) / 2;
+            const pulse = Math.sin(time * 0.04 + b.age * 0.1) * 0.3 + 0.7;
+            const midHue = (hue1 + hue2) / 2;
+            ctx.fillStyle = `hsla(${midHue}, 80%, 70%, ${b.weight * pulse * 0.5})`;
+            ctx.beginPath();
+            ctx.arc(mx, my, 1.5 + b.weight * 2.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Faithful bond: braided rendering
+        if (b.faithfulness > 0.6 && b.weight > 0.5) {
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+            const d = Math.sqrt(dx * dx + dy * dy);
+            const nx = -dy / d, ny = dx / d;
+            const amp = 3 * b.faithfulness;
+            const steps = 12;
+            ctx.strokeStyle = `hsla(${(hue1 + hue2) / 2}, 90%, 75%, ${b.faithfulness * 0.2})`;
+            ctx.lineWidth = 0.6;
+            ctx.beginPath();
+            for (let s = 0; s <= steps; s++) {
+                const t = s / steps;
+                const x = p1.x + dx * t + nx * Math.sin(t * Math.PI * 3 + time * 0.05) * amp;
+                const y = p1.y + dy * t + ny * Math.sin(t * Math.PI * 3 + time * 0.05) * amp;
+                if (s === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+    }
+
+    // --- Draw particles ---
+    for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+
+        // Probability cloud (quantum haze)
+        for (let c = 0; c < p.cloud.length; c++) {
+            const cl = p.cloud[c];
+            const a = cl.angle + Math.sin(time * 0.008 + cl.phase) * 0.6;
+            const d = cl.dist * (1 + Math.sin(time * 0.015 + cl.phase) * 0.3);
+            const cx = p.x + Math.cos(a) * d;
+            const cy = p.y + Math.sin(a) * d;
+            ctx.fillStyle = `hsla(${p.hue}, 60%, 60%, 0.06)`;
+            ctx.beginPath();
+            ctx.arc(cx, cy, cl.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Fractal branches radiating from each particle
+        const branchLen = 12 + p.amplitude * 18 + p.gravitationalMass * 12;
+        const depth = Math.min(3, Math.ceil(1.5 + p.gravitationalMass * 1.5));
+        const baseAngle = Math.atan2(p.y - cm.y, p.x - cm.x);
+        const baseAlpha = 0.3 + p.amplitude * 0.4 + p.gravitationalMass * 0.2;
+        drawBranch(p, p.x, p.y, branchLen, baseAngle, depth, baseAlpha);
+
+        // Main body (geometry shape)
+        drawBody(p, p.x, p.y, baseAlpha);
+    }
+}
+
+// --- Fractal branch drawing ---
+function drawBranch(p, x, y, length, angle, depth, alpha) {
+    if (depth <= 0 || length < 2) return;
+
+    const ex = x + Math.cos(angle) * length;
+    const ey = y + Math.sin(angle) * length;
+    const a = alpha * (depth / 3.5);
+
+    const grad = ctx.createLinearGradient(x, y, ex, ey);
+    grad.addColorStop(0, `hsla(${p.hue}, 70%, 50%, ${a * 0.5})`);
+    grad.addColorStop(1, `hsla(${(p.hue + 25) % 360}, 70%, 60%, ${a})`);
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = Math.max(0.4, depth * 1.2);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(ex, ey);
+    ctx.stroke();
+
+    // Node at branch tip
+    if (depth > 1) {
+        ctx.fillStyle = `hsla(${p.hue}, 80%, 65%, ${a * 0.6})`;
+        ctx.beginPath();
+        ctx.arc(ex, ey, 1 + depth * 0.6, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // Recurse: two child branches
+    const branchAngle = Math.PI / 5;
+    const mult = 0.6 + Math.sin(time * 0.008) * 0.05;
+    drawBranch(p, ex, ey, length * mult, angle - branchAngle, depth - 1, alpha);
+    drawBranch(p, ex, ey, length * mult, angle + branchAngle, depth - 1, alpha);
+}
+
+// --- Body geometry drawing (evolving shapes) ---
+function drawBody(p, x, y, alpha) {
+    const size = 4 + p.amplitude * 5 + p.gravitationalMass * 3;
+    const pulse = Math.sin(p.phase) * 0.25 + 0.75;
+    const rotation = time * 0.008 * (1 + p.evolutionStage * 0.3) + p.phaseOffset;
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+
+    // Glow for high-mass nodes
+    if (p.gravitationalMass > 0.4) {
+        ctx.shadowBlur = 12 * p.gravitationalMass;
+        ctx.shadowColor = `hsla(${p.hue}, 80%, 60%, ${p.gravitationalMass * 0.35})`;
+    }
+
+    const stage = Math.floor(p.geometryType);
+    ctx.fillStyle = `hsla(${p.hue}, 80%, 60%, ${alpha * pulse})`;
+    ctx.strokeStyle = `hsla(${(p.hue + 20) % 360}, 90%, 70%, ${alpha * pulse * 0.7})`;
+    ctx.lineWidth = 1.2;
+
+    ctx.beginPath();
+    switch (stage) {
+        case 0: // Triangle (T = 3)
+            for (let i = 0; i <= 3; i++) {
+                const a = (i / 3) * Math.PI * 2 - Math.PI / 2;
+                if (i === 0) ctx.moveTo(Math.cos(a) * size, Math.sin(a) * size);
+                else ctx.lineTo(Math.cos(a) * size, Math.sin(a) * size);
+            }
+            break;
+        case 1: // Square (P = 4)
+            ctx.rect(-size, -size, size * 2, size * 2);
+            break;
+        case 2: // Pentagon
+            for (let i = 0; i <= 5; i++) {
+                const a = (i / 5) * Math.PI * 2 - Math.PI / 2;
+                if (i === 0) ctx.moveTo(Math.cos(a) * size, Math.sin(a) * size);
+                else ctx.lineTo(Math.cos(a) * size, Math.sin(a) * size);
+            }
+            break;
+        case 3: // Hexagon
+            for (let i = 0; i <= 6; i++) {
+                const a = (i / 6) * Math.PI * 2;
+                if (i === 0) ctx.moveTo(Math.cos(a) * size, Math.sin(a) * size);
+                else ctx.lineTo(Math.cos(a) * size, Math.sin(a) * size);
+            }
+            break;
+        case 4: // Star
+            for (let i = 0; i <= 12; i++) {
+                const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
+                const r = i % 2 === 0 ? size : size * 0.45;
+                if (i === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+                else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+            }
+            break;
+        default: // Circle (⊙)
+            ctx.arc(0, 0, size, 0, Math.PI * 2);
+            break;
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Aperture dot at center (•)
+    if (p.gravitationalMass > 0.3) {
+        ctx.fillStyle = `hsla(${p.hue}, 90%, 90%, ${pulse * 0.8})`;
+        ctx.beginPath();
+        ctx.arc(0, 0, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    ctx.shadowBlur = 0;
+    ctx.restore();
+}
+
+// --- Interaction ---
+function interact(x, y, interactionMode) {
+    const radius = 120;
+    for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        const d = Math.sqrt((p.x - x) * (p.x - x) + (p.y - y) * (p.y - y));
+        if (d < radius) {
+            const strength = 1 - d / radius;
+            switch (interactionMode) {
+                case 'feed':
+                    p.amplitude = Math.min(1, p.amplitude + PHYS.FEED_AMOUNT * strength);
+                    p.hue = (p.hue + Math.random() * 20) % 360;
+                    break;
+                case 'excite':
+                    p.vx += (Math.random() - 0.5) * 6 * strength;
+                    p.vy += (Math.random() - 0.5) * 6 * strength;
+                    p.frequency *= (1 + (Math.random() - 0.5) * 0.15 * strength);
+                    p.hue = (p.hue + 90 * strength) % 360;
+                    p.evolutionStage += 0.4 * strength;
+                    break;
+                case 'calm':
+                    p.vx *= (1 - 0.4 * strength);
+                    p.vy *= (1 - 0.4 * strength);
+                    p.amplitude = Math.min(1, p.amplitude + 0.08 * strength);
+                    p.hue = p.hue * (1 - 0.08 * strength) + 210 * 0.08 * strength;
+                    break;
+            }
+        }
+    }
+}
+
+// --- Metrics update ---
+function updateMetrics() {
+    const n = particles.length;
+    if (n === 0) return;
+
+    let totalE = 0, totalBal = 0;
+    for (let i = 0; i < n; i++) {
+        totalE += particles[i].amplitude;
+        totalBal += particles[i].balance;
+    }
+
+    let totalW = 0, matureBonds = 0;
+    for (let i = 0; i < bonds.length; i++) {
+        totalW += bonds[i].weight;
+        if (bonds[i].weight > 0.55) matureBonds++;
+    }
+    const coherence = bonds.length > 0 ? totalW / bonds.length : 0;
+    const avgBal = totalBal / n;
+    const D = 1 + avgBal * 0.5 + (1 - Math.abs(avgBal - 0.5) * 2) * 0.5;
+
+    // Stage detection (recursive ICE: Identity, Coupling, Emergence)
+    let stage;
+    if (n < 4) stage = 'SEED';
+    else if (bonds.length < 4 || matureBonds < 2) stage = 'IDENTITY (I)';
+    else if (bonds.length < 12 || n < 12) stage = 'COUPLING (C)';
+    else if (n < 20) stage = 'FIELD (E)';
+    else if (boundaryStrength < 0.2) stage = 'BOUNDARY FORMING';
+    else if (boundaryStrength < 0.5) stage = 'MEMBRANE';
+    else if (boundaryStrength < 0.75) stage = 'ORGANISM';
+    else stage = 'BEING';
+
+    // Energy budget (cosmological mapping)
+    const active = particles.filter(p => Math.abs(Math.sin(p.phase)) > 0.65).length;
+    const vis = (active / n) * 0.15 + 0.02;
+    const dm = (1 - vis) * 0.4;
+    const de = 1 - vis - dm;
+
+    document.getElementById('m-particles').textContent = n;
+    document.getElementById('m-bonds').textContent = bonds.length;
+    document.getElementById('m-coherence').textContent = (coherence * 100).toFixed(0) + '%';
+    document.getElementById('m-energy').textContent = (totalE / n).toFixed(2);
+    document.getElementById('m-balance').textContent = avgBal.toFixed(3);
+    document.getElementById('m-boundary').textContent = (boundaryStrength * 100).toFixed(0) + '%';
+    document.getElementById('m-fractal').textContent = D.toFixed(3);
+    document.getElementById('m-stage').textContent = stage;
+
+    document.getElementById('bar-vis').style.width = (vis * 100) + '%';
+    document.getElementById('bar-dm').style.width = (dm * 100) + '%';
+    document.getElementById('bar-de').style.width = (de * 100) + '%';
+    document.getElementById('lbl-vis').textContent = 'Vis ' + (vis * 100).toFixed(1) + '%';
+    document.getElementById('lbl-dm').textContent = 'Dark ' + (dm * 100).toFixed(1) + '%';
+    document.getElementById('lbl-de').textContent = 'Field ' + (de * 100).toFixed(1) + '%';
+}
+
+// --- Main loop ---
+let lastTime = performance.now();
+let metricTimer = 0;
+
+function loop(now) {
+    const rawDt = (now - lastTime) / 1000;
+    const dt = Math.min(rawDt, 0.033); // cap at ~30fps minimum
+    lastTime = now;
+
+    if (!paused) {
+        updatePhysics(dt * 60); // normalize to ~60fps
+        render();
+
+        metricTimer += dt;
+        if (metricTimer > 0.5) {
+            updateMetrics();
+            metricTimer = 0;
+        }
+    }
+
+    requestAnimationFrame(loop);
+}
+
+// --- UI wiring ---
+document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        mode = btn.dataset.mode;
+    });
+});
+
+document.getElementById('btn-pause').addEventListener('click', function() {
+    paused = !paused;
+    this.textContent = paused ? 'Resume' : 'Pause';
+});
+
+document.getElementById('btn-reset').addEventListener('click', () => {
+    initSeed();
+});
+
+// Canvas interaction: click and drag
+let mouseDown = false;
+let lastMx = 0, lastMy = 0;
+
+canvas.addEventListener('mousedown', (e) => {
+    mouseDown = true;
+    const rect = canvas.getBoundingClientRect();
+    lastMx = e.clientX - rect.left;
+    lastMy = e.clientY - rect.top;
+    interact(lastMx, lastMy, mode);
+});
+
+canvas.addEventListener('mousemove', (e) => {
+    if (!mouseDown) return;
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    interact(mx, my, mode);
+
+    // Energy trail from drag
+    energyTrails.push(new EnergyTrail(lastMx, lastMy, mx, my));
+    lastMx = mx;
+    lastMy = my;
+});
+
+canvas.addEventListener('mouseup', () => { mouseDown = false; });
+canvas.addEventListener('mouseleave', () => { mouseDown = false; });
+
+// Touch support
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const t = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    lastMx = t.clientX - rect.left;
+    lastMy = t.clientY - rect.top;
+    interact(lastMx, lastMy, mode);
+}, { passive: false });
+
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    const t = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const mx = t.clientX - rect.left;
+    const my = t.clientY - rect.top;
+    interact(mx, my, mode);
+    energyTrails.push(new EnergyTrail(lastMx, lastMy, mx, my));
+    lastMx = mx;
+    lastMy = my;
+}, { passive: false });
+
+// --- Start ---
+initSeed();
+requestAnimationFrame(loop);
+
+</script>
+</body>
+</html>

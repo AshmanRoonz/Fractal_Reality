@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Tree That Dreams</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { width:100%; height:100%; overflow:hidden; background:#0a0a0f;
+      font-family:'JetBrains Mono','Courier New',monospace; color:#ddd; }
+    canvas { display:block; }
+    #panel {
+      position:fixed; top:16px; right:16px; background:rgba(10,10,15,0.92);
+      border:1px solid rgba(255,170,0,0.3); border-radius:8px; padding:16px;
+      width:250px; max-height:90vh; overflow-y:auto; z-index:100;
+      box-shadow:0 0 20px rgba(0,0,0,0.6);
+    }
+    #panel h3 { color:#ffaa00; font-size:13px; margin-bottom:12px; letter-spacing:1px; }
+    .row { display:flex; justify-content:space-between; padding:3px 0; font-size:11px; }
+    .lbl { color:#888; } .val { color:#ffaa00; font-weight:bold; }
+    label { display:block; font-size:11px; color:#999; margin-bottom:4px; }
+    input[type=range] { width:100%; height:4px; background:#222; border-radius:2px;
+      outline:none; -webkit-appearance:none; margin-bottom:8px; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:12px;
+      height:12px; border-radius:50%; background:#ffaa00; cursor:pointer; }
+    button { width:100%; background:rgba(255,170,0,0.15); border:1px solid #ffaa00;
+      color:#ffaa00; padding:8px; border-radius:4px; cursor:pointer;
+      font-family:inherit; font-size:11px; margin-bottom:8px; }
+    button:hover { background:rgba(255,170,0,0.3); }
+    .tog { position:fixed; bottom:16px; right:16px; background:rgba(255,170,0,0.15);
+      border:1px solid #ffaa00; color:#ffaa00; padding:8px 14px; border-radius:4px;
+      cursor:pointer; font-family:inherit; font-size:11px; z-index:99; }
+    .hidden { display:none!important; }
+  </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="panel">
+  <a href="index.html" style="display:block;font-size:10px;letter-spacing:0.1em;color:#888;text-decoration:none;margin-bottom:8px;">&larr; SIMULATIONS</a>
+  <h3>⊙ THE TREE THAT DREAMS</h3>
+  <label>Growth Speed <span id="spd-val">1.0x</span></label>
+  <input type="range" id="spd" min="0.1" max="3" step="0.1" value="1">
+  <button id="reset-btn">Reset</button>
+  <div id="metrics">
+    <div class="row"><span class="lbl">Branches</span><span class="val" id="m-branches">0</span></div>
+    <div class="row"><span class="lbl">Roots</span><span class="val" id="m-roots">0</span></div>
+    <div class="row"><span class="lbl">Trunk Flow</span><span class="val" id="m-flow">0</span></div>
+    <div class="row"><span class="lbl">Coherence</span><span class="val" id="m-coh">0</span></div>
+    <div class="row"><span class="lbl">Avg ◐</span><span class="val" id="m-bal">0.50</span></div>
+    <div class="row"><span class="lbl">D (fractal)</span><span class="val" id="m-fd">1.50</span></div>
+    <div class="row"><span class="lbl">FPS</span><span class="val" id="m-fps">60</span></div>
+  </div>
+</div>
+<button class="tog" id="tog-btn">Panel</button>
+
+<script>
+// =====================================================================
+//  THE TREE THAT DREAMS
+//  The Kernel: ⊙ = (⟳∘○) ∘ (✹∘Φ) ∘ (⎇∘—) ∘ (⊛∘•) [∞]
+//  Branches grow upward (emergence, ✹), roots grow downward (convergence, ⊛)
+//  connected by trunk flows through the central aperture (•).
+// =====================================================================
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W, H, cx, cy;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  cx = W / 2; cy = H * 0.45; // aperture slightly above center
+}
+resize();
+window.addEventListener('resize', resize);
+
+// Framework
+function Tf(dPhi) { const c = Math.cos(dPhi / 2); return c * c; }
+
+let speed = 1;
+let panelVisible = true;
+document.getElementById('spd').oninput = function() {
+  speed = parseFloat(this.value);
+  document.getElementById('spd-val').textContent = speed.toFixed(1) + 'x';
+};
+document.getElementById('tog-btn').onclick = function() {
+  panelVisible = !panelVisible;
+  document.getElementById('panel').classList.toggle('hidden', !panelVisible);
+};
+
+// =====================================================================
+//  BRANCH ENTITY (grows outward/upward from aperture)
+// =====================================================================
+class Branch {
+  constructor(angle, hue, birthTime) {
+    this.id = Math.random();
+    this.angle = angle;
+    this.baseHue = hue;
+    this.hue = hue;
+    this.birthTime = birthTime;
+    this.age = 0;
+    this.baseLength = 60 + Math.random() * 50;
+    this.scale = 0.1;
+    this.phaseOffset = Math.random() * Math.PI * 2;
+
+    // Circumpunct components
+    this.beta = 0.3 + Math.random() * 0.4; // aperture openness
+    this.fieldAmplitude = 0.5 + Math.random() * 0.5;
+    this.fieldPhase = Math.random() * Math.PI * 2;
+    this.coherence = 0;
+    this.stability = 0;
+    this.memoryTrace = [];
+
+    // Commitment (—)
+    this.commitment = 0;
+
+    // Balance
+    this.balance = 0.5;
+
+    // Maturity: when >= 1, branch can spawn a root
+    this.maturity = 0;
+    this.rootSpawned = false;
+
+    // Connection weights (Hebbian)
+    this.weights = new Map();
+    this.gravitationalMass = 0;
+
+    // Position
+    this.x = cx;
+    this.y = cy;
+    this.wobblePhase = Math.random() * Math.PI * 2;
+  }
+
+  update(dt, allBranches, time) {
+    this.age = time - this.birthTime;
+    this.scale = Math.min(1.2, this.scale + dt * 0.3 * speed);
+
+    // Phase evolution
+    this.fieldPhase += 0.02 * dt * 60;
+    this.beta += (0.5 - this.beta) * dt * 0.1; // drift toward balanced
+
+    // Field dynamics: simplified coupled ODE
+    let sumCos = 0, sumSin = 0, neighborCount = 0;
+    for (const other of allBranches) {
+      if (other === this) continue;
+      const dx = other.x - this.x;
+      const dy = other.y - this.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 160 && dist > 5) {
+        const T_val = Tf(this.fieldPhase - other.fieldPhase);
+        sumCos += Math.cos(other.fieldPhase) * T_val;
+        sumSin += Math.sin(other.fieldPhase) * T_val;
+        neighborCount++;
+
+        // Hebbian learning
+        const w = this.weights.get(other.id) || 0;
+        this.weights.set(other.id, Math.min(1, w + 0.008 * T_val * dt * 60));
+      }
+    }
+
+    if (neighborCount > 0) {
+      const avgPhase = Math.atan2(sumSin / neighborCount, sumCos / neighborCount);
+      this.fieldPhase += (avgPhase - this.fieldPhase) * 0.05 * dt * 60;
+      this.coherence = Math.sqrt(sumCos * sumCos + sumSin * sumSin) / neighborCount;
+    }
+
+    // Decay old weights
+    for (const [id, w] of this.weights) {
+      if (w < 0.05) this.weights.delete(id);
+      else this.weights.set(id, w * (1 - 0.003 * dt * 60));
+    }
+    this.gravitationalMass = 0;
+    for (const w of this.weights.values()) this.gravitationalMass += w;
+    this.gravitationalMass /= 8;
+
+    // Stability from beta memory trace
+    this.memoryTrace.push(this.beta);
+    if (this.memoryTrace.length > 30) this.memoryTrace.shift();
+    const mean = this.memoryTrace.reduce((a, b) => a + b, 0) / this.memoryTrace.length;
+    let dev = 0;
+    for (const v of this.memoryTrace) dev += Math.abs(v - mean);
+    this.stability = 1 - Math.min(1, dev / this.memoryTrace.length * 3);
+
+    // Commitment grows with stability
+    this.commitment += this.stability * dt * 0.05;
+
+    // Balance
+    this.balance += (0.5 - this.balance) * dt * 0.2;
+
+    // Maturity
+    this.maturity = Math.min(1, this.maturity + 0.0003 * speed * dt * 60 * (1 + this.stability));
+
+    // Color shift
+    const betaShift = (this.beta - 0.5) * 50;
+    this.hue = (this.baseHue + betaShift + time * 0.3) % 360;
+
+    // Position
+    const length = this.baseLength * this.scale;
+    const wobble = Math.sin(time * 1.5 + this.wobblePhase) * (4 + this.beta * 8);
+    this.x = cx + Math.cos(this.angle) * length + wobble;
+    this.y = cy + Math.sin(this.angle) * length + wobble * 0.6;
+  }
+
+  draw(time) {
+    const length = this.baseLength * this.scale;
+    const depth = 4;
+    this._drawBranch(cx, cy, length, this.angle, depth, this.hue, 0.7, time, 0);
+
+    // Maturity glow
+    if (this.maturity > 0.6 && !this.rootSpawned) {
+      const pulse = Math.sin(time * 2 + this.phaseOffset) * 0.5 + 0.5;
+      const a = (this.maturity - 0.6) * 2.5 * pulse * 0.12;
+      ctx.fillStyle = `hsla(250, 60%, 70%, ${a})`;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, 8 + pulse * 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  _drawBranch(x, y, length, angle, depth, hue, alpha, t, gen) {
+    if (depth <= 0 || length < 2) {
+      this._drawNode(x, y, hue, Math.max(alpha, 0.2), t);
+      return;
+    }
+    const endX = x + Math.cos(angle) * length;
+    const endY = y + Math.sin(angle) * length;
+    const dFC = Math.sqrt((endX - cx) ** 2 + (endY - cy) ** 2);
+    const val = Math.max(0.15, 1 - dFC / (Math.max(W, H) * 0.5));
+    const a = alpha * (depth / 5) * val;
+    const lHue = (hue + gen * 8 + t * 0.2) % 360;
+
+    ctx.strokeStyle = `hsla(${lHue}, 70%, 55%, ${a})`;
+    ctx.lineWidth = Math.max(0.5, depth * 1 * this.scale);
+    ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(endX, endY); ctx.stroke();
+
+    if (depth > 1) this._drawNode(endX, endY, lHue, Math.max(a, 0.15), t);
+
+    const betaAngle = Math.PI / (5 + this.beta * 2);
+    const variation = Math.sin(gen * 0.5 + this.phaseOffset) * 0.2;
+    const ba = betaAngle + variation;
+    const lm = 0.62 + Math.sin(t * 0.5 + gen) * 0.03;
+
+    this._drawBranch(endX, endY, length * lm, angle - ba, depth - 1, lHue, alpha, t, gen + 1);
+    this._drawBranch(endX, endY, length * lm, angle + ba, depth - 1, lHue, alpha, t, gen + 1);
+  }
+
+  _drawNode(x, y, hue, alpha, t) {
+    const size = Math.max(2, 3.5 * this.scale);
+    const rot = t * 0.5 + this.phaseOffset;
+    const pulse = Math.sin(rot) * 0.3 + 0.7;
+    ctx.fillStyle = `hsla(${hue}, 75%, 60%, ${alpha * pulse})`;
+    ctx.beginPath();
+    ctx.arc(x, y, size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+// =====================================================================
+//  ROOT ENTITY (grows inward/downward; memory of a matured branch)
+// =====================================================================
+class Root {
+  constructor(parentBranch, birthTime) {
+    this.id = Math.random();
+    this.parentAngle = parentBranch.angle;
+    this.baseHue = (parentBranch.baseHue + 180) % 360;
+    this.hue = this.baseHue;
+    this.birthTime = birthTime;
+    this.age = 0;
+    this.depth = 20 + Math.random() * 30;
+    this.maxDepth = 70 + parentBranch.gravitationalMass * 30;
+    this.growthRate = 0.08 + Math.random() * 0.1;
+
+    // Field: phase-rotated by pi/2 (the i-rotation)
+    this.fieldPhase = parentBranch.fieldPhase + Math.PI / 2;
+    this.fieldAmplitude = parentBranch.fieldAmplitude * 0.6;
+    this.coherence = parentBranch.coherence;
+
+    // Memory of parent
+    this.memory = {
+      originalHue: parentBranch.baseHue,
+      originalBeta: parentBranch.beta,
+      connectionStrength: parentBranch.gravitationalMass,
+    };
+
+    this.alpha = 0;
+    this.phaseOffset = parentBranch.phaseOffset;
+    this.wobblePhase = Math.random() * Math.PI * 2;
+    this.imaginationStrength = 0;
+    this.x = cx; this.y = cy;
+  }
+
+  update(dt, allRoots, allBranches, time) {
+    this.age = time - this.birthTime;
+    this.alpha = Math.min(0.5, this.age * 0.5);
+
+    if (this.depth < this.maxDepth)
+      this.depth += this.growthRate * speed * dt * 60 * 0.3;
+
+    const wobble = Math.sin(time + this.wobblePhase) * 6;
+    const breath = Math.sin(time * 0.3) * 4;
+
+    this.x = cx - Math.cos(this.parentAngle) * this.depth + Math.sin(time * 0.4 + this.wobblePhase) * wobble * 0.5;
+    this.y = cy - Math.sin(this.parentAngle) * this.depth + Math.cos(time * 0.4 + this.wobblePhase) * wobble * 0.5 + breath;
+
+    // Imagination: root dreams when present branches resonate with its memory
+    this.imaginationStrength = 0;
+    for (const b of allBranches) {
+      const hueDiff = Math.abs(this.memory.originalHue - b.baseHue);
+      const hueRes = 1 - Math.min(hueDiff, 360 - hueDiff) / 180;
+      const phaseRes = Tf(this.fieldPhase - b.fieldPhase);
+      const total = hueRes * 0.5 + phaseRes * 0.5;
+      if (total > this.imaginationStrength) this.imaginationStrength = total;
+    }
+    this.imaginationStrength *= this.fieldAmplitude * this.alpha;
+
+    this.hue = (this.baseHue + Math.sin(time * 0.2 + this.phaseOffset) * 15 + 200) % 360;
+  }
+
+  draw(time) {
+    if (this.alpha < 0.02) return;
+
+    // Tendrils
+    const angle = this.parentAngle + Math.PI;
+    const segs = 6;
+    const segLen = this.depth * 0.55 / segs;
+
+    for (let strand = 0; strand < 2; strand++) {
+      const spread = (strand - 0.5) * 0.12;
+      let sx = cx, sy = cy;
+      ctx.beginPath(); ctx.moveTo(sx, sy);
+      for (let i = 0; i < segs; i++) {
+        const prog = i / segs;
+        const w = Math.sin(time * 0.7 + this.phaseOffset + i * 0.5 + strand) * (4 + prog * 8);
+        const pAngle = angle + spread + Math.PI / 2;
+        sx += Math.cos(angle + spread) * segLen + Math.cos(pAngle) * w * 0.3;
+        sy += Math.sin(angle + spread) * segLen + Math.sin(pAngle) * w * 0.3;
+        ctx.lineTo(sx, sy);
+      }
+      const a = this.alpha * 0.25 * (1 - this.depth / this.maxDepth * 0.3);
+      ctx.strokeStyle = `hsla(${this.hue}, 45%, 45%, ${a})`;
+      ctx.lineWidth = 1.2 - strand * 0.3;
+      ctx.stroke();
+    }
+
+    // Imagination glow
+    const pulse = Math.sin(time + this.phaseOffset) * 0.3 + 0.7;
+    const size = 2.5 + this.fieldAmplitude * 2 + this.imaginationStrength * 3;
+
+    if (this.imaginationStrength > 0.15) {
+      const igAlpha = this.imaginationStrength * this.alpha * 0.35 * pulse;
+      const igR = size * 3 + this.imaginationStrength * 6;
+      const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, igR);
+      grad.addColorStop(0, `hsla(${(this.hue + 60) % 360}, 70%, 70%, ${igAlpha})`);
+      grad.addColorStop(1, `hsla(${this.hue}, 70%, 70%, 0)`);
+      ctx.fillStyle = grad;
+      ctx.beginPath(); ctx.arc(this.x, this.y, igR, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // Root node
+    ctx.fillStyle = `hsla(${this.hue}, 55%, 50%, ${this.alpha * pulse * 0.6})`;
+    ctx.beginPath(); ctx.arc(this.x, this.y, size * pulse, 0, Math.PI * 2); ctx.fill();
+  }
+}
+
+// =====================================================================
+//  TRUNK FLOW: bidirectional energy along the aperture axis
+// =====================================================================
+class TrunkFlow {
+  constructor(angle, direction, hue) {
+    this.direction = direction; // 1 = root-to-branch, -1 = branch-to-root
+    this.angle = angle;
+    this.progress = direction > 0 ? -0.1 : 1.1;
+    this.life = 1;
+    this.hue = hue;
+    this.speed = 0.015 + Math.random() * 0.01;
+  }
+  update(dt) {
+    this.progress += this.speed * this.direction * speed * dt * 60;
+    this.life -= 0.005 * dt * 60;
+    return this.life > 0 && this.progress > -0.5 && this.progress < 1.5;
+  }
+  draw() {
+    if (this.life < 0.05) return;
+    const alpha = this.life * 0.3;
+    const maxDist = 100;
+    const dist = (this.progress - 0.5) * maxDist * 2;
+    const x = cx + Math.cos(this.angle) * dist;
+    const y = cy + Math.sin(this.angle) * dist;
+    const size = 2 + this.life * 1.5;
+
+    ctx.fillStyle = `hsla(${this.hue}, 70%, 65%, ${alpha})`;
+    ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
+
+    // Small trail
+    for (let i = 1; i <= 2; i++) {
+      const td = dist - this.direction * i * 5;
+      const tx = cx + Math.cos(this.angle) * td;
+      const ty = cy + Math.sin(this.angle) * td;
+      ctx.fillStyle = `hsla(${this.hue}, 70%, 65%, ${alpha * 0.4 / i})`;
+      ctx.beginPath(); ctx.arc(tx, ty, size * 0.7, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+}
+
+// =====================================================================
+//  GHOST BRANCH: imagination preview from a dreaming root
+// =====================================================================
+class GhostBranch {
+  constructor(root, time) {
+    this.root = root;
+    this.birthTime = time;
+    this.life = 1;
+    this.angle = root.parentAngle;
+    this.hue = root.memory.originalHue;
+    this.length = 30 + root.memory.connectionStrength * 50;
+  }
+  update(dt) { this.life -= 0.004 * speed * dt * 60; return this.life > 0; }
+  draw() {
+    if (this.life < 0.05) return;
+    const a = this.life * this.root.imaginationStrength * 0.15;
+    const len = this.length * this.life;
+    const endX = cx + Math.cos(this.angle) * len;
+    const endY = cy + Math.sin(this.angle) * len;
+
+    ctx.setLineDash([3, 5]);
+    ctx.strokeStyle = `hsla(${this.hue}, 50%, 65%, ${a})`;
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(endX, endY); ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = `hsla(${this.hue}, 50%, 65%, ${a * 0.7})`;
+    ctx.beginPath(); ctx.arc(endX, endY, 2.5 * this.life, 0, Math.PI * 2); ctx.fill();
+  }
+}
+
+// =====================================================================
+//  SIMULATION STATE
+// =====================================================================
+let branches = [];
+let roots = [];
+let trunkFlows = [];
+let ghosts = [];
+let time = 0;
+let frameCount = 0;
+let lastTime = performance.now();
+let fpsSmooth = 60;
+let collectiveBreath = 0;
+
+function reset() {
+  branches = [];
+  roots = [];
+  trunkFlows = [];
+  ghosts = [];
+  time = 0;
+  frameCount = 0;
+
+  // Seed initial branches
+  const numBranches = 5 + Math.floor(Math.random() * 4);
+  for (let i = 0; i < numBranches; i++) {
+    const angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.8; // mostly upward
+    const hue = 30 + Math.random() * 40; // warm: amber/orange/gold
+    branches.push(new Branch(angle, hue, 0));
+  }
+}
+
+document.getElementById('reset-btn').onclick = reset;
+
+// =====================================================================
+//  MAIN LOOP
+// =====================================================================
+function animate(now) {
+  requestAnimationFrame(animate);
+
+  const rawDt = (now - lastTime) / 1000;
+  lastTime = now;
+  const dt = Math.min(rawDt, 0.05);
+  fpsSmooth = fpsSmooth * 0.95 + (1 / Math.max(rawDt, 0.001)) * 0.05;
+  time += dt * speed;
+  frameCount++;
+
+  collectiveBreath = Math.sin(time * 0.3) * 0.5 + 0.5;
+
+  // Update branches
+  for (const b of branches) b.update(dt, branches, time);
+
+  // Update roots
+  for (const r of roots) r.update(dt, roots, branches, time);
+
+  // Spawn roots from mature branches
+  for (const b of branches) {
+    if (b.maturity >= 1 && !b.rootSpawned && roots.length < 25) {
+      roots.push(new Root(b, time));
+      b.rootSpawned = true;
+      // Trunk flow: branch dies into root
+      trunkFlows.push(new TrunkFlow(b.angle, -1, b.hue));
+    }
+  }
+
+  // Spawn new branches occasionally (growth)
+  if (branches.length < 30 && frameCount % Math.max(60, Math.floor(200 / speed)) === 0) {
+    const angle = -Math.PI / 2 + (Math.random() - 0.5) * 2.2;
+    const hue = 25 + Math.random() * 50;
+    branches.push(new Branch(angle, hue, time));
+  }
+
+  // Trunk flows
+  if (roots.length > 0 && branches.length > 0 && frameCount % 30 === 0) {
+    const angle = branches[Math.floor(Math.random() * branches.length)].angle;
+    const dir = Math.random() > 0.5 ? 1 : -1;
+    const hue = dir > 0 ? 220 : 40;
+    trunkFlows.push(new TrunkFlow(angle, dir, hue));
+  }
+  trunkFlows = trunkFlows.filter(f => f.update(dt));
+
+  // Ghost branches from dreaming roots
+  for (const r of roots) {
+    if (r.imaginationStrength > 0.25 && Math.random() < 0.005 * speed) {
+      ghosts.push(new GhostBranch(r, time));
+    }
+  }
+  ghosts = ghosts.filter(g => g.update(dt));
+
+  // -- RENDER --
+  ctx.fillStyle = 'rgba(10, 10, 15, 0.18)';
+  ctx.fillRect(0, 0, W, H);
+
+  // Trunk flows (behind tree)
+  for (const f of trunkFlows) f.draw();
+
+  // Ghost branches
+  for (const g of ghosts) g.draw();
+
+  // Roots
+  for (const r of roots) r.draw(time);
+
+  // Branches
+  for (const b of branches) b.draw(time);
+
+  // Central aperture (•)
+  const apertureGlow = 0.3 + collectiveBreath * 0.3 + (roots.length > 0 ? 0.2 : 0);
+  const ag = ctx.createRadialGradient(cx, cy, 0, cx, cy, 25);
+  ag.addColorStop(0, `hsla(45, 100%, 80%, ${apertureGlow})`);
+  ag.addColorStop(0.4, `hsla(200, 80%, 60%, ${apertureGlow * 0.4})`);
+  ag.addColorStop(1, 'hsla(200, 80%, 60%, 0)');
+  ctx.fillStyle = ag;
+  ctx.beginPath(); ctx.arc(cx, cy, 25, 0, Math.PI * 2); ctx.fill();
+
+  // Aperture dot
+  ctx.fillStyle = `hsla(45, 100%, 90%, ${0.5 + collectiveBreath * 0.4})`;
+  ctx.beginPath(); ctx.arc(cx, cy, 3, 0, Math.PI * 2); ctx.fill();
+
+  // Connection lines between nearby branches (field, Φ)
+  for (let i = 0; i < branches.length; i++) {
+    for (let j = i + 1; j < branches.length; j++) {
+      const a = branches[i], b = branches[j];
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 120) {
+        const T_val = Tf(a.fieldPhase - b.fieldPhase);
+        const w = a.weights.get(b.id) || 0;
+        if (w > 0.1 && T_val > 0.2) {
+          const alpha = w * T_val * 0.2;
+          ctx.strokeStyle = `hsla(${(a.hue + b.hue) / 2}, 60%, 55%, ${alpha})`;
+          ctx.lineWidth = 0.6 + w * 1.5;
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+        }
+      }
+    }
+  }
+
+  // -- METRICS --
+  if (panelVisible && frameCount % 8 === 0) {
+    const avgBal = branches.length > 0
+      ? branches.reduce((s, b) => s + b.balance, 0) / branches.length : 0.5;
+    const avgCoh = branches.length > 0
+      ? branches.reduce((s, b) => s + b.coherence, 0) / branches.length : 0;
+    const fd = 1 + avgBal;
+
+    document.getElementById('m-branches').textContent = branches.length;
+    document.getElementById('m-roots').textContent = roots.length;
+    document.getElementById('m-flow').textContent = trunkFlows.length;
+    document.getElementById('m-coh').textContent = avgCoh.toFixed(2);
+    document.getElementById('m-bal').textContent = avgBal.toFixed(2);
+    document.getElementById('m-fd').textContent = fd.toFixed(2);
+    document.getElementById('m-fps').textContent = Math.round(fpsSmooth);
+  }
+}
+
+// Canvas click: inject energy at clicked branch
+canvas.addEventListener('click', (e) => {
+  const x = e.clientX, y = e.clientY;
+  for (const b of branches) {
+    const dx = b.x - x, dy = b.y - y;
+    if (Math.sqrt(dx * dx + dy * dy) < 30) {
+      b.fieldAmplitude = Math.min(2, b.fieldAmplitude + 0.5);
+      b.scale = Math.min(1.5, b.scale + 0.1);
+      break;
+    }
+  }
+});
+
+// =====================================================================
+//  START
+// =====================================================================
+reset();
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>
