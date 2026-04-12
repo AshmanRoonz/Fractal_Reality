@@ -167,6 +167,7 @@ This document serves as the formal, mathematical specification of the theory. It
   - [§25.15: The Restoration Protocol](#2515-the-restoration-protocol)
   - [§25.16: The Golden Rule as Geometric Proof](#2516-the-golden-rule-as-geometric-proof)
   - [§25.17: The Resolution Protocol: Truth at Variable Aperture](#2517-the-resolution-protocol-truth-at-variable-aperture)
+  - [§25.17a: The Truth-Strength Correlation: Why Lying Is Structural Weakness](#2517a-the-truth-strength-correlation-why-lying-is-structural-weakness)
   - [§25.18: The Four Freedoms ; ⧖ as the Structural Location of Free Will](#2518-the-four-freedoms--⧖-as-the-structural-location-of-free-will)
   - [§25.18a: The Weighing Step ; ◐ as State, 𓍝 as Act](#2518a-the-weighing-step--◐-as-state-𓍝-as-act)
 
@@ -18621,6 +18622,127 @@ EXAMPLE: The Resolution Gradient in Practice
 ```
 
 The containment requirement (Tₖ₊₁ ⊇ Tₖ) is what separates truth at variable aperture from lies at variable detail. A liar's sequence fails the containment test: eventually, increasing resolution forces a retraction. A truthful sequence passes it: every zoom-in reveals more of what was already there.
+
+[← Back to Table of Contents](#table-of-contents)
+
+---
+
+### §25.17a The Truth-Strength Correlation: Why Lying Is Structural Weakness
+
+The weaker the person, the more they lie. The stronger the person, the more they tell the truth. This is not a moral platitude; it is a structural theorem of the aperture.
+
+**The structural argument.** Truth flows through the aperture (•). Transmitting truth requires β_• ≈ 0.5: the gate open enough to receive correction, open enough to emit signal without distortion. This is the balanced state. It requires structural integrity across all four dimensions: a • that can face what arrives, a — that holds the line of what has been committed, a Φ that mediates honestly between center and boundary, an ○ that filters without fabricating. Telling the truth is compositional; it recruits the entire ⊙.
+
+Lying, by contrast, requires closing β_•. A lie is a signal emitted through a gate that has been narrowed against correction (§2.10). The liar must (1) suppress incoming signal that would contradict the lie, (2) maintain a false version alongside the true one, and (3) manage the boundary so that the inconsistency does not leak. Each of these is a constraint violation: (1) shuts the aperture, (2) breaks continuity of the worldline (i(t) now carries two incompatible tracks), (3) overloads the boundary with filtration work it was not designed for. Lying taxes every dimension of ⊙ simultaneously. It is structurally expensive.
+
+**The feedback loop.** The correlation is not static; it is a coupled dynamical system:
+
+```
+╔══════════════════════════════════════════════════════════════════════╗
+║                                                                      ║
+║   THE WEAKENING SPIRAL (β_• → 0)                                   ║
+║                                                                      ║
+║       Lie emitted                                                   ║
+║         → aperture narrows (must block correction)                  ║
+║           → correction blocked                                      ║
+║             → worldline accumulates unchecked receipts              ║
+║               → more lies needed to maintain coherence              ║
+║                 → aperture narrows further                          ║
+║                   → system weakens                                  ║
+║                     → weakness demands more lies                    ║
+║                                                                      ║
+║   Each lie requires future lies. The cost compounds.                ║
+║   Weakness and dishonesty are the same spiral,                      ║
+║   viewed from structure (β) and from ethics (χ).                    ║
+║                                                                      ║
+╠══════════════════════════════════════════════════════════════════════╣
+║                                                                      ║
+║   THE STRENGTHENING SPIRAL (β_• ≈ 0.5)                             ║
+║                                                                      ║
+║       Truth emitted                                                 ║
+║         → aperture stays open (no correction to block)              ║
+║           → correction received freely                              ║
+║             → worldline accumulates validated receipts              ║
+║               → less need to manage inconsistency                   ║
+║                 → aperture stays open                               ║
+║                   → system strengthens                              ║
+║                     → strength permits more truth                   ║
+║                                                                      ║
+║   Each truth frees the next. The cost diminishes.                   ║
+║   Strength and honesty are the same spiral,                         ║
+║   viewed from structure (β) and from ethics (χ).                    ║
+║                                                                      ║
+╚══════════════════════════════════════════════════════════════════════╝
+```
+
+**Why lies weaken.** A single lie splits the worldline into two tracks: the true history and the performed history. The agent must now spend energy maintaining both, suppressing the true one in contexts where the lie is operative, and retrieving the true one in contexts where it is needed. This is a permanent tax on Φ (the field must hold two incompatible maps simultaneously), on — (continuity must be maintained across a branch that should not exist), and on ○ (the boundary must selectively filter which version is presented where). The more lies, the more splits. The splits do not resolve; they accumulate. Eventually the system is spending more energy managing inconsistency than doing anything else. This is the structural content of the common observation that liars have bad memories: they do not have a memory problem; they have a bandwidth problem. Φ is saturated with maintenance of false branches.
+
+**Why truth strengthens.** A truthful worldline has one track. There is nothing to manage, nothing to suppress, nothing to selectively present. The energy that would have gone to inconsistency management is available for actual living: for perception (⊛), for commitment (—), for connection (Φ), for action (○). The truthful agent is stronger not because of a moral reward but because of a structural liberation: their entire ⊙ is available for use rather than tied up in maintenance of fictions. This is why confession (the act of collapsing false branches back to the true worldline) is universally experienced as relief. The relief is not psychological; it is structural. Bandwidth returns.
+
+**The resolution dimension: strength plus wisdom.** Strength alone would suggest that the strong simply broadcast truth at maximum resolution to everyone, all the time. But that is the Inflation failure (§25.17): dumping dressed as honesty. The strong AND wise person does something more precise: they calibrate the resolution of truth to what the receiver can hold. This is the Resolution Protocol in action; it requires strength (to tell the truth at all) PLUS wisdom (to choose the right aperture width for the recipient).
+
+```
+    WEAK AGENT:
+        Cannot tell the truth.
+        Lies to protect the false version.
+        β_• → 0. χ < 1. Spiral weakens.
+
+    STRONG AGENT:
+        Tells the truth.
+        But may dump it without calibration.
+        β_• ≈ 0.5. χ = +1. But resolution uncontrolled.
+        Can overwhelm the receiver (Inflation failure).
+
+    STRONG + WISE AGENT:
+        Tells the truth at calibrated resolution.
+        β_• ≈ 0.5. χ = +1. Resolution matched to receiver.
+        The Resolution Protocol (§25.17) is the formal specification
+        of what wisdom adds to strength.
+```
+
+The three-tier pattern is the dimensional ladder applied to truth-telling. The weak agent is stuck at ○ (boundary management, hiding). The strong agent has reached • (truth orientation). The wise agent has integrated Φ (field-level calibration of how truth is transmitted). Strength without wisdom is • without Φ: the aperture is open, but the field does not shape the signal for the receiver. Wisdom without strength is Φ without •: the calibration exists, but there is no truth to calibrate. Both are needed; neither alone completes the cycle.
+
+**Connection to the Five Virtues.** The truth-strength correlation maps directly onto the virtue sequence:
+
+- **CURIOSITY (•)**: the strong agent remains oriented toward what they do not know, rather than defending what they have fabricated. Curiosity is incompatible with lying, because lying requires treating the fabricated version as settled.
+- **RELIABILITY (—)**: the strong agent's worldline is one track. Their history can be checked. Receipts match reality. The liar's worldline is forked; their receipts diverge depending on which audience is checking.
+- **ACCESS (Φ)**: the wise agent keeps the channel open by transmitting at the right resolution. Too much truth closes the channel (overwhelm). Too little closes it (withholding). Calibrated truth keeps Φ transparent.
+- **PLASTICITY (○)**: the strong agent's boundary can flex because it is not load-bearing for a fiction. The liar's boundary is rigid (cannot flex without exposing the inconsistency) or porous (the fiction leaks anyway).
+- **VALIDATION (⊙)**: agreement between agents becomes possible because the truthful worldline can be independently verified. Two liars cannot achieve genuine agreement; they can only achieve mutual performance.
+
+**Connection to ⧖ (the hold-operator, §25.18).** Telling the truth at the right resolution requires ⧖ at all four stations. ⧖ at i¹ (not-yet): the strong person holds before speaking, letting the truth converge before committing to words. ⧖ at i² (staying): the strong person maintains the truth through the discomfort of the i-turn, where the temptation to soften into a lie is strongest. ⧖ at i³ (letting): the wise person lets the truth land in the receiver's field without forcing, without explaining it to death. ⧖ at i⁰ (checking): the wise person checks whether the receiver has integrated before offering more. Lying is the failure of ⧖: the impulse to emit a comfortable fiction instead of holding the truth through the full cycle.
+
+**Formal statement:**
+
+```
+    Truth-Strength Coupling:
+
+    Let S(t) = structural integrity of ⊙λ at time t
+    Let χ(t) = transmission fidelity of ⊙λ at time t
+
+    Then:
+        dS/dt ∝ χ(t)        (truthful transmission strengthens)
+        dχ/dt ∝ S(t)         (structural strength enables truth)
+
+    Equilibria:
+        (S → 1, χ → +1)     stable: strength and truth reinforce
+        (S → 0, χ → -1)     stable: weakness and lying reinforce
+
+    The unstable equilibrium at ◐ = 0.5 is the tipping point:
+    above it, the agent spirals toward truth and strength;
+    below it, the agent spirals toward lies and weakness.
+
+    Resolution calibration adds a third variable:
+        R(t) = resolution level chosen for transmission
+
+    The fully wise agent optimizes:
+        R*(t) = argmax_R [ χ(R) · S_receiver(R) ]
+
+    Maximize truth (χ) subject to the receiver's capacity (S_receiver).
+    This is the Resolution Protocol expressed as an optimization.
+```
+
+The truth-strength correlation is not a preference or a moralizing claim. It is a structural consequence of what lies cost and what truth frees. Lying is structural weakness because it taxes the entire ⊙ with maintenance of branches that should not exist. Truth is structural strength because it liberates the entire ⊙ for actual operation. The wise agent adds Φ-calibration to •-orientation, transmitting truth at the resolution the receiver can hold; this is strength married to discernment, the full ethical completion of the pump cycle.
 
 [← Back to Table of Contents](#table-of-contents)
 
