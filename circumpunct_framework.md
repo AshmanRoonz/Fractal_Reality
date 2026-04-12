@@ -21215,6 +21215,19 @@ The 1.5D glyph and the 2D glyph are the framework's notation for *the operator a
 
 **Summary in one line.** The 1.5D station of the dimensional ladder is λ, the scaling operator; the framework's glyph ⎇ and the Greek letter λ are the same picture of branching; ⊙λ = λ(⊙Λ) is the functional form of ⊙λ ⊂ ⊙Λ; every constant on the ladder is a fixed point of λ at its own rung; scale is exactly what fractals do, and a fractal is a fixed point of λ; "I am a whole fractal of a greater whole" is the first-person statement of λ(⊙Λ) = ⊙λ spoken by a ⊙ that knows what it is.
 
+**The Mandelbrot confirmation (§27.7m.1).** The claim that "every constant on the ladder is a fixed point of λ" has an independent confirmation from complex dynamics. The Mandelbrot iteration z_{n+1} = z_n² + c defines the most famous fractal in mathematics. Its fixed points satisfy z = z² + c, i.e. z² − z + c = 0. At c = −1, this becomes z² − z − 1 = 0: the golden ratio equation. φ is the fixed point of the Mandelbrot iteration at c = −1.
+
+In the framework, −1 = i² (the 1.5D station, the branching station, the home of the fractal operator λ). The connection is therefore: the Mandelbrot map, evaluated at the framework's own fractal-generating station (c = i² = −1), yields φ as its fixed point. This is not a post-hoc analogy; it is the same equation (x² = x + 1) derived from an independent domain of mathematics (complex dynamics of quadratic maps) applied at the dimension the framework independently assigns to fractal branching.
+
+The convergence extends further:
+
+- The Mandelbrot set boundary has fractal dimension D = 2 (Shishikura, 1998): the Φ station, the field, the 2D constant of the ladder.
+- Brownian motion at balance (◐ = 0.5) has D = 1 + ◐ = 1.5 (Mandelbrot): the balanced fractal dimension at the 1.5D station.
+- λ lives at 1.5D (§27.7m above), which is where i² = −1 sits on the dimensional octave.
+- φ is the characteristic root of the Fibonacci/Lucas recurrence, which is the numerical trace of the fractal operator λ applied repeatedly.
+
+Four objects (the Mandelbrot set, the golden ratio, the branching station, the balance parameter) meet at the same point on the ladder. The Mandelbrot map is the framework's pump cycle restricted to 1.5D: convergence (z_n → z_n²) followed by displacement (+ c). At c = i², the displacement is exactly one i-turn (the branching stroke), and the fixed point is φ, the structural ratio of the framework. The framework did not select φ by searching recurrences; φ was waiting at the fixed point of the most fundamental quadratic map in complex dynamics, evaluated at the framework's own branching constant. Route B (A3 as x = 1 + 1/x) and the Mandelbrot confirmation (z² − z − 1 = 0 at c = i²) are two views of the same fixed-point theorem; neither requires the generative-structural partition of Route A, and both arrive at φ by asking the same structural question ("what is the fixed point of the fractal operator?") in different mathematical languages.
+
 ### §27.8 Primes Are Made of Dimensions
 
 The structural dimensions of the circumpunct (1, 2, 3) are also the first integers. Two of them (2 and 3) are the first primes. The third (1) is the unit.
