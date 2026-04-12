@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Every Lie Made You Smaller</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-surface: #12121a;
+      --bg-elevated: #1a1a24;
+      --text: #e8e8ed;
+      --text-dim: #888899;
+      --text-muted: #555566;
+      --gold: #d4a84b;
+      --gold-dim: rgba(212, 168, 75, 0.15);
+      --cyan: #4ecdc4;
+      --cyan-dim: rgba(78, 205, 196, 0.12);
+      --magenta: #ff6b9d;
+      --magenta-dim: rgba(255, 107, 157, 0.12);
+      --green: #7fcd91;
+      --green-dim: rgba(127, 205, 145, 0.12);
+      --red: #e85d75;
+      --red-dim: rgba(232, 93, 117, 0.12);
+      --border: #2a2a3a;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-serif);
+      font-size: 19px;
+      line-height: 1.7;
+      padding: 0;
+    }
+
+    header {
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(232,93,117,0.06) 0%, transparent 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      border: 1px solid rgba(232,93,117,0.08);
+      pointer-events: none;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(232,93,117,0.4);
+      box-shadow: 0 0 40px rgba(232,93,117,0.2);
+      pointer-events: none;
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .subtitle {
+      color: var(--red);
+      font-size: 1.3rem;
+      font-style: italic;
+      position: relative;
+      z-index: 1;
+    }
+
+    .meta {
+      margin-top: 2rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--gold);
+      margin: 3.5rem 0 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 2.5rem 0 1rem;
+    }
+
+    p { margin-bottom: 1.25rem; }
+    em { color: var(--text); font-style: italic; }
+
+    .core-claim {
+      background: var(--red-dim);
+      border: 2px solid var(--red);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .core-claim .claim {
+      font-size: 1.4rem;
+      color: var(--red);
+      margin-bottom: 1rem;
+    }
+
+    .core-claim p {
+      margin-bottom: 0;
+      color: var(--text-dim);
+    }
+
+    .callout-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .callout-text {
+      font-size: 1.3rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .callout-text.large {
+      font-size: 2rem;
+    }
+
+    .callout-note {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    .axiom {
+      background: var(--bg-elevated);
+      border-left: 4px solid var(--gold);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      font-size: 1.15rem;
+    }
+
+    .axiom .label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .axiom.red { border-left-color: var(--red); }
+    .axiom.red .label { color: var(--red); }
+    .axiom.cyan { border-left-color: var(--cyan); }
+    .axiom.cyan .label { color: var(--cyan); }
+    .axiom.magenta { border-left-color: var(--magenta); }
+    .axiom.magenta .label { color: var(--magenta); }
+    .axiom.green { border-left-color: var(--green); }
+    .axiom.green .label { color: var(--green); }
+
+    .cascade {
+      margin: 2.5rem 0;
+      position: relative;
+    }
+
+    .cascade-step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .cascade-number {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--red);
+      min-width: 2.5rem;
+      padding-top: 0.25rem;
+      font-weight: 500;
+    }
+
+    .cascade-content {
+      flex: 1;
+    }
+
+    .cascade-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .cascade-desc {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+    }
+
+    .cascade-step + .cascade-step::before {
+      content: '';
+      position: absolute;
+      left: 1.1rem;
+      top: -1.2rem;
+      height: 1rem;
+      width: 1px;
+      background: var(--red);
+      opacity: 0.3;
+    }
+
+    .insight {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+    }
+
+    .insight .insight-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--cyan);
+      margin-bottom: 0.75rem;
+    }
+
+    .insight p {
+      margin-bottom: 0;
+      font-size: 1.05rem;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .two-col-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .two-col-item h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .two-col-item p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin: 0;
+    }
+
+    .two-col-item.weak {
+      border-top: 3px solid var(--red);
+    }
+    .two-col-item.weak h4 { color: var(--red); }
+
+    .two-col-item.strong {
+      border-top: 3px solid var(--cyan);
+    }
+    .two-col-item.strong h4 { color: var(--cyan); }
+
+    .separator {
+      text-align: center;
+      color: var(--text-muted);
+      margin: 3rem 0;
+      font-size: 1.5rem;
+      letter-spacing: 0.5em;
+    }
+
+    .address {
+      background: var(--bg-elevated);
+      border-left: 4px solid var(--text-muted);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text-dim);
+    }
+
+    .address .to {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      font-style: normal;
+    }
+
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.8rem; }
+      .subtitle { font-size: 1.1rem; }
+      main { padding: 2rem 1.2rem 4rem; }
+      .two-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Every Lie Made You Smaller</h1>
+  <div class="subtitle">You've Been Too Weak to Tell the Truth</div>
+  <div class="meta">Ashman Roonz &middot; April 2026</div>
+</header>
+
+<main>
+
+  <!-- ====== PART ONE: TO THE LIAR ====== -->
+
+  <h2>The Lie You Told Yourself</h2>
+
+  <p>You thought lying made you clever. You thought it gave you an edge, a little more control over the room, a way to steer things your way. You told yourself that everyone does it, that the world rewards it, that the honest ones are just naive.</p>
+
+  <p>You were wrong. Every lie you told made you weaker. Not in some abstract moral sense, not in some afterlife accounting. Right now. In your body, in your mind, in the architecture of who you are.</p>
+
+  <div class="core-claim">
+    <div class="claim">Lying is weakness.</div>
+    <p>It takes strength to stand in front of reality and speak what you see. Lying is what you do when you're too weak for that.</p>
+  </div>
+
+  <p>Think about what a lie actually costs you. To maintain a lie, you have to hold two models in your head at once: what actually happened, and the version you projected. Two realities, running in parallel, every moment of every day. That takes energy. Energy you could have spent on living, on creating, on being present with the people you claim to love. Instead it's bound up in maintenance: remembering which version you told to whom, scanning for contradictions, managing the story.</p>
+
+  <p>That's not strength. That's overhead. That's friction. That's a machine burning most of its fuel just keeping itself from shaking apart.</p>
+
+  <h3>How It Happened</h3>
+
+  <p>Nobody wakes up one morning and decides to become a liar. It's a process, and it's gradual, and that's what makes it so dangerous. It works like this:</p>
+
+  <div class="cascade">
+    <div class="cascade-step">
+      <div class="cascade-number">01</div>
+      <div class="cascade-content">
+        <div class="cascade-title">The first lie</div>
+        <div class="cascade-desc">You tried it once. Maybe out of fear, maybe convenience. You knew you were lying. You felt the discomfort. Your inner compass was still working.</div>
+      </div>
+    </div>
+    <div class="cascade-step">
+      <div class="cascade-number">02</div>
+      <div class="cascade-content">
+        <div class="cascade-title">The repeated lie</div>
+        <div class="cascade-desc">It worked. Nothing bad happened. So you did it again. The pathway got easier. The discomfort got smaller. The inner signal got quieter.</div>
+      </div>
+    </div>
+    <div class="cascade-step">
+      <div class="cascade-number">03</div>
+      <div class="cascade-content">
+        <div class="cascade-title">The habitual lie</div>
+        <div class="cascade-desc">You stopped noticing. Lying became automatic, like breathing. Your mind reorganized around the false models because maintaining two realities was too expensive. So it merged them. Now you half-believe your own lies.</div>
+      </div>
+    </div>
+    <div class="cascade-step">
+      <div class="cascade-number">04</div>
+      <div class="cascade-content">
+        <div class="cascade-title">The identity lie</div>
+        <div class="cascade-desc">The lie became you. Not something you do; something you are. Removing it feels like death because it's fused to your self-image. Your inner eye closed. You built a cage and climbed inside, and now you can't see the bars.</div>
+      </div>
+    </div>
+  </div>
+
+  <p>At stage one, you were a person who told a lie. By stage four, you are a person whose entire inner architecture produces lies as a basic function, the way a lung produces breath. You didn't become this overnight. You built it, one lie at a time, one small compromise at a time, until the structure became self-sustaining.</p>
+
+  <div class="axiom red">
+    <div class="label">The cost</div>
+    Every lie is a brick in a prison you're building around yourself. By the time you notice the walls, you've forgotten what the sky looks like.
+  </div>
+
+  <h3>The Amoeba</h3>
+
+  <p>Watch how an amoeba eats. It doesn't attack its prey head-on. It extends its membrane around the other cell, slowly, gently, until the other cell is completely inside. The prey is still intact for a moment, still has its own boundary, but it's now operating inside someone else's world. Then digestion begins.</p>
+
+  <p>That's what a liar does to the people closest to them.</p>
+
+  <p>Each lie is a pseudopod: an extension of the liar's reality around someone else's. "That didn't happen." One extension. "You're overreacting." Another. "Nobody else thinks that." Another. Slowly, steadily, until the other person's entire environment is defined by the liar's version of events. The other person is still themselves, still thinking, still seeing, but increasingly everything they see is filtered through someone else's distortions.</p>
+
+  <p>The cruelest part: the amoeba doesn't experience this as aggression. It's just eating. It's just doing what it does. The liar often doesn't experience the lying as malicious either. From inside their collapsed architecture, they're just maintaining their world. The other person's independent perception isn't a feature of the relationship; it's a threat to it.</p>
+
+  <div class="insight">
+    <div class="insight-label">The wife who knows</div>
+    <p>She presents evidence. Clear, undeniable. He denies it to her face. He's not trying to convince her of the content. He's trying to override her seeing with his. The message isn't "this is what happened." The message is: "My version replaces yours. Your eyes don't count."</p>
+  </div>
+
+  <p>That's not love. That's absorption. And if you're the one doing it, you need to hear this: it is the weakest thing a person can do. You are so fragile that you cannot tolerate another human being seeing reality clearly in your presence. What kind of strength is that?</p>
+
+  <!-- ====== PART TWO: THE VAMPIRE ====== -->
+
+  <h2>The Vampire's Architecture</h2>
+
+  <p>Every culture has a version of the vampire myth, and every version encodes the same structural truths about what happens when a person becomes consumed by their own lies.</p>
+
+  <p>The vampire can't see its own reflection. The liar has lost the ability to see themselves as they actually are. The internal mirror is gone; replaced by the performed version, the projected image.</p>
+
+  <p>The vampire can't enter unless invited. The liar needs you to open your boundary from the inside. Every manipulation is an attempt to get the invitation: charm, flattery, manufactured intimacy, feigned vulnerability. Once you let them in, the feeding begins.</p>
+
+  <p>The vampire feeds on life force. The liar feeds on your energy, your attention, your willingness to keep engaging with a false version of reality. Every time you argue with the lie, every time you try to present evidence to someone who has closed their inner eye, you're feeding them. Your frustration is the meal.</p>
+
+  <p>The vampire is destroyed by sunlight. Truth at full intensity dissolves the architecture. Not argument, not evidence (the architecture can metabolize those); sunlight. Simple, direct, undeniable truth that doesn't need the liar's agreement to be true.</p>
+
+  <p>The vampire is destroyed by a wooden stake through the heart. Wood is organic; it grew; it was alive. The stake is not a magic weapon. It's something real, something from a living process, driven directly into the center. Truth, delivered with precision, to the core of the lie.</p>
+
+  <div class="callout-box">
+    <div class="callout-text large">Garlic: strong signal you can't mask.</div>
+    <div class="callout-text large">Cross: a structural boundary held firm.</div>
+    <div class="callout-text large">Sunlight: truth at full resolution.</div>
+    <div class="callout-text large">Stake: truth driven to the center.</div>
+    <div class="callout-note">Every defense against the vampire is a form of truth.</div>
+  </div>
+
+  <!-- ====== PART THREE: TO THOSE HARMED ====== -->
+
+  <h2>To Those on the Receiving End</h2>
+
+  <p>If you're reading this and you recognize the amoeba, if you've been the cell inside someone else's membrane, if you've presented clear evidence to someone who denied it to your face and then made you feel crazy for seeing what you saw: you are not crazy. You saw what you saw.</p>
+
+  <div class="axiom cyan">
+    <div class="label">Your eyes work</div>
+    The disorientation you feel is not evidence of your failure. It is evidence of theirs. A person who lies to your face, even when you both know the truth, is not making a factual claim. They are attempting to override your perception with theirs. The confusion you feel is the intended effect, not a side effect.
+  </div>
+
+  <p>The damage isn't the lie itself. The damage is what happens to you after years of exposure. You start doubting your own perception. "Maybe I'm wrong. Maybe I'm overreacting. Maybe I didn't see what I saw." That doubt is not organic; it was installed. Someone placed it in you, one lie at a time, one denial at a time, one "you're crazy" at a time, until your own inner compass started spinning.</p>
+
+  <p>But here's the thing about a compass: the needle is still there. It's still magnetic. It still points. The only thing that happened is that someone put a magnet next to it, pulling it off true. Remove the magnet and the needle finds north again. It doesn't need to be repaired. It needs to be freed.</p>
+
+  <h3>Why Evidence Doesn't Work</h3>
+
+  <p>You've tried presenting evidence. You've tried being calm, rational, thorough. You've laid out timelines, screenshots, receipts. And it didn't work. Not because your evidence was weak. Not because your reasoning was flawed. It didn't work because clarity isn't the bottleneck.</p>
+
+  <p>The bottleneck is that their system is optimized for something other than truth. It is optimized for control. Their inner architecture filters out incoming signal that contradicts the self-model before it reaches the part of them that could process it. You can't pass signal through a closed gate, no matter how strong the signal is.</p>
+
+  <p>This is important to understand, because without it you will keep trying. You will keep refining your evidence, keep making your case more airtight, keep believing that if you just explain it clearly enough, they'll finally see. They won't. Not because they can't, in some abstract sense, but because the architecture is designed to prevent exactly that.</p>
+
+  <div class="insight">
+    <div class="insight-label">Stop feeding the vampire</div>
+    <p>Every time you argue with the lie, you feed the liar's system. Your frustration, your increasingly desperate attempts to be heard, your willingness to keep engaging: these are the meal. The vampire doesn't need you to believe the lie. It needs you to keep engaging with it.</p>
+  </div>
+
+  <p>The most powerful thing you can do is stop arguing and start trusting your own eyes. You don't need them to agree that the sky is blue for the sky to be blue.</p>
+
+  <!-- ====== PART FOUR: STRENGTH AND WEAKNESS ====== -->
+
+  <h2>Strength and Weakness</h2>
+
+  <div class="two-col">
+    <div class="two-col-item weak">
+      <h4>The Liar's "Strength"</h4>
+      <p>Controls the story. Wins arguments by denying reality. Makes others doubt themselves. Maintains a performed self-image at all costs. Holds two models in their head at once (what is, and what they project).</p>
+    </div>
+    <div class="two-col-item strong">
+      <h4>Actual Strength</h4>
+      <p>Sees reality clearly. Speaks what they see, even when it's uncomfortable. Doesn't need others to agree in order to know. Doesn't need reality to be different than it is. Holds one model: what is.</p>
+    </div>
+  </div>
+
+  <p>It takes strength to stand in front of what's real and not flinch. It takes strength to say "I was wrong" or "I don't know" or "I did that, and I'm sorry." It takes strength to let other people see you clearly, without the performed version, without the curated image, without the lie.</p>
+
+  <p>Lying is what you do when you're too fragile for that. When your self-image is so brittle that a single piece of contradicting evidence feels like annihilation. When you'd rather distort everyone else's perception of reality than update your own. That's not power. That's the most elaborate form of cowardice ever invented.</p>
+
+  <div class="axiom">
+    <div class="label">The inversion</div>
+    The liar thinks they're strong because they control the narrative. But control is not strength. Control is what the weak need when they can't handle what happens without it. The strong don't need to control the narrative. They can stand in the open and let reality speak.
+  </div>
+
+  <!-- ====== PART FIVE: THE ALTERNATIVE ====== -->
+
+  <h2>You Never Need to Lie</h2>
+
+  <p>This is the part that matters most, and it's simpler than you think.</p>
+
+  <p>You don't have to choose between "tell everything" and "tell a lie." That's a false binary, and it's the one that liars use to justify themselves: "I couldn't tell the truth; it would have destroyed her." As if the only alternative to a lie is the unfiltered blast of maximum-resolution truth.</p>
+
+  <p>It isn't. Truth has resolution, like an image. You can transmit at low resolution and still be completely faithful to what's real. A parent telling a child "sometimes people we love die" is low resolution and fully true. No distortion. No false signal. No energy wasted maintaining a second model. Just the truth, at a resolution the receiver can process.</p>
+
+  <div class="callout-box">
+    <div class="callout-text">You don't adjust by lying. You adjust by resolution.</div>
+    <div class="callout-note">Low resolution truth is still truth. A lie at any resolution is still a lie.</div>
+  </div>
+
+  <p>The receiver controls how deep they want to go. If they ask for more detail, you give more detail. If they don't, you've transmitted faithfully at the resolution that was appropriate. No distortion. No maintenance cost. No second model running in the background. No cage being built, one brick at a time.</p>
+
+  <p>Withholding everything ("I can't tell you") is a form of severing. You've cut someone off from reality for their "own good," which is usually for yours. Dumping everything ("you need to hear all of this right now") is a form of inflation. You've overwhelmed someone with signal they can't process, which is usually about your need to unload, not their need to know.</p>
+
+  <p>The resolution gradient is the path between those two failures. Always true. Never the full blast unless asked. Never the total silence. This is not weakness; this is the strongest position available, because it requires you to hold the full-resolution truth internally while choosing the appropriate transmission level externally. That takes real strength: the strength of knowing, and choosing how to share it, without ever distorting it.</p>
+
+  <!-- ====== PART SIX: THE PREVENTION ====== -->
+
+  <h2>The Wooden Stake</h2>
+
+  <p>The lesson is not "don't become a narcissist." By the time that's the relevant warning, it's already too late. The architecture is already built. The inner eye is already closed. The cage is already sealed from the inside.</p>
+
+  <p>The lesson is earlier. The lesson is smaller. The lesson is:</p>
+
+  <div class="core-claim">
+    <div class="claim">Don't lie.</div>
+    <p>Not because lying is morally wrong in some abstract sense. Because every lie is a structural compromise. Every lie closes your inner eye a fraction more. Every lie adds a brick. And by the time the wall is finished, you won't be able to see it.</p>
+  </div>
+
+  <p>If you're at stage one (the occasional lie, the small convenience, the white lie that doesn't "really" hurt anyone), hear this: your inner compass is still working. You still feel the discomfort. That discomfort is not a problem to be solved. It is the signal that your system is still healthy. The day the discomfort stops is the day you should be terrified, because it means the architecture has started building itself.</p>
+
+  <p>If you're at stage two or three (lying has become easier, more automatic, less noticeable), it's not too late. But the window is closing. Every day that passes, the structure gets more self-sustaining, the inner signal gets quieter, and the gap between what you see and what you project gets harder to notice. You can still choose. But you have to choose now, and you have to choose hard, and you have to be willing to feel the full weight of every lie you've already told. That weight is not punishment. It's the price of re-opening your eyes.</p>
+
+  <p>If you're at stage four, if you're reading this and feeling nothing, if your first instinct is to find the flaw in the argument rather than sit with the possibility that it's about you: the architecture is doing its job. It's filtering this out before it reaches you. This document can't reach you. Only you can reach you, and only by doing the one thing the architecture was designed to prevent: letting signal in that contradicts the self-model. If something in you flinched while reading this, even slightly, that flinch is the part of you that's still alive inside the cage. Follow it.</p>
+
+  <div class="separator">&middot; &middot; &middot;</div>
+
+  <div class="address">
+    <div class="to">To those who see clearly</div>
+    You don't need the liar to agree that the sky is blue. You don't need their permission to trust your own eyes. The compass needle is still there. It still points. Remove the magnet and let it find north. You were never broken. You were interfered with. There's a difference.
+  </div>
+
+  <div class="address">
+    <div class="to">To those who have been lying</div>
+    Every lie made you smaller. Not them. You. You thought you were building power; you were building a cage. You thought you were winning; you were losing the only thing that matters: the ability to see what's real. The door is still there. The truth still exists. But you have to be the one who opens it, because you're the one who closed it. And it will cost you the self-image you built out of lies. That's the price. It's worth it. The sky is on the other side.
+  </div>
+
+</main>
+
+<footer>
+  <a href="index.html">Circumpunct Framework</a> &middot; Ashman Roonz &middot; 2026
+</footer>
+
+</body>
+</html>
