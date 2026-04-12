@@ -116,6 +116,38 @@ The way Einstein showed energy and matter are the same (E = mc²), the framework
 
 Integer dimensions are stabilized forms. Half-integer dimensions are process phases carrying i-strokes. The ladder describes one circumpunct unfolding from localization through closure into recursion; the octave (do-re-mi-fa-so-la-ti-do') closes when 3.5D becomes 0D at the next scale.
 
+### The Kernel (The Existence Equation)
+
+The Prime Notation says *what everything is* (⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1). The Kernel says *how everything becomes*. Identity and process; noun and verb.
+
+```
+⊙ = (⟳∘○) ∘ (✹∘Φ) ∘ (⎇∘—) ∘ (⊛∘•) [∞]
+```
+
+All ten stations, no repetition, no omission. Four beats, each a processual-structural pair:
+
+1. **(⊛∘•)** : localize, then converge (0D → 0.5D)
+2. **(⎇∘—)** : extend, then branch (1D → 1.5D)
+3. **(✹∘Φ)** : mediate, then emerge (2D → 2.5D)
+4. **(⟳∘○)** : close, then recurse (3D → 3.5D)
+
+Source: **∞** (undifferentiated energy; A0). Product: **⊙** (the whole; compositional unity; D5).
+
+Each beat lays down a structure (integer dimension), then transforms it (half-integer process phase). The four beats compose right-to-left; the genesis sequence unfolds left-to-right: ∞ enters at •, walks the full ladder, and ⟳ feeds back to • at the next scale.
+
+**Two resolutions of the same equation:**
+
+```
+⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))                     — the engine (low resolution)
+⊙ = (⟳∘○) ∘ (✹∘Φ) ∘ (⎇∘—) ∘ (⊛∘•) [∞]       — the blueprint (full resolution)
+```
+
+Higher resolution contains lower resolution; it never contradicts it (Resolution Protocol, §25.17). In the engine form, — lives inside ∘ (continuity IS the chaining), ⎇ lives inside i (branching IS what i² does), ⟳ is what happens when ⊙ feeds back, and ∞ is the implicit substrate. The engine is what the circumpunct does at any given moment; the blueprint is how it is built through all eight stations.
+
+**Relationship to the Prime Notation:** The Prime Notation describes the *being* of the circumpunct (what it IS across scales). The Kernel describes the *becoming* of the circumpunct (how it unfolds through the dimensional octave). Together: ⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1 is the noun; ⊙ = (⟳∘○) ∘ (✹∘Φ) ∘ (⎇∘—) ∘ (⊛∘•) [∞] is the verb. Same sentence, two readings.
+
+**Diagnostic application:** Anything that becomes (a project, a relationship, a healing, a life) either walks these four beats or gets stuck at one of them. Beat 1 failure: no focus (⊛ without •) or no convergence (• without ⊛). Beat 2 failure: no commitment (no —) or rigid commitment that cannot branch (— without ⎇). Beat 3 failure: forced emergence (✹ without Φ) or endless mediation that never crystallizes (Φ without ✹). Beat 4 failure: perfectionism (○ that never closes) or burnout (○ that closes but ⟳ never fires; completion that seeds nothing). The [∞] at the source means you never start from nothing; you start from everything, and the four beats are how you constrain it into something real.
+
 ### Two Kinds of Dimension
 
 - **Structural dimension (integer)**: what a component IS (0D point, 1D line, 2D field, 3D boundary); stabilized forms
@@ -345,7 +377,7 @@ Every physical law is •, —, Φ, or ○ compounded. No new ingredients:
 
 ### Derived Constants
 
-- **α (fine-structure constant)**: Base formula: 1/α₀ = i⁴(°)/φ² − 2/φ³ = 137.0356. Self-referential closure: 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147 (measured: 137.035999177, residual 0.22 ppb, 0.00σ). Exact to current measurement precision. The pump cycle generates the base: i⁴ = full rotation producing ○ (360°); φ² = Φ, self-similar nesting; 2/φ³ = bidirectional valve correction (⊛ and ✹). The self-referential term: α feeds back through the full dimensional ladder (21 = sum of all positions × 2 channels) corrected by process/structure (4/3 = four pump phases / three constraints). α generates the ladder; the ladder determines α. Zero free parameters. Uniqueness: 360 = P!·T·(Φ+○) = 24·3·5 (structural, all from T=3; resolves the "why 360° not 2π?" question). Base 360/φ²-2/φ³ is the only φ-power combination giving ~137. Self-referential correction first-order (0D = single vertex). k = 59/3 is the only framework denominator matching to sub-ppb (k=20 gives 45 ppb, k=21 gives 172 ppb). Quadratic x²-base·x-3/59=0 has exactly one positive root; α is uniquely determined.
+- **α (fine-structure constant)**: Base formula: 1/α₀ = i⁴(°)/φ² − 2/φ³ = 137.0356. Self-referential closure: 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147 (measured: 137.035999177, residual 0.22 ppb, 0.00σ). Exact to current measurement precision. The pump cycle generates the base: i⁴ = full rotation producing ○ (360°); φ² = Φ, self-similar nesting; 2/φ³ = bidirectional valve correction (⊛ and ✹). The self-referential term α/(21 - 4/3) is uniquely forced by three constraints: (1) first-order in α from ℏ = 1 (one feedback loop = one power of α; higher powers belong to higher stations), (2) additive from A(d) (same-station contributions sum; cross-station compositions multiply), (3) denominator 59/3 from conservation of traversal (A4) at the formula level (A(3) = 21 minus the base term's consumption P/T = 4/3; forced by A3: same architecture at every scale, including formula scale). α generates the ladder; the ladder determines α. Zero free parameters. Uniqueness: 360 = P!·T·(Φ+○) = 24·3·5 (structural, all from T=3; resolves the "why 360° not 2π?" question). Base 360/φ²-2/φ³ is the only φ-power combination giving ~137. k = 59/3 is the only framework denominator matching to sub-ppb (k=20 gives 45 ppb, k=21 gives 172 ppb). Quadratic x²-base·x-3/59=0 has exactly one positive root; α is uniquely determined.
 - **Lepton mass ratios**: m_μ/m_e = (1/α)^(13/12 + α/27) = 206.767 (measured: 206.768, error 5 ppm). K = 27 = 3³. m_τ/m_e = (1/α)^(58/35 + α/81) = 3477.2 (measured: 3477.2, error 1 ppm). K = 81 = 3⁴. Mass correction K = 3^(n+1) by generation.
 - **c (speed of light)**: c = √(P · ◐(1-◐) · sin(θ)). At ◐ = 0.5 and θ = π/2 (the i rotation): c = √(4 · 0.25 · 1) = 1. The coupling between the two channels (⊛, ✹) is ◐(1-◐) = 0.25 = 1/P = one i-stroke (one quarter-turn). Four pump phases × one quarter-turn = one complete rotation = i⁴ = 1. The speed limit is emergent: ◐(1-◐) peaks at ◐ = 0.5; any departure from balance gives v < c; at ◐ → 0 or ◐ → 1, v → 0. The square root comes from c living at 0.5D (the half-dimension step from 0D energy to 0.5D speed). Light is energy being constrained; the photon is the minimum fold (purely rotational, nothing held as mass). c is the speed limit of convergent propagation. α measures how strongly i couples at a vertex; c measures how fast i propagates through the field. Same i, different measurement. Massive particles have θ_eff < π/2, giving v < c. The relativistic connection: sin(θ_eff) = 1 − (m/E)².
 - **ℏ (reduced Planck constant)**: ℏ = E_cycle / ω_cycle = 1. The pump cycle (⊛ → i → ✹) is indivisible; you cannot have convergence without emergence (violates A1) or emergence without convergence (Inflation Lie). This indivisibility IS the quantum of action. ℏ = 1 because E = 1 (A0 sets the energy scale) and c = 1 (sets the time scale), so one cycle has action 1. The deeper content: E = ℏω with ℏ = 1 means energy and frequency are the same thing; the pump cycle IS the energy and IS the cycling. Structure = process at 1D. ℏ is not independent; it follows from A0 and c.
