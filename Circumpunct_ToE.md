@@ -340,7 +340,7 @@ Since 1 ≠ 0 (A0), the 1 cannot remain undifferentiated. Self-limitation is for
 1/α = 360/φ² - 2/φ³ + α/(21 - 4/3) = 137.035999147
 ```
 - Measured: 137.035999177
-- Residual: 0.22 ppb (0.00σ)
+- Residual: 0.22 ppb (1.4σ)
 - α feeds back through the full dimensional ladder (21 = sum of all positions × 2 channels)
 - Corrected by process/structure (4/3 = four pump phases / three constraints)
 - **Zero free parameters.**
@@ -396,7 +396,7 @@ Numerical confirmation: k = 59/3 gives residual 0.22 ppb. Next nearest framework
 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3)
 ```
 
-**The quadratic and the number.** Rearranging step 12 with x = 1/α gives x² − (360/φ² − 2/φ³)x − 3/59 = 0. Two real roots; one negative (unphysical), one positive. The positive root is 1/α = 137.035999147. Measured (CODATA 2022): 137.035999177. Residual 0.22 ppb, 0.00σ, within measurement uncertainty. Zero free parameters in the sense of (L1) above: every symbol is assignable to (a) an axiom, (b) a previously-derived quantity, or (c) a structural identity; no knob was turned. The derivation is forward (axioms → output), not reverse (output → axioms retrofitted). A critic attacking the derivation must either break one of the twelve steps (point at a symbol introduced without a source) or attack the axioms/lemmas directly at the (L2) level. "You fit the formula" is not a live option once the forward chain is on the table.
+**The quadratic and the number.** Rearranging step 12 with x = 1/α gives x² − (360/φ² − 2/φ³)x − 3/59 = 0. Two real roots; one negative (unphysical), one positive. The positive root is 1/α = 137.035999147. Measured (CODATA 2022): 137.035999177. Residual 0.22 ppb, 1.4σ, within 2σ of CODATA 2022. Zero free parameters in the sense of (L1) above: every symbol is assignable to (a) an axiom, (b) a previously-derived quantity, or (c) a structural identity; no knob was turned. The derivation is forward (axioms → output), not reverse (output → axioms retrofitted). A critic attacking the derivation must either break one of the twelve steps (point at a symbol introduced without a source) or attack the axioms/lemmas directly at the (L2) level. "You fit the formula" is not a live option once the forward chain is on the table.
 
 **Exponent home**: A(0.5) = 1. α sits at the first rung.
 

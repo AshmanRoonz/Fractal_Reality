@@ -3312,7 +3312,7 @@ The infinite depth of the aperture chamber contributes at each level:
     ║                                                                   ║
     ║   SELF-REFERENTIAL CLOSURE:                                      ║
     ║   1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147           ║
-    ║   (0.22 ppb from CODATA; 0.00σ; ZERO FREE PARAMETERS)           ║
+    ║   (0.22 ppb from CODATA; 1.4σ; ZERO FREE PARAMETERS)            ║
     ║                                                                   ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
@@ -3345,7 +3345,7 @@ SELF-REFERENTIAL CLOSURE:
     Closure:    1/α = 360/φ² − 2/φ³ + α/(21 − 4/3)
     Predicted:  137.035999147
     Measured:   137.035999177
-    Residual:   0.22 ppb (0.00σ). Exact to measurement precision.
+    Residual:   0.22 ppb (1.4σ). Within 2σ of CODATA 2022.
     21 = sum of all dimensional positions × 2 channels (the G exponent)
     4/3 = four pump phases / three constraints = process / structure
     α feeds back into its own definition through the full dimensional ladder.

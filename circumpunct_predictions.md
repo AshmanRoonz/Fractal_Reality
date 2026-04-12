@@ -48,7 +48,7 @@ The formula is a quadratic: x² - (360/φ² - 2/φ³)x - 3/59 = 0. The positive 
 
     Predicted:  1/α = 137.035999147
     Measured:   1/α = 137.035999177  (CODATA 2022)
-    Residual:   0.22 ppb  (0.00σ)
+    Residual:   0.22 ppb  (1.4σ)
 
 α generates the dimensional ladder; the ladder determines α. Zero free parameters.
 

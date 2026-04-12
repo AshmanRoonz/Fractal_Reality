@@ -121,7 +121,7 @@ Since 1 ≠ 0 (A0), the 1 cannot remain undifferentiated. Self-limitation is for
 1/α = 360/φ² - 2/φ³ + α/(21 - 4/3) = 137.035999147
 ```
 - Measured: 137.035999177
-- Residual: 0.22 ppb (0.00σ)
+- Residual: 0.22 ppb (1.4σ)
 - α feeds back through the full dimensional ladder (21 = sum of all positions × 2 channels)
 - Corrected by process/structure (4/3 = four pump phases / three constraints)
 - **Zero free parameters.**

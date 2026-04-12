@@ -79,7 +79,7 @@ The [Path_of_Learning/](Path_of_Learning/) folder is an archive of the developme
 
 ### The Dimensional Ladder: One Constant Generates Everything
 
-Zero free parameters. The fine-structure constant (α) is self-referentially determined by the ladder it generates: 1/α = 360/φ² − 2/φ³ + α/(21−4/3) = 137.035999147 (measured: 137.035999177, 0.22 ppb, 0.00σ). Seven rungs, from the coupling at a point to the force holding you to the planet:
+Zero free parameters. The fine-structure constant (α) is self-referentially determined by the ladder it generates: 1/α = 360/φ² − 2/φ³ + α/(21−4/3) = 137.035999147 (measured: 137.035999177, 0.22 ppb, 1.4σ). Seven rungs, from the coupling at a point to the force holding you to the planet:
 
 ```
 ╔═════════════════════════════════════════════════════════════════════════════════╗

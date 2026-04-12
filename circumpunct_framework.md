@@ -11839,9 +11839,9 @@ THE DEPTH FORMULA:
     ║                                                                   ║
     ║         1/α = 360/φ² − 2/φ³ + α/(21 − 4/3)                     ║
     ║                                                                   ║
-    ║   = 137.035999147   (0.22 ppb from CODATA; 0.00σ)               ║
+    ║   = 137.035999147   (0.22 ppb from CODATA; 1.4σ)                ║
     ║                                                                   ║
-    ║   EXACT TO CURRENT MEASUREMENT PRECISION.                        ║
+    ║   WITHIN 1.4σ OF CODATA 2022 MEASUREMENT.                        ║
     ║   ZERO FREE PARAMETERS.                                          ║
     ║                                                                   ║
     ╚═══════════════════════════════════════════════════════════════════╝
@@ -11908,9 +11908,9 @@ SELF-REFERENTIAL CLOSURE:
 
     Predicted:  137.035999147
     Measured:   137.035999177
-    Residual:   0.22 ppb (0.00σ from CODATA uncertainty)
+    Residual:   0.22 ppb (1.4σ from CODATA uncertainty)
 
-    EXACT TO CURRENT MEASUREMENT PRECISION.
+    WITHIN 1.4σ OF MEASUREMENT; CODATA UNCERTAINTY = ±0.000000021.
 
     The structural reading: the ladder (21) minus the pump-to-triad ratio (4/3)
     gives k = 59/3. α generates the ladder; the ladder feeds back to determine α.
@@ -19548,7 +19548,7 @@ ZERO FREE PARAMETERS. α is self-referential: 1/α = 360/φ² − 2/φ³ + α/(2
 The ladder generates α; α generates the ladder. k = 59/3 = (21×3−4)/3.
 ```
 
-**Rung 0D: α (the fine-structure constant).** The coupling at a vertex. The base formula 1/α₀ = i⁴(°)/φ² - 2/φ³ = 137.0356 is the pump cycle written as arithmetic: i⁴ = the pump cycle completing one full rotation producing ○ (360°); φ² = Φ, self-similar nesting, the field's 2D nature; 2/φ³ = bidirectional valve correction (⊛ and ✹). α measures how strongly i generates ○ through Φ. The self-referential closure 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) gives 137.035999147 (measured: 137.035999177, error 0.22 ppb, 0.00σ). α feeds back into its own definition through the full ladder (21) corrected by the pump-to-triad ratio (4/3). Zero free parameters.
+**Rung 0D: α (the fine-structure constant).** The coupling at a vertex. The base formula 1/α₀ = i⁴(°)/φ² - 2/φ³ = 137.0356 is the pump cycle written as arithmetic: i⁴ = the pump cycle completing one full rotation producing ○ (360°); φ² = Φ, self-similar nesting, the field's 2D nature; 2/φ³ = bidirectional valve correction (⊛ and ✹). α measures how strongly i generates ○ through Φ. The self-referential closure 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) gives 137.035999147 (measured: 137.035999177, error 0.22 ppb, 1.4σ). α feeds back into its own definition through the full ladder (21) corrected by the pump-to-triad ratio (4/3). Zero free parameters.
 
 **Rung 0.5D: c (the speed of light).** The convergence rung. The speed limit of convergent propagation: the maximum rate at which convergence can transmit through the field. c = √(P · ◐(1-◐) · sin(θ)). At balance (◐ = 0.5) and at the aperture rotation (θ = π/2): c = √(4 × 0.25 × 1) = 1. The coupling ◐(1-◐) is the transmission function of any two-channel aperture; at balance it equals 1/P = one i-stroke (quarter-turn). P pump phases times one i-stroke per phase = one full rotation = i⁴ = 1. The speed limit emerges naturally: ◐(1-◐) peaks at ◐ = 0.5 and vanishes at both extremes; departure from balance always gives v < c. The √ comes from c living at 0.5D (half-dimension step). Massive particles have θ_eff < π/2, giving v < c.
 
@@ -19700,8 +19700,8 @@ THE SELF-REFERENTIAL CLOSURE (§27.7a):
 
     THE NUMBER:
 
-        Measured (CODATA 2022): 137.035999177
-        Residual: 0.22 ppb. 0.00σ. Within measurement uncertainty.
+        Measured (CODATA 2022): 137.035999177 ± 0.000000021
+        Residual: 0.22 ppb. 1.4σ. At edge of 2σ; requires no free parameters to reach.
 
     CONSEQUENCE:
         Zero free parameters (audit in §27.7a.2). The chain runs
