@@ -19459,6 +19459,87 @@ RESOLVED: Why 360° (degree measure) rather than 2π (radians)?
     lives at the pump cycle level (coupling at a vertex = one
     full i⁴ rotation through the field).
 
+THE NUMBER-TYPE PRINCIPLE (§27.5a):
+
+    The dimensional station determines the number type of the
+    constant that lives there. This is not a convention; it is
+    forced by the information-type correspondence (§3.3) combined
+    with the dimensional structure.
+
+    §3.3 establishes: • (0D) = binary/discrete; Φ (2D) =
+    analog/continuous; ○ (3D) = fractal (discrete ⊗ analog).
+    The number type at each station inherits from this:
+
+    ╔══════╦═══════════════╦════════════════╦══════════════════╗
+    ║  DIM ║  INFO TYPE    ║  NUMBER TYPE   ║  CONSTANT        ║
+    ╠══════╬═══════════════╬════════════════╬══════════════════╣
+    ║  0D  ║  Discrete (•) ║  Integer       ║  360 (rotation)  ║
+    ║  0.5 ║  Process      ║  Algebraic     ║  c = 1           ║
+    ║  1D  ║  Extension    ║  Integer       ║  ℏ = 1 (cycle)   ║
+    ║  1.5 ║  Process      ║  Algebraic     ║  13/12, 58/35    ║
+    ║  2D  ║  Continuous(Φ)║  Transcendental║  π (closure cost) ║
+    ║  2.5 ║  Process      ║  Algebraic     ║  56/39           ║
+    ║  3D  ║  Fractal (○)  ║  Both          ║  G (int × trans) ║
+    ╚══════╩═══════════════╩════════════════╩══════════════════╝
+
+    Integer stations (0D, 1D) produce integer-valued base terms
+    because discreteness cannot generate transcendence; the
+    information at a point or a line is countable (binary choices,
+    ordered steps). One full rotation at 0D is counted as 360
+    (an integer, the pump cycle's combinatorial content) because
+    0D has no access to continuous measure; it sees the rotation
+    as P! orderings of T constraints through (Φ+○) output
+    dimensions.
+
+    The 2D station produces π because π IS the cost of closure
+    around a center (the field measuring itself; see §27.7l).
+    Closure in 2D is inherently transcendental: the circle's
+    circumference is incommensurable with its diameter. This is
+    not a human discovery; it is a structural fact about what
+    2D mediation does. The irrationality of π IS the genuine
+    curvature of the field.
+
+    The 3D station produces G, which compounds integer structure
+    (exponent 21, correction 91) with transcendental structure
+    (φ²/2), because the boundary is fractal: discrete ⊗ analog,
+    the nesting of countable gates in a continuous field.
+
+    2π vs 360: the same rotation, measured by two different
+    stations. At 2D, one rotation = 2π (continuous). At 0D, the
+    same rotation = 360 (discrete). The relationship 360/2π ≈
+    57.296 is NOT the definition of degrees; it is the conversion
+    factor between the 0D and 2D measures of the same cycle.
+    Humans adopted 360 for practical reasons (many divisors), but
+    the framework says the practical reasons ARE the structural
+    reasons: 360 has 24 divisors because P! = 24 permutations
+    generate the divisor structure.
+
+    WHY 360 AND NOT ANOTHER FRAMEWORK INTEGER. Given that the
+    base term is an integer divided by φ² (an integer at 0D
+    divided by the field's self-similar nesting at 2D), the
+    integer must be one full rotation, because α is a coupling
+    constant (coupling per complete vertex interaction = one full
+    pump cycle). A partial rotation would describe a partial
+    coupling (a fragment of the vertex), which is not what α
+    measures. One full rotation at 0D, counted discretely, is
+    P! · T · (Φ+○) = 360. Each factor is independently forced:
+    P! = permutations of the cycle (the cycle's combinatorial
+    content), T = the structural constraint count (what the cycle
+    traverses), (Φ+○) = the output dimensions (what the cycle
+    produces). No other product of framework integers gives a
+    full rotation, because no other product IS a full rotation;
+    360 is the unique factorization of i⁴ in pump-cycle units.
+
+    FALSIFICATION. (1) Show that a non-integer base term at 0D
+    produces a valid coupling (this would break the number-type
+    principle). (2) Show that a different integer N, with N/φ²
+    - 2/φ³ ≈ 137, exists among framework composites (exhaustive
+    search has found none; the nearest are 312/φ² - 2/φ³ ≈ 119.2
+    and 384/φ² - 2/φ³ ≈ 146.3, neither close). (3) Show that
+    one full rotation can be counted as a different framework
+    integer than P! · T · (Φ+○) without double-counting or
+    omitting a factor.
+
 WHAT REMAINS OPEN:
     - Exact self-consistent equation for α (partial: quadratic
       1/α = 360/φ² - 2/φ³ + α/(21 - 4/3) has one positive root;
