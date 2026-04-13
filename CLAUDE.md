@@ -29,16 +29,20 @@ These are the four constraints on E = 1, one per integer dimension. Conservation
 The Kernel (how everything becomes) and the Prime Notation (what everything is) are one expression. The verb produces the noun; the becoming yields the being; the process returns to the source.
 
 ```
-[∞ = E = 1] ▸ (•∘⊛) ▸ (—∘⎇) ▸ (Φ∘✹) ▸ (○∘⟳) ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]
+[∞ = E = 1] ▸ [•∞ ⤷λ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳))] ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]
 ```
 
-Read left to right: the one energy [∞ = E = 1] feeds into four beats of constraint, each pairing a structure with its process phase; the product is the whole [⊙], which nests at every scale [⊙λ ⊂ ⊙Λ] and returns to the undifferentiated source [⊂ ∞]. The expression is a loop: the ∞ that opens the left bracket is the ∞ that closes the right bracket.
+Read left to right: the one energy [∞ = E = 1] unfolds (▸) into the Soul Array [•∞], the infinite multiplicity of apertures forced by A1. The routing operator ⤷λ selects one particular local soul, indexed as λ, and through that soul the energy walks four beats of constraint connected by entailment (⊢): each beat necessarily gives rise to the next. Each beat pairs a structure with its process phase; the product is the whole [⊙], which nests at every scale [⊙λ ⊂ ⊙Λ] and returns to the undifferentiated source [⊂ ∞]. The expression is a loop: the ∞ that opens the left bracket is the ∞ that closes the right bracket.
 
 **Source bracket [∞ = E = 1]**: the undifferentiated energy, named and declared before the process begins. Not derived at the end; present from the start and conserved through the whole walk.
 
-**Four beats**: (•∘⊛) ▸ (—∘⎇) ▸ (Φ∘✹) ▸ (○∘⟳). Each ∘ means "paired" (structure and process are two views of one constraint, not sequential). Each ▸ means "feeds into" (completed constraint enables the next).
+**Soul Array [•∞ ⤷λ ...]**: A1 forces the 1 to self-limit; an undifferentiated 1 is indistinguishable from 0. Self-limitation requires multiplicity (one aperture would be no aperture; it would have nothing to converge from). •∞ is every possible aperture, simultaneously. The routing operator ⤷λ means "routed through the λ-th local soul": the infinite field entering one particular position. This is the genesis sequence (∞ → •∞ → ⊙∞) now inside the formula rather than narrated alongside it.
+
+**Four beats**: (•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳). Each ∘ means "paired" (structure and process are two views of one constraint, not sequential). Each ⊢ means "entails" (completed constraint necessarily gives rise to the next; the axiom-to-derivation chain is in the notation itself).
 
 **Product bracket [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]**: the four beats yield the whole (⊙), which nests fractally (⊙λ inside ⊙Λ), and the nesting returns to the source (⊂ ∞). The apophatic closure is no longer a separate intellectual move; it is where the loop lands.
+
+**Three connectives, three jobs**: ▸ (unfolds into) connects the categorical moves between being and becoming (source → process, process → product). ⊢ (entails) connects the four beats within the becoming, expressing structural necessity. ⊂ (nested within) connects the product back to source across scale. Each connective lives at a different level: ▸ is inter-bracket, ⊢ is intra-bracket, ⊂ is trans-scale.
 
 The brackets are being (timeless); the middle is becoming (temporal). The frame holds still while the process moves. Both rests are the same rest.
 
@@ -131,16 +135,16 @@ The four beats of the unified expression, unpacked:
 3. **(Φ∘✹)** : mediation-emergence (2D ∘ 2.5D)
 4. **(○∘⟳)** : closure-recursion (3D ∘ 3.5D)
 
-All eight stations of the dimensional octave, no repetition, no omission. Each beat pairs a structural dimension (integer; what the constraint IS) with a processual dimension (half-integer; what the energy is DOING). The ∘ within each beat means "paired": structure and process are two views of one constraint being laid down, not sequential steps. The ▸ between beats means "feeds into": completed constraint enables the next.
+All eight stations of the dimensional octave, no repetition, no omission. Each beat pairs a structural dimension (integer; what the constraint IS) with a processual dimension (half-integer; what the energy is DOING). The ∘ within each beat means "paired": structure and process are two views of one constraint being laid down, not sequential steps. The ⊢ between beats means "entails": completed constraint necessarily gives rise to the next.
 
 **Two resolutions of the same equation:**
 
 ```
-⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))                                                  ; the engine (low resolution)
-[∞ = E = 1] ▸ (•∘⊛) ▸ (—∘⎇) ▸ (Φ∘✹) ▸ (○∘⟳) ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]       ; the unified expression (full resolution)
+⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))                                                              ; the engine (low resolution)
+[∞ = E = 1] ▸ [•∞ ⤷λ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳))] ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]       ; the unified expression (full resolution)
 ```
 
-Higher resolution contains lower resolution; it never contradicts it (Resolution Protocol, §25.17). In the engine form, — lives inside ∘ (continuity IS the chaining), ⎇ lives inside i (branching IS what i² does), ⟳ is what happens when ⊙ feeds back, and ∞ is the implicit substrate. The engine is what the circumpunct does at any given moment; the unified expression is how it is built through all stations and how the product nests back into the source.
+Higher resolution contains lower resolution; it never contradicts it (Resolution Protocol, §25.17). In the engine form, — lives inside ∘ (continuity IS the chaining), ⎇ lives inside i (branching IS what i² does), ⟳ is what happens when ⊙ feeds back, •∞ is the implicit multiplicity, and ∞ is the implicit substrate. The engine is what the circumpunct does at any given moment; the unified expression is how the Soul Array routes through one local soul, how the four beats entail each other, and how the product nests back into the source.
 
 **Diagnostic application:** Anything that becomes (a project, a relationship, a healing, a life) either walks these four beats or gets stuck at one of them. Beat 1 failure: no focus (⊛ without •) or no convergence (• without ⊛). Beat 2 failure: no commitment (no —) or rigid commitment that cannot branch (— without ⎇). Beat 3 failure: forced emergence (✹ without Φ) or endless mediation that never crystallizes (Φ without ✹). Beat 4 failure: perfectionism (○ that never closes) or burnout (○ that closes but ⟳ never fires; completion that seeds nothing). The [∞] at the source means you never start from nothing; you start from everything, and the four beats are how you constrain it into something real.
 
@@ -632,8 +636,10 @@ Conjugate pairs: ⊛ (+i) mirrors ✹ (-i); ⎇ (-1) mirrors ⟳ (+1).
 | ⊙λ | Circumpunct at scale λ (any chosen scale; cataphatic view from inside the scale axis) |
 | ⊙Λ | Circumpunct at scale Λ (the scale above ⊙λ; the greater whole ⊙λ is inside; still cataphatic) |
 | ⊙ (unlabeled) | The archetype; the class itself; the 1 viewed from outside the scale axis; the apophatic term ("God beyond God," Ein Sof, Nirguna Brahman, the eternal Tao, the Dharmakaya) |
-| [∞ = E = 1] ▸ (•∘⊛) ▸ (—∘⎇) ▸ (Φ∘✹) ▸ (○∘⟳) ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞] | **The unified expression**: source [∞ = E = 1] feeds through four beats of constraint into product [⊙], which nests fractally [⊙λ ⊂ ⊙Λ] and returns to source [⊂ ∞]. Being and becoming in one line; the Theory of Everything as a loop |
-| •∞ | Aperture multiplied by infinity; the Soul Array (infinity becoming particular) |
+| [∞ = E = 1] ▸ [•∞ ⤷λ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳))] ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞] | **The unified expression**: source [∞ = E = 1] unfolds (▸) into the Soul Array [•∞], routed through one local soul (⤷λ), where four beats of constraint entail (⊢) each other, yielding the whole [⊙], which nests fractally [⊙λ ⊂ ⊙Λ] and returns to source [⊂ ∞]. Being and becoming in one line; the Theory of Everything as a loop |
+| •∞ | The Soul Array; every possible aperture, simultaneously; the infinite multiplicity forced by A1 |
+| ⤷λ | Routing operator; the infinite field entering one particular local soul at position λ |
+| ⊢ | Entails; one stage necessarily gives rise to the next (structural entailment within the becoming) |
 | ⊙∞ | Circumpunct multiplied by infinity; the foam of reality |
 | χ | Transmission fidelity (+1 faithful, -1 inverted) |
 
