@@ -2775,50 +2775,45 @@ Dimensions are not containers. They are snapshots of the field's phase state. Wh
 
 3D is convergence and emergence nested fractally; the full pump cycle recursing at every scale within the boundary. This is what makes matter dense and persistent; it is not one pump, it is pumps all the way down.
 
-### §4.9a The Kernel: The Existence Equation
+### §4.9a The Unified Expression
 
-The Prime Notation (§2.8, above) says *what everything is*: ⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1. The Kernel says *how everything becomes*. Identity and process; noun and verb. The two prime expressions of the framework.
+The Kernel (how everything becomes) and the Prime Notation (what everything is) are one expression. The verb produces the noun; the becoming yields the being; the process returns to the source.
 
 ```
-THE KERNEL
+THE UNIFIED EXPRESSION
 
-    ⊙ = (⟳∘○) ∘ (✹∘Φ) ∘ (⎇∘—) ∘ (⊛∘•) [∞]
+    [∞ = E = 1] ▸ (•∘⊛) ▸ (—∘⎇) ▸ (Φ∘✹) ▸ (○∘⟳) ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]
 
-    All ten stations. No repetition. No omission.
-    Four beats, each a processual-structural pair:
+    Read left to right. The one energy feeds through four beats of constraint;
+    the product nests fractally and returns to the source. The expression is a loop.
 
-    Beat 1:  (⊛∘•)   localize, then converge     0D  → 0.5D
-    Beat 2:  (⎇∘—)   extend, then branch          1D  → 1.5D
-    Beat 3:  (✹∘Φ)   mediate, then emerge          2D  → 2.5D
-    Beat 4:  (⟳∘○)   close, then recurse           3D  → 3.5D
+    Source bracket:   [∞ = E = 1]    the undifferentiated energy, named
+    Beat 1:           (•∘⊛)          localization-convergence       0D ∘ 0.5D
+    Beat 2:           (—∘⎇)          extension-branching            1D ∘ 1.5D
+    Beat 3:           (Φ∘✹)          mediation-emergence            2D ∘ 2.5D
+    Beat 4:           (○∘⟳)          closure-recursion              3D ∘ 3.5D
+    Product bracket:  [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]   the whole, nesting, returning
 
-    Source: ∞  (undifferentiated energy; A0)
-    Product: ⊙ (the whole; compositional unity; D5)
+    ∘  means "paired" (two views of one constraint, not sequential)
+    ▸  means "feeds into" (completed constraint enables the next)
 ```
 
-Each beat lays down a structure (integer dimension), then transforms it (half-integer process phase). The four beats compose right-to-left (standard function composition); the genesis sequence unfolds left-to-right: ∞ enters at •, walks the full ladder, and the boundary's recursion (⟳) feeds back to • at the next scale.
+The brackets are being (timeless); the middle is becoming (temporal). Both rests are the same rest: the ∞ that opens the expression is the ∞ that closes it.
 
-The Kernel is the dimensional octave (§4.9) compressed into one equation. The octave describes the stations; the Kernel describes the *act* of walking them. It is self-executing: every ⊙ in reality is running this equation right now, at its scale, as itself.
+Each beat pairs a structural dimension (integer; what the constraint IS) with a processual dimension (half-integer; what the energy is DOING). The ∘ within each beat means "paired": structure and process are two views of one constraint being laid down, not sequential steps. The ▸ between beats means "feeds into": completed constraint enables the next.
+
+The expression is the dimensional octave (§4.9) compressed into one line, unified with the nesting relation. The octave describes the stations; the four beats describe the *act* of walking them; the product bracket describes what walking them produces and how the product returns to the source. It is self-executing: every ⊙ in reality is running this expression right now, at its scale, as itself.
 
 **Two resolutions of the same equation:**
 
 ```
-    ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))                    — the engine (low resolution)
-    ⊙ = (⟳∘○) ∘ (✹∘Φ) ∘ (⎇∘—) ∘ (⊛∘•) [∞]      — the blueprint (full resolution)
+    ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))                                                  ; the engine (low resolution)
+    [∞ = E = 1] ▸ (•∘⊛) ▸ (—∘⎇) ▸ (Φ∘✹) ▸ (○∘⟳) ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]       ; the unified expression (full resolution)
 ```
 
-Higher resolution contains lower resolution; it never contradicts it (Resolution Protocol, §25.17). In the engine form: — lives inside ∘ (continuity IS the chaining), ⎇ lives inside i (branching IS what i² does), ⟳ is what happens when ⊙ feeds its output back, and ∞ is the implicit substrate. The engine is what the circumpunct does at any given moment; the blueprint is how the circumpunct is built through all eight stations.
+Higher resolution contains lower resolution; it never contradicts it (Resolution Protocol, §25.17). In the engine form: — lives inside ∘ (continuity IS the chaining), ⎇ lives inside i (branching IS what i² does), ⟳ is what happens when ⊙ feeds its output back, and ∞ is the implicit substrate. The engine is what the circumpunct does at any given moment; the unified expression is how it is built through all stations and how the product nests back into the source.
 
-**Why [∞] is not an input but a substrate.** The equation does not create from nothing; it constrains from everything. ∞ is what is already there (A0: E = 1). The four beats are four successive self-limitations of the 1. By the time you reach ⊙, nothing has been added; what was always there has been shaped. The Kernel is not a recipe for making being; it is a description of the constraint sequence that being already is.
-
-**Relationship to the Prime Notation:**
-
-```
-    ⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1                         — the noun (what it IS)
-    ⊙ = (⟳∘○) ∘ (✹∘Φ) ∘ (⎇∘—) ∘ (⊛∘•) [∞]      — the verb (how it BECOMES)
-```
-
-The Prime Notation describes the *being* of the circumpunct across scales. The Kernel describes the *becoming* of the circumpunct through the dimensional octave. Together they say the same sentence in two voices. Every ⊙λ in the prime notation is running the Kernel at its scale; every cycle of the Kernel produces a ⊙λ that nests inside ⊙Λ by the prime notation.
+**Why [∞ = E = 1] is both source and destination.** The expression does not create from nothing; it constrains from everything. ∞ is what is already there (A0: E = 1). The four beats are four successive self-limitations of the 1. By the time you reach ⊙, nothing has been added; what was always there has been shaped. And the nesting returns to ∞ because the apophatic term was never separate from the source; walking far enough up the scale axis brings you back to where the labels were never applied. The end is the beginning.
 
 **Diagnostic application.** Anything that becomes (a project, a relationship, a healing, a creative work, a life) either walks these four beats or gets stuck at one of them:
 
@@ -21356,7 +21351,7 @@ The prose draft of this section was written in June 2025, ten months before §27
 
 ### §27.7m λ Is the Glyph of Fractal Branching: The 1.5D Operator of the Ladder
 
-§27.7l noticed that Φ is the glyph of π: the 2D station's own symbol is the diagram whose measurement IS the 2D constant. §27.7m does the same catch for the 1.5D station. The letter λ, used throughout the framework's prime notation (⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1), has been read as a scale label, a wavelength, an index on the nesting axis. All of those are correct. But they are surface reasons; they are what λ *does*. The deeper fact is what λ *is*: **λ is the glyph of fractal branching**, and fractal branching is the structural operator of the 1.5D station (⎇), and the structural operator of the 1.5D station is the thing that makes A3 numerically live at every rung of the ladder. λ is not a label on the framework's notation; λ is the operator the notation names.
+§27.7l noticed that Φ is the glyph of π: the 2D station's own symbol is the diagram whose measurement IS the 2D constant. §27.7m does the same catch for the 1.5D station. The letter λ, used throughout the framework's unified expression ([∞ = E = 1] ▸ ... ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]), has been read as a scale label, a wavelength, an index on the nesting axis. All of those are correct. But they are surface reasons; they are what λ *does*. The deeper fact is what λ *is*: **λ is the glyph of fractal branching**, and fractal branching is the structural operator of the 1.5D station (⎇), and the structural operator of the 1.5D station is the thing that makes A3 numerically live at every rung of the ladder. λ is not a label on the framework's notation; λ is the operator the notation names.
 
 **Visually, λ is the atomic fractal generator.** Look at the letter. A point at the top, two strokes branching down and apart. One node becoming two. A Y-fork. A bifurcation. This is the simplest possible fractal generator: the step from 1 to 2 at smaller scale. Every fractal in nature is λ iterated: draw λ, then draw a smaller λ at the end of each of its two legs, then again, then again. Trees branching. Lungs bifurcating. Rivers deltaing. Neurons arborizing. Lightning forking. Coastlines subdividing. Every self-similar branching structure in the physical world is an L-system whose production rule is "replace each λ with two smaller λs rotated and rescaled." The letter *is* the production rule written as a single stroke. One λ is one step of recursion; a fractal is what happens when you never stop.
 
@@ -21364,7 +21359,7 @@ The prose draft of this section was written in June 2025, ten months before §27
 
 **Lambda-calculus is the third witness.** Alonzo Church (1930s) needed a letter to name the operation that abstracts a variable and produces a function applicable to itself, allowing recursion, fixed points, self-reference, and all of computation to be built. He picked λ. The entire theory of computation rests on lambda-abstraction, and lambda-abstraction is, at its foundation, about *feeding something back into itself at a smaller scale*; every recursive function in every programming language is a fixed point of a lambda expression, produced by the Y combinator, which is itself named after the shape Y because the shape Y is what recursion *looks like*. Mathematics, physics, linguistics, computation, and alphabet design all independently converged on λ as the letter of *scale-via-self-reference* because the letter is already a picture of the thing. Same phenomenon as Φ and π. The letter was the diagram, and nobody noticed.
 
-**λ as functional application: ⊙λ = λ(⊙Λ).** The prime notation ⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1 reads set-theoretically as "⊙λ is contained in ⊙Λ is contained in the archetype." But read functionally, with λ as an operator, it becomes cleaner and stronger:
+**λ as functional application: ⊙λ = λ(⊙Λ).** The nesting relation ⊙λ ⊂ ⊙Λ ⊂ ∞ reads set-theoretically as "⊙λ is contained in ⊙Λ is contained in the undifferentiated." But read functionally, with λ as an operator, it becomes cleaner and stronger:
 
 ```
 ⊙λ = λ(⊙Λ)
@@ -21404,11 +21399,11 @@ Every constant is a fixed point of λ. The dimensional ladder is not a list of i
 
 The 1.5D glyph and the 2D glyph are the framework's notation for *the operator and the constant whose fixed point it is*: λ acts (scaling operator), π holds (fixed point of λ in the plane). ⎇ = λ; Φ = π (and φ). The framework did not pick these glyphs arbitrarily; it inherited them from traditions that had already noticed the pictures and named them, and the traditions were correct each time.
 
-**The prime notation unfolded with λ taken seriously.** ⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1 reads as: *"The circumpunct at the fractal-applied scale is contained in the circumpunct at the greater-whole scale, which is contained in the unlabeled archetype where the fractal operator has no specific argument to act on, and the whole stack equals the one energy, which equals 1."* Apply λ once and you descend one rung. Drop the λ subscript altogether and you enter the apophatic view (no scale label, no operator argument, no position on the recursion axis; just the 1 viewed without the operator). The prime notation is *the scaling operator in three states*: applied at your scale (⊙λ), applied at the scale above (⊙Λ), and not applied at all (⊙ unlabeled). Three readings, one operator, one content.
+**The nesting relation unfolded with λ taken seriously.** ⊙λ ⊂ ⊙Λ ⊂ ∞ reads as: *"The circumpunct at the fractal-applied scale is contained in the circumpunct at the greater-whole scale, which is contained in the undifferentiated source where the fractal operator has no specific argument to act on, and the whole stack equals the one energy, which equals 1."* Apply λ once and you descend one rung. Drop the λ subscript altogether and you return to ∞ (no scale label, no operator argument, no position on the recursion axis; just the 1 before any operator was applied). The nesting relation is *the scaling operator in three states*: applied at your scale (⊙λ), applied at the scale above (⊙Λ), and not applied at all (∞). Three readings, one operator, one content. The unified expression makes this a loop: the ∞ where the operator is unapplied is the same ∞ where the process begins.
 
 **The testimony form: "I am a whole fractal of a greater whole."** Everything in §27.7m condenses into this sentence. "Whole" because the fractal operator preserves wholeness (the 1 of ⊙Λ survives intact in ⊙λ). "Fractal" because the operator that produced this wholeness at this scale is λ, the scaling operator, which is *what fractals do*, which is what scale *is*. "Of a greater whole" because the application is not spontaneous; the operator always acts on a ⊙Λ, a scale above. The full mathematical form ⊙λ = λ(⊙Λ) and the full first-person form "I am a whole fractal of a greater whole" are *the same statement*, and the framework can finally say that the second IS the first spoken from inside the fixed point that the first equation defines.
 
-**Summary in one line.** The 1.5D station of the dimensional ladder is λ, the scaling operator; the framework's glyph ⎇ and the Greek letter λ are the same picture of branching; ⊙λ = λ(⊙Λ) is the functional form of ⊙λ ⊂ ⊙Λ; every constant on the ladder is a fixed point of λ at its own rung; scale is exactly what fractals do, and a fractal is a fixed point of λ; "I am a whole fractal of a greater whole" is the first-person statement of λ(⊙Λ) = ⊙λ spoken by a ⊙ that knows what it is.
+**Summary in one line.** The 1.5D station of the dimensional ladder is λ, the scaling operator; the framework's glyph ⎇ and the Greek letter λ are the same picture of branching; ⊙λ = λ(⊙Λ) is the functional form of ⊙λ ⊂ ⊙Λ ⊂ ∞; every constant on the ladder is a fixed point of λ at its own rung; scale is exactly what fractals do, and a fractal is a fixed point of λ; "I am a whole fractal of a greater whole" is the first-person statement of λ(⊙Λ) = ⊙λ spoken by a ⊙ that knows what it is.
 
 **The Mandelbrot confirmation (§27.7m.1).** The claim that "every constant on the ladder is a fixed point of λ" has an independent confirmation from complex dynamics. The Mandelbrot iteration z_{n+1} = z_n² + c defines the most famous fractal in mathematics. Its fixed points satisfy z = z² + c, i.e. z² − z + c = 0. At c = −1, this becomes z² − z − 1 = 0: the golden ratio equation. φ is the fixed point of the Mandelbrot iteration at c = −1.
 

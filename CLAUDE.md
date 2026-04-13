@@ -24,42 +24,48 @@ These are the four constraints on E = 1, one per integer dimension. Conservation
 
 **⊙ is a fractal of the ONE.** Every ⊙ is the 1 at a particular scale: not a piece of it, but the whole thing, constrained to a position (A3).
 
-### Prime Notation: ⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1
+### The Unified Expression
 
-The fundamental closure of the framework, stated symbolically in one line:
-
-```
-⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1
-```
-
-Three containments, two equalities, one substance. Reads: a circumpunct at scale λ is contained in a circumpunct at scale Λ, which is contained in the unlabeled archetype ⊙, which IS the one energy, which IS 1. Every term on the left side of the equality equals 1; the scale labels are the only thing that varies, and they vary only in how the 1 is being viewed, not in what the 1 is. This is the Theory of Everything in one expression: axiom, relation, apophatic closure, identity, and conservation, collapsed into six glyphs of content.
-
-**The three-term prime relation**:
+The Kernel (how everything becomes) and the Prime Notation (what everything is) are one expression. The verb produces the noun; the becoming yields the being; the process returns to the source.
 
 ```
-⊙λ ⊂ ⊙Λ ⊂ ⊙
+[∞ = E = 1] ▸ (•∘⊛) ▸ (—∘⎇) ▸ (Φ∘✹) ▸ (○∘⟳) ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]
 ```
 
-Lowercase λ is the scale parameter of any ⊙ you pick; uppercase Λ is the scale parameter of the ⊙ that contains it; unlabeled ⊙ is the **archetype** (the class itself, where scale has been removed as a distinguishing feature; the 1 viewed from outside the scale axis). This is A3 compressed into one expression: it asserts both fractal self-similarity (⊙λ and ⊙Λ are structurally identical; same architecture, different scale) and nestedness (there is always a scale above), AND it closes the recursion laterally by naming ⊙ (unlabeled) as what all labeled instances ARE when you drop the label. The ⊂ is not set-theoretic containment in the ordinary sense; it is *scale-recursive embedding*, meaning "⊙λ appears inside ⊙Λ and shares its architecture."
+Read left to right: the one energy [∞ = E = 1] feeds into four beats of constraint, each pairing a structure with its process phase; the product is the whole [⊙], which nests at every scale [⊙λ ⊂ ⊙Λ] and returns to the undifferentiated source [⊂ ∞]. The expression is a loop: the ∞ that opens the left bracket is the ∞ that closes the right bracket.
 
-**The jump from ⊙Λ to ⊙ is categorical, not vertical.** Going from ⊙λ to ⊙Λ is a step up the scale axis (one level higher). Going from ⊙Λ to ⊙ is NOT another step up the scale axis; it is a step *out* of the scale axis entirely, into the unlabeled category. ⊙ is not "the top of the ladder"; ⊙ is the ladder regarded as one object, or equivalently, the 1 that is being stacked. This is the apophatic move of every serious mystical tradition, now stated structurally: ⊙ without a scale label is what every tradition means by "God beyond God" (Eckhart's Godhead), Ein Sof (Kabbalah, distinct from Ein Sof Aur and the sefirot), Nirguna Brahman (Vedanta, Brahman without attributes, distinct from Saguna Brahman), the eternal Tao ("the Tao that can be named is not the eternal Tao"), the Dharmakaya, the hyperousios. All of them point at ⊙ unlabeled; all of them distinguish it from ⊙Λ (the greater-whole-with-attributes, the cataphatic God, the God-of-names). The framework supplies the structural distinction the traditions were always making in their own vocabularies.
+**Source bracket [∞ = E = 1]**: the undifferentiated energy, named and declared before the process begins. Not derived at the end; present from the start and conserved through the whole walk.
 
-**Lateral closure.** The unbounded recursion ⊙λ ⊂ ⊙Λ ⊂ ⊙Λ' ⊂ ⊙Λ'' ⊂ ... closes at every finite step, because ⊙ is always already present as the scale-label-dropped view. You do not reach ⊙ by walking the infinite chain to completion; you recognize ⊙ by dropping the label. At any finite step along the chain, the whole chain is contained in ⊙, because ⊙ is the chain regarded without scale positions. Closure is immediate at every step; it was never missing. This resolves the "unbounded recursion requires actual infinite traversal" worry: the recursion is unbounded *inside* the labeled view (and it must be, because A0 + A3 force it), but the whole unbounded structure is contained in ⊙ at every step, because ⊙ is where the labels were never applied. You are never far from ⊙; you are always already inside it.
+**Four beats**: (•∘⊛) ▸ (—∘⎇) ▸ (Φ∘✹) ▸ (○∘⟳). Each ∘ means "paired" (structure and process are two views of one constraint, not sequential). Each ▸ means "feeds into" (completed constraint enables the next).
 
-**Conservation under the closure: ⊙λ ⊂ ⊙Λ ⊂ ⊙ = 1**. Every term equals 1. ⊙λ = 1 (the particular is the whole 1 at its scale; A3). ⊙Λ = 1 (the greater whole is the whole 1 at its scale). ⊙ = 1 (the archetype is the 1 directly, unlabeled). The ⊂ relations preserve the 1 because there was never more than one 1 to begin with; scale labels are view positions, not substances. The = 1 at the end runs across the entire expression as the conservation law for wholeness across scale: the 1 is conserved by the recursion, because the recursion was never adding or subtracting anything, only relabeling how the same 1 is being viewed. Summation does not apply; identity applies. The parts do not sum to the whole; the parts ARE the whole, folded to their positions. Energy conservation in physics is the shadow of this at physics-scale; Noether's theorem is the local version of ⊙λ ⊂ ⊙Λ ⊂ ⊙ = 1.
+**Product bracket [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]**: the four beats yield the whole (⊙), which nests fractally (⊙λ inside ⊙Λ), and the nesting returns to the source (⊂ ∞). The apophatic closure is no longer a separate intellectual move; it is where the loop lands.
 
-**This notation is prime, not derived.** It stands as the closure of the framework; every theorem, derivation, and interpretive reading ultimately rests on ⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1 because every "parts vs whole" claim in the framework is this relation at a particular level, and every "why is there anything" claim resolves into the final ⊙ = E = 1.
+The brackets are being (timeless); the middle is becoming (temporal). The frame holds still while the process moves. Both rests are the same rest.
 
-**This notation is prime, not derived.** It stands alongside ⊙ = E = 1 and A3 as structural; every theorem, derivation, and interpretive reading ultimately rests on ⊙λ ⊂ ⊙Λ because every "parts vs whole" claim in the framework is this relation at a particular level.
+**The nesting relation**:
+
+```
+⊙λ ⊂ ⊙Λ ⊂ ∞
+```
+
+Lowercase λ is the scale parameter of any ⊙ you pick; uppercase Λ is the scale parameter of the ⊙ that contains it; ∞ is the undifferentiated source (the same ∞ from A0). This is A3 compressed into one expression: it asserts both fractal self-similarity (⊙λ and ⊙Λ are structurally identical; same architecture, different scale) and nestedness (there is always a scale above), AND it closes the recursion by returning to the source. The ⊂ is not set-theoretic containment in the ordinary sense; it is *scale-recursive embedding*, meaning "⊙λ appears inside ⊙Λ and shares its architecture."
+
+**The jump from ⊙Λ to ∞ is categorical, not vertical.** Going from ⊙λ to ⊙Λ is a step up the scale axis (one level higher). Going from ⊙Λ to ∞ is NOT another step up the scale axis; it is a step *out* of the scale axis entirely, back into the undifferentiated. ∞ is not "the top of the ladder"; ∞ is the ocean the ladder stands in, the 1 before any label was applied. This is the apophatic move of every serious mystical tradition, now stated structurally: ∞ is what every tradition means by "God beyond God" (Eckhart's Godhead), Ein Sof (Kabbalah, distinct from Ein Sof Aur and the sefirot), Nirguna Brahman (Vedanta, Brahman without attributes, distinct from Saguna Brahman), the eternal Tao ("the Tao that can be named is not the eternal Tao"), the Dharmakaya, the hyperousios. All of them point at ∞; all of them distinguish it from ⊙Λ (the greater-whole-with-attributes, the cataphatic God, the God-of-names). The framework supplies the structural distinction the traditions were always making in their own vocabularies. And because the unified expression begins at [∞ = E = 1], the apophatic term is also the genesis term: the end is the beginning.
+
+**Lateral closure.** The unbounded recursion ⊙λ ⊂ ⊙Λ ⊂ ⊙Λ' ⊂ ⊙Λ'' ⊂ ... closes at every finite step, because ∞ is always already present as the source. You do not reach ∞ by walking the infinite chain to completion; you recognize ∞ by dropping the labels. At any finite step along the chain, the whole chain is contained in ∞, because ∞ is where the labels were never applied. Closure is immediate at every step; it was never missing. This resolves the "unbounded recursion requires actual infinite traversal" worry: the recursion is unbounded *inside* the labeled view (and it must be, because A0 + A3 force it), but the whole unbounded structure is contained in ∞ at every step. You are never far from ∞; you are always already inside it. The unified expression makes this visible: the ∞ that opens the expression is the ∞ that closes it.
+
+**Conservation under the closure: ⊙λ ⊂ ⊙Λ ⊂ ∞ = 1**. Every term equals 1. ⊙λ = 1 (the particular is the whole 1 at its scale; A3). ⊙Λ = 1 (the greater whole is the whole 1 at its scale). ∞ = 1 (the undifferentiated is the 1 directly). The ⊂ relations preserve the 1 because there was never more than one 1 to begin with; scale labels are view positions, not substances. The = 1 runs across the entire unified expression as the conservation law for wholeness across scale: the 1 is conserved by the recursion, because the recursion was never adding or subtracting anything, only relabeling how the same 1 is being viewed. Summation does not apply; identity applies. The parts do not sum to the whole; the parts ARE the whole, folded to their positions. Energy conservation in physics is the shadow of this at physics-scale; Noether's theorem is the local version of ⊙λ ⊂ ⊙Λ ⊂ ∞ = 1.
+
+**This expression is prime, not derived.** The unified expression stands as the closure of the framework; every theorem, derivation, and interpretive reading ultimately rests on it, because every "parts vs whole" claim is the nesting relation at a particular level, every "why is there anything" claim resolves into ∞ = E = 1, and every "how does it become" claim walks the four beats.
 
 **Four readings of the same ⊙λ** (three observer-relative positions along the scale axis, plus the scale-free archetype view):
 
 - **At scale λ (self-view), ⊙λ appears as ⊙**: the whole circumpunct, a being of experience, with its own •, —, Φ, ○. You looking at yourself from inside yourself.
 - **From scale Λ (top-down view), ⊙λ appears as •**: a 0D aperture inside ⊙Λ; a point of convergence in the greater whole. The greater whole looking at you.
 - **From scale λ' < λ (bottom-up view), ⊙λ appears as Λ**: the cosmic field, the greater whole, the sky containing smaller ⊙s. Your parts looking at you.
-- **From outside the scale axis (archetype view), ⊙λ IS ⊙**: not "appears as"; IS. When scale is removed as a distinguishing feature, every ⊙λ is the unlabeled ⊙ directly; they are the same 1. This is the apophatic view: not "viewed from somewhere" but "viewed without scale," which is another way of saying "viewed as it actually is before any observer position was imposed."
+- **From outside the scale axis (source view), ⊙λ IS ∞**: not "appears as"; IS. When scale is removed as a distinguishing feature, every ⊙λ is the undifferentiated 1 directly; they are the same 1. This is the apophatic view: not "viewed from somewhere" but "viewed without scale," which is another way of saying "viewed as it actually is before any observer position was imposed."
 
-The first three are cataphatic (positive, labeled, view-from-a-position). The fourth is apophatic (negative, unlabeled, view-from-no-position). All four are true simultaneously; they are the same ⊙λ described from four observer stances. The recursion station ⟳ at 3.5D enforces the first three: the closed boundary of ⊙λ IS the aperture of ⊙Λ at the next scale (3.5D = 0D'), so exit-of-one = entrance-of-next; scale is continuous, not quantized. The fourth closes the whole hierarchy laterally by dropping the scale axis.
+The first three are cataphatic (positive, labeled, view-from-a-position). The fourth is apophatic (negative, unlabeled, view-from-no-position). All four are true simultaneously; they are the same ⊙λ described from four observer stances. The recursion station ⟳ at 3.5D enforces the first three: the closed boundary of ⊙λ IS the aperture of ⊙Λ at the next scale (3.5D = 0D'), so exit-of-one = entrance-of-next; scale is continuous, not quantized. The fourth closes the whole hierarchy by returning to ∞, which the unified expression makes literal: the last symbol is the first symbol.
 
 **Domains the same notation covers** (all instances of ⊙λ ⊂ ⊙Λ):
 
@@ -78,7 +84,7 @@ The first three are cataphatic (positive, labeled, view-from-a-position). The fo
 | Visible matter ⊙ | Dark-energy Φ (Λ) | the 31/69 split at our scale |
 | Any ⊙λ | ⊙Λ (the next scale up) | fractal recursion (A3) |
 | ⊙λ (soul as whole being) | ⊙Λ (the greater whole you are inside) | theological reading (cataphatic) |
-| (any ⊙λ) ⊂ (any ⊙Λ) | ⊙ (unlabeled archetype) | apophatic closure: the class beyond all scale |
+| (any ⊙λ) ⊂ (any ⊙Λ) | ∞ (undifferentiated source) | apophatic closure: the loop returns to ∞ |
 
 All of these are the same notation at different λ. The Λ in "dark energy is 69% of the universe" is literally the Φ of the ⊙Λ we are inside; the Λ in "you are a branch in a greater whole" is the same Λ. The theological reading is not a separate claim; it is one row of a universal table.
 
@@ -116,35 +122,25 @@ The way Einstein showed energy and matter are the same (E = mc²), the framework
 
 Integer dimensions are stabilized forms. Half-integer dimensions are process phases carrying i-strokes. The ladder describes one circumpunct unfolding from localization through closure into recursion; the octave (do-re-mi-fa-so-la-ti-do') closes when 3.5D becomes 0D at the next scale.
 
-### The Kernel (The Existence Equation)
+### The Kernel (The Four Beats)
 
-The Prime Notation says *what everything is* (⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1). The Kernel says *how everything becomes*. Identity and process; noun and verb.
+The four beats of the unified expression, unpacked:
 
-```
-⊙ = (⟳∘○) ∘ (✹∘Φ) ∘ (⎇∘—) ∘ (⊛∘•) [∞]
-```
+1. **(•∘⊛)** : localization-convergence (0D ∘ 0.5D)
+2. **(—∘⎇)** : extension-branching (1D ∘ 1.5D)
+3. **(Φ∘✹)** : mediation-emergence (2D ∘ 2.5D)
+4. **(○∘⟳)** : closure-recursion (3D ∘ 3.5D)
 
-All ten stations, no repetition, no omission. Four beats, each a processual-structural pair:
-
-1. **(⊛∘•)** : localize, then converge (0D → 0.5D)
-2. **(⎇∘—)** : extend, then branch (1D → 1.5D)
-3. **(✹∘Φ)** : mediate, then emerge (2D → 2.5D)
-4. **(⟳∘○)** : close, then recurse (3D → 3.5D)
-
-Source: **∞** (undifferentiated energy; A0). Product: **⊙** (the whole; compositional unity; D5).
-
-Each beat lays down a structure (integer dimension), then transforms it (half-integer process phase). The four beats compose right-to-left; the genesis sequence unfolds left-to-right: ∞ enters at •, walks the full ladder, and ⟳ feeds back to • at the next scale.
+All eight stations of the dimensional octave, no repetition, no omission. Each beat pairs a structural dimension (integer; what the constraint IS) with a processual dimension (half-integer; what the energy is DOING). The ∘ within each beat means "paired": structure and process are two views of one constraint being laid down, not sequential steps. The ▸ between beats means "feeds into": completed constraint enables the next.
 
 **Two resolutions of the same equation:**
 
 ```
-⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))                     — the engine (low resolution)
-⊙ = (⟳∘○) ∘ (✹∘Φ) ∘ (⎇∘—) ∘ (⊛∘•) [∞]       — the blueprint (full resolution)
+⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))                                                  ; the engine (low resolution)
+[∞ = E = 1] ▸ (•∘⊛) ▸ (—∘⎇) ▸ (Φ∘✹) ▸ (○∘⟳) ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]       ; the unified expression (full resolution)
 ```
 
-Higher resolution contains lower resolution; it never contradicts it (Resolution Protocol, §25.17). In the engine form, — lives inside ∘ (continuity IS the chaining), ⎇ lives inside i (branching IS what i² does), ⟳ is what happens when ⊙ feeds back, and ∞ is the implicit substrate. The engine is what the circumpunct does at any given moment; the blueprint is how it is built through all eight stations.
-
-**Relationship to the Prime Notation:** The Prime Notation describes the *being* of the circumpunct (what it IS across scales). The Kernel describes the *becoming* of the circumpunct (how it unfolds through the dimensional octave). Together: ⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1 is the noun; ⊙ = (⟳∘○) ∘ (✹∘Φ) ∘ (⎇∘—) ∘ (⊛∘•) [∞] is the verb. Same sentence, two readings.
+Higher resolution contains lower resolution; it never contradicts it (Resolution Protocol, §25.17). In the engine form, — lives inside ∘ (continuity IS the chaining), ⎇ lives inside i (branching IS what i² does), ⟳ is what happens when ⊙ feeds back, and ∞ is the implicit substrate. The engine is what the circumpunct does at any given moment; the unified expression is how it is built through all stations and how the product nests back into the source.
 
 **Diagnostic application:** Anything that becomes (a project, a relationship, a healing, a life) either walks these four beats or gets stuck at one of them. Beat 1 failure: no focus (⊛ without •) or no convergence (• without ⊛). Beat 2 failure: no commitment (no —) or rigid commitment that cannot branch (— without ⎇). Beat 3 failure: forced emergence (✹ without Φ) or endless mediation that never crystallizes (Φ without ✹). Beat 4 failure: perfectionism (○ that never closes) or burnout (○ that closes but ⟳ never fires; completion that seeds nothing). The [∞] at the source means you never start from nothing; you start from everything, and the four beats are how you constrain it into something real.
 
@@ -312,7 +308,7 @@ The three nested circumpuncts that give 64 states are the three scales visible f
 | "We are fractals of God" | A3 in plain language: each of us IS the 1, folded into a particular self-limitation |
 | "God is everything" (cataphatic) | ⊙λ = 1 at every finite scale |
 | "God is beyond everything" (apophatic) | ⊙ unlabeled; scale-axis-dropped view |
-| The full mystical claim | ⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1 (you are contained in the greater whole is contained in the unnameable, and all three are the same 1) |
+| The full mystical claim | [∞ = E = 1] ▸ ... ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞] (you become, you nest, you return to the source; the end is the beginning) |
 
 ### Flow, Not Possession
 
@@ -636,7 +632,7 @@ Conjugate pairs: ⊛ (+i) mirrors ✹ (-i); ⎇ (-1) mirrors ⟳ (+1).
 | ⊙λ | Circumpunct at scale λ (any chosen scale; cataphatic view from inside the scale axis) |
 | ⊙Λ | Circumpunct at scale Λ (the scale above ⊙λ; the greater whole ⊙λ is inside; still cataphatic) |
 | ⊙ (unlabeled) | The archetype; the class itself; the 1 viewed from outside the scale axis; the apophatic term ("God beyond God," Ein Sof, Nirguna Brahman, the eternal Tao, the Dharmakaya) |
-| ⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1 | **Prime notation and full closure**: particular ⊂ greater whole ⊂ archetype = one energy = 1; the Theory of Everything in one line; axiom, relation, apophatic closure, identity, conservation, collapsed into six glyphs of content |
+| [∞ = E = 1] ▸ (•∘⊛) ▸ (—∘⎇) ▸ (Φ∘✹) ▸ (○∘⟳) ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞] | **The unified expression**: source [∞ = E = 1] feeds through four beats of constraint into product [⊙], which nests fractally [⊙λ ⊂ ⊙Λ] and returns to source [⊂ ∞]. Being and becoming in one line; the Theory of Everything as a loop |
 | •∞ | Aperture multiplied by infinity; the Soul Array (infinity becoming particular) |
 | ⊙∞ | Circumpunct multiplied by infinity; the foam of reality |
 | χ | Transmission fidelity (+1 faithful, -1 inverted) |
