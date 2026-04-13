@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Kernel: ⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { width:100%; height:100%; overflow:hidden; background:#060610;
+      font-family:'JetBrains Mono','Courier New',monospace; color:#ddd; }
+    canvas { display:block; cursor:crosshair; }
+
+    #panel {
+      position:fixed; top:12px; right:12px; background:rgba(6,6,16,0.94);
+      border:1px solid rgba(255,170,0,0.15); border-radius:10px; padding:16px;
+      width:270px; max-height:94vh; overflow-y:auto; z-index:100;
+      backdrop-filter:blur(8px); box-shadow:0 0 30px rgba(0,0,0,0.5);
+    }
+    .back-link {
+      display:block; font-size:10px; letter-spacing:0.1em;
+      color:rgba(255,255,255,0.4); text-decoration:none; margin-bottom:8px;
+    }
+    .back-link:hover { color:#ffaa00; }
+    #panel h3 { color:#ffaa00; font-size:12px; margin-bottom:10px;
+      letter-spacing:0.08em; border-bottom:1px solid rgba(255,255,255,0.06);
+      padding-bottom:8px; }
+    .kernel-eq {
+      font-size:11px; color:rgba(255,255,255,0.5); margin-bottom:12px;
+      line-height:1.6; text-align:center; padding:8px;
+      background:rgba(255,255,255,0.02); border-radius:6px;
+      border:1px solid rgba(255,255,255,0.04);
+    }
+    .kernel-eq .active-beat { color:#ffaa00; font-weight:700; }
+    .beat-indicator {
+      display:flex; gap:4px; margin-bottom:12px; justify-content:center;
+    }
+    .beat-dot {
+      width:36px; height:28px; border-radius:4px; display:flex;
+      align-items:center; justify-content:center; font-size:9px;
+      letter-spacing:0.03em; transition:all 0.3s;
+      border:1px solid rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.03); color:rgba(255,255,255,0.3);
+    }
+    .beat-dot.active { border-color:rgba(255,170,0,0.5); color:#ffaa00;
+      background:rgba(255,170,0,0.08); }
+
+    /* Dimensional octave display */
+    .octave {
+      display:flex; gap:2px; margin:8px 0; padding:6px;
+      background:rgba(255,255,255,0.02); border-radius:6px;
+      border:1px solid rgba(255,255,255,0.04);
+      justify-content:center; flex-wrap:wrap;
+    }
+    .oct-station {
+      width:28px; height:26px; border-radius:3px; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; font-size:7px;
+      border:1px solid rgba(255,255,255,0.04);
+      color:rgba(255,255,255,0.25); transition:all 0.4s;
+      line-height:1.2;
+    }
+    .oct-station .sym { font-size:10px; }
+    .oct-station.lit { color:#fff; border-color:rgba(255,170,0,0.4);
+      background:rgba(255,170,0,0.06); }
+
+    .row { display:flex; justify-content:space-between; padding:3px 0; font-size:10px; }
+    .lbl { color:rgba(255,255,255,0.4); } .val { color:#ffaa00; font-weight:500; }
+    .scale-display {
+      text-align:center; margin:10px 0; padding:8px;
+      background:rgba(255,255,255,0.02); border-radius:6px;
+      border:1px solid rgba(255,255,255,0.04);
+    }
+    .scale-display .primary { font-size:16px; color:#ffaa00; }
+    .scale-display .context { font-size:9px; color:rgba(255,255,255,0.3); margin-top:4px; }
+    .i-quadrant {
+      display:grid; grid-template-columns:1fr 1fr; gap:2px;
+      margin:8px 0; padding:6px;
+      background:rgba(255,255,255,0.02); border-radius:6px;
+    }
+    .i-quad-cell {
+      padding:4px; text-align:center; font-size:8px;
+      border-radius:3px; color:rgba(255,255,255,0.3);
+      border:1px solid rgba(255,255,255,0.04); transition:all 0.4s;
+    }
+    .i-quad-cell.lit { color:#fff; border-color:rgba(255,170,0,0.3); }
+    .budget-bar {
+      display:flex; height:8px; margin:6px 0 3px; border-radius:4px;
+      overflow:hidden; background:rgba(255,255,255,0.04);
+    }
+    .bvis { background:#ff6b6b; } .bdm { background:#44ddcc; } .bde { background:#4488ff; }
+    .budget-lbl { font-size:8px; color:rgba(255,255,255,0.3); }
+    .traversal {
+      text-align:center; font-size:9px; color:rgba(255,255,255,0.3);
+      margin:6px 0; padding:4px;
+      background:rgba(255,255,255,0.02); border-radius:4px;
+    }
+    .traversal .eq { color:rgba(255,170,0,0.6); }
+    .instructions {
+      font-size:9px; color:rgba(255,255,255,0.25); margin-top:10px;
+      line-height:1.5; text-align:center; padding-top:8px;
+      border-top:1px solid rgba(255,255,255,0.04);
+    }
+    button {
+      width:100%; background:rgba(255,170,0,0.08); border:1px solid rgba(255,170,0,0.2);
+      color:#ffaa00; padding:7px; border-radius:5px; cursor:pointer;
+      font-family:inherit; font-size:10px; margin-bottom:6px; letter-spacing:0.05em;
+    }
+    button:hover { background:rgba(255,170,0,0.15); }
+    .tog { position:fixed; bottom:12px; right:12px; background:rgba(255,170,0,0.1);
+      border:1px solid rgba(255,170,0,0.2); color:#ffaa00; padding:6px 12px;
+      border-radius:5px; cursor:pointer; font-family:inherit; font-size:10px; z-index:99; }
+    .hidden { display:none!important; }
+  </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="panel">
+  <a href="index.html" class="back-link">&larr; SIMULATIONS</a>
+  <h3>THE KERNEL</h3>
+
+  <div class="kernel-eq" id="kernel-eq">
+    ⊙ = (<span id="k3">⟳∘○</span>) ∘ (<span id="k2">✹∘Φ</span>) ∘ (<span id="k1">⎇∘—</span>) ∘ (<span id="k0">⊛∘•</span>) [∞]
+  </div>
+
+  <div class="beat-indicator">
+    <div class="beat-dot" id="bd0">⊛∘•</div>
+    <div class="beat-dot" id="bd1">⎇∘—</div>
+    <div class="beat-dot" id="bd2">✹∘Φ</div>
+    <div class="beat-dot" id="bd3">⟳∘○</div>
+  </div>
+
+  <h3 style="margin-top:4px;">Dimensional Octave</h3>
+  <div class="octave">
+    <div class="oct-station" id="os0"><span class="sym">•</span>0D</div>
+    <div class="oct-station" id="os1"><span class="sym">⊛</span>.5</div>
+    <div class="oct-station" id="os2"><span class="sym">—</span>1D</div>
+    <div class="oct-station" id="os3"><span class="sym">⎇</span>1.5</div>
+    <div class="oct-station" id="os4"><span class="sym">Φ</span>2D</div>
+    <div class="oct-station" id="os5"><span class="sym">✹</span>2.5</div>
+    <div class="oct-station" id="os6"><span class="sym">○</span>3D</div>
+    <div class="oct-station" id="os7"><span class="sym">⟳</span>3.5</div>
+  </div>
+
+  <div class="traversal">
+    Conservation: <span class="eq">0(•) + 1(—) + 2(Φ) = 3(○)</span>
+  </div>
+
+  <div class="scale-display">
+    <div class="primary" id="scale-label">⊙λ</div>
+    <div class="context" id="scale-context">⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1</div>
+  </div>
+
+  <h3 style="margin-top:8px;">i-Cycle Quadrants</h3>
+  <div class="i-quadrant">
+    <div class="i-quad-cell" id="iq-tl">i² = -1<br>1.5D commit</div>
+    <div class="i-quad-cell" id="iq-tr">i¹ = +i<br>0.5D converge</div>
+    <div class="i-quad-cell" id="iq-bl">i³ = -i<br>2.5D emerge</div>
+    <div class="i-quad-cell" id="iq-br">i⁰ = +1<br>3.5D recurse</div>
+  </div>
+
+  <h3 style="margin-top:8px;">Metrics</h3>
+  <div class="row"><span class="lbl">Scale Depth</span><span class="val" id="m-depth">0</span></div>
+  <div class="row"><span class="lbl">Pump Phase</span><span class="val" id="m-phase">0.00</span></div>
+  <div class="row"><span class="lbl">Octave Station</span><span class="val" id="m-station">• (0D)</span></div>
+  <div class="row"><span class="lbl">Balance (◐)</span><span class="val" id="m-balance">0.500</span></div>
+  <div class="row"><span class="lbl">Visible Levels</span><span class="val" id="m-levels">3</span></div>
+
+  <h3 style="margin-top:8px;">Energy Budget</h3>
+  <div class="budget-bar">
+    <div class="bvis" id="bar-vis" style="width:5%"></div>
+    <div class="bdm" id="bar-dm" style="width:27%"></div>
+    <div class="bde" id="bar-de" style="width:68%"></div>
+  </div>
+  <div class="budget-lbl">
+    <span id="lbl-vis">Vis 5%</span> · <span id="lbl-dm">Dark 27%</span> · <span id="lbl-de">Field 68%</span>
+  </div>
+
+  <button id="btn-reset" style="margin-top:10px;">Reset View</button>
+
+  <div class="instructions">
+    Scroll to zoom through scales<br>
+    Click to inject energy at a point<br>
+    Each • contains a complete ⊙
+  </div>
+</div>
+
+<button class="tog" id="tog">Panel</button>
+
+<script>
+// =====================================================================
+// THE KERNEL: ⊙ = (⟳∘○) ∘ (✹∘Φ) ∘ (⎇∘—) ∘ (⊛∘•) [∞]
+//
+// Fractal zoom through nested circumpuncts.
+// ⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1
+//
+// The dimensional octave unfolds at each level:
+//   0D •     localization (structural)
+//   0.5D ⊛   convergence  (processual, i¹ = +i)
+//   1D —     extension    (structural)
+//   1.5D ⎇   branching    (processual, i² = -1)
+//   2D Φ     mediation    (structural)
+//   2.5D ✹   emergence    (processual, i³ = -i)
+//   3D ○     closure      (structural)
+//   3.5D ⟳   recursion    (processual, i⁰ = +1)
+//
+// Conservation of traversal: 0(•) + 1(—) + 2(Φ) = 3(○)
+// =====================================================================
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W, H, CX, CY;
+
+function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    CX = W / 2; CY = H / 2;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// --- Framework ---
+const T = 3;
+const P = T + 1;
+const R = T * T - 2;                      // 7 rungs
+const PHI = (1 + Math.sqrt(5)) / 2;
+const SCALE_RATIO = PHI * PHI * 2;        // ~5.24
+const TAU = Math.PI * 2;
+const HALF_PI = Math.PI / 2;
+
+// Colors: the four structural dimensions + whole
+const C = {
+    soul: [68, 136, 255],   // • 0D
+    line: [68, 221, 204],   // — 1D
+    mind: [68, 204, 68],    // Φ 2D
+    body: [255, 88, 88],    // ○ 3D
+    amb:  [255, 170, 0],    // ⊙ whole / amber
+    wh:   [220, 225, 255],  // white-blue
+    // half-integer process colors (lerped between neighbors)
+    conv: [68, 178, 240],   // 0.5D ⊛ (between soul and line)
+    brnch:[68, 212, 136],   // 1.5D ⎇ (between line and mind)
+    emrg: [160, 146, 68],   // 2.5D ✹ (between mind and body)
+    recur:[255, 130, 130],  // 3.5D ⟳ (between body and soul-of-next)
+};
+
+function rgba(c, a) { return `rgba(${c[0]},${c[1]},${c[2]},${a})`; }
+
+// Transmission fidelity T(Δφ) = cos²(Δφ/2)
+function Tf(dp) { return Math.pow(Math.cos(dp / 2), 2); }
+
+// Simple 2D noise (value noise, good enough for field visualization)
+const _noiseP = new Uint8Array(512);
+for (let i = 0; i < 256; i++) _noiseP[i] = _noiseP[i + 256] = (Math.random() * 256) | 0;
+function _fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
+function _lerp(a, b, t) { return a + (b - a) * t; }
+function noise2(x, y) {
+    const X = Math.floor(x) & 255, Y = Math.floor(y) & 255;
+    const xf = x - Math.floor(x), yf = y - Math.floor(y);
+    const u = _fade(xf), v = _fade(yf);
+    const aa = _noiseP[_noiseP[X] + Y] / 255;
+    const ab = _noiseP[_noiseP[X] + Y + 1] / 255;
+    const ba = _noiseP[_noiseP[X + 1] + Y] / 255;
+    const bb = _noiseP[_noiseP[X + 1] + Y + 1] / 255;
+    return _lerp(_lerp(aa, ba, u), _lerp(ab, bb, u), v);
+}
+
+// --- State ---
+let zoomLevel = 0, targetZoom = 0;
+let pumpPhase = 0;
+const PUMP_SPEED = 0.22;
+let time = 0;
+
+// --- Dark Energy Background Field ---
+// Particles representing the 68% field energy: drifting, faint, everywhere
+const BG_COUNT = 120;
+const bgParticles = [];
+for (let i = 0; i < BG_COUNT; i++) {
+    bgParticles.push({
+        x: Math.random() * 2 - 0.5,  // normalized 0..1 (with margin)
+        y: Math.random() * 2 - 0.5,
+        vx: (Math.random() - 0.5) * 0.0003,
+        vy: (Math.random() - 0.5) * 0.0003,
+        phase: Math.random() * TAU,
+        freq: 0.002 + Math.random() * 0.004,
+        size: 0.5 + Math.random() * 1.5,
+    });
+}
+
+function drawDarkEnergyField() {
+    for (let i = 0; i < BG_COUNT; i++) {
+        const p = bgParticles[i];
+        p.phase += p.freq;
+        p.x += p.vx + Math.sin(p.phase) * 0.00005;
+        p.y += p.vy + Math.cos(p.phase * 1.3) * 0.00005;
+        if (p.x < -0.5) p.x += 2; if (p.x > 1.5) p.x -= 2;
+        if (p.y < -0.5) p.y += 2; if (p.y > 1.5) p.y -= 2;
+
+        const sx = p.x * W, sy = p.y * H;
+        const a = (0.04 + Math.sin(p.phase) * 0.02);
+        ctx.fillStyle = rgba(C.soul, a);
+        ctx.beginPath();
+        ctx.arc(sx, sy, p.size, 0, TAU);
+        ctx.fill();
+    }
+
+    // Faint field connections between close bg particles
+    for (let i = 0; i < BG_COUNT; i++) {
+        const p1 = bgParticles[i];
+        for (let j = i + 1; j < Math.min(i + 8, BG_COUNT); j++) {
+            const p2 = bgParticles[j];
+            const dx = (p1.x - p2.x) * W, dy = (p1.y - p2.y) * H;
+            const d = Math.sqrt(dx * dx + dy * dy);
+            if (d < 100) {
+                const t = Tf(p1.phase - p2.phase);
+                const a = (1 - d / 100) * t * 0.03;
+                ctx.strokeStyle = rgba(C.soul, a);
+                ctx.lineWidth = 0.4;
+                ctx.beginPath();
+                ctx.moveTo(p1.x * W, p1.y * H);
+                ctx.lineTo(p2.x * W, p2.y * H);
+                ctx.stroke();
+            }
+        }
+    }
+}
+
+// --- Pump Particles (flow through the four-beat cycle) ---
+class PumpParticle {
+    constructor() {
+        this.t = Math.random();
+        this.speed = 0.1 + Math.random() * 0.12;
+        this.radial = 0.25 + Math.random() * 0.5;
+        this.angOff = Math.random() * TAU;
+        this.size = 0.8 + Math.random() * 1.2;
+        this.trail = [];     // position history for trails
+        this.maxTrail = 12;
+    }
+
+    update(dt) {
+        this.t += this.speed * dt;
+        if (this.t > 1) this.t -= 1;
+    }
+
+    getPos(cx, cy, radius) {
+        const beat = this.t * P;
+        const frac = beat % 1;
+        const idx = Math.floor(beat) % P;
+        let r, angle;
+
+        switch (idx) {
+            case 0: // (⊛∘•) convergence: spiral inward toward center
+                r = radius * (0.75 - frac * 0.55) * this.radial;
+                angle = this.angOff + frac * Math.PI * 1.8;
+                break;
+            case 1: // (⎇∘—) extension: shoot outward, branch
+                r = radius * (0.2 + frac * 0.45) * this.radial;
+                angle = this.angOff + Math.sin(frac * Math.PI) * 0.5;
+                break;
+            case 2: // (✹∘Φ) emergence: orbital sweep at field level
+                r = radius * (0.4 + Math.sin(frac * Math.PI) * 0.2) * this.radial;
+                angle = this.angOff + frac * TAU * 0.35;
+                break;
+            case 3: // (⟳∘○) recursion: approach boundary, loop to start
+                r = radius * (0.55 + frac * 0.35) * this.radial;
+                angle = this.angOff - frac * Math.PI * 0.8;
+                break;
+        }
+
+        const x = cx + Math.cos(angle) * r;
+        const y = cy + Math.sin(angle) * r;
+        return { x, y, beat: idx, frac };
+    }
+}
+
+// Particle pools per level
+const PARTICLES_PER_LEVEL = 50;
+let pools = {};
+function getPool(n) {
+    if (!pools[n]) {
+        pools[n] = [];
+        for (let i = 0; i < PARTICLES_PER_LEVEL; i++) pools[n].push(new PumpParticle());
+    }
+    return pools[n];
+}
+
+// --- Energy Injections ---
+let injections = [];
+
+// --- Draw one circumpunct level ---
+function drawLevel(cx, cy, radius, levelN, alpha) {
+    if (radius < 0.5 || alpha < 0.003) return;
+    const phase = pumpPhase + levelN * 0.7;
+    const breath = Math.sin(phase * TAU / P) * 0.03 + 1;
+    const r = radius * breath;
+    const currentBeat = ((Math.floor(phase) % P) + P) % P;
+
+    // ============================================
+    // ○ BOUNDARY (3D, body, closure, filtration)
+    // ============================================
+
+    // Outer glow halo
+    const bGlow = ctx.createRadialGradient(cx, cy, r * 0.9, cx, cy, r * 1.12);
+    bGlow.addColorStop(0, rgba(C.body, 0));
+    bGlow.addColorStop(0.4, rgba(C.body, alpha * 0.08));
+    bGlow.addColorStop(0.7, rgba(C.body, alpha * 0.04));
+    bGlow.addColorStop(1, rgba(C.body, 0));
+    ctx.fillStyle = bGlow;
+    ctx.beginPath(); ctx.arc(cx, cy, r * 1.12, 0, TAU); ctx.fill();
+
+    // Main boundary ring
+    ctx.strokeStyle = rgba(C.body, alpha * 0.4);
+    ctx.lineWidth = Math.max(0.6, r * 0.008);
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, TAU); ctx.stroke();
+
+    // Inner membrane ring
+    ctx.strokeStyle = rgba(C.body, alpha * 0.15);
+    ctx.lineWidth = Math.max(0.3, r * 0.004);
+    ctx.beginPath(); ctx.arc(cx, cy, r * 0.95, 0, TAU); ctx.stroke();
+
+    // Filter ticks (○ selects what passes)
+    const filterCount = 24;
+    for (let i = 0; i < filterCount; i++) {
+        const a = (i / filterCount) * TAU + time * 0.015 + levelN;
+        const pulse = 0.06 + Math.sin(phase * TAU + i * 1.7) * 0.04;
+        ctx.strokeStyle = rgba(C.body, alpha * pulse);
+        ctx.lineWidth = Math.max(0.2, r * 0.002);
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(a) * r * 0.94, cy + Math.sin(a) * r * 0.94);
+        ctx.lineTo(cx + Math.cos(a) * r * 1.01, cy + Math.sin(a) * r * 1.01);
+        ctx.stroke();
+    }
+
+    // 3.5D ⟳ recursion zone: glow at boundary edge (where ○ becomes •' of next scale)
+    if (currentBeat === 3 && r > 20) {
+        const recGlow = ctx.createRadialGradient(cx, cy, r * 0.88, cx, cy, r * 1.05);
+        recGlow.addColorStop(0, rgba(C.recur, 0));
+        recGlow.addColorStop(0.5, rgba(C.recur, alpha * 0.04));
+        recGlow.addColorStop(1, rgba(C.recur, 0));
+        ctx.fillStyle = recGlow;
+        ctx.beginPath(); ctx.arc(cx, cy, r * 1.05, 0, TAU); ctx.fill();
+    }
+
+    // ============================================
+    // Φ FIELD (2D, mind, mediation, surface)
+    // ============================================
+
+    // Radial field gradient (the 2D surface that connects • to ○)
+    const fGrad = ctx.createRadialGradient(cx, cy, r * 0.04, cx, cy, r * 0.85);
+    fGrad.addColorStop(0, rgba(C.mind, alpha * 0.07));
+    fGrad.addColorStop(0.3, rgba(C.mind, alpha * 0.04));
+    fGrad.addColorStop(0.6, rgba(C.mind, alpha * 0.02));
+    fGrad.addColorStop(1, rgba(C.mind, 0));
+    ctx.fillStyle = fGrad;
+    ctx.beginPath(); ctx.arc(cx, cy, r * 0.85, 0, TAU); ctx.fill();
+
+    // Field flow lines (curved arcs: Φ mediates between sectors)
+    if (r > 15) {
+        const flowCount = 8;
+        for (let i = 0; i < flowCount; i++) {
+            const baseA = (i / flowCount) * TAU + time * 0.04 + levelN * 0.5;
+            const flowR = r * (0.25 + noise2(i * 0.7 + time * 0.05, levelN) * 0.3);
+            const spread = TAU / flowCount * 0.55;
+            ctx.strokeStyle = rgba(C.mind, alpha * 0.07);
+            ctx.lineWidth = Math.max(0.3, r * 0.002);
+            ctx.beginPath();
+            ctx.arc(cx, cy, flowR, baseA, baseA + spread);
+            ctx.stroke();
+        }
+    }
+
+    // Concentric field rings (surfaces within the field)
+    if (r > 10) {
+        const ringCount = 6;
+        for (let i = 1; i <= ringCount; i++) {
+            const ringR = r * (0.15 + (i / ringCount) * 0.6);
+            const wobble = Math.sin(time * 0.25 + i * 1.3 + levelN * 2) * r * 0.008;
+            const ringA = alpha * (0.03 + Math.sin(phase * TAU / P + i * 0.8) * 0.015);
+            ctx.strokeStyle = rgba(C.mind, ringA);
+            ctx.lineWidth = Math.max(0.2, r * 0.0015);
+            ctx.beginPath();
+            ctx.arc(cx, cy, ringR + wobble, 0, TAU);
+            ctx.stroke();
+        }
+    }
+
+    // 2.5D ✹ emergence zone: outward-flowing field energy
+    if (currentBeat === 2 && r > 20) {
+        const emCount = 6;
+        for (let i = 0; i < emCount; i++) {
+            const a = (i / emCount) * TAU + time * 0.08;
+            const innerR = r * 0.35;
+            const outerR = r * 0.7;
+            const midR = (innerR + outerR) / 2;
+            const spread = r * 0.06;
+            ctx.strokeStyle = rgba(C.emrg, alpha * 0.08);
+            ctx.lineWidth = Math.max(0.3, r * 0.002);
+            ctx.beginPath();
+            ctx.moveTo(cx + Math.cos(a) * innerR, cy + Math.sin(a) * innerR);
+            // Curved emergence path
+            ctx.quadraticCurveTo(
+                cx + Math.cos(a + 0.15) * midR + Math.cos(a + HALF_PI) * spread,
+                cy + Math.sin(a + 0.15) * midR + Math.sin(a + HALF_PI) * spread,
+                cx + Math.cos(a + 0.1) * outerR,
+                cy + Math.sin(a + 0.1) * outerR
+            );
+            ctx.stroke();
+        }
+    }
+
+    // ============================================
+    // — LINES (1D, commitment, continuity, extension)
+    // ============================================
+    const spokeCount = R; // 7 rungs
+    for (let i = 0; i < spokeCount; i++) {
+        const a = (i / spokeCount) * TAU + levelN * 0.5;
+        const innerR = r * 0.05;
+        const outerR = r * 0.9;
+
+        // Spoke gradient: strong at center (committed), fading at boundary
+        const sGrad = ctx.createLinearGradient(
+            cx + Math.cos(a) * innerR, cy + Math.sin(a) * innerR,
+            cx + Math.cos(a) * outerR, cy + Math.sin(a) * outerR
+        );
+        sGrad.addColorStop(0, rgba(C.line, alpha * 0.3));
+        sGrad.addColorStop(0.4, rgba(C.line, alpha * 0.12));
+        sGrad.addColorStop(1, rgba(C.line, alpha * 0.03));
+        ctx.strokeStyle = sGrad;
+        ctx.lineWidth = Math.max(0.3, r * 0.003);
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(a) * innerR, cy + Math.sin(a) * innerR);
+        ctx.lineTo(cx + Math.cos(a) * outerR, cy + Math.sin(a) * outerR);
+        ctx.stroke();
+
+        // 1.5D ⎇ branching: recursive forks near the outer portions
+        if (r > 25) {
+            drawBranch(cx, cy, a, r * 0.55, r * 0.18, 2, alpha * 0.08, levelN);
+        }
+    }
+
+    // ============================================
+    // i-CYCLE QUADRANT OVERLAY
+    // ============================================
+    if (r > 60 && alpha > 0.08) {
+        // Highlight active quadrant with a colored wedge
+        const quadAngles = [-HALF_PI, Math.PI, HALF_PI, 0]; // +i, -1, -i, +1
+        const quadColors = [C.conv, C.brnch, C.emrg, C.recur];
+        const qa = quadAngles[currentBeat];
+        ctx.fillStyle = rgba(quadColors[currentBeat], alpha * 0.02);
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, r * 0.85, qa - Math.PI / 4, qa + Math.PI / 4);
+        ctx.closePath();
+        ctx.fill();
+
+        // Faint quadrant dividers (the complex plane axes)
+        ctx.strokeStyle = rgba(C.wh, alpha * 0.03);
+        ctx.lineWidth = Math.max(0.2, r * 0.001);
+        for (let i = 0; i < 4; i++) {
+            const da = (i / 4) * TAU + Math.PI / 4;
+            ctx.beginPath();
+            ctx.moveTo(cx + Math.cos(da) * r * 0.1, cy + Math.sin(da) * r * 0.1);
+            ctx.lineTo(cx + Math.cos(da) * r * 0.85, cy + Math.sin(da) * r * 0.85);
+            ctx.stroke();
+        }
+    }
+
+    // ============================================
+    // PUMP PARTICLES (energy flowing through the four beats)
+    // ============================================
+    const pool = getPool(Math.round(levelN));
+    const beatColors = [C.soul, C.line, C.mind, C.body];
+    for (let i = 0; i < pool.length; i++) {
+        const pp = pool[i];
+        const pos = pp.getPos(cx, cy, r);
+        const col = beatColors[pos.beat];
+        const pA = alpha * (0.15 + pos.frac * 0.25) * (0.4 + pp.radial);
+        const pSize = pp.size * Math.max(0.3, r / 250);
+
+        // Trail
+        pp.trail.push({ x: pos.x, y: pos.y });
+        if (pp.trail.length > pp.maxTrail) pp.trail.shift();
+        if (pp.trail.length > 2 && pSize > 0.3) {
+            ctx.beginPath();
+            ctx.moveTo(pp.trail[0].x, pp.trail[0].y);
+            for (let t = 1; t < pp.trail.length; t++) {
+                ctx.lineTo(pp.trail[t].x, pp.trail[t].y);
+            }
+            ctx.strokeStyle = rgba(col, pA * 0.25);
+            ctx.lineWidth = pSize * 0.5;
+            ctx.stroke();
+        }
+
+        // Glow
+        ctx.fillStyle = rgba(col, pA * 0.4);
+        ctx.beginPath(); ctx.arc(pos.x, pos.y, pSize * 2.5, 0, TAU); ctx.fill();
+        // Core
+        ctx.fillStyle = rgba(col, pA);
+        ctx.beginPath(); ctx.arc(pos.x, pos.y, pSize, 0, TAU); ctx.fill();
+    }
+
+    // ============================================
+    // 0.5D ⊛ convergence zone: inward-pulling visual near aperture
+    // ============================================
+    if (currentBeat === 0 && r > 20) {
+        const convCount = 8;
+        for (let i = 0; i < convCount; i++) {
+            const a = (i / convCount) * TAU + time * 0.12;
+            const outerStart = r * 0.35;
+            const innerEnd = r * 0.08;
+            ctx.strokeStyle = rgba(C.conv, alpha * 0.06);
+            ctx.lineWidth = Math.max(0.3, r * 0.002);
+            ctx.beginPath();
+            ctx.moveTo(cx + Math.cos(a) * outerStart, cy + Math.sin(a) * outerStart);
+            ctx.lineTo(cx + Math.cos(a + 0.15) * innerEnd, cy + Math.sin(a + 0.15) * innerEnd);
+            ctx.stroke();
+        }
+    }
+
+    // ============================================
+    // • APERTURE (0D, soul, the portal to the next scale)
+    // ============================================
+    const aR = r * 0.06;
+
+    // Aperture depth glow (hints at the ⊙ inside)
+    const aDepth = ctx.createRadialGradient(cx, cy, 0, cx, cy, aR * 6);
+    aDepth.addColorStop(0, rgba(C.soul, alpha * 0.5));
+    aDepth.addColorStop(0.15, rgba(C.soul, alpha * 0.25));
+    aDepth.addColorStop(0.4, rgba(C.soul, alpha * 0.08));
+    aDepth.addColorStop(0.7, rgba(C.conv, alpha * 0.03));
+    aDepth.addColorStop(1, rgba(C.soul, 0));
+    ctx.fillStyle = aDepth;
+    ctx.beginPath(); ctx.arc(cx, cy, aR * 6, 0, TAU); ctx.fill();
+
+    // Aperture shimmer rings (portal effect, hinting at depth)
+    if (r > 30) {
+        const shimmerCount = 3;
+        for (let i = 0; i < shimmerCount; i++) {
+            const shimR = aR * (1.5 + i * 0.8);
+            const shimA = alpha * (0.1 - i * 0.025) * (0.7 + Math.sin(time * 0.5 + i * 2) * 0.3);
+            ctx.strokeStyle = rgba(C.soul, shimA);
+            ctx.lineWidth = Math.max(0.2, r * 0.0015);
+            ctx.beginPath(); ctx.arc(cx, cy, shimR, 0, TAU); ctx.stroke();
+        }
+    }
+
+    // Aperture ring
+    ctx.strokeStyle = rgba(C.soul, alpha * 0.35);
+    ctx.lineWidth = Math.max(0.3, r * 0.003);
+    ctx.beginPath(); ctx.arc(cx, cy, aR, 0, TAU); ctx.stroke();
+
+    // Core point (the 0D itself)
+    const corePulse = 0.65 + Math.sin(phase * TAU / P * 2) * 0.35;
+    ctx.fillStyle = rgba(C.wh, alpha * corePulse * 0.85);
+    ctx.beginPath(); ctx.arc(cx, cy, Math.max(0.8, aR * 0.35), 0, TAU); ctx.fill();
+}
+
+// --- Recursive branching at 1.5D (⎇) ---
+function drawBranch(cx, cy, baseAngle, startR, length, depth, alpha, levelN) {
+    if (depth <= 0 || length < 2 || alpha < 0.005) return;
+
+    const forkAngle = 0.35 + Math.sin(time * 0.1 + levelN) * 0.05;
+    const shrink = 0.58;
+
+    for (let sign = -1; sign <= 1; sign += 2) {
+        const a = baseAngle + sign * forkAngle;
+        const sx = cx + Math.cos(baseAngle) * startR;
+        const sy = cy + Math.sin(baseAngle) * startR;
+        const ex = sx + Math.cos(a) * length;
+        const ey = sy + Math.sin(a) * length;
+
+        ctx.strokeStyle = rgba(C.brnch, alpha);
+        ctx.lineWidth = Math.max(0.2, depth * 0.6);
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(ex, ey);
+        ctx.stroke();
+
+        // Tiny node at fork point
+        if (depth > 1) {
+            ctx.fillStyle = rgba(C.brnch, alpha * 0.6);
+            ctx.beginPath(); ctx.arc(ex, ey, 0.8 + depth * 0.3, 0, TAU); ctx.fill();
+        }
+
+        const nextR = Math.sqrt((ex - cx) * (ex - cx) + (ey - cy) * (ey - cy));
+        drawBranch(cx, cy, a, nextR, length * shrink, depth - 1, alpha * 0.7, levelN);
+    }
+}
+
+// --- Scale axis indicator ---
+function drawScaleAxis(nMin, nMax) {
+    const axisX = 36;
+    const axisTop = H * 0.2;
+    const axisBot = H * 0.8;
+    const axisH = axisBot - axisTop;
+    const range = Math.max(1, nMax - nMin);
+
+    // Vertical line
+    ctx.strokeStyle = rgba(C.amb, 0.06);
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 4]);
+    ctx.beginPath(); ctx.moveTo(axisX, axisTop); ctx.lineTo(axisX, axisBot); ctx.stroke();
+    ctx.setLineDash([]);
+
+    for (let n = nMin; n <= nMax; n++) {
+        const t = (n - nMin) / range;
+        const y = axisTop + t * axisH;
+        const isCurrent = Math.abs(n - Math.round(zoomLevel)) < 0.5;
+
+        ctx.fillStyle = rgba(isCurrent ? C.amb : C.wh, isCurrent ? 0.55 : 0.12);
+        ctx.beginPath(); ctx.arc(axisX, y, isCurrent ? 4 : 1.5, 0, TAU); ctx.fill();
+
+        if (isCurrent) {
+            ctx.font = '9px JetBrains Mono, monospace';
+            ctx.fillStyle = rgba(C.amb, 0.45);
+            ctx.textAlign = 'left';
+            ctx.fillText('⊙λ', axisX + 10, y + 3);
+        }
+    }
+
+    ctx.fillStyle = rgba(C.wh, 0.06);
+    ctx.font = '8px JetBrains Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('⊙Λ', axisX, axisTop - 8);
+    ctx.fillText("⊙λ'", axisX, axisBot + 14);
+}
+
+// --- Main render ---
+function render() {
+    ctx.fillStyle = 'rgba(6, 6, 16, 0.2)';
+    ctx.fillRect(0, 0, W, H);
+
+    // Dark energy background field (the 68%)
+    drawDarkEnergyField();
+
+    const baseR = Math.min(W, H) * 0.36;
+    const logSR = Math.log(SCALE_RATIO);
+    const nMin = Math.floor(zoomLevel - Math.log(Math.max(W, H) * 3 / baseR) / logSR);
+    const nMax = Math.ceil(zoomLevel - Math.log(2 / baseR) / logSR);
+
+    let levelsDrawn = 0;
+
+    // Draw outer to inner
+    for (let n = nMin; n <= nMax; n++) {
+        const radius = baseR * Math.pow(SCALE_RATIO, zoomLevel - n);
+        if (radius < 1 || radius > Math.max(W, H) * 3.5) continue;
+
+        const dist = Math.abs(n - zoomLevel);
+        let alpha = dist < 0.5 ? 1 : Math.max(0.04, 1 - (dist - 0.5) * 0.55);
+
+        // Fade very large and very small
+        const maxDim = Math.max(W, H);
+        if (radius > maxDim * 0.8) alpha *= Math.max(0.08, 1 - (radius - maxDim * 0.8) / (maxDim * 1.5));
+        if (radius < 15) alpha *= radius / 15;
+
+        drawLevel(CX, CY, radius, n, alpha);
+        levelsDrawn++;
+    }
+
+    // Scale axis
+    if (levelsDrawn > 1) drawScaleAxis(nMin, nMax);
+
+    // Energy injections
+    for (let i = injections.length - 1; i >= 0; i--) {
+        const inj = injections[i];
+        inj.life -= 0.012;
+        inj.radius += 2.5;
+        if (inj.life <= 0) { injections.splice(i, 1); continue; }
+        for (let r = 0; r < 3; r++) {
+            const rr = inj.radius * (0.4 + r * 0.35);
+            ctx.strokeStyle = rgba(C.amb, inj.life * (0.3 - r * 0.08));
+            ctx.lineWidth = 1.2 * inj.life;
+            ctx.beginPath(); ctx.arc(inj.x, inj.y, rr, 0, TAU); ctx.stroke();
+        }
+    }
+
+    updatePanel(levelsDrawn);
+}
+
+// --- Update ---
+function update(dt) {
+    time += dt;
+    pumpPhase += PUMP_SPEED * dt;
+    if (pumpPhase >= P) pumpPhase -= P;
+
+    // Smooth zoom
+    zoomLevel += (targetZoom - zoomLevel) * 0.06 * 60 * dt;
+
+    // Update particles
+    for (let key in pools) {
+        const pool = pools[key];
+        for (let i = 0; i < pool.length; i++) pool[i].update(dt);
+    }
+
+    // Memory cleanup
+    const cur = Math.round(zoomLevel);
+    for (let key in pools) {
+        if (Math.abs(parseInt(key) - cur) > 4) delete pools[key];
+    }
+}
+
+// --- Panel update ---
+const stationNames = ['• (0D)', '⊛ (0.5D)', '— (1D)', '⎇ (1.5D)', 'Φ (2D)', '✹ (2.5D)', '○ (3D)', '⟳ (3.5D)'];
+
+function updatePanel(levelsDrawn) {
+    const beat = Math.floor(pumpPhase) % P;
+
+    // Kernel equation highlights
+    for (let i = 0; i < P; i++) {
+        const k = document.getElementById('k' + i);
+        if (k) k.className = i === beat ? 'active-beat' : '';
+        const bd = document.getElementById('bd' + i);
+        if (bd) bd.className = i === beat ? 'beat-dot active' : 'beat-dot';
+    }
+
+    // Dimensional octave: light the current two stations (structural + processual)
+    // Each beat covers a structural station and the processual station that follows it
+    const structStation = beat * 2;       // 0, 2, 4, 6
+    const procStation = beat * 2 + 1;     // 1, 3, 5, 7
+    const frac = pumpPhase % 1;           // where within the beat
+
+    for (let i = 0; i < 8; i++) {
+        const el = document.getElementById('os' + i);
+        if (!el) continue;
+        if (i === structStation && frac < 0.5) el.className = 'oct-station lit';
+        else if (i === procStation && frac >= 0.5) el.className = 'oct-station lit';
+        else el.className = 'oct-station';
+    }
+
+    // i-cycle quadrants
+    const quadIds = ['iq-tr', 'iq-tl', 'iq-bl', 'iq-br'];
+    for (let i = 0; i < P; i++) {
+        const el = document.getElementById(quadIds[i]);
+        if (el) el.className = i === beat ? 'i-quad-cell lit' : 'i-quad-cell';
+    }
+
+    // Octave station name
+    const stIdx = frac < 0.5 ? structStation : procStation;
+    document.getElementById('m-station').textContent = stationNames[stIdx] || '';
+
+    document.getElementById('m-depth').textContent = Math.round(zoomLevel);
+    document.getElementById('m-phase').textContent = pumpPhase.toFixed(2);
+    document.getElementById('m-levels').textContent = levelsDrawn;
+
+    const balance = 0.5 - Math.abs(zoomLevel - Math.round(zoomLevel)) * 0.3;
+    document.getElementById('m-balance').textContent = balance.toFixed(3);
+
+    // Energy budget from i-cycle
+    const rightPlane = (beat === 0 || beat === 3) ? 1 : 0;
+    const vis = 0.03 + rightPlane * 0.04 + Math.sin(pumpPhase * TAU / P) * 0.01;
+    const dm = 0.25 + (1 - rightPlane) * 0.04;
+    const de = 1 - vis - dm;
+
+    document.getElementById('bar-vis').style.width = (vis * 100) + '%';
+    document.getElementById('bar-dm').style.width = (dm * 100) + '%';
+    document.getElementById('bar-de').style.width = (de * 100) + '%';
+    document.getElementById('lbl-vis').textContent = 'Vis ' + (vis * 100).toFixed(1) + '%';
+    document.getElementById('lbl-dm').textContent = 'Dark ' + (dm * 100).toFixed(1) + '%';
+    document.getElementById('lbl-de').textContent = 'Field ' + (de * 100).toFixed(1) + '%';
+
+    const depth = Math.round(zoomLevel);
+    if (depth === 0) {
+        document.getElementById('scale-label').textContent = '⊙λ';
+        document.getElementById('scale-context').textContent = '⊙λ ⊂ ⊙Λ ⊂ ⊙ = E = 1';
+    } else if (depth > 0) {
+        document.getElementById('scale-label').textContent = '⊙λ' + "'".repeat(Math.min(depth, 5));
+        document.getElementById('scale-context').textContent = depth + ' scales inward';
+    } else {
+        const up = Math.abs(depth);
+        document.getElementById('scale-label').textContent = up === 1 ? '⊙Λ' : '⊙Λ' + "'".repeat(up - 1);
+        document.getElementById('scale-context').textContent = up + ' scales outward';
+    }
+}
+
+// --- Loop ---
+let lastTime = performance.now();
+function loop(now) {
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+    update(dt);
+    render();
+    requestAnimationFrame(loop);
+}
+
+// --- Input ---
+canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    targetZoom += e.deltaY > 0 ? -0.15 : 0.15;
+}, { passive: false });
+
+canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    injections.push({ x: e.clientX - rect.left, y: e.clientY - rect.top, life: 1, radius: 5 });
+});
+
+// Touch: pinch to zoom
+let lastTouchDist = 0;
+canvas.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        lastTouchDist = Math.sqrt(dx * dx + dy * dy);
+    } else if (e.touches.length === 1) {
+        const rect = canvas.getBoundingClientRect();
+        injections.push({ x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top, life: 1, radius: 5 });
+    }
+}, { passive: true });
+
+canvas.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2) {
+        e.preventDefault();
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (lastTouchDist > 0) targetZoom += (dist / lastTouchDist - 1) * 0.5;
+        lastTouchDist = dist;
+    }
+}, { passive: false });
+canvas.addEventListener('touchend', () => { lastTouchDist = 0; });
+
+document.getElementById('tog').addEventListener('click', () => {
+    document.getElementById('panel').classList.toggle('hidden');
+});
+document.getElementById('btn-reset').addEventListener('click', () => {
+    targetZoom = 0; zoomLevel = 0; pumpPhase = 0; injections = []; pools = {};
+});
+
+// --- Start ---
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
