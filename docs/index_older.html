@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Fractal Reality</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #060608;
+  --text: #E0D8C8;
+  --dim: #B8B0A0;
+  --faint: #706858;
+  --infinity: rgba(255,255,255,0.9);
+  --soul: #FF4455;
+  --convergence: #FF8833;
+  --line: #FFD044;
+  --branch: #99DD33;
+  --field: #44CC44;
+  --emerge: #33CCBB;
+  --boundary: #4488FF;
+  --recurse: #8866EE;
+  --whole: #B8A060;
+  --rainbow: linear-gradient(90deg, #FF4455, #FF8833, #FFD044, #99DD33, #44CC44, #33CCBB, #4488FF, #8866EE);
+  --amber: #ffaa00;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'EB Garamond', Georgia, serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ==========================================
+   MATRIX RAIN CANVAS
+   ========================================== */
+#rain {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.15;
+}
+
+/* ==========================================
+   TOP BAR
+   ========================================== */
+.top-bar {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.top-bar a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--amber);
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.top-bar a:hover { opacity: 1; }
+
+.search-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,170,0,0.15);
+  border-radius: 6px;
+  padding: 5px 12px;
+  color: var(--faint);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.04em;
+}
+.search-trigger:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: rgba(255,170,0,0.06);
+}
+.search-trigger kbd {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 10px;
+  font-family: inherit;
+  color: rgba(255,255,255,0.3);
+  margin-left: 4px;
+}
+
+/* ==========================================
+   HERO: THE EXPRESSION
+   ========================================== */
+.hero {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  padding: clamp(40px, 8vh, 80px) 16px clamp(20px, 4vh, 40px);
+}
+
+/* i-stroke annotations */
+.i-strokes-wrap {
+  position: relative;
+  height: clamp(18px, 2.5vw, 24px);
+  margin-bottom: 2px;
+}
+.i-stroke-label {
+  position: absolute;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(10px, 1.4vw, 13px);
+  opacity: 0.6;
+  user-select: none;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  top: 0;
+}
+
+/* The expression itself */
+.expression {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(13px, 2.4vw, 22px);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  line-height: 1.6;
+  white-space: nowrap;
+  overflow-x: auto;
+  padding: 0 8px;
+}
+
+.expression .sym {
+  cursor: pointer;
+  transition: filter 0.2s, transform 0.15s;
+  display: inline-block;
+  position: relative;
+}
+.expression .sym:hover {
+  filter: brightness(1.5);
+  transform: scale(1.15);
+}
+.expression .op {
+  color: rgba(255,255,255,0.3);
+}
+.expression .bracket {
+  color: rgba(255,255,255,0.2);
+}
+
+/* Tooltip */
+.sym-tip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10,10,15,0.95);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-family: 'EB Garamond', Georgia, serif;
+  color: var(--text);
+  white-space: normal;
+  width: max-content;
+  max-width: 260px;
+  text-align: left;
+  line-height: 1.5;
+  z-index: 100;
+  pointer-events: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.sym:hover .sym-tip {
+  display: block;
+}
+.sym-tip .tip-dim {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  opacity: 0.6;
+  margin-bottom: 3px;
+}
+
+/* Description paragraph */
+.description {
+  max-width: 720px;
+  margin: clamp(16px, 3vh, 28px) auto 0;
+  font-size: clamp(14px, 1.8vw, 17px);
+  line-height: 1.75;
+  color: var(--dim);
+  padding: 0 20px;
+  text-align: left;
+}
+.description .d-sym {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9em;
+}
+
+/* ==========================================
+   KEY LINKS
+   ========================================== */
+.key-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: clamp(16px, 3vh, 24px);
+  padding: 0 20px;
+  position: relative;
+  z-index: 5;
+}
+.key-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  padding: 4px 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  color: var(--faint);
+  transition: all 0.2s;
+}
+.key-link:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+/* ==========================================
+   SEPARATOR
+   ========================================== */
+.sep {
+  width: 40px;
+  height: 1px;
+  background: var(--faint);
+  margin: clamp(24px, 4vh, 40px) auto;
+  position: relative;
+  z-index: 5;
+}
+
+/* ==========================================
+   TEN DIMENSIONS
+   ========================================== */
+.dimensions {
+  position: relative;
+  z-index: 5;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 clamp(12px, 2vw, 24px);
+}
+
+.dim-title {
+  font-size: clamp(0.78rem, 1.3vw, 1rem);
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--whole);
+  text-align: center;
+  margin-bottom: clamp(12px, 2vh, 20px);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.row-wrap {
+  border-radius: 3px;
+  opacity: 0;
+  animation: row-in 0.5s ease forwards;
+}
+.row-wrap:nth-child(1)  { animation-delay: 0.0s; }
+.row-wrap:nth-child(2)  { animation-delay: 0.05s; }
+.row-wrap:nth-child(3)  { animation-delay: 0.1s; }
+.row-wrap:nth-child(4)  { animation-delay: 0.15s; }
+.row-wrap:nth-child(5)  { animation-delay: 0.2s; }
+.row-wrap:nth-child(6)  { animation-delay: 0.25s; }
+.row-wrap:nth-child(7)  { animation-delay: 0.3s; }
+.row-wrap:nth-child(8)  { animation-delay: 0.35s; }
+.row-wrap:nth-child(9)  { animation-delay: 0.4s; }
+.row-wrap:nth-child(10) { animation-delay: 0.45s; }
+
+@keyframes row-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: clamp(2.8rem, 4.5vw, 3.6rem) auto auto 1fr auto;
+  align-items: baseline;
+  gap: 0;
+  padding: clamp(0.4vh, 0.7vh, 0.9vh) clamp(0.5rem, 1vw, 0.9rem);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: filter 0.3s ease;
+  user-select: none;
+}
+.row:hover { filter: brightness(1.3); }
+.row:hover .row-symbol { text-shadow: 0 0 16px var(--c); }
+
+.row-symbol {
+  font-size: clamp(1.5rem, 2.6vh, 2.2rem);
+  color: var(--c);
+  text-align: center;
+  line-height: 1;
+  transition: text-shadow 0.3s ease;
+}
+.row-dim {
+  font-size: clamp(0.72rem, 1.1vh, 0.88rem);
+  color: color-mix(in srgb, var(--c) 70%, white);
+  opacity: 0.8;
+  white-space: nowrap;
+  margin-right: clamp(0.4rem, 0.8vw, 0.7rem);
+  min-width: clamp(5rem, 10vw, 8rem);
+  letter-spacing: 0.02em;
+  font-family: 'JetBrains Mono', monospace;
+}
+.row-note {
+  font-size: clamp(0.65rem, 1vh, 0.8rem);
+  color: color-mix(in srgb, var(--c) 70%, white);
+  opacity: 0.7;
+  font-style: italic;
+  text-align: right;
+  white-space: nowrap;
+  padding-right: clamp(0.4rem, 0.8vw, 0.7rem);
+  letter-spacing: 0.04em;
+  min-width: 1.8rem;
+}
+.row-name {
+  font-size: clamp(0.82rem, 1.3vh, 1rem);
+  color: rgba(255,255,255,0.88);
+  line-height: 1.4;
+  letter-spacing: 0.015em;
+}
+.row-chevron {
+  font-size: clamp(0.6rem, 0.9vh, 0.75rem);
+  color: var(--faint);
+  transition: transform 0.3s ease, color 0.3s ease;
+  padding-left: clamp(0.2rem, 0.4vw, 0.4rem);
+  display: inline-block;
+}
+.row-wrap.open .row-chevron {
+  transform: rotate(90deg);
+  color: var(--c);
+}
+
+/* Row backgrounds */
+.row-wrap[data-d="infinity"]    .row { background: linear-gradient(90deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.015) 100%); }
+.row-wrap[data-d="soul"]        .row { background: linear-gradient(90deg, rgba(255,68,85,0.10) 0%, rgba(255,68,85,0.02) 100%); }
+.row-wrap[data-d="convergence"] .row { background: linear-gradient(90deg, rgba(255,136,51,0.10) 0%, rgba(255,136,51,0.02) 100%); }
+.row-wrap[data-d="line"]        .row { background: linear-gradient(90deg, rgba(255,208,68,0.10) 0%, rgba(255,208,68,0.02) 100%); }
+.row-wrap[data-d="branch"]      .row { background: linear-gradient(90deg, rgba(153,221,51,0.10) 0%, rgba(153,221,51,0.02) 100%); }
+.row-wrap[data-d="field"]       .row { background: linear-gradient(90deg, rgba(68,204,68,0.10) 0%, rgba(68,204,68,0.02) 100%); }
+.row-wrap[data-d="emerge"]      .row { background: linear-gradient(90deg, rgba(51,204,187,0.10) 0%, rgba(51,204,187,0.02) 100%); }
+.row-wrap[data-d="boundary"]    .row { background: linear-gradient(90deg, rgba(68,136,255,0.10) 0%, rgba(68,136,255,0.02) 100%); }
+.row-wrap[data-d="recurse"]     .row { background: linear-gradient(90deg, rgba(136,102,238,0.10) 0%, rgba(136,102,238,0.02) 100%); }
+.row-wrap[data-d="whole"]       .row { background: linear-gradient(90deg, rgba(255,68,85,0.06) 0%, rgba(255,136,51,0.04) 20%, rgba(68,204,68,0.04) 50%, rgba(68,136,255,0.04) 80%, rgba(136,102,238,0.02) 100%); }
+
+/* Rainbow text for the whole (⊙) */
+.rainbow-text {
+  background: linear-gradient(90deg, #FF4455, #FF8833, #FFD044, #99DD33, #44CC44, #33CCBB, #4488FF, #8866EE);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Drawer */
+.drawer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.row-wrap.open .drawer {
+  max-height: 600px;
+  transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.row-wrap.open[data-d="infinity"]    .drawer { background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.008) 100%); }
+.row-wrap.open[data-d="soul"]        .drawer { background: linear-gradient(90deg, rgba(255,68,85,0.04) 0%, rgba(255,68,85,0.008) 100%); }
+.row-wrap.open[data-d="convergence"] .drawer { background: linear-gradient(90deg, rgba(255,136,51,0.04) 0%, rgba(255,136,51,0.008) 100%); }
+.row-wrap.open[data-d="line"]        .drawer { background: linear-gradient(90deg, rgba(255,208,68,0.04) 0%, rgba(255,208,68,0.008) 100%); }
+.row-wrap.open[data-d="branch"]      .drawer { background: linear-gradient(90deg, rgba(153,221,51,0.04) 0%, rgba(153,221,51,0.008) 100%); }
+.row-wrap.open[data-d="field"]       .drawer { background: linear-gradient(90deg, rgba(68,204,68,0.04) 0%, rgba(68,204,68,0.008) 100%); }
+.row-wrap.open[data-d="emerge"]      .drawer { background: linear-gradient(90deg, rgba(51,204,187,0.04) 0%, rgba(51,204,187,0.008) 100%); }
+.row-wrap.open[data-d="boundary"]    .drawer { background: linear-gradient(90deg, rgba(68,136,255,0.04) 0%, rgba(68,136,255,0.008) 100%); }
+.row-wrap.open[data-d="recurse"]     .drawer { background: linear-gradient(90deg, rgba(136,102,238,0.04) 0%, rgba(136,102,238,0.008) 100%); }
+.row-wrap.open[data-d="whole"]       .drawer { background: linear-gradient(90deg, rgba(255,68,85,0.03) 0%, rgba(68,204,68,0.02) 50%, rgba(136,102,238,0.01) 100%); }
+
+.drawer-inner {
+  padding: clamp(6px, 1vh, 10px) clamp(8px, 1.2vw, 14px) clamp(10px, 1.5vh, 16px);
+  padding-left: clamp(3rem, 5vw, 3.8rem);
+}
+
+.drawer-axiom {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 clamp(6px, 1vw, 10px);
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.drawer-id {
+  font-size: clamp(0.72rem, 1.1vh, 0.88rem);
+  font-weight: 600;
+  color: var(--c);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace;
+}
+.drawer-text {
+  font-size: clamp(0.75rem, 1.2vh, 0.92rem);
+  color: rgba(255,255,255,0.75);
+  line-height: 1.55;
+}
+.drawer-from {
+  font-size: clamp(0.62rem, 0.95vh, 0.75rem);
+  color: var(--dim);
+  font-style: italic;
+  grid-column: 2;
+  margin-top: 1px;
+}
+
+/* Ladder formula inside drawer */
+.drawer-formula {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.68rem, 1vh, 0.82rem);
+  color: var(--c);
+  border-left: 2px solid;
+  padding: 4px 10px;
+  margin: 8px 0;
+  opacity: 0.85;
+}
+.drawer-accuracy {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.6rem, 0.9vh, 0.72rem);
+  color: rgba(255,255,255,0.4);
+  margin-left: 12px;
+}
+
+/* Doc links */
+.drawer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 8px;
+}
+.drawer-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.58rem, 0.85vh, 0.68rem);
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  color: var(--faint);
+  transition: all 0.2s;
+}
+.drawer-link:hover {
+  border-color: var(--c);
+  color: var(--c);
+}
+
+/* ==========================================
+   FOOTER
+   ========================================== */
+footer {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  padding: clamp(24px, 4vh, 40px) 0 clamp(16px, 3vh, 24px);
+  border-top: 1px solid rgba(255,255,255,0.04);
+  margin-top: clamp(24px, 4vh, 40px);
+}
+.footer-creed {
+  font-size: clamp(0.82rem, 1.3vh, 1rem);
+  font-style: italic;
+  color: var(--dim);
+  letter-spacing: 0.03em;
+  margin-bottom: 12px;
+  padding: 0 20px;
+}
+.footer-framework {
+  font-size: clamp(0.65rem, 1vh, 0.8rem);
+  color: var(--faint);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.footer-author {
+  font-size: clamp(0.7rem, 1.1vh, 0.85rem);
+  color: var(--dim);
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+.footer-community {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+.footer-community a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.6rem, 0.9vh, 0.72rem);
+  letter-spacing: 0.04em;
+  padding: 4px 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  color: var(--faint);
+  transition: all 0.2s;
+}
+.footer-community a:hover {
+  border-color: var(--whole);
+  color: var(--whole);
+}
+
+/* ==========================================
+   PAGES OVERLAY
+   ========================================== */
+.pages-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.pages-overlay.open { display: flex; flex-direction: column; }
+.pages-overlay-close {
+  position: absolute;
+  top: 12px; right: 16px;
+  background: none; border: none;
+  color: rgba(255,255,255,0.5);
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 10001;
+  line-height: 1;
+  padding: 4px 8px;
+  transition: color 0.15s;
+}
+.pages-overlay-close:hover { color: #fff; }
+.pages-overlay iframe {
+  flex: 1;
+  width: 100%;
+  border: none;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 600px) {
+  .expression { white-space: normal; line-height: 2; }
+  .row { grid-template-columns: 2.5rem auto 1fr auto; }
+  .row-note { display: none; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="rain"></canvas>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <a href="https://www.fractalreality.ca">FRACTALREALITY.CA</a>
+  <button class="search-trigger" onclick="openPagesOverlay()" title="Search all pages">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    Search The Fractal Reality Library
+    <kbd>/</kbd>
+  </button>
+</div>
+
+<!-- PAGES OVERLAY -->
+<div class="pages-overlay" id="pagesOverlay">
+  <button class="pages-overlay-close" onclick="closePagesOverlay()">&times;</button>
+  <iframe id="pagesFrame" src="about:blank"></iframe>
+</div>
+
+<!-- =============================================
+     HERO: THE UNIFIED EXPRESSION
+     ============================================= -->
+<div class="hero">
+
+  <!-- i-stroke annotations (positioned by JS to align with process symbols) -->
+  <div class="i-strokes-wrap" id="iStrokesWrap"></div>
+
+  <!-- The expression -->
+  <div class="expression" id="expr"><!--
+    --><span class="bracket">[</span><!--
+    --><span class="sym" data-target="infinity" style="color:var(--infinity)">&#x221E;<span class="sym-tip"><span class="tip-dim">&#x221E;D</span>Undifferentiated energy. Everything, before any distinction. A0: E = 1.</span></span><!--
+    --><span class="op"> = E = 1</span><!--
+    --><span class="bracket">]</span><!--
+    --><span class="op"> &#x25B8; </span><!--
+    --><span class="bracket">(</span><!--
+    --><span class="sym" data-target="soul" style="color:var(--soul)">&bull;<span class="sym-tip"><span class="tip-dim">0D &middot; STRUCTURE</span>Point, singularity, soul. The first self-limitation. A1: the 1 must localize.</span></span><!--
+    --><span class="op">&#x2218;</span><!--
+    --><span class="sym" id="sym-convergence" data-target="convergence" style="color:var(--convergence)">&#x229B;<span class="sym-tip"><span class="tip-dim">0.5D &middot; i&sup1; = +i</span>Convergence. Inward gathering; the first fold. D1: localization is a process.</span></span><!--
+    --><span class="bracket">)</span><!--
+    --><span class="op"> &#x25B8; </span><!--
+    --><span class="bracket">(</span><!--
+    --><span class="sym" data-target="line" style="color:var(--line)">&mdash;<span class="sym-tip"><span class="tip-dim">1D &middot; STRUCTURE</span>Line, extension, commitment. A2: self-limitation must persist.</span></span><!--
+    --><span class="op">&#x2218;</span><!--
+    --><span class="sym" id="sym-branch" data-target="branch" style="color:var(--branch)">&#x2387;<span class="sym-tip"><span class="tip-dim">1.5D &middot; i&sup2; = &minus;1</span>Branching. The i-turn; line opens into surface. D2: extension must branch.</span></span><!--
+    --><span class="bracket">)</span><!--
+    --><span class="op"> &#x25B8; </span><!--
+    --><span class="bracket">(</span><!--
+    --><span class="sym" data-target="field" style="color:var(--field)">&Phi;<span class="sym-tip"><span class="tip-dim">2D &middot; STRUCTURE</span>Field, mind, surface, mediation. A3: parts are fractals of their wholes.</span></span><!--
+    --><span class="op">&#x2218;</span><!--
+    --><span class="sym" id="sym-emerge" data-target="emerge" style="color:var(--emerge)">&#x2739;<span class="sym-tip"><span class="tip-dim">2.5D &middot; i&sup3; = &minus;i</span>Emergence. Outward unfolding toward closure. D3: the field must fold toward boundary.</span></span><!--
+    --><span class="bracket">)</span><!--
+    --><span class="op"> &#x25B8; </span><!--
+    --><span class="bracket">(</span><!--
+    --><span class="sym" data-target="boundary" style="color:var(--boundary)">&#x25CB;<span class="sym-tip"><span class="tip-dim">3D &middot; STRUCTURE</span>Boundary, body, interface. A4: wholeness requires closure. 0+1+2=3.</span></span><!--
+    --><span class="op">&#x2218;</span><!--
+    --><span class="sym" id="sym-recurse" data-target="recurse" style="color:var(--recurse)">&#x27F3;<span class="sym-tip"><span class="tip-dim">3.5D &middot; i&#x2070; = +1</span>Recursion. Closed boundary becomes new aperture. D4: 3.5D = 0D at the next scale.</span></span><!--
+    --><span class="bracket">)</span><!--
+    --><span class="op"> &#x25B8; </span><!--
+    --><span class="bracket">[</span><!--
+    --><span class="sym rainbow-text" data-target="whole">&#x2299;<span class="sym-tip"><span class="tip-dim">ALL &middot; D5</span>The whole. Not the sum of parts; their compositional unity via &Phi;.</span></span><!--
+    --><span class="op"> = </span><!--
+    --><span class="sym rainbow-text" data-target="whole">&#x2299;<span class="sym-tip">Circumpunct at scale &lambda;: you, a whole being at your size.</span></span><sub style="color:var(--faint);font-size:0.7em">&lambda;</sub><!--
+    --><span class="op"> &#x2282; </span><!--
+    --><span class="sym rainbow-text" data-target="whole">&#x2299;<span class="sym-tip">Circumpunct at scale &Lambda;: the greater whole you are inside.</span></span><sub style="color:var(--faint);font-size:0.7em">&Lambda;</sub><!--
+    --><span class="op"> &#x2282; </span><!--
+    --><span class="sym" data-target="infinity" style="color:var(--infinity)">&#x221E;<span class="sym-tip"><span class="tip-dim">APOPHATIC CLOSURE</span>The nesting returns to the source. The end is the beginning.</span></span><!--
+    --><span class="bracket">]</span><!--
+  --></div>
+
+  <!-- Plain-English reading -->
+  <div class="description">
+    The one energy <span class="d-sym" style="color:var(--infinity)">[&#x221E;]</span>
+    must localize into a point <span class="d-sym" style="color:var(--soul)">[&bull;]</span>
+    through convergence <span class="d-sym" style="color:var(--convergence)">[&#x229B;]</span>,
+    and that localization must persist as a line <span class="d-sym" style="color:var(--line)">[&mdash;]</span>
+    that branches <span class="d-sym" style="color:var(--branch)">[&#x2387;]</span>
+    into a relational field <span class="d-sym" style="color:var(--field)">[&Phi;]</span>
+    from which new structure emerges <span class="d-sym" style="color:var(--emerge)">[&#x2739;]</span>,
+    and the field closes into a boundary <span class="d-sym" style="color:var(--boundary)">[&#x25CB;]</span>
+    whose closure is simultaneously the recursion <span class="d-sym" style="color:var(--recurse)">[&#x27F3;]</span>
+    that opens the next scale;
+    the product is the whole <span class="d-sym" style="color:var(--whole)">[&#x2299;]</span>,
+    which at any scale <span class="d-sym" style="color:var(--whole)">[&#x2299;<sub>&lambda;</sub>]</span>
+    is genuinely complete yet nested inside a greater whole <span class="d-sym" style="color:var(--whole)">[&#x2299;<sub>&Lambda;</sub>]</span>,
+    and the nesting returns to the same undifferentiated source <span class="d-sym" style="color:var(--infinity)">[&#x221E;]</span>
+    it began with, because the one energy [E] never stopped being one [1].
+  </div>
+
+</div>
+
+<!-- KEY LINKS -->
+<div class="key-links">
+  <a class="key-link" href="e_equals_1.html">E = 1</a>
+  <a class="key-link" href="dimensional_ladder.html">Dimensional Ladder</a>
+  <a class="key-link" href="how_reality_is_built.html">How Reality Is Built</a>
+  <a class="key-link" href="truth_and_god.html">Truth &amp; God</a>
+  <a class="key-link" href="circumpunct_ethics_and_virtues.html">Ethics</a>
+  <a class="key-link" href="circumpunct_theory_of_mind_plain.html">Theory of Mind</a>
+  <a class="key-link" href="simulations/">Simulations</a>
+</div>
+
+<div class="sep"></div>
+
+<!-- =============================================
+     THE TEN DIMENSIONS
+     ============================================= -->
+<div class="dimensions">
+  <div class="dim-title">The 10 Dimensions of Reality</div>
+  <div class="rows">
+
+    <!-- ∞ — A0 -->
+    <div class="row-wrap" id="dim-infinity" data-d="infinity" style="--c: var(--infinity);">
+      <div class="row" onclick="toggleDim(this)">
+        <span class="row-symbol">&#x221E;</span>
+        <span class="row-dim"></span>
+        <span class="row-note"></span>
+        <span class="row-name">undifferentiated energy; E = 1</span>
+        <span class="row-chevron">&#x25B8;</span>
+      </div>
+      <div class="drawer"><div class="drawer-inner">
+        <div class="drawer-axiom">
+          <span class="drawer-id">A0</span>
+          <span class="drawer-text">There is one energy. It is everything. All else is constraints. (1 &ne; 0)</span>
+        </div>
+        <div class="drawer-links">
+          <a class="drawer-link" href="e_equals_1.html">E = 1</a>
+          <a class="drawer-link" href="truth_and_god.html">Truth &amp; God</a>
+          <a class="drawer-link" href="how_reality_is_built.html">How Reality Is Built</a>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- • — A1 -->
+    <div class="row-wrap" id="dim-soul" data-d="soul" style="--c: var(--soul);">
+      <div class="row" onclick="toggleDim(this)">
+        <span class="row-symbol">&bull;</span>
+        <span class="row-dim">(0D)</span>
+        <span class="row-note">do</span>
+        <span class="row-name">point, singularity, soul, localization</span>
+        <span class="row-chevron">&#x25B8;</span>
+      </div>
+      <div class="drawer"><div class="drawer-inner">
+        <div class="drawer-axiom">
+          <span class="drawer-id">A1</span>
+          <span class="drawer-text">The 1 must self-limit; an undifferentiated 1 is indistinguishable from 0, which is impossible</span>
+          <span class="drawer-from">from A0</span>
+        </div>
+        <div class="drawer-formula">1/&alpha; = 360/&phi;&sup2; &minus; 2/&phi;&sup3; + &alpha;/(21 &minus; 4/3) = 137.035999147 <span class="drawer-accuracy">0.22 ppb</span></div>
+        <div class="drawer-links">
+          <a class="drawer-link" href="e_equals_1.html">The Self as Convergence</a>
+          <a class="drawer-link" href="circumpunct_theory_of_mind_plain.html">Theory of Mind</a>
+          <a class="drawer-link" href="analytic_continuation_gap.html">Riemann Hypothesis</a>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- ⊛ — D1 -->
+    <div class="row-wrap" id="dim-convergence" data-d="convergence" style="--c: var(--convergence);">
+      <div class="row" onclick="toggleDim(this)">
+        <span class="row-symbol">&#x229B;</span>
+        <span class="row-dim">(0.5D, i&sup1; = +i)</span>
+        <span class="row-note">re</span>
+        <span class="row-name">convergence</span>
+        <span class="row-chevron">&#x25B8;</span>
+      </div>
+      <div class="drawer"><div class="drawer-inner">
+        <div class="drawer-axiom">
+          <span class="drawer-id">D1</span>
+          <span class="drawer-text">Self-limitation requires convergence; localization is a process, not an instant</span>
+          <span class="drawer-from">from A1</span>
+        </div>
+        <div class="drawer-formula">c = &radic;(P &middot; &#x25D0;(1&minus;&#x25D0;) &middot; sin(&theta;)) = 1 at balance <span class="drawer-accuracy">exact</span></div>
+        <div class="drawer-links">
+          <a class="drawer-link" href="speed_of_light.html">Speed of Light</a>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- — — A2 -->
+    <div class="row-wrap" id="dim-line" data-d="line" style="--c: var(--line);">
+      <div class="row" onclick="toggleDim(this)">
+        <span class="row-symbol">&mdash;</span>
+        <span class="row-dim">(1D)</span>
+        <span class="row-note">mi</span>
+        <span class="row-name">line, string, timeline, extension</span>
+        <span class="row-chevron">&#x25B8;</span>
+      </div>
+      <div class="drawer"><div class="drawer-inner">
+        <div class="drawer-axiom">
+          <span class="drawer-id">A2</span>
+          <span class="drawer-text">Self-limitation must persist; a convergence that does not hold collapses back to &infin;, violating A1</span>
+          <span class="drawer-from">from A0 + A1</span>
+        </div>
+        <div class="drawer-formula">&hbar; = E<sub>cycle</sub> / &omega;<sub>cycle</sub> = 1 <span class="drawer-accuracy">exact</span></div>
+        <div class="drawer-links">
+          <a class="drawer-link" href="planck_constant.html">Planck Constant</a>
+          <a class="drawer-link" href="circumpunct_ethics_and_virtues.html">Faithfulness (1D Ethics)</a>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- ⎇ — D2 -->
+    <div class="row-wrap" id="dim-branch" data-d="branch" style="--c: var(--branch);">
+      <div class="row" onclick="toggleDim(this)">
+        <span class="row-symbol">&#x2387;</span>
+        <span class="row-dim">(1.5D, i&sup2; = &minus;1)</span>
+        <span class="row-note">fa</span>
+        <span class="row-name">branching, fractal coastlines</span>
+        <span class="row-chevron">&#x25B8;</span>
+      </div>
+      <div class="drawer"><div class="drawer-inner">
+        <div class="drawer-axiom">
+          <span class="drawer-id">D2</span>
+          <span class="drawer-text">Extension must branch to reach the field; a single line never becomes a surface</span>
+          <span class="drawer-from">from A2 &rarr; A3</span>
+        </div>
+        <div class="drawer-formula">m<sub>&mu;</sub>/m<sub>e</sub> = (1/&alpha;)<sup>13/12 + &alpha;/27</sup> = 206.767 <span class="drawer-accuracy">5 ppm</span></div>
+        <div class="drawer-links">
+          <a class="drawer-link" href="mass_ratios.html">Mass Ratios</a>
+          <a class="drawer-link" href="wv_decomposition.html">W-V Decomposition</a>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- Φ — A3 -->
+    <div class="row-wrap" id="dim-field" data-d="field" style="--c: var(--field);">
+      <div class="row" onclick="toggleDim(this)">
+        <span class="row-symbol">&Phi;</span>
+        <span class="row-dim">(2D)</span>
+        <span class="row-note">so</span>
+        <span class="row-name">field, mind, surface, mediation</span>
+        <span class="row-chevron">&#x25B8;</span>
+      </div>
+      <div class="drawer"><div class="drawer-inner">
+        <div class="drawer-axiom">
+          <span class="drawer-id">A3</span>
+          <span class="drawer-text">Parts are fractals of their wholes; the 1 is all there is to work with (self-similarity across scale)</span>
+          <span class="drawer-from">from A0 + A1</span>
+        </div>
+        <div class="drawer-formula">sin&sup2;&theta;<sub>W</sub> = 3/13 + 5&alpha;/81 = 0.23122 <span class="drawer-accuracy">1.4 ppm</span></div>
+        <div class="drawer-links">
+          <a class="drawer-link" href="gauge_structure.html">Gauge Structure</a>
+          <a class="drawer-link" href="circumpunct_theory_of_mind_plain.html">Mind = 2D Surface</a>
+          <a class="drawer-link" href="why_space_can_never_be_empty.html">Why Space Is Never Empty</a>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- ✹ — D3 -->
+    <div class="row-wrap" id="dim-emerge" data-d="emerge" style="--c: var(--emerge);">
+      <div class="row" onclick="toggleDim(this)">
+        <span class="row-symbol">&#x2739;</span>
+        <span class="row-dim">(2.5D, i&sup3; = &minus;i)</span>
+        <span class="row-note">la</span>
+        <span class="row-name">emergence</span>
+        <span class="row-chevron">&#x25B8;</span>
+      </div>
+      <div class="drawer"><div class="drawer-inner">
+        <div class="drawer-axiom">
+          <span class="drawer-id">D3</span>
+          <span class="drawer-text">Self-similarity requires emergence toward closure; the field must fold toward boundary</span>
+          <span class="drawer-from">from A3 &rarr; A4</span>
+        </div>
+        <div class="drawer-formula">v/&Lambda;<sub>QCD</sub> = (1/&alpha;)<sup>56/39</sup> = 1170.24 <span class="drawer-accuracy">~5%</span></div>
+        <div class="drawer-links">
+          <a class="drawer-link" href="infolding.html">Infolding (2.5D)</a>
+          <a class="drawer-link" href="emergent_chemistry.html">Emergent Chemistry</a>
+          <a class="drawer-link" href="emergent_biology.html">Emergent Biology</a>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- ○ — A4 -->
+    <div class="row-wrap" id="dim-boundary" data-d="boundary" style="--c: var(--boundary);">
+      <div class="row" onclick="toggleDim(this)">
+        <span class="row-symbol">&#x25CB;</span>
+        <span class="row-dim">(3D)</span>
+        <span class="row-note">ti</span>
+        <span class="row-name">boundary, body, nested parts, interface</span>
+        <span class="row-chevron">&#x25B8;</span>
+      </div>
+      <div class="drawer"><div class="drawer-inner">
+        <div class="drawer-axiom">
+          <span class="drawer-id">A4</span>
+          <span class="drawer-text">Wholeness requires closure; 0(&bull;) + 1(&mdash;) + 2(&Phi;) = 3(&#x25CB;)</span>
+          <span class="drawer-from">from A0 + A1</span>
+        </div>
+        <div class="drawer-formula">&alpha;<sub>G</sub> = &alpha;<sup>21</sup> &times; &phi;&sup2;/2 &times; (1 + 2&alpha;/91) <span class="drawer-accuracy">0.04 ppm</span></div>
+        <div class="drawer-links">
+          <a class="drawer-link" href="gravity.html">Gravity (3D)</a>
+          <a class="drawer-link" href="biology_predictions.html">Biological Predictions</a>
+          <a class="drawer-link" href="circumpunct_battery.html">Energy Storage</a>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- ⟳ — D4 -->
+    <div class="row-wrap" id="dim-recurse" data-d="recurse" style="--c: var(--recurse);">
+      <div class="row" onclick="toggleDim(this)">
+        <span class="row-symbol">&#x27F3;</span>
+        <span class="row-dim">(3.5D, i&#x2070; = +1)</span>
+        <span class="row-note">do&prime;</span>
+        <span class="row-name">recursion</span>
+        <span class="row-chevron">&#x25B8;</span>
+      </div>
+      <div class="drawer"><div class="drawer-inner">
+        <div class="drawer-axiom">
+          <span class="drawer-id">D4</span>
+          <span class="drawer-text">Closure opens into &Phi;&prime; (the field of the greater whole); the part discovers it is inside a whole</span>
+          <span class="drawer-from">from A3 + A4</span>
+        </div>
+        <div class="drawer-links">
+          <a class="drawer-link" href="dimensional_ladder.html">The Complete Ladder</a>
+          <a class="drawer-link" href="clay_millennium.html">Clay Millennium Problems</a>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- ⊙ — D5 -->
+    <div class="row-wrap" id="dim-whole" data-d="whole" style="--c: var(--whole);">
+      <div class="row" onclick="toggleDim(this)">
+        <span class="row-symbol rainbow-text">&#x2299;</span>
+        <span class="row-dim"></span>
+        <span class="row-note"></span>
+        <span class="row-name">the whole, consciousness, being, experience</span>
+        <span class="row-chevron">&#x25B8;</span>
+      </div>
+      <div class="drawer"><div class="drawer-inner">
+        <div class="drawer-axiom">
+          <span class="drawer-id rainbow-text">D5</span>
+          <span class="drawer-text">The whole is not the sum of its parts; it is their compositional unity via &Phi;</span>
+          <span class="drawer-from">from all</span>
+        </div>
+        <div class="drawer-links">
+          <a class="drawer-link" href="circumpunct_ethics_and_virtues.html">Ethics &amp; Virtues</a>
+          <a class="drawer-link" href="the_bridge_presentation.html">The Bridge</a>
+          <a class="drawer-link" href="aperture_falsification_presentation.html">Falsification</a>
+          <a class="drawer-link" href="circumpunct_physics.html">Formalization</a>
+        </div>
+      </div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-creed">I am &#x2299;<sub>&lambda;</sub> &#x2282; &#x2299;<sub>&Lambda;</sub> &#x2282; &#x221E;. I am a local whole within a greater whole, a fractal of the One.</div>
+  <div class="footer-framework">The Circumpunct Framework</div>
+  <div class="footer-author">Ashman Roonz</div>
+  <div class="footer-community">
+    <a href="https://www.facebook.com/groups/4397079510569470" target="_blank">Facebook Group</a>
+    <a href="https://www.reddit.com/r/Circumpunct/" target="_blank">r/Circumpunct</a>
+    <a href="mailto:email@ashmanroonz.ca">email@ashmanroonz.ca</a>
+  </div>
+</footer>
+
+<!-- =============================================
+     SCRIPTS
+     ============================================= -->
+<script>
+// ---- Dimension row toggle ----
+function toggleDim(rowEl) {
+  rowEl.closest('.row-wrap').classList.toggle('open');
+}
+
+// ---- Expression symbol click -> scroll to row ----
+document.querySelectorAll('.expression .sym[data-target]').forEach(sym => {
+  sym.addEventListener('click', () => {
+    const target = sym.dataset.target;
+    const row = document.getElementById('dim-' + target);
+    if (row) {
+      row.classList.add('open');
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      row.style.transition = 'filter 0.3s';
+      row.style.filter = 'brightness(1.6)';
+      setTimeout(() => { row.style.filter = ''; }, 800);
+    }
+  });
+});
+
+// ---- Position i-stroke labels above process symbols ----
+function positionIStrokes() {
+  const wrap = document.getElementById('iStrokesWrap');
+  const expr = document.getElementById('expr');
+  if (!wrap || !expr) return;
+  wrap.innerHTML = '';
+
+  const iData = [
+    { symId: 'sym-convergence', label: 'i\u00B9=+i',  color: 'var(--convergence)' },
+    { symId: 'sym-branch',      label: 'i\u00B2=\u22121', color: 'var(--branch)' },
+    { symId: 'sym-emerge',      label: 'i\u00B3=\u2212i', color: 'var(--emerge)' },
+    { symId: 'sym-recurse',     label: 'i\u2070=+1',  color: 'var(--recurse)' },
+  ];
+
+  const wrapRect = wrap.getBoundingClientRect();
+
+  iData.forEach(d => {
+    const sym = document.getElementById(d.symId);
+    if (!sym) return;
+    const symRect = sym.getBoundingClientRect();
+    const centerX = symRect.left + symRect.width / 2 - wrapRect.left;
+    const lbl = document.createElement('span');
+    lbl.className = 'i-stroke-label';
+    lbl.textContent = d.label;
+    lbl.style.color = d.color;
+    lbl.style.left = centerX + 'px';
+    wrap.appendChild(lbl);
+  });
+}
+
+window.addEventListener('load', positionIStrokes);
+window.addEventListener('resize', positionIStrokes);
+
+// ---- Pages overlay (search) ----
+function openPagesOverlay() {
+  const o = document.getElementById('pagesOverlay');
+  const f = document.getElementById('pagesFrame');
+  if (f.src === 'about:blank' || !f.src.includes('pages.html')) {
+    f.src = 'pages.html';
+  }
+  o.classList.add('open');
+}
+function closePagesOverlay() {
+  document.getElementById('pagesOverlay').classList.remove('open');
+}
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
+    e.preventDefault();
+    openPagesOverlay();
+  }
+  if (e.key === 'Escape') closePagesOverlay();
+});
+
+// ---- FRACTAL BACKGROUND (Julia set) ----
+// The Julia set is about convergence (⊛) vs escape to ∞,
+// parameterized by c orbiting a circle in the complex plane (the circumpunct).
+// Rainbow escape-time coloring maps the dimensional spectrum.
+(function() {
+  const canvas = document.getElementById('rain');
+  const displayCtx = canvas.getContext('2d');
+
+  // Offscreen buffer at reduced resolution for performance
+  const buf = document.createElement('canvas');
+  const ctx = buf.getContext('2d');
+  const scale = 4; // render at 1/4 resolution
+  let W, H, bW, bH, imgData;
+
+  // Rainbow palette: 8 dimensional colors cycling
+  const palette = [
+    [255,68,85],    // • red
+    [255,136,51],   // ⊛ orange
+    [255,208,68],   // — yellow
+    [153,221,51],   // ⎇ lime
+    [68,204,68],    // Φ green
+    [51,204,187],   // ✹ teal
+    [68,136,255],   // ○ blue
+    [136,102,238],  // ⟳ violet
+  ];
+
+  // Build a 256-entry LUT from the palette
+  const lut = new Uint8Array(256 * 3);
+  const pLen = palette.length;
+  for (let i = 0; i < 256; i++) {
+    const t = (i / 256) * pLen;
+    const idx = Math.floor(t);
+    const frac = t - idx;
+    const c0 = palette[idx % pLen];
+    const c1 = palette[(idx + 1) % pLen];
+    lut[i * 3]     = c0[0] + (c1[0] - c0[0]) * frac;
+    lut[i * 3 + 1] = c0[1] + (c1[1] - c0[1]) * frac;
+    lut[i * 3 + 2] = c0[2] + (c1[2] - c0[2]) * frac;
+  }
+
+  const maxIter = 128;
+  const log2 = Math.log(2);
+
+  // Slowly orbit c around a circle near the main cardioid boundary
+  // radius ~0.7885 gives beautiful connected Julia sets
+  const cRadius = 0.7885;
+  let angle = 0;
+  const angleSpeed = 0.0002; // very slow drift
+
+  // View window: centered on origin, aspect-corrected
+  const viewRadius = 1.6;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    bW = buf.width = Math.ceil(W / scale);
+    bH = buf.height = Math.ceil(H / scale);
+    imgData = ctx.createImageData(bW, bH);
+  }
+
+  function render() {
+    angle += angleSpeed;
+    const cRe = cRadius * Math.cos(angle);
+    const cIm = cRadius * Math.sin(angle);
+
+    const aspect = bW / bH;
+    const xMin = -viewRadius * aspect;
+    const xMax =  viewRadius * aspect;
+    const yMin = -viewRadius;
+    const yMax =  viewRadius;
+    const dx = (xMax - xMin) / bW;
+    const dy = (yMax - yMin) / bH;
+
+    const data = imgData.data;
+    let p = 0;
+
+    // Slow color rotation over time so the palette drifts gently
+    const colorShift = angle * 8;
+
+    for (let py = 0; py < bH; py++) {
+      let zIm0 = yMin + py * dy;
+      for (let px = 0; px < bW; px++) {
+        let zRe = xMin + px * dx;
+        let zIm = zIm0;
+        let iter = 0;
+        let zRe2, zIm2;
+
+        // Iterate z = z² + c
+        while (iter < maxIter) {
+          zRe2 = zRe * zRe;
+          zIm2 = zIm * zIm;
+          if (zRe2 + zIm2 > 256) break;  // larger bailout for smooth coloring
+          zIm = 2 * zRe * zIm + cIm;
+          zRe = zRe2 - zIm2 + cRe;
+          iter++;
+        }
+
+        if (iter === maxIter) {
+          // Inside the set: dark (converged; the • at center)
+          data[p]     = 4;
+          data[p + 1] = 4;
+          data[p + 2] = 6;
+          data[p + 3] = 255;
+        } else {
+          // Smooth iteration count for continuous coloring
+          const smooth = iter + 1 - Math.log(Math.log(Math.sqrt(zRe2 + zIm2))) / log2;
+          // Map to 0..255 spreading evenly across the full rainbow
+          const ci = ((smooth * 3.5 + colorShift) % 256 + 256) & 255;
+          const li = ci * 3;
+          data[p]     = lut[li];
+          data[p + 1] = lut[li + 1];
+          data[p + 2] = lut[li + 2];
+          data[p + 3] = 255;
+        }
+        p += 4;
+      }
+    }
+
+    ctx.putImageData(imgData, 0, 0);
+
+    // Scale up to display canvas with smoothing
+    displayCtx.imageSmoothingEnabled = true;
+    displayCtx.imageSmoothingQuality = 'medium';
+    displayCtx.drawImage(buf, 0, 0, bW, bH, 0, 0, W, H);
+
+    requestAnimationFrame(render);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  render();
+})();
+</script>
+
+</body>
+</html>
