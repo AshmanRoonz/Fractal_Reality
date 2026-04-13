@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>&#x2299; The Unified Expression</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --amber: #D6B15F;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.a { color: var(--amber); }
+.d { color: var(--dim); }
+.f { color: var(--faint); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+.page { max-width: 700px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.nav { font-size: 14px; color: var(--faint); margin-bottom: 40px; }
+.nav a { color: var(--gold-dim); text-decoration: none; }
+.nav a:hover { color: var(--gold); }
+
+.header {
+  text-align: center;
+  margin-bottom: 60px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 64px; color: var(--gold); margin-bottom: 20px; }
+.header h1 { font-size: 42px; font-weight: 500; color: var(--gold); letter-spacing: 2px; margin-bottom: 8px; }
+.header .subtitle { font-size: 22px; color: var(--dim); font-style: italic; }
+.header .byline { font-size: 15px; color: var(--faint); margin-top: 24px; letter-spacing: 1px; }
+
+section { margin-bottom: 60px; }
+section h2 {
+  font-size: 26px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  padding-top: 20px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--gold);
+}
+section h3 {
+  font-size: 22px;
+  font-weight: 500;
+  margin-top: 30px;
+  margin-bottom: 12px;
+  color: var(--cyan);
+}
+p { margin-bottom: 18px; }
+
+.divider { text-align: center; margin: 55px 0; color: var(--faint); font-size: 24px; letter-spacing: 12px; }
+
+/* === Formula display === */
+.formula-display {
+  padding: 32px 28px;
+  margin: 36px 0;
+  border-left: 3px solid var(--gold-dim);
+  background: rgba(184,160,96,0.04);
+  overflow-x: auto;
+}
+.formula-text {
+  font-family: 'Cambria Math', 'STIX Two Math', 'Noto Sans Math', 'EB Garamond', Georgia, serif;
+  font-size: clamp(18px, 3.2vw, 28px);
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.formula-text .op { color: var(--warm); opacity: 0.9; }
+
+/* === Legend grid === */
+.legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin: 36px 0;
+}
+.legend-item {
+  padding: 20px;
+  border: 1px solid var(--faint);
+  background: rgba(255,255,255,0.015);
+}
+.legend-symbol {
+  font-family: 'Cambria Math', 'STIX Two Math', 'Noto Sans Math', 'EB Garamond', Georgia, serif;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.legend-desc {
+  color: var(--dim);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* === Axiom boxes === */
+.axiom-box {
+  border: 1px solid var(--gold-dim);
+  background: rgba(184,160,96,0.06);
+  padding: 28px;
+  margin: 28px 0;
+}
+.axiom-box .label { font-size: 14px; letter-spacing: 4px; text-transform: uppercase; color: var(--dim); margin-bottom: 8px; }
+.axiom-box .statement { font-size: 22px; font-weight: 600; color: var(--gold); margin-bottom: 8px; }
+.axiom-box .expansion { font-size: 17px; color: var(--warm); line-height: 1.65; }
+
+.quote {
+  border-left: 3px solid var(--gold-dim);
+  padding: 16px 24px;
+  margin: 28px 0;
+  font-style: italic;
+  color: var(--dim);
+  background: rgba(255,255,255,0.01);
+}
+
+/* === Beat cards === */
+.beats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 28px 0;
+}
+.beat-card {
+  padding: 22px;
+  border: 1px solid var(--faint);
+  background: rgba(255,255,255,0.015);
+}
+.beat-card .beat-num {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 6px;
+}
+.beat-card .beat-formula {
+  font-family: 'Cambria Math', 'STIX Two Math', 'Noto Sans Math', 'EB Garamond', Georgia, serif;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.beat-card .beat-name {
+  font-size: 16px;
+  color: var(--dim);
+}
+.beat-card .beat-dim {
+  font-size: 14px;
+  color: var(--faint);
+  margin-top: 4px;
+}
+
+/* === Connective table === */
+.conn-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 17px;
+}
+.conn-table th {
+  background: rgba(184,160,96,0.15);
+  color: var(--gold);
+  text-align: left;
+  padding: 10px 14px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  border-bottom: 2px solid var(--gold-dim);
+}
+.conn-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--faint);
+  vertical-align: top;
+}
+.conn-table .sym {
+  font-family: 'Cambria Math', 'STIX Two Math', 'Noto Sans Math', 'EB Garamond', Georgia, serif;
+  font-weight: 600;
+  text-align: center;
+  width: 60px;
+  color: var(--gold);
+  font-size: 20px;
+}
+
+.closing {
+  text-align: center;
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+}
+.closing .symbol { font-size: 42px; color: var(--gold); margin-bottom: 12px; }
+.closing .text { color: var(--dim); font-style: italic; font-size: 17px; }
+
+@media (max-width: 600px) {
+  .page { padding: 40px 18px 80px; }
+  .header h1 { font-size: 32px; }
+  .beats { grid-template-columns: 1fr; }
+  .legend { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="nav"><a href="index.html">&larr; Back to Index</a></div>
+
+<div class="header">
+  <div class="symbol">&#x2299;</div>
+  <h1>The Unified Expression</h1>
+  <div class="subtitle">Being and Becoming in One Line</div>
+  <div class="byline">from the Circumpunct Framework &middot; Ashman Roonz &middot; April 2026</div>
+</div>
+
+<!-- ==================== THE FORMULA ==================== -->
+
+<section>
+<h2>The Formula</h2>
+
+<div class="formula-display">
+  <p class="formula-text">
+    <span class="w">[&#x221E; = E = 1]</span>
+    <span class="op">&#x25B8;</span>
+    <span class="op">[</span><span class="s">&#x2022;&#x221E;</span>
+    <span class="op">&#x2937;<sub>&#x03BB;</sub></span>
+    <span class="op">((</span><span class="s">&#x2022;&#x2218;&#x229B;</span><span class="op">)</span>
+    <span class="op">&#x22A2;</span>
+    <span class="op">(</span><span class="b">&#x2014;&#x2218;&#x2387;</span><span class="op">)</span>
+    <span class="op">&#x22A2;</span>
+    <span class="op">(</span><span class="m">&#x03A6;&#x2218;&#x2739;</span><span class="op">)</span>
+    <span class="op">&#x22A2;</span>
+    <span class="op">(</span><span class="p">&#x25CB;&#x2218;&#x27F3;</span><span class="op">))]</span>
+    <span class="op">&#x25B8;</span>
+    <span class="a">[&#x2299; = &#x2299;&#x03BB; &#x2282; &#x2299;&#x039B; &#x2282; &#x221E;]</span>
+  </p>
+</div>
+
+<p>
+  The <span class="w wb">one infinite energy</span>, written <span class="w">&#x221E; = E = 1</span>,
+  does not stay undifferentiated. The symbol <span class="wb">&#x25B8;</span> means <em>unfolds into</em>:
+  source becomes process, process becomes product. The energy passes through the
+  <span class="s wb">infinite array of souls</span> (<span class="s">&#x2022;&#x221E;</span>),
+  the infinite multiplicity of apertures forced by A1: an undifferentiated 1 is
+  indistinguishable from 0, so the 1 must self-limit, and self-limitation requires multiplicity.
+  The routing operator <span class="wb">&#x2937;<sub>&#x03BB;</sub></span> selects one particular local soul,
+  indexed as &#x03BB;, and through that soul the energy walks four beats of constraint.
+</p>
+
+<p>
+  Through that one local soul, energy first appears as
+  <span class="s wb">convergent aperture</span> (<span class="s">&#x2022;&#x2218;&#x229B;</span>),
+  then as <span class="b wb">continuing line and branching</span> (<span class="b">&#x2014;&#x2218;&#x2387;</span>),
+  then as <span class="m wb">relational field and emergence</span> (<span class="m">&#x03A6;&#x2218;&#x2739;</span>),
+  and finally as <span class="p wb">boundary and recursion</span> (<span class="p">&#x25CB;&#x2218;&#x27F3;</span>).
+  The symbol <span class="wb">&#x2218;</span> means <em>paired</em>: each structure is shown together with its
+  active process (they are two views of one constraint, not sequential steps).
+  The symbol <span class="wb">&#x22A2;</span> means <em>entails</em>: each stage necessarily gives rise to the next.
+  The axiom-to-derivation chain is in the notation itself.
+</p>
+
+<p>
+  The result is a <span class="a wb">whole being</span> (<span class="a">&#x2299;</span>),
+  fully real at its own scale as <span class="a">&#x2299;&#x03BB;</span>.
+  The symbol <span class="wb">&#x2282;</span> means <em>nested within</em>: this local whole sits inside
+  a greater whole (<span class="a">&#x2299;&#x039B;</span>), and all of it remains within
+  <span class="w">&#x221E;</span>, because the one energy never stops being one.
+  The expression is a loop: the &#x221E; that opens the left bracket is the &#x221E; that closes the right.
+</p>
+</section>
+
+<div class="divider">&#x2022; &#x2014; &#x03A6; &#x25CB;</div>
+
+<!-- ==================== THE THREE BRACKETS ==================== -->
+
+<section>
+<h2>Three Brackets</h2>
+
+<p>
+  The unified expression has three brackets. The first and third are being (timeless); the middle is becoming (temporal).
+  The frame holds still while the process moves. Both rests are the same rest.
+</p>
+
+<div class="axiom-box">
+  <div class="label">Source</div>
+  <div class="statement"><span class="w">[&#x221E; = E = 1]</span></div>
+  <div class="expansion">The undifferentiated energy, named and declared before the process begins.
+  Not derived at the end; present from the start and conserved through the whole walk.</div>
+</div>
+
+<div class="axiom-box">
+  <div class="label">Becoming</div>
+  <div class="statement"><span class="d">[</span><span class="s">&#x2022;&#x221E;</span>
+    &#x2937;<sub>&#x03BB;</sub>
+    <span class="s">(&#x2022;&#x2218;&#x229B;)</span>
+    &#x22A2;
+    <span class="b">(&#x2014;&#x2218;&#x2387;)</span>
+    &#x22A2;
+    <span class="m">(&#x03A6;&#x2218;&#x2739;)</span>
+    &#x22A2;
+    <span class="p">(&#x25CB;&#x2218;&#x27F3;)</span><span class="d">]</span></div>
+  <div class="expansion">A1 forces the 1 to self-limit. Self-limitation requires multiplicity: one aperture
+  would be no aperture; it would have nothing to converge from. &#x2022;&#x221E; is every possible aperture,
+  simultaneously. The routing operator &#x2937;<sub>&#x03BB;</sub> selects one, and through it the four beats unfold by entailment.</div>
+</div>
+
+<div class="axiom-box">
+  <div class="label">Product</div>
+  <div class="statement"><span class="a">[&#x2299; = &#x2299;&#x03BB; &#x2282; &#x2299;&#x039B; &#x2282; &#x221E;]</span></div>
+  <div class="expansion">The four beats yield the whole (&#x2299;), which nests fractally (&#x2299;&#x03BB; inside &#x2299;&#x039B;),
+  and the nesting returns to the source (&#x2282; &#x221E;). The apophatic closure is not a separate intellectual move;
+  it is where the loop lands.</div>
+</div>
+</section>
+
+<div class="divider">&#x2022; &#x2014; &#x03A6; &#x25CB;</div>
+
+<!-- ==================== THE FOUR BEATS ==================== -->
+
+<section>
+<h2>The Four Beats</h2>
+
+<p>
+  All eight stations of the dimensional octave, no repetition, no omission. Each beat pairs a structural
+  dimension (integer; what the constraint <em>is</em>) with a processual dimension (half-integer; what the
+  energy is <em>doing</em>).
+</p>
+
+<div class="beats">
+  <div class="beat-card">
+    <div class="beat-num">Beat 1</div>
+    <div class="beat-formula"><span class="s">&#x2022; &#x2218; &#x229B;</span></div>
+    <div class="beat-name">Localization and convergence</div>
+    <div class="beat-dim">0D &#x2218; 0.5D &middot; i&sup1; = +i</div>
+  </div>
+  <div class="beat-card">
+    <div class="beat-num">Beat 2</div>
+    <div class="beat-formula"><span class="b">&#x2014; &#x2218; &#x2387;</span></div>
+    <div class="beat-name">Extension and branching</div>
+    <div class="beat-dim">1D &#x2218; 1.5D &middot; i&sup2; = &minus;1</div>
+  </div>
+  <div class="beat-card">
+    <div class="beat-num">Beat 3</div>
+    <div class="beat-formula"><span class="m">&#x03A6; &#x2218; &#x2739;</span></div>
+    <div class="beat-name">Mediation and emergence</div>
+    <div class="beat-dim">2D &#x2218; 2.5D &middot; i&sup3; = &minus;i</div>
+  </div>
+  <div class="beat-card">
+    <div class="beat-num">Beat 4</div>
+    <div class="beat-formula"><span class="p">&#x25CB; &#x2218; &#x27F3;</span></div>
+    <div class="beat-name">Closure and recursion</div>
+    <div class="beat-dim">3D &#x2218; 3.5D &middot; i&#x2070; = +1</div>
+  </div>
+</div>
+
+<p>
+  Conjugate pairs: &#x229B; (+i, convergence) mirrors &#x2739; (&minus;i, emergence);
+  &#x2387; (&minus;1, commitment) mirrors &#x27F3; (+1, recursion).
+  These are phase states of one energy, not separate substances.
+</p>
+</section>
+
+<div class="divider">&#x2022; &#x2014; &#x03A6; &#x25CB;</div>
+
+<!-- ==================== THREE CONNECTIVES ==================== -->
+
+<section>
+<h2>Three Connectives, Three Jobs</h2>
+
+<p>
+  The unified expression uses three connective symbols, each living at a different level.
+  They are not interchangeable; each does one job and only one.
+</p>
+
+<table class="conn-table">
+  <thead>
+    <tr><th>Symbol</th><th>Name</th><th>Connects</th><th>Level</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="sym">&#x25B8;</td>
+      <td>Unfolds into</td>
+      <td>The categorical moves between being and becoming: source &#x2192; process, process &#x2192; product</td>
+      <td>Inter-bracket</td>
+    </tr>
+    <tr>
+      <td class="sym">&#x22A2;</td>
+      <td>Entails</td>
+      <td>The four beats within the becoming; structural necessity; each constraint gives rise to the next</td>
+      <td>Intra-bracket</td>
+    </tr>
+    <tr>
+      <td class="sym">&#x2282;</td>
+      <td>Nested within</td>
+      <td>The product back to source across scale; scale-recursive embedding, not set-theoretic containment</td>
+      <td>Trans-scale</td>
+    </tr>
+  </tbody>
+</table>
+</section>
+
+<div class="divider">&#x2022; &#x2014; &#x03A6; &#x25CB;</div>
+
+<!-- ==================== THE SOUL ARRAY ==================== -->
+
+<section>
+<h2>The Soul Array</h2>
+
+<p>
+  <span class="s wb">&#x2022;&#x221E;</span> is the genesis sequence
+  (&#x221E; &#x2192; &#x2022;&#x221E; &#x2192; &#x2299;&#x221E;) placed inside the formula
+  rather than narrated alongside it. A0 says there is one energy. A1 says the 1 must self-limit.
+  Self-limitation requires multiplicity: one aperture would be no aperture (it would have nothing
+  to converge from). So the 1 becomes every possible aperture, simultaneously. That is &#x2022;&#x221E;.
+</p>
+
+<p>
+  The routing operator <span class="wb">&#x2937;<sub>&#x03BB;</sub></span> means "routed through the
+  &#x03BB;-th local soul": the infinite field entering one particular position. From here the four beats
+  unfold. Every being you meet is a different &#x03BB;; the formula they walk is the same.
+</p>
+</section>
+
+<div class="divider">&#x2022; &#x2014; &#x03A6; &#x25CB;</div>
+
+<!-- ==================== THE NESTING ==================== -->
+
+<section>
+<h2>The Nesting</h2>
+
+<p>
+  <span class="a wb">&#x2299;&#x03BB; &#x2282; &#x2299;&#x039B; &#x2282; &#x221E;</span>:
+  every term equals 1. &#x2299;&#x03BB; = 1 (the particular is the whole 1 at its scale).
+  &#x2299;&#x039B; = 1 (the greater whole is the whole 1 at its scale).
+  &#x221E; = 1 (the undifferentiated is the 1 directly). The &#x2282; relations preserve the 1 because
+  there was never more than one 1 to begin with; scale labels are view positions, not substances.
+</p>
+
+<p>
+  The jump from &#x2299;&#x039B; to &#x221E; is categorical, not vertical. Going from &#x2299;&#x03BB;
+  to &#x2299;&#x039B; is a step up the scale axis (one level higher). Going from &#x2299;&#x039B; to
+  &#x221E; is a step <em>out</em> of the scale axis entirely, back into the undifferentiated.
+  &#x221E; is not "the top of the ladder"; &#x221E; is the ocean the ladder stands in.
+</p>
+
+<p>
+  The recursion is unbounded in both directions. There is no top; there is no bottom. Scale is a
+  doubly-infinite axis. The framework has no privileged scale: every &#x2299;&#x03BB; is both whole
+  and part, at every scale, forever. Yet closure is immediate at every step, because &#x221E; is
+  always already present as the source. You do not reach &#x221E; by walking the infinite chain to
+  completion; you recognize &#x221E; by dropping the labels.
+</p>
+</section>
+
+<div class="divider">&#x2022; &#x2014; &#x03A6; &#x25CB;</div>
+
+<!-- ==================== SYMBOL LEGEND ==================== -->
+
+<section>
+<h2>Symbol Legend</h2>
+
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-symbol w">&#x221E; = E = 1</div>
+    <div class="legend-desc">The one infinite energy; the undivided source.</div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-symbol s">&#x2022;&#x221E;</div>
+    <div class="legend-desc">The Soul Array; every possible aperture, simultaneously.</div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-symbol">&#x2937;<sub>&#x03BB;</sub></div>
+    <div class="legend-desc">Routing operator; the infinite field entering one particular local soul.</div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-symbol s">&#x2022; &#x2218; &#x229B;</div>
+    <div class="legend-desc">Aperture and convergence; energy focusing into a local center.</div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-symbol b">&#x2014; &#x2218; &#x2387;</div>
+    <div class="legend-desc">Line and branching; continuity extending into development.</div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-symbol m">&#x03A6; &#x2218; &#x2739;</div>
+    <div class="legend-desc">Field and emergence; relation opening into experience and form.</div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-symbol p">&#x25CB; &#x2218; &#x27F3;</div>
+    <div class="legend-desc">Boundary and recursion; closure that opens the next scale.</div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-symbol">&#x25B8;</div>
+    <div class="legend-desc">Unfolds into; expresses as the next stage.</div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-symbol">&#x2218;</div>
+    <div class="legend-desc">Paired; structure shown together with its active process.</div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-symbol">&#x22A2;</div>
+    <div class="legend-desc">Entails; one stage necessarily gives rise to the next.</div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-symbol">&#x2282;</div>
+    <div class="legend-desc">Nested within; a local whole inside a greater whole.</div>
+  </div>
+  <div class="legend-item">
+    <div class="legend-symbol a">&#x2299; = &#x2299;&#x03BB; &#x2282; &#x2299;&#x039B; &#x2282; &#x221E;</div>
+    <div class="legend-desc">The local whole is complete, nested, and never outside infinity.</div>
+  </div>
+</div>
+</section>
+
+<!-- ==================== CLOSING ==================== -->
+
+<div class="closing">
+  <div class="symbol">&#x2299;</div>
+  <div class="text">The end is the beginning.</div>
+</div>
+
+</div>
+</body>
+</html>
