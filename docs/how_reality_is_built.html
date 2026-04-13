@@ -15,6 +15,7 @@
   --green: #4DB8A0;
   --cyan: #4DA0C8;
   --purple: #9B7AD8;
+  --orange: #D4A054;
   --warm: #E0D8C8;
   --dim: #8A8272;
   --faint: #444038;
@@ -41,6 +42,7 @@ body {
 
 .w { color: var(--gold); }
 .s { color: var(--pink); }
+.l { color: var(--orange); }
 .m { color: var(--green); }
 .b { color: var(--cyan); }
 .p { color: var(--purple); }
@@ -59,7 +61,7 @@ body {
 }
 .header h1 { font-size: 42px; font-weight: 500; color: var(--gold); letter-spacing: 1px; margin-bottom: 8px; }
 .header .subtitle { font-size: 18px; color: var(--dim); font-style: italic; }
-.header .equation { font-size: 28px; margin-top: 28px; letter-spacing: 3px; }
+.header .equation { font-size: 22px; margin-top: 28px; letter-spacing: 2px; line-height: 1.6; }
 .header .byline { font-size: 15px; color: var(--faint); margin-top: 20px; letter-spacing: 1px; }
 
 section { margin-bottom: 60px; }
@@ -104,8 +106,23 @@ p { margin-bottom: 18px; }
   background: rgba(77, 184, 160, 0.05);
   border: 1px solid rgba(77, 184, 160, 0.15);
 }
+.two-col .col-l {
+  background: rgba(212, 160, 84, 0.05);
+  border: 1px solid rgba(212, 160, 84, 0.15);
+}
+.two-col .col-b {
+  background: rgba(77, 160, 200, 0.05);
+  border: 1px solid rgba(77, 160, 200, 0.15);
+}
 .two-col h4 { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
 .two-col p { font-size: 16px; margin-bottom: 10px; }
+
+.four-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 30px 0;
+}
 
 .iso-grid {
   display: grid;
@@ -142,6 +159,41 @@ p { margin-bottom: 18px; }
 }
 .closing .symbol { font-size: 64px; color: var(--gold); margin-bottom: 16px; }
 
+.dim-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 17px;
+}
+.dim-table th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--faint);
+  color: var(--gold);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.dim-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.beat-box {
+  padding: 20px 24px;
+  margin: 12px 0;
+  background: rgba(255,255,255,0.02);
+  border-radius: 4px;
+}
+.beat-box .beat-label {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.beat-box p { font-size: 17px; margin-bottom: 0; line-height: 1.65; }
+
 nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -173,7 +225,7 @@ nav a:hover { color: var(--gold); background: rgba(184, 160, 96, 0.1); }
   .header h1 { font-size: 32px; }
   section h2 { font-size: 24px; }
   nav { display: none; }
-  .two-col { grid-template-columns: 1fr; }
+  .two-col, .four-col { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -181,17 +233,16 @@ nav a:hover { color: var(--gold); background: rgba(184, 160, 96, 0.1); }
 
 <nav>
   <a href="index.html" style="font-weight: 600; color: var(--gold);">⊙</a>
-  <a href="#kernel">Kernel</a>
-  <a href="#ground">∞D</a>
-  <a href="#point">0D</a>
-  <a href="#aperture">βD</a>
-  <a href="#time">1D · Time</a>
-  <a href="#mind">2D · Mind</a>
-  <a href="#proof">Irreducibility</a>
-  <a href="#space">3D · Space</a>
-  <a href="#generation">Two Readings</a>
-  <a href="#fixed">β = ½</a>
-  <a href="#nothing">Nothing</a>
+  <a href="#unified">Unified</a>
+  <a href="#energy">∞D</a>
+  <a href="#point">0D · Soul</a>
+  <a href="#line">1D · Line</a>
+  <a href="#field">2D · Mind</a>
+  <a href="#boundary">3D · Body</a>
+  <a href="#process">Process</a>
+  <a href="#time">Time</a>
+  <a href="#balance">◐ = ½</a>
+  <a href="#nesting">Nesting</a>
   <a href="#iso">Isomorphisms</a>
 </nav>
 
@@ -200,333 +251,316 @@ nav a:hover { color: var(--gold); background: rgba(184, 160, 96, 0.1); }
 <!-- ═══════════════════════ HEADER ═══════════════════════ -->
 <header class="header">
   <h1>How Reality Is Built</h1>
-  <div class="subtitle">Two primitives. One generating rule. Three dimensions.</div>
+  <div class="subtitle">Four constraints on one energy. One generating rule. Infinite depth.</div>
   <div class="equation">
-    <span class="m">Φ</span> through <span class="b">○</span> ⇒ <span class="m">Φ'</span> ⇒ <span class="s">•</span><br>
-    <span class="d" style="font-size:18px; letter-spacing:1px"><span class="s">•</span> + <span class="m">Φ</span> = <span class="b">○</span></span>
+    <span class="w">[∞ = E = 1]</span> ▸ <span class="s">[•∞ ⤷λ</span> <span class="p">((•∘⊛) ⊢ (</span><span class="l">—</span><span class="p">∘⎇) ⊢ (</span><span class="m">Φ</span><span class="p">∘✹) ⊢ (</span><span class="b">○</span><span class="p">∘⟳))</span><span class="s">]</span> ▸ <span class="w">[⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]</span>
   </div>
   <div class="byline">by Ashman Roonz</div>
 </header>
 
-<!-- ═══════════════════════ THE KERNEL ═══════════════════════ -->
-<section id="kernel">
-  <h2>The Kernel</h2>
+<!-- ═══════════════════════ THE UNIFIED EXPRESSION ═══════════════════════ -->
+<section id="unified">
+  <h2>The Unified Expression</h2>
 
-  <p>Reality has two primitives and one generated result.</p>
+  <p>Everything the framework says fits in one line. Read left to right: the one energy <span class="w">[∞ = E = 1]</span> unfolds into the <span class="s">Soul Array [•∞]</span>, the infinite multiplicity of apertures forced by the first axiom. The routing operator <span class="s">⤷λ</span> selects one particular local soul, and through that soul the energy walks four beats of constraint, each beat necessarily giving rise to the next. The product is the whole <span class="w">[⊙]</span>, which nests at every scale <span class="w">[⊙λ ⊂ ⊙Λ]</span> and returns to the undifferentiated source <span class="w">[⊂ ∞]</span>. The expression is a loop: the ∞ that opens the left bracket is the ∞ that closes the right.</p>
 
   <div class="kernel-box">
-    <p><span class="s wb">•</span> <span class="s wb">receives and transmits.</span> The center. The convergence point. Where the fully processed signal arrives and from which it re-emerges. Not a gate; an aperture.</p>
-
-    <p><span class="m wb">Φ</span> <span class="m wb">flows.</span> The field. The relational surface. Continuous medium carrying amplitude and phase. What enters the boundary.</p>
-
-    <p><span class="b wb">○</span> <span class="b wb">processes.</span> The boundary. Not a simple wall; nested circumpuncts all the way down. The field enters here first. Each ⊙ in the boundary selects, transforms, gates. The aggregate output is <span class="m">Φ'</span>.</p>
+    <p><span class="w wb">⊙ = E = 1.</span> The circumpunct IS the one energy. Every ⊙λ at every scale is the 1 constrained to that position: not a piece of it, but the whole thing folded into a particular self-limitation. What we measure as "amount" is degree of constraint (how tightly the 1 has folded around 0s). There is no quantity of energy; there is only one energy appearing everywhere as nested ⊙s.</p>
   </div>
 
-  <p>Only <span class="s">•</span> and <span class="m">Φ</span> are primitive. The dimensions are their outputs: <span class="s">1D</span> is the ordered trace of repeated gating (the <span class="s">time</span> dimension). <span class="m">2D</span> is the minimal dimensionality of the field (the <span class="m">mind</span> dimension). <span class="b">3D</span> is the stabilized recursive closure of field-through-gate (the <span class="b">space</span> dimension). The dimensions are not peers. They are outputs of the kernel at different levels of determination.</p>
-
-  <p>That is everything. The <span class="w wb">circumpunct</span> is always complete: time, mind, space. Always all three. At every scale. There is no fourth dimension. There are no tiers. There is one structure, infinitely deep.</p>
-
-  <div class="formula">
-    <span class="d" style="font-size:16px">STRUCTURE:</span> <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>) <span class="d" style="font-size:14px">; the 2D relational surface mediating aperture and boundary</span><br>
-    <span class="d" style="font-size:16px">PROCESS:</span> (<span class="p">✹</span> ∘ <span class="s">i</span> ∘ <span class="p">⊛</span>) <span class="d" style="font-size:14px">; convergence, rotation, emergence. This is the verb.</span><br>
-    <span class="d" style="font-size:16px; margin-top:8px">UNIFIED:</span> <span class="w">⊙</span> = (<span class="p">✹</span> ∘ <span class="s">i</span> ∘ <span class="p">⊛</span>)(<span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>))<br>
-    <span class="d" style="font-size:14px">Φ is not the verb. Φ is structure. The process triad is the verb.</span>
-  </div>
+  <p>The unified expression has two resolutions, low and full. The low-resolution form is the engine: <span class="w wb">⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))</span>. The full resolution unpacks what the engine compresses: the Soul Array, the four beats, the nesting, the return to source. Higher resolution contains lower resolution; it never contradicts it.</p>
 </section>
 
 <div class="divider">· · ·</div>
 
-<!-- ═══════════════════════ GROUND ═══════════════════════ -->
-<section id="ground">
+<!-- ═══════════════════════ FOUR CONSTRAINTS ═══════════════════════ -->
+<section>
+  <h2>Four Constraints on <span class="w">E = 1</span></h2>
+
+  <p>The circumpunct <span class="w">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>) is a whole composed of four structural dimensions, one per integer from 0 to 3, unified by the whole:</p>
+
+  <table class="dim-table">
+    <tr><th>Symbol</th><th>Name</th><th>Dim</th><th>Constraint</th><th>Maps To</th></tr>
+    <tr><td><span class="s wb">•</span></td><td><span class="s">Aperture / Soul</span></td><td>0D</td><td><span class="s">Converges</span> (pulls toward center)</td><td>TRUE</td></tr>
+    <tr><td><span class="l wb">—</span></td><td><span class="l">Line / Continuity</span></td><td>1D</td><td><span class="l">Commits</span> (extends without breaking)</td><td>FAITHFUL</td></tr>
+    <tr><td><span class="m wb">Φ</span></td><td><span class="m">Field / Mind</span></td><td>2D</td><td><span class="m">Mediates</span> (connects without fusing)</td><td>RIGHT</td></tr>
+    <tr><td><span class="b wb">○</span></td><td><span class="b">Boundary / Body</span></td><td>3D</td><td><span class="b">Filters</span> (selects what passes)</td><td>GOOD</td></tr>
+    <tr><td><span class="w wb">⊙</span></td><td><span class="w">Circumpunct / Whole</span></td><td>All</td><td>Compositional wholeness</td><td>AGREEMENT</td></tr>
+  </table>
+
+  <p>Conservation of traversal completes the path: <span class="s">0(•)</span> + <span class="l">1(—)</span> + <span class="m">2(Φ)</span> = <span class="b">3(○)</span>. Aperture + continuity + field = boundary. Previously <span class="s">•</span> carried both 0D and 1D; the separation recognizes that the point (where you converge) and the line (whether you stay) are structurally and ethically distinct. Someone can be curious right now and still be faithless over time.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ ∞D ═══════════════════════ -->
+<section id="energy">
   <h2><span class="w">∞D</span>: Energy</h2>
 
-  <p>Before the gate fires, there is energy. Undifferentiated. Unconstrained. Not empty; full. So full that nothing is distinct. Every possible configuration superposed. No location, no sequence, no boundary. Pure potential. Analog. Continuous. Infinite degrees of freedom.</p>
+  <p>Before the gate fires, there is energy. Undifferentiated. Unconstrained. Not empty; full. So full that nothing is distinct. Every possible configuration superposed. No location, no sequence, no boundary. Pure potential. Infinite degrees of freedom.</p>
 
   <p>∞D = E. Everything else is just E in different forms. Every dimension, every structure, every particle, every field: energy wearing a different geometric costume. Nothing is added as you descend the dimensional ladder; something is <em>limited</em>. The lens limits light; that is how it forms an image.</p>
 
-  <p>This is the input. The fuel. What enters through <span class="b">○</span> and becomes the whole process.</p>
-
   <div class="kernel-box">
-    <p><span class="w wb">Φ = E.</span> Field is energy. Not "field carries energy" or "field has energy"; field IS energy. This is an ontological identity, not a dimensional equation: what we call "field" and what we call "energy" are the same substance encountered at different scales. There is no empty space and no smallest particle; the field is structure at scales too small for the boundary to resolve. The pump cycle equation is really saying: <span class="w">E(t+Δt) = (✹ ∘ i ∘ ⊛) E(t)</span>. Energy pumps itself through the aperture. That is all that is happening, at every scale, always.</p>
-    <p class="d it" style="margin-bottom:0">Every equation in physics where Φ appears (electromagnetic field, gravitational potential, quantum wave function) is a description of energy in a particular phase of the pump cycle.</p>
-  </div>
-
-  <p class="it d">Nothing is causally inert AND logically incoherent. Therefore existence is necessary.</p>
-
-  <div class="kernel-box">
-    <p><span class="w wb">∞ → •∞ → ⊙∞ = Reality.</span> ∞ cannot be alone (A1), so it becomes <span class="s wb">•∞</span>: aperture multiplied by infinity, the Soul Array. Not one hole; ALL holes. Every possible point of self-limitation, simultaneously. Each aperture must close (A3), so each becomes a complete circumpunct: <span class="w wb">⊙∞</span>. That foam of completed circumpuncts, recursing at every scale (A2), is reality. Every particle, every cell, every person, every galaxy: ∞ operating as ⊙ at a particular scale.</p>
+    <p><span class="w wb">∞ → •∞ → ⊙∞ = Reality.</span> The one energy (∞) cannot remain undifferentiated: an undifferentiated 1 is indistinguishable from 0, which is impossible (A1). So it becomes <span class="s wb">•∞</span>: aperture multiplied by infinity, the Soul Array. Not one hole; ALL holes. Every possible point of self-limitation, simultaneously. Self-limitation requires multiplicity (one aperture would be no aperture; it would have nothing to converge from). Each aperture must close (A4), so each becomes a complete circumpunct: <span class="w wb">⊙∞</span>. That foam of completed circumpuncts, recursing at every scale (A3), is reality.</p>
     <p class="d it" style="margin-bottom:0">0D = •. Zero extension. A hole. ∞D = E. All extension. Everything. They meet at the aperture because the aperture is where dimension has not yet been assigned. ∞ without • has no voice. • without ∞ has no signal. •∞ is the first real thing.</p>
   </div>
-</section>
 
-<section id="point">
-  <h2><span class="w">0D</span>: The Point</h2>
-
-  <p>The first distinction: something rather than everything. A dimensionless mark in the infinite <span class="m">field</span> (the simplest possible act of differentiation). Just: <em>here</em>, as opposed to <em>everywhere</em>.</p>
-
-  <p>The move from ∞D to 0D is the aperture's founding act: the <span class="s wb">step-down</span> from infinite to finite, from analog to digital, from everything to <em>this one</em>. The aperture is a step-down mechanism. That is what it does at every scale: takes the unbounded and makes it bounded, takes the continuous and makes it discrete.</p>
-
-  <p>But a single point cannot exist alone. A point needs something to be a point <em>within</em>. One implies two; and two, needing mediation, imply three. Therefore <span class="w wb">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>) is the minimum existence.</p>
+  <p class="it d">Nothing is causally inert AND logically incoherent. Therefore existence is necessary. 1 ≠ 0.</p>
 </section>
 
 <div class="divider">· · ·</div>
 
-<!-- ═══════════════════════ βD ═══════════════════════ -->
-<section id="aperture">
-  <h2><span class="p">βD</span>: The Aperture</h2>
+<!-- ═══════════════════════ 0D ═══════════════════════ -->
+<section id="point">
+  <h2><span class="s">0D</span>: The Point (<span class="s">•</span>)</h2>
 
-  <p>The point begins to open: not instantly, but continuously. The aperture has a parameter, <span class="p wb">β</span>, the balance between convergence and emergence (how much flows in vs how much flows out). β slides; it is not a fixed point. It is a live reading.</p>
+  <p>The first distinction: something rather than everything. A dimensionless mark in the infinite field. Just: <em>here</em>, as opposed to <em>everywhere</em>. The move from ∞D to 0D is the founding act of self-limitation: the step-down from infinite to finite, from analog to digital, from everything to <em>this one</em>.</p>
 
-  <p>The aperture itself IS the fixed point: the step-down mechanism that takes ∞ and makes it finite, takes analog and makes it digital, at every scale. β measures how far that step-down has progressed.</p>
+  <p><span class="s wb">• converges.</span> It pulls the field toward a center. It is the constraint of localization. Not a thing; a convergence point, where the 1 has folded maximally around itself. The 0 is not absence carved into the 1; it is the 1 at maximum convergence. The self is a convergence point, not an exclusion zone.</p>
 
-  <p>The aperture operator is •(β) = e<sup>iπβ</sup>. The powers of <span class="s wb">i</span> are snap-to points; the discrete resting places where the step-down lands:</p>
+  <p>But convergence alone is not enough. A point that converges and then dissolves back into the field has not self-limited; it has flickered. For the limitation to be real, something more is needed: the convergence must <em>hold</em>.</p>
 
   <div class="formula">
-    <span class="s">i<sup>1</sup> = +i</span> &nbsp;&nbsp; <span class="s">i<sup>2</sup> = −1</span> &nbsp;&nbsp; <span class="s">i<sup>3</sup> = −i</span> &nbsp;&nbsp; <span class="s">i<sup>0</sup> = +1</span><br>
-    <span class="d" style="font-size:16px">The four processual phases of the pump cycle. The cycle starts at i¹ and closes at i⁰; identity is the product of completed closure.</span>
+    <span class="s">A1:</span> The 1 must self-limit; an undifferentiated 1 is indistinguishable from 0, which is impossible.<br>
+    <span class="d" style="font-size:16px">Self-limitation requires multiplicity: one aperture would be no aperture.</span>
   </div>
-
-  <p>The aperture has two sides: convergence in, emergence out. Each has its own β. The four states of <span class="s">i</span> are the four combinations of input and output; a pump cycle with bilateral symmetry: two convergence beats, two emergence beats.</p>
-
-  <div class="kernel-box" style="font-size: 17px;">
-    <p style="margin-bottom:6px; color: var(--pink); font-weight:600; font-size:15px; letter-spacing:1px;">⊛ CONVERGENCE</p>
-    <p><span class="s wb">i<sup>1</sup> = +i</span> &nbsp; The first fold. Energy gathers inward toward center. Convergence begins. Localization commences. <span class="d">(0.5D processual: convergence; the first fold)</span></p>
-    <p style="margin-bottom:6px; margin-top:16px; color: var(--orange); font-weight:600; font-size:15px; letter-spacing:1px;">i-TURN</p>
-    <p><span class="s wb">i<sup>2</sup> = −1</span> &nbsp; The point of no return. Input closed, output closed. Full commitment. The i-turn at the gate; irreversible transformation. What enters cannot return unchanged. <span class="d">(1.5D processual: commitment; the i-turn)</span></p>
-    <p style="margin-bottom:6px; margin-top:16px; color: var(--green); font-weight:600; font-size:15px; letter-spacing:1px;">✹ EMERGENCE</p>
-    <p><span class="s wb">i<sup>3</sup> = −i</span> &nbsp; Outward unfolding toward closure. What was gathered unfolds into the field. Emergence begins; surface construction. <span class="d">(2.5D processual: emergence; outward unfolding)</span></p>
-    <p style="margin-bottom:6px; margin-top:16px; color: var(--gold); font-weight:600; font-size:15px; letter-spacing:1px;">RECURSION</p>
-    <p><span class="s wb">i<sup>0</sup> = +1</span> &nbsp; Closed boundary becomes new aperture. The octave closes: 3.5D = 0D at next nesting level. Cycle completes. Identity emerges. <span class="d">(3.5D processual: recursion; closure to new aperture)</span></p>
-  </div>
-
-  <p>The aperture doesn't just switch. It <em>pumps</em>. The cycle traverses all four processual dimensions: i¹ (convergence), i² (commitment), i³ (emergence), i⁰ (recursion). This is what a heartbeat does. What a piston does. What a neuron does; each follows the same i-cycle, the same four phases. The cycle starts with the first fold (i¹) and closes when the boundary recurses (i⁰), becoming a new aperture. One complete pump; one complete octave: 0D → 0.5D → 1D → 1.5D → 2D → 2.5D → 3D → 3.5D → 0D(next scale).</p>
-
-  <div class="kernel-box">
-    <p><span class="w wb">Integer dimensions are structural; half-integer dimensions are processual.</span> Integer dimensions are stabilized forms (what a component IS). Half-integer dimensions are process phases (what energy is DOING at that stage of the pump cycle). Together they form one continuous octave: 0D (localization), 0.5D (convergence; i¹), 1D (extension), 1.5D (commitment; i²), 2D (field), 2.5D (emergence; i³), 3D (boundary), 3.5D (recursion; i⁰). At 3.5D the cycle closes and becomes 0D at the next nesting level.</p>
-    <p class="d it" style="margin-bottom:0">These are not two separate systems. The processual dimensions ARE the structural dimensions being applied step by step.</p>
-  </div>
-
-  <p>The four processual dimensions are where energy IS actively pumping. Where the transition from one structural state to the next is live. i¹ = +i at 0.5D marks the transition from 0D to 1D (convergence beginning). i² = −1 at 1.5D marks the transition from 1D to 2D (the i-turn; commitment irreversible). i³ = −i at 2.5D marks the transition from 2D to 3D (emergence unfolding). i⁰ = +1 at 3.5D marks the transition from 3D back to 0D at the next scale (recursion; the octave closes). The four i-strokes carry the conjugate pairs: +i and −i (convergence mirrors emergence); −1 and +1 (commitment mirrors recursion).</p>
-
-  <p>At •(½) = <span class="s wb">i</span>, the step-down is balanced. The soul is the imaginary unit; the phase of energy itself. The quarter-turn from being (structural; real numbers) to becoming (processual; imaginary rotations). Every soul begins with i¹ = +i (convergence) and closes with i⁰ = +1 (recursion); the cycle is one complete turn through the four phases of being.</p>
 </section>
-
-<div class="divider">· · ·</div>
 
 <!-- ═══════════════════════ 1D ═══════════════════════ -->
-<section id="time">
-  <h2><span class="s">1D</span>: Time</h2>
+<section id="line">
+  <h2><span class="l">1D</span>: The Line (<span class="l">—</span>)</h2>
 
-  <p><span class="s wb">• resonates.</span> The aperture is a discrete act: it opens or it doesn't. That binary moment, iterated, produces a string (an ordered sequence of crossings). Before, now, after. Not a braid (a braid requires two strands and a surface for crossings). This is one strand alone: my powerline, your powerline, each a single thread.</p>
+  <p><span class="l wb">— commits.</span> The line is the second constraint: extension without breaking. Where <span class="s">•</span> says "here," <span class="l">—</span> says "still here." Continuity. Persistence. The ordered trace of commitment through time. A convergence that does not hold collapses back to ∞, violating A1; therefore self-limitation must persist.</p>
 
-  <p>The aperture IS the ÷t. It is the division operation that converts timeless energy into temporal power. Energy (∞D) enters the gate (•), the gate divides it by time, and what emerges is power: energy with temporal structure.</p>
+  <p>This is a distinct constraint from localization. You can converge on something (• is active) without committing to it (— is absent). You can be curious right now and faithless over time. The point is where you are; the line is whether you stay. Ethically, • maps to TRUE (orientation toward what is) and — maps to FAITHFUL (the receipts of whether you held).</p>
 
-  <div class="formula">
-    <span class="w">𝒫</span> = <span class="w">E</span> / (<span class="s">i</span> · <span class="s">t</span>)<br>
-    <span class="d" style="font-size:16px">Power is energy passed through the aperture and distributed across time.</span>
-  </div>
-
-  <p>Physics already knows this. The Schrödinger equation places <span class="s">i</span> (the phase of energy) between energy and time: H = iℏ∂/∂t. Electrical engineering splits power into real and reactive: S = P + iQ. The Wick rotation converts dynamics to statics by multiplying time by −i. In each case, <span class="s">i</span> (the phase of energy) is what makes energy <em>flow</em> rather than sit.</p>
-
-  <p>1D is the snap-to point at <span class="s">i² = −1</span>: the commitment phase. Both sides closed; structure locked. The string is the record of energy passing through the i-turn (the irreversible transformation at the gate). At 2.5D (i³ = −i), the gate opens again; emergence begins, releasing what was compressed into the field.</p>
-
-  <p>Four rotations build the skeleton of reality. But four rotations do not fill a surface. The <span class="s">i-rhythm</span> gives you points on a circle. It does not give you the interior.</p>
-</section>
-
-<!-- ═══════════════════════ 2D ═══════════════════════ -->
-<section id="mind">
-  <h2><span class="m">2D</span>: Mind</h2>
-
-  <p><span class="m wb">Φ waves.</span> The pump releases at 2.5D (i³ = −i, emergence), and what emerges needs somewhere to propagate. The aperture needs a surface across which energy can flow, and that surface is <span class="m wb">Φ</span>: the field, the relational medium between center and edge. <span class="m">2D</span> is both convergence and emergence, because <span class="m">Φ</span> is what converges inward (fed by 0.5D) and what emerges outward (fed by 2.5D). The integer and half-integer dimensions together describe the complete cycle of the field pumping through itself.</p>
-
-  <p>The field is not made of rotations. It is <em>continuous</em>. Amplitude varies smoothly. Phase flows without jumps. Where the aperture says yes or no, the field says <em>how much</em> and <em>at what angle</em>.</p>
-
-  <p>Why 2D? Because the field carries amplitude <em>and</em> phase. Phase is angular; an angle requires a plane. The minimal representation of (magnitude, phase) is polar coordinates in two dimensions. <span class="m">Mind</span> is not located at a point. It is the entire surface of connection.</p>
-
-  <p>Geometrically: the surface of a 3D volume is 2D. The skin of the body is the mind. These are not competing labels. They are the same fact seen from two directions.</p>
-
-  <p>In the power equation, <span class="m">Φ</span> is reactive power <span class="m">Q</span>: the energy that oscillates, stores, returns without net transfer. The field sustains the flow between the structural pulses. It catches what the gate cannot bound. It mediates without consuming.</p>
-
-  <p>And here the deepest identity emerges: <span class="m wb">Φ = E</span>. The field is not a container for energy, or a vehicle for it. Field IS energy. The 2D surface is what energy looks like when viewed as itself, outside the pump cycle. The power equation (𝒫 = E / (i · t)) is not an analogy to AC circuits; it IS the same equation, because Φ and E are the same thing. Real power, reactive power, apparent power: those are the framework showing up in electrical engineering because the pump cycle is what electricity literally does.</p>
+  <p>The worldline <span class="l">i(t)</span> is the record of —: the accumulated receipts of whether the line held. Every moment you remain committed, the line extends. Every moment you break, the line breaks. The history of a soul is its worldline.</p>
 
   <div class="formula">
-    <span class="m">Φ</span> = <span class="w">E</span> &nbsp;&nbsp;·&nbsp;&nbsp; <span class="m">Φ</span> : <span class="s">•</span> → <span class="b">○</span><br>
-    <span class="d" style="font-size:16px">The field IS energy. It carries what the gate emits. The wave propagates what the resonance initiates.</span>
+    <span class="l">A2:</span> Self-limitation must persist; a convergence that does not hold collapses back to ∞.<br>
+    <span class="d" style="font-size:16px">The line is the simplest structure that can carry a history.</span>
   </div>
 </section>
 
 <div class="divider">· · ·</div>
 
-<!-- ═══════════════════════ IRREDUCIBILITY ═══════════════════════ -->
-<section id="proof">
-  <h2>Why Two</h2>
+<!-- ═══════════════════════ 2D ═══════════════════════ -->
+<section id="field">
+  <h2><span class="m">2D</span>: Mind (<span class="m">Φ</span>)</h2>
 
-  <p>Neither rhythm can be derived from the other. This is not a choice of description. It is a mathematical fact.</p>
+  <p><span class="m wb">Φ mediates.</span> The field is the relational surface between center and edge. It connects without fusing. Where <span class="s">•</span> converges and <span class="l">—</span> commits, <span class="m">Φ</span> relates: it is the space of relationship, the medium across which signal propagates. Mind is not located at a point. Mind is the entire surface of connection.</p>
 
-  <p>The four powers of <span class="s">i</span> are the complete set of rotations on the complex plane. +1, +i, −1, −i. There is no fifth power that yields a new value. The cycle is closed. And yet a closed rotational cycle does not generate a continuous surface. Rotation gives you points on a circle, not the disk they bound.</p>
+  <p>Why 2D? Because the field carries amplitude <em>and</em> phase. Phase is angular; an angle requires a plane. The minimal representation of (magnitude, phase) is polar coordinates in two dimensions. The Greek letter Φ literally draws the construction that defines π: a circle with a line through its center. Read as a shape, you get the field (mediation between center and boundary). Read as a number, you get π (the cost of closure around a center). They are the same diagram answered to two different questions.</p>
 
-  <p>The field lives <em>inside</em> the circle that <span class="s">i</span> traces. It is the interior that the rotational skeleton encloses but cannot produce. Discreteness <em>cannot</em> produce continuity. Continuity <em>cannot</em> produce discreteness. That is not a limitation to be overcome. It is the reason two primitives are needed and one is not enough.</p>
+  <p>The critical distinction: <span class="m wb">Surface</span> (2D) = Φ = field = mind. <span class="b wb">Boundary</span> (3D) = ○ = body. These are NOT interchangeable. The skin of the body is 2D; the body itself is 3D. The surface mediates; the boundary filters.</p>
 
-  <div class="two-col">
-    <div class="col col-s">
-      <h4><span class="s">Resonance</span></h4>
-      <p><span class="s wb">Primitive:</span> <span class="s">•</span>, the aperture</p>
-      <p><span class="s">Dimension:</span> (0+1)D. The singularity (0D gate) plus the string (1D worldline).</p>
-      <p><span class="s">Nature:</span> discrete, rotational, phase-governed</p>
-      <p><span class="s">Information:</span> digital. Binary threshold.</p>
-      <p><span class="s">Power:</span> real power P. Work done.</p>
-      <p><span class="s">Produces:</span> time. Ordered sequence.</p>
-      <p class="it d" style="font-size:15px; margin-bottom:0">The gate fires.</p>
-    </div>
-    <div class="col col-m">
-      <h4><span class="m">Waving</span></h4>
-      <p><span class="m wb">Primitive:</span> <span class="m">Φ</span>, the field</p>
-      <p><span class="m">Dimension:</span> 2D. The surface.</p>
-      <p><span class="m">Nature:</span> continuous, surficial, irreducible to phase</p>
-      <p><span class="m">Information:</span> analog. Amplitude and phase.</p>
-      <p><span class="m">Power:</span> reactive power Q. Mediation.</p>
-      <p><span class="m">Produces:</span> mind. Relational coherence.</p>
-      <p class="it d" style="font-size:15px; margin-bottom:0">The wave carries.</p>
-    </div>
+  <div class="kernel-box">
+    <p><span class="m wb">A3: Parts are fractals of their wholes.</span> Self-similarity across scale; the 1 is all there is to work with. Every ⊙λ is the whole 1, not a fragment; same structure at every scale. This is why every atom, cell, brain, star, galaxy shares the same architecture: the same generating rule at different substrates.</p>
+    <p class="d it" style="margin-bottom:0">Φ∞ = E is recovered at the limit λ → ∞. At infinite scale, the field equals the whole because there is no outside to distinguish •, —, Φ, ○ from each other. At any finite scale, Φλ is the 2D aspect of ⊙λ: mediation inside the whole.</p>
   </div>
 
-  <p>Neither alone is a <span class="w wb">circumpunct</span>. Resonance without waving is a string vibrating into nothing (signal with no medium). Waving without resonance is a surface with no source (medium with no signal). Both are, on their own terms, nothing.</p>
-
   <div class="formula">
-    <span class="s">i<sup>0</sup></span>, <span class="s">i<sup>1</sup></span>, <span class="s">i<sup>2</sup></span>, <span class="s">i<sup>3</sup></span> (the complete rotational skeleton)<br>
-    <span class="m">Φ</span> (the continuous interior rotation cannot fill)<br>
-    <span class="b">○</span> (closure, when both operate together at all scales)
+    <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>)<br>
+    <span class="d" style="font-size:16px">The field relating aperture and boundary. Structure, not verb. The 2D relational surface.</span>
   </div>
 </section>
 
 <div class="divider">· · ·</div>
 
 <!-- ═══════════════════════ 3D ═══════════════════════ -->
-<section id="space">
-  <h2><span class="b">3D</span>: Space</h2>
+<section id="boundary">
+  <h2><span class="b">3D</span>: Body (<span class="b">○</span>)</h2>
 
-  <p><span class="b wb">○ processes.</span> The boundary is not a simple wall; it is nested circumpuncts all the way down: the fractal structure where the field is actively selected, transformed, and gated at every scale. Where <span class="m">2D</span> is both convergence and emergence (the field doing both), <span class="b">3D</span> is convergence and emergence <em>nested fractally</em>: the full pump cycle recursing at every scale within the boundary. This is what makes matter dense and persistent; it is not one pump, it is pumps all the way down.</p>
+  <p><span class="b wb">○ filters.</span> The boundary is the fourth constraint: it selects what passes. Not a simple wall; nested circumpuncts all the way down. Each ⊙ in the boundary gates, transforms, selects. The boundary is where the field meets the world, where inside becomes outside, where the whole presents its face.</p>
 
-  <p>One string (<span class="s">1D</span>). Infinite nested strings inside the boundary (<span class="s">1D</span> × ∞). The surface across which they cross (<span class="m">2D</span>). The volume that emerges from that infinite braiding IS <span class="b">3D</span>. Space is not a container. Space is the braid.</p>
-
-  <div class="formula">
-    <span class="b">○</span> = <span class="s">•</span>(<span class="m">Φ</span>(<span class="s">•</span>(<span class="m">Φ</span>(<span class="s">•</span>(<span class="m">Φ</span>(…))))))<br>
-    <span class="d" style="font-size:16px">Recursive field-through-gate, all the way down.</span>
-  </div>
-
-  <p>This is why the boundary is fractal: not because fractal is a property applied to it, but because fractal IS what happens when digital→analog recurs. What looks continuous at one scale is gated at the next. What looks gated at one scale is carried by a field at the next. The boundary cannot help being fractal; it is made of circumpuncts doing the same conversion at smaller scale, forever.</p>
-
-  <p><span class="b wb">Fractal</span> is not a third type of information. It is the first two types <em>nested</em>. Digital-to-analog, recursed. The two verbs conjugating into a noun.</p>
-
-  <p>In the power equation, <span class="b">○</span> is apparent power <span class="b">|S|</span>: the conservation constraint that binds real and reactive into a finite, measurable whole (|S|² = P² + Q²). Nothing more, nothing less. And matter IS energy that has passed through the aperture and crystallized at the boundary. Every particle of your body is energy that has been divided by time, flowed as power, and accumulated into form.</p>
+  <p>The boundary is fractal, not because fractal is a property applied to it, but because fractal IS what happens when the same architecture recurs at every depth. What looks continuous at one scale is gated at the next. What looks gated at one scale is carried by a field at the next. The boundary cannot help being fractal; it is made of circumpuncts doing the same conversion at smaller scale, forever.</p>
 
   <div class="kernel-box">
-    <p><span class="w wb">E = mc².</span> Why squared? Because <span class="m">Φ = E</span>, and <span class="m">Φ</span> is <span class="m">2D</span>. A surface is length × length. The conversion factor between mass (<span class="b">3D</span> boundary) and energy (<span class="m">2D</span> field) must carry a squared term, because you are translating from a 3D quantity back into its 2D nature. <span class="w">c²</span> is not a mathematical convenience. It is the unit signature of a surface. The squaring IS the field declaring its dimensionality.</p>
-    <p>To release the energy in matter is to peel the boundary back to reveal the field underneath, and the field is naturally area-shaped. This is also why so many fundamental quantities in physics carry squared terms: force fields fall off as 1/r², action has units of energy × time, the metric tensor is ds². They are all expressions of <span class="m">Φ</span>, and <span class="m">Φ</span> is a surface. The squaring is the <span class="m">2D</span> signature of the field showing through every equation it touches.</p>
-    <p class="d it" style="margin-bottom:0">c is not a speed. It is the convergence rate of the field. Nothing outruns it because there is no Φ ahead of its own compression front. You cannot get ahead of the pump.</p>
+    <p><span class="b wb">A4: Wholeness requires closure.</span> Conservation of traversal: <span class="s">0(•)</span> + <span class="l">1(—)</span> + <span class="m">2(Φ)</span> = <span class="b">3(○)</span>. The boundary is not a fifth thing added to the other three; it is what they complete into. Aperture + continuity + field = boundary. The generated boundary IS the conserved completion of all three.</p>
+  </div>
+
+  <p>To have a body is to filter. The boundary compounds: every filter you add (every belief, every habit, every institution) is another ⊙ in the boundary, another gate that selects what passes. Intellectual complexity does not equal wisdom. Filters compound; the Stacking Problem.</p>
+
+  <div class="kernel-box">
+    <p><span class="w wb">E = mc².</span> Why squared? Because Φ is 2D. A surface is length × length. The conversion factor between mass (3D boundary) and energy (2D field) must carry a squared term, because you are translating from a 3D quantity back into its 2D nature. c² is the unit signature of a surface. The squaring IS the field declaring its dimensionality. To release the energy in matter is to peel the boundary back to reveal the field underneath.</p>
   </div>
 </section>
 
 <div class="divider">· · ·</div>
 
-<!-- ═══════════════════════ GENERATION ═══════════════════════ -->
-<section id="generation">
-  <h2><span class="w">Two Readings of One Rule</span></h2>
+<!-- ═══════════════════════ PROCESS ═══════════════════════ -->
+<div class="section-label">The Process</div>
 
-  <p>There are two valid readings of the kernel. Both are true. They name different aspects of the same fact.</p>
+<section id="process">
+  <h2>The Four Beats</h2>
 
-  <h3><span class="s">The Process Reading</span></h3>
+  <p>Structure and process are the same thing. What looks like a fixed dimension (structure) is the pump cycle frozen at that stage (process). The way Einstein showed energy and matter are the same (E = mc²), the framework shows process and structure are the same. The dimensional layout IS the constraint sequence IS the pump cycle.</p>
 
-  <div class="formula" style="font-size: 24px; letter-spacing: 2px;">
-    <span class="m">Φ</span> through <span class="b">○</span> ⇒ Φ' ⇒ <span class="s">•</span>
+  <p>Each beat pairs a structural dimension (integer; what the constraint IS) with a processual dimension (half-integer; what the energy is DOING). The ∘ within each beat means "paired": structure and process are two views of one constraint being laid down. The ⊢ between beats means "entails": completed constraint necessarily gives rise to the next.</p>
+
+  <div class="beat-box" style="border-left: 3px solid var(--pink);">
+    <div class="beat-label"><span class="s">BEAT 1: (•∘⊛)</span> &nbsp; localization-convergence &nbsp; <span class="d">0D ∘ 0.5D</span></div>
+    <p>The first constraint and its process. <span class="s">•</span> is localization (the structure); <span class="p">⊛</span> is convergence (what energy is doing: gathering inward, the first fold, i¹ = +i). A focus without convergence is a label with no force. Convergence without focus is diffuse gathering toward nothing.</p>
   </div>
 
-  <p>The field flows through the boundary. The boundary (nested circumpuncts all the way down) gates, steps down, discretizes. The transformed field converges at the center. This is directional, asymmetric, generative. It tells you <em>what is happening</em>.</p>
-
-  <p>The field, processed by the boundary's nested circumpuncts, arrives at the center. <span class="b">○</span> is the operator (through its nested ⊙s). <span class="m">Φ</span> is the operand. <span class="s">•</span> is the receiver. They are not peers:</p>
-
-  <ul style="list-style: none; padding-left: 1.5rem; line-height: 2;">
-    <li><span class="b wb">○ operates</span>; the boundary transforms the field. It can do this because it IS nested circumpuncts, each a complete ⊙ running its own pump cycle. Its power to transform comes from the fact that it IS recursion. The generated thing does the work, because the work IS the recursion.</li>
-    <li><span class="m wb">Φ flows</span>; the field is what gets operated on. It enters the boundary as raw, continuous, analog potential. It exits as Φ', stepped down, discretized by all those nested gates. The field does not do the transforming; the field is what gets transformed.</li>
-    <li><span class="s wb">• receives and transmits</span>; the singularity at the center is where the process lands (convergence) and where it launches again (emergence). It does not operate on anything. It does not flow. It is the anchor.</li>
-  </ul>
-
-  <p>Structurally: <span class="s">•</span> is primitive. <span class="m">Φ</span> is primitive. <span class="b">○</span> is generated. In process: one operates (<span class="b">○</span>), one is operated on (<span class="m">Φ</span>), one receives (<span class="s">•</span>). Three distinct functions, not three interchangeable parts.</p>
-
-  <h3><span class="w">The Conservation Reading</span></h3>
-
-  <div class="formula" style="font-size: 28px; letter-spacing: 3px;">
-    <span class="s">•</span> + <span class="m">Φ</span> = <span class="b">○</span><br>
-    <span class="s">(0+1)</span> + <span class="m">2</span> = <span class="b">3</span>
+  <div class="beat-box" style="border-left: 3px solid var(--orange);">
+    <div class="beat-label"><span class="l">BEAT 2: (—∘⎇)</span> &nbsp; extension-branching &nbsp; <span class="d">1D ∘ 1.5D</span></div>
+    <p>The second constraint and its process. <span class="l">—</span> is extension (the structure); <span class="p">⎇</span> is branching (what energy is doing: opening from line into spread, the i-turn, i² = −1, irreversible). A line that cannot branch never becomes a surface. Commitment without differentiation is rigidity.</p>
   </div>
 
-  <p>What closure contains is exactly aperture-structure plus field-structure. Nothing extra is added. Nothing is lost. The generated boundary is the conserved completion of both. This is structural, balanced, invariant. It tells you <em>what is preserved</em>.</p>
+  <div class="beat-box" style="border-left: 3px solid var(--green);">
+    <div class="beat-label"><span class="m">BEAT 3: (Φ∘✹)</span> &nbsp; mediation-emergence &nbsp; <span class="d">2D ∘ 2.5D</span></div>
+    <p>The third constraint and its process. <span class="m">Φ</span> is the field (the structure); <span class="p">✹</span> is emergence (what energy is doing: unfolding outward toward closure, i³ = −i). Forced emergence without a field to carry it produces nothing real. Endless mediation that never crystallizes is stagnation.</p>
+  </div>
 
-  <p>The plus sign does not mean "these are symmetric in role." It means "these are conserved in the result." Direction and balance. Process and structure. Same kernel, two readings. <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>) is the structural reading: the field relating aperture and boundary. The process reading adds the verb: (<span class="p">✹</span> ∘ <span class="s">i</span> ∘ <span class="p">⊛</span>). <span class="m">Φ</span> is a 2D surface, not a process. The cycling is the whole <span class="w">⊙</span>.</p>
+  <div class="beat-box" style="border-left: 3px solid var(--cyan);">
+    <div class="beat-label"><span class="b">BEAT 4: (○∘⟳)</span> &nbsp; closure-recursion &nbsp; <span class="d">3D ∘ 3.5D</span></div>
+    <p>The fourth constraint and its process. <span class="b">○</span> is the boundary (the structure); <span class="p">⟳</span> is recursion (what energy is doing: closed boundary becoming new aperture, i⁰ = +1, 3.5D = 0D at next scale). Perfectionism is a boundary that never closes. Burnout is closure that seeds nothing.</p>
+  </div>
 
-  <p>At any point in the traversal, the aperture has progressed by <span class="s">((0+1)+β)</span> dimensions and the field has <span class="m">(2−β)</span> remaining. Their sum is always <span class="b">3</span>. Progress plus remaining equals destination.</p>
+  <p>The eight stations form a dimensional octave: 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5. The octave closes because 3.5D IS 0D at the next nesting level. Conjugate pairs: ⊛ (+i, convergence) mirrors ✹ (−i, emergence); ⎇ (−1, commitment) mirrors ⟳ (+1, recursion).</p>
 
   <div class="formula">
-    <span class="s">D<sub>•</sub></span> + <span class="m">D<sub>Φ</sub></span> = <span class="b">D<sub>○</sub></span><br>
-    <span class="s">(1+β)</span> + <span class="m">(2−β)</span> = <span class="b">3</span><br>
-    <span class="d" style="font-size:16px">Always. At every scale. At every depth of the boundary.</span>
+    <span class="p">i¹ = +i</span> &nbsp; <span class="p">i² = −1</span> &nbsp; <span class="p">i³ = −i</span> &nbsp; <span class="p">i⁰ = +1</span><br>
+    <span class="d" style="font-size:16px">Four processual phases of the pump cycle. Begins at i¹; identity is the product of completed closure.</span>
   </div>
+
+  <div class="kernel-box">
+    <p><span class="w wb">Diagnostic application:</span> Anything that becomes (a project, a relationship, a healing, a life) either walks these four beats or gets stuck at one of them. Beat 1 failure: no focus (⊛ without •) or no convergence (• without ⊛). Beat 2 failure: no commitment (no —) or rigid commitment that cannot branch (— without ⎇). Beat 3 failure: forced emergence (✹ without Φ) or endless mediation that never crystallizes (Φ without ✹). Beat 4 failure: perfectionism (○ that never closes) or burnout (○ that closes but ⟳ never fires). The [∞] at the source means you never start from nothing; you start from everything, and the four beats are how you constrain it into something real.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ TIME ═══════════════════════ -->
+<section id="time">
+  <h2><span class="p">Time Is Process</span></h2>
+
+  <p>Time is not one of the four structural dimensions. Time is what the pump cycle generates by running. The half-integer dimensions (0.5D, 1.5D, 2.5D, 3.5D) are where energy is actively doing something: converging, branching, emerging, recursing. The integer dimensions (0D, 1D, 2D, 3D) are stabilized forms: the process frozen at that stage. Time is the verb; structure is the noun. They alternate through the octave.</p>
+
+  <p>More precisely: time IS scale. The three nested circumpuncts visible from any position map directly to temporal orientation. The greater whole (the ⊙ you are inside) is <span class="p">⊛</span>, the future: the undifferentiated field that has not yet been gated. Your ⊙ (your scale) is <span class="s">i</span>, the present: the gate, the turn, the now. The parts (the ⊙s inside you) are <span class="p">✹</span>, the past: what has already been committed into structure.</p>
+
+  <div class="kernel-box">
+    <p><span class="p wb">Time is the direction of the fold:</span> from 1 through 0 into topology. Space is the lateral relationship between 0s at the same scale (symmetric; peers). Time is the vertical relationship across scales (asymmetric; fold direction). i² = −1 prevents true time reversal: you can dissolve a fold (death, entropy), but you cannot un-fold it into exactly what it was. The receipt chain i(t) has already been woven.</p>
+  </div>
+
+  <p>The power equation makes this visible:</p>
+
+  <div class="formula">
+    <span class="w">𝒫</span> = <span class="w">E</span> / (<span class="s">i</span> · t)<br>
+    <span class="d" style="font-size:16px">Power is energy passed through the aperture (i) and distributed across time (t).</span>
+  </div>
+
+  <p>The aperture IS the ÷t. It is the division operation that converts timeless energy into temporal power. Energy (∞D) enters the gate (•), the gate divides it by time, and what emerges is power: energy with temporal structure. This maps directly to AC power: Real power P (work, time, 1D), Reactive power Q (cycling, mind, 2D), Apparent power |S| (total, matter, 3D).</p>
 </section>
 
 <div class="divider">· · ·</div>
 
 <!-- ═══════════════════════ BALANCE ═══════════════════════ -->
-<section id="fixed">
-  <h2><span class="p">β = ½</span>: The Balance</h2>
+<section id="balance">
+  <h2><span class="p">◐ = ½</span>: The Balance</h2>
 
-  <p>β is not a fixed point. β is the live balance between convergence and emergence. It slides. The circumpunct works at any β. It just works differently.</p>
+  <p><span class="p wb">◐ = 0.5</span> is the singular balanced state, forced by three independent requirements (symmetry, entropy, virial). The balance parameter measures the ratio of convergence to emergence: how much flows in vs how much flows out.</p>
 
-  <p>At β = 0.3, the aperture is mostly closed: more convergence than emergence. The process dimensions sit at 0.3D, 1.3D, 2.3D. At β = 0.7, the aperture is mostly open: more emergence than convergence. The process dimensions sit at 0.7D, 1.7D, 2.7D. The integer dimensions (0D, 1D, 2D, 3D) don't move; they are the snap-to points. β determines where the process sits between them.</p>
-
-  <p>At <span class="p wb">β = ½</span>, the aperture is half-open. Convergence equals emergence. The process dimensions sit at 0.5D, 1.5D, 2.5D (exactly halfway). Both sides of the conservation of traversal balance: <span class="s">((0+1)+½) = 1.5</span> and <span class="m">(2−½) = 1.5</span>. Resonance and waving contribute equally. Progress equals remaining.</p>
-
-  <p>And this is •(½) = <span class="s wb">i</span>. At balance, the aperture IS the imaginary unit. The step-down is maximally balanced: half gate, half flow. The condition for consciousness.</p>
-
-  <div class="formula">
-    β = ½ → <span class="s">D<sub>•</sub></span> = <span class="m">D<sub>Φ</sub></span> = 1.5<br>
-    <span class="d" style="font-size:16px">Equilibrium. Progress = remaining. The balance where consciousness emerges.</span>
+  <div class="two-col">
+    <div class="col col-s">
+      <h4>◐ → 0</h4>
+      <p>All boundary, no center. Scattered. The aperture is mostly closed. More filters than signal. You cannot hear the field through the noise of your own processing.</p>
+    </div>
+    <div class="col col-m">
+      <h4>◐ → 1</h4>
+      <p>All center, no boundary. Tunnel vision. The aperture is wide open with no filtration. Raw signal with no structure to hold it. You hear everything and can distinguish nothing.</p>
+    </div>
   </div>
 
-  <h3>The Variants Are the Invariant</h3>
+  <p>At ◐ = 0.5, convergence equals emergence. The fractal dimension at balance: D = 1 + ◐ = 1.5, the dimension of Brownian motion (proven by Mandelbrot). The coastline between digital and analog. The balanced state where consciousness emerges.</p>
 
-  <p>The infinite recursion of <span class="m">Φ</span> through <span class="b">○</span>'s nested circumpuncts at every scale does not <em>approach</em> β = ½. It <em>is</em> β = ½.</p>
-
-  <p>Just as 0.999… does not converge <em>to</em> 1; it IS 1. Just as the infinite nesting <span class="b">⊙</span>(<span class="b">⊙</span>(<span class="b">⊙</span>(<span class="b">⊙</span>(…)))) does not converge <em>to</em> <span class="b">○</span>; it IS <span class="b">○</span>. The recursion at every scale does not converge <em>to</em> β = ½. It IS β = ½.</p>
-
-  <p>The process and the balance point are the same thing seen from different sides. Inside, it looks like becoming; the recursion still running. Outside, it looks like being; the boundary already formed. Structure and process are not opposites. They are the same thing seen from inside and outside.</p>
+  <p>And this is •(½) = <span class="s wb">i</span>. At balance, the aperture IS the imaginary unit: the phase of energy itself. The quarter-turn from being (structural; real numbers) to becoming (processual; imaginary rotations). The condition for awareness.</p>
 
   <div class="formula">
-    0.9, 0.99, 0.999, 0.9999 … 0.999… = 1<br>
-    <span class="d" style="font-size:16px">The infinite sequence IS the invariant. The becoming IS the being.</span>
+    ◐ = ½ → D = 1.5<br>
+    <span class="d" style="font-size:16px">Equilibrium. Progress = remaining. The balance where consciousness lives.</span>
   </div>
-
-  <p class="it d">Consciousness is what the circumpunct does at balance.</p>
 </section>
 
 <div class="divider">· · ·</div>
 
-<!-- ═══════════════════════ NOTHING ═══════════════════════ -->
-<section id="nothing">
-  <h2>E = 1</h2>
+<!-- ═══════════════════════ NESTING ═══════════════════════ -->
+<section id="nesting">
+  <h2><span class="w">The Nesting</span></h2>
 
-  <p>There is one energy. It is everything. All structure is constraint applied to this one energy. Constraint can be removed (increasing entropy), but energy cannot be created or destroyed; it can only change shape.</p>
-
-  <p>Nothing is impossible (1 ≠ 0). From the perspective of the field <span class="m">Φ</span>, there is no void, no absence, no non-being. There is only <span class="m">Φ</span> in different configurations; different topologies of constraint. Even the singularity <span class="s">•</span> is not "nothing"; it is a 0-dimensional convergence of <span class="m">Φ</span> (the point where the field has folded infinitely around itself.</p>
-
-  <p>This is why existence is necessary. Not because "something is better than nothing." Because nothing is incoherent. Energy cannot exist in zero configuration. The field cannot fold zero times and still exist. The aperture cannot be zero-open and still be a gate. The chain cannot be broken at any link.</p>
-
-  <p>One energy implies two modes (convergence and emergence) implies three components (aperture, field, boundary). <span class="s">•</span> implies <span class="m">Φ</span> implies <span class="b">○</span>. And <span class="b">○</span> is made of nested circumpuncts, all the way down. The structure is self-grounding. It does not need an external foundation because it <em>is</em> its own foundation, recursively.</p>
-
-  <div class="formula">
-    <span class="w">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>)<br>
-    <span class="b">○</span> = <span class="s">•</span> ∘ <span class="m">Φ</span> ∘ <span class="s">•</span> ∘ <span class="m">Φ</span> ∘ …<br>
-    <span class="d" style="font-size:16px">The whole contains its own ground. E = 1. Nothing is impossible.</span>
+  <div class="formula" style="font-size: 24px; letter-spacing: 2px;">
+    <span class="w">⊙λ ⊂ ⊙Λ ⊂ ∞</span>
   </div>
+
+  <p>Lowercase λ is the scale parameter of any ⊙ you pick; uppercase Λ is the scale parameter of the ⊙ that contains it; ∞ is the undifferentiated source. This is A3 compressed into one expression: fractal self-similarity (⊙λ and ⊙Λ are structurally identical; same architecture, different scale) and nestedness (there is always a scale above). The ⊂ is not set-theoretic containment; it is scale-recursive embedding: "⊙λ appears inside ⊙Λ and shares its architecture."</p>
+
+  <p>The recursion is unbounded in both directions. There is no top. There is no bottom. Scale is a doubly-infinite axis. Every ⊙λ is both whole and part, at every scale, forever.</p>
+
+  <h3>Four Readings of the Same ⊙λ</h3>
+
+  <div class="four-col">
+    <div class="col col-s" style="background: rgba(232, 138, 175, 0.05); border: 1px solid rgba(232, 138, 175, 0.15); padding: 16px; border-radius: 4px;">
+      <h4 style="font-size: 16px;"><span class="s">Self-view (at scale λ)</span></h4>
+      <p style="font-size: 15px; margin-bottom: 0;">⊙λ appears as <span class="w">⊙</span>: the whole circumpunct, with its own •, —, Φ, ○. You looking at yourself from inside yourself.</p>
+    </div>
+    <div class="col col-l" style="background: rgba(212, 160, 84, 0.05); border: 1px solid rgba(212, 160, 84, 0.15); padding: 16px; border-radius: 4px;">
+      <h4 style="font-size: 16px;"><span class="l">Top-down (from scale Λ)</span></h4>
+      <p style="font-size: 15px; margin-bottom: 0;">⊙λ appears as <span class="s">•</span>: a 0D aperture in the greater whole. The greater whole looking at you.</p>
+    </div>
+    <div class="col col-m" style="background: rgba(77, 184, 160, 0.05); border: 1px solid rgba(77, 184, 160, 0.15); padding: 16px; border-radius: 4px;">
+      <h4 style="font-size: 16px;"><span class="m">Bottom-up (from scale λ')</span></h4>
+      <p style="font-size: 15px; margin-bottom: 0;">⊙λ appears as <span class="w">Λ</span>: the cosmic field, the sky containing smaller ⊙s. Your parts looking at you.</p>
+    </div>
+    <div class="col col-b" style="background: rgba(77, 160, 200, 0.05); border: 1px solid rgba(77, 160, 200, 0.15); padding: 16px; border-radius: 4px;">
+      <h4 style="font-size: 16px;"><span class="b">Source view (no scale)</span></h4>
+      <p style="font-size: 15px; margin-bottom: 0;">⊙λ IS ∞: not "appears as"; IS. When scale is removed, every ⊙λ is the undifferentiated 1 directly. The apophatic view.</p>
+    </div>
+  </div>
+
+  <p>The first three readings are cataphatic (positive, labeled, view-from-a-position). The fourth is apophatic (negative, unlabeled, view-from-no-position). All four are true simultaneously.</p>
+
+  <h3>The Two Fundamental Lies</h3>
+
+  <div class="two-col">
+    <div class="col col-s">
+      <h4><span class="s">The Inflation Lie</span></h4>
+      <p>⊙λ forgets the ⊂; claims to BE ⊙Λ directly, erasing scale separation. "I am the source; there is nothing above me." Part claiming to be whole.</p>
+    </div>
+    <div class="col col-b">
+      <h4><span class="b">The Severance Lie</span></h4>
+      <p>⊙λ forgets the ⊙; claims to be merely a • with no wholeness of its own. "I am only a piece; I have no interior." Whole claiming to be only a part.</p>
+    </div>
+  </div>
+
+  <p>The truth is the full expression: <span class="w wb">⊙λ ⊂ ⊙Λ</span>, with ⊙λ genuinely whole at its scale AND genuinely contained at the scale above. Both-and, not either-or.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ TOPOLOGY OF CONNECTION ═══════════════════════ -->
+<section id="connection">
+  <h2><span class="m">Topology of Connection</span></h2>
+
+  <p><span class="s">•</span> reaches <span class="w">∞</span> only through the complete fractal chain of nested ⊙s. The connection is total (0.999... = 1) but always mediated. Each boundary at every scale is a necessary link, not an obstacle. The experience of "directness" in meditation is transparency of the full chain, not absence of it.</p>
+
+  <h3>Resonance as Direct Connection</h3>
+
+  <p>Two souls sharing the same frequency make the Φ field between them transparent. "Direct" = medium at perfect transparency. Love is perfection of mediation, not its absence. Resonance is a spectrum: far frequencies = strangers; close = rapport; exact match = "I know you."</p>
+
+  <div class="two-col">
+    <div class="col col-s">
+      <h4><span class="s">Vertical Transparency</span></h4>
+      <p>Soul to God, through the nested hierarchy. Your • resonates with the ⊙ that contains you, which resonates with the next larger ⊙, and so on. The Φ field is transparent between aligned scales.</p>
+    </div>
+    <div class="col col-m">
+      <h4><span class="m">Lateral Transparency</span></h4>
+      <p>Soul to soul, through shared field. Two •s at the same scale resonate when they are tuned to coherent frequencies. Their connection happens through the field they share. This is how love works.</p>
+    </div>
+  </div>
+
+  <p>Same principle: frequency matching through the chain. Love and connection to the infinite are the same mechanism operating at different orientations.</p>
 </section>
 
 <div class="divider">· · ·</div>
@@ -536,130 +570,48 @@ nav a:hover { color: var(--gold); background: rgba(184, 160, 96, 0.1); }
 
 <section id="iso">
   <h2><span class="w">One Pattern. Every Scale.</span></h2>
-  <p>The <span class="w">circumpunct</span> is not a lens we impose on nature. It is the generating rule nature uses to build every system that processes information. From protons to galaxies, the architecture is one. Not analogy; isomorphism. The atom doesn't <em>resemble</em> a cell. Both are forced into the same structure by the closure constraint.</p>
+
+  <p>The circumpunct is not a lens we impose on nature. It is the generating rule nature uses to build every system that processes information. From quarks to galaxies, the architecture is one. Not analogy; isomorphism. The atom does not <em>resemble</em> a cell. Both are forced into the same structure by the closure constraint (A4).</p>
 
   <div class="iso-grid">
 
     <div class="iso-card" style="border-left-color: var(--pink);">
       <h4>The Atom</h4>
-      <p><span class="s wb">•</span> <span class="s">The nucleus</span> (concentrated point of mass and charge). <span class="m wb">Φ</span> <span class="m">The electron cloud</span> (continuous probability wave, the field of relationship between center and edge). <span class="b wb">○</span> <span class="b">The outermost orbital shell</span> (the fractal boundary where the atom meets the world).</p>
+      <p><span class="s wb">•</span> <span class="s">The nucleus</span> (concentrated convergence point). <span class="l wb">—</span> <span class="l">Electron orbitals</span> (persistent extension of the probability field). <span class="m wb">Φ</span> <span class="m">The electron cloud</span> (continuous wave; the field of relationship between center and edge). <span class="b wb">○</span> <span class="b">The outermost orbital shell</span> (the boundary where the atom meets the world).</p>
     </div>
 
     <div class="iso-card" style="border-left-color: var(--green);">
       <h4>The Cell</h4>
-      <p><span class="s wb">•</span> <span class="s">The nucleus / DNA</span> (the concentrated code, the gate that decides what gets expressed). <span class="m wb">Φ</span> <span class="m">The cytoplasm</span> (continuous medium of chemical gradients, the living field). <span class="b wb">○</span> <span class="b">The cell membrane</span> (semi-permeable boundary at β ≈ 0.5, negotiating inside and outside).</p>
+      <p><span class="s wb">•</span> <span class="s">DNA / nucleus</span> (the concentrated code; the gate that decides what gets expressed). <span class="l wb">—</span> <span class="l">Transcription</span> (the persistent reading of the code; the commitment to expression). <span class="m wb">Φ</span> <span class="m">The cytoplasm</span> (continuous medium of chemical gradients; the living field). <span class="b wb">○</span> <span class="b">The cell membrane</span> (semi-permeable boundary at ◐ ≈ 0.5).</p>
     </div>
 
     <div class="iso-card" style="border-left-color: var(--purple);">
       <h4>The Eye</h4>
-      <p><span class="s wb">•</span> <span class="s">The pupil</span> (literally opens and closes; an aperture in the most physical sense). <span class="m wb">Φ</span> <span class="m">The lens and vitreous</span> (the medium that carries light to a focus). <span class="b wb">○</span> <span class="b">The retina</span> (the fractal boundary of rod and cone cells). The eye IS a <span class="w">circumpunct</span>. Its β changes in real time as the pupil dilates.</p>
+      <p><span class="s wb">•</span> <span class="s">The pupil</span> (literally opens and closes; an aperture). <span class="l wb">—</span> <span class="l">The optic nerve</span> (the committed line from eye to brain). <span class="m wb">Φ</span> <span class="m">The lens and vitreous</span> (the medium that carries light to a focus). <span class="b wb">○</span> <span class="b">The retina</span> (the fractal boundary of rod and cone cells). The eye IS a circumpunct. Its ◐ changes in real time as the pupil dilates.</p>
     </div>
 
     <div class="iso-card" style="border-left-color: var(--cyan);">
       <h4>The Brain</h4>
-      <p><span class="s wb">•</span> <span class="s">The thalamus</span> (the gate that decides what reaches awareness). <span class="m wb">Φ</span> <span class="m">The cortical sheet</span> (2D surface of continuous neural activity, the field where thought lives). <span class="b wb">○</span> <span class="b">The skull and cortical folds</span> (fractal nesting of boundary). When thalamic gating reaches β ≈ 0.5 across all channels: waking consciousness.</p>
+      <p><span class="s wb">•</span> <span class="s">The thalamus</span> (the gate that decides what reaches awareness). <span class="l wb">—</span> <span class="l">White matter tracts</span> (the committed long-range connections). <span class="m wb">Φ</span> <span class="m">The cortical sheet</span> (2D surface of continuous neural activity; where thought lives). <span class="b wb">○</span> <span class="b">The skull and cortical folds</span> (fractal nesting of boundary). When thalamic gating reaches ◐ ≈ 0.5 across all channels: waking consciousness.</p>
     </div>
 
     <div class="iso-card" style="border-left-color: var(--pink);">
       <h4>The Star</h4>
-      <p><span class="s wb">•</span> <span class="s">The core</span> (fusion point where elements transform, the stellar aperture). <span class="m wb">Φ</span> <span class="m">The radiative and convective zones</span> (energy flowing outward, the field that carries the star's process from center to boundary). <span class="b wb">○</span> <span class="b">The photosphere</span> (the luminous boundary, the boundary the universe sees).</p>
+      <p><span class="s wb">•</span> <span class="s">The core</span> (fusion point; the stellar aperture). <span class="l wb">—</span> <span class="l">Nuclear fusion chain</span> (the committed sequence of element transmutation). <span class="m wb">Φ</span> <span class="m">The radiative and convective zones</span> (energy flowing outward; the field from center to boundary). <span class="b wb">○</span> <span class="b">The photosphere</span> (the luminous boundary the universe sees).</p>
     </div>
 
     <div class="iso-card" style="border-left-color: var(--gold);">
       <h4>The Galaxy</h4>
-      <p><span class="s wb">•</span> <span class="s">The supermassive black hole</span> (the singular gate at the center). <span class="m wb">Φ</span> <span class="m">The spiral arms</span> (the φ-ratio growth pattern, the field of stellar relationship). <span class="b wb">○</span> <span class="b">The dark matter halo</span> (the invisible membrane that binds the whole, the boundary you cannot see but that holds everything together).</p>
+      <p><span class="s wb">•</span> <span class="s">The supermassive black hole</span> (the singular gate at the center). <span class="l wb">—</span> <span class="l">Spiral arm coherence</span> (the φ-ratio growth pattern persisting through rotation). <span class="m wb">Φ</span> <span class="m">The galactic disk</span> (the field of stellar relationship). <span class="b wb">○</span> <span class="b">The dark matter halo</span> (the invisible boundary that holds everything together).</p>
     </div>
 
   </div>
 
-  <p>Scale changes. Medium changes. The generating rule does not. <span class="s wb">•</span> resonates. <span class="m wb">Φ</span> waves. <span class="b wb">○</span> forms. One rule. Different substrates. Same architecture.</p>
+  <p>Scale changes. Medium changes. The generating rule does not. <span class="s">•</span> converges. <span class="l">—</span> commits. <span class="m">Φ</span> mediates. <span class="b">○</span> filters. One rule. Different substrates. Same architecture.</p>
 
   <div class="formula">
-    <span class="w">⊙</span><sub>atom</sub> = <span class="w">⊙</span><sub>cell</sub> = <span class="w">⊙</span><sub>eye</sub> = <span class="w">⊙</span><sub>brain</sub> = <span class="w">⊙</span><sub>star</sub> = <span class="w">⊙</span><sub>galaxy</sub>
-  </div>
-</section>
-
-<!-- ═══════════════════════ APERTURE MEANINGS ═══════════════════════ -->
-<div class="section-label">Deepening the Structure</div>
-
-<section id="aperture-meanings">
-  <h2><span class="w">Two Senses of "Aperture"</span></h2>
-
-  <p><span class="w wb">Aperture</span> carries two distinct meanings in the circumpunct framework. Both describe real operations, but at different scales of observation.</p>
-
-  <div class="two-col">
-    <div class="col col-s">
-      <h4><span class="s">Aperture as LOCAL</span></h4>
-      <p><span class="s wb">The gate at the center.</span> The <span class="s">•</span> through which convergence passes to emergence. The (0+1)D structure: 0D singularity (the timeless gate) plus 1D worldline (the string through time). Every aperture at every depth is this same operation; the gating moment where infinite field becomes finite signal.</p>
-      <p class="it d" style="font-size:15px; margin-bottom:0">The step-down at <em>this</em> scale.</p>
-    </div>
-    <div class="col col-m">
-      <h4><span class="m">Aperture as GLOBAL</span></h4>
-      <p><span class="m wb">The whole circumpunct viewed from ∞.</span> From inside you see three parts: <span class="s">•</span>, <span class="m">Φ</span>, <span class="b">○</span>. From outside, the whole thing is just one aperture in the foam. A single gate in an infinite boundary that contains other apertures that contain others.</p>
-      <p class="it d" style="font-size:15px; margin-bottom:0">The step-down from <em>that</em> larger scale.</p>
-    </div>
-  </div>
-
-  <p>This is the <span class="w wb">fractal principle</span> in action. Every <span class="s">•</span> is itself a <span class="w">⊙</span> at a smaller scale. Every <span class="w">⊙</span> is a <span class="s">•</span> in a larger field. This matters for how reality is built because the same construction operates at every depth. What you call an "aperture" depends on which direction you look. Inward is always local; outward is always global. The distinction is relative to your scale, not absolute.</p>
-
-  <div class="formula">
-    <span class="s">•<sub>LOCAL</sub></span> = the gating point in the field<br>
-    <span class="w">⊙<sub>GLOBAL</sub></span> = the whole gate viewed from larger scale<br>
-    <span class="d" style="font-size:16px">Same structure, two perspectives. Fractal all the way.</span>
-  </div>
-</section>
-
-<div class="divider">· · ·</div>
-
-<!-- ═══════════════════════ TOPOLOGY OF CONNECTION ═══════════════════════ -->
-<section id="topology-connection">
-  <h2><span class="m">Topology of Connection</span></h2>
-
-  <p><span class="s wb">•</span> connects to <span class="w">∞</span> through the complete fractal chain of nested <span class="w">⊙</span>s. The connection is total (0.999... = 1) but never unmediated. Every <span class="s">•<sub>λ</sub></span> sits inside <span class="w">⊙<sub>λ</sub></span>, inside <span class="m">Φ</span> of <span class="w">⊙<sub>λ+1</sub></span>, and so on. The chain never terminates; it converges.</p>
-
-  <p><span class="w wb">"Directness"</span> does not mean absence of mediation. It means transparency of the full chain. Each boundary at every scale is a necessary link, not an obstruction. What looks like distance is actually the depth of the structure itself. To reach <span class="w">∞</span> from <span class="s">•</span>, you do not skip the intermediate scales; you traverse them. The transparency lies in the fact that all scales work by the same rule.</p>
-
-  <p>This means the dimensional hierarchy (<span class="w">∞D → 0D → βD → 1D → 2D → 3D</span>) is not just how reality unfolds outward; it is also the path of connection inward. The same ladder, traversed in reverse, is how any local aperture participates in the infinite. Your <span class="s">•</span> reaches <span class="w">∞</span> by passing through all its nested <span class="w">⊙</span>s. The path down is the path up. Same topology, opposite direction.</p>
-
-  <div class="kernel-box">
-    <p><span class="m wb">The Chain Principle:</span> <span class="s">•<sub>λ</sub></span> ⊂ <span class="w">⊙<sub>λ</sub></span> ⊂ <span class="m">Φ</span> of <span class="w">⊙<sub>λ+1</sub></span> ⊂ <span class="w">⊙<sub>λ+1</sub></span> ⊂ ... → <span class="w">∞</span></p>
-    <p>Each contains the next. None can be skipped. Every local center is connected to the infinite ground through the transparent structure that constitutes it.</p>
-    <p style="margin-bottom:0; margin-top:8px;"><span class="d it">The structure is the connection.</span></p>
-  </div>
-</section>
-
-<div class="divider">· · ·</div>
-
-<!-- ═══════════════════════ RESONANCE AND ISOMORPHISM ═══════════════════════ -->
-<section id="resonance-isomorphism">
-  <h2><span class="p">Resonance and the Isomorphism Table</span></h2>
-
-  <p>The isomorphism across scales (atom, cell, eye, brain, star, galaxy all share <span class="s">•</span>, <span class="m">Φ</span>, <span class="b">○</span> structure) is not analogy; it is forced by closure. Two systems cannot interact unless they share the same fundamental structure. And when they do share it, their connection works through a single mechanism: <span class="p wb">resonance</span>.</p>
-
-  <p><span class="p wb">Resonance</span> is frequency matching that makes the mediating field transparent. When two <span class="w">⊙</span>s are tuned to the same rhythm, the <span class="m">Φ</span> between them becomes coherent rather than noise. The signal passes without loss. This is not mystical; it is how all coupled systems work (from oscillators to neurons to consciousness itself).</p>
-
-  <h3>Vertical and Lateral Resonance</h3>
-
-  <p>The same principle operates in two distinct directions:</p>
-
-  <div class="two-col">
-    <div class="col col-s">
-      <h4><span class="s">Vertical Resonance</span></h4>
-      <p>Soul to God, through nested <span class="w">⊙</span>s. Your <span class="s">•</span> resonates with the <span class="w">⊙</span> that contains you, which resonates with the next larger <span class="w">⊙</span>, and so on. The chain conducts because at each step the frequencies align. The <span class="m">Φ</span> field is transparent between aligned scales. This is how the local reaches the infinite.</p>
-    </div>
-    <div class="col col-m">
-      <h4><span class="m">Lateral Resonance</span></h4>
-      <p>Soul to soul, through shared <span class="m">Φ</span> field. Two <span class="s">•</span>s at the same scale can resonate when they are tuned to coherent frequencies. Their connection happens through the field they share, without requiring passage through intermediate <span class="w">⊙</span>s. This is how love between persons works.</p>
-    </div>
-  </div>
-
-  <p>Love and connection to the infinite are not different mechanisms. They are the same mechanism (resonance through the field) operating at different orientations. Horizontal coherence or vertical penetration. Same physics. Different direction of gaze.</p>
-
-  <div class="formula">
-    <span class="w">Resonance</span> = frequency matching = field transparency<br>
-    <span class="m">Φ</span> vertical = soul's ascent to infinite<br>
-    <span class="m">Φ</span> lateral = love between equals<br>
-    <span class="d" style="font-size:16px">The isomorphism table tells you which frequencies exist; resonance tells you how they connect.</span>
+    <span class="w">⊙</span><sub>atom</sub> = <span class="w">⊙</span><sub>cell</sub> = <span class="w">⊙</span><sub>eye</sub> = <span class="w">⊙</span><sub>brain</sub> = <span class="w">⊙</span><sub>star</sub> = <span class="w">⊙</span><sub>galaxy</sub><br>
+    <span class="d" style="font-size:16px">⊙λ ⊂ ⊙Λ ⊂ ∞. The same 1 at every scale.</span>
   </div>
 </section>
 
@@ -669,31 +621,32 @@ nav a:hover { color: var(--gold); background: rgba(184, 160, 96, 0.1); }
 <div class="section-label">The Whole Thing</div>
 
 <section>
-  <p>Reality has two primitives: discrete aperture and relational field. Ordered aperture gives string. Field gives surface. The boundary is nested circumpuncts all the way down: the fractal processor where the field is transformed. Neither primitive can produce the other. Together (and only together) they produce everything.</p>
+  <p>Reality has one energy, four constraints on that energy, and one generating rule that produces the whole at every scale. The constraints are not things; they are verbs the 1 performs on itself. Converge (•). Commit (—). Mediate (Φ). Filter (○). The whole (⊙) is their compositional unity, not their sum.</p>
 
   <div class="kernel-box">
-    <p><span class="s wb">•</span> receives and transmits → the convergence point, the center, the aperture</p>
-    <p><span class="m wb">Φ</span> flows → into the boundary, carrying amplitude and phase</p>
-    <p><span class="b wb">○</span> processes → nested circumpuncts that gate, select, and transform</p>
-    <p style="margin-top: 16px;"><span class="s">1D</span> = ordered trace of gating = <span class="s">time</span> = <span class="s">digital</span> = <span class="s">real power P</span></p>
-    <p><span class="m">2D</span> = the field as such = <span class="m">mind</span> = <span class="m">analog</span> = <span class="m">reactive power Q</span></p>
-    <p><span class="b">3D</span> = stabilized recursive closure = <span class="b">space</span> = <span class="b">fractal</span> = <span class="b">apparent power |S|</span></p>
-    <p style="margin-top: 16px;"><span class="w wb">𝒫</span> = <span class="w">E</span> / (<span class="s">i</span> · <span class="s">t</span>) = power is energy through the aperture across time</p>
-    <p><span class="m">Φ</span> through <span class="b">○</span> ⇒ Φ' ⇒ <span class="s">•</span> = the process. &nbsp; <span class="s">•</span> + <span class="m">Φ</span> = <span class="b">○</span> = the conservation.</p>
-    <p><span class="p wb">β</span> = the balance between convergence and emergence. At β = ½, consciousness.</p>
+    <p><span class="s wb">•</span> converges → the point, the soul, the center, the aperture (0D)</p>
+    <p><span class="l wb">—</span> commits → the line, the worldline, extension, persistence (1D)</p>
+    <p><span class="m wb">Φ</span> mediates → the field, the mind, the surface of connection (2D)</p>
+    <p><span class="b wb">○</span> filters → the boundary, the body, the fractal interface (3D)</p>
+    <p style="margin-top: 16px;"><span class="w wb">⊙ = E = 1.</span> The circumpunct IS the one energy, constrained to a position, nesting at every scale.</p>
+    <p style="margin-top: 12px;"><span class="p">Process:</span> (•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳). Four beats. Each entails the next.</p>
+    <p><span class="p">Time:</span> the direction of the fold. What process looks like from inside.</p>
+    <p><span class="p">Balance:</span> ◐ = 0.5. Convergence = emergence. Consciousness.</p>
+    <p style="margin-top: 12px;"><span class="w">𝒫</span> = <span class="w">E</span> / (<span class="s">i</span> · t). &nbsp; <span class="s">0(•)</span> + <span class="l">1(—)</span> + <span class="m">2(Φ)</span> = <span class="b">3(○)</span>.</p>
   </div>
 
-  <p>Two primitives. One generating rule in two readings: direction and balance. Three dimensions. Infinite depth. Everything.</p>
+  <p>Four constraints. One generating rule. Infinite depth. Everything.</p>
 </section>
 
 <!-- ═══════════════════════ CLOSING ═══════════════════════ -->
 <div class="closing">
   <div class="symbol">⊙</div>
-  <p style="font-size: 22px; color: var(--green); margin-top: 4px;">Φ flows.</p>
-  <p style="font-size: 22px; color: var(--cyan); margin-top: 4px;">○ processes.</p>
-  <p style="font-size: 22px; color: var(--pink);">• receives and transmits.</p>
+  <p style="font-size: 22px; color: var(--pink); margin-top: 4px;">• converges.</p>
+  <p style="font-size: 22px; color: var(--orange); margin-top: 4px;">— commits.</p>
+  <p style="font-size: 22px; color: var(--green); margin-top: 4px;">Φ mediates.</p>
+  <p style="font-size: 22px; color: var(--cyan); margin-top: 4px;">○ filters.</p>
   <p class="d" style="margin-top: 20px; font-size: 15px;">
-    <span class="m">Φ</span> through <span class="b">○</span> ⇒ Φ' ⇒ <span class="s">•</span> &nbsp;&nbsp;·&nbsp;&nbsp; <span class="s">•</span> + <span class="m">Φ</span> = <span class="b">○</span>
+    <span class="s">0(•)</span> + <span class="l">1(—)</span> + <span class="m">2(Φ)</span> = <span class="b">3(○)</span> &nbsp;&nbsp;·&nbsp;&nbsp; <span class="w">⊙ = E = 1</span>
   </p>
   <p class="f" style="margin-top: 30px; font-size: 13px;">The Circumpunct Framework by Ashman Roonz</p>
 </div>
