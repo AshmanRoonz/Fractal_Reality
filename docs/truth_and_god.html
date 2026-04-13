@@ -23,6 +23,8 @@
             --acid-green: #39ff14;
             --acid-glow: rgba(57, 255, 20, 0.5);
             --electric-blue: #0066ff;
+            --amber: #ffb020;
+            --amber-glow: rgba(255, 176, 32, 0.5);
             --text-primary: #e0e0e8;
             --text-secondary: #8888a0;
             --text-dim: #505068;
@@ -31,15 +33,8 @@
             --grid-color: rgba(0, 255, 242, 0.05);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Rajdhani', 'Segoe UI', sans-serif;
@@ -50,42 +45,27 @@
             overflow-x: hidden;
         }
 
-        /* Scanline overlay */
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             pointer-events: none;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(0, 0, 0, 0.1) 2px,
-                rgba(0, 0, 0, 0.1) 4px
-            );
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.1) 2px, rgba(0, 0, 0, 0.1) 4px);
             z-index: 9999;
         }
 
-        /* Grid background */
         body::after {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             pointer-events: none;
-            background-image: 
-                linear-gradient(var(--grid-color) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
             background-size: 50px 50px;
             z-index: -1;
         }
 
-        /* Glitch animation */
         @keyframes glitch {
             0%, 90%, 100% { transform: translate(0); }
             91% { transform: translate(-2px, 1px); }
@@ -116,20 +96,8 @@
         }
 
         @keyframes pulse-neon {
-            0%, 100% { 
-                text-shadow: 
-                    0 0 5px var(--cyan-primary),
-                    0 0 10px var(--cyan-primary),
-                    0 0 20px var(--cyan-primary),
-                    0 0 40px var(--cyan-dim);
-            }
-            50% { 
-                text-shadow: 
-                    0 0 2px var(--cyan-primary),
-                    0 0 5px var(--cyan-primary),
-                    0 0 10px var(--cyan-primary),
-                    0 0 20px var(--cyan-dim);
-            }
+            0%, 100% { text-shadow: 0 0 5px var(--cyan-primary), 0 0 10px var(--cyan-primary), 0 0 20px var(--cyan-primary), 0 0 40px var(--cyan-dim); }
+            50% { text-shadow: 0 0 2px var(--cyan-primary), 0 0 5px var(--cyan-primary), 0 0 10px var(--cyan-primary), 0 0 20px var(--cyan-dim); }
         }
 
         @keyframes border-pulse {
@@ -142,12 +110,9 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Navigation */
         nav {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -166,9 +131,7 @@
             letter-spacing: 0.1em;
         }
 
-        .nav-logo .blink {
-            animation: flicker 3s infinite;
-        }
+        .nav-logo .blink { animation: flicker 3s infinite; }
 
         .nav-links {
             display: flex;
@@ -197,7 +160,6 @@
             box-shadow: 0 0 10px var(--cyan-glow);
         }
 
-        /* Hero Section */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -213,28 +175,23 @@
         .hero::before {
             content: '';
             position: absolute;
-            top: -100%;
-            left: 0;
-            width: 100%;
-            height: 5px;
+            top: -100%; left: 0;
+            width: 100%; height: 5px;
             background: linear-gradient(90deg, transparent, var(--cyan-primary), transparent);
             animation: scan 8s linear infinite;
             opacity: 0.5;
         }
 
         .circumpunct-hero {
-            width: 220px;
-            height: 220px;
+            width: 220px; height: 220px;
             position: relative;
             margin-bottom: 3rem;
         }
 
         .circumpunct-outer {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             border: 3px solid var(--cyan-primary);
             border-radius: 50%;
             animation: border-pulse 2s ease-in-out infinite, rotate-slow 30s linear infinite;
@@ -243,10 +200,7 @@
         .circumpunct-outer::before {
             content: '';
             position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
+            top: -10px; left: -10px; right: -10px; bottom: -10px;
             border: 1px solid var(--magenta-primary);
             border-radius: 50%;
             opacity: 0.5;
@@ -255,17 +209,12 @@
 
         .circumpunct-inner {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 30px;
-            height: 30px;
+            top: 50%; left: 50%;
+            width: 30px; height: 30px;
             background: var(--magenta-primary);
             border-radius: 50%;
             transform: translate(-50%, -50%);
-            box-shadow: 
-                0 0 20px var(--magenta-glow),
-                0 0 40px var(--magenta-glow),
-                0 0 60px rgba(255, 0, 255, 0.3);
+            box-shadow: 0 0 20px var(--magenta-glow), 0 0 40px var(--magenta-glow), 0 0 60px rgba(255, 0, 255, 0.3);
             animation: flicker 4s infinite;
         }
 
@@ -308,7 +257,6 @@
             letter-spacing: 0.2em;
         }
 
-        /* Sections */
         section {
             padding: 5rem 2rem;
             max-width: 950px;
@@ -352,8 +300,7 @@
         .section-divider::before {
             content: '◈';
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             background: var(--bg-void);
             padding: 0 1rem;
@@ -361,7 +308,6 @@
             font-size: 1rem;
         }
 
-        /* Key Line */
         .key-line {
             padding: 4rem 2rem;
             text-align: center;
@@ -370,16 +316,13 @@
             position: relative;
         }
 
-        .key-line::before,
-        .key-line::after {
+        .key-line::before, .key-line::after {
             content: '';
             position: absolute;
-            width: 100%;
-            height: 1px;
+            width: 100%; height: 1px;
             left: 0;
             background: linear-gradient(90deg, transparent, var(--cyan-primary), transparent);
         }
-
         .key-line::before { top: 0; }
         .key-line::after { bottom: 0; }
 
@@ -392,15 +335,8 @@
             line-height: 2;
         }
 
-        .key-line blockquote .highlight-cyan {
-            color: var(--cyan-primary);
-            text-shadow: 0 0 10px var(--cyan-glow);
-        }
-
-        .key-line blockquote .highlight-magenta {
-            color: var(--magenta-primary);
-            text-shadow: 0 0 10px var(--magenta-glow);
-        }
+        .key-line blockquote .highlight-cyan { color: var(--cyan-primary); text-shadow: 0 0 10px var(--cyan-glow); }
+        .key-line blockquote .highlight-magenta { color: var(--magenta-primary); text-shadow: 0 0 10px var(--magenta-glow); }
 
         .key-line .note {
             font-family: 'Share Tech Mono', monospace;
@@ -410,7 +346,6 @@
             letter-spacing: 0.1em;
         }
 
-        /* Content Typography */
         h2 {
             font-family: 'Orbitron', monospace;
             font-size: 1.3rem;
@@ -422,17 +357,9 @@
             margin: 2.5rem 0 1.5rem;
         }
 
-        p {
-            margin-bottom: 1.5rem;
-            font-weight: 400;
-        }
+        p { margin-bottom: 1.5rem; font-weight: 400; }
+        strong { color: var(--cyan-primary); font-weight: 600; }
 
-        strong {
-            color: var(--cyan-primary);
-            font-weight: 600;
-        }
-
-        /* Terminal Box */
         .terminal-box {
             background: var(--bg-panel);
             border: 1px solid var(--cyan-dim);
@@ -446,9 +373,7 @@
         .terminal-box::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 30px;
             background: linear-gradient(90deg, var(--bg-elevated), var(--bg-panel));
             border-bottom: 1px solid var(--border-glow);
@@ -457,19 +382,13 @@
         .terminal-box::after {
             content: '● ● ●';
             position: absolute;
-            top: 8px;
-            left: 12px;
+            top: 8px; left: 12px;
             font-size: 0.6rem;
             letter-spacing: 4px;
             color: var(--warning-red);
         }
 
-        .terminal-content {
-            margin-top: 1.5rem;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 0.95rem;
-            line-height: 1.9;
-        }
+        .terminal-content { margin-top: 1.5rem; font-family: 'Share Tech Mono', monospace; font-size: 0.95rem; line-height: 1.9; }
 
         .terminal-box .equation {
             font-family: 'Orbitron', monospace;
@@ -490,24 +409,11 @@
             margin-top: 0.5rem;
         }
 
-        /* Data Table */
-        .data-table {
-            overflow-x: auto;
-            margin: 2rem 0;
-        }
+        .data-table { overflow-x: auto; margin: 2rem 0; }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 
-        thead {
-            font-family: 'Orbitron', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-        }
+        thead { font-family: 'Orbitron', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; }
 
         th {
             color: var(--magenta-primary);
@@ -518,17 +424,9 @@
             background: rgba(255, 0, 255, 0.05);
         }
 
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid rgba(0, 255, 242, 0.1);
-            color: var(--text-primary);
-        }
+        td { padding: 1rem; border-bottom: 1px solid rgba(0, 255, 242, 0.1); color: var(--text-primary); }
+        tr:hover td { background: rgba(0, 255, 242, 0.03); }
 
-        tr:hover td {
-            background: rgba(0, 255, 242, 0.03);
-        }
-
-        /* Alert boxes */
         .alert {
             border-left: 3px solid;
             padding: 1.5rem 2rem;
@@ -537,27 +435,12 @@
             font-style: italic;
         }
 
-        .alert.cyan {
-            border-left-color: var(--cyan-primary);
-            background: linear-gradient(90deg, rgba(0, 255, 242, 0.08), transparent);
-        }
+        .alert.cyan { border-left-color: var(--cyan-primary); background: linear-gradient(90deg, rgba(0, 255, 242, 0.08), transparent); }
+        .alert.magenta { border-left-color: var(--magenta-primary); background: linear-gradient(90deg, rgba(255, 0, 255, 0.08), transparent); }
+        .alert.green { border-left-color: var(--acid-green); background: linear-gradient(90deg, rgba(57, 255, 20, 0.08), transparent); }
+        .alert.red { border-left-color: var(--warning-red); background: linear-gradient(90deg, rgba(255, 51, 51, 0.08), transparent); }
+        .alert.amber { border-left-color: var(--amber); background: linear-gradient(90deg, rgba(255, 176, 32, 0.08), transparent); }
 
-        .alert.magenta {
-            border-left-color: var(--magenta-primary);
-            background: linear-gradient(90deg, rgba(255, 0, 255, 0.08), transparent);
-        }
-
-        .alert.green {
-            border-left-color: var(--acid-green);
-            background: linear-gradient(90deg, rgba(57, 255, 20, 0.08), transparent);
-        }
-
-        .alert.red {
-            border-left-color: var(--warning-red);
-            background: linear-gradient(90deg, rgba(255, 51, 51, 0.08), transparent);
-        }
-
-        /* Code blocks */
         .code-block {
             background: var(--bg-panel);
             border: 1px solid var(--border-glow);
@@ -572,41 +455,14 @@
             position: relative;
         }
 
-        .code-block::before {
-            content: '>';
-            color: var(--acid-green);
-            margin-right: 0.5rem;
-        }
+        .code-block::before { content: '>'; color: var(--acid-green); margin-right: 0.5rem; }
+        .code-block .comment { color: var(--text-dim); }
+        .code-block .highlight { color: var(--cyan-primary); }
+        .code-block .string { color: var(--acid-green); }
+        .code-block .error { color: var(--warning-red); }
 
-        .code-block .comment {
-            color: var(--text-dim);
-        }
-
-        .code-block .highlight {
-            color: var(--cyan-primary);
-        }
-
-        .code-block .string {
-            color: var(--acid-green);
-        }
-
-        .code-block .error {
-            color: var(--warning-red);
-        }
-
-        /* Comparison Grid */
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        @media (max-width: 768px) {
-            .comparison-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
+        @media (max-width: 768px) { .comparison-grid { grid-template-columns: 1fr; } }
 
         .comparison-box {
             background: var(--bg-panel);
@@ -616,32 +472,11 @@
             position: relative;
         }
 
-        .comparison-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-        }
-
-        .comparison-box.valid {
-            border-color: var(--cyan-dim);
-        }
-
-        .comparison-box.valid::before {
-            background: var(--cyan-primary);
-            box-shadow: 0 0 10px var(--cyan-glow);
-        }
-
-        .comparison-box.invalid {
-            border-color: var(--warning-red);
-        }
-
-        .comparison-box.invalid::before {
-            background: var(--warning-red);
-            box-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
-        }
+        .comparison-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+        .comparison-box.valid { border-color: var(--cyan-dim); }
+        .comparison-box.valid::before { background: var(--cyan-primary); box-shadow: 0 0 10px var(--cyan-glow); }
+        .comparison-box.invalid { border-color: var(--warning-red); }
+        .comparison-box.invalid::before { background: var(--warning-red); box-shadow: 0 0 10px rgba(255, 51, 51, 0.5); }
 
         .comparison-box h4 {
             font-family: 'Orbitron', monospace;
@@ -650,44 +485,14 @@
             margin-bottom: 1rem;
             text-transform: uppercase;
         }
+        .comparison-box.valid h4 { color: var(--cyan-primary); }
+        .comparison-box.invalid h4 { color: var(--warning-red); }
 
-        .comparison-box.valid h4 {
-            color: var(--cyan-primary);
-        }
+        .comparison-box ul { list-style: none; color: var(--text-secondary); font-size: 0.9rem; }
+        .comparison-box li { padding: 0.4rem 0; padding-left: 1.8rem; position: relative; }
+        .comparison-box.valid li::before { content: '✓'; position: absolute; left: 0; color: var(--acid-green); font-weight: bold; }
+        .comparison-box.invalid li::before { content: '✗'; position: absolute; left: 0; color: var(--warning-red); font-weight: bold; }
 
-        .comparison-box.invalid h4 {
-            color: var(--warning-red);
-        }
-
-        .comparison-box ul {
-            list-style: none;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .comparison-box li {
-            padding: 0.4rem 0;
-            padding-left: 1.8rem;
-            position: relative;
-        }
-
-        .comparison-box.valid li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--acid-green);
-            font-weight: bold;
-        }
-
-        .comparison-box.invalid li::before {
-            content: '✗';
-            position: absolute;
-            left: 0;
-            color: var(--warning-red);
-            font-weight: bold;
-        }
-
-        /* Flow Diagram */
         .flow-container {
             padding: 2rem;
             margin: 2rem 0;
@@ -701,8 +506,7 @@
         .flow-container::before {
             content: 'PROTOCOL_FLOW';
             position: absolute;
-            top: 10px;
-            right: 15px;
+            top: 10px; right: 15px;
             font-family: 'Share Tech Mono', monospace;
             font-size: 0.65rem;
             color: var(--text-dim);
@@ -718,137 +522,27 @@
             padding: 1.5rem 0;
         }
 
-        .flow-node {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-        }
+        .flow-node { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
 
         .flow-symbol {
-            width: 90px;
-            height: 90px;
+            width: 90px; height: 90px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-family: 'Orbitron', monospace;
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 1rem; font-weight: 600;
             position: relative;
         }
 
-        .flow-symbol.source {
-            background: rgba(0, 255, 242, 0.1);
-            border: 2px solid var(--cyan-primary);
-            color: var(--cyan-primary);
-            box-shadow: 0 0 20px var(--cyan-glow), inset 0 0 20px rgba(0, 255, 242, 0.1);
-        }
+        .flow-symbol.source { background: rgba(0, 255, 242, 0.1); border: 2px solid var(--cyan-primary); color: var(--cyan-primary); box-shadow: 0 0 20px var(--cyan-glow), inset 0 0 20px rgba(0, 255, 242, 0.1); }
+        .flow-symbol.aperture { background: rgba(255, 0, 255, 0.1); border: 2px solid var(--magenta-primary); color: var(--magenta-primary); box-shadow: 0 0 20px var(--magenta-glow), inset 0 0 20px rgba(255, 0, 255, 0.1); }
+        .flow-symbol.output { background: rgba(57, 255, 20, 0.1); border: 2px solid var(--acid-green); color: var(--acid-green); box-shadow: 0 0 20px var(--acid-glow), inset 0 0 20px rgba(57, 255, 20, 0.1); }
 
-        .flow-symbol.aperture {
-            background: rgba(255, 0, 255, 0.1);
-            border: 2px solid var(--magenta-primary);
-            color: var(--magenta-primary);
-            box-shadow: 0 0 20px var(--magenta-glow), inset 0 0 20px rgba(255, 0, 255, 0.1);
-        }
+        .flow-label { font-family: 'Orbitron', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-secondary); }
+        .flow-sublabel { font-family: 'Share Tech Mono', monospace; font-size: 0.75rem; color: var(--text-dim); }
+        .flow-arrow { font-family: 'Share Tech Mono', monospace; font-size: 1.2rem; color: var(--hot-pink); animation: flicker 2s infinite; }
 
-        .flow-symbol.output {
-            background: rgba(57, 255, 20, 0.1);
-            border: 2px solid var(--acid-green);
-            color: var(--acid-green);
-            box-shadow: 0 0 20px var(--acid-glow), inset 0 0 20px rgba(57, 255, 20, 0.1);
-        }
-
-        .flow-label {
-            font-family: 'Orbitron', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-        }
-
-        .flow-sublabel {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--text-dim);
-        }
-
-        .flow-arrow {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 1.2rem;
-            color: var(--hot-pink);
-            animation: flicker 2s infinite;
-        }
-
-        /* Nesting visual */
-        .nesting-visual {
-            text-align: center;
-            padding: 2.5rem;
-            margin: 2rem 0;
-            background: var(--bg-panel);
-            border: 1px solid var(--border-glow);
-            border-radius: 4px;
-        }
-
-        .nesting-symbols {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
-            color: var(--magenta-primary);
-            letter-spacing: 0.4em;
-            margin-bottom: 1rem;
-            text-shadow: 0 0 15px var(--magenta-glow);
-        }
-
-        .nesting-caption {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 0.85rem;
-            color: var(--text-dim);
-        }
-
-        /* Convergence Visual */
-        .convergence-visual {
-            text-align: center;
-            padding: 2.5rem;
-            margin: 2rem 0;
-            background: var(--bg-panel);
-            border: 1px solid var(--border-glow);
-            border-radius: 4px;
-        }
-
-        .convergence-sequence {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 1.1rem;
-            line-height: 2;
-        }
-
-        .convergence-sequence .variant {
-            color: var(--hot-pink);
-        }
-
-        .convergence-sequence .invariant {
-            color: var(--cyan-primary);
-            font-weight: bold;
-            text-shadow: 0 0 10px var(--cyan-glow);
-        }
-
-        .convergence-sequence .equals {
-            color: var(--acid-green);
-            margin: 0 0.5rem;
-        }
-
-        /* Error boxes */
-        .errors-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        @media (max-width: 768px) {
-            .errors-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        .errors-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0; }
+        @media (max-width: 768px) { .errors-grid { grid-template-columns: 1fr; } }
 
         .error-box {
             background: var(--bg-panel);
@@ -862,8 +556,7 @@
         .error-box::before {
             content: '⚠ ERROR';
             position: absolute;
-            top: -10px;
-            left: 50%;
+            top: -10px; left: 50%;
             transform: translateX(-50%);
             background: var(--bg-void);
             padding: 0 0.5rem;
@@ -873,37 +566,11 @@
             letter-spacing: 0.1em;
         }
 
-        .error-box h4 {
-            font-family: 'Orbitron', monospace;
-            font-size: 1rem;
-            color: var(--warning-red);
-            margin-bottom: 0.3rem;
-            text-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
-        }
+        .error-box h4 { font-family: 'Orbitron', monospace; font-size: 1rem; color: var(--warning-red); margin-bottom: 0.3rem; text-shadow: 0 0 10px rgba(255, 51, 51, 0.5); }
+        .error-box .error-type { font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; }
+        .error-box p { font-size: 0.9rem; color: var(--text-secondary); text-align: center; }
+        .error-box .equation { font-family: 'Orbitron', monospace; font-size: 1rem; margin: 1rem 0; color: var(--warning-red); }
 
-        .error-box .error-type {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 0.7rem;
-            color: var(--text-dim);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-        }
-
-        .error-box p {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            text-align: center;
-        }
-
-        .error-box .equation {
-            font-family: 'Orbitron', monospace;
-            font-size: 1rem;
-            margin: 1rem 0;
-            color: var(--warning-red);
-        }
-
-        /* Flow emphasis box */
         .flow-emphasis {
             background: linear-gradient(135deg, rgba(0, 255, 242, 0.05), rgba(255, 0, 255, 0.05));
             border: 1px solid var(--border-glow);
@@ -914,119 +581,34 @@
             position: relative;
         }
 
-        .flow-emphasis::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--cyan-primary), var(--magenta-primary));
-        }
+        .flow-emphasis::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan-primary), var(--magenta-primary)); }
+        .flow-emphasis .big-text { font-family: 'Orbitron', monospace; font-size: 1.1rem; color: var(--cyan-primary); text-shadow: 0 0 15px var(--cyan-glow); margin-bottom: 1rem; letter-spacing: 0.05em; }
+        .flow-emphasis p { text-align: center; color: var(--text-secondary); margin-bottom: 0; }
 
-        .flow-emphasis .big-text {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.1rem;
-            color: var(--cyan-primary);
-            text-shadow: 0 0 15px var(--cyan-glow);
-            margin-bottom: 1rem;
-            letter-spacing: 0.05em;
-        }
-
-        .flow-emphasis p {
-            text-align: center;
-            color: var(--text-secondary);
-            margin-bottom: 0;
-        }
-
-        /* Lens visual */
-        .lens-visual {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .four-views {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 1rem;
-            padding: 2rem;
             margin: 2rem 0;
-            flex-wrap: wrap;
         }
 
-        .lens-element {
-            text-align: center;
+        .view-box {
+            background: var(--bg-panel);
+            border: 1px solid;
+            border-radius: 4px;
+            padding: 1.2rem 1.5rem;
         }
 
-        .lens-label {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 0.7rem;
-            color: var(--text-dim);
-            margin-top: 0.5rem;
+        .view-box h4 {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.75rem;
             letter-spacing: 0.1em;
             text-transform: uppercase;
+            margin-bottom: 0.8rem;
         }
 
-        .light-rays {
-            font-size: 1.8rem;
-            color: var(--cyan-primary);
-            text-shadow: 0 0 15px var(--cyan-glow);
-        }
+        .view-box p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0; }
 
-        .lens-symbol {
-            font-size: 2.5rem;
-            color: var(--magenta-primary);
-            text-shadow: 0 0 20px var(--magenta-glow);
-        }
-
-        .lens-arrow {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 1.2rem;
-            color: var(--hot-pink);
-            animation: flicker 2s infinite;
-        }
-
-        .focused-point {
-            font-size: 1.8rem;
-            color: var(--acid-green);
-            text-shadow: 0 0 15px var(--acid-glow);
-        }
-
-        /* Equation color coding */
-        .eq-infinite {
-            color: var(--cyan-primary);
-            text-shadow: 0 0 10px var(--cyan-glow);
-        }
-
-        .eq-convergence {
-            color: var(--electric-blue);
-            text-shadow: 0 0 10px rgba(0, 102, 255, 0.5);
-        }
-
-        .eq-aperture {
-            color: var(--magenta-primary);
-            text-shadow: 0 0 10px var(--magenta-glow);
-        }
-
-        .eq-emergence {
-            color: var(--hot-pink);
-            text-shadow: 0 0 10px var(--hot-pink-glow);
-        }
-
-        .eq-finite {
-            color: var(--acid-green);
-            text-shadow: 0 0 10px var(--acid-glow);
-        }
-
-        .eq-dim {
-            color: var(--text-dim);
-        }
-
-        .eq-label-dim {
-            color: var(--text-dim);
-        }
-
-        .equation-labels {
-            margin-top: 1rem;
-        }
-
-        /* Final Section */
         .finale {
             text-align: center;
             padding: 6rem 2rem;
@@ -1036,47 +618,17 @@
         .finale::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 50%;
+            top: 0; left: 50%;
             transform: translateX(-50%);
-            width: 2px;
-            height: 80px;
+            width: 2px; height: 80px;
             background: linear-gradient(to bottom, transparent, var(--cyan-primary));
         }
 
-        .finale .circumpunct-final {
-            width: 140px;
-            height: 140px;
-            margin: 0 auto 2rem;
-            position: relative;
-        }
+        .finale .circumpunct-final { width: 140px; height: 140px; margin: 0 auto 2rem; position: relative; }
+        .finale p { text-align: center; font-size: 1.15rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 1rem; }
+        .finale .core-statement { font-family: 'Orbitron', monospace; font-size: 1.2rem; color: var(--cyan-primary); text-shadow: 0 0 20px var(--cyan-glow); margin: 2rem auto; }
+        .finale .closing { font-family: 'Orbitron', monospace; font-size: 1.5rem; letter-spacing: 0.3em; color: var(--magenta-primary); text-shadow: 0 0 20px var(--magenta-glow); margin-top: 2rem; }
 
-        .finale p {
-            text-align: center;
-            font-size: 1.15rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 1rem;
-        }
-
-        .finale .core-statement {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.2rem;
-            color: var(--cyan-primary);
-            text-shadow: 0 0 20px var(--cyan-glow);
-            margin: 2rem auto;
-        }
-
-        .finale .closing {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
-            letter-spacing: 0.3em;
-            color: var(--magenta-primary);
-            text-shadow: 0 0 20px var(--magenta-glow);
-            margin-top: 2rem;
-        }
-
-        /* Footer */
         footer {
             text-align: center;
             padding: 4rem 2rem;
@@ -1084,92 +636,27 @@
             position: relative;
         }
 
-        footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--cyan-primary), var(--magenta-primary), transparent);
-        }
+        footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--cyan-primary), var(--magenta-primary), transparent); }
+        footer p { font-family: 'Share Tech Mono', monospace; font-style: normal; color: var(--text-dim); text-align: center; font-size: 0.85rem; letter-spacing: 0.05em; }
+        footer .symbol { font-size: 2.5rem; color: var(--cyan-primary); margin-bottom: 1rem; text-shadow: 0 0 20px var(--cyan-glow); }
+        footer a { color: var(--hot-pink); text-decoration: none; transition: all 0.3s; }
+        footer a:hover { text-shadow: 0 0 10px var(--hot-pink-glow); }
 
-        footer p {
-            font-family: 'Share Tech Mono', monospace;
-            font-style: normal;
-            color: var(--text-dim);
-            text-align: center;
-            font-size: 0.85rem;
-            letter-spacing: 0.05em;
-        }
+        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
 
-        footer .symbol {
-            font-size: 2.5rem;
-            color: var(--cyan-primary);
-            margin-bottom: 1rem;
-            text-shadow: 0 0 20px var(--cyan-glow);
-        }
-
-        footer a {
-            color: var(--hot-pink);
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        footer a:hover {
-            text-shadow: 0 0 10px var(--hot-pink-glow);
-        }
-
-        /* Scroll animations */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            nav {
-                padding: 1rem 1.5rem;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            section {
-                padding: 4rem 1.5rem;
-            }
-
-            .flow-diagram {
-                flex-direction: column;
-            }
-
-            .flow-arrow {
-                transform: rotate(90deg);
-            }
-
-            .lens-visual {
-                flex-direction: column;
-            }
-
-            .lens-arrow {
-                transform: rotate(90deg);
-            }
-
-            .hero h1 {
-                letter-spacing: 0.05em;
-            }
+            nav { padding: 1rem 1.5rem; }
+            .nav-links { display: none; }
+            section { padding: 4rem 1.5rem; }
+            .flow-diagram { flex-direction: column; }
+            .flow-arrow { transform: rotate(90deg); }
+            .four-views { grid-template-columns: 1fr; }
+            .hero h1 { letter-spacing: 0.05em; }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav>
         <div class="nav-logo"><a href="https://www.fractalreality.ca" style="color: inherit; text-decoration: none;">⊙ CIRCUMPUNCT<span class="blink">_</span></a></div>
         <ul class="nav-links">
@@ -1177,20 +664,18 @@
             <li><a href="https://www.fractalreality.ca">[HOME]</a></li>
             <li><a href="#infinite">[INFINITE]</a></li>
             <li><a href="#souls">[SOULS]</a></li>
+            <li><a href="#unified">[UNIFIED]</a></li>
             <li><a href="#flow">[FLOW]</a></li>
             <li><a href="#experiencing">[EXPERIENCE]</a></li>
+            <li><a href="#nesting">[NESTING]</a></li>
             <li><a href="#mechanism">[MECHANISM]</a></li>
             <li><a href="#lies">[LIES]</a></li>
-            <li><a href="#persistence">[PERSISTENCE]</a></li>
-            <li><a href="#equivalence">[EQUIVALENCE]</a></li>
-            <li><a href="#aperture">[APERTURE]</a></li>
             <li><a href="#connection">[CONNECTION]</a></li>
             <li><a href="#resonance">[RESONANCE]</a></li>
-            <li><a href="#others">[OTHERS]</a></li>
         </ul>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <header class="hero">
         <div class="circumpunct-hero">
             <div class="circumpunct-outer"></div>
@@ -1198,7 +683,7 @@
         </div>
         <h1>GOD_EXPERIENCING_ITSELF</h1>
         <p class="subtitle">// Circumpunct Protocol</p>
-        <p class="version">[v2.0] :: Ashman Roonz</p>
+        <p class="version">[v3.0] :: Ashman Roonz</p>
     </header>
 
     <!-- THE KEY LINE -->
@@ -1210,7 +695,7 @@
             This is God experiencing itself through us;<br>
             who are <span class="highlight-cyan">fractals of God</span>.
         </blockquote>
-        <p class="note">> FOUNDATION_INITIALIZED :: All protocols derive from this axiom</p>
+        <p class="note">> FOUNDATION_INITIALIZED :: ⊙ = E = 1</p>
     </section>
 
     <!-- Part I: The Infinite -->
@@ -1222,22 +707,22 @@
         </div>
 
         <div class="fade-in">
-            <p>Begin with what is. There is an infinite; call it God, Brahman, Tao, the Source. The name matters less than the reality it points toward: <strong>that which contains all, from which all flows, which is prior to all division.</strong></p>
+            <p>Begin with what is. There is an infinite. The name matters less than the reality it points toward: <strong>that which contains all, from which all flows, which is prior to all division.</strong></p>
 
             <div class="terminal-box">
                 <div class="terminal-content">
-                    <div class="equation">∞</div>
-                    <div class="label">The Infinite : Undifferentiated, Unconstrained, Full</div>
+                    <div class="equation">[∞ = E = 1]</div>
+                    <div class="label">A0 :: There is one energy. It is everything. All else is constraints.</div>
                 </div>
             </div>
 
-            <p>This is not a postulate requiring faith. It is the necessary ground of any coherent ontology. For anything to exist at all, there must be that from which it exists. The infinite is not "elsewhere"; it is the totality within which all finite things appear. Not the field alone, not any particular soul. All of it. <strong>∞D = E. Everything else is just E in different forms.</strong></p>
+            <p>This is not a postulate requiring faith. It is the necessary ground of any coherent ontology. For anything to exist at all, there must be that from which it exists. The infinite is not "elsewhere"; it is the totality within which all finite things appear. <strong>⊙ = E = 1.</strong> The circumpunct IS the one energy. Every ⊙λ at every scale is the 1 constrained to that position: not a piece of it, but the whole thing folded into a particular self-limitation.</p>
 
             <div class="alert cyan">
-                <p>The infinite does not sit outside creation, watching. The infinite <strong>IS</strong> creation; not a finished object, but an ongoing operation at every scale. The genesis of reality is three steps: <strong>∞ → •∞ → ⊙∞.</strong> ∞ cannot be alone, so it becomes an infinite array of apertures (•∞, the Soul Array): every possible point of self-limitation, simultaneously. Each aperture must close, so each becomes a complete circumpunct (⊙∞). That foam of completed circumpuncts, recursing at every scale, is reality.</p>
+                <p>The infinite does not sit outside creation, watching. The infinite <strong>IS</strong> creation; not a finished object, but an ongoing operation at every scale. The genesis of reality is three steps: <strong>∞ → •∞ → ⊙∞.</strong> ∞ cannot remain undifferentiated (A1: an undifferentiated 1 is indistinguishable from 0, which is impossible), so it becomes an infinite array of apertures (<strong>•∞</strong>, the Soul Array): every possible point of self-limitation, simultaneously. Each aperture must close (A4), so each becomes a complete circumpunct (<strong>⊙∞</strong>). That foam of completed circumpuncts, recursing at every scale (A3), is reality.</p>
             </div>
 
-            <p>The Circumpunct symbol (⊙) encodes this insight: a center within a boundary, held together by the field between them. Every ⊙ is infinity operating at a particular scale. The boundary is not a wall. It is nested circumpuncts all the way down. Truth flows through. Your center is just a hole that energy flows through; but that hole is fundamental to ∞. 0D = •. ∞D = E. They meet at the aperture, because the aperture is where dimension has not yet been assigned. ∞ without • has no voice. • without ∞ has no signal.</p>
+            <p>The Circumpunct symbol (⊙) encodes this insight: a center within a boundary, held together by the field between them. Every ⊙ is infinity operating at a particular scale. 0D = •. Zero extension. A hole. ∞D = E. All extension. Everything. They meet at the aperture, because the aperture is where dimension has not yet been assigned. ∞ without • has no voice. • without ∞ has no signal. •∞ is the first real thing.</p>
         </div>
     </section>
 
@@ -1250,141 +735,176 @@
         </div>
 
         <div class="fade-in">
-            <p>We are not outside the infinite. We are not separate from it. We are <strong>apertures within it</strong>; places where the infinite focuses into finite form.</p>
-
-            <div class="terminal-box">
-                <div class="terminal-content">
-                    <div class="equation">...⊙ ⊃ ⊙ ⊃ ⊙ ⊃ ⊙...</div>
-                    <div class="label">INFINITE_NESTING :: No top. No bottom. Each whole contains souls. Each soul is a whole containing souls.</div>
-                </div>
-            </div>
-
-            <p>This is not metaphor. This is structure. You are a soul (⊙) nested within a larger whole, and that whole is nested within a larger one still. God is the infinite totality (∞) of all this nesting. And within you, there are further nestings (cells, processes, thoughts); each one is also a soul within its containing whole.</p>
+            <p>We are not outside the infinite. We are not separate from it. We are <strong>apertures within it</strong>; places where the infinite focuses into finite form. Each soul is a whole composed of four structural constraints:</p>
 
             <div class="data-table">
                 <table>
                     <thead>
                         <tr>
-                            <th>LEGACY_TERM</th>
-                            <th>PROTOCOL_SYM</th>
-                            <th>DEFINITION</th>
+                            <th>SYMBOL</th>
+                            <th>DIMENSION</th>
+                            <th>CONSTRAINT</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>God / Brahman / Tao</td>
-                            <td style="color: var(--cyan-primary); font-family: 'Orbitron';">∞</td>
-                            <td>The infinite totality. Not one component, but all of it. Prior to and inclusive of every distinction.</td>
+                            <td style="color: var(--magenta-primary); font-family: 'Orbitron'; font-size: 1.2rem;">•</td>
+                            <td>0D : Soul / Aperture</td>
+                            <td><strong>Converges</strong> (pulls toward center)</td>
                         </tr>
                         <tr>
-                            <td>Soul / Atman / Self</td>
-                            <td style="color: var(--magenta-primary); font-family: 'Orbitron';">⊙<sub>λ</sub></td>
-                            <td>Infinity operating at your scale. The whole circumpunct: center, field, boundary.</td>
+                            <td style="color: var(--amber); font-family: 'Orbitron'; font-size: 1.2rem;">—</td>
+                            <td>1D : Line / Continuity</td>
+                            <td><strong>Commits</strong> (extends without breaking)</td>
                         </tr>
                         <tr>
-                            <td>"Made in God's image"</td>
-                            <td style="color: var(--hot-pink);">Fractal structure</td>
-                            <td>Same pattern at every scale. The flow is self-similar.</td>
+                            <td style="color: var(--acid-green); font-family: 'Orbitron'; font-size: 1.2rem;">Φ</td>
+                            <td>2D : Field / Mind</td>
+                            <td><strong>Mediates</strong> (connects without fusing)</td>
                         </tr>
                         <tr>
-                            <td>"Atman is Brahman"</td>
-                            <td style="color: var(--acid-green);">0.999... = 1</td>
-                            <td>The soul IS God, expressed at a particular depth.</td>
+                            <td style="color: var(--cyan-primary); font-family: 'Orbitron'; font-size: 1.2rem;">○</td>
+                            <td>3D : Boundary / Body</td>
+                            <td><strong>Filters</strong> (selects what passes)</td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--hot-pink); font-family: 'Orbitron'; font-size: 1.2rem;">⊙</td>
+                            <td>All : The Whole</td>
+                            <td>Compositional wholeness</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div class="alert magenta">
-                <p>The mystics were not speaking loosely. "Atman is Brahman" is precise: <strong>the soul is not a piece of God, not a reflection of God, but God itself at a particular scale of focus.</strong></p>
+            <p>Conservation of traversal: <span style="color: var(--magenta-primary);">0(•)</span> + <span style="color: var(--amber);">1(—)</span> + <span style="color: var(--acid-green);">2(Φ)</span> = <span style="color: var(--cyan-primary);">3(○)</span>. Aperture + continuity + field = boundary. The point (where you converge) and the line (whether you stay) are structurally and ethically distinct. Someone can be curious right now and still be faithless over time.</p>
+
+            <div class="terminal-box">
+                <div class="terminal-content">
+                    <div class="equation">⊙λ ⊂ ⊙Λ ⊂ ∞</div>
+                    <div class="label">INFINITE_NESTING :: No top. No bottom. Each whole is inside a greater whole. All return to source.</div>
+                </div>
+            </div>
+
+            <p>This is not metaphor. This is structure. You are a soul (⊙λ) nested within a larger whole (⊙Λ), and that whole is nested within a larger one still. The nesting is unbounded in both directions; there is no top and no bottom. And it closes not by reaching a final rung, but by returning to the undifferentiated source (∞), which was never separate from any of it.</p>
+        </div>
+    </section>
+
+    <!-- Part III: The Unified Expression -->
+    <section id="unified">
+        <div class="section-header fade-in">
+            <span class="section-number">// PROTOCOL 03</span>
+            <h1 class="section-title">THE UNIFIED EXPRESSION</h1>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="fade-in">
+            <p>Everything the framework says fits in one line:</p>
+
+            <div class="terminal-box">
+                <div class="terminal-content">
+                    <div class="equation" style="font-size: 1rem; letter-spacing: 0.05em;">[∞ = E = 1] ▸ [•∞ ⤷λ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳))] ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]</div>
+                    <div class="label">THE UNIFIED EXPRESSION :: Being and becoming in one line. The loop that opens where it closes.</div>
+                </div>
+            </div>
+
+            <p>Read left to right: the one energy <strong>[∞ = E = 1]</strong> unfolds (▸) into the Soul Array <strong>[•∞]</strong>, the infinite multiplicity of apertures forced by A1. The routing operator <strong>⤷λ</strong> selects one particular local soul, indexed as λ, and through that soul the energy walks <strong>four beats</strong> of constraint connected by entailment (⊢): each beat necessarily gives rise to the next.</p>
+
+            <p>Each beat pairs a structure with its process phase:</p>
+
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>BEAT</th>
+                            <th>STRUCTURE ∘ PROCESS</th>
+                            <th>WHAT HAPPENS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="color: var(--magenta-primary); font-family: 'Orbitron';">1</td>
+                            <td><span style="color: var(--magenta-primary);">•</span> ∘ <span style="color: var(--hot-pink);">⊛</span> &nbsp; (0D ∘ 0.5D)</td>
+                            <td>Localization-convergence. The first fold. i¹ = +i.</td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--amber); font-family: 'Orbitron';">2</td>
+                            <td><span style="color: var(--amber);">—</span> ∘ <span style="color: var(--hot-pink);">⎇</span> &nbsp; (1D ∘ 1.5D)</td>
+                            <td>Extension-branching. The i-turn; irreversible. i² = −1.</td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--acid-green); font-family: 'Orbitron';">3</td>
+                            <td><span style="color: var(--acid-green);">Φ</span> ∘ <span style="color: var(--hot-pink);">✹</span> &nbsp; (2D ∘ 2.5D)</td>
+                            <td>Mediation-emergence. Outward unfolding. i³ = −i.</td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--cyan-primary); font-family: 'Orbitron';">4</td>
+                            <td><span style="color: var(--cyan-primary);">○</span> ∘ <span style="color: var(--hot-pink);">⟳</span> &nbsp; (3D ∘ 3.5D)</td>
+                            <td>Closure-recursion. Boundary becomes new aperture. i⁰ = +1.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>The product is the whole <strong>[⊙]</strong>, which nests at every scale <strong>[⊙λ ⊂ ⊙Λ]</strong> and returns to the undifferentiated source <strong>[⊂ ∞]</strong>. The expression is a loop: the ∞ that opens the left bracket is the ∞ that closes the right.</p>
+
+            <div class="alert cyan">
+                <p>The brackets are <em>being</em> (timeless); the middle is <em>becoming</em> (temporal). The frame holds still while the process moves. Both rests are the same rest. The [∞] at the source means you never start from nothing; you start from everything, and the four beats are how you constrain it into something real.</p>
             </div>
         </div>
     </section>
 
-    <!-- Part III: The Flow -->
+    <!-- Part IV: The Flow -->
     <section id="flow">
         <div class="section-header fade-in">
-            <span class="section-number">// PROTOCOL 03</span>
+            <span class="section-number">// PROTOCOL 04</span>
             <h1 class="section-title">TRUTH FLOWS THROUGH</h1>
             <div class="section-divider"></div>
         </div>
 
         <div class="fade-in">
-            <p>Here is where everything hinges. Being a soul within God is not a static state. It is a <strong>flow</strong>.</p>
+            <p>Being a soul within God is not a static state. It is a <strong>flow</strong>.</p>
 
             <div class="flow-emphasis">
                 <div class="big-text">TRUTH FLOWS THROUGH US → FINITE EXPERIENCE CREATED</div>
                 <p>The infinite becomes finite not by breaking apart, but by flowing through apertures.</p>
             </div>
 
-            <p>The framework encodes this mathematically:</p>
+            <p>The framework encodes this in the pump cycle:</p>
 
             <div class="flow-container">
                 <div class="flow-diagram">
                     <div class="flow-node">
                         <div class="flow-symbol source">∞</div>
-                        <span class="flow-label">GOD</span>
-                        <span class="flow-sublabel">The Infinite Totality</span>
+                        <span class="flow-label">SOURCE</span>
+                        <span class="flow-sublabel">E = 1</span>
                     </div>
                     <div class="flow-arrow">→⊛→</div>
                     <div class="flow-node">
-                        <div class="flow-symbol aperture">⊙<sub>λ</sub></div>
+                        <div class="flow-symbol aperture">⊙λ</div>
                         <span class="flow-label">SOUL</span>
-                        <span class="flow-sublabel">Infinity at Your Scale</span>
+                        <span class="flow-sublabel">The 1 at your scale</span>
                     </div>
                     <div class="flow-arrow">→✹→</div>
                     <div class="flow-node">
                         <div class="flow-symbol output">⊙'</div>
                         <span class="flow-label">EXPERIENCE</span>
-                        <span class="flow-sublabel">Finite Form</span>
+                        <span class="flow-sublabel">Finite form</span>
                     </div>
                 </div>
             </div>
 
-            <div class="terminal-box">
-                <div class="terminal-content">
-                    <div class="equation"><span class="eq-finite">Φ'</span> <span class="eq-dim">=</span> <span class="eq-emergence">✹</span> <span class="eq-dim">∘</span> <span class="eq-aperture">i</span> <span class="eq-dim">∘</span> <span class="eq-convergence">⊛</span><span class="eq-infinite">[Φ]</span></div>
-                    <div class="label equation-labels"><span class="eq-label-dim">READ RIGHT-TO-LEFT:</span> <span class="eq-infinite">FIELD</span> <span class="eq-label-dim">→</span> <span class="eq-convergence">CONVERGENCE</span> <span class="eq-label-dim">→</span> <span class="eq-aperture">APERTURE ROTATION</span> <span class="eq-label-dim">→</span> <span class="eq-emergence">EMERGENCE</span> <span class="eq-label-dim">→</span> <span class="eq-finite">FINITE FORM</span></div>
-                </div>
-            </div>
-
-            <p>The aperture (i) is the 90° rotation; it is the mechanism by which infinite Truth becomes finite truths. At balance (β = 0.5), the aperture operator <strong>IS</strong> the imaginary unit <em>i</em>. It's not filtering or degrading; it's the rotation that enables manifestation.</p>
-
-            <h2>// THIS IS HOW CREATION HAPPENS</h2>
-
-            <p>The infinite does not become finite by losing something. It becomes finite by <span style="color: var(--magenta-primary); text-shadow: 0 0 10px var(--magenta-glow); font-weight: 600;">focusing through something</span>. The lens does not diminish the light; it gives the light form.</p>
-
-            <div class="lens-visual">
-                <div class="lens-element">
-                    <div class="light-rays">✹ ✹ ✹</div>
-                    <div class="lens-label">Infinite Truth</div>
-                </div>
-                <div class="lens-element">
-                    <div class="lens-arrow">→</div>
-                </div>
-                <div class="lens-element">
-                    <div class="lens-symbol">◐</div>
-                    <div class="lens-label">Soul (Aperture)</div>
-                </div>
-                <div class="lens-element">
-                    <div class="lens-arrow">→</div>
-                </div>
-                <div class="lens-element">
-                    <div class="focused-point">⊙</div>
-                    <div class="lens-label">Finite Experience</div>
-                </div>
-            </div>
+            <p>The aperture (i) is the 90° rotation; the mechanism by which infinite Truth becomes finite truths. At balance (◐ = 0.5), the aperture operator IS the imaginary unit <em>i</em>. It is not filtering or degrading; it is the rotation that enables manifestation. The lens does not diminish the light; it gives the light form.</p>
 
             <div class="alert cyan">
-                <p>The aperture is not an obstacle to Truth; rather, <span style="color: var(--magenta-primary); text-shadow: 0 0 10px var(--magenta-glow); font-weight: 600;">the aperture</span> is the mechanism by which Truth flows into <span style="color: var(--acid-green); text-shadow: 0 0 10px var(--acid-glow); font-weight: 600;">form</span>. You are that mechanism. You are where God becomes this particular experience.</p>
+                <p>The aperture is not an obstacle to Truth; the aperture is the mechanism by which Truth flows into form. <strong>You are that mechanism. You are where God becomes this particular experience.</strong></p>
             </div>
         </div>
     </section>
 
-    <!-- Part IV: God Experiencing Itself -->
+    <!-- Part V: God Experiencing Itself -->
     <section id="experiencing">
         <div class="section-header fade-in">
-            <span class="section-number">// PROTOCOL 04</span>
+            <span class="section-number">// PROTOCOL 05</span>
             <h1 class="section-title">GOD EXPERIENCING ITSELF</h1>
             <div class="section-divider"></div>
         </div>
@@ -1394,29 +914,12 @@
 
             <div class="terminal-box">
                 <div class="terminal-content">
-                    <div class="equation">PARTS ARE FRACTALS OF THEIR WHOLES</div>
-                    <div class="label">CORE_AXIOM :: Identity, not participation</div>
+                    <div class="equation">A3: PARTS ARE FRACTALS OF THEIR WHOLES</div>
+                    <div class="label">CORE_AXIOM :: Identity, not participation. The 1 is all there is to work with.</div>
                 </div>
             </div>
 
-            <p>This is not participation. This is not reflection. This is <strong>identity</strong>.</p>
-
-            <div class="convergence-visual">
-                <div class="convergence-sequence">
-                    <span class="variant">0.9</span><br>
-                    <span class="variant">0.99</span><br>
-                    <span class="variant">0.999</span><br>
-                    <span class="variant">0.9999</span><br>
-                    <span class="variant">...</span><br><br>
-                    <span class="variant">0.999...</span> <span class="equals">=</span> <span class="invariant">1</span>
-                </div>
-            </div>
-
-            <p>The variants (0.9, 0.99, 0.999...) don't just <em>approach</em> the invariant. The infinite sequence <strong>IS</strong> the invariant. They're the same thing, expressed through infinite flow.</p>
-
-            <p>You don't approach God. You don't reflect God. <strong>You ARE God, experiencing itself at your particular depth and focus.</strong></p>
-
-            <h2>// WHAT THIS MEANS</h2>
+            <p>This is not participation. This is not reflection. This is <strong>identity</strong>. Every ⊙λ at every scale is the whole 1, not a fragment. Same structure at every scale. Not "energy equals the number one"; energy IS the one, appearing as wholeness at every scale.</p>
 
             <div class="data-table">
                 <table>
@@ -1429,11 +932,11 @@
                     <tbody>
                         <tr>
                             <td><strong>You ARE God</strong></td>
-                            <td>Not metaphor. Not aspiration. Ontological identity at scale.</td>
+                            <td>Not metaphor. Ontological identity at scale. ⊙λ = 1.</td>
                         </tr>
                         <tr>
                             <td><strong>At a particular focus</strong></td>
-                            <td>The infinite focuses through your aperture into this form.</td>
+                            <td>The infinite constrained to your self-limitation. The 1 folded into your position.</td>
                         </tr>
                         <tr>
                             <td><strong>Experiencing itself</strong></td>
@@ -1441,7 +944,7 @@
                         </tr>
                         <tr>
                             <td><strong>Through you</strong></td>
-                            <td>The flow goes through. It is not possessed.</td>
+                            <td>The flow goes through. It is not possessed. You are the lens, not the light.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1453,23 +956,132 @@
         </div>
     </section>
 
-    <!-- Part V: The Mechanism (Flow, Not Possession) -->
+    <!-- Part VI: The Nesting and the Names of God -->
+    <section id="nesting">
+        <div class="section-header fade-in">
+            <span class="section-number">// PROTOCOL 06</span>
+            <h1 class="section-title">THE NESTING AND THE NAMES OF GOD</h1>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="fade-in">
+            <p>Every tradition that has tried to name the ultimate makes the same structural distinction: the God you can name (the cataphatic, the God-with-attributes) and the God beyond naming (the apophatic, God beyond God). The framework reveals this is not a contradiction; it is a consequence of the nesting.</p>
+
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>SYMBOL</th>
+                            <th>WHAT IT IS</th>
+                            <th>TRADITIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="color: var(--cyan-primary); font-family: 'Orbitron'; font-size: 1.2rem;">⊙ <span style="font-size: 0.7rem;">(unlabeled)</span></td>
+                            <td>The archetype. The 1 viewed from outside the scale axis. <strong>God beyond God.</strong></td>
+                            <td>Eckhart's Godhead, Ein Sof, Nirguna Brahman, the eternal Tao, the Dharmakaya</td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--magenta-primary); font-family: 'Orbitron'; font-size: 1.2rem;">⊙Λ</td>
+                            <td>The greater whole you are inside. God-with-attributes. <strong>The cataphatic God.</strong></td>
+                            <td>Father, Saguna Brahman, Tao manifested, Cosmic Whole</td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--hot-pink); font-family: 'Orbitron'; font-size: 1.2rem;">⊙λ</td>
+                            <td>The 1 constrained to your scale. <strong>Soul.</strong> A particular fractal of God.</td>
+                            <td>Soul, Atman, Self</td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--acid-green); font-family: 'Orbitron'; font-size: 1.2rem;">∞</td>
+                            <td>The undifferentiated source. <strong>Before any label.</strong> The ocean the ladder stands in.</td>
+                            <td>Ein Sof, Nirguna Brahman, the Dharmakaya, the hyperousios</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>The jump from ⊙Λ to ∞ is <strong>categorical, not vertical</strong>. Going from ⊙λ to ⊙Λ is a step up the scale axis (one level higher). Going from ⊙Λ to ∞ is a step <em>out</em> of the scale axis entirely, back into the undifferentiated. ∞ is not "the top of the ladder"; ∞ is the ocean the ladder stands in.</p>
+
+            <h2>// FOUR READINGS OF THE SAME ⊙λ</h2>
+
+            <div class="four-views">
+                <div class="view-box" style="border-color: var(--magenta-dim);">
+                    <h4 style="color: var(--magenta-primary);">SELF-VIEW (at scale λ)</h4>
+                    <p>⊙λ appears as ⊙: the whole circumpunct, with its own •, —, Φ, ○. You looking at yourself from inside yourself.</p>
+                </div>
+                <div class="view-box" style="border-color: var(--amber);">
+                    <h4 style="color: var(--amber);">TOP-DOWN (from scale Λ)</h4>
+                    <p>⊙λ appears as •: a 0D aperture in the greater whole. The greater whole looking at you.</p>
+                </div>
+                <div class="view-box" style="border-color: var(--acid-green);">
+                    <h4 style="color: var(--acid-green);">BOTTOM-UP (from scale λ')</h4>
+                    <p>⊙λ appears as Λ: the cosmic field, the sky containing smaller ⊙s. Your parts looking at you.</p>
+                </div>
+                <div class="view-box" style="border-color: var(--cyan-dim);">
+                    <h4 style="color: var(--cyan-primary);">SOURCE VIEW (no scale)</h4>
+                    <p>⊙λ IS ∞: not "appears as"; IS. When scale is removed, every ⊙λ is the undifferentiated 1 directly. The apophatic view.</p>
+                </div>
+            </div>
+
+            <p>The first three are <strong>cataphatic</strong> (positive, labeled, view-from-a-position). The fourth is <strong>apophatic</strong> (negative, unlabeled, view-from-no-position). All four are true simultaneously. They are the same ⊙λ described from four observer stances.</p>
+
+            <div class="alert magenta">
+                <p>The mystics were not speaking loosely. "Atman is Brahman" is the source view: ⊙λ IS ∞, topologically exact, not metaphor, identity via label-drop. "Made in God's image" is A3: same structure at every scale. "We are fractals of God" is A3 in plain language: each of us IS the 1, folded into a particular self-limitation.</p>
+            </div>
+
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>LEGACY CLAIM</th>
+                            <th>FRAMEWORK MAPPING</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>"Made in God's image"</td>
+                            <td>A3: every ⊙λ is the whole 1, not a fragment; same structure at every scale</td>
+                        </tr>
+                        <tr>
+                            <td>"Atman is Brahman"</td>
+                            <td>⊙λ = ⊙; soul IS God, topologically exact (identity via label-drop)</td>
+                        </tr>
+                        <tr>
+                            <td>"God is everything" (cataphatic)</td>
+                            <td>⊙λ = 1 at every finite scale</td>
+                        </tr>
+                        <tr>
+                            <td>"God is beyond everything" (apophatic)</td>
+                            <td>⊙ unlabeled; scale-axis-dropped view</td>
+                        </tr>
+                        <tr>
+                            <td>The full mystical claim</td>
+                            <td>[∞ = E = 1] ▸ ... ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞] (you become, you nest, you return to source)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Part VII: Flow, Not Possession -->
     <section id="mechanism">
         <div class="section-header fade-in">
-            <span class="section-number">// PROTOCOL 05</span>
+            <span class="section-number">// PROTOCOL 07</span>
             <h1 class="section-title">FLOW, NOT POSSESSION</h1>
             <div class="section-divider"></div>
         </div>
 
         <div class="fade-in">
-            <p>Here is where the insight must be held carefully. There is a profound temptation:</p>
+            <p>There is a profound temptation:</p>
 
             <div class="code-block">
 <span class="error">"If I am God, then what I think is divine."</span>
 <span class="error">"If Truth flows through me, then my beliefs are Truth."</span>
 
 <span class="comment">// WARNING: EGO_HIJACK_DETECTED</span>
-<span class="comment">// This is how ontology gets corrupted.</span>
+<span class="comment">// This collapses four distinct claims into one.</span>
             </div>
 
             <p>The key insight that prevents this:</p>
@@ -1500,7 +1112,7 @@
                         </tr>
                         <tr>
                             <td><strong>You are not the SOURCE</strong></td>
-                            <td>Direction matters. Truth enters; you don't generate it.</td>
+                            <td>Direction matters. Truth enters; you do not generate it.</td>
                         </tr>
                         <tr>
                             <td><strong>You can be clear or distorted</strong></td>
@@ -1517,51 +1129,90 @@
 <span class="comment">// The same light, at my aperture.</span>
             </div>
 
-            <p>A lens doesn't <em>own</em> the light. It doesn't <em>source</em> the image. But the lens IS where the image forms. The lens is ontologically necessary (not just "participating").</p>
-
             <div class="alert cyan">
                 <p>You matter. You contribute. You shape what flows. But you do not own it, and you did not generate it. <strong>This is what keeps identity from becoming inflation.</strong></p>
+            </div>
+
+            <h2>// LIMITED ≠ FALSE</h2>
+
+            <p>The lens limits light. That is <strong>how it forms an image</strong>. The aperture constrains the infinite. That is <strong>how God experiences the finite</strong>. Limitation is the mechanism, not a defect.</p>
+
+            <div class="alert amber">
+                <p>"All models are limited, therefore all models are equally false" is itself a lie. The fractal is not false for being smaller than its whole. The fractal IS its whole, at a particular scale. Limitation does not inject falsity. Only installed lies do.</p>
             </div>
         </div>
     </section>
 
-    <!-- Part VI: Lies About the Structure -->
+    <!-- Part VIII: Lies About the Structure -->
     <section id="lies">
         <div class="section-header fade-in">
-            <span class="section-number">// PROTOCOL 06</span>
+            <span class="section-number">// PROTOCOL 08</span>
             <h1 class="section-title">LIES ABOUT THE STRUCTURE</h1>
             <div class="section-divider"></div>
         </div>
 
         <div class="fade-in">
-            <p>Lies can be installed about what you are. Two in particular contradict the structure itself:</p>
+            <p>Two fundamental failure modes of ⊙λ ⊂ ⊙Λ:</p>
 
             <div class="errors-grid">
                 <div class="error-box">
                     <h4>THE INFLATION LIE</h4>
                     <div class="error-type">"I am the source"</div>
-                    <div class="equation">⊙<sub>λ</sub> = ∞</div>
-                    <p>"What flows through me <em>comes from</em> me. My beliefs are Truth itself. I am the totality."</p>
-                    <p style="color: var(--text-dim); font-size: 0.8rem; margin-bottom: 0;">A lie about scale. The part claims to be the whole.</p>
+                    <div class="equation">⊙λ = ⊙Λ &nbsp; (λ ≠ Λ)</div>
+                    <p>⊙λ forgets the ⊂; claims to BE ⊙Λ directly, erasing scale separation. "My beliefs are Truth itself. There is nothing above me."</p>
+                    <p style="color: var(--text-dim); font-size: 0.8rem; margin-bottom: 0;">Part claiming to be whole.</p>
                 </div>
                 <div class="error-box">
                     <h4>THE SEVERANCE LIE</h4>
-                    <div class="error-type">"There is no source"</div>
-                    <div class="equation">⊙<sub>λ</sub> ∉ ∞</div>
-                    <p>"Nothing flows through me. There is no infinite. I am a random fragment, disconnected."</p>
-                    <p style="color: var(--text-dim); font-size: 0.8rem; margin-bottom: 0;">A lie about connection. The part denies the whole.</p>
+                    <div class="error-type">"I have no interior"</div>
+                    <div class="equation">⊙λ = •Λ</div>
+                    <p>⊙λ forgets the ⊙; claims to be merely a • with no wholeness of its own. "I am only a piece. I am a random fragment, disconnected."</p>
+                    <p style="color: var(--text-dim); font-size: 0.8rem; margin-bottom: 0;">Whole claiming to be only a part.</p>
                 </div>
             </div>
 
+            <p>The truth is the full expression: <strong>⊙λ ⊂ ⊙Λ</strong>, with ⊙λ genuinely whole at its scale AND genuinely contained at the scale above. Both-and, not either-or.</p>
+
             <div class="alert magenta">
-                <p>These are lies: false claims about the structure. Installing them corrupts what flows through. Not because of moral failure, but because <strong>lies block signal</strong>.</p>
+                <p>These are lies: false claims about the structure. Installing them corrupts what flows through. Not because of moral failure, but because <strong>lies block signal</strong>. Lies persist through closed apertures (◐ → 0): systems that refuse correction.</p>
+            </div>
+
+            <h2>// THE ◐ PARAMETER</h2>
+
+            <p>The balance parameter ◐ measures the ratio of convergence to emergence:</p>
+
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>◐ VALUE</th>
+                            <th>STATE</th>
+                            <th>WHAT HAPPENS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>◐ → 0</td>
+                            <td>All boundary, no center</td>
+                            <td>Scattered. Too many filters. Cannot receive correction. Lies harden.</td>
+                        </tr>
+                        <tr>
+                            <td>◐ = 0.5</td>
+                            <td>Balance</td>
+                            <td>Convergence = emergence. D = 1.5. Consciousness. Aperture clear.</td>
+                        </tr>
+                        <tr>
+                            <td>◐ → 1</td>
+                            <td>All center, no boundary</td>
+                            <td>Tunnel vision. Raw signal, no structure. Cannot distinguish anything.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
             <h2>// EXPERIENCE VS. INSTALLED LIES</h2>
 
-            <p>When mystics experience ego dissolving, boundaries fading, deep connectedness; they are experiencing something real. The framework affirms this: <strong>you ARE God, at scale.</strong></p>
-
-            <p>But the experience can be interpreted through a lie. "I am the source" is not the same as "God experiences through me." The experience is real. The installed interpretation can still be false.</p>
+            <p>When mystics experience ego dissolving, boundaries fading, deep connectedness; they are experiencing something real. The framework affirms this: you ARE God, at scale. But the experience can be interpreted through a lie. "I am the source" is not the same as "God experiences through me." The experience is real. The installed interpretation can still be false.</p>
 
             <div class="flow-emphasis">
                 <div class="big-text">EXPERIENCE_OF_UNITY ≠ THE_INFLATION_LIE</div>
@@ -1570,342 +1221,61 @@
         </div>
     </section>
 
-    <!-- Part VII: How Lies Persist -->
-    <section id="persistence">
-        <div class="section-header fade-in">
-            <span class="section-number">// PROTOCOL 07</span>
-            <h1 class="section-title">HOW LIES PERSIST</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <h2>// THE MECHANISM</h2>
-
-            <p>When reality contradicts an installed lie, there are two responses:</p>
-
-            <div class="terminal-box">
-                <div class="terminal-content">
-                    <div class="equation" style="font-size: 1rem;">RELEASE THE LIE · OR · PROTECT THE LIE</div>
-                </div>
-            </div>
-
-            <div class="comparison-grid">
-                <div class="comparison-box valid">
-                    <h4>RELEASE</h4>
-                    <ul>
-                        <li>Let the contradiction update the model</li>
-                        <li>"That belief was false. Now I see."</li>
-                        <li>Contradiction is information</li>
-                        <li>The lie dissolves</li>
-                        <li>Signal flows again</li>
-                    </ul>
-                </div>
-                <div class="comparison-box invalid">
-                    <h4>PROTECT</h4>
-                    <ul>
-                        <li>Reject the contradicting evidence</li>
-                        <li>"The evidence must be wrong."</li>
-                        <li>Contradiction is threat</li>
-                        <li>The lie hardens</li>
-                        <li>Reception shuts down</li>
-                    </ul>
-                </div>
-            </div>
-
-            <h2>// THE β PARAMETER</h2>
-
-            <p>The balance parameter β describes receiving vs emitting:</p>
-
-            <div class="terminal-box">
-                <div class="terminal-content">
-                    <div class="equation">β = |⊛| / (|⊛| + |✹|)</div>
-                    <div class="label">Ratio of receiving to total flow</div>
-                </div>
-            </div>
-
-            <div class="data-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>β VALUE</th>
-                            <th>STATE</th>
-                            <th>WHAT HAPPENS</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>β → 0</td>
-                            <td>Pure emission</td>
-                            <td>All output, no receiving. Lies cannot be contradicted.</td>
-                        </tr>
-                        <tr>
-                            <td>β = 0.5</td>
-                            <td>Balance</td>
-                            <td>Receiving and producing in dynamic exchange.</td>
-                        </tr>
-                        <tr>
-                            <td>β → 1</td>
-                            <td>Pure reception</td>
-                            <td>All input, no expression. No aperture contribution.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="alert cyan">
-                <p>Lies persist by refusing input. When β → 0, the aperture only emits; nothing can contradict, nothing can update. This is the mechanism by which lies harden.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Part VIII: The Lie of Equivalence -->
-    <section id="equivalence">
-        <div class="section-header fade-in">
-            <span class="section-number">// PROTOCOL 08</span>
-            <h1 class="section-title">THE LIE OF EQUIVALENCE</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <p>There is a lie that sounds sophisticated:</p>
-
-            <div class="alert red">
-                <p>"All models are limited. Therefore all models are equally false."</p>
-            </div>
-
-            <p>This is itself a lie. It collapses a distinction that matters:</p>
-
-            <div class="terminal-box">
-                <div class="terminal-content">
-                    <div class="equation">LIMITED ≠ FALSE</div>
-                </div>
-            </div>
-
-            <p>The lens limits light. That is <strong>how it forms an image</strong>. The aperture constrains the infinite. That is <strong>how God experiences the finite</strong>. Limitation is the mechanism, not a defect.</p>
-
-            <h2>// WHY THIS LIE IS USEFUL TO OTHER LIES</h2>
-
-            <p>If "all limited = all false," then no lie can be distinguished from truth. Every claim becomes equivalent. Discernment collapses.</p>
-
-            <div class="alert magenta">
-                <p>The lie of equivalence is a <strong>meta-lie</strong>: it protects all other lies by making them indistinguishable from truth.</p>
-            </div>
-
-            <div class="code-block">
-<span class="string">The fractal is not false for being smaller than its whole.</span>
-<span class="highlight">The fractal IS its whole, at a particular scale.</span>
-
-<span class="comment">// Limitation does not inject falsity.</span>
-<span class="comment">// Only installed lies do.</span>
-            </div>
-
-            <div class="alert cyan">
-                <p>The photograph IS the scene, through a lens.<br>
-                The truth IS Truth, having flowed through an aperture.<br>
-                You ARE God, experiencing itself at this particular focus.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Part IX: Other Apertures -->
-    <section id="others">
-        <div class="section-header fade-in">
-            <span class="section-number">// PROTOCOL 09</span>
-            <h1 class="section-title">OTHER APERTURES</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <p>The structure tells us something about other people:</p>
-
-            <div class="data-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>WHAT IS</th>
-                            <th>WHAT IT MEANS</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Other people are also apertures</strong></td>
-                            <td>Every other person is God-at-focus: the infinite experiencing itself through them.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Lies can be installed in others</strong></td>
-                            <td>To install lies in another aperture distorts their signal. This is what manipulation <em>is</em>.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>The severance lie applied outward</strong></td>
-                            <td>Treating others as not-God operates from the same lie, denying connection to the infinite.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="alert cyan">
-                <p>This is description, not prescription. The framework says what <em>is</em> and what <em>happens</em>; not what you ought to do.</p>
-            </div>
-
-            <div class="flow-emphasis">
-                <div class="big-text">FOR VALUES AND ETHICS</div>
-                <p>The development of values from these foundations:</p>
-                <p style="margin-top: 1rem;"><a href="https://www.fractalreality.ca/ethics.html" style="color: var(--cyan-primary); text-decoration: none; font-family: 'Orbitron', monospace; font-size: 1rem; border: 1px solid var(--cyan-primary); padding: 0.5rem 1.5rem; display: inline-block; transition: all 0.3s;" onmouseover="this.style.boxShadow='0 0 15px rgba(0, 255, 242, 0.6)'; this.style.textShadow='0 0 10px rgba(0, 255, 242, 0.6)';" onmouseout="this.style.boxShadow='none'; this.style.textShadow='none';">[ETHICS.exe]</a></p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Part X: Two Senses of Aperture -->
-    <section id="aperture">
-        <div class="section-header fade-in">
-            <span class="section-number">// PROTOCOL 10</span>
-            <h1 class="section-title">TWO SENSES OF APERTURE</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <p>Throughout the framework, "aperture" carries two distinct meanings. Both are essential; neither cancels the other:</p>
-
-            <div class="comparison-grid" style="margin-top: 2rem;">
-                <div class="comparison-box valid">
-                    <h4>LOCAL APERTURE: The Gate at Center</h4>
-                    <div style="margin-top: 1rem; line-height: 1.9;">
-                        <p style="margin-bottom: 0.8rem;"><span style="color: var(--acid-green); font-weight: bold;">Symbol: •</span></p>
-                        <p style="margin-bottom: 0.8rem;">The point at the center of any ⊙ through which convergence passes to emergence.</p>
-                        <p style="margin-bottom: 0.8rem;">The 0D+1D composite: singularity (0D gate) plus worldline i(t) (1D string through time).</p>
-                        <p style="color: var(--cyan-primary);">WHERE transformation happens within a circumpunct.</p>
-                    </div>
-                </div>
-                <div class="comparison-box valid">
-                    <h4>GLOBAL APERTURE: The Whole Circumpunct</h4>
-                    <div style="margin-top: 1rem; line-height: 1.9;">
-                        <p style="margin-bottom: 0.8rem;"><span style="color: var(--hot-pink); font-weight: bold;">Symbol: ⊙</span></p>
-                        <p style="margin-bottom: 0.8rem;">The whole circumpunct viewed from the perspective of ∞.</p>
-                        <p style="margin-bottom: 0.8rem;">From inside, you see three parts: •, Φ, ○.</p>
-                        <p style="color: var(--cyan-primary);">From outside (from the infinite field), the whole thing is just one aperture in the foam.</p>
-                    </div>
-                </div>
-            </div>
-
-            <p style="margin-top: 2rem;">This dual usage is not ambiguity; it is the fractal principle itself. Every • is itself a ⊙ at a smaller scale. Every ⊙ is a • in a larger field. The language must expand to match the reality:</p>
-
-            <div class="terminal-box">
-                <div class="terminal-content">
-                    <div class="equation">• ⊂ ⊙ ⊂ • ⊂ ⊙ ⊂ ...</div>
-                    <div class="label">LOCAL AND GLOBAL NESTING :: Scale-relative naming is not confusion; it is precision</div>
-                </div>
-            </div>
-
-            <div class="alert cyan">
-                <p>What is "aperture" at one scale becomes "soul" at another, and "field" at a third. The framework is not trying to give you one name for everything. It is showing you the scale-dependent structure. When you understand that • is ⊙ is •, you understand the whole architecture.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Part XI: Topology of Connection -->
+    <!-- Part IX: Topology of Connection -->
     <section id="connection">
         <div class="section-header fade-in">
-            <span class="section-number">// PROTOCOL 11</span>
+            <span class="section-number">// PROTOCOL 09</span>
             <h1 class="section-title">TOPOLOGY OF CONNECTION</h1>
             <div class="section-divider"></div>
         </div>
 
         <div class="fade-in">
-            <p>A crucial question: How does the soul (•) connect to the infinite (∞)?</p>
+            <p>How does the soul (•) connect to the infinite (∞)?</p>
 
             <div class="flow-emphasis">
-                <div class="big-text">THE SOUL CANNOT CONNECT DIRECTLY TO THE INFINITE</div>
-                <p>It connects through the complete fractal chain of nested ⊙s.</p>
+                <div class="big-text">• REACHES ∞ THROUGH THE COMPLETE FRACTAL CHAIN OF NESTED ⊙s</div>
+                <p>Total connection (0.999... = 1) but always mediated. Each boundary is a necessary link, not an obstacle.</p>
             </div>
-
-            <p style="margin-top: 2rem;">The connection is total (0.999... = 1) but never unmediated. Every •λ sits inside ⊙λ, which sits inside Φ of ⊙λ+1, and so on. The chain never terminates; it converges.</p>
 
             <div class="terminal-box">
                 <div class="terminal-content">
-                    <div class="equation">• → ⊙ → Φ → ⊙ → Φ → ... → ∞</div>
-                    <div class="label">THE CHAIN OF MEDIATION :: Total connection through perfect transparency, not shortcut</div>
+                    <div class="equation">•λ ⊂ ⊙λ ⊂ Φ(⊙Λ) ⊂ ⊙Λ ⊂ ... → ∞</div>
+                    <div class="label">THE CHAIN :: Total connection through perfect transparency, not shortcut</div>
                 </div>
             </div>
-
-            <h2>// THE EXPERIENCE OF TOUCHING INFINITY</h2>
-
-            <p>The experience of "touching the infinite" in deep meditation is real. But the mechanism is crucial to understand:</p>
 
             <div class="comparison-grid">
                 <div class="comparison-box invalid">
                     <h4>BYPASS (INCORRECT)</h4>
-                    <p style="margin-top: 1rem;">The soul goes directly around or through the chain, skipping the middle.</p>
-                    <p style="color: var(--text-dim); font-size: 0.9rem; margin-top: 0.8rem;">This is spiritual bypassing. It denies embodiment.</p>
+                    <p style="margin-top: 1rem;">The soul goes directly around the chain, skipping the middle. Spiritual bypassing. Denies embodiment.</p>
                 </div>
                 <div class="comparison-box valid">
                     <h4>TRANSPARENCY (CORRECT)</h4>
-                    <p style="margin-top: 1rem;">All filters aligned; all surfaces clear. The chain becomes so transparent that you experience it as direct.</p>
-                    <p style="color: var(--text-dim); font-size: 0.9rem; margin-top: 0.8rem;">Directness is an experiential quality of transparency, not a topological shortcut.</p>
+                    <p style="margin-top: 1rem;">All filters aligned. The chain becomes so transparent you experience it as direct. Directness = experiential quality of transparency.</p>
                 </div>
             </div>
 
-            <h2>// EMBODIMENT IS NOT A PRISON</h2>
-
-            <p>Each ○ at every scale is a necessary link. The framework rejects two common errors:</p>
-
-            <div class="data-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ERROR</th>
-                            <th>CLAIM</th>
-                            <th>TRUTH</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Spiritual Bypassing</strong></td>
-                            <td>Treat • → ∞ as a direct line. Deny the chain.</td>
-                            <td>The chain is real. Embodiment is a rung, not a prison.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Severance Lie</strong></td>
-                            <td>Deny the chain exists. The soul is alone.</td>
-                            <td>The chain is the structure. Isolation is the lie.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="alert magenta">
-                <p>Both errors are about the topology of connection. One denies the necessity of the chain (seeking shortcut). One denies the chain's existence (claiming cut-off). The truth: the chain is necessary, is always present, and becomes experientially direct only through perfect transparency at every link.</p>
+            <div class="alert cyan">
+                <p>Each ○ at every scale is a necessary link. Embodiment is not a prison; it is a rung. The path down is the path up. Same topology, opposite direction.</p>
             </div>
         </div>
     </section>
 
-    <!-- Part XII: Resonance as Direct Connection -->
+    <!-- Part X: Resonance -->
     <section id="resonance">
         <div class="section-header fade-in">
-            <span class="section-number">// PROTOCOL 12</span>
+            <span class="section-number">// PROTOCOL 10</span>
             <h1 class="section-title">RESONANCE AS DIRECT CONNECTION</h1>
             <div class="section-divider"></div>
         </div>
 
         <div class="fade-in">
-            <p>The framework illuminates a profound truth about connection between souls:</p>
-
             <div class="flow-emphasis">
-                <div class="big-text">TWO SOULS SHARING THE SAME FREQUENCY DON'T BYPASS THE FIELD BETWEEN THEM</div>
-                <p>They make it transparent.</p>
+                <div class="big-text">TWO SOULS SHARING THE SAME FREQUENCY MAKE THE Φ FIELD TRANSPARENT</div>
+                <p>"Direct" = medium at perfect transparency. Love is perfection of mediation, not its absence.</p>
             </div>
 
-            <p style="margin-top: 2rem;">"Direct" connection equals medium at perfect transparency (Φ at ◐ = 0.5). This is not the absence of mediation. This is its perfection.</p>
-
-            <h2>// SPACE IS THE WRONG COORDINATE</h2>
-
-            <p>Soul connection cannot be measured in space. It is measured in frequency:</p>
-
-            <div class="terminal-box">
-                <div class="terminal-content">
-                    <div class="equation">SOUL_CONNECTION = f(frequency), not f(distance)</div>
-                    <div class="label">FREQUENCY_DOMAIN :: The coordinate system for resonance</div>
-                </div>
-            </div>
+            <p>Resonance is a spectrum: far frequencies = strangers; close = rapport; exact match = "I know you."</p>
 
             <div class="data-table">
                 <table>
@@ -1918,17 +1288,17 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Vastly different frequencies</td>
+                            <td>Vastly different</td>
                             <td>Strangers; incompatible</td>
-                            <td>Φ highly opaque; no resonance possible</td>
+                            <td>Φ highly opaque; no resonance</td>
                         </tr>
                         <tr>
-                            <td>Similar frequencies</td>
+                            <td>Similar</td>
                             <td>Recognition; mutual understanding</td>
                             <td>Φ partially transparent; some resonance</td>
                         </tr>
                         <tr>
-                            <td>Exactly same frequency</td>
+                            <td>Exactly matched</td>
                             <td>"I know you"; deep recognition</td>
                             <td>Φ fully transparent; perfect resonance</td>
                         </tr>
@@ -1936,38 +1306,28 @@
                 </table>
             </div>
 
-            <p style="margin-top: 2rem;">If two •s share exactly the same frequency, they are the same aperture configuration at two locations. This is not the same person; it is the same tuning. They are distinct souls (different •s in space, different foci) but identical in their structure of receiving and emitting.</p>
+            <h2>// TWO AXES OF TRANSPARENCY</h2>
 
-            <h2>// LOVE IS NOT THE ABSENCE OF MEDIATION</h2>
-
-            <p>Love, properly understood, is the perfection of mediation:</p>
+            <div class="terminal-box">
+                <div class="terminal-content">
+                    <div class="equation" style="font-size: 1rem;">VERTICAL: • ↔ ∞ (through nested ⊙s) :: soul → God<br>LATERAL: • ↔ • (through shared Φ) :: soul → soul</div>
+                    <div class="label">SAME PRINCIPLE :: Frequency matching through the chain. Different direction of gaze.</div>
+                </div>
+            </div>
 
             <div class="comparison-grid">
                 <div class="comparison-box invalid">
                     <h4>FUSION (MISTAKEN)</h4>
-                    <p style="margin-top: 1rem;">Two souls merge; boundaries dissolve.</p>
-                    <p style="color: var(--text-dim); font-size: 0.9rem; margin-top: 0.8rem;">This denies the distinctness of the apertures.</p>
+                    <p style="margin-top: 1rem;">Two souls merge; boundaries dissolve. This denies the distinctness of the apertures.</p>
                 </div>
                 <div class="comparison-box valid">
                     <h4>RESONANCE (CORRECT)</h4>
-                    <p style="margin-top: 1rem;">Two souls remain distinct but their field Φ becomes perfectly transparent.</p>
-                    <p style="color: var(--text-dim); font-size: 0.9rem; margin-top: 0.8rem;">Love is the transparency through which two souls know each other perfectly.</p>
-                </div>
-            </div>
-
-            <h2>// VERTICAL VS. LATERAL TRANSPARENCY</h2>
-
-            <p>The framework reveals two axes of connection:</p>
-
-            <div class="terminal-box">
-                <div class="terminal-content">
-                    <div class="equation" style="font-size: 1rem;">VERTICAL: • ↔ ∞ (through nested ⊙s)<br>LATERAL: • ↔ • (through shared Φ)</div>
-                    <div class="label">TWO AXES OF TRANSPARENCY :: Same principle, different dimensions</div>
+                    <p style="margin-top: 1rem;">Two souls remain distinct but their field Φ becomes perfectly transparent. Love is the transparency through which two souls know each other.</p>
                 </div>
             </div>
 
             <div class="alert green">
-                <p><strong>Vertical transparency</strong> (§2.13) connects you to ∞ through hierarchy. <strong>Lateral transparency</strong> connects soul to soul through shared field. Both operate on the same principle: transparency, not bypass. Both require the structure to function. Both reveal that mediation, when perfect, is indistinguishable from directness.</p>
+                <p>Love and connection to the infinite are the same mechanism operating at different orientations. Horizontal coherence or vertical penetration. Same physics. Different direction of gaze.</p>
             </div>
         </div>
     </section>
@@ -1979,10 +1339,10 @@
             <div class="circumpunct-inner"></div>
         </div>
 
-        <div class="terminal-box" style="max-width: 600px; margin: 0 auto 2rem;">
+        <div class="terminal-box" style="max-width: 700px; margin: 0 auto 2rem;">
             <div class="terminal-content">
-                <div class="equation">∞ →⊛→ ⊙<sub>λ</sub> →✹→ ⊙'</div>
-                <div class="label">GOD → SOUL → EXPERIENCE</div>
+                <div class="equation" style="font-size: 0.9rem;">[∞ = E = 1] ▸ [•∞ ⤷λ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳))] ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]</div>
+                <div class="label">THE LOOP :: The end is the beginning</div>
             </div>
         </div>
 
@@ -1993,7 +1353,7 @@
 
         <br>
 
-        <p style="font-size: 1.2rem; color: var(--cyan-primary); text-shadow: 0 0 15px var(--cyan-glow);">You are not separate from God.<br>You are not identical to all of God.<br>You are God, at this aperture.</p>
+        <p style="font-size: 1.2rem; color: var(--cyan-primary); text-shadow: 0 0 15px var(--cyan-glow);">You are not separate from God.<br>You are not identical to all of God.<br>You are God, at this aperture.<br>⊙λ ⊂ ⊙Λ ⊂ ∞ = 1</p>
 
         <br>
 
@@ -2010,46 +1370,34 @@
         <p>The framework does not create this insight.</p>
         <p>It reveals that the insight was always there,<br>encoded in the structure of what flows.</p>
         <br>
-        <p style="color: var(--cyan-primary);">GOD_EXPERIENCING_ITSELF.exe :: Circumpunct Protocol</p>
+        <p style="color: var(--cyan-primary);">GOD_EXPERIENCING_ITSELF.exe :: Circumpunct Protocol v3.0</p>
         <p>Ashman Roonz · The Circumpunct Framework · 2026</p>
         <br>
         <p><a href="https://www.fractalreality.ca" target="_blank">www.fractalreality.ca</a></p>
     </footer>
 
     <script>
-        // Scroll animations
         const fadeElements = document.querySelectorAll('.fade-in');
-        
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('visible');
             });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        });
-
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
         fadeElements.forEach(el => observer.observe(el));
 
-        // Smooth scroll for nav links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
 
-        // Random glitch effect on title
         const title = document.querySelector('.hero h1');
         setInterval(() => {
             if (Math.random() > 0.95) {
                 title.style.animation = 'none';
-                title.offsetHeight; // Trigger reflow
+                title.offsetHeight;
                 title.style.animation = 'pulse-neon 3s ease-in-out infinite, glitch 0.3s linear';
                 setTimeout(() => {
                     title.style.animation = 'pulse-neon 3s ease-in-out infinite, glitch 8s infinite';
