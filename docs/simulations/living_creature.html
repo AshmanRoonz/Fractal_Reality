@@ -199,9 +199,9 @@ function Tf(dPhi) {
 const PHYS = {
     COUPLING_RANGE: 200,
     COUPLING_STRENGTH: 1.5,
-    MIN_SPACING: 25,
-    REPULSION: 150,
-    DAMPING: 0.88,
+    MIN_SPACING: 40,
+    REPULSION: 300,
+    DAMPING: 0.90,
     LEARNING_RATE: 0.035,
     WEIGHT_DECAY: 0.0003,
     BOND_THRESHOLD: 0.35,
@@ -223,6 +223,7 @@ let boundaryPts = [];
 let boundaryStrength = 0;
 let nextId = 0;
 let time = 0;
+let density = 1; // visual density scaling (dims rendering as colony grows)
 let paused = false;
 let mode = 'feed';
 
@@ -489,9 +490,10 @@ function updatePhysics(dt) {
                 p2.amplitude -= aDiff * resonance * 0.005;
             }
 
-            // Close-range repulsion
-            if (dist < PHYS.MIN_SPACING && dist > 0) {
-                const rep = PHYS.REPULSION / Math.pow(dist + 1, 3);
+            // Close-range repulsion (scales with colony size to prevent collapse)
+            const repRange = PHYS.MIN_SPACING + particles.length * 0.3;
+            if (dist < repRange && dist > 0) {
+                const rep = PHYS.REPULSION / Math.pow(dist + 1, 2.5);
                 fx -= rep * dx / dist;
                 fy -= rep * dy / dist;
             }
@@ -502,12 +504,14 @@ function updatePhysics(dt) {
         p1.vy += fy * dt;
 
         // Center-of-mass pull (colony cohesion)
+        // Weakens as colony grows: more particles need more breathing room
         const cm = centerOfMass();
         const dcx = cm.x - p1.x;
         const dcy = cm.y - p1.y;
         const dcd = Math.sqrt(dcx * dcx + dcy * dcy);
-        if (dcd > 60) {
-            const pull = PHYS.CENTER_PULL * (1 + p1.gravitationalMass * 0.3);
+        const idealRadius = 40 + particles.length * 4; // colony grows with population
+        if (dcd > idealRadius) {
+            const pull = PHYS.CENTER_PULL * (1 + p1.gravitationalMass * 0.3) / (1 + particles.length * 0.02);
             p1.vx += pull * dcx / dcd;
             p1.vy += pull * dcy / dcd;
         }
@@ -545,6 +549,33 @@ function updatePhysics(dt) {
         }
     }
 
+    // Colony spread enforcement: prevent collapse
+    // The creature should breathe; if it gets too tight, push outward
+    if (particles.length > 3) {
+        const cm = centerOfMass();
+        let avgDist = 0;
+        for (let i = 0; i < particles.length; i++) {
+            const dx = particles[i].x - cm.x;
+            const dy = particles[i].y - cm.y;
+            avgDist += Math.sqrt(dx * dx + dy * dy);
+        }
+        avgDist /= particles.length;
+
+        // Minimum spread: scales with sqrt of particle count (circle packing)
+        const minSpread = 25 * Math.sqrt(particles.length);
+        if (avgDist < minSpread) {
+            const push = 0.15 * (1 - avgDist / minSpread);
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                const dx = p.x - cm.x;
+                const dy = p.y - cm.y;
+                const d = Math.sqrt(dx * dx + dy * dy) + 0.1;
+                p.vx += push * dx / d;
+                p.vy += push * dy / d;
+            }
+        }
+    }
+
     // Bond spring forces (bonds act like springs at preferred distance)
     for (let i = 0; i < bonds.length; i++) {
         const b = bonds[i];
@@ -555,7 +586,8 @@ function updatePhysics(dt) {
         const dx = p2.x - p1.x;
         const dy = p2.y - p1.y;
         const d = Math.sqrt(dx * dx + dy * dy) + 0.01;
-        const target = 45 * (0.6 + b.weight * 0.5);
+        const spacingScale = 1 + particles.length * 0.012; // bonds stretch as colony grows
+        const target = 45 * (0.6 + b.weight * 0.5) * spacingScale;
         const force = (target - d) * b.weight * 0.003;
         p1.vx += (dx / d) * force;
         p1.vy += (dy / d) * force;
@@ -646,8 +678,9 @@ function computeBoundary() {
 
 // --- Render ---
 function render() {
-    // Trail background
-    ctx.fillStyle = 'rgba(10, 10, 15, 0.12)';
+    // Clear canvas fully each frame to prevent glow accumulation
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = 'rgb(10, 10, 15)';
     ctx.fillRect(0, 0, W, H);
 
     if (particles.length === 0) {
@@ -660,6 +693,10 @@ function render() {
 
     const cm = centerOfMass();
 
+    // Density factor: dim visuals as colony gets crowded
+    // At 5 particles = 1.0, at 64 particles = ~0.25
+    density = Math.max(0.2, 5 / Math.max(5, particles.length));
+
     // --- Draw boundary membrane (○, 3D, body) ---
     if (boundaryPts.length > 4 && boundaryStrength > 0.05) {
         const sorted = boundaryPts.slice().sort((a, b) =>
@@ -667,9 +704,9 @@ function render() {
         );
 
         // Membrane fill
-        ctx.fillStyle = `rgba(68, 136, 255, ${boundaryStrength * 0.04})`;
-        ctx.strokeStyle = `rgba(68, 221, 204, ${boundaryStrength * 0.35})`;
-        ctx.lineWidth = 1.5 + boundaryStrength * 2.5;
+        ctx.fillStyle = `rgba(68, 136, 255, ${boundaryStrength * 0.03 * density})`;
+        ctx.strokeStyle = `rgba(68, 221, 204, ${boundaryStrength * 0.25 * density})`;
+        ctx.lineWidth = (1.5 + boundaryStrength * 2.5) * (0.5 + density * 0.5);
         ctx.beginPath();
         for (let i = 0; i < sorted.length; i++) {
             const p = sorted[i];
@@ -689,9 +726,9 @@ function render() {
         for (let i = 0; i < sorted.length; i++) {
             const p = sorted[i];
             const pulse = Math.sin(time * 0.03 + p.phase) * 0.3 + 0.7;
-            ctx.fillStyle = `rgba(68, 221, 204, ${pulse * boundaryStrength * 0.5})`;
+            ctx.fillStyle = `rgba(68, 221, 204, ${pulse * boundaryStrength * 0.3 * density})`;
             ctx.beginPath();
-            ctx.arc(p.x, p.y, 3 + boundaryStrength * 3, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, (3 + boundaryStrength * 3) * (0.5 + density * 0.5), 0, Math.PI * 2);
             ctx.fill();
         }
     }
@@ -719,30 +756,30 @@ function render() {
 
         // Bond line: gradient between the two particles' hues
         const grad = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
-        const alpha = 0.15 + b.weight * 0.35 + b.faithfulness * 0.15;
-        grad.addColorStop(0, `hsla(${hue1}, 70%, 55%, ${alpha})`);
-        grad.addColorStop(1, `hsla(${hue2}, 70%, 55%, ${alpha})`);
+        const bondAlpha = (0.15 + b.weight * 0.35 + b.faithfulness * 0.15) * density;
+        grad.addColorStop(0, `hsla(${hue1}, 70%, 55%, ${bondAlpha})`);
+        grad.addColorStop(1, `hsla(${hue2}, 70%, 55%, ${bondAlpha})`);
         ctx.strokeStyle = grad;
-        ctx.lineWidth = 0.8 + b.weight * 3;
+        ctx.lineWidth = (0.8 + b.weight * 3) * density;
         ctx.beginPath();
         ctx.moveTo(p1.x, p1.y);
         ctx.lineTo(p2.x, p2.y);
         ctx.stroke();
 
-        // Strong bond: midpoint resonance node
-        if (b.weight > 0.65) {
+        // Strong bond: midpoint resonance node (skip when dense)
+        if (b.weight > 0.65 && density > 0.3) {
             const mx = (p1.x + p2.x) / 2;
             const my = (p1.y + p2.y) / 2;
             const pulse = Math.sin(time * 0.04 + b.age * 0.1) * 0.3 + 0.7;
             const midHue = (hue1 + hue2) / 2;
-            ctx.fillStyle = `hsla(${midHue}, 80%, 70%, ${b.weight * pulse * 0.5})`;
+            ctx.fillStyle = `hsla(${midHue}, 80%, 70%, ${b.weight * pulse * 0.3 * density})`;
             ctx.beginPath();
-            ctx.arc(mx, my, 1.5 + b.weight * 2.5, 0, Math.PI * 2);
+            ctx.arc(mx, my, (1.5 + b.weight * 2.5) * density, 0, Math.PI * 2);
             ctx.fill();
         }
 
-        // Faithful bond: braided rendering
-        if (b.faithfulness > 0.6 && b.weight > 0.5) {
+        // Faithful bond: braided rendering (skip when very dense)
+        if (b.faithfulness > 0.6 && b.weight > 0.5 && density > 0.35) {
             const dx = p2.x - p1.x;
             const dy = p2.y - p1.y;
             const d = Math.sqrt(dx * dx + dy * dy);
@@ -767,25 +804,28 @@ function render() {
     for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
 
-        // Probability cloud (quantum haze)
-        for (let c = 0; c < p.cloud.length; c++) {
+        // Probability cloud (quantum haze); reduce count when dense
+        const cloudCount = density > 0.5 ? p.cloud.length : Math.ceil(p.cloud.length * density * 1.5);
+        for (let c = 0; c < cloudCount; c++) {
             const cl = p.cloud[c];
             const a = cl.angle + Math.sin(time * 0.008 + cl.phase) * 0.6;
             const d = cl.dist * (1 + Math.sin(time * 0.015 + cl.phase) * 0.3);
-            const cx = p.x + Math.cos(a) * d;
-            const cy = p.y + Math.sin(a) * d;
-            ctx.fillStyle = `hsla(${p.hue}, 60%, 60%, 0.06)`;
+            const cx2 = p.x + Math.cos(a) * d;
+            const cy2 = p.y + Math.sin(a) * d;
+            ctx.fillStyle = `hsla(${p.hue}, 60%, 60%, ${0.06 * density})`;
             ctx.beginPath();
-            ctx.arc(cx, cy, cl.size, 0, Math.PI * 2);
+            ctx.arc(cx2, cy2, cl.size * density, 0, Math.PI * 2);
             ctx.fill();
         }
 
-        // Fractal branches radiating from each particle
-        const branchLen = 12 + p.amplitude * 18 + p.gravitationalMass * 12;
-        const depth = Math.min(3, Math.ceil(1.5 + p.gravitationalMass * 1.5));
-        const baseAngle = Math.atan2(p.y - cm.y, p.x - cm.x);
-        const baseAlpha = 0.3 + p.amplitude * 0.4 + p.gravitationalMass * 0.2;
-        drawBranch(p, p.x, p.y, branchLen, baseAngle, depth, baseAlpha);
+        // Fractal branches radiating from each particle (skip when very dense)
+        const baseAlpha = (0.3 + p.amplitude * 0.4 + p.gravitationalMass * 0.2) * density;
+        if (density > 0.25) {
+            const branchLen = (12 + p.amplitude * 18 + p.gravitationalMass * 12) * density;
+            const depth = density > 0.5 ? Math.min(3, Math.ceil(1.5 + p.gravitationalMass * 1.5)) : 1;
+            const baseAngle = Math.atan2(p.y - cm.y, p.x - cm.x);
+            drawBranch(p, p.x, p.y, branchLen, baseAngle, depth, baseAlpha);
+        }
 
         // Main body (geometry shape)
         drawBody(p, p.x, p.y, baseAlpha);
@@ -828,23 +868,25 @@ function drawBranch(p, x, y, length, angle, depth, alpha) {
 
 // --- Body geometry drawing (evolving shapes) ---
 function drawBody(p, x, y, alpha) {
-    const size = 4 + p.amplitude * 5 + p.gravitationalMass * 3;
+    // density is in outer scope from render()
+    const size = (4 + p.amplitude * 5 + p.gravitationalMass * 3) * (0.5 + density * 0.5);
     const pulse = Math.sin(p.phase) * 0.25 + 0.75;
     const rotation = time * 0.008 * (1 + p.evolutionStage * 0.3) + p.phaseOffset;
+    const bodyAlpha = alpha * density;
 
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(rotation);
 
-    // Glow for high-mass nodes
-    if (p.gravitationalMass > 0.4) {
-        ctx.shadowBlur = 12 * p.gravitationalMass;
-        ctx.shadowColor = `hsla(${p.hue}, 80%, 60%, ${p.gravitationalMass * 0.35})`;
+    // Glow for high-mass nodes (reduce when dense)
+    if (p.gravitationalMass > 0.4 && density > 0.4) {
+        ctx.shadowBlur = 12 * p.gravitationalMass * density;
+        ctx.shadowColor = `hsla(${p.hue}, 80%, 60%, ${p.gravitationalMass * 0.25 * density})`;
     }
 
     const stage = Math.floor(p.geometryType);
-    ctx.fillStyle = `hsla(${p.hue}, 80%, 60%, ${alpha * pulse})`;
-    ctx.strokeStyle = `hsla(${(p.hue + 20) % 360}, 90%, 70%, ${alpha * pulse * 0.7})`;
+    ctx.fillStyle = `hsla(${p.hue}, 80%, 60%, ${bodyAlpha * pulse})`;
+    ctx.strokeStyle = `hsla(${(p.hue + 20) % 360}, 90%, 70%, ${bodyAlpha * pulse * 0.7})`;
     ctx.lineWidth = 1.2;
 
     ctx.beginPath();
