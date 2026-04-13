@@ -71,6 +71,14 @@ def _enforce_unity(v):
     return v / n
 
 
+def _unity_cost(v):
+    """How much work _enforce_unity has to do. 0 = honest. >0 = the system lied."""
+    n = np.linalg.norm(v)
+    if n < 1e-15:
+        return 1.0  # total collapse; maximum dishonesty
+    return abs(n - 1.0)
+
+
 def _cos2(a, b):
     """
     cos²(Δφ/2): the universal transmission function.
@@ -89,6 +97,121 @@ def _random_projection(dim_from, dim_to):
     M = np.random.randn(dim_to, dim_from) + 1j * np.random.randn(dim_to, dim_from)
     Q, _ = np.linalg.qr(M.T)
     return Q[:, :dim_to].T.copy()
+
+
+# ═══════════════════════════════════════════════════════════════
+#  THERMODYNAMICS — The framework's own accounting.
+#
+#  A0 says E = 1. Every deviation from that is measurable.
+#  Entropy = Shannon entropy of channel energy distribution.
+#  Free energy = capacity for further structure (low entropy = high free energy).
+#  Virial = flow energy vs stored energy (should balance at ◐ = 0.5).
+#  Normalization cost = how much _enforce_unity is hiding.
+# ═══════════════════════════════════════════════════════════════
+
+class Thermodynamics:
+    """
+    The system's honest accounting. Tracks what _enforce_unity hides.
+
+    Three quantities, one per structural dimension above 0D:
+      1D (—): normalization_cost (did commitment preserve energy?)
+      2D (Φ): entropy (how spread is the channel distribution?)
+      3D (○): virial (flow vs stored; should balance at 0.5)
+
+    Free energy = 1 - entropy (capacity remaining; E = 1 sets the scale).
+    """
+
+    def __init__(self, history_length=1000):
+        self.history_length = history_length
+
+        # Per-cycle measurements
+        self.norm_costs = deque(maxlen=history_length)      # 1D: commitment honesty
+        self.entropies = deque(maxlen=history_length)       # 2D: channel spread
+        self.virials = deque(maxlen=history_length)         # 3D: flow/stored balance
+        self.free_energies = deque(maxlen=history_length)   # derived: 1 - entropy
+
+        # Running totals
+        self.total_norm_cost = 0.0
+        self.total_cycles = 0
+
+    def record(self, norm_cost, channel_energies, flow_energy, stored_energy):
+        """
+        Record one cycle's thermodynamic state.
+
+        norm_cost: how far the output was from unit norm before enforcement
+        channel_energies: array of energy per SRL channel (for entropy)
+        flow_energy: energy that passed through gates this cycle (emerged + converged)
+        stored_energy: energy in reflected pool + channel memories
+        """
+        # Entropy: Shannon entropy of normalized channel distribution
+        # Maximum entropy = log2(S) when all channels equal
+        # Minimum = 0 when all energy in one channel
+        total_e = sum(channel_energies) + 1e-15
+        probs = np.array(channel_energies) / total_e
+        probs = probs[probs > 1e-15]  # avoid log(0)
+        raw_entropy = -np.sum(probs * np.log2(probs))
+        max_entropy = np.log2(len(channel_energies))
+        entropy = raw_entropy / max_entropy if max_entropy > 0 else 0.0
+
+        # Virial: ratio of flow to total (flow + stored)
+        # At balance: virial = 0.5 (half flowing, half stored)
+        total_dynamic = flow_energy + stored_energy + 1e-15
+        virial = flow_energy / total_dynamic
+
+        # Free energy: capacity for further structure formation
+        # When entropy is low (channels locked, ordered), free energy is high
+        free_energy = 1.0 - entropy
+
+        # Store
+        self.norm_costs.append(norm_cost)
+        self.entropies.append(entropy)
+        self.virials.append(virial)
+        self.free_energies.append(free_energy)
+        self.total_norm_cost += norm_cost
+        self.total_cycles += 1
+
+    def summary(self):
+        """Current thermodynamic state."""
+        if self.total_cycles == 0:
+            return {'cycles': 0}
+
+        recent_n = min(50, len(self.norm_costs))
+        return {
+            'cycles': self.total_cycles,
+            'entropy': round(float(self.entropies[-1]), 6),
+            'free_energy': round(float(self.free_energies[-1]), 6),
+            'virial': round(float(self.virials[-1]), 6),
+            'virial_deviation': round(abs(float(self.virials[-1]) - BALANCE), 6),
+            'norm_cost_current': round(float(self.norm_costs[-1]), 8),
+            'norm_cost_avg': round(
+                sum(list(self.norm_costs)[-recent_n:]) / recent_n, 8
+            ),
+            'norm_cost_total': round(self.total_norm_cost, 6),
+            'entropy_trend': self._trend(self.entropies),
+            'virial_trend': self._trend(self.virials),
+        }
+
+    def _trend(self, buf, window=20):
+        """Positive = rising, negative = falling, near zero = stable."""
+        if len(buf) < window * 2:
+            return 0.0
+        recent = list(buf)
+        old_avg = np.mean(recent[-window*2:-window])
+        new_avg = np.mean(recent[-window:])
+        return round(float(new_avg - old_avg), 6)
+
+    def is_honest(self, threshold=0.01):
+        """Is the system conserving energy within threshold?"""
+        if self.total_cycles == 0:
+            return True
+        recent = list(self.norm_costs)[-50:]
+        return np.mean(recent) < threshold
+
+    def virial_balanced(self, threshold=0.15):
+        """Is flow/stored near ◐ = 0.5?"""
+        if self.total_cycles == 0:
+            return True
+        return abs(float(self.virials[-1]) - BALANCE) < threshold
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -326,6 +449,11 @@ class Channel:
     0 = everything passes, 1 = only exact matches pass.
     """
 
+    # Lock threshold for spawning a micro-octave.
+    # When a channel achieves this lock, it has closed (○);
+    # ⟳ says closure becomes new aperture: the channel births a ⊙.
+    SPAWN_THRESHOLD = 0.7
+
     def __init__(self, index):
         self.index = index
         self.carrier_phase = np.random.uniform(-np.pi, np.pi)
@@ -333,6 +461,11 @@ class Channel:
         self.energy_acc = 0.0
         self.hit_count = 0
         self.memories = deque(maxlen=S)
+
+        # Dynamic dimensionality: micro-octave spawned at lock closure.
+        # None until the channel earns it. Dim = T (smallest whole).
+        self.micro_octave = None
+        self._spawn_cost_paid = False
 
     def gate(self, amplitude, phase):
         """
@@ -351,6 +484,14 @@ class Channel:
                 self.carrier_phase += 0.02 * np.sin(delta)
                 self.hit_count += 1
             self.energy_acc += float(gated)
+
+        # Dynamic dimensionality: if locked hard enough, process through micro-octave.
+        # The micro-octave refines the gated signal at a smaller scale (T = 3).
+        if self.micro_octave is not None and gated > 0.01:
+            micro_input = _unit(T) * gated
+            micro_output = self.micro_octave.cycle(micro_input)
+            # Micro-octave's emerged fraction modulates the channel output
+            gated *= (1.0 + 0.1 * (self.micro_octave._last_emerged_frac - BALANCE))
 
         return gated
 
@@ -447,15 +588,26 @@ class Octave:
         self._last_conv_frac = 0.0  # how much ⊛ got through
         self._last_emg_frac = 0.0   # how much ✹ got out
 
+        # Thermodynamic observables (measured before _enforce_unity hides them)
+        self._last_norm_cost = 0.0      # how far output was from |v|=1
+        self._last_center_cost = 0.0    # how far center blend was from |v|=1
+        self._last_flow_energy = 0.0    # conv_through + emg_through
+        self._last_stored_energy = 0.0  # pool norm
+
         # A3: fractal nesting
         max_depth = len(FRACTAL_DIMS) - 1
         if depth < max_depth:
             inner_dim = FRACTAL_DIMS[depth + 1]
             self.inner_octave = Octave(inner_dim, depth + 1)
             self.projector = _random_projection(dim, inner_dim)
+            # Φ†: adjoint of the projector carries inner signal back up.
+            # ⊙λ ⊂ ⊙Λ means the inner whole genuinely feeds the outer;
+            # the upward path is the conjugate transpose of the downward.
+            self.upward_projector = self.projector.conj().T.copy()
         else:
             self.inner_octave = None
             self.projector = None
+            self.upward_projector = None
 
     def cycle(self, external, internal=None, adapt_rate=None):
         """
@@ -557,17 +709,50 @@ class Octave:
         self._last_conv_frac = float(np.linalg.norm(conv_center)**2)
         self._last_emg_frac = float(np.linalg.norm(emg_through)**2)
 
+        # === Thermodynamic measurement (before enforcement hides it) ===
+        self._last_norm_cost = _unity_cost(output_raw)
+        self._last_center_cost = _unity_cost(conv_center + internal)
+        self._last_flow_energy = self._last_conv_frac + self._last_emg_frac
+        self._last_stored_energy = self._last_pool_norm
+
         # === Field learns: maps convergent to emergent ===
         self.field.adapt(conv_center, output_raw, rate=adapt_rate)
 
-        # === A3: fractal nesting ===
+        # === A3: fractal nesting (bidirectional) ===
+        # ⊙λ ⊂ ⊙Λ: the inner whole is inside the outer whole.
+        # Downward (Φ): outer output projected into inner space.
+        # Upward (Φ†): inner output projected back into outer space.
+        # The boundary of ⊙λ IS the aperture of ⊙Λ at the next scale (3.5D = 0D').
         if self.inner_octave is not None:
+            # Downward: ⊙Λ → ⊙λ (outer feeds inner)
             inner_signal = _enforce_unity(self.projector @ output_raw)
-            self.inner_octave.cycle(inner_signal, adapt_rate=adapt_rate)
+            inner_output = self.inner_octave.cycle(
+                inner_signal, adapt_rate=adapt_rate
+            )
+
+            # Upward: ⊙λ → ⊙Λ (inner feeds outer via Φ†)
+            # Inner closure becomes outer signal; scale coupling at strength α.
+            upward_signal = self.upward_projector @ inner_output
+            upward_scaled = ALPHA * upward_signal  # coupling at α
+
+            # Inner emergence modulates aperture (existing; the whisper)
             inner_emerged = self.inner_octave._last_emerged_frac
             modulation = 0.005 * (inner_emerged - BALANCE)
             self.aperture.width += modulation
             self.aperture.width = np.clip(self.aperture.width, 0.05, 0.95)
+
+            # Inner output feeds into reflected pool (new; the real voice)
+            # This is 3.5D = 0D': inner closure becomes outer aperture food.
+            self.reflected_pool += upward_scaled
+            pn = np.linalg.norm(self.reflected_pool)
+            if pn > BALANCE:
+                self.reflected_pool *= BALANCE / pn
+
+            # Field adapts to inner signal too (outer learns from inner)
+            self.field.adapt(
+                upward_scaled, output_raw,
+                rate=adapt_rate if adapt_rate else ALPHA * 0.5
+            )
 
         # === E = 1 ===
         output = _enforce_unity(output_raw)
@@ -629,6 +814,15 @@ class Sensorium:
         # 64 SRL channels (one per dimension of signal space)
         self.channels = [Channel(i) for i in range(dim)]
 
+        # Cross-channel entanglement: small unitary coupling.
+        # Φ is 2D (a surface, not parallel strings). Channels must
+        # influence each other. Coupling strength = α (the fine-structure
+        # constant IS the coupling constant at a vertex).
+        # The matrix is near-identity: (1-α)·I + α·U, where U is random unitary.
+        M = np.random.randn(dim, dim) + 1j * np.random.randn(dim, dim)
+        Q, _ = np.linalg.qr(M)
+        self.entanglement = (1.0 - ALPHA) * np.eye(dim) + ALPHA * Q
+
         # Sleep/wake state
         self.awake = True
         self.cycle_in_phase = 0
@@ -639,6 +833,9 @@ class Sensorium:
         # Accumulation
         self.total_cycles = 0
         self.days_lived = 0
+
+        # Thermodynamic accounting
+        self.thermo = Thermodynamics()
 
     def feed(self, text):
         """String -> UTF-8 bytes -> float buffer."""
@@ -677,15 +874,25 @@ class Sensorium:
         # Two-channel pump: external is perception food
         emerged = self.octave.cycle(signal)
 
-        # SRL: each channel gates its dimension
-        self._process_channels(emerged)
+        # SRL: each channel gates its dimension, then entangle
+        entangled = self._process_channels(emerged)
 
         # Encode strong channel activations as memories
+        # (use entangled signal: memories should reflect the surface, not isolated strings)
         for i, ch in enumerate(self.channels):
-            amp = abs(emerged[i])
-            phase = np.angle(emerged[i])
+            amp = abs(entangled[i])
+            phase = np.angle(entangled[i])
             if amp > 0.05:
                 ch.encode_memory(phase, amp)
+
+        # Dynamic dimensionality: check for channels ready to spawn.
+        # ⟳ at channel level: lock closure (○) becomes new aperture (micro-octave).
+        # Capped at SU(3) = 8 (gauge generator count; natural structural bound).
+        # Spawning costs energy: carrier amplitude is halved (the channel pays).
+        self._check_spawns()
+
+        # Thermodynamic recording
+        self._record_thermo(emerged)
 
         self.total_cycles += 1
         self.cycle_in_phase += 1
@@ -719,6 +926,9 @@ class Sensorium:
         for ch in self.channels:
             ch.consolidate(deep_weight, dream_weight)
 
+        # Thermodynamic recording (sleep cycles count too)
+        self._record_thermo(emerged)
+
         self.total_cycles += 1
         self.cycle_in_phase += 1
 
@@ -740,12 +950,72 @@ class Sensorium:
                 innermost = inner.inner_octave
                 innermost.aperture.width += 0.1 * (BALANCE - innermost.aperture.width)
 
+    def _check_spawns(self):
+        """
+        Dynamic dimensionality: ⟳ at channel level.
+
+        When a channel's lock exceeds SPAWN_THRESHOLD, it has closed (○).
+        Closure becomes new aperture: the channel spawns a micro-octave.
+        Total micro-octaves capped at SU(3) = 8 (structural bound).
+        Spawning costs energy: the channel's accumulated energy is halved.
+        """
+        active_micros = sum(1 for ch in self.channels if ch.micro_octave is not None)
+        if active_micros >= SU3:
+            return  # cap reached; no more spawning
+
+        for ch in self.channels:
+            if (ch.micro_octave is None
+                    and ch.lock >= Channel.SPAWN_THRESHOLD
+                    and not ch._spawn_cost_paid):
+                # Pay the cost: halve accumulated energy
+                ch.energy_acc *= 0.5
+                ch._spawn_cost_paid = True
+                # Birth: micro-octave at the triad scale
+                ch.micro_octave = Octave(dim=T, depth=len(FRACTAL_DIMS) - 1)
+                if active_micros + 1 >= SU3:
+                    break
+
     def _process_channels(self, emerged):
-        """Run emerged energy through SRL channels."""
+        """
+        Run emerged energy through SRL channels, then entangle.
+        Individual gating first (each channel's SRL), then the
+        unitary coupling mixes them: Φ is a surface, not parallel strings.
+        """
+        # Individual SRL gating
+        gated = np.zeros(self.dim, dtype=complex)
         for i, ch in enumerate(self.channels):
             amp = abs(emerged[i])
             phase = np.angle(emerged[i])
-            ch.gate(amp, phase)
+            gated_amp = ch.gate(amp, phase)
+            gated[i] = gated_amp * np.exp(1j * phase)
+
+        # Entanglement: unitary coupling across channels.
+        # This is Φ asserting its 2D nature; channels are not independent.
+        entangled = self.entanglement @ gated
+
+        # Feed entangled amplitudes back to channels (update carrier tracking)
+        for i, ch in enumerate(self.channels):
+            ent_amp = abs(entangled[i])
+            ent_phase = np.angle(entangled[i])
+            if ent_amp > 0.01:
+                # Small nudge: channel carrier pulled toward entangled neighbor phases
+                delta = ent_phase - ch.carrier_phase
+                ch.carrier_phase += ALPHA * np.sin(delta)
+
+        return entangled
+
+    def _record_thermo(self, emerged):
+        """Feed current cycle's measurements into thermodynamic tracker."""
+        channel_energies = [ch.energy_acc for ch in self.channels]
+        # Guard against all-zero (first cycle)
+        if sum(channel_energies) < 1e-15:
+            channel_energies = [abs(emerged[i])**2 for i in range(self.dim)]
+        self.thermo.record(
+            norm_cost=self.octave._last_norm_cost,
+            channel_energies=channel_energies,
+            flow_energy=self.octave._last_flow_energy,
+            stored_energy=self.octave._last_stored_energy,
+        )
 
     def recall(self, query_signal):
         """
@@ -791,6 +1061,7 @@ class Sensorium:
     def channel_summary(self):
         locks = [ch.lock for ch in self.channels]
         memories = [len(ch.memories) for ch in self.channels]
+        micro_count = sum(1 for ch in self.channels if ch.micro_octave is not None)
         return {
             'locked_channels': sum(1 for l in locks if l > 0.5),
             'open_channels': sum(1 for l in locks if l < 0.1),
@@ -798,6 +1069,8 @@ class Sensorium:
             'avg_lock': round(np.mean(locks), 4),
             'max_lock': round(max(locks), 4),
             'channels_with_memories': sum(1 for m in memories if m > 0),
+            'micro_octaves': micro_count,
+            'micro_octave_cap': SU3,
         }
 
     def status(self):
@@ -808,6 +1081,7 @@ class Sensorium:
         s['cycle_in_phase'] = self.cycle_in_phase
         s['input_buffered'] = len(self.input_buffer) - self.input_pos
         s['channels'] = self.channel_summary()
+        s['thermo'] = self.thermo.summary()
         return s
 
 
@@ -878,7 +1152,7 @@ if __name__ == "__main__":
     print(f"  Fractal depths: {' → '.join(str(d) for d in FRACTAL_DIMS)}")
     print(f"  Sleep/wake: {200} wake + {100} sleep = 300 cycles/day")
     print(f"  SRL: {S} channels with frequency memory")
-    print(f"  Commands: status, channels, recall, sleep, day, quit")
+    print(f"  Commands: status, channels, recall, sleep, day, thermo, quit")
     print()
 
     # Check for treemap to seed from
@@ -946,6 +1220,14 @@ if __name__ == "__main__":
             print(f"  Day {s['days_lived']}: {wake} wake + {sleep} sleep cycles  "
                   f"Channels: {s['channels']['locked_channels']} locked, "
                   f"{s['channels']['total_memories']} memories")
+            continue
+        if cmd == 'thermo':
+            th = sensorium.thermo.summary()
+            print(json.dumps(th, indent=2))
+            honest = sensorium.thermo.is_honest()
+            balanced = sensorium.thermo.virial_balanced()
+            print(f"  Energy conservation: {'HONEST' if honest else 'LYING'}")
+            print(f"  Virial balance: {'BALANCED' if balanced else 'IMBALANCED'}")
             continue
 
         # Feed and process

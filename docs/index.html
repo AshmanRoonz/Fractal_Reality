@@ -1,512 +1,450 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⊙ Fractal Reality</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>⊙ The Circumpunct Theory</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
     <style>
-        :root {
-            --soul: #4488ff;
-            --line: #44ddcc;
-            --mind: #44cc44;
-            --body: #ff4444;
-            --amber: #ffaa00;
-            --bg: #0a0a0f;
-            --text: #e6edf3;
-            --mute: rgba(255,255,255,0.55);
+        .community-links .research-trigger {
+            color: #00ffff;
+            border-color: rgba(0,255,255,0.3);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 15px;
-            line-height: 1.65;
-            overflow-x: hidden;
+        .community-links .research-trigger:hover {
+            border-color: #00ffff;
+            background: rgba(0,255,255,0.1);
         }
-        a { color: inherit; text-decoration: none; }
+        /* Links inside research/about panels */
+        .panel-research a, .panel-about a { color: #58a6ff; text-decoration: none; }
+        .panel-research a:hover, .panel-about a:hover { text-decoration: underline; color: #79c0ff; }
+        .panel-research li, .panel-about li { margin-bottom: 0.5rem; }
 
         /* Top bar */
         .top-bar {
             text-align: center;
-            padding: 10px 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            font-size: 12px;
-            letter-spacing: 0.1em;
-            color: var(--amber);
+            padding: 0.5rem 1rem;
+            font-family: 'Space Grotesk', monospace;
+            font-size: clamp(0.65rem, 2.8vw, 1.05rem);
+            white-space: nowrap;
+            border-bottom: 1px solid rgba(0,255,255,0.15);
+            letter-spacing: 0.03em;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(13,17,23,0.85);
+            backdrop-filter: blur(8px);
         }
+        .top-bar-text, .top-bar a {
+            background-image: linear-gradient(90deg, #ff0000, #ff7700, #ffdd00, #00ff00, #00ccff, #0066ff, #8800ff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 6px rgba(255,255,255,0.3));
+            text-decoration: none;
+            text-underline-offset: 2px;
+        }
+        .top-bar a:hover { opacity: 0.7; }
 
-        /* ==========================================
-           THE CIRCUMPUNCT (center of everything)
-           ========================================== */
-        .hero {
-            text-align: center;
-            padding: 50px 20px 10px;
-            position: relative;
-        }
+        /* ===================================
+           SIMPLE CSS CIRCUMPUNCT
+           =================================== */
         .circ {
             position: relative;
-            width: 180px;
-            height: 180px;
-            margin: 0 auto;
+            width: min(55vw, 55vh, 260px);
+            aspect-ratio: 1/1;
+            margin: 1rem auto;
         }
         .circ-boundary {
-            position: absolute; inset: 0;
+            position: absolute;
+            inset: 0;
             border-radius: 50%;
-            border: 5px solid var(--body);
-            box-shadow: 0 0 25px rgba(255,68,68,0.2);
+            border: 8px solid var(--body-color);
+            box-shadow: 0 0 40px rgba(163,113,247,0.35), 0 0 100px rgba(163,113,247,0.1), inset 0 0 40px rgba(163,113,247,0.06);
             cursor: pointer;
-            transition: box-shadow 0.3s;
             z-index: 1;
         }
         .circ-boundary:hover {
-            box-shadow: 0 0 45px rgba(255,68,68,0.35);
+            box-shadow: 0 0 60px rgba(163,113,247,0.5), 0 0 120px rgba(163,113,247,0.15);
         }
         .circ-field {
-            position: absolute; inset: 5px;
+            position: absolute;
+            inset: 8px;
             border-radius: 50%;
-            background: radial-gradient(circle at 50% 48%, rgba(68,204,68,0.55) 0%, rgba(68,204,68,0.22) 50%, rgba(68,204,68,0.06) 100%);
-            box-shadow: inset 0 0 40px rgba(68,204,68,0.15);
+            background: radial-gradient(circle at 50% 48%, rgba(240,180,41,0.45) 0%, rgba(200,150,30,0.30) 40%, rgba(160,120,20,0.18) 70%, rgba(120,90,15,0.08) 100%);
             cursor: pointer;
             z-index: 2;
         }
         .circ-field:hover {
-            background: radial-gradient(circle at 50% 48%, rgba(68,204,68,0.7) 0%, rgba(68,204,68,0.3) 50%, rgba(68,204,68,0.08) 100%);
-            box-shadow: inset 0 0 50px rgba(68,204,68,0.25);
+            background: radial-gradient(circle at 50% 48%, rgba(240,180,41,0.40) 0%, rgba(240,180,41,0.25) 35%, rgba(240,180,41,0.12) 65%, rgba(240,180,41,0.04) 100%);
+        }
+        .circ-phi {
+            position: absolute;
+            top: 30%;
+            left: 62%;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            color: var(--mind-color);
+            opacity: 0.55;
+            pointer-events: none;
+        }
+        .circ-phi-outer {
+            position: absolute;
+            top: -28%;
+            left: -10%;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            color: var(--mind-color);
+            opacity: 0.7;
+            pointer-events: none;
+            letter-spacing: 0.05em;
+            text-shadow: 0 0 12px rgba(240,180,41,0.4);
+        }
+        .circ-phi-inner {
+            position: absolute;
+            top: 38%;
+            left: 28%;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            color: #9B7AD8;
+            opacity: 0.55;
+            pointer-events: none;
+        }
+        .circ-orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 68px;
+            height: 68px;
+            transform: translate(-50%, -50%);
+            border: 1.5px dashed rgba(88,166,255,0.2);
+            border-radius: 50%;
+            pointer-events: none;
         }
         .circ-soul {
             position: absolute;
-            top: 50%; left: 50%;
-            width: 24px; height: 24px;
+            top: 50%;
+            left: 50%;
+            width: 32px;
+            height: 32px;
             transform: translate(-50%, -50%);
             border-radius: 50%;
-            background: var(--soul);
-            box-shadow: 0 0 18px rgba(68,136,255,0.45);
+            background: var(--soul-color);
+            box-shadow: 0 0 28px rgba(88,166,255,0.5), 0 0 70px rgba(88,166,255,0.12);
             cursor: pointer;
-            z-index: 3;
+            z-index: 20;
             transition: transform 0.2s, box-shadow 0.2s;
         }
         .circ-soul:hover {
-            transform: translate(-50%, -50%) scale(1.3);
-            box-shadow: 0 0 35px rgba(68,136,255,0.6);
+            transform: translate(-50%, -50%) scale(1.25);
+            box-shadow: 0 0 45px rgba(88,166,255,0.6), 0 0 100px rgba(88,166,255,0.2);
         }
-        /* Labels around the circumpunct */
-        .circ-label {
-            position: absolute;
-            font-size: 11px;
-            letter-spacing: 0.1em;
-            pointer-events: none;
-        }
-        .circ-label-top { top: -22px; left: 50%; transform: translateX(-50%); color: var(--body); }
-        .circ-label-phi-outer { top: 28%; right: -32px; color: var(--mind); font-size: 13px; pointer-events: auto; cursor: pointer; transition: opacity 0.2s; }
-        .circ-label-phi-outer:hover { opacity: 0.6; }
-        .circ-label-phi-inner { top: 38%; left: 50%; transform: translateX(28px); color: rgba(68,204,68,0.5); font-size: 12px; z-index: 4; }
-        .circ-label-bottom { bottom: -22px; left: 50%; transform: translateX(-50%); color: var(--soul); }
 
-        /* Equation */
-        .eq {
-            margin-top: 24px;
-            font-size: 20px;
-            font-weight: 300;
-            letter-spacing: 0.06em;
+        /* ===================================
+           LEGEND
+           =================================== */
+        /* Hero image card */
+        .hero-card-img {
+            padding: 0 !important;
+            overflow: hidden;
         }
-        .whole-text {
-            background: linear-gradient(90deg, var(--body), var(--mind), var(--soul));
+        .hero-img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .hero-card-overlay .hero-img {
+            aspect-ratio: 3/2;
+        }
+        .hero-img-link {
+            display: block;
+            cursor: pointer;
+        }
+        .hero-img-link:hover .hero-img {
+            filter: brightness(1.15);
+            transition: filter 0.2s;
+        }
+        /* Overlay links on circumpunct card image */
+        .hero-card-overlay {
+            position: relative;
+        }
+        .img-overlay-link {
+            position: absolute;
+            left: 20%;
+            width: 60%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: transparent;
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0;
+        }
+        .img-overlay-link:hover {
+            background: rgba(88,166,255,0.12);
+            box-shadow: inset 0 0 20px rgba(88,166,255,0.15);
+        }
+
+        /* Hero cards container */
+        .hero-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .hero-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 0.9rem 1.1rem;
+            text-align: left;
+        }
+        /* ===================================
+           DIMENSIONAL DRAWERS (right panel)
+           =================================== */
+        .dimensions-title {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: #00ffff;
+            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #0088ff, 0 0 80px #0088ff;
+            text-align: center;
+            margin: 0 0 0.5rem;
+            letter-spacing: 0.03em;
+        }
+        .dim-hint {
+            font-size: 0.65rem;
+            color: var(--text-dim, #c8d1db);
+            text-shadow: none;
+            animation: none;
+            opacity: 0.6;
+            font-weight: 300;
+        }
+        .drawers {
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.1) transparent;
+            max-height: 60vh;
+        }
+        .drawers::-webkit-scrollbar { width: 5px; }
+        .drawers::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+        .tier {
+            padding: 8px 16px 5px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--mind-color);
+            opacity: 0.7;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            border-top: 1px solid rgba(240,180,41,0.08);
+            background: rgba(240,180,41,0.02);
+        }
+        .dr { border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .dr-h {
+            display: grid;
+            grid-template-columns: 44px 1fr 18px;
+            align-items: center;
+            padding: 7px 14px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .dr-h:hover { background: rgba(255,255,255,0.025); }
+        .dr-d { font-family: 'Space Grotesk', monospace; font-size: 0.82rem; text-align: center; }
+        .dr-n { font-size: 0.85rem; letter-spacing: 0.02em; }
+        .dr-c { font-size: 0.6rem; color: var(--text); transition: transform 0.3s; text-align: center; }
+        .dr.open .dr-c { transform: rotate(90deg); }
+        .dr-b { display: none; padding: 0 14px 0 58px; }
+        .dr.open .dr-b { display: block; padding: 0 14px 10px 58px; }
+        .dr-b p { font-size: 0.85rem; color: var(--text); line-height: 1.65; margin-bottom: 0.3rem; }
+        .dr-b strong { color: var(--text); font-weight: 600; }
+        .dr-b em { font-style: italic; }
+        /* Drawer color classes — matched to how_reality_is_built.html */
+        .dg .dr-d, .dg .dr-n { color: var(--soul-color); }
+        .dg.dr-rainbow .dr-d,
+        .dg.dr-rainbow .dr-n { background: linear-gradient(90deg, #ff0000, #ff7700, #ffdd00, #00ff00, #00ccff, #0066ff, #8800ff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .da .dr-d, .da .dr-n { color: var(--soul-color); }
+        .da .dr-b em { color: var(--soul-color); }
+        .ds .dr-d, .ds .dr-n { color: var(--soul-color); }
+        .dp .dr-d, .dp .dr-n { color: var(--soul-color); }
+        .dp .dr-b em { color: var(--soul-color); }
+        .df .dr-d, .df .dr-n { color: var(--mind-color); }
+        .df .dr-b em { color: var(--mind-color); }
+        .db .dr-n { color: var(--body-color); }
+        .db .dr-b em { color: var(--body-color); }
+        /* Boundary dim (3D): stabilized recursive closure */
+        .db .dr-d {
+            background: linear-gradient(135deg, var(--body-color), var(--mind-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        .hint {
-            font-size: 12px;
-            color: var(--mute);
-            margin-top: 8px;
-            letter-spacing: 0.04em;
-        }
 
-        /* ==========================================
-           PANELS (unfold from circumpunct clicks)
-           ========================================== */
-        .panel {
-            display: none;
-            max-width: 620px;
-            margin: 16px auto 0;
-            padding: 16px 20px;
-        }
-        .panel.open { display: block; }
-        .panel-header {
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        .panel-title {
-            font-size: 12px;
-            letter-spacing: 0.12em;
-            font-weight: 500;
-        }
-        .panel-close {
-            font-size: 16px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: var(--mute);
-            padding: 0 4px;
-        }
-        .panel-close:hover { color: #fff; }
-        .panel-text {
-            font-size: 14px;
-            color: var(--text);
-            line-height: 1.7;
-            margin-bottom: 10px;
-        }
-        .panel-links {
-            font-size: 12px;
-            margin-top: 10px;
-        }
-        .panel-links a {
-            padding: 3px 0;
-            transition: opacity 0.15s;
-        }
-        .panel-links a:hover { opacity: 0.6; }
-
-        /* ==========================================
-           AXIOM LINE
-           ========================================== */
-        .axiom {
-            text-align: center;
-            padding: 32px 20px 10px;
-        }
-        .axiom-main {
-            font-size: 17px;
-            letter-spacing: 0.06em;
-        }
-        .axiom-sub {
-            font-size: 13px;
-            color: var(--mute);
-            margin-top: 8px;
-            max-width: 520px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* ==========================================
-           LADDER
-           ========================================== */
-        .section-wrap {
-            max-width: 640px;
+        /* ===================================
+           NAVIGATION BUTTONS GRID
+           =================================== */
+        .circumpunct-nav-row {
+            position: relative;
+            width: min(90vw, 90vh, 440px);
+            aspect-ratio: 1/1;
             margin: 0 auto;
-            padding: 0 24px;
         }
-        .section-label {
-            font-size: 11px;
-            color: var(--amber);
-            letter-spacing: 0.15em;
-            margin-bottom: 4px;
+        /* Circumpunct centered inside the radial wrapper */
+        .circumpunct-nav-row .circumpunct-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
-        .section-title {
-            font-size: 14px;
+        /* SVG arc navigation */
+        .arc-nav {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .arc-nav a { pointer-events: auto; cursor: pointer; }
+        .arc-nav .arc-bg {
+            fill: none;
+            stroke: rgba(12, 12, 25, 0.85);
+            stroke-linecap: round;
+            transition: stroke 0.25s, filter 0.25s;
+        }
+        .arc-nav .arc-border {
+            fill: none;
+            stroke: rgba(255,255,255,0.1);
+            stroke-linecap: round;
+            transition: stroke 0.25s;
+        }
+        .arc-nav a:hover .arc-bg {
+            stroke: rgba(88,166,255,0.18);
+            filter: drop-shadow(0 0 6px rgba(88,166,255,0.3));
+        }
+        .arc-nav a:hover .arc-border {
+            stroke: rgba(88,166,255,0.5);
+        }
+        .arc-nav .arc-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
             font-weight: 500;
-            letter-spacing: 0.1em;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--amber);
-            margin-bottom: 12px;
-        }
-        .section-intro {
-            font-size: 13px;
-            color: var(--mute);
-            margin-bottom: 12px;
+            dominant-baseline: central;
         }
 
-        /* Rung */
-        .rung-header {
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-            padding: 6px 0;
-            cursor: pointer;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: background 0.15s;
-        }
-        .rung-header:hover { background: rgba(255,255,255,0.02); margin: 0 -8px; padding: 8px 8px; border-radius: 3px; }
-        .rung-dim { font-weight: 700; font-size: 14px; min-width: 40px; }
-        .rung-sym { font-size: 18px; min-width: 22px; text-align: center; line-height: 1; }
-        .rung-name { font-size: 14px; flex: 1; }
-        .rung-desc { font-size: 12px; color: var(--mute); }
-        .rung-acc { font-size: 12px; flex-shrink: 0; }
-        .rung-arrow { font-size: 10px; color: var(--mute); flex-shrink: 0; transition: transform 0.2s; }
-        .rung.open .rung-arrow { transform: rotate(90deg); }
-        .rung.open .rung-header { border-bottom-color: transparent; }
-
-        .rung-body {
-            display: none;
-            padding: 4px 0 10px 72px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .rung.open .rung-body { display: block; }
-        .rung-formula {
-            border-left: 2px solid;
-            padding: 6px 12px;
-            font-size: 13px;
-            color: #fff;
-            margin-bottom: 8px;
-        }
-        .rung-detail {
-            font-size: 13px;
-            color: var(--mute);
-            margin-bottom: 8px;
-            line-height: 1.7;
-        }
-        .rung-link {
-            font-size: 12px;
-            transition: opacity 0.15s;
-        }
-        .rung-link:hover { opacity: 0.6; }
-
-        /* ==========================================
-           CLAIM
-           ========================================== */
-        .claim {
+        /* ===================================
+           LANDING TAGLINE
+           =================================== */
+        .landing-tagline {
             text-align: center;
-            padding: 10px 16px;
-            border-top: 1px solid rgba(255,170,0,0.3);
-            border-bottom: 1px solid rgba(255,170,0,0.3);
-            margin: 20px 0;
+            padding: 1.2rem 1.5rem 0.4rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+            font-weight: 300;
+            color: var(--text-dim, #c8d1db);
+            letter-spacing: 0.04em;
+            line-height: 1.6;
+            max-width: 540px;
+            margin: 0 auto;
+            opacity: 0.85;
         }
-        .claim-line { font-size: 14px; color: var(--amber); letter-spacing: 0.06em; }
-        .claim-line span { font-weight: 700; font-size: 16px; }
 
-        /* ==========================================
-           EXPLORE GRID
-           ========================================== */
-        .explore-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1px;
-            background: rgba(255,255,255,0.08);
-            margin: 10px 0;
-        }
-        @media (max-width: 500px) { .explore-grid { grid-template-columns: 1fr; } }
-        .explore-card {
-            background: var(--bg);
-            padding: 10px 12px;
-            display: block;
-            transition: background 0.15s;
-        }
-        .explore-card:hover { background: rgba(255,255,255,0.03); }
-        .explore-card .card-cat { font-size: 11px; letter-spacing: 0.1em; margin-bottom: 3px; }
-        .explore-card .card-title { font-size: 14px; color: #fff; font-weight: 500; }
-
-        /* More links */
-        .more-links { font-size: 12px; margin-top: 14px; line-height: 2.2; }
-        .more-links a { transition: opacity 0.15s; }
-        .more-links a:hover { opacity: 0.6; }
-
-        footer {
+        /* ===================================
+           SUBSCRIBE SECTION
+           =================================== */
+        .subscribe-section {
+            position: relative;
+            z-index: 2;
             text-align: center;
-            padding: 20px 0;
-            font-size: 11px;
-            color: var(--amber);
-            opacity: 0.4;
-            border-top: 1px solid rgba(255,255,255,0.06);
-            margin-top: 30px;
-            letter-spacing: 0.08em;
+            padding: 2rem 1.5rem 1rem;
+            max-width: 440px;
+            margin: 0 auto;
         }
-
-        /* ==========================================
-           SEED: Nav Pills
-           ========================================== */
-        .sd-pills {
+        .subscribe-section p {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-dim, #c8d1db);
+            opacity: 0.7;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.03em;
+        }
+        .subscribe-form {
             display: flex;
-            flex-wrap: wrap;
+            gap: 0.5rem;
             justify-content: center;
-            gap: 5px;
-            max-width: 640px;
-            margin: 16px auto 0;
-            padding: 0 24px;
         }
-        .sd-pill {
-            font-family: inherit;
-            font-size: 10px;
-            letter-spacing: 0.06em;
-            padding: 3px 9px;
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--mute);
-            background: transparent;
+        .subscribe-form input[type="email"] {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 6px;
+            padding: 0.55rem 0.9rem;
+            color: var(--text, #e6edf3);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            width: 220px;
+            outline: none;
+            transition: border-color 0.2s;
         }
-        .sd-pill:hover { border-color: var(--amber); color: var(--amber); }
-        .sd-pill.active { border-color: var(--amber); color: var(--amber); background: rgba(255,170,0,0.1); }
-
-        .sd-controls {
-            text-align: center;
-            margin-top: 10px;
+        .subscribe-form input[type="email"]:focus {
+            border-color: rgba(88,166,255,0.5);
         }
-        .sd-ctrl {
-            font-family: inherit;
-            font-size: 9px;
-            letter-spacing: 0.1em;
-            padding: 3px 10px;
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 3px;
-            background: transparent;
-            color: rgba(255,255,255,0.35);
-            cursor: pointer;
-            margin: 0 3px;
-            transition: all 0.2s;
+        .subscribe-form input[type="email"]::placeholder {
+            color: rgba(255,255,255,0.25);
         }
-        .sd-ctrl:hover { border-color: var(--amber); color: var(--amber); }
-
-        /* ==========================================
-           SEED: Expandable Sections
-           ========================================== */
-        .sd-wrap {
-            max-width: 640px;
-            margin: 20px auto 0;
-            padding: 0 24px;
-        }
-        .sd-section {
-            margin-bottom: 6px;
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 5px;
-            overflow: hidden;
-            transition: border-color 0.3s;
-        }
-        .sd-section:hover { border-color: rgba(255,255,255,0.12); }
-        .sd-section.open { border-color: rgba(255,170,0,0.2); }
-
-        .sd-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 11px 14px;
-            cursor: pointer;
-            background: rgba(255,255,255,0.02);
-            transition: background 0.2s;
-            user-select: none;
-        }
-        .sd-header:hover { background: rgba(255,255,255,0.04); }
-        .sd-section.open .sd-header { background: rgba(255,255,255,0.04); }
-
-        .sd-icon { font-size: 14px; min-width: 22px; text-align: center; }
-        .sd-label { flex: 1; }
-        .sd-dim { font-size: 9px; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); }
-        .sd-title { font-size: 12px; font-weight: 500; letter-spacing: 0.05em; }
-        .sd-arrow { font-size: 12px; color: rgba(255,255,255,0.3); transition: transform 0.3s; }
-        .sd-section.open .sd-arrow { transform: rotate(90deg); }
-
-        .sd-body {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .sd-section.open .sd-body {
-            max-height: 8000px;
-            transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .sd-inner { padding: 0 14px 14px; }
-
-        /* Seed typography */
-        .sd-text { font-size: 13px; line-height: 1.75; color: var(--text); margin-bottom: 10px; }
-        .sd-text:last-child { margin-bottom: 0; }
-        .sd-heading { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--amber); margin: 14px 0 6px; }
-        .sd-heading:first-child { margin-top: 2px; }
-        .sd-eq { text-align: center; font-size: 15px; font-weight: 500; padding: 12px 0; color: var(--amber); letter-spacing: 0.04em; }
-        .sd-eq-sm { text-align: center; font-size: 12px; padding: 6px 0; color: var(--amber); }
-
-        .sd-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 11px; }
-        .sd-table th { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--amber); color: var(--amber); font-weight: 500; letter-spacing: 0.08em; font-size: 9px; }
-        .sd-table td { padding: 4px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-        .sd-table tr:last-child td { border-bottom: none; }
-
-        .sd-list { margin: 6px 0 10px 16px; font-size: 12px; line-height: 1.8; }
-        .sd-list li { margin-bottom: 3px; }
-        .sd-list li::marker { color: rgba(255,255,255,0.3); }
-
-        .sd-highlight {
-            background: rgba(255,170,0,0.06);
-            padding: 8px 12px;
-            border-left: 2px solid var(--amber);
-            border-radius: 0 3px 3px 0;
-            margin: 10px 0;
-            font-size: 12px;
-        }
-
-        .sd-badge {
-            display: inline-block;
-            font-size: 9px;
-            padding: 1px 7px;
-            border-radius: 8px;
-            letter-spacing: 0.05em;
+        .subscribe-form button {
+            background: rgba(88,166,255,0.12);
+            border: 1px solid rgba(88,166,255,0.3);
+            border-radius: 6px;
+            padding: 0.55rem 1rem;
+            color: var(--soul-color, #58a6ff);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.82rem;
             font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            white-space: nowrap;
         }
-        .sd-badge-soul { background: rgba(68,136,255,0.15); color: var(--soul); }
-        .sd-badge-mind { background: rgba(68,204,68,0.15); color: var(--mind); }
-        .sd-badge-body { background: rgba(255,68,68,0.15); color: var(--body); }
-        .sd-badge-amber { background: rgba(255,170,0,0.12); color: var(--amber); }
-
-        /* Seed sub-sections */
-        .sd-sub { margin: 6px 0; border: 1px solid rgba(255,255,255,0.04); border-radius: 3px; }
-        .sd-sub-header { display: flex; align-items: center; gap: 6px; padding: 6px 10px; cursor: pointer; font-size: 11px; color: var(--mute); transition: color 0.2s; }
-        .sd-sub-header:hover { color: var(--text); }
-        .sd-sub-arrow { font-size: 9px; transition: transform 0.2s; color: rgba(255,255,255,0.3); }
-        .sd-sub.open .sd-sub-arrow { transform: rotate(90deg); }
-        .sd-sub-body { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .sd-sub.open .sd-sub-body { max-height: 4000px; }
-        .sd-sub-inner { padding: 0 10px 10px; }
-
-        /* Genesis visual */
-        .sd-genesis { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 16px 0; font-size: 16px; }
-        .sd-genesis-step { text-align: center; }
-        .sd-genesis-sym { font-size: 24px; display: block; margin-bottom: 3px; }
-        .sd-genesis-lbl { font-size: 9px; color: rgba(255,255,255,0.35); letter-spacing: 0.05em; }
-        .sd-genesis-arrow { font-size: 18px; color: rgba(255,255,255,0.3); }
-
-        /* Pump visual */
-        .sd-pump { display: flex; justify-content: center; gap: 0; margin: 12px 0; }
-        .sd-pump-step { text-align: center; padding: 8px 12px; position: relative; flex: 1; max-width: 140px; }
-        .sd-pump-step::after { content: '→'; position: absolute; right: -6px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.3); font-size: 12px; }
-        .sd-pump-step:last-child::after { content: ''; }
-        .sd-pump-sym { font-size: 20px; display: block; margin-bottom: 3px; }
-        .sd-pump-name { font-size: 10px; letter-spacing: 0.05em; }
-        .sd-pump-desc { font-size: 9px; color: rgba(255,255,255,0.35); margin-top: 1px; }
-
-        /* Color helpers */
-        .c-soul { color: var(--soul); }
-        .c-line { color: var(--line); }
-        .c-mind { color: var(--mind); }
-        .c-body { color: var(--body); }
-        .c-amber { color: var(--amber); }
-        .c-mute { color: var(--mute); }
-        .c-dim { color: rgba(255,255,255,0.35); }
-
-        /* Search bar in top bar */
-        .top-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 16px;
+        .subscribe-form button:hover {
+            background: rgba(88,166,255,0.2);
+            border-color: rgba(88,166,255,0.5);
         }
+        .subscribe-msg {
+            font-size: 0.78rem;
+            color: var(--soul-color, #58a6ff);
+            margin-top: 0.5rem;
+            min-height: 1.2em;
+        }
+
+        /* ===================================
+           SEARCH OVERLAY
+           =================================== */
         .search-trigger {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,170,0,0.2);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,170,0,0.15);
             border-radius: 6px;
             padding: 5px 12px;
-            color: var(--mute);
-            font-family: inherit;
-            font-size: 12px;
+            color: rgba(255,255,255,0.35);
+            font-family: 'Space Grotesk', monospace;
+            font-size: 11px;
             cursor: pointer;
             transition: all 0.2s;
             letter-spacing: 0.04em;
+            margin-left: 0.6rem;
+            vertical-align: middle;
         }
         .search-trigger:hover {
-            border-color: var(--amber);
-            color: var(--amber);
+            border-color: #ffaa00;
+            color: #ffaa00;
             background: rgba(255,170,0,0.06);
         }
         .search-trigger kbd {
@@ -516,11 +454,9 @@
             padding: 1px 5px;
             font-size: 10px;
             font-family: inherit;
-            color: rgba(255,255,255,0.35);
-            margin-left: 6px;
+            color: rgba(255,255,255,0.3);
+            margin-left: 4px;
         }
-
-        /* Pages overlay */
         .pages-overlay {
             display: none;
             position: fixed;
@@ -533,10 +469,8 @@
         .pages-overlay.open { display: flex; flex-direction: column; }
         .pages-overlay-close {
             position: absolute;
-            top: 12px;
-            right: 16px;
-            background: none;
-            border: none;
+            top: 12px; right: 16px;
+            background: none; border: none;
             color: rgba(255,255,255,0.5);
             font-size: 28px;
             cursor: pointer;
@@ -550,960 +484,855 @@
             flex: 1;
             width: 100%;
             border: none;
-            border-radius: 0;
         }
     </style>
 </head>
 <body>
 
-<div class="top-bar">
-    <a href="https://www.fractalreality.ca" style="color:var(--amber)">FRACTALREALITY.CA</a>
-    <button class="search-trigger" onclick="openPagesOverlay()" title="Search all pages">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        Search all pages
-        <kbd>/</kbd>
-    </button>
-</div>
+    <canvas id="particles"></canvas>
 
-<!-- Pages overlay (loads pages.html in iframe) -->
-<div class="pages-overlay" id="pagesOverlay">
-    <button class="pages-overlay-close" onclick="closePagesOverlay()">&times;</button>
-    <iframe id="pagesFrame" src="about:blank"></iframe>
-</div>
-
-<!-- =============================================
-     THE CIRCUMPUNCT: low resolution, in focus
-     ============================================= -->
-<div class="hero">
-    <div class="circ">
-        <span class="circ-label circ-label-top">○ BODY</span>
-        <a href="truth_and_god.html" class="circ-label circ-label-phi-outer" title="The Greater Whole">Φ</a>
-        <span class="circ-label circ-label-phi-inner">Φ' MIND</span>
-        <span class="circ-label circ-label-bottom">• SOUL</span>
-        <div class="circ-boundary" onclick="togglePanel('body')"></div>
-        <div class="circ-field" onclick="togglePanel('mind')"></div>
-        <div class="circ-soul" onclick="togglePanel('soul')"></div>
-    </div>
-    <div class="eq">
-        <span class="whole-text">⊙</span> = <span style="color:var(--mind)">Φ</span>(<span style="color:var(--soul)">•</span>, <span style="color:var(--body)">○</span>)
-    </div>
-    <div class="hint">click any part · everything unfolds</div>
-</div>
-
-<!-- Panels that unfold from circumpunct clicks -->
-<div class="panel" id="panel-soul" style="border:1px solid var(--soul)">
-    <div class="panel-header">
-        <span class="panel-title" style="color:var(--soul)">• SOUL (APERTURE)</span>
-        <button class="panel-close" onclick="closePanel()">&times;</button>
-    </div>
-    <div class="panel-text">0D singularity + 1D worldline. <span style="color:var(--soul)">Converges.</span> The gate through which truth flows. The center is equidistant from all that you are. Consciousness is what 0 feels like from inside: the 1 experiencing its own convergence.</div>
-    <div class="panel-links">
-        <a href="e_equals_1.html" style="color:var(--soul)">E = 1 →</a> · <a href="truth_and_god.html" style="color:var(--soul)">God and the Soul Array →</a> · <a href="circumpunct_breath.html" style="color:var(--soul)">The Breath →</a>
-    </div>
-</div>
-
-<div class="panel" id="panel-mind" style="border:1px solid var(--mind)">
-    <div class="panel-header">
-        <span class="panel-title" style="color:var(--mind)">Φ MIND (FIELD)</span>
-        <button class="panel-close" onclick="closePanel()">&times;</button>
-    </div>
-    <div class="panel-text">2D surface. <span style="color:var(--mind)">Mediates.</span> Mind is not a thing; mind is a between. Two fields: <span style="color:var(--mind)">Φ</span> (outer, God) and <span style="color:#9b7ad8">Φ'</span> (inner, mind). Same substance, different scope. Φ = E: field IS energy.</div>
-    <div class="panel-links">
-        <a href="circumpunct_theory_of_mind_plain.html" style="color:var(--mind)">Theory of Mind →</a> · <a href="how_reality_is_built.html" style="color:var(--mind)">How Reality Is Built →</a> · <a href="why_space_can_never_be_empty.html" style="color:var(--mind)">Why Space Is Never Empty →</a>
-    </div>
-</div>
-
-<div class="panel" id="panel-body" style="border:1px solid var(--body)">
-    <div class="panel-header">
-        <span class="panel-title" style="color:var(--body)">○ BODY (BOUNDARY)</span>
-        <button class="panel-close" onclick="closePanel()">&times;</button>
-    </div>
-    <div class="panel-text">3D closure. <span style="color:var(--body)">Filters.</span> The nested membrane that makes the infinite finite. To have a body is to filter. Volume is nested surfaces seen from above. E = mc²: c² is the field declaring its 2D dimensionality.</div>
-    <div class="panel-links">
-        <a href="circumpunct_ethics_and_virtues.html" style="color:var(--body)">Ethics & Virtues →</a> · <a href="gravity.html" style="color:var(--body)">Gravity →</a> · <a href="the_bridge_presentation.html" style="color:var(--body)">The Bridge →</a>
-    </div>
-</div>
-
-<!-- Axiom -->
-<div class="axiom">
-    <div class="axiom-main">
-        <a href="e_equals_1.html" style="color:var(--amber)">E = 1.</a> All else is <a href="how_reality_is_built.html" style="color:var(--mute)">constraints.</a>
-    </div>
-    <div class="axiom-sub">One axiom (A0). Four derivations: <a href="how_reality_is_built.html" style="color:var(--mute)">multiplicity</a> (A1), <a href="how_reality_is_built.html" style="color:var(--mute)">self-similarity</a> (A2), <a href="how_reality_is_built.html" style="color:var(--mute)">closure</a> (A3), <a href="how_reality_is_built.html" style="color:var(--mute)">compositional unity</a> (A4). All of <a href="dimensional_ladder.html" style="color:var(--mind)">physics</a>, <a href="molecular_geometry.html" style="color:var(--mind)">chemistry</a>, <a href="emergent_biology.html" style="color:var(--mind)">biology</a>, <a href="circumpunct_ethics_and_virtues.html" style="color:var(--body)">ethics</a> and <a href="circumpunct_theory_of_mind_plain.html" style="color:var(--soul)">consciousness</a> from geometry alone.</div>
-</div>
-
-<!-- SEED: Nav Pills -->
-<div class="sd-pills" id="sdPills">
-    <button class="sd-pill" data-target="sd-core">Core</button>
-    <button class="sd-pill" data-target="sd-ontology">1/0</button>
-    <button class="sd-pill" data-target="sd-e1">E = 1</button>
-    <button class="sd-pill" data-target="sd-process">Process</button>
-    <button class="sd-pill" data-target="sd-axioms">Axioms</button>
-    <button class="sd-pill" data-target="sd-genesis">Genesis</button>
-    <button class="sd-pill" data-target="sd-pump">Pump</button>
-    <button class="sd-pill" data-target="sd-balance">Balance</button>
-    <button class="sd-pill" data-target="sd-64">64 States</button>
-    <button class="sd-pill" data-target="sd-time">Time</button>
-    <button class="sd-pill" data-target="sd-god">God/Soul</button>
-    <button class="sd-pill" data-target="sd-connect">Connection</button>
-    <button class="sd-pill" data-target="sd-vacuum">Vacuum</button>
-    <button class="sd-pill" data-target="sd-power">Power</button>
-    <button class="sd-pill" data-target="sd-physics">Physics</button>
-    <button class="sd-pill" data-target="sd-constants">Constants</button>
-    <button class="sd-pill" data-target="sd-self">Self</button>
-    <button class="sd-pill" data-target="sd-mind">Mind</button>
-    <button class="sd-pill" data-target="sd-ethics">Ethics</button>
-</div>
-<div class="sd-controls">
-    <button class="sd-ctrl" onclick="sdExpandAll()">EXPAND ALL</button>
-    <button class="sd-ctrl" onclick="sdCollapseAll()">COLLAPSE ALL</button>
-</div>
-
-<!-- THE DIMENSIONAL LADDER -->
-<div class="section-wrap" style="margin-top:30px">
-    <div class="section-label">§2 PREDICTIONS</div>
-    <div class="section-title"><a href="dimensional_ladder.html" style="color:#fff">THE DIMENSIONAL LADDER</a></div>
-    <div class="section-intro">Seven rungs. Every constant derived from <a href="e_equals_1.html" style="color:var(--soul)">α</a> and <span class="whole-text">⊙</span> geometry. Click any rung.</div>
-
-    <div class="rung" id="r0">
-        <div class="rung-header" onclick="toggleRung('r0')">
-            <span class="rung-dim" style="color:var(--soul)">0D</span>
-            <span class="rung-sym" style="color:var(--soul)">•</span>
-            <span class="rung-name">α <span class="rung-desc">(fine-structure)</span></span>
-            <span class="rung-acc" style="color:var(--soul)">0.22 ppb</span>
-            <span class="rung-arrow">▶</span>
-        </div>
-        <div class="rung-body">
-            <div class="rung-formula" style="border-color:var(--soul)">1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147</div>
-            <div class="rung-detail">Self-referentially determined. α generates the ladder; the ladder determines α. Measured: 137.035999177. Exact to current precision.</div>
-            <a href="e_equals_1.html" class="rung-link" style="color:var(--soul)">full derivation →</a>
-        </div>
+    <div class="top-bar">
+        <span class="top-bar-text">Explore Fractal Reality with your host, <a href="#" id="host-link">Ashman Roonz</a></span>
+        <button class="search-trigger" onclick="openPagesOverlay()" title="Search all pages">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Search
+            <kbd>/</kbd>
+        </button>
     </div>
 
-    <div class="rung" id="r05">
-        <div class="rung-header" onclick="toggleRung('r05')">
-            <span class="rung-dim" style="color:var(--soul)">0.5D</span>
-            <span class="rung-sym" style="color:var(--soul)">⊛</span>
-            <span class="rung-name">c <span class="rung-desc">(speed of light)</span></span>
-            <span class="rung-acc" style="color:var(--soul)">exact</span>
-            <span class="rung-arrow">▶</span>
-        </div>
-        <div class="rung-body">
-            <div class="rung-formula" style="border-color:var(--soul)">c = √(2◐ · sin θ) = 1</div>
-            <div class="rung-detail">Convergence; inward gathering. At <a href="how_reality_is_built.html" style="color:var(--soul)">balance</a> (◐ = 0.5), convergence propagates at maximum speed. Not measured; a geometric consequence.</div>
-            <a href="speed_of_light.html" class="rung-link" style="color:var(--soul)">interactive simulation →</a>
-        </div>
+    <!-- PAGES OVERLAY -->
+    <div class="pages-overlay" id="pagesOverlay">
+        <button class="pages-overlay-close" onclick="closePagesOverlay()">&times;</button>
+        <iframe id="pagesFrame" src="about:blank"></iframe>
     </div>
 
-    <div class="rung" id="r1">
-        <div class="rung-header" onclick="toggleRung('r1')">
-            <span class="rung-dim" style="color:var(--line)">1D</span>
-            <span class="rung-sym" style="color:var(--line)">—</span>
-            <span class="rung-name">ℏ <span class="rung-desc">(quantum of action)</span></span>
-            <span class="rung-acc" style="color:var(--line)">exact</span>
-            <span class="rung-arrow">▶</span>
-        </div>
-        <div class="rung-body">
-            <div class="rung-formula" style="border-color:var(--line)">ℏ = E_cycle / ω_cycle = 1</div>
-            <div class="rung-detail">The <a href="how_reality_is_built.html" style="color:var(--line)">pump cycle</a> is indivisible. You cannot have convergence without emergence. This indivisibility IS the quantum of action.</div>
-            <a href="planck_constant.html" class="rung-link" style="color:var(--line)">the indivisible cycle →</a>
-        </div>
+    <div class="unified-expression" style="text-align:center; padding:0.6rem 1rem 0.1rem; font-family:'Space Grotesk',monospace; font-size:clamp(0.52rem,1.8vw,0.78rem); letter-spacing:0.02em; color:var(--text-dim,#c8d1db); opacity:0.85; white-space:nowrap; overflow-x:auto;">
+        <a href="ten_dimensions.html" style="text-decoration:none; color:inherit;">
+            <span style="color:rgba(255,255,255,0.9);">[</span><span style="color:rgba(255,255,255,0.9);">&infin;</span> <span style="color:rgba(255,255,255,0.6);">=</span> <span style="color:#B8A060;">E</span> <span style="color:rgba(255,255,255,0.6);">=</span> <span style="color:rgba(255,255,255,0.9);">1</span><span style="color:rgba(255,255,255,0.9);">]</span>
+            <span style="color:rgba(255,255,255,0.3);"> &#x25B8; </span>
+            <span style="color:#4488ff;">(</span><span style="color:#4488ff;">&bull;</span><span style="color:rgba(255,255,255,0.4);">&#x2218;</span><span style="color:#6B5BFF;">&#x229B;</span><span style="color:#4488ff;">)</span>
+            <span style="color:rgba(255,255,255,0.3);"> &#x25B8; </span>
+            <span style="color:#44ddcc;">(</span><span style="color:#44ddcc;">&mdash;</span><span style="color:rgba(255,255,255,0.4);">&#x2218;</span><span style="color:#E88AAF;">&#x2387;</span><span style="color:#44ddcc;">)</span>
+            <span style="color:rgba(255,255,255,0.3);"> &#x25B8; </span>
+            <span style="color:#44cc44;">(</span><span style="color:#44cc44;">&Phi;</span><span style="color:rgba(255,255,255,0.4);">&#x2218;</span><span style="color:#ffaa00;">&#x2739;</span><span style="color:#44cc44;">)</span>
+            <span style="color:rgba(255,255,255,0.3);"> &#x25B8; </span>
+            <span style="color:#ff4444;">(</span><span style="color:#ff4444;">&#x25CB;</span><span style="color:rgba(255,255,255,0.4);">&#x2218;</span><span style="color:#9B7AD8;">&#x27F3;</span><span style="color:#ff4444;">)</span>
+            <span style="color:rgba(255,255,255,0.3);"> &#x25B8; </span>
+            <span style="color:rgba(255,255,255,0.9);">[</span><span style="color:#B8A060;">&#x2299;</span> <span style="color:rgba(255,255,255,0.6);">=</span> <span style="color:#B8A060;">&#x2299;</span><span style="color:rgba(255,255,255,0.5);">&lambda;</span> <span style="color:rgba(255,255,255,0.4);">&sub;</span> <span style="color:#B8A060;">&#x2299;</span><span style="color:rgba(255,255,255,0.5);">&Lambda;</span> <span style="color:rgba(255,255,255,0.4);">&sub;</span> <span style="color:rgba(255,255,255,0.9);">&infin;</span><span style="color:rgba(255,255,255,0.9);">]</span>
+        </a>
     </div>
 
-    <div class="rung" id="r15">
-        <div class="rung-header" onclick="toggleRung('r15')">
-            <span class="rung-dim" style="color:#44aa88">1.5D</span>
-            <span class="rung-sym" style="color:#44aa88">⑂</span>
-            <span class="rung-name">masses <span class="rung-desc">(i-turn)</span></span>
-            <span class="rung-acc" style="color:#44aa88">1-5 ppm</span>
-            <span class="rung-arrow">▶</span>
-        </div>
-        <div class="rung-body">
-            <div class="rung-formula" style="border-color:#44aa88">m_μ/m_e = (1/α)^(13/12 + α/27)  ·  m_τ/m_e = (1/α)^(58/35 + α/81)</div>
-            <div class="rung-detail">Half-integer dimensions produce spectra. K = 3^(n+1) by generation. Links to <a href="clay_millennium.html" style="color:#44aa88">BSD conjecture</a> (1.5D Clay).</div>
-            <a href="mass_ratios.html" class="rung-link" style="color:#44aa88">mass ratio derivations →</a>
-        </div>
-    </div>
+    <div class="landing-tagline" style="font-style:italic; font-size:0.85em;"><a href="e_equals_1.html" style="color: #B8A060; text-decoration: none; font-weight: 500;">E = 1</a><em> &middot; all else is constraints</em></div>
 
-    <div class="rung" id="r2">
-        <div class="rung-header" onclick="toggleRung('r2')">
-            <span class="rung-dim" style="color:var(--mind)">2D</span>
-            <span class="rung-sym" style="color:var(--mind)">Φ</span>
-            <span class="rung-name">gauge <span class="rung-desc">(forces)</span></span>
-            <span class="rung-acc" style="color:var(--mind)">1.4 ppm</span>
-            <span class="rung-arrow">▶</span>
-        </div>
-        <div class="rung-body">
-            <div class="rung-formula" style="border-color:var(--mind)">sin²θ_W = 3/13 + 5α/81 = 0.23122</div>
-            <div class="rung-detail"><a href="gauge_structure.html" style="color:var(--mind)">SU(3) × SU(2) × U(1)</a> from 64-state architecture. 8+3+1 = 12 = 4×3 (pump × triad). Links to <a href="clay_millennium.html" style="color:var(--mind)">Navier-Stokes</a> (2D Clay).</div>
-            <a href="gauge_structure.html" class="rung-link" style="color:var(--mind)">gauge structure →</a>
-        </div>
-    </div>
+    <main class="container">
 
-    <div class="rung" id="r25">
-        <div class="rung-header" onclick="toggleRung('r25')">
-            <span class="rung-dim" style="color:#cc8833">2.5D</span>
-            <span class="rung-sym" style="color:#cc8833">✹</span>
-            <span class="rung-name">emergence <span class="rung-desc">(scales)</span></span>
-            <span class="rung-acc" style="color:#cc8833">3.4 ppm*</span>
-            <span class="rung-arrow">▶</span>
-        </div>
-        <div class="rung-body">
-            <div class="rung-formula" style="border-color:#cc8833">v/Λ_QCD = (1/α)^(56/39)  ·  56 = 8×7  ·  39 = 3×13</div>
-            <div class="rung-detail">Transmission between scales. Strong sector × full ladder / (triad × generation structure). 15,000× more precise than Λ_QCD measurement. Links to <a href="clay_millennium.html" style="color:#cc8833">Hodge conjecture</a>.</div>
-            <a href="infolding.html" class="rung-link" style="color:#cc8833">emergence and transmission →</a>
-        </div>
-    </div>
-
-    <div class="rung" id="r3">
-        <div class="rung-header" onclick="toggleRung('r3')">
-            <span class="rung-dim" style="color:var(--body)">3D</span>
-            <span class="rung-sym" style="color:var(--body)">○</span>
-            <span class="rung-name">G <span class="rung-desc">(gravity)</span></span>
-            <span class="rung-acc" style="color:var(--body)">0.04 ppm</span>
-            <span class="rung-arrow">▶</span>
-        </div>
-        <div class="rung-body">
-            <div class="rung-formula" style="border-color:var(--body)">α_G = α²¹ × φ²/2 × (1 + 2α/91)</div>
-            <div class="rung-detail"><a href="gravity.html" style="color:var(--body)">21 α-steps</a> from point to boundary: this IS why gravity is weak. G = 6.67430 × 10⁻¹¹ (predicted = measured). 45 orders of magnitude. Links to <a href="clay_millennium.html" style="color:var(--body)">Poincaré</a> (3D, solved).</div>
-            <a href="gravity.html" class="rung-link" style="color:var(--body)">the boundary closes →</a>
-        </div>
-    </div>
-
-    <div style="font-size:11px;color:var(--mute);margin-top:8px">* Λ_QCD known to ~5%; formula 15,000× more precise than measurement.</div>
-
-    <!-- ==========================================
-         SEED: Expandable Framework Sections
-         ========================================== -->
-    <div class="sd-wrap" id="sdSections">
-
-    <!-- CORE STRUCTURE -->
-    <div class="sd-section" id="sd-core">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">⊙</div>
-            <div class="sd-label">
-                <div class="sd-dim">FOUNDATION</div>
-                <div class="sd-title">The Core Structure</div>
-            </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-text">The circumpunct ⊙ = Φ(•, ○) is a whole composed of four structural dimensions. Conservation of traversal completes the path: 0(•) + 1(—) + 2(Φ) = 3(○). Aperture + continuity + field = boundary.</div>
-            <table class="sd-table">
-                <tr><th>Symbol</th><th>Name</th><th>Dim</th><th>Constraint</th><th>Maps To</th></tr>
-                <tr><td class="c-soul">•</td><td>Aperture / Soul</td><td>0D</td><td>Converges</td><td class="c-soul">TRUE</td></tr>
-                <tr><td class="c-line">—</td><td>Line / Continuity</td><td>1D</td><td>Commits</td><td class="c-line">FAITHFUL</td></tr>
-                <tr><td class="c-mind">Φ</td><td>Field / Mind</td><td>2D</td><td>Mediates</td><td class="c-mind">RIGHT</td></tr>
-                <tr><td class="c-body">○</td><td>Boundary / Body</td><td>3D</td><td>Filters</td><td class="c-body">GOOD</td></tr>
-                <tr><td class="c-amber">⊙</td><td>Circumpunct / Whole</td><td>All</td><td>Compositional wholeness</td><td class="c-amber">AGREEMENT</td></tr>
-            </table>
-            <div class="sd-highlight">⊙ is a fractal of the ONE. Every ⊙ is the 1 at a particular scale: not a piece of it, but the whole thing, constrained to a position (A2).</div>
-            <div class="sd-heading">CRITICAL TERMINOLOGY</div>
-            <div class="sd-text"><span class="c-mind">Surface</span> = 2D = Φ = field = mind. <span class="c-body">Boundary</span> = 3D = ○ = body. These are NOT interchangeable. §5A establishes: Surface = Field = Mind.</div>
-            <div class="sd-heading">TWO SENSES OF "APERTURE"</div>
-            <div class="sd-text"><span class="c-soul">• as aperture (local)</span>: the gate at the center of any ⊙ through which convergence passes to emergence. <span class="c-amber">⊙ as aperture (global)</span>: the whole circumpunct viewed from ∞; from outside, the entire thing is one aperture in the foam.</div>
-        </div></div>
-    </div>
-
-    <!-- 1/0 ONTOLOGY -->
-    <div class="sd-section" id="sd-ontology">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">1/0</div>
-            <div class="sd-label">
-                <div class="sd-dim">§1.2</div>
-                <div class="sd-title">The 1/0 Ontology</div>
-            </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-text">The symbol ⊙ draws the ontology directly. The dot is 0 (total convergence of the field to a point). The circle is 1 (the field, curving back on itself). The space between them is the fractal coastline (D = 1.5 at balance).</div>
-            <div class="sd-text">Neither primitive is a thing: <span class="c-amber">1</span> is everything (undivided), <span class="c-soul">0</span> is not absence but the 1 at maximum convergence. All structure is the topology of convergence points in the 1.</div>
-            <div class="sd-text">Integer dimensions are the field (1) at different degrees of constraint; half-integer dimensions are the fractal coastlines between those constraints.</div>
-            <div class="sd-highlight">Attention is a 0 in the 1: a convergence point where the field becomes local.</div>
-        </div></div>
-    </div>
-
-    <!-- E = 1 -->
-    <div class="sd-section" id="sd-e1">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">E</div>
-            <div class="sd-label">
-                <div class="sd-dim">§4.8a</div>
-                <div class="sd-title">E = 1</div>
-            </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-text">If Φ = E (§4.8), and there is exactly one field, then <span class="c-amber">E = 1</span>. Not "energy equals the number one"; energy IS the one. There is no quantity of energy; there is only one energy appearing everywhere.</div>
-            <div class="sd-text">What we measure as "amount" is degree of constraint (how tightly the 1 has folded around 0s).</div>
-            <div class="sd-heading">CONSEQUENCES</div>
-            <ul class="sd-list">
-                <li><span class="c-amber">m = 1/c²</span> : mass is inverse surface signature; how tightly 1 wraps around 0s</li>
-                <li><span class="c-amber">𝒫 = 1/(i·t)</span> : power is 1 flowing through rotation over time</li>
-                <li>Free energy = removing constraints (the 1 released from folds)</li>
-                <li>Entropy increasing = de-constraint (the 1 relaxing back toward itself)</li>
-                <li>Information = the topology of 0s in the 1</li>
-            </ul>
-        </div></div>
-    </div>
-
-    <!-- PROCESS = STRUCTURE -->
-    <div class="sd-section" id="sd-process">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">≡</div>
-            <div class="sd-label">
-                <div class="sd-dim">IDENTITY</div>
-                <div class="sd-title">Process and Structure Are the Same Thing</div>
-            </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-text">The way Einstein showed energy and matter are the same (E = mc²), the framework shows process and structure are the same. What looks like a fixed dimension (structure) is the pump cycle frozen at that stage (process).</div>
-            <table class="sd-table">
-                <tr><th></th><th>Dim</th><th>Type</th><th>Role</th><th>i-stroke</th></tr>
-                <tr><td style="color:var(--soul);font-size:16px">•</td><td>0D</td><td>structural</td><td>point; first constraint: convergence</td><td></td></tr>
-                <tr><td style="color:var(--soul);font-size:16px">⊛</td><td>0.5D</td><td>processual</td><td>convergence; the first fold</td><td>i¹ = +i</td></tr>
-                <tr><td style="color:var(--line);font-size:16px">—</td><td>1D</td><td>structural</td><td>line; second constraint: commitment</td><td></td></tr>
-                <tr><td style="color:#44aa88;font-size:16px">⑂</td><td>1.5D</td><td>processual</td><td>commitment; the i-turn (irreversible)</td><td>i² = −1</td></tr>
-                <tr><td style="color:var(--mind);font-size:16px">Φ</td><td>2D</td><td>structural</td><td>field; third constraint: mediation</td><td></td></tr>
-                <tr><td style="color:#cc8833;font-size:16px">✹</td><td>2.5D</td><td>processual</td><td>emergence; outward unfolding</td><td>i³ = −i</td></tr>
-                <tr><td style="color:var(--body);font-size:16px">○</td><td>3D</td><td>structural</td><td>boundary; fourth constraint: filtration</td><td></td></tr>
-                <tr><td style="color:var(--amber);font-size:16px">↻</td><td>3.5D</td><td>processual</td><td>recursion; boundary becomes new aperture</td><td>i⁰ = +1</td></tr>
-            </table>
-            <div class="sd-heading">THE DIMENSIONAL OCTAVE</div>
-            <div class="sd-text">0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5 = do, re, mi, fa, so, la, ti, do'. Structure and process alternate. The octave closes: 3.5D IS 0D at the next nesting level. The cycle begins at i¹ (+i), not i⁰ (+1); identity is earned through full rotation.</div>
-            <div class="sd-heading">TWO KINDS OF DIMENSION</div>
-            <div class="sd-text"><strong>Structural</strong> (integer): what a component IS (0D singularity, 1D worldline, 2D surface, 3D boundary). <strong>Processual</strong> (half-integer): what energy is DOING at a given phase (0.5D convergence, 1.5D commitment, 2.5D emergence, 3.5D recursion); each carries an i-stroke. These are not two separate systems; they form one continuous octave.</div>
-        </div></div>
-    </div>
-
-    <!-- AXIOMS -->
-    <div class="sd-section" id="sd-axioms">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">A</div>
-            <div class="sd-label">
-                <div class="sd-dim">FOUNDATION</div>
-                <div class="sd-title">The One Axiom and Its Four Derivations</div>
-            </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <table class="sd-table">
-                <tr><th>Axiom</th><th>Statement</th><th>Source</th></tr>
-                <tr><td class="c-amber">A0</td><td>E = 1. There is one energy. It is everything. All else is constraints. Nothing is impossible (1 ≠ 0).</td><td>Axiom</td></tr>
-                <tr><td class="c-amber">A1</td><td>Necessary multiplicity: an undifferentiated 1 is operationally indistinguishable from 0, which is impossible, so the 1 must self-limit.</td><td>A0</td></tr>
-                <tr><td class="c-amber">A2</td><td>Parts are fractals of their wholes (self-similarity across scale); the 1 is all there is to work with.</td><td>A0 + A1</td></tr>
-                <tr><td class="c-amber">A3</td><td>Wholeness requires closure (boundary is necessary); conservation of traversal: 0(•) + 1(—) + 2(Φ) = 3(○).</td><td>A0 + A1</td></tr>
-                <tr><td class="c-amber">A4</td><td>The whole is not the sum of its parts; it is their compositional unity via Φ.</td><td>A2 + A3</td></tr>
-            </table>
-        </div></div>
-    </div>
-
-    <!-- GENESIS -->
-    <div class="sd-section" id="sd-genesis">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">∞</div>
-            <div class="sd-label">
-                <div class="sd-dim">ORIGIN</div>
-                <div class="sd-title">The Genesis Sequence</div>
-            </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-genesis">
-                <div class="sd-genesis-step"><span class="sd-genesis-sym">∞</span><span class="sd-genesis-lbl">undifferentiated</span></div>
-                <span class="sd-genesis-arrow">→</span>
-                <div class="sd-genesis-step"><span class="sd-genesis-sym">•∞</span><span class="sd-genesis-lbl">soul array</span></div>
-                <span class="sd-genesis-arrow">→</span>
-                <div class="sd-genesis-step"><span class="sd-genesis-sym">⊙∞</span><span class="sd-genesis-lbl">reality</span></div>
-            </div>
-            <div class="sd-text"><span class="c-amber">∞</span>: Undifferentiated energy. No distinction. Pure E. (A0 forces existence.)</div>
-            <div class="sd-text"><span class="c-soul">•∞</span>: Aperture multiplied by infinity; the Soul Array. Not one hole; ALL holes. Every possible self-limitation, simultaneously. (A1 forces multiplicity.)</div>
-            <div class="sd-text"><span class="c-body">⊙∞</span>: Circumpunct multiplied by infinity; each aperture completing into a full circumpunct (field + boundary). The foam of reality. (A3 forces closure. A4: closure is compositional. A2: recurses at every scale.)</div>
-            <div class="sd-highlight">0D = •. Zero extension. A hole. ∞D = E. All extension. Everything. They meet at the aperture (0 = ∞ at field level) because the aperture is where dimension has not yet been assigned. ∞ without • has no voice. • without ∞ has no signal. •∞ is the first real thing.</div>
-        </div></div>
-    </div>
-
-    <!-- PUMP CYCLE -->
-    <div class="sd-section" id="sd-pump">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">⊛</div>
-            <div class="sd-label">
-                <div class="sd-dim">TEMPORAL</div>
-                <div class="sd-title">The Pump Cycle</div>
-            </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-eq">Φ(t+Δt) = ✹ ∘ i ∘ ⊛[Φ(t)]</div>
-            <div class="sd-text">Since Φ = E (field IS energy), equivalently: E(t+Δt) = (✹ ∘ i ∘ ⊛) E(t). Energy pumps itself through the aperture.</div>
-            <div class="sd-pump">
-                <div class="sd-pump-step"><span class="sd-pump-sym">⊛</span><span class="sd-pump-name c-soul">Convergence</span><span class="sd-pump-desc">gathering inward</span></div>
-                <div class="sd-pump-step"><span class="sd-pump-sym">i</span><span class="sd-pump-name c-amber">Rotation</span><span class="sd-pump-desc">90° at the gate</span></div>
-                <div class="sd-pump-step"><span class="sd-pump-sym">✹</span><span class="sd-pump-name c-mind">Emergence</span><span class="sd-pump-desc">radiating outward</span></div>
-            </div>
-            <div class="sd-heading">FLOW OPERATORS MAP TO FORCES</div>
-            <div class="sd-text">⊛ (inward): gravity, strong nuclear force. ✹ (outward): electromagnetism, weak force.</div>
-            <div class="sd-heading">THE FOUR-STROKE PUMP</div>
-            <table class="sd-table">
-                <tr><th>Phase</th><th>i^n</th><th>Value</th><th>State</th><th>Dim</th></tr>
-                <tr><td>⊛ convergence</td><td>i¹</td><td>+i</td><td>the first fold</td><td>0.5D</td></tr>
-                <tr><td>✹ commitment</td><td>i²</td><td>-1</td><td>the i-turn</td><td>1.5D</td></tr>
-                <tr><td>✹ emergence</td><td>i³</td><td>-i</td><td>outward unfolding</td><td>2.5D</td></tr>
-                <tr><td>⊛ recursion</td><td>i⁰</td><td>+1</td><td>boundary becomes new aperture</td><td>3.5D</td></tr>
-            </table>
-            <div class="sd-text c-dim" style="font-size:11px">The cycle begins at i¹ (convergence), not i⁰ (identity). Identity is the product of completed closure, not the starting condition. Conjugate pairs: +i ↔ −i (convergence ↔ emergence), −1 ↔ +1 (commitment ↔ recursion).</div>
-            <div class="sd-heading">Φ = E AND i AS PHASE OF ENERGY</div>
-            <div class="sd-text"><span class="c-amber">∞D = E.</span> Everything else is just E in different forms. Every dimension, every structure, every particle, every field: energy wearing a different geometric costume. The lens limits light; that is how it forms an image.</div>
-            <div class="sd-text"><span class="c-mind">Φ = E</span>: Field IS energy. An ontological identity, not a dimensional equation.</div>
-            <div class="sd-text"><span class="c-soul">i is the phase of energy</span>: the rotation operator that cycles energy between convergent and emergent states.</div>
-            <div class="sd-text"><span class="c-amber">𝒫 = E / (i · t)</span>: Power = energy divided by its phase and time. Not analogy; this IS the equation.</div>
-            <div class="sd-text"><span class="c-amber">E = mc²</span>: c² is squared because Φ = E and Φ is 2D. A surface is length × length. To release energy from mass is to peel the 3D boundary back to reveal the 2D field underneath.</div>
-        </div></div>
-    </div>
-
-    <!-- BALANCE -->
-    <div class="sd-section" id="sd-balance">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">◐</div>
-            <div class="sd-label">
-                <div class="sd-dim">§5</div>
-                <div class="sd-title">The Balance Parameter</div>
-            </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-eq">◐ = 0.5</div>
-            <div class="sd-text">The singular balanced state, forced by three independent requirements: symmetry, entropy, and virial theorem.</div>
-            <table class="sd-table">
-                <tr><th>◐</th><th>State</th><th>Description</th></tr>
-                <tr><td>→ 0</td><td>Scattered</td><td>All boundary, no center</td></tr>
-                <tr><td class="c-amber">= 0.5</td><td class="c-amber">Balanced</td><td>Optimal center and periphery</td></tr>
-                <tr><td>→ 1</td><td>Tunnel vision</td><td>All center, no boundary</td></tr>
-            </table>
-            <div class="sd-highlight">Fractal dimension at balance: D = 1 + ◐ = 1.5 (Brownian motion, proven by Mandelbrot).</div>
-        </div></div>
-    </div>
-
-    <!-- 64 STATES -->
-    <div class="sd-section" id="sd-64">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">64</div>
-            <div class="sd-label">
-                <div class="sd-dim">§7</div>
-                <div class="sd-title">The 64-State Architecture</div>
-            </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-text">3 circumpuncts × 2 channels each = 6 binary degrees of freedom. 2⁶ = 64 states.</div>
-            <div class="sd-text">Maps to I Ching hexagrams, DNA codons, and the Standard Model particle spectrum (with 3 extended Higgs states as framework predictions beyond the minimal SM).</div>
-        </div></div>
-    </div>
-
-    <!-- TIME IS SCALE -->
-    <div class="sd-section" id="sd-time">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">⧖</div>
-            <div class="sd-label">
-                <div class="sd-dim">§4.11</div>
-                <div class="sd-title">Time Is Scale</div>
-            </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-text">The three nested circumpuncts that give 64 states are the three scales visible from any position.</div>
-            <table class="sd-table">
-                <tr><th>Scale</th><th>Operator</th><th>Time</th></tr>
-                <tr><td>Greater whole</td><td>⊛</td><td>Future (undifferentiated, not yet gated)</td></tr>
-                <tr><td>Your ⊙</td><td>i</td><td>Present (the gate, the turn, the now)</td></tr>
-                <tr><td>Parts</td><td>✹</td><td>Past (already committed into structure)</td></tr>
-            </table>
-            <div class="sd-text">Time and scale are the same axis. Time IS the direction of the fold: from 1 through 0 into topology. Space is the lateral relationship between 0s at the same scale (symmetric; peers). Time is the vertical relationship across scales (asymmetric; fold direction).</div>
-            <div class="sd-highlight">i² = -1 prevents true time reversal: you can dissolve a fold (death, entropy), but you cannot un-fold it into exactly what it was. The receipt chain i(t) has already been woven.</div>
-        </div></div>
-    </div>
-
-    <!-- GOD / SOUL -->
-    <div class="sd-section" id="sd-god">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">∞</div>
-            <div class="sd-label">
-                <div class="sd-dim">ONTOLOGICAL</div>
-                <div class="sd-title">God, Soul, and the Two Lies</div>
-            </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <table class="sd-table">
-                <tr><th>Concept</th><th>Framework Mapping</th></tr>
-                <tr><td>God / Brahman / Tao</td><td>∞ (infinite totality)</td></tr>
-                <tr><td>Soul / Atman / Self</td><td>⊙λ (infinity operating at your scale)</td></tr>
-                <tr><td>"Made in God's image"</td><td>Fractal structure (same pattern every scale)</td></tr>
-                <tr><td>"Atman is Brahman"</td><td>0.999... = 1 (soul IS God at particular depth)</td></tr>
-            </table>
-            <div class="sd-heading">FLOW, NOT POSSESSION</div>
-            <div class="sd-text">You are a flow-being: (1) you ARE the aperture, (2) truth flows THROUGH you, (3) you are not the SOURCE, (4) you can be clear or distorted. The ego hijack is collapsing these into "what I think is divine."</div>
-            <div class="sd-heading">THE TWO FUNDAMENTAL LIES</div>
-            <div class="sd-text"><span class="c-body">Inflation Lie</span>: "I am the source" (⊙λ = ∞; part claims to be whole). <span class="c-soul">Severance Lie</span>: "There is no source" (⊙λ ∉ ∞; part denies the whole). Lies persist through closed apertures (β → 0): systems that refuse correction.</div>
-            <div class="sd-highlight">Limited ≠ False. The lens limits light; that is HOW it forms an image. Limitation does not inject falsity; only installed lies do.</div>
-        </div></div>
-    </div>
-
-    <!-- CONNECTION -->
-    <div class="sd-section" id="sd-connect">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">◇</div>
-            <div class="sd-label">
-                <div class="sd-dim">TOPOLOGY</div>
-                <div class="sd-title">Topology of Connection</div>
-            </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-text">• reaches ∞ only through the complete fractal chain of nested ⊙s. The connection is total (0.999... = 1) but always mediated. The experience of "directness" in meditation is transparency of the full chain, not absence of it.</div>
-            <div class="sd-heading">RESONANCE AS DIRECT CONNECTION</div>
-            <div class="sd-text">Two souls sharing the same frequency make the Φ field between them transparent. "Direct" = medium at perfect transparency. Love is perfection of mediation, not its absence.</div>
-            <div class="sd-text"><span class="c-soul">Vertical transparency</span>: soul → God (through the nested hierarchy). <span class="c-mind">Lateral transparency</span>: soul → soul (through shared field). Same principle: frequency matching through the chain.</div>
-            <div class="sd-highlight">Resonance is a spectrum: far frequencies = strangers; close = rapport; exact match = "I know you."</div>
-        </div></div>
-    </div>
-
-    <!-- VACUUM -->
-    <div class="sd-section" id="sd-vacuum">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">Φ</div>
-            <div class="sd-label">
-                <div class="sd-dim">FIELD</div>
-                <div class="sd-title">Why Space Is Never Empty</div>
-            </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-text">2D surfaces are the scale connector; phase requires exactly 2D to exist (rotation needs a plane). If every surface is made of nested ⊙s, the nesting never terminates because a surface with zero structure cannot carry phase.</div>
-            <div class="sd-highlight">Vacuum = Φ at scales below measurement threshold. Zero-point energy = residual hum of nested apertures pumping below our instruments.</div>
-        </div></div>
-    </div>
-
-    <!-- POWER -->
-    <div class="sd-section" id="sd-power">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">𝒫</div>
-            <div class="sd-label">
-                <div class="sd-dim">ENERGY</div>
-                <div class="sd-title">The Power Equation</div>
-            </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-eq">𝒫 = E / (i · t)</div>
-            <div class="sd-text">Maps to AC power: Real power P (work, time, 1D), Reactive power Q (cycling, mind, 2D), Apparent power |S| (total, matter, 3D).</div>
-        </div></div>
-    </div>
-
-    <!-- ALL PHYSICS -->
-    <div class="sd-section" id="sd-physics">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">⊛</div>
-            <div class="sd-label">
-                <div class="sd-dim">PHYSICS</div>
-                <div class="sd-title">All Physics as Compounded Constraints</div>
-            </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-text">Every physical law is •, Φ, or ○ compounded. No new ingredients:</div>
-            <table class="sd-table">
-                <tr><th>Force</th><th>Constraint</th><th>Mechanism</th></tr>
-                <tr><td>Gravity</td><td>• + •</td><td>Convergence compounding convergence. Inverse-square because Φ is 2D.</td></tr>
-                <tr><td>EM</td><td>Φ</td><td>Mediation. Maxwell's equations: amplitude and phase (two axes of 2D surface).</td></tr>
-                <tr><td>Strong</td><td>• (max)</td><td>Convergence at smallest scale. Confinement = aperture closing with distance.</td></tr>
-                <tr><td>Weak</td><td>○ (particle)</td><td>Filtration at particle level. Parity violation = asymmetric filter.</td></tr>
-                <tr><td>QM</td><td>Φ before ○</td><td>Superposition = field carrying all possibilities. Measurement = boundary selecting one.</td></tr>
-                <tr><td>GR</td><td>• shaping Φ</td><td>Spacetime curvature IS convergence shaping the field.</td></tr>
-                <tr><td>Thermo</td><td>relaxation</td><td>Constraints relaxing. Second law = the 1 tending back toward itself.</td></tr>
-            </table>
-        </div></div>
-    </div>
-
-    <!-- DERIVED CONSTANTS -->
-    <div class="sd-section" id="sd-constants">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">α</div>
-            <div class="sd-label">
-                <div class="sd-dim">CONSTANTS</div>
-                <div class="sd-title">Derived Constants and the Dimensional Ladder</div>
-            </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-text">Each constant lives at its dimensional home. The framework has zero free parameters.</div>
-
-            <div class="sd-sub">
-                <div class="sd-sub-header" onclick="sdToggleSub(this)">
-                    <span class="sd-sub-arrow">▸</span>
-                    <span><span class="sd-badge sd-badge-amber">0D</span> α (fine-structure constant)</span>
+        <!-- Responsive Layout Wrapper -->
+        <div class="main-layout">
+            <!-- Left Column: Hero Equation -->
+            <header class="header side-panel left-panel">
+              <div class="hero-cards">
+                <div class="hero-card hero-card-img">
+                    <a href="#" data-zone="circumpunct" class="hero-img-link">
+                        <img src="fractal_reality2.png" alt="The Circumpunct Framework – Reality is fractal" class="hero-img" />
+                    </a>
                 </div>
-                <div class="sd-sub-body"><div class="sd-sub-inner">
-                    <div class="sd-text">Base: 1/α₀ = i⁴(°)/φ² - 2/φ³ = 137.0356</div>
-                    <div class="sd-text">Self-referential closure: 1/α = 360/φ² - 2/φ³ + α/(21 - 4/3) = <span class="c-amber">137.035999147</span></div>
-                    <div class="sd-text c-dim" style="font-size:11px">Measured: 137.035999177. Residual: 0.22 ppb, 0.00σ.</div>
-                    <div class="sd-text">α generates the ladder; the ladder determines α. Zero free parameters.</div>
-                </div></div>
-            </div>
 
-            <div class="sd-sub">
-                <div class="sd-sub-header" onclick="sdToggleSub(this)">
-                    <span class="sd-sub-arrow">▸</span>
-                    <span><span class="sd-badge sd-badge-amber">0.5D</span> c (speed of light)</span>
+                <div class="hero-card hero-card-img hero-card-overlay">
+                    <img src="circumpunct_card.png" alt="⊙ = Φ(•, ○) – Soul, Mind, Body, Consciousness" class="hero-img" />
+                    <a href="#" data-zone="soul" class="img-overlay-link" style="top:24%;height:14%">Soul · aperture</a>
+                    <a href="#" data-zone="mind" class="img-overlay-link" style="top:40%;height:14%">Mind · field</a>
+                    <a href="#" data-zone="body" class="img-overlay-link" style="top:56%;height:14%">Body · boundary</a>
+                    <a href="#" data-zone="circumpunct" class="img-overlay-link" style="top:72%;height:16%">Consciousness</a>
                 </div>
-                <div class="sd-sub-body"><div class="sd-sub-inner">
-                    <div class="sd-eq-sm">c = √(2◐ · sin(θ)) = 1</div>
-                    <div class="sd-text">Light is energy being constrained; the photon is the minimum fold. c is the speed of the first fold. Massive particles have θ_eff < π/2, giving v < c.</div>
-                </div></div>
-            </div>
+              </div>
+            </header>
 
-            <div class="sd-sub">
-                <div class="sd-sub-header" onclick="sdToggleSub(this)">
-                    <span class="sd-sub-arrow">▸</span>
-                    <span><span class="sd-badge sd-badge-amber">1D</span> ℏ (reduced Planck constant)</span>
-                </div>
-                <div class="sd-sub-body"><div class="sd-sub-inner">
-                    <div class="sd-eq-sm">ℏ = E_cycle / ω_cycle = 1</div>
-                    <div class="sd-text">The pump cycle is indivisible; this indivisibility IS the quantum of action. E = ℏω with ℏ = 1 means energy and frequency are the same thing.</div>
-                </div></div>
-            </div>
+            <!-- Center Column: Circumpunct -->
+            <div class="center-panel">
 
-            <div class="sd-sub">
-                <div class="sd-sub-header" onclick="sdToggleSub(this)">
-                    <span class="sd-sub-arrow">▸</span>
-                    <span><span class="sd-badge sd-badge-amber">1.5D</span> Lepton mass ratios</span>
-                </div>
-                <div class="sd-sub-body"><div class="sd-sub-inner">
-                    <div class="sd-text">m_μ/m_e = (1/α)^(13/12 + α/27) = <span class="c-amber">206.767</span> (measured: 206.768, 5 ppm)</div>
-                    <div class="sd-text">m_τ/m_e = (1/α)^(58/35 + α/81) = <span class="c-amber">3477.2</span> (measured: 3477.2, 1 ppm)</div>
-                    <div class="sd-text c-dim" style="font-size:11px">K = 3^(n+1) by generation.</div>
-                </div></div>
-            </div>
+        <!-- Circumpunct + Navigation side by side -->
+        <div class="circumpunct-nav-row">
 
-            <div class="sd-sub">
-                <div class="sd-sub-header" onclick="sdToggleSub(this)">
-                    <span class="sd-sub-arrow">▸</span>
-                    <span><span class="sd-badge sd-badge-mind">2D</span> Gauge structure</span>
-                </div>
-                <div class="sd-sub-body"><div class="sd-sub-inner">
-                    <div class="sd-text">SU(3) × SU(2) × U(1) from 64-state architecture. 8 + 3 + 1 = 12 = 4 × 3 (pump × triad).</div>
-                    <div class="sd-text">Weinberg angle: sin²θ_W = 3/13 + 5α/81 = <span class="c-amber">0.23122</span> (measured: 0.23122, 1.4 ppm).</div>
-                </div></div>
-            </div>
+        <!-- Arc nav is generated by JS below -->
 
-            <div class="sd-sub">
-                <div class="sd-sub-header" onclick="sdToggleSub(this)">
-                    <span class="sd-sub-arrow">▸</span>
-                    <span><span class="sd-badge sd-badge-amber">2.5D</span> v/Λ_QCD ratio</span>
-                </div>
-                <div class="sd-sub-body"><div class="sd-sub-inner">
-                    <div class="sd-text">v/Λ_QCD = (1/α)^(56/39) = <span class="c-amber">1170.24</span> (measured: 1170.2 ± ~5%). 15,000× more precise than measurement uncertainty.</div>
-                </div></div>
+        <!-- The Simple Circumpunct -->
+        <div class="circumpunct-container">
+            <div class="circ">
+                <div class="circ-phi-outer">Φ</div>
+                <div class="circ-boundary" data-zone="body"></div>
+                <div class="circ-field" data-zone="mind"></div>
+                <div class="circ-phi-inner">Φ'</div>
+                <div class="circ-orbit"></div>
+                <div class="circ-soul" data-zone="soul"></div>
             </div>
-
-            <div class="sd-sub">
-                <div class="sd-sub-header" onclick="sdToggleSub(this)">
-                    <span class="sd-sub-arrow">▸</span>
-                    <span><span class="sd-badge sd-badge-body">3D</span> G (gravitational constant)</span>
-                </div>
-                <div class="sd-sub-body"><div class="sd-sub-inner">
-                    <div class="sd-text">α_G = α²¹ × φ²/2 × (1 + 2α/91). Predicted G = <span class="c-amber">6.67430 × 10⁻¹¹</span> (measured: 6.67430 × 10⁻¹¹, 0.04 ppm, 0.00σ).</div>
-                    <div class="sd-text">Solves the hierarchy problem: gravity is weak because 21 α-steps separate the point (0D) from the boundary (3D).</div>
-                </div></div>
-            </div>
-
-            <div class="sd-sub">
-                <div class="sd-sub-header" onclick="sdToggleSub(this)">
-                    <span class="sd-sub-arrow">▸</span>
-                    <span>Primes are made of dimensions</span>
-                </div>
-                <div class="sd-sub-body"><div class="sd-sub-inner">
-                    <div class="sd-text">Every prime > 3 is of the form p = (2 × 3) × k ± 1 = (Φ × ○) × k ± •. Primes are the gaps in that lattice, displaced by exactly one unit of soul (±1).</div>
-                    <div class="sd-highlight">The Riemann Hypothesis (0D rung) asks where these convergence points sit: Re(s) = ½ = ◐.</div>
-                </div></div>
-            </div>
-
-            <div class="sd-sub">
-                <div class="sd-sub-header" onclick="sdToggleSub(this)">
-                    <span class="sd-sub-arrow">▸</span>
-                    <span>Clay Millennium mapping</span>
-                </div>
-                <div class="sd-sub-body"><div class="sd-sub-inner">
-                    <table class="sd-table">
-                        <tr><th>Rung</th><th>Problem</th><th>Status</th></tr>
-                        <tr><td>0D</td><td>Riemann Hypothesis</td><td>Open</td></tr>
-                        <tr><td>0.5D</td><td>P vs NP</td><td>Open</td></tr>
-                        <tr><td>1D</td><td>Yang-Mills</td><td>Open</td></tr>
-                        <tr><td>1.5D</td><td>Birch and Swinnerton-Dyer</td><td>Open</td></tr>
-                        <tr><td>2D</td><td>Navier-Stokes</td><td>Open</td></tr>
-                        <tr><td>2.5D</td><td>Hodge Conjecture</td><td>Open</td></tr>
-                        <tr><td class="c-amber">3D</td><td class="c-amber">Poincare</td><td class="c-amber">Solved</td></tr>
-                    </table>
-                    <div class="sd-text c-dim" style="font-size:11px">The only solved problem is the boundary (3D), the outermost rung.</div>
-                </div></div>
-            </div>
-        </div></div>
-    </div>
-
-    <!-- SELF -->
-    <div class="sd-section" id="sd-self">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">•</div>
-            <div class="sd-label">
-                <div class="sd-dim">CONSCIOUSNESS</div>
-                <div class="sd-title">The Self as Convergence Point</div>
-            </div>
-            <div class="sd-arrow">▸</div>
         </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-text">The 0 is not an absence carved into the 1; it is the 1 at maximum convergence. Every 0 is a relative 0: the same field, converged from a different position. The self is a convergence point, not an exclusion zone.</div>
-            <div class="sd-highlight">Consciousness is what 0 feels like from inside: the 1 experiencing its own convergence.</div>
-            <div class="sd-text">"I am the 0 at the center of the circumpunct, equidistant from all that I am." The distance between • and ○ is Φ: mind mediating between who you are (the 0) and what you are (the boundary). Equidistant means balanced: ◐ = 0.5.</div>
-        </div></div>
-    </div>
 
-    <!-- THEORY OF MIND -->
-    <div class="sd-section" id="sd-mind">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">Φ</div>
-            <div class="sd-label">
-                <div class="sd-dim">PSYCHOLOGY</div>
-                <div class="sd-title">Theory of Mind</div>
+        </div><!-- /circumpunct-nav-row -->
+            </div><!-- /center-panel -->
+
+            <!-- Right Column: Ten Dimensions Card -->
+            <div class="dimension-section side-panel right-panel">
+                <style>
+                    .td-card { font-family: 'EB Garamond', 'Space Grotesk', Georgia, serif; }
+                    .td-card .td-title {
+                        font-size: 0.85rem; font-weight: 600; letter-spacing: 0.2em;
+                        text-transform: uppercase; color: #B8A060; text-align: center;
+                        margin-bottom: 0.6rem;
+                    }
+                    .td-card .td-rows { display: flex; flex-direction: column; gap: 2px; }
+                    .td-card .td-row-wrap { border-radius: 3px; opacity: 0; animation: td-row-in 0.5s ease forwards; }
+                    .td-card .td-row {
+                        display: grid; grid-template-columns: 2.2rem auto auto 1fr auto;
+                        align-items: baseline; gap: 0; padding: 5px 10px; border-radius: 3px;
+                        cursor: pointer; transition: filter 0.3s ease; user-select: none;
+                    }
+                    .td-card .td-row:hover { filter: brightness(1.3); }
+                    .td-card .td-row:hover .td-sym { text-shadow: 0 0 16px var(--rc); }
+                    .td-card .td-sym { font-size: 1.4rem; color: var(--rc); text-align: center; line-height: 1; transition: text-shadow 0.3s; }
+                    .td-card .td-dim { font-size: 0.7rem; color: color-mix(in srgb, var(--rc) 70%, white); opacity: 0.8; white-space: nowrap; margin-right: 0.5rem; min-width: 5.5rem; letter-spacing: 0.02em; }
+                    .td-card .td-note { font-size: 0.65rem; color: color-mix(in srgb, var(--rc) 70%, white); opacity: 0.8; font-style: italic; text-align: right; white-space: nowrap; padding-right: 0.5rem; letter-spacing: 0.04em; min-width: 1.5rem; }
+                    .td-card .td-name { font-size: 0.78rem; color: rgba(255,255,255,0.9); line-height: 1.4; letter-spacing: 0.015em; }
+                    .td-card .td-chev { font-size: 0.6rem; color: #706858; transition: transform 0.3s, color 0.3s; padding-left: 0.3rem; display: inline-block; }
+                    .td-card .td-row-wrap.open .td-chev { transform: rotate(90deg); color: var(--rc); }
+                    .td-card .td-drawer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.35s ease; padding: 0 10px; }
+                    .td-card .td-row-wrap.open .td-drawer { max-height: 5rem; padding: 3px 10px 6px; }
+                    .td-card .td-dr-inner { display: grid; grid-template-columns: auto 1fr; gap: 0 0.4rem; align-items: baseline; padding-left: 2.2rem; }
+                    .td-card .td-dr-id { font-size: 0.72rem; font-weight: 600; color: var(--rc); letter-spacing: 0.04em; white-space: nowrap; }
+                    .td-card .td-dr-text { font-size: 0.72rem; color: rgba(255,255,255,0.75); line-height: 1.5; }
+                    .td-card .td-dr-from { font-size: 0.62rem; color: #B8B0A0; font-style: italic; grid-column: 2; margin-top: 0.1em; }
+
+                    /* Row backgrounds */
+                    .td-card .td-row-wrap[data-d="infinity"]    .td-row { background: linear-gradient(90deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%); }
+                    .td-card .td-row-wrap[data-d="soul"]        .td-row { background: linear-gradient(90deg, rgba(68,136,255,0.10) 0%, rgba(68,136,255,0.03) 100%); }
+                    .td-card .td-row-wrap[data-d="convergence"] .td-row { background: linear-gradient(90deg, rgba(107,91,255,0.10) 0%, rgba(107,91,255,0.03) 100%); }
+                    .td-card .td-row-wrap[data-d="line"]        .td-row { background: linear-gradient(90deg, rgba(68,221,204,0.10) 0%, rgba(68,221,204,0.03) 100%); }
+                    .td-card .td-row-wrap[data-d="branch"]      .td-row { background: linear-gradient(90deg, rgba(232,138,175,0.10) 0%, rgba(232,138,175,0.03) 100%); }
+                    .td-card .td-row-wrap[data-d="field"]       .td-row { background: linear-gradient(90deg, rgba(68,204,68,0.10) 0%, rgba(68,204,68,0.03) 100%); }
+                    .td-card .td-row-wrap[data-d="emerge"]      .td-row { background: linear-gradient(90deg, rgba(255,170,0,0.10) 0%, rgba(255,170,0,0.03) 100%); }
+                    .td-card .td-row-wrap[data-d="boundary"]    .td-row { background: linear-gradient(90deg, rgba(255,68,68,0.10) 0%, rgba(255,68,68,0.03) 100%); }
+                    .td-card .td-row-wrap[data-d="recurse"]     .td-row { background: linear-gradient(90deg, rgba(155,122,216,0.10) 0%, rgba(155,122,216,0.03) 100%); }
+                    .td-card .td-row-wrap[data-d="whole"]       .td-row { background: linear-gradient(90deg, rgba(184,160,96,0.10) 0%, rgba(184,160,96,0.03) 100%); }
+
+                    .td-card .td-row-wrap.open[data-d="infinity"]    .td-drawer { background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); }
+                    .td-card .td-row-wrap.open[data-d="soul"]        .td-drawer { background: linear-gradient(90deg, rgba(68,136,255,0.05) 0%, rgba(68,136,255,0.01) 100%); }
+                    .td-card .td-row-wrap.open[data-d="convergence"] .td-drawer { background: linear-gradient(90deg, rgba(107,91,255,0.05) 0%, rgba(107,91,255,0.01) 100%); }
+                    .td-card .td-row-wrap.open[data-d="line"]        .td-drawer { background: linear-gradient(90deg, rgba(68,221,204,0.05) 0%, rgba(68,221,204,0.01) 100%); }
+                    .td-card .td-row-wrap.open[data-d="branch"]      .td-drawer { background: linear-gradient(90deg, rgba(232,138,175,0.05) 0%, rgba(232,138,175,0.01) 100%); }
+                    .td-card .td-row-wrap.open[data-d="field"]       .td-drawer { background: linear-gradient(90deg, rgba(68,204,68,0.05) 0%, rgba(68,204,68,0.01) 100%); }
+                    .td-card .td-row-wrap.open[data-d="emerge"]      .td-drawer { background: linear-gradient(90deg, rgba(255,170,0,0.05) 0%, rgba(255,170,0,0.01) 100%); }
+                    .td-card .td-row-wrap.open[data-d="boundary"]    .td-drawer { background: linear-gradient(90deg, rgba(255,68,68,0.05) 0%, rgba(255,68,68,0.01) 100%); }
+                    .td-card .td-row-wrap.open[data-d="recurse"]     .td-drawer { background: linear-gradient(90deg, rgba(155,122,216,0.05) 0%, rgba(155,122,216,0.01) 100%); }
+                    .td-card .td-row-wrap.open[data-d="whole"]       .td-drawer { background: linear-gradient(90deg, rgba(184,160,96,0.05) 0%, rgba(184,160,96,0.01) 100%); }
+
+                    /* Animation */
+                    .td-card .td-row-wrap:nth-child(1)  { animation-delay: 0.0s; }
+                    .td-card .td-row-wrap:nth-child(2)  { animation-delay: 0.05s; }
+                    .td-card .td-row-wrap:nth-child(3)  { animation-delay: 0.10s; }
+                    .td-card .td-row-wrap:nth-child(4)  { animation-delay: 0.15s; }
+                    .td-card .td-row-wrap:nth-child(5)  { animation-delay: 0.20s; }
+                    .td-card .td-row-wrap:nth-child(6)  { animation-delay: 0.25s; }
+                    .td-card .td-row-wrap:nth-child(7)  { animation-delay: 0.30s; }
+                    .td-card .td-row-wrap:nth-child(8)  { animation-delay: 0.35s; }
+                    .td-card .td-row-wrap:nth-child(9)  { animation-delay: 0.40s; }
+                    .td-card .td-row-wrap:nth-child(10) { animation-delay: 0.45s; }
+                    @keyframes td-row-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+                </style>
+
+                <div class="td-card">
+                    <a href="ten_dimensions.html" style="text-decoration:none;"><div class="td-title">The 10 Dimensions of Reality</div></a>
+                    <div class="td-rows">
+
+                        <!-- ∞ — A0 -->
+                        <div class="td-row-wrap" data-d="infinity" style="--rc: rgba(255,255,255,0.9);">
+                            <div class="td-row"><span class="td-sym">&#x221E;</span><span class="td-dim"></span><span class="td-note"></span><span class="td-name">undifferentiated energy; E = 1</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">A0</span><span class="td-dr-text">There is one energy. It is everything. All else is constraints. (1 &ne; 0)</span></div></div>
+                        </div>
+
+                        <!-- • — A1 -->
+                        <div class="td-row-wrap" data-d="soul" style="--rc: #4488ff;">
+                            <div class="td-row"><span class="td-sym">&bull;</span><span class="td-dim">(0D)</span><span class="td-note">do</span><span class="td-name">point, singularity, soul, localization</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">A1</span><span class="td-dr-text">The 1 must self-limit; an undifferentiated 1 is indistinguishable from 0</span><span class="td-dr-from">from A0</span></div></div>
+                        </div>
+
+                        <!-- ⊛ — D1 -->
+                        <div class="td-row-wrap" data-d="convergence" style="--rc: #6B5BFF;">
+                            <div class="td-row"><span class="td-sym">&#x229B;</span><span class="td-dim">(0.5D, i&sup1; = +i)</span><span class="td-note">re</span><span class="td-name">convergence</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">D1</span><span class="td-dr-text">Self-limitation requires convergence; localization is a process, not an instant</span><span class="td-dr-from">from A1</span></div></div>
+                        </div>
+
+                        <!-- — — A2 -->
+                        <div class="td-row-wrap" data-d="line" style="--rc: #44ddcc;">
+                            <div class="td-row"><span class="td-sym">&mdash;</span><span class="td-dim">(1D)</span><span class="td-note">mi</span><span class="td-name">line, string, timeline, extension</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">A2</span><span class="td-dr-text">Self-limitation must persist; a convergence that does not hold collapses back to &infin;</span><span class="td-dr-from">from A0 + A1</span></div></div>
+                        </div>
+
+                        <!-- ⎇ — D2 -->
+                        <div class="td-row-wrap" data-d="branch" style="--rc: #E88AAF;">
+                            <div class="td-row"><span class="td-sym">&#x2387;</span><span class="td-dim">(1.5D, i&sup2; = &minus;1)</span><span class="td-note">fa</span><span class="td-name">branching, fractal coastlines</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">D2</span><span class="td-dr-text">Extension must branch to reach the field; a single line never becomes a surface</span><span class="td-dr-from">from A2 &rarr; A3</span></div></div>
+                        </div>
+
+                        <!-- Φ — A3 -->
+                        <div class="td-row-wrap" data-d="field" style="--rc: #44cc44;">
+                            <div class="td-row"><span class="td-sym">&Phi;</span><span class="td-dim">(2D)</span><span class="td-note">so</span><span class="td-name">field, mind, surface, mediation</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">A3</span><span class="td-dr-text">Parts are fractals of their wholes; the 1 is all there is to work with</span><span class="td-dr-from">from A0 + A1</span></div></div>
+                        </div>
+
+                        <!-- ✹ — D3 -->
+                        <div class="td-row-wrap" data-d="emerge" style="--rc: #ffaa00;">
+                            <div class="td-row"><span class="td-sym">&#x2739;</span><span class="td-dim">(2.5D, i&sup3; = &minus;i)</span><span class="td-note">la</span><span class="td-name">emergence</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">D3</span><span class="td-dr-text">Self-similarity requires emergence toward closure; the field must fold toward boundary</span><span class="td-dr-from">from A3 &rarr; A4</span></div></div>
+                        </div>
+
+                        <!-- ○ — A4 -->
+                        <div class="td-row-wrap" data-d="boundary" style="--rc: #ff4444;">
+                            <div class="td-row"><span class="td-sym">&#x25CB;</span><span class="td-dim">(3D)</span><span class="td-note">ti</span><span class="td-name">boundary, body, nested parts, interface</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">A4</span><span class="td-dr-text">Wholeness requires closure; 0(&bull;) + 1(&mdash;) + 2(&Phi;) = 3(&#x25CB;)</span><span class="td-dr-from">from A0 + A1</span></div></div>
+                        </div>
+
+                        <!-- ⟳ — D4 -->
+                        <div class="td-row-wrap" data-d="recurse" style="--rc: #9B7AD8;">
+                            <div class="td-row"><span class="td-sym">&#x27F3;</span><span class="td-dim">(3.5D, i&#x2070; = +1)</span><span class="td-note">do&prime;</span><span class="td-name">recursion</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">D4</span><span class="td-dr-text">Closure opens into &Phi;&prime;; the part discovers it is inside a whole</span><span class="td-dr-from">from A3 + A4</span></div></div>
+                        </div>
+
+                        <!-- ⊙ — D5 -->
+                        <div class="td-row-wrap" data-d="whole" style="--rc: #B8A060;">
+                            <div class="td-row"><span class="td-sym">&#x2299;</span><span class="td-dim"></span><span class="td-note"></span><span class="td-name">the whole, consciousness, being, experience</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">D5</span><span class="td-dr-text">The whole is not the sum of its parts; it is their compositional unity via &Phi;</span><span class="td-dr-from">from all</span></div></div>
+                        </div>
+
+                    </div>
+
+                    <div style="width:40px;height:1px;background:#706858;margin:0.7rem auto;"></div>
+                    <div style="text-align:center;">
+                        <div style="font-size:0.65rem;color:#B8B0A0;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.15em;">The Circumpunct Framework</div>
+                        <div style="font-size:0.72rem;color:#E0D8C8;letter-spacing:0.08em;">Ashman Roonz</div>
+                    </div>
+                </div>
             </div>
-            <div class="sd-arrow">▸</div>
-        </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-text">The triad applied to psychology: <span class="c-soul">Source (•, 1D soul)</span>, <span class="c-mind">Surface (Φ, 2D mind)</span>, <span class="c-body">Boundary (○, 3D body)</span>.</div>
-            <div class="sd-heading">THE BOUNDARY AS FILTER</div>
-            <div class="sd-text">To have a body is to filter. Filters compound (the Stacking Problem). Intellectual complexity ≠ wisdom.</div>
-            <div class="sd-heading">FOUR-STAGE CASCADE</div>
-            <table class="sd-table">
-                <tr><th>#</th><th>Stage</th><th>Effect</th></tr>
-                <tr><td>1</td><td>Thought entertained</td><td>Temporary; dissolves when attention shifts</td></tr>
-                <tr><td>2</td><td>Thought repeated</td><td>Pathway strengthens</td></tr>
-                <tr><td>3</td><td>Thought habituated</td><td>Fires automatically</td></tr>
-                <tr><td>4</td><td>Identity fusion</td><td>Thought IS you; removal feels existential</td></tr>
-            </table>
-            <div class="sd-heading">MENTAL HEALTH = RANGE OF MOTION</div>
-            <div class="sd-text">Not a fixed state but freedom to move along the source-to-boundary axis. Pathology = being locked at either extreme.</div>
-            <div class="sd-heading">CURIOSITY AS UNIVERSAL SOLVENT</div>
-            <div class="sd-text">The Noble Lie is a triple-structure filter that (1) distorts signal, (2) hides the distortion, (3) labels correction as distortion. Curiosity works because it operates at a different level: a filter about filters. Cannot be faked; dissolves certainty.</div>
-        </div></div>
-    </div>
+        </div><!-- /main-layout -->
+    </main>
 
-    <!-- ETHICS -->
-    <div class="sd-section" id="sd-ethics">
-        <div class="sd-header" onclick="sdToggle(this)">
-            <div class="sd-icon">⊙</div>
-            <div class="sd-label">
-                <div class="sd-dim">ETHICS</div>
-                <div class="sd-title">Ethics and the Five Virtues</div>
+    <!-- BODY Panel -->
+    <div class="panel panel-body" id="panel-body">
+        <button class="panel-close" aria-label="Close">&times;</button>
+        <div class="panel-content">
+            <div class="panel-header">
+                <span class="panel-symbol">○</span>
+                <h2>BODY</h2>
             </div>
-            <div class="sd-arrow">▸</div>
+            <p class="panel-subtitle">The Boundary Filters · 3D · Stabilized Closure</p>
+
+            <div class="panel-section panel-essay">
+                <p>The boundary is the first thing you meet. Before you can see the center, before you can cross the space, you encounter what <strong>filters</strong>.</p>
+
+                <p><strong>○ is not a simple wall.</strong> The boundary is made of circumpuncts, nested ⊙s all the way down. Each point on your boundary is itself a whole system with its own boundary, field, and center. The boundary is where the real processing happens: every signal that reaches your soul has already been shaped by what the boundary lets through.</p>
+
+                <p style="font-family: monospace; text-align: center; margin: 1.5rem 0; color: var(--body-color);">
+                    ○ = ⊙(⊙(⊙(⊙(⊙(⊙(…))))))<br>
+                    <span style="font-size: 0.85rem; color: #888;">Nested circumpuncts, all the way down.</span>
+                </p>
+
+                <p>A boundary made of smaller whole systems necessarily processes any signal moving through it. Transmission without processing implies zero structure: the boundary collapses to a point. Therefore <strong>to have a body is to filter</strong>. The center sees <em>through</em> the boundary, which means the quality of your seeing depends entirely on the quality of your filter.</p>
+
+                <p><strong>Space is not a container. Space is the <a href="how_reality_is_built.html" style="color: inherit; text-decoration: underline dotted;">braid</a>.</strong> One string (1D). Infinite nested strings inside the boundary (1D × ∞). The surface across which they cross (2D). The volume that emerges from that infinite braiding IS 3D. Time doesn't run alongside space as a fourth dimension. Time is <em>inside</em> space; it's the 1D thread that, woven through the 2D field, produces 3D closure. <strong>1 + 2 = 3.</strong></p>
+
+                <p>This is why the boundary is fractal. Not because fractal is a property applied to it. Because fractal IS what happens when digital→analog recurs. What looks continuous at one scale is gated at the next. The boundary cannot help being fractal: it is made of circumpuncts doing the same conversion at smaller scale, forever.</p>
+
+                <p>Your skin is the obvious edge, but it's just the outermost layer of a nested stack of interfaces. Underneath, every organ, every tissue, every cell is also negotiating what gets in and what stays out. Each cell has a membrane (○) surrounding a field (Φ) surrounding a nucleus (•). Zoom into that membrane, and you find molecules. Each molecule is a circumpunct. The pattern repeats infinitely.</p>
+
+                <p><strong>Volume is what nested surfaces look like from above.</strong> What appears as solid 3D body is actually layer upon layer of 2D surfaces connecting scales. And matter IS energy that has passed through the aperture and crystallized at the boundary. In the power equation, ○ is apparent power <strong>|S|</strong>: the conservation constraint that binds real and reactive into a finite, measurable whole. |S|² = P² + Q².</p>
+
+                <p>When you feel something (warmth, pressure, texture), that's <strong>sensation</strong> at (2+β)D: the moment where your 3D boundary couples with your 2D inner field. Sensation is the boundary speaking to the field. And perception (when that sensation becomes <em>your</em> experience) is the aperture firing. <strong>You don't perceive a pre-existing world. Your perception is one of the operations that constitutes the world.</strong></p>
+
+                <p>The boundary is where one thing meets another. Every real interaction happens at this meeting place, where inside encounters outside. <strong>Consent is the basic requirement for healthy exchange</strong>: the effects of what crosses my boundary are within what I understand and accept.</p>
+
+                <p>Your body lives at the edge of order and chaos. Too rigid, and you become brittle (physically, emotionally, socially). Too permeable, and you lose yourself (no immune defense, no personal space, no "no"). A living boundary, one that can flex, is the only thing that gives the center a chance at seeing what is actually there.</p>
+            </div>
+
+            <div class="panel-section">
+                <h3>The Ethics of ○: Good</h3>
+                <p>The boundary is what cares. It says: this belongs inside, that belongs outside. Every wall exists because something matters enough to be sheltered. A <strong>healthy boundary</strong> is not selfish; it's honest. It protects what truly matters while still allowing goodness in.</p>
+                <p>But the boundary can die. Without <strong><a href="circumpunct_ethics_and_virtues.html" style="color: inherit; text-decoration: underline dotted;">plasticity</a></strong> (the virtue that keeps Good alive), the boundary becomes either a rigid wall that admits only a fixed slice of reality, or it dissolves entirely into no boundary at all. A living membrane adjusts based on what's actually there, not what it decided in advance.</p>
+                <p>Good asks: Does this preserve what matters? Does it respect boundaries, mine and others'? Is consent honored? Are important distinctions preserved?</p>
+                <p class="ethics-question"><strong><a href="circumpunct_ethics_and_virtues.html" style="color: inherit; text-decoration: underline dotted;">Good / Bad</a></strong>; Does it preserve what matters?</p>
+            </div>
+
+            <div class="panel-section panel-practice">
+                <h3>Try This</h3>
+                <p>Close your eyes and feel where your body ends and the air begins. Then zoom in: feel specific spots (hands, feet, face, breath). Notice you're not feeling one surface but many: skin against air, organs against organs, breath moving in and out.</p>
+                <p>Then zoom out again and feel yourself as one shape in space. Notice how countless tiny boundaries (each one a circumpunct at smaller scale) are being woven into that one felt "edge."</p>
+                <p>That edge, that living, fractal, negotiable boundary made of surfaces all the way down, is your <strong>○ Body</strong>. It is how you meet the world, and how the world meets you.</p>
+            </div>
+
+            <div class="panel-links">
+                <span>Explore:</span>
+                <a href="#" data-zone="mind">Φ Mind</a>
+                <a href="#" data-zone="soul">• Soul</a>
+                <a href="#" data-zone="circumpunct">⊙ The Whole</a>
+                <a href="circumpunct_ethics_and_virtues.html">Ethics & Virtues</a>
+                <a href="how_reality_is_built.html">How Reality Is Built</a>
+            </div>
         </div>
-        <div class="sd-body"><div class="sd-inner">
-            <div class="sd-text">Five pillars: <span class="c-body">GOOD (○)</span>, <span class="c-mind">RIGHT (Φ)</span>, <span class="c-line">FAITHFUL (—)</span>, <span class="c-soul">TRUE (•)</span>, <span class="c-amber">AGREEMENT (⊙)</span>.</div>
-            <div class="sd-heading">FIVE VIRTUES</div>
-            <table class="sd-table">
-                <tr><th>Pillar</th><th>Virtue</th><th>Function</th></tr>
-                <tr><td class="c-body">GOOD (○)</td><td>Plasticity</td><td>Boundary that can flex without breaking</td></tr>
-                <tr><td class="c-mind">RIGHT (Φ)</td><td>Access</td><td>Space between remains open and clear</td></tr>
-                <tr><td class="c-line">FAITHFUL (—)</td><td>Reliability</td><td>The line holds; the receipts are unbroken</td></tr>
-                <tr><td class="c-soul">TRUE (•)</td><td>Curiosity</td><td>Orientation toward what one does not know</td></tr>
-                <tr><td class="c-amber">AGREE (⊙)</td><td>Validation</td><td>Independent seeing recognizes independent seeing</td></tr>
-            </table>
-            <div class="sd-heading">REQUIRED SEQUENCE</div>
-            <div class="sd-text">GOOD → RIGHT → FAITHFUL → TRUE → AGREEMENT. Each step requires the previous. No skipping.</div>
-            <div class="sd-heading">PERFORMED vs LIVED</div>
-            <div class="sd-text">Performed ethics mimics the shape while hollow. Lived ethics animates from within. The difference: performed versions know the answer before the question; lived versions discover through genuine engagement.</div>
-            <div class="sd-heading">THE STEELMAN PRINCIPLE</div>
-            <div class="sd-text">Build the strongest possible version of any position before agreeing or disagreeing. Requires all five virtues simultaneously.</div>
-            <div class="sd-heading">THE RESOLUTION PROTOCOL (§25.17)</div>
-            <div class="sd-text">When truth and harm share the same signal: transmit at the lowest resolution that is still true, increase only upon the receiver's request. Withholding entirely = Severance Lie dressed as compassion. Dumping everything = Inflation Lie dressed as honesty.</div>
-            <div class="sd-highlight">Quality test: can you increase resolution without retracting previous levels?</div>
-        </div></div>
     </div>
 
-    </div><!-- end sd-wrap / sdSections -->
+    <!-- MIND Panel -->
+    <div class="panel panel-mind" id="panel-mind">
+        <button class="panel-close" aria-label="Close">&times;</button>
+        <div class="panel-content">
+            <div class="panel-header">
+                <span class="panel-symbol" style="color: #9B7AD8;">Φ'</span>
+                <h2>MIND</h2>
+            </div>
+            <p class="panel-subtitle">The Field Mediates · 2D · Φ Gated Through ○</p>
 
-    <!-- Zero free parameters -->
-    <div class="claim">
-        <div class="claim-line"><span>0</span> free parameters. <a href="e_equals_1.html" style="color:var(--amber)">α determines itself;</a> everything else follows from α and <span class="whole-text">⊙</span>.</div>
+            <div class="panel-section panel-essay">
+                <p><a href="circumpunct_theory_of_mind_plain.html" style="color: inherit; text-decoration: underline dotted;">Mind is not a thing. Mind is a <em>between</em>.</a></p>
+
+                <p>There are three parts to any complete system: a source, the space around it, and the outer boundary where things become real. The source is the soul, the space is the mind, and the boundary is the body. Mind is the structural necessity that must exist whenever there is a source and a boundary standing in relation to each other. It does not come from either end. It <em>is</em> the relationship between them: the medium through which the invisible becomes the visible world.</p>
+
+                <p>There is not one field. There are two. <strong style="color: var(--mind-color);">Φ</strong> is the outer field: objective, shared, future, <a href="truth_and_god.html" style="color: inherit; text-decoration: underline dotted;">God</a>. <strong style="color: #9B7AD8;">Φ'</strong> is the inner field: subjective, private, present, mind.</p>
+
+                <p style="font-family: monospace; text-align: center; margin: 1.5rem 0;">
+                    <span style="color: #9B7AD8;">Φ'</span> = <span style="color: var(--mind-color);">Φ</span> through <span style="color: var(--body-color);">○</span><br>
+                    <span style="font-size: 0.85rem; color: #888;">Mind is God gated through nested boundaries. Same substance. Different scope.</span>
+                </p>
+
+                <p>Not diminished. <em>Focused</em>. Same light, concentrated, directed, made local. Your inner field is God-through-you. My inner field is God-through-me. Same Φ. Different •. Different Φ'.</p>
+
+                <p>If the source is presence without size and the boundary is full extension in space and time, then the space between them is not merely <em>in</em> spacetime: it <em>is</em> spacetime. <strong style="color: #9B7AD8;">Φ'</strong> is a <a href="how_reality_is_built.html" style="color: inherit; text-decoration: underline dotted;">2D surface</a>. Why 2D? Because the field carries amplitude <em>and</em> phase; an angle requires a plane. The skin of the body is the mind. These are the same fact seen from two directions.</p>
+
+                <p>This dissolves the <strong>binding problem</strong>: how does the brain combine separate inputs into unified experience? Mind (2D) is the field; it's <em>already</em> unified. You don't need to bind fragments together if you start with the field and gate it.</p>
+
+                <p><strong>Every thought nested in the boundary is itself a filter.</strong> Each thought is a smaller whole system (a circumpunct within ○): its own boundary (what it selects), its own field (how it relates), its own center (what it converges on). Thoughts stack: filter on filter on filter, each one narrowing the bandwidth further. Even small refractions accumulate. After enough layers, the signal arriving at the source bears little resemblance to what entered from the field.</p>
+
+                <p>This explains why intellectual complexity does not reliably lead to wisdom. More thoughts do not mean more clarity; they mean more filters. Unless each nested part is transparent, adding complexity adds distortion. The wisest minds are not those with the most filters, but those whose boundary is most aligned with the light passing through it.</p>
+
+                <p><strong>Attention is energy.</strong> Every thought you entertain, you feed. You give it structure in the boundary. What you attend to, you amplify. What you neglect, you allow to atrophy. Every serious contemplative tradition includes practices of attentional discipline: the Buddhists call it Right Thought, the Stoics called it <em>prosoche</em>, the desert fathers spoke of guarding the heart. They all understood the same truth: what you let nest in the boundary determines what reaches the source.</p>
+
+                <p>This is how the <a href="circumpunct_breath.html" style="color: inherit; text-decoration: underline dotted;">circumpunct breathes</a>. <span style="color: var(--mind-color);">Φ</span> flows in through ○ (<strong>perception</strong>), becomes <span style="color: #9B7AD8;">Φ'</span> (your private experience). <span style="color: #9B7AD8;">Φ'</span> flows out through ○ (<strong>expression</strong>): action, speech, creation. The boundary is the exchange interface where outer becomes inner and inner becomes outer.</p>
+
+                <p>One way to understand Φ is through balance. There's always a flow of <strong>input</strong> from the body and world (convergence) and a flow of <strong>output</strong> from the center (emergence). The balance between these flows is <strong>β</strong>. In <strong><a href="two_rhythms.html" style="color: inherit; text-decoration: underline dotted;">flow states</a></strong>, β is near balance: enough structure to direct, enough openness to receive. <strong>God flowing through the soul without obstruction.</strong> In <strong>anxiety</strong>, the field feels contracted and noisy; β repeatedly spikes and crashes.</p>
+
+                <p>The good news: <strong>Φ is trainable</strong>. The goal is not no filters. The goal is <em>transparent</em> ones. In the <a href="how_reality_is_built.html" style="color: inherit; text-decoration: underline dotted;">power equation</a>, Φ is reactive power <strong>Q</strong>: the energy that oscillates, stores, returns without net transfer. <strong>The field is analog; the aperture is digital.</strong> Neither can be derived from the other. That is the reason two primitives are needed and one is not enough.</p>
+            </div>
+
+            <div class="panel-section">
+                <h3>The Ethics of Φ: Right</h3>
+                <p>Inside the circle, there is space. Not emptiness: <strong>fullness</strong>. The space between center and edge is alive with connection. Right is the path that works: how cause becomes effect, how intention becomes outcome.</p>
+                <p>The space between is where reality <strong>tests</strong> you. Every claim about how things connect must survive contact with what actually happens. Right action is not just propriety: it is fitness. <em>Reality selects.</em></p>
+                <p>But the space can die. Without <strong><a href="circumpunct_ethics_and_virtues.html" style="color: inherit; text-decoration: underline dotted;">access</a></strong> (the virtue that keeps Right alive), the path between cause and effect gets blocked, distorted, or filled with noise. Cherry-picking evidence, gaslighting, actions that serve a hidden agenda: these are the space without access.</p>
+                <p>Right asks: Is the action properly balanced? Does cause connect to effect? Am I accepting real consequences?</p>
+                <p class="ethics-question"><strong><a href="circumpunct_ethics_and_virtues.html" style="color: inherit; text-decoration: underline dotted;">Right / Wrong</a></strong>; Is the action balanced?</p>
+            </div>
+
+            <div class="panel-section panel-practice">
+                <h3>Try This</h3>
+                <p>Sit comfortably. Notice your body breathing by itself. That's ○. Now notice that you're noticing. That reflective awareness is flowing from •. Then feel the <strong>space in which both are happening</strong>: the subtle, clear "in-between" that holds both body and awareness. That's Φ.</p>
+                <p>Don't think of it as empty space. Feel it as <strong>connection</strong>: the relating between your center and your boundary, between you and your nested parts, between you and the larger whole you're part of.</p>
+                <p>That surface, that living, responsive, balancing medium connecting scales, is your <strong>Φ Mind</strong>. It is how inside and outside learn to move together.</p>
+            </div>
+
+            <div class="panel-links">
+                <span>Explore:</span>
+                <a href="#" data-zone="body">○ Body</a>
+                <a href="#" data-zone="soul">• Soul</a>
+                <a href="#" data-zone="circumpunct">⊙ The Whole</a>
+                <a href="two_rhythms.html">Two Rhythms</a>
+                <a href="circumpunct_theory_of_mind_plain.html">Theory of Mind</a>
+            </div>
+        </div>
     </div>
 
-    <!-- EXPLORE -->
-    <div class="section-label" style="margin-top:30px">INCREASE RESOLUTION</div>
-    <div class="section-title">Every page is a deeper look at the same structure.</div>
+    <!-- SOUL Panel -->
+    <div class="panel panel-soul" id="panel-soul">
+        <button class="panel-close" aria-label="Close">&times;</button>
+        <div class="panel-content">
+            <div class="panel-header">
+                <span class="panel-symbol">•</span>
+                <h2>SOUL</h2>
+            </div>
+            <p class="panel-subtitle">The Center Converges · 0D+1D · The Gate</p>
 
-    <div class="explore-grid">
-        <a href="e_equals_1.html" class="explore-card"><div class="card-cat" style="color:var(--mind)">FOUNDATION</div><div class="card-title">E = 1</div></a>
-        <a href="how_reality_is_built.html" class="explore-card"><div class="card-cat" style="color:var(--mind)">FOUNDATION</div><div class="card-title">How Reality Is Built</div></a>
-        <a href="circumpunct_theory_of_mind_plain.html" class="explore-card"><div class="card-cat" style="color:var(--soul)">PSYCHOLOGY</div><div class="card-title">Theory of Mind</div></a>
-        <a href="circumpunct_ethics_and_virtues.html" class="explore-card"><div class="card-cat" style="color:var(--body)">ETHICS</div><div class="card-title">Ethics & Virtues</div></a>
-        <a href="truth_and_god.html" class="explore-card"><div class="card-cat" style="color:var(--amber)">ONTOLOGY</div><div class="card-title">God and the Soul Array</div></a>
-        <a href="circumpunct_math.html" class="explore-card"><div class="card-cat" style="color:var(--mind)">PHYSICS</div><div class="card-title">Mathematical Formalization</div></a>
-        <a href="clay_millennium.html" class="explore-card"><div class="card-cat" style="color:var(--soul)">MATHEMATICS</div><div class="card-title">Seven Clay Problems</div></a>
-        <a href="wv_decomposition.html" class="explore-card"><div class="card-cat" style="color:var(--amber)">MATHEMATICS</div><div class="card-title">W-V Decomposition</div></a>
-        <a href="aperture_falsification_presentation.html" class="explore-card"><div class="card-cat" style="color:var(--body)">FALSIFICATION</div><div class="card-title">How To Break This</div></a>
-        <a href="gnosis.html" class="explore-card"><div class="card-cat" style="color:var(--amber)">ONTOLOGY</div><div class="card-title">Gnosis: Knowing</div></a>
-        <a href="molecular_geometry.html" class="explore-card"><div class="card-cat" style="color:var(--mind)">CHEMISTRY</div><div class="card-title">Molecular Geometry from T = 3</div></a>
-        <a href="emergent_chemistry.html" class="explore-card"><div class="card-cat" style="color:var(--mind)">CHEMISTRY</div><div class="card-title">Bond Energy from the Ladder</div></a>
-        <a href="meson_mass_law.html" class="explore-card"><div class="card-cat" style="color:var(--mind)">PHYSICS</div><div class="card-title">The Meson Mass Law</div></a>
-        <a href="emergent_biology.html" class="explore-card"><div class="card-cat" style="color:var(--mind)">BIOLOGY</div><div class="card-title">Life from the Dimensional Ladder</div></a>
-        <a href="biology_predictions.html" class="explore-card"><div class="card-cat" style="color:var(--mind)">BIOLOGY</div><div class="card-title">Biological Predictions</div></a>
+            <div class="panel-section panel-essay">
+                <p>Pause for a moment and let the words fall away.</p>
+
+                <p>Even when you're not thinking anything in particular, even when your emotions are quiet, there is still something undeniably here. A simple presence. A bare <em>"I am."</em> Not "I am this" or "I am that": just the felt fact of being.</p>
+
+                <p>That is what I mean by <strong>•</strong>.</p>
+
+                <p><strong>• isn't a thing. It's a through.</strong> Not a traveler, a condition of passage. The aperture is the act of crossing: the present moment where something deeper flows into your field, and where your field opens back into something deeper. A verb, not a noun. A gate, not an object.</p>
+
+                <p>We are not outside the infinite. We are not separate from it. We are <strong><a href="truth_and_god.html" style="color: inherit; text-decoration: underline dotted;">apertures within it</a></strong>: places where the infinite focuses into finite form. The framework's nesting:</p>
+
+                <p style="font-family: monospace; text-align: center; margin: 1.5rem 0; font-size: 0.9rem;">
+                    <span style="color: var(--soul-color);">...⊙ ⊃ ⊙ ⊃ ⊙ ⊃ ⊙...</span><br>
+                    <span style="font-size: 0.85rem; color: #888;">Infinite nesting. No top. No bottom. Each whole contains souls. Each soul is a whole.</span>
+                </p>
+
+                <p>The aperture is one of reality's <strong>two primitives</strong>. It is the step-down mechanism: the gate that takes the infinite and makes it finite, the analog and makes it digital, at every scale. It has a parameter, <strong>β</strong>, the live balance between convergence (taking in) and emergence (giving out). The aperture pumps: intake, compress, fire, exhaust. What a heartbeat does. What a neuron does. What prayer does.</p>
+
+                <p>The aperture operator is •(β) = e<sup>iπβ</sup>. The powers of <em>i</em> are the snap-to points:</p>
+
+                <p style="font-family: monospace; text-align: center; margin: 1.5rem 0; font-size: 0.9rem;">
+                    <span style="color: #888; font-size: 0.8rem;">⊛ CONVERGENCE</span><br>
+                    <span style="color: var(--soul-color);">i⁰ = +1</span> open/open · pass-through · <span style="color: #888;">0D</span><br>
+                    <span style="color: var(--soul-color);">i¹ = +i</span> open/closed · compress · <span style="color: #888;">0.5D</span><br>
+                    <span style="color: #888; font-size: 0.8rem;">✹ EMERGENCE</span><br>
+                    <span style="color: var(--soul-color);">i² = −1</span> closed/closed · committed · <span style="color: #888;">1D</span><br>
+                    <span style="color: var(--soul-color);">i³ = −i</span> closed/open · release · <span style="color: #888;">1.5D</span>
+                </p>
+
+                <p><strong><a href="truth_and_god.html" style="color: inherit; text-decoration: underline dotted;">God</a></strong>, the infinite field (Φ), flows through the boundary (○), gets processed by its nested circumpuncts, and what arrives at • is the fully transformed signal. <strong>Truth flows through us, and finite experience is created. This is God experiencing itself through us, who are fractals of God.</strong></p>
+
+                <p style="font-family: monospace; text-align: center; margin: 1.5rem 0;">
+                    <span style="color: var(--mind-color);">Φ</span> through <span style="color: var(--body-color);"><strong>○</strong></span> ⇒ <span style="color: #9B7AD8;">Φ'</span> ⇒ <span style="color: var(--soul-color);">•</span> = <span style="color: #fff;">⊙</span><br>
+                    <span style="font-size: 0.85rem; color: #888;">God through Body ⇒ Mind ⇒ Soul = The Whole</span>
+                </p>
+
+                <p>The being is a <strong>flow-being, not a possession-being</strong>. You ARE the aperture, but what flows through you is not yours to own. A lens doesn't own the light. It doesn't source the image. But the lens IS where the image forms. The lens is ontologically necessary: not just "participating."</p>
+
+                <p>There is a profound temptation: "If I am God, then what I think is divine." This is the <strong>inflation lie</strong>: the part claiming to be the whole. The opposite error is the <strong>severance lie</strong>: "There is no source. I am a random fragment, disconnected." Both are structural falsehoods. You matter. You contribute. You shape what flows. But you do not own it, and you did not generate it. <strong>This is what keeps identity from becoming inflation.</strong></p>
+
+                <p>Time flows through you. The future arrives at your boundary, gets processed, and the transformed signal converges at your soul. You're not moving forward through time: <strong>time is what your aperture produces</strong>. Each firing of your gate is one moment. The 1D worldline (i(t)) is the trail the 0D singularity leaves behind: your history, your memory, every "yes" and "no" you've made. Soul = 0D singularity (timeless gate) + 1D worldline (string through time). Not alongside space, but inside it. 1 + 2 = 3.</p>
+
+                <p>This is why • is both timeless and temporal. Bodies change completely over a lifetime. Memories blur, identities shift. And yet, when you remember being a child, there's a sense that <em>the one who was there then is the same one who is here now</em>. Not the same story, not the same body, but the same <strong>crossing point</strong>.</p>
+
+                <p>Many traditions point at this: as <strong>soul</strong> (the immortal part), as <strong>ātman</strong> (the inner witness), as <strong>Buddha-nature</strong> (the awake mind), as the <strong>inner light</strong> (the spark of divinity). The framework says why they all agree: every soul is an aperture through which the same infinite field flows. Not different sources: <strong>one field, many gates</strong>.</p>
+            </div>
+
+            <div class="panel-section">
+                <h3>Why <em>i</em> Lives Here</h3>
+                <p>The imaginary unit <em>i</em> is not a mathematical curiosity. It is the <strong><a href="two_rhythms.html" style="color: inherit; text-decoration: underline dotted;">operation the boundary performs</a></strong> through its nested circumpuncts.</p>
+
+                <p>God's energy flows through Φ into the boundary (○), and there, the <em>i</em> rotation happens. What emerges is no longer raw potential. It is transformed, filtered, processed: <span style="color: #9B7AD8;">Φ'</span>, the inner field. It converges at the soul (•; 0D + 1D). The trail of reception is the 1D worldline of memory: every moment already committed to the 0D singularity that persists beneath change.</p>
+
+                <p style="font-family: monospace; text-align: center; margin: 1.5rem 0; color: #B8A060;">
+                    𝒫 = E / (<em>i</em> · t)
+                </p>
+
+                <p>At balance (β = 0.5), the aperture operator becomes <strong>exactly <em>i</em></strong>: •(½) = e<sup><em>i</em>π/2</sup> = <em>i</em>. Not clamped shut (refusing the future, locked in the past). Not blown open (flooded by raw potential, unable to commit anything). But poised at the crossing: <strong>present</strong>. This is where consciousness lives.</p>
+
+                <p>Physics already knows this. The <em>i</em> in Schrödinger's equation places <em>i</em> between energy and time. Euler's identity connects all fundamental constants through rotation. Electrical engineering splits power into real and reactive: S = P + <em>i</em>Q. Everywhere physics finds <em>i</em>, it's finding the soul's operation: <strong>the gate where the future becomes the past.</strong></p>
+
+                <p><em>i</em> is not imaginary in the sense of "not real." It is imaginary in the sense of <strong>"not yet real"</strong>: the future, the energy, the potential still converging toward the aperture, still waiting to cross into committed existence.</p>
+            </div>
+
+            <div class="panel-section">
+                <h3>The Ethics of •: True</h3>
+                <p>At the center, there is only <strong>seeing</strong>. The point has no size. It simply is, and in its being, it sees. The center is where pretense ends: something either arrives or it doesn't; no cleverness can force a lie past genuine perception.</p>
+                <p>The center is what <strong>persists through change</strong>. You have been infant, child, adult; different body, different thoughts. Yet something threads through unchanged. When the center is stable, you can change your mind without losing yourself. You can be wrong and learn without falling apart.</p>
+                <p>But truth can die. Without <strong><a href="circumpunct_ethics_and_virtues.html" style="color: inherit; text-decoration: underline dotted;">curiosity</a></strong> (the virtue that keeps True alive), the center stops receiving and starts projecting. A person oriented toward projecting isn't curious; they're closed. <a href="circumpunct_theory_of_mind_plain.html" style="color: inherit; text-decoration: underline dotted;">Curiosity is the only cognitive orientation that cannot be corrupted</a>: the moment you authentically ask "is this true?", the boundary becomes transparent. The lie requires certainty to survive. Curiosity dissolves certainty by nature.</p>
+                <p>True asks: Does this correspond to reality? Is it honest, accurate, coherent? Am I being authentic to my deepest nature?</p>
+                <p class="ethics-question"><strong><a href="circumpunct_ethics_and_virtues.html" style="color: inherit; text-decoration: underline dotted;">True / False</a></strong>; Does it correspond to reality?</p>
+            </div>
+
+            <div class="panel-section panel-practice">
+                <h3>Try This</h3>
+                <p>Close your eyes. Notice your breath. Notice that there is awareness of the breath. Then, gently, turn attention back toward that awareness itself: not the objects in it, but the <strong>fact that knowing is happening</strong>. Don't chase it as an idea. Just rest as that.</p>
+                <p>Feel it not as a point but as a <strong>crossing</strong>: where something deeper meets your experience, where the infinite becomes particular, where the future arrives and becomes past.</p>
+                <p>Thoughts will come. Sensations will change. But the crossing itself (the eternal NOW, the basic "I am here, aware") remains. That's •.</p>
+                <p>This center, that quiet, lucid crossing point, is your <strong>• Soul</strong>. Not a separate world from your life, but the living threshold where the infinite source flows into the one you're already living.</p>
+            </div>
+
+            <div class="panel-links">
+                <span>Explore:</span>
+                <a href="#" data-zone="body">○ Body</a>
+                <a href="#" data-zone="mind">Φ Mind</a>
+                <a href="#" data-zone="circumpunct">⊙ The Whole</a>
+                <a href="truth_and_god.html">Truth & God</a>
+                <a href="circumpunct_theory_of_mind_plain.html">Theory of Mind</a>
+            </div>
+        </div>
     </div>
 
-    <div class="more-links">
-        <a href="speed_of_light.html" style="color:var(--soul)">Speed of Light</a> · <a href="planck_constant.html" style="color:var(--soul)">Planck Constant</a> · <a href="mass_ratios.html" style="color:#44aa88">Mass Ratios</a> · <a href="gauge_structure.html" style="color:var(--mind)">Gauge Structure</a> · <a href="infolding.html" style="color:#cc8833">Infolding</a> · <a href="gravity.html" style="color:var(--body)">Gravity</a> · <a href="molecular_geometry.html" style="color:var(--mind)">Molecular Geometry</a> · <a href="emergent_chemistry.html" style="color:var(--mind)">Bond Energy</a> · <a href="meson_mass_law.html" style="color:var(--mind)">Meson Mass Law</a> · <a href="emergent_biology.html" style="color:var(--mind)">Emergent Biology</a> · <a href="biology_predictions.html" style="color:var(--mind)">Biology Predictions</a> · <a href="dimensional_ladder.html" style="color:var(--amber)">Full Ladder</a> · <a href="wv_decomposition.html" style="color:var(--amber)">W-V Decomposition</a> · <a href="shut_up_and_calculate.html" style="color:var(--amber)">Shut Up and Calculate</a> · <a href="analytic_continuation_gap.html" style="color:var(--soul)">Riemann Hypothesis</a> · <a href="circumpunct_breath.html" style="color:var(--mind)">The Breath</a> · <a href="why_space_can_never_be_empty.html" style="color:var(--mind)">Why Space Is Never Empty</a> · <a href="gnosis.html" style="color:var(--amber)">Gnosis</a> · <a href="receiving_vs_repeating.html" style="color:var(--soul)">Receiving vs. Repeating</a>
+    <!-- CIRCUMPUNCT Panel -->
+    <div class="panel panel-circumpunct" id="panel-circumpunct">
+        <button class="panel-close" aria-label="Close">&times;</button>
+        <div class="panel-content">
+            <div class="panel-header">
+                <span class="panel-symbol">⊙</span>
+                <h2>CIRCUMPUNCT</h2>
+            </div>
+            <p class="panel-subtitle">The Whole You · Three Constraints on E = 1</p>
+
+            <div class="panel-section panel-essay">
+                <p>Three parts. Three constraints on <a href="e_equals_1.html" style="color: #B8A060; text-decoration: underline dotted;">E = 1</a>. Each one does exactly one thing:</p>
+
+                <p style="font-family: monospace; text-align: center; margin: 1.5rem 0; line-height: 2.2;">
+                    <span style="color: var(--soul-color);">•</span> <strong>converges</strong> <span style="color: #888;">(0D+1D · pulls toward center)</span><br>
+                    <span style="color: var(--mind-color);">Φ</span> <strong>mediates</strong> <span style="color: #888;">(2D · connects without fusing)</span><br>
+                    <span style="color: var(--body-color);">○</span> <strong>filters</strong> <span style="color: #888;">(3D · selects what passes)</span>
+                </p>
+
+                <p>They are <strong>not peers</strong>. Structurally: <span style="color: var(--soul-color);">•</span> is primitive, <span style="color: var(--mind-color);">Φ</span> is primitive, <span style="color: var(--body-color);">○</span> is generated. There is no fourth constraint because ⊙ has no fourth part. There is no missing constraint because the dimensional path is complete: 0 + 1 + 2 = 3. Conservation of traversal.</p>
+
+                <p>But in lived experience, you're never just one at a time.</p>
+
+                <p>When you reach for a cup of coffee, ○ feels the handle, Φ coordinates the movement and expectation, • is the silent "I" doing the reaching. It's one action, one moment, one being. That unified being is what I call <strong>⊙</strong>.</p>
+
+                <p>The whole is constituted by the operation of relating. <span style="color: var(--mind-color);">Φ</span> flows through <span style="color: var(--body-color);">○</span>, becomes <span style="color: #9B7AD8;">Φ'</span>, converges at <span style="color: var(--soul-color);">•</span>. And it has two readings, both true, naming different aspects of the same fact:</p>
+
+                <p style="font-family: monospace; text-align: center; margin: 1.5rem 0;">
+                    <span style="color: var(--mind-color);">Φ</span> through <span style="color: var(--body-color);">○</span> ⇒ <span style="color: #9B7AD8;">Φ'</span> ⇒ <span style="color: var(--soul-color);">•</span> ; represents <span style="color: #888;">the process. What is happening.</span><br>
+                    <span style="color: var(--soul-color);">•</span> + <span style="color: var(--mind-color);">Φ</span> = <span style="color: var(--body-color);">○</span> ; represents <span style="color: #888;">the conservation. What is preserved.</span><br>
+                    <span style="color: var(--soul-color);">1</span> + <span style="color: var(--mind-color);">2</span> = <span style="color: var(--body-color);">3</span>
+                </p>
+
+                <p>Your body (○) isn't a passive shell: it's the <strong>fractal processor</strong>, nested circumpuncts all the way down, where Φ is actively transformed. Your mind (<span style="color: #9B7AD8;">Φ'</span>) isn't just thoughts: it's <span style="color: var(--mind-color);">Φ</span> gated through your boundary's nested circumpuncts, the continuous relational surface made private and local. Your soul (•) isn't just attention: it's the convergence point where the processed signal <strong>arrives</strong>. <strong>Every part of you is already doing the work of interface.</strong></p>
+
+                <p>And the <a href="circumpunct_breath.html" style="color: inherit; text-decoration: underline dotted;">circumpunct breathes</a>. <span style="color: var(--mind-color);">Φ</span> (future, God) flows in through ○ and becomes <span style="color: #9B7AD8;">Φ'</span> (present, mind). <span style="color: #9B7AD8;">Φ'</span> flows out through ○ and becomes <span style="color: var(--mind-color);">Φ</span> again, shaped by the passage. What enters is God. What exits is God bearing the form of the experience. The boundary of this pass becomes the aperture of the next: <strong>•<sub>n+1</sub> = ○<sub>n</sub></strong>.</p>
+
+                <p>You can't peel these apart in reality. There is no • without Φ to flow through it (a soul without God is structurally incoherent). There is no ○ without the recursion that generates it (space without time is a contradiction). There is no Φ without • to gate it (a field with no aperture produces no closure).</p>
+
+                <p>So instead of thinking, "I have a body, I have a mind, I have a soul," you can think: "<strong>I am ⊙</strong>, a whole being whose body, mind, and soul are three faces of the same process."</p>
+
+                <p><strong>Monism</strong> says, "All is one." <strong>Atomism</strong> says, "All is many." The circumpunct says: <strong>parts are fractals of their wholes, all the way down and all the way up.</strong> There is no top. There is no bottom. You are both fully yourself and fully a member of larger wholes: family, culture, ecosystem, cosmos.</p>
+
+                <p>And <strong><a href="truth_and_god.html" style="color: inherit; text-decoration: underline dotted;">God is Φ</a></strong>: the infinite, continuous, relational field that flows through every boundary at every scale. Not a circumpunct at the top. Not a being separate from creation. The field itself. <strong>Φ through ○ ⇒ Φ' ⇒ •. God through Reality ⇒ Mind ⇒ Soul.</strong></p>
+
+                <p>When two people meet, it's not just two bodies bumping or two ideas clashing. It's ⊙ meeting ⊙. Boundaries touch (○↔○), fields resonate (Φ↔Φ), centers recognize each other (•↔•). Agreement, when it's real, happens at this level of whole-to-whole contact. Not mere consensus. Not hollow conformity. Real harmony: whole people in coherent relationship.</p>
+            </div>
+
+            <div class="panel-section">
+                <h3>The Ethics of ⊙: Agreement</h3>
+                <p>When boundary, space, and center align (when <a href="circumpunct_ethics_and_virtues.html" style="color: inherit; text-decoration: underline dotted;">Good, Right, and True</a> converge) something greater emerges: <strong>genuine agreement</strong>. Agreement requires a passage: what you perceive privately must become something you can share publicly. Nobody can make this passage for another, but you can help.</p>
+                <p>But agreement can die. Without <strong><a href="circumpunct_ethics_and_virtues.html" style="color: inherit; text-decoration: underline dotted;">validation</a></strong> (the virtue that keeps Agreement alive), harmony becomes compliance: one person declares, the other submits. Validation means two people see independently and find the same thing. Not consensus by pressure, but harmony discovered.</p>
+                <p>The <strong>Noble Lie</strong> blocks the passage: "accept my version instead." The <strong><a href="circumpunct_ethics_and_virtues.html" style="color: inherit; text-decoration: underline dotted;">Steelman</a></strong> assists it: "what are you actually seeing?" Before you reject someone's perspective, you try to reconstruct the strongest, most coherent version of what they're saying: seeing their values (○), their reasoning (Φ), and their core concern (•) as generously as possible. Only then do you decide where you truly agree or disagree. This is seeing the other as ⊙, not as a cardboard opponent.</p>
+                <p>Agreement asks: Do the people involved genuinely resonate? Is there consent, harmony, mutual recognition? Have we truly engaged with each other's reality?</p>
+            </div>
+
+            <div class="panel-section">
+                <h3>The Nesting IS the Connection</h3>
+                <p>There's no special tunnel between the part and the whole. <strong>The connection is the <a href="how_reality_is_built.html" style="color: inherit; text-decoration: underline dotted;">nesting</a> itself.</strong> You are inside a greater circumpunct. Your boundary touches its field. Your field exists within its field. Your center opens through your field to its center. <strong>You are inside, therefore you are connected.</strong></p>
+                <p>But here's the rule: <strong>centers cannot interact directly, only through fields.</strong> Your soul (•) doesn't touch God directly; it touches God through Φ, the field that connects you. This is why mind matters. This is why relationship matters. The field IS God, at the scale where you can experience it.</p>
+                <p>Each part of you corresponds to a part of the greater whole: your soul (•) mirrors the greater center, your mind (Φ) moves within the greater field, your body (○) is creation touching creation. This is what "made in the image" means: not a picture, but a structure.</p>
+            </div>
+
+            <div class="panel-section panel-practice">
+                <h3>Try This</h3>
+                <p>Sit quietly. Feel your body as one shape (○). Notice the living surface of connection where thoughts, feelings, and sensations arise (Φ): not empty space but the relating itself between your center and your boundary. Sense the quiet center that's aware of all of this (•). Then, instead of focusing on any one, soften your attention to hold all three at once.</p>
+                <p>The seamless unity you glimpse there: that's <strong>⊙</strong>. That's the whole you.</p>
+                <p>You are a whole with parts, and a part of larger wholes. You have a center and a boundary and a field, and they are not at war: they are the way your existence is braided together.</p>
+                <p class="closing-thought"><strong>You are not on your way to being ⊙. You are ⊙, right now, reading these words.</strong></p>
+                <p>The rest of the journey is simply learning to live from that wholeness on purpose.</p>
+            </div>
+
+            <div class="panel-links">
+                <span>Explore:</span>
+                <a href="#" data-zone="body">○ Body</a>
+                <a href="#" data-zone="mind">Φ Mind</a>
+                <a href="#" data-zone="soul">• Soul</a>
+                <a href="the_bridge_presentation.html">The Bridge</a>
+                <a href="circumpunct_ethics_and_virtues.html">Ethics & Virtues</a>
+            </div>
+        </div>
     </div>
 
-    <!-- SUBSCRIBE & COMMUNITY -->
-    <div style="text-align:center;margin-top:40px;padding:20px 0;border-top:1px solid rgba(255,255,255,0.06)">
-        <div style="font-size:10px;color:var(--mute);letter-spacing:0.06em;margin-bottom:10px">New papers and formalizations as they publish.</div>
-        <form id="subscribe-form" style="display:inline-flex;gap:6px" onsubmit="return handleSubscribe(event)">
-            <input type="email" name="email" placeholder="your@email.com" required style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:3px;padding:5px 10px;color:var(--text);font-family:inherit;font-size:11px;width:180px;outline:none">
-            <button type="submit" style="background:rgba(68,136,255,0.1);border:1px solid rgba(68,136,255,0.3);border-radius:3px;padding:5px 10px;color:var(--soul);font-family:inherit;font-size:10px;cursor:pointer;letter-spacing:0.05em">Subscribe</button>
+    <!-- RESEARCH & FALSIFICATION Panel (popup; content in DOM for scrapers) -->
+    <div class="panel panel-research" id="panel-research">
+        <button class="panel-close" aria-label="Close">&times;</button>
+        <div class="panel-content">
+            <div class="panel-header">
+                <span class="panel-symbol" style="color:#00ffff;">⊙</span>
+                <h2>Research &amp; Falsification</h2>
+            </div>
+            <p class="panel-subtitle">Formal mathematics, quantitative predictions, and falsification criteria</p>
+
+            <div class="panel-section panel-essay">
+                <p>The Circumpunct Framework is a geometric formalization built on a single structural claim: <strong>parts are fractals of their wholes</strong>. Every system at every scale exhibits the same triadic architecture; an aperture that selects (•), a field that mediates (Φ), and a boundary that interfaces (○). The structural equation is <strong>Φ(•, ○)</strong>: the 2D relational surface mediating aperture and boundary. The process is <strong>(✹ ∘ i ∘ ⊛)</strong>: convergence, rotation, emergence. Φ is not the verb; the process triad is. The unified expression is <strong>⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))</strong>. The three elements are not peers: ○ operates (transforms the field, because it IS nested circumpuncts), Φ flows (the operand), • receives and transmits (the anchor). Three distinct functions.</p>
+
+                <p>This is not metaphor. The framework generates specific, quantitative, falsifiable predictions:</p>
+
+                <ul>
+                    <li><strong>Physics:</strong> Zero-parameter derivation of the fine structure constant (α) and particle mass ratios from fractal geometry at D = 1.5. Derivation of the Schrödinger equation from kernel convolution. Einstein field equations from coarse-grained braid structure.</li>
+                    <li><strong>Consciousness:</strong> Resolution of the <a href="circumpunct_theory_of_mind_plain.html" style="color: #58a6ff; text-decoration: underline dotted;">binding problem</a> through aperture dynamics; awareness modeled as a fractal lens, not an emergent epiphenomenon. Specific predictions about the relationship between aperture width and perceptual integration.</li>
+                    <li><strong>Pathology:</strong> Narcissism formalized as belief-corruption protocol ("<a href="circumpunct_ethics_and_virtues.html" style="color: #58a6ff; text-decoration: underline dotted;">Noble Lie</a> virus") that weaponizes functional love against resonant love. Predicts specific recovery trajectories based on aperture restoration.</li>
+                    <li><strong>Empirical Test:</strong> Copper electrowinning experiments designed to test the ρ = ω/α parameter's predictions about crystal morphology at different frequency regimes.</li>
+                </ul>
+            </div>
+
+            <div class="panel-section">
+                <h3>Falsification Criteria</h3>
+                <p>If the predicted fractal dimension relationships do not hold in empirical crystal growth data, or if the derived constants diverge from measured values beyond specified error bounds, the framework is falsified.</p>
+            </div>
+
+            <div class="panel-section">
+                <h3>Papers &amp; Formalizations</h3>
+                <ul>
+                    <li><a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework_physicists.md">Circumpunct Framework: Mathematical Formulation for Peer Review</a>; Explicit derivations, operator definitions, and testable predictions. No metaphors.</li>
+                    <li><a href="https://fractalreality.ca/circumpunct_framework.html">Complete Theoretical Framework</a>; Full treatment across physics, consciousness, ethics, and pathology.</li>
+                    <li><a href="aperture_falsification_presentation.html">Falsification Protocol &amp; Experimental Design</a></li>
+                    <li><a href="methodological_status.html">Methodological Status &amp; Validation</a></li>
+                    <li><a href="circumpunct_physics.html">Interactive Physics Explorer</a></li>
+                    <li><strong><a href="dimensional_ladder.html">The Dimensional Ladder: Zero Free Parameters</a></strong></li>
+                    <li><a href="speed_of_light.html">c = sin(i): The Speed of the First Fold</a></li>
+                    <li><a href="planck_constant.html">ℏ = 1: The Indivisible Cycle</a></li>
+                    <li><a href="mass_ratios.html">1.5D: Mass Ratios from α</a></li>
+                    <li><a href="gauge_structure.html">2D: Gauge Structure from Validation</a></li>
+                    <li><a href="infolding.html">2.5D: The Infolding; Transmission Between Scales</a></li>
+                    <li><a href="gravity.html">3D: The Boundary Closes; G from the Dimensional Ladder</a></li>
+                    <li><a href="clay_millennium.html">The Seven Clay Problems and the Dimensional Ladder</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABOUT Panel (popup) -->
+    <div class="panel panel-about" id="panel-about">
+        <button class="panel-close" aria-label="Close">&times;</button>
+        <div class="panel-content">
+            <div class="panel-header">
+                <span class="panel-symbol" style="color:#8b949e;">⊙</span>
+                <h2>About the Researcher</h2>
+            </div>
+
+            <div class="panel-section panel-essay">
+                <p>Ashman Roonz is an independent researcher with a Bachelor of Science degree and fifteen years of field experience as an Educational Assistant, where he developed observational models of pathological pattern transmission in children. He is currently pursuing a Master's in Counselling Psychology and maintains active academic connections at the University of Toronto.</p>
+                <p>The Circumpunct Framework has been in continuous development for fifteen years, with formal mathematical treatment and falsification criteria developed in collaboration with AI systems as a proof-of-concept for human-synthetic intelligence cooperation.</p>
+                <p>Contact: <a href="mailto:email@ashmanroonz.ca">email@ashmanroonz.ca</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="subscribe-section">
+        <p>New papers and formalizations as they publish.</p>
+        <form class="subscribe-form" id="subscribe-form" action="https://formspree.io/f/email@ashmanroonz.ca" method="POST" onsubmit="return handleSubscribe(event)">
+            <input type="email" name="email" placeholder="your@email.com" required>
+            <button type="submit">Subscribe</button>
         </form>
-        <div id="subscribe-msg" style="font-size:10px;color:var(--soul);margin-top:4px;min-height:1em"></div>
-        <div style="margin-top:12px;font-size:10px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-            <a href="https://www.facebook.com/groups/4397079510569470" target="_blank" style="color:var(--mute);border:1px solid rgba(255,255,255,0.08);padding:3px 8px;border-radius:3px;transition:border-color 0.2s">Facebook Group</a>
-            <a href="https://www.reddit.com/r/Circumpunct/" target="_blank" style="color:var(--mute);border:1px solid rgba(255,255,255,0.08);padding:3px 8px;border-radius:3px;transition:border-color 0.2s">Reddit r/Circumpunct</a>
+        <div class="subscribe-msg" id="subscribe-msg"></div>
+        <div class="community-row" style="display:flex; gap:1.2rem; justify-content:center; margin-top:1rem;">
+            <a href="https://www.facebook.com/groups/4397079510569470" target="_blank" style="font-family:'Space Grotesk',sans-serif; font-size:0.8rem; color:#888; text-decoration:none; border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:0.4rem 0.8rem; transition:border-color 0.2s, color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.25)';this.style.color='#aaa'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='#888'">Facebook Group</a>
+            <a href="https://www.reddit.com/r/Circumpunct/" target="_blank" style="font-family:'Space Grotesk',sans-serif; font-size:0.8rem; color:#888; text-decoration:none; border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:0.4rem 0.8rem; transition:border-color 0.2s, color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.25)';this.style.color='#aaa'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='#888'">Reddit r/Circumpunct</a>
         </div>
     </div>
 
-    <!-- BOTTOM LINKS -->
-    <div style="text-align:center;margin-top:16px;font-size:10px;line-height:2.2">
-        <a href="javascript:void(0)" onclick="openPagesOverlay()" style="color:var(--amber)">All Pages</a> · <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" style="color:var(--mute)">GitHub</a> · <a href="https://www.ashmanroonz.ca/2025/08/god-and-soul-array.html" target="_blank" style="color:var(--mute)">Blog</a> · <a href="simulators.html" style="color:var(--mute)">Interactive Demos</a> · <a href="circumpunct_encyclopedia.html" style="color:var(--mute)">Encyclopedia</a> · <a href="mailto:email@ashmanroonz.ca" style="color:var(--mute)">Contact</a>
-    </div>
+    <footer style="text-align:center; padding:2.5rem 1.5rem 3rem; max-width:520px; margin:0 auto; font-family:'EB Garamond',Georgia,serif; line-height:1.7;">
+        <p style="font-size:1.15rem; color:#B8A060; font-style:italic; opacity:0.85;">Reality flows through the gate of your consciousness. May the Truth of Reality (the Light of God) flow through you, authentically, expressed compressed but not distorted.</p>
+        <p style="font-size:0.8rem; color:#444038; margin-top:0.8rem; letter-spacing:0.08em;">; Ashman Roonz</p>
+    </footer>
 
-    <!-- CLOSING QUOTE -->
-    <div style="text-align:center;padding:24px 20px 10px;max-width:420px;margin:0 auto;font-style:italic;font-size:11px;color:rgba(255,170,0,0.5);line-height:1.7">
-        Reality flows through the gate of your consciousness. May the Truth of Reality (the Light of God) flow through you, authentically, expressed compressed but not distorted.
-    </div>
-    <div style="text-align:center;font-size:9px;color:rgba(255,255,255,0.15);letter-spacing:0.08em;padding-bottom:6px">; Ashman Roonz</div>
-
-    <footer>THE CIRCUMPUNCT FRAMEWORK · ASHMAN ROONZ · FRACTALREALITY.CA</footer>
-</div>
-
-<script>
-function handleSubscribe(e) {
-    e.preventDefault();
-    var form = document.getElementById('subscribe-form');
-    var msg = document.getElementById('subscribe-msg');
-    var email = form.querySelector('input[type="email"]').value;
-    var subject = encodeURIComponent('Subscribe to Fractal Reality');
-    var body = encodeURIComponent('Please add ' + email + ' to the mailing list.');
-    window.location.href = 'mailto:email@ashmanroonz.ca?subject=' + subject + '&body=' + body;
-    msg.textContent = 'Opening your email client; send to subscribe.';
-    return false;
-}
-function togglePanel(zone) {
-    const panels = ['soul','mind','body'];
-    panels.forEach(p => {
-        const el = document.getElementById('panel-' + p);
-        if (p === zone && !el.classList.contains('open')) {
-            el.classList.add('open');
-        } else {
-            el.classList.remove('open');
-        }
-    });
-}
-function closePanel() {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('open'));
-}
-function toggleRung(id) {
-    const el = document.getElementById(id);
-    const wasOpen = el.classList.contains('open');
-    document.querySelectorAll('.rung.open').forEach(r => r.classList.remove('open'));
-    if (!wasOpen) el.classList.add('open');
-}
-
-// Seed section toggle
-function sdToggle(header) {
-    var sec = header.closest('.sd-section');
-    var wasOpen = sec.classList.contains('open');
-    sec.classList.toggle('open');
-    var id = sec.id;
-    var pill = document.querySelector('.sd-pill[data-target="' + id + '"]');
-    if (pill) pill.classList.toggle('active', !wasOpen);
-}
-
-// Seed sub-section toggle
-function sdToggleSub(header) {
-    header.closest('.sd-sub').classList.toggle('open');
-}
-
-// Seed expand/collapse all
-function sdExpandAll() {
-    document.querySelectorAll('.sd-section').forEach(function(s) { s.classList.add('open'); });
-    document.querySelectorAll('.sd-sub').forEach(function(s) { s.classList.add('open'); });
-    document.querySelectorAll('.sd-pill').forEach(function(p) { p.classList.add('active'); });
-}
-function sdCollapseAll() {
-    document.querySelectorAll('.sd-section').forEach(function(s) { s.classList.remove('open'); });
-    document.querySelectorAll('.sd-sub').forEach(function(s) { s.classList.remove('open'); });
-    document.querySelectorAll('.sd-pill').forEach(function(p) { p.classList.remove('active'); });
-}
-
-// Seed nav pill clicks
-document.querySelectorAll('.sd-pill').forEach(function(pill) {
-    pill.addEventListener('click', function() {
-        var target = document.getElementById(pill.dataset.target);
-        if (!target) return;
-        var isOpen = target.classList.contains('open');
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        setTimeout(function() {
-            if (!isOpen) { target.classList.add('open'); pill.classList.add('active'); }
-            else { target.classList.remove('open'); pill.classList.remove('active'); }
-        }, 300);
-    });
-});
-
-// Pages overlay (search)
-function openPagesOverlay() {
-    var overlay = document.getElementById('pagesOverlay');
-    var frame = document.getElementById('pagesFrame');
-    overlay.classList.add('open');
-    if (frame.src === 'about:blank' || !frame.src.includes('pages.html')) {
-        frame.src = 'pages.html';
-    }
-    // Focus the search input inside the iframe once loaded
-    frame.onload = function() {
-        try {
-            var input = frame.contentDocument.getElementById('searchInput');
-            if (input) input.focus();
-        } catch(e) {}
-    };
-    document.body.style.overflow = 'hidden';
-}
-function closePagesOverlay() {
-    var overlay = document.getElementById('pagesOverlay');
-    overlay.classList.remove('open');
-    document.body.style.overflow = '';
-}
-// Keyboard shortcut: / to open, Escape to close
-document.addEventListener('keydown', function(e) {
-    var overlay = document.getElementById('pagesOverlay');
-    if (e.key === '/' && !overlay.classList.contains('open') && !e.ctrlKey && !e.metaKey) {
-        var tag = (e.target.tagName || '').toLowerCase();
-        if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+    <script>
+    function handleSubscribe(e) {
         e.preventDefault();
-        openPagesOverlay();
+        var form = document.getElementById('subscribe-form');
+        var msg = document.getElementById('subscribe-msg');
+        var email = form.querySelector('input[type="email"]').value;
+        // mailto fallback; the site owner can replace this with Formspree, Buttondown, etc.
+        var subject = encodeURIComponent('Subscribe to Fractal Reality');
+        var body = encodeURIComponent('Please add ' + email + ' to the mailing list.');
+        window.location.href = 'mailto:email@ashmanroonz.ca?subject=' + subject + '&body=' + body;
+        msg.textContent = 'Opening your email client; send to subscribe.';
+        return false;
     }
-    if (e.key === 'Escape' && overlay.classList.contains('open')) {
-        closePagesOverlay();
+    </script>
+    <script src="js/circumpunct.js"></script>
+
+    <!-- Drawer toggle + Research/About panel triggers -->
+    <script>
+    // Drawer accordion toggle
+    function tog(h) {
+        var d = h.parentElement;
+        var wasOpen = d.classList.contains('open');
+        document.querySelectorAll('.dr.open').forEach(function(o) { o.classList.remove('open'); });
+        if (!wasOpen) d.classList.add('open');
     }
-});
-// Click backdrop to close
-document.getElementById('pagesOverlay').addEventListener('click', function(e) {
-    if (e.target === this) closePagesOverlay();
-});
-</script>
+
+    // Ten dimensions card drawer toggle
+    document.querySelectorAll('.td-card .td-row-wrap').forEach(function(wrap) {
+        wrap.querySelector('.td-row').addEventListener('click', function() {
+            wrap.classList.toggle('open');
+        });
+    });
+
+    // Pages overlay (search)
+    function openPagesOverlay() {
+        var o = document.getElementById('pagesOverlay');
+        var f = document.getElementById('pagesFrame');
+        if (f.src === 'about:blank' || !f.src.includes('pages.html')) {
+            f.src = 'pages.html';
+        }
+        o.classList.add('open');
+    }
+    function closePagesOverlay() {
+        document.getElementById('pagesOverlay').classList.remove('open');
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === '/' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
+            e.preventDefault();
+            openPagesOverlay();
+        }
+        if (e.key === 'Escape') closePagesOverlay();
+    });
+
+    (function() {
+        // Reuse the existing backdrop created by circumpunct.js
+        function getBackdrop() { return document.querySelector('.backdrop'); }
+
+        function closeAllPanels() {
+            document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('open'); });
+            var bd = getBackdrop(); if (bd) bd.classList.remove('show');
+        }
+
+        function openPanel(id) {
+            closeAllPanels();
+            var panel = document.getElementById(id);
+            if (!panel) return;
+            panel.classList.add('open');
+            var bd = getBackdrop(); if (bd) bd.classList.add('show');
+            panel.scrollTop = 0;
+        }
+
+        var resBtn = document.getElementById('research-btn');
+        if (resBtn) resBtn.addEventListener('click', function(e) { e.preventDefault(); openPanel('panel-research'); });
+        document.getElementById('host-link').addEventListener('click', function(e) { e.preventDefault(); openPanel('panel-about'); });
+
+        // Expose openPanel for arc-nav script
+        window._openPanel = openPanel;
+
+        // Close buttons
+        document.querySelectorAll('#panel-research .panel-close, #panel-about .panel-close').forEach(function(btn) {
+            btn.addEventListener('click', closeAllPanels);
+        });
+
+        // Open first drawer by default
+        var firstDrawer = document.querySelector('.drawers .dr:nth-child(2)');
+        if (firstDrawer) firstDrawer.classList.add('open');
+    })();
+    </script>
+
+    <!-- SVG Arc Navigation -->
+    <script>
+    (function(){
+        var NS = 'http://www.w3.org/2000/svg';
+        var CX = 220, CY = 220;
+
+        // Two rings: inner ring hugs the purple boundary, outer ring further out
+        // Circumpunct = 260px → radius 130, boundary border ~8px → outer edge ~134
+        // Container = 440px → half = 220
+        var ring1 = { r: 148, sw: 24, count: 6, gap: 7 };   // inner ring (on boundary)
+        var ring2 = { r: 186, sw: 24, count: 4, gap: 8, offset: 0 }; // outer ring
+
+        var btnsR1 = [
+            { label: 'E = 1', href: 'e_equals_1.html', color: '#B8A060' },
+            { label: 'Complete Theory', href: 'circumpunct_physics.html', color: 'url(#rainbow-grad)' },
+            { label: 'Ethics', href: 'https://fractalreality.ca/circumpunct_ethics_and_virtues.html', color: '#f0b429' },
+            { label: 'The Bridge', href: 'the_bridge_presentation.html', color: '#a371f7' },
+            { label: 'How Reality is Built', href: 'how_reality_is_built.html', color: 'url(#rainbow-grad)' },
+            { label: 'The Breath', href: 'circumpunct_breath.html', color: '#9B7AD8' },
+            { label: 'Truth & God', href: 'truth_and_god.html', color: 'url(#rainbow-grad)' }
+        ];
+        var btnsR2 = [
+            { label: 'Research', href: '#', id: 'research-btn', color: '#58a6ff' },
+            { label: 'All Pages', href: 'pages.html', color: 'url(#rainbow-grad)' },
+            { label: 'GitHub', href: 'https://github.com/AshmanRoonz/Fractal_Reality', target: '_blank', color: '#58a6ff' },
+            { label: 'Theory of Mind', href: 'https://fractalreality.ca/circumpunct_theory_of_mind_plain.html', color: '#f0b429' }
+        ];
+
+        function toRad(deg) { return (deg - 90) * Math.PI / 180; }
+
+        function arcD(r, startDeg, endDeg) {
+            var a1 = toRad(startDeg), a2 = toRad(endDeg);
+            var x1 = CX + r * Math.cos(a1), y1 = CY + r * Math.sin(a1);
+            var x2 = CX + r * Math.cos(a2), y2 = CY + r * Math.sin(a2);
+            var la = (endDeg - startDeg > 180) ? 1 : 0;
+            return 'M'+x1+','+y1+' A'+r+','+r+' 0 '+la+' 1 '+x2+','+y2;
+        }
+
+        function arcDFlip(r, startDeg, endDeg) {
+            var a1 = toRad(endDeg), a2 = toRad(startDeg);
+            var x1 = CX + r * Math.cos(a1), y1 = CY + r * Math.sin(a1);
+            var x2 = CX + r * Math.cos(a2), y2 = CY + r * Math.sin(a2);
+            var la = (endDeg - startDeg > 180) ? 1 : 0;
+            return 'M'+x1+','+y1+' A'+r+','+r+' 0 '+la+' 0 '+x2+','+y2;
+        }
+
+        function el(tag, attrs) {
+            var e = document.createElementNS(NS, tag);
+            for (var k in attrs) e.setAttribute(k, attrs[k]);
+            return e;
+        }
+
+        // Create SVG
+        var svg = el('svg', { viewBox: '0 0 440 440', 'class': 'arc-nav' });
+        var defs = el('defs', {});
+
+        // Rainbow gradient
+        var lg = el('linearGradient', { id: 'rainbow-grad', gradientUnits: 'userSpaceOnUse', x1: '0', y1: '0', x2: '440', y2: '0' });
+        ['#ff0000','#ff7700','#ffdd00','#00ff00','#00ccff','#0066ff','#8800ff','#ff00ff'].forEach(function(c, i) {
+            lg.appendChild(el('stop', { offset: (i/7*100)+'%', 'stop-color': c }));
+        });
+        defs.appendChild(lg);
+        svg.appendChild(defs);
+
+        var pathId = 0;
+
+        function addArc(ring, index, btn, offset) {
+            offset = offset || 0;
+            var seg = 360 / ring.count;
+            var arcSpan = seg - ring.gap;
+            var s = offset + index * seg + ring.gap / 2;
+            var e = s + arcSpan;
+            var mid = ((s + e) / 2) % 360;
+            var flip = mid > 100 && mid < 260;
+
+            var a = el('a', { href: btn.href });
+            if (btn.target) a.setAttribute('target', btn.target);
+            if (btn.id) a.setAttribute('id', btn.id);
+
+            // Background arc (thick stroke = band)
+            a.appendChild(el('path', {
+                d: arcD(ring.r, s, e),
+                'class': 'arc-bg',
+                'stroke-width': ring.sw
+            }));
+
+            // Border arc (slightly wider, behind… but we draw on top as outline)
+            a.appendChild(el('path', {
+                d: arcD(ring.r, s, e),
+                'class': 'arc-border',
+                'stroke-width': ring.sw + 2
+            }));
+
+            // Re-draw bg on top so border only shows as 1px edge
+            a.appendChild(el('path', {
+                d: arcD(ring.r, s, e),
+                'class': 'arc-bg',
+                'stroke-width': ring.sw
+            }));
+
+            // Text path
+            var pid = 'arc-tp-' + (pathId++);
+            var tp = el('path', { id: pid, d: flip ? arcDFlip(ring.r, s, e) : arcD(ring.r, s, e) });
+            defs.appendChild(tp);
+
+            var text = el('text', { 'class': 'arc-label', fill: btn.color || '#e6edf3' });
+            var textPath = el('textPath', { href: '#' + pid, startOffset: '50%', 'text-anchor': 'middle' });
+            textPath.textContent = btn.label;
+            text.appendChild(textPath);
+            a.appendChild(text);
+
+            svg.appendChild(a);
+        }
+
+        btnsR1.forEach(function(b, i) { addArc(ring1, i, b, 0); });
+        btnsR2.forEach(function(b, i) { addArc(ring2, i, b, ring2.offset); });
+
+        // Insert into DOM
+        var row = document.querySelector('.circumpunct-nav-row');
+        row.appendChild(svg);
+
+        // Research button handler
+        var rb = document.getElementById('research-btn');
+        if (rb && window._openPanel) {
+            rb.addEventListener('click', function(e) {
+                e.preventDefault();
+                window._openPanel('panel-research');
+            });
+        }
+    })();
+    </script>
 </body>
 </html>
