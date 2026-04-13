@@ -421,13 +421,90 @@
             margin-top: 0.5rem;
             min-height: 1.2em;
         }
+
+        /* ===================================
+           SEARCH OVERLAY
+           =================================== */
+        .search-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,170,0,0.15);
+            border-radius: 6px;
+            padding: 5px 12px;
+            color: rgba(255,255,255,0.35);
+            font-family: 'Space Grotesk', monospace;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.04em;
+            margin-left: 0.6rem;
+            vertical-align: middle;
+        }
+        .search-trigger:hover {
+            border-color: #ffaa00;
+            color: #ffaa00;
+            background: rgba(255,170,0,0.06);
+        }
+        .search-trigger kbd {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 3px;
+            padding: 1px 5px;
+            font-size: 10px;
+            font-family: inherit;
+            color: rgba(255,255,255,0.3);
+            margin-left: 4px;
+        }
+        .pages-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+        .pages-overlay.open { display: flex; flex-direction: column; }
+        .pages-overlay-close {
+            position: absolute;
+            top: 12px; right: 16px;
+            background: none; border: none;
+            color: rgba(255,255,255,0.5);
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 10001;
+            line-height: 1;
+            padding: 4px 8px;
+            transition: color 0.15s;
+        }
+        .pages-overlay-close:hover { color: #fff; }
+        .pages-overlay iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
     </style>
 </head>
 <body>
 
     <canvas id="particles"></canvas>
 
-    <div class="top-bar"><span class="top-bar-text">Explore Fractal Reality with your host, <a href="#" id="host-link">Ashman Roonz</a></span></div>
+    <div class="top-bar">
+        <span class="top-bar-text">Explore Fractal Reality with your host, <a href="#" id="host-link">Ashman Roonz</a></span>
+        <button class="search-trigger" onclick="openPagesOverlay()" title="Search all pages">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Search
+            <kbd>/</kbd>
+        </button>
+    </div>
+
+    <!-- PAGES OVERLAY -->
+    <div class="pages-overlay" id="pagesOverlay">
+        <button class="pages-overlay-close" onclick="closePagesOverlay()">&times;</button>
+        <iframe id="pagesFrame" src="about:blank"></iframe>
+    </div>
 
     <div class="unified-expression" style="text-align:center; padding:0.6rem 1rem 0.1rem; font-family:'Space Grotesk',monospace; font-size:clamp(0.52rem,1.8vw,0.78rem); letter-spacing:0.02em; color:var(--text-dim,#c8d1db); opacity:0.85; white-space:nowrap; overflow-x:auto;">
         <a href="ten_dimensions.html" style="text-decoration:none; color:inherit;">
@@ -1068,6 +1145,26 @@
         wrap.querySelector('.td-row').addEventListener('click', function() {
             wrap.classList.toggle('open');
         });
+    });
+
+    // Pages overlay (search)
+    function openPagesOverlay() {
+        var o = document.getElementById('pagesOverlay');
+        var f = document.getElementById('pagesFrame');
+        if (f.src === 'about:blank' || !f.src.includes('pages.html')) {
+            f.src = 'pages.html';
+        }
+        o.classList.add('open');
+    }
+    function closePagesOverlay() {
+        document.getElementById('pagesOverlay').classList.remove('open');
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === '/' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
+            e.preventDefault();
+            openPagesOverlay();
+        }
+        if (e.key === 'Escape') closePagesOverlay();
     });
 
     (function() {
