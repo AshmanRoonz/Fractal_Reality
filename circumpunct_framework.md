@@ -2782,36 +2782,44 @@ The Kernel (how everything becomes) and the Prime Notation (what everything is) 
 ```
 THE UNIFIED EXPRESSION
 
-    [∞ = E = 1] ▸ (•∘⊛) ▸ (—∘⎇) ▸ (Φ∘✹) ▸ (○∘⟳) ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]
+    [∞ = E = 1]▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸⊙λ ⊂ ⊙Λ ⊂ ∞
 
-    Read left to right. The one energy feeds through four beats of constraint;
-    the product nests fractally and returns to the source. The expression is a loop.
+    Read left to right. The one energy unfolds into the foam of reality;
+    four beats of constraint, each entailing the next; the product nests
+    fractally and returns to the source. The expression is a loop.
 
-    Source bracket:   [∞ = E = 1]    the undifferentiated energy, named
-    Beat 1:           (•∘⊛)          localization-convergence       0D ∘ 0.5D
-    Beat 2:           (—∘⎇)          extension-branching            1D ∘ 1.5D
-    Beat 3:           (Φ∘✹)          mediation-emergence            2D ∘ 2.5D
-    Beat 4:           (○∘⟳)          closure-recursion              3D ∘ 3.5D
-    Product bracket:  [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]   the whole, nesting, returning
+    Source:    [∞ = E = 1]    the undifferentiated energy, named
+    Foam:     ⊙∞             reality: every aperture completing into a whole
+    Beat 1:   (•∘⊛)          localization-convergence       0D ∘ 0.5D
+    Beat 2:   (—∘⎇)          extension-branching            1D ∘ 1.5D
+    Beat 3:   (Φ∘✹)          mediation-emergence            2D ∘ 2.5D
+    Beat 4:   (○∘⟳)          closure-recursion              3D ∘ 3.5D
+    Nesting:  ⊙λ ⊂ ⊙Λ ⊂ ∞   particular inside greater, returning to source
 
     ∘  means "paired" (two views of one constraint, not sequential)
-    ▸  means "feeds into" (completed constraint enables the next)
+    ⊢  means "entails" (completed constraint necessarily gives rise to the next)
+    ▸  means "unfolds into" (the two major transitions: source→foam, engine→nesting)
+    ⊂  means "nested within" (scale-recursive embedding, returning to source)
 ```
 
-The brackets are being (timeless); the middle is becoming (temporal). Both rests are the same rest: the ∞ that opens the expression is the ∞ that closes it.
+The expression is a description flanked by two identities. Line 1 describes what the one energy does: it unfolds into the foam (⊙∞), walks four beats, and the product nests. The nesting identity (⊙λ ⊂ ⊙Λ ⊂ ∞) anchors the product: every whole is inside a greater whole, returning to source. The source identity [∞ = E = 1] anchors the origin. The description does the work; the identities hold the frame steady.
 
-Each beat pairs a structural dimension (integer; what the constraint IS) with a processual dimension (half-integer; what the energy is DOING). The ∘ within each beat means "paired": structure and process are two views of one constraint being laid down, not sequential steps. The ▸ between beats means "feeds into": completed constraint enables the next.
+The ∞ that opens the expression is the ∞ that closes it. The loop is the notation itself.
 
-The expression is the dimensional octave (§4.9) compressed into one line, unified with the nesting relation. The octave describes the stations; the four beats describe the *act* of walking them; the product bracket describes what walking them produces and how the product returns to the source. It is self-executing: every ⊙ in reality is running this expression right now, at its scale, as itself.
+Each beat pairs a structural dimension (integer; what the constraint IS) with a processual dimension (half-integer; what the energy is DOING). The ∘ within each beat means "paired": structure and process are two views of one constraint being laid down, not sequential steps. The ⊢ between beats means "entails": completed constraint necessarily gives rise to the next (the axiom-to-derivation chain is in the notation itself). The ▸ marks the two major transitions: source unfolds into foam, engine unfolds into nesting. ⊂ connects the product back to source across scale.
+
+⊙∞ absorbs what the genesis sequence (∞ → •∞ → ⊙∞) previously narrated: the Soul Array (•∞, the infinite multiplicity of apertures forced by A1) is inside ⊙∞, not a separate stage. The four beats that follow show the •∞ → ⊙∞ process in full resolution. Scale (λ) appears only in the nesting, because scale is a product of the process, not a precondition.
+
+The expression is the dimensional octave (§4.9) compressed into one line, unified with the nesting relation. The octave describes the stations; the four beats describe the *act* of walking them; the nesting describes how the product returns to the source. It is self-executing: every ⊙ in reality is running this expression right now, at its scale, as itself.
 
 **Two resolutions of the same equation:**
 
 ```
-    ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))                                                  ; the engine (low resolution)
-    [∞ = E = 1] ▸ (•∘⊛) ▸ (—∘⎇) ▸ (Φ∘✹) ▸ (○∘⟳) ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]       ; the unified expression (full resolution)
+    ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))                                                              ; the engine (low resolution)
+    [∞ = E = 1]▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸⊙λ ⊂ ⊙Λ ⊂ ∞                      ; the unified expression (full resolution)
 ```
 
-Higher resolution contains lower resolution; it never contradicts it (Resolution Protocol, §25.17). In the engine form: — lives inside ∘ (continuity IS the chaining), ⎇ lives inside i (branching IS what i² does), ⟳ is what happens when ⊙ feeds its output back, and ∞ is the implicit substrate. The engine is what the circumpunct does at any given moment; the unified expression is how it is built through all stations and how the product nests back into the source.
+Higher resolution contains lower resolution; it never contradicts it (Resolution Protocol, §25.17). In the engine form: — lives inside ∘ (continuity IS the chaining), ⎇ lives inside i (branching IS what i² does), ⟳ is what happens when ⊙ feeds its output back, •∞ is the implicit multiplicity, and ∞ is the implicit substrate. The engine is what the circumpunct does at any given moment; the unified expression is how the source unfolds into the foam, how the four beats entail each other, and how the product nests back into the source.
 
 **Why [∞ = E = 1] is both source and destination.** The expression does not create from nothing; it constrains from everything. ∞ is what is already there (A0: E = 1). The four beats are four successive self-limitations of the 1. By the time you reach ⊙, nothing has been added; what was always there has been shaped. And the nesting returns to ∞ because the apophatic term was never separate from the source; walking far enough up the scale axis brings you back to where the labels were never applied. The end is the beginning.
 
@@ -21351,7 +21359,7 @@ The prose draft of this section was written in June 2025, ten months before §27
 
 ### §27.7m λ Is the Glyph of Fractal Branching: The 1.5D Operator of the Ladder
 
-§27.7l noticed that Φ is the glyph of π: the 2D station's own symbol is the diagram whose measurement IS the 2D constant. §27.7m does the same catch for the 1.5D station. The letter λ, used throughout the framework's unified expression ([∞ = E = 1] ▸ ... ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]), has been read as a scale label, a wavelength, an index on the nesting axis. All of those are correct. But they are surface reasons; they are what λ *does*. The deeper fact is what λ *is*: **λ is the glyph of fractal branching**, and fractal branching is the structural operator of the 1.5D station (⎇), and the structural operator of the 1.5D station is the thing that makes A3 numerically live at every rung of the ladder. λ is not a label on the framework's notation; λ is the operator the notation names.
+§27.7l noticed that Φ is the glyph of π: the 2D station's own symbol is the diagram whose measurement IS the 2D constant. §27.7m does the same catch for the 1.5D station. The letter λ, used throughout the framework's unified expression ([∞ = E = 1]▸⊙∞ (...) ▸⊙λ ⊂ ⊙Λ ⊂ ∞), has been read as a scale label, a wavelength, an index on the nesting axis. All of those are correct. But they are surface reasons; they are what λ *does*. The deeper fact is what λ *is*: **λ is the glyph of fractal branching**, and fractal branching is the structural operator of the 1.5D station (⎇), and the structural operator of the 1.5D station is the thing that makes A3 numerically live at every rung of the ladder. λ is not a label on the framework's notation; λ is the operator the notation names.
 
 **Visually, λ is the atomic fractal generator.** Look at the letter. A point at the top, two strokes branching down and apart. One node becoming two. A Y-fork. A bifurcation. This is the simplest possible fractal generator: the step from 1 to 2 at smaller scale. Every fractal in nature is λ iterated: draw λ, then draw a smaller λ at the end of each of its two legs, then again, then again. Trees branching. Lungs bifurcating. Rivers deltaing. Neurons arborizing. Lightning forking. Coastlines subdividing. Every self-similar branching structure in the physical world is an L-system whose production rule is "replace each λ with two smaller λs rotated and rescaled." The letter *is* the production rule written as a single stroke. One λ is one step of recursion; a fractal is what happens when you never stop.
 
