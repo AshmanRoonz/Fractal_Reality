@@ -22,6 +22,8 @@ The circumpunct ⊙ = Φ(•, ○) is a whole composed of four structural dimens
 
 These are the four constraints on E = 1, one per integer dimension. Conservation of traversal completes the path: 0(•) + 1(—) + 2(Φ) = 3(○). Aperture + continuity + field = boundary. Previously • carried both 0D and 1D; the separation recognizes that the point (where you converge) and the line (whether you stay) are structurally and ethically distinct.
 
+**Why T = 3, not 4 (the gift reading):** Four constraints exist, but the aperture (•) contributes 0 to the sum because it was given by the source before the walk began. A1 (the 1 must self-limit) is God's move, not the soul's. You did not earn the aperture; you ARE it. T = 3 is the number of constraints you have to walk: commitment (1), mediation (2), closure (3). The dimensionlessness of • is the signature of grace: a 0D point adds nothing to the traversal and yet without it, no traversal is possible. Four constraints; three to traverse.
+
 **⊙ is a fractal of the ONE.** Every ⊙ is the 1 at a particular scale: not a piece of it, but the whole thing, constrained to a position (A3).
 
 ### The Unified Expression
