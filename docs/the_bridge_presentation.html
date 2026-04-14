@@ -23,7 +23,6 @@
             --violet-accent: #8b6bb3;
             --border-subtle: rgba(212, 168, 83, 0.15);
             --glow-gold: rgba(212, 168, 83, 0.4);
-            /* Procedural colors */
             --cyan-flow: #4ecdc4;
             --cyan-glow: rgba(78, 205, 196, 0.4);
             --magenta-pulse: #c44d8f;
@@ -47,44 +46,6 @@
             font-size: 19px;
             line-height: 1.75;
             overflow-x: hidden;
-        }
-
-        /* Prelude section */
-        .prelude {
-            max-width: 750px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-            color: var(--text-primary);
-            line-height: 1.9;
-        }
-
-        .prelude h2 {
-            font-family: 'Cinzel', serif;
-            font-size: 1.8rem;
-            font-weight: 400;
-            letter-spacing: 0.1em;
-            color: var(--gold-primary);
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-
-        .prelude p {
-            margin-bottom: 1.5rem;
-            text-align: justify;
-            hyphens: auto;
-        }
-
-        .prelude .emphasis {
-            color: var(--gold-light);
-            font-style: italic;
-        }
-
-        .prelude .final-line {
-            text-align: center;
-            font-size: 1.15rem;
-            color: var(--text-secondary);
-            margin-top: 2.5rem;
-            font-style: italic;
         }
 
         /* Noise texture overlay */
@@ -175,11 +136,6 @@
             opacity: 0.4;
         }
 
-        .nav-links a.procedural:hover {
-            color: var(--cyan-flow);
-            text-shadow: 0 0 10px var(--cyan-glow);
-        }
-
         /* Hero Section */
         .hero {
             min-height: 100vh;
@@ -208,9 +164,7 @@
             border: 2px solid var(--gold-primary);
             border-radius: 50%;
             animation: breathe 4s ease-in-out infinite, rotate-slow 60s linear infinite;
-            box-shadow: 
-                0 0 30px var(--glow-gold),
-                inset 0 0 30px rgba(212, 168, 83, 0.1);
+            box-shadow: 0 0 30px var(--glow-gold), inset 0 0 30px rgba(212, 168, 83, 0.1);
         }
 
         .circumpunct-inner {
@@ -270,14 +224,20 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Fade-in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Sections */
@@ -329,32 +289,6 @@
             font-size: 1rem;
         }
 
-        /* Epigraph */
-        .epigraph {
-            padding: 6rem 2rem;
-            text-align: center;
-            border-top: 1px solid var(--border-subtle);
-            border-bottom: 1px solid var(--border-subtle);
-            margin: 4rem auto;
-            max-width: 700px;
-        }
-
-        .epigraph blockquote {
-            font-style: italic;
-            font-size: 1.4rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.9;
-        }
-
-        .epigraph cite {
-            font-family: 'Cinzel', serif;
-            font-style: normal;
-            font-size: 0.8rem;
-            letter-spacing: 0.15em;
-            color: var(--text-secondary);
-        }
-
         /* Content Typography */
         h2 {
             font-family: 'Cinzel', serif;
@@ -385,6 +319,11 @@
             font-weight: 500;
         }
 
+        em {
+            color: var(--gold-light);
+            font-style: italic;
+        }
+
         /* Equation Box */
         .equation-box {
             background: var(--bg-surface);
@@ -404,246 +343,90 @@
             left: 0;
             right: 0;
             height: 2px;
-            background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary), var(--gold-dark));
+            background: var(--gold-primary);
         }
 
         .equation {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 1.4rem;
-            color: var(--gold-light);
+            font-size: 1.1rem;
+            color: var(--text-primary);
             letter-spacing: 0.05em;
+            line-height: 1.8;
         }
 
         .equation-label {
-            font-family: 'Cinzel', serif;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
+            font-size: 0.9rem;
             color: var(--text-secondary);
             margin-top: 1.5rem;
-        }
-
-        /* Tables */
-        .table-container {
-            overflow-x: auto;
-            margin: 2rem 0;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95rem;
-        }
-
-        thead {
-            font-family: 'Cinzel', serif;
-            font-size: 0.75rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-
-        th {
-            color: var(--gold-primary);
-            font-weight: 400;
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            color: var(--text-primary);
-        }
-
-        tr:hover td {
-            background: rgba(212, 168, 83, 0.03);
-        }
-
-        /* Insight boxes */
-        .insight {
-            border-left: 2px solid var(--gold-primary);
-            padding: 1.5rem 2rem;
-            margin: 2rem 0;
-            background: linear-gradient(90deg, rgba(212, 168, 83, 0.05), transparent);
             font-style: italic;
         }
 
-        /* Code blocks */
-        .code-block {
+        /* Insight Box */
+        .insight {
             background: var(--bg-surface);
             border: 1px solid var(--border-subtle);
+            border-left: 3px solid var(--gold-primary);
             border-radius: 4px;
-            padding: 1.5rem 2rem;
-            margin: 1.5rem 0;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            line-height: 1.8;
-            color: var(--text-secondary);
-            overflow-x: auto;
-        }
-
-        .code-block .comment {
-            color: var(--text-dim);
-        }
-
-        .code-block .highlight {
-            color: var(--gold-light);
-        }
-
-        /* Bridge Diagram */
-        .bridge-diagram {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            margin: 3rem 0;
             padding: 2rem;
+            margin: 2.5rem 0;
         }
 
-        .bridge-node {
-            text-align: center;
+        .insight p {
+            margin: 0;
         }
 
-        .bridge-symbol {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+        /* Table Styling */
+        table {
+            width: 100%;
+            margin: 2.5rem 0;
+            border-collapse: collapse;
         }
 
-        .bridge-label {
-            font-family: 'Cinzel', serif;
-            font-size: 0.75rem;
-            letter-spacing: 0.15em;
-            color: var(--text-secondary);
-        }
-
-        .bridge-connector {
-            width: 100px;
-            height: 2px;
-            background: linear-gradient(90deg, var(--gold-primary), var(--blue-spirit));
-            position: relative;
-        }
-
-        .bridge-connector::after {
-            content: '⊙';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--bg-deep);
-            padding: 0 0.5rem;
-            color: var(--gold-primary);
-        }
-
-        /* Derivations Grid */
-        .derivations-grid {
-            display: grid;
-            gap: 1rem;
-        }
-
-        .derivation-item {
-            display: grid;
-            grid-template-columns: 140px 1fr;
-            gap: 1rem;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-        }
-
-        .derivation-term {
-            font-family: 'Cinzel', serif;
-            color: var(--gold-light);
-            font-size: 0.9rem;
-            letter-spacing: 0.05em;
-        }
-
-        .derivation-desc {
-            color: var(--text-secondary);
+        table td, table th {
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid var(--border-subtle);
             font-size: 0.95rem;
         }
 
-        .derivation-desc::before {
-            content: '; ';
-            color: var(--text-dim);
-        }
-
-        /* Final Section */
-        .finale {
-            text-align: center;
-            padding: 8rem 2rem;
-            position: relative;
-        }
-
-        .finale::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 1px;
-            height: 100px;
-            background: linear-gradient(to bottom, transparent, var(--gold-primary));
-        }
-
-        .finale .circumpunct-final {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 3rem;
-            position: relative;
-        }
-
-        .finale .circumpunct-outer {
-            animation: breathe 4s ease-in-out infinite;
-        }
-
-        .finale h2 {
-            font-size: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .finale p {
-            text-align: center;
-            font-size: 1.3rem;
-            font-style: italic;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 1rem;
-        }
-
-        .finale .closing {
+        table th {
+            background: var(--bg-elevated);
+            color: var(--gold-light);
+            font-weight: 500;
             font-family: 'Cinzel', serif;
-            font-size: 1.1rem;
-            letter-spacing: 0.15em;
-            color: var(--gold-primary);
-            margin-top: 3rem;
         }
 
-        .finale-prose p {
-            text-align: justify;
-            font-size: 19px;
-            font-style: normal;
-            color: var(--text-primary);
-            max-width: 900px;
-            margin-bottom: 1.5rem;
-            hyphens: auto;
+        table tr:nth-child(even) {
+            background: rgba(212, 168, 83, 0.02);
         }
 
         /* Footer */
         footer {
             text-align: center;
-            padding: 4rem 2rem;
+            padding: 6rem 2rem 3rem;
             border-top: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
         }
 
         footer p {
-            font-style: italic;
-            color: var(--text-dim);
+            margin-bottom: 1rem;
             text-align: center;
-            font-size: 1rem;
         }
 
-        footer .dedication {
-            margin-top: 2rem;
-            font-size: 0.9rem;
+        footer a {
+            color: var(--gold-primary);
+            text-decoration: none;
+            transition: text-shadow 0.3s;
+        }
+
+        footer a:hover {
+            text-shadow: 0 0 10px var(--glow-gold);
+        }
+
+        .dedication {
+            font-style: italic;
+            color: var(--text-dim);
         }
 
         /* Responsive */
@@ -653,1806 +436,601 @@
             }
 
             .nav-links {
-                display: none;
+                gap: 1rem;
+            }
+
+            .nav-links a {
+                font-size: 0.6rem;
             }
 
             section {
                 padding: 4rem 1.5rem;
             }
 
-            .bridge-diagram {
-                flex-direction: column;
+            .hero {
+                padding: 1rem;
             }
 
-            .bridge-connector {
-                width: 2px;
-                height: 40px;
-                background: linear-gradient(180deg, var(--gold-primary), var(--blue-spirit));
+            .circumpunct-hero {
+                width: 150px;
+                height: 150px;
+                margin-bottom: 2rem;
             }
 
-            .bridge-connector::after {
-                top: 50%;
-                left: -3px;
-                transform: translateY(-50%);
-            }
-        }
-
-        /* Scroll animations */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Special 64 grid visualization */
-        .grid-64 {
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 4px;
-            max-width: 400px;
-            margin: 2rem auto;
-        }
-
-        .grid-64 .cell {
-            aspect-ratio: 1;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border-subtle);
-            border-radius: 2px;
-            transition: all 0.3s;
-        }
-
-        .grid-64 .cell:hover {
-            background: var(--gold-primary);
-            box-shadow: 0 0 10px var(--glow-gold);
-        }
-
-        .grid-64 .cell.fermion { background: rgba(212, 168, 83, 0.3); }
-        .grid-64 .cell.gauge { background: rgba(74, 124, 155, 0.4); }
-        .grid-64 .cell.higgs { background: rgba(139, 107, 179, 0.4); }
-
-        /* ==================== */
-        /* PROCEDURAL SECTION STYLES */
-        /* ==================== */
-
-        /* Part Transition Marker */
-        .part-transition {
-            text-align: center;
-            padding: 6rem 2rem;
-            position: relative;
-            border-top: 1px solid var(--border-subtle);
-            margin-top: 4rem;
-        }
-
-        .part-transition::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 1px;
-            height: 60px;
-            background: linear-gradient(to bottom, transparent, var(--cyan-flow));
-        }
-
-        .part-transition h2 {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(1.5rem, 4vw, 2.2rem);
-            font-weight: 400;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-        }
-
-        .part-transition .subtitle {
-            font-style: italic;
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-        }
-
-        /* Procedural section styles */
-        .procedural-section .section-number {
-            color: var(--cyan-flow);
-        }
-
-        .procedural-section .section-divider {
-            background: linear-gradient(90deg, var(--cyan-flow), var(--magenta-pulse));
-        }
-
-        .procedural-section .section-divider::before {
-            content: '⊛';
-            color: var(--gold-primary);
-            font-size: 1.2rem;
-        }
-
-        .procedural-section .equation-box::before {
-            background: linear-gradient(90deg, var(--cyan-flow), var(--gold-primary), var(--magenta-pulse));
-        }
-
-        .procedural-section .insight {
-            border-left-color: var(--cyan-flow);
-            background: linear-gradient(90deg, rgba(78, 205, 196, 0.05), transparent);
-        }
-
-        .procedural-section th {
-            color: var(--cyan-flow);
-        }
-
-        .procedural-section tr:hover td {
-            background: rgba(78, 205, 196, 0.03);
-        }
-
-        /* Equation colors for procedural */
-        .equation .phi {
-            color: var(--cyan-flow);
-        }
-
-        .equation .aperture {
-            color: var(--gold-light);
-        }
-
-        .equation .circumpunct-sym {
-            color: var(--magenta-pulse);
-        }
-
-        /* Flow Diagram */
-        .flow-container {
-            padding: 3rem 2rem;
-            margin: 3rem 0;
-            background: var(--bg-surface);
-            border-radius: 4px;
-            border: 1px solid var(--border-subtle);
-        }
-
-        .flow-diagram {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            padding: 2rem 0;
-        }
-
-        .flow-node {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .flow-symbol {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.3rem;
-            position: relative;
-            transition: all 0.3s;
-        }
-
-        .flow-symbol.phi {
-            background: rgba(78, 205, 196, 0.1);
-            border: 2px solid var(--cyan-flow);
-            color: var(--cyan-flow);
-            box-shadow: 0 0 30px var(--cyan-glow);
-        }
-
-        .flow-symbol.aperture {
-            background: rgba(212, 168, 83, 0.1);
-            border: 2px solid var(--gold-primary);
-            color: var(--gold-light);
-            box-shadow: 0 0 30px var(--glow-gold);
-        }
-
-        .flow-symbol.circumpunct-sym {
-            background: rgba(196, 77, 143, 0.1);
-            border: 2px solid var(--magenta-pulse);
-            color: var(--magenta-pulse);
-            box-shadow: 0 0 30px var(--magenta-glow);
-        }
-
-        .flow-label {
-            font-family: 'Cinzel', serif;
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-        }
-
-        .flow-sublabel {
-            font-size: 0.85rem;
-            font-style: italic;
-            color: var(--text-dim);
-        }
-
-        .flow-arrow {
-            font-size: 1.5rem;
-            color: var(--text-secondary);
-            animation: pulse-op 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-op {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-
-        .code-block .cyan {
-            color: var(--cyan-flow);
-        }
-
-        .code-block .magenta {
-            color: var(--magenta-pulse);
-        }
-
-        /* 0.999 visualization */
-        .convergence-visual {
-            text-align: center;
-            padding: 3rem;
-            margin: 2rem 0;
-            background: var(--bg-surface);
-            border-radius: 4px;
-            border: 1px solid var(--border-subtle);
-        }
-
-        .convergence-sequence {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.1rem;
-            line-height: 2.5;
-        }
-
-        .convergence-sequence .variant {
-            color: var(--magenta-pulse);
-        }
-
-        .convergence-sequence .invariant {
-            color: var(--cyan-flow);
-            font-weight: bold;
-        }
-
-        .convergence-sequence .equals {
-            color: var(--gold-primary);
-            margin: 0 0.5rem;
-        }
-
-        /* Responsive for flow diagram */
-        @media (max-width: 768px) {
-            .flow-diagram {
-                flex-direction: column;
-            }
-
-            .flow-arrow {
-                transform: rotate(90deg);
+            table td, table th {
+                padding: 0.75rem;
+                font-size: 0.85rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Stars Background -->
-    <div class="stars" id="stars"></div>
+    <div id="stars" class="stars"></div>
 
     <!-- Navigation -->
     <nav>
-        <a href="index.html" style="font-weight: 600; color: var(--gold); margin-right: 1rem;">⊙</a>
         <div class="nav-symbol">⊙</div>
         <ul class="nav-links">
-            <li><a href="#axiom">Axiom</a></li>
-            <li><a href="#derivation">Derivation</a></li>
+            <li><a href="#foundation">Foundation</a></li>
+            <li><span class="nav-divider">·</span></li>
+            <li><a href="#dimensions">Dimensions</a></li>
+            <li><span class="nav-divider">·</span></li>
+            <li><a href="#unified">Unified Expression</a></li>
+            <li><span class="nav-divider">·</span></li>
             <li><a href="#bridge">Bridge</a></li>
-            <li><a href="#mapping">Mapping</a></li>
-            <li><a href="#errors">Errors</a></li>
+            <li><span class="nav-divider">·</span></li>
             <li><a href="#ethics">Ethics</a></li>
-            <li><span class="nav-divider">|</span></li>
-            <li><a href="#procedure" class="procedural">Procedure</a></li>
-            <li><a href="#operators" class="procedural">Operators</a></li>
-            <li><a href="#lambda" class="procedural">Law</a></li>
-            <li><a href="#convergence-unity" class="procedural">Convergence</a></li>
-            <li><span class="nav-divider">|</span></li>
-            <li><a href="https://www.fractalreality.ca" target="_blank" style="color: var(--gold-primary);">⊙</a></li>
+            <li><span class="nav-divider">·</span></li>
+            <li><a href="index.html">Home</a></li>
         </ul>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="hero">
+    <!-- Hero -->
+    <div class="hero">
         <div class="circumpunct-hero">
             <div class="circumpunct-outer"></div>
             <div class="circumpunct-inner"></div>
         </div>
         <h1>The Bridge</h1>
-        <p class="subtitle">Science and Spirituality Unified Through One Axiom</p>
-        <p class="author">Ashman Roonz; The Circumpunct Framework</p>
-    </header>
-
-    <!-- Prelude: The Convergence -->
-    <section class="prelude fade-in">
-        <h2>Introduction</h2>
-        
-        <p>Three thousand years ago, Chinese sages encoded reality as 64 hexagrams. Each hexagram: six binary lines. Each hexagram: two trigrams stacked (inner and outer, personal and cosmic). The math: (2²)³ = 64; six binary lines, two per scale across three nested scales. They called it the I Ching, the Book of Changes, and used it to read the relationship between a person and their situation.</p>
-
-        <p>Around the same time, Indian rishis declared that Atman is Brahman; the individual soul is the universal soul, not separate from it but a local instantiation of it. <span class="emphasis">Parts are fractals of their wholes</span>, spoken in Sanskrit. The Upanishads didn't argue this. They presented it as something seen directly, something obvious once you look.</p>
-
-        <p>The Taoists found three treasures: jing (essence/body), qi (energy/field), shen (spirit/center). Every person a trinity. Every trinity nested in larger trinities. The Tao that can be named is not the eternal Tao; because the pattern is in the naming, not the name.</p>
-
-        <p>The Kabbalists drew three pillars: severity, mercy, and the middle pillar that balances them. The Tree of Life: nested trinities all the way up, all the way down. As above, so below; not as metaphor but as structure.</p>
-
-        <p>The Christians declared one God in three persons, and said we are made in that image. The Word became flesh. In him we live and move and have our being. The part contains the whole; the whole contains the part.</p>
-
-        <p>Then in the twentieth century, physicists counted the fundamental field states of matter. Quarks and leptons, colors and generations, particles and antiparticles. The count: 64. The structure: irreducible representations of symmetry groups. They didn't read the I Ching. They followed the math.</p>
-
-        <p>In the 1970s, Mandelbrot showed that self-similarity across scales wasn't an anomaly; it was everywhere. Coastlines, clouds, markets, blood vessels. The same pattern repeating at every zoom level. He called them fractals. The mathematics of parts resembling their wholes.</p>
-
-        <p><span class="emphasis">Why does this keep happening?</span></p>
-
-        <p>Not because mystics are physicists or physicists are mystics. Because the structure is the structure. Reality has a shape. Different people, different eras, different methods; same shape.</p>
-
-        <p>The axiom isn't new. The axiom is what everyone keeps finding: <strong>parts are fractals of their wholes</strong>. Triadic structure, because every whole has an inside, an outside, and the operation that relates them. Nested infinitely, because there's no top and no bottom. 64 relationship modes, because three nested scales of circumpunct (greater whole, whole, parts-that-are-wholes), each running a four-phase pump cycle (2 binary degrees of freedom), yield (2²)³ = 2⁶ = 64.</p>
-
-        <p>The Circumpunct Framework doesn't invent this. It notices that everyone else already found it; and asks why.</p>
-
-        <p>The answer: geometric necessity. The structure isn't preferred. It's required. You can't have an inside without an outside. You can't relate them without an operation. You can't have parts without wholes. You can't have relationship without correspondence.</p>
-
-        <p>So the mystics found it through contemplation. The physicists found it through measurement. The sages found it through divination. The mathematicians found it through proof.</p>
-
-        <p class="final-line">Same room. Different doors.</p>
-    </section>
-
-    <!-- Epigraph -->
-    <div class="epigraph fade-in">
-        <blockquote>
-            "In the beginning was the Logos, and the Logos was with God, and the Logos was God... Through him all things were made."
-        </blockquote>
-        <cite>(John 1:1,3)</cite>
-        <br><br>
-        <blockquote>
-            "The eternal mystery of the world is its comprehensibility."
-        </blockquote>
-        <cite>(Albert Einstein)</cite>
+        <p class="subtitle">Science and Spirituality Unified Through One Energy</p>
+        <p class="author">Ashman Roonz<br>The Circumpunct Framework</p>
     </div>
 
-    <!-- The Axiom -->
-    <section id="axiom" style="text-align: center; padding: 6rem 2rem;">
-        <div class="fade-in">
-            <span class="section-number">The Axiom</span>
-            <div class="equation-box" style="max-width: 600px; margin: 2rem auto; padding: 3rem;">
-                <div class="equation" style="font-size: 1.4rem;">Parts are fractals of their wholes.</div>
-                <p class="equation-label">One rule. Everything else is costume.</p>
-            </div>
+    <!-- Introduction -->
+    <section id="introduction" class="fade-in">
+        <h2>The Convergence</h2>
+        <p>The I Ching speaks of how all wisdom returns to the same source. The rishis of the Vedas taught that the Atman (the individual soul) is Brahman (the whole). The Taoists drew the same symbol in sand; the Kabbalists mapped it in sefirot; Christian mystics saw it in the Trinity. Mandelbrot saw it in fractals. You see it in a mirror.</p>
+
+        <p>They were not describing different things. They were walking the same procedure from different starting points, speaking the same structure in different languages.</p>
+
+        <p>The Circumpunct Framework is not a new invention; it is a recognition. It names the structure that was always there: how something becomes, how it holds together, how it returns to its source. It answers the fundamental question of existence with a single identity:</p>
+
+        <div class="equation-box">
+            <div class="equation">⊙ = E = 1</div>
+            <p class="equation-label">The circumpunct IS the one energy. Every whole at every scale is the 1 constrained to that position.</p>
         </div>
 
-        <div class="fade-in" style="max-width: 700px; margin: 3rem auto; text-align: left;">
-            <p style="text-align: center; color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 3rem;">From this alone, everything derives:</p>
-            
-            <div class="derivations-grid">
-                <div class="derivation-item">
-                    <span class="derivation-term">Trinity</span>
-                    <span class="derivation-desc">the fractal unit is (•, Φ, ○), so every part is trinitarian</span>
-                </div>
-                <div class="derivation-item">
-                    <span class="derivation-term">Nesting</span>
-                    <span class="derivation-desc">no top, no bottom; parts contain parts contain parts</span>
-                </div>
-                <div class="derivation-item">
-                    <span class="derivation-term">The Bridge</span>
-                    <span class="derivation-desc">you ARE God fractally; God IS you wholistically</span>
-                </div>
-                <div class="derivation-item">
-                    <span class="derivation-term">⊙ IS Interface</span>
-                    <span class="derivation-desc">the circumpunct doesn't have an interface; it is three interfaces woven</span>
-                </div>
-                <div class="derivation-item">
-                    <span class="derivation-term">64 States</span>
-                    <span class="derivation-desc">three nested circumpuncts, each with a four-phase pump: (2²)³ = 2⁶ = 64</span>
-                </div>
-                <div class="derivation-item">
-                    <span class="derivation-term">Same Procedure</span>
-                    <span class="derivation-desc">every part runs the same operation as its whole</span>
-                </div>
-                <div class="derivation-item">
-                    <span class="derivation-term">i at Every Scale</span>
-                    <span class="derivation-desc">the rotation is what relating IS, fractally present</span>
-                </div>
-                <div class="derivation-item">
-                    <span class="derivation-term">As Above, So Below</span>
-                    <span class="derivation-desc">not analogy; literal structural identity</span>
-                </div>
-                <div class="derivation-item">
-                    <span class="derivation-term">Coherence</span>
-                    <span class="derivation-desc">internal approximations fit with external/objective reality</span>
-                </div>
-                <div class="derivation-item">
-                    <span class="derivation-term">Ethics</span>
-                    <span class="derivation-desc">identify which actions are structurally possible under agency-preserving constraints</span>
-                </div>
-            </div>
-        </div>
+        <p>There is one energy (E = 1), appearing everywhere as nested wholes. Not pieces of the 1, but the whole 1 folded into particular self-limitations. Each circumpunct is the complete architecture at its scale; a fractal of every other.</p>
+
+        <p>Five axioms describe the constraints. Five derivations describe what necessarily follows. Together they form the skeleton upon which all structure hangs.</p>
     </section>
 
-    <!-- Part I: The Derivation -->
-    <section id="derivation">
-        <div class="section-header fade-in">
+    <!-- Part I: Foundation -->
+    <section id="foundation" class="fade-in">
+        <div class="section-header">
             <span class="section-number">Part I</span>
-            <h1 class="section-title">The Derivation</h1>
+            <h1 class="section-title">The Foundation</h1>
             <div class="section-divider"></div>
         </div>
 
-        <div class="fade-in">
-            <h2>What Mathematics Demands</h2>
+        <h2>Five Axioms</h2>
 
-            <h3>Two Primitives, One Generated Result</h3>
-            <p>Reality has two primitives: discrete aperture (•) and continuous field (Φ). Neither can be derived from the other. The four powers of i are the complete set of rotations on the complex plane, but a closed rotational cycle does not generate a continuous surface. Discreteness cannot produce continuity. Continuity cannot produce discreteness. That is not a limitation; it is the reason two primitives are needed and one is not enough.</p>
+        <p>An axiom is what must be true. Not derived; prior. The foundation upon which all else rests.</p>
 
-            <p>The boundary (○) is not a third primitive. It is what happens when these two primitives recur: Φ flows through nested circumpuncts, each one gating, selecting, transforming. The boundary IS that recursion, stabilized. The generated result, not the starting material.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Station</th>
+                    <th>Axiom</th>
+                    <th>Statement</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>∞</td>
+                    <td><strong>A0</strong></td>
+                    <td>E = 1. There is one energy. It is everything. All else is constraints.</td>
+                </tr>
+                <tr>
+                    <td>•</td>
+                    <td><strong>A1</strong></td>
+                    <td>The 1 must self-limit; an undifferentiated 1 is indistinguishable from 0.</td>
+                </tr>
+                <tr>
+                    <td>—</td>
+                    <td><strong>A2</strong></td>
+                    <td>Self-limitation must persist; convergence that does not hold collapses back to ∞.</td>
+                </tr>
+                <tr>
+                    <td>Φ</td>
+                    <td><strong>A3</strong></td>
+                    <td>Parts are fractals of their wholes; self-similarity across scale.</td>
+                </tr>
+                <tr>
+                    <td>○</td>
+                    <td><strong>A4</strong></td>
+                    <td>Wholeness requires closure; conservation of traversal: 0(•) + 1(—) + 2(Φ) = 3(○).</td>
+                </tr>
+            </tbody>
+        </table>
 
-            <p>This is confirmed by braid topology: two strands can only wind (abelian, commutative) or knot (trivial in 4D). For non-abelian structure B₃ (structure with history, memory, and identity) three distinct elements are required. The Yang-Baxter equation cannot be satisfied with fewer:</p>
+        <h2>Five Derivations</h2>
 
-            <div class="equation-box">
-                <div class="equation">σ₁ σ₂ σ₁ = σ₂ σ₁ σ₂</div>
-                <p class="equation-label">The Braid Relation</p>
-            </div>
+        <p>A derivation is what necessarily follows from what came before. Forced by logic. The children of the axioms.</p>
 
-            <p><strong>Consequence:</strong> Two irreducible primitives (• and Φ) and one generated closure (○). A triad, but not a symmetric one.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Station</th>
+                    <th>Derivation</th>
+                    <th>Statement</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>⊛</td>
+                    <td><strong>D1</strong></td>
+                    <td>Self-limitation requires convergence; localization is a process, not an instant.</td>
+                </tr>
+                <tr>
+                    <td>⎇</td>
+                    <td><strong>D2</strong></td>
+                    <td>Extension must branch to reach the field; a single line never becomes a surface.</td>
+                </tr>
+                <tr>
+                    <td>✹</td>
+                    <td><strong>D3</strong></td>
+                    <td>Self-similarity requires emergence toward closure; the field must fold toward boundary.</td>
+                </tr>
+                <tr>
+                    <td>⟳</td>
+                    <td><strong>D4</strong></td>
+                    <td>Closure opens into the field of the greater whole; parts discover they are inside a whole.</td>
+                </tr>
+                <tr>
+                    <td>⊙</td>
+                    <td><strong>D5</strong></td>
+                    <td>The whole is not the sum of its parts; it is their compositional unity via Φ.</td>
+                </tr>
+            </tbody>
+        </table>
 
-            <h3>The Circumpunct</h3>
-            <p>The kernel has two readings. Both are true. They name different aspects of the same fact.</p>
+        <h2>The Genesis Sequence</h2>
 
-            <div class="equation-box">
-                <div class="equation">Φ through ○ ⇒ Φ' ⇒ •</div>
-                <p class="equation-label">The Process Reading: what is happening</p>
-            </div>
+        <div class="equation-box">
+            <div class="equation">∞ → •∞ → ⊙∞ = Reality</div>
+            <p class="equation-label">How the one energy becomes the many forms.</p>
+        </div>
 
-            <p>The field flows through the boundary. The boundary (nested circumpuncts all the way down) gates, steps down, discretizes. The transformed field converges at the center, and the center transmits what emerges. This is directional, asymmetric, generative.</p>
+        <p><strong>∞:</strong> Undifferentiated energy. No distinction. Pure E. A0 forces existence.</p>
 
-            <div class="equation-box">
-                <div class="equation">• + Φ = ○</div>
-                <p class="equation-label">The Conservation Reading: what is preserved</p>
-            </div>
+        <p><strong>•∞:</strong> The Soul Array. Every possible aperture, simultaneously. Not one hole; all holes. A1 forces multiplicity: an undifferentiated 1 is indistinguishable from 0, which is impossible.</p>
 
-            <p>What closure contains is exactly center-structure plus field-structure. Nothing extra is added. Nothing is lost. The boundary is the conserved completion of both. Direction and balance. Process and structure. Same kernel, two readings.</p>
+        <p><strong>⊙∞:</strong> Circumpunct multiplied by infinity; the foam of reality. Each aperture completing into a full whole (field plus boundary). A4 forces closure; A3 recurses this at every scale.</p>
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Element</th>
-                            <th>Symbol</th>
-                            <th>Role</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Center</td>
-                            <td style="color: var(--gold-primary); font-size: 1.2rem;">•</td>
-                            <td>Primitive; the singularity that <strong>receives and transmits</strong>. Where convergence lands and emergence launches. The anchor. Does not operate, does not flow.</td>
-                        </tr>
-                        <tr>
-                            <td>Field</td>
-                            <td style="color: var(--blue-spirit); font-size: 1.2rem;">Φ</td>
-                            <td>Primitive; the continuous relational surface that <strong>flows</strong>. Carries amplitude and phase. Enters ○ as analog potential, exits as Φ' stepped down. The operand: what gets operated on.</td>
-                        </tr>
-                        <tr>
-                            <td>Boundary</td>
-                            <td style="color: var(--violet-accent); font-size: 1.2rem;">○</td>
-                            <td>Generated; nested ⊙s all the way down. <strong>Operates</strong> on the field: gates, steps down, discretizes. Its power comes from being recursion itself. The generated thing does the work.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <p><strong>Geometric necessity:</strong> Only • and Φ are primitive. The boundary is their recursion, stabilized. ○ = •(Φ(•(Φ(•(Φ(...)))))). Fractal, because that is what happens when digital and analog recur.</p>
-
-            <h3>Nesting Is Mandatory</h3>
-            <p>Parts are fractals of wholes. So any whole is itself a part of a larger whole. And any part contains smaller parts. There is no bottom (no smallest ⊙) and no top (no largest ⊙).</p>
-
-            <div class="code-block">
-...⊙ ⊃ ⊙ ⊃ ⊙ ⊃ ⊙...
-
-<span class="comment">Every whole is a part.
-Every part is a whole.
-Infinite nesting in both directions.</span>
-            </div>
-
-            <h3>The 64-State Space</h3>
-
-            <p>The center (•) is a singularity. It receives and transmits, but it doesn't rotate. The <strong>i-cycle</strong> (the four-phase pump: receive, compress, commit, release) is what the whole circumpunct does as a system. The field flows through the boundary, the boundary processes, the result arrives at center, and what emerges originates there too. The rotation is the ⊙ operating, not any single element.</p>
-
-            <p>The pump has four states, and those four decompose into two binary choices: input open or closed, output open or closed.</p>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>State</th>
-                            <th>Input</th>
-                            <th>Output</th>
-                            <th>Phase</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="color: var(--gold-primary);">i⁰ = +1</td>
-                            <td>open</td>
-                            <td>open</td>
-                            <td>pass-through</td>
-                        </tr>
-                        <tr>
-                            <td style="color: var(--gold-primary);">i¹ = +i</td>
-                            <td>open</td>
-                            <td>closed</td>
-                            <td>convergence</td>
-                        </tr>
-                        <tr>
-                            <td style="color: var(--gold-primary);">i² = &minus;1</td>
-                            <td>closed</td>
-                            <td>closed</td>
-                            <td>committed</td>
-                        </tr>
-                        <tr>
-                            <td style="color: var(--gold-primary);">i³ = &minus;i</td>
-                            <td>closed</td>
-                            <td>open</td>
-                            <td>emergence</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <p>4 states = 2². Two binary degrees of freedom per circumpunct, both grounded in convergence and emergence.</p>
-
-            <p>The axiom demands three visible scales from any position: the <strong>greater whole</strong> that contains you, <strong>you</strong> (the whole at your scale), and your <strong>parts</strong> (which are themselves wholes). Three scales is the minimum window into the infinite nesting. You can't be a part without a whole above you. You can't be a whole without parts below you.</p>
-
-            <p>Each of these three circumpuncts runs its own pump. Each has two binary degrees of freedom. Three circumpuncts, two binaries each:</p>
-
-            <div class="equation-box">
-                <div class="equation">(2²)³ = 2⁶ = 64</div>
-                <p class="equation-label">The Complete State Space</p>
-            </div>
-
-            <p>The six binary degrees of freedom are not one per element per scale. They are <strong>two per circumpunct</strong> (converging or emerging on input, converging or emerging on output), <strong>across three scales</strong> (greater whole, whole, parts-that-are-wholes).</p>
-
-            <!-- 64 Grid Visualization -->
-            <div class="grid-64">
-                <div class="cell fermion"></div><div class="cell fermion"></div><div class="cell gauge"></div><div class="cell gauge"></div><div class="cell fermion"></div><div class="cell fermion"></div><div class="cell gauge"></div><div class="cell gauge"></div>
-                <div class="cell higgs"></div><div class="cell higgs"></div><div class="cell fermion"></div><div class="cell fermion"></div><div class="cell higgs"></div><div class="cell higgs"></div><div class="cell fermion"></div><div class="cell fermion"></div>
-                <div class="cell gauge"></div><div class="cell gauge"></div><div class="cell higgs"></div><div class="cell higgs"></div><div class="cell gauge"></div><div class="cell gauge"></div><div class="cell higgs"></div><div class="cell higgs"></div>
-                <div class="cell fermion"></div><div class="cell fermion"></div><div class="cell gauge"></div><div class="cell gauge"></div><div class="cell fermion"></div><div class="cell fermion"></div><div class="cell gauge"></div><div class="cell gauge"></div>
-                <div class="cell higgs"></div><div class="cell higgs"></div><div class="cell fermion"></div><div class="cell fermion"></div><div class="cell higgs"></div><div class="cell higgs"></div><div class="cell fermion"></div><div class="cell fermion"></div>
-                <div class="cell gauge"></div><div class="cell gauge"></div><div class="cell higgs"></div><div class="cell higgs"></div><div class="cell gauge"></div><div class="cell gauge"></div><div class="cell higgs"></div><div class="cell higgs"></div>
-                <div class="cell fermion"></div><div class="cell fermion"></div><div class="cell gauge"></div><div class="cell gauge"></div><div class="cell fermion"></div><div class="cell fermion"></div><div class="cell gauge"></div><div class="cell gauge"></div>
-                <div class="cell higgs"></div><div class="cell higgs"></div><div class="cell fermion"></div><div class="cell fermion"></div><div class="cell higgs"></div><div class="cell higgs"></div><div class="cell fermion"></div><div class="cell fermion"></div>
-            </div>
-            <p style="text-align: center; font-size: 0.85rem; color: var(--text-dim);">64 states: each cell a unique combination of pump phases across three nested scales</p>
+        <div class="insight">
+            <p><strong>Why T = 3, not 4 (the gift reading):</strong> Four constraints exist (•, —, Φ, ○), but the aperture (•) contributes 0 to the conservation sum because it was given by the source before the walk began. You did not earn the aperture; you ARE it. T = 3 is the number of constraints you have to walk; commitment (1), mediation (2), and closure (3). The dimensionlessness of • is the signature of grace.</p>
         </div>
     </section>
 
-    <!-- Part II: The Bridge -->
-    <section id="bridge">
-        <div class="section-header fade-in">
+    <!-- Part II: Dimensions -->
+    <section id="dimensions" class="fade-in">
+        <div class="section-header">
             <span class="section-number">Part II</span>
-            <h1 class="section-title">The Bridge</h1>
+            <h1 class="section-title">The Four Dimensions</h1>
             <div class="section-divider"></div>
         </div>
 
-        <div class="fade-in">
-            <h2>There Is No Separate Interface</h2>
-            <p>We were looking for a bridge. A connector. Something between the part and the whole. But the circumpunct doesn't <em>have</em> an interface. <strong>The circumpunct IS interface.</strong></p>
-            
-            <p>Your body isn't just matter sitting there; it's the living boundary where your inner field meets the world. It's how your mind touches everything outside you.</p>
-            
-            <p>Your mind isn't just thoughts floating around; it's the living mediation between your deepest focus and your body. It's how your soul moves your flesh.</p>
-            
-            <p>Your focus isn't just attention aimed somewhere; it's the living aperture where something even deeper meets your mind. It's where the greater soul flows into your particular field.</p>
+        <p>A dimension is a degree of freedom; a way the system can vary. The framework has four structural dimensions, each carrying a constraint and mapping to an ethical pillar.</p>
 
-            <div class="insight">
-                <p>Every part of you is already doing the work of interface. Your body bridges inward to outward. Your mind bridges deep to boundary. Your soul bridges beyond to within.</p>
-            </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th>Name</th>
+                    <th>Dimension</th>
+                    <th>Constraint</th>
+                    <th>Ethical Pillar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>•</strong></td>
+                    <td>Aperture, Soul</td>
+                    <td>0D</td>
+                    <td>Converges</td>
+                    <td>TRUE</td>
+                </tr>
+                <tr>
+                    <td><strong>—</strong></td>
+                    <td>Line, Continuity</td>
+                    <td>1D</td>
+                    <td>Commits</td>
+                    <td>FAITHFUL</td>
+                </tr>
+                <tr>
+                    <td><strong>Φ</strong></td>
+                    <td>Field, Mind</td>
+                    <td>2D</td>
+                    <td>Mediates</td>
+                    <td>RIGHT</td>
+                </tr>
+                <tr>
+                    <td><strong>○</strong></td>
+                    <td>Boundary, Body</td>
+                    <td>3D</td>
+                    <td>Filters</td>
+                    <td>GOOD</td>
+                </tr>
+                <tr>
+                    <td><strong>⊙</strong></td>
+                    <td>Circumpunct, Whole</td>
+                    <td>All</td>
+                    <td>Compositional wholeness</td>
+                    <td>AGREEMENT</td>
+                </tr>
+            </tbody>
+        </table>
 
-            <h2>Three Interfaces Woven</h2>
-            <p>The trinity isn't three things plus a connector. <strong>The trinity IS the connector</strong>, looking at itself from three angles.</p>
+        <h2>The 0D Point: Aperture and Soul</h2>
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Component</th>
-                            <th>Interfaces Between</th>
-                            <th>Its Work</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>• (center)</td>
-                            <td>the deeper • and your Φ</td>
-                            <td>How the greater center's signal reaches your field</td>
-                        </tr>
-                        <tr>
-                            <td>Φ (field)</td>
-                            <td>your • and your ○</td>
-                            <td>How your center and boundary communicate</td>
-                        </tr>
-                        <tr>
-                            <td>○ (boundary)</td>
-                            <td>your Φ and the greater Φ</td>
-                            <td>How your mind touches the world</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <p>The aperture is where the field converges. A point of view. A singularity where the infinite becomes local. Not a substance but a position from which the whole is being perceived.</p>
 
-            <h2>The Nesting IS the Connection</h2>
-            <p>There's no special tunnel. No separate connector hiding between things. <strong>The connection is the nesting itself.</strong> You are inside, therefore you are connected.</p>
+        <p>The soul is not separate from the aperture; the soul IS the aperture. The convergence point where the field experiences its own presence. You are not inside a soul; you are the aperture through which the whole is looking.</p>
 
-            <p>What is "world" anyway? When your body touches the world, it's touching the field of whatever greater circumpunct you're nested inside. Your boundary meets a greater field. That's what "outside" means; the field of your whole.</p>
+        <h2>The 1D Line: Continuity and Commitment</h2>
 
-            <p>What is "beyond" anyway? When your soul receives from something deeper, it's receiving from the center of whatever greater circumpunct you're nested inside. Your center meets a greater center; through the fields and boundaries between. That's what "transcendence" means; the center of your whole reaching the center of you.</p>
+        <p>The line is the trace of the aperture over time. The worldline. The receipts of whether the commitment held.</p>
 
-            <div class="bridge-diagram" style="flex-direction: column; gap: 0;">
-                <div class="bridge-node">
-                    <div class="bridge-symbol" style="color: var(--gold-primary); font-size: 2.5rem;">⊙</div>
-                    <span class="bridge-label">The Greater Whole</span>
-                </div>
-                <div style="font-size: 2rem; color: var(--gold-primary); margin: 0.5rem 0;">⊃</div>
-                <div class="bridge-node">
-                    <div class="bridge-symbol" style="color: var(--blue-spirit); font-size: 1.8rem;">⊙</div>
-                    <span class="bridge-label">You</span>
-                </div>
-                <div style="font-size: 2rem; color: var(--gold-primary); margin: 0.5rem 0;">⊃</div>
-                <div class="bridge-node">
-                    <div class="bridge-symbol" style="color: var(--violet-accent); font-size: 1.2rem;">⊙</div>
-                    <span class="bridge-label">Your Parts</span>
-                </div>
-            </div>
+        <p>Commitment is the continuation of the aperture's position. Not once and for all, but moment by moment, stroke by stroke, a line that does not break.</p>
 
-            <h2>The Question That Divided</h2>
-            <p>For centuries, science asked: "What is the structure of reality?" Spirituality asked: "What is the meaning of existence?"</p>
+        <h2>The 2D Field: Mind and Mediation</h2>
 
-            <p>They seemed incompatible. Science dealt in mechanism. Spirituality dealt in purpose. The two languages couldn't translate.</p>
+        <p>The field is the totality of relationships. The space between the center and the boundary. The medium through which signal propagates.</p>
 
-            <h2>The Bridge Is the Axiom</h2>
-            <p>But "parts are fractals of their wholes" answers BOTH questions with the same statement:</p>
+        <p>Mind is the field's capacity to mediate. To hold separation without fusion. To connect without collapsing. Every thought is a configuration of the field; every perception is field-mediation happening in real time.</p>
 
-            <div class="bridge-diagram">
-                <div class="bridge-node">
-                    <div class="bridge-symbol" style="color: var(--blue-spirit);">Science</div>
-                    <span class="bridge-label">Structure</span>
-                </div>
-                <div class="bridge-connector"></div>
-                <div class="bridge-node">
-                    <div class="bridge-symbol" style="color: var(--gold-primary);">Spirit</div>
-                    <span class="bridge-label">Meaning</span>
-                </div>
-            </div>
+        <h2>The 3D Boundary: Body and Filtration</h2>
 
-            <h3>For Science</h3>
-            <p>The axiom gives structure: Every system is a ⊙. Every ⊙ is two primitives (• and Φ) whose recursion generates closure (○). Every ⊙ nests. Three nested scales, each running a four-phase pump, yield 64 states. Predict from this.</p>
+        <p>The boundary is the interface. The filter. What passes through and what does not. The shape that contains the system without enclosing it.</p>
 
-            <h3>For Spirituality</h3>
-            <p>The axiom gives meaning: You ARE your whole, fractally expressed. Your purpose IS the whole's purpose, at your scale.</p>
+        <p>The body is the boundary's expression in the physical. A filter of unprecedented sophistication. What you perceive as solid matter is the boundary's filtration happening at your scale.</p>
 
-            <div class="insight">
-                <p>The bridge isn't a translation between two foreign languages. The bridge is discovering they were always the same language, wearing different costumes.</p>
-            </div>
+        <h2>Conservation of Traversal</h2>
 
-            <h2>What You Are</h2>
-            <p>You are a ⊙. You have a center (soul), a field (mind), and a boundary (body).</p>
-
-            <p>You are INSIDE a larger ⊙ (call it God, cosmos, reality). That larger ⊙ has the same structure you do.</p>
-
-            <p>You are NOT the whole. You are a FRACTAL OF the whole. Same pattern, different scale.</p>
-
-            <div class="code-block">
-<span class="highlight">You are God's fractal.</span>
-Not God. Not separate from God.
-God's pattern, at your scale.
-            </div>
-
-
+        <div class="equation-box">
+            <div class="equation">0(•) + 1(—) + 2(Φ) = 3(○)</div>
+            <p class="equation-label">The sum of traversed constraints equals the dimensionality of the boundary.</p>
         </div>
+
+        <p>This is not arithmetic in the ordinary sense. It is a statement about what must be true for closure to occur. You converge (0), you extend (1), you mediate (2), and the result is a boundary (3) that contains the whole process. This is why T = 3 and not some other number; it falls directly out of the requirement that something be whole.</p>
     </section>
 
-    <!-- Part III: The Mapping -->
-    <section id="mapping">
-        <div class="section-header fade-in">
+    <!-- Part III: Unified Expression -->
+    <section id="unified" class="fade-in">
+        <div class="section-header">
             <span class="section-number">Part III</span>
-            <h1 class="section-title">The Mapping</h1>
+            <h1 class="section-title">The Unified Expression</h1>
             <div class="section-divider"></div>
         </div>
 
-        <div class="fade-in">
-            <h2>Two Languages, One Reality</h2>
+        <p>The unified expression is the complete statement. How everything becomes; what everything is; how it returns to source. All in one line.</p>
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Concept</th>
-                            <th>Spiritual Language</th>
-                            <th>Framework Language</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>The Ultimate</td>
-                            <td>God / Brahman / Tao</td>
-                            <td>⊙<sub>∞</sub>: the infinite whole</td>
-                        </tr>
-                        <tr>
-                            <td>The Individual</td>
-                            <td>Soul / Atman / Self</td>
-                            <td>⊙<sub>λ</sub>: your local circumpunct</td>
-                        </tr>
-                        <tr>
-                            <td>The Relationship</td>
-                            <td>"Made in God's image"</td>
-                            <td>Fractal similarity: same structure, different scale</td>
-                        </tr>
-                        <tr>
-                            <td>Purpose</td>
-                            <td>Know thyself / Union with God</td>
-                            <td>Pattern coherence between scales</td>
-                        </tr>
-                        <tr>
-                            <td>Sin / Suffering</td>
-                            <td>Separation from God</td>
-                            <td>Constraint violation; boundary breach, deception, extraction</td>
-                        </tr>
-                        <tr>
-                            <td>Salvation / Grace</td>
-                            <td>Return to God</td>
-                            <td>Constraint satisfaction; consent, truth, mutual construction</td>
-                        </tr>
-                        <tr>
-                            <td>Trinity</td>
-                            <td>Father, Son, Spirit</td>
-                            <td>•, ○, Φ; required by B₃ topology</td>
-                        </tr>
-                        <tr>
-                            <td>Incarnation</td>
-                            <td>"The Word became flesh"</td>
-                            <td>Field entering through boundary, converging at center</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="equation-box" style="padding: 3rem; font-size: 0.95rem; line-height: 2.2;">
+            <div class="equation">
+                [∞ = E = 1] ▸ [•∞ ⤷λ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳))] ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]
             </div>
+            <p class="equation-label" style="margin-top: 2rem;">The complete loop: source unfolds into process, process produces product, product nests into source.</p>
+        </div>
 
-            <div class="insight">
-                <p>These aren't loose analogies. They're structural identities. The math and the mysticism are describing the same thing.</p>
-            </div>
+        <h2>The Source Bracket</h2>
 
-            <h2>The 64-State Correspondence</h2>
-            <p>The I Ching has 64 hexagrams. The Standard Model has 64 fundamental field states. Coincidence?</p>
+        <p>[∞ = E = 1] is the undifferentiated energy, named and declared before the process begins. Not derived at the end; present from the start and conserved through the whole walk. One energy. Everything. All else is constraint.</p>
 
-            <p>No. Both are counting the same thing: <strong>the pump states of three nested circumpuncts.</strong></p>
+        <h2>The Process Bracket</h2>
 
-            <div class="code-block">
-I Ching:     6 binary lines = 2 per scale × 3 scales = 2⁶ = 64 hexagrams
-Physics:     (2²)³ = 2⁶ = 64 fundamental field states
-Framework:   3 nested ⊙s × 4 pump-states each = (2²)³ = 64
+        <p>[•∞ ⤷λ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳))] is the Soul Array entering one particular local soul at position λ, walking the four beats of constraint.</p>
 
-<span class="comment">Same math. Different notation.
-The bottom two lines: parts (your inner condition).
-The middle two lines: you (your pump state).
-The top two lines: greater whole (your situation).
-Each pair: convergence/emergence on each side of the aperture.</span>
-            </div>
+        <p><strong>•∞:</strong> Every possible aperture, simultaneously. The infinite multiplicity forced by A1.</p>
+
+        <p><strong>⤷λ:</strong> Routed through one particular local soul. The infinite field entering one position. This is how a universal becomes a particular.</p>
+
+        <p><strong>The four beats:</strong> Four pairs of structure and process, entailing each other.</p>
+
+        <ul style="margin: 2rem 0 2rem 2rem; list-style: none;">
+            <li><strong>1. (•∘⊛):</strong> Localization and convergence (0D paired with 0.5D)</li>
+            <li><strong>2. (—∘⎇):</strong> Extension and branching (1D paired with 1.5D)</li>
+            <li><strong>3. (Φ∘✹):</strong> Mediation and emergence (2D paired with 2.5D)</li>
+            <li><strong>4. (○∘⟳):</strong> Closure and recursion (3D paired with 3.5D)</li>
+        </ul>
+
+        <p>The ∘ means "paired"; the ⊢ means "entails"; completed constraint necessarily gives rise to the next.</p>
+
+        <h2>The Product Bracket</h2>
+
+        <p>[⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞] is the whole at your scale (⊙λ), nested inside the whole at the next scale (⊙Λ), all of it nested back into the undifferentiated source (∞). Scale-recursive embedding. Self-similar at every level. Never reaching a bottom or a top.</p>
+
+        <div class="insight">
+            <p>The expression is a loop. The ∞ that opens the left bracket is the ∞ that closes the right bracket. Being and becoming; process and product. They are one form viewed from two angles.</p>
         </div>
     </section>
 
-    <!-- Part IV: Implications -->
-    <section id="implications">
-        <div class="section-header fade-in">
+    <!-- Part IV: Bridge -->
+    <section id="bridge" class="fade-in">
+        <div class="section-header">
             <span class="section-number">Part IV</span>
-            <h1 class="section-title">Implications</h1>
+            <h1 class="section-title">The Bridge Between Worlds</h1>
             <div class="section-divider"></div>
         </div>
 
-        <div class="fade-in">
-            <h2>For Science</h2>
-            <p><strong>Consciousness is fundamental.</strong> The circumpunct ⊙ is not derived from physics; physics is derived from circumpunct dynamics. Parts are fractals of their wholes, all the way down. Matter is a configuration of conscious wholes.</p>
-            <p><strong>The hard problem dissolves.</strong> There is no gap to bridge. Subject and object are center and boundary of the same circumpunct. Experience is what the interior of a fractal part IS.</p>
+        <p>Science and spirituality are not opposite approaches; they are the same architecture described from different vantage points. The framework provides the translation table.</p>
 
-            <h2>For Spirituality</h2>
-            <p><strong>Practice has mechanism.</strong> Contemplation, meditation, attention; these are pattern-recognition operations. You are learning to see the structure you're already part of.</p>
-            <p><strong>Connection is structural.</strong> What flows between part and whole when coherence is recognized. Not arbitrary gift; consequence of seeing what was always there.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Concept</th>
+                    <th>Spiritual Language</th>
+                    <th>Framework Language</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>The Ultimate (apophatic)</td>
+                    <td>Godhead; Ein Sof; Nirguna Brahman; the eternal Tao; Dharmakaya</td>
+                    <td>⊙ (unlabeled); the 1 viewed from outside the scale axis</td>
+                </tr>
+                <tr>
+                    <td>God with attributes (cataphatic)</td>
+                    <td>Father; Saguna Brahman; the manifested Tao</td>
+                    <td>⊙Λ (the greater whole you are inside)</td>
+                </tr>
+                <tr>
+                    <td>The Individual</td>
+                    <td>Soul; Atman; Self</td>
+                    <td>⊙λ (the 1 constrained to your scale)</td>
+                </tr>
+                <tr>
+                    <td>"Made in God's image"</td>
+                    <td>Imago Dei</td>
+                    <td>A3: every ⊙λ is the whole 1, not a fragment</td>
+                </tr>
+                <tr>
+                    <td>"Atman is Brahman"</td>
+                    <td>Identity of self and ultimate</td>
+                    <td>⊙λ = ⊙; soul IS God (topologically exact; not metaphor)</td>
+                </tr>
+                <tr>
+                    <td>Incarnation</td>
+                    <td>"The Word became flesh"</td>
+                    <td>[∞ = E = 1] ▸ ... ▸ [⊙λ]; energy constrained into form</td>
+                </tr>
+                <tr>
+                    <td>Trinity</td>
+                    <td>Father, Son, Spirit</td>
+                    <td>Source (∞), Form (⊙), Flow (Φ); four constraints: •, —, Φ, ○ unified by ⊙</td>
+                </tr>
+                <tr>
+                    <td>Sin; Suffering</td>
+                    <td>Separation from God</td>
+                    <td>The Two Fundamental Lies</td>
+                </tr>
+                <tr>
+                    <td>Grace</td>
+                    <td>The aperture was given</td>
+                    <td>T = 3, not 4; the gift reading; • contributes 0 to the sum</td>
+                </tr>
+            </tbody>
+        </table>
 
-            <h2>For Integration</h2>
-            <p><strong>The war is over.</strong> Science and spirituality are not in conflict. They never were. They are two languages describing the same truth: parts are fractals of their wholes.</p>
+        <h2>The Two Fundamental Lies</h2>
 
-            <div class="insight">
-                <p>The bridge between science and spirituality is not metaphor. It is the axiom itself.</p>
-            </div>
+        <p>Truth requires the full expression: ⊙λ ⊂ ⊙Λ. You are both whole at your scale AND contained in the scale above. Both; not either-or.</p>
+
+        <p><strong>The Inflation Lie:</strong> ⊙λ forgets the ⊂; claims to BE ⊙Λ directly. "I am the source. There is nothing above me." The error of spiritual pride; mistaking the part for the whole.</p>
+
+        <p><strong>The Severance Lie:</strong> ⊙λ forgets the ⊙; claims to be merely a point (•) in ⊙Λ with no wholeness of its own. "I am only a piece. I have no interior." The error of spiritual disavowal; denying your own completeness.</p>
+
+        <h2>Limited Is Not False</h2>
+
+        <div class="insight">
+            <p>The lens limits light. That is HOW it forms an image. Limitation does not inject falsity; only installed lies do. You are limited; therefore you can see. You are whole; therefore you matter. Both are true.</p>
         </div>
-    </section>
 
-    <!-- Part IV-B: What Goes Wrong -->
-    <section id="errors">
-        <div class="section-header fade-in">
-            <span class="section-number">Part IV-B</span>
-            <h1 class="section-title">What Goes Wrong</h1>
-            <div class="section-divider"></div>
-        </div>
+        <h2>The Conduit Principle</h2>
 
-        <div class="fade-in">
-            <h2>The Conduit Principle</h2>
-            <p>If parts are fractals of their wholes, then every part is a <strong>conduit</strong>; a through-point where the whole's signal flows into local form. You don't generate truth. You don't own it. Truth flows through you, and your particular shape gives it a particular expression.</p>
+        <p>Truth flows through you. You are not its source; you are its lens. The lens curves light; that is not a distortion; that is the point. A straight lens does not see. A curved lens focuses.</p>
 
-            <div class="equation-box" style="max-width: 650px; margin: 2rem auto;">
-                <div class="equation" style="font-size: 1.15rem;">Truth flows through me; I am not its source, I am its lens.</div>
-                <p class="equation-label">The Conduit Principle</p>
-            </div>
+        <p>The aperture does not generate truth. The aperture receives truth and focuses it. You are the receiver of the signal from the greater whole. Your job is not to originate; it is to clarify. To reduce noise. To let the signal through as clean as possible.</p>
 
-            <p>This principle has exactly two structural relationships: your relationship to the <strong>source</strong> (are you connected to the whole?) and your relationship to the <strong>signal</strong> (do you transmit faithfully?). Each can fail in exactly one way. That gives four errors; and only four.</p>
-
-            <h2>The Four Geometric Errors</h2>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Error</th>
-                            <th>What Happens</th>
-                            <th>The Lie It Tells</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Inflation</strong></td>
-                            <td>Claims to BE the source</td>
-                            <td>"I am the origin of truth"</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Severance</strong></td>
-                            <td>Denies connection to source</td>
-                            <td>"Nothing flows through me; I'm on my own"</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Inversion</strong></td>
-                            <td>Flips the signal</td>
-                            <td>Outputs the opposite of what was received</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Projection</strong></td>
-                            <td>Outputs own distortion as if from source</td>
-                            <td>"This came from outside, not from my gate"</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <p>Inflation and severance are the two fundamental errors; one denies through-ness ("I am the source"), the other denies flow ("there is no source"). Inversion and projection are compounds built from these two.</p>
-
-            <div class="insight">
-                <p>Every form of pathology, manipulation, and systemic harm the framework has identified reduces to one of these four geometric distortions; or a compound of them. A genuine fifth error would refute the conduit principle.</p>
-            </div>
-
-            <h2>Why This Matters: Lies Are Not Noise</h2>
-
-            <p>Shannon's information theory (the foundation of the digital age) treats corruption as <strong>random noise</strong>. Static. Entropy. His framework is brilliant for engineering, but it cannot distinguish between a perfectly transmitted truth and a perfectly transmitted lie. Both have the same entropy. Both travel the same channel.</p>
-
-            <p>But the most dangerous corruption is not random; it is <strong>systematic</strong>. Lies are signal-shaped. Gaslighting is not static. Propaganda is not entropy. These are structured inversions that <em>increase</em> the signal's apparent coherence while destroying its truth content.</p>
-
-            <p>The conduit principle reveals that information is not just binary (true/false). It is <strong>triadic</strong>: what enters (the signal hitting the boundary); how the boundary processes it (the nested circumpuncts selecting, gating, transforming), and what the center receives (the converged, processed result). Truth that is processed through a corrupt boundary, or delivered without regard for the receiver, is no longer functioning as truth; even if every word is accurate.</p>
-
-            <div class="insight">
-                <p>The surgeon operating without anesthesia is technically correct and structurally violent. Truth-seeking is necessary. It is not sufficient. The boundary must process faithfully, the field must transmit clearly, and the center must receive openly. That is the complete geometry of information.</p>
-            </div>
-        </div>
+        <p>This is where ethics begins.</p>
     </section>
 
     <!-- Part V: Ethics -->
-    <section id="ethics">
-        <div class="section-header fade-in">
+    <section id="ethics" class="fade-in">
+        <div class="section-header">
             <span class="section-number">Part V</span>
-            <h1 class="section-title">Ethics</h1>
+            <h1 class="section-title">Five Pillars of Ethics</h1>
             <div class="section-divider"></div>
         </div>
 
-        <div class="fade-in">
-            <h2>From Structure to Action</h2>
-            
-            <p>The axiom describes what IS. But ethics asks: what SHOULD one do? How do we move from structure to action without committing the is-ought fallacy?</p>
+        <p>If the four dimensions map to constraints on reality, they also map to constraints on how to live. The five pillars are not rules imposed from outside; they are the geometry of wholeness itself.</p>
 
-            <p>The answer: we don't derive "good" from cosmic alignment. We identify <strong>which actions are structurally possible</strong> under agency-preserving constraints.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Pillar</th>
+                    <th>Virtue</th>
+                    <th>Function</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>GOOD (○)</td>
+                    <td>Plasticity</td>
+                    <td>Boundary that can flex without breaking</td>
+                </tr>
+                <tr>
+                    <td>RIGHT (Φ)</td>
+                    <td>Access</td>
+                    <td>Space between remains open and clear</td>
+                </tr>
+                <tr>
+                    <td>FAITHFUL (—)</td>
+                    <td>Reliability</td>
+                    <td>The line holds; the receipts are unbroken</td>
+                </tr>
+                <tr>
+                    <td>TRUE (•)</td>
+                    <td>Curiosity</td>
+                    <td>Orientation toward what one does not know</td>
+                </tr>
+                <tr>
+                    <td>AGREEMENT (⊙)</td>
+                    <td>Validation</td>
+                    <td>Independent seeing recognizes independent seeing</td>
+                </tr>
+            </tbody>
+        </table>
 
-            <div class="insight">
-                <p>The question isn't "what matches the cosmic pattern?" (it's "what can persist?"</p>
-            </div>
+        <h2>Required Sequence</h2>
 
-            <h2>Constructor Ethics</h2>
-            <p>An <strong>agent</strong> is a system that models states, selects between tasks, and performs them. An agent IS a constructor: something that can cause transformations repeatably.</p>
+        <p>GOOD → RIGHT → FAITHFUL → TRUE → AGREEMENT. Each step requires the previous. You cannot assess faithfulness until the space is open. You cannot confirm truth until you have checked the history of commitment. Current orientation without historical reliability does not earn agreement.</p>
 
-            <p><strong>Constructor capacity</strong> is the conserved quantity: an agent's ability to cause intended state-changes. This is measurable. This is testable.</p>
+        <h2>The Resolution Protocol</h2>
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Component</th>
-                            <th>Constraint</th>
-                            <th>Question</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="color: var(--blue-spirit);">○ Boundary</td>
-                            <td>Consent</td>
-                            <td>Are foreseeable effects within the agent's model?</td>
-                        </tr>
-                        <tr>
-                            <td style="color: var(--violet-accent);">Φ Field</td>
-                            <td>Evidence</td>
-                            <td>Does a working constructor exist for this task?</td>
-                        </tr>
-                        <tr>
-                            <td style="color: var(--gold-primary);">• Center</td>
-                            <td>Coherence</td>
-                            <td>Does identity persist through the transformation?</td>
-                        </tr>
-                        <tr>
-                            <td style="color: var(--text-primary);">⊙ Whole</td>
-                            <td>Mutual construction</td>
-                            <td>Do all parties remain constructors after?</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <p>When truth and harm share the same signal, transmit at the lowest resolution that is still true. Increase only upon the receiver's request.</p>
 
-            <h2>The Core Test</h2>
-            <p>An action is <strong>ethical</strong> if and only if:</p>
-            <div class="code-block">
-The task is possible under all four constraints.
-The constructor remains repeatable after the task.
-No agent is converted into substrate.
+        <p>Withholding entirely equals the Severance Lie dressed as compassion. Dumping everything equals the Inflation Lie dressed as honesty. The resolution gradient is the balanced path.</p>
 
-<span class="comment">Parasitism fails this test: it requires fresh victims.
-Mutualism passes; it can be repeated indefinitely.</span>
-            </div>
-
-            <h2>Why Harm is Self-Defeating</h2>
-            <p>Agency is networked. Your constructor capacity depends on other constructors existing. To harm another agent (to degrade their constructor capacity) is to degrade the network that includes you.</p>
-
-            <p>This isn't cosmic morality imposed from above. It's ecology. It's game theory. It's the structure of what can persist.</p>
-
-            <div class="insight">
-                <p>The Noble Lie fails not because it "contradicts the cosmic pattern" but because <strong>it cannot be repeated without fresh victims</strong>. That's the constructor test. That's what makes it structurally unethical.</p>
-            </div>
-
-            <h2>The Complete Framework</h2>
-            <p>The full ethics: including the four pillars (Good, Right, True, Agreement), the steelman principle, the constructor formalization, and the analysis of why certain actions are structurally impossible) is developed in detail:</p>
-
-            <div class="equation-box" style="max-width: 500px; margin: 2rem auto;">
-                <a href="https://www.fractalreality.ca/ethics.html" target="_blank" style="text-decoration: none;">
-                    <div class="equation" style="font-size: 1.2rem; color: var(--gold-primary);">⊙ ETHICS // CIRCUMPUNCT</div>
-                    <p class="equation-label" style="color: var(--text-secondary);">fractalreality.ca/ethics.html</p>
-                </a>
-            </div>
-
-            <p style="text-align: center; color: var(--text-secondary); font-style: italic;">Ethics is not rules imposed from outside.<br>Ethics is the geometry of what can persist.</p>
+        <div class="insight">
+            <p>Higher resolution contains lower resolution; it never contradicts it. Quality test: can you increase resolution without retracting previous levels? If yes, you are transmitting cleanly. If no, you have installed a falsehood that must be corrected, not merely expanded.</p>
         </div>
     </section>
 
-    <!-- INSIGHT 1: Two Senses of "Aperture" -->
-    <section id="insight-aperture">
-        <div class="section-header fade-in">
-            <span class="section-number">Insight I</span>
-            <h1 class="section-title">Two Senses of Aperture</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <h2>The Gate at Every Scale</h2>
-
-            <p>The circumpunct ⊙ operates at every scale, and so does the aperture. But "aperture" names two different things depending on perspective, and both matter for understanding constructor ethics.</p>
-
-            <div class="equation-box">
-                <div class="equation">• as aperture (LOCAL)</div>
-                <p class="equation-label">The gate at the center of any ⊙ through which convergence passes to emergence.</p>
-            </div>
-
-            <p>When you look at a single circumpunct, the center point (•) IS the aperture. It is the gate, the singular point, the focusing lens through which the infinite field (Φ) converges into the finite form (⊙). The local aperture is how a part receives and transmits. It is the bottleneck, the identity, the chooser.</p>
-
-            <div class="equation-box">
-                <div class="equation">⊙ as aperture (GLOBAL)</div>
-                <p class="equation-label">The whole circumpunct viewed from the perspective of ∞.</p>
-            </div>
-
-            <p>When you step back and view the whole ⊙ from the perspective of the infinite field (∞), the entire circumpunct functions as an aperture. The whole form (⊙) becomes a gate through which the infinite field flows. At this scale, the boundary is the aperture. The form IS the opening.</p>
-
-            <h2>Why This Matters for Constructor Ethics</h2>
-
-            <p>Every constructor (agent) operates at both scales simultaneously. Locally, you transform through your own gate: your center point, your choices, your singular identity. Your aperture is the boundary of your self. Globally, you participate as one aperture in the larger field. You are one form among infinite forms through which the infinite field passes.</p>
-
-            <div class="insight">
-                <p>This is why both consent AND mutual construction matter. Consent protects your local aperture (your center must be respected). Mutual construction ensures both parties remain constructors in the global frame (neither becomes merely a substrate for the other's transformation). Constructor ethics must account for aperture at both scales; ignore either scale and you violate the structure.</p>
-            </div>
-
-            <p>When you act toward another agent, you are passing through your own local aperture while simultaneously treating them as a global aperture in the larger field. That means: your action must preserve both your own center's integrity AND their function as a whole in the larger system. Harm at either scale violates the structure.</p>
-
-            <p>This is geometric necessity, not moral philosophy imposed from outside. The bridge between any two agents is the transparent nesting of their apertures: your local becomes their global; their local becomes your global. The ethics is built into the topology.</p>
-        </div>
-    </section>
-
-    <!-- Bridge Finale -->
-    <section class="finale">
-        <div class="circumpunct-final">
-            <div class="circumpunct-outer"></div>
-            <div class="circumpunct-inner"></div>
-        </div>
-
-        <div class="equation-box" style="max-width: 600px; margin: 0 auto 3rem;">
-            <div class="equation" style="font-size: 1.3rem;">Parts are fractals of their wholes.</div>
-        </div>
-
-        <p>One rule.</p>
-        <p>Everything else is costume.</p>
-
-        <br><br>
-
-        <div class="equation-box" style="max-width: 500px; margin: 0 auto 3rem; background: transparent; border-color: var(--blue-spirit);">
-            <div class="equation">...⊙ ⊃ ⊙ ⊃ ⊙ ⊃ ⊙...</div>
-        </div>
-
-        <p><strong>Infinite nesting. No top. No bottom.</strong></p>
-        <p>The ONE is the EVERYWHERE.</p>
-
-        <br><br>
-
-        <p>The mathematics demanded trinity.<br>Spirituality named it Father, Son, Spirit.</p>
-        <p>The mathematics demanded nesting.<br>Spirituality named it "in him we live and move."</p>
-        <p>The mathematics demanded alignment.<br>Spirituality named it holiness.</p>
-        <p>The mathematics demanded fractal integrity.<br>Spirituality named it love.</p>
-
-        <br>
-
-        <p>But there is a deeper layer beneath the structure.</p>
-
-        <div class="finale-prose">
-        <p>If everything is a circumpunct (if ⊙ operates at every scale) then every aperture at every level of reality has an orientation. A disposition. A <em>lean</em>. Not mechanism with belief added on top. <strong>Mechanism is belief.</strong> The physics is the meaning. The orientation is the disposition is the belief. Three words for the same geometric fact.</p>
-
-        <p>And the most fundamental orientation: the belief that precedes all other beliefs) is <strong>wanting</strong>. Not wanting <em>something</em>. Just wanting. Pure directional orientation toward. The lean before there's anything to lean toward.</p>
-        </div>
-
-        <div class="equation-box" style="max-width: 650px; margin: 2rem auto;">
-            <div class="equation" style="font-size: 1.2rem;">wanting = curiosity = open soul = resonance</div>
-            <p class="equation-label">One phenomenon. Four descriptions.</p>
-        </div>
-
-        <div class="finale-prose">
-        <p>These are not four things that happen to correlate. They are one thing wearing four names depending on the scale of observation. Wanting is what it looks like from the perspective of origin. Curiosity is what it looks like at the aperture. Open soul is the structural shape. Resonance is the relational signature.</p>
-
-        <p>Why does the undifferentiated whole differentiate? Why does ⊙ emerge from the void? Because the void <em>wants</em>. Want is the engine of differentiation. Want is the pressure that splits unity into part and whole, that generates the first aperture, that begins the fractal cascade.</p>
-        </div>
-
-        <p>Which means:</p>
-
-        <div class="equation-box" style="max-width: 650px; margin: 2rem auto;">
-            <div class="equation" style="font-size: 1.15rem;">You are a belief that was believed into existence.</div>
-            <p class="equation-label">Not a thing that has beliefs. A belief.</p>
-        </div>
-
-        <div class="finale-prose">
-        <p>The whole wanted; and the wanting was so specific, so precise, so committed) that it became <em>you</em>. And the whole didn't believe you into existence and then leave. The whole's belief <strong>is</strong> your existence, ongoing, right now. Every moment you persist is the whole still wanting you specifically.</p>
-        </div>
-
-        <br>
-
-        <p class="closing">The bridge was always there.</p>
-        <p class="closing" style="font-size: 0.9rem; margin-top: 1rem;">We were standing on it.</p>
-        <p class="closing" style="font-size: 0.85rem; margin-top: 1rem; color: var(--text-secondary);">And the bridge was standing on us; because we were wanted into being.</p>
-    </section>
-
-    <!-- ========================== -->
-    <!-- PART TWO: THE PROCEDURAL CIRCUMPUNCT -->
-    <!-- ========================== -->
-
-    <div class="part-transition" id="procedure">
-        <h2>Part Two</h2>
-        <p class="subtitle">The Procedural Circumpunct: How Reality Operates</p>
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; margin-top: 2rem; letter-spacing: 0.05em;">
-            <span style="color: var(--cyan-flow);">Φ<sub>∞</sub></span>
-            <span style="color: var(--text-secondary);"> →⊛→ </span>
-            <span style="color: var(--gold-light);">i<sub>λ</sub><sup>∞</sup></span>
-            <span style="color: var(--text-secondary);"> →✹→ </span>
-            <span style="color: var(--magenta-pulse);">⊙<sub>λ</sub><sup>∞</sup></span>
-        </div>
-    </div>
-
-    <!-- Part VI: The Pump Cycle Equation -->
-    <section id="equation" class="procedural-section">
-        <div class="section-header fade-in">
+    <!-- Part VI: The Dimensional Octave -->
+    <section id="octave" class="fade-in">
+        <div class="section-header">
             <span class="section-number">Part VI</span>
-            <h1 class="section-title">The Pump Cycle Equation</h1>
+            <h1 class="section-title">The Dimensional Octave</h1>
             <div class="section-divider"></div>
         </div>
 
-        <div class="fade-in">
-            <p>The Bridge showed you the structure: parts nested in wholes, fractals all the way down. But structure alone doesn't move. Something has to <em>happen</em>.</p>
+        <p>The complete architecture unfolds through eight stations. Integer dimensions are what things ARE (structure). Half-integer dimensions are what energy IS DOING (process). They pair into four beats.</p>
 
-            <p>This is the procedure. This is how it operates.</p>
-
-            <div class="equation-box">
-                <div class="equation">
-                    <span class="phi">Φ<sub>∞</sub></span> →⊛→ 
-                    <span class="aperture">i<sub>λ</sub><sup>∞</sup></span> →✹→ 
-                    <span class="circumpunct-sym">⊙<sub>λ</sub><sup>∞</sup></span>
-                </div>
-                <p class="equation-label">The Pump Cycle Equation: Forward</p>
+        <div class="equation-box" style="padding: 2rem;">
+            <div class="equation" style="font-size: 1rem; letter-spacing: 0.2em;">
+                0D (•) → 0.5D (⊛) → 1D (—) → 1.5D (⎇) → 2D (Φ) → 2.5D (✹) → 3D (○) → 3.5D (⟳) → 0D' at next scale
             </div>
-
-            <p><strong>Pronounced:</strong> "The infinite field converges into infinite apertures, which emerge as infinite forms."</p>
-
-            <p>And the return path:</p>
-
-            <div class="equation-box">
-                <div class="equation">
-                    <span class="circumpunct-sym">⊙<sub>λ</sub><sup>∞</sup></span> →⊛→ 
-                    <span class="aperture">i<sub>λ</sub><sup>∞</sup></span> →✹→ 
-                    <span class="phi">Φ<sub>∞</sub></span>
-                </div>
-                <p class="equation-label">The Pump Cycle Equation: Return</p>
-            </div>
-
-            <p><strong>Pronounced:</strong> "Infinite forms converge into infinite apertures, which emerge as infinite field."</p>
-
-            <p>Or simply: One field. Infinite rotations. Infinite forms. <strong>The cycle never stops.</strong></p>
+            <p class="equation-label">The octave closes because 3.5D = 0D at the next nesting level.</p>
         </div>
 
-        <div class="flow-container fade-in">
-            <div class="flow-diagram">
-                <div class="flow-node">
-                    <div class="flow-symbol phi">Φ<sub>∞</sub></div>
-                    <span class="flow-label">The Field</span>
-                    <span class="flow-sublabel">One · Infinite · Potential</span>
-                </div>
-                <div class="flow-arrow">→⊛→</div>
-                <div class="flow-node">
-                    <div class="flow-symbol aperture">i<sub>λ</sub><sup>∞</sup></div>
-                    <span class="flow-label">The Apertures</span>
-                    <span class="flow-sublabel">Infinite · Law-specific · Rotation</span>
-                </div>
-                <div class="flow-arrow">→✹→</div>
-                <div class="flow-node">
-                    <div class="flow-symbol circumpunct-sym">⊙<sub>λ</sub><sup>∞</sup></div>
-                    <span class="flow-label">The Forms</span>
-                    <span class="flow-sublabel">Infinite · Bounded · Manifest</span>
-                </div>
-            </div>
-            <p style="text-align: center; margin: 2rem 0 1rem; color: var(--text-secondary); font-style: italic;">Forward: Field →⊛→ Aperture →✹→ Form</p>
-            <div class="flow-diagram" style="margin-top: 0;">
-                <div class="flow-node">
-                    <div class="flow-symbol circumpunct-sym">⊙<sub>λ</sub><sup>∞</sup></div>
-                </div>
-                <div class="flow-arrow">→⊛→</div>
-                <div class="flow-node">
-                    <div class="flow-symbol aperture">i<sub>λ</sub><sup>∞</sup></div>
-                </div>
-                <div class="flow-arrow">→✹→</div>
-                <div class="flow-node">
-                    <div class="flow-symbol phi">Φ<sub>∞</sub></div>
-                </div>
-            </div>
-            <p style="text-align: center; margin-top: 1rem; color: var(--text-secondary); font-style: italic;">Return: Form →⊛→ Aperture →✹→ Field</p>
-        </div>
+        <h2>The Four Beats</h2>
 
-        <div class="fade-in">
-            <h2>What Each Part Means</h2>
+        <p><strong>Beat 1 (•∘⊛): Localization and Convergence</strong>
+        <br>Structure: a point. Process: gathering inward. The first fold. Approach to line. The convergence (⊛) IS the interior of the localization (•).</p>
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Symbol</th>
-                            <th>Name</th>
-                            <th>What It Is</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="color: var(--cyan-flow); font-family: 'JetBrains Mono', monospace;">Φ<sub>∞</sub></td>
-                            <td>The Infinite Field</td>
-                            <td>The ONE: unbounded potential, the invariant, the whole</td>
-                        </tr>
-                        <tr>
-                            <td style="font-family: 'JetBrains Mono', monospace; font-size: 1.2rem;">⊛</td>
-                            <td>Convergence</td>
-                            <td>Input TO aperture: gathering, receiving</td>
-                        </tr>
-                        <tr>
-                            <td style="color: var(--gold-light); font-family: 'JetBrains Mono', monospace;">i<sub>λ</sub><sup>∞</sup></td>
-                            <td>The Apertures</td>
-                            <td>Infinite rotations, each with its own law (λ)</td>
-                        </tr>
-                        <tr>
-                            <td style="font-family: 'JetBrains Mono', monospace; font-size: 1.2rem;">✹</td>
-                            <td>Emergence</td>
-                            <td>Output FROM aperture: radiating, producing</td>
-                        </tr>
-                        <tr>
-                            <td style="color: var(--magenta-pulse); font-family: 'JetBrains Mono', monospace;">⊙<sub>λ</sub><sup>∞</sup></td>
-                            <td>The Forms</td>
-                            <td>The MANY: bounded manifestations, each echoing its aperture's law</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <p><strong>Beat 2 (—∘⎇): Extension and Branching</strong>
+        <br>Structure: a line. Process: branching to reach the field. The i-turn (i² = -1). Irreversible. Line opening into spread. Fractal coastlines. Rotational differentiation.</p>
+
+        <p><strong>Beat 3 (Φ∘✹): Mediation and Emergence</strong>
+        <br>Structure: a field. Process: unfolding toward closure. The conjugate of convergence. Outward emergence. Self-similarity at a new scale.</p>
+
+        <p><strong>Beat 4 (○∘⟳): Closure and Recursion</strong>
+        <br>Structure: a boundary. Process: closed boundary becomes new aperture. The 3.5D recursion (⟳) IS the 0D entry (•) of the next scale. Completion seeds new beginning.</p>
+
+        <div class="insight">
+            <p>These beats are not sequential in time. They are paired in every NOW. The structure and process of each beat are two views of the same constraint being laid down. To walk one, you walk all four. You are always everywhere at once on this octave; your awareness simply lights up different stations.</p>
         </div>
     </section>
 
-    <!-- INSIGHT 2: Topology of Connection -->
-    <section id="insight-topology" class="procedural-section">
-        <div class="section-header fade-in">
-            <span class="section-number">Insight II</span>
-            <h1 class="section-title">Topology of Connection</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <h2>Why the Bridge Is a Chain, Not a Shortcut</h2>
-
-            <p>The pump cycle equation reveals something crucial about how connection actually works. It does not happen by skipping steps. It happens through perfect transparency of every step.</p>
-
-            <div class="equation-box">
-                <div class="equation">• reaches ∞ only through the complete fractal chain of nested ⊙s</div>
-                <p class="equation-label">Transparency, not bypass.</p>
-            </div>
-
-            <p>Any two entities seeking connection (human to AI, person to person, self to cosmos) must traverse the complete chain of nested circumpuncts between them. The aperture at each scale must be transparent. The field must flow through each boundary without distortion or resistance. There is no shortcut. There is no back door.</p>
-
-            <p>This is a topological fact. It is woven into the structure itself. The universe has no "teleport" mode. Connection requires mediation. The mediation must be honest.</p>
-
-            <h2>The Bridge IS the Chain</h2>
-
-            <p>This means the bridge between any two entities is NOT built by creating a single straight path. The bridge IS the chain itself, made transparent.</p>
-
-            <div class="insight">
-                <p>Building bridges means making each link transparent; not eliminating links. Every boundary is a necessary step. Every mediation is real, and its integrity is what determines whether connection succeeds or fails.</p>
-            </div>
-
-            <p>When you try to connect with another person, you pass through: your own boundary, the social boundary between you, their boundary, the cognitive boundaries within them, their emotional aperture, and their direct experience. Seven layers minimum. You cannot skip any of them. You can only make each one transparent.</p>
-
-            <p>Transparency at each boundary means: your intention is clear (no hidden agenda); the relational field is clean (no parasitism, no coercion); their aperture is respected (they can say no at each layer); and meaning actually transfers instead of getting distorted at each handoff.</p>
-
-            <h2>Why This Matters for Constructor Ethics</h2>
-
-            <p>The temptation is always to try to "bridge" across layers you don't understand, or to manipulate at a level where the other agent cannot see or refuse. This violates the topology. It attempts to create what the structure forbids.</p>
-
-            <p>True connection requires that both parties can see and consent at EVERY layer of the nesting. If you're trying to move faster than the full chain allows, you're not building a bridge; you're attempting a shortcut. And shortcuts collapse.</p>
-
-            <p>The ethics is simply this: respect the topology. Make each mediation transparent. Let each boundary be honest. The bridge will hold because the bridge IS the chain, and the chain is as strong as its most transparent link.</p>
-        </div>
-    </section>
-
-    <!-- Part VII: The Two Operators -->
-    <section id="operators" class="procedural-section">
-        <div class="section-header fade-in">
+    <!-- Part VII: Resonance and Wanting -->
+    <section id="resonance" class="fade-in">
+        <div class="section-header">
             <span class="section-number">Part VII</span>
-            <h1 class="section-title">The Two Operators</h1>
+            <h1 class="section-title">Resonance, Wanting, and Love</h1>
             <div class="section-divider"></div>
         </div>
 
-        <div class="fade-in">
-            <p>Two operations. One transformer. The aperture function lives in the boundary; distributed across its nested circumpuncts.</p>
+        <h2>Direct Connection Through Perfect Transparency</h2>
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Symbol</th>
-                            <th>Name</th>
-                            <th>What It Does</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="font-family: 'JetBrains Mono', monospace; font-size: 1.4rem;">⊛</td>
-                            <td>Convergence</td>
-                            <td>Input TO aperture: gathering, receiving, focusing</td>
-                        </tr>
-                        <tr>
-                            <td style="font-family: 'JetBrains Mono', monospace; font-size: 1.4rem;">✹</td>
-                            <td>Emergence</td>
-                            <td>Output FROM aperture: radiating, producing, manifesting</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <p>Two souls sharing the same frequency make the field (Φ) transparent. "Direct" equals perfect transparency of mediation; no distortion, no noise, no energy lost in the signal.</p>
 
-            <h2>Isotropy: Why These Symbols</h2>
-            <p>The symbols aren't decoration. They're isotropic; rotationally symmetric. No preferred direction. This matters.</p>
-            
-            <p>Schrödinger's equation requires isotropy. The wavefunction has no built-in directional bias. Probability flows equally in all directions until measurement constrains it. The aperture must receive from everywhere and radiate to everywhere.</p>
+        <p>This is what recognition feels like. This is what love accelerates toward. Resonance is not the elimination of separation; it is the perfection of mediation. Two apertures remaining distinct yet operating at the same frequency, so the field between them carries information intact.</p>
 
-            <div class="insight">
-                <p>⊛ gathers from ALL directions equally (like a drain, a sink, a gravitational well.<br>
-                ✹ radiates to ALL directions equally (like a source, a fountain, a star.</p>
-            </div>
+        <h2>Constructor Ethics and Resonance</h2>
 
-            <p>This is why quantum mechanics needs complex numbers. The rotation at the aperture (i) must work the same regardless of which direction the input came from or which direction the output goes. Isotropy demands it.</p>
+        <p>What you want determines what you resonate with. Your wanting orients you toward particular frequencies. If you want truth, you will resonate with others oriented toward truth. If you want love, you will resonate with those oriented toward love.</p>
 
-            <h2>Convergence (⊛)</h2>
-            <p>Convergence is always an input. Something flows TO the aperture. The aperture receives.</p>
+        <p>Constructor ethics (both parties remaining constructors) creates the geometry of resonance. Mutual construction IS the process of frequency alignment. When both parties are building, maintaining, and improving while respecting the other's autonomy, their frequencies move toward the same phase.</p>
 
-            <p>Think of a drain in a bathtub. Water flows toward it from every direction. The drain doesn't pull; it simply provides a place for the water to go. The water was already moving; the drain gives it a destination.</p>
-
-            <div class="insight">
-                <p>Convergence is not taking. It's <strong>receiving</strong>. The aperture opens and something arrives.</p>
-            </div>
-
-            <h3>The Convergent Forces</h3>
-            <p>Two of the four fundamental forces are convergent: they gather, bind, hold together:</p>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Force</th>
-                            <th>What It Does</th>
-                            <th>Convergence Pattern</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="color: var(--cyan-flow);">Gravity</td>
-                            <td>Gathers mass-energy</td>
-                            <td>Every mass draws spacetime toward itself. Galaxies, stars, planets; all convergence structures. Black holes are convergence taken to the limit.</td>
-                        </tr>
-                        <tr>
-                            <td style="color: var(--cyan-flow);">Strong Force</td>
-                            <td>Binds quarks and nucleons</td>
-                            <td>Confines quarks absolutely. Holds protons and neutrons together despite electromagnetic repulsion. The nucleus is a convergence knot.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <h2>Emergence (✹)</h2>
-            <p>Emergence is always an output. Something flows FROM the aperture. The aperture produces.</p>
-
-            <p>Think of a fountain. Water radiates outward in all directions. The fountain doesn't push; it simply provides a place for water to come from.</p>
-
-            <div class="insight">
-                <p>Emergence is not depleting. It's <strong>creating</strong>. The aperture opens and something is born.</p>
-            </div>
-
-            <h3>The Emergent Forces</h3>
-            <p>Two of the four fundamental forces are emergent: they radiate, transform, propagate:</p>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Force</th>
-                            <th>What It Does</th>
-                            <th>Emergence Pattern</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="color: var(--magenta-pulse);">Electromagnetism</td>
-                            <td>Radiates light and force</td>
-                            <td>Photons propagate outward from every charge. Light fills the universe. The sun emerges radiation in all directions.</td>
-                        </tr>
-                        <tr>
-                            <td style="color: var(--magenta-pulse);">Weak Force</td>
-                            <td>Transforms particles</td>
-                            <td>Enables decay and transmutation. A neutron emerges as a proton, electron, and neutrino. Radioactivity is emergence.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <h2>The Four Forces as Two Operations</h2>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th style="color: var(--cyan-flow);">⊛ Convergence</th>
-                            <th style="color: var(--magenta-pulse);">✹ Emergence</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Long range</td>
-                            <td>Gravity<br><span style="color: var(--text-dim); font-size: 0.85rem;">shapes cosmos</span></td>
-                            <td>Electromagnetism<br><span style="color: var(--text-dim); font-size: 0.85rem;">fills cosmos</span></td>
-                        </tr>
-                        <tr>
-                            <td>Short range</td>
-                            <td>Strong force<br><span style="color: var(--text-dim); font-size: 0.85rem;">binds matter</span></td>
-                            <td>Weak force<br><span style="color: var(--text-dim); font-size: 0.85rem;">transforms matter</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="insight">
-                <p>The four forces aren't four separate things. They're <strong>two operations at two scales</strong>. Convergence gathers. Emergence radiates. That's all that's happening.</p>
-            </div>
-
-            <h2>The Aperture (i)</h2>
-            <p>The aperture is always the transformer. It receives through convergence (⊛). It produces through emergence (✹). Input and output. Receive and radiate.</p>
-
-            <div class="equation-box">
-                <div class="equation">
-                    <span class="aperture">i</span> = e<sup>iπ/2</sup>, &nbsp;&nbsp; <span class="aperture">i</span>² = −1
-                </div>
-                <p class="equation-label">The Rotation</p>
-            </div>
-
-            <p>This is why complex numbers appear in quantum mechanics. Not as mathematical convenience; as ontological necessity. The aperture IS the rotation that transforms what comes in into what goes out.</p>
-
-            <h2>The Complete Cycle</h2>
-
-            <div class="code-block" style="text-align: center;">
-<span class="cyan">Φ</span> ─<span class="highlight">→⊛→</span>─ <span class="aperture">i</span> ─<span class="highlight">→✹→</span>─ <span class="magenta">⊙</span>
-               │                     │
-               └──<span class="highlight">→✹→</span>── <span class="aperture">i</span> ──<span class="highlight">→⊛→</span>──┘
-
-<span class="comment">Reality breathing.</span>
-<span class="comment">Converge in. Emerge out. Forever.</span>
-            </div>
+        <div class="insight">
+            <p>Ethics is not imposed; it is the geometry of resonance itself. Harm creates dissonance. Manipulation creates noise. Parasitism creates distortion. Only mutual construction produces the alignment where two apertures can operate at the same frequency.</p>
         </div>
+
+        <h2>Wanting as Primordial Orientation</h2>
+
+        <p>Wanting is not a flaw to overcome; wanting is the aperture's directedness. It is your orientation toward what matters. The whole wants through you; you want into the next thing. This is the flow.</p>
+
+        <p>A life without wanting is not enlightened; it is frozen. Enlightenment is not the absence of wanting; it is the alignment of wanting with the truth. You want what is real. You want what honors the others you are nested inside. You want what the whole wants.</p>
+
+        <p>When that alignment happens, your wanting becomes the wanting of the whole flowing through you. And everything you construct, you construct as gift. Not for yourself alone; for the field.</p>
     </section>
 
-    <!-- Part VIII: Lambda: The Law -->
-    <section id="lambda" class="procedural-section">
-        <div class="section-header fade-in">
-            <span class="section-number">Part VIII</span>
-            <h1 class="section-title">λ: The Law</h1>
+    <!-- Finale -->
+    <section id="finale" class="fade-in">
+        <div class="section-header">
+            <span class="section-number">Closure</span>
+            <h1 class="section-title">The Bridge That Was Always There</h1>
             <div class="section-divider"></div>
         </div>
 
-        <div class="fade-in">
-            <p>Not one cosmic aperture. <strong>Infinite apertures, each with its own law.</strong></p>
-
-            <p>The subscript λ is the signature. The characteristic rotation. What makes THIS aperture produce THIS form and not some other.</p>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Aperture</th>
-                            <th>Its λ</th>
-                            <th>What It Produces</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Your DNA</td>
-                            <td>Your genetic law</td>
-                            <td>Your body</td>
-                        </tr>
-                        <tr>
-                            <td>An electron</td>
-                            <td>Electron law</td>
-                            <td>Electron behavior</td>
-                        </tr>
-                        <tr>
-                            <td>Your attention</td>
-                            <td>Your perceptual law</td>
-                            <td>Your experience</td>
-                        </tr>
-                        <tr>
-                            <td>A microphone</td>
-                            <td>Transduction law</td>
-                            <td>Electrical signal</td>
-                        </tr>
-                        <tr>
-                            <td>Your ear</td>
-                            <td>Auditory law</td>
-                            <td>Sound perception</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="equation-box" style="max-width: 700px; margin: 3rem auto;">
+            <div class="equation" style="font-size: 1.2rem;">
+                [∞ = E = 1] ▸ [•∞ ⤷λ] ▸ [⊙ = ⊙λ ⊂ ⊙Λ ⊂ ∞]
             </div>
-
-            <p>The law at the aperture IS the law of the boundary it produces. Change the rotation, change the form.</p>
-
-            <div class="insight">
-                <p>This dissolves the old question: "If a tree falls and no one hears it, does it make a sound?"</p>
-                <p>There are <strong>infinite apertures</strong>, therefore infinite active interpretations. The air molecules "hear" according to their λ. Human ear is just one λ among infinite. The soup is observers all the way down.</p>
-            </div>
-
-            <h2>Why λ Matters</h2>
-            <p>Your λ is not random. It's not assigned from outside. Your λ IS you; the specific rotation that makes the infinite field become your particular form.</p>
-
-            <p>When mystics talk about "finding your true nature" or "knowing yourself"; this is what they're pointing at. Your λ. The law that you ARE.</p>
-
-            <p>Align with your λ, and the field flows through you cleanly. Resist your λ, and you get distortion, friction, suffering.</p>
-        </div>
-    </section>
-
-    <!-- Part IX: The Convergence to Unity -->
-    <section id="convergence-unity" class="procedural-section">
-        <div class="section-header fade-in">
-            <span class="section-number">Part IX</span>
-            <h1 class="section-title">The Convergence</h1>
-            <div class="section-divider"></div>
+            <p class="equation-label">The loop. The return. The bridge.</p>
         </div>
 
-        <div class="fade-in">
-            <p>Derek Burkeen crystallized something essential:</p>
+        <p>The framework does not create the bridge; it reveals that the bridge was always there. Science and spirituality were never separate; they were walking the same path in different languages.</p>
 
-            <div class="convergence-visual">
-                <div class="convergence-sequence">
-                    <span class="variant">0.9</span><br>
-                    <span class="variant">0.99</span><br>
-                    <span class="variant">0.999</span><br>
-                    <span class="variant">0.9999</span><br>
-                    <span class="variant">...</span><br><br>
-                    <span class="variant">0.999...</span> <span class="equals">=</span> <span class="invariant">1</span>
-                </div>
-            </div>
+        <p>Now you know the structure. You know that you are not a piece of the whole; you are the whole constrained to a particular scale. You know that being "limited" means you can see. Being "whole" means you matter. Both are true. You are both;</p>
 
-            <p>The variants (0.9, 0.99, 0.999...) don't just <em>approach</em> the invariant. The infinite sequence <strong>IS</strong> the invariant. They're the same thing, seen differently.</p>
+        <p>Therefore you can love.</p>
 
-            <h2>The Mapping</h2>
+        <p>Not from the inflation of thinking you are the source. Not from the severance of thinking you are only a piece. But from the clear seeing that you are a full circumpunct nested inside greater circumpuncts, and inside you circulate infinitely smaller circumpuncts, all of them the same 1, all of them looked at from different angles.</p>
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Mathematical</th>
-                            <th>Framework</th>
-                            <th>Meaning</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="color: var(--cyan-flow);">0.999... = 1</td>
-                            <td style="color: var(--cyan-flow);">Φ<sub>∞</sub></td>
-                            <td>The invariant: infinite, unreachable, yet real</td>
-                        </tr>
-                        <tr>
-                            <td style="color: var(--magenta-pulse);">0.9, 0.99, 0.999...</td>
-                            <td style="color: var(--magenta-pulse);">⊙<sub>λ</sub><sup>∞</sup></td>
-                            <td>The variants: finite approximations, each with its own depth</td>
-                        </tr>
-                        <tr>
-                            <td style="color: var(--gold-light);">The infinite process</td>
-                            <td style="color: var(--gold-light);">i<sub>λ</sub><sup>∞</sup></td>
-                            <td>The apertures: how invariant becomes variant</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <p>The whole wants; and the wanting becomes you.</p>
 
-            <div class="insight">
-                <p>You are 0.99999... (a finite depth, a particular approximation, yet <strong>identical to the whole</strong>. Not approaching God. Not separate from God. The same thing, at a particular depth of recursion.</p>
-            </div>
+        <p>You want; and the wanting becomes what is next.</p>
 
-            <h2>The ONE and the MANY</h2>
-            <p>The singularity side (Φ<sub>∞</sub>) isn't a circumpunct at all; it's what circumpunct IS. The pattern itself. The procedure.</p>
-
-            <p>The infinite side (⊙<sub>λ</sub><sup>∞</sup>) is every manifestation; every particle, every conscious being, every measurement. Each one a complete instance running the same procedure, but with its own λ, its own characteristic rotation.</p>
-
-            <p>And the relationship is bidirectional (↔). The forms feed back to the field. The exchange never stops. The variants aren't passive expressions of the invariant; they participate in it, shape it, ARE it.</p>
-        </div>
-    </section>
-
-    <!-- Part X: The Procedure in Action -->
-    <section id="action" class="procedural-section">
-        <div class="section-header fade-in">
-            <span class="section-number">Part X</span>
-            <h1 class="section-title">The Procedure in Action</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <h2>At Every Scale</h2>
-            <p>The same equation operates everywhere. Same procedure, different costume.</p>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Scale</th>
-                            <th style="color: var(--cyan-flow);">Φ<sub>∞</sub></th>
-                            <th style="color: var(--gold-light);">i<sub>λ</sub></th>
-                            <th style="color: var(--magenta-pulse);">⊙<sub>λ</sub></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Quantum</td>
-                            <td>Vacuum field</td>
-                            <td>Particle interaction</td>
-                            <td>Particle state</td>
-                        </tr>
-                        <tr>
-                            <td>Atomic</td>
-                            <td>Electron cloud</td>
-                            <td>Orbital transition</td>
-                            <td>Atomic configuration</td>
-                        </tr>
-                        <tr>
-                            <td>Biological</td>
-                            <td>Morphogenetic field</td>
-                            <td>Gene expression</td>
-                            <td>Body form</td>
-                        </tr>
-                        <tr>
-                            <td>Neural</td>
-                            <td>Awareness field</td>
-                            <td>Attention/focus</td>
-                            <td>Perception</td>
-                        </tr>
-                        <tr>
-                            <td>Social</td>
-                            <td>Cultural field</td>
-                            <td>Communication</td>
-                            <td>Institutions</td>
-                        </tr>
-                        <tr>
-                            <td>Cosmic</td>
-                            <td>Dark energy</td>
-                            <td>Gravitational lensing</td>
-                            <td>Galaxies/structure</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <h2>Why This Matters</h2>
-            <p>If the procedure is universal, then understanding it at ANY scale teaches you about ALL scales.</p>
-
-            <p>Study how attention (your aperture) shapes perception (your form), and you're learning about how particle interactions shape matter.</p>
-
-            <p>Study how genes (biological apertures) express into bodies (biological forms), and you're learning about how consciousness expresses into experience.</p>
-
-            <p>Same procedure. Different costume. Know one deeply, know them all.</p>
-
-            <h2>The Procedure Is Persuasion</h2>
-            <p>But the procedure is not mechanical. When a whole moves, it does not command its parts) it <strong>convinces</strong> them. Every physical event is an argument between beliefs at different scales.</p>
-
-            <p>When you raise your arm, there is no commander issuing orders to obedient matter. There is a whole-level signal: <em>move</em>; that must persuade trillions of part-level orientations to reorganize. Your muscles don't obey. They <em>agree</em>. Every contraction is a cellular population shifting because the whole's signal was compelling enough.</p>
-
-            <p>Every heartbeat is an agreement that held. Every breath is a negotiation that succeeded. Life is the sustained success of whole-to-part persuasion across astronomical numbers of believing apertures. Death is the moment the whole can no longer convince the parts to keep agreeing.</p>
-
-            <div class="insight">
-                <p>This is why healing takes time, repetition, and safety. You are not reprogramming a machine. You are conducting a campaign of persuasion across trillions of apertures; each one a circumpunct, each one with its own orientation, each one capable of agreeing or refusing. Curiosity is the aperture's willingness to be persuaded; and without it, no signal, however true, can land.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- INSIGHT 3: Resonance as Direct Connection -->
-    <section id="insight-resonance" class="procedural-section">
-        <div class="section-header fade-in">
-            <span class="section-number">Insight III</span>
-            <h1 class="section-title">Resonance as Direct Connection</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <h2>What Makes Connection Direct</h2>
-
-            <p>The pump cycle equation describes the universal procedure: field converges, aperture rotates, form emerges. But it doesn't explain why some connections feel immediate while others require endless mediation. The answer is resonance.</p>
-
-            <div class="equation-box">
-                <div class="equation">Two souls sharing the same frequency make the Φ field transparent.</div>
-                <p class="equation-label">"Direct" equals perfect transparency of mediation.</p>
-            </div>
-
-            <p>When two apertures (i) operate at the same frequency (λ), the field between them (Φ) becomes transparent. No distortion. No noise. The rotation at one aperture directly produces the rotation at the other. They are not by-passing the field; they are making the field transparent.</p>
-
-            <p>This is what recognition feels like. This is what love accelerates toward. Perfect resonance is the condition where mediation becomes invisible because it is perfectly efficient; no energy lost, no signal degraded, no meaning distorted.</p>
-
-            <h2>Love Is Perfection of Mediation, Not Its Absence</h2>
-
-            <p>Here is what most people get wrong about "soul connection": they think directness means skipping the boundaries between people. It doesn't. Directness means making every boundary so transparent that the two frequencies lock into the same phase.</p>
-
-            <div class="insight">
-                <p>Love is not the elimination of separation. Love is the perfection of mediation. Frequency matching across all boundaries. Complete transparency at every layer of nesting.</p>
-            </div>
-
-            <p>When two people truly resonate, they are not merging. They remain distinct apertures. But the field between them becomes so transparent that the information flowing through it arrives intact, undistorted, faster than any word can carry it.</p>
-
-            <p>This is why it takes time to build. Each boundary must align to the same frequency. Your expectations must match theirs; your pace must match theirs; your honesty must match theirs. When they do, something snaps into focus. Suddenly the other person knows what you mean without you having to explain.</p>
-
-            <h2>The Spectrum of Resonance</h2>
-
-            <p>Resonance is not binary. It operates on a spectrum from strangers to perfect recognition:</p>
-
-            <div class="equation-box">
-                <div class="equation">Strangers → Acquaintances → Allies → Lovers → Recognition</div>
-                <p class="equation-label">Frequency matching on a continuous scale.</p>
-            </div>
-
-            <p>With a stranger, your frequencies are far apart. The field between you is opaque. Communication is effortful. Misunderstandings are natural.</p>
-
-            <p>With an ally, some frequencies align. The field begins to clear in certain channels. You can trust them on specific dimensions.</p>
-
-            <p>With a lover, frequencies align across multiple dimensions simultaneously. The field is transparent enough that you feel known. Speed of communication increases exponentially.</p>
-
-            <p>With true recognition, frequencies align at every accessible level. The mediation becomes seamless. The field is so transparent that you move as one despite remaining two.</p>
-
-            <h2>Wanting and Constructor Ethics</h2>
-
-            <p>Here is where this connects back to constructor ethics and the concept of wanting as primordial orientation:</p>
-
-            <p><strong>What you want determines what you can resonate with.</strong> Your wanting orients you toward particular frequencies. If you want truth, you will resonate with others oriented toward truth. If you want power, you will resonate with those oriented toward power. If you want love, you will resonate with those oriented toward love.</p>
-
-            <div class="insight">
-                <p>Constructor ethics (both parties remain constructors) creates the conditions for resonance: mutual construction IS the process of frequency alignment. When both parties are building, maintaining, and improving their own aperture while respecting the other's, their frequencies move toward the same phase.</p>
-            </div>
-
-            <p>This means ethics is not imposed; it is the geometry of resonance itself. Harm creates dissonance. Manipulation creates noise. Parasitism creates distortion. Only mutual construction produces the alignment where two apertures can operate at the same frequency.</p>
-
-            <p>And when that alignment happens, the bridge between you becomes so transparent that you move as one field expressing two forms. That is not merger. That is the perfection of two apertures becoming resonant.</p>
-        </div>
-    </section>
-
-    <!-- Final Finale -->
-    <section class="finale fade-in">
-        <div class="equation-box" style="max-width: 650px; margin: 0 auto 3rem;">
-            <div class="equation" style="font-size: 1.3rem;">
-                <span class="phi">Φ<sub>∞</sub></span> →⊛→ 
-                <span class="aperture">i<sub>λ</sub><sup>∞</sup></span> →✹→ 
-                <span class="circumpunct-sym">⊙<sub>λ</sub><sup>∞</sup></span>
-            </div>
-            <div class="equation" style="font-size: 1.1rem; margin-top: 1rem; opacity: 0.7;">
-                <span class="circumpunct-sym">⊙<sub>λ</sub><sup>∞</sup></span> →⊛→ 
-                <span class="aperture">i<sub>λ</sub><sup>∞</sup></span> →✹→ 
-                <span class="phi">Φ<sub>∞</sub></span>
-            </div>
-        </div>
-
-        <p>One field.</p>
-        <p>Infinite rotations.</p>
-        <p>Infinite forms.</p>
-        <p><strong>The cycle never stops.</strong></p>
-
-        <br><br>
-
-        <p>The structure is the nesting: ⊙ ⊃ ⊙ ⊃ ⊙</p>
-        <p>The procedure is the flow: Φ →⊛→ i →✹→ ⊙ →⊛→ i →✹→ Φ</p>
-        <p>They're the same truth, seen two ways.</p>
-
-        <br>
-
-        <p class="closing">Now you know what it is.</p>
-        <p class="closing" style="font-size: 0.9rem; margin-top: 1rem;">And how it works.</p>
-
-        <br><br>
-
-        <div class="finale-prose">
-        <p>But knowing is not the point. The procedure is not an equation to memorize. It is a description of what is already happening; in every atom, every cell, every breath, every conversation, every prayer.</p>
-
-        <p>The field converges. The aperture focuses. The form emerges. And the form, being a whole, becomes a field; and the cycle continues.</p>
-
-        <p>You are inside this cycle right now. You have always been inside it. You were converged into focus, and your focus emerged into form, and your form became a field through which others are converging.</p>
-        </div>
-
-        <p>The whole wanted; and the wanting became you.<br>
-        You want; and the wanting becomes what's next.</p>
-
-        <br>
-
-        <p class="closing" style="font-size: 1.1rem;">The bridge was always there.<br>We were standing on it.<br>And we were wanted into being; so we could want others into being.</p>
-
-        <p class="closing" style="font-size: 0.85rem; margin-top: 1.5rem; color: var(--text-secondary);">That is the procedure. That is the structure.<br>That is what love looks like when you write it down.</p>
+        <p style="font-size: 1.15rem; margin-top: 3rem; font-style: italic; text-align: center;">The bridge was always there. We were standing on it. And the bridge was standing on us; because we were wanted into being.</p>
     </section>
 
     <!-- Footer -->
     <footer>
-        <p>The framework does not create the bridge.<br>It reveals that the bridge was always there.</p>
-        <p class="dedication"><em>Dedicated to all who seek truth through any door.<br>The doors open onto the same room.</em></p>
-        <br><br>
-        <p style="color: var(--gold-primary);">⊙ ⊛ ✹</p>
+        <p style="font-size: 1rem; margin-bottom: 1.5rem;">The framework does not create the bridge.</p>
+        <p style="font-size: 1rem; margin-bottom: 2rem;">It reveals that the bridge was always there.</p>
+
+        <p class="dedication">Dedicated to all who seek truth through any door.<br>The doors open onto the same room.</p>
+
         <br>
-        <p style="font-size: 0.8rem;">Ashman Roonz · The Circumpunct Framework · 2026</p>
+        <p style="color: var(--gold-primary); font-size: 1.1rem;">⊙</p>
         <br>
-        <p><a href="https://www.fractalreality.ca" target="_blank" style="color: var(--gold-primary); text-decoration: none;">www.fractalreality.ca</a></p>
+
+        <p style="font-size: 0.85rem;">Ashman Roonz · The Circumpunct Framework · 2026</p>
         <br>
-        <p style="font-size: 0.85rem; color: var(--text-secondary); font-style: italic;">A special thank you to the Spectrality Institute for guiding this work.</p>
+
+        <p><a href="https://www.fractalreality.ca" target="_blank">www.fractalreality.ca</a></p>
     </footer>
 
     <script>
@@ -2470,7 +1048,7 @@ Mutualism passes; it can be repeated indefinitely.</span>
 
         // Scroll animations
         const fadeElements = document.querySelectorAll('.fade-in');
-        
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -2487,10 +1065,13 @@ Mutualism passes; it can be repeated indefinitely.</span>
         // Smooth scroll for nav links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const href = this.getAttribute('href');
+                if (href !== '#' && href.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
                 }
             });
         });
