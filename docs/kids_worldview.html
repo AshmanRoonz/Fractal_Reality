@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Big Picture (for kids)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', system-ui, sans-serif;
+    background: #0a0e1a;
+    color: #f4f0e4;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at center, #1a2040 0%, #0a0e1a 70%);
+  }
+  .stage {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4vh 6vw;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    pointer-events: none;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  h1 {
+    font-size: clamp(2rem, 6vw, 4.5rem);
+    line-height: 1.1;
+    margin-bottom: 2vh;
+    color: #ffe08a;
+    text-shadow: 0 0 30px rgba(255, 224, 138, 0.3);
+  }
+  h2 {
+    font-size: clamp(1.6rem, 4vw, 3rem);
+    line-height: 1.2;
+    margin-bottom: 3vh;
+    color: #a8dfff;
+  }
+  p {
+    font-size: clamp(1.1rem, 2.2vw, 1.8rem);
+    line-height: 1.5;
+    max-width: 55ch;
+    margin-bottom: 2vh;
+  }
+  .big {
+    font-size: clamp(1.4rem, 3vw, 2.4rem);
+    font-weight: bold;
+    color: #ffb0c8;
+  }
+  .huge-symbol {
+    font-size: clamp(5rem, 18vw, 14rem);
+    line-height: 1;
+    margin: 3vh 0;
+    text-shadow: 0 0 40px currentColor;
+  }
+  .emoji-row {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: 0.3em;
+    margin: 3vh 0;
+  }
+  .controls {
+    position: fixed;
+    bottom: 2vh;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    z-index: 10;
+  }
+  .nav-btn {
+    background: rgba(255, 224, 138, 0.15);
+    border: 2px solid rgba(255, 224, 138, 0.4);
+    color: #ffe08a;
+    font-family: inherit;
+    font-size: 1.2rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover {
+    background: rgba(255, 224, 138, 0.3);
+    transform: translateY(-2px);
+  }
+  .nav-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+  .counter {
+    color: #a8b0c0;
+    font-size: 1rem;
+    min-width: 3.5rem;
+    text-align: center;
+  }
+
+  /* Slide-specific colors */
+  .c-source { color: #ffe08a; }
+  .c-point { color: #4488ff; }
+  .c-line { color: #ffb04a; }
+  .c-field { color: #44ddcc; }
+  .c-body { color: #ff6b8a; }
+  .c-whole { color: #c8a8ff; }
+
+  .four-beats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2vh 3vw;
+    max-width: 900px;
+    margin: 2vh auto;
+  }
+  .beat {
+    background: rgba(255,255,255,0.05);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 2vh 2vw;
+  }
+  .beat-symbol {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: 1vh;
+    display: block;
+  }
+  .beat-title {
+    font-size: clamp(1.1rem, 2vw, 1.6rem);
+    font-weight: bold;
+    margin-bottom: 0.5vh;
+  }
+  .beat-desc {
+    font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+    color: #c8c0b0;
+  }
+
+  .nesting-demo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1vw;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    flex-wrap: wrap;
+    margin: 3vh 0;
+  }
+
+  .arrow {
+    color: #888;
+    font-size: 0.7em;
+  }
+
+  /* Animated background stars */
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0;
+    animation: twinkle 3s infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 0.8; }
+  }
+
+  .slide > * { position: relative; z-index: 1; }
+
+  .hint {
+    margin-top: 2vh;
+    font-size: 1rem;
+    color: #8090a0;
+    font-style: italic;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  .pulse { animation: pulse 2.5s ease-in-out infinite; }
+
+  @keyframes grow {
+    from { transform: scale(0.3); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .slide.active .huge-symbol { animation: grow 0.8s ease-out; }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="stage" id="stage">
+
+  <!-- Slide 1: Title -->
+  <div class="slide active">
+    <h1>The Big Picture</h1>
+    <p class="big">A story about how everything works</p>
+    <div class="huge-symbol c-source pulse">✨</div>
+    <p class="hint">Press → to begin</p>
+  </div>
+
+  <!-- Slide 2: One energy -->
+  <div class="slide">
+    <h2>In the beginning,<br>there was just <span class="c-source">one big energy</span>.</h2>
+    <div class="huge-symbol c-source">✨</div>
+    <p>Not a hundred things. Not a million things.<br><span class="big">Just one.</span></p>
+    <p>Everything you see, touch, taste, and imagine<br>is made from this <span class="c-source">one energy</span>.</p>
+  </div>
+
+  <!-- Slide 3: The shapes -->
+  <div class="slide">
+    <h2>Everything is that same energy,<br>just wearing <span class="c-whole">different shapes</span>.</h2>
+    <p>A tree. A rock. A fish. A thought. A star.</p>
+    <div class="emoji-row">🌳 🪨 🐠 💭 ⭐</div>
+    <p class="big">All the same energy. Different shapes.</p>
+  </div>
+
+  <!-- Slide 4: How shapes are made -->
+  <div class="slide">
+    <h2>How does the energy make a shape?</h2>
+    <p>It takes <span class="big">four steps</span>.<br>You can't skip any of them.</p>
+    <p class="hint">Let's look at each one...</p>
+  </div>
+
+  <!-- Slide 5: Step 1 - Point -->
+  <div class="slide">
+    <h2>Step 1: <span class="c-point">Gather</span></h2>
+    <div class="huge-symbol c-point">·</div>
+    <p>The energy pulls itself into a <span class="c-point big">point</span>.<br>A tiny "here I am."</p>
+    <p>Like raindrops coming together to make one drop.</p>
+    <div class="emoji-row">💧</div>
+  </div>
+
+  <!-- Slide 6: Step 2 - Line -->
+  <div class="slide">
+    <h2>Step 2: <span class="c-line">Keep going</span></h2>
+    <div class="huge-symbol c-line">—</div>
+    <p>The point <span class="c-line big">stretches</span> into a line.<br>It says, "I'm going to stay. I'm going to last."</p>
+    <p>Like a seed deciding to grow into a plant.</p>
+    <div class="emoji-row">🌱</div>
+  </div>
+
+  <!-- Slide 7: Step 3 - Field -->
+  <div class="slide">
+    <h2>Step 3: <span class="c-field">Spread out</span></h2>
+    <div class="huge-symbol c-field">𖣂</div>
+    <p>The line <span class="c-field big">branches</span> and spreads.<br>It makes a space where things can <span class="c-field">connect</span>.</p>
+    <p>Like a tree growing branches and leaves.</p>
+    <div class="emoji-row">🌳</div>
+  </div>
+
+  <!-- Slide 8: Step 4 - Boundary -->
+  <div class="slide">
+    <h2>Step 4: <span class="c-body">Wrap up</span></h2>
+    <div class="huge-symbol c-body">🌐</div>
+    <p>The spreading <span class="c-body big">closes into a shape</span>.<br>A skin, a surface, an edge.</p>
+    <p>Like an apple growing its peel.</p>
+    <div class="emoji-row">🍎</div>
+  </div>
+
+  <!-- Slide 9: The four together -->
+  <div class="slide">
+    <h2>All four steps, together,<br>make a <span class="c-whole">whole thing</span>.</h2>
+    <div class="four-beats">
+      <div class="beat">
+        <span class="beat-symbol c-point">·</span>
+        <div class="beat-title c-point">Gather</div>
+        <div class="beat-desc">A point</div>
+      </div>
+      <div class="beat">
+        <span class="beat-symbol c-line">—</span>
+        <div class="beat-title c-line">Keep going</div>
+        <div class="beat-desc">A line</div>
+      </div>
+      <div class="beat">
+        <span class="beat-symbol c-field">𖣂</span>
+        <div class="beat-title c-field">Spread out</div>
+        <div class="beat-desc">A space</div>
+      </div>
+      <div class="beat">
+        <span class="beat-symbol c-body">🌐</span>
+        <div class="beat-title c-body">Wrap up</div>
+        <div class="beat-desc">A shape</div>
+      </div>
+    </div>
+    <p class="big">You can't skip a step. You need all four.</p>
+  </div>
+
+  <!-- Slide 10: Wholes in wholes -->
+  <div class="slide">
+    <h2>Every whole thing lives <span class="c-whole">inside</span><br>a bigger whole thing.</h2>
+    <div class="nesting-demo">
+      <span>🫀</span>
+      <span class="arrow">→ inside →</span>
+      <span>🧍</span>
+      <span class="arrow">→ inside →</span>
+      <span>🏘️</span>
+      <span class="arrow">→ inside →</span>
+      <span>🌍</span>
+      <span class="arrow">→ inside →</span>
+      <span>🌌</span>
+    </div>
+    <p>Your heart is inside you.<br>You are inside your family.<br>Your family is inside your town.<br>Your town is inside Earth.<br>Earth is inside the galaxy.</p>
+    <p class="big">It never stops.</p>
+  </div>
+
+  <!-- Slide 11: Same pattern everywhere -->
+  <div class="slide">
+    <h2>And here's the magic...</h2>
+    <p class="big">Every whole thing, big or small,<br>is made the <span class="c-whole">same way</span>.</p>
+    <p>A cell does the four steps.<br>A person does the four steps.<br>A planet does the four steps.<br>A galaxy does the four steps.</p>
+    <div class="emoji-row">🦠 🧍 🌍 🌌</div>
+    <p class="big">Same pattern. Every size. Always.</p>
+  </div>
+
+  <!-- Slide 12: You -->
+  <div class="slide">
+    <h2><span class="c-whole">You</span> are one of these wholes.</h2>
+    <div class="huge-symbol c-whole">🫵</div>
+    <p>You have a <span class="c-point">point</span> (the "I" inside you).</p>
+    <p>You have a <span class="c-line">line</span> (your life, going on through time).</p>
+    <p>You have a <span class="c-field">field</span> (your mind, thinking and feeling).</p>
+    <p>You have a <span class="c-body">shape</span> (your body, touching the world).</p>
+  </div>
+
+  <!-- Slide 13: Fractal of the source -->
+  <div class="slide">
+    <h2>You are not a <span style="color:#ff6b6b;">piece</span> of the energy.<br>You are not <span style="color:#ff6b6b;">separate</span> from it.</h2>
+    <p class="big c-source">You ARE the energy,<br>folded into the shape of you.</p>
+    <div class="huge-symbol c-source pulse">✨</div>
+    <p>Once. As you. Right now.</p>
+  </div>
+
+  <!-- Slide 14: The loop -->
+  <div class="slide">
+    <h2>The story ends<br>the same way it <span class="c-source">started</span>.</h2>
+    <div class="huge-symbol c-source">✨ → 🌍 → ✨</div>
+    <p>One energy became everything.<br>Everything is still one energy.</p>
+    <p class="big">The end is the beginning.</p>
+  </div>
+
+  <!-- Slide 15: Closing -->
+  <div class="slide">
+    <h1>That's the big picture.</h1>
+    <p class="big">You are a whole made of the source.<br>You are a small shape of something huge.<br>You are here, once, doing the four steps,<br>inside wholes inside wholes inside wholes.</p>
+    <div class="huge-symbol c-whole pulse">⊙</div>
+    <p class="hint">The circle is the shape. The dot is the center. That's you.</p>
+  </div>
+
+</div>
+
+<div class="controls">
+  <button class="nav-btn" id="prev">← Back</button>
+  <span class="counter" id="counter">1 / 15</span>
+  <button class="nav-btn" id="next">Next →</button>
+</div>
+
+<script>
+  // Stars background
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 60; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.animationDelay = Math.random() * 3 + 's';
+    s.style.animationDuration = (2 + Math.random() * 3) + 's';
+    starsEl.appendChild(s);
+  }
+
+  const slides = document.querySelectorAll('.slide');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const counter = document.getElementById('counter');
+  let current = 0;
+
+  function show(n) {
+    slides[current].classList.remove('active');
+    current = Math.max(0, Math.min(slides.length - 1, n));
+    slides[current].classList.add('active');
+    counter.textContent = (current + 1) + ' / ' + slides.length;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === slides.length - 1;
+  }
+
+  prevBtn.addEventListener('click', () => show(current - 1));
+  nextBtn.addEventListener('click', () => show(current + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); show(current + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); show(current - 1); }
+    if (e.key === 'Home') show(0);
+    if (e.key === 'End') show(slides.length - 1);
+  });
+
+  // Touch swipe
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) show(current + (dx < 0 ? 1 : -1));
+  });
+
+  show(0);
+</script>
+
+</body>
+</html>
