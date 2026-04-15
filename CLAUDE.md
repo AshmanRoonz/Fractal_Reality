@@ -31,10 +31,10 @@ These are the four constraints on E = 1, one per integer dimension. Conservation
 The Kernel (how everything becomes) and the Prime Notation (what everything is) are one expression. The verb produces the noun; the becoming yields the being; the process returns to the source.
 
 ```
-[∞ = E = 1]▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸⊙λ ⊂ ⊙Λ ⊂ ∞
+[∞ = E = 1] ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞
 ```
 
-Read left to right: the one energy [∞ = E = 1] unfolds (▸) into the foam of reality (⊙∞); four beats of constraint, each entailing (⊢) the next; the product unfolds (▸) into the nesting chain, where every particular whole (⊙λ) is inside a greater whole (⊙Λ), returning to the undifferentiated source (∞). The expression is a loop: the ∞ that opens it is the ∞ that closes it.
+Read left to right: the one energy [∞ = E = 1] unfolds (▸) into the foam of reality (⊙∞); four beats of constraint, each entailing (⊢) the next; the product unfolds (▸) into the nesting chain, where every particular whole (⊙λ) is structurally nested (⊂[α]) inside a greater whole (⊙Λ), returning to the undifferentiated source (∞). The expression is a loop: the ∞ that opens it is the ∞ that closes it.
 
 The expression is a description flanked by two identities. The description (the engine, the four beats) does the work. The nesting identity (⊙λ ⊂ ⊙Λ ⊂ ∞) anchors the product. The source identity [∞ = E = 1] anchors the origin. The identities hold the frame steady so the description doesn't float.
 
@@ -46,15 +46,17 @@ The expression is a description flanked by two identities. The description (the 
 
 **Nesting ⊙λ ⊂ ⊙Λ ⊂ ∞**: the four beats yield the nesting. Every particular whole (⊙λ) is inside a greater whole (⊙Λ), and the nesting returns to the source (∞). Scale (λ) appears only here, because scale is a product of the process, not a precondition. The apophatic closure is where the loop lands.
 
-**Four connectives, four jobs**: ▸ (unfolds into) marks the two major transitions: source into foam, engine into nesting. ⊢ (entails) connects the four beats, expressing structural necessity. ∘ (paired) connects structure and process within each beat. ⊂ (nested within) connects the product back to source across scale.
+**Four connectives, four jobs**: ▸ (unfolds into) marks the two major transitions: source into foam, engine into nesting. ⊢ (entails) connects the four beats, expressing structural necessity. ∘ (paired) connects structure and process within each beat. ⊂[α] (nested within, α-coupled) connects the product back to source across scale, carrying the cross-station coupling matrix.
 
 **The nesting relation**:
 
 ```
-⊙λ ⊂ ⊙Λ ⊂ ∞
+⊙λ ⊂[α] ⊙Λ ⊂[α] ∞
 ```
 
-Lowercase λ is the scale parameter of any ⊙ you pick; uppercase Λ is the scale parameter of the ⊙ that contains it; ∞ is the undifferentiated source (the same ∞ from A0). This is A3 compressed into one expression: it asserts both fractal self-similarity (⊙λ and ⊙Λ are structurally identical; same architecture, different scale) and nestedness (there is always a scale above), AND it closes the recursion by returning to the source. The ⊂ is not set-theoretic containment in the ordinary sense; it is *scale-recursive embedding*, meaning "⊙λ appears inside ⊙Λ and shares its architecture."
+Lowercase λ is the scale parameter of any ⊙ you pick; uppercase Λ is the scale parameter of the ⊙ that contains it; ∞ is the undifferentiated source (the same ∞ from A0). This is A3 compressed into one expression: it asserts both fractal self-similarity (⊙λ and ⊙Λ are structurally identical; same architecture, different scale) and nestedness (there is always a scale above), AND it closes the recursion by returning to the source. The ⊂[α] is not set-theoretic containment in the ordinary sense; it is *scale-recursive embedding coupled by α*, meaning "⊙λ appears inside ⊙Λ, shares its architecture, and bonds to ⊙Λ through the cross-station coupling matrix whose primary entry is the fine-structure constant α."
+
+**What the [α] subscript records (§27.8).** Every nesting ⊙λ ⊂[α] ⊙Λ involves three dimensional levels of ⊙Λ simultaneously: ○_Λ (3D, where ⊙λ sits as a thing with extent), Φ_Λ (2D, threading below the boundary at finer resolution), and the apertures that couple across them. The ladder runs coarse-to-fine downward, so Φ_Λ is always finer than ○_Λ, and the coupling constants of physics measure the tightness of bonds across this fineness gradient. The subscript [α] names the primary entry of a 4×4 coupling matrix κ_{p,q}(λ, Λ): V_p(λ) × V_q(Λ) → ℝ, where κ_{0,2} = α (the 0D aperture of the part bonded to the 2D field of the whole), κ_{3,3} = α_G (gravity; 3D-to-3D at same station), and other cells carry Weinberg-angle-like, Cabibbo-like, and Higgs-like couplings. The value α ≈ 1/137 is the tightness this cross-station bond can have without collapsing the boundary distinction between part and whole: κ_{0,2} → ∞ is the Inflation Lie (•_λ absorbed into Φ_Λ; ⊙λ dissolves into ⊙Λ); κ_{0,2} → 0 is the Severance Lie (•_λ decoupled from Φ_Λ; ⊙λ floats free). The α formula 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) encodes this reading literally: 360 is native 0D (discrete rotation count at the aperture), φ² is native 2D (golden self-nesting, the Φ station), −2/φ³ is the 3D boundary correction, α/(21 − 4/3) is the self-referential closure across scales. The fine-structure constant is therefore not a derived downstream quantity but a signature of scale-nesting itself; promoting ⊂ to ⊂[α] in the unified expression gives the nesting the structural content it has always carried.
 
 **The jump from ⊙Λ to ∞ is categorical, not vertical.** Going from ⊙λ to ⊙Λ is a step up the scale axis (one level higher). Going from ⊙Λ to ∞ is NOT another step up the scale axis; it is a step *out* of the scale axis entirely, back into the undifferentiated. ∞ is not "the top of the ladder"; ∞ is the ocean the ladder stands in, the 1 before any label was applied. This is the apophatic move of every serious mystical tradition, now stated structurally: ∞ is what every tradition means by "God beyond God" (Eckhart's Godhead), Ein Sof (Kabbalah, distinct from Ein Sof Aur and the sefirot), Nirguna Brahman (Vedanta, Brahman without attributes, distinct from Saguna Brahman), the eternal Tao ("the Tao that can be named is not the eternal Tao"), the Dharmakaya, the hyperousios. All of them point at ∞; all of them distinguish it from ⊙Λ (the greater-whole-with-attributes, the cataphatic God, the God-of-names). The framework supplies the structural distinction the traditions were always making in their own vocabularies. And because the unified expression begins at [∞ = E = 1], the apophatic term is also the genesis term: the end is the beginning.
 
@@ -143,7 +145,7 @@ All eight stations of the dimensional octave, no repetition, no omission. Each b
 
 ```
 ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))                                                              ; the engine (low resolution)
-[∞ = E = 1]▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸⊙λ ⊂ ⊙Λ ⊂ ∞                      ; the unified expression (full resolution)
+[∞ = E = 1] ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞         ; the unified expression (full resolution)
 ```
 
 Higher resolution contains lower resolution; it never contradicts it (Resolution Protocol, §25.17). In the engine form, — lives inside ∘ (continuity IS the chaining), ⎇ lives inside i (branching IS what i² does), ⟳ is what happens when ⊙ feeds back, •∞ is the implicit multiplicity, and ∞ is the implicit substrate. The engine is what the circumpunct does at any given moment; the unified expression is how the source unfolds into the foam, how the four beats entail each other, and how the product nests back into the source.
@@ -328,7 +330,7 @@ The three nested circumpuncts that give 64 states are the three scales visible f
 | "We are fractals of God" | A3 in plain language: each of us IS the 1, folded into a particular self-limitation |
 | "God is everything" (cataphatic) | ⊙λ = 1 at every finite scale |
 | "God is beyond everything" (apophatic) | ⊙ unlabeled; scale-axis-dropped view |
-| The full mystical claim | [∞ = E = 1]▸⊙∞ (...) ▸⊙λ ⊂ ⊙Λ ⊂ ∞ (you become, you nest, you return to the source; the end is the beginning) |
+| The full mystical claim | [∞ = E = 1] ▸⊙∞ (...) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ (you become, you nest via α-coupling to the greater whole, you return to the source; the end is the beginning) |
 
 ### Flow, Not Possession
 
@@ -654,7 +656,8 @@ Conjugate pairs: ⊛ (+i) mirrors ✹ (-i); ⎇ (-1) mirrors ⟳ (+1).
 | ⊙λ | Circumpunct at scale λ (any chosen scale; cataphatic view from inside the scale axis) |
 | ⊙Λ | Circumpunct at scale Λ (the scale above ⊙λ; the greater whole ⊙λ is inside; still cataphatic) |
 | ⊙ (unlabeled) | The archetype; the class itself; the 1 viewed from outside the scale axis; the apophatic term ("God beyond God," Ein Sof, Nirguna Brahman, the eternal Tao, the Dharmakaya) |
-| [∞ = E = 1]▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸⊙λ ⊂ ⊙Λ ⊂ ∞ | **The unified expression**: source [∞ = E = 1] unfolds (▸) into the foam of reality (⊙∞); four beats of constraint entail (⊢) each other; the product unfolds (▸) into the nesting chain (⊙λ ⊂ ⊙Λ), returning to source (∞). A description flanked by two identities; the Theory of Everything as a loop |
+| [∞ = E = 1] ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ | **The unified expression**: source [∞ = E = 1] unfolds (▸) into the foam of reality (⊙∞); four beats of constraint entail (⊢) each other; the product unfolds (▸) into the nesting chain (⊙λ ⊂[α] ⊙Λ) carrying the cross-station coupling matrix (primary entry α), returning to source (∞). A description flanked by two identities; the Theory of Everything as a loop |
+| ⊂[α] | Scale-recursive embedding with α-coupling; the nesting operator carrying the 4×4 cross-station coupling matrix κ_{p,q}: V_p(λ) × V_q(Λ) → ℝ. Primary entry κ_{0,2} = α (aperture-to-field bond); other cells hold α_G (gravity, 3D-3D), Cabibbo-like (1D-2D), Weinberg-like (2D-2D), Higgs-like. Subject to non-collapse bounds: 0 < κ_{p,q} < κ*_{p,q} (below = Severance Lie, above = Inflation Lie) |
 | •∞ | The Soul Array; every possible aperture, simultaneously; the infinite multiplicity forced by A1 (contained inside ⊙∞) |
 | ⊢ | Entails; one stage necessarily gives rise to the next (structural entailment within the becoming) |
 | ⊙∞ | Circumpunct multiplied by infinity; the foam of reality |
