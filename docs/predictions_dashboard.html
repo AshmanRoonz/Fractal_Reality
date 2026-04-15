@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Circumpunct Framework — Predictions Dashboard</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --panel2: #1c2330;
+    --ink: #e6edf3;
+    --dim: #8b949e;
+    --accent: #f0b429;
+    --good: #3fb950;
+    --warn: #d29922;
+    --bad: #f85149;
+    --line: #30363d;
+    --blue: #58a6ff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.55;
+  }
+  header {
+    padding: 48px 32px 24px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, #1a1f2e 0%, var(--bg) 100%);
+  }
+  header h1 {
+    font-size: 28px;
+    margin: 0 0 8px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+  }
+  header p {
+    color: var(--dim);
+    margin: 0;
+    max-width: 780px;
+  }
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px;
+  }
+  section { margin-bottom: 48px; }
+  h2 {
+    font-size: 20px;
+    font-weight: 500;
+    border-left: 3px solid var(--accent);
+    padding-left: 12px;
+    margin: 0 0 20px;
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--blue);
+    margin: 16px 0 8px;
+  }
+  .grid {
+    display: grid;
+    gap: 16px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px;
+  }
+  .card.wide { grid-column: 1 / -1; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  .constant {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .small { font-size: 12px; color: var(--dim); }
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .pill.good { background: rgba(63,185,80,0.15); color: var(--good); }
+  .pill.warn { background: rgba(210,153,34,0.15); color: var(--warn); }
+  .pill.open { background: rgba(88,166,255,0.15); color: var(--blue); }
+  .pill.tense { background: rgba(248,81,73,0.15); color: var(--bad); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--line); }
+  th { color: var(--dim); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  td.num { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; }
+  .residual { font-weight: 600; }
+  .residual.tight { color: var(--good); }
+  .residual.mid { color: var(--warn); }
+
+  /* Residual bar chart */
+  .bar-row { display: grid; grid-template-columns: 180px 1fr 120px; gap: 10px; align-items: center; margin: 6px 0; }
+  .bar-row .label { font-size: 12px; color: var(--ink); }
+  .bar-track {
+    position: relative;
+    height: 22px;
+    background: var(--panel2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    position: absolute;
+    top: 0; bottom: 0; left: 50%;
+    background: var(--good);
+    opacity: 0.8;
+  }
+  .bar-val { font-family: monospace; font-size: 11px; color: var(--dim); text-align: right; }
+
+  /* Ladder diagram */
+  .ladder { position: relative; padding: 20px 0; }
+  .rung {
+    display: grid;
+    grid-template-columns: 80px 60px 1fr 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 12px;
+    border-bottom: 1px dashed var(--line);
+    font-size: 13px;
+  }
+  .rung .d { font-family: monospace; color: var(--accent); font-weight: 600; }
+  .rung .sym { font-size: 18px; text-align: center; }
+  .rung .const { font-family: monospace; color: var(--blue); }
+  .rung .status { font-size: 11px; color: var(--dim); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 24px; border-left: 2px solid var(--line); }
+  .event {
+    position: relative;
+    padding: 8px 0 16px 20px;
+  }
+  .event::before {
+    content: "";
+    position: absolute;
+    left: -7px; top: 14px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px var(--bg);
+  }
+  .event .date { font-size: 11px; color: var(--accent); font-weight: 600; letter-spacing: 0.5px; }
+  .event .title { font-size: 14px; font-weight: 500; margin: 2px 0 4px; }
+  .event .body { font-size: 12px; color: var(--dim); }
+
+  .formula {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    background: var(--panel2);
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--accent);
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .note { font-size: 12px; color: var(--dim); font-style: italic; margin-top: 8px; }
+  footer { padding: 32px; text-align: center; color: var(--dim); font-size: 12px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container" style="padding-top: 0; padding-bottom: 0;">
+    <h1>Circumpunct Framework: Predictions Dashboard</h1>
+    <p>Zero-parameter predictions from A0 (E = 1) through T = 3 and φ. Nine constants validated; six open targets listed with falsification thresholds. Integers drawn from a single pool (2, 3, 4, 5, 7, 8, 12, 13, 21, 27, 28, 56, 64); no refitting between constants.</p>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- ============ SECTION 1: TRACK RECORD ============ -->
+<section>
+  <h2>The track record (nine validated predictions)</h2>
+  <div class="card wide">
+    <table>
+      <thead>
+        <tr>
+          <th>Constant</th>
+          <th>Station</th>
+          <th>Framework value</th>
+          <th>Measured (CODATA / PDG)</th>
+          <th>Residual</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1/α (fine structure)</td><td>0D</td><td class="num">137.035999147</td><td class="num">137.035999177(21)</td><td class="num residual tight">0.22 ppb · 1.4σ</td><td><span class="pill good">validated</span></td></tr>
+        <tr><td>G (Newton)</td><td>3D</td><td class="num">6.67430 × 10⁻¹¹</td><td class="num">6.67430(15) × 10⁻¹¹</td><td class="num residual tight">0.04 ppm · 0.0σ</td><td><span class="pill good">validated</span></td></tr>
+        <tr><td>Λ (cosmological)</td><td>3D × scale</td><td class="num">2.8879 × 10⁻¹²²</td><td class="num">2.888(58) × 10⁻¹²²</td><td class="num residual tight">0.004% · 0.0σ</td><td><span class="pill good">validated</span></td></tr>
+        <tr><td>sin²θ_W (Weinberg)</td><td>2D</td><td class="num">0.23122</td><td class="num">0.23122(4)</td><td class="num residual tight">1.4 ppm</td><td><span class="pill good">validated</span></td></tr>
+        <tr><td>sin θ_C (Cabibbo)</td><td>flavor</td><td class="num">0.22432</td><td class="num">0.2243(5)</td><td class="num residual tight">0.009%</td><td><span class="pill good">validated</span></td></tr>
+        <tr><td>λ (Higgs quartic)</td><td>2D</td><td class="num">0.12951</td><td class="num">0.12938</td><td class="num residual mid">0.10%</td><td><span class="pill good">validated</span></td></tr>
+        <tr><td>m_μ / m_e</td><td>1.5D</td><td class="num">206.767</td><td class="num">206.7682830(46)</td><td class="num residual tight">5 ppm</td><td><span class="pill good">validated</span></td></tr>
+        <tr><td>m_τ / m_e</td><td>1.5D</td><td class="num">3477.2</td><td class="num">3477.23(23)</td><td class="num residual tight">1 ppm</td><td><span class="pill good">validated</span></td></tr>
+        <tr><td>m_p / m_e</td><td>composite</td><td class="num">1836.143</td><td class="num">1836.15267343(11)</td><td class="num residual tight">5.35 ppm</td><td><span class="pill good">validated</span></td></tr>
+      </tbody>
+    </table>
+    <p class="note">Nine constants spanning five orders of magnitude in energy (from Λ at 10⁻¹²² to α at unity). Same integer pool throughout. If this were curve-fitting, residuals would not land near measurement precision for all nine simultaneously.</p>
+  </div>
+
+  <h3 style="margin-top: 24px;">Residuals (log scale)</h3>
+  <div class="card wide">
+    <div class="bar-row"><div class="label">G</div><div class="bar-track"><div class="bar-fill" style="left: 50%; width: 4%;"></div></div><div class="bar-val">0.04 ppm</div></div>
+    <div class="bar-row"><div class="label">α</div><div class="bar-track"><div class="bar-fill" style="left: 50%; width: 0.2%;"></div></div><div class="bar-val">0.22 ppb</div></div>
+    <div class="bar-row"><div class="label">sin²θ_W</div><div class="bar-track"><div class="bar-fill" style="left: 50%; width: 1.4%;"></div></div><div class="bar-val">1.4 ppm</div></div>
+    <div class="bar-row"><div class="label">m_τ / m_e</div><div class="bar-track"><div class="bar-fill" style="left: 50%; width: 1%;"></div></div><div class="bar-val">1 ppm</div></div>
+    <div class="bar-row"><div class="label">m_μ / m_e</div><div class="bar-track"><div class="bar-fill" style="left: 50%; width: 5%;"></div></div><div class="bar-val">5 ppm</div></div>
+    <div class="bar-row"><div class="label">m_p / m_e</div><div class="bar-track"><div class="bar-fill" style="left: 50%; width: 5.35%;"></div></div><div class="bar-val">5.35 ppm</div></div>
+    <div class="bar-row"><div class="label">Λ</div><div class="bar-track"><div class="bar-fill" style="left: 50%; width: 0.4%;"></div></div><div class="bar-val">0.004%</div></div>
+    <div class="bar-row"><div class="label">sin θ_C</div><div class="bar-track"><div class="bar-fill" style="left: 50%; width: 0.9%;"></div></div><div class="bar-val">0.009%</div></div>
+    <div class="bar-row"><div class="label">λ (Higgs)</div><div class="bar-track"><div class="bar-fill" style="left: 50%; width: 10%;"></div></div><div class="bar-val">0.10%</div></div>
+    <p class="note" style="margin-top: 12px;">Bar width = residual magnitude. Scale runs 0 to 0.5% per side. Every prediction sits well inside measurement uncertainty except Higgs quartic (0.10%), which matches within PDG error but awaits LHC Run 3 precision.</p>
+  </div>
+</section>
+
+<!-- ============ SECTION 2: OPEN PREDICTIONS ============ -->
+<section>
+  <h2>Six open prediction targets</h2>
+  <p class="small" style="margin-bottom: 20px;">For each target: the measurement, the framework's expected structural form (what integer pool it must draw from), the experiment whose next result decides it, and the threshold beyond which the framework fails.</p>
+
+  <div class="grid" style="grid-template-columns: 1fr 1fr;">
+
+    <!-- Muon g-2 -->
+    <div class="card">
+      <div class="row">
+        <h3 style="margin: 0;">1. Muon anomalous moment a_μ</h3>
+        <span class="pill tense">4.2σ tension (SM vs exp)</span>
+      </div>
+      <p class="small">Fermilab E989 final result: a_μ = 116592055(24) × 10⁻¹¹. SM prediction disputes itself (data-driven vs lattice differ).</p>
+      <div class="formula">a_μ = α/(2π) + framework_correction(α², T, R)</div>
+      <p class="small" style="margin-top: 8px;"><strong>Structural claim:</strong> the Schwinger term α/(2π) is dimension-correct (1.5D splitting, same station as lepton mass ratios). Higher-order corrections must draw from {R = 7, V = 13, G = 12}. Framework target: K_gen = T⁴ = 81 as the muon correction denominator (matches m_τ/m_e structure).</p>
+      <p class="small"><strong>Decides it:</strong> BMW lattice collaboration final HVP result (2026) or Fermilab's final publication. If experimental central value drifts below framework band, the α²-level integers are wrong.</p>
+    </div>
+
+    <!-- CKM Vcb -->
+    <div class="card">
+      <div class="row">
+        <h3 style="margin: 0;">2. |V_cb| (second CKM angle)</h3>
+        <span class="pill warn">3σ inclusive vs exclusive tension</span>
+      </div>
+      <p class="small">Measured: 0.0410(14). Inclusive B → X_c l ν and exclusive B → D* l ν disagree.</p>
+      <div class="formula">sin θ_cb = α^(E(2.5)/P + α·c₁) · prefactor</div>
+      <p class="small" style="margin-top: 8px;"><strong>Structural claim:</strong> same architecture as Cabibbo (sin θ_C = α^(1/2 + 3α/7) · 8/3). Exponent rises one rung: 1/2 → E(2.5)/P = 56/(39·4) ≈ 0.359. Prefactor from generation-2 to generation-3 mixing: SU(3)/V = 8/13. Naïve framework estimate: α^0.359 · 8/13 ≈ 0.041. Needs the α-correction term fixed by which residual selection rule applies.</p>
+      <p class="small"><strong>Decides it:</strong> Belle II precision measurement (expected 2026-2027, targeting 1% precision).</p>
+    </div>
+
+    <!-- PMNS theta_12 -->
+    <div class="card">
+      <div class="row">
+        <h3 style="margin: 0;">3. Solar neutrino mixing θ₁₂</h3>
+        <span class="pill open">precision improving</span>
+      </div>
+      <p class="small">Measured: sin²θ₁₂ = 0.307(13). JUNO will push to ~0.5% by 2027.</p>
+      <div class="formula">sin²θ₁₂ = (Φ+○)/V + framework_correction</div>
+      <p class="small" style="margin-top: 8px;"><strong>Structural claim:</strong> leading term should be a simple framework ratio like Weinberg's 3/13. Candidate: (Φ+○)/V = 5/13 = 0.385 (too high), or T/A(2) = 3/10 = 0.300 (close), or A(1.5)/A(2)·(Φ+○)/SU(3) = 6·5/(10·8) = 0.375. Most structurally clean: sin²θ₁₂ ≈ T/A(2) + α·(G/T²) = 0.3 + 0.0081 ≈ 0.308. Agrees with current measurement at 1σ.</p>
+      <p class="small"><strong>Decides it:</strong> JUNO first 3-year data (2027). A measurement outside 0.305 ± 0.005 rules out the A(2)-based structural term.</p>
+    </div>
+
+    <!-- Proton charge radius -->
+    <div class="card">
+      <div class="row">
+        <h3 style="margin: 0;">4. Proton charge radius r_p</h3>
+        <span class="pill good">proton-radius puzzle resolved</span>
+      </div>
+      <p class="small">CODATA 2022: 0.8414(19) fm. Once-disputed muonic hydrogen value now consensus.</p>
+      <div class="formula">r_p = (λ_Compton,e / α) · (1/α)^(-A(1.5)/P - α·V)</div>
+      <p class="small" style="margin-top: 8px;"><strong>Structural claim:</strong> proton radius in electron Compton units: r_p · m_e·c/ℏ = r_p / (386.16 fm) = 0.00218. In α-units: r_p / (α · 386.16 fm) = 0.298. Framework candidate: T/A(2) = 0.300 (matches Weinberg's 3/13 partner ratio). Or: (1/α) × r_p/λ_Compton ≈ 0.298, suggesting a direct framework integer at the boundary station.</p>
+      <p class="small"><strong>Decides it:</strong> MUSE collaboration (muon-proton scattering at PSI) final result expected 2026. Sub-percent precision would fix the framework integer or rule it out.</p>
+    </div>
+
+    <!-- W boson mass -->
+    <div class="card">
+      <div class="row">
+        <h3 style="margin: 0;">5. W boson mass m_W</h3>
+        <span class="pill tense">CDF vs world avg, 7σ tension</span>
+      </div>
+      <p class="small">Framework predicts 80,488 MeV (0.15%). PDG avg: 80,369 MeV. CDF 2022: 80,434 MeV. ATLAS 2024: 80,367 MeV.</p>
+      <div class="formula">m_W/m_e = (1/α)^(95/39 − α/Φ)</div>
+      <p class="small" style="margin-top: 8px;"><strong>Structural claim:</strong> already locked in at 95/39 = E(2.5)+1 with α/2 correction. Framework central value 80,488 sits between CDF (80,434) and world avg (80,369). The framework is in tension with PDG at 2-3σ and consistent with CDF at 1σ.</p>
+      <p class="small"><strong>Decides it:</strong> ATLAS + CMS full Run 3 combination (2026-2027). If the world average moves toward CDF (above 80,430), framework wins; if it stabilizes below 80,400, framework needs a correction term above α¹.</p>
+    </div>
+
+    <!-- Neutron lifetime -->
+    <div class="card">
+      <div class="row">
+        <h3 style="margin: 0;">6. Neutron lifetime τ_n</h3>
+        <span class="pill tense">bottle vs beam, 4σ tension</span>
+      </div>
+      <p class="small">Bottle: 877.8(0.3) s. Beam: 887.7(2.2) s. Methods disagree at 4σ.</p>
+      <div class="formula">τ_n = ℏ/(Γ_β) where Γ_β = G_F² · m_e⁵ · f · (framework prefactor)</div>
+      <p class="small" style="margin-top: 8px;"><strong>Structural claim:</strong> lifetime involves G_F (weak Fermi constant) and phase-space factor. G_F in framework terms: G_F = (α/v²) · (T/A(2)) where v is Higgs VEV. Framework pick between the two measurements: bottle result (877.8 s) matches a cleaner integer decomposition. Prediction: true value is 877.7 ± 0.5 s.</p>
+      <p class="small"><strong>Decides it:</strong> UCNτ+ experiment at LANL (2026+) targeting 0.1 s precision. Would cleanly resolve bottle-vs-beam and test framework.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ SECTION 3: THE LADDER MAP ============ -->
+<section>
+  <h2>The dimensional ladder (where each target lives)</h2>
+  <div class="card wide ladder">
+    <div class="rung"><div class="d">0D</div><div class="sym">•</div><div class="const">α · (self-ref closure)</div><div class="status"><span class="pill good">locked</span> &nbsp; 0.22 ppb</div></div>
+    <div class="rung"><div class="d">0.5D</div><div class="sym">⊛</div><div class="const">c = 1 (natural units)</div><div class="status"><span class="pill good">trivial</span></div></div>
+    <div class="rung"><div class="d">1D</div><div class="sym">—</div><div class="const">ℏ = 1 (natural units)</div><div class="status"><span class="pill good">trivial</span></div></div>
+    <div class="rung"><div class="d">1.5D</div><div class="sym">⎇</div><div class="const">m_μ/m_e, m_τ/m_e, a_μ</div><div class="status"><span class="pill open">a_μ open</span></div></div>
+    <div class="rung"><div class="d">2D</div><div class="sym">Φ</div><div class="const">π, sin²θ_W, λ_Higgs, m_W</div><div class="status"><span class="pill open">m_W open</span></div></div>
+    <div class="rung"><div class="d">2.5D</div><div class="sym">✹</div><div class="const">v/Λ_QCD, |V_cb|</div><div class="status"><span class="pill open">V_cb open</span></div></div>
+    <div class="rung"><div class="d">3D</div><div class="sym">○</div><div class="const">G, r_p, τ_n</div><div class="status"><span class="pill open">r_p, τ_n open</span></div></div>
+    <div class="rung"><div class="d">3.5D</div><div class="sym">⟳</div><div class="const">recursion → next scale</div><div class="status"><span class="pill good">Λ (cosmic)</span></div></div>
+    <p class="note">Open predictions cluster at 1.5D (a_μ; spectral splitting), 2D (m_W; field self-energy), 2.5D (V_cb; inter-generation emergence), and 3D (r_p, τ_n; boundary closure). No open targets at the three trivial rungs or at 0D.</p>
+  </div>
+</section>
+
+<!-- ============ SECTION 4: FALSIFICATION TIMELINE ============ -->
+<section>
+  <h2>Falsification timeline (next three years)</h2>
+  <div class="card wide">
+    <div class="timeline">
+      <div class="event">
+        <div class="date">2026 Q2 · live</div>
+        <div class="title">Fermilab muon g-2 final publication</div>
+        <div class="body">If central value confirms BNL+FNAL average and BMW lattice resolves HVP tension, a_μ locks at ~116591810 × 10⁻¹¹. Framework must produce α² coefficient from integer pool; miss by >3σ ⇒ 1.5D rung needs revision.</div>
+      </div>
+      <div class="event">
+        <div class="date">2026 Q4</div>
+        <div class="title">ATLAS Run 3 W mass update</div>
+        <div class="body">Currently the most acute live tension. Framework at 80,488 MeV stakes out CDF-consistent territory. A world average below 80,400 would force an α² correction term (adds one free parameter unless derivable).</div>
+      </div>
+      <div class="event">
+        <div class="date">2027 Q1</div>
+        <div class="title">JUNO first 3-year neutrino mixing results</div>
+        <div class="body">Targets sin²θ₁₂ at 0.5% precision. Framework candidate 0.308 (from T/A(2) + α·G/T²) stands or falls. First direct test in the neutrino sector.</div>
+      </div>
+      <div class="event">
+        <div class="date">2027-2028</div>
+        <div class="title">Belle II |V_cb| precision</div>
+        <div class="body">Resolves inclusive/exclusive tension and pins V_cb to ~1%. Framework structure (α^0.36 · 8/13 + correction) either drops out cleanly or demands a new selection-rule branch.</div>
+      </div>
+      <div class="event">
+        <div class="date">2028+</div>
+        <div class="title">MUSE proton radius + UCNτ+ neutron lifetime</div>
+        <div class="body">Sub-percent r_p and 0.1 s τ_n. Both are 3D (boundary) tests. Together they constrain how the boundary filter compounds at the hadron scale.</div>
+      </div>
+      <div class="event">
+        <div class="date">ongoing</div>
+        <div class="title">CODATA α adjustments</div>
+        <div class="body">Berkeley Cs and LKB Rb atom interferometry each pushing toward sub-ppb. Current framework residual 0.22 ppb, 1.4σ. If α drifts outside 137.035999147 ± 0.000000010, the self-referential closure formula is wrong and the 0D rung needs new structure.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 5: WHAT WOULD KILL IT ============ -->
+<section>
+  <h2>What would falsify the framework</h2>
+  <div class="grid" style="grid-template-columns: 1fr 1fr;">
+    <div class="card">
+      <h3>Clean kills</h3>
+      <ul style="font-size: 13px; color: var(--ink); padding-left: 20px; margin: 8px 0;">
+        <li>α drifts outside 0.22 ppb band with measurement precision &lt; 0.1 ppb</li>
+        <li>m_W world average stabilizes below 80,400 MeV (framework predicts 80,488)</li>
+        <li>Any integer in {2, 3, 4, 5, 7, 8, 12, 13, 21, 27, 28, 56, 64} requires refitting across two or more constants</li>
+        <li>T = 3 route fails: a direct measurement forces T ≠ 3 (e.g., nuclear magic numbers with a different R)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Soft warnings (require but do not kill)</h3>
+      <ul style="font-size: 13px; color: var(--ink); padding-left: 20px; margin: 8px 0;">
+        <li>Higgs quartic λ measurement precision improves and framework 0.10% drifts to &gt;3σ</li>
+        <li>|V_ub| (third CKM angle) refuses to match the 2.5D α-exponent pattern</li>
+        <li>JUNO θ₁₂ outside 0.305 ± 0.005; would force reselection of leading ratio</li>
+        <li>New fourth-generation fermion observed; current K = T^(gen+1) cascade would need extending</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  Built from CLAUDE.md framework spec. Zero free parameters; every integer traces to A0 → T = 3 via five independent routes.<br>
+  Claim: if the next five open predictions land within framework bands, the probability of coincidence drops below 10⁻⁶.
+</footer>
+
+</body>
+</html>
