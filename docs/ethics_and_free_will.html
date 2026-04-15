@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ethics and Free Will: A Plain-Language Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-surface: #12121a;
+      --bg-elevated: #1a1a24;
+      --text: #e8e8ed;
+      --text-dim: #888899;
+      --text-muted: #555566;
+      --gold: #d4a84b;
+      --gold-dim: rgba(212, 168, 75, 0.15);
+      --cyan: #4ecdc4;
+      --cyan-dim: rgba(78, 205, 196, 0.12);
+      --magenta: #ff6b9d;
+      --magenta-dim: rgba(255, 107, 157, 0.12);
+      --green: #7fcd91;
+      --green-dim: rgba(127, 205, 145, 0.12);
+      --red: #e85d75;
+      --red-dim: rgba(232, 93, 117, 0.12);
+      --border: #2a2a3a;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-serif);
+      font-size: 19px;
+      line-height: 1.7;
+    }
+    header {
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(78,205,196,0.04) 0%, transparent 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      border: 1px solid rgba(78,205,196,0.06);
+      pointer-events: none;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,107,157,0.2);
+      box-shadow: 0 0 40px rgba(255,107,157,0.15);
+      pointer-events: none;
+    }
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem;
+      position: relative; z-index: 1;
+    }
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 1.2rem;
+      font-style: italic;
+      position: relative; z-index: 1;
+    }
+    .meta {
+      margin-top: 2rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      position: relative; z-index: 1;
+    }
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 6rem;
+    }
+    section { margin-bottom: 3.5rem; }
+    h2 {
+      font-size: 1.9rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      color: var(--gold);
+      letter-spacing: 0.01em;
+    }
+    h3 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--cyan);
+    }
+    p { margin-bottom: 1.1rem; }
+    .lede {
+      font-size: 1.25rem;
+      font-style: italic;
+      color: var(--text-dim);
+      border-left: 2px solid var(--gold);
+      padding-left: 1.25rem;
+      margin: 2rem 0;
+    }
+    .pillcard {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--cyan);
+      padding: 1.25rem 1.5rem;
+      margin: 1rem 0;
+      border-radius: 2px;
+    }
+    .pillcard.good { border-left-color: var(--green); }
+    .pillcard.right { border-left-color: var(--cyan); }
+    .pillcard.faithful { border-left-color: var(--gold); }
+    .pillcard.true { border-left-color: var(--magenta); }
+    .pillcard h4 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.05em;
+    }
+    .pillcard .tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-left: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+    }
+    .freedom-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      margin: 1.25rem 0;
+      border-radius: 2px;
+    }
+    .freedom-card h4 {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.1em;
+    }
+    .fail {
+      color: var(--text-dim);
+      font-style: italic;
+      font-size: 0.95rem;
+      margin-top: 0.6rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.92rem;
+      background: var(--bg-surface);
+    }
+    th, td {
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      color: var(--gold);
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--gold-dim);
+    }
+    td.mono {
+      font-family: var(--font-mono);
+      color: var(--cyan);
+      font-size: 0.85rem;
+    }
+    .agreement-grid {
+      display: grid;
+      grid-template-columns: auto 1fr 1fr;
+      gap: 0.25rem;
+      font-size: 0.9rem;
+      margin: 1rem 0;
+    }
+    .agreement-grid > div {
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+    }
+    .agreement-grid .bits {
+      font-family: var(--font-mono);
+      color: var(--cyan);
+      text-align: center;
+    }
+    .agreement-grid .full {
+      background: var(--gold-dim);
+      border-color: var(--gold);
+    }
+    blockquote {
+      border-left: 2px solid var(--gold);
+      padding-left: 1.25rem;
+      color: var(--text-dim);
+      font-style: italic;
+      margin: 1.5rem 0;
+    }
+    .framework-section {
+      margin-top: 5rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .framework-section h2 {
+      color: var(--magenta);
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    .framework-section h3 {
+      color: var(--text-dim);
+      font-size: 1.1rem;
+      margin-top: 1.5rem;
+    }
+    .framework-section { font-size: 0.95rem; }
+    .framework-section code, .framework-section .mono {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--cyan);
+      background: var(--bg-elevated);
+      padding: 0.1rem 0.35rem;
+      border-radius: 2px;
+    }
+    .symbol {
+      font-family: var(--font-mono);
+      color: var(--gold);
+    }
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--cyan); text-decoration: none; }
+    footer a:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Ethics and Free Will</h1>
+  <div class="subtitle">A plain-language account in four pillars and four freedoms</div>
+  <div class="meta">Ashman Roonz &middot; Circumpunct Framework</div>
+</header>
+
+<main>
+
+<section>
+  <p class="lede">Ethics is not a rulebook. Free will is not one big power to choose. Both are made of four pieces, and almost everything interesting about how people actually live happens in how those pieces fit together.</p>
+  <p>This is the short version. The longer version, with the structural derivations, is at the bottom.</p>
+</section>
+
+<section>
+  <h2>Ethics: Four Pillars</h2>
+
+  <p>Any real situation you care about can be held up against four questions. Each one is a different kind of check. You can pass some and fail others; failing any one of them leaves a specific kind of damage. Together they are the whole of what ethical living comes down to.</p>
+
+  <div class="pillcard good">
+    <h4>GOOD <span class="tag">does it filter?</span></h4>
+    <p>Is your boundary doing its job? A good filter lets the nourishing in and keeps the harmful out, and it does this without becoming rigid. Plasticity is the virtue; a filter that can flex without breaking. Without GOOD, you either let everything through (no discernment) or let nothing through (walled off). Either way, you get hurt, and so does anyone standing close to you.</p>
+  </div>
+
+  <div class="pillcard right">
+    <h4>RIGHT <span class="tag">is the space open?</span></h4>
+    <p>Is there room between you and the other, room for both of you to exist without fusion or severance? Access is the virtue; the space stays open, clear, walkable. Without RIGHT, you either collapse into the other (enmeshment) or cut them off entirely (severance). Neither is a relationship; both feel like one from inside.</p>
+  </div>
+
+  <div class="pillcard faithful">
+    <h4>FAITHFUL <span class="tag">does the line hold?</span></h4>
+    <p>Does your commitment survive time and cost? Reliability is the virtue; the receipts are unbroken. Without FAITHFUL, your line is a series of restarts that never add up to anything. People can tell. They might not be able to name it, but they can tell.</p>
+  </div>
+
+  <div class="pillcard true">
+    <h4>TRUE <span class="tag">are you actually looking?</span></h4>
+    <p>Are you oriented toward what is, or toward what you already decided? Curiosity is the virtue. Not the pretense of curiosity, the real thing; willingness to discover that you were wrong. Without TRUE, everything else is performance. You can be GOOD, RIGHT, and FAITHFUL and still be oriented away from what's there, and the whole structure drifts.</p>
+  </div>
+
+  <p>There is a fifth pillar: AGREEMENT. It is not a separate thing. It is what happens when the four are all alive at once, in you and in the person you're agreeing with. More on this in a minute.</p>
+
+  <h3>The Required Sequence</h3>
+
+  <p>These pillars are not a menu. They have to stand up in a particular order: GOOD, then RIGHT, then FAITHFUL, then TRUE, then AGREEMENT. You cannot judge whether a space is open before you know what your filter is doing. You cannot assess faithfulness without a space to be faithful across. You cannot confirm truth without a history of commitment to check it against. You cannot earn AGREEMENT without the four underneath it.</p>
+
+  <p>Most ethical disasters are the sequence skipped. Someone jumps to "we agree" before the pillars underneath have been checked. The agreement looks real. It is not real. It will come apart the first time it is stressed, and everyone will be surprised.</p>
+</section>
+
+<section>
+  <h2>Free Will: Four Freedoms</h2>
+
+  <p>The old debate about free will assumes there is one big power called "choice" and asks whether we have it. The real picture is different. There are four freedoms, each a different kind of holding, each exercised at a different moment in any cycle of becoming. Most willpower problems are a weakness at one specific one of the four, and strengthening the wrong one does not help.</p>
+
+  <p>The four freedoms are what carry you from one pillar to the next. Each virtue, held at its station, launches the next step. Here is what each freedom actually is, in plain terms.</p>
+
+  <div class="freedom-card">
+    <h4>NOT-YET</h4>
+    <p>The freedom to not commit yet. To stay with something while it's still forming, before you've decided what it is or what you're going to do about it. Curiosity lives here.</p>
+    <p class="fail">Weak: you snap shut on the first impression and call it knowing. Overdone: you never commit to anything and hide in "staying open" forever.</p>
+  </div>
+
+  <div class="freedom-card">
+    <h4>STAYING</h4>
+    <p>The freedom to keep going after you've committed, especially when alternatives start looking good. Commitment is a one-way door; once you've drawn the line, you cannot un-draw it back to exactly how things were. Faithfulness lives here.</p>
+    <p class="fail">Weak: every new option breaks your line and you start over constantly. Overdone: you white-knuckle a commitment long past its expiration date.</p>
+  </div>
+
+  <div class="freedom-card">
+    <h4>LETTING</h4>
+    <p>The freedom to not grab at something that is emerging. Things want to take shape on their own; your job is to not squeeze them into the shape you already had in mind. Artists know it as "the painting comes when you stop trying to force it." Parents know it as "the kid becomes themselves when you stop shaping them."</p>
+    <p class="fail">Weak: you force outcomes and distort what was trying to appear. Overdone: you just drift and never close on anything.</p>
+  </div>
+
+  <div class="freedom-card">
+    <h4>CHECKING</h4>
+    <p>The freedom to pause at the end and verify before you start the next thing. Does this actually work? Does this hold? Plasticity lives here; the willingness to reopen something if the check fails.</p>
+    <p class="fail">Weak: you rush into the next cycle carrying unverified baggage. Overdone: you freeze at the threshold and cannot start fresh.</p>
+  </div>
+
+  <h3>Why Free Will Is a Practice, Not a Moment</h3>
+
+  <p>The question "could I have done otherwise at this one second" is the wrong question; it puts freedom at the moment of the turn, where the cycle is already rolling. The better question is: how well do I hold at each of these four stations, across every cycle I'm inside? The answer is not yes or no. It is four-dimensional. Each dimension can be strong or weak, and each one strengthens with use and atrophies with neglect.</p>
+
+  <p>Mental health, read this way, is free movement through all four, in order. Not locked at any one. Not skipping any one. The symptom we call rigidity is a lock at STAYING; the symptom we call flakiness is a collapse at NOT-YET; the symptom we call control is a failure at LETTING; the symptom we call recklessness is a failure at CHECKING.</p>
+</section>
+
+<section>
+  <h2>How the Pillars and Freedoms Fit Together</h2>
+
+  <p>Each virtue, at its pillar, launches one of the four freedoms into action. The freedom you exercise at that moment is what bridges you to the next pillar. The whole picture is one turn of a cycle, and there are exactly five stations.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Pillar</th>
+        <th>Virtue</th>
+        <th>Freedom held</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>GOOD (the filter)</td><td>Plasticity</td><td>CHECKING</td></tr>
+      <tr><td>RIGHT (the space)</td><td>Access</td><td>LETTING</td></tr>
+      <tr><td>FAITHFUL (the line)</td><td>Reliability</td><td>STAYING</td></tr>
+      <tr><td>TRUE (the orientation)</td><td>Curiosity</td><td>NOT-YET</td></tr>
+      <tr><td>AGREEMENT (the whole)</td><td>Validation</td><td>all four, completed</td></tr>
+    </tbody>
+  </table>
+
+  <p>AGREEMENT is not a fifth freedom. It is what you have after you have exercised all four. Both of you. At the same time. This is why agreement of the ordinary kind is cheap and common, and agreement of the ethical kind is rare.</p>
+</section>
+
+<section>
+  <h2>Sixteen Kinds of Agreement</h2>
+
+  <p>Two people can agree on almost anything without checking anything. Crowds agree. Committees nod. Kids agree the floor is lava. Agreement-the-word costs nothing.</p>
+
+  <p>What is rare is agreement where all four pillars are standing up underneath. Since each pillar is independent (GOOD, RIGHT, FAITHFUL, TRUE can each be present or absent on its own), there are sixteen possible combinations. Only one of them is ethical agreement. The other fifteen are the ordinary kinds, each with its own flavor and its own way of falling apart.</p>
+
+  <div class="agreement-grid">
+    <div>GRFT</div><div>What's alive</div><div>What breaks it</div>
+    <div class="bits">0000</div><div>Nothing; just matching noises</div><div>Any real stress</div>
+    <div class="bits">0001</div><div>TRUE; shared seeing in the moment</div><div>Anything beyond the moment</div>
+    <div class="bits">0010</div><div>FAITHFUL; we've both stuck to it for years</div><div>Anyone actually looking</div>
+    <div class="bits">0100</div><div>RIGHT; pleasant rapport, warm vibes</div><div>Any real demand</div>
+    <div class="bits">1000</div><div>GOOD; shared taste, shared filter</div><div>Anything outside the shared filter</div>
+    <div class="bits">1100</div><div>Comfortable, filtered dinner-party agreement</div><div>Stakes</div>
+    <div class="bits">1101</div><div>Fresh ethical agreement, untested</div><div>Time, until FAITHFUL accrues</div>
+    <div class="bits">1110</div><div>Going through the motions</div><div>Someone actually oriented checking</div>
+    <div class="bits full">1111</div><div>Ethical agreement (GOOD + RIGHT + FAITHFUL + TRUE)</div><div>Survives all four stresses</div>
+  </div>
+
+  <p>The reason this is useful: when an agreement breaks, the question is not "was there an agreement?" (yes, obviously). The question is which pillar was the one that was missing, and the answer tells you exactly what stress broke it.</p>
+
+  <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+    <li>It fell apart when someone finally looked: <em>missing TRUE</em>.</li>
+    <li>It fell apart over time without any acute cause: <em>missing FAITHFUL</em>.</li>
+    <li>It fell apart when a real difference showed up: <em>missing RIGHT</em>.</li>
+    <li>It let something bad through and fell apart when the damage showed: <em>missing GOOD</em>.</li>
+  </ul>
+
+  <p>Every pillar handles one specific kind of stress. The absence of a pillar is exactly the vulnerability to that stress. Which is another way of saying: each of the four pillars is a different protection, and ethical agreement is the rare case where all four protections are actually in place, on both sides, at the same time.</p>
+</section>
+
+<section>
+  <h2>What This Looks Like in Daily Life</h2>
+
+  <p>Most conflict is not about the surface topic. It is about which pillar has gone weak or which freedom has locked up. A few examples:</p>
+
+  <p><strong>The conversation that loops.</strong> Two people keep having the same argument. TRUE is missing on at least one side; nobody is actually looking, so the argument can never resolve. Strengthening NOT-YET (the freedom to stay with what's forming before deciding what it is) is the move.</p>
+
+  <p><strong>The relationship that feels thin.</strong> Warm rapport, everybody smiles, but nothing holds when stakes arrive. The 1100 cell (GOOD + RIGHT, no FAITHFUL, no TRUE). Time will reveal this; the faster cure is someone willing to introduce a real stake.</p>
+
+  <p><strong>The career that stalls.</strong> Strong LETTING (things emerge), weak CHECKING (never verifies what emerged). Unverified work piles up and nobody can tell what is finished. Strengthening CHECKING, not LETTING, is the fix.</p>
+
+  <p><strong>The person who cannot commit.</strong> Chronic NOT-YET, never moves to STAYING. Every option is kept open, which looks like freedom and is in fact paralysis. Commitment is a capacity; it grows with use and atrophies without.</p>
+
+  <p><strong>The person who cannot let go.</strong> Strong STAYING, weak LETTING. White-knuckling a commitment whose natural life has ended. LETTING is a skill; it has to be practiced, not demanded.</p>
+
+  <p><strong>The judgmental friend.</strong> Strong CHECKING, weak NOT-YET. Every new person is filtered instantly; no one ever gets the benefit of the not-yet. Fresh contact becomes impossible; the filter closes before there is anything to filter.</p>
+</section>
+
+<section>
+  <h2>The Short Version</h2>
+
+  <p>Ethics is four checks: <strong>does it filter, is the space open, does the line hold, are you actually looking</strong>.</p>
+  <p>Free will is four holds: <strong>not-yet, staying, letting, checking</strong>.</p>
+  <p>The virtues are what keep the checks alive. The freedoms are what move you from one check to the next. Agreement of the ordinary kind costs nothing and is everywhere; agreement of the ethical kind requires all four checks to be passed on both sides at once, which is why it is rare and why it is worth building.</p>
+  <p>You do not get to ethical agreement by jumping to the end. You walk it: GOOD, RIGHT, FAITHFUL, TRUE, AGREEMENT. In that order. Each pillar standing. Each freedom exercised. Skip any one and you will feel it, sooner or later, usually later, usually expensively.</p>
+</section>
+
+<section class="framework-section">
+  <h2>Framework Correlations</h2>
+
+  <p>For readers familiar with the Circumpunct Framework, the plain-language terms above map precisely onto structural positions. This section names the correspondences.</p>
+
+  <h3>The Five Pillars and the Dimensional Architecture</h3>
+  <p>The five pillars are the five integer-stable stations of the framework: <span class="mono">○</span> (boundary, 3D), <span class="mono">Φ</span> (field, 2D), <span class="mono">—</span> (line, 1D), <span class="mono">•</span> (aperture, 0D), <span class="mono">⊙</span> (whole, all dimensions).</p>
+  <table>
+    <thead><tr><th>Pillar</th><th>Symbol</th><th>Dim</th><th>Virtue</th><th>Constraint</th><th>i-stroke launched</th><th>Freedom</th></tr></thead>
+    <tbody>
+      <tr><td>GOOD</td><td class="mono">○</td><td>3D</td><td>Plasticity</td><td>Filters</td><td class="mono">i⁰ = +1 (3.5D)</td><td>CHECKING</td></tr>
+      <tr><td>RIGHT</td><td class="mono">Φ</td><td>2D</td><td>Access</td><td>Mediates</td><td class="mono">i³ = −i (2.5D)</td><td>LETTING</td></tr>
+      <tr><td>FAITHFUL</td><td class="mono">—</td><td>1D</td><td>Reliability</td><td>Commits</td><td class="mono">i² = −1 (1.5D)</td><td>STAYING</td></tr>
+      <tr><td>TRUE</td><td class="mono">•</td><td>0D</td><td>Curiosity</td><td>Converges</td><td class="mono">i¹ = +i (0.5D)</td><td>NOT-YET</td></tr>
+      <tr><td>AGREE</td><td class="mono">⊙</td><td>all</td><td>Validation</td><td>Composes</td><td class="mono">i⁴ = 1 (full cycle)</td><td>all four</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Free Will as the Hold Operator (<span class="mono">⧖</span>)</h3>
+  <p>Free will lives at the four half-integer stations of the pump cycle. The framework notation is <span class="mono">⧖</span>: the hold operator, the dwell-extension exercised by a worldline against the pump's default rotation. Rotation (<span class="mono">i</span>) is determined by axiom necessity (A0 through A4); holding (<span class="mono">⧖</span>) is the worldline's free contribution. This dissolves the classical determinism-vs-libertarianism debate; determinism is <span class="mono">i</span>, freedom is <span class="mono">⧖</span>, and they act at different sub-phases of the same cycle.</p>
+  <p>The four freedoms are the four positions of <span class="mono">⧖</span>: <span class="mono">⧖₁</span> at i¹ = NOT-YET, <span class="mono">⧖₂</span> at i² = STAYING, <span class="mono">⧖₃</span> at i³ = LETTING, <span class="mono">⧖₀</span> at i⁰ = CHECKING. Each has two failure modes (under-hold and over-hold); balanced exercise bridges two adjacent pillars.</p>
+
+  <h3>The Weighing Act (<span class="mono">𓍝</span>)</h3>
+  <p>Each hold is completed by a weighing. <span class="mono">◐</span> is the balance parameter (structural, state); <span class="mono">𓍝</span> is the act of reading it (processual, verb). The next pillar opens only when <span class="mono">◐ = 0.5</span> at the hold; the two failure modes correspond to <span class="mono">◐ → 0</span> (under-hold, impulse) and <span class="mono">◐ → 1</span> (over-hold, pathology). Free will is therefore not hold-and-release; it is hold-weigh-release, with the weighing as the discipline that turns dwell into delivery.</p>
+
+  <h3>The Sixteen Agreements</h3>
+  <p>Agreement-space is <span class="mono">2⁴ = 16</span> cells (GOOD, RIGHT, FAITHFUL, TRUE each independent binary). Ethical agreement is the single cell where all four are alive. The 16 cells are the 4-channel projection of the full <span class="mono">2⁶ = 64</span>-state architecture (Chapter 7); the remaining two channels carry scale information (greater whole, your ⊙, parts), which is why agreements that hold at one scale can fail at the next scale up or down. The analysis repeats at every scale where an agreement is supposed to hold (A3, fractal self-similarity).</p>
+
+  <h3>The Two Fundamental Lies at the Freedom Level</h3>
+  <p>Each of the two structural lies (Inflation, Severance) corresponds to an over-held freedom:</p>
+  <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+    <li><strong>Inflation Lie (<span class="mono">⊙λ = ∞</span>):</strong> sustained <span class="mono">⧖₁</span> at i¹. "I am the gathering itself; I do not need to commit because I am already source." The aperture is held open as if it were the undifferentiated.</li>
+    <li><strong>Severance Lie (<span class="mono">⊙λ ∉ ∞</span>):</strong> sustained <span class="mono">⧖₃</span> at i³. "I am only emergence; I have no closure of my own, I refuse to become a whole." The emergence is held open as if it had no destination.</li>
+  </ul>
+  <p>Both are free-will failures at specific stations, not metaphysical choices. Restoration (§25.15) is the rehabilitation of <span class="mono">⧖</span> at the station where it has frozen.</p>
+
+  <h3>Related Sections</h3>
+  <p>The full treatment is in Chapter 25 of <code>circumpunct_framework.md</code>. Key subsections:</p>
+  <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+    <li>§25.10 The Five Virtues</li>
+    <li>§25.11 The Required Sequence</li>
+    <li>§25.12 Performed vs Lived Ethics</li>
+    <li>§25.13 The Steelman Principle</li>
+    <li>§25.15 The Restoration Protocol</li>
+    <li>§25.17 The Resolution Protocol (truth at variable aperture)</li>
+    <li>§25.18 The Four Freedoms (<span class="mono">⧖</span> as the structural location of free will)</li>
+    <li>§25.18a The Weighing Step (<span class="mono">◐</span> as state, <span class="mono">𓍝</span> as act)</li>
+    <li>§25.18b The Pillar-Freedom Table</li>
+    <li>§25.18c The Sixteen Agreements</li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  <p><a href="index.html">&larr; back to index</a></p>
+  <p style="margin-top: 1rem;">Circumpunct Framework &middot; Ashman Roonz</p>
+</footer>
+
+</body>
+</html>
