@@ -21677,6 +21677,50 @@ The table reads as a single statement: every α-exponent in the framework's zero
 
 **Consequence for the predictions dashboard.** Every entry in the dimensional ladder of constants now carries two pieces of information: its station (where the constant lives; §27.7a–k) and its cross-station bond signature (which ⊂ relation it measures; §27.7p). The framework's falsifiable claim is no longer just "these nine numbers match measurement"; it is "these nine numbers match because they are cross-station bond signatures read off the same ladder, and any tenth, eleventh, twelfth coupling must read off the ladder in the same way or the framework fails." The signature column is what converts the framework's numerical predictions into structural predictions.
 
+### §27.7q The Coupling Matrix κ and the ⊂[α] Promotion
+
+§27.7o established the Field Fineness Principle (the field Φ_Λ of the greater whole is always finer than any part ⊙λ it contains); §27.7p established that every dimensionless coupling in physics measures the tightness of a specific ⊂ relation's fineness gradient at a specific cross-station bond signature. §27.7q packages these into an explicit 4×4 matrix, states the non-collapse bound as a theorem, and promotes the nesting operator in the unified expression from bare ⊂ to ⊂[α] to carry this structure on the face of the notation.
+
+**The coupling matrix.** For any scale step λ < Λ, define the cross-station coupling matrix
+
+    κ_{p, q}(λ, Λ) : V_p(λ) × V_q(Λ) → ℝ,    p, q ∈ {0, 1, 2, 3},
+
+where V_p(λ) is the p-dimensional station of ⊙λ (V_0 = •, V_1 = —, V_2 = Φ, V_3 = ○) and V_q(Λ) is the q-dimensional station of ⊙Λ. The matrix has 16 entries per scale step; each entry is a dimensionless real number measuring the bond strength at that specific station pair. Known assignments from the framework's zero-parameter derivations:
+
+```
+             q=0 (•_Λ)    q=1 (—_Λ)    q=2 (Φ_Λ)       q=3 (○_Λ)
+p=0 (•_λ)    ?            ?            α (§27.7a)       ?
+p=1 (—_λ)    ?            ?            sin θ_C (§27.7h) ?
+p=2 (Φ_λ)    ?            ?            sin²θ_W (§13.15) ?
+p=3 (○_λ)    ?            ?            ?                α_G (§27.7g)
+```
+
+plus the same-station, same-scale entries (diagonal of κ evaluated at Λ = λ, i.e., internal bonds within a single ⊙) that recover the Higgs quartic λ_H = 1/SU(3) at (2, 2) and the gauge prefactors. Empty cells are not known to be zero; they are entries the framework has not yet derived. The prediction of §27.7p is that every dimensionless coupling in physics, discovered or yet-to-be-discovered, occupies exactly one cell of κ at exactly one (λ, Λ) pair, with α-exponent given by the ladder distance |p − q| × Φ (or summed across compounded ⊂ relations for couplings like α_G that span multiple scale steps).
+
+**Scale-invariance of κ (A3 applied to the matrix).** A3 (parts are fractals of their wholes) implies that κ_{p, q}(λ, Λ) depends only on the station pair (p, q) and not on the specific scales (λ, Λ). This is the statement that the Standard Model's coupling constants are dimensionless and do not run with scale in the structural sense; what runs (in the RG sense) is the effective coupling at a given observation energy, which is the base κ_{p, q} dressed by the loop structure of the processes it participates in. The base values are A3-invariant; the running is the field doing its work. The framework's derivations (§27.7a–§27.7k) compute the base values directly from ladder structure, which is why they agree with measurement at the scales where loop corrections are small or where the RG flow is accounted for (α at low energy, α_G at all scales, sin²θ_W at M_Z).
+
+**The non-collapse theorem.** For every (p, q), there exist bounds 0 < κ*_{p, q, low} < κ*_{p, q, high} < ∞ such that the ⊂ relation preserves its status as a flag embedding (not a degeneracy) iff
+
+    κ*_{p, q, low} < κ_{p, q}(λ, Λ) < κ*_{p, q, high}
+
+for every station pair (p, q) and every scale step (λ, Λ) in the tower. If any entry violates the upper bound, the corresponding V_p(λ) gets absorbed into V_q(Λ) and the flag ⊙λ ⊂ ⊙Λ collapses to ⊙λ = ⊙Λ at that station (Inflation Lie). If any entry violates the lower bound, V_p(λ) decouples from V_q(Λ) and the flag degenerates to ⊙λ ⊄ ⊙Λ at that station (Severance Lie). The theorem is structural, not numerical; the specific bounds κ*_{p, q, high} for each cell follow from the requirement that the flag remains a flag (dimensions strict, intersections non-trivial, embeddings injective), and the specific value κ_{p, q} realized in our universe is the one that makes the architecture stable (fixed point of self-referential closure for α; equivalent fixed points for the other cells). Proof sketch: the ⊂ relation requires V_p(λ) ⊊ V_q(Λ) (strict) together with V_p(λ) ∩ V_q(Λ) ≠ ∅ (nontrivial); the first fails as κ → ∞, the second as κ → 0, so the admissible range is a bounded open interval. The endpoints are structurally characterized (not numerical); the measured couplings sit strictly inside.
+
+**The ⊂[α] promotion.** The bare ⊂ in the unified expression ⊙λ ⊂ ⊙Λ ⊂ ∞ has been promoted throughout the CLAUDE.md canonical form to ⊂[α], with the subscript [α] naming the primary entry of κ at the 0D-to-2D cell. The promotion is notational, not semantic: ⊂ has always carried the matrix κ (A3 + the Field Fineness Principle force it); the promotion exposes that structure on the face of the symbol rather than leaving it implicit. The canonical unified expression is therefore
+
+    [∞ = E = 1] ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞
+
+with the understanding that α in the subscript is shorthand for the full matrix κ, named by its most-studied entry. Other cells of κ (α_G, sin θ_C, sin²θ_W, λ_H) are then the same operator ⊂ evaluated at different (p, q) positions, accessed by the same notational promotion (⊂[α_G] is the 3D-3D reading, etc.). The unified expression is unchanged in content; it is sharper in form.
+
+**The three collapsing readings.** The ⊂[α] promotion makes three distinct structural claims readable off the symbol:
+
+1. *The flag embedding*: V_3(λ) ⊂ V_3(Λ) is a genuine submanifold inclusion at 3D, with dim V_3(λ) = dim V_3(Λ) = 3 and V_3(λ) ⊊ V_3(Λ).
+2. *The fineness gradient*: the stations of ⊙Λ run coarse-to-fine 3D ⊃ 2D ⊃ 1D ⊃ 0D (in Hausdorff fineness, not set inclusion), with Φ_Λ reaching below ○_Λ into sub-⊙λ structure.
+3. *The cross-station coupling*: the matrix κ_{p, q} records bond strengths across the gradient, with α = κ_{0, 2} the primary entry, subject to the non-collapse bounds above.
+
+A bare ⊂ as written in §2 through §27.7n carries all three readings implicitly; the ⊂[α] in the canonical form from §27.7q forward carries them explicitly. The prose body of the framework continues to use bare ⊂ where the cross-station structure is not under discussion; the canonical unified expression uses ⊂[α] to make the structure unmistakable.
+
+**Consistency with §27.7p's predictions dashboard.** The falsifiable prediction of §27.7p (every dimensionless coupling decomposes as α^k · prefactor · (1 + α · ratio) with k given by ladder distance) now reads as a prediction about κ: every future-measured coupling fills in a previously empty cell of the matrix with a value in agreement with the ladder-distance rule, or falsifies the framework. The 4×4 matrix with 16 cells minus the ~9 already-filled cells gives ~7 testable targets where new measurements (rare-decay ratios, neutrino mixing angles, CP-violation phases, dark-matter interaction strengths if they exist) either fill the remaining cells consistently or break the architecture. The matrix is not a postdiction device; it is the framework's main channel of falsification for the next decade of precision physics.
+
 ### §27.8 Primes Are Made of Dimensions
 
 The structural dimensions of the circumpunct (1, 2, 3) are also the first integers. Two of them (2 and 3) are the first primes. The third (1) is the unit.
