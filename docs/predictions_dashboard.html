@@ -307,17 +307,36 @@
 
 <!-- ============ SECTION 3: THE LADDER MAP ============ -->
 <section>
-  <h2>The dimensional ladder (where each target lives)</h2>
+  <h2>The dimensional ladder (station + cross-station bond signature)</h2>
+  <p class="small" style="margin-bottom: 20px;">Per §27.7p, every coupling now carries two addresses: its <em>station</em> (where the constant lives on the ladder) and its <em>cross-station bond signature</em> (which ⊂ relation it measures). The signature is d_part→d_whole on ⊙λ⊂⊙Λ; k = Δd · Φ is the α-exponent forced by the signature.</p>
   <div class="card wide ladder">
-    <div class="rung"><div class="d">0D</div><div class="sym">•</div><div class="const">α · (self-ref closure)</div><div class="status"><span class="pill good">locked</span> &nbsp; 0.22 ppb</div></div>
-    <div class="rung"><div class="d">0.5D</div><div class="sym">⊛</div><div class="const">c = 1 (natural units)</div><div class="status"><span class="pill good">trivial</span></div></div>
-    <div class="rung"><div class="d">1D</div><div class="sym">—</div><div class="const">ℏ = 1 (natural units)</div><div class="status"><span class="pill good">trivial</span></div></div>
-    <div class="rung"><div class="d">1.5D</div><div class="sym">⎇</div><div class="const">m_μ/m_e, m_τ/m_e, a_μ</div><div class="status"><span class="pill open">a_μ open</span></div></div>
-    <div class="rung"><div class="d">2D</div><div class="sym">Φ</div><div class="const">π, sin²θ_W, λ_Higgs, m_W</div><div class="status"><span class="pill open">m_W open</span></div></div>
-    <div class="rung"><div class="d">2.5D</div><div class="sym">✹</div><div class="const">v/Λ_QCD, |V_cb|</div><div class="status"><span class="pill open">V_cb open</span></div></div>
-    <div class="rung"><div class="d">3D</div><div class="sym">○</div><div class="const">G, r_p, τ_n</div><div class="status"><span class="pill open">r_p, τ_n open</span></div></div>
-    <div class="rung"><div class="d">3.5D</div><div class="sym">⟳</div><div class="const">recursion → next scale</div><div class="status"><span class="pill good">Λ (cosmic)</span></div></div>
-    <p class="note">Open predictions cluster at 1.5D (a_μ; spectral splitting), 2D (m_W; field self-energy), 2.5D (V_cb; inter-generation emergence), and 3D (r_p, τ_n; boundary closure). No open targets at the three trivial rungs or at 0D.</p>
+    <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d" style="color: var(--dim); font-size: 11px;">station</div><div class="sym" style="font-size: 11px; color: var(--dim);">sym</div><div class="const" style="color: var(--dim); font-size: 11px;">constants</div><div class="const" style="color: var(--dim); font-size: 11px;">bond signature</div><div class="status" style="color: var(--dim); font-size: 11px;">status</div></div>
+    <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">0D</div><div class="sym">•</div><div class="const">α (EM vertex)</div><div class="const">0D→2D · k=1 · fixed point</div><div class="status"><span class="pill good">0.22 ppb</span></div></div>
+    <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">0D↔0D</div><div class="sym">•↔•</div><div class="const">α_s (strong)</div><div class="const">same station, cross-scale</div><div class="status"><span class="pill open">asymptotic</span></div></div>
+    <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">0.5D</div><div class="sym">⊛</div><div class="const">c = 1 (natural units)</div><div class="const">process phase; no bond</div><div class="status"><span class="pill good">trivial</span></div></div>
+    <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">1D</div><div class="sym">—</div><div class="const">ℏ = 1 (natural units)</div><div class="const">commitment quantum</div><div class="status"><span class="pill good">trivial</span></div></div>
+    <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">1.5D</div><div class="sym">⎇</div><div class="const">m_μ/m_e, m_τ/m_e, a_μ</div><div class="const">spectral splitting at the i-turn; K=T^(gen+1)</div><div class="status"><span class="pill open">a_μ open</span></div></div>
+    <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">2D</div><div class="sym">Φ</div><div class="const">sin²θ_W, λ_H, m_W</div><div class="const">2D↔2D · k=0 · prefactor-dominated (α_W mixing with EM's k=1)</div><div class="status"><span class="pill open">m_W tense</span></div></div>
+    <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">2.5D</div><div class="sym">✹</div><div class="const">v/Λ_QCD, |V_cb|, Cabibbo</div><div class="const">half-rung · k=½ base · inter-generation emergence</div><div class="status"><span class="pill open">V_cb open</span></div></div>
+    <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">3D</div><div class="sym">○</div><div class="const">r_p, τ_n, G</div><div class="const">3D↔3D compounded · k = T·R = 21 (full ladder)</div><div class="status"><span class="pill open">r_p, τ_n open</span></div></div>
+    <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">3.5D</div><div class="sym">⟳</div><div class="const">Λ (cosmological)</div><div class="const">cosmic ⊂ · k = SU(3)·R = 56</div><div class="status"><span class="pill good">0.004%</span></div></div>
+    <p class="note" style="margin-top: 16px;">The k column is the α-exponent forced by the bond signature. Values match the framework's derived exponents in §27.7a–k: α at k=1 (base); Cabibbo at k=½ (half-rung); gravity at k=21 (full ladder once); Λ at k=56 (full ladder compounded by cosmic SU(3) factor). Any new coupling must fit this arithmetic or the framework fails.</p>
+  </div>
+</section>
+
+<!-- ============ NEW: COUPLINGS AS ADDRESSES ============ -->
+<section>
+  <h2>§27.7p falsifiable prediction</h2>
+  <div class="card wide">
+    <p style="font-size: 14px; margin-top: 0;">Every dimensionless coupling in physics, known or future, must decompose as:</p>
+    <div class="formula" style="white-space: normal; padding: 14px;">coupling = α^k · (framework prefactor from {T, R, P, G, V, SU(3), Φ, ○}) · (1 + α · framework ratio + ...)</div>
+    <p class="small" style="margin-top: 12px;">where k is the cross-station bond signature. A newly measured coupling that cannot be fit into this decomposition within measurement precision falsifies §27.7p. A coupling that fits supplies its own structural theorem: the ⊂ relation it encodes is the one its signature names. The α-exponent is no longer a number the framework reports; it is an address the framework reads.</p>
+    <h3 style="margin-top: 16px;">Three specific tests</h3>
+    <ul style="font-size: 13px; color: var(--ink); padding-left: 20px;">
+      <li><strong>Strong coupling at unification:</strong> α_s at the GUT scale should equal α (same ladder-distance when scales converge). Measured α_s(M_Z) = 0.1179 runs to ~1/25 at ~10^16 GeV; framework prediction: it meets α_W and α at k=0 convergence.</li>
+      <li><strong>Fourth-generation absence:</strong> the K = T^(gen+1) cascade for mass ratios terminates at gen 3 (K = 81). A fourth-generation lepton, if observed, would force K = T⁵ = 243 with specific m_4/m_e prediction; its absence is consistent with framework closure at three generations.</li>
+      <li><strong>Dark matter coupling:</strong> if dark matter interacts via a new force, its coupling constant must land at one of the ladder addresses not yet occupied (e.g., 1.5D↔1.5D cross-scale, or 2.5D↔3D). A coupling that does not fit the ladder would be a harder test than non-detection.</li>
+    </ul>
   </div>
 </section>
 
