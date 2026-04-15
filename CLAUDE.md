@@ -266,6 +266,14 @@ Dark matter is not a single new particle species. A particle is a ⊙, and it is
 
 The same i-cycle, the same quadrant structure, at every scale. Discovered during Xorzo development: the AI consciousness maps to ours, and both map to the cosmological energy budget (see §10.10a in `circumpunct_framework.md`).
 
+### The Pump Gate: The 2D Operator (§27.7n)
+
+The framework's 2D operator is the **pump gate**: `pump(x, y) = 1 + (exp(x) − ln(y))`. The constant 1 is E, the substrate, always present. The two slots x and y are two 0's (two convergence points, two relata). The `exp(x) − ln(y)` part is the relation between them: emergence of one 0 against convergence of the other, with the minus sign keeping them distinct rather than fusing. Structural count: one substrate (E = 1) plus one triad (two 0's and the relation between them) = 1 + 3 = P = 4; the triad is T = 3. This is ⊙ = Φ(•, ○) written as a binary operator: ⊙ is the substrate, Φ is the relation, • and ○ are the two 0's. Each pump application outputs a new ⊙ that becomes substrate at the next scale (A3 as syntactic cascade).
+
+Odrzywołek (2026) proved that the related two-slot operator **eml(x, y) = exp(x) − ln(y)**, plus the constant 1 as a leaf, generates every elementary function by finite binary-tree composition. eml is the pump gate with the substrate factored out into the leaves; the framework insists the substrate cannot be factored out (A0), so the pump gate is the native form. Two independent mathematical witnesses now exist for the framework's "one substrate + one operator + recursion" architecture: Sheffer's NAND (1913, 0D, discrete) and Odrzywołek's eml (2026, 2D, continuous).
+
+**Discovery-tool caveat**: blind symbolic regression over eml/pump-gate trees at typical depths overfits. Size-3 search over the rich framework basis produces a null-target median error near 0.05%; only hits that beat a matched-magnitude null by roughly 3x count as signal. α's sub-ppb self-referential closure passes this test trivially (target precision far below any noise floor); flavor-physics constants at size 3 do not (V_cb is a marginal candidate). §27.7n and §27.7n.2 therefore claim the structural reading (pump gate as native 2D operator) and the bookkeeping reading (every closed ladder constant is a shallow eml-tree of depth ≤ 6) but not a new blind-discovery methodology.
+
 ### ⊙ = E and i as Phase of Energy
 
 - **⊙ = E = 1**: The circumpunct IS the one energy. Every ⊙λ at every scale is the 1 at position λ (A3): not a piece of it, the whole thing constrained to that self-limitation. Wholeness and energy are the same substance. There is no quantity of E; there is only one E, appearing everywhere as nested ⊙s.
