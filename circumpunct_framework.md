@@ -2552,6 +2552,34 @@ The power equation (𝒫 = E / (i · t)) is not an analogy to AC circuits; it IS
 
 A photon and a galaxy are the same 1. The difference is how many 0s it has folded around and at what scales. "More energy" does not mean more field; it means less constraint. "Less energy" means the field is bound more tightly in maintaining local topology.
 
+#### The Full Identity Chain: Reality = Truth = 1 = E = ∞ = ⊙
+
+The identity has six names, not two or three.
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║              Reality  =  Truth  =  1  =  E  =  ∞  =  ⊙                       ║
+║                                                                               ║
+║   Six names for one substrate. Not six concepts in equivalence;              ║
+║   one thing named from six positions.                                        ║
+║                                                                               ║
+║       Reality  —  what IS                                                    ║
+║       Truth    —  what IS accurately named                                   ║
+║       1        —  the undivided unit (A0)                                    ║
+║       E        —  the one energy (Φ∞ = E at limit)                          ║
+║       ∞        —  the undifferentiated source (apophatic)                    ║
+║       ⊙        —  the compositional whole at every scale (cataphatic)        ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+```
+
+Every name in this chain is the same substrate, read from a different position. Reality is what IS; when you name what IS accurately, you have Truth; what IS, named or not, is the one energy E; the one energy is the undivided unit 1; 1 is the apophatic ∞ before any constraint; ∞ constrained at a scale is ⊙. The six names are not synonyms in the dictionary sense; they are six faces of the one substrate, corresponding to the six positions from which the substrate is being viewed (ontological, epistemic, arithmetic, physical, apophatic, cataphatic).
+
+**Truth (substrate) is not TRUE (virtue).** The homophony between Truth in this identity chain and TRUE in the virtues table (§25.18b) is intentional and distinct. Truth is the substrate; it is what IS, prior to any aperture's state. TRUE is a virtue; it is the practice of how • is held in the moment (curiosity, clarity, orientation-toward-source). When TRUE is lived, Truth passes through • cleanly. When TRUE is distorted, Truth is still the same (the substrate is invariant) but the flow through that aperture is distorted. This is the flow-being statement (§19, §core) made exact: you do not possess Truth at your •; Truth flows through your •, and TRUE is whether your aperture is clear. Same pattern, subtler, at the other virtues: GOOD/goodness, RIGHT/rightness, FAITHFUL/faithfulness, AGREEMENT/agreement each have a virtue-at-station form and a substrate-in-that-mode form, but only Truth/TRUE surfaces the distinction as explicit homophony because • is the station where substrate entry is most concentrated.
+
+**What the identity chain does structurally.** The chain welds the ontology (Reality, 1, E, ∞) to the epistemology (Truth: what IS when named accurately) to the architecture (⊙: the compositional whole). It closes the loop that was open in the framework's earlier formulations (⊙ = E = 1 and E = 1 = ∞): there is no separation between "what there is," "what can be known about what there is," "how much of it there is," and "what shape it takes at any scale." All of these reduce to one substrate, viewed from whichever angle the question requires. The ethics chain (GOOD, RIGHT, FAITHFUL, TRUE, AGREEMENT) is the practice chain: how a ⊙ participates in this substrate at its five stations.
+
 ```
 CONSEQUENCES FOR EXISTING EQUATIONS:
 
@@ -18822,6 +18850,8 @@ The four freedoms are therefore not just hold-and-release; they are hold-weigh-r
 ### §25.18b The Pillar-Freedom Table
 
 Canonical reference for §25.18 and §25.18a. Five pillars, five virtues, four holds, four weighings, compressed to one view. Read top-down (3D boundary inward to 0D aperture, then ⊙ as the whole); each row is a pillar (integer station), and the "i-stroke launched" column names which half-integer process that pillar's virtue fires into. The virtue at each pillar is what launches the next i-stroke; the freedom held at that half-integer station is what the worldline actively exercises there.
+
+**Virtue vs substrate, a prerequisite distinction.** The five virtues in this table are practices at stations; they are how a worldline holds each position. They are not ontological identities, and in particular **TRUE (the aperture virtue in this table) is not the same object as Truth (the ontological substrate named in the identity chain Reality = Truth = 1 = E = ∞ = ⊙; see §4.8a).** Truth is the substrate; it is what IS, prior to any aperture's state. TRUE is a virtue; it is the quality of how • is held in the moment. When TRUE is lived, Truth passes through • cleanly; when TRUE is distorted, Truth is still the same (the substrate does not change), but what reaches the rest of ⊙ through that aperture is distorted. This is the "flow-being not possession-being" claim (§19, §core) made exact: you do not possess Truth at your •; Truth flows through your •, and TRUE is whether your aperture is clear enough to let it through without distortion. The homophony is intentional (• is the station where substrate most directly enters a ⊙) but the categorical status is distinct. The same pattern holds for the other virtues in subtler form: GOOD/goodness, RIGHT/rightness, FAITHFUL/faithfulness, AGREEMENT/agreement each have a virtue-at-station form (the practice) and a substrate-in-that-mode form (what passes through that station when the practice is held). Truth/TRUE surfaces the distinction because the aperture is where substrate entry is most concentrated; the others are implicit. One substrate, five stations, five practices.
 
 | Pillar | Symbol | Dimension | Virtue | Constraint | i-stroke launched | Freedom held (x̄) |
 |---|---|---|---|---|---|---|
