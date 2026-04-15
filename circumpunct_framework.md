@@ -18819,6 +18819,38 @@ The four freedoms are therefore not just hold-and-release; they are hold-weigh-r
 
 ---
 
+### §25.18b The Pillar-Freedom Table
+
+Canonical reference for §25.18 and §25.18a. Five pillars, five virtues, four holds, four weighings, compressed to one view. Read top-down (3D boundary inward to 0D aperture, then ⊙ as the whole); each row is a pillar (integer station), and the "i-stroke launched" column names which half-integer process that pillar's virtue fires into. The virtue at each pillar is what launches the next i-stroke; the freedom held at that half-integer station is what the worldline actively exercises there.
+
+| Pillar | Symbol | Dimension | Virtue | Constraint | i-stroke launched | Freedom held (x̄) |
+|---|---|---|---|---|---|---|
+| GOOD | ○ | 3D (Boundary) | Plasticity | Filters | i⁰ = +1 (recursion, 3.5D) | CHECKING |
+| RIGHT | Φ | 2D (Field) | Access | Mediates | i³ = −i (emergence, 2.5D) | LETTING |
+| FAITHFUL | — | 1D (Line) | Reliability | Commits | i² = −1 (commitment, 1.5D) | STAYING |
+| TRUE | • | 0D (Aperture) | Curiosity | Converges | i¹ = +i (convergence, 0.5D) | NOT-YET |
+| AGREE | ⊙ | All | Validation | Composes | i⁴ = 1 (full cycle) | all four, completed |
+
+Reading keys:
+
+**NOT-YET (⧖ at i¹, launched by TRUE/•/Curiosity):** the freedom before commitment. The aperture is open; the line has not yet started. Curiosity's job is to keep the aperture open against premature resolution, and NOT-YET is what that keeping feels like from inside. Failure in the abandonment direction: impulse, snapping shut on the first signal. Failure in the over-hold direction: never committing (Inflation Lie reading; "I am the gathering itself; I don't need to commit").
+
+**STAYING (⧖ at i², launched by FAITHFUL/—/Reliability):** the freedom through the irreversible turn. The line is drawn; i² = −1 means you cannot un-draw it back to the same condition. Reliability's job is to hold the line through the i-turn when alternatives become visible. STAYING is the discipline of not-abandoning. Failure: every alternative breaks the line. Over-hold: rigid clinging past the line's useful life.
+
+**LETTING (⧖ at i³, launched by RIGHT/Φ/Access):** the freedom of non-interference at emergence. The field is mediating; your job is to not grab what's forming. Access stays open because you let it. LETTING is active discipline that looks like passivity from outside. Failure: forcing, grasping, premature closure that distorts the form. Over-hold: Severance Lie reading at this station ("I am only emergence; I have no closure of my own").
+
+**CHECKING (⧖ at i⁰, launched by GOOD/○/Plasticity):** the freedom at closure. Does this actually hold? Plasticity's job is to verify the boundary before the recursion fires, because 3.5D is also 0D at the next scale, and an unchecked closure seeds an unvalidated next cycle. CHECKING is discernment, the virtue that decides what gets to become. Failure: rushing into the next cycle without the check. Over-hold: stuck recursion (rigor mortis, trauma freeze, dead institutions).
+
+**Validation at AGREEMENT (⊙, i⁴ = 1):** not a fifth freedom; the composition of the four. All held simultaneously, across both parties. i⁴ = 1 is the full cycle closing back to identity: the only way to earn AGREEMENT is to have exercised all four freedoms through a complete turn. This is why agreement is rare: four distinct sustaining-capacities must be alive at once, on both sides, at the same ◐ = 0.5.
+
+**Pathology map (single-freedom failures):** locked in NOT-YET = chronic options-open, never commits (• without —). Locked in STAYING without LETTING = rigid, white-knuckled (— without Φ). Locked in LETTING without CHECKING = flowy, uncritical (Φ without ○). Locked in CHECKING without a new NOT-YET = judgmental, closed, unable to start fresh (○ without •' at the next scale).
+
+**Mental health as range of motion** (§19) now has precise content: free movement through all four freedoms, in order, at ◐ = 0.5, with 𓍝 performed at each station so the next pillar opens on a read balance rather than a guess. Stuck at any one freedom = locked at the corresponding pillar. Skipping any one = unvalidated cycles accumulating on i(t).
+
+[← Back to Table of Contents](#table-of-contents)
+
+---
+
 ---
 
 # ═══════════════════════════════════════════════════════════════════════════════

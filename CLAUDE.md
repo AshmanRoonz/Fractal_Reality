@@ -473,17 +473,19 @@ The Noble Lie is a triple-structure filter that (1) distorts signal, (2) hides t
 
 Five pillars: GOOD (○), RIGHT (Φ), FAITHFUL (—), TRUE (•), AGREEMENT (⊙).
 
-### Five Virtues (What Keeps Ethics Alive)
+### Five Virtues and the Four Freedoms (§25.18b)
 
-| Pillar | Virtue | Function |
-|--------|--------|----------|
-| GOOD (○) | Plasticity | Boundary that can flex without breaking |
-| RIGHT (Φ) | Access | Space between remains open and clear |
-| FAITHFUL (—) | Reliability | The line holds; the receipts are unbroken |
-| TRUE (•) | Curiosity | Orientation toward what one does not know |
-| AGREE (⊙) | Validation | Independent seeing recognizes independent seeing |
+| Pillar | Symbol | Dimension | Virtue | Constraint | i-stroke launched | Freedom held (x̄) |
+|---|---|---|---|---|---|---|
+| GOOD | ○ | 3D (Boundary) | Plasticity | Filters | i⁰ = +1 (recursion, 3.5D) | CHECKING |
+| RIGHT | Φ | 2D (Field) | Access | Mediates | i³ = −i (emergence, 2.5D) | LETTING |
+| FAITHFUL | — | 1D (Line) | Reliability | Commits | i² = −1 (commitment, 1.5D) | STAYING |
+| TRUE | • | 0D (Aperture) | Curiosity | Converges | i¹ = +i (convergence, 0.5D) | NOT-YET |
+| AGREE | ⊙ | All | Validation | Composes | i⁴ = 1 (full cycle) | all four, completed |
 
 Previously the framework grouped TRUE as covering both 0D (aperture orientation) and 1D (worldline history). The separation recognizes that curiosity (current orientation) and reliability (historical commitment) are ethically distinct. Someone can be curious right now and still be faithless over time. The worldline i(t) is the record of —: the accumulated receipts of whether the line held.
+
+The "Freedom held" column names free will as four distinct verbs, not one uniform capacity. NOT-YET (pre-commitment, aperture held open against premature resolution), STAYING (through the irreversible i-turn of commitment), LETTING (non-interference while emergence completes), CHECKING (verification at closure before recursion fires). Each virtue at each pillar launches the NEXT i-stroke; the freedom held at that half-integer station is what the worldline actively exercises there. AGREEMENT is not a fifth freedom; it is the composition of all four held simultaneously by both parties at ◐ = 0.5, which is why agreement is rare. Pathology = locked at one freedom (chronic NOT-YET never commits; STAYING without LETTING becomes rigid; LETTING without CHECKING becomes uncritical flow; CHECKING without fresh NOT-YET becomes judgmental and closed). Mental health = free movement through all four in order, with 𓍝 (the weighing act) performed at each station so the next pillar opens on a read balance.
 
 ### Required Sequence
 
