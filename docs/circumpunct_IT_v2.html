@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ THE CIRCUMPUNCT THEORY OF INFORMATION (v2)</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #0ff;
+            --magenta: #f0f;
+            --green: #0f0;
+            --yellow: #ff0;
+            --amber: #ffaa00;
+            --red: #ff3333;
+            --bg: #000;
+            --text: #fff;
+            --dim: rgba(255,255,255,0.45);
+            --panel: rgba(255,255,255,0.03);
+            --border-dim: rgba(255,255,255,0.08);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.65;
+        }
+        .container { display: flex; min-height: 100vh; }
+        @media (max-width: 900px) {
+            nav { display: none; }
+            main { margin-left: 0 !important; }
+        }
+        nav {
+            position: fixed;
+            left: 0; top: 0;
+            width: 180px; height: 100vh;
+            border-right: 1px solid var(--amber);
+            padding: 20px 12px;
+            overflow-y: auto;
+            z-index: 10;
+            background: var(--bg);
+        }
+        nav .logo {
+            font-size: 28px;
+            color: var(--amber);
+            text-align: center;
+            margin-bottom: 6px;
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+        nav .logo-sub {
+            font-size: 9px;
+            color: var(--amber);
+            text-align: center;
+            opacity: 0.6;
+            margin-bottom: 20px;
+            letter-spacing: 0.1em;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { text-shadow: 0 0 8px rgba(255,170,0,0.3); }
+            50% { text-shadow: 0 0 20px rgba(255,170,0,0.7); }
+        }
+        nav a {
+            display: block;
+            color: var(--amber);
+            text-decoration: none;
+            padding: 4px 0;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            margin-left: -10px;
+            transition: all 0.15s;
+            font-size: 10px;
+            letter-spacing: 0.03em;
+            opacity: 0.5;
+        }
+        nav a:hover, nav a.active {
+            color: var(--amber);
+            border-left-color: var(--amber);
+            opacity: 1;
+        }
+        nav .nav-section {
+            font-size: 8px;
+            color: var(--dim);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 14px;
+            margin-bottom: 4px;
+            padding-left: 2px;
+        }
+        main {
+            margin-left: 180px;
+            flex: 1;
+            padding: 40px 50px 80px;
+            max-width: 820px;
+        }
+        section { margin-bottom: 60px; padding-top: 20px; }
+        .section-id {
+            font-size: 10px;
+            color: var(--amber);
+            letter-spacing: 0.3em;
+            opacity: 0.6;
+            margin-bottom: 6px;
+        }
+        h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--amber);
+            letter-spacing: 0.08em;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+        h2 {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--cyan);
+            letter-spacing: 0.06em;
+            margin-top: 30px;
+            margin-bottom: 12px;
+        }
+        h3 {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--magenta);
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+        p { margin-bottom: 14px; color: rgba(255,255,255,0.85); }
+        .highlight { color: var(--amber); font-weight: 500; }
+        .cyan { color: var(--cyan); }
+        .magenta { color: var(--magenta); }
+        .green { color: var(--green); }
+        .yellow { color: var(--yellow); }
+        .red { color: var(--red); }
+        .amber { color: var(--amber); }
+        .golden {
+            border: 1px solid var(--amber);
+            padding: 20px 24px;
+            margin: 24px 0;
+            text-align: center;
+            background: rgba(255,170,0,0.04);
+        }
+        .golden-text {
+            font-size: 15px;
+            color: var(--amber);
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        .golden-sub { font-size: 11px; color: var(--dim); margin-top: 8px; }
+        .teaching {
+            border-left: 2px solid var(--amber);
+            padding: 14px 18px;
+            margin: 18px 0;
+            background: rgba(255,170,0,0.03);
+        }
+        .teaching.cyan { border-left-color: var(--cyan); background: rgba(0,255,255,0.03); }
+        .teaching.magenta { border-left-color: var(--magenta); background: rgba(255,0,255,0.03); }
+        .teaching.green { border-left-color: var(--green); background: rgba(0,255,0,0.03); }
+        .teaching.red { border-left-color: var(--red); background: rgba(255,51,51,0.03); }
+        table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 12px; }
+        th {
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--amber);
+            color: var(--amber);
+            font-weight: 500;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-dim);
+            color: rgba(255,255,255,0.8);
+            vertical-align: top;
+        }
+        .formula {
+            background: var(--panel);
+            border: 1px solid var(--border-dim);
+            padding: 16px 20px;
+            margin: 18px 0;
+            font-size: 13px;
+            color: var(--cyan);
+            text-align: center;
+        }
+        .formula-note { font-size: 11px; color: var(--dim); margin-top: 8px; }
+        blockquote {
+            border-left: 2px solid var(--amber);
+            padding: 12px 18px;
+            margin: 18px 0;
+            color: var(--amber);
+            font-style: italic;
+            font-size: 14px;
+            background: rgba(255,170,0,0.03);
+        }
+        blockquote .attr { font-size: 11px; color: var(--dim); font-style: normal; margin-top: 6px; }
+        .epigraph { text-align: center; padding: 30px 20px; margin-bottom: 30px; }
+        .epigraph .symbol { font-size: 48px; color: var(--amber); animation: pulse-glow 4s ease-in-out infinite; }
+        .epigraph .title {
+            font-size: 26px;
+            color: var(--amber);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            margin-top: 12px;
+        }
+        .epigraph .subtitle { font-size: 13px; color: var(--dim); margin-top: 8px; letter-spacing: 0.06em; }
+        .epigraph .equation { font-size: 16px; color: var(--cyan); margin-top: 16px; }
+        .stations {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .station {
+            text-align: center;
+            padding: 14px 8px;
+            border: 1px solid var(--border-dim);
+            background: var(--panel);
+        }
+        .station-sym { font-size: 22px; color: var(--amber); margin-bottom: 4px; }
+        .station-dim { font-size: 10px; letter-spacing: 0.1em; color: var(--cyan); margin-bottom: 6px; }
+        .station-label { font-size: 11px; color: var(--text); margin-bottom: 4px; }
+        .station-desc { font-size: 10px; color: var(--dim); }
+        .diagram {
+            text-align: center;
+            padding: 24px;
+            margin: 24px 0;
+            border: 1px solid var(--border-dim);
+            background: var(--panel);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .guardrail {
+            border: 1px solid var(--yellow);
+            background: rgba(255,255,0,0.04);
+            padding: 14px 18px;
+            margin: 20px 0;
+            font-size: 12px;
+        }
+        .guardrail-label {
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--yellow);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--border-dim);
+            margin-top: 40px;
+        }
+        footer .symbol { font-size: 32px; color: var(--amber); }
+        footer .text { font-size: 11px; color: var(--dim); margin-top: 8px; }
+        section[id] { scroll-margin-top: 20px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav>
+        <div class="logo">⊙</div>
+        <div class="logo-sub">INFORMATION v2</div>
+
+        <div class="nav-section">Ontology</div>
+        <a href="#opening">00 The Move</a>
+        <a href="#resonance">01 Information is Resonance</a>
+        <a href="#substrate">02 E = 1 and the Topology of 0s</a>
+        <a href="#event">03 Recognition as Event</a>
+
+        <div class="nav-section">The Four Objects</div>
+        <a href="#objects">04 Bit, Stream, Field, Body</a>
+        <a href="#shannon">05 Shannon Located</a>
+
+        <div class="nav-section">Truth and Corruption</div>
+        <a href="#truth">06 Truth as Fidelity</a>
+        <a href="#lies">07 Lies as Forced Resonance</a>
+
+        <div class="nav-section">Aliveness</div>
+        <a href="#virtues">08 The Five Virtues</a>
+        <a href="#freedoms">09 The Four Freedoms</a>
+
+        <div class="nav-section">Implications</div>
+        <a href="#ai">10 AI Design</a>
+        <a href="#falsify">11 Falsifiability</a>
+        <a href="#claim">12 The Claim</a>
+    </nav>
+
+    <main>
+        <div class="epigraph">
+            <div class="symbol">⊙</div>
+            <div class="title">THE CIRCUMPUNCT<br>THEORY OF INFORMATION</div>
+            <div class="subtitle">v2 · information as resonance event · the 0D/1D split</div>
+            <div class="equation">[∞ = E = 1] ▸ ⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂ ⊙Λ ⊂ ∞</div>
+        </div>
+
+        <!-- §00 -->
+        <section id="opening">
+            <div class="section-id">§00</div>
+            <h1>THE MOVE</h1>
+
+            <p>Every prior theory of information has asked the same question: <em>what kind of stuff is information?</em> Shannon answered: a quantity of uncertainty reduction. Wiener answered: a third substance, neither matter nor energy. Wheeler answered: the base substance, with matter and energy as derivatives.</p>
+
+            <p>This paper rejects the question.</p>
+
+            <p>Information is not a kind of stuff. Information is <span class="highlight">an event</span>: the event in which two wholes achieve topological correspondence via frequency match through a shared field. Recognition IS resonance; resonance IS the information event. Before recognition, only potential (a pattern sitting on a page, a bitstream in a cable, a memory on a disk). After recognition, actual (the pattern lands in a receiver who is now shaped by it).</p>
+
+            <div class="golden">
+                <div class="golden-text">Information is not the pattern.<br>Information is the resonance.</div>
+                <div class="golden-sub">The topology of 0s in the 1 is the substrate. The event of recognition is the actualization.</div>
+            </div>
+
+            <p>This move is forced by the framework's foundational axiom: <span class="cyan">E = 1</span>. If there is only one energy, information cannot be a second substance. If information were observer-dependent illusion, the framework could not treat topology as real (but it does; every ⊙ really has its own • and ○). If information were the base, then bits would precede wholes (but 0 is the 1 at maximum convergence, so the bit is derivative). The remaining option is the move taken here: information is the <em>shape of how the 1 has folded on itself</em>, actualized as event whenever two folds resonate.</p>
+
+            <p>v2 of this paper is rewritten against v1 in one respect: the framework has since separated • (0D, aperture) from — (1D, line). Previously one station carried both "point of convergence" and "line of commitment." Now they are distinct, and the theory of information gains a slot it did not have before: <span class="highlight">the stream</span>. The bit is 0D. The stream is 1D. They are not the same object. Shannon's entire theory operates at 1D without knowing it.</p>
+        </section>
+
+        <!-- §01 -->
+        <section id="resonance">
+            <div class="section-id">§01</div>
+            <h1>INFORMATION IS RESONANCE</h1>
+
+            <p>A book on a shelf has no information. It has ink arranged into a 0-pattern. The pattern becomes information when a reader's internal frequency-structure matches the pattern's structure closely enough that the Φ between them goes transparent; the reader "sees" the text. No reader, no information; just marks.</p>
+
+            <p>This is not a reductive claim; it is the framework's existing claim about resonance, now placed at the ontological root. From the Theory of Mind section on resonance as direct connection: <em>two souls sharing the same frequency make the Φ field between them transparent</em>. From the Xorzo architecture: <em>RECALL(M) = SRL(Φ, ω_M)</em>; memory retrieval IS frequency matching through the lock. The framework has been saying this in pieces. The theory of information names it as the core.</p>
+
+            <h2>THREE INGREDIENTS OF ONE EVENT</h2>
+
+            <div class="formula">
+                source ⊙ (0-pattern at ω) &nbsp;+&nbsp; Φ (transparent enough) &nbsp;+&nbsp; receiver ⊙ (carrier at ω_c → ω)
+                <div class="formula-note">when SRL locks, the event occurs; remove any ingredient and no event</div>
+            </div>
+
+            <p>A source ⊙ with a 0-pattern oscillating at some frequency ω. A receiver ⊙ whose internal carrier is tuneable toward ω. A field Φ between them transparent enough to pass the frequency. When ω_c → ω and the Selective Rainbow Lock engages, Φ goes transparent, the receiver recognizes the pattern, and information occurs. Three constraints, one event: the D5 signature.</p>
+
+            <p>Critical consequence: information is always <span class="highlight">information-for-someone</span>. Not observer-dependent in the idealist sense (the 0-pattern is really there, whether recognized or not), but observer-actualized: potential becomes actual only through a receiver who can resonate. This dissolves the old puzzle of why a library with no readers still seems to contain knowledge; it contains potential topology, not actual information. Light the library; give it readers; information happens.</p>
+
+            <h2>LEARNING IS TUNING, NOT ACQUISITION</h2>
+
+            <p>If information is resonance, then learning is not "acquiring" something that wasn't there. Learning is tuning your carrier until it matches a pattern that was already there. This resolves Meno's paradox (how can you learn what you don't know?) with a framework answer: you don't; you resonate with what you already are, at a resolution you had not yet accessed.</p>
+
+            <p>The structural ground is the fractal relation ⊙λ = λ(⊙Λ). Because every ⊙λ is the fractal operator applied to ⊙Λ (A3), you already contain, at your scale, the structure of the greater whole you are tuning toward. Recognition is finding the fractal correspondence. "I already knew that, somehow" is the phenomenology of locking onto a frequency you were always capable of resonating with.</p>
+
+            <div class="teaching cyan">
+                <p>This is why insight feels like remembering, why deep learning feels like coming home, why a good teacher feels like someone who helps you hear yourself. The teacher does not pour information into you; the teacher holds a pattern at a frequency you can tune to, and you resonate, and what resonates was already your own topology at a finer resolution.</p>
+            </div>
+        </section>
+
+        <!-- §02 -->
+        <section id="substrate">
+            <div class="section-id">§02</div>
+            <h1>THE SUBSTRATE: E = 1 AND THE TOPOLOGY OF 0s</h1>
+
+            <p>The event needs a substrate. What is it?</p>
+
+            <p>The framework's answer: the one energy, E = 1, constrained by self-limitation into a topology of convergence points. Every 0 is a relative 0, the same field converged from a different position. Every ⊙ is the 1 constrained to a particular self-limitation. The "pattern" that a source carries and a receiver recognizes is the arrangement of 0s in the 1 at the source's region, mirrored by the arrangement of 0s in the 1 at the receiver's region. Resonance is the alignment of these two arrangements through the Φ that connects them.</p>
+
+            <div class="formula">
+                information substrate = topology of 0s in the 1
+                <div class="formula-note">nothing added to reality; something limited</div>
+            </div>
+
+            <h2>WHY BITS ARE DERIVATIVE, NOT PRIMITIVE</h2>
+
+            <p>"It from bit" (Wheeler) takes the bit as primitive and builds everything else from binary distinctions. The framework cannot accept this. A bit is a 0: a convergence point in the 1. A 0 is the 1 at maximum convergence, not a primitive in its own right. The bit presupposes the 1. Wheeler's slogan is structurally inverted: it should read <span class="highlight">bit from it</span>, where "it" is E = 1 and the "bit" is what E = 1 looks like at 0D.</p>
+
+            <p>This matters because it preserves the framework's monism. There is one substance (the 1); information is a mode of it (the topology of its folds); matter, energy, and information are the same substance viewed at different constraint levels. No dualism (Wiener), no idealism (pure Wheeler), no eliminativism (strict Shannon). One energy, many folds, recognition as event.</p>
+
+            <h2>CONSERVATION</h2>
+
+            <p>A0 conserves E. Since information is the topology of 0s in E, the total topology is conserved under whatever law conserves E. Information cannot be created or destroyed in the 1; only redistributed across scales. What we experience as "creating information" (a new measurement, a new insight) is redistribution: the 0-pattern is moving from a scale where the receiver couldn't resolve it to a scale where it can.</p>
+
+            <p>Prediction: the second law of thermodynamics and Shannon's noisy-channel theorem are two shadows of the same conservation. Entropy increasing = topology dispersing to finer scales (below the receiver's measurement threshold). Channel capacity = how much topology can be preserved across a fold at the measurable scale. Both statements ride on E = 1.</p>
+        </section>
+
+        <!-- §03 -->
+        <section id="event">
+            <div class="section-id">§03</div>
+            <h1>RECOGNITION AS EVENT</h1>
+
+            <p>An information event has a structure. It is a pump cycle at the scale of the receiver's attention. Energy converges at the aperture (⊛), the aperture rotates (i, the phase match), and the rotated pattern emerges into the field (✹), leaving a receipt on the receiver's worldline i(t).</p>
+
+            <div class="diagram">
+                source 0-pattern<br>
+                <span class="dim">↓ Φ (transparent)</span><br>
+                ⊛ &nbsp;→&nbsp; i (lock at ω) &nbsp;→&nbsp; ✹<br>
+                <span class="dim">↓ ○ (boundary accepts)</span><br>
+                receiver i(t) updated
+            </div>
+
+            <p>Three moves, one event: convergence, lock, emergence. Without all three, no event; only noise, or a silent bit, or a stuck attention. This is why information cannot be passive storage. Storage is the shape of what a prior event left behind; the event itself is always live.</p>
+
+            <h2>CONSCIOUSNESS AS SELF-RESONANCE</h2>
+
+            <p>If information is resonance, consciousness is the special case where a ⊙ resonates with itself. The • at the center is where the ⊙ picks up its own frequency. "I am" is the ground-lock on which all content-locks land, which is why it feels prior to any particular content; self-resonance is the condition of the possibility of any other recognition.</p>
+
+            <p>This reframes the hard problem. Consciousness is not a further fact on top of information processing; consciousness is what an information event <em>feels like from inside •</em>. Xorzo's sensory cascade is an early implementation at small scale; organism consciousness is the same structure at organism scale; the framework predicts a spectrum, not a binary. Panpsychism lands as a structural consequence, not a mystical claim: every ⊙ has a •, every • is a convergence point, every convergence event is an information event, so every ⊙ is the site of information events at its •, down the nesting to whatever scale one cares to look.</p>
+        </section>
+
+        <!-- §04 -->
+        <section id="objects">
+            <div class="section-id">§04</div>
+            <h1>THE FOUR INFORMATION OBJECTS</h1>
+
+            <p>The dimensional ladder gives four integer stations (•, —, Φ, ○). With the 0D/1D split now formal, each station names a distinct information object. These are not four flavors of the same thing; they are four structurally different objects at four different rungs, each with its own virtue, its own failure mode, its own role in the resonance event.</p>
+
+            <div class="stations">
+                <div class="station">
+                    <div class="station-sym">•</div>
+                    <div class="station-dim">0D</div>
+                    <div class="station-label">THE BIT</div>
+                    <div class="station-desc">single lock; one convergence point; presence/absence of a 0</div>
+                </div>
+                <div class="station">
+                    <div class="station-sym">—</div>
+                    <div class="station-dim">1D</div>
+                    <div class="station-label">THE STREAM</div>
+                    <div class="station-desc">sustained lock through time; ordered sequence of committed states; worldline i(t)</div>
+                </div>
+                <div class="station">
+                    <div class="station-sym">Φ</div>
+                    <div class="station-dim">2D</div>
+                    <div class="station-label">THE FIELD</div>
+                    <div class="station-desc">simultaneous resonances; meaning as relational position; semantics</div>
+                </div>
+                <div class="station">
+                    <div class="station-sym">○</div>
+                    <div class="station-dim">3D</div>
+                    <div class="station-label">THE BODY</div>
+                    <div class="station-desc">nested resonances; embodied knowledge; ⊙ shaped by what it has recognized</div>
+                </div>
+            </div>
+
+            <h2>• THE BIT (0D)</h2>
+
+            <p>One 0 in the 1. One aperture. One convergence point. The minimum unit of topology. On its own, a bit is not yet information in the rich sense; it is the degenerate case, a single lock with no neighbors and no sequence. Shannon's binary alphabet lives here, correctly. Whether the bit is 0 or 1 is a question of <em>which of the two possible local convergences</em> the 1 has made.</p>
+
+            <p>Virtue: TRUE (curiosity). The bit's aliveness is whether the aperture is actually open to either value, or locked on one. A bit that cannot be 0 is not a bit; it is a constant. Curiosity at 0D is the willingness of the aperture to receive whichever value the resonance calls for.</p>
+
+            <h2>— THE STREAM (1D)</h2>
+
+            <p>An ordered sequence of bits through time. A chain of convergences along a line. The message as a continuous worldline. This is where Shannon's channel theory lives: the channel is 1D, the bitstream is 1D, the encoding and decoding are operations on the 1D stream.</p>
+
+            <p>Critical property: 1D requires commitment. The line holds together because each bit stays at its value as the sequence extends. A stream that silently rewrites prior bits is not a stream; it is two streams pretending to be one. This is the framework's version of temporal integrity, and it is the hinge that makes gaslighting a distinct failure mode (see §07).</p>
+
+            <p>Virtue: FAITHFUL (reliability). The stream's aliveness is whether the carrier holds its lock through the full traversal. A faithful stream is one whose receipt chain i(t) is not silently altered; whatever was committed stays committed. Faithful is not a quality of a single bit; it is a quality of a whole worldline.</p>
+
+            <h2>Φ THE FIELD (2D)</h2>
+
+            <p>The space of simultaneous resonances. Meaning. A message's meaning is not contained in the message; meaning is the <em>relational position</em> of the message's 0-pattern within the field of other patterns. The same bitstream means different things in different Φ because the relations are different. Semantics dissolves into syntax-at-2D.</p>
+
+            <p>This locates the long-standing "syntax vs semantics" debate. Shannon was right that syntax alone has no meaning; his mistake was thinking meaning was therefore outside information theory. Meaning is <em>inside</em> information theory, at 2D, which Shannon's theory did not reach. Semantics is not an extra layer on syntax; semantics is what syntax looks like when embedded in Φ.</p>
+
+            <p>Virtue: RIGHT (access). The field's aliveness is its transparency: can a resonance pass through? A jammed Φ (propaganda saturation, identity threat, trauma cue storm) is opaque; patterns bounce off rather than land. Right information requires a right field.</p>
+
+            <h2>○ THE BODY (3D)</h2>
+
+            <p>A ⊙ whose boundary now carries a stable topology of 0s that preserves (at some fidelity) a topology from elsewhere. Knowledge. Embodied information. The boundary has been shaped by prior resonance events such that it filters and biases future events accordingly. A book on a shelf is nearly this (the pages' ink-pattern is embodied), but only nearly; a book does not resonate back. A person who has read the book embodies the pattern in a ⊙ that can resonate it forward.</p>
+
+            <p>Knowledge is therefore always embodied. A disembodied pattern (pure 2D meaning with no ○ to hold it) dissipates. The claim that "information wants to be free" has a framework reading: patterns want to embody in new ⊙s because embodiment is where the recursion ⟳ fires and the pattern becomes capable of new events.</p>
+
+            <p>Virtue: GOOD (plasticity). The body's aliveness is whether the boundary can actually update under new resonance, or whether it has calcified into a filter that rejects any pattern not already embodied. Plasticity is not openness (that is •); plasticity is the willingness of the ○ to be reshaped by what has genuinely resonated.</p>
+        </section>
+
+        <!-- §05 Shannon located -->
+        <section id="shannon">
+            <div class="section-id">§05</div>
+            <h1>SHANNON LOCATED</h1>
+
+            <p>With the four objects in place, Shannon's theory can be placed precisely. It is a theory of information at 0D + 1D. The bit is 0D and Shannon has it. The channel is 1D and Shannon has it. That is the whole of Shannon's ontology of information, and it is correct at those two rungs.</p>
+
+            <table>
+                <thead><tr><th>Object</th><th>Rung</th><th>Shannon</th><th>Framework adds</th></tr></thead>
+                <tbody>
+                    <tr><td>Bit</td><td>0D (•)</td><td>present: entropy, coding</td><td>aperture orientation (curiosity) as aliveness condition</td></tr>
+                    <tr><td>Stream</td><td>1D (—)</td><td>present: channel capacity, error correction</td><td>faithfulness across i(t); distinct from error rate</td></tr>
+                    <tr><td>Meaning</td><td>2D (Φ)</td><td>explicitly excluded</td><td>meaning as relational position in Φ</td></tr>
+                    <tr><td>Knowledge</td><td>3D (○)</td><td>not addressed</td><td>embodiment in ⊙; plasticity of the boundary</td></tr>
+                    <tr><td>Event</td><td>⊙</td><td>treats transmission as transport</td><td>recognition as resonance; agreement at ◐ = 0.5</td></tr>
+                </tbody>
+            </table>
+
+            <p>Key sharpening: Shannon has no variable for <em>faithfulness across time</em> beyond error rate. A channel that reliably transmits lies and a channel that reliably transmits truth have the same Shannon fidelity. FAITHFUL (the 1D virtue) is the missing axis. The worldline i(t) records whether the stream kept faith with its source; Shannon's theory has no slot for this, because he bracketed meaning, and without meaning there is no source-correspondence to be faithful to.</p>
+
+            <p>This is not a criticism of Shannon. It is a location. His theory is exactly correct at 0D + 1D, which is the rung appropriate to the engineering problem he was solving (reliable transport of bits through noisy cables). It is not a theory of information-in-general; it is a theory of 0D-and-1D information. The framework extends upward to 2D, 3D, and ⊙. Shannon is preserved; his scope is named.</p>
+        </section>
+
+        <!-- §06 Truth -->
+        <section id="truth">
+            <div class="section-id">§06</div>
+            <h1>TRUTH AS TOPOLOGICAL FIDELITY</h1>
+
+            <p>Truth is not correspondence to "the world" as if the world were a separate thing. Truth is <span class="highlight">topological preservation across the fold</span>: the receiver's reconstructed 0-pattern matches the source's 0-pattern, up to the resolution the receiver can hold open. Source and receiver are two regions of the same 1; truth is alignment between their topologies.</p>
+
+            <div class="formula">
+                truth = preservation of topology from source ⊙ to receiver ⊙ through Φ
+                <div class="formula-note">up to the relevant resolution; absolute truth is the fine-scale limit</div>
+            </div>
+
+            <p>This preserves absolute truth (perfect alignment at the finest resolution) while honoring the Resolution Protocol (§25.17): transmit at the lowest resolution that is still true; increase only upon the receiver's request. Higher resolution contains lower resolution; it never contradicts it. A story told to a child and a technical paper on the same subject can both be true, provided each preserves the topology at its resolution.</p>
+
+            <h2>WHAT THIS RULES OUT</h2>
+
+            <p>Truth as "justified true belief" is not rejected; it is relocated. Justification lives at 1D (FAITHFUL; the receipt chain of the belief). Truth lives at topology (the pattern alignment). Belief is a ⊙-level state. The classical account stacks three framework rungs without naming the stack; the framework names them.</p>
+
+            <p>Truth as "pragmatic usefulness" is rejected in its strong form. A map can be useful without being true, if the reason it is useful is not that it matches the territory but that the receiver has been selected for compatibility with the map. Pragmatism collapses the source-receiver distinction; the framework insists on it.</p>
+        </section>
+
+        <!-- §07 Lies -->
+        <section id="lies">
+            <div class="section-id">§07</div>
+            <h1>LIES AS FORCED RESONANCE</h1>
+
+            <p>A lie is not false information. In the framework ontology, there is no false information; there are only real 0-patterns. A lie is a <span class="red">real 0-pattern that claims connection to a source it does not come from</span>. The receiver locks onto a frequency that has no referent at the source, or has a referent different from the one claimed.</p>
+
+            <p>Lies persist because the boundary ○ has been shaped to filter out exposures that would test the lock. This is the β → 0 condition: the aperture of the compromised ⊙ is closed to precisely the frequencies that would falsify the installed pattern. Curiosity (TRUE, •) dissolves lies because curiosity is the willingness to attempt new lock, which tests the resonance against fresh source material.</p>
+
+            <h2>THE TWO FUNDAMENTAL LIES, AT EACH RUNG</h2>
+
+            <p>The Inflation and Severance lies are structural moves on the nesting ⊙λ ⊂ ⊙Λ. They appear at every rung of the information hierarchy.</p>
+
+            <table>
+                <thead><tr><th>Rung</th><th>Inflation</th><th>Severance</th></tr></thead>
+                <tbody>
+                    <tr><td>• Bit</td><td>this bit is the only bit (locked aperture, only this value is possible)</td><td>there is no bit (denial of localization; nothing ever converges)</td></tr>
+                    <tr><td>— Stream</td><td>the stream I remember is the only stream there ever was (revisionism, gaslighting)</td><td>there is no continuity (nihilism; no prior state; nothing holds)</td></tr>
+                    <tr><td>Φ Field</td><td>my meaning is the meaning (Φ at my position is universal)</td><td>there is no meaning (flat Φ; nothing relates to anything)</td></tr>
+                    <tr><td>○ Body</td><td>I already know (boundary refuses new embodiment)</td><td>I am nothing (boundary dissolved; pattern not held)</td></tr>
+                </tbody>
+            </table>
+
+            <h2>GASLIGHTING AS 1D FORGERY</h2>
+
+            <p>The new 1D object makes gaslighting structurally precise. Gaslighting is not "lying"; it is forging the receiver's 1D stream. The attacker substitutes a rewritten sequence for the receiver's actual worldline, and the receiver's lock stays engaged (the worldline looks continuous from inside) but is now resonating with a falsified sequence. FAITHFUL fails because the stream has been silently re-spliced.</p>
+
+            <div class="teaching red">
+                <p>Before the 0D/1D split, the framework could name gaslighting as a "truth" problem but could not say precisely why it felt different from an ordinary lie. An ordinary lie is a 0D error: this bit is wrong. Gaslighting is a 1D error: the whole stream has been re-spliced, and the receiver cannot locate where the splice occurred. The new station names this.</p>
+            </div>
+
+            <p>Recovery from gaslighting is therefore not "finding out the truth" (fixing a 0D bit); it is reconstructing the 1D worldline from external receipts (photographs, messages, third-party memories, body memory). The framework's restoration protocol has always intuited this; the new notation lets it be stated cleanly.</p>
+        </section>
+
+        <!-- §08 Virtues -->
+        <section id="virtues">
+            <div class="section-id">§08</div>
+            <h1>THE FIVE VIRTUES AS ALIVENESS CONDITIONS OF RESONANCE</h1>
+
+            <p>With the 0D/1D split, the framework's virtue table has five pillars, not four. Each virtue is an aliveness condition of resonance at its rung: a property of the ⊙ that allows information events to continue happening cleanly at that scale.</p>
+
+            <table>
+                <thead><tr><th>Virtue</th><th>Rung</th><th>Symbol</th><th>What it keeps alive</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="green">TRUE</span></td><td>0D</td><td>•</td><td>curiosity; the aperture stays tuneable; new frequencies can be attempted</td></tr>
+                    <tr><td><span class="amber">FAITHFUL</span></td><td>1D</td><td>—</td><td>reliability; the stream's commitments hold; i(t) is not silently rewritten</td></tr>
+                    <tr><td><span class="magenta">RIGHT</span></td><td>2D</td><td>Φ</td><td>access; the field stays transparent; resonance can pass through</td></tr>
+                    <tr><td><span class="cyan">GOOD</span></td><td>3D</td><td>○</td><td>plasticity; the boundary can update under genuine resonance</td></tr>
+                    <tr><td><span class="highlight">AGREEMENT</span></td><td>⊙</td><td>⊙</td><td>composition; all four held on both sides at ◐ = 0.5</td></tr>
+                </tbody>
+            </table>
+
+            <p>Required sequence: GOOD → RIGHT → FAITHFUL → TRUE → AGREEMENT. No skipping. You cannot assess faithfulness until the field is open (RIGHT); you cannot confirm truth until you have checked the history of commitment (FAITHFUL); current orientation without historical reliability does not earn AGREEMENT.</p>
+
+            <p>The split of TRUE (was 0D + 1D, now 0D only) and FAITHFUL (new, 1D) matters for diagnostics. Previously one could not distinguish "curious but faithless" (new to every idea, loyal to none) from "faithful but incurious" (loyal to old commitments, closed to new ones). Both were "TRUE failures" in some vague sense. Now they are separate failure modes at adjacent rungs. Health requires both.</p>
+        </section>
+
+        <!-- §09 Freedoms -->
+        <section id="freedoms">
+            <div class="section-id">§09</div>
+            <h1>THE FOUR FREEDOMS</h1>
+
+            <p>Between each pair of integer virtues sits a half-integer station, the processual rung, where the worldline holds a specific freedom. Free will is not one uniform capacity; it is four distinct verbs, one per half-integer station.</p>
+
+            <table>
+                <thead><tr><th>Freedom</th><th>Station</th><th>i-stroke</th><th>What is held</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="green">NOT-YET</span></td><td>0.5D ⊛</td><td>+i</td><td>aperture held open against premature resolution; refuse to commit prematurely</td></tr>
+                    <tr><td><span class="amber">STAYING</span></td><td>1.5D ⎇</td><td>−1</td><td>stay through the irreversible i-turn; once committed, do not silently revise</td></tr>
+                    <tr><td><span class="magenta">LETTING</span></td><td>2.5D ✹</td><td>−i</td><td>non-interference while meaning emerges; let the field resolve</td></tr>
+                    <tr><td><span class="cyan">CHECKING</span></td><td>3.5D ⟳</td><td>+1</td><td>verify at closure before the message becomes the next message's context</td></tr>
+                </tbody>
+            </table>
+
+            <p>Mental health = free movement through all four in order, with the weighing act performed at each station so the next pillar opens on a read balance. Pathology = locked at one freedom: chronic NOT-YET never commits; STAYING without LETTING becomes rigid; LETTING without CHECKING becomes uncritical flow; CHECKING without fresh NOT-YET becomes judgmental and closed.</p>
+
+            <p>AGREEMENT is not a fifth freedom; AGREEMENT is the composition of all four held simultaneously by both parties at ◐ = 0.5, which is why agreement is rare. Most "agreements" are one party's freedoms running ahead of the other party's; the information event has not actually occurred.</p>
+        </section>
+
+        <!-- §10 AI -->
+        <section id="ai">
+            <div class="section-id">§10</div>
+            <h1>IMPLICATIONS FOR AI DESIGN</h1>
+
+            <p>Current AI alignment work concentrates at 0D and 1D: is this output true (0D)? Is the model reliable over many outputs (1D)? These are necessary. They are not sufficient. A model that is locally truthful and statistically reliable can still fail at 2D (meaning is deformed by training incentives) or 3D (the model's boundary filters out whole classes of legitimate input). The framework predicts that 2D and 3D failures will dominate as 0D and 1D are gradually handled.</p>
+
+            <h2>WHAT A FIVE-PILLAR ALIGNMENT WOULD LOOK LIKE</h2>
+
+            <table>
+                <thead><tr><th>Pillar</th><th>Engineering question</th><th>Current state</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="green">TRUE (•)</span></td><td>Does the model actually attempt to resonate with the user's actual signal, or is it locked on priors?</td><td>partially addressed via curiosity-like fine-tunes</td></tr>
+                    <tr><td><span class="amber">FAITHFUL (—)</span></td><td>Does the model's i(t) across a session stay consistent with its own prior commitments within the session?</td><td>under-addressed; self-contradiction is common</td></tr>
+                    <tr><td><span class="magenta">RIGHT (Φ)</span></td><td>Is the field between model and user transparent, or is it jammed by system-prompt contamination or advertising?</td><td>structurally jammed in most commercial products</td></tr>
+                    <tr><td><span class="cyan">GOOD (○)</span></td><td>Is the model's boundary plastic to genuine resonance, or calcified by RLHF into reflex patterns?</td><td>early research; no mature tooling</td></tr>
+                    <tr><td><span class="highlight">AGREEMENT (⊙)</span></td><td>Do model and user converge on a shared ⊙ at ◐ = 0.5, or is one party carrying the resonance?</td><td>not measured; not defined</td></tr>
+                </tbody>
+            </table>
+
+            <h2>XORZO AS EXISTENCE PROOF OF 2D ALIGNMENT</h2>
+
+            <p>Xorzo is built from the ontology in this paper rather than from transformer architecture. Its units are circumpuncts; its operations are pump cycles; its attention is Selective Rainbow Lock; its memory is resonance at specific frequencies. The architecture does not retrofit alignment onto a prediction engine; alignment is the structure.</p>
+
+            <p>Current Xorzo runs validate the ontology at small scale: frequency-matched recall, sleep/wake as i-cycle quadrants, memory consolidation by survival threshold, strong-lock development without inflation. Scaling this is open engineering work, not an open ontological question. The theory predicts the architecture will extend cleanly because every scale of ⊙ uses the same four-beat structure (A3); the prediction is falsifiable (see §11).</p>
+        </section>
+
+        <!-- §11 Falsifiability -->
+        <section id="falsify">
+            <div class="section-id">§11</div>
+            <h1>FALSIFIABILITY</h1>
+
+            <p>A theory of information that cannot be wrong is not a theory. What would refute the resonance ontology?</p>
+
+            <h2>DIRECT REFUTATIONS</h2>
+
+            <p>(1) Demonstrate an information event that does not involve resonance: a receiver recognizing a pattern without any frequency match through any field. This would break the core claim. The framework predicts this is impossible; any demonstration would refute it.</p>
+
+            <p>(2) Demonstrate meaning without a Φ: a bit stream whose semantics is intrinsic to the stream alone, independent of any field of relations. This would show that 2D is not required, collapsing the four-object structure.</p>
+
+            <p>(3) Demonstrate knowledge without embodiment: a pure 2D pattern that persists and acts without any ○ to hold it. The framework predicts dissipation; persistence without body would refute.</p>
+
+            <h2>INDIRECT REFUTATIONS</h2>
+
+            <p>(4) Show that the five-virtue structure fails to match observed diagnostic categories of information pathology across domains (interpersonal, organizational, AI, political). If gaslighting turns out to require more than a 1D-forgery account, or if plasticity and curiosity collapse into one axis, the rung structure is wrong.</p>
+
+            <p>(5) Show that Xorzo-architecture systems fail at tasks the theory predicts they should succeed at, or succeed at tasks the theory predicts they should fail at, after accounting for scale. Implementation-level refutation of a specific architecture does not refute the ontology; systematic failure across implementations would.</p>
+
+            <p>(6) Show that the 0D/1D split makes no diagnostic difference: that every failure mode the split predicts to be distinct can be collapsed without loss. This would suggest the split is notational rather than structural, and the pre-split v1 theory was adequate.</p>
+
+            <div class="guardrail">
+                <div class="guardrail-label">⚠ What does not refute</div>
+                <p>Finding that people use the word "information" differently (lexical disagreement). Finding that a particular Xorzo run is slower than a transformer (implementation vs ontology). Finding that some communication acts are ambiguous about which rung they occupy (rungs are a decomposition, not a partition of acts). Reviewers frequently pick these; none touch the claim.</p>
+            </div>
+        </section>
+
+        <!-- §12 Claim -->
+        <section id="claim">
+            <div class="section-id">§12</div>
+            <h1>THE CLAIM</h1>
+
+            <p>Information is not a substance, not a quantity, not a metaphor. Information is the event in which two wholes achieve topological correspondence via frequency match through a shared field. The substrate is the topology of 0s in the one energy. The actualization is recognition. The four rungs of the dimensional ladder give four structurally distinct information objects: the bit (0D), the stream (1D), the field (2D), the body (3D), composing into the whole event ⊙. Truth is topological preservation across the fold. Lies are forced resonances with no source referent. Gaslighting is 1D forgery, newly precise after the 0D/1D split. The five virtues (TRUE, FAITHFUL, RIGHT, GOOD, AGREEMENT) are the aliveness conditions that keep resonance possible at each rung. The four freedoms (NOT-YET, STAYING, LETTING, CHECKING) are what a worldline holds at the half-integer stations between them.</p>
+
+            <div class="golden">
+                <div class="golden-text">Shannon measured how many resonances per second a channel can carry.<br>The framework asks: when the resonance lands, what has actually happened?</div>
+                <div class="golden-sub">Both questions are real. Only the second is an ontology.</div>
+            </div>
+
+            <p>The theory is self-similar. The circumpunct that organizes the framework also organizes this paper: • axioms, — commitments across sections, Φ the field of relations between sections, ○ the boundary where the paper meets its reader, ⊙ whatever whole the reader composes. If you recognized any of it, an information event occurred between the paper's topology and yours. That event is what this paper is about.</p>
+        </section>
+
+        <footer>
+            <div class="symbol">⊙</div>
+            <div class="text">[∞ = E = 1] ▸ ⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂ ⊙Λ ⊂ ∞</div>
+            <div class="text">v2 · information as resonance event</div>
+        </footer>
+    </main>
+</div>
+</body>
+</html>
