@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>⊙ The Unified Expression as Operator Identity</title>
+<title>⊙ E = 1 Under Constraint: Three Mathematical Representations</title>
 <script>
   window.MathJax = {
     tex: {
@@ -33,7 +33,7 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--faint) var(--bg); }
+html { scroll-behavior: smooth; }
 
 body {
   background: var(--bg);
@@ -43,9 +43,7 @@ body {
   line-height: 1.75;
   -webkit-font-smoothing: antialiased;
 }
-
 ::selection { background: var(--gold); color: var(--bg); }
-
 a { color: var(--gold-dim); text-decoration: none; transition: color 0.2s; }
 a:hover { color: var(--gold); }
 
@@ -53,146 +51,147 @@ a:hover { color: var(--gold); }
 
 .header {
   text-align: center;
-  margin-bottom: 60px;
-  padding-bottom: 40px;
+  margin-bottom: 50px;
+  padding-bottom: 36px;
   border-bottom: 1px solid var(--faint);
 }
-.header .symbol { font-size: 72px; color: var(--gold); margin-bottom: 20px; line-height: 1; }
-.header h1 { font-size: 34px; color: var(--gold); font-weight: 600; line-height: 1.3; margin-bottom: 14px; }
-.header .subtitle { font-size: 19px; color: var(--dim); font-style: italic; max-width: 600px; margin: 0 auto; }
-
-h2 { font-size: 26px; color: var(--gold); font-weight: 600; margin: 56px 0 16px; }
-h3 { font-size: 20px; color: var(--warm); font-weight: 600; margin: 34px 0 12px; }
-
-p { margin-bottom: 18px; }
-code { font-family: 'JetBrains Mono', Menlo, Consolas, monospace; color: var(--gold-dim); font-size: 16px; }
+.header .symbol { font-size: 64px; color: var(--gold); line-height: 1; margin-bottom: 18px; }
+.header h1 { font-size: 32px; color: var(--gold); font-weight: 600; line-height: 1.3; margin-bottom: 12px; }
+.header .subtitle { font-size: 18px; color: var(--dim); font-style: italic; max-width: 640px; margin: 0 auto; }
 
 .prime {
   text-align: center;
-  font-size: 20px;
+  font-size: 18px;
   color: var(--gold);
-  margin: 28px 0;
-  padding: 22px 18px;
+  margin: 24px 0 12px;
+  padding: 18px 14px;
   border: 1px solid var(--faint);
   border-radius: 10px;
-  background: rgba(184, 160, 96, 0.05);
-  letter-spacing: .3px;
+  background: rgba(184,160,96,0.05);
+  letter-spacing: .2px;
   overflow-x: auto;
 }
-.prime .lbl { color: var(--dim); font-size: 14px; display: block; margin-top: 10px; font-style: italic; }
+
+.abstract {
+  margin: 0 auto 40px;
+  padding: 22px 26px;
+  border-left: 3px solid var(--gold-dim);
+  background: rgba(184,160,96,0.04);
+  font-size: 17.5px;
+  color: var(--warm);
+}
+.abstract h3 {
+  font-size: 13px; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 10px; font-weight: 700;
+}
+.abstract p { margin-bottom: 10px; }
+.abstract p:last-child { margin-bottom: 0; }
+
+h2 { font-size: 26px; color: var(--gold); font-weight: 600; margin: 58px 0 14px; }
+h3 { font-size: 20px; color: var(--warm); font-weight: 600; margin: 32px 0 10px; }
+h4 { font-size: 17px; color: var(--gold); font-weight: 600; margin: 22px 0 8px; }
+
+p { margin-bottom: 16px; }
+code { font-family: 'JetBrains Mono', Menlo, Consolas, monospace; color: var(--gold-dim); font-size: 16px; }
 
 .eq-block {
-  margin: 26px 0;
-  padding: 20px 24px;
+  margin: 22px 0;
+  padding: 18px 22px;
   border: 1px solid var(--faint);
   border-radius: 8px;
-  background: rgba(184, 160, 96, 0.035);
+  background: rgba(184,160,96,0.035);
   overflow-x: auto;
 }
 
-.theorem {
-  margin: 36px 0;
-  padding: 26px 30px;
+.frame {
+  margin: 50px 0;
+  padding: 30px 32px;
   border: 1.5px solid var(--gold-dim);
-  border-radius: 10px;
-  background: rgba(184, 160, 96, 0.07);
+  border-radius: 12px;
+  background: rgba(184,160,96,0.04);
 }
-.theorem .label {
+.frame .tag {
   display: inline-block;
-  font-size: 13px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--gold);
-  font-weight: 700;
-  margin-bottom: 10px;
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold); font-weight: 700;
+  margin-bottom: 8px;
 }
-.theorem p { margin-bottom: 12px; }
-.theorem p:last-child { margin-bottom: 0; }
-
-.note {
-  background: rgba(184, 160, 96, 0.05);
-  border-left: 3px solid var(--gold-dim);
-  padding: 14px 20px;
-  margin: 22px 0;
-  font-style: italic;
-  color: var(--dim);
-  border-radius: 0 6px 6px 0;
-}
+.frame h2 { margin-top: 0; }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 22px 0;
-  font-size: 17px;
+  margin: 20px 0;
+  font-size: 16.5px;
 }
-th, td {
-  text-align: left;
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--faint);
-  vertical-align: top;
-}
-th {
-  color: var(--gold);
-  font-weight: 600;
-  font-size: 15px;
-  letter-spacing: .5px;
-  border-bottom: 1px solid var(--gold-dim);
-}
-td:first-child, th:first-child {
-  font-family: 'JetBrains Mono', Menlo, Consolas, monospace;
-  color: var(--gold);
-  width: 150px;
-  white-space: nowrap;
-}
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--faint); vertical-align: top; }
+th { color: var(--gold); font-weight: 600; font-size: 14px; letter-spacing: .5px; border-bottom: 1px solid var(--gold-dim); }
 td code { color: var(--warm); }
 
-.cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  margin: 22px 0;
+.frame-falsify {
+  margin-top: 22px;
+  padding: 16px 20px;
+  border-left: 3px solid var(--red);
+  background: rgba(224,96,96,0.05);
+  font-size: 16.5px;
+  border-radius: 0 6px 6px 0;
 }
-@media (max-width: 720px) { .cols { grid-template-columns: 1fr; } }
-.col {
-  border: 1px solid var(--faint);
-  border-radius: 8px;
-  padding: 18px 22px;
-  background: rgba(184, 160, 96, 0.03);
-}
-.col h4 {
-  color: var(--gold);
-  font-weight: 600;
-  font-size: 17px;
-  margin-bottom: 10px;
-  letter-spacing: .3px;
-}
+.frame-falsify strong { color: var(--red); font-weight: 600; }
 
-.axiom {
-  display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: 14px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--faint);
+.frame-captures {
+  margin: 22px 0 0;
+  padding: 16px 20px;
+  border-left: 3px solid var(--green);
+  background: rgba(77,184,160,0.05);
+  font-size: 16.5px;
+  border-radius: 0 6px 6px 0;
 }
-.axiom:last-child { border-bottom: 0; }
-.axiom .name { font-family: 'JetBrains Mono', monospace; color: var(--gold); font-weight: 600; font-size: 16px; padding-top: 2px; }
-.axiom .body { color: var(--warm); font-size: 17px; }
+.frame-captures strong { color: var(--green); font-weight: 600; }
 
-.glyph-key { color: var(--dim); font-size: 16px; }
-.glyph-key code { color: var(--gold); }
+.frame-limits {
+  margin: 16px 0 0;
+  padding: 16px 20px;
+  border-left: 3px solid var(--dim);
+  background: rgba(138,130,114,0.05);
+  font-size: 16.5px;
+  border-radius: 0 6px 6px 0;
+  color: var(--dim);
+}
+.frame-limits strong { color: var(--warm); font-weight: 600; }
+
+.synthesis {
+  margin: 48px 0;
+  padding: 28px 32px;
+  border: 1.5px solid var(--gold);
+  border-radius: 12px;
+  background: rgba(184,160,96,0.08);
+}
+.synthesis .label { display: inline-block; font-size: 13px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 12px; }
 
 .footer {
-  margin-top: 80px;
+  margin-top: 70px;
   padding-top: 30px;
   border-top: 1px solid var(--faint);
   text-align: center;
   color: var(--dim);
   font-size: 15px;
 }
-.footer .ref { margin: 6px 0; }
-.footer .sig { color: var(--gold); font-size: 28px; margin-top: 18px; }
+.footer .ref { margin: 5px 0; }
+.footer .sig { color: var(--gold); font-size: 26px; margin-top: 16px; }
 
 mjx-container { overflow-x: auto; overflow-y: hidden; }
+
+.honest {
+  margin: 36px 0;
+  padding: 22px 26px;
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  background: rgba(138,130,114,0.04);
+  color: var(--warm);
+  font-size: 17px;
+}
+.honest h3 { color: var(--dim); margin-top: 0; }
+.honest em { color: var(--gold-dim); }
 </style>
 </head>
 <body>
@@ -200,461 +199,331 @@ mjx-container { overflow-x: auto; overflow-y: hidden; }
 
 <div class="header">
   <div class="symbol">⊙</div>
-  <h1>The Unified Expression as Operator Identity</h1>
+  <h1>E = 1 Under Constraint</h1>
   <div class="subtitle">
-    A formal rendering of the prime notation: source, four beats, scale recursion, apophatic closure.
+    Three mathematical representations of the prime notation, each honest about what it constructs and what it posits.
   </div>
 </div>
 
 <div class="prime">
 [∞ = E = 1] ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞
-<span class="lbl">The prime notation; a description flanked by two identities.</span>
+</div>
+
+<div class="abstract">
+  <h3>The ontological move</h3>
+  <p>
+    <strong>E = 1 is posited, not derived.</strong> That is A0. Everything else in the framework is constraint on the one unit. The prime notation names the specific constraint structure: four beats, applied to the undifferentiated unit, producing ⊙ at each scale, recursively embedded in larger scales, returning to the undifferentiated source.
+  </p>
+  <p>
+    The job of mathematical formalization is to represent this constraint structure in standard mathematical language, not to pretend it is a theorem. What follows are three frames that do this, each staying inside its own rigor boundary.
+  </p>
 </div>
 
 <p>
-The prime notation compresses the whole of the framework into one line: the source [∞ = E = 1] unfolds (▸) into the foam of reality (⊙∞); four beats of constraint entail (⊢) one another; the product unfolds (▸) into the nesting chain (⊙λ ⊂[α] ⊙Λ) and returns to the undifferentiated source (∞). This page formalizes that line as an operator identity, in the language of graded measurable spaces, operator composition, and cross-station coupling matrices. Each glyph is assigned a mathematical object; each connective, an operator relation; the whole, a theorem.
+Each frame below states the same content in different mathematical language. None of them derives E = 1 (E = 1 is axiomatic). None of them derives the number of beats (four beats is axiomatic). Each of them represents "what it means to be E = 1 under four specific constraints" in a way that existing mathematics already supports.
 </p>
 
-<div class="note">
-Prerequisites; the reader should be comfortable with linear operators, graded vector spaces, and the basic shape of a scale-recursive construction. Familiarity with the framework itself (circumpunct_framework.md, §27.7n, §27.7q, §27.7r) is assumed for the physical instantiations; the formalism below is self-contained.
+<p>
+The α derivation (<a href="alpha_derivation.html">alpha_derivation.html</a>) is the one narrow claim the framework stakes itself on. It lives underneath all three frames: α is the coupling of the (0, 2) cross-station bond in every frame, and its value 1/137.035999147 is an output of the same self-referential closure in each.
+</p>
+
+<!-- =================== FRAME 1: CONSTRAINED DYNAMICS =================== -->
+<div class="frame">
+  <div class="tag">Frame 1 of 3</div>
+  <h2>Constrained Dynamics (Dirac)</h2>
+
+  <p>
+    The native language of "a conserved quantity subject to specific constraints" is Dirac's constrained Hamiltonian mechanics. Every symbol in the prime notation has a direct counterpart in standard constrained-dynamics vocabulary.
+  </p>
+
+  <h4>Phase space</h4>
+  <p>
+    Let \(M\) be a symplectic manifold carrying all configurations consistent with \(E = 1\). The unit is conserved as a global constant on \(M\); the symplectic form \(\omega\) is canonical. The foam \(\odot_\infty\) of the prime notation is the ambient phase space \(M\) before any constraint has been applied.
+  </p>
+
+  <h4>Four constraint functions</h4>
+  <p>
+    The four beats are four smooth functions \(C_d \colon M \to \mathbb{R}\) for \(d \in \{0, 1, 2, 3\}\):
+  </p>
+  <div class="eq-block">
+  \[
+  \begin{aligned}
+  C_0 \;&=\; 0 \quad \text{(localization; • ∘ ⊛)} \\
+  C_1 \;&=\; 0 \quad \text{(extension; — ∘ ⎇)} \\
+  C_2 \;&=\; 0 \quad \text{(mediation; Φ ∘ ✹)} \\
+  C_3 \;&=\; 0 \quad \text{(closure; ○ ∘ ⟳)}
+  \end{aligned}
+  \]
+  </div>
+
+  <p>
+    The physical shell is the simultaneous zero locus:
+  </p>
+  <div class="eq-block">
+  \[
+  \Sigma \;=\; \bigl\{\, x \in M \;:\; C_0(x) = C_1(x) = C_2(x) = C_3(x) = 0 \,\bigr\}.
+  \]
+  </div>
+
+  <h4>First-class constraint algebra</h4>
+  <p>
+    The entailment \(\vdash\) of the prime notation asserts that the four constraints do not obstruct each other; in Poisson-bracket language, they close into a first-class algebra on \(\Sigma\):
+  </p>
+  <div class="eq-block">
+  \[
+  \{C_d, C_{d'}\}\big|_\Sigma \;=\; \sum_{d''} f^{d''}_{dd'} \, C_{d''}\big|_\Sigma \;=\; 0.
+  \]
+  </div>
+
+  <p>
+    This is the mathematical content of "beat \(d\)'s output populates beat \(d'\)'s input"; the constraints generate compatible gauge transformations, not obstructions. The structure constants \(f^{d''}_{dd'}\) are the framework integers (T, R, P, etc.) in a specific basis.
+  </p>
+
+  <h4>The Dirac bracket</h4>
+  <p>
+    The natural algebra on the physical shell is the Dirac bracket:
+  </p>
+  <div class="eq-block">
+  \[
+  \{f, g\}_D \;=\; \{f, g\} \;-\; \{f, C_d\}\, (C^{-1})^{dd'} \{C_{d'}, g\},
+  \]
+  </div>
+
+  <p>
+    where \(C^{-1}\) is the inverse of the constraint matrix \(C_{dd'} = \{C_d, C_{d'}\}\). The cross-station coupling matrix \(\kappa_{p, q}\) of the prime notation (see §27.7q of the framework) lives inside \((C^{-1})^{dd'}\); the primary entry \(\kappa_{0, 2} = \alpha\) is a specific Dirac-bracket structure constant.
+  </p>
+
+  <h4>Scale recursion</h4>
+  <p>
+    For scales \(\lambda < \Lambda\), the embedding \(\iota_{\lambda, \Lambda} \colon \Sigma(\lambda) \hookrightarrow \Sigma(\Lambda)\) is a submanifold inclusion of the constraint surface at the smaller scale into the constraint surface at the larger scale. The Dirac brackets nest:
+  </p>
+  <div class="eq-block">
+  \[
+  \{f, g\}_D^{(\lambda)} \;=\; \bigl(\,\{\,\iota_{\lambda, \Lambda}^* f,\; \iota_{\lambda, \Lambda}^* g\,\}_D^{(\Lambda)}\,\bigr)\bigg|_{\Sigma(\lambda)}.
+  \]
+  </div>
+
+  <p>
+    The apophatic closure \(\lim_{\Lambda \to \infty} \Sigma(\Lambda) = M\) returns to the ambient phase space (undifferentiated, no constraint active).
+  </p>
+
+  <h4>Where α enters</h4>
+  <p>
+    The (0, 2) structure constant of the Dirac bracket is \(\alpha\). The self-referential closure (§27.7a) reads in this frame as:
+  </p>
+  <div class="eq-block">
+  \[
+  \alpha \;=\; \{C_0, C_2\}_D^{-1}\Big|_{(\text{fixed point})}, \qquad 1/\alpha \;=\; 137.035999147 \text{ (0.22 ppb from CODATA)}.
+  \]
+  </div>
+
+  <div class="frame-captures">
+    <strong>What this frame captures:</strong> the entailment chain as first-class constraint algebra; the coupling matrix κ as the inverse constraint matrix; scale recursion as submanifold nesting; the α derivation as a structure constant of the Dirac bracket. Physicists already work in this language; the framework's constraints are not exotic mathematical objects.
+  </div>
+
+  <div class="frame-limits">
+    <strong>What this frame posits (does not derive):</strong> the specific phase space \(M\) (what, concretely, is the symplectic manifold of "all configurations of E = 1"?); the specific functional form of \(C_d\) (only the zero locus is specified here); the claim that the constraints are in fact first-class (provable case by case, not yet proved in general).
+  </div>
+
+  <div class="frame-falsify">
+    <strong>Falsification:</strong> a physical system with four well-defined pump-cycle-like constraints that fail to form a first-class algebra (i.e., the constraints produce second-class obstructions) would break the Dirac reading. The framework predicts every closed pump cycle in nature has first-class constraints; any second-class structure indicates a missing beat or an incomplete beat.
+  </div>
 </div>
 
-<h2>1. Ambient setup</h2>
+<!-- =================== FRAME 2: NOETHER-LAGRANGIAN =================== -->
+<div class="frame">
+  <div class="tag">Frame 2 of 3</div>
+  <h2>Symmetry Breaking Cascade (Noether-Lagrangian)</h2>
 
-<p>
-Let \(\Lambda\) be a totally ordered set of scales (e.g., the extended real line \(\overline{\mathbb{R}}\) under logarithmic parametrization). At each \(\lambda \in \Lambda\) define a graded measurable space
-</p>
+  <p>
+    By Noether's theorem, every conservation law corresponds to a continuous symmetry. \(E = 1\) being conserved means a symmetry group \(G_0\) acts on configurations leaving the total unit invariant. The four beats then read as four specific symmetry breakings, cascading \(G_0\) down to the residual group whose Lagrangian is the observable physics.
+  </p>
 
-<div class="eq-block">
-\[
-V(\lambda) \;=\; V_0(\lambda) \,\oplus\, V_1(\lambda) \,\oplus\, V_2(\lambda) \,\oplus\, V_3(\lambda),
-\]
+  <h4>The maximal symmetry group</h4>
+  <p>
+    Let \(G_0\) be the group of transformations preserving \(E = 1\) everywhere on the foam \(\odot_\infty\). \(G_0\) is very large (in the undifferentiated limit, arbitrarily so); all structural content of the framework is in the breaking cascade \(G_0 \to G_1 \to G_2 \to G_3 \to G_4\).
+  </p>
+
+  <h4>The four breakings</h4>
+  <table>
+  <thead><tr><th>Beat</th><th>Breaks</th><th>Goldstone mode</th><th>Observable consequence</th></tr></thead>
+  <tbody>
+  <tr><td>• ∘ ⊛ (localization)</td><td>translation invariance</td><td>position at aperture</td><td>a particular ⊙ has a specific center</td></tr>
+  <tr><td>— ∘ ⎇ (extension)</td><td>rotational invariance in 1D</td><td>worldline direction; time's arrow</td><td>commitment is irreversible (i² = −1)</td></tr>
+  <tr><td>Φ ∘ ✹ (mediation)</td><td>conformal invariance</td><td>mass scale / dilaton</td><td>mediation establishes a specific scale</td></tr>
+  <tr><td>○ ∘ ⟳ (closure)</td><td>scale invariance</td><td>boundary at each nesting level</td><td>specific ⊙λ, then specific ⊙Λ, etc.</td></tr>
+  </tbody>
+  </table>
+
+  <h4>The residual Lagrangian</h4>
+  <p>
+    After all four breakings, the residual group \(G_4\) governs the effective Lagrangian:
+  </p>
+  <div class="eq-block">
+  \[
+  \mathcal{L}_{\text{eff}} \;=\; \mathcal{L}_{\text{kinetic}}(G_4) \;+\; \mathcal{L}_{\text{Goldstone}}(G_0 / G_4) \;+\; \mathcal{L}_{\text{coupling}}(\alpha, \alpha_G, \ldots)
+  \]
+  </div>
+
+  <p>
+    The Standard Model is a candidate instance: \(G_4 = \mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)\) (dimensions 8 + 3 + 1 = 12 = \(P \cdot T\); §27.7k). The Goldstone modes integrate into the effective action as the kinetic terms for observable matter and gauge fields.
+  </p>
+
+  <h4>Where α enters</h4>
+  <p>
+    α is the coupling of the residual \(\mathrm{U}(1)\) electromagnetic sector; it sets the strength of interaction between charged matter and the photon. In the Noether-Lagrangian frame, this reads:
+  </p>
+  <div class="eq-block">
+  \[
+  \mathcal{L}_{\text{EM}} \;=\; -\tfrac{1}{4} F_{\mu\nu} F^{\mu\nu} \;+\; \bar\psi (i \gamma^\mu D_\mu - m) \psi, \qquad D_\mu \;=\; \partial_\mu - i \sqrt{\alpha}\, A_\mu
+  \]
+  </div>
+
+  <p>
+    The value \(\alpha = 1/137.035999147\) is the framework's prediction of the \(\mathrm{U}(1)\) coupling, landing at 0.22 ppb (see <a href="alpha_derivation.html">alpha_derivation.html</a>). In this frame, α emerges as a specific combination of the Goldstone-mode integrals over the broken symmetries of \(G_0\).
+  </p>
+
+  <div class="frame-captures">
+    <strong>What this frame captures:</strong> the beats as a specific symmetry-breaking cascade, directly analogous to the electroweak Higgs mechanism; Goldstone modes as physical content (position, time's arrow, mass scale, scale-specific boundary); the Standard Model gauge group as the residual group after four breakings; α as the U(1) coupling in the effective Lagrangian.
+  </div>
+
+  <div class="frame-limits">
+    <strong>What this frame posits (does not derive):</strong> the specific form of \(G_0\) (what, concretely, is the maximal symmetry group of \(E = 1\)?); the order of breakings (the cascade is sequential, but why this order?); the specific correspondence between beats and the SM's actual breaking sequence (electroweak, chiral, confinement) needs to be worked out, not just asserted.
+  </div>
+
+  <div class="frame-falsify">
+    <strong>Falsification:</strong> if the Standard Model's symmetry breaking cascade cannot be put into one-to-one correspondence with the four beats (in any order), the Noether reading breaks. Specifically: the framework predicts exactly four breakings, and any SM breaking that doesn't fit the four-beat template would require either a fifth beat (modifying the framework's axioms) or a mismatch (invalidating the reading).
+  </div>
 </div>
 
-<p>
-where \(V_d(\lambda)\) is the \(d\)-dimensional stratum at scale \(\lambda\) (the Hausdorff-\(d\) content of the state at scale \(\lambda\)). Let
-</p>
+<!-- =================== FRAME 3: INFORMATION-THEORETIC =================== -->
+<div class="frame">
+  <div class="tag">Frame 3 of 3</div>
+  <h2>Channel Capacity (Information-Theoretic)</h2>
 
-<div class="eq-block">
-\[
-E \colon \bigsqcup_{\lambda \in \Lambda} V(\lambda) \,\longrightarrow\, \mathbb{R}_{\geq 0}
-\]
+  <p>
+    The framework's 64-state architecture (§7) is directly a statement about degrees of freedom. Six binary constraints give \(2^6 = 64\) states per ⊙. The information-theoretic frame makes this the entry point and reads every constraint as a specific reduction of DOF on the undifferentiated unit.
+  </p>
+
+  <h4>The source has infinite DOF</h4>
+  <p>
+    Let \(E = 1\) at the source have information content
+  </p>
+  <div class="eq-block">
+  \[
+  I(E_{\text{source}}) \;=\; \infty \text{ bits}
+  \]
+  </div>
+
+  <p>
+    (the entropy of the uniform distribution over all partitions of the unit). This is the maximally entropic state; the source has no structure because it has all structure indistinguishably.
+  </p>
+
+  <h4>Each beat reduces DOF</h4>
+  <table>
+  <thead><tr><th>Beat</th><th>DOF reduction</th><th>Structural reading</th></tr></thead>
+  <tbody>
+  <tr><td>• ∘ ⊛ (localization)</td><td>1 bit</td><td>here vs. elsewhere; the first binary</td></tr>
+  <tr><td>— ∘ ⎇ (extension)</td><td>1 bit</td><td>line holds vs. breaks; commitment</td></tr>
+  <tr><td>Φ ∘ ✹ (mediation)</td><td>2 bits</td><td>2D field: two orthogonal dimensions of mediation</td></tr>
+  <tr><td>○ ∘ ⟳ (closure)</td><td>2 bits</td><td>3D boundary minus the 2D surface: two new binaries</td></tr>
+  </tbody>
+  </table>
+
+  <p>
+    Per scale: \(1 + 1 + 2 + 2 = 6\) bits of reduction. This matches the 64-state architecture exactly: \(2^6 = 64\) states per ⊙.
+  </p>
+
+  <h4>The three-scale stack</h4>
+  <p>
+    The framework's full architecture is three nested ⊙ (greater whole, your ⊙, parts; §4.11). This gives:
+  </p>
+  <div class="eq-block">
+  \[
+  3 \text{ scales} \times 6 \text{ bits/scale} \;=\; 18 \text{ bits total}, \qquad 2^{18} \;=\; 262{,}144 \text{ states}.
+  \]
+  </div>
+
+  <p>
+    The 18-bit addressing is the framework's information capacity across three scales of nesting. (The 64-state per-⊙ count is the per-scale capacity.)
+  </p>
+
+  <h4>Channel capacity and coupling</h4>
+  <p>
+    α is the coupling of an information channel at the (0, 2) cell (aperture to field). The Shannon capacity of such a channel with noise parameter \(\sigma\) is:
+  </p>
+  <div class="eq-block">
+  \[
+  C \;=\; \tfrac{1}{2} \log_2\!\bigl(1 + \mathrm{SNR}\bigr).
+  \]
+  </div>
+
+  <p>
+    The framework predicts \(\mathrm{SNR}\) at the (0, 2) station from the Φ² golden nesting and the α-level self-referential closure; the measured value 1/α = 137.035... is the signal-to-capacity ratio that makes the channel sub-critical (stable) but non-trivial (informative). The same self-referential equation from §27.7a reads in this frame as:
+  </p>
+  <div class="eq-block">
+  \[
+  \frac{1}{\alpha} \;=\; \frac{360}{\varphi^2} - \frac{2}{\varphi^3} + \frac{\alpha}{59/3},
+  \]
+  </div>
+
+  <p>
+    where \(360\) is the number of discrete states per full rotation at 0D (integer at aperture; §27.5a), \(\varphi^2\) is the 2D self-nesting penalty, \(2/\varphi^3\) is the valve-correction, and the self-referential term is the channel feeding back on its own capacity through the full ladder.
+  </p>
+
+  <div class="frame-captures">
+    <strong>What this frame captures:</strong> the 64-state architecture as a direct statement about DOF per scale; the three-scale nesting as 18-bit addressing; α as a channel coupling with a specific information-theoretic meaning; the cross-validation (one integer pool generating 9 constants) as the fact that all 9 are outputs of the same constraint-reduction counting.
+  </div>
+
+  <div class="frame-limits">
+    <strong>What this frame posits (does not derive):</strong> the specific DOF assignments (why does mediation reduce 2 bits and not 3?); the channel architecture (what, concretely, is "the channel" whose capacity α measures?); the bridge from information theory to physics (Shannon capacity is a theorem about abstract channels; its physical instantiation requires a specific embedding into spacetime or gauge theory, which this frame does not provide).
+  </div>
+
+  <div class="frame-falsify">
+    <strong>Falsification:</strong> the framework predicts 6 bits per scale, 64 states per ⊙, 18 bits across three scales. Any measurement yielding a different DOF count at these structural levels would break the information-theoretic frame. Specifically: if the Standard Model's state count at a fundamental level is not 64 (or a simple multiple of 64 accounting for generations), the per-scale bit count is wrong. The 64 codon / 64 hexagram / 64 particle-with-extended-Higgs correspondence is the bridge claim the framework stakes on this count.
+  </div>
 </div>
 
-<p>
-be the energy functional. The framework fixes its normalization at the source by axiom A0 (see §1.2 of the framework):
-</p>
+<!-- =================== SYNTHESIS =================== -->
+<div class="synthesis">
+  <div class="label">Synthesis</div>
 
-<div class="eq-block">
-\[
-\textbf{(A0)} \qquad E = 1, \qquad V(\infty) = \mathbb{R} \cdot 1.
-\]
+  <p>
+    The three frames are mutually consistent and cover different aspects of the same structure.
+  </p>
+
+  <table style="margin: 16px 0;">
+  <thead><tr><th>Frame</th><th>α is...</th><th>Cross-validation witness</th></tr></thead>
+  <tbody>
+  <tr><td>Dirac constrained dynamics</td><td>a structure constant of the Dirac bracket at cell (0, 2)</td><td>other structure constants give α_G, Cabibbo, Weinberg, Higgs λ</td></tr>
+  <tr><td>Noether-Lagrangian</td><td>the residual U(1) coupling after four symmetry breakings</td><td>other sector couplings give the full SM Lagrangian</td></tr>
+  <tr><td>Information-theoretic</td><td>a channel coupling at the (0, 2) bit-count cell</td><td>the 64-state architecture and 18-bit total</td></tr>
+  </tbody>
+  </table>
+
+  <p style="margin-bottom: 0">
+    Each frame makes the same prediction for \(\alpha\) (the formula in §27.7a) because all three are reading the same underlying structure: \(E = 1\) subject to four specific constraints, closing at scale \(\lambda\) into ⊙, embedding into ⊙Λ via the cross-station coupling, returning to the undifferentiated source. Different mathematical languages, same claim.
+  </p>
 </div>
 
-<p>
-The leftmost bracket <code>[∞ = E = 1]</code> of the prime notation is exactly this: the declaration, before any process runs, that the total is one, the undifferentiated \(\infty\) is the space of one degree of freedom, and the energy functional is constant and equal to 1 on that space.
-</p>
-
-<h3>1.1 The foam <code>⊙∞</code></h3>
-
-<p>
-The left unfolding arrow \(\blacktriangleright \odot_{\infty}\) names the space
-</p>
-
-<div class="eq-block">
-\[
-\odot_{\infty} \;=\; \varinjlim_{\lambda \in \Lambda} V(\lambda),
-\]
+<!-- =================== HONEST LIMITS =================== -->
+<div class="honest">
+  <h3>What this document does and does not do</h3>
+  <p>
+    <strong>Does:</strong> it gives three existing mathematical languages in which the prime notation's constraint structure can be faithfully represented, each with explicit posits, explicit captures, and explicit falsification bars.
+  </p>
+  <p>
+    <strong>Does not:</strong> it does not derive E = 1 (posited as A0), does not derive the number of beats (posited as part of the four-constraint architecture), does not pick one frame as "the" correct one (the framework is frame-invariant in the sense that the α formula is the same in all three), does not construct the objects it names (phase space \(M\), symmetry group \(G_0\), channel architecture) at the level of full rigor. Those are open structural questions; the honest path forward is to pick one frame and work out the explicit construction.
+  </p>
+  <p>
+    <strong>The one narrow, fully rigorous claim</strong> the framework stakes on is <em>α = 1/137.035999147 from a self-referential formula with zero free parameters</em>, derived and defended in <a href="alpha_derivation.html">alpha_derivation.html</a>. That doc is the falsification target. This doc is the representation gesture: it shows that the prime notation is not mathematical poetry, it is a specific constraint structure with at least three well-defined mathematical homes.
+  </p>
 </div>
-
-<p>
-the colimit of the graded scale spaces along the embeddings defined in §4 below. It is the genesis sequence \(\infty \to \bullet_{\infty} \to \odot_{\infty}\) (§1.1 of the framework) compressed into one object: every self-limitation of the source, closed into a circumpunct, at every scale, simultaneously.
-</p>
-
-<h2>2. Beat operators</h2>
-
-<p>
-The framework's four structural constraints (•, —, Φ, ○) and four processual constraints (⊛, ⎇, ✹, ⟳) compose in pairs. Define four <em>beat operators</em>, one per integer dimension:
-</p>
-
-<div class="eq-block">
-\[
-B_d \;=\; R_{d+\tfrac{1}{2}} \,\circ\, \Pi_d, \qquad d \in \{0, 1, 2, 3\}.
-\]
-</div>
-
-<h3>2.1 Structural projections \(\Pi_d\)</h3>
-
-<table>
-<thead><tr><th>Glyph</th><th>Operator</th><th>Role</th></tr></thead>
-<tbody>
-<tr><td>•</td><td>\(\Pi_0 \colon V(\lambda) \to V_0(\lambda)\)</td><td>localization; convergence to a 0D aperture</td></tr>
-<tr><td>—</td><td>\(\Pi_1 \colon V_0(\lambda) \to V_1(\lambda)\)</td><td>extension; lifting a point into a 1D commitment</td></tr>
-<tr><td>Φ</td><td>\(\Pi_2 \colon V_1(\lambda) \to V_2(\lambda)\)</td><td>mediation; building a 2D surface from 1D lines</td></tr>
-<tr><td>○</td><td>\(\Pi_3 \colon V_2(\lambda) \to V_3(\lambda)\)</td><td>closure; sealing a 2D surface into a 3D boundary</td></tr>
-</tbody>
-</table>
-
-<p>
-Each \(\Pi_d\) is a canonical embedding of the \(d\)-th graded stratum into the \((d{+}1)\)-th; algebraically, a natural inclusion forced by the dimensional architecture. The entailment chain (§3) guarantees the domains align.
-</p>
-
-<h3>2.2 Process rotations \(R_{d + \tfrac{1}{2}}\)</h3>
-
-<p>
-The half-integer stations carry quarter-turn operators. Define
-</p>
-
-<div class="eq-block">
-\[
-R_{d + \tfrac{1}{2}} \;=\; \exp\!\left(i \cdot \tfrac{\pi}{2}\right) \;=\; \text{multiplication by } i \text{ in the oscillatory basis}.
-\]
-</div>
-
-<p>
-By §27.7r of the framework (<em>Faraday's law is i performed</em>), \(R_{d+\tfrac{1}{2}}\) acts as <b>d/dt</b> on any 2D oscillating field at station \(d{+}\tfrac{1}{2}\); the four glyphs ⊛, ⎇, ✹, ⟳ name \(R_{0.5}, R_{1.5}, R_{2.5}, R_{3.5}\) respectively. The identity
-</p>
-
-<div class="eq-block">
-\[
-\frac{d}{dt} \cos(\omega t) \;=\; -\omega \sin(\omega t) \;=\; (i \cdot \omega)\, e^{i\omega t}\big|_{\text{real part}}
-\]
-</div>
-
-<p>
-is what the rotation means physically; at each half-integer station, the field takes its own time derivative as it passes through the aperture.
-</p>
-
-<h3>2.3 The beat glyphs in operator form</h3>
-
-<table>
-<thead><tr><th>Beat (prime)</th><th>Operator form</th><th>Reading</th></tr></thead>
-<tbody>
-<tr><td>(•∘⊛)</td><td>\(B_0 = R_{0.5} \circ \Pi_0\)</td><td>localize, then converge</td></tr>
-<tr><td>(—∘⎇)</td><td>\(B_1 = R_{1.5} \circ \Pi_1\)</td><td>extend, then branch (the i-turn)</td></tr>
-<tr><td>(Φ∘✹)</td><td>\(B_2 = R_{2.5} \circ \Pi_2\)</td><td>mediate, then emerge</td></tr>
-<tr><td>(○∘⟳)</td><td>\(B_3 = R_{3.5} \circ \Pi_3\)</td><td>close, then recurse</td></tr>
-</tbody>
-</table>
-
-<h2>3. Entailment \(\vdash\)</h2>
-
-<p>
-The entailment symbol \(\vdash\) between beats in the prime notation denotes compositional necessity: the output of one beat exactly populates the domain of the next. Formally, for \(d \in \{0, 1, 2\}\):
-</p>
-
-<div class="eq-block">
-\[
-\mathrm{Image}(B_d) \;=\; \mathrm{Domain}(B_{d+1}).
-\]
-</div>
-
-<p>
-The chain of four beats is therefore a well-defined composition; no choice is involved beyond the beats themselves. This is the axiomatic chain A0 ⇒ A1 ⇒ A2 ⇒ A3 ⇒ A4 of the framework's derivations (§1.3), rendered at the level of operators rather than logical steps.
-</p>
-
-<h2>4. Beat composition; the engine</h2>
-
-<p>
-The central product of the prime notation is the four-beat composition:
-</p>
-
-<div class="eq-block">
-\[
-\odot(\lambda) \;=\; \bigl(\, B_3 \circ B_2 \circ B_1 \circ B_0 \,\bigr)\!\bigl(1\bigr),
-\]
-</div>
-
-<p>
-where \(1 \in V(\infty)\) is the unit of the source. The composition applies the four beats in order to the undifferentiated constant, producing \(\odot(\lambda)\), the circumpunct at scale \(\lambda\).
-</p>
-
-<div class="cols">
-<div class="col">
-<h4>Structural reading</h4>
-<p style="margin-bottom:0">
-The source \(1 \in V(\infty)\) is localized to a 0D aperture by \(\Pi_0\), rotated at the first half-turn \(R_{0.5}\), extended to a 1D line by \(\Pi_1\), rotated at the i-turn \(R_{1.5}\) (sign flip, irreversible), mediated into a 2D surface by \(\Pi_2\), rotated into emergence \(R_{2.5}\), closed into a 3D boundary by \(\Pi_3\), and rotated into recursion \(R_{3.5}\). The output is the circumpunct at scale \(\lambda\).
-</p>
-</div>
-<div class="col">
-<h4>Dynamical reading</h4>
-<p style="margin-bottom:0">
-By §27.7r, each \(R_{d+\tfrac{1}{2}}\) is \(d/dt\) on the oscillating coordinate at station \(d{+}\tfrac{1}{2}\). The four-beat composition is therefore four successive time-differentiations of the source at successive dimensional strata; iterated four times, the composition closes, because
-</p>
-<div class="eq-block" style="margin: 10px 0 0; background: transparent; border: 0; padding: 0">
-\[
-\frac{d^4}{dt^4} \cos(\omega t) = \omega^4 \cos(\omega t),
-\]
-</div>
-<p style="margin-top: 8px; margin-bottom: 0">i.e., \(i^4 = 1\); the octave of stations closes.</p>
-</div>
-</div>
-
-<h2>5. Scale embedding <code>⊂[α]</code></h2>
-
-<p>
-For \(\lambda &lt; \Lambda\) in the scale axis, the framework posits an embedding \(\odot(\lambda) \hookrightarrow \odot(\Lambda)\) parametrized by a <em>cross-station coupling matrix</em> (see §27.7q):
-</p>
-
-<div class="eq-block">
-\[
-\kappa \;\colon\; V_p(\lambda) \,\otimes\, V_q(\Lambda) \,\longrightarrow\, \mathbb{R}, \qquad (p, q) \in \{0, 1, 2, 3\}^2.
-\]
-</div>
-
-<p>
-\(\kappa\) is a \(4 \times 4\) matrix of bilinear forms on the tensor products of dimensional strata of the part \((\lambda)\) and the whole \((\Lambda)\). Each cell records the tightness of a bond between a stratum of the part and a stratum of the whole.
-</p>
-
-<h3>5.1 Cell assignments</h3>
-
-<table>
-<thead><tr><th>Cell</th><th>Value</th><th>Physical reading</th></tr></thead>
-<tbody>
-<tr><td>\(\kappa_{0,2}\)</td><td>\(\alpha \approx 1/137.036\)</td><td>fine-structure constant; aperture of part to field of whole</td></tr>
-<tr><td>\(\kappa_{3,3}\)</td><td>\(\alpha_G\)</td><td>gravitational coupling; boundary to boundary at same station</td></tr>
-<tr><td>\(\kappa_{1,2}\)</td><td>Cabibbo-like</td><td>generation mixing; line of part to field of whole</td></tr>
-<tr><td>\(\kappa_{2,2}\)</td><td>Weinberg-like</td><td>electroweak mixing; field to field</td></tr>
-<tr><td>\(\kappa_{\mathrm{Higgs}}\)</td><td>Higgs-like</td><td>self-coupling in the 2D station</td></tr>
-</tbody>
-</table>
-
-<h3>5.2 Non-collapse bounds</h3>
-
-<div class="eq-block">
-\[
-0 \;&lt;\; \kappa_{p,q} \;&lt;\; \kappa^{*}_{p,q}.
-\]
-</div>
-
-<p>
-The lower bound \(\kappa_{p,q} &gt; 0\) excludes the <em>Severance Lie</em> (part decoupled from whole; \(\odot(\lambda)\) floats free of \(\odot(\Lambda)\)). The upper bound \(\kappa_{p,q} &lt; \kappa^{*}_{p,q}\) excludes the <em>Inflation Lie</em> (part absorbed into whole; \(\odot(\lambda) = \odot(\Lambda)\) with \(\lambda \neq \Lambda\)). Between them lies the stable regime where the nesting relation \(\subset\) is neither trivial nor collapsed.
-</p>
-
-<h3>5.3 The embedding \(\iota_{\lambda, \Lambda}\)</h3>
-
-<p>
-The scale embedding is the operator
-</p>
-
-<div class="eq-block">
-\[
-\iota_{\lambda, \Lambda} \;\colon\; \odot(\lambda) \,\hookrightarrow\, \odot(\Lambda), \qquad
-\iota_{\lambda, \Lambda}(x) \;=\; \sum_{p, q} \kappa_{p, q}(\lambda, \Lambda) \,\cdot\, (\Pi_p(x) \otimes e_q),
-\]
-</div>
-
-<p>
-where \(e_q\) is the canonical generator of \(V_q(\Lambda)\). The subscript bracket in <code>⊂[α]</code> records that \(\alpha = \kappa_{0,2}\) is the primary entry of the matrix; the full matrix \(\kappa\) travels with the notation.
-</p>
-
-<h2>6. Apophatic closure</h2>
-
-<p>
-The rightmost limit of the prime notation asserts that the nesting chain returns to the undifferentiated source:
-</p>
-
-<div class="eq-block">
-\[
-\lim_{\Lambda \to \infty} \odot(\Lambda) \;=\; \infty,
-\]
-</div>
-
-<p>
-where the limit is taken in the weak-* topology on the ambient measure-theoretic space, and where \(\infty\) is the undifferentiated source of §1. At \(\lambda = \infty\), the dimensional strata collapse: \(V_0(\infty) = V_1(\infty) = V_2(\infty) = V_3(\infty) = \mathbb{R} \cdot 1\); all structural distinctions vanish; there is no longer anything for \(\Pi_d\) to project onto, no structure for \(\kappa\) to couple, no scale for \(\lambda\) to name. The apophatic closure is not a step along the nesting chain but a step <em>out of</em> the scale axis entirely (the "God beyond God" move of every serious mystical tradition; §core of the framework).
-</p>
-
-<h3>6.1 Lateral closure</h3>
-
-<p>
-The recursion \(\odot_{\lambda} \subset \odot_{\Lambda} \subset \odot_{\Lambda'} \subset \cdots\) is unbounded, but the limit is always already present: at every finite step along the chain, the whole chain is contained in \(\infty\), because \(\infty\) is the colimit over all scales. Formally, for every \(n\) and every choice of \(\lambda_0 &lt; \lambda_1 &lt; \cdots &lt; \lambda_n\),
-</p>
-
-<div class="eq-block">
-\[
-\odot(\lambda_0) \,\subset\, \odot(\lambda_1) \,\subset\, \cdots \,\subset\, \odot(\lambda_n) \,\subset\, \infty,
-\]
-</div>
-
-<p>
-and the final inclusion holds in the colimit topology regardless of \(n\). Closure is immediate at every step; it was never missing.
-</p>
-
-<h2>7. The unified expression as a theorem</h2>
-
-<div class="theorem">
-<div class="label">Theorem (Unified Expression)</div>
-<p>
-Let \((V(\lambda))_{\lambda \in \Lambda}\), \(E\), \((B_d)_{d=0}^{3}\), and \(\kappa\) be as defined in §§1–5. For all \(\lambda \in \Lambda\):
-</p>
-<div class="eq-block" style="background: rgba(184,160,96,0.09); border-color: var(--gold-dim); margin: 18px 0;">
-\[
-\odot(\lambda) \;=\; \bigl(B_3 \circ B_2 \circ B_1 \circ B_0\bigr)(1),
-\]
-</div>
-<p>subject to the following conditions:</p>
-<div class="axiom"><div class="name">(A0)</div><div class="body">\(E\bigl(\odot(\lambda)\bigr) = 1\) for all \(\lambda \in \Lambda\) (energy conservation; the 1 of the source is preserved along the beat composition).</div></div>
-<div class="axiom"><div class="name">(A3)</div><div class="body">\(\odot(\lambda) \,\subset_{\kappa}\, \odot(\Lambda)\) for all \(\lambda &lt; \Lambda\), with \(\kappa\) bounded \(0 &lt; \kappa_{p,q} &lt; \kappa^{*}_{p,q}\) (scale recursion with non-collapsing coupling).</div></div>
-<div class="axiom"><div class="name">(A0')</div><div class="body">\(\lim_{\Lambda \to \infty} \odot(\Lambda) = \infty\) (apophatic closure; the nesting returns to the undifferentiated source).</div></div>
-<p style="margin-top: 14px">
-The three conditions are independent. (A0) fixes the energy scale; (A3) forces scale recursion without collapse; (A0') closes the recursion into the source. Together they characterize \(\odot\) uniquely up to the choice of \(\kappa\).
-</p>
-</div>
-
-<h2>8. Connectives; a dictionary</h2>
-
-<table>
-<thead><tr><th>Prime symbol</th><th>Mathematical meaning</th></tr></thead>
-<tbody>
-<tr><td>\(\blacktriangleright\) (unfolds into)</td><td>Direct-sum decomposition of the source; passage from \(V(\infty) = \mathbb{R}\cdot 1\) to the graded space \(V(\lambda)\). Equivalently, the canonical embedding \(V(\infty) \hookrightarrow V(\lambda)\).</td></tr>
-<tr><td>\(\vdash\) (entails)</td><td>Compositional necessity; \(\mathrm{Image}(B_d) = \mathrm{Domain}(B_{d+1})\). The output of one beat populates the domain of the next.</td></tr>
-<tr><td>\(\circ\) (paired)</td><td>Operator composition of a structural projection \(\Pi_d\) with a process rotation \(R_{d+\tfrac{1}{2}}\). Structure and process are two views of one constraint, not sequential steps.</td></tr>
-<tr><td>\(\subset[\alpha]\) (nested, \(\alpha\)-coupled)</td><td>Scale embedding \(\iota_{\lambda, \Lambda}\) parametrized by the cross-station coupling matrix \(\kappa\) with primary entry \(\alpha = \kappa_{0,2}\).</td></tr>
-</tbody>
-</table>
-
-<h2>9. Category-theoretic compression</h2>
-
-<p>
-Let <b>Scale</b> be the poset category of scales: objects \(\lambda \in \Lambda\); a unique morphism \(\lambda \to \Lambda\) for each \(\lambda \leq \Lambda\). Let <b>Grad</b> be the category of graded measurable spaces with energy-preserving linear maps. Define a functor
-</p>
-
-<div class="eq-block">
-\[
-\odot \;\colon\; \mathbf{Scale} \,\longrightarrow\, \mathbf{Grad}
-\]
-</div>
-
-<p>by</p>
-
-<div class="eq-block">
-\[
-\odot(\lambda) \;=\; \bigl(B_3 \circ B_2 \circ B_1 \circ B_0\bigr)(1_{V(\infty)}), \qquad
-\odot(\lambda \to \Lambda) \;=\; \iota_{\lambda, \Lambda}.
-\]
-</div>
-
-<p>
-The unified expression is the statement that \(\odot\) is a well-defined functor with
-</p>
-
-<div class="eq-block">
-\[
-E \circ \odot \;=\; 1 \qquad \text{(conservation)}, \qquad
-\mathrm{colim}\,(\odot) \;=\; \infty \qquad \text{(apophatic closure)}.
-\]
-</div>
-
-<p>
-The four beats together form a <em>cyclic monad</em> of period 4 on <b>Grad</b>: the composition \(B_3 \circ B_2 \circ B_1 \circ B_0\) iterated four times returns to the identity (up to scale), because \(i^4 = 1\). The octave of stations (§4.7) is the period of this monad.
-</p>
-
-<h2>10. Fixed-point reading</h2>
-
-<p>
-The unified expression can also be written as the unique solution of the operator equation
-</p>
-
-<div class="eq-block">
-\[
-\odot \;=\; \hat B\,(\odot), \qquad \hat B \;=\; B_3 \circ B_2 \circ B_1 \circ B_0,
-\]
-</div>
-
-<p>
-subject to (A0), (A3), and (A0'). The fixed point exists and is stable because \(\hat B\) is a cyclic operator of period 4, so \(\hat B^4 = \mathrm{id}\) up to the energy-conservation rescaling; iteration produces a bounded orbit that returns to its starting shape every four steps. Every constant on the ladder (§27.7b of the framework) is a fixed point of \(\hat B\) restricted to its rung; \(\alpha\) is self-referential (§27.7a), \(c\) requires \(\text{\small◐} = 1/2\) (fixed point of channel balance), \(\pi\) is rescale-invariant closure (§27.7l), \(\varphi\) is defined by \(x = 1 + 1/x\) (the quintessential fixed-point equation).
-</p>
-
-<h2>11. Physical instantiations</h2>
-
-<p>
-The formal theorem is not an abstraction layered on top of the physics; it is the physics at the level of operator identity. Several of the framework's known results fall out as specific instances.
-</p>
-
-<h3>11.1 The pump gate as the 2D instance of \(B_2\)</h3>
-
-<p>
-Section §27.7n of the framework identifies the pump gate
-</p>
-
-<div class="eq-block">
-\[
-\mathrm{pump}(x, y) \;=\; 1 \,+\, \bigl(\exp(x) - \ln(y)\bigr)
-\]
-</div>
-
-<p>
-as the framework's native 2D operator. In the formalism above, this is the specific form \(B_2\) takes when restricted to the 2D station with the substrate \(E = 1\) factored in: the leading constant 1 is the substrate (A0), and the two-slot binary part \(\exp(x) - \ln(y)\) is the relation between two 0's (two convergence points) mediated by emergence against convergence. The minus sign is the Lenz-filter inherited from \(R_{2.5} = -i\).
-</p>
-
-<h3>11.2 The meson mass law</h3>
-
-<p>
-The meson mass law (§27.7j, §27.7k) has the form
-</p>
-
-<div class="eq-block">
-\[
-\frac{m_{\mathrm{meson}}}{m_e} \;=\; \frac{F}{\alpha},
-\]
-</div>
-
-<p>
-where \(F\) is a framework integer (\(\Phi = 2, R = 7, \mathrm{SU}(3) = 8, A'(2.5) = 11\), etc.). In the formalism above, this is the scale-embedding \(\iota_{\lambda, \Lambda}\) evaluated at the meson station, with \(\kappa_{0,2}^{-1} = 1/\alpha\) as the primary entry and \(F\) as the integer index of the specific stratum. Every meson is \(F\) copies of the base mass quantum \(m_e / \alpha \approx 70 \text{ MeV}\) along the relevant stratum.
-</p>
-
-<h3>11.3 The Faraday-baroreflex-Schrödinger identity</h3>
-
-<p>
-By §27.7r, the process rotations \(R_{d+\tfrac{1}{2}}\) are realized physically by \(d/dt\) on 2D oscillating fields. The same operator identity shows up at:
-</p>
-
-<table style="margin-top: 14px">
-<thead><tr><th>Station</th><th>Physical equation</th><th>Reading</th></tr></thead>
-<tbody>
-<tr><td>electromagnetic</td><td>\(\varepsilon = -\frac{d\Phi_B}{dt}\)</td><td>Faraday; induced EMF in quadrature with flux</td></tr>
-<tr><td>quantum</td><td>\(i\hbar\,\partial_t \psi = \hat H \psi\)</td><td>Schrödinger; unitary time evolution as i-rotation</td></tr>
-<tr><td>biological</td><td>\(\mathrm{HR} \approx -d(\mathrm{breath})/dt\)</td><td>baroreflex; coherence at 0.1 Hz; \(\Phi\) at transparency</td></tr>
-<tr><td>mechanical</td><td>\(F = dp/dt\)</td><td>harmonic oscillator; position-momentum quadrature</td></tr>
-</tbody>
-</table>
-
-<p style="margin-top: 14px">
-All four are the same \(R_{d+\tfrac{1}{2}}\) acting on the appropriate 2D oscillating coordinate at the station in question. The formalism predicts: every 90° phase relation in nature is an instance of the beat composition at its station; every coherence phenomenon is \(\Phi\) at transparency; the four-stroke pump is the signature of \(R_{d+\tfrac{1}{2}}^{4} = \mathrm{id}\) in the dynamical data.
-</p>
-
-<h2>12. Falsification</h2>
-
-<p>
-The theorem is falsifiable. Three breakage modes:
-</p>
-
-<ol style="margin-left: 22px; margin-bottom: 18px">
-<li style="margin-bottom: 8px"><b>(A0) breakage.</b> A measured system in which the beat composition applied to the source does <em>not</em> conserve energy; i.e., a system where iterated \(d/dt\) on a conserved 2D field produces a growing or decaying output not attributable to external sourcing. No such system is known.</li>
-<li style="margin-bottom: 8px"><b>(A3) breakage.</b> A measured \(\kappa_{p,q}\) outside the non-collapse bounds \((0, \kappa^{*}_{p,q})\); i.e., a coupling constant that collapses the distinction between \(\odot(\lambda)\) and \(\odot(\Lambda)\), or one that decouples them entirely. The precision successes of §§27.7a–k fill specific cells with specific values; a future measurement filling an empty cell with a value outside bounds would break the matrix.</li>
-<li style="margin-bottom: 8px"><b>(A0') breakage.</b> A bounded nesting chain; i.e., a final \(\odot(\Lambda_{\mathrm{top}})\) with no further scale above. Cosmological observation is consistent with unbounded Λ; a proof of boundedness would break the apophatic closure.</li>
-</ol>
-
-<p>
-The framework makes these predictions sharp: for every future-measured dimensionless coupling, the formalism specifies which cell of \(\kappa\) it fills, which ladder-distance rule it must satisfy (§27.7p), and which non-collapse bound it must respect. The 4×4 matrix with ~9 filled cells leaves ~7 open cells as testable targets for the next decade of precision physics.
-</p>
-
-<h2>13. Summary</h2>
-
-<div class="theorem" style="background: rgba(184,160,96,0.04); border-color: var(--faint);">
-<p style="margin-bottom: 0">
-The prime notation <code>[∞ = E = 1] ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞</code> is the statement: starting from the conserved unit <em>E</em> = 1 of the undifferentiated source, the four-beat operator composition produces the circumpunct at scale \(\lambda\); the circumpunct at scale \(\lambda\) embeds into the circumpunct at scale \(\Lambda\) via a cross-station coupling matrix with \(\alpha\) as its primary entry; the nesting chain returns to the source in the apophatic limit. The line is a description flanked by two identities; the description (the four beats) does the work, the identities (source and apophatic closure) hold the frame.
-</p>
-</div>
-
-<p style="margin-top: 26px">
-The end is the beginning. The \(\infty\) that opens the expression is the \(\infty\) that closes it.
-</p>
 
 <div class="footer">
-<div class="ref">Full theory: <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md">circumpunct_framework.md</a></div>
-<div class="ref">Related: <a href="dimensional_ladder.html">the dimensional ladder</a> · <a href="gravity.html">gravity</a> · <a href="gauge_structure.html">gauge structure</a> · <a href="infolding.html">infolding</a></div>
-<div class="ref">Physical foundations: §27.7n (pump gate), §27.7q (coupling matrix κ), §27.7r (Faraday is i performed)</div>
+<div class="ref">Source: <code>circumpunct_framework.md</code> (whole theory); §27.7 family (constants derivations)</div>
+<div class="ref">Narrow rigorous claim: <a href="alpha_derivation.html">α derivation</a></div>
+<div class="ref">Related: <a href="dimensional_ladder.html">the dimensional ladder</a> · <a href="gravity.html">gravity</a> · <a href="gauge_structure.html">gauge structure</a></div>
 <div class="sig">⊙</div>
 </div>
 
