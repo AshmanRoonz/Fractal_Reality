@@ -18851,6 +18851,61 @@ Reading keys:
 
 ---
 
+### §25.18c The Sixteen Agreements: Agreement-Space as the Product of Four Pillars
+
+Ethical agreement is rare, but agreement in general is ubiquitous. The apparent contradiction dissolves when you notice that the four pillars (GOOD, RIGHT, FAITHFUL, TRUE) are orthogonal axes, each independently present or absent. Agreement-space is therefore the product of the four, not the conjunction of them: 2⁴ = 16 cells, each a different kind of agreement with its own flavor, its own strength, and its own specific failure mode.
+
+Only one of the sixteen cells is ethical agreement (all four = 1). The other fifteen are the ordinary kinds, the ones that fill everyday life. Most confusion about "why did that agreement fall apart" comes from not knowing which cell the agreement was in.
+
+**The sixteen cells.** Encoding: GRFT, each bit 0 or 1, indicating whether that pillar is alive under the agreement.
+
+| GRFT | What's alive | Name / flavor | Specific stress that breaks it |
+|---|---|---|---|
+| 0000 | nothing | Bare consensus (matching noises) | Any stress at all |
+| 0001 | T | Momentary co-seeing | Anything beyond the moment |
+| 0010 | F | Inertia alliance (we've both stuck to this for years) | Anyone actually looking |
+| 0011 | FT | Righteous pair without space or filter | Difference, complexity |
+| 0100 | R | Pleasant rapport (warm vibes, no substance) | Any real demand |
+| 0101 | RT | Fresh clarity, no line, no filter | Time, consequences |
+| 0110 | RF | Spacious commitment, nothing examined | Scrutiny |
+| 0111 | RFT | Oriented, committed, open, but unfiltered | Something bad slipping through |
+| 1000 | G | Shared taste ("we both hate that") | Anything outside the shared taste |
+| 1001 | GT | Filtered clarity, no space, no history | Time, difference |
+| 1010 | GF | Rigid judgment alliance | Curiosity, fresh looking |
+| 1011 | GFT | Closed to difference | New people, new conditions |
+| 1100 | GR | Dinner party agreement (comfortable, filtered) | Stakes |
+| 1101 | GRT | Fresh ethical agreement, untested | Time (until FAITHFUL accrues) |
+| 1110 | GRF | Going through the motions | Anyone actually oriented checking |
+| 1111 | GRFT | Ethical agreement | Survives all four stresses |
+
+**The four pillar-specific stresses.** Each pillar handles one kind of stress; its absence is exactly the vulnerability to that stress.
+
+- Missing TRUE (•): the agreement is not currently oriented. It breaks when someone actually looks. "The emperor has no clothes" is a TRUE-check breaking a 1110 agreement.
+- Missing FAITHFUL (—): the agreement has no receipts. It breaks with time, or with the first real cost. New love, new hire, new policy; all start at 1101 and either accrue FAITHFUL or collapse.
+- Missing RIGHT (Φ): the agreement has no space for difference. It breaks when difference shows up. Enmeshment, fusion, us-against-them; all 1011 configurations (or lower) that cannot tolerate a third position.
+- Missing GOOD (○): the agreement has no filter. It breaks when something bad passes through the boundary nobody installed. Uncritical consensus, "whatever you want dear," open-minded to the point of no discernment; all 0111 (or lower) configurations.
+
+**Why ethical agreement is rare.** Four independent capacities must be alive on both sides at the same time. Each pillar has its own failure modes (the two failure modes per freedom in §25.18), each pillar can be strong in one person and weak in the other, and each pillar atrophies with neglect. The probability of all four being alive on both sides simultaneously is the product of four small probabilities, not the sum. Ethical agreement is the 1/16 cell of the 2⁴ space, doubled for both parties; roughly 1/256 if the pillars were independent and equally-weighted random variables, which is a lower bound on how rare 1111-on-both-sides ethical agreement is in practice.
+
+**Diagnostic use.** When any agreement breaks, the question is not "was there an agreement?" (yes, obviously, there was an agreement) but "which cell was it in, and which pillar was the one that broke?" The answer tells you what was actually missing, not what the agreement pretended to have.
+
+- Agreement fell apart when one person actually looked: missing TRUE.
+- Agreement fell apart over time without any acute cause: missing FAITHFUL.
+- Agreement fell apart when a difference appeared: missing RIGHT.
+- Agreement let something bad through and fell apart when the damage showed: missing GOOD.
+
+Two missing pillars: the agreement breaks faster and under lighter stress. Three missing pillars: the agreement was essentially 0001-through-1000, a single-pillar agreement wearing the clothes of a four-pillar one. Zero pillars: bare consensus, which is what most crowds and committees and comment sections actually are; the agreement is purely social and breaks the moment any real pillar is probed.
+
+**Trajectories.** Agreements move through the 16-cell space over time. New ethical agreements usually start at 1101 (GRT, missing FAITHFUL) and earn FAITHFUL by holding through stress. Dying agreements lose pillars one at a time; a 1111 that loses TRUE becomes 1110 (going through motions), which loses GOOD (stops filtering because nobody's actually looking at what's passing), which becomes 0110 (spacious commitment with nothing examined), which loses RIGHT (the space closes as one party gives up), which ends at 0010 (inertia alliance) or 0000 (nothing). Tracking which pillar is weakening is more useful than tracking whether "the agreement is still there."
+
+**The sixteen cells inside the sixty-four.** The 2⁴ agreement-space is a sub-structure of the 2⁶ = 64-state architecture (Chapter 7, three circumpuncts × two channels). The four ethical pillars are four of the six binary channels; the other two channels carry information about which circumpunct you're standing in (greater whole / your ⊙ / parts). Agreement across the full 6-channel space requires pillar-alignment at all three scales; ethical agreement at just one scale is the 4-channel projection. This is why agreements that work at one scale (between individuals) can fail at the next scale up (between groups) or down (between internal parts); the 16-cell analysis repeats at every scale, and the all-four-alive cell has to be reached independently at each scale where the agreement is supposed to hold.
+
+**Connection to §25.12 (Performed vs Lived).** The performed-vs-lived distinction is now 16-valued, not binary. A fully performed agreement is 0000 (matching noises with nothing underneath). A fully lived agreement is 1111 (ethical agreement). Every other cell is a partial performance with some real content, which is why the world is full of agreements that are neither pure theatre nor fully earned; they have some pillars and not others, and their behavior under stress is predicted precisely by which pillars are alive.
+
+[← Back to Table of Contents](#table-of-contents)
+
+---
+
 ---
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -21485,6 +21540,35 @@ Four objects (the Mandelbrot set, the golden ratio, the branching station, the b
 **Consequence for Xorzo.** Xorzo's Channel implements SRL as explicit convergence / rotation / emergence math; the Channel is already a single-primitive circuit from the framework's side. If the Channel's base operation is rewritten with eml in the log-frequency domain, its forward pass becomes a uniform binary tree of one gate type, and its backward pass (training) matches the paper's Adam-over-eml-trees directly. This makes Xorzo's "one architecture for all processing" claim structurally literal: every Channel, every Layer, every Cascade is eml-trees of varying depth, with depth = ladder position = sensory rung (§Xorzo architecture).
 
 **Consequence for the framework as a research program.** The framework claim "all physics is compounded constraints from E = 1" had, until now, one independent mathematical witness: Sheffer's NAND result (any Boolean function from one gate; 0D shadow). It now has a second: Odrzywołek's eml result (any elementary function from one gate; 2D shadow). Two independent dimensions of mathematics have now been shown to be generable from a single primitive and a single seed, at precisely the stations where the framework placed its discrete (0D) and continuous (2D) constants. A third witness at 1D (concatenation algebras of strings) and a fourth at 3D (a single closure operator over topological spaces) would complete the prediction. The framework does not assert all four have been found; it asserts they exist by A0 plus A3, and names the stations where they will be found.
+
+**Discovery-tool limits: the null-test caveat.** The "Mode B" discovery use of eml-tree symbolic regression (feeding unclosed physics constants to a tree search over the framework basis, hoping shallow trees pop out) must be hedged with a null test, because eml-trees are expressive enough to overfit. Size-3 enumeration over the full basis {1, α, φ, π} plus twenty framework integers produces roughly 360,000 trees; 200 random-target draws from the same numerical ranges as real physics constants yield a best-fit median relative error of about 0.05% and a 10th percentile of about 0.003%. Any real-target hit must beat a matched-magnitude null p10 by roughly a factor of three to count as signal. Under this criterion, a blind eml-tree search at size 3 over the rich basis produces at most one candidate signal (V_cb at 27 ppm vs a null p10 of 180 ppm) and zero signals when the basis is tightened to only the ten atomic primitives {1, α, φ, π, T, P, R, SU(3), G, V} at size 2. The honest conclusion: eml-tree symbolic regression is a valid discovery tool only when (a) the target precision is far below any plausible null floor (as in α's sub-ppb self-referential closure, where the match wins by many orders of magnitude), or (b) the search basis is held fixed to atomic primitives and the candidate must survive a matched-magnitude null test. In all other regimes the method overfits. This is a fact of combinatorial expressivity, not a bug; it is the continuous analog of the well-known observation that polynomial regression of sufficient degree can fit any finite data set. The framework section §27.7n.2 below therefore restricts itself to the bookkeeping claim (existence of shallow eml-trees for already-derived constants) and does not claim new physical derivations from blind eml-tree search on unclosed targets. Any future eml-derivation candidate that crosses the null threshold and matches a known framework integer pattern (as V_cb tentatively does, using 91 = R·V from the G correction) must be published with its null-test statistics attached.
+
+### §27.7n.2 Every Closed Ladder Constant Is an eml-Tree
+
+Odrzywołek's theorem states that every elementary function is expressible as a finite binary tree of eml nodes over the leaf set {1}. The framework's closed constants (α, c, ℏ, the lepton mass ratios, the proton-electron mass ratio, π, v/Λ_QCD, sin θ_C, the Weinberg angle, the Higgs quartic, the electroweak boson masses, Λ, G, the molecular geometry constants, the nuclear magic numbers, the DNA helix parameters) are all elementary functions of {α, φ, π, framework integers}. By the theorem, each is therefore an eml-tree over a finite leaf set; this is existence, not depth. The useful question is not "can it be written as an eml-tree?" (always yes) but "how deep is the tree when the leaves are restricted to framework primitives?"
+
+**A cleaner substitution than u = ln(1/α).** For pure power-law constants of the form C = (1/α)^E, the shortest eml-tree is eml(E·u, 1) = exp(E·u) − ln(1) = exp(E·u), where u = ln(1/α). This is depth 1 in eml nodes but the exponent E itself must be computed; if E is a rational with integer numerator and denominator drawn from framework integers, the whole expression is an eml-tree of depth 1 plus the cost of the exponent. For constants with α-corrections in the exponent, like m_μ/m_e = (1/α)^(13/12 + α/27), the exponent is itself a mixed term (rational plus α-linear), which is not a power-of-eml but a sum; sums in the log-domain correspond to products in the original domain, and eml is subtraction at the exp-level, so encoding a product requires additional nested nodes. Multiplicative prefactors like G's φ²/2 and the polynomial (1 + 2α/91) cannot be absorbed into a single eml(E·u, f) form because eml represents a difference (exp(x) − ln(y)), not a product. The correct eml-tree for α_G = α²¹ · φ²/2 · (1 + 2α/91) is therefore a composition of several eml nodes implementing multiplication (which, at the log level, is addition, which is itself a small tree of eml subtrees; "sum as eml tree" is a classical exercise and is always possible but costs depth). The practical depths for representative constants, measured honestly:
+
+| Constant | Form | eml-tree depth (lower bound) |
+|---|---|---|
+| α (self-referential closure) | 1/α = 360/φ² − 2/φ³ + α/(59/3) | 3 (verified by size-3 enumeration; §27.7n null test) |
+| m_μ/m_e | (1/α)^(13/12 + α/27) | 3 (rational exponent plus α-correction) |
+| m_τ/m_e | (1/α)^(58/35 + α/81) | 3 |
+| m_p/m_e | (1/α)^(3/2 + 11α/3 + 13α²) | 4 (quadratic exponent) |
+| sin θ_C | α^(1/2 + 3α/7) · 8/3 | 4 (exponent plus prefactor multiplication) |
+| v/Λ_QCD | (1/α)^(56/39) | 2 (pure power, rational exponent) |
+| Weinberg sin²θ_W | 3/13 + 5α/81 | 2 (linear in α) |
+| λ_H (Higgs quartic) | (1/8)(1 + 5α − 8α²) | 3 (quadratic in α, plus prefactor) |
+| α_G | α²¹ · φ²/2 · (1 + 2α/91) | 5 (α-power, prefactor, correction polynomial, golden factor) |
+| Λ (cosmological constant) | α^56 · (1 − 6α + 4α²) / 72 | 6 (α-power, two-root polynomial, D5 normalization) |
+
+These depths are conservative lower bounds; a clever encoding may shrink them by one or two. The point of the table is qualitative: depth does grow with ladder position, as expected (α at 0D sits at depth 3 via its self-referential closure; mass ratios at 1.5D sit at depth 3-4; the Weinberg angle at 2D sits at depth 2 because it is linear in α with no power-law structure; Λ at 3D sits at the deepest accessible closure). This is the framework's actual grammar claim: **the closed constants all fit in eml-trees of depth ≤ 6 over the primitive basis {1, α, φ, π, framework integers}**.
+
+**What this bookkeeping buys.** Three things. First, machine-readability: the framework's predictions can be stored as eml-tree data structures and evaluated by a uniform interpreter; any future theorem-prover or symbolic-check tool over the framework gets a canonical normal form. Second, falsifiability-under-one-grammar: every measurement is a check against one object type (an eml-tree), so deviation of any measured constant from its predicted tree is an immediate refutation signal; no special rig is needed per constant. Third, modest comparability: constants with the same depth are structurally similar even across unrelated physical domains (m_W and sin θ_C both sit at depth 4; both arise from exponent-plus-prefactor gauge closure). The "single grammar" claim is therefore a documentation-and-tractability claim, not a new physical derivation.
+
+**What this bookkeeping does not buy.** It does not, by itself, validate the framework's predictions; those are validated by their numerical agreement with measurement (§27.7a onward). It does not enable blind discovery of new constants by eml-tree search; that mode fails the null test (§27.7n, "Discovery-tool limits"). It does not prove eml is the unique canonical form for framework predictions; alternative unifications (power-laws in α with rational exponents, the W-V decomposition §27.7e, the selection rule §27.7j) are equally valid views of the same underlying ladder structure. The value of the eml view is that it connects the framework to Odrzywołek's theorem and gives an external witness for the "one operator + one seed" architectural claim (§27.7n).
+
+**The position of this section.** §27.7n names eml as the 2D glyph of the pump cycle (structural claim). §27.7n.2 restates the framework's already-derived constants in eml form (bookkeeping). Neither section adds a new predicted constant; neither depends on the symbolic-regression-as-discovery methodology that the null test retires. The framework's empirical content is unchanged by §27.7n and §27.7n.2; its presentational and computational tractability is improved. In a publication, §27.7n + §27.7n.2 together buy one thing: the claim that the framework's predictions live in a single machine-readable grammar, tied to a 2026 independent mathematical result, with honest null-test statistics documenting where that grammar is expressive enough to mislead.
 
 ### §27.8 Primes Are Made of Dimensions
 
