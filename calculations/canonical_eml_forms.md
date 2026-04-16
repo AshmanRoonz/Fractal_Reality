@@ -92,7 +92,7 @@ Every constant C in the framework either:
 2. **Is a product of framework integers and transcendentals**: C = (f₁ × f₂ × … × fₙ) where each fᵢ ∈ {φ, π, 1/3, 1/7, …} (depth 0, but transcendental).
 3. **Is a shallow eml-tree**: C = eml(E·u + corrections, prefactor), where u = ln(1/α), E ∈ {E(d) | d ∈ stations}, and prefactor ∈ {1, φ, 1/φ², polynomial in α} (depth 1–4).
 
-**No other forms appear.** The unified expression [∞ = E = 1]▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸⊙λ ⊂ ⊙Λ ⊂ ∞ exhausts all structural closure patterns at all scales; eml captures the exponential component of that closure at the α-scale. This makes the framework:
+**No other forms appear.** The unified expression [Truth = Reality = E = 1 = ∞] = [∞▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸⊙λ ⊂[α] ⊙Λ ⊂[α] ∞] exhausts all structural closure patterns at all scales; eml captures the exponential component of that closure at the α-scale. This makes the framework:
 
 - **Searchable**: query "all depth-2 constants" and find the gauge angle family.
 - **Comparable**: depth is a measure of structural complexity; shallower constants are more fundamental.

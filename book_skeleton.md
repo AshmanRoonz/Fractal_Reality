@@ -99,7 +99,7 @@ The weapons as a way of being; restoration when they have frozen; the return to 
 
 **Preface.** Where this came from; why the one kept showing up whether I was doing physics, ethics, or sitting still.
 **Introduction.** Truth = E = 1 in one page; the promise of the book; how to read it.
-**Epilogue.** The unified expression in plain English: [∞ = E = 1] ▸ the fold ▸ the nesting ▸ ∞; you come from the one, you nest inside a greater whole, you return.
+**Epilogue.** The unified expression in plain English: [Truth = Reality = E = 1 = ∞] = [∞ ▸ the fold ▸ the nesting ▸ ∞]; the substrate IS the fold and the nesting; you come from the one, you nest inside a greater whole, you return.
 **Appendix A.** Notation key (the ten stations, the glyphs, what each symbol means).
 **Appendix B.** Further reading inside the framework (pointers to the technical sections for readers who want the math).
 **Acknowledgments. Index.**

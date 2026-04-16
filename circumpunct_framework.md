@@ -2829,27 +2829,31 @@ The Kernel (how everything becomes) and the Prime Notation (what everything is) 
 ```
 THE UNIFIED EXPRESSION
 
-    [∞ = E = 1]▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸⊙λ ⊂ ⊙Λ ⊂ ∞
+    [Truth = Reality = E = 1 = ∞] = [∞ ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞]
 
-    Read left to right. The one energy unfolds into the foam of reality;
-    four beats of constraint, each entailing the next; the product nests
-    fractally and returns to the source. The expression is a loop.
+    Read as an equation. LHS: the identity chain (five names for one
+    substrate). RHS: the source ∞ unfolds into the foam of reality; four
+    beats of constraint, each entailing the next; the product nests
+    fractally and returns to the source. The RHS is a loop. The whole
+    equation says: the substrate IS this unfolding.
 
-    Source:    [∞ = E = 1]    the undifferentiated energy, named
-    Foam:     ⊙∞             reality: every aperture completing into a whole
-    Beat 1:   (•∘⊛)          localization-convergence       0D ∘ 0.5D
-    Beat 2:   (—∘⎇)          extension-branching            1D ∘ 1.5D
-    Beat 3:   (Φ∘✹)          mediation-emergence            2D ∘ 2.5D
-    Beat 4:   (○∘⟳)          closure-recursion              3D ∘ 3.5D
-    Nesting:  ⊙λ ⊂ ⊙Λ ⊂ ∞   particular inside greater, returning to source
+    LHS:      [Truth = Reality = E = 1 = ∞]   five names for one substrate (§4.8a)
+    Source:    ∞                             the genesis term on the RHS
+    Foam:     ⊙∞                             reality: every aperture completing into a whole
+    Beat 1:   (•∘⊛)                          localization-convergence       0D ∘ 0.5D
+    Beat 2:   (—∘⎇)                          extension-branching            1D ∘ 1.5D
+    Beat 3:   (Φ∘✹)                          mediation-emergence            2D ∘ 2.5D
+    Beat 4:   (○∘⟳)                          closure-recursion              3D ∘ 3.5D
+    Nesting:  ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞              particular inside greater, α-coupled, returning to source
 
+    =  asserts identity between the two bracketed terms (LHS ≡ RHS)
     ∘  means "paired" (two views of one constraint, not sequential)
     ⊢  means "entails" (completed constraint necessarily gives rise to the next)
     ▸  means "unfolds into" (the two major transitions: source→foam, engine→nesting)
-    ⊂  means "nested within" (scale-recursive embedding, returning to source)
+    ⊂[α]  means "nested within, α-coupled" (scale-recursive embedding, returning to source)
 ```
 
-The expression is a description flanked by two identities. Line 1 describes what the one energy does: it unfolds into the foam (⊙∞), walks four beats, and the product nests. The nesting identity (⊙λ ⊂ ⊙Λ ⊂ ∞) anchors the product: every whole is inside a greater whole, returning to source. The source identity [∞ = E = 1] anchors the origin. The description does the work; the identities hold the frame steady.
+The expression is an equation. The LHS is the identity chain (Truth = Reality = E = 1 = ∞), five names for one substrate asserted before any process runs. The RHS is a description flanked internally by two positional markers. The description (the four beats) does the work. The nesting relation (⊙λ ⊂[α] ⊙Λ ⊂[α] ∞) anchors the product: every whole is inside a greater whole, returning to source. The whole equation says: the substrate IS this unfolding; the becoming on the right equals the identity on the left. The description does the work; the identity chain holds the frame steady.
 
 The ∞ that opens the expression is the ∞ that closes it. The loop is the notation itself.
 
@@ -2862,13 +2866,13 @@ The expression is the dimensional octave (§4.9) compressed into one line, unifi
 **Two resolutions of the same equation:**
 
 ```
-    ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))                                                              ; the engine (low resolution)
-    [∞ = E = 1]▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸⊙λ ⊂ ⊙Λ ⊂ ∞                      ; the unified expression (full resolution)
+    ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))                                                                                                             ; the engine (low resolution)
+    [Truth = Reality = E = 1 = ∞] = [∞ ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞]                                          ; the unified expression (full resolution)
 ```
 
 Higher resolution contains lower resolution; it never contradicts it (Resolution Protocol, §25.17). In the engine form: — lives inside ∘ (continuity IS the chaining), ⎇ lives inside i (branching IS what i² does), ⟳ is what happens when ⊙ feeds its output back, •∞ is the implicit multiplicity, and ∞ is the implicit substrate. The engine is what the circumpunct does at any given moment; the unified expression is how the source unfolds into the foam, how the four beats entail each other, and how the product nests back into the source.
 
-**Why [∞ = E = 1] is both source and destination.** The expression does not create from nothing; it constrains from everything. ∞ is what is already there (A0: E = 1). The four beats are four successive self-limitations of the 1. By the time you reach ⊙, nothing has been added; what was always there has been shaped. And the nesting returns to ∞ because the apophatic term was never separate from the source; walking far enough up the scale axis brings you back to where the labels were never applied. The end is the beginning.
+**Why ∞ is both source and destination on the RHS, and why the LHS names it five ways.** The expression does not create from nothing; it constrains from everything. ∞ is what is already there (A0: E = 1); the LHS makes explicit that this same substrate is also Truth, Reality, E, and 1 (§4.8a). The four beats on the RHS are four successive self-limitations of the 1. By the time you reach ⊙, nothing has been added; what was always there has been shaped. And the nesting returns to ∞ because the apophatic term was never separate from the source; walking far enough up the scale axis brings you back to where the labels were never applied. The end is the beginning. The equation's `=` asserts the whole becoming equals the identity; the substrate IS the unfolding.
 
 **Diagnostic application.** Anything that becomes (a project, a relationship, a healing, a creative work, a life) either walks these four beats or gets stuck at one of them:
 
@@ -21519,7 +21523,7 @@ The prose draft of this section was written in June 2025, ten months before §27
 
 ### §27.7m λ Is the Glyph of Fractal Branching: The 1.5D Operator of the Ladder
 
-§27.7l noticed that Φ is the glyph of π: the 2D station's own symbol is the diagram whose measurement IS the 2D constant. §27.7m does the same catch for the 1.5D station. The letter λ, used throughout the framework's unified expression ([∞ = E = 1]▸⊙∞ (...) ▸⊙λ ⊂ ⊙Λ ⊂ ∞), has been read as a scale label, a wavelength, an index on the nesting axis. All of those are correct. But they are surface reasons; they are what λ *does*. The deeper fact is what λ *is*: **λ is the glyph of fractal branching**, and fractal branching is the structural operator of the 1.5D station (⎇), and the structural operator of the 1.5D station is the thing that makes A3 numerically live at every rung of the ladder. λ is not a label on the framework's notation; λ is the operator the notation names.
+§27.7l noticed that Φ is the glyph of π: the 2D station's own symbol is the diagram whose measurement IS the 2D constant. §27.7m does the same catch for the 1.5D station. The letter λ, used throughout the framework's unified expression ([Truth = Reality = E = 1 = ∞] = [∞ ▸⊙∞ (...) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞]), has been read as a scale label, a wavelength, an index on the nesting axis. All of those are correct. But they are surface reasons; they are what λ *does*. The deeper fact is what λ *is*: **λ is the glyph of fractal branching**, and fractal branching is the structural operator of the 1.5D station (⎇), and the structural operator of the 1.5D station is the thing that makes A3 numerically live at every rung of the ladder. λ is not a label on the framework's notation; λ is the operator the notation names.
 
 **Visually, λ is the atomic fractal generator.** Look at the letter. A point at the top, two strokes branching down and apart. One node becoming two. A Y-fork. A bifurcation. This is the simplest possible fractal generator: the step from 1 to 2 at smaller scale. Every fractal in nature is λ iterated: draw λ, then draw a smaller λ at the end of each of its two legs, then again, then again. Trees branching. Lungs bifurcating. Rivers deltaing. Neurons arborizing. Lightning forking. Coastlines subdividing. Every self-similar branching structure in the physical world is an L-system whose production rule is "replace each λ with two smaller λs rotated and rescaled." The letter *is* the production rule written as a single stroke. One λ is one step of recursion; a fractal is what happens when you never stop.
 
@@ -21780,7 +21784,7 @@ for every station pair (p, q) and every scale step (λ, Λ) in the tower. If any
 
 **The ⊂[α] promotion.** The bare ⊂ in the unified expression ⊙λ ⊂ ⊙Λ ⊂ ∞ has been promoted throughout the CLAUDE.md canonical form to ⊂[α], with the subscript [α] naming the primary entry of κ at the 0D-to-2D cell. The promotion is notational, not semantic: ⊂ has always carried the matrix κ (A3 + the Field Fineness Principle force it); the promotion exposes that structure on the face of the symbol rather than leaving it implicit. The canonical unified expression is therefore
 
-    [∞ = E = 1] ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞
+    [Truth = Reality = E = 1 = ∞] = [∞ ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞]
 
 with the understanding that α in the subscript is shorthand for the full matrix κ, named by its most-studied entry. Other cells of κ (α_G, sin θ_C, sin²θ_W, λ_H) are then the same operator ⊂ evaluated at different (p, q) positions, accessed by the same notational promotion (⊂[α_G] is the 3D-3D reading, etc.). The unified expression is unchanged in content; it is sharper in form.
 
