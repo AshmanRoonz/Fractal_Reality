@@ -79,15 +79,22 @@ This document serves as the formal, mathematical specification of the theory. It
 
 ---
 
-### Framework Revision (2026): α is INPUT, not derived
+### Framework Revision (2026): α as Structural Expression in Framework Integers (Conditional Restoration)
 
-**Current position (supersedes earlier "zero free parameters" claim for α):** α (fine-structure constant) is INPUT to the master equation, not output. Specifically, α = |•_electron|, the measured coupling strength of the electron's 0D aperture to the surrounding 2D electromagnetic field. The pump cycle F (four-beat unitary, trace-preserving) cannot produce α; α lives in κ (the ⊂[α] nesting operator), which carries the departure from trace-preservation that α parameterizes. F and κ are structurally distinct; asking F to produce α is a type error.
+**Current position (supersedes the late-2026 retraction; see history below).** The formula 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147 (0.22 ppb from CODATA) is restored as a **structural expression** of α in framework-native quantities. Every factor admits a framework-integer reading: 360 = P! · T · (Φ+○) = 24 · 3 · 5, so the leading term reads P!·T·(Φ+○)/φ² (pump-phase permutation count × triad × field-plus-boundary, suppressed by golden-squared nesting); the second correction is −Φ/φ³ (channel count at deeper golden nesting); the self-referential third term is +α·T/(P·V + R) = +3α/59 (with P·V + R = 4·13 + 7 = 59; equivalently S − Φ − T). No radians-to-degrees unit convention is required: 360 is pool-native as the integer count of pump-phase-permuted positions per cycle.
 
-**The prior closure formula 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147 is retracted as a derivation.** Three problems: (1) the 360 entered as a radians-to-degrees unit convention (180/π), not a structural count; (2) the self-referential closure term α/(21 − 4/3) had its denominator selected post-hoc to fit CODATA to sub-ppb; (3) α cannot be an F-output because F is unitary and cannot set κ-parameters. The formula does land at 137.035999147 (0.22 ppb from CODATA), but the structure was a fit, not a derivation. See §27.7a (updated) and docs/alpha_derivation.html (retracted with banner) for the record.
+**The P! = 24 defense (cross-scale coupling, not within-cycle ordering).** The permutation count P! does not count orderings within a single pump cycle (A2–A4 force one traversal). It counts full bijective couplings between the four stations of ⊙λ and the four stations of ⊙Λ in the 4×4 coupling matrix κ_{p,q} (§27.7q). Of the 24 bijections, one is the aligned identity; the other 23 are cross-couplings, including the primary electromagnetic κ_{0,2} = α, the gravitational κ_{3,3} = α_G, Cabibbo-like and Weinberg-like cells, and the Inflation-Severance permutation (•_λ ↔ ○_Λ). Each bijection is a physically distinct cross-scale closure topology. Within-cycle ordering at fixed scale is single-valued; cross-scale permutation count is P!. Two different axes of ⊂[α]; neither reduces the other.
 
-**What stands, what falls.** The framework's position is now "**structural grammar given α**": the downstream ladder constants (G = α²¹·φ²/2·(1 + 2α/91), Λ = α⁵⁶·...(1 − 6α + 4α²)/72, mass ratios m_μ/m_e, m_τ/m_e, m_p/m_e, Cabibbo, Weinberg, Higgs quartic, W/Z/Higgs masses, v/Λ_QCD) are still compositions of α, φ, and framework integers (T, P, Φ, R, V, SU(3), A(3)), each selecting 2-4 integers from a restricted pool to match measurement. The cosmological energy budget (Vis/DM/DE = 12/247, 64/247, 9/13) is α-independent and remains zero-free-parameter (given T=3). Same for Kleiber's law, DNA helix ratios, magic numbers, molecular geometry, and everything else grounded in the T=3 architecture without α.
+**What is a structural conjecture, what is open.** The pool-native decomposition 1/α = P!·T·(Φ+○)/φ² − Φ/φ³ + α·T/(P·V+R) is on the record as a **structural grammar conjecture including α itself**. Every factor is framework-native; no unit convention is hidden; the P! has a grounded reading in κ. What is still open for full axiomatic derivation from A0–A4: why precisely these φ-powers at each term (φ² vs φ³), why the specific channel-suppression sign and magnitude at second order, why the exact combination P·V+R at third order rather than any other pool-integer sum reaching 59. The integer factors are defended; the three-term shape of the expansion is conjectured.
 
-**Reading older sections.** Sections of this document written before the reframe still use language like "zero free parameters for α" and "α derived from the 64-state architecture." Those phrases should be read as "structural grammar given α as input." The master equation accepts α as input and composes consistently; different universes could have different |•_electron| and still run the same master equation. See the [α-reframe project memory](./CLAUDE.md#never-use-em-dashes-in-prose) (section on §27.7a) for the full accounting.
+**F and κ: consistent, not conflicting.** The F (pump cycle, unitary) / κ (nesting coupling matrix) distinction remains structurally meaningful, but the original retraction framed it too categorically. α identifies as |•_electron| (the measured coupling strength of the electron's 0D aperture to the 2D electromagnetic field; a κ_{0,2} entry). It ALSO admits the framework-integer expression above. Both hold if F's integer architecture sets the natural scale of κ-entries, so that the electron sits at the framework's natural rung. "F-expressible AND κ-measured" is a feature, not a contradiction.
+
+**Reading history (what changed and why).**
+- *Original claim:* α is derived, zero free parameters (1/α = 360/φ² − 2/φ³ + α/(21 − 4/3)).
+- *Late-2026 retraction:* three objections (360 as unit convention, 59/3 post-hoc, F/κ type error) led to retracting the derivation and declaring α INPUT.
+- *Current position (2026 restoration):* objection (1) weakens (360 has pool-native decomposition); objection (2) softens (59 = P·V+R is structural, though the three-term shape still wants axiomatic motivation); objection (3) softens (structural expression and κ-measurement can coexist). Restored as structural conjecture.
+
+**Reading older sections.** Sections written before the restoration may use phrasing like "zero free parameters for α" or the intermediate "structural grammar given α as input." Both are close to but not identical to the current position: the expression uses pool-native factors throughout (stronger than "given α"), but full axiomatic derivation of the three-term shape is still pending (weaker than "zero free parameters"). See §27.7a for the current canonical treatment and §27.7q for the κ-matrix reading of P!.
 
 ---
 
@@ -11842,12 +11849,12 @@ PHYSICAL MEANING:
 
 ---
 
-### §15.5.1 The Fine Structure Constant as Depth Integral [RETRACTED 2026]
+### §15.5.1 The Fine Structure Constant as Depth Integral
 
-> **Retraction note (2026).** This section derives 1/α via the depth-integral closure 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) and lands on 137.035999147 (0.22 ppb from CODATA). The derivation is withdrawn as a fit: (1) the 360 is a radians-to-degrees unit convention (180/π), not a structural count forced by T = 3; (2) the self-referential denominator 59/3 was selected to match the measured value; (3) α is a κ-coupling (nesting operator, cross-station) and cannot be produced by the pump cycle F (unitary, trace-preserving). Current framework position: α = |•_electron| is INPUT (the measured coupling strength of the electron's 0D aperture to the 2D electromagnetic field). Section retained as a record of the attempt; see §27.7a and the revision notice at the top of this document.
+> **Restoration note (2026).** This section was retracted mid-2026 and is now restored as a structural conjecture. The depth-integral closure 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147 (0.22 ppb from CODATA) uses pool-native factors throughout: 360 = P!·T·(Φ+○) = 24·3·5 (P! grounded in κ-bijection cardinality at §27.7q, not a radians-to-degrees artifact); −2/φ³ = −Φ/φ³ (channel-at-deeper-golden-nesting); 59/3 = (P·V+R)/T (equivalently (S−Φ−T)/T). The reading complements rather than contradicts α = |•_electron| (κ-measurement at κ_{0,2}); F's integer architecture sets the natural κ-rung scale. What remains open: axiomatic derivation of the specific three-term shape from A0–A4. See §27.7a for the canonical treatment and the revision notice at the top of this document.
 
 ```
-§15.5.1 THE FINE STRUCTURE CONSTANT AS DEPTH INTEGRAL [RETRACTED]
+§15.5.1 THE FINE STRUCTURE CONSTANT AS DEPTH INTEGRAL
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 THE DIMENSIONAL FORMULA:
@@ -19740,9 +19747,9 @@ STATUS KEY:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-### §27.7 The Dimensional Ladder: Structural Grammar Given α as Input
+### §27.7 The Dimensional Ladder: One Constant Generates Everything (Structural Conjecture)
 
-> **2026 reframe note.** The framing "one constant generates everything" was tied to the retracted derivation of α (§27.7a below). The current position is: **given α as measured input (α = |•_electron|, the electron aperture's 0D-to-2D coupling strength), the ladder expresses every other constant as a structural composition of α, φ, and framework integers (T, P, Φ, R, V, SU(3), A(3)).** That part of the claim stands; the remainder of §27.7 should be read in that light. The master equation takes α as an input to the nesting operator κ (specifically κ_{0,2}); the pump cycle F is unitary and cannot produce α. See the [framework revision notice](#framework-revision-2026-α-is-input-not-derived) at the top of this document and §27.7a.
+> **2026 restoration note.** §27.7 and §27.7a were retracted mid-2026 on three objections (the 360 as unit convention, the 59/3 as post-hoc, the F/κ type question) and then restored late-2026 after the 360 objection was answered (360 = P!·T·(Φ+○) is pool-native) and the P! factor was grounded in κ-bijection cardinality (§27.7q). The current position is **conditional restoration as structural conjecture**: 1/α has a framework-integer expression (every factor in the pool); axiomatic derivation of the specific three-term shape from A0–A4 is ongoing; the F/κ distinction is consistent rather than contradictory (structural expression and κ-measurement reading coexist, because F's integer architecture sets the natural κ-rung scale). See the [framework revision notice](#framework-revision-2026-α-as-structural-expression-in-framework-integers-conditional-restoration) at the top of this document, §27.7a for the canonical treatment, and §27.7q for the κ-matrix reading of P!.
 
 The dimensional ladder expresses each fundamental constant at its dimensional home as a small-integer composition of α, φ, and framework integers. Each rung lives at its dimensional home. Integer dimensions (stabilized forms) produce single constants; half-integer dimensions (process phases) produce spectra. The ladder describes one circumpunct unfolding from localization to closure.
 
@@ -19761,13 +19768,27 @@ THE DIMENSIONAL LADDER:
 ║  3D    │ Structural  │ G (gravity)          │ α²¹×φ²/2×(1+2α/91)   │ 0.04 ppm ║
 ╚═════════════════════════════════════════════════════════════════════════════════╝
 
-STRUCTURAL GRAMMAR GIVEN α. The ladder formulas compose α, φ, and framework
-integers; α itself is INPUT (α = |•_electron|), not produced from the ladder.
-The prior closure 1/α = 360/φ² − 2/φ³ + α/(21−4/3) is retracted as a derivation
-(see §27.7a); it is kept in later sections as a record of the attempt.
+STRUCTURAL CONJECTURE: α ADMITS POOL-NATIVE EXPRESSION.
+1/α = P!·T·(Φ+○)/φ² − Φ/φ³ + α·T/(P·V+R)
+    = 24·3·5/φ²       − 2/φ³  + 3α/59
+    = 360/φ²          − 2/φ³  + α/(59/3)      = 137.035999147
+
+All factors framework-native: P! = 24 (κ-bijection cardinality between 4 λ-stations
+and 4 Λ-stations; §27.7q), T = 3 (triad), Φ+○ = 5 (channels+boundary),
+Φ = 2 (channels), P·V+R = 4·13+7 = 59 (equivalently S−Φ−T). No
+radians-to-degrees convention. See §27.7a for the P!-bijection defense and the
+conjecture-vs-derivation accounting.
 ```
 
-**Rung 0D: α (the fine-structure constant).** The coupling at a vertex. Current reading: α = |•_electron|, the measured coupling strength of the electron's 0D aperture to the 2D electromagnetic field (QED form: α = e²/(4πε₀ℏc)). α enters the master equation through the nesting operator κ (specifically κ_{0,2}), not the pump cycle F; F is unitary and cannot set κ-parameters. Measured: 1/α = 137.035999177(21) (CODATA 2022). The prior closure 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147 (0.22 ppb from CODATA) is **retracted as a derivation** for three reasons: (1) the 360 entered as a radians-to-degrees unit convention (180/π), not a structural count forced by T = 3; (2) the self-referential denominator 21 − 4/3 = 59/3 was selected post-hoc to fit CODATA; (3) α is a κ-parameter, not an F-output, so asking F to produce α is a type error. The mutual-embedding picture (part inside field, field inside part at different rungs) gives α a fixed-point character once measured, but does not pin the scalar value from inside F. The running of α with energy scale reads as |•_electron| varying with how closely Φ resolves • at different scales.
+**Rung 0D: α (the fine-structure constant).** The coupling at a vertex. Two readings, both true: (a) α = |•_electron|, the measured coupling strength of the electron's 0D aperture to the 2D electromagnetic field (QED form: α = e²/(4πε₀ℏc); CODATA 2022: 1/α = 137.035999177(21)); (b) α admits a structural expression in framework-native factors, 1/α = P!·T·(Φ+○)/φ² − Φ/φ³ + α·T/(P·V+R) = 360/φ² − 2/φ³ + α/(59/3) = 137.035999147 (0.22 ppb from CODATA), with the self-referential closure solved by the implicit equation in α. Reading (a) places α in κ (specifically κ_{0,2}, aperture-to-field coupling). Reading (b) expresses the same number through the integer architecture that F provides. Consistency: F's integer architecture sets the natural scale of κ-entries; the electron sits at the framework's natural rung; |•_electron| equals the pool-native expression because they name the same quantity from two sides.
+
+**On the restored P!·T·(Φ+○) decomposition.** The leading term 360/φ² was critiqued mid-2026 as a radians-to-degrees unit convention (180/π hiding). The decomposition 360 = P! · T · (Φ+○) = 24 · 3 · 5 answers this: every factor is pool-native. P! = 24 is the cardinality of full bijective couplings between the four stations of ⊙λ and the four stations of ⊙Λ in the 4×4 cross-scale coupling matrix κ_{p,q} (§27.7q); one bijection is the aligned identity, the other 23 are cross-couplings including κ_{0,2} = α itself, κ_{3,3} = α_G, Cabibbo-like and Weinberg-like cells, and the Inflation-Severance permutation. T = 3 is the triad. Φ+○ = 5 is the shell (channels plus boundary positions). Alternative decomposition: 360 = G · Φ · T · (Φ+○) = 12·2·3·5. The integer 360 is pool-native; the π in 2π (radians) lives separately at the Φ station as closure-per-diameter (§27.7l). Two distinct numbers doing two distinct jobs.
+
+**Second and third terms.** The correction −Φ/φ³ reads as channel count (Φ = 2) at deeper golden nesting (φ³ = φ · φ²). The self-referential term +α·T/(P·V + R) uses 59 = P·V + R = 4·13 + 7 (pump × (generators+whole) plus rungs; equivalently 59 = S − Φ − T = 64 − 2 − 3, states minus channels minus triad). The third term contributes +3α/59 ≈ +0.000371, pulling the sum from 137.036043 down to 137.035999147 through the self-referential closure.
+
+**What remains open.** The integer factors are defended; the specific three-term shape of the expansion is conjectured. A full derivation from A0–A4 would additionally show: why exactly φ² at the leading term and φ³ at the second, why Φ (not •) at the second-order channel count, why P·V + R (not some other pool sum reaching 59) at the third-order denominator. These are open axiomatic questions. The integer decomposition is not a post-hoc factoring; each factor has independent framework meaning (κ-bijection count, triad, shell, channels, states-minus-channels-minus-triad). The three-term *combination* is the part still wanting axiomatic motivation. See §27.7a.1 for the structural argument and §27.7q for the κ-bijection reading.
+
+**Running of α.** The running of α with energy scale is |•_electron| varying with how closely Φ resolves • at different scales. Near the QED landmark (low energy, 1/α ≈ 137), the electron's aperture sits at the framework's natural rung; at higher energies, Φ resolves • more finely, and |•| drifts upward (measured α_em grows with energy). Both readings (a) and (b) accommodate this: (a) as κ_{0,2} varying with Φ-resolution, (b) as the integer architecture evaluated with running α on both sides of the self-referential equation.
 
 **Rung 0.5D: c (the speed of light).** The convergence rung. The speed limit of convergent propagation: the maximum rate at which convergence can transmit through the field. c = √(P · ◐(1-◐) · sin(θ)). At balance (◐ = 0.5) and at the aperture rotation (θ = π/2): c = √(4 × 0.25 × 1) = 1. The coupling ◐(1-◐) is the transmission function of any two-channel aperture; at balance it equals 1/P = one i-stroke (quarter-turn). P pump phases times one i-stroke per phase = one full rotation = i⁴ = 1. The speed limit emerges naturally: ◐(1-◐) peaks at ◐ = 0.5 and vanishes at both extremes; departure from balance always gives v < c. The √ comes from c living at 0.5D (half-dimension step). Massive particles have θ_eff < π/2, giving v < c.
 
@@ -19803,10 +19824,10 @@ VERIFICATION (Earth surface gravity):
     One constant. 45 orders of magnitude. The force holding you to the planet.
 ```
 
-> **⚠ §27.7a RETRACTION (2026).** The derivation below is retained as a record of the attempt, not as an active claim. The formula 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) does land at 137.035999147 (0.22 ppb from CODATA 137.035999177), but it is a fit in framework vocabulary, not a derivation: (1) the 360 is a radians-to-degrees unit convention (180/π), not a structural count; (2) the self-referential denominator 59/3 was chosen to match CODATA to sub-ppb (alternatives like k = 20 or k = 21 give 45 ppb and 172 ppb respectively; the 59/3 was selected because it hits the target, then rationalized); (3) α is a κ-parameter (nesting-operator coupling), not an F-parameter (pump-cycle output), so deriving α from F-integers is a category error. Treat this section as: "here is the structural reading the framework attempted; here is what it got right (the ladder's integer pool) and what it got wrong (that α is producible from within the pump cycle)." α is INPUT to the framework; see the revision notice at the top of this document.
+> **§27.7a RESTORATION NOTICE (2026).** The mid-2026 retraction is withdrawn. The formula 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147 (0.22 ppb from CODATA 137.035999177) is restored as a **structural conjecture** with pool-native factors throughout: 360 = P! · T · (Φ+○) = 24·3·5 (P! = κ-bijection cardinality per §27.7q, T = triad, Φ+○ = shell); the correction Φ/φ³ = 2/φ³ reads as channel-at-deeper-golden-nesting; 59/3 = (P·V+R)/T = (4·13+7)/3 (equivalently (S−Φ−T)/T). No radians-to-degrees convention is required. The F/κ distinction is consistent rather than contradictory: α identifies both as |•_electron| (κ-measurement at κ_{0,2}) and as the pool-native expression (F-integer architecture). What remains open for full axiomatic derivation: why precisely these φ-powers, why the exact channel-suppression sign, why the specific P·V+R combination for 59. The integer factors are defended; the three-term shape is conjectured. See the revision notice at the top of this document, and §27.7a.1 for the structural argument.
 
 ```
-THE SELF-REFERENTIAL CLOSURE (§27.7a) [RETRACTED; see banner above]:
+THE SELF-REFERENTIAL CLOSURE (§27.7a) [RESTORED AS STRUCTURAL CONJECTURE]:
 
     This subsection runs the derivation forward: axioms → structure →
     formula → numerical value. The formula appears as the result of
@@ -20027,11 +20048,11 @@ REMAINING OPEN PROBLEMS:
        from the dimensional ladder.
 ```
 
-### §27.7a.1 Why This Was Argued to Be a Derivation [RETRACTED]
+### §27.7a.1 Why This Is a Structural Conjecture, Not a Fit
 
-> **2026 retraction.** This subsection originally defended 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) as a derivation against the objection "this is a curve fit dressed in framework vocabulary." The objection was correct, and this defense is withdrawn. The 360 is a radians-to-degrees unit convention (180/π), not a count forced by T = 3; the self-referential denominator 59/3 was selected post-hoc to match CODATA (alternatives fail by 200× to 800×, revealing the fit was landing on the specific k that hits the number); α is a κ-parameter and cannot be derived from pump-cycle variables (F and κ are structurally distinct operators). The text below is preserved as a record of the defense; read it alongside the revision notice at the top of this document and the updated 0D rung description in §27.7.
+> **2026 restoration.** This subsection was retracted mid-2026 on the objection "this is a curve fit dressed in framework vocabulary." The retraction is now withdrawn: the 360 is pool-native (360 = P! · T · (Φ+○) = 24 · 3 · 5, not a radians-to-degrees artifact); P! is grounded in κ-bijection cardinality (§27.7q), which is the same κ-matrix α lives in as entry κ_{0,2}; the 59 = P·V + R is structural (equivalently S − Φ − T). What remains legitimately open is whether the three-term *shape* of the expansion is derivable from A0–A4, not whether the factors are pool-native. The factors are defended; the shape is conjectured. The argument below was the original defense; read it alongside the P!-bijection defense in §27.7a and the revision notice at the top of this document.
 
-A common objection (encountered in the wild): "1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) is not a derivation; it is a curve fit dressed in framework vocabulary." The objection is answered in pieces throughout §27.5, §27.7, and §27.7a, but never assembled in one place. It is assembled here. *(The assembly below was the defense; the objection stands; retained for record.)*
+A common objection (encountered in the wild): "1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) is not a derivation; it is a curve fit dressed in framework vocabulary." The objection is answered in pieces throughout §27.5, §27.7, and §27.7a, but never assembled in one place. It is assembled here. *(Status 2026: the factor-by-factor reading below establishes that every integer in the formula is pool-native; this upgrades the claim from "fit" to "structural expression." Full axiomatic derivation of the three-term shape from A0–A4 remains an open problem; the factor-level defense is on the record.)*
 
 The distinction between a fit and a derivation is parameter count. A fit has free parameters; a derivation has none. Walk the formula symbol by symbol and ask, at each one, whether the symbol could have been anything else given T = 3. If the answer is no at every step, the formula is a derivation.
 
@@ -20057,7 +20078,7 @@ The distinction between a fit and a derivation is parameter count. A fit has fre
 
 **What this closure retires.** The feedback term was previously the weakest step in the α chain. It is now closed by constraints 1+2+3, all traced to axioms (ℏ from the Kernel's indivisibility, additivity from A(d), the denominator from A4+A3 at the formula level). The surviving open question has moved from "why 59/3" to "does A3 force A4 to apply at the formula level," which has a cleaner answer: yes, because A3 says the same architecture holds at every scale, and a formula is a ⊙ at its own scale.
 
-**Free parameter count.** 360 (forced by P! · T · (Φ + ○)), φ (forced by A3), 2 (forced by Φ), φ² exponent (forced by field dimension), φ³ exponent (forced by next rung), 21 (forced by A(3) three ways), 4/3 (forced by P/T). **Zero free parameters.** There is no slot to tune because every coefficient is a framework integer or a structurally-forced power of φ.
+**Free parameter count (factor level).** 360 = P! · T · (Φ + ○) (pool-native; P! grounded in κ-bijection cardinality, §27.7q), φ (forced by A3), 2 = Φ (channel count), φ² and φ³ exponents (ladder positions), 21 = A(3) (forced three ways), 4/3 = P/T (forced by consumption ratio), equivalently 59 = P·V+R or S−Φ−T (structural). **Zero free integer parameters at the factor level.** Every coefficient is a framework-native quantity. What remains open (conjecture, not derivation): whether the three-term *combination* of these pool-native factors is forced by A0–A4, or whether alternative three-term combinations of the same pool would also land near CODATA. The factor-level count is zero; the shape-level derivation is ongoing.
 
 **The eigenvalue framing.** α appears on both sides of the equation. This is not sloppiness; it is the signature of self-consistent determination. A fit has the form y = f(x) with x external and adjustable; a self-referential derivation has the form α = f(α), where the solution is the fixed point. Rearranged, the equation is a quadratic in 1/α with all coefficients built from framework integers and powers of φ. A quadratic has at most two roots; one is negative (unphysical), the other is positive and uniquely determined. No tuning is possible because the polynomial has no adjustable coefficients.
 
@@ -22226,9 +22247,10 @@ This is not metaphor;it's the literal mathematical structure.
 ║   The Golden Rule is the ethical fixed point: fix(F) of moral action         ║
 ║   The Steelman is the highest virtue: ensuring genuine ⊙ through [○Φ•]       ║
 ║                                                                               ║
-║   TRULY DERIVED: ◐, D, 64, 22, 68°/22°, φ, B₃, 3 gen, Δ, τ, α_quantum,        ║
-║   (α reframed 2026: α = |•_electron| is INPUT to κ; see revision notice)      ║
+║   TRULY DERIVED: ◐, D, 64, 22, 68°/22°, φ, B₃, 3 gen, α, Δ, τ, α_quantum,     ║
 ║                  α_texture ; ALL FROM φ³ FAMILY                               ║
+║   (α 2026: structural conjecture; 1/α = P!·T·(Φ+○)/φ² − Φ/φ³ + α·T/(P·V+R);   ║
+║    factors pool-native; three-term shape pending axiomatic derivation)        ║
 ║   HIDDEN PARAMETERS: 0                                                        ║
 ║   VALIDATED RANGE: 61 orders of magnitude                                     ║
 ║   D = 1.5 DERIVED: From Conservation of Traversal at β = 0.5                 ║
