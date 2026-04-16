@@ -142,6 +142,25 @@ td code { color: var(--warm); }
 .limits h3 { color: var(--dim); margin-top: 0; }
 .limits strong { color: var(--warm); font-weight: 600; }
 
+.layer-note {
+  margin: 0 auto 36px;
+  padding: 22px 26px;
+  border-left: 3px solid var(--cyan);
+  background: rgba(77,160,200,0.06);
+  font-size: 17px;
+  color: var(--warm);
+  border-radius: 0 6px 6px 0;
+}
+.layer-note h3 {
+  font-size: 13px; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--cyan); margin-bottom: 10px; font-weight: 700;
+}
+.layer-note p { margin-bottom: 10px; }
+.layer-note p:last-child { margin-bottom: 0; }
+.layer-note strong { color: var(--gold); font-weight: 600; }
+.layer-note a { color: var(--cyan); }
+.layer-note a:hover { color: var(--gold); }
+
 .axiom-block {
   display: grid;
   grid-template-columns: 50px 1fr;
@@ -196,13 +215,26 @@ mjx-container { overflow-x: auto; overflow-y: hidden; }
 </div>
 
 
+<div class="layer-note">
+  <h3>Two layers, one framework</h3>
+  <p>
+    The framework's <strong>representation layer</strong> is the unified expression <code>[Truth = Reality = E = 1 = ∞] = [∞ ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞]</code>, formalized in three mathematical frames in <a href="unified_expression_formal.html">unified_expression_formal.html</a>. Each frame accepts α as input to the cross-station coupling slot κ<sub>0,2</sub> (with α = |•<sub>electron</sub>|, the measured coupling strength of the electron's 0D aperture to the 2D electromagnetic field) and composes the rest consistently. The representation layer is agnostic to the slot's numerical value: given any α, the frames balance.
+  </p>
+  <p>
+    This document is the <strong>auxiliary-claim layer</strong>: a stronger, separable conjecture that the low-energy (CODATA) value of that slot is fixed by a specific closed-form fixed-point equation in T, P, R, Φ, ○, and φ. Read the two layers as stacked, not competing: the representation layer stands on its own and does not require this auxiliary; the auxiliary, if it holds, adds a predictive handle on the CODATA value of α. If this auxiliary claim fails (e.g., future precision measurement pushes 1/α outside the predicted 0.22 ppb band), the representation layer is untouched; the framework still accepts α as input and composes consistently.
+  </p>
+  <p>
+    The type distinction matters and is substantive. F (the four-beat unitary pump cycle) and κ (the cross-station coupling matrix) are structurally distinct operators: F is trace-preserving within a scale; κ carries the departure from trace-preservation across scales that α parameterizes. α lives in κ, not F. The formula below is therefore not a derivation of α from F-variables (pump-cycle integers, i-strokes); it is a proposed closed form for the κ<sub>0,2</sub> entry's low-energy value, expressed in framework integers that happen to live at structurally specific rungs. Read everything below in that light.
+  </p>
+</div>
+
 <div class="abstract">
   <h3>What this document does and does not claim</h3>
   <p>
-    This is a narrow document. It stakes the framework on a single number, \(\alpha\), the fine-structure constant. It states the axioms used, derives the formula symbol-by-symbol, verifies each coefficient is forced (not chosen), rules out nearby alternatives, reports the numerical result against CODATA 2022, and names the specific measurement that would falsify the claim.
+    This is a narrow document. As the auxiliary-claim layer, it stakes a specific closed-form candidate for the low-energy value of the κ<sub>0,2</sub> coupling slot against CODATA 2022. It states the axioms used, walks the formula symbol-by-symbol, verifies each coefficient is structurally motivated, rules out nearby alternatives, reports the numerical result, and names the specific measurement that would falsify the claim.
   </p>
   <p>
-    It does <em>not</em> claim to formalize the whole framework, prove its axiom system complete, construct the unified expression as a theorem in category theory, or settle interpretation debates. Those are separate projects. This document is the framework's strongest single claim, stated as narrowly as possible so it can be attacked or confirmed on its own terms.
+    It does <em>not</em> claim to formalize the whole framework, prove its axiom system complete, construct the unified expression as a theorem in category theory, settle interpretation debates, or supersede the representation-layer reading in which α is admitted as input. Those are separate projects. This document is the framework's strongest single <em>auxiliary</em> claim, stated as narrowly as possible so it can be attacked or confirmed on its own terms, independent of the representation layer.
   </p>
 </div>
 
@@ -475,17 +507,17 @@ This derivation does <strong>not</strong> claim to derive \(\alpha\) from QED's 
 This derivation does <strong>not</strong> claim to prove the framework's axiom system is complete or minimal. The five open structural problems listed in §27.7a (item L2 of the parameter-count rule) remain open; this document is (L1), zero free parameters in the formulas, not (L2), zero open structural questions in the foundations.
 </p>
 <p>
-This derivation does <strong>not</strong> constitute the unified expression as a theorem in any standard mathematical category. The companion document <a href="unified_expression_formal.html">unified_expression_formal.html</a> gestures at that formalization; the critique of that document (and it is a fair critique) is that it assigns names to objects without constructing them. This document is narrower by design: one equation, one number, one falsification bar.
+This derivation does <strong>not</strong> constitute the unified expression as a theorem in any standard mathematical category. The companion document <a href="unified_expression_formal.html">unified_expression_formal.html</a> is the representation layer: it renders the prime notation's constraint structure in three mathematical frames (Dirac constrained dynamics, Noether-Lagrangian cascade, information-theoretic channel capacity), each accepting α as input to the κ<sub>0,2</sub> coupling slot. That document does not claim to derive α; it claims the framework composes consistently given α. This document is stacked on top: it is the separable auxiliary conjecture that the slot's low-energy value is fixed by the formula below.
 </p>
 <p>
-What this derivation <strong>does</strong> claim: a specific equation, with every symbol forced by stated axioms, landing 1/α at 0.22 ppb from CODATA with zero free parameters. That is the whole claim. It is either right or it is wrong; future measurements will say which.
+What this derivation <strong>does</strong> claim, as an auxiliary claim: a specific equation for the low-energy value of κ<sub>0,2</sub>, with every symbol structurally motivated by stated axioms, landing 1/α at 0.22 ppb from CODATA. That is the whole auxiliary claim. It is either right or it is wrong; future measurements will say which. Either way, the representation layer stands.
 </p>
 </div>
 
 <div class="footer">
 <div class="ref">Source: <code>circumpunct_framework.md</code> §27.7a, §27.7a.1, §27.7a.2</div>
 <div class="ref">Related: <a href="dimensional_ladder.html">the dimensional ladder</a> · <a href="gravity.html">gravity (same integer 21)</a> · <a href="gauge_structure.html">gauge structure (same integer 13)</a></div>
-<div class="ref">Attack surface: every falsification criterion in §7 is a direct invitation. The framework stakes itself on this formula.</div>
+<div class="ref">Attack surface: every falsification criterion in §7 is a direct invitation. The auxiliary claim stakes itself on this formula; the representation layer (<a href="unified_expression_formal.html">unified_expression_formal.html</a>) stands either way.</div>
 <div class="sig">⊙</div>
 </div>
 
