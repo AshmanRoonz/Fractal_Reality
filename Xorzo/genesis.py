@@ -43,6 +43,22 @@ import json
 import time
 from pathlib import Path
 
+# The T-operator: the unified expression as computable pump engine
+try:
+    from t_operator import TOperator
+    T_PUMP = TOperator(dim=4)   # ℂ⁴ structural operator for pump cycle
+    HAS_T_OPERATOR = True
+except ImportError:
+    T_PUMP = None
+    HAS_T_OPERATOR = False
+
+# Framework-derived constants (replaces heuristic hyperparameters)
+try:
+    from framework_constants import FC
+    HAS_FRAMEWORK_CONSTANTS = True
+except ImportError:
+    HAS_FRAMEWORK_CONSTANTS = False
+
 
 # ═══════════════════════════════════════════════════════════════════════
 #  CONSTANTS FROM GEOMETRY — not parameters, consequences
@@ -212,65 +228,66 @@ CORE_HISTORY_MAXLEN = 10000     # self-referential core state history
 COUPLING_TRACE_MAXLEN = 1000    # coupling trace for core
 
 # --- Channel dynamics ---
-CHANNEL_INITIAL_THRESHOLD = 0.02    # start wide open (infant perception); self-regulates upward
+# Framework-derived where possible (see framework_constants.py for derivations)
+CHANNEL_INITIAL_THRESHOLD = FC.CHANNEL_LOCK_REINFORCE_WAKE if HAS_FRAMEWORK_CONSTANTS else 0.02  # α×T ≈ 0.0219
 CHANNEL_THRESHOLD_MIN = 0.005       # minimum threshold (never fully closed)
 CHANNEL_THRESHOLD_MAX = 0.95        # maximum threshold (never fully locked)
-CHANNEL_THRESHOLD_LR = 0.001        # how fast threshold adapts
-CHANNEL_TARGET_OPEN_RATE = 0.3      # target fraction of time channel is open
-CHANNEL_BALANCE_SMOOTHING = 0.05    # EMA smoothing for ◐ balance
-CHANNEL_LOCK_REINFORCE_WAKE = 0.02  # lock reinforcement during waking (per aligned signal) [was 0.05]
-CHANNEL_LOCK_DECAY_WAKE = 0.008    # lock decay during waking (per scattered signal) [was 0.005]
-CHANNEL_LOCK_REINFORCE_DREAM = 0.002  # lock reinforcement during dreaming
-CHANNEL_LOCK_DECAY_SLEEP = 0.90    # lock multiplicative decay during sleep (per cycle) [was 0.97]
+CHANNEL_THRESHOLD_LR = FC.CHANNEL_THRESHOLD_LR if HAS_FRAMEWORK_CONSTANTS else 0.001  # α/A(3) ≈ 0.000347
+CHANNEL_TARGET_OPEN_RATE = FC.CHANNEL_TARGET_OPEN_RATE if HAS_FRAMEWORK_CONSTANTS else 0.3  # 1/T = 0.333
+CHANNEL_BALANCE_SMOOTHING = FC.CHANNEL_BALANCE_SMOOTHING if HAS_FRAMEWORK_CONSTANTS else 0.05  # α×R ≈ 0.0511
+CHANNEL_LOCK_REINFORCE_WAKE = FC.CHANNEL_LOCK_REINFORCE_WAKE if HAS_FRAMEWORK_CONSTANTS else 0.02  # α×T ≈ 0.0219
+CHANNEL_LOCK_DECAY_WAKE = FC.CHANNEL_LOCK_DECAY_WAKE if HAS_FRAMEWORK_CONSTANTS else 0.008  # α ≈ 0.00730
+CHANNEL_LOCK_REINFORCE_DREAM = FC.CHANNEL_LOCK_REINFORCE_DREAM if HAS_FRAMEWORK_CONSTANTS else 0.002  # α×T/A(2) ≈ 0.00219
+CHANNEL_LOCK_DECAY_SLEEP = FC.CHANNEL_LOCK_DECAY_SLEEP if HAS_FRAMEWORK_CONSTANTS else 0.90  # 1-1/A(2) = 0.90
 
 # --- Habituation (neural fatigue) ---
-HABITUATION_INCREASE = 0.04         # habituation gained per open step [was 0.02]
-HABITUATION_DECAY = 0.003           # habituation lost per resting step [was 0.005]
-HABITUATION_MAX = 0.9               # maximum habituation (90% suppression) [was 0.8]
-HABITUATION_ACTIVATION_SCALE = 0.85 # how strongly habituation suppresses activation [was 0.7]
+HABITUATION_INCREASE = FC.HABITUATION_INCREASE if HAS_FRAMEWORK_CONSTANTS else 0.04  # 1/A(3) ≈ 0.0476
+HABITUATION_DECAY = FC.HABITUATION_DECAY if HAS_FRAMEWORK_CONSTANTS else 0.003  # α/P ≈ 0.00182
+HABITUATION_MAX = FC.HABITUATION_MAX if HAS_FRAMEWORK_CONSTANTS else 0.9  # 1-1/A(2) = 0.90
+HABITUATION_ACTIVATION_SCALE = FC.HABITUATION_ACTIVATION_SCALE if HAS_FRAMEWORK_CONSTANTS else 0.85  # 1-1/R ≈ 0.857
 
 # (MEMORY_LOCK/BALANCE_THRESHOLD removed: encoding is now continuous via braid imprinting)
 
 # --- Sleep dynamics ---
-MEMORY_SURVIVAL_THRESHOLD = 0.05    # minimum strength to survive consolidation
+MEMORY_SURVIVAL_THRESHOLD = FC.MEMORY_SURVIVAL_THRESHOLD if HAS_FRAMEWORK_CONSTANTS else 0.05  # α×R ≈ 0.0511
 MEMORY_AGE_DIVISOR = 2000.0         # controls age-dependent decay speed
-SIDEBAND_SLEEP_DECAY = 0.5          # sideband *= this at dawn
+SIDEBAND_SLEEP_DECAY = FC.SIDEBAND_SLEEP_DECAY if HAS_FRAMEWORK_CONSTANTS else 0.5  # ◐ = 0.5
 
 # --- Beta (◐) regulation ---
 BETA_WINDOW = 200                   # recent signals for beta computation
-BETA_BALANCE = 0.5                  # the forced balance point
-VIRIAL_STRENGTH = 0.3               # how strongly the virial theorem pulls
+BETA_BALANCE = 0.5                  # the forced balance point (◐, by symmetry)
+VIRIAL_STRENGTH = FC.VIRIAL_STRENGTH if HAS_FRAMEWORK_CONSTANTS else 0.3  # processual fraction ≈ 0.313
 
 # --- Byte input (FFT transducer) ---
-BYTE_WINDOW = NUM_STATES            # FFT window = 64 bytes (matches state space)
+BYTE_WINDOW = FC.BYTE_WINDOW if HAS_FRAMEWORK_CONSTANTS else NUM_STATES  # S = 64
 BYTE_STRIDE = 16                    # advance 16 bytes per step (75% overlap)
 BYTE_NOISE = 0.05                   # small noise floor so silent bytes aren't dead
 
 # --- Boundary protection (pupil, blink, pigment) ---
 # Every rung is a boundary layer. Every boundary needs a pupil.
-PUPIL_SMOOTHING = 0.1               # how fast the pupil tracks energy (EMA)
+PUPIL_SMOOTHING = FC.FOAM_MICRO_PUMP_RATE if HAS_FRAMEWORK_CONSTANTS else 0.1  # 1/A(2) = 0.1
 PUPIL_BASELINE = 1.0                # energy level where pupil is fully open
-PUPIL_SENSITIVITY = 2.0             # how sharply the pupil contracts (higher = more reactive)
-BLINK_THRESHOLD = 5.0               # energy multiple above baseline that triggers a blink
-BLINK_DURATION = 3                  # steps the layer stays dark after a blink
+PUPIL_SENSITIVITY = FC.PUPIL_SENSITIVITY if HAS_FRAMEWORK_CONSTANTS else 2.0  # Φ dimension = 2
+BLINK_THRESHOLD = FC.BLINK_THRESHOLD if HAS_FRAMEWORK_CONSTANTS else 5.0  # Φ+○ = 5
+BLINK_DURATION = FC.BLINK_DURATION if HAS_FRAMEWORK_CONSTANTS else 3  # T = 3
 PIGMENT_MAX = 1.0                   # full pigment budget (fresh channel)
-PIGMENT_DEPLETION_RATE = 0.01        # pigment lost per activation (proportional to activation strength)
-PIGMENT_REGEN_RATE_WAKE = 0.0005    # pigment regeneration per step (waking, only when closed)
-PIGMENT_REGEN_RATE_SLEEP = 0.02     # pigment regeneration per sleep cycle
-PIGMENT_MIN_FOR_OPEN = 0.05         # below this, channel cannot open (burned out)
+PIGMENT_DEPLETION_RATE = FC.PIGMENT_DEPLETION_RATE if HAS_FRAMEWORK_CONSTANTS else 0.01  # α ≈ 0.00730
+PIGMENT_REGEN_RATE_WAKE = FC.PIGMENT_REGEN_RATE_WAKE if HAS_FRAMEWORK_CONSTANTS else 0.0005  # α²×T ≈ 0.000160
+PIGMENT_REGEN_RATE_SLEEP = FC.PIGMENT_REGEN_RATE_SLEEP if HAS_FRAMEWORK_CONSTANTS else 0.02  # α×T ≈ 0.0219
+PIGMENT_MIN_FOR_OPEN = FC.PIGMENT_MIN_FOR_OPEN if HAS_FRAMEWORK_CONSTANTS else 0.05  # α×R ≈ 0.0511
 
 # --- Simulation run ---
-DAY_LENGTH = 200                    # waking steps per day
-SLEEP_CYCLES = 100                  # sleep oscillation cycles per night
-N_DAYS = 15                         # total days to simulate
+DAY_LENGTH = FC.DAY_LENGTH if HAS_FRAMEWORK_CONSTANTS else 200  # A(3)×A(2) = 210
+SLEEP_CYCLES = FC.SLEEP_CYCLES if HAS_FRAMEWORK_CONSTANTS else 100  # 100 (round number)
+N_DAYS = FC.N_DAYS if HAS_FRAMEWORK_CONSTANTS else 15  # simulation parameter
 
 # --- Foam (fractal state) ---
-FOAM_MICRO_PUMP_RATE = 0.1          # how strongly the micro-pump cycles each step
+FOAM_MICRO_PUMP_RATE = FC.FOAM_MICRO_PUMP_RATE if HAS_FRAMEWORK_CONSTANTS else 0.1  # 1/A(2) = 0.1
 FOAM_WRITHE_DECAY = 0.999           # slow decay of per-atom writhe (keeps recent history)
 FOAM_MICRO_PIGMENT_MAX = 1.0        # full micro-pigment per atom
-FOAM_MICRO_PIGMENT_DEPLETION = 0.005 # base depletion per waking step (flat cost of being awake)
-FOAM_MICRO_PIGMENT_REGEN = 0.008    # regeneration per sleeping step
-FOAM_FLIP_THRESHOLD = 0.05          # pigment below this forces flip to left half-plane
+FOAM_MICRO_PIGMENT_DEPLETION = FC.FOAM_MICRO_PIGMENT_DEPLETION if HAS_FRAMEWORK_CONSTANTS else 0.005  # α ≈ 0.00730
+FOAM_MICRO_PIGMENT_REGEN = FC.FOAM_MICRO_PIGMENT_REGEN if HAS_FRAMEWORK_CONSTANTS else 0.008  # α ≈ 0.00730
+FOAM_FLIP_THRESHOLD = FC.PIGMENT_MIN_FOR_OPEN if HAS_FRAMEWORK_CONSTANTS else 0.05  # α×R ≈ 0.0511
 FOAM_WAKE_THRESHOLD = 0.8           # pigment above this forces flip back to right half-plane
 
 
@@ -1400,28 +1417,37 @@ class Channel:
             converged = converged / conv_norm
 
         # Blend with channel state (the channel's own history)
-        converged = 0.7 * converged + 0.3 * self.state
+        braid_blend = FC.BRAID_BLEND if HAS_FRAMEWORK_CONSTANTS else 0.3
+        converged = (1 - braid_blend) * converged + braid_blend * self.state
         conv_norm = np.linalg.norm(converged)
         if conv_norm > 1e-10:
             converged = converged / conv_norm
 
-        # i(ω_c): Aperture rotation at carrier frequency
-        # The rotation phase comes from the braid (accumulated identity)
-        # PLUS the carrier phase (what we're locked onto)
-        carrier_phase = float(np.angle(carrier_projection))
-        if self.braid.time > 0:
-            braid_phase = self.braid.phase
-            # Blend: strong lock = carrier dominates; weak lock = braid dominates
-            angle = (self.lock_strength * carrier_phase +
-                     (1 - self.lock_strength) * braid_phase)
+        # ═══ T-OPERATOR PUMP (when available) ═══
+        # The T-operator replaces the heuristic i-rotation with the
+        # actual four-beat engine from the unified expression.
+        # T = κ ∘ F: the converged signal is pumped through the
+        # four beats and nesting coupling in one operation.
+        if HAS_T_OPERATOR and T_PUMP is not None:
+            # Project converged signal into ℂ⁴ operator space
+            pumped = T_PUMP.pump(converged, convergence_weight=self.lock_strength)
+            # The pump returns the emerged signal; lock_strength
+            # controls how strongly the operator acts (weak lock =
+            # mostly identity; strong lock = full T application)
+            emerged = pumped
         else:
-            angle = carrier_phase
+            # Fallback: original heuristic i-rotation
+            # i(ω_c): Aperture rotation at carrier frequency
+            carrier_phase = float(np.angle(carrier_projection))
+            if self.braid.time > 0:
+                braid_phase = self.braid.phase
+                angle = (self.lock_strength * carrier_phase +
+                         (1 - self.lock_strength) * braid_phase)
+            else:
+                angle = carrier_phase
 
-        rotation = np.exp(1j * angle)
-        rotated = rotation * converged
-
-        # ✹: Emergence (the filtered field)
-        emerged = rotated
+            rotation = np.exp(1j * angle)
+            emerged = rotation * converged
 
         # ═══ UPDATE CHANNEL STATE ═══
         lr = ALPHA * 10  # channels learn faster (smaller ⊙, faster cycle)
@@ -2173,11 +2199,13 @@ class Braid:
     # Memory imprint rate: how much each crossing contributes to M.
     # Small enough that single crossings are faint; strong memories
     # require repetition (reinforcement through resonance).
-    IMPRINT_RATE = 0.01
+    # Framework: α ≈ 0.00730 (one coupling step)
+    IMPRINT_RATE = FC.BRAID_IMPRINT if HAS_FRAMEWORK_CONSTANTS else 0.01
 
     # Sleep decay: how much M relaxes toward identity per sleep cycle.
     # Strong patterns (large eigenvalues in M) survive; weak ones fade.
-    SLEEP_DECAY = 0.05
+    # Framework: α×R ≈ 0.0511 (coupling through rungs)
+    SLEEP_DECAY = FC.BRAID_SLEEP_DECAY if HAS_FRAMEWORK_CONSTANTS else 0.05
 
     def __init__(self, dimension: int = NUM_STATES):
         self.dimension = dimension
