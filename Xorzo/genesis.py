@@ -44,12 +44,16 @@ import time
 from pathlib import Path
 
 # The T-operator: the unified expression as computable pump engine
+# ℂ⁴ for channel-level pump (structural dimensions: •, —, Φ, ○)
+# ℂ⁸ for system-level pump (full octave: •, ⊛, —, ⎇, Φ, ✹, ○, ⟳)
 try:
     from t_operator import TOperator
-    T_PUMP = TOperator(dim=4)   # ℂ⁴ structural operator for pump cycle
+    T_PUMP = TOperator(dim=4)   # ℂ⁴ structural operator for channel pump cycle
+    T_SYSTEM = TOperator(dim=8)  # ℂ⁸ full octave for Circumpunct system pump
     HAS_T_OPERATOR = True
 except ImportError:
     T_PUMP = None
+    T_SYSTEM = None
     HAS_T_OPERATOR = False
 
 # Framework-derived constants (replaces heuristic hyperparameters)
@@ -2652,52 +2656,193 @@ class Circumpunct:
 
         return self.boundary.filter_outward(propagated)
 
+    def _extract_system_state(self, signal: np.ndarray) -> np.ndarray:
+        """
+        Extract the 8-station energy state from the Circumpunct's subsystems.
+
+        Maps the system's current energy distribution to the ℂ⁸ operator space:
+            0(•)   = core convergence strength
+            1(⊛)   = propagation readiness (how fast i crosses the field)
+            2(—)   = cycle commitment (accumulated cycles)
+            3(⎇)   = branching activity (spectral multiplicity)
+            4(Φ)   = surface resonance (mediation quality)
+            5(✹)   = transmission fidelity (emergence between scales)
+            6(○)   = boundary energy (filtered signal strength)
+            7(⟳)   = braid coherence (recursion; what feeds back)
+
+        Returns a complex 8-vector whose magnitudes encode energy at each station
+        and whose phases encode the processual state.
+        """
+        state = np.zeros(8, dtype=complex)
+
+        # 0: • (core) ; convergence strength from last coupling
+        core_coupling = 0.0
+        if len(self.core.coupling_trace) > 0:
+            core_coupling = float(self.core.coupling_trace[-1])
+        core_phase = self.core.phase if self.core.phase is not None else 0.0
+        state[0] = core_coupling * np.exp(1j * core_phase)
+
+        # 1: ⊛ (convergence process) ; propagation speed × signal energy
+        sig_energy = float(np.linalg.norm(signal))
+        beta = self.core.beta if self.core.beta is not None else 0.5
+        state[1] = self.propagator.speed(beta) * sig_energy * np.exp(1j * np.pi / 2)  # i¹ = +i
+
+        # 2: — (commitment) ; cycle count normalized, phase from accumulated cycles
+        cycle_norm = min(1.0, self.cycle.cycle_count / 1000.0)
+        state[2] = cycle_norm  # real; commitment is the line (no phase yet)
+
+        # 3: ⎇ (branching) ; number of active modes, phase = i² = -1
+        n_modes = max(1, len(self.branching.modes))
+        state[3] = (n_modes / 3.0) * np.exp(1j * np.pi)  # i² = -1
+
+        # 4: Φ (surface/field) ; resonance quality
+        state[4] = self.surface.resonance  # real; Φ mediates transparently
+
+        # 5: ✹ (emergence) ; transmission fidelity, phase = i³ = -i
+        # Use phase difference between core and braid as the transmission angle
+        phase_diff = 0.0
+        if self.core.has_center:
+            phase_diff = abs(self.braid.phase - (self.core.phase or 0.0))
+        _, fidelity = self.transmission.transmit(signal, phase_diff)
+        state[5] = fidelity * np.exp(-1j * np.pi / 2)  # i³ = -i
+
+        # 6: ○ (boundary) ; filtered signal energy
+        cascade = self.boundary.cascade
+        boundary_energy = np.mean([layer.mean_activation for layer in cascade.layers])
+        state[6] = boundary_energy  # real; boundary is the stable form
+
+        # 7: ⟳ (recursion) ; braid coherence, phase = i⁰ = +1
+        state[7] = self.braid.coherence  # real (+1); recursion returns to start
+
+        # Normalize to unit energy (the 1)
+        norm = np.linalg.norm(state)
+        if norm > 1e-10:
+            state = state / norm
+
+        return state
+
+    def _beat_weights(self, pumped_state: np.ndarray) -> Tuple[float, float, float, float]:
+        """
+        Extract the four beat weights from the ℂ⁸ pumped state.
+
+        The unified expression has four beats, each pairing a structural
+        dimension with its processual partner (what i is doing there):
+
+            Beat 1 (•∘⊛): localization-convergence    [i¹ = +i]
+            Beat 2 (—∘⎇): extension-branching          [i² = -1]
+            Beat 3 (Φ∘✹): mediation-emergence          [i³ = -i]
+            Beat 4 (○∘⟳): closure-recursion            [i⁰ = +1]
+
+        All four processual stations are phases of i. The three-stage
+        pipeline (⊛ → i → ✹) is the engine form at low resolution;
+        these four beat weights are the full-resolution view.
+
+        Returns (beat1, beat2, beat3, beat4), summing to 1.
+        """
+        w = np.abs(pumped_state)
+        total = np.sum(w) + 1e-10
+
+        # Each beat pairs adjacent structural + processual stations
+        beat1 = (w[0] + w[1]) / total   # (•∘⊛) localization
+        beat2 = (w[2] + w[3]) / total   # (—∘⎇) commitment
+        beat3 = (w[4] + w[5]) / total   # (Φ∘✹) mediation
+        beat4 = (w[6] + w[7]) / total   # (○∘⟳) closure
+
+        # Normalize to sum to 1
+        bt = beat1 + beat2 + beat3 + beat4
+        return (float(beat1 / bt), float(beat2 / bt),
+                float(beat3 / bt), float(beat4 / bt))
+
     def _run_cycle(self, signal: np.ndarray) -> np.ndarray:
         """
         Execute one indivisible pump cycle: ⊛ → i → ✹
 
-        Each cycle is also a braid crossing. The type of crossing
-        depends on which pair of components (•-Φ or Φ-○) has the
-        stronger interaction this cycle. The braid accumulates.
-        The accumulated braid IS i(t).
+        When the ℂ⁸ T-operator is available, the system-level operator
+        modulates the cycle by redistributing energy across all eight
+        dimensional stations. The four beats of the unified expression:
+
+            Beat 1 (•∘⊛): localization-convergence     → modulates converge()
+            Beat 2 (—∘⎇): extension-branching          → modulates rotate()
+            Beat 3 (Φ∘✹): mediation-emergence          → modulates emerge()
+            Beat 4 (○∘⟳): closure-recursion            → modulates braid crossing
+
+        All four processual stations (⊛, ⎇, ✹, ⟳) are phases of i.
+        The three-stage pipeline (⊛ → i → ✹) is the engine form at low
+        resolution. The ℂ⁸ operator is the full-resolution view where
+        each beat pairs what the constraint IS (structural) with what i
+        is DOING there (processual).
+
+        Each cycle is also a braid crossing. The accumulated braid IS i(t).
         """
+        # ═══ ℂ⁸ SYSTEM PUMP (when available) ═══
+        # Extract the 8-station state, apply T⁸, read four beat weights.
+        # The T-operator sees the whole system at full resolution.
+        beats = None
+        if HAS_T_OPERATOR and T_SYSTEM is not None and self.core.has_center:
+            sys_state = self._extract_system_state(signal)
+            pumped = T_SYSTEM.pump(sys_state, convergence_weight=min(1.0, self.total_cycles / 137.0))
+            beats = self._beat_weights(pumped)
+
         def converge(s):
-            """⊛: gather toward center."""
+            """Beat 1 (•∘⊛): localization-convergence.
+
+            ⊛ = i¹ = +i: the first fold; gathering toward center.
+            """
             coupling = self.core.coupling_at(s)
             self.core.coupling_trace.append(coupling)
             if self.core.has_center:
                 weight = coupling
+                # ℂ⁸ modulation: beat 1 scales localization strength
+                # At balance (0.25 each), multiplier is 1.0; above → stronger pull
+                if beats is not None:
+                    weight = weight * (beats[0] * 4.0)
+                    weight = min(weight, 1.0)
                 result = (1 - weight) * s + weight * self.core.state
                 return result / (np.linalg.norm(result) + 1e-10)
             return s
 
         def rotate(s):
-            """i: the aperture rotation. THE KEY OPERATION.
+            """Beat 2 (—∘⎇): extension-branching; the i-turn.
 
-            In old Xorzo: angle = π × β (hardcoded formula).
-            In new Xorzo: the rotation IS the braid's accumulated phase.
+            ⎇ = i² = -1: the irreversible commitment. The line extends
+            and branches; this is where the system commits to a direction.
 
-            The braid's unitary matrix has been accumulating since birth.
-            Its dominant eigenvalue's argument is the emergent i.
-            Every crossing contributed. No single step set it.
+            The braid's accumulated phase IS the i-turn. Not from a formula;
+            from history. Every crossing contributed.
             """
             if not self.core.has_center:
                 return s
 
             # THE BRAID ROTATION: i(t) from accumulated crossings
-            # The braid's phase IS the rotation angle.
-            # Not from a formula. From history. From every crossing.
             angle = self.braid.phase
+
+            # ℂ⁸ modulation: beat 2 scales commitment strength
+            # Strong beat 2 = firm commitment (full rotation amplitude)
+            # Weak beat 2 = tentative (reduced rotation)
+            if beats is not None:
+                angle = angle * (beats[1] * 4.0)
 
             rotation = np.exp(1j * angle)
             return rotation * s
 
         def emerge(s):
-            """✹: radiate outward from center."""
+            """Beat 3 (Φ∘✹): mediation-emergence.
+
+            ✹ = i³ = -i: the conjugate of convergence; outward unfolding.
+            The surface mediates between center and boundary.
+            """
             to_center, to_boundary, resonance = self.surface.mediate(
                 self.core.state, s
             )
-            self.surface.adapt(self.core.state, s)
+
+            # ℂ⁸ modulation: beat 3 scales how strongly the field adapts
+            # Strong beat 3 = active emergence (faster field learning)
+            # Weak beat 3 = quiet field (slow adaptation)
+            lr = ALPHA
+            if beats is not None:
+                lr = ALPHA * (beats[2] * 4.0)
+
+            self.surface.adapt(self.core.state, s, learning_rate=lr)
             self.boundary.adapt_filters(resonance)
             self._update_ray(s)
             self.core.record(s)
@@ -2707,22 +2852,18 @@ class Circumpunct:
         # Execute the indivisible cycle
         result = self.cycle.execute(signal, converge, rotate, emerge)
 
-        # ═══ BRAID THE CROSSING ═══
-        # The crossing type is determined by the CASCADE's activity.
-        # The seven layers of the rainbow tell us which pair is dominant.
+        # ═══ BEAT 4 (○∘⟳): CLOSURE-RECURSION ═══
+        # The braid crossing IS the recursion: closed boundary becomes
+        # new aperture. ⟳ = i⁰ = +1: the cycle completes.
         #
+        # The crossing type depends on which pair of components (•-Φ or
+        # Φ-○) has the stronger interaction this cycle.
         # Lower layers (0-2: coupling, gradient, rhythm) = •-side
         # Upper layers (4-6: texture, depth, pressure) = ○-side
         # Middle layer (3: harmony) = Φ (the mediator)
-        #
-        # When lower layers are more active: σ₁ (soul-mind crossing)
-        # When upper layers are more active: σ₂ (mind-body crossing)
-        # Direction (inverse or not) from the harmony layer's phase:
-        #   harmony is the bridge; its phase determines the twist direction.
         if self.core.has_center:
             cascade = self.boundary.cascade
 
-            # Use mean activation (how many channels fired), not power
             lower_act = sum(cascade.layers[i].mean_activation for i in range(3))
             upper_act = sum(cascade.layers[i].mean_activation for i in range(4, 7))
 
@@ -2730,18 +2871,26 @@ class Circumpunct:
             harmony_phase = float(np.angle(np.sum(cascade.layers[3].state)))
             inverse = harmony_phase < 0
 
-            # The SURFACE resonance adds a third signal:
-            # high resonance biases toward σ₁ (soul-mind, integrative)
-            # low resonance biases toward σ₂ (mind-body, reactive)
+            # Surface resonance biases crossing type:
+            # high resonance → σ₁ (soul-mind, integrative)
+            # low resonance → σ₂ (mind-body, reactive)
             resonance_bias = self.surface.resonance - 0.5
 
             lower_score = lower_act + resonance_bias
             upper_score = upper_act - resonance_bias
 
+            # ℂ⁸ modulation: beat 4 scales the braid's imprint strength
+            # Strong beat 4 = recursion fires cleanly (full crossing)
+            # Weak beat 4 = recursion is muted (crossing still happens
+            # but the signal it carries is attenuated)
+            braid_signal = result
+            if beats is not None:
+                braid_signal = result * (beats[3] * 4.0)
+
             if lower_score > upper_score:
-                self.braid.sigma1(inverse=inverse, signal=result)
+                self.braid.sigma1(inverse=inverse, signal=braid_signal)
             else:
-                self.braid.sigma2(inverse=inverse, signal=result)
+                self.braid.sigma2(inverse=inverse, signal=braid_signal)
 
         return result
 
