@@ -283,10 +283,18 @@ Completed:
 - ✓ #11 (golden splitting: |s_1|/|s_3| = 1/φ² at 0.126% residual; real but NOT exact; attractor, not identity)
 - ✓ #12 (sphere phase sum: -π/6 = -π/(2T) analytically derived from beat 3 self-drive G[Φ,Φ] = -iπ/(2T); only beat with nonzero trace; BCH corrections vanish)
 
-Remaining:
-1. **κ_{1,3} = α prediction**: independent test or derivation.
-2. **ℂ⁸ representation**: promote to full 8-station octave.
-3. **Multiple attractors in sphere**: resolve whether this is a feature of the topology or a representational artifact.
+- ✓ #13 (κ_{1,3} = α derived from ⊙ symmetry: diameter-swap permutation commutes with κ_both but not κ_primary; singular values lift to {1+α, 1+α, 1-α, 1-α})
+- ✓ #14 (ℂ⁸ octave: phase sum -π/3 = 2×(-π/6); converged structural 68.7% / processual 31.3%; 69.1/30.9 cosmological match at 0.56%)
+- ✓ #15 (multiple attractors resolved: SINGLE ATTRACTOR; 1000 ICs at 10000 steps all cluster within 0.01; v7 variance was slow convergence)
+
+**ALL DIRECTIONS COMPLETE.**
+
+Remaining open questions (future work):
+1. ℂ⁸ convergence RESOLVED in v10: 300K steps gives 68.7/31.3, matching cosmological 69.1/30.9 at 0.56%
+2. Higher-order α correction to the golden splitting ratio
+3. Connection to QFT formalism (T as quantum channel in actual field theory)
+4. λ₆ phase (-19.6°): no clean framework match; potentially a genuinely new prediction
+5. λ₇ phase (water angle 104.45° at 2.8%): suggestive but not clean enough to call definitive
 
 ---
 
@@ -299,8 +307,8 @@ Remaining:
 | 3 | T is not completely positive (**PASSED**: Choi matrix positive semidefinite) |
 | 4 | Non-1 fixed points satisfy ◐ = 0.5 AND A3 (**PASSED for diameter**: Lie modes have ◐ undefined, A3 violated) |
 | 5 | Diagonal κ entries stabilize the fixed point (would contradict "self-coupling = Inflation") (**PASSED**: all diagonal entries destabilize) |
-| 6 | Iteration diverges from 1 for generic initial conditions (**PASSED for diameter**; sphere has multiple basins) |
-| 7 | Section claims contradict existing framework chapters (pending; §27.7s not yet written) |
+| 6 | Iteration diverges from 1 for generic initial conditions (**PASSED**: single attractor confirmed with 1000 ICs at 10000 steps) |
+| 7 | Section claims contradict existing framework chapters (**PASSED**: §27.7s written and consistent) |
 | 8 | Eigenvalue splitting ratios don't match φ-powers (**SHARPENED**: |s_1|/|s_3| ≈ 1/φ² at 0.126% residual; stable at 30 digits; real but approximate, not exact) |
 | 9 | No construction produces cosmological weights (**CLOSED negative**: orbit analysis confirms budget does NOT live in T's weights or orbit; budget is i-cycle quadrant property, not operator-weight property) |
 | 10 | Orbit average doesn't converge (**PASSED**: converges to triad structure; dominant period ≈ P; robust across 20 ICs) |
@@ -330,3 +338,71 @@ Cosmological budget does NOT emerge from orbit-averaged weights. Diameter collap
 5. BCH corrections vanish (off-diagonal affects magnitudes, not trace)
 
 Hub_divisor law: Σθ = -360°/(2·h·P). At h = T: X = 2TP = G = 12. Without self-drive: Σθ = 0 exactly. The phase deficit IS the cost of mediation.
+
+---
+
+## Results: v9 (Directions #13, #14, #15)
+
+### #13: κ_{1,3} = α derived from ⊙ symmetry
+
+The diameter-swap permutation P_swap commutes with κ_both (||[P_swap, κ_both]|| = 0) but NOT with κ_primary (||[P_swap, κ_primary]|| = 0.015). This is a symmetry proof: both diameters span the same dimensional distance P = 4, and α measures nesting tightness (a property of ⊂), so both must carry α. Singular values lift from {1+α, 1, 1, 1-α} to {1+α, 1+α, 1-α, 1-α}.
+
+### #14: ℂ⁸ full octave
+
+Phase sum -π/3 = 2×(-π/6); both Φ and ✹ self-drive. Singular values {(1+α)⁴, (1-α)⁴}. All 8 eigenvalues split from 1. Fixed point (preliminary at 10K steps): structural 70.0% / processual 30.0%. See v10 for converged values at 300K steps: 68.7/31.3 (0.56% cosmological match). Projection ℂ⁸ → ℂ⁴ is NOT exact (||F₈_proj - F₄|| = 1.70): process and structure genuinely couple.
+
+### #15: Single attractor (resolved)
+
+1000 random ICs at 10000 steps: all cluster within 0.01. One cluster at tol = 0.02. The v7 "multiple attractors" was slow convergence, not structural. The attractor is unique, Lenz-paired, and mirror-symmetric.
+
+---
+
+## Results: v10 (Prediction Catalog and Convergence Correction)
+
+### Critical discovery: ℂ⁸ convergence
+
+The ℂ⁸ fixed point requires ~200K+ iterations to converge (vs ~5K for ℂ⁴). The v9 "70/30" was taken at 10K steps and was not converged. Convergence test at 5K, 10K, 20K, 50K, 100K, 200K, 300K steps shows weights stabilize only at ~200K+. The true converged fixed point (300K steps, stable to 0.001):
+
+| Station | Weight |
+|---|---|
+| •(0D) | 0.094792 |
+| ⊛(0.5D) | 0.021168 |
+| —(1D) | 0.278407 |
+| ⎇(1.5D) | 0.136498 |
+| Φ(2D) | 0.029054 |
+| ✹(2.5D) | 0.016012 |
+| ○(3D) | 0.284961 |
+| ⟳(3.5D) | 0.139108 |
+| **Structural** | **0.687214** (cosmological DE 0.6911, residual 0.56%) |
+| **Processual** | **0.312786** (cosmological matter 0.3089, residual 1.26%) |
+
+This is CLOSER to cosmological values than the preliminary 70/30 (which had 1.4% residual).
+
+### Prediction scorecard (11 genuine predictions)
+
+| # | Prediction | Value | Target | Residual | Grade |
+|---|---|---|---|---|---|
+| 5 | Struct/Proc = DE/Matter | 68.7/31.3 | 69.1/30.9 | 0.56% | **A** |
+| 1 | •+Φ = DE (ℂ⁴) | 0.685 | 0.691 | 0.92% | **A** |
+| 4 | |Δ₂|/|Δ₃| = 1/P | 0.2496 | 0.2500 | 0.17% | **A** |
+| 9d | w(—)/w(⟳) = Φ | 2.001 | 2.000 | 0.07% | **A** |
+| 9a | w(•)/w(○) = 1/T | 0.333 | 0.333 | 0.20% | **A** |
+| 10 | Φ+○ = matter | 0.314 | 0.309 | 1.7% | **B** |
+| 8 | Low/High proc = 2/V | 0.158/0.155 | 0.154 | 0.8-2.5% | **B** |
+| E1 | λ₁ = tetrahedral | 109.76° | 109.47° | 0.27% | **B** |
+| 8 | Δ₇/α = π/4 | 0.791 | 0.785 | 0.76% | **B** |
+| 3 | Δ₀/α = P/V | 0.301 | 0.308 | 2.2% | **C** |
+| 6 | Beats 2,4 = T/R | 0.415/0.424 | 0.429 | 1-3% | **C** |
+
+### What's genuine vs construction artifact
+
+**GENUINE** (not input, match framework or observables): structural/processual = cosmological (0.56%), ℂ⁴ primary diameter = DE (0.9%), tetrahedral angle in eigenvalue (0.27%), framework integers in weight ratios (0.07-0.2%), beat weights = T/R (1-3%), processual halves = 2/V (0.8-2.5%), splitting ratios = 1/P (0.17%), Δ₇/α = π/4 (0.76%).
+
+**DERIVED FROM CONSTRUCTION** (not predictions): phase sums (-π/6, -π/3), singular values {1±α}, mixing time 1/α, ◐ = 0.5 in quadrant balance.
+
+**AMBIGUOUS**: water angle in λ₇ (2.8%), Cabibbo in Δ₃ (3.4%), Φ+○ = matter at different resolution (1.7%).
+
+### Files
+
+- `experiments/unified_expression_T_v10_predictions.py`: prediction extraction and matching code
+- `experiments/T_operator_findings_v10_predictions.md`: full prediction catalog with convergence analysis
