@@ -269,19 +269,22 @@ class TOperator:
         Apply one pump cycle: state → T(state) = κ(F(state)).
 
         The state is a complex vector in ℂ^dim representing energy
-        distribution across the dimensional stations.
+        distribution across the dimensional stations. State is
+        L2-normalized (|ψ|₂ = 1, Born-rule convention); the fixed-point
+        distribution |ψ|² matches the canonical cosmological split
+        (68.7/31.3 at ℂ⁸, cf. experiments/unified_expression_T_v10).
         """
         result = self.T @ state
-        # Normalize to preserve the 1 (projective space)
-        norm = np.sum(np.abs(result))
+        # Normalize to preserve the 1 (L2; proper quantum-state normalization)
+        norm = np.sqrt(np.sum(np.abs(result)**2))
         if norm > 0:
             result = result / norm
         return result
 
     def apply_F_only(self, state: np.ndarray) -> np.ndarray:
-        """Apply just the four beats (no nesting coupling)."""
+        """Apply just the four beats (no nesting coupling). L2-normalized."""
         result = self.F @ state
-        norm = np.sum(np.abs(result))
+        norm = np.sqrt(np.sum(np.abs(result)**2))
         if norm > 0:
             result = result / norm
         return result
@@ -309,9 +312,15 @@ class TOperator:
         return state
 
     def weights(self, steps: int = 5000) -> np.ndarray:
-        """Get the fixed-point weight distribution (real, normalized)."""
+        """
+        Get the fixed-point weight distribution (real, normalized).
+
+        Returns Born-rule probabilities |ψ|² / Σ|ψ|². For ℂ⁸ at full
+        convergence this gives structural ≈ 0.6872 / processual ≈ 0.3128,
+        matching the cosmological dark-energy/matter split at 0.56%.
+        """
         fp = self.fixed_point(steps)
-        w = np.abs(fp)
+        w = np.abs(fp)**2
         return w / np.sum(w)
 
     def mixing_time(self) -> float:
@@ -400,25 +409,25 @@ class TOperator:
             return int(np.argmax(proc_weights))
 
     def _project_in(self, vec: np.ndarray) -> np.ndarray:
-        """Project a higher-dim vector into operator space."""
+        """Project a higher-dim vector into operator space (L2-normalized)."""
         n = len(vec)
         result = np.zeros(self.dim, dtype=complex)
         # Distribute energy across stations by folding
         for i in range(n):
             result[i % self.dim] += vec[i]
-        # Normalize
-        norm = np.sum(np.abs(result))
+        # Normalize (L2; matches apply() convention so pump() blends cleanly)
+        norm = np.sqrt(np.sum(np.abs(result)**2))
         if norm > 0:
             result /= norm
         return result
 
     def _project_out(self, vec: np.ndarray, target_dim: int) -> np.ndarray:
-        """Project operator-space vector back to original dimension."""
+        """Project operator-space vector back to original dimension (L2-normalized)."""
         result = np.zeros(target_dim, dtype=complex)
         for i in range(target_dim):
             result[i] = vec[i % self.dim]
-        # Normalize
-        norm = np.sum(np.abs(result))
+        # Normalize (L2)
+        norm = np.sqrt(np.sum(np.abs(result)**2))
         if norm > 0:
             result /= norm
         return result
