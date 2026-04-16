@@ -75,6 +75,8 @@
     <h1>T = 3 is Forced</h1>
     <p class="sub">Slide T off 3.0 and watch nine independent predictions break simultaneously. There is no retuning; the same T drives every formula.</p>
 
+    <div style="border-left: 3px solid var(--bad); background: rgba(248,81,73,0.08); padding: 10px 12px; margin: 12px 0; color: var(--ink); font-size: 11px; line-height: 1.5;"><strong style="color: var(--bad);">Revision (2026):</strong> α is now read as an input to the framework (α = |•<sub>electron</sub>|, the measured electron-aperture coupling). The prior closure formula shown below (1/α = 360/φ² − 2/φ³ + α/(59/3)) is <a href="alpha_derivation.html" style="color: var(--blue);">retracted</a>. The sim still demonstrates T-sensitivity of the other rungs (G, Λ, mass ratios, gauge couplings) given α; α is taken as input on the CODATA value, and T = 3 remains forced by the other constants, not by the α formula.</div>
+
     <div class="slider-box">
       <div class="t-sub">Triad integer T</div>
       <div class="t-display" id="tDisp">3.000</div>
@@ -96,13 +98,14 @@
     <p class="sub" style="margin-bottom: 8px;">All structural integers derive algebraically from T. When T is not 3, these stop being integers.</p>
     <div class="pool-grid" id="poolGrid"></div>
 
-    <h2>The α formula</h2>
-    <div class="formula-hint">
+    <h2>The α formula (retracted)</h2>
+    <div class="formula-hint" style="opacity: 0.55;">
+<span style="color: var(--bad);">Retracted closure (for record only):</span><br>
 1/α = (T+1)!·T·(Φ+○) / φ²<br>
 &nbsp;&nbsp;&nbsp; − 2/φ³<br>
 &nbsp;&nbsp;&nbsp; + α / (T·R − P/T)<br><br>
-Every symbol from T and φ.<br>
-At T = 3: the 360/φ² − 2/φ³ + α/(59/3) closure.
+At T = 3: 360/φ² − 2/φ³ + α/(59/3).<br><br>
+<span style="color: var(--ink);">Current reading:</span> α = |•<sub>electron</sub>| is an input (CODATA 1/α = 137.035999177). See <a href="alpha_derivation.html" style="color: var(--blue);">the retraction note</a>.
     </div>
   </div>
 
@@ -133,7 +136,7 @@ predictions simultaneously small.
     <h2>Reading</h2>
     <div class="formula-hint" style="color: var(--ink); line-height: 1.7;">
 <span class="tag ok">T = 3.000</span> all nine land near measurement<br><br>
-<span class="tag fail">T = 2.95</span> α breaks first (ladder exponents shift continuously; α is the most sensitive because of the self-referential closure)<br><br>
+<span class="tag fail">T = 2.95</span> Under the retracted closure, α was the most sensitive to T-drift; with α now read as input (fixed at CODATA), the other eight predictions take the role of witnesses — they break as T shifts.<br><br>
 <span class="tag fail">T = 3.05</span> Λ breaks first (α^56 amplifies tiny T-drift by 56 powers)<br><br>
 The cosmological constant is the framework's amplifier; any non-integer T detonates there.
     </div>

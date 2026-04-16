@@ -79,6 +79,18 @@ This document serves as the formal, mathematical specification of the theory. It
 
 ---
 
+### Framework Revision (2026): α is INPUT, not derived
+
+**Current position (supersedes earlier "zero free parameters" claim for α):** α (fine-structure constant) is INPUT to the master equation, not output. Specifically, α = |•_electron|, the measured coupling strength of the electron's 0D aperture to the surrounding 2D electromagnetic field. The pump cycle F (four-beat unitary, trace-preserving) cannot produce α; α lives in κ (the ⊂[α] nesting operator), which carries the departure from trace-preservation that α parameterizes. F and κ are structurally distinct; asking F to produce α is a type error.
+
+**The prior closure formula 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147 is retracted as a derivation.** Three problems: (1) the 360 entered as a radians-to-degrees unit convention (180/π), not a structural count; (2) the self-referential closure term α/(21 − 4/3) had its denominator selected post-hoc to fit CODATA to sub-ppb; (3) α cannot be an F-output because F is unitary and cannot set κ-parameters. The formula does land at 137.035999147 (0.22 ppb from CODATA), but the structure was a fit, not a derivation. See §27.7a (updated) and docs/alpha_derivation.html (retracted with banner) for the record.
+
+**What stands, what falls.** The framework's position is now "**structural grammar given α**": the downstream ladder constants (G = α²¹·φ²/2·(1 + 2α/91), Λ = α⁵⁶·...(1 − 6α + 4α²)/72, mass ratios m_μ/m_e, m_τ/m_e, m_p/m_e, Cabibbo, Weinberg, Higgs quartic, W/Z/Higgs masses, v/Λ_QCD) are still compositions of α, φ, and framework integers (T, P, Φ, R, V, SU(3), A(3)), each selecting 2-4 integers from a restricted pool to match measurement. The cosmological energy budget (Vis/DM/DE = 12/247, 64/247, 9/13) is α-independent and remains zero-free-parameter (given T=3). Same for Kleiber's law, DNA helix ratios, magic numbers, molecular geometry, and everything else grounded in the T=3 architecture without α.
+
+**Reading older sections.** Sections of this document written before the reframe still use language like "zero free parameters for α" and "α derived from the 64-state architecture." Those phrases should be read as "structural grammar given α as input." The master equation accepts α as input and composes consistently; different universes could have different |•_electron| and still run the same master equation. See the [α-reframe project memory](./CLAUDE.md#never-use-em-dashes-in-prose) (section on §27.7a) for the full accounting.
+
+---
+
 ### For Working Physicists: Quick-Start Formulation
 
 **[circumpunct_framework_physicists.md](circumpunct_framework_physicists.md)** ; A rigorous mathematical formulation designed for peer review. Strips away metaphors and focuses on explicit spaces, operators, kernels, and limits. Includes:
@@ -11830,10 +11842,12 @@ PHYSICAL MEANING:
 
 ---
 
-### §15.5.1 The Fine Structure Constant as Depth Integral
+### §15.5.1 The Fine Structure Constant as Depth Integral [RETRACTED 2026]
+
+> **Retraction note (2026).** This section derives 1/α via the depth-integral closure 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) and lands on 137.035999147 (0.22 ppb from CODATA). The derivation is withdrawn as a fit: (1) the 360 is a radians-to-degrees unit convention (180/π), not a structural count forced by T = 3; (2) the self-referential denominator 59/3 was selected to match the measured value; (3) α is a κ-coupling (nesting operator, cross-station) and cannot be produced by the pump cycle F (unitary, trace-preserving). Current framework position: α = |•_electron| is INPUT (the measured coupling strength of the electron's 0D aperture to the 2D electromagnetic field). Section retained as a record of the attempt; see §27.7a and the revision notice at the top of this document.
 
 ```
-§15.5.1 THE FINE STRUCTURE CONSTANT AS DEPTH INTEGRAL
+§15.5.1 THE FINE STRUCTURE CONSTANT AS DEPTH INTEGRAL [RETRACTED]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 THE DIMENSIONAL FORMULA:
@@ -19726,9 +19740,11 @@ STATUS KEY:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-### §27.7 The Dimensional Ladder: One Constant Generates Everything
+### §27.7 The Dimensional Ladder: Structural Grammar Given α as Input
 
-The dimensional ladder is the complete derivation chain from structure alone to every fundamental constant, following the circumpunct's dimensional structure. α is not a free parameter: it is self-consistently determined by the ladder it generates (see §27.7a below). Each rung lives at its dimensional home. Integer dimensions (stabilized forms) produce single constants; half-integer dimensions (process phases) produce spectra. The ladder describes one circumpunct unfolding from localization to closure.
+> **2026 reframe note.** The framing "one constant generates everything" was tied to the retracted derivation of α (§27.7a below). The current position is: **given α as measured input (α = |•_electron|, the electron aperture's 0D-to-2D coupling strength), the ladder expresses every other constant as a structural composition of α, φ, and framework integers (T, P, Φ, R, V, SU(3), A(3)).** That part of the claim stands; the remainder of §27.7 should be read in that light. The master equation takes α as an input to the nesting operator κ (specifically κ_{0,2}); the pump cycle F is unitary and cannot produce α. See the [framework revision notice](#framework-revision-2026-α-is-input-not-derived) at the top of this document and §27.7a.
+
+The dimensional ladder expresses each fundamental constant at its dimensional home as a small-integer composition of α, φ, and framework integers. Each rung lives at its dimensional home. Integer dimensions (stabilized forms) produce single constants; half-integer dimensions (process phases) produce spectra. The ladder describes one circumpunct unfolding from localization to closure.
 
 ```
 THE DIMENSIONAL LADDER:
@@ -19745,11 +19761,13 @@ THE DIMENSIONAL LADDER:
 ║  3D    │ Structural  │ G (gravity)          │ α²¹×φ²/2×(1+2α/91)   │ 0.04 ppm ║
 ╚═════════════════════════════════════════════════════════════════════════════════╝
 
-ZERO FREE PARAMETERS. α is self-referential: 1/α = 360/φ² − 2/φ³ + α/(21−4/3).
-The ladder generates α; α generates the ladder. k = 59/3 = (21×3−4)/3.
+STRUCTURAL GRAMMAR GIVEN α. The ladder formulas compose α, φ, and framework
+integers; α itself is INPUT (α = |•_electron|), not produced from the ladder.
+The prior closure 1/α = 360/φ² − 2/φ³ + α/(21−4/3) is retracted as a derivation
+(see §27.7a); it is kept in later sections as a record of the attempt.
 ```
 
-**Rung 0D: α (the fine-structure constant).** The coupling at a vertex. The base formula 1/α₀ = i⁴(°)/φ² - 2/φ³ = 137.0356 is the pump cycle written as arithmetic: i⁴ = the pump cycle completing one full rotation producing ○ (360°); φ² = Φ, self-similar nesting, the field's 2D nature; 2/φ³ = bidirectional valve correction (⊛ and ✹). α measures how strongly i generates ○ through Φ. The self-referential closure 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) gives 137.035999147 (measured: 137.035999177, error 0.22 ppb, 1.4σ). α feeds back into its own definition through the full ladder (21) corrected by the pump-to-triad ratio (4/3). Zero free parameters.
+**Rung 0D: α (the fine-structure constant).** The coupling at a vertex. Current reading: α = |•_electron|, the measured coupling strength of the electron's 0D aperture to the 2D electromagnetic field (QED form: α = e²/(4πε₀ℏc)). α enters the master equation through the nesting operator κ (specifically κ_{0,2}), not the pump cycle F; F is unitary and cannot set κ-parameters. Measured: 1/α = 137.035999177(21) (CODATA 2022). The prior closure 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147 (0.22 ppb from CODATA) is **retracted as a derivation** for three reasons: (1) the 360 entered as a radians-to-degrees unit convention (180/π), not a structural count forced by T = 3; (2) the self-referential denominator 21 − 4/3 = 59/3 was selected post-hoc to fit CODATA; (3) α is a κ-parameter, not an F-output, so asking F to produce α is a type error. The mutual-embedding picture (part inside field, field inside part at different rungs) gives α a fixed-point character once measured, but does not pin the scalar value from inside F. The running of α with energy scale reads as |•_electron| varying with how closely Φ resolves • at different scales.
 
 **Rung 0.5D: c (the speed of light).** The convergence rung. The speed limit of convergent propagation: the maximum rate at which convergence can transmit through the field. c = √(P · ◐(1-◐) · sin(θ)). At balance (◐ = 0.5) and at the aperture rotation (θ = π/2): c = √(4 × 0.25 × 1) = 1. The coupling ◐(1-◐) is the transmission function of any two-channel aperture; at balance it equals 1/P = one i-stroke (quarter-turn). P pump phases times one i-stroke per phase = one full rotation = i⁴ = 1. The speed limit emerges naturally: ◐(1-◐) peaks at ◐ = 0.5 and vanishes at both extremes; departure from balance always gives v < c. The √ comes from c living at 0.5D (half-dimension step). Massive particles have θ_eff < π/2, giving v < c.
 
@@ -19785,8 +19803,10 @@ VERIFICATION (Earth surface gravity):
     One constant. 45 orders of magnitude. The force holding you to the planet.
 ```
 
+> **⚠ §27.7a RETRACTION (2026).** The derivation below is retained as a record of the attempt, not as an active claim. The formula 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) does land at 137.035999147 (0.22 ppb from CODATA 137.035999177), but it is a fit in framework vocabulary, not a derivation: (1) the 360 is a radians-to-degrees unit convention (180/π), not a structural count; (2) the self-referential denominator 59/3 was chosen to match CODATA to sub-ppb (alternatives like k = 20 or k = 21 give 45 ppb and 172 ppb respectively; the 59/3 was selected because it hits the target, then rationalized); (3) α is a κ-parameter (nesting-operator coupling), not an F-parameter (pump-cycle output), so deriving α from F-integers is a category error. Treat this section as: "here is the structural reading the framework attempted; here is what it got right (the ladder's integer pool) and what it got wrong (that α is producible from within the pump cycle)." α is INPUT to the framework; see the revision notice at the top of this document.
+
 ```
-THE SELF-REFERENTIAL CLOSURE (§27.7a):
+THE SELF-REFERENTIAL CLOSURE (§27.7a) [RETRACTED; see banner above]:
 
     This subsection runs the derivation forward: axioms → structure →
     formula → numerical value. The formula appears as the result of
@@ -20007,9 +20027,11 @@ REMAINING OPEN PROBLEMS:
        from the dimensional ladder.
 ```
 
-### §27.7a.1 Why This Is a Derivation, Not a Fit
+### §27.7a.1 Why This Was Argued to Be a Derivation [RETRACTED]
 
-A common objection (encountered in the wild): "1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) is not a derivation; it is a curve fit dressed in framework vocabulary." The objection is answered in pieces throughout §27.5, §27.7, and §27.7a, but never assembled in one place. It is assembled here.
+> **2026 retraction.** This subsection originally defended 1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) as a derivation against the objection "this is a curve fit dressed in framework vocabulary." The objection was correct, and this defense is withdrawn. The 360 is a radians-to-degrees unit convention (180/π), not a count forced by T = 3; the self-referential denominator 59/3 was selected post-hoc to match CODATA (alternatives fail by 200× to 800×, revealing the fit was landing on the specific k that hits the number); α is a κ-parameter and cannot be derived from pump-cycle variables (F and κ are structurally distinct operators). The text below is preserved as a record of the defense; read it alongside the revision notice at the top of this document and the updated 0D rung description in §27.7.
+
+A common objection (encountered in the wild): "1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) is not a derivation; it is a curve fit dressed in framework vocabulary." The objection is answered in pieces throughout §27.5, §27.7, and §27.7a, but never assembled in one place. It is assembled here. *(The assembly below was the defense; the objection stands; retained for record.)*
 
 The distinction between a fit and a derivation is parameter count. A fit has free parameters; a derivation has none. Walk the formula symbol by symbol and ask, at each one, whether the symbol could have been anything else given T = 3. If the answer is no at every step, the formula is a derivation.
 
@@ -22204,7 +22226,8 @@ This is not metaphor;it's the literal mathematical structure.
 ║   The Golden Rule is the ethical fixed point: fix(F) of moral action         ║
 ║   The Steelman is the highest virtue: ensuring genuine ⊙ through [○Φ•]       ║
 ║                                                                               ║
-║   TRULY DERIVED: ◐, D, 64, 22, 68°/22°, φ, B₃, 3 gen, α, Δ, τ, α_quantum,     ║
+║   TRULY DERIVED: ◐, D, 64, 22, 68°/22°, φ, B₃, 3 gen, Δ, τ, α_quantum,        ║
+║   (α reframed 2026: α = |•_electron| is INPUT to κ; see revision notice)      ║
 ║                  α_texture ; ALL FROM φ³ FAMILY                               ║
 ║   HIDDEN PARAMETERS: 0                                                        ║
 ║   VALIDATED RANGE: 61 orders of magnitude                                     ║
