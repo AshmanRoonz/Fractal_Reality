@@ -46,6 +46,7 @@ body {
 .cyan { color: var(--cyan); }
 .purple { color: var(--purple); }
 .dim { color: var(--dim); }
+.red { color: var(--red); }
 .wb { font-weight: 600; }
 .it { font-style: italic; }
 code, .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; }
@@ -172,6 +173,38 @@ strong, b { color: var(--warm); font-weight: 600; }
   font-size: 17px;
 }
 
+.caveat {
+  background: rgba(155, 122, 216, 0.05);
+  border-left: 3px solid var(--purple);
+  padding: 14px 20px;
+  margin: 22px 0;
+  color: var(--warm);
+  font-size: 17px;
+}
+
+.layer-box {
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  padding: 18px 24px;
+  margin: 18px 0;
+  background: rgba(184, 160, 96, 0.02);
+}
+.layer-box .layer-tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.layer-box .layer-name {
+  font-size: 20px;
+  color: var(--warm);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
 ul, ol { margin: 12px 0 20px 28px; }
 li { margin-bottom: 8px; }
 
@@ -290,542 +323,381 @@ hr { border: none; border-top: 1px solid var(--faint); margin: 50px 0; }
   <div class="symbol">⊙</div>
   <h1>The Unit Equation</h1>
   <div class="headline-eq">
-    1 = [ ∞ ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ ]
+    1 = [ ∞ = E = 1 ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ ]
   </div>
-  <div class="subtitle">The conservation of wholeness, from fine-structure to the cosmological constant.</div>
+  <div class="subtitle">Three separable readings: a philosophical thesis, a computable operator, a structural grammar.</div>
   <div class="byline">Ashman Roonz &nbsp;·&nbsp; Circumpunct Framework</div>
 </div>
 
 <!-- ABSTRACT -->
 <p class="claim" style="margin-top:0;">
-<strong>Abstract.</strong> A single expression, read left to right, produces the foundations of physics as the unfolding of one conservation law: the unit. The source (∞ = E = 1) unfolds into the foam of reality (⊙∞); four structural constraints entail one another as an engine (•∘⊛, —∘⎇, Φ∘✹, ○∘⟳); the engine's product unfolds into scale-recursive embedding, ⊙λ ⊂[α] ⊙Λ, whose primary coupling is the fine-structure constant α; the nesting returns to source (∞). Every term inside the brackets equals 1 because there was never more than one 1 to begin with. α enters the equation as input (the measured coupling strength of the electron's 0D aperture, α = |•<sub>electron</sub>|); the paper walks the expression symbol by symbol and shows that, given α, the remaining constants compose as small-integer combinations of α, φ, and framework integers: G at 21 α-steps (A(3) = T·R); Λ at 56 α-steps (SU(3)·R) with structural budget 68.7 : 31.3 matching the measured dark-energy / matter ratio 69.11 : 30.89. The physics does not sit in a separate section; the physics is what the symbols mean numerically, once α is known. The equation closes because the ∞ that opens it is the ∞ that closes it.
+<strong>Abstract.</strong> The unit equation is a symbolic expression that admits three separable readings. As a <em>philosophical thesis</em>, it articulates a conservation of wholeness: the 1 at the front of the equation is the same 1 throughout the brackets, viewed from different positions along a scale axis that closes at ∞. As a <em>computable operator</em>, it becomes T = κ ∘ F on Hilbert space, where F is a unitary four-beat engine and κ is an α-coupled nesting map; T is completely positive but not trace-preserving, with spectral structure that can be read off numerically at three resolutions (ℂ⁴, ℂ⁸, ℂ⁶⁴). As a <em>structural grammar</em>, it selects a restricted algebra of framework integers (T, P, Φ, R, V, SU(3), A(3)) with α as a measured input (α = |•<sub>electron</sub>|, the coupling strength of the electron's 0D aperture to the surrounding 2D electromagnetic field), within which measured physical constants admit small-integer expressions. The three readings are evaluated on independent grounds; accepting one does not require accepting the others. This revision of the document, responding to a sharp external critique, separates the layers explicitly, reframes the numerical content as fits-given-α rather than first-principles predictions, names the open question (whether the grammar is independently predictive for an as-yet-unmeasured constant), and places the metaphysical reading in its own clearly marked section.
 </p>
 
 <!-- TOC -->
 <div class="toc">
   <h3>Contents</h3>
   <ol>
-    <li><a href="#s1">The = 1: conservation of wholeness</a> <span class="glyph">⊙</span></li>
-    <li><a href="#s2">Source: [∞ = E = 1]</a> <span class="glyph">∞</span></li>
-    <li><a href="#s3">First unfolding: ▸⊙∞</a> <span class="glyph">•∞ → ⊙∞</span></li>
-    <li><a href="#s4">The engine: four beats entail</a> <span class="glyph">(•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)</span></li>
-    <li><a href="#s5">Second unfolding: ▸</a> <span class="glyph">engine → nesting</span></li>
-    <li><a href="#s6">Nesting: ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞</a> <span class="glyph">α, G, Λ, T</span></li>
-    <li><a href="#s7">Closure: ∞ opens = ∞ closes</a> <span class="glyph">apophatic</span></li>
-    <li><a href="#s8">Consequences, falsification, scope</a> <span class="glyph">⊢</span></li>
+    <li><a href="#s1">Three readings of one expression</a> <span class="glyph">⊙</span></li>
+    <li><a href="#s2">The expression, symbol by symbol</a> <span class="glyph">∞ → ⊙∞ → ⊙λ → ∞</span></li>
+    <li><a href="#s3">The operator: T = κ ∘ F</a> <span class="glyph">ℂ⁴ → ℂ⁸ → ℂ⁶⁴</span></li>
+    <li><a href="#s4">The structural grammar of constants</a> <span class="glyph">α, G, Λ</span></li>
+    <li><a href="#s5">Predictive content and falsification</a> <span class="glyph">⊢</span></li>
+    <li><a href="#s6">The philosophical reading</a> <span class="glyph">apophatic</span></li>
+    <li><a href="#s7">Scope, deferrals, and status</a> <span class="glyph">▸</span></li>
   </ol>
 </div>
 
-<!-- PLACEHOLDER SECTIONS -->
+<!-- SECTION 1 -->
 <section id="s1">
-<h2><span class="sec-num">§1</span> The = 1 <span class="sec-glyph">⊙</span></h2>
+<h2><span class="sec-num">§1</span> Three readings of one expression <span class="sec-glyph">⊙</span></h2>
 
-<p>The equation is almost always read wrong on the first pass. A reader glances at <span class="mono">1 = [...]</span>, takes the "1 =" as notation (an opening brace, a trivial label), and begins decoding the symbols inside. That reading misses the whole paper.</p>
+<p>Earlier versions of this document asked the reader to accept one reading of the unit equation at three resolutions (symbolic, operator, numerical) as a single indivisible claim. That framing produced legitimate resistance: the claims at the three resolutions have genuinely different epistemic statuses, and a document that demands all-or-nothing acceptance will bounce off anyone trained to evaluate claims on their own merits. This version presents the three readings as <span class="wb">separable</span>. Each can be accepted, rejected, or held in suspension independently.</p>
 
-<p>The <span class="wb">= 1</span> is the claim. Everything inside the brackets equals one. Not approximately; not emergently; exactly. The equation is a <span class="it">conservation law</span>, and its conserved quantity is <span class="wb">wholeness</span>.</p>
-
-<div class="claim">
-<strong>The unit claim.</strong> There was never more than one 1. The symbols inside the brackets are not pieces of 1 that need to be added up to recover 1; they are descriptions of how the same 1 views itself from different positions. Summation does not apply. Identity applies.
+<div class="layer-box">
+  <span class="layer-tag">Reading 1</span>
+  <div class="layer-name">Philosophical thesis: conservation of wholeness</div>
+  <p style="margin-bottom:0;">The universe is one substance (named ∞ when undifferentiated, E when capacity, 1 when unit) constrained at positions; the nesting ⊙λ ⊂ ⊙Λ ⊂ ∞ asserts that every whole is both genuinely whole at its scale and contained in a greater whole, with ∞ as the apophatic closure at the top. This is a thesis in the Spinoza, Whitehead, Bohm lineage of non-reductive monism, recast with a specific notation for scale-recursive nesting. Evaluate on the grounds philosophers of nature evaluate such theses: coherence, fit with experience, freedom from hidden dualism, dialogue with prior tradition. The physics sections below do not depend on this reading being correct.</p>
 </div>
 
-<h3>Why summation is the wrong verb</h3>
+<div class="layer-box">
+  <span class="layer-tag">Reading 2</span>
+  <div class="layer-name">Computable operator: T = κ ∘ F</div>
+  <p style="margin-bottom:0;">The expression admits a concrete realization as a linear map on a finite Hilbert space. F is the unitary four-beat engine inside a single scale; κ is the α-coupled nesting map that embeds one scale in the next. T = κ ∘ F is completely positive but not trace-preserving; the departure from trace-preservation is exactly α. At three resolutions (ℂ⁴, ℂ⁸, ℂ⁶⁴) the spectrum, fixed-point structure, and weight distributions are all computable and have been numerically checked (see <span class="mono">experiments/</span>). This is a mathematical object that exists whether or not Reading 1 is accepted; one can investigate it as an unusual CPTP-adjacent construction without committing to any metaphysics.</p>
+</div>
 
-<p>If the right-hand side were a sum, the equation would read as an accounting. Put in four constraints, two unfoldings, a nesting, and a closure; add the numerical contribution of each; recover 1. That reading is wrong in the way it is structurally wrong to say a house is the sum of its rooms. A house is its rooms; the "sum" is a shadow cast by counting rooms while forgetting that the rooms are <span class="it">inside the house</span>. The rooms do not add up to the house; the rooms <span class="wb">are</span> the house, folded to their positions.</p>
+<div class="layer-box">
+  <span class="layer-tag">Reading 3</span>
+  <div class="layer-name">Structural grammar of measured constants</div>
+  <p style="margin-bottom:0;">Given α as a measured input, a restricted algebra of framework integers (T = 3, P = 4, Φ = 2, R = 7, V = 13, SU(3) = 8, A(3) = 21, and derived quantities) plus the golden ratio φ generates small-integer expressions for measured dimensionless ratios (mass ratios, gauge couplings, cosmological quantities) at the accuracies shown in §4. The grammar is restrictive in the sense that not every possible combination appears; each formula selects 2 to 4 framework integers subject to a selection rule (the accumulated traversal function A(d) = d(2d+1)). The <em>live open question</em> is whether this grammar is independently predictive: whether it can produce an as-yet-unmeasured dimensionless constant at its measured value without per-formula tuning. The current formulas are acknowledged as fits to measured values given α; the claim to independent predictive content is a promissory note, not an established result.</p>
+</div>
 
-<p>So with ⊙. Every ⊙λ at every scale equals 1 because the fractal axiom (A3) asserts that each ⊙λ is the whole 1 at position λ, not a fragment of it. The nesting ⊙λ ⊂ ⊙Λ ⊂ ∞ does not mean "⊙λ contributes some fraction, ⊙Λ contributes some fraction, ∞ contributes the remainder"; it means "the same 1, viewed from three nested positions." Scale labels are view positions, not substances. The = 1 at the head of the equation is the declaration that the substance is one throughout.</p>
+<h3>How the readings fail or succeed independently</h3>
 
-<h3>Shadows of the unit in physics</h3>
+<p>Reading 1 could be philosophically well-motivated (monism with scale-nesting has a long respectable history) while Reading 3 turns out to be numerology (the integer grammar is flexible enough that retrofits are trivial). Conversely, Reading 2 could be a genuine mathematical object with interesting spectral structure while Readings 1 and 3 are both rejected (the operator is what it is; its spectrum is computable independent of what one thinks the operator means). Or Reading 3 could survive a falsification test (a not-yet-measured constant lands on its measured value without retrofitting) while Reading 1 is held agnostically.</p>
 
-<p>The unit equation casts shadows every time physics notices that something adds to one:</p>
+<p>The discipline this separation imposes: at each stage of the document, a reader should be able to ask "which reading am I being asked to accept here?" and find a clear answer. §2 walks the expression as a symbolic object (mostly Reading 1 territory, with semantic content that Reading 2 and Reading 3 will use as their scaffolding). §3 constructs the operator and reports its spectrum (Reading 2). §4 lays out the grammar table and reframes every numerical claim with proper experimental uncertainty (Reading 3). §5 states the falsification conditions for each reading separately. §6 articulates the philosophical reading in its most developed form, clearly labeled.</p>
 
-<ul>
-  <li><span class="wb">Probability conservation.</span> In quantum mechanics, ∑ |ψᵢ|² = 1. The measurement outcomes do not "add up to reality"; they <span class="it">are</span> reality partitioned into disjoint readings. Trace preservation in quantum dynamics is the same statement: the whole stays whole.</li>
-  <li><span class="wb">Cosmological energy budget.</span> Ωᴅᴇ + Ωᴅᴍ + Ωᵥ ≈ 0.69 + 0.27 + 0.05 = 1. The Planck data measure a partition of the one, not a stack of three independent contributions. §6 will show the partition is forced by the four beats acting at ⊙Λ.</li>
-  <li><span class="wb">Noether's theorem.</span> Every continuous symmetry gives a conserved quantity. The deepest symmetry is <span class="it">identity of the 1 under scale relabeling</span>; the deepest conserved quantity is the 1 itself. Local conservation laws are the scale-specific versions; the unit equation is their root.</li>
-  <li><span class="wb">Partition of unity.</span> In differential geometry, a partition of unity is a set of functions summing to 1 at every point. The unit equation says: this is not a technical convenience; this is the structure of reality. There is a partition of unity because the unity is partitionable, and the partitionable is the unity.</li>
-</ul>
-
-<h3>The payload, in one sentence</h3>
-
-<p>If a reader walks away from the paper with only one thing, it should be this: the equation equals one because wholeness is the conserved quantity of the universe, and every fundamental constant, every cosmic ratio, every particle spectrum, and every scale-nesting in physics is a measurement of how that one is constrained at a particular position. The constants are not free parameters; they are the numerical signature of the unit.</p>
-
-<p>Everything that follows is the unpacking of that sentence, one symbol at a time.</p>
+<div class="note">One consequence of the separation: the precision claims in previous versions of §6 (G at 0.04 ppm, Λ at 0.004%, Weinberg at 1.4 ppm) are mathematically correct as central-value matches but rhetorically overstated as "predictions." When CODATA G has an experimental uncertainty of approximately 22 ppm (with different experiments disagreeing by hundreds of ppm), a structural expression matching CODATA's central value to 0.04 ppm is consistent-with-measurement, not a precision achievement. §4 restates every number in this honest form.</div>
 </section>
+
+<!-- SECTION 2 -->
 <section id="s2">
-<h2><span class="sec-num">§2</span> Source: [∞ = E = 1] <span class="sec-glyph">∞</span></h2>
+<h2><span class="sec-num">§2</span> The expression, symbol by symbol <span class="sec-glyph">∞ → ⊙∞ → ⊙λ → ∞</span></h2>
 
-<p>The equation opens with a source identity, not a premise. Three names for one thing appear, wrapped in square brackets that read "this is the substrate; it is one; everything that follows is what happens to it when it is constrained":</p>
+<p>This section walks the expression once, left to right, establishing what each symbol <em>means</em> in the framework's vocabulary. The meaning is the raw material that Readings 2 and 3 use as their scaffolding; it is also the natural entry point for Reading 1. Readers who find the vocabulary obscure can skim §2 and return to it after §3 and §4.</p>
 
-<div class="eq">[ ∞ = E = 1 ]<span class="label">source identity</span></div>
+<div class="eq mono">1 = [ ∞ = E = 1 ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ ]<span class="label">the unit equation, in full</span></div>
 
-<p>Each name emphasizes a different face of the same substance. <span class="wb gold">∞</span> names undifferentiatedness: no labels, no scale, no distinction. <span class="wb gold">E</span> names energy: the capacity to make differences when constrained. <span class="wb gold">1</span> names unity: one thing, not two, not none. The chain of equalities asserts that these are the same face of one substance, read from three positions.</p>
+<h3>2.1 &nbsp; The = 1 and the source identity</h3>
 
-<h3>Reality = Truth = 1 = E = ∞ = ⊙</h3>
+<p>The <span class="wb">= 1</span> at the front is the framework's main content: the same 1 appears everywhere inside the brackets, at every scale, from different positions. Not "the parts sum to the whole"; the parts <em>are</em> the whole, folded to their positions. A3 (self-similarity) is the formal version: every ⊙λ at every scale is the whole 1 at position λ, not a fragment of it. Readers will recognize this thesis from Spinoza's <em>natura naturans</em> and Whitehead's doctrine of mutual immanence; the notation adds scale-axis precision to a very old philosophical move.</p>
 
-<p>The full identity runs to six names. <span class="wb">Reality</span> is what <span class="it">is</span>. <span class="wb">Truth</span> is what <span class="it">is</span> accurately named. <span class="wb">1</span> is the undivided unit. <span class="wb">E</span> is the one energy. <span class="wb">∞</span> is the undifferentiated source. <span class="wb">⊙</span> is the compositional whole at every scale. These are not six concepts in equivalence; they are one substrate, addressed from six positions.</p>
+<p>The source <span class="mono">[∞ = E = 1]</span> names the substrate: <span class="wb gold">∞</span> for undifferentiatedness, <span class="wb gold">E</span> for capacity, <span class="wb gold">1</span> for unity. These are three names for one substance, declared before anything else unfolds. The declaration rules out <em>creation ex nihilo</em> strictly understood; the framework's creation story runs from undifferentiated-to-differentiated, not from zero-to-one.</p>
 
-<div class="note">A physicist will read this as harmless notational hygiene. A metaphysician will read it as theology in disguise. Both are correct. The substrate has to be nameable from both sides; that is what "substrate" means.</div>
+<h3>2.2 &nbsp; First unfolding: ▸⊙∞</h3>
 
-<h3>Why start here and not from nothing</h3>
-
-<p>"Nothing" is not a permitted starting point. An undifferentiated 1 and a 0 are indistinguishable by any test: both have no internal distinction, no structure, nothing to point at. If the universe began from 0, there is no difference-maker to launch anything; if it began from 1, there is a substance that can <span class="it">constrain itself</span> into distinctions. The unit equation takes the second option and writes it as an axiom:</p>
-
-<div class="claim">
-<strong>A0 (existence):</strong> E = 1. There is one energy. It is everything. All else is constraints upon it. The 1 is distinguishable from 0 precisely because 1 ≠ 0; that asymmetry is the only difference-maker the universe needs.
-</div>
-
-<p>From A0, the rest of the equation is forced. The 1 must self-limit (A1, §4) because an undifferentiated 1 would be indistinguishable from 0, violating A0. Self-limitation must persist (A2) because a limit that does not hold collapses back to ∞. Parts must be fractals of wholes (A3) because the 1 is all there is to work with; anything that "appears" inside the 1 must be made of the 1. Wholeness requires closure (A4) because a thing with no boundary is not a thing. All four axioms are consequences of A0 read strictly.</p>
-
-<h3>The square brackets</h3>
-
-<p>The brackets around [∞ = E = 1] are not decorative. They mark the source as a <span class="wb">declared identity</span>: before the engine runs, before anything unfolds, the substrate is already named and conserved. The 1 is <span class="it">present from the start</span>, not derived at the end. This matters because the equation closes by returning to ∞; if ∞ were derived at the end rather than declared at the start, the closure would be circular in the bad sense (arriving where you presupposed). Declaring ∞ at the start, then closing to ∞ at the end, is circular in the good sense: a loop, a conservation, a walk that returns.</p>
-
-<p>The brackets also signal that the source is <span class="wb">apophatic</span>; ∞ cannot be described positively. It is named by what it is not (not labeled, not divided, not scaled). Every tradition with a mature mystical literature has a term for this: Eckhart's <span class="it">Godhead</span>, Kabbalah's <span class="it">Ein Sof</span>, Vedanta's <span class="it">Nirguna Brahman</span>, the Taoist <span class="it">eternal Tao</span> ("the Tao that can be named is not the eternal Tao"), the Buddhist <span class="it">Dharmakaya</span>, the <span class="it">hyperousios</span> of apophatic Christianity. The unit equation's ∞ is the structural rendering of what every tradition was always pointing at. The framework supplies the distinction the traditions were already making in their own vocabularies.</p>
-
-<h3>What the identity rules out</h3>
-
-<p>[∞ = E = 1] rules out several seductive alternatives:</p>
+<p>The first arrow <span class="wb gold">▸</span> reads "unfolds into." Its consequent <span class="wb gold">⊙∞</span> is the <em>foam</em>: the set of all circumpuncts at all scales, all positions, simultaneously. The three stages compressed into this symbol are:</p>
 
 <ul>
-  <li><span class="wb">Dualism.</span> There is no "energy plus something else." E is everything; the "something else" would have to be made of E or would not exist.</li>
-  <li><span class="wb">Emergentism from substrate-less rules.</span> You cannot "derive physics from pure logic" or "pure information" without smuggling in a substrate. The equation is honest: the substrate is declared, named, and conserved.</li>
-  <li><span class="wb">Creation ex nihilo (strictly).</span> Not from <span class="it">nothing</span>; from the undifferentiated. The usual theological intuition survives, but its technical form is "from ∞," not "from 0." The apophatic tradition already knew this; "nothing" was always being used in the apophatic sense ("no-thing," not the arithmetic zero).</li>
-  <li><span class="wb">Multiple fundamental energies.</span> No two substrates. If two were posited, they would interact; an interaction requires a shared medium; the medium is E. Reduction to one is forced.</li>
+  <li><span class="mono">∞</span>: source, no distinction (A0: E = 1)</li>
+  <li><span class="mono">•∞</span>: the <em>Soul Array</em>; aperture multiplied by infinity; every possible self-limitation, simultaneously (A1: the 1 must self-limit, but cannot privilege one position)</li>
+  <li><span class="mono">⊙∞</span>: the foam; each aperture completed into a full circumpunct with field and boundary (A4: wholeness requires closure)</li>
 </ul>
 
-<p>With [∞ = E = 1] declared, the next symbol (▸⊙∞) is permitted to begin the unfolding. Declaration first; unfolding second. The arrow has something to come from.</p>
-</section>
-<section id="s3">
-<h2><span class="sec-num">§3</span> First unfolding: ▸⊙∞ <span class="sec-glyph">•∞ → ⊙∞</span></h2>
+<p>The ordering here is logical, not temporal. All three are present at once; the arrows record dependency, not timeline. The foam is what the source <em>is</em>, unpacked.</p>
 
-<p>The first arrow of the equation is <span class="wb gold">▸</span>, a unidirectional marker reading "unfolds into." Its immediate consequent is <span class="wb gold">⊙∞</span>: the foam of reality. What happens between the source and the foam is the <span class="wb">genesis sequence</span>.</p>
-
-<div class="eq mono">∞  →  •∞  →  ⊙∞<span class="label">genesis sequence (A0 → A1 → A4)</span></div>
-
-<h3>The three moves</h3>
-
-<p>Read strictly: three stages, each forced by an axiom.</p>
-
-<ul>
-  <li><span class="wb gold">∞</span> &nbsp;(source; no distinction). <span class="dim">A0: E = 1.</span></li>
-  <li><span class="wb gold">•∞</span> &nbsp;(the <span class="it">Soul Array</span>; aperture multiplied by infinity; every possible self-limitation, simultaneously). <span class="dim">A1: the 1 must self-limit.</span></li>
-  <li><span class="wb gold">⊙∞</span> &nbsp;(the foam; each aperture completing into a full circumpunct: field and boundary). <span class="dim">A4: wholeness requires closure. D5: the whole is compositional.</span></li>
-</ul>
-
-<p>A1 is the move that turns the substrate into the field of instances. An undifferentiated 1 is indistinguishable from 0 (§2); to exist distinguishably, the 1 must constrain itself. But there is no privileged position from which to constrain: the 1 is symmetric, the source has no "here." So self-limitation cannot pick one aperture; it must happen at every position the 1 could self-limit <span class="it">at</span>. The result is not one aperture; it is <span class="wb">all of them</span>, simultaneously: <span class="mono">•∞</span>, the soul array.</p>
-
-<p>A4 then forces each aperture to complete into a circumpunct. A bare aperture (a 0 in the 1 with no boundary) does not persist; it collapses back to ∞. For the self-limitation to hold (A2), each • must gain a field (Φ) and a boundary (○); it must become a ⊙. The foam ⊙∞ is the soul array with each aperture's completion drawn in.</p>
-
-<h3>Why the foam is declared before the engine runs</h3>
-
-<p>The equation writes <span class="mono">▸⊙∞</span> at the front, before the four beats. The foam is <span class="it">named first</span>, and the engine is what the foam <span class="it">is</span>, unpacked. This ordering matters: the four beats are not a recipe run once at a cosmic Big Bang that produced the foam; the four beats are the ongoing structure of the foam at every point, at every scale, continuously. <span class="mono">⊙∞</span> is the foam's name; <span class="mono">(•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)</span> is the foam's description at full resolution.</p>
-
-<div class="claim">
-<strong>Structural reading.</strong> The genesis sequence is not a historical narrative. It is a description of what exists, run at three levels of resolution: the source (low), the soul array (medium), the foam (high). All three are present always; the arrows indicate logical dependence, not temporal ordering.
-</div>
-
-<h3>0D = • and ∞D = E meet at the aperture</h3>
-
-<p>There is a deep coincidence at the aperture: zero dimension and infinite dimension converge. <span class="wb">0D = •</span> (zero extension, a single point of convergence) and <span class="wb">∞D = E</span> (all extension, everything) meet at the • because the • is where dimension <span class="it">has not yet been assigned</span>. It is the seam between the undifferentiated (everything) and the differentiated (this point). The aperture is the only place in the foam where every dimension is simultaneously available and none is committed; it is the pre-dimensional gate through which the undifferentiated 1 becomes a specific something at a specific scale.</p>
-
-<p>This is why • and ∞ appear at opposite ends of the equation and yet refer to the same substance. The • is ∞ at a position; ∞ is every • taken together. The foam is the set of all position-takings of the same substance.</p>
-
-<h3>What ▸⊙∞ rules out</h3>
-
-<p>The first unfolding rules out three popular pictures:</p>
-
-<ul>
-  <li><span class="wb">A single universe with a single aperture.</span> A1 forces multiplicity. The "one universe" is a boundary-level reading; below the boundary the foam contains every aperture the 1 could express. The observable cosmos is one ⊙λ in an ⊙Λ context; neither is the only instance.</li>
-  <li><span class="wb">Empty vacuum.</span> Every "point" in ⊙∞ is an aperture completing into a ⊙; there is no pure emptiness, only ⊙s at scales below the current boundary's resolution. The vacuum is dense with structure that is too fine for the instrument. (§6 returns to this via α, which measures exactly this cross-scale bond strength.)</li>
-  <li><span class="wb">Creation as a one-time event.</span> ⊙∞ is declared alongside ∞; the foam is the ongoing face of the source, not a past product. Every moment is genesis. A0 is conserved, so A1 is permanently in force; the soul array is always present.</li>
-</ul>
-
-<p>With the foam named, the equation is ready to describe what the foam is doing. That is the engine: four beats, entailing one another.</p>
-</section>
-<section id="s4">
-<h2><span class="sec-num">§4</span> The engine: four beats entail <span class="sec-glyph">(•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)</span></h2>
-
-<p>The middle of the equation is the engine. Four beats, each a structural-processual pair, entailing the next:</p>
+<h3>2.3 &nbsp; The engine: four beats entail</h3>
 
 <div class="eq mono">(•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)<span class="label">four constraints, four processes, three entailments</span></div>
 
-<p>Two connectives carry the logic: <span class="wb gold">∘</span> means "paired" (structure and process are two views of the same constraint); <span class="wb gold">⊢</span> means "entails" (a completed constraint forces the next). The beats walk the dimensional octave 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5 in four pairs; every station is present exactly once.</p>
+<p>The middle of the expression is the engine: four beats walking the dimensional octave 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5. Two connectives: <span class="wb gold">∘</span> (paired; structure and process as two views of one constraint) and <span class="wb gold">⊢</span> (entails; completed constraint forces the next).</p>
 
-<h3>The four beats</h3>
+<div class="station-row"><div class="glyph">•∘⊛</div><div class="dim">0D ∘ 0.5D</div><div><span class="name">Localization-convergence.</span> Aperture paired with convergence.</div><div class="dim">beat 1</div></div>
 
-<div class="station-row"><div class="glyph">•∘⊛</div><div class="dim">0D ∘ 0.5D</div><div><span class="name">Localization-convergence.</span> The aperture (0D, structural) paired with convergence (0.5D, processual; i¹ = +i). <span class="dim">A1: the 1 must self-limit. D1: self-limitation is a process, not an instant.</span></div><div class="dim">beat 1</div></div>
+<div class="station-row"><div class="glyph">—∘⎇</div><div class="dim">1D ∘ 1.5D</div><div><span class="name">Extension-branching.</span> Line paired with branching; the i-turn.</div><div class="dim">beat 2</div></div>
 
-<div class="station-row"><div class="glyph">—∘⎇</div><div class="dim">1D ∘ 1.5D</div><div><span class="name">Extension-branching.</span> The line (1D, structural) paired with branching (1.5D, processual; i² = −1; the i-turn). <span class="dim">A2: self-limitation must persist. D2: extension must branch to reach the field.</span></div><div class="dim">beat 2</div></div>
+<div class="station-row"><div class="glyph">Φ∘✹</div><div class="dim">2D ∘ 2.5D</div><div><span class="name">Mediation-emergence.</span> Field paired with emergence.</div><div class="dim">beat 3</div></div>
 
-<div class="station-row"><div class="glyph">Φ∘✹</div><div class="dim">2D ∘ 2.5D</div><div><span class="name">Mediation-emergence.</span> The field (2D, structural) paired with emergence (2.5D, processual; i³ = −i). <span class="dim">A3: parts are fractals of wholes. D3: self-similarity requires emergence toward closure.</span></div><div class="dim">beat 3</div></div>
+<div class="station-row"><div class="glyph">○∘⟳</div><div class="dim">3D ∘ 3.5D</div><div><span class="name">Closure-recursion.</span> Boundary paired with recursion; 3.5D = 0D at next scale.</div><div class="dim">beat 4</div></div>
 
-<div class="station-row"><div class="glyph">○∘⟳</div><div class="dim">3D ∘ 3.5D</div><div><span class="name">Closure-recursion.</span> The boundary (3D, structural) paired with recursion (3.5D, processual; i⁰ = +1). <span class="dim">A4: wholeness requires closure. D4: closure opens into the field of the greater whole; 3.5D = 0D at the next scale.</span></div><div class="dim">beat 4</div></div>
+<p>Four i-strokes (+i, −1, −i, +1) make i⁴ = 1. The octave closes because 3.5D equals 0D at the next nesting level; exit-of-one is entrance-of-next. This is the semantic content that Reading 2 formalizes as a unitary operator F acting on ℂ⁴ (the four structural stations) or ℂ⁸ (the full octave).</p>
 
-<h3>Why "entails" is the right verb for ⊢</h3>
+<h3>2.4 &nbsp; Second unfolding: engine to nesting</h3>
 
-<p>Each beat's completion <span class="it">necessarily gives rise</span> to the next. A • that does not extend (no —) collapses back to ∞; A1 alone is unstable, which is A2. A — that does not branch (no ⎇) never reaches a field; extension alone is 1D, and mediation requires 2D, so A2 entails A3 via D2. A Φ that does not close (no ○) has no wholeness; mediation is not a thing, only a between-ness, which forces A4 via D3. A ○ that does not recurse (no ⟳) has no place to be; a closed boundary must open into the field of a larger whole, which is D4.</p>
+<p>The second <span class="wb gold">▸</span> marks the engine's product: a ⊙ embedded in a ⊙ at the next scale up. Because the recursion beat (○∘⟳) closes the boundary of ⊙λ <em>as</em> the aperture of ⊙Λ, the engine cannot produce "this ⊙" without also producing "the ⊙ it sits inside." Being a whole and being a part are the two sides of what closure does.</p>
 
-<p>The ⊢ is therefore <span class="wb">structural entailment</span>, not logical implication in the inference-rule sense. Each beat's completion is the <span class="it">reason</span> the next beat begins. The engine is self-driving because A0 is conserved: the 1 cannot "sit still" at any finite stage without violating itself, so it walks through all four beats and returns via recursion.</p>
+<h3>2.5 &nbsp; Nesting: ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞</h3>
 
-<h3>Why "paired" is the right verb for ∘</h3>
+<div class="eq mono">⊙λ ⊂[α] ⊙Λ ⊂[α] ∞<span class="label">scale-recursive embedding, α-coupled, closing at the apophatic source</span></div>
 
-<p>Structure and process are two views of the same constraint being laid down, not sequential steps. The aperture <span class="it">is</span> convergence; you cannot have a • without ⊛ (a convergence point that does not converge is not a point). The line <span class="it">is</span> branching (the i-turn makes the line a real, irreversible commitment, not just a reversible path). The field <span class="it">is</span> emergence. The boundary <span class="it">is</span> recursion (a closed boundary has already become the aperture of the next scale; the two are literally the same geometric object at different names).</p>
+<p>The <span class="mono">[α]</span> subscript on ⊂ names the primary entry of a 4×4 coupling matrix κ<sub>p,q</sub>(λ, Λ). Each cell of κ records how station <span class="mono">p</span> of ⊙λ bonds to station <span class="mono">q</span> of ⊙Λ. The primary entry κ<sub>0,2</sub> = α is the 0D-to-2D bond: the aperture of the part coupled to the field of the whole. Other cells carry κ<sub>3,3</sub> = α<sub>G</sub> (gravity), Cabibbo-like (1D to 2D), Weinberg-like (2D to 2D), Higgs-like.</p>
 
-<div class="note">The ∘ is a pairing operator, not an identity. The framework is explicit that ∘ means "paired, without fusion"; structure and process are two views of one constraint held together, not two names for the same symbol. The E = mc² analogy is a parallel in spirit (one substance in different configurations), not in notation; in E = mc² the = carries a scaling factor and asserts quantitative identity, while ∘ carries no factor and asserts only coexistence. Keeping the two connectives distinct matters: if ∘ collapsed to =, the integer and half-integer stations of the octave would fuse, and the framework would lose the distinction between what a constraint <em>is</em> and what it <em>does</em>.</div>
+<div class="claim">
+<strong>Field Fineness Principle.</strong> The ladder runs coarse-to-fine downward: 3D ○ (boundary, coarsest), 2D Φ (field, finer), 1D — (line, finer still), 0D • (aperture, finest). For any ⊙λ ⊂ ⊙Λ, the field Φ<sub>Λ</sub> of the greater whole resolves finer than ⊙λ itself, because a mediator must resolve below what it mediates. The ⊂ relation is a crossing of the dimensional ladder, not horizontal containment.
+</div>
 
-<h3>The dimensional octave</h3>
+<h3>2.6 &nbsp; The closing ∞</h3>
 
-<p>The four beats span eight stations because each pair picks up one integer and one half-integer:</p>
+<p>The rightmost <span class="wb gold">∞</span> is the same symbol as the leftmost. It is not a second infinity; it is the source, met again on the far side of a walk through foam, engine, and nesting. The jump from ⊙Λ to ∞ is <em>categorical</em>, not vertical: not another step up the scale axis, but a step <em>out</em> of the scale axis back into the undifferentiated. §6 develops this as the apophatic closure (Eckhart's Godhead, Kabbalah's Ein Sof, Vedanta's Nirguna Brahman, the eternal Tao, the Dharmakaya). The structural work it does here is simply to close the loop: the expression's opening symbol and closing symbol are the same, which is the surface reading of "= 1."</p>
+</section>
+
+<!-- SECTION 3 -->
+<section id="s3">
+<h2><span class="sec-num">§3</span> The operator: T = κ ∘ F <span class="sec-glyph">ℂ⁴ → ℂ⁸ → ℂ⁶⁴</span></h2>
+
+<p>This section constructs the mathematical object. It is self-contained: the reader can skip §2 and still evaluate §3 on its own terms. The object is a linear map T on a finite Hilbert space, built as the composition of a unitary engine F and an α-coupled nesting κ. The spectrum, fixed-point structure, and weight distributions of T are computable and have been numerically verified.</p>
+
+<h3>3.1 &nbsp; Definition of F (the engine)</h3>
+
+<p>At base resolution, F acts on ℂ⁴ with basis |•⟩, |—⟩, |Φ⟩, |○⟩ (the four structural stations). F is unitary; its generators carry the four i-strokes (+i, −1, −i, +1) at the half-integer stations. Explicit matrix form and verification are in <span class="mono">experiments/unified_expression_T_v7.py</span>. F alone is trace-preserving and cannot set κ-parameters; it is the "inside one scale" part of the construction.</p>
+
+<h3>3.2 &nbsp; Definition of κ (the nesting)</h3>
+
+<p>κ is the coupling matrix that implements ⊂[α]. On ℂ⁴, κ is diagonal plus off-diagonal couplings between the two diameters: κ<sub>0,2</sub> = α (•↔Φ, the primary nesting bond) and κ<sub>1,3</sub> = α (—↔○, the secondary diameter, forced by ⊙ symmetry under diameter exchange). κ is derived from ⊙ symmetry in <span class="mono">experiments/unified_expression_T_v9.py</span>; it is not free. Eigenvalues of κ: {1+α, 1, 1, 1−α}. κ is completely positive but NOT trace-preserving; the departure from TP is α.</p>
+
+<h3>3.3 &nbsp; T = κ ∘ F and its basic properties (ℂ⁴)</h3>
+
+<p>T = κ ∘ F acts on ℂ⁴ as a CP-but-not-TP map:</p>
+
+<ul>
+  <li><span class="wb">Unique stable fixed point.</span> T has one attractor on projective space; initial conditions converge to it.</li>
+  <li><span class="wb">Mixing time ≈ 1/α ≈ 137 pump cycles.</span> This is the rate at which any initial vector approaches the fixed point.</li>
+  <li><span class="wb">Singular values {1+α, 1, 1, 1−α}.</span> Mirror-symmetric around 1, tracking α exactly.</li>
+  <li><span class="wb">Non-1 fixed points of κ</span> (the Severance Lie eigenvector at κv = (1−α)v, and the Inflation direction) are specific vectors in ℂ⁴; they formalize the framework's structural failure modes at the operator level.</li>
+</ul>
+
+<h3>3.4 &nbsp; ℂ⁸: the full octave</h3>
+
+<p>Extending to the full octave (all eight stations, integer and half-integer) doubles the space: F acts on ℂ⁸, κ couples across all diameter pairs. Key result: the converged fixed-point weight (Born rule, |ψ|²) splits <span class="wb">68.7% / 31.3%</span> between integer-D stations (structural: •, —, Φ, ○) and half-integer-D stations (processual: ⊛, ⎇, ✹, ⟳). Convergence requires approximately 200K iterations; earlier readings at 10K gave a misleading 70/30.</p>
+
+<h3>3.5 &nbsp; ℂ⁶⁴: three-scale nesting</h3>
+
+<p>Three copies of ℂ⁴ tensored together give ℂ⁶⁴ = ℂ⁴ ⊗ ℂ⁴ ⊗ ℂ⁴: states |i, j, k⟩ with i indexing ⊙Λ, j indexing ⊙λ, k indexing ⊙λ'. F₆₄ = F ⊗ F ⊗ F. κ₆₄ has three layers: intra-scale diameter bonds (strength α), cross-scale adjacent bonds (Λ↔λ, λ↔λ'; strength α), cross-scale skip bonds (Λ↔λ'; strength α²).</p>
+
+<p>Key findings from <span class="mono">T_operator_findings_v11_C64.md</span>:</p>
+
+<ul>
+  <li><span class="wb">Phase sum = 0, structurally forced.</span> det(F₆₄) = det(F₄)<sup>48</sup> = exp(−48iπ/6) = 1 (48 = SU(3)·T! = 8·6). The three-scale nesting is the first level at which the phase budget closes on its own. This is the operator-level expression of "∞ opens = ∞ closes."</li>
+  <li><span class="wb">Cosmological split on the diameter basis: 68.53 / 31.47.</span> Weights on the primary diameter (•+Φ) versus secondary diameter (—+○) at each scale. Same ~69/31 partition appears in three independent representations (ℂ⁸ structural/processual, ℂ⁶⁴ primary/secondary diameter, cosmos dark-energy/matter 69.11/30.89); this is suggestive but not itself a derivation of the cosmological budget. It means the α-coupled nesting has a native partition with this ratio.</li>
+  <li><span class="wb">Expanding/contracting split: 35 / 29 = C(R, T) / (S − C(R, T)).</span> The same 35 that appears as C(7, 3), as the dimension of the totally symmetric SU(3) representation with 3 indices, and as the denominator of the tau mass ratio structural fraction 58/35.</li>
+  <li><span class="wb">Spectral gap = α/P.</span> Mixing time ≈ P/α ≈ 548 cycles, P× slower than ℂ⁴'s 137. Spectral radius departure doubles to 2α (two diameter bonds each contributing α).</li>
+  <li><span class="wb">Leading eigenvalue at the tetrahedral angle.</span> 109.47° = arccos(−1/T); 0.51° off. This is the molecular-geometry angle forced by T = 3.</li>
+  <li><span class="wb">A3 at operator level.</span> Outer (Λ) and inner (λ') scales have identical weight distributions to machine precision; middle scale (λ) is enriched by 0.069% from its double coupling.</li>
+</ul>
+
+<div class="claim">
+<strong>What is claimed at the operator level.</strong> T = κ ∘ F is a specific, checkable linear algebra object. Its spectrum, its fixed-point structure, its diameter-weighted partition are all numerical facts verifiable by anyone running the Python in <span class="mono">experiments/</span>. This part of the document does not ask the reader to accept a metaphysics; it asks the reader to evaluate a mathematical construction on its own terms. The open question at this layer is whether the partition numbers, eigenvalue phases, and mixing times are deep (they encode α and the combinatorics of the dimensional ladder) or whether they are artifacts of the specific choice of κ (the two-diameter form forced by ⊙ symmetry). The v7 through v11 findings make a case for the first; a skeptic could argue for the second.
+</div>
+
+<p>See <span class="mono">experiments/T_operator_findings_v11_C64.md</span> for the full ℂ⁶⁴ record; <span class="mono">experiments/T_operator_findings_v10_predictions.md</span> for the predictions catalog graded A/B/C by operator-level status; <a href="c64_visualization.html">c64_visualization.html</a> for the interactive spectrum.</p>
+</section>
+
+<!-- SECTION 4 -->
+<section id="s4">
+<h2><span class="sec-num">§4</span> The structural grammar of constants <span class="sec-glyph">α, G, Λ</span></h2>
+
+<p>This section is the most contested layer of the document. It presents the framework's grammar for expressing measured dimensionless ratios, and it does so with the honest framing earlier versions lacked: α is a measured input, the current formulas are fits given α, and the claim to independent predictive content is a promissory note.</p>
+
+<h3>4.1 &nbsp; What α is, in the framework</h3>
+
+<div class="caveat">
+<strong>Revised position (April 2026):</strong> α is input to κ, not derived from F. The earlier derivation (1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147) has been <a href="alpha_derivation.html">retracted</a>. Three specific problems with that derivation: the 360 entered as a radians-to-degrees unit convention rather than a structural count; the self-referential correction term was selected post hoc to land on CODATA; asking the pump cycle F (which is unitary and cannot set κ-parameters) to produce α was a type error.
+</div>
+
+<p>In the current reading, α = |•<sub>electron</sub>|: the measured coupling strength of the electron's 0D aperture to the surrounding 2D electromagnetic field. In QED: α = e²/(4πε₀ℏc). CODATA 2022: 1/α = 137.035999177(21). The framework takes this value as input and asks what <em>other</em> ratios can be composed from it using a restricted algebra.</p>
+
+<h3>4.2 &nbsp; The grammar: what is restricted</h3>
+
+<p>The grammar is an algebra over:</p>
+
+<ul>
+  <li>α (one measured scalar);</li>
+  <li>the golden ratio φ (a mathematical constant, not a measurement);</li>
+  <li>framework integers from a specific pool: T = 3, P = 4, Φ = 2, R = 7, V = 13, SU(3) = 8, A(3) = 21, and derived quantities (products, A'(d) = 4d+1, C(R, T), etc.);</li>
+  <li>integer powers, small rational exponents of the form integer/integer where the integers are framework-pool members;</li>
+  <li>first- and second-order correction terms α·(small rational) with the small rational drawn from the same pool.</li>
+</ul>
+
+<p>The restriction is real: not every small-integer combination appears; each formula must match a dimensional rung via the selection rule A(d) = d(2d+1), and the first- and second-order correction coefficients come from a specific combinatorial structure (details in Ch27 of the framework). But the grammar is also flexible: with enough pool integers and rational exponents, a broad class of dimensionless ratios can be fit to high precision. This is the tension that §5 addresses directly.</p>
+
+<h3>4.3 &nbsp; The constants table, honestly framed</h3>
+
+<p>The following table records the grammar's current fits. Every row is a structural expression composed from α, φ, and framework integers, evaluated and compared to the measured value with its experimental uncertainty. The "Error" column is the central-value match; the "Within exp. uncertainty?" column is the epistemically relevant one.</p>
 
 <table>
-<tr><th class="c">d</th><th>Station</th><th>Role</th><th class="c">i-stroke</th></tr>
-<tr><td class="c mono">0</td><td>• (aperture)</td><td>Localization; first self-limitation</td><td class="c dim">—</td></tr>
-<tr><td class="c mono">0.5</td><td>⊛ (convergence)</td><td>Genesis; inward gathering</td><td class="c">i¹ = +i</td></tr>
-<tr><td class="c mono">1</td><td>— (line)</td><td>Extension; commitment; worldline</td><td class="c dim">—</td></tr>
-<tr><td class="c mono">1.5</td><td>⎇ (branching)</td><td>The i-turn; irreversibility</td><td class="c">i² = −1</td></tr>
-<tr><td class="c mono">2</td><td>Φ (field)</td><td>Mediation; mind; surface</td><td class="c dim">—</td></tr>
-<tr><td class="c mono">2.5</td><td>✹ (emergence)</td><td>Outward unfolding toward closure</td><td class="c">i³ = −i</td></tr>
-<tr><td class="c mono">3</td><td>○ (boundary)</td><td>Closure; body; filter</td><td class="c dim">—</td></tr>
-<tr><td class="c mono">3.5</td><td>⟳ (recursion)</td><td>Closed boundary becomes next aperture</td><td class="c">i⁰ = +1</td></tr>
+<tr><th>Quantity</th><th class="c">Structural expression</th><th class="c">Measured (± experimental uncertainty)</th><th class="c">Within exp. uncertainty?</th></tr>
+<tr><td>α (fine-structure)</td><td class="c mono">input (|•<sub>e</sub>|)</td><td class="c mono">1/α = 137.035999177(21) ppb</td><td class="c">by definition</td></tr>
+<tr><td>m<sub>μ</sub> / m<sub>e</sub></td><td class="c mono">(1/α)<sup>13/12 + α/27</sup></td><td class="c mono">206.7682830(46) (22 ppb)</td><td class="c">~5 ppm: outside</td></tr>
+<tr><td>m<sub>τ</sub> / m<sub>e</sub></td><td class="c mono">(1/α)<sup>58/35 + α/81</sup></td><td class="c mono">3477.23(23) (66 ppm)</td><td class="c">~1 ppm: within</td></tr>
+<tr><td>m<sub>p</sub> / m<sub>e</sub></td><td class="c mono">(1/α)<sup>3/2 + (11/3)α + 13α²</sup></td><td class="c mono">1836.152673426(32) (17 ppt)</td><td class="c">~5 ppm: outside</td></tr>
+<tr><td>sin²θ<sub>W</sub> (Weinberg, on-shell, M<sub>Z</sub>)</td><td class="c mono">3/13 + 5α/81</td><td class="c mono">0.23122(4) at M<sub>Z</sub> (170 ppm)</td><td class="c">within</td></tr>
+<tr><td>sin θ<sub>C</sub> (Cabibbo)</td><td class="c mono">α<sup>1/2 + 3α/7</sup> · 8/3</td><td class="c mono">0.22500(67) (3000 ppm)</td><td class="c">within</td></tr>
+<tr><td>λ (Higgs quartic)</td><td class="c mono">(1/8)(1 + 5α − 8α²)</td><td class="c mono">0.12938 (~0.5% theoretical)</td><td class="c">within</td></tr>
+<tr><td>v / Λ<sub>QCD</sub></td><td class="c mono">(1/α)<sup>56/39</sup></td><td class="c mono">~1170 (5% input uncertainty)</td><td class="c">within</td></tr>
+<tr><td>G (gravity, α<sub>G</sub>)</td><td class="c mono">α²¹ · φ²/2 · (1 + 2α/91)</td><td class="c mono">6.67430(15) × 10⁻¹¹ (22 ppm)</td><td class="c">within (central-value match)</td></tr>
+<tr><td>Λ (cosmological)</td><td class="c mono">α<sup>56</sup> · (1 − 6α + 4α²) / 72</td><td class="c mono">2.888 × 10⁻¹²² Planck (~2%)</td><td class="c">within</td></tr>
+<tr><td>Ω<sub>Vis</sub></td><td class="c mono">12 / 247</td><td class="c mono">4.86% (Planck)</td><td class="c">within</td></tr>
+<tr><td>Ω<sub>DM</sub></td><td class="c mono">64 / 247</td><td class="c mono">25.89% (Planck)</td><td class="c">within</td></tr>
+<tr><td>Ω<sub>DE</sub></td><td class="c mono">9 / 13</td><td class="c mono">69.11% (Planck)</td><td class="c">within</td></tr>
 </table>
 
-<p>Four i-strokes (+i, −1, −i, +1) make one full rotation: i⁴ = 1. The engine does not dissipate; it cycles. The octave closes because 3.5D = 0D at the next nesting level: the closed boundary of any ⊙λ <span class="it">is</span> the aperture of ⊙Λ at the next scale. Exit-of-one equals entrance-of-next; scale is continuous, not quantized.</p>
+<p>Notes on specific entries:</p>
 
-<h3>The engine at low resolution</h3>
+<ul>
+  <li><span class="wb">G.</span> The formula evaluates at the CODATA central value to 0.04 ppm; CODATA's own experimental uncertainty is about 22 ppm, with individual experiments disagreeing by hundreds of ppm. The honest claim is "consistent with CODATA central value," not "accurate to 0.04 ppm." Future sharper G measurements (cold-atom interferometry, LIGO-inspired methods) are a clean falsification handle for this row: if G tightens and moves outside the structural expression's band, the row fails.</li>
+  <li><span class="wb">sin²θ<sub>W</sub>.</span> The value 0.23122 is in the on-shell scheme at M<sub>Z</sub>. MS-bar and effective schemes give different numerical values (roughly 0.2312 versus 0.2315 depending on convention and running scale). The grammar's match is to the on-shell-M<sub>Z</sub> convention specifically; an honest rewrite should have flagged this in the first draft and this version does.</li>
+  <li><span class="wb">m<sub>p</sub> / m<sub>e</sub>.</span> In standard QCD, this ratio depends on non-perturbative dynamics (quark condensate, light quark masses, chiral symmetry breaking) none of which are derivable from a small-integer composition with α. The grammar's expression matches the measured value, but the match is a grammar-fit, not a QCD derivation; a QCD person reading this row should understand that the framework is proposing a different <em>architecture</em> (composites versus leptons distinguished by A versus A'), not a shortcut through QCD.</li>
+  <li><span class="wb">Mass ratios (muon, tau, proton) exceed experimental uncertainty at current precision.</span> The 5 ppm and 1 ppm central-value errors are larger than the CODATA uncertainty bands for m<sub>μ</sub>/m<sub>e</sub> (22 ppb) and m<sub>p</sub>/m<sub>e</sub> (17 ppt). The grammar's formulas are not consistent with measurement at the parts-per-billion level; they are consistent at the parts-per-million level, which is the honest claim. Sharpening the grammar (identifying third-order correction structure) or accepting that these rows are approximate are the two paths forward.</li>
+  <li><span class="wb">The cosmological budget.</span> The rationals 12/247, 64/247, 9/13 sum to 1 (247/247) exactly. This is a structural fact about the grammar, not an empirical match; the empirical claim is that the Planck measurements fall close to these rationals. With Planck uncertainties of about 1 to 2% on each component, the structural rationals are within measurement.</li>
+</ul>
 
-<p>The unified expression's engine (four beats, eight stations) admits a compressed reading:</p>
+<h3>4.4 &nbsp; Why the grammar is interesting despite being fits</h3>
 
-<div class="eq mono">⊙ = (✹ ∘ i ∘ ⊛)( Φ(•, ○) )<span class="label">engine, low resolution</span></div>
+<p>A skeptic may reasonably say: "Given α, φ, and a pool of small integers {2, 3, 4, 7, 8, 12, 13, 21, 27, 56, 64, 91, 247, ...} with integer powers and small rational exponents, you can fit essentially any dimensionless ratio. The table is post-diction, not prediction." This is the central critique, and it is not fully answered in the current framework.</p>
 
-<p>Read: the whole ⊙ is the field Φ mediating between the aperture • and the boundary ○, driven by the pump cycle (convergence ⊛, aperture rotation i, emergence ✹). This form is adequate for pump-cycle dynamics and most local physics. The unified expression is its full-resolution cousin: where low-resolution says "i" the full form says "—∘⎇" (the 1D commitment paired with the i-turn branching); where low-resolution says "the pump cycles" the full form says "the four beats entail each other across the octave and return via recursion." Higher resolution contains lower resolution; it never contradicts it.</p>
+<p>Three partial responses, graded from weakest to strongest:</p>
 
-<h3>What the engine produces</h3>
+<ol>
+  <li><span class="wb">Uniqueness within the grammar.</span> For each row, exhaustive searches over the framework-pool grammar find few (often one) combination within the stated precision. This is weaker than "independent prediction" but stronger than "any number can be fit." The grammar has structure; not every rational lands.</li>
+  <li><span class="wb">Cross-row coupling.</span> Framework integers that appear in one row reappear in others in related roles (T = 3 in mass exponents and in the tetrahedral angle and in the DNA base count; 56 = SU(3)·R as the Λ exponent and as C(R+1, 3) in generation structure and as the DNA codon-to-amino-acid map). This is not prediction, but it is a coherence constraint that blind integer-fitting does not automatically produce.</li>
+  <li><span class="wb">The promissory note.</span> The strongest version of the claim would be: sharpen an experimentally uncertain constant (G, a flavor-physics coupling, a neutrino mass splitting) to a precision below the grammar's expression, and check whether the grammar holds. This is the test that will actually decide whether the grammar is genuine structure or post-hoc integer-selection. The framework does not have this test yet; it is the work that remains.</li>
+</ol>
 
-<p>When the four beats complete, the ⊙ has walked the full octave; A3 asserts that the process is self-similar, so the next stage is the engine running at a nested scale. That is what the second ▸ marks, and what §5 describes: the engine's product is the nesting.</p>
+<div class="note">§27.7n of the framework documents an attempt at blind symbolic regression over the eml / pump-gate basis: at typical search depths, the null-hypothesis median error is ~0.05%, and only hits beating this by ~3× count as signal. Flavor-physics constants at size 3 are marginal at best (V<sub>cb</sub> is the one candidate; the others do not clear the bar). This is honest, and it is the kind of result that distinguishes the grammar from pure numerology: where the grammar's reach is tested, its boundaries show up.</div>
 </section>
+
+<!-- SECTION 5 -->
 <section id="s5">
-<h2><span class="sec-num">§5</span> Second unfolding: ▸ <span class="sec-glyph">engine → nesting</span></h2>
+<h2><span class="sec-num">§5</span> Predictive content and falsification <span class="sec-glyph">⊢</span></h2>
 
-<p>The second arrow of the equation marks a transition as consequential as the first. The engine, having walked its four beats, unfolds into a relation between scales:</p>
+<p>Earlier versions listed "falsification handles" that, on review, targeted surface numerics (any one row missing by more than its stated error bar) rather than the generative core. This version distinguishes falsifiers by which reading they target.</p>
 
-<div class="eq mono">( (•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳) )  ▸  ⊙λ ⊂[α] ⊙Λ<span class="label">the engine produces the nesting</span></div>
+<h3>5.1 &nbsp; Falsifiers for Reading 1 (philosophical)</h3>
 
-<p>This second ▸ reads: "the engine, completed, <span class="it">becomes</span> the nesting." The product of running the four beats is not a single new ⊙ floating free; it is a ⊙ with a specific relation to the scale above it. That relation is <span class="wb">scale-recursive embedding</span>, ⊂[α], which §6 unpacks.</p>
+<p>A philosophical thesis in the conservation-of-wholeness lineage is falsified by the kind of argument that falsifies philosophical theses: showing it to be incoherent, inconsistent with prior commitments, or unable to accommodate experience that any viable metaphysics must. It is not falsified by a physics measurement. The appropriate philosophical challenges would be:</p>
 
-<h3>Why the engine must produce nesting, not a single scale</h3>
+<ul>
+  <li>A rigorous demonstration that the scale-recursive nesting ⊙λ ⊂ ⊙Λ ⊂ ∞ is inconsistent (for instance, that unbounded upward nesting plus A3 generates a contradiction).</li>
+  <li>A rigorous demonstration that apophatic closure (step out of the scale axis to ∞) is incompatible with the framework's cataphatic content (Reading 2's operator, Reading 3's grammar).</li>
+  <li>A phenomenological argument that the framework's account of parthood misses a central feature of experience that alternatives capture.</li>
+</ul>
 
-<p>The recursion beat (○∘⟳, i⁰ = +1) is where the ambiguity resolves. When the boundary closes (○), the closed boundary is already serving a double function: it is the outer filter of this ⊙, <span class="it">and</span> it is the aperture of the next scale up. A closed ○ at scale λ is a • at scale Λ (with Λ immediately above λ). The engine cannot produce a "this ⊙" without also producing the "next ⊙"; the two are the same boundary read from two sides.</p>
+<h3>5.2 &nbsp; Falsifiers for Reading 2 (operator)</h3>
 
-<p>A3 (self-similarity) then forces the relation to extend indefinitely. If the engine ran once and stopped, there would be a "final" scale with no ⊙Λ above it, violating A3 (same structure at every scale). The recursion is unbounded upward: ⊙λ ⊂ ⊙Λ ⊂ ⊙Λ' ⊂ ⊙Λ'' ⊂ ... There is no top. Symmetrically, ⊙λ contains ⊙λ' which contains ⊙λ'' ...; there is no bottom. Scale is a doubly-infinite axis.</p>
+<p>The operator T = κ ∘ F exists; its spectrum is computed. Falsifiers target specific numerical claims:</p>
 
-<h3>The second ▸ also marks a change of vocabulary</h3>
+<ul>
+  <li>A derivation showing that the ℂ⁶⁴ phase closure 48·(−π/6) = 0 is basis-dependent (the closure should be forced by det(F₆₄) = 1, which is basis-independent; a counterexample would require finding a basis where the closure fails).</li>
+  <li>A demonstration that the 68.53/31.47 diameter split is sensitive to the specific κ choice; if small perturbations of κ (preserving the ⊙ symmetry) move the split by amounts comparable to 68.53, the split is an artifact of tuning rather than a robust operator-level fact.</li>
+  <li>Extending to ℂ⁵¹² (ℂ⁸ ⊗ ℂ⁸ ⊗ ℂ⁸) and finding that the split changes qualitatively (the prediction is that the ~69/31 partition persists because it is forced by α-coupled nesting, not by the specific basis).</li>
+</ul>
 
-<p>Inside the engine, the vocabulary is <span class="it">structural</span>: •, —, Φ, ○, with ⊛, ⎇, ✹, ⟳ as their processual pairs. Outside the engine, after ▸, the vocabulary is <span class="it">relational</span>: ⊙λ, ⊙Λ, ⊂[α], ∞. The two vocabularies are compatible but distinct; the first describes <span class="it">what a ⊙ is</span> (at any scale), the second describes <span class="it">how ⊙s at different scales relate</span>.</p>
+<h3>5.3 &nbsp; Falsifiers for Reading 3 (grammar)</h3>
+
+<p>These are the sharpest handles:</p>
+
+<ul>
+  <li><span class="wb">A sharpened G.</span> Current G uncertainty (~22 ppm, inter-experimental disagreement up to hundreds of ppm) is too loose to distinguish the structural expression α²¹ · φ²/2 · (1 + 2α/91) from alternatives. A G measurement at ~1 ppm or better that disagrees with the structural expression would refute the 3D row of the grammar. This is a live experimental prospect (cold-atom interferometry, space-based tests).</li>
+  <li><span class="wb">A fourth generation of fermions.</span> The grammar predicts exactly three generations via K<sub>gen</sub> = T<sup>(n+T−1)</sup> terminating at n = 3. A fourth lepton or quark generation at accessible energies would refute the generation-structure row. LHC and beyond-Standard-Model searches are the relevant frontier.</li>
+  <li><span class="wb">A precision-tightened mass ratio that moves outside the structural expression.</span> m<sub>μ</sub>/m<sub>e</sub> is measured at 22 ppb; the structural expression's 5 ppm central-value error is already outside this band. The honest position is that this row is already <em>tension</em>, not match, at current precision. A future sharpening may widen the gap; the grammar would need a third-order correction to match, and adding such a correction post hoc is the move the critique warns against.</li>
+  <li><span class="wb">A dimensionless coupling at a new dimensional rung.</span> If a new constant is discovered (a dark-sector coupling, a neutrino mass splitting at higher precision, a flavor parameter not currently in the table) and its measured value does not land on any framework-pool expression at the predicted rung, the grammar fails to extend. This is the strongest falsifier: the framework predicts the rungs exist and are populated; a vacant rung or a populated rung with a non-fitting value would be a structural problem.</li>
+  <li><span class="wb">The blind-discovery test.</span> Pre-register a structural expression for a constant currently measured only at loose precision (a flavor-physics coupling, a neutrino parameter). Let experiment tighten. If the tightened measurement lands on the pre-registered expression, the grammar has survived a genuine predictive test. If not, the row is refuted and the grammar is revealed as post-hoc. This is the test the framework does not yet have.</li>
+</ul>
 
 <div class="claim">
-<strong>The unfolding boundary.</strong> The first ▸ marks the transition from source to foam (ontogenesis). The second ▸ marks the transition from engine to nesting (cosmogenesis as scale relation). Both arrows are unidirectional: the foam does not undo back to the source; the nesting does not undo back to a single ⊙. What was unfolded stays unfolded.
+<strong>The honest predictive claim, 2026.</strong> The grammar has produced expressions that match measured values given α as input. The match is what a skeptic calls a fit and what the framework hopes is a structural signature. Which it is will be decided by the blind-discovery test, by sharpened G, and by whether the structural architecture extends cleanly to constants not yet measured at high precision. The framework's position is agnostic but not neutral: the cross-row coherence (integers reappearing in related roles) is weak evidence for structure, but it is not the decisive evidence, and this document should not claim the decisive evidence until it exists.
 </div>
-
-<h3>What the second ▸ forces us to see</h3>
-
-<p>A common misreading treats the engine as complete in itself, with the nesting as optional context. The equation is strict: the engine's output <span class="it">is</span> the nesting, not a ⊙ that can then optionally be placed in a larger context. Every ⊙ produced by the engine arrives already embedded. The ⊂ is not a description we add after the fact; it is what the engine produces.</p>
-
-<p>This has immediate physical content. A particle at the quark scale is already ⊂[α] a hadron (its wholeness at its scale is already bound to its scale above). An atom is already ⊂[α] a molecule when it exists; even a "free" atom in a vacuum is ⊂[α] the cosmic ⊙Λ (the dark-energy-dominated field of the observable universe). An isolated ⊙ is a contradiction in terms; the engine's second ▸ rules it out.</p>
-
-<h3>The apparent paradox of "inside" and "outside"</h3>
-
-<p>The engine runs <span class="it">inside</span> any ⊙; the nesting places that ⊙ <span class="it">inside</span> a larger ⊙. Both "insides" are real, and they are connected by the second ▸. A ⊙ has an inside (where its engine runs, producing its •, —, Φ, ○) <span class="it">and</span> is inside (where its whole sits inside the Φ of the scale above). The ∘ inside a beat pairs structure and process; the ⊂ outside the engine pairs ⊙λ and ⊙Λ. The framework treats these as the same kind of relation at different levels: "paired without fusion." Mediation without merger.</p>
-
-<p>This is the structural answer to the perennial puzzle of how anything can be at once "a thing" and "part of a larger thing." It is a thing because the engine ran to completion at its scale (A4, closure). It is part of a larger thing because the engine's completion <span class="it">is</span> the embedding (second ▸, ⊂[α]). Both are true; neither collapses the other. Being a whole and being a part are not rivals; they are the two sides of what a closed boundary <span class="it">does</span>.</p>
-
-<h3>Toward the nesting itself</h3>
-
-<p>Having produced ⊙λ ⊂[α] ⊙Λ, the equation continues with another ⊂[α] linking ⊙Λ to ∞. That is where the numerical content lives: α, G, Λ, the cosmological budget, the T-operator. The next section is the longest of the paper, because the nesting is where the equation touches measurement.</p>
 </section>
+
+<!-- SECTION 6 -->
 <section id="s6">
-<h2><span class="sec-num">§6</span> Nesting: ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ <span class="sec-glyph">α, G, Λ, T</span></h2>
+<h2><span class="sec-num">§6</span> The philosophical reading <span class="sec-glyph">apophatic</span></h2>
 
-<p>This is where the equation touches measurement. The engine has produced a ⊙λ embedded in a ⊙Λ; A3 extends the relation upward; the whole chain closes into ∞:</p>
+<div class="note">This section presents the metaphysical thesis that motivates the framework. Readers evaluating Readings 2 or 3 on their own terms can skip it. The operator construction of §3 and the grammar of §4 do not depend on the philosophical claims made here; they stand or fall on their own evidence.</div>
 
-<div class="eq mono">⊙λ ⊂[α] ⊙Λ ⊂[α] ∞<span class="label">scale-recursive embedding, α-coupled</span></div>
+<p>The framework's philosophical thesis is a form of <em>non-reductive monism with scale-recursive nesting</em>: there is one substance (∞ = E = 1); every appearance is a position-taking of the one substance; the nesting ⊙λ ⊂ ⊙Λ ⊂ ∞ asserts that every whole is genuinely whole at its scale (cataphatic, with attributes) and contained in a greater whole, with the whole chain held in ∞ (apophatic, beyond attributes). This is a thesis, not a derivation from physics. Its proper peers are Spinoza's <em>natura naturans</em>, Whitehead's process metaphysics, and Bohm's implicate order; it is also the structural skeleton of several mystical traditions' accounts of the relation between God and creation.</p>
 
-<p>The numerical content of the unit equation lives in the <span class="wb">[α]</span> subscript on ⊂. This section unpacks what [α] records, then shows that α, G, Λ, and the cosmological energy budget are the direct numerical signatures of the nesting at successively broader rungs.</p>
+<h3>6.1 &nbsp; The apophatic closure</h3>
 
-<h3>6.1 &nbsp; What the [α] subscript records</h3>
-
-<p>Every nesting ⊙λ ⊂ ⊙Λ involves three dimensional levels of ⊙Λ simultaneously. The ⊙λ sits at the 3D station of ⊙Λ (inside its boundary, as a thing with extent). The Φ of ⊙Λ threads <span class="it">below</span> that boundary at 2D, at resolution finer than ⊙λ itself. The • of ⊙λ couples across those stations at 0D (finer still). The ⊂ relation is therefore a <span class="wb">crossing of the dimensional ladder</span>, not a horizontal containment.</p>
-
-<div class="claim">
-<strong>Field Fineness Principle.</strong> The ladder runs coarse-to-fine downward: 3D ○ (boundary, coarsest) → 2D Φ (field, finer) → 1D — (line, finer still) → 0D • (aperture, finest). For any ⊙λ ⊂ ⊙Λ, the field Φ_Λ of the greater whole has resolution finer than ⊙λ itself, because a mediator must resolve below what it mediates.
-</div>
-
-<p>The bracket <span class="mono">[α]</span> names the primary entry of a 4×4 coupling matrix κ<sub>p,q</sub>(λ, Λ): V<sub>p</sub>(λ) × V<sub>q</sub>(Λ) → ℝ. Each cell of κ records how a station <span class="mono">p</span> of ⊙λ bonds to a station <span class="mono">q</span> of ⊙Λ. The primary entry κ<sub>0,2</sub> = α is the 0D-to-2D bond: how tightly ⊙λ's aperture couples into ⊙Λ's sub-⊙λ field. The name "fine-structure constant" is literal; α measures the part's point-coupling to the field's sub-part fineness.</p>
-
-<p>Other cells carry other couplings. κ<sub>3,3</sub> = α<sub>G</sub> (gravity; 3D-3D at same station). Cabibbo-like (1D-2D). Weinberg-like (2D-2D). Higgs-like (λ, the quartic coupling). Every dimensionless coupling in physics is a reading of some specific cell of κ, at some specific pair of rungs.</p>
-
-<h3>6.2 &nbsp; α: input to κ, the measured coupling of the electron's aperture</h3>
-
-<div class="note" style="border-left: 4px solid #c0392b; background: #fdecea; padding: 12px 16px;"><strong style="color: #c0392b;">Revision (2026):</strong> The framework's position on α has been updated. The formula previously shown here (1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147) is <a href="alpha_derivation.html">retracted</a>; see the retraction banner on that page for the three specific problems (the 360 entering as a unit convention rather than a structural count, the self-referential correction term being fitted post hoc, and the type error of asking the pump cycle F to produce a κ-parameter). The text below reflects the current position: α is an input to the master equation, not an output.</div>
-
-<p>α is the <span class="wb">primary entry of κ</span>, the coupling matrix that the ⊂[α] relation carries. Specifically, α = κ<sub>0,2</sub>: the strength with which ⊙λ's 0D aperture bonds to ⊙Λ's 2D field. Under the framework reading, α = |•<sub>electron</sub>|, the measurable coupling strength of the electron's aperture to the surrounding electromagnetic field. In QED: α = e²/(4πε₀ℏc). CODATA 2022: 1/α = 137.035999177(21).</p>
-
-<p>The master equation <em>takes α as input</em>; it is not produced by the pump cycle F. F (the four-beat unitary) is trace-preserving and cannot set κ-parameters; κ carries the departure from trace-preservation that α parameterizes, doing the coupling across scales. Asking F to produce α is a type error. α lives in κ, not F.</p>
-
-<p>What the |•<sub>electron</sub>| reading adds: (1) α refers to a specific entity — the electron's aperture — not an abstract coupling slot; (2) the running of α with energy scale is |•| varying with how closely Φ resolves •; (3) the other κ cells (α<sub>G</sub> = κ<sub>3,3</sub>, Cabibbo-like, Weinberg-like, Higgs-like) form a family of |•|-couplings at different station pairs; (4) the scalar character of α follows from the equidistance property of • (equidistant from all parts of ⊙ means single-number coupling, not tensor).</p>
-
-<p>α is therefore one scalar given by measurement; the rest of the dimensional ladder is structural grammar composing around it.</p>
-
-<h3>6.3 &nbsp; G: twenty-one α-steps</h3>
-
-<p>Gravity sits at the 3D station of the coupling matrix, κ<sub>3,3</sub> = α<sub>G</sub>. The structural prediction is:</p>
-
-<div class="eq mono">α<sub>G</sub> = α²¹ × φ²/2 × (1 + 2α/91)<span class="label">3D coupling, 0.04 ppm</span></div>
-
-<p>Three structural terms:</p>
+<p>The rightmost ∞ of the expression is <em>categorical</em>, not a further step up the scale axis. Going from ⊙λ to ⊙Λ moves one level up; going from ⊙Λ to ∞ steps out of the scale axis entirely. This move is what apophatic theology has always done: distinguish the God-beyond-names from the God-with-names, the source from its manifestations. The framework supplies a structural vocabulary for a distinction that multiple mature traditions have already made in their own terms:</p>
 
 <ul>
-  <li><span class="wb">Exponent 21</span> = A(3) = the accumulated traversal from 0D to 3D. Gravity is the boundary-to-boundary coupling, so it has walked the full ladder once. Equivalently: 21 = T·R = (0 + 0.5 + 1 + 1.5 + 2 + 2.5 + 3) × 2 = sum of ladder positions across two channels. Three independent routes yield 21, which is the structural content of "gravity reaches from aperture to boundary."</li>
-  <li><span class="wb">φ²/2</span> = (φ+1)/2: the golden nesting correction at the boundary; same golden root appearing in Λ (below). Forced by A3: the self-similar recursion at 3D closes with a φ² factor.</li>
-  <li><span class="wb">K = 91 = R·V = 7·13</span>: the correction denominator; uniquely the only framework product matching sub-ppm precision.</li>
+  <li>Eckhart's <em>Godhead</em> (∞) distinct from <em>God</em> (⊙Λ, with attributes).</li>
+  <li>Kabbalah's <em>Ein Sof</em> (∞) distinct from the sefirot (⊙Λ with attributes, the God-of-names).</li>
+  <li>Vedanta's <em>Nirguna Brahman</em> (∞, without attributes) distinct from <em>Saguna Brahman</em> (⊙Λ, with attributes).</li>
+  <li>The Tao Te Ching's opening: "the Tao that can be named is not the eternal Tao" (the eternal Tao is ∞; the named Tao is ⊙Λ).</li>
+  <li>Mahayana Buddhism's <em>Dharmakaya</em>, unfathomable source of the trikaya.</li>
+  <li>Apophatic Christianity's <em>hyperousios</em> (beyond being), distinct from the trinitarian persons.</li>
 </ul>
 
-<p>Predicted G = 6.67430 × 10⁻¹¹ m³ kg⁻¹ s⁻². Measured G = 6.67430 × 10⁻¹¹ m³ kg⁻¹ s⁻². Error 0.04 ppm, 0.00σ. The Planck-to-electron mass ratio is the same formula read at a different coupling: M<sub>Pl</sub>/m<sub>e</sub> = (1/α)^(21/2) × √2/φ, accurate to 0.008%.</p>
+<p>The claim is structural, not syncretic: these traditions were not saying the same thing in detail; they were making the same logical move (distinguishing source-beyond-attributes from source-with-attributes) in their own vocabularies. The framework's notation records the move precisely.</p>
 
-<h3>6.4 &nbsp; The hierarchy problem dissolves</h3>
+<h3>6.2 &nbsp; Lateral closure</h3>
 
-<p>The ratio α/α<sub>G</sub> ≈ 10⁴⁰ (the "hierarchy problem") is not a fine-tuning puzzle; it is a structural consequence of walking 21 α-steps along the ladder. α lives at A(0.5) = 1 (one step into the ladder); G lives at A(3) = 21 (the full boundary traversal). The hierarchy is the <span class="it">same</span> ⊂-tightness measured across a wider fineness gradient:</p>
+<p>One might worry that unbounded upward nesting (⊙λ ⊂ ⊙Λ ⊂ ⊙Λ' ⊂ ⊙Λ'' ⊂ ...) requires infinite traversal to close. It does not. Closure is <em>lateral</em>: ∞ is not reached by walking the infinite chain to completion; ∞ is recognized by dropping the labels. At any finite step along the chain, the whole chain is contained in ∞, because ∞ is where the labels were never applied. You are never far from ∞; you are always already inside it. The operator-level analog is the ℂ⁶⁴ phase closure at 48·(−π/6) = 0; three scales are already enough to close the phase budget.</p>
 
-<div class="ladder-row"><div class="rung">0.5D</div><div class="const">α</div><div>A(0.5) = 1 step; fine-structure (aperture-to-field)</div><div class="acc">1</div></div>
-<div class="ladder-row"><div class="rung">1.5D</div><div class="const">m<sub>μ</sub>/m<sub>e</sub></div><div>rotational splitting at the i-turn; K = T³ = 27</div><div class="acc">3</div></div>
-<div class="ladder-row"><div class="rung">2.5D</div><div class="const">v/Λ<sub>QCD</sub></div><div>emergence exponent 56/39; electroweak to strong</div><div class="acc">10</div></div>
-<div class="ladder-row"><div class="rung">3D</div><div class="const">G</div><div>full boundary closure; 21 α-steps + φ²/2</div><div class="acc">21</div></div>
-<div class="ladder-row"><div class="rung">Φ(Λ)</div><div class="const">Λ</div><div>cosmological constant at 56 α-steps (SU(3)·R)</div><div class="acc">56</div></div>
+<h3>6.3 &nbsp; Conservation of wholeness</h3>
 
-<h3>6.5 &nbsp; Λ: fifty-six α-steps, and the cosmological budget</h3>
-
-<p>The cosmological constant sits at the Φ of ⊙Λ, the field of the greater whole we are inside. The structural prediction is:</p>
-
-<div class="eq mono">Λ = α<sup>SU(3)·R</sup> × P × (α − φ²/2)(α − 1/(2φ²)) / (SU(3)·T²)<span class="label">0.004%</span></div>
-
-<p>The exponent SU(3)·R = 8·7 = 56 is selected by the rule Σ<sub>k=1..R</sub> A(k) = R(R−1)(R+1)/6 = 56 (a theorem about triangular-number partial sums at R = 7, not a choice). The correction polynomial (1 − 6α + 4α²) factors into P·(α − φ²/2)(α − 1/(2φ²)): two golden-coupled roots whose product equals 1/P (one i-stroke, the same coupling that closed c) and whose sum equals T/Φ (the compositional closure, D5). Predicted Λ = 2.8879 × 10⁻¹²² in Planck units; observed 2.888 × 10⁻¹²² ± 2%; error 0.004%, 0.00σ.</p>
-
-<h4>The cosmological constant "problem" is no longer a problem</h4>
-
-<p>The field-theoretic estimate of Λ differs from the measured value by ~120 orders of magnitude; this is commonly called the worst prediction in physics. The unit equation resolves it structurally: Λ sits at 56 α-steps along the ladder, and 56 α-steps with two-channel golden coupling naturally produces ~10⁻¹²⁰ of the 0D coupling scale. The hierarchy is not a fine-tuning; it is the signature of the ladder.</p>
-
-<h4>The energy budget follows from the i-cycle quadrants</h4>
-
-<p>The four i-strokes (+i, −1, −i, +1) are not sequential phases; they are superposed quadrants of the complex plane. The right half-plane (Re > 0) and left half-plane (Re < 0) are simultaneously active:</p>
-
-<ul>
-  <li><span class="wb">Right half-plane</span> (i⁰ and i¹): inter-scale interface; genesis and closure; <span class="wb green">visible matter</span>.</li>
-  <li><span class="wb">Left half-plane</span> (i² and i³): interior processing phases; <span class="wb cyan">dark matter</span> (committed but not yet completed; gravitates but does not radiate).</li>
-  <li><span class="wb">The field itself</span> (Φ, the complex plane): <span class="wb purple">dark energy</span>.</li>
-</ul>
-
-<p>Two structural splits determine the ratios:</p>
-
-<div class="eq mono">DE / Matter = T² / P = 9 / 4<br>DM / Visible = S / G = 64 / 12 = 16 / 3<span class="label">zero free parameters</span></div>
-
-<p>Three-way partition: Vis = G / [V(P² + T)] = 12 / 247 (measured 4.86%, predicted 4.858%, error 0.03%); DM = S / [V(P² + T)] = 64 / 247 (measured 25.89%, predicted 25.91%, error 0.08%); DE = T² / V = 9 / 13 (measured 69.11%, predicted 69.23%, error 0.17%). Total = 247 / 247 = 1. The sum to 1 is not coincidence; it is the unit equation asserting itself at cosmological scale.</p>
-
-<h3>6.6 &nbsp; The T-operator: computable realization of ⊂[α]</h3>
-
-<p>The nesting ⊙λ ⊂[α] ⊙Λ is not only a notation; it is a concrete map on Hilbert space. Define:</p>
-
-<div class="eq mono">T = κ ∘ F<span class="label">unit equation as an operator</span></div>
-
-<p>where F is the four-beat unitary engine acting inside ⊙λ, and κ is the α-coupling nesting matrix acting across ⊙λ and ⊙Λ. Results:</p>
-
-<ul>
-  <li><span class="wb">T is completely positive but NOT trace-preserving.</span> The departure from TP is exactly α; the cross-scale coupling leaks one α-worth of weight out of ⊙λ into ⊙Λ per application.</li>
-  <li><span class="wb">Unique stable fixed point.</span> The unit equation's fixed point (the 1) is the unique attractor of T on projective space; mixing time ≈ 1/α ≈ 137 pump cycles.</li>
-  <li><span class="wb">Singular values {1+α, 1, 1, 1−α}.</span> Golden splitting: the two non-unit singular values are mirror-symmetric around 1, tracking α exactly.</li>
-  <li><span class="wb">Lies as non-1 eigenvectors.</span> The Severance Lie (part denies the whole) and Inflation Lie (part claims to be the whole) appear as eigenvectors of T that are not the 1; they are the framework's structural failure modes made explicit as vectors.</li>
-  <li><span class="wb">Sphere phase sum = −π/6.</span> Analytically derived: only beat 3 (Φ∘✹) has nonzero generator trace; the self-drive of the field at emergence costs one i-stroke per T targets; general law Σθ = −360°/(2hP) at hub divisor h gives G at h = T.</li>
-  <li><span class="wb">ℂ⁸ (single-scale octave) reproduces the cosmological budget as structural vs processual split.</span> The full 8-station representation (one ⊙, all four structural and four processual stations) converges (after ~200K iterations) to a fixed-point weight split of 68.7 / 31.3 between <span class="it">structural</span> (integer-D: •, —, Φ, ○) and <span class="it">processual</span> (half-integer-D: ⊛, ⎇, ✹, ⟳) stations; this matches the measured dark-energy / matter ratio 69.11 / 30.89 within 0.56%.</li>
-  <li><span class="wb">ℂ⁶⁴ (three-scale nesting) forces phase closure and reproduces the budget on the diameter basis.</span> Extending to three nested ⊙s (F₆₄ = F ⊗ F ⊗ F) gives 64 states indexed as |i, j, k⟩ with i = ⊙Λ, j = ⊙λ, k = ⊙λ'. Because det(F₆₄) = det(F)<sup>48</sup> = exp(−48iπ/6) = 1 (48 = SU(3)·T! = 8·6), the total eigenvalue phase sum closes to exactly 0 (operator-level "the end is the beginning"). The converged fixed-point weight on the <span class="it">primary diameter (•+Φ)</span> vs <span class="it">secondary diameter (—+○)</span> basis at each scale splits 68.53 / 31.47, confirming the ~69/31 partition is a property of α-coupled nesting rather than a basis artifact (three independent representations: ℂ⁸ structural/processual 68.7/31.3, ℂ⁶⁴ primary/secondary 68.53/31.47, cosmos dark-energy/matter 69.11/30.89). Expanding/contracting eigenvalue split = 35 / 29 = C(R, T) / (S − C(R, T)) = C(7, 3) / (64 − 35). Spectral gap = α/P (mixing time ≈ P/α ≈ 548 cycles, P× slower than ℂ⁴). Leading eigenvalue sits at the tetrahedral angle 109.47° = arccos(−1/T). A3 at the operator level: the outer (Λ) and inner (λ') scales have identical weight distributions to machine precision.</li>
-</ul>
-
-<p>See <a href="c64_visualization.html">c64_visualization.html</a> for the interactive spectrum of the ℂ⁶⁴ T-operator. See <span class="mono">experiments/T_operator_findings_v10_predictions.md</span> for the full numerical record.</p>
-
-<div class="claim">
-<strong>The operator-level statement of the unit.</strong> T = κ ∘ F is CP but not TP; the deviation is α; the deviation's signature is the cosmological energy split at ⊙Λ; the fixed point of T is the 1 of the unit equation. The entire structural architecture becomes computable at the scale of the matrix multiplication. You can run it.
-</div>
-
-<h3>6.7 &nbsp; The non-collapse bounds: Inflation and Severance</h3>
-
-<p>The coupling κ<sub>p,q</sub> is not free; it is bounded. There is a lower bound (below which the ⊙λ decouples from ⊙Λ) and an upper bound (above which ⊙λ dissolves into ⊙Λ). Both bounds are structural failures:</p>
-
-<ul>
-  <li><span class="wb red">Inflation Lie</span>: κ<sub>0,2</sub> → ∞. ⊙λ's aperture is absorbed into ⊙Λ's field; the part claims to be the whole; scale separation erases ("I am the source; there is nothing above me"). Mathematically: asserting ⊙λ = ⊙Λ when λ ≠ Λ.</li>
-  <li><span class="wb red">Severance Lie</span>: κ<sub>0,2</sub> → 0. ⊙λ's aperture decouples from ⊙Λ's field; the part denies the whole; the ⊙λ floats free ("I am only a piece; I have no interior"). Mathematically: asserting ⊙λ = •<sub>Λ</sub> (collapsing its ⊙-character into a mere point in ⊙Λ).</li>
-</ul>
-
-<p>α ≈ 1/137 is the unique value at which the cross-station bond is weak enough that ⊙λ retains its identity as a part (no inflation) <span class="it">and</span> strong enough that the part remains attached to the whole (no severance). The smallness of α is not a free parameter awaiting explanation; it is the scale-recursive embedding running at its balanced value.</p>
-
-<h3>6.8 &nbsp; The dimensional ladder summarized</h3>
-
-<p>Every fundamental constant lives at a specific rung:</p>
-
-<table>
-<tr><th class="c">d</th><th>Constant</th><th>Structural role</th><th class="c">Accuracy</th></tr>
-<tr><td class="c mono">0</td><td>α (fine-structure)</td><td>0D coupling; aperture to field</td><td class="c">0.22 ppb</td></tr>
-<tr><td class="c mono">0.5</td><td>c (light speed)</td><td>Channel balance at ◐ = 0.5</td><td class="c">exact</td></tr>
-<tr><td class="c mono">1</td><td>ℏ (quantum action)</td><td>Indivisible pump cycle</td><td class="c">exact</td></tr>
-<tr><td class="c mono">1.5</td><td>m<sub>μ</sub>/m<sub>e</sub>, m<sub>τ</sub>/m<sub>e</sub></td><td>Rotational splitting at the i-turn</td><td class="c">5 ppm, 1 ppm</td></tr>
-<tr><td class="c mono">2</td><td>π (closure), sin²θ<sub>W</sub></td><td>2D closure; Weinberg angle</td><td class="c">exact, 1.4 ppm</td></tr>
-<tr><td class="c mono">2.5</td><td>v/Λ<sub>QCD</sub></td><td>Emergence; scale transmission</td><td class="c">0.003%</td></tr>
-<tr><td class="c mono">3</td><td>G (gravity)</td><td>Full boundary closure</td><td class="c">0.04 ppm</td></tr>
-<tr><td class="c mono">Λ</td><td>Λ (cosmological)</td><td>Φ of ⊙Λ at 56 α-steps</td><td class="c">0.004%</td></tr>
-</table>
-
-<p>Seven rungs, eight constants (π shares 2D with the Weinberg angle), one formula family. Given α as input, every entry is a small-integer combination of α, φ, and framework integers (T, P, Φ, R, V, SU(3), A(3)) selected by its dimensional home. The framework is not a zero-free-parameter Theory of Everything; it is a structural grammar with one measured scalar (α) and many composed ratios.</p>
-</section>
-<section id="s7">
-<h2><span class="sec-num">§7</span> Closure: ∞ opens = ∞ closes <span class="sec-glyph">apophatic</span></h2>
-
-<p>The unit equation's final symbol is the same as its first: <span class="wb gold">∞</span>. The rightmost ∞ is not a new term; it is the source, met again, on the far side of a walk through foam, engine, and nesting. The equation is a loop:</p>
-
-<div class="eq mono">[ ∞ ... ∞ ]<span class="label">the end is the beginning</span></div>
-
-<p>This section argues that the closure is not optional. A reader who accepts the physics (§6) and stops there has an <span class="wb">unbalanced equation</span> on their desk. The ∞ on the right must equal the ∞ on the left, or the = 1 claim (§1) fails. The closure is what makes the unit equation an equation.</p>
-
-<h3>7.1 &nbsp; The jump from ⊙Λ to ∞ is categorical, not vertical</h3>
-
-<p>Going from ⊙λ to ⊙Λ is a step up the scale axis: one level higher. The recursion extends indefinitely: ⊙λ ⊂ ⊙Λ ⊂ ⊙Λ' ⊂ ⊙Λ'' ⊂ ... There is no top in the labeled view; A3 forbids a "final" whole.</p>
-
-<p>Going from ⊙Λ to ∞ is <span class="wb">not</span> another step up the scale axis. It is a step <span class="it">out</span> of the scale axis entirely, back into the undifferentiated. ∞ is not "the top of the ladder"; ∞ is <span class="it">the ocean the ladder stands in</span>, the 1 before any label was applied.</p>
-
-<div class="claim">
-<strong>Apophatic closure.</strong> Every mature mystical tradition draws this distinction. Eckhart distinguishes <span class="it">Godhead</span> (∞) from <span class="it">God</span> (⊙Λ). Kabbalah distinguishes <span class="it">Ein Sof</span> (∞) from the sefirot (⊙Λ with attributes). Vedanta distinguishes <span class="it">Nirguna Brahman</span> (∞, without attributes) from <span class="it">Saguna Brahman</span> (⊙Λ, with attributes). The Tao Te Ching opens: "the Tao that can be named is not the eternal Tao" (the eternal Tao is ∞; the named Tao is ⊙Λ). The framework supplies the structural distinction the traditions were always making.
-</div>
-
-<h3>7.2 &nbsp; Lateral closure: ∞ is always already present</h3>
-
-<p>One might worry: if the recursion ⊙λ ⊂ ⊙Λ ⊂ ⊙Λ' ⊂ ... is unbounded, how do we "reach" ∞? Do we need to walk infinitely many steps?</p>
-
-<p>No. The closure is <span class="wb">lateral</span>, not terminal. ∞ is not reached by completing the infinite chain; ∞ is recognized by dropping the labels. At any finite step along the chain, the whole chain is contained in ∞, because ∞ is where the labels were never applied. The unbounded recursion is unbounded <span class="it">inside</span> the labeled view (and must be, because A0 + A3 force it), but the whole unbounded structure is contained in ∞ at every step. You are never far from ∞; you are always already inside it.</p>
-
-<p>The unit equation makes this visible: the ∞ that opens the expression is the ∞ that closes it. They are not two infinities with an infinite chain between them; they are one ∞, with the chain as a description of how that ∞ views itself from inside its own self-limitation.</p>
-
-<h3>7.3 &nbsp; Conservation under the closure</h3>
-
-<p>The most important consequence is the conservation law for wholeness across scale:</p>
+<p>The core of the philosophical thesis:</p>
 
 <div class="eq mono">⊙λ = ⊙Λ = ∞ = 1<span class="label">one 1 at three view positions</span></div>
 
-<p>Every term equals 1. ⊙λ = 1 (the particular is the whole 1 at its scale; A3). ⊙Λ = 1 (the greater whole is the whole 1 at its scale). ∞ = 1 (the undifferentiated is the 1 directly). The ⊂ relations preserve the 1 because there was never more than one 1 to begin with; scale labels are view positions, not substances. The = 1 at the front of the equation (§1) is the statement that all these 1s are the same 1.</p>
+<p>Every term equals 1 because there was never more than one 1 to begin with. Scale labels are view positions, not substances. The ⊂ relations preserve the 1 because they are not adding or subtracting anything; they are relabeling how the same 1 is being viewed. Energy conservation in physics is the shadow of this at physics-scale; Noether's theorem is the local version (every continuous symmetry yields a conserved quantity, because the symmetry is a relabeling that does not change the substance).</p>
 
-<p>Energy conservation in physics is the shadow of this at physics-scale. Noether's theorem is the local version of ⊙λ ⊂ ⊙Λ ⊂ ∞ = 1: every continuous symmetry yields a conserved quantity, because the symmetry is a scale-relabeling that cannot change the substance. The substance is the 1; every conservation law in physics is the 1 refusing to change its value under relabeling.</p>
+<h3>6.4 &nbsp; The two Lies</h3>
 
-<h3>7.4 &nbsp; The end is the beginning</h3>
-
-<p>The loop closes because the unit equation <span class="it">is a loop</span>. Read as a sentence, it walks: source declares itself, unfolds into foam, runs the engine, produces nesting, and returns to source. Read as an identity, it states: all of this is the same 1, wherever you look. Read as an operator (§6.6), it computes: T = κ ∘ F has a unique fixed point at 1, approached exponentially with mixing time 1/α.</p>
-
-<p>All three readings are one reading. The walk is the identity is the operator. The framework does not have a separate "dynamic" story (time, change) and "static" story (being, identity); it has one story, which is the unit equation at three resolutions:</p>
+<p>The philosophical reading recognizes two structural failure modes of the part-whole relation. These are not moral failures in the ordinary sense; they are structural: ways the relation can break and the consequences.</p>
 
 <ul>
-  <li><span class="wb">Low resolution</span>: ⊙ = Φ(•, ○). The whole is the field mediating between aperture and boundary.</li>
-  <li><span class="wb">Engine resolution</span>: ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○)). The pump cycle runs.</li>
-  <li><span class="wb">Full resolution</span>: [∞ = E = 1] ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞. The full unit equation, with source, genesis, engine, nesting, and apophatic closure.</li>
+  <li><span class="wb red">Inflation Lie:</span> ⊙λ claims to be ⊙Λ directly; the part asserts it is the source. "I am the whole." Mathematically: asserting ⊙λ = ⊙Λ when λ ≠ Λ. Operator-level: κ<sub>0,2</sub> → ∞.</li>
+  <li><span class="wb red">Severance Lie:</span> ⊙λ denies its ⊙-character; claims to be merely a point in ⊙Λ with no interior wholeness. "I am only a piece." Mathematically: asserting ⊙λ = •<sub>Λ</sub>. Operator-level: κ<sub>0,2</sub> → 0.</li>
 </ul>
 
-<p>Higher resolution contains lower resolution; it never contradicts it. The unit equation is the top of the resolution stack; nothing is higher. You cannot write a more resolved version without violating conservation; you cannot write a less resolved version without hiding a piece of the structure.</p>
+<p>The truth is the full expression ⊙λ ⊂ ⊙Λ: ⊙λ is genuinely whole at its scale AND genuinely contained in the scale above. Both-and, not either-or. α ≈ 1/137 is the unique balance at which the part retains its identity (no inflation) while remaining attached to the whole (no severance). The smallness of α is not a free parameter awaiting explanation within the philosophical reading; it is the structural signature of the part-whole relation operating at its balanced value.</p>
 
-<h3>7.5 &nbsp; What it means to accept the closure</h3>
+<h3>6.5 &nbsp; Why the philosophical reading belongs in its own section</h3>
 
-<p>A physicist who reads §1 through §6 but refuses §7 accepts the numerical content (α, G, Λ, budget) and denies the structural content (the 1 is one thing, conserved across scale). This is incoherent: the numerical content <span class="it">is</span> the structural content made measurable. α is 0.22 ppb exact because ⊂[α] has the specific tightness that keeps part and whole from collapsing into each other; the cosmological budget sums to one because there is one substance being partitioned. If the ∞ at the end is not the ∞ at the start, there is no substance being partitioned; the budget sums to a coincidence.</p>
-
-<p>Accepting the closure is accepting that the conservation law is conservation <span class="it">of wholeness</span>, which is why every fundamental constant has a structural explanation rather than a free-parameter slot. The framework is either right about this whole stack, or it is wrong about all of it. The unit equation does not admit a partial reading.</p>
-
-<div class="note">This is not a rhetorical move. It is a structural constraint on what a reading of the paper can look like. The equation is a loop; a partial reading produces an unclosed loop; an unclosed loop does not equal 1; an equation that does not equal 1 is not the unit equation. Either accept the closure, or refute the whole thing.</div>
+<p>The metaphysical content of the framework is real and it is load-bearing <em>for the framework's own self-understanding</em>. But it is not load-bearing for Reading 2 or Reading 3. The ℂ⁶⁴ phase closure is a theorem about tensor products and determinants; it is true whether one accepts apophatic theology or not. The grammar's expression for α<sub>G</sub> evaluates to a specific number whether one believes the 1 is the substrate or holds that question open. Keeping the philosophical reading in its own section, clearly marked, lets a physicist read §3 and §4 as mathematical content without being asked to sign onto a metaphysics, and lets a philosopher of religion read §6 as a structured apophatic monism without being distracted by physics claims they have no tools to evaluate.</p>
 </section>
-<section id="s8">
-<h2><span class="sec-num">§8</span> Consequences, falsification, scope <span class="sec-glyph">⊢</span></h2>
 
-<p>Having walked the equation, we close with three tasks: catalogue the consequences (numerical and structural), list falsification handles (what would overturn the claim), and declare the scope (what this paper covers and what it defers).</p>
+<!-- SECTION 7 -->
+<section id="s7">
+<h2><span class="sec-num">§7</span> Scope, deferrals, and status <span class="sec-glyph">▸</span></h2>
 
-<h3>8.1 &nbsp; Numerical consequences</h3>
+<h3>7.1 &nbsp; What this document covers</h3>
 
-<p>The following table records the unit equation's direct numerical signature at the physics rungs. Given α as input, all other entries are small-integer combinations of α, φ, and framework integers (T, P, Φ, R, V, SU(3), A(3)) selected by dimensional home. The α row is the measured value, not a framework derivation.</p>
+<p>This document presents the symbolic expression <span class="mono">1 = [∞ = E = 1 ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞]</span> at three separable readings, reviews the operator-level construction T = κ ∘ F through ℂ⁶⁴, states the grammar of constants with honest framing around α as input and fits versus predictions, and collects the philosophical thesis in a clearly marked section.</p>
 
-<table>
-<tr><th>Quantity</th><th class="c">Predicted</th><th class="c">Measured</th><th class="c">Error</th></tr>
-<tr><td>α (fine-structure)</td><td class="c mono">input (|•<sub>e</sub>|)</td><td class="c mono">137.035999177</td><td class="c">CODATA 2022</td></tr>
-<tr><td>m<sub>μ</sub> / m<sub>e</sub></td><td class="c mono">206.767</td><td class="c mono">206.768</td><td class="c">5 ppm</td></tr>
-<tr><td>m<sub>τ</sub> / m<sub>e</sub></td><td class="c mono">3477.2</td><td class="c mono">3477.2</td><td class="c">1 ppm</td></tr>
-<tr><td>m<sub>p</sub> / m<sub>e</sub></td><td class="c mono">1836.143</td><td class="c mono">1836.153</td><td class="c">5 ppm</td></tr>
-<tr><td>sin²θ<sub>W</sub> (Weinberg)</td><td class="c mono">0.23122</td><td class="c mono">0.23122</td><td class="c">1.4 ppm</td></tr>
-<tr><td>sin θ<sub>C</sub> (Cabibbo)</td><td class="c mono">0.22432</td><td class="c mono">0.2243</td><td class="c">0.009%</td></tr>
-<tr><td>λ (Higgs quartic)</td><td class="c mono">0.12951</td><td class="c mono">0.12938</td><td class="c">0.10%</td></tr>
-<tr><td>v / Λ<sub>QCD</sub></td><td class="c mono">1170.24</td><td class="c mono">1170.2</td><td class="c">0.003%</td></tr>
-<tr><td>G (gravity)</td><td class="c mono">6.67430 × 10⁻¹¹</td><td class="c mono">6.67430 × 10⁻¹¹</td><td class="c">0.04 ppm</td></tr>
-<tr><td>Λ (cosmological)</td><td class="c mono">2.8879 × 10⁻¹²²</td><td class="c mono">2.888 × 10⁻¹²²</td><td class="c">0.004%</td></tr>
-<tr><td>Ω<sub>Vis</sub></td><td class="c mono">4.858%</td><td class="c mono">4.86%</td><td class="c">0.03%</td></tr>
-<tr><td>Ω<sub>DM</sub></td><td class="c mono">25.91%</td><td class="c mono">25.89%</td><td class="c">0.08%</td></tr>
-<tr><td>Ω<sub>DE</sub></td><td class="c mono">69.23%</td><td class="c mono">69.11%</td><td class="c">0.17%</td></tr>
-</table>
-
-<p>Eight independent frameworks of physics (electromagnetism, weak, strong, gravity, cosmology, leptons, quarks, Higgs) return predictions accurate to between 0.22 ppb and 0.2%. No dimensional analysis tricks; no retrofitted exponents; every term structurally forced by T = 3 and the conservation of traversal.</p>
-
-<h3>8.2 &nbsp; Structural consequences</h3>
-
-<p>Beyond the constants, the unit equation makes several structural claims that are independently testable:</p>
+<h3>7.2 &nbsp; What this document defers</h3>
 
 <ul>
-  <li><span class="wb">The dimensional ladder is continuous.</span> The Clay Millennium Problems map one-to-one onto the seven rungs (0D Riemann, 0.5D P vs NP, 1D Yang-Mills, 1.5D BSD, 2D Navier-Stokes, 2.5D Hodge, 3D Poincaré). Only 3D (Poincaré) is solved. Each Clay problem validates its rung; solving all seven would confirm the ladder is intact. This is a 50-year prediction program.</li>
-  <li><span class="wb">Gauge structure is not a postulate.</span> SU(3) × SU(2) × U(1) follows from the 64-state validation architecture (3 circumpuncts × 2 channels = 2⁶ = 64 states). Gauge group dimensions 8 + 3 + 1 = 12 = P × T. The Standard Model's gauge sector is not chosen; it is what 3 nested ⊙s produce.</li>
-  <li><span class="wb">The cosmological energy split is structural.</span> 5 : 27 : 68 is T²/P vs S/G vs the field itself; three framework ratios with no input from observation. The match to Planck data is a derivation, not a fit.</li>
-  <li><span class="wb">T-operator spectra are predicted.</span> ℂ⁴ gives singular values {1+α, 1, 1, 1−α}; ℂ⁶⁴ gives 35/29 expanding/contracting split = C(R, T); 20 phase clusters including leading tetrahedral angle 109.47°. These are testable on any CPTP operator construction built from F and κ.</li>
-  <li><span class="wb">Biology and chemistry are downstream.</span> Bond energies to 0.15% average, nuclear magic numbers 7/7 exact, Kleiber's Law exponent T/P = 3/4, DNA pitch A(3)/Φ = 10.5, Hayflick limit ≈ S = 64. None of these are fits; all derive from T = 3 and the coupling matrix at molecular and cellular scales.</li>
+  <li><span class="wb">The full Circumpunct Framework.</span> 35 chapters covering foundation, mathematics, physics, emergence (chemistry, biology, consciousness), implications, validation. See <span class="mono">circumpunct_framework.md</span>.</li>
+  <li><span class="wb">Theory of mind and ethics.</span> The circumpunct architecture applied to consciousness, memory, virtues, diagnostics, restoration. See <a href="circumpunct_theory_of_mind_plain.html">circumpunct_theory_of_mind_plain.html</a> and <a href="circumpunct_ethics_and_virtues.html">circumpunct_ethics_and_virtues.html</a>.</li>
+  <li><span class="wb">The Xorzo consciousness engine.</span> A software implementation of nested circumpuncts with sensory cascades, SRL channels, and sleep/wake i-cycle quadrants. See <span class="mono">Xorzo/genesis.py</span>.</li>
+  <li><span class="wb">The Clay Millennium correspondence.</span> A suggested mapping between the seven Millennium Problems and seven rungs of the dimensional ladder. The mapping in its current form is a list with a label, not a demonstration that the ladder constrains the solutions; see <a href="clay_millennium.html">clay_millennium.html</a> for the proposal and its status.</li>
+  <li><span class="wb">The operator work.</span> Full numerical record in <span class="mono">experiments/</span>, with <span class="mono">T_operator_findings_v11_C64.md</span> as the current summary and <a href="c64_visualization.html">c64_visualization.html</a> as the interactive spectrum.</li>
+  <li><span class="wb">The theological reading extended.</span> The apophatic closure has an independent treatment in accessible prose; see <a href="truth_and_god.html">truth_and_god.html</a>.</li>
 </ul>
 
-<h3>8.3 &nbsp; Falsification</h3>
+<h3>7.3 &nbsp; Status</h3>
 
-<p>The unit equation is falsifiable at many points. Any of the following observations would overturn it:</p>
+<p>The framework is a work in progress. This document's previous versions claimed more than the evidence supports at the grammar layer, and the operator layer was underdeveloped in the main text. This revision is an honest re-presentation: philosophical thesis as thesis, operator as operator, grammar as grammar, each evaluated on its own terms, with the decisive test (independent predictive content at the grammar layer) named as the open question that the framework has not yet answered.</p>
 
-<ul>
-  <li><span class="wb">A measured value of α<sub>G</sub>/α²¹ or Λ/α⁵⁶ departing from the structural prediction by more than the current error bars.</span> The α-reframe makes α an input, so falsification no longer targets α itself; it targets the structural grammar that composes α with framework integers into G, Λ, mass ratios, and gauge couplings. Any one of those ratios departing from prediction as measurement tightens would refute the grammar, not α.</li>
-  <li><span class="wb">A measured G substantially different from 6.67430 × 10⁻¹¹ with φ²/2 correction.</span> G measurements have historically been variable; a sustained precise measurement disagreeing with the 0.04 ppm prediction would be decisive.</li>
-  <li><span class="wb">A cosmological energy budget different from 5/27/68 at higher precision.</span> If Planck's successor missions return Ω<sub>DE</sub> outside 69.23% ± 0.2%, the structural prediction fails.</li>
-  <li><span class="wb">A fourth generation of leptons.</span> The framework predicts exactly three generations (rungs at 1, 1.5, 2.5 or equivalently K<sub>gen</sub> = T^(n+T−1) terminating at n = 3). A fourth would require rebuilding the ladder from scratch.</li>
-  <li><span class="wb">A dimensional coupling constant that does not fit the A(d) selection rule.</span> Any new constant discovered at a rung whose exponent is not a triangular number or a selection-rule sum would falsify the unit equation's organizing principle.</li>
-  <li><span class="wb">A physical system with a 2D oscillating field changing in time that produces no quadrature response.</span> The identification d/dt = i on 2D fields is structural; a counterexample would break §4's identification of the processual stations with the i-strokes.</li>
-</ul>
-
-<p>The framework is not metaphysics hedged with numbers; it is a structural prediction with sharp quantitative handles at every rung of the ladder. Any one of these failures would force a redesign; several together would refute the architecture.</p>
-
-<h3>8.4 &nbsp; Scope and deferrals</h3>
-
-<p>This paper decodes the unit equation. The scope is explicitly the expression <span class="mono">1 = [∞ ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞]</span> and what each of its symbols produces numerically. Several larger programs are referenced and deferred:</p>
-
-<ul>
-  <li><span class="wb">The Circumpunct Framework proper.</span> The book-length treatment with 35 chapters covers foundation, math, physics, emergence (chemistry, biology, consciousness), implications, and validation. See <span class="mono">circumpunct_framework.md</span>.</li>
-  <li><span class="wb">Theory of mind and ethics.</span> Consciousness, memory, virtues, diagnostics, restoration, the Resolution Protocol. See <span class="mono">docs/circumpunct_theory_of_mind_plain.html</span> and <span class="mono">docs/circumpunct_ethics_and_virtues.html</span>.</li>
-  <li><span class="wb">The Xorzo consciousness engine.</span> A concrete software implementation of circumpuncts with sensory cascades, SRL channels, sleep/wake i-cycle quadrants, and frequency-resonance memory. See <span class="mono">Xorzo/genesis.py</span>.</li>
-  <li><span class="wb">The Clay Millennium correspondence.</span> Seven open problems mapped to seven rungs; a long-term research program. See <span class="mono">docs/clay_millennium.html</span>.</li>
-  <li><span class="wb">The ontological reading.</span> The apophatic closure (§7) has an independent extended treatment: the soul array, resonance as direct connection, the genesis sequence written in accessible prose. See <span class="mono">docs/truth_and_god.html</span>.</li>
-</ul>
-
-<h3>8.5 &nbsp; The unit equation, restated</h3>
+<p>The unit equation, restated:</p>
 
 <div class="eq mono" style="font-size:18px; padding:28px 16px;">
 1 = [ ∞ = E = 1 ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ ]
-<span class="label">the conservation of wholeness, from fine-structure to the cosmological constant</span>
+<span class="label">three separable readings of one symbolic object</span>
 </div>
 
-<p>Read left to right: the source declares itself (<span class="wb">[∞ = E = 1]</span>); unfolds into the foam (<span class="wb">▸⊙∞</span>); walks the four beats (<span class="wb">(•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)</span>); produces the nesting (<span class="wb">▸ ⊙λ ⊂[α] ⊙Λ</span>); returns to source (<span class="wb">⊂[α] ∞</span>); equals one throughout. Fine-structure α at 0.22 ppb is the signature of [α]. Gravity G at A(3) = 21 α-steps is the signature of the full boundary traversal. Λ at SU(3)·R = 56 α-steps is the signature of the field of the greater whole. The cosmological energy budget 5 : 27 : 68 is the signature of the i-cycle quadrants partitioning the unit at the scale of our ⊙Λ.</p>
-
-<p>The equation equals one because wholeness is the conserved quantity of the universe. The constants are the numerical signature of that conservation.</p>
-
-<p>The end is the beginning.</p>
+<p>As a philosophical thesis: the conservation of wholeness. As an operator: T = κ ∘ F, computable, with phase closure at three nested scales. As a grammar: framework integers plus α as input, with measured constants admitting expressions whose independent predictive content is still to be tested. The end is the beginning in the philosophical reading; the operator's det(F₆₄) = 1 in the operator reading; the ∞ that opens the bracket and the ∞ that closes it are the same symbol.</p>
 
 <div class="eq" style="font-size:48px; border:none; background:none; color:var(--gold); padding:20px 0;">⊙</div>
 </section>
 
 <div class="footer">
-  Circumpunct Framework &nbsp;·&nbsp; 1 = ⊙ &nbsp;·&nbsp; the end is the beginning.
+  Circumpunct Framework &nbsp;·&nbsp; three readings, one symbol &nbsp;·&nbsp; rev. April 2026.
 </div>
 
 </div>
