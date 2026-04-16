@@ -301,5 +301,32 @@ Remaining:
 | 5 | Diagonal κ entries stabilize the fixed point (would contradict "self-coupling = Inflation") (**PASSED**: all diagonal entries destabilize) |
 | 6 | Iteration diverges from 1 for generic initial conditions (**PASSED for diameter**; sphere has multiple basins) |
 | 7 | Section claims contradict existing framework chapters (pending; §27.7s not yet written) |
-| 8 | Eigenvalue splitting ratios don't match φ-powers (**PARTIAL**: |s_1|/|s_3| ≈ 1/φ² at 0.13%; needs high-precision confirmation) |
-| 9 | No construction produces cosmological weights (**OPEN**: best match 14.9% at non-standard params) |
+| 8 | Eigenvalue splitting ratios don't match φ-powers (**SHARPENED**: |s_1|/|s_3| ≈ 1/φ² at 0.126% residual; stable at 30 digits; real but approximate, not exact) |
+| 9 | No construction produces cosmological weights (**CLOSED negative**: orbit analysis confirms budget does NOT live in T's weights or orbit; budget is i-cycle quadrant property, not operator-weight property) |
+| 10 | Orbit average doesn't converge (**PASSED**: converges to triad structure; dominant period ≈ P; robust across 20 ICs) |
+| 11 | Golden splitting unstable at high precision (**PASSED**: residual stable at 30 digits; not a floating-point artifact) |
+| 12 | Phase sum derivation requires fine-tuning (**PASSED**: analytic chain from single self-drive term; no tuning; BCH corrections vanish) |
+
+---
+
+## Results: v8 (Directions #10, #11, #12)
+
+### #10: Orbit analysis (clean negative)
+
+Cosmological budget does NOT emerge from orbit-averaged weights. Diameter collapses to {0.5, 0, 0.5, 0}. Sphere converges to {0.325, 0.177, 0.323, 0.176} (65/35 split, Lenz-forced pairing). Dominant oscillation period ≈ 3.7 ≈ P. No grouping of four weights into three bins matches 5/27/68 (all errors > 600%). Structural conclusion: the cosmological budget is a property of the i-cycle quadrants (§10.10a), not of the operator weights. Different questions, different answers.
+
+### #11: Golden splitting at 30-digit precision
+
+|s_1|/|s_3| = 0.38149 vs 1/φ² = 0.38197 (0.126% residual, stable at 30 digits). The ratio |s_1|/|s_0| = 0.6225 vs 1/φ = 0.6180 (0.72% residual). The golden ratio is an attractor of the splitting structure, not an exact identity. Goes into the framework as "φ-approximate."
+
+### #12: Phase sum derivation (MAIN RESULT)
+
+**-π/6 = -π/(2T) from beat 3's self-drive.** Analytic chain:
+
+1. Four beat generators G_k; F = ∏ exp(G_k)
+2. Beats 1, 2, 4 have Tr(G_k) = 0
+3. Beat 3 (Φ∘✹) has G[Φ,Φ] = -iπ/(2T) (the self-drive: Φ radiates to T targets AND rotates itself; the self-rotation is one i-stroke divided by T)
+4. Σθ = Im(Σ Tr(G_k)) = -π/(2T) = -π/6
+5. BCH corrections vanish (off-diagonal affects magnitudes, not trace)
+
+Hub_divisor law: Σθ = -360°/(2·h·P). At h = T: X = 2TP = G = 12. Without self-drive: Σθ = 0 exactly. The phase deficit IS the cost of mediation.
