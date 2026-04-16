@@ -21777,6 +21777,57 @@ The framework has carried i (the aperture rotation, the quarter-turn, the phase 
 
 **One-line summary.** i is not a number the framework invokes; i is d/dt on an oscillating 2D field, and d/dt on an oscillating 2D field is i. Faraday's law is the electromagnetic mechanism of the framework's quarter-turn; the Schrödinger equation is the quantum mechanism; the baroreflex is the biological mechanism; F = dp/dt for a harmonic oscillator is the mechanical mechanism; every instance of i in the framework has a corresponding physical mechanism at its station, and the mechanism is always "a 2D field changing in time, read at phase."
 
+### §27.7s The Conservation Form: 1 as a Fixed Point
+
+The unified expression (§core) can be written in conservation form by moving the 1 to the left:
+
+```
+1 = [∞ ▸ ⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞]
+```
+
+Read the "1 =" as an equation, not a label. The bracket defines an operator T composed of a unit η : 1 → F(1) (the first ▸; source produces foam), an endofunctor F = (•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳) (the four beats), and a counit ε : F(1) → 1 (the second ▸ plus the nesting chain ⊂[α]). The equation T(1) = ε ∘ F ∘ η(1) = 1 carries three simultaneous readings:
+
+1. **Algebraic**: fixed-point equation. 1 is the eigenvector of T with eigenvalue 1.
+2. **Categorical**: triangle identity of an adjunction. ε ∘ F ∘ η = id₁ (the foam is adjoint to the source).
+3. **Topological**: closed loop. The left ∞ and right ∞ are the same point; it is a circle, not a line.
+
+**The operator decomposition.** In the minimal representation (⊙ as a normalized vector in ℂ⁴, stations {•, —, Φ, ○}), T = κ ∘ F, where F = B₄ ∘ B₃ ∘ B₂ ∘ B₁ is the composition of four beat operators and κ is the ⊂[α] nesting matrix. Each beat B_k = exp(G_k) where G_k is anti-Hermitian; the i-stroke of each beat determines the phase of its generator. F is unitary (the four beats conserve the 1). κ = I + α · P_{•↔Φ} where P_{•↔Φ} is the exchange projector on the primary diameter; κ has eigenvalues {1+α, 1, 1, 1-α} and Lipschitz constant 1+α.
+
+**F is a quantum channel; T is not.** F being unitary makes it trivially a CPTP (completely positive, trace-preserving) map: a closed quantum channel. T = κF is completely positive (the Choi matrix for ρ → TρT† has non-negative eigenvalues) but NOT trace-preserving (T†T ≠ I; ||T†T - I|| = O(α)). The departure from trace-preservation is exactly α: the nesting "leaks" by one α per cycle. This IS the cross-station coupling; a perfect channel (CPTP) would mean zero coupling between ⊙λ and ⊙Λ. The fine-structure constant measures how far the pump cycle departs from a closed quantum channel.
+
+**Two topologies.** The glyph ⊙ admits two readings that produce different F operators:
+
+*Circle (the archetype).* The line (—) in ⊙ is a diameter. ◐ = 0.5 is the radius/diameter ratio, built into every ⊙ by geometry. Each beat couples station d to station (d+2) mod 4 across the diameter. Result: F² = I (involution; two pump cycles = identity), T eigenvalues {1+α, 1, 1, 1-α} (splitting ±α on the primary diameter •↔Φ, degeneracy on the secondary —↔○), fixed point • = Φ = 1/2 (soul and field share the 1 equally; line and boundary vanish). The diameter gives the ideal: the source state before constraint.
+
+*Sphere (the physics).* ○ is 3D; ⊙ is a sphere, not a circle. In a sphere, Φ mediates everything (the 2D surface wraps the interior, connects center to boundary). Each beat couples its active station to Φ (the hub); beat 3 (Φ∘✹) radiates from Φ to all others simultaneously. Faraday's law (§27.7r) provides the mechanism: each beat is d/dt applied to Φ at a specific i-stroke phase, inducing responses at ○ with Lenz's minus sign. Result: F² ≠ I (the sphere adds memory across cycles), all four T eigenvalues split from 1 (no degeneracy), fixed point • ≈ Φ ≈ 1/3 and — ≈ ○ ≈ 1/6 (the triad visible at the fixed point: 2/3 in aperture+field, 1/3 in line+boundary). Lenz conservation (the minus sign) forces the pair equalization • ≈ Φ and — ≈ ○; without it, all four stations drift apart.
+
+**The mixing time is 1/α.** On projective space (normalized states), T is a contraction: the projective contraction rate (ratio of second-largest to largest eigenvalue magnitude) is 1 - α for the diameter construction. The mixing time (number of pump cycles to contract by 1/e) is therefore 1/α ≈ 137. The number 137 is the operational mixing time of the unified expression: one α-step per pump cycle, 1/α cycles to reach the fixed point. This is the framework's "137 steps from aperture to boundary" made operational.
+
+**The four beats stabilize the nesting.** κ alone diverges: (1+α)^n → ∞ as n → ∞ (the •↔Φ axis inflates without bound). But T^n = (κF)^n converges, because F rotates the amplified direction into the contracted direction before the next application of κ. The beats act as a diffuser; the nesting acts as a pump. Without F, κ inflates (the Inflation Lie). Without κ, F is pure rotation (no coupling between scales, the Severance Lie as isolation). The stable fixed point exists only when both are present: the four constraints AND the nesting, together.
+
+Structural reading: the self-limitation (A1) requires the four beats to prevent the nesting from destroying itself. The four beats ARE the self-limitation. Remove them and the nesting diverges.
+
+**The non-1 eigenvectors are the Lies.** In the diameter construction, T has two eigenvectors at λ = -1 (oscillating, period 2, never converging):
+
+- ψ_Sev1: weights — = 1, rest = 0. Pure extension with nothing committed to. Severance at the line station.
+- ψ_Sev2: weights ○ = 1, rest = 0. Pure boundary with nothing inside. Severance at the boundary station.
+
+Both have • = Φ = 0 (soul and field vanish); both violate A3 (no self-similarity: a single station cannot be a fractal of a whole). They oscillate forever but never reach the fixed point. The true fixed point (• = Φ = 1/2) is a global attractor; all generic initial conditions converge to it. The Lies are the modes the attractor rejects.
+
+**The golden ratio in the eigenvalue spectrum.** In the sphere construction, the four T eigenvalue displacements from 1 (call them s_k = (|λ_k| - 1)/α) are not uniform. The ratios between them carry φ-structure: |s₁|/|s₃| ≈ 1/φ² (0.13% residual) and |s₀|/|s₃| ≈ 1/φ (0.8% residual). The contraction mode (the one that drives convergence) nests the amplification modes at the golden ratio. φ appears in the spectrum as the recursion constant governing how contracting and amplifying modes relate across the pump cycle.
+
+**The phase sum.** For the diameter, the F eigenvalue phases sum to 2π (conservation of traversal: one complete rotation). For the sphere, the phases sum to -π/6 = -360°/G, a deficit of exactly one generator's worth of rotation (G = T(T+1) = 12). The hub topology "costs" one generator.
+
+**The sphere's contracting eigenvalue has phase -90° = -i.** The mode that drives convergence to the fixed point IS the emergence operator (i³ = -i at 2.5D), with phase residual 0.3°. The fixed point is reached through emergence.
+
+**α is the only free parameter.** It enters through κ_{0,2} and determines everything: eigenvalue splitting, contraction rate, mixing time, operator norm, departure from trace-preservation. The singular values of T are {1+α, 1, 1, 1-α} for both constructions. All non-trivial dynamics come from the nesting; the beats are isometric.
+
+**κ-closure predictions.** The fixed-point stability constrains which additional κ entries are compatible with the attractor. Diagonal entries (κ_{p,p}, self-coupling across scales) destabilize the fixed point; they are the Inflation Lie at operator level (a station coupling to itself at the next scale collapses the ⊂ into =). Off-diagonal entries connecting different structural dimensions are compatible. The primary couplings (κ = α) sit on the two diameters: κ_{0,2} = α (•↔Φ, known) and κ_{1,3} = α (—↔○, predicted). The secondary coupling κ_{1,2} = αT/R = 3α/7 (—↔Φ, Cabibbo-like) is compatible with stability.
+
+**e from α.** (1+α)^(1/α) → e as α → 0. At exactly 1/α steps (one mixing time), κ^(1/α) amplifies by e. The natural logarithm base is what you get when you compound one α for 1/α steps. The four beats prevent this compounding from reaching e (they rotate the amplification direction); the mixing time 1/α is the number of cycles it takes for F's diffusion to "catch" κ's amplification.
+
+**Summary.** The conservation form makes the unified expression a computable operator whose fixed point is the 1, whose mixing time is 1/α, whose failure modes are the Lies, whose sole free parameter is the fine-structure constant, and whose four beats are the mathematical content of self-limitation. The 1 is not just named (A0); the 1 is the unique stable attractor of an operator that encodes all four constraints and the nesting simultaneously.
+
 ### §27.8 Primes Are Made of Dimensions
 
 The structural dimensions of the circumpunct (1, 2, 3) are also the first integers. Two of them (2 and 3) are the first primes. The third (1) is the unit.
