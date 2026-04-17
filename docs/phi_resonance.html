@@ -233,13 +233,32 @@
   select, input[type="number"], input[type="text"] {
     width: 100%;
     padding: 12px 10px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: #fff;
+    background-color: #14141f;
+    background-image: none;
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    color: #ffd700;
     border-radius: 8px;
     font-family: inherit;
     font-size: 0.95rem;
     min-height: 44px;
+    -webkit-appearance: none;
+    appearance: none;
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 10px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23ffd700' d='M0 0l5 6 5-6z'/></svg>");
+    padding-right: 32px;
+  }
+
+  select option {
+    background-color: #14141f;
+    color: #ffd700;
+  }
+
+  select:focus, input:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.25);
   }
 
   /* Preset tile grid */
@@ -501,7 +520,7 @@
   <header class="hero col-span-2 col-span-3">
     <div class="phi-symbol">⊙</div>
     <h1 class="title">φ-ENTRAINMENT</h1>
-    <div class="sub">Sound Laboratory ; binaural, isochronic, drone, noise, cascade</div>
+    <div class="sub">Sound lab: binaural, isochronic, monaural, drone, harmonic, cascade, noise, chord</div>
   </header>
 
   <!-- LEFT / TRANSPORT + PRESETS -->
@@ -715,7 +734,7 @@
     </details>
 
     <div class="info">
-      <strong>Framework mapping:</strong> left ear (•) holds the base; right ear (○) holds the φ-offset. The perceived beat in the neural field is Φ: mediation between center and boundary. At β = 0.5, the aperture sits at balanced flow; sides pull toward autonomy or integration as you explore.
+      <strong>Framework mapping:</strong> in binaural mode, the left channel (•) holds the base tone; the right channel (○) holds the φ-offset tone. The interference pattern at the difference frequency is Φ (the beat). This is an acoustic mapping onto the circumpunct notation, not a medical claim.
     </div>
   </section>
 
@@ -728,23 +747,23 @@
     <div class="chips" id="layerMixChips"></div>
 
     <details class="section" style="margin-top:14px;">
-      <summary>Solfeggio Tones</summary>
+      <summary>Solfeggio Frequencies</summary>
       <div class="section-body">
         <div class="chips" id="solfeggio"></div>
       </div>
     </details>
 
     <details class="section">
-      <summary>Chakra Frequencies</summary>
+      <summary>Equal-Temperament Notes</summary>
       <div class="section-body">
-        <div class="chips" id="chakras"></div>
+        <div class="chips" id="notes"></div>
       </div>
     </details>
 
     <details class="section">
-      <summary>Brainwave Targets</summary>
+      <summary>Low Frequencies (beat rates)</summary>
       <div class="section-body">
-        <div class="chips" id="brainwaves"></div>
+        <div class="chips" id="lowfreqs"></div>
       </div>
     </details>
 
@@ -753,13 +772,13 @@
       <div class="section-body">
         <div class="chips" id="ratios"></div>
         <div class="info" style="margin-top:10px;">
-          These set the beat (or layer ratio) to framework integers: Φ = 2, T = 3, P = 4, (Φ+○) = 5, R = 7, SU(3) = 8, A(2) = 10, G = 12, V = 13, and the golden number φ ≈ 1.618.
+          These set the beat rate to framework integers: Φ = 2, T = 3, P = 4, (Φ+○) = 5, R = 7, SU(3) = 8, A(2) = 10, G = 12, V = 13, A(3) = 21, and the golden number φ ≈ 1.618.
         </div>
       </div>
     </details>
 
     <div class="info">
-      <strong>Use headphones</strong> for binaural, monaural, and φ-cascade modes. Drone, harmonic, chord, and noise modes work on any speaker. Start with low volume; raise slowly. If anything gets uncomfortable, lower the beat rate and reverb first.
+      <strong>Headphones recommended</strong> for binaural and φ-cascade modes (stereo separation matters). Drone, harmonic, chord, monaural, and noise modes play fine on any speaker. Start at low volume and raise slowly; if anything becomes uncomfortable, lower the beat rate, reverb, and volume.
     </div>
   </section>
 
@@ -786,67 +805,75 @@
 
   // ============= PRESETS =============
   const PRESETS = [
-    { id: 'flow',        name: '✹ FLOW',          desc: 'deep work, coding, creation',        base: 432, beat: PHI,         beta: 0.50, mode: 'binaural',   wave: 'sine',     spacing: 'phi' },
-    { id: 'meditation',  name: '⊛ MEDITATE',      desc: 'calm awareness, stillness',          base: 256, beat: 7.83,        beta: 0.40, mode: 'drone',      wave: 'organ',    spacing: 'octave' },
-    { id: 'focus',       name: '⊛ FOCUS',         desc: 'problem-solving, study',             base: 528, beat: 15,          beta: 0.60, mode: 'binaural',   wave: 'sine',     spacing: 'fifth' },
-    { id: 'sleep',       name: '• REST',          desc: 'sleep onset, deep relax',            base: 174, beat: 2.0,         beta: 0.25, mode: 'isochronic', wave: 'triangle', spacing: 'octave' },
-    { id: 'creative',    name: '✹ CREATE',        desc: 'ideation, brainstorm',               base: 396, beat: PHI*PHI,     beta: 0.55, mode: 'cascade',    wave: 'triangle', spacing: 'phi' },
-    { id: 'integrate',   name: 'Φ INTEGRATE',     desc: 'post-practice processing',           base: 369, beat: 1.0,         beta: 0.50, mode: 'harmonic',   wave: 'sine',     spacing: 'harmonic' },
-    { id: 'gamma',       name: 'γ GAMMA',         desc: 'insight, binding, 40 Hz',            base: 432, beat: 40,          beta: 0.55, mode: 'isochronic', wave: 'sine',     spacing: 'phi' },
-    { id: 'theta',       name: 'θ THETA',         desc: 'trance, creative liminal',           base: 256, beat: 6.0,         beta: 0.45, mode: 'binaural',   wave: 'sine',     spacing: 'octave' },
-    { id: 'alpha',       name: 'α ALPHA',         desc: 'relaxed wakefulness',                base: 432, beat: 10,          beta: 0.50, mode: 'binaural',   wave: 'sine',     spacing: 'phi' },
-    { id: 'delta',       name: 'δ DELTA',         desc: 'deep sleep, restoration',            base: 110, beat: 2.5,         beta: 0.30, mode: 'monaural',   wave: 'triangle', spacing: 'octave' },
-    { id: 'schumann',    name: '♁ SCHUMANN',      desc: 'earth resonance 7.83 Hz',            base: 62.64,beat: 7.83,       beta: 0.50, mode: 'drone',      wave: 'sine',     spacing: 'harmonic' },
-    { id: 'heart',       name: '♥ HEART',         desc: 'HRV coherence, 0.1 Hz',              base: 220, beat: 0.1,         beta: 0.50, mode: 'binaural',   wave: 'sine',     spacing: 'octave' }
+    { id: 'phibeat',     name: '✹ φ-BEAT',        desc: '432 base, beat = φ Hz, binaural, sine',        base: 432, beat: PHI,         beta: 0.50, mode: 'binaural',   wave: 'sine',     spacing: 'phi' },
+    { id: 'organ',       name: '⊛ ORGAN DRONE',   desc: '256 base, octave layers, organ',               base: 256, beat: 7.83,        beta: 0.40, mode: 'drone',      wave: 'organ',    spacing: 'octave' },
+    { id: 'fifth',       name: '⊛ 5TH BEAT',      desc: '528 base, 15 Hz beat, fifth spacing',          base: 528, beat: 15,          beta: 0.60, mode: 'binaural',   wave: 'sine',     spacing: 'fifth' },
+    { id: 'slowpulse',   name: '• SLOW PULSE',    desc: '174 base, 2 Hz pulse, isochronic triangle',    base: 174, beat: 2.0,         beta: 0.25, mode: 'isochronic', wave: 'triangle', spacing: 'octave' },
+    { id: 'cascade',     name: '✹ φ-CASCADE',     desc: '396 base, φ² beat, cascade triangle',          base: 396, beat: PHI*PHI,     beta: 0.55, mode: 'cascade',    wave: 'triangle', spacing: 'phi' },
+    { id: 'harmonic',    name: 'Φ HARMONIC',      desc: '369 base, integer partials stacked',           base: 369, beat: 1.0,         beta: 0.50, mode: 'harmonic',   wave: 'sine',     spacing: 'harmonic' },
+    { id: 'fast40',      name: '40 Hz PULSE',     desc: '432 base, 40 Hz isochronic, sine',             base: 432, beat: 40,          beta: 0.55, mode: 'isochronic', wave: 'sine',     spacing: 'phi' },
+    { id: 'beat6',       name: '6 Hz BEAT',       desc: '256 base, 6 Hz binaural, sine',                base: 256, beat: 6.0,         beta: 0.45, mode: 'binaural',   wave: 'sine',     spacing: 'octave' },
+    { id: 'beat10',      name: '10 Hz BEAT',      desc: '432 base, 10 Hz binaural, sine',               base: 432, beat: 10,          beta: 0.50, mode: 'binaural',   wave: 'sine',     spacing: 'phi' },
+    { id: 'beat2_5',     name: '2.5 Hz BEAT',     desc: '110 base, 2.5 Hz monaural, triangle',          base: 110, beat: 2.5,         beta: 0.30, mode: 'monaural',   wave: 'triangle', spacing: 'octave' },
+    { id: 'sch',         name: '7.83 Hz',         desc: '62.64 base, 7.83 beat, harmonic drone',        base: 62.64,beat: 7.83,       beta: 0.50, mode: 'drone',      wave: 'sine',     spacing: 'harmonic' },
+    { id: 'beat01',      name: '0.1 Hz BEAT',     desc: '220 base, 0.1 Hz binaural, sine',              base: 220, beat: 0.1,         beta: 0.50, mode: 'binaural',   wave: 'sine',     spacing: 'octave' }
   ];
 
   const FREQ_SETS = [
-    { id: 'std',    name: 'Standard 440' },
+    { id: 'std',    name: '440 Hz' },
     { id: '432',    name: '432 Hz' },
-    { id: '528',    name: '528 Hz Love' },
-    { id: '256',    name: '256 Hz Scientific' },
+    { id: '528',    name: '528 Hz' },
+    { id: '256',    name: '256 Hz' },
     { id: '111',    name: '111 Hz' },
-    { id: '136.1',  name: '136.1 Hz (OM)' },
-    { id: '369',    name: '369 Tesla' },
-    { id: '963',    name: '963 Pineal' }
+    { id: '136.1',  name: '136.1 Hz' },
+    { id: '369',    name: '369 Hz' },
+    { id: '963',    name: '963 Hz' }
   ];
 
   const SOLFEGGIO = [
-    { hz: 174,  label: '174 foundation' },
-    { hz: 285,  label: '285 tissue' },
-    { hz: 396,  label: '396 liberate fear' },
-    { hz: 417,  label: '417 change' },
-    { hz: 528,  label: '528 love / DNA' },
-    { hz: 639,  label: '639 relationships' },
-    { hz: 741,  label: '741 awaken' },
-    { hz: 852,  label: '852 intuition' },
-    { hz: 963,  label: '963 unity' }
+    { hz: 174,  label: '174 Hz' },
+    { hz: 285,  label: '285 Hz' },
+    { hz: 396,  label: '396 Hz' },
+    { hz: 417,  label: '417 Hz' },
+    { hz: 528,  label: '528 Hz' },
+    { hz: 639,  label: '639 Hz' },
+    { hz: 741,  label: '741 Hz' },
+    { hz: 852,  label: '852 Hz' },
+    { hz: 963,  label: '963 Hz' }
   ];
 
-  const CHAKRAS = [
-    { hz: 194.18, label: 'root (C)' },
-    { hz: 210.42, label: 'sacral (D)' },
-    { hz: 126.22, label: 'solar (E)' },
-    { hz: 136.10, label: 'heart (F) OM' },
-    { hz: 141.27, label: 'throat (G)' },
-    { hz: 221.23, label: 'third eye (A)' },
-    { hz: 172.06, label: 'crown (B)' }
+  const NOTES = [
+    { hz: 130.81, label: 'C3' },
+    { hz: 146.83, label: 'D3' },
+    { hz: 164.81, label: 'E3' },
+    { hz: 174.61, label: 'F3' },
+    { hz: 196.00, label: 'G3' },
+    { hz: 220.00, label: 'A3' },
+    { hz: 246.94, label: 'B3' },
+    { hz: 261.63, label: 'C4' },
+    { hz: 293.66, label: 'D4' },
+    { hz: 329.63, label: 'E4' },
+    { hz: 349.23, label: 'F4' },
+    { hz: 392.00, label: 'G4' },
+    { hz: 440.00, label: 'A4' }
   ];
 
-  const BRAINWAVES = [
-    { hz: 0.5,  label: 'δ 0.5 Hz' },
-    { hz: 2,    label: 'δ 2 Hz' },
-    { hz: 4,    label: 'θ 4 Hz' },
-    { hz: 6,    label: 'θ 6 Hz' },
-    { hz: 7.83, label: 'Schumann' },
-    { hz: 8,    label: 'α 8 Hz' },
-    { hz: 10,   label: 'α 10 Hz' },
-    { hz: 12,   label: 'α 12 Hz' },
-    { hz: 15,   label: 'β 15 Hz' },
-    { hz: 20,   label: 'β 20 Hz' },
-    { hz: 30,   label: 'β 30 Hz' },
-    { hz: 40,   label: 'γ 40 Hz' },
-    { hz: 60,   label: 'γ 60 Hz' }
+  const LOW_FREQS = [
+    { hz: 0.1,  label: '0.1 Hz' },
+    { hz: 0.5,  label: '0.5 Hz' },
+    { hz: 1,    label: '1 Hz' },
+    { hz: 2,    label: '2 Hz' },
+    { hz: 4,    label: '4 Hz' },
+    { hz: 6,    label: '6 Hz' },
+    { hz: 7.83, label: '7.83 Hz' },
+    { hz: 8,    label: '8 Hz' },
+    { hz: 10,   label: '10 Hz' },
+    { hz: 12,   label: '12 Hz' },
+    { hz: 15,   label: '15 Hz' },
+    { hz: 20,   label: '20 Hz' },
+    { hz: 30,   label: '30 Hz' },
+    { hz: 40,   label: '40 Hz' },
+    { hz: 60,   label: '60 Hz' }
   ];
 
   const RATIOS = [
@@ -878,7 +905,7 @@
     timer: 0,
     timerInt: null,
     timerTarget: 0,
-    currentPreset: 'flow',
+    currentPreset: 'phibeat',
     mode: 'binaural',
     layerCount: 6,
     layerMute: new Array(9).fill(false),
@@ -1794,14 +1821,14 @@
     $('baseStat').textContent = Math.round(it.hz);
     if (state.playing) debouncedRestart();
   });
-  renderChips('chakras', CHAKRAS, (it) => {
+  renderChips('notes', NOTES, (it) => {
     $('base').value = it.hz;
     state.params.base = it.hz;
     $('baseVal').textContent = Math.round(it.hz) + ' Hz';
     $('baseStat').textContent = Math.round(it.hz);
     if (state.playing) debouncedRestart();
   });
-  renderChips('brainwaves', BRAINWAVES, (it) => {
+  renderChips('lowfreqs', LOW_FREQS, (it) => {
     $('beat').value = it.hz;
     state.params.beat = it.hz;
     $('beatVal').textContent = it.hz.toFixed(3) + ' Hz';
