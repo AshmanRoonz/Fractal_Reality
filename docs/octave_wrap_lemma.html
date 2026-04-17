@@ -298,12 +298,12 @@ The ladder produces two different kinds of integer objects:
 <thead><tr><th>Type</th><th>Examples</th><th>What they are</th></tr></thead>
 <tbody>
 <tr><td>Dimensional positions</td><td>• (0D), — (1D), Φ (2D), ○ (3D), ⊛ (0.5D), ⎇ (1.5D), ✹ (2.5D), ⟳ (3.5D)</td><td>Locations on the ladder; ordered; subject to octave wrap</td></tr>
-<tr><td>Counts</td><td>\(T = 3\) (number of structural stations), \(P = 4\) (number of pump phases), \(R = 7\) (rungs), \(G = 12\) (generators), \(V = 13\) (vertex count), \(S = 64\) (state count)</td><td>Cardinalities of framework structures; unordered; plain integers</td></tr>
+<tr><td>Counts</td><td>\(T = 3\) (observer-triad count; scale-positions in the nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞), \(P = 4\) (number of pump phases), \(R = 7\) (rungs), \(G = 12\) (generators), \(V = 13\) (vertex count), \(S = 64\) (state count)</td><td>Cardinalities of framework structures; unordered; plain integers</td></tr>
 </tbody>
 </table>
 
 <p>
-These share integer values across categories (\(T = 3\) and \(\circ = 3\) are both the integer 3; \(P = 4\) and no current dimensional position is 4), but they are structurally distinct. T is the count of stations; ○ is a dimensional position that happens to have the same integer value by conservation of traversal (A4: 0+1+2=3).
+These share integer values across categories (\(T = 3\) and \(\circ = 3\) are both the integer 3; \(P = 4\) and no current dimensional position is 4), but they are structurally distinct. T is the observer-triad count (three scale-positions in the nesting chain); ○ is a dimensional position that happens to have the same integer value by conservation of traversal (A4: 0+1+2=3).
 </p>
 
 <div class="lemma-block">
@@ -403,14 +403,14 @@ This is the condition. At T = 3, (T−1)! = 2! = 2, and Φ = 2 (from A1, channel
 <h3>Structural reading</h3>
 
 <p>
-The identity says: at T = 3, the orderings of the four pump phases (a combinatoric count of F-side dynamics) equal the gauge generators multiplied by the channel count (a κ-side structural product, \(SU(3) \oplus SU(2) \oplus U(1)\) has dim 8 + 3 + 1 = 12 generators, times 2 channels). The two sides describe the same quantity:
+The identity says: at T = 3 (the observer-triad count; three distinct scale-positions in the nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞), the orderings of the four pump phases (a combinatoric count of F-side dynamics) equal the gauge generators multiplied by the channel count (a κ-side structural product; SU(3) × SU(2) × U(1) has dim 8 + 3 + 1 = 12 generators, times 2 channels). The two sides describe the same quantity:
 </p>
 
 <div class="reading">
 <h3>Two views of one count</h3>
 <ul>
 <li><strong>F-side (pump-cycle reading):</strong> 24 is the number of distinct orderings of the four beats (•∘⊛, —∘⎇, Φ∘✹, ○∘⟳). This is the combinatorics of one cycle's temporal dynamics.</li>
-<li><strong>κ-side (gauge reading):</strong> 24 is the number of gauge-generator components, each doubled by the channel dichotomy (convergent/emergent). This is the structure of one cycle's cross-station coupling content.</li>
+<li><strong>κ-side (gauge reading):</strong> 24 is the number of gauge-generator components (SU(3) × SU(2) × U(1) = 12), each doubled by the channel dichotomy (convergent/emergent). This is the structure of one cycle's cross-station coupling content. Note that the SM gauge group itself has the triadic observer-structure: three gauge groups (T = 3 at the meta-level), with the middle one (SU(2)) having 3 generators (T = 3 at the object-level); A3 as self-similarity of the observer-triad at every scale of the gauge structure.</li>
 </ul>
 <p>
 At T = 3, these coincide. The F-side (dynamics) and the κ-side (coupling) are the same count expressed in two vocabularies. The apparent ambiguity in the α formula's counting factor was an artifact of reading one quantity two ways; the quantity itself is uniquely pinned.
@@ -430,7 +430,11 @@ The framework already lists five independent routes forcing T = 3 (§27.7b): \(R
 </ul>
 
 <p>
-The structural content of Route 6: T = 3 is forced not just by the ladder's internal arithmetic (routes 1–5) but by the requirement that the F-side and the κ-side produce the same counting factor at the 2D rung. If T were any other value, the pump cycle's combinatorics and the gauge structure's product would diverge, and the α formula's 360 would admit two genuinely different readings. At T = 3 they converge; the framework is self-consistent at the 2D rung precisely because (T−1)! = Φ.
+The structural content of Route 6, read under T = 3 as observer-triad count: the observer-triad's cardinality (three distinct scale-positions) minus one (the observer-position itself, your own scale) equals the channel count per aperture. Equivalently, the factorial of "what the observer sees beyond themselves" (container + source; two positions) equals Φ. This is the observer-triad's structure speaking: excluding your own position, the remaining two observer-positions have 2! = 2 orderings, and that count equals the channel count at any aperture. Not an ad hoc arithmetic coincidence; a structural reflection of the observer-triad's outside-yourself partition.
+</p>
+
+<p>
+Equivalent framing via the 2D-rung pinning: T = 3 is forced not just by the ladder's internal arithmetic (routes 1–5) but by the requirement that the F-side and the κ-side produce the same counting factor at the 2D rung. If T were any other value, the pump cycle's combinatorics and the gauge structure's product would diverge, and the α formula's 360 would admit two genuinely different readings. At T = 3 they converge; the framework is self-consistent at the 2D rung precisely because (T−1)! = Φ.
 </p>
 
 <h3>Consequence for the α derivation</h3>
@@ -446,7 +450,7 @@ Together with the octave-wrap lemma (Φ + ○ = 1.5D'), the counting-factor iden
 </div>
 
 <p>
-These are not two admissible assemblies; they are one assembly with two equivalent structural readings. Each factor has a single structural role: the counting factor (24, the coincidence of pump orderings and gauge-times-channels), the station count (T = 3), and the dimensional sum ((Φ + ○) = 1.5D'). The residual assembly ambiguity identified in earlier review now resolves: the α formula's 360 is uniquely assembled once T = 3 is admitted.
+These are not two admissible assemblies; they are one assembly with two equivalent structural readings. Each factor has a single structural role: the counting factor (24, the coincidence of pump orderings and gauge-times-channels), the observer-triad count (T = 3, three scale-positions in the nesting chain), and the dimensional sum ((Φ + ○) = 1.5D'). The residual assembly ambiguity identified in earlier review now resolves: the α formula's 360 is uniquely assembled once T = 3 is admitted.
 </p>
 
 <h2>7. Where this lemma is used</h2>
@@ -457,12 +461,12 @@ The immediate load-bearing use is in the α fixed-point formula (<a href="alpha_
 
 <div class="eq-block">
 \[
-360 \;=\; \underbrace{P!}_{\text{orderings of pump phases (count)}} \;\cdot\; \underbrace{T}_{\text{stations traversed (count)}} \;\cdot\; \underbrace{(\Phi + \circ)}_{\text{branching at }\odot_\Lambda\text{ (dimensional, via octave wrap)}}
+360 \;=\; \underbrace{P!}_{\text{orderings of pump phases (count)}} \;\cdot\; \underbrace{T}_{\text{observer-triad positions (count)}} \;\cdot\; \underbrace{(\Phi + \circ)}_{\text{branching at }\odot_\Lambda\text{ (dimensional, via octave wrap)}}
 \]
 </div>
 
 <p>
-The three factors have distinct structural content: the first is combinatoric (orderings), the second is cardinal (stations), the third is dimensional (next-scale branching). The product is "all orderings of pump beats through all stations, reaching into the next scale's differentiation." That is a specific content claim, not an arithmetic coincidence.
+The three factors have distinct structural content: the first is combinatoric (orderings of pump beats), the second is cardinal (three observer-relevant positions in the nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞), the third is dimensional (next-scale branching). The product is "all orderings of pump beats, at each of the three observer positions, reaching into the next scale's differentiation." That is a specific content claim, not an arithmetic coincidence.
 </p>
 
 <p>
@@ -481,12 +485,14 @@ Secondary uses will appear elsewhere in the corpus as the lemma is cited: any fo
 <div class="status">
 <h3>Status</h3>
 <p>
-This lemma, together with the P! = G·Φ identity and the sixth self-determination of T = 3 via (T−1)! = Φ, is newly stated (2026-04-16 session, in dialogue with external review). It is not yet integrated into <code>circumpunct_framework.md</code> as a canonical structural piece; the existing corpus uses the octave-closure rule 3.5D = 0D' and treats \((\Phi + \circ)\) as a pool-native integer without explicit octave-wrap arithmetic, and lists five routes for T = 3 (§27.7b) without the (T−1)! = Φ route. Integration steps pending:
+This lemma, together with the P! = G·Φ identity, the sixth self-determination of T = 3 via (T−1)! = Φ, and a reframe of T = 3 as the observer-triad count (three scale-positions in the nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞, not "three of four structural dimensions"), is newly stated (2026-04-16 session, in dialogue with external review). It is not yet integrated into <code>circumpunct_framework.md</code>; the existing corpus describes T = 3 as "three structural stations (•, Φ, ○)" (which is three-of-four, not a genuine triad), treats (Φ + ○) as a pool-native integer without explicit octave-wrap arithmetic, and lists five routes for T = 3 (§27.7b) without the (T−1)! = Φ route. Integration steps pending:
 </p>
 <ol>
+<li>Rewrite the T = 3 definition throughout the corpus to name the observer-triad (the three scale-positions in the nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞), with the conservation 0+1+2=3 treated as a separate structural fact that gives the same integer via a different route. The "(•, Φ, ○) is the triad" reading is a labeling error (three of four dimensions is not a triad) and should be retired.</li>
 <li>Add §27.7t (Octave-Wrap Lemma and Counting-Factor Identity) to <code>circumpunct_framework.md</code>, formalizing both rules and their consistency with §27.7s's T = κ ∘ F operator and with conservation of traversal.</li>
 <li>Add Route 6 ((T−1)! = Φ) to §27.7b's list of self-determinations of T = 3, with attribution to the F-side / κ-side coincidence reading.</li>
-<li>Audit the other ladder-constant derivations (G, Λ, mass ratios, Cabibbo, Higgs quartic) for implicit uses of octave-wrap arithmetic and the counting-factor identity; cite these where they occur.</li>
+<li>Note that T = 3 surfaces fractally across the gauge structure: three gauge groups (SU(3) × SU(2) × U(1)) at the meta-level, three generators of SU(2) at the object-level, each instance of the triadic observer-structure containing another at the next level down (A3 made literal in the gauge content).</li>
+<li>Audit the other ladder-constant derivations (G, Λ, mass ratios, Cabibbo, Higgs quartic) for implicit uses of octave-wrap arithmetic, the counting-factor identity, and the observer-triad reading of T; cite these where they occur.</li>
 <li>Check the extended identity table (§5 above) for any entry that produces a structurally absurd reading. If any entry fails, weaken the lemma to only the specific identity 3D + 2D = 1.5D'.</li>
 <li>Decide whether the type-preserving-addition corollary extends to subtraction, multiplication, and powers, or whether it applies only to addition.</li>
 <li>Decide whether the counting-factor identity (P! = G·Φ at T = 3) generalizes to other factorial-meets-gauge-product coincidences at T = 3, or whether it is specific to the P! / G·Φ pair. The framework uses P! in specific places (pump-phase orderings, kernel; §2 of this document) and G·Φ in others (gauge structure audit); the identity links these two specific quantities, not factorials and gauge products in general.</li>
