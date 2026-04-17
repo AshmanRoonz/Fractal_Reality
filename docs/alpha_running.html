@@ -367,22 +367,23 @@ A full framework derivation of Δα<sub>had</sub> would either:
 </ol>
 
 <div class="open">
-<div class="label">Open: hadronic half</div>
+<div class="label">Update 2026-04-17: hadronic half narrowed to 3.5%</div>
 <p style="margin: 0;">
-Until either route closes, Δα<sub>had</sub>(M<sub>Z</sub>²) is taken from experimental dispersive calculations (PDG value 0.02761 ± 0.00013). This is the same practice used by the Standard Model in its precision fits; it is not a framework flaw per se, but it is a gap in a "zero-experimental-input" derivation of α(M<sub>Z</sub>). Flagging it explicitly.
+As of 2026-04-17, individual quark masses have been proposed in framework form (see <a href="quark_masses.html">quark_masses.html</a>): m_u = P(1+SU(3)α)·m_e, m_d = T²(1+Tα)·m_e, m_s = (SU(3)/T²)·m_μ, m_c = G·m_μ, m_b = Φ^V·m_e, m_t = (R/A(2))·v. Using these framework quark masses plus framework Λ_QCD (= v·α^(56/39) = 210 MeV) as the threshold for light quarks, the free-fermion hadronic contribution evaluates to Δ(1/α)<sub>had</sub> ≈ 4.01, within 3.5% of the measured dispersive value 3.87. The remaining 3.5% gap is the free-fermion approximation's treatment of light-quark resonances below Λ_QCD; closing that requires a direct framework expression for R(s') (meson-mass-law-based; partial), which is a smaller, specific technical project than "whole hadronic running."
 </p>
 </div>
 
 <h2>4. Putting the pieces together at M<sub>Z</sub></h2>
 
 <table>
-<thead><tr><th>Contribution</th><th>Δ(1/α)</th><th>Source</th><th>Status</th></tr></thead>
+<thead><tr><th>Contribution</th><th>Δ(1/α)</th><th>Source</th><th>Status (2026-04-17)</th></tr></thead>
 <tbody>
-<tr><td>Leptonic</td><td>4.83</td><td>framework lepton masses + structural β coefficient</td><td><strong>closed</strong> this doc</td></tr>
-<tr><td>Hadronic (5 flavors)</td><td>~3.87</td><td>e⁺e⁻ dispersive (experimental)</td><td>open: quark masses pending</td></tr>
-<tr><td>Top contribution</td><td>~0.05</td><td>heavy quark decoupling formula</td><td>negligible at M<sub>Z</sub></td></tr>
-<tr><td><strong>Total</strong></td><td><strong>~8.75</strong></td><td></td><td></td></tr>
-<tr><td>PDG measured (OS)</td><td>9.09</td><td>1/α(0) − 1/α(M<sub>Z</sub>)</td><td>target</td></tr>
+<tr><td>Leptonic</td><td>4.83</td><td>framework lepton masses + structural β coefficient</td><td><strong>closed</strong> (§2)</td></tr>
+<tr><td>Hadronic (5 flavors, framework quark masses + Λ_QCD)</td><td>~4.01</td><td>free-fermion with framework thresholds (<a href="quark_masses.html">quark_masses.html</a>)</td><td><strong>narrowed</strong> (3.5% gap, not closed)</td></tr>
+<tr><td>Hadronic (PDG dispersive)</td><td>~3.87</td><td>e⁺e⁻ experimental data</td><td>reference</td></tr>
+<tr><td>Top contribution</td><td>~0.04</td><td>heavy quark decoupling formula (m_t from framework)</td><td>small at M<sub>Z</sub></td></tr>
+<tr><td><strong>Total (framework)</strong></td><td><strong>~8.88</strong></td><td>lep + framework had + top</td><td></td></tr>
+<tr><td>PDG measured (OS)</td><td>9.09</td><td>1/α(0) − 1/α(M<sub>Z</sub>)</td><td>target (2.3% gap)</td></tr>
 </tbody>
 </table>
 
