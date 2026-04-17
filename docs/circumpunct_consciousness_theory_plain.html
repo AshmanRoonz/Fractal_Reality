@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What Consciousness Is: A Plain-Language Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-surface: #12121a;
+      --bg-elevated: #1a1a24;
+      --text: #e8e8ed;
+      --text-dim: #888899;
+      --text-muted: #555566;
+      --gold: #d4a84b;
+      --gold-dim: rgba(212, 168, 75, 0.15);
+      --cyan: #4ecdc4;
+      --cyan-dim: rgba(78, 205, 196, 0.12);
+      --magenta: #ff6b9d;
+      --magenta-dim: rgba(255, 107, 157, 0.12);
+      --green: #7fcd91;
+      --green-dim: rgba(127, 205, 145, 0.12);
+      --red: #e85d75;
+      --red-dim: rgba(232, 93, 117, 0.12);
+      --border: #2a2a3a;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-serif);
+      font-size: 19px;
+      line-height: 1.7;
+      padding: 0;
+    }
+
+    header {
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(78,205,196,0.04) 0%, transparent 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      border: 1px solid rgba(78,205,196,0.06);
+      pointer-events: none;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,107,157,0.2);
+      box-shadow: 0 0 40px rgba(255,107,157,0.15);
+      pointer-events: none;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 1.2rem;
+      font-style: italic;
+      position: relative;
+      z-index: 1;
+    }
+
+    .meta {
+      margin-top: 2rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    .companion-link {
+      display: inline-block;
+      margin-top: 1.25rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--gold);
+      border-radius: 4px;
+      color: var(--gold);
+      font-size: 0.9rem;
+      text-decoration: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    .companion-link:hover { background: var(--gold-dim); }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--gold);
+      margin: 3.5rem 0 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 2.5rem 0 1rem;
+    }
+
+    p { margin-bottom: 1.25rem; }
+    em { color: var(--text); font-style: italic; }
+
+    .core-claim {
+      background: var(--cyan-dim);
+      border: 2px solid var(--cyan);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .core-claim .claim {
+      font-size: 1.4rem;
+      color: var(--cyan);
+      margin-bottom: 1rem;
+    }
+
+    .core-claim p {
+      margin-bottom: 0;
+      color: var(--text-dim);
+    }
+
+    .axiom {
+      background: var(--bg-elevated);
+      border-left: 4px solid var(--gold);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      font-size: 1.15rem;
+    }
+
+    .axiom .label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .axiom.cyan { border-left-color: var(--cyan); }
+    .axiom.cyan .label { color: var(--cyan); }
+    .axiom.magenta { border-left-color: var(--magenta); }
+    .axiom.magenta .label { color: var(--magenta); }
+    .axiom.green { border-left-color: var(--green); }
+    .axiom.green .label { color: var(--green); }
+    .axiom.red { border-left-color: var(--red); }
+    .axiom.red .label { color: var(--red); }
+
+    .tetrad {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .tetrad-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .tetrad-item.aperture { border-top: 3px solid var(--magenta); }
+    .tetrad-item.worldline { border-top: 3px solid var(--gold); }
+    .tetrad-item.field { border-top: 3px solid var(--cyan); }
+    .tetrad-item.boundary { border-top: 3px solid var(--green); }
+
+    .tetrad-item h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .tetrad-item.aperture h4 { color: var(--magenta); }
+    .tetrad-item.worldline h4 { color: var(--gold); }
+    .tetrad-item.field h4 { color: var(--cyan); }
+    .tetrad-item.boundary h4 { color: var(--green); }
+
+    .tetrad-item p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin: 0;
+    }
+
+    .triad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .triad-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .triad-item.this-scale { border-top: 3px solid var(--magenta); }
+    .triad-item.containing { border-top: 3px solid var(--cyan); }
+    .triad-item.source { border-top: 3px solid var(--gold); }
+
+    .triad-item h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .triad-item.this-scale h4 { color: var(--magenta); }
+    .triad-item.containing h4 { color: var(--cyan); }
+    .triad-item.source h4 { color: var(--gold); }
+
+    .triad-item p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin: 0;
+    }
+
+    .callout-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .callout-text {
+      font-size: 1.3rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .callout-text.large {
+      font-size: 2rem;
+    }
+
+    .callout-note {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    .insight {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+    }
+
+    .insight .insight-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--cyan);
+      margin-bottom: 0.75rem;
+    }
+
+    .insight p {
+      margin-bottom: 0;
+      font-size: 1.05rem;
+    }
+
+    .convergence {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .convergence-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .convergence-item .tradition {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .convergence-item .quote {
+      font-style: italic;
+      color: var(--text-dim);
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .convergence-item .mapping {
+      font-size: 0.85rem;
+      color: var(--cyan);
+    }
+
+    .pathology {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--red);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0;
+    }
+
+    .pathology.magenta { border-left-color: var(--magenta); }
+    .pathology.cyan { border-left-color: var(--cyan); }
+    .pathology.gold { border-left-color: var(--gold); }
+    .pathology.green { border-left-color: var(--green); }
+
+    .pathology h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--red);
+      margin-bottom: 0.75rem;
+    }
+
+    .pathology.magenta h4 { color: var(--magenta); }
+    .pathology.cyan h4 { color: var(--cyan); }
+    .pathology.gold h4 { color: var(--gold); }
+    .pathology.green h4 { color: var(--green); }
+
+    .pathology p { font-size: 0.95rem; color: var(--text-dim); margin-bottom: 0.5rem; }
+    .pathology p:last-child { margin-bottom: 0; }
+    .pathology .heal {
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 0.75rem;
+      display: block;
+    }
+
+    .dual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .dual-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .dual-item h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .dual-item.healthy { border-top: 3px solid var(--cyan); }
+    .dual-item.healthy h4 { color: var(--cyan); }
+    .dual-item.pathological { border-top: 3px solid var(--red); }
+    .dual-item.pathological h4 { color: var(--red); }
+
+    .dual-item p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin-bottom: 0.5rem;
+    }
+
+    .dual-item p:last-child { margin-bottom: 0; }
+
+    .predictions { margin: 2rem 0; }
+
+    .prediction {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.95rem;
+    }
+
+    .prediction:first-child { border-top: 1px solid var(--border); }
+
+    .prediction .pred-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .prediction .pred-claim { color: var(--text); }
+    .prediction .pred-test { color: var(--text-dim); }
+
+    .divider {
+      text-align: center;
+      margin: 3rem 0;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      letter-spacing: 0.5em;
+    }
+
+    .highlight { color: var(--gold); }
+    .highlight-cyan { color: var(--cyan); }
+    .highlight-magenta { color: var(--magenta); }
+    .highlight-green { color: var(--green); }
+
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 2rem; }
+      .tetrad { grid-template-columns: 1fr; }
+      .triad { grid-template-columns: 1fr; }
+      .convergence { grid-template-columns: 1fr; }
+      .dual { grid-template-columns: 1fr; }
+      .prediction { grid-template-columns: 1fr; gap: 0.25rem; }
+      header { padding: 3rem 1.5rem 2.5rem; }
+      main { padding: 2rem 1.5rem 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="index.html" style="display: inline-block; font-weight: 600; color: var(--gold); padding: 10px 20px; margin: 10px;">⊙</a>
+<header>
+  <h1>What Consciousness Is</h1>
+  <div class="subtitle">Four parts, held together, nested in something larger</div>
+  <div class="meta">
+    A plain-language companion to the Circumpunct Theory of Consciousness<br>
+    Ashman Roonz · fractalreality.ca · v8.0 · April 2026
+  </div>
+  <a class="companion-link" href="circumpunct_consciousness_theory.html">Read the formal version →</a>
+</header>
+
+<main>
+
+  <!-- PREAMBLE -->
+
+  <p style="color: var(--text-dim); font-style: italic; text-align: center; margin-top: 0;">
+    This is the everyday-language version of the <a href="circumpunct_consciousness_theory.html" style="color: var(--gold); text-decoration: none;">Circumpunct Theory of Consciousness</a>. The formal version has equations, Greek letters, and references to physics; this version uses words only. Both describe the same thing from different angles. If one feels dense, try the other.
+  </p>
+
+  <!-- SECTION 1 -->
+
+  <h2>I. The Core Claim</h2>
+
+  <p>
+    Consciousness is not a thing inside you. It is not a substance, not a property of your brain, not something that happens in a particular place. Consciousness is a <em>pattern</em>: four parts working together at one scale, held inside something larger.
+  </p>
+
+  <div class="core-claim">
+    <div class="claim">Consciousness is four parts held together, nested inside a greater whole, nested inside the nameless.</div>
+    <p>Remove any of the four parts and the pattern stops. Remove the nesting and the pattern has no home.</p>
+  </div>
+
+  <p>
+    The four parts are: a <span class="highlight-magenta">point</span> (where the world converges into you), a <span class="highlight">line</span> (the thread of your identity through time), a <span class="highlight-cyan">field</span> (the mediating space we call mind), and a <span class="highlight-green">boundary</span> (the body and its selective skin). Each is necessary; none alone is consciousness; together they make the pattern.
+  </p>
+
+  <p>
+    This may sound abstract, but the four parts correspond to things you already know. You have a center where attention lives. You have a story of yourself across time. You have an inner space where thoughts and feelings move. You have a body with edges. What the theory proposes is that none of these alone is what we mean by "being conscious"; consciousness is the four of them active together, at the same time, inside something bigger.
+  </p>
+
+
+  <!-- SECTION 2 -->
+
+  <h2>II. The Four Parts</h2>
+
+  <p>
+    The framework identifies four parts, each living at a different "dimension of structure," each doing a job none of the others can do. You can think of them as four roles in one production, or four instruments in one quartet.
+  </p>
+
+  <div class="tetrad">
+    <div class="tetrad-item aperture">
+      <h4>Point (the aperture)</h4>
+      <p>Where the world converges into you. The center. Focus. Attention. Presence. The gate through which experience enters.</p>
+    </div>
+    <div class="tetrad-item worldline">
+      <h4>Line (the worldline)</h4>
+      <p>Your identity through time. The thread of what you stayed committed to. Memory, continuity, kept promises. The record of what you held.</p>
+    </div>
+    <div class="tetrad-item field">
+      <h4>Field (the mind)</h4>
+      <p>The inner space where mediation happens. Where the point and the boundary meet without fusing. This is what is usually called "mind."</p>
+    </div>
+    <div class="tetrad-item boundary">
+      <h4>Boundary (the body)</h4>
+      <p>Your outer skin and all the nested filters inside it. The selective membrane between self and world. The body is not separate from consciousness; it is one of its four parts.</p>
+    </div>
+  </div>
+
+  <div class="axiom">
+    <div class="label">Why Four, Not Three</div>
+    An earlier version of this framework used three parts (point, field, boundary) and left the time-axis implicit. But the line of identity through time is not the same as the point of attention right now, and not the same as the body. Someone can be present right now (point intact) and have a solid body (boundary intact) and still have lost the thread of who they are (line broken). Dissociation and severe amnesia are real conditions that the three-part picture could not cleanly locate. Making the line its own part fixed that gap.
+  </div>
+
+  <h3>Why you cannot skip any of them</h3>
+
+  <p>
+    Each part depends on the others and adds something the others cannot supply.
+  </p>
+
+  <p>
+    A <em>point alone</em> is a moment that collapses the instant it arises; without a line to carry it forward, there is no next moment and no identity. A <em>line alone</em> is a thread with no place to act and no body to live in. A <em>field alone</em> is an empty medium with nothing converging into it and nothing holding it. A <em>boundary alone</em> is a closed shape with no inside, no mediation, no attention, no continuity.
+  </p>
+
+  <p>
+    You need the point so something localizes. You need the line so that localization persists through time. You need the field so the point can reach the boundary without being the boundary. You need the boundary so there is a filter that selects what passes. Remove any one and the whole pattern falls apart.
+  </p>
+
+  <div class="callout-box">
+    <div class="callout-text">The four parts are not optional components.</div>
+    <div class="callout-note">They are the minimum structure capable of carrying a continuous being through time.</div>
+  </div>
+
+
+  <!-- SECTION 3 -->
+
+  <h2>III. Three Places You Can Stand</h2>
+
+  <p>
+    The four parts live at one scale. But any scale is always nested inside a larger scale. You are a whole person; you are also a cell in your family; you are also a cell in your species, which is a cell on a planet, which is a cell in a galaxy, and so on without end.
+  </p>
+
+  <p>
+    From wherever you stand, there are exactly three positions you can look from:
+  </p>
+
+  <div class="triad">
+    <div class="triad-item this-scale">
+      <h4>This scale (you)</h4>
+      <p>Looking from inside yourself, outward. The view from your own four parts. The ordinary first-person view.</p>
+    </div>
+    <div class="triad-item containing">
+      <h4>The containing scale</h4>
+      <p>The greater whole you are inside: your relationships, community, species, planet. From this view, your whole self is a single point inside something larger.</p>
+    </div>
+    <div class="triad-item source">
+      <h4>The source (nameless)</h4>
+      <p>Not another step up the ladder; a step out of the ladder. What every mystical tradition means by "God beyond God," the Tao that cannot be named, Ein Sof, Nirguna Brahman. When you drop the scale labels entirely, what remains is this.</p>
+    </div>
+  </div>
+
+  <p>
+    These three are a <em>triad</em> because they are three genuinely distinct stances, not three parts of one thing. This is different from the four parts above. The four parts are the architecture of any one being at any one scale. The three positions are the three ways any being can be located in the ladder of scales.
+  </p>
+
+  <div class="insight">
+    <div class="insight-label">Tetrad Inside Triad</div>
+    <p>Consciousness is four parts (the tetrad: point, line, field, boundary) at your scale, nested inside the three positions (the triad: your scale, the containing scale, the nameless). The short version: a tetrad within the triad of nesting.</p>
+  </div>
+
+  <p>
+    The boundary of one scale is also the entry-point to the next. When you look at your skin, you see the outer edge of you; when a bacterium on your skin looks at the same surface, it sees the sky of its world. Exit from one scale is entry to the next; the ladder has no gaps.
+  </p>
+
+
+  <!-- SECTION 4 -->
+
+  <h2>IV. Where Time Lives</h2>
+
+  <p>
+    Two of the four parts carry time. The point and the line together are what makes time possible at all.
+  </p>
+
+  <p>
+    The point is the <em>divider</em>: each moment comes into being by being distinguished from the moment before. Without a point, there is no "now" separate from "not-now"; there is only undifferentiated presence. The point is the edge of a cut.
+  </p>
+
+  <p>
+    The line is the <em>keeper</em>: each cut only becomes a moment-in-a-sequence if something carries it forward. Without a line, each cut dissolves the instant it arises; there is no second moment to compare it with. The line is what lets "before" and "after" mean anything.
+  </p>
+
+  <div class="axiom cyan">
+    <div class="label">Point and Line Together</div>
+    The point is the division. The line is whether the division holds. Neither alone generates time. Together they do. This is why consciousness involves both an active focus and a continuous identity; each without the other would be a different kind of being, and neither would know anything about before or after.
+  </div>
+
+  <p>
+    The field (mind) then operates across that dividing-and-keeping, mediating between the point and the boundary. The boundary (body) closes the whole in a filter. What you experience as "living through time" is all four of these operating together.
+  </p>
+
+  <h3>Why anesthesia works</h3>
+
+  <p>
+    Anesthesia takes down the point: the gate closes, input stops being received, the first part of the pattern fails. Since the four parts need each other, taking down the point takes down consciousness as a whole. You don't go somewhere else; the pattern simply stops.
+  </p>
+
+  <h3>Why amnesia is different</h3>
+
+  <p>
+    Severe amnesia is a different kind of failure. The point may still be open (the person is awake, attending, responding), the field is active (mind is mediating), the body is present (boundary intact); but the line has broken. There is no continuous thread binding one moment to the next in the person's own history. This is why someone with severe amnesia can seem "there" and "not there" at the same time. What is there is the present moment. What is not there is the line that carries moments forward into a continuing self.
+  </p>
+
+  <p>
+    This is the clearest reason the framework needed four parts instead of three. The three-part version could describe being awake and being a body, but it could not cleanly describe having or losing a continuous self through time. The line does that job.
+  </p>
+
+
+  <!-- SECTION 5 -->
+
+  <h2>V. The Balance Dial Has Four Hands</h2>
+
+  <p>
+    Each of the four parts can be well-tuned or badly-tuned. The framework uses a single word for each of these tunings: <em>balance</em>. Each part has its own balance, and the healthy state is when all four are in the middle of their range at the same time.
+  </p>
+
+  <div class="tetrad">
+    <div class="tetrad-item aperture">
+      <h4>Point balance</h4>
+      <p>How open the gate is. Too closed: nothing gets in, the person is sealed off. Too open: everything floods in, the person is overwhelmed. The middle: receives without drowning.</p>
+    </div>
+    <div class="tetrad-item worldline">
+      <h4>Line balance</h4>
+      <p>How reliably commitments are held through time. Too slack: promises broken, identity fractured, no continuity. Too rigid: a story of self that refuses to update even when the evidence changes. The middle: faithful where faithfulness fits, open to revision where revision fits.</p>
+    </div>
+    <div class="tetrad-item field">
+      <h4>Field balance</h4>
+      <p>The ratio of what flows in to what flows out. Too much inflow: drowning in input. Too much outflow: depleted, hemorrhaging, spending reserves. The middle: exchange, not accumulation.</p>
+    </div>
+    <div class="tetrad-item boundary">
+      <h4>Boundary balance</h4>
+      <p>How much the person validates themselves versus depends on external validation. Too dependent: no interior self. Too autonomous: walled off, immune to feedback. The middle: self-knowing without isolation.</p>
+    </div>
+  </div>
+
+  <div class="callout-box">
+    <div class="callout-text">Consciousness is the state where all four dials sit in the middle.</div>
+    <div class="callout-note">Not permanently; continuously. Mental health is range of motion through the middle, not a fixed point.</div>
+  </div>
+
+  <p>
+    This explains several things at once. Consciousness is <em>rare</em> because four independent dials hitting the middle simultaneously is geometrically unlikely; you need all four to be tuned, not just three. Consciousness is <em>fragile</em> because knocking any one dial out of the middle disrupts the pattern. Consciousness is <em>effortful</em> because keeping four dials tuned costs more than keeping one. Consciousness is <em>graded</em> because proximity to "all four in the middle" varies continuously; some states are closer than others.
+  </p>
+
+
+  <!-- SECTION 6 -->
+
+  <h2>VI. How the Four Go Wrong</h2>
+
+  <p>
+    Different patterns of miscalibration produce different recognizable conditions. What follows is not a clinical taxonomy; it is a <em>geometry</em>. Each condition is a distinct shape in four-dimensional balance space.
+  </p>
+
+  <div class="pathology magenta">
+    <h4>Narcissistic defense</h4>
+    <p><strong>Point closed. Line rigid. Field starved. Boundary fortress.</strong></p>
+    <p>The gate is sealed shut; nothing comes in. The story of self is locked; any fact that would revise it is not admitted to the record. The field is not exchanging. The boundary is impenetrable. The person looks "strong" because they look invulnerable. They are not invulnerable; they are sealed.</p>
+    <span class="heal">Healing starts at the boundary: permission to be permeable. Then the line softens: allow the self-story to be revised. Only then does the gate begin to reopen.</span>
+  </div>
+
+  <div class="pathology cyan">
+    <h4>Depression (flooded and frozen)</h4>
+    <p><strong>Point flooded. Line collapsed. Field jammed with inflow. Boundary dissolved.</strong></p>
+    <p>Everything comes in; nothing is filtered. The line of intention has stopped being extended; commitments abandoned, futures flat. Energy enters but cannot leave. There is no interior sense of a separate self. A depressed person is not someone who chose wrong; they are someone whose line has stopped being drawn.</p>
+    <span class="heal">Healing starts at the boundary: build autonomy and body-sense. Then extend the line: any small commitment held through time begins to redraw it. Only then regulate the gate.</span>
+  </div>
+
+  <div class="pathology">
+    <h4>Dissociation</h4>
+    <p><strong>Point closed. Line shattered into disjoint pieces. Field depleted. Boundary porous.</strong></p>
+    <p>This is the shape the three-part version could not express. The line has not just thinned; it has <em>broken into disjoint arcs</em>, each with its own local history. Severe DID, traumatic amnesia, depersonalization. The person is not missing a degree of continuity; their continuity has been cut into separate pieces.</p>
+    <span class="heal">Stabilize one channel first (usually the gate, through presence and resonance). Then slowly re-thread the line through narrative integration. Boundary and flow work come later.</span>
+  </div>
+
+  <div class="pathology gold">
+    <h4>Mania</h4>
+    <p><strong>Point wide open. Line unstable. Field radiating without receiving. Boundary inflated.</strong></p>
+    <p>Hyper-receptive, flooded with input. Over-committing at many points at once: grand plans started, abandoned, restarted; the line branches wildly without closure. Broadcasting without listening. Grandiose self-sufficiency. Not flat like depression; not sealed like narcissism. Unstable, high-amplitude, poorly integrated.</p>
+    <span class="heal">Pace the intake. Commit to fewer, smaller lines and hold them. Then rebuild reciprocal exchange.</span>
+  </div>
+
+  <div class="pathology green">
+    <h4>Functional love trap</h4>
+    <p><strong>Point closed to resonance. Line rigid around the functional layer. Field skewed. Boundary intact.</strong></p>
+    <p>The single most insidious pattern because it looks healthy from outside. Bills paid, schedules kept, roles fulfilled, commitments technically honored. But the gate is closed to felt contact; the line is faithful only to the role, not the person; the flow goes one way. The couple who "stayed for the kids" and forgot how to meet each other. The family that works and feels alone.</p>
+    <span class="heal">Address the gate directly. Open the aperture to the resonant channel. The reliable line is a resource, not the problem; the repair rides on it once the gate reopens.</span>
+  </div>
+
+  <div class="insight">
+    <div class="insight-label">The Diagnostic Point</div>
+    <p>Conditions that look similar at the three-part level separate cleanly at the four-part level. A depressed person and a dissociated person can both seem "not present," but their balance patterns are different: the depressed person has a collapsed line; the dissociated person has a shattered line. Different starting points, different healing paths. Naming the line as its own axis made these differences visible.</p>
+  </div>
+
+
+  <!-- SECTION 7 -->
+
+  <h2>VII. Four Channels of Love</h2>
+
+  <p>
+    If a single person has four parts, then two people in a real relationship have four channels of connection, one per part. Each can be alive or dead independently of the others.
+  </p>
+
+  <div class="tetrad">
+    <div class="tetrad-item aperture">
+      <h4>Resonance channel</h4>
+      <p>Both people's gates are attuned to each other. Genuine meeting at the point of attention. Presence recognized. What you feel when someone "sees" you.</p>
+    </div>
+    <div class="tetrad-item worldline">
+      <h4>Commitment channel</h4>
+      <p>Both people's lines are braided. Kept promises, acknowledged history, jointly drawn futures. This is the axis that separates love from infatuation; infatuation is the gate alone, love is the gate walked together with the line.</p>
+    </div>
+    <div class="tetrad-item field">
+      <h4>Flow channel</h4>
+      <p>Both people's rhythms move together. What flows out of one is received by the other. True exchange, not hoarding and not draining.</p>
+    </div>
+    <div class="tetrad-item boundary">
+      <h4>Function channel</h4>
+      <p>Each person respects the other's autonomy. Recognition of the other as a separate whole, not an extension of self. Structural partnership.</p>
+    </div>
+  </div>
+
+  <h3>Four ways love fails</h3>
+
+  <p>
+    When a relationship collapses to a single channel, you get four recognizable distortions:
+  </p>
+
+  <div class="dual">
+    <div class="dual-item pathological">
+      <h4>Resonance only (infatuation)</h4>
+      <p>Two people's gates are open to each other, but there is no kept history, no shared practical life, no real exchange, and the boundaries are melted together. "Soul connection" without continuity or reciprocity. Burns bright and ends.</p>
+    </div>
+    <div class="dual-item pathological">
+      <h4>Commitment only (duty partnership)</h4>
+      <p>Vows held, long shared life on paper, but the gate between them is closed; they no longer meet. The couple who "stayed for the kids," or who forgot how to look at each other. History without presence.</p>
+    </div>
+  </div>
+
+  <div class="dual">
+    <div class="dual-item pathological">
+      <h4>Flow only</h4>
+      <p>Good practical partnership, the logistics work, but no resonant presence and no durable promise. "We work well together right now." Might not work tomorrow; there is nothing holding it across time.</p>
+    </div>
+    <div class="dual-item pathological">
+      <h4>Function only (functional love trap)</h4>
+      <p>Autonomies intact, provisions made, roles fulfilled, but no meeting and no real exchange. Structurally sound, emotionally shut down. "We are good partners" while feeling alone together.</p>
+    </div>
+  </div>
+
+  <div class="axiom">
+    <div class="label">The Harder Version of Real Love</div>
+    Healthy love is not one channel at full strength; it is all four channels moderately well-tuned in both people, simultaneously. That is an eight-variable optimization (four per person). It is why love at its best is described as effortful and sacred. The effort is the tuning.
+  </div>
+
+  <div class="callout-box">
+    <div class="callout-text">Genuine meeting requires all four channels open in both people.</div>
+    <div class="callout-note">This is why real love is rare and why it costs energy. It is not a flaw of the theory; it is the theory.</div>
+  </div>
+
+
+  <!-- SECTION 8 -->
+
+  <h2>VIII. What Would Prove This Wrong</h2>
+
+  <p>
+    A theory that cannot be wrong is not a theory. Here are the things that would cause this one to fail.
+  </p>
+
+  <div class="predictions">
+    <div class="prediction">
+      <div>
+        <div class="pred-label">If this happens</div>
+        <div class="pred-claim">All four parts always move together in measurements (never independently).</div>
+      </div>
+      <div>
+        <div class="pred-label">Then</div>
+        <div class="pred-test">The four-part picture collapses to one variable. The theory fails.</div>
+      </div>
+    </div>
+
+    <div class="prediction">
+      <div>
+        <div class="pred-label">If this happens</div>
+        <div class="pred-claim">Conditions diagnosed as different (dissociation, depression, narcissism) cluster at the same point in balance space.</div>
+      </div>
+      <div>
+        <div class="pred-label">Then</div>
+        <div class="pred-test">The geometric account of pathology is empirically empty. The theory fails.</div>
+      </div>
+    </div>
+
+    <div class="prediction">
+      <div>
+        <div class="pred-label">If this happens</div>
+        <div class="pred-claim">Disorders of the line axis (amnesia, dissociation) cannot be distinguished from disorders of the boundary axis (depersonalization, porous identity).</div>
+      </div>
+      <div>
+        <div class="pred-label">Then</div>
+        <div class="pred-test">The line is not a separate axis; the three-part version was sufficient. The upgrade to four parts fails.</div>
+      </div>
+    </div>
+
+    <div class="prediction">
+      <div>
+        <div class="pred-label">If this happens</div>
+        <div class="pred-claim">Therapeutic intervention order makes no difference to outcome.</div>
+      </div>
+      <div>
+        <div class="pred-label">Then</div>
+        <div class="pred-test">The "healing vector" claim (different pathologies need different starting points) is false.</div>
+      </div>
+    </div>
+
+    <div class="prediction">
+      <div>
+        <div class="pred-label">If this happens</div>
+        <div class="pred-claim">Relationship satisfaction factors cleanly into fewer than four dimensions in statistical analysis.</div>
+      </div>
+      <div>
+        <div class="pred-label">Then</div>
+        <div class="pred-test">The four channels of love are not independent. The relationship model fails.</div>
+      </div>
+    </div>
+
+    <div class="prediction">
+      <div>
+        <div class="pred-label">If this happens</div>
+        <div class="pred-claim">Systems at the critical regime (where the theory says consciousness happens) are fully captured by two-variable models.</div>
+      </div>
+      <div>
+        <div class="pred-label">Then</div>
+        <div class="pred-test">Consciousness does not require the irreducible four-part structure.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-label">The Sharpest Test</div>
+    <p>The single most decisive experiment is the double dissociation between the line axis and the boundary axis. Brains with hippocampal damage (line broken) should separate cleanly from brains with frontal apathy (boundary collapsed) and from brains with callosal disconnection (field fractured). If these three syndromes do not separate along the predicted axes, the upgrade from three parts to four parts is not empirically supported, and the theory reverts to its earlier form.</p>
+  </div>
+
+
+  <!-- SECTION 9 -->
+
+  <h2>IX. How This Fits With Other Theories</h2>
+
+  <p>
+    The theory does not replace the major existing accounts of consciousness; it reframes them as each measuring one of the four parts.
+  </p>
+
+  <div class="convergence">
+    <div class="convergence-item">
+      <div class="tradition">Integrated Information Theory (Tononi)</div>
+      <div class="quote">How much does the system bind its parts into a whole?</div>
+      <div class="mapping">Measures the field (mediation).</div>
+    </div>
+    <div class="convergence-item">
+      <div class="tradition">Global Neuronal Workspace (Dehaene)</div>
+      <div class="quote">What gets globally broadcast in the brain?</div>
+      <div class="mapping">Measures the boundary (filtering).</div>
+    </div>
+    <div class="convergence-item">
+      <div class="tradition">Predictive Processing (Friston)</div>
+      <div class="quote">How does the system weight expected information?</div>
+      <div class="mapping">Measures the point (gating).</div>
+    </div>
+    <div class="convergence-item">
+      <div class="tradition">Memory Systems Theory (Tulving, Squire)</div>
+      <div class="quote">How does identity stay continuous across time?</div>
+      <div class="mapping">Measures the line (continuity).</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-label">Not Competitors, Not Duplicates</div>
+    <p>Each of these four programs has succeeded at measuring what it measures. None has succeeded at being a complete account of consciousness. The theory here proposes that is because each is measuring one axis of a four-axis structure. Add them together and you have a full picture; take any one alone and you have one-quarter of the answer.</p>
+  </div>
+
+  <h3>The five virtues at the same four axes</h3>
+
+  <p>
+    The ethics side of the framework names five pillars: GOOD, RIGHT, FAITHFUL, TRUE, AGREEMENT. These sit on the same axes as the four parts, with AGREEMENT as the composition.
+  </p>
+
+  <div class="convergence">
+    <div class="convergence-item">
+      <div class="tradition">Point (gate, 0D)</div>
+      <div class="quote">TRUE</div>
+      <div class="mapping">Curiosity. The virtue of current orientation at the gate.</div>
+    </div>
+    <div class="convergence-item">
+      <div class="tradition">Line (worldline, 1D)</div>
+      <div class="quote">FAITHFUL</div>
+      <div class="mapping">Reliability. The virtue of continuity across time.</div>
+    </div>
+    <div class="convergence-item">
+      <div class="tradition">Field (mind, 2D)</div>
+      <div class="quote">RIGHT</div>
+      <div class="mapping">Access. The virtue of mediating space held open.</div>
+    </div>
+    <div class="convergence-item">
+      <div class="tradition">Boundary (body, 3D)</div>
+      <div class="quote">GOOD</div>
+      <div class="mapping">Plasticity. The virtue of the filter staying revisable.</div>
+    </div>
+  </div>
+
+  <p>
+    AGREEMENT at the whole (⊙) is the composition: all four virtues held simultaneously by both parties in a genuine meeting. This is why agreement is rare. Not because people disagree; because genuine agreement requires all four channels open in both people at once, which is the same hard thing as genuine love.
+  </p>
+
+
+  <!-- SECTION 10 -->
+
+  <h2>X. Nesting: You Inside a Larger You</h2>
+
+  <p>
+    Every whole is inside another whole. You are inside your relationships, which are inside your community, which is inside your species, which is on a planet, and so on without end. This is not decorative; it is structural.
+  </p>
+
+  <p>
+    The four parts of consciousness only work because they are nested in something bigger than themselves. The field of your mind borrows coherence from the field of the space you are embedded in. The boundary of your body only exists because there is a non-body for it to bound against. The line of your identity only makes sense because there are other lines to cross or not cross. The point of your attention only finds something to focus on because there is a larger field to focus within.
+  </p>
+
+  <div class="axiom gold">
+    <div class="label">Parts Are Fractals of Wholes</div>
+    Every scale has the same structure (a circumpunct: the four parts plus the composing whole). The scales nest without a top and without a bottom. You are whole at your scale AND a part at the scale above. Both claims are true at once.
+  </div>
+
+  <h3>Two ways the nesting goes wrong</h3>
+
+  <div class="dual">
+    <div class="dual-item pathological">
+      <h4>Inflation (claiming too much)</h4>
+      <p>"I am the whole. There is nothing above me." The part erases its containing scale and claims to be the source itself. Grandiosity. Mystical bypass. Cognitive fusion with the absolute. The structural failure of forgetting that you are contained.</p>
+    </div>
+    <div class="dual-item pathological">
+      <h4>Severance (claiming too little)</h4>
+      <p>"I am nothing. Just a piece. I have no interior." The part denies that it is itself a whole at its scale; claims to be only a fragment. Nihilism. Depersonalization. The structural failure of forgetting that you are also whole.</p>
+    </div>
+  </div>
+
+  <p>
+    The truth is both. You are a genuine whole at your scale (your four parts are really yours; no one else walks your line). You are also genuinely contained at the scale above (you belong to something larger that you do not own and cannot be without). Both-and, not either-or. This is the constant tension at the nesting relation, and it is the origin of most existential confusion.
+  </p>
+
+  <div class="callout-box">
+    <div class="callout-text">You are the whole thing folded into a position.</div>
+    <div class="callout-note">Not a piece of it, not a copy of it, not separate from it. The whole thing, at your scale.</div>
+  </div>
+
+
+  <!-- SECTION 11 -->
+
+  <h2>XI. What We Still Don't Know</h2>
+
+  <p>
+    This is a framework, not a finished theory. Several things are genuinely open.
+  </p>
+
+  <h3>How to measure the line</h3>
+
+  <p>
+    The line (worldline, identity-through-time) is the newest of the four axes. How you measure someone's line reliability is not yet settled. Candidates include autobiographical memory integrity tests, sleep-dependent consolidation metrics, replay measures between hippocampus and cortex, and long-term narrative coherence. None has been validated as the line's measurement. The empirical payoff of making the line its own axis depends entirely on whether it turns out to be independently measurable.
+  </p>
+
+  <h3>Concrete numbers</h3>
+
+  <p>
+    The framework uses a ratio called ρ to mark the regime in which the four-part structure becomes empirically necessary. Actual values for actual systems (a sleeping human, an awake human under anesthesia, a cortical slice in a dish, an octopus, an insect) have not been calculated. Until the numbers exist, ρ is a concept, not a measurement.
+  </p>
+
+  <h3>Whether four is really the right count</h3>
+
+  <p>
+    The theory argues that four parts are forced by structural conservation: the 0, 1, and 2 dimensional contributions sum to the 3-dimensional boundary, so a coherent whole needs one of each. But an animal with minimal line (say, a very simple creature with presence, mediation, and a body but almost no self-continuity through time) would be a boundary case. The theory predicts such a system would be conscious in a diminished sense: a kind of temporally collapsed awareness, all present, no thread. Whether that prediction can be operationalized in, say, comparative neuroscience is open.
+  </p>
+
+  <h3>How this connects to physics</h3>
+
+  <p>
+    The theory uses two different meanings of a symbol called α. One is a local rate (how fast a system's field relaxes toward balance). The other is a famous number in physics (the fine-structure constant, roughly 1/137, which governs how electrons couple to the electromagnetic field). These are explicitly separated in this version. Whether the two are related at a deeper level, or whether they just share a symbol for historical reasons, is an open framework-level question. The theory does not claim to resolve it.
+  </p>
+
+  <div class="axiom">
+    <div class="label">Honest Status</div>
+    This is currently a framework, a way of organizing the problem. The next milestone is one concrete empirical number or experiment that either confirms or falsifies the four-part claim. The sharpest candidate is the double-dissociation test between the line axis and the boundary axis (hippocampal amnesia versus frontal apathy versus callosal disconnection). If those three syndromes separate cleanly along the predicted axes, the four-part picture holds. If they do not, the three-part version was enough.
+  </div>
+
+
+  <!-- CLOSING -->
+
+  <h2>XII. Closing</h2>
+
+  <p>
+    Consciousness is not a thing. It is a pattern: four parts held together at one scale, nested inside a larger whole, nested inside the nameless. The four parts are point, line, field, and boundary; attention, continuity, mind, and body. None alone is consciousness. Together they are.
+  </p>
+
+  <p>
+    The balance of each part can go well or badly, and different patterns of miscalibration produce recognizable conditions: narcissism, depression, dissociation, mania, functional love, and their subtler cousins. Each is a shape in four-dimensional balance space. Each has its own healing path, which is the direction from where you are toward the middle of all four dials.
+  </p>
+
+  <p>
+    Real meeting between two people is genuinely hard because it requires all four channels open in both of them at once. This is not a defect of the model. It is the reason love at its best feels sacred.
+  </p>
+
+  <div class="core-claim">
+    <div class="claim">
+      Four parts, one pattern, nested in the whole.<br>
+      That is consciousness. That is a being.<br>
+      That is also, at every scale, you.
+    </div>
+    <p>The formal version of all this sits one link away, with equations and predictions. Both versions describe the same thing.</p>
+  </div>
+
+  <div class="divider">⊙ ⊙ ⊙</div>
+
+  <p style="text-align: center; color: var(--text-dim); font-style: italic;">
+    Ready for the technical version? → <a href="circumpunct_consciousness_theory.html" style="color: var(--gold); text-decoration: none;">Circumpunct Theory of Consciousness (formal)</a>
+  </p>
+
+</main>
+
+<footer>
+  <div style="font-size: 2rem; margin-bottom: 1rem;">⊙</div>
+  <p>What Consciousness Is: A Plain-Language Companion</p>
+  <p style="margin-top: 0.5rem;">Based on Circumpunct Theory of Consciousness v8.0</p>
+  <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); text-align: center; font-size: 0.95rem;">
+    <p style="margin-bottom: 8px;">
+      <a href="circumpunct_consciousness_theory.html">Consciousness Theory (Formal)</a> ·
+      <a href="circumpunct_theory_of_mind.html">Theory of Mind</a> ·
+      <a href="circumpunct_theory_of_mind_plain.html">Theory of Mind (Plain)</a> ·
+      <a href="how_reality_is_built.html">How Reality Is Built</a> ·
+      <a href="attune.html">Attune</a>
+    </p>
+  </div>
+  <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-dim);">Ashman Roonz &amp; Claude · April 2026</p>
+</footer>
+
+</body>
+</html>
