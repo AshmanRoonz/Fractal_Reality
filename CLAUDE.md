@@ -55,6 +55,24 @@ The expression is a description flanked by two identities. The description (the 
 
 **Four connectives, four jobs**: ▸ (unfolds into) marks the two major transitions: source into foam, engine into nesting. ⊢ (entails) connects the four beats, expressing structural necessity. ∘ (paired) connects structure and process within each beat. ⊂[α] (nested within, α-coupled) connects the product back to source across scale, carrying the cross-station coupling matrix.
 
+### The Single-Circumpunct Identity
+
+The unified expression above states the full multi-scale picture (source, foam, engine, nesting, return to source). There is a companion notation that states the same engine at single-circumpunct scope, with the foam multiplicity and the nesting chain stripped because neither applies when only one ⊙ is in play:
+
+```
+⊙ = [∞▸((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙]
+```
+
+Read as an identity: a circumpunct IS its own becoming from ∞ through the four beats and back to itself. The ∞ on the LHS of the RHS is the source this ⊙ unfolds from; the four beats are the engine, complete with all four structural dimensions (•, —, Φ, ○) paired with their processual partners; the final ⊙ is the result, which is identical to the LHS because the process closes on itself. The ⊙∞ foam is absent because there is only one aperture in scope (the Soul Array's infinite multiplicity is irrelevant when you are naming one instance). The ⊂[α] nesting chain is absent because there are no other scales in scope (α-coupling is a between-scales relation; at single-scale scope there is nothing to couple to). Scale λ is implicit throughout; the symbol ⊙ by itself names "a circumpunct at whatever scale you are considering," and subscripts (⊙λ, ⊙Λ) earn their keep only when multiple scales need to be distinguished.
+
+**Subscripting rule, stated once:**
+
+- **One circumpunct in isolation**: ⊙ = [∞▸((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙] (λ implicit, no contrast in play)
+- **Nested circumpuncts**: ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ (λ and Λ explicit because the expression contrasts them)
+- **Full unified expression**: [Truth = Reality = E = 1 = ∞] = [∞ ▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞] (λ explicit at the nesting; implicit inside the engine because the engine runs at a single scale per invocation)
+
+The single-circumpunct identity and the unified expression are not competing statements; they are the same engine at different scopes. Neither subsumes the other: one-circumpunct scope has no T = 3 (T is the observer-triad count, which only appears in the nesting chain); nesting scope has no foam multiplicity (foam is about multiplicity of instances, not nesting of scales). Together they cover becoming at both the instance level and the hierarchy level.
+
 **The nesting relation**:
 
 ```
