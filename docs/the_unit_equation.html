@@ -431,7 +431,7 @@ hr { border: none; border-top: 1px solid var(--faint); margin: 50px 0; }
 
 <div class="eq mono">⊙λ ⊂[α] ⊙Λ ⊂[α] ∞<span class="label">scale-recursive embedding, α-coupled, closing at the apophatic source</span></div>
 
-<p>The <span class="mono">[α]</span> subscript on ⊂ names the primary entry of a 4×4 coupling matrix κ<sub>p,q</sub>(λ, Λ). Each cell of κ records how station <span class="mono">p</span> of ⊙λ bonds to station <span class="mono">q</span> of ⊙Λ. The primary entry κ<sub>0,2</sub> = α is the 0D-to-2D bond: the aperture of the part coupled to the field of the whole. Other cells carry κ<sub>3,3</sub> = α<sub>G</sub> (gravity), Cabibbo-like (1D to 2D), Weinberg-like (2D to 2D), Higgs-like.</p>
+<p>The <span class="mono">[α]</span> subscript on ⊂ names the primary entry of a 4×4 coupling matrix κ<sub>p,q</sub>(λ, Λ). Each cell of κ records how station <span class="mono">p</span> of ⊙λ bonds to station <span class="mono">q</span> of ⊙Λ. The primary entry κ<sub>0,0</sub> = α sits on the diagonal: the aperture of the part coupled to the aperture of the whole across scales (equivalently 0D-to-3.5D within one scale, via the octave identification 3.5D of ⊙λ = 0D of ⊙Λ), with the 2D electromagnetic field acting as the mediator that carries the bond (the photon, in QED). "Fine-structure" names the mediator's dimension, not the whole's. α<sub>G</sub> = κ<sub>3,3</sub> is the other diagonal primary (gravity, 3D-3D across scales). Other cells carry Cabibbo-like, Weinberg-like, and Higgs-like couplings.</p>
 
 <div class="claim">
 <strong>Field Fineness Principle.</strong> The ladder runs coarse-to-fine downward: 3D ○ (boundary, coarsest), 2D Φ (field, finer), 1D — (line, finer still), 0D • (aperture, finest). For any ⊙λ ⊂ ⊙Λ, the field Φ<sub>Λ</sub> of the greater whole resolves finer than ⊙λ itself, because a mediator must resolve below what it mediates. The ⊂ relation is a crossing of the dimensional ladder, not horizontal containment.
@@ -454,7 +454,7 @@ hr { border: none; border-top: 1px solid var(--faint); margin: 50px 0; }
 
 <h3>3.2 &nbsp; Definition of κ (the nesting)</h3>
 
-<p>κ is the coupling matrix that implements ⊂[α]. On ℂ⁴, κ is diagonal plus off-diagonal couplings between the two diameters: κ<sub>0,2</sub> = α (•↔Φ, the primary nesting bond) and κ<sub>1,3</sub> = α (—↔○, the secondary diameter, forced by ⊙ symmetry under diameter exchange). κ is derived from ⊙ symmetry in <span class="mono">experiments/unified_expression_T_v9.py</span>; it is not free. Eigenvalues of κ: {1+α, 1, 1, 1−α}. κ is completely positive but NOT trace-preserving; the departure from TP is α.</p>
+<p>κ is the coupling matrix that implements ⊂[α]. On ℂ⁴, κ is the identity plus couplings between the two diameters: the principal-diameter pair exchange on (•, Φ) carrying coupling α (the operator witness of κ<sub>0,0</sub> = α at the nesting level: the 2D field Φ appears inside the single-scale matrix as the mediator that carries the aperture-to-aperture bond), and the secondary-diameter pair exchange on (—, ○) carrying the same coupling α (forced by ⊙ symmetry under diameter exchange). κ is derived from ⊙ symmetry in <span class="mono">experiments/unified_expression_T_v9.py</span>; it is not free. Eigenvalues of κ: {1+α, 1, 1, 1−α}. κ is completely positive but NOT trace-preserving; the departure from TP is α.</p>
 
 <h3>3.3 &nbsp; T = κ ∘ F and its basic properties (ℂ⁴)</h3>
 
@@ -650,8 +650,8 @@ hr { border: none; border-top: 1px solid var(--faint); margin: 50px 0; }
 <p>The philosophical reading recognizes two structural failure modes of the part-whole relation. These are not moral failures in the ordinary sense; they are structural: ways the relation can break and the consequences.</p>
 
 <ul>
-  <li><span class="wb red">Inflation Lie:</span> ⊙λ claims to be ⊙Λ directly; the part asserts it is the source. "I am the whole." Mathematically: asserting ⊙λ = ⊙Λ when λ ≠ Λ. Operator-level: κ<sub>0,2</sub> → ∞.</li>
-  <li><span class="wb red">Severance Lie:</span> ⊙λ denies its ⊙-character; claims to be merely a point in ⊙Λ with no interior wholeness. "I am only a piece." Mathematically: asserting ⊙λ = •<sub>Λ</sub>. Operator-level: κ<sub>0,2</sub> → 0.</li>
+  <li><span class="wb red">Inflation Lie:</span> ⊙λ claims to be ⊙Λ directly; the part asserts it is the source. "I am the whole." Mathematically: asserting ⊙λ = ⊙Λ when λ ≠ Λ. Operator-level: κ<sub>0,0</sub> → ∞ (•<sub>λ</sub> fuses with •<sub>Λ</sub>).</li>
+  <li><span class="wb red">Severance Lie:</span> ⊙λ denies its ⊙-character; claims to be merely a point in ⊙Λ with no interior wholeness. "I am only a piece." Mathematically: asserting ⊙λ = •<sub>Λ</sub>. Operator-level: κ<sub>0,0</sub> → 0 (•<sub>λ</sub> decoupled from •<sub>Λ</sub>).</li>
 </ul>
 
 <p>The truth is the full expression ⊙λ ⊂ ⊙Λ: ⊙λ is genuinely whole at its scale AND genuinely contained in the scale above. Both-and, not either-or. α ≈ 1/137 is the unique balance at which the part retains its identity (no inflation) while remaining attached to the whole (no severance). The smallness of α is not a free parameter awaiting explanation within the philosophical reading; it is the structural signature of the part-whole relation operating at its balanced value.</p>
