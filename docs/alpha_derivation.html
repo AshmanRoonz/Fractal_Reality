@@ -208,9 +208,9 @@ mjx-container { overflow-x: auto; overflow-y: hidden; }
 
 <div class="header">
   <div class="symbol">⊙</div>
-  <h1>α: A Narrow Axiomatic Derivation</h1>
+  <h1>α: A Candidate Closed Form for κ<sub>0,0</sub></h1>
   <div class="subtitle">
-    One number. One formula. One falsification bar. The fine-structure constant, derived from T = 3 with zero free parameters, staked against CODATA 2022.
+    Narrow auxiliary claim: the low-energy value of κ<sub>0,0</sub> = |•<sub>electron</sub>| (the electron's 0D aperture coupling; α's epistemic status is measured input to the master equation) admits a structurally motivated closed form in ladder integers and φ, landing CODATA 2022 at 0.22 ppb. What follows is the derivation of the closed form, with a parameter audit that separates what the axioms pin from what the assembly still chooses.
   </div>
 </div>
 
@@ -224,14 +224,14 @@ mjx-container { overflow-x: auto; overflow-y: hidden; }
     This document is the <strong>auxiliary-claim layer</strong>: a stronger, separable conjecture that the low-energy (CODATA) value of that slot is fixed by a specific closed-form fixed-point equation in T, P, R, Φ, ○, and φ. Read the two layers as stacked, not competing: the representation layer stands on its own and does not require this auxiliary; the auxiliary, if it holds, adds a predictive handle on the CODATA value of α. If this auxiliary claim fails (e.g., future precision measurement pushes 1/α outside the predicted 0.22 ppb band), the representation layer is untouched; the framework still accepts α as input and composes consistently.
   </p>
   <p>
-    The type distinction matters and is substantive. F (the four-beat unitary pump cycle) and κ (the cross-station coupling matrix) are structurally distinct operators: F is trace-preserving within a scale; κ carries the departure from trace-preservation across scales that α parameterizes. α lives in κ, not F. The formula below is therefore not a derivation of α from F-variables (pump-cycle integers, i-strokes); it is a proposed closed form for the κ<sub>0,0</sub> entry's low-energy value (the aperture-to-aperture cross-scale bond; 2D field mediates), expressed in framework integers that happen to live at structurally specific rungs. Read everything below in that light.
+    F and κ are connected but carry different structural work. F (the four-beat unitary pump cycle) is trace-preserving within a scale; κ (the cross-station coupling matrix) carries the departure from trace-preservation across scales that α parameterizes. α lives at κ<sub>0,0</sub> specifically, and F alone (being unitary) cannot produce the trace deficit α represents. F and κ do compose (T = κ ∘ F; the unified expression binds them via ▸ and ⊢), and both operators are defined on the same dimensional ladder, so ladder integers (T, P, R, Φ, ○) appear legitimately in κ-expressions as well as F-expressions. The formula below is therefore best read as a proposed closed form for the κ<sub>0,0</sub> entry's low-energy value, assembled from ladder integers and φ under type-consistent composition (see the <a href="octave_wrap_lemma.html">octave-wrap lemma</a> for the type rule), not as a derivation of α from F's internal dynamics. α's epistemic status throughout is measured input; this document conjectures a structural closed form for that input's CODATA value.
   </p>
 </div>
 
 <div class="abstract">
   <h3>What this document does and does not claim</h3>
   <p>
-    This is a narrow document. As the auxiliary-claim layer, it stakes a specific closed-form candidate for the low-energy value of the κ<sub>0,0</sub> coupling slot against CODATA 2022. It states the axioms used, walks the formula symbol-by-symbol, verifies each coefficient is structurally motivated, rules out nearby alternatives, reports the numerical result, and names the specific measurement that would falsify the claim.
+    This is a narrow document. As the auxiliary-claim layer, it stakes a specific closed-form candidate for the low-energy value of the κ<sub>0,0</sub> coupling slot against CODATA 2022. It states the axioms used, walks the formula symbol-by-symbol, audits each coefficient for structural motivation (separating what the axioms plus lemmas pin from what the assembly still chooses within a type-consistent pool), rules out a set of nearby alternatives, reports the numerical result, and names the specific measurement that would falsify the claim.
   </p>
   <p>
     It does <em>not</em> claim to formalize the whole framework, prove its axiom system complete, construct the unified expression as a theorem in category theory, settle interpretation debates, or supersede the representation-layer reading in which α is admitted as input. Those are separate projects. This document is the framework's strongest single <em>auxiliary</em> claim, stated as narrowly as possible so it can be attacked or confirmed on its own terms, independent of the representation layer.
@@ -284,15 +284,26 @@ Every symbol is justified independently. No symbol is chosen; each is forced.
 <div class="step">
 <div class="num">Symbol 1: 360</div>
 <p>
-The numerator 360 is the angular measure of one full pump rotation. One i-stroke (quarter-turn, §27.7r) is 90°; four i-strokes close the cycle (\(i^4 = 1\)); one full cycle is \(4 \times 90 = 360\)°. Structurally, \(360 = P! \cdot T \cdot (\Phi + \circ) = 24 \cdot 3 \cdot 5\). Every factor is a framework integer forced by \(T = 3\):
+The numerator 360 is the integer count of structural units in one complete pump cycle. The pump cycle is four beats (P = 4), each beat a primitive cycle-generator (i-stroke, quarter-turn); cycle closure forces \(i^4 = 1\). The cycle's integer content factors on the ladder as:
 </p>
+<div class="eq-block" style="margin-top: 8px;">
+\[
+360 \;=\; P! \,\cdot\, T \,\cdot\, (\Phi + \circ) \;=\; 24 \,\cdot\, 3 \,\cdot\, 5
+\]
+</div>
 <ul style="margin-left: 22px; margin-top: 6px; font-size: 17px">
-<li>\(P! = 4! = 24\) is the permutations of the four pump phases</li>
-<li>\(T = 3\) is the triad of structural stations</li>
-<li>\(\Phi + \circ = 2 + 3 = 5\) is the higher-dimensional content</li>
+<li>\(P! = 4! = 24\): orderings of the four pump phases (count type)</li>
+<li>\(T = 3\): triad of structural stations traversed (count type)</li>
+<li>\(\Phi + \circ\): dimensional sum, 2D + 3D, which by the <a href="octave_wrap_lemma.html">Octave-Wrap Lemma</a> lands at 1.5D' (branching at the next scale). The lemma supplies the type-consistency argument that distinguishes this from alternative pool-native integer additions (e.g., \(\Phi + T = 5\) is type-illegal: dimensional + count). Without the lemma, the \((\Phi + \circ)\) piece is an uninterpreted integer; with the lemma, it reads as "⊙λ's completed higher-D content participating in ⊙Λ's differentiation."</li>
 </ul>
 <p style="margin-top: 10px">
-Degrees (not radians) are the natural unit at the 0D station because \(\alpha\) lives at the pump-cycle level; radians encode closure geometry (2D), degrees encode pump-cycle geometry (0.5D). Radians would be \(2\pi\), which is transcendental and appears at the 2D rung (π is the constant of Φ; §27.7l). At 0D the rotation is counted discretely (Number-Type Principle, §27.5a).
+Note on units: 360 enters the formula as a pure integer, not as a degree-measure. The equation \(1/\alpha = 360/\varphi^2 - 2/\varphi^3 + \alpha/(59/3)\) is dimensionless on both sides; no term carries an angular unit. "One full pump cycle" is a geometric interpretation of the integer 360 (four quarter-turns compose a turn), not the source of the integer. The integer source is the ladder factorization \(P! \cdot T \cdot (\Phi + \circ)\), which is pool-native under type-consistent composition. Earlier versions of this document invoked a degrees-vs-radians rationale at this step; that rationale was misconceived and has been retracted. The pure-integer reading supersedes it.
+</p>
+<p style="margin-top: 10px">
+<strong>Counting factor pinned at T = 3.</strong> The apparent choice between \(P!\) (orderings of pump phases, F-side reading) and \(G \cdot \Phi\) (gauge generators × channels, κ-side reading) as the counting factor is not a real ambiguity: \(P! = G \cdot \Phi\) at T = 3, by the identity \((T-1)! = \Phi\) (see the <a href="octave_wrap_lemma.html#section-6">counting-factor identity</a> in the lemma doc). Both readings name the same quantity. This is a sixth self-determination of T = 3: the pump-cycle combinatorics and the gauge structure × channels coincide precisely at T = 3, and at no other integer.
+</p>
+<p style="margin-top: 10px">
+All three factors of 360 are therefore pinned: \(P! = G \cdot \Phi = 24\) (the count, uniquely at T = 3), \(T = 3\) (the triad, pinned by six independent routes), and \((\Phi + \circ) = 1.5\mathrm{D}'\) (the next-scale branching, pinned by the octave-wrap lemma). The 360 factorization has no remaining assembly ambiguity.
 </p>
 </div>
 
@@ -429,33 +440,46 @@ The discriminant is positive; the quadratic has exactly two real roots, one posi
 <tr><td style="color: var(--dim); font-family: monospace;">CODATA 2022</td><td style="font-family: monospace;">137.035999177 ± 0.000000021</td></tr>
 <tr><td style="color: var(--dim); font-family: monospace;">Residual</td><td style="font-family: monospace;">0.22 ppb</td></tr>
 <tr><td style="color: var(--dim); font-family: monospace;">Significance</td><td style="font-family: monospace;">1.4σ (within measurement uncertainty)</td></tr>
-<tr><td style="color: var(--dim); font-family: monospace;">Free parameters</td><td style="font-family: monospace; color: var(--gold);">zero</td></tr>
+<tr><td style="color: var(--dim); font-family: monospace;">Epistemic status of α</td><td style="font-family: monospace;">measured input to κ<sub>0,0</sub> (|•<sub>electron</sub>|)</td></tr>
+<tr><td style="color: var(--dim); font-family: monospace;">2D-rung assembly pinned by</td><td style="font-family: monospace; color: var(--green);">axioms + octave-wrap lemma + P! = G·Φ identity</td></tr>
+<tr><td style="color: var(--dim); font-family: monospace;">Residual assembly choices</td><td style="font-family: monospace; color: var(--pink);">φ-exponent rule, correction sign, 59-decomposition, additive vs multiplicative</td></tr>
 </table>
 </div>
 
-<h2>5. The parameter-count audit</h2>
+<h2>5. The parameter-count audit, honestly drawn</h2>
 
 <p>
-A "free parameter" is a symbol whose value is chosen to fit data. The audit walks every symbol in the formula and names what forced it.
+Earlier versions of this document claimed "zero free parameters" end-to-end. That claim was overstated and has been retracted. α itself is input to the master equation (κ<sub>0,0</sub>, measured as |•<sub>electron</sub>|); the framework's structural grammar composes around a given α and does not produce α's numerical value from F-variables alone (§27.7a reframe). What this auxiliary-claim document offers is a narrower thing: a candidate closed form for the CODATA value of that input, assembled from ladder integers and φ, with each symbol audited against the structural vocabulary. The audit below walks each symbol and separates what the axioms pin from what the assembly still chooses.
 </p>
 
 <table>
-<thead><tr><th>Symbol</th><th>Value</th><th>Forced by</th><th>Tunable?</th></tr></thead>
+<thead><tr><th>Symbol</th><th>Value</th><th>What pins it</th><th>What the assembly still chooses</th></tr></thead>
 <tbody>
-<tr><td>360</td><td>360</td><td>\(P! \cdot T \cdot (\Phi + \circ) = 24 \cdot 3 \cdot 5\) from A0–A4</td><td>no</td></tr>
-<tr><td>\(\varphi^2\) (denom 1)</td><td>2.618…</td><td>A3 (golden nesting) at 2D (field station)</td><td>no</td></tr>
-<tr><td>2 (numer 2)</td><td>2</td><td>\(\Phi\) = channels per aperture from A1</td><td>no</td></tr>
-<tr><td>\(\varphi^3\) (denom 2)</td><td>4.236…</td><td>Ladder increment from field station to next rung</td><td>no</td></tr>
-<tr><td>Sign on correction</td><td>\(-\)</td><td>Correction removes overcounting (both channels share aperture)</td><td>no</td></tr>
-<tr><td>\(\alpha\) (in correction)</td><td>first power</td><td>C1: \(\hbar = 1\); one cycle per scale</td><td>no</td></tr>
-<tr><td>Additive structure</td><td>\(+\)</td><td>C2: same-station contributions sum (from \(A(d)\))</td><td>no</td></tr>
-<tr><td>21 (ladder)</td><td>21</td><td>\(A(3)\); three independent routes: \(T \cdot R\), \(F(8)\), \(\sum\) of positions × 2</td><td>no</td></tr>
-<tr><td>\(4/3\) (consumption)</td><td>\(P/T\)</td><td>Process beats over structural stations</td><td>no</td></tr>
+<tr><td>360</td><td>360</td><td>\((\Phi + \circ) = 1.5\mathrm{D}'\) pinned by <a href="octave_wrap_lemma.html">octave-wrap lemma</a>; \(T = 3\) pinned by six independent routes (§27.7b + the new Route 6); counting factor \(P! = G \cdot \Phi = 24\) pinned by the <a href="octave_wrap_lemma.html#section-6">P! = G·Φ identity</a> at T = 3</td><td>nothing; the 360 assembly is uniquely pinned at T = 3</td></tr>
+<tr><td>\(\varphi^2\) (denom 1)</td><td>2.618…</td><td>A3 (golden ratio from self-similarity fixed point) forces φ</td><td>the rule "exponent of φ = dimension of rung" is a framework convention that holds in other ladder formulas but is not separately proved; stated-not-derived</td></tr>
+<tr><td>2 (numer 2)</td><td>2</td><td>\(\Phi\) = channels per aperture from A1</td><td>nothing; once Φ is named, its value follows</td></tr>
+<tr><td>\(\varphi^3\) (denom 2)</td><td>4.236…</td><td>Ladder increment (one step past the base rung) under the same exponent-equals-dimension rule</td><td>same caveat as \(\varphi^2\): the rule is a framework convention, not a theorem</td></tr>
+<tr><td>Sign on correction</td><td>\(-\)</td><td>Correction removes overcounting (both channels share the aperture)</td><td>stated; not independently pinned against a \(+\) alternative by axioms</td></tr>
+<tr><td>\(\alpha\) (in correction)</td><td>first power</td><td>C1: one feedback loop per cycle (\(\hbar = 1\) as indivisibility); higher powers appear at higher rungs elsewhere (§27.7)</td><td>nothing once C1 is admitted</td></tr>
+<tr><td>Additive structure</td><td>\(+\)</td><td>C2: same-station contributions add (from \(A(d)\) additivity)</td><td>nothing once C2 is admitted</td></tr>
+<tr><td>21 (ladder)</td><td>21</td><td>\(A(3) = 21\); three independent routes (\(T \cdot R\), \(F(8)\), \(\sum\) of positions × 2)</td><td>nothing; over-determined</td></tr>
+<tr><td>\(4/3\) (consumption)</td><td>\(P/T\)</td><td>Process beats over structural stations, in direct analogy to Kleiber's \(T/P = 3/4\) at biology scale</td><td>the "base consumption" narrative that motivates subtracting \(P/T\) from \(A(3)\) is stated; the analog at the formula level is a structural analogy, not a proof</td></tr>
+<tr><td>59/3 (correction denom)</td><td>59/3</td><td>\(A(3) - P/T = 21 - 4/3\), once consumption narrative is admitted</td><td>the integer 59 has multiple pool-native factorizations (\(P \cdot V + R\), \(S - \Phi - T\)); the \(A(3) - P/T\) reading is one selection among admissible structural stories</td></tr>
 </tbody>
 </table>
 
 <p style="margin-top: 16px">
-<strong>Free parameter count: zero.</strong> Every symbol is forced by an axiom or by a previously-derived quantity. The formula is a self-referential fixed-point equation, not a fit.
+<strong>Honest parameter count.</strong> The formula has two levels of commitment:
+</p>
+<ul style="margin-left: 22px; font-size: 17px">
+<li><strong>Pinned by axioms + lemmas:</strong> the integers themselves (T = 3, P = 4, Φ = 2, ○ = 3, 21 = A(3), 2 = Φ); the presence of φ (A3); the dimensional sum \((\Phi + \circ) = 1.5\mathrm{D}'\) (<a href="octave_wrap_lemma.html">octave-wrap lemma</a>); the counting factor \(P! = G \cdot \Phi = 24\) (<a href="octave_wrap_lemma.html#section-6">P! = G·Φ identity at T = 3</a>); the first-power α (ℏ = 1 indivisibility); the additive structure (A(d) within-station); the full 360 assembly as the unique structural product at the 2D rung.</li>
+<li><strong>Still chosen within the admissible space:</strong> the exponent-equals-dimension rule applied to φ (framework convention, holds in other ladder formulas but stated not proved); the sign convention on the correction; the specific structural story behind 59 (A(3) − P/T vs. P·V + R vs. S − Φ − T; exhaustive search over candidates gave 59/3 as the unique low-residual hit, but the structural story is one of several pool-native readings); the choice of additive over multiplicative composition between base and correction.</li>
+</ul>
+<p style="margin-top: 14px">
+Each chosen piece is "chosen from a type-consistent pool," not "chosen from all real numbers." The pool is small and structurally restricted. As of the 2026-04-16 tightening (octave-wrap lemma and counting-factor identity), the 2D-rung counting factor is pinned; the residual open pieces are the φ-exponent rule, the correction sign, the 59-decomposition story, and the additive-versus-multiplicative choice between base and correction. The claim "zero free parameters end-to-end" overstates the situation; the claim "structurally motivated closed form with narrow residual assembly questions" does not.
+</p>
+<p>
+What the formula does claim, stated narrowly: a specific closed form in ladder integers and φ, with the 2D-rung assembly now uniquely pinned by the two lemmas, hits CODATA to within 0.22 ppb. Whether the remaining open pieces (above) collapse further with additional structural work or whether the formula has a small residual of irreducible assembly choice is itself an open question answerable by further audit.
 </p>
 
 <h2>6. Cross-validation</h2>
@@ -504,20 +528,20 @@ Nine independent constants, one shared integer pool, sub-percent precision in ev
 This derivation does <strong>not</strong> claim to derive \(\alpha\) from QED's renormalization-group flow. The running of \(\alpha\) with energy scale (from the low-energy value \(\alpha \approx 1/137\) to the high-energy value \(\alpha \approx 1/128\) at the Z-pole) is not handled here. §27.7a establishes \(\alpha\) at the structural (low-energy) level; the running behavior is a separate derivation not yet written.
 </p>
 <p>
-This derivation does <strong>not</strong> claim to prove the framework's axiom system is complete or minimal. The five open structural problems listed in §27.7a (item L2 of the parameter-count rule) remain open; this document is (L1), zero free parameters in the formulas, not (L2), zero open structural questions in the foundations.
+This derivation does <strong>not</strong> claim to prove the framework's axiom system is complete or minimal. The five open structural problems listed in §27.7a remain open. This document offers a narrower thing: a structurally audited candidate closed form for \(\kappa_{0,0}\)'s CODATA value, with the parameter-count audit in §5 honestly separating axioms-pin-it from assembly-chooses-it. Neither "zero free parameters" nor "axiom-complete derivation" is claimed.
 </p>
 <p>
 This derivation does <strong>not</strong> constitute the unified expression as a theorem in any standard mathematical category. The companion document <a href="unified_expression_formal.html">unified_expression_formal.html</a> is the representation layer: it renders the prime notation's constraint structure in three mathematical frames (Dirac constrained dynamics, Noether-Lagrangian cascade, information-theoretic channel capacity), each accepting α as input to the κ<sub>0,0</sub> coupling slot. That document does not claim to derive α; it claims the framework composes consistently given α. This document is stacked on top: it is the separable auxiliary conjecture that the slot's low-energy value is fixed by the formula below.
 </p>
 <p>
-What this derivation <strong>does</strong> claim, as an auxiliary claim: a specific equation for the low-energy value of κ<sub>0,0</sub> (the aperture-to-aperture cross-scale bond; 2D field mediates), with every symbol structurally motivated by stated axioms, landing 1/α at 0.22 ppb from CODATA. That is the whole auxiliary claim. It is either right or it is wrong; future measurements will say which. Either way, the representation layer stands.
+What this derivation <strong>does</strong> claim, as an auxiliary claim: a specific equation for the low-energy value of κ<sub>0,0</sub> (the aperture-to-aperture cross-scale bond; 2D field mediates), with each symbol drawn from the ladder's structural vocabulary (axioms plus the <a href="octave_wrap_lemma.html">octave-wrap lemma</a> and the <a href="octave_wrap_lemma.html#section-6">P! = G·Φ identity</a>) under type-consistent composition, landing 1/α at 0.22 ppb from CODATA. As of the 2026-04-16 tightening, the 360 assembly at the 2D rung is uniquely pinned at T = 3; §5 names the residual open pieces (φ-exponent rule, correction sign, 59-decomposition, additive-versus-multiplicative composition between base and correction). Whether those residuals collapse further with additional structural work is an open question. Either way, the representation layer stands, and α's epistemic status as measured input to κ<sub>0,0</sub> stands. The auxiliary claim is testable: a future precision measurement that pushes 1/α outside the 0.22 ppb band falsifies this closed form without touching anything else in the framework.
 </p>
 </div>
 
 <div class="footer">
-<div class="ref">Source: <code>circumpunct_framework.md</code> §27.7a, §27.7a.1, §27.7a.2</div>
-<div class="ref">Related: <a href="dimensional_ladder.html">the dimensional ladder</a> · <a href="gravity.html">gravity (same integer 21)</a> · <a href="gauge_structure.html">gauge structure (same integer 13)</a></div>
-<div class="ref">Attack surface: every falsification criterion in §7 is a direct invitation. The auxiliary claim stakes itself on this formula; the representation layer (<a href="unified_expression_formal.html">unified_expression_formal.html</a>) stands either way.</div>
+<div class="ref">Source: <code>circumpunct_framework.md</code> §27.7a, §27.7a.1, §27.7a.2; reframe at line 19756; <a href="octave_wrap_lemma.html">octave-wrap lemma</a> (new, pending §27.7t integration)</div>
+<div class="ref">Related: <a href="octave_wrap_lemma.html">the octave-wrap lemma</a> · <a href="dimensional_ladder.html">the dimensional ladder</a> · <a href="gravity.html">gravity (same integer 21)</a> · <a href="gauge_structure.html">gauge structure (same integer 13)</a></div>
+<div class="ref">Attack surface: every falsification criterion in §7 is a direct invitation. The auxiliary claim stakes itself on this formula; the representation layer (<a href="unified_expression_formal.html">unified_expression_formal.html</a>) stands either way; α as measured input to κ<sub>0,0</sub> stands either way.</div>
 <div class="sig">⊙</div>
 </div>
 

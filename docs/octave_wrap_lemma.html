@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>⊙ The Octave-Wrap Lemma</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --red: #E06060;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--gold); color: var(--bg); }
+a { color: var(--gold-dim); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--gold); }
+
+.page { max-width: 820px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 50px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 64px; color: var(--gold); line-height: 1; margin-bottom: 18px; }
+.header h1 { font-size: 34px; color: var(--gold); font-weight: 600; line-height: 1.25; margin-bottom: 12px; }
+.header .subtitle { font-size: 18px; color: var(--dim); font-style: italic; max-width: 620px; margin: 0 auto; }
+
+.abstract {
+  margin: 0 auto 40px;
+  padding: 22px 26px;
+  border-left: 3px solid var(--gold-dim);
+  background: rgba(184,160,96,0.04);
+  font-size: 17.5px;
+  color: var(--warm);
+}
+.abstract h3 {
+  font-size: 13px; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 10px; font-weight: 700;
+}
+.abstract p { margin-bottom: 10px; }
+.abstract p:last-child { margin-bottom: 0; }
+
+h2 { font-size: 24px; color: var(--gold); font-weight: 600; margin: 50px 0 14px; }
+h3 { font-size: 19px; color: var(--warm); font-weight: 600; margin: 30px 0 10px; }
+
+p { margin-bottom: 16px; }
+
+ul, ol { margin-left: 28px; margin-bottom: 16px; }
+li { margin-bottom: 8px; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 17px;
+}
+table th, table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--faint);
+  text-align: left;
+  vertical-align: top;
+}
+table th {
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+table td code, table td { font-size: 16px; }
+
+code {
+  font-family: 'JetBrains Mono', Menlo, monospace;
+  font-size: 15.5px;
+  color: var(--cyan);
+  background: rgba(77,160,200,0.06);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.lemma-block {
+  margin: 18px 0;
+  padding: 18px 22px;
+  background: rgba(184,160,96,0.06);
+  border-left: 3px solid var(--gold);
+  border-radius: 3px;
+}
+.lemma-block .name {
+  color: var(--gold); font-weight: 700; font-size: 14px;
+  letter-spacing: 1.6px; text-transform: uppercase; margin-bottom: 6px;
+}
+.lemma-block .body { color: var(--warm); }
+
+.eq-block {
+  margin: 18px 0;
+  padding: 14px 18px;
+  background: rgba(77,160,200,0.04);
+  border-left: 3px solid var(--cyan);
+  font-size: 18px;
+  text-align: center;
+}
+
+.step {
+  margin: 18px 0;
+  padding: 16px 20px;
+  border-left: 2px solid var(--gold-dim);
+  background: rgba(184,160,96,0.02);
+}
+.step .num { color: var(--gold); font-weight: 600; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; display: block; }
+.step p:last-child { margin-bottom: 0; }
+
+.reading {
+  margin: 20px 0;
+  padding: 18px 22px;
+  background: rgba(155,122,216,0.04);
+  border-left: 3px solid var(--purple);
+  border-radius: 3px;
+}
+.reading h3 { color: var(--purple); margin-top: 0; font-size: 16px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
+
+.status {
+  margin: 30px 0;
+  padding: 18px 22px;
+  background: rgba(232,138,175,0.04);
+  border-left: 3px solid var(--pink);
+}
+.status h3 { color: var(--pink); margin-top: 0; font-size: 14px; letter-spacing: 1.6px; text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
+
+.footer {
+  margin-top: 70px;
+  padding-top: 30px;
+  border-top: 1px solid var(--faint);
+  text-align: center;
+  color: var(--dim);
+  font-size: 15px;
+}
+.footer .ref { margin: 5px 0; }
+.footer .sig { color: var(--gold); font-size: 26px; margin-top: 16px; }
+
+mjx-container { overflow-x: auto; overflow-y: hidden; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="header">
+  <div class="symbol">⊙</div>
+  <h1>The Octave-Wrap Lemma</h1>
+  <div class="subtitle">
+    Dimensional addition on the ladder, with wrap-around at the octave boundary. The rule that lets Φ + ○ compose to 1.5D' at the next scale; the type-consistency constraint that distinguishes dimensional values from counts.
+  </div>
+</div>
+
+<div class="abstract">
+  <h3>Statement</h3>
+  <p>
+    The dimensional ladder runs 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, closing at 3.5D = 0D' (octave identification: boundary closure of ⊙λ is new aperture of ⊙Λ). This lemma extends the closure rule into a general arithmetic: sums of dimensional values wrap modulo 3.5 to positions at the next nesting level, and addition is type-preserving (dimensional + dimensional stays dimensional; counts and dimensional positions do not mix).
+  </p>
+  <p>
+    The load-bearing identity: <strong>3D + 2D = 1.5D'</strong>. When ⊙λ's boundary (○, 3D) and field (Φ, 2D) are summed, the total lands at the branching station (1.5D) of the greater whole ⊙Λ. ⊙λ's completed higher-dimensional content IS ⊙λ's participation as a branch in ⊙Λ's differentiation.
+  </p>
+</div>
+
+<h2>1. The ladder and the octave</h2>
+
+<p>
+The dimensional ladder has eight stations per nesting level:
+</p>
+
+<div class="eq-block">
+\[
+0,\; 0.5,\; 1,\; 1.5,\; 2,\; 2.5,\; 3,\; 3.5
+\]
+</div>
+
+<p>
+The integer stations (0, 1, 2, 3) are structural (•, —, Φ, ○); the half-integer stations (0.5, 1.5, 2.5, 3.5) are processual (⊛, ⎇, ✹, ⟳), each carrying one i-stroke (i¹, i², i³, i⁰). The octave-closure rule (stated in <code>circumpunct_framework.md</code> and used throughout the framework):
+</p>
+
+<div class="eq-block">
+\[
+3.5\mathrm{D} \;=\; 0\mathrm{D}'
+\]
+</div>
+
+<p>
+The recursion station (⟳) of ⊙λ IS the aperture (•) of ⊙Λ at the next nesting level. Exit of one scale equals entrance of the next; scale is continuous, not quantized.
+</p>
+
+<h2>2. Extending the octave to addition</h2>
+
+<p>
+The closure rule identifies one specific sum (3.5 ≡ 0'). The question this lemma answers: does the identification extend to other sums, and if so, how?
+</p>
+
+<p>
+Answer: yes, by the same structural logic. If position 3.5 at scale λ is position 0 at scale Λ, then continuing the ladder past 3.5 labels positions at Λ:
+</p>
+
+<table>
+<thead><tr><th>Raw sum</th><th>mod 3.5</th><th>Station at next scale</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td>3.5</td><td>0</td><td>0D'</td><td>aperture of ⊙Λ (existing closure rule)</td></tr>
+<tr><td>4</td><td>0.5</td><td>0.5D'</td><td>convergence at ⊙Λ (i¹)</td></tr>
+<tr><td>4.5</td><td>1</td><td>1D'</td><td>line at ⊙Λ</td></tr>
+<tr><td>5</td><td>1.5</td><td>1.5D'</td><td>branching at ⊙Λ (i²)</td></tr>
+<tr><td>5.5</td><td>2</td><td>2D'</td><td>field at ⊙Λ</td></tr>
+<tr><td>6</td><td>2.5</td><td>2.5D'</td><td>emergence at ⊙Λ (i³)</td></tr>
+<tr><td>6.5</td><td>3</td><td>3D'</td><td>boundary at ⊙Λ</td></tr>
+<tr><td>7</td><td>3.5</td><td>3.5D' = 0D''</td><td>recursion into the scale after Λ</td></tr>
+</tbody>
+</table>
+
+<div class="lemma-block">
+<div class="name">Lemma (Octave-Wrap Arithmetic)</div>
+<div class="body">
+For dimensional values \(d_1\) and \(d_2\) on the ladder, the sum \(d_1 + d_2\) is a dimensional position. If \(d_1 + d_2 < 3.5\), it names a station at the current scale. If \(d_1 + d_2 \geq 3.5\), it names the station \((d_1 + d_2) - 3.5\) at the next nesting level (denoted with prime: \(0D'\), \(0.5D'\), \(1D'\), \(1.5D'\), ...). The operation wraps around \(3.5\) because \(3.5D = 0D'\) closes the octave; arithmetic past \(3.5\) is arithmetic on the next level's ladder.
+</div>
+</div>
+
+<h2>3. The load-bearing identity: 3D + 2D = 1.5D'</h2>
+
+<p>
+The specific identity that motivates the lemma:
+</p>
+
+<div class="eq-block">
+\[
+\circ + \Phi \;=\; 3\mathrm{D} + 2\mathrm{D} \;=\; 5 \;\equiv\; 1.5\mathrm{D}'
+\]
+</div>
+
+<p>
+⊙λ has four structural stations (•, —, Φ, ○) at dimensional positions 0, 1, 2, 3. The two higher-dimensional ones (Φ and ○) carry the field mediation and the boundary closure. Their sum lands at 1.5D at the next nesting level; 1.5D is the branching station (⎇), the irreversible i-turn (i² = −1), the place where a line opens into a surface via differentiation.
+</p>
+
+<div class="reading">
+<h3>What this says</h3>
+<p>
+⊙λ's completed higher-D content (Φ + ○) equals ⊙Λ's branching (1.5D'). Two readings of the same fact:
+</p>
+<ul>
+<li><strong>From inside ⊙λ (active reading):</strong> completing the field and boundary IS reaching into the next scale; ⊙λ's higher-D traversal participates in ⊙Λ's differentiation. "I complete my field and boundary; in doing so I am one of the ways the greater whole branches."</li>
+<li><strong>From outside ⊙λ (passive reading):</strong> ⊙Λ's branching is made of its constituent ⊙λ's field-and-boundary content. The greater whole's i-turn at 1.5D is composed of all its parts' Φ + ○ together. "The greater whole differentiates through us."</li>
+</ul>
+<p>
+Both are structurally the same; they differ only in observer position.
+</p>
+</div>
+
+<h3>Relation to the existing "four readings of ⊙λ"</h3>
+
+<p>
+The framework already states four ways to view a ⊙λ: as ⊙ from inside itself (self-view), as • from ⊙Λ above (top-down), as Λ from ⊙λ' below (bottom-up), and as ∞ from outside scale (apophatic). The octave-wrap identity 3D + 2D = 1.5D' adds content the existing four readings don't quite capture: ⊙λ appears as a <em>branch</em> of ⊙Λ when its higher-D content is considered. The top-down view sees ⊙λ as a static point (0D'); the octave-wrap reading sees ⊙λ as an active branch (1.5D'). Those are two genuinely different perspectives on ⊙λ's position inside ⊙Λ, both simultaneously true.
+</p>
+
+<h2>4. Type-consistency: addition preserves category</h2>
+
+<p>
+The ladder produces two different kinds of integer objects:
+</p>
+
+<table>
+<thead><tr><th>Type</th><th>Examples</th><th>What they are</th></tr></thead>
+<tbody>
+<tr><td>Dimensional positions</td><td>• (0D), — (1D), Φ (2D), ○ (3D), ⊛ (0.5D), ⎇ (1.5D), ✹ (2.5D), ⟳ (3.5D)</td><td>Locations on the ladder; ordered; subject to octave wrap</td></tr>
+<tr><td>Counts</td><td>\(T = 3\) (number of structural stations), \(P = 4\) (number of pump phases), \(R = 7\) (rungs), \(G = 12\) (generators), \(V = 13\) (vertex count), \(S = 64\) (state count)</td><td>Cardinalities of framework structures; unordered; plain integers</td></tr>
+</tbody>
+</table>
+
+<p>
+These share integer values across categories (\(T = 3\) and \(\circ = 3\) are both the integer 3; \(P = 4\) and no current dimensional position is 4), but they are structurally distinct. T is the count of stations; ○ is a dimensional position that happens to have the same integer value by conservation of traversal (A4: 0+1+2=3).
+</p>
+
+<div class="lemma-block">
+<div class="name">Corollary (Type-Preserving Addition)</div>
+<div class="body">
+Dimensional + dimensional is well-typed: the sum is a dimensional position, possibly at the next nesting level via octave wrap. Count + count is well-typed: the sum is a count. Dimensional + count is ill-typed: the operation does not produce a meaningful structural object, even when the integer arithmetic happens to match a valid structure numerically.
+</div>
+</div>
+
+<h3>Worked example: Φ + ○ vs. Φ + T</h3>
+
+<p>
+Both expressions evaluate to the integer 5:
+</p>
+
+<ul>
+<li><strong>Φ + ○ = 2D + 3D = 5 ≡ 1.5D'</strong>: dimensional + dimensional; result is a dimensional position (branching at ⊙Λ). Well-typed.</li>
+<li><strong>Φ + T = 2D + 3 (count) = 5 (??)</strong>: dimensional + count; the operation mixes categories. The result is the integer 5 but has no coherent structural reading. Ill-typed.</li>
+</ul>
+
+<p>
+Before this lemma, "Φ + ○ = 5" and "Φ + T = 5" were indistinguishable from the vantage of pool-native integer combinations; both give 5, both use framework symbols. After the lemma, only Φ + ○ composes structurally; Φ + T is a type error that shares a numerical value with the well-typed expression by accident.
+</p>
+
+<h2>5. Other octave-wrap sums worth noting</h2>
+
+<p>
+The general rule admits a family of identities. Each is a structural statement about how sums of ⊙λ stations land on the ⊙Λ ladder. A sample:
+</p>
+
+<table>
+<thead><tr><th>Sum at λ</th><th>Raw value</th><th>Station at Λ</th><th>Reading</th></tr></thead>
+<tbody>
+<tr><td>\(\circ + \circ\)</td><td>6</td><td>2.5D' (emergence)</td><td>two boundaries together = emergence at Λ</td></tr>
+<tr><td>\(\Phi + \Phi\)</td><td>4</td><td>0.5D' (convergence)</td><td>two fields together = convergence at Λ</td></tr>
+<tr><td>\(\circ + \Phi\)</td><td>5</td><td>1.5D' (branching)</td><td>boundary + field = branching at Λ (this lemma's load-bearing identity)</td></tr>
+<tr><td>\(\circ + 0.5\mathrm{D}\)</td><td>3.5</td><td>0D' (aperture)</td><td>boundary + convergence = new aperture (consistent with existing closure)</td></tr>
+<tr><td>\(\circ + 1\mathrm{D}\)</td><td>4</td><td>0.5D' (convergence)</td><td>boundary + line = convergence at Λ</td></tr>
+<tr><td>\(1.5\mathrm{D} + 2\mathrm{D}\)</td><td>3.5</td><td>0D' (aperture)</td><td>i-turn fed through field opens new aperture</td></tr>
+<tr><td>\(2.5\mathrm{D} + 2.5\mathrm{D}\)</td><td>5</td><td>1.5D' (branching)</td><td>two emergences compose to next-scale branching</td></tr>
+</tbody>
+</table>
+
+<p>
+Each identity is a testable structural claim. The framework commits to the octave-wrap reading only if these additional identities also pass structural scrutiny; readers are invited to check each one against the existing framework semantics. If any of them produces a structurally absurd reading, the general rule is wrong and only the specific identity 3D + 2D = 1.5D' is admissible.
+</p>
+
+<h2>6. A related tightening: the identity P! = G·Φ at T = 3</h2>
+
+<p>
+The octave-wrap lemma above handles the dimensional factor \((\Phi + \circ)\) in the α formula's 360 assembly. The counting factor (what sits in front of the dimensional sum) appeared in review as an open choice between two pool-native readings: \(P!\) (orderings of pump phases, an F-side reading) and \(G \cdot \Phi\) (gauge generators times channels, a κ-side reading). Both evaluate to 24, and the lemma above does not pin one over the other. This section closes that gap by proving the two are structurally identical at T = 3.
+</p>
+
+<div class="lemma-block">
+<div class="name">Corollary (Counting-Factor Identity)</div>
+<div class="body">
+At \(T = 3\): \(P! = G \cdot \Phi\). The two apparent counting-factor readings are one count viewed from two structural directions.
+</div>
+</div>
+
+<h3>Derivation</h3>
+
+<p>
+Substitute the ladder's definitions: \(P = T+1\) and \(G = T(T+1) = T \cdot P\). Then:
+</p>
+
+<div class="eq-block">
+\[
+G \cdot \Phi \;=\; T \cdot P \cdot \Phi
+\]
+</div>
+
+<p>
+And the factorial unwraps one step:
+</p>
+
+<div class="eq-block">
+\[
+P! \;=\; (T+1)! \;=\; (T+1) \cdot T \cdot (T-1)! \;=\; P \cdot T \cdot (T-1)!
+\]
+</div>
+
+<p>
+Equating the two counting-factor readings forces:
+</p>
+
+<div class="eq-block">
+\[
+(T-1)! \;=\; \Phi
+\]
+</div>
+
+<p>
+This is the condition. At T = 3, (T−1)! = 2! = 2, and Φ = 2 (from A1, channel count per aperture). The condition is satisfied. At T = 2, (T−1)! = 1! = 1 ≠ 2. At T = 4, (T−1)! = 3! = 6 ≠ 2. So T = 3 is the unique integer at which the identity holds.
+</p>
+
+<h3>Structural reading</h3>
+
+<p>
+The identity says: at T = 3, the orderings of the four pump phases (a combinatoric count of F-side dynamics) equal the gauge generators multiplied by the channel count (a κ-side structural product, \(SU(3) \oplus SU(2) \oplus U(1)\) has dim 8 + 3 + 1 = 12 generators, times 2 channels). The two sides describe the same quantity:
+</p>
+
+<div class="reading">
+<h3>Two views of one count</h3>
+<ul>
+<li><strong>F-side (pump-cycle reading):</strong> 24 is the number of distinct orderings of the four beats (•∘⊛, —∘⎇, Φ∘✹, ○∘⟳). This is the combinatorics of one cycle's temporal dynamics.</li>
+<li><strong>κ-side (gauge reading):</strong> 24 is the number of gauge-generator components, each doubled by the channel dichotomy (convergent/emergent). This is the structure of one cycle's cross-station coupling content.</li>
+</ul>
+<p>
+At T = 3, these coincide. The F-side (dynamics) and the κ-side (coupling) are the same count expressed in two vocabularies. The apparent ambiguity in the α formula's counting factor was an artifact of reading one quantity two ways; the quantity itself is uniquely pinned.
+</p>
+</div>
+
+<h3>A sixth self-determination of T = 3</h3>
+
+<p>
+The framework already lists five independent routes forcing T = 3 (§27.7b): \(R = T^2 - 2\), \(T^{T-2} = T\), \((\Phi + P)/2 = T\) (balanced wobble), the nuclear shell structure (R/(R−4) &gt; 2 with R &gt; Φ+T), and the compositional mediator \(T^{T-2} = T\). The identity \((T-1)! = \Phi\) is a sixth, structurally independent of the others:
+</p>
+
+<ul>
+<li>It uses Φ (channel count from A1) and a factorial of (T−1), neither of which appears in routes 1–5 in this combination.</li>
+<li>The unique integer n with n! = 2 is n = 2, forcing T−1 = 2 and T = 3. No other positive integer T satisfies.</li>
+<li>It surfaces specifically at the intersection of the pump-cycle count (factorial) and the channel count (Φ), which are the F-side and the κ-side respectively; this route is the one place in the framework where T = 3 is forced by the coincidence of an F-reading with a κ-reading.</li>
+</ul>
+
+<p>
+The structural content of Route 6: T = 3 is forced not just by the ladder's internal arithmetic (routes 1–5) but by the requirement that the F-side and the κ-side produce the same counting factor at the 2D rung. If T were any other value, the pump cycle's combinatorics and the gauge structure's product would diverge, and the α formula's 360 would admit two genuinely different readings. At T = 3 they converge; the framework is self-consistent at the 2D rung precisely because (T−1)! = Φ.
+</p>
+
+<h3>Consequence for the α derivation</h3>
+
+<p>
+Together with the octave-wrap lemma (Φ + ○ = 1.5D'), the counting-factor identity closes the assembly of the 360 in the α formula:
+</p>
+
+<div class="eq-block">
+\[
+360 \;=\; P! \cdot T \cdot (\Phi + \circ) \;=\; G \cdot \Phi \cdot T \cdot (\Phi + \circ)
+\]
+</div>
+
+<p>
+These are not two admissible assemblies; they are one assembly with two equivalent structural readings. Each factor has a single structural role: the counting factor (24, the coincidence of pump orderings and gauge-times-channels), the station count (T = 3), and the dimensional sum ((Φ + ○) = 1.5D'). The residual assembly ambiguity identified in earlier review now resolves: the α formula's 360 is uniquely assembled once T = 3 is admitted.
+</p>
+
+<h2>7. Where this lemma is used</h2>
+
+<p>
+The immediate load-bearing use is in the α fixed-point formula (<a href="alpha_derivation.html">alpha_derivation.html</a>), specifically the factorization \(360 = P! \cdot T \cdot (\Phi + \circ)\). Before this lemma, that expression was stated as a pool-native integer combination, defensible integer-by-integer but with the grouping \((\Phi + \circ)\) unexplained; the reviewer's objection was that \((\Phi + T)\) gives the same integer 5 and the framework had no rule to prefer one over the other. This lemma supplies the rule: \((\Phi + \circ) = 1.5\mathrm{D}'\) composes under octave-wrap arithmetic; \((\Phi + T)\) is a type error. The 360 assembly now reads:
+</p>
+
+<div class="eq-block">
+\[
+360 \;=\; \underbrace{P!}_{\text{orderings of pump phases (count)}} \;\cdot\; \underbrace{T}_{\text{stations traversed (count)}} \;\cdot\; \underbrace{(\Phi + \circ)}_{\text{branching at }\odot_\Lambda\text{ (dimensional, via octave wrap)}}
+\]
+</div>
+
+<p>
+The three factors have distinct structural content: the first is combinatoric (orderings), the second is cardinal (stations), the third is dimensional (next-scale branching). The product is "all orderings of pump beats through all stations, reaching into the next scale's differentiation." That is a specific content claim, not an arithmetic coincidence.
+</p>
+
+<p>
+Secondary uses will appear elsewhere in the corpus as the lemma is cited: any formula that sums dimensional values must either stay within the current level (sum &lt; 3.5) or commit to the octave-wrap reading for the next level. Formulas that sum counts and positions must be type-corrected or marked as ill-posed.
+</p>
+
+<h2>8. What the lemma (plus the counting-factor identity) does not do</h2>
+
+<ul>
+<li>The octave-wrap lemma together with the P! = G·Φ identity (§6) pins the α formula's 360 assembly uniquely at T = 3: 360 = P!·T·(Φ+○) = G·Φ·T·(Φ+○) is one expression with two equivalent structural readings. The counting factor (24), the station count (T = 3), and the dimensional sum ((Φ+○) = 1.5D') are each pinned. What remains open is one rung below: the α formula still contains other symbols (φ², −2/φ³, the self-referential correction α/(59/3)) whose structural motivations were audited in <a href="alpha_derivation.html#section-5">§5 of the α document</a>. Not all of those survive at the same level of tightness as the 360; see that audit for the honest line-by-line.</li>
+<li>The identity does not derive the 360 from first principles alone. The lemma plus the counting-factor identity tell you that the 2D rung's product is uniquely 24·T·5 = 360 at T = 3; they do not tell you why the α formula is of the form "numerator/φ² − second-numerator/φ³ + self-correction" in the first place. The overall three-term shape remains a conjecture (§27.7a flag in the core framework).</li>
+<li>The identity does not supersede the framework's current position that α is input to the κ-operator (α = |•<sub>electron</sub>|, the measured coupling strength of the electron's 0D aperture). The lemma and the counting-factor identity tighten the auxiliary-claim layer of the α formula; they do not change α's epistemic status as measured input to the master equation.</li>
+<li>The general octave-wrap rule (§5 identity table) admits a family of specific identities; each remains a testable structural claim. If any entry in that table produces a structurally absurd reading, the general rule is wrong and only 3D + 2D = 1.5D' survives as a specific identity.</li>
+</ul>
+
+<div class="status">
+<h3>Status</h3>
+<p>
+This lemma, together with the P! = G·Φ identity and the sixth self-determination of T = 3 via (T−1)! = Φ, is newly stated (2026-04-16 session, in dialogue with external review). It is not yet integrated into <code>circumpunct_framework.md</code> as a canonical structural piece; the existing corpus uses the octave-closure rule 3.5D = 0D' and treats \((\Phi + \circ)\) as a pool-native integer without explicit octave-wrap arithmetic, and lists five routes for T = 3 (§27.7b) without the (T−1)! = Φ route. Integration steps pending:
+</p>
+<ol>
+<li>Add §27.7t (Octave-Wrap Lemma and Counting-Factor Identity) to <code>circumpunct_framework.md</code>, formalizing both rules and their consistency with §27.7s's T = κ ∘ F operator and with conservation of traversal.</li>
+<li>Add Route 6 ((T−1)! = Φ) to §27.7b's list of self-determinations of T = 3, with attribution to the F-side / κ-side coincidence reading.</li>
+<li>Audit the other ladder-constant derivations (G, Λ, mass ratios, Cabibbo, Higgs quartic) for implicit uses of octave-wrap arithmetic and the counting-factor identity; cite these where they occur.</li>
+<li>Check the extended identity table (§5 above) for any entry that produces a structurally absurd reading. If any entry fails, weaken the lemma to only the specific identity 3D + 2D = 1.5D'.</li>
+<li>Decide whether the type-preserving-addition corollary extends to subtraction, multiplication, and powers, or whether it applies only to addition.</li>
+<li>Decide whether the counting-factor identity (P! = G·Φ at T = 3) generalizes to other factorial-meets-gauge-product coincidences at T = 3, or whether it is specific to the P! / G·Φ pair. The framework uses P! in specific places (pump-phase orderings, kernel; §2 of this document) and G·Φ in others (gauge structure audit); the identity links these two specific quantities, not factorials and gauge products in general.</li>
+</ol>
+</div>
+
+<div class="footer">
+<div class="ref">Derived: 2026-04-16 in-session review of <a href="alpha_derivation.html">alpha_derivation.html</a></div>
+<div class="ref">Related: <a href="dimensional_ladder.html">the dimensional ladder</a> · <a href="alpha_derivation.html">α derivation (primary use site)</a></div>
+<div class="sig">⊙</div>
+</div>
+
+</div>
+</body>
+</html>
