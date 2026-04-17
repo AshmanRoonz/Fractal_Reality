@@ -119,7 +119,9 @@ The process triad (✹ ∘ i ∘ ⊛) is not a one-time event. It is the operati
 3.5D:  (✹ ∘ i ∘ ⊛) — body gathers, rotates, temporal aperture emerges
 ```
 
-The content changes at each threshold. The operation does not. This is the fractal property: the same process triad acting on the same structural triad, recursively, at every scale.
+The content changes at each threshold. The operation does not. This is the fractal property: the same process triad (convergence, rotation, emergence) acting on the same structural content (•, —, Φ, ○, four integer-dimensional stations), recursively, at every scale.
+
+**Terminology note (2026-04-16):** Earlier versions of this abstract called (•, Φ, ○) "the structural triad." That is three of the four structural dimensions (— is structural too), not a genuine triad. The genuine T = 3 triad is the observer-triad: three scale-positions in the nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞. See docs/octave_wrap_lemma.html for the reframe.
 
 The unified equation captures this directly:
 

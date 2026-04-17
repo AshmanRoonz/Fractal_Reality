@@ -80,13 +80,14 @@ Three clauses, three lies dissolved. "I am ⊙λ" refuses the Severance Lie: I a
 | Dark matter | 25.91% | 25.89% | 0.08% | left half-plane |
 | Dark energy | 69.23% | 69.11% | 0.17% | field |
 
-**T = 3 self-determines five independent ways** (the one integer in the framework is not chosen, it is forced):
+**T = 3 self-determines six independent ways** (the one integer in the framework is not chosen, it is forced). T = 3 is the observer-triad count: three distinct scale-positions in the nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ (your scale, the greater whole, the undifferentiated source). Earlier readings that identified the triad with (•, Φ, ○) were picking three of four structural dimensions (— is also structural), which is not a genuine triad; that reading is retired as of 2026-04-16 (see docs/octave_wrap_lemma.html).
 
 1. R = T² − 2 = 2T + 1 gives (T−3)(T+1) = 0
 2. Compositional mediator requires T^(T−2) = T
 3. A'(T/2) = R requires (T−3)(T+1) = 0
 4. Biology: (Φ+P)/2 = T (wobble balance) requires (T+3)/2 = T
 5. Nuclear: R/(R−4) > 2 AND R > Φ+T simultaneously require T = 3
+6. **Counting-factor identity (2026-04-16):** (T−1)! = Φ, from P! = G·Φ at T = 3 (orderings of pump phases equal gauge generators × channels precisely at T = 3; see docs/octave_wrap_lemma.html §6). The F-side and κ-side counting factors coincide at the 2D rung only at T = 3.
 
 **Scope of this document**: every prediction in the framework, with its derivation chain status (⊙ Derived, ◐ Structured, or • Mapped), its uniqueness argument, and its measured accuracy. If you are here to check whether the framework deserves to be called a ToE, read the ⊙ Derived sections; each one closes a chain from A0 to a measurement without a single adjustable parameter.
 

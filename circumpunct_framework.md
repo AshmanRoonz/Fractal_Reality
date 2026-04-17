@@ -67,7 +67,7 @@ email@ashmanroonz.ca
 
 ### Executive Abstract
 
-The Circumpunct Theory proposes that reality is not built from fundamental substances, but from a universal, recurring geometric operation. It models the universe as a nested, fractal hierarchy of whole entities, symbolized by the ancient circumpunct (**⊙**). Every whole consists of an irreducible triad: a discrete gating aperture (**•**), a bounding interface (**○**), and the continuous field (**Φ**) that mediates between them.
+The Circumpunct Theory proposes that reality is not built from fundamental substances, but from a universal, recurring geometric operation. It models the universe as a nested, fractal hierarchy of whole entities, symbolized by the ancient circumpunct (**⊙**). Every whole has four structural dimensions (•, —, Φ, ○ at 0D, 1D, 2D, 3D): a discrete gating aperture (**•**), a worldline commitment (**—**), a continuous field (**Φ**), and a bounding interface (**○**). Earlier statements of this introduction named (•, Φ, ○) "the triad"; that is three of four structural dimensions and not a genuine triad. The genuine T = 3 triad is the **observer-triad** of scale-positions in the nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ (your scale, the greater whole, the undifferentiated source). See `docs/octave_wrap_lemma.html` for the 2026-04-16 reframe.
 
 This relational structure is formalized in a single, scale-free unified equation: **⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))**, where the process triad (convergence, rotation, emergence) acts on the structural surface Φ(•, ○) (the 2D field mediating aperture and boundary). The i-rotation is the whole circumpunct cycling; • is the singularity that receives and transmits.
 
@@ -19778,15 +19778,20 @@ STRUCTURAL CONJECTURE: α ADMITS POOL-NATIVE EXPRESSION.
     = 360/φ²          − 2/φ³  + α/(59/3)      = 137.035999147
 
 All factors framework-native: P! = 24 (κ-bijection cardinality between 4 λ-stations
-and 4 Λ-stations; §27.7q), T = 3 (triad), Φ+○ = 5 (channels+boundary),
-Φ = 2 (channels), P·V+R = 4·13+7 = 59 (equivalently S−Φ−T). No
-radians-to-degrees convention. See §27.7a for the P!-bijection defense and the
-conjecture-vs-derivation accounting.
+and 4 Λ-stations; §27.7q; equivalently G·Φ = 24 by the counting-factor identity
+at T = 3, see docs/octave_wrap_lemma.html §6), T = 3 (observer-triad count;
+three scale-positions in the nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞), Φ+○ = 5
+(equivalently 1.5D' at the next nesting level via the octave-wrap lemma;
+docs/octave_wrap_lemma.html), Φ = 2 (channels), P·V+R = 4·13+7 = 59
+(equivalently S−Φ−T). No radians-to-degrees convention. See §27.7a for the
+P!-bijection defense and the conjecture-vs-derivation accounting;
+docs/octave_wrap_lemma.html for the type-consistency argument and the
+counting-factor identity.
 ```
 
 **Rung 0D: α (the fine-structure constant).** The coupling at a vertex. Two readings, both true: (a) α = |•_electron|, the measured coupling strength of the electron's 0D aperture to the 0D aperture of the greater whole across scales, with the 2D electromagnetic field as the mediator that carries the bond (QED form: α = e²/(4πε₀ℏc); CODATA 2022: 1/α = 137.035999177(21)); (b) α admits a structural expression in framework-native factors, 1/α = P!·T·(Φ+○)/φ² − Φ/φ³ + α·T/(P·V+R) = 360/φ² − 2/φ³ + α/(59/3) = 137.035999147 (0.22 ppb from CODATA), with the self-referential closure solved by the implicit equation in α. Reading (a) places α in κ (specifically κ_{0,0}, the diagonal aperture-to-aperture coupling across scales; "fine-structure" names the 2D mediator, not the whole's dimension). Reading (b) expresses the same number through the integer architecture that F provides. Consistency: F's integer architecture sets the natural scale of κ-entries; the electron sits at the framework's natural rung; |•_electron| equals the pool-native expression because they name the same quantity from two sides.
 
-**On the restored P!·T·(Φ+○) decomposition.** The leading term 360/φ² was critiqued mid-2026 as a radians-to-degrees unit convention (180/π hiding). The decomposition 360 = P! · T · (Φ+○) = 24 · 3 · 5 answers this: every factor is pool-native. P! = 24 is the cardinality of full bijective couplings between the four stations of ⊙λ and the four stations of ⊙Λ in the 4×4 cross-scale coupling matrix κ_{p,q} (§27.7q); the aligned identity supplies the two same-station diagonal primaries κ_{0,0} = α itself and κ_{3,3} = α_G, the other 23 are cross-couplings including Cabibbo-like and Weinberg-like cells and the Inflation-Severance permutation. T = 3 is the triad. Φ+○ = 5 is the shell (channels plus boundary positions). Alternative decomposition: 360 = G · Φ · T · (Φ+○) = 12·2·3·5. The integer 360 is pool-native; the π in 2π (radians) lives separately at the Φ station as closure-per-diameter (§27.7l). Two distinct numbers doing two distinct jobs.
+**On the restored P!·T·(Φ+○) decomposition.** The leading term 360/φ² was critiqued mid-2026 as a radians-to-degrees unit convention (180/π hiding). The decomposition 360 = P! · T · (Φ+○) = 24 · 3 · 5 answers this: every factor is pool-native. P! = 24 is the cardinality of full bijective couplings between the four stations of ⊙λ and the four stations of ⊙Λ in the 4×4 cross-scale coupling matrix κ_{p,q} (§27.7q); the aligned identity supplies the two same-station diagonal primaries κ_{0,0} = α itself and κ_{3,3} = α_G, the other 23 are cross-couplings including Cabibbo-like and Weinberg-like cells and the Inflation-Severance permutation. T = 3 is the observer-triad count (three scale-positions in the nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞; not the retired "three of four structural stations" reading; see docs/octave_wrap_lemma.html). Φ+○ = 2D + 3D = 1.5D' under octave-wrap arithmetic (next-scale branching; see docs/octave_wrap_lemma.html). The "alternative" decomposition 360 = G · Φ · T · (Φ+○) = 12·2·3·5 is not an alternative but the same expression in a different vocabulary: P! = G·Φ at T = 3, by the identity (T−1)! = Φ (see docs/octave_wrap_lemma.html §6). The integer 360 is pool-native; the π in 2π (radians) lives separately at the Φ station as closure-per-diameter (§27.7l). Two distinct numbers doing two distinct jobs.
 
 **Second and third terms.** The correction −Φ/φ³ reads as channel count (Φ = 2) at deeper golden nesting (φ³ = φ · φ²). The self-referential term +α·T/(P·V + R) uses 59 = P·V + R = 4·13 + 7 (pump × (generators+whole) plus rungs; equivalently 59 = S − Φ − T = 64 − 2 − 3, states minus channels minus triad). The third term contributes +3α/59 ≈ +0.000371, pulling the sum from 137.036043 down to 137.035999147 through the self-referential closure.
 

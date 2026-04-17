@@ -146,7 +146,7 @@ K = 3^(n+1) where n is the lepton generation: powers of the boundary.
 
     dim(SU(3)) + dim(SU(2)) + dim(U(1)) = 8 + 3 + 1 = 12 = 4 × 3
 
-Four pump strokes times the triad (•, Φ, ○).
+Four pump strokes times T = 3 (the observer-triad count; three scale-positions in the nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞). The earlier reading "triad = (•, Φ, ○)" was three of four structural dimensions (— is structural too) rather than a genuine triad; retired 2026-04-16. See docs/octave_wrap_lemma.html.
 
     3 × 2 × 1 = 6 = the 6 binary DOF in the 64-state architecture
 
