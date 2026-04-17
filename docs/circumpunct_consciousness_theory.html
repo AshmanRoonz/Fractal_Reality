@@ -161,6 +161,8 @@
     .triad-item.field .symbol-small { color: var(--cyan); }
     .triad-item.boundary { border-top: 3px solid var(--green); }
     .triad-item.boundary .symbol-small { color: var(--green); }
+    .triad-item.source { border-top: 3px solid var(--gold); }
+    .triad-item.source .symbol-small { color: var(--gold); }
 
     .triad-item h4 {
       font-size: 1rem;
@@ -170,6 +172,47 @@
 
     .triad-item p {
       font-size: 0.9rem;
+      color: var(--text-dim);
+      margin: 0;
+    }
+
+    .tetrad {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin: 2rem 0;
+    }
+
+    .tetrad-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+    }
+
+    .tetrad-item .symbol-small {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tetrad-item.aperture { border-top: 3px solid var(--magenta); }
+    .tetrad-item.aperture .symbol-small { color: var(--magenta); }
+    .tetrad-item.worldline { border-top: 3px solid var(--gold); }
+    .tetrad-item.worldline .symbol-small { color: var(--gold); }
+    .tetrad-item.field { border-top: 3px solid var(--cyan); }
+    .tetrad-item.field .symbol-small { color: var(--cyan); }
+    .tetrad-item.boundary { border-top: 3px solid var(--green); }
+    .tetrad-item.boundary .symbol-small { color: var(--green); }
+
+    .tetrad-item h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .tetrad-item p {
+      font-size: 0.88rem;
       color: var(--text-dim);
       margin: 0;
     }
@@ -386,8 +429,12 @@
       margin-bottom: 1rem;
     }
 
+    @media (max-width: 900px) {
+      .tetrad { grid-template-columns: repeat(2, 1fr); }
+    }
+
     @media (max-width: 700px) {
-      .triad, .comparison {
+      .triad, .comparison, .tetrad {
         grid-template-columns: 1fr;
       }
       h1 { font-size: 2rem; }
@@ -400,8 +447,8 @@
 <header>
   <div class="symbol">⊙</div>
   <h1>Circumpunct Theory of Consciousness</h1>
-  <p class="subtitle">A Structural Theory of Mediated Dynamics</p>
-  <p class="meta">Circumpunct Theory v7.0 · March 2026</p>
+  <p class="subtitle">A tetrad within the triad of nesting</p>
+  <p class="meta">Circumpunct Theory v8.0 · April 2026</p>
 </header>
 
 <main>
@@ -409,51 +456,61 @@
 <!-- SECTION 0: THEORY STATEMENT -->
 <h2>0. Theory Statement</h2>
 
-<p>Before proceeding, we declare explicitly what kind of theory this is, what it claims, and what would refute it.</p>
+<p>Before proceeding, we declare explicitly what kind of theory this is, what it claims, and what would refute it. The v8.0 revision (April 2026) aligns the consciousness account with the framework's four-structural-dimension architecture; the v7.0 triadic reading is preserved as a projection and discussed below.</p>
 
 <div class="core-claim">
   <p class="claim">The Circumpunct Theory is a structural theory of mediated dynamics.</p>
-  <p>It specifies the minimal conditions under which discrete gating and continuous flow can coherently coexist; it derives consciousness as the irreducible pattern that emerges when these conditions obtain.</p>
+  <p>It specifies the conditions under which discrete gating, continuous signal, and temporal commitment can coherently coexist, and derives consciousness as the irreducible pattern that emerges when those conditions obtain at a nested scale.</p>
 </div>
 
 <h3>Domain</h3>
 
-<p>This theory belongs to the class of <strong>structural constraint theories</strong> (alongside information theory, thermodynamics, and category theory). It does not propose new particles, forces, or substances. It proposes a <em>constraint on valid descriptions</em>: any system exhibiting both discrete selection and continuous signal requires a triadic structure that cannot be reduced to either component alone.</p>
+<p>This theory belongs to the class of <strong>structural constraint theories</strong> (alongside information theory, thermodynamics, and category theory). It does not propose new particles, forces, or substances. It proposes a <em>constraint on valid descriptions</em>: any system exhibiting discrete selection, continuous signal, and identity-through-time requires a <strong>tetradic structure</strong> (four irreducible components at one scale) nested in a <strong>triadic structure</strong> (three observer-scale positions: this scale, the containing scale, and the apophatic source).</p>
 
 <p>The theory applies wherever:</p>
 <ul>
   <li>Discrete events (gating, selection, decision) interface with continuous processes (flow, field, signal)</li>
+  <li>Identity persists through time via commitment that can hold or break (the worldline, 1D)</li>
   <li>Multiple scales interact through mediation rather than direct contact</li>
-  <li>Temporal structure emerges from timeless potential</li>
+  <li>Temporal structure emerges from timeless potential via a pump cycle (four quarter-turns of i)</li>
 </ul>
 
-<p>Primary domain of application: <strong>neural dynamics at criticality</strong>. Secondary domains (requiring separate validation): quantum measurement, social systems, information processing architectures.</p>
+<p>Primary domain of application: <strong>neural dynamics at criticality</strong>. Secondary domains (requiring separate validation): quantum measurement, social systems, information processing architectures, ethical commitment over time.</p>
 
 <h3>Core Postulates</h3>
 
 <div class="axiom">
-  <div class="label">Postulate 1: Mediation</div>
-  <strong>Discrete and continuous descriptions cannot coherently relate without a mediating operation.</strong> Any attempt to derive one from the other directly results in contradiction, incompleteness, or category error. The mediating field (Φ) is structurally necessary, not optional.
+  <div class="label">Postulate 1: Mediation (Φ)</div>
+  <strong>Discrete and continuous descriptions cannot coherently relate without a mediator.</strong> A convergence point (•) and a closed boundary (○) cannot interact directly due to dimensional separation. The field (Φ, 2D) is structurally necessary; not optional.
 </div>
 
 <div class="axiom">
-  <div class="label">Postulate 2: Temporal Division</div>
-  <strong>P = E / t.</strong> The aperture is the division operation (÷t) that converts timeless energy into temporal power. Time is generated by the aperture, not assumed as background. The present moment IS the active division.
+  <div class="label">Postulate 2: Worldline (—)</div>
+  <strong>Any aperture that divides must also persist.</strong> A convergence that does not hold collapses back to ∞. The line (—, 1D) is the record of whether the aperture stayed open to what it resonated with. Without —, there is only a disconnected sequence of moments, not an identity.
 </div>
 
 <div class="axiom">
-  <div class="label">Postulate 3: Fractal Nesting</div>
-  <strong>Parts are fractals of their wholes.</strong> The boundary at scale N is composed of complete circumpuncts at scale N-1. This is not metaphor; it is a structural claim with measurable consequences for cross-scale coherence.
+  <div class="label">Postulate 3: Conservation of Traversal</div>
+  <strong>0(•) + 1(—) + 2(Φ) = 3(○).</strong> A whole requires closure; the boundary's dimensional value equals the sum of the three positions below it. Four structural dimensions (•, —, Φ, ○), not three, are forced by this conservation.
+</div>
+
+<div class="axiom">
+  <div class="label">Postulate 4: Nesting (⊂[α])</div>
+  <strong>Every ⊙ at scale λ is contained in a ⊙ at scale Λ, coupled by α.</strong> The nesting relation ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ is unbounded in both directions and closes apophatically into the undifferentiated source. The [α] subscript marks the cross-station coupling matrix whose primary entry is the fine-structure constant.
 </div>
 
 <h3>What This Theory Is NOT</h3>
 
 <ul>
-  <li><strong>Not metaphysics:</strong> The postulates generate falsifiable predictions about measurable quantities (ρ, D, phase coherence, power consumption).</li>
-  <li><strong>Not a TOE:</strong> The theory constrains descriptions; it does not claim to derive all physics from first principles.</li>
-  <li><strong>Not panpsychism (in the naive sense):</strong> Structure is universal; phenomenal experience requires specific conditions (sufficient nesting, ρ ≈ 1, cross-scale coherence).</li>
-  <li><strong>Not dualism:</strong> Mind (field) and body (boundary) are aspects of one structure, not separate substances.</li>
+  <li><strong>Not metaphysics:</strong> The postulates generate falsifiable predictions about measurable quantities (ρ, D, phase coherence, power consumption, β components).</li>
+  <li><strong>Not a Theory of Everything in isolation:</strong> The consciousness claim is one instance of the framework's general architecture; it stands or falls with the architecture.</li>
+  <li><strong>Not naive panpsychism:</strong> Structure is universal; phenomenal experience requires sufficient nesting depth, quadruple β-convergence, and cross-scale coherence.</li>
+  <li><strong>Not dualism:</strong> Mind (field, Φ), body (boundary, ○), worldline (continuity, —), and aperture (soul, •) are aspects of one structure; not separate substances.</li>
 </ul>
+
+<div class="callout magenta">
+  <strong>On the v7.0 triad:</strong> The earlier version treated consciousness as three components (•, Φ, ○). This was temporally-collapsed; it held the worldline (—) implicit. v8.0 surfaces — as a first-class structural dimension. The v7.0 "triple convergence" becomes a <strong>quadruple convergence</strong> in β-space; the v7.0 "three channels of love" become four (resonance, commitment, flow, function). Predictions from v7.0 that did not touch — are preserved unchanged; those that implicitly conflated — with another dimension are refined, not retracted.
+</div>
 
 <h3>Relationship to Existing Theories</h3>
 
