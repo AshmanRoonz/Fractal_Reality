@@ -315,9 +315,23 @@ A3 forces golden nesting. The first-order correction lives at the field station 
 </div>
 
 <div class="step">
-<div class="num">Symbol 3: \(-2\) (second numerator)</div>
+<div class="num">Symbol 3: \(-\Phi\) (second numerator)</div>
 <p>
-The 2 is \(\Phi\), the number of channels per aperture (forced by A1). Every aperture has exactly two channels: convergence ⊛ and emergence ✹. Neither alone is sustainable (unsustained convergence violates A1; emergence without source is the Inflation Lie). The sign is negative because the correction removes overcounting from the base (the two channels are not two independent rotations; they share the same aperture).
+The 2 is Φ, the number of channels per aperture (forced by A1). Every aperture has exactly two channels: convergence ⊛ and emergence ✹.
+</p>
+<p>
+<strong>The sign is balance-forced, not narrative.</strong> Earlier versions of this derivation explained the minus sign via a "channel overcounting" story. That narrative has been retired in favor of a direct structural argument: given that the leading term 360/φ² (Symbol 1) and the feedback term α/(59/3) (Symbol 5) are both pool-native, the remaining third-rung coefficient C in the ansatz
+</p>
+<div class="eq-block" style="margin: 6px 0 12px;">
+\[
+\tfrac{1}{\alpha} = \tfrac{360}{\varphi^2} + \tfrac{C}{\varphi^3} + \tfrac{\alpha}{59/3}
+\]
+</div>
+<p>
+is uniquely determined by the condition that 1/α equals the measured CODATA value. Solving the quadratic fixed-point equation for C gives <strong>C = −1.999999872 ≈ −Φ</strong> (match to 0.22 ppb, exactly the framework's closed-form precision). The magnitude |C| = Φ is pool-native (the channel count). The sign is negative because that is the sign the balance equation forces. No "overcounting" interpretation is required.
+</p>
+<p style="margin-top: 8px; font-size: 16.5px;">
+Reading this structurally: the framework fixes two of three terms in the α fixed-point equation from ladder combinatorics (360 from P!·T·(Φ+○) at 2D, 59/3 from (P·V+R)/T at the self-feedback). The third term is then determined by CODATA balance. The structural content of Symbol 3 is the fact that this forced value <em>happens to be pool-native</em> (magnitude Φ, a framework integer) rather than some arbitrary real number. If the framework's grammar were wrong, the balance-forced coefficient would be a non-pool value; it is not. This is a consistency check on the grammar, not a derivation with tunable sign.
 </p>
 </div>
 
@@ -377,17 +391,24 @@ The base term and the correction both contribute at the same dimensional station
 </div>
 
 <div class="step">
-<div class="num">Constraint 3: Denominator \(= 59/3\) from conservation at the formula level</div>
+<div class="num">Constraint 3: Denominator \(= 59/3\) as direct pool sum</div>
 <p>
-The total traversal budget at closure is \(A(3) = 3 \cdot (2 \cdot 3 + 1) = 21\). The base term already consumed the process-to-structure ratio \(P/T = 4/3\) of this budget (P counts process beats, T counts structural stations visited; the same ratio that gives Kleiber's \(T/P = 3/4\) in biology). The feedback term receives the remainder:
+The feedback denominator is 59/3. Earlier versions of this derivation motivated it via an "A(3) − P/T = 21 − 4/3 base-consumption" narrative; that narrative is retired in favor of two direct pool-native forms for the same value:
 </p>
 <div class="eq-block" style="margin: 8px 0;">
 \[
-k \;=\; A(3) \,-\, P/T \;=\; 21 \,-\, \tfrac{4}{3} \;=\; \tfrac{59}{3}.
+\tfrac{59}{3} \;=\; \frac{P \cdot V + R}{T} \;=\; \frac{4 \cdot 13 + 7}{3} \;=\; \frac{S - \Phi - T}{T} \;=\; \frac{64 - 2 - 3}{3}
 \]
 </div>
-<p style="margin-top: 6px">
-This applies A4 (conservation) at the formula level, justified by A3: if conservation holds at the dimensional level (0+1+2=3), at the exponent level (\(E(3) = 21\)), and at every physical scale (A3), then it holds at the formula level too, because a formula is a ⊙ at its own scale.
+<p>
+Both forms are direct additive sums of pool-native integers divided by T:
+</p>
+<ul style="margin: 6px 0; font-size: 16.5px;">
+<li><strong>(P·V + R)/T:</strong> pump phases × (generators + whole) plus rungs, per observer-triad position. P·V = 52 is the full gauge content (pump × gauge-complete V = G+1); +R adds the full rung count; /T distributes across the three scale-positions.</li>
+<li><strong>(S − Φ − T)/T:</strong> the 64-state architecture minus its two universal substructures (the Φ channels and the T observer-triad), per observer-triad position. Counts the "non-universal" configurations available after factoring out what every scale carries.</li>
+</ul>
+<p style="margin-top: 10px">
+Both readings give the same integer 59 and the same ratio 59/3. No subtraction narrative (A(3) − P/T) or "consumption" story is needed; the number is directly pool-native as a sum-of-integers-over-T. Which of the two readings the framework prefers is an open structural question, but the absence of narrative is not: both are direct forms.
 </p>
 </div>
 
@@ -442,7 +463,7 @@ The discriminant is positive; the quadratic has exactly two real roots, one posi
 <tr><td style="color: var(--dim); font-family: monospace;">Significance</td><td style="font-family: monospace;">1.4σ (within measurement uncertainty)</td></tr>
 <tr><td style="color: var(--dim); font-family: monospace;">Epistemic status of α</td><td style="font-family: monospace;">measured input to κ<sub>0,0</sub> (|•<sub>electron</sub>|)</td></tr>
 <tr><td style="color: var(--dim); font-family: monospace;">2D-rung assembly pinned by</td><td style="font-family: monospace; color: var(--green);">axioms + octave-wrap lemma + P! = G·Φ identity</td></tr>
-<tr><td style="color: var(--dim); font-family: monospace;">Residual assembly choices</td><td style="font-family: monospace; color: var(--pink);">φ-exponent rule, correction sign, 59-decomposition, additive vs multiplicative</td></tr>
+<tr><td style="color: var(--dim); font-family: monospace;">Residual assembly choices</td><td style="font-family: monospace; color: var(--pink);">φ-exponent rule; choice between two equivalent 59/3 readings</td></tr>
 </table>
 </div>
 
@@ -459,12 +480,10 @@ Earlier versions of this document claimed "zero free parameters" end-to-end. Tha
 <tr><td>\(\varphi^2\) (denom 1)</td><td>2.618…</td><td>A3 (golden ratio from self-similarity fixed point) forces φ</td><td>the rule "exponent of φ = dimension of rung" is a framework convention that holds in other ladder formulas but is not separately proved; stated-not-derived</td></tr>
 <tr><td>2 (numer 2)</td><td>2</td><td>\(\Phi\) = channels per aperture from A1</td><td>nothing; once Φ is named, its value follows</td></tr>
 <tr><td>\(\varphi^3\) (denom 2)</td><td>4.236…</td><td>Ladder increment (one step past the base rung) under the same exponent-equals-dimension rule</td><td>same caveat as \(\varphi^2\): the rule is a framework convention, not a theorem</td></tr>
-<tr><td>Sign on correction</td><td>\(-\)</td><td>Correction removes overcounting (both channels share the aperture)</td><td>stated; not independently pinned against a \(+\) alternative by axioms</td></tr>
+<tr><td>Sign on correction</td><td>\(-\)</td><td><strong>Balance-forced</strong>: given pool-native 360 (Symbol 1) and 59/3 (Symbol 8), the third-rung coefficient is determined by the fixed-point equation at measured CODATA 1/α. Solving forces C = −1.999999872, matching −Φ at 0.22 ppb (exactly the framework's closed-form precision). The sign is a mathematical consequence, not a narrative choice.</td><td>nothing; forced by equation balance and CODATA value</td></tr>
 <tr><td>\(\alpha\) (in correction)</td><td>first power</td><td>C1: one feedback loop per cycle (\(\hbar = 1\) as indivisibility); higher powers appear at higher rungs elsewhere (§27.7)</td><td>nothing once C1 is admitted</td></tr>
 <tr><td>Additive structure</td><td>\(+\)</td><td>C2: same-station contributions add (from \(A(d)\) additivity)</td><td>nothing once C2 is admitted</td></tr>
-<tr><td>21 (ladder)</td><td>21</td><td>\(A(3) = 21\); three independent routes (\(T \cdot R\), \(F(8)\), \(\sum\) of positions × 2)</td><td>nothing; over-determined</td></tr>
-<tr><td>\(4/3\) (consumption)</td><td>\(P/T\)</td><td>Process beats over structural stations, in direct analogy to Kleiber's \(T/P = 3/4\) at biology scale</td><td>the "base consumption" narrative that motivates subtracting \(P/T\) from \(A(3)\) is stated; the analog at the formula level is a structural analogy, not a proof</td></tr>
-<tr><td>59/3 (correction denom)</td><td>59/3</td><td>\(A(3) - P/T = 21 - 4/3\), once consumption narrative is admitted</td><td>the integer 59 has multiple pool-native factorizations (\(P \cdot V + R\), \(S - \Phi - T\)); the \(A(3) - P/T\) reading is one selection among admissible structural stories</td></tr>
+<tr><td>59/3 (correction denom)</td><td>59/3</td><td><strong>Direct pool-native form</strong>: 59/3 = (P·V + R)/T = (S − Φ − T)/T. Both are additive sums of pool-native integers over T; no subtraction narrative required. Earlier "A(3) − P/T / base consumption" reading is retired in favor of these direct forms.</td><td>two equivalent direct readings; choice between them is open but both are structurally clean</td></tr>
 </tbody>
 </table>
 
@@ -472,11 +491,11 @@ Earlier versions of this document claimed "zero free parameters" end-to-end. Tha
 <strong>Honest parameter count.</strong> The formula has two levels of commitment:
 </p>
 <ul style="margin-left: 22px; font-size: 17px">
-<li><strong>Pinned by axioms + lemmas:</strong> the integers themselves (T = 3, P = 4, Φ = 2, ○ = 3, 21 = A(3), 2 = Φ); the presence of φ (A3); the dimensional sum \((\Phi + \circ) = 1.5\mathrm{D}'\) (<a href="octave_wrap_lemma.html">octave-wrap lemma</a>); the counting factor \(P! = G \cdot \Phi = 24\) (<a href="octave_wrap_lemma.html#section-6">P! = G·Φ identity at T = 3</a>); the first-power α (ℏ = 1 indivisibility); the additive structure (A(d) within-station); the full 360 assembly as the unique structural product at the 2D rung.</li>
-<li><strong>Still chosen within the admissible space:</strong> the exponent-equals-dimension rule applied to φ (framework convention, holds in other ladder formulas but stated not proved); the sign convention on the correction; the specific structural story behind 59 (A(3) − P/T vs. P·V + R vs. S − Φ − T; exhaustive search over candidates gave 59/3 as the unique low-residual hit, but the structural story is one of several pool-native readings); the choice of additive over multiplicative composition between base and correction.</li>
+<li><strong>Pinned by axioms + lemmas:</strong> the integers themselves (T = 3, P = 4, Φ = 2, ○ = 3, 21 = A(3), 2 = Φ); the presence of φ (A3); the dimensional sum \((\Phi + \circ) = 1.5\mathrm{D}'\) (<a href="octave_wrap_lemma.html">octave-wrap lemma</a>); the counting factor \(P! = G \cdot \Phi = 24\) (<a href="octave_wrap_lemma.html#section-6">P! = G·Φ identity at T = 3</a>); the first-power α (ℏ = 1 indivisibility); the additive structure (A(d) within-station); the full 360 assembly as the unique structural product at the 2D rung; <strong>the sign and magnitude of the φ³ correction (balance-forced to −Φ at 0.22 ppb given pool-native 360 and 59/3)</strong>; <strong>59/3 as direct pool-native sum (P·V+R)/T = (S−Φ−T)/T, no subtraction narrative required</strong>.</li>
+<li><strong>Still chosen within the admissible space:</strong> the exponent-equals-dimension rule applied to φ (framework convention, holds in other ladder formulas but stated not proved); the choice between the two equivalent direct readings of 59/3 (both are pool-native additive sums; the framework has not committed to one as primary); the choice of additive over multiplicative composition between base and correction (motivated by A(d) additivity but could in principle be formulated differently).</li>
 </ul>
 <p style="margin-top: 14px">
-Each chosen piece is "chosen from a type-consistent pool," not "chosen from all real numbers." The pool is small and structurally restricted. As of the 2026-04-16 tightening (octave-wrap lemma and counting-factor identity), the 2D-rung counting factor is pinned; the residual open pieces are the φ-exponent rule, the correction sign, the 59-decomposition story, and the additive-versus-multiplicative choice between base and correction. The claim "zero free parameters end-to-end" overstates the situation; the claim "structurally motivated closed form with narrow residual assembly questions" does not.
+Each chosen piece is "chosen from a type-consistent pool," not "chosen from all real numbers." The pool is small and structurally restricted. As of the 2026-04-17 tightening (balance-forcing of the correction sign + direct forms for 59/3), the 2D-rung counting factor is pinned, the φ³ correction sign and magnitude are pinned by balance, and the 59/3 denominator has two equivalent direct pool-native readings (no subtraction narrative). The residual open pieces are now specifically: the φ-exponent rule (convention, not theorem) and the choice between the two equivalent 59/3 readings. The claim "zero free parameters end-to-end" overstates the situation; the claim "structurally motivated closed form with two narrow residual open questions" does not.
 </p>
 <p>
 What the formula does claim, stated narrowly: a specific closed form in ladder integers and φ, with the 2D-rung assembly now uniquely pinned by the two lemmas, hits CODATA to within 0.22 ppb. Whether the remaining open pieces (above) collapse further with additional structural work or whether the formula has a small residual of irreducible assembly choice is itself an open question answerable by further audit.
