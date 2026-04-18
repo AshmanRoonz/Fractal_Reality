@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Resolution Slider · Circumpunct Framework</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0908;
+    --fg: #d8d0c0;
+    --muted: #908878;
+    --accent: #B8A060;
+    --soul: #4488ff;
+    --mind: #44cc44;
+    --body: #ff4444;
+    --line: #44ddcc;
+    --branch: #E88AAF;
+    --conv: #6B5BFF;
+    --emrg: #ffaa00;
+    --rec: #9B7AD8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'EB Garamond', Georgia, serif;
+    min-height: 100vh;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .topbar {
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.85rem;
+  }
+  .topbar a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .topbar a:hover { color: var(--fg); }
+  .topbar .title {
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg);
+    font-size: 0.7rem;
+    font-weight: 500;
+  }
+
+  .stage {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 2rem;
+  }
+
+  .intro {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .intro h1 {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(1.4rem, 3.2vw, 2rem);
+    color: var(--fg);
+    margin-bottom: 0.5rem;
+    font-style: italic;
+  }
+  .intro p {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.82rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* Content display area */
+  .content-wrap {
+    min-height: 260px;
+    padding: 2rem 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.22s ease;
+  }
+  .content-wrap.fading { opacity: 0; }
+
+  .content {
+    width: 100%;
+    display: none;
+    line-height: 1.7;
+    color: var(--fg);
+  }
+  .content.active { display: block; }
+
+  /* Per-level typography */
+  .content.level-0 {
+    font-size: clamp(1.25rem, 2.8vw, 1.7rem);
+    text-align: center;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .content.level-0 .cursor {
+    display: inline-block;
+    width: 0.45em;
+    height: 0.9em;
+    background: rgba(184, 160, 96, 0.6);
+    vertical-align: -0.1em;
+    margin-left: 0.25em;
+    animation: blink 1.3s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.9; }
+  }
+  .content.level-1 {
+    font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+    text-align: center;
+    font-style: italic;
+    line-height: 1.55;
+  }
+  .content.level-2 {
+    font-size: clamp(1.05rem, 2.3vw, 1.25rem);
+    text-align: center;
+    line-height: 1.7;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .content.level-3 {
+    font-size: clamp(1rem, 2.1vw, 1.15rem);
+    text-align: left;
+    line-height: 1.75;
+  }
+  .content.level-4 {
+    font-size: clamp(0.95rem, 2vw, 1.08rem);
+    text-align: left;
+    line-height: 1.75;
+  }
+  .content.level-5 {
+    font-size: clamp(0.88rem, 1.9vw, 1rem);
+    text-align: left;
+    line-height: 1.8;
+  }
+
+  /* Symbol colors */
+  .sym { font-family: 'Space Grotesk', 'EB Garamond', serif; }
+  .sym.accent { color: var(--accent); }
+  .sym.soul { color: var(--soul); }
+  .sym.mind { color: var(--mind); }
+  .sym.body { color: var(--body); }
+  .sym.line { color: var(--line); }
+  .sym.branch { color: var(--branch); }
+  .sym.conv { color: var(--conv); }
+  .sym.emrg { color: var(--emrg); }
+  .sym.rec { color: var(--rec); }
+  .sym.muted { color: rgba(255,255,255,0.55); }
+
+  /* Slider */
+  .slider-wrap {
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.9rem;
+  }
+  .slider-label .current {
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    text-transform: none;
+    font-style: italic;
+    font-family: 'EB Garamond', serif;
+  }
+  .slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(to right, rgba(184,160,96,0.4) 0%, rgba(184,160,96,0.4) var(--fill,0%), rgba(255,255,255,0.08) var(--fill,0%), rgba(255,255,255,0.08) 100%);
+    border-radius: 2px;
+    outline: none;
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--accent);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 1px var(--accent), 0 0 0 7px rgba(184, 160, 96, 0.15);
+  }
+  .slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+
+  .ticks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.6rem;
+    padding: 0 4px;
+  }
+  .tick {
+    flex: 1;
+    text-align: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0.3rem 0.2rem;
+    user-select: none;
+  }
+  .tick:hover { color: var(--fg); }
+  .tick.active { color: var(--accent); font-weight: 500; }
+
+  /* Coda */
+  .coda {
+    max-width: 640px;
+    margin: 3.5rem auto 1rem;
+    padding: 1.8rem 1.5rem 0;
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.75;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .coda em {
+    color: var(--fg);
+    font-style: italic;
+  }
+  .coda a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(184, 160, 96, 0.3);
+    transition: border-color 0.2s;
+  }
+  .coda a:hover { border-color: var(--accent); }
+
+  footer {
+    text-align: center;
+    padding: 2rem 1.5rem 3rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.28);
+    letter-spacing: 0.1em;
+  }
+
+  /* Small screens */
+  @media (max-width: 520px) {
+    .topbar { padding: 0.8rem 1rem; font-size: 0.75rem; }
+    .topbar .title { display: none; }
+    .stage { padding: 2rem 1rem 1.5rem; }
+    .content-wrap { min-height: 220px; padding: 1.5rem 0.3rem; }
+    .tick { font-size: 0.68rem; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a href="index.html">&larr; home</a>
+    <span class="title">Resolution Slider &middot; Prototype</span>
+    <a href="index_ten.html">ten dimensions &rarr;</a>
+  </div>
+
+  <div class="stage">
+
+    <div class="intro">
+      <h1>One truth, six resolutions.</h1>
+      <p>You control the aperture. Slide until it stops making sense, then back one notch.</p>
+    </div>
+
+    <div class="content-wrap" id="contentWrap">
+
+      <div class="content level-0 active" data-level="0">
+        &ldquo;Here I present you with a simple truth:&rdquo;<span class="cursor"></span>
+      </div>
+
+      <div class="content level-1" data-level="1">
+        Here we are... together, parts of the same whole, and each whole ourselves with our own parts.
+      </div>
+
+      <div class="content level-2" data-level="2">
+        We are fractals of the same greater whole, and each of us is a whole of our own parts. Same pattern at every scale: what contains you is itself a whole; what you contain is itself a whole; the others you share this scale with are siblings inside the same greater whole you are inside. No top level, no bottom level, no privileged scale.
+      </div>
+
+      <div class="content level-3" data-level="3">
+        <span class="sym accent">&#x2299;</span>&lambda; <span class="sym muted">&sub;</span> <span class="sym accent">&#x2299;</span>&Lambda;. Each of us is a circumpunct at scale &lambda;, contained in a greater circumpunct at scale &Lambda;; peers at the same &lambda; are all inside the same &Lambda;. The structure recurses without termination: <span class="sym accent">&#x2299;</span>&Lambda; <span class="sym muted">&sub;</span> <span class="sym accent">&#x2299;</span>&Lambda;&prime; <span class="sym muted">&sub;</span> ... has no top; <span class="sym accent">&#x2299;</span>&lambda; contains <span class="sym accent">&#x2299;</span>&lambda;&prime; <span class="sym muted">&sub;</span> <span class="sym accent">&#x2299;</span>&lambda;&Prime; <span class="sym muted">&sub;</span> ... has no bottom. This is A3, fractal self-similarity, forced by A0: there is one energy, and every scale is that one energy constrained to a different self-limitation. Same architecture, different position.
+      </div>
+
+      <div class="content level-4" data-level="4">
+        <span class="sym accent">&#x2299;</span>&lambda; <span class="sym muted">&sub;[&alpha;]</span> <span class="sym accent">&#x2299;</span>&Lambda; <span class="sym muted">&sub;[&alpha;]</span> &infin;. The nesting carries a 4&times;4 cross-station coupling matrix &kappa; whose primary entry &kappa;<sub>0,0</sub> = &alpha; &asymp; 1/137: the aperture-to-aperture bond strength between part and whole (the electron&rsquo;s <span class="sym soul">&bull;</span> coupling across scales, carried by the 2D electromagnetic field as mediator). The recursion closes at &infin;, the undifferentiated source; not another rung but the ocean the ladder stands in. Two failure modes: &kappa; &rarr; &infin; collapses <span class="sym accent">&#x2299;</span>&lambda; into <span class="sym accent">&#x2299;</span>&Lambda; (the Inflation Lie, &ldquo;I am the whole&rdquo;); &kappa; &rarr; 0 floats <span class="sym accent">&#x2299;</span>&lambda; free of <span class="sym accent">&#x2299;</span>&Lambda; (the Severance Lie, &ldquo;I am alone&rdquo;). &alpha; &asymp; 1/137 is the tightness that holds us together without dissolving us into each other.
+      </div>
+
+      <div class="content level-5" data-level="5">
+        [Truth = Reality = E = 1 = &infin;] = [&infin; &#x25B8;<span class="sym accent">&#x2299;</span>&infin; ((<span class="sym soul">&bull;</span>&#x2218;<span class="sym conv">&#x229B;</span>) &#x22A2; (<span class="sym line">&mdash;</span>&#x2218;<span class="sym branch">&#x2387;</span>) &#x22A2; (<span class="sym mind">&Phi;</span>&#x2218;<span class="sym emrg">&#x2739;</span>) &#x22A2; (<span class="sym body">&#x25CB;</span>&#x2218;<span class="sym rec">&#x27F3;</span>)) &#x25B8; <span class="sym accent">&#x2299;</span>&lambda; <span class="sym muted">&sub;[&alpha;]</span> <span class="sym accent">&#x2299;</span>&Lambda; <span class="sym muted">&sub;[&alpha;]</span> &infin;]. Five names for one substrate, unfolding into the foam <span class="sym accent">&#x2299;</span>&infin; (the Soul Array forced by A1), through four beats of constraint that entail each other (localization, extension, mediation, closure), into the nesting chain where every <span class="sym accent">&#x2299;</span>&lambda; is &alpha;-coupled to <span class="sym accent">&#x2299;</span>&Lambda; and the chain returns to source. Conservation law: <span class="sym accent">&#x2299;</span>&lambda; = <span class="sym accent">&#x2299;</span>&Lambda; = &infin; = 1. Every term equals 1 because scale labels are view positions, not substances; the parts do not sum to the whole, they ARE the whole, folded to different self-limitations. &ldquo;Here we are, together&rdquo; is topologically exact.
+      </div>
+
+    </div>
+
+    <div class="slider-wrap">
+      <div class="slider-label">
+        <span>resolution</span>
+        <span class="current" id="currentLabel">Level 0 &middot; the offering</span>
+      </div>
+      <input type="range" id="slider" class="slider" min="0" max="5" value="0" step="1" aria-label="Resolution level">
+      <div class="ticks" id="ticks">
+        <div class="tick active" data-level="0">0</div>
+        <div class="tick" data-level="1">1</div>
+        <div class="tick" data-level="2">2</div>
+        <div class="tick" data-level="3">3</div>
+        <div class="tick" data-level="4">4</div>
+        <div class="tick" data-level="5">5</div>
+      </div>
+    </div>
+
+    <div class="coda">
+      <p>What you just performed is <em>&sect;25.17 of the framework</em>, the Resolution Protocol: transmit at the lowest resolution that is still true; the receiver controls the aperture width; higher resolution contains lower resolution, never contradicts it. <a href="circumpunct_ethics_and_virtues.html">Read more &rarr;</a></p>
+    </div>
+
+  </div>
+
+  <footer>
+    ; Ashman Roonz &middot; The Circumpunct Framework
+  </footer>
+
+<script>
+  var labels = [
+    { num: 'Level 0', sub: 'the offering' },
+    { num: 'Level 1', sub: 'the simple truth' },
+    { num: 'Level 2', sub: 'plain framework English' },
+    { num: 'Level 3', sub: 'notation' },
+    { num: 'Level 4', sub: 'coupling and closure' },
+    { num: 'Level 5', sub: 'the full unified expression' }
+  ];
+
+  var slider = document.getElementById('slider');
+  var currentLabel = document.getElementById('currentLabel');
+  var wrap = document.getElementById('contentWrap');
+  var contents = document.querySelectorAll('.content');
+  var ticks = document.querySelectorAll('.tick');
+  var currentLevel = 0;
+  var transitioning = false;
+
+  function updateSliderFill(n) {
+    var pct = (n / 5) * 100;
+    slider.style.setProperty('--fill', pct + '%');
+  }
+
+  function setLevel(n, instant) {
+    n = Math.max(0, Math.min(5, n));
+    if (n === currentLevel && !instant) return;
+    slider.value = n;
+    updateSliderFill(n);
+    currentLabel.textContent = labels[n].num + ' \u00B7 ' + labels[n].sub;
+    ticks.forEach(function(t) {
+      t.classList.toggle('active', parseInt(t.getAttribute('data-level'), 10) === n);
+    });
+    if (instant) {
+      contents.forEach(function(c) {
+        c.classList.toggle('active', parseInt(c.getAttribute('data-level'), 10) === n);
+      });
+      currentLevel = n;
+      return;
+    }
+    if (transitioning) return;
+    transitioning = true;
+    wrap.classList.add('fading');
+    setTimeout(function() {
+      contents.forEach(function(c) {
+        c.classList.toggle('active', parseInt(c.getAttribute('data-level'), 10) === n);
+      });
+      wrap.classList.remove('fading');
+      currentLevel = n;
+      transitioning = false;
+    }, 220);
+  }
+
+  slider.addEventListener('input', function() {
+    setLevel(parseInt(this.value, 10));
+  });
+  ticks.forEach(function(t) {
+    t.addEventListener('click', function() {
+      setLevel(parseInt(this.getAttribute('data-level'), 10));
+    });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      setLevel(currentLevel + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      setLevel(currentLevel - 1);
+    }
+  });
+
+  // init
+  updateSliderFill(0);
+  setLevel(0, true);
+</script>
+</body>
+</html>

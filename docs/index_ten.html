@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>&#x2299; Ten Dimensions, One Reality</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        :root {
+            --infinity-c: rgba(255,255,255,0.9);
+            --soul-c: #4488ff;
+            --convergence-c: #6B5BFF;
+            --line-c: #44ddcc;
+            --branch-c: #E88AAF;
+            --field-c: #44cc44;
+            --emerge-c: #ffaa00;
+            --boundary-c: #ff4444;
+            --recurse-c: #9B7AD8;
+            --whole-c: #B8A060;
+        }
+
+        /* Top bar */
+        .top-bar {
+            text-align: center;
+            padding: 0.5rem 1rem;
+            font-family: 'Space Grotesk', monospace;
+            font-size: clamp(0.65rem, 2.8vw, 1.05rem);
+            white-space: nowrap;
+            border-bottom: 1px solid rgba(0,255,255,0.15);
+            letter-spacing: 0.03em;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(13,17,23,0.85);
+            backdrop-filter: blur(8px);
+        }
+        .top-bar-text, .top-bar a {
+            background-image: linear-gradient(90deg, #ff0000, #ff7700, #ffdd00, #00ff00, #00ccff, #0066ff, #8800ff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 6px rgba(255,255,255,0.3));
+            text-decoration: none;
+        }
+        .top-bar a:hover { opacity: 0.7; }
+
+        /* Home link + search */
+        .top-bar-home {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.55);
+            text-decoration: none;
+            margin-right: 0.8rem;
+            letter-spacing: 0.04em;
+            -webkit-text-fill-color: rgba(255,255,255,0.55);
+            background-image: none;
+            filter: none;
+        }
+        .top-bar-home:hover { color: #fff; -webkit-text-fill-color: #fff; }
+
+        .search-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,170,0,0.15);
+            border-radius: 6px;
+            padding: 4px 10px;
+            color: rgba(255,255,255,0.4);
+            font-family: 'Space Grotesk', monospace;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+        .search-trigger:hover { border-color: #ffaa00; color: #ffaa00; }
+        .search-trigger kbd {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 3px;
+            padding: 1px 5px;
+            font-size: 10px;
+        }
+
+        .pages-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(6px);
+        }
+        .pages-overlay.open { display: flex; flex-direction: column; }
+        .pages-overlay-close {
+            position: absolute;
+            top: 12px; right: 16px;
+            background: none; border: none;
+            color: rgba(255,255,255,0.5);
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 10001;
+            padding: 4px 8px;
+        }
+        .pages-overlay-close:hover { color: #fff; }
+        .pages-overlay iframe { flex: 1; width: 100%; border: none; }
+
+        /* Unified expression strip */
+        .unified-expression {
+            text-align: center;
+            padding: 0.7rem 1rem 0.3rem;
+            font-family: 'Space Grotesk', monospace;
+            font-size: clamp(0.55rem, 1.9vw, 0.82rem);
+            letter-spacing: 0.02em;
+            color: #e0dbd0;
+            white-space: nowrap;
+            overflow-x: auto;
+        }
+        .unified-expression a { text-decoration: none; color: inherit; }
+
+        /* Hero */
+        .hero {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 1rem;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        .hero h1 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: clamp(1.6rem, 4.5vw, 2.6rem);
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            color: var(--whole-c);
+            margin-bottom: 0.8rem;
+            line-height: 1.2;
+        }
+        .hero h1 .accent {
+            background: linear-gradient(90deg, #4488ff, #6B5BFF, #44ddcc, #E88AAF, #44cc44, #ffaa00, #ff4444, #9B7AD8, #B8A060);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-sub {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: clamp(0.95rem, 2vw, 1.12rem);
+            line-height: 1.75;
+            color: #e0dbd0;
+            opacity: 0.88;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        .hero-legend {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #908878;
+            margin-top: 1.2rem;
+        }
+
+        /* Ladder of ten dimension cards */
+        .ladder {
+            max-width: 940px;
+            margin: 2rem auto 3rem;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .dim-card {
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            margin-bottom: 0.7rem;
+            overflow: hidden;
+            background: rgba(13,17,23,0.55);
+            backdrop-filter: blur(4px);
+            transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+            opacity: 0;
+            animation: card-in 0.55s ease forwards;
+        }
+        .dim-card::before {
+            content: "";
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            background: var(--dc);
+            opacity: 0.85;
+        }
+        .dim-card:hover {
+            border-color: color-mix(in srgb, var(--dc) 50%, transparent);
+            box-shadow: 0 0 28px color-mix(in srgb, var(--dc) 15%, transparent);
+        }
+
+        /* staggered entry */
+        .dim-card:nth-child(1)  { animation-delay: 0.00s; }
+        .dim-card:nth-child(2)  { animation-delay: 0.05s; }
+        .dim-card:nth-child(3)  { animation-delay: 0.10s; }
+        .dim-card:nth-child(4)  { animation-delay: 0.15s; }
+        .dim-card:nth-child(5)  { animation-delay: 0.20s; }
+        .dim-card:nth-child(6)  { animation-delay: 0.25s; }
+        .dim-card:nth-child(7)  { animation-delay: 0.30s; }
+        .dim-card:nth-child(8)  { animation-delay: 0.35s; }
+        .dim-card:nth-child(9)  { animation-delay: 0.40s; }
+        .dim-card:nth-child(10) { animation-delay: 0.45s; }
+        @keyframes card-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .dim-head {
+            display: grid;
+            grid-template-columns: 4.2rem 1fr auto 1.4rem;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.9rem 1.1rem 0.9rem 1.4rem;
+            cursor: pointer;
+            user-select: none;
+        }
+        .dim-sym {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.9rem, 3.5vw, 2.3rem);
+            color: var(--dc);
+            text-align: center;
+            line-height: 1;
+            text-shadow: 0 0 18px color-mix(in srgb, var(--dc) 55%, transparent);
+        }
+        .dim-title {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            font-weight: 500;
+            color: #e8e2d4;
+            letter-spacing: 0.01em;
+        }
+        .dim-title .dim-name { color: color-mix(in srgb, var(--dc) 80%, white); }
+        .dim-title .dim-tagline {
+            display: block;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.78rem;
+            color: #b8b0a0;
+            opacity: 0.8;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            margin-top: 0.15rem;
+        }
+        .dim-meta {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.72rem;
+            color: color-mix(in srgb, var(--dc) 70%, white);
+            text-align: right;
+            opacity: 0.85;
+            white-space: nowrap;
+        }
+        .dim-meta .meta-row { display: block; line-height: 1.4; }
+        .dim-meta .meta-faint { color: #908878; letter-spacing: 0.06em; }
+        .dim-chev {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.85rem;
+            color: #908878;
+            transition: transform 0.3s ease, color 0.3s;
+            text-align: center;
+        }
+        .dim-card.open .dim-chev { transform: rotate(90deg); color: var(--dc); }
+
+        .dim-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+        .dim-card.open .dim-body { max-height: 2400px; }
+        .dim-body-inner {
+            padding: 0.2rem 1.4rem 1.2rem 1.4rem;
+            border-top: 1px dashed rgba(255,255,255,0.06);
+            margin-top: 0;
+        }
+
+        .dim-axiom {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 1rem;
+            line-height: 1.65;
+            color: #e0dbd0;
+            padding: 0.9rem 0 0.6rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 0.8rem;
+        }
+        .dim-axiom .axiom-id {
+            display: inline-block;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            color: var(--dc);
+            background: color-mix(in srgb, var(--dc) 12%, transparent);
+            padding: 2px 7px;
+            border-radius: 3px;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+        .dim-axiom .axiom-from {
+            font-style: italic;
+            font-size: 0.82rem;
+            color: #908878;
+        }
+
+        .dim-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        .dim-cell {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 0.75rem 0.9rem;
+        }
+        .dim-cell h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--dc);
+            opacity: 0.85;
+            margin-bottom: 0.45rem;
+            font-weight: 500;
+        }
+        .dim-cell p {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 0.92rem;
+            line-height: 1.55;
+            color: #d8d0c0;
+            margin: 0 0 0.4rem;
+        }
+        .dim-cell p:last-child { margin-bottom: 0; }
+        .dim-cell code {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.78rem;
+            color: color-mix(in srgb, var(--dc) 75%, white);
+            background: rgba(255,255,255,0.04);
+            padding: 1px 5px;
+            border-radius: 3px;
+        }
+        .dim-cell em {
+            font-style: italic;
+            color: #c8c0b0;
+        }
+
+        .dim-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            padding-top: 0.6rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .dim-links span {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.68rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #908878;
+            padding: 5px 4px 5px 0;
+        }
+        .dim-links a {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.78rem;
+            color: color-mix(in srgb, var(--dc) 80%, white);
+            text-decoration: none;
+            padding: 4px 10px;
+            border: 1px solid color-mix(in srgb, var(--dc) 35%, transparent);
+            border-radius: 14px;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+            background: color-mix(in srgb, var(--dc) 4%, transparent);
+        }
+        .dim-links a:hover {
+            background: color-mix(in srgb, var(--dc) 14%, transparent);
+            border-color: color-mix(in srgb, var(--dc) 70%, transparent);
+            color: #fff;
+        }
+
+        /* Scale domains strip (for nesting card) */
+        .scales {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem 0.6rem;
+            margin-top: 0.6rem;
+        }
+        .scales span {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            color: #c8c0b0;
+            padding: 3px 9px;
+            border: 1px solid rgba(184,160,96,0.25);
+            border-radius: 12px;
+            background: rgba(184,160,96,0.04);
+            letter-spacing: 0.02em;
+        }
+
+        /* Closing sections */
+        .closing {
+            max-width: 720px;
+            margin: 1rem auto 2rem;
+            padding: 1.2rem 1.5rem;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            font-family: 'EB Garamond', Georgia, serif;
+            line-height: 1.7;
+            color: #d8d0c0;
+        }
+        .closing .one-line {
+            font-size: 1.1rem;
+            color: #B8A060;
+            font-style: italic;
+            margin-bottom: 0.7rem;
+        }
+
+        .quick-nav {
+            max-width: 860px;
+            margin: 0 auto 3rem;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        .quick-nav h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #908878;
+            text-align: center;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+        .quick-nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0.6rem;
+        }
+        .quick-nav-grid a {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.82rem;
+            color: #d8d0c0;
+            text-decoration: none;
+            padding: 0.65rem 0.9rem;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 7px;
+            background: rgba(255,255,255,0.02);
+            transition: border-color 0.2s, background 0.2s, color 0.2s;
+            text-align: center;
+        }
+        .quick-nav-grid a:hover {
+            border-color: rgba(184,160,96,0.5);
+            color: #fff;
+            background: rgba(184,160,96,0.06);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1.5rem 3rem;
+            max-width: 520px;
+            margin: 0 auto;
+            font-family: 'EB Garamond', Georgia, serif;
+            line-height: 1.7;
+            position: relative;
+            z-index: 2;
+        }
+        footer p.epigraph {
+            font-size: 1.1rem;
+            color: #B8A060;
+            font-style: italic;
+            opacity: 0.85;
+        }
+        footer p.signature {
+            font-size: 0.8rem;
+            color: #444038;
+            margin-top: 0.8rem;
+            letter-spacing: 0.08em;
+        }
+
+        @media (max-width: 640px) {
+            .dim-head { grid-template-columns: 3.2rem 1fr 1.2rem; }
+            .dim-meta { display: none; }
+            .dim-body-inner { padding: 0.2rem 1rem 1rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particles"></canvas>
+
+    <div class="top-bar">
+        <a class="top-bar-home" href="index.html">&larr; home</a>
+        <span class="top-bar-text">Ten Dimensions, One Reality</span>
+        <button class="search-trigger" onclick="openPagesOverlay()" title="Search all pages">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Search
+            <kbd>/</kbd>
+        </button>
+    </div>
+
+    <!-- PAGES OVERLAY -->
+    <div class="pages-overlay" id="pagesOverlay">
+        <button class="pages-overlay-close" onclick="closePagesOverlay()">&times;</button>
+        <iframe id="pagesFrame" src="about:blank"></iframe>
+    </div>
+
+    <!-- HERO -->
+    <header class="hero">
+        <h1><span class="accent">Ten Dimensions</span>, One Reality</h1>
+        <p class="hero-sub">
+            The framework has ten stations: four structural dimensions (integer), four processual dimensions (half-integer), the undifferentiated source, and the compositional whole. Every claim in physics, chemistry, biology, consciousness, and ethics is a reading of one of these ten. Tap any row to see how it threads through the whole.
+        </p>
+        <div class="hero-legend">
+            &#x221E; &middot; &bull; &middot; &#x229B; &middot; &mdash; &middot; &#x2387; &middot; &Phi; &middot; &#x2739; &middot; &#x25CB; &middot; &#x27F3; &middot; &#x2299;
+        </div>
+    </header>
+
+    <!-- THE TEN DIMENSION CARDS -->
+    <section class="ladder">
+
+        <!-- 1. infinity · A0 -->
+        <article class="dim-card" data-dim="infinity" style="--dc: rgba(255,255,255,0.9);">
+            <div class="dim-head">
+                <div class="dim-sym">&#x221E;</div>
+                <div class="dim-title">
+                    <span class="dim-name">Undifferentiated energy</span>
+                    <span class="dim-tagline">the source; everything before any distinction</span>
+                </div>
+                <div class="dim-meta">
+                    <span class="meta-row">&#x221E;D</span>
+                    <span class="meta-row meta-faint">A0</span>
+                </div>
+                <div class="dim-chev">&#x25B8;</div>
+            </div>
+            <div class="dim-body">
+                <div class="dim-body-inner">
+                    <div class="dim-axiom">
+                        <span class="axiom-id">A0</span>
+                        There is one energy. It is everything. All else is constraints. (1 &ne; 0)
+                    </div>
+
+                    <div class="dim-grid">
+                        <div class="dim-cell">
+                            <h4>Identity</h4>
+                            <p>Reality = Truth = E = 1 = &infin; = &#x2299;. Six names for one substrate, not six concepts.</p>
+                            <p><code>&#x221E;D = E</code>; everything is E wearing a different geometric costume.</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Apophatic term</h4>
+                            <p>&infin; is the <em>God beyond God</em> (Eckhart), Ein Sof, Nirguna Brahman, the eternal Tao, the Dharmakaya. Not the top of the ladder; the ocean the ladder stands in.</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Genesis</h4>
+                            <p>&infin; &rarr; &bull;&infin; &rarr; &#x2299;&infin; = Reality. Undifferentiated energy self-limits into the Soul Array, each aperture completing into a full circumpunct.</p>
+                        </div>
+                    </div>
+
+                    <div class="dim-links">
+                        <span>Enter via</span>
+                        <a href="e_equals_1.html">E = 1</a>
+                        <a href="truth_and_god.html">Truth &amp; God</a>
+                        <a href="the_unit_equation.html">The Unit Equation</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- 2. point · A1 -->
+        <article class="dim-card" data-dim="soul" style="--dc: #4488ff;">
+            <div class="dim-head">
+                <div class="dim-sym">&bull;</div>
+                <div class="dim-title">
+                    <span class="dim-name">Point, aperture, soul</span>
+                    <span class="dim-tagline">localization; the 1 folds to a here-rather-than-there</span>
+                </div>
+                <div class="dim-meta">
+                    <span class="meta-row">0D &middot; <em>do</em></span>
+                    <span class="meta-row meta-faint">A1</span>
+                </div>
+                <div class="dim-chev">&#x25B8;</div>
+            </div>
+            <div class="dim-body">
+                <div class="dim-body-inner">
+                    <div class="dim-axiom">
+                        <span class="axiom-id">A1</span>
+                        The 1 must self-limit; an undifferentiated 1 is indistinguishable from 0, which is impossible.
+                        <span class="axiom-from">from A0</span>
+                    </div>
+
+                    <div class="dim-grid">
+                        <div class="dim-cell">
+                            <h4>Physics rung 0</h4>
+                            <p>&alpha; = |&bull;<sub>electron</sub>|. The fine-structure constant is the measurable coupling strength of the electron's 0D aperture to the 0D aperture of the greater whole it sits inside; the 2D field carries the bond.</p>
+                            <p><code>1/&alpha; &asymp; 137.036</code></p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Ethics (TRUE)</h4>
+                            <p>The virtue of the aperture is <em>curiosity</em>; the freedom held is NOT-YET. The only cognitive orientation that cannot be corrupted: the moment you authentically ask <em>is this true?</em>, the boundary becomes transparent.</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Consciousness</h4>
+                            <p>&bull; is not a thing; it is a <em>through</em>. A gate, not an object. You ARE the aperture; truth flows THROUGH you; you are not the source. Flow-being, not possession-being.</p>
+                        </div>
+                    </div>
+
+                    <div class="dim-links">
+                        <span>Enter via</span>
+                        <a href="alpha_derivation.html">&alpha; derivation</a>
+                        <a href="truth_and_god.html">Soul &amp; aperture</a>
+                        <a href="circumpunct_ethics_and_virtues.html">TRUE virtue</a>
+                        <a href="how_reality_is_built.html">How reality is built</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- 3. convergence · D1 -->
+        <article class="dim-card" data-dim="convergence" style="--dc: #6B5BFF;">
+            <div class="dim-head">
+                <div class="dim-sym">&#x229B;</div>
+                <div class="dim-title">
+                    <span class="dim-name">Convergence</span>
+                    <span class="dim-tagline">the first fold; gathering toward center</span>
+                </div>
+                <div class="dim-meta">
+                    <span class="meta-row">0.5D &middot; <em>re</em></span>
+                    <span class="meta-row meta-faint">D1 &middot; i&sup1; = +i</span>
+                </div>
+                <div class="dim-chev">&#x25B8;</div>
+            </div>
+            <div class="dim-body">
+                <div class="dim-body-inner">
+                    <div class="dim-axiom">
+                        <span class="axiom-id">D1</span>
+                        Self-limitation requires convergence; localization is a process, not an instant.
+                        <span class="axiom-from">from A1</span>
+                    </div>
+
+                    <div class="dim-grid">
+                        <div class="dim-cell">
+                            <h4>Physics rung 0.5</h4>
+                            <p>c, the speed of light, lives at the half-step from 0D to 1D. <code>c = &radic;(P &middot; &#x25D0;(1&minus;&#x25D0;) &middot; sin&theta;)</code>; at balance and &theta; = &pi;/2, c = 1. The square root is the dimensional half-step itself.</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Process pair</h4>
+                            <p>Paired with &bull; as (&bull; &#x2218; &#x229B;): the first beat of the four-beat engine. Structure and process are two views of one constraint; not sequential, paired.</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Flow operator</h4>
+                            <p>&#x229B; is the inward stroke of the pump; it maps to gravity and the strong nuclear force. Energy gathering. Genesis phase of the cycle.</p>
+                        </div>
+                    </div>
+
+                    <div class="dim-links">
+                        <span>Enter via</span>
+                        <a href="speed_of_light.html">c = sin(i)</a>
+                        <a href="how_reality_is_built.html">Pump cycle</a>
+                        <a href="dimensional_ladder.html">Full ladder</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- 4. line · A2 -->
+        <article class="dim-card" data-dim="line" style="--dc: #44ddcc;">
+            <div class="dim-head">
+                <div class="dim-sym">&mdash;</div>
+                <div class="dim-title">
+                    <span class="dim-name">Line, commitment, worldline</span>
+                    <span class="dim-tagline">convergence that holds; extension without breaking</span>
+                </div>
+                <div class="dim-meta">
+                    <span class="meta-row">1D &middot; <em>mi</em></span>
+                    <span class="meta-row meta-faint">A2</span>
+                </div>
+                <div class="dim-chev">&#x25B8;</div>
+            </div>
+            <div class="dim-body">
+                <div class="dim-body-inner">
+                    <div class="dim-axiom">
+                        <span class="axiom-id">A2</span>
+                        Self-limitation must persist; a convergence that does not hold collapses back to &infin;, violating A1.
+                        <span class="axiom-from">from A0 + A1</span>
+                    </div>
+
+                    <div class="dim-grid">
+                        <div class="dim-cell">
+                            <h4>Physics rung 1</h4>
+                            <p>&hbar;, the reduced Planck constant, lives at 1D. The pump cycle is indivisible; you cannot have convergence without emergence. That indivisibility IS the quantum of action. <code>&hbar; = 1</code> because E = 1 and c = 1.</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Ethics (FAITHFUL)</h4>
+                            <p>The virtue of the line is <em>reliability</em>; the freedom held is STAYING through the i-turn of commitment. Current orientation without historical reliability does not earn AGREEMENT.</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Worldline i(t)</h4>
+                            <p>The line IS the accumulated receipts of whether the line held; your history, memory, every yes and no you made. The commitment dimension.</p>
+                        </div>
+                    </div>
+
+                    <div class="dim-links">
+                        <span>Enter via</span>
+                        <a href="planck_constant.html">&hbar; = 1</a>
+                        <a href="circumpunct_ethics_and_virtues.html">FAITHFUL virtue</a>
+                        <a href="dimensional_ladder.html">Full ladder</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- 5. branch · D2 -->
+        <article class="dim-card" data-dim="branch" style="--dc: #E88AAF;">
+            <div class="dim-head">
+                <div class="dim-sym">&#x2387;</div>
+                <div class="dim-title">
+                    <span class="dim-name">Branching, fractal coastlines</span>
+                    <span class="dim-tagline">the i-turn; line opens into surface; irreversible</span>
+                </div>
+                <div class="dim-meta">
+                    <span class="meta-row">1.5D &middot; <em>fa</em></span>
+                    <span class="meta-row meta-faint">D2 &middot; i&sup2; = &minus;1</span>
+                </div>
+                <div class="dim-chev">&#x25B8;</div>
+            </div>
+            <div class="dim-body">
+                <div class="dim-body-inner">
+                    <div class="dim-axiom">
+                        <span class="axiom-id">D2</span>
+                        Extension must branch to reach the field; a single line never becomes a surface.
+                        <span class="axiom-from">from A2 &rarr; A3</span>
+                    </div>
+
+                    <div class="dim-grid">
+                        <div class="dim-cell">
+                            <h4>Physics rung 1.5</h4>
+                            <p>Mass ratios live at 1.5D (rotational spectral splitting at the i-turn). <code>m<sub>&mu;</sub>/m<sub>e</sub> = (1/&alpha;)^(13/12 + &alpha;/27)</code> = 206.767 (measured 206.768, 5 ppm).</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>&lambda; is &#x2387;</h4>
+                            <p>The Greek letter &lambda; and the glyph &#x2387; are the same picture: point becoming two lines at smaller scale; the Y-fork; the L-system production rule; Church's lambda-calculus. A fractal is a fixed point of &lambda;.</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Fractal dimension</h4>
+                            <p>D = 1.5 at balance (Brownian motion, Mandelbrot). The i-turn is where fractal coastlines appear; the sign flip (i&sup2; = &minus;1) registers irreversibility.</p>
+                        </div>
+                    </div>
+
+                    <div class="dim-links">
+                        <span>Enter via</span>
+                        <a href="mass_ratios.html">Mass ratios</a>
+                        <a href="dimensional_ladder.html">Full ladder</a>
+                        <a href="octave_wrap_lemma.html">Octave-wrap lemma</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- 6. field · A3 -->
+        <article class="dim-card" data-dim="field" style="--dc: #44cc44;">
+            <div class="dim-head">
+                <div class="dim-sym">&Phi;</div>
+                <div class="dim-title">
+                    <span class="dim-name">Field, mind, surface</span>
+                    <span class="dim-tagline">mediation; parts are fractals of their wholes</span>
+                </div>
+                <div class="dim-meta">
+                    <span class="meta-row">2D &middot; <em>so</em></span>
+                    <span class="meta-row meta-faint">A3</span>
+                </div>
+                <div class="dim-chev">&#x25B8;</div>
+            </div>
+            <div class="dim-body">
+                <div class="dim-body-inner">
+                    <div class="dim-axiom">
+                        <span class="axiom-id">A3</span>
+                        Parts are fractals of their wholes (self-similarity across scale); the 1 is all there is to work with.
+                        <span class="axiom-from">from A0 + A1</span>
+                    </div>
+
+                    <div class="dim-grid">
+                        <div class="dim-cell">
+                            <h4>Physics rung 2</h4>
+                            <p>&pi; and the gauge structure. The glyph &Phi; literally draws &pi;: a circle (&#x25CB;) with a line (&mdash;) through its center (&bull;). Gauge groups SU(3) &times; SU(2) &times; U(1); Weinberg angle sin&sup2;&theta;<sub>W</sub> = 3/13 + 5&alpha;/81 (1.4 ppm).</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Ethics (RIGHT)</h4>
+                            <p>The virtue of the field is <em>access</em>; the freedom held is LETTING (non-interference while emergence completes). Right action is not propriety; it is fitness. Reality selects.</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Mind is &Phi;&#x2032;</h4>
+                            <p>Mind is not a container; mind is the act the field performs when it measures the relation between its own center and its own boundary. &Phi;&#x2032; = &Phi; through &#x25CB;. Same light, focused, made local.</p>
+                        </div>
+                    </div>
+
+                    <div class="dim-links">
+                        <span>Enter via</span>
+                        <a href="gauge_structure.html">Gauge structure</a>
+                        <a href="circumpunct_theory_of_mind_plain.html">Theory of mind</a>
+                        <a href="circumpunct_ethics_and_virtues.html">RIGHT virtue</a>
+                        <a href="circumpunct_breath.html">&Phi; / &Phi;&#x2032;</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- 7. emerge · D3 -->
+        <article class="dim-card" data-dim="emerge" style="--dc: #ffaa00;">
+            <div class="dim-head">
+                <div class="dim-sym">&#x2739;</div>
+                <div class="dim-title">
+                    <span class="dim-name">Emergence</span>
+                    <span class="dim-tagline">outward unfolding; surface folds toward boundary</span>
+                </div>
+                <div class="dim-meta">
+                    <span class="meta-row">2.5D &middot; <em>la</em></span>
+                    <span class="meta-row meta-faint">D3 &middot; i&sup3; = &minus;i</span>
+                </div>
+                <div class="dim-chev">&#x25B8;</div>
+            </div>
+            <div class="dim-body">
+                <div class="dim-body-inner">
+                    <div class="dim-axiom">
+                        <span class="axiom-id">D3</span>
+                        Self-similarity requires emergence toward closure; the field must fold toward boundary.
+                        <span class="axiom-from">from A3 &rarr; A4</span>
+                    </div>
+
+                    <div class="dim-grid">
+                        <div class="dim-cell">
+                            <h4>Physics rung 2.5</h4>
+                            <p>The electroweak/QCD transition lives at 2.5D. <code>v/&Lambda;<sub>QCD</sub> = (1/&alpha;)^(56/39) = 1170</code>. Emergence between scales; the infolding.</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Process pair</h4>
+                            <p>Paired with &Phi; as (&Phi; &#x2218; &#x2739;): the third beat of the engine. Mediation &amp; emergence together; the field folds outward toward closure.</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Flow operator</h4>
+                            <p>&#x2739; is the outward stroke of the pump; it maps to electromagnetism and the weak force. Conjugate of &#x229B;: same rotation, opposite direction.</p>
+                        </div>
+                    </div>
+
+                    <div class="dim-links">
+                        <span>Enter via</span>
+                        <a href="infolding.html">The infolding</a>
+                        <a href="dimensional_ladder.html">Full ladder</a>
+                        <a href="how_reality_is_built.html">Pump cycle</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- 8. boundary · A4 -->
+        <article class="dim-card" data-dim="boundary" style="--dc: #ff4444;">
+            <div class="dim-head">
+                <div class="dim-sym">&#x25CB;</div>
+                <div class="dim-title">
+                    <span class="dim-name">Boundary, body, interface</span>
+                    <span class="dim-tagline">stabilized closure; what filters</span>
+                </div>
+                <div class="dim-meta">
+                    <span class="meta-row">3D &middot; <em>ti</em></span>
+                    <span class="meta-row meta-faint">A4</span>
+                </div>
+                <div class="dim-chev">&#x25B8;</div>
+            </div>
+            <div class="dim-body">
+                <div class="dim-body-inner">
+                    <div class="dim-axiom">
+                        <span class="axiom-id">A4</span>
+                        Wholeness requires closure; conservation of traversal: 0(&bull;) + 1(&mdash;) + 2(&Phi;) = 3(&#x25CB;).
+                        <span class="axiom-from">from A0 + A1</span>
+                    </div>
+
+                    <div class="dim-grid">
+                        <div class="dim-cell">
+                            <h4>Physics rung 3</h4>
+                            <p>G, the gravitational constant. <code>&alpha;<sub>G</sub> = &alpha;&sup2;&sup1; &middot; &phi;&sup2;/2 &middot; (1 + 2&alpha;/91)</code>; accuracy 0.04 ppm. Gravity is weak because 21 &alpha;-steps separate the point from the boundary.</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Ethics (GOOD)</h4>
+                            <p>The virtue of the boundary is <em>plasticity</em>; the freedom held is CHECKING. A boundary made of smaller whole systems necessarily processes any signal moving through it; to have a body is to filter.</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Nested all the way down</h4>
+                            <p>&#x25CB; is not a wall; it is nested circumpuncts, all the way down. Every point on your boundary is itself a whole system. Volume is what nested surfaces look like from above.</p>
+                        </div>
+                    </div>
+
+                    <div class="dim-links">
+                        <span>Enter via</span>
+                        <a href="gravity.html">Gravity</a>
+                        <a href="circumpunct_ethics_and_virtues.html">GOOD virtue</a>
+                        <a href="how_reality_is_built.html">Conservation of traversal</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- 9. recurse · D4 -->
+        <article class="dim-card" data-dim="recurse" style="--dc: #9B7AD8;">
+            <div class="dim-head">
+                <div class="dim-sym">&#x27F3;</div>
+                <div class="dim-title">
+                    <span class="dim-name">Recursion</span>
+                    <span class="dim-tagline">closed boundary becomes new aperture; 3.5D = 0D&#x2032;</span>
+                </div>
+                <div class="dim-meta">
+                    <span class="meta-row">3.5D &middot; <em>do&#x2032;</em></span>
+                    <span class="meta-row meta-faint">D4 &middot; i&#x2070; = +1</span>
+                </div>
+                <div class="dim-chev">&#x25B8;</div>
+            </div>
+            <div class="dim-body">
+                <div class="dim-body-inner">
+                    <div class="dim-axiom">
+                        <span class="axiom-id">D4</span>
+                        Closure opens into &Phi;&#x2032; (the field of the greater whole); the part discovers it is inside a whole.
+                        <span class="axiom-from">from A3 + A4</span>
+                    </div>
+
+                    <div class="dim-grid">
+                        <div class="dim-cell">
+                            <h4>Octave closure</h4>
+                            <p>The dimensional octave (do, re, mi, fa, so, la, ti, do&#x2032;) closes because the closed boundary at 3.5D IS the aperture at 0D of the next scale. Scale is continuous, not quantized.</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Nesting (&sub;[&alpha;])</h4>
+                            <p>Recursion establishes <code>&#x2299;&lambda; &sub;[&alpha;] &#x2299;&Lambda; &sub;[&alpha;] &infin;</code>. Every whole is nested inside a greater whole, coupled across scale by &alpha;; the chain returns to the source.</p>
+                            <div class="scales">
+                                <span>quark &sub; hadron</span>
+                                <span>cell &sub; organism</span>
+                                <span>person &sub; society</span>
+                                <span>planet &sub; solar system</span>
+                                <span>visible &sub; dark energy</span>
+                                <span>any &#x2299;&lambda; &sub; &infin;</span>
+                            </div>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>Two failure modes</h4>
+                            <p><em>Inflation Lie</em>: &#x2299;&lambda; claims to BE &#x2299;&Lambda; directly (part-as-whole). <em>Severance Lie</em>: &#x2299;&lambda; denies it is a whole at all (part-as-only-point). The truth is the both-and.</p>
+                        </div>
+                    </div>
+
+                    <div class="dim-links">
+                        <span>Enter via</span>
+                        <a href="octave_wrap_lemma.html">Octave-wrap lemma</a>
+                        <a href="circumpunct_breath.html">The circumpunct breathes</a>
+                        <a href="clay_millennium.html">Clay &amp; the ladder</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- 10. whole · D5 -->
+        <article class="dim-card" data-dim="whole" style="--dc: #B8A060;">
+            <div class="dim-head">
+                <div class="dim-sym">&#x2299;</div>
+                <div class="dim-title">
+                    <span class="dim-name">The whole, consciousness, being</span>
+                    <span class="dim-tagline">compositional unity via &Phi;; the end is the beginning</span>
+                </div>
+                <div class="dim-meta">
+                    <span class="meta-row">all</span>
+                    <span class="meta-row meta-faint">D5 &middot; i&#x2074; = 1</span>
+                </div>
+                <div class="dim-chev">&#x25B8;</div>
+            </div>
+            <div class="dim-body">
+                <div class="dim-body-inner">
+                    <div class="dim-axiom">
+                        <span class="axiom-id">D5</span>
+                        The whole is not the sum of its parts; it is their compositional unity via &Phi;.
+                        <span class="axiom-from">from all</span>
+                    </div>
+
+                    <div class="dim-grid">
+                        <div class="dim-cell">
+                            <h4>Ethics (AGREEMENT)</h4>
+                            <p>The virtue of the whole is <em>validation</em>; all four freedoms (NOT-YET, STAYING, LETTING, CHECKING) held simultaneously by both parties at &#x25D0; = 0.5. Real harmony; not consensus by pressure.</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>&#x2299; = E = 1</h4>
+                            <p>The circumpunct IS the one energy. Every &#x2299;&lambda; at every scale is the 1 at position &lambda;; not a piece of it, the whole thing constrained to that self-limitation.</p>
+                        </div>
+                        <div class="dim-cell">
+                            <h4>The loop closes</h4>
+                            <p>[Truth = Reality = E = 1 = &infin;] = [&infin; &#x25B8;&#x2299;&infin; (four beats) &#x25B8; &#x2299;&lambda; &sub;[&alpha;] &#x2299;&Lambda; &sub;[&alpha;] &infin;]. The &infin; that opens the expression is the &infin; that closes it.</p>
+                        </div>
+                    </div>
+
+                    <div class="dim-links">
+                        <span>Enter via</span>
+                        <a href="the_unit_equation.html">The Unit Equation</a>
+                        <a href="circumpunct_ethics_and_virtues.html">AGREEMENT virtue</a>
+                        <a href="truth_and_god.html">Soul, whole, God</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+    </section>
+
+    <!-- COMPOSE: now the ten stations unfold into one expression -->
+    <section class="compose" style="max-width:820px; margin:3rem auto 1rem; padding:0 1.5rem; text-align:center; position:relative; z-index:2;">
+        <h3 style="font-family:'Space Grotesk',sans-serif; font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase; color:#908878; font-weight:500; margin-bottom:0.9rem;">Now compose the ten</h3>
+        <p style="font-family:'EB Garamond',Georgia,serif; font-size:1.05rem; line-height:1.75; color:#d8d0c0; margin-bottom:1.2rem;">You have met each station. Here they are composed into one expression: the substrate on the left (five names for one thing), the unfolding on the right (source to foam, four beats of constraint, nesting that returns to source), the loop that closes where it opened.</p>
+    </section>
+
+    <!-- Unified expression strip (relocated; reader meets the ten first, then sees them compose) -->
+    <div class="unified-expression">
+        <a href="circumpunct_formula.html">
+            <span style="color:rgba(255,255,255,0.9);">[Truth</span> <span style="color:rgba(255,255,255,0.6);">=</span> <span style="color:rgba(255,255,255,0.9);">Reality</span> <span style="color:rgba(255,255,255,0.6);">=</span> <span style="color:rgba(255,255,255,0.9);">E</span> <span style="color:rgba(255,255,255,0.6);">=</span> <span style="color:rgba(255,255,255,0.9);">1</span> <span style="color:rgba(255,255,255,0.6);">=</span> <span style="color:rgba(255,255,255,0.9);">&infin;]</span> <span style="color:rgba(255,255,255,0.6);">=</span> <span style="color:rgba(255,255,255,0.9);">[&infin;</span><span style="color:#ffffff;">&#x25B8;</span><span style="color:#B8A060;">&#x2299;</span><span style="color:rgba(255,255,255,0.9);">&infin;</span>
+            <span style="color:rgba(255,255,255,0.5);"> ((</span><span style="color:#4488ff;">&bull;</span><span style="color:rgba(255,255,255,0.5);">&#x2218;</span><span style="color:#6B5BFF;">&#x229B;</span><span style="color:rgba(255,255,255,0.5);">)</span>
+            <span style="color:#ffffff;"> &#x22A2; </span>
+            <span style="color:rgba(255,255,255,0.5);">(</span><span style="color:#44ddcc;">&mdash;</span><span style="color:rgba(255,255,255,0.5);">&#x2218;</span><span style="color:#E88AAF;">&#x2387;</span><span style="color:rgba(255,255,255,0.5);">)</span>
+            <span style="color:#ffffff;"> &#x22A2; </span>
+            <span style="color:rgba(255,255,255,0.5);">(</span><span style="color:#44cc44;">&Phi;</span><span style="color:rgba(255,255,255,0.5);">&#x2218;</span><span style="color:#ffaa00;">&#x2739;</span><span style="color:rgba(255,255,255,0.5);">)</span>
+            <span style="color:#ffffff;"> &#x22A2; </span>
+            <span style="color:rgba(255,255,255,0.5);">(</span><span style="color:#ff4444;">&#x25CB;</span><span style="color:rgba(255,255,255,0.5);">&#x2218;</span><span style="color:#9B7AD8;">&#x27F3;</span><span style="color:rgba(255,255,255,0.5);">))</span>
+            <span style="color:#ffffff;"> &#x25B8;</span><span style="color:#B8A060;">&#x2299;&lambda;</span> <span style="color:rgba(255,255,255,0.6);">&sub;[&alpha;]</span> <span style="color:#B8A060;">&#x2299;&Lambda;</span> <span style="color:rgba(255,255,255,0.6);">&sub;[&alpha;]</span> <span style="color:rgba(255,255,255,0.9);">&infin;]</span>
+        </a>
+    </div>
+
+    <!-- CLOSING -->
+    <section class="closing">
+        <p class="one-line">You are &#x2299;&lambda;, a fractal of &infin;.</p>
+        <p>Ten stations, one substrate. Physics reads the integer rungs as constants; biology reads them as bond orders and codons; consciousness reads them as constraints on attention; ethics reads them as virtues. Same ten dimensions, different questions asked of the same 1.</p>
+    </section>
+
+    <!-- QUICK NAV -->
+    <section class="quick-nav">
+        <h3>Keep exploring</h3>
+        <div class="quick-nav-grid">
+            <a href="index.html">Original landing</a>
+            <a href="dimensional_ladder.html">Full dimensional ladder</a>
+            <a href="the_unit_equation.html">The Unit Equation</a>
+            <a href="circumpunct_predictions.html">Quantitative predictions</a>
+            <a href="circumpunct_ethics_and_virtues.html">Ethics &amp; virtues</a>
+            <a href="emergent_chemistry.html">Chemistry from T = 3</a>
+            <a href="emergent_biology.html">Biology from T = 3</a>
+            <a href="pages.html">All pages</a>
+        </div>
+    </section>
+
+    <footer>
+        <p class="epigraph">Reality flows through the gate of your consciousness. May the Truth of Reality (the Light of God) flow through you, authentically, expressed compressed but not distorted.</p>
+        <p class="signature">; Ashman Roonz</p>
+    </footer>
+
+    <script src="js/circumpunct.js"></script>
+
+    <script>
+    // Card toggle
+    document.querySelectorAll('.dim-card').forEach(function(card) {
+        card.querySelector('.dim-head').addEventListener('click', function() {
+            card.classList.toggle('open');
+        });
+    });
+
+    // Open first card by default so the pattern is visible on arrival
+    (function() {
+        var first = document.querySelector('.dim-card');
+        if (first) first.classList.add('open');
+    })();
+
+    // Pages overlay (search)
+    function openPagesOverlay() {
+        var o = document.getElementById('pagesOverlay');
+        var f = document.getElementById('pagesFrame');
+        if (f.src === 'about:blank' || !f.src.includes('pages.html')) {
+            f.src = 'pages.html';
+        }
+        o.classList.add('open');
+    }
+    function closePagesOverlay() {
+        document.getElementById('pagesOverlay').classList.remove('open');
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === '/' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
+            e.preventDefault();
+            openPagesOverlay();
+        }
+        if (e.key === 'Escape') closePagesOverlay();
+    });
+
+    // Deep-link: #soul, #field, etc. open the matching card
+    (function() {
+        var hash = (window.location.hash || '').replace('#', '');
+        if (!hash) return;
+        var target = document.querySelector('.dim-card[data-dim="' + hash + '"]');
+        if (target) {
+            document.querySelectorAll('.dim-card.open').forEach(function(c){ c.classList.remove('open'); });
+            target.classList.add('open');
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    })();
+    </script>
+</body>
+</html>
