@@ -408,16 +408,23 @@
   let beatPhase = 0;                 // 0..2π wraps per beat, locked to tempo
 
   // Onset detection function (ODF) : half-wave rectified raw-bass derivative,
-  // sampled at a FIXED 60 Hz regardless of display refresh rate. 4 seconds of
-  // history gives us enough window to autocorrelate slow tempos (55 BPM =
-  // 1.09s period, so we see 3-4 periods per window).
+  // sampled at a FIXED 60 Hz regardless of display refresh rate. 12 seconds of
+  // history gives us 11+ periods even at 55 BPM, so the past genuinely informs
+  // the present and we have enough evidence to project the future.
   const ODF_RATE = 60;
   const ODF_DT   = 1 / ODF_RATE;
-  const ODF_LEN  = 240;
+  const ODF_LEN  = 720;              // 12 s at 60 Hz
   const odfBuf   = new Float32Array(ODF_LEN);
   let odfIdx = 0;
   let odfPrev = 0;
   let odfClock = -1;                 // the 60Hz sample clock, decoupled from frames
+  let lastAcfT = -1;                 // wall time of previous autocorr pass (for dt-based EMAs)
+  let lastPhaseT = -1;               // wall time of previous phase update
+  // Argmax hysteresis : stay on the current winning lag unless a new one
+  // dominates for a while (stops BPM-jitter between octave partners).
+  let winnerLag       = -1;
+  let winnerChallenge = -1;
+  let winnerChallengeT = 0;
 
   // Tempo candidates : lag = period in ODF samples. Scan 55-190 BPM inclusive.
   // softmax over autocorr scores picks the winner ; every tempo competes every
@@ -499,6 +506,8 @@
     preBeatEnv = 0; bassLongAvg = 0; lastBeatT = 0;
     odfBuf.fill(0); acfEMA.fill(0); acfProb.fill(0); acfFolded.fill(0);
     odfIdx = 0; odfPrev = 0; odfClock = -1;
+    lastAcfT = -1; lastPhaseT = -1;
+    winnerLag = -1; winnerChallenge = -1; winnerChallengeT = 0;
   }
 
   async function useMic(){
@@ -579,7 +588,14 @@
   }
 
   // Run autocorrelation against every candidate lag ; softmax gives the winner.
-  function runAutocorrSoftmax(){
+  // Time-based : dt measured from wall clock so EMA time constants are stable
+  // regardless of frame rate, and hysteresis windows are genuine seconds.
+  function runAutocorrSoftmax(tNow){
+    // Wall-clock dt since last pass. Clamp to sane bounds (dropped frames or
+    // tab-switch pauses shouldn't inject giant jumps).
+    const dt = lastAcfT < 0 ? 1/60 : Math.max(1/600, Math.min(0.2, tNow - lastAcfT));
+    lastAcfT = tNow;
+
     // Raw autocorrelation this frame (not normalized by lag variance ; we
     // just care about relative ordering between candidates).
     for(let k = 0; k < N_CAND; k++){
@@ -592,9 +608,11 @@
         sum += a * b;
       }
       acfScore[k] = sum / N;
-      // Slow EMA accumulates evidence over ~1s. This is the "memory" :
-      // candidates that keep winning stay strong ; lucky one-frame spikes fade.
-      acfEMA[k] = acfEMA[k] * 0.93 + acfScore[k] * 0.07;
+      // Time-based EMA : 3s time constant gives the past genuine weight without
+      // being so slow it misses real tempo changes. Candidates that keep
+      // winning accumulate ; one-frame spikes fade in a few hundred ms.
+      const emaAlpha = 1 - Math.exp(-dt / 3.0);
+      acfEMA[k] = acfEMA[k] * (1 - emaAlpha) + acfScore[k] * emaAlpha;
     }
 
     // Softmax with normalization, temperature, and framework-integer prior.
@@ -608,7 +626,7 @@
       if(acfEMA[k] < minS) minS = acfEMA[k];
     }
     const range = Math.max(1e-9, maxS - minS);
-    const beta = 7.0;   // temperature : higher = sharper peak
+    const beta = 10.0;   // temperature : higher = sharper peak
     let pSum = 0;
     for(let k = 0; k < N_CAND; k++){
       const nrm = (acfEMA[k] - minS) / range;
@@ -646,21 +664,62 @@
     }
     const lockCand = 1.0 - entropy / Math.log(N_CAND);
 
-    // Gate the lock : if the music is silent, normalized scores are noise and
-    // the softmax can still spike ; require actual energy in the autocorr.
-    const energyGate = Math.min(1, maxS * 200);
+    // Gate the lock on actual ODF energy (not softmax score, which is always
+    // normalized). This way silence can't produce a false lock.
+    let odfEnergy = 0;
+    for(let i = 0; i < ODF_LEN; i++) odfEnergy += odfBuf[i] * odfBuf[i];
+    odfEnergy /= ODF_LEN;
+    const energyGate = Math.min(1, odfEnergy * 1500);
     const effectiveLock = lockCand * energyGate;
 
-    // Expected lag from the RAW (unfolded) distribution for the BPM reading.
-    // Using the raw distribution means the displayed BPM reflects the felt
-    // pulse (whichever octave is loudest), while lock confidence above
-    // reflects structural confidence across octaves.
-    let expLag = 0;
-    for(let k = 0; k < N_CAND; k++) expLag += (LAG_LO + k) * acfProb[k];
-    const newSec = expLag / ODF_RATE;
+    // Argmax over FOLDED distribution with hysteresis. Expected-value jitters
+    // on multi-modal distributions ; argmax + hysteresis picks one mode and
+    // stays there until a challenger dominates for long enough to earn the
+    // switch. The past (EMA memory) chooses the present (current argmax)
+    // which predicts the future (nextBeatAt projection).
+    let bestK = 0, bestP = acfFolded[0];
+    for(let k = 1; k < N_CAND; k++){
+      if(acfFolded[k] > bestP){ bestP = acfFolded[k]; bestK = k; }
+    }
+    const bestLag = LAG_LO + bestK;
+    if(winnerLag < 0){
+      winnerLag = bestLag;                     // first valid pass : adopt it
+      winnerChallenge = -1;
+      winnerChallengeT = 0;
+    } else if(bestLag === winnerLag){
+      winnerChallenge = -1;                    // champion still winning
+      winnerChallengeT = 0;
+    } else {
+      // A challenger is winning THIS frame. Require it to hold the crown for
+      // half a second (or have a big probability margin) before switching.
+      const currentIdx = winnerLag - LAG_LO;
+      const currentP = currentIdx >= 0 && currentIdx < N_CAND ? acfFolded[currentIdx] : 0;
+      const margin = bestP - currentP;
+      if(bestLag !== winnerChallenge){
+        winnerChallenge = bestLag;
+        winnerChallengeT = 0;
+      } else {
+        winnerChallengeT += dt;
+      }
+      if(winnerChallengeT > 0.5 || margin > 0.08){
+        winnerLag = bestLag;
+        winnerChallenge = -1;
+        winnerChallengeT = 0;
+      }
+    }
+    const newSec = winnerLag / ODF_RATE;
+    // Small smoothing so the BPM number doesn't twitch ; argmax already gives
+    // us a single answer, this just eases jumps during the switch itself.
     tempoSec = tempoSec > 0 ? tempoSec * 0.85 + newSec * 0.15 : newSec;
     tempoBPM = 60 / tempoSec;
-    tempoLock = tempoLock * 0.9 + effectiveLock * 0.1;
+
+    // Asymmetric time-based EMA on the lock : rises fast (~0.5s) when the
+    // structural pulse is clear, falls slow (~3s) so a brief dip mid-song
+    // (breakdown, drop, vocal section) doesn't knock the listener off pattern.
+    const rising = effectiveLock > tempoLock;
+    const tau = rising ? 0.5 : 3.0;
+    const lockAlpha = 1 - Math.exp(-dt / tau);
+    tempoLock = tempoLock * (1 - lockAlpha) + effectiveLock * lockAlpha;
   }
 
   // Peak-pick only provides PHASE anchoring now. Tempo comes from autocorr.
@@ -713,7 +772,7 @@
     // frame rate) and run the autocorr/softmax tempo estimator every frame.
     // tempoBPM, tempoSec, and tempoLock are updated from inside runAutocorrSoftmax.
     pushODF(tNow, bass);
-    runAutocorrSoftmax();
+    runAutocorrSoftmax(tNow);
 
     let rms = 0;
     for(let i = 0; i < timeBuf.length; i++){
@@ -782,22 +841,36 @@
     beatEnv[1] = beatEnv[1] * 0.96  + beatEnv[0] * 0.04;
     beatEnv[2] = beatEnv[2] * 0.995 + beatEnv[0] * 0.005;
 
-    // Pre-beat anticipation.
-    if(tempoSec > 0.2 && tempoLock > 0.3){
-      // Roll nextBeatAt forward if we somehow missed it (e.g. audio was paused).
-      while(nextBeatAt < tNow - tempoSec) nextBeatAt += tempoSec;
-      const timeToNext = nextBeatAt - tNow;
-      if(timeToNext >= 0 && timeToNext <= tempoSec){
-        const progress = 1 - timeToNext / tempoSec;   // 0 just after last beat, 1 at next
-        // Cubic ease-in so it's mostly dormant until just before the hit.
-        preBeatEnv = Math.pow(progress, 3) * tempoLock;
+    // Pre-beat anticipation and forward-projected phase. The past (autocorr
+    // memory) fixed tempoSec ; we now integrate phase forward with wall-clock
+    // dt so the beat keeps coasting even if the signal dips or lock wobbles.
+    // When a real onset arrives it soft-nudges phase back toward 0 (anchor)
+    // ; between onsets, phase is a pure prediction running on tempoSec.
+    const phaseDt = lastPhaseT < 0 ? 0 : Math.max(0, Math.min(0.2, tNow - lastPhaseT));
+    lastPhaseT = tNow;
+    if(tempoSec > 0.2){
+      // Advance phase at 2π/tempoSec radians per second.
+      beatPhase = (beatPhase + (phaseDt / tempoSec) * 2 * Math.PI) % (2 * Math.PI);
+      // Soft nudge toward 0 when an onset just fired. Nudge strength scales
+      // with lock ; if we're locked, the onset confirms phase, if we're not,
+      // the onset pulls harder because we have less prior to trust.
+      if(isTrans){
+        const nudge = 0.35 + 0.25 * (1 - tempoLock);
+        // Wrap distance to 0 : shortest path on the circle.
+        let d = beatPhase;
+        if(d > Math.PI) d -= 2 * Math.PI;
+        beatPhase = (beatPhase - d * nudge + 2 * Math.PI) % (2 * Math.PI);
       }
-      // Beat-phase uniform : 0..2π, wraps each beat, locked to tempo.
-      const sinceLast = tNow - (beatHistory[beatHistory.length - 1] || tNow);
-      beatPhase = ((sinceLast / tempoSec) * 2 * Math.PI) % (2 * Math.PI);
+      // Predict next-beat timestamp from current phase.
+      const phaseToNext = (2 * Math.PI - beatPhase) % (2 * Math.PI);
+      nextBeatAt = tNow + (phaseToNext / (2 * Math.PI)) * tempoSec;
+      // Pre-beat envelope uses the projected phase directly ; cubic ease-in
+      // so it's mostly dormant until just before the predicted hit. Gated
+      // softly by lock so weak lock = weak anticipation (not off).
+      const progress = beatPhase / (2 * Math.PI);
+      preBeatEnv = Math.pow(progress, 3) * Math.max(0.15, tempoLock);
     } else {
       preBeatEnv *= 0.9;
-      beatPhase = 0;
     }
 
     // Phrase tracker : short vs long RMS envelopes (uses the fast RMS layer
@@ -829,8 +902,9 @@
     const targetEra = (1.0 - sCentroid[2]) * 3.0 - sPhrase * 0.4;
     sEra = sEra * 0.97 + Math.max(0, Math.min(3, targetEra)) * 0.03;
 
-    // Slow decay of lock when beats stop arriving (song ended, DJ cut, etc).
-    if(tNow - lastBeatT > 3.0) tempoLock *= 0.95;
+    // No hard lock-decay : the asymmetric EMA inside runAutocorrSoftmax
+    // already handles silence (3s fall time constant). A DJ cut that lasts
+    // ~3s drops lock to 1/e of its previous value without a frame-rate cliff.
   }
 
   // ---------------- Readout ----------------
