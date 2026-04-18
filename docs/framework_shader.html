@@ -13,13 +13,20 @@
     text-shadow: 0 1px 2px rgba(0,0,0,0.9);
     line-height: 1.5;
   }
+  #err {
+    position: fixed; top: 0; left: 0; right: 0;
+    color: #f88; font-family: monospace; font-size: 12px;
+    background: rgba(0,0,0,0.85); padding: 10px; white-space: pre-wrap;
+    display: none;
+  }
 </style>
 </head>
 <body>
 <div class="info">
-  ⊙ = Φ(•, ○) ; 21 steps (A(3)), 8 folds (SU(3)), φ-nesting, 1/α inversion, 31/69 split
+  ⊙ = Φ(•, ○) ; 21 steps (A(3)), 8 folds (SU(3)), φ-nesting, 31/69 split
 </div>
 <canvas id="c"></canvas>
+<pre id="err"></pre>
 
 <script id="vert" type="x-shader/x-vertex">
   attribute vec2 a;
@@ -49,21 +56,22 @@
   void main(){
     vec2 FC = gl_FragCoord.xy;
     vec4 o = vec4(0.0);
-    float i = 0.0, g = 0.0, e = 0.0, s = 0.0, q = 0.0;
+    float g = 0.0, e = 0.0, s = 0.0, q = 0.0;
+
     for(int n = 0; n < 21; n++){
-      i += 1.0;
-      vec3 p = vec3((FC.xy * 2.0 - r) / r.y * 8.0, g - 2.0)
+      vec3 p = vec3((FC.xy * 2.0 - r) / r.y * (8.0 + cos(t * 0.5) * 3.0), g + 0.2)
                * rotate3D(t * 0.25, vec3(-4.0, sin(t) + 7.0, 0.0));
       s = 1.0;
       for(int k = 0; k < 8; k++){
-        e = max(0.5, 1.37 / dot(p, p));
+        e = max(0.95, 9.0 / dot(p, p));
         s *= e;
-        p = vec3(1.618, 3.0, 2.618) - abs(abs(p) * e - vec3(1.0, 1.5, 1.618));
+        p = vec3(2.618, 4.0, 3.0) - abs(abs(p) * e - vec3(1.0, 1.5, 1.618));
       }
       g += mod(length(p.yy), p.y) / s * 0.5;
       q = 0.5 + 0.5 * sin(atan(p.x, p.y) + t * 0.3);
-      o.rgb += hsv(0.59 - q * 0.15, 0.4 - g * 0.03, s / 3000.0 * (0.31 + q * 0.69));
+      o.rgb += hsv(0.59 - q * 0.1, 0.4 - g * 0.03, s / 4000.0 * (0.31 + q * 0.69));
     }
+
     gl_FragColor = vec4(o.rgb, 1.0);
   }
 </script>
@@ -71,16 +79,18 @@
 <script>
 (function(){
   const canvas = document.getElementById('c');
+  const err = document.getElementById('err');
+  function showErr(msg){ err.textContent = msg; err.style.display = 'block'; }
+
   const gl = canvas.getContext('webgl', { antialias: false, premultipliedAlpha: false });
-  if(!gl){ document.body.innerHTML = '<div style="color:#fff;font-family:sans-serif;padding:20px">WebGL not available.</div>'; return; }
+  if(!gl){ showErr('WebGL not available in this browser.'); return; }
 
   function compile(type, src){
     const sh = gl.createShader(type);
     gl.shaderSource(sh, src);
     gl.compileShader(sh);
     if(!gl.getShaderParameter(sh, gl.COMPILE_STATUS)){
-      console.error(gl.getShaderInfoLog(sh));
-      document.body.innerHTML = '<pre style="color:#f88;font-family:monospace;padding:20px">' + gl.getShaderInfoLog(sh) + '</pre>';
+      showErr('Shader compile error:\n' + gl.getShaderInfoLog(sh));
       return null;
     }
     return sh;
@@ -95,7 +105,7 @@
   gl.attachShader(prog, fs);
   gl.linkProgram(prog);
   if(!gl.getProgramParameter(prog, gl.LINK_STATUS)){
-    console.error(gl.getProgramInfoLog(prog));
+    showErr('Program link error:\n' + gl.getProgramInfoLog(prog));
     return;
   }
   gl.useProgram(prog);

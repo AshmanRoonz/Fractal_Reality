@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Circumpunct Chemistry Shader</title>
+<style>
+  html, body { margin: 0; padding: 0; overflow: hidden; background: #000; height: 100%; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+  .info {
+    position: fixed; top: 12px; left: 14px; z-index: 10;
+    font-family: -apple-system, system-ui, sans-serif; font-size: 12px;
+    color: rgba(255,255,255,0.6); pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+    line-height: 1.5;
+    max-width: 420px;
+  }
+  .info a { color: rgba(184,160,96,0.9); text-decoration: none; pointer-events: auto; }
+  .info a:hover { color: rgba(232,138,175,0.9); }
+  #readout {
+    position: fixed; bottom: 12px; left: 14px; z-index: 10;
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px;
+    color: rgba(255,255,255,0.55); pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+    line-height: 1.6;
+  }
+  #err {
+    position: fixed; top: 0; left: 0; right: 0;
+    color: #f88; font-family: monospace; font-size: 12px;
+    background: rgba(0,0,0,0.85); padding: 10px; white-space: pre-wrap;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<div class="info">
+  T = 3 is the observer-triad, the nesting ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ ; three scales rendered at once (21 = T·R, three triads of seven rungs) ; 109.47° emerges because the simplex fits in dim(○) = T ; lone-pair breathing CH₄ → NH₃ → H₂O via cos(θ) = -1/T + n<sub>LP</sub>·2/R²<br>
+  <a href="molecular_geometry.html">§16.4</a> &nbsp; <a href="emergent_chemistry.html">bond energy model</a>
+</div>
+<canvas id="c"></canvas>
+<pre id="err"></pre>
+<div id="readout"></div>
+
+<script id="vert" type="x-shader/x-vertex">
+  attribute vec2 a;
+  void main(){ gl_Position = vec4(a, 0.0, 1.0); }
+</script>
+
+<script id="frag" type="x-shader/x-fragment">
+  precision highp float;
+  uniform vec2 r;
+  uniform float t;
+  uniform float nLP;        // lone pairs, animated 0 -> 2
+  uniform float cosTheta;   // -1/T + nLP * 2/R^2
+  uniform float theta;      // acos(cosTheta)
+
+  vec3 hsv(float h, float s, float v){
+    vec3 k = mod(vec3(5.0, 3.0, 1.0) + h * 6.0, 6.0);
+    return v - v * s * clamp(min(k, 4.0 - k), 0.0, 1.0);
+  }
+
+  mat3 rotate3D(float a, vec3 ax){
+    ax = normalize(ax);
+    float s = sin(a), c = cos(a), o = 1.0 - c;
+    return mat3(
+      o*ax.x*ax.x + c,      o*ax.x*ax.y - ax.z*s, o*ax.z*ax.x + ax.y*s,
+      o*ax.x*ax.y + ax.z*s, o*ax.y*ax.y + c,      o*ax.y*ax.z - ax.x*s,
+      o*ax.z*ax.x - ax.y*s, o*ax.y*ax.z + ax.x*s, o*ax.z*ax.z + c
+    );
+  }
+
+  // Rotation in the xz-plane by theta; used to inject the simplex angle
+  // directly into the fold.
+  mat2 rot2(float a){
+    float c = cos(a), s = sin(a);
+    return mat2(c, -s, s, c);
+  }
+
+  void main(){
+    vec2 FC = gl_FragCoord.xy;
+    vec4 o = vec4(0.0);
+    float g, e, s, q;
+
+    // Compression factor from the lone pair formula: when n_LP = 0 (methane)
+    // comp = 0; when n_LP = 2 (water) comp = 4/49 ≈ 0.0816.
+    float comp = nLP * 2.0 / 49.0;
+
+    // T = 3 as observer-triad: three scale-positions rendered simultaneously.
+    // Outer loop walks ⊙λ (yourself, triad 0), ⊙Λ (the greater whole that
+    // contains you, triad 1), and ∞-approaching (the undifferentiated source,
+    // triad 2). Each triad runs its own raymarch at its own scale; the three
+    // are blended so you see all three scale-positions at once. This is the
+    // nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ expressed as image layers.
+    for(int triad = 0; triad < 3; triad++){
+      float tf = float(triad);
+
+      // Scale multiplier decreases with triad; ⊙λ shows intimate detail,
+      // ⊙Λ shows the middle scale, ∞ shows the widest, least-differentiated
+      // field. Ratio is φ per nesting step (golden self-similarity, A3).
+      float sMul = pow(1.618, 3.0 - tf * 2.0);
+
+      // Hue base walks cyan (⊙λ) → blue (⊙Λ) → deep purple (∞).
+      float hueBase = 0.57 + tf * 0.07;
+
+      // Weight per scale: ⊙λ brightest (you are most vivid to yourself),
+      // ∞ dimmest (the source does not differentiate itself).
+      float weight = pow(0.78, tf);
+
+      g = 0.0;
+
+      // Each scale walks 7 = R rungs. Three triads of seven rungs = 21 outer
+      // steps total = A(3), the full traversal of the dimensional ladder.
+      for(int n = 0; n < 7; n++){
+        vec3 p = vec3((FC.xy * 2.0 - r) / r.y * sMul, g + 0.2)
+                 * rotate3D(t * (0.15 + tf * 0.08),
+                           vec3(sin(t * 0.3), 1.618, cos(t * 0.3)));
+        s = 1.0;
+        for(int k = 0; k < 8; k++){
+          // Aperture: sphere inversion (•, 0D).
+          e = max(0.95, 9.0 / dot(p, p));
+          s *= e;
+
+          // Tetrahedral reflection planes. The simplex symmetry does NOT
+          // define T = 3; rather, the simplex fits because dim(○) = T = 3.
+          // The nesting is primary, the geometry is downstream.
+          if(p.x + p.y < 0.0) p.xy = -p.yx;
+          if(p.x + p.z < 0.0) p.xz = -p.zx;
+          if(p.y + p.z < 0.0) p.yz = -p.zy;
+
+          // Simplex rotation by theta = acos(-1/T + n_LP·2/R²).
+          // At n_LP = 0: theta = 109.47° (methane). At n_LP = 2: 104.58°
+          // (water). The fractal's internal angle IS the bond angle.
+          p.xz = rot2(theta * 0.03) * p.xz;
+
+          // Scale-and-offset with lone-pair compression on the y-axis.
+          p = p * e - vec3(1.5, 1.618 * (1.0 - comp), 1.0);
+        }
+        g += mod(length(p.yy), p.y) / s * 0.5;
+
+        // 3-phase pump cycle at each scale: ⊛ convergence, i aperture, ✹
+        // emergence. atan(p.x, p.y) * 3 gives the 3-fold reaction symmetry.
+        float phase = atan(p.x, p.y);
+        q = 0.5 + 0.5 * sin(phase * 3.0 + t * 0.5);
+
+        // σ / π₁ / π₂ = 1 / (7/9) / (13/20) brightness bands.
+        float band = q < 0.333 ? 13.0/20.0
+                   : q < 0.666 ? 7.0/9.0
+                   : 1.0;
+
+        float hue = hueBase + 0.12 * cos(phase + t * 0.2);
+        o.rgb += hsv(hue, 0.35 - g * 0.02,
+                     s / 4500.0 * (0.22 + 0.78 * band)) * weight;
+      }
+    }
+
+    gl_FragColor = vec4(o.rgb, 1.0);
+  }
+</script>
+
+<script>
+(function(){
+  const canvas = document.getElementById('c');
+  const err = document.getElementById('err');
+  const readout = document.getElementById('readout');
+  function showErr(msg){ err.textContent = msg; err.style.display = 'block'; }
+
+  const gl = canvas.getContext('webgl', { antialias: false, premultipliedAlpha: false });
+  if(!gl){ showErr('WebGL not available in this browser.'); return; }
+
+  function compile(type, src){
+    const sh = gl.createShader(type);
+    gl.shaderSource(sh, src);
+    gl.compileShader(sh);
+    if(!gl.getShaderParameter(sh, gl.COMPILE_STATUS)){
+      showErr('Shader compile error:\n' + gl.getShaderInfoLog(sh));
+      return null;
+    }
+    return sh;
+  }
+
+  const vs = compile(gl.VERTEX_SHADER, document.getElementById('vert').textContent);
+  const fs = compile(gl.FRAGMENT_SHADER, document.getElementById('frag').textContent);
+  if(!vs || !fs) return;
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog, vs);
+  gl.attachShader(prog, fs);
+  gl.linkProgram(prog);
+  if(!gl.getProgramParameter(prog, gl.LINK_STATUS)){
+    showErr('Program link error:\n' + gl.getProgramInfoLog(prog));
+    return;
+  }
+  gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const aLoc = gl.getAttribLocation(prog, 'a');
+  gl.enableVertexAttribArray(aLoc);
+  gl.vertexAttribPointer(aLoc, 2, gl.FLOAT, false, 0, 0);
+
+  const uR = gl.getUniformLocation(prog, 'r');
+  const uT = gl.getUniformLocation(prog, 't');
+  const uNLP = gl.getUniformLocation(prog, 'nLP');
+  const uCos = gl.getUniformLocation(prog, 'cosTheta');
+  const uTheta = gl.getUniformLocation(prog, 'theta');
+
+  function resize(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.floor(window.innerWidth * dpr);
+    canvas.height = Math.floor(window.innerHeight * dpr);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function moleculeName(nLP){
+    if(nLP < 0.33) return 'CH\u2084 (methane)';
+    if(nLP < 1.00) return 'CH\u2084 \u2192 NH\u2083';
+    if(nLP < 1.33) return 'NH\u2083 (ammonia)';
+    if(nLP < 2.00) return 'NH\u2083 \u2192 H\u2082O';
+    return 'H\u2082O (water)';
+  }
+
+  const start = performance.now();
+  function frame(){
+    const tNow = (performance.now() - start) / 1000.0;
+
+    // n_LP breathes smoothly from 0 to 2 and back with period ~24s.
+    const nLP = 1.0 + Math.cos(tNow * 0.26) * 1.0;
+    const cosTheta = -1.0/3.0 + nLP * 2.0/49.0;
+    const theta = Math.acos(Math.max(-1.0, Math.min(1.0, cosTheta)));
+    const thetaDeg = theta * 180.0 / Math.PI;
+
+    gl.uniform2f(uR, canvas.width, canvas.height);
+    gl.uniform1f(uT, tNow);
+    gl.uniform1f(uNLP, nLP);
+    gl.uniform1f(uCos, cosTheta);
+    gl.uniform1f(uTheta, theta);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+    readout.innerHTML =
+      'scales visible: \u2299\u03BB (you) \u2282[\u03B1] \u2299\u039B (greater whole) \u2282[\u03B1] \u221E<br>' +
+      'n<sub>LP</sub> = ' + nLP.toFixed(2) + '<br>' +
+      'cos(\u03B8) = -1/T + n<sub>LP</sub>\u00B72/R\u00B2 = ' + cosTheta.toFixed(4) + '<br>' +
+      '\u03B8 = ' + thetaDeg.toFixed(2) + '\u00B0<br>' +
+      'shape: ' + moleculeName(nLP);
+
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
+</body>
+</html>
