@@ -239,25 +239,10 @@
                    : q < 0.666 ? 7.0/9.0
                    : 1.0;
 
-        // Per-ring spectral pulse : ring n reads the frequency octave that
-        // sits at dimensional station n (0=•, 1=⊛, 2=—, 3=⎇, 4=Φ, 5=✹, 6=○).
-        // Inner rings pulse to bass ; outer rings pulse to treble ; the
-        // ladder •→○ becomes the radial coordinate. Triad picks the temporal
-        // layer, so each scale-position dances to its own tempo.
-        float octT = uOct[n * 3 + triad];
-
-        // Each octave gets its own seat on the rainbow wheel. Within a ring,
-        // phase drives a full hue cycle, so every active octave paints a
-        // complete rainbow rotation. A song that lights up six octaves paints
-        // six rainbows at once. 3.5D = 0D' (octave closure) made visible :
-        // the wheel wraps back at the next ring.
-        float ringBaseHue = hueBase + float(n) / 7.0;
-        float phaseHue    = phase / 6.2831853;          // phase ∈ [-π,π] → full hue cycle
-        float hue = ringBaseHue + phaseHue + centT * 0.08 + trebT * 0.05;
-        float sat = 0.45 - g * 0.02 + midsT * 0.15 + satBoost;
+        float hue = hueShift + 0.12 * cos(phase + t * 0.2);
+        float sat = 0.35 - g * 0.02 + midsT * 0.15 + satBoost;
         float val = s / 4500.0 * (0.22 + 0.78 * band)
-                    * (1.0 + beatT * 0.4 * tempoDamp + uPreBeat * 0.25 * tempoDamp)
-                    * (1.0 + octT * 0.35 * tempoDamp);
+                    * (1.0 + beatT * 0.4 * tempoDamp + uPreBeat * 0.25 * tempoDamp);
         o.rgb += hsv(hue, sat, val) * weight;
       }
     }
