@@ -490,6 +490,11 @@
 
   function disconnectSource(){
     if(sourceNode){ try { sourceNode.disconnect(); } catch(_){} sourceNode = null; }
+    // Tear down the monitor path too. Without this, analyser → destination
+    // survives a source switch, and the next source (e.g. mic) ends up
+    // routed to the speakers : feedback on PC, voice-mode ducking on Android
+    // (which is why a YouTube song in another app slows down and distorts).
+    if(analyser){ try { analyser.disconnect(); } catch(_){} }
     if(micStream){ micStream.getTracks().forEach(tr => tr.stop()); micStream = null; }
     if(!audioEl.paused) audioEl.pause();
     sourceType = 'none';
@@ -515,9 +520,20 @@
       ensureAudioCtx();
       disconnectSource();
       micStream = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: false, autoGainControl: false, noiseSuppression: false }
+        audio: {
+          // All three must be off : we want the raw spectrum for the visual,
+          // not a conversation-optimized stream. echoCancellation is what
+          // flips Android into voice-mode (ducking other apps) ; keeping it
+          // off keeps the YouTube player at full volume and speed.
+          echoCancellation: false,
+          autoGainControl:  false,
+          noiseSuppression: false
+        }
       });
       sourceNode = audioCtx.createMediaStreamSource(micStream);
+      // Analyser only : NO destination connect. Mic must never reach
+      // speakers (would feedback on PC, would force communication-mode
+      // audio session on Android and distort whatever is playing elsewhere).
       sourceNode.connect(analyser);
       sourceType = 'mic';
       return true;
@@ -537,6 +553,8 @@
       audioEl.play();
       sourceNode = audioCtx.createMediaElementSource(audioEl);
       sourceNode.connect(analyser);
+      // File playback : user wants to HEAR the song, so monitor is on.
+      // disconnectSource() tears this down before any mic path runs.
       analyser.connect(audioCtx.destination);
       sourceType = 'file';
       return true;
