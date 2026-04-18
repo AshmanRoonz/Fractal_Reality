@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Circumpunct Cosmos Shader : Walking the Ladder</title>
+<style>
+  html, body { margin: 0; padding: 0; overflow: hidden; background: #000; height: 100%; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+  .info {
+    position: fixed; top: 12px; left: 14px; z-index: 10;
+    font-family: -apple-system, system-ui, sans-serif; font-size: 12px;
+    color: rgba(255,255,255,0.6); pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+    line-height: 1.5;
+    max-width: 440px;
+  }
+  .info a { color: rgba(184,160,96,0.9); text-decoration: none; pointer-events: auto; }
+  #readout {
+    position: fixed; bottom: 12px; left: 14px; z-index: 10;
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px;
+    color: rgba(255,255,255,0.7); pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+    line-height: 1.7;
+    max-width: 480px;
+  }
+  .era-name { color: rgba(184,160,96,0.9); font-weight: 600; }
+  #progress {
+    position: fixed; bottom: 0; left: 0; right: 0; height: 2px;
+    background: rgba(255,255,255,0.08); z-index: 10;
+  }
+  #progress-bar {
+    height: 100%; background: rgba(184,160,96,0.7);
+    transition: none;
+  }
+  #err {
+    position: fixed; top: 0; left: 0; right: 0;
+    color: #f88; font-family: monospace; font-size: 12px;
+    background: rgba(0,0,0,0.85); padding: 10px; white-space: pre-wrap;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<div class="info">
+  Walking the nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ ; four eras cycling, framework constants drive each<br>
+  T = 3 observer-triad preserved throughout (three scales always visible)<br>
+  <a href="framework_chemistry_shader.html">chemistry</a> &nbsp; <a href="emergent_chemistry.html">§16</a> &nbsp; <a href="emergent_biology.html">§18</a> &nbsp; <a href="gravity.html">G</a> &nbsp; <a href="dimensional_ladder.html">ladder</a>
+</div>
+<canvas id="c"></canvas>
+<pre id="err"></pre>
+<div id="readout"></div>
+<div id="progress"><div id="progress-bar"></div></div>
+
+<script id="vert" type="x-shader/x-vertex">
+  attribute vec2 a;
+  void main(){ gl_Position = vec4(a, 0.0, 1.0); }
+</script>
+
+<script id="frag" type="x-shader/x-fragment">
+  precision highp float;
+  uniform vec2 r;
+  uniform float t;
+  uniform float era;           // 0..4 (atomic, biological, planetary, cosmological, wrap)
+  uniform float comp;          // lone-pair compression (atomic era only)
+
+  vec3 hsv(float h, float s, float v){
+    vec3 k = mod(vec3(5.0, 3.0, 1.0) + h * 6.0, 6.0);
+    return v - v * s * clamp(min(k, 4.0 - k), 0.0, 1.0);
+  }
+
+  mat3 rotate3D(float a, vec3 ax){
+    ax = normalize(ax);
+    float s = sin(a), c = cos(a), o = 1.0 - c;
+    return mat3(
+      o*ax.x*ax.x + c,      o*ax.x*ax.y - ax.z*s, o*ax.z*ax.x + ax.y*s,
+      o*ax.x*ax.y + ax.z*s, o*ax.y*ax.y + c,      o*ax.y*ax.z - ax.x*s,
+      o*ax.z*ax.x - ax.y*s, o*ax.y*ax.z + ax.x*s, o*ax.z*ax.z + c
+    );
+  }
+
+  void main(){
+    vec2 FC = gl_FragCoord.xy;
+    vec4 o = vec4(0.0);
+
+    // Tent blending weights for 4 eras, with wraparound so era=4 == era=0.
+    float w0 = max(0.0, 1.0 - abs(era - 0.0));
+    float w1 = max(0.0, 1.0 - abs(era - 1.0));
+    float w2 = max(0.0, 1.0 - abs(era - 2.0));
+    float w3 = max(0.0, 1.0 - abs(era - 3.0));
+    w0 = max(w0, max(0.0, 1.0 - abs(era - 4.0)));  // wrap
+
+    // Per-era fold offsets, drawn from the framework at each scale.
+    //   atomic:       (D, φ, •) = (1.5, 1.618, 1.0) — balanced fractal dim, φ recursion, unit aperture
+    //   biological:   (2.1, 10.5/7, φ²) — DNA bp-per-turn 10.5 = A(3)/Φ, φ² nesting
+    //   planetary:    (φ², φ, φ) = (2.618, 1.618, 1.618) — pure golden nesting (orbital resonance)
+    //   cosmological: (T, φ², φ) = (3.0, 2.618, 1.618) — triad, golden nesting, recursion
+    vec3 offAtom = vec3(1.5, 1.618, 1.0);
+    vec3 offBio  = vec3(2.1, 1.5, 2.618);
+    vec3 offPlan = vec3(2.618, 1.618, 1.618);
+    vec3 offCos  = vec3(3.0, 2.618, 1.618);
+    vec3 offset = offAtom*w0 + offBio*w1 + offPlan*w2 + offCos*w3;
+
+    // Per-era hue base: cyan (atomic) → green (biological) → gold (planetary) → purple (cosmological).
+    float hueBase = 0.56*w0 + 0.36*w1 + 0.09*w2 + 0.78*w3;
+
+    // Per-era inversion strength and rotation rate.
+    float inv = 9.0*w0 + 10.5*w1 + 8.0*w2 + 7.0*w3;  // 10.5 = DNA bp/turn in biological
+    float rotSpeed = 0.20*w0 + 0.15*w1 + 0.10*w2 + 0.05*w3;  // bigger scales move slower
+
+    // T = 3 observer-triad: three scale-positions always rendered.
+    for(int triad = 0; triad < 3; triad++){
+      float tf = float(triad);
+
+      // Golden nesting between the three simultaneous scales (A3).
+      float sMul = pow(1.618, 3.0 - tf * 2.0);
+      float weight = pow(0.78, tf);
+      float hueShift = hueBase + tf * 0.06;
+
+      float g = 0.0, e, s, q;
+
+      // Each triad walks 7 = R rungs; 3 × 7 = 21 = A(3) full ladder traversal.
+      for(int n = 0; n < 7; n++){
+        vec3 p = vec3((FC.xy * 2.0 - r) / r.y * sMul, g + 0.2)
+                 * rotate3D(t * (rotSpeed + tf * 0.04),
+                           vec3(sin(t * 0.3), 1.618, cos(t * 0.3)));
+        s = 1.0;
+        for(int k = 0; k < 8; k++){
+          // Aperture: sphere inversion with era-dependent strength.
+          e = max(0.95, inv / dot(p, p));
+          s *= e;
+
+          // Tetrahedral reflection planes (T = 3 simplex symmetry).
+          // Same three planes at every scale; the fold is scale-invariant (A3).
+          if(p.x + p.y < 0.0) p.xy = -p.yx;
+          if(p.x + p.z < 0.0) p.xz = -p.zx;
+          if(p.y + p.z < 0.0) p.yz = -p.zy;
+
+          // Era-dependent offset, with lone-pair compression on y-axis
+          // (only meaningful in atomic era; comp fades to 0 elsewhere).
+          p = p * e - vec3(offset.x, offset.y * (1.0 - comp), offset.z);
+        }
+        g += mod(length(p.yy), p.y) / s * 0.5;
+
+        // 3-phase pump cycle at each scale (⊛ → i → ✹).
+        float phase = atan(p.x, p.y);
+        q = 0.5 + 0.5 * sin(phase * 3.0 + t * 0.5);
+
+        // σ/π₁/π₂ = 1 / (7/9) / (13/20) brightness bands from §16.4e.
+        float band = q < 0.333 ? 13.0/20.0
+                   : q < 0.666 ? 7.0/9.0
+                   : 1.0;
+
+        float hue = hueShift + 0.12 * cos(phase + t * 0.2);
+        o.rgb += hsv(hue, 0.35 - g * 0.02,
+                     s / 4500.0 * (0.22 + 0.78 * band)) * weight;
+      }
+    }
+
+    gl_FragColor = vec4(o.rgb, 1.0);
+  }
+</script>
+
+<script>
+(function(){
+  const canvas = document.getElementById('c');
+  const err = document.getElementById('err');
+  const readout = document.getElementById('readout');
+  const progBar = document.getElementById('progress-bar');
+  function showErr(msg){ err.textContent = msg; err.style.display = 'block'; }
+
+  const gl = canvas.getContext('webgl', { antialias: false, premultipliedAlpha: false });
+  if(!gl){ showErr('WebGL not available in this browser.'); return; }
+
+  function compile(type, src){
+    const sh = gl.createShader(type);
+    gl.shaderSource(sh, src);
+    gl.compileShader(sh);
+    if(!gl.getShaderParameter(sh, gl.COMPILE_STATUS)){
+      showErr('Shader compile error:\n' + gl.getShaderInfoLog(sh));
+      return null;
+    }
+    return sh;
+  }
+
+  const vs = compile(gl.VERTEX_SHADER, document.getElementById('vert').textContent);
+  const fs = compile(gl.FRAGMENT_SHADER, document.getElementById('frag').textContent);
+  if(!vs || !fs) return;
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog, vs);
+  gl.attachShader(prog, fs);
+  gl.linkProgram(prog);
+  if(!gl.getProgramParameter(prog, gl.LINK_STATUS)){
+    showErr('Program link error:\n' + gl.getProgramInfoLog(prog));
+    return;
+  }
+  gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const aLoc = gl.getAttribLocation(prog, 'a');
+  gl.enableVertexAttribArray(aLoc);
+  gl.vertexAttribPointer(aLoc, 2, gl.FLOAT, false, 0, 0);
+
+  const uR = gl.getUniformLocation(prog, 'r');
+  const uT = gl.getUniformLocation(prog, 't');
+  const uEra = gl.getUniformLocation(prog, 'era');
+  const uComp = gl.getUniformLocation(prog, 'comp');
+
+  function resize(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.floor(window.innerWidth * dpr);
+    canvas.height = Math.floor(window.innerHeight * dpr);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // Era labels and framework constants at each scale.
+  const eras = [
+    {
+      name: 'ATOMIC',
+      scales: '⊙ quark ⊂ atom ⊂ molecule',
+      constants: [
+        'T = 3 simplex: arccos(−1/T) = 109.47° (tetrahedral)',
+        'α = |•_electron| = 1/137.036 (aperture coupling)',
+        'σ / π₁ / π₂ = 1 / 7/9 / 13/20 (bond energy, §16.4e)',
+        'CH₄ → NH₃ → H₂O via n_LP · 2/R²'
+      ]
+    },
+    {
+      name: 'BIOLOGICAL',
+      scales: '⊙ cell ⊂ organism ⊂ biosphere',
+      constants: [
+        'DNA 10.5 bp/turn = A(3)/Φ = 21/2',
+        'D = 1 + ◐ = 1.5 (fractal at balance)',
+        'S = 64 = P^T (genetic code, Hayflick)',
+        'Kleiber: metabolic ∝ M^(T/P) = M^(3/4)'
+      ]
+    },
+    {
+      name: 'PLANETARY',
+      scales: '⊙ planet ⊂ solar system ⊂ galaxy',
+      constants: [
+        'α_G = α²¹ · φ²/2 (gravity at 3D, §27.7g)',
+        'M_Pl / m_e = (1/α)^(21/2) · √2/φ',
+        'Murray\'s law r^T = r³ (vascular, orbital)',
+        'φ nesting in orbital resonance'
+      ]
+    },
+    {
+      name: 'COSMOLOGICAL',
+      scales: '⊙Λ ⊂ observable ⊂ ∞',
+      constants: [
+        'Λ ∝ α^(SU(3)·R) = α⁵⁶ (cosmological constant)',
+        'Visible / Dark matter / Dark energy = 5 / 27 / 68',
+        'T²/V = 9/13 (DE fraction from structure)',
+        '⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ (apophatic closure)'
+      ]
+    }
+  ];
+
+  function renderReadout(era){
+    const eraF = era % 4;
+    const idx = Math.floor(eraF);
+    const frac = eraF - idx;
+    const e = eras[idx];
+    const next = eras[(idx + 1) % 4];
+
+    const transitioning = frac > 0.7;
+    const transitionText = transitioning
+      ? '<span style="color:rgba(232,138,175,0.8)">→ ' + next.name + '</span>'
+      : '';
+
+    readout.innerHTML =
+      '<span class="era-name">' + e.name + '</span> ' + transitionText + '<br>' +
+      e.scales + '<br>' +
+      e.constants.map(c => '&nbsp;&nbsp;· ' + c).join('<br>');
+  }
+
+  const CYCLE = 120.0;  // seconds for full 4-era cycle
+  const start = performance.now();
+  function frame(){
+    const tNow = (performance.now() - start) / 1000.0;
+    const era = (tNow / (CYCLE / 4.0)) % 4.0;
+
+    // Lone pair breathing, only meaningful during atomic era.
+    const atomicWeight = Math.max(0, 1.0 - Math.abs(era - 0.0));
+    const atomicWeightWrap = Math.max(0, 1.0 - Math.abs(era - 4.0));
+    const wAtom = Math.max(atomicWeight, atomicWeightWrap);
+    const nLP = 1.0 + Math.cos(tNow * 0.26);
+    const comp = (nLP * 2.0 / 49.0) * wAtom;
+
+    gl.uniform2f(uR, canvas.width, canvas.height);
+    gl.uniform1f(uT, tNow);
+    gl.uniform1f(uEra, era);
+    gl.uniform1f(uComp, comp);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+    renderReadout(era);
+    progBar.style.width = ((tNow / CYCLE) % 1.0 * 100).toFixed(2) + '%';
+
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
+</body>
+</html>
