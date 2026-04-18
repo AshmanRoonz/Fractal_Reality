@@ -239,11 +239,30 @@
                    : q < 0.666 ? 7.0/9.0
                    : 1.0;
 
+        // BASE LAYER : Copy-palette exactly. Narrow hue shift around
+        // hueBase, satin palette, always visible. This is the aesthetic
+        // floor ; the rainbow layer below adds ON TOP of this.
         float hue = hueShift + 0.12 * cos(phase + t * 0.2);
         float sat = 0.35 - g * 0.02 + midsT * 0.15 + satBoost;
         float val = s / 4500.0 * (0.22 + 0.78 * band)
                     * (1.0 + beatT * 0.4 * tempoDamp + uPreBeat * 0.25 * tempoDamp);
         o.rgb += hsv(hue, sat, val) * weight;
+
+        // RAINBOW LAYER : ring n is assigned octave n, full-rainbow hue
+        // mapping (low = red, mid = green, high = violet). Gated by
+        // octEnergy so SILENT octaves draw nothing (no wash) and only the
+        // DOMINANT 1-3 octaves glow at a given instant. This is what makes
+        // colors visibly track the music : quiet bass → no red ; loud
+        // bass → red ring glows ; treble spike → violet ring flashes.
+        // smoothstep(0.12, 0.5) = hard dead zone below 12%, full by 50%.
+        float octEnergy = uOct[n * 3];                          // fast channel
+        float octMed    = uOct[n * 3 + 1];                      // medium (for sustain)
+        float octGate   = smoothstep(0.12, 0.5, octEnergy);
+        float rainbowHue = float(n) / 7.0;                      // 0=red → 1=red again
+        // Slight hue animation so the rainbow isn't static per ring.
+        rainbowHue += 0.03 * sin(t * 0.4 + float(n) * 1.618);
+        float rainbowVal = val * octGate * (1.5 + octMed * 2.0) * (1.0 + beatT * 0.5);
+        o.rgb += hsv(rainbowHue, 0.88, rainbowVal) * weight;
       }
     }
 
