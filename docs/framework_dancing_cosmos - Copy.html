@@ -355,56 +355,13 @@
   const centU = new Float32Array(3);
 
   // ---------------- Learning state ----------------
-  const beatHistory = [];            // timestamps of peak-picked events (phase anchors only)
+  const beatHistory = [];            // timestamps of detected beats
   const MAX_BEAT_HISTORY = 24;
   let tempoSec = 0;                  // seconds per beat (0 = no lock)
   let tempoBPM = 0;
-  let tempoLock = 0;                 // 0..1 confidence (softmax peakedness)
+  let tempoLock = 0;                 // 0..1 confidence (SRL lock strength)
   let nextBeatAt = 0;                // predicted timestamp of next beat
   let beatPhase = 0;                 // 0..2π wraps per beat, locked to tempo
-
-  // Onset detection function (ODF) : half-wave rectified raw-bass derivative,
-  // sampled at a FIXED 60 Hz regardless of display refresh rate. 4 seconds of
-  // history gives us enough window to autocorrelate slow tempos (55 BPM =
-  // 1.09s period, so we see 3-4 periods per window).
-  const ODF_RATE = 60;
-  const ODF_DT   = 1 / ODF_RATE;
-  const ODF_LEN  = 240;
-  const odfBuf   = new Float32Array(ODF_LEN);
-  let odfIdx = 0;
-  let odfPrev = 0;
-  let odfClock = -1;                 // the 60Hz sample clock, decoupled from frames
-
-  // Tempo candidates : lag = period in ODF samples. Scan 55-190 BPM inclusive.
-  // softmax over autocorr scores picks the winner ; every tempo competes every
-  // frame, no averaging of noisy interval estimates.
-  const LAG_LO = Math.round(ODF_RATE * 60 / 190);   // 19
-  const LAG_HI = Math.round(ODF_RATE * 60 /  55);   // 65
-  const N_CAND = LAG_HI - LAG_LO + 1;
-  const acfScore  = new Float32Array(N_CAND);       // raw autocorr this frame
-  const acfEMA    = new Float32Array(N_CAND);       // slow EMA of scores (the "memory")
-  const acfProb   = new Float32Array(N_CAND);       // softmax probability (raw lags)
-  const acfFolded = new Float32Array(N_CAND);       // octave-folded probability
-
-  // Framework-integer prior : candidates at framework Hz get a small bonus so
-  // the listener resonates with the same pool the phi_resonance generator
-  // uses. Hz = 60 / (lag·ODF_DT), so lag = ODF_RATE·60/BPM. Within 55-190 BPM
-  // these land at : T=3Hz→180BPM→lag 20 ; φ²≈2.618Hz→157BPM→lag 23 ;
-  // Φ=2Hz→120BPM→lag 30 ; φ≈1.618Hz→97BPM→lag 37 ; •=1Hz→60BPM→lag 60.
-  const PRIOR_LAGS   = [20, 23, 30, 37, 60];
-  const PRIOR_LABELS = ['T', 'φ²', 'Φ', 'φ', '•'];
-  const PRIOR_AMP    = 0.06;   // small ; evidence still dominates
-  const PRIOR_WIDTH  = 1.2;    // Gaussian width in samples
-  const priorBonus   = new Float32Array(N_CAND);
-  for(let k = 0; k < N_CAND; k++){
-    const lag = LAG_LO + k;
-    let b = 0;
-    for(const pl of PRIOR_LAGS){
-      const d = lag - pl;
-      b += PRIOR_AMP * Math.exp(-(d * d) / (2 * PRIOR_WIDTH * PRIOR_WIDTH));
-    }
-    priorBonus[k] = b;
-  }
 
   let energyShort = 0, energyLong = 0;   // phrase trackers
   let sPhrase = 0;                        // smoothed (energyShort - energyLong)
@@ -441,8 +398,6 @@
     sBass.fill(0); sMids.fill(0); sTreble.fill(0); sRMS.fill(0);
     sCentroid.fill(0); beatEnv.fill(0);
     preBeatEnv = 0; bassLongAvg = 0; lastBeatT = 0;
-    odfBuf.fill(0); acfEMA.fill(0); acfProb.fill(0); acfFolded.fill(0);
-    odfIdx = 0; odfPrev = 0; odfClock = -1;
   }
 
   async function useMic(){
@@ -499,121 +454,48 @@
     startOverlay.style.display = 'flex';
   });
 
-  // ---------------- Tempo estimation : autocorr + softmax ----------------
-  // The ODF is sampled at a fixed 60 Hz regardless of frame rate. The
-  // autocorrelation of this signal at a given lag is high when the signal
-  // repeats at that period. We score every candidate period in parallel, softmax
-  // over the scores (with slow EMA memory for stability), and the peakedness of
-  // the distribution IS the lock confidence. No interval averaging, no ghosts :
-  // the right tempo simply wins because its autocorrelation is highest.
-
-  // Push ODF samples at exactly 60 Hz. Called from analyze() each frame with
-  // current time and raw (un-smoothed) bass level ; catches up any samples we
-  // owe since last call.
-  function pushODF(tNow, rawBass){
-    if(odfClock < 0) odfClock = tNow;
-    // Half-wave rectified derivative : we care about ATTACKS, not decays.
-    while(tNow - odfClock >= ODF_DT){
-      const onset = Math.max(0, rawBass - odfPrev);
-      odfPrev = rawBass;
-      odfBuf[odfIdx] = onset;
-      odfIdx = (odfIdx + 1) % ODF_LEN;
-      odfClock += ODF_DT;
-    }
-  }
-
-  // Run autocorrelation against every candidate lag ; softmax gives the winner.
-  function runAutocorrSoftmax(){
-    // Raw autocorrelation this frame (not normalized by lag variance ; we
-    // just care about relative ordering between candidates).
-    for(let k = 0; k < N_CAND; k++){
-      const lag = LAG_LO + k;
-      const N = ODF_LEN - lag;
-      let sum = 0;
-      for(let i = 0; i < N; i++){
-        const a = odfBuf[(odfIdx + i) % ODF_LEN];
-        const b = odfBuf[(odfIdx + i + lag) % ODF_LEN];
-        sum += a * b;
-      }
-      acfScore[k] = sum / N;
-      // Slow EMA accumulates evidence over ~1s. This is the "memory" :
-      // candidates that keep winning stay strong ; lucky one-frame spikes fade.
-      acfEMA[k] = acfEMA[k] * 0.93 + acfScore[k] * 0.07;
-    }
-
-    // Softmax with normalization, temperature, and framework-integer prior.
-    // Normalize to [0, 1] so the softmax sharpness is stable regardless of
-    // overall signal strength ; add the prior bonus inside the exponent so
-    // framework-Hz candidates get a small tie-breaking boost without
-    // overriding actual audio evidence.
-    let maxS = acfEMA[0], minS = acfEMA[0];
-    for(let k = 1; k < N_CAND; k++){
-      if(acfEMA[k] > maxS) maxS = acfEMA[k];
-      if(acfEMA[k] < minS) minS = acfEMA[k];
-    }
-    const range = Math.max(1e-9, maxS - minS);
-    const beta = 7.0;   // temperature : higher = sharper peak
-    let pSum = 0;
-    for(let k = 0; k < N_CAND; k++){
-      const nrm = (acfEMA[k] - minS) / range;
-      acfProb[k] = Math.exp((nrm + priorBonus[k]) * beta);
-      pSum += acfProb[k];
-    }
-    for(let k = 0; k < N_CAND; k++) acfProb[k] /= pSum;
-
-    // Octave fold : L and 2L are the same ⊙ at different λ (A3 at the tempo
-    // level). Accumulate mass from half-lag and double-lag into each
-    // candidate so octave partners reinforce each other ; this is how a
-    // structural tempo emerges when the music is ambiguous between octaves.
-    let foldSum = 0;
-    for(let k = 0; k < N_CAND; k++){
-      const lag = LAG_LO + k;
-      let m = acfProb[k];
-      const halfLag = Math.round(lag / 2);
-      const dblLag  = lag * 2;
-      if(halfLag >= LAG_LO && halfLag <= LAG_HI) m += 0.5 * acfProb[halfLag - LAG_LO];
-      if(dblLag  >= LAG_LO && dblLag  <= LAG_HI) m += 0.5 * acfProb[dblLag  - LAG_LO];
-      acfFolded[k] = m;
-      foldSum += m;
-    }
-    const foldNorm = foldSum > 1e-9 ? 1 / foldSum : 0;
-    for(let k = 0; k < N_CAND; k++) acfFolded[k] *= foldNorm;
-
-    // Peakedness of the FOLDED distribution = lock confidence. Folding lets
-    // 90 BPM and 180 BPM count as the same structural pulse ; the listener
-    // reports high lock when it's confident about the pulse, not when it's
-    // merely confident about one particular octave of it.
-    let entropy = 0;
-    for(let k = 0; k < N_CAND; k++){
-      const p = acfFolded[k];
-      if(p > 1e-9) entropy -= p * Math.log(p);
-    }
-    const lockCand = 1.0 - entropy / Math.log(N_CAND);
-
-    // Gate the lock : if the music is silent, normalized scores are noise and
-    // the softmax can still spike ; require actual energy in the autocorr.
-    const energyGate = Math.min(1, maxS * 200);
-    const effectiveLock = lockCand * energyGate;
-
-    // Expected lag from the RAW (unfolded) distribution for the BPM reading.
-    // Using the raw distribution means the displayed BPM reflects the felt
-    // pulse (whichever octave is loudest), while lock confidence above
-    // reflects structural confidence across octaves.
-    let expLag = 0;
-    for(let k = 0; k < N_CAND; k++) expLag += (LAG_LO + k) * acfProb[k];
-    const newSec = expLag / ODF_RATE;
-    tempoSec = tempoSec > 0 ? tempoSec * 0.85 + newSec * 0.15 : newSec;
-    tempoBPM = 60 / tempoSec;
-    tempoLock = tempoLock * 0.9 + effectiveLock * 0.1;
-  }
-
-  // Peak-pick only provides PHASE anchoring now. Tempo comes from autocorr.
+  // ---------------- Beat onset handling ----------------
   function onBeatDetected(tNow){
     beatHistory.push(tNow);
     if(beatHistory.length > MAX_BEAT_HISTORY) beatHistory.shift();
-    // Anchor the next-beat prediction to this just-happened onset ; tempo
-    // itself was already decided by the softmax (no interval averaging).
-    if(tempoSec > 0) nextBeatAt = tNow + tempoSec;
+
+    if(beatHistory.length >= 4){
+      // Inter-beat intervals.
+      const ivls = [];
+      for(let i = 1; i < beatHistory.length; i++){
+        ivls.push(beatHistory[i] - beatHistory[i-1]);
+      }
+      // Median as robust tempo estimate.
+      const sorted = [...ivls].sort((a,b) => a-b);
+      const median = sorted[Math.floor(sorted.length / 2)];
+      // Keep only intervals within 35% of the median (rejects missed beats
+      // that read as 2× or half-time ghosts).
+      const good = ivls.filter(v => Math.abs(v - median) / median < 0.35);
+      if(good.length >= 3){
+        const mean = good.reduce((a,b) => a+b, 0) / good.length;
+        let variance = 0;
+        for(const v of good) variance += (v - mean) * (v - mean);
+        variance /= good.length;
+        const std = Math.sqrt(variance);
+        // Lock strength : low relative std → high confidence. Clamp the
+        // bounds so it can't spike to 1 on two coincidental intervals.
+        const rel = std / mean;
+        const lockTarget = Math.max(0, Math.min(1, 1.0 - rel * 3.0));
+        tempoLock = tempoLock * 0.75 + lockTarget * 0.25;
+        tempoSec = tempoSec * 0.7 + mean * 0.3;
+        tempoBPM = 60 / tempoSec;
+      }
+      // Predict next beat off the most recent actual beat.
+      nextBeatAt = tNow + (tempoSec || (tNow - beatHistory[beatHistory.length - 2]));
+    } else {
+      // Not enough history yet ; use interval-from-previous as rough guess.
+      if(beatHistory.length >= 2){
+        const last = beatHistory[beatHistory.length - 1] - beatHistory[beatHistory.length - 2];
+        tempoSec = tempoSec * 0.6 + last * 0.4;
+        tempoBPM = 60 / tempoSec;
+        nextBeatAt = tNow + tempoSec;
+      }
+    }
   }
 
   // ---------------- Per-frame analysis ----------------
@@ -653,12 +535,6 @@
     const mids = midsSum / Math.max(1, midsEndBin - bassEndBin);
     const treb = trebSum / Math.max(1, trebEndBin - midsEndBin);
 
-    // Feed the onset detection function at a fixed 60 Hz (decoupled from
-    // frame rate) and run the autocorr/softmax tempo estimator every frame.
-    // tempoBPM, tempoSec, and tempoLock are updated from inside runAutocorrSoftmax.
-    pushODF(tNow, bass);
-    runAutocorrSoftmax();
-
     let rms = 0;
     for(let i = 0; i < timeBuf.length; i++){
       const x = (timeBuf[i] - 128) / 128;
@@ -688,17 +564,9 @@
     sRMS[2]      = sRMS[2]      * 0.995 + rms      * 0.005;
     sCentroid[2] = sCentroid[2] * 0.997 + centroid * 0.003;
 
-    // Peak-pick on the fast bass layer : provides PHASE anchoring and visual
-    // beatEnv flashes ; tempo itself comes from the autocorr/softmax above.
-    // Thresholds can be permissive because the autocorr rejects ghosts ; the
-    // peak-picker just marks "something happened here" for the visual pulse.
-    bassLongAvg = bassLongAvg * 0.99 + sBass[0] * 0.01;   // slower baseline
-    const spike    = sBass[0] - bassLongAvg;
-    const isTrans  = sBass[0] > bassLongAvg * 1.35
-                  && sBass[0] > 0.12
-                  && spike    > 0.04
-                  && (tNow - lastBeatT) > 0.18;
-    if(isTrans){
+    // Beat detection on the fast layer (⊙λ : the moment).
+    bassLongAvg = bassLongAvg * 0.985 + sBass[0] * 0.015;
+    if(sBass[0] > bassLongAvg * 1.4 && sBass[0] > 0.12 && (tNow - lastBeatT) > 0.12){
       beatEnv[0] = 1.0;
       preBeatEnv = 0;   // reset anticipation ; the event happened
       lastBeatT = tNow;
@@ -797,18 +665,9 @@
                      : sPhrase < -0.05 ? 'ebbing' : 'steady';
 
     const timeToNext = Math.max(0, nextBeatAt - (performance.now() / 1000.0 - (startTs / 1000.0)));
-    // Progressive messaging so you can see the learning happening.
-    let tempoText;
-    if(beatHistory.length < 2){
-      tempoText = 'listening ; ' + beatHistory.length + ' hit' + (beatHistory.length === 1 ? '' : 's');
-    } else if(tempoLock < 0.3){
-      tempoText = 'listening ; ' + beatHistory.length + ' hits ; '
-                + (tempoBPM > 0 ? tempoBPM.toFixed(0) + ' BPM (rough)' : 'no stable tempo');
-    } else if(tempoLock < 0.6){
-      tempoText = 'forming ; ' + tempoBPM.toFixed(1) + ' BPM ; next in ' + timeToNext.toFixed(2) + 's';
-    } else {
-      tempoText = 'locked ; ' + tempoBPM.toFixed(1) + ' BPM ; next in ' + timeToNext.toFixed(2) + 's';
-    }
+    const tempoText = tempoBPM > 0
+      ? tempoBPM.toFixed(1) + ' BPM ; next in ' + timeToNext.toFixed(2) + 's'
+      : 'not yet locked';
 
     readout.innerHTML =
       '<span class="era-name">' + eras[idx] + '</span>' +
