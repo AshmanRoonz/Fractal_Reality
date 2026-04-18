@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Circumpunct Record Player : The Ladder as an Octave</title>
+<style>
+  html, body { margin: 0; padding: 0; overflow: hidden; background: #000; height: 100%; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+  .info {
+    position: fixed; top: 12px; left: 14px; z-index: 10;
+    font-family: -apple-system, system-ui, sans-serif; font-size: 12px;
+    color: rgba(255,255,255,0.6); pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+    line-height: 1.5;
+    max-width: 520px;
+  }
+  .info a { color: rgba(184,160,96,0.9); text-decoration: none; pointer-events: auto; }
+  #readout {
+    position: fixed; bottom: 14px; left: 14px; z-index: 10;
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px;
+    color: rgba(255,255,255,0.72); pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+    line-height: 1.55;
+    max-width: 560px;
+  }
+  .era-name { color: rgba(184,160,96,0.95); font-weight: 600; }
+  .audio-status { color: rgba(77,184,160,0.9); }
+  .bar-struct { color: rgba(184,216,255,0.9); }
+  .bar-proc { color: rgba(232,138,175,0.9); }
+  #overlay-svg {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    pointer-events: none; z-index: 5;
+  }
+  #start-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.88); z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 20px;
+    font-family: -apple-system, system-ui, sans-serif;
+    color: rgba(255,255,255,0.85);
+    cursor: pointer;
+    transition: opacity 0.6s;
+  }
+  #start-overlay h1 {
+    font-size: 24px; font-weight: 400; letter-spacing: 0.5px;
+    color: rgba(184,160,96,0.95);
+  }
+  #start-overlay p { font-size: 13px; max-width: 580px; text-align: center; line-height: 1.6; margin: 0 20px; }
+  #start-overlay .btn {
+    padding: 14px 36px; border: 1px solid rgba(184,160,96,0.6);
+    border-radius: 4px; font-size: 14px; letter-spacing: 1px;
+    color: rgba(184,160,96,0.95); background: rgba(184,160,96,0.08);
+    margin-top: 12px;
+  }
+  #start-overlay.hide { opacity: 0; pointer-events: none; }
+  #progress {
+    position: fixed; bottom: 0; left: 0; right: 0; height: 2px;
+    background: rgba(255,255,255,0.08); z-index: 10;
+  }
+  #progress-bar { height: 100%; background: rgba(184,160,96,0.7); }
+  #err {
+    position: fixed; top: 0; left: 0; right: 0;
+    color: #f88; font-family: monospace; font-size: 12px;
+    background: rgba(0,0,0,0.85); padding: 10px; white-space: pre-wrap;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<div id="start-overlay">
+  <h1>The ladder as an octave</h1>
+  <p>Eight voices, one per station: • do (0D), ⊛ re (0.5D), — mi (1D), ⎇ fa (1.5D), Φ so (2D), ✹ la (2.5D), ○ ti (3D), ⟳ do' (3.5D). Each voice samples a concentric ring of the rendered field for its amplitude; the four processual voices (half-integer rungs) are gated by the i-cycle quadrant phase, so the pump cycle's breath amplifies and suppresses them in turn.</p>
+  <div class="btn">CLICK TO BEGIN</div>
+</div>
+
+<div class="info">
+  8 voices = 8 stations ; do-re-mi-fa-so-la-ti-do' = 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5<br>
+  ring<sub>i</sub> brightness → voice<sub>i</sub> amplitude ; i-cycle LFO gates processual rungs<br>
+  <a href="framework_cosmos_shader.html">silent cosmos</a> &nbsp; <a href="framework_chemistry_shader.html">chemistry</a> &nbsp; <a href="dimensional_ladder.html">ladder</a>
+</div>
+
+<canvas id="c"></canvas>
+<svg id="overlay-svg"></svg>
+<pre id="err"></pre>
+<div id="readout"></div>
+<div id="progress"><div id="progress-bar"></div></div>
+
+<script id="vert" type="x-shader/x-vertex">
+  attribute vec2 a;
+  void main(){ gl_Position = vec4(a, 0.0, 1.0); }
+</script>
+
+<script id="frag" type="x-shader/x-fragment">
+  precision highp float;
+  uniform vec2 r;
+  uniform float t;
+  uniform float era;
+  uniform float comp;
+
+  vec3 hsv(float h, float s, float v){
+    vec3 k = mod(vec3(5.0, 3.0, 1.0) + h * 6.0, 6.0);
+    return v - v * s * clamp(min(k, 4.0 - k), 0.0, 1.0);
+  }
+
+  mat3 rotate3D(float a, vec3 ax){
+    ax = normalize(ax);
+    float s = sin(a), c = cos(a), o = 1.0 - c;
+    return mat3(
+      o*ax.x*ax.x + c,      o*ax.x*ax.y - ax.z*s, o*ax.z*ax.x + ax.y*s,
+      o*ax.x*ax.y + ax.z*s, o*ax.y*ax.y + c,      o*ax.y*ax.z - ax.x*s,
+      o*ax.z*ax.x - ax.y*s, o*ax.y*ax.z + ax.x*s, o*ax.z*ax.z + c
+    );
+  }
+
+  void main(){
+    vec2 FC = gl_FragCoord.xy;
+    vec4 o = vec4(0.0);
+
+    float w0 = max(0.0, 1.0 - abs(era - 0.0));
+    float w1 = max(0.0, 1.0 - abs(era - 1.0));
+    float w2 = max(0.0, 1.0 - abs(era - 2.0));
+    float w3 = max(0.0, 1.0 - abs(era - 3.0));
+    w0 = max(w0, max(0.0, 1.0 - abs(era - 4.0)));
+
+    vec3 offAtom = vec3(1.5, 1.618, 1.0);
+    vec3 offBio  = vec3(2.1, 1.5, 2.618);
+    vec3 offPlan = vec3(2.618, 1.618, 1.618);
+    vec3 offCos  = vec3(3.0, 2.618, 1.618);
+    vec3 offset = offAtom*w0 + offBio*w1 + offPlan*w2 + offCos*w3;
+
+    float hueBase = 0.56*w0 + 0.36*w1 + 0.09*w2 + 0.78*w3;
+    float inv = 9.0*w0 + 10.5*w1 + 8.0*w2 + 7.0*w3;
+    float rotSpeed = 0.20*w0 + 0.15*w1 + 0.10*w2 + 0.05*w3;
+
+    for(int triad = 0; triad < 3; triad++){
+      float tf = float(triad);
+      float sMul = pow(1.618, 3.0 - tf * 2.0);
+      float weight = pow(0.78, tf);
+      float hueShift = hueBase + tf * 0.06;
+
+      float g = 0.0, e, s, q;
+
+      for(int n = 0; n < 7; n++){
+        vec3 p = vec3((FC.xy * 2.0 - r) / r.y * sMul, g + 0.2)
+                 * rotate3D(t * (rotSpeed + tf * 0.04),
+                           vec3(sin(t * 0.3), 1.618, cos(t * 0.3)));
+        s = 1.0;
+        for(int k = 0; k < 8; k++){
+          e = max(0.95, inv / dot(p, p));
+          s *= e;
+          if(p.x + p.y < 0.0) p.xy = -p.yx;
+          if(p.x + p.z < 0.0) p.xz = -p.zx;
+          if(p.y + p.z < 0.0) p.yz = -p.zy;
+          p = p * e - vec3(offset.x, offset.y * (1.0 - comp), offset.z);
+        }
+        g += mod(length(p.yy), p.y) / s * 0.5;
+
+        float phase = atan(p.x, p.y);
+        q = 0.5 + 0.5 * sin(phase * 3.0 + t * 0.5);
+        float band = q < 0.333 ? 13.0/20.0
+                   : q < 0.666 ? 7.0/9.0
+                   : 1.0;
+
+        float hue = hueShift + 0.12 * cos(phase + t * 0.2);
+        o.rgb += hsv(hue, 0.35 - g * 0.02,
+                     s / 4500.0 * (0.22 + 0.78 * band)) * weight;
+      }
+    }
+
+    gl_FragColor = vec4(o.rgb, 1.0);
+  }
+</script>
+
+<script>
+(function(){
+  const canvas = document.getElementById('c');
+  const svg = document.getElementById('overlay-svg');
+  const err = document.getElementById('err');
+  const readout = document.getElementById('readout');
+  const progBar = document.getElementById('progress-bar');
+  const startOverlay = document.getElementById('start-overlay');
+  function showErr(msg){ err.textContent = msg; err.style.display = 'block'; }
+
+  const gl = canvas.getContext('webgl', {
+    antialias: false,
+    premultipliedAlpha: false,
+    preserveDrawingBuffer: true
+  });
+  if(!gl){ showErr('WebGL not available in this browser.'); return; }
+
+  function compile(type, src){
+    const sh = gl.createShader(type);
+    gl.shaderSource(sh, src);
+    gl.compileShader(sh);
+    if(!gl.getShaderParameter(sh, gl.COMPILE_STATUS)){
+      showErr('Shader compile error:\n' + gl.getShaderInfoLog(sh));
+      return null;
+    }
+    return sh;
+  }
+
+  const vs = compile(gl.VERTEX_SHADER, document.getElementById('vert').textContent);
+  const fs = compile(gl.FRAGMENT_SHADER, document.getElementById('frag').textContent);
+  if(!vs || !fs) return;
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog, vs);
+  gl.attachShader(prog, fs);
+  gl.linkProgram(prog);
+  if(!gl.getProgramParameter(prog, gl.LINK_STATUS)){
+    showErr('Program link error:\n' + gl.getProgramInfoLog(prog));
+    return;
+  }
+  gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const aLoc = gl.getAttribLocation(prog, 'a');
+  gl.enableVertexAttribArray(aLoc);
+  gl.vertexAttribPointer(aLoc, 2, gl.FLOAT, false, 0, 0);
+
+  const uR = gl.getUniformLocation(prog, 'r');
+  const uT = gl.getUniformLocation(prog, 't');
+  const uEra = gl.getUniformLocation(prog, 'era');
+  const uComp = gl.getUniformLocation(prog, 'comp');
+
+  function resize(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.floor(window.innerWidth * dpr);
+    canvas.height = Math.floor(window.innerHeight * dpr);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // Eras set the base tonic; the 8 voices fan out from there across one octave.
+  const eras = [
+    { name: 'ATOMIC',      scales: '⊙ quark ⊂ atom ⊂ molecule',
+      constants: ['T = 3 simplex: 109.47°', 'α = |•_electron| = 1/137',
+                  'σ / π₁ / π₂ = 1 / 7/9 / 13/20', 'CH₄ → NH₃ → H₂O via n_LP·2/R²'],
+      tonic: 220 },    // A3
+    { name: 'BIOLOGICAL', scales: '⊙ cell ⊂ organism ⊂ biosphere',
+      constants: ['DNA 10.5 bp/turn = A(3)/Φ', 'D = 1 + ◐ = 1.5',
+                  'S = 64 = P^T', 'Kleiber: M^(T/P) = M^(3/4)'],
+      tonic: 164.81 }, // E3
+    { name: 'PLANETARY',   scales: '⊙ planet ⊂ solar system ⊂ galaxy',
+      constants: ['α_G = α²¹ · φ²/2', 'M_Pl/m_e = (1/α)^(21/2) · √2/φ',
+                  "Murray's law r^T = r³", 'φ nesting in orbits'],
+      tonic: 110 },    // A2
+    { name: 'COSMOLOGICAL', scales: '⊙Λ ⊂ observable ⊂ ∞',
+      constants: ['Λ ∝ α⁵⁶ = α^(SU(3)·R)', 'Visible/Dark/Field = 5/27/68',
+                  'T²/V = 9/13 (DE fraction)', '⊙λ ⊂[α] ⊙Λ ⊂[α] ∞'],
+      tonic: 82.41 }   // E2
+  ];
+
+  // --------- The octave ---------
+  // Just-intonation ratios. Ring radii step outward across the ladder (0D near
+  // the aperture, 3D at the boundary); 3.5D recurses back to the aperture at
+  // the next octave (ring wraps to small). iPhase marks which quadrant of the
+  // i-cycle LFO amplifies the processual voices.
+  const STATIONS = [
+    { glyph: '•',   note: 'do',    dim: 0.0, ratio: 1.0,    ring: 0.04, isProc: false, iPhase: null,           color: 'rgba(255,245,220,0.90)' },
+    { glyph: '⊛',   note: 're',    dim: 0.5, ratio: 9/8,    ring: 0.09, isProc: true,  iPhase: 0.0,             color: 'rgba(232,138,175,0.90)' }, // +i genesis
+    { glyph: '—',   note: 'mi',    dim: 1.0, ratio: 5/4,    ring: 0.14, isProc: false, iPhase: null,           color: 'rgba(184,216,255,0.90)' },
+    { glyph: '⎇',   note: 'fa',    dim: 1.5, ratio: 4/3,    ring: 0.19, isProc: true,  iPhase: Math.PI/2,      color: 'rgba(232,138,175,0.90)' }, // -1 commit
+    { glyph: 'Φ',   note: 'so',    dim: 2.0, ratio: 3/2,    ring: 0.24, isProc: false, iPhase: null,           color: 'rgba(184,216,255,0.90)' },
+    { glyph: '✹',   note: 'la',    dim: 2.5, ratio: 5/3,    ring: 0.29, isProc: true,  iPhase: Math.PI,        color: 'rgba(232,138,175,0.90)' }, // -i emerge
+    { glyph: '○',   note: 'ti',    dim: 3.0, ratio: 15/8,   ring: 0.34, isProc: false, iPhase: null,           color: 'rgba(184,216,255,0.90)' },
+    { glyph: '⟳',   note: "do'",   dim: 3.5, ratio: 2.0,    ring: 0.04, isProc: true,  iPhase: 3*Math.PI/2,    color: 'rgba(232,138,175,0.90)' }  // +1 recursion
+  ];
+
+  // Mutable per-voice state.
+  const voicePhase  = new Float32Array(STATIONS.length);    // oscillator phase
+  const voiceEnergy = new Float32Array(STATIONS.length);    // field brightness at ring
+  const voiceAmp    = new Float32Array(STATIONS.length);    // smoothed final gain
+
+  // Renderer state.
+  const CYCLE = 120.0;
+  let currentTonic = 110;
+  let lfoPhase = 0;    // i-cycle LFO phase (slow rotation)
+  const LFO_PERIOD = 9.0;  // seconds per rotation ; ~13 rotations per CYCLE
+
+  // --------- Framebuffer sample grid ---------
+  // We sample a fixed low-res window at the center of the canvas and read all
+  // ring brightnesses out of it. Ring sampling uses N points around each radius.
+  const SAMPLE_W = 256;
+  const SAMPLE_H = 256;
+  const RING_POINTS = 16;
+  let pixelBuf = null;
+
+  function sampleBrightnessPx(px, py){
+    const pyFlip = (SAMPLE_H - 1 - py);
+    const idx = (pyFlip * SAMPLE_W + px) * 4;
+    const r = pixelBuf[idx] / 255.0;
+    const g = pixelBuf[idx + 1] / 255.0;
+    const b = pixelBuf[idx + 2] / 255.0;
+    return 0.299 * r + 0.587 * g + 0.114 * b;
+  }
+
+  function updateRingEnergies(tNow){
+    if(!pixelBuf) return;
+    // Slow ring rotation so sampled points aren't pinned to artifacts.
+    const ringRot = tNow * 0.17;
+    for(let i = 0; i < STATIONS.length; i++){
+      const st = STATIONS[i];
+      // Ring radius in pixels inside the SAMPLE window; station.ring is in 0..~0.35.
+      const rPx = st.ring * SAMPLE_W;   // SAMPLE_W == SAMPLE_H here
+      const cX = SAMPLE_W / 2;
+      const cY = SAMPLE_H / 2;
+      let acc = 0;
+      for(let k = 0; k < RING_POINTS; k++){
+        const ang = (k / RING_POINTS) * 2 * Math.PI + ringRot + i * 0.4;
+        const px = Math.max(0, Math.min(SAMPLE_W - 1, Math.round(cX + rPx * Math.cos(ang))));
+        const py = Math.max(0, Math.min(SAMPLE_H - 1, Math.round(cY + rPx * Math.sin(ang))));
+        acc += sampleBrightnessPx(px, py);
+      }
+      const mean = acc / RING_POINTS;
+      // One-pole smoothing so the audio doesn't get zipper noise.
+      voiceEnergy[i] = voiceEnergy[i] * 0.85 + mean * 0.15;
+    }
+  }
+
+  // --------- Audio ---------
+  let audioCtx = null;
+  let audioStartTime = 0;
+
+  async function startAudio(){
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if(audioCtx.state === 'suspended') await audioCtx.resume();
+      audioStartTime = audioCtx.currentTime;
+
+      const bufSize = 2048;
+      const node = audioCtx.createScriptProcessor(bufSize, 0, 1);
+      const gain = audioCtx.createGain();
+      gain.gain.value = 0.28;
+
+      node.onaudioprocess = (e) => {
+        const out = e.outputBuffer.getChannelData(0);
+        if(!pixelBuf){
+          for(let i = 0; i < bufSize; i++) out[i] = 0;
+          return;
+        }
+        const sampleRate = audioCtx.sampleRate;
+        const twoPi = 2 * Math.PI;
+        const tBlockStart = audioCtx.currentTime - audioStartTime;
+
+        for(let i = 0; i < bufSize; i++){
+          const tA = tBlockStart + i / sampleRate;
+
+          // i-cycle LFO phase, rotating slowly through the complex plane.
+          // Its quadrant decides which processual voice is active.
+          const lfo = twoPi * tA / LFO_PERIOD;
+
+          let sum = 0;
+          for(let v = 0; v < STATIONS.length; v++){
+            const st = STATIONS[v];
+            const freq = currentTonic * st.ratio;
+            voicePhase[v] += twoPi * freq / sampleRate;
+            if(voicePhase[v] > twoPi) voicePhase[v] -= twoPi;
+
+            // Structural voices: always responsive to their ring.
+            // Processual voices: same, but windowed by how close the LFO sits
+            // to their quadrant. cos(lfo - iPhase) peaks in-quadrant, so
+            // squared it makes a soft window that pulses once per LFO cycle.
+            let gate = 1.0;
+            if(st.isProc){
+              const c = Math.max(0, Math.cos(lfo - st.iPhase));
+              gate = c * c;   // 0 when π/2 away, 1 in quadrant
+            }
+
+            // Lift voiceEnergy off DC and give it some dynamic range.
+            const fieldAmp = Math.max(0, voiceEnergy[v] - 0.18) * 1.8;
+            // Processual voices get more motion ; structural ones stay anchored.
+            const perVoiceGain = st.isProc ? 0.11 : 0.14;
+            const amp = fieldAmp * gate * perVoiceGain;
+
+            // Subtle smoothing for display bars.
+            voiceAmp[v] = voiceAmp[v] * 0.92 + amp * 0.08;
+
+            sum += Math.sin(voicePhase[v]) * amp;
+          }
+
+          // Soft clip the additive sum.
+          out[i] = Math.tanh(sum);
+        }
+
+        lfoPhase = twoPi * (tBlockStart + bufSize / sampleRate) / LFO_PERIOD;
+      };
+
+      node.connect(gain);
+      gain.connect(audioCtx.destination);
+      pixelBuf = new Uint8Array(SAMPLE_W * SAMPLE_H * 4);
+      return true;
+    } catch(e){
+      showErr('Audio failed to start: ' + e.message);
+      return false;
+    }
+  }
+
+  startOverlay.addEventListener('click', async () => {
+    const ok = await startAudio();
+    if(ok){
+      startOverlay.classList.add('hide');
+      setTimeout(() => startOverlay.style.display = 'none', 700);
+    }
+  });
+
+  // --------- SVG overlay : rings + active-voice dots ---------
+  function updateOverlay(){
+    if(!audioCtx) { svg.innerHTML = ''; return; }
+    const W = window.innerWidth, H = window.innerHeight;
+    const cx = W / 2, cy = H / 2;
+    // Scale so the widest ring (station.ring ~ 0.34) fits comfortably inside
+    // the shortest screen dimension.
+    const px = Math.min(W, H) * 0.9;   // px per "1.0 of normalized sample size"
+
+    let out = '';
+    for(let i = 0; i < STATIONS.length; i++){
+      const st = STATIONS[i];
+      const rPix = st.ring * px;
+      // Ring circle, opacity scales with current voice amplitude.
+      const ringOpacity = 0.15 + 0.55 * Math.min(1, voiceAmp[i] * 4);
+      const ringColor = st.color.replace(/[\d.]+\)$/, ringOpacity.toFixed(2) + ')');
+      out += '<circle cx="' + cx + '" cy="' + cy + '" r="' + rPix.toFixed(1) +
+             '" fill="none" stroke="' + ringColor + '" stroke-width="1"/>';
+      // Station dot traveling around its ring at its voice frequency.
+      const ang = voicePhase[i];
+      const dx = cx + rPix * Math.cos(ang);
+      const dy = cy + rPix * Math.sin(ang);
+      const dotR = 3 + 7 * Math.min(1, voiceAmp[i] * 5);
+      out += '<circle cx="' + dx.toFixed(1) + '" cy="' + dy.toFixed(1) +
+             '" r="' + dotR.toFixed(1) + '" fill="' + st.color + '"/>';
+      // Glyph next to the dot on the right side of the ring.
+      const lx = cx + (rPix + 12) * Math.cos(0);
+      const ly = cy + (rPix + 12) * Math.sin(0);
+      out += '<text x="' + lx.toFixed(1) + '" y="' + (ly+4).toFixed(1) +
+             '" font-family="ui-monospace,Menlo,monospace" font-size="11" ' +
+             'fill="rgba(255,255,255,0.55)">' + st.glyph + ' ' + st.note + '</text>';
+    }
+    // i-cycle LFO indicator : a small rotating hand at canvas edge.
+    const lfoR = Math.min(W, H) * 0.42;
+    const lx = cx + lfoR * Math.cos(lfoPhase);
+    const ly = cy + lfoR * Math.sin(lfoPhase);
+    out += '<circle cx="' + lx.toFixed(1) + '" cy="' + ly.toFixed(1) +
+           '" r="5" fill="rgba(184,160,96,0.9)"/>';
+    out += '<line x1="' + cx + '" y1="' + cy + '" x2="' + lx.toFixed(1) +
+           '" y2="' + ly.toFixed(1) +
+           '" stroke="rgba(184,160,96,0.18)" stroke-width="1"/>';
+
+    svg.innerHTML = out;
+  }
+
+  // --------- Readout ---------
+  function renderReadout(era, eraName, transitioning, nextName){
+    const transText = transitioning
+      ? '<span style="color:rgba(232,138,175,0.8)">→ ' + nextName + '</span>'
+      : '';
+
+    let bars = '';
+    for(let i = 0; i < STATIONS.length; i++){
+      const st = STATIONS[i];
+      const freq = currentTonic * st.ratio;
+      const level = Math.min(1, voiceAmp[i] * 6);
+      const filled = Math.round(level * 12);
+      const bar = '█'.repeat(filled) + '░'.repeat(12 - filled);
+      const cls = st.isProc ? 'bar-proc' : 'bar-struct';
+      const procMark = st.isProc ? '*' : ' ';
+      bars += '<span class="' + cls + '">' + st.glyph + ' ' + st.note +
+              '  ' + st.dim.toFixed(1) + 'D' + procMark + '  ' +
+              freq.toFixed(1).padStart(6) + 'Hz  ' + bar + '</span><br>';
+    }
+
+    const audioState = audioCtx
+      ? '♫ tonic = ' + currentTonic.toFixed(2) + ' Hz ; LFO ' +
+        (lfoPhase / (2*Math.PI) % 1 * 360).toFixed(0) + '° ; * = i-cycle gated'
+      : '♪ click to begin';
+
+    readout.innerHTML =
+      '<span class="era-name">' + eraName + '</span> ' + transText + '<br>' +
+      bars +
+      '<span class="audio-status">' + audioState + '</span>';
+  }
+
+  // --------- Main loop ---------
+  const start = performance.now();
+  function frame(){
+    const tNow = (performance.now() - start) / 1000.0;
+    const era = (tNow / (CYCLE / 4.0)) % 4.0;
+
+    const atomicW = Math.max(0, 1.0 - Math.abs(era - 0.0));
+    const atomicWWrap = Math.max(0, 1.0 - Math.abs(era - 4.0));
+    const wAtom = Math.max(atomicW, atomicWWrap);
+    const nLP = 1.0 + Math.cos(tNow * 0.26);
+    const comp = (nLP * 2.0 / 49.0) * wAtom;
+
+    gl.uniform2f(uR, canvas.width, canvas.height);
+    gl.uniform1f(uT, tNow);
+    gl.uniform1f(uEra, era);
+    gl.uniform1f(uComp, comp);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+    // Interpolate tonic between era endpoints.
+    const idx = Math.floor(era);
+    const frac = era - idx;
+    const e = eras[idx];
+    const nextE = eras[(idx + 1) % 4];
+    currentTonic = e.tonic * (1 - frac) + nextE.tonic * frac;
+
+    // Sample framebuffer and fan it out to per-voice energies.
+    if(audioCtx && pixelBuf){
+      const sX = ((canvas.width - SAMPLE_W) / 2) | 0;
+      const sY = ((canvas.height - SAMPLE_H) / 2) | 0;
+      gl.readPixels(sX, sY, SAMPLE_W, SAMPLE_H, gl.RGBA, gl.UNSIGNED_BYTE, pixelBuf);
+      updateRingEnergies(tNow);
+    }
+
+    progBar.style.width = ((tNow / CYCLE) % 1.0 * 100).toFixed(2) + '%';
+
+    const transitioning = frac > 0.7;
+    renderReadout(era, e.name, transitioning, nextE.name);
+    updateOverlay();
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
+</body>
+</html>
