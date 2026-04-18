@@ -324,6 +324,87 @@
     border-color: #fff;
   }
 
+  /* Save / load rows */
+  .save-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .save-row input[type="text"] { min-height: 40px; }
+  .save-row button {
+    padding: 10px 14px;
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #111;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    min-height: 40px;
+    min-width: 72px;
+  }
+  .save-row button:active { transform: scale(0.97); }
+
+  .saved-list {
+    display: grid;
+    gap: 6px;
+  }
+  .saved-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px;
+    align-items: stretch;
+    background: rgba(255,255,255,0.03);
+    border-left: 3px solid var(--gold);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .saved-load {
+    background: transparent;
+    color: var(--gold);
+    border: none;
+    padding: 10px 12px;
+    text-align: left;
+    font-family: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+    min-height: 40px;
+    word-break: break-word;
+  }
+  .saved-load:active { background: rgba(255,215,0,0.12); }
+  .saved-del {
+    background: rgba(255, 80, 80, 0.12);
+    color: #ff7070;
+    border: none;
+    padding: 0 14px;
+    font-family: inherit;
+    font-size: 1.2rem;
+    cursor: pointer;
+    min-width: 40px;
+    min-height: 40px;
+  }
+  .saved-del:active { background: rgba(255, 80, 80, 0.25); }
+
+  .io-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .io-row button {
+    padding: 10px 6px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    cursor: pointer;
+    min-height: 40px;
+  }
+  .io-row button:active { background: rgba(255,215,0,0.12); }
+
   /* Collapsible sections */
   details.section {
     border: 1px solid var(--gold-faint);
@@ -553,6 +634,18 @@
       <button class="tbtn" data-time="60">60m</button>
       <button class="tbtn" data-time="90">90m</button>
       <button class="tbtn" data-time="120">2h</button>
+    </div>
+
+    <h2 style="margin-top:18px;">⟲ Saved States</h2>
+    <div class="save-row">
+      <input type="text" id="saveName" placeholder="Name this state..." maxlength="40" autocomplete="off" spellcheck="false">
+      <button id="saveBtn">Save</button>
+    </div>
+    <div class="saved-list" id="savedStates"></div>
+    <div class="io-row">
+      <button id="exportBtn">Export all (.json)</button>
+      <button id="importBtn">Import (.json)</button>
+      <input type="file" id="importFile" accept="application/json,.json" style="display:none;">
     </div>
 
     <h2 style="margin-top:18px;">Φ Presets</h2>
@@ -1813,6 +1906,199 @@
     });
   });
 
+  // ============= SAVE / LOAD =============
+  const STORAGE_KEY = 'phi_resonance_states_v1';
+
+  function getSaved() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    } catch (e) { return {}; }
+  }
+
+  function writeSaved(obj) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); }
+    catch (e) { alert('Save failed: ' + e.message); }
+  }
+
+  function serializeState() {
+    return {
+      mode: state.mode,
+      layerCount: state.layerCount,
+      layerMute: state.layerMute.slice(),
+      currentPreset: state.currentPreset,
+      timerTarget: state.timerTarget,
+      params: Object.assign({}, state.params),
+      savedAt: Date.now()
+    };
+  }
+
+  function pushUIFromState() {
+    const p = state.params;
+    $('base').value = p.base;
+    $('beat').value = p.beat;
+    $('vol').value = p.vol;
+    $('wave').value = p.wave;
+    $('detune').value = p.detune;
+    $('spacing').value = p.spacing;
+    $('stereo').value = p.stereo;
+    $('beatStr').value = p.beatStr;
+    $('lfoDepth').value = p.lfoDepth;
+    $('lfoRate').value = p.lfoRate;
+    $('trem').value = p.trem;
+    $('vib').value = p.vib;
+    $('filterType').value = p.filterType;
+    $('cutoff').value = p.cutoff;
+    $('q').value = p.q;
+    $('rev').value = p.rev;
+    $('revSz').value = p.revSz;
+    $('noiseType').value = p.noiseType;
+    $('noiseLvl').value = p.noiseLvl;
+    $('layers').value = state.layerCount;
+
+    $('volVal').textContent = p.vol + '%';
+    $('baseVal').textContent = Math.round(p.base) + ' Hz';
+    $('beatVal').textContent = (+p.beat).toFixed(3) + ' Hz';
+    $('detuneVal').textContent = p.detune + ' c';
+    $('stereoVal').textContent = p.stereo + '%';
+    $('beatStrVal').textContent = p.beatStr + '%';
+    $('lfoDepthVal').textContent = p.lfoDepth + '%';
+    $('lfoRateVal').textContent = (+p.lfoRate).toFixed(2) + ' Hz';
+    $('tremVal').textContent = p.trem + '%';
+    $('vibVal').textContent = p.vib + '%';
+    $('cutoffVal').textContent = Math.round(p.cutoff) + ' Hz';
+    $('qVal').textContent = (+p.q).toFixed(1);
+    $('revVal').textContent = p.rev + '%';
+    $('revSzVal').textContent = (+p.revSz).toFixed(1) + ' s';
+    $('noiseLvlVal').textContent = p.noiseLvl + '%';
+    $('layersVal').textContent = state.layerCount;
+    updateStatsFromParams();
+  }
+
+  function saveCurrent() {
+    const nameInput = $('saveName');
+    const name = (nameInput.value || '').trim();
+    if (!name) { nameInput.focus(); return; }
+    const all = getSaved();
+    if (all[name] && !confirm('Overwrite "' + name + '"?')) return;
+    all[name] = serializeState();
+    writeSaved(all);
+    nameInput.value = '';
+    renderSavedStates();
+  }
+
+  function loadSaved(name) {
+    const all = getSaved();
+    const s = all[name];
+    if (!s) return;
+    state.mode = s.mode || state.mode;
+    state.layerCount = s.layerCount || state.layerCount;
+    if (Array.isArray(s.layerMute)) {
+      state.layerMute = new Array(9).fill(false);
+      s.layerMute.forEach((v, i) => { if (i < 9) state.layerMute[i] = !!v; });
+    }
+    state.currentPreset = s.currentPreset || state.currentPreset;
+    state.timerTarget = s.timerTarget || 0;
+    if (s.params) state.params = Object.assign({}, state.params, s.params);
+
+    pushUIFromState();
+    renderPresets();
+    renderLayerMixChips();
+    document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === state.mode));
+    $('modeStat').textContent = state.mode.toUpperCase();
+    document.querySelectorAll('.tbtn').forEach(x => x.classList.toggle('active', parseInt(x.dataset.time,10) === state.timerTarget));
+    if (state.playing) { stopSession(); setTimeout(startSession, 80); }
+  }
+
+  function deleteSaved(name) {
+    const all = getSaved();
+    delete all[name];
+    writeSaved(all);
+    renderSavedStates();
+  }
+
+  function renderSavedStates() {
+    const box = $('savedStates');
+    box.innerHTML = '';
+    const all = getSaved();
+    const names = Object.keys(all).sort();
+    if (!names.length) {
+      const empty = document.createElement('div');
+      empty.style.cssText = 'color:var(--muted); font-size:0.8rem; padding:4px 2px;';
+      empty.textContent = 'No saved states yet. Dial in your settings, give them a name, save.';
+      box.appendChild(empty);
+      return;
+    }
+    names.forEach(name => {
+      const row = document.createElement('div');
+      row.className = 'saved-row';
+      const loadB = document.createElement('button');
+      loadB.className = 'saved-load';
+      loadB.textContent = name;
+      loadB.title = 'Load this state';
+      loadB.addEventListener('click', () => loadSaved(name));
+      const delB = document.createElement('button');
+      delB.className = 'saved-del';
+      delB.textContent = '×';
+      delB.title = 'Delete';
+      delB.setAttribute('aria-label', 'Delete ' + name);
+      delB.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (confirm('Delete "' + name + '"?')) deleteSaved(name);
+      });
+      row.appendChild(loadB);
+      row.appendChild(delB);
+      box.appendChild(row);
+    });
+  }
+
+  function exportStates() {
+    const all = getSaved();
+    const payload = { version: 1, kind: 'phi_resonance_states', exportedAt: new Date().toISOString(), states: all };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    a.download = 'phi-resonance-states-' + stamp + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }
+
+  function importStates(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        const incoming = (data && data.states) ? data.states : data;
+        if (!incoming || typeof incoming !== 'object') throw new Error('Unrecognized format');
+        const current = getSaved();
+        let added = 0, overwritten = 0;
+        Object.keys(incoming).forEach(k => {
+          if (current[k]) overwritten++; else added++;
+          current[k] = incoming[k];
+        });
+        writeSaved(current);
+        renderSavedStates();
+        alert('Imported: ' + added + ' new, ' + overwritten + ' overwritten.');
+      } catch (err) {
+        alert('Import failed: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  $('saveBtn').addEventListener('click', saveCurrent);
+  $('saveName').addEventListener('keydown', (e) => { if (e.key === 'Enter') saveCurrent(); });
+  $('exportBtn').addEventListener('click', exportStates);
+  $('importBtn').addEventListener('click', () => $('importFile').click());
+  $('importFile').addEventListener('change', (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (f) importStates(f);
+    e.target.value = '';
+  });
+
   // Chips: solfeggio, chakras, brainwaves, ratios, freq sets
   renderChips('solfeggio', SOLFEGGIO, (it) => {
     $('base').value = it.hz;
@@ -1855,6 +2141,7 @@
   renderPresets();
   renderLayers();
   renderLayerMixChips();
+  renderSavedStates();
   updateStatsFromParams();
   drawBG();
   drawViz();
