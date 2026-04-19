@@ -1,0 +1,19 @@
+Ship models: CC0 (Creative Commons Zero, public domain)
+=======================================================
+
+All seven ship .glb files in this folder are CC0-licensed assets.
+No attribution is required; this list is provided as a courtesy.
+
+  northstar.glb  Quaternius, Ultimate Space Kit  (poly.pizza/m/uCeLfsdmNP)
+  ronin.glb      Quaternius, Ultimate Space Kit  (poly.pizza/m/Jqfed124pQ)
+  ion.glb        Poly.pizza CC0 submission       (poly.pizza/m/htfBk9vPfw)
+  tone.glb       Quaternius, Ultimate Space Kit  (poly.pizza/m/u105mYHLHU)
+  monarch.glb    Poly.pizza CC0 submission       (poly.pizza/m/DbGajMHrvp)
+  scorch.glb     Quaternius, Ultimate Space Kit  (poly.pizza/m/VSxUAFhzbA)
+  legion.glb     Poly.pizza CC0 submission       (poly.pizza/m/PQzePrvBCD)
+
+The Quaternius "Ultimate Space Kit" is mirrored at:
+  https://opengameart.org/content/ultimate-space-kit
+
+Per Quaternius's terms: "All my assets are free for you to use for any
+purpose, including commercial."
