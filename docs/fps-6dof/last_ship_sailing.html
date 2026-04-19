@@ -755,7 +755,7 @@ const LOADOUTS = {
     weapon: { name: 'T-203 Thermite', mode: 'projectile', damage: 900, fireRate: 1.2, clipSize: 12, range: 2500, splash: 300, projSpeed: 600, pellets: 1, spinup: 0 },
     abilities: [
       { name: 'Firewall', cooldown: 10, duration: 6, desc: 'Fire line: 400 DPS', type: 'offensive', dmg: 2400 },
-      { name: 'Thermal Shield', cooldown: 0, duration: 999, desc: 'Hold to burn close enemies (drains shield HP)', type: 'defensive' },
+      { name: 'Thermal Shield', cooldown: 0, duration: 5, desc: 'Hold up to 5s; blocks attacks, burns close enemies (recharges over 10s)', type: 'defensive' },
       { name: 'Incendiary Trap', cooldown: 15, duration: 10, desc: 'Area denial fire', type: 'utility' },
     ],
     core: { name: 'Flame Core', desc: 'Massive AoE incendiary', duration: 2, damage: 9000, cooldown: 60 },
@@ -914,7 +914,7 @@ const player = {
   phaseInvuln: false,
   phaseInvulnTimer: 0,
   // NORTHSTAR
-  thermalShieldHP: 0, thermalShieldMaxHP: 2500, // Scorch Thermal Shield HP pool
+  thermalShieldHP: 2500, thermalShieldMaxHP: 2500, // Scorch Thermal Shield power pool (absorbs damage + drains while held). Starts full; regens to max over 10s out of use.
   afterburnerActive: false,
   afterburnerSpeedMult: 1.0,
   railgunCharge: 0, // 0-1 charge level (hold alt-fire to charge)
@@ -2537,9 +2537,12 @@ function buildModelShipMesh(chassisData, teamColor, loadoutKey) {
   }
 
   // Shield bubble (identical to procedural).
+  // Additive blending + depthWrite:false so the bubble reads as a light shimmer rather
+  // than a solid dark-blue disk against fog/space when it flashes on hit.
   const shieldGeo = new THREE.SphereGeometry(Math.max(w, l) * 2, 16, 12);
   const shieldMat = new THREE.MeshBasicMaterial({
-    color: 0x44ccff, transparent: true, opacity: 0, side: THREE.DoubleSide
+    color: 0x44ccff, transparent: true, opacity: 0, side: THREE.DoubleSide,
+    blending: THREE.AdditiveBlending, depthWrite: false
   });
   const shield = new THREE.Mesh(shieldGeo, shieldMat);
   shield.name = 'shield';
@@ -2830,7 +2833,9 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
 
   // Shield bubble (shared across all chassis)
   const shieldGeo = new THREE.SphereGeometry(Math.max(w, l) * 2, 16, 12);
-  const shieldMat = new THREE.MeshBasicMaterial({ color: 0x44ccff, transparent: true, opacity: 0, side: THREE.DoubleSide });
+  // Additive blending + depthWrite:false prevents the shield bubble from rendering as a
+  // solid navy disk against dark fog/space when it flashes on damage hits.
+  const shieldMat = new THREE.MeshBasicMaterial({ color: 0x44ccff, transparent: true, opacity: 0, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false });
   const shield = new THREE.Mesh(shieldGeo, shieldMat);
   shield.name = 'shield';
   group.add(shield);
@@ -4975,7 +4980,7 @@ function selectLoadout(key) {
   player.gunShieldHP = 0; player.gunShieldTimer = 0;
   player.powerShotCharging = false; player.powerShotCharge = 0;
   player.legionSwitchTimer = 0;
-  player.thermalShieldHP = 0;
+  player.thermalShieldHP = player.thermalShieldMaxHP; // Scorch thermal shield starts fully charged
   player.monarchTier = 0;
   player.monarchDmgMult = 1.0;
   player.monarchCooldownMult = 1.0;
@@ -4993,6 +4998,8 @@ function selectLoadout(key) {
   if (player.vortexShieldRing) { scene.remove(player.vortexShieldRing); player.vortexShieldRing = null; }
   if (player.gunShieldMesh) { scene.remove(player.gunShieldMesh); player.gunShieldMesh = null; }
   if (player.gunShieldEdge) { scene.remove(player.gunShieldEdge); player.gunShieldEdge = null; }
+  if (player.thermalShieldMesh) { scene.remove(player.thermalShieldMesh); player.thermalShieldMesh = null; }
+  if (player.thermalShieldRing) { scene.remove(player.thermalShieldRing); player.thermalShieldRing = null; }
 
   if (player.mesh) scene.remove(player.mesh);
   player.mesh = createShipMesh(ch, 0xff4444, key);
@@ -5124,16 +5131,18 @@ function playerTakeDamage(amount, attacker, projectile) {
       }
     }
   }
-  // Thermal Shield (SCORCH): absorbs damage with HP pool; burns nearby enemies (handled in tick)
+  // Thermal Shield (SCORCH): absorbs damage with power pool; burns nearby enemies (handled in tick).
+  // No fixed cooldown on depletion; the 10s recharge to max IS the cooldown.
   if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Thermal Shield') {
     if (player.thermalShieldHP > 0) {
       const absorbed = Math.min(amount, player.thermalShieldHP);
       player.thermalShieldHP -= absorbed;
       amount -= absorbed;
       if (player.thermalShieldHP <= 0) {
-        // Shield destroyed: auto-deactivate with cooldown
+        // Power depleted: auto-deactivate; recharge begins automatically.
+        player.thermalShieldHP = 0;
         player.abilityActive[1] = false;
-        player.abilityCooldowns[1] = 12;
+        player.abilityTimers[1] = 0;
       }
       if (amount <= 0) return;
     }
@@ -5255,7 +5264,7 @@ function respawnPlayer() {
   player.ionEnergy = player.ionMaxEnergy;
   player.ionAdsActive = false;
   player.gunShieldHP = 0; player.gunShieldTimer = 0;
-  player.thermalShieldHP = 0;
+  player.thermalShieldHP = player.thermalShieldMaxHP; // Scorch spawns with a fully charged thermal shield
   player.abilityActive = [false, false, false];
   player.abilityTimers = [0, 0, 0];
   player.abilityCooldowns = [0, 0, 0];
@@ -6141,9 +6150,18 @@ function executeAbility(slot, ability) {
       player.gunShieldHP = player.gunShieldMaxHP;
       player.gunShieldTimer = 10;
     }
-    // Thermal Shield (SCORCH): activate with full HP
+    // Thermal Shield (SCORCH): hold-to-use; blocks attacks (via power pool),
+    // burns close enemies with distance falloff. Max 5s per activation (capped by
+    // ability.duration). Power regens to max over 10s when not held. Cannot
+    // re-activate with empty power; the duration timer is set by the caller
+    // (useAbility) via player.abilityTimers[slot] = ability.duration.
     else if (ability.name === 'Thermal Shield') {
-      player.thermalShieldHP = player.thermalShieldMaxHP;
+      if (player.thermalShieldHP <= 0) {
+        // Refuse activation: power is empty; let it recharge.
+        player.abilityActive[slot] = false;
+        player.abilityTimers[slot] = 0;
+        return;
+      }
     }
     // Particle Wall (TONE): deploy a floating rectangle shield that stays in place
     else if (ability.name === 'Particle Wall') {
@@ -6561,6 +6579,64 @@ function updateShieldVisuals(dt) {
     }
   }
 
+  // ---- SCORCH: Thermal Shield (translucent orange disc held in front) ----
+  // Visual parity with Ion's Vortex Shield: a bright circle + outer ring in
+  // front of the player, pulsing. Coloring stays in the orange/amber band
+  // (hue oscillates 0.04–0.11) so it reads as heat rather than the rainbow.
+  const thermalActive = player.loadoutKey === 'SCORCH' &&
+    player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Thermal Shield' &&
+    player.thermalShieldHP > 0;
+
+  if (thermalActive) {
+    if (!player.thermalShieldMesh) {
+      const geo = new THREE.CircleGeometry(120, 32);
+      const mat = new THREE.MeshBasicMaterial({
+        color: 0xff7722, transparent: true, opacity: 0.28,
+        side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false
+      });
+      player.thermalShieldMesh = new THREE.Mesh(geo, mat);
+      scene.add(player.thermalShieldMesh);
+      // Outer heat-haze ring
+      const ringGeo = new THREE.RingGeometry(110, 125, 32);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0xffaa44, transparent: true, opacity: 0.22,
+        side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false
+      });
+      player.thermalShieldRing = new THREE.Mesh(ringGeo, ringMat);
+      scene.add(player.thermalShieldRing);
+    }
+    // Position in front of player (same offset as Vortex Shield).
+    const shieldPos = player.position.clone().add(forward.clone().multiplyScalar(80));
+    player.thermalShieldMesh.position.copy(shieldPos);
+    player.thermalShieldMesh.lookAt(shieldPos.clone().add(forward));
+    // Orange hue cycling (kept in warm band).
+    const hue = 0.04 + (Math.sin(game.time * 2.2) * 0.5 + 0.5) * 0.07; // 0.04 → 0.11
+    const hpPct = Math.max(0, player.thermalShieldHP / player.thermalShieldMaxHP);
+    player.thermalShieldMesh.material.color.setHSL(hue, 0.85, 0.55);
+    // Opacity scales with remaining power (brighter when full) + pulse
+    player.thermalShieldMesh.material.opacity = (0.22 + hpPct * 0.18) + Math.sin(game.time * 8) * 0.05;
+    // Outer ring
+    if (player.thermalShieldRing) {
+      player.thermalShieldRing.position.copy(shieldPos);
+      player.thermalShieldRing.lookAt(shieldPos.clone().add(forward));
+      player.thermalShieldRing.material.color.setHSL((hue + 0.02) % 1, 0.75, 0.65);
+      player.thermalShieldRing.material.opacity = (0.14 + hpPct * 0.12) + Math.sin(game.time * 10) * 0.04;
+    }
+  } else {
+    if (player.thermalShieldMesh) {
+      scene.remove(player.thermalShieldMesh);
+      if (player.thermalShieldMesh.geometry) player.thermalShieldMesh.geometry.dispose();
+      if (player.thermalShieldMesh.material) player.thermalShieldMesh.material.dispose();
+      player.thermalShieldMesh = null;
+    }
+    if (player.thermalShieldRing) {
+      scene.remove(player.thermalShieldRing);
+      if (player.thermalShieldRing.geometry) player.thermalShieldRing.geometry.dispose();
+      if (player.thermalShieldRing.material) player.thermalShieldRing.material.dispose();
+      player.thermalShieldRing = null;
+    }
+  }
+
 }
 
 function updateAbilities(dt) {
@@ -6641,28 +6717,49 @@ function updateAbilities(dt) {
         player.abilityCooldowns[i] = 15;
       }
     }
-    // Thermal Shield: hold-to-use, drains shield HP over time, burns nearby enemies
+    // Thermal Shield: hold-to-use (max 5s, capped by ability.duration above);
+    // drains shield power over time; absorbs incoming damage (see playerTakeDamage);
+    // burns close enemies with distance falloff (more damage up close). Power
+    // regens over 10s when not held (handled below outside this loop).
     if (player.abilityActive[i] && player.abilities[i] && player.abilities[i].name === 'Thermal Shield') {
-      // Drain shield HP while held (resource cost)
-      const shieldDrainRate = 300; // HP per second drain
+      // Drain power while held: full pool (2500) over 5s = 500/s, so a full
+      // hold-from-max exactly empties the pool in 5s (matches the duration cap).
+      const shieldDrainRate = player.thermalShieldMaxHP / 5;
       player.thermalShieldHP -= shieldDrainRate * dt;
       if (player.thermalShieldHP <= 0) {
         player.thermalShieldHP = 0;
         player.abilityActive[i] = false;
-        player.abilityCooldowns[i] = 12; // cooldown when depleted
+        player.abilityTimers[i] = 0;
+        // No fixed cooldown; the 10s recharge IS the cooldown.
       }
-      // Burn nearby enemies
+      // Burn nearby enemies with distance falloff: more damage up close.
+      // At 0 dist: 1500 DPS (point blank). At 500 dist: 0 DPS (edge).
+      const burnRadius = 500;
+      const maxDPS = 1500;
       for (const bot of game.entities) {
         if (!bot.alive || bot.team === player.team) continue;
         const dist = player.position.distanceTo(bot.position);
-        if (dist < 500) {
-          const dmgPerSec = 800;
+        if (dist < burnRadius) {
+          const falloff = 1 - (dist / burnRadius); // 1 at center, 0 at edge
+          const dmgPerSec = maxDPS * falloff;
           const dealt = bot.takeDamage(dmgPerSec * dt, 'player');
           if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 200); }
         }
       }
       // Thermal Shield is a fire source: ignite nearby Incendiary Traps
-      igniteNearbyGas(player.position, 500);
+      igniteNearbyGas(player.position, burnRadius);
+    }
+    // Thermal Shield recharge (ticks every frame, inside or outside the
+    // ability-loop body; guarded to only regen when NOT actively held).
+    // Regen rate: full pool over 10s = 250/s, so empty → full in 10s.
+    if (player.loadoutKey === 'SCORCH' && !player.abilityActive[i] &&
+        player.abilities[i] && player.abilities[i].name === 'Thermal Shield' &&
+        player.thermalShieldHP < player.thermalShieldMaxHP) {
+      const rechargePerSec = player.thermalShieldMaxHP / 10;
+      player.thermalShieldHP = Math.min(
+        player.thermalShieldMaxHP,
+        player.thermalShieldHP + rechargePerSec * dt
+      );
     }
     // Vortex Shield: drains ION energy while held up; auto-drops when depleted
     if (player.abilityActive[i] && player.abilities[i] && player.abilities[i].name === 'Vortex Shield') {
@@ -8378,6 +8475,23 @@ function updateAbilityHUD() {
       // Show energy on idle slots
       if (cdText && cd <= 0 && !active) {
         cdText.textContent = Math.floor(player.ionEnergy);
+      }
+    }
+
+    // SCORCH Thermal Shield: bar shows power level (drains while held, recharges over 10s)
+    if (player.loadoutKey === 'SCORCH' && ability.name === 'Thermal Shield') {
+      const powerPct = player.thermalShieldHP / player.thermalShieldMaxHP;
+      const bar2 = slot.querySelector('.ab-cd-bar');
+      if (bar2) bar2.style.width = (powerPct * 100) + '%';
+      // Keep the slot visually "ready" whenever power remains, even during recharge
+      if (!active && player.thermalShieldHP > 0) {
+        slot.className = 'ability-slot ready';
+      } else if (!active && player.thermalShieldHP <= 0) {
+        slot.className = 'ability-slot on-cooldown';
+      }
+      // Show power on idle slots so the player sees it refilling
+      if (cdText && !active) {
+        cdText.textContent = Math.floor(player.thermalShieldHP);
       }
     }
   }
