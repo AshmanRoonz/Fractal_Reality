@@ -1575,28 +1575,12 @@ document.body.appendChild(renderer.domElement);
 
 const postFX = { enabled: true };
 
-// Render scale for the post-processing offscreen target.
-// Composite (ACES + bloom + chromatic aberration + lens dirt + grain + vignette) is expensive
-// per-pixel; running it at device-pixel resolution on a retina display is 4x the GPU work.
-// 1.0 = CSS pixel resolution; push to 1.25 or 1.5 if the scene looks too soft.
-postFX.renderScale = 1.0;
-
-function _postFXTargetSize() {
-  const s = postFX.renderScale;
-  return {
-    w: Math.max(1, Math.floor(window.innerWidth  * s)),
-    h: Math.max(1, Math.floor(window.innerHeight * s))
-  };
-}
-
 // Render target: scene renders here first, then post-processed to screen
-{
-  const { w, h } = _postFXTargetSize();
-  postFX.rtScene = new THREE.WebGLRenderTarget(
-    w, h,
-    { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat }
-  );
-}
+postFX.rtScene = new THREE.WebGLRenderTarget(
+  window.innerWidth * Math.min(window.devicePixelRatio, 2),
+  window.innerHeight * Math.min(window.devicePixelRatio, 2),
+  { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat }
+);
 
 // Bloom: extract bright pixels, blur, composite
 postFX.rtBright = new THREE.WebGLRenderTarget(
@@ -8914,13 +8898,13 @@ window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
-  // Resize post-processing render targets at the configured render scale
-  // (NOT devicePixelRatio; composite is too expensive at 4x pixel count on retina)
-  const { w, h } = _postFXTargetSize();
+  // Resize post-processing render targets
+  const dpr = Math.min(window.devicePixelRatio, 2);
+  const w = window.innerWidth * dpr, h = window.innerHeight * dpr;
   postFX.rtScene.setSize(w, h);
-  postFX.rtBright.setSize(Math.max(1, Math.floor(w / 2)), Math.max(1, Math.floor(h / 2)));
-  postFX.rtBlurH.setSize(Math.max(1, Math.floor(w / 2)), Math.max(1, Math.floor(h / 2)));
-  postFX.rtBlurV.setSize(Math.max(1, Math.floor(w / 2)), Math.max(1, Math.floor(h / 2)));
+  postFX.rtBright.setSize(Math.floor(w / 2), Math.floor(h / 2));
+  postFX.rtBlurH.setSize(Math.floor(w / 2), Math.floor(h / 2));
+  postFX.rtBlurV.setSize(Math.floor(w / 2), Math.floor(h / 2));
   postFX.blurMat.uniforms.resolution.value.set(Math.floor(w / 2), Math.floor(h / 2));
 });
 
@@ -10341,27 +10325,8 @@ function gameLoop(timestamp) {
   updateEffects(dt);
   updateScreenShake(dt);
   updateDamageIndicators(dt);
-
-  // Throttle overlay work: Canvas2D minimap redraws and DOM-heavy HUD text writes
-  // were running at 60+ Hz. The minimap only needs ~15 Hz to feel responsive; HUD
-  // text (timers, scores, labels) only changes at human-readable speed.
-  if (!game._minimapAccum) game._minimapAccum = 0;
-  if (!game._hudAccum)     game._hudAccum = 0;
-  game._minimapAccum += dt;
-  game._hudAccum     += dt;
-  const MINIMAP_INTERVAL = 1 / 15;
-  const HUD_INTERVAL     = 1 / 20;
-  if (game._hudAccum >= HUD_INTERVAL) {
-    game._hudAccum = 0;
-    updateHUD();
-  } else {
-    // Ability cooldown bars still need smooth motion; update only that slice each frame.
-    if (typeof updateAbilityHUD === 'function') updateAbilityHUD();
-  }
-  if (game._minimapAccum >= MINIMAP_INTERVAL) {
-    game._minimapAccum = 0;
-    updateMinimap();
-  }
+  updateHUD();
+  updateMinimap();
   updateEnemyHealthBars();
 
   // Apply screen shake offset to camera (skip during death cam)
