@@ -8613,11 +8613,13 @@ function updateMinimap() {
   const cx = 75, cy = 75;
 
   // Draw tunnel cylinders as lines
+  // Note: screenX uses (cx - worldX * scale) so east/west on the radar matches the player's
+  // actual right/left in-world (fixes the mirror-on-vertical-axis flip).
   ctx.strokeStyle = 'rgba(60,70,100,0.35)';
   ctx.lineWidth = 2;
   for (const c of (game.levelCylinders || [])) {
-    const x1 = cx + c.ax * scale, y1 = cy - c.az * scale;
-    const x2 = cx + c.bx * scale, y2 = cy - c.bz * scale;
+    const x1 = cx - c.ax * scale, y1 = cy - c.az * scale;
+    const x2 = cx - c.bx * scale, y2 = cy - c.bz * scale;
     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
   }
 
@@ -8626,12 +8628,12 @@ function updateMinimap() {
   ctx.strokeStyle = 'rgba(80,90,130,0.4)';
   ctx.lineWidth = 1;
   for (const s of (game.levelSpheres || [])) {
-    const sx = cx + s.cx * scale, sy = cy - s.cz * scale, sr = s.r * scale;
+    const sx = cx - s.cx * scale, sy = cy - s.cz * scale, sr = s.r * scale;
     ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
   }
 
   // Player
-  const px = cx + player.position.x * scale;
+  const px = cx - player.position.x * scale;
   const py = cy - player.position.z * scale;
   ctx.fillStyle = '#fff';
   ctx.fillRect(px - 2, py - 2, 4, 4);
@@ -8641,13 +8643,13 @@ function updateMinimap() {
   ctx.strokeStyle = 'rgba(255,255,255,0.5)';
   ctx.beginPath();
   ctx.moveTo(px, py);
-  ctx.lineTo(px + forward.x * 15, py - forward.z * 15);
+  ctx.lineTo(px - forward.x * 15, py - forward.z * 15);
   ctx.stroke();
 
   // Bots
   for (const bot of game.entities) {
     if (!bot.alive) continue;
-    const bx = cx + bot.position.x * scale;
+    const bx = cx - bot.position.x * scale;
     const by = cy - bot.position.z * scale;
     ctx.fillStyle = bot.team === LSS.TEAM_FLEET_A ? '#ff4444' : '#44bb44';
     ctx.fillRect(bx - 2, by - 2, 3, 3);
@@ -8664,7 +8666,7 @@ function updateMinimap() {
   // Stasis fields (pulsing cyan diamonds)
   for (const field of game.stasisFields) {
     if (!field.alive) continue;
-    const fx = cx + field.position.x * scale;
+    const fx = cx - field.position.x * scale;
     const fy = cy - field.position.z * scale;
     const pulse = 0.5 + Math.sin(game.time * 4) * 0.3;
     ctx.fillStyle = `rgba(0,200,255,${pulse})`;
