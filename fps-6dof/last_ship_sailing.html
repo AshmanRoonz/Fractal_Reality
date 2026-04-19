@@ -682,6 +682,7 @@ canvas { display: block; }
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <!-- trystero loaded via dynamic import() in joinRoom(); uses BitTorrent trackers for P2P signaling -->
 <script>
 // ============================================================================
@@ -1250,10 +1251,11 @@ class NetworkPlayer {
     this.arcSlowTimer = 0;
 
     const teamColor = team === LSS.TEAM_FLEET_A ? 0xff4444 : 0x44bb44;
-    this.mesh = createShipMesh(chassisData, teamColor);
+    this.mesh = createShipMesh(chassisData, teamColor, loadoutKey);
     this.mesh.position.copy(this.position);
     this.mesh.userData.bot = this; // reuse existing hit detection that checks .bot
     scene.add(this.mesh);
+    swapToModelMeshWhenReady(this, teamColor);
 
     // Interpolation state
     this.interpPos = new THREE.Vector3();
@@ -1596,18 +1598,25 @@ postFX.rtBlurV = new THREE.WebGLRenderTarget(
 postFX.quadGeo = new THREE.PlaneGeometry(2, 2);
 postFX.quadCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
-// Brightness threshold extraction shader
+// Brightness threshold extraction shader (soft knee for smoother bloom)
 postFX.brightMat = new THREE.ShaderMaterial({
-  uniforms: { tDiffuse: { value: null }, threshold: { value: 0.7 } },
+  uniforms: { tDiffuse: { value: null }, threshold: { value: 0.55 }, softKnee: { value: 0.35 } },
   vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }`,
   fragmentShader: `
     uniform sampler2D tDiffuse;
     uniform float threshold;
+    uniform float softKnee;
     varying vec2 vUv;
     void main() {
       vec4 c = texture2D(tDiffuse, vUv);
-      float brightness = dot(c.rgb, vec3(0.2126, 0.7152, 0.0722));
-      gl_FragColor = brightness > threshold ? c : vec4(0.0, 0.0, 0.0, 1.0);
+      float brightness = max(c.r, max(c.g, c.b));
+      // Soft-knee: smooth ramp around threshold instead of hard cutoff
+      float knee = threshold * softKnee + 1e-5;
+      float soft = clamp(brightness - threshold + knee, 0.0, 2.0 * knee);
+      soft = (soft * soft) / (4.0 * knee + 1e-5);
+      float contribution = max(soft, brightness - threshold);
+      contribution /= max(brightness, 1e-5);
+      gl_FragColor = vec4(c.rgb * contribution, 1.0);
     }
   `
 });
@@ -1642,15 +1651,18 @@ postFX.blurMat = new THREE.ShaderMaterial({
   `
 });
 
-// Final composite: scene + bloom + vignette + chromatic aberration
+// Final composite: scene + bloom + ACES tonemap + lens dirt + color grade + vignette + CA
 postFX.compositeMat = new THREE.ShaderMaterial({
   uniforms: {
     tScene: { value: null },
     tBloom: { value: null },
-    bloomStrength: { value: 0.45 },
-    vignetteIntensity: { value: 0.35 },
-    vignetteSize: { value: 0.45 },
-    chromAb: { value: 0.0 }, // driven by damage indicator intensity
+    bloomStrength: { value: 0.85 },     // stronger, cinematic
+    vignetteIntensity: { value: 0.55 }, // base vignette
+    vignetteSize: { value: 0.42 },
+    chromAb: { value: 0.0 },            // driven by damage indicator intensity
+    damagePulse: { value: 0.0 },        // 0..1, pulses vignette red on hit
+    lensDirt: { value: 0.55 },          // procedural dirt response strength
+    exposure: { value: 1.05 },
     time: { value: 0.0 }
   },
   vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }`,
@@ -1661,26 +1673,83 @@ postFX.compositeMat = new THREE.ShaderMaterial({
     uniform float vignetteIntensity;
     uniform float vignetteSize;
     uniform float chromAb;
+    uniform float damagePulse;
+    uniform float lensDirt;
+    uniform float exposure;
     uniform float time;
     varying vec2 vUv;
+
+    // Narkowicz 2015 ACES filmic tonemap (cheap, cinematic)
+    vec3 acesFilmic(vec3 x) {
+      const float a = 2.51;
+      const float b = 0.03;
+      const float c = 2.43;
+      const float d = 0.59;
+      const float e = 0.14;
+      return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+    }
+
+    // Cheap pseudo-noise for procedural lens dirt mask
+    float hash(vec2 p) {
+      return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+    }
+    float lensDirtMask(vec2 uv) {
+      // A few fixed bright "smudges" + soft streaks
+      float m = 0.0;
+      // Smudge spots (blobs at fixed positions)
+      vec2 s1 = uv - vec2(0.18, 0.72);
+      vec2 s2 = uv - vec2(0.78, 0.30);
+      vec2 s3 = uv - vec2(0.55, 0.85);
+      vec2 s4 = uv - vec2(0.32, 0.14);
+      m += 0.55 * exp(-dot(s1, s1) * 24.0);
+      m += 0.40 * exp(-dot(s2, s2) * 30.0);
+      m += 0.35 * exp(-dot(s3, s3) * 28.0);
+      m += 0.45 * exp(-dot(s4, s4) * 26.0);
+      // Subtle low-freq dust noise
+      m += 0.10 * hash(floor(uv * 24.0));
+      return m;
+    }
+
     void main() {
-      // Chromatic aberration (shifts RGB channels apart when taking damage)
       vec2 center = vUv - 0.5;
       float dist = length(center);
-      float abAmount = chromAb * dist * 0.02;
+
+      // Chromatic aberration (radial; punchier on damage)
+      float abAmount = chromAb * dist * 0.025 + 0.0008 * dist;
       vec3 col;
       col.r = texture2D(tScene, vUv + center * abAmount).r;
       col.g = texture2D(tScene, vUv).g;
       col.b = texture2D(tScene, vUv - center * abAmount).b;
-      // Add bloom
+
+      // Bloom + lens dirt (dirt makes bloom catch on the "lens", classic JJ-Abrams cinematic)
       vec3 bloom = texture2D(tBloom, vUv).rgb;
-      col += bloom * bloomStrength;
-      // Vignette
-      float vignette = 1.0 - smoothstep(vignetteSize, vignetteSize + 0.55, dist * 1.4);
-      col *= mix(1.0, vignette, vignetteIntensity);
-      // Subtle film grain (very light, adds texture)
-      float grain = (fract(sin(dot(vUv * time * 100.0, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.03;
+      float dirt = lensDirtMask(vUv);
+      vec3 dirtBloom = bloom * dirt * lensDirt;
+      col += bloom * bloomStrength + dirtBloom;
+
+      // Exposure
+      col *= exposure;
+
+      // ACES filmic tonemap (cinematic highlight rolloff)
+      col = acesFilmic(col);
+
+      // Color grade: lift shadows toward cool teal, push highlights warm
+      float lum = dot(col, vec3(0.2126, 0.7152, 0.0722));
+      vec3 shadowsTint = vec3(0.78, 0.94, 1.05);  // cool
+      vec3 highlightsTint = vec3(1.06, 1.02, 0.92); // warm
+      vec3 graded = col * mix(shadowsTint, highlightsTint, smoothstep(0.0, 0.7, lum));
+      col = mix(col, graded, 0.55);
+
+      // Vignette (with damage pulse pushing into red)
+      float vig = 1.0 - smoothstep(vignetteSize, vignetteSize + 0.55, dist * 1.4);
+      float vigStrength = vignetteIntensity + damagePulse * 0.45;
+      col *= mix(1.0, vig, vigStrength);
+      col = mix(col, col * vec3(1.0, 0.55, 0.45), damagePulse * (1.0 - vig) * 0.5);
+
+      // Subtle film grain
+      float grain = (fract(sin(dot(vUv * time * 100.0, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.025;
       col += grain;
+
       gl_FragColor = vec4(col, 1.0);
     }
   `
@@ -1704,6 +1773,7 @@ function renderPostFX() {
     game.damageIndicators.left, game.damageIndicators.right
   );
   postFX.compositeMat.uniforms.chromAb.value = damageMax * 3.0;
+  postFX.compositeMat.uniforms.damagePulse.value = Math.min(1.0, damageMax * 1.6);
   postFX.compositeMat.uniforms.time.value = game.time;
 
   // 1. Render scene to offscreen target
@@ -2285,27 +2355,305 @@ function getWallNormal(point) {
 
 // ---- SHIP MESH CREATION ----
 
-function createShipMesh(chassisData, teamColor) {
+// ============================================================================
+// SHIP MODELS (CC0, Quaternius + Poly.pizza)
+// ============================================================================
+// Each loadout gets its own 3D model. Files live in ./ships/ relative to the
+// game HTML. faceFlip rotates 180° around Y so the model's forward aligns with
+// the game's -Z forward axis. scaleMult nudges the auto-fit-to-hullLength
+// scale per model to compensate for bbox padding (wings inflate the bbox).
+const SHIP_MODELS = {
+  NORTHSTAR: { url: 'ships/northstar.glb', faceFlip: true,  scaleMult: 1.10 },
+  RONIN:     { url: 'ships/ronin.glb',     faceFlip: true,  scaleMult: 1.10 },
+  ION:       { url: 'ships/ion.glb',       faceFlip: true,  scaleMult: 1.15 },
+  TONE:      { url: 'ships/tone.glb',      faceFlip: true,  scaleMult: 1.00 },
+  MONARCH:   { url: 'ships/monarch.glb',   faceFlip: true,  scaleMult: 1.10 },
+  SCORCH:    { url: 'ships/scorch.glb',    faceFlip: true,  scaleMult: 1.05 },
+  LEGION:    { url: 'ships/legion.glb',    faceFlip: true,  scaleMult: 1.05 },
+};
+
+const shipModelCache = { loaded: {}, ready: null };
+
+function preloadShipModels() {
+  if (shipModelCache.ready) return shipModelCache.ready;
+  if (typeof THREE === 'undefined' || typeof THREE.GLTFLoader === 'undefined') {
+    console.warn('[ships] GLTFLoader unavailable; procedural fallback only.');
+    shipModelCache.ready = Promise.resolve();
+    return shipModelCache.ready;
+  }
+  const loader = new THREE.GLTFLoader();
+  const jobs = Object.entries(SHIP_MODELS).map(([key, spec]) => new Promise(resolve => {
+    loader.load(
+      spec.url,
+      gltf => {
+        const proto = gltf.scene;
+        if (spec.faceFlip) proto.rotation.y = Math.PI;
+        // Fit to chassis hullLength (pre-bake scale; clones inherit it).
+        const ld = LOADOUTS[key];
+        const ch = ld ? CHASSIS[ld.chassis] : null;
+        const targetLen = ch ? ch.hullLength : 100;
+        const box = new THREE.Box3().setFromObject(proto);
+        const sz = box.getSize(new THREE.Vector3());
+        const longest = Math.max(sz.x, sz.y, sz.z) || 1;
+        const baseScale = (targetLen / longest) * (spec.scaleMult || 1.0);
+        proto.scale.setScalar(baseScale);
+        // Re-center on origin so plumes at +Z sit flush with tail.
+        const box2 = new THREE.Box3().setFromObject(proto);
+        const center = box2.getCenter(new THREE.Vector3());
+        proto.position.sub(center);
+        proto.userData.bboxSize = box2.getSize(new THREE.Vector3());
+        shipModelCache.loaded[key] = proto;
+        resolve();
+      },
+      undefined,
+      err => {
+        console.warn('[ships] failed to load', spec.url, err && err.message ? err.message : err);
+        resolve();
+      }
+    );
+  }));
+  shipModelCache.ready = Promise.all(jobs).then(() => {
+    const n = Object.keys(shipModelCache.loaded).length;
+    console.log('[ships] loaded', n, 'of', Object.keys(SHIP_MODELS).length, 'models');
+  });
+  return shipModelCache.ready;
+}
+
+// Build a ship mesh from a preloaded glTF model while exposing the same
+// userData contract as the procedural path (engineMesh, shieldMesh, engineGlows,
+// enginePlumes, panelGlowMat, engineGlowMat). The rest of the game interacts
+// through userData, so this is a drop-in replacement at the call site.
+function buildModelShipMesh(chassisData, teamColor, loadoutKey) {
+  const group = new THREE.Group();
+  const proto = shipModelCache.loaded[loadoutKey];
+  const teamCol = new THREE.Color(teamColor);
+
+  // Clone and retint materials (preserve baseColor texture and vertex colors,
+  // add a subtle team-color emissive so you can still tell sides apart).
+  const model = proto.clone(true);
+  model.traverse(child => {
+    if (child.isMesh) {
+      const mats = Array.isArray(child.material) ? child.material : [child.material];
+      const newMats = mats.map(m => {
+        const params = {
+          specular: 0x333344, shininess: 80,
+          emissive: teamCol.clone().multiplyScalar(0.08),
+          emissiveIntensity: 1.0,
+          transparent: !!(m && m.transparent),
+          opacity: (m && m.opacity != null) ? m.opacity : 1.0,
+        };
+        if (m && m.map) params.map = m.map;
+        if (m && m.vertexColors) params.vertexColors = true;
+        params.color = (m && m.color) ? m.color.clone() : new THREE.Color(0xbfc4d2);
+        return new THREE.MeshPhongMaterial(params);
+      });
+      child.material = newMats.length === 1 ? newMats[0] : newMats;
+      child.castShadow = false; child.receiveShadow = false;
+    }
+  });
+  group.add(model);
+
+  // Engine + plume materials (additive, identical to procedural path).
+  const engineGlowMat = new THREE.MeshBasicMaterial({
+    color: teamColor, transparent: true, opacity: 1.0,
+    blending: THREE.AdditiveBlending, depthWrite: false
+  });
+  const thrusterMat = new THREE.MeshBasicMaterial({
+    color: 0x66eeff, transparent: true, opacity: 0.95,
+    blending: THREE.AdditiveBlending, depthWrite: false
+  });
+  const panelGlowMat = new THREE.MeshBasicMaterial({
+    color: teamColor, transparent: true, opacity: 0.85,
+    blending: THREE.AdditiveBlending, depthWrite: false
+  });
+  const plumeMat = new THREE.MeshBasicMaterial({
+    color: teamCol.clone().lerp(new THREE.Color(0xffffff), 0.35),
+    transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+  const plumeMatCool = new THREE.MeshBasicMaterial({
+    color: 0xaaeeff, transparent: true, opacity: 0.55,
+    blending: THREE.AdditiveBlending, depthWrite: false
+  });
+
+  // Engine layout per chassis. Anchor tail to the model's +Z bbox edge so
+  // plumes sit flush behind the real hull, not at a synthetic coordinate.
+  const bboxSize = proto.userData.bboxSize || new THREE.Vector3(
+    chassisData.hullWidth, chassisData.hullHeight, chassisData.hullLength);
+  const tailZ = bboxSize.z * 0.5;
+  const w = chassisData.hullWidth * 0.5;
+  const h = chassisData.hullHeight * 0.5;
+  const l = chassisData.hullLength * 0.5;
+
+  function addGlow(geo, mat, x, y, z) {
+    const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); group.add(m); return m;
+  }
+  function addPlume(x, y, z, radius, length, mat) {
+    const g = new THREE.ConeGeometry(radius, length, 12, 1, true);
+    g.rotateX(Math.PI / 2);
+    const cone = new THREE.Mesh(g, mat);
+    cone.position.set(x, y, z + length * 0.5);
+    cone.userData.isPlume = true;
+    cone.userData.basePlumeLength = length;
+    cone.userData.basePlumeOpacity = mat.opacity;
+    group.add(cone);
+    return cone;
+  }
+
+  let engineMesh;
+  const name = chassisData.name;
+  if (name === 'Frigate') {
+    const glowGeo = new THREE.CircleGeometry(h * 0.35, 12);
+    const g1 = addGlow(glowGeo, engineGlowMat, -w * 0.5, -h * 0.15, tailZ);
+    const g2 = addGlow(glowGeo, engineGlowMat,  w * 0.5, -h * 0.15, tailZ);
+    addPlume(-w * 0.5, -h * 0.15, tailZ, h * 0.32, l * 1.4, plumeMat);
+    addPlume( w * 0.5, -h * 0.15, tailZ, h * 0.32, l * 1.4, plumeMat);
+    engineMesh = g1;
+  } else if (name === 'Corvette') {
+    const glowGeo = new THREE.CircleGeometry(h * 0.6, 16);
+    const g = addGlow(glowGeo, engineGlowMat, 0, 0, tailZ);
+    addPlume(0, 0, tailZ, h * 0.55, l * 1.8, plumeMat);
+    const thrGeo = new THREE.CircleGeometry(h * 0.12, 8);
+    [-1, 1].forEach(sx => [-1, 1].forEach(sy => {
+      addGlow(thrGeo, thrusterMat, sx * w * 0.7, sy * h * 0.5, tailZ - h * 0.3);
+      addPlume(sx * w * 0.7, sy * h * 0.5, tailZ - h * 0.3, h * 0.10, l * 0.45, plumeMatCool);
+    }));
+    engineMesh = g;
+  } else {
+    // Dreadnought
+    const bigGlowGeo = new THREE.CircleGeometry(h * 0.35, 12);
+    const big = [];
+    [-1, 0, 1].forEach(i => {
+      const m = addGlow(bigGlowGeo, engineGlowMat, i * w * 0.5, 0, tailZ);
+      big.push(m);
+      addPlume(i * w * 0.5, 0, tailZ, h * 0.32, l * 1.6, plumeMat);
+    });
+    const smGlowGeo = new THREE.CircleGeometry(h * 0.15, 8);
+    [-1.5, -0.5, 0.5, 1.5].forEach(i => {
+      addGlow(smGlowGeo, thrusterMat, i * w * 0.35, h * 0.5, tailZ - h * 0.15);
+      addPlume(i * w * 0.35, h * 0.5, tailZ - h * 0.15, h * 0.13, l * 0.55, plumeMatCool);
+    });
+    engineMesh = big[1];
+  }
+
+  // Shield bubble (identical to procedural).
+  const shieldGeo = new THREE.SphereGeometry(Math.max(w, l) * 2, 16, 12);
+  const shieldMat = new THREE.MeshBasicMaterial({
+    color: 0x44ccff, transparent: true, opacity: 0, side: THREE.DoubleSide
+  });
+  const shield = new THREE.Mesh(shieldGeo, shieldMat);
+  shield.name = 'shield';
+  group.add(shield);
+
+  const engineGlows = [];
+  const enginePlumes = [];
+  group.traverse(child => {
+    if (child.material === engineGlowMat || child.material === thrusterMat) engineGlows.push(child);
+    if (child.userData && child.userData.isPlume) enginePlumes.push(child);
+  });
+  const barrelMeshes = []; // no procedural barrels to recoil on imported hulls
+  group.userData = { engineMesh, shieldMesh: shield, engineGlows, enginePlumes, barrelMeshes, panelGlowMat, engineGlowMat, isModelShip: true };
+  return group;
+}
+
+// Kick off the preload as soon as this script runs; by the time the player
+// picks a loadout, models are almost certainly ready.
+preloadShipModels();
+
+// If a ship was built before its model finished loading (procedural fallback),
+// call this with the owner (player / bot / network player) to swap in the model
+// mesh once the cache is ready. The owner must have .mesh, .chassis, .loadoutKey.
+function swapToModelMeshWhenReady(owner, teamColor) {
+  if (!shipModelCache.ready) return;
+  shipModelCache.ready.then(() => {
+    if (!owner) return;
+    // Player uses shipState; bots/network use .alive. Accept either "alive" signal.
+    const isDead = (owner.alive === false) || (owner.shipState === 'dead');
+    if (isDead) return;
+    if (!owner.mesh || (owner.mesh.userData && owner.mesh.userData.isModelShip)) return;
+    const key = owner.loadoutKey;
+    if (!key || !shipModelCache.loaded[key]) return;
+    // Preserve position, quaternion, visibility, and the .bot backreference.
+    const oldMesh = owner.mesh;
+    const pos = oldMesh.position.clone();
+    const quat = oldMesh.quaternion.clone();
+    const visible = oldMesh.visible;
+    const botRef = oldMesh.userData && oldMesh.userData.bot;
+    if (oldMesh.parent) oldMesh.parent.remove(oldMesh);
+    owner.mesh = createShipMesh(owner.chassis, teamColor, key);
+    owner.mesh.position.copy(pos);
+    owner.mesh.quaternion.copy(quat);
+    owner.mesh.visible = visible;
+    if (botRef) owner.mesh.userData.bot = botRef;
+    scene.add(owner.mesh);
+  });
+}
+
+function createShipMesh(chassisData, teamColor, loadoutKey) {
+  // Model-backed path: if the cache has a preloaded glTF for this loadout,
+  // build the mesh from it. Otherwise, fall through to the procedural path.
+  if (loadoutKey && shipModelCache.loaded[loadoutKey]) {
+    return buildModelShipMesh(chassisData, teamColor, loadoutKey);
+  }
   const group = new THREE.Group();
   const w = chassisData.hullWidth * 0.5;
   const h = chassisData.hullHeight * 0.5;
   const l = chassisData.hullLength * 0.5;
 
-  // Shared materials (shiny hull with specular highlights, glowing accents)
-  const hullMat = new THREE.MeshPhongMaterial({ color: teamColor, specular: 0x444444, shininess: 60 });
-  const darkMat = new THREE.MeshPhongMaterial({ color: 0x222233, specular: 0x222222, shininess: 40 });
-  const accentMat = new THREE.MeshPhongMaterial({ color: new THREE.Color(teamColor).offsetHSL(0, 0, -0.15), specular: 0x666666, shininess: 80 });
-  const cockpitMat = new THREE.MeshPhongMaterial({ color: 0x1a3355, specular: 0x88bbff, shininess: 120, emissive: 0x0a1a33, emissiveIntensity: 0.4 });
+  // Shared materials (cinematic sci-fi: punchier specular, subtle team-color self-emission,
+  // bright cockpit emissive that catches bloom)
+  const teamCol = new THREE.Color(teamColor);
+  const hullMat = new THREE.MeshPhongMaterial({
+    color: teamColor, specular: 0x9999aa, shininess: 110,
+    emissive: teamCol.clone().multiplyScalar(0.12), emissiveIntensity: 1.0
+  });
+  const darkMat = new THREE.MeshPhongMaterial({ color: 0x222233, specular: 0x444466, shininess: 60 });
+  const accentMat = new THREE.MeshPhongMaterial({
+    color: teamCol.clone().offsetHSL(0, 0, -0.15),
+    specular: 0xaaaacc, shininess: 130,
+    emissive: teamCol.clone().multiplyScalar(0.18), emissiveIntensity: 1.0
+  });
+  const cockpitMat = new THREE.MeshPhongMaterial({
+    color: 0x2244aa, specular: 0xccddff, shininess: 200,
+    emissive: 0x66aaff, emissiveIntensity: 1.4
+  });
   const engineGlowMat = new THREE.MeshBasicMaterial({
-    color: teamColor, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending
+    color: teamColor, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending,
+    depthWrite: false
   });
   const thrusterMat = new THREE.MeshBasicMaterial({
-    color: 0x44ddff, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending
+    color: 0x66eeff, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending,
+    depthWrite: false
   });
   // Glowing panel strips (emissive accent along hull seams)
   const panelGlowMat = new THREE.MeshBasicMaterial({
-    color: teamColor, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending
+    color: teamColor, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending,
+    depthWrite: false
   });
+  // Tapered engine plume (bright additive cone behind engine glow circles)
+  const plumeMat = new THREE.MeshBasicMaterial({
+    color: teamCol.clone().lerp(new THREE.Color(0xffffff), 0.35),
+    transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false
+  });
+  const plumeMatCool = new THREE.MeshBasicMaterial({
+    color: 0xaaeeff, transparent: true, opacity: 0.55,
+    blending: THREE.AdditiveBlending, depthWrite: false
+  });
+
+  // Helper: build a tapered engine plume cone at (x,y,z) extending +z (out the back).
+  // Returns the cone mesh (so caller can register it for animation).
+  function addPlume(group, x, y, z, radius, length, mat) {
+    const geo = new THREE.ConeGeometry(radius, length, 12, 1, true);
+    geo.rotateX(Math.PI / 2);
+    // Cone center sits at z + length/2 so base is flush with the engine glow.
+    const cone = new THREE.Mesh(geo, mat);
+    cone.position.set(x, y, z + length * 0.5);
+    cone.userData.isPlume = true;
+    cone.userData.basePlumeLength = length;
+    cone.userData.basePlumeOpacity = mat.opacity;
+    group.add(cone);
+    return cone;
+  }
   const outlineMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
 
   // Helper: add mesh + outline to group
@@ -2357,14 +2705,16 @@ function createShipMesh(chassisData, teamColor) {
     addPart(podGeo, darkMat, [-w * 0.5, -h * 0.15, l * 0.9]);
     addPart(podGeo, darkMat, [w * 0.5, -h * 0.15, l * 0.9]);
 
-    // Engine glow (visible from behind)
-    const glowGeo = new THREE.CircleGeometry(h * 0.35, 8);
+    // Engine glow (visible from behind) + tapered plume
+    const glowGeo = new THREE.CircleGeometry(h * 0.35, 12);
     const glow1 = new THREE.Mesh(glowGeo, engineGlowMat);
     glow1.position.set(-w * 0.5, -h * 0.15, l * 1.2);
     group.add(glow1);
     const glow2 = new THREE.Mesh(glowGeo, engineGlowMat);
     glow2.position.set(w * 0.5, -h * 0.15, l * 1.2);
     group.add(glow2);
+    addPlume(group, -w * 0.5, -h * 0.15, l * 1.2, h * 0.32, l * 1.4, plumeMat);
+    addPlume(group,  w * 0.5, -h * 0.15, l * 1.2, h * 0.32, l * 1.4, plumeMat);
 
     engineMesh = glow1;
 
@@ -2400,18 +2750,20 @@ function createShipMesh(chassisData, teamColor) {
     const engineBlockGeo = new THREE.BoxGeometry(w * 1.2, h * 0.8, l * 0.4);
     addPart(engineBlockGeo, darkMat, [0, 0, l * 1.1]);
 
-    // Engine glow (large single)
-    const glowGeo = new THREE.CircleGeometry(h * 0.6, 8);
+    // Engine glow (large single) + dramatic plume
+    const glowGeo = new THREE.CircleGeometry(h * 0.6, 16);
     engineMesh = new THREE.Mesh(glowGeo, engineGlowMat);
     engineMesh.position.set(0, 0, l * 1.3);
     group.add(engineMesh);
+    addPlume(group, 0, 0, l * 1.3, h * 0.55, l * 1.8, plumeMat);
 
-    // Small maneuvering thrusters (4 corners)
-    const thrGeo = new THREE.CircleGeometry(h * 0.12, 6);
+    // Small maneuvering thrusters (4 corners) + tiny cool plumes
+    const thrGeo = new THREE.CircleGeometry(h * 0.12, 8);
     [-1, 1].forEach(sx => [-1, 1].forEach(sy => {
       const thr = new THREE.Mesh(thrGeo, thrusterMat);
       thr.position.set(sx * w * 0.7, sy * h * 0.5, l * 1.0);
       group.add(thr);
+      addPlume(group, sx * w * 0.7, sy * h * 0.5, l * 1.0, h * 0.10, l * 0.45, plumeMatCool);
     }));
 
   } else {
@@ -2455,20 +2807,25 @@ function createShipMesh(chassisData, teamColor) {
     const engineBankGeo = new THREE.BoxGeometry(w * 1.8, h * 1.2, l * 0.3);
     addPart(engineBankGeo, darkMat, [0, 0, l * 1.2]);
 
-    const bigGlowGeo = new THREE.CircleGeometry(h * 0.35, 8);
+    const bigGlowGeo = new THREE.CircleGeometry(h * 0.35, 12);
+    const dreadBigGlows = [];
     [-1, 0, 1].forEach(i => {
       const g = new THREE.Mesh(bigGlowGeo, engineGlowMat);
       g.position.set(i * w * 0.5, 0, l * 1.35);
       group.add(g);
+      dreadBigGlows.push(g);
+      // Heavy plume per main engine
+      addPlume(group, i * w * 0.5, 0, l * 1.35, h * 0.32, l * 1.6, plumeMat);
     });
-    const smGlowGeo = new THREE.CircleGeometry(h * 0.15, 6);
+    const smGlowGeo = new THREE.CircleGeometry(h * 0.15, 8);
     [-1.5, -0.5, 0.5, 1.5].forEach(i => {
       const g = new THREE.Mesh(smGlowGeo, thrusterMat);
       g.position.set(i * w * 0.35, h * 0.5, l * 1.2);
       group.add(g);
+      addPlume(group, i * w * 0.35, h * 0.5, l * 1.2, h * 0.13, l * 0.55, plumeMatCool);
     });
 
-    engineMesh = group.children[group.children.length - 5]; // middle big glow
+    engineMesh = dreadBigGlows[1]; // middle big glow
   }
 
   // Shield bubble (shared across all chassis)
@@ -2478,10 +2835,12 @@ function createShipMesh(chassisData, teamColor) {
   shield.name = 'shield';
   group.add(shield);
 
-  // Collect all engine glow meshes for thrust animation
+  // Collect all engine glow meshes for thrust animation (glow circles + plume cones)
   const engineGlows = [];
+  const enginePlumes = [];
   group.traverse(child => {
     if (child.material === engineGlowMat || child.material === thrusterMat) engineGlows.push(child);
+    if (child.userData && child.userData.isPlume) enginePlumes.push(child);
   });
   // Collect barrel meshes for muzzle flash animation
   const barrelMeshes = [];
@@ -2490,7 +2849,7 @@ function createShipMesh(chassisData, teamColor) {
       barrelMeshes.push(child);
     }
   });
-  group.userData = { engineMesh, shieldMesh: shield, engineGlows, barrelMeshes, panelGlowMat, engineGlowMat };
+  group.userData = { engineMesh, shieldMesh: shield, engineGlows, enginePlumes, barrelMeshes, panelGlowMat, engineGlowMat };
   return group;
 }
 
@@ -2503,12 +2862,24 @@ function animateShipMesh(mesh, speed, maxSpeed, isFiring, dt) {
   // Engines: pulse opacity and scale with speed
   if (mesh.userData.engineGlows) {
     for (const glow of mesh.userData.engineGlows) {
-      const baseOp = 0.3 + t * 0.6;
+      const baseOp = 0.45 + t * 0.55;
       const pulse = Math.sin(time * 12 + Math.random() * 0.1) * 0.08 * t;
       glow.material.opacity = baseOp + pulse;
-      const baseScale = 0.6 + t * 0.8;
+      const baseScale = 0.7 + t * 0.9;
       const flicker = 1 + Math.sin(time * 18) * 0.05 * t;
       glow.scale.setScalar(baseScale * flicker);
+    }
+  }
+  // Engine plumes: stretch length & flare with throttle for cinematic thrust
+  if (mesh.userData.enginePlumes) {
+    for (const plume of mesh.userData.enginePlumes) {
+      const baseOp = (plume.userData.basePlumeOpacity || 0.55);
+      const flicker = 1 + Math.sin(time * 22 + plume.position.x * 0.5) * 0.12;
+      plume.material.opacity = (0.18 + t * baseOp) * flicker;
+      // Stretch along Z (cone is oriented along +Z), pulse radially.
+      const lenScale = 0.35 + t * 1.4 + Math.sin(time * 26) * 0.04 * t;
+      const radScale = 0.7 + t * 0.4 + Math.sin(time * 16) * 0.06 * t;
+      plume.scale.set(radScale, radScale, lenScale);
     }
   }
   // Barrels: brief recoil + flash when firing
@@ -2568,10 +2939,11 @@ class Bot {
     this.coreMeter = 0;
 
     const teamColor = team === LSS.TEAM_FLEET_A ? 0xff4444 : 0x44bb44;
-    this.mesh = createShipMesh(chassisData, teamColor);
+    this.mesh = createShipMesh(chassisData, teamColor, loadoutKey);
     this.mesh.position.copy(this.position);
     this.mesh.userData.bot = this;
     scene.add(this.mesh);
+    swapToModelMeshWhenReady(this, teamColor);
 
     // AI enhancement: squad tactics and navigation
     this.aiTarget = null;
@@ -3094,9 +3466,9 @@ class Projectile {
     scene.add(this.trail);
     this.trailTimer = 0;
 
-    // Glow trail (wider, softer)
-    const glowGeo = new THREE.SphereGeometry(5, 4, 3);
-    const glowMat = new THREE.MeshBasicMaterial({ color: this.trailColor, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending });
+    // Glow trail (wider, softer, brighter so post-bloom catches it)
+    const glowGeo = new THREE.SphereGeometry(7, 6, 4);
+    const glowMat = new THREE.MeshBasicMaterial({ color: this.trailColor, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending, depthWrite: false });
     this.glowMesh = new THREE.Mesh(glowGeo, glowMat);
     this.glowMesh.position.copy(origin);
     scene.add(this.glowMesh);
@@ -3464,13 +3836,34 @@ function updateDynamicLights() {
 function spawnExplosion(pos, size) {
   size = size || 20;
 
+  // --- Distance-based camera shake (cinematic concussive feel) ---
+  if (player && player.position) {
+    const dx = pos.x - player.position.x, dy = pos.y - player.position.y, dz = pos.z - player.position.z;
+    const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    const reach = Math.max(400, size * 25);
+    if (dist < reach) {
+      const falloff = 1 - (dist / reach);
+      const shake = Math.min(12, size * 0.18 * falloff * falloff);
+      if (shake > 0.05) triggerScreenShake(shake);
+    }
+  }
+
   // --- Phase 1: White-hot flash core (instant, tiny, bright) ---
-  const flashGeo = new THREE.SphereGeometry(size * 0.4, 6, 4);
-  const flashMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending });
+  const flashGeo = new THREE.SphereGeometry(size * 0.55, 8, 6);
+  const flashMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending, depthWrite: false });
   const flashMesh = new THREE.Mesh(flashGeo, flashMat);
   flashMesh.position.copy(pos);
   scene.add(flashMesh);
-  game.effects.push({ mesh: flashMesh, lifetime: 0.08, age: 0, type: 'explosionFlash' });
+  game.effects.push({ mesh: flashMesh, lifetime: 0.12, age: 0, type: 'explosionFlash' });
+
+  // --- Phase 1b: Cinematic billboarded "lens flare" disc that faces the camera ---
+  const flareGeo = new THREE.PlaneGeometry(size * 1.6, size * 1.6);
+  const flareMat = new THREE.MeshBasicMaterial({ color: 0xffeec0, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+  const flareMesh = new THREE.Mesh(flareGeo, flareMat);
+  flareMesh.position.copy(pos);
+  flareMesh.lookAt(camera.position);
+  scene.add(flareMesh);
+  game.effects.push({ mesh: flareMesh, lifetime: 0.22, age: 0, type: 'explosionFlash', billboard: true });
 
   // --- Phase 2: Expanding fireball (orange-red, multi-layer) ---
   const fireGeo = new THREE.SphereGeometry(size, 8, 6);
@@ -3488,26 +3881,35 @@ function spawnExplosion(pos, size) {
   scene.add(coreMesh);
   game.effects.push({ mesh: coreMesh, lifetime: 0.35, age: 0, type: 'explosionFire', maxSize: size * 1.8 });
 
-  // --- Phase 3: Shockwave ring (expanding torus, fast) ---
+  // --- Phase 3: Shockwave rings (volumetric torus + billboarded flat ring) ---
   if (size > 12) {
-    const ringGeo = new THREE.TorusGeometry(size * 0.5, size * 0.08, 6, 24);
-    const ringMat = new THREE.MeshBasicMaterial({ color: 0xffaa44, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending });
+    // Camera-facing billboarded flat shockwave (the "cinematic" disc you can always read)
+    const flatGeo = new THREE.RingGeometry(size * 0.45, size * 0.55, 48);
+    const flatMat = new THREE.MeshBasicMaterial({ color: 0xffd080, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+    const flatMesh = new THREE.Mesh(flatGeo, flatMat);
+    flatMesh.position.copy(pos);
+    flatMesh.lookAt(camera.position);
+    scene.add(flatMesh);
+    game.effects.push({ mesh: flatMesh, lifetime: 0.55, age: 0, type: 'shockwave', maxSize: size * 6, billboard: true });
+
+    // Volumetric torus shockwave for depth (random orientation)
+    const ringGeo = new THREE.TorusGeometry(size * 0.5, size * 0.10, 8, 32);
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0xffaa44, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false });
     const ringMesh = new THREE.Mesh(ringGeo, ringMat);
     ringMesh.position.copy(pos);
-    // Random orientation for variety
     ringMesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
     scene.add(ringMesh);
-    game.effects.push({ mesh: ringMesh, lifetime: 0.4, age: 0, type: 'shockwave', maxSize: size * 5 });
+    game.effects.push({ mesh: ringMesh, lifetime: 0.45, age: 0, type: 'shockwave', maxSize: size * 5 });
 
-    // Second ring, perpendicular
+    // Second perpendicular ring for big explosions
     if (size > 30) {
-      const ring2Geo = new THREE.TorusGeometry(size * 0.5, size * 0.06, 6, 24);
-      const ring2Mat = new THREE.MeshBasicMaterial({ color: 0xff8833, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending });
+      const ring2Geo = new THREE.TorusGeometry(size * 0.5, size * 0.07, 8, 32);
+      const ring2Mat = new THREE.MeshBasicMaterial({ color: 0xff8833, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false });
       const ring2Mesh = new THREE.Mesh(ring2Geo, ring2Mat);
       ring2Mesh.position.copy(pos);
       ring2Mesh.rotation.set(Math.random() * Math.PI + 1.5, Math.random() * Math.PI, 0);
       scene.add(ring2Mesh);
-      game.effects.push({ mesh: ring2Mesh, lifetime: 0.5, age: 0, type: 'shockwave', maxSize: size * 6 });
+      game.effects.push({ mesh: ring2Mesh, lifetime: 0.55, age: 0, type: 'shockwave', maxSize: size * 6 });
     }
   }
 
@@ -4310,9 +4712,10 @@ function updateEffects(dt) {
     }
     // --- White-hot flash core: rapid shrink + fade ---
     else if (e.type === 'explosionFlash') {
-      const s = 1 + t * 0.5;
+      const s = e.billboard ? (1 + t * 2.5) : (1 + t * 0.5);
       e.mesh.scale.set(s, s, s);
       e.mesh.material.opacity = 1.0 * (1 - t * t); // fast quadratic fade
+      if (e.billboard) e.mesh.lookAt(camera.position);
     }
     // --- Fireball: expand + color shift orange->red->dark ---
     else if (e.type === 'explosionFire') {
@@ -4328,8 +4731,15 @@ function updateEffects(dt) {
     // --- Shockwave ring: rapid radial expansion ---
     else if (e.type === 'shockwave') {
       const ringScale = 1 + t * (e.maxSize || 5);
-      e.mesh.scale.set(ringScale, ringScale, ringScale);
-      e.mesh.material.opacity = 0.7 * (1 - t);
+      if (e.billboard) {
+        // Flat camera-facing ring: expand only in plane (X,Y), keep facing camera.
+        e.mesh.scale.set(ringScale, ringScale, 1);
+        e.mesh.lookAt(camera.position);
+        e.mesh.material.opacity = 0.95 * (1 - t * t);
+      } else {
+        e.mesh.scale.set(ringScale, ringScale, ringScale);
+        e.mesh.material.opacity = 0.8 * (1 - t);
+      }
     }
     // --- Smoke cloud: slow expand, drift, rotate, long fade ---
     else if (e.type === 'smoke') {
@@ -4585,9 +4995,10 @@ function selectLoadout(key) {
   if (player.gunShieldEdge) { scene.remove(player.gunShieldEdge); player.gunShieldEdge = null; }
 
   if (player.mesh) scene.remove(player.mesh);
-  player.mesh = createShipMesh(ch, 0xff4444);
+  player.mesh = createShipMesh(ch, 0xff4444, key);
   player.mesh.visible = false;
   scene.add(player.mesh);
+  swapToModelMeshWhenReady(player, 0xff4444);
 
   document.getElementById('ship-name').textContent = loadout.name;
   document.getElementById('ship-class').textContent = loadout.className;
