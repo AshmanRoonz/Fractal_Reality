@@ -358,13 +358,14 @@ canvas { display: block; }
   font-family: 'Courier New', monospace;
 }
 #ov-countdown.show { animation: ovCountdown 0.9s ease-out forwards; }
+#ov-countdown.fight.show { animation-duration: 1.2s; }
 @keyframes ovCountdown {
   0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
   10%  { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
   20%  { transform: translate(-50%, -50%) scale(0.95); }
   30%  { transform: translate(-50%, -50%) scale(1.02); }
   70%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1.3); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.3); }
 }
 #ov-countdown .cd-label { font-size: 12px; color: #ffaa00aa; letter-spacing: 4px; margin-bottom: 8px; }
 #ov-countdown .cd-number { font-weight: bold; font-size: 96px; color: #ffffff; text-shadow: 0 0 20px rgba(255,255,255,0.3); letter-spacing: 0; }
@@ -453,10 +454,13 @@ canvas { display: block; }
 #ov-respawn.show .rs-destroyed { transform: scale(1); }
 #ov-respawn .rs-killer { color: #aaa; font-size: 13px; margin-top: 12px; letter-spacing: 2px; }
 #ov-respawn .rs-killer b { color: #ff6666; font-weight: bold; }
-#ov-respawn .rs-countdown { color: #ffaa00; font-size: 18px; margin-top: 24px; letter-spacing: 3px; }
-#ov-respawn .rs-ring { margin-top: 16px; }
-#ov-respawn .rs-number {
-  fill: #ff4400; font-family: 'Courier New', monospace; font-size: 20px; font-weight: bold;
+#ov-respawn .rs-wait {
+  color: #ffaa00; font-size: 14px; margin-top: 18px; letter-spacing: 4px;
+  opacity: 0.8; animation: ovRespawnPulse 2s ease-in-out infinite;
+}
+@keyframes ovRespawnPulse {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1; }
 }
 
 /* Round transition banner */
@@ -596,14 +600,7 @@ canvas { display: block; }
 <div id="ov-respawn">
   <div class="rs-destroyed">DESTROYED</div>
   <div class="rs-killer" style="display:none">by <b></b></div>
-  <div class="rs-countdown">RESPAWN IN <span class="rs-num">5</span></div>
-  <svg class="rs-ring" width="80" height="80">
-    <circle cx="40" cy="40" r="35" fill="none" stroke="#ff220033" stroke-width="3"/>
-    <circle class="rs-ring-fg" cx="40" cy="40" r="35" fill="none" stroke="#ff4400" stroke-width="3"
-            stroke-dasharray="0 220" stroke-linecap="round" transform="rotate(-90 40 40)"
-            style="transition: stroke-dasharray 1s linear"/>
-    <text class="rs-number" x="40" y="46" text-anchor="middle">5</text>
-  </svg>
+  <div class="rs-wait">WAITING FOR NEXT ROUND</div>
 </div>
 
 <div id="ov-banner">
@@ -2614,6 +2611,11 @@ class Bot {
 
   update(dt) {
     if (!this.alive) return;
+    // Bots are locked in place during pre-round warmup.
+    if (game.state === 'warmup') {
+      if (this.velocity) this.velocity.set(0, 0, 0);
+      return;
+    }
 
     // Decay fire flash for gun animation
     if (this.fireFlashTimer > 0) { this.fireFlashTimer -= dt; if (this.fireFlashTimer <= 0) this.isFiring = false; }
@@ -4804,7 +4806,7 @@ function playerDie(attacker) {
   player._lastKilledBy = attacker && attacker.loadout ? attacker : null;
   if (window.Overlays) {
     const killerName = (attacker && attacker.loadout) ? attacker.loadout.name : '';
-    Overlays.respawn(killerName, 3);
+    Overlays.respawn(killerName);
   }
   setTimeout(() => {
     if (game.state === 'playing' || game.state === 'warmup') respawnPlayer();
@@ -4866,8 +4868,11 @@ const _mvDrag = new THREE.Vector3();
 
 function updatePlayerMovement(dt) {
   if (player.shipState === 'dead' || !player.chassis) return;
-  // Immobilized during stasis field recharge
-  if (game.playerInStasis) {
+  // Immobilized during stasis field recharge OR during pre-round warmup
+  // (ships locked in place until the 3-2-1-FIGHT countdown finishes).
+  if (game.playerInStasis || game.state === 'warmup') {
+    // Kill any residual velocity so we don't drift mid-lockout.
+    player.velocity.set(0, 0, 0);
     // Still allow looking around but no movement
     if (input.locked) {
       player.euler.y -= input.mouseDX * input.sensitivity;
@@ -9242,6 +9247,14 @@ const Overlays = (() => {
     el.querySelector('.cd-label').textContent = label || '';
     el.querySelector('.cd-label').style.display = isFight ? 'none' : 'block';
     el.querySelector('.cd-number').textContent = isFight ? 'FIGHT' : String(n);
+    // Install a one-shot animationend listener so the element fully clears
+    // after the fade-out keyframe (instead of holding at the final frame).
+    if (!el._hasEndListener) {
+      el.addEventListener('animationend', (e) => {
+        if (e.animationName === 'ovCountdown') el.classList.remove('show');
+      });
+      el._hasEndListener = true;
+    }
     replay(el, 'show');
     // The ring is a child with its own animation; restart it too.
     const ring = el.querySelector('.cd-ring');
@@ -9287,14 +9300,10 @@ const Overlays = (() => {
     replay(el, 'show');
   }
 
-  // ---- Respawn ----
-  let _respawnCount = 0;
-  let _respawnTickId = null;
-  function respawn(killer, seconds) {
+  // ---- Destroyed overlay (persists until next round starts; 1-life-per-round) ----
+  function respawn(killer) {
     const el = $('ov-respawn');
     if (!el) return;
-    const secs = seconds == null ? 3 : seconds;
-    _respawnCount = secs;
     const killerRow = el.querySelector('.rs-killer');
     if (killer) {
       killerRow.style.display = 'block';
@@ -9302,30 +9311,12 @@ const Overlays = (() => {
     } else {
       killerRow.style.display = 'none';
     }
-    const num = el.querySelector('.rs-num');
-    const txt = el.querySelector('.rs-number');
-    const fg = el.querySelector('.rs-ring-fg');
-    num.textContent = _respawnCount;
-    txt.textContent = _respawnCount;
-    if (fg) fg.setAttribute('stroke-dasharray', '0 220');
     el.classList.add('show');
-    if (_respawnTickId) clearInterval(_respawnTickId);
-    _respawnTickId = setInterval(() => {
-      _respawnCount--;
-      num.textContent = Math.max(0, _respawnCount);
-      txt.textContent = Math.max(0, _respawnCount);
-      if (fg) {
-        const frac = secs > 0 ? 1 - (_respawnCount / secs) : 1;
-        fg.setAttribute('stroke-dasharray', (220 * frac).toFixed(1) + ' 220');
-      }
-      if (_respawnCount <= 0) { clearInterval(_respawnTickId); _respawnTickId = null; }
-    }, 1000);
   }
   function hideRespawn() {
     const el = $('ov-respawn');
     if (!el) return;
     el.classList.remove('show');
-    if (_respawnTickId) { clearInterval(_respawnTickId); _respawnTickId = null; }
   }
 
   // ---- Round banner ----
