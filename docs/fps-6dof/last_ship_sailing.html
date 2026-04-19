@@ -4963,49 +4963,150 @@ function spawnLightningBolt(from, to, color, lifetime, branches, thickness) {
 }
 
 const MAX_PARTICLES = 500;
-const _sharedParticleGeo = new THREE.SphereGeometry(1, 4, 3); // shared; scale per particle
+
+// ---- GPU-batched particle renderer ----
+// All of game.particles (embers, sparks, smoke motes, muzzle dots, trail
+// flecks) draws in ONE Points draw call via a custom ShaderMaterial.
+// Previously each particle allocated its own Mesh + MeshBasicMaterial and was
+// added to the scene graph on spawn; that meant up to 500 scene objects, 500
+// material instances, and 500 draw calls per frame just for particles,
+// which chewed CPU. The new path pre-allocates BufferAttribute pools sized
+// to MAX_PARTICLES and updates them in-place. JS work per particle is now a
+// handful of typed-array writes instead of a Three.js object mutation.
+//
+// Perspective scaling: gl_PointSize is computed in the vertex shader from
+// the world-space size attribute and the viewport height uniform, so a
+// particle with size=2 covers the same apparent area at any distance as
+// the equivalent sphere mesh did.
+const batchedParticles = (() => {
+  const geometry = new THREE.BufferGeometry();
+  const positions = new Float32Array(MAX_PARTICLES * 3);
+  const colors    = new Float32Array(MAX_PARTICLES * 3);
+  const sizes     = new Float32Array(MAX_PARTICLES);
+  const alphas    = new Float32Array(MAX_PARTICLES);
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute('pColor',   new THREE.BufferAttribute(colors, 3));
+  geometry.setAttribute('pSize',    new THREE.BufferAttribute(sizes, 1));
+  geometry.setAttribute('pAlpha',   new THREE.BufferAttribute(alphas, 1));
+  geometry.setDrawRange(0, 0);
+
+  const vertSrc = [
+    'attribute vec3 pColor;',
+    'attribute float pSize;',
+    'attribute float pAlpha;',
+    'varying vec3 vColor;',
+    'varying float vAlpha;',
+    'uniform float heightPx;',
+    'void main() {',
+    '  vColor = pColor;',
+    '  vAlpha = pAlpha;',
+    '  vec4 mvPos = modelViewMatrix * vec4(position, 1.0);',
+    '  gl_Position = projectionMatrix * mvPos;',
+    // Perspective-correct point size in pixels. projectionMatrix[1][1] is
+    // the vertical scale factor; dividing by -mvPos.z (view-space depth)
+    // maps a world-space radius to screen pixels at this pixel density.
+    '  gl_PointSize = max(2.0, pSize * heightPx * 0.5 * projectionMatrix[1][1] / max(0.01, -mvPos.z));',
+    '}'
+  ].join('\n');
+
+  const fragSrc = [
+    'varying vec3 vColor;',
+    'varying float vAlpha;',
+    'void main() {',
+    '  vec2 d = gl_PointCoord - vec2(0.5);',
+    '  float r2 = dot(d, d) * 4.0;',
+    '  if (r2 > 1.0) discard;',
+    '  float fall = exp(-r2 * 3.2);',
+    '  gl_FragColor = vec4(vColor * fall, vAlpha * fall);',
+    '}'
+  ].join('\n');
+
+  const material = new THREE.ShaderMaterial({
+    vertexShader: vertSrc,
+    fragmentShader: fragSrc,
+    uniforms: { heightPx: { value: window.innerHeight } },
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  });
+
+  const points = new THREE.Points(geometry, material);
+  points.frustumCulled = false;
+  scene.add(points);
+
+  return { geometry, positions, colors, sizes, alphas, material, points };
+})();
 
 function cullOldestParticle() {
-  // Remove the particle with the least remaining life
+  // Remove the particle with the least remaining life. No mesh to dispose
+  // under the batched path; the particle is just a JS record.
   let oldestIdx = 0, lowestLife = Infinity;
   for (let i = 0; i < game.particles.length; i++) {
     if (game.particles[i].life < lowestLife) { lowestLife = game.particles[i].life; oldestIdx = i; }
   }
-  const p = game.particles[oldestIdx];
-  if (p.mesh) { scene.remove(p.mesh); p.mesh.material.dispose(); }
   game.particles.splice(oldestIdx, 1);
 }
 
 function updateParticles(dt) {
-  // Cap particle count: cull oldest when over budget
+  // Cap particle count: cull oldest when over budget.
   while (game.particles.length > MAX_PARTICLES) cullOldestParticle();
 
   const arenaLimit = LSS.ARENA_SIZE;
-  for (let i = game.particles.length - 1; i >= 0; i--) {
+  const positions = batchedParticles.positions;
+  const colors    = batchedParticles.colors;
+  const sizes     = batchedParticles.sizes;
+  const alphas    = batchedParticles.alphas;
+
+  // Single pass: step physics + pack into buffers. Dead particles are
+  // skipped (not written into the buffer), so the draw range shrinks
+  // naturally. We still splice dead entries out of game.particles so the
+  // length bookkeeping for spawn budget stays correct, but only after the
+  // pass; compacting in reverse keeps indices stable.
+  let slot = 0;
+  for (let i = 0; i < game.particles.length; i++) {
     const p = game.particles[i];
     p.life -= dt;
-    // Kill expired particles and those outside arena bounds
     const pos = p.position;
-    if (p.life <= 0 || Math.abs(pos.x) > arenaLimit || Math.abs(pos.y) > arenaLimit || Math.abs(pos.z) > arenaLimit) {
-      if (p.mesh) { scene.remove(p.mesh); p.mesh.material.dispose(); }
-      game.particles.splice(i, 1);
-      continue;
-    }
     pos.x += p.velocity.x * dt;
     pos.y += p.velocity.y * dt;
     pos.z += p.velocity.z * dt;
-    p.velocity.multiplyScalar(0.95); // drag on particles
-    const alpha = p.life / p.maxLife;
-    if (!p.mesh) {
-      const mat = new THREE.MeshBasicMaterial({ color: p.color, transparent: true, opacity: alpha, blending: THREE.AdditiveBlending });
-      p.mesh = new THREE.Mesh(_sharedParticleGeo, mat); // shared geometry
-      p.mesh.scale.setScalar(p.size);
-      scene.add(p.mesh);
+    p.velocity.multiplyScalar(0.95);
+    if (p.life <= 0 || Math.abs(pos.x) > arenaLimit || Math.abs(pos.y) > arenaLimit || Math.abs(pos.z) > arenaLimit) {
+      p._dead = true;
+      continue;
     }
-    p.mesh.position.copy(pos);
-    p.mesh.material.opacity = alpha;
-    p.mesh.scale.setScalar(p.size * (0.5 + alpha * 0.5));
+    p._dead = false;
+    if (slot >= MAX_PARTICLES) continue;
+    const j = slot * 3;
+    positions[j]   = pos.x;
+    positions[j+1] = pos.y;
+    positions[j+2] = pos.z;
+    // Cache rgb triple on the particle so we don't re-parse the color each
+    // frame (colors are immutable for the particle's lifetime).
+    if (p._rgb === undefined) {
+      const c = new THREE.Color(p.color);
+      p._rgb = [c.r, c.g, c.b];
+    }
+    colors[j]   = p._rgb[0];
+    colors[j+1] = p._rgb[1];
+    colors[j+2] = p._rgb[2];
+    const alpha = p.life / p.maxLife;
+    sizes[slot]  = p.size * (0.5 + alpha * 0.5);
+    alphas[slot] = alpha;
+    slot++;
   }
+
+  // Compact: drop dead entries. Reverse walk keeps surviving indices valid.
+  for (let i = game.particles.length - 1; i >= 0; i--) {
+    if (game.particles[i]._dead) game.particles.splice(i, 1);
+  }
+
+  const geom = batchedParticles.geometry;
+  geom.attributes.position.needsUpdate = true;
+  geom.attributes.pColor.needsUpdate = true;
+  geom.attributes.pSize.needsUpdate = true;
+  geom.attributes.pAlpha.needsUpdate = true;
+  geom.setDrawRange(0, slot);
 }
 
 const MAX_EFFECTS = 350;
@@ -8945,6 +9046,11 @@ window.addEventListener('resize', () => {
   postFX.rtBlurH.setSize(Math.max(1, Math.floor(w / 2)), Math.max(1, Math.floor(h / 2)));
   postFX.rtBlurV.setSize(Math.max(1, Math.floor(w / 2)), Math.max(1, Math.floor(h / 2)));
   postFX.blurMat.uniforms.resolution.value.set(Math.floor(w / 2), Math.floor(h / 2));
+  // Keep the batched particle shader's perspective scaler in sync with the
+  // real viewport height so point sprites stay the right size on-screen.
+  if (typeof batchedParticles !== 'undefined' && batchedParticles.material && batchedParticles.material.uniforms.heightPx) {
+    batchedParticles.material.uniforms.heightPx.value = window.innerHeight;
+  }
 });
 
 // ---- SETTINGS PAGE ----
