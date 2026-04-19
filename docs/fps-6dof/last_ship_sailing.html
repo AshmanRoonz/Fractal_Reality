@@ -6734,8 +6734,9 @@ function updateAbilities(dt) {
     }
     // Thermal Shield: hold-to-use (max 5s, capped by ability.duration above);
     // drains shield power over time; absorbs incoming damage (see playerTakeDamage);
-    // burns close enemies with distance falloff (more damage up close). Power
-    // regens over 10s when not held (handled below outside this loop).
+    // burns enemies in a FORWARD CONE about one ship's length long (more damage
+    // up close; tapers to zero at the cone tip). Power regens over 10s when not
+    // held (handled below outside this loop).
     if (player.abilityActive[i] && player.abilities[i] && player.abilities[i].name === 'Thermal Shield') {
       // Drain power while held: full pool (2500) over 5s = 500/s, so a full
       // hold-from-max exactly empties the pool in 5s (matches the duration cap).
@@ -6747,22 +6748,40 @@ function updateAbilities(dt) {
         player.abilityTimers[i] = 0;
         // No fixed cooldown; the 10s recharge IS the cooldown.
       }
-      // Burn nearby enemies with distance falloff: more damage up close.
-      // At 0 dist: 1500 DPS (point blank). At 500 dist: 0 DPS (edge).
-      const burnRadius = 500;
-      const maxDPS = 1500;
+      // Forward burn cone: the shield projects heat about one ship's length
+      // ahead of the player. Enemies off-axis or past the tip take no damage.
+      // Ship length is the chassis hullLength (~140 for the Dreadnought).
+      const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+      const reach = player.chassis.hullLength;
+      const baseRadius = player.chassis.hullLength * 0.35; // narrow at the shield face
+      const tipRadius  = player.chassis.hullLength * 0.80; // widens at the tip
+      const maxDPS = 2500; // more damage: cone is smaller than the old sphere
       for (const bot of game.entities) {
         if (!bot.alive || bot.team === player.team) continue;
-        const dist = player.position.distanceTo(bot.position);
-        if (dist < burnRadius) {
-          const falloff = 1 - (dist / burnRadius); // 1 at center, 0 at edge
-          const dmgPerSec = maxDPS * falloff;
-          const dealt = bot.takeDamage(dmgPerSec * dt, 'player');
-          if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 200); }
-        }
+        const toBot = new THREE.Vector3().subVectors(bot.position, player.position);
+        const along = toBot.dot(forward);
+        if (along < 0 || along > reach) continue; // behind or past tip
+        const perp = toBot.clone().sub(forward.clone().multiplyScalar(along));
+        const perpLen = perp.length();
+        const along01 = along / reach; // 0 at shield face, 1 at cone tip
+        const coneR = baseRadius + (tipRadius - baseRadius) * along01;
+        if (perpLen > coneR) continue; // outside the cone
+        // Falloff: DPS peaks up close and tapers to zero at the tip. Lateral
+        // falloff keeps a strong core while softening the rim.
+        const forwardFall = 1 - along01;
+        const lateralFall = 1 - (perpLen / coneR);
+        const dmgPerSec = maxDPS * forwardFall * (0.5 + 0.5 * lateralFall);
+        const dealt = bot.takeDamage(dmgPerSec * dt, 'player');
+        if (dealt > 0) { player.damageDealt += dealt; player.coreMeter = Math.min(100, player.coreMeter + dealt / 200); }
       }
-      // Thermal Shield is a fire source: ignite nearby Incendiary Traps
-      igniteNearbyGas(player.position, burnRadius);
+      // Thermal Shield is a fire source: ignite Incendiary Traps anywhere
+      // inside the burn cone (probe at mid-cone with a generous radius so a
+      // single call covers most of the cone volume), plus a small probe at
+      // the player so clouds we are standing in also light up.
+      const probeMid = player.position.clone().add(forward.clone().multiplyScalar(reach * 0.5));
+      const probeRadius = Math.max(reach * 0.5, (baseRadius + tipRadius) * 0.5);
+      igniteNearbyGas(probeMid, probeRadius);
+      igniteNearbyGas(player.position, baseRadius);
     }
     // Thermal Shield recharge (ticks every frame, inside or outside the
     // ability-loop body; guarded to only regen when NOT actively held).
