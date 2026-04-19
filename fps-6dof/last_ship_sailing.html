@@ -5432,6 +5432,8 @@ function fireSpread(origin, dir, w) {
 
 function activateAbility(slot) {
   if (player.shipState === 'dead' || !player.abilities[slot]) return;
+  // No abilities during the pre-round warmup countdown
+  if (game.state === 'warmup') return;
   if (player.abilityCooldowns[slot] > 0) return;
 
   const ability = player.abilities[slot];
@@ -8841,10 +8843,11 @@ function buildRoomGraphLevel(level) {
       '    float d = length(vWorldPos - roomCenters[i]);',
       '    if (d < minD) { minD = d; zoneColor = roomColorsU[i]; nearC = roomCenters[i]; nearR = roomRadii[i]; }',
       '  }',
-      // Fraction along the room's vertical extent: 0 at floor, 1 at ceiling.
+      // Fraction along the nearest room's vertical extent: 0 at floor, 1 at
+      // ceiling. Works for both spherical rooms and cylindrical tunnels: any
+      // surface gets placed along the local vertical axis, which is what we
+      // want since the rooms/tunnels are rotationally symmetric.
       '  float heightFrac = clamp((vWorldPos.y - (nearC.y - nearR)) / (2.0 * nearR), 0.0, 1.0);',
-      // Wallness: 1 for a vertical surface, 0 for a pure floor/ceiling.
-      '  float wallness = 1.0 - abs(vNormal.y);',
       // Base: very dark, slight zone tint.
       '  vec3 dark = vec3(0.015, 0.020, 0.035) + zoneColor * 0.25;',
       '  vec3 c = dark;',
@@ -8852,30 +8855,38 @@ function buildRoomGraphLevel(level) {
       '  float grid = zoneGrid(vWorldPos);',
       '  vec3 gridColor = zoneColor * 3.2 + vec3(0.04, 0.06, 0.10);',
       '  c = mix(c, gridColor, grid * 0.85);',
-      // Organic roots climbing out of the floor up the walls. Strongest where
-      // the surface IS a wall AND we are low in the room.
-      '  float floorUpFade = pow(1.0 - heightFrac, 1.6);',
-      '  float rootMask = roots(vWorldPos * 0.65) * floorUpFade * wallness;',
-      '  float rootPulse = 0.88 + 0.12 * sin(time * 0.35);',
-      '  vec3 rootGlow = zoneColor * 5.0 + vec3(0.03, 0.05, 0.10);',
-      '  c = mix(c, rootGlow, smoothstep(0.25, 0.75, rootMask) * rootPulse);',
-      '  c += rootGlow * smoothstep(0.7, 0.95, rootMask) * 0.6 * rootPulse;',
+      // Organic roots growing out of the floor and climbing up. Strongest at
+      // heightFrac = 0 (floor), fading to zero by the top. No wallness gate,
+      // so floors AND the lower halves of curved sphere/cylinder walls show
+      // the pattern.
+      '  float floorUpFade = pow(1.0 - heightFrac, 1.8);',
+      '  float rootRaw = roots(vWorldPos * 0.6);',
+      '  float rootMask = rootRaw * floorUpFade;',
+      '  float rootPulse = 0.85 + 0.15 * sin(time * 0.35);',
+      '  vec3 rootGlow = zoneColor * 6.0 + vec3(0.05, 0.08, 0.15);',
+      // Direct mix (no smoothstep gate) so the filament pattern shows at any
+      // intensity instead of only above a threshold.
+      '  c = mix(c, rootGlow, clamp(rootMask * 1.4, 0.0, 1.0) * rootPulse);',
+      // Bright tips where roots cross / thicken.
+      '  c += rootGlow * smoothstep(0.45, 0.85, rootMask) * 1.0 * rootPulse;',
       // Soft diffuse + rim so surfaces read in 3D.
       '  vec3 vd = normalize(cameraPosition - vWorldPos);',
       '  float diff = max(dot(vNormal, vd), 0.0) * 0.35 + 0.65;',
       '  float fresnelFactor = pow(1.0 - abs(dot(vNormal, vd)), 3.0);',
       '  c += zoneColor * 1.5 * fresnelFactor * 0.4;',
       '  c *= diff * vAO;',
-      // Upper half of walls is one-way transparent: interior view (front
-      // face) fades out so you can see the starfield through the top; the
-      // back face stays fully opaque so nobody can look *in* from outside.
-      // Lower half of walls and all floor/ceiling surfaces remain opaque.
-      '  float upperMask = smoothstep(0.50, 0.72, heightFrac) * wallness;',
+      // Upper half is one-way transparent: interior (front-face) fades to
+      // low alpha above heightFrac ~0.5 so players see the starfield through
+      // the top of any chamber, sphere, or tunnel. Back faces stay opaque so
+      // nobody can peer *in* from outside. No wallness gate; rooms are
+      // spheres/cylinders, so "upper wall" for them is the curved top band,
+      // not an axis-aligned vertical surface.
+      '  float upperMask = smoothstep(0.50, 0.72, heightFrac);',
       '  float alpha = 1.0;',
       '  if (gl_FrontFacing) {',
-      // Keep the grid lines visible even where the surface goes transparent,
-      // so the upper wall reads as a window frame rather than a hole.
-      '    float gridVis = max(grid * 0.55, 0.12);',
+      // Keep grid lines visible in the transparent band so the top reads as
+      // a framed window rather than a ragged hole.
+      '    float gridVis = max(grid * 0.55, 0.10);',
       '    alpha = mix(1.0, gridVis, upperMask);',
       '  }',
       '  gl_FragColor = vec4(c, alpha);',
