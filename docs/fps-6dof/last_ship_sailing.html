@@ -5346,6 +5346,74 @@ function spawnImpactSparks(pos, count) {
   spawnDynamicLight(pos, 0xffcc44, 2.0, 300, 0.2);     // warm afterglow
 }
 
+// ---- SHADER PRE-WARM ----
+// WebGL compiles a shader program the first time a unique material/blending/
+// transparent/depth/wireframe/linewidth permutation is drawn. In combat, a
+// flurry of explosion phases, impact sparks, tracers, lightning bolts, shield
+// hits, and damage smoke all spawn at once, each producing its own program;
+// the first fight stutters while the driver compiles ~15-20 programs in the
+// frame they first appear. After that, the driver cache smooths everything
+// out (which is why it "gets faster as it goes on").
+//
+// This runs once at init: spawn one of every combat effect variant at a far-
+// off position, call renderer.compile() to force GLSL compilation against the
+// current scene/camera, then age-out the effects before gameplay begins. All
+// the permutations are in the driver cache by the time the first gunfight
+// fires a bullet.
+function precompileCombatShaders() {
+  try {
+    const origParticleCount = game.particles.length;
+    const origEffectCount = game.effects.length;
+    const farPos = new THREE.Vector3(100000, 100000, 100000); // outside draw/visibility
+
+    // Big explosion: flash, flare, fire, core, shockwave (flat + torus + 2nd torus),
+    // smoke, embers, debris chunks, dynamic lights. size > 30 triggers every phase.
+    spawnExplosion(farPos, 40);
+
+    // Tracer beam: core + beam + glow + flare + trail particles.
+    spawnTracer(farPos, farPos.clone().add(new THREE.Vector3(500, 0, 0)), 0xffff00);
+
+    // Lightning bolt: core + glow LineBasicMaterials with additive blending.
+    spawnLightningBolt(farPos, farPos.clone().add(new THREE.Vector3(0, 500, 0)), 0x44aaff, 0.2, 3, 2);
+
+    // Impact sparks: flash + sparks + secondary particles + scorch puff.
+    spawnImpactSparks(farPos, 6);
+
+    // Shield hit: wireframe additive sphere.
+    spawnShieldHit(farPos, 40, 0x4488ff);
+
+    // Damage smoke: force-emit regardless of health percent by seeding particles directly.
+    // (spawnDamageSmoke's early-out would skip us at any healthPct the init code picks.)
+    game.particles.push({
+      position: farPos.clone(), velocity: new THREE.Vector3(0, 20, 0),
+      life: 0.01, maxLife: 0.8, color: 0x222222, size: 6
+    });
+    game.particles.push({
+      position: farPos.clone(), velocity: new THREE.Vector3(0, 30, 0),
+      life: 0.01, maxLife: 0.3, color: 0xff6600, size: 3
+    });
+
+    // Force all queued programs to compile now.
+    renderer.compile(scene, camera);
+
+    // Age everything out and clean up (skip the usual per-type animation by
+    // using a dt larger than any effect's lifetime). Pass a fake deltaTime so
+    // updateParticles doesn't see NaN / 0.
+    game.deltaTime = 10;
+    updateEffects(10);
+    updateParticles(10);
+    game.deltaTime = 0;
+
+    console.log(
+      'Precompiled combat shaders (',
+      (game.effects.length - origEffectCount) + ' residual effects,',
+      (game.particles.length - origParticleCount) + ' residual particles)'
+    );
+  } catch (err) {
+    console.warn('Shader pre-warm skipped:', err);
+  }
+}
+
 // ---- PLAYER FUNCTIONS ----
 
 function selectLoadout(key) {
@@ -11288,6 +11356,11 @@ buildSettingsPage();
 // Hook audio init on first user interaction
 document.addEventListener('click', initAudio, { once: false });
 document.addEventListener('keydown', initAudio, { once: false });
+
+// Pre-warm combat effect shaders so the first gunfight doesn't stall while
+// the driver compiles explosion / spark / tracer / lightning / shield-hit
+// programs on their first draw.
+precompileCombatShaders();
 
 requestAnimationFrame(gameLoop);
 
