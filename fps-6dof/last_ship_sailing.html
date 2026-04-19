@@ -847,7 +847,7 @@ const game = {
   playerStasisDuration: 3,
   playerPreStasisVelocity: null,
   // Map/level for current round
-  selectedMap: 'circumpunct', // map key; changed via selectMap()
+  selectedMap: 'hourglass', // map key; changed via selectMap()
   mapWord: '',
   mapMeshes: [],
   currentLevel: null,
@@ -8602,27 +8602,6 @@ const SU = 150; // ship unit (Dreadnought hull + margin)
 // ---- MAP DATA DEFINITIONS ----
 // Each map contains: name, description, rooms array, tunnels array
 const MAP_DATA = {
-  circumpunct: {
-    name: 'The Circumpunct',
-    description: 'Symmetrical dual spawn. Central citadel. Classic engagement.',
-    rooms: [
-      { id: 'center',  team: null, x: 0,       y: 0, z: 0,       r: SU * 3.5 },
-      { id: 'spawn_a', team: 'A',  x: -SU * 9, y: 0, z: -SU * 4, r: SU * 2.5 },
-      { id: 'spawn_b', team: 'B',  x:  SU * 9, y: 0, z: -SU * 4, r: SU * 2.5 },
-      { id: 'ready_a', team: null, x: -SU * 5, y: 0, z:  SU * 7, r: SU * 2.5 },
-      { id: 'ready_b', team: null, x:  SU * 5, y: 0, z:  SU * 7, r: SU * 2.5 },
-    ],
-    tunnels: [
-      { path: [{x: -SU*9, y: 0, z: -SU*4}, {x: -SU*7, y: 0, z:  SU*2}, {x: -SU*3, y: 0, z:  SU*3}, {x:  0,    y: 0, z:  0}]},
-      { path: [{x:  SU*9, y: 0, z: -SU*4}, {x:  SU*7, y: 0, z:  SU*2}, {x:  SU*3, y: 0, z:  SU*3}, {x:  0,    y: 0, z:  0}]},
-      { path: [{x: -SU*9, y: 0, z: -SU*4}, {x: -SU*5, y: 0, z:  SU*7}]},
-      { path: [{x:  SU*9, y: 0, z: -SU*4}, {x:  SU*5, y: 0, z:  SU*7}]},
-      { path: [{x: -SU*5, y:  SU*1.2, z: SU*7}, {x:  SU*5, y:  SU*1.2, z: SU*7}]},
-      { path: [{x: -SU*5, y: -SU*1.2, z: SU*7}, {x:  SU*5, y: -SU*1.2, z: SU*7}]},
-      { path: [{x: -SU*5, y: 0, z: SU*7}, {x:  0,    y: 0, z: 0}]},
-      { path: [{x:  SU*5, y: 0, z: SU*7}, {x:  0,    y: 0, z: 0}]},
-    ]
-  },
   hourglass: {
     name: 'The Nexus',
     description: 'Ring layout. Six chambers. Every room connects to two others; no dead ends.',
@@ -8656,155 +8635,13 @@ const MAP_DATA = {
       { path: [{x: -SU*7, y: -SU*2, z:  SU*4}, {x: 0, y: 0, z: 0}]},   // sw -> center
       { path: [{x: -SU*7, y: SU*2, z: -SU*4}, {x: 0, y: 0, z: 0}]},    // nw -> center
     ]
-  },
-  procedural: {
-    name: 'Deep Random',
-    description: 'Procedurally generated. New layout every match.',
-    procedural: true // flag: generate on load
   }
 };
 
-// Procedural map generator: random spheres + cylinders, guaranteed connectivity, no dead ends
-function generateProceduralMap() {
-  const roomCount = 5 + Math.floor(Math.random() * 3); // 5-7 rooms
-  const rooms = [];
-  const tunnels = [];
-
-  // Place spawn rooms on opposite sides
-  const spawnDist = SU * 8 + Math.random() * SU * 3;
-  const spawnAngle = Math.random() * Math.PI * 2;
-  const spawnAx = Math.cos(spawnAngle) * spawnDist;
-  const spawnAz = Math.sin(spawnAngle) * spawnDist;
-  const spawnAy = (Math.random() - 0.5) * SU * 2;
-  rooms.push({ id: 'spawn_a', team: 'A', x: spawnAx, y: spawnAy, z: spawnAz, r: SU * (2.0 + Math.random() * 0.8) });
-  rooms.push({ id: 'spawn_b', team: 'B', x: -spawnAx, y: -spawnAy, z: -spawnAz, r: SU * (2.0 + Math.random() * 0.8) });
-
-  // Place neutral rooms scattered in between
-  const neutralCount = roomCount - 2;
-  for (let i = 0; i < neutralCount; i++) {
-    let px, py, pz, rr, valid;
-    for (let attempt = 0; attempt < 80; attempt++) {
-      px = (Math.random() - 0.5) * spawnDist * 1.4;
-      py = (Math.random() - 0.5) * SU * 4;
-      pz = (Math.random() - 0.5) * spawnDist * 1.4;
-      rr = SU * (1.2 + Math.random() * 1.5);
-      // Must not overlap too much with existing rooms
-      valid = true;
-      for (const r of rooms) {
-        const d = Math.sqrt((px - r.x) ** 2 + (py - r.y) ** 2 + (pz - r.z) ** 2);
-        if (d < (rr + r.r) * 0.4) { valid = false; break; }
-      }
-      if (valid) break;
-    }
-    if (valid) {
-      rooms.push({ id: 'room_' + i, team: null, x: px, y: py, z: pz, r: rr });
-    }
-  }
-
-  // Build connectivity graph: minimum spanning tree (Prim's) for guaranteed connectivity
-  const n = rooms.length;
-  const connected = new Set([0]);
-  const edges = []; // {from, to, dist}
-
-  while (connected.size < n) {
-    let bestEdge = null, bestDist = Infinity;
-    for (const ci of connected) {
-      for (let j = 0; j < n; j++) {
-        if (connected.has(j)) continue;
-        const a = rooms[ci], b = rooms[j];
-        const d = Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);
-        if (d < bestDist) { bestDist = d; bestEdge = { from: ci, to: j }; }
-      }
-    }
-    if (!bestEdge) break;
-    edges.push(bestEdge);
-    connected.add(bestEdge.to);
-  }
-
-  // Add extra random edges for loops (no dead ends, feng shui flow)
-  // Every room should have at least 2 connections
-  const connectionCount = new Array(n).fill(0);
-  for (const e of edges) { connectionCount[e.from]++; connectionCount[e.to]++; }
-
-  // Add edges until every room has 2+ connections
-  for (let i = 0; i < n; i++) {
-    while (connectionCount[i] < 2) {
-      // Find nearest room not already directly connected
-      let bestJ = -1, bestD = Infinity;
-      for (let j = 0; j < n; j++) {
-        if (j === i) continue;
-        const alreadyConnected = edges.some(e =>
-          (e.from === i && e.to === j) || (e.from === j && e.to === i));
-        if (alreadyConnected) continue;
-        const a = rooms[i], b = rooms[j];
-        const d = Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);
-        if (d < bestD) { bestD = d; bestJ = j; }
-      }
-      if (bestJ >= 0) {
-        edges.push({ from: i, to: bestJ });
-        connectionCount[i]++;
-        connectionCount[bestJ]++;
-      } else break;
-    }
-  }
-
-  // Also sprinkle 1-2 extra random loops for variety
-  const extraLoops = 1 + Math.floor(Math.random() * 2);
-  for (let l = 0; l < extraLoops; l++) {
-    const ri = Math.floor(Math.random() * n);
-    const rj = Math.floor(Math.random() * n);
-    if (ri === rj) continue;
-    const already = edges.some(e =>
-      (e.from === ri && e.to === rj) || (e.from === rj && e.to === ri));
-    if (!already) {
-      edges.push({ from: ri, to: rj });
-      connectionCount[ri]++;
-      connectionCount[rj]++;
-    }
-  }
-
-  // Convert edges to tunnels (with optional midpoint curve for longer connections)
-  // Procedural tunnels: minimum 3 ships wide (diameter = 3 * SU, so radius = 1.5 * SU)
-  // Plus some random variation up to 2.0 * SU for variety
-  for (const e of edges) {
-    const a = rooms[e.from], b = rooms[e.to];
-    const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z;
-    const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-    const tunR = SU * (1.5 + Math.random() * 0.5); // 3-4 ships across diameter
-
-    if (dist > SU * 8) {
-      // Long tunnel: add a curved midpoint
-      const mx = (a.x + b.x) / 2 + (Math.random() - 0.5) * SU * 3;
-      const my = (a.y + b.y) / 2 + (Math.random() - 0.5) * SU * 2;
-      const mz = (a.z + b.z) / 2 + (Math.random() - 0.5) * SU * 3;
-      tunnels.push({ r: tunR, path: [
-        { x: a.x, y: a.y, z: a.z },
-        { x: mx, y: my, z: mz },
-        { x: b.x, y: b.y, z: b.z }
-      ]});
-    } else {
-      // Short tunnel: direct
-      tunnels.push({ r: tunR, path: [
-        { x: a.x, y: a.y, z: a.z },
-        { x: b.x, y: b.y, z: b.z }
-      ]});
-    }
-  }
-
-  return {
-    name: 'Deep Random',
-    description: 'Procedurally generated. New layout every match.',
-    rooms: rooms,
-    tunnels: tunnels
-  };
-}
-
 function getNextMap() {
-  const selectedMapKey = game.selectedMap || 'circumpunct';
+  const selectedMapKey = game.selectedMap || 'hourglass';
   const mapData = MAP_DATA[selectedMapKey];
-  if (!mapData) return MAP_DATA.circumpunct;
-  // Procedural maps: generate fresh layout each time
-  if (mapData.procedural) return generateProceduralMap();
+  if (!mapData) return MAP_DATA.hourglass;
   return mapData;
 }
 function shuffleMapRotation() {}
@@ -8937,6 +8774,10 @@ function buildRoomGraphLevel(level) {
       '}'
     ].join('\n');
 
+    // Wall shader (Nexus): dark base + per-zone colored grid, organic fractal
+    // roots growing from the floor up the lower half of walls, and a
+    // one-way-transparent upper half (interior view sees through to the
+    // starfield/skybox; exterior/back-face view stays opaque).
     const sdfFragSrc = [
       'uniform float time;',
       'varying vec3 vWorldPos;',
@@ -8947,91 +8788,97 @@ function buildRoomGraphLevel(level) {
       'uniform float roomRadii[8];',
       'uniform int roomCount;',
       '',
-      'float hash(vec2 p) {',
-      '  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);',
-      '}',
-      'float hash3(vec3 p) {',
-      '  return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);',
-      '}',
+      'float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
       'float noise(vec2 p) {',
       '  vec2 i = floor(p), f = fract(p);',
       '  f = f * f * (3.0 - 2.0 * f);',
       '  return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y);',
       '}',
-      'float branches(vec3 wp) {',
+      // Organic root/vein pattern: recursive domain warp producing branching
+      // filaments. Caller multiplies by a floor-up fade so the pattern visibly
+      // "grows" from the ground up the walls.
+      'float roots(vec3 wp) {',
       '  float pattern = 0.0;',
-      '  float scale = 0.002;',
-      '  float weight = 0.7;',
-      '  vec2 p = vec2(wp.x + wp.z * 0.7, wp.y);',
-      '  for (int i = 0; i < 6; i++) {',
+      '  float scale = 0.003;',
+      '  float weight = 0.75;',
+      '  vec2 p = vec2(wp.x + wp.z * 0.6, wp.y);',
+      '  for (int i = 0; i < 5; i++) {',
       '    vec2 g = p * scale;',
-      '    float n = noise(g * 2.5 + float(i) * 1.3);',
-      '    float n2 = noise(g * 4.0 + float(i) * 2.7);',
-      '    g.x += sin(g.y * 1.5 + n * 4.0) * 0.4;',
-      '    g.y += cos(g.x * 0.8 + n2 * 2.0) * 0.15;',
+      '    float n = noise(g * 2.7 + float(i) * 1.3);',
+      '    g.x += sin(g.y * 1.8 + n * 4.2) * 0.45;',
+      '    g.y += cos(g.x * 1.1 + n * 2.3) * 0.25;',
       '    vec2 f = abs(fract(g) - 0.5);',
-      '    float vein = 1.0 - smoothstep(0.0, 0.09, f.x);',
-      '    float branch = 1.0 - smoothstep(0.0, 0.14, f.x + f.y * 0.4);',
-      '    float cross1 = 1.0 - smoothstep(0.0, 0.10, f.y);',
-      '    pattern += (vein * 0.45 + branch * 0.35 + cross1 * 0.2) * weight;',
-      '    p = vec2(p.y * 0.7 + p.x * 0.7, -p.x * 0.5 + p.y * 0.85 + n * 40.0);',
-      '    scale *= 1.9;',
-      '    weight *= 0.50;',
+      '    float vein   = 1.0 - smoothstep(0.00, 0.08, f.x);',
+      '    float branch = 1.0 - smoothstep(0.00, 0.12, f.x + f.y * 0.35);',
+      '    pattern += (vein * 0.6 + branch * 0.4) * weight;',
+      '    p = vec2(p.y * 0.75 + p.x * 0.65, -p.x * 0.55 + p.y * 0.8 + n * 30.0);',
+      '    scale *= 1.85;',
+      '    weight *= 0.55;',
       '  }',
       '  return clamp(pattern, 0.0, 1.0);',
       '}',
-      'float panelGrid(vec3 wp) {',
-      '  vec3 gridPos = floor(wp / 400.0) * 400.0;',
-      '  vec3 localPos = mod(wp, 400.0);',
-      '  float gridX = abs(fract(localPos.x / 400.0 + 0.5) - 0.5) < 0.015 ? 1.0 : 0.0;',
-      '  float gridY = abs(fract(localPos.y / 400.0 + 0.5) - 0.5) < 0.012 ? 1.0 : 0.0;',
-      '  float gridZ = abs(fract(localPos.z / 400.0 + 0.5) - 0.5) < 0.015 ? 1.0 : 0.0;',
-      '  return max(gridX, max(gridY, gridZ));',
-      '}',
-      'float greebles(vec3 wp, float fade) {',
-      '  vec3 gp = wp * 0.05;',
-      '  float h1 = hash3(floor(gp));',
-      '  float h2 = hash3(floor(gp * 3.7) + 0.1);',
-      '  float detail = sin(gp.x * 8.0) * sin(gp.y * 7.0) * sin(gp.z * 6.0);',
-      '  detail = abs(detail) * 0.5 + 0.5;',
-      '  float greeble = detail * 0.3 + (h2 * 0.3);',
-      '  return greeble * fade;',
+      // Sharp per-zone grid. Cell size is ~half an SU so the grid reads at
+      // ship-flight distance without stripes merging. Returns line strength
+      // in [0..1]: 1 on a gridline, 0 inside a cell.
+      'float zoneGrid(vec3 wp) {',
+      '  float s = 75.0;',
+      '  vec3 m = mod(wp, s) / s;',
+      '  vec3 d = min(m, 1.0 - m);',
+      '  float lineX = 1.0 - smoothstep(0.00, 0.015, d.x);',
+      '  float lineY = 1.0 - smoothstep(0.00, 0.015, d.y);',
+      '  float lineZ = 1.0 - smoothstep(0.00, 0.015, d.z);',
+      '  return max(lineX, max(lineY, lineZ));',
       '}',
       'void main() {',
-      '  vec3 base = vec3(0.06, 0.08, 0.12);',
+      // Nearest room supplies the zone color and the local wall extent used
+      // for the lower/upper half split.
+      '  vec3 zoneColor = vec3(0.06, 0.08, 0.12);',
+      '  vec3 nearC = vec3(0.0, 0.0, 0.0);',
+      '  float nearR = 500.0;',
       '  float minD = 99999.0;',
       '  for (int i = 0; i < 8; i++) {',
       '    if (i >= roomCount) break;',
       '    float d = length(vWorldPos - roomCenters[i]);',
-      '    if (d < minD) { minD = d; base = roomColorsU[i]; }',
+      '    if (d < minD) { minD = d; zoneColor = roomColorsU[i]; nearC = roomCenters[i]; nearR = roomRadii[i]; }',
       '  }',
-      '  float yNorm = clamp((vWorldPos.y + 2000.0) / 4000.0, 0.0, 1.0);',
-      '  float gradientDark = 0.6 + yNorm * 0.4;',
-      '  vec3 brightBase = base * 2.5 + vec3(0.03, 0.04, 0.06);',
-      '  vec3 gradBase = brightBase * gradientDark;',
-      '  float branchPattern = branches(vWorldPos);',
-      '  float branchStrength = 0.7 + (1.0 - yNorm) * 0.3;',
-      '  branchPattern *= branchStrength;',
-      '  float branchPulse = 0.95 + 0.05 * sin(time * 0.3);',
-      '  vec3 glow1 = base * 10.0 + vec3(0.05, 0.08, 0.15);',
-      '  vec3 glow2 = base * 18.0 + vec3(0.10, 0.15, 0.25);',
-      '  vec3 c = gradBase;',
-      '  c = mix(c, glow1, branchPattern * 0.6 * branchPulse);',
-      '  c = mix(c, glow2, smoothstep(0.25, 0.65, branchPattern) * 0.8 * branchPulse);',
-      '  c += (base * 8.0 + vec3(0.04, 0.06, 0.12)) * smoothstep(0.5, 0.9, branchPattern) * branchPulse;',
+      // Fraction along the room's vertical extent: 0 at floor, 1 at ceiling.
+      '  float heightFrac = clamp((vWorldPos.y - (nearC.y - nearR)) / (2.0 * nearR), 0.0, 1.0);',
+      // Wallness: 1 for a vertical surface, 0 for a pure floor/ceiling.
+      '  float wallness = 1.0 - abs(vNormal.y);',
+      // Base: very dark, slight zone tint.
+      '  vec3 dark = vec3(0.015, 0.020, 0.035) + zoneColor * 0.25;',
+      '  vec3 c = dark;',
+      // Per-zone grid, tinted by the zone color (brighter than base).
+      '  float grid = zoneGrid(vWorldPos);',
+      '  vec3 gridColor = zoneColor * 3.2 + vec3(0.04, 0.06, 0.10);',
+      '  c = mix(c, gridColor, grid * 0.85);',
+      // Organic roots climbing out of the floor up the walls. Strongest where
+      // the surface IS a wall AND we are low in the room.
+      '  float floorUpFade = pow(1.0 - heightFrac, 1.6);',
+      '  float rootMask = roots(vWorldPos * 0.65) * floorUpFade * wallness;',
+      '  float rootPulse = 0.88 + 0.12 * sin(time * 0.35);',
+      '  vec3 rootGlow = zoneColor * 5.0 + vec3(0.03, 0.05, 0.10);',
+      '  c = mix(c, rootGlow, smoothstep(0.25, 0.75, rootMask) * rootPulse);',
+      '  c += rootGlow * smoothstep(0.7, 0.95, rootMask) * 0.6 * rootPulse;',
+      // Soft diffuse + rim so surfaces read in 3D.
       '  vec3 vd = normalize(cameraPosition - vWorldPos);',
-      '  float diff = max(dot(vNormal, vd), 0.0) * 0.4 + 0.6;',
+      '  float diff = max(dot(vNormal, vd), 0.0) * 0.35 + 0.65;',
       '  float fresnelFactor = pow(1.0 - abs(dot(vNormal, vd)), 3.0);',
-      '  vec3 rimGlow = vec3(0.1, 0.15, 0.25) * fresnelFactor * 0.6;',
-      '  c += rimGlow;',
-      '  c *= diff;',
-      '  float panelStrength = panelGrid(vWorldPos) * 0.08;',
-      '  c *= (1.0 - panelStrength);',
-      '  float greebleDistance = 1.0 - clamp(length(cameraPosition - vWorldPos) / 3000.0, 0.0, 1.0);',
-      '  float greebleDetail = greebles(vWorldPos, greebleDistance);',
-      '  c = mix(c, c * (1.0 - greebleDetail * 0.25), greebleDistance);',
-      '  c *= vAO;',
-      '  gl_FragColor = vec4(c, 1.0);',
+      '  c += zoneColor * 1.5 * fresnelFactor * 0.4;',
+      '  c *= diff * vAO;',
+      // Upper half of walls is one-way transparent: interior view (front
+      // face) fades out so you can see the starfield through the top; the
+      // back face stays fully opaque so nobody can look *in* from outside.
+      // Lower half of walls and all floor/ceiling surfaces remain opaque.
+      '  float upperMask = smoothstep(0.50, 0.72, heightFrac) * wallness;',
+      '  float alpha = 1.0;',
+      '  if (gl_FrontFacing) {',
+      // Keep the grid lines visible even where the surface goes transparent,
+      // so the upper wall reads as a window frame rather than a hole.
+      '    float gridVis = max(grid * 0.55, 0.12);',
+      '    alpha = mix(1.0, gridVis, upperMask);',
+      '  }',
+      '  gl_FragColor = vec4(c, alpha);',
       '}'
     ].join('\n');
 
@@ -9060,6 +8907,10 @@ function buildRoomGraphLevel(level) {
       vertexShader: sdfVertSrc,
       fragmentShader: sdfFragSrc,
       side: THREE.DoubleSide,
+      // transparent: one-way upper walls fade to low alpha on the interior face
+      // so the starfield shows through; back faces stay opaque (see shader).
+      transparent: true,
+      depthWrite: true,
       uniforms: {
         time: { value: 0 },
         roomCenters: { value: roomCentersArr },
