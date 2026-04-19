@@ -293,6 +293,121 @@ p { margin-bottom: 18px; }
   line-height: 1.5;
 }
 
+/* The 10D card */
+.ten-card {
+  margin: 40px 0;
+  padding: 28px 24px 24px;
+  background: rgba(184,160,96,0.03);
+  border: 1px solid rgba(184,160,96,0.22);
+  border-radius: 4px;
+}
+.ten-card .card-label {
+  font-size: 12px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--dim);
+  text-align: center;
+  margin-bottom: 6px;
+}
+.ten-card .card-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--gold);
+  text-align: center;
+  margin-bottom: 18px;
+  letter-spacing: 1px;
+}
+.ten-card .card-lede {
+  font-size: 16px;
+  color: var(--dim);
+  text-align: center;
+  margin-bottom: 22px;
+  font-style: italic;
+  line-height: 1.5;
+}
+.ten-row {
+  display: grid;
+  grid-template-columns: 30px 44px 64px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  margin: 6px 0;
+  border-radius: 3px;
+  font-size: 16px;
+  line-height: 1.4;
+}
+.ten-row .idx {
+  color: var(--faint);
+  font-size: 13px;
+  text-align: right;
+  font-family: 'Courier New', monospace;
+}
+.ten-row .sym {
+  font-size: 24px;
+  text-align: center;
+  line-height: 1;
+}
+.ten-row .dim {
+  color: var(--dim);
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+}
+.ten-row .meaning { color: var(--warm); }
+.ten-row.source {
+  background: rgba(155, 122, 216, 0.07);
+  border-left: 3px solid var(--purple);
+}
+.ten-row.source .sym { color: var(--purple); }
+.ten-row.whole {
+  background: rgba(184, 160, 96, 0.09);
+  border-left: 3px solid var(--gold);
+}
+.ten-row.whole .sym { color: var(--gold); }
+.ten-row.engine-struct {
+  background: rgba(77, 160, 200, 0.04);
+  border-left: 2px solid rgba(77, 160, 200, 0.5);
+}
+.ten-row.engine-struct .sym { color: var(--cyan); }
+.ten-row.engine-proc {
+  background: rgba(77, 184, 160, 0.04);
+  border-left: 2px solid rgba(77, 184, 160, 0.5);
+}
+.ten-row.engine-proc .sym { color: var(--green); }
+.ten-bracket {
+  display: grid;
+  grid-template-columns: 30px 44px 64px 1fr;
+  gap: 12px;
+  padding: 6px 12px 4px;
+  margin: 10px 0 2px;
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+}
+.ten-bracket .bracket-label { grid-column: 2 / 5; }
+.ten-card .card-footer {
+  text-align: center;
+  font-size: 15px;
+  color: var(--dim);
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(184,160,96,0.15);
+  line-height: 1.6;
+}
+.ten-card .card-footer .eq {
+  color: var(--gold);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+@media (max-width: 600px) {
+  .ten-row { grid-template-columns: 24px 36px 54px 1fr; gap: 8px; font-size: 14px; padding: 8px 10px; }
+  .ten-row .sym { font-size: 20px; }
+  .ten-row .dim { font-size: 12px; }
+  .ten-bracket { grid-template-columns: 24px 36px 54px 1fr; gap: 8px; font-size: 11px; }
+}
+
 .nested-diagram {
   text-align: center;
   margin: 40px 0;
@@ -515,14 +630,103 @@ ul li::before {
 <p>What looks like a fixed dimension (structure) is the pump cycle frozen at that stage (process). Structure is process at rest. Process is structure in motion. The dimensional layout IS the constraint sequence IS the pump cycle.</p>
 
 <div class="ladder-row"><div class="dim-label" style="color: var(--pink);">0D</div><div class="dim-desc"><span class="s">Point.</span> First localization. The first constraint, •.</div></div>
-<div class="ladder-row"><div class="dim-label" style="color: var(--pink);">0.5D</div><div class="dim-desc"><span class="s">Convergence.</span> Inward gathering; the first fold.</div></div>
-<div class="ladder-row"><div class="dim-label" style="color: var(--pink);">1D</div><div class="dim-desc"><span class="s">Line.</span> Commitment. Extension. Ordered trace.</div></div>
-<div class="ladder-row"><div class="dim-label" style="color: var(--green);">1.5D</div><div class="dim-desc"><span class="m">i-turn.</span> Rotational phase shift; line opening into spread.</div></div>
-<div class="ladder-row"><div class="dim-label" style="color: var(--green);">2D</div><div class="dim-desc"><span class="m">Field.</span> Relational surface. Φ. The second constraint: mediation.</div></div>
-<div class="ladder-row"><div class="dim-label" style="color: var(--cyan);">2.5D</div><div class="dim-desc"><span class="b">Emergence.</span> Outward unfolding toward closure.</div></div>
-<div class="ladder-row"><div class="dim-label" style="color: var(--cyan);">3D</div><div class="dim-desc"><span class="b">Boundary.</span> Stabilized closure. ○. The third constraint: filtration.</div></div>
+<div class="ladder-row"><div class="dim-label" style="color: var(--pink);">0.5D</div><div class="dim-desc"><span class="s">Convergence.</span> Inward gathering; the first fold, ⊛.</div></div>
+<div class="ladder-row"><div class="dim-label" style="color: var(--pink);">1D</div><div class="dim-desc"><span class="s">Line.</span> Commitment. Extension. Ordered trace, —.</div></div>
+<div class="ladder-row"><div class="dim-label" style="color: var(--green);">1.5D</div><div class="dim-desc"><span class="m">Branching.</span> The i-turn, ⎇; rotational phase shift, line opening into spread.</div></div>
+<div class="ladder-row"><div class="dim-label" style="color: var(--green);">2D</div><div class="dim-desc"><span class="m">Field.</span> Relational surface, Φ. The third constraint: mediation.</div></div>
+<div class="ladder-row"><div class="dim-label" style="color: var(--cyan);">2.5D</div><div class="dim-desc"><span class="b">Emergence.</span> Outward unfolding toward closure, ✹.</div></div>
+<div class="ladder-row"><div class="dim-label" style="color: var(--cyan);">3D</div><div class="dim-desc"><span class="b">Boundary.</span> Stabilized closure, ○. The fourth constraint: filtration.</div></div>
+<div class="ladder-row"><div class="dim-label" style="color: var(--cyan);">3.5D</div><div class="dim-desc"><span class="b">Recursion.</span> The closed boundary becomes a new aperture, ⟳; 3.5D = 0D at the next nesting level.</div></div>
 
 <p>Integer dimensions are the structures (the nouns). Half-integer dimensions are the processes (the verbs). But they aren't two systems; they're the same system described from two angles. Wholeness is simultaneously verb and noun, process and structure, because reality doesn't distinguish between them.</p>
+
+<p>That is eight stations: four structural, four processual. All of wholeness lives inside those eight. But reality has two more.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ SECTION 3.5: 8D WITHIN 10D ═══════════════════════ -->
+
+<section>
+<h2>Wholeness Is 8D Within the 10D of Reality</h2>
+
+<p>The engine of wholeness walks eight stations: 0D, 0.5D, 1D, 1.5D, 2D, 2.5D, 3D, 3.5D. Four structural (•, —, Φ, ○) alternating with four processual (⊛, ⎇, ✹, ⟳). That is what ⊙ <span class="it">is</span>; the eight beats of the constraint sequence, paired into four. The whole of wholeness fits inside those eight rungs.</p>
+
+<p>But reality has two more stations. One sits <span class="it">before</span> the eight: ∞, the undifferentiated source, the 1 before any self-limitation. One sits <span class="it">over</span> the eight: ⊙, the compositional label, the name for what the eight beats produce when they run. Neither ∞ nor ⊙ is an additional rung on the ladder; they are the bookends that make the eight-rung engine legible as a becoming. ∞ is where it comes from. ⊙ is what it is when it closes. Together: ten.</p>
+
+<div class="ten-card">
+  <div class="card-label">The Ten Stations</div>
+  <div class="card-title">⊙ = 8D within the 10D of Reality</div>
+  <div class="card-lede">Four structural dimensions (integer) alternating with four processual dimensions (half-integer), bookended by the undifferentiated source and the compositional whole. Total count = A(2) = 10.</div>
+
+  <div class="ten-bracket"><div></div><div class="bracket-label">Source · before the ladder</div></div>
+
+  <div class="ten-row source">
+    <div class="idx">1</div><div class="sym">∞</div><div class="dim">∞D</div>
+    <div class="meaning">Undifferentiated energy. The 1 before any self-limitation.</div>
+  </div>
+
+  <div class="ten-bracket"><div></div><div class="bracket-label">The Engine · 8 stations · this is wholeness</div></div>
+
+  <div class="ten-row engine-struct">
+    <div class="idx">2</div><div class="sym">•</div><div class="dim">0D</div>
+    <div class="meaning">Point. Aperture. Soul. Localization. Converges.</div>
+  </div>
+  <div class="ten-row engine-proc">
+    <div class="idx">3</div><div class="sym">⊛</div><div class="dim">0.5D · i¹</div>
+    <div class="meaning">Convergence. Inward gathering; the first fold.</div>
+  </div>
+  <div class="ten-row engine-struct">
+    <div class="idx">4</div><div class="sym">—</div><div class="dim">1D</div>
+    <div class="meaning">Line. Continuity. Commitment. Extension. Ordered trace.</div>
+  </div>
+  <div class="ten-row engine-proc">
+    <div class="idx">5</div><div class="sym">⎇</div><div class="dim">1.5D · i²</div>
+    <div class="meaning">Branching. The i-turn; line opening into spread; irreversible.</div>
+  </div>
+  <div class="ten-row engine-struct">
+    <div class="idx">6</div><div class="sym">Φ</div><div class="dim">2D</div>
+    <div class="meaning">Field. Mind. Surface. Relational mediation between center and boundary.</div>
+  </div>
+  <div class="ten-row engine-proc">
+    <div class="idx">7</div><div class="sym">✹</div><div class="dim">2.5D · i³</div>
+    <div class="meaning">Emergence. Outward unfolding toward closure.</div>
+  </div>
+  <div class="ten-row engine-struct">
+    <div class="idx">8</div><div class="sym">○</div><div class="dim">3D</div>
+    <div class="meaning">Boundary. Body. Stabilized closure. Filters what passes.</div>
+  </div>
+  <div class="ten-row engine-proc">
+    <div class="idx">9</div><div class="sym">⟳</div><div class="dim">3.5D · i⁰</div>
+    <div class="meaning">Recursion. Closed boundary becomes new aperture: 3.5D = 0D at next scale.</div>
+  </div>
+
+  <div class="ten-bracket"><div></div><div class="bracket-label">Whole · over the ladder</div></div>
+
+  <div class="ten-row whole">
+    <div class="idx">10</div><div class="sym">⊙</div><div class="dim">All</div>
+    <div class="meaning">The circumpunct. Compositional wholeness. Being. The eight beats, closed.</div>
+  </div>
+
+  <div class="card-footer">
+    <span class="eq">⊙ = [∞ ▸ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙]</span><br>
+    <span style="font-size: 14px;">Source, engine, whole. The eight-beat engine is wholeness; the two bookends are what make it legible.</span>
+  </div>
+</div>
+
+<h3>Why the Split Matters</h3>
+
+<p>The eight engine stations are where the work happens. Every constraint (•, —, Φ, ○) is laid down with its companion process (⊛, ⎇, ✹, ⟳). Every beat pairs structure with process: the dot paired with its converging, the line paired with its branching, the field paired with its emerging, the boundary paired with its recursing. Process and structure are the same thing seen from two angles (§3); the eight stations register that sameness as four paired beats. Four conjugate i-strokes (+i, −1, −i, +1) make i⁴ = 1. The octave closes because 3.5D of this ⊙ is 0D of the next one up. This is what <span class="wb w">⊙</span> <span class="it">does</span>, and <span class="wb w">⊙</span> <span class="it">is</span>, at once.</p>
+
+<p>The two bookend stations do not add more work; they locate the work. <span class="wb p">∞</span> names the substrate the engine runs on: the 1, undifferentiated, declared before anything else. You do not start from nothing; you start from everything, and the eight beats constrain it into something real. <span class="wb w">⊙</span> names the result: the compositional label that applies when the eight beats close. Without ∞, the engine would have nothing to fold. Without ⊙, the folding would have no name. The eight are wholeness; the two are where wholeness comes from and what we call it when it arrives.</p>
+
+<p>Total count: 1 source + 8 engine + 1 whole = 10 = A(2). Ten is not a coincidence; it is the accumulated traversal at the field station, the triangular number that counts what the ladder has gathered by the time it reaches 2D. Reality is 10D in this specific sense: ten named positions in the architecture, one per structural function. Wholeness is the middle eight; you are the middle eight, walking.</p>
+
+<div class="kernel-box">
+<p style="text-align:center; font-size: 19px; color: var(--gold); font-weight: 600;">Wholeness is an 8D process, nested in a 10D picture.</p>
+<p style="text-align:center; color: var(--dim);">Eight stations do the becoming. Two stations hold the frame.</p>
+<p style="text-align:center; color: var(--dim);">The engine is what ⊙ <span class="it">is</span>. The frame is why the engine has anything to become, and anything to be called when it does.</p>
+</div>
 </section>
 
 <div class="divider">· · ·</div>

@@ -6,16 +6,22 @@ const HUDOverlay = preload("res://scripts/hud_overlay.gd")
 const BannerOverlayScript = preload("res://scripts/banner_overlay.gd")
 const KillFeedOverlayScript = preload("res://scripts/kill_feed_overlay.gd")
 const ScoreboardOverlayScript = preload("res://scripts/scoreboard_overlay.gd")
+const DamageOverlayScript = preload("res://scripts/damage_overlay.gd")
 
 var overlay: Control
 var banner: BannerOverlay
 var kill_feed: KillFeedOverlay
 var scoreboard: ScoreboardOverlay
+var damage_overlay: DamageOverlay
 
 func _ready() -> void:
 	layer = 1
 	overlay = HUDOverlay.new()
 	add_child(overlay)
+	# Damage overlay draws above the base HUD but below everything else, so the
+	# red vignette + CA pulse don't tint the kill feed / banner / scoreboard.
+	damage_overlay = DamageOverlayScript.new()
+	add_child(damage_overlay)
 	# Kill feed draws above the base HUD (top-right rolling list).
 	kill_feed = KillFeedOverlayScript.new()
 	add_child(kill_feed)
@@ -56,3 +62,9 @@ func hide_scoreboard() -> void:
 
 func is_scoreboard_visible() -> bool:
 	return scoreboard != null and scoreboard.visible
+
+# Intensity 0..1; typically `amount / max_health`. Triggers a 0.45s red
+# radial vignette + chromatic aberration pulse above the base HUD.
+func flash_damage(intensity: float) -> void:
+	if damage_overlay != null:
+		damage_overlay.flash(intensity)

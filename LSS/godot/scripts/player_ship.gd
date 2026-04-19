@@ -15,6 +15,11 @@ signal loadout_changed(loadout_key: String)
 # killer_loadout_key = attacker's loadout (or "" if environmental / unknown);
 # victim_loadout_key = this ship's loadout. Emitted once per death.
 signal destroyed(killer_loadout_key: String, victim_loadout_key: String)
+# Emitted AFTER health/shield deduction but regardless of whether it killed the
+# ship. `amount` is the raw damage pre-absorption; `ratio` is amount/max_health
+# already clamped to [0, 1] (so listeners don't need player config). Use for
+# HUD effects (damage vignette, hit-marker audio). Fires even on fatal hits.
+signal damage_taken(amount: float, ratio: float)
 
 const TEAM_PLAYER := 0
 
