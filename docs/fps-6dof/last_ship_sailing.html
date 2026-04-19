@@ -857,6 +857,8 @@ const game = {
   worldEffects: [],
   // Destructible moving geometry
   dynamicObjects: [],
+  // Cluster obstacles (hold groups of dynamicObjects as their children)
+  clusters: [],
   // Web Worker for marching cubes
   levelWorker: null,
   levelWorkerCallbacks: [],
@@ -4012,6 +4014,15 @@ class DestructibleObstacle {
     this.respawnTime = 25;
     this.collisionRadius = this.scale * 0.7;
 
+    // Cluster / fragment fields (populated by ClusterObstacle when applicable)
+    this.cluster = null;           // parent ClusterObstacle, or null for standalone
+    this.localOffset = null;       // offset within the cluster while intact
+    this.broken = false;           // true once the cluster has shattered
+    this.fragmentVel = new THREE.Vector3();
+    this.fragmentLife = 0;         // countdown after breaking, if nothing is hit
+    this.fragmentMaxLife = 14;     // debris dissolves after this many seconds
+    this.contactDmgCooldown = 0;   // per-target throttle would require a map; use global throttle instead
+
     // Random slow rotation
     this.rotSpeed = new THREE.Vector3(
       (Math.random() - 0.5) * 0.3,
@@ -4093,22 +4104,92 @@ class DestructibleObstacle {
 
   update(dt) {
     if (!this.alive) {
-      this.respawnTimer -= dt;
-      if (this.respawnTimer <= 0) this.respawn();
+      // Standalone obstacles self-respawn; cluster children do NOT (ClusterObstacle manages rebirth)
+      if (!this.cluster) {
+        this.respawnTimer -= dt;
+        if (this.respawnTimer <= 0) this.respawn();
+      }
       return;
     }
-    // Slow rotation
+
+    // Broken fragment: drift under its own velocity and spin; die after lifetime
+    if (this.broken) {
+      this.position.addScaledVector(this.fragmentVel, dt);
+      // mild drag so debris eventually drifts gently
+      this.fragmentVel.multiplyScalar(Math.max(0, 1 - 0.35 * dt));
+      if (this.mesh) this.mesh.position.copy(this.position);
+      if (this.edgeMesh) this.edgeMesh.position.copy(this.position);
+      this.fragmentLife += dt;
+      if (this.fragmentLife > this.fragmentMaxLife) {
+        this.alive = false;
+        if (this.mesh && this.mesh.parent) scene.remove(this.mesh);
+        if (this.edgeMesh && this.edgeMesh.parent) scene.remove(this.edgeMesh);
+        return;
+      }
+      // Fragment-vs-entity contact: explode and damage
+      if (this.contactDmgCooldown > 0) this.contactDmgCooldown -= dt;
+      this._checkFragmentImpacts();
+    }
+
+    // Rotation (both intact and broken states get a spin)
     this.rotation.x += this.rotSpeed.x * dt;
     this.rotation.y += this.rotSpeed.y * dt;
     this.rotation.z += this.rotSpeed.z * dt;
-    this.mesh.rotation.copy(this.rotation);
-    this.edgeMesh.rotation.copy(this.rotation);
+    if (this.mesh) this.mesh.rotation.copy(this.rotation);
+    if (this.edgeMesh) this.edgeMesh.rotation.copy(this.rotation);
 
     // Damage flash
-    const hpRatio = this.hp / this.maxHp;
-    if (hpRatio < 0.5) {
-      const flash = 0.15 + (1 - hpRatio) * 0.4;
-      this.mesh.material.emissiveIntensity = flash;
+    if (this.mesh && this.mesh.material) {
+      const hpRatio = this.hp / this.maxHp;
+      if (this.broken) {
+        this.mesh.material.emissiveIntensity = 0.55;
+      } else if (hpRatio < 0.5) {
+        const flash = 0.15 + (1 - hpRatio) * 0.4;
+        this.mesh.material.emissiveIntensity = flash;
+      }
+    }
+  }
+
+  _checkFragmentImpacts() {
+    if (!this.broken || !this.alive) return;
+    // Ship contact: deal light damage and explode
+    const myRadius = this.collisionRadius;
+    // Player
+    if (player.shipState !== 'dead' && player.chassis) {
+      const shipRad = player.chassis.hullLength * 0.45;
+      if (this.position.distanceTo(player.position) < myRadius + shipRad) {
+        const impactSpeed = this.fragmentVel.length();
+        const dmg = 40 + Math.min(80, impactSpeed * 0.3);
+        if (typeof playerTakeDamage === 'function') playerTakeDamage(dmg);
+        this._fragmentExplode();
+        return;
+      }
+    }
+    // Bots
+    for (const bot of game.entities) {
+      if (!bot.alive || !bot.chassis) continue;
+      const shipRad = bot.chassis.hullLength * 0.45;
+      if (this.position.distanceTo(bot.position) < myRadius + shipRad) {
+        const impactSpeed = this.fragmentVel.length();
+        const dmg = 40 + Math.min(80, impactSpeed * 0.3);
+        if (typeof bot.takeDamage === 'function') {
+          const dealt = bot.takeDamage(dmg, 'debris');
+          if (dealt > 0) spawnImpactSparks(this.position, 3);
+        }
+        this._fragmentExplode();
+        return;
+      }
+    }
+  }
+
+  _fragmentExplode() {
+    if (!this.alive) return;
+    this.alive = false;
+    if (this.mesh && this.mesh.parent) scene.remove(this.mesh);
+    if (this.edgeMesh && this.edgeMesh.parent) scene.remove(this.edgeMesh);
+    spawnExplosion(this.position, Math.max(3, Math.ceil(this.scale / 10)));
+    if (typeof spawnDynamicLight === 'function') {
+      spawnDynamicLight(this.position, 0xffaa55, 1.6, 200, 0.25);
     }
   }
 
@@ -4127,6 +4208,18 @@ class DestructibleObstacle {
         return;
       }
       const nx = dx / dist, ny = dy / dist, nz = dz / dist;
+
+      // Broken fragment: no solid bounce; just explode on the contacting entity.
+      if (this.broken) {
+        // Ship isn't blocked by debris; damage + detonate immediately
+        const impactSpeed = Math.hypot(velocity.x, velocity.y, velocity.z);
+        const dmg = 40 + Math.min(80, impactSpeed * 0.3);
+        // The caller's entity handler already applies damage via _checkFragmentImpacts each frame;
+        // here we just ensure an immediate detonation if bumped.
+        this._fragmentExplode();
+        return;
+      }
+
       // Push out
       const pen = minDist - dist;
       pos.x += nx * (pen + 1);
@@ -4138,19 +4231,32 @@ class DestructibleObstacle {
         // Ram damage: proportional to impact speed
         const impactSpeed = Math.abs(vDotN);
         if (impactSpeed > 50) {
-          this.takeDamage(impactSpeed * 0.4);
+          this.takeDamage(impactSpeed * 0.4, new THREE.Vector3(-nx, -ny, -nz));
         }
         velocity.x -= nx * vDotN * 1.3;
         velocity.y -= ny * vDotN * 1.3;
         velocity.z -= nz * vDotN * 1.3;
+        // Significant bump on an intact cluster child triggers cluster shatter
+        if (this.cluster && !this.cluster.broken && impactSpeed > 80) {
+          this.cluster.breakApart(this.position.clone(), new THREE.Vector3(-nx, -ny, -nz));
+        }
       }
     }
   }
 
-  takeDamage(dmg) {
+  takeDamage(dmg, hitDir) {
+    // Any damage to a still-intact cluster child shatters the whole cluster
+    if (this.cluster && !this.cluster.broken) {
+      this.cluster.breakApart(this.position.clone(), hitDir || null);
+    }
     this.hp -= dmg;
     if (this.hp <= 0) {
-      this.destroy();
+      // Broken fragments detonate; intact pieces play the standard destroy path
+      if (this.broken) {
+        this._fragmentExplode();
+      } else {
+        this.destroy();
+      }
       return dmg;
     }
     return dmg;
@@ -4161,7 +4267,10 @@ class DestructibleObstacle {
     if (this.mesh && this.mesh.parent) scene.remove(this.mesh);
     if (this.edgeMesh && this.edgeMesh.parent) scene.remove(this.edgeMesh);
     spawnExplosion(this.position, Math.ceil(this.scale / 8));
-    this.respawnTimer = this.respawnTime;
+    // Cluster children don't self-respawn; parent ClusterObstacle rebuilds them
+    if (!this.cluster) {
+      this.respawnTimer = this.respawnTime;
+    }
   }
 
   respawn() {
@@ -4172,17 +4281,169 @@ class DestructibleObstacle {
   }
 }
 
+// A cluster spawns 5-10 small destructible sub-shapes that orbit together until hit,
+// then shatter into loose debris. Each child is a DestructibleObstacle registered
+// in game.dynamicObjects so existing collision/damage iteration still works.
+class ClusterObstacle {
+  constructor(pos, clusterScale) {
+    this.position = pos.clone();
+    this.originalPos = pos.clone();
+    this.clusterScale = clusterScale;      // overall bounding radius of the cluster
+    this.alive = true;
+    this.broken = false;
+    this.respawnTimer = 0;
+    this.respawnTime = 30;
+    // Slow orbital rotation as a whole while intact
+    this.rotSpeed = new THREE.Vector3(
+      (Math.random() - 0.5) * 0.15,
+      (Math.random() - 0.5) * 0.20,
+      (Math.random() - 0.5) * 0.15
+    );
+    this.rotation = new THREE.Euler(
+      Math.random() * Math.PI * 2,
+      Math.random() * Math.PI * 2,
+      Math.random() * Math.PI * 2
+    );
+    const colorIdx = Math.floor(Math.random() * OBSTACLE_COLORS.length);
+    this.baseColor = OBSTACLE_COLORS[colorIdx];
+    this.children = [];
+    this._buildChildren();
+  }
+
+  _buildChildren() {
+    const count = 5 + Math.floor(Math.random() * 6); // 5-10 pieces
+    const packR = this.clusterScale * 0.70;
+    const avgChildScale = this.clusterScale * (0.22 + Math.random() * 0.10); // ~22-32% of cluster
+    const q = new THREE.Quaternion().setFromEuler(this.rotation);
+    for (let i = 0; i < count; i++) {
+      // Rejection-sample an offset inside the packing sphere
+      let offset;
+      let tries = 0;
+      do {
+        offset = new THREE.Vector3(
+          (Math.random() - 0.5) * 2 * packR,
+          (Math.random() - 0.5) * 2 * packR,
+          (Math.random() - 0.5) * 2 * packR
+        );
+        tries++;
+      } while (offset.length() > packR && tries < 12);
+      const rotatedOffset = offset.clone().applyQuaternion(q);
+      const childPos = this.position.clone().add(rotatedOffset);
+      const childScale = avgChildScale * (0.75 + Math.random() * 0.55);
+      const child = new DestructibleObstacle(childPos, null, childScale);
+      // Unify color within a cluster for visual cohesion
+      if (child.mesh && child.mesh.material) {
+        child.mesh.material.color.setHex(this.baseColor);
+        child.mesh.material.emissive.setHex(this.baseColor);
+      }
+      child.baseColor = this.baseColor;
+      child.cluster = this;
+      child.localOffset = offset.clone(); // body-frame offset (pre-rotation)
+      child.hp = child.maxHp = 80 + childScale * 2; // weaker than standalone
+      child.fragmentMaxLife = 10 + Math.random() * 6;
+      this.children.push(child);
+      game.dynamicObjects.push(child);
+    }
+  }
+
+  update(dt) {
+    if (!this.alive) {
+      this.respawnTimer -= dt;
+      if (this.respawnTimer <= 0) this.respawn();
+      return;
+    }
+    if (!this.broken) {
+      // Rotate cluster as a rigid group; each child follows its rotated offset
+      this.rotation.x += this.rotSpeed.x * dt;
+      this.rotation.y += this.rotSpeed.y * dt;
+      this.rotation.z += this.rotSpeed.z * dt;
+      const q = new THREE.Quaternion().setFromEuler(this.rotation);
+      for (const c of this.children) {
+        if (!c.alive || c.broken) continue;
+        const rotated = c.localOffset.clone().applyQuaternion(q);
+        c.position.copy(this.position).add(rotated);
+        if (c.mesh) c.mesh.position.copy(c.position);
+        if (c.edgeMesh) c.edgeMesh.position.copy(c.position);
+      }
+    }
+    // Once every piece is gone, schedule a full respawn of the cluster
+    const anyAlive = this.children.some(c => c.alive);
+    if (!anyAlive) {
+      this.alive = false;
+      this.respawnTimer = this.respawnTime;
+    }
+  }
+
+  breakApart(hitPos, hitDir) {
+    if (this.broken) return;
+    this.broken = true;
+    const src = hitPos || this.position;
+    for (const c of this.children) {
+      if (!c.alive) continue;
+      c.broken = true;
+      c.fragmentLife = 0;
+      // Outward push from hit point, plus random scatter, plus hit direction contribution
+      const outward = new THREE.Vector3().subVectors(c.position, src);
+      if (outward.lengthSq() < 0.001) outward.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5);
+      outward.normalize();
+      const scatter = new THREE.Vector3(
+        Math.random() - 0.5,
+        Math.random() - 0.5,
+        Math.random() - 0.5
+      ).normalize();
+      const speed = 45 + Math.random() * 65;
+      c.fragmentVel.copy(outward).multiplyScalar(speed * 0.7);
+      c.fragmentVel.addScaledVector(scatter, speed * 0.4);
+      if (hitDir) c.fragmentVel.addScaledVector(hitDir, 25);
+      // Each fragment tumbles on its own now
+      c.rotSpeed.set(
+        (Math.random() - 0.5) * 2.2,
+        (Math.random() - 0.5) * 2.2,
+        (Math.random() - 0.5) * 2.2
+      );
+      // Shrink collision radius a touch so debris doesn't feel sticky
+      c.collisionRadius = c.scale * 0.55;
+    }
+    // Small sympathetic flash at the cluster center
+    if (typeof spawnDynamicLight === 'function') {
+      spawnDynamicLight(this.position, 0xffaa66, 1.2, Math.min(260, this.clusterScale * 3), 0.25);
+    }
+  }
+
+  respawn() {
+    // Clear any lingering child meshes / references
+    for (const c of this.children) {
+      if (c.mesh && c.mesh.parent) scene.remove(c.mesh);
+      if (c.edgeMesh && c.edgeMesh.parent) scene.remove(c.edgeMesh);
+      const idx = game.dynamicObjects.indexOf(c);
+      if (idx >= 0) game.dynamicObjects.splice(idx, 1);
+    }
+    this.children = [];
+    this.broken = false;
+    this.alive = true;
+    this.position.copy(this.originalPos);
+    this.rotation.set(
+      Math.random() * Math.PI * 2,
+      Math.random() * Math.PI * 2,
+      Math.random() * Math.PI * 2
+    );
+    this._buildChildren();
+  }
+}
+
 function spawnDynamicObjects(rooms) {
+  // Tear down existing cluster children and any standalone debris
   for (const obj of game.dynamicObjects) {
     if (obj.mesh && obj.mesh.parent) scene.remove(obj.mesh);
     if (obj.edgeMesh && obj.edgeMesh.parent) scene.remove(obj.edgeMesh);
   }
   game.dynamicObjects = [];
+  game.clusters = [];
 
-  // Place obstacles in non-spawn rooms (center, flanking, etc.)
+  // Place cluster obstacles in non-spawn rooms (center, flanking, etc.)
   const nonSpawnRooms = rooms.filter(r => !r.team);
   for (const rm of nonSpawnRooms) {
-    const count = 2 + Math.floor(Math.random() * 2); // 2-3 per room
+    const count = 2 + Math.floor(Math.random() * 2); // 2-3 clusters per room
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2;
       const dist = rm.r * (0.15 + Math.random() * 0.45);
@@ -4192,25 +4453,34 @@ function spawnDynamicObjects(rooms) {
         rm.y + yOff,
         rm.z + Math.sin(angle) * dist
       );
-      const scale = 35 + Math.random() * 55;
-      game.dynamicObjects.push(new DestructibleObstacle(pos, null, scale));
+      const clusterScale = 35 + Math.random() * 55; // matches prior obstacle footprint
+      game.clusters.push(new ClusterObstacle(pos, clusterScale));
     }
   }
 
-  // Place a few in tunnels
+  // Place a few clusters in tunnels
   const tunnelPoints = game.corridorPoints.filter(p => p.roomType === 'tunnel');
   const crateCount = Math.min(6, Math.max(3, Math.floor(tunnelPoints.length / 5)));
   for (let c = 0; c < crateCount && tunnelPoints.length > 0; c++) {
     const idx = Math.floor(Math.random() * tunnelPoints.length);
     const pt = tunnelPoints.splice(idx, 1)[0];
     const pos = new THREE.Vector3(pt.x, pt.y, pt.z);
-    const scale = 25 + Math.random() * 35;
-    game.dynamicObjects.push(new DestructibleObstacle(pos, null, scale));
+    const clusterScale = 25 + Math.random() * 35;
+    game.clusters.push(new ClusterObstacle(pos, clusterScale));
   }
 }
 
 function updateDynamicObjects(dt) {
-  for (const obj of game.dynamicObjects) {
+  // Tick clusters first so intact children's positions follow the cluster rotation,
+  // then tick individual pieces (broken fragments drift + check impacts)
+  for (const cl of game.clusters) cl.update(dt);
+  // Prune dead cluster children out of game.dynamicObjects
+  for (let i = game.dynamicObjects.length - 1; i >= 0; i--) {
+    const obj = game.dynamicObjects[i];
+    if (!obj.alive && obj.cluster) {
+      game.dynamicObjects.splice(i, 1);
+      continue;
+    }
     obj.update(dt);
   }
 }
