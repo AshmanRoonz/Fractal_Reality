@@ -376,7 +376,9 @@ func _draw_minimap(viewport_size: Vector2, hud_scale: float, _t: float) -> void:
 	var player_pos := _world_to_minimap(player_ref.global_position, inner, map_center, scale)
 	draw_rect(Rect2(player_pos - Vector2.ONE * 2.0, Vector2.ONE * 4.0), Color(0.98, 0.99, 1.0, 0.96))
 	var forward := player_ref.get_forward()
-	_draw_line(player_pos, player_pos + Vector2(forward.x, -forward.z).normalized() * (16.0 * hud_scale), Color(0.98, 0.99, 1.0, 0.65), 1.4)
+	# Forward arrow must use the same axis convention as _world_to_minimap
+	# (both world.x and world.z negated; HTML last_ship_sailing.html:8850-8855).
+	_draw_line(player_pos, player_pos + Vector2(-forward.x, -forward.z).normalized() * (16.0 * hud_scale), Color(0.98, 0.99, 1.0, 0.65), 1.4)
 
 	for enemy in enemies:
 		if not is_instance_valid(enemy) or not enemy.has_method("is_alive") or not enemy.is_alive():
@@ -478,8 +480,12 @@ func _ability_is_active(ability_id: String) -> bool:
 			return false
 
 func _world_to_minimap(world_pos: Vector3, rect: Rect2, map_center: Vector3, scale: float) -> Vector2:
+	# Mirror the HTML convention (last_ship_sailing.html:8824-8825): both world.x
+	# and world.z are negated on the radar so east/west on the minimap matches
+	# the player's actual right/left in-world. Without the X negation the radar
+	# is flipped across the vertical axis relative to ship movement.
 	return Vector2(
-		rect.get_center().x + (world_pos.x - map_center.x) * scale,
+		rect.get_center().x - (world_pos.x - map_center.x) * scale,
 		rect.get_center().y - (world_pos.z - map_center.z) * scale
 	)
 

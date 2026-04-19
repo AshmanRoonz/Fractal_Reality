@@ -15,6 +15,13 @@ signal destroyed(killer_loadout_key: String, victim_loadout_key: String)
 
 const TEAM_ENEMY := 1
 
+# Doomed state thresholds (HTML LSS.DOOMED_HEALTH_PCT = 0.15, DOOMED_TIMER = 10
+# at last_ship_sailing.html line 701). Enemies enter doomed at the same
+# thresholds as the player so the scoreboard / execute mechanic treat them
+# symmetrically.
+const DOOMED_HEALTH_PCT := 0.15
+const DOOMED_TIMER := 10.0
+
 var loadout_key := "SCORCH"
 var loadout: Dictionary = {}
 var chassis: Dictionary = {}
@@ -27,6 +34,11 @@ var max_health := 0.0
 var shield := 0.0
 var max_shield := 0.0
 var alive := true
+# Doomed state: entered when hull/max_health ≤ DOOMED_HEALTH_PCT. Latches
+# until death or respawn; doom_timer counts down to fatal when the last 15%
+# is reached.
+var doomed := false
+var doom_timer := 0.0
 var respawn_timer := 0.0
 var fire_cooldown := 0.0
 var reload_timer := 0.0
@@ -70,6 +82,15 @@ func _physics_process(delta: float) -> void:
 
 	if not alive:
 		return
+
+	# Doomed countdown. Ticks regardless of match_state so bots that enter
+	# doomed during warmup still resolve naturally when play resumes.
+	# Matches HTML line 3051-3053 (inside bot update, unconditional).
+	if doomed:
+		doom_timer = maxf(0.0, doom_timer - delta)
+		if doom_timer <= 0.0:
+			_apply_doomed_death()
+			return
 
 	for index in range(ability_cooldowns.size()):
 		ability_cooldowns[index] = maxf(0.0, float(ability_cooldowns[index]) - delta)
@@ -202,16 +223,41 @@ func apply_damage(amount: float, _hit_point: Vector3, source_loadout_key: String
 	if amount > 0.0:
 		health -= amount
 
+	# Enter doomed state at the 15% threshold (HTML line 3413).
+	if not doomed and health > 0.0 and health / maxf(1.0, max_health) <= DOOMED_HEALTH_PCT:
+		doomed = true
+		doom_timer = DOOMED_TIMER
+
 	if health <= 0.0:
 		alive = false
+		doomed = false
+		doom_timer = 0.0
 		respawn_timer = 3.2
 		velocity = Vector3.ZERO
 		visuals.set_ship_enabled(false)
 		global_position = Vector3(0, -4000, 0)
 		destroyed.emit(source_loadout_key, loadout_key)
 
+# Fatal when doom_timer reaches zero with no finishing blow. destroyed.emit()
+# still fires with an empty killer key so kill-feed / scoring paths run, but
+# no attacker is credited (matches HTML die(null) for timer kills).
+func _apply_doomed_death() -> void:
+	if not alive:
+		return
+	health = 0.0
+	alive = false
+	doomed = false
+	doom_timer = 0.0
+	respawn_timer = 3.2
+	velocity = Vector3.ZERO
+	visuals.set_ship_enabled(false)
+	global_position = Vector3(0, -4000, 0)
+	destroyed.emit("", loadout_key)
+
 func respawn(force_position := false) -> void:
 	alive = true
+	doomed = false
+	doom_timer = 0.0
 	respawn_timer = 0.0
 	health = max_health
 	shield = max_shield
@@ -233,6 +279,12 @@ func respawn(force_position := false) -> void:
 
 func is_alive() -> bool:
 	return alive
+
+func is_doomed() -> bool:
+	return doomed and alive
+
+func get_doom_timer() -> float:
+	return doom_timer
 
 func get_team() -> int:
 	return TEAM_ENEMY

@@ -8,6 +8,13 @@ const Settings = preload("res://scripts/settings.gd")
 
 const FIRST_PERSON_VIEW := true
 
+# Doomed state: when hull drops to or below 15% of max, the ship enters a
+# countdown (DOOMED_TIMER seconds). Reaching zero on the timer is fatal even
+# if external damage stops. Matches HTML LSS.DOOMED_HEALTH_PCT = 0.15 and
+# LSS.DOOMED_TIMER = 10 (last_ship_sailing.html line 701).
+const DOOMED_HEALTH_PCT := 0.15
+const DOOMED_TIMER := 10.0
+
 signal primary_fired(origin: Vector3, direction: Vector3, loadout_key: String, weapon_data: Dictionary, source: Node3D, team: int)
 signal ability_triggered(ability_id: String, loadout_key: String, source: Node3D, origin: Vector3, direction: Vector3, team: int)
 signal core_triggered(core_id: String, loadout_key: String, source: Node3D, origin: Vector3, direction: Vector3, team: int)
@@ -46,6 +53,11 @@ var health := 0.0
 var max_shield := 0.0
 var shield := 0.0
 var alive := true
+# Doomed state: entered when hull/max_health ≤ DOOMED_HEALTH_PCT. A
+# persistent red vignette + "HULL CRITICAL" banner appear; shield no longer
+# regenerates; doom_timer counts down to fatal. Reset on respawn.
+var doomed := false
+var doom_timer := 0.0
 var respawn_timer := 0.0
 var spawn_point := Vector3(0, 0, 720)
 var ability_cooldowns := [0.0, 0.0, 0.0]
@@ -116,6 +128,16 @@ func _physics_process(delta: float) -> void:
 	if not alive:
 		_update_feedback(delta, 0.0, Vector3.ZERO)
 		return
+
+	# Doomed countdown: ticks regardless of match_state so holding the round-end
+	# banner past your critical window still kills you (matches HTML line 5896
+	# which runs inside the main update, unconditional on playing state).
+	if doomed:
+		doom_timer = maxf(0.0, doom_timer - delta)
+		if doom_timer <= 0.0:
+			_apply_doomed_death()
+			_update_feedback(delta, 0.0, Vector3.ZERO)
+			return
 
 	for index in range(ability_cooldowns.size()):
 		ability_cooldowns[index] = maxf(0.0, float(ability_cooldowns[index]) - delta)
@@ -240,6 +262,8 @@ func set_loadout_by_index(index: int) -> void:
 	max_shield = float(chassis.get("max_shield", 3000.0))
 	shield = max_shield
 	alive = true
+	doomed = false
+	doom_timer = 0.0
 	respawn_timer = 0.0
 	reload_timer = 0.0
 	fire_cooldown = 0.0
@@ -276,6 +300,8 @@ func get_status() -> Dictionary:
 		"shield": shield,
 		"max_shield": max_shield,
 		"alive": alive,
+		"doomed": doomed,
+		"doom_timer": doom_timer,
 		"ability_names": _get_ability_names(),
 		"ability_cooldowns": ability_cooldowns.duplicate(),
 		"core_name": String(loadout.get("core", {}).get("name", "Core")),
@@ -298,6 +324,11 @@ func apply_damage(amount: float, _hit_point: Vector3, source_loadout_key: String
 	if is_state_active("vortex_shield"):
 		amount *= 0.4
 
+	# Capture post-mitigation, pre-shield damage for HUD listeners. Shield is
+	# part of the ship's wholeness (it's consumed either way), so we report the
+	# full amount that landed on the ship, not just what leaked through.
+	var inflicted := amount
+
 	if shield > 0.0:
 		visuals.pulse_shield()
 		var shield_damage := minf(shield, amount)
@@ -307,8 +338,17 @@ func apply_damage(amount: float, _hit_point: Vector3, source_loadout_key: String
 	if amount > 0.0:
 		health -= amount
 
+	# Enter doomed state when hull crosses the 15% threshold (HTML line 5699).
+	# Guarded by !doomed so the timer isn't reset by further hits; latches until
+	# death or respawn.
+	if not doomed and health > 0.0 and health / maxf(1.0, max_health) <= DOOMED_HEALTH_PCT:
+		doomed = true
+		doom_timer = DOOMED_TIMER
+
 	if health <= 0.0:
 		alive = false
+		doomed = false
+		doom_timer = 0.0
 		respawn_timer = 2.5
 		velocity = Vector3.ZERO
 		visuals.set_ship_enabled(false)
@@ -317,8 +357,34 @@ func apply_damage(amount: float, _hit_point: Vector3, source_loadout_key: String
 		camera_recoil = minf(camera_recoil + amount / maxf(1.0, max_health) * 5.0, 0.45)
 		_add_screen_shake(minf(1.8, 0.35 + amount / 1600.0))
 
+	var ratio := clampf(inflicted / maxf(1.0, max_health), 0.0, 1.0)
+	damage_taken.emit(inflicted, ratio)
+
+# Fired when the doom_timer reaches zero. Equivalent to a fatal apply_damage
+# with no attributed killer; the ship dies, destroyed.emit() fires so
+# kill-feed / scoreboard updates still run, and the respawn timer starts.
+func _apply_doomed_death() -> void:
+	if not alive:
+		return
+	health = 0.0
+	alive = false
+	doomed = false
+	doom_timer = 0.0
+	respawn_timer = 2.5
+	velocity = Vector3.ZERO
+	visuals.set_ship_enabled(false)
+	# Empty killer key matches the HTML playerDie(null) path for environmental
+	# / timer kills (no attacker to credit, no revenge target recorded).
+	destroyed.emit("", loadout_key)
+
 func is_alive() -> bool:
 	return alive
+
+func is_doomed() -> bool:
+	return doomed and alive
+
+func get_doom_timer() -> float:
+	return doom_timer
 
 func get_team() -> int:
 	return TEAM_PLAYER
@@ -373,6 +439,14 @@ func _sync_local_view_mode() -> void:
 
 func _add_screen_shake(amount: float) -> void:
 	camera_shake = minf(camera_shake + amount, 4.0)
+
+# Public shake trigger for external events (explosions, nearby blasts,
+# projectile detonations). Mirrors HTML triggerScreenShake() (line 10276).
+# Amount is in the same 0..4 scale as _add_screen_shake, where 4.0 is cap.
+func add_screen_shake(amount: float) -> void:
+	if not alive:
+		return
+	_add_screen_shake(amount)
 
 func _apply_fire_feedback(weapon: Dictionary) -> void:
 	var weapon_mode := String(weapon.get("mode", "hitscan"))
@@ -484,6 +558,8 @@ func _apply_bounds() -> void:
 
 func _respawn() -> void:
 	alive = true
+	doomed = false
+	doom_timer = 0.0
 	respawn_timer = 0.0
 	health = max_health
 	shield = max_shield

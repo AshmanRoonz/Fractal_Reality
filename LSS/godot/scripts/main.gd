@@ -102,6 +102,7 @@ func _ready() -> void:
 	player.ability_triggered.connect(_on_ability_triggered)
 	player.core_triggered.connect(_on_core_triggered)
 	player.destroyed.connect(_on_player_destroyed)
+	player.damage_taken.connect(_on_player_damage_taken)
 
 	# Apply the loadout chosen in MainMenu (defaults to "ION" when launched
 	# directly without the menu).
@@ -183,7 +184,7 @@ func _collect_scoreboard_rows() -> Array:
 	var player_name := "YOU (%s)" % String(player_loadout.get("name", player.loadout_key))
 	rows.append({
 		"name": player_name,
-		"status": _ship_status_label(player.is_alive(), false),
+		"status": _ship_status_label(player.is_alive(), player.is_doomed()),
 		"health": player.health,
 		"shield": player.shield,
 		"team": 0,
@@ -196,7 +197,7 @@ func _collect_scoreboard_rows() -> Array:
 		var enemy_loadout := GameData.get_loadout(enemy.loadout_key)
 		rows.append({
 			"name": String(enemy_loadout.get("name", enemy.loadout_key)),
-			"status": _ship_status_label(enemy.is_alive(), false),
+			"status": _ship_status_label(enemy.is_alive(), enemy.is_doomed()),
 			"health": max(0.0, enemy.health),
 			"shield": max(0.0, enemy.shield),
 			"team": 1,
@@ -204,12 +205,15 @@ func _collect_scoreboard_rows() -> Array:
 		})
 	return rows
 
-func _ship_status_label(is_alive: bool, _is_doomed: bool) -> String:
-	# Doomed flag isn't tracked yet on the Godot side; default to ALIVE / DEAD
-	# until the doomed-state port lands.
-	if is_alive:
-		return "ALIVE"
-	return "DEAD"
+# Three-way status matching HTML lines 11271-11286: DEAD takes precedence over
+# DOOMED, and DOOMED over ALIVE. is_doomed() already AND's with alive on the
+# ship side, so this just enforces the priority explicitly.
+func _ship_status_label(is_alive: bool, is_doomed: bool) -> String:
+	if not is_alive:
+		return "DEAD"
+	if is_doomed:
+		return "DOOMED"
+	return "ALIVE"
 
 func _return_to_main_menu() -> void:
 	# Unpin the scoreboard so it doesn't flash for a frame on MainMenu.
@@ -232,6 +236,10 @@ func _on_settings_overlay_closed() -> void:
 
 func _process(_delta: float) -> void:
 	hud.update_from_player(player, _count_alive_enemies(), _get_match_info())
+	# Drive the persistent doomed vignette + "HULL CRITICAL" banner from the
+	# ship's latched flag. Cheap no-op when state hasn't changed (DoomedOverlay
+	# early-returns when set_active is called with the same value).
+	hud.set_doomed_state(player.is_doomed())
 	# Keep the scoreboard's stats fresh while it's on screen so health/shield
 	# values follow combat in real time (mirrors HTML updateScoreboard being
 	# called every keydown; we poll at frame rate while visible).
@@ -517,6 +525,13 @@ func _on_player_destroyed(killer_loadout_key: String, _victim_loadout_key: Strin
 	player_deaths += 1
 	if hud != null:
 		hud.add_kill_feed_entry(killer_name, "You")
+
+# Cinematic damage feedback: red radial vignette + chromatic aberration pulse,
+# intensity scaled by how hard we were hit relative to max health. Matches
+# HTML Overlays.damageVignette(amount/player.maxHealth) (line 5682).
+func _on_player_damage_taken(_amount: float, ratio: float) -> void:
+	if hud != null:
+		hud.flash_damage(ratio)
 
 func _on_enemy_destroyed(killer_loadout_key: String, victim_loadout_key: String) -> void:
 	# If the player scored this kill, attribute to "You" rather than the
@@ -1023,6 +1038,11 @@ func _detonate_projectile(index: int, position: Vector3, hit_target: Object) -> 
 	if explode_radius > 0.0 and blast_damage > 0.0:
 		_blast_area(position, explode_radius, blast_damage, int(projectile["team"]), loadout_key, signature, source)
 
+	# Concussive shake: blast radius and damage drive the kick size; distance
+	# attenuates quadratically so distant detonations barely register.
+	var kick := 0.8 + (blast_damage + base_damage) / 2400.0
+	_shake_from_event(position, minf(3.0, kick), 3000.0)
+
 	var cluster_count := int(projectile.get("cluster_count", 0))
 	if cluster_count > 0:
 		var cluster_damage := float(projectile.get("cluster_damage", base_damage * 0.3))
@@ -1044,6 +1064,24 @@ func _blast_area(position: Vector3, radius: float, damage: float, team: int, loa
 		_track_player_damage(source, target, damage)
 		_award_core_charge(source, damage)
 	_spawn_impact_burst(position, signature)
+	# AOE contribution to shake: small kick with the blast radius's own falloff.
+	_shake_from_event(position, minf(1.5, 0.25 + damage / 1800.0), maxf(radius * 4.0, 1500.0))
+
+# Distance-attenuated screen-shake trigger for explosions. Mirrors the HTML
+# "distance-based camera shake" block (lines 3896-3904). amount is the peak
+# intensity at distance 0; falloff is quadratic out to max_distance, at which
+# point the contribution is zero. Skips when player is null/dead or mounted
+# on a camera that isn't following the event space (headless tests).
+func _shake_from_event(position: Vector3, amount: float, max_distance: float) -> void:
+	if player == null or not player.is_alive():
+		return
+	if amount <= 0.0:
+		return
+	var distance := player.global_position.distance_to(position)
+	var falloff := clampf(1.0 - distance / maxf(1.0, max_distance), 0.0, 1.0)
+	var shake := amount * falloff * falloff
+	if shake > 0.05:
+		player.add_screen_shake(shake)
 
 # Record damage the local player dealt to enemy ships for the scoreboard
 # stats. Source is the attacking Node3D; target is whatever took the hit.
