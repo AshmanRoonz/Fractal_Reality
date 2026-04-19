@@ -1464,8 +1464,14 @@ postFX.compositeMat = new THREE.ShaderMaterial({
 postFX.brightQuad = new THREE.Mesh(postFX.quadGeo, postFX.brightMat);
 postFX.blurQuad = new THREE.Mesh(postFX.quadGeo, postFX.blurMat);
 postFX.compositeQuad = new THREE.Mesh(postFX.quadGeo, postFX.compositeMat);
+// Single scene with all three quads; toggle .visible per pass instead of add/remove every frame.
 postFX.passScene = new THREE.Scene();
 postFX.passScene.add(postFX.brightQuad);
+postFX.passScene.add(postFX.blurQuad);
+postFX.passScene.add(postFX.compositeQuad);
+postFX.brightQuad.visible = false;
+postFX.blurQuad.visible = false;
+postFX.compositeQuad.visible = false;
 
 function renderPostFX() {
   const damageMax = Math.max(
@@ -1481,20 +1487,21 @@ function renderPostFX() {
 
   // 2. Extract bright pixels
   postFX.brightMat.uniforms.tDiffuse.value = postFX.rtScene.texture;
-  postFX.passScene.remove(postFX.blurQuad, postFX.compositeQuad);
-  postFX.passScene.add(postFX.brightQuad);
+  postFX.brightQuad.visible = true;
+  postFX.blurQuad.visible = false;
+  postFX.compositeQuad.visible = false;
   renderer.setRenderTarget(postFX.rtBright);
   renderer.render(postFX.passScene, postFX.quadCamera);
 
   // 3. Horizontal blur
   postFX.blurMat.uniforms.tDiffuse.value = postFX.rtBright.texture;
   postFX.blurMat.uniforms.direction.value.set(1, 0);
-  postFX.passScene.remove(postFX.brightQuad, postFX.compositeQuad);
-  postFX.passScene.add(postFX.blurQuad);
+  postFX.brightQuad.visible = false;
+  postFX.blurQuad.visible = true;
   renderer.setRenderTarget(postFX.rtBlurH);
   renderer.render(postFX.passScene, postFX.quadCamera);
 
-  // 4. Vertical blur
+  // 4. Vertical blur (blurQuad already the only visible one)
   postFX.blurMat.uniforms.tDiffuse.value = postFX.rtBlurH.texture;
   postFX.blurMat.uniforms.direction.value.set(0, 1);
   renderer.setRenderTarget(postFX.rtBlurV);
@@ -1503,8 +1510,8 @@ function renderPostFX() {
   // 5. Composite to screen
   postFX.compositeMat.uniforms.tScene.value = postFX.rtScene.texture;
   postFX.compositeMat.uniforms.tBloom.value = postFX.rtBlurV.texture;
-  postFX.passScene.remove(postFX.brightQuad, postFX.blurQuad);
-  postFX.passScene.add(postFX.compositeQuad);
+  postFX.blurQuad.visible = false;
+  postFX.compositeQuad.visible = true;
   renderer.setRenderTarget(null);
   renderer.render(postFX.passScene, postFX.quadCamera);
 }
@@ -4572,6 +4579,14 @@ function respawnPlayer() {
 
 // ---- PLAYER MOVEMENT ----
 
+// Scratch vectors reused every frame to avoid GC churn in the movement loop.
+const _mvForward = new THREE.Vector3();
+const _mvRight = new THREE.Vector3();
+const _mvUp = new THREE.Vector3(0, 1, 0);
+const _mvMoveDir = new THREE.Vector3();
+const _mvAccelDir = new THREE.Vector3();
+const _mvDrag = new THREE.Vector3();
+
 function updatePlayerMovement(dt) {
   if (player.shipState === 'dead' || !player.chassis) return;
   // Immobilized during stasis field recharge
@@ -4609,46 +4624,46 @@ function updatePlayerMovement(dt) {
   input.mouseDY = 0;
 
   camera.quaternion.setFromEuler(player.euler);
-  const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
-  const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
-  const up = new THREE.Vector3(0, 1, 0);
+  const forward = _mvForward.set(0, 0, -1).applyQuaternion(camera.quaternion);
+  const right = _mvRight.set(1, 0, 0).applyQuaternion(camera.quaternion);
+  const up = _mvUp;
 
   // Movement input (keyboard)
-  const moveDir = new THREE.Vector3();
-  if (input.keys['w'] || input.keys['arrowup']) moveDir.add(forward.clone().multiplyScalar(ch.flightSpeed));
-  if (input.keys['s'] || input.keys['arrowdown']) moveDir.add(forward.clone().multiplyScalar(-ch.flightSpeed * 0.6));
-  if (input.keys['a'] || input.keys['arrowleft']) moveDir.add(right.clone().multiplyScalar(-ch.strafeSpeed));
-  if (input.keys['d'] || input.keys['arrowright']) moveDir.add(right.clone().multiplyScalar(ch.strafeSpeed));
-  if (input.keys[' ']) moveDir.add(up.clone().multiplyScalar(ch.verticalSpeed));
-  if (input.keys['control']) moveDir.add(up.clone().multiplyScalar(-ch.verticalSpeed));
+  const moveDir = _mvMoveDir.set(0, 0, 0);
+  if (input.keys['w'] || input.keys['arrowup']) moveDir.addScaledVector(forward, ch.flightSpeed);
+  if (input.keys['s'] || input.keys['arrowdown']) moveDir.addScaledVector(forward, -ch.flightSpeed * 0.6);
+  if (input.keys['a'] || input.keys['arrowleft']) moveDir.addScaledVector(right, -ch.strafeSpeed);
+  if (input.keys['d'] || input.keys['arrowright']) moveDir.addScaledVector(right, ch.strafeSpeed);
+  if (input.keys[' ']) moveDir.addScaledVector(up, ch.verticalSpeed);
+  if (input.keys['control']) moveDir.addScaledVector(up, -ch.verticalSpeed);
 
   // Gamepad movement (uses configured curve and sensitivity)
   if (input.gpConnected) {
     const gpMoveMult = input.gpMoveSensitivity / 10.0;
     if (Math.abs(input.gpMoveY) > 0.01) {
-      moveDir.add(forward.clone().multiplyScalar(-input.gpMoveY * ch.flightSpeed * gpMoveMult));
+      moveDir.addScaledVector(forward, -input.gpMoveY * ch.flightSpeed * gpMoveMult);
     }
     if (Math.abs(input.gpMoveX) > 0.01) {
-      moveDir.add(right.clone().multiplyScalar(input.gpMoveX * ch.strafeSpeed * gpMoveMult));
+      moveDir.addScaledVector(right, input.gpMoveX * ch.strafeSpeed * gpMoveMult);
     }
     // D-pad up/down for vertical movement
-    if (input.gpMoveUp) moveDir.add(up.clone().multiplyScalar(ch.verticalSpeed));
-    if (input.gpMoveDown) moveDir.add(up.clone().multiplyScalar(-ch.verticalSpeed));
+    if (input.gpMoveUp) moveDir.addScaledVector(up, ch.verticalSpeed);
+    if (input.gpMoveDown) moveDir.addScaledVector(up, -ch.verticalSpeed);
   }
 
   // Northstar Afterburner speed boost
   if (player.afterburnerActive) moveDir.multiplyScalar(player.afterburnerSpeedMult);
 
   // Acceleration
-  if (moveDir.length() > 0) {
-    const accelDir = moveDir.clone().sub(player.velocity);
+  if (moveDir.lengthSq() > 0) {
+    const accelDir = _mvAccelDir.copy(moveDir).sub(player.velocity);
     const accelMag = Math.min(accelDir.length(), ch.acceleration * dt);
     if (accelMag > 0.01) player.velocity.add(accelDir.normalize().multiplyScalar(accelMag));
   } else {
     const speed = player.velocity.length();
     if (speed > 1) {
       const drag = Math.min(speed, ch.deceleration * dt);
-      player.velocity.sub(player.velocity.clone().normalize().multiplyScalar(drag));
+      player.velocity.sub(_mvDrag.copy(player.velocity).normalize().multiplyScalar(drag));
     } else {
       player.velocity.set(0, 0, 0);
     }
@@ -9131,7 +9146,10 @@ function gameLoop(timestamp) {
     camera.position.y += game.shakeOffset.y;
   }
 
-  game.killFeed = game.killFeed.filter(e => game.time - e.time < 8);
+  // In-place expire of old kill-feed entries; avoids per-frame array allocation.
+  for (let i = game.killFeed.length - 1; i >= 0; i--) {
+    if (game.time - game.killFeed[i].time >= 8) game.killFeed.splice(i, 1);
+  }
 
   // Update dynamic explosion lights
   updateDynamicLights();
