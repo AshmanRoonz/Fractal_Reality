@@ -3534,9 +3534,11 @@ class Projectile {
     this.position.add(this.velocity.clone().multiplyScalar(dt));
     this.mesh.position.copy(this.position);
 
-    // Fire projectiles ignite gas clouds as they fly through (not just on splash)
+    // Fire projectiles ignite gas clouds as they fly through (not just on splash).
+    // Radius 150 ensures a fast-moving round passing near the cloud edge reliably
+    // triggers ignition, even at high frame intervals (Scorch weapon "touch" feel).
     if (this.isFireSource) {
-      igniteNearbyGas(this.position, 80);
+      igniteNearbyGas(this.position, 150);
     }
 
     // --- Shift trail positions forward and add current pos at head ---
@@ -3767,16 +3769,25 @@ class Projectile {
   }
 }
 
-// Ignite any Incendiary Trap gas clouds near a fire source position
+// Ignite any Incendiary Trap gas clouds near a fire source position. If the cloud
+// is already burning, a fresh fire-source contact refreshes the burn timer back to
+// its full duration (sustained fire sources, like the Thermal Shield held inside
+// the cloud, keep the blaze alive).
 function igniteNearbyGas(pos, radius) {
   for (const eff of game.worldEffects) {
-    if (eff.type === 'incendiary_gas' && !eff.ignited && pos.distanceTo(eff.position) < eff.radius + radius) {
+    if (eff.type !== 'incendiary_gas') continue;
+    if (pos.distanceTo(eff.position) >= eff.radius + radius) continue;
+    if (!eff.ignited) {
+      // First ignition: light the cloud, color swap, pop explosion/light
       eff.ignited = true;
       eff.igniteTimer = eff.igniteDuration;
       if (eff.mesh) { eff.mesh.material.color.setHex(0xff4400); eff.mesh.material.opacity = 0.18; }
       if (eff.coreMesh) { eff.coreMesh.material.color.setHex(0xff6600); eff.coreMesh.material.opacity = 0.15; }
       spawnExplosion(eff.position, 30);
       spawnDynamicLight(eff.position, 0xff4400, 3.0, 500, 0.5);
+    } else {
+      // Re-contact refreshes the burn timer (but never beyond igniteDuration)
+      eff.igniteTimer = Math.max(eff.igniteTimer, eff.igniteDuration);
     }
   }
 }
@@ -6242,13 +6253,17 @@ function executeAbility(slot, ability) {
         game.worldEffects[game.worldEffects.length - 1].mesh = mineMesh;
       }
     }
-    // SCORCH: Incendiary Trap (gas canisters that ignite on contact with fire/thermite)
+    // SCORCH: Incendiary Trap (gas canisters that ignite on contact with any Scorch fire source:
+    // thermite rounds, firewall, thermal shield, flame core). Once lit, the cloud burns anything
+    // inside it (bots + player if enemy trap). Re-contact with a fire source refreshes the burn
+    // timer, so holding the thermal shield in the cloud keeps the blaze alive until the shield
+    // power runs out.
     else if (ability.name === 'Incendiary Trap') {
       const trapPos = player.position.clone().add(forward.clone().multiplyScalar(400));
       game.worldEffects.push({
         type: 'incendiary_gas', position: trapPos.clone(),
         timer: 15, radius: 350, owner: 'player', team: player.team,
-        ignited: false, igniteDmgPerSec: 120, igniteTimer: 0, igniteDuration: 8, slowFactor: 0.5,
+        ignited: false, igniteDmgPerSec: 450, igniteTimer: 0, igniteDuration: 10, slowFactor: 0.5,
         fxTimer: 0,
       });
       // Visual: large semi-transparent gas cloud (matches actual 350-unit radius)
@@ -9303,10 +9318,11 @@ function buildRoomGraphLevel(level) {
       '}'
     ].join('\n');
 
-    // Wall shader (Nexus): dark base + per-zone colored grid, organic fractal
-    // roots growing from the floor up the lower half of walls, and a
+    // Wall shader (Nexus): dark base with the dancing Kali IFS cosmic fractal
+    // covering every surface at full brightness (floor to ceiling), and a
     // one-way-transparent upper half (interior view sees through to the
-    // starfield/skybox; exterior/back-face view stays opaque).
+    // starfield/skybox; exterior/back-face view stays opaque). No grid;
+    // the fractal IS the texture.
     const sdfFragSrc = [
       'uniform float time;',
       'varying vec3 vWorldPos;',
@@ -9374,23 +9390,12 @@ function buildRoomGraphLevel(level) {
       '    float phase = atan(pp.x, pp.y);',
       '    float q = 0.5 + 0.5 * sin(phase * 3.0 + tt * 0.3 + rf * 1.7);',
       '    float band = q < 0.5 ? 0.65 : 1.0;',
-      '    float val = clamp(s / 600.0 * (0.25 + 0.75 * band), 0.0, 2.5);',
+      '    float val = clamp(s / 380.0 * (0.35 + 0.80 * band), 0.0, 4.5);',
       '    float hue = fract(baseHue + rf * 0.12 + phase * 0.05 + tt * 0.02);',
       '    float sat = 0.55 + rf * 0.10;',
       '    accum += hsv(hue, sat, val) * pow(0.75, rf);',
       '  }',
       '  return accum;',
-      '}',
-      // Sharp per-zone grid, kept at low opacity so the cosmic fractal
-      // reads as the primary texture and the grid just marks zone edges.
-      'float zoneGrid(vec3 wp) {',
-      '  float s = 75.0;',
-      '  vec3 m = mod(wp, s) / s;',
-      '  vec3 d = min(m, 1.0 - m);',
-      '  float lineX = 1.0 - smoothstep(0.00, 0.015, d.x);',
-      '  float lineY = 1.0 - smoothstep(0.00, 0.015, d.y);',
-      '  float lineZ = 1.0 - smoothstep(0.00, 0.015, d.z);',
-      '  return max(lineX, max(lineY, lineZ));',
       '}',
       'void main() {',
       // Nearest room supplies the zone color and the local wall extent used
@@ -9409,41 +9414,34 @@ function buildRoomGraphLevel(level) {
       // surface gets placed along the local vertical axis, which is what we
       // want since the rooms/tunnels are rotationally symmetric.
       '  float heightFrac = clamp((vWorldPos.y - (nearC.y - nearR)) / (2.0 * nearR), 0.0, 1.0);',
-      // Base: very dark, slight zone tint.
-      '  vec3 dark = vec3(0.015, 0.020, 0.035) + zoneColor * 0.25;',
+      // Base: very dark, slight zone tint. Kept dark so the bright fractal pops.
+      '  vec3 dark = vec3(0.010, 0.012, 0.022) + zoneColor * 0.20;',
       '  vec3 c = dark;',
-      // Cosmic Kali IFS fractal: the main wall texture. Evaluated at the
+      // Cosmic Kali IFS fractal: the sole wall texture. Evaluated at the
       // vertex world position, steered by the zone color into a hue band,
-      // and faded from the floor up so the lower half glows brightly and
-      // the upper half calms toward the transparent window.
-      '  float floorUpFade = pow(1.0 - heightFrac, 1.6);',
-      '  float fracPulse = 0.88 + 0.12 * sin(time * 0.35);',
+      // and rendered at full brightness across the ENTIRE surface (floor,
+      // walls, ceiling) so the dancing fractal surrounds the player. A
+      // gentle pulse breathes the whole pattern; a second faster shimmer
+      // adds sparkle. No floor-up fade; no grid.
+      '  float fracPulse = 0.92 + 0.12 * sin(time * 0.35);',
+      '  float shimmer   = 0.90 + 0.18 * sin(time * 1.10 + vWorldPos.x * 0.003 + vWorldPos.z * 0.003);',
       '  vec3 cosmic = cosmicField(vWorldPos, zoneColor, time);',
-      '  c += cosmic * floorUpFade * fracPulse * 1.4;',
-      // Subtle per-zone grid, low opacity so it reads as zone bounds on top
-      // of the cosmic texture rather than fighting with it.
-      '  float grid = zoneGrid(vWorldPos);',
-      '  vec3 gridColor = zoneColor * 2.4 + vec3(0.03, 0.05, 0.08);',
-      '  c = mix(c, gridColor, grid * 0.35);',
-      // Soft diffuse + rim so surfaces read in 3D.
+      '  c += cosmic * fracPulse * shimmer * 3.4;',
+      // Soft diffuse + rim so surfaces still read in 3D.
       '  vec3 vd = normalize(cameraPosition - vWorldPos);',
       '  float diff = max(dot(vNormal, vd), 0.0) * 0.35 + 0.65;',
       '  float fresnelFactor = pow(1.0 - abs(dot(vNormal, vd)), 3.0);',
-      '  c += zoneColor * 1.5 * fresnelFactor * 0.4;',
+      '  c += zoneColor * 1.8 * fresnelFactor * 0.5;',
       '  c *= diff * vAO;',
-      // Upper half is one-way transparent: interior (front-face) fades to
-      // low alpha above heightFrac ~0.5 so players see the starfield through
-      // the top of any chamber, sphere, or tunnel. Back faces stay opaque so
-      // nobody can peer *in* from outside. No wallness gate; rooms are
-      // spheres/cylinders, so "upper wall" for them is the curved top band,
-      // not an axis-aligned vertical surface.
-      '  float upperMask = smoothstep(0.50, 0.72, heightFrac);',
+      // Upper half is one-way transparent: interior (front-face) fades toward
+      // low alpha above heightFrac ~0.5 so players still see the starfield
+      // through the top of any chamber. Back faces stay opaque. The fractal
+      // continues to the fade edge so the transition reads as a glowing
+      // cosmic haze dissolving into sky, not a ragged hole.
+      '  float upperMask = smoothstep(0.50, 0.80, heightFrac);',
       '  float alpha = 1.0;',
       '  if (gl_FrontFacing) {',
-      // Keep grid lines visible in the transparent band so the top reads as
-      // a framed window rather than a ragged hole.
-      '    float gridVis = max(grid * 0.55, 0.10);',
-      '    alpha = mix(1.0, gridVis, upperMask);',
+      '    alpha = mix(1.0, 0.08, upperMask);',
       '  }',
       '  gl_FragColor = vec4(c, alpha);',
       '}'
