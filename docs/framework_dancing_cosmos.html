@@ -131,11 +131,30 @@
   // 8 frequency octaves × 3 temporal layers, flattened : index (oct*3 + layer).
   // Octave n maps to dimensional station n (0=• aperture ... 7=⟳ recursion).
   uniform float uOct[24];
-  uniform float uPreBeat;       // anticipation envelope (predicts, unified)
-  uniform float uLock;          // 0..1 tempo confidence (unified)
-  uniform float uBeatPhase;     // 0..2π, wraps each beat, locked to tempo
-  uniform float uPhrase;        // -1..1, building vs ebbing
-  uniform float uFamiliarity;   // 0..1 cosine similarity with running signature
+  // The 12-bin chroma vector: pitch classes C, C#, D, ..., B. Because the
+  // visible spectrum is one octave of light and an audio octave subdivides
+  // into 12 semitones, each pitch class maps to a specific hue on the color
+  // wheel (hue = p/12). Sound and light are the same Φ oscillation at
+  // different scales; the 12 audio bins drive 12 hue positions, not by
+  // convention but by A3 (fractal self-similarity across scale).
+  uniform float uChroma[12];
+  uniform float uChromaBass[12];    // 40-250 Hz: chord roots, ⊛ convergence
+  uniform float uChromaTreble[12];  // 250+ Hz: melody, ✹ emergence
+  uniform float uTonic;             // 0..11 detected key center
+  uniform float uMode;              // 0=minor, 1=major
+  uniform float uKeyConf;           // 0..1
+  uniform float uChordRoot;         // 0..11
+  uniform float uChordQual;         // 0=minor, 1=major
+  uniform float uChordConf;         // 0..1
+  uniform float uFlatness;          // 0=tonal (pitched), 1=noisy (percussion)
+  uniform float uBarLen;            // 2..8 beats per bar (time signature top)
+  uniform float uBarPhase;          // 0..1 position inside current bar
+  uniform float uBarConf;           // 0..1
+  uniform float uPreBeat;           // anticipation envelope (predicts, unified)
+  uniform float uLock;              // 0..1 tempo confidence (unified)
+  uniform float uBeatPhase;         // 0..2π, wraps each beat, locked to tempo
+  uniform float uPhrase;            // -1..1, building vs ebbing
+  uniform float uFamiliarity;       // 0..1 cosine similarity with running signature
 
   vec3 hsv(float h, float s, float v){
     vec3 k = mod(vec3(5.0, 3.0, 1.0) + h * 6.0, 6.0);
@@ -150,6 +169,27 @@
       o*ax.x*ax.y + ax.z*s, o*ax.y*ax.y + c,      o*ax.y*ax.z - ax.x*s,
       o*ax.z*ax.x - ax.y*s, o*ax.y*ax.z + ax.x*s, o*ax.z*ax.z + c
     );
+  }
+
+  // chromaAt: sample the 12-bin chroma vector by continuous index
+  // (0..12 wrapping). Uses Gaussian weighting on the three nearest bins
+  // so adjacent pitch classes blend smoothly (a C#/D half-step shows a
+  // hue between red-orange and orange-yellow, not a hard step).
+  float chromaAt(float idx, int which){
+    float sum = 0.0;
+    for(int i = 0; i < 12; i++){
+      float fi = float(i);
+      float d = fi - idx;
+      // Wrap distance to the nearer side of the circle.
+      if(d >  6.0) d -= 12.0;
+      if(d < -6.0) d += 12.0;
+      float w = exp(-d * d * 1.6);
+      float v = which == 0 ? uChroma[i]
+              : which == 1 ? uChromaBass[i]
+                           : uChromaTreble[i];
+      sum += v * w;
+    }
+    return sum;
   }
 
   void main(){
@@ -169,20 +209,97 @@
     vec3 offCos  = vec3(3.0, 2.618, 1.618);
     vec3 offsetBase = offAtom*w0 + offBio*w1 + offPlan*w2 + offCos*w3;
 
-    float hueBase = 0.56*w0 + 0.36*w1 + 0.09*w2 + 0.78*w3;
-    hueBase += uFamiliarity * 0.08;
+    // TONIC HUE: the detected key center IS a specific color because audio
+    // and light are the same Φ oscillation at different scales. C = 0/12,
+    // C# = 1/12, ..., B = 11/12 on the color wheel. Mode tilt: major
+    // warms the palette; minor cools it.
+    float tonicHue = uTonic / 12.0;
+    float modeTilt = (uMode - 0.5) * 0.06;   // ±0.03 hue warmth
+    // Harmonic gate: how much of the visual comes from real tonal content
+    // vs the era palette fallback. High when key+chord are locked and the
+    // signal is tonal; drops to 0 during drum fills / noise bursts.
+    float harmonic = uKeyConf * (1.0 - uFlatness * 0.8);
+    harmonic = clamp(harmonic, 0.0, 1.0);
 
-    // Shared, unified responses (the pump's singular beat belongs to the whole).
+    // FEATURE PHASE: run a small kaleidoscope seed to get a per-pixel
+    // fractal angle. That angle indexes the chroma vector (0..12), so
+    // pixels in different fractal basins sample different pitch classes.
+    // The whole ring of 12 semitones wraps once around the folded figure.
+    vec3 pSeed = vec3((FC.xy * 2.0 - r) / r.y * 1.5, 0.5);
+    pSeed = pSeed * rotate3D(t * 0.09,
+                   vec3(sin(t * 0.25), 1.618, cos(t * 0.25)));
+    for(int k = 0; k < 4; k++){
+      float se = max(0.95, 9.0 / dot(pSeed, pSeed));
+      pSeed *= se;
+      if(pSeed.x + pSeed.y < 0.0) pSeed.xy = -pSeed.yx;
+      if(pSeed.x + pSeed.z < 0.0) pSeed.xz = -pSeed.zx;
+      if(pSeed.y + pSeed.z < 0.0) pSeed.yz = -pSeed.zy;
+      pSeed -= vec3(1.618, 1.5, 1.0);
+    }
+    float seedPhase = atan(pSeed.x, pSeed.y);                 // -π..π
+    // Pixel's pitch-class index, 0..12. Rotated slowly by tonic so the
+    // tonic always sits at the same angular position on screen (the key
+    // anchors the picture to itself).
+    float pcIdx = fract(seedPhase / 6.2831853 + 0.5 - uTonic / 12.0) * 12.0;
+    // Radial feature: how "inside" the fractal this pixel is (0 = near
+    // center, 1 = far out). Controls bass vs treble chroma selection.
+    float pRadius = clamp(length(pSeed) * 0.12, 0.0, 1.0);
+
+    // Per-pixel chroma energy: bass-chroma near the center (⊛, convergence),
+    // treble-chroma near the edges (✹, emergence), mid-chroma in between.
+    float eBass   = chromaAt(pcIdx, 1);
+    float eTreble = chromaAt(pcIdx, 2);
+    float eAll    = chromaAt(pcIdx, 0);
+    float radialMix = smoothstep(0.15, 0.85, pRadius);   // 0 inner, 1 outer
+    float pixChroma = mix(eBass, eTreble, radialMix) * 0.6 + eAll * 0.4;
+
+    // CHORD BOOST: if the pixel's pitch class is one of the triad notes,
+    // amplify its energy. Three peaks on the color wheel (root, third,
+    // fifth) get punched harder than the rest. Confidence-gated so
+    // ambiguous passages don't force a chord look.
+    float chordRootD = pcIdx - uChordRoot;
+    if(chordRootD >  6.0) chordRootD -= 12.0;
+    if(chordRootD < -6.0) chordRootD += 12.0;
+    float thirdSemis = mix(3.0, 4.0, uChordQual);    // minor=3, major=4
+    float chordThirdD = pcIdx - mod(uChordRoot + thirdSemis, 12.0);
+    if(chordThirdD >  6.0) chordThirdD -= 12.0;
+    if(chordThirdD < -6.0) chordThirdD += 12.0;
+    float chordFifthD = pcIdx - mod(uChordRoot + 7.0, 12.0);
+    if(chordFifthD >  6.0) chordFifthD -= 12.0;
+    if(chordFifthD < -6.0) chordFifthD += 12.0;
+    float chordPeaks = exp(-chordRootD * chordRootD * 1.2)
+                     + exp(-chordThirdD * chordThirdD * 1.4) * 0.8
+                     + exp(-chordFifthD * chordFifthD * 1.4) * 0.7;
+    pixChroma *= (1.0 + chordPeaks * uChordConf * 1.2);
+
+    // HUE: pitch-class position on the color wheel. Pure light-frequency
+    // mapping when chroma is strong; era palette when harmonic content is
+    // weak or absent.
+    float pitchHue  = pcIdx / 12.0 + modeTilt;
+    // Neutral era hue retained as fallback (slow breathing sweep).
+    float eraHueBase = 0.56*w0 + 0.36*w1 + 0.09*w2 + 0.78*w3;
+    eraHueBase += uFamiliarity * 0.08;
+    // Gate: how much a given pixel shows pitch-hue vs era-hue.
+    float pixShift = smoothstep(0.05, 0.55, pixChroma) * harmonic;
+
+    // DIMENSIONS: shared responses.
     float invBase = 9.0*w0 + 10.5*w1 + 8.0*w2 + 7.0*w3;
     float rotBase = 0.20*w0 + 0.15*w1 + 0.10*w2 + 0.05*w3;
     float lockedPhase = uBeatPhase * uLock;
-    float zoom = 1.0 - uPreBeat * 0.05;
+    // Downbeat pulse: strongest at bar phase 0, fades through the bar.
+    // ⟳ recursion is the bar closing; the full-cycle pulse on beat 1.
+    float downbeatT = exp(-uBarPhase * uBarPhase * 20.0)
+                    + exp(-(1.0 - uBarPhase) * (1.0 - uBarPhase) * 20.0);
+    float zoom = 1.0 - uPreBeat * 0.05 - downbeatT * 0.03 * uBarConf;
     float satBoost = uFamiliarity * 0.20;
+
+    // FOLD COUNT: the kaleidoscope symmetry equals the time signature.
+    // 3/4 → 3-fold lobes (waltz = T), 4/4 → 4-fold (P), 5/4 → 5, 6/8 → 6,
+    // 7/8 → 7 (R), etc. Falls back to 3 when no bar is locked.
+    float foldN = mix(3.0, uBarLen, uBarConf);
 
     for(int triad = 0; triad < 3; triad++){
       float tf = float(triad);
-      // Each triad pulls from its own temporal layer of the audio.
-      // triad 0 = ⊙λ (you) = fast ; triad 1 = ⊙Λ = medium ; triad 2 = ∞ = slow.
       float bassT = uBass[triad];
       float midsT = uMids[triad];
       float trebT = uTreble[triad];
@@ -190,28 +307,20 @@
       float beatT = uBeat[triad];
       float centT = uCentroid[triad];
 
-      // Layer damping : outer triad moves slower in space too (not just time).
-      float tempoDamp = 1.0 - tf * 0.33;   // 1.0, 0.67, 0.34
+      float tempoDamp = 1.0 - tf * 0.33;
 
       float sMul = pow(1.618, 3.0 - tf * 2.0) * (zoom - beatT * 0.08 * tempoDamp);
       float weight = pow(0.78, tf) * (0.7 + 0.6 * rmsT);
-      float hueShift = hueBase + tf * 0.06 + centT * 0.1 + trebT * 0.15;
 
-      // Per-triad mids push : the field offset breathes at this triad's tempo.
-      // Outer triad gets a much slower carrier so it doesn't wobble.
-      float mT = (tf + 1.0) * 0.35;    // 0.35, 0.70, 1.05 : slower carriers for slower triads
+      float mT = (tf + 1.0) * 0.35;
       vec3 triadOff = offsetBase +
         vec3(sin(t * (1.3 - mT)), cos(t * (1.1 - mT)), sin(t * (0.9 - mT * 0.5)))
         * midsT * 0.5;
 
-      // Per-triad inversion : bass tightens convergence at this triad's tempo.
-      // Beat is stronger on inner (fast) triad, almost absent on outer (slow).
       float triadInv = invBase + bassT * 3.0 + beatT * 3.0 * tempoDamp
-                                + uPreBeat * 2.0 * tempoDamp;
+                                + uPreBeat * 2.0 * tempoDamp
+                                + downbeatT * 1.2 * uBarConf * tempoDamp;
 
-      // Per-triad rotation : treble adds spin but damped for slower triads ;
-      // the locked-tempo phase adds a gentle synced component for the inner
-      // triad, less for middle, none for outer (the source doesn't spin).
       float triadRot = rotBase * tempoDamp + trebT * 0.15 * tempoDamp
                       + beatT * 0.18 * tempoDamp;
       float triadDrive = t * triadRot + lockedPhase * 0.18 * tempoDamp;
@@ -234,35 +343,35 @@
         g += mod(length(p.yy), p.y) / s * 0.5;
 
         float phase = atan(p.x, p.y);
-        q = 0.5 + 0.5 * sin(phase * 3.0 + t * 0.5 + uBeatPhase * uLock * tempoDamp);
+        // FOLD symmetry driven by time signature. Bar phase rotates the
+        // pattern once per bar (downbeat always lands in the same orientation).
+        q = 0.5 + 0.5 * sin(phase * foldN + t * 0.5
+                            + uBeatPhase * uLock * tempoDamp
+                            + uBarPhase * 6.2831853);
         float band = q < 0.333 ? 13.0/20.0
                    : q < 0.666 ? 7.0/9.0
                    : 1.0;
 
-        // BASE LAYER : Copy-palette exactly. Narrow hue shift around
-        // hueBase, satin palette, always visible. This is the aesthetic
-        // floor ; the rainbow layer below adds ON TOP of this.
-        float hue = hueShift + 0.12 * cos(phase + t * 0.2);
-        float sat = 0.35 - g * 0.02 + midsT * 0.15 + satBoost;
+        // PITCH HUE first, era hue as backup. All 21 ring samples at this
+        // pixel share pitchHue/pixShift, so additive blending stacks one
+        // hue cleanly (no wash to white).
+        float eraHue = eraHueBase + tf * 0.06 + centT * 0.1 + trebT * 0.15
+                     + 0.12 * cos(phase + t * 0.2);
+        float hue = mix(eraHue, pitchHue, pixShift);
+        // Saturation: lifts on strong chroma, also on the downbeat.
+        float sat = 0.30 - g * 0.02 + midsT * 0.12 + satBoost
+                  + pixShift * 0.45
+                  + downbeatT * 0.10 * uBarConf;
+        // Brightness: RMS-driven with beat emphasis. Dissonance/noise
+        // (uFlatness) gently flattens brightness so percussion doesn't
+        // overdrive the exposure.
         float val = s / 4500.0 * (0.22 + 0.78 * band)
-                    * (1.0 + beatT * 0.4 * tempoDamp + uPreBeat * 0.25 * tempoDamp);
+                    * (1.0 + beatT * 0.4 * tempoDamp
+                          + uPreBeat * 0.25 * tempoDamp
+                          + downbeatT * 0.35 * uBarConf * tempoDamp)
+                    * (1.0 + pixShift * 0.6)
+                    * (1.0 - uFlatness * 0.15);
         o.rgb += hsv(hue, sat, val) * weight;
-
-        // RAINBOW LAYER : ring n is assigned octave n, full-rainbow hue
-        // mapping (low = red, mid = green, high = violet). Gated by
-        // octEnergy so SILENT octaves draw nothing (no wash) and only the
-        // DOMINANT 1-3 octaves glow at a given instant. This is what makes
-        // colors visibly track the music : quiet bass → no red ; loud
-        // bass → red ring glows ; treble spike → violet ring flashes.
-        // smoothstep(0.12, 0.5) = hard dead zone below 12%, full by 50%.
-        float octEnergy = uOct[n * 3];                          // fast channel
-        float octMed    = uOct[n * 3 + 1];                      // medium (for sustain)
-        float octGate   = smoothstep(0.12, 0.5, octEnergy);
-        float rainbowHue = float(n) / 7.0;                      // 0=red → 1=red again
-        // Slight hue animation so the rainbow isn't static per ring.
-        rainbowHue += 0.03 * sin(t * 0.4 + float(n) * 1.618);
-        float rainbowVal = val * octGate * (1.5 + octMed * 2.0) * (1.0 + beatT * 0.5);
-        o.rgb += hsv(rainbowHue, 0.88, rainbowVal) * weight;
       }
     }
 
@@ -334,6 +443,19 @@
   const uPhrase = gl.getUniformLocation(prog, 'uPhrase');
   const uFamiliarity = gl.getUniformLocation(prog, 'uFamiliarity');
   const uOctLoc = gl.getUniformLocation(prog, 'uOct');
+  const uChromaLoc = gl.getUniformLocation(prog, 'uChroma');
+  const uChromaBassLoc = gl.getUniformLocation(prog, 'uChromaBass');
+  const uChromaTrebleLoc = gl.getUniformLocation(prog, 'uChromaTreble');
+  const uTonicLoc = gl.getUniformLocation(prog, 'uTonic');
+  const uModeLoc = gl.getUniformLocation(prog, 'uMode');
+  const uKeyConfLoc = gl.getUniformLocation(prog, 'uKeyConf');
+  const uChordRootLoc = gl.getUniformLocation(prog, 'uChordRoot');
+  const uChordQualLoc = gl.getUniformLocation(prog, 'uChordQual');
+  const uChordConfLoc = gl.getUniformLocation(prog, 'uChordConf');
+  const uFlatnessLoc = gl.getUniformLocation(prog, 'uFlatness');
+  const uBarLenLoc = gl.getUniformLocation(prog, 'uBarLen');
+  const uBarPhaseLoc = gl.getUniformLocation(prog, 'uBarPhase');
+  const uBarConfLoc = gl.getUniformLocation(prog, 'uBarConf');
 
   function resize(){
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -482,6 +604,259 @@
   let sigSpectrum = null;            // running signature of the spectrum
   let sFamiliarity = 0;              // smoothed cosine similarity
 
+  // ---------------- Chroma and music theory ----------------
+  // The 12 pitch classes (C, C#, D, ..., B). One Φ oscillation wraps the
+  // octave; 12 generators (G = T(T+1)) subdivide the cycle. The visible
+  // spectrum is one octave of light (400-790 THz; 790/400 ≈ 1.975), so
+  // audio pitch class p maps directly to hue = p/12 on the color wheel.
+  // This is not analogy: sound and light are the same Φ oscillation at
+  // different scales. Middle C shifted 41 octaves lands at ~575 THz
+  // (yellow-green). Every other pitch class is forced from there.
+  const CHROMA_REF_HZ = 16.35;   // C0, so log2(f/ref) gives pitch directly
+  // Three time layers of chroma, and a bass/treble split.
+  const sChroma       = [new Float32Array(12), new Float32Array(12), new Float32Array(12)];
+  const sChromaBass   = new Float32Array(12);   // 40-250 Hz: roots of chords
+  const sChromaTreble = new Float32Array(12);   // 250+ Hz: melody, upper voices
+  const chromaFast    = new Float32Array(12);   // for shader upload (fast layer)
+  // Krumhansl-Schmuckler key profiles (rotations of these 12-vectors, one
+  // rotation per tonic, matched to chroma by Pearson correlation).
+  const K_MAJOR = [6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88];
+  const K_MINOR = [6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17];
+  // Running "key chroma": ~8s window (slower than chord changes, faster than
+  // whole-song so it can track key modulations). This is the bed the key
+  // detector reads from.
+  const keyChroma = new Float32Array(12);
+  let sTonic     = 0;   // 0..11, C = 0
+  let sMode      = 1;   // 0 = minor, 1 = major
+  let sKeyConf   = 0;
+  let sChordRoot = 0;
+  let sChordQual = 1;
+  let sChordConf = 0;
+  let sFlatness  = 0;   // 0 = tonal, 1 = noisy
+
+  // ---------------- Time signature / bar structure ----------------
+  // Bar autocorrelation runs on the same 60Hz ODF, but the candidate lags
+  // are multiples of the detected beat period. Signatures 2..8 cover all
+  // common meters: 2/4, 3/4, 4/4, 5/4, 6/8, 7/8, 8/8.
+  const BAR_MIN = 2;
+  const BAR_MAX = 8;
+  const barScore = new Float32Array(BAR_MAX - BAR_MIN + 1);
+  const barEMA   = new Float32Array(BAR_MAX - BAR_MIN + 1);
+  let sBarLen   = 4;      // integer beats per bar (2..8)
+  let sBarConf  = 0;      // 0..1 confidence
+  let sBarPhase = 0;      // 0..1 position inside current bar
+  let barPhaseClock = 0;  // integrated time since last inferred downbeat
+  let lastBarWinner = 4;  // hysteresis for bar-length argmax
+  let barChallenge = -1;
+  let barChallengeT = 0;
+  let lastBarT = -1;      // wall time of previous bar detection pass
+  let beatsInBar = 0;     // integer: 0..sBarLen-1, which beat of the bar we're on
+
+  // Precomputed per-bin pitch class and bass/treble assignment, filled once
+  // the analyser is created so we can do chroma in O(N) per frame.
+  let binPitch = null;      // Int16Array: pitch class 0..11 or -1 (below ref / DC)
+  let binIsBass = null;     // Int8Array: 1 if <250 Hz (and >40 Hz)
+
+  function buildChromaTable(){
+    const sr = audioCtx.sampleRate;
+    const N  = freqBuf.length;
+    const binHz = (sr / 2) / N;
+    binPitch  = new Int16Array(N);
+    binIsBass = new Int8Array(N);
+    for(let i = 0; i < N; i++){
+      const f = i * binHz;
+      if(f < 27.5 || f > 8000){ binPitch[i] = -1; binIsBass[i] = 0; continue; }
+      // Pitch class = round(12 * log2(f / C0)) mod 12. C0 ≈ 16.35 Hz.
+      const pc = Math.round(12 * Math.log2(f / CHROMA_REF_HZ)) % 12;
+      binPitch[i]  = (pc + 12) % 12;
+      binIsBass[i] = (f >= 40 && f < 250) ? 1 : 0;
+    }
+  }
+
+  // ---------------- Chroma vector (12 pitch classes) ----------------
+  // Sum FFT magnitudes into pitch class buckets, octave-folded. Light low
+  // frequencies so the kick drum doesn't dominate the harmonic picture.
+  // Produces: raw 12-bin chroma (normalized), bass-only chroma (roots),
+  // treble-only chroma (melody/upper voices).
+  const chromaRaw    = new Float32Array(12);
+  const chromaRawB   = new Float32Array(12);
+  const chromaRawT   = new Float32Array(12);
+
+  function computeChroma(){
+    chromaRaw.fill(0);
+    chromaRawB.fill(0);
+    chromaRawT.fill(0);
+    const N = freqBuf.length;
+    for(let i = 1; i < N; i++){
+      const pc = binPitch[i];
+      if(pc < 0) continue;
+      // Magnitude squared = energy. Emphasizes tonal bins over noise floor.
+      const m = freqBuf[i] / 255.0;
+      const e = m * m;
+      chromaRaw[pc] += e;
+      if(binIsBass[i]) chromaRawB[pc] += e;
+      else             chromaRawT[pc] += e;
+    }
+    // Normalize each vector to [0,1] (max = 1 when populated).
+    let maxA = 0, maxB = 0, maxT = 0;
+    for(let p = 0; p < 12; p++){
+      if(chromaRaw[p]  > maxA) maxA = chromaRaw[p];
+      if(chromaRawB[p] > maxB) maxB = chromaRawB[p];
+      if(chromaRawT[p] > maxT) maxT = chromaRawT[p];
+    }
+    const invA = maxA > 1e-9 ? 1 / maxA : 0;
+    const invB = maxB > 1e-9 ? 1 / maxB : 0;
+    const invT = maxT > 1e-9 ? 1 / maxT : 0;
+    for(let p = 0; p < 12; p++){
+      chromaRaw[p]  *= invA;
+      chromaRawB[p] *= invB;
+      chromaRawT[p] *= invT;
+    }
+  }
+
+  // ---------------- Key detection (Krumhansl-Schmuckler) ----------------
+  // Correlate the rolling key-chroma window against 24 candidate profiles
+  // (12 major + 12 minor rotations). Pearson correlation; argmax is the key.
+  // Confidence = (best - second_best) / best (gap-normalized, 0..1).
+  function detectKey(){
+    // Chroma mean (needed for Pearson).
+    let cMean = 0;
+    for(let p = 0; p < 12; p++) cMean += keyChroma[p];
+    cMean /= 12;
+    let cSq = 0;
+    for(let p = 0; p < 12; p++){
+      const d = keyChroma[p] - cMean;
+      cSq += d * d;
+    }
+    if(cSq < 1e-9){ sKeyConf *= 0.95; return; }
+    const cNorm = Math.sqrt(cSq);
+    // Pre-compute profile means once (constants of the input profiles).
+    let mMajor = 0, mMinor = 0;
+    for(let p = 0; p < 12; p++){ mMajor += K_MAJOR[p]; mMinor += K_MINOR[p]; }
+    mMajor /= 12; mMinor /= 12;
+    let majSq = 0, minSq = 0;
+    for(let p = 0; p < 12; p++){
+      const dj = K_MAJOR[p] - mMajor;
+      const dn = K_MINOR[p] - mMinor;
+      majSq += dj * dj; minSq += dn * dn;
+    }
+    const majNorm = Math.sqrt(majSq);
+    const minNorm = Math.sqrt(minSq);
+    let bestR = -2, bestTonic = 0, bestMode = 1;
+    let secondR = -2;
+    for(let t = 0; t < 12; t++){
+      let dotMaj = 0, dotMin = 0;
+      for(let p = 0; p < 12; p++){
+        const c = keyChroma[p] - cMean;
+        dotMaj += c * (K_MAJOR[(p - t + 12) % 12] - mMajor);
+        dotMin += c * (K_MINOR[(p - t + 12) % 12] - mMinor);
+      }
+      const rMaj = dotMaj / (cNorm * majNorm);
+      const rMin = dotMin / (cNorm * minNorm);
+      if(rMaj > bestR){ secondR = bestR; bestR = rMaj; bestTonic = t; bestMode = 1; }
+      else if(rMaj > secondR) secondR = rMaj;
+      if(rMin > bestR){ secondR = bestR; bestR = rMin; bestTonic = t; bestMode = 0; }
+      else if(rMin > secondR) secondR = rMin;
+    }
+    // Smoothed key with slow EMA so modulations take seconds to register.
+    // If the new best tonic matches the current one, confidence climbs;
+    // if it jumps, confidence falls and the tonic follows only as the
+    // signal holds.
+    const conf = Math.max(0, Math.min(1, (bestR - Math.max(0, secondR)) / Math.max(0.15, bestR)));
+    if(bestTonic === sTonic && bestMode === sMode){
+      sKeyConf = sKeyConf * 0.92 + conf * 0.08;
+    } else {
+      sKeyConf *= 0.92;
+      if(sKeyConf < 0.25){
+        // Accept the new key; confidence will climb from here.
+        sTonic = bestTonic;
+        sMode  = bestMode;
+        sKeyConf = conf * 0.3;
+      }
+    }
+  }
+
+  // ---------------- Chord detection (triad templates) ----------------
+  // Match current chroma against 24 triad templates (major/minor × 12 roots).
+  // Major triad = root + major third (+4 semitones) + perfect fifth (+7).
+  // Minor triad = root + minor third (+3) + perfect fifth (+7).
+  function detectChord(){
+    let bestScore = -1, bestRoot = 0, bestQual = 1;
+    let secondScore = -1;
+    for(let r = 0; r < 12; r++){
+      // Each template is three bins. Score = sum of chroma at those bins
+      // minus penalty for mass outside them (keeps C major from winning
+      // every time there's stray energy anywhere).
+      const sMaj = chromaRaw[r] + chromaRaw[(r + 4) % 12] + chromaRaw[(r + 7) % 12];
+      const sMin = chromaRaw[r] + chromaRaw[(r + 3) % 12] + chromaRaw[(r + 7) % 12];
+      if(sMaj > bestScore){ secondScore = bestScore; bestScore = sMaj; bestRoot = r; bestQual = 1; }
+      else if(sMaj > secondScore) secondScore = sMaj;
+      if(sMin > bestScore){ secondScore = bestScore; bestScore = sMin; bestRoot = r; bestQual = 0; }
+      else if(sMin > secondScore) secondScore = sMin;
+    }
+    const conf = Math.max(0, Math.min(1, (bestScore - Math.max(0, secondScore)) / Math.max(0.3, bestScore)));
+    // Chord changes fast: short EMA so it tracks harmony in real time.
+    if(bestRoot === sChordRoot && bestQual === sChordQual){
+      sChordConf = sChordConf * 0.80 + conf * 0.20;
+    } else {
+      sChordConf *= 0.80;
+      if(sChordConf < 0.4){
+        sChordRoot = bestRoot;
+        sChordQual = bestQual;
+        sChordConf = conf * 0.5;
+      }
+    }
+  }
+
+  // ---------------- Bar length (time signature) detection ----------------
+  // Given tempoSec (seconds per beat), candidate bar lengths are N beats
+  // for N = 2..8. Autocorrelate the ODF at each bar-length lag; pick
+  // winner with hysteresis. 3→3/4 (waltz), 4→4/4 (common), 6→6/8 (compound),
+  // 7→7/8, etc.
+  function detectBar(tNow, dt){
+    if(tempoSec < 0.2 || tempoLock < 0.35){ sBarConf *= 0.95; return; }
+    const beatLag = tempoSec * ODF_RATE;   // ODF samples per beat
+    let sumTotal = 0;
+    for(let n = BAR_MIN; n <= BAR_MAX; n++){
+      const lag = Math.round(beatLag * n);
+      if(lag >= ODF_LEN) { barScore[n - BAR_MIN] = 0; continue; }
+      const Nw = ODF_LEN - lag;
+      let s = 0;
+      for(let i = 0; i < Nw; i++){
+        const a = odfBuf[(odfIdx + i) % ODF_LEN];
+        const b = odfBuf[(odfIdx + i + lag) % ODF_LEN];
+        s += a * b;
+      }
+      barScore[n - BAR_MIN] = s / Nw;
+      sumTotal += barScore[n - BAR_MIN];
+    }
+    // Time-based EMA on the bar scores.
+    const emaAlpha = 1 - Math.exp(-dt / 4.0);
+    for(let k = 0; k < barScore.length; k++){
+      barEMA[k] = barEMA[k] * (1 - emaAlpha) + barScore[k] * emaAlpha;
+    }
+    // Argmax over EMA with hysteresis.
+    let bestK = 0, bestV = barEMA[0];
+    for(let k = 1; k < barEMA.length; k++){
+      if(barEMA[k] > bestV){ bestV = barEMA[k]; bestK = k; }
+    }
+    const bestN = bestK + BAR_MIN;
+    let total = 0;
+    for(let k = 0; k < barEMA.length; k++) total += Math.max(0, barEMA[k]);
+    const conf = total > 1e-9 ? bestV / total : 0;
+    if(bestN === lastBarWinner){
+      barChallenge = -1; barChallengeT = 0;
+    } else {
+      if(bestN !== barChallenge){ barChallenge = bestN; barChallengeT = 0; }
+      else barChallengeT += dt;
+      if(barChallengeT > 1.0){
+        lastBarWinner = bestN; barChallenge = -1; barChallengeT = 0;
+      }
+    }
+    sBarLen  = lastBarWinner;
+    sBarConf = sBarConf * 0.92 + Math.min(1, conf * 3.5) * 0.08;
+  }
+
   function ensureAudioCtx(){
     if(!audioCtx){
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -504,6 +879,7 @@
         octBinLo[o] = Math.max(1, Math.floor(fLo / binHz));
         octBinHi[o] = Math.min(freqBuf.length, Math.ceil(fHi / binHz));
       }
+      buildChromaTable();
     }
   }
 
@@ -532,6 +908,16 @@
     odfIdx = 0; odfPrev = 0; odfClock = -1;
     lastAcfT = -1; lastPhaseT = -1;
     winnerLag = -1; winnerChallenge = -1; winnerChallengeT = 0;
+    // Music theory state.
+    for(let i = 0; i < 3; i++) sChroma[i].fill(0);
+    sChromaBass.fill(0); sChromaTreble.fill(0); keyChroma.fill(0); chromaFast.fill(0);
+    sTonic = 0; sMode = 1; sKeyConf = 0;
+    sChordRoot = 0; sChordQual = 1; sChordConf = 0;
+    sFlatness = 0;
+    barScore.fill(0); barEMA.fill(0);
+    sBarLen = 4; sBarConf = 0; sBarPhase = 0;
+    lastBarWinner = 4; barChallenge = -1; barChallengeT = 0;
+    lastBarT = -1; beatsInBar = 0; barPhaseClock = 0;
   }
 
   async function useMic(){
@@ -810,6 +1196,13 @@
     // tempoBPM, tempoSec, and tempoLock are updated from inside runAutocorrSoftmax.
     pushODF(tNow, bass);
     runAutocorrSoftmax(tNow);
+    // Bar-length / time-signature detection uses the same ODF buffer at
+    // multi-beat lags.
+    {
+      const barDt = lastBarT < 0 ? 1/60 : Math.max(1/600, Math.min(0.2, tNow - lastBarT));
+      lastBarT = tNow;
+      detectBar(tNow, barDt);
+    }
 
     let rms = 0;
     for(let i = 0; i < timeBuf.length; i++){
@@ -840,6 +1233,47 @@
     sRMS[2]      = sRMS[2]      * 0.995 + rms      * 0.005;
     sCentroid[2] = sCentroid[2] * 0.997 + centroid * 0.003;
 
+    // Chroma: 12-bin pitch class vector. This is the harmonic content, the
+    // input to key/chord detection and the forced hue mapping.
+    if(binPitch){
+      computeChroma();
+      // Three-layer smoothing on chroma (same pattern as bass/mids/treble).
+      for(let p = 0; p < 12; p++){
+        sChroma[0][p]     = sChroma[0][p]     * 0.78  + chromaRaw[p]  * 0.22;
+        sChroma[1][p]     = sChroma[1][p]     * 0.96  + chromaRaw[p]  * 0.04;
+        sChroma[2][p]     = sChroma[2][p]     * 0.995 + chromaRaw[p]  * 0.005;
+        sChromaBass[p]    = sChromaBass[p]    * 0.85  + chromaRawB[p] * 0.15;
+        sChromaTreble[p]  = sChromaTreble[p]  * 0.85  + chromaRawT[p] * 0.15;
+        // Key chroma: very slow EMA (~8s) so key detection sees the
+        // statistical distribution of pitch classes over a long window.
+        keyChroma[p] = keyChroma[p] * 0.992 + chromaRaw[p] * 0.008;
+      }
+      detectKey();
+      detectChord();
+    }
+
+    // Spectral flatness: geomean / arithmean over the 40-8000 Hz band.
+    // Near 1 = noise-like (percussion, breath); near 0 = tonal (pure pitch).
+    // Used to gate harmonic mapping: during drum fills we want less chroma
+    // influence because there are no real pitches.
+    {
+      const loF = Math.max(1, Math.floor(40 / binHz));
+      const hiF = Math.min(N - 1, Math.floor(8000 / binHz));
+      let logSum = 0, arithSum = 0, cnt = 0;
+      for(let i = loF; i < hiF; i++){
+        const v = freqBuf[i] / 255.0 + 1e-6;
+        logSum += Math.log(v);
+        arithSum += v;
+        cnt++;
+      }
+      if(cnt > 0 && arithSum > 1e-6){
+        const gm = Math.exp(logSum / cnt);
+        const am = arithSum / cnt;
+        const flat = Math.max(0, Math.min(1, gm / am));
+        sFlatness = sFlatness * 0.90 + flat * 0.10;
+      }
+    }
+
     // Spectral pyramid : one value per octave, each octave = one dimensional
     // station. A song's actual content is here ; bass/mids/treb above were a
     // 3-bucket cross-section of the same 8 octaves.
@@ -868,7 +1302,21 @@
                   && spike    > 0.04
                   && (tNow - lastBeatT) > 0.18;
     if(isTrans){
+      // Advance the bar-position counter on every confirmed beat. A bar of
+      // sBarLen beats wraps at the downbeat (beatsInBar = 0 = beat 1 of
+      // the next bar). The strongest beats tend to be downbeats, so if a
+      // hit is especially loud we snap the counter to 0 to correct drift.
+      beatsInBar = (beatsInBar + 1) % Math.max(2, sBarLen | 0);
+      // Downbeat-snap: if this onset is much stronger than recent onsets,
+      // assume it's the downbeat and realign. Gated by bar confidence.
+      if(sBarConf > 0.25 && spike > 0.12 && sBass[0] > bassLongAvg * 1.9){
+        beatsInBar = 0;
+      }
       beatEnv[0] = 1.0;
+      // Downbeat gets an extra kick: full ⟳ recursion of the bar. Gated
+      // by bar confidence so it only kicks in once the time signature is
+      // actually known.
+      if(beatsInBar === 0) beatEnv[0] = 1.0 + 0.5 * sBarConf;
       preBeatEnv = 0;   // reset anticipation ; the event happened
       lastBeatT = tNow;
       onBeatDetected(tNow);
@@ -901,6 +1349,11 @@
       // Predict next-beat timestamp from current phase.
       const phaseToNext = (2 * Math.PI - beatPhase) % (2 * Math.PI);
       nextBeatAt = tNow + (phaseToNext / (2 * Math.PI)) * tempoSec;
+      // Bar phase: combine integer beatsInBar with continuous beatPhase.
+      // Range 0..1; 0 = on the downbeat, 0.25 = middle of beat 1 in 4/4,
+      // 0.5 = on beat 3 in 4/4, etc. Goes to the shader as uBarPhase.
+      const bl = Math.max(2, sBarLen | 0);
+      sBarPhase = ((beatsInBar + beatPhase / (2 * Math.PI)) / bl) % 1;
       // Pre-beat envelope uses the projected phase directly ; cubic ease-in
       // so it's mostly dormant until just before the predicted hit. Gated
       // softly by lock so weak lock = weak anticipation (not off).
@@ -1000,6 +1453,24 @@
     const phraseText = sPhrase > 0.05 ? 'building'
                      : sPhrase < -0.05 ? 'ebbing' : 'steady';
 
+    // Pitch-class name and key/chord readouts.
+    const NOTE_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+    const tonicName = NOTE_NAMES[((sTonic % 12) + 12) % 12];
+    const modeName  = sMode > 0.5 ? 'maj' : 'min';
+    const keyText   = sKeyConf > 0.15
+                    ? tonicName + ' ' + modeName + ' (' + (sKeyConf * 100).toFixed(0) + '%)'
+                    : 'searching';
+    const chordRootName = NOTE_NAMES[((sChordRoot % 12) + 12) % 12];
+    const chordQualName = sChordQual > 0.5 ? 'maj' : 'min';
+    const chordText = sChordConf > 0.2
+                    ? chordRootName + ' ' + chordQualName + ' (' + (sChordConf * 100).toFixed(0) + '%)'
+                    : '-';
+    const barLenInt = Math.round(sBarLen);
+    const timeText  = sBarConf > 0.25
+                    ? barLenInt + '/4 (' + (sBarConf * 100).toFixed(0) + '%)'
+                    : 'searching';
+    const tonality = sFlatness < 0.2 ? 'tonal' : sFlatness > 0.6 ? 'noisy' : 'mixed';
+
     const timeToNext = Math.max(0, nextBeatAt - (performance.now() / 1000.0 - (startTs / 1000.0)));
     // Progressive messaging so you can see the learning happening.
     let tempoText;
@@ -1027,6 +1498,11 @@
         '   <span class="' + lockClass + '">LOCK ' + lockMark + ' ' + bar(tempoLock, 10) + '</span>\n' +
       ' PRE-BEAT       ' + bar(preBeatEnv, 16) + '  ' + tempoText + '\n' +
       ' FAMILIARITY    ' + bar(sFamiliarity, 16) + '  ' + sFamiliarity.toFixed(2) + '\n' +
+      ' KEY            ' + bar(sKeyConf, 16)     + '  ' + keyText + '\n' +
+      ' CHORD          ' + bar(sChordConf, 16)   + '  ' + chordText + '\n' +
+      ' METER          ' + bar(sBarConf, 16)     + '  ' + timeText +
+        '  bar φ ' + bar(sBarPhase, 8) + '\n' +
+      ' TONALITY       ' + bar(1 - sFlatness, 16) + '  ' + tonality + '\n' +
       '<span class="audio-status">' + srcLabel + '</span>';
   }
 
@@ -1070,6 +1546,22 @@
     gl.uniform1fv(uBeat, beatU);
     gl.uniform1fv(uCentroid, centU);
     gl.uniform1fv(uOctLoc, octU);
+    // Pack the 12-dim chroma vector (fast layer) : one weight per pitch class.
+    // Physics-grounded: pitch class = angular position on the color wheel, by A3.
+    for(let p = 0; p < 12; p++) chromaFast[p] = Math.min(1, sChroma[0][p]);
+    gl.uniform1fv(uChromaLoc, chromaFast);
+    gl.uniform1fv(uChromaBassLoc, sChromaBass);
+    gl.uniform1fv(uChromaTrebleLoc, sChromaTreble);
+    gl.uniform1f(uTonicLoc, sTonic);
+    gl.uniform1f(uModeLoc, sMode);
+    gl.uniform1f(uKeyConfLoc, Math.max(0, Math.min(1, sKeyConf)));
+    gl.uniform1f(uChordRootLoc, sChordRoot);
+    gl.uniform1f(uChordQualLoc, sChordQual);
+    gl.uniform1f(uChordConfLoc, Math.max(0, Math.min(1, sChordConf)));
+    gl.uniform1f(uFlatnessLoc, Math.max(0, Math.min(1, sFlatness)));
+    gl.uniform1f(uBarLenLoc, sBarLen);
+    gl.uniform1f(uBarPhaseLoc, sBarPhase);
+    gl.uniform1f(uBarConfLoc, Math.max(0, Math.min(1, sBarConf)));
     gl.uniform1f(uPreBeat, preBeatEnv);
     gl.uniform1f(uLock, tempoLock);
     gl.uniform1f(uBeatPhase, beatPhase);
