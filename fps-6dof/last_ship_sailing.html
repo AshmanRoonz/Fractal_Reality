@@ -301,6 +301,192 @@ canvas { display: block; }
 .map-card.selected { border-color: #ffff00; background: rgba(40,40,60,0.95); }
 .map-card .map-name { font-size: 16px; font-weight: bold; color: #ffaa00; margin-bottom: 8px; }
 .map-card .map-desc { font-size: 11px; color: #aaa; line-height: 1.4; }
+
+/* ==========================================================================
+   CINEMATIC OVERLAYS (ported from lss_overlays.jsx; pure CSS animations)
+   ========================================================================== */
+
+/* Damage vignette: red radial gradient flash */
+#ov-damage-vignette {
+  position: fixed; inset: 0; pointer-events: none; z-index: 50;
+  opacity: 0;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(255,0,0,0.5) 100%);
+  box-shadow: inset 0 0 80px rgba(255,0,0,0.3), inset 0 0 120px rgba(0,0,0,0.2);
+}
+#ov-damage-vignette.flash { animation: ovDamageFlash 0.45s ease-out forwards; }
+@keyframes ovDamageFlash {
+  0%   { opacity: 0; }
+  15%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Kill streak announcement */
+#ov-killstreak {
+  position: fixed; top: 28%; left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0; z-index: 60; pointer-events: none; text-align: center;
+  font-family: 'Courier New', monospace;
+}
+#ov-killstreak.show { animation: ovKillStreak 2s ease-out forwards; }
+@keyframes ovKillStreak {
+  0%   { opacity: 0; transform: translate(-50%, calc(-50% - 40px)) scale(0.3); }
+  8%   { opacity: 1; transform: translate(-50%, -50%) scale(var(--ks-scale, 1.2)) ; }
+  12%  { transform: translate(-50%, -50%) scale(calc(var(--ks-scale, 1.2) * 0.92)); }
+  70%  { opacity: 1; transform: translate(-50%, -50%) scale(var(--ks-scale, 1.2)); }
+  100% { opacity: 0; transform: translate(-50%, calc(-50% + 30px)) scale(var(--ks-scale, 1.2)); }
+}
+#ov-killstreak .ks-label {
+  font-weight: bold; font-size: 42px; letter-spacing: 6px;
+  color: var(--ks-color, #ffcc00);
+  text-shadow: 0 0 12px var(--ks-color-soft, #ffcc0088), 0 0 30px var(--ks-color-faint, #ffcc0044);
+}
+#ov-killstreak.godlike .ks-label {
+  text-shadow: 0 0 20px var(--ks-color, #ff00ff), 0 0 40px var(--ks-color, #ff00ff), 0 0 60px var(--ks-color, #ff00ff);
+  filter: brightness(1.3);
+}
+#ov-killstreak .ks-count { font-size: 14px; letter-spacing: 4px; margin-top: 4px; color: var(--ks-color-soft, #ffcc00aa); }
+#ov-killstreak .ks-bar {
+  width: var(--ks-bar-w, 80px); height: 2px; margin: 6px auto 0;
+  background: linear-gradient(90deg, transparent, var(--ks-color, #ffcc00), transparent);
+}
+
+/* Round countdown 3-2-1-FIGHT */
+#ov-countdown {
+  position: fixed; top: 40%; left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0; z-index: 65; pointer-events: none; text-align: center;
+  font-family: 'Courier New', monospace;
+}
+#ov-countdown.show { animation: ovCountdown 0.9s ease-out forwards; }
+@keyframes ovCountdown {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+  10%  { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+  20%  { transform: translate(-50%, -50%) scale(0.95); }
+  30%  { transform: translate(-50%, -50%) scale(1.02); }
+  70%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1.3); }
+}
+#ov-countdown .cd-label { font-size: 12px; color: #ffaa00aa; letter-spacing: 4px; margin-bottom: 8px; }
+#ov-countdown .cd-number { font-weight: bold; font-size: 96px; color: #ffffff; text-shadow: 0 0 20px rgba(255,255,255,0.3); letter-spacing: 0; }
+#ov-countdown.fight .cd-number { font-size: 64px; color: #ff4400; text-shadow: 0 0 30px #ff4400, 0 0 60px #ff220088; letter-spacing: 8px; }
+#ov-countdown .cd-ring {
+  position: absolute; top: 50%; left: 50%;
+  width: 80px; height: 80px; border: 2px solid rgba(255,170,0,0.4);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: ovCountdownRing 0.9s ease-out forwards;
+}
+@keyframes ovCountdownRing {
+  0%   { width: 80px; height: 80px; opacity: 0.4; }
+  100% { width: 280px; height: 280px; opacity: 0; }
+}
+
+/* Medal popup (stack) */
+#ov-medals {
+  position: fixed; left: 50%; top: 62%;
+  transform: translateX(-50%);
+  z-index: 55; pointer-events: none;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  font-family: 'Courier New', monospace;
+}
+.ov-medal {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(0,0,0,0.6); padding: 4px 14px;
+  border: 1px solid var(--med-color-faint, #ff440044);
+  border-radius: 2px;
+  opacity: 0; transform: translateX(-40px);
+  animation: ovMedal 2.2s ease-out forwards;
+}
+@keyframes ovMedal {
+  0%   { opacity: 0; transform: translateX(-40px); }
+  8%   { opacity: 1; transform: translateX(4px); }
+  12%  { transform: translateX(0); }
+  75%  { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(20px); }
+}
+.ov-medal .med-icon { font-size: 18px; color: var(--med-color, #ff4400); filter: drop-shadow(0 0 6px var(--med-color, #ff4400)); }
+.ov-medal .med-label { font-size: 11px; color: var(--med-color, #ff4400); letter-spacing: 2px; font-weight: bold; }
+
+/* Ability flash (edge glow + center label) */
+#ov-ability {
+  position: fixed; inset: 0; pointer-events: none; z-index: 48;
+  opacity: 0;
+  font-family: 'Courier New', monospace;
+}
+#ov-ability.show { animation: ovAbility 0.8s ease-out forwards; }
+@keyframes ovAbility {
+  0%   { opacity: 0; }
+  20%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+#ov-ability .ab-edge {
+  position: absolute; inset: 0;
+  box-shadow: inset 0 0 100px var(--ab-color, #ffffff), inset 0 0 200px var(--ab-color-soft, rgba(255,255,255,0.5));
+  opacity: 0.5;
+}
+#ov-ability .ab-label {
+  position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 14px; color: var(--ab-color, #ffffff); letter-spacing: 4px; font-weight: bold;
+  text-shadow: 0 0 10px var(--ab-color, #ffffff);
+  animation: ovAbilityLabel 0.8s ease-out forwards;
+}
+@keyframes ovAbilityLabel {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+  20%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.3); }
+}
+
+/* Respawn overlay (persistent until hideRespawn()) */
+#ov-respawn {
+  position: fixed; inset: 0; z-index: 70; pointer-events: none;
+  background: rgba(0,0,0,0); opacity: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-family: 'Courier New', monospace;
+  transition: background 0.6s ease-out, opacity 0.6s ease-out;
+}
+#ov-respawn.show { opacity: 1; background: rgba(0,0,0,0.6); }
+#ov-respawn .rs-destroyed {
+  color: #ff2200; font-size: 36px; font-weight: bold; letter-spacing: 6px;
+  text-shadow: 0 0 20px rgba(255,34,0,0.5);
+  transform: scale(0.8); transition: transform 0.6s ease-out;
+}
+#ov-respawn.show .rs-destroyed { transform: scale(1); }
+#ov-respawn .rs-killer { color: #aaa; font-size: 13px; margin-top: 12px; letter-spacing: 2px; }
+#ov-respawn .rs-killer b { color: #ff6666; font-weight: bold; }
+#ov-respawn .rs-countdown { color: #ffaa00; font-size: 18px; margin-top: 24px; letter-spacing: 3px; }
+#ov-respawn .rs-ring { margin-top: 16px; }
+#ov-respawn .rs-number {
+  fill: #ff4400; font-family: 'Courier New', monospace; font-size: 20px; font-weight: bold;
+}
+
+/* Round transition banner */
+#ov-banner {
+  position: fixed; top: 38%; left: 50%; transform: translate(-50%, -50%);
+  opacity: 0; z-index: 65; pointer-events: none; text-align: center;
+  font-family: 'Courier New', monospace;
+}
+#ov-banner.show { animation: ovBanner 3s ease-out forwards; }
+@keyframes ovBanner {
+  0%   { opacity: 0; }
+  10%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+#ov-banner .ban-line {
+  height: 1px; margin: 0 auto;
+  background: linear-gradient(90deg, transparent, #ffaa00, transparent);
+  width: 0; animation: ovBannerLine 3s ease-out forwards;
+}
+#ov-banner .ban-line.top { margin-bottom: 12px; }
+#ov-banner .ban-line.bot { margin-top: 12px; }
+@keyframes ovBannerLine {
+  0%   { width: 0; }
+  10%  { width: 300px; }
+  80%  { width: 300px; }
+  100% { width: 300px; }
+}
+#ov-banner .ban-text { font-size: 28px; font-weight: bold; color: #ffaa00; letter-spacing: 8px; text-shadow: 0 0 20px rgba(255,170,0,0.4); }
+#ov-banner .ban-sub { font-size: 12px; color: #888; letter-spacing: 3px; margin-top: 6px; }
 </style>
 </head>
 <body>
@@ -384,6 +570,48 @@ canvas { display: block; }
 <svg class="damage-indicator" id="dmg-right" viewBox="0 0 60 20">
   <polygon points="10,20 30,2 50,20" fill="rgba(255,40,0,0.8)" stroke="rgba(255,100,50,0.6)" stroke-width="1"/>
 </svg>
+
+<!-- Cinematic overlays (ported from lss_overlays.jsx) -->
+<div id="ov-damage-vignette"></div>
+
+<div id="ov-killstreak">
+  <div class="ks-label"></div>
+  <div class="ks-count"></div>
+  <div class="ks-bar"></div>
+</div>
+
+<div id="ov-countdown">
+  <div class="cd-label">ROUND 1</div>
+  <div class="cd-number">3</div>
+  <div class="cd-ring"></div>
+</div>
+
+<div id="ov-medals"></div>
+
+<div id="ov-ability">
+  <div class="ab-edge"></div>
+  <div class="ab-label">ABILITY ACTIVE</div>
+</div>
+
+<div id="ov-respawn">
+  <div class="rs-destroyed">DESTROYED</div>
+  <div class="rs-killer" style="display:none">by <b></b></div>
+  <div class="rs-countdown">RESPAWN IN <span class="rs-num">5</span></div>
+  <svg class="rs-ring" width="80" height="80">
+    <circle cx="40" cy="40" r="35" fill="none" stroke="#ff220033" stroke-width="3"/>
+    <circle class="rs-ring-fg" cx="40" cy="40" r="35" fill="none" stroke="#ff4400" stroke-width="3"
+            stroke-dasharray="0 220" stroke-linecap="round" transform="rotate(-90 40 40)"
+            style="transition: stroke-dasharray 1s linear"/>
+    <text class="rs-number" x="40" y="46" text-anchor="middle">5</text>
+  </svg>
+</div>
+
+<div id="ov-banner">
+  <div class="ban-line top"></div>
+  <div class="ban-text">ROUND START</div>
+  <div class="ban-sub"></div>
+  <div class="ban-line bot"></div>
+</div>
 
 <!-- Enemy health bars overlay -->
 <div id="enemy-healthbars"></div>
@@ -2786,6 +3014,42 @@ class Bot {
       player.coreMeter = Math.min(100, player.coreMeter + 15);
       addKillFeed('You', this.loadout.name);
       showKillMarker();
+      // Cinematic: multi-kill streak window + medals.
+      if (window.Overlays) {
+        if (!player._streakCount) player._streakCount = 0;
+        const now = game.time;
+        const MULTIKILL_WINDOW = 4.0; // seconds between kills to chain
+        if (player._lastKillTime != null && (now - player._lastKillTime) <= MULTIKILL_WINDOW) {
+          player._streakCount++;
+        } else {
+          player._streakCount = 1;
+        }
+        player._lastKillTime = now;
+        if (player._streakCount >= 2) Overlays.killStreak(player._streakCount);
+        // First blood: first kill of the current round.
+        if (!game._firstBloodClaimed) {
+          game._firstBloodClaimed = true;
+          Overlays.medal('firstBlood');
+        }
+        // Longshot: > 1800 units from the kill point.
+        if (this.position && player.position) {
+          const d2 = player.position.distanceToSquared(this.position);
+          if (d2 > 1800 * 1800) Overlays.medal('longshot');
+        }
+        // Revenge: this bot is who last killed the player.
+        if (player._lastKilledBy && player._lastKilledBy === this) {
+          Overlays.medal('revenge');
+          player._lastKilledBy = null;
+        }
+        // Shutdown: the bot itself was on a streak ≥ 3.
+        if (this._streakCount && this._streakCount >= 3) Overlays.medal('shutdown');
+      }
+    } else if (attacker && attacker !== 'player') {
+      // Bot-on-bot or bot-on-player: track this bot's own streak for shutdown medals.
+      if (attacker.alive !== undefined) {
+        if (!attacker._streakCount) attacker._streakCount = 0;
+        attacker._streakCount++;
+      }
     }
   }
 
@@ -4502,6 +4766,11 @@ function playerTakeDamage(amount, attacker, projectile) {
   const shakeAmt = Math.min(8, amount / 150);
   triggerScreenShake(shakeAmt);
 
+  // Cinematic damage vignette (intensity 0..1 normalized to max health)
+  if (window.Overlays && player.maxHealth) {
+    Overlays.damageVignette(amount / player.maxHealth);
+  }
+
   // Damage direction indicator
   if (attacker && attacker.position) {
     showDamageIndicator(attacker.position);
@@ -4530,6 +4799,13 @@ function playerDie(attacker) {
   player.deaths++;
   spawnExplosion(player.position, player.chassis.hullLength);
   if (attacker && attacker.loadout) addKillFeed(attacker.loadout.name, 'You');
+  // Cinematic: respawn overlay + track killer for revenge medals.
+  player._streakCount = 0;
+  player._lastKilledBy = attacker && attacker.loadout ? attacker : null;
+  if (window.Overlays) {
+    const killerName = (attacker && attacker.loadout) ? attacker.loadout.name : '';
+    Overlays.respawn(killerName, 3);
+  }
   setTimeout(() => {
     if (game.state === 'playing' || game.state === 'warmup') respawnPlayer();
   }, 3000);
@@ -4537,6 +4813,7 @@ function playerDie(attacker) {
 
 function respawnPlayer() {
   if (!player.loadout) return;
+  if (window.Overlays) Overlays.hideRespawn();
   const ch = player.chassis;
   player.health = ch.maxHealth;
   player.shield = ch.maxShield;
@@ -5167,6 +5444,26 @@ function activateAbility(slot) {
 
   player.abilityActive[slot] = true;
   player.abilityTimers[slot] = ability.duration;
+  // Cinematic: edge glow + "X ACTIVE" label. Map the long ability name to a
+  // color bucket; Overlays.abilityFlash picks the color for known keys and
+  // accepts an explicit hex otherwise.
+  if (window.Overlays) {
+    const ABILITY_COLORS = {
+      dash: '#00ccff', shield: '#4488ff', overclock: '#ffaa00', cloak: '#aa44ff',
+      emp: '#ff4400', heal: '#44ff88', stasis: '#00ffcc', missiles: '#ff6600',
+    };
+    const keyMap = {
+      'afterburner': 'overclock', 'phase dash': 'dash', 'gun shield': 'shield',
+      'thermal shield': 'shield', 'vortex shield': 'shield', 'sword block': 'shield',
+      'particle wall': 'shield', 'cluster missile': 'missiles', 'tracker rockets': 'missiles',
+      'rocket salvo': 'missiles', 'laser shot': 'emp', 'arc wave': 'emp',
+      'power shot': 'overclock', 'firewall': 'emp', 'rearm': 'heal',
+      'trip wire': 'stasis', 'incendiary trap': 'emp', 'tether trap': 'stasis',
+      'energy siphon': 'heal',
+    };
+    const bucket = keyMap[(ability.name || '').toLowerCase()] || null;
+    Overlays.abilityFlash(ability.name || 'ABILITY', bucket ? ABILITY_COLORS[bucket] : null);
+  }
   executeAbility(slot, ability);
   if (ability.cooldown > 0) {
     let cd = ability.cooldown;
@@ -6432,8 +6729,26 @@ function dash() {
 
 function updateRoundSystem(dt) {
   if (game.state === 'warmup') {
+    const prev = game.warmupTimer;
     game.warmupTimer -= dt;
-    if (game.warmupTimer <= 0) { game.state = 'playing'; game.roundTimer = LSS.ROUND_TIME; playSound('round_start'); }
+    // Cinematic 3-2-1 countdown in the final seconds of warmup.
+    if (window.Overlays) {
+      for (let n = 3; n >= 1; n--) {
+        if (prev > n && game.warmupTimer <= n) {
+          Overlays.countdown(n, 'ROUND ' + (game.currentRound || 1));
+        }
+      }
+    }
+    if (game.warmupTimer <= 0) {
+      game.state = 'playing';
+      game.roundTimer = LSS.ROUND_TIME;
+      playSound('round_start');
+      // Cinematic: FIGHT! banner on warmup -> playing transition.
+      if (window.Overlays) {
+        Overlays.countdown('FIGHT', '');
+        game._firstBloodClaimed = false;
+      }
+    }
   } else if (game.state === 'playing') {
     game.roundTimer -= dt;
     const aliveA = (player.shipState !== 'dead' ? 1 : 0) +
@@ -6446,16 +6761,22 @@ function updateRoundSystem(dt) {
       else game.scoreA++;
       game.state = 'roundEnd';
       game.roundEndTimer = 5;
+      if (window.Overlays) Overlays.banner('ROUND OVER', 'FLEET A: ' + game.scoreA + '  FLEET B: ' + game.scoreB);
     } else if (aliveA === 0) {
       game.scoreB++;
       game.state = 'roundEnd';
       game.roundEndTimer = 5;
+      if (window.Overlays) Overlays.banner('ROUND OVER', 'FLEET A: ' + game.scoreA + '  FLEET B: ' + game.scoreB);
     }
   } else if (game.state === 'roundEnd') {
     game.roundEndTimer -= dt;
     if (game.roundEndTimer <= 0) {
       if (game.scoreA >= LSS.ROUNDS_TO_WIN || game.scoreB >= LSS.ROUNDS_TO_WIN) {
         game.state = 'matchEnd';
+        if (window.Overlays) {
+          const winner = game.scoreA >= LSS.ROUNDS_TO_WIN ? 'FLEET A' : 'FLEET B';
+          Overlays.banner('VICTORY', winner + ' WINS');
+        }
       } else {
         game.currentRound++;
         game.state = 'warmup';
@@ -8855,6 +9176,176 @@ function getValidSpawnPoint(team, spread) {
     base.z + (Math.random() - 0.5) * spread
   );
 }
+
+// ---- CINEMATIC OVERLAYS ----
+// Ported from lss_overlays.jsx as pure CSS animations + imperative JS.
+// All methods are safe to call at any time; they no-op if the relevant
+// DOM element is missing.
+
+const Overlays = (() => {
+  const $ = (id) => document.getElementById(id);
+
+  // Restart a CSS animation by removing and re-adding the class.
+  function replay(el, cls) {
+    if (!el) return;
+    el.classList.remove(cls);
+    // Force reflow so the animation restarts cleanly.
+    void el.offsetWidth;
+    el.classList.add(cls);
+  }
+
+  // ---- Damage vignette ----
+  function damageVignette(intensity) {
+    const el = $('ov-damage-vignette');
+    if (!el) return;
+    // Scale opacity by severity via inline opacity on the flash peak.
+    const i = Math.max(0.15, Math.min(1, intensity));
+    el.style.setProperty('--dmg-peak', i.toFixed(2));
+    // Tint intensity: heavier hit -> brighter red. Done via inline background weight.
+    el.style.background = `radial-gradient(ellipse at center, transparent 30%, rgba(255,0,0,${0.25 + 0.45 * i}) 100%)`;
+    replay(el, 'flash');
+  }
+
+  // ---- Kill streak ----
+  const STREAK_DATA = [
+    null, null,
+    { label: 'DOUBLE KILL',  color: '#ffcc00', scale: 1.10 },
+    { label: 'TRIPLE KILL',  color: '#ff8800', scale: 1.20 },
+    { label: 'QUAD KILL',    color: '#ff4400', scale: 1.35 },
+    { label: 'RAMPAGE',      color: '#ff0044', scale: 1.50 },
+    { label: 'UNSTOPPABLE',  color: '#cc00ff', scale: 1.60 },
+    { label: 'GODLIKE',      color: '#ff00ff', scale: 1.70, glow: true },
+  ];
+  function killStreak(count) {
+    const el = $('ov-killstreak');
+    if (!el || count < 2) return;
+    const d = STREAK_DATA[Math.min(count, STREAK_DATA.length - 1)] || STREAK_DATA[STREAK_DATA.length - 1];
+    el.classList.toggle('godlike', !!d.glow);
+    el.querySelector('.ks-label').textContent = d.label;
+    el.querySelector('.ks-count').textContent = count + ' KILLS';
+    const soft = d.color + '88';
+    const faint = d.color + '44';
+    el.style.setProperty('--ks-color', d.color);
+    el.style.setProperty('--ks-color-soft', soft);
+    el.style.setProperty('--ks-color-faint', faint);
+    el.style.setProperty('--ks-scale', d.scale);
+    el.style.setProperty('--ks-bar-w', (60 + count * 12) + 'px');
+    replay(el, 'show');
+  }
+
+  // ---- Round countdown (3, 2, 1, FIGHT) ----
+  function countdown(n, label) {
+    const el = $('ov-countdown');
+    if (!el) return;
+    const isFight = (n === 0 || n === 'FIGHT');
+    el.classList.toggle('fight', isFight);
+    el.querySelector('.cd-label').textContent = label || '';
+    el.querySelector('.cd-label').style.display = isFight ? 'none' : 'block';
+    el.querySelector('.cd-number').textContent = isFight ? 'FIGHT' : String(n);
+    replay(el, 'show');
+    // The ring is a child with its own animation; restart it too.
+    const ring = el.querySelector('.cd-ring');
+    if (ring) { ring.style.animation = 'none'; void ring.offsetWidth; ring.style.animation = ''; }
+  }
+
+  // ---- Medals ----
+  const MEDAL_ICONS = {
+    firstBlood: { icon: '◉', label: 'FIRST BLOOD', color: '#ff0044' },
+    revenge:    { icon: '⟳', label: 'REVENGE',     color: '#cc44ff' },
+    shutdown:   { icon: '✹', label: 'SHUTDOWN',    color: '#ffaa00' },
+    longshot:   { icon: '—', label: 'LONGSHOT',    color: '#44ccff' },
+    assist:     { icon: 'Φ', label: 'ASSIST',      color: '#66ff66' },
+    savior:     { icon: '○', label: 'SAVIOR',      color: '#44aaff' },
+    execution:  { icon: '•', label: 'EXECUTION',   color: '#ff2200' },
+  };
+  function medal(type) {
+    const root = $('ov-medals');
+    const m = MEDAL_ICONS[type];
+    if (!root || !m) return;
+    const row = document.createElement('div');
+    row.className = 'ov-medal';
+    row.style.setProperty('--med-color', m.color);
+    row.style.setProperty('--med-color-faint', m.color + '44');
+    row.innerHTML = `<span class="med-icon">${m.icon}</span><span class="med-label">${m.label}</span>`;
+    row.addEventListener('animationend', () => { row.remove(); });
+    root.appendChild(row);
+  }
+
+  // ---- Ability flash ----
+  const ABILITY_COLORS = {
+    dash:      '#00ccff', shield:    '#4488ff', overclock: '#ffaa00',
+    cloak:     '#aa44ff', emp:       '#ff4400', heal:      '#44ff88',
+    stasis:    '#00ffcc', missiles:  '#ff6600',
+  };
+  function abilityFlash(name, color) {
+    const el = $('ov-ability');
+    if (!el) return;
+    const c = color || ABILITY_COLORS[(name || '').toLowerCase()] || '#ffffff';
+    el.style.setProperty('--ab-color', c);
+    el.style.setProperty('--ab-color-soft', c + '80');
+    el.querySelector('.ab-label').textContent = (name || 'ABILITY').toUpperCase() + ' ACTIVE';
+    replay(el, 'show');
+  }
+
+  // ---- Respawn ----
+  let _respawnCount = 0;
+  let _respawnTickId = null;
+  function respawn(killer, seconds) {
+    const el = $('ov-respawn');
+    if (!el) return;
+    const secs = seconds == null ? 3 : seconds;
+    _respawnCount = secs;
+    const killerRow = el.querySelector('.rs-killer');
+    if (killer) {
+      killerRow.style.display = 'block';
+      killerRow.querySelector('b').textContent = killer;
+    } else {
+      killerRow.style.display = 'none';
+    }
+    const num = el.querySelector('.rs-num');
+    const txt = el.querySelector('.rs-number');
+    const fg = el.querySelector('.rs-ring-fg');
+    num.textContent = _respawnCount;
+    txt.textContent = _respawnCount;
+    if (fg) fg.setAttribute('stroke-dasharray', '0 220');
+    el.classList.add('show');
+    if (_respawnTickId) clearInterval(_respawnTickId);
+    _respawnTickId = setInterval(() => {
+      _respawnCount--;
+      num.textContent = Math.max(0, _respawnCount);
+      txt.textContent = Math.max(0, _respawnCount);
+      if (fg) {
+        const frac = secs > 0 ? 1 - (_respawnCount / secs) : 1;
+        fg.setAttribute('stroke-dasharray', (220 * frac).toFixed(1) + ' 220');
+      }
+      if (_respawnCount <= 0) { clearInterval(_respawnTickId); _respawnTickId = null; }
+    }, 1000);
+  }
+  function hideRespawn() {
+    const el = $('ov-respawn');
+    if (!el) return;
+    el.classList.remove('show');
+    if (_respawnTickId) { clearInterval(_respawnTickId); _respawnTickId = null; }
+  }
+
+  // ---- Round banner ----
+  function banner(text, subtext) {
+    const el = $('ov-banner');
+    if (!el) return;
+    el.querySelector('.ban-text').textContent = text || '';
+    const sub = el.querySelector('.ban-sub');
+    sub.textContent = subtext || '';
+    sub.style.display = subtext ? 'block' : 'none';
+    replay(el, 'show');
+    // Lines have their own animation; restart them.
+    el.querySelectorAll('.ban-line').forEach((ln) => { ln.style.animation = 'none'; void ln.offsetWidth; ln.style.animation = ''; });
+  }
+
+  return { damageVignette, killStreak, countdown, medal, abilityFlash, respawn, hideRespawn, banner };
+})();
+
+// Expose globally for ease of debugging / future hooks.
+window.Overlays = Overlays;
 
 // ---- SCREEN SHAKE ----
 
