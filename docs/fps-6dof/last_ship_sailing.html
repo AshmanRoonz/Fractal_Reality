@@ -2446,23 +2446,46 @@ function buildModelShipMesh(chassisData, teamColor, loadoutKey) {
   const proto = shipModelCache.loaded[loadoutKey];
   const teamCol = new THREE.Color(teamColor);
 
-  // Clone and retint materials (preserve baseColor texture and vertex colors,
-  // add a subtle team-color emissive so you can still tell sides apart).
+  // Clone and retint materials. Some glTF source packs (Quaternius) ship with
+  // colored materials baked in; others (Poly.pizza submissions for ion, monarch,
+  // legion) ship plain white/grey. Detect untextured low-saturation materials
+  // and replace their hue with the team color so every loadout reads as a
+  // fleet ship. Colorful source materials keep their look with just a gentle
+  // team tint. Textured materials are never hue-shifted (texture wins).
+  const teamHsl = { h: 0, s: 0, l: 0 };
+  teamCol.getHSL(teamHsl);
   const model = proto.clone(true);
   model.traverse(child => {
     if (child.isMesh) {
       const mats = Array.isArray(child.material) ? child.material : [child.material];
       const newMats = mats.map(m => {
+        const hasTex = !!(m && m.map);
+        const origColor = (m && m.color) ? m.color.clone() : new THREE.Color(0xbfc4d2);
+        const hsl = { h: 0, s: 0, l: 0 };
+        origColor.getHSL(hsl);
+        const isGrey = !hasTex && hsl.s < 0.18;
+        let finalColor;
+        if (isGrey) {
+          // Preserve original lightness (keeps shading & panel contrast);
+          // inherit team hue + saturation. Clamp lightness so we don't land
+          // on pure black or pure white which would wash the team hue out.
+          const lightness = Math.min(0.72, Math.max(0.28, hsl.l));
+          finalColor = new THREE.Color().setHSL(teamHsl.h, teamHsl.s, lightness);
+        } else {
+          // Already colored or textured; gentle team-lean so squads still read.
+          finalColor = origColor.clone().lerp(teamCol, 0.15);
+        }
+        const emStrength = isGrey ? 0.22 : 0.08;
         const params = {
           specular: 0x333344, shininess: 80,
-          emissive: teamCol.clone().multiplyScalar(0.08),
+          emissive: teamCol.clone().multiplyScalar(emStrength),
           emissiveIntensity: 1.0,
           transparent: !!(m && m.transparent),
           opacity: (m && m.opacity != null) ? m.opacity : 1.0,
+          color: finalColor,
         };
-        if (m && m.map) params.map = m.map;
+        if (hasTex) params.map = m.map;
         if (m && m.vertexColors) params.vertexColors = true;
-        params.color = (m && m.color) ? m.color.clone() : new THREE.Color(0xbfc4d2);
         return new THREE.MeshPhongMaterial(params);
       });
       child.material = newMats.length === 1 ? newMats[0] : newMats;
@@ -9716,13 +9739,23 @@ function buildRoomGraphLevel(level) {
       '    float d = length(vWorldPos - roomCenters[i]);',
       '    if (d < minD) { minD = d; zoneColor = roomColorsU[i]; nearC = roomCenters[i]; nearR = roomRadii[i]; }',
       '  }',
+      // Normalize the zone color for tinting: preserves hue & saturation, but
+      // scales the brightness so darker palette entries tint the walls as
+      // vividly as lighter ones. Without this, a room whose palette color is
+      // 0x1a3050 contributes only ~(0.10, 0.19, 0.31) to every tint term and
+      // the walls read as near-black with pale fractal threads instead of
+      // showing the intended zone hue.
+      '  float zMax = max(zoneColor.r, max(zoneColor.g, zoneColor.b));',
+      '  vec3 zoneTint = zoneColor / max(0.04, zMax);',
       // Fraction along the nearest room's vertical extent: 0 at floor, 1 at
       // ceiling. Works for both spherical rooms and cylindrical tunnels: any
       // surface gets placed along the local vertical axis, which is what we
       // want since the rooms/tunnels are rotationally symmetric.
       '  float heightFrac = clamp((vWorldPos.y - (nearC.y - nearR)) / (2.0 * nearR), 0.0, 1.0);',
       // Base: very dark, slight zone tint. Kept dark so the bright fractal pops.
-      '  vec3 dark = vec3(0.010, 0.012, 0.022) + zoneColor * 0.20;',
+      // Uses the normalized tint so dark rooms still read as "blue room" /
+      // "red room" instead of collapsing to near-black ambient.
+      '  vec3 dark = vec3(0.010, 0.012, 0.022) + zoneTint * 0.08;',
       '  vec3 c = dark;',
       // Cosmic Kali IFS fractal: the sole wall texture. Evaluated at the
       // vertex world position, steered by the zone color into a hue band,
@@ -9730,15 +9763,18 @@ function buildRoomGraphLevel(level) {
       // walls, ceiling) so the dancing fractal surrounds the player. A
       // gentle pulse breathes the whole pattern; a second faster shimmer
       // adds sparkle. No floor-up fade; no grid.
+      // Hue source is the normalized tint so dark palette entries steer the
+      // fractal just as clearly as saturated ones.
       '  float fracPulse = 0.92 + 0.12 * sin(time * 0.35);',
       '  float shimmer   = 0.90 + 0.18 * sin(time * 1.10 + vWorldPos.x * 0.003 + vWorldPos.z * 0.003);',
-      '  vec3 cosmic = cosmicField(vWorldPos, zoneColor, time);',
+      '  vec3 cosmic = cosmicField(vWorldPos, zoneTint, time);',
       '  c += cosmic * fracPulse * shimmer * 3.4;',
-      // Soft diffuse + rim so surfaces still read in 3D.
+      // Soft diffuse + rim so surfaces still read in 3D. Fresnel edge uses the
+      // normalized tint so dark rooms get a clean colored rim at grazing angles.
       '  vec3 vd = normalize(cameraPosition - vWorldPos);',
       '  float diff = max(dot(vNormal, vd), 0.0) * 0.35 + 0.65;',
       '  float fresnelFactor = pow(1.0 - abs(dot(vNormal, vd)), 3.0);',
-      '  c += zoneColor * 1.8 * fresnelFactor * 0.5;',
+      '  c += zoneTint * 1.6 * fresnelFactor * 0.5;',
       '  c *= diff * vAO;',
       // Upper half is one-way transparent: interior (front-face) fades toward
       // low alpha above heightFrac ~0.5 so players still see the starfield
