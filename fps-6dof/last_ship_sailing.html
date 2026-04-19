@@ -8819,7 +8819,7 @@ function buildRoomGraphLevel(level) {
       // many iterations, low in the folds.
       'float kaliIFS(vec3 p, vec3 off, float inv) {',
       '  float s = 1.0;',
-      '  for (int k = 0; k < 5; k++) {',
+      '  for (int k = 0; k < 8; k++) {',
       '    if (p.x + p.y < 0.0) p.xy = -p.yx;',
       '    if (p.x + p.z < 0.0) p.xz = -p.zx;',
       '    if (p.y + p.z < 0.0) p.yz = -p.zy;',
@@ -8849,7 +8849,7 @@ function buildRoomGraphLevel(level) {
       '    float phase = atan(pp.x, pp.y);',
       '    float q = 0.5 + 0.5 * sin(phase * 3.0 + tt * 0.3 + rf * 1.7);',
       '    float band = q < 0.5 ? 0.65 : 1.0;',
-      '    float val = clamp(s / 5000.0 * (0.25 + 0.75 * band), 0.0, 3.0);',
+      '    float val = clamp(s / 600.0 * (0.25 + 0.75 * band), 0.0, 2.5);',
       '    float hue = fract(baseHue + rf * 0.12 + phase * 0.05 + tt * 0.02);',
       '    float sat = 0.55 + rf * 0.10;',
       '    accum += hsv(hue, sat, val) * pow(0.75, rf);',
@@ -8894,7 +8894,7 @@ function buildRoomGraphLevel(level) {
       '  float floorUpFade = pow(1.0 - heightFrac, 1.6);',
       '  float fracPulse = 0.88 + 0.12 * sin(time * 0.35);',
       '  vec3 cosmic = cosmicField(vWorldPos, zoneColor, time);',
-      '  c += cosmic * floorUpFade * fracPulse * 1.8;',
+      '  c += cosmic * floorUpFade * fracPulse * 1.4;',
       // Subtle per-zone grid, low opacity so it reads as zone bounds on top
       // of the cosmic texture rather than fighting with it.
       '  float grid = zoneGrid(vWorldPos);',
