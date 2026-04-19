@@ -30,19 +30,20 @@ static var trigger_threshold: float = 0.3
 static var invert_look_y: bool = false
 static var swap_sticks: bool = false
 
-# ---- Gamepad button bindings (Godot JoyButton indices; -1 unbound) ----
-# Keyed by InputMap action names; these are the actions the engine reads.
-# Defaults mirror ensure_input_map() in game_data.gd.
+# ---- Gamepad button bindings (Godot JoyButton indices or BIND_TRIGGER_* ;
+# ----  -1 = unbound). Keyed by InputMap action names. Defaults mirror HTML
+# ---- gpBindings at last_ship_sailing.html lines 963-971; fire_primary maps
+# ---- to RT (synthetic trigger index), everything else is a standard button.
 static var gp_bindings: Dictionary = {
-	"fire_primary":  JOY_BUTTON_RIGHT_SHOULDER,
-	"dash":          JOY_BUTTON_LEFT_SHOULDER,
+	"fire_primary":  BIND_TRIGGER_RIGHT,
+	"dash":          JOY_BUTTON_A,
 	"reload":        JOY_BUTTON_X,
-	"ability_1":     JOY_BUTTON_LEFT_STICK,
-	"ability_2":     JOY_BUTTON_RIGHT_STICK,
+	"ability_1":     JOY_BUTTON_LEFT_SHOULDER,
+	"ability_2":     JOY_BUTTON_RIGHT_SHOULDER,
 	"ability_3":     JOY_BUTTON_Y,
-	"core_ability":  JOY_BUTTON_B,
-	"move_up":       JOY_BUTTON_A,
-	"move_down":     JOY_BUTTON_DPAD_DOWN,
+	"core_ability":  JOY_BUTTON_DPAD_UP,
+	"move_up":       JOY_BUTTON_LEFT_STICK,
+	"move_down":     JOY_BUTTON_RIGHT_STICK,
 	"next_loadout":  JOY_BUTTON_DPAD_RIGHT,
 	"prev_loadout":  JOY_BUTTON_DPAD_LEFT,
 }
@@ -62,28 +63,40 @@ const ACTION_LABELS := {
 	"prev_loadout":  "Previous Loadout",
 }
 
-# Button index -> human label (Godot JoyButton indices).
+# Synthetic binding indices for trigger axes. Godot exposes triggers as axes
+# (JOY_AXIS_TRIGGER_LEFT / JOY_AXIS_TRIGGER_RIGHT), not JoyButton constants, so
+# they are invisible to a button-only rebind UI. These high values let the UI
+# and apply_to_input_map() treat a trigger pull like any other button binding
+# while generating the correct InputEventJoypadMotion event under the hood.
+const BIND_TRIGGER_LEFT := 100
+const BIND_TRIGGER_RIGHT := 101
+
+# Binding index -> human label. Standard JoyButton indices 0-14 plus the two
+# synthetic trigger entries above.
 const BUTTON_NAMES := {
 	-1: "None",
-	 0: "A",              # JOY_BUTTON_A
-	 1: "B",              # JOY_BUTTON_B
-	 2: "X",              # JOY_BUTTON_X
-	 3: "Y",              # JOY_BUTTON_Y
-	 4: "Back",           # JOY_BUTTON_BACK
-	 5: "Guide",          # JOY_BUTTON_GUIDE
-	 6: "Start",          # JOY_BUTTON_START
-	 7: "L3",             # JOY_BUTTON_LEFT_STICK
-	 8: "R3",             # JOY_BUTTON_RIGHT_STICK
-	 9: "LB",             # JOY_BUTTON_LEFT_SHOULDER
-	10: "RB",             # JOY_BUTTON_RIGHT_SHOULDER
-	11: "D-Up",           # JOY_BUTTON_DPAD_UP
-	12: "D-Down",         # JOY_BUTTON_DPAD_DOWN
-	13: "D-Left",         # JOY_BUTTON_DPAD_LEFT
-	14: "D-Right",        # JOY_BUTTON_DPAD_RIGHT
+	 0: "A",                      # JOY_BUTTON_A
+	 1: "B",                      # JOY_BUTTON_B
+	 2: "X",                      # JOY_BUTTON_X
+	 3: "Y",                      # JOY_BUTTON_Y
+	 4: "Back",                   # JOY_BUTTON_BACK
+	 5: "Guide",                  # JOY_BUTTON_GUIDE
+	 6: "Start",                  # JOY_BUTTON_START
+	 7: "L3",                     # JOY_BUTTON_LEFT_STICK
+	 8: "R3",                     # JOY_BUTTON_RIGHT_STICK
+	 9: "LB",                     # JOY_BUTTON_LEFT_SHOULDER
+	10: "RB",                     # JOY_BUTTON_RIGHT_SHOULDER
+	11: "D-Up",                   # JOY_BUTTON_DPAD_UP
+	12: "D-Down",                 # JOY_BUTTON_DPAD_DOWN
+	13: "D-Left",                 # JOY_BUTTON_DPAD_LEFT
+	14: "D-Right",                # JOY_BUTTON_DPAD_RIGHT
+	BIND_TRIGGER_LEFT:  "LT",     # JOY_AXIS_TRIGGER_LEFT (synthetic)
+	BIND_TRIGGER_RIGHT: "RT",     # JOY_AXIS_TRIGGER_RIGHT (synthetic)
 }
 
-# Ordered list of selectable button indices for the rebind dropdowns.
-const BUTTON_ORDER: Array = [-1, 0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+# Ordered list of selectable binding indices for the rebind dropdowns. The
+# triggers sit at the end so they read as "less standard" fallbacks.
+const BUTTON_ORDER: Array = [-1, 0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, BIND_TRIGGER_LEFT, BIND_TRIGGER_RIGHT]
 
 static var _loaded: bool = false
 
@@ -135,15 +148,15 @@ static func reset_to_defaults() -> void:
 	invert_look_y = false
 	swap_sticks = false
 	gp_bindings = {
-		"fire_primary":  JOY_BUTTON_RIGHT_SHOULDER,
-		"dash":          JOY_BUTTON_LEFT_SHOULDER,
+		"fire_primary":  BIND_TRIGGER_RIGHT,
+		"dash":          JOY_BUTTON_A,
 		"reload":        JOY_BUTTON_X,
-		"ability_1":     JOY_BUTTON_LEFT_STICK,
-		"ability_2":     JOY_BUTTON_RIGHT_STICK,
+		"ability_1":     JOY_BUTTON_LEFT_SHOULDER,
+		"ability_2":     JOY_BUTTON_RIGHT_SHOULDER,
 		"ability_3":     JOY_BUTTON_Y,
-		"core_ability":  JOY_BUTTON_B,
-		"move_up":       JOY_BUTTON_A,
-		"move_down":     JOY_BUTTON_DPAD_DOWN,
+		"core_ability":  JOY_BUTTON_DPAD_UP,
+		"move_up":       JOY_BUTTON_LEFT_STICK,
+		"move_down":     JOY_BUTTON_RIGHT_STICK,
 		"next_loadout":  JOY_BUTTON_DPAD_RIGHT,
 		"prev_loadout":  JOY_BUTTON_DPAD_LEFT,
 	}
@@ -157,24 +170,37 @@ static func reset_to_defaults() -> void:
 # axis/key/mouse events untouched). Also pushes trigger_threshold into the
 # trigger actions' deadzones and gp_deadzone into the stick actions.
 static func apply_to_input_map() -> void:
+	var trig_dz := clampf(trigger_threshold, 0.05, 0.95)
 	for action_variant in gp_bindings.keys():
 		var action := StringName(action_variant)
 		if not InputMap.has_action(action):
 			continue
-		# Clear old JoyButton events for this action only.
+		# Clear old JoyButton events and any prior trigger axis events for this
+		# action. Stick axes (LEFT_X/Y, RIGHT_X/Y) are left alone because those
+		# are hardcoded by game_data.ensure_input_map() for movement and look.
 		for event in InputMap.action_get_events(action):
 			if event is InputEventJoypadButton:
 				InputMap.action_erase_event(action, event)
+			elif event is InputEventJoypadMotion:
+				if event.axis == JOY_AXIS_TRIGGER_LEFT or event.axis == JOY_AXIS_TRIGGER_RIGHT:
+					InputMap.action_erase_event(action, event)
 		var btn := int(gp_bindings[action_variant])
-		if btn >= 0:
+		if btn == BIND_TRIGGER_LEFT or btn == BIND_TRIGGER_RIGHT:
+			var axis_event := InputEventJoypadMotion.new()
+			axis_event.axis = JOY_AXIS_TRIGGER_LEFT if btn == BIND_TRIGGER_LEFT else JOY_AXIS_TRIGGER_RIGHT
+			axis_event.axis_value = 1.0
+			InputMap.action_set_deadzone(action, trig_dz)
+			InputMap.action_add_event(action, axis_event)
+		elif btn >= 0:
 			var new_event := InputEventJoypadButton.new()
 			new_event.button_index = btn
 			InputMap.action_add_event(action, new_event)
 
-	# Trigger-driven actions use axis events; tune their deadzone to the
-	# trigger_threshold setting. fire_primary has an RT axis event; dash has
-	# an LT axis event.
-	var trig_dz := clampf(trigger_threshold, 0.05, 0.95)
+	# Re-tune the trigger-driven actions' deadzones whenever the
+	# trigger_threshold slider moves. fire_primary and dash may carry a
+	# trigger axis event if their gp_bindings map to BIND_TRIGGER_LEFT /
+	# BIND_TRIGGER_RIGHT; setting the deadzone even when they don't is
+	# harmless because Godot only reads it for axis events.
 	if InputMap.has_action("fire_primary"):
 		InputMap.action_set_deadzone("fire_primary", trig_dz)
 	if InputMap.has_action("dash"):

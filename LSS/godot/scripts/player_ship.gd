@@ -17,6 +17,11 @@ const DOOMED_TIMER := 10.0
 
 signal primary_fired(origin: Vector3, direction: Vector3, loadout_key: String, weapon_data: Dictionary, source: Node3D, team: int)
 signal ability_triggered(ability_id: String, loadout_key: String, source: Node3D, origin: Vector3, direction: Vector3, team: int)
+# Emitted for every ability activation regardless of routing (local `_set_state`
+# paths don't fire `ability_triggered`, which only covers networked abilities).
+# `ability_name` is the human-readable loadout name; the HUD uses this for the
+# cinematic edge-glow label.
+signal ability_activated(ability_id: String, ability_name: String, slot: int)
 signal core_triggered(core_id: String, loadout_key: String, source: Node3D, origin: Vector3, direction: Vector3, team: int)
 signal loadout_changed(loadout_key: String)
 # killer_loadout_key = attacker's loadout (or "" if environmental / unknown);
@@ -26,7 +31,7 @@ signal destroyed(killer_loadout_key: String, victim_loadout_key: String)
 # ship. `amount` is the raw damage pre-absorption; `ratio` is amount/max_health
 # already clamped to [0, 1] (so listeners don't need player config). Use for
 # HUD effects (damage vignette, hit-marker audio). Fires even on fatal hits.
-signal damage_taken(amount: float, ratio: float)
+signal damage_taken(amount: float, ratio: float, hit_point: Vector3)
 
 const TEAM_PLAYER := 0
 
@@ -67,7 +72,37 @@ var monarch_tier := 0
 var monarch_damage_mult := 1.0
 var monarch_cooldown_mult := 1.0
 var monarch_bonus_shield := 0.0
+var monarch_arc_rounds := false
+var monarch_missile_racks := false
+var monarch_xo16_accel := false
 var legion_mode := "close"
+# LEGION Mode Switch: 1s transition delay before the pending mode activates
+# (HTML last_ship_sailing.html:7699-7724). During the window the ship keeps
+# firing the previous weapon profile and the HUD shows "SWITCHING".
+var legion_switch_timer := 0.0
+var legion_pending_mode := ""
+# LEGION Power Shot: 1s charge window before firing; the charged shot's
+# behaviour depends on legion_mode at the moment it releases.
+var power_shot_charging := false
+var power_shot_charge := 0.0
+# TONE lock-on: player-side dictionary keyed by EnemyShip instance id, max 3
+# per target. Tracker Rockets consume only full (>=3) locks; partial locks
+# persist across volleys. enemy_tone_locks tracks the reverse (TONE bots
+# building locks on the player from hits).
+var tone_locks: Dictionary = {}
+var tone_locked_target: EnemyShip = null
+var enemy_tone_locks: Dictionary = {}
+var enemy_tone_lock_max := 0
+# Stasis state: set by main.gd when the player walks into a stasis pickup.
+# While in_stasis, velocity is zeroed every frame and shield recharges linearly
+# from its current level to max_shield over stasis_timer's full duration.
+# pre_stasis_velocity is captured at entry so a future design pass could
+# restore it on exit; HTML last_ship_sailing.html:9524-9558 zeroes and leaves
+# the player at rest, which this port matches.
+var in_stasis := false
+var stasis_timer := 0.0
+var stasis_duration := 0.0
+var pre_stasis_velocity := Vector3.ZERO
 var match_state := "warmup"
 var arena_map: ArenaMap
 var look_input := Vector2.ZERO
@@ -142,6 +177,9 @@ func _physics_process(delta: float) -> void:
 	for index in range(ability_cooldowns.size()):
 		ability_cooldowns[index] = maxf(0.0, float(ability_cooldowns[index]) - delta)
 	_tick_state_timers(delta)
+	_tick_legion_switch(delta)
+	_tick_power_shot(delta)
+	_tick_stasis(delta)
 
 	# Gamepad right-stick look (applied only while playing and while mouse is
 	# captured, so the settings overlay can't fight the stick for the camera).
@@ -160,6 +198,15 @@ func _physics_process(delta: float) -> void:
 		set_loadout_by_index(posmod(loadout_index - 1, loadout_keys.size()))
 	if match_state != "playing":
 		velocity = velocity.move_toward(Vector3.ZERO, float(chassis.get("deceleration", 600.0)) * delta)
+		_update_feedback(delta, 0.0, Vector3.ZERO)
+		visuals.update_ship_visuals(delta, 0.0, Vector3.ZERO, look_input, 0.0)
+		return
+	# Stasis lockout: velocity is pinned to zero inside _tick_stasis, and
+	# movement / fire / ability input are ignored for the duration. The camera,
+	# look axes, and state timers keep running so the player can still observe
+	# and react visually (HTML last_ship_sailing.html:9535-9558).
+	if in_stasis:
+		velocity = Vector3.ZERO
 		_update_feedback(delta, 0.0, Vector3.ZERO)
 		visuals.update_ship_visuals(delta, 0.0, Vector3.ZERO, look_input, 0.0)
 		return
@@ -229,6 +276,10 @@ func _physics_process(delta: float) -> void:
 		_add_screen_shake(0.9)
 		if dash_recharge_timer == 0.0:
 			dash_recharge_timer = float(chassis.get("dash_cooldown", 4.0))
+		# HTML line 11189-11194: dash SFX fires only when a charge was actually
+		# consumed. The `hadCharges` guard there is equivalent to the dash_charges > 0
+		# check we already gate the whole block on.
+		_play_audio("dash")
 
 	global_position += velocity * delta
 	if arena_map:
@@ -277,7 +328,22 @@ func set_loadout_by_index(index: int) -> void:
 	monarch_damage_mult = 1.0
 	monarch_cooldown_mult = 1.0
 	monarch_bonus_shield = 0.0
+	monarch_arc_rounds = false
+	monarch_missile_racks = false
+	monarch_xo16_accel = false
 	legion_mode = "close"
+	legion_switch_timer = 0.0
+	legion_pending_mode = ""
+	power_shot_charging = false
+	power_shot_charge = 0.0
+	tone_locks.clear()
+	tone_locked_target = null
+	enemy_tone_locks.clear()
+	enemy_tone_lock_max = 0
+	in_stasis = false
+	stasis_timer = 0.0
+	stasis_duration = 0.0
+	pre_stasis_velocity = Vector3.ZERO
 	_update_camera_base_offset()
 
 	visuals.configure_ship(loadout_key, chassis, signature)
@@ -302,6 +368,9 @@ func get_status() -> Dictionary:
 		"alive": alive,
 		"doomed": doomed,
 		"doom_timer": doom_timer,
+		"in_stasis": in_stasis,
+		"stasis_timer": stasis_timer,
+		"stasis_duration": stasis_duration,
 		"ability_names": _get_ability_names(),
 		"ability_cooldowns": ability_cooldowns.duplicate(),
 		"core_name": String(loadout.get("core", {}).get("name", "Core")),
@@ -309,7 +378,7 @@ func get_status() -> Dictionary:
 		"match_state": match_state
 	}
 
-func apply_damage(amount: float, _hit_point: Vector3, source_loadout_key: String) -> void:
+func apply_damage(amount: float, hit_point: Vector3, source_loadout_key: String) -> void:
 	if not alive:
 		return
 	if is_state_active("phase_dash"):
@@ -352,13 +421,23 @@ func apply_damage(amount: float, _hit_point: Vector3, source_loadout_key: String
 		respawn_timer = 2.5
 		velocity = Vector3.ZERO
 		visuals.set_ship_enabled(false)
+		# Death SFX before destroyed.emit so listeners (kill feed, revenge
+		# tracking) don't race the sound. HTML 11198 fires death on playerDie().
+		_play_audio("death")
 		destroyed.emit(source_loadout_key, loadout_key)
 	else:
 		camera_recoil = minf(camera_recoil + amount / maxf(1.0, max_health) * 5.0, 0.45)
 		_add_screen_shake(minf(1.8, 0.35 + amount / 1600.0))
+		# Damage SFX fires only on non-fatal hits; fatal hits play "death"
+		# instead (HTML 11197 gates damage SFX on survival). `inflicted` is the
+		# post-mitigation amount that landed on the ship (shield + hull).
+		if inflicted > 0.0:
+			_play_audio("damage")
 
 	var ratio := clampf(inflicted / maxf(1.0, max_health), 0.0, 1.0)
-	damage_taken.emit(inflicted, ratio)
+	# hit_point = attacker's world position (or projectile impact). HUD listeners
+	# use it to drive the directional damage overlay (HTML 10292-10337).
+	damage_taken.emit(inflicted, ratio, hit_point)
 
 # Fired when the doom_timer reaches zero. Equivalent to a fatal apply_damage
 # with no attributed killer; the ship dies, destroyed.emit() fires so
@@ -373,6 +452,9 @@ func _apply_doomed_death() -> void:
 	respawn_timer = 2.5
 	velocity = Vector3.ZERO
 	visuals.set_ship_enabled(false)
+	# Death SFX on the environmental-kill path too; the sound is the same
+	# regardless of attribution.
+	_play_audio("death")
 	# Empty killer key matches the HTML playerDie(null) path for environmental
 	# / timer kills (no attacker to credit, no revenge target recorded).
 	destroyed.emit("", loadout_key)
@@ -390,7 +472,9 @@ func get_team() -> int:
 	return TEAM_PLAYER
 
 func get_collision_radius() -> float:
-	return maxf(float(chassis.get("hull_width", 80.0)), float(chassis.get("hull_length", 100.0))) * 0.14
+	# Match HTML wall-collision sphere (last_ship_sailing.html:5904):
+	# `collRadius = ch.hullLength * 0.4`.
+	return float(chassis.get("hull_length", 100.0)) * 0.4
 
 func set_arena_map(new_arena_map: ArenaMap) -> void:
 	arena_map = new_arena_map
@@ -416,6 +500,59 @@ func add_core_charge(amount: float) -> void:
 
 func restore_shield(amount: float) -> void:
 	shield = minf(max_shield, shield + amount)
+
+# Called by main.gd when the player walks into a stasis pickup. Locks the ship
+# immobile for `duration` seconds and slowly refills shield over that window
+# (HTML last_ship_sailing.html:9524-9558). Re-entering while already in stasis
+# is a no-op so overlapping pickups don't double-stack the timer.
+func enter_stasis(duration: float) -> void:
+	if not alive or in_stasis or duration <= 0.0:
+		return
+	in_stasis = true
+	stasis_duration = duration
+	stasis_timer = duration
+	pre_stasis_velocity = velocity
+	velocity = Vector3.ZERO
+	# Stasis lock-in SFX (HTML 11207). Only fires on genuine entry; the
+	# re-entry guard above ensures overlapping pickups don't restack the sound.
+	_play_audio("stasis")
+
+# Clear the stasis lock early. Used by respawn / round reset; exits the state
+# without forcing shield to full (the natural timer path guarantees full; this
+# path is for involuntary exits).
+func exit_stasis() -> void:
+	in_stasis = false
+	stasis_timer = 0.0
+	stasis_duration = 0.0
+	pre_stasis_velocity = Vector3.ZERO
+
+func _tick_stasis(delta: float) -> void:
+	if not in_stasis:
+		return
+	# Linear shield recharge: maxShield / duration per second, matching HTML
+	# line 9542-9543. The final `shield = maxShield` at exit (below) guarantees
+	# a full top-off even if the player started with partial shield.
+	var recharge_per_sec := max_shield / maxf(0.0001, stasis_duration)
+	shield = minf(max_shield, shield + recharge_per_sec * delta)
+	# Force immobility every frame; any _physics_process movement above this
+	# tick was already gated, but this guards against external force sources
+	# (ramming, knockback) still landing on the frozen ship.
+	velocity = Vector3.ZERO
+	stasis_timer = maxf(0.0, stasis_timer - delta)
+	if stasis_timer <= 0.0:
+		in_stasis = false
+		stasis_duration = 0.0
+		shield = max_shield
+		pre_stasis_velocity = Vector3.ZERO
+
+# Velocity helpers used by main.gd's trap-field ticks: scale_velocity is called
+# by the incendiary_gas slow effect (multiplicative drag per frame), set_velocity
+# is called by the tether_trap root (hard zero each frame while rooted).
+func set_velocity(new_velocity: Vector3) -> void:
+	velocity = new_velocity
+
+func scale_velocity(factor: float) -> void:
+	velocity *= factor
 
 func get_damage_multiplier() -> float:
 	var multiplier := monarch_damage_mult
@@ -447,6 +584,33 @@ func add_screen_shake(amount: float) -> void:
 	if not alive:
 		return
 	_add_screen_shake(amount)
+
+# Null-safe dispatcher into the Audio autoload. In headless tests the autoload
+# may not be installed (scripts/tests/ spin up a bare SceneTree); we skip the
+# call silently so physics/gameplay paths keep working.
+func _play_audio(type: String) -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return
+	var root: Window = tree.root
+	if root != null and root.has_node("Audio"):
+		root.get_node("Audio").play_sound(type)
+
+# Weapon-fire routing. The Audio autoload classifies the active weapon by mode,
+# fire-rate, and flags (homing/salvo) to pick one of 5 fire SFX (hitscan,
+# railgun, minigun, projectile, spread).
+func _play_weapon_fire_audio(weapon: Dictionary) -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return
+	var root: Window = tree.root
+	if root != null and root.has_node("Audio"):
+		root.get_node("Audio").play_weapon_fire(
+			String(weapon.get("mode", "hitscan")),
+			float(weapon.get("fire_rate", 0.25)),
+			bool(weapon.get("homing", false)),
+			bool(weapon.get("salvo", false))
+		)
 
 func _apply_fire_feedback(weapon: Dictionary) -> void:
 	var weapon_mode := String(weapon.get("mode", "hitscan"))
@@ -506,6 +670,9 @@ func _attempt_fire(forward: Vector3) -> void:
 
 	if clip_ammo <= 0:
 		reload_timer = 1.1
+		# Empty-click reload trigger; matches HTML 11165-11170 where the dry
+		# click launches the reload SFX from the same zero-ammo branch.
+		_play_audio("reload")
 		return
 
 	var weapon: Dictionary = loadout.get("weapon", {})
@@ -516,9 +683,13 @@ func _attempt_fire(forward: Vector3) -> void:
 
 	if clip_ammo == 0:
 		reload_timer = 1.1
+		_play_audio("reload")
 
 	var muzzle_origin := global_position + forward * 36.0
 	_apply_fire_feedback(weapon)
+	# Fire SFX after feedback so the routing dict matches the shot that was
+	# actually committed (recoil/shake came from the same weapon record).
+	_play_weapon_fire_audio(weapon)
 	muzzle_flash_timer = 0.08
 	muzzle_flash_side = shot_toggle % 2
 	if muzzle_flash_side == 0:
@@ -584,6 +755,10 @@ func _respawn() -> void:
 	_sync_local_view_mode()
 	state_timers.clear()
 	ability_cooldowns = [0.0, 0.0, 0.0]
+	in_stasis = false
+	stasis_timer = 0.0
+	stasis_duration = 0.0
+	pre_stasis_velocity = Vector3.ZERO
 
 func _try_activate_ability(slot: int) -> void:
 	var abilities: Array = loadout.get("abilities", [])
@@ -627,6 +802,14 @@ func _try_activate_ability(slot: int) -> void:
 			ability_triggered.emit(ability_id, loadout_key, self, origin, forward, TEAM_PLAYER)
 
 	ability_cooldowns[slot] = cooldown
+	# Ability SFX after successful activation. Mirrors HTML 11186; the ability
+	# triggered the match above, so cooldown has been committed.
+	_play_audio("ability")
+	# Fire the cinematic hook AFTER routing so the HUD only flashes for
+	# abilities that actually activated (cooldown + empty-id checks above
+	# early-return before we get here).
+	var ability_name := String(ability.get("name", ability_id))
+	ability_activated.emit(ability_id, ability_name, slot)
 
 func _try_activate_core() -> void:
 	var core: Dictionary = loadout.get("core", {})
@@ -635,6 +818,8 @@ func _try_activate_core() -> void:
 		return
 
 	core_meter = 0.0
+	# Core SFX after the meter-drain guard. HTML 11185 fires on discharge.
+	_play_audio("core")
 	match core_id:
 		"afterburner_core":
 			_set_state("afterburner_core", float(core.get("duration", 5.0)))
@@ -660,24 +845,69 @@ func _set_state(state_id: String, duration: float) -> void:
 	state_timers[state_id] = maxf(float(state_timers.get(state_id, 0.0)), duration)
 
 func _toggle_legion_mode() -> void:
+	# Queue a pending mode and start the 1s transition timer instead of flipping
+	# instantly (HTML last_ship_sailing.html:6798-6802). The actual weapon profile
+	# swap happens in _tick_legion_switch when the timer reaches zero.
+	legion_switch_timer = 1.0
+	legion_pending_mode = "long" if legion_mode == "close" else "close"
+
+func _tick_legion_switch(delta: float) -> void:
+	if legion_switch_timer <= 0.0:
+		return
+	legion_switch_timer = maxf(0.0, legion_switch_timer - delta)
+	if legion_switch_timer > 0.0:
+		return
+	if legion_pending_mode.is_empty():
+		return
 	var weapon: Dictionary = loadout.get("weapon", {})
-	if legion_mode == "close":
-		legion_mode = "long"
-		weapon["range"] = 3200.0
-		weapon["spread"] = 0.012
-		weapon["fire_rate"] = 0.08
-	else:
+	# Scale ammo proportionally between modes so a switch mid-clip doesn't
+	# give a free reload (HTML last_ship_sailing.html:7705-7722).
+	var ammo_pct := 1.0
+	if max_clip > 0:
+		ammo_pct = float(clip_ammo) / float(max_clip)
+	if legion_pending_mode == "close":
 		legion_mode = "close"
 		weapon["range"] = 1500.0
 		weapon["spread"] = 0.04
 		weapon["fire_rate"] = 0.05
+		weapon["damage"] = 85.0
+		max_clip = 150
+	else:
+		legion_mode = "long"
+		weapon["range"] = 3000.0
+		weapon["spread"] = 0.005
+		weapon["fire_rate"] = 0.08
+		weapon["damage"] = 100.0
+		max_clip = 100
+	clip_ammo = int(round(ammo_pct * float(max_clip)))
+	weapon["clip_size"] = max_clip
 	loadout["weapon"] = weapon
+	legion_pending_mode = ""
+
+func start_power_shot_charge() -> void:
+	# LEGION Power Shot begins a 1s charge; the charge completes in
+	# _tick_power_shot which emits power_shot_released and resets the charge.
+	power_shot_charging = true
+	power_shot_charge = 0.0
+
+func _tick_power_shot(delta: float) -> void:
+	if not power_shot_charging:
+		return
+	power_shot_charge = minf(1.0, power_shot_charge + delta)
+	if power_shot_charge >= 1.0:
+		power_shot_charging = false
+		power_shot_charge = 0.0
+		ability_triggered.emit("power_shot_release", loadout_key, self, get_muzzle_origin(), get_forward(), TEAM_PLAYER)
 
 func _apply_monarch_upgrade() -> void:
 	monarch_tier = min(monarch_tier + 1, 3)
 	var weapon: Dictionary = loadout.get("weapon", {})
 	match monarch_tier:
 		1:
+			# Tier 1: Arc Rounds + extra clip capacity (HTML 6934-6938).
+			# monarch_arc_rounds is consumed in main.gd when the attacker
+			# resolves damage against a target that still has shield.
+			monarch_arc_rounds = true
 			max_clip = max(max_clip, 50)
 			clip_ammo = min(max_clip, clip_ammo + 10)
 			weapon["clip_size"] = max_clip
@@ -687,9 +917,64 @@ func _apply_monarch_upgrade() -> void:
 			shield = minf(max_shield, shield + 500.0)
 			monarch_cooldown_mult = 0.7
 		3:
+			# Tier 3: XO-16 Accelerator (HTML 6946-6950). The flag exposes the
+			# tier state to HUD / analytics; damage and fire-rate effects are
+			# applied below and consumed via get_damage_multiplier / weapon.
+			monarch_xo16_accel = true
 			monarch_damage_mult = 1.25
 			weapon["fire_rate"] = maxf(0.06, float(weapon.get("fire_rate", 0.09)) * 0.75)
 	loadout["weapon"] = weapon
+
+func clear_tone_lock(enemy_id: int) -> void:
+	# Called from main.gd when an enemy dies; purge both our locks on them and
+	# locked_target refs that point to the dead enemy. Mirrors HTML 3427-3429.
+	tone_locks.erase(enemy_id)
+	if tone_locked_target != null and tone_locked_target.get_instance_id() == enemy_id:
+		tone_locked_target = null
+	enemy_tone_locks.erase(enemy_id)
+	_recompute_enemy_tone_lock_max()
+
+func add_tone_lock(enemy: EnemyShip, amount: int = 1) -> int:
+	# Build up to 3 locks on a single enemy; return the new count. Called by
+	# the Sonar Lock ability handler in main.gd for each enemy inside the cone.
+	if enemy == null or not is_instance_valid(enemy):
+		return 0
+	var enemy_id := enemy.get_instance_id()
+	var current := int(tone_locks.get(enemy_id, 0))
+	var next := clampi(current + amount, 0, 3)
+	tone_locks[enemy_id] = next
+	if next >= 3:
+		tone_locked_target = enemy
+	return next
+
+func consume_full_tone_locks() -> Array:
+	# Return the list of enemies with 3+ locks and strip those entries so the
+	# Tracker Rockets volley gets a clean shopping list. Partial locks survive.
+	var locked_targets: Array = []
+	for key in tone_locks.keys():
+		if int(tone_locks[key]) >= 3:
+			locked_targets.append(key)
+	for key in locked_targets:
+		tone_locks.erase(key)
+	tone_locked_target = null
+	return locked_targets
+
+func register_enemy_tone_lock(enemy: EnemyShip) -> void:
+	# TONE bots build lock stacks on the player with each hit (HTML 3386-3390).
+	# We key by the attacker's instance id, not loadout_key, so each TONE bot
+	# tracks its own lock independently.
+	if enemy == null or not is_instance_valid(enemy):
+		return
+	var enemy_id := enemy.get_instance_id()
+	var current := int(enemy_tone_locks.get(enemy_id, 0))
+	enemy_tone_locks[enemy_id] = clampi(current + 1, 0, 3)
+	_recompute_enemy_tone_lock_max()
+
+func _recompute_enemy_tone_lock_max() -> void:
+	var running_max := 0
+	for key in enemy_tone_locks.keys():
+		running_max = max(running_max, int(enemy_tone_locks[key]))
+	enemy_tone_lock_max = running_max
 
 func _get_ability_names() -> Array:
 	var names: Array = []

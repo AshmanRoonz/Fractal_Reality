@@ -441,7 +441,9 @@ static func get_map_data(map_key: String) -> Dictionary:
 	return MAPS.get(map_key, MAPS["hourglass"]).duplicate(true)
 
 static func ensure_input_map() -> void:
-	# Keyboard + mouse (mirrors HTML lines 680-681 keybinds)
+	# Keyboard + mouse (mirrors HTML lines 680-681 and 9070-9073 keybinds:
+	# Q/E/F trigger activateAbility(0/1/2), V triggers activateCore(),
+	# R reloads, Shift dashes, Space/Ctrl move up/down, L-click fires).
 	_ensure_key_action("move_forward", KEY_W)
 	_ensure_key_action("move_backward", KEY_S)
 	_ensure_key_action("move_left", KEY_A)
@@ -450,29 +452,50 @@ static func ensure_input_map() -> void:
 	_ensure_key_action("move_down", KEY_CTRL)
 	_ensure_key_action("dash", KEY_SHIFT)
 	_ensure_key_action("reload", KEY_R)
-	_ensure_key_action("next_loadout", KEY_E)
-	_ensure_key_action("prev_loadout", KEY_Q)
+	# Ability keys: Q / E / F match the HTML loadout activateAbility() calls.
+	# Numeric 1 / 2 / 3 stay as convenience aliases (no HTML collision).
+	_ensure_key_action("ability_1", KEY_Q)
 	_ensure_key_action("ability_1", KEY_1)
+	_ensure_key_action("ability_2", KEY_E)
 	_ensure_key_action("ability_2", KEY_2)
+	_ensure_key_action("ability_3", KEY_F)
 	_ensure_key_action("ability_3", KEY_3)
-	_ensure_key_action("core_ability", KEY_F)
+	# Core ability: V matches HTML `keys['v'] -> activateCore()` (line 9073).
+	_ensure_key_action("core_ability", KEY_V)
+	# Mid-match loadout cycling is a Godot-only convenience (HTML only lets
+	# you pick at the select screen). Parked on the bracket keys so they do
+	# not collide with Q/E abilities.
+	_ensure_key_action("prev_loadout", KEY_BRACKETLEFT)
+	_ensure_key_action("next_loadout", KEY_BRACKETRIGHT)
 	_ensure_mouse_action("fire_primary", MOUSE_BUTTON_LEFT)
 
-	# Gamepad bindings (mirrors pollGamepad defaults in HTML lines 7843-7923).
-	# Xbox-style mapping: RT = fire, LT = dash, A = jump, B = core,
-	# X = reload, Y = ability 3, LB/RB = abilities 1/2, D-Pad up/down = vertical thrust.
-	_ensure_joy_button("fire_primary", JOY_BUTTON_RIGHT_SHOULDER)
+	# Gamepad bindings (mirrors HTML gpBindings defaults at lines 963-971 of
+	# last_ship_sailing.html). HTML mapping uses W3C gamepad API indices which
+	# translate as follows to Godot JoyButton constants:
+	#   HTML 7 (RT)       -> trigger axis JOY_AXIS_TRIGGER_RIGHT (fire)
+	#   HTML 0 (A)        -> JOY_BUTTON_A (dash)
+	#   HTML 2 (X)        -> JOY_BUTTON_X (reload)
+	#   HTML 4 (LB)       -> JOY_BUTTON_LEFT_SHOULDER (ability 1, offensive)
+	#   HTML 5 (RB)       -> JOY_BUTTON_RIGHT_SHOULDER (ability 2, defensive)
+	#   HTML 3 (Y)        -> JOY_BUTTON_Y (ability 3, utility)
+	#   HTML 12 (DPadUp)  -> JOY_BUTTON_DPAD_UP (core ability)
+	#   HTML 10 (L3)      -> JOY_BUTTON_LEFT_STICK (move up / ascend)
+	#   HTML 11 (R3)      -> JOY_BUTTON_RIGHT_STICK (move down / descend)
+	# Loadout cycling is a Godot-only convenience (HTML only lets you pick at
+	# the select screen); parked on D-Pad left/right so they don't collide.
+	# Trigger axes remain for fire because HTML's RT-button-index is actually
+	# a Godot axis. Settings.apply_to_input_map() can override any button
+	# assignment but leaves axis events untouched, so the RT trigger still
+	# works as a fallback even if a user clears the button binding.
 	_ensure_joy_axis_action("fire_primary", JOY_AXIS_TRIGGER_RIGHT, 1.0, 0.5)
-	_ensure_joy_button("dash", JOY_BUTTON_LEFT_SHOULDER)
-	_ensure_joy_axis_action("dash", JOY_AXIS_TRIGGER_LEFT, 1.0, 0.5)
-	_ensure_joy_button("move_up", JOY_BUTTON_A)
-	_ensure_joy_button("move_up", JOY_BUTTON_DPAD_UP)
-	_ensure_joy_button("move_down", JOY_BUTTON_DPAD_DOWN)
-	_ensure_joy_button("core_ability", JOY_BUTTON_B)
+	_ensure_joy_button("dash", JOY_BUTTON_A)
 	_ensure_joy_button("reload", JOY_BUTTON_X)
+	_ensure_joy_button("ability_1", JOY_BUTTON_LEFT_SHOULDER)
+	_ensure_joy_button("ability_2", JOY_BUTTON_RIGHT_SHOULDER)
 	_ensure_joy_button("ability_3", JOY_BUTTON_Y)
-	_ensure_joy_button("ability_1", JOY_BUTTON_LEFT_STICK)
-	_ensure_joy_button("ability_2", JOY_BUTTON_RIGHT_STICK)
+	_ensure_joy_button("core_ability", JOY_BUTTON_DPAD_UP)
+	_ensure_joy_button("move_up", JOY_BUTTON_LEFT_STICK)
+	_ensure_joy_button("move_down", JOY_BUTTON_RIGHT_STICK)
 	_ensure_joy_button("prev_loadout", JOY_BUTTON_DPAD_LEFT)
 	_ensure_joy_button("next_loadout", JOY_BUTTON_DPAD_RIGHT)
 

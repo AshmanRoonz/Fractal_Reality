@@ -115,7 +115,13 @@ func _rebuild_ship() -> void:
 	var hull_width := float(chassis.get("hull_width", 80.0))
 	var hull_height := float(chassis.get("hull_height", 30.0))
 	var hull_length := float(chassis.get("hull_length", 100.0))
-	var scale_factor := 0.25
+	# Match HTML: chassis hullWidth/hullHeight/hullLength are world-unit
+	# dimensions (last_ship_sailing.html:2522-2527 uses them directly via
+	# `w = hullWidth*0.5` etc). The previous 0.25 scale_factor made ships
+	# ~25 units long against a 750-unit-diameter spawn room, so they read as
+	# specks. Drawing at full chassis dimensions matches the HTML reference
+	# and the room/tunnel scale (MAP_UNIT = 150 = HTML SU = 150).
+	var scale_factor := 1.0
 	var w := hull_width * scale_factor
 	var h := hull_height * scale_factor
 	var l := hull_length * scale_factor

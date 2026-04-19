@@ -58,6 +58,33 @@ func _init() -> void:
 	print("DASH action has RB event = ", dash_has_rb)
 	ok = ok and dash_has_rb
 
+	# Verify the synthetic trigger bindings: defaults put fire_primary on
+	# BIND_TRIGGER_RIGHT (the RT axis). apply_to_input_map should translate
+	# that to an InputEventJoypadMotion on JOY_AXIS_TRIGGER_RIGHT.
+	var fire_has_rt_axis: bool = false
+	for event in InputMap.action_get_events("fire_primary"):
+		if event is InputEventJoypadMotion and event.axis == JOY_AXIS_TRIGGER_RIGHT:
+			fire_has_rt_axis = true
+			break
+	print("FIRE action has RT axis event (default) = ", fire_has_rt_axis)
+	ok = ok and fire_has_rt_axis
+
+	# Rebind reload to LT, save, reload from disk; assert the LT axis event
+	# landed on reload and no stray button events remain on reload.
+	Settings.gp_bindings["reload"] = Settings.BIND_TRIGGER_LEFT
+	Settings.save_to_disk()
+	Settings.apply_to_input_map()
+	Settings.load_from_disk()
+	var reload_has_lt: bool = false
+	var reload_button_count: int = 0
+	for event in InputMap.action_get_events("reload"):
+		if event is InputEventJoypadMotion and event.axis == JOY_AXIS_TRIGGER_LEFT:
+			reload_has_lt = true
+		elif event is InputEventJoypadButton:
+			reload_button_count += 1
+	print("RELOAD has LT axis = ", reload_has_lt, " joy buttons = ", reload_button_count)
+	ok = ok and reload_has_lt and reload_button_count == 0
+
 	# Verify stick movement actions got the configured deadzone.
 	var mf_dz := InputMap.action_get_deadzone("move_forward")
 	print("move_forward deadzone = ", mf_dz)

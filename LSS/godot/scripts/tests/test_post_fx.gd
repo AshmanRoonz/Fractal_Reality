@@ -108,7 +108,9 @@ func _init() -> void:
 	var captured_amount := [0.0]
 	var captured_ratio := [0.0]
 	var captured_count := [0]
-	player.damage_taken.connect(func(amount: float, ratio: float) -> void:
+	# Signal signature extended with hit_point (Vector3) in task #60 so the
+	# HUD can render the directional damage indicator; bind the third arg.
+	player.damage_taken.connect(func(amount: float, ratio: float, _hit_point: Vector3) -> void:
 		captured_amount[0] = amount
 		captured_ratio[0] = ratio
 		captured_count[0] += 1

@@ -119,17 +119,31 @@ func constrain_point(point: Vector3, clearance: float = 0.0) -> Vector3:
 	return best_point
 
 func raycast_wall(from: Vector3, to: Vector3, clearance: float = 0.0) -> Dictionary:
-	if not contains_point(from, clearance):
-		return {}
-
 	var segment := to - from
 	var length := segment.length()
 	if length <= 0.01:
 		return {}
 
+	var direction := segment / length
+
+	# Mirrors HTML sdfRaycast (last_ship_sailing.html:2076-2095): if the origin
+	# is already outside the playable cavity, the bullet / ray has been in a
+	# wall since before this frame, so report an immediate hit 4 units ahead
+	# (capped to the segment). Previously this branch returned {} and let the
+	# shot pass through every subsequent wall, which is the "shoots through
+	# walls" bug: a ship clipping the hull for one frame would fire bullets
+	# that ignored every wall for the rest of their lifetime because the
+	# origin kept testing as outside.
+	if not contains_point(from, clearance):
+		var hit_dist := minf(4.0, length)
+		return {"point": from + direction * hit_dist, "distance": hit_dist}
+
+	# Tighter sampling (<= 16 units per step, vs HTML's 8-unit sphere-trace
+	# minimum) so fast projectiles or hitscans cannot skip thin sections of
+	# the hull between samples. Bisection refinement stays at 8 rounds.
 	var prev := from
 	var prev_inside := true
-	var steps := maxi(4, int(ceil(length / 40.0)))
+	var steps := maxi(6, int(ceil(length / 16.0)))
 	for index in range(1, steps + 1):
 		var t := float(index) / float(steps)
 		var sample := from.lerp(to, t)
@@ -137,7 +151,7 @@ func raycast_wall(from: Vector3, to: Vector3, clearance: float = 0.0) -> Diction
 		if prev_inside and not inside:
 			var low := prev
 			var high := sample
-			for _refine in range(7):
+			for _refine in range(8):
 				var mid := low.lerp(high, 0.5)
 				if contains_point(mid, clearance):
 					low = mid
@@ -221,13 +235,24 @@ func _compute_bounds() -> void:
 func _build_visuals() -> void:
 	_nexus_wall_material = _build_nexus_wall_material()
 
+	# Hull root: CSGCombiner3D baked as a UNION of every room sphere and every
+	# tunnel cylinder. One continuous hull mesh; tunnel end caps dissolve inside
+	# the rooms they connect, overlapping spheres merge into a single cavity, and
+	# the resulting surface matches the logical union used by contains_point /
+	# constrain_point / raycast_wall. What the player sees is what they collide
+	# with, which is what the HTML build got from worldSDF + Marching Cubes but
+	# without a custom MC port (last_ship_sailing.html:1960-2006, 2048-2095).
+	# cull_disabled on nexus_wall.gdshader keeps the interior view correct.
+	var hull_root := CSGCombiner3D.new()
+	hull_root.name = "Hull"
+	hull_root.operation = CSGShape3D.OPERATION_UNION
+	hull_root.use_collision = false
+	hull_root.material_override = _nexus_wall_material
+	add_child(hull_root)
+
 	var room_root := Node3D.new()
 	room_root.name = "Rooms"
 	add_child(room_root)
-
-	var tunnel_root := Node3D.new()
-	tunnel_root.name = "Tunnels"
-	add_child(tunnel_root)
 
 	var marker_root := Node3D.new()
 	marker_root.name = "Markers"
@@ -241,14 +266,14 @@ func _build_visuals() -> void:
 		var room: Dictionary = room_data
 		var center := Vector3(room.get("position", Vector3.ZERO))
 		var radius := float(room.get("radius", 0.0))
-		var room_mesh := MeshInstance3D.new()
-		var sphere := SphereMesh.new()
-		sphere.radius = radius
-		sphere.height = radius * 2.0
-		room_mesh.mesh = sphere
-		room_mesh.position = center
-		room_mesh.material_override = _nexus_wall_material
-		room_root.add_child(room_mesh)
+
+		var room_csg := CSGSphere3D.new()
+		room_csg.radius = radius
+		room_csg.radial_segments = 32
+		room_csg.rings = 16
+		room_csg.position = center
+		room_csg.operation = CSGShape3D.OPERATION_UNION
+		hull_root.add_child(room_csg)
 
 		var room_light := OmniLight3D.new()
 		room_light.position = center
@@ -273,18 +298,17 @@ func _build_visuals() -> void:
 		var segment: Dictionary = segment_data
 		var a := Vector3(segment["a"])
 		var b := Vector3(segment["b"])
-		var tunnel_mesh := MeshInstance3D.new()
-		var cylinder := CylinderMesh.new()
 		var radius := float(segment.get("radius", DEFAULT_TUNNEL_RADIUS))
-		cylinder.top_radius = radius
-		cylinder.bottom_radius = radius
-		cylinder.height = a.distance_to(b)
-		tunnel_mesh.mesh = cylinder
-		tunnel_mesh.transform = _segment_transform(a, b)
-		tunnel_mesh.material_override = _nexus_wall_material
-		tunnel_root.add_child(tunnel_mesh)
 
-		_add_tunnel_beacons(detail_root, a, b, float(segment.get("radius", DEFAULT_TUNNEL_RADIUS)))
+		var tunnel_csg := CSGCylinder3D.new()
+		tunnel_csg.radius = radius
+		tunnel_csg.height = a.distance_to(b)
+		tunnel_csg.sides = 32
+		tunnel_csg.transform = _segment_transform(a, b)
+		tunnel_csg.operation = CSGShape3D.OPERATION_UNION
+		hull_root.add_child(tunnel_csg)
+
+		_add_tunnel_beacons(detail_root, a, b, radius)
 
 func _generate_corridor_points() -> void:
 	for room_data in rooms:

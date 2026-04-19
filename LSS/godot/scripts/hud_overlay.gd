@@ -12,6 +12,12 @@ var match_info: Dictionary = {}
 var status: Dictionary = {}
 var tracked_enemy: Node3D
 
+# Edge-of-screen directional damage indicators. Each value in 0..1 is the
+# alpha of that edge's red overlay; set to 1.0 by show_damage_indicator when
+# the player takes a hit from that side, then decays at 2.5/sec in _process.
+# Mirrors HTML last_ship_sailing.html:10294-10360 (set) and :10332 (decay).
+var damage_indicators: Dictionary = {"top": 0.0, "bottom": 0.0, "left": 0.0, "right": 0.0}
+
 func _ready() -> void:
 	set_anchors_preset(PRESET_FULL_RECT)
 	offset_left = 0.0
@@ -34,8 +40,17 @@ func set_state(player: PlayerShip, new_alive_targets: int, new_match_info: Dicti
 	status = player.get_status() if player != null else {}
 	queue_redraw()
 
-func _process(_delta: float) -> void:
-	if player_ref != null:
+func _process(delta: float) -> void:
+	# Decay directional damage indicators at 2.5/sec (HTML 10332). Tick them
+	# unconditionally so a set indicator always decays, even if player_ref is
+	# briefly null between spawns.
+	var any_active := false
+	for dir in damage_indicators.keys():
+		var v := maxf(0.0, float(damage_indicators[dir]) - delta * 2.5)
+		damage_indicators[dir] = v
+		if v > 0.0:
+			any_active = true
+	if player_ref != null or any_active:
 		queue_redraw()
 
 func _draw() -> void:
@@ -49,6 +64,7 @@ func _draw() -> void:
 	var accent_color := _with_alpha(panel_color.lightened(0.12), 1.0)
 
 	_draw_damage_vignette(viewport_size, t)
+	_draw_damage_indicators(viewport_size)
 	_draw_round_banner(viewport_size, hud_scale, t, accent_color)
 	_draw_enemy_markers(viewport_size, hud_scale, t)
 	_draw_center_hud(viewport_size, hud_scale, t, accent_color)
@@ -67,6 +83,65 @@ func _draw_damage_vignette(viewport_size: Vector2, t: float) -> void:
 	draw_rect(Rect2(0.0, viewport_size.y - edge, viewport_size.x, edge), vignette_color)
 	draw_rect(Rect2(0.0, 0.0, edge, viewport_size.y), vignette_color)
 	draw_rect(Rect2(viewport_size.x - edge, 0.0, edge, viewport_size.y), vignette_color)
+
+# Light the edge-of-screen overlay pointing at an attacker. Mirrors HTML
+# last_ship_sailing.html:10294-10325. Direction is computed from the camera
+# basis (Godot: forward = -basis.z, right = basis.x) so left/right match what
+# the player is actually looking at.
+#
+# Thresholds (HTML): |dot| > 0.3 lights the primary edge to 1.0. When the
+# attacker is nearly directly ahead or behind (|fDot| > 0.7), the lateral
+# edge on the attacker's side also lights to 0.5; this keeps the feedback
+# readable even when the forward/back channel saturates.
+func show_damage_indicator(attacker_pos: Vector3, player_pos: Vector3, cam: Camera3D) -> void:
+	if cam == null:
+		return
+	var to_attacker := attacker_pos - player_pos
+	if to_attacker.length_squared() < 0.000001:
+		return
+	var to_attacker_norm := to_attacker.normalized()
+	var forward := -cam.global_basis.z
+	var right := cam.global_basis.x
+	var f_dot := forward.dot(to_attacker_norm)
+	var r_dot := right.dot(to_attacker_norm)
+
+	if f_dot > 0.3:
+		damage_indicators["top"] = 1.0
+	elif f_dot < -0.3:
+		damage_indicators["bottom"] = 1.0
+	if r_dot > 0.3:
+		damage_indicators["right"] = 1.0
+	elif r_dot < -0.3:
+		damage_indicators["left"] = 1.0
+
+	# Secondary lateral ping: when the attacker is almost exactly ahead or
+	# behind, |r_dot| is small so neither left nor right would otherwise
+	# trigger; bias to whichever side of r_dot has more magnitude so the
+	# player sees a directional cue instead of just the top/bottom bar.
+	if absf(f_dot) > 0.7:
+		if r_dot >= 0.0:
+			damage_indicators["right"] = maxf(float(damage_indicators["right"]), 0.5)
+		else:
+			damage_indicators["left"] = maxf(float(damage_indicators["left"]), 0.5)
+
+# Draw the four edge overlays. Alpha scales with the per-edge indicator value
+# (0.0 hidden, 1.0 fresh hit). Capped at 0.55 so the base HUD stays legible
+# even when all four edges fire at once (mirrors HTML visual weight).
+func _draw_damage_indicators(viewport_size: Vector2) -> void:
+	var thickness := minf(viewport_size.x, viewport_size.y) * 0.06
+	var base_color := Color(1.0, 0.24, 0.22, 1.0)
+	var top_val := float(damage_indicators.get("top", 0.0))
+	var bottom_val := float(damage_indicators.get("bottom", 0.0))
+	var left_val := float(damage_indicators.get("left", 0.0))
+	var right_val := float(damage_indicators.get("right", 0.0))
+	if top_val > 0.0:
+		draw_rect(Rect2(0.0, 0.0, viewport_size.x, thickness), _with_alpha(base_color, top_val * 0.55))
+	if bottom_val > 0.0:
+		draw_rect(Rect2(0.0, viewport_size.y - thickness, viewport_size.x, thickness), _with_alpha(base_color, bottom_val * 0.55))
+	if left_val > 0.0:
+		draw_rect(Rect2(0.0, 0.0, thickness, viewport_size.y), _with_alpha(base_color, left_val * 0.55))
+	if right_val > 0.0:
+		draw_rect(Rect2(viewport_size.x - thickness, 0.0, thickness, viewport_size.y), _with_alpha(base_color, right_val * 0.55))
 
 func _draw_round_banner(viewport_size: Vector2, hud_scale: float, t: float, accent_color: Color) -> void:
 	var timer_seconds := int(round(float(match_info.get("timer", 0.0))))
