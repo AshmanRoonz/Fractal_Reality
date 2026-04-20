@@ -4834,16 +4834,201 @@ function warmupCombatShaders() {
     matRefs.push(ptsMat);
     group.add(new THREE.Points(ptsGeo, ptsMat));
 
+    // MeshStandardMaterial (used by DestructibleObstacle fragments; line 5103).
+    // PBR path is a completely different program from MeshBasic/MeshPhong and
+    // must be linked before the first cluster-shatter in combat. The scene
+    // already has AmbientLight + DirectionalLight + PointLight so the lit
+    // variants (USE_AMBIENTLIGHT, USE_DIRECTIONAL_LIGHTS, USE_POINT_LIGHTS)
+    // will be included in the program signature.
+    const stdGeo = new THREE.BoxGeometry(1, 1, 1);
+    const stdMat = new THREE.MeshStandardMaterial({
+      color: 0x00ddff, metalness: 0.7, roughness: 0.3,
+      emissive: 0x00ddff, emissiveIntensity: 0.15
+    });
+    matRefs.push(stdMat);
+    group.add(new THREE.Mesh(stdGeo, stdMat));
+
+    // Full ship model mesh (MeshPhongMaterial with map + onBeforeCompile rim-
+    // light fragment injection). This is the program variant every enemy and
+    // teammate ship uses once their GLB swap completes. If we skip it, the
+    // first frame where a bot becomes visible to the camera triggers a link.
+    // We only attempt this when the cache has finished loading; otherwise it
+    // falls through to the procedural path which already has its materials
+    // covered by the Phong variants created inside createShipMesh below.
+    let shipWarmupMesh = null;
+    try {
+      const loadedKeys = (typeof shipModelCache !== 'undefined' && shipModelCache.loaded)
+        ? Object.keys(shipModelCache.loaded) : [];
+      if (loadedKeys.length > 0 && typeof LOADOUTS !== 'undefined' && typeof CHASSIS !== 'undefined') {
+        const key = loadedKeys[0];
+        const ld = LOADOUTS[key];
+        const ch = ld ? CHASSIS[ld.chassis] : null;
+        if (ch && typeof createShipMesh === 'function') {
+          shipWarmupMesh = createShipMesh(ch, 0xff4444, key);
+          group.add(shipWarmupMesh);
+        }
+      }
+    } catch (_) { /* non-fatal: ship warm-up is a bonus, not a requirement */ }
+
     scene.add(group);
     renderer.compile(scene, camera);
+
+    // --- GPU texture upload: the 473ms idle-dominated hitch at t+20s in the
+    // 121949 trace was NOT shader compile (only 4 getProgramInfoLog ticks vs
+    // 1643 (idle) ticks); it's GPU-side texture upload / FBO allocation.
+    // renderer.compile() links programs but does NOT actually upload the
+    // textures those programs sample from. Each CanvasTexture sits on the JS
+    // heap until its first real draw forces the upload, which costs the whole
+    // main thread (pinned waiting on the GPU). renderer.initTexture(tex) forces
+    // the upload now so the first spawnTracer / spawnElectricSmoke / model-swap
+    // frame in combat doesn't have to.
+    if (typeof renderer.initTexture === 'function') {
+      const uploadQueue = [];
+      const seen = new WeakSet();
+      const pushTex = (t) => {
+        if (!t || seen.has(t)) return;
+        seen.add(t);
+        uploadQueue.push(t);
+      };
+      // Procedural textures that the combat-effect paths will use.
+      if (typeof _emberFalloffTexture !== 'undefined') pushTex(_emberFalloffTexture);
+      try {
+        if (typeof getElectricSmokeTexture === 'function') pushTex(getElectricSmokeTexture());
+      } catch (_) {}
+      try {
+        if (typeof getHeatTrailTexture === 'function') pushTex(getHeatTrailTexture());
+      } catch (_) {}
+      try {
+        if (typeof getFlameLickTexture === 'function') pushTex(getFlameLickTexture());
+      } catch (_) {}
+      // GLB ship textures: every loaded prototype has baseColor/normal/emissive
+      // maps that need to be on the GPU before the first bot becomes visible.
+      try {
+        if (typeof shipModelCache !== 'undefined' && shipModelCache.loaded) {
+          for (const key of Object.keys(shipModelCache.loaded)) {
+            const proto = shipModelCache.loaded[key];
+            if (!proto || !proto.traverse) continue;
+            proto.traverse(child => {
+              if (!child.isMesh) return;
+              const mats = Array.isArray(child.material) ? child.material : [child.material];
+              for (const m of mats) {
+                if (!m) continue;
+                pushTex(m.map); pushTex(m.normalMap); pushTex(m.emissiveMap);
+                pushTex(m.roughnessMap); pushTex(m.metalnessMap); pushTex(m.aoMap);
+              }
+            });
+          }
+        }
+      } catch (_) {}
+      // Also walk whatever textures the warmup meshes themselves reference.
+      try {
+        group.traverse(child => {
+          if (!child.isMesh && !child.isSprite) return;
+          const mats = Array.isArray(child.material) ? child.material : [child.material];
+          for (const m of mats) {
+            if (!m) continue;
+            pushTex(m.map); pushTex(m.normalMap); pushTex(m.emissiveMap);
+          }
+        });
+      } catch (_) {}
+      // Actually force uploads. initTexture is a cheap per-texture call; doing
+      // it in a tight loop here moves the aggregate cost out of combat.
+      for (const t of uploadQueue) {
+        try { renderer.initTexture(t); } catch (_) { /* bad texture state; skip */ }
+      }
+    }
+
+    // --- postFX shockwave path pre-warm: the composite shader has a runtime
+    // if-branch guarded on shockIntensity > 0.001 that only fires when the
+    // first explosion spawns. Most WebGL drivers keep one program regardless of
+    // uniform values, but some Angle/Intel stacks recompile on first non-zero
+    // uniform or cache the program per-uniform-state. One render with the
+    // branch active guarantees the branch's codegen is resident before combat.
+    if (typeof postFX !== 'undefined' && postFX.compositeMat && postFX.compositeQuad) {
+      try {
+        const u = postFX.compositeMat.uniforms;
+        // Save current state so we don't leak values into the running game.
+        const prev = {
+          shockIntensity: u.shockIntensity.value,
+          shockAge: u.shockAge.value,
+          shockCenter: u.shockCenter.value.clone(),
+          damagePulse: u.damagePulse.value,
+          warpAmount: u.warpAmount.value,
+          doomedWarp: u.doomedWarp.value,
+          killFlash: u.killFlash.value,
+          tScene: u.tScene.value,
+          tBloom: u.tBloom.value,
+        };
+        // Provide placeholder textures so the shader can sample without error.
+        // Use rtBright/rtBlurV as read sources (destination is rtBlurH below;
+        // WebGL rejects reading and writing the same texture in one draw).
+        u.tScene.value = postFX.rtBright.texture;
+        u.tBloom.value = postFX.rtBlurV.texture;
+        u.shockIntensity.value = 0.001;  // just above the if(...) threshold
+        u.shockAge.value = 0.5;          // mid-expansion so the band is real
+        u.shockCenter.value.set(0.5, 0.5);
+        u.damagePulse.value = 0.001;     // also touch the damage-warp branch
+        u.warpAmount.value = 0.001;
+        u.doomedWarp.value = 0.001;
+        u.killFlash.value = 0.001;
+        // Bring the composite quad briefly visible and render the pass scene
+        // once to the default framebuffer (the result is overwritten on the
+        // next real frame, so it's invisible to the player).
+        const savedVis = {
+          bright: postFX.brightQuad.visible,
+          blur: postFX.blurQuad.visible,
+          comp: postFX.compositeQuad.visible,
+        };
+        postFX.brightQuad.visible = false;
+        postFX.blurQuad.visible = false;
+        postFX.compositeQuad.visible = true;
+        // Render to the scratch rtBlurH target (read sources above are rtBright
+        // and rtBlurV so there's no read/write feedback). We cannot render to
+        // the default framebuffer because the composite pass would flash on
+        // screen during the 10-second launch countdown.
+        const prevTarget = renderer.getRenderTarget();
+        renderer.setRenderTarget(postFX.rtBlurH);
+        renderer.render(postFX.passScene, postFX.quadCamera);
+        renderer.setRenderTarget(prevTarget);
+        // Restore.
+        postFX.brightQuad.visible = savedVis.bright;
+        postFX.blurQuad.visible = savedVis.blur;
+        postFX.compositeQuad.visible = savedVis.comp;
+        u.shockIntensity.value = prev.shockIntensity;
+        u.shockAge.value = prev.shockAge;
+        u.shockCenter.value.copy(prev.shockCenter);
+        u.damagePulse.value = prev.damagePulse;
+        u.warpAmount.value = prev.warpAmount;
+        u.doomedWarp.value = prev.doomedWarp;
+        u.killFlash.value = prev.killFlash;
+        u.tScene.value = prev.tScene;
+        u.tBloom.value = prev.tBloom;
+      } catch (_) { /* pass warmup is non-fatal */ }
+    }
+
     scene.remove(group);
+    // Dispose the ship warmup mesh's owned materials (the procedural path
+    // creates fresh MeshPhongMaterial instances per mesh; we built one set for
+    // warmup and won't use it again). The shader programs stay in the Three.js
+    // WebGL cache keyed by program signature.
+    if (shipWarmupMesh) {
+      try {
+        shipWarmupMesh.traverse(child => {
+          if (child.isMesh) {
+            const mats = Array.isArray(child.material) ? child.material : [child.material];
+            for (const m of mats) { try { m.dispose(); } catch (_) {} }
+            if (child.geometry) { try { child.geometry.dispose(); } catch (_) {} }
+          }
+        });
+      } catch (_) {}
+    }
     // Dispose prototype geometries/materials; the shader programs remain in
     // Three.js' WebGL cache keyed by program signature, which is the whole
     // point of running compile() first. Textures (_emberFalloffTexture etc.)
     // are shared with the real effect code path and must NOT be disposed.
     sphGeo.dispose(); ringGeo.dispose(); boxGeo.dispose();
     torusGeo.dispose(); lineGeo.dispose(); edgesGeo.dispose();
-    planeGeo.dispose(); cylGeo.dispose(); ptsGeo.dispose();
+    planeGeo.dispose(); cylGeo.dispose(); ptsGeo.dispose(); stdGeo.dispose();
     for (const m of matRefs) m.dispose();
   } catch (e) {
     console.warn('[warmupCombatShaders] skipped:', e && e.message);
