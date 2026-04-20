@@ -10,6 +10,20 @@ canvas { display: block; }
 
 #hud { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
 
+/* Per-titan cockpit frame overlay. Full-viewport PNG with alpha, cutout in the middle.
+   z-index 9 sits above the Three.js canvas (default stacking) but below the HUD (z:10),
+   so the cockpit arms/guns drawn on the HUD canvas overlap the frame correctly.
+   object-fit cover fills the viewport without distorting the art. pointer-events none
+   so crosshair clicks still pass through. image-rendering auto (no pixelation). */
+#cockpit-frame {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 9;
+  background-repeat: no-repeat; background-position: center center;
+  background-size: cover;
+  opacity: 0; transition: opacity 0.35s ease-out;
+}
+#cockpit-frame.active { opacity: 1; }
+
 /* Old crosshair hidden; replaced by circumpunct HUD canvas */
 #crosshair { display: none; }
 
@@ -25,9 +39,19 @@ canvas { display: block; }
 }
 .hit-marker.active { animation: hitFlash 0.25s ease-out; }
 @keyframes hitFlash {
-  0% { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
-  50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.0); }
-  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+  /* Chromatic split layered on classic hit mark: cyan leads left, magenta trails right. */
+  0% {
+    opacity: 1; transform: translate(-50%, -50%) scale(1.3);
+    filter: drop-shadow(-2px 0 0 rgba(0,255,255,0.95)) drop-shadow(2px 0 0 rgba(255,0,180,0.95));
+  }
+  40% {
+    opacity: 0.95; transform: translate(-50%, -50%) scale(1.05);
+    filter: drop-shadow(-1px 0 0 rgba(0,255,255,0.55)) drop-shadow(1px 0 0 rgba(255,0,180,0.55));
+  }
+  100% {
+    opacity: 0; transform: translate(-50%, -50%) scale(0.8);
+    filter: drop-shadow(0 0 0 rgba(0,255,255,0)) drop-shadow(0 0 0 rgba(255,0,180,0));
+  }
 }
 .hit-marker-kill {
   position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -35,9 +59,19 @@ canvas { display: block; }
 }
 .hit-marker-kill.active { animation: killFlash 0.5s ease-out; }
 @keyframes killFlash {
-  0% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
-  30% { opacity: 1; transform: translate(-50%, -50%) scale(1.0); }
-  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+  /* Wider chromatic split confirms kill vs hit: cyan pushed further, magenta wider. */
+  0% {
+    opacity: 1; transform: translate(-50%, -50%) scale(1.5);
+    filter: drop-shadow(-4px 0 0 rgba(0,240,255,1)) drop-shadow(4px 0 0 rgba(255,50,200,1));
+  }
+  25% {
+    opacity: 1; transform: translate(-50%, -50%) scale(1.0);
+    filter: drop-shadow(-2px 0 0 rgba(0,240,255,0.75)) drop-shadow(2px 0 0 rgba(255,50,200,0.75));
+  }
+  100% {
+    opacity: 0; transform: translate(-50%, -50%) scale(0.6);
+    filter: drop-shadow(0 0 0 rgba(0,240,255,0)) drop-shadow(0 0 0 rgba(255,50,200,0));
+  }
 }
 
 /* Legacy HUD elements (integrated into circumpunct ring HUD) */
@@ -109,27 +143,156 @@ canvas { display: block; }
 }
 .kill-entry { padding: 2px 0; opacity: 1; transition: opacity 0.5s; }
 
-/* Ship Select */
+/* Ship Select ; redesigned layout
+   Left column: stacked loadout-name list (click to preview).
+   Center: large preview panel with ship name, chassis, stats, weapon, abilities,
+           plus a CONFIRM & LAUNCH button that commits the pick.
+   Bottom strip: teammates with the ship they've picked.
+   Countdown overlay sits on top of this screen and stays visible during 3-2-1,
+   then the screen fades as the warp-in animation begins. Between rounds the
+   screen reappears so you can swap for the next round. */
 #ship-select {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(5,5,15,0.95); z-index: 100; display: flex;
-  flex-direction: column; align-items: center; justify-content: center;
-  color: #fff; cursor: default;
+  background: rgba(5,5,15,0.95); z-index: 100; display: none;
+  flex-direction: column; align-items: stretch; justify-content: flex-start;
+  color: #fff; cursor: default; padding: 0;
 }
-#ship-select h1 { font-size: 36px; margin-bottom: 8px; letter-spacing: 4px; color: #ffaa00; }
-#ship-select h2 { font-size: 14px; margin-bottom: 30px; color: #888; letter-spacing: 2px; }
-#ship-grid { display: grid; grid-template-columns: repeat(4, 200px); gap: 12px; }
-.ship-card {
-  background: rgba(20,20,40,0.9); border: 1px solid rgba(80,80,120,0.4);
-  padding: 16px; cursor: pointer; transition: all 0.2s; pointer-events: all;
+#ship-select.active { display: flex; }
+#ship-select-header {
+  padding: 18px 32px 10px; border-bottom: 1px solid rgba(80,80,120,0.25);
 }
-.ship-card:hover { border-color: #ffaa00; background: rgba(30,30,50,0.9); transform: translateY(-2px); }
-.ship-card .loadout-name { font-size: 18px; font-weight: bold; color: #ffaa00; }
-.ship-card .chassis-name { font-size: 11px; color: #888; margin-bottom: 8px; }
-.ship-card .stat { font-size: 10px; color: #aaa; margin: 2px 0; }
-.ship-card .stat span { color: #fff; }
-.ship-card .weapon-name { font-size: 10px; color: #66bb66; margin-top: 6px; }
-.ship-card .abilities-list { font-size: 9px; color: #66cc66; margin-top: 4px; }
+#ship-select-header h1 { font-size: 30px; margin: 0; letter-spacing: 4px; color: #ffaa00; }
+#ship-select-header h2 { font-size: 12px; margin: 4px 0 0; color: #888; letter-spacing: 2px; }
+#ship-select-body {
+  flex: 1; display: flex; flex-direction: row; min-height: 0;
+}
+/* Left: stacked ship-name list */
+#ship-list {
+  width: 240px; flex-shrink: 0;
+  padding: 18px 14px; overflow-y: auto;
+  border-right: 1px solid rgba(80,80,120,0.25);
+}
+.ship-list-entry {
+  padding: 12px 14px; margin-bottom: 6px;
+  border: 1px solid rgba(80,80,120,0.35);
+  background: rgba(20,20,40,0.6); color: #ddd;
+  font-size: 15px; letter-spacing: 2px; cursor: pointer;
+  transition: all 0.15s; pointer-events: all;
+  display: flex; flex-direction: column;
+}
+.ship-list-entry .sle-name { font-weight: bold; color: #ffaa00; font-size: 16px; }
+.ship-list-entry .sle-class { font-size: 10px; color: #888; margin-top: 2px; letter-spacing: 1px; }
+.ship-list-entry:hover { border-color: #ffaa00; background: rgba(30,30,50,0.9); }
+.ship-list-entry.selected {
+  border-color: #ffaa00; background: rgba(50,40,15,0.9);
+  box-shadow: inset 0 0 12px rgba(255,170,0,0.25);
+}
+/* Center + right: 3D GLB preview on the left of the preview panel, info/stack on the right */
+#ship-preview {
+  flex: 1; display: flex; flex-direction: row; align-items: stretch;
+  justify-content: center; padding: 20px; min-width: 0; gap: 28px;
+}
+/* 3D model viewer (left half of preview panel): slowly-rotating GLB in its own
+   WebGL canvas. The canvas fills this container; we resize it from JS each frame
+   to match clientWidth/clientHeight so DPR and responsive layouts stay sharp. */
+#ship-preview-model {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  min-width: 0; position: relative;
+}
+#ship-preview-canvas {
+  width: 100%; height: 100%; display: block;
+  background: radial-gradient(ellipse at center,
+    rgba(30,40,70,0.35) 0%,
+    rgba(10,12,22,0.15) 55%,
+    rgba(0,0,0,0) 100%);
+}
+#ship-preview-info {
+  width: 440px; flex-shrink: 0; display: flex; flex-direction: column;
+  align-items: stretch; justify-content: center; text-align: center;
+  padding: 0 8px;
+}
+#ship-preview-header { text-align: center; margin-bottom: 14px; }
+#ship-preview-name { font-size: 32px; letter-spacing: 4px; color: #ffaa00; font-weight: bold; }
+#ship-preview-class { font-size: 13px; color: #aaa; letter-spacing: 2px; margin-top: 4px; }
+#ship-preview-stats {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px;
+  margin: 14px 0 18px; pointer-events: none; width: 100%;
+}
+.sp-stat {
+  font-size: 12px; letter-spacing: 1px; color: #aaa;
+  display: flex; justify-content: space-between;
+  padding: 6px 10px; background: rgba(20,20,40,0.4);
+  border-left: 2px solid rgba(80,80,120,0.5);
+}
+.sp-stat .sp-val { color: #fff; font-weight: bold; }
+#ship-preview-weapon {
+  color: #66bbff; font-size: 13px; letter-spacing: 1px; margin-top: 6px;
+  text-align: center;
+}
+#ship-preview-abilities {
+  color: #66cc66; font-size: 11px; letter-spacing: 1px;
+  text-align: center; margin-top: 2px;
+}
+#ship-preview-core {
+  color: #ffaa00; font-size: 11px; letter-spacing: 1px;
+  text-align: center; margin-top: 4px; opacity: 0.8;
+}
+#ship-preview-confirm {
+  margin-top: 22px; padding: 12px 36px;
+  background: rgba(255,170,0,0.15); border: 2px solid #ffaa00;
+  color: #ffaa00; font-size: 14px; letter-spacing: 3px; font-weight: bold;
+  cursor: pointer; transition: all 0.15s; pointer-events: all;
+  font-family: inherit; align-self: center;
+}
+#ship-preview-confirm:hover { background: rgba(255,170,0,0.35); color: #fff; }
+#ship-preview-confirm:disabled { opacity: 0.3; cursor: not-allowed; }
+#ship-preview-empty {
+  color: #555; font-size: 14px; letter-spacing: 2px; text-align: center;
+  padding: 60px 0; margin: auto;
+}
+/* Bottom: teammates */
+#teammates-strip {
+  border-top: 1px solid rgba(80,80,120,0.25);
+  padding: 14px 24px; display: flex; flex-direction: row;
+  gap: 14px; align-items: center; overflow-x: auto;
+  background: rgba(8,8,18,0.7);
+  min-height: 56px;
+}
+#teammates-strip .strip-label {
+  font-size: 11px; color: #888; letter-spacing: 2px; margin-right: 10px;
+  flex-shrink: 0;
+}
+.teammate-chip {
+  display: flex; flex-direction: column; padding: 6px 12px;
+  background: rgba(20,20,40,0.6); border: 1px solid rgba(80,80,120,0.35);
+  min-width: 130px; flex-shrink: 0;
+}
+.teammate-chip .tm-name { color: #ddd; font-size: 12px; letter-spacing: 1px; font-weight: bold; }
+.teammate-chip .tm-ship { color: #ffaa00; font-size: 10px; letter-spacing: 1px; margin-top: 2px; }
+.teammate-chip.you { border-color: #ffaa00; background: rgba(50,40,15,0.6); }
+.teammate-chip.empty .tm-ship { color: #555; }
+/* Countdown overlay shown while ship-select is still visible. */
+#ship-select-countdown {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 110; pointer-events: none; text-align: center;
+  display: none;
+}
+#ship-select-countdown.active { display: block; }
+#ship-select-countdown .cd-num {
+  font-size: 160px; font-weight: bold; color: #ffaa00;
+  text-shadow: 0 0 40px rgba(255,170,0,0.8), 0 0 80px rgba(255,100,0,0.4);
+  letter-spacing: 0; line-height: 1;
+  animation: cdPulse 0.9s ease-out forwards;
+}
+#ship-select-countdown .cd-sub {
+  font-size: 14px; color: #ddd; letter-spacing: 4px; margin-top: 8px;
+}
+@keyframes cdPulse {
+  0% { transform: scale(0.6); opacity: 0; }
+  15% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
 
 /* Doomed Warning */
 #doomed-warning {
@@ -515,6 +678,9 @@ canvas { display: block; }
   </svg>
 </div>
 
+<!-- Per-titan cockpit frame: PNG with alpha cutout, populated by updateCockpitFrame() -->
+<div id="cockpit-frame"></div>
+
 <div id="hud">
   <canvas id="health-canvas" width="500" height="70"></canvas>
 
@@ -668,17 +834,44 @@ canvas { display: block; }
   </div>
 </div>
 
-<div id="ship-select" style="display:none;">
-  <h1>LAST SHIP SAILING</h1>
-  <h2>CHOOSE YOUR SHIP</h2>
-  <div id="ship-grid"></div>
-
-  <div id="map-select">
-    <h3>SELECT MAP</h3>
-    <div id="map-select-grid"></div>
+<div id="ship-select">
+  <div id="ship-select-header">
+    <h1>LAST SHIP SAILING</h1>
+    <h2>CHOOSE YOUR SHIP</h2>
   </div>
-  <div style="margin-top:20px;color:#555;font-size:10px;letter-spacing:1px;">WASD: Move | SPACE/CTRL: Up/Down | MOUSE: Aim | SHIFT: Dash | Q/E/F: Abilities | V: Core | ESC: Settings</div>
-  <div style="margin-top:4px;color:#444;font-size:9px;letter-spacing:1px;">GAMEPAD: D-Pad Up/Down for vertical movement</div>
+  <div id="ship-select-body">
+    <div id="ship-list"></div>
+    <div id="ship-preview">
+      <div id="ship-preview-empty">SELECT A SHIP FROM THE LIST</div>
+      <div id="ship-preview-model" style="display:none;">
+        <canvas id="ship-preview-canvas"></canvas>
+      </div>
+      <div id="ship-preview-info" style="display:none;">
+        <div id="ship-preview-header" style="display:none;">
+          <div id="ship-preview-name"></div>
+          <div id="ship-preview-class"></div>
+        </div>
+        <div id="ship-preview-stats" style="display:none;"></div>
+        <div id="ship-preview-weapon" style="display:none;"></div>
+        <div id="ship-preview-abilities" style="display:none;"></div>
+        <div id="ship-preview-core" style="display:none;"></div>
+        <button id="ship-preview-confirm" style="display:none;">CONFIRM &amp; LAUNCH</button>
+        <div id="map-select" style="display:none; margin-top:28px; text-align:center;">
+          <h3 style="font-size:13px;color:#ffaa00;letter-spacing:2px;margin:0 0 8px;">SELECT MAP</h3>
+          <div id="map-select-grid" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="teammates-strip">
+    <span class="strip-label">TEAMMATES</span>
+    <div id="teammates-list" style="display:flex;gap:10px;"></div>
+  </div>
+  <div style="padding:8px 24px;color:#555;font-size:10px;letter-spacing:1px;background:rgba(4,4,10,0.85);">WASD: Move | SPACE/CTRL: Up/Down | MOUSE: Aim | SHIFT: Dash | Q/E/F: Abilities | V: Core | ESC: Settings&nbsp;&nbsp;&nbsp;GAMEPAD: D-Pad Up/Down for vertical movement</div>
+  <div id="ship-select-countdown">
+    <div class="cd-num">3</div>
+    <div class="cd-sub">LAUNCH</div>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -700,6 +893,10 @@ const LSS = {
   ROUND_TIME: 180, WARMUP_TIME: 5, ROUNDS_TO_WIN: 4,
   SPAWN_PROTECTION: 3, DOOMED_HEALTH_PCT: 0.15, DOOMED_TIMER: 10,
   GRAVITY: 0, ARENA_SIZE: 25000, TICK_RATE: 60,
+  // Seconds shown on the in-screen 3-2-1-LAUNCH ticker. The round-system
+  // warmupTimer is kept in lockstep with this so bots stay in 'warmup' (no
+  // firing, no movement) for the full duration of the visible countdown.
+  LAUNCH_COUNTDOWN: 10,
 };
 
 // ---- CHASSIS DEFINITIONS ----
@@ -917,6 +1114,8 @@ const player = {
   phaseInvulnTimer: 0,
   // NORTHSTAR
   thermalShieldHP: 2500, thermalShieldMaxHP: 2500, // Scorch Thermal Shield power pool (absorbs damage + drains while held). Starts full; regens to max over 10s out of use.
+  // Scorch Incendiary Trap: charge-based like dashes. Two charges, each refilling on TRAP_CHARGE_COOLDOWN seconds.
+  trapCharges: 2, maxTrapCharges: 2, trapChargeCooldown: 12, trapCooldownTimer: 0,
   afterburnerActive: false,
   afterburnerSpeedMult: 1.0,
   railgunCharge: 0, // 0-1 charge level (hold alt-fire to charge)
@@ -1172,8 +1371,15 @@ function startSolo() {
 
 function enterShipSelect() {
   document.getElementById('lobby').style.display = 'none';
-  document.getElementById('ship-select').style.display = 'flex';
+  const sel = document.getElementById('ship-select');
+  sel.classList.add('active');
+  // Make sure the countdown is hidden and the preview is in its empty state
+  // whenever we (re-)enter the screen (first time, or between rounds).
+  const cd = document.getElementById('ship-select-countdown');
+  if (cd) cd.classList.remove('active');
+  buildShipSelect();
   buildMapSelector();
+  updateTeammatesStrip();
 }
 
 function buildMapSelector() {
@@ -1663,6 +1869,13 @@ postFX.compositeMat = new THREE.ShaderMaterial({
     vignetteSize: { value: 0.42 },
     chromAb: { value: 0.0 },            // driven by damage indicator intensity
     damagePulse: { value: 0.0 },        // 0..1, pulses vignette red on hit
+    warpAmount: { value: 0.0 },         // 0..1, damage UV warp (quick, low-freq sine)
+    doomedWarp: { value: 0.0 },         // 0..1, doomed-state slow world warp
+    killFlash: { value: 0.0 },          // 0..1, shutter-flash pulse on kill
+    // Shockwave screen-space refraction warp (single active at a time)
+    shockCenter: { value: new THREE.Vector2(0.5, 0.5) },
+    shockAge: { value: 1.0 },           // 0..1 (0 = just spawned, 1 = dissipated)
+    shockIntensity: { value: 0.0 },     // base strength (0 = off)
     lensDirt: { value: 0.55 },          // procedural dirt response strength
     exposure: { value: 1.05 },
     time: { value: 0.0 }
@@ -1676,6 +1889,12 @@ postFX.compositeMat = new THREE.ShaderMaterial({
     uniform float vignetteSize;
     uniform float chromAb;
     uniform float damagePulse;
+    uniform float warpAmount;
+    uniform float doomedWarp;
+    uniform float killFlash;
+    uniform vec2  shockCenter;
+    uniform float shockAge;
+    uniform float shockIntensity;
     uniform float lensDirt;
     uniform float exposure;
     uniform float time;
@@ -1716,18 +1935,72 @@ postFX.compositeMat = new THREE.ShaderMaterial({
       vec2 center = vUv - 0.5;
       float dist = length(center);
 
+      // Damage/doomed UV warp: low-freq sines, radial-weighted so center stays stable.
+      // warpAmount rides damagePulse (fast, tight); doomedWarp is slower and stronger,
+      // and runs as long as the player is doomed. Both fall off toward screen center.
+      vec2 warpedUv = vUv;
+
+      // Shockwave refraction ring: expanding radial band around shockCenter.
+      // shockAge goes 0->1 over the explosion's ~300 ms window; a narrow band
+      // at radius = shockAge sweeps outward and pushes UVs away from center.
+      if (shockIntensity > 0.001 && shockAge < 1.0) {
+        vec2 shockToFrag = vUv - shockCenter;
+        // account for non-square aspect by stretching x vs y (cheap approx using dFdx/dFdy alternative: just use vUv)
+        float r = length(shockToFrag);
+        float ringR = shockAge * 0.85;              // current ring radius in UV space
+        float bandWidth = 0.10;                     // how thick the refraction band is
+        float band = exp(-pow((r - ringR) / bandWidth, 2.0)); // gaussian band
+        float shockStrength = shockIntensity * (1.0 - shockAge) * band;
+        // Push UV outward along the ring's radial axis
+        vec2 shockDir = r > 0.0001 ? shockToFrag / r : vec2(0.0);
+        warpedUv += shockDir * shockStrength * 0.035;
+      }
+
+      if (warpAmount > 0.001 || doomedWarp > 0.001) {
+        float radialFalloff = smoothstep(0.05, 0.55, dist);
+        // Fast warp on hit: ~3.0 Hz, tight 0.012 amplitude at full pulse
+        vec2 wHit = vec2(
+          sin(time * 3.0 + vUv.y * 14.0),
+          cos(time * 2.7 + vUv.x * 11.0)
+        ) * (warpAmount * 0.012);
+        // Slow heavy warp while doomed: ~0.9 Hz, 0.022 amplitude peak
+        vec2 wDoom = vec2(
+          sin(time * 0.9 + vUv.y * 6.5),
+          cos(time * 0.75 + vUv.x * 5.2 + 1.3)
+        ) * (doomedWarp * 0.022);
+        warpedUv += (wHit + wDoom) * radialFalloff;
+      }
+
       // Chromatic aberration (radial; punchier on damage)
       float abAmount = chromAb * dist * 0.025 + 0.0008 * dist;
       vec3 col;
-      col.r = texture2D(tScene, vUv + center * abAmount).r;
-      col.g = texture2D(tScene, vUv).g;
-      col.b = texture2D(tScene, vUv - center * abAmount).b;
+      col.r = texture2D(tScene, warpedUv + center * abAmount).r;
+      col.g = texture2D(tScene, warpedUv).g;
+      col.b = texture2D(tScene, warpedUv - center * abAmount).b;
 
       // Bloom + lens dirt (dirt makes bloom catch on the "lens", classic JJ-Abrams cinematic)
-      vec3 bloom = texture2D(tBloom, vUv).rgb;
+      vec3 bloom = texture2D(tBloom, warpedUv).rgb;
       float dirt = lensDirtMask(vUv);
       vec3 dirtBloom = bloom * dirt * lensDirt;
       col += bloom * bloomStrength + dirtBloom;
+
+      // God-rays: radial blur of bloom toward shockCenter during an explosion's
+      // lifetime. 8-sample line from the fragment toward the bright emitter; falls
+      // off with shockAge so the rays flash in then fade. Free ride on the existing
+      // bloom texture and shockwave uniforms.
+      if (shockIntensity > 0.001 && shockAge < 1.0) {
+        vec2 rayDir = shockCenter - vUv;
+        vec3 rays = vec3(0.0);
+        const int RAY_SAMPLES = 8;
+        for (int i = 0; i < RAY_SAMPLES; i++) {
+          float t = float(i) / float(RAY_SAMPLES);
+          vec2 sUv = vUv + rayDir * (t * 0.30);
+          rays += texture2D(tBloom, sUv).rgb * (1.0 - t);
+        }
+        rays /= float(RAY_SAMPLES);
+        float rayStrength = shockIntensity * (1.0 - shockAge) * 0.75;
+        col += rays * rayStrength;
+      }
 
       // Exposure
       col *= exposure;
@@ -1741,6 +2014,27 @@ postFX.compositeMat = new THREE.ShaderMaterial({
       vec3 highlightsTint = vec3(1.06, 1.02, 0.92); // warm
       vec3 graded = col * mix(shadowsTint, highlightsTint, smoothstep(0.0, 0.7, lum));
       col = mix(col, graded, 0.55);
+
+      // Atmospheric perspective (cool-tinted second fog layer). Depth isn't available
+      // in the composite pass, so use "moderately-dark fragments near screen center"
+      // as a proxy for "looking into an open fogged volume." Bright (bloom, lights)
+      // and very dark (solid shadow / vignette) are excluded so only the mid-lum haze
+      // picks up the cool pull. This sells distance for silhouettes without tinting
+      // the hull or the hot plume tips.
+      float fogBand = smoothstep(0.02, 0.28, lum) * (1.0 - smoothstep(0.50, 0.85, lum));
+      float fogCenter = 1.0 - smoothstep(0.08, 0.55, dist); // strongest toward center
+      float fogMix = fogBand * fogCenter * 0.28;
+      vec3 coolFog = vec3(0.55, 0.78, 0.98);
+      col = mix(col, col * coolFog, fogMix);
+
+      // Kill shutter flash: brief inverse-bloom pulse. First half = dip (neg exposure), second half = bright crack.
+      // killFlash is already a decaying curve from 1.0; we shape it with smoothstep peaks.
+      if (killFlash > 0.001) {
+        float dip = smoothstep(0.55, 1.0, killFlash);       // dark slam at the very top of the curve
+        float crack = smoothstep(0.15, 0.9, killFlash);     // bright lift across most of the pulse
+        col = mix(col, 1.0 - col, dip * 0.35);              // partial inversion at peak (inverse-bloom feel)
+        col += vec3(1.05, 1.02, 0.95) * crack * 0.35;       // warm bright kick
+      }
 
       // Vignette (with damage pulse pushing into red)
       float vig = 1.0 - smoothstep(vignetteSize, vignetteSize + 0.55, dist * 1.4);
@@ -1775,7 +2069,47 @@ function renderPostFX() {
     game.damageIndicators.left, game.damageIndicators.right
   );
   postFX.compositeMat.uniforms.chromAb.value = damageMax * 3.0;
-  postFX.compositeMat.uniforms.damagePulse.value = Math.min(1.0, damageMax * 1.6);
+  const dPulse = Math.min(1.0, damageMax * 1.6);
+  postFX.compositeMat.uniforms.damagePulse.value = dPulse;
+  postFX.compositeMat.uniforms.warpAmount.value = dPulse;
+  // Doomed world warp: ease in smoothly while doomed (but not while dead), ease out otherwise.
+  const doomedActive = (typeof player !== 'undefined' && player && player.doomed && player.shipState !== 'dead') ? 1.0 : 0.0;
+  const prevDoomWarp = postFX.compositeMat.uniforms.doomedWarp.value;
+  // ~0.5s ease toward target; smooth visual onset/offset
+  postFX.compositeMat.uniforms.doomedWarp.value = prevDoomWarp + (doomedActive - prevDoomWarp) * 0.04;
+  // Kill flash decays fast (~120 ms to near zero); multiplicative decay gives snappy shutter feel.
+  const prevKillFlash = postFX.compositeMat.uniforms.killFlash.value;
+  postFX.compositeMat.uniforms.killFlash.value = prevKillFlash > 0.001 ? prevKillFlash * 0.82 : 0.0;
+
+  // Shockwave warp: project active 3D shockwave origin to UV, drive age/intensity.
+  if (postFX.shockwave && postFX.shockwave.active) {
+    const sw = postFX.shockwave;
+    const elapsed = (typeof game !== 'undefined' ? game.time : 0) - sw.startTime;
+    const age = elapsed / sw.duration;
+    if (age >= 1.0 || !sw.origin) {
+      sw.active = false;
+      postFX.compositeMat.uniforms.shockIntensity.value = 0.0;
+      postFX.compositeMat.uniforms.shockAge.value = 1.0;
+    } else {
+      // Project world -> NDC using camera.
+      const _sv = new THREE.Vector3().copy(sw.origin);
+      _sv.project(camera);
+      // Behind camera gives z > 1; gate it out.
+      if (_sv.z > 1.0 || _sv.z < -1.0) {
+        postFX.compositeMat.uniforms.shockIntensity.value = 0.0;
+      } else {
+        // NDC -> UV (0..1)
+        const u = (_sv.x + 1.0) * 0.5;
+        const v = (_sv.y + 1.0) * 0.5;
+        postFX.compositeMat.uniforms.shockCenter.value.set(u, v);
+        postFX.compositeMat.uniforms.shockAge.value = age;
+        postFX.compositeMat.uniforms.shockIntensity.value = sw.intensity;
+      }
+    }
+  } else {
+    postFX.compositeMat.uniforms.shockIntensity.value = 0.0;
+  }
+
   postFX.compositeMat.uniforms.time.value = game.time;
 
   // 1. Render scene to offscreen target
@@ -2421,6 +2755,143 @@ function preloadShipModels() {
   return shipModelCache.ready;
 }
 
+// ---- SHIP-SELECT 3D PREVIEW ----
+// A small, isolated Three.js renderer for the ship-select center panel.
+// Renders the currently-previewed GLB slowly rotating around Y. Completely
+// independent of the main game renderer (separate canvas, scene, camera,
+// rAF loop), so it can run while the game scene is idle during ship select.
+const _shipPreview3D = {
+  renderer: null, scene: null, camera: null, canvas: null,
+  model: null, lastKey: null, pendingKey: null, animId: null,
+  rotationSpeed: 0.005, // radians per frame at 60fps (slow, graceful)
+};
+
+function _initShipPreview3D() {
+  if (_shipPreview3D.renderer) return _shipPreview3D.renderer;
+  if (typeof THREE === 'undefined') return null;
+  const canvas = document.getElementById('ship-preview-canvas');
+  if (!canvas) return null;
+  try {
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setClearColor(0x000000, 0); // transparent: CSS radial gradient shows behind
+    const scene = new THREE.Scene();
+    // Lighting: cool key from upper-front, warm fill from below-back, plus ambient
+    // so dark hull panels still read. Colors echo the main-game team-neutral palette.
+    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+    const keyL = new THREE.DirectionalLight(0xbfd9ff, 1.1);
+    keyL.position.set(180, 240, 160); scene.add(keyL);
+    const fillL = new THREE.DirectionalLight(0xffb066, 0.45);
+    fillL.position.set(-140, -80, -200); scene.add(fillL);
+    const rimL = new THREE.DirectionalLight(0xffaa00, 0.25);
+    rimL.position.set(0, 120, -260); scene.add(rimL);
+    const camera = new THREE.PerspectiveCamera(32, 1, 1, 8000);
+    camera.position.set(0, 70, 320);
+    camera.lookAt(0, 0, 0);
+    _shipPreview3D.renderer = renderer;
+    _shipPreview3D.scene = scene;
+    _shipPreview3D.camera = camera;
+    _shipPreview3D.canvas = canvas;
+    return renderer;
+  } catch (e) {
+    console.warn('[ship-preview] WebGL init failed:', e && e.message ? e.message : e);
+    return null;
+  }
+}
+
+// Swap the rotating model to the given loadout key. If the GLB pool hasn't
+// finished loading yet, we arm a one-shot retry against shipModelCache.ready
+// so the preview backfills as soon as the model lands.
+function setShipPreviewModel(key) {
+  if (!_shipPreview3D.renderer) _initShipPreview3D();
+  if (!_shipPreview3D.renderer) return;
+  _shipPreview3D.pendingKey = key;
+  _applyShipPreviewModel(key);
+}
+
+function _applyShipPreviewModel(key) {
+  const s = _shipPreview3D;
+  if (!s.renderer) return;
+  if (s.pendingKey !== key) return; // user swapped again while we were resolving
+  const proto = shipModelCache.loaded && shipModelCache.loaded[key];
+  if (!proto) {
+    if (shipModelCache.ready && typeof shipModelCache.ready.then === 'function') {
+      shipModelCache.ready.then(() => {
+        if (s.pendingKey === key) _applyShipPreviewModel(key);
+      });
+    }
+    return;
+  }
+  if (s.lastKey === key && s.model) return; // nothing to do
+  if (s.model) {
+    s.scene.remove(s.model);
+    s.model = null;
+  }
+  s.lastKey = key;
+  // Clone and neutralize the clone's materials so the preview reads like a
+  // hero shot: no team tint, mild emissive lift, preserved texture/vertexColor.
+  const clone = proto.clone(true);
+  clone.traverse(child => {
+    if (child.isMesh) {
+      const mats = Array.isArray(child.material) ? child.material : [child.material];
+      const newMats = mats.map(m => {
+        if (!m) return m;
+        const copy = m.clone();
+        if (copy.emissive) copy.emissive.setHex(0x22334a);
+        if ('emissiveIntensity' in copy) copy.emissiveIntensity = 1.0;
+        return copy;
+      });
+      child.material = newMats.length === 1 ? newMats[0] : newMats;
+      child.castShadow = false;
+      child.receiveShadow = false;
+    }
+  });
+  // Fit camera dolly to the model's bbox so small ships don't look tiny and
+  // large ships don't clip. We aim 3/4 down-angled for a good silhouette.
+  const box = new THREE.Box3().setFromObject(clone);
+  const sz = box.getSize(new THREE.Vector3());
+  const maxDim = Math.max(sz.x, sz.y, sz.z) || 100;
+  const cam = s.camera;
+  cam.position.set(0, maxDim * 0.35, maxDim * 2.2);
+  cam.lookAt(0, 0, 0);
+  // Reset rotation so every new ship starts facing camera.
+  clone.rotation.set(0, 0, 0);
+  s.scene.add(clone);
+  s.model = clone;
+}
+
+function _animateShipPreview() {
+  const s = _shipPreview3D;
+  if (!s.renderer || !s.canvas) return;
+  // Keep the backbuffer in sync with the CSS-sized canvas.
+  const w = s.canvas.clientWidth | 0;
+  const h = s.canvas.clientHeight | 0;
+  if (w > 0 && h > 0) {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const wantW = Math.floor(w * dpr), wantH = Math.floor(h * dpr);
+    if (s.renderer.domElement.width !== wantW || s.renderer.domElement.height !== wantH) {
+      s.renderer.setSize(w, h, false);
+      s.camera.aspect = w / h;
+      s.camera.updateProjectionMatrix();
+    }
+  }
+  if (s.model) s.model.rotation.y += s.rotationSpeed;
+  s.renderer.render(s.scene, s.camera);
+  s.animId = requestAnimationFrame(_animateShipPreview);
+}
+
+function startShipPreviewLoop() {
+  if (_shipPreview3D.animId) return;
+  if (!_shipPreview3D.renderer) _initShipPreview3D();
+  if (!_shipPreview3D.renderer) return;
+  _animateShipPreview();
+}
+
+function stopShipPreviewLoop() {
+  if (_shipPreview3D.animId) cancelAnimationFrame(_shipPreview3D.animId);
+  _shipPreview3D.animId = null;
+}
+
 // Build a ship mesh from a preloaded glTF model while exposing the same
 // userData contract as the procedural path (engineMesh, shieldMesh, engineGlows,
 // enginePlumes, panelGlowMat, engineGlowMat). The rest of the game interacts
@@ -2433,6 +2904,10 @@ function buildModelShipMesh(chassisData, teamColor, loadoutKey) {
   // Clone and retint materials (preserve baseColor texture and vertex colors,
   // add a subtle team-color emissive so you can still tell sides apart).
   const model = proto.clone(true);
+  // Collect hull-like materials so animateShipMesh can dim them on doomed state.
+  // Opaque MeshPhongMaterials that aren't additive engine/shield/plume bits are
+  // the hull; we skip transparent ones to preserve glow highlights.
+  const hullMats = [];
   model.traverse(child => {
     if (child.isMesh) {
       const mats = Array.isArray(child.material) ? child.material : [child.material];
@@ -2447,13 +2922,16 @@ function buildModelShipMesh(chassisData, teamColor, loadoutKey) {
         if (m && m.map) params.map = m.map;
         if (m && m.vertexColors) params.vertexColors = true;
         params.color = (m && m.color) ? m.color.clone() : new THREE.Color(0xbfc4d2);
-        return new THREE.MeshPhongMaterial(params);
+        const mat = new THREE.MeshPhongMaterial(params);
+        if (!params.transparent) hullMats.push(mat);
+        return mat;
       });
       child.material = newMats.length === 1 ? newMats[0] : newMats;
       child.castShadow = false; child.receiveShadow = false;
     }
   });
   group.add(model);
+  group.userData.hullMats = hullMats;
 
   // Engine + plume materials (additive, identical to procedural path).
   const engineGlowMat = new THREE.MeshBasicMaterial({
@@ -2557,7 +3035,14 @@ function buildModelShipMesh(chassisData, teamColor, loadoutKey) {
     if (child.userData && child.userData.isPlume) enginePlumes.push(child);
   });
   const barrelMeshes = []; // no procedural barrels to recoil on imported hulls
-  group.userData = { engineMesh, shieldMesh: shield, engineGlows, enginePlumes, barrelMeshes, panelGlowMat, engineGlowMat, isModelShip: true };
+  // V5a rim-PointLight was removed: the fresnel rim-shader on hullMat already
+  // paints the silhouette in team color without adding a scene light. Adding a
+  // PointLight per ship pushed the scene past Three.js' baked NUM_POINT_LIGHTS,
+  // which caused MeshPhongMaterial to recompile into a variant that rendered
+  // hulls nearly black in normal play. Darkness is now reserved for the doomed
+  // state (see animateShipMesh), so "ship looks dark" reads as "executable."
+  const prevUD = group.userData || {};
+  group.userData = Object.assign(prevUD, { engineMesh, shieldMesh: shield, engineGlows, enginePlumes, barrelMeshes, panelGlowMat, engineGlowMat, isModelShip: true });
   return group;
 }
 
@@ -2612,6 +3097,25 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
     color: teamColor, specular: 0x9999aa, shininess: 110,
     emissive: teamCol.clone().multiplyScalar(0.12), emissiveIntensity: 1.0
   });
+  // Fresnel rim-light: team-colored glow at glancing angles. onBeforeCompile injects
+  // a view-dependent power(1 - n·v) term into the fragment shader so silhouettes pop
+  // for instant target ID at distance. Cheap (no extra passes) and compatible with bloom.
+  hullMat.userData.rimColor = { value: teamCol.clone().multiplyScalar(1.35) };
+  hullMat.userData.rimPower = { value: 2.5 };
+  hullMat.userData.rimStrength = { value: 0.75 };
+  hullMat.onBeforeCompile = function(shader) {
+    shader.uniforms.rimColor = hullMat.userData.rimColor;
+    shader.uniforms.rimPower = hullMat.userData.rimPower;
+    shader.uniforms.rimStrength = hullMat.userData.rimStrength;
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>',
+        '#include <common>\nuniform vec3 rimColor;\nuniform float rimPower;\nuniform float rimStrength;')
+      .replace('#include <dithering_fragment>',
+        'vec3 _rimViewDir = normalize(-vViewPosition);\n' +
+        'float _rimFresnel = pow(1.0 - max(dot(normalize(normal), _rimViewDir), 0.0), rimPower);\n' +
+        'gl_FragColor.rgb += rimColor * (_rimFresnel * rimStrength);\n' +
+        '#include <dithering_fragment>');
+  };
   const darkMat = new THREE.MeshPhongMaterial({ color: 0x222233, specular: 0x444466, shininess: 60 });
   const accentMat = new THREE.MeshPhongMaterial({
     color: teamCol.clone().offsetHSL(0, 0, -0.15),
@@ -2622,6 +3126,11 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
     color: 0x2244aa, specular: 0xccddff, shininess: 200,
     emissive: 0x66aaff, emissiveIntensity: 1.4
   });
+  // Register the cockpit material on the group so animateShipMesh can pulse it (heartbeat).
+  group.userData.cockpitMat = cockpitMat;
+  group.userData.cockpitBaseEmissiveIntensity = 1.4;
+  // Register hull material so doomed-state darkening can dim the silhouette.
+  group.userData.hullMat = hullMat;
   const engineGlowMat = new THREE.MeshBasicMaterial({
     color: teamColor, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending,
     depthWrite: false
@@ -2660,6 +3169,13 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
     return cone;
   }
   const outlineMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
+  // V2e now toggles outline.visible (not opacity) at a far-distance threshold,
+  // so we keep outlineMat fully opaque and skip the transparent render queue.
+  // Transparent line-materials were sorting incorrectly against the hull under
+  // some camera angles, stacking far-side outlines over near-side hull and
+  // reading as "all black". Hiding entirely past the fade distance is cheaper
+  // and visually equivalent (distant ships already read via plume + fresnel).
+  group.userData.outlineMat = outlineMat;
 
   // Helper: add mesh + outline to group
   function addPart(geo, mat, pos, rot) {
@@ -2856,16 +3372,229 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
       barrelMeshes.push(child);
     }
   });
-  group.userData = { engineMesh, shieldMesh: shield, engineGlows, enginePlumes, barrelMeshes, panelGlowMat, engineGlowMat };
+  // V5a rim-PointLight was removed here too; see note in buildModelShipMesh.
+  // The fresnel shader on hullMat delivers the silhouette tint without adding
+  // a scene light per ship.
+  const prevUD = group.userData || {};
+  group.userData = Object.assign(prevUD, { engineMesh, shieldMesh: shield, engineGlows, enginePlumes, barrelMeshes, panelGlowMat, engineGlowMat });
   return group;
 }
 
 // ---- SHIP ANIMATION ----
 // Animate engine glow based on speed (pulse + scale), gun barrels on fire
-function animateShipMesh(mesh, speed, maxSpeed, isFiring, dt) {
+// Shared heat-haze sprite material (lazy): faint vertical radial-band texture,
+// additive so it reads as refraction without requiring a second render target.
+let _heatHazeSpriteMat = null;
+function getHeatHazeSpriteMat() {
+  if (_heatHazeSpriteMat) return _heatHazeSpriteMat;
+  const c = document.createElement('canvas');
+  c.width = 64; c.height = 128;
+  const ctx2d = c.getContext('2d');
+  // Vertical gradient: mostly alpha at center tapering to zero at top/bottom.
+  const grad = ctx2d.createRadialGradient(32, 64, 2, 32, 64, 60);
+  grad.addColorStop(0, 'rgba(255, 220, 180, 0.55)');
+  grad.addColorStop(0.30, 'rgba(255, 200, 160, 0.22)');
+  grad.addColorStop(0.70, 'rgba(200, 200, 220, 0.05)');
+  grad.addColorStop(1.0, 'rgba(200, 200, 220, 0)');
+  ctx2d.fillStyle = grad;
+  ctx2d.fillRect(0, 0, 64, 128);
+  // Small vertical streaks for additional "hot air" striation.
+  ctx2d.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 8; i++) {
+    const x = 8 + Math.random() * 48;
+    const h = 40 + Math.random() * 60;
+    const y = 64 - h * 0.5;
+    const g2 = ctx2d.createLinearGradient(x, y, x, y + h);
+    g2.addColorStop(0.0, 'rgba(255,230,200,0.0)');
+    g2.addColorStop(0.5, 'rgba(255,230,200,0.12)');
+    g2.addColorStop(1.0, 'rgba(255,230,200,0.0)');
+    ctx2d.fillStyle = g2;
+    ctx2d.fillRect(x, y, 3, h);
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  tex.needsUpdate = true;
+  _heatHazeSpriteMat = new THREE.SpriteMaterial({
+    map: tex,
+    transparent: true,
+    opacity: 0.0,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    depthTest: true,
+  });
+  return _heatHazeSpriteMat;
+}
+
+// Shared electric-smoke texture: soft bluish puff with a few arc streaks inside.
+// Each emitted sprite clones this into its own material so opacity can flicker
+// independently. Generated once, cached on first use.
+let _electricSmokeTexture = null;
+function getElectricSmokeTexture() {
+  if (_electricSmokeTexture) return _electricSmokeTexture;
+  const c = document.createElement('canvas');
+  c.width = 128; c.height = 128;
+  const ctx2d = c.getContext('2d');
+  // Soft puff base (warm-blue, fades to transparent)
+  const grad = ctx2d.createRadialGradient(64, 64, 4, 64, 64, 62);
+  grad.addColorStop(0.00, 'rgba(200, 230, 255, 0.55)');
+  grad.addColorStop(0.30, 'rgba(140, 200, 255, 0.32)');
+  grad.addColorStop(0.65, 'rgba(90, 140, 220, 0.10)');
+  grad.addColorStop(1.00, 'rgba(60, 80, 140, 0.00)');
+  ctx2d.fillStyle = grad;
+  ctx2d.fillRect(0, 0, 128, 128);
+  // A handful of thin branching arcs for texture
+  ctx2d.globalCompositeOperation = 'lighter';
+  ctx2d.strokeStyle = 'rgba(220, 240, 255, 0.75)';
+  ctx2d.lineWidth = 1.2;
+  for (let a = 0; a < 5; a++) {
+    let x = 64 + (Math.random() - 0.5) * 10;
+    let y = 64 + (Math.random() - 0.5) * 10;
+    ctx2d.beginPath();
+    ctx2d.moveTo(x, y);
+    const segs = 5 + Math.floor(Math.random() * 4);
+    for (let s = 0; s < segs; s++) {
+      x += (Math.random() - 0.5) * 22;
+      y += (Math.random() - 0.5) * 22;
+      ctx2d.lineTo(x, y);
+    }
+    ctx2d.stroke();
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  tex.needsUpdate = true;
+  _electricSmokeTexture = tex;
+  return tex;
+}
+
+// Shared heat-trail texture: warm soft disc. Ships emit these behind the hull
+// scaled up along the velocity axis so they read as motion blur / heat wake.
+let _heatTrailTexture = null;
+function getHeatTrailTexture() {
+  if (_heatTrailTexture) return _heatTrailTexture;
+  const c = document.createElement('canvas');
+  c.width = 64; c.height = 64;
+  const ctx2d = c.getContext('2d');
+  const grad = ctx2d.createRadialGradient(32, 32, 1, 32, 32, 30);
+  grad.addColorStop(0.00, 'rgba(255, 220, 180, 0.90)');
+  grad.addColorStop(0.35, 'rgba(255, 150, 80, 0.45)');
+  grad.addColorStop(0.75, 'rgba(180, 60, 30, 0.10)');
+  grad.addColorStop(1.00, 'rgba(80, 20, 10, 0.00)');
+  ctx2d.fillStyle = grad;
+  ctx2d.fillRect(0, 0, 64, 64);
+  const tex = new THREE.CanvasTexture(c);
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  tex.needsUpdate = true;
+  _heatTrailTexture = tex;
+  return tex;
+}
+
+// Shared flame-lick texture: pointed top, round bottom (tear-drop), hot white
+// core fading through yellow/orange to deep red at the edges. Additive blended
+// billboards layered along a firewall read as a wall of fire instead of a flat
+// panel. Shape is elongated on Y so sprites read as vertical flame licks.
+let _flameLickTexture = null;
+function getFlameLickTexture() {
+  if (_flameLickTexture) return _flameLickTexture;
+  const c = document.createElement('canvas');
+  c.width = 64; c.height = 128;
+  const ctx2d = c.getContext('2d');
+  // Ellipse gradient centered low (base) with hot core, tapering up to a tip
+  // (taper is done by masking with a tear-drop path).
+  const grad = ctx2d.createRadialGradient(32, 96, 2, 32, 96, 60);
+  grad.addColorStop(0.00, 'rgba(255, 250, 230, 0.95)');
+  grad.addColorStop(0.18, 'rgba(255, 220, 130, 0.80)');
+  grad.addColorStop(0.40, 'rgba(255, 150, 50, 0.55)');
+  grad.addColorStop(0.70, 'rgba(220, 70, 20, 0.22)');
+  grad.addColorStop(1.00, 'rgba(100, 20, 10, 0.00)');
+  // Draw teardrop silhouette (round base, pointed tip) then fill with the warm gradient
+  ctx2d.save();
+  ctx2d.beginPath();
+  ctx2d.moveTo(32, 2);                      // tip
+  ctx2d.bezierCurveTo(6, 40, 2, 90, 32, 124); // left side curving to base
+  ctx2d.bezierCurveTo(62, 90, 58, 40, 32, 2); // right side back to tip
+  ctx2d.closePath();
+  ctx2d.clip();
+  ctx2d.fillStyle = grad;
+  ctx2d.fillRect(0, 0, 64, 128);
+  // A couple of inner hot streaks for a bit of structure
+  ctx2d.globalCompositeOperation = 'lighter';
+  for (let s = 0; s < 3; s++) {
+    const sx = 32 + (Math.random() - 0.5) * 10;
+    const sy0 = 100 + Math.random() * 14;
+    const sy1 = 20 + Math.random() * 30;
+    const g2 = ctx2d.createLinearGradient(sx, sy0, sx, sy1);
+    g2.addColorStop(0.00, 'rgba(255, 240, 200, 0.35)');
+    g2.addColorStop(1.00, 'rgba(255, 120, 40, 0.00)');
+    ctx2d.strokeStyle = g2;
+    ctx2d.lineWidth = 3 + Math.random() * 2;
+    ctx2d.beginPath();
+    ctx2d.moveTo(sx, sy0);
+    ctx2d.quadraticCurveTo(sx + (Math.random() - 0.5) * 14, (sy0 + sy1) * 0.5, sx + (Math.random() - 0.5) * 6, sy1);
+    ctx2d.stroke();
+  }
+  ctx2d.restore();
+  const tex = new THREE.CanvasTexture(c);
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  tex.needsUpdate = true;
+  _flameLickTexture = tex;
+  return tex;
+}
+
+function animateShipMesh(mesh, speed, maxSpeed, isFiring, dt, doomed) {
   if (!mesh || !mesh.userData) return;
   const t = Math.min(1, speed / maxSpeed);
   const time = game.time;
+  // Distance-based outline culling: WebGL can't widen GL_LINES, so for distant
+  // ships the outline chatter isn't useful. We keep the outline opaque (avoids
+  // transparent-queue sort issues that stacked far-side edges onto near-side
+  // hull, reading as "all black") and simply hide it past ~2200 u. Distant
+  // ships still read via plume + fresnel rim.
+  if (mesh.userData.outlineMat && camera) {
+    const camPos = camera.position;
+    const dx = mesh.position.x - camPos.x;
+    const dy = mesh.position.y - camPos.y;
+    const dz = mesh.position.z - camPos.z;
+    const d = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    mesh.userData.outlineMat.visible = (d < 2200);
+  }
+  // Doomed-state hull darkening: ONLY when the ship is doomed we pull hull
+  // emissive + color toward black, so the silhouette reads as "executable." In
+  // normal play the hull stays at full brightness. Applied per-frame with a
+  // smooth lerp so the transition into/out of doomed is cinematic (about 0.5 s
+  // to fully dim at 60 fps). Shield/cockpit/plume stay bright so they catch
+  // bloom and the outline of the doomed ship stays legible against fog.
+  function dimHullMat(hullM, dim) {
+    if (hullM.userData._baseHullColor === undefined) {
+      hullM.userData._baseHullColor = hullM.color.clone();
+      hullM.userData._baseEmissiveI = hullM.emissiveIntensity;
+    }
+    hullM.color.copy(hullM.userData._baseHullColor).multiplyScalar(dim);
+    hullM.emissiveIntensity = hullM.userData._baseEmissiveI * dim;
+  }
+  const targetDim = doomed ? 0.25 : 1.0;
+  const prevDim = mesh.userData._dimAmount === undefined ? 1.0 : mesh.userData._dimAmount;
+  const nextDim = prevDim + (targetDim - prevDim) * 0.08;
+  mesh.userData._dimAmount = nextDim;
+  if (mesh.userData.hullMat) dimHullMat(mesh.userData.hullMat, nextDim);
+  if (mesh.userData.hullMats) {
+    for (const hm of mesh.userData.hullMats) dimHullMat(hm, nextDim);
+  }
+  // Cockpit heartbeat: slow 1 Hz emissive modulation (±10%) so idle ships read as alive.
+  // Speeds up toward ~1.6 Hz at full throttle so the pulse tracks energy output.
+  if (mesh.userData.cockpitMat) {
+    const base = mesh.userData.cockpitBaseEmissiveIntensity || 1.4;
+    const hbFreq = 1.0 + t * 0.6; // 1 Hz idle, ~1.6 Hz flat-out
+    // Double-beat heartbeat shape: systole then diastole (lub-dub)
+    const phase = time * hbFreq * Math.PI * 2;
+    const lub = Math.exp(-Math.pow(((phase % (Math.PI * 2)) - 0.5) * 2.0, 2));
+    const dub = Math.exp(-Math.pow(((phase % (Math.PI * 2)) - 1.3) * 2.5, 2)) * 0.6;
+    const pulse = (lub + dub) * 0.10; // ±10% of base
+    mesh.userData.cockpitMat.emissiveIntensity = base * (1 + pulse - 0.05);
+  }
   // Engines: pulse opacity and scale with speed
   if (mesh.userData.engineGlows) {
     for (const glow of mesh.userData.engineGlows) {
@@ -2877,16 +3606,53 @@ function animateShipMesh(mesh, speed, maxSpeed, isFiring, dt) {
       glow.scale.setScalar(baseScale * flicker);
     }
   }
-  // Engine plumes: stretch length & flare with throttle for cinematic thrust
+  // Engine plumes: stretch length & flare with throttle for cinematic thrust.
+  // Strong thrust-modulation: idle plumes nearly vanish, full-throttle plumes double length
+  // and pick up a hot-white tint; animateShipMesh already knows speed so no extra state needed.
   if (mesh.userData.enginePlumes) {
     for (const plume of mesh.userData.enginePlumes) {
       const baseOp = (plume.userData.basePlumeOpacity || 0.55);
       const flicker = 1 + Math.sin(time * 22 + plume.position.x * 0.5) * 0.12;
-      plume.material.opacity = (0.18 + t * baseOp) * flicker;
-      // Stretch along Z (cone is oriented along +Z), pulse radially.
-      const lenScale = 0.35 + t * 1.4 + Math.sin(time * 26) * 0.04 * t;
-      const radScale = 0.7 + t * 0.4 + Math.sin(time * 16) * 0.06 * t;
+      // Opacity: near-zero at idle (t<0.05), ramps hard through midrange, ceiling at full.
+      // t-squared curve concentrates visible plume in the upper throttle band.
+      const opCurve = Math.max(0, t * t * 1.15 + (t > 0.02 ? 0.05 : 0));
+      plume.material.opacity = (opCurve * baseOp) * flicker;
+      // Stretch along Z with wider dynamic range: 0.22 at rest, up to 2.2 at full throttle.
+      const lenScale = 0.22 + t * 2.0 + Math.sin(time * 26) * 0.05 * t;
+      const radScale = 0.65 + t * 0.5 + Math.sin(time * 16) * 0.07 * t;
       plume.scale.set(radScale, radScale, lenScale);
+      // Hot-white tint at high throttle: plume core gets whiter/hotter the harder you burn.
+      if (plume.userData.basePlumeColor === undefined && plume.material.color) {
+        plume.userData.basePlumeColor = plume.material.color.clone();
+      }
+      if (plume.userData.basePlumeColor && plume.material.color) {
+        const heat = Math.min(1, Math.max(0, (t - 0.5) * 2.0)); // 0 below half throttle, 1 at full
+        plume.material.color.copy(plume.userData.basePlumeColor).lerp(new THREE.Color(0xffffff), heat * 0.55);
+      }
+      // Heat-haze billboard: a stretched additive Sprite sits behind the plume tip.
+      // Lazily created on first update. Opacity scales with thrust^2 so haze only
+      // shows at high burn; scale pulses on time for shimmer. Additive blend plus
+      // low opacity fakes refraction without a second render target.
+      if (!plume.userData.hazeSprite) {
+        const hazeSprite = new THREE.Sprite(getHeatHazeSpriteMat());
+        hazeSprite.material = hazeSprite.material.clone(); // per-sprite opacity
+        hazeSprite.renderOrder = 1; // after opaque geometry
+        const baseLen = plume.userData.basePlumeLength || 1;
+        hazeSprite.userData.baseLen = baseLen;
+        // Attach to the plume so it moves with the ship; offset along +z past tip.
+        plume.add(hazeSprite);
+        hazeSprite.position.set(0, 0, 0.6); // beyond the plume tip in plume-local space
+        plume.userData.hazeSprite = hazeSprite;
+      }
+      const haze = plume.userData.hazeSprite;
+      // Shimmer: opacity modulated with thrust^2 and a fast sine wobble.
+      const hazeWobble = 1 + Math.sin(time * 9.0 + plume.position.x * 1.7) * 0.25;
+      haze.material.opacity = t * t * 0.28 * hazeWobble;
+      // Scale: narrow band that widens subtly with thrust and wobbles on time.
+      const baseLen = haze.userData.baseLen || 1;
+      const hazeW = baseLen * (0.28 + t * 0.30 + Math.sin(time * 7.5) * 0.06 * t);
+      const hazeH = baseLen * (0.95 + t * 0.85 + Math.sin(time * 5.5) * 0.12 * t);
+      haze.scale.set(hazeW, hazeH, 1);
     }
   }
   // Barrels: brief recoil + flash when firing
@@ -3344,9 +4110,14 @@ class Bot {
     }
 
     playerTakeDamage(damage, this);
-    // TONE bot lock-on: hits build lock marks on the player (max 3)
+    // TONE bot lock-on: hits build lock marks on the player (max 3). The sonar
+    // ping is reserved for the player's OWN TONE lock progression (hear-when-
+    // you-lock), not for enemy lock progression onto you; the on-screen
+    // "ENEMY LOCKED-ON" warning pips already communicate incoming threat
+    // visually. Otherwise every ship being TONE-shot would hear lock pings.
     if (this.loadoutKey === 'TONE') {
-      player.enemyToneLocks[this.id] = Math.min(3, (player.enemyToneLocks[this.id] || 0) + 1);
+      const prevEnemyLocks = player.enemyToneLocks[this.id] || 0;
+      player.enemyToneLocks[this.id] = Math.min(3, prevEnemyLocks + 1);
       if (player._enemyLockDecayTimers) player._enemyLockDecayTimers[this.id] = 0; // reset decay
     }
     // Bot core meter charges from dealing damage
@@ -3457,18 +4228,36 @@ class Projectile {
     this.mesh.position.copy(origin);
     scene.add(this.mesh);
 
-    // --- Enhanced multi-segment trail ---
+    // --- Enhanced multi-segment ribbon trail (per-vertex color gradient) ---
     this.trailColor = color || 0xffaa00;
-    const trailSegs = 12;
+    const trailSegs = 14; // slightly longer ribbon (8-14 history positions recommended)
+    this.trailSegs = trailSegs;
     this.trailPositions = new Float32Array(trailSegs * 3);
     for (let i = 0; i < trailSegs; i++) {
       this.trailPositions[i*3] = origin.x;
       this.trailPositions[i*3+1] = origin.y;
       this.trailPositions[i*3+2] = origin.z;
     }
+    // Per-vertex color gradient: head is full color, tail fades to black (additive blend = transparent).
+    const trailColors = new Float32Array(trailSegs * 3);
+    const headCol = new THREE.Color(this.trailColor);
+    for (let i = 0; i < trailSegs; i++) {
+      const t = 1.0 - (i / (trailSegs - 1)); // 1 at head, 0 at tail
+      const fade = t * t; // quadratic falloff for snappier ribbon
+      trailColors[i*3]   = headCol.r * fade;
+      trailColors[i*3+1] = headCol.g * fade;
+      trailColors[i*3+2] = headCol.b * fade;
+    }
     const trailGeo = new THREE.BufferGeometry();
     trailGeo.setAttribute('position', new THREE.BufferAttribute(this.trailPositions, 3));
-    const trailMat = new THREE.LineBasicMaterial({ color: this.trailColor, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+    trailGeo.setAttribute('color', new THREE.BufferAttribute(trailColors, 3));
+    const trailMat = new THREE.LineBasicMaterial({
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending,
+      linewidth: 1 // webgl caps at 1, but the gradient reads as ribbon anyway
+    });
     this.trail = new THREE.Line(trailGeo, trailMat);
     scene.add(this.trail);
     this.trailTimer = 0;
@@ -3668,7 +4457,11 @@ class Projectile {
           }
           // TONE 40mm Tracker Cannon: weapon hits build lock marks
           if (player.loadoutKey === 'TONE' && !this.isArcWave && !this.isCluster && !this.tracking) {
-            player.toneLocks[bot.id] = Math.min(3, (player.toneLocks[bot.id] || 0) + 1);
+            const prevLocks = player.toneLocks[bot.id] || 0;
+            player.toneLocks[bot.id] = Math.min(3, prevLocks + 1);
+            if (player.toneLocks[bot.id] > prevLocks) {
+              playSound('sonar_ping_' + player.toneLocks[bot.id]);
+            }
             if (player.toneLocks[bot.id] >= 3) player.toneLockedTarget = bot;
           }
           // Arc Wave: apply slow effect to hit targets
@@ -3855,14 +4648,34 @@ function spawnExplosion(pos, size) {
   size = size || 20;
 
   // --- Distance-based camera shake (cinematic concussive feel) ---
+  let _shockFalloff = 0;
   if (player && player.position) {
     const dx = pos.x - player.position.x, dy = pos.y - player.position.y, dz = pos.z - player.position.z;
     const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
     const reach = Math.max(400, size * 25);
     if (dist < reach) {
       const falloff = 1 - (dist / reach);
+      _shockFalloff = falloff;
       const shake = Math.min(12, size * 0.18 * falloff * falloff);
       if (shake > 0.05) triggerScreenShake(shake);
+    }
+  }
+
+  // --- Screen-space shockwave refraction warp (~300 ms per plan V1b) ---
+  // Only spawn one at a time; replace if a new explosion is closer/bigger.
+  if (typeof postFX !== 'undefined' && postFX.compositeMat) {
+    const intensity = Math.min(0.9, (size * 0.012 + 0.25) * (0.4 + 0.6 * _shockFalloff));
+    if (intensity > 0.05) {
+      if (!postFX.shockwave) postFX.shockwave = {};
+      const cur = postFX.shockwave;
+      // Replace only if nothing active or the new one is meaningfully stronger.
+      if (!cur.active || intensity > cur.intensity * 0.85) {
+        cur.active = true;
+        cur.origin = pos.clone();
+        cur.startTime = (typeof game !== 'undefined' ? game.time : 0);
+        cur.duration = 0.30 + size * 0.003;  // ~300 ms baseline; slight extension for big blasts
+        cur.intensity = intensity;
+      }
     }
   }
 
@@ -3985,11 +4798,14 @@ function spawnExplosion(pos, size) {
     }
   }
 
-  // --- Dynamic lighting: two-phase (bright flash then warm glow) ---
+  // --- Dynamic lighting: three-phase (flash -> glow -> afterglow) ---
+  // Third low-intensity warm point keeps the smoke lit after the flash dies,
+  // so the billboards don't turn into flat black disks once the fireball fades.
   const lightIntensity = Math.min(8.0, size * 0.2);
   const lightRange = Math.min(1500, size * 18);
   spawnDynamicLight(pos, 0xffcc88, lightIntensity * 1.5, lightRange * 0.6, 0.1);  // flash
   spawnDynamicLight(pos, 0xff5500, lightIntensity, lightRange, 0.45);              // glow
+  spawnDynamicLight(pos, 0xff3300, lightIntensity * 0.35, lightRange * 0.8, 1.5); // afterglow
 }
 
 // ---- DESTRUCTIBLE DYNAMIC GEOMETRY ----
@@ -4364,6 +5180,32 @@ class ClusterObstacle {
         c.position.copy(this.position).add(rotated);
         if (c.mesh) c.mesh.position.copy(c.position);
         if (c.edgeMesh) c.edgeMesh.position.copy(c.position);
+      }
+      // Electric-smoke haze inside the packing sphere. Emit slowly so a given
+      // cluster has two to three puffs alive at a time. Only run emitter when
+      // the player is close enough that the haze would be visible; skipping
+      // far clusters keeps the effect pool for near clusters.
+      if (!this._smokeTimer) this._smokeTimer = 0.25 + Math.random() * 0.35;
+      this._smokeTimer -= dt;
+      if (this._smokeTimer <= 0) {
+        this._smokeTimer = 0.6 + Math.random() * 0.9;
+        const camDist2 = player && player.position
+          ? this.position.distanceToSquared(player.position)
+          : 0;
+        const visibleR = 2200;
+        if (camDist2 < visibleR * visibleR && typeof spawnElectricSmoke === 'function') {
+          spawnElectricSmoke(this.position, this.clusterScale * 0.95, {
+            size: this.clusterScale * 1.4,
+            color: 0x88c0ff,
+          });
+          // Occasional second puff for denser clusters, with a warmer tint
+          if (this.clusterScale > 90 && Math.random() < 0.35) {
+            spawnElectricSmoke(this.position, this.clusterScale * 0.85, {
+              size: this.clusterScale * 1.15,
+              color: 0xa090ff,
+            });
+          }
+        }
       }
     }
     // Once every piece is gone, schedule a full respawn of the cluster
@@ -4926,6 +5768,26 @@ function spawnLightningBolt(from, to, color, lifetime, branches, thickness) {
 const MAX_PARTICLES = 500;
 const _sharedParticleGeo = new THREE.SphereGeometry(1, 4, 3); // shared; scale per particle
 
+// Soft radial-falloff texture for ember sprites: generated once, shared by every ember.
+// Camera-facing quad via THREE.Sprite + radial gradient gives embers soft edges instead of
+// polygonal sphere silhouettes, and the additive blending reads as light rather than geometry.
+const _emberFalloffTexture = (function() {
+  const size = 64;
+  const canvas = document.createElement('canvas');
+  canvas.width = size; canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  const g = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+  g.addColorStop(0.00, 'rgba(255,255,255,1.00)');
+  g.addColorStop(0.25, 'rgba(255,255,255,0.70)');
+  g.addColorStop(0.55, 'rgba(255,255,255,0.20)');
+  g.addColorStop(1.00, 'rgba(255,255,255,0.00)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, size, size);
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.needsUpdate = true;
+  return tex;
+})();
+
 function cullOldestParticle() {
   // Remove the particle with the least remaining life
   let oldestIdx = 0, lowestLife = Infinity;
@@ -4958,14 +5820,23 @@ function updateParticles(dt) {
     p.velocity.multiplyScalar(0.95); // drag on particles
     const alpha = p.life / p.maxLife;
     if (!p.mesh) {
-      const mat = new THREE.MeshBasicMaterial({ color: p.color, transparent: true, opacity: alpha, blending: THREE.AdditiveBlending });
-      p.mesh = new THREE.Mesh(_sharedParticleGeo, mat); // shared geometry
-      p.mesh.scale.setScalar(p.size);
+      // Camera-facing sprite with soft radial falloff: reads as light, not geometry.
+      const mat = new THREE.SpriteMaterial({
+        map: _emberFalloffTexture,
+        color: p.color,
+        transparent: true,
+        opacity: alpha,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      p.mesh = new THREE.Sprite(mat);
+      // Sprites need roughly 2.2x the radius to match the apparent size of the old spheres.
+      p.mesh.scale.setScalar(p.size * 2.2);
       scene.add(p.mesh);
     }
     p.mesh.position.copy(pos);
     p.mesh.material.opacity = alpha;
-    p.mesh.scale.setScalar(p.size * (0.5 + alpha * 0.5));
+    p.mesh.scale.setScalar(p.size * 2.2 * (0.5 + alpha * 0.5));
   }
 }
 
@@ -5072,6 +5943,25 @@ function updateEffects(dt) {
       e.mesh.scale.set(shimmer, shimmer, shimmer);
       e.mesh.material.opacity = 0.6 * (1 - t);
     }
+    // --- Electric smoke around cluster obstacles: slow swell + flicker ---
+    else if (e.type === 'electricSmoke') {
+      const swell = 1 + t * (e.grow || 1.6);
+      e.mesh.scale.set(e.baseScale * swell, e.baseScale * swell, 1);
+      // Slow attack, then fade. Flicker on top via a high-freq sine.
+      const envelope = Math.sin(Math.min(1, t * 1.2) * Math.PI); // 0 -> 1 -> 0
+      const flicker = 0.75 + 0.25 * Math.sin(game.time * 32 + (e.flickerSeed || 0) * 7.3);
+      e.mesh.material.opacity = 0.5 * envelope * flicker;
+      if (e.drift) e.mesh.position.addScaledVector(e.drift, dt);
+    }
+    // --- Heat-trail blur behind ships: rapid fade, slight grow ---
+    else if (e.type === 'heatTrail') {
+      const swell = 1 + t * (e.grow || 1.2);
+      // Stretch-along-velocity look: grow slightly more on Y than X
+      e.mesh.scale.set(e.baseScale * 0.7 * swell, e.baseScale * swell * 1.15, 1);
+      if (e.initialOpacity == null) e.initialOpacity = e.mesh.material.opacity;
+      e.mesh.material.opacity = e.initialOpacity * (1 - t) * (1 - t);
+      if (e.drift) e.mesh.position.addScaledVector(e.drift, dt);
+    }
   }
 }
 
@@ -5130,6 +6020,90 @@ function spawnDamageSmoke(pos, healthPct) {
       size: 2 + Math.random() * 3
     });
   }
+}
+
+// Electric smoke puff for cluster obstacle clusters: bluish, additive, slowly
+// expands while flickering. Pushed into game.effects with type 'electricSmoke'
+// so updateEffects handles its lifetime and updateEffects' MAX_EFFECTS budget
+// keeps the count bounded.
+function spawnElectricSmoke(pos, radius, opts) {
+  opts = opts || {};
+  const tex = getElectricSmokeTexture();
+  const mat = new THREE.SpriteMaterial({
+    map: tex,
+    color: opts.color || 0x88c0ff,
+    transparent: true,
+    opacity: 0.0,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+  const sprite = new THREE.Sprite(mat);
+  // Slight randomized offset within the cluster's bounding sphere
+  const r = radius * (0.4 + Math.random() * 0.7);
+  const theta = Math.random() * Math.PI * 2;
+  const phi = Math.acos(2 * Math.random() - 1);
+  sprite.position.set(
+    pos.x + r * Math.sin(phi) * Math.cos(theta),
+    pos.y + r * Math.cos(phi),
+    pos.z + r * Math.sin(phi) * Math.sin(theta)
+  );
+  const baseScale = (opts.size || radius) * (0.55 + Math.random() * 0.55);
+  sprite.scale.set(baseScale, baseScale, 1);
+  scene.add(sprite);
+  game.effects.push({
+    mesh: sprite,
+    lifetime: 1.4 + Math.random() * 0.9,
+    age: 0,
+    type: 'electricSmoke',
+    baseScale: baseScale,
+    grow: 1.6 + Math.random() * 0.8,
+    flickerSeed: Math.random() * 100,
+    drift: new THREE.Vector3(
+      (Math.random() - 0.5) * 6,
+      (Math.random() - 0.5) * 4,
+      (Math.random() - 0.5) * 6
+    ),
+  });
+}
+
+// Heat trail blur behind a moving ship. Spawns a stretched additive sprite
+// just aft of the hull, oriented along the velocity direction. Intensity
+// scales with speed/maxSpeed so parked ships emit nothing.
+function spawnHeatTrail(pos, velocity, maxSpeed, hullRadius) {
+  const speed = velocity.length();
+  if (speed < 30) return;
+  const t = Math.min(1, speed / Math.max(1, maxSpeed));
+  if (t < 0.12) return;
+  const tex = getHeatTrailTexture();
+  const mat = new THREE.SpriteMaterial({
+    map: tex,
+    color: 0xffb070,
+    transparent: true,
+    opacity: 0.45 + t * 0.35,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    rotation: Math.random() * Math.PI * 2,
+  });
+  const sprite = new THREE.Sprite(mat);
+  // Spawn a touch behind the hull along the negative velocity direction,
+  // with a small jitter so back-to-back puffs don't z-fight.
+  const back = velocity.clone().normalize().multiplyScalar(-(hullRadius * 0.85));
+  sprite.position.copy(pos).add(back);
+  sprite.position.x += (Math.random() - 0.5) * (hullRadius * 0.4);
+  sprite.position.y += (Math.random() - 0.5) * (hullRadius * 0.4);
+  sprite.position.z += (Math.random() - 0.5) * (hullRadius * 0.4);
+  const baseScale = hullRadius * (0.9 + t * 1.1);
+  sprite.scale.set(baseScale * 0.7, baseScale, 1);
+  scene.add(sprite);
+  game.effects.push({
+    mesh: sprite,
+    lifetime: 0.35 + t * 0.45,
+    age: 0,
+    type: 'heatTrail',
+    baseScale: baseScale,
+    grow: 1.15 + t * 0.6,
+    drift: velocity.clone().multiplyScalar(-0.08), // slight backwards drift
+  });
 }
 
 function showHitMarker() {
@@ -5208,12 +6182,150 @@ function spawnImpactSparks(pos, count) {
 
 // ---- PLAYER FUNCTIONS ----
 
-function selectLoadout(key) {
+// Per-titan cockpit frame overlay. Drops a full-viewport PNG with alpha-cutout over
+// the scene so each ship has its own framed look. Images live at ./frames/<KEY>.png
+// (relative to this HTML file). Missing files fail silently: if the image 404s, the
+// overlay stays hidden so gameplay is never blocked on art assets shipping in.
+// Cached per-key so we only probe the network once per ship.
+// ChatGPT-generated frames rarely put the painted barrel tips at the exact pixel
+// coordinates the procedural guns target, so on load we alpha-scan each half of
+// the image and detect where the painted barrels actually point. That detected
+// tip is then used as the muzzle-flash origin on the HUD canvas, so flash lines
+// up with the painted art even when the art drifts by a few percent.
+const _cockpitFrameCache = {}; // key -> { status: 'ok'|'missing', muzzle?: {...} }
+
+// Alpha-channel scan to find where the two painted gun-barrel tips point. For
+// each half of the image (left half, right half) we sweep rows top-to-bottom in
+// the lower 2/3 of the image looking for the first row where a noticeable opaque
+// band appears; that's the painted tip. We then sample the next ~16 rows below
+// and take the median x-center so we lock onto the barrel's long axis, not a
+// single-pixel tip-corner. Returns { imgW, imgH, left: {x,y}, right: {x,y} } in
+// image-native coords, or null if either tip can't be found cleanly.
+function detectFrameMuzzlePoints(img) {
+  try {
+    const iw = img.naturalWidth, ih = img.naturalHeight;
+    if (iw < 100 || ih < 100) return null;
+    const cv = document.createElement('canvas');
+    cv.width = iw; cv.height = ih;
+    const cx = cv.getContext('2d');
+    cx.drawImage(img, 0, 0);
+    const data = cx.getImageData(0, 0, iw, ih).data;
+    const MIN_RUN = Math.max(6, Math.floor(iw * 0.01)); // ignore specks smaller than ~1% wide
+    const findTipInHalf = (x0, x1) => {
+      const yStart = Math.floor(ih * 0.30);
+      const yEnd = Math.floor(ih * 0.98);
+      let tipY = -1;
+      for (let y = yStart; y <= yEnd; y++) {
+        let runStart = -1, runEnd = -1;
+        for (let x = x0; x < x1; x++) {
+          const a = data[(y * iw + x) * 4 + 3];
+          if (a > 40) {
+            if (runStart < 0) runStart = x;
+            runEnd = x;
+          }
+        }
+        if (runStart >= 0 && (runEnd - runStart) > MIN_RUN) {
+          tipY = y;
+          break;
+        }
+      }
+      if (tipY < 0) return null;
+      // Sample a band below the tip and median the horizontal centers.
+      const yOff = Math.min(Math.floor(ih * 0.015), yEnd - tipY);
+      const centers = [];
+      for (let y = tipY; y <= tipY + yOff; y++) {
+        let rS = -1, rE = -1;
+        for (let x = x0; x < x1; x++) {
+          const a = data[(y * iw + x) * 4 + 3];
+          if (a > 40) {
+            if (rS < 0) rS = x;
+            rE = x;
+          }
+        }
+        if (rS >= 0) centers.push((rS + rE) / 2);
+      }
+      if (centers.length === 0) return null;
+      centers.sort((a, b) => a - b);
+      const medX = centers[Math.floor(centers.length / 2)];
+      return { x: medX, y: tipY };
+    };
+    const halfW = Math.floor(iw / 2);
+    const left = findTipInHalf(0, halfW);
+    const right = findTipInHalf(halfW, iw);
+    if (!left || !right) return null;
+    return { imgW: iw, imgH: ih, left: left, right: right };
+  } catch (e) {
+    // CORS taint, decode failure, whatever: detection is best-effort.
+    return null;
+  }
+}
+
+// Translate an image-space (ix, iy) coord to screen coords assuming the PNG is
+// displayed at background-size: cover on a W x H container (image scaled up to
+// fully cover the element, aspect preserved, overflow cropped equally on both
+// sides of the over-sized axis).
+function frameImgToScreen(ix, iy, imgW, imgH, W, H) {
+  const scale = Math.max(W / imgW, H / imgH);
+  const sw = imgW * scale, sh = imgH * scale;
+  const ox = (sw - W) / 2, oy = (sh - H) / 2;
+  return { x: ix * scale - ox, y: iy * scale - oy };
+}
+
+function updateCockpitFrame() {
+  const el = document.getElementById('cockpit-frame');
+  if (!el) return;
+  const key = (player && player.loadoutKey) || null;
+  if (!key) {
+    el.classList.remove('active');
+    el.style.backgroundImage = '';
+    if (player) player.cockpitFrameMuzzle = null;
+    return;
+  }
+  const url = './frames/' + key + '.png';
+  const cached = _cockpitFrameCache[key];
+  const apply = (entry) => {
+    if (!entry || entry.status !== 'ok') {
+      el.classList.remove('active');
+      el.style.backgroundImage = '';
+      if (player) player.cockpitFrameMuzzle = null;
+      return;
+    }
+    el.style.backgroundImage = 'url("' + url + '")';
+    el.classList.add('active');
+    if (player) player.cockpitFrameMuzzle = entry.muzzle || null;
+  };
+  if (cached) { apply(cached); return; }
+  // First-time: probe with an Image() so a 404 doesn't splatter a broken-image flash.
+  const probe = new Image();
+  probe.onload = function() {
+    const muzzle = detectFrameMuzzlePoints(probe);
+    const entry = { status: 'ok', muzzle: muzzle };
+    _cockpitFrameCache[key] = entry;
+    // Guard: player may have swapped ships while the probe was loading.
+    if (player && player.loadoutKey === key) apply(entry);
+  };
+  probe.onerror = function() {
+    _cockpitFrameCache[key] = { status: 'missing' };
+    if (player && player.loadoutKey === key) apply({ status: 'missing' });
+  };
+  probe.src = url;
+}
+
+// Commit a loadout: fully set up the player ship, build the map, spawn bots, and
+// kick off the launchCountdown (3-2-1-LAUNCH) while ship-select stays visible.
+// Used both for the initial pick (fresh match) and for between-round ship swaps
+// (midMatch = game.state === 'warmup' AND we already have a non-first round).
+function commitLoadout(key) {
   const loadout = LOADOUTS[key];
   const ch = CHASSIS[loadout.chassis];
+  // midMatch: between-rounds swap. Skip the match reset + map rebuild + bot respawn.
+  // The round-end path already handled those; all we need here is the player-side
+  // loadout refresh and a fresh launchCountdown.
+  const midMatch = (game.state === 'warmup' && game.currentRound && game.currentRound > 1);
 
   player.loadout = loadout;
   player.loadoutKey = key;
+  updateCockpitFrame(); // swap the cockpit frame PNG to match the new titan
   player.chassis = ch;
   player.health = ch.maxHealth;
   player.maxHealth = ch.maxHealth;
@@ -5262,6 +6374,8 @@ function selectLoadout(key) {
   player.powerShotCharging = false; player.powerShotCharge = 0;
   player.legionSwitchTimer = 0;
   player.thermalShieldHP = player.thermalShieldMaxHP; // Scorch thermal shield starts fully charged
+  player.trapCharges = player.maxTrapCharges; // Scorch starts with both Incendiary Trap charges
+  player.trapCooldownTimer = 0;
   player.monarchTier = 0;
   player.monarchDmgMult = 1.0;
   player.monarchCooldownMult = 1.0;
@@ -5293,31 +6407,46 @@ function selectLoadout(key) {
   document.getElementById('weapon-name').textContent = loadout.weapon.name;
 
   buildAbilityHUD();
-  document.getElementById('ship-select').style.display = 'none';
-  renderer.domElement.requestPointerLock();
+  // NOTE: ship-select stays visible here; launchCountdown() hides it when the
+  // 3-2-1-LAUNCH ticker finishes and the player actually warps into the arena.
+  // Pointer lock is also deferred to that moment.
 
-  // Load map from rotation (handcrafted maps + procedural)
-  shuffleMapRotation();
-  const level = getNextMap();
-  buildRoomGraphLevel(level);
-  spawnDynamicObjects(game.sdfRoomData);
-  spawnOrganics(game.sdfRoomData);
+  if (!midMatch) {
+    // Fresh match: full map build, stasis reset, bot spawn, score reset.
+    shuffleMapRotation();
+    const level = getNextMap();
+    buildRoomGraphLevel(level);
+    spawnDynamicObjects(game.sdfRoomData);
+    spawnOrganics(game.sdfRoomData);
 
-  // Place player inside the letter corridors (Fleet A territory)
-  player.position.copy(getValidSpawnPoint('A'));
+    // Place player inside the letter corridors (Fleet A territory)
+    player.position.copy(getValidSpawnPoint('A'));
 
-  // Reset stasis field state
-  game.stasisFields.forEach(f => f.destroy());
-  game.stasisFields = [];
-  game.stasisSpawnTimer = 30;
-  game.stasisFirstBatch = true;
-  game.playerInStasis = false;
-  game.playerStasisTimer = 0;
-  document.getElementById('stasis-warning').style.display = 'none';
-  document.getElementById('stasis-vignette').style.display = 'none';
+    // Reset stasis field state
+    game.stasisFields.forEach(f => f.destroy());
+    game.stasisFields = [];
+    game.stasisSpawnTimer = 30;
+    game.stasisFirstBatch = true;
+    game.playerInStasis = false;
+    game.playerStasisTimer = 0;
+    document.getElementById('stasis-warning').style.display = 'none';
+    document.getElementById('stasis-vignette').style.display = 'none';
 
-  // In multiplayer, still spawn bots to fill slots; network players coexist
-  spawnBots();
+    // In multiplayer, still spawn bots to fill slots; network players coexist
+    spawnBots();
+
+    game.state = 'warmup';
+    game.roundTimer = LSS.ROUND_TIME;
+    game.scoreA = 0;
+    game.scoreB = 0;
+    game.currentRound = 1;
+    // Start ambient sound bed (only once per match)
+    startAmbientBed();
+  } else {
+    // Between-rounds swap: place player at their team's spawn; the map is already
+    // built from the round-end transition; scores/round counter are preserved.
+    player.position.copy(getValidSpawnPoint(player.team === LSS.TEAM_FLEET_B ? 'B' : 'A'));
+  }
 
   // Announce our loadout to peers
   if (net.active && net.sendLoadout) {
@@ -5328,15 +6457,15 @@ function selectLoadout(key) {
     });
   }
 
-  game.state = 'warmup';
-  game.warmupTimer = LSS.WARMUP_TIME;
-  game.roundTimer = LSS.ROUND_TIME;
-  game.scoreA = 0;
-  game.scoreB = 0;
-  game.currentRound = 1;
-
-  // Start ambient sound bed
-  startAmbientBed();
+  // Hold the round in 'warmup' for the full duration of the visible
+  // ship-select countdown; otherwise the warmup elapses partway through and
+  // bots become live behind the scenes while the player is still ticking
+  // down to LAUNCH.
+  game.warmupTimer = LSS.LAUNCH_COUNTDOWN;
+  // Refresh the teammates strip so the newly committed ship shows up as YOU's pick.
+  updateTeammatesStrip();
+  // Fire the in-screen 3-2-1-LAUNCH beep + number sequence.
+  launchCountdown();
 
   console.log('Map: ' + game.mapWord);
 }
@@ -5546,6 +6675,8 @@ function respawnPlayer() {
   player.ionAdsActive = false;
   player.gunShieldHP = 0; player.gunShieldTimer = 0;
   player.thermalShieldHP = player.thermalShieldMaxHP; // Scorch spawns with a fully charged thermal shield
+  player.trapCharges = player.maxTrapCharges; // Scorch respawns with both trap charges
+  player.trapCooldownTimer = 0;
   player.abilityActive = [false, false, false];
   player.abilityTimers = [0, 0, 0];
   player.abilityCooldowns = [0, 0, 0];
@@ -5673,6 +6804,15 @@ function updatePlayerMovement(dt) {
     if (player.dashCooldownTimer <= 0 && player.dashCharges < ch.maxDashes) {
       player.dashCharges++;
       if (player.dashCharges < ch.maxDashes) player.dashCooldownTimer = ch.dashCooldown;
+    }
+  }
+
+  // Scorch Incendiary Trap charge regen (mirrors the dash charge system)
+  if (player.loadoutKey === 'SCORCH' && player.trapCooldownTimer > 0) {
+    player.trapCooldownTimer -= dt;
+    if (player.trapCooldownTimer <= 0 && player.trapCharges < player.maxTrapCharges) {
+      player.trapCharges++;
+      if (player.trapCharges < player.maxTrapCharges) player.trapCooldownTimer = player.trapChargeCooldown;
     }
   }
 
@@ -6137,9 +7277,16 @@ function activateAbility(slot) {
   if (player.shipState === 'dead' || !player.abilities[slot]) return;
   // No abilities during the pre-round warmup countdown
   if (game.state === 'warmup') return;
-  if (player.abilityCooldowns[slot] > 0) return;
 
   const ability = player.abilities[slot];
+
+  // Incendiary Trap (Scorch): charge-based gating instead of cooldown gating
+  const isTrapCharges = (ability.name === 'Incendiary Trap' && player.loadoutKey === 'SCORCH');
+  if (isTrapCharges) {
+    if ((player.trapCharges || 0) <= 0) return;
+  } else {
+    if (player.abilityCooldowns[slot] > 0) return;
+  }
 
   // Vortex Shield: can't reactivate if ION energy is depleted
   if (ability.name === 'Vortex Shield' && player.ionEnergy <= 0) return;
@@ -6175,7 +7322,11 @@ function activateAbility(slot) {
     Overlays.abilityFlash(ability.name || 'ABILITY', bucket ? ABILITY_COLORS[bucket] : null);
   }
   executeAbility(slot, ability);
-  if (ability.cooldown > 0) {
+  if (isTrapCharges) {
+    // Consume a trap charge; start the per-charge regen timer if not already running
+    player.trapCharges = Math.max(0, (player.trapCharges || 0) - 1);
+    if (player.trapCooldownTimer <= 0) player.trapCooldownTimer = player.trapChargeCooldown;
+  } else if (ability.cooldown > 0) {
     let cd = ability.cooldown;
     // Monarch tier 3: 30% cooldown reduction
     if (player.monarchCooldownMult < 1) cd *= player.monarchCooldownMult;
@@ -6249,26 +7400,77 @@ function executeAbility(slot, ability) {
         fxTimer: 0, meshes: [],
       };
       game.worldEffects.push(effData);
-      // Persistent visual: glowing fire line mesh (visible wall of flames)
-      const segCount = 8;
-      for (let s = 0; s < segCount; s++) {
-        const t0 = (s / segCount) * wallLen;
-        const t1 = ((s + 1) / segCount) * wallLen;
-        const p0 = start.clone().add(forward.clone().multiplyScalar(t0));
-        const p1 = start.clone().add(forward.clone().multiplyScalar(t1));
-        const mid = p0.clone().add(p1).multiplyScalar(0.5);
-        // Flat plane segment for the fire wall
-        const planeGeo = new THREE.PlaneGeometry(wallLen / segCount, 120);
-        const planeMat = new THREE.MeshBasicMaterial({
-          color: 0xff5500, transparent: true, opacity: 0.25,
-          blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
+      // Persistent visual: a wall of flame licks. Many layered billboard sprites
+      // scattered along the length with per-sprite phase so each lick bobs and
+      // flickers independently. Reads as an organic fire curtain instead of a
+      // flat panel.
+      const flameTex = getFlameLickTexture();
+      const licksPerUnit = 40 / 800; // ~40 licks over the default 800u wall
+      const lickCount = Math.max(16, Math.floor(wallLen * licksPerUnit));
+      // Core (back) row, then mid row, then front row for depth
+      for (let i = 0; i < lickCount; i++) {
+        const u = i / Math.max(1, lickCount - 1);
+        const tAlong = u * wallLen + (Math.random() - 0.5) * (wallLen / lickCount) * 0.9;
+        const layer = i % 3; // 0 core, 1 mid, 2 front
+        const lateralJitter = (Math.random() - 0.5) * 40;
+        const vertJitter = (Math.random() - 0.5) * 20;
+        const basePt = start.clone().add(forward.clone().multiplyScalar(tAlong));
+        const perp = new THREE.Vector3(-forward.z, 0, forward.x).normalize();
+        basePt.add(perp.clone().multiplyScalar(lateralJitter));
+        // Sprite lick
+        const mat = new THREE.SpriteMaterial({
+          map: flameTex, color: 0xffffff, transparent: true, opacity: 0.85,
+          blending: THREE.AdditiveBlending, depthWrite: false,
         });
-        const planeMesh = new THREE.Mesh(planeGeo, planeMat);
-        planeMesh.position.copy(mid);
-        // Orient plane to face perpendicular to the firewall direction
-        planeMesh.lookAt(mid.clone().add(new THREE.Vector3(-forward.z, 0, forward.x)));
-        scene.add(planeMesh);
-        effData.meshes.push(planeMesh);
+        const spr = new THREE.Sprite(mat);
+        // Scale: taller than wide (flame licks are vertical). Back layer a touch
+        // larger and dimmer; front layer a touch smaller and hotter.
+        const heightBase = (layer === 0) ? 180 : (layer === 1) ? 150 : 120;
+        const h = heightBase * (0.8 + Math.random() * 0.5);
+        const w = h * 0.55 * (0.85 + Math.random() * 0.3);
+        spr.scale.set(w, h, 1);
+        spr.position.copy(basePt);
+        spr.position.y += h * 0.35 + vertJitter; // pedestal so base sits near y=0
+        // Per-lick animation params (used by the firewall update tick)
+        spr.userData._fw = {
+          phase: Math.random() * Math.PI * 2,
+          freq: 5 + Math.random() * 4,
+          baseH: h,
+          baseW: w,
+          baseY: spr.position.y,
+          baseOpacity: (layer === 0) ? 0.55 : (layer === 1) ? 0.75 : 0.9,
+          hueShift: (layer === 2) ? 0x10 : 0x00, // front licks slightly hotter
+          layer: layer,
+        };
+        mat.color.setHex(layer === 2 ? 0xffeecc : layer === 1 ? 0xffbb66 : 0xff7733);
+        scene.add(spr);
+        effData.meshes.push(spr);
+      }
+      // Low embers strip: squat sprites near the ground to hide the sprite bases
+      const emberCount = Math.max(8, Math.floor(wallLen / 60));
+      for (let i = 0; i < emberCount; i++) {
+        const tAlong = (i / emberCount) * wallLen + Math.random() * (wallLen / emberCount);
+        const basePt = start.clone().add(forward.clone().multiplyScalar(tAlong));
+        const perp = new THREE.Vector3(-forward.z, 0, forward.x).normalize();
+        basePt.add(perp.clone().multiplyScalar((Math.random() - 0.5) * 30));
+        const mat = new THREE.SpriteMaterial({
+          map: flameTex, color: 0xff5522, transparent: true, opacity: 0.7,
+          blending: THREE.AdditiveBlending, depthWrite: false,
+        });
+        const spr = new THREE.Sprite(mat);
+        const h = 55 + Math.random() * 25;
+        const w = h * 1.4;
+        spr.scale.set(w, h, 1);
+        spr.position.copy(basePt);
+        spr.position.y += h * 0.25;
+        spr.userData._fw = {
+          phase: Math.random() * Math.PI * 2,
+          freq: 7 + Math.random() * 3,
+          baseH: h, baseW: w, baseY: spr.position.y,
+          baseOpacity: 0.55, layer: -1, // ember row
+        };
+        scene.add(spr);
+        effData.meshes.push(spr);
       }
       // Initial burst along the line
       for (let t = 0; t <= wallLen; t += 60) {
@@ -6580,7 +7782,11 @@ function executeAbility(slot, ability) {
         if (forward.dot(toBot) > 0.3) {
           // Add lock stack (max 3)
           const id = bot.id;
-          player.toneLocks[id] = Math.min(3, (player.toneLocks[id] || 0) + 1);
+          const prevLocks = player.toneLocks[id] || 0;
+          player.toneLocks[id] = Math.min(3, prevLocks + 1);
+          if (player.toneLocks[id] > prevLocks) {
+            playSound('sonar_ping_' + player.toneLocks[id]);
+          }
           if (player.toneLocks[id] >= 3) player.toneLockedTarget = bot;
           // Visual lock indicator
           spawnTracer(player.position, bot.position, 0xffaa00);
@@ -6873,16 +8079,25 @@ function updateShieldVisuals(dt) {
     player.thermalShieldHP > 0;
 
   if (thermalActive) {
+    // Size the visual to the actual cone (reach ≈ hullLength * 1.85, tip
+    // radius ≈ hullLength * 1.20). Disc sits at the cone's mid-point and is
+    // scaled to the mid-cone radius so the visual footprint lines up with
+    // where damage actually lands.
+    const hLen = (player.chassis && player.chassis.hullLength) ? player.chassis.hullLength : 140;
+    const coneReach = hLen * 1.85;
+    const coneBaseR = hLen * 0.50;
+    const coneTipR  = hLen * 1.20;
+    const midR = (coneBaseR + coneTipR) * 0.5;
     if (!player.thermalShieldMesh) {
-      const geo = new THREE.CircleGeometry(120, 32);
+      const geo = new THREE.CircleGeometry(1, 40); // unit circle; scaled below
       const mat = new THREE.MeshBasicMaterial({
         color: 0xff7722, transparent: true, opacity: 0.28,
         side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false
       });
       player.thermalShieldMesh = new THREE.Mesh(geo, mat);
       scene.add(player.thermalShieldMesh);
-      // Outer heat-haze ring
-      const ringGeo = new THREE.RingGeometry(110, 125, 32);
+      // Outer heat-haze ring: unit ring 0.88..1.04 scaled to match disc
+      const ringGeo = new THREE.RingGeometry(0.88, 1.04, 40);
       const ringMat = new THREE.MeshBasicMaterial({
         color: 0xffaa44, transparent: true, opacity: 0.22,
         side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false
@@ -6890,20 +8105,23 @@ function updateShieldVisuals(dt) {
       player.thermalShieldRing = new THREE.Mesh(ringGeo, ringMat);
       scene.add(player.thermalShieldRing);
     }
-    // Position in front of player (same offset as Vortex Shield).
-    const shieldPos = player.position.clone().add(forward.clone().multiplyScalar(80));
+    // Position mid-cone and scale to mid-cone radius so the footprint matches
+    // the damage volume. Slightly out in front of the hull like before.
+    const shieldPos = player.position.clone().add(forward.clone().multiplyScalar(coneReach * 0.5));
     player.thermalShieldMesh.position.copy(shieldPos);
     player.thermalShieldMesh.lookAt(shieldPos.clone().add(forward));
+    player.thermalShieldMesh.scale.set(midR, midR, midR);
     // Orange hue cycling (kept in warm band).
     const hue = 0.04 + (Math.sin(game.time * 2.2) * 0.5 + 0.5) * 0.07; // 0.04 → 0.11
     const hpPct = Math.max(0, player.thermalShieldHP / player.thermalShieldMaxHP);
     player.thermalShieldMesh.material.color.setHSL(hue, 0.85, 0.55);
     // Opacity scales with remaining power (brighter when full) + pulse
     player.thermalShieldMesh.material.opacity = (0.22 + hpPct * 0.18) + Math.sin(game.time * 8) * 0.05;
-    // Outer ring
+    // Outer ring (matches disc scale)
     if (player.thermalShieldRing) {
       player.thermalShieldRing.position.copy(shieldPos);
       player.thermalShieldRing.lookAt(shieldPos.clone().add(forward));
+      player.thermalShieldRing.scale.set(midR, midR, midR);
       player.thermalShieldRing.material.color.setHSL((hue + 0.02) % 1, 0.75, 0.65);
       player.thermalShieldRing.material.opacity = (0.14 + hpPct * 0.12) + Math.sin(game.time * 10) * 0.04;
     }
@@ -7018,14 +8236,15 @@ function updateAbilities(dt) {
         player.abilityTimers[i] = 0;
         // No fixed cooldown; the 10s recharge IS the cooldown.
       }
-      // Forward burn cone: the shield projects heat about one ship's length
-      // ahead of the player. Enemies off-axis or past the tip take no damage.
-      // Ship length is the chassis hullLength (~140 for the Dreadnought).
+      // Forward burn cone: the shield projects heat well past the hull. Reach
+      // and width were bumped after playtesting; the cone now stretches almost
+      // two ship lengths (~250u for Dreadnought) and flares wider at the tip
+      // so enemies a touch off-axis still take damage.
       const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
-      const reach = player.chassis.hullLength;
-      const baseRadius = player.chassis.hullLength * 0.35; // narrow at the shield face
-      const tipRadius  = player.chassis.hullLength * 0.80; // widens at the tip
-      const maxDPS = 2500; // more damage: cone is smaller than the old sphere
+      const reach = player.chassis.hullLength * 1.85;
+      const baseRadius = player.chassis.hullLength * 0.50; // wider face
+      const tipRadius  = player.chassis.hullLength * 1.20; // much wider tip
+      const maxDPS = 2500; // unchanged DPS; bigger volume already buffs uptime damage
       for (const bot of game.entities) {
         if (!bot.alive || bot.team === player.team) continue;
         const toBot = new THREE.Vector3().subVectors(bot.position, player.position);
@@ -7457,11 +8676,25 @@ function updateAbilities(dt) {
       }
     }
 
-    // Animate firewall meshes (flicker opacity)
+    // Animate firewall flame licks (breath + bob + flicker per sprite)
     if (eff.type === 'firewall' && eff.meshes) {
       const fade = Math.max(0, Math.min(1, eff.timer / 1.0)); // fade out in last second
+      const t = game.time;
       for (const m of eff.meshes) {
-        m.material.opacity = (0.15 + Math.sin(game.time * 12 + Math.random()) * 0.1) * fade;
+        const fw = m.userData && m.userData._fw;
+        if (!fw) { m.material.opacity = 0.2 * fade; continue; }
+        // Breath: vertical scale oscillation around base height
+        const breath = 1 + 0.22 * Math.sin(t * fw.freq + fw.phase);
+        const breathW = 1 + 0.08 * Math.sin(t * (fw.freq * 0.7) + fw.phase * 1.3);
+        m.scale.x = fw.baseW * breathW;
+        m.scale.y = fw.baseH * breath;
+        // Bob: subtle y-lift on the taller layers, none for embers
+        if (fw.layer >= 0) {
+          m.position.y = fw.baseY + Math.sin(t * (fw.freq * 0.5) + fw.phase) * 6;
+        }
+        // Flicker: opacity modulated per sprite so the curtain twinkles
+        const flick = 0.75 + 0.25 * Math.sin(t * (fw.freq * 1.3) + fw.phase * 2.1);
+        m.material.opacity = fw.baseOpacity * flick * fade;
       }
     }
 
@@ -7470,12 +8703,12 @@ function updateAbilities(dt) {
       if (eff.mesh && eff.mesh.parent) { scene.remove(eff.mesh); eff.mesh.geometry.dispose(); eff.mesh.material.dispose(); }
       if (eff.coreMesh && eff.coreMesh.parent) { scene.remove(eff.coreMesh); eff.coreMesh.geometry.dispose(); eff.coreMesh.material.dispose(); }
       if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh);
-      // Clean up firewall line meshes
+      // Clean up firewall line meshes / sprites
       if (eff.meshes) {
         for (const m of eff.meshes) {
           if (m.parent) scene.remove(m);
-          m.geometry.dispose();
-          m.material.dispose();
+          if (m.geometry && m.geometry.dispose) m.geometry.dispose();
+          if (m.material && m.material.dispose) m.material.dispose();
         }
       }
       game.worldEffects.splice(e, 1);
@@ -7552,8 +8785,12 @@ function updateRoundSystem(dt) {
   if (game.state === 'warmup') {
     const prev = game.warmupTimer;
     game.warmupTimer -= dt;
+    // Suppress the overlay 3-2-1 if the ship-select screen is still handling the
+    // countdown (launchCountdown draws its own giant digits inside ship-select).
+    const selectActive = document.getElementById('ship-select') &&
+                         document.getElementById('ship-select').classList.contains('active');
     // Cinematic 3-2-1 countdown in the final seconds of warmup.
-    if (window.Overlays) {
+    if (window.Overlays && !selectActive) {
       for (let n = 3; n >= 1; n--) {
         if (prev > n && game.warmupTimer <= n) {
           Overlays.countdown(n, 'ROUND ' + (game.currentRound || 1));
@@ -7563,7 +8800,10 @@ function updateRoundSystem(dt) {
     if (game.warmupTimer <= 0) {
       game.state = 'playing';
       game.roundTimer = LSS.ROUND_TIME;
-      playSound('round_start');
+      // round_start tone: already played by launchCountdown when selectActive was true,
+      // but not when selectActive is false (between-round mid-air transitions). Guard so
+      // we don't stack two of them when the ship-select path is driving the countdown.
+      if (!selectActive) playSound('round_start');
       // Cinematic: FIGHT! banner on warmup -> playing transition.
       if (window.Overlays) {
         Overlays.countdown('FIGHT', '');
@@ -7601,7 +8841,10 @@ function updateRoundSystem(dt) {
       } else {
         game.currentRound++;
         game.state = 'warmup';
-        game.warmupTimer = LSS.WARMUP_TIME;
+        // Round warmup runs through the ship-select screen so the player can
+        // swap ships between rounds; matches the visible launch countdown so
+        // bots stay holstered until LAUNCH.
+        game.warmupTimer = LSS.LAUNCH_COUNTDOWN;
         // Next map from rotation each round
         const level = getNextMap();
         buildRoomGraphLevel(level);
@@ -7625,6 +8868,16 @@ function updateRoundSystem(dt) {
         player.coreTimer = 0;
         respawnPlayer();
         spawnBots();
+        // Release pointer lock and re-show ship-select with the current pick
+        // highlighted; the player can swap ships or wait for the auto-launch.
+        if (document.exitPointerLock) {
+          try { document.exitPointerLock(); } catch (e) {}
+        }
+        const sel = document.getElementById('ship-select');
+        if (sel) { sel.style.display = 'flex'; sel.classList.add('active'); }
+        buildShipSelect();
+        updateTeammatesStrip();
+        launchCountdown();
       }
     }
   }
@@ -7736,8 +8989,12 @@ function drawCircumpunctHUD() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, W, H);
 
-  const cx = W / 2;
-  const cy = H / 2;
+  // Parallax: counter-shift HUD ring against camera shake so it reads as cockpit-anchored.
+  // Full counter would paste HUD to the world; partial factor (0.35) keeps it feeling sprung.
+  const hudShakeX = game.shakeOffset ? -game.shakeOffset.x * 0.35 : 0;
+  const hudShakeY = game.shakeOffset ? -game.shakeOffset.y * 0.35 : 0;
+  const cx = W / 2 + hudShakeX;
+  const cy = H / 2 + hudShakeY;
   const t = game.time;
 
   // ---- Derived values ----
@@ -7841,11 +9098,16 @@ function drawCircumpunctHUD() {
       const fillPct = Math.min(1, (healthPct - segStartPct) / (1 / segments));
       const fillEnd = segStart + (segEnd - segStart) * fillPct;
 
+      // Cinematic glow: blur rises as health falls (gets more desperate looking near empty).
+      ctx.save();
+      ctx.shadowColor = hCol;
+      ctx.shadowBlur = 6 + (1 - healthPct) * 10;
       ctx.strokeStyle = hCol;
       ctx.lineWidth = 8;
       ctx.beginPath();
       ctx.arc(cx, cy, r1, segStart, fillEnd);
       ctx.stroke();
+      ctx.restore();
 
       // Brighter inner edge
       ctx.strokeStyle = white + '0.15)';
@@ -7893,11 +9155,15 @@ function drawCircumpunctHUD() {
   // Shield fill
   if (shieldPct > 0) {
     const fillEnd = shieldArcStart + shieldArcSpan * shieldPct;
+    ctx.save();
+    ctx.shadowColor = cyan + '0.85)';
+    ctx.shadowBlur = 10;
     ctx.strokeStyle = cyan + '0.6)';
     ctx.lineWidth = 5;
     ctx.beginPath();
     ctx.arc(cx, cy, r2, shieldArcStart, fillEnd);
     ctx.stroke();
+    ctx.restore();
   }
 
   // Tick marks along shield arc (every 10%)
@@ -7926,11 +9192,15 @@ function drawCircumpunctHUD() {
   ctx.stroke();
 
   if (speedPct > 0) {
+    ctx.save();
+    ctx.shadowColor = white + '0.6)';
+    ctx.shadowBlur = 5;
     ctx.strokeStyle = white + '0.45)';
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.arc(cx, cy, r3, speedArcStart, speedArcStart + speedSpan * speedPct);
     ctx.stroke();
+    ctx.restore();
   }
 
   // Speed text
@@ -7992,21 +9262,30 @@ function drawCircumpunctHUD() {
     const coreStart = -Math.PI / 2;
     const coreEnd = coreStart + Math.PI * 2 * corePct;
     const coreCol = corePct >= 1 ? amber + (0.4 + Math.sin(t * 4) * 0.2) + ')' : amber + '0.25)';
+    ctx.save();
+    // Glow grows as core fills; spikes when ready.
+    ctx.shadowColor = amber + '0.9)';
+    ctx.shadowBlur = 4 + corePct * 8 + (corePct >= 1 ? (4 + Math.sin(t * 4) * 3) : 0);
     ctx.strokeStyle = coreCol;
     ctx.lineWidth = 4;
     ctx.beginPath();
     ctx.arc(cx, cy, r4, coreStart, coreEnd);
     ctx.stroke();
+    ctx.restore();
   }
 
   // Core ready pulse
   if (corePct >= 1) {
     const pulse = 0.05 + Math.sin(t * 3) * 0.05;
+    ctx.save();
+    ctx.shadowColor = amber + '0.7)';
+    ctx.shadowBlur = 14 + Math.sin(t * 3) * 6;
     ctx.strokeStyle = amber + pulse + ')';
     ctx.lineWidth = 8;
     ctx.beginPath();
     ctx.arc(cx, cy, r4, 0, Math.PI * 2);
     ctx.stroke();
+    ctx.restore();
   }
 
   // ---- LAYER 6: FLOATING BRACKETS (Abilities) ----
@@ -8276,6 +9555,10 @@ function drawCircumpunctHUD() {
   const gunTipW = W * 0.04;      // narrow barrel tip
   // Angle: barrels aim slightly wider than center (not dead center)
   const tipInset = W * 0.22;     // how far from center the barrel tip sits
+  // Global arm offsets (user-tuned): push the whole gun assembly down and out so
+  // less cockpit furniture covers the view.
+  const ARM_DOWN_SHIFT = 100;
+  const ARM_OUT_SHIFT = 50;
 
   const gunAccentCol = player.team === 'A' ? 'rgba(60,200,120,' : 'rgba(200,80,60,';
 
@@ -8288,11 +9571,11 @@ function drawCircumpunctHUD() {
     // Anchor points: bottom corner (wide) to upper-inner (narrow barrel tip)
     // Left gun: bottom-left corner -> up and inward
     // Right gun: bottom-right corner -> up and inward
-    const baseY = H + 20 + recoilAmt + sway; // bottom (offscreen slightly)
-    const tipY = H - gunLen + recoilAmt + sway; // top of gun (barrel end)
+    const baseY = H + 20 + recoilAmt + sway + ARM_DOWN_SHIFT; // bottom (pushed further off-screen)
+    let tipY = H - gunLen + recoilAmt + sway + ARM_DOWN_SHIFT; // top of gun (barrel end)
 
-    // Slide guns outward so ~2/3 of the base hangs off-screen
-    const gunSlide = gunBaseW * 0.66;
+    // Slide guns outward so ~2/3 of the base hangs off-screen (+ extra user offset)
+    const gunSlide = gunBaseW * 0.66 + ARM_OUT_SHIFT;
     let baseOuterX, baseInnerX, tipOuterX, tipInnerX;
     if (side === 0) {
       // Left gun (shifted left)
@@ -8308,98 +9591,193 @@ function drawCircumpunctHUD() {
       tipInnerX = W - tipInset + gunSlide * 0.35;
     }
 
-    // Main gun body (trapezoid: wide at bottom corner, narrow at barrel tip)
-    ctx.fillStyle = 'rgba(55,62,78,0.92)';
-    ctx.beginPath();
-    ctx.moveTo(baseOuterX, baseY);
-    ctx.lineTo(baseInnerX, baseY);
-    ctx.lineTo(tipInnerX, tipY);
-    ctx.lineTo(tipOuterX, tipY);
-    ctx.closePath();
-    ctx.fill();
-
-    // Darker barrel core (inner strip running along the gun)
-    ctx.fillStyle = 'rgba(35,40,50,0.9)';
-    ctx.beginPath();
-    const bFrac = 0.3; // barrel is 30% of gun width
-    if (side === 0) {
-      const bBaseO = baseOuterX + (baseInnerX - baseOuterX) * 0.35;
-      const bBaseI = baseOuterX + (baseInnerX - baseOuterX) * 0.65;
-      const bTipO = tipOuterX + (tipInnerX - tipOuterX) * 0.25;
-      const bTipI = tipOuterX + (tipInnerX - tipOuterX) * 0.75;
-      ctx.moveTo(bBaseO, baseY); ctx.lineTo(bBaseI, baseY);
-      ctx.lineTo(bTipI, tipY); ctx.lineTo(bTipO, tipY);
-    } else {
-      const bBaseO = baseInnerX + (baseOuterX - baseInnerX) * 0.35;
-      const bBaseI = baseInnerX + (baseOuterX - baseInnerX) * 0.65;
-      const bTipO = tipInnerX + (tipOuterX - tipInnerX) * 0.25;
-      const bTipI = tipInnerX + (tipOuterX - tipInnerX) * 0.75;
-      ctx.moveTo(bBaseO, baseY); ctx.lineTo(bBaseI, baseY);
-      ctx.lineTo(bTipI, tipY); ctx.lineTo(bTipO, tipY);
-    }
-    ctx.closePath();
-    ctx.fill();
-
-    // Team-colored accent line (runs along inner edge of gun)
-    ctx.strokeStyle = gunAccentCol + '0.6)';
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.moveTo(baseInnerX, baseY);
-    ctx.lineTo(tipInnerX, tipY);
-    ctx.stroke();
-
-    // Outer edge highlight
-    ctx.strokeStyle = 'rgba(120,130,150,0.3)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(baseOuterX, baseY);
-    ctx.lineTo(tipOuterX, tipY);
-    ctx.stroke();
-
-    // Panel seam lines (horizontal across the gun body)
-    ctx.strokeStyle = 'rgba(30,35,45,0.5)';
-    ctx.lineWidth = 1;
-    for (let i = 1; i <= 4; i++) {
-      const frac = i / 5;
-      const ly = baseY + (tipY - baseY) * frac;
-      const lxO = baseOuterX + (tipOuterX - baseOuterX) * frac;
-      const lxI = baseInnerX + (tipInnerX - baseInnerX) * frac;
-      ctx.beginPath(); ctx.moveTo(lxO, ly); ctx.lineTo(lxI, ly); ctx.stroke();
+    // If a titan cockpit frame PNG is loaded AND alpha-detection found the two
+    // painted barrel tips, override the procedural tip positions so the muzzle
+    // flash fires from where the frame's painted gun actually points. We skip
+    // drawing the procedural gun body/seams/dot in this case because the frame's
+    // painted art is what should be visible; only the flash remains on top.
+    const fm = player.cockpitFrameMuzzle;
+    const useFrame = !!(fm && fm.left && fm.right);
+    if (useFrame) {
+      const tip = side === 0 ? fm.left : fm.right;
+      const scr = frameImgToScreen(tip.x, tip.y, fm.imgW, fm.imgH, W, H);
+      // Apply recoil+sway (same feel as procedural gun) so flash still kicks.
+      const tipCX = scr.x;
+      const tipCY = scr.y + recoilAmt + sway;
+      // Half-width around the painted-barrel axis: give the muzzle a small
+      // extent so dirX/perpX compute a stable orientation and the flash has
+      // a believable footprint rather than collapsing to a point.
+      const halfW = Math.max(10, W * 0.012);
+      tipOuterX = tipCX - (side === 0 ? halfW : -halfW);
+      tipInnerX = tipCX + (side === 0 ? halfW : -halfW);
+      tipY = tipCY;
     }
 
-    // Power indicator dot (near barrel tip)
-    const dotFrac = 0.85;
-    const dotX = (baseOuterX + baseInnerX) / 2 + ((tipOuterX + tipInnerX) / 2 - (baseOuterX + baseInnerX) / 2) * dotFrac;
-    const dotY = baseY + (tipY - baseY) * dotFrac;
-    ctx.fillStyle = player.clipAmmo > 0 ? 'rgba(0,255,120,0.8)' : 'rgba(255,50,30,0.8)';
-    ctx.beginPath(); ctx.arc(dotX, dotY, 3.5, 0, Math.PI * 2); ctx.fill();
+    // Procedural arms/gun bodies removed; cockpit art now comes from the
+    // per-titan frame PNG overlay (see updateCockpitFrame). Only the muzzle
+    // flash is drawn from the HUD, firing from the detected frame tip when
+    // a frame is loaded or from the procedural default position otherwise.
 
     // ---- MUZZLE FLASH (at barrel tip) ----
     if (flashActive) {
       const muzzleX = (tipOuterX + tipInnerX) / 2;
       const muzzleY = tipY - 8;
-      const fi = player.muzzleFlashTimer / 0.08;
+      const fi = Math.max(0, Math.min(1, player.muzzleFlashTimer / 0.08)); // 1 -> 0
+      const age = 1 - fi;                                                  // 0 -> 1
 
-      // Outer glow
-      const grad = ctx.createRadialGradient(muzzleX, muzzleY, 0, muzzleX, muzzleY, 100 * fi);
-      grad.addColorStop(0, `rgba(255,200,80,${0.9 * fi})`);
-      grad.addColorStop(0.25, `rgba(255,120,30,${0.6 * fi})`);
-      grad.addColorStop(1, 'rgba(255,80,0,0)');
-      ctx.fillStyle = grad;
-      ctx.beginPath(); ctx.arc(muzzleX, muzzleY, 100 * fi, 0, Math.PI * 2); ctx.fill();
+      // Barrel direction (base mid -> tip mid) and its left-perpendicular.
+      const baseMidX = (baseOuterX + baseInnerX) / 2;
+      const baseMidY = baseY;
+      let dirX = muzzleX - baseMidX;
+      let dirY = muzzleY - baseMidY;
+      const dirLen = Math.max(1, Math.sqrt(dirX * dirX + dirY * dirY));
+      dirX /= dirLen; dirY /= dirLen;
+      const perpX = -dirY, perpY = dirX;
 
-      // Bright core
-      ctx.fillStyle = `rgba(255,255,220,${fi})`;
-      ctx.beginPath(); ctx.arc(muzzleX, muzzleY, 18 * fi, 0, Math.PI * 2); ctx.fill();
+      // Per-shot pseudo-random seed: stays constant through the 0.08s flash,
+      // changes on the next shot (so spikes don't jitter frame-to-frame).
+      const seed = Math.floor(t * 12.5) + side * 7 + (player.muzzleFlashSide || 0) * 3;
+      const rnd = (n) => {
+        const v = Math.sin((seed + n) * 12.9898 + 78.233) * 43758.5453;
+        return v - Math.floor(v);
+      };
 
-      // Flash spikes
-      ctx.strokeStyle = `rgba(255,220,100,${0.7 * fi})`;
-      ctx.lineWidth = 2.5;
-      for (let spike = 0; spike < 8; spike++) {
-        const a = (spike / 8) * Math.PI * 2 + t * 25;
-        const sLen = (30 + Math.random() * 30) * fi;
-        ctx.beginPath(); ctx.moveTo(muzzleX, muzzleY);
-        ctx.lineTo(muzzleX + Math.cos(a) * sLen, muzzleY + Math.sin(a) * sLen); ctx.stroke();
+      // Composite additive adds warmth without clobbering HUD behind
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+
+      // --- Expanding heat shockwave ring ---
+      const shockR = 24 + age * 150;
+      ctx.strokeStyle = `rgba(255,210,130,${0.55 * fi})`;
+      ctx.lineWidth = 3 * fi + 0.5;
+      ctx.beginPath();
+      ctx.arc(muzzleX, muzzleY, shockR, 0, Math.PI * 2);
+      ctx.stroke();
+      // Second, fainter wave trailing the first
+      ctx.strokeStyle = `rgba(255,160,60,${0.25 * fi})`;
+      ctx.lineWidth = 2 * fi;
+      ctx.beginPath();
+      ctx.arc(muzzleX, muzzleY, shockR * 0.65, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // --- Wide warm bloom (soft outer glow) ---
+      const outerR = 130 * Math.pow(fi, 0.55);
+      const gradOut = ctx.createRadialGradient(muzzleX, muzzleY, 0, muzzleX, muzzleY, outerR);
+      gradOut.addColorStop(0.00, `rgba(255,235,170,${0.95 * fi})`);
+      gradOut.addColorStop(0.20, `rgba(255,175,70,${0.70 * fi})`);
+      gradOut.addColorStop(0.55, `rgba(255,95,30,${0.35 * fi})`);
+      gradOut.addColorStop(1.00, 'rgba(180,40,10,0)');
+      ctx.fillStyle = gradOut;
+      ctx.beginPath(); ctx.arc(muzzleX, muzzleY, outerR, 0, Math.PI * 2); ctx.fill();
+
+      // --- Directional flame cone along the barrel axis ---
+      const coneLen = 200 * fi;
+      const coneHalfW = 32 * fi;
+      const tipConeX = muzzleX + dirX * coneLen;
+      const tipConeY = muzzleY + dirY * coneLen;
+      const baseLX = muzzleX + perpX * coneHalfW;
+      const baseLY = muzzleY + perpY * coneHalfW;
+      const baseRX = muzzleX - perpX * coneHalfW;
+      const baseRY = muzzleY - perpY * coneHalfW;
+      const coneGrad = ctx.createLinearGradient(muzzleX, muzzleY, tipConeX, tipConeY);
+      coneGrad.addColorStop(0.00, `rgba(255,250,215,${0.9 * fi})`);
+      coneGrad.addColorStop(0.25, `rgba(255,215,120,${0.75 * fi})`);
+      coneGrad.addColorStop(0.60, `rgba(255,130,45,${0.45 * fi})`);
+      coneGrad.addColorStop(1.00, 'rgba(200,50,20,0)');
+      ctx.fillStyle = coneGrad;
+      ctx.beginPath();
+      ctx.moveTo(baseLX, baseLY);
+      ctx.quadraticCurveTo(
+        muzzleX + dirX * coneLen * 0.55 + perpX * coneHalfW * 0.75,
+        muzzleY + dirY * coneLen * 0.55 + perpY * coneHalfW * 0.75,
+        tipConeX, tipConeY
+      );
+      ctx.quadraticCurveTo(
+        muzzleX + dirX * coneLen * 0.55 - perpX * coneHalfW * 0.75,
+        muzzleY + dirY * coneLen * 0.55 - perpY * coneHalfW * 0.75,
+        baseRX, baseRY
+      );
+      ctx.closePath();
+      ctx.fill();
+
+      // --- Secondary inner flame (tighter + hotter) ---
+      const inCL = coneLen * 0.55;
+      const inCW = coneHalfW * 0.5;
+      const inTipX = muzzleX + dirX * inCL;
+      const inTipY = muzzleY + dirY * inCL;
+      const inGrad = ctx.createLinearGradient(muzzleX, muzzleY, inTipX, inTipY);
+      inGrad.addColorStop(0.0, `rgba(255,255,240,${0.95 * fi})`);
+      inGrad.addColorStop(1.0, 'rgba(255,180,80,0)');
+      ctx.fillStyle = inGrad;
+      ctx.beginPath();
+      ctx.moveTo(muzzleX + perpX * inCW, muzzleY + perpY * inCW);
+      ctx.lineTo(inTipX, inTipY);
+      ctx.lineTo(muzzleX - perpX * inCW, muzzleY - perpY * inCW);
+      ctx.closePath();
+      ctx.fill();
+
+      // --- Bright white-hot core + second bloom ---
+      ctx.fillStyle = `rgba(255,255,240,${0.95 * fi})`;
+      ctx.beginPath(); ctx.arc(muzzleX, muzzleY, 20 * fi, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgba(255,240,180,${0.55 * fi})`;
+      ctx.beginPath(); ctx.arc(muzzleX, muzzleY, 34 * fi, 0, Math.PI * 2); ctx.fill();
+
+      // --- Deterministic starburst: 4 long majors + 4 short minors, rotated per shot ---
+      const spikeBase = rnd(1) * Math.PI * 2;
+      ctx.lineCap = 'round';
+      for (let sp = 0; sp < 8; sp++) {
+        const isMajor = (sp % 2 === 0);
+        const a = spikeBase + (sp / 8) * Math.PI * 2;
+        const lenVar = 0.7 + rnd(sp + 11) * 0.55;
+        const sLen = (isMajor ? 70 : 34) * lenVar * Math.pow(fi, 0.35);
+        const ex = muzzleX + Math.cos(a) * sLen;
+        const ey = muzzleY + Math.sin(a) * sLen;
+        const sGrad = ctx.createLinearGradient(muzzleX, muzzleY, ex, ey);
+        sGrad.addColorStop(0.0, `rgba(255,255,220,${(isMajor ? 0.95 : 0.75) * fi})`);
+        sGrad.addColorStop(0.5, `rgba(255,180,80,${(isMajor ? 0.55 : 0.35) * fi})`);
+        sGrad.addColorStop(1.0, 'rgba(255,100,30,0)');
+        ctx.strokeStyle = sGrad;
+        ctx.lineWidth = (isMajor ? 3.2 : 1.6) * Math.max(0.25, fi);
+        ctx.beginPath();
+        ctx.moveTo(muzzleX, muzzleY);
+        ctx.lineTo(ex, ey);
+        ctx.stroke();
+      }
+      ctx.lineCap = 'butt';
+
+      // --- Drifting embers riding the cone outward (bright -> dim with age) ---
+      const emberCount = 7;
+      for (let eIdx = 0; eIdx < emberCount; eIdx++) {
+        const spd = 110 + rnd(eIdx + 21) * 180;
+        const spread = (rnd(eIdx + 31) - 0.5) * 48;
+        const dist = 14 + age * spd;
+        const ex = muzzleX + dirX * dist + perpX * spread;
+        const ey = muzzleY + dirY * dist + perpY * spread;
+        const eLife = Math.max(0, fi - rnd(eIdx + 41) * 0.15);
+        if (eLife <= 0) continue;
+        const hot = eLife * eLife;
+        ctx.fillStyle = `rgba(255,${200 + Math.floor(hot * 40)},${80 + Math.floor(hot * 70)},${0.85 * eLife})`;
+        ctx.beginPath();
+        ctx.arc(ex, ey, 2.4 * (0.6 + eLife * 0.6), 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore(); // end additive block
+
+      // --- Thin smoke puff (normal blending, behind the next shot's bloom) ---
+      const smokeR = 28 + age * 70;
+      const smokeA = (1 - fi) * 0.18; // grows as flash fades
+      if (smokeA > 0.01) {
+        const smokeGrad = ctx.createRadialGradient(
+          muzzleX + dirX * age * 30, muzzleY + dirY * age * 30, 0,
+          muzzleX + dirX * age * 30, muzzleY + dirY * age * 30, smokeR
+        );
+        smokeGrad.addColorStop(0.0, `rgba(120,100,90,${smokeA})`);
+        smokeGrad.addColorStop(1.0, 'rgba(40,35,30,0)');
+        ctx.fillStyle = smokeGrad;
+        ctx.beginPath();
+        ctx.arc(muzzleX + dirX * age * 30, muzzleY + dirY * age * 30, smokeR, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
 
@@ -8612,12 +9990,18 @@ function updateMinimap() {
   const scale = 150 / (mapExtent * 2);
   const cx = 75, cy = 75;
 
+  // World-to-radar mapping: +X world → right on screen (unchanged); world -Z
+  // (camera forward) → up on screen. Canvas y grows downward, so forward (-Z)
+  // must produce a smaller screen y; that's +worldZ in the canvas direction.
+  // Earlier this used `cy - z*scale`, which put forward at the BOTTOM and gave
+  // the whole radar a horizontal-line mirror flip.
+
   // Draw tunnel cylinders as lines
   ctx.strokeStyle = 'rgba(60,70,100,0.35)';
   ctx.lineWidth = 2;
   for (const c of (game.levelCylinders || [])) {
-    const x1 = cx + c.ax * scale, y1 = cy - c.az * scale;
-    const x2 = cx + c.bx * scale, y2 = cy - c.bz * scale;
+    const x1 = cx + c.ax * scale, y1 = cy + c.az * scale;
+    const x2 = cx + c.bx * scale, y2 = cy + c.bz * scale;
     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
   }
 
@@ -8626,29 +10010,29 @@ function updateMinimap() {
   ctx.strokeStyle = 'rgba(80,90,130,0.4)';
   ctx.lineWidth = 1;
   for (const s of (game.levelSpheres || [])) {
-    const sx = cx + s.cx * scale, sy = cy - s.cz * scale, sr = s.r * scale;
+    const sx = cx + s.cx * scale, sy = cy + s.cz * scale, sr = s.r * scale;
     ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
   }
 
   // Player
   const px = cx + player.position.x * scale;
-  const py = cy - player.position.z * scale;
+  const py = cy + player.position.z * scale;
   ctx.fillStyle = '#fff';
   ctx.fillRect(px - 2, py - 2, 4, 4);
 
-  // Direction line
+  // Direction line: forward is world -Z; on canvas that should point UP (smaller y).
   const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
   ctx.strokeStyle = 'rgba(255,255,255,0.5)';
   ctx.beginPath();
   ctx.moveTo(px, py);
-  ctx.lineTo(px + forward.x * 15, py - forward.z * 15);
+  ctx.lineTo(px + forward.x * 15, py + forward.z * 15);
   ctx.stroke();
 
   // Bots
   for (const bot of game.entities) {
     if (!bot.alive) continue;
     const bx = cx + bot.position.x * scale;
-    const by = cy - bot.position.z * scale;
+    const by = cy + bot.position.z * scale;
     ctx.fillStyle = bot.team === LSS.TEAM_FLEET_A ? '#ff4444' : '#44bb44';
     ctx.fillRect(bx - 2, by - 2, 3, 3);
     // Doomed indicator on minimap
@@ -8665,7 +10049,7 @@ function updateMinimap() {
   for (const field of game.stasisFields) {
     if (!field.alive) continue;
     const fx = cx + field.position.x * scale;
-    const fy = cy - field.position.z * scale;
+    const fy = cy + field.position.z * scale;
     const pulse = 0.5 + Math.sin(game.time * 4) * 0.3;
     ctx.fillStyle = `rgba(0,200,255,${pulse})`;
     ctx.beginPath();
@@ -8798,6 +10182,32 @@ function updateAbilityHUD() {
         cdText.textContent = Math.floor(player.thermalShieldHP);
       }
     }
+
+    // SCORCH Incendiary Trap: charge-based (mirrors dash charges).
+    // Bar fills with the regen progress of the next charge; text shows current charge count.
+    if (player.loadoutKey === 'SCORCH' && ability.name === 'Incendiary Trap') {
+      const charges = player.trapCharges || 0;
+      const maxCharges = player.maxTrapCharges || 2;
+      const bar2 = slot.querySelector('.ab-cd-bar');
+      if (bar2) {
+        if (charges >= maxCharges) {
+          bar2.style.width = '100%';
+        } else {
+          const t = player.trapCooldownTimer || 0;
+          const cdMax = player.trapChargeCooldown || 12;
+          bar2.style.width = ((1 - t / cdMax) * 100) + '%';
+        }
+      }
+      // Slot reads ready whenever at least one charge is available
+      if (charges > 0) {
+        slot.className = 'ability-slot ready';
+      } else {
+        slot.className = 'ability-slot on-cooldown';
+      }
+      if (cdText) {
+        cdText.textContent = charges + '/' + maxCharges;
+      }
+    }
   }
 
   // Core slot
@@ -8823,28 +10233,246 @@ function updateAbilityHUD() {
 }
 
 // ---- SHIP SELECT SCREEN ----
+// Two-phase layout: (1) preview a ship's stats without committing (previewLoadout);
+// (2) confirm pick, which sets up game state and starts the launchCountdown while
+// ship-select stays visible. When the countdown finishes, ship-select hides and
+// the warp-in sequence begins. Between rounds, we return to ship-select so the
+// player can swap ships before the next launchCountdown.
+
+// Tracks which ship key is currently being previewed (not yet committed).
+let _previewedKey = null;
 
 function buildShipSelect() {
-  const grid = document.getElementById('ship-grid');
-  grid.innerHTML = '';
-
+  const list = document.getElementById('ship-list');
+  if (!list) return;
+  list.innerHTML = '';
   for (const [key, loadout] of Object.entries(LOADOUTS)) {
     const ch = CHASSIS[loadout.chassis];
-    const card = document.createElement('div');
-    card.className = 'ship-card';
-    card.innerHTML = `
-      <div class="loadout-name">${loadout.name}</div>
-      <div class="chassis-name">${loadout.className} (${ch.name})</div>
-      <div class="stat">Hull: <span>${ch.maxHealth}</span></div>
-      <div class="stat">Shield: <span>${ch.maxShield}</span></div>
-      <div class="stat">Speed: <span>${ch.flightSpeed}</span></div>
-      <div class="stat">Dashes: <span>${ch.maxDashes}</span></div>
-      <div class="weapon-name">${loadout.weapon.name} (${loadout.weapon.damage} dmg)</div>
-      <div class="abilities-list">${loadout.abilities.map(a => a.name).join(' / ')}</div>
+    const row = document.createElement('div');
+    row.className = 'ship-list-entry';
+    row.dataset.key = key;
+    row.innerHTML = `
+      <span class="sle-name">${loadout.name}</span>
+      <span class="sle-class">${loadout.className}</span>
     `;
-    card.addEventListener('click', () => selectLoadout(key));
-    grid.appendChild(card);
+    row.addEventListener('click', () => previewLoadout(key));
+    list.appendChild(row);
   }
+  // Start the rotating-ship render loop now that the panel is visible.
+  startShipPreviewLoop();
+  // If the player already has a loadout (eg. coming back between rounds), pre-select it
+  // so the center panel isn't empty.
+  const initialKey = (player && player.loadoutKey) ? player.loadoutKey : null;
+  if (initialKey && LOADOUTS[initialKey]) {
+    previewLoadout(initialKey);
+  } else {
+    _previewedKey = null;
+    // Show empty-state messaging in the preview panel, hide the 3D area + info stack.
+    const emptyEl = document.getElementById('ship-preview-empty');
+    if (emptyEl) emptyEl.style.display = 'block';
+    for (const id of ['ship-preview-model', 'ship-preview-info',
+                      'ship-preview-header', 'ship-preview-stats', 'ship-preview-weapon',
+                      'ship-preview-abilities', 'ship-preview-core', 'ship-preview-confirm']) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    }
+  }
+}
+
+// Render the stats/weapon/abilities/core of a loadout into the center preview panel.
+// Pure UI; does NOT mutate game state. The player only commits by clicking CONFIRM.
+function previewLoadout(key) {
+  const loadout = LOADOUTS[key];
+  if (!loadout) return;
+  const ch = CHASSIS[loadout.chassis];
+  _previewedKey = key;
+
+  // Highlight the selected entry in the left list.
+  const entries = document.querySelectorAll('.ship-list-entry');
+  entries.forEach(e => {
+    e.classList.toggle('selected', e.dataset.key === key);
+  });
+
+  const emptyEl = document.getElementById('ship-preview-empty');
+  if (emptyEl) emptyEl.style.display = 'none';
+
+  // Show the rotating-GLB stage in the center and the info column on the right.
+  const modelEl = document.getElementById('ship-preview-model');
+  if (modelEl) modelEl.style.display = 'flex';
+  const infoEl = document.getElementById('ship-preview-info');
+  if (infoEl) infoEl.style.display = 'flex';
+  // Swap the displayed ship to this loadout's GLB. Safe to call repeatedly;
+  // the renderer will retry until the cache has the prototype loaded.
+  try { setShipPreviewModel(key); } catch (e) {}
+
+  const headerEl = document.getElementById('ship-preview-header');
+  if (headerEl) {
+    headerEl.style.display = 'block';
+    document.getElementById('ship-preview-name').textContent = loadout.name;
+    document.getElementById('ship-preview-class').textContent = loadout.className + ' ; ' + ch.name;
+  }
+
+  const statsEl = document.getElementById('ship-preview-stats');
+  if (statsEl) {
+    statsEl.style.display = 'grid';
+    statsEl.innerHTML = `
+      <div class="sp-stat"><span>HULL</span><span class="sp-val">${ch.maxHealth}</span></div>
+      <div class="sp-stat"><span>SHIELD</span><span class="sp-val">${ch.maxShield}</span></div>
+      <div class="sp-stat"><span>SPEED</span><span class="sp-val">${ch.flightSpeed}</span></div>
+      <div class="sp-stat"><span>DASHES</span><span class="sp-val">${ch.maxDashes}</span></div>
+    `;
+  }
+
+  const weaponEl = document.getElementById('ship-preview-weapon');
+  if (weaponEl) {
+    weaponEl.style.display = 'block';
+    weaponEl.textContent = 'WEAPON: ' + loadout.weapon.name + ' (' + loadout.weapon.damage + ' dmg)';
+  }
+
+  const abilitiesEl = document.getElementById('ship-preview-abilities');
+  if (abilitiesEl) {
+    abilitiesEl.style.display = 'block';
+    abilitiesEl.textContent = 'ABILITIES: ' + loadout.abilities.map(a => a.name).join(' / ');
+  }
+
+  const coreEl = document.getElementById('ship-preview-core');
+  if (coreEl && loadout.core) {
+    coreEl.style.display = 'block';
+    coreEl.textContent = 'CORE: ' + loadout.core.name + ' ; ' + loadout.core.desc;
+  }
+
+  const confirmBtn = document.getElementById('ship-preview-confirm');
+  if (confirmBtn) {
+    confirmBtn.style.display = 'inline-block';
+    // Reset any prior click binding by cloning the node.
+    const newBtn = confirmBtn.cloneNode(true);
+    confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+    newBtn.addEventListener('click', () => commitLoadout(key));
+  }
+}
+
+// Legacy entry point: anywhere still calling selectLoadout(key) jumps straight to
+// the commit path (existing keyboard shortcuts, net sync, etc.).
+function selectLoadout(key) { commitLoadout(key); }
+
+// Populates the bottom teammates strip with names + ship picks. The local player
+// always shows as "YOU"; bots are listed by their loadout name; empty slots show
+// a dashed placeholder so the strip's structure stays legible before bots spawn.
+function updateTeammatesStrip() {
+  const list = document.getElementById('teammates-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  // The local player chip first.
+  const youChip = document.createElement('div');
+  youChip.className = 'teammate-chip you';
+  const yourShip = (player && player.loadoutKey) ? player.loadoutKey : '---';
+  youChip.innerHTML = `
+    <span class="tm-name">YOU</span>
+    <span class="tm-ship">${yourShip}</span>
+  `;
+  list.appendChild(youChip);
+
+  // Friendly bots: anyone on the player's team in game.entities.
+  const myTeam = (player && player.team !== undefined) ? player.team : LSS.TEAM_FLEET_A;
+  const friendlies = (game.entities || []).filter(b => b.team === myTeam);
+  for (const bot of friendlies) {
+    const chip = document.createElement('div');
+    chip.className = 'teammate-chip';
+    chip.innerHTML = `
+      <span class="tm-name">${bot.loadout && bot.loadout.name ? bot.loadout.name + ' BOT' : 'BOT'}</span>
+      <span class="tm-ship">${bot.loadoutKey || '---'}</span>
+    `;
+    list.appendChild(chip);
+  }
+
+  // Pad to 3 slots (player + 2 bots) so the strip doesn't collapse pre-spawn.
+  while (list.children.length < 3) {
+    const empty = document.createElement('div');
+    empty.className = 'teammate-chip empty';
+    empty.innerHTML = `<span class="tm-name">EMPTY</span><span class="tm-ship">---</span>`;
+    list.appendChild(empty);
+  }
+}
+
+// Plays the 3-2-1-LAUNCH beep sequence in-screen. The ship-select stays visible
+// the whole time; only on "LAUNCH" do we hide it, request pointer lock, and let
+// the warmup → playing transition finish (warmupTimer is already 3s in commitLoadout
+// so it lines up). Cancellable via _activeLaunchTimers if the player exits.
+let _activeLaunchTimers = [];
+function _clearLaunchCountdown() {
+  for (const t of _activeLaunchTimers) clearTimeout(t);
+  _activeLaunchTimers = [];
+}
+function launchCountdown() {
+  _clearLaunchCountdown();
+  const overlay = document.getElementById('ship-select-countdown');
+  const numEl = overlay ? overlay.querySelector('.cd-num') : null;
+  const subEl = overlay ? overlay.querySelector('.cd-sub') : null;
+  if (!overlay || !numEl || !subEl) return;
+
+  // Helper: pulse a single digit/word, restarting the cdPulse animation each tick.
+  function tick(text, sub) {
+    numEl.textContent = text;
+    subEl.textContent = sub;
+    overlay.classList.add('active');
+    // Re-trigger the CSS animation by removing/re-adding the node briefly.
+    numEl.style.animation = 'none';
+    // Force reflow so the next assignment restarts the keyframe.
+    void numEl.offsetWidth;
+    numEl.style.animation = '';
+  }
+
+  // START → ... → 4 (silent), then 3 → 2 → 1 → LAUNCH at 1s intervals with
+  // rising-pitch beeps (sonar_ping_1/2/3) for the final three and round_start
+  // on LAUNCH. The silent head gives players time to settle before the pings.
+  // START is shared with game.warmupTimer so the round system stays in
+  // 'warmup' (no bot firing/movement) for the full visible countdown.
+  const START = LSS.LAUNCH_COUNTDOWN;
+  // First tick immediate (no sound).
+  tick(String(START), 'LAUNCH IN');
+  // Silent body: START-1 → 4.
+  for (let n = START - 1; n >= 4; n--) {
+    const delay = (START - n) * 1000;
+    _activeLaunchTimers.push(setTimeout(() => {
+      tick(String(n), 'LAUNCH IN');
+    }, delay));
+  }
+  // Final three: pings on 3, 2, 1.
+  _activeLaunchTimers.push(setTimeout(() => {
+    tick('3', 'LAUNCH IN');
+    try { playSound('sonar_ping_1'); } catch (e) {}
+  }, (START - 3) * 1000));
+
+  _activeLaunchTimers.push(setTimeout(() => {
+    tick('2', 'LAUNCH IN');
+    try { playSound('sonar_ping_2'); } catch (e) {}
+  }, (START - 2) * 1000));
+
+  _activeLaunchTimers.push(setTimeout(() => {
+    tick('1', 'LAUNCH IN');
+    try { playSound('sonar_ping_3'); } catch (e) {}
+  }, (START - 1) * 1000));
+
+  _activeLaunchTimers.push(setTimeout(() => {
+    tick('LAUNCH', 'WARP-IN');
+    try { playSound('round_start'); } catch (e) {}
+    // Hand off to gameplay: hide ship-select, lock pointer, hide overlay shortly.
+    const sel = document.getElementById('ship-select');
+    if (sel) {
+      sel.classList.remove('active');
+      sel.style.display = 'none';
+    }
+    // Pause the isolated preview renderer so it isn't burning frames during
+    // the actual match; buildShipSelect() will start it again next time.
+    try { stopShipPreviewLoop(); } catch (e) {}
+    if (renderer && renderer.domElement && renderer.domElement.requestPointerLock) {
+      try { renderer.domElement.requestPointerLock(); } catch (e) {}
+    }
+    _activeLaunchTimers.push(setTimeout(() => {
+      overlay.classList.remove('active');
+    }, 700));
+  }, START * 1000));
 }
 
 // ---- INPUT HANDLERS ----
@@ -8874,7 +10502,12 @@ document.addEventListener('keyup', e => { input.keys[e.key.toLowerCase()] = fals
 document.addEventListener('mousedown', e => {
   if (e.button === 0) input.mouseDown = true;
   if (e.button === 2) input.rightMouseDown = true;
-  if (!input.locked && game.state !== 'select') renderer.domElement.requestPointerLock();
+  // Don't grab pointer lock while ship-select is showing (between-rounds swap
+  // path leaves game.state='warmup' with ship-select visible; we need clicks to
+  // reach the ship list and confirm button).
+  const selectActive = document.getElementById('ship-select') &&
+                       document.getElementById('ship-select').classList.contains('active');
+  if (!input.locked && game.state !== 'select' && !selectActive) renderer.domElement.requestPointerLock();
 });
 
 document.addEventListener('mouseup', e => {
@@ -8993,6 +10626,30 @@ function buildSettingsPage() {
       <div id="bind-rows"></div>
     </div>
 
+    <h2>AUDIO</h2>
+
+    <div class="settings-section">
+      <h3>Volume</h3>
+      <div class="setting-row">
+        <label>Master</label>
+        <input type="range" id="set-vol-master" min="0" max="1.5" step="0.05" value="${audio.userVol.master}">
+        <div class="value-display" id="val-vol-master">${audio.userVol.master.toFixed(2)}</div>
+      </div>
+      <div class="setting-row">
+        <label>SFX</label>
+        <input type="range" id="set-vol-sfx" min="0" max="1.5" step="0.05" value="${audio.userVol.sfx}">
+        <div class="value-display" id="val-vol-sfx">${audio.userVol.sfx.toFixed(2)}</div>
+      </div>
+      <div class="setting-row">
+        <label>Music / Ambient</label>
+        <input type="range" id="set-vol-ambient" min="0" max="1.5" step="0.05" value="${audio.userVol.ambient}">
+        <div class="value-display" id="val-vol-ambient">${audio.userVol.ambient.toFixed(2)}</div>
+      </div>
+      <div class="setting-row" style="opacity:0.7; font-size:0.85em;">
+        <label style="flex:1;">Headphones recommended: ambient bed is a phi-cascade binaural layer; speakers collapse the stereo beat.</label>
+      </div>
+    </div>
+
     <button id="settings-close">CLOSE</button>
     <button id="settings-reset">RESET TO DEFAULTS</button>
   `;
@@ -9030,6 +10687,18 @@ function buildSettingsPage() {
     ['set-gp-move-curve', 'val-gp-move-curve', v => { input.gpMoveCurve = v; }, 1],
     ['set-gp-deadzone', 'val-gp-deadzone', v => { input.gpDeadzone = v; }, 2],
     ['set-gp-trigger', 'val-gp-trigger', v => { input.triggerThreshold = v; }, 2],
+    ['set-vol-master', 'val-vol-master', v => {
+      audio.userVol.master = v;
+      if (audio.masterGain) audio.masterGain.gain.value = 0.85 * v;
+    }, 2],
+    ['set-vol-sfx', 'val-vol-sfx', v => {
+      audio.userVol.sfx = v;
+      if (audio.sfxBus) audio.sfxBus.gain.value = v;
+    }, 2],
+    ['set-vol-ambient', 'val-vol-ambient', v => {
+      audio.userVol.ambient = v;
+      // updateAmbientBed() reads audio.userVol.ambient every frame, so no immediate wire needed.
+    }, 2],
   ];
   sliders.forEach(([id, valId, setter, decimals]) => {
     const slider = overlay.querySelector('#' + id);
@@ -9097,6 +10766,12 @@ function resetSettingsToDefaults() {
     ability0: 4, ability1: 5, ability2: 3, core: 12,
     moveUp: 10, moveDown: 11, scoreboard: 8, menu: 9,
   };
+  // Audio defaults
+  audio.userVol.master = 1.0;
+  audio.userVol.sfx = 1.0;
+  audio.userVol.ambient = 1.0;
+  if (audio.masterGain) audio.masterGain.gain.value = 0.85;
+  if (audio.sfxBus) audio.sfxBus.gain.value = 1.0;
   saveSettings();
 }
 
@@ -9113,6 +10788,9 @@ function saveSettings() {
       swapSticks: input.swapSticks,
       triggerThreshold: input.triggerThreshold,
       gpBindings: input.gpBindings,
+      audioMaster: audio.userVol.master,
+      audioSfx: audio.userVol.sfx,
+      audioAmbient: audio.userVol.ambient,
     };
     localStorage.setItem('lss_settings', JSON.stringify(data));
   } catch(e) {}
@@ -9133,6 +10811,10 @@ function loadSettings() {
     if (data.swapSticks !== undefined) input.swapSticks = data.swapSticks;
     if (data.triggerThreshold !== undefined) input.triggerThreshold = data.triggerThreshold;
     if (data.gpBindings) Object.assign(input.gpBindings, data.gpBindings);
+    // Audio volumes (applied later when initAudio creates the gain nodes)
+    if (data.audioMaster !== undefined) audio.userVol.master = data.audioMaster;
+    if (data.audioSfx !== undefined) audio.userVol.sfx = data.audioSfx;
+    if (data.audioAmbient !== undefined) audio.userVol.ambient = data.audioAmbient;
   } catch(e) {}
 }
 
@@ -10300,7 +11982,19 @@ function gameLoop(timestamp) {
     // Animate bot ship: engine glow + gun recoil
     const botSpeed = bot.velocity ? bot.velocity.length() : 0;
     const botMaxSpeed = bot.chassis ? bot.chassis.maxSpeed : 400;
-    animateShipMesh(bot.mesh, botSpeed, botMaxSpeed, bot.isFiring, dt);
+    animateShipMesh(bot.mesh, botSpeed, botMaxSpeed, bot.isFiring, dt, !!bot.doomed);
+    // Heat-trail blur: throttled emitter, scales rate with speed so cruising
+    // bots get a steady wake and parked bots get nothing.
+    if (bot.alive && bot.velocity && typeof spawnHeatTrail === 'function') {
+      if (bot._heatTrailTimer == null) bot._heatTrailTimer = Math.random() * 0.05;
+      bot._heatTrailTimer -= dt;
+      if (bot._heatTrailTimer <= 0) {
+        const t = Math.min(1, botSpeed / Math.max(1, botMaxSpeed));
+        bot._heatTrailTimer = 0.08 + (1 - t) * 0.22; // faster emit while fast
+        const hullR = (bot.chassis && bot.chassis.hullLength) ? bot.chassis.hullLength * 0.45 : 45;
+        spawnHeatTrail(bot.position, bot.velocity, botMaxSpeed, hullR);
+      }
+    }
   }
   // Ship-ship collision: after all movement, push overlapping ships apart
   resolveShipShipCollisions(dt);
@@ -10308,7 +12002,18 @@ function gameLoop(timestamp) {
   if (player.mesh) {
     const pSpeed = player.velocity ? player.velocity.length() : 0;
     const pMaxSpeed = player.chassis ? player.chassis.maxSpeed : 400;
-    animateShipMesh(player.mesh, pSpeed, pMaxSpeed, player.isFiring, dt);
+    animateShipMesh(player.mesh, pSpeed, pMaxSpeed, player.isFiring, dt, !!player.doomed);
+    // Heat-trail blur on the player too (visible in third-person / death cam)
+    if (!player.doomed && player.velocity && typeof spawnHeatTrail === 'function') {
+      if (player._heatTrailTimer == null) player._heatTrailTimer = 0;
+      player._heatTrailTimer -= dt;
+      if (player._heatTrailTimer <= 0) {
+        const t = Math.min(1, pSpeed / Math.max(1, pMaxSpeed));
+        player._heatTrailTimer = 0.08 + (1 - t) * 0.22;
+        const hullR = (player.chassis && player.chassis.hullLength) ? player.chassis.hullLength * 0.45 : 45;
+        spawnHeatTrail(player.position, player.velocity, pMaxSpeed, hullR);
+      }
+    }
   }
 
   for (let i = game.projectiles.length - 1; i >= 0; i--) {
@@ -10353,12 +12058,30 @@ function gameLoop(timestamp) {
 const audio = {
   ctx: null,
   masterGain: null,
+  masterComp: null,     // master bus compressor (glue)
+  sfxBus: null,         // pre-master bus for all SFX (user "SFX" slider target)
   reverbGain: null,     // wet reverb signal
   dryGain: null,        // dry signal
-  convolver: null,      // impulse response reverb
+  convolver: null,      // reverb input hub (fans out to wide + tight convolvers)
+  convolverWide: null,  // 2.4s open-volume tail (open rooms)
+  convolverTight: null, // 0.5s slap (tunnels)
+  reverbWideGain: null, // wide-tail bus gain (crossfade target, 0..1)
+  reverbTightGain: null,// tight-slap bus gain (crossfade target, 0..1)
+  envOpenness: 0.7,     // smoothed 0..1, 1 = open volume, 0 = tunnel/tight
+  convolverLong: null,  // 5s lush tail for explosion distance (low wet level)
+  reverbLongGain: null, // long-tail bus gain (low wet, for explosion halos)
+  _extraReverbSend: null, // when set, triChord/playNoiseBurst also tap this node
   ambientGain: null,    // ambient sound bed volume
   ambientNodes: [],     // oscillator nodes for ambient bed
   initialized: false,
+  // User-facing volume multipliers (0..1.5), stacked on top of internal gain staging.
+  userVol: { master: 1.0, sfx: 1.0, ambient: 1.0 },
+  // Side-chain duck factor for ambient bed: 1.0 = full, drops on loud SFX, ramps back.
+  duckFactor: 1.0,
+  duckTarget: 1.0,
+  // When non-null, triChord/playNoiseBurst route their dry tap through this node
+  // (used by playSpatialSound to insert a per-call HRTF PannerNode).
+  _spatialSink: null,
 };
 
 // Generate a synthetic impulse response for metallic interior reverb.
@@ -10397,29 +12120,77 @@ function initAudio() {
     audio.hiCut.Q.value = 0.7; // gentle slope (no resonance peak)
     audio.hiCut.connect(audio.ctx.destination);
 
-    // Master output (routes through the hi-cut filter)
-    audio.masterGain = audio.ctx.createGain();
-    audio.masterGain.gain.value = 0.85;
-    audio.masterGain.connect(audio.hiCut);
+    // Master bus compressor (glue): keeps simultaneous SFX legible without clipping.
+    // threshold -18 dB, ratio 4:1, fast attack for transient control, musical release.
+    audio.masterComp = audio.ctx.createDynamicsCompressor();
+    audio.masterComp.threshold.value = -18;
+    audio.masterComp.knee.value = 12;
+    audio.masterComp.ratio.value = 4;
+    audio.masterComp.attack.value = 0.005;
+    audio.masterComp.release.value = 0.100;
+    audio.masterComp.connect(audio.hiCut);
 
-    // Reverb chain: dry + wet mixed into master
+    // Master output (routes into compressor, then hi-cut). Base 0.85 multiplied
+    // by userVol.master so the user slider scales the bus cleanly.
+    audio.masterGain = audio.ctx.createGain();
+    audio.masterGain.gain.value = 0.85 * audio.userVol.master;
+    audio.masterGain.connect(audio.masterComp);
+
+    // SFX bus: groups all gameplay SFX (dry + reverb rails) under a single user-facing
+    // "SFX" slider, separate from the ambient bed. Lives between dry/reverb and master.
+    audio.sfxBus = audio.ctx.createGain();
+    audio.sfxBus.gain.value = audio.userVol.sfx;
+    audio.sfxBus.connect(audio.masterGain);
+
+    // Reverb chain: dry + wet mixed into SFX bus
     audio.dryGain = audio.ctx.createGain();
     audio.dryGain.gain.value = 0.80; // dry signal (most of the punch)
-    audio.dryGain.connect(audio.masterGain);
+    audio.dryGain.connect(audio.sfxBus);
 
     audio.reverbGain = audio.ctx.createGain();
     audio.reverbGain.gain.value = 0.40; // reverb for futuristic echo (tamed to avoid ringing)
-    audio.reverbGain.connect(audio.masterGain);
+    audio.reverbGain.connect(audio.sfxBus);
 
-    // Convolver with synthetic impulse response (longer tail for spacious echo)
-    audio.convolver = audio.ctx.createConvolver();
-    audio.convolver.buffer = generateImpulseResponse(audio.ctx, 2.4, 3.5, 0.015);
-    audio.convolver.connect(audio.reverbGain);
+    // Dual convolvers with environment crossfade:
+    //   wide = 2.4s decay, spacious open-volume tail
+    //   tight = 0.5s decay, fast slap for tunnels
+    // `audio.convolver` is repurposed as the reverb INPUT hub: all existing sources
+    // that connect to `audio.convolver` fan out to both convolvers in parallel.
+    audio.convolverWide = audio.ctx.createConvolver();
+    audio.convolverWide.buffer = generateImpulseResponse(audio.ctx, 2.4, 3.5, 0.015);
+    audio.convolverTight = audio.ctx.createConvolver();
+    audio.convolverTight.buffer = generateImpulseResponse(audio.ctx, 0.5, 6.5, 0.004);
+    audio.reverbWideGain = audio.ctx.createGain();
+    audio.reverbTightGain = audio.ctx.createGain();
+    // Initial crossfade weights favor open volume; updated per-frame in updateAmbientBed.
+    audio.reverbWideGain.gain.value = 0.7;
+    audio.reverbTightGain.gain.value = 0.3;
+    audio.convolverWide.connect(audio.reverbWideGain);
+    audio.convolverTight.connect(audio.reverbTightGain);
+    audio.reverbWideGain.connect(audio.reverbGain);
+    audio.reverbTightGain.connect(audio.reverbGain);
+    // Input hub: GainNode so existing `gain.connect(audio.convolver)` calls still work.
+    audio.convolver = audio.ctx.createGain();
+    audio.convolver.gain.value = 1.0;
+    audio.convolver.connect(audio.convolverWide);
+    audio.convolver.connect(audio.convolverTight);
 
-    // Ambient sound bed gain (separate from SFX)
+    // Long lush send for explosions: separate ~5 s IR at low wet level. Not fed by
+    // the main reverb input hub; triChord/playNoiseBurst opt in via audio._extraReverbSend
+    // set on the explosion case. Output mixes into the shared reverb bus so the long
+    // tail carries the same mix/duck/compression path as the rest of the wet signal.
+    audio.convolverLong = audio.ctx.createConvolver();
+    audio.convolverLong.buffer = generateImpulseResponse(audio.ctx, 5.0, 2.2, 0.030);
+    audio.reverbLongGain = audio.ctx.createGain();
+    audio.reverbLongGain.gain.value = 0.18; // low wet level; noticeable as halo, not splash
+    audio.convolverLong.connect(audio.reverbLongGain);
+    audio.reverbLongGain.connect(audio.reverbGain);
+
+    // Ambient sound bed gain (separate from SFX): bypasses master compressor so the
+    // binaural bed isn't pumped by gunfire. Still passes through hi-cut for consistent top.
     audio.ambientGain = audio.ctx.createGain();
     audio.ambientGain.gain.value = 0; // starts silent, fades in when playing
-    audio.ambientGain.connect(audio.hiCut); // through same hi-cut as master
+    audio.ambientGain.connect(audio.hiCut);
 
     audio.initialized = true;
   } catch(e) { console.warn('Audio init failed:', e); }
@@ -10524,14 +12295,81 @@ function startAmbientBed() {
 // Modulate ambient bed based on player speed.
 // The entire phi cascade shifts from 144Hz base (rest) to 200Hz base (full speed).
 // This makes the whole harmonic structure wind up together, like an engine spooling.
+// Environment probe: raycast in a few directions from camera; short average distance
+// = tunnel (crossfade reverb toward tight slap), long average = open volume (toward wide tail).
+// Called every few frames from updateAmbientBed for CPU economy.
+const _envProbeDirs = [
+  new THREE.Vector3( 1,  0,  0),
+  new THREE.Vector3(-1,  0,  0),
+  new THREE.Vector3( 0,  1,  0),
+  new THREE.Vector3( 0, -1,  0),
+  new THREE.Vector3( 0,  0,  1),
+  new THREE.Vector3( 0,  0, -1),
+];
+const _envProbeRay = new THREE.Raycaster();
+_envProbeRay.far = 2000;
+let _envProbeCounter = 0;
+function probeEnvironmentOpenness() {
+  if (!camera || !game || !game.mapMeshes || !game.mapMeshes.length) return 0.7;
+  const camPos = camera.getWorldPosition(new THREE.Vector3());
+  let sum = 0;
+  let hits = 0;
+  for (const d of _envProbeDirs) {
+    _envProbeRay.set(camPos, d);
+    _envProbeRay.near = 0;
+    _envProbeRay.far = 2000;
+    const hit = _envProbeRay.intersectObjects(game.mapMeshes, false);
+    if (hit && hit.length) {
+      sum += hit[0].distance;
+      hits++;
+    } else {
+      sum += 2000;
+      hits++;
+    }
+  }
+  const avg = hits ? sum / hits : 2000;
+  // 200 u = very tight tunnel, 1200+ u = open room
+  return Math.max(0, Math.min(1, (avg - 200) / 1000));
+}
+
 function updateAmbientBed() {
   if (!ambientStarted || !audio.ctx || !player.velocity) return;
+  // Probe environment openness every 8th frame to drive reverb crossfade.
+  if (audio.convolverWide && audio.convolverTight && audio.reverbWideGain && audio.reverbTightGain) {
+    _envProbeCounter++;
+    if ((_envProbeCounter & 7) === 0) {
+      const openness = probeEnvironmentOpenness();
+      audio.envOpenness += (openness - audio.envOpenness) * 0.25;
+    }
+    // Smooth crossfade; wideGain = openness, tightGain = (1 - openness)
+    const wG = audio.envOpenness;
+    const tG = 1 - audio.envOpenness;
+    audio.reverbWideGain.gain.value += (wG - audio.reverbWideGain.gain.value) * 0.10;
+    audio.reverbTightGain.gain.value += (tG - audio.reverbTightGain.gain.value) * 0.10;
+  }
   const speed = player.velocity ? player.velocity.length() : 0;
   const maxSpeed = 800;
   const t = Math.min(1, speed / maxSpeed);
 
-  // Fade ambient in when game is active
-  const targetVol = (game.state === 'playing' || game.state === 'warmup') ? 1.0 : 0.08;
+  // Fade ambient in when game is active. User's ambient slider scales the whole bed.
+  const baseVol = (game.state === 'playing' || game.state === 'warmup') ? 1.0 : 0.08;
+  // Side-chain duck: on loud SFX the duck target drops; factor eases back over ~400 ms.
+  // Ramp back at ~0.04/frame ≈ 400 ms at 60 FPS.
+  audio.duckFactor += (audio.duckTarget - audio.duckFactor) * 0.04;
+  audio.duckTarget += (1.0 - audio.duckTarget) * 0.08; // target also eases back
+  // Health tremor: low-freq gain wobble scales with (1 - health%); peaks when doomed.
+  // At full health tremor ≈ 0; at 0 HP / doomed, ±30% gain wobble at ~4 Hz.
+  let tremorFactor = 1.0;
+  if (player.maxHealth && player.health !== undefined) {
+    const healthPct = Math.max(0, player.health / player.maxHealth);
+    const tremorDepth = (1 - healthPct) * 0.30 + (player.doomed ? 0.10 : 0);
+    if (tremorDepth > 0.001) {
+      const t = (audio.ctx ? audio.ctx.currentTime : 0);
+      const tremorFreq = 3.5 + (1 - healthPct) * 1.5; // 3.5 Hz → 5 Hz toward doomed
+      tremorFactor = 1.0 - tremorDepth * (0.5 - 0.5 * Math.cos(2 * Math.PI * tremorFreq * t));
+    }
+  }
+  const targetVol = baseVol * audio.userVol.ambient * audio.duckFactor * tremorFactor;
   audio.ambientGain.gain.value += (targetVol - audio.ambientGain.gain.value) * 0.02;
 
   // Current base frequency: lerp from rest to speed
@@ -10551,14 +12389,27 @@ function updateAmbientBed() {
   }
 }
 
+// Trigger a side-chain duck on the ambient bed. depth = target factor (0..1).
+// Called on loud SFX (explosions, deaths, kills). Factor eases back to 1 over ~400 ms.
+function duckAmbient(depth) {
+  // Only deepen the duck; don't pull it up if a louder event is already ducking harder.
+  if (depth < audio.duckTarget) audio.duckTarget = depth;
+  if (depth < audio.duckFactor) audio.duckFactor = depth;
+}
+
 // Enhanced tri-chord helper with configurable ADSR envelopes.
 // envelope = { attack, hold, decay } (in seconds). Defaults to instant attack + exponential decay.
 // All SFX route through both dry and reverb (convolver) for spatial presence.
+// Each oscillator gets a detuned chorus partner (±5 cents alternating, 30% mix) for
+// procedural thickness; same ADSR envelope is shared so the partner tracks perfectly.
 function triChord(freqs, wave, vol, dur, rampFreqs, rampTime, startOffset, envelope) {
   const ctx = audio.ctx;
   const now = ctx.currentTime + (startOffset || 0);
   const env = envelope || { attack: 0.003, hold: 0, decay: dur };
+  const CHORUS_DETUNE_CENTS = 5;
+  const CHORUS_MIX = 0.30;
   freqs.forEach((freq, i) => {
+    // Main oscillator and shared envelope gain
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = wave;
@@ -10575,11 +12426,28 @@ function triChord(freqs, wave, vol, dur, rampFreqs, rampTime, startOffset, envel
     }
     gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
     osc.connect(gain);
-    // Route to dry + reverb for spatial presence
-    if (audio.dryGain) gain.connect(audio.dryGain);
-    else gain.connect(audio.masterGain);
+
+    // Chorus partner: same envelope, detuned ±5 cents (alternating sign per i for stereo spread)
+    const chorusOsc = ctx.createOscillator();
+    const chorusGain = ctx.createGain();
+    chorusOsc.type = wave;
+    chorusOsc.frequency.setValueAtTime(freq, now);
+    chorusOsc.detune.setValueAtTime((i % 2 === 0 ? 1 : -1) * CHORUS_DETUNE_CENTS, now);
+    if (rampFreqs && rampFreqs[i] !== undefined) {
+      chorusOsc.frequency.exponentialRampToValueAtTime(Math.max(1, rampFreqs[i]), now + (rampTime || dur));
+    }
+    chorusGain.gain.value = CHORUS_MIX;
+    chorusOsc.connect(chorusGain);
+    chorusGain.connect(gain); // routes through the same ADSR envelope as main
+
+    // Route to dry + reverb for spatial presence. If a spatial panner is active,
+    // the dry tap goes through it so the source is HRTF-positioned in world space.
+    const drySink = audio._spatialSink || audio.dryGain || audio.masterGain;
+    gain.connect(drySink);
     if (audio.convolver) gain.connect(audio.convolver);
+    if (audio._extraReverbSend) gain.connect(audio._extraReverbSend);
     osc.start(now); osc.stop(now + dur + 0.01);
+    chorusOsc.start(now); chorusOsc.stop(now + dur + 0.01);
   });
 }
 
@@ -10608,10 +12476,11 @@ function playNoiseBurst(duration, volume, startTime, filterFreq, filterQ) {
   } else {
     src.connect(gain);
   }
-  // Route to dry + reverb
-  if (audio.dryGain) gain.connect(audio.dryGain);
-  else gain.connect(audio.masterGain);
+  // Route to dry + reverb (dry routes through spatial panner if active)
+  const drySink = audio._spatialSink || audio.dryGain || audio.masterGain;
+  gain.connect(drySink);
   if (audio.convolver) gain.connect(audio.convolver);
+  if (audio._extraReverbSend) gain.connect(audio._extraReverbSend);
   src.start(startTime);
 }
 
@@ -10663,12 +12532,31 @@ function playSound(type) {
     }
   }
   else if (type === 'fire_minigun') {
-    // Ultra-short tick with micro-variation (never identical at rapid fire)
-    const p = rr(1, 0.08);
-    triChord([ri(90*p,0), ri(113*p,0), ri(135*p,0)], rWave(['square','sawtooth']),
-      rr(0.14, 0.2), rr(0.04, 0.15), [ri(60*p,0), ri(75*p,0), ri(90*p,0)], 0.03, 0,
-      { attack: 0.001, hold: 0, decay: rr(0.04, 0.2) });
-    playNoiseBurst(rr(0.015, 0.2), rr(0.05, 0.2), now, ri(2200, 0.15), rr(2.0, 0.2));
+    // Granular noise sub-bed: short bandpassed grains (30-50 ms) stack across the
+    // rapid-fire stream for meatier, cheaper chatter than per-tick triChord. Each
+    // call drops 2-3 grains at slightly offset times/bands so the bursts are never
+    // identical but never alias either. A low 40 Hz sub grain lands the body hit;
+    // a bright 2 kHz snap carries attack. The pitched triChord tick only fires
+    // occasionally so the spectrum stays dense without becoming tonal.
+    const grainCount = 2 + Math.floor(r() * 2); // 2 or 3 grains
+    for (let i = 0; i < grainCount; i++) {
+      const grainDur = rr(0.040, 0.25); // 30-50 ms
+      const grainOff = i * rr(0.012, 0.4); // staggered
+      const grainBand = ri(500 + r() * 1200, 0.15); // 500-1700 Hz random center
+      const grainQ = rr(1.8, 0.25);
+      playNoiseBurst(grainDur, rr(0.055, 0.3), now + grainOff, grainBand, grainQ);
+    }
+    // Sub-bass body grain: 40 Hz thump per tick (additive, not tonal)
+    playNoiseBurst(rr(0.035, 0.2), rr(0.07, 0.25), now, ri(40, 0.3), rr(0.9, 0.2));
+    // Bright snap: very short high-band grain carries attack transient
+    playNoiseBurst(rr(0.012, 0.3), rr(0.045, 0.3), now, ri(2200, 0.15), rr(1.8, 0.25));
+    // Occasional pitched tick (only ~1 in 3 shots) for readability in rapid fire
+    if (r() > 0.67) {
+      const p = rr(1, 0.08);
+      triChord([ri(90*p,0), ri(113*p,0)], rWave(['square','sawtooth']),
+        rr(0.09, 0.2), rr(0.03, 0.15), [ri(60*p,0), ri(75*p,0)], 0.025, 0,
+        { attack: 0.001, hold: 0, decay: rr(0.03, 0.2) });
+    }
   }
   else if (type === 'fire_railgun') {
     // Charged weapon: randomized swell + metallic ring
@@ -10705,6 +12593,7 @@ function playSound(type) {
       { attack: 0.001, hold: 0, decay: rr(0.12, 0.2) });
   }
   else if (type === 'kill') {
+    duckAmbient(0.45); // moderate duck for kill confirm
     const p = rr(1, 0.08);
     triChord([ri(130*p,0), ri(156*p,0), ri(196*p,0)], 'sine',
       rr(0.18, 0.12), rr(0.35, 0.12), null, null, 0,
@@ -10712,6 +12601,50 @@ function playSound(type) {
     triChord([ri(65*p,0), ri(78*p,0), ri(98*p,0)], 'sine',
       rr(0.15, 0.12), rr(0.40, 0.12), null, null, rr(0.12, 0.15),
       { attack: 0.005, hold: rr(0.05, 0.2), decay: rr(0.35, 0.15) });
+  }
+  else if (type === 'damage_shield') {
+    // Shield hit: a tempered "metal-on-plate" thud with a short metallic ring,
+    // NOT a high glass chime. Previous version lived at 2.4-3.2 kHz with a
+    // +12 dB peak, which read as "tin can." This version centers in the
+    // 400-900 Hz band where armor and ferrous impact sounds actually sit:
+    //   - Bandpass noise thump at ~500 Hz (the body / heft of the hit).
+    //   - Short metal ring: low-Q peak at ~1.1 kHz, modest +6 dB (suggests
+    //     the plate resonates briefly without ringing like a tuning fork).
+    //   - A pitched tri-chord an octave lower than before (220/330/440) for
+    //     a warm harmonic overtone; decays fast so it reads as attack, not
+    //     pitched instrument.
+    const p = rr(1, 0.10);
+    const thudNoise = ctx.createBufferSource();
+    const bufLen = Math.floor(ctx.sampleRate * 0.09);
+    const thudBuf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+    const thudData = thudBuf.getChannelData(0);
+    for (let i = 0; i < bufLen; i++) thudData[i] = (Math.random() * 2 - 1) * Math.exp(-i / bufLen * 5);
+    thudNoise.buffer = thudBuf;
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.value = ri(500 * p, 0.12);
+    bp.Q.value = 1.1;
+    const ring = ctx.createBiquadFilter();
+    ring.type = 'peaking';
+    ring.frequency.value = ri(1100 * p, 0.12);
+    ring.Q.value = rr(3, 0.2);
+    ring.gain.value = 6;
+    const thudGain = ctx.createGain();
+    thudGain.gain.setValueAtTime(rr(0.26, 0.2), now);
+    thudGain.gain.exponentialRampToValueAtTime(0.001, now + rr(0.14, 0.2));
+    thudNoise.connect(bp); bp.connect(ring); ring.connect(thudGain);
+    if (audio.dryGain) thudGain.connect(audio.dryGain);
+    else thudGain.connect(audio.masterGain);
+    if (audio.convolver) thudGain.connect(audio.convolver);
+    thudNoise.start(now);
+    // Warm harmonic overtone, octave lower than the old chime so it reads as
+    // "impact on a dense plate" rather than "tap on glass."
+    triChord(
+      [ri(220 * p, 0.05), ri(330 * p, 0.05), ri(440 * p, 0.05)],
+      'triangle',
+      rr(0.09, 0.2), rr(0.14, 0.2), null, null, 0.003,
+      { attack: 0.001, hold: 0, decay: rr(0.11, 0.2) }
+    );
   }
   else if (type === 'damage') {
     // Rapid-fire dissonant pulses: 3-5 short staccato hits with clashing intervals
@@ -10762,8 +12695,43 @@ function playSound(type) {
       { attack: rr(0.04, 0.2), hold: rr(0.08, 0.2), decay: rr(0.48, 0.10) });
     playNoiseBurst(rr(0.50, 0.15), rr(0.12, 0.15), now, ri(600, 0.2), rr(0.5, 0.3));
   }
+  else if (type === 'core_titan') {
+    // Titan core activation: heavy announcement stinger. Audible across the arena so
+    // every pilot in range knows a titan just went critical. Four-layer structure:
+    //  (1) sub-bass swell (pressure rise before impact)
+    //  (2) impact thud (body hit at t = 0.05s)
+    //  (3) stacked fifth-and-octave power chord on saw/tri (the declaration)
+    //  (4) metallic shimmer transient (high brass warning, rides the chord)
+    duckAmbient(0.45); // strong duck so the stinger punches through
+    const p = rr(1, 0.04); // very little variation; this is a signature sound
+    // Layer 1: sub-bass swell (slow attack, long decay, low freq)
+    triChord([ri(32*p,0), ri(40*p,0), ri(48*p,0)], 'sine',
+      rr(0.45, 0.08), rr(1.20, 0.08), null, null, 0,
+      { attack: rr(0.12, 0.15), hold: rr(0.20, 0.15), decay: rr(0.90, 0.08) });
+    // Layer 2: impact thud (fast attack, short decay, low noise burst)
+    playNoiseBurst(rr(0.55, 0.10), rr(0.18, 0.12), now + 0.04, ri(90, 0.2), rr(0.35, 0.2));
+    playNoiseBurst(rr(0.22, 0.12), rr(0.10, 0.15), now + 0.06, ri(180, 0.2), rr(0.5, 0.2));
+    // Layer 3: stacked power chord (saw + tri, tonic + fifth + octave + 2-octave)
+    triChord([ri(65*p,0), ri(98*p,0), ri(130*p,0)], 'sawtooth',
+      rr(0.38, 0.10), rr(1.00, 0.08), [ri(82*p,0), ri(123*p,0), ri(164*p,0)], rr(0.75, 0.10), rr(0.06, 0.2),
+      { attack: rr(0.02, 0.2), hold: rr(0.18, 0.15), decay: rr(0.85, 0.10) });
+    triChord([ri(98*p,0), ri(147*p,0), ri(196*p,0)], 'triangle',
+      rr(0.26, 0.10), rr(0.85, 0.08), [ri(123*p,0), ri(185*p,0), ri(247*p,0)], rr(0.65, 0.10), rr(0.10, 0.2),
+      { attack: rr(0.02, 0.2), hold: rr(0.15, 0.15), decay: rr(0.75, 0.10) });
+    // Layer 4: metallic shimmer (high brass/horn; square for harmonic richness, narrow, rides on top)
+    triChord([ri(392*p,0), ri(523*p,0), ri(659*p,0)], 'square',
+      rr(0.08, 0.12), rr(0.70, 0.10), null, null, rr(0.18, 0.15),
+      { attack: rr(0.03, 0.2), hold: rr(0.10, 0.2), decay: rr(0.55, 0.10) });
+    // High crash noise accent (subtle, gives the stinger "air")
+    playNoiseBurst(rr(0.10, 0.20), rr(0.45, 0.10), now + 0.08, ri(4800, 0.15), rr(0.9, 0.2));
+  }
   else if (type === 'explosion') {
     // Rapid-fire destruction: 5-8 dissonant staccato pulses layered with noise blasts
+    duckAmbient(0.35); // strong duck for explosions
+    // Long lush send: during this synchronous block, every triChord/playNoiseBurst
+    // also taps the 5 s convolver for the distant-explosion halo. Cleared at the end.
+    const _prevExtra = audio._extraReverbSend;
+    if (audio.convolverLong) audio._extraReverbSend = audio.convolverLong;
     const size = rr(1, 0.25);
     const pulses = 5 + Math.floor(r() * 4);
     const baseP = rr(1, 0.25);
@@ -10811,6 +12779,8 @@ function playSound(type) {
 
     // Sub-rumble tail (fading low growl after the burst)
     playNoiseBurst(rr(0.25, 0.3) * size, rr(0.20, 0.2), now + 0.12, ri(45, 0.3), rr(0.2, 0.3));
+    // Restore prior extra reverb send (long send was active only for this explosion).
+    audio._extraReverbSend = _prevExtra;
   }
   else if (type === 'stasis') {
     // Full 3-second charging sound: rising harmonic sweep that builds to release
@@ -10850,8 +12820,30 @@ function playSound(type) {
   else if (type === 'death') {
     // Ship death: dramatic descending drone with heavy randomization.
     // Multiple overlapping layers, random metallic debris, and a bass drop.
+    duckAmbient(0.30); // deep duck; death is the loudest event in the mix
     const p = rr(1, 0.15); // large pitch variation per death
     const size = rr(1, 0.2);
+    // Sub-bass impulse at death onset: 35 Hz pure sine, ADSR 5/100/600 ms.
+    // Routes through dry only (no reverb, keeps it physical not ringing). Lands the
+    // concussion in the chest before the descending drone even starts.
+    {
+      const subOsc = ctx.createOscillator();
+      const subGain = ctx.createGain();
+      subOsc.type = 'sine';
+      subOsc.frequency.setValueAtTime(35 * p, now);
+      // Drop to 25 Hz over the decay for a felt "thud-hum"
+      subOsc.frequency.exponentialRampToValueAtTime(25 * p, now + 0.70);
+      const subPeak = rr(0.45, 0.15) * size;
+      subGain.gain.setValueAtTime(0.001, now);
+      subGain.gain.linearRampToValueAtTime(subPeak, now + 0.005); // 5 ms attack
+      subGain.gain.setValueAtTime(subPeak, now + 0.005 + 0.100);  // 100 ms hold
+      subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.005 + 0.100 + 0.600); // 600 ms decay
+      subOsc.connect(subGain);
+      // Dry only: sub-bass through reverb smears the transient
+      if (audio.dryGain) subGain.connect(audio.dryGain);
+      else subGain.connect(audio.masterGain);
+      subOsc.start(now); subOsc.stop(now + 0.72);
+    }
     // Primary descending drone (sawtooth for grit)
     triChord([ri(82*p,0), ri(98*p,0), ri(123*p,0)], rWave(['sawtooth','square']),
       rr(0.25, 0.15), rr(1.30, 0.15) * size, [ri(20*p,0), ri(25*p,0), ri(30*p,0)], rr(1.10, 0.15), 0,
@@ -10885,13 +12877,154 @@ function playSound(type) {
         { attack: rr(0.05, 0.3), hold: rr(0.05, 0.3), decay: rr(0.70, 0.15) });
     }
   }
+  else if (type === 'sonar_ping' || type === 'sonar_ping_1' || type === 'sonar_ping_2' || type === 'sonar_ping_3') {
+    // Lock-on sonar ping: pitch + rate scale with lock level (1..3).
+    // Level 1: one pip at ~880 Hz. Level 2: two pips at ~1100 Hz. Level 3: four pips at ~1480 Hz (full-lock).
+    const level = (type === 'sonar_ping_3') ? 3 : (type === 'sonar_ping_2') ? 2 : 1;
+    const basePitches = [0, 880, 1100, 1480];
+    const basePitch = basePitches[level];
+    const pipCount = level === 3 ? 4 : level * 2; // lvl 1 → 2, lvl 2 → 2, lvl 3 → 4 (per plan "2 pip cycles at half-lock, 4 at full-lock")
+    const pips = level === 1 ? 1 : pipCount; // level 1: single soft pip
+    const pipSpacing = level === 3 ? 0.055 : 0.090; // faster at full lock
+    for (let i = 0; i < pips; i++) {
+      const pipP = rr(1, 0.03);
+      const pipFreq = basePitch * pipP;
+      triChord(
+        [pipFreq, pipFreq * 1.5], // ping + fifth harmonic
+        'sine',
+        rr(0.08, 0.2), 0.055, null, null, i * pipSpacing,
+        { attack: 0.002, hold: 0, decay: 0.050 }
+      );
+    }
+    // Low sub-blip at full lock: signals threat
+    if (level >= 3) {
+      triChord([70, 90], 'sine', 0.06, 0.12, null, null, 0,
+        { attack: 0.003, hold: 0, decay: 0.10 });
+    }
+  }
   else if (type === 'round_start') {
+    // Three rising chords, but the third resolves up a fifth (E major base jumps
+    // to B major, the dominant) rather than continuing the sequence linearly. A
+    // reverse-cymbal swell rides under chord 2 and peaks exactly on the resolve.
     triChord([65, 82, 98], 'sine', 0.18, 0.35, null, null, 0,
       { attack: 0.01, hold: 0.08, decay: 0.26 });
     triChord([73, 92, 110], 'sine', 0.18, 0.35, null, null, 0.18,
       { attack: 0.01, hold: 0.08, decay: 0.26 });
-    triChord([82, 103, 130], 'sine', 0.20, 0.40, null, null, 0.36,
-      { attack: 0.01, hold: 0.10, decay: 0.29 });
+    // Reverse cymbal: white/high noise with inverted envelope (silent → full)
+    // ramping over 0.36 s to land on the resolve chord. Built inline because
+    // playNoiseBurst has a fixed decaying envelope.
+    try {
+      const ctx = audio.ctx;
+      const swellDur = 0.36;
+      const swellStart = now;
+      const bufSize = Math.floor(ctx.sampleRate * swellDur);
+      const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      const sGain = ctx.createGain();
+      sGain.gain.setValueAtTime(0.001, swellStart);
+      sGain.gain.exponentialRampToValueAtTime(0.18, swellStart + swellDur);
+      const sFilter = ctx.createBiquadFilter();
+      sFilter.type = 'highpass';
+      sFilter.frequency.value = 1800;
+      sFilter.Q.value = 0.7;
+      src.connect(sFilter);
+      sFilter.connect(sGain);
+      const drySink = audio.dryGain || audio.masterGain;
+      sGain.connect(drySink);
+      if (audio.convolver) sGain.connect(audio.convolver);
+      src.start(swellStart);
+      src.stop(swellStart + swellDur + 0.01);
+    } catch (e) {}
+    // The resolve: chord rooted a fifth above the first (C → G). B major feel at
+    // the top of the voicing, played slightly longer/louder so the climax lands.
+    triChord([98, 123, 147], 'sine', 0.24, 0.50, null, null, 0.36,
+      { attack: 0.005, hold: 0.18, decay: 0.31 });
+  }
+}
+
+// ---- HRTF spatial playback wrapper ----
+// Wraps playSound so its dry tap is routed through a per-call PannerNode positioned
+// relative to the camera. Ambient bed stays unspatialized (bypasses sfxBus entirely).
+// Reverb tap goes to the shared convolver so every spatial source shares room tone.
+// A BiquadFilter sits between panner and sfxBus: if the line from camera to source
+// passes through level geometry, cutoff drops so high frequencies attenuate (occlusion).
+const _spatialRelPos = new THREE.Vector3();
+const _spatialInvQuat = new THREE.Quaternion();
+const _spatialCamPos = new THREE.Vector3();
+const _spatialDir = new THREE.Vector3();
+const _spatialRaycaster = new THREE.Raycaster();
+_spatialRaycaster.firstHitOnly = true;
+function playSpatialSound(type, worldPos, opts) {
+  if (!audio.initialized || !audio.ctx) return;
+  if (!worldPos || !camera) return playSound(type);
+  try {
+    const panner = audio.ctx.createPanner();
+    panner.panningModel = 'HRTF';
+    panner.distanceModel = 'inverse';
+    // Optional range override: some sounds (titan core activation) should carry farther.
+    // refDistance = how close before attenuation begins; higher = louder at distance.
+    // rolloffFactor < 1 = slower falloff with distance.
+    panner.refDistance = (opts && opts.refDistance) || 250;
+    panner.maxDistance = (opts && opts.maxDistance) || 8000;
+    panner.rolloffFactor = (opts && opts.rolloffFactor) || 1.0;
+    // Compute listener-relative position (camera at origin, looking -Z in local space).
+    camera.getWorldPosition(_spatialCamPos);
+    _spatialRelPos.subVectors(worldPos, _spatialCamPos);
+    const distToSource = _spatialRelPos.length();
+    _spatialInvQuat.copy(camera.quaternion).invert();
+    _spatialRelPos.applyQuaternion(_spatialInvQuat);
+    const t = audio.ctx.currentTime;
+    // Web Audio listener looks down -Z by default; Three.js camera looks down -Z; after
+    // inverse-camera-rotation our local -Z matches the listener's forward.
+    panner.positionX.setValueAtTime(_spatialRelPos.x, t);
+    panner.positionY.setValueAtTime(_spatialRelPos.y, t);
+    panner.positionZ.setValueAtTime(_spatialRelPos.z, t);
+    // Occlusion lowpass: raycast camera -> source against level meshes. If occluded,
+    // drop cutoff so high freqs get eaten by the wall. Also drop gain slightly.
+    const occl = audio.ctx.createBiquadFilter();
+    occl.type = 'lowpass';
+    let cutoff = 18000;
+    let occludedGain = 1.0;
+    if (distToSource > 1 && game && game.mapMeshes && game.mapMeshes.length) {
+      _spatialDir.subVectors(worldPos, _spatialCamPos).normalize();
+      _spatialRaycaster.set(_spatialCamPos, _spatialDir);
+      _spatialRaycaster.near = 0;
+      _spatialRaycaster.far = distToSource * 0.99;
+      const hits = _spatialRaycaster.intersectObjects(game.mapMeshes, false);
+      if (hits && hits.length) {
+        // A hit between listener and source = occluded. Shorter path inside geometry
+        // = thinner wall = less attenuation. Use ray distance ratio as a rough proxy.
+        const h = hits[0];
+        const penetration = distToSource - h.distance;
+        // 100 u = thin wall, 1000+ u = deep occlusion
+        const wallDepth = Math.min(1.0, penetration / 600);
+        cutoff = 2400 - 1500 * wallDepth; // 2400 Hz thin, ~900 Hz deep
+        occludedGain = 0.55 - 0.20 * wallDepth; // -5 dB thin, -9 dB deep
+      }
+    }
+    occl.frequency.setValueAtTime(cutoff, t);
+    occl.Q.setValueAtTime(0.707, t);
+    const occlGain = audio.ctx.createGain();
+    occlGain.gain.setValueAtTime(occludedGain, t);
+    panner.connect(occl);
+    occl.connect(occlGain);
+    occlGain.connect(audio.sfxBus || audio.masterGain);
+    audio._spatialSink = panner;
+    playSound(type);
+    audio._spatialSink = null;
+    // Clean up: nodes detach automatically when their upstream gains stop, but we also
+    // schedule an explicit disconnect so they're GC-eligible.
+    setTimeout(() => {
+      try { panner.disconnect(); } catch (e) {}
+      try { occl.disconnect(); } catch (e) {}
+      try { occlGain.disconnect(); } catch (e) {}
+    }, 4000);
+  } catch (e) {
+    audio._spatialSink = null;
+    playSound(type);
   }
 }
 
@@ -10925,12 +13058,22 @@ const _origShowKillMarker = showKillMarker;
 showKillMarker = function() {
   _origShowKillMarker();
   playSound('kill');
+  // Inverse-bloom shutter flash: instant peak, renderPostFX decays it to near-zero in ~120 ms.
+  if (typeof postFX !== 'undefined' && postFX.compositeMat && postFX.compositeMat.uniforms.killFlash) {
+    postFX.compositeMat.uniforms.killFlash.value = 1.0;
+  }
 };
 
 const _origPlayerTakeDamage = playerTakeDamage;
 playerTakeDamage = function(amount, attacker, projectile) {
+  // Snapshot shield before damage resolves so we can pick shield vs armor SFX.
+  const shieldBefore = player.shield || 0;
   _origPlayerTakeDamage(amount, attacker, projectile);
-  playSound('damage');
+  const shieldAfter = player.shield || 0;
+  // Shield absorbed all or part of this hit => crystalline crack
+  if (shieldBefore > 0) playSound('damage_shield');
+  // Shield ran out (or was already out) and armor took the overflow => dissonance
+  if (shieldAfter <= 0 && shieldBefore < amount + 0.001) playSound('damage');
 };
 
 const _origPlayerDie = playerDie;
@@ -10956,8 +13099,22 @@ activateAbility = function(slot) {
 const _origActivateCore = activateCore;
 activateCore = function() {
   const wasMeter = player.coreMeter;
+  const wasActive = player.coreActive;
   _origActivateCore();
-  if (wasMeter >= 100) playSound('core');
+  // Successful activation = had full meter and now coreActive is true.
+  if (wasMeter >= 100 && !wasActive && player.coreActive) {
+    // Heavy announcement stinger from the player's position. Wide spatial range so the
+    // sound carries across the arena: every titan in the area should know a core just
+    // went hot. The player is the listener AND the source, so HRTF places it close
+    // and loud; if other titans ever activate cores, the same call positions them
+    // correctly relative to the listener.
+    playSpatialSound('core_titan', player.position.clone(), {
+      refDistance: 800, maxDistance: 12000, rolloffFactor: 0.6
+    });
+    // Layer the original 'core' sound on top so the activator gets both the personal
+    // power-up cue and the broadcast stinger; the two readings reinforce each other.
+    playSound('core');
+  }
 };
 
 const _origStartReload = startReload;
@@ -10975,7 +13132,8 @@ enterStasis = function(field) {
 const _origSpawnExplosion = spawnExplosion;
 spawnExplosion = function(pos, size) {
   _origSpawnExplosion(pos, size);
-  if (size > 30) playSound('explosion'); // only big explosions get sound
+  // HRTF-positioned boom so you hear it in 3D; falls back to flat routing if anything fails.
+  if (size > 30) playSpatialSound('explosion', pos);
 };
 
 // ---- SCOREBOARD OVERLAY (Tab key) ----
