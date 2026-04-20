@@ -9131,6 +9131,16 @@ function pollGamepad() {
 
 const hudCanvas = document.getElementById('circumpunct-hud');
 const hudCtx = hudCanvas.getContext('2d');
+// Cache last-applied canvas dims so we don't reset (and reallocate the
+// internal bitmap) every frame. Also cache the current font string so
+// repeated `ctx.font = '10px Courier New'` writes skip the parse.
+let _hudLastW = 0, _hudLastH = 0, _hudLastDPR = 0;
+let _hudFontCache = '';
+function hudFont(s) {
+  if (s === _hudFontCache) return;
+  _hudFontCache = s;
+  hudCtx.font = s;
+}
 
 function drawCircumpunctHUD() {
   if (!player.chassis) return;
@@ -9138,10 +9148,14 @@ function drawCircumpunctHUD() {
   const dpr = window.devicePixelRatio || 1;
   const W = window.innerWidth;
   const H = window.innerHeight;
-  hudCanvas.width = W * dpr;
-  hudCanvas.height = H * dpr;
-  hudCanvas.style.width = W + 'px';
-  hudCanvas.style.height = H + 'px';
+  if (W !== _hudLastW || H !== _hudLastH || dpr !== _hudLastDPR) {
+    hudCanvas.width = W * dpr;
+    hudCanvas.height = H * dpr;
+    hudCanvas.style.width = W + 'px';
+    hudCanvas.style.height = H + 'px';
+    _hudLastW = W; _hudLastH = H; _hudLastDPR = dpr;
+    _hudFontCache = ''; // context state reset by sizing
+  }
   const ctx = hudCtx;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, W, H);
@@ -9215,14 +9229,14 @@ function drawCircumpunctHUD() {
       // Switching animation: blink between modes
       const blinkOn = Math.floor(t * 6) % 2 === 0;
       ctx.fillStyle = amber + (blinkOn ? '0.7)' : '0.3)');
-      ctx.font = '10px Courier New';
+      hudFont('10px Courier New');
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
       ctx.fillText('SWITCHING', cx, cy + 32);
     } else {
       const modeLabel = player.legionMode === 'close' ? 'CLOSE' : 'LONG';
       ctx.fillStyle = white + '0.4)';
-      ctx.font = '10px Courier New';
+      hudFont('10px Courier New');
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
       ctx.fillText(modeLabel, cx, cy + 32);
@@ -9291,7 +9305,7 @@ function drawCircumpunctHUD() {
 
   // Health text (below ring)
   ctx.fillStyle = white + '0.6)';
-  ctx.font = '13px Courier New';
+  hudFont('13px Courier New');
   ctx.textAlign = 'center';
   ctx.fillText(Math.ceil(player.health) + '', cx, cy + r1 + 24);
 
@@ -9365,7 +9379,7 @@ function drawCircumpunctHUD() {
   const speedTx = cx + Math.cos(speedAngle) * (r3 + 22);
   const speedTy = cy + Math.sin(speedAngle) * (r3 + 22);
   ctx.fillStyle = white + '0.45)';
-  ctx.font = '11px Courier New';
+  hudFont('11px Courier New');
   ctx.textAlign = 'center';
   ctx.fillText(Math.floor(player.velocity.length()), speedTx, speedTy);
 
@@ -9396,7 +9410,7 @@ function drawCircumpunctHUD() {
   const ammoTx = cx + Math.cos(ammoAngle) * (r3 + 22);
   const ammoTy = cy + Math.sin(ammoAngle) * (r3 + 22);
   ctx.fillStyle = white + '0.45)';
-  ctx.font = '11px Courier New';
+  hudFont('11px Courier New');
   ctx.textAlign = 'center';
   const ammoStr = (player.weapon.clipSize >= 999 || smartCoreAmmo) ? 'INF' : player.clipAmmo + '';
   ctx.fillText(ammoStr, ammoTx, ammoTy);
@@ -9505,7 +9519,7 @@ function drawCircumpunctHUD() {
     const labelAngle = angle;
     const labelR = r5 + 22;
     ctx.fillStyle = ready ? (active ? amber + '0.9)' : white + '0.5)') : white + '0.2)';
-    ctx.font = '11px Courier New';
+    hudFont('11px Courier New');
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(abilityKeys[i], cx + Math.cos(labelAngle) * labelR, cy + Math.sin(labelAngle) * labelR);
@@ -9617,7 +9631,7 @@ function drawCircumpunctHUD() {
     }
     // Label
     ctx.fillStyle = chgPct >= 1 ? 'rgba(255,80,20,0.9)' : 'rgba(255,120,40,0.5)';
-    ctx.font = '10px Courier New';
+    hudFont('10px Courier New');
     ctx.textAlign = 'center';
     ctx.fillText(chgPct >= 1 ? 'MAX' : Math.floor(chgPct * 100) + '%', cx, cy + chgR + 16);
   }
@@ -9646,7 +9660,7 @@ function drawCircumpunctHUD() {
     }
     // Label
     ctx.fillStyle = chgPct >= 1 ? 'rgba(255,80,20,0.9)' : 'rgba(255,120,40,0.5)';
-    ctx.font = '10px Courier New';
+    hudFont('10px Courier New');
     ctx.textAlign = 'center';
     ctx.fillText('PWR', cx, cy + chgR + 16);
   }
@@ -9675,7 +9689,7 @@ function drawCircumpunctHUD() {
     }
     // Label
     ctx.fillStyle = nrgPct < 0.2 ? 'rgba(255,60,30,0.8)' : 'rgba(60,180,255,0.5)';
-    ctx.font = '10px Courier New';
+    hudFont('10px Courier New');
     ctx.textAlign = 'center';
     ctx.fillText('NRG ' + Math.floor(nrgPct * 100) + '%', cx, cy + nrgR + 16);
   }
@@ -10049,7 +10063,7 @@ function drawCircumpunctHUD() {
       // Full lock text
       if (locks >= 3) {
         ctx.fillStyle = fullLockColor;
-        ctx.font = 'bold 10px Courier New';
+        hudFont('bold 10px Courier New');
         ctx.textAlign = 'center';
         ctx.fillText('LOCKED', sx, sy + baseR * 1.8 + 8);
       }
@@ -10265,7 +10279,7 @@ function updateMinimap() {
   // Map word label
   if (game.mapWord) {
     ctx.fillStyle = 'rgba(255,170,0,0.4)';
-    ctx.font = '8px Courier New';
+    hudFont('8px Courier New');
     ctx.textAlign = 'center';
     ctx.fillText(game.mapWord, 75, 145);
   }
@@ -12076,6 +12090,11 @@ function initHbarPool(maxBars, maxMarkers) {
   hbarPool.initialized = true;
 }
 
+// Module-level temp vectors reused across updateEnemyHealthBars calls to
+// avoid per-enemy allocations (the trace showed Vector3 churn in this path).
+const _hbTmpA = new THREE.Vector3();
+const _hbTmpB = new THREE.Vector3();
+
 function updateEnemyHealthBars() {
   if (!hbarPool.initialized) initHbarPool(24, 8);
 
@@ -12085,8 +12104,9 @@ function updateEnemyHealthBars() {
     return;
   }
 
-  const halfW = window.innerWidth / 2;
-  const halfH = window.innerHeight / 2;
+  const winW = window.innerWidth, winH = window.innerHeight;
+  const halfW = winW / 2;
+  const halfH = winH / 2;
 
   let barIdx = 0;
   for (const bot of game.entities) {
@@ -12094,22 +12114,24 @@ function updateEnemyHealthBars() {
     const dist = player.position.distanceTo(bot.position);
     if (dist > 3000) continue;
 
-    // Line-of-sight check: hide health bars behind walls
-    const toBot = new THREE.Vector3().subVectors(bot.position, player.position).normalize();
-    const wallDist = raycastLevel(player.position, toBot, dist + 50);
-    if (wallDist < dist - 30) continue; // wall blocks view
-
-    const worldPos = bot.position.clone();
+    // Project first (cheap) and early-out for off-screen / behind-camera
+    // bots before running the expensive line-of-sight raycast.
+    const worldPos = _hbTmpA.copy(bot.position);
     worldPos.y += bot.chassis.hullHeight + 30;
-    const projected = worldPos.clone().project(camera);
+    const projected = _hbTmpB.copy(worldPos).project(camera);
 
     if (projected.z > 1) continue;
 
     const sx = (projected.x * halfW) + halfW;
     const sy = -(projected.y * halfH) + halfH;
 
-    if (sx < -60 || sx > window.innerWidth + 60 || sy < -30 || sy > window.innerHeight + 30) continue;
+    if (sx < -60 || sx > winW + 60 || sy < -30 || sy > winH + 30) continue;
     if (barIdx >= hbarPool.bars.length) break;
+
+    // Line-of-sight check (raycast) only after on-screen cull passes.
+    const toBot = _hbTmpA.subVectors(bot.position, player.position).normalize();
+    const wallDist = raycastLevel(player.position, toBot, dist + 50);
+    if (wallDist < dist - 30) continue; // wall blocks view
 
     const healthPct = Math.max(0, bot.health / bot.maxHealth);
     const shieldPct = Math.max(0, bot.shield / bot.maxShield);
@@ -12147,14 +12169,14 @@ function updateEnemyHealthBars() {
     const dist = player.position.distanceTo(field.position);
     if (dist > 4000) continue;
 
-    const worldPos = field.position.clone();
+    const worldPos = _hbTmpA.copy(field.position);
     worldPos.y += 60;
-    const projected = worldPos.clone().project(camera);
+    const projected = _hbTmpB.copy(worldPos).project(camera);
     if (projected.z > 1) continue;
 
     const sx = (projected.x * halfW) + halfW;
     const sy = -(projected.y * halfH) + halfH;
-    if (sx < -30 || sx > window.innerWidth + 30 || sy < -30 || sy > window.innerHeight + 30) continue;
+    if (sx < -30 || sx > winW + 30 || sy < -30 || sy > winH + 30) continue;
     if (mkIdx >= hbarPool.markers.length) break;
 
     const div = hbarPool.markers[mkIdx];
