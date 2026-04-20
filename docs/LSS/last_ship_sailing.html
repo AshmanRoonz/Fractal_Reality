@@ -6110,10 +6110,26 @@ function updateOrganics(dt) {
 
 function spawnTracer(from, to, color) {
   color = color || 0xffff00;
-  const dir = new THREE.Vector3().subVectors(to, from);
+  // If the tracer starts right at the camera (player's own shot in first
+  // person), the cylinder meshes have their near-end cap sitting on top of
+  // the camera and paint the inside of the tube across the whole center of
+  // the screen. Push the visible start forward so the camera is outside the
+  // tube looking at it, not inside it. Threshold is a bit larger than the
+  // outer tail radius (9) so the tail silhouette clears the near plane.
+  const camDist = camera ? from.distanceTo(camera.position) : 9999;
+  let fromVis = from;
+  if (camDist < 80) {
+    const dirTmp = new THREE.Vector3().subVectors(to, from);
+    const totalLen = dirTmp.length();
+    if (totalLen > 1) {
+      const push = Math.min(80 - camDist + 20, totalLen * 0.5);
+      fromVis = from.clone().add(dirTmp.multiplyScalar(push / totalLen));
+    }
+  }
+  const dir = new THREE.Vector3().subVectors(to, fromVis);
   const len = dir.length();
   if (len < 1) return;
-  const mid = new THREE.Vector3().addVectors(from, to).multiplyScalar(0.5);
+  const mid = new THREE.Vector3().addVectors(fromVis, to).multiplyScalar(0.5);
 
   // --- Hot core beam (thin, bright, very short-lived: the "shot" itself) ---
   const coreGeo = new THREE.CylinderGeometry(1.2, 1.2, len, 4, 1);
@@ -6165,7 +6181,7 @@ function spawnTracer(from, to, color) {
   const particleCount = Math.min(Math.ceil(len / 300), 4);
   for (let i = 0; i < particleCount; i++) {
     const t = 0.25 + Math.random() * 0.55;
-    const pPos = from.clone().add(dir.clone().multiplyScalar(t));
+    const pPos = fromVis.clone().add(dir.clone().multiplyScalar(t));
     pPos.x += (Math.random() - 0.5) * 6;
     pPos.y += (Math.random() - 0.5) * 6;
     pPos.z += (Math.random() - 0.5) * 6;
