@@ -9224,12 +9224,18 @@ function updateMinimap() {
   const scale = 150 / (mapExtent * 2);
   const cx = 75, cy = 75;
 
+  // World-to-radar mapping: +X world → right on screen (unchanged); world -Z
+  // (camera forward) → up on screen. Canvas y grows downward, so forward (-Z)
+  // must produce a smaller screen y; that's +worldZ in the canvas direction.
+  // Earlier this used `cy - z*scale`, which put forward at the BOTTOM and gave
+  // the whole radar a horizontal-line mirror flip.
+
   // Draw tunnel cylinders as lines
   ctx.strokeStyle = 'rgba(60,70,100,0.35)';
   ctx.lineWidth = 2;
   for (const c of (game.levelCylinders || [])) {
-    const x1 = cx + c.ax * scale, y1 = cy - c.az * scale;
-    const x2 = cx + c.bx * scale, y2 = cy - c.bz * scale;
+    const x1 = cx + c.ax * scale, y1 = cy + c.az * scale;
+    const x2 = cx + c.bx * scale, y2 = cy + c.bz * scale;
     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
   }
 
@@ -9238,29 +9244,29 @@ function updateMinimap() {
   ctx.strokeStyle = 'rgba(80,90,130,0.4)';
   ctx.lineWidth = 1;
   for (const s of (game.levelSpheres || [])) {
-    const sx = cx + s.cx * scale, sy = cy - s.cz * scale, sr = s.r * scale;
+    const sx = cx + s.cx * scale, sy = cy + s.cz * scale, sr = s.r * scale;
     ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
   }
 
   // Player
   const px = cx + player.position.x * scale;
-  const py = cy - player.position.z * scale;
+  const py = cy + player.position.z * scale;
   ctx.fillStyle = '#fff';
   ctx.fillRect(px - 2, py - 2, 4, 4);
 
-  // Direction line
+  // Direction line: forward is world -Z; on canvas that should point UP (smaller y).
   const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
   ctx.strokeStyle = 'rgba(255,255,255,0.5)';
   ctx.beginPath();
   ctx.moveTo(px, py);
-  ctx.lineTo(px + forward.x * 15, py - forward.z * 15);
+  ctx.lineTo(px + forward.x * 15, py + forward.z * 15);
   ctx.stroke();
 
   // Bots
   for (const bot of game.entities) {
     if (!bot.alive) continue;
     const bx = cx + bot.position.x * scale;
-    const by = cy - bot.position.z * scale;
+    const by = cy + bot.position.z * scale;
     ctx.fillStyle = bot.team === LSS.TEAM_FLEET_A ? '#ff4444' : '#44bb44';
     ctx.fillRect(bx - 2, by - 2, 3, 3);
     // Doomed indicator on minimap
@@ -9277,7 +9283,7 @@ function updateMinimap() {
   for (const field of game.stasisFields) {
     if (!field.alive) continue;
     const fx = cx + field.position.x * scale;
-    const fy = cy - field.position.z * scale;
+    const fy = cy + field.position.z * scale;
     const pulse = 0.5 + Math.sin(game.time * 4) * 0.3;
     ctx.fillStyle = `rgba(0,200,255,${pulse})`;
     ctx.beginPath();
