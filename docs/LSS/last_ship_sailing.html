@@ -10014,9 +10014,14 @@ function pollGamepad() {
   // Scoreboard hold (Start during combat). Mirrors the Tab key: scoreboard
   // is visible while Start is held, hidden when released. Does not fire while
   // any menu overlay is active (those contexts use Start as a confirm).
+  // We read button 9 RAW here (rather than going through input.gpMenu, which
+  // routes through input.gpBindings) so the scoreboard hold survives any
+  // corrupted/missing 'menu' binding loaded from localStorage; Start is a
+  // standard-layout hardware button and is always at index 9.
   {
     const _inCombat = !_menuActive;
-    const want = _inCombat && !!input.gpMenu;
+    const _startRaw = !!(gp.buttons[9] && (gp.buttons[9].pressed || gp.buttons[9].value > input.triggerThreshold));
+    const want = _inCombat && (_startRaw || !!input.gpMenu);
     if (want !== _scoreboardGpHeld) {
       _scoreboardGpHeld = want;
       _refreshScoreboardVisibility();
