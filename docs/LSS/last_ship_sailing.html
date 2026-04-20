@@ -10,6 +10,20 @@ canvas { display: block; }
 
 #hud { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
 
+/* Per-titan cockpit frame overlay. Full-viewport PNG with alpha, cutout in the middle.
+   z-index 9 sits above the Three.js canvas (default stacking) but below the HUD (z:10),
+   so the cockpit arms/guns drawn on the HUD canvas overlap the frame correctly.
+   object-fit cover fills the viewport without distorting the art. pointer-events none
+   so crosshair clicks still pass through. image-rendering auto (no pixelation). */
+#cockpit-frame {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 9;
+  background-repeat: no-repeat; background-position: center center;
+  background-size: cover;
+  opacity: 0; transition: opacity 0.35s ease-out;
+}
+#cockpit-frame.active { opacity: 1; }
+
 /* Old crosshair hidden; replaced by circumpunct HUD canvas */
 #crosshair { display: none; }
 
@@ -644,6 +658,9 @@ canvas { display: block; }
     <line x1="10" y1="20" x2="30" y2="20" stroke="#ff2200" stroke-width="2" opacity="0.6"/>
   </svg>
 </div>
+
+<!-- Per-titan cockpit frame: PNG with alpha cutout, populated by updateCockpitFrame() -->
+<div id="cockpit-frame"></div>
 
 <div id="hud">
   <canvas id="health-canvas" width="500" height="70"></canvas>
@@ -6000,6 +6017,49 @@ function spawnImpactSparks(pos, count) {
 
 // ---- PLAYER FUNCTIONS ----
 
+// Per-titan cockpit frame overlay. Drops a full-viewport PNG with alpha-cutout over
+// the scene so each ship has its own framed look. Images live at ./frames/<KEY>.png
+// (relative to this HTML file). Missing files fail silently: if the image 404s, the
+// overlay stays hidden so gameplay is never blocked on art assets shipping in.
+// Cached per-key so we only probe the network once per ship.
+const _cockpitFrameCache = {}; // key -> 'ok' or 'missing' or the loaded Image
+function updateCockpitFrame() {
+  const el = document.getElementById('cockpit-frame');
+  if (!el) return;
+  const key = (player && player.loadoutKey) || null;
+  if (!key) { el.classList.remove('active'); el.style.backgroundImage = ''; return; }
+  const url = './frames/' + key + '.png';
+  const cached = _cockpitFrameCache[key];
+  if (cached === 'missing') {
+    el.classList.remove('active');
+    el.style.backgroundImage = '';
+    return;
+  }
+  if (cached === 'ok') {
+    el.style.backgroundImage = 'url("' + url + '")';
+    el.classList.add('active');
+    return;
+  }
+  // First-time: probe with an Image() so a 404 doesn't splatter a broken-image flash.
+  const probe = new Image();
+  probe.onload = function() {
+    _cockpitFrameCache[key] = 'ok';
+    // Guard: player may have swapped ships while the probe was loading.
+    if (player && player.loadoutKey === key) {
+      el.style.backgroundImage = 'url("' + url + '")';
+      el.classList.add('active');
+    }
+  };
+  probe.onerror = function() {
+    _cockpitFrameCache[key] = 'missing';
+    if (player && player.loadoutKey === key) {
+      el.classList.remove('active');
+      el.style.backgroundImage = '';
+    }
+  };
+  probe.src = url;
+}
+
 // Commit a loadout: fully set up the player ship, build the map, spawn bots, and
 // kick off the launchCountdown (3-2-1-LAUNCH) while ship-select stays visible.
 // Used both for the initial pick (fresh match) and for between-round ship swaps
@@ -6014,6 +6074,7 @@ function commitLoadout(key) {
 
   player.loadout = loadout;
   player.loadoutKey = key;
+  updateCockpitFrame(); // swap the cockpit frame PNG to match the new titan
   player.chassis = ch;
   player.health = ch.maxHealth;
   player.maxHealth = ch.maxHealth;
