@@ -3242,6 +3242,71 @@ function getHeatHazeSpriteMat() {
   return _heatHazeSpriteMat;
 }
 
+// Shared electric-smoke texture: soft bluish puff with a few arc streaks inside.
+// Each emitted sprite clones this into its own material so opacity can flicker
+// independently. Generated once, cached on first use.
+let _electricSmokeTexture = null;
+function getElectricSmokeTexture() {
+  if (_electricSmokeTexture) return _electricSmokeTexture;
+  const c = document.createElement('canvas');
+  c.width = 128; c.height = 128;
+  const ctx2d = c.getContext('2d');
+  // Soft puff base (warm-blue, fades to transparent)
+  const grad = ctx2d.createRadialGradient(64, 64, 4, 64, 64, 62);
+  grad.addColorStop(0.00, 'rgba(200, 230, 255, 0.55)');
+  grad.addColorStop(0.30, 'rgba(140, 200, 255, 0.32)');
+  grad.addColorStop(0.65, 'rgba(90, 140, 220, 0.10)');
+  grad.addColorStop(1.00, 'rgba(60, 80, 140, 0.00)');
+  ctx2d.fillStyle = grad;
+  ctx2d.fillRect(0, 0, 128, 128);
+  // A handful of thin branching arcs for texture
+  ctx2d.globalCompositeOperation = 'lighter';
+  ctx2d.strokeStyle = 'rgba(220, 240, 255, 0.75)';
+  ctx2d.lineWidth = 1.2;
+  for (let a = 0; a < 5; a++) {
+    let x = 64 + (Math.random() - 0.5) * 10;
+    let y = 64 + (Math.random() - 0.5) * 10;
+    ctx2d.beginPath();
+    ctx2d.moveTo(x, y);
+    const segs = 5 + Math.floor(Math.random() * 4);
+    for (let s = 0; s < segs; s++) {
+      x += (Math.random() - 0.5) * 22;
+      y += (Math.random() - 0.5) * 22;
+      ctx2d.lineTo(x, y);
+    }
+    ctx2d.stroke();
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  tex.needsUpdate = true;
+  _electricSmokeTexture = tex;
+  return tex;
+}
+
+// Shared heat-trail texture: warm soft disc. Ships emit these behind the hull
+// scaled up along the velocity axis so they read as motion blur / heat wake.
+let _heatTrailTexture = null;
+function getHeatTrailTexture() {
+  if (_heatTrailTexture) return _heatTrailTexture;
+  const c = document.createElement('canvas');
+  c.width = 64; c.height = 64;
+  const ctx2d = c.getContext('2d');
+  const grad = ctx2d.createRadialGradient(32, 32, 1, 32, 32, 30);
+  grad.addColorStop(0.00, 'rgba(255, 220, 180, 0.90)');
+  grad.addColorStop(0.35, 'rgba(255, 150, 80, 0.45)');
+  grad.addColorStop(0.75, 'rgba(180, 60, 30, 0.10)');
+  grad.addColorStop(1.00, 'rgba(80, 20, 10, 0.00)');
+  ctx2d.fillStyle = grad;
+  ctx2d.fillRect(0, 0, 64, 64);
+  const tex = new THREE.CanvasTexture(c);
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  tex.needsUpdate = true;
+  _heatTrailTexture = tex;
+  return tex;
+}
+
 function animateShipMesh(mesh, speed, maxSpeed, isFiring, dt, doomed) {
   if (!mesh || !mesh.userData) return;
   const t = Math.min(1, speed / maxSpeed);
@@ -4879,6 +4944,32 @@ class ClusterObstacle {
         if (c.mesh) c.mesh.position.copy(c.position);
         if (c.edgeMesh) c.edgeMesh.position.copy(c.position);
       }
+      // Electric-smoke haze inside the packing sphere. Emit slowly so a given
+      // cluster has two to three puffs alive at a time. Only run emitter when
+      // the player is close enough that the haze would be visible; skipping
+      // far clusters keeps the effect pool for near clusters.
+      if (!this._smokeTimer) this._smokeTimer = 0.25 + Math.random() * 0.35;
+      this._smokeTimer -= dt;
+      if (this._smokeTimer <= 0) {
+        this._smokeTimer = 0.6 + Math.random() * 0.9;
+        const camDist2 = player && player.position
+          ? this.position.distanceToSquared(player.position)
+          : 0;
+        const visibleR = 2200;
+        if (camDist2 < visibleR * visibleR && typeof spawnElectricSmoke === 'function') {
+          spawnElectricSmoke(this.position, this.clusterScale * 0.95, {
+            size: this.clusterScale * 1.4,
+            color: 0x88c0ff,
+          });
+          // Occasional second puff for denser clusters, with a warmer tint
+          if (this.clusterScale > 90 && Math.random() < 0.35) {
+            spawnElectricSmoke(this.position, this.clusterScale * 0.85, {
+              size: this.clusterScale * 1.15,
+              color: 0xa090ff,
+            });
+          }
+        }
+      }
     }
     // Once every piece is gone, schedule a full respawn of the cluster
     const anyAlive = this.children.some(c => c.alive);
@@ -5615,6 +5706,25 @@ function updateEffects(dt) {
       e.mesh.scale.set(shimmer, shimmer, shimmer);
       e.mesh.material.opacity = 0.6 * (1 - t);
     }
+    // --- Electric smoke around cluster obstacles: slow swell + flicker ---
+    else if (e.type === 'electricSmoke') {
+      const swell = 1 + t * (e.grow || 1.6);
+      e.mesh.scale.set(e.baseScale * swell, e.baseScale * swell, 1);
+      // Slow attack, then fade. Flicker on top via a high-freq sine.
+      const envelope = Math.sin(Math.min(1, t * 1.2) * Math.PI); // 0 -> 1 -> 0
+      const flicker = 0.75 + 0.25 * Math.sin(game.time * 32 + (e.flickerSeed || 0) * 7.3);
+      e.mesh.material.opacity = 0.5 * envelope * flicker;
+      if (e.drift) e.mesh.position.addScaledVector(e.drift, dt);
+    }
+    // --- Heat-trail blur behind ships: rapid fade, slight grow ---
+    else if (e.type === 'heatTrail') {
+      const swell = 1 + t * (e.grow || 1.2);
+      // Stretch-along-velocity look: grow slightly more on Y than X
+      e.mesh.scale.set(e.baseScale * 0.7 * swell, e.baseScale * swell * 1.15, 1);
+      if (e.initialOpacity == null) e.initialOpacity = e.mesh.material.opacity;
+      e.mesh.material.opacity = e.initialOpacity * (1 - t) * (1 - t);
+      if (e.drift) e.mesh.position.addScaledVector(e.drift, dt);
+    }
   }
 }
 
@@ -5673,6 +5783,90 @@ function spawnDamageSmoke(pos, healthPct) {
       size: 2 + Math.random() * 3
     });
   }
+}
+
+// Electric smoke puff for cluster obstacle clusters: bluish, additive, slowly
+// expands while flickering. Pushed into game.effects with type 'electricSmoke'
+// so updateEffects handles its lifetime and updateEffects' MAX_EFFECTS budget
+// keeps the count bounded.
+function spawnElectricSmoke(pos, radius, opts) {
+  opts = opts || {};
+  const tex = getElectricSmokeTexture();
+  const mat = new THREE.SpriteMaterial({
+    map: tex,
+    color: opts.color || 0x88c0ff,
+    transparent: true,
+    opacity: 0.0,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+  const sprite = new THREE.Sprite(mat);
+  // Slight randomized offset within the cluster's bounding sphere
+  const r = radius * (0.4 + Math.random() * 0.7);
+  const theta = Math.random() * Math.PI * 2;
+  const phi = Math.acos(2 * Math.random() - 1);
+  sprite.position.set(
+    pos.x + r * Math.sin(phi) * Math.cos(theta),
+    pos.y + r * Math.cos(phi),
+    pos.z + r * Math.sin(phi) * Math.sin(theta)
+  );
+  const baseScale = (opts.size || radius) * (0.55 + Math.random() * 0.55);
+  sprite.scale.set(baseScale, baseScale, 1);
+  scene.add(sprite);
+  game.effects.push({
+    mesh: sprite,
+    lifetime: 1.4 + Math.random() * 0.9,
+    age: 0,
+    type: 'electricSmoke',
+    baseScale: baseScale,
+    grow: 1.6 + Math.random() * 0.8,
+    flickerSeed: Math.random() * 100,
+    drift: new THREE.Vector3(
+      (Math.random() - 0.5) * 6,
+      (Math.random() - 0.5) * 4,
+      (Math.random() - 0.5) * 6
+    ),
+  });
+}
+
+// Heat trail blur behind a moving ship. Spawns a stretched additive sprite
+// just aft of the hull, oriented along the velocity direction. Intensity
+// scales with speed/maxSpeed so parked ships emit nothing.
+function spawnHeatTrail(pos, velocity, maxSpeed, hullRadius) {
+  const speed = velocity.length();
+  if (speed < 30) return;
+  const t = Math.min(1, speed / Math.max(1, maxSpeed));
+  if (t < 0.12) return;
+  const tex = getHeatTrailTexture();
+  const mat = new THREE.SpriteMaterial({
+    map: tex,
+    color: 0xffb070,
+    transparent: true,
+    opacity: 0.45 + t * 0.35,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    rotation: Math.random() * Math.PI * 2,
+  });
+  const sprite = new THREE.Sprite(mat);
+  // Spawn a touch behind the hull along the negative velocity direction,
+  // with a small jitter so back-to-back puffs don't z-fight.
+  const back = velocity.clone().normalize().multiplyScalar(-(hullRadius * 0.85));
+  sprite.position.copy(pos).add(back);
+  sprite.position.x += (Math.random() - 0.5) * (hullRadius * 0.4);
+  sprite.position.y += (Math.random() - 0.5) * (hullRadius * 0.4);
+  sprite.position.z += (Math.random() - 0.5) * (hullRadius * 0.4);
+  const baseScale = hullRadius * (0.9 + t * 1.1);
+  sprite.scale.set(baseScale * 0.7, baseScale, 1);
+  scene.add(sprite);
+  game.effects.push({
+    mesh: sprite,
+    lifetime: 0.35 + t * 0.45,
+    age: 0,
+    type: 'heatTrail',
+    baseScale: baseScale,
+    grow: 1.15 + t * 0.6,
+    drift: velocity.clone().multiplyScalar(-0.08), // slight backwards drift
+  });
 }
 
 function showHitMarker() {
@@ -11160,6 +11354,18 @@ function gameLoop(timestamp) {
     const botSpeed = bot.velocity ? bot.velocity.length() : 0;
     const botMaxSpeed = bot.chassis ? bot.chassis.maxSpeed : 400;
     animateShipMesh(bot.mesh, botSpeed, botMaxSpeed, bot.isFiring, dt, !!bot.doomed);
+    // Heat-trail blur: throttled emitter, scales rate with speed so cruising
+    // bots get a steady wake and parked bots get nothing.
+    if (bot.alive && bot.velocity && typeof spawnHeatTrail === 'function') {
+      if (bot._heatTrailTimer == null) bot._heatTrailTimer = Math.random() * 0.05;
+      bot._heatTrailTimer -= dt;
+      if (bot._heatTrailTimer <= 0) {
+        const t = Math.min(1, botSpeed / Math.max(1, botMaxSpeed));
+        bot._heatTrailTimer = 0.08 + (1 - t) * 0.22; // faster emit while fast
+        const hullR = (bot.chassis && bot.chassis.hullLength) ? bot.chassis.hullLength * 0.45 : 45;
+        spawnHeatTrail(bot.position, bot.velocity, botMaxSpeed, hullR);
+      }
+    }
   }
   // Ship-ship collision: after all movement, push overlapping ships apart
   resolveShipShipCollisions(dt);
@@ -11168,6 +11374,17 @@ function gameLoop(timestamp) {
     const pSpeed = player.velocity ? player.velocity.length() : 0;
     const pMaxSpeed = player.chassis ? player.chassis.maxSpeed : 400;
     animateShipMesh(player.mesh, pSpeed, pMaxSpeed, player.isFiring, dt, !!player.doomed);
+    // Heat-trail blur on the player too (visible in third-person / death cam)
+    if (!player.doomed && player.velocity && typeof spawnHeatTrail === 'function') {
+      if (player._heatTrailTimer == null) player._heatTrailTimer = 0;
+      player._heatTrailTimer -= dt;
+      if (player._heatTrailTimer <= 0) {
+        const t = Math.min(1, pSpeed / Math.max(1, pMaxSpeed));
+        player._heatTrailTimer = 0.08 + (1 - t) * 0.22;
+        const hullR = (player.chassis && player.chassis.hullLength) ? player.chassis.hullLength * 0.45 : 45;
+        spawnHeatTrail(player.position, player.velocity, pMaxSpeed, hullR);
+      }
+    }
   }
 
   for (let i = game.projectiles.length - 1; i >= 0; i--) {
