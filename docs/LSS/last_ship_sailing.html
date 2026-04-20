@@ -6537,11 +6537,16 @@ function commitLoadout(key) {
   // Hold the round in 'warmup' for the full duration of the visible
   // ship-select countdown; otherwise the warmup elapses partway through and
   // bots become live behind the scenes while the player is still ticking
-  // down to LAUNCH.
-  game.warmupTimer = LSS.LAUNCH_COUNTDOWN;
+  // down to LAUNCH. Only seed the warmup timer when no countdown is already
+  // running; swapping ships mid-countdown must not reset either clock.
+  if (!_countdownActive) {
+    game.warmupTimer = LSS.LAUNCH_COUNTDOWN;
+  }
   // Refresh the teammates strip so the newly committed ship shows up as YOU's pick.
   updateTeammatesStrip();
-  // Fire the in-screen 3-2-1-LAUNCH beep + number sequence.
+  // Fire the in-screen 3-2-1-LAUNCH beep + number sequence. launchCountdown()
+  // itself is a no-op if one is already running, so this is safe to call
+  // unconditionally.
   launchCountdown();
 }
 
@@ -10620,17 +10625,26 @@ function updateTeammatesStrip() {
 // the whole time; only on "LAUNCH" do we hide it, request pointer lock, and let
 // the warmup → playing transition finish (warmupTimer is already 3s in commitLoadout
 // so it lines up). Cancellable via _activeLaunchTimers if the player exits.
+// Once started, the countdown is commit-only: swapping ships mid-countdown does
+// NOT reset it. `_countdownActive` gates re-entry; it clears on LAUNCH or on
+// explicit abort (round end, lobby exit).
 let _activeLaunchTimers = [];
+let _countdownActive = false;
 function _clearLaunchCountdown() {
   for (const t of _activeLaunchTimers) clearTimeout(t);
   _activeLaunchTimers = [];
+  _countdownActive = false;
 }
 function launchCountdown() {
+  // If already running, do not reset. Ship swaps during countdown are allowed
+  // by commitLoadout but must not restart the timer; the clock keeps ticking.
+  if (_countdownActive) return;
   _clearLaunchCountdown();
+  _countdownActive = true;
   const overlay = document.getElementById('ship-select-countdown');
   const numEl = overlay ? overlay.querySelector('.cd-num') : null;
   const subEl = overlay ? overlay.querySelector('.cd-sub') : null;
-  if (!overlay || !numEl || !subEl) return;
+  if (!overlay || !numEl || !subEl) { _countdownActive = false; return; }
 
   // Helper: pulse a single digit/word, restarting the cdPulse animation each tick.
   function tick(text, sub) {
@@ -10692,6 +10706,9 @@ function launchCountdown() {
     }
     _activeLaunchTimers.push(setTimeout(() => {
       overlay.classList.remove('active');
+      // Countdown has fully handed off to gameplay; next round (or a fresh
+      // post-match re-entry) is allowed to start a new one.
+      _countdownActive = false;
     }, 700));
   }, START * 1000));
 }
