@@ -10242,20 +10242,34 @@ function launchCountdown() {
     numEl.style.animation = '';
   }
 
-  // 3 → 2 → 1 → LAUNCH at 1s intervals; LAUNCH then triggers warp-in.
-  // Beeps use the existing sonar_ping family (rising pitch matches countdown).
-  tick('3', 'LAUNCH IN');
-  try { playSound('sonar_ping_1'); } catch (e) {}
+  // 10 → 9 → ... → 4 (silent), then 3 → 2 → 1 → LAUNCH at 1s intervals with
+  // rising-pitch beeps (sonar_ping_1/2/3) for the final three and round_start
+  // on LAUNCH. The silent head gives players time to settle before the pings.
+  const START = 10;
+  // First tick immediate (no sound).
+  tick(String(START), 'LAUNCH IN');
+  // Silent body: START-1 → 4.
+  for (let n = START - 1; n >= 4; n--) {
+    const delay = (START - n) * 1000;
+    _activeLaunchTimers.push(setTimeout(() => {
+      tick(String(n), 'LAUNCH IN');
+    }, delay));
+  }
+  // Final three: pings on 3, 2, 1.
+  _activeLaunchTimers.push(setTimeout(() => {
+    tick('3', 'LAUNCH IN');
+    try { playSound('sonar_ping_1'); } catch (e) {}
+  }, (START - 3) * 1000));
 
   _activeLaunchTimers.push(setTimeout(() => {
     tick('2', 'LAUNCH IN');
     try { playSound('sonar_ping_2'); } catch (e) {}
-  }, 1000));
+  }, (START - 2) * 1000));
 
   _activeLaunchTimers.push(setTimeout(() => {
     tick('1', 'LAUNCH IN');
     try { playSound('sonar_ping_3'); } catch (e) {}
-  }, 2000));
+  }, (START - 1) * 1000));
 
   _activeLaunchTimers.push(setTimeout(() => {
     tick('LAUNCH', 'WARP-IN');
@@ -10272,7 +10286,7 @@ function launchCountdown() {
     _activeLaunchTimers.push(setTimeout(() => {
       overlay.classList.remove('active');
     }, 700));
-  }, 3000));
+  }, START * 1000));
 }
 
 // ---- INPUT HANDLERS ----
