@@ -4725,6 +4725,12 @@ function warmupCombatShaders() {
       { transparent: true, opacity: 0.8, side: THREE.DoubleSide, blending: THREE.AdditiveBlending },
       { transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false },
       { transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, fog: false },
+      // T3.15: OPAQUE MeshBasicMaterial (no transparent flag). Distinct program
+      // signature from every transparent variant above. The Projectile class
+      // creates its bullet mesh with exactly `new MeshBasicMaterial({color})`;
+      // if this signature is not pre-compiled, the first bullet that becomes
+      // visible to the camera triggers a 300ms program link on main thread.
+      {},
     ];
     const matRefs = [];
     for (const v of matVariants) {
@@ -4754,6 +4760,20 @@ function warmupCombatShaders() {
     // the signature.
     const cylGeo = new THREE.CylinderGeometry(1, 1, 1, 4, 1);
     group.add(new THREE.Mesh(cylGeo, matRefs[1] /* additive variant */));
+    // T3.14: explicitly render each of the four tracer prototype materials
+    // once through the compile pass, binding them against the exact pooled
+    // cylinder geometries _spawnSingleTracer will reuse. The two tail
+    // prototypes use depthWrite:false, which is a different GL-state combo
+    // than the plain additive variant attached above; even though Three.js
+    // keys programs on defines (not depthWrite), forcing the renderer to see
+    // these specific (material, geometry) pairs during compile keeps every
+    // first-combat shot off the hot path. The prototypes themselves live for
+    // the life of the page; we just need the renderer to have bound them once
+    // so no acquireProgram call fires on the first real tracer.
+    group.add(new THREE.Mesh(_TRACER_CORE_GEO, _TRACER_CORE_MAT_PROTO));
+    group.add(new THREE.Mesh(_TRACER_BEAM_GEO, _TRACER_BEAM_MAT_PROTO));
+    group.add(new THREE.Mesh(_TRACER_TAIL_INNER_GEO, _TRACER_TAIL_INNER_MAT_PROTO));
+    group.add(new THREE.Mesh(_TRACER_TAIL_OUTER_GEO, _TRACER_TAIL_OUTER_MAT_PROTO));
 
     // Line variants (trails, outlines, impact arcs).
     const lineGeo = new THREE.BufferGeometry();
@@ -4765,6 +4785,25 @@ function warmupCombatShaders() {
     group.add(new THREE.Line(lineGeo, lineMat2));
     const edgesGeo = new THREE.EdgesGeometry(boxGeo);
     group.add(new THREE.LineSegments(edgesGeo, lineMat1));
+
+    // T3.15: LineBasicMaterial with vertexColors: true. USE_COLOR is a define
+    // that forks the program signature from every plain line material above,
+    // so lineMat1/lineMat2 do NOT cover it. The Projectile trail uses exactly
+    // this combo (vertexColors + transparent + additive), and the attribute
+    // layout (position + color) must match what the renderer binds at draw
+    // time, so the warmup geometry needs both attributes.
+    const lineVtxGeo = new THREE.BufferGeometry();
+    lineVtxGeo.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0, 1,0,0], 3));
+    lineVtxGeo.setAttribute('color', new THREE.Float32BufferAttribute([1,1,1, 0,0,0], 3));
+    const lineVtxMat = new THREE.LineBasicMaterial({
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending,
+      linewidth: 1
+    });
+    matRefs.push(lineVtxMat);
+    group.add(new THREE.Line(lineVtxGeo, lineVtxMat));
 
     // Untextured sprites (fallback path for any code that builds a sprite
     // without a map).
@@ -6108,80 +6147,83 @@ function updateOrganics(dt) {
   }
 }
 
-function spawnTracer(from, to, color) {
-  color = color || 0xffff00;
-  // If the tracer starts right at the camera (player's own shot in first
-  // person), the cylinder meshes have their near-end cap sitting on top of
-  // the camera and paint the inside of the tube across the whole center of
-  // the screen. Push the visible start forward so the camera is outside the
-  // tube looking at it, not inside it. Threshold is a bit larger than the
-  // outer tail radius (9) so the tail silhouette clears the near plane.
-  const camDist = camera ? from.distanceTo(camera.position) : 9999;
-  let fromVis = from;
-  if (camDist < 80) {
-    const dirTmp = new THREE.Vector3().subVectors(to, from);
-    const totalLen = dirTmp.length();
-    if (totalLen > 1) {
-      const push = Math.min(80 - camDist + 20, totalLen * 0.5);
-      fromVis = from.clone().add(dirTmp.multiplyScalar(push / totalLen));
-    }
-  }
-  const dir = new THREE.Vector3().subVectors(to, fromVis);
+// Module-level tracer pools (T3.14). Pre-build four unit-length cylinders
+// pointing along +Z (via rotateX(pi/2) at build time so lookAt behaves) and
+// four prototype MeshBasicMaterial instances covering the exact flag
+// combinations _spawnSingleTracer uses. Every spawn scales a shared geometry
+// and clones from a prototype material, which keeps Three.js's program cache
+// key stable (clone preserves defines + GL-state flags), eliminating the
+// main-thread shader-compile stalls that showed up as 400ms+ frames in the
+// 134506 trace during combat. This also removes ~80 geometry + 80 material
+// allocations/sec at minigun rates, easing GC pressure.
+// Radii are set so scale.x == widthScale, scale.y == len, scale.z == widthScale
+// reproduces the old per-shape width/taper. Three.js CylinderGeometry's
+// default axis is +Y, so we use scale.y for length and scale.x/z for radius,
+// then rotate once at build time to align with lookAt's -Z forward convention.
+const _TRACER_CORE_GEO = new THREE.CylinderGeometry(1.2, 1.2, 1, 4, 1);
+_TRACER_CORE_GEO.rotateX(Math.PI / 2);
+const _TRACER_BEAM_GEO = new THREE.CylinderGeometry(2.0, 1.5, 1, 4, 1);
+_TRACER_BEAM_GEO.rotateX(Math.PI / 2);
+const _TRACER_TAIL_INNER_GEO = new THREE.CylinderGeometry(3.0, 2.4, 1, 6, 1);
+_TRACER_TAIL_INNER_GEO.rotateX(Math.PI / 2);
+const _TRACER_TAIL_OUTER_GEO = new THREE.CylinderGeometry(7.0, 5.5, 1, 6, 1);
+_TRACER_TAIL_OUTER_GEO.rotateX(Math.PI / 2);
+// Prototype materials. The two 'tracer' variants and the two 'tracerTail'
+// variants differ by depthWrite (false on tails, default-true on beams).
+// Every other flag (transparent, AdditiveBlending, fog-default) is identical
+// so Three.js assigns them the same program cache key family as the other
+// additive MeshBasic effects already warmed up in warmupCombatShaders.
+const _TRACER_CORE_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending });
+const _TRACER_BEAM_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
+const _TRACER_TAIL_INNER_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false });
+const _TRACER_TAIL_OUTER_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false });
+
+// Internal helper: spawn one tracer streak along (fromVec -> toVec).
+// spawnTracer() routes player-side shots through two calls to this (one
+// from each arm) so the visible beams converge on the target as a triangle.
+function _spawnSingleTracer(fromVec, toVec, color, widthScale) {
+  widthScale = widthScale || 1.0;
+  const dir = new THREE.Vector3().subVectors(toVec, fromVec);
   const len = dir.length();
   if (len < 1) return;
-  const mid = new THREE.Vector3().addVectors(fromVis, to).multiplyScalar(0.5);
+  const mid = new THREE.Vector3().addVectors(fromVec, toVec).multiplyScalar(0.5);
+
+  // Helper: build one of the four shapes from pooled geo + cloned prototype
+  // material, scaled so the unit cylinder (length 1 along local +Z after the
+  // rotateX done at pool-build time) covers the full from->to segment.
+  function _makeShape(geo, matProto, col, opacity, lifetime, type) {
+    const m = matProto.clone();
+    m.color = new THREE.Color(col);
+    m.opacity = opacity;
+    const mesh = new THREE.Mesh(geo, m);
+    mesh.position.copy(mid);
+    mesh.lookAt(toVec);
+    // Scale: radius via X and Y (the geometry is rotated so local +Z is length);
+    // length via local Z. Because the geometry was built with radii baked in
+    // (1.2, 2.0, 3.0, 7.0), scale.x/y == widthScale and scale.z == len
+    // reproduces the pre-pool per-shape widths.
+    mesh.scale.set(widthScale, widthScale, len);
+    scene.add(mesh);
+    game.effects.push({ mesh, lifetime, age: 0, type });
+  }
 
   // --- Hot core beam (thin, bright, very short-lived: the "shot" itself) ---
-  const coreGeo = new THREE.CylinderGeometry(1.2, 1.2, len, 4, 1);
-  coreGeo.rotateX(Math.PI / 2);
-  const coreMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending });
-  const core = new THREE.Mesh(coreGeo, coreMat);
-  core.position.copy(mid);
-  core.lookAt(to);
-  scene.add(core);
-  game.effects.push({ mesh: core, lifetime: 0.05, age: 0, type: 'tracer' });
-
+  _makeShape(_TRACER_CORE_GEO, _TRACER_CORE_MAT_PROTO, 0xffffff, 1.0, 0.05, 'tracer');
   // --- Main beam (weapon color, medium width) ---
-  const beamGeo = new THREE.CylinderGeometry(2.0, 1.5, len, 4, 1);
-  beamGeo.rotateX(Math.PI / 2);
-  const beamMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
-  const beam = new THREE.Mesh(beamGeo, beamMat);
-  beam.position.copy(mid);
-  beam.lookAt(to);
-  scene.add(beam);
-  game.effects.push({ mesh: beam, lifetime: 0.10, age: 0, type: 'tracer' });
-
+  _makeShape(_TRACER_BEAM_GEO, _TRACER_BEAM_MAT_PROTO, color, 0.9, 0.10, 'tracer');
   // --- Ethereal tail: two nested additive tubes that linger and taper.
-  // This is the "ghost trail" the player sees after the shot has passed.
   // The inner tail is tighter and fades faster; the outer tail is wide and
-  // wispy, fading over ~0.45s so the beam reads as a lingering ribbon of light
-  // rather than a single bright slice. Additive blending on black-sky space
-  // keeps the trail reading as emitted light, not a solid cylinder.
-  const tailInnerGeo = new THREE.CylinderGeometry(3.5, 2.8, len, 6, 1);
-  tailInnerGeo.rotateX(Math.PI / 2);
-  const tailInnerMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false });
-  const tailInner = new THREE.Mesh(tailInnerGeo, tailInnerMat);
-  tailInner.position.copy(mid);
-  tailInner.lookAt(to);
-  scene.add(tailInner);
-  game.effects.push({ mesh: tailInner, lifetime: 0.28, age: 0, type: 'tracerTail' });
-
-  const tailOuterGeo = new THREE.CylinderGeometry(9, 7, len, 6, 1);
-  tailOuterGeo.rotateX(Math.PI / 2);
-  const tailOuterMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false });
-  const tailOuter = new THREE.Mesh(tailOuterGeo, tailOuterMat);
-  tailOuter.position.copy(mid);
-  tailOuter.lookAt(to);
-  scene.add(tailOuter);
-  game.effects.push({ mesh: tailOuter, lifetime: 0.45, age: 0, type: 'tracerTail' });
+  // wispy, fading over ~0.45s so the beam reads as a lingering ribbon of
+  // light rather than a single bright slice. Additive + depthWrite:false so
+  // the trail reads as emitted light, not a solid cylinder.
+  _makeShape(_TRACER_TAIL_INNER_GEO, _TRACER_TAIL_INNER_MAT_PROTO, color, 0.5, 0.28, 'tracerTail');
+  _makeShape(_TRACER_TAIL_OUTER_GEO, _TRACER_TAIL_OUTER_MAT_PROTO, color, 0.18, 0.45, 'tracerTail');
 
   // --- Tracer sparkles along the beam (trace of dust) ---
-  // Fewer particles than before because the ethereal tail now carries most
-  // of the visual weight; the sparkles are accents, not the main effect.
-  const particleCount = Math.min(Math.ceil(len / 300), 4);
+  const particleCount = Math.min(Math.ceil(len / 400), 3);
   for (let i = 0; i < particleCount; i++) {
     const t = 0.25 + Math.random() * 0.55;
-    const pPos = fromVis.clone().add(dir.clone().multiplyScalar(t));
+    const pPos = fromVec.clone().add(dir.clone().multiplyScalar(t));
     pPos.x += (Math.random() - 0.5) * 6;
     pPos.y += (Math.random() - 0.5) * 6;
     pPos.z += (Math.random() - 0.5) * 6;
@@ -6196,6 +6238,82 @@ function spawnTracer(from, to, color) {
       color, size: 0.9 + Math.random() * 1.2
     });
   }
+}
+
+function spawnTracer(from, to, color) {
+  color = color || 0xffff00;
+  // Player-side shots: split into two tracers that originate at the left
+  // and right arm positions and converge on the target. With the camera
+  // sitting right at player.position, a single centered tracer paints its
+  // tube interior across the middle of the screen (see T3.10). Two offset
+  // tracers angle inward, leaving the center clear and forming a visible
+  // triangle (left arm, right arm, target) pointed at what the player is
+  // shooting at, which also lines up with the two arm light-up effects
+  // already drawn on the HUD.
+  const camDist = (typeof camera !== 'undefined' && camera) ? from.distanceTo(camera.position) : 9999;
+  if (camDist < 80) {
+    // Camera-local basis for building muzzle world positions from screen-space
+    // pixel targets. The goal is to place the two muzzle origins so they
+    // project to exact screen positions matching the cockpit frame's painted
+    // barrel tips (player.cockpitFrameMuzzle), giving a tracer triangle that
+    // lines up with the artwork. Falls back to a HUD-ring-angle approximation
+    // if the per-titan frame hasn't loaded yet.
+    const q = camera.quaternion;
+    const right = new THREE.Vector3(1, 0, 0).applyQuaternion(q);
+    const up = new THREE.Vector3(0, 1, 0).applyQuaternion(q);
+    const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(q);
+    const fwdOff = 60;  // push forward past the near-camera zone
+    const winW = (typeof window !== 'undefined') ? window.innerWidth : 1920;
+    const winH = (typeof window !== 'undefined') ? window.innerHeight : 1080;
+    const fovRad = (camera.fov || 90) * Math.PI / 180;
+    // View frustum extents at fwdOff depth
+    const halfH = fwdOff * Math.tan(fovRad / 2);
+    const halfW = halfH * (winW / winH);
+    // Turn a screen-space pixel (sx, sy) into a camera-local world offset at
+    // depth fwdOff. NDC_x = 2*(sx - W/2)/W; NDC_y = -2*(sy - H/2)/H (flip so
+    // +Y is up in world). World offset = NDC_x*halfW along right + NDC_y*halfH
+    // along up + fwdOff along fwd.
+    function screenToMuzzle(sx, sy) {
+      const ndx = (2 * (sx - winW / 2)) / winW;
+      const ndy = -(2 * (sy - winH / 2)) / winH;
+      return from.clone()
+        .add(right.clone().multiplyScalar(ndx * halfW))
+        .add(up.clone().multiplyScalar(ndy * halfH))
+        .add(fwd.clone().multiplyScalar(fwdOff));
+    }
+    let leftMuzzle, rightMuzzle;
+    const fm = (typeof player !== 'undefined' && player) ? player.cockpitFrameMuzzle : null;
+    const frameOk = !!(fm && fm.left && fm.right
+      && Number.isFinite(fm.left.x) && Number.isFinite(fm.left.y)
+      && Number.isFinite(fm.right.x) && Number.isFinite(fm.right.y)
+      && fm.imgW && fm.imgH);
+    if (frameOk) {
+      // Use the detected barrel tips in screen space; the tracer will emerge
+      // exactly from the pointy part of the cockpit frame art.
+      const sL = frameImgToScreen(fm.left.x, fm.left.y, fm.imgW, fm.imgH, winW, winH);
+      const sR = frameImgToScreen(fm.right.x, fm.right.y, fm.imgW, fm.imgH, winW, winH);
+      leftMuzzle = screenToMuzzle(sL.x, sL.y);
+      rightMuzzle = screenToMuzzle(sR.x, sR.y);
+    } else {
+      // Fallback: approximate the HUD outer-ring angle if no frame is loaded.
+      const hudR = 275;
+      const angDown = 55 * Math.PI / 180;
+      const cxF = winW / 2;
+      const cyF = winH / 2;
+      const sxL = cxF - hudR * Math.cos(angDown);
+      const sxR = cxF + hudR * Math.cos(angDown);
+      const syLR = cyF + hudR * Math.sin(angDown);
+      leftMuzzle = screenToMuzzle(sxL, syLR);
+      rightMuzzle = screenToMuzzle(sxR, syLR);
+    }
+    // Each arm is a little thinner than the single-tracer default so the two
+    // converging streaks together don't exceed the old total visual weight.
+    _spawnSingleTracer(leftMuzzle, to, color, 0.85);
+    _spawnSingleTracer(rightMuzzle, to, color, 0.85);
+    return;
+  }
+  // Bot / far-field shots: single tracer as before.
+  _spawnSingleTracer(from, to, color, 1.0);
 }
 
 // Lightning bolt: jagged line from A to B using a single merged BufferGeometry (1 draw call)
@@ -6348,6 +6466,16 @@ function _disposeOrReleaseEffect(e) {
   // other effect type disposes normally.
   if (e.type === 'heatTrail') {
     _releaseHeatTrail(e.mesh);
+    return;
+  }
+  // Pooled-geometry effects (T3.14): tracer + tracerTail meshes share the
+  // four module-level _TRACER_*_GEO prototypes, so we must NOT call
+  // geometry.dispose() on them or the next spawn will render nothing. Their
+  // materials are still cloned per-spawn and need to be disposed to free
+  // the clone. Everything else still disposes both geo and material.
+  if (e.type === 'tracer' || e.type === 'tracerTail') {
+    scene.remove(e.mesh);
+    if (e.mesh.material) e.mesh.material.dispose();
     return;
   }
   scene.remove(e.mesh);
