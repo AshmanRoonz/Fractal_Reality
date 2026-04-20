@@ -381,6 +381,18 @@ canvas { display: block; }
   padding: 4px 8px; font-family: 'Courier New', monospace; font-size: 11px; cursor: pointer;
 }
 .setting-row input[type="checkbox"] { accent-color: #ffaa00; cursor: pointer; width: 16px; height: 16px; }
+/* Gamepad focus ring (d-pad nav in the settings overlay) */
+#settings-overlay .gp-focus {
+  outline: 2px solid #ffaa00;
+  outline-offset: 4px;
+  box-shadow: 0 0 12px rgba(255, 170, 0, 0.5);
+}
+#settings-overlay .setting-row.gp-focus-row {
+  background: rgba(255, 170, 0, 0.07);
+  border-left: 2px solid #ffaa00;
+  padding-left: 6px;
+  margin-left: -8px;
+}
 .bind-select {
   background: rgba(20,20,40,0.9); color: #fff; border: 1px solid rgba(100,100,120,0.5);
   padding: 4px 8px; font-family: 'Courier New', monospace; font-size: 11px;
@@ -1560,6 +1572,9 @@ class NetworkPlayer {
     this.doomTimer = 0;
     this.coreMeter = 0;
     this.arcSlowTimer = 0;
+    // Stats (for scoreboard)
+    this.kills = 0;
+    this.damageDealt = 0;
 
     const teamColor = team === LSS.TEAM_FLEET_A ? 0xff4444 : 0x44bb44;
     this.mesh = createShipMesh(chassisData, teamColor, loadoutKey);
@@ -3848,6 +3863,9 @@ class Bot {
     this.doomed = false;
     this.doomTimer = 0;
     this.coreMeter = 0;
+    // Stats (for scoreboard): kills this match, damage dealt this match
+    this.kills = 0;
+    this.damageDealt = 0;
 
     const teamColor = team === LSS.TEAM_FLEET_A ? 0xff4444 : 0x44bb44;
     this.mesh = createShipMesh(chassisData, teamColor, loadoutKey);
@@ -4272,6 +4290,12 @@ class Bot {
       this.health -= amount;
     }
 
+    // Track damage-dealt on bot attackers (player is tracked at the call sites).
+    // 'debris' and string attackers pass through unchanged.
+    if (attacker && typeof attacker === 'object' && attacker.alive !== undefined) {
+      attacker.damageDealt = (attacker.damageDealt || 0) + amount;
+    }
+
     // Flash shield + shimmer effect
     const shieldMesh = this.mesh.userData.shieldMesh;
     if (shieldMesh && this.shield > 0) {
@@ -4339,6 +4363,7 @@ class Bot {
       if (attacker.alive !== undefined) {
         if (!attacker._streakCount) attacker._streakCount = 0;
         attacker._streakCount++;
+        attacker.kills = (attacker.kills || 0) + 1;
       }
     }
   }
@@ -9970,7 +9995,7 @@ function pollGamepad() {
   const _shipSelectActive = !!(_shipSelect && _shipSelect.classList.contains('active'));
   const _menuActive = settingsOpen || _shipSelectActive || game.state === 'select' || game.state === 'matchEnd';
 
-  // Start: confirm / select
+  // Start: confirm / select (menus) or hold-to-show scoreboard (in combat)
   if (input.gpMenu && !input.gpMenuPrev) {
     if (settingsOpen) {
       closeSettings();
@@ -9983,7 +10008,19 @@ function pollGamepad() {
         if (first && first.dataset && first.dataset.key) previewLoadout(first.dataset.key);
       }
     }
-    // In-game: no-op (no confirm action during combat)
+    // In-combat press edge is handled below via the hold-tracker.
+  }
+
+  // Scoreboard hold (Start during combat). Mirrors the Tab key: scoreboard
+  // is visible while Start is held, hidden when released. Does not fire while
+  // any menu overlay is active (those contexts use Start as a confirm).
+  {
+    const _inCombat = !_menuActive;
+    const want = _inCombat && !!input.gpMenu;
+    if (want !== _scoreboardGpHeld) {
+      _scoreboardGpHeld = want;
+      _refreshScoreboardVisibility();
+    }
   }
 
   // Back: cancel / esc
@@ -10020,6 +10057,20 @@ function pollGamepad() {
     } else if (input.gpDpadRight && !input.gpDpadRightPrev) {
       if (typeof cycleMap === 'function') cycleMap(1);
     }
+  } else if (settingsOpen) {
+    // Settings overlay nav: d-pad up/down moves focus between rows; d-pad
+    // left/right adjusts the focused widget (slider step or dropdown cycle);
+    // gamepad A (button 0) activates buttons or toggles checkboxes.
+    if (typeof _settingsEnsureFocus === 'function') _settingsEnsureFocus();
+    if (input.gpDpadUp    && !input.gpDpadUpPrev)    _settingsMoveFocus(-1);
+    if (input.gpDpadDown  && !input.gpDpadDownPrev)  _settingsMoveFocus(+1);
+    if (input.gpDpadLeft  && !input.gpDpadLeftPrev)  _settingsAdjustFocused(-1);
+    if (input.gpDpadRight && !input.gpDpadRightPrev) _settingsAdjustFocused(+1);
+    // Raw button 0 (A) for confirm; do not use the configurable 'dash' binding
+    // because the user may have remapped dash to something non-A.
+    const _aBtn = !!(gp.buttons[0] && gp.buttons[0].pressed);
+    if (_aBtn && !input.gpAPrev) _settingsActivateFocused();
+    input.gpAPrev = _aBtn;
   } else if (typeof deathCam !== 'undefined' && deathCam.active) {
     // Spectator mode: d-pad left/right cycles the teammate we're watching.
     // (stick-horizontal fallback is already folded into gpDpadLeft/Right above)
@@ -11753,6 +11804,10 @@ function openSettings() {
   overlay.classList.add('open');
   overlay.style.display = '';
   document.exitPointerLock();
+  // Reset gamepad focus to the first widget so d-pad nav has a predictable
+  // starting point; applied on a microtask so the overlay has laid out.
+  _settingsFocusIdx = 0;
+  setTimeout(_settingsApplyFocus, 0);
 }
 
 function closeSettings() {
@@ -11760,7 +11815,108 @@ function closeSettings() {
   const overlay = document.getElementById('settings-overlay');
   overlay.classList.remove('open');
   overlay.style.display = 'none';
+  _settingsClearFocus();
   if (game.state !== 'select') renderer.domElement.requestPointerLock();
+}
+
+// ---- Gamepad navigation helpers for the settings overlay ----
+// Focusable widgets = every interactive control in the overlay, in DOM order.
+// The focused widget gets a CSS highlight and its parent .setting-row gets a
+// row highlight so the user can see the active row even when the widget is
+// off-screen. d-pad adjusts the widget; A button activates/toggles.
+let _settingsFocusIdx = 0;
+function _settingsFocusables() {
+  const overlay = document.getElementById('settings-overlay');
+  if (!overlay || !settingsOpen) return [];
+  const nodes = overlay.querySelectorAll(
+    'input[type="range"], input[type="checkbox"], select, button'
+  );
+  return Array.from(nodes);
+}
+function _settingsClearFocus() {
+  const overlay = document.getElementById('settings-overlay');
+  if (!overlay) return;
+  overlay.querySelectorAll('.gp-focus').forEach(el => el.classList.remove('gp-focus'));
+  overlay.querySelectorAll('.gp-focus-row').forEach(el => el.classList.remove('gp-focus-row'));
+}
+function _settingsApplyFocus() {
+  const list = _settingsFocusables();
+  _settingsClearFocus();
+  if (!list.length) return;
+  if (_settingsFocusIdx < 0) _settingsFocusIdx = list.length - 1;
+  if (_settingsFocusIdx >= list.length) _settingsFocusIdx = 0;
+  const el = list[_settingsFocusIdx];
+  if (!el) return;
+  el.classList.add('gp-focus');
+  const row = el.closest('.setting-row');
+  if (row) row.classList.add('gp-focus-row');
+  try { el.focus({ preventScroll: true }); } catch (_) {}
+  try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (_) {}
+}
+function _settingsEnsureFocus() {
+  // Re-apply focus if the focused element was removed by a rebuild.
+  const list = _settingsFocusables();
+  if (!list.length) return;
+  const current = document.querySelector('#settings-overlay .gp-focus');
+  if (!current) _settingsApplyFocus();
+}
+function _settingsMoveFocus(dir) {
+  const list = _settingsFocusables();
+  if (!list.length) return;
+  _settingsFocusIdx = (_settingsFocusIdx + dir + list.length) % list.length;
+  _settingsApplyFocus();
+}
+function _settingsAdjustFocused(dir) {
+  const list = _settingsFocusables();
+  const el = list[_settingsFocusIdx];
+  if (!el) return;
+  if (el.tagName === 'INPUT' && el.type === 'range') {
+    const min = parseFloat(el.min);
+    const max = parseFloat(el.max);
+    const step = parseFloat(el.step) || 1;
+    let v = parseFloat(el.value) + dir * step;
+    if (v < min) v = min;
+    if (v > max) v = max;
+    // Snap to step grid to avoid float drift
+    v = Math.round(v / step) * step;
+    el.value = v;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  } else if (el.tagName === 'SELECT') {
+    const n = el.options.length;
+    if (n > 0) {
+      el.selectedIndex = (el.selectedIndex + dir + n) % n;
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  } else if (el.tagName === 'INPUT' && el.type === 'checkbox') {
+    // Left/right on a checkbox toggles (also handled by A; left/right is a
+    // natural affordance since the user already has their thumb on the d-pad)
+    el.checked = !el.checked;
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  } else if (el.tagName === 'BUTTON') {
+    // Buttons don't respond to left/right; A activates them.
+  }
+}
+function _settingsActivateFocused() {
+  const list = _settingsFocusables();
+  const el = list[_settingsFocusIdx];
+  if (!el) return;
+  if (el.tagName === 'INPUT' && el.type === 'checkbox') {
+    el.checked = !el.checked;
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  } else if (el.tagName === 'BUTTON') {
+    el.click();
+  } else if (el.tagName === 'SELECT') {
+    // A-button on a dropdown cycles forward (B would be "back"; we use d-pad
+    // left for that). Cycling on A matches console-menu conventions.
+    const n = el.options.length;
+    if (n > 0) {
+      el.selectedIndex = (el.selectedIndex + 1) % n;
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  } else if (el.tagName === 'INPUT' && el.type === 'range') {
+    // No-op for sliders; use d-pad left/right to adjust.
+  }
 }
 
 function resetSettingsToDefaults() {
@@ -13295,6 +13451,15 @@ function gameLoop(timestamp) {
   // pollGamepad are gated on _menuActive so this does not misfire abilities.
   pollGamepad();
 
+  // Refresh scoreboard contents while it's visible so kills/damage update
+  // in real time (throttled to ~5 Hz to avoid rebuilding the DOM every frame).
+  if (scoreboardVisible) {
+    if (!game._sbLastUpdate || game.time - game._sbLastUpdate >= 0.2) {
+      game._sbLastUpdate = game.time;
+      updateScoreboard();
+    }
+  }
+
   if (game.state === 'select') { renderPostFX(); return; }
 
   // Pause gameplay while settings are open
@@ -14553,6 +14718,18 @@ scoreboardDiv.id = 'scoreboard';
 document.body.appendChild(scoreboardDiv);
 
 let scoreboardVisible = false;
+// Track keyboard-hold and gamepad-hold independently; the scoreboard is shown
+// while EITHER is held. This lets Tab (keyboard) and Start (gamepad) both work
+// without fighting over the visibility flag.
+let _scoreboardKeyHeld = false;
+let _scoreboardGpHeld = false;
+function _refreshScoreboardVisibility() {
+  const want = _scoreboardKeyHeld || _scoreboardGpHeld;
+  if (want !== scoreboardVisible) {
+    scoreboardVisible = want;
+    updateScoreboard();
+  }
+}
 
 function updateScoreboard() {
   const sb = scoreboardDiv;
@@ -14562,46 +14739,68 @@ function updateScoreboard() {
   const teamA = game.entities.filter(b => b.team === LSS.TEAM_FLEET_A);
   const teamB = game.entities.filter(b => b.team === LSS.TEAM_FLEET_B);
 
-  let html = '<h2>SCOREBOARD</h2>';
-  html += '<div class="sb-header-row"><div class="sb-name sb-stat-header">SHIP</div><div class="sb-stat-header">STATUS</div><div class="sb-stat-header">HEALTH</div><div class="sb-stat-header">SHIELD</div></div>';
+  // Sort each team by kills descending (player pinned at the top of their own team).
+  teamA.sort((a, b) => (b.kills || 0) - (a.kills || 0));
+  teamB.sort((a, b) => (b.kills || 0) - (a.kills || 0));
 
+  const statusOf = (e) => !e.alive ? 'DEAD' : e.doomed ? 'DOOMED' : 'ALIVE';
+  const row = (name, status, kills, dmg, isPlayer) => (
+    '<div class="sb-row' + (isPlayer ? ' player-row' : '') + '">' +
+    '<div class="sb-name">' + name + '</div>' +
+    '<div class="sb-stat">' + status + '</div>' +
+    '<div class="sb-stat">' + (kills || 0) + '</div>' +
+    '<div class="sb-stat">' + Math.floor(dmg || 0) + '</div>' +
+    '</div>'
+  );
+
+  let html = '<h2>SCOREBOARD</h2>';
+  html += '<div class="sb-header-row"><div class="sb-name sb-stat-header">SHIP</div><div class="sb-stat-header">STATUS</div><div class="sb-stat-header">KILLS</div><div class="sb-stat-header">DAMAGE</div></div>';
+
+  // FLEET A (player's team)
   html += '<div class="sb-team-header sb-team-a">FLEET A (' + game.scoreA + ' rounds)</div>';
-  // Player
   const pStatus = player.shipState === 'dead' ? 'DEAD' : player.doomed ? 'DOOMED' : 'ALIVE';
-  html += '<div class="sb-row player-row"><div class="sb-name">YOU (' + (player.loadout ? player.loadout.name : '?') + ')</div><div class="sb-stat">' + pStatus + '</div><div class="sb-stat">' + Math.ceil(player.health) + '</div><div class="sb-stat">' + Math.ceil(player.shield) + '</div></div>';
+  html += row('YOU (' + (player.loadout ? player.loadout.name : '?') + ')', pStatus, player.kills, player.damageDealt, true);
   for (const bot of teamA) {
-    const st = !bot.alive ? 'DEAD' : bot.doomed ? 'DOOMED' : 'ALIVE';
-    html += '<div class="sb-row"><div class="sb-name">' + bot.loadout.name + '</div><div class="sb-stat">' + st + '</div><div class="sb-stat">' + Math.ceil(bot.health) + '</div><div class="sb-stat">' + Math.ceil(bot.shield) + '</div></div>';
+    html += row(bot.loadout.name, statusOf(bot), bot.kills, bot.damageDealt, false);
   }
 
+  // FLEET B (enemy team)
   html += '<div class="sb-team-header sb-team-b">FLEET B (' + game.scoreB + ' rounds)</div>';
   for (const bot of teamB) {
-    const st = !bot.alive ? 'DEAD' : bot.doomed ? 'DOOMED' : 'ALIVE';
-    html += '<div class="sb-row"><div class="sb-name">' + bot.loadout.name + '</div><div class="sb-stat">' + st + '</div><div class="sb-stat">' + Math.ceil(bot.health) + '</div><div class="sb-stat">' + Math.ceil(bot.shield) + '</div></div>';
+    html += row(bot.loadout.name, statusOf(bot), bot.kills, bot.damageDealt, false);
   }
 
-  // Network players
+  // Network players (stats track through their own Bot-like objects if present)
   for (const np of net.networkPlayers) {
-    const st = !np.alive ? 'DEAD' : np.doomed ? 'DOOMED' : 'ALIVE';
-    const teamLabel = np.team === LSS.TEAM_FLEET_A ? 'A' : 'B';
-    html += '<div class="sb-row"><div class="sb-name">[NET] ' + (np.loadout ? np.loadout.name : '?') + '</div><div class="sb-stat">' + st + '</div><div class="sb-stat">' + Math.ceil(np.health) + '</div><div class="sb-stat">' + Math.ceil(np.shield) + '</div></div>';
+    html += row('[NET] ' + (np.loadout ? np.loadout.name : '?'), statusOf(np), np.kills, np.damageDealt, false);
   }
 
-  html += '<div style="text-align:center;color:#555;font-size:9px;margin-top:12px;">K: ' + player.kills + ' / D: ' + player.deaths + ' / DMG: ' + Math.floor(player.damageDealt) + '</div>';
+  // Personal summary footer
+  html += '<div style="text-align:center;color:#888;font-size:10px;margin-top:12px;letter-spacing:2px;">KILLS ' + (player.kills || 0) + '  &middot;  DEATHS ' + (player.deaths || 0) + '  &middot;  DAMAGE ' + Math.floor(player.damageDealt || 0) + '</div>';
   sb.innerHTML = html;
 }
 
-// Tab key handler for scoreboard
+// Tab key handler for scoreboard. Only intercept Tab when we're actually in
+// combat (not select, not settings, not ship select); otherwise let the
+// browser's native Tab behavior move focus through form fields.
+function _scoreboardTabShouldIntercept() {
+  if (game.state === 'select') return false;
+  if (settingsOpen) return false;
+  const sel = document.getElementById('ship-select');
+  if (sel && sel.classList.contains('active')) return false;
+  return true;
+}
 document.addEventListener('keydown', e => {
-  if (e.key === 'Tab' && game.state !== 'select') {
-    scoreboardVisible = true;
-    updateScoreboard();
+  if (e.key === 'Tab' && _scoreboardTabShouldIntercept()) {
+    e.preventDefault();
+    _scoreboardKeyHeld = true;
+    _refreshScoreboardVisibility();
   }
 });
 document.addEventListener('keyup', e => {
   if (e.key === 'Tab') {
-    scoreboardVisible = false;
-    updateScoreboard();
+    _scoreboardKeyHeld = false;
+    _refreshScoreboardVisibility();
   }
 });
 
