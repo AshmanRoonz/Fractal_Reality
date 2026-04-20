@@ -940,7 +940,7 @@ canvas { display: block; }
     <span class="strip-label">TEAMMATES</span>
     <div id="teammates-list" style="display:flex;gap:10px;"></div>
   </div>
-  <div style="padding:8px 24px;color:#555;font-size:10px;letter-spacing:1px;background:rgba(4,4,10,0.85);">WASD: Move | SPACE/CTRL: Up/Down | MOUSE: Aim | SHIFT: Dash | Q/E/F: Abilities | V: Core | ESC: Settings&nbsp;&nbsp;&nbsp;GAMEPAD: D-Pad Up/Down: ships | D-Pad Left/Right: map | START: launch | BACK: settings (in-match) / close menu</div>
+  <div style="padding:8px 24px;color:#555;font-size:10px;letter-spacing:1px;background:rgba(4,4,10,0.85);">WASD: Move | SPACE/CTRL: Up/Down | MOUSE: Aim | SHIFT: Dash | Q/E/F: Abilities | V: Core | ESC: Settings | DEAD: A/D or Click cycle teammate cam&nbsp;&nbsp;&nbsp;GAMEPAD: D-Pad Up/Down: ships | D-Pad Left/Right: map (or teammate cam when dead) | START: launch | BACK: settings (in-match) / close menu</div>
   <div id="ship-select-countdown">
     <div class="cd-num">3</div>
     <div class="cd-sub">LAUNCH</div>
@@ -7453,9 +7453,13 @@ function playerDie(attacker) {
     const killerName = (attacker && attacker.loadout) ? attacker.loadout.name : '';
     Overlays.respawn(killerName);
   }
-  setTimeout(() => {
-    if (game.state === 'playing' || game.state === 'warmup') respawnPlayer();
-  }, 3000);
+  // Last Ship Sailing: one life per round. No mid-round respawn. The round-end
+  // state transition at the top of updateRoundSystem() calls respawnPlayer()
+  // when the next round begins. Until then, spectate teammates via the
+  // death-cam cycle controls (A/D or arrow left/right on keyboard; d-pad
+  // left/right on gamepad). If every teammate has also been destroyed,
+  // the round will end on its own and the camera falls back to orbiting
+  // the wreck.
 }
 
 function respawnPlayer() {
@@ -9865,6 +9869,14 @@ function pollGamepad() {
     } else if (input.gpDpadRight && !input.gpDpadRightPrev) {
       if (typeof cycleMap === 'function') cycleMap(1);
     }
+  } else if (typeof deathCam !== 'undefined' && deathCam.active) {
+    // Spectator mode: d-pad left/right cycles the teammate we're watching.
+    // (stick-horizontal fallback is already folded into gpDpadLeft/Right above)
+    if (input.gpDpadLeft && !input.gpDpadLeftPrev) {
+      if (typeof cycleSpectateTarget === 'function') cycleSpectateTarget(-1);
+    } else if (input.gpDpadRight && !input.gpDpadRightPrev) {
+      if (typeof cycleSpectateTarget === 'function') cycleSpectateTarget(1);
+    }
   }
 
   // ---- Gameplay edge-triggered actions (suppressed while a menu is active) ----
@@ -11981,6 +11993,12 @@ const MAP_DATA = {
   hourglass: {
     name: 'The Nexus',
     description: 'Ring layout. Six chambers. Every room connects to two others; no dead ends.',
+    // Cool indigo ring with a warm gold hub (the council-chamber feel).
+    // Index 0 = center, then around the hexagonal ring. The shader picks
+    // the nearest room's color and steers wall hue toward it.
+    palette: [
+      0x4a3818, 0x2a1840, 0x1a2848, 0x18283a, 0x202848, 0x1a2840, 0x18203a, 0x1c2848
+    ],
     // Feng shui arena design: circular flow, multiple flanking routes, no camping corners,
     // every room has 2+ exits, spawns on opposite sides of the ring, power position in center.
     // Layout: hexagonal ring of 6 chambers with a central hub. Spawns at north and south.
@@ -12022,6 +12040,10 @@ const MAP_DATA = {
   spine: {
     name: 'The Spine',
     description: 'Long axis with parallel bypasses. Center is the killing line; flank through the arcs.',
+    // Industrial gunmetal with crimson accents (the kill-corridor feel).
+    palette: [
+      0x1c1818, 0x281a1a, 0x2a1c1c, 0x381616, 0x281818, 0x202020, 0x301818, 0x401818
+    ],
     rooms: [
       { id: 'spawn_a',  team: 'A',  x: 0,        y: 0,       z: -SU * 9, r: SU * 2.2 }, // west end
       { id: 'mid_a',    team: null, x: 0,        y: 0,       z: -SU * 4, r: SU * 2.0 },
@@ -12055,6 +12077,11 @@ const MAP_DATA = {
   infinity: {
     name: 'The Infinity',
     description: 'Two rings joined at a pinch. Hold the center, halve the map.',
+    // Teal lobe (left) and magenta lobe (right) with a hot orange center pinch.
+    // Room order: spawn_a, left_n, left_s, center, spawn_b, right_n, right_s.
+    palette: [
+      0x103838, 0x14383a, 0x12303a, 0x4a2818, 0x381038, 0x3a1438, 0x381432, 0x183838
+    ],
     rooms: [
       { id: 'spawn_a', team: 'A',  x: -SU * 8, y:  0,       z:  0,       r: SU * 2.2 },
       { id: 'left_n',  team: null, x: -SU * 4, y:  SU * 2,  z: -SU * 4,  r: SU * 1.8 },
@@ -12087,6 +12114,12 @@ const MAP_DATA = {
   tower: {
     name: 'The Tower',
     description: 'Vertical stack. Two layers between the spawns. Watch your six in three dimensions.',
+    // Vertical sky-to-forge gradient: cold purple at the top, neutral center,
+    // warm amber at the bottom. Room order: spawn_a(top), mid_hi_e, mid_hi_w,
+    // center, mid_lo_e, mid_lo_w, spawn_b(bottom).
+    palette: [
+      0x281848, 0x201840, 0x282040, 0x303030, 0x382818, 0x402818, 0x481810, 0x3a2010
+    ],
     rooms: [
       { id: 'spawn_a',  team: 'A',  x:  0,       y:  SU * 8, z:  0,       r: SU * 2.2 }, // top
       { id: 'mid_hi_e', team: null, x:  SU * 4,  y:  SU * 4, z:  SU * 2,  r: SU * 1.8 },
@@ -12124,6 +12157,11 @@ const MAP_DATA = {
   cross: {
     name: 'The Cross',
     description: 'Compact crucible. Four arms cut by diagonals; nowhere to hide.',
+    // Gladiatorial crimson and gold (close-range brawl feel). Room order:
+    // center, arm_n, arm_s, arm_e, arm_w, spawn_a, spawn_b.
+    palette: [
+      0x4a2818, 0x401818, 0x381818, 0x401010, 0x381010, 0x4a2010, 0x4a2010, 0x382010
+    ],
     rooms: [
       { id: 'center',  team: null, x:  0,       y:  0,       z:  0,       r: SU * 2.5 },
       { id: 'arm_n',   team: null, x:  0,       y:  SU * 1,  z: -SU * 4,  r: SU * 1.8 },
@@ -12158,6 +12196,11 @@ const MAP_DATA = {
   arc: {
     name: 'The Arc',
     description: 'Curved approach with shortcuts over the top. Flank or get flanked.',
+    // Sunset palette: deep ocean blue at the wings, sky pink across the arc,
+    // sand orange at the peak. Room order: spawn_a(SW), arc_1..arc_5, spawn_b(SE).
+    palette: [
+      0x101838, 0x182040, 0x282040, 0x481830, 0x382040, 0x282040, 0x182040, 0x101838
+    ],
     rooms: [
       { id: 'spawn_a', team: 'A',  x: -SU * 8, y:  0,      z:  SU * 3, r: SU * 2.2 }, // SW
       { id: 'arc_1',   team: null, x: -SU * 6, y:  SU * 1, z: -SU * 3, r: SU * 1.8 },
@@ -12448,10 +12491,16 @@ function buildRoomGraphLevel(level) {
       '}'
     ].join('\n');
 
-    // Dynamic room uniforms (pad to 8 elements for shader array)
-    const roomPalette = [
+    // Dynamic room uniforms (pad to 8 elements for shader array).
+    // Per-map palettes live on level.palette (8 hex colors, one per room slot;
+    // shader array is fixed at 8). Falls back to a neutral jewel-tone default
+    // if the active map didn't ship a palette.
+    const defaultPalette = [
       0x1a3050, 0x3a1010, 0x103a10, 0x351828, 0x183520, 0x2a2040, 0x1a4030, 0x402020
     ];
+    const roomPalette = (level && Array.isArray(level.palette) && level.palette.length > 0)
+      ? level.palette
+      : defaultPalette;
     const numRooms = Math.min(game.sdfRoomData.length, 8);
     const roomCentersArr = [];
     const roomColorsArr = [];
@@ -14284,31 +14333,133 @@ document.addEventListener('keyup', e => {
   }
 });
 
-// ---- DEATH CAMERA (orbit spectator) ----
+// ---- DEATH CAMERA (teammate spectator with orbit fallback) ----
+// You get one life per round. On death, the camera detaches from your wreck
+// and follows a living teammate as a chase-cam. Cycle teammates with A/D,
+// arrow left/right, left-click, or gamepad d-pad left/right. If every
+// teammate is also dead we fall back to a slow orbit around your wreck.
 
 const deathCam = {
   active: false,
+  // Orbit-mode state (fallback when no living teammates remain)
   angle: 0,
   radius: 400,
   height: 150,
-  target: null, // position to orbit around (death location)
+  target: null,            // THREE.Vector3 of the death location
+  // Spectator-mode state (chase a living teammate)
+  spectateTarget: null,    // entity reference (bot or player-like) we're chasing
+  // Local edge-detection for cycle-spectate input (scoped to deathCam so we
+  // don't stomp on the main input system's prev-state tracking)
+  _kbPrevLeft: false,
+  _kbPrevRight: false,
+  _kbPrevClick: false,
 };
+
+function _livingTeammates() {
+  const out = [];
+  for (const b of game.entities) {
+    if (b && b.alive && b.team === player.team) out.push(b);
+  }
+  return out;
+}
+
+function cycleSpectateTarget(dir) {
+  const mates = _livingTeammates();
+  if (mates.length === 0) { deathCam.spectateTarget = null; return; }
+  let startIdx = 0;
+  if (deathCam.spectateTarget) {
+    const curIdx = mates.indexOf(deathCam.spectateTarget);
+    if (curIdx >= 0) startIdx = curIdx;
+    else startIdx = -dir; // fell off the list (target died); step to first entry
+  }
+  const nextIdx = ((startIdx + dir) % mates.length + mates.length) % mates.length;
+  deathCam.spectateTarget = mates[nextIdx];
+  _updateSpectateOverlay();
+}
+
+function _updateSpectateOverlay() {
+  // Repurpose the existing ov-respawn overlay's wait row to show who we're
+  // watching. Keeps the overlay's "DESTROYED" headline intact while making
+  // the spectate state legible.
+  const el = document.getElementById('ov-respawn');
+  if (!el) return;
+  const wait = el.querySelector('.rs-wait');
+  if (!wait) return;
+  if (deathCam.spectateTarget && deathCam.spectateTarget.loadout) {
+    const name = deathCam.spectateTarget.loadout.name || 'ALLY';
+    wait.textContent = 'SPECTATING ' + name.toUpperCase() + '  (A/D OR D-PAD TO CYCLE)';
+  } else {
+    wait.textContent = 'WAITING FOR NEXT ROUND';
+  }
+}
 
 function startDeathCam() {
   deathCam.active = true;
   deathCam.target = player.position.clone();
   deathCam.angle = player.euler.y;
   deathCam.radius = player.chassis ? player.chassis.hullLength * 4 : 400;
+  deathCam.spectateTarget = null;
+  deathCam._kbPrevLeft = false;
+  deathCam._kbPrevRight = false;
+  deathCam._kbPrevClick = false;
+  // Auto-pick first living teammate if one exists
+  cycleSpectateTarget(1);
 }
 
 function updateDeathCam(dt) {
-  if (!deathCam.active || !deathCam.target) return;
-  deathCam.angle += dt * 0.4; // slow orbit
-  const camX = deathCam.target.x + Math.cos(deathCam.angle) * deathCam.radius;
-  const camY = deathCam.target.y + deathCam.height;
-  const camZ = deathCam.target.z + Math.sin(deathCam.angle) * deathCam.radius;
-  camera.position.set(camX, camY, camZ);
-  camera.lookAt(deathCam.target);
+  if (!deathCam.active) return;
+
+  // Input: cycle spectate target (keyboard + mouse; gamepad handled in the
+  // main input pass so it shares the existing edge-tracking state).
+  const kbLeft  = !!(input.keys && (input.keys['a'] || input.keys['arrowleft']));
+  const kbRight = !!(input.keys && (input.keys['d'] || input.keys['arrowright']));
+  const kbClick = !!input.mouseDown;
+  if (kbLeft  && !deathCam._kbPrevLeft)  cycleSpectateTarget(-1);
+  if (kbRight && !deathCam._kbPrevRight) cycleSpectateTarget( 1);
+  if (kbClick && !deathCam._kbPrevClick) cycleSpectateTarget( 1);
+  deathCam._kbPrevLeft  = kbLeft;
+  deathCam._kbPrevRight = kbRight;
+  deathCam._kbPrevClick = kbClick;
+
+  // If the spectate target died since last frame, advance to the next alive one.
+  if (deathCam.spectateTarget && !deathCam.spectateTarget.alive) {
+    cycleSpectateTarget(1);
+  } else if (!deathCam.spectateTarget) {
+    cycleSpectateTarget(1); // maybe one is back up (e.g., if ever mid-round respawns return)
+  }
+
+  if (deathCam.spectateTarget) {
+    // Chase cam: sit behind and slightly above the teammate's ship,
+    // looking along their heading.
+    const t = deathCam.spectateTarget;
+    const tgt = t.position;
+    const dir = (t.targetDir && t.targetDir.lengthSq() > 0.001)
+      ? t.targetDir
+      : new THREE.Vector3(0, 0, -1);
+    const hull = (t.chassis && t.chassis.hullLength) ? t.chassis.hullLength : 80;
+    const chaseDist = hull * 4;
+    const heightOff = hull * 0.9;
+    camera.position.set(
+      tgt.x - dir.x * chaseDist,
+      tgt.y - dir.y * chaseDist + heightOff,
+      tgt.z - dir.z * chaseDist
+    );
+    // Look slightly ahead of the ship so their nose is centered, not their tail.
+    const lookAhead = new THREE.Vector3(
+      tgt.x + dir.x * hull * 0.5,
+      tgt.y + dir.y * hull * 0.5,
+      tgt.z + dir.z * hull * 0.5
+    );
+    camera.lookAt(lookAhead);
+  } else if (deathCam.target) {
+    // No living teammates: slow orbit around the wreck.
+    deathCam.angle += dt * 0.4;
+    const camX = deathCam.target.x + Math.cos(deathCam.angle) * deathCam.radius;
+    const camY = deathCam.target.y + deathCam.height;
+    const camZ = deathCam.target.z + Math.sin(deathCam.angle) * deathCam.radius;
+    camera.position.set(camX, camY, camZ);
+    camera.lookAt(deathCam.target);
+  }
 }
 
 // Hook death camera into playerDie and respawnPlayer
@@ -14321,6 +14472,7 @@ playerDie = function(attacker) {
 const _origRespawnPlayer = respawnPlayer;
 respawnPlayer = function() {
   deathCam.active = false;
+  deathCam.spectateTarget = null;
   _origRespawnPlayer();
 };
 
