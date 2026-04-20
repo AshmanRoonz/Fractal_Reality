@@ -4754,10 +4754,24 @@ const dynamicLights = {
   MAX_LIGHTS: 8,
 };
 
+// NUM_POINT_LIGHTS PINNING (Trace 20260420T164534 fix):
+// Three.js bakes NUM_POINT_LIGHTS into every lit program as a GLSL #define,
+// keyed on the count of scene-resident lights where .visible===true. Flipping
+// .visible during play changes the count and forces a synchronous program
+// relink per lit material; the 125839 trace showed 116 getProgramInfoLog
+// ticks on the first explosion afterglow. The previous 8-step warmup loop
+// pre-linked every NUM_POINT_LIGHTS value from 1..8 but still left runtime
+// recompiles when a single-digit count crossed a boundary during combat.
+//
+// The fix: keep ALL pool lights permanently visible, with intensity 0 when
+// not in use. NUM_POINT_LIGHTS=MAX_LIGHTS always, no .visible toggling, no
+// runtime recompiles. Cost is ~8 noop light iterations per fragment (0 dot
+// products when intensity=0 gets unrolled) which is sub-millisecond.
 (function initDynamicLights() {
   for (let i = 0; i < dynamicLights.MAX_LIGHTS; i++) {
     const light = new THREE.PointLight(0xff8800, 0, 600);
-    light.visible = false;
+    // Permanently visible; intensity=0 is the "off" state. See comment above.
+    light.visible = true;
     scene.add(light);
     dynamicLights.pool.push(light);
   }
@@ -4770,14 +4784,14 @@ function spawnDynamicLight(pos, color, intensity, range, duration) {
   } else {
     // Steal the oldest active light
     const oldest = dynamicLights.active.shift();
-    if (oldest) { oldest.light.visible = false; light = oldest.light; }
+    if (oldest) { oldest.light.intensity = 0; light = oldest.light; }
     else return; // shouldn't happen
   }
   light.color.setHex(color);
   light.intensity = intensity;
   light.distance = range;
   light.position.copy(pos);
-  light.visible = true;
+  // light.visible stays true forever; see NUM_POINT_LIGHTS PINNING note above.
   dynamicLights.active.push({ light, intensity, duration, age: 0 });
 }
 
@@ -4788,7 +4802,8 @@ function updateDynamicLights() {
     entry.age += dt;
     if (entry.age >= entry.duration) {
       entry.light.intensity = 0;
-      entry.light.visible = false;
+      // Do NOT flip .visible; we pin NUM_POINT_LIGHTS by keeping all pool
+      // lights scene-resident at intensity 0. See initDynamicLights comment.
       dynamicLights.pool.push(entry.light);
       dynamicLights.active.splice(i, 1);
     } else {
@@ -5052,6 +5067,20 @@ function warmupCombatShaders() {
     } catch (_) { /* non-fatal: ship warm-up is a bonus, not a requirement */ }
 
     scene.add(group);
+
+    // --- Explosion / impact mesh pool warmup (Trace 20260420T164534 fix) ---
+    // Prime the pool BEFORE renderer.compile(scene, camera) so every pooled
+    // (geometry, material) tuple is part of the scene during link-time. The
+    // driver validates programs against every visible geometry+material it sees
+    // during compile, so seeding the pool here is the difference between a
+    // cold first-use stall on shot #1 and a warm first-use pass. The pool
+    // acquire adds meshes to the scene; we release them immediately, which
+    // hides them (intensity kept, .visible = false) but keeps them scene-
+    // resident so compile sees them. See _EXPL_POOL at the EFFECTS block.
+    try {
+      if (typeof _warmupExplosionPool === 'function') _warmupExplosionPool();
+    } catch (_) { /* pool warmup is non-fatal; game still runs, just takes one stall */ }
+
     renderer.compile(scene, camera);
 
     // --- GPU texture upload: the 473ms idle-dominated hitch at t+20s in the
@@ -5187,45 +5216,14 @@ function warmupCombatShaders() {
       } catch (_) { /* pass warmup is non-fatal */ }
     }
 
-    // --- NUM_POINT_LIGHTS warmup ---
-    // Three.js bakes the scene's active point-light count into the GLSL of
-    // every lit material as NUM_POINT_LIGHTS. Whenever a PointLight enters
-    // or leaves the scene, that #define changes and every lit program must
-    // be recompiled. The 125839 trace showed this dominating first-shot lag:
-    // 116 compile ticks at t+29s (first explosion afterglow light activated)
-    // and smaller spikes at every new dynamic-light event after.
-    //
-    // The dynamicLights pool pre-adds MAX_LIGHTS PointLights invisible at
-    // init, so the peak count is (static ambient/directional + the 1 init
-    // pointLight + however many pool lights are currently visible). We walk
-    // that count from 1 up to the pool max, calling renderer.compile() at
-    // each step, so the program cache contains a variant for every count
-    // combat can ever reach. After this loop, flipping a pool light visible
-    // never triggers a synchronous relink because the variant is warm.
-    try {
-      if (typeof dynamicLights !== 'undefined' && Array.isArray(dynamicLights.pool)) {
-        // Save current visible state so we don't accidentally leave pool
-        // lights on (they're supposed to be invisible-at-rest).
-        const savedVis = dynamicLights.pool.map(l => l.visible);
-        const savedInt = dynamicLights.pool.map(l => l.intensity);
-        // Incrementally activate pool lights and compile at each step so
-        // every intermediate NUM_POINT_LIGHTS value gets a cached program.
-        for (let n = 1; n <= dynamicLights.pool.length; n++) {
-          const light = dynamicLights.pool[n - 1];
-          // Intensity 0 means no visual change (can't leak on screen), but
-          // the renderer still counts it in NUM_POINT_LIGHTS because it's
-          // visible. Position doesn't matter; keep it at origin.
-          light.intensity = 0;
-          light.visible = true;
-          try { renderer.compile(scene, camera); } catch (_) {}
-        }
-        // Restore pool lights to their resting state (invisible, 0 intensity).
-        for (let i = 0; i < dynamicLights.pool.length; i++) {
-          dynamicLights.pool[i].visible = savedVis[i];
-          dynamicLights.pool[i].intensity = savedInt[i];
-        }
-      }
-    } catch (_) { /* light-count warmup is a bonus, non-fatal */ }
+    // --- NUM_POINT_LIGHTS is now pinned ---
+    // The 8-step incremental compile loop that used to sit here is retired.
+    // initDynamicLights keeps every pool light permanently visible at
+    // intensity 0, so NUM_POINT_LIGHTS = MAX_LIGHTS (8) at all times and
+    // the renderer.compile(scene, camera) call above already links every
+    // lit program against that final count. No runtime recompiles fire
+    // when dynamicLights activate/deactivate during combat, because .visible
+    // never toggles. See the NUM_POINT_LIGHTS PINNING note at initDynamicLights.
 
     scene.remove(group);
     // Dispose every ship warmup mesh's owned materials. buildModelShipMesh /
@@ -5286,6 +5284,146 @@ function warmupCombatShaders() {
 
 // ---- EFFECTS ----
 
+// ---- EXPLOSION / IMPACT MESH POOL (Trace 20260420T164534 fix) ----
+// The 109 / 72 / 66 ms gameLoop spikes at t+21.4-22.1s in that trace were
+// spawnExplosion + spawnImpactSparks allocating ~10 fresh geometries and
+// materials per call. The first two shots each triggered a driver-side
+// state-validation stall on the newly-built (geometry, material, shader)
+// tuple; by the third shot, the cache was warm and frames went smooth.
+//
+// The fix is to pre-create a unit geometry per role, pool a handful of
+// (mesh, material) pairs per role, and reuse them across every explosion /
+// impact. size is carried through effect.baseScale (see updateEffects).
+const _EXPL_SPHERE_LG  = new THREE.SphereGeometry(1, 8, 6);     // flash, fire
+const _EXPL_SPHERE_SM  = new THREE.SphereGeometry(1, 6, 4);     // explosion core
+const _EXPL_SPHERE_TINY= new THREE.SphereGeometry(1, 4, 3);     // impact sparks
+const _EXPL_PLANE      = new THREE.PlaneGeometry(1, 1);          // flare billboard
+const _EXPL_RING_FLAT  = new THREE.RingGeometry(0.45, 0.55, 48); // flat shockwave (aspect preserved on unit ring)
+const _EXPL_TORUS_PRI  = new THREE.TorusGeometry(0.5, 0.10, 8, 32); // primary shockwave torus
+const _EXPL_TORUS_SEC  = new THREE.TorusGeometry(0.5, 0.07, 8, 32); // secondary shockwave torus
+const _EXPL_ICOS       = new THREE.IcosahedronGeometry(1, 1);    // smoke + impact puff
+const _EXPL_TETRA      = new THREE.TetrahedronGeometry(1, 0);    // debris chunk
+
+const _EXPL_POOL = {
+  flash: [], flare: [], fire: [], core: [],
+  flatShock: [], ringShock: [], ring2Shock: [],
+  smoke: [], chunk: [],
+  sparkFlash: [], spark: [], puff: []
+};
+const _EXPL_POOL_CAP = {
+  flash: 32, flare: 32, fire: 32, core: 32,
+  flatShock: 16, ringShock: 16, ring2Shock: 12,
+  smoke: 24, chunk: 64,
+  sparkFlash: 32, spark: 96, puff: 32
+};
+
+function _makeExplosionMesh(type) {
+  let geo, matOpts;
+  switch (type) {
+    case 'flash':
+      geo = _EXPL_SPHERE_LG;
+      matOpts = { color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending, depthWrite: false };
+      break;
+    case 'flare':
+      geo = _EXPL_PLANE;
+      matOpts = { color: 0xffeec0, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide };
+      break;
+    case 'fire':
+      geo = _EXPL_SPHERE_LG;
+      matOpts = { color: 0xff6600, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending };
+      break;
+    case 'core':
+      geo = _EXPL_SPHERE_SM;
+      matOpts = { color: 0xff2200, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending };
+      break;
+    case 'flatShock':
+      geo = _EXPL_RING_FLAT;
+      matOpts = { color: 0xffd080, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide };
+      break;
+    case 'ringShock':
+      geo = _EXPL_TORUS_PRI;
+      matOpts = { color: 0xffaa44, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false };
+      break;
+    case 'ring2Shock':
+      geo = _EXPL_TORUS_SEC;
+      matOpts = { color: 0xff8833, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false };
+      break;
+    case 'smoke':
+      geo = _EXPL_ICOS;
+      matOpts = { color: 0x221100, transparent: true, opacity: 0.4 };
+      break;
+    case 'chunk':
+      geo = _EXPL_TETRA;
+      matOpts = { color: 0x443322, transparent: true, opacity: 0.8 };
+      break;
+    case 'sparkFlash':
+      geo = _EXPL_SPHERE_SM;
+      matOpts = { color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending };
+      break;
+    case 'spark':
+      geo = _EXPL_SPHERE_TINY;
+      matOpts = { color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending };
+      break;
+    case 'puff':
+      geo = _EXPL_ICOS;
+      matOpts = { color: 0x111111, transparent: true, opacity: 0.3 };
+      break;
+  }
+  const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial(matOpts));
+  mesh.userData._poolType = type;
+  return mesh;
+}
+
+function _acquireExplosionMesh(type) {
+  const pool = _EXPL_POOL[type];
+  let mesh = (pool && pool.length) ? pool.pop() : _makeExplosionMesh(type);
+  if (!mesh.parent) scene.add(mesh);
+  mesh.visible = true;
+  mesh.rotation.set(0, 0, 0);
+  return mesh;
+}
+
+function _releaseExplosionMesh(mesh) {
+  if (!mesh) return;
+  const type = mesh.userData && mesh.userData._poolType;
+  const pool = type ? _EXPL_POOL[type] : null;
+  if (!pool) {
+    if (mesh.parent) scene.remove(mesh);
+    if (mesh.material) mesh.material.dispose();
+    return;
+  }
+  const cap = _EXPL_POOL_CAP[type] || 16;
+  if (pool.length >= cap) {
+    if (mesh.parent) scene.remove(mesh);
+    if (mesh.material) mesh.material.dispose();
+    return;
+  }
+  // Keep mesh scene-resident but hidden; the next acquire flips .visible back.
+  mesh.visible = false;
+  mesh.position.set(0, -1e7, 0);
+  mesh.scale.set(1, 1, 1);
+  mesh.rotation.set(0, 0, 0);
+  if (mesh.material) mesh.material.opacity = 1;
+  pool.push(mesh);
+}
+
+// Prime the explosion pool and warm the program/VAO cache for every pooled
+// (geometry, material) pair. Called from warmupCombatShaders so the first
+// two real shots of a match don't hit a cold driver.
+function _warmupExplosionPool() {
+  const keys = Object.keys(_EXPL_POOL);
+  const acquired = [];
+  // 4 of each type is enough to cover a burst of simultaneous explosions
+  // (kill + secondaries + impacts) without any first-use allocation.
+  for (const k of keys) {
+    for (let i = 0; i < 4; i++) {
+      acquired.push(_acquireExplosionMesh(k));
+    }
+  }
+  // Release them back immediately; they stay scene-resident and invisible.
+  for (const m of acquired) _releaseExplosionMesh(m);
+}
+
 function spawnExplosion(pos, size) {
   size = size || 20;
 
@@ -5322,79 +5460,85 @@ function spawnExplosion(pos, size) {
   }
 
   // --- Phase 1: White-hot flash core (instant, tiny, bright) ---
-  const flashGeo = new THREE.SphereGeometry(size * 0.55, 8, 6);
-  const flashMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending, depthWrite: false });
-  const flashMesh = new THREE.Mesh(flashGeo, flashMat);
+  // Pooled unit-sphere; baseScale carries the original size * 0.55 factor into
+  // updateEffects' scale math. Material is reused across calls; reset opacity +
+  // color on acquire because the previous user may have faded it to black.
+  const flashMesh = _acquireExplosionMesh('flash');
   flashMesh.position.copy(pos);
-  scene.add(flashMesh);
-  game.effects.push({ mesh: flashMesh, lifetime: 0.12, age: 0, type: 'explosionFlash' });
+  flashMesh.scale.setScalar(size * 0.55);
+  flashMesh.material.color.setHex(0xffffff);
+  flashMesh.material.opacity = 1.0;
+  game.effects.push({ mesh: flashMesh, lifetime: 0.12, age: 0, type: 'explosionFlash', pooled: true, baseScale: size * 0.55 });
 
   // --- Phase 1b: Cinematic billboarded "lens flare" disc that faces the camera ---
-  const flareGeo = new THREE.PlaneGeometry(size * 1.6, size * 1.6);
-  const flareMat = new THREE.MeshBasicMaterial({ color: 0xffeec0, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
-  const flareMesh = new THREE.Mesh(flareGeo, flareMat);
+  const flareMesh = _acquireExplosionMesh('flare');
   flareMesh.position.copy(pos);
+  flareMesh.scale.setScalar(size * 1.6);
   flareMesh.lookAt(camera.position);
-  scene.add(flareMesh);
-  game.effects.push({ mesh: flareMesh, lifetime: 0.22, age: 0, type: 'explosionFlash', billboard: true });
+  flareMesh.material.color.setHex(0xffeec0);
+  flareMesh.material.opacity = 0.95;
+  game.effects.push({ mesh: flareMesh, lifetime: 0.22, age: 0, type: 'explosionFlash', pooled: true, billboard: true, baseScale: size * 1.6 });
 
   // --- Phase 2: Expanding fireball (orange-red, multi-layer) ---
-  const fireGeo = new THREE.SphereGeometry(size, 8, 6);
-  const fireMat = new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending });
-  const fireMesh = new THREE.Mesh(fireGeo, fireMat);
+  const fireMesh = _acquireExplosionMesh('fire');
   fireMesh.position.copy(pos);
-  scene.add(fireMesh);
-  game.effects.push({ mesh: fireMesh, lifetime: 0.5, age: 0, type: 'explosionFire', maxSize: size * 2.5 });
+  fireMesh.scale.setScalar(size);
+  fireMesh.material.color.setHex(0xff6600);
+  fireMesh.material.opacity = 0.85;
+  game.effects.push({ mesh: fireMesh, lifetime: 0.5, age: 0, type: 'explosionFire', pooled: true, maxSize: size * 2.5, baseScale: size });
 
   // Inner darker core (red, slightly delayed expansion)
-  const coreGeo = new THREE.SphereGeometry(size * 0.7, 6, 4);
-  const coreMat = new THREE.MeshBasicMaterial({ color: 0xff2200, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
-  const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+  const coreMesh = _acquireExplosionMesh('core');
   coreMesh.position.copy(pos);
-  scene.add(coreMesh);
-  game.effects.push({ mesh: coreMesh, lifetime: 0.35, age: 0, type: 'explosionFire', maxSize: size * 1.8 });
+  coreMesh.scale.setScalar(size * 0.7);
+  coreMesh.material.color.setHex(0xff2200);
+  coreMesh.material.opacity = 0.6;
+  game.effects.push({ mesh: coreMesh, lifetime: 0.35, age: 0, type: 'explosionFire', pooled: true, maxSize: size * 1.8, baseScale: size * 0.7 });
 
   // --- Phase 3: Shockwave rings (volumetric torus + billboarded flat ring) ---
   if (size > 12) {
-    // Camera-facing billboarded flat shockwave (the "cinematic" disc you can always read)
-    const flatGeo = new THREE.RingGeometry(size * 0.45, size * 0.55, 48);
-    const flatMat = new THREE.MeshBasicMaterial({ color: 0xffd080, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
-    const flatMesh = new THREE.Mesh(flatGeo, flatMat);
+    // Camera-facing billboarded flat shockwave (the "cinematic" disc you can always read).
+    // Unit ring is pre-built at inner=0.45 / outer=0.55; scaling by size keeps the
+    // same aspect as the old size*0.45 / size*0.55 call.
+    const flatMesh = _acquireExplosionMesh('flatShock');
     flatMesh.position.copy(pos);
+    flatMesh.scale.setScalar(size);
     flatMesh.lookAt(camera.position);
-    scene.add(flatMesh);
-    game.effects.push({ mesh: flatMesh, lifetime: 0.55, age: 0, type: 'shockwave', maxSize: size * 6, billboard: true });
+    flatMesh.material.color.setHex(0xffd080);
+    flatMesh.material.opacity = 0.95;
+    game.effects.push({ mesh: flatMesh, lifetime: 0.55, age: 0, type: 'shockwave', pooled: true, maxSize: size * 6, billboard: true, baseScale: size });
 
-    // Volumetric torus shockwave for depth (random orientation)
-    const ringGeo = new THREE.TorusGeometry(size * 0.5, size * 0.10, 8, 32);
-    const ringMat = new THREE.MeshBasicMaterial({ color: 0xffaa44, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false });
-    const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+    // Volumetric torus shockwave for depth (random orientation). Unit torus is
+    // major=0.5 / minor=0.10, so scaling by size recovers size*0.5 / size*0.10.
+    const ringMesh = _acquireExplosionMesh('ringShock');
     ringMesh.position.copy(pos);
+    ringMesh.scale.setScalar(size);
     ringMesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
-    scene.add(ringMesh);
-    game.effects.push({ mesh: ringMesh, lifetime: 0.45, age: 0, type: 'shockwave', maxSize: size * 5 });
+    ringMesh.material.color.setHex(0xffaa44);
+    ringMesh.material.opacity = 0.8;
+    game.effects.push({ mesh: ringMesh, lifetime: 0.45, age: 0, type: 'shockwave', pooled: true, maxSize: size * 5, baseScale: size });
 
     // Second perpendicular ring for big explosions
     if (size > 30) {
-      const ring2Geo = new THREE.TorusGeometry(size * 0.5, size * 0.07, 8, 32);
-      const ring2Mat = new THREE.MeshBasicMaterial({ color: 0xff8833, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false });
-      const ring2Mesh = new THREE.Mesh(ring2Geo, ring2Mat);
+      const ring2Mesh = _acquireExplosionMesh('ring2Shock');
       ring2Mesh.position.copy(pos);
+      ring2Mesh.scale.setScalar(size);
       ring2Mesh.rotation.set(Math.random() * Math.PI + 1.5, Math.random() * Math.PI, 0);
-      scene.add(ring2Mesh);
-      game.effects.push({ mesh: ring2Mesh, lifetime: 0.55, age: 0, type: 'shockwave', maxSize: size * 6 });
+      ring2Mesh.material.color.setHex(0xff8833);
+      ring2Mesh.material.opacity = 0.6;
+      game.effects.push({ mesh: ring2Mesh, lifetime: 0.55, age: 0, type: 'shockwave', pooled: true, maxSize: size * 6, baseScale: size });
     }
   }
 
   // --- Phase 4: Smoke cloud (dark, slow expansion, longer life) ---
   if (size > 15) {
-    const smokeGeo = new THREE.IcosahedronGeometry(size * 0.6, 1);
-    const smokeMat = new THREE.MeshBasicMaterial({ color: 0x221100, transparent: true, opacity: 0.4 });
-    const smokeMesh = new THREE.Mesh(smokeGeo, smokeMat);
+    const smokeMesh = _acquireExplosionMesh('smoke');
     smokeMesh.position.copy(pos);
+    smokeMesh.scale.setScalar(size * 0.6);
     smokeMesh.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
-    scene.add(smokeMesh);
-    game.effects.push({ mesh: smokeMesh, lifetime: 1.2, age: 0, type: 'smoke', maxSize: size * 4,
+    smokeMesh.material.color.setHex(0x221100);
+    smokeMesh.material.opacity = 0.4;
+    game.effects.push({ mesh: smokeMesh, lifetime: 1.2, age: 0, type: 'smoke', pooled: true, maxSize: size * 4, baseScale: size * 0.6,
       rotVel: new THREE.Vector3((Math.random()-0.5)*2, (Math.random()-0.5)*2, (Math.random()-0.5)*2) });
   }
 
@@ -5423,18 +5567,19 @@ function spawnExplosion(pos, size) {
     const chunkCount = Math.min(Math.ceil(size * 0.1), 6);
     for (let i = 0; i < chunkCount; i++) {
       const chunkSize = 2 + Math.random() * 4;
-      const chunkGeo = new THREE.TetrahedronGeometry(chunkSize, 0);
-      const chunkMat = new THREE.MeshBasicMaterial({ color: 0x443322, transparent: true, opacity: 0.8 });
-      const chunk = new THREE.Mesh(chunkGeo, chunkMat);
+      const chunk = _acquireExplosionMesh('chunk');
       chunk.position.copy(pos);
-      scene.add(chunk);
+      chunk.scale.setScalar(chunkSize);
+      chunk.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+      chunk.material.color.setHex(0x443322);
+      chunk.material.opacity = 0.8;
       const cVel = new THREE.Vector3(
         (Math.random() - 0.5) * 350,
         (Math.random() - 0.5) * 350,
         (Math.random() - 0.5) * 350
       );
       game.effects.push({
-        mesh: chunk, lifetime: 0.8 + Math.random() * 0.6, age: 0, type: 'debris', vel: cVel,
+        mesh: chunk, lifetime: 0.8 + Math.random() * 0.6, age: 0, type: 'debris', pooled: true, baseScale: chunkSize, vel: cVel,
         rotVel: new THREE.Vector3((Math.random()-0.5)*10, (Math.random()-0.5)*10, (Math.random()-0.5)*10)
       });
     }
@@ -6596,6 +6741,15 @@ function _disposeOrReleaseEffect(e) {
     if (e.mesh.material) e.mesh.material.dispose();
     return;
   }
+  // Pooled explosion / impact meshes (Trace 20260420T164534 fix): return the
+  // mesh to its type pool instead of disposing. The pool keeps a cap per type
+  // and disposes overflow, so unbounded growth is impossible. Crucially, the
+  // pooled geometry is shared via the _EXPL_*_GEO prototypes, so we must NOT
+  // dispose the geometry; _releaseExplosionMesh handles the reset + park.
+  if (e.pooled) {
+    _releaseExplosionMesh(e.mesh);
+    return;
+  }
   scene.remove(e.mesh);
   if (e.mesh.geometry) e.mesh.geometry.dispose();
   if (e.mesh.material) e.mesh.material.dispose();
@@ -6623,15 +6777,20 @@ function updateEffects(dt) {
       e.mesh.material.opacity = 0.8 * (1 - t);
     }
     // --- White-hot flash core: rapid shrink + fade ---
+    // When pooled, geometry is unit-radius; multiply the growth curve by baseScale
+    // so the mesh keeps its original call-site size. Legacy non-pooled path still
+    // works via baseScale=1.
     else if (e.type === 'explosionFlash') {
-      const s = e.billboard ? (1 + t * 2.5) : (1 + t * 0.5);
+      const base = e.baseScale || 1;
+      const s = (e.billboard ? (1 + t * 2.5) : (1 + t * 0.5)) * base;
       e.mesh.scale.set(s, s, s);
       e.mesh.material.opacity = 1.0 * (1 - t * t); // fast quadratic fade
       if (e.billboard) e.mesh.lookAt(camera.position);
     }
     // --- Fireball: expand + color shift orange->red->dark ---
     else if (e.type === 'explosionFire') {
-      const expand = 1 + t * 2.2;
+      const base = e.baseScale || 1;
+      const expand = (1 + t * 2.2) * base;
       e.mesh.scale.set(expand, expand, expand);
       // Color shift: white-orange -> red -> dark red
       const r = 1.0;
@@ -6642,10 +6801,11 @@ function updateEffects(dt) {
     }
     // --- Shockwave ring: rapid radial expansion ---
     else if (e.type === 'shockwave') {
-      const ringScale = 1 + t * (e.maxSize || 5);
+      const base = e.baseScale || 1;
+      const ringScale = (1 + t * (e.maxSize || 5)) * base;
       if (e.billboard) {
         // Flat camera-facing ring: expand only in plane (X,Y), keep facing camera.
-        e.mesh.scale.set(ringScale, ringScale, 1);
+        e.mesh.scale.set(ringScale, ringScale, base);
         e.mesh.lookAt(camera.position);
         e.mesh.material.opacity = 0.95 * (1 - t * t);
       } else {
@@ -6655,7 +6815,8 @@ function updateEffects(dt) {
     }
     // --- Smoke cloud: slow expand, drift, rotate, long fade ---
     else if (e.type === 'smoke') {
-      const smokeExpand = 1 + t * ((e.maxSize || 4) - 1);
+      const base = e.baseScale || 1;
+      const smokeExpand = (1 + t * ((e.maxSize || 4) - 1)) * base;
       e.mesh.scale.set(smokeExpand, smokeExpand, smokeExpand);
       e.mesh.material.opacity = 0.4 * (1 - t) * (1 - t); // slow quadratic fade
       // Gentle rotation
@@ -6667,6 +6828,7 @@ function updateEffects(dt) {
     }
     // --- Debris chunks: fly outward, spin, fade ---
     else if (e.type === 'debris') {
+      const base = e.baseScale || 1;
       if (e.vel) {
         e.mesh.position.add(e.vel.clone().multiplyScalar(dt));
         e.vel.multiplyScalar(0.97); // slight drag
@@ -6677,7 +6839,7 @@ function updateEffects(dt) {
         e.mesh.rotation.z += e.rotVel.z * dt;
       }
       e.mesh.material.opacity = 0.8 * (1 - t);
-      const shrink = 1 - t * 0.3;
+      const shrink = (1 - t * 0.3) * base;
       e.mesh.scale.set(shrink, shrink, shrink);
     }
     // --- Tracers: fade ---
@@ -6701,10 +6863,11 @@ function updateEffects(dt) {
     }
     // --- Sparks: fly, drag, shrink, fade ---
     else if (e.type === 'spark' && e.vel) {
+      const base = e.baseScale || 1;
       e.mesh.position.add(e.vel.clone().multiplyScalar(dt));
       e.vel.multiplyScalar(0.93);
       e.mesh.material.opacity = 1 - t;
-      const s = 1 - t * 0.6;
+      const s = (1 - t * 0.6) * base;
       e.mesh.scale.set(s, s, s);
     }
     // --- Shield shimmer (for shield hits) ---
@@ -6923,29 +7086,34 @@ function spawnImpactSparks(pos, count) {
   count = count || 6;
 
   // --- Bright impact flash (white-hot center) ---
-  const flashGeo = new THREE.SphereGeometry(3, 6, 4);
-  const flashMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
-  const flashMesh = new THREE.Mesh(flashGeo, flashMat);
+  // Pooled 'sparkFlash' = unit sphere radius 1 at segments (6,4); scale 3 recovers
+  // the old SphereGeometry(3, 6, 4). Material is reset on every acquire so the
+  // previous user's faded opacity doesn't bleed through.
+  const flashMesh = _acquireExplosionMesh('sparkFlash');
   flashMesh.position.copy(pos);
-  scene.add(flashMesh);
-  game.effects.push({ mesh: flashMesh, lifetime: 0.06, age: 0, type: 'explosionFlash' });
+  flashMesh.scale.setScalar(3);
+  flashMesh.material.color.setHex(0xffffff);
+  flashMesh.material.opacity = 0.9;
+  game.effects.push({ mesh: flashMesh, lifetime: 0.06, age: 0, type: 'explosionFlash', pooled: true, baseScale: 3 });
 
   // --- Spark streaks (fast, bright, varied angles) ---
+  // Pooled 'spark' = unit sphere radius 1 at segments (4,3); baseScale carries
+  // the 1.2..2.0 per-spark size factor into updateEffects (spark branch).
   for (let i = 0; i < count; i++) {
     const brightness = 0.8 + Math.random() * 0.2;
-    const sparkColor = new THREE.Color(brightness, brightness * 0.6 + Math.random() * 0.2, brightness * 0.15);
-    const geo = new THREE.SphereGeometry(1.2 + Math.random() * 0.8, 4, 3);
-    const mat = new THREE.MeshBasicMaterial({ color: sparkColor, transparent: true, opacity: 1, blending: THREE.AdditiveBlending });
-    const spark = new THREE.Mesh(geo, mat);
+    const sparkScale = 1.2 + Math.random() * 0.8;
+    const spark = _acquireExplosionMesh('spark');
     spark.position.copy(pos);
-    scene.add(spark);
+    spark.scale.setScalar(sparkScale);
+    spark.material.color.setRGB(brightness, brightness * 0.6 + Math.random() * 0.2, brightness * 0.15);
+    spark.material.opacity = 1;
     const speed = 300 + Math.random() * 500;
     const vel = new THREE.Vector3(
       (Math.random()-0.5) * speed,
       (Math.random()-0.5) * speed,
       (Math.random()-0.5) * speed
     );
-    game.effects.push({ mesh: spark, lifetime: 0.2 + Math.random() * 0.3, age: 0, type: 'spark', vel });
+    game.effects.push({ mesh: spark, lifetime: 0.2 + Math.random() * 0.3, age: 0, type: 'spark', pooled: true, baseScale: sparkScale, vel });
   }
 
   // --- Tiny secondary sparks (ember spray, more numerous, slower) ---
@@ -6963,13 +7131,15 @@ function spawnImpactSparks(pos, count) {
   }
 
   // --- Small scorch puff (dark smoke wisp) ---
+  // Pooled 'puff' = unit icosahedron; scaling by 4 recovers the old radius-4 call.
   if (count > 3) {
-    const puffGeo = new THREE.IcosahedronGeometry(4, 0);
-    const puffMat = new THREE.MeshBasicMaterial({ color: 0x111111, transparent: true, opacity: 0.3 });
-    const puff = new THREE.Mesh(puffGeo, puffMat);
+    const puff = _acquireExplosionMesh('puff');
     puff.position.copy(pos);
-    scene.add(puff);
-    game.effects.push({ mesh: puff, lifetime: 0.6, age: 0, type: 'smoke', maxSize: 12,
+    puff.scale.setScalar(4);
+    puff.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
+    puff.material.color.setHex(0x111111);
+    puff.material.opacity = 0.3;
+    game.effects.push({ mesh: puff, lifetime: 0.6, age: 0, type: 'smoke', pooled: true, maxSize: 12, baseScale: 4,
       rotVel: new THREE.Vector3((Math.random()-0.5)*3, (Math.random()-0.5)*3, (Math.random()-0.5)*3) });
   }
 
