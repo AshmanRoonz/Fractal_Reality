@@ -1069,6 +1069,8 @@ const player = {
   phaseInvulnTimer: 0,
   // NORTHSTAR
   thermalShieldHP: 2500, thermalShieldMaxHP: 2500, // Scorch Thermal Shield power pool (absorbs damage + drains while held). Starts full; regens to max over 10s out of use.
+  // Scorch Incendiary Trap: charge-based like dashes. Two charges, each refilling on TRAP_CHARGE_COOLDOWN seconds.
+  trapCharges: 2, maxTrapCharges: 2, trapChargeCooldown: 12, trapCooldownTimer: 0,
   afterburnerActive: false,
   afterburnerSpeedMult: 1.0,
   railgunCharge: 0, // 0-1 charge level (hold alt-fire to charge)
@@ -3304,6 +3306,59 @@ function getHeatTrailTexture() {
   tex.magFilter = THREE.LinearFilter;
   tex.needsUpdate = true;
   _heatTrailTexture = tex;
+  return tex;
+}
+
+// Shared flame-lick texture: pointed top, round bottom (tear-drop), hot white
+// core fading through yellow/orange to deep red at the edges. Additive blended
+// billboards layered along a firewall read as a wall of fire instead of a flat
+// panel. Shape is elongated on Y so sprites read as vertical flame licks.
+let _flameLickTexture = null;
+function getFlameLickTexture() {
+  if (_flameLickTexture) return _flameLickTexture;
+  const c = document.createElement('canvas');
+  c.width = 64; c.height = 128;
+  const ctx2d = c.getContext('2d');
+  // Ellipse gradient centered low (base) with hot core, tapering up to a tip
+  // (taper is done by masking with a tear-drop path).
+  const grad = ctx2d.createRadialGradient(32, 96, 2, 32, 96, 60);
+  grad.addColorStop(0.00, 'rgba(255, 250, 230, 0.95)');
+  grad.addColorStop(0.18, 'rgba(255, 220, 130, 0.80)');
+  grad.addColorStop(0.40, 'rgba(255, 150, 50, 0.55)');
+  grad.addColorStop(0.70, 'rgba(220, 70, 20, 0.22)');
+  grad.addColorStop(1.00, 'rgba(100, 20, 10, 0.00)');
+  // Draw teardrop silhouette (round base, pointed tip) then fill with the warm gradient
+  ctx2d.save();
+  ctx2d.beginPath();
+  ctx2d.moveTo(32, 2);                      // tip
+  ctx2d.bezierCurveTo(6, 40, 2, 90, 32, 124); // left side curving to base
+  ctx2d.bezierCurveTo(62, 90, 58, 40, 32, 2); // right side back to tip
+  ctx2d.closePath();
+  ctx2d.clip();
+  ctx2d.fillStyle = grad;
+  ctx2d.fillRect(0, 0, 64, 128);
+  // A couple of inner hot streaks for a bit of structure
+  ctx2d.globalCompositeOperation = 'lighter';
+  for (let s = 0; s < 3; s++) {
+    const sx = 32 + (Math.random() - 0.5) * 10;
+    const sy0 = 100 + Math.random() * 14;
+    const sy1 = 20 + Math.random() * 30;
+    const g2 = ctx2d.createLinearGradient(sx, sy0, sx, sy1);
+    g2.addColorStop(0.00, 'rgba(255, 240, 200, 0.35)');
+    g2.addColorStop(1.00, 'rgba(255, 120, 40, 0.00)');
+    ctx2d.strokeStyle = g2;
+    ctx2d.lineWidth = 3 + Math.random() * 2;
+    ctx2d.beginPath();
+    ctx2d.moveTo(sx, sy0);
+    ctx2d.quadraticCurveTo(sx + (Math.random() - 0.5) * 14, (sy0 + sy1) * 0.5, sx + (Math.random() - 0.5) * 6, sy1);
+    ctx2d.stroke();
+  }
+  ctx2d.restore();
+  const tex = new THREE.CanvasTexture(c);
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  tex.needsUpdate = true;
+  _flameLickTexture = tex;
   return tex;
 }
 
@@ -6007,6 +6062,8 @@ function commitLoadout(key) {
   player.powerShotCharging = false; player.powerShotCharge = 0;
   player.legionSwitchTimer = 0;
   player.thermalShieldHP = player.thermalShieldMaxHP; // Scorch thermal shield starts fully charged
+  player.trapCharges = player.maxTrapCharges; // Scorch starts with both Incendiary Trap charges
+  player.trapCooldownTimer = 0;
   player.monarchTier = 0;
   player.monarchDmgMult = 1.0;
   player.monarchCooldownMult = 1.0;
@@ -6303,6 +6360,8 @@ function respawnPlayer() {
   player.ionAdsActive = false;
   player.gunShieldHP = 0; player.gunShieldTimer = 0;
   player.thermalShieldHP = player.thermalShieldMaxHP; // Scorch spawns with a fully charged thermal shield
+  player.trapCharges = player.maxTrapCharges; // Scorch respawns with both trap charges
+  player.trapCooldownTimer = 0;
   player.abilityActive = [false, false, false];
   player.abilityTimers = [0, 0, 0];
   player.abilityCooldowns = [0, 0, 0];
@@ -6430,6 +6489,15 @@ function updatePlayerMovement(dt) {
     if (player.dashCooldownTimer <= 0 && player.dashCharges < ch.maxDashes) {
       player.dashCharges++;
       if (player.dashCharges < ch.maxDashes) player.dashCooldownTimer = ch.dashCooldown;
+    }
+  }
+
+  // Scorch Incendiary Trap charge regen (mirrors the dash charge system)
+  if (player.loadoutKey === 'SCORCH' && player.trapCooldownTimer > 0) {
+    player.trapCooldownTimer -= dt;
+    if (player.trapCooldownTimer <= 0 && player.trapCharges < player.maxTrapCharges) {
+      player.trapCharges++;
+      if (player.trapCharges < player.maxTrapCharges) player.trapCooldownTimer = player.trapChargeCooldown;
     }
   }
 
@@ -6894,9 +6962,16 @@ function activateAbility(slot) {
   if (player.shipState === 'dead' || !player.abilities[slot]) return;
   // No abilities during the pre-round warmup countdown
   if (game.state === 'warmup') return;
-  if (player.abilityCooldowns[slot] > 0) return;
 
   const ability = player.abilities[slot];
+
+  // Incendiary Trap (Scorch): charge-based gating instead of cooldown gating
+  const isTrapCharges = (ability.name === 'Incendiary Trap' && player.loadoutKey === 'SCORCH');
+  if (isTrapCharges) {
+    if ((player.trapCharges || 0) <= 0) return;
+  } else {
+    if (player.abilityCooldowns[slot] > 0) return;
+  }
 
   // Vortex Shield: can't reactivate if ION energy is depleted
   if (ability.name === 'Vortex Shield' && player.ionEnergy <= 0) return;
@@ -6932,7 +7007,11 @@ function activateAbility(slot) {
     Overlays.abilityFlash(ability.name || 'ABILITY', bucket ? ABILITY_COLORS[bucket] : null);
   }
   executeAbility(slot, ability);
-  if (ability.cooldown > 0) {
+  if (isTrapCharges) {
+    // Consume a trap charge; start the per-charge regen timer if not already running
+    player.trapCharges = Math.max(0, (player.trapCharges || 0) - 1);
+    if (player.trapCooldownTimer <= 0) player.trapCooldownTimer = player.trapChargeCooldown;
+  } else if (ability.cooldown > 0) {
     let cd = ability.cooldown;
     // Monarch tier 3: 30% cooldown reduction
     if (player.monarchCooldownMult < 1) cd *= player.monarchCooldownMult;
@@ -7006,26 +7085,77 @@ function executeAbility(slot, ability) {
         fxTimer: 0, meshes: [],
       };
       game.worldEffects.push(effData);
-      // Persistent visual: glowing fire line mesh (visible wall of flames)
-      const segCount = 8;
-      for (let s = 0; s < segCount; s++) {
-        const t0 = (s / segCount) * wallLen;
-        const t1 = ((s + 1) / segCount) * wallLen;
-        const p0 = start.clone().add(forward.clone().multiplyScalar(t0));
-        const p1 = start.clone().add(forward.clone().multiplyScalar(t1));
-        const mid = p0.clone().add(p1).multiplyScalar(0.5);
-        // Flat plane segment for the fire wall
-        const planeGeo = new THREE.PlaneGeometry(wallLen / segCount, 120);
-        const planeMat = new THREE.MeshBasicMaterial({
-          color: 0xff5500, transparent: true, opacity: 0.25,
-          blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
+      // Persistent visual: a wall of flame licks. Many layered billboard sprites
+      // scattered along the length with per-sprite phase so each lick bobs and
+      // flickers independently. Reads as an organic fire curtain instead of a
+      // flat panel.
+      const flameTex = getFlameLickTexture();
+      const licksPerUnit = 40 / 800; // ~40 licks over the default 800u wall
+      const lickCount = Math.max(16, Math.floor(wallLen * licksPerUnit));
+      // Core (back) row, then mid row, then front row for depth
+      for (let i = 0; i < lickCount; i++) {
+        const u = i / Math.max(1, lickCount - 1);
+        const tAlong = u * wallLen + (Math.random() - 0.5) * (wallLen / lickCount) * 0.9;
+        const layer = i % 3; // 0 core, 1 mid, 2 front
+        const lateralJitter = (Math.random() - 0.5) * 40;
+        const vertJitter = (Math.random() - 0.5) * 20;
+        const basePt = start.clone().add(forward.clone().multiplyScalar(tAlong));
+        const perp = new THREE.Vector3(-forward.z, 0, forward.x).normalize();
+        basePt.add(perp.clone().multiplyScalar(lateralJitter));
+        // Sprite lick
+        const mat = new THREE.SpriteMaterial({
+          map: flameTex, color: 0xffffff, transparent: true, opacity: 0.85,
+          blending: THREE.AdditiveBlending, depthWrite: false,
         });
-        const planeMesh = new THREE.Mesh(planeGeo, planeMat);
-        planeMesh.position.copy(mid);
-        // Orient plane to face perpendicular to the firewall direction
-        planeMesh.lookAt(mid.clone().add(new THREE.Vector3(-forward.z, 0, forward.x)));
-        scene.add(planeMesh);
-        effData.meshes.push(planeMesh);
+        const spr = new THREE.Sprite(mat);
+        // Scale: taller than wide (flame licks are vertical). Back layer a touch
+        // larger and dimmer; front layer a touch smaller and hotter.
+        const heightBase = (layer === 0) ? 180 : (layer === 1) ? 150 : 120;
+        const h = heightBase * (0.8 + Math.random() * 0.5);
+        const w = h * 0.55 * (0.85 + Math.random() * 0.3);
+        spr.scale.set(w, h, 1);
+        spr.position.copy(basePt);
+        spr.position.y += h * 0.35 + vertJitter; // pedestal so base sits near y=0
+        // Per-lick animation params (used by the firewall update tick)
+        spr.userData._fw = {
+          phase: Math.random() * Math.PI * 2,
+          freq: 5 + Math.random() * 4,
+          baseH: h,
+          baseW: w,
+          baseY: spr.position.y,
+          baseOpacity: (layer === 0) ? 0.55 : (layer === 1) ? 0.75 : 0.9,
+          hueShift: (layer === 2) ? 0x10 : 0x00, // front licks slightly hotter
+          layer: layer,
+        };
+        mat.color.setHex(layer === 2 ? 0xffeecc : layer === 1 ? 0xffbb66 : 0xff7733);
+        scene.add(spr);
+        effData.meshes.push(spr);
+      }
+      // Low embers strip: squat sprites near the ground to hide the sprite bases
+      const emberCount = Math.max(8, Math.floor(wallLen / 60));
+      for (let i = 0; i < emberCount; i++) {
+        const tAlong = (i / emberCount) * wallLen + Math.random() * (wallLen / emberCount);
+        const basePt = start.clone().add(forward.clone().multiplyScalar(tAlong));
+        const perp = new THREE.Vector3(-forward.z, 0, forward.x).normalize();
+        basePt.add(perp.clone().multiplyScalar((Math.random() - 0.5) * 30));
+        const mat = new THREE.SpriteMaterial({
+          map: flameTex, color: 0xff5522, transparent: true, opacity: 0.7,
+          blending: THREE.AdditiveBlending, depthWrite: false,
+        });
+        const spr = new THREE.Sprite(mat);
+        const h = 55 + Math.random() * 25;
+        const w = h * 1.4;
+        spr.scale.set(w, h, 1);
+        spr.position.copy(basePt);
+        spr.position.y += h * 0.25;
+        spr.userData._fw = {
+          phase: Math.random() * Math.PI * 2,
+          freq: 7 + Math.random() * 3,
+          baseH: h, baseW: w, baseY: spr.position.y,
+          baseOpacity: 0.55, layer: -1, // ember row
+        };
+        scene.add(spr);
+        effData.meshes.push(spr);
       }
       // Initial burst along the line
       for (let t = 0; t <= wallLen; t += 60) {
@@ -7634,16 +7764,25 @@ function updateShieldVisuals(dt) {
     player.thermalShieldHP > 0;
 
   if (thermalActive) {
+    // Size the visual to the actual cone (reach ≈ hullLength * 1.85, tip
+    // radius ≈ hullLength * 1.20). Disc sits at the cone's mid-point and is
+    // scaled to the mid-cone radius so the visual footprint lines up with
+    // where damage actually lands.
+    const hLen = (player.chassis && player.chassis.hullLength) ? player.chassis.hullLength : 140;
+    const coneReach = hLen * 1.85;
+    const coneBaseR = hLen * 0.50;
+    const coneTipR  = hLen * 1.20;
+    const midR = (coneBaseR + coneTipR) * 0.5;
     if (!player.thermalShieldMesh) {
-      const geo = new THREE.CircleGeometry(120, 32);
+      const geo = new THREE.CircleGeometry(1, 40); // unit circle; scaled below
       const mat = new THREE.MeshBasicMaterial({
         color: 0xff7722, transparent: true, opacity: 0.28,
         side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false
       });
       player.thermalShieldMesh = new THREE.Mesh(geo, mat);
       scene.add(player.thermalShieldMesh);
-      // Outer heat-haze ring
-      const ringGeo = new THREE.RingGeometry(110, 125, 32);
+      // Outer heat-haze ring: unit ring 0.88..1.04 scaled to match disc
+      const ringGeo = new THREE.RingGeometry(0.88, 1.04, 40);
       const ringMat = new THREE.MeshBasicMaterial({
         color: 0xffaa44, transparent: true, opacity: 0.22,
         side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false
@@ -7651,20 +7790,23 @@ function updateShieldVisuals(dt) {
       player.thermalShieldRing = new THREE.Mesh(ringGeo, ringMat);
       scene.add(player.thermalShieldRing);
     }
-    // Position in front of player (same offset as Vortex Shield).
-    const shieldPos = player.position.clone().add(forward.clone().multiplyScalar(80));
+    // Position mid-cone and scale to mid-cone radius so the footprint matches
+    // the damage volume. Slightly out in front of the hull like before.
+    const shieldPos = player.position.clone().add(forward.clone().multiplyScalar(coneReach * 0.5));
     player.thermalShieldMesh.position.copy(shieldPos);
     player.thermalShieldMesh.lookAt(shieldPos.clone().add(forward));
+    player.thermalShieldMesh.scale.set(midR, midR, midR);
     // Orange hue cycling (kept in warm band).
     const hue = 0.04 + (Math.sin(game.time * 2.2) * 0.5 + 0.5) * 0.07; // 0.04 → 0.11
     const hpPct = Math.max(0, player.thermalShieldHP / player.thermalShieldMaxHP);
     player.thermalShieldMesh.material.color.setHSL(hue, 0.85, 0.55);
     // Opacity scales with remaining power (brighter when full) + pulse
     player.thermalShieldMesh.material.opacity = (0.22 + hpPct * 0.18) + Math.sin(game.time * 8) * 0.05;
-    // Outer ring
+    // Outer ring (matches disc scale)
     if (player.thermalShieldRing) {
       player.thermalShieldRing.position.copy(shieldPos);
       player.thermalShieldRing.lookAt(shieldPos.clone().add(forward));
+      player.thermalShieldRing.scale.set(midR, midR, midR);
       player.thermalShieldRing.material.color.setHSL((hue + 0.02) % 1, 0.75, 0.65);
       player.thermalShieldRing.material.opacity = (0.14 + hpPct * 0.12) + Math.sin(game.time * 10) * 0.04;
     }
@@ -7779,14 +7921,15 @@ function updateAbilities(dt) {
         player.abilityTimers[i] = 0;
         // No fixed cooldown; the 10s recharge IS the cooldown.
       }
-      // Forward burn cone: the shield projects heat about one ship's length
-      // ahead of the player. Enemies off-axis or past the tip take no damage.
-      // Ship length is the chassis hullLength (~140 for the Dreadnought).
+      // Forward burn cone: the shield projects heat well past the hull. Reach
+      // and width were bumped after playtesting; the cone now stretches almost
+      // two ship lengths (~250u for Dreadnought) and flares wider at the tip
+      // so enemies a touch off-axis still take damage.
       const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
-      const reach = player.chassis.hullLength;
-      const baseRadius = player.chassis.hullLength * 0.35; // narrow at the shield face
-      const tipRadius  = player.chassis.hullLength * 0.80; // widens at the tip
-      const maxDPS = 2500; // more damage: cone is smaller than the old sphere
+      const reach = player.chassis.hullLength * 1.85;
+      const baseRadius = player.chassis.hullLength * 0.50; // wider face
+      const tipRadius  = player.chassis.hullLength * 1.20; // much wider tip
+      const maxDPS = 2500; // unchanged DPS; bigger volume already buffs uptime damage
       for (const bot of game.entities) {
         if (!bot.alive || bot.team === player.team) continue;
         const toBot = new THREE.Vector3().subVectors(bot.position, player.position);
@@ -8218,11 +8361,25 @@ function updateAbilities(dt) {
       }
     }
 
-    // Animate firewall meshes (flicker opacity)
+    // Animate firewall flame licks (breath + bob + flicker per sprite)
     if (eff.type === 'firewall' && eff.meshes) {
       const fade = Math.max(0, Math.min(1, eff.timer / 1.0)); // fade out in last second
+      const t = game.time;
       for (const m of eff.meshes) {
-        m.material.opacity = (0.15 + Math.sin(game.time * 12 + Math.random()) * 0.1) * fade;
+        const fw = m.userData && m.userData._fw;
+        if (!fw) { m.material.opacity = 0.2 * fade; continue; }
+        // Breath: vertical scale oscillation around base height
+        const breath = 1 + 0.22 * Math.sin(t * fw.freq + fw.phase);
+        const breathW = 1 + 0.08 * Math.sin(t * (fw.freq * 0.7) + fw.phase * 1.3);
+        m.scale.x = fw.baseW * breathW;
+        m.scale.y = fw.baseH * breath;
+        // Bob: subtle y-lift on the taller layers, none for embers
+        if (fw.layer >= 0) {
+          m.position.y = fw.baseY + Math.sin(t * (fw.freq * 0.5) + fw.phase) * 6;
+        }
+        // Flicker: opacity modulated per sprite so the curtain twinkles
+        const flick = 0.75 + 0.25 * Math.sin(t * (fw.freq * 1.3) + fw.phase * 2.1);
+        m.material.opacity = fw.baseOpacity * flick * fade;
       }
     }
 
@@ -8231,12 +8388,12 @@ function updateAbilities(dt) {
       if (eff.mesh && eff.mesh.parent) { scene.remove(eff.mesh); eff.mesh.geometry.dispose(); eff.mesh.material.dispose(); }
       if (eff.coreMesh && eff.coreMesh.parent) { scene.remove(eff.coreMesh); eff.coreMesh.geometry.dispose(); eff.coreMesh.material.dispose(); }
       if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh);
-      // Clean up firewall line meshes
+      // Clean up firewall line meshes / sprites
       if (eff.meshes) {
         for (const m of eff.meshes) {
           if (m.parent) scene.remove(m);
-          m.geometry.dispose();
-          m.material.dispose();
+          if (m.geometry && m.geometry.dispose) m.geometry.dispose();
+          if (m.material && m.material.dispose) m.material.dispose();
         }
       }
       game.worldEffects.splice(e, 1);
@@ -9608,6 +9765,32 @@ function updateAbilityHUD() {
       // Show power on idle slots so the player sees it refilling
       if (cdText && !active) {
         cdText.textContent = Math.floor(player.thermalShieldHP);
+      }
+    }
+
+    // SCORCH Incendiary Trap: charge-based (mirrors dash charges).
+    // Bar fills with the regen progress of the next charge; text shows current charge count.
+    if (player.loadoutKey === 'SCORCH' && ability.name === 'Incendiary Trap') {
+      const charges = player.trapCharges || 0;
+      const maxCharges = player.maxTrapCharges || 2;
+      const bar2 = slot.querySelector('.ab-cd-bar');
+      if (bar2) {
+        if (charges >= maxCharges) {
+          bar2.style.width = '100%';
+        } else {
+          const t = player.trapCooldownTimer || 0;
+          const cdMax = player.trapChargeCooldown || 12;
+          bar2.style.width = ((1 - t / cdMax) * 100) + '%';
+        }
+      }
+      // Slot reads ready whenever at least one charge is available
+      if (charges > 0) {
+        slot.className = 'ability-slot ready';
+      } else {
+        slot.className = 'ability-slot on-cooldown';
+      }
+      if (cdText) {
+        cdText.textContent = charges + '/' + maxCharges;
       }
     }
   }
