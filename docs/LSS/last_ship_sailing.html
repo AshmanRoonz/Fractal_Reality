@@ -867,7 +867,7 @@ canvas { display: block; }
     <span class="strip-label">TEAMMATES</span>
     <div id="teammates-list" style="display:flex;gap:10px;"></div>
   </div>
-  <div style="padding:8px 24px;color:#555;font-size:10px;letter-spacing:1px;background:rgba(4,4,10,0.85);">WASD: Move | SPACE/CTRL: Up/Down | MOUSE: Aim | SHIFT: Dash | Q/E/F: Abilities | V: Core | ESC: Settings&nbsp;&nbsp;&nbsp;GAMEPAD: D-Pad Up/Down for vertical movement</div>
+  <div style="padding:8px 24px;color:#555;font-size:10px;letter-spacing:1px;background:rgba(4,4,10,0.85);">WASD: Move | SPACE/CTRL: Up/Down | MOUSE: Aim | SHIFT: Dash | Q/E/F: Abilities | V: Core | ESC: Settings&nbsp;&nbsp;&nbsp;GAMEPAD: D-Pad Up/Down: browse ships | START: launch | BACK: settings (in-match) / close menu</div>
   <div id="ship-select-countdown">
     <div class="cd-num">3</div>
     <div class="cd-sub">LAUNCH</div>
@@ -1147,6 +1147,10 @@ const input = {
   gpAbility1: false, gpAbility1Prev: false,
   gpAbility2: false, gpAbility2Prev: false,
   gpCore: false, gpCorePrev: false,
+  gpMenu: false, gpMenuPrev: false,
+  gpScoreboard: false, gpScoreboardPrev: false,
+  gpDpadUp: false, gpDpadUpPrev: false,
+  gpDpadDown: false, gpDpadDownPrev: false,
   gpMoveX: 0, gpMoveY: 0,
   gpLookX: 0, gpLookY: 0,
   gpMoveUp: false, gpMoveDown: false,
@@ -9030,6 +9034,10 @@ function pollGamepad() {
   input.gpAbility1Prev = input.gpAbility1;
   input.gpAbility2Prev = input.gpAbility2;
   input.gpCorePrev = input.gpCore;
+  input.gpMenuPrev = input.gpMenu;
+  input.gpScoreboardPrev = input.gpScoreboard;
+  input.gpDpadUpPrev = input.gpDpadUp;
+  input.gpDpadDownPrev = input.gpDpadDown;
 
   // Buttons (via configurable bindings)
   input.gpFire = gpBtn('fire');
@@ -9042,13 +9050,73 @@ function pollGamepad() {
   input.gpCore = gpBtn('core');
   input.gpMoveUp = gpBtn('moveUp');
   input.gpMoveDown = gpBtn('moveDown');
+  // Menu buttons (fixed to Start/Back by convention; bindings are advisory)
+  input.gpMenu = gpBtn('menu');            // Start (confirm/select)
+  input.gpScoreboard = gpBtn('scoreboard'); // Back (cancel/esc)
+  // D-pad up/down read directly (buttons 12/13) so menu nav still works when
+  // button 12 is bound to 'core' for gameplay. We gate the gameplay core-edge
+  // below whenever a menu is active, so there's no double-fire.
+  input.gpDpadUp = !!(gp.buttons[12] && (gp.buttons[12].pressed || gp.buttons[12].value > input.triggerThreshold));
+  input.gpDpadDown = !!(gp.buttons[13] && (gp.buttons[13].pressed || gp.buttons[13].value > input.triggerThreshold));
 
-  // Edge-triggered actions
-  if (input.gpDash && !input.gpDashPrev) dash();
-  if (input.gpAbility0 && !input.gpAbility0Prev) activateAbility(0);
-  if (input.gpAbility1 && !input.gpAbility1Prev) activateAbility(1);
-  if (input.gpAbility2 && !input.gpAbility2Prev) activateAbility(2);
-  if (input.gpCore && !input.gpCorePrev) activateCore();
+  // ---- Menu navigation (runs before gameplay edge triggers) ----
+  const _shipSelect = document.getElementById('ship-select');
+  const _shipSelectActive = !!(_shipSelect && _shipSelect.classList.contains('active'));
+  const _menuActive = settingsOpen || _shipSelectActive || game.state === 'select' || game.state === 'matchEnd';
+
+  // Start: confirm / select
+  if (input.gpMenu && !input.gpMenuPrev) {
+    if (settingsOpen) {
+      closeSettings();
+    } else if (_shipSelectActive) {
+      // Confirm previewed ship; if nothing previewed yet, pick the first entry
+      if (_previewedKey && LOADOUTS[_previewedKey]) {
+        commitLoadout(_previewedKey);
+      } else {
+        const first = document.querySelector('.ship-list-entry');
+        if (first && first.dataset && first.dataset.key) previewLoadout(first.dataset.key);
+      }
+    }
+    // In-game: no-op (no confirm action during combat)
+  }
+
+  // Back: cancel / esc
+  if (input.gpScoreboard && !input.gpScoreboardPrev) {
+    if (settingsOpen) {
+      closeSettings();
+    } else if (_shipSelectActive) {
+      // Top-level menu; nothing to back out to
+    } else if (game.state !== 'select') {
+      openSettings();
+      buildSettingsPage();
+    }
+  }
+
+  // D-pad up/down while ship-select is open: cycle the ship list
+  if (_shipSelectActive) {
+    const entries = Array.from(document.querySelectorAll('.ship-list-entry'));
+    if (entries.length) {
+      let idx = entries.findIndex(e => e.classList.contains('selected'));
+      if (input.gpDpadUp && !input.gpDpadUpPrev) {
+        idx = (idx <= 0) ? entries.length - 1 : idx - 1;
+        const key = entries[idx] && entries[idx].dataset && entries[idx].dataset.key;
+        if (key) previewLoadout(key);
+      } else if (input.gpDpadDown && !input.gpDpadDownPrev) {
+        idx = (idx < 0 || idx >= entries.length - 1) ? 0 : idx + 1;
+        const key = entries[idx] && entries[idx].dataset && entries[idx].dataset.key;
+        if (key) previewLoadout(key);
+      }
+    }
+  }
+
+  // ---- Gameplay edge-triggered actions (suppressed while a menu is active) ----
+  if (!_menuActive) {
+    if (input.gpDash && !input.gpDashPrev) dash();
+    if (input.gpAbility0 && !input.gpAbility0Prev) activateAbility(0);
+    if (input.gpAbility1 && !input.gpAbility1Prev) activateAbility(1);
+    if (input.gpAbility2 && !input.gpAbility2Prev) activateAbility(2);
+    if (input.gpCore && !input.gpCorePrev) activateCore();
+  }
 }
 
 // ---- CIRCUMPUNCT HUD ----
@@ -12083,6 +12151,12 @@ function gameLoop(timestamp) {
   // Update level shader time for vein animations
   if (game.levelMaterial) game.levelMaterial.uniforms.time.value = game.time;
 
+  // Poll gamepad every frame (before any state-based early return) so menu
+  // buttons (Start/Back/D-pad) keep working while the ship-select overlay
+  // is up or while settings are open. Gameplay edge-triggered actions inside
+  // pollGamepad are gated on _menuActive so this does not misfire abilities.
+  pollGamepad();
+
   if (game.state === 'select') { renderPostFX(); return; }
 
   // Pause gameplay while settings are open
@@ -12092,9 +12166,6 @@ function gameLoop(timestamp) {
   }
 
   const dt = game.deltaTime;
-
-  // Poll gamepad
-  pollGamepad();
 
   // Update systems
   updatePlayerStasis(dt);

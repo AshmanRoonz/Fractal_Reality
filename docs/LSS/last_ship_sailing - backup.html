@@ -2063,6 +2063,12 @@ postFX.brightQuad.visible = false;
 postFX.blurQuad.visible = false;
 postFX.compositeQuad.visible = false;
 
+// Hot-path scratch vectors. Both renderPostFX (every frame) and
+// probeEnvironmentOpenness (every Nth frame, very cheap) used to allocate
+// fresh Vector3s; reusing a module-level scratch removes that GC pressure.
+const _postFXScratchV = new THREE.Vector3();
+const _envProbeCamPos = new THREE.Vector3();
+
 function renderPostFX() {
   const damageMax = Math.max(
     game.damageIndicators.top, game.damageIndicators.bottom,
@@ -2091,8 +2097,8 @@ function renderPostFX() {
       postFX.compositeMat.uniforms.shockIntensity.value = 0.0;
       postFX.compositeMat.uniforms.shockAge.value = 1.0;
     } else {
-      // Project world -> NDC using camera.
-      const _sv = new THREE.Vector3().copy(sw.origin);
+      // Project world -> NDC using camera. Scratch vector is reused across frames.
+      const _sv = _postFXScratchV.copy(sw.origin);
       _sv.project(camera);
       // Behind camera gives z > 1; gate it out.
       if (_sv.z > 1.0 || _sv.z < -1.0) {
@@ -2764,13 +2770,19 @@ const _shipPreview3D = {
   renderer: null, scene: null, camera: null, canvas: null,
   model: null, lastKey: null, pendingKey: null, animId: null,
   rotationSpeed: 0.005, // radians per frame at 60fps (slow, graceful)
+  initFailed: false, // set true if WebGL init throws; prevents retry storm
 };
 
 function _initShipPreview3D() {
   if (_shipPreview3D.renderer) return _shipPreview3D.renderer;
-  if (typeof THREE === 'undefined') return null;
+  // Once init has failed (driver refused WebGL, canvas missing, etc.) don't
+  // keep retrying on every setShipPreviewModel / startShipPreviewLoop call;
+  // the preview panel will just stay hidden. The player can still pick and
+  // launch, and a full page reload clears the flag.
+  if (_shipPreview3D.initFailed) return null;
+  if (typeof THREE === 'undefined') { _shipPreview3D.initFailed = true; return null; }
   const canvas = document.getElementById('ship-preview-canvas');
-  if (!canvas) return null;
+  if (!canvas) return null; // canvas not in DOM yet; don't latch the failure
   try {
     const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -2795,6 +2807,7 @@ function _initShipPreview3D() {
     return renderer;
   } catch (e) {
     console.warn('[ship-preview] WebGL init failed:', e && e.message ? e.message : e);
+    _shipPreview3D.initFailed = true;
     return null;
   }
 }
@@ -2863,6 +2876,16 @@ function _applyShipPreviewModel(key) {
 function _animateShipPreview() {
   const s = _shipPreview3D;
   if (!s.renderer || !s.canvas) return;
+  // Skip the render entirely when the tab is hidden or when the ship-select
+  // panel isn't actually on screen (the .active class is added by buildShipSelect
+  // and removed at LAUNCH). We still rAF so we can resume seamlessly when the
+  // tab returns to focus, but we don't burn GPU on an invisible scene.
+  const sel = document.getElementById('ship-select');
+  const visible = !document.hidden && sel && sel.classList.contains('active');
+  if (!visible) {
+    s.animId = requestAnimationFrame(_animateShipPreview);
+    return;
+  }
   // Keep the backbuffer in sync with the CSS-sized canvas.
   const w = s.canvas.clientWidth | 0;
   const h = s.canvas.clientHeight | 0;
@@ -3055,14 +3078,26 @@ preloadShipModels();
 // mesh once the cache is ready. The owner must have .mesh, .chassis, .loadoutKey.
 function swapToModelMeshWhenReady(owner, teamColor) {
   if (!shipModelCache.ready) return;
+  if (!owner) return;
+  // Per-owner generation token: each call bumps the counter and captures the
+  // captured key/team at call time. If a later swap is queued (respawn, loadout
+  // swap, team change) before the promise resolves, the stale callback will see
+  // a mismatch and bail. Prevents ghost meshes and wrong-color/wrong-key swaps
+  // when the owner mutates between issue and fulfillment.
+  const gen = (owner._swapGen || 0) + 1;
+  owner._swapGen = gen;
+  const capturedKey = owner.loadoutKey;
+  const capturedTeam = teamColor;
   shipModelCache.ready.then(() => {
-    if (!owner) return;
+    if (!owner || owner._swapGen !== gen) return;
     // Player uses shipState; bots/network use .alive. Accept either "alive" signal.
     const isDead = (owner.alive === false) || (owner.shipState === 'dead');
     if (isDead) return;
     if (!owner.mesh || (owner.mesh.userData && owner.mesh.userData.isModelShip)) return;
-    const key = owner.loadoutKey;
-    if (!key || !shipModelCache.loaded[key]) return;
+    // Key/team must still match what we were issued with; if not, a newer swap
+    // will take over (owner._swapGen would have been bumped).
+    if (owner.loadoutKey !== capturedKey) return;
+    if (!capturedKey || !shipModelCache.loaded[capturedKey]) return;
     // Preserve position, quaternion, visibility, and the .bot backreference.
     const oldMesh = owner.mesh;
     const pos = oldMesh.position.clone();
@@ -3070,7 +3105,7 @@ function swapToModelMeshWhenReady(owner, teamColor) {
     const visible = oldMesh.visible;
     const botRef = oldMesh.userData && oldMesh.userData.bot;
     if (oldMesh.parent) oldMesh.parent.remove(oldMesh);
-    owner.mesh = createShipMesh(owner.chassis, teamColor, key);
+    owner.mesh = createShipMesh(owner.chassis, capturedTeam, capturedKey);
     owner.mesh.position.copy(pos);
     owner.mesh.quaternion.copy(quat);
     owner.mesh.visible = visible;
@@ -4867,14 +4902,8 @@ class DestructibleObstacle {
         break;
       }
       case 'cross': {
-        // Three intersecting boxes forming a cross/jack
-        const arm = s * 0.35;
-        const len = s;
-        const g1 = new THREE.BoxGeometry(len, arm, arm);
-        const g2 = new THREE.BoxGeometry(arm, len, arm);
-        const g3 = new THREE.BoxGeometry(arm, arm, len);
-        geo = new THREE.BufferGeometry();
-        // Merge: just use the biggest box and add extra detail with a dodecahedron
+        // Originally three intersecting boxes; the merge was never finished and
+        // the visual settled on a dodecahedron, so the boxes were dead code.
         geo = new THREE.DodecahedronGeometry(s * 0.75, 0);
         break;
       }
@@ -5841,21 +5870,28 @@ function updateParticles(dt) {
 }
 
 const MAX_EFFECTS = 350;
+function _disposeOrReleaseEffect(e) {
+  // Heat-trail sprites route back to the pool instead of disposing; every
+  // other effect type disposes normally.
+  if (e.type === 'heatTrail') {
+    _releaseHeatTrail(e.mesh);
+    return;
+  }
+  scene.remove(e.mesh);
+  if (e.mesh.geometry) e.mesh.geometry.dispose();
+  if (e.mesh.material) e.mesh.material.dispose();
+}
 function updateEffects(dt) {
   // Cap effects: cull oldest when over budget
   while (game.effects.length > MAX_EFFECTS) {
     const e = game.effects.shift();
-    scene.remove(e.mesh);
-    if (e.mesh.geometry) e.mesh.geometry.dispose();
-    if (e.mesh.material) e.mesh.material.dispose();
+    _disposeOrReleaseEffect(e);
   }
   for (let i = game.effects.length - 1; i >= 0; i--) {
     const e = game.effects[i];
     e.age += dt;
     if (e.age >= e.lifetime) {
-      scene.remove(e.mesh);
-      if (e.mesh.geometry) e.mesh.geometry.dispose();
-      if (e.mesh.material) e.mesh.material.dispose();
+      _disposeOrReleaseEffect(e);
       game.effects.splice(i, 1);
       continue;
     }
@@ -6066,6 +6102,36 @@ function spawnElectricSmoke(pos, radius, opts) {
   });
 }
 
+// Heat-trail sprite + material pool. Ships emit up to ~12 heat trails/sec each
+// while moving fast, so with 6 active ships we'd be allocating ~75 sprites/sec
+// of steady-state GC pressure. Pool entries are acquired on spawn, reset per
+// call, and released on expiry (see updateEffects).
+const _heatTrailPool = [];
+const _HEAT_TRAIL_POOL_MAX = 96;
+function _acquireHeatTrail(tex) {
+  if (_heatTrailPool.length) return _heatTrailPool.pop();
+  const mat = new THREE.SpriteMaterial({
+    map: tex,
+    color: 0xffb070,
+    transparent: true,
+    opacity: 1.0,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    rotation: 0,
+  });
+  const sprite = new THREE.Sprite(mat);
+  return { sprite, mat };
+}
+function _releaseHeatTrail(sprite) {
+  if (!sprite) return;
+  if (sprite.parent) sprite.parent.remove(sprite);
+  if (_heatTrailPool.length < _HEAT_TRAIL_POOL_MAX) {
+    _heatTrailPool.push({ sprite, mat: sprite.material });
+  } else {
+    // Pool full; actually dispose to free the GPU resources.
+    if (sprite.material) sprite.material.dispose();
+  }
+}
 // Heat trail blur behind a moving ship. Spawns a stretched additive sprite
 // just aft of the hull, oriented along the velocity direction. Intensity
 // scales with speed/maxSpeed so parked ships emit nothing.
@@ -6075,16 +6141,14 @@ function spawnHeatTrail(pos, velocity, maxSpeed, hullRadius) {
   const t = Math.min(1, speed / Math.max(1, maxSpeed));
   if (t < 0.12) return;
   const tex = getHeatTrailTexture();
-  const mat = new THREE.SpriteMaterial({
-    map: tex,
-    color: 0xffb070,
-    transparent: true,
-    opacity: 0.45 + t * 0.35,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false,
-    rotation: Math.random() * Math.PI * 2,
-  });
-  const sprite = new THREE.Sprite(mat);
+  const entry = _acquireHeatTrail(tex);
+  const sprite = entry.sprite;
+  const mat = entry.mat;
+  mat.map = tex;
+  mat.color.setHex(0xffb070);
+  mat.opacity = 0.45 + t * 0.35;
+  mat.rotation = Math.random() * Math.PI * 2;
+  mat.needsUpdate = true;
   // Spawn a touch behind the hull along the negative velocity direction,
   // with a small jitter so back-to-back puffs don't z-fight.
   const back = velocity.clone().normalize().multiplyScalar(-(hullRadius * 0.85));
@@ -6193,6 +6257,7 @@ function spawnImpactSparks(pos, count) {
 // tip is then used as the muzzle-flash origin on the HUD canvas, so flash lines
 // up with the painted art even when the art drifts by a few percent.
 const _cockpitFrameCache = {}; // key -> { status: 'ok'|'missing', muzzle?: {...} }
+const _cockpitFrameInFlight = {}; // key -> true while an Image() probe is loading
 
 // Alpha-channel scan to find where the two painted gun-barrel tips point. For
 // each half of the image (left half, right half) we sweep rows top-to-bottom in
@@ -6265,6 +6330,7 @@ function detectFrameMuzzlePoints(img) {
 // fully cover the element, aspect preserved, overflow cropped equally on both
 // sides of the over-sized axis).
 function frameImgToScreen(ix, iy, imgW, imgH, W, H) {
+  if (!imgW || !imgH || !W || !H) return { x: 0, y: 0 };
   const scale = Math.max(W / imgW, H / imgH);
   const sw = imgW * scale, sh = imgH * scale;
   const ox = (sw - W) / 2, oy = (sh - H) / 2;
@@ -6295,9 +6361,15 @@ function updateCockpitFrame() {
     if (player) player.cockpitFrameMuzzle = entry.muzzle || null;
   };
   if (cached) { apply(cached); return; }
+  // Coalesce: if a probe for this key is already in flight, skip re-issuing.
+  // The original probe's onload/onerror will call apply() when it resolves (and
+  // will no-op if the player has since swapped to a different key).
+  if (_cockpitFrameInFlight[key]) return;
+  _cockpitFrameInFlight[key] = true;
   // First-time: probe with an Image() so a 404 doesn't splatter a broken-image flash.
   const probe = new Image();
   probe.onload = function() {
+    _cockpitFrameInFlight[key] = false;
     const muzzle = detectFrameMuzzlePoints(probe);
     const entry = { status: 'ok', muzzle: muzzle };
     _cockpitFrameCache[key] = entry;
@@ -6305,6 +6377,7 @@ function updateCockpitFrame() {
     if (player && player.loadoutKey === key) apply(entry);
   };
   probe.onerror = function() {
+    _cockpitFrameInFlight[key] = false;
     _cockpitFrameCache[key] = { status: 'missing' };
     if (player && player.loadoutKey === key) apply({ status: 'missing' });
   };
@@ -6466,8 +6539,6 @@ function commitLoadout(key) {
   updateTeammatesStrip();
   // Fire the in-screen 3-2-1-LAUNCH beep + number sequence.
   launchCountdown();
-
-  console.log('Map: ' + game.mapWord);
 }
 
 function spawnBots() {
@@ -6628,6 +6699,8 @@ function playerTakeDamage(amount, attacker, projectile) {
 function playerDie(attacker) {
   player.health = 0;
   player.shipState = 'dead';
+  player.doomed = false;
+  player.doomTimer = 0;
   player.deaths++;
   spawnExplosion(player.position, player.chassis.hullLength);
   if (attacker && attacker.loadout) addKillFeed(attacker.loadout.name, 'You');
@@ -8766,6 +8839,9 @@ function updateAbilities(dt) {
 
 function dash() {
   if (player.shipState === 'dead' || player.dashCharges <= 0 || player.dashActive) return;
+  // Hold dashes until LAUNCH; bots are also frozen during warmup, so the
+  // player shouldn't be able to gain a positional jump before the round starts.
+  if (game.state === 'warmup') return;
   const ch = player.chassis;
   const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
   let dashDir = player.velocity.clone();
@@ -8812,9 +8888,17 @@ function updateRoundSystem(dt) {
     }
   } else if (game.state === 'playing') {
     game.roundTimer -= dt;
-    const aliveA = (player.shipState !== 'dead' ? 1 : 0) +
-      game.entities.filter(b => b.alive && b.team === LSS.TEAM_FLEET_A).length;
-    const aliveB = game.entities.filter(b => b.alive && b.team === LSS.TEAM_FLEET_B).length;
+    // Single pass over the entity list to count alive on each team; previously
+    // we walked the array twice via .filter, which is double the work for a
+    // hot per-tick check.
+    let aliveA = (player.shipState !== 'dead' ? 1 : 0);
+    let aliveB = 0;
+    for (let i = 0, n = game.entities.length; i < n; i++) {
+      const b = game.entities[i];
+      if (!b.alive) continue;
+      if (b.team === LSS.TEAM_FLEET_A) aliveA++;
+      else if (b.team === LSS.TEAM_FLEET_B) aliveB++;
+    }
 
     if (aliveB === 0 || game.roundTimer <= 0) {
       if (aliveB === 0) game.scoreA++;
@@ -9597,7 +9681,10 @@ function drawCircumpunctHUD() {
     // drawing the procedural gun body/seams/dot in this case because the frame's
     // painted art is what should be visible; only the flash remains on top.
     const fm = player.cockpitFrameMuzzle;
-    const useFrame = !!(fm && fm.left && fm.right);
+    const useFrame = !!(fm && fm.left && fm.right
+      && Number.isFinite(fm.left.x) && Number.isFinite(fm.left.y)
+      && Number.isFinite(fm.right.x) && Number.isFinite(fm.right.y)
+      && fm.imgW && fm.imgH);
     if (useFrame) {
       const tip = side === 0 ? fm.left : fm.right;
       const scr = frameImgToScreen(tip.x, tip.y, fm.imgW, fm.imgH, W, H);
@@ -9907,6 +9994,41 @@ function drawCircumpunctHUD() {
   }
 }
 
+// HUD DOM ref + last-written-value cache. Lazy-initialized on first read so we
+// don't re-query document every frame and don't write to the DOM unless the
+// value actually changed (prevents layout/reflow on idle HUD).
+const _hudEls = Object.create(null);
+const _hudLast = Object.create(null);
+function _hudEl(id) {
+  let el = _hudEls[id];
+  if (el === undefined) el = _hudEls[id] = document.getElementById(id) || null;
+  return el;
+}
+function _hudText(el, key, v) {
+  if (!el) return;
+  if (_hudLast[key] === v) return;
+  _hudLast[key] = v;
+  el.textContent = v;
+}
+function _hudWidth(el, key, v) {
+  if (!el) return;
+  if (_hudLast[key] === v) return;
+  _hudLast[key] = v;
+  el.style.width = v;
+}
+function _hudDisplay(el, key, v) {
+  if (!el) return;
+  if (_hudLast[key] === v) return;
+  _hudLast[key] = v;
+  el.style.display = v;
+}
+function _hudClass(el, key, v) {
+  if (!el) return;
+  if (_hudLast[key] === v) return;
+  _hudLast[key] = v;
+  el.className = v;
+}
+
 function updateHUD() {
   if (!player.chassis) return;
 
@@ -9915,13 +10037,14 @@ function updateHUD() {
 
   // Core meter (keep DOM element updated for backward compat)
   const corePct = Math.min(100, player.coreMeter);
-  document.getElementById('core-fill').style.width = corePct + '%';
-  document.getElementById('core-value').textContent = Math.floor(corePct) + '%';
+  _hudWidth(_hudEl('core-fill'), 'core-fill:w', corePct + '%');
+  _hudText(_hudEl('core-value'), 'core-value:t', Math.floor(corePct) + '%');
 
   // Doomed warning + vignette
   const isDoomed = player.doomed && player.shipState !== 'dead';
-  document.getElementById('doomed-warning').style.display = isDoomed ? 'block' : 'none';
-  document.getElementById('doomed-vignette').style.display = isDoomed ? 'block' : 'none';
+  const doomDisp = isDoomed ? 'block' : 'none';
+  _hudDisplay(_hudEl('doomed-warning'), 'doomed-warning:d', doomDisp);
+  _hudDisplay(_hudEl('doomed-vignette'), 'doomed-vignette:d', doomDisp);
 
   // Enemy TONE lock-on warning (decay locks over time, show warning)
   let maxEnemyLocks = 0;
@@ -9933,34 +10056,39 @@ function updateHUD() {
     if (player.enemyToneLocks[botId] > maxEnemyLocks) maxEnemyLocks = player.enemyToneLocks[botId];
   }
   player.enemyToneLockMax = maxEnemyLocks;
-  const lockonEl = document.getElementById('enemy-lockon-warning');
+  const lockonEl = _hudEl('enemy-lockon-warning');
   if (maxEnemyLocks > 0 && player.shipState !== 'dead') {
-    lockonEl.style.display = 'block';
-    lockonEl.className = maxEnemyLocks >= 3 ? 'full-lock' : '';
-    const textEl = lockonEl.querySelector('.lockon-text');
-    textEl.textContent = maxEnemyLocks >= 3 ? 'WARNING: ENEMY LOCKED-ON' : 'WARNING: ENEMY LOCKING';
+    _hudDisplay(lockonEl, 'lockon:d', 'block');
+    _hudClass(lockonEl, 'lockon:c', maxEnemyLocks >= 3 ? 'full-lock' : '');
+    if (lockonEl) {
+      const textEl = _hudLast['lockon:textEl'] || (_hudLast['lockon:textEl'] = lockonEl.querySelector('.lockon-text'));
+      _hudText(textEl, 'lockon:t', maxEnemyLocks >= 3 ? 'WARNING: ENEMY LOCKED-ON' : 'WARNING: ENEMY LOCKING');
+    }
     for (let p = 1; p <= 3; p++) {
-      const pip = document.getElementById('lockon-pip-' + p);
-      pip.className = p <= maxEnemyLocks ? 'lockon-pip filled' : 'lockon-pip';
+      const pip = _hudEl('lockon-pip-' + p);
+      _hudClass(pip, 'lockon-pip:c:' + p, p <= maxEnemyLocks ? 'lockon-pip filled' : 'lockon-pip');
     }
   } else {
-    lockonEl.style.display = 'none';
+    _hudDisplay(lockonEl, 'lockon:d', 'none');
   }
 
   // Round info
   let timerValue = game.state === 'warmup' ? game.warmupTimer : game.roundTimer;
   const minutes = Math.floor(Math.max(0, timerValue) / 60);
   const seconds = Math.floor(Math.max(0, timerValue) % 60);
-  document.getElementById('round-timer').textContent = minutes + ':' + String(seconds).padStart(2, '0');
+  _hudText(_hudEl('round-timer'), 'round-timer:t', minutes + ':' + String(seconds).padStart(2, '0'));
 
   const stateText = game.state === 'warmup' ? 'WARMUP' :
     game.state === 'playing' ? 'ROUND ' + game.currentRound :
     game.state === 'roundEnd' ? 'ROUND OVER' :
     game.state === 'matchEnd' ? (game.scoreA >= LSS.ROUNDS_TO_WIN ? 'FLEET A WINS' : 'FLEET B WINS') : '';
-  document.getElementById('round-state').textContent = stateText;
+  _hudText(_hudEl('round-state'), 'round-state:t', stateText);
 
-  document.querySelector('.team-a').textContent = 'FLEET A: ' + game.scoreA;
-  document.querySelector('.team-b').textContent = 'FLEET B: ' + game.scoreB;
+  // team-a / team-b are class selectors; cache the first match once.
+  const teamA = _hudLast['team-a:el'] || (_hudLast['team-a:el'] = document.querySelector('.team-a'));
+  const teamB = _hudLast['team-b:el'] || (_hudLast['team-b:el'] = document.querySelector('.team-b'));
+  _hudText(teamA, 'team-a:t', 'FLEET A: ' + game.scoreA);
+  _hudText(teamB, 'team-b:t', 'FLEET B: ' + game.scoreB);
 
   // Update ability bar
   updateAbilityHUD();
@@ -10091,6 +10219,9 @@ function addKillFeed(killer, victim) {
 function buildAbilityHUD() {
   const container = document.getElementById('abilities');
   container.innerHTML = '';
+  // innerHTML = '' drops the old slot elements; clear the cache so the next
+  // updateAbilityHUD requeries fresh children.
+  _abInvalidate();
   const keys = ['Q', 'E', 'F'];
   const gpLabels = ['LB', 'RB', 'Y'];
   const typeLabels = ['OFF', 'DEF', 'UTL'];
@@ -10124,62 +10255,91 @@ function buildAbilityHUD() {
   container.appendChild(coreSlot);
 }
 
+// Cache of per-slot DOM refs. Rebuilt whenever buildAbilityHUD rewrites the
+// slots' innerHTML (see buildAbilityHUD for the invalidation). Each entry holds
+// { slot, bar, cdText }.
+const _abSlotCache = { slots: [null, null, null], core: null };
+function _abSlot(i) {
+  let e = _abSlotCache.slots[i];
+  if (!e) {
+    const slot = document.getElementById('ab-slot-' + i);
+    if (!slot) return null;
+    e = _abSlotCache.slots[i] = {
+      slot,
+      bar: slot.querySelector('.ab-cd-bar'),
+      cdText: slot.querySelector('.ab-cd-text'),
+    };
+  }
+  return e;
+}
+function _abCore() {
+  let e = _abSlotCache.core;
+  if (!e) {
+    const slot = document.getElementById('ab-slot-core');
+    if (!slot) return null;
+    e = _abSlotCache.core = {
+      slot,
+      bar: slot.querySelector('.ab-cd-bar'),
+      cdText: slot.querySelector('.ab-cd-text'),
+    };
+  }
+  return e;
+}
+function _abInvalidate() {
+  _abSlotCache.slots[0] = _abSlotCache.slots[1] = _abSlotCache.slots[2] = null;
+  _abSlotCache.core = null;
+}
+
 function updateAbilityHUD() {
   for (let i = 0; i < 3; i++) {
-    const slot = document.getElementById('ab-slot-' + i);
-    if (!slot) continue;
+    const e = _abSlot(i);
+    if (!e) continue;
     const ability = player.abilities[i];
     if (!ability) continue;
     const cd = player.abilityCooldowns[i];
     const active = player.abilityActive[i];
     const maxCd = ability.cooldown || 1;
-    const ready = cd <= 0 && !active;
 
     // Update class
-    slot.className = 'ability-slot' +
+    let cls = 'ability-slot' +
       (active ? ' active-now' : cd > 0 ? ' on-cooldown' : ' ready');
 
     // Cooldown bar (fills as it recharges; full = ready)
-    const bar = slot.querySelector('.ab-cd-bar');
-    if (bar) bar.style.width = (cd > 0 ? ((1 - cd / maxCd) * 100) : 100) + '%';
+    let barW = (cd > 0 ? ((1 - cd / maxCd) * 100) : 100) + '%';
 
     // Cooldown text (with special displays for ION energy, shield HP)
-    const cdText = slot.querySelector('.ab-cd-text');
-    if (cdText) {
-      if (active && ability.name === 'Gun Shield' && player.gunShieldHP > 0) {
-        cdText.textContent = Math.ceil(player.gunShieldHP);
-      } else if (active && ability.name === 'Thermal Shield' && player.thermalShieldHP > 0) {
-        cdText.textContent = Math.ceil(player.thermalShieldHP);
-      } else if (active) { cdText.textContent = ''; }
-      else if (cd > 0) { cdText.textContent = Math.ceil(cd) + 's'; }
-      else { cdText.textContent = ''; }
-    }
+    let cdTextVal;
+    if (active && ability.name === 'Gun Shield' && player.gunShieldHP > 0) {
+      cdTextVal = String(Math.ceil(player.gunShieldHP));
+    } else if (active && ability.name === 'Thermal Shield' && player.thermalShieldHP > 0) {
+      cdTextVal = String(Math.ceil(player.thermalShieldHP));
+    } else if (active) { cdTextVal = ''; }
+    else if (cd > 0) { cdTextVal = Math.ceil(cd) + 's'; }
+    else { cdTextVal = ''; }
 
     // ION energy: override bar to show energy level instead of cooldown for all ION abilities
     if (player.loadoutKey === 'ION') {
       const energyPct = player.ionEnergy / player.ionMaxEnergy;
-      const bar2 = slot.querySelector('.ab-cd-bar');
-      if (bar2 && cd <= 0) bar2.style.width = (energyPct * 100) + '%';
+      if (cd <= 0) barW = (energyPct * 100) + '%';
       // Show energy on idle slots
-      if (cdText && cd <= 0 && !active) {
-        cdText.textContent = Math.floor(player.ionEnergy);
+      if (cd <= 0 && !active) {
+        cdTextVal = String(Math.floor(player.ionEnergy));
       }
     }
 
     // SCORCH Thermal Shield: bar shows power level (drains while held, recharges over 10s)
     if (player.loadoutKey === 'SCORCH' && ability.name === 'Thermal Shield') {
       const powerPct = player.thermalShieldHP / player.thermalShieldMaxHP;
-      const bar2 = slot.querySelector('.ab-cd-bar');
-      if (bar2) bar2.style.width = (powerPct * 100) + '%';
+      barW = (powerPct * 100) + '%';
       // Keep the slot visually "ready" whenever power remains, even during recharge
       if (!active && player.thermalShieldHP > 0) {
-        slot.className = 'ability-slot ready';
+        cls = 'ability-slot ready';
       } else if (!active && player.thermalShieldHP <= 0) {
-        slot.className = 'ability-slot on-cooldown';
+        cls = 'ability-slot on-cooldown';
       }
       // Show power on idle slots so the player sees it refilling
-      if (cdText && !active) {
-        cdText.textContent = Math.floor(player.thermalShieldHP);
+      if (!active) {
+        cdTextVal = String(Math.floor(player.thermalShieldHP));
       }
     }
 
@@ -10188,47 +10348,40 @@ function updateAbilityHUD() {
     if (player.loadoutKey === 'SCORCH' && ability.name === 'Incendiary Trap') {
       const charges = player.trapCharges || 0;
       const maxCharges = player.maxTrapCharges || 2;
-      const bar2 = slot.querySelector('.ab-cd-bar');
-      if (bar2) {
-        if (charges >= maxCharges) {
-          bar2.style.width = '100%';
-        } else {
-          const t = player.trapCooldownTimer || 0;
-          const cdMax = player.trapChargeCooldown || 12;
-          bar2.style.width = ((1 - t / cdMax) * 100) + '%';
-        }
+      if (charges >= maxCharges) {
+        barW = '100%';
+      } else {
+        const t = player.trapCooldownTimer || 0;
+        const cdMax = player.trapChargeCooldown || 12;
+        barW = ((1 - t / cdMax) * 100) + '%';
       }
       // Slot reads ready whenever at least one charge is available
-      if (charges > 0) {
-        slot.className = 'ability-slot ready';
-      } else {
-        slot.className = 'ability-slot on-cooldown';
-      }
-      if (cdText) {
-        cdText.textContent = charges + '/' + maxCharges;
-      }
+      cls = charges > 0 ? 'ability-slot ready' : 'ability-slot on-cooldown';
+      cdTextVal = charges + '/' + maxCharges;
     }
+
+    _hudClass(e.slot, 'ab:' + i + ':c', cls);
+    _hudWidth(e.bar, 'ab:' + i + ':w', barW);
+    _hudText(e.cdText, 'ab:' + i + ':t', cdTextVal);
   }
 
   // Core slot
-  const coreSlot = document.getElementById('ab-slot-core');
-  if (coreSlot) {
+  const core = _abCore();
+  if (core) {
     const corePct = Math.min(100, player.coreMeter) / 100;
     const coreActive = player.coreActive;
     const coreReady = player.coreReady && !coreActive;
 
-    coreSlot.className = 'ability-slot' +
+    const cls = 'ability-slot' +
       (coreActive ? ' active-now' : coreReady ? ' ready' : ' on-cooldown');
+    _hudClass(core.slot, 'ab:core:c', cls);
+    _hudWidth(core.bar, 'ab:core:w', (corePct * 100) + '%');
 
-    const bar = coreSlot.querySelector('.ab-cd-bar');
-    if (bar) bar.style.width = (corePct * 100) + '%';
-
-    const cdText = coreSlot.querySelector('.ab-cd-text');
-    if (cdText) {
-      if (coreActive) { cdText.textContent = ''; }
-      else if (!coreReady) { cdText.textContent = Math.floor(player.coreMeter) + '%'; }
-      else { cdText.textContent = ''; }
-    }
+    let cdTextVal;
+    if (coreActive) { cdTextVal = ''; }
+    else if (!coreReady) { cdTextVal = Math.floor(player.coreMeter) + '%'; }
+    else { cdTextVal = ''; }
+    _hudText(core.cdText, 'ab:core:t', cdTextVal);
   }
 }
 
@@ -11323,7 +11476,7 @@ function buildRoomGraphLevel(level) {
       '  else h = ((c.r - c.g) / d + 4.0) / 6.0;',
       '  return h;',
       '}',
-      // Kali IFS (Apollonian-style fold/scale/offset fractal) — the core
+      // Kali IFS (Apollonian-style fold/scale/offset fractal); the core
       // pattern from docs/framework_dancing_cosmos.html. Iterative mirror
       // folds into the positive octant, scale by the reciprocal of |p|²,
       // translate by a golden-ratio triple. Returns the accumulated scale
@@ -12311,7 +12464,7 @@ _envProbeRay.far = 2000;
 let _envProbeCounter = 0;
 function probeEnvironmentOpenness() {
   if (!camera || !game || !game.mapMeshes || !game.mapMeshes.length) return 0.7;
-  const camPos = camera.getWorldPosition(new THREE.Vector3());
+  const camPos = camera.getWorldPosition(_envProbeCamPos);
   let sum = 0;
   let hits = 0;
   for (const d of _envProbeDirs) {
@@ -12957,11 +13110,42 @@ const _spatialCamPos = new THREE.Vector3();
 const _spatialDir = new THREE.Vector3();
 const _spatialRaycaster = new THREE.Raycaster();
 _spatialRaycaster.firstHitOnly = true;
+// Pool of { panner, occl, occlGain } triples. Each call to playSpatialSound
+// acquires a triple, uses it for ~4s, then releases it back. Nodes are reset on
+// release (cancelScheduledValues + disconnect) so they come back to acquire()
+// in a known-clean state. Keeps GC steady under rapid fire (minigun, salvos).
+const _spatialPool = [];
+const _SPATIAL_POOL_MAX = 32;
+function _acquireSpatialTriple(ctx) {
+  if (_spatialPool.length) return _spatialPool.pop();
+  return {
+    panner: ctx.createPanner(),
+    occl: ctx.createBiquadFilter(),
+    occlGain: ctx.createGain(),
+  };
+}
+function _releaseSpatialTriple(triple) {
+  if (!triple) return;
+  const { panner, occl, occlGain } = triple;
+  try { panner.disconnect(); } catch (e) {}
+  try { occl.disconnect(); } catch (e) {}
+  try { occlGain.disconnect(); } catch (e) {}
+  // Clear any pending automation so a reused node doesn't inherit stale values.
+  const now = (audio && audio.ctx) ? audio.ctx.currentTime : 0;
+  try { panner.positionX.cancelScheduledValues(now); } catch (e) {}
+  try { panner.positionY.cancelScheduledValues(now); } catch (e) {}
+  try { panner.positionZ.cancelScheduledValues(now); } catch (e) {}
+  try { occl.frequency.cancelScheduledValues(now); } catch (e) {}
+  try { occl.Q.cancelScheduledValues(now); } catch (e) {}
+  try { occlGain.gain.cancelScheduledValues(now); } catch (e) {}
+  if (_spatialPool.length < _SPATIAL_POOL_MAX) _spatialPool.push(triple);
+}
 function playSpatialSound(type, worldPos, opts) {
   if (!audio.initialized || !audio.ctx) return;
   if (!worldPos || !camera) return playSound(type);
+  const triple = _acquireSpatialTriple(audio.ctx);
+  const { panner, occl, occlGain } = triple;
   try {
-    const panner = audio.ctx.createPanner();
     panner.panningModel = 'HRTF';
     panner.distanceModel = 'inverse';
     // Optional range override: some sounds (titan core activation) should carry farther.
@@ -12984,7 +13168,6 @@ function playSpatialSound(type, worldPos, opts) {
     panner.positionZ.setValueAtTime(_spatialRelPos.z, t);
     // Occlusion lowpass: raycast camera -> source against level meshes. If occluded,
     // drop cutoff so high freqs get eaten by the wall. Also drop gain slightly.
-    const occl = audio.ctx.createBiquadFilter();
     occl.type = 'lowpass';
     let cutoff = 18000;
     let occludedGain = 1.0;
@@ -13007,7 +13190,6 @@ function playSpatialSound(type, worldPos, opts) {
     }
     occl.frequency.setValueAtTime(cutoff, t);
     occl.Q.setValueAtTime(0.707, t);
-    const occlGain = audio.ctx.createGain();
     occlGain.gain.setValueAtTime(occludedGain, t);
     panner.connect(occl);
     occl.connect(occlGain);
@@ -13015,15 +13197,12 @@ function playSpatialSound(type, worldPos, opts) {
     audio._spatialSink = panner;
     playSound(type);
     audio._spatialSink = null;
-    // Clean up: nodes detach automatically when their upstream gains stop, but we also
-    // schedule an explicit disconnect so they're GC-eligible.
-    setTimeout(() => {
-      try { panner.disconnect(); } catch (e) {}
-      try { occl.disconnect(); } catch (e) {}
-      try { occlGain.disconnect(); } catch (e) {}
-    }, 4000);
+    // Return to pool after the sound tail has played out. 4s is well past the
+    // longest sfx envelope; keeps the pool saturated under rapid fire.
+    setTimeout(() => { _releaseSpatialTriple(triple); }, 4000);
   } catch (e) {
     audio._spatialSink = null;
+    _releaseSpatialTriple(triple);
     playSound(type);
   }
 }
