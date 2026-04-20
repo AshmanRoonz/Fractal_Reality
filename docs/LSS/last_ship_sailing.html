@@ -6115,7 +6115,7 @@ function spawnTracer(from, to, color) {
   if (len < 1) return;
   const mid = new THREE.Vector3().addVectors(from, to).multiplyScalar(0.5);
 
-  // --- Hot core beam (thin, bright, short-lived) ---
+  // --- Hot core beam (thin, bright, very short-lived: the "shot" itself) ---
   const coreGeo = new THREE.CylinderGeometry(1.2, 1.2, len, 4, 1);
   coreGeo.rotateX(Math.PI / 2);
   const coreMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending });
@@ -6125,7 +6125,7 @@ function spawnTracer(from, to, color) {
   scene.add(core);
   game.effects.push({ mesh: core, lifetime: 0.05, age: 0, type: 'tracer' });
 
-  // --- Main beam (weapon color) ---
+  // --- Main beam (weapon color, medium width) ---
   const beamGeo = new THREE.CylinderGeometry(2.0, 1.5, len, 4, 1);
   beamGeo.rotateX(Math.PI / 2);
   const beamMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
@@ -6133,44 +6133,51 @@ function spawnTracer(from, to, color) {
   beam.position.copy(mid);
   beam.lookAt(to);
   scene.add(beam);
-  game.effects.push({ mesh: beam, lifetime: 0.08, age: 0, type: 'tracer' });
+  game.effects.push({ mesh: beam, lifetime: 0.10, age: 0, type: 'tracer' });
 
-  // --- Outer glow (wider, softer, lingering) ---
-  const glowGeo = new THREE.CylinderGeometry(6, 5, len, 4, 1);
-  glowGeo.rotateX(Math.PI / 2);
-  const glowMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.2, blending: THREE.AdditiveBlending });
-  const glow = new THREE.Mesh(glowGeo, glowMat);
-  glow.position.copy(mid);
-  glow.lookAt(to);
-  scene.add(glow);
-  game.effects.push({ mesh: glow, lifetime: 0.15, age: 0, type: 'tracer' });
+  // --- Ethereal tail: two nested additive tubes that linger and taper.
+  // This is the "ghost trail" the player sees after the shot has passed.
+  // The inner tail is tighter and fades faster; the outer tail is wide and
+  // wispy, fading over ~0.45s so the beam reads as a lingering ribbon of light
+  // rather than a single bright slice. Additive blending on black-sky space
+  // keeps the trail reading as emitted light, not a solid cylinder.
+  const tailInnerGeo = new THREE.CylinderGeometry(3.5, 2.8, len, 6, 1);
+  tailInnerGeo.rotateX(Math.PI / 2);
+  const tailInnerMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false });
+  const tailInner = new THREE.Mesh(tailInnerGeo, tailInnerMat);
+  tailInner.position.copy(mid);
+  tailInner.lookAt(to);
+  scene.add(tailInner);
+  game.effects.push({ mesh: tailInner, lifetime: 0.28, age: 0, type: 'tracerTail' });
 
-  // --- Muzzle-end flare (bright sphere at origin) ---
-  const flareGeo = new THREE.SphereGeometry(4, 6, 4);
-  const flareMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
-  const flare = new THREE.Mesh(flareGeo, flareMat);
-  flare.position.copy(from);
-  scene.add(flare);
-  game.effects.push({ mesh: flare, lifetime: 0.06, age: 0, type: 'explosionFlash' });
+  const tailOuterGeo = new THREE.CylinderGeometry(9, 7, len, 6, 1);
+  tailOuterGeo.rotateX(Math.PI / 2);
+  const tailOuterMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false });
+  const tailOuter = new THREE.Mesh(tailOuterGeo, tailOuterMat);
+  tailOuter.position.copy(mid);
+  tailOuter.lookAt(to);
+  scene.add(tailOuter);
+  game.effects.push({ mesh: tailOuter, lifetime: 0.45, age: 0, type: 'tracerTail' });
 
-  // --- Tracer particles along the beam (sparkle trail) ---
-  const particleCount = Math.min(Math.ceil(len / 200), 6);
-  const dirNorm = dir.clone().normalize();
+  // --- Tracer sparkles along the beam (trace of dust) ---
+  // Fewer particles than before because the ethereal tail now carries most
+  // of the visual weight; the sparkles are accents, not the main effect.
+  const particleCount = Math.min(Math.ceil(len / 300), 4);
   for (let i = 0; i < particleCount; i++) {
-    const t = 0.2 + Math.random() * 0.6;
+    const t = 0.25 + Math.random() * 0.55;
     const pPos = from.clone().add(dir.clone().multiplyScalar(t));
-    pPos.x += (Math.random() - 0.5) * 8;
-    pPos.y += (Math.random() - 0.5) * 8;
-    pPos.z += (Math.random() - 0.5) * 8;
+    pPos.x += (Math.random() - 0.5) * 6;
+    pPos.y += (Math.random() - 0.5) * 6;
+    pPos.z += (Math.random() - 0.5) * 6;
     const pVel = new THREE.Vector3(
-      (Math.random() - 0.5) * 60,
-      (Math.random() - 0.5) * 60,
-      (Math.random() - 0.5) * 60
+      (Math.random() - 0.5) * 40,
+      (Math.random() - 0.5) * 40,
+      (Math.random() - 0.5) * 40
     );
     game.particles.push({
       position: pPos, velocity: pVel,
-      life: 0.08 + Math.random() * 0.06, maxLife: 0.14,
-      color, size: 1 + Math.random() * 1.5
+      life: 0.12 + Math.random() * 0.10, maxLife: 0.22,
+      color, size: 0.9 + Math.random() * 1.2
     });
   }
 }
@@ -6414,6 +6421,21 @@ function updateEffects(dt) {
     // --- Tracers: fade ---
     else if (e.type === 'tracer') {
       e.mesh.material.opacity = (e.mesh.material.opacity || 0.8) * (1 - t);
+    }
+    // --- Tracer ethereal tail: linger, slowly dim, slight radial swell
+    // so the trail reads as an expanding ribbon of light rather than a
+    // shrinking cylinder. Stores initialOpacity on first tick so the fade
+    // curve is clean single-shot (vs compounding per-frame multiply).
+    else if (e.type === 'tracerTail') {
+      if (e.initialOpacity == null) e.initialOpacity = e.mesh.material.opacity;
+      // Cubic ease-out fade: holds bright briefly, then fades softly
+      const fade = 1 - t * t * t;
+      e.mesh.material.opacity = e.initialOpacity * fade;
+      // Radial swell only (don't stretch along beam axis): the beam is
+      // already oriented down its length; scaling x/y widens the tube.
+      const swell = 1 + t * 0.8;
+      e.mesh.scale.x = swell;
+      e.mesh.scale.y = swell;
     }
     // --- Sparks: fly, drag, shrink, fade ---
     else if (e.type === 'spark' && e.vel) {
@@ -10240,179 +10262,16 @@ function drawCircumpunctHUD() {
     }
 
     // Procedural arms/gun bodies removed; cockpit art now comes from the
-    // per-titan frame PNG overlay (see updateCockpitFrame). Only the muzzle
-    // flash is drawn from the HUD, firing from the detected frame tip when
-    // a frame is loaded or from the procedural default position otherwise.
-
-    // ---- MUZZLE FLASH (at barrel tip) ----
-    if (flashActive) {
-      const muzzleX = (tipOuterX + tipInnerX) / 2;
-      const muzzleY = tipY - 8;
-      const fi = Math.max(0, Math.min(1, player.muzzleFlashTimer / 0.08)); // 1 -> 0
-      const age = 1 - fi;                                                  // 0 -> 1
-
-      // Barrel direction (base mid -> tip mid) and its left-perpendicular.
-      const baseMidX = (baseOuterX + baseInnerX) / 2;
-      const baseMidY = baseY;
-      let dirX = muzzleX - baseMidX;
-      let dirY = muzzleY - baseMidY;
-      const dirLen = Math.max(1, Math.sqrt(dirX * dirX + dirY * dirY));
-      dirX /= dirLen; dirY /= dirLen;
-      const perpX = -dirY, perpY = dirX;
-
-      // Per-shot pseudo-random seed: stays constant through the 0.08s flash,
-      // changes on the next shot (so spikes don't jitter frame-to-frame).
-      const seed = Math.floor(t * 12.5) + side * 7 + (player.muzzleFlashSide || 0) * 3;
-      const rnd = (n) => {
-        const v = Math.sin((seed + n) * 12.9898 + 78.233) * 43758.5453;
-        return v - Math.floor(v);
-      };
-
-      // Composite additive adds warmth without clobbering HUD behind
-      ctx.save();
-      ctx.globalCompositeOperation = 'lighter';
-
-      // --- Expanding heat shockwave ring ---
-      // Halved radii and softened colors compared to the original paint pass;
-      // the player was seeing this dominate the center of the screen every
-      // shot. Shockwave ring still there but tighter; bloom and cone both
-      // shrunk to ~50% of former size; warm yellow stop shifted toward white
-      // so the hue is less saturated.
-      const shockR = 16 + age * 80;
-      ctx.strokeStyle = `rgba(255,225,175,${0.45 * fi})`;
-      ctx.lineWidth = 2 * fi + 0.4;
-      ctx.beginPath();
-      ctx.arc(muzzleX, muzzleY, shockR, 0, Math.PI * 2);
-      ctx.stroke();
-      // Second, fainter wave trailing the first
-      ctx.strokeStyle = `rgba(255,190,130,${0.18 * fi})`;
-      ctx.lineWidth = 1.5 * fi;
-      ctx.beginPath();
-      ctx.arc(muzzleX, muzzleY, shockR * 0.65, 0, Math.PI * 2);
-      ctx.stroke();
-
-      // --- Compact warm bloom (soft outer glow) ---
-      const outerR = 62 * Math.pow(fi, 0.55);
-      const gradOut = ctx.createRadialGradient(muzzleX, muzzleY, 0, muzzleX, muzzleY, outerR);
-      gradOut.addColorStop(0.00, `rgba(255,245,225,${0.85 * fi})`);
-      gradOut.addColorStop(0.25, `rgba(255,205,150,${0.55 * fi})`);
-      gradOut.addColorStop(0.60, `rgba(255,140,85,${0.25 * fi})`);
-      gradOut.addColorStop(1.00, 'rgba(200,90,50,0)');
-      ctx.fillStyle = gradOut;
-      ctx.beginPath(); ctx.arc(muzzleX, muzzleY, outerR, 0, Math.PI * 2); ctx.fill();
-
-      // --- Directional flame cone along the barrel axis ---
-      const coneLen = 100 * fi;
-      const coneHalfW = 18 * fi;
-      const tipConeX = muzzleX + dirX * coneLen;
-      const tipConeY = muzzleY + dirY * coneLen;
-      const baseLX = muzzleX + perpX * coneHalfW;
-      const baseLY = muzzleY + perpY * coneHalfW;
-      const baseRX = muzzleX - perpX * coneHalfW;
-      const baseRY = muzzleY - perpY * coneHalfW;
-      const coneGrad = ctx.createLinearGradient(muzzleX, muzzleY, tipConeX, tipConeY);
-      coneGrad.addColorStop(0.00, `rgba(255,250,235,${0.75 * fi})`);
-      coneGrad.addColorStop(0.30, `rgba(255,225,170,${0.55 * fi})`);
-      coneGrad.addColorStop(0.65, `rgba(255,160,95,${0.30 * fi})`);
-      coneGrad.addColorStop(1.00, 'rgba(210,90,55,0)');
-      ctx.fillStyle = coneGrad;
-      ctx.beginPath();
-      ctx.moveTo(baseLX, baseLY);
-      ctx.quadraticCurveTo(
-        muzzleX + dirX * coneLen * 0.55 + perpX * coneHalfW * 0.75,
-        muzzleY + dirY * coneLen * 0.55 + perpY * coneHalfW * 0.75,
-        tipConeX, tipConeY
-      );
-      ctx.quadraticCurveTo(
-        muzzleX + dirX * coneLen * 0.55 - perpX * coneHalfW * 0.75,
-        muzzleY + dirY * coneLen * 0.55 - perpY * coneHalfW * 0.75,
-        baseRX, baseRY
-      );
-      ctx.closePath();
-      ctx.fill();
-
-      // --- Secondary inner flame (tighter + hotter) ---
-      const inCL = coneLen * 0.55;
-      const inCW = coneHalfW * 0.5;
-      const inTipX = muzzleX + dirX * inCL;
-      const inTipY = muzzleY + dirY * inCL;
-      const inGrad = ctx.createLinearGradient(muzzleX, muzzleY, inTipX, inTipY);
-      inGrad.addColorStop(0.0, `rgba(255,255,245,${0.8 * fi})`);
-      inGrad.addColorStop(1.0, 'rgba(255,210,150,0)');
-      ctx.fillStyle = inGrad;
-      ctx.beginPath();
-      ctx.moveTo(muzzleX + perpX * inCW, muzzleY + perpY * inCW);
-      ctx.lineTo(inTipX, inTipY);
-      ctx.lineTo(muzzleX - perpX * inCW, muzzleY - perpY * inCW);
-      ctx.closePath();
-      ctx.fill();
-
-      // --- Bright white-hot core + second bloom ---
-      ctx.fillStyle = `rgba(255,255,245,${0.85 * fi})`;
-      ctx.beginPath(); ctx.arc(muzzleX, muzzleY, 10 * fi, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = `rgba(255,245,210,${0.45 * fi})`;
-      ctx.beginPath(); ctx.arc(muzzleX, muzzleY, 17 * fi, 0, Math.PI * 2); ctx.fill();
-
-      // --- Deterministic starburst: 4 long majors + 4 short minors, rotated per shot ---
-      // Halved max length so spikes stay near the muzzle rather than
-      // reaching across the HUD, and shifted gradient warmth toward white.
-      const spikeBase = rnd(1) * Math.PI * 2;
-      ctx.lineCap = 'round';
-      for (let sp = 0; sp < 8; sp++) {
-        const isMajor = (sp % 2 === 0);
-        const a = spikeBase + (sp / 8) * Math.PI * 2;
-        const lenVar = 0.7 + rnd(sp + 11) * 0.55;
-        const sLen = (isMajor ? 35 : 18) * lenVar * Math.pow(fi, 0.35);
-        const ex = muzzleX + Math.cos(a) * sLen;
-        const ey = muzzleY + Math.sin(a) * sLen;
-        const sGrad = ctx.createLinearGradient(muzzleX, muzzleY, ex, ey);
-        sGrad.addColorStop(0.0, `rgba(255,255,235,${(isMajor ? 0.8 : 0.6) * fi})`);
-        sGrad.addColorStop(0.5, `rgba(255,210,145,${(isMajor ? 0.42 : 0.26) * fi})`);
-        sGrad.addColorStop(1.0, 'rgba(255,155,90,0)');
-        ctx.strokeStyle = sGrad;
-        ctx.lineWidth = (isMajor ? 2.4 : 1.2) * Math.max(0.25, fi);
-        ctx.beginPath();
-        ctx.moveTo(muzzleX, muzzleY);
-        ctx.lineTo(ex, ey);
-        ctx.stroke();
-      }
-      ctx.lineCap = 'butt';
-
-      // --- Drifting embers riding the cone outward (bright -> dim with age) ---
-      const emberCount = 4;
-      for (let eIdx = 0; eIdx < emberCount; eIdx++) {
-        const spd = 110 + rnd(eIdx + 21) * 180;
-        const spread = (rnd(eIdx + 31) - 0.5) * 48;
-        const dist = 14 + age * spd;
-        const ex = muzzleX + dirX * dist + perpX * spread;
-        const ey = muzzleY + dirY * dist + perpY * spread;
-        const eLife = Math.max(0, fi - rnd(eIdx + 41) * 0.15);
-        if (eLife <= 0) continue;
-        const hot = eLife * eLife;
-        ctx.fillStyle = `rgba(255,${200 + Math.floor(hot * 40)},${80 + Math.floor(hot * 70)},${0.85 * eLife})`;
-        ctx.beginPath();
-        ctx.arc(ex, ey, 2.4 * (0.6 + eLife * 0.6), 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      ctx.restore(); // end additive block
-
-      // --- Thin smoke puff (normal blending, behind the next shot's bloom) ---
-      const smokeR = 28 + age * 70;
-      const smokeA = (1 - fi) * 0.18; // grows as flash fades
-      if (smokeA > 0.01) {
-        const smokeGrad = ctx.createRadialGradient(
-          muzzleX + dirX * age * 30, muzzleY + dirY * age * 30, 0,
-          muzzleX + dirX * age * 30, muzzleY + dirY * age * 30, smokeR
-        );
-        smokeGrad.addColorStop(0.0, `rgba(120,100,90,${smokeA})`);
-        smokeGrad.addColorStop(1.0, 'rgba(40,35,30,0)');
-        ctx.fillStyle = smokeGrad;
-        ctx.beginPath();
-        ctx.arc(muzzleX + dirX * age * 30, muzzleY + dirY * age * 30, smokeR, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
+    // per-titan frame PNG overlay (see updateCockpitFrame). The HUD-space
+    // muzzle-flash paint block used to sit here; it has been removed at the
+    // player's request because it dominated the center of the screen on every
+    // shot. The visual feedback on the player's ship is now: (1) the arm
+    // light-up and recoil kick via gunRecoilL/R and the per-frame flash overlay
+    // from updateCockpitFrame, (2) the 3D tracer beam in spawnTracer which now
+    // carries an ethereal lingering tail instead of a HUD-space burst. The
+    // flashActive parameter is retained only so the (unused) flashL/flashR
+    // call-sites remain readable; a future pass can drop it entirely.
+    void flashActive;
 
     ctx.restore();
   }
