@@ -4731,6 +4731,26 @@ function warmupCombatShaders() {
       group.add(new THREE.Mesh(torusGeo, m));
     }
 
+    // PlaneGeometry variants (explosion flare disc, flat shockwave ring). The
+    // flare specifically uses AdditiveBlending + DoubleSide + depthWrite:false,
+    // which is a distinct program signature from the sphere/torus variants.
+    const planeGeo = new THREE.PlaneGeometry(1, 1);
+    const planeMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+    matRefs.push(planeMat);
+    group.add(new THREE.Mesh(planeGeo, planeMat));
+    // Ring with the same Additive+DoubleSide+depthWrite:false combo (shockwave
+    // flat ring; not covered by the DoubleSide-only variant above).
+    const ringAddMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+    matRefs.push(ringAddMat);
+    group.add(new THREE.Mesh(ringGeo, ringAddMat));
+
+    // CylinderGeometry (tracers, beam cores): same MeshBasic+Additive material
+    // family but geometry-binding differs. renderer.compile() keys by program,
+    // so this is mainly insurance in case a future Three.js version tightens
+    // the signature.
+    const cylGeo = new THREE.CylinderGeometry(1, 1, 1, 4, 1);
+    group.add(new THREE.Mesh(cylGeo, matRefs[1] /* additive variant */));
+
     // Line variants (trails, outlines, impact arcs).
     const lineGeo = new THREE.BufferGeometry();
     lineGeo.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0, 1,0,0], 3));
@@ -4742,21 +4762,88 @@ function warmupCombatShaders() {
     const edgesGeo = new THREE.EdgesGeometry(boxGeo);
     group.add(new THREE.LineSegments(edgesGeo, lineMat1));
 
-    // Sprites (damage smoke, heat haze, particle billboards).
+    // Untextured sprites (fallback path for any code that builds a sprite
+    // without a map).
     const sprMat1 = new THREE.SpriteMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
     const sprMat2 = new THREE.SpriteMaterial({ color: 0xffffff, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
     matRefs.push(sprMat1, sprMat2);
     group.add(new THREE.Sprite(sprMat1));
     group.add(new THREE.Sprite(sprMat2));
 
+    // Textured sprites (USE_MAP define). These are a DIFFERENT program from
+    // untextured sprites and drive every particle, electric smoke puff, and
+    // heat trail. Not pre-compiling these was the main reason combat still
+    // stalled after the first warmup pass; updateParticles lazy-builds a new
+    // SpriteMaterial({map: _emberFalloffTexture, blending: Additive, depthWrite: false})
+    // on the first particle of combat, and Three.js has to compile its program
+    // inside the frame.
+    if (typeof _emberFalloffTexture !== 'undefined' && _emberFalloffTexture) {
+      const sprTexMat = new THREE.SpriteMaterial({
+        map: _emberFalloffTexture, color: 0xffffff, transparent: true,
+        opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false
+      });
+      matRefs.push(sprTexMat);
+      group.add(new THREE.Sprite(sprTexMat));
+      // Same material with rotation != 0 (heat trails set mat.rotation per spawn).
+      const sprTexRotMat = new THREE.SpriteMaterial({
+        map: _emberFalloffTexture, color: 0xffb070, transparent: true,
+        opacity: 1.0, blending: THREE.AdditiveBlending, depthWrite: false,
+        rotation: 0.5
+      });
+      matRefs.push(sprTexRotMat);
+      group.add(new THREE.Sprite(sprTexRotMat));
+    }
+    // Electric smoke texture (bluish, used by spawnElectricSmoke around
+    // cluster obstacles). Only warm up if the helper actually exists.
+    if (typeof getElectricSmokeTexture === 'function') {
+      try {
+        const esTex = getElectricSmokeTexture();
+        if (esTex) {
+          const esMat = new THREE.SpriteMaterial({
+            map: esTex, color: 0x88c0ff, transparent: true,
+            opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false
+          });
+          matRefs.push(esMat);
+          group.add(new THREE.Sprite(esMat));
+        }
+      } catch (_) { /* texture gen failures are non-fatal */ }
+    }
+    // Heat-trail texture (warm orange, with rotation uniform).
+    if (typeof getHeatTrailTexture === 'function') {
+      try {
+        const htTex = getHeatTrailTexture();
+        if (htTex) {
+          const htMat = new THREE.SpriteMaterial({
+            map: htTex, color: 0xffb070, transparent: true,
+            opacity: 1.0, blending: THREE.AdditiveBlending, depthWrite: false,
+            rotation: 0.25
+          });
+          matRefs.push(htMat);
+          group.add(new THREE.Sprite(htMat));
+        }
+      } catch (_) { /* same */ }
+    }
+
+    // PointsMaterial with vertexColors (used at line 2202 in the star/debris
+    // background path; compile once here to avoid any surprise the first time
+    // it hits the render list).
+    const ptsGeo = new THREE.BufferGeometry();
+    ptsGeo.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0, 1,0,0, 0,1,0], 3));
+    ptsGeo.setAttribute('color', new THREE.Float32BufferAttribute([1,1,1, 1,0.5,0, 0.5,0.5,1], 3));
+    const ptsMat = new THREE.PointsMaterial({ size: 5, vertexColors: true, transparent: true, opacity: 0.9 });
+    matRefs.push(ptsMat);
+    group.add(new THREE.Points(ptsGeo, ptsMat));
+
     scene.add(group);
     renderer.compile(scene, camera);
     scene.remove(group);
     // Dispose prototype geometries/materials; the shader programs remain in
     // Three.js' WebGL cache keyed by program signature, which is the whole
-    // point of running compile() first.
+    // point of running compile() first. Textures (_emberFalloffTexture etc.)
+    // are shared with the real effect code path and must NOT be disposed.
     sphGeo.dispose(); ringGeo.dispose(); boxGeo.dispose();
     torusGeo.dispose(); lineGeo.dispose(); edgesGeo.dispose();
+    planeGeo.dispose(); cylGeo.dispose(); ptsGeo.dispose();
     for (const m of matRefs) m.dispose();
   } catch (e) {
     console.warn('[warmupCombatShaders] skipped:', e && e.message);
