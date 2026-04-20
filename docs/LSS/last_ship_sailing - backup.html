@@ -455,15 +455,78 @@ canvas { display: block; }
 .stasis-marker-icon { width: 16px; height: 16px; border: 2px solid #00ccff; border-radius: 50%; margin: 0 auto 2px; animation: stasisPulse 1.2s infinite; }
 @keyframes stasisPulse { 0%,100% { box-shadow: 0 0 4px rgba(0,200,255,0.3); } 50% { box-shadow: 0 0 12px rgba(0,200,255,0.7); } }
 
-/* Map Selector */
-#map-select { display: none; margin-bottom: 30px; text-align: center; }
-#map-select h3 { font-size: 16px; color: #ffaa00; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; }
-#map-select-grid { display: flex; gap: 12px; justify-content: center; }
-.map-card { background: rgba(20,20,40,0.9); border: 2px solid rgba(80,80,120,0.4); padding: 16px 24px; cursor: pointer; transition: all 0.2s; width: 220px; }
-.map-card:hover { border-color: #ffaa00; background: rgba(30,30,50,0.9); transform: translateY(-2px); }
-.map-card.selected { border-color: #ffff00; background: rgba(40,40,60,0.95); }
-.map-card .map-name { font-size: 16px; font-weight: bold; color: #ffaa00; margin-bottom: 8px; }
-.map-card .map-desc { font-size: 11px; color: #aaa; line-height: 1.4; }
+/* Map Selector (right-side vertical panel inside ship-select-body; visible while ship-select is open) */
+#map-select {
+  display: none;
+  width: 260px; flex-shrink: 0;
+  padding: 24px 16px;
+  border-left: 1px solid rgba(80,80,120,0.25);
+  background: rgba(8,8,18,0.5);
+  flex-direction: column; align-items: center; gap: 14px;
+  justify-content: center;
+}
+#ship-select.active #map-select { display: flex; }
+#map-select-label {
+  font-size: 11px; color: #888; letter-spacing: 2px;
+}
+#map-window {
+  width: 100%; min-height: 140px;
+  padding: 16px 14px;
+  background: rgba(20,20,40,0.6);
+  border: 2px solid #ffaa00;
+  box-shadow: inset 0 0 12px rgba(255,170,0,0.18);
+  position: relative; text-align: center;
+  display: flex; flex-direction: column; justify-content: center;
+}
+#map-window-check {
+  position: absolute; top: 6px; right: 10px;
+  color: #66ff66; font-size: 18px; font-weight: bold;
+  text-shadow: 0 0 6px rgba(102,255,102,0.5);
+}
+#map-window-name {
+  font-size: 18px; font-weight: bold; color: #ffaa00;
+  letter-spacing: 2px; margin-bottom: 8px;
+}
+#map-window-desc {
+  font-size: 12px; color: #aaa; line-height: 1.4;
+}
+#map-select-row {
+  display: flex; flex-direction: row;
+  align-items: center; justify-content: space-between;
+  gap: 10px; width: 100%;
+}
+.map-arrow {
+  background: rgba(20,20,40,0.6);
+  border: 1px solid rgba(80,80,120,0.4);
+  color: #ffaa00; font-family: inherit;
+  font-size: 18px; font-weight: bold;
+  width: 40px; height: 40px; flex-shrink: 0;
+  cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: all;
+}
+.map-arrow:hover { border-color: #ffaa00; background: rgba(40,40,60,0.9); }
+.map-arrow:active { background: rgba(60,50,15,0.9); }
+#map-indicator {
+  display: flex; flex-direction: row; gap: 6px;
+  flex: 1; justify-content: center;
+}
+.map-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(80,80,120,0.6); transition: all 0.15s;
+}
+.map-dot.active {
+  background: #ffaa00; box-shadow: 0 0 6px rgba(255,170,0,0.7);
+}
+/* Confirmed ship checkmark (on the highlighted entry in the ship list) */
+.ship-list-entry { position: relative; }
+.ship-list-entry.selected::after {
+  content: '\2713';
+  position: absolute; top: 50%; right: 12px;
+  transform: translateY(-50%);
+  color: #66ff66; font-weight: bold; font-size: 18px;
+  text-shadow: 0 0 6px rgba(102,255,102,0.5);
+}
 
 /* ==========================================================================
    CINEMATIC OVERLAYS (ported from lss_overlays.jsx; pure CSS animations)
@@ -856,10 +919,20 @@ canvas { display: block; }
         <div id="ship-preview-abilities" style="display:none;"></div>
         <div id="ship-preview-core" style="display:none;"></div>
         <button id="ship-preview-confirm" style="display:none;">CONFIRM &amp; LAUNCH</button>
-        <div id="map-select" style="display:none; margin-top:28px; text-align:center;">
-          <h3 style="font-size:13px;color:#ffaa00;letter-spacing:2px;margin:0 0 8px;">SELECT MAP</h3>
-          <div id="map-select-grid" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
-        </div>
+      </div>
+    </div>
+    <!-- Map selector (right-side vertical panel; always visible while ship-select is open) -->
+    <div id="map-select">
+      <div id="map-select-label">MAP</div>
+      <div id="map-window">
+        <div id="map-window-check">&#10003;</div>
+        <div id="map-window-name"></div>
+        <div id="map-window-desc"></div>
+      </div>
+      <div id="map-select-row">
+        <button class="map-arrow" id="map-prev" title="Previous map">&#9664;</button>
+        <div id="map-indicator"></div>
+        <button class="map-arrow" id="map-next" title="Next map">&#9654;</button>
       </div>
     </div>
   </div>
@@ -867,7 +940,7 @@ canvas { display: block; }
     <span class="strip-label">TEAMMATES</span>
     <div id="teammates-list" style="display:flex;gap:10px;"></div>
   </div>
-  <div style="padding:8px 24px;color:#555;font-size:10px;letter-spacing:1px;background:rgba(4,4,10,0.85);">WASD: Move | SPACE/CTRL: Up/Down | MOUSE: Aim | SHIFT: Dash | Q/E/F: Abilities | V: Core | ESC: Settings&nbsp;&nbsp;&nbsp;GAMEPAD: D-Pad Up/Down: browse ships | START: launch | BACK: settings (in-match) / close menu</div>
+  <div style="padding:8px 24px;color:#555;font-size:10px;letter-spacing:1px;background:rgba(4,4,10,0.85);">WASD: Move | SPACE/CTRL: Up/Down | MOUSE: Aim | SHIFT: Dash | Q/E/F: Abilities | V: Core | ESC: Settings | DEAD: A/D or Click cycle teammate cam&nbsp;&nbsp;&nbsp;GAMEPAD: D-Pad Up/Down: ships | D-Pad Left/Right: map (or teammate cam when dead) | START: launch | BACK: settings (in-match) / close menu</div>
   <div id="ship-select-countdown">
     <div class="cd-num">3</div>
     <div class="cd-sub">LAUNCH</div>
@@ -1386,39 +1459,84 @@ function enterShipSelect() {
   updateTeammatesStrip();
 }
 
+// Build (or rebuild) the single-window map selector. Runs each time ship-select
+// opens. The window always shows exactly one map; the dots indicate position in
+// the list; prev/next arrows (and gamepad d-pad LEFT/RIGHT) cycle through.
 function buildMapSelector() {
-  const grid = document.getElementById('map-select-grid');
-  grid.innerHTML = '';
-  
-  const mapSelectDiv = document.getElementById('map-select');
-  mapSelectDiv.style.display = 'block';
-  
-  for (const [key, mapData] of Object.entries(MAP_DATA)) {
-    const card = document.createElement('div');
-    card.className = 'map-card';
-    if (game.selectedMap === key) {
-      card.classList.add('selected');
-    }
-    card.innerHTML = `
-      <div class="map-name">${mapData.name}</div>
-      <div class="map-desc">${mapData.description}</div>
-    `;
-    card.addEventListener('click', () => selectMap(key));
-    grid.appendChild(card);
+  const keys = Object.keys(MAP_DATA);
+  if (keys.length === 0) return;
+
+  // Default selection on first entry; otherwise keep the player's last choice,
+  // so returning between rounds preserves their pick.
+  if (!game.selectedMap || !MAP_DATA[game.selectedMap]) {
+    game.selectedMap = keys[0];
   }
+
+  // Build the indicator dots (one per map).
+  const indicator = document.getElementById('map-indicator');
+  if (indicator) {
+    indicator.innerHTML = '';
+    for (const k of keys) {
+      const dot = document.createElement('div');
+      dot.className = 'map-dot';
+      dot.dataset.key = k;
+      // Clicking a dot jumps directly to that map
+      dot.addEventListener('click', () => selectMap(k));
+      dot.style.cursor = 'pointer';
+      dot.style.pointerEvents = 'all';
+      indicator.appendChild(dot);
+    }
+  }
+
+  // Rebind prev/next arrows (clone to drop any old handlers if buildMapSelector
+  // is called multiple times in one session).
+  const rebindArrow = (id, dir) => {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    const fresh = btn.cloneNode(true);
+    btn.parentNode.replaceChild(fresh, btn);
+    fresh.addEventListener('click', () => cycleMap(dir));
+  };
+  rebindArrow('map-prev', -1);
+  rebindArrow('map-next',  1);
+
+  // Render the window contents for the currently-selected map.
+  selectMap(game.selectedMap);
 }
 
+// Set the current map by key; update the window contents, the active dot, and
+// the checkmark. Safe to call directly (used by click handlers and cycleMap).
 function selectMap(mapKey) {
+  if (!MAP_DATA[mapKey]) return;
   game.selectedMap = mapKey;
-  
-  // Update visual selection
-  const cards = document.querySelectorAll('.map-card');
-  cards.forEach(card => card.classList.remove('selected'));
-  
-  const selectedCard = event.currentTarget;
-  if (selectedCard) {
-    selectedCard.classList.add('selected');
+  const mapData = MAP_DATA[mapKey];
+
+  const nameEl = document.getElementById('map-window-name');
+  if (nameEl) nameEl.textContent = mapData.name;
+  const descEl = document.getElementById('map-window-desc');
+  if (descEl) descEl.textContent = mapData.description;
+
+  // Check is always visible in the current design (a map is always selected).
+  // Kept conditional so future states (no map chosen) can toggle it off.
+  const checkEl = document.getElementById('map-window-check');
+  if (checkEl) checkEl.style.display = 'block';
+
+  // Active dot
+  const dots = document.querySelectorAll('#map-indicator .map-dot');
+  dots.forEach(d => d.classList.toggle('active', d.dataset.key === mapKey));
+}
+
+// Cycle to the prev (-1) or next (+1) map, wrapping at either end.
+function cycleMap(dir) {
+  const keys = Object.keys(MAP_DATA);
+  if (keys.length === 0) return;
+  if (!game.selectedMap || !MAP_DATA[game.selectedMap]) {
+    selectMap(keys[0]);
+    return;
   }
+  const idx = keys.indexOf(game.selectedMap);
+  const next = ((idx + dir) % keys.length + keys.length) % keys.length;
+  selectMap(keys[next]);
 }
 
 function updateLobbyPeers() {
@@ -4636,10 +4754,24 @@ const dynamicLights = {
   MAX_LIGHTS: 8,
 };
 
+// NUM_POINT_LIGHTS PINNING (Trace 20260420T164534 fix):
+// Three.js bakes NUM_POINT_LIGHTS into every lit program as a GLSL #define,
+// keyed on the count of scene-resident lights where .visible===true. Flipping
+// .visible during play changes the count and forces a synchronous program
+// relink per lit material; the 125839 trace showed 116 getProgramInfoLog
+// ticks on the first explosion afterglow. The previous 8-step warmup loop
+// pre-linked every NUM_POINT_LIGHTS value from 1..8 but still left runtime
+// recompiles when a single-digit count crossed a boundary during combat.
+//
+// The fix: keep ALL pool lights permanently visible, with intensity 0 when
+// not in use. NUM_POINT_LIGHTS=MAX_LIGHTS always, no .visible toggling, no
+// runtime recompiles. Cost is ~8 noop light iterations per fragment (0 dot
+// products when intensity=0 gets unrolled) which is sub-millisecond.
 (function initDynamicLights() {
   for (let i = 0; i < dynamicLights.MAX_LIGHTS; i++) {
     const light = new THREE.PointLight(0xff8800, 0, 600);
-    light.visible = false;
+    // Permanently visible; intensity=0 is the "off" state. See comment above.
+    light.visible = true;
     scene.add(light);
     dynamicLights.pool.push(light);
   }
@@ -4652,14 +4784,14 @@ function spawnDynamicLight(pos, color, intensity, range, duration) {
   } else {
     // Steal the oldest active light
     const oldest = dynamicLights.active.shift();
-    if (oldest) { oldest.light.visible = false; light = oldest.light; }
+    if (oldest) { oldest.light.intensity = 0; light = oldest.light; }
     else return; // shouldn't happen
   }
   light.color.setHex(color);
   light.intensity = intensity;
   light.distance = range;
   light.position.copy(pos);
-  light.visible = true;
+  // light.visible stays true forever; see NUM_POINT_LIGHTS PINNING note above.
   dynamicLights.active.push({ light, intensity, duration, age: 0 });
 }
 
@@ -4670,7 +4802,8 @@ function updateDynamicLights() {
     entry.age += dt;
     if (entry.age >= entry.duration) {
       entry.light.intensity = 0;
-      entry.light.visible = false;
+      // Do NOT flip .visible; we pin NUM_POINT_LIGHTS by keeping all pool
+      // lights scene-resident at intensity 0. See initDynamicLights comment.
       dynamicLights.pool.push(entry.light);
       dynamicLights.active.splice(i, 1);
     } else {
@@ -4934,6 +5067,20 @@ function warmupCombatShaders() {
     } catch (_) { /* non-fatal: ship warm-up is a bonus, not a requirement */ }
 
     scene.add(group);
+
+    // --- Explosion / impact mesh pool warmup (Trace 20260420T164534 fix) ---
+    // Prime the pool BEFORE renderer.compile(scene, camera) so every pooled
+    // (geometry, material) tuple is part of the scene during link-time. The
+    // driver validates programs against every visible geometry+material it sees
+    // during compile, so seeding the pool here is the difference between a
+    // cold first-use stall on shot #1 and a warm first-use pass. The pool
+    // acquire adds meshes to the scene; we release them immediately, which
+    // hides them (intensity kept, .visible = false) but keeps them scene-
+    // resident so compile sees them. See _EXPL_POOL at the EFFECTS block.
+    try {
+      if (typeof _warmupExplosionPool === 'function') _warmupExplosionPool();
+    } catch (_) { /* pool warmup is non-fatal; game still runs, just takes one stall */ }
+
     renderer.compile(scene, camera);
 
     // --- GPU texture upload: the 473ms idle-dominated hitch at t+20s in the
@@ -5069,45 +5216,14 @@ function warmupCombatShaders() {
       } catch (_) { /* pass warmup is non-fatal */ }
     }
 
-    // --- NUM_POINT_LIGHTS warmup ---
-    // Three.js bakes the scene's active point-light count into the GLSL of
-    // every lit material as NUM_POINT_LIGHTS. Whenever a PointLight enters
-    // or leaves the scene, that #define changes and every lit program must
-    // be recompiled. The 125839 trace showed this dominating first-shot lag:
-    // 116 compile ticks at t+29s (first explosion afterglow light activated)
-    // and smaller spikes at every new dynamic-light event after.
-    //
-    // The dynamicLights pool pre-adds MAX_LIGHTS PointLights invisible at
-    // init, so the peak count is (static ambient/directional + the 1 init
-    // pointLight + however many pool lights are currently visible). We walk
-    // that count from 1 up to the pool max, calling renderer.compile() at
-    // each step, so the program cache contains a variant for every count
-    // combat can ever reach. After this loop, flipping a pool light visible
-    // never triggers a synchronous relink because the variant is warm.
-    try {
-      if (typeof dynamicLights !== 'undefined' && Array.isArray(dynamicLights.pool)) {
-        // Save current visible state so we don't accidentally leave pool
-        // lights on (they're supposed to be invisible-at-rest).
-        const savedVis = dynamicLights.pool.map(l => l.visible);
-        const savedInt = dynamicLights.pool.map(l => l.intensity);
-        // Incrementally activate pool lights and compile at each step so
-        // every intermediate NUM_POINT_LIGHTS value gets a cached program.
-        for (let n = 1; n <= dynamicLights.pool.length; n++) {
-          const light = dynamicLights.pool[n - 1];
-          // Intensity 0 means no visual change (can't leak on screen), but
-          // the renderer still counts it in NUM_POINT_LIGHTS because it's
-          // visible. Position doesn't matter; keep it at origin.
-          light.intensity = 0;
-          light.visible = true;
-          try { renderer.compile(scene, camera); } catch (_) {}
-        }
-        // Restore pool lights to their resting state (invisible, 0 intensity).
-        for (let i = 0; i < dynamicLights.pool.length; i++) {
-          dynamicLights.pool[i].visible = savedVis[i];
-          dynamicLights.pool[i].intensity = savedInt[i];
-        }
-      }
-    } catch (_) { /* light-count warmup is a bonus, non-fatal */ }
+    // --- NUM_POINT_LIGHTS is now pinned ---
+    // The 8-step incremental compile loop that used to sit here is retired.
+    // initDynamicLights keeps every pool light permanently visible at
+    // intensity 0, so NUM_POINT_LIGHTS = MAX_LIGHTS (8) at all times and
+    // the renderer.compile(scene, camera) call above already links every
+    // lit program against that final count. No runtime recompiles fire
+    // when dynamicLights activate/deactivate during combat, because .visible
+    // never toggles. See the NUM_POINT_LIGHTS PINNING note at initDynamicLights.
 
     scene.remove(group);
     // Dispose every ship warmup mesh's owned materials. buildModelShipMesh /
@@ -5168,6 +5284,146 @@ function warmupCombatShaders() {
 
 // ---- EFFECTS ----
 
+// ---- EXPLOSION / IMPACT MESH POOL (Trace 20260420T164534 fix) ----
+// The 109 / 72 / 66 ms gameLoop spikes at t+21.4-22.1s in that trace were
+// spawnExplosion + spawnImpactSparks allocating ~10 fresh geometries and
+// materials per call. The first two shots each triggered a driver-side
+// state-validation stall on the newly-built (geometry, material, shader)
+// tuple; by the third shot, the cache was warm and frames went smooth.
+//
+// The fix is to pre-create a unit geometry per role, pool a handful of
+// (mesh, material) pairs per role, and reuse them across every explosion /
+// impact. size is carried through effect.baseScale (see updateEffects).
+const _EXPL_SPHERE_LG  = new THREE.SphereGeometry(1, 8, 6);     // flash, fire
+const _EXPL_SPHERE_SM  = new THREE.SphereGeometry(1, 6, 4);     // explosion core
+const _EXPL_SPHERE_TINY= new THREE.SphereGeometry(1, 4, 3);     // impact sparks
+const _EXPL_PLANE      = new THREE.PlaneGeometry(1, 1);          // flare billboard
+const _EXPL_RING_FLAT  = new THREE.RingGeometry(0.45, 0.55, 48); // flat shockwave (aspect preserved on unit ring)
+const _EXPL_TORUS_PRI  = new THREE.TorusGeometry(0.5, 0.10, 8, 32); // primary shockwave torus
+const _EXPL_TORUS_SEC  = new THREE.TorusGeometry(0.5, 0.07, 8, 32); // secondary shockwave torus
+const _EXPL_ICOS       = new THREE.IcosahedronGeometry(1, 1);    // smoke + impact puff
+const _EXPL_TETRA      = new THREE.TetrahedronGeometry(1, 0);    // debris chunk
+
+const _EXPL_POOL = {
+  flash: [], flare: [], fire: [], core: [],
+  flatShock: [], ringShock: [], ring2Shock: [],
+  smoke: [], chunk: [],
+  sparkFlash: [], spark: [], puff: []
+};
+const _EXPL_POOL_CAP = {
+  flash: 32, flare: 32, fire: 32, core: 32,
+  flatShock: 16, ringShock: 16, ring2Shock: 12,
+  smoke: 24, chunk: 64,
+  sparkFlash: 32, spark: 96, puff: 32
+};
+
+function _makeExplosionMesh(type) {
+  let geo, matOpts;
+  switch (type) {
+    case 'flash':
+      geo = _EXPL_SPHERE_LG;
+      matOpts = { color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending, depthWrite: false };
+      break;
+    case 'flare':
+      geo = _EXPL_PLANE;
+      matOpts = { color: 0xffeec0, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide };
+      break;
+    case 'fire':
+      geo = _EXPL_SPHERE_LG;
+      matOpts = { color: 0xff6600, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending };
+      break;
+    case 'core':
+      geo = _EXPL_SPHERE_SM;
+      matOpts = { color: 0xff2200, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending };
+      break;
+    case 'flatShock':
+      geo = _EXPL_RING_FLAT;
+      matOpts = { color: 0xffd080, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide };
+      break;
+    case 'ringShock':
+      geo = _EXPL_TORUS_PRI;
+      matOpts = { color: 0xffaa44, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false };
+      break;
+    case 'ring2Shock':
+      geo = _EXPL_TORUS_SEC;
+      matOpts = { color: 0xff8833, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false };
+      break;
+    case 'smoke':
+      geo = _EXPL_ICOS;
+      matOpts = { color: 0x221100, transparent: true, opacity: 0.4 };
+      break;
+    case 'chunk':
+      geo = _EXPL_TETRA;
+      matOpts = { color: 0x443322, transparent: true, opacity: 0.8 };
+      break;
+    case 'sparkFlash':
+      geo = _EXPL_SPHERE_SM;
+      matOpts = { color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending };
+      break;
+    case 'spark':
+      geo = _EXPL_SPHERE_TINY;
+      matOpts = { color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending };
+      break;
+    case 'puff':
+      geo = _EXPL_ICOS;
+      matOpts = { color: 0x111111, transparent: true, opacity: 0.3 };
+      break;
+  }
+  const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial(matOpts));
+  mesh.userData._poolType = type;
+  return mesh;
+}
+
+function _acquireExplosionMesh(type) {
+  const pool = _EXPL_POOL[type];
+  let mesh = (pool && pool.length) ? pool.pop() : _makeExplosionMesh(type);
+  if (!mesh.parent) scene.add(mesh);
+  mesh.visible = true;
+  mesh.rotation.set(0, 0, 0);
+  return mesh;
+}
+
+function _releaseExplosionMesh(mesh) {
+  if (!mesh) return;
+  const type = mesh.userData && mesh.userData._poolType;
+  const pool = type ? _EXPL_POOL[type] : null;
+  if (!pool) {
+    if (mesh.parent) scene.remove(mesh);
+    if (mesh.material) mesh.material.dispose();
+    return;
+  }
+  const cap = _EXPL_POOL_CAP[type] || 16;
+  if (pool.length >= cap) {
+    if (mesh.parent) scene.remove(mesh);
+    if (mesh.material) mesh.material.dispose();
+    return;
+  }
+  // Keep mesh scene-resident but hidden; the next acquire flips .visible back.
+  mesh.visible = false;
+  mesh.position.set(0, -1e7, 0);
+  mesh.scale.set(1, 1, 1);
+  mesh.rotation.set(0, 0, 0);
+  if (mesh.material) mesh.material.opacity = 1;
+  pool.push(mesh);
+}
+
+// Prime the explosion pool and warm the program/VAO cache for every pooled
+// (geometry, material) pair. Called from warmupCombatShaders so the first
+// two real shots of a match don't hit a cold driver.
+function _warmupExplosionPool() {
+  const keys = Object.keys(_EXPL_POOL);
+  const acquired = [];
+  // 4 of each type is enough to cover a burst of simultaneous explosions
+  // (kill + secondaries + impacts) without any first-use allocation.
+  for (const k of keys) {
+    for (let i = 0; i < 4; i++) {
+      acquired.push(_acquireExplosionMesh(k));
+    }
+  }
+  // Release them back immediately; they stay scene-resident and invisible.
+  for (const m of acquired) _releaseExplosionMesh(m);
+}
+
 function spawnExplosion(pos, size) {
   size = size || 20;
 
@@ -5204,79 +5460,85 @@ function spawnExplosion(pos, size) {
   }
 
   // --- Phase 1: White-hot flash core (instant, tiny, bright) ---
-  const flashGeo = new THREE.SphereGeometry(size * 0.55, 8, 6);
-  const flashMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending, depthWrite: false });
-  const flashMesh = new THREE.Mesh(flashGeo, flashMat);
+  // Pooled unit-sphere; baseScale carries the original size * 0.55 factor into
+  // updateEffects' scale math. Material is reused across calls; reset opacity +
+  // color on acquire because the previous user may have faded it to black.
+  const flashMesh = _acquireExplosionMesh('flash');
   flashMesh.position.copy(pos);
-  scene.add(flashMesh);
-  game.effects.push({ mesh: flashMesh, lifetime: 0.12, age: 0, type: 'explosionFlash' });
+  flashMesh.scale.setScalar(size * 0.55);
+  flashMesh.material.color.setHex(0xffffff);
+  flashMesh.material.opacity = 1.0;
+  game.effects.push({ mesh: flashMesh, lifetime: 0.12, age: 0, type: 'explosionFlash', pooled: true, baseScale: size * 0.55 });
 
   // --- Phase 1b: Cinematic billboarded "lens flare" disc that faces the camera ---
-  const flareGeo = new THREE.PlaneGeometry(size * 1.6, size * 1.6);
-  const flareMat = new THREE.MeshBasicMaterial({ color: 0xffeec0, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
-  const flareMesh = new THREE.Mesh(flareGeo, flareMat);
+  const flareMesh = _acquireExplosionMesh('flare');
   flareMesh.position.copy(pos);
+  flareMesh.scale.setScalar(size * 1.6);
   flareMesh.lookAt(camera.position);
-  scene.add(flareMesh);
-  game.effects.push({ mesh: flareMesh, lifetime: 0.22, age: 0, type: 'explosionFlash', billboard: true });
+  flareMesh.material.color.setHex(0xffeec0);
+  flareMesh.material.opacity = 0.95;
+  game.effects.push({ mesh: flareMesh, lifetime: 0.22, age: 0, type: 'explosionFlash', pooled: true, billboard: true, baseScale: size * 1.6 });
 
   // --- Phase 2: Expanding fireball (orange-red, multi-layer) ---
-  const fireGeo = new THREE.SphereGeometry(size, 8, 6);
-  const fireMat = new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending });
-  const fireMesh = new THREE.Mesh(fireGeo, fireMat);
+  const fireMesh = _acquireExplosionMesh('fire');
   fireMesh.position.copy(pos);
-  scene.add(fireMesh);
-  game.effects.push({ mesh: fireMesh, lifetime: 0.5, age: 0, type: 'explosionFire', maxSize: size * 2.5 });
+  fireMesh.scale.setScalar(size);
+  fireMesh.material.color.setHex(0xff6600);
+  fireMesh.material.opacity = 0.85;
+  game.effects.push({ mesh: fireMesh, lifetime: 0.5, age: 0, type: 'explosionFire', pooled: true, maxSize: size * 2.5, baseScale: size });
 
   // Inner darker core (red, slightly delayed expansion)
-  const coreGeo = new THREE.SphereGeometry(size * 0.7, 6, 4);
-  const coreMat = new THREE.MeshBasicMaterial({ color: 0xff2200, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
-  const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+  const coreMesh = _acquireExplosionMesh('core');
   coreMesh.position.copy(pos);
-  scene.add(coreMesh);
-  game.effects.push({ mesh: coreMesh, lifetime: 0.35, age: 0, type: 'explosionFire', maxSize: size * 1.8 });
+  coreMesh.scale.setScalar(size * 0.7);
+  coreMesh.material.color.setHex(0xff2200);
+  coreMesh.material.opacity = 0.6;
+  game.effects.push({ mesh: coreMesh, lifetime: 0.35, age: 0, type: 'explosionFire', pooled: true, maxSize: size * 1.8, baseScale: size * 0.7 });
 
   // --- Phase 3: Shockwave rings (volumetric torus + billboarded flat ring) ---
   if (size > 12) {
-    // Camera-facing billboarded flat shockwave (the "cinematic" disc you can always read)
-    const flatGeo = new THREE.RingGeometry(size * 0.45, size * 0.55, 48);
-    const flatMat = new THREE.MeshBasicMaterial({ color: 0xffd080, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
-    const flatMesh = new THREE.Mesh(flatGeo, flatMat);
+    // Camera-facing billboarded flat shockwave (the "cinematic" disc you can always read).
+    // Unit ring is pre-built at inner=0.45 / outer=0.55; scaling by size keeps the
+    // same aspect as the old size*0.45 / size*0.55 call.
+    const flatMesh = _acquireExplosionMesh('flatShock');
     flatMesh.position.copy(pos);
+    flatMesh.scale.setScalar(size);
     flatMesh.lookAt(camera.position);
-    scene.add(flatMesh);
-    game.effects.push({ mesh: flatMesh, lifetime: 0.55, age: 0, type: 'shockwave', maxSize: size * 6, billboard: true });
+    flatMesh.material.color.setHex(0xffd080);
+    flatMesh.material.opacity = 0.95;
+    game.effects.push({ mesh: flatMesh, lifetime: 0.55, age: 0, type: 'shockwave', pooled: true, maxSize: size * 6, billboard: true, baseScale: size });
 
-    // Volumetric torus shockwave for depth (random orientation)
-    const ringGeo = new THREE.TorusGeometry(size * 0.5, size * 0.10, 8, 32);
-    const ringMat = new THREE.MeshBasicMaterial({ color: 0xffaa44, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false });
-    const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+    // Volumetric torus shockwave for depth (random orientation). Unit torus is
+    // major=0.5 / minor=0.10, so scaling by size recovers size*0.5 / size*0.10.
+    const ringMesh = _acquireExplosionMesh('ringShock');
     ringMesh.position.copy(pos);
+    ringMesh.scale.setScalar(size);
     ringMesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
-    scene.add(ringMesh);
-    game.effects.push({ mesh: ringMesh, lifetime: 0.45, age: 0, type: 'shockwave', maxSize: size * 5 });
+    ringMesh.material.color.setHex(0xffaa44);
+    ringMesh.material.opacity = 0.8;
+    game.effects.push({ mesh: ringMesh, lifetime: 0.45, age: 0, type: 'shockwave', pooled: true, maxSize: size * 5, baseScale: size });
 
     // Second perpendicular ring for big explosions
     if (size > 30) {
-      const ring2Geo = new THREE.TorusGeometry(size * 0.5, size * 0.07, 8, 32);
-      const ring2Mat = new THREE.MeshBasicMaterial({ color: 0xff8833, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false });
-      const ring2Mesh = new THREE.Mesh(ring2Geo, ring2Mat);
+      const ring2Mesh = _acquireExplosionMesh('ring2Shock');
       ring2Mesh.position.copy(pos);
+      ring2Mesh.scale.setScalar(size);
       ring2Mesh.rotation.set(Math.random() * Math.PI + 1.5, Math.random() * Math.PI, 0);
-      scene.add(ring2Mesh);
-      game.effects.push({ mesh: ring2Mesh, lifetime: 0.55, age: 0, type: 'shockwave', maxSize: size * 6 });
+      ring2Mesh.material.color.setHex(0xff8833);
+      ring2Mesh.material.opacity = 0.6;
+      game.effects.push({ mesh: ring2Mesh, lifetime: 0.55, age: 0, type: 'shockwave', pooled: true, maxSize: size * 6, baseScale: size });
     }
   }
 
   // --- Phase 4: Smoke cloud (dark, slow expansion, longer life) ---
   if (size > 15) {
-    const smokeGeo = new THREE.IcosahedronGeometry(size * 0.6, 1);
-    const smokeMat = new THREE.MeshBasicMaterial({ color: 0x221100, transparent: true, opacity: 0.4 });
-    const smokeMesh = new THREE.Mesh(smokeGeo, smokeMat);
+    const smokeMesh = _acquireExplosionMesh('smoke');
     smokeMesh.position.copy(pos);
+    smokeMesh.scale.setScalar(size * 0.6);
     smokeMesh.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
-    scene.add(smokeMesh);
-    game.effects.push({ mesh: smokeMesh, lifetime: 1.2, age: 0, type: 'smoke', maxSize: size * 4,
+    smokeMesh.material.color.setHex(0x221100);
+    smokeMesh.material.opacity = 0.4;
+    game.effects.push({ mesh: smokeMesh, lifetime: 1.2, age: 0, type: 'smoke', pooled: true, maxSize: size * 4, baseScale: size * 0.6,
       rotVel: new THREE.Vector3((Math.random()-0.5)*2, (Math.random()-0.5)*2, (Math.random()-0.5)*2) });
   }
 
@@ -5305,18 +5567,19 @@ function spawnExplosion(pos, size) {
     const chunkCount = Math.min(Math.ceil(size * 0.1), 6);
     for (let i = 0; i < chunkCount; i++) {
       const chunkSize = 2 + Math.random() * 4;
-      const chunkGeo = new THREE.TetrahedronGeometry(chunkSize, 0);
-      const chunkMat = new THREE.MeshBasicMaterial({ color: 0x443322, transparent: true, opacity: 0.8 });
-      const chunk = new THREE.Mesh(chunkGeo, chunkMat);
+      const chunk = _acquireExplosionMesh('chunk');
       chunk.position.copy(pos);
-      scene.add(chunk);
+      chunk.scale.setScalar(chunkSize);
+      chunk.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+      chunk.material.color.setHex(0x443322);
+      chunk.material.opacity = 0.8;
       const cVel = new THREE.Vector3(
         (Math.random() - 0.5) * 350,
         (Math.random() - 0.5) * 350,
         (Math.random() - 0.5) * 350
       );
       game.effects.push({
-        mesh: chunk, lifetime: 0.8 + Math.random() * 0.6, age: 0, type: 'debris', vel: cVel,
+        mesh: chunk, lifetime: 0.8 + Math.random() * 0.6, age: 0, type: 'debris', pooled: true, baseScale: chunkSize, vel: cVel,
         rotVel: new THREE.Vector3((Math.random()-0.5)*10, (Math.random()-0.5)*10, (Math.random()-0.5)*10)
       });
     }
@@ -6478,6 +6741,15 @@ function _disposeOrReleaseEffect(e) {
     if (e.mesh.material) e.mesh.material.dispose();
     return;
   }
+  // Pooled explosion / impact meshes (Trace 20260420T164534 fix): return the
+  // mesh to its type pool instead of disposing. The pool keeps a cap per type
+  // and disposes overflow, so unbounded growth is impossible. Crucially, the
+  // pooled geometry is shared via the _EXPL_*_GEO prototypes, so we must NOT
+  // dispose the geometry; _releaseExplosionMesh handles the reset + park.
+  if (e.pooled) {
+    _releaseExplosionMesh(e.mesh);
+    return;
+  }
   scene.remove(e.mesh);
   if (e.mesh.geometry) e.mesh.geometry.dispose();
   if (e.mesh.material) e.mesh.material.dispose();
@@ -6505,15 +6777,20 @@ function updateEffects(dt) {
       e.mesh.material.opacity = 0.8 * (1 - t);
     }
     // --- White-hot flash core: rapid shrink + fade ---
+    // When pooled, geometry is unit-radius; multiply the growth curve by baseScale
+    // so the mesh keeps its original call-site size. Legacy non-pooled path still
+    // works via baseScale=1.
     else if (e.type === 'explosionFlash') {
-      const s = e.billboard ? (1 + t * 2.5) : (1 + t * 0.5);
+      const base = e.baseScale || 1;
+      const s = (e.billboard ? (1 + t * 2.5) : (1 + t * 0.5)) * base;
       e.mesh.scale.set(s, s, s);
       e.mesh.material.opacity = 1.0 * (1 - t * t); // fast quadratic fade
       if (e.billboard) e.mesh.lookAt(camera.position);
     }
     // --- Fireball: expand + color shift orange->red->dark ---
     else if (e.type === 'explosionFire') {
-      const expand = 1 + t * 2.2;
+      const base = e.baseScale || 1;
+      const expand = (1 + t * 2.2) * base;
       e.mesh.scale.set(expand, expand, expand);
       // Color shift: white-orange -> red -> dark red
       const r = 1.0;
@@ -6524,10 +6801,11 @@ function updateEffects(dt) {
     }
     // --- Shockwave ring: rapid radial expansion ---
     else if (e.type === 'shockwave') {
-      const ringScale = 1 + t * (e.maxSize || 5);
+      const base = e.baseScale || 1;
+      const ringScale = (1 + t * (e.maxSize || 5)) * base;
       if (e.billboard) {
         // Flat camera-facing ring: expand only in plane (X,Y), keep facing camera.
-        e.mesh.scale.set(ringScale, ringScale, 1);
+        e.mesh.scale.set(ringScale, ringScale, base);
         e.mesh.lookAt(camera.position);
         e.mesh.material.opacity = 0.95 * (1 - t * t);
       } else {
@@ -6537,7 +6815,8 @@ function updateEffects(dt) {
     }
     // --- Smoke cloud: slow expand, drift, rotate, long fade ---
     else if (e.type === 'smoke') {
-      const smokeExpand = 1 + t * ((e.maxSize || 4) - 1);
+      const base = e.baseScale || 1;
+      const smokeExpand = (1 + t * ((e.maxSize || 4) - 1)) * base;
       e.mesh.scale.set(smokeExpand, smokeExpand, smokeExpand);
       e.mesh.material.opacity = 0.4 * (1 - t) * (1 - t); // slow quadratic fade
       // Gentle rotation
@@ -6549,6 +6828,7 @@ function updateEffects(dt) {
     }
     // --- Debris chunks: fly outward, spin, fade ---
     else if (e.type === 'debris') {
+      const base = e.baseScale || 1;
       if (e.vel) {
         e.mesh.position.add(e.vel.clone().multiplyScalar(dt));
         e.vel.multiplyScalar(0.97); // slight drag
@@ -6559,7 +6839,7 @@ function updateEffects(dt) {
         e.mesh.rotation.z += e.rotVel.z * dt;
       }
       e.mesh.material.opacity = 0.8 * (1 - t);
-      const shrink = 1 - t * 0.3;
+      const shrink = (1 - t * 0.3) * base;
       e.mesh.scale.set(shrink, shrink, shrink);
     }
     // --- Tracers: fade ---
@@ -6583,10 +6863,11 @@ function updateEffects(dt) {
     }
     // --- Sparks: fly, drag, shrink, fade ---
     else if (e.type === 'spark' && e.vel) {
+      const base = e.baseScale || 1;
       e.mesh.position.add(e.vel.clone().multiplyScalar(dt));
       e.vel.multiplyScalar(0.93);
       e.mesh.material.opacity = 1 - t;
-      const s = 1 - t * 0.6;
+      const s = (1 - t * 0.6) * base;
       e.mesh.scale.set(s, s, s);
     }
     // --- Shield shimmer (for shield hits) ---
@@ -6805,29 +7086,34 @@ function spawnImpactSparks(pos, count) {
   count = count || 6;
 
   // --- Bright impact flash (white-hot center) ---
-  const flashGeo = new THREE.SphereGeometry(3, 6, 4);
-  const flashMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
-  const flashMesh = new THREE.Mesh(flashGeo, flashMat);
+  // Pooled 'sparkFlash' = unit sphere radius 1 at segments (6,4); scale 3 recovers
+  // the old SphereGeometry(3, 6, 4). Material is reset on every acquire so the
+  // previous user's faded opacity doesn't bleed through.
+  const flashMesh = _acquireExplosionMesh('sparkFlash');
   flashMesh.position.copy(pos);
-  scene.add(flashMesh);
-  game.effects.push({ mesh: flashMesh, lifetime: 0.06, age: 0, type: 'explosionFlash' });
+  flashMesh.scale.setScalar(3);
+  flashMesh.material.color.setHex(0xffffff);
+  flashMesh.material.opacity = 0.9;
+  game.effects.push({ mesh: flashMesh, lifetime: 0.06, age: 0, type: 'explosionFlash', pooled: true, baseScale: 3 });
 
   // --- Spark streaks (fast, bright, varied angles) ---
+  // Pooled 'spark' = unit sphere radius 1 at segments (4,3); baseScale carries
+  // the 1.2..2.0 per-spark size factor into updateEffects (spark branch).
   for (let i = 0; i < count; i++) {
     const brightness = 0.8 + Math.random() * 0.2;
-    const sparkColor = new THREE.Color(brightness, brightness * 0.6 + Math.random() * 0.2, brightness * 0.15);
-    const geo = new THREE.SphereGeometry(1.2 + Math.random() * 0.8, 4, 3);
-    const mat = new THREE.MeshBasicMaterial({ color: sparkColor, transparent: true, opacity: 1, blending: THREE.AdditiveBlending });
-    const spark = new THREE.Mesh(geo, mat);
+    const sparkScale = 1.2 + Math.random() * 0.8;
+    const spark = _acquireExplosionMesh('spark');
     spark.position.copy(pos);
-    scene.add(spark);
+    spark.scale.setScalar(sparkScale);
+    spark.material.color.setRGB(brightness, brightness * 0.6 + Math.random() * 0.2, brightness * 0.15);
+    spark.material.opacity = 1;
     const speed = 300 + Math.random() * 500;
     const vel = new THREE.Vector3(
       (Math.random()-0.5) * speed,
       (Math.random()-0.5) * speed,
       (Math.random()-0.5) * speed
     );
-    game.effects.push({ mesh: spark, lifetime: 0.2 + Math.random() * 0.3, age: 0, type: 'spark', vel });
+    game.effects.push({ mesh: spark, lifetime: 0.2 + Math.random() * 0.3, age: 0, type: 'spark', pooled: true, baseScale: sparkScale, vel });
   }
 
   // --- Tiny secondary sparks (ember spray, more numerous, slower) ---
@@ -6845,13 +7131,15 @@ function spawnImpactSparks(pos, count) {
   }
 
   // --- Small scorch puff (dark smoke wisp) ---
+  // Pooled 'puff' = unit icosahedron; scaling by 4 recovers the old radius-4 call.
   if (count > 3) {
-    const puffGeo = new THREE.IcosahedronGeometry(4, 0);
-    const puffMat = new THREE.MeshBasicMaterial({ color: 0x111111, transparent: true, opacity: 0.3 });
-    const puff = new THREE.Mesh(puffGeo, puffMat);
+    const puff = _acquireExplosionMesh('puff');
     puff.position.copy(pos);
-    scene.add(puff);
-    game.effects.push({ mesh: puff, lifetime: 0.6, age: 0, type: 'smoke', maxSize: 12,
+    puff.scale.setScalar(4);
+    puff.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
+    puff.material.color.setHex(0x111111);
+    puff.material.opacity = 0.3;
+    game.effects.push({ mesh: puff, lifetime: 0.6, age: 0, type: 'smoke', pooled: true, maxSize: 12, baseScale: 4,
       rotVel: new THREE.Vector3((Math.random()-0.5)*3, (Math.random()-0.5)*3, (Math.random()-0.5)*3) });
   }
 
@@ -7335,9 +7623,13 @@ function playerDie(attacker) {
     const killerName = (attacker && attacker.loadout) ? attacker.loadout.name : '';
     Overlays.respawn(killerName);
   }
-  setTimeout(() => {
-    if (game.state === 'playing' || game.state === 'warmup') respawnPlayer();
-  }, 3000);
+  // Last Ship Sailing: one life per round. No mid-round respawn. The round-end
+  // state transition at the top of updateRoundSystem() calls respawnPlayer()
+  // when the next round begins. Until then, spectate teammates via the
+  // death-cam cycle controls (A/D or arrow left/right on keyboard; d-pad
+  // left/right on gamepad). If every teammate has also been destroyed,
+  // the round will end on its own and the camera falls back to orbiting
+  // the wreck.
 }
 
 function respawnPlayer() {
@@ -9661,6 +9953,8 @@ function pollGamepad() {
   input.gpScoreboardPrev = input.gpScoreboard;
   input.gpDpadUpPrev = input.gpDpadUp;
   input.gpDpadDownPrev = input.gpDpadDown;
+  input.gpDpadLeftPrev = input.gpDpadLeft;
+  input.gpDpadRightPrev = input.gpDpadRight;
 
   // Buttons (via configurable bindings)
   input.gpFire = gpBtn('fire');
@@ -9681,6 +9975,14 @@ function pollGamepad() {
   // below whenever a menu is active, so there's no double-fire.
   input.gpDpadUp = !!(gp.buttons[12] && (gp.buttons[12].pressed || gp.buttons[12].value > input.triggerThreshold));
   input.gpDpadDown = !!(gp.buttons[13] && (gp.buttons[13].pressed || gp.buttons[13].value > input.triggerThreshold));
+  // D-pad LEFT/RIGHT (buttons 14/15) and left-stick horizontal fallback for menu nav.
+  // Stick threshold 0.6 matches the d-pad feel; only registers when the user pushes hard.
+  const _gpDpadLeftBtn  = !!(gp.buttons[14] && (gp.buttons[14].pressed || gp.buttons[14].value > input.triggerThreshold));
+  const _gpDpadRightBtn = !!(gp.buttons[15] && (gp.buttons[15].pressed || gp.buttons[15].value > input.triggerThreshold));
+  const _gpStickLeft  = (gp.axes[0] !== undefined && gp.axes[0] < -0.6);
+  const _gpStickRight = (gp.axes[0] !== undefined && gp.axes[0] >  0.6);
+  input.gpDpadLeft  = _gpDpadLeftBtn  || _gpStickLeft;
+  input.gpDpadRight = _gpDpadRightBtn || _gpStickRight;
 
   // ---- Menu navigation (runs before gameplay edge triggers) ----
   const _shipSelect = document.getElementById('ship-select');
@@ -9715,7 +10017,9 @@ function pollGamepad() {
     }
   }
 
-  // D-pad up/down while ship-select is open: cycle the ship list
+  // D-pad up/down while ship-select is open: cycle the ship list.
+  // D-pad left/right (or left-stick horizontal): cycle the map window.
+  // START confirms whatever is currently highlighted (ship + map together).
   if (_shipSelectActive) {
     const entries = Array.from(document.querySelectorAll('.ship-list-entry'));
     if (entries.length) {
@@ -9729,6 +10033,19 @@ function pollGamepad() {
         const key = entries[idx] && entries[idx].dataset && entries[idx].dataset.key;
         if (key) previewLoadout(key);
       }
+    }
+    if (input.gpDpadLeft && !input.gpDpadLeftPrev) {
+      if (typeof cycleMap === 'function') cycleMap(-1);
+    } else if (input.gpDpadRight && !input.gpDpadRightPrev) {
+      if (typeof cycleMap === 'function') cycleMap(1);
+    }
+  } else if (typeof deathCam !== 'undefined' && deathCam.active) {
+    // Spectator mode: d-pad left/right cycles the teammate we're watching.
+    // (stick-horizontal fallback is already folded into gpDpadLeft/Right above)
+    if (input.gpDpadLeft && !input.gpDpadLeftPrev) {
+      if (typeof cycleSpectateTarget === 'function') cycleSpectateTarget(-1);
+    } else if (input.gpDpadRight && !input.gpDpadRightPrev) {
+      if (typeof cycleSpectateTarget === 'function') cycleSpectateTarget(1);
     }
   }
 
@@ -11846,6 +12163,12 @@ const MAP_DATA = {
   hourglass: {
     name: 'The Nexus',
     description: 'Ring layout. Six chambers. Every room connects to two others; no dead ends.',
+    // Cool indigo ring with a warm gold hub (the council-chamber feel).
+    // Index 0 = center, then around the hexagonal ring. The shader picks
+    // the nearest room's color and steers wall hue toward it.
+    palette: [
+      0x4a3818, 0x2a1840, 0x1a2848, 0x18283a, 0x202848, 0x1a2840, 0x18203a, 0x1c2848
+    ],
     // Feng shui arena design: circular flow, multiple flanking routes, no camping corners,
     // every room has 2+ exits, spawns on opposite sides of the ring, power position in center.
     // Layout: hexagonal ring of 6 chambers with a central hub. Spawns at north and south.
@@ -11875,6 +12198,200 @@ const MAP_DATA = {
       { path: [{x: 0, y: 0, z:  SU*8}, {x: 0, y: 0, z: 0}]},           // spawn_b -> center
       { path: [{x: -SU*7, y: -SU*2, z:  SU*4}, {x: 0, y: 0, z: 0}]},   // sw -> center
       { path: [{x: -SU*7, y: SU*2, z: -SU*4}, {x: 0, y: 0, z: 0}]},    // nw -> center
+    ]
+  },
+
+  // ----------------------------------------------------------------------
+  // The Spine: long-axis corridor with two parallel bypass loops.
+  // Favors long-range work (Puncture, Tracker). Center is the contested
+  // sightline; bypass rooms (north_arc, south_arc) let flankers cross
+  // the map without committing to the spine.
+  // 7 rooms; spawns at z = +/- 9*SU; spans roughly +/-9 along z.
+  spine: {
+    name: 'The Spine',
+    description: 'Long axis with parallel bypasses. Center is the killing line; flank through the arcs.',
+    // Industrial gunmetal with crimson accents (the kill-corridor feel).
+    palette: [
+      0x1c1818, 0x281a1a, 0x2a1c1c, 0x381616, 0x281818, 0x202020, 0x301818, 0x401818
+    ],
+    rooms: [
+      { id: 'spawn_a',  team: 'A',  x: 0,        y: 0,       z: -SU * 9, r: SU * 2.2 }, // west end
+      { id: 'mid_a',    team: null, x: 0,        y: 0,       z: -SU * 4, r: SU * 2.0 },
+      { id: 'center',   team: null, x: 0,        y: 0,       z:  0,      r: SU * 2.5 },
+      { id: 'mid_b',    team: null, x: 0,        y: 0,       z:  SU * 4, r: SU * 2.0 },
+      { id: 'spawn_b',  team: 'B',  x: 0,        y: 0,       z:  SU * 9, r: SU * 2.2 }, // east end
+      { id: 'north_arc',team: null, x: SU * 5,   y: SU * 2,  z:  0,      r: SU * 1.8 }, // bypass north of spine
+      { id: 'south_arc',team: null, x: -SU * 5,  y: -SU * 2, z:  0,      r: SU * 1.8 }, // bypass south of spine
+    ],
+    tunnels: [
+      // Backbone (linear spine)
+      { path: [{x: 0, y: 0, z: -SU*9}, {x: 0, y: 0, z: -SU*4}]},                    // spawn_a -> mid_a
+      { path: [{x: 0, y: 0, z: -SU*4}, {x: 0, y: 0, z:  0}]},                       // mid_a -> center
+      { path: [{x: 0, y: 0, z:  0},    {x: 0, y: 0, z:  SU*4}]},                    // center -> mid_b
+      { path: [{x: 0, y: 0, z:  SU*4}, {x: 0, y: 0, z:  SU*9}]},                    // mid_b -> spawn_b
+      // North bypass (mid_a <-> mid_b via north_arc)
+      { path: [{x: 0, y: 0, z: -SU*4}, {x: SU*5, y: SU*2, z:  0}]},                 // mid_a -> north_arc
+      { path: [{x: SU*5, y: SU*2, z:  0}, {x: 0, y: 0, z:  SU*4}]},                 // north_arc -> mid_b
+      // South bypass (mid_a <-> mid_b via south_arc)
+      { path: [{x: 0, y: 0, z: -SU*4}, {x: -SU*5, y: -SU*2, z:  0}]},               // mid_a -> south_arc
+      { path: [{x: -SU*5, y: -SU*2, z:  0}, {x: 0, y: 0, z:  SU*4}]},               // south_arc -> mid_b
+    ]
+  },
+
+  // ----------------------------------------------------------------------
+  // The Infinity: figure-8 dual rings sharing one central pinch room.
+  // Favors area control (Vortex, Pyro). Each lobe has spawn + 2 ring rooms;
+  // the center is the only crossing between lobes, so denying it splits
+  // the map. Two paths around each lobe, so no team can be cornered.
+  // 7 rooms; spawns at x = +/- 8*SU.
+  infinity: {
+    name: 'The Infinity',
+    description: 'Two rings joined at a pinch. Hold the center, halve the map.',
+    // Teal lobe (left) and magenta lobe (right) with a hot orange center pinch.
+    // Room order: spawn_a, left_n, left_s, center, spawn_b, right_n, right_s.
+    palette: [
+      0x103838, 0x14383a, 0x12303a, 0x4a2818, 0x381038, 0x3a1438, 0x381432, 0x183838
+    ],
+    rooms: [
+      { id: 'spawn_a', team: 'A',  x: -SU * 8, y:  0,       z:  0,       r: SU * 2.2 },
+      { id: 'left_n',  team: null, x: -SU * 4, y:  SU * 2,  z: -SU * 4,  r: SU * 1.8 },
+      { id: 'left_s',  team: null, x: -SU * 4, y: -SU * 2,  z:  SU * 4,  r: SU * 1.8 },
+      { id: 'center',  team: null, x:  0,      y:  0,       z:  0,       r: SU * 2.5 },
+      { id: 'right_n', team: null, x:  SU * 4, y: -SU * 2,  z: -SU * 4,  r: SU * 1.8 },
+      { id: 'right_s', team: null, x:  SU * 4, y:  SU * 2,  z:  SU * 4,  r: SU * 1.8 },
+      { id: 'spawn_b', team: 'B',  x:  SU * 8, y:  0,       z:  0,       r: SU * 2.2 },
+    ],
+    tunnels: [
+      // Left ring
+      { path: [{x: -SU*8, y: 0, z: 0},          {x: -SU*4, y: SU*2,  z: -SU*4}]},   // spawn_a -> left_n
+      { path: [{x: -SU*4, y: SU*2,  z: -SU*4},  {x:  0,    y: 0,     z:  0}]},      // left_n -> center
+      { path: [{x:  0,    y: 0,     z:  0},     {x: -SU*4, y: -SU*2, z:  SU*4}]},   // center -> left_s
+      { path: [{x: -SU*4, y: -SU*2, z:  SU*4},  {x: -SU*8, y: 0,     z:  0}]},      // left_s -> spawn_a
+      // Right ring
+      { path: [{x:  SU*8, y: 0, z: 0},          {x:  SU*4, y: -SU*2, z: -SU*4}]},   // spawn_b -> right_n
+      { path: [{x:  SU*4, y: -SU*2, z: -SU*4},  {x:  0,    y: 0,     z:  0}]},      // right_n -> center
+      { path: [{x:  0,    y: 0,     z:  0},     {x:  SU*4, y: SU*2,  z:  SU*4}]},   // center -> right_s
+      { path: [{x:  SU*4, y: SU*2,  z:  SU*4},  {x:  SU*8, y: 0,     z:  0}]},      // right_s -> spawn_b
+    ]
+  },
+
+  // ----------------------------------------------------------------------
+  // The Tower: vertical stack across +/- 8*SU on the Y axis.
+  // Favors 3D mobility (Slayer phase dash, Syphon, Vortex). Two horizontal
+  // mid-layers connected through a central column; spawns at top and bottom
+  // force vertical engagement.
+  // 7 rooms; vertical span 16*SU.
+  tower: {
+    name: 'The Tower',
+    description: 'Vertical stack. Two layers between the spawns. Watch your six in three dimensions.',
+    // Vertical sky-to-forge gradient: cold purple at the top, neutral center,
+    // warm amber at the bottom. Room order: spawn_a(top), mid_hi_e, mid_hi_w,
+    // center, mid_lo_e, mid_lo_w, spawn_b(bottom).
+    palette: [
+      0x281848, 0x201840, 0x282040, 0x303030, 0x382818, 0x402818, 0x481810, 0x3a2010
+    ],
+    rooms: [
+      { id: 'spawn_a',  team: 'A',  x:  0,       y:  SU * 8, z:  0,       r: SU * 2.2 }, // top
+      { id: 'mid_hi_e', team: null, x:  SU * 4,  y:  SU * 4, z:  SU * 2,  r: SU * 1.8 },
+      { id: 'mid_hi_w', team: null, x: -SU * 4,  y:  SU * 4, z: -SU * 2,  r: SU * 1.8 },
+      { id: 'center',   team: null, x:  0,       y:  0,      z:  0,       r: SU * 2.5 },
+      { id: 'mid_lo_e', team: null, x:  SU * 4,  y: -SU * 4, z: -SU * 2,  r: SU * 1.8 },
+      { id: 'mid_lo_w', team: null, x: -SU * 4,  y: -SU * 4, z:  SU * 2,  r: SU * 1.8 },
+      { id: 'spawn_b',  team: 'B',  x:  0,       y: -SU * 8, z:  0,       r: SU * 2.2 }, // bottom
+    ],
+    tunnels: [
+      // Top spawn to upper layer
+      { path: [{x:  0, y: SU*8, z: 0}, {x:  SU*4, y: SU*4, z:  SU*2}]},                  // spawn_a -> mid_hi_e
+      { path: [{x:  0, y: SU*8, z: 0}, {x: -SU*4, y: SU*4, z: -SU*2}]},                  // spawn_a -> mid_hi_w
+      // Upper layer cross
+      { path: [{x:  SU*4, y: SU*4, z:  SU*2}, {x: -SU*4, y: SU*4, z: -SU*2}]},           // mid_hi_e -> mid_hi_w
+      // Upper layer to center
+      { path: [{x:  SU*4, y: SU*4, z:  SU*2}, {x: 0, y: 0, z: 0}]},                      // mid_hi_e -> center
+      { path: [{x: -SU*4, y: SU*4, z: -SU*2}, {x: 0, y: 0, z: 0}]},                      // mid_hi_w -> center
+      // Center to lower layer
+      { path: [{x: 0, y: 0, z: 0}, {x:  SU*4, y: -SU*4, z: -SU*2}]},                     // center -> mid_lo_e
+      { path: [{x: 0, y: 0, z: 0}, {x: -SU*4, y: -SU*4, z:  SU*2}]},                     // center -> mid_lo_w
+      // Lower layer cross
+      { path: [{x:  SU*4, y: -SU*4, z: -SU*2}, {x: -SU*4, y: -SU*4, z:  SU*2}]},         // mid_lo_e -> mid_lo_w
+      // Lower layer to bottom spawn
+      { path: [{x:  SU*4, y: -SU*4, z: -SU*2}, {x: 0, y: -SU*8, z: 0}]},                 // mid_lo_e -> spawn_b
+      { path: [{x: -SU*4, y: -SU*4, z:  SU*2}, {x: 0, y: -SU*8, z: 0}]},                 // mid_lo_w -> spawn_b
+    ]
+  },
+
+  // ----------------------------------------------------------------------
+  // The Cross: compact orthogonal cross with diagonal cuts.
+  // Favors close-range brawl (Slayer, Pyro). Tighter than Nexus; the
+  // diagonals between arm rooms make corner-camping a death sentence.
+  // 7 rooms; horizontal span +/- 8*SU on z.
+  cross: {
+    name: 'The Cross',
+    description: 'Compact crucible. Four arms cut by diagonals; nowhere to hide.',
+    // Gladiatorial crimson and gold (close-range brawl feel). Room order:
+    // center, arm_n, arm_s, arm_e, arm_w, spawn_a, spawn_b.
+    palette: [
+      0x4a2818, 0x401818, 0x381818, 0x401010, 0x381010, 0x4a2010, 0x4a2010, 0x382010
+    ],
+    rooms: [
+      { id: 'center',  team: null, x:  0,       y:  0,       z:  0,       r: SU * 2.5 },
+      { id: 'arm_n',   team: null, x:  0,       y:  SU * 1,  z: -SU * 4,  r: SU * 1.8 },
+      { id: 'arm_s',   team: null, x:  0,       y: -SU * 1,  z:  SU * 4,  r: SU * 1.8 },
+      { id: 'arm_e',   team: null, x:  SU * 4,  y:  0,       z:  0,       r: SU * 1.8 },
+      { id: 'arm_w',   team: null, x: -SU * 4,  y:  0,       z:  0,       r: SU * 1.8 },
+      { id: 'spawn_a', team: 'A',  x:  0,       y:  SU * 2,  z: -SU * 8,  r: SU * 2.2 }, // north of arm_n
+      { id: 'spawn_b', team: 'B',  x:  0,       y: -SU * 2,  z:  SU * 8,  r: SU * 2.2 }, // south of arm_s
+    ],
+    tunnels: [
+      // Spokes from center
+      { path: [{x: 0, y: 0, z: 0}, {x: 0, y: SU*1, z: -SU*4}]},                          // center -> arm_n
+      { path: [{x: 0, y: 0, z: 0}, {x: 0, y: -SU*1, z: SU*4}]},                          // center -> arm_s
+      { path: [{x: 0, y: 0, z: 0}, {x: SU*4, y: 0, z: 0}]},                              // center -> arm_e
+      { path: [{x: 0, y: 0, z: 0}, {x: -SU*4, y: 0, z: 0}]},                             // center -> arm_w
+      // Diagonals between arm tips (so each arm has 3+ exits)
+      { path: [{x: 0, y: SU*1, z: -SU*4}, {x: SU*4, y: 0, z: 0}]},                       // arm_n -> arm_e
+      { path: [{x: 0, y: SU*1, z: -SU*4}, {x: -SU*4, y: 0, z: 0}]},                      // arm_n -> arm_w
+      { path: [{x: 0, y: -SU*1, z: SU*4}, {x: SU*4, y: 0, z: 0}]},                       // arm_s -> arm_e
+      { path: [{x: 0, y: -SU*1, z: SU*4}, {x: -SU*4, y: 0, z: 0}]},                      // arm_s -> arm_w
+      // Spawn extensions
+      { path: [{x: 0, y: SU*1, z: -SU*4}, {x: 0, y: SU*2, z: -SU*8}]},                   // arm_n -> spawn_a
+      { path: [{x: 0, y: -SU*1, z: SU*4}, {x: 0, y: -SU*2, z: SU*8}]},                   // arm_s -> spawn_b
+    ]
+  },
+
+  // ----------------------------------------------------------------------
+  // The Arc: curved half-loop with skip-ahead shortcuts over the top.
+  // Favors flanking (Syphon, Blaster). Linear arc lets snipers hold,
+  // shortcuts let mobile ships punish overextension.
+  // 7 rooms arranged in an arc curving through the north half.
+  arc: {
+    name: 'The Arc',
+    description: 'Curved approach with shortcuts over the top. Flank or get flanked.',
+    // Sunset palette: deep ocean blue at the wings, sky pink across the arc,
+    // sand orange at the peak. Room order: spawn_a(SW), arc_1..arc_5, spawn_b(SE).
+    palette: [
+      0x101838, 0x182040, 0x282040, 0x481830, 0x382040, 0x282040, 0x182040, 0x101838
+    ],
+    rooms: [
+      { id: 'spawn_a', team: 'A',  x: -SU * 8, y:  0,      z:  SU * 3, r: SU * 2.2 }, // SW
+      { id: 'arc_1',   team: null, x: -SU * 6, y:  SU * 1, z: -SU * 3, r: SU * 1.8 },
+      { id: 'arc_2',   team: null, x: -SU * 3, y:  SU * 2, z: -SU * 6, r: SU * 1.8 },
+      { id: 'arc_3',   team: null, x:  0,      y:  SU * 3, z: -SU * 7, r: SU * 2.0 }, // peak
+      { id: 'arc_4',   team: null, x:  SU * 3, y:  SU * 2, z: -SU * 6, r: SU * 1.8 },
+      { id: 'arc_5',   team: null, x:  SU * 6, y:  SU * 1, z: -SU * 3, r: SU * 1.8 },
+      { id: 'spawn_b', team: 'B',  x:  SU * 8, y:  0,      z:  SU * 3, r: SU * 2.2 }, // SE
+    ],
+    tunnels: [
+      // Main arc (curved spine)
+      { path: [{x: -SU*8, y: 0,    z:  SU*3}, {x: -SU*6, y: SU*1, z: -SU*3}]},           // spawn_a -> arc_1
+      { path: [{x: -SU*6, y: SU*1, z: -SU*3}, {x: -SU*3, y: SU*2, z: -SU*6}]},           // arc_1 -> arc_2
+      { path: [{x: -SU*3, y: SU*2, z: -SU*6}, {x:  0,    y: SU*3, z: -SU*7}]},           // arc_2 -> arc_3
+      { path: [{x:  0,    y: SU*3, z: -SU*7}, {x:  SU*3, y: SU*2, z: -SU*6}]},           // arc_3 -> arc_4
+      { path: [{x:  SU*3, y: SU*2, z: -SU*6}, {x:  SU*6, y: SU*1, z: -SU*3}]},           // arc_4 -> arc_5
+      { path: [{x:  SU*6, y: SU*1, z: -SU*3}, {x:  SU*8, y: 0,    z:  SU*3}]},           // arc_5 -> spawn_b
+      // Skip-ahead shortcuts (from arc_1 and arc_5 to the peak; over-the-top from arc_2 to arc_4)
+      { path: [{x: -SU*6, y: SU*1, z: -SU*3}, {x:  0,    y: SU*3, z: -SU*7}]},           // arc_1 -> arc_3 (skip)
+      { path: [{x:  0,    y: SU*3, z: -SU*7}, {x:  SU*6, y: SU*1, z: -SU*3}]},           // arc_3 -> arc_5 (skip)
+      { path: [{x: -SU*3, y: SU*2, z: -SU*6}, {x:  SU*3, y: SU*2, z: -SU*6}]},           // arc_2 -> arc_4 (over the top)
     ]
   }
 };
@@ -12144,10 +12661,16 @@ function buildRoomGraphLevel(level) {
       '}'
     ].join('\n');
 
-    // Dynamic room uniforms (pad to 8 elements for shader array)
-    const roomPalette = [
+    // Dynamic room uniforms (pad to 8 elements for shader array).
+    // Per-map palettes live on level.palette (8 hex colors, one per room slot;
+    // shader array is fixed at 8). Falls back to a neutral jewel-tone default
+    // if the active map didn't ship a palette.
+    const defaultPalette = [
       0x1a3050, 0x3a1010, 0x103a10, 0x351828, 0x183520, 0x2a2040, 0x1a4030, 0x402020
     ];
+    const roomPalette = (level && Array.isArray(level.palette) && level.palette.length > 0)
+      ? level.palette
+      : defaultPalette;
     const numRooms = Math.min(game.sdfRoomData.length, 8);
     const roomCentersArr = [];
     const roomColorsArr = [];
@@ -13980,31 +14503,133 @@ document.addEventListener('keyup', e => {
   }
 });
 
-// ---- DEATH CAMERA (orbit spectator) ----
+// ---- DEATH CAMERA (teammate spectator with orbit fallback) ----
+// You get one life per round. On death, the camera detaches from your wreck
+// and follows a living teammate as a chase-cam. Cycle teammates with A/D,
+// arrow left/right, left-click, or gamepad d-pad left/right. If every
+// teammate is also dead we fall back to a slow orbit around your wreck.
 
 const deathCam = {
   active: false,
+  // Orbit-mode state (fallback when no living teammates remain)
   angle: 0,
   radius: 400,
   height: 150,
-  target: null, // position to orbit around (death location)
+  target: null,            // THREE.Vector3 of the death location
+  // Spectator-mode state (chase a living teammate)
+  spectateTarget: null,    // entity reference (bot or player-like) we're chasing
+  // Local edge-detection for cycle-spectate input (scoped to deathCam so we
+  // don't stomp on the main input system's prev-state tracking)
+  _kbPrevLeft: false,
+  _kbPrevRight: false,
+  _kbPrevClick: false,
 };
+
+function _livingTeammates() {
+  const out = [];
+  for (const b of game.entities) {
+    if (b && b.alive && b.team === player.team) out.push(b);
+  }
+  return out;
+}
+
+function cycleSpectateTarget(dir) {
+  const mates = _livingTeammates();
+  if (mates.length === 0) { deathCam.spectateTarget = null; return; }
+  let startIdx = 0;
+  if (deathCam.spectateTarget) {
+    const curIdx = mates.indexOf(deathCam.spectateTarget);
+    if (curIdx >= 0) startIdx = curIdx;
+    else startIdx = -dir; // fell off the list (target died); step to first entry
+  }
+  const nextIdx = ((startIdx + dir) % mates.length + mates.length) % mates.length;
+  deathCam.spectateTarget = mates[nextIdx];
+  _updateSpectateOverlay();
+}
+
+function _updateSpectateOverlay() {
+  // Repurpose the existing ov-respawn overlay's wait row to show who we're
+  // watching. Keeps the overlay's "DESTROYED" headline intact while making
+  // the spectate state legible.
+  const el = document.getElementById('ov-respawn');
+  if (!el) return;
+  const wait = el.querySelector('.rs-wait');
+  if (!wait) return;
+  if (deathCam.spectateTarget && deathCam.spectateTarget.loadout) {
+    const name = deathCam.spectateTarget.loadout.name || 'ALLY';
+    wait.textContent = 'SPECTATING ' + name.toUpperCase() + '  (A/D OR D-PAD TO CYCLE)';
+  } else {
+    wait.textContent = 'WAITING FOR NEXT ROUND';
+  }
+}
 
 function startDeathCam() {
   deathCam.active = true;
   deathCam.target = player.position.clone();
   deathCam.angle = player.euler.y;
   deathCam.radius = player.chassis ? player.chassis.hullLength * 4 : 400;
+  deathCam.spectateTarget = null;
+  deathCam._kbPrevLeft = false;
+  deathCam._kbPrevRight = false;
+  deathCam._kbPrevClick = false;
+  // Auto-pick first living teammate if one exists
+  cycleSpectateTarget(1);
 }
 
 function updateDeathCam(dt) {
-  if (!deathCam.active || !deathCam.target) return;
-  deathCam.angle += dt * 0.4; // slow orbit
-  const camX = deathCam.target.x + Math.cos(deathCam.angle) * deathCam.radius;
-  const camY = deathCam.target.y + deathCam.height;
-  const camZ = deathCam.target.z + Math.sin(deathCam.angle) * deathCam.radius;
-  camera.position.set(camX, camY, camZ);
-  camera.lookAt(deathCam.target);
+  if (!deathCam.active) return;
+
+  // Input: cycle spectate target (keyboard + mouse; gamepad handled in the
+  // main input pass so it shares the existing edge-tracking state).
+  const kbLeft  = !!(input.keys && (input.keys['a'] || input.keys['arrowleft']));
+  const kbRight = !!(input.keys && (input.keys['d'] || input.keys['arrowright']));
+  const kbClick = !!input.mouseDown;
+  if (kbLeft  && !deathCam._kbPrevLeft)  cycleSpectateTarget(-1);
+  if (kbRight && !deathCam._kbPrevRight) cycleSpectateTarget( 1);
+  if (kbClick && !deathCam._kbPrevClick) cycleSpectateTarget( 1);
+  deathCam._kbPrevLeft  = kbLeft;
+  deathCam._kbPrevRight = kbRight;
+  deathCam._kbPrevClick = kbClick;
+
+  // If the spectate target died since last frame, advance to the next alive one.
+  if (deathCam.spectateTarget && !deathCam.spectateTarget.alive) {
+    cycleSpectateTarget(1);
+  } else if (!deathCam.spectateTarget) {
+    cycleSpectateTarget(1); // maybe one is back up (e.g., if ever mid-round respawns return)
+  }
+
+  if (deathCam.spectateTarget) {
+    // Chase cam: sit behind and slightly above the teammate's ship,
+    // looking along their heading.
+    const t = deathCam.spectateTarget;
+    const tgt = t.position;
+    const dir = (t.targetDir && t.targetDir.lengthSq() > 0.001)
+      ? t.targetDir
+      : new THREE.Vector3(0, 0, -1);
+    const hull = (t.chassis && t.chassis.hullLength) ? t.chassis.hullLength : 80;
+    const chaseDist = hull * 4;
+    const heightOff = hull * 0.9;
+    camera.position.set(
+      tgt.x - dir.x * chaseDist,
+      tgt.y - dir.y * chaseDist + heightOff,
+      tgt.z - dir.z * chaseDist
+    );
+    // Look slightly ahead of the ship so their nose is centered, not their tail.
+    const lookAhead = new THREE.Vector3(
+      tgt.x + dir.x * hull * 0.5,
+      tgt.y + dir.y * hull * 0.5,
+      tgt.z + dir.z * hull * 0.5
+    );
+    camera.lookAt(lookAhead);
+  } else if (deathCam.target) {
+    // No living teammates: slow orbit around the wreck.
+    deathCam.angle += dt * 0.4;
+    const camX = deathCam.target.x + Math.cos(deathCam.angle) * deathCam.radius;
+    const camY = deathCam.target.y + deathCam.height;
+    const camZ = deathCam.target.z + Math.sin(deathCam.angle) * deathCam.radius;
+    camera.position.set(camX, camY, camZ);
+    camera.lookAt(deathCam.target);
+  }
 }
 
 // Hook death camera into playerDie and respawnPlayer
@@ -14017,6 +14642,7 @@ playerDie = function(attacker) {
 const _origRespawnPlayer = respawnPlayer;
 respawnPlayer = function() {
   deathCam.active = false;
+  deathCam.spectateTarget = null;
   _origRespawnPlayer();
 };
 
