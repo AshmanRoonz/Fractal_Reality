@@ -11876,6 +11876,175 @@ const MAP_DATA = {
       { path: [{x: -SU*7, y: -SU*2, z:  SU*4}, {x: 0, y: 0, z: 0}]},   // sw -> center
       { path: [{x: -SU*7, y: SU*2, z: -SU*4}, {x: 0, y: 0, z: 0}]},    // nw -> center
     ]
+  },
+
+  // ----------------------------------------------------------------------
+  // The Spine: long-axis corridor with two parallel bypass loops.
+  // Favors long-range work (Puncture, Tracker). Center is the contested
+  // sightline; bypass rooms (north_arc, south_arc) let flankers cross
+  // the map without committing to the spine.
+  // 7 rooms; spawns at z = +/- 9*SU; spans roughly +/-9 along z.
+  spine: {
+    name: 'The Spine',
+    description: 'Long axis with parallel bypasses. Center is the killing line; flank through the arcs.',
+    rooms: [
+      { id: 'spawn_a',  team: 'A',  x: 0,        y: 0,       z: -SU * 9, r: SU * 2.2 }, // west end
+      { id: 'mid_a',    team: null, x: 0,        y: 0,       z: -SU * 4, r: SU * 2.0 },
+      { id: 'center',   team: null, x: 0,        y: 0,       z:  0,      r: SU * 2.5 },
+      { id: 'mid_b',    team: null, x: 0,        y: 0,       z:  SU * 4, r: SU * 2.0 },
+      { id: 'spawn_b',  team: 'B',  x: 0,        y: 0,       z:  SU * 9, r: SU * 2.2 }, // east end
+      { id: 'north_arc',team: null, x: SU * 5,   y: SU * 2,  z:  0,      r: SU * 1.8 }, // bypass north of spine
+      { id: 'south_arc',team: null, x: -SU * 5,  y: -SU * 2, z:  0,      r: SU * 1.8 }, // bypass south of spine
+    ],
+    tunnels: [
+      // Backbone (linear spine)
+      { path: [{x: 0, y: 0, z: -SU*9}, {x: 0, y: 0, z: -SU*4}]},                    // spawn_a -> mid_a
+      { path: [{x: 0, y: 0, z: -SU*4}, {x: 0, y: 0, z:  0}]},                       // mid_a -> center
+      { path: [{x: 0, y: 0, z:  0},    {x: 0, y: 0, z:  SU*4}]},                    // center -> mid_b
+      { path: [{x: 0, y: 0, z:  SU*4}, {x: 0, y: 0, z:  SU*9}]},                    // mid_b -> spawn_b
+      // North bypass (mid_a <-> mid_b via north_arc)
+      { path: [{x: 0, y: 0, z: -SU*4}, {x: SU*5, y: SU*2, z:  0}]},                 // mid_a -> north_arc
+      { path: [{x: SU*5, y: SU*2, z:  0}, {x: 0, y: 0, z:  SU*4}]},                 // north_arc -> mid_b
+      // South bypass (mid_a <-> mid_b via south_arc)
+      { path: [{x: 0, y: 0, z: -SU*4}, {x: -SU*5, y: -SU*2, z:  0}]},               // mid_a -> south_arc
+      { path: [{x: -SU*5, y: -SU*2, z:  0}, {x: 0, y: 0, z:  SU*4}]},               // south_arc -> mid_b
+    ]
+  },
+
+  // ----------------------------------------------------------------------
+  // The Infinity: figure-8 dual rings sharing one central pinch room.
+  // Favors area control (Vortex, Pyro). Each lobe has spawn + 2 ring rooms;
+  // the center is the only crossing between lobes, so denying it splits
+  // the map. Two paths around each lobe, so no team can be cornered.
+  // 7 rooms; spawns at x = +/- 8*SU.
+  infinity: {
+    name: 'The Infinity',
+    description: 'Two rings joined at a pinch. Hold the center, halve the map.',
+    rooms: [
+      { id: 'spawn_a', team: 'A',  x: -SU * 8, y:  0,       z:  0,       r: SU * 2.2 },
+      { id: 'left_n',  team: null, x: -SU * 4, y:  SU * 2,  z: -SU * 4,  r: SU * 1.8 },
+      { id: 'left_s',  team: null, x: -SU * 4, y: -SU * 2,  z:  SU * 4,  r: SU * 1.8 },
+      { id: 'center',  team: null, x:  0,      y:  0,       z:  0,       r: SU * 2.5 },
+      { id: 'right_n', team: null, x:  SU * 4, y: -SU * 2,  z: -SU * 4,  r: SU * 1.8 },
+      { id: 'right_s', team: null, x:  SU * 4, y:  SU * 2,  z:  SU * 4,  r: SU * 1.8 },
+      { id: 'spawn_b', team: 'B',  x:  SU * 8, y:  0,       z:  0,       r: SU * 2.2 },
+    ],
+    tunnels: [
+      // Left ring
+      { path: [{x: -SU*8, y: 0, z: 0},          {x: -SU*4, y: SU*2,  z: -SU*4}]},   // spawn_a -> left_n
+      { path: [{x: -SU*4, y: SU*2,  z: -SU*4},  {x:  0,    y: 0,     z:  0}]},      // left_n -> center
+      { path: [{x:  0,    y: 0,     z:  0},     {x: -SU*4, y: -SU*2, z:  SU*4}]},   // center -> left_s
+      { path: [{x: -SU*4, y: -SU*2, z:  SU*4},  {x: -SU*8, y: 0,     z:  0}]},      // left_s -> spawn_a
+      // Right ring
+      { path: [{x:  SU*8, y: 0, z: 0},          {x:  SU*4, y: -SU*2, z: -SU*4}]},   // spawn_b -> right_n
+      { path: [{x:  SU*4, y: -SU*2, z: -SU*4},  {x:  0,    y: 0,     z:  0}]},      // right_n -> center
+      { path: [{x:  0,    y: 0,     z:  0},     {x:  SU*4, y: SU*2,  z:  SU*4}]},   // center -> right_s
+      { path: [{x:  SU*4, y: SU*2,  z:  SU*4},  {x:  SU*8, y: 0,     z:  0}]},      // right_s -> spawn_b
+    ]
+  },
+
+  // ----------------------------------------------------------------------
+  // The Tower: vertical stack across +/- 8*SU on the Y axis.
+  // Favors 3D mobility (Slayer phase dash, Syphon, Vortex). Two horizontal
+  // mid-layers connected through a central column; spawns at top and bottom
+  // force vertical engagement.
+  // 7 rooms; vertical span 16*SU.
+  tower: {
+    name: 'The Tower',
+    description: 'Vertical stack. Two layers between the spawns. Watch your six in three dimensions.',
+    rooms: [
+      { id: 'spawn_a',  team: 'A',  x:  0,       y:  SU * 8, z:  0,       r: SU * 2.2 }, // top
+      { id: 'mid_hi_e', team: null, x:  SU * 4,  y:  SU * 4, z:  SU * 2,  r: SU * 1.8 },
+      { id: 'mid_hi_w', team: null, x: -SU * 4,  y:  SU * 4, z: -SU * 2,  r: SU * 1.8 },
+      { id: 'center',   team: null, x:  0,       y:  0,      z:  0,       r: SU * 2.5 },
+      { id: 'mid_lo_e', team: null, x:  SU * 4,  y: -SU * 4, z: -SU * 2,  r: SU * 1.8 },
+      { id: 'mid_lo_w', team: null, x: -SU * 4,  y: -SU * 4, z:  SU * 2,  r: SU * 1.8 },
+      { id: 'spawn_b',  team: 'B',  x:  0,       y: -SU * 8, z:  0,       r: SU * 2.2 }, // bottom
+    ],
+    tunnels: [
+      // Top spawn to upper layer
+      { path: [{x:  0, y: SU*8, z: 0}, {x:  SU*4, y: SU*4, z:  SU*2}]},                  // spawn_a -> mid_hi_e
+      { path: [{x:  0, y: SU*8, z: 0}, {x: -SU*4, y: SU*4, z: -SU*2}]},                  // spawn_a -> mid_hi_w
+      // Upper layer cross
+      { path: [{x:  SU*4, y: SU*4, z:  SU*2}, {x: -SU*4, y: SU*4, z: -SU*2}]},           // mid_hi_e -> mid_hi_w
+      // Upper layer to center
+      { path: [{x:  SU*4, y: SU*4, z:  SU*2}, {x: 0, y: 0, z: 0}]},                      // mid_hi_e -> center
+      { path: [{x: -SU*4, y: SU*4, z: -SU*2}, {x: 0, y: 0, z: 0}]},                      // mid_hi_w -> center
+      // Center to lower layer
+      { path: [{x: 0, y: 0, z: 0}, {x:  SU*4, y: -SU*4, z: -SU*2}]},                     // center -> mid_lo_e
+      { path: [{x: 0, y: 0, z: 0}, {x: -SU*4, y: -SU*4, z:  SU*2}]},                     // center -> mid_lo_w
+      // Lower layer cross
+      { path: [{x:  SU*4, y: -SU*4, z: -SU*2}, {x: -SU*4, y: -SU*4, z:  SU*2}]},         // mid_lo_e -> mid_lo_w
+      // Lower layer to bottom spawn
+      { path: [{x:  SU*4, y: -SU*4, z: -SU*2}, {x: 0, y: -SU*8, z: 0}]},                 // mid_lo_e -> spawn_b
+      { path: [{x: -SU*4, y: -SU*4, z:  SU*2}, {x: 0, y: -SU*8, z: 0}]},                 // mid_lo_w -> spawn_b
+    ]
+  },
+
+  // ----------------------------------------------------------------------
+  // The Cross: compact orthogonal cross with diagonal cuts.
+  // Favors close-range brawl (Slayer, Pyro). Tighter than Nexus; the
+  // diagonals between arm rooms make corner-camping a death sentence.
+  // 7 rooms; horizontal span +/- 8*SU on z.
+  cross: {
+    name: 'The Cross',
+    description: 'Compact crucible. Four arms cut by diagonals; nowhere to hide.',
+    rooms: [
+      { id: 'center',  team: null, x:  0,       y:  0,       z:  0,       r: SU * 2.5 },
+      { id: 'arm_n',   team: null, x:  0,       y:  SU * 1,  z: -SU * 4,  r: SU * 1.8 },
+      { id: 'arm_s',   team: null, x:  0,       y: -SU * 1,  z:  SU * 4,  r: SU * 1.8 },
+      { id: 'arm_e',   team: null, x:  SU * 4,  y:  0,       z:  0,       r: SU * 1.8 },
+      { id: 'arm_w',   team: null, x: -SU * 4,  y:  0,       z:  0,       r: SU * 1.8 },
+      { id: 'spawn_a', team: 'A',  x:  0,       y:  SU * 2,  z: -SU * 8,  r: SU * 2.2 }, // north of arm_n
+      { id: 'spawn_b', team: 'B',  x:  0,       y: -SU * 2,  z:  SU * 8,  r: SU * 2.2 }, // south of arm_s
+    ],
+    tunnels: [
+      // Spokes from center
+      { path: [{x: 0, y: 0, z: 0}, {x: 0, y: SU*1, z: -SU*4}]},                          // center -> arm_n
+      { path: [{x: 0, y: 0, z: 0}, {x: 0, y: -SU*1, z: SU*4}]},                          // center -> arm_s
+      { path: [{x: 0, y: 0, z: 0}, {x: SU*4, y: 0, z: 0}]},                              // center -> arm_e
+      { path: [{x: 0, y: 0, z: 0}, {x: -SU*4, y: 0, z: 0}]},                             // center -> arm_w
+      // Diagonals between arm tips (so each arm has 3+ exits)
+      { path: [{x: 0, y: SU*1, z: -SU*4}, {x: SU*4, y: 0, z: 0}]},                       // arm_n -> arm_e
+      { path: [{x: 0, y: SU*1, z: -SU*4}, {x: -SU*4, y: 0, z: 0}]},                      // arm_n -> arm_w
+      { path: [{x: 0, y: -SU*1, z: SU*4}, {x: SU*4, y: 0, z: 0}]},                       // arm_s -> arm_e
+      { path: [{x: 0, y: -SU*1, z: SU*4}, {x: -SU*4, y: 0, z: 0}]},                      // arm_s -> arm_w
+      // Spawn extensions
+      { path: [{x: 0, y: SU*1, z: -SU*4}, {x: 0, y: SU*2, z: -SU*8}]},                   // arm_n -> spawn_a
+      { path: [{x: 0, y: -SU*1, z: SU*4}, {x: 0, y: -SU*2, z: SU*8}]},                   // arm_s -> spawn_b
+    ]
+  },
+
+  // ----------------------------------------------------------------------
+  // The Arc: curved half-loop with skip-ahead shortcuts over the top.
+  // Favors flanking (Syphon, Blaster). Linear arc lets snipers hold,
+  // shortcuts let mobile ships punish overextension.
+  // 7 rooms arranged in an arc curving through the north half.
+  arc: {
+    name: 'The Arc',
+    description: 'Curved approach with shortcuts over the top. Flank or get flanked.',
+    rooms: [
+      { id: 'spawn_a', team: 'A',  x: -SU * 8, y:  0,      z:  SU * 3, r: SU * 2.2 }, // SW
+      { id: 'arc_1',   team: null, x: -SU * 6, y:  SU * 1, z: -SU * 3, r: SU * 1.8 },
+      { id: 'arc_2',   team: null, x: -SU * 3, y:  SU * 2, z: -SU * 6, r: SU * 1.8 },
+      { id: 'arc_3',   team: null, x:  0,      y:  SU * 3, z: -SU * 7, r: SU * 2.0 }, // peak
+      { id: 'arc_4',   team: null, x:  SU * 3, y:  SU * 2, z: -SU * 6, r: SU * 1.8 },
+      { id: 'arc_5',   team: null, x:  SU * 6, y:  SU * 1, z: -SU * 3, r: SU * 1.8 },
+      { id: 'spawn_b', team: 'B',  x:  SU * 8, y:  0,      z:  SU * 3, r: SU * 2.2 }, // SE
+    ],
+    tunnels: [
+      // Main arc (curved spine)
+      { path: [{x: -SU*8, y: 0,    z:  SU*3}, {x: -SU*6, y: SU*1, z: -SU*3}]},           // spawn_a -> arc_1
+      { path: [{x: -SU*6, y: SU*1, z: -SU*3}, {x: -SU*3, y: SU*2, z: -SU*6}]},           // arc_1 -> arc_2
+      { path: [{x: -SU*3, y: SU*2, z: -SU*6}, {x:  0,    y: SU*3, z: -SU*7}]},           // arc_2 -> arc_3
+      { path: [{x:  0,    y: SU*3, z: -SU*7}, {x:  SU*3, y: SU*2, z: -SU*6}]},           // arc_3 -> arc_4
+      { path: [{x:  SU*3, y: SU*2, z: -SU*6}, {x:  SU*6, y: SU*1, z: -SU*3}]},           // arc_4 -> arc_5
+      { path: [{x:  SU*6, y: SU*1, z: -SU*3}, {x:  SU*8, y: 0,    z:  SU*3}]},           // arc_5 -> spawn_b
+      // Skip-ahead shortcuts (from arc_1 and arc_5 to the peak; over-the-top from arc_2 to arc_4)
+      { path: [{x: -SU*6, y: SU*1, z: -SU*3}, {x:  0,    y: SU*3, z: -SU*7}]},           // arc_1 -> arc_3 (skip)
+      { path: [{x:  0,    y: SU*3, z: -SU*7}, {x:  SU*6, y: SU*1, z: -SU*3}]},           // arc_3 -> arc_5 (skip)
+      { path: [{x: -SU*3, y: SU*2, z: -SU*6}, {x:  SU*3, y: SU*2, z: -SU*6}]},           // arc_2 -> arc_4 (over the top)
+    ]
   }
 };
 
