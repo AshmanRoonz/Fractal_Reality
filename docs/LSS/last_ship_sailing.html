@@ -303,7 +303,7 @@ canvas { display: block; }
 }
 @keyframes doomedFlash { from { opacity: 0.5; } to { opacity: 1; } }
 
-/* Enemy TONE Lock-on Warning */
+/* Enemy TRACKER Lock-on Warning */
 #enemy-lockon-warning {
   position: fixed; top: 12%; left: 50%; transform: translateX(-50%);
   z-index: 15; pointer-events: none; display: none; text-align: center;
@@ -685,7 +685,7 @@ canvas { display: block; }
   <canvas id="health-canvas" width="500" height="70"></canvas>
 
   <div id="ship-status">
-    <div id="ship-name">ION</div>
+    <div id="ship-name">VORTEX</div>
     <div id="ship-class">Corvette MkII</div>
     <div id="core-container">
       <div id="core-fill" style="width:0%"></div>
@@ -937,8 +937,8 @@ const CHASSIS = {
 // ---- LOADOUT DEFINITIONS (ported from SDK lss_loadout_data.cpp) ----
 
 const LOADOUTS = {
-  ION: {
-    name: 'ION', className: 'Corvette MkII', chassis: 'CORVETTE',
+  VORTEX: {
+    name: 'VORTEX', className: 'Corvette MkII', chassis: 'CORVETTE',
     weapon: { name: 'Splitter Rifle', mode: 'hitscan', damage: 380, fireRate: 0.25, clipSize: 30, range: 3000, splash: 0, projSpeed: 0, pellets: 1, spinup: 0 },
     abilities: [
       { name: 'Laser Shot', cooldown: 10, duration: 0.5, desc: 'Massive beam: 2400 damage', type: 'offensive', dmg: 2400 },
@@ -947,8 +947,8 @@ const LOADOUTS = {
     ],
     core: { name: 'Laser Core', desc: 'Continuous high-power laser', duration: 4, damage: 12000, cooldown: 60 },
   },
-  SCORCH: {
-    name: 'SCORCH', className: 'Dreadnought Incinerator', chassis: 'DREADNOUGHT',
+  PYRO: {
+    name: 'PYRO', className: 'Dreadnought Incinerator', chassis: 'DREADNOUGHT',
     weapon: { name: 'T-203 Thermite', mode: 'projectile', damage: 900, fireRate: 1.2, clipSize: 12, range: 2500, splash: 300, projSpeed: 600, pellets: 1, spinup: 0 },
     abilities: [
       { name: 'Firewall', cooldown: 10, duration: 6, desc: 'Fire line: 400 DPS', type: 'offensive', dmg: 2400 },
@@ -957,8 +957,8 @@ const LOADOUTS = {
     ],
     core: { name: 'Flame Core', desc: 'Massive AoE incendiary', duration: 2, damage: 9000, cooldown: 60 },
   },
-  NORTHSTAR: {
-    name: 'NORTHSTAR', className: 'Frigate Starcaster', chassis: 'FRIGATE',
+  PUNCTURE: {
+    name: 'PUNCTURE', className: 'Frigate Starcaster', chassis: 'FRIGATE',
     weapon: { name: 'Plasma Railgun', mode: 'hitscan', damage: 1000, fireRate: 1.5, clipSize: 6, range: 4500, splash: 50, projSpeed: 0, pellets: 1, spinup: 0 },
     abilities: [
       { name: 'Cluster Missile', cooldown: 8, duration: 0.3, desc: 'Impact 800 + 500 DPS for 5s', type: 'offensive', dmg: 3300 },
@@ -967,8 +967,8 @@ const LOADOUTS = {
     ],
     core: { name: 'Afterburner Core', desc: 'Speed boost + rocket barrage', duration: 5, damage: 7000, cooldown: 60 },
   },
-  RONIN: {
-    name: 'RONIN', className: 'Frigate Blade', chassis: 'FRIGATE',
+  SLAYER: {
+    name: 'SLAYER', className: 'Frigate Blade', chassis: 'FRIGATE',
     weapon: { name: 'Leadwall', mode: 'spread', damage: 200, fireRate: 0.85, clipSize: 4, range: 900, splash: 0, projSpeed: 350, pellets: 8, spinup: 0 },
     abilities: [
       { name: 'Arc Wave', cooldown: 8, duration: 0.1, desc: 'Electric proj: 2000 damage', type: 'offensive', dmg: 2000 },
@@ -977,8 +977,8 @@ const LOADOUTS = {
     ],
     core: { name: 'Sword Core', desc: 'Empowered melee + arc waves', duration: 5, damage: 9000, cooldown: 60 },
   },
-  TONE: {
-    name: 'TONE', className: 'Corvette Tracker', chassis: 'CORVETTE',
+  TRACKER: {
+    name: 'TRACKER', className: 'Corvette Tracker', chassis: 'CORVETTE',
     weapon: { name: '40mm Tracker', mode: 'projectile', damage: 660, fireRate: 0.6, clipSize: 20, range: 3500, splash: 0, projSpeed: 900, pellets: 1, spinup: 0 },
     abilities: [
       { name: 'Tracker Rockets', cooldown: 6, duration: 0.5, desc: 'Lock-on: 5 rockets (3 locks)', type: 'offensive', dmg: 5000 },
@@ -987,8 +987,8 @@ const LOADOUTS = {
     ],
     core: { name: 'Salvo Core', desc: 'Massive missile barrage', duration: 3, damage: 11000, cooldown: 60 },
   },
-  LEGION: {
-    name: 'LEGION', className: 'Dreadnought Siege', chassis: 'DREADNOUGHT',
+  BLASTER: {
+    name: 'BLASTER', className: 'Dreadnought Siege', chassis: 'DREADNOUGHT',
     weapon: { name: 'Predator Cannon', mode: 'hitscan', damage: 85, fireRate: 0.05, clipSize: 150, range: 1500, splash: 0, projSpeed: 0, pellets: 1, spinup: 1.2, spread: 0.04 }, // close range defaults
     abilities: [
       { name: 'Power Shot', cooldown: 8, duration: 0.1, desc: 'High-power: 3200 damage', type: 'offensive', dmg: 3200 },
@@ -997,8 +997,8 @@ const LOADOUTS = {
     ],
     core: { name: 'Smart Core', desc: 'Auto-aim + unlimited ammo', duration: 10, damage: 10000, cooldown: 60 },
   },
-  MONARCH: {
-    name: 'MONARCH', className: 'Corvette Sovereign', chassis: 'CORVETTE',
+  SYPHON: {
+    name: 'SYPHON', className: 'Corvette Sovereign', chassis: 'CORVETTE',
     weapon: { name: 'XO-16 Chaingun', mode: 'hitscan', damage: 240, fireRate: 0.09, clipSize: 40, range: 3000, splash: 0, projSpeed: 0, pellets: 1, spinup: 0.4 },
     abilities: [
       { name: 'Rocket Salvo', cooldown: 6, duration: 0.3, desc: '5 rockets (10 with Missile Racks)', type: 'offensive', dmg: 3500 },
@@ -1087,34 +1087,34 @@ const player = {
   abilityTimers: [0, 0, 0],
   coreReady: false, coreActive: false, coreTimer: 0,
   vortexStored: 0,
-  // ION energy pool (shared across all abilities)
-  ionEnergy: 1000, ionMaxEnergy: 1000, ionEnergyRegen: 150, // per second (always regens, no delay)
-  ionAdsActive: false, // true when ION is ADS (drains energy, boosts damage)
-  // TONE lock-on system
-  toneLocks: {}, // { botId: lockCount } (max 3 per target)
-  toneLockedTarget: null, // current target with 3+ locks
-  // Enemy TONE lock-on tracking (bots locking onto player)
+  // VORTEX energy pool (shared across all abilities)
+  vortexEnergy: 1000, vortexMaxEnergy: 1000, vortexEnergyRegen: 150, // per second (always regens, no delay)
+  vortexAdsActive: false, // true when VORTEX is ADS (drains energy, boosts damage)
+  // TRACKER lock-on system
+  trackerLocks: {}, // { botId: lockCount } (max 3 per target)
+  trackerLockedTarget: null, // current target with 3+ locks
+  // Enemy TRACKER lock-on tracking (bots locking onto player)
   enemyToneLocks: {}, // { botId: lockCount } (max 3 per bot)
   enemyToneLockMax: 0, // highest lock count any enemy currently has on player
-  // LEGION mode switch
-  legionMode: 'close', // 'close' or 'long'
-  gunShieldHP: 0, gunShieldMaxHP: 5000, gunShieldTimer: 0, // Legion Gun Shield: 5000 HP, 10s duration
-  powerShotCharging: false, powerShotCharge: 0, // Legion Power Shot: 1s charge before firing
-  legionSwitchTimer: 0, // 1s delay when switching gun modes
-  // MONARCH upgrade tiers
-  monarchTier: 0, // 0-3, each core activation upgrades
-  monarchDmgMult: 1.0,
-  monarchCooldownMult: 1.0,
-  monarchShieldBonus: 0,
-  monarchArcRounds: false,     // Tier 1 choice: +50% vs shields/walls, +10 ammo
-  monarchMissileRacks: false,  // Tier 1 choice: double Rocket Salvo missiles
-  monarchXO16Accel: false,     // Tier 3 choice: +25% damage, faster ROF
-  // RONIN phase dash invulnerability
+  // BLASTER mode switch
+  blasterMode: 'close', // 'close' or 'long'
+  gunShieldHP: 0, gunShieldMaxHP: 5000, gunShieldTimer: 0, // Blaster Gun Shield: 5000 HP, 10s duration
+  powerShotCharging: false, powerShotCharge: 0, // Blaster Power Shot: 1s charge before firing
+  blasterSwitchTimer: 0, // 1s delay when switching gun modes
+  // SYPHON upgrade tiers
+  syphonTier: 0, // 0-3, each core activation upgrades
+  syphonDmgMult: 1.0,
+  syphonCooldownMult: 1.0,
+  syphonShieldBonus: 0,
+  syphonArcRounds: false,     // Tier 1 choice: +50% vs shields/walls, +10 ammo
+  syphonMissileRacks: false,  // Tier 1 choice: double Rocket Salvo missiles
+  syphonXO16Accel: false,     // Tier 3 choice: +25% damage, faster ROF
+  // SLAYER phase dash invulnerability
   phaseInvuln: false,
   phaseInvulnTimer: 0,
-  // NORTHSTAR
-  thermalShieldHP: 2500, thermalShieldMaxHP: 2500, // Scorch Thermal Shield power pool (absorbs damage + drains while held). Starts full; regens to max over 10s out of use.
-  // Scorch Incendiary Trap: charge-based like dashes. Two charges, each refilling on TRAP_CHARGE_COOLDOWN seconds.
+  // PUNCTURE
+  thermalShieldHP: 2500, thermalShieldMaxHP: 2500, // Pyro Thermal Shield power pool (absorbs damage + drains while held). Starts full; regens to max over 10s out of use.
+  // Pyro Incendiary Trap: charge-based like dashes. Two charges, each refilling on TRAP_CHARGE_COOLDOWN seconds.
   trapCharges: 2, maxTrapCharges: 2, trapChargeCooldown: 12, trapCooldownTimer: 0,
   afterburnerActive: false,
   afterburnerSpeedMult: 1.0,
@@ -2709,13 +2709,13 @@ function getWallNormal(point) {
 // the game's -Z forward axis. scaleMult nudges the auto-fit-to-hullLength
 // scale per model to compensate for bbox padding (wings inflate the bbox).
 const SHIP_MODELS = {
-  NORTHSTAR: { url: 'ships/northstar.glb', faceFlip: true,  scaleMult: 1.10 },
-  RONIN:     { url: 'ships/ronin.glb',     faceFlip: true,  scaleMult: 1.10 },
-  ION:       { url: 'ships/ion.glb',       faceFlip: true,  scaleMult: 1.15 },
-  TONE:      { url: 'ships/tone.glb',      faceFlip: true,  scaleMult: 1.00 },
-  MONARCH:   { url: 'ships/monarch.glb',   faceFlip: true,  scaleMult: 1.10 },
-  SCORCH:    { url: 'ships/scorch.glb',    faceFlip: true,  scaleMult: 1.05 },
-  LEGION:    { url: 'ships/legion.glb',    faceFlip: true,  scaleMult: 1.05 },
+  PUNCTURE: { url: 'ships/puncture.glb', faceFlip: true,  scaleMult: 1.10 },
+  SLAYER:     { url: 'ships/slayer.glb',     faceFlip: true,  scaleMult: 1.10 },
+  VORTEX:       { url: 'ships/vortex.glb',       faceFlip: true,  scaleMult: 1.15 },
+  TRACKER:      { url: 'ships/tracker.glb',      faceFlip: true,  scaleMult: 1.00 },
+  SYPHON:   { url: 'ships/syphon.glb',   faceFlip: true,  scaleMult: 1.10 },
+  PYRO:    { url: 'ships/pyro.glb',    faceFlip: true,  scaleMult: 1.05 },
+  BLASTER:    { url: 'ships/blaster.glb',    faceFlip: true,  scaleMult: 1.05 },
 };
 
 const shipModelCache = { loaded: {}, ready: null };
@@ -3782,13 +3782,13 @@ class Bot {
 
   getLoadoutRangePreference() {
     switch (this.loadoutKey) {
-      case 'SCORCH': return 500;    // Close range (short range assault)
-      case 'RONIN': return 500;     // Close range (sword range)
-      case 'NORTHSTAR': return 1500; // Medium range (sniper)
-      case 'TONE': return 1200;     // Medium range (balanced)
-      case 'LEGION': return 1000;   // Medium range (minigun effective)
-      case 'MONARCH': return 800;   // Medium-close (versatile)
-      case 'ION': return 1000;      // Medium (energy efficient at range)
+      case 'PYRO': return 500;    // Close range (short range assault)
+      case 'SLAYER': return 500;     // Close range (sword range)
+      case 'PUNCTURE': return 1500; // Medium range (sniper)
+      case 'TRACKER': return 1200;     // Medium range (balanced)
+      case 'BLASTER': return 1000;   // Medium range (minigun effective)
+      case 'SYPHON': return 800;   // Medium-close (versatile)
+      case 'VORTEX': return 1000;      // Medium (energy efficient at range)
       default: return 800;
     }
   }
@@ -3878,7 +3878,7 @@ class Bot {
     this.targetDir.lerp(moveDir, dt * 2);
     this.targetDir.normalize();
 
-    // Arc slow effect (from RONIN Arc Wave)
+    // Arc slow effect (from SLAYER Arc Wave)
     if (this.arcSlowTimer > 0) {
       this.arcSlowTimer -= dt;
       // Slowed: reduce acceleration significantly
@@ -4084,13 +4084,13 @@ class Bot {
 
     // Color scheme per loadout
     const loadoutColors = {
-      'ION': 0x44ddff,
-      'SCORCH': 0xff4400,
-      'NORTHSTAR': 0x88aaff,
-      'RONIN': 0xffaa44,
-      'TONE': 0xffaa00,
-      'LEGION': 0xffdd44,
-      'MONARCH': 0xffdd44
+      'VORTEX': 0x44ddff,
+      'PYRO': 0xff4400,
+      'PUNCTURE': 0x88aaff,
+      'SLAYER': 0xffaa44,
+      'TRACKER': 0xffaa00,
+      'BLASTER': 0xffdd44,
+      'SYPHON': 0xffdd44
     };
     const flashColor = loadoutColors[this.loadout.name] || 0xffdd44;
 
@@ -4149,12 +4149,12 @@ class Bot {
     }
 
     playerTakeDamage(damage, this);
-    // TONE bot lock-on: hits build lock marks on the player (max 3). The sonar
-    // ping is reserved for the player's OWN TONE lock progression (hear-when-
+    // TRACKER bot lock-on: hits build lock marks on the player (max 3). The sonar
+    // ping is reserved for the player's OWN TRACKER lock progression (hear-when-
     // you-lock), not for enemy lock progression onto you; the on-screen
     // "ENEMY LOCKED-ON" warning pips already communicate incoming threat
-    // visually. Otherwise every ship being TONE-shot would hear lock pings.
-    if (this.loadoutKey === 'TONE') {
+    // visually. Otherwise every ship being TRACKER-shot would hear lock pings.
+    if (this.loadoutKey === 'TRACKER') {
       const prevEnemyLocks = player.enemyToneLocks[this.id] || 0;
       player.enemyToneLocks[this.id] = Math.min(3, prevEnemyLocks + 1);
       if (player._enemyLockDecayTimers) player._enemyLockDecayTimers[this.id] = 0; // reset decay
@@ -4195,10 +4195,10 @@ class Bot {
     this.health = 0;
     scene.remove(this.mesh);
     spawnExplosion(this.position, this.chassis.hullLength);
-    // Clean up TONE lock marks for this bot
-    delete player.toneLocks[this.id];
-    if (player.toneLockedTarget === this) player.toneLockedTarget = null;
-    // Clean up enemy TONE locks on player from this bot
+    // Clean up TRACKER lock marks for this bot
+    delete player.trackerLocks[this.id];
+    if (player.trackerLockedTarget === this) player.trackerLockedTarget = null;
+    // Clean up enemy TRACKER locks on player from this bot
     delete player.enemyToneLocks[this.id];
     if (attacker === 'player') {
       player.kills++;
@@ -4366,7 +4366,7 @@ class Projectile {
 
     // Fire projectiles ignite gas clouds as they fly through (not just on splash).
     // Radius 150 ensures a fast-moving round passing near the cloud edge reliably
-    // triggers ignition, even at high frame intervals (Scorch weapon "touch" feel).
+    // triggers ignition, even at high frame intervals (Pyro weapon "touch" feel).
     if (this.isFireSource) {
       igniteNearbyGas(this.position, 150);
     }
@@ -4494,14 +4494,14 @@ class Projectile {
             showHitMarker();
             spawnImpactSparks(this.position, 5);
           }
-          // TONE 40mm Tracker Cannon: weapon hits build lock marks
-          if (player.loadoutKey === 'TONE' && !this.isArcWave && !this.isCluster && !this.tracking) {
-            const prevLocks = player.toneLocks[bot.id] || 0;
-            player.toneLocks[bot.id] = Math.min(3, prevLocks + 1);
-            if (player.toneLocks[bot.id] > prevLocks) {
-              playSound('sonar_ping_' + player.toneLocks[bot.id]);
+          // TRACKER 40mm Tracker Cannon: weapon hits build lock marks
+          if (player.loadoutKey === 'TRACKER' && !this.isArcWave && !this.isCluster && !this.tracking) {
+            const prevLocks = player.trackerLocks[bot.id] || 0;
+            player.trackerLocks[bot.id] = Math.min(3, prevLocks + 1);
+            if (player.trackerLocks[bot.id] > prevLocks) {
+              playSound('sonar_ping_' + player.trackerLocks[bot.id]);
             }
-            if (player.toneLocks[bot.id] >= 3) player.toneLockedTarget = bot;
+            if (player.trackerLocks[bot.id] >= 3) player.trackerLockedTarget = bot;
           }
           // Arc Wave: apply slow effect to hit targets
           if (this.isArcWave && bot.velocity) {
@@ -4565,7 +4565,7 @@ class Projectile {
   }
 
   spawnClusterChildren() {
-    // NORTHSTAR Cluster Missile: creates sustained explosion zone on impact
+    // PUNCTURE Cluster Missile: creates sustained explosion zone on impact
     const dmgPerSec = this.clusterDmg || 80;
     const duration = this.clusterDuration || 3;
     game.worldEffects.push({
@@ -7051,27 +7051,27 @@ function commitLoadout(key) {
   player.damageDealt = 0;
   player.shieldRegenDelay = 0;
   // Reset titan-specific state
-  player.ionEnergy = 1000;
-  player.ionAdsActive = false;
+  player.vortexEnergy = 1000;
+  player.vortexAdsActive = false;
   player.vortexStored = 0;
-  player.toneLocks = {};
-  player.toneLockedTarget = null;
+  player.trackerLocks = {};
+  player.trackerLockedTarget = null;
   player.enemyToneLocks = {};
   player.enemyToneLockMax = 0;
-  player.legionMode = 'close';
+  player.blasterMode = 'close';
   player.gunShieldHP = 0; player.gunShieldTimer = 0;
   player.powerShotCharging = false; player.powerShotCharge = 0;
-  player.legionSwitchTimer = 0;
-  player.thermalShieldHP = player.thermalShieldMaxHP; // Scorch thermal shield starts fully charged
-  player.trapCharges = player.maxTrapCharges; // Scorch starts with both Incendiary Trap charges
+  player.blasterSwitchTimer = 0;
+  player.thermalShieldHP = player.thermalShieldMaxHP; // Pyro thermal shield starts fully charged
+  player.trapCharges = player.maxTrapCharges; // Pyro starts with both Incendiary Trap charges
   player.trapCooldownTimer = 0;
-  player.monarchTier = 0;
-  player.monarchDmgMult = 1.0;
-  player.monarchCooldownMult = 1.0;
-  player.monarchShieldBonus = 0;
-  player.monarchArcRounds = false;
-  player.monarchMissileRacks = false;
-  player.monarchXO16Accel = false;
+  player.syphonTier = 0;
+  player.syphonDmgMult = 1.0;
+  player.syphonCooldownMult = 1.0;
+  player.syphonShieldBonus = 0;
+  player.syphonArcRounds = false;
+  player.syphonMissileRacks = false;
+  player.syphonXO16Accel = false;
   player.phaseInvuln = false;
   player.phaseInvulnTimer = 0;
   player.afterburnerActive = false;
@@ -7169,7 +7169,7 @@ function spawnBots() {
   for (const bot of game.entities) bot.destroy();
   game.entities = [];
 
-  const enemyLoadouts = ['SCORCH', 'RONIN', 'TONE'];
+  const enemyLoadouts = ['PYRO', 'SLAYER', 'TRACKER'];
   for (let i = 0; i < 3; i++) {
     const bot = new Bot(enemyLoadouts[i], LSS.TEAM_FLEET_B, i + 1);
     const sp = getValidSpawnPoint('B');
@@ -7177,7 +7177,7 @@ function spawnBots() {
     game.entities.push(bot);
   }
 
-  const friendlyLoadouts = ['NORTHSTAR', 'LEGION'];
+  const friendlyLoadouts = ['PUNCTURE', 'BLASTER'];
   for (let i = 0; i < 2; i++) {
     const bot = new Bot(friendlyLoadouts[i], LSS.TEAM_FLEET_A, i + 10);
     const sp = getValidSpawnPoint('A');
@@ -7188,7 +7188,7 @@ function spawnBots() {
 
 function playerTakeDamage(amount, attacker, projectile) {
   if (player.shipState === 'dead' || player.spawnProtection > 0) return;
-  // Phase Dash invulnerability (RONIN)
+  // Phase Dash invulnerability (SLAYER)
   if (player.phaseInvuln) return;
   player.lastDamageTime = game.time;
 
@@ -7213,12 +7213,12 @@ function playerTakeDamage(amount, attacker, projectile) {
   }
 
   // Defensive ability damage modifiers (from TF2 SDK)
-  // Sword Block (RONIN): 70% damage reduction (85% during Sword Core); blocks Arc Wave damage but not slow
+  // Sword Block (SLAYER): 70% damage reduction (85% during Sword Core); blocks Arc Wave damage but not slow
   if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Sword Block') {
     const swordCoreActive = player.coreActive && player.loadout && player.loadout.core.name === 'Sword Core';
     amount *= swordCoreActive ? 0.15 : 0.30;
   }
-  // Gun Shield (LEGION): frontal shield with HP pool; absorbs damage until depleted (destroyed by Arc Wave above)
+  // Gun Shield (BLASTER): frontal shield with HP pool; absorbs damage until depleted (destroyed by Arc Wave above)
   if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Gun Shield') {
     if (attacker && attacker.position) {
       const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
@@ -7236,7 +7236,7 @@ function playerTakeDamage(amount, attacker, projectile) {
       }
     }
   }
-  // Thermal Shield (SCORCH): absorbs damage with power pool; burns nearby enemies (handled in tick).
+  // Thermal Shield (PYRO): absorbs damage with power pool; burns nearby enemies (handled in tick).
   // No fixed cooldown on depletion; the 10s recharge to max IS the cooldown.
   if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Thermal Shield') {
     if (player.thermalShieldHP > 0) {
@@ -7252,16 +7252,16 @@ function playerTakeDamage(amount, attacker, projectile) {
       if (amount <= 0) return;
     }
   }
-  // Vortex Shield (ION): absorbs projectile damage, stores it for burst release
+  // Vortex Shield (VORTEX): absorbs projectile damage, stores it for burst release
   if (player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Vortex Shield') {
     const stored = Math.min(amount, 500 - (player.vortexStored || 0));
     player.vortexStored = (player.vortexStored || 0) + stored;
     amount -= stored;
     if (amount <= 0) return; // fully absorbed
   }
-  // Particle Wall (TONE): deployed one-way shield with HP; check if attacker shot hits the wall
+  // Particle Wall (TRACKER): deployed one-way shield with HP; check if attacker shot hits the wall
   // The wall is a world effect, damage absorption is handled here for simplicity
-  if (player.loadoutKey === 'TONE') {
+  if (player.loadoutKey === 'TRACKER') {
     for (const eff of game.worldEffects) {
       if (eff.type === 'particle_wall' && eff.owner === 'player' && eff.hp > 0) {
         // Check if the attacker is on the far side of the wall (wall blocks incoming)
@@ -7355,31 +7355,31 @@ function respawnPlayer() {
   player.reloading = false;
   player.velocity.set(0, 0, 0);
   // Reset ability state
-  player.toneLocks = {};
-  player.toneLockedTarget = null;
+  player.trackerLocks = {};
+  player.trackerLockedTarget = null;
   player.enemyToneLocks = {};
   player.enemyToneLockMax = 0;
-  player.legionMode = 'close';
+  player.blasterMode = 'close';
   player.powerShotCharging = false; player.powerShotCharge = 0;
-  player.legionSwitchTimer = 0;
+  player.blasterSwitchTimer = 0;
   player.phaseInvuln = false;
   player.phaseInvulnTimer = 0;
   player.afterburnerActive = false;
   player.afterburnerSpeedMult = 1.0;
   player.railgunCharge = 0;
   player.vortexStored = 0;
-  player.ionEnergy = player.ionMaxEnergy;
-  player.ionAdsActive = false;
+  player.vortexEnergy = player.vortexMaxEnergy;
+  player.vortexAdsActive = false;
   player.gunShieldHP = 0; player.gunShieldTimer = 0;
-  player.thermalShieldHP = player.thermalShieldMaxHP; // Scorch spawns with a fully charged thermal shield
-  player.trapCharges = player.maxTrapCharges; // Scorch respawns with both trap charges
+  player.thermalShieldHP = player.thermalShieldMaxHP; // Pyro spawns with a fully charged thermal shield
+  player.trapCharges = player.maxTrapCharges; // Pyro respawns with both trap charges
   player.trapCooldownTimer = 0;
   player.abilityActive = [false, false, false];
   player.abilityTimers = [0, 0, 0];
   player.abilityCooldowns = [0, 0, 0];
   player.coreActive = false;
   player.coreTimer = 0;
-  // Monarch upgrades persist across respawns
+  // Syphon upgrades persist across respawns
   // Spawn at a valid corridor position in the player's team territory
   const sp = getValidSpawnPoint(player.team === LSS.TEAM_FLEET_B ? 'B' : 'A');
   player.position.copy(sp);
@@ -7462,7 +7462,7 @@ function updatePlayerMovement(dt) {
     if (input.gpMoveDown) moveDir.addScaledVector(up, -ch.verticalSpeed);
   }
 
-  // Northstar Afterburner speed boost
+  // Puncture Afterburner speed boost
   if (player.afterburnerActive) moveDir.multiplyScalar(player.afterburnerSpeedMult);
 
   // Acceleration
@@ -7504,8 +7504,8 @@ function updatePlayerMovement(dt) {
     }
   }
 
-  // Scorch Incendiary Trap charge regen (mirrors the dash charge system)
-  if (player.loadoutKey === 'SCORCH' && player.trapCooldownTimer > 0) {
+  // Pyro Incendiary Trap charge regen (mirrors the dash charge system)
+  if (player.loadoutKey === 'PYRO' && player.trapCooldownTimer > 0) {
     player.trapCooldownTimer -= dt;
     if (player.trapCooldownTimer <= 0 && player.trapCharges < player.maxTrapCharges) {
       player.trapCharges++;
@@ -7612,21 +7612,21 @@ function updateWeapon(dt) {
   // ADS (aim down sights) state
   const aiming = input.rightMouseDown || input.gpAltFire;
 
-  // ION ADS: zoom in, bonus damage on shots (energy only drains when firing while ADS)
-  if (player.loadoutKey === 'ION') {
-    if (aiming && player.ionEnergy > 0) {
-      player.ionAdsActive = true;
+  // VORTEX ADS: zoom in, bonus damage on shots (energy only drains when firing while ADS)
+  if (player.loadoutKey === 'VORTEX') {
+    if (aiming && player.vortexEnergy > 0) {
+      player.vortexAdsActive = true;
       const firing = input.mouseDown || input.gpFire;
       if (firing) {
-        player.ionEnergy = Math.max(0, player.ionEnergy - 350 * dt); // drains 350/s only while ADS + firing
+        player.vortexEnergy = Math.max(0, player.vortexEnergy - 350 * dt); // drains 350/s only while ADS + firing
       }
     } else {
-      player.ionAdsActive = false;
+      player.vortexAdsActive = false;
     }
   }
 
-  // Northstar Railgun charge: hold alt-fire to charge over 3s, boosted damage
-  if (player.loadoutKey === 'NORTHSTAR') {
+  // Puncture Railgun charge: hold alt-fire to charge over 3s, boosted damage
+  if (player.loadoutKey === 'PUNCTURE') {
     if (aiming) {
       player.railgunCharge = Math.min(1.0, player.railgunCharge + dt / 2.5); // full charge in 2.5s (TF2)
     } else if (!aiming && player.railgunCharge > 0 && player.railgunCharge < 0.05) {
@@ -7640,8 +7640,8 @@ function updateWeapon(dt) {
   const baseFov = 90;
   let targetFov = baseFov;
   if (aiming) {
-    if (player.loadoutKey === 'NORTHSTAR') targetFov = 40; // sniper zoom
-    else if (player.loadoutKey === 'ION') targetFov = 55;
+    if (player.loadoutKey === 'PUNCTURE') targetFov = 40; // sniper zoom
+    else if (player.loadoutKey === 'VORTEX') targetFov = 55;
     else targetFov = 65; // general ADS
   }
   camera.fov += (targetFov - camera.fov) * Math.min(1, dt * 12);
@@ -7661,11 +7661,11 @@ function updateWeapon(dt) {
   }
 
   player.fireTimer -= dt;
-  // Block firing during Legion mode switch transition
-  if (player.legionSwitchTimer > 0) firing = false;
+  // Block firing during Blaster mode switch transition
+  if (player.blasterSwitchTimer > 0) firing = false;
   if (firing && player.fireTimer <= 0) {
     // Smart Core: unlimited ammo (no consumption, no reload needed)
-    const smartCoreActive = player.coreActive && player.loadoutKey === 'LEGION';
+    const smartCoreActive = player.coreActive && player.loadoutKey === 'BLASTER';
     if (!smartCoreActive && player.clipAmmo <= 0) { startReload(); return; }
     fireWeapon();
     player.isFiring = true; player.fireFlashTimer = 0.12;
@@ -7750,8 +7750,8 @@ function fireWeapon() {
     });
   }
 
-  // SCORCH specific: extra fire particles for projectile weapons
-  if (player.loadoutKey === 'SCORCH' && w.mode === 'projectile') {
+  // PYRO specific: extra fire particles for projectile weapons
+  if (player.loadoutKey === 'PYRO' && w.mode === 'projectile') {
     const fireColors = [0xff4400, 0xff6600, 0xff8833];
     for (let i = 0; i < 4; i++) {
       const pVel = forward.clone().multiplyScalar(250 + Math.random() * 150);
@@ -7771,7 +7771,7 @@ function fireWeapon() {
 }
 
 function fireHitscan(origin, dir, w) {
-  // Apply weapon spread (Legion Predator Cannon has mode-dependent spread)
+  // Apply weapon spread (Blaster Predator Cannon has mode-dependent spread)
   let aimDir = dir.clone();
   if (w.spread && w.spread > 0) {
     aimDir.x += (Math.random() - 0.5) * w.spread;
@@ -7782,8 +7782,8 @@ function fireHitscan(origin, dir, w) {
   // Check level geometry first
   const levelDist = raycastLevel(origin, aimDir, w.range);
   const end = origin.clone().add(aimDir.clone().multiplyScalar(levelDist));
-  // Color depends on loadout: ION uses cyan, otherwise yellow
-  const tracerColor = player.loadoutKey === 'ION' ? 0x44ddff : 0xffff44;
+  // Color depends on loadout: VORTEX uses cyan, otherwise yellow
+  const tracerColor = player.loadoutKey === 'VORTEX' ? 0x44ddff : 0xffff44;
   spawnTracer(origin, end, tracerColor);
 
   // Check destructible obstacles (hitscan can damage them too)
@@ -7818,11 +7818,11 @@ function fireHitscan(origin, dir, w) {
   // If obstacle is closer than any bot, hit the obstacle instead
   if (bestObstacle && bestObstDist < bestDist) {
     let finalDmg = w.damage;
-    if (player.loadoutKey === 'NORTHSTAR' && player.railgunCharge > 0) {
+    if (player.loadoutKey === 'PUNCTURE' && player.railgunCharge > 0) {
       finalDmg *= 1.0 + player.railgunCharge * 3.0;
       player.railgunCharge = 0;
     }
-    if (player.monarchDmgMult > 1) finalDmg *= player.monarchDmgMult;
+    if (player.syphonDmgMult > 1) finalDmg *= player.syphonDmgMult;
     const dealt = bestObstacle.takeDamage(finalDmg);
     if (dealt > 0) {
       player.damageDealt += dealt;
@@ -7840,19 +7840,19 @@ function fireHitscan(origin, dir, w) {
     const hitDist = bestDist;
     const rangeFalloff = 0.7 + 0.3 * Math.max(0, 1 - hitDist / w.range);
     let finalDmg = w.damage * rangeFalloff;
-    // ION ADS: 1.75x damage while aiming (drains energy pool)
-    if (player.loadoutKey === 'ION' && player.ionAdsActive) {
+    // VORTEX ADS: 1.75x damage while aiming (drains energy pool)
+    if (player.loadoutKey === 'VORTEX' && player.vortexAdsActive) {
       finalDmg *= 1.75;
     }
-    // Northstar Railgun charge: up to 4x damage at full charge (3s to fully charge)
-    if (player.loadoutKey === 'NORTHSTAR' && player.railgunCharge > 0) {
+    // Puncture Railgun charge: up to 4x damage at full charge (3s to fully charge)
+    if (player.loadoutKey === 'PUNCTURE' && player.railgunCharge > 0) {
       finalDmg *= 1.0 + player.railgunCharge * 3.0; // 1x at 0 charge, 4x at full
       player.railgunCharge = 0; // consume charge on hit
     }
-    // Monarch upgrade tier damage multiplier (Tier 3 XO-16 Accelerator: +25%)
-    if (player.monarchDmgMult > 1) finalDmg *= player.monarchDmgMult;
-    // Monarch Arc Rounds (Tier 1): +50% damage vs shielded targets, Particle Walls, Gun Shields
-    if (player.monarchArcRounds && bestHit.shield > 0) finalDmg *= 1.5;
+    // Syphon upgrade tier damage multiplier (Tier 3 XO-16 Accelerator: +25%)
+    if (player.syphonDmgMult > 1) finalDmg *= player.syphonDmgMult;
+    // Syphon Arc Rounds (Tier 1): +50% damage vs shielded targets, Particle Walls, Gun Shields
+    if (player.syphonArcRounds && bestHit.shield > 0) finalDmg *= 1.5;
 
     const dealt = bestHit.takeDamage(finalDmg, 'player');
     if (dealt > 0) {
@@ -7864,8 +7864,8 @@ function fireHitscan(origin, dir, w) {
     spawnExplosion(hitPoint, 8);
     spawnImpactSparks(hitPoint, 4);
 
-    // ION specific hit effects: electrical sparks
-    if (player.loadoutKey === 'ION') {
+    // VORTEX specific hit effects: electrical sparks
+    if (player.loadoutKey === 'VORTEX') {
       for (let i = 0; i < 3; i++) {
         const sparkDir = new THREE.Vector3(
           (Math.random() - 0.5) * 0.8,
@@ -7891,8 +7891,8 @@ function fireHitscan(origin, dir, w) {
 function fireProjectile(origin, dir, w) {
   const vel = dir.clone().multiplyScalar(w.projSpeed);
   const proj = new Projectile(origin, vel, w.damage, w.splash, 'player', 0xff8800);
-  // Scorch projectiles are fire sources (ignite gas clouds on pass-through)
-  if (player.loadoutKey === 'SCORCH') proj.isFireSource = true;
+  // Pyro projectiles are fire sources (ignite gas clouds on pass-through)
+  if (player.loadoutKey === 'PYRO') proj.isFireSource = true;
   game.projectiles.push(proj);
 }
 
@@ -7942,7 +7942,7 @@ function fireSpread(origin, dir, w) {
         // Spread damage falloff: significant drop-off at range (shotgun behavior)
         const rangeFalloff = Math.max(0.3, 1 - (proj / w.range) * 0.7);
         let finalDmg = w.damage * rangeFalloff;
-        if (player.monarchDmgMult > 1) finalDmg *= player.monarchDmgMult;
+        if (player.syphonDmgMult > 1) finalDmg *= player.syphonDmgMult;
         const dealt = bot.takeDamage(finalDmg, 'player');
         if (dealt > 0) {
           player.damageDealt += dealt;
@@ -7980,16 +7980,16 @@ function activateAbility(slot) {
 
   const ability = player.abilities[slot];
 
-  // Incendiary Trap (Scorch): charge-based gating instead of cooldown gating
-  const isTrapCharges = (ability.name === 'Incendiary Trap' && player.loadoutKey === 'SCORCH');
+  // Incendiary Trap (Pyro): charge-based gating instead of cooldown gating
+  const isTrapCharges = (ability.name === 'Incendiary Trap' && player.loadoutKey === 'PYRO');
   if (isTrapCharges) {
     if ((player.trapCharges || 0) <= 0) return;
   } else {
     if (player.abilityCooldowns[slot] > 0) return;
   }
 
-  // Vortex Shield: can't reactivate if ION energy is depleted
-  if (ability.name === 'Vortex Shield' && player.ionEnergy <= 0) return;
+  // Vortex Shield: can't reactivate if VORTEX energy is depleted
+  if (ability.name === 'Vortex Shield' && player.vortexEnergy <= 0) return;
 
   // Hold-to-use abilities: pressing while already held does nothing (release handles deactivation)
   const isHoldAbility = ['Vortex Shield', 'Sword Block', 'Thermal Shield'].includes(ability.name);
@@ -8028,8 +8028,8 @@ function activateAbility(slot) {
     if (player.trapCooldownTimer <= 0) player.trapCooldownTimer = player.trapChargeCooldown;
   } else if (ability.cooldown > 0) {
     let cd = ability.cooldown;
-    // Monarch tier 3: 30% cooldown reduction
-    if (player.monarchCooldownMult < 1) cd *= player.monarchCooldownMult;
+    // Syphon tier 3: 30% cooldown reduction
+    if (player.syphonCooldownMult < 1) cd *= player.syphonCooldownMult;
     player.abilityCooldowns[slot] = cd;
   }
 }
@@ -8037,16 +8037,16 @@ function activateAbility(slot) {
 function executeAbility(slot, ability) {
   const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
 
-  // ION energy cost check (all ION abilities share one energy pool)
-  const ionEnergyCosts = { 'Laser Shot': 350, 'Vortex Shield': 200, 'Trip Wire': 250 };
-  if (player.loadoutKey === 'ION' && ionEnergyCosts[ability.name]) {
-    if (player.ionEnergy < ionEnergyCosts[ability.name]) return; // not enough energy
-    player.ionEnergy -= ionEnergyCosts[ability.name];
+  // VORTEX energy cost check (all VORTEX abilities share one energy pool)
+  const vortexEnergyCosts = { 'Laser Shot': 350, 'Vortex Shield': 200, 'Trip Wire': 250 };
+  if (player.loadoutKey === 'VORTEX' && vortexEnergyCosts[ability.name]) {
+    if (player.vortexEnergy < vortexEnergyCosts[ability.name]) return; // not enough energy
+    player.vortexEnergy -= vortexEnergyCosts[ability.name];
   }
 
   // ---- OFFENSIVE ABILITIES ----
   if (ability.type === 'offensive') {
-    // ION: Laser Shot (concentrated beam, 1200 dmg in a line)
+    // VORTEX: Laser Shot (concentrated beam, 1200 dmg in a line)
     if (ability.name === 'Laser Shot') {
       const range = 2500;
       const beamEnd = player.position.clone().add(forward.clone().multiplyScalar(range));
@@ -8090,7 +8090,7 @@ function executeAbility(slot, ability) {
         }
       }
     }
-    // SCORCH: Firewall (path of fire laid forward from player, 5s duration)
+    // PYRO: Firewall (path of fire laid forward from player, 5s duration)
     else if (ability.name === 'Firewall') {
       const wallLen = 800;
       const start = player.position.clone().add(forward.clone().multiplyScalar(100));
@@ -8181,7 +8181,7 @@ function executeAbility(slot, ability) {
       const wallCenter = start.clone().add(forward.clone().multiplyScalar(wallLen * 0.5));
       spawnDynamicLight(wallCenter, 0xff6600, 2.5, 800, 0.5);
     }
-    // NORTHSTAR: Cluster Missile (impact + sustained explosions in area for 3s)
+    // PUNCTURE: Cluster Missile (impact + sustained explosions in area for 3s)
     else if (ability.name === 'Cluster Missile') {
       const vel = forward.clone().multiplyScalar(1000);
       const proj = new Projectile(player.position.clone(), vel, 800, 250, 'player', 0xff6600);
@@ -8190,7 +8190,7 @@ function executeAbility(slot, ability) {
       proj.clusterDuration = 5; // seconds of sustained explosions
       game.projectiles.push(proj);
     }
-    // RONIN: Arc Wave (electric projectile, 1000 dmg, slows enemies hit; 1500 in Sword Core)
+    // SLAYER: Arc Wave (electric projectile, 1000 dmg, slows enemies hit; 1500 in Sword Core)
     else if (ability.name === 'Arc Wave') {
       const arcDmg = player.coreActive && player.loadout.core.name === 'Sword Core' ? 3000 : 2000;
       const vel = forward.clone().multiplyScalar(800);
@@ -8198,11 +8198,11 @@ function executeAbility(slot, ability) {
       proj.isArcWave = true; // applies slow on hit
       game.projectiles.push(proj);
     }
-    // TONE: Tracker Rockets (fire homing salvo at fully-locked targets; partial locks preserved)
+    // TRACKER: Tracker Rockets (fire homing salvo at fully-locked targets; partial locks preserved)
     else if (ability.name === 'Tracker Rockets') {
       // Gather only targets with full 3 locks
       const lockedTargets = [];
-      for (const [botId, locks] of Object.entries(player.toneLocks)) {
+      for (const [botId, locks] of Object.entries(player.trackerLocks)) {
         if (locks >= 3) {
           const bot = game.entities.find(b => b.id == botId && b.alive);
           if (bot) lockedTargets.push(bot);
@@ -8220,9 +8220,9 @@ function executeAbility(slot, ability) {
             game.projectiles.push(proj);
           }
           // Only consume full locks; partial locks on other targets stay
-          delete player.toneLocks[target.id];
+          delete player.trackerLocks[target.id];
         }
-        player.toneLockedTarget = null;
+        player.trackerLockedTarget = null;
       } else {
         // No full locks: fire unguided salvo (partial locks preserved for next volley)
         for (let m = 0; m < 5; m++) {
@@ -8232,15 +8232,15 @@ function executeAbility(slot, ability) {
         }
       }
     }
-    // LEGION: Power Shot (1s charge, then fires; mode-dependent)
+    // BLASTER: Power Shot (1s charge, then fires; mode-dependent)
     else if (ability.name === 'Power Shot') {
       // Start charging; actual fire happens in updateAbilities when charge reaches 1.0
       player.powerShotCharging = true;
       player.powerShotCharge = 0;
     }
-    // MONARCH: Rocket Salvo (5 rockets, 350 dmg each; doubled with Missile Racks upgrade)
+    // SYPHON: Rocket Salvo (5 rockets, 350 dmg each; doubled with Missile Racks upgrade)
     else if (ability.name === 'Rocket Salvo') {
-      const rocketCount = player.monarchMissileRacks ? 10 : 5;
+      const rocketCount = player.syphonMissileRacks ? 10 : 5;
       for (let r = 0; r < rocketCount; r++) {
         const spread = new THREE.Vector3((Math.random()-0.5)*0.12, (Math.random()-0.5)*0.12, 0);
         const vel = forward.clone().add(spread).normalize().multiplyScalar(800);
@@ -8252,7 +8252,7 @@ function executeAbility(slot, ability) {
   // ---- DEFENSIVE ABILITIES ----
   else if (ability.type === 'defensive') {
     // Most defensive abilities are handled passively in playerTakeDamage
-    // Energy Siphon (MONARCH): actively drains enemy shields and heals player
+    // Energy Siphon (SYPHON): actively drains enemy shields and heals player
     if (ability.name === 'Energy Siphon') {
       let bestBot = null, bestDist = Infinity;
       for (const bot of game.entities) {
@@ -8323,17 +8323,17 @@ function executeAbility(slot, ability) {
         showHitMarker();
       }
     }
-    // Afterburner (NORTHSTAR): speed boost for the duration
+    // Afterburner (PUNCTURE): speed boost for the duration
     else if (ability.name === 'Afterburner') {
       player.afterburnerActive = true;
       player.afterburnerSpeedMult = 1.5; // 50% speed boost
     }
-    // Gun Shield (LEGION): activate with full HP, 10s duration
+    // Gun Shield (BLASTER): activate with full HP, 10s duration
     else if (ability.name === 'Gun Shield') {
       player.gunShieldHP = player.gunShieldMaxHP;
       player.gunShieldTimer = 10;
     }
-    // Thermal Shield (SCORCH): hold-to-use; blocks attacks (via power pool),
+    // Thermal Shield (PYRO): hold-to-use; blocks attacks (via power pool),
     // burns close enemies with distance falloff. Max 5s per activation (capped by
     // ability.duration). Power regens to max over 10s when not held. Cannot
     // re-activate with empty power; the duration timer is set by the caller
@@ -8346,7 +8346,7 @@ function executeAbility(slot, ability) {
         return;
       }
     }
-    // Particle Wall (TONE): deploy a floating rectangle shield that stays in place
+    // Particle Wall (TRACKER): deploy a floating rectangle shield that stays in place
     else if (ability.name === 'Particle Wall') {
       const wallPos = player.position.clone().add(forward.clone().multiplyScalar(200));
       const wallDir = forward.clone();
@@ -8379,7 +8379,7 @@ function executeAbility(slot, ability) {
 
   // ---- UTILITY ABILITIES ----
   else if (ability.type === 'utility') {
-    // RONIN: Phase Dash (movement direction + brief invulnerability)
+    // SLAYER: Phase Dash (movement direction + brief invulnerability)
     // Goes in the direction you're moving; if stationary, phase in place
     if (ability.name === 'Phase Dash') {
       player.phaseInvuln = true;
@@ -8396,7 +8396,7 @@ function executeAbility(slot, ability) {
         spawnExplosion(player.position.clone(), 10);
       }
     }
-    // MONARCH: Rearm (reset Dash, Ordnance, and Defensive cooldowns)
+    // SYPHON: Rearm (reset Dash, Ordnance, and Defensive cooldowns)
     else if (ability.name === 'Rearm') {
       for (let i = 0; i < 3; i++) {
         if (i !== slot) player.abilityCooldowns[i] = 0;
@@ -8405,7 +8405,7 @@ function executeAbility(slot, ability) {
       player.dashCharges = player.maxDashes;
       player.dashCooldownTimer = 0;
     }
-    // ION: Trip Wire (deploy 3 proximity orbs in a wide spread for area coverage)
+    // VORTEX: Trip Wire (deploy 3 proximity orbs in a wide spread for area coverage)
     else if (ability.name === 'Trip Wire') {
       const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
       const offsets = [-180, 0, 180]; // lateral spread
@@ -8425,7 +8425,7 @@ function executeAbility(slot, ability) {
         game.worldEffects[game.worldEffects.length - 1].mesh = mineMesh;
       }
     }
-    // SCORCH: Incendiary Trap (gas canisters that ignite on contact with any Scorch fire source:
+    // PYRO: Incendiary Trap (gas canisters that ignite on contact with any Pyro fire source:
     // thermite rounds, firewall, thermal shield, flame core). Once lit, the cloud burns anything
     // inside it (bots + player if enemy trap). Re-contact with a fire source refreshes the burn
     // timer, so holding the thermal shield in the cloud keeps the blaze alive until the shield
@@ -8456,7 +8456,7 @@ function executeAbility(slot, ability) {
       effRef.mesh = gasMesh;
       effRef.coreMesh = coreMesh;
     }
-    // NORTHSTAR: Tether Trap (slow + root enemies for 4s)
+    // PUNCTURE: Tether Trap (slow + root enemies for 4s)
     else if (ability.name === 'Tether Trap') {
       const trapPos = player.position.clone().add(forward.clone().multiplyScalar(300));
       game.worldEffects.push({
@@ -8470,7 +8470,7 @@ function executeAbility(slot, ability) {
       scene.add(tetherMesh);
       game.worldEffects[game.worldEffects.length - 1].mesh = tetherMesh;
     }
-    // TONE: Sonar Lock (reveal enemies + build lock stacks for Tracker Rockets)
+    // TRACKER: Sonar Lock (reveal enemies + build lock stacks for Tracker Rockets)
     else if (ability.name === 'Sonar Lock') {
       // Pulse that reveals and locks enemies in a cone
       const lockRange = 2000;
@@ -8482,21 +8482,21 @@ function executeAbility(slot, ability) {
         if (forward.dot(toBot) > 0.3) {
           // Add lock stack (max 3)
           const id = bot.id;
-          const prevLocks = player.toneLocks[id] || 0;
-          player.toneLocks[id] = Math.min(3, prevLocks + 1);
-          if (player.toneLocks[id] > prevLocks) {
-            playSound('sonar_ping_' + player.toneLocks[id]);
+          const prevLocks = player.trackerLocks[id] || 0;
+          player.trackerLocks[id] = Math.min(3, prevLocks + 1);
+          if (player.trackerLocks[id] > prevLocks) {
+            playSound('sonar_ping_' + player.trackerLocks[id]);
           }
-          if (player.toneLocks[id] >= 3) player.toneLockedTarget = bot;
+          if (player.trackerLocks[id] >= 3) player.trackerLockedTarget = bot;
           // Visual lock indicator
           spawnTracer(player.position, bot.position, 0xffaa00);
         }
       }
     }
-    // LEGION: Mode Switch (toggle close/long range, 1s transition delay)
+    // BLASTER: Mode Switch (toggle close/long range, 1s transition delay)
     else if (ability.name === 'Mode Switch') {
-      player.legionSwitchTimer = 1.0; // 1s delay before mode activates
-      player.legionPendingMode = player.legionMode === 'close' ? 'long' : 'close';
+      player.blasterSwitchTimer = 1.0; // 1s delay before mode activates
+      player.blasterPendingMode = player.blasterMode === 'close' ? 'long' : 'close';
     }
   }
 
@@ -8506,7 +8506,7 @@ function executeAbility(slot, ability) {
 
 function firePowerShot() {
   const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
-  if (player.legionMode === 'close') {
+  if (player.blasterMode === 'close') {
     // Close-range Power Shot: shotgun blast (12 pellets, wide spread, knockback)
     const range = 1200;
     const pelletCount = 12;
@@ -8561,8 +8561,8 @@ function firePowerShot() {
 
 function activateCore() {
   if (player.coreMeter < 100 || player.coreActive || player.shipState === 'dead') return;
-  // Monarch: block activation if already at max tier (3)
-  if (player.loadout && player.loadout.core.name === 'Upgrade Core' && player.monarchTier >= 3) return;
+  // Syphon: block activation if already at max tier (3)
+  if (player.loadout && player.loadout.core.name === 'Upgrade Core' && player.syphonTier >= 3) return;
   player.coreActive = true;
   player.coreTimer = player.loadout.core.duration;
   player.coreMeter = 0;
@@ -8570,12 +8570,12 @@ function activateCore() {
   const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
   const coreName = player.loadout.core.name;
 
-  // ION: Laser Core (continuous high-power laser, 4500 dmg over 3s; dealt per tick in updateAbilities)
+  // VORTEX: Laser Core (continuous high-power laser, 4500 dmg over 3s; dealt per tick in updateAbilities)
   if (coreName === 'Laser Core') {
     // Initial burst visual
     spawnTracer(player.position, player.position.clone().add(forward.clone().multiplyScalar(3000)), 0xff0000);
   }
-  // SCORCH: Flame Core (massive AoE incendiary, 4500 dmg instant around player; TF2)
+  // PYRO: Flame Core (massive AoE incendiary, 4500 dmg instant around player; TF2)
   else if (coreName === 'Flame Core') {
     const radius = 1200;
     for (const bot of game.entities) {
@@ -8592,12 +8592,12 @@ function activateCore() {
     spawnExplosion(player.position, 80);
     triggerScreenShake(8);
   }
-  // NORTHSTAR: Afterburner Core (speed boost + rocket barrage over 5s)
+  // PUNCTURE: Afterburner Core (speed boost + rocket barrage over 5s)
   else if (coreName === 'Afterburner Core') {
     // Speed boost is handled in updateAbilities; initial rocket volley
     player.velocity.add(forward.clone().multiplyScalar(600));
   }
-  // RONIN: Sword Core (empowered melee + rapid arc waves over 4s)
+  // SLAYER: Sword Core (empowered melee + rapid arc waves over 4s)
   else if (coreName === 'Sword Core') {
     // Handled in updateAbilities; initial shockwave
     const radius = 600;
@@ -8610,7 +8610,7 @@ function activateCore() {
     }
     spawnExplosion(player.position, 40);
   }
-  // TONE: Salvo Core (remote-guided missile volley; all missiles steer toward crosshair in real time)
+  // TRACKER: Salvo Core (remote-guided missile volley; all missiles steer toward crosshair in real time)
   else if (coreName === 'Salvo Core') {
     // Fire initial burst; more spawn per tick in updateAbilities
     for (let m = 0; m < 8; m++) {
@@ -8621,29 +8621,29 @@ function activateCore() {
       game.projectiles.push(proj);
     }
   }
-  // LEGION: Smart Core (auto-aim + max accuracy, 3500 dmg over 8s)
+  // BLASTER: Smart Core (auto-aim + max accuracy, 3500 dmg over 8s)
   else if (coreName === 'Smart Core') {
     // Handled per-tick in updateAbilities (auto-aim firing)
   }
-  // MONARCH: Upgrade Core (permanent tier upgrade, 3 tiers; TF2-style choices auto-applied)
+  // SYPHON: Upgrade Core (permanent tier upgrade, 3 tiers; TF2-style choices auto-applied)
   else if (coreName === 'Upgrade Core') {
-    player.monarchTier = Math.min(3, player.monarchTier + 1);
-    switch (player.monarchTier) {
+    player.syphonTier = Math.min(3, player.syphonTier + 1);
+    switch (player.syphonTier) {
       case 1: // Tier 1: Arc Rounds (+50% vs shields/walls/Gun Shield, +10 ammo)
-        player.monarchArcRounds = true;
+        player.syphonArcRounds = true;
         player.maxClip = 50;
         player.clipAmmo = Math.min(player.clipAmmo + 10, 50);
         break;
       case 2: // Tier 2: Maelstrom (shield recharge + 500 bonus shield HP)
-        player.monarchShieldBonus = 500;
+        player.syphonShieldBonus = 500;
         player.maxShield = player.chassis.maxShield + 500;
         player.shield = Math.min(player.shield + 500, player.maxShield);
         // Also reset ability cooldowns (Rearm bonus at Tier 2)
-        player.monarchCooldownMult = 0.7;
+        player.syphonCooldownMult = 0.7;
         break;
       case 3: // Tier 3: XO-16 Accelerator (+25% damage, faster fire rate)
-        player.monarchXO16Accel = true;
-        player.monarchDmgMult = 1.25;
+        player.syphonXO16Accel = true;
+        player.syphonDmgMult = 1.25;
         // Increase fire rate by reducing interval
         if (player.weapon) player.weapon.fireRate = Math.max(0.06, player.weapon.fireRate * 0.75);
         break;
@@ -8652,13 +8652,13 @@ function activateCore() {
 }
 
 // ---- SHIELD VISUAL MESHES ----
-// Create and manage the 3D shield meshes for Ion (rainbow circle), Tone (rectangle), Legion (octagon)
+// Create and manage the 3D shield meshes for Vortex (rainbow circle), Tracker (rectangle), Blaster (octagon)
 
 function updateShieldVisuals(dt) {
   const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
 
-  // ---- ION: Vortex Shield (translucent rainbow circle held in front) ----
-  const vortexActive = player.loadoutKey === 'ION' &&
+  // ---- VORTEX: Vortex Shield (translucent rainbow circle held in front) ----
+  const vortexActive = player.loadoutKey === 'VORTEX' &&
     player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Vortex Shield';
 
   if (vortexActive) {
@@ -8710,8 +8710,8 @@ function updateShieldVisuals(dt) {
     }
   }
 
-  // ---- LEGION: Gun Shield (octagon attached to guns) ----
-  const gunShieldActive = player.loadoutKey === 'LEGION' &&
+  // ---- BLASTER: Gun Shield (octagon attached to guns) ----
+  const gunShieldActive = player.loadoutKey === 'BLASTER' &&
     player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Gun Shield' &&
     player.gunShieldHP > 0;
 
@@ -8770,11 +8770,11 @@ function updateShieldVisuals(dt) {
     }
   }
 
-  // ---- SCORCH: Thermal Shield (translucent orange disc held in front) ----
-  // Visual parity with Ion's Vortex Shield: a bright circle + outer ring in
+  // ---- PYRO: Thermal Shield (translucent orange disc held in front) ----
+  // Visual parity with Vortex's Vortex Shield: a bright circle + outer ring in
   // front of the player, pulsing. Coloring stays in the orange/amber band
   // (hue oscillates 0.04–0.11) so it reads as heat rather than the rainbow.
-  const thermalActive = player.loadoutKey === 'SCORCH' &&
+  const thermalActive = player.loadoutKey === 'PYRO' &&
     player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Thermal Shield' &&
     player.thermalShieldHP > 0;
 
@@ -8975,7 +8975,7 @@ function updateAbilities(dt) {
     // Thermal Shield recharge (ticks every frame, inside or outside the
     // ability-loop body; guarded to only regen when NOT actively held).
     // Regen rate: full pool over 10s = 250/s, so empty → full in 10s.
-    if (player.loadoutKey === 'SCORCH' && !player.abilityActive[i] &&
+    if (player.loadoutKey === 'PYRO' && !player.abilityActive[i] &&
         player.abilities[i] && player.abilities[i].name === 'Thermal Shield' &&
         player.thermalShieldHP < player.thermalShieldMaxHP) {
       const rechargePerSec = player.thermalShieldMaxHP / 10;
@@ -8984,12 +8984,12 @@ function updateAbilities(dt) {
         player.thermalShieldHP + rechargePerSec * dt
       );
     }
-    // Vortex Shield: drains ION energy while held up; auto-drops when depleted
+    // Vortex Shield: drains VORTEX energy while held up; auto-drops when depleted
     if (player.abilityActive[i] && player.abilities[i] && player.abilities[i].name === 'Vortex Shield') {
       const drainRate = 120; // energy per second while held
-      player.ionEnergy -= drainRate * dt;
-      if (player.ionEnergy <= 0) {
-        player.ionEnergy = 0;
+      player.vortexEnergy -= drainRate * dt;
+      if (player.vortexEnergy <= 0) {
+        player.vortexEnergy = 0;
         // Force deactivate: release burst and drop shield
         player.abilityActive[i] = false;
         player.abilityTimers[i] = 0;
@@ -9026,7 +9026,7 @@ function updateAbilities(dt) {
     const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
     const coreName = player.loadout ? player.loadout.core.name : '';
 
-    // ION Laser Core: continuous laser beam (1500 DPS over 3s)
+    // VORTEX Laser Core: continuous laser beam (1500 DPS over 3s)
     if (coreName === 'Laser Core') {
       const range = 3000;
       const end = player.position.clone().add(forward.clone().multiplyScalar(range));
@@ -9044,7 +9044,7 @@ function updateAbilities(dt) {
         }
       }
     }
-    // NORTHSTAR Afterburner Core: speed boost + rockets every 0.5s
+    // PUNCTURE Afterburner Core: speed boost + rockets every 0.5s
     else if (coreName === 'Afterburner Core') {
       // Speed boost
       const curSpeed = player.velocity.length();
@@ -9058,7 +9058,7 @@ function updateAbilities(dt) {
         game.projectiles.push(new Projectile(player.position.clone(), vel, 200, 100, 'player', 0xff6600));
       }
     }
-    // RONIN Sword Core: melee damage aura + periodic arc waves
+    // SLAYER Sword Core: melee damage aura + periodic arc waves
     else if (coreName === 'Sword Core') {
       // Melee damage aura
       for (const bot of game.entities) {
@@ -9077,7 +9077,7 @@ function updateAbilities(dt) {
         game.projectiles.push(proj);
       }
     }
-    // TONE Salvo Core: keep spawning remote-guided missiles during duration
+    // TRACKER Salvo Core: keep spawning remote-guided missiles during duration
     else if (coreName === 'Salvo Core') {
       if (Math.random() < dt * 10) {
         const spread = new THREE.Vector3((Math.random()-0.5)*0.25, (Math.random()-0.5)*0.25, 0);
@@ -9088,7 +9088,7 @@ function updateAbilities(dt) {
         game.projectiles.push(missile);
       }
     }
-    // LEGION Smart Core: auto-aim rapid fire at nearest enemy
+    // BLASTER Smart Core: auto-aim rapid fire at nearest enemy
     else if (coreName === 'Smart Core') {
       let nearest = null, nearDist = Infinity;
       for (const bot of game.entities) {
@@ -9415,21 +9415,21 @@ function updateAbilities(dt) {
     }
   }
 
-  // ION energy regen: always regens, no delay
-  if (player.loadoutKey === 'ION') {
-    player.ionEnergy = Math.min(player.ionMaxEnergy, player.ionEnergy + player.ionEnergyRegen * dt);
+  // VORTEX energy regen: always regens, no delay
+  if (player.loadoutKey === 'VORTEX') {
+    player.vortexEnergy = Math.min(player.vortexMaxEnergy, player.vortexEnergy + player.vortexEnergyRegen * dt);
   }
 
-  // Legion Mode Switch: 1s transition delay
-  if (player.legionSwitchTimer > 0) {
-    player.legionSwitchTimer -= dt;
-    if (player.legionSwitchTimer <= 0) {
-      player.legionSwitchTimer = 0;
-      player.legionMode = player.legionPendingMode;
+  // Blaster Mode Switch: 1s transition delay
+  if (player.blasterSwitchTimer > 0) {
+    player.blasterSwitchTimer -= dt;
+    if (player.blasterSwitchTimer <= 0) {
+      player.blasterSwitchTimer = 0;
+      player.blasterMode = player.blasterPendingMode;
       if (player.weapon) {
         // Scale ammo proportionally between modes (long = 2/3 of short)
         const ammoPct = player.maxClip > 0 ? player.clipAmmo / player.maxClip : 1;
-        if (player.legionMode === 'close') {
+        if (player.blasterMode === 'close') {
           player.weapon.fireRate = 0.05;
           player.weapon.range = 1500;
           player.weapon.damage = 85;
@@ -9448,7 +9448,7 @@ function updateAbilities(dt) {
     }
   }
 
-  // Legion Power Shot: charge up over 1s, then auto-fire
+  // Blaster Power Shot: charge up over 1s, then auto-fire
   if (player.powerShotCharging) {
     player.powerShotCharge = Math.min(1.0, player.powerShotCharge + dt / 1.0);
     if (player.powerShotCharge >= 1.0) {
@@ -9456,9 +9456,9 @@ function updateAbilities(dt) {
     }
   }
 
-  // Freeze core meter while core is active, and cap at 0 for maxed Monarch
+  // Freeze core meter while core is active, and cap at 0 for maxed Syphon
   if (player.coreActive) player.coreMeter = 0;
-  if (player.loadout && player.loadout.core.name === 'Upgrade Core' && player.monarchTier >= 3) player.coreMeter = 0;
+  if (player.loadout && player.loadout.core.name === 'Upgrade Core' && player.syphonTier >= 3) player.coreMeter = 0;
   player.coreReady = player.coreMeter >= 100;
 }
 
@@ -9810,8 +9810,8 @@ function drawCircumpunctHUD() {
   else hCol = green + '0.7)';
 
   // ---- LAYER 0: CENTER DOT + CROSSHAIR ----
-  // Legion close range: circle crosshair (O); all others: standard + crosshair
-  if (player.loadoutKey === 'LEGION' && player.legionMode === 'close') {
+  // Blaster close range: circle crosshair (O); all others: standard + crosshair
+  if (player.loadoutKey === 'BLASTER' && player.blasterMode === 'close') {
     // Circle crosshair for close range (roughly same size as the + crosshair)
     ctx.strokeStyle = white + '0.6)';
     ctx.lineWidth = 2;
@@ -9841,9 +9841,9 @@ function drawCircumpunctHUD() {
     ctx.stroke();
   }
 
-  // Legion mode indicator (below crosshair)
-  if (player.loadoutKey === 'LEGION') {
-    if (player.legionSwitchTimer > 0) {
+  // Blaster mode indicator (below crosshair)
+  if (player.loadoutKey === 'BLASTER') {
+    if (player.blasterSwitchTimer > 0) {
       // Switching animation: blink between modes
       const blinkOn = Math.floor(t * 6) % 2 === 0;
       ctx.fillStyle = amber + (blinkOn ? '0.7)' : '0.3)');
@@ -9852,7 +9852,7 @@ function drawCircumpunctHUD() {
       ctx.textBaseline = 'top';
       ctx.fillText('SWITCHING', cx, cy + 32);
     } else {
-      const modeLabel = player.legionMode === 'close' ? 'CLOSE' : 'LONG';
+      const modeLabel = player.blasterMode === 'close' ? 'CLOSE' : 'LONG';
       ctx.fillStyle = white + '0.4)';
       hudFont('10px Courier New');
       ctx.textAlign = 'center';
@@ -10002,7 +10002,7 @@ function drawCircumpunctHUD() {
   ctx.fillText(Math.floor(player.velocity.length()), speedTx, speedTy);
 
   // ---- LAYER 4: AMMO ARC (right side) ----
-  const smartCoreAmmo = player.coreActive && player.loadoutKey === 'LEGION';
+  const smartCoreAmmo = player.coreActive && player.loadoutKey === 'BLASTER';
   const ammoPct = (player.weapon.clipSize >= 999 || smartCoreAmmo) ? 1 : player.clipAmmo / player.maxClip;
   const ammoArcStart = Math.PI * 0.05;
   const ammoArcEnd = Math.PI * 0.45;
@@ -10225,8 +10225,8 @@ function drawCircumpunctHUD() {
     ctx.restore();
   }
 
-  // ---- NORTHSTAR RAILGUN CHARGE INDICATOR ----
-  if (player.loadoutKey === 'NORTHSTAR') {
+  // ---- PUNCTURE RAILGUN CHARGE INDICATOR ----
+  if (player.loadoutKey === 'PUNCTURE') {
     const chgPct = player.railgunCharge;
     const chgR = r1 - 25; // inside the health ring
     const chgStart = Math.PI * 0.85;
@@ -10254,8 +10254,8 @@ function drawCircumpunctHUD() {
     ctx.fillText(chgPct >= 1 ? 'MAX' : Math.floor(chgPct * 100) + '%', cx, cy + chgR + 16);
   }
 
-  // ---- LEGION POWER SHOT CHARGE INDICATOR ----
-  if (player.loadoutKey === 'LEGION' && player.powerShotCharging) {
+  // ---- BLASTER POWER SHOT CHARGE INDICATOR ----
+  if (player.loadoutKey === 'BLASTER' && player.powerShotCharging) {
     const chgPct = player.powerShotCharge;
     const chgR = r1 - 25;
     const chgStart = Math.PI * 0.85;
@@ -10283,9 +10283,9 @@ function drawCircumpunctHUD() {
     ctx.fillText('PWR', cx, cy + chgR + 16);
   }
 
-  // ---- ION ENERGY INDICATOR ----
-  if (player.loadoutKey === 'ION') {
-    const nrgPct = player.ionEnergy / player.ionMaxEnergy;
+  // ---- VORTEX ENERGY INDICATOR ----
+  if (player.loadoutKey === 'VORTEX') {
+    const nrgPct = player.vortexEnergy / player.vortexMaxEnergy;
     const nrgR = r1 - 25;
     const nrgStart = Math.PI * 0.85;
     const nrgEnd = Math.PI * 1.15;
@@ -10456,13 +10456,13 @@ function drawCircumpunctHUD() {
     ctx.fill();
   }
 
-  // ---- TONE LOCK-ON CIRCUMPUNCT INDICATORS (over locked enemies) ----
-  if (player.loadoutKey === 'TONE') {
+  // ---- TRACKER LOCK-ON CIRCUMPUNCT INDICATORS (over locked enemies) ----
+  if (player.loadoutKey === 'TRACKER') {
     const halfW = W / 2;
     const halfH = H / 2;
     for (const bot of game.entities) {
       if (!bot.alive || bot.team === player.team) continue;
-      const locks = player.toneLocks[bot.id] || 0;
+      const locks = player.trackerLocks[bot.id] || 0;
       if (locks <= 0) continue;
 
       // Project enemy position to screen
@@ -10595,12 +10595,12 @@ function updateHUD() {
   _hudDisplay(_hudEl('doomed-warning'), 'doomed-warning:d', doomDisp);
   _hudDisplay(_hudEl('doomed-vignette'), 'doomed-vignette:d', doomDisp);
 
-  // Enemy TONE lock-on warning (decay locks over time, show warning)
+  // Enemy TRACKER lock-on warning (decay locks over time, show warning)
   let maxEnemyLocks = 0;
   for (const botId in player.enemyToneLocks) {
     const bot = game.entities.find(b => b.id === parseInt(botId));
     if (!bot || !bot.alive) { delete player.enemyToneLocks[botId]; continue; }
-    // Decay locks: lose 1 lock per 4 seconds if the TONE bot hasn't hit recently
+    // Decay locks: lose 1 lock per 4 seconds if the TRACKER bot hasn't hit recently
     // (handled by not decaying here; locks auto-clear on bot death or round reset)
     if (player.enemyToneLocks[botId] > maxEnemyLocks) maxEnemyLocks = player.enemyToneLocks[botId];
   }
@@ -10856,7 +10856,7 @@ function updateAbilityHUD() {
     // Cooldown bar (fills as it recharges; full = ready)
     let barW = (cd > 0 ? ((1 - cd / maxCd) * 100) : 100) + '%';
 
-    // Cooldown text (with special displays for ION energy, shield HP)
+    // Cooldown text (with special displays for VORTEX energy, shield HP)
     let cdTextVal;
     if (active && ability.name === 'Gun Shield' && player.gunShieldHP > 0) {
       cdTextVal = String(Math.ceil(player.gunShieldHP));
@@ -10866,18 +10866,18 @@ function updateAbilityHUD() {
     else if (cd > 0) { cdTextVal = Math.ceil(cd) + 's'; }
     else { cdTextVal = ''; }
 
-    // ION energy: override bar to show energy level instead of cooldown for all ION abilities
-    if (player.loadoutKey === 'ION') {
-      const energyPct = player.ionEnergy / player.ionMaxEnergy;
+    // VORTEX energy: override bar to show energy level instead of cooldown for all VORTEX abilities
+    if (player.loadoutKey === 'VORTEX') {
+      const energyPct = player.vortexEnergy / player.vortexMaxEnergy;
       if (cd <= 0) barW = (energyPct * 100) + '%';
       // Show energy on idle slots
       if (cd <= 0 && !active) {
-        cdTextVal = String(Math.floor(player.ionEnergy));
+        cdTextVal = String(Math.floor(player.vortexEnergy));
       }
     }
 
-    // SCORCH Thermal Shield: bar shows power level (drains while held, recharges over 10s)
-    if (player.loadoutKey === 'SCORCH' && ability.name === 'Thermal Shield') {
+    // PYRO Thermal Shield: bar shows power level (drains while held, recharges over 10s)
+    if (player.loadoutKey === 'PYRO' && ability.name === 'Thermal Shield') {
       const powerPct = player.thermalShieldHP / player.thermalShieldMaxHP;
       barW = (powerPct * 100) + '%';
       // Keep the slot visually "ready" whenever power remains, even during recharge
@@ -10892,9 +10892,9 @@ function updateAbilityHUD() {
       }
     }
 
-    // SCORCH Incendiary Trap: charge-based (mirrors dash charges).
+    // PYRO Incendiary Trap: charge-based (mirrors dash charges).
     // Bar fills with the regen progress of the next charge; text shows current charge count.
-    if (player.loadoutKey === 'SCORCH' && ability.name === 'Incendiary Trap') {
+    if (player.loadoutKey === 'PYRO' && ability.name === 'Incendiary Trap') {
       const charges = player.trapCharges || 0;
       const maxCharges = player.maxTrapCharges || 2;
       if (charges >= maxCharges) {
@@ -12698,7 +12698,7 @@ function gameLoop(timestamp) {
   // Network: clean up stale hit claims
   if (net.active && game.time % 1 < dt) cleanupPendingHits();
 
-  // Decay enemy TONE locks on player (lose all locks after 5 seconds of no new hits)
+  // Decay enemy TRACKER locks on player (lose all locks after 5 seconds of no new hits)
   if (!player._enemyLockDecayTimers) player._enemyLockDecayTimers = {};
   for (const botId in player.enemyToneLocks) {
     if (!player._enemyLockDecayTimers[botId]) player._enemyLockDecayTimers[botId] = 0;
@@ -13800,8 +13800,8 @@ fireWeapon = function() {
   const w = player.weapon;
   if (!w) return;
   // Identify weapon character for distinct sound selection
-  const isRailgun = w.mode === 'hitscan' && w.fireRate >= 0.8; // slow charged hitscan (NORTHSTAR Plasma Railgun)
-  const isMinigun = w.mode === 'hitscan' && w.fireRate < 0.08; // rapid fire (LEGION Predator Cannon)
+  const isRailgun = w.mode === 'hitscan' && w.fireRate >= 0.8; // slow charged hitscan (PUNCTURE Plasma Railgun)
+  const isMinigun = w.mode === 'hitscan' && w.fireRate < 0.08; // rapid fire (BLASTER Predator Cannon)
   const isMissile = w.mode === 'projectile' && (w.homing || w.salvo); // homing or guided missiles
   if (isMinigun) playSound('fire_minigun');
   else if (isRailgun) playSound('fire_railgun');
