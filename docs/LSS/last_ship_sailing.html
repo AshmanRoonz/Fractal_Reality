@@ -455,15 +455,70 @@ canvas { display: block; }
 .stasis-marker-icon { width: 16px; height: 16px; border: 2px solid #00ccff; border-radius: 50%; margin: 0 auto 2px; animation: stasisPulse 1.2s infinite; }
 @keyframes stasisPulse { 0%,100% { box-shadow: 0 0 4px rgba(0,200,255,0.3); } 50% { box-shadow: 0 0 12px rgba(0,200,255,0.7); } }
 
-/* Map Selector */
-#map-select { display: none; margin-bottom: 30px; text-align: center; }
-#map-select h3 { font-size: 16px; color: #ffaa00; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; }
-#map-select-grid { display: flex; gap: 12px; justify-content: center; }
-.map-card { background: rgba(20,20,40,0.9); border: 2px solid rgba(80,80,120,0.4); padding: 16px 24px; cursor: pointer; transition: all 0.2s; width: 220px; }
-.map-card:hover { border-color: #ffaa00; background: rgba(30,30,50,0.9); transform: translateY(-2px); }
-.map-card.selected { border-color: #ffff00; background: rgba(40,40,60,0.95); }
-.map-card .map-name { font-size: 16px; font-weight: bold; color: #ffaa00; margin-bottom: 8px; }
-.map-card .map-desc { font-size: 11px; color: #aaa; line-height: 1.4; }
+/* Map Selector (horizontal strip below ship-select-body; always visible while ship-select is open) */
+#map-select {
+  display: none; padding: 14px 24px;
+  border-top: 1px solid rgba(80,80,120,0.25);
+  background: rgba(8,8,18,0.7);
+  flex-direction: column; align-items: center; gap: 8px;
+}
+#ship-select.active #map-select { display: flex; }
+#map-select-label {
+  font-size: 11px; color: #888; letter-spacing: 2px; margin-bottom: 2px;
+}
+#map-select-row {
+  display: flex; flex-direction: row; align-items: stretch; gap: 16px;
+}
+.map-arrow {
+  background: rgba(20,20,40,0.6);
+  border: 1px solid rgba(80,80,120,0.4);
+  color: #ffaa00; font-family: inherit;
+  font-size: 22px; font-weight: bold;
+  width: 44px; min-height: 72px;
+  cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: all;
+}
+.map-arrow:hover { border-color: #ffaa00; background: rgba(40,40,60,0.9); }
+.map-arrow:active { background: rgba(60,50,15,0.9); }
+#map-window {
+  width: 460px; min-height: 72px; padding: 12px 20px;
+  background: rgba(20,20,40,0.6);
+  border: 2px solid #ffaa00;
+  box-shadow: inset 0 0 12px rgba(255,170,0,0.18);
+  position: relative; text-align: center;
+}
+#map-window-check {
+  position: absolute; top: 6px; right: 10px;
+  color: #66ff66; font-size: 18px; font-weight: bold;
+  text-shadow: 0 0 6px rgba(102,255,102,0.5);
+}
+#map-window-name {
+  font-size: 18px; font-weight: bold; color: #ffaa00;
+  letter-spacing: 2px; margin-bottom: 6px;
+}
+#map-window-desc {
+  font-size: 12px; color: #aaa; line-height: 1.4;
+}
+#map-indicator {
+  display: flex; flex-direction: row; gap: 6px; margin-top: 2px;
+}
+.map-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(80,80,120,0.6); transition: all 0.15s;
+}
+.map-dot.active {
+  background: #ffaa00; box-shadow: 0 0 6px rgba(255,170,0,0.7);
+}
+/* Confirmed ship checkmark (on the highlighted entry in the ship list) */
+.ship-list-entry { position: relative; }
+.ship-list-entry.selected::after {
+  content: '\2713';
+  position: absolute; top: 50%; right: 12px;
+  transform: translateY(-50%);
+  color: #66ff66; font-weight: bold; font-size: 18px;
+  text-shadow: 0 0 6px rgba(102,255,102,0.5);
+}
 
 /* ==========================================================================
    CINEMATIC OVERLAYS (ported from lss_overlays.jsx; pure CSS animations)
@@ -856,18 +911,28 @@ canvas { display: block; }
         <div id="ship-preview-abilities" style="display:none;"></div>
         <div id="ship-preview-core" style="display:none;"></div>
         <button id="ship-preview-confirm" style="display:none;">CONFIRM &amp; LAUNCH</button>
-        <div id="map-select" style="display:none; margin-top:28px; text-align:center;">
-          <h3 style="font-size:13px;color:#ffaa00;letter-spacing:2px;margin:0 0 8px;">SELECT MAP</h3>
-          <div id="map-select-grid" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
-        </div>
       </div>
     </div>
+  </div>
+  <!-- Map selector strip (full width; always visible while ship-select is open) -->
+  <div id="map-select">
+    <div id="map-select-label">MAP</div>
+    <div id="map-select-row">
+      <button class="map-arrow" id="map-prev" title="Previous map">&#9664;</button>
+      <div id="map-window">
+        <div id="map-window-check">&#10003;</div>
+        <div id="map-window-name"></div>
+        <div id="map-window-desc"></div>
+      </div>
+      <button class="map-arrow" id="map-next" title="Next map">&#9654;</button>
+    </div>
+    <div id="map-indicator"></div>
   </div>
   <div id="teammates-strip">
     <span class="strip-label">TEAMMATES</span>
     <div id="teammates-list" style="display:flex;gap:10px;"></div>
   </div>
-  <div style="padding:8px 24px;color:#555;font-size:10px;letter-spacing:1px;background:rgba(4,4,10,0.85);">WASD: Move | SPACE/CTRL: Up/Down | MOUSE: Aim | SHIFT: Dash | Q/E/F: Abilities | V: Core | ESC: Settings&nbsp;&nbsp;&nbsp;GAMEPAD: D-Pad Up/Down: browse ships | START: launch | BACK: settings (in-match) / close menu</div>
+  <div style="padding:8px 24px;color:#555;font-size:10px;letter-spacing:1px;background:rgba(4,4,10,0.85);">WASD: Move | SPACE/CTRL: Up/Down | MOUSE: Aim | SHIFT: Dash | Q/E/F: Abilities | V: Core | ESC: Settings&nbsp;&nbsp;&nbsp;GAMEPAD: D-Pad Up/Down: ships | D-Pad Left/Right: map | START: launch | BACK: settings (in-match) / close menu</div>
   <div id="ship-select-countdown">
     <div class="cd-num">3</div>
     <div class="cd-sub">LAUNCH</div>
@@ -1386,39 +1451,84 @@ function enterShipSelect() {
   updateTeammatesStrip();
 }
 
+// Build (or rebuild) the single-window map selector. Runs each time ship-select
+// opens. The window always shows exactly one map; the dots indicate position in
+// the list; prev/next arrows (and gamepad d-pad LEFT/RIGHT) cycle through.
 function buildMapSelector() {
-  const grid = document.getElementById('map-select-grid');
-  grid.innerHTML = '';
-  
-  const mapSelectDiv = document.getElementById('map-select');
-  mapSelectDiv.style.display = 'block';
-  
-  for (const [key, mapData] of Object.entries(MAP_DATA)) {
-    const card = document.createElement('div');
-    card.className = 'map-card';
-    if (game.selectedMap === key) {
-      card.classList.add('selected');
-    }
-    card.innerHTML = `
-      <div class="map-name">${mapData.name}</div>
-      <div class="map-desc">${mapData.description}</div>
-    `;
-    card.addEventListener('click', () => selectMap(key));
-    grid.appendChild(card);
+  const keys = Object.keys(MAP_DATA);
+  if (keys.length === 0) return;
+
+  // Default selection on first entry; otherwise keep the player's last choice,
+  // so returning between rounds preserves their pick.
+  if (!game.selectedMap || !MAP_DATA[game.selectedMap]) {
+    game.selectedMap = keys[0];
   }
+
+  // Build the indicator dots (one per map).
+  const indicator = document.getElementById('map-indicator');
+  if (indicator) {
+    indicator.innerHTML = '';
+    for (const k of keys) {
+      const dot = document.createElement('div');
+      dot.className = 'map-dot';
+      dot.dataset.key = k;
+      // Clicking a dot jumps directly to that map
+      dot.addEventListener('click', () => selectMap(k));
+      dot.style.cursor = 'pointer';
+      dot.style.pointerEvents = 'all';
+      indicator.appendChild(dot);
+    }
+  }
+
+  // Rebind prev/next arrows (clone to drop any old handlers if buildMapSelector
+  // is called multiple times in one session).
+  const rebindArrow = (id, dir) => {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    const fresh = btn.cloneNode(true);
+    btn.parentNode.replaceChild(fresh, btn);
+    fresh.addEventListener('click', () => cycleMap(dir));
+  };
+  rebindArrow('map-prev', -1);
+  rebindArrow('map-next',  1);
+
+  // Render the window contents for the currently-selected map.
+  selectMap(game.selectedMap);
 }
 
+// Set the current map by key; update the window contents, the active dot, and
+// the checkmark. Safe to call directly (used by click handlers and cycleMap).
 function selectMap(mapKey) {
+  if (!MAP_DATA[mapKey]) return;
   game.selectedMap = mapKey;
-  
-  // Update visual selection
-  const cards = document.querySelectorAll('.map-card');
-  cards.forEach(card => card.classList.remove('selected'));
-  
-  const selectedCard = event.currentTarget;
-  if (selectedCard) {
-    selectedCard.classList.add('selected');
+  const mapData = MAP_DATA[mapKey];
+
+  const nameEl = document.getElementById('map-window-name');
+  if (nameEl) nameEl.textContent = mapData.name;
+  const descEl = document.getElementById('map-window-desc');
+  if (descEl) descEl.textContent = mapData.description;
+
+  // Check is always visible in the current design (a map is always selected).
+  // Kept conditional so future states (no map chosen) can toggle it off.
+  const checkEl = document.getElementById('map-window-check');
+  if (checkEl) checkEl.style.display = 'block';
+
+  // Active dot
+  const dots = document.querySelectorAll('#map-indicator .map-dot');
+  dots.forEach(d => d.classList.toggle('active', d.dataset.key === mapKey));
+}
+
+// Cycle to the prev (-1) or next (+1) map, wrapping at either end.
+function cycleMap(dir) {
+  const keys = Object.keys(MAP_DATA);
+  if (keys.length === 0) return;
+  if (!game.selectedMap || !MAP_DATA[game.selectedMap]) {
+    selectMap(keys[0]);
+    return;
   }
+  const idx = keys.indexOf(game.selectedMap);
+  const next = ((idx + dir) % keys.length + keys.length) % keys.length;
+  selectMap(keys[next]);
 }
 
 function updateLobbyPeers() {
@@ -9661,6 +9771,8 @@ function pollGamepad() {
   input.gpScoreboardPrev = input.gpScoreboard;
   input.gpDpadUpPrev = input.gpDpadUp;
   input.gpDpadDownPrev = input.gpDpadDown;
+  input.gpDpadLeftPrev = input.gpDpadLeft;
+  input.gpDpadRightPrev = input.gpDpadRight;
 
   // Buttons (via configurable bindings)
   input.gpFire = gpBtn('fire');
@@ -9681,6 +9793,14 @@ function pollGamepad() {
   // below whenever a menu is active, so there's no double-fire.
   input.gpDpadUp = !!(gp.buttons[12] && (gp.buttons[12].pressed || gp.buttons[12].value > input.triggerThreshold));
   input.gpDpadDown = !!(gp.buttons[13] && (gp.buttons[13].pressed || gp.buttons[13].value > input.triggerThreshold));
+  // D-pad LEFT/RIGHT (buttons 14/15) and left-stick horizontal fallback for menu nav.
+  // Stick threshold 0.6 matches the d-pad feel; only registers when the user pushes hard.
+  const _gpDpadLeftBtn  = !!(gp.buttons[14] && (gp.buttons[14].pressed || gp.buttons[14].value > input.triggerThreshold));
+  const _gpDpadRightBtn = !!(gp.buttons[15] && (gp.buttons[15].pressed || gp.buttons[15].value > input.triggerThreshold));
+  const _gpStickLeft  = (gp.axes[0] !== undefined && gp.axes[0] < -0.6);
+  const _gpStickRight = (gp.axes[0] !== undefined && gp.axes[0] >  0.6);
+  input.gpDpadLeft  = _gpDpadLeftBtn  || _gpStickLeft;
+  input.gpDpadRight = _gpDpadRightBtn || _gpStickRight;
 
   // ---- Menu navigation (runs before gameplay edge triggers) ----
   const _shipSelect = document.getElementById('ship-select');
@@ -9715,7 +9835,9 @@ function pollGamepad() {
     }
   }
 
-  // D-pad up/down while ship-select is open: cycle the ship list
+  // D-pad up/down while ship-select is open: cycle the ship list.
+  // D-pad left/right (or left-stick horizontal): cycle the map window.
+  // START confirms whatever is currently highlighted (ship + map together).
   if (_shipSelectActive) {
     const entries = Array.from(document.querySelectorAll('.ship-list-entry'));
     if (entries.length) {
@@ -9729,6 +9851,11 @@ function pollGamepad() {
         const key = entries[idx] && entries[idx].dataset && entries[idx].dataset.key;
         if (key) previewLoadout(key);
       }
+    }
+    if (input.gpDpadLeft && !input.gpDpadLeftPrev) {
+      if (typeof cycleMap === 'function') cycleMap(-1);
+    } else if (input.gpDpadRight && !input.gpDpadRightPrev) {
+      if (typeof cycleMap === 'function') cycleMap(1);
     }
   }
 
