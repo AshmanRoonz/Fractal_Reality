@@ -893,6 +893,10 @@ const LSS = {
   ROUND_TIME: 180, WARMUP_TIME: 5, ROUNDS_TO_WIN: 4,
   SPAWN_PROTECTION: 3, DOOMED_HEALTH_PCT: 0.15, DOOMED_TIMER: 10,
   GRAVITY: 0, ARENA_SIZE: 25000, TICK_RATE: 60,
+  // Seconds shown on the in-screen 3-2-1-LAUNCH ticker. The round-system
+  // warmupTimer is kept in lockstep with this so bots stay in 'warmup' (no
+  // firing, no movement) for the full duration of the visible countdown.
+  LAUNCH_COUNTDOWN: 10,
 };
 
 // ---- CHASSIS DEFINITIONS ----
@@ -6453,8 +6457,11 @@ function commitLoadout(key) {
     });
   }
 
-  // Keep 3s warmup so it syncs with the 3-2-1-LAUNCH ship-select countdown.
-  game.warmupTimer = 3.0;
+  // Hold the round in 'warmup' for the full duration of the visible
+  // ship-select countdown; otherwise the warmup elapses partway through and
+  // bots become live behind the scenes while the player is still ticking
+  // down to LAUNCH.
+  game.warmupTimer = LSS.LAUNCH_COUNTDOWN;
   // Refresh the teammates strip so the newly committed ship shows up as YOU's pick.
   updateTeammatesStrip();
   // Fire the in-screen 3-2-1-LAUNCH beep + number sequence.
@@ -8834,9 +8841,10 @@ function updateRoundSystem(dt) {
       } else {
         game.currentRound++;
         game.state = 'warmup';
-        // Round warmup now runs through the ship-select screen so the player can
-        // swap ships between rounds. 3s lines up with the 3-2-1-LAUNCH beeps.
-        game.warmupTimer = 3.0;
+        // Round warmup runs through the ship-select screen so the player can
+        // swap ships between rounds; matches the visible launch countdown so
+        // bots stay holstered until LAUNCH.
+        game.warmupTimer = LSS.LAUNCH_COUNTDOWN;
         // Next map from rotation each round
         const level = getNextMap();
         buildRoomGraphLevel(level);
@@ -10415,10 +10423,12 @@ function launchCountdown() {
     numEl.style.animation = '';
   }
 
-  // 10 → 9 → ... → 4 (silent), then 3 → 2 → 1 → LAUNCH at 1s intervals with
+  // START → ... → 4 (silent), then 3 → 2 → 1 → LAUNCH at 1s intervals with
   // rising-pitch beeps (sonar_ping_1/2/3) for the final three and round_start
   // on LAUNCH. The silent head gives players time to settle before the pings.
-  const START = 10;
+  // START is shared with game.warmupTimer so the round system stays in
+  // 'warmup' (no bot firing/movement) for the full visible countdown.
+  const START = LSS.LAUNCH_COUNTDOWN;
   // First tick immediate (no sound).
   tick(String(START), 'LAUNCH IN');
   // Silent body: START-1 → 4.
