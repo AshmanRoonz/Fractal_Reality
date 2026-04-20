@@ -1575,28 +1575,12 @@ document.body.appendChild(renderer.domElement);
 
 const postFX = { enabled: true };
 
-// Render scale for the post-processing offscreen target.
-// Composite (ACES + bloom + chromatic aberration + lens dirt + grain + vignette) is expensive
-// per-pixel; running it at device-pixel resolution on a retina display is 4x the GPU work.
-// 1.0 = CSS pixel resolution; push to 1.25 or 1.5 if the scene looks too soft.
-postFX.renderScale = 1.0;
-
-function _postFXTargetSize() {
-  const s = postFX.renderScale;
-  return {
-    w: Math.max(1, Math.floor(window.innerWidth  * s)),
-    h: Math.max(1, Math.floor(window.innerHeight * s))
-  };
-}
-
 // Render target: scene renders here first, then post-processed to screen
-{
-  const { w, h } = _postFXTargetSize();
-  postFX.rtScene = new THREE.WebGLRenderTarget(
-    w, h,
-    { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat }
-  );
-}
+postFX.rtScene = new THREE.WebGLRenderTarget(
+  window.innerWidth * Math.min(window.devicePixelRatio, 2),
+  window.innerHeight * Math.min(window.devicePixelRatio, 2),
+  { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat }
+);
 
 // Bloom: extract bright pixels, blur, composite
 postFX.rtBright = new THREE.WebGLRenderTarget(
@@ -2446,46 +2430,23 @@ function buildModelShipMesh(chassisData, teamColor, loadoutKey) {
   const proto = shipModelCache.loaded[loadoutKey];
   const teamCol = new THREE.Color(teamColor);
 
-  // Clone and retint materials. Some glTF source packs (Quaternius) ship with
-  // colored materials baked in; others (Poly.pizza submissions for ion, monarch,
-  // legion) ship plain white/grey. Detect untextured low-saturation materials
-  // and replace their hue with the team color so every loadout reads as a
-  // fleet ship. Colorful source materials keep their look with just a gentle
-  // team tint. Textured materials are never hue-shifted (texture wins).
-  const teamHsl = { h: 0, s: 0, l: 0 };
-  teamCol.getHSL(teamHsl);
+  // Clone and retint materials (preserve baseColor texture and vertex colors,
+  // add a subtle team-color emissive so you can still tell sides apart).
   const model = proto.clone(true);
   model.traverse(child => {
     if (child.isMesh) {
       const mats = Array.isArray(child.material) ? child.material : [child.material];
       const newMats = mats.map(m => {
-        const hasTex = !!(m && m.map);
-        const origColor = (m && m.color) ? m.color.clone() : new THREE.Color(0xbfc4d2);
-        const hsl = { h: 0, s: 0, l: 0 };
-        origColor.getHSL(hsl);
-        const isGrey = !hasTex && hsl.s < 0.18;
-        let finalColor;
-        if (isGrey) {
-          // Preserve original lightness (keeps shading & panel contrast);
-          // inherit team hue + saturation. Clamp lightness so we don't land
-          // on pure black or pure white which would wash the team hue out.
-          const lightness = Math.min(0.72, Math.max(0.28, hsl.l));
-          finalColor = new THREE.Color().setHSL(teamHsl.h, teamHsl.s, lightness);
-        } else {
-          // Already colored or textured; gentle team-lean so squads still read.
-          finalColor = origColor.clone().lerp(teamCol, 0.15);
-        }
-        const emStrength = isGrey ? 0.22 : 0.08;
         const params = {
           specular: 0x333344, shininess: 80,
-          emissive: teamCol.clone().multiplyScalar(emStrength),
+          emissive: teamCol.clone().multiplyScalar(0.08),
           emissiveIntensity: 1.0,
           transparent: !!(m && m.transparent),
           opacity: (m && m.opacity != null) ? m.opacity : 1.0,
-          color: finalColor,
         };
-        if (hasTex) params.map = m.map;
+        if (m && m.map) params.map = m.map;
         if (m && m.vertexColors) params.vertexColors = true;
+        params.color = (m && m.color) ? m.color.clone() : new THREE.Color(0xbfc4d2);
         return new THREE.MeshPhongMaterial(params);
       });
       child.material = newMats.length === 1 ? newMats[0] : newMats;
@@ -4963,150 +4924,49 @@ function spawnLightningBolt(from, to, color, lifetime, branches, thickness) {
 }
 
 const MAX_PARTICLES = 500;
-
-// ---- GPU-batched particle renderer ----
-// All of game.particles (embers, sparks, smoke motes, muzzle dots, trail
-// flecks) draws in ONE Points draw call via a custom ShaderMaterial.
-// Previously each particle allocated its own Mesh + MeshBasicMaterial and was
-// added to the scene graph on spawn; that meant up to 500 scene objects, 500
-// material instances, and 500 draw calls per frame just for particles,
-// which chewed CPU. The new path pre-allocates BufferAttribute pools sized
-// to MAX_PARTICLES and updates them in-place. JS work per particle is now a
-// handful of typed-array writes instead of a Three.js object mutation.
-//
-// Perspective scaling: gl_PointSize is computed in the vertex shader from
-// the world-space size attribute and the viewport height uniform, so a
-// particle with size=2 covers the same apparent area at any distance as
-// the equivalent sphere mesh did.
-const batchedParticles = (() => {
-  const geometry = new THREE.BufferGeometry();
-  const positions = new Float32Array(MAX_PARTICLES * 3);
-  const colors    = new Float32Array(MAX_PARTICLES * 3);
-  const sizes     = new Float32Array(MAX_PARTICLES);
-  const alphas    = new Float32Array(MAX_PARTICLES);
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  geometry.setAttribute('pColor',   new THREE.BufferAttribute(colors, 3));
-  geometry.setAttribute('pSize',    new THREE.BufferAttribute(sizes, 1));
-  geometry.setAttribute('pAlpha',   new THREE.BufferAttribute(alphas, 1));
-  geometry.setDrawRange(0, 0);
-
-  const vertSrc = [
-    'attribute vec3 pColor;',
-    'attribute float pSize;',
-    'attribute float pAlpha;',
-    'varying vec3 vColor;',
-    'varying float vAlpha;',
-    'uniform float heightPx;',
-    'void main() {',
-    '  vColor = pColor;',
-    '  vAlpha = pAlpha;',
-    '  vec4 mvPos = modelViewMatrix * vec4(position, 1.0);',
-    '  gl_Position = projectionMatrix * mvPos;',
-    // Perspective-correct point size in pixels. projectionMatrix[1][1] is
-    // the vertical scale factor; dividing by -mvPos.z (view-space depth)
-    // maps a world-space radius to screen pixels at this pixel density.
-    '  gl_PointSize = max(2.0, pSize * heightPx * 0.5 * projectionMatrix[1][1] / max(0.01, -mvPos.z));',
-    '}'
-  ].join('\n');
-
-  const fragSrc = [
-    'varying vec3 vColor;',
-    'varying float vAlpha;',
-    'void main() {',
-    '  vec2 d = gl_PointCoord - vec2(0.5);',
-    '  float r2 = dot(d, d) * 4.0;',
-    '  if (r2 > 1.0) discard;',
-    '  float fall = exp(-r2 * 3.2);',
-    '  gl_FragColor = vec4(vColor * fall, vAlpha * fall);',
-    '}'
-  ].join('\n');
-
-  const material = new THREE.ShaderMaterial({
-    vertexShader: vertSrc,
-    fragmentShader: fragSrc,
-    uniforms: { heightPx: { value: window.innerHeight } },
-    transparent: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-  });
-
-  const points = new THREE.Points(geometry, material);
-  points.frustumCulled = false;
-  scene.add(points);
-
-  return { geometry, positions, colors, sizes, alphas, material, points };
-})();
+const _sharedParticleGeo = new THREE.SphereGeometry(1, 4, 3); // shared; scale per particle
 
 function cullOldestParticle() {
-  // Remove the particle with the least remaining life. No mesh to dispose
-  // under the batched path; the particle is just a JS record.
+  // Remove the particle with the least remaining life
   let oldestIdx = 0, lowestLife = Infinity;
   for (let i = 0; i < game.particles.length; i++) {
     if (game.particles[i].life < lowestLife) { lowestLife = game.particles[i].life; oldestIdx = i; }
   }
+  const p = game.particles[oldestIdx];
+  if (p.mesh) { scene.remove(p.mesh); p.mesh.material.dispose(); }
   game.particles.splice(oldestIdx, 1);
 }
 
 function updateParticles(dt) {
-  // Cap particle count: cull oldest when over budget.
+  // Cap particle count: cull oldest when over budget
   while (game.particles.length > MAX_PARTICLES) cullOldestParticle();
 
   const arenaLimit = LSS.ARENA_SIZE;
-  const positions = batchedParticles.positions;
-  const colors    = batchedParticles.colors;
-  const sizes     = batchedParticles.sizes;
-  const alphas    = batchedParticles.alphas;
-
-  // Single pass: step physics + pack into buffers. Dead particles are
-  // skipped (not written into the buffer), so the draw range shrinks
-  // naturally. We still splice dead entries out of game.particles so the
-  // length bookkeeping for spawn budget stays correct, but only after the
-  // pass; compacting in reverse keeps indices stable.
-  let slot = 0;
-  for (let i = 0; i < game.particles.length; i++) {
+  for (let i = game.particles.length - 1; i >= 0; i--) {
     const p = game.particles[i];
     p.life -= dt;
+    // Kill expired particles and those outside arena bounds
     const pos = p.position;
+    if (p.life <= 0 || Math.abs(pos.x) > arenaLimit || Math.abs(pos.y) > arenaLimit || Math.abs(pos.z) > arenaLimit) {
+      if (p.mesh) { scene.remove(p.mesh); p.mesh.material.dispose(); }
+      game.particles.splice(i, 1);
+      continue;
+    }
     pos.x += p.velocity.x * dt;
     pos.y += p.velocity.y * dt;
     pos.z += p.velocity.z * dt;
-    p.velocity.multiplyScalar(0.95);
-    if (p.life <= 0 || Math.abs(pos.x) > arenaLimit || Math.abs(pos.y) > arenaLimit || Math.abs(pos.z) > arenaLimit) {
-      p._dead = true;
-      continue;
-    }
-    p._dead = false;
-    if (slot >= MAX_PARTICLES) continue;
-    const j = slot * 3;
-    positions[j]   = pos.x;
-    positions[j+1] = pos.y;
-    positions[j+2] = pos.z;
-    // Cache rgb triple on the particle so we don't re-parse the color each
-    // frame (colors are immutable for the particle's lifetime).
-    if (p._rgb === undefined) {
-      const c = new THREE.Color(p.color);
-      p._rgb = [c.r, c.g, c.b];
-    }
-    colors[j]   = p._rgb[0];
-    colors[j+1] = p._rgb[1];
-    colors[j+2] = p._rgb[2];
+    p.velocity.multiplyScalar(0.95); // drag on particles
     const alpha = p.life / p.maxLife;
-    sizes[slot]  = p.size * (0.5 + alpha * 0.5);
-    alphas[slot] = alpha;
-    slot++;
+    if (!p.mesh) {
+      const mat = new THREE.MeshBasicMaterial({ color: p.color, transparent: true, opacity: alpha, blending: THREE.AdditiveBlending });
+      p.mesh = new THREE.Mesh(_sharedParticleGeo, mat); // shared geometry
+      p.mesh.scale.setScalar(p.size);
+      scene.add(p.mesh);
+    }
+    p.mesh.position.copy(pos);
+    p.mesh.material.opacity = alpha;
+    p.mesh.scale.setScalar(p.size * (0.5 + alpha * 0.5));
   }
-
-  // Compact: drop dead entries. Reverse walk keeps surviving indices valid.
-  for (let i = game.particles.length - 1; i >= 0; i--) {
-    if (game.particles[i]._dead) game.particles.splice(i, 1);
-  }
-
-  const geom = batchedParticles.geometry;
-  geom.attributes.position.needsUpdate = true;
-  geom.attributes.pColor.needsUpdate = true;
-  geom.attributes.pSize.needsUpdate = true;
-  geom.attributes.pAlpha.needsUpdate = true;
-  geom.setDrawRange(0, slot);
 }
 
 const MAX_EFFECTS = 350;
@@ -5344,74 +5204,6 @@ function spawnImpactSparks(pos, count) {
   // --- Dynamic lights: impact flash + warm glow ---
   spawnDynamicLight(pos, 0xffffff, 3.0, 200, 0.05);   // white flash
   spawnDynamicLight(pos, 0xffcc44, 2.0, 300, 0.2);     // warm afterglow
-}
-
-// ---- SHADER PRE-WARM ----
-// WebGL compiles a shader program the first time a unique material/blending/
-// transparent/depth/wireframe/linewidth permutation is drawn. In combat, a
-// flurry of explosion phases, impact sparks, tracers, lightning bolts, shield
-// hits, and damage smoke all spawn at once, each producing its own program;
-// the first fight stutters while the driver compiles ~15-20 programs in the
-// frame they first appear. After that, the driver cache smooths everything
-// out (which is why it "gets faster as it goes on").
-//
-// This runs once at init: spawn one of every combat effect variant at a far-
-// off position, call renderer.compile() to force GLSL compilation against the
-// current scene/camera, then age-out the effects before gameplay begins. All
-// the permutations are in the driver cache by the time the first gunfight
-// fires a bullet.
-function precompileCombatShaders() {
-  try {
-    const origParticleCount = game.particles.length;
-    const origEffectCount = game.effects.length;
-    const farPos = new THREE.Vector3(100000, 100000, 100000); // outside draw/visibility
-
-    // Big explosion: flash, flare, fire, core, shockwave (flat + torus + 2nd torus),
-    // smoke, embers, debris chunks, dynamic lights. size > 30 triggers every phase.
-    spawnExplosion(farPos, 40);
-
-    // Tracer beam: core + beam + glow + flare + trail particles.
-    spawnTracer(farPos, farPos.clone().add(new THREE.Vector3(500, 0, 0)), 0xffff00);
-
-    // Lightning bolt: core + glow LineBasicMaterials with additive blending.
-    spawnLightningBolt(farPos, farPos.clone().add(new THREE.Vector3(0, 500, 0)), 0x44aaff, 0.2, 3, 2);
-
-    // Impact sparks: flash + sparks + secondary particles + scorch puff.
-    spawnImpactSparks(farPos, 6);
-
-    // Shield hit: wireframe additive sphere.
-    spawnShieldHit(farPos, 40, 0x4488ff);
-
-    // Damage smoke: force-emit regardless of health percent by seeding particles directly.
-    // (spawnDamageSmoke's early-out would skip us at any healthPct the init code picks.)
-    game.particles.push({
-      position: farPos.clone(), velocity: new THREE.Vector3(0, 20, 0),
-      life: 0.01, maxLife: 0.8, color: 0x222222, size: 6
-    });
-    game.particles.push({
-      position: farPos.clone(), velocity: new THREE.Vector3(0, 30, 0),
-      life: 0.01, maxLife: 0.3, color: 0xff6600, size: 3
-    });
-
-    // Force all queued programs to compile now.
-    renderer.compile(scene, camera);
-
-    // Age everything out and clean up (skip the usual per-type animation by
-    // using a dt larger than any effect's lifetime). Pass a fake deltaTime so
-    // updateParticles doesn't see NaN / 0.
-    game.deltaTime = 10;
-    updateEffects(10);
-    updateParticles(10);
-    game.deltaTime = 0;
-
-    console.log(
-      'Precompiled combat shaders (',
-      (game.effects.length - origEffectCount) + ' residual effects,',
-      (game.particles.length - origParticleCount) + ' residual particles)'
-    );
-  } catch (err) {
-    console.warn('Shader pre-warm skipped:', err);
-  }
 }
 
 // ---- PLAYER FUNCTIONS ----
@@ -8821,13 +8613,11 @@ function updateMinimap() {
   const cx = 75, cy = 75;
 
   // Draw tunnel cylinders as lines
-  // Note: screenX uses (cx - worldX * scale) so east/west on the radar matches the player's
-  // actual right/left in-world (fixes the mirror-on-vertical-axis flip).
   ctx.strokeStyle = 'rgba(60,70,100,0.35)';
   ctx.lineWidth = 2;
   for (const c of (game.levelCylinders || [])) {
-    const x1 = cx - c.ax * scale, y1 = cy - c.az * scale;
-    const x2 = cx - c.bx * scale, y2 = cy - c.bz * scale;
+    const x1 = cx + c.ax * scale, y1 = cy - c.az * scale;
+    const x2 = cx + c.bx * scale, y2 = cy - c.bz * scale;
     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
   }
 
@@ -8836,12 +8626,12 @@ function updateMinimap() {
   ctx.strokeStyle = 'rgba(80,90,130,0.4)';
   ctx.lineWidth = 1;
   for (const s of (game.levelSpheres || [])) {
-    const sx = cx - s.cx * scale, sy = cy - s.cz * scale, sr = s.r * scale;
+    const sx = cx + s.cx * scale, sy = cy - s.cz * scale, sr = s.r * scale;
     ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
   }
 
   // Player
-  const px = cx - player.position.x * scale;
+  const px = cx + player.position.x * scale;
   const py = cy - player.position.z * scale;
   ctx.fillStyle = '#fff';
   ctx.fillRect(px - 2, py - 2, 4, 4);
@@ -8851,13 +8641,13 @@ function updateMinimap() {
   ctx.strokeStyle = 'rgba(255,255,255,0.5)';
   ctx.beginPath();
   ctx.moveTo(px, py);
-  ctx.lineTo(px - forward.x * 15, py - forward.z * 15);
+  ctx.lineTo(px + forward.x * 15, py - forward.z * 15);
   ctx.stroke();
 
   // Bots
   for (const bot of game.entities) {
     if (!bot.alive) continue;
-    const bx = cx - bot.position.x * scale;
+    const bx = cx + bot.position.x * scale;
     const by = cy - bot.position.z * scale;
     ctx.fillStyle = bot.team === LSS.TEAM_FLEET_A ? '#ff4444' : '#44bb44';
     ctx.fillRect(bx - 2, by - 2, 3, 3);
@@ -8874,7 +8664,7 @@ function updateMinimap() {
   // Stasis fields (pulsing cyan diamonds)
   for (const field of game.stasisFields) {
     if (!field.alive) continue;
-    const fx = cx - field.position.x * scale;
+    const fx = cx + field.position.x * scale;
     const fy = cy - field.position.z * scale;
     const pulse = 0.5 + Math.sin(game.time * 4) * 0.3;
     ctx.fillStyle = `rgba(0,200,255,${pulse})`;
@@ -9106,19 +8896,14 @@ window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
-  // Resize post-processing render targets at the configured render scale
-  // (NOT devicePixelRatio; composite is too expensive at 4x pixel count on retina)
-  const { w, h } = _postFXTargetSize();
+  // Resize post-processing render targets
+  const dpr = Math.min(window.devicePixelRatio, 2);
+  const w = window.innerWidth * dpr, h = window.innerHeight * dpr;
   postFX.rtScene.setSize(w, h);
-  postFX.rtBright.setSize(Math.max(1, Math.floor(w / 2)), Math.max(1, Math.floor(h / 2)));
-  postFX.rtBlurH.setSize(Math.max(1, Math.floor(w / 2)), Math.max(1, Math.floor(h / 2)));
-  postFX.rtBlurV.setSize(Math.max(1, Math.floor(w / 2)), Math.max(1, Math.floor(h / 2)));
+  postFX.rtBright.setSize(Math.floor(w / 2), Math.floor(h / 2));
+  postFX.rtBlurH.setSize(Math.floor(w / 2), Math.floor(h / 2));
+  postFX.rtBlurV.setSize(Math.floor(w / 2), Math.floor(h / 2));
   postFX.blurMat.uniforms.resolution.value.set(Math.floor(w / 2), Math.floor(h / 2));
-  // Keep the batched particle shader's perspective scaler in sync with the
-  // real viewport height so point sprites stay the right size on-screen.
-  if (typeof batchedParticles !== 'undefined' && batchedParticles.material && batchedParticles.material.uniforms.heightPx) {
-    batchedParticles.material.uniforms.heightPx.value = window.innerHeight;
-  }
 });
 
 // ---- SETTINGS PAGE ----
@@ -9913,23 +9698,13 @@ function buildRoomGraphLevel(level) {
       '    float d = length(vWorldPos - roomCenters[i]);',
       '    if (d < minD) { minD = d; zoneColor = roomColorsU[i]; nearC = roomCenters[i]; nearR = roomRadii[i]; }',
       '  }',
-      // Normalize the zone color for tinting: preserves hue & saturation, but
-      // scales the brightness so darker palette entries tint the walls as
-      // vividly as lighter ones. Without this, a room whose palette color is
-      // 0x1a3050 contributes only ~(0.10, 0.19, 0.31) to every tint term and
-      // the walls read as near-black with pale fractal threads instead of
-      // showing the intended zone hue.
-      '  float zMax = max(zoneColor.r, max(zoneColor.g, zoneColor.b));',
-      '  vec3 zoneTint = zoneColor / max(0.04, zMax);',
       // Fraction along the nearest room's vertical extent: 0 at floor, 1 at
       // ceiling. Works for both spherical rooms and cylindrical tunnels: any
       // surface gets placed along the local vertical axis, which is what we
       // want since the rooms/tunnels are rotationally symmetric.
       '  float heightFrac = clamp((vWorldPos.y - (nearC.y - nearR)) / (2.0 * nearR), 0.0, 1.0);',
       // Base: very dark, slight zone tint. Kept dark so the bright fractal pops.
-      // Uses the normalized tint so dark rooms still read as "blue room" /
-      // "red room" instead of collapsing to near-black ambient.
-      '  vec3 dark = vec3(0.010, 0.012, 0.022) + zoneTint * 0.08;',
+      '  vec3 dark = vec3(0.010, 0.012, 0.022) + zoneColor * 0.20;',
       '  vec3 c = dark;',
       // Cosmic Kali IFS fractal: the sole wall texture. Evaluated at the
       // vertex world position, steered by the zone color into a hue band,
@@ -9937,18 +9712,15 @@ function buildRoomGraphLevel(level) {
       // walls, ceiling) so the dancing fractal surrounds the player. A
       // gentle pulse breathes the whole pattern; a second faster shimmer
       // adds sparkle. No floor-up fade; no grid.
-      // Hue source is the normalized tint so dark palette entries steer the
-      // fractal just as clearly as saturated ones.
       '  float fracPulse = 0.92 + 0.12 * sin(time * 0.35);',
       '  float shimmer   = 0.90 + 0.18 * sin(time * 1.10 + vWorldPos.x * 0.003 + vWorldPos.z * 0.003);',
-      '  vec3 cosmic = cosmicField(vWorldPos, zoneTint, time);',
+      '  vec3 cosmic = cosmicField(vWorldPos, zoneColor, time);',
       '  c += cosmic * fracPulse * shimmer * 3.4;',
-      // Soft diffuse + rim so surfaces still read in 3D. Fresnel edge uses the
-      // normalized tint so dark rooms get a clean colored rim at grazing angles.
+      // Soft diffuse + rim so surfaces still read in 3D.
       '  vec3 vd = normalize(cameraPosition - vWorldPos);',
       '  float diff = max(dot(vNormal, vd), 0.0) * 0.35 + 0.65;',
       '  float fresnelFactor = pow(1.0 - abs(dot(vNormal, vd)), 3.0);',
-      '  c += zoneTint * 1.6 * fresnelFactor * 0.5;',
+      '  c += zoneColor * 1.8 * fresnelFactor * 0.5;',
       '  c *= diff * vAO;',
       // Upper half is one-way transparent: interior (front-face) fades toward
       // low alpha above heightFrac ~0.5 so players still see the starfield
@@ -10551,27 +10323,8 @@ function gameLoop(timestamp) {
   updateEffects(dt);
   updateScreenShake(dt);
   updateDamageIndicators(dt);
-
-  // Throttle overlay work: Canvas2D minimap redraws and DOM-heavy HUD text writes
-  // were running at 60+ Hz. The minimap only needs ~15 Hz to feel responsive; HUD
-  // text (timers, scores, labels) only changes at human-readable speed.
-  if (!game._minimapAccum) game._minimapAccum = 0;
-  if (!game._hudAccum)     game._hudAccum = 0;
-  game._minimapAccum += dt;
-  game._hudAccum     += dt;
-  const MINIMAP_INTERVAL = 1 / 15;
-  const HUD_INTERVAL     = 1 / 20;
-  if (game._hudAccum >= HUD_INTERVAL) {
-    game._hudAccum = 0;
-    updateHUD();
-  } else {
-    // Ability cooldown bars still need smooth motion; update only that slice each frame.
-    if (typeof updateAbilityHUD === 'function') updateAbilityHUD();
-  }
-  if (game._minimapAccum >= MINIMAP_INTERVAL) {
-    game._minimapAccum = 0;
-    updateMinimap();
-  }
+  updateHUD();
+  updateMinimap();
   updateEnemyHealthBars();
 
   // Apply screen shake offset to camera (skip during death cam)
@@ -11356,11 +11109,6 @@ buildSettingsPage();
 // Hook audio init on first user interaction
 document.addEventListener('click', initAudio, { once: false });
 document.addEventListener('keydown', initAudio, { once: false });
-
-// Pre-warm combat effect shaders so the first gunfight doesn't stall while
-// the driver compiles explosion / spark / tracer / lightning / shield-hit
-// programs on their first draw.
-precompileCombatShaders();
 
 requestAnimationFrame(gameLoop);
 
