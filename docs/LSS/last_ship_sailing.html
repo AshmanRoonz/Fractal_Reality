@@ -6022,40 +6022,126 @@ function spawnImpactSparks(pos, count) {
 // (relative to this HTML file). Missing files fail silently: if the image 404s, the
 // overlay stays hidden so gameplay is never blocked on art assets shipping in.
 // Cached per-key so we only probe the network once per ship.
-const _cockpitFrameCache = {}; // key -> 'ok' or 'missing' or the loaded Image
+// ChatGPT-generated frames rarely put the painted barrel tips at the exact pixel
+// coordinates the procedural guns target, so on load we alpha-scan each half of
+// the image and detect where the painted barrels actually point. That detected
+// tip is then used as the muzzle-flash origin on the HUD canvas, so flash lines
+// up with the painted art even when the art drifts by a few percent.
+const _cockpitFrameCache = {}; // key -> { status: 'ok'|'missing', muzzle?: {...} }
+
+// Alpha-channel scan to find where the two painted gun-barrel tips point. For
+// each half of the image (left half, right half) we sweep rows top-to-bottom in
+// the lower 2/3 of the image looking for the first row where a noticeable opaque
+// band appears; that's the painted tip. We then sample the next ~16 rows below
+// and take the median x-center so we lock onto the barrel's long axis, not a
+// single-pixel tip-corner. Returns { imgW, imgH, left: {x,y}, right: {x,y} } in
+// image-native coords, or null if either tip can't be found cleanly.
+function detectFrameMuzzlePoints(img) {
+  try {
+    const iw = img.naturalWidth, ih = img.naturalHeight;
+    if (iw < 100 || ih < 100) return null;
+    const cv = document.createElement('canvas');
+    cv.width = iw; cv.height = ih;
+    const cx = cv.getContext('2d');
+    cx.drawImage(img, 0, 0);
+    const data = cx.getImageData(0, 0, iw, ih).data;
+    const MIN_RUN = Math.max(6, Math.floor(iw * 0.01)); // ignore specks smaller than ~1% wide
+    const findTipInHalf = (x0, x1) => {
+      const yStart = Math.floor(ih * 0.30);
+      const yEnd = Math.floor(ih * 0.98);
+      let tipY = -1;
+      for (let y = yStart; y <= yEnd; y++) {
+        let runStart = -1, runEnd = -1;
+        for (let x = x0; x < x1; x++) {
+          const a = data[(y * iw + x) * 4 + 3];
+          if (a > 40) {
+            if (runStart < 0) runStart = x;
+            runEnd = x;
+          }
+        }
+        if (runStart >= 0 && (runEnd - runStart) > MIN_RUN) {
+          tipY = y;
+          break;
+        }
+      }
+      if (tipY < 0) return null;
+      // Sample a band below the tip and median the horizontal centers.
+      const yOff = Math.min(Math.floor(ih * 0.015), yEnd - tipY);
+      const centers = [];
+      for (let y = tipY; y <= tipY + yOff; y++) {
+        let rS = -1, rE = -1;
+        for (let x = x0; x < x1; x++) {
+          const a = data[(y * iw + x) * 4 + 3];
+          if (a > 40) {
+            if (rS < 0) rS = x;
+            rE = x;
+          }
+        }
+        if (rS >= 0) centers.push((rS + rE) / 2);
+      }
+      if (centers.length === 0) return null;
+      centers.sort((a, b) => a - b);
+      const medX = centers[Math.floor(centers.length / 2)];
+      return { x: medX, y: tipY };
+    };
+    const halfW = Math.floor(iw / 2);
+    const left = findTipInHalf(0, halfW);
+    const right = findTipInHalf(halfW, iw);
+    if (!left || !right) return null;
+    return { imgW: iw, imgH: ih, left: left, right: right };
+  } catch (e) {
+    // CORS taint, decode failure, whatever: detection is best-effort.
+    return null;
+  }
+}
+
+// Translate an image-space (ix, iy) coord to screen coords assuming the PNG is
+// displayed at background-size: cover on a W x H container (image scaled up to
+// fully cover the element, aspect preserved, overflow cropped equally on both
+// sides of the over-sized axis).
+function frameImgToScreen(ix, iy, imgW, imgH, W, H) {
+  const scale = Math.max(W / imgW, H / imgH);
+  const sw = imgW * scale, sh = imgH * scale;
+  const ox = (sw - W) / 2, oy = (sh - H) / 2;
+  return { x: ix * scale - ox, y: iy * scale - oy };
+}
+
 function updateCockpitFrame() {
   const el = document.getElementById('cockpit-frame');
   if (!el) return;
   const key = (player && player.loadoutKey) || null;
-  if (!key) { el.classList.remove('active'); el.style.backgroundImage = ''; return; }
-  const url = './frames/' + key + '.png';
-  const cached = _cockpitFrameCache[key];
-  if (cached === 'missing') {
+  if (!key) {
     el.classList.remove('active');
     el.style.backgroundImage = '';
+    if (player) player.cockpitFrameMuzzle = null;
     return;
   }
-  if (cached === 'ok') {
+  const url = './frames/' + key + '.png';
+  const cached = _cockpitFrameCache[key];
+  const apply = (entry) => {
+    if (!entry || entry.status !== 'ok') {
+      el.classList.remove('active');
+      el.style.backgroundImage = '';
+      if (player) player.cockpitFrameMuzzle = null;
+      return;
+    }
     el.style.backgroundImage = 'url("' + url + '")';
     el.classList.add('active');
-    return;
-  }
+    if (player) player.cockpitFrameMuzzle = entry.muzzle || null;
+  };
+  if (cached) { apply(cached); return; }
   // First-time: probe with an Image() so a 404 doesn't splatter a broken-image flash.
   const probe = new Image();
   probe.onload = function() {
-    _cockpitFrameCache[key] = 'ok';
+    const muzzle = detectFrameMuzzlePoints(probe);
+    const entry = { status: 'ok', muzzle: muzzle };
+    _cockpitFrameCache[key] = entry;
     // Guard: player may have swapped ships while the probe was loading.
-    if (player && player.loadoutKey === key) {
-      el.style.backgroundImage = 'url("' + url + '")';
-      el.classList.add('active');
-    }
+    if (player && player.loadoutKey === key) apply(entry);
   };
   probe.onerror = function() {
-    _cockpitFrameCache[key] = 'missing';
-    if (player && player.loadoutKey === key) {
-      el.classList.remove('active');
-      el.style.backgroundImage = '';
-    }
+    _cockpitFrameCache[key] = { status: 'missing' };
+    if (player && player.loadoutKey === key) apply({ status: 'missing' });
   };
   probe.src = url;
 }
@@ -9317,7 +9403,7 @@ function drawCircumpunctHUD() {
     // Left gun: bottom-left corner -> up and inward
     // Right gun: bottom-right corner -> up and inward
     const baseY = H + 20 + recoilAmt + sway + ARM_DOWN_SHIFT; // bottom (pushed further off-screen)
-    const tipY = H - gunLen + recoilAmt + sway + ARM_DOWN_SHIFT; // top of gun (barrel end)
+    let tipY = H - gunLen + recoilAmt + sway + ARM_DOWN_SHIFT; // top of gun (barrel end)
 
     // Slide guns outward so ~2/3 of the base hangs off-screen (+ extra user offset)
     const gunSlide = gunBaseW * 0.66 + ARM_OUT_SHIFT;
@@ -9336,71 +9422,95 @@ function drawCircumpunctHUD() {
       tipInnerX = W - tipInset + gunSlide * 0.35;
     }
 
-    // Main gun body (trapezoid: wide at bottom corner, narrow at barrel tip)
-    ctx.fillStyle = 'rgba(55,62,78,0.92)';
-    ctx.beginPath();
-    ctx.moveTo(baseOuterX, baseY);
-    ctx.lineTo(baseInnerX, baseY);
-    ctx.lineTo(tipInnerX, tipY);
-    ctx.lineTo(tipOuterX, tipY);
-    ctx.closePath();
-    ctx.fill();
-
-    // Darker barrel core (inner strip running along the gun)
-    ctx.fillStyle = 'rgba(35,40,50,0.9)';
-    ctx.beginPath();
-    const bFrac = 0.3; // barrel is 30% of gun width
-    if (side === 0) {
-      const bBaseO = baseOuterX + (baseInnerX - baseOuterX) * 0.35;
-      const bBaseI = baseOuterX + (baseInnerX - baseOuterX) * 0.65;
-      const bTipO = tipOuterX + (tipInnerX - tipOuterX) * 0.25;
-      const bTipI = tipOuterX + (tipInnerX - tipOuterX) * 0.75;
-      ctx.moveTo(bBaseO, baseY); ctx.lineTo(bBaseI, baseY);
-      ctx.lineTo(bTipI, tipY); ctx.lineTo(bTipO, tipY);
-    } else {
-      const bBaseO = baseInnerX + (baseOuterX - baseInnerX) * 0.35;
-      const bBaseI = baseInnerX + (baseOuterX - baseInnerX) * 0.65;
-      const bTipO = tipInnerX + (tipOuterX - tipInnerX) * 0.25;
-      const bTipI = tipInnerX + (tipOuterX - tipInnerX) * 0.75;
-      ctx.moveTo(bBaseO, baseY); ctx.lineTo(bBaseI, baseY);
-      ctx.lineTo(bTipI, tipY); ctx.lineTo(bTipO, tipY);
-    }
-    ctx.closePath();
-    ctx.fill();
-
-    // Team-colored accent line (runs along inner edge of gun)
-    ctx.strokeStyle = gunAccentCol + '0.6)';
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.moveTo(baseInnerX, baseY);
-    ctx.lineTo(tipInnerX, tipY);
-    ctx.stroke();
-
-    // Outer edge highlight
-    ctx.strokeStyle = 'rgba(120,130,150,0.3)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(baseOuterX, baseY);
-    ctx.lineTo(tipOuterX, tipY);
-    ctx.stroke();
-
-    // Panel seam lines (horizontal across the gun body)
-    ctx.strokeStyle = 'rgba(30,35,45,0.5)';
-    ctx.lineWidth = 1;
-    for (let i = 1; i <= 4; i++) {
-      const frac = i / 5;
-      const ly = baseY + (tipY - baseY) * frac;
-      const lxO = baseOuterX + (tipOuterX - baseOuterX) * frac;
-      const lxI = baseInnerX + (tipInnerX - baseInnerX) * frac;
-      ctx.beginPath(); ctx.moveTo(lxO, ly); ctx.lineTo(lxI, ly); ctx.stroke();
+    // If a titan cockpit frame PNG is loaded AND alpha-detection found the two
+    // painted barrel tips, override the procedural tip positions so the muzzle
+    // flash fires from where the frame's painted gun actually points. We skip
+    // drawing the procedural gun body/seams/dot in this case because the frame's
+    // painted art is what should be visible; only the flash remains on top.
+    const fm = player.cockpitFrameMuzzle;
+    const useFrame = !!(fm && fm.left && fm.right);
+    if (useFrame) {
+      const tip = side === 0 ? fm.left : fm.right;
+      const scr = frameImgToScreen(tip.x, tip.y, fm.imgW, fm.imgH, W, H);
+      // Apply recoil+sway (same feel as procedural gun) so flash still kicks.
+      const tipCX = scr.x;
+      const tipCY = scr.y + recoilAmt + sway;
+      // Half-width around the painted-barrel axis: give the muzzle a small
+      // extent so dirX/perpX compute a stable orientation and the flash has
+      // a believable footprint rather than collapsing to a point.
+      const halfW = Math.max(10, W * 0.012);
+      tipOuterX = tipCX - (side === 0 ? halfW : -halfW);
+      tipInnerX = tipCX + (side === 0 ? halfW : -halfW);
+      tipY = tipCY;
     }
 
-    // Power indicator dot (near barrel tip)
-    const dotFrac = 0.85;
-    const dotX = (baseOuterX + baseInnerX) / 2 + ((tipOuterX + tipInnerX) / 2 - (baseOuterX + baseInnerX) / 2) * dotFrac;
-    const dotY = baseY + (tipY - baseY) * dotFrac;
-    ctx.fillStyle = player.clipAmmo > 0 ? 'rgba(0,255,120,0.8)' : 'rgba(255,50,30,0.8)';
-    ctx.beginPath(); ctx.arc(dotX, dotY, 3.5, 0, Math.PI * 2); ctx.fill();
+    if (!useFrame) {
+      // Main gun body (trapezoid: wide at bottom corner, narrow at barrel tip)
+      ctx.fillStyle = 'rgba(55,62,78,0.92)';
+      ctx.beginPath();
+      ctx.moveTo(baseOuterX, baseY);
+      ctx.lineTo(baseInnerX, baseY);
+      ctx.lineTo(tipInnerX, tipY);
+      ctx.lineTo(tipOuterX, tipY);
+      ctx.closePath();
+      ctx.fill();
+
+      // Darker barrel core (inner strip running along the gun)
+      ctx.fillStyle = 'rgba(35,40,50,0.9)';
+      ctx.beginPath();
+      const bFrac = 0.3; // barrel is 30% of gun width
+      if (side === 0) {
+        const bBaseO = baseOuterX + (baseInnerX - baseOuterX) * 0.35;
+        const bBaseI = baseOuterX + (baseInnerX - baseOuterX) * 0.65;
+        const bTipO = tipOuterX + (tipInnerX - tipOuterX) * 0.25;
+        const bTipI = tipOuterX + (tipInnerX - tipOuterX) * 0.75;
+        ctx.moveTo(bBaseO, baseY); ctx.lineTo(bBaseI, baseY);
+        ctx.lineTo(bTipI, tipY); ctx.lineTo(bTipO, tipY);
+      } else {
+        const bBaseO = baseInnerX + (baseOuterX - baseInnerX) * 0.35;
+        const bBaseI = baseInnerX + (baseOuterX - baseInnerX) * 0.65;
+        const bTipO = tipInnerX + (tipOuterX - tipInnerX) * 0.25;
+        const bTipI = tipInnerX + (tipOuterX - tipInnerX) * 0.75;
+        ctx.moveTo(bBaseO, baseY); ctx.lineTo(bBaseI, baseY);
+        ctx.lineTo(bTipI, tipY); ctx.lineTo(bTipO, tipY);
+      }
+      ctx.closePath();
+      ctx.fill();
+
+      // Team-colored accent line (runs along inner edge of gun)
+      ctx.strokeStyle = gunAccentCol + '0.6)';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(baseInnerX, baseY);
+      ctx.lineTo(tipInnerX, tipY);
+      ctx.stroke();
+
+      // Outer edge highlight
+      ctx.strokeStyle = 'rgba(120,130,150,0.3)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(baseOuterX, baseY);
+      ctx.lineTo(tipOuterX, tipY);
+      ctx.stroke();
+
+      // Panel seam lines (horizontal across the gun body)
+      ctx.strokeStyle = 'rgba(30,35,45,0.5)';
+      ctx.lineWidth = 1;
+      for (let i = 1; i <= 4; i++) {
+        const frac = i / 5;
+        const ly = baseY + (tipY - baseY) * frac;
+        const lxO = baseOuterX + (tipOuterX - baseOuterX) * frac;
+        const lxI = baseInnerX + (tipInnerX - baseInnerX) * frac;
+        ctx.beginPath(); ctx.moveTo(lxO, ly); ctx.lineTo(lxI, ly); ctx.stroke();
+      }
+
+      // Power indicator dot (near barrel tip)
+      const dotFrac = 0.85;
+      const dotX = (baseOuterX + baseInnerX) / 2 + ((tipOuterX + tipInnerX) / 2 - (baseOuterX + baseInnerX) / 2) * dotFrac;
+      const dotY = baseY + (tipY - baseY) * dotFrac;
+      ctx.fillStyle = player.clipAmmo > 0 ? 'rgba(0,255,120,0.8)' : 'rgba(255,50,30,0.8)';
+      ctx.beginPath(); ctx.arc(dotX, dotY, 3.5, 0, Math.PI * 2); ctx.fill();
+    }
 
     // ---- MUZZLE FLASH (at barrel tip) ----
     if (flashActive) {
