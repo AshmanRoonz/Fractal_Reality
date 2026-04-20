@@ -4698,6 +4698,10 @@ function warmupCombatShaders() {
       !(typeof scene !== 'undefined' && scene) ||
       !(typeof camera !== 'undefined' && camera)) return;
   _shaderWarmup.done = true;
+  const _warmupT0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : 0;
+  let _warmupShipMeshCount = 0;
+  let _warmupTextureCount = 0;
+  let _warmupMaterialCount = 0;
   try {
     const group = new THREE.Group();
     // Park the prototypes far below the map so they cannot be seen by the
@@ -4848,24 +4852,44 @@ function warmupCombatShaders() {
     matRefs.push(stdMat);
     group.add(new THREE.Mesh(stdGeo, stdMat));
 
-    // Full ship model mesh (MeshPhongMaterial with map + onBeforeCompile rim-
+    // Full ship model meshes (MeshPhongMaterial with map + onBeforeCompile rim-
     // light fragment injection). This is the program variant every enemy and
-    // teammate ship uses once their GLB swap completes. If we skip it, the
-    // first frame where a bot becomes visible to the camera triggers a link.
-    // We only attempt this when the cache has finished loading; otherwise it
-    // falls through to the procedural path which already has its materials
-    // covered by the Phong variants created inside createShipMesh below.
-    let shipWarmupMesh = null;
+    // teammate ship uses once their GLB swap completes. buildModelShipMesh()
+    // clones the GLB and replaces every child material with a fresh
+    // MeshPhongMaterial per-ship; the onBeforeCompile rim-light injection also
+    // produces a distinct program per team color (the rim color is baked into
+    // the injected fragment uniform). So to actually cover combat, we have to
+    // build one warmup mesh per (loadout, team color) pair: 7 models × 2 teams
+    // = 14 ghost ships. All get added to the offscreen group together so
+    // renderer.compile() below sees every program variant, and the
+    // initTexture() walk further down can reach every map on every loaded GLB.
+    //
+    // This moves ALL the 450ms texture-upload / program-link idle frames that
+    // the 124204 trace showed at t+9.1s and t+9.8s (when enemy ships first
+    // came into view) into the launch-countdown window.
+    const shipWarmupMeshes = [];
     try {
       const loadedKeys = (typeof shipModelCache !== 'undefined' && shipModelCache.loaded)
         ? Object.keys(shipModelCache.loaded) : [];
-      if (loadedKeys.length > 0 && typeof LOADOUTS !== 'undefined' && typeof CHASSIS !== 'undefined') {
-        const key = loadedKeys[0];
-        const ld = LOADOUTS[key];
-        const ch = ld ? CHASSIS[ld.chassis] : null;
-        if (ch && typeof createShipMesh === 'function') {
-          shipWarmupMesh = createShipMesh(ch, 0xff4444, key);
-          group.add(shipWarmupMesh);
+      if (loadedKeys.length > 0 && typeof LOADOUTS !== 'undefined' && typeof CHASSIS !== 'undefined' && typeof createShipMesh === 'function') {
+        const teamColors = [0xff4444, 0x44bb44];  // TEAM_FLEET_A, TEAM_FLEET_B
+        for (const key of loadedKeys) {
+          const ld = LOADOUTS[key];
+          const ch = ld ? CHASSIS[ld.chassis] : null;
+          if (!ch) continue;
+          for (let i = 0; i < teamColors.length; i++) {
+            try {
+              const m = createShipMesh(ch, teamColors[i], key);
+              if (m) {
+                // Space them apart so nothing weird happens with overlapping
+                // lights / depth; still 100k units below the map.
+                m.position.set(i * 10, 0, shipWarmupMeshes.length * 10);
+                group.add(m);
+                shipWarmupMeshes.push(m);
+                _warmupShipMeshCount++;
+              }
+            } catch (_) { /* one bad loadout shouldn't sink the rest */ }
+          }
         }
       }
     } catch (_) { /* non-fatal: ship warm-up is a bonus, not a requirement */ }
@@ -4934,7 +4958,7 @@ function warmupCombatShaders() {
       // Actually force uploads. initTexture is a cheap per-texture call; doing
       // it in a tight loop here moves the aggregate cost out of combat.
       for (const t of uploadQueue) {
-        try { renderer.initTexture(t); } catch (_) { /* bad texture state; skip */ }
+        try { renderer.initTexture(t); _warmupTextureCount++; } catch (_) { /* bad texture state; skip */ }
       }
     }
 
@@ -5007,29 +5031,57 @@ function warmupCombatShaders() {
     }
 
     scene.remove(group);
-    // Dispose the ship warmup mesh's owned materials (the procedural path
-    // creates fresh MeshPhongMaterial instances per mesh; we built one set for
-    // warmup and won't use it again). The shader programs stay in the Three.js
-    // WebGL cache keyed by program signature.
-    if (shipWarmupMesh) {
+    // Dispose every ship warmup mesh's owned materials. buildModelShipMesh /
+    // createShipMesh clone materials fresh per mesh, so each of the 14 ghost
+    // ships owns its own MeshPhongMaterial instances. The GLB texture maps
+    // are SHARED with the real shipModelCache prototypes (traverse + replace
+    // in buildModelShipMesh reuses the loaded textures directly), so we must
+    // null out .map / .normalMap / .emissiveMap before dispose() to avoid
+    // tearing down textures that real bot ships will sample from next frame.
+    // The shader programs stay in the Three.js WebGL cache keyed by program
+    // signature, which is the whole point of running compile() first.
+    for (const shipMesh of shipWarmupMeshes) {
       try {
-        shipWarmupMesh.traverse(child => {
+        shipMesh.traverse(child => {
           if (child.isMesh) {
             const mats = Array.isArray(child.material) ? child.material : [child.material];
-            for (const m of mats) { try { m.dispose(); } catch (_) {} }
-            if (child.geometry) { try { child.geometry.dispose(); } catch (_) {} }
+            for (const m of mats) {
+              if (!m) continue;
+              // Detach any shared texture maps before disposing the material.
+              m.map = null; m.normalMap = null; m.emissiveMap = null;
+              m.roughnessMap = null; m.metalnessMap = null; m.aoMap = null;
+              try { m.dispose(); _warmupMaterialCount++; } catch (_) {}
+            }
+            // Only dispose geometry if it was generated for this mesh; the
+            // GLB path shares geometry across clones so we DON'T touch it.
+            // Procedural createShipMesh builds fresh geometries per call, so
+            // they're safe to drop. Distinguish by userData.procedural flag
+            // if present; otherwise leave alone (safer).
+            if (child.geometry && child.userData && child.userData.procedural) {
+              try { child.geometry.dispose(); } catch (_) {}
+            }
           }
         });
       } catch (_) {}
     }
     // Dispose prototype geometries/materials; the shader programs remain in
-    // Three.js' WebGL cache keyed by program signature, which is the whole
-    // point of running compile() first. Textures (_emberFalloffTexture etc.)
-    // are shared with the real effect code path and must NOT be disposed.
+    // Three.js' WebGL cache keyed by program signature. Textures are shared
+    // with the real effect code path and must NOT be disposed.
     sphGeo.dispose(); ringGeo.dispose(); boxGeo.dispose();
     torusGeo.dispose(); lineGeo.dispose(); edgesGeo.dispose();
     planeGeo.dispose(); cylGeo.dispose(); ptsGeo.dispose(); stdGeo.dispose();
-    for (const m of matRefs) m.dispose();
+    for (const m of matRefs) { try { m.dispose(); _warmupMaterialCount++; } catch (_) {} }
+
+    // Persistent telemetry: logs every time the warmup runs so future traces
+    // can confirm it actually executed (not silently caught), and how much it
+    // cost. If you see this line absent from the console during countdown,
+    // the warmup bailed before finishing and the next trace will show why.
+    const _warmupMs = ((typeof performance !== 'undefined' && performance.now) ? performance.now() : 0) - _warmupT0;
+    console.log('[warmup]',
+      _warmupShipMeshCount, 'ship meshes,',
+      _warmupMaterialCount, 'materials,',
+      _warmupTextureCount, 'textures,',
+      _warmupMs.toFixed(1) + 'ms');
   } catch (e) {
     console.warn('[warmupCombatShaders] skipped:', e && e.message);
   }
