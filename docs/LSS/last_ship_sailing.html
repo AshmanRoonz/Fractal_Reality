@@ -25,9 +25,19 @@ canvas { display: block; }
 }
 .hit-marker.active { animation: hitFlash 0.25s ease-out; }
 @keyframes hitFlash {
-  0% { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
-  50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.0); }
-  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+  /* Chromatic split layered on classic hit mark: cyan leads left, magenta trails right. */
+  0% {
+    opacity: 1; transform: translate(-50%, -50%) scale(1.3);
+    filter: drop-shadow(-2px 0 0 rgba(0,255,255,0.95)) drop-shadow(2px 0 0 rgba(255,0,180,0.95));
+  }
+  40% {
+    opacity: 0.95; transform: translate(-50%, -50%) scale(1.05);
+    filter: drop-shadow(-1px 0 0 rgba(0,255,255,0.55)) drop-shadow(1px 0 0 rgba(255,0,180,0.55));
+  }
+  100% {
+    opacity: 0; transform: translate(-50%, -50%) scale(0.8);
+    filter: drop-shadow(0 0 0 rgba(0,255,255,0)) drop-shadow(0 0 0 rgba(255,0,180,0));
+  }
 }
 .hit-marker-kill {
   position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -35,9 +45,19 @@ canvas { display: block; }
 }
 .hit-marker-kill.active { animation: killFlash 0.5s ease-out; }
 @keyframes killFlash {
-  0% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
-  30% { opacity: 1; transform: translate(-50%, -50%) scale(1.0); }
-  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+  /* Wider chromatic split confirms kill vs hit: cyan pushed further, magenta wider. */
+  0% {
+    opacity: 1; transform: translate(-50%, -50%) scale(1.5);
+    filter: drop-shadow(-4px 0 0 rgba(0,240,255,1)) drop-shadow(4px 0 0 rgba(255,50,200,1));
+  }
+  25% {
+    opacity: 1; transform: translate(-50%, -50%) scale(1.0);
+    filter: drop-shadow(-2px 0 0 rgba(0,240,255,0.75)) drop-shadow(2px 0 0 rgba(255,50,200,0.75));
+  }
+  100% {
+    opacity: 0; transform: translate(-50%, -50%) scale(0.6);
+    filter: drop-shadow(0 0 0 rgba(0,240,255,0)) drop-shadow(0 0 0 rgba(255,50,200,0));
+  }
 }
 
 /* Legacy HUD elements (integrated into circumpunct ring HUD) */
@@ -1663,6 +1683,13 @@ postFX.compositeMat = new THREE.ShaderMaterial({
     vignetteSize: { value: 0.42 },
     chromAb: { value: 0.0 },            // driven by damage indicator intensity
     damagePulse: { value: 0.0 },        // 0..1, pulses vignette red on hit
+    warpAmount: { value: 0.0 },         // 0..1, damage UV warp (quick, low-freq sine)
+    doomedWarp: { value: 0.0 },         // 0..1, doomed-state slow world warp
+    killFlash: { value: 0.0 },          // 0..1, shutter-flash pulse on kill
+    // Shockwave screen-space refraction warp (single active at a time)
+    shockCenter: { value: new THREE.Vector2(0.5, 0.5) },
+    shockAge: { value: 1.0 },           // 0..1 (0 = just spawned, 1 = dissipated)
+    shockIntensity: { value: 0.0 },     // base strength (0 = off)
     lensDirt: { value: 0.55 },          // procedural dirt response strength
     exposure: { value: 1.05 },
     time: { value: 0.0 }
@@ -1676,6 +1703,12 @@ postFX.compositeMat = new THREE.ShaderMaterial({
     uniform float vignetteSize;
     uniform float chromAb;
     uniform float damagePulse;
+    uniform float warpAmount;
+    uniform float doomedWarp;
+    uniform float killFlash;
+    uniform vec2  shockCenter;
+    uniform float shockAge;
+    uniform float shockIntensity;
     uniform float lensDirt;
     uniform float exposure;
     uniform float time;
@@ -1716,18 +1749,72 @@ postFX.compositeMat = new THREE.ShaderMaterial({
       vec2 center = vUv - 0.5;
       float dist = length(center);
 
+      // Damage/doomed UV warp: low-freq sines, radial-weighted so center stays stable.
+      // warpAmount rides damagePulse (fast, tight); doomedWarp is slower and stronger,
+      // and runs as long as the player is doomed. Both fall off toward screen center.
+      vec2 warpedUv = vUv;
+
+      // Shockwave refraction ring: expanding radial band around shockCenter.
+      // shockAge goes 0->1 over the explosion's ~300 ms window; a narrow band
+      // at radius = shockAge sweeps outward and pushes UVs away from center.
+      if (shockIntensity > 0.001 && shockAge < 1.0) {
+        vec2 shockToFrag = vUv - shockCenter;
+        // account for non-square aspect by stretching x vs y (cheap approx using dFdx/dFdy alternative: just use vUv)
+        float r = length(shockToFrag);
+        float ringR = shockAge * 0.85;              // current ring radius in UV space
+        float bandWidth = 0.10;                     // how thick the refraction band is
+        float band = exp(-pow((r - ringR) / bandWidth, 2.0)); // gaussian band
+        float shockStrength = shockIntensity * (1.0 - shockAge) * band;
+        // Push UV outward along the ring's radial axis
+        vec2 shockDir = r > 0.0001 ? shockToFrag / r : vec2(0.0);
+        warpedUv += shockDir * shockStrength * 0.035;
+      }
+
+      if (warpAmount > 0.001 || doomedWarp > 0.001) {
+        float radialFalloff = smoothstep(0.05, 0.55, dist);
+        // Fast warp on hit: ~3.0 Hz, tight 0.012 amplitude at full pulse
+        vec2 wHit = vec2(
+          sin(time * 3.0 + vUv.y * 14.0),
+          cos(time * 2.7 + vUv.x * 11.0)
+        ) * (warpAmount * 0.012);
+        // Slow heavy warp while doomed: ~0.9 Hz, 0.022 amplitude peak
+        vec2 wDoom = vec2(
+          sin(time * 0.9 + vUv.y * 6.5),
+          cos(time * 0.75 + vUv.x * 5.2 + 1.3)
+        ) * (doomedWarp * 0.022);
+        warpedUv += (wHit + wDoom) * radialFalloff;
+      }
+
       // Chromatic aberration (radial; punchier on damage)
       float abAmount = chromAb * dist * 0.025 + 0.0008 * dist;
       vec3 col;
-      col.r = texture2D(tScene, vUv + center * abAmount).r;
-      col.g = texture2D(tScene, vUv).g;
-      col.b = texture2D(tScene, vUv - center * abAmount).b;
+      col.r = texture2D(tScene, warpedUv + center * abAmount).r;
+      col.g = texture2D(tScene, warpedUv).g;
+      col.b = texture2D(tScene, warpedUv - center * abAmount).b;
 
       // Bloom + lens dirt (dirt makes bloom catch on the "lens", classic JJ-Abrams cinematic)
-      vec3 bloom = texture2D(tBloom, vUv).rgb;
+      vec3 bloom = texture2D(tBloom, warpedUv).rgb;
       float dirt = lensDirtMask(vUv);
       vec3 dirtBloom = bloom * dirt * lensDirt;
       col += bloom * bloomStrength + dirtBloom;
+
+      // God-rays: radial blur of bloom toward shockCenter during an explosion's
+      // lifetime. 8-sample line from the fragment toward the bright emitter; falls
+      // off with shockAge so the rays flash in then fade. Free ride on the existing
+      // bloom texture and shockwave uniforms.
+      if (shockIntensity > 0.001 && shockAge < 1.0) {
+        vec2 rayDir = shockCenter - vUv;
+        vec3 rays = vec3(0.0);
+        const int RAY_SAMPLES = 8;
+        for (int i = 0; i < RAY_SAMPLES; i++) {
+          float t = float(i) / float(RAY_SAMPLES);
+          vec2 sUv = vUv + rayDir * (t * 0.30);
+          rays += texture2D(tBloom, sUv).rgb * (1.0 - t);
+        }
+        rays /= float(RAY_SAMPLES);
+        float rayStrength = shockIntensity * (1.0 - shockAge) * 0.75;
+        col += rays * rayStrength;
+      }
 
       // Exposure
       col *= exposure;
@@ -1741,6 +1828,27 @@ postFX.compositeMat = new THREE.ShaderMaterial({
       vec3 highlightsTint = vec3(1.06, 1.02, 0.92); // warm
       vec3 graded = col * mix(shadowsTint, highlightsTint, smoothstep(0.0, 0.7, lum));
       col = mix(col, graded, 0.55);
+
+      // Atmospheric perspective (cool-tinted second fog layer). Depth isn't available
+      // in the composite pass, so use "moderately-dark fragments near screen center"
+      // as a proxy for "looking into an open fogged volume." Bright (bloom, lights)
+      // and very dark (solid shadow / vignette) are excluded so only the mid-lum haze
+      // picks up the cool pull. This sells distance for silhouettes without tinting
+      // the hull or the hot plume tips.
+      float fogBand = smoothstep(0.02, 0.28, lum) * (1.0 - smoothstep(0.50, 0.85, lum));
+      float fogCenter = 1.0 - smoothstep(0.08, 0.55, dist); // strongest toward center
+      float fogMix = fogBand * fogCenter * 0.28;
+      vec3 coolFog = vec3(0.55, 0.78, 0.98);
+      col = mix(col, col * coolFog, fogMix);
+
+      // Kill shutter flash: brief inverse-bloom pulse. First half = dip (neg exposure), second half = bright crack.
+      // killFlash is already a decaying curve from 1.0; we shape it with smoothstep peaks.
+      if (killFlash > 0.001) {
+        float dip = smoothstep(0.55, 1.0, killFlash);       // dark slam at the very top of the curve
+        float crack = smoothstep(0.15, 0.9, killFlash);     // bright lift across most of the pulse
+        col = mix(col, 1.0 - col, dip * 0.35);              // partial inversion at peak (inverse-bloom feel)
+        col += vec3(1.05, 1.02, 0.95) * crack * 0.35;       // warm bright kick
+      }
 
       // Vignette (with damage pulse pushing into red)
       float vig = 1.0 - smoothstep(vignetteSize, vignetteSize + 0.55, dist * 1.4);
@@ -1775,7 +1883,47 @@ function renderPostFX() {
     game.damageIndicators.left, game.damageIndicators.right
   );
   postFX.compositeMat.uniforms.chromAb.value = damageMax * 3.0;
-  postFX.compositeMat.uniforms.damagePulse.value = Math.min(1.0, damageMax * 1.6);
+  const dPulse = Math.min(1.0, damageMax * 1.6);
+  postFX.compositeMat.uniforms.damagePulse.value = dPulse;
+  postFX.compositeMat.uniforms.warpAmount.value = dPulse;
+  // Doomed world warp: ease in smoothly while doomed (but not while dead), ease out otherwise.
+  const doomedActive = (typeof player !== 'undefined' && player && player.doomed && player.shipState !== 'dead') ? 1.0 : 0.0;
+  const prevDoomWarp = postFX.compositeMat.uniforms.doomedWarp.value;
+  // ~0.5s ease toward target; smooth visual onset/offset
+  postFX.compositeMat.uniforms.doomedWarp.value = prevDoomWarp + (doomedActive - prevDoomWarp) * 0.04;
+  // Kill flash decays fast (~120 ms to near zero); multiplicative decay gives snappy shutter feel.
+  const prevKillFlash = postFX.compositeMat.uniforms.killFlash.value;
+  postFX.compositeMat.uniforms.killFlash.value = prevKillFlash > 0.001 ? prevKillFlash * 0.82 : 0.0;
+
+  // Shockwave warp: project active 3D shockwave origin to UV, drive age/intensity.
+  if (postFX.shockwave && postFX.shockwave.active) {
+    const sw = postFX.shockwave;
+    const elapsed = (typeof game !== 'undefined' ? game.time : 0) - sw.startTime;
+    const age = elapsed / sw.duration;
+    if (age >= 1.0 || !sw.origin) {
+      sw.active = false;
+      postFX.compositeMat.uniforms.shockIntensity.value = 0.0;
+      postFX.compositeMat.uniforms.shockAge.value = 1.0;
+    } else {
+      // Project world -> NDC using camera.
+      const _sv = new THREE.Vector3().copy(sw.origin);
+      _sv.project(camera);
+      // Behind camera gives z > 1; gate it out.
+      if (_sv.z > 1.0 || _sv.z < -1.0) {
+        postFX.compositeMat.uniforms.shockIntensity.value = 0.0;
+      } else {
+        // NDC -> UV (0..1)
+        const u = (_sv.x + 1.0) * 0.5;
+        const v = (_sv.y + 1.0) * 0.5;
+        postFX.compositeMat.uniforms.shockCenter.value.set(u, v);
+        postFX.compositeMat.uniforms.shockAge.value = age;
+        postFX.compositeMat.uniforms.shockIntensity.value = sw.intensity;
+      }
+    }
+  } else {
+    postFX.compositeMat.uniforms.shockIntensity.value = 0.0;
+  }
+
   postFX.compositeMat.uniforms.time.value = game.time;
 
   // 1. Render scene to offscreen target
@@ -2557,7 +2705,14 @@ function buildModelShipMesh(chassisData, teamColor, loadoutKey) {
     if (child.userData && child.userData.isPlume) enginePlumes.push(child);
   });
   const barrelMeshes = []; // no procedural barrels to recoil on imported hulls
-  group.userData = { engineMesh, shieldMesh: shield, engineGlows, enginePlumes, barrelMeshes, panelGlowMat, engineGlowMat, isModelShip: true };
+  // Team-color rim PointLight: short-range light attached to ship root that
+  // tints the hull from inside the team color. Range ~180 u (just enough to
+  // wrap the ship silhouette); intensity gently pulses with speed via animate.
+  const rimLight = new THREE.PointLight(teamColor, 0.9, 180, 2.0);
+  rimLight.position.set(0, 0, 0);
+  group.add(rimLight);
+  const prevUD = group.userData || {};
+  group.userData = Object.assign(prevUD, { engineMesh, shieldMesh: shield, engineGlows, enginePlumes, barrelMeshes, panelGlowMat, engineGlowMat, rimLight, isModelShip: true });
   return group;
 }
 
@@ -2612,6 +2767,25 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
     color: teamColor, specular: 0x9999aa, shininess: 110,
     emissive: teamCol.clone().multiplyScalar(0.12), emissiveIntensity: 1.0
   });
+  // Fresnel rim-light: team-colored glow at glancing angles. onBeforeCompile injects
+  // a view-dependent power(1 - n·v) term into the fragment shader so silhouettes pop
+  // for instant target ID at distance. Cheap (no extra passes) and compatible with bloom.
+  hullMat.userData.rimColor = { value: teamCol.clone().multiplyScalar(1.35) };
+  hullMat.userData.rimPower = { value: 2.5 };
+  hullMat.userData.rimStrength = { value: 0.75 };
+  hullMat.onBeforeCompile = function(shader) {
+    shader.uniforms.rimColor = hullMat.userData.rimColor;
+    shader.uniforms.rimPower = hullMat.userData.rimPower;
+    shader.uniforms.rimStrength = hullMat.userData.rimStrength;
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>',
+        '#include <common>\nuniform vec3 rimColor;\nuniform float rimPower;\nuniform float rimStrength;')
+      .replace('#include <dithering_fragment>',
+        'vec3 _rimViewDir = normalize(-vViewPosition);\n' +
+        'float _rimFresnel = pow(1.0 - max(dot(normalize(normal), _rimViewDir), 0.0), rimPower);\n' +
+        'gl_FragColor.rgb += rimColor * (_rimFresnel * rimStrength);\n' +
+        '#include <dithering_fragment>');
+  };
   const darkMat = new THREE.MeshPhongMaterial({ color: 0x222233, specular: 0x444466, shininess: 60 });
   const accentMat = new THREE.MeshPhongMaterial({
     color: teamCol.clone().offsetHSL(0, 0, -0.15),
@@ -2622,6 +2796,9 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
     color: 0x2244aa, specular: 0xccddff, shininess: 200,
     emissive: 0x66aaff, emissiveIntensity: 1.4
   });
+  // Register the cockpit material on the group so animateShipMesh can pulse it (heartbeat).
+  group.userData.cockpitMat = cockpitMat;
+  group.userData.cockpitBaseEmissiveIntensity = 1.4;
   const engineGlowMat = new THREE.MeshBasicMaterial({
     color: teamColor, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending,
     depthWrite: false
@@ -2659,7 +2836,11 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
     group.add(cone);
     return cone;
   }
-  const outlineMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
+  const outlineMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2, transparent: true, opacity: 1.0 });
+  // Expose for distance-based opacity fade in animateShipMesh (WebGL can't truly
+  // scale line width, so we fade opacity as the ship recedes: closer = darker,
+  // far = silhouette dissolves into the volumetric fog).
+  group.userData.outlineMat = outlineMat;
 
   // Helper: add mesh + outline to group
   function addPart(geo, mat, pos, rot) {
@@ -2856,16 +3037,105 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
       barrelMeshes.push(child);
     }
   });
-  group.userData = { engineMesh, shieldMesh: shield, engineGlows, enginePlumes, barrelMeshes, panelGlowMat, engineGlowMat };
+  // Team-color rim PointLight: short-range light attached to ship root that
+  // tints the hull from inside the team color. Range ~180 u (just enough to
+  // wrap the ship silhouette); intensity gently pulses with speed via animate.
+  const rimLight = new THREE.PointLight(teamColor, 0.9, 180, 2.0);
+  rimLight.position.set(0, 0, 0);
+  group.add(rimLight);
+  const prevUD = group.userData || {};
+  group.userData = Object.assign(prevUD, { engineMesh, shieldMesh: shield, engineGlows, enginePlumes, barrelMeshes, panelGlowMat, engineGlowMat, rimLight });
   return group;
 }
 
 // ---- SHIP ANIMATION ----
 // Animate engine glow based on speed (pulse + scale), gun barrels on fire
+// Shared heat-haze sprite material (lazy): faint vertical radial-band texture,
+// additive so it reads as refraction without requiring a second render target.
+let _heatHazeSpriteMat = null;
+function getHeatHazeSpriteMat() {
+  if (_heatHazeSpriteMat) return _heatHazeSpriteMat;
+  const c = document.createElement('canvas');
+  c.width = 64; c.height = 128;
+  const ctx2d = c.getContext('2d');
+  // Vertical gradient: mostly alpha at center tapering to zero at top/bottom.
+  const grad = ctx2d.createRadialGradient(32, 64, 2, 32, 64, 60);
+  grad.addColorStop(0, 'rgba(255, 220, 180, 0.55)');
+  grad.addColorStop(0.30, 'rgba(255, 200, 160, 0.22)');
+  grad.addColorStop(0.70, 'rgba(200, 200, 220, 0.05)');
+  grad.addColorStop(1.0, 'rgba(200, 200, 220, 0)');
+  ctx2d.fillStyle = grad;
+  ctx2d.fillRect(0, 0, 64, 128);
+  // Small vertical streaks for additional "hot air" striation.
+  ctx2d.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 8; i++) {
+    const x = 8 + Math.random() * 48;
+    const h = 40 + Math.random() * 60;
+    const y = 64 - h * 0.5;
+    const g2 = ctx2d.createLinearGradient(x, y, x, y + h);
+    g2.addColorStop(0.0, 'rgba(255,230,200,0.0)');
+    g2.addColorStop(0.5, 'rgba(255,230,200,0.12)');
+    g2.addColorStop(1.0, 'rgba(255,230,200,0.0)');
+    ctx2d.fillStyle = g2;
+    ctx2d.fillRect(x, y, 3, h);
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  tex.needsUpdate = true;
+  _heatHazeSpriteMat = new THREE.SpriteMaterial({
+    map: tex,
+    transparent: true,
+    opacity: 0.0,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    depthTest: true,
+  });
+  return _heatHazeSpriteMat;
+}
+
 function animateShipMesh(mesh, speed, maxSpeed, isFiring, dt) {
   if (!mesh || !mesh.userData) return;
   const t = Math.min(1, speed / maxSpeed);
   const time = game.time;
+  // Distance-scaled outline fade: WebGL can't widen GL_LINES, so we fade opacity
+  // as the ship recedes. Close (<600 u) = full opacity; far (>2800 u) = fully
+  // transparent (silhouette dissolves into fog). Nearest friendly readout stays
+  // crisp; distant ships read via rim light + plume glow instead of chunky edges.
+  if (mesh.userData.outlineMat && camera) {
+    const camPos = camera.position;
+    const dx = mesh.position.x - camPos.x;
+    const dy = mesh.position.y - camPos.y;
+    const dz = mesh.position.z - camPos.z;
+    const distSq = dx*dx + dy*dy + dz*dz;
+    // Compute fade: 1.0 under 600 u, 0.0 over 2800 u, smoothstep between.
+    const d = Math.sqrt(distSq);
+    const fade = 1.0 - Math.max(0, Math.min(1, (d - 600) / 2200));
+    // smootherstep shape feels better than linear
+    const eased = fade * fade * (3 - 2 * fade);
+    mesh.userData.outlineMat.opacity = eased;
+  }
+  // Team-color rim light pulse: gently modulate intensity with speed + time so
+  // the team signature breathes, and dim slightly when the ship is at rest so
+  // stationary hulls don't look self-illuminated.
+  if (mesh.userData.rimLight) {
+    const rim = mesh.userData.rimLight;
+    const base = 0.55 + t * 0.65; // 0.55 idle, ~1.2 at full throttle
+    const pulse = 1 + Math.sin(time * 2.2) * 0.12;
+    rim.intensity = base * pulse;
+  }
+  // Cockpit heartbeat: slow 1 Hz emissive modulation (±10%) so idle ships read as alive.
+  // Speeds up toward ~1.6 Hz at full throttle so the pulse tracks energy output.
+  if (mesh.userData.cockpitMat) {
+    const base = mesh.userData.cockpitBaseEmissiveIntensity || 1.4;
+    const hbFreq = 1.0 + t * 0.6; // 1 Hz idle, ~1.6 Hz flat-out
+    // Double-beat heartbeat shape: systole then diastole (lub-dub)
+    const phase = time * hbFreq * Math.PI * 2;
+    const lub = Math.exp(-Math.pow(((phase % (Math.PI * 2)) - 0.5) * 2.0, 2));
+    const dub = Math.exp(-Math.pow(((phase % (Math.PI * 2)) - 1.3) * 2.5, 2)) * 0.6;
+    const pulse = (lub + dub) * 0.10; // ±10% of base
+    mesh.userData.cockpitMat.emissiveIntensity = base * (1 + pulse - 0.05);
+  }
   // Engines: pulse opacity and scale with speed
   if (mesh.userData.engineGlows) {
     for (const glow of mesh.userData.engineGlows) {
@@ -2877,16 +3147,53 @@ function animateShipMesh(mesh, speed, maxSpeed, isFiring, dt) {
       glow.scale.setScalar(baseScale * flicker);
     }
   }
-  // Engine plumes: stretch length & flare with throttle for cinematic thrust
+  // Engine plumes: stretch length & flare with throttle for cinematic thrust.
+  // Strong thrust-modulation: idle plumes nearly vanish, full-throttle plumes double length
+  // and pick up a hot-white tint; animateShipMesh already knows speed so no extra state needed.
   if (mesh.userData.enginePlumes) {
     for (const plume of mesh.userData.enginePlumes) {
       const baseOp = (plume.userData.basePlumeOpacity || 0.55);
       const flicker = 1 + Math.sin(time * 22 + plume.position.x * 0.5) * 0.12;
-      plume.material.opacity = (0.18 + t * baseOp) * flicker;
-      // Stretch along Z (cone is oriented along +Z), pulse radially.
-      const lenScale = 0.35 + t * 1.4 + Math.sin(time * 26) * 0.04 * t;
-      const radScale = 0.7 + t * 0.4 + Math.sin(time * 16) * 0.06 * t;
+      // Opacity: near-zero at idle (t<0.05), ramps hard through midrange, ceiling at full.
+      // t-squared curve concentrates visible plume in the upper throttle band.
+      const opCurve = Math.max(0, t * t * 1.15 + (t > 0.02 ? 0.05 : 0));
+      plume.material.opacity = (opCurve * baseOp) * flicker;
+      // Stretch along Z with wider dynamic range: 0.22 at rest, up to 2.2 at full throttle.
+      const lenScale = 0.22 + t * 2.0 + Math.sin(time * 26) * 0.05 * t;
+      const radScale = 0.65 + t * 0.5 + Math.sin(time * 16) * 0.07 * t;
       plume.scale.set(radScale, radScale, lenScale);
+      // Hot-white tint at high throttle: plume core gets whiter/hotter the harder you burn.
+      if (plume.userData.basePlumeColor === undefined && plume.material.color) {
+        plume.userData.basePlumeColor = plume.material.color.clone();
+      }
+      if (plume.userData.basePlumeColor && plume.material.color) {
+        const heat = Math.min(1, Math.max(0, (t - 0.5) * 2.0)); // 0 below half throttle, 1 at full
+        plume.material.color.copy(plume.userData.basePlumeColor).lerp(new THREE.Color(0xffffff), heat * 0.55);
+      }
+      // Heat-haze billboard: a stretched additive Sprite sits behind the plume tip.
+      // Lazily created on first update. Opacity scales with thrust^2 so haze only
+      // shows at high burn; scale pulses on time for shimmer. Additive blend plus
+      // low opacity fakes refraction without a second render target.
+      if (!plume.userData.hazeSprite) {
+        const hazeSprite = new THREE.Sprite(getHeatHazeSpriteMat());
+        hazeSprite.material = hazeSprite.material.clone(); // per-sprite opacity
+        hazeSprite.renderOrder = 1; // after opaque geometry
+        const baseLen = plume.userData.basePlumeLength || 1;
+        hazeSprite.userData.baseLen = baseLen;
+        // Attach to the plume so it moves with the ship; offset along +z past tip.
+        plume.add(hazeSprite);
+        hazeSprite.position.set(0, 0, 0.6); // beyond the plume tip in plume-local space
+        plume.userData.hazeSprite = hazeSprite;
+      }
+      const haze = plume.userData.hazeSprite;
+      // Shimmer: opacity modulated with thrust^2 and a fast sine wobble.
+      const hazeWobble = 1 + Math.sin(time * 9.0 + plume.position.x * 1.7) * 0.25;
+      haze.material.opacity = t * t * 0.28 * hazeWobble;
+      // Scale: narrow band that widens subtly with thrust and wobbles on time.
+      const baseLen = haze.userData.baseLen || 1;
+      const hazeW = baseLen * (0.28 + t * 0.30 + Math.sin(time * 7.5) * 0.06 * t);
+      const hazeH = baseLen * (0.95 + t * 0.85 + Math.sin(time * 5.5) * 0.12 * t);
+      haze.scale.set(hazeW, hazeH, 1);
     }
   }
   // Barrels: brief recoil + flash when firing
@@ -3344,9 +3651,14 @@ class Bot {
     }
 
     playerTakeDamage(damage, this);
-    // TONE bot lock-on: hits build lock marks on the player (max 3)
+    // TONE bot lock-on: hits build lock marks on the player (max 3).
+    // Sonar ping fires on lock transitions so the player hears the threat escalate.
     if (this.loadoutKey === 'TONE') {
-      player.enemyToneLocks[this.id] = Math.min(3, (player.enemyToneLocks[this.id] || 0) + 1);
+      const prevEnemyLocks = player.enemyToneLocks[this.id] || 0;
+      player.enemyToneLocks[this.id] = Math.min(3, prevEnemyLocks + 1);
+      if (player.enemyToneLocks[this.id] > prevEnemyLocks) {
+        playSound('sonar_ping_' + player.enemyToneLocks[this.id]);
+      }
       if (player._enemyLockDecayTimers) player._enemyLockDecayTimers[this.id] = 0; // reset decay
     }
     // Bot core meter charges from dealing damage
@@ -3457,18 +3769,36 @@ class Projectile {
     this.mesh.position.copy(origin);
     scene.add(this.mesh);
 
-    // --- Enhanced multi-segment trail ---
+    // --- Enhanced multi-segment ribbon trail (per-vertex color gradient) ---
     this.trailColor = color || 0xffaa00;
-    const trailSegs = 12;
+    const trailSegs = 14; // slightly longer ribbon (8-14 history positions recommended)
+    this.trailSegs = trailSegs;
     this.trailPositions = new Float32Array(trailSegs * 3);
     for (let i = 0; i < trailSegs; i++) {
       this.trailPositions[i*3] = origin.x;
       this.trailPositions[i*3+1] = origin.y;
       this.trailPositions[i*3+2] = origin.z;
     }
+    // Per-vertex color gradient: head is full color, tail fades to black (additive blend = transparent).
+    const trailColors = new Float32Array(trailSegs * 3);
+    const headCol = new THREE.Color(this.trailColor);
+    for (let i = 0; i < trailSegs; i++) {
+      const t = 1.0 - (i / (trailSegs - 1)); // 1 at head, 0 at tail
+      const fade = t * t; // quadratic falloff for snappier ribbon
+      trailColors[i*3]   = headCol.r * fade;
+      trailColors[i*3+1] = headCol.g * fade;
+      trailColors[i*3+2] = headCol.b * fade;
+    }
     const trailGeo = new THREE.BufferGeometry();
     trailGeo.setAttribute('position', new THREE.BufferAttribute(this.trailPositions, 3));
-    const trailMat = new THREE.LineBasicMaterial({ color: this.trailColor, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+    trailGeo.setAttribute('color', new THREE.BufferAttribute(trailColors, 3));
+    const trailMat = new THREE.LineBasicMaterial({
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending,
+      linewidth: 1 // webgl caps at 1, but the gradient reads as ribbon anyway
+    });
     this.trail = new THREE.Line(trailGeo, trailMat);
     scene.add(this.trail);
     this.trailTimer = 0;
@@ -3668,7 +3998,11 @@ class Projectile {
           }
           // TONE 40mm Tracker Cannon: weapon hits build lock marks
           if (player.loadoutKey === 'TONE' && !this.isArcWave && !this.isCluster && !this.tracking) {
-            player.toneLocks[bot.id] = Math.min(3, (player.toneLocks[bot.id] || 0) + 1);
+            const prevLocks = player.toneLocks[bot.id] || 0;
+            player.toneLocks[bot.id] = Math.min(3, prevLocks + 1);
+            if (player.toneLocks[bot.id] > prevLocks) {
+              playSound('sonar_ping_' + player.toneLocks[bot.id]);
+            }
             if (player.toneLocks[bot.id] >= 3) player.toneLockedTarget = bot;
           }
           // Arc Wave: apply slow effect to hit targets
@@ -3855,14 +4189,34 @@ function spawnExplosion(pos, size) {
   size = size || 20;
 
   // --- Distance-based camera shake (cinematic concussive feel) ---
+  let _shockFalloff = 0;
   if (player && player.position) {
     const dx = pos.x - player.position.x, dy = pos.y - player.position.y, dz = pos.z - player.position.z;
     const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
     const reach = Math.max(400, size * 25);
     if (dist < reach) {
       const falloff = 1 - (dist / reach);
+      _shockFalloff = falloff;
       const shake = Math.min(12, size * 0.18 * falloff * falloff);
       if (shake > 0.05) triggerScreenShake(shake);
+    }
+  }
+
+  // --- Screen-space shockwave refraction warp (~300 ms per plan V1b) ---
+  // Only spawn one at a time; replace if a new explosion is closer/bigger.
+  if (typeof postFX !== 'undefined' && postFX.compositeMat) {
+    const intensity = Math.min(0.9, (size * 0.012 + 0.25) * (0.4 + 0.6 * _shockFalloff));
+    if (intensity > 0.05) {
+      if (!postFX.shockwave) postFX.shockwave = {};
+      const cur = postFX.shockwave;
+      // Replace only if nothing active or the new one is meaningfully stronger.
+      if (!cur.active || intensity > cur.intensity * 0.85) {
+        cur.active = true;
+        cur.origin = pos.clone();
+        cur.startTime = (typeof game !== 'undefined' ? game.time : 0);
+        cur.duration = 0.30 + size * 0.003;  // ~300 ms baseline; slight extension for big blasts
+        cur.intensity = intensity;
+      }
     }
   }
 
@@ -3985,11 +4339,14 @@ function spawnExplosion(pos, size) {
     }
   }
 
-  // --- Dynamic lighting: two-phase (bright flash then warm glow) ---
+  // --- Dynamic lighting: three-phase (flash -> glow -> afterglow) ---
+  // Third low-intensity warm point keeps the smoke lit after the flash dies,
+  // so the billboards don't turn into flat black disks once the fireball fades.
   const lightIntensity = Math.min(8.0, size * 0.2);
   const lightRange = Math.min(1500, size * 18);
   spawnDynamicLight(pos, 0xffcc88, lightIntensity * 1.5, lightRange * 0.6, 0.1);  // flash
   spawnDynamicLight(pos, 0xff5500, lightIntensity, lightRange, 0.45);              // glow
+  spawnDynamicLight(pos, 0xff3300, lightIntensity * 0.35, lightRange * 0.8, 1.5); // afterglow
 }
 
 // ---- DESTRUCTIBLE DYNAMIC GEOMETRY ----
@@ -4926,6 +5283,26 @@ function spawnLightningBolt(from, to, color, lifetime, branches, thickness) {
 const MAX_PARTICLES = 500;
 const _sharedParticleGeo = new THREE.SphereGeometry(1, 4, 3); // shared; scale per particle
 
+// Soft radial-falloff texture for ember sprites: generated once, shared by every ember.
+// Camera-facing quad via THREE.Sprite + radial gradient gives embers soft edges instead of
+// polygonal sphere silhouettes, and the additive blending reads as light rather than geometry.
+const _emberFalloffTexture = (function() {
+  const size = 64;
+  const canvas = document.createElement('canvas');
+  canvas.width = size; canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  const g = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+  g.addColorStop(0.00, 'rgba(255,255,255,1.00)');
+  g.addColorStop(0.25, 'rgba(255,255,255,0.70)');
+  g.addColorStop(0.55, 'rgba(255,255,255,0.20)');
+  g.addColorStop(1.00, 'rgba(255,255,255,0.00)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, size, size);
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.needsUpdate = true;
+  return tex;
+})();
+
 function cullOldestParticle() {
   // Remove the particle with the least remaining life
   let oldestIdx = 0, lowestLife = Infinity;
@@ -4958,14 +5335,23 @@ function updateParticles(dt) {
     p.velocity.multiplyScalar(0.95); // drag on particles
     const alpha = p.life / p.maxLife;
     if (!p.mesh) {
-      const mat = new THREE.MeshBasicMaterial({ color: p.color, transparent: true, opacity: alpha, blending: THREE.AdditiveBlending });
-      p.mesh = new THREE.Mesh(_sharedParticleGeo, mat); // shared geometry
-      p.mesh.scale.setScalar(p.size);
+      // Camera-facing sprite with soft radial falloff: reads as light, not geometry.
+      const mat = new THREE.SpriteMaterial({
+        map: _emberFalloffTexture,
+        color: p.color,
+        transparent: true,
+        opacity: alpha,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      p.mesh = new THREE.Sprite(mat);
+      // Sprites need roughly 2.2x the radius to match the apparent size of the old spheres.
+      p.mesh.scale.setScalar(p.size * 2.2);
       scene.add(p.mesh);
     }
     p.mesh.position.copy(pos);
     p.mesh.material.opacity = alpha;
-    p.mesh.scale.setScalar(p.size * (0.5 + alpha * 0.5));
+    p.mesh.scale.setScalar(p.size * 2.2 * (0.5 + alpha * 0.5));
   }
 }
 
@@ -6580,7 +6966,11 @@ function executeAbility(slot, ability) {
         if (forward.dot(toBot) > 0.3) {
           // Add lock stack (max 3)
           const id = bot.id;
-          player.toneLocks[id] = Math.min(3, (player.toneLocks[id] || 0) + 1);
+          const prevLocks = player.toneLocks[id] || 0;
+          player.toneLocks[id] = Math.min(3, prevLocks + 1);
+          if (player.toneLocks[id] > prevLocks) {
+            playSound('sonar_ping_' + player.toneLocks[id]);
+          }
           if (player.toneLocks[id] >= 3) player.toneLockedTarget = bot;
           // Visual lock indicator
           spawnTracer(player.position, bot.position, 0xffaa00);
@@ -7736,8 +8126,12 @@ function drawCircumpunctHUD() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, W, H);
 
-  const cx = W / 2;
-  const cy = H / 2;
+  // Parallax: counter-shift HUD ring against camera shake so it reads as cockpit-anchored.
+  // Full counter would paste HUD to the world; partial factor (0.35) keeps it feeling sprung.
+  const hudShakeX = game.shakeOffset ? -game.shakeOffset.x * 0.35 : 0;
+  const hudShakeY = game.shakeOffset ? -game.shakeOffset.y * 0.35 : 0;
+  const cx = W / 2 + hudShakeX;
+  const cy = H / 2 + hudShakeY;
   const t = game.time;
 
   // ---- Derived values ----
@@ -7841,11 +8235,16 @@ function drawCircumpunctHUD() {
       const fillPct = Math.min(1, (healthPct - segStartPct) / (1 / segments));
       const fillEnd = segStart + (segEnd - segStart) * fillPct;
 
+      // Cinematic glow: blur rises as health falls (gets more desperate looking near empty).
+      ctx.save();
+      ctx.shadowColor = hCol;
+      ctx.shadowBlur = 6 + (1 - healthPct) * 10;
       ctx.strokeStyle = hCol;
       ctx.lineWidth = 8;
       ctx.beginPath();
       ctx.arc(cx, cy, r1, segStart, fillEnd);
       ctx.stroke();
+      ctx.restore();
 
       // Brighter inner edge
       ctx.strokeStyle = white + '0.15)';
@@ -7893,11 +8292,15 @@ function drawCircumpunctHUD() {
   // Shield fill
   if (shieldPct > 0) {
     const fillEnd = shieldArcStart + shieldArcSpan * shieldPct;
+    ctx.save();
+    ctx.shadowColor = cyan + '0.85)';
+    ctx.shadowBlur = 10;
     ctx.strokeStyle = cyan + '0.6)';
     ctx.lineWidth = 5;
     ctx.beginPath();
     ctx.arc(cx, cy, r2, shieldArcStart, fillEnd);
     ctx.stroke();
+    ctx.restore();
   }
 
   // Tick marks along shield arc (every 10%)
@@ -7926,11 +8329,15 @@ function drawCircumpunctHUD() {
   ctx.stroke();
 
   if (speedPct > 0) {
+    ctx.save();
+    ctx.shadowColor = white + '0.6)';
+    ctx.shadowBlur = 5;
     ctx.strokeStyle = white + '0.45)';
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.arc(cx, cy, r3, speedArcStart, speedArcStart + speedSpan * speedPct);
     ctx.stroke();
+    ctx.restore();
   }
 
   // Speed text
@@ -7992,21 +8399,30 @@ function drawCircumpunctHUD() {
     const coreStart = -Math.PI / 2;
     const coreEnd = coreStart + Math.PI * 2 * corePct;
     const coreCol = corePct >= 1 ? amber + (0.4 + Math.sin(t * 4) * 0.2) + ')' : amber + '0.25)';
+    ctx.save();
+    // Glow grows as core fills; spikes when ready.
+    ctx.shadowColor = amber + '0.9)';
+    ctx.shadowBlur = 4 + corePct * 8 + (corePct >= 1 ? (4 + Math.sin(t * 4) * 3) : 0);
     ctx.strokeStyle = coreCol;
     ctx.lineWidth = 4;
     ctx.beginPath();
     ctx.arc(cx, cy, r4, coreStart, coreEnd);
     ctx.stroke();
+    ctx.restore();
   }
 
   // Core ready pulse
   if (corePct >= 1) {
     const pulse = 0.05 + Math.sin(t * 3) * 0.05;
+    ctx.save();
+    ctx.shadowColor = amber + '0.7)';
+    ctx.shadowBlur = 14 + Math.sin(t * 3) * 6;
     ctx.strokeStyle = amber + pulse + ')';
     ctx.lineWidth = 8;
     ctx.beginPath();
     ctx.arc(cx, cy, r4, 0, Math.PI * 2);
     ctx.stroke();
+    ctx.restore();
   }
 
   // ---- LAYER 6: FLOATING BRACKETS (Abilities) ----
@@ -8993,6 +9409,30 @@ function buildSettingsPage() {
       <div id="bind-rows"></div>
     </div>
 
+    <h2>AUDIO</h2>
+
+    <div class="settings-section">
+      <h3>Volume</h3>
+      <div class="setting-row">
+        <label>Master</label>
+        <input type="range" id="set-vol-master" min="0" max="1.5" step="0.05" value="${audio.userVol.master}">
+        <div class="value-display" id="val-vol-master">${audio.userVol.master.toFixed(2)}</div>
+      </div>
+      <div class="setting-row">
+        <label>SFX</label>
+        <input type="range" id="set-vol-sfx" min="0" max="1.5" step="0.05" value="${audio.userVol.sfx}">
+        <div class="value-display" id="val-vol-sfx">${audio.userVol.sfx.toFixed(2)}</div>
+      </div>
+      <div class="setting-row">
+        <label>Music / Ambient</label>
+        <input type="range" id="set-vol-ambient" min="0" max="1.5" step="0.05" value="${audio.userVol.ambient}">
+        <div class="value-display" id="val-vol-ambient">${audio.userVol.ambient.toFixed(2)}</div>
+      </div>
+      <div class="setting-row" style="opacity:0.7; font-size:0.85em;">
+        <label style="flex:1;">Headphones recommended: ambient bed is a phi-cascade binaural layer; speakers collapse the stereo beat.</label>
+      </div>
+    </div>
+
     <button id="settings-close">CLOSE</button>
     <button id="settings-reset">RESET TO DEFAULTS</button>
   `;
@@ -9030,6 +9470,18 @@ function buildSettingsPage() {
     ['set-gp-move-curve', 'val-gp-move-curve', v => { input.gpMoveCurve = v; }, 1],
     ['set-gp-deadzone', 'val-gp-deadzone', v => { input.gpDeadzone = v; }, 2],
     ['set-gp-trigger', 'val-gp-trigger', v => { input.triggerThreshold = v; }, 2],
+    ['set-vol-master', 'val-vol-master', v => {
+      audio.userVol.master = v;
+      if (audio.masterGain) audio.masterGain.gain.value = 0.85 * v;
+    }, 2],
+    ['set-vol-sfx', 'val-vol-sfx', v => {
+      audio.userVol.sfx = v;
+      if (audio.sfxBus) audio.sfxBus.gain.value = v;
+    }, 2],
+    ['set-vol-ambient', 'val-vol-ambient', v => {
+      audio.userVol.ambient = v;
+      // updateAmbientBed() reads audio.userVol.ambient every frame, so no immediate wire needed.
+    }, 2],
   ];
   sliders.forEach(([id, valId, setter, decimals]) => {
     const slider = overlay.querySelector('#' + id);
@@ -9097,6 +9549,12 @@ function resetSettingsToDefaults() {
     ability0: 4, ability1: 5, ability2: 3, core: 12,
     moveUp: 10, moveDown: 11, scoreboard: 8, menu: 9,
   };
+  // Audio defaults
+  audio.userVol.master = 1.0;
+  audio.userVol.sfx = 1.0;
+  audio.userVol.ambient = 1.0;
+  if (audio.masterGain) audio.masterGain.gain.value = 0.85;
+  if (audio.sfxBus) audio.sfxBus.gain.value = 1.0;
   saveSettings();
 }
 
@@ -9113,6 +9571,9 @@ function saveSettings() {
       swapSticks: input.swapSticks,
       triggerThreshold: input.triggerThreshold,
       gpBindings: input.gpBindings,
+      audioMaster: audio.userVol.master,
+      audioSfx: audio.userVol.sfx,
+      audioAmbient: audio.userVol.ambient,
     };
     localStorage.setItem('lss_settings', JSON.stringify(data));
   } catch(e) {}
@@ -9133,6 +9594,10 @@ function loadSettings() {
     if (data.swapSticks !== undefined) input.swapSticks = data.swapSticks;
     if (data.triggerThreshold !== undefined) input.triggerThreshold = data.triggerThreshold;
     if (data.gpBindings) Object.assign(input.gpBindings, data.gpBindings);
+    // Audio volumes (applied later when initAudio creates the gain nodes)
+    if (data.audioMaster !== undefined) audio.userVol.master = data.audioMaster;
+    if (data.audioSfx !== undefined) audio.userVol.sfx = data.audioSfx;
+    if (data.audioAmbient !== undefined) audio.userVol.ambient = data.audioAmbient;
   } catch(e) {}
 }
 
@@ -10353,12 +10818,30 @@ function gameLoop(timestamp) {
 const audio = {
   ctx: null,
   masterGain: null,
+  masterComp: null,     // master bus compressor (glue)
+  sfxBus: null,         // pre-master bus for all SFX (user "SFX" slider target)
   reverbGain: null,     // wet reverb signal
   dryGain: null,        // dry signal
-  convolver: null,      // impulse response reverb
+  convolver: null,      // reverb input hub (fans out to wide + tight convolvers)
+  convolverWide: null,  // 2.4s open-volume tail (open rooms)
+  convolverTight: null, // 0.5s slap (tunnels)
+  reverbWideGain: null, // wide-tail bus gain (crossfade target, 0..1)
+  reverbTightGain: null,// tight-slap bus gain (crossfade target, 0..1)
+  envOpenness: 0.7,     // smoothed 0..1, 1 = open volume, 0 = tunnel/tight
+  convolverLong: null,  // 5s lush tail for explosion distance (low wet level)
+  reverbLongGain: null, // long-tail bus gain (low wet, for explosion halos)
+  _extraReverbSend: null, // when set, triChord/playNoiseBurst also tap this node
   ambientGain: null,    // ambient sound bed volume
   ambientNodes: [],     // oscillator nodes for ambient bed
   initialized: false,
+  // User-facing volume multipliers (0..1.5), stacked on top of internal gain staging.
+  userVol: { master: 1.0, sfx: 1.0, ambient: 1.0 },
+  // Side-chain duck factor for ambient bed: 1.0 = full, drops on loud SFX, ramps back.
+  duckFactor: 1.0,
+  duckTarget: 1.0,
+  // When non-null, triChord/playNoiseBurst route their dry tap through this node
+  // (used by playSpatialSound to insert a per-call HRTF PannerNode).
+  _spatialSink: null,
 };
 
 // Generate a synthetic impulse response for metallic interior reverb.
@@ -10397,29 +10880,77 @@ function initAudio() {
     audio.hiCut.Q.value = 0.7; // gentle slope (no resonance peak)
     audio.hiCut.connect(audio.ctx.destination);
 
-    // Master output (routes through the hi-cut filter)
-    audio.masterGain = audio.ctx.createGain();
-    audio.masterGain.gain.value = 0.85;
-    audio.masterGain.connect(audio.hiCut);
+    // Master bus compressor (glue): keeps simultaneous SFX legible without clipping.
+    // threshold -18 dB, ratio 4:1, fast attack for transient control, musical release.
+    audio.masterComp = audio.ctx.createDynamicsCompressor();
+    audio.masterComp.threshold.value = -18;
+    audio.masterComp.knee.value = 12;
+    audio.masterComp.ratio.value = 4;
+    audio.masterComp.attack.value = 0.005;
+    audio.masterComp.release.value = 0.100;
+    audio.masterComp.connect(audio.hiCut);
 
-    // Reverb chain: dry + wet mixed into master
+    // Master output (routes into compressor, then hi-cut). Base 0.85 multiplied
+    // by userVol.master so the user slider scales the bus cleanly.
+    audio.masterGain = audio.ctx.createGain();
+    audio.masterGain.gain.value = 0.85 * audio.userVol.master;
+    audio.masterGain.connect(audio.masterComp);
+
+    // SFX bus: groups all gameplay SFX (dry + reverb rails) under a single user-facing
+    // "SFX" slider, separate from the ambient bed. Lives between dry/reverb and master.
+    audio.sfxBus = audio.ctx.createGain();
+    audio.sfxBus.gain.value = audio.userVol.sfx;
+    audio.sfxBus.connect(audio.masterGain);
+
+    // Reverb chain: dry + wet mixed into SFX bus
     audio.dryGain = audio.ctx.createGain();
     audio.dryGain.gain.value = 0.80; // dry signal (most of the punch)
-    audio.dryGain.connect(audio.masterGain);
+    audio.dryGain.connect(audio.sfxBus);
 
     audio.reverbGain = audio.ctx.createGain();
     audio.reverbGain.gain.value = 0.40; // reverb for futuristic echo (tamed to avoid ringing)
-    audio.reverbGain.connect(audio.masterGain);
+    audio.reverbGain.connect(audio.sfxBus);
 
-    // Convolver with synthetic impulse response (longer tail for spacious echo)
-    audio.convolver = audio.ctx.createConvolver();
-    audio.convolver.buffer = generateImpulseResponse(audio.ctx, 2.4, 3.5, 0.015);
-    audio.convolver.connect(audio.reverbGain);
+    // Dual convolvers with environment crossfade:
+    //   wide = 2.4s decay, spacious open-volume tail
+    //   tight = 0.5s decay, fast slap for tunnels
+    // `audio.convolver` is repurposed as the reverb INPUT hub: all existing sources
+    // that connect to `audio.convolver` fan out to both convolvers in parallel.
+    audio.convolverWide = audio.ctx.createConvolver();
+    audio.convolverWide.buffer = generateImpulseResponse(audio.ctx, 2.4, 3.5, 0.015);
+    audio.convolverTight = audio.ctx.createConvolver();
+    audio.convolverTight.buffer = generateImpulseResponse(audio.ctx, 0.5, 6.5, 0.004);
+    audio.reverbWideGain = audio.ctx.createGain();
+    audio.reverbTightGain = audio.ctx.createGain();
+    // Initial crossfade weights favor open volume; updated per-frame in updateAmbientBed.
+    audio.reverbWideGain.gain.value = 0.7;
+    audio.reverbTightGain.gain.value = 0.3;
+    audio.convolverWide.connect(audio.reverbWideGain);
+    audio.convolverTight.connect(audio.reverbTightGain);
+    audio.reverbWideGain.connect(audio.reverbGain);
+    audio.reverbTightGain.connect(audio.reverbGain);
+    // Input hub: GainNode so existing `gain.connect(audio.convolver)` calls still work.
+    audio.convolver = audio.ctx.createGain();
+    audio.convolver.gain.value = 1.0;
+    audio.convolver.connect(audio.convolverWide);
+    audio.convolver.connect(audio.convolverTight);
 
-    // Ambient sound bed gain (separate from SFX)
+    // Long lush send for explosions: separate ~5 s IR at low wet level. Not fed by
+    // the main reverb input hub; triChord/playNoiseBurst opt in via audio._extraReverbSend
+    // set on the explosion case. Output mixes into the shared reverb bus so the long
+    // tail carries the same mix/duck/compression path as the rest of the wet signal.
+    audio.convolverLong = audio.ctx.createConvolver();
+    audio.convolverLong.buffer = generateImpulseResponse(audio.ctx, 5.0, 2.2, 0.030);
+    audio.reverbLongGain = audio.ctx.createGain();
+    audio.reverbLongGain.gain.value = 0.18; // low wet level; noticeable as halo, not splash
+    audio.convolverLong.connect(audio.reverbLongGain);
+    audio.reverbLongGain.connect(audio.reverbGain);
+
+    // Ambient sound bed gain (separate from SFX): bypasses master compressor so the
+    // binaural bed isn't pumped by gunfire. Still passes through hi-cut for consistent top.
     audio.ambientGain = audio.ctx.createGain();
     audio.ambientGain.gain.value = 0; // starts silent, fades in when playing
-    audio.ambientGain.connect(audio.hiCut); // through same hi-cut as master
+    audio.ambientGain.connect(audio.hiCut);
 
     audio.initialized = true;
   } catch(e) { console.warn('Audio init failed:', e); }
@@ -10524,14 +11055,81 @@ function startAmbientBed() {
 // Modulate ambient bed based on player speed.
 // The entire phi cascade shifts from 144Hz base (rest) to 200Hz base (full speed).
 // This makes the whole harmonic structure wind up together, like an engine spooling.
+// Environment probe: raycast in a few directions from camera; short average distance
+// = tunnel (crossfade reverb toward tight slap), long average = open volume (toward wide tail).
+// Called every few frames from updateAmbientBed for CPU economy.
+const _envProbeDirs = [
+  new THREE.Vector3( 1,  0,  0),
+  new THREE.Vector3(-1,  0,  0),
+  new THREE.Vector3( 0,  1,  0),
+  new THREE.Vector3( 0, -1,  0),
+  new THREE.Vector3( 0,  0,  1),
+  new THREE.Vector3( 0,  0, -1),
+];
+const _envProbeRay = new THREE.Raycaster();
+_envProbeRay.far = 2000;
+let _envProbeCounter = 0;
+function probeEnvironmentOpenness() {
+  if (!camera || !game || !game.mapMeshes || !game.mapMeshes.length) return 0.7;
+  const camPos = camera.getWorldPosition(new THREE.Vector3());
+  let sum = 0;
+  let hits = 0;
+  for (const d of _envProbeDirs) {
+    _envProbeRay.set(camPos, d);
+    _envProbeRay.near = 0;
+    _envProbeRay.far = 2000;
+    const hit = _envProbeRay.intersectObjects(game.mapMeshes, false);
+    if (hit && hit.length) {
+      sum += hit[0].distance;
+      hits++;
+    } else {
+      sum += 2000;
+      hits++;
+    }
+  }
+  const avg = hits ? sum / hits : 2000;
+  // 200 u = very tight tunnel, 1200+ u = open room
+  return Math.max(0, Math.min(1, (avg - 200) / 1000));
+}
+
 function updateAmbientBed() {
   if (!ambientStarted || !audio.ctx || !player.velocity) return;
+  // Probe environment openness every 8th frame to drive reverb crossfade.
+  if (audio.convolverWide && audio.convolverTight && audio.reverbWideGain && audio.reverbTightGain) {
+    _envProbeCounter++;
+    if ((_envProbeCounter & 7) === 0) {
+      const openness = probeEnvironmentOpenness();
+      audio.envOpenness += (openness - audio.envOpenness) * 0.25;
+    }
+    // Smooth crossfade; wideGain = openness, tightGain = (1 - openness)
+    const wG = audio.envOpenness;
+    const tG = 1 - audio.envOpenness;
+    audio.reverbWideGain.gain.value += (wG - audio.reverbWideGain.gain.value) * 0.10;
+    audio.reverbTightGain.gain.value += (tG - audio.reverbTightGain.gain.value) * 0.10;
+  }
   const speed = player.velocity ? player.velocity.length() : 0;
   const maxSpeed = 800;
   const t = Math.min(1, speed / maxSpeed);
 
-  // Fade ambient in when game is active
-  const targetVol = (game.state === 'playing' || game.state === 'warmup') ? 1.0 : 0.08;
+  // Fade ambient in when game is active. User's ambient slider scales the whole bed.
+  const baseVol = (game.state === 'playing' || game.state === 'warmup') ? 1.0 : 0.08;
+  // Side-chain duck: on loud SFX the duck target drops; factor eases back over ~400 ms.
+  // Ramp back at ~0.04/frame ≈ 400 ms at 60 FPS.
+  audio.duckFactor += (audio.duckTarget - audio.duckFactor) * 0.04;
+  audio.duckTarget += (1.0 - audio.duckTarget) * 0.08; // target also eases back
+  // Health tremor: low-freq gain wobble scales with (1 - health%); peaks when doomed.
+  // At full health tremor ≈ 0; at 0 HP / doomed, ±30% gain wobble at ~4 Hz.
+  let tremorFactor = 1.0;
+  if (player.maxHealth && player.health !== undefined) {
+    const healthPct = Math.max(0, player.health / player.maxHealth);
+    const tremorDepth = (1 - healthPct) * 0.30 + (player.doomed ? 0.10 : 0);
+    if (tremorDepth > 0.001) {
+      const t = (audio.ctx ? audio.ctx.currentTime : 0);
+      const tremorFreq = 3.5 + (1 - healthPct) * 1.5; // 3.5 Hz → 5 Hz toward doomed
+      tremorFactor = 1.0 - tremorDepth * (0.5 - 0.5 * Math.cos(2 * Math.PI * tremorFreq * t));
+    }
+  }
+  const targetVol = baseVol * audio.userVol.ambient * audio.duckFactor * tremorFactor;
   audio.ambientGain.gain.value += (targetVol - audio.ambientGain.gain.value) * 0.02;
 
   // Current base frequency: lerp from rest to speed
@@ -10551,14 +11149,27 @@ function updateAmbientBed() {
   }
 }
 
+// Trigger a side-chain duck on the ambient bed. depth = target factor (0..1).
+// Called on loud SFX (explosions, deaths, kills). Factor eases back to 1 over ~400 ms.
+function duckAmbient(depth) {
+  // Only deepen the duck; don't pull it up if a louder event is already ducking harder.
+  if (depth < audio.duckTarget) audio.duckTarget = depth;
+  if (depth < audio.duckFactor) audio.duckFactor = depth;
+}
+
 // Enhanced tri-chord helper with configurable ADSR envelopes.
 // envelope = { attack, hold, decay } (in seconds). Defaults to instant attack + exponential decay.
 // All SFX route through both dry and reverb (convolver) for spatial presence.
+// Each oscillator gets a detuned chorus partner (±5 cents alternating, 30% mix) for
+// procedural thickness; same ADSR envelope is shared so the partner tracks perfectly.
 function triChord(freqs, wave, vol, dur, rampFreqs, rampTime, startOffset, envelope) {
   const ctx = audio.ctx;
   const now = ctx.currentTime + (startOffset || 0);
   const env = envelope || { attack: 0.003, hold: 0, decay: dur };
+  const CHORUS_DETUNE_CENTS = 5;
+  const CHORUS_MIX = 0.30;
   freqs.forEach((freq, i) => {
+    // Main oscillator and shared envelope gain
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = wave;
@@ -10575,11 +11186,28 @@ function triChord(freqs, wave, vol, dur, rampFreqs, rampTime, startOffset, envel
     }
     gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
     osc.connect(gain);
-    // Route to dry + reverb for spatial presence
-    if (audio.dryGain) gain.connect(audio.dryGain);
-    else gain.connect(audio.masterGain);
+
+    // Chorus partner: same envelope, detuned ±5 cents (alternating sign per i for stereo spread)
+    const chorusOsc = ctx.createOscillator();
+    const chorusGain = ctx.createGain();
+    chorusOsc.type = wave;
+    chorusOsc.frequency.setValueAtTime(freq, now);
+    chorusOsc.detune.setValueAtTime((i % 2 === 0 ? 1 : -1) * CHORUS_DETUNE_CENTS, now);
+    if (rampFreqs && rampFreqs[i] !== undefined) {
+      chorusOsc.frequency.exponentialRampToValueAtTime(Math.max(1, rampFreqs[i]), now + (rampTime || dur));
+    }
+    chorusGain.gain.value = CHORUS_MIX;
+    chorusOsc.connect(chorusGain);
+    chorusGain.connect(gain); // routes through the same ADSR envelope as main
+
+    // Route to dry + reverb for spatial presence. If a spatial panner is active,
+    // the dry tap goes through it so the source is HRTF-positioned in world space.
+    const drySink = audio._spatialSink || audio.dryGain || audio.masterGain;
+    gain.connect(drySink);
     if (audio.convolver) gain.connect(audio.convolver);
+    if (audio._extraReverbSend) gain.connect(audio._extraReverbSend);
     osc.start(now); osc.stop(now + dur + 0.01);
+    chorusOsc.start(now); chorusOsc.stop(now + dur + 0.01);
   });
 }
 
@@ -10608,10 +11236,11 @@ function playNoiseBurst(duration, volume, startTime, filterFreq, filterQ) {
   } else {
     src.connect(gain);
   }
-  // Route to dry + reverb
-  if (audio.dryGain) gain.connect(audio.dryGain);
-  else gain.connect(audio.masterGain);
+  // Route to dry + reverb (dry routes through spatial panner if active)
+  const drySink = audio._spatialSink || audio.dryGain || audio.masterGain;
+  gain.connect(drySink);
   if (audio.convolver) gain.connect(audio.convolver);
+  if (audio._extraReverbSend) gain.connect(audio._extraReverbSend);
   src.start(startTime);
 }
 
@@ -10663,12 +11292,31 @@ function playSound(type) {
     }
   }
   else if (type === 'fire_minigun') {
-    // Ultra-short tick with micro-variation (never identical at rapid fire)
-    const p = rr(1, 0.08);
-    triChord([ri(90*p,0), ri(113*p,0), ri(135*p,0)], rWave(['square','sawtooth']),
-      rr(0.14, 0.2), rr(0.04, 0.15), [ri(60*p,0), ri(75*p,0), ri(90*p,0)], 0.03, 0,
-      { attack: 0.001, hold: 0, decay: rr(0.04, 0.2) });
-    playNoiseBurst(rr(0.015, 0.2), rr(0.05, 0.2), now, ri(2200, 0.15), rr(2.0, 0.2));
+    // Granular noise sub-bed: short bandpassed grains (30-50 ms) stack across the
+    // rapid-fire stream for meatier, cheaper chatter than per-tick triChord. Each
+    // call drops 2-3 grains at slightly offset times/bands so the bursts are never
+    // identical but never alias either. A low 40 Hz sub grain lands the body hit;
+    // a bright 2 kHz snap carries attack. The pitched triChord tick only fires
+    // occasionally so the spectrum stays dense without becoming tonal.
+    const grainCount = 2 + Math.floor(r() * 2); // 2 or 3 grains
+    for (let i = 0; i < grainCount; i++) {
+      const grainDur = rr(0.040, 0.25); // 30-50 ms
+      const grainOff = i * rr(0.012, 0.4); // staggered
+      const grainBand = ri(500 + r() * 1200, 0.15); // 500-1700 Hz random center
+      const grainQ = rr(1.8, 0.25);
+      playNoiseBurst(grainDur, rr(0.055, 0.3), now + grainOff, grainBand, grainQ);
+    }
+    // Sub-bass body grain: 40 Hz thump per tick (additive, not tonal)
+    playNoiseBurst(rr(0.035, 0.2), rr(0.07, 0.25), now, ri(40, 0.3), rr(0.9, 0.2));
+    // Bright snap: very short high-band grain carries attack transient
+    playNoiseBurst(rr(0.012, 0.3), rr(0.045, 0.3), now, ri(2200, 0.15), rr(1.8, 0.25));
+    // Occasional pitched tick (only ~1 in 3 shots) for readability in rapid fire
+    if (r() > 0.67) {
+      const p = rr(1, 0.08);
+      triChord([ri(90*p,0), ri(113*p,0)], rWave(['square','sawtooth']),
+        rr(0.09, 0.2), rr(0.03, 0.15), [ri(60*p,0), ri(75*p,0)], 0.025, 0,
+        { attack: 0.001, hold: 0, decay: rr(0.03, 0.2) });
+    }
   }
   else if (type === 'fire_railgun') {
     // Charged weapon: randomized swell + metallic ring
@@ -10705,6 +11353,7 @@ function playSound(type) {
       { attack: 0.001, hold: 0, decay: rr(0.12, 0.2) });
   }
   else if (type === 'kill') {
+    duckAmbient(0.45); // moderate duck for kill confirm
     const p = rr(1, 0.08);
     triChord([ri(130*p,0), ri(156*p,0), ri(196*p,0)], 'sine',
       rr(0.18, 0.12), rr(0.35, 0.12), null, null, 0,
@@ -10712,6 +11361,42 @@ function playSound(type) {
     triChord([ri(65*p,0), ri(78*p,0), ri(98*p,0)], 'sine',
       rr(0.15, 0.12), rr(0.40, 0.12), null, null, rr(0.12, 0.15),
       { attack: 0.005, hold: rr(0.05, 0.2), decay: rr(0.35, 0.15) });
+  }
+  else if (type === 'damage_shield') {
+    // Shield hit: crystalline crack; high-pass filtered noise burst + bright bell chime.
+    // Characterful "glass-on-glass" snap, distinct from armor's dissonant pulses.
+    const p = rr(1, 0.10);
+    // Bell-filtered noise burst (simulated high-pass: bandpass at high freq with wide Q)
+    const bellNoise = ctx.createBufferSource();
+    const bufLen = Math.floor(ctx.sampleRate * 0.08);
+    const bellBuf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+    const bellData = bellBuf.getChannelData(0);
+    for (let i = 0; i < bufLen; i++) bellData[i] = (Math.random() * 2 - 1) * Math.exp(-i / bufLen * 4);
+    bellNoise.buffer = bellBuf;
+    const hp = ctx.createBiquadFilter();
+    hp.type = 'highpass';
+    hp.frequency.value = ri(2400 * p, 0.15);
+    hp.Q.value = 0.7;
+    const bell = ctx.createBiquadFilter();
+    bell.type = 'peaking';
+    bell.frequency.value = ri(3200 * p, 0.10);
+    bell.Q.value = rr(6, 0.2);
+    bell.gain.value = 12;
+    const bellGain = ctx.createGain();
+    bellGain.gain.setValueAtTime(rr(0.18, 0.2), now);
+    bellGain.gain.exponentialRampToValueAtTime(0.001, now + rr(0.12, 0.2));
+    bellNoise.connect(hp); hp.connect(bell); bell.connect(bellGain);
+    if (audio.dryGain) bellGain.connect(audio.dryGain);
+    else bellGain.connect(audio.masterGain);
+    if (audio.convolver) bellGain.connect(audio.convolver);
+    bellNoise.start(now);
+    // Crystalline chime: bright triangle/sine chord at a high interval (perfect fifth + octave)
+    triChord(
+      [ri(880 * p, 0.05), ri(1320 * p, 0.05), ri(1760 * p, 0.05)],
+      'triangle',
+      rr(0.10, 0.2), rr(0.18, 0.2), null, null, 0.005,
+      { attack: 0.001, hold: 0, decay: rr(0.15, 0.2) }
+    );
   }
   else if (type === 'damage') {
     // Rapid-fire dissonant pulses: 3-5 short staccato hits with clashing intervals
@@ -10764,6 +11449,11 @@ function playSound(type) {
   }
   else if (type === 'explosion') {
     // Rapid-fire destruction: 5-8 dissonant staccato pulses layered with noise blasts
+    duckAmbient(0.35); // strong duck for explosions
+    // Long lush send: during this synchronous block, every triChord/playNoiseBurst
+    // also taps the 5 s convolver for the distant-explosion halo. Cleared at the end.
+    const _prevExtra = audio._extraReverbSend;
+    if (audio.convolverLong) audio._extraReverbSend = audio.convolverLong;
     const size = rr(1, 0.25);
     const pulses = 5 + Math.floor(r() * 4);
     const baseP = rr(1, 0.25);
@@ -10811,6 +11501,8 @@ function playSound(type) {
 
     // Sub-rumble tail (fading low growl after the burst)
     playNoiseBurst(rr(0.25, 0.3) * size, rr(0.20, 0.2), now + 0.12, ri(45, 0.3), rr(0.2, 0.3));
+    // Restore prior extra reverb send (long send was active only for this explosion).
+    audio._extraReverbSend = _prevExtra;
   }
   else if (type === 'stasis') {
     // Full 3-second charging sound: rising harmonic sweep that builds to release
@@ -10850,8 +11542,30 @@ function playSound(type) {
   else if (type === 'death') {
     // Ship death: dramatic descending drone with heavy randomization.
     // Multiple overlapping layers, random metallic debris, and a bass drop.
+    duckAmbient(0.30); // deep duck; death is the loudest event in the mix
     const p = rr(1, 0.15); // large pitch variation per death
     const size = rr(1, 0.2);
+    // Sub-bass impulse at death onset: 35 Hz pure sine, ADSR 5/100/600 ms.
+    // Routes through dry only (no reverb, keeps it physical not ringing). Lands the
+    // concussion in the chest before the descending drone even starts.
+    {
+      const subOsc = ctx.createOscillator();
+      const subGain = ctx.createGain();
+      subOsc.type = 'sine';
+      subOsc.frequency.setValueAtTime(35 * p, now);
+      // Drop to 25 Hz over the decay for a felt "thud-hum"
+      subOsc.frequency.exponentialRampToValueAtTime(25 * p, now + 0.70);
+      const subPeak = rr(0.45, 0.15) * size;
+      subGain.gain.setValueAtTime(0.001, now);
+      subGain.gain.linearRampToValueAtTime(subPeak, now + 0.005); // 5 ms attack
+      subGain.gain.setValueAtTime(subPeak, now + 0.005 + 0.100);  // 100 ms hold
+      subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.005 + 0.100 + 0.600); // 600 ms decay
+      subOsc.connect(subGain);
+      // Dry only: sub-bass through reverb smears the transient
+      if (audio.dryGain) subGain.connect(audio.dryGain);
+      else subGain.connect(audio.masterGain);
+      subOsc.start(now); subOsc.stop(now + 0.72);
+    }
     // Primary descending drone (sawtooth for grit)
     triChord([ri(82*p,0), ri(98*p,0), ri(123*p,0)], rWave(['sawtooth','square']),
       rr(0.25, 0.15), rr(1.30, 0.15) * size, [ri(20*p,0), ri(25*p,0), ri(30*p,0)], rr(1.10, 0.15), 0,
@@ -10885,13 +11599,151 @@ function playSound(type) {
         { attack: rr(0.05, 0.3), hold: rr(0.05, 0.3), decay: rr(0.70, 0.15) });
     }
   }
+  else if (type === 'sonar_ping' || type === 'sonar_ping_1' || type === 'sonar_ping_2' || type === 'sonar_ping_3') {
+    // Lock-on sonar ping: pitch + rate scale with lock level (1..3).
+    // Level 1: one pip at ~880 Hz. Level 2: two pips at ~1100 Hz. Level 3: four pips at ~1480 Hz (full-lock).
+    const level = (type === 'sonar_ping_3') ? 3 : (type === 'sonar_ping_2') ? 2 : 1;
+    const basePitches = [0, 880, 1100, 1480];
+    const basePitch = basePitches[level];
+    const pipCount = level === 3 ? 4 : level * 2; // lvl 1 → 2, lvl 2 → 2, lvl 3 → 4 (per plan "2 pip cycles at half-lock, 4 at full-lock")
+    const pips = level === 1 ? 1 : pipCount; // level 1: single soft pip
+    const pipSpacing = level === 3 ? 0.055 : 0.090; // faster at full lock
+    for (let i = 0; i < pips; i++) {
+      const pipP = rr(1, 0.03);
+      const pipFreq = basePitch * pipP;
+      triChord(
+        [pipFreq, pipFreq * 1.5], // ping + fifth harmonic
+        'sine',
+        rr(0.08, 0.2), 0.055, null, null, i * pipSpacing,
+        { attack: 0.002, hold: 0, decay: 0.050 }
+      );
+    }
+    // Low sub-blip at full lock: signals threat
+    if (level >= 3) {
+      triChord([70, 90], 'sine', 0.06, 0.12, null, null, 0,
+        { attack: 0.003, hold: 0, decay: 0.10 });
+    }
+  }
   else if (type === 'round_start') {
+    // Three rising chords, but the third resolves up a fifth (E major base jumps
+    // to B major, the dominant) rather than continuing the sequence linearly. A
+    // reverse-cymbal swell rides under chord 2 and peaks exactly on the resolve.
     triChord([65, 82, 98], 'sine', 0.18, 0.35, null, null, 0,
       { attack: 0.01, hold: 0.08, decay: 0.26 });
     triChord([73, 92, 110], 'sine', 0.18, 0.35, null, null, 0.18,
       { attack: 0.01, hold: 0.08, decay: 0.26 });
-    triChord([82, 103, 130], 'sine', 0.20, 0.40, null, null, 0.36,
-      { attack: 0.01, hold: 0.10, decay: 0.29 });
+    // Reverse cymbal: white/high noise with inverted envelope (silent → full)
+    // ramping over 0.36 s to land on the resolve chord. Built inline because
+    // playNoiseBurst has a fixed decaying envelope.
+    try {
+      const ctx = audio.ctx;
+      const swellDur = 0.36;
+      const swellStart = now;
+      const bufSize = Math.floor(ctx.sampleRate * swellDur);
+      const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      const sGain = ctx.createGain();
+      sGain.gain.setValueAtTime(0.001, swellStart);
+      sGain.gain.exponentialRampToValueAtTime(0.18, swellStart + swellDur);
+      const sFilter = ctx.createBiquadFilter();
+      sFilter.type = 'highpass';
+      sFilter.frequency.value = 1800;
+      sFilter.Q.value = 0.7;
+      src.connect(sFilter);
+      sFilter.connect(sGain);
+      const drySink = audio.dryGain || audio.masterGain;
+      sGain.connect(drySink);
+      if (audio.convolver) sGain.connect(audio.convolver);
+      src.start(swellStart);
+      src.stop(swellStart + swellDur + 0.01);
+    } catch (e) {}
+    // The resolve: chord rooted a fifth above the first (C → G). B major feel at
+    // the top of the voicing, played slightly longer/louder so the climax lands.
+    triChord([98, 123, 147], 'sine', 0.24, 0.50, null, null, 0.36,
+      { attack: 0.005, hold: 0.18, decay: 0.31 });
+  }
+}
+
+// ---- HRTF spatial playback wrapper ----
+// Wraps playSound so its dry tap is routed through a per-call PannerNode positioned
+// relative to the camera. Ambient bed stays unspatialized (bypasses sfxBus entirely).
+// Reverb tap goes to the shared convolver so every spatial source shares room tone.
+// A BiquadFilter sits between panner and sfxBus: if the line from camera to source
+// passes through level geometry, cutoff drops so high frequencies attenuate (occlusion).
+const _spatialRelPos = new THREE.Vector3();
+const _spatialInvQuat = new THREE.Quaternion();
+const _spatialCamPos = new THREE.Vector3();
+const _spatialDir = new THREE.Vector3();
+const _spatialRaycaster = new THREE.Raycaster();
+_spatialRaycaster.firstHitOnly = true;
+function playSpatialSound(type, worldPos) {
+  if (!audio.initialized || !audio.ctx) return;
+  if (!worldPos || !camera) return playSound(type);
+  try {
+    const panner = audio.ctx.createPanner();
+    panner.panningModel = 'HRTF';
+    panner.distanceModel = 'inverse';
+    panner.refDistance = 250;
+    panner.maxDistance = 8000;
+    panner.rolloffFactor = 1.0;
+    // Compute listener-relative position (camera at origin, looking -Z in local space).
+    camera.getWorldPosition(_spatialCamPos);
+    _spatialRelPos.subVectors(worldPos, _spatialCamPos);
+    const distToSource = _spatialRelPos.length();
+    _spatialInvQuat.copy(camera.quaternion).invert();
+    _spatialRelPos.applyQuaternion(_spatialInvQuat);
+    const t = audio.ctx.currentTime;
+    // Web Audio listener looks down -Z by default; Three.js camera looks down -Z; after
+    // inverse-camera-rotation our local -Z matches the listener's forward.
+    panner.positionX.setValueAtTime(_spatialRelPos.x, t);
+    panner.positionY.setValueAtTime(_spatialRelPos.y, t);
+    panner.positionZ.setValueAtTime(_spatialRelPos.z, t);
+    // Occlusion lowpass: raycast camera -> source against level meshes. If occluded,
+    // drop cutoff so high freqs get eaten by the wall. Also drop gain slightly.
+    const occl = audio.ctx.createBiquadFilter();
+    occl.type = 'lowpass';
+    let cutoff = 18000;
+    let occludedGain = 1.0;
+    if (distToSource > 1 && game && game.mapMeshes && game.mapMeshes.length) {
+      _spatialDir.subVectors(worldPos, _spatialCamPos).normalize();
+      _spatialRaycaster.set(_spatialCamPos, _spatialDir);
+      _spatialRaycaster.near = 0;
+      _spatialRaycaster.far = distToSource * 0.99;
+      const hits = _spatialRaycaster.intersectObjects(game.mapMeshes, false);
+      if (hits && hits.length) {
+        // A hit between listener and source = occluded. Shorter path inside geometry
+        // = thinner wall = less attenuation. Use ray distance ratio as a rough proxy.
+        const h = hits[0];
+        const penetration = distToSource - h.distance;
+        // 100 u = thin wall, 1000+ u = deep occlusion
+        const wallDepth = Math.min(1.0, penetration / 600);
+        cutoff = 2400 - 1500 * wallDepth; // 2400 Hz thin, ~900 Hz deep
+        occludedGain = 0.55 - 0.20 * wallDepth; // -5 dB thin, -9 dB deep
+      }
+    }
+    occl.frequency.setValueAtTime(cutoff, t);
+    occl.Q.setValueAtTime(0.707, t);
+    const occlGain = audio.ctx.createGain();
+    occlGain.gain.setValueAtTime(occludedGain, t);
+    panner.connect(occl);
+    occl.connect(occlGain);
+    occlGain.connect(audio.sfxBus || audio.masterGain);
+    audio._spatialSink = panner;
+    playSound(type);
+    audio._spatialSink = null;
+    // Clean up: nodes detach automatically when their upstream gains stop, but we also
+    // schedule an explicit disconnect so they're GC-eligible.
+    setTimeout(() => {
+      try { panner.disconnect(); } catch (e) {}
+      try { occl.disconnect(); } catch (e) {}
+      try { occlGain.disconnect(); } catch (e) {}
+    }, 4000);
+  } catch (e) {
+    audio._spatialSink = null;
+    playSound(type);
   }
 }
 
@@ -10925,12 +11777,22 @@ const _origShowKillMarker = showKillMarker;
 showKillMarker = function() {
   _origShowKillMarker();
   playSound('kill');
+  // Inverse-bloom shutter flash: instant peak, renderPostFX decays it to near-zero in ~120 ms.
+  if (typeof postFX !== 'undefined' && postFX.compositeMat && postFX.compositeMat.uniforms.killFlash) {
+    postFX.compositeMat.uniforms.killFlash.value = 1.0;
+  }
 };
 
 const _origPlayerTakeDamage = playerTakeDamage;
 playerTakeDamage = function(amount, attacker, projectile) {
+  // Snapshot shield before damage resolves so we can pick shield vs armor SFX.
+  const shieldBefore = player.shield || 0;
   _origPlayerTakeDamage(amount, attacker, projectile);
-  playSound('damage');
+  const shieldAfter = player.shield || 0;
+  // Shield absorbed all or part of this hit => crystalline crack
+  if (shieldBefore > 0) playSound('damage_shield');
+  // Shield ran out (or was already out) and armor took the overflow => dissonance
+  if (shieldAfter <= 0 && shieldBefore < amount + 0.001) playSound('damage');
 };
 
 const _origPlayerDie = playerDie;
@@ -10975,7 +11837,8 @@ enterStasis = function(field) {
 const _origSpawnExplosion = spawnExplosion;
 spawnExplosion = function(pos, size) {
   _origSpawnExplosion(pos, size);
-  if (size > 30) playSound('explosion'); // only big explosions get sound
+  // HRTF-positioned boom so you hear it in 3D; falls back to flat routing if anything fails.
+  if (size > 30) playSpatialSound('explosion', pos);
 };
 
 // ---- SCOREBOARD OVERLAY (Tab key) ----
