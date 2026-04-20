@@ -478,11 +478,6 @@ canvas { display: block; }
   position: relative; text-align: center;
   display: flex; flex-direction: column; justify-content: center;
 }
-#map-window-check {
-  position: absolute; top: 6px; right: 10px;
-  color: #66ff66; font-size: 18px; font-weight: bold;
-  text-shadow: 0 0 6px rgba(102,255,102,0.5);
-}
 #map-window-name {
   font-size: 18px; font-weight: bold; color: #ffaa00;
   letter-spacing: 2px; margin-bottom: 8px;
@@ -518,15 +513,7 @@ canvas { display: block; }
 .map-dot.active {
   background: #ffaa00; box-shadow: 0 0 6px rgba(255,170,0,0.7);
 }
-/* Confirmed ship checkmark (on the highlighted entry in the ship list) */
 .ship-list-entry { position: relative; }
-.ship-list-entry.selected::after {
-  content: '\2713';
-  position: absolute; top: 50%; right: 12px;
-  transform: translateY(-50%);
-  color: #66ff66; font-weight: bold; font-size: 18px;
-  text-shadow: 0 0 6px rgba(102,255,102,0.5);
-}
 
 /* ==========================================================================
    CINEMATIC OVERLAYS (ported from lss_overlays.jsx; pure CSS animations)
@@ -925,7 +912,6 @@ canvas { display: block; }
     <div id="map-select">
       <div id="map-select-label">MAP</div>
       <div id="map-window">
-        <div id="map-window-check">&#10003;</div>
         <div id="map-window-name"></div>
         <div id="map-window-desc"></div>
       </div>
@@ -1515,11 +1501,6 @@ function selectMap(mapKey) {
   if (nameEl) nameEl.textContent = mapData.name;
   const descEl = document.getElementById('map-window-desc');
   if (descEl) descEl.textContent = mapData.description;
-
-  // Check is always visible in the current design (a map is always selected).
-  // Kept conditional so future states (no map chosen) can toggle it off.
-  const checkEl = document.getElementById('map-window-check');
-  if (checkEl) checkEl.style.display = 'block';
 
   // Active dot
   const dots = document.querySelectorAll('#map-indicator .map-dot');
