@@ -12393,6 +12393,127 @@ const MAP_DATA = {
       { path: [{x:  0,    y: SU*3, z: -SU*7}, {x:  SU*6, y: SU*1, z: -SU*3}]},           // arc_3 -> arc_5 (skip)
       { path: [{x: -SU*3, y: SU*2, z: -SU*6}, {x:  SU*3, y: SU*2, z: -SU*6}]},           // arc_2 -> arc_4 (over the top)
     ]
+  },
+
+  // ----------------------------------------------------------------------
+  // The Octahedron: classical bipyramid. Two apex spawns (top, bottom) with
+  // a four-room equator ring and a central hub. Vertical combat is forced;
+  // the center is the most contested room (shared by both the spine and
+  // every equator spoke). Every room has >= 3 exits. Cool crystal blues
+  // for the equator, warm gold at the hub, icy whites at the apex spawns.
+  octahedron: {
+    name: 'The Octahedron',
+    description: 'Bipyramid. Two apex spawns, four equator rooms, a central hub. Vertical and lateral, no camp.',
+    palette: [
+      0x4a3818, 0x1a2848, 0x1c2a50, 0x1a2848, 0x1c2a50, 0x1a2848, 0x1c2a50, 0x202848
+    ],
+    rooms: [
+      { id: 'center',   team: null, x: 0,        y: 0,        z: 0,        r: SU * 2.5 },
+      { id: 'spawn_a',  team: 'A',  x: 0,        y:  SU * 8,  z: 0,        r: SU * 2.2 }, // top apex
+      { id: 'spawn_b',  team: 'B',  x: 0,        y: -SU * 8,  z: 0,        r: SU * 2.2 }, // bottom apex
+      { id: 'eq_n',     team: null, x: 0,        y: 0,        z: -SU * 6,  r: SU * 1.8 },
+      { id: 'eq_e',     team: null, x:  SU * 6,  y: 0,        z: 0,        r: SU * 1.8 },
+      { id: 'eq_s',     team: null, x: 0,        y: 0,        z:  SU * 6,  r: SU * 1.8 },
+      { id: 'eq_w',     team: null, x: -SU * 6,  y: 0,        z: 0,        r: SU * 1.8 },
+    ],
+    tunnels: [
+      // Upper pyramid edges (spawn_a to each equator room)
+      { path: [{x: 0, y:  SU*8, z: 0}, {x: 0,       y: 0, z: -SU*6}]},     // spawn_a -> eq_n
+      { path: [{x: 0, y:  SU*8, z: 0}, {x:  SU*6,  y: 0, z: 0}]},           // spawn_a -> eq_e
+      { path: [{x: 0, y:  SU*8, z: 0}, {x: 0,       y: 0, z:  SU*6}]},     // spawn_a -> eq_s
+      { path: [{x: 0, y:  SU*8, z: 0}, {x: -SU*6,  y: 0, z: 0}]},           // spawn_a -> eq_w
+      // Lower pyramid edges (spawn_b to each equator room)
+      { path: [{x: 0, y: -SU*8, z: 0}, {x: 0,       y: 0, z: -SU*6}]},     // spawn_b -> eq_n
+      { path: [{x: 0, y: -SU*8, z: 0}, {x:  SU*6,  y: 0, z: 0}]},           // spawn_b -> eq_e
+      { path: [{x: 0, y: -SU*8, z: 0}, {x: 0,       y: 0, z:  SU*6}]},     // spawn_b -> eq_s
+      { path: [{x: 0, y: -SU*8, z: 0}, {x: -SU*6,  y: 0, z: 0}]},           // spawn_b -> eq_w
+      // Equator ring (four-room loop)
+      { path: [{x: 0,      y: 0, z: -SU*6}, {x:  SU*6, y: 0, z: 0}]},       // eq_n -> eq_e
+      { path: [{x:  SU*6, y: 0, z: 0},      {x: 0,      y: 0, z:  SU*6}]},  // eq_e -> eq_s
+      { path: [{x: 0,      y: 0, z:  SU*6}, {x: -SU*6, y: 0, z: 0}]},       // eq_s -> eq_w
+      { path: [{x: -SU*6, y: 0, z: 0},      {x: 0,      y: 0, z: -SU*6}]},  // eq_w -> eq_n
+      // Vertical spine through the central hub
+      { path: [{x: 0, y:  SU*8, z: 0}, {x: 0, y: 0, z: 0}]},                 // spawn_a -> center
+      { path: [{x: 0, y: 0,     z: 0}, {x: 0, y: -SU*8, z: 0}]},             // center -> spawn_b
+    ]
+  },
+
+  // ----------------------------------------------------------------------
+  // The Pentagon: pentagonal bipyramid. Two apex spawns, five equator
+  // rooms arranged at 72-degree intervals, no center room. Forces the
+  // fight outward: every path goes through the ring. Radiant gold palette
+  // with a warm amber undertone; spawns at the poles.
+  pentagon: {
+    name: 'The Pentagon',
+    description: 'Pentagonal bipyramid. Two apex spawns, five ring rooms, no hub. Every path crosses the ring.',
+    palette: [
+      0x4a2a10, 0x3a2818, 0x4a3820, 0x3a2810, 0x4a2a18, 0x4a3820, 0x3a2818, 0x4a2a10
+    ],
+    rooms: [
+      { id: 'spawn_a', team: 'A',  x: 0,             y:  SU * 7,  z: 0,             r: SU * 2.2 }, // top apex
+      { id: 'spawn_b', team: 'B',  x: 0,             y: -SU * 7,  z: 0,             r: SU * 2.2 }, // bottom apex
+      { id: 'p0',      team: null, x:  SU *  6.000,  y: 0,        z:  SU *  0.000,  r: SU * 1.8 }, // 0 deg
+      { id: 'p1',      team: null, x:  SU *  1.854,  y: 0,        z:  SU *  5.706,  r: SU * 1.8 }, // 72 deg
+      { id: 'p2',      team: null, x: -SU *  4.854,  y: 0,        z:  SU *  3.527,  r: SU * 1.8 }, // 144 deg
+      { id: 'p3',      team: null, x: -SU *  4.854,  y: 0,        z: -SU *  3.527,  r: SU * 1.8 }, // 216 deg
+      { id: 'p4',      team: null, x:  SU *  1.854,  y: 0,        z: -SU *  5.706,  r: SU * 1.8 }, // 288 deg
+    ],
+    tunnels: [
+      // Upper cone (spawn_a to each ring room)
+      { path: [{x: 0, y:  SU*7, z: 0}, {x:  SU*6.000, y: 0, z:  SU*0.000}]}, // spawn_a -> p0
+      { path: [{x: 0, y:  SU*7, z: 0}, {x:  SU*1.854, y: 0, z:  SU*5.706}]}, // spawn_a -> p1
+      { path: [{x: 0, y:  SU*7, z: 0}, {x: -SU*4.854, y: 0, z:  SU*3.527}]}, // spawn_a -> p2
+      { path: [{x: 0, y:  SU*7, z: 0}, {x: -SU*4.854, y: 0, z: -SU*3.527}]}, // spawn_a -> p3
+      { path: [{x: 0, y:  SU*7, z: 0}, {x:  SU*1.854, y: 0, z: -SU*5.706}]}, // spawn_a -> p4
+      // Lower cone (spawn_b to each ring room)
+      { path: [{x: 0, y: -SU*7, z: 0}, {x:  SU*6.000, y: 0, z:  SU*0.000}]}, // spawn_b -> p0
+      { path: [{x: 0, y: -SU*7, z: 0}, {x:  SU*1.854, y: 0, z:  SU*5.706}]}, // spawn_b -> p1
+      { path: [{x: 0, y: -SU*7, z: 0}, {x: -SU*4.854, y: 0, z:  SU*3.527}]}, // spawn_b -> p2
+      { path: [{x: 0, y: -SU*7, z: 0}, {x: -SU*4.854, y: 0, z: -SU*3.527}]}, // spawn_b -> p3
+      { path: [{x: 0, y: -SU*7, z: 0}, {x:  SU*1.854, y: 0, z: -SU*5.706}]}, // spawn_b -> p4
+      // Pentagon ring
+      { path: [{x:  SU*6.000, y: 0, z:  SU*0.000}, {x:  SU*1.854, y: 0, z:  SU*5.706}]}, // p0 -> p1
+      { path: [{x:  SU*1.854, y: 0, z:  SU*5.706}, {x: -SU*4.854, y: 0, z:  SU*3.527}]}, // p1 -> p2
+      { path: [{x: -SU*4.854, y: 0, z:  SU*3.527}, {x: -SU*4.854, y: 0, z: -SU*3.527}]}, // p2 -> p3
+      { path: [{x: -SU*4.854, y: 0, z: -SU*3.527}, {x:  SU*1.854, y: 0, z: -SU*5.706}]}, // p3 -> p4
+      { path: [{x:  SU*1.854, y: 0, z: -SU*5.706}, {x:  SU*6.000, y: 0, z:  SU*0.000}]}, // p4 -> p0
+    ]
+  },
+
+  // ----------------------------------------------------------------------
+  // The Gyre: helix arena. Spawns at the poles, five spiral rooms winding
+  // up the Y axis at 72-degree increments. Main spiral is long; three chord
+  // shortcuts across the helix let chasers catch and flankers cut. Neon
+  // violet/cyan palette; the spiral twists visibly in the low-light glow.
+  gyre: {
+    name: 'The Gyre',
+    description: 'Helix. Spawns at the poles, five spiral rooms climbing Y. Long main path with chord shortcuts.',
+    palette: [
+      0x2a1848, 0x1a2848, 0x301848, 0x183848, 0x281a48, 0x183048, 0x2a1848, 0x1a2a48
+    ],
+    rooms: [
+      { id: 'spawn_a', team: 'A',  x: 0,             y: -SU * 7,  z: 0,             r: SU * 2.2 }, // south pole
+      { id: 'spawn_b', team: 'B',  x: 0,             y:  SU * 7,  z: 0,             r: SU * 2.2 }, // north pole
+      { id: 'g1',      team: null, x:  SU *  5.000,  y: -SU * 4,  z:  SU *  0.000,  r: SU * 1.8 }, // 0 deg,   y=-4
+      { id: 'g2',      team: null, x:  SU *  1.545,  y: -SU * 2,  z:  SU *  4.755,  r: SU * 1.8 }, // 72 deg,  y=-2
+      { id: 'g3',      team: null, x: -SU *  4.045,  y: 0,        z:  SU *  2.939,  r: SU * 2.0 }, // 144 deg, y= 0 (mid)
+      { id: 'g4',      team: null, x: -SU *  4.045,  y:  SU * 2,  z: -SU *  2.939,  r: SU * 1.8 }, // 216 deg, y=+2
+      { id: 'g5',      team: null, x:  SU *  1.545,  y:  SU * 4,  z: -SU *  4.755,  r: SU * 1.8 }, // 288 deg, y=+4
+    ],
+    tunnels: [
+      // Main spiral (six cylinders from pole to pole)
+      { path: [{x: 0,             y: -SU*7, z: 0            }, {x:  SU*5.000, y: -SU*4, z:  SU*0.000}]}, // spawn_a -> g1
+      { path: [{x:  SU*5.000,    y: -SU*4, z:  SU*0.000},     {x:  SU*1.545, y: -SU*2, z:  SU*4.755}]}, // g1 -> g2
+      { path: [{x:  SU*1.545,    y: -SU*2, z:  SU*4.755},     {x: -SU*4.045, y: 0,     z:  SU*2.939}]}, // g2 -> g3
+      { path: [{x: -SU*4.045,    y: 0,     z:  SU*2.939},     {x: -SU*4.045, y:  SU*2, z: -SU*2.939}]}, // g3 -> g4
+      { path: [{x: -SU*4.045,    y:  SU*2, z: -SU*2.939},     {x:  SU*1.545, y:  SU*4, z: -SU*4.755}]}, // g4 -> g5
+      { path: [{x:  SU*1.545,    y:  SU*4, z: -SU*4.755},     {x: 0,         y:  SU*7, z: 0           }]}, // g5 -> spawn_b
+      // Chord shortcuts (cut across the helix)
+      { path: [{x: 0,             y: -SU*7, z: 0            }, {x: -SU*4.045, y: 0,     z:  SU*2.939}]}, // spawn_a -> g3 (vertical skip up)
+      { path: [{x: -SU*4.045,    y: 0,     z:  SU*2.939},     {x: 0,         y:  SU*7, z: 0           }]}, // g3 -> spawn_b (vertical skip up)
+      { path: [{x:  SU*5.000,    y: -SU*4, z:  SU*0.000},     {x: -SU*4.045, y:  SU*2, z: -SU*2.939}]}, // g1 -> g4 (diagonal through middle)
+      { path: [{x:  SU*1.545,    y: -SU*2, z:  SU*4.755},     {x:  SU*1.545, y:  SU*4, z: -SU*4.755}]}, // g2 -> g5 (diagonal through middle)
+    ]
   }
 };
 
