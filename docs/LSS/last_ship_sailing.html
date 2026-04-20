@@ -4681,6 +4681,88 @@ function updateDynamicLights() {
   }
 }
 
+// ---- SHADER WARMUP ----
+// The first time each new material/blend combination appears on screen during
+// combat, Three.js synchronously compiles and links a GLSL program variant.
+// The trace captures from 20260420 showed this dominating every combat-start
+// hitch (70-90%+ of a 371ms / 104ms / 62ms frame was spent in
+// getProgramInfoLog + getShaderInfoLog). This helper builds one prototype
+// mesh per common combat-effect material combination, drops them into the
+// scene, asks the renderer to compile everything, and removes them again.
+// That moves the compile cost out of the first combat frame and into the
+// pre-match countdown where the player is already watching a 10-second timer.
+const _shaderWarmup = { done: false };
+function warmupCombatShaders() {
+  if (_shaderWarmup.done) return;
+  if (!(typeof renderer !== 'undefined' && renderer) ||
+      !(typeof scene !== 'undefined' && scene) ||
+      !(typeof camera !== 'undefined' && camera)) return;
+  _shaderWarmup.done = true;
+  try {
+    const group = new THREE.Group();
+    // Park the prototypes far below the map so they cannot be seen by the
+    // player even if a compile frame happens to render before we remove them.
+    group.position.set(0, -100000, 0);
+
+    const sphGeo = new THREE.SphereGeometry(1, 4, 3);
+    const ringGeo = new THREE.RingGeometry(1, 2, 8);
+    const boxGeo = new THREE.BoxGeometry(1, 1, 1);
+    const torusGeo = new THREE.TorusGeometry(1, 0.1, 4, 8);
+
+    // The main material-key axes that combat effects touch: transparent,
+    // blending (Normal vs Additive), wireframe, side (Double for sprites/shells),
+    // depthWrite, and fog (most effects inherit fog; some opt out).
+    const matVariants = [
+      { transparent: true, opacity: 0.8 },
+      { transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending },
+      { transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, wireframe: true },
+      { transparent: true, opacity: 0.8, wireframe: true },
+      { transparent: true, opacity: 0.8, side: THREE.DoubleSide },
+      { transparent: true, opacity: 0.8, side: THREE.DoubleSide, blending: THREE.AdditiveBlending },
+      { transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false },
+      { transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, fog: false },
+    ];
+    const matRefs = [];
+    for (const v of matVariants) {
+      const m = new THREE.MeshBasicMaterial(Object.assign({ color: 0xffffff }, v));
+      matRefs.push(m);
+      group.add(new THREE.Mesh(sphGeo, m));
+      group.add(new THREE.Mesh(ringGeo, m));
+      group.add(new THREE.Mesh(torusGeo, m));
+    }
+
+    // Line variants (trails, outlines, impact arcs).
+    const lineGeo = new THREE.BufferGeometry();
+    lineGeo.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0, 1,0,0], 3));
+    const lineMat1 = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 });
+    const lineMat2 = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending });
+    matRefs.push(lineMat1, lineMat2);
+    group.add(new THREE.Line(lineGeo, lineMat1));
+    group.add(new THREE.Line(lineGeo, lineMat2));
+    const edgesGeo = new THREE.EdgesGeometry(boxGeo);
+    group.add(new THREE.LineSegments(edgesGeo, lineMat1));
+
+    // Sprites (damage smoke, heat haze, particle billboards).
+    const sprMat1 = new THREE.SpriteMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
+    const sprMat2 = new THREE.SpriteMaterial({ color: 0xffffff, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+    matRefs.push(sprMat1, sprMat2);
+    group.add(new THREE.Sprite(sprMat1));
+    group.add(new THREE.Sprite(sprMat2));
+
+    scene.add(group);
+    renderer.compile(scene, camera);
+    scene.remove(group);
+    // Dispose prototype geometries/materials; the shader programs remain in
+    // Three.js' WebGL cache keyed by program signature, which is the whole
+    // point of running compile() first.
+    sphGeo.dispose(); ringGeo.dispose(); boxGeo.dispose();
+    torusGeo.dispose(); lineGeo.dispose(); edgesGeo.dispose();
+    for (const m of matRefs) m.dispose();
+  } catch (e) {
+    console.warn('[warmupCombatShaders] skipped:', e && e.message);
+  }
+}
+
 // ---- EFFECTS ----
 
 function spawnExplosion(pos, size) {
@@ -6544,6 +6626,9 @@ function commitLoadout(key) {
   }
   // Refresh the teammates strip so the newly committed ship shows up as YOU's pick.
   updateTeammatesStrip();
+  // Pre-compile shader programs for combat-effect materials while the player
+  // watches the 10s launch countdown. One-shot (idempotent).
+  warmupCombatShaders();
   // Fire the in-screen 3-2-1-LAUNCH beep + number sequence. launchCountdown()
   // itself is a no-op if one is already running, so this is safe to call
   // unconditionally.
