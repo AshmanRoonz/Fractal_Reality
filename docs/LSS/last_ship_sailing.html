@@ -187,17 +187,36 @@ canvas { display: block; }
   border-color: #ffaa00; background: rgba(50,40,15,0.9);
   box-shadow: inset 0 0 12px rgba(255,170,0,0.25);
 }
-/* Center: preview + stats */
+/* Center + right: 3D GLB preview on the left of the preview panel, info/stack on the right */
 #ship-preview {
-  flex: 1; display: flex; flex-direction: column; align-items: center;
-  justify-content: center; padding: 20px; min-width: 0;
+  flex: 1; display: flex; flex-direction: row; align-items: stretch;
+  justify-content: center; padding: 20px; min-width: 0; gap: 28px;
+}
+/* 3D model viewer (left half of preview panel): slowly-rotating GLB in its own
+   WebGL canvas. The canvas fills this container; we resize it from JS each frame
+   to match clientWidth/clientHeight so DPR and responsive layouts stay sharp. */
+#ship-preview-model {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  min-width: 0; position: relative;
+}
+#ship-preview-canvas {
+  width: 100%; height: 100%; display: block;
+  background: radial-gradient(ellipse at center,
+    rgba(30,40,70,0.35) 0%,
+    rgba(10,12,22,0.15) 55%,
+    rgba(0,0,0,0) 100%);
+}
+#ship-preview-info {
+  width: 440px; flex-shrink: 0; display: flex; flex-direction: column;
+  align-items: stretch; justify-content: center; text-align: center;
+  padding: 0 8px;
 }
 #ship-preview-header { text-align: center; margin-bottom: 14px; }
 #ship-preview-name { font-size: 32px; letter-spacing: 4px; color: #ffaa00; font-weight: bold; }
 #ship-preview-class { font-size: 13px; color: #aaa; letter-spacing: 2px; margin-top: 4px; }
 #ship-preview-stats {
-  display: grid; grid-template-columns: repeat(2, 220px); gap: 8px 24px;
-  margin: 14px 0 18px; pointer-events: none;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px;
+  margin: 14px 0 18px; pointer-events: none; width: 100%;
 }
 .sp-stat {
   font-size: 12px; letter-spacing: 1px; color: #aaa;
@@ -223,13 +242,13 @@ canvas { display: block; }
   background: rgba(255,170,0,0.15); border: 2px solid #ffaa00;
   color: #ffaa00; font-size: 14px; letter-spacing: 3px; font-weight: bold;
   cursor: pointer; transition: all 0.15s; pointer-events: all;
-  font-family: inherit;
+  font-family: inherit; align-self: center;
 }
 #ship-preview-confirm:hover { background: rgba(255,170,0,0.35); color: #fff; }
 #ship-preview-confirm:disabled { opacity: 0.3; cursor: not-allowed; }
 #ship-preview-empty {
   color: #555; font-size: 14px; letter-spacing: 2px; text-align: center;
-  padding: 60px 0;
+  padding: 60px 0; margin: auto;
 }
 /* Bottom: teammates */
 #teammates-strip {
@@ -824,18 +843,23 @@ canvas { display: block; }
     <div id="ship-list"></div>
     <div id="ship-preview">
       <div id="ship-preview-empty">SELECT A SHIP FROM THE LIST</div>
-      <div id="ship-preview-header" style="display:none;">
-        <div id="ship-preview-name"></div>
-        <div id="ship-preview-class"></div>
+      <div id="ship-preview-model" style="display:none;">
+        <canvas id="ship-preview-canvas"></canvas>
       </div>
-      <div id="ship-preview-stats" style="display:none;"></div>
-      <div id="ship-preview-weapon" style="display:none;"></div>
-      <div id="ship-preview-abilities" style="display:none;"></div>
-      <div id="ship-preview-core" style="display:none;"></div>
-      <button id="ship-preview-confirm" style="display:none;">CONFIRM &amp; LAUNCH</button>
-      <div id="map-select" style="display:none; margin-top:28px; text-align:center;">
-        <h3 style="font-size:13px;color:#ffaa00;letter-spacing:2px;margin:0 0 8px;">SELECT MAP</h3>
-        <div id="map-select-grid" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
+      <div id="ship-preview-info" style="display:none;">
+        <div id="ship-preview-header" style="display:none;">
+          <div id="ship-preview-name"></div>
+          <div id="ship-preview-class"></div>
+        </div>
+        <div id="ship-preview-stats" style="display:none;"></div>
+        <div id="ship-preview-weapon" style="display:none;"></div>
+        <div id="ship-preview-abilities" style="display:none;"></div>
+        <div id="ship-preview-core" style="display:none;"></div>
+        <button id="ship-preview-confirm" style="display:none;">CONFIRM &amp; LAUNCH</button>
+        <div id="map-select" style="display:none; margin-top:28px; text-align:center;">
+          <h3 style="font-size:13px;color:#ffaa00;letter-spacing:2px;margin:0 0 8px;">SELECT MAP</h3>
+          <div id="map-select-grid" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -2725,6 +2749,143 @@ function preloadShipModels() {
     console.log('[ships] loaded', n, 'of', Object.keys(SHIP_MODELS).length, 'models');
   });
   return shipModelCache.ready;
+}
+
+// ---- SHIP-SELECT 3D PREVIEW ----
+// A small, isolated Three.js renderer for the ship-select center panel.
+// Renders the currently-previewed GLB slowly rotating around Y. Completely
+// independent of the main game renderer (separate canvas, scene, camera,
+// rAF loop), so it can run while the game scene is idle during ship select.
+const _shipPreview3D = {
+  renderer: null, scene: null, camera: null, canvas: null,
+  model: null, lastKey: null, pendingKey: null, animId: null,
+  rotationSpeed: 0.005, // radians per frame at 60fps (slow, graceful)
+};
+
+function _initShipPreview3D() {
+  if (_shipPreview3D.renderer) return _shipPreview3D.renderer;
+  if (typeof THREE === 'undefined') return null;
+  const canvas = document.getElementById('ship-preview-canvas');
+  if (!canvas) return null;
+  try {
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setClearColor(0x000000, 0); // transparent: CSS radial gradient shows behind
+    const scene = new THREE.Scene();
+    // Lighting: cool key from upper-front, warm fill from below-back, plus ambient
+    // so dark hull panels still read. Colors echo the main-game team-neutral palette.
+    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+    const keyL = new THREE.DirectionalLight(0xbfd9ff, 1.1);
+    keyL.position.set(180, 240, 160); scene.add(keyL);
+    const fillL = new THREE.DirectionalLight(0xffb066, 0.45);
+    fillL.position.set(-140, -80, -200); scene.add(fillL);
+    const rimL = new THREE.DirectionalLight(0xffaa00, 0.25);
+    rimL.position.set(0, 120, -260); scene.add(rimL);
+    const camera = new THREE.PerspectiveCamera(32, 1, 1, 8000);
+    camera.position.set(0, 70, 320);
+    camera.lookAt(0, 0, 0);
+    _shipPreview3D.renderer = renderer;
+    _shipPreview3D.scene = scene;
+    _shipPreview3D.camera = camera;
+    _shipPreview3D.canvas = canvas;
+    return renderer;
+  } catch (e) {
+    console.warn('[ship-preview] WebGL init failed:', e && e.message ? e.message : e);
+    return null;
+  }
+}
+
+// Swap the rotating model to the given loadout key. If the GLB pool hasn't
+// finished loading yet, we arm a one-shot retry against shipModelCache.ready
+// so the preview backfills as soon as the model lands.
+function setShipPreviewModel(key) {
+  if (!_shipPreview3D.renderer) _initShipPreview3D();
+  if (!_shipPreview3D.renderer) return;
+  _shipPreview3D.pendingKey = key;
+  _applyShipPreviewModel(key);
+}
+
+function _applyShipPreviewModel(key) {
+  const s = _shipPreview3D;
+  if (!s.renderer) return;
+  if (s.pendingKey !== key) return; // user swapped again while we were resolving
+  const proto = shipModelCache.loaded && shipModelCache.loaded[key];
+  if (!proto) {
+    if (shipModelCache.ready && typeof shipModelCache.ready.then === 'function') {
+      shipModelCache.ready.then(() => {
+        if (s.pendingKey === key) _applyShipPreviewModel(key);
+      });
+    }
+    return;
+  }
+  if (s.lastKey === key && s.model) return; // nothing to do
+  if (s.model) {
+    s.scene.remove(s.model);
+    s.model = null;
+  }
+  s.lastKey = key;
+  // Clone and neutralize the clone's materials so the preview reads like a
+  // hero shot: no team tint, mild emissive lift, preserved texture/vertexColor.
+  const clone = proto.clone(true);
+  clone.traverse(child => {
+    if (child.isMesh) {
+      const mats = Array.isArray(child.material) ? child.material : [child.material];
+      const newMats = mats.map(m => {
+        if (!m) return m;
+        const copy = m.clone();
+        if (copy.emissive) copy.emissive.setHex(0x22334a);
+        if ('emissiveIntensity' in copy) copy.emissiveIntensity = 1.0;
+        return copy;
+      });
+      child.material = newMats.length === 1 ? newMats[0] : newMats;
+      child.castShadow = false;
+      child.receiveShadow = false;
+    }
+  });
+  // Fit camera dolly to the model's bbox so small ships don't look tiny and
+  // large ships don't clip. We aim 3/4 down-angled for a good silhouette.
+  const box = new THREE.Box3().setFromObject(clone);
+  const sz = box.getSize(new THREE.Vector3());
+  const maxDim = Math.max(sz.x, sz.y, sz.z) || 100;
+  const cam = s.camera;
+  cam.position.set(0, maxDim * 0.35, maxDim * 2.2);
+  cam.lookAt(0, 0, 0);
+  // Reset rotation so every new ship starts facing camera.
+  clone.rotation.set(0, 0, 0);
+  s.scene.add(clone);
+  s.model = clone;
+}
+
+function _animateShipPreview() {
+  const s = _shipPreview3D;
+  if (!s.renderer || !s.canvas) return;
+  // Keep the backbuffer in sync with the CSS-sized canvas.
+  const w = s.canvas.clientWidth | 0;
+  const h = s.canvas.clientHeight | 0;
+  if (w > 0 && h > 0) {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const wantW = Math.floor(w * dpr), wantH = Math.floor(h * dpr);
+    if (s.renderer.domElement.width !== wantW || s.renderer.domElement.height !== wantH) {
+      s.renderer.setSize(w, h, false);
+      s.camera.aspect = w / h;
+      s.camera.updateProjectionMatrix();
+    }
+  }
+  if (s.model) s.model.rotation.y += s.rotationSpeed;
+  s.renderer.render(s.scene, s.camera);
+  s.animId = requestAnimationFrame(_animateShipPreview);
+}
+
+function startShipPreviewLoop() {
+  if (_shipPreview3D.animId) return;
+  if (!_shipPreview3D.renderer) _initShipPreview3D();
+  if (!_shipPreview3D.renderer) return;
+  _animateShipPreview();
+}
+
+function stopShipPreviewLoop() {
+  if (_shipPreview3D.animId) cancelAnimationFrame(_shipPreview3D.animId);
+  _shipPreview3D.animId = null;
 }
 
 // Build a ship mesh from a preloaded glTF model while exposing the same
@@ -10089,6 +10250,8 @@ function buildShipSelect() {
     row.addEventListener('click', () => previewLoadout(key));
     list.appendChild(row);
   }
+  // Start the rotating-ship render loop now that the panel is visible.
+  startShipPreviewLoop();
   // If the player already has a loadout (eg. coming back between rounds), pre-select it
   // so the center panel isn't empty.
   const initialKey = (player && player.loadoutKey) ? player.loadoutKey : null;
@@ -10096,10 +10259,11 @@ function buildShipSelect() {
     previewLoadout(initialKey);
   } else {
     _previewedKey = null;
-    // Show empty-state messaging in the preview panel.
+    // Show empty-state messaging in the preview panel, hide the 3D area + info stack.
     const emptyEl = document.getElementById('ship-preview-empty');
     if (emptyEl) emptyEl.style.display = 'block';
-    for (const id of ['ship-preview-header', 'ship-preview-stats', 'ship-preview-weapon',
+    for (const id of ['ship-preview-model', 'ship-preview-info',
+                      'ship-preview-header', 'ship-preview-stats', 'ship-preview-weapon',
                       'ship-preview-abilities', 'ship-preview-core', 'ship-preview-confirm']) {
       const el = document.getElementById(id);
       if (el) el.style.display = 'none';
@@ -10123,6 +10287,15 @@ function previewLoadout(key) {
 
   const emptyEl = document.getElementById('ship-preview-empty');
   if (emptyEl) emptyEl.style.display = 'none';
+
+  // Show the rotating-GLB stage in the center and the info column on the right.
+  const modelEl = document.getElementById('ship-preview-model');
+  if (modelEl) modelEl.style.display = 'flex';
+  const infoEl = document.getElementById('ship-preview-info');
+  if (infoEl) infoEl.style.display = 'flex';
+  // Swap the displayed ship to this loadout's GLB. Safe to call repeatedly;
+  // the renderer will retry until the cache has the prototype loaded.
+  try { setShipPreviewModel(key); } catch (e) {}
 
   const headerEl = document.getElementById('ship-preview-header');
   if (headerEl) {
@@ -10280,6 +10453,9 @@ function launchCountdown() {
       sel.classList.remove('active');
       sel.style.display = 'none';
     }
+    // Pause the isolated preview renderer so it isn't burning frames during
+    // the actual match; buildShipSelect() will start it again next time.
+    try { stopShipPreviewLoop(); } catch (e) {}
     if (renderer && renderer.domElement && renderer.domElement.requestPointerLock) {
       try { renderer.domElement.requestPointerLock(); } catch (e) {}
     }
