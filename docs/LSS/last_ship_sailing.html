@@ -129,27 +129,137 @@ canvas { display: block; }
 }
 .kill-entry { padding: 2px 0; opacity: 1; transition: opacity 0.5s; }
 
-/* Ship Select */
+/* Ship Select ; redesigned layout
+   Left column: stacked loadout-name list (click to preview).
+   Center: large preview panel with ship name, chassis, stats, weapon, abilities,
+           plus a CONFIRM & LAUNCH button that commits the pick.
+   Bottom strip: teammates with the ship they've picked.
+   Countdown overlay sits on top of this screen and stays visible during 3-2-1,
+   then the screen fades as the warp-in animation begins. Between rounds the
+   screen reappears so you can swap for the next round. */
 #ship-select {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(5,5,15,0.95); z-index: 100; display: flex;
-  flex-direction: column; align-items: center; justify-content: center;
-  color: #fff; cursor: default;
+  background: rgba(5,5,15,0.95); z-index: 100; display: none;
+  flex-direction: column; align-items: stretch; justify-content: flex-start;
+  color: #fff; cursor: default; padding: 0;
 }
-#ship-select h1 { font-size: 36px; margin-bottom: 8px; letter-spacing: 4px; color: #ffaa00; }
-#ship-select h2 { font-size: 14px; margin-bottom: 30px; color: #888; letter-spacing: 2px; }
-#ship-grid { display: grid; grid-template-columns: repeat(4, 200px); gap: 12px; }
-.ship-card {
-  background: rgba(20,20,40,0.9); border: 1px solid rgba(80,80,120,0.4);
-  padding: 16px; cursor: pointer; transition: all 0.2s; pointer-events: all;
+#ship-select.active { display: flex; }
+#ship-select-header {
+  padding: 18px 32px 10px; border-bottom: 1px solid rgba(80,80,120,0.25);
 }
-.ship-card:hover { border-color: #ffaa00; background: rgba(30,30,50,0.9); transform: translateY(-2px); }
-.ship-card .loadout-name { font-size: 18px; font-weight: bold; color: #ffaa00; }
-.ship-card .chassis-name { font-size: 11px; color: #888; margin-bottom: 8px; }
-.ship-card .stat { font-size: 10px; color: #aaa; margin: 2px 0; }
-.ship-card .stat span { color: #fff; }
-.ship-card .weapon-name { font-size: 10px; color: #66bb66; margin-top: 6px; }
-.ship-card .abilities-list { font-size: 9px; color: #66cc66; margin-top: 4px; }
+#ship-select-header h1 { font-size: 30px; margin: 0; letter-spacing: 4px; color: #ffaa00; }
+#ship-select-header h2 { font-size: 12px; margin: 4px 0 0; color: #888; letter-spacing: 2px; }
+#ship-select-body {
+  flex: 1; display: flex; flex-direction: row; min-height: 0;
+}
+/* Left: stacked ship-name list */
+#ship-list {
+  width: 240px; flex-shrink: 0;
+  padding: 18px 14px; overflow-y: auto;
+  border-right: 1px solid rgba(80,80,120,0.25);
+}
+.ship-list-entry {
+  padding: 12px 14px; margin-bottom: 6px;
+  border: 1px solid rgba(80,80,120,0.35);
+  background: rgba(20,20,40,0.6); color: #ddd;
+  font-size: 15px; letter-spacing: 2px; cursor: pointer;
+  transition: all 0.15s; pointer-events: all;
+  display: flex; flex-direction: column;
+}
+.ship-list-entry .sle-name { font-weight: bold; color: #ffaa00; font-size: 16px; }
+.ship-list-entry .sle-class { font-size: 10px; color: #888; margin-top: 2px; letter-spacing: 1px; }
+.ship-list-entry:hover { border-color: #ffaa00; background: rgba(30,30,50,0.9); }
+.ship-list-entry.selected {
+  border-color: #ffaa00; background: rgba(50,40,15,0.9);
+  box-shadow: inset 0 0 12px rgba(255,170,0,0.25);
+}
+/* Center: preview + stats */
+#ship-preview {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 20px; min-width: 0;
+}
+#ship-preview-header { text-align: center; margin-bottom: 14px; }
+#ship-preview-name { font-size: 32px; letter-spacing: 4px; color: #ffaa00; font-weight: bold; }
+#ship-preview-class { font-size: 13px; color: #aaa; letter-spacing: 2px; margin-top: 4px; }
+#ship-preview-stats {
+  display: grid; grid-template-columns: repeat(2, 220px); gap: 8px 24px;
+  margin: 14px 0 18px; pointer-events: none;
+}
+.sp-stat {
+  font-size: 12px; letter-spacing: 1px; color: #aaa;
+  display: flex; justify-content: space-between;
+  padding: 6px 10px; background: rgba(20,20,40,0.4);
+  border-left: 2px solid rgba(80,80,120,0.5);
+}
+.sp-stat .sp-val { color: #fff; font-weight: bold; }
+#ship-preview-weapon {
+  color: #66bbff; font-size: 13px; letter-spacing: 1px; margin-top: 6px;
+  text-align: center;
+}
+#ship-preview-abilities {
+  color: #66cc66; font-size: 11px; letter-spacing: 1px;
+  text-align: center; margin-top: 2px;
+}
+#ship-preview-core {
+  color: #ffaa00; font-size: 11px; letter-spacing: 1px;
+  text-align: center; margin-top: 4px; opacity: 0.8;
+}
+#ship-preview-confirm {
+  margin-top: 22px; padding: 12px 36px;
+  background: rgba(255,170,0,0.15); border: 2px solid #ffaa00;
+  color: #ffaa00; font-size: 14px; letter-spacing: 3px; font-weight: bold;
+  cursor: pointer; transition: all 0.15s; pointer-events: all;
+  font-family: inherit;
+}
+#ship-preview-confirm:hover { background: rgba(255,170,0,0.35); color: #fff; }
+#ship-preview-confirm:disabled { opacity: 0.3; cursor: not-allowed; }
+#ship-preview-empty {
+  color: #555; font-size: 14px; letter-spacing: 2px; text-align: center;
+  padding: 60px 0;
+}
+/* Bottom: teammates */
+#teammates-strip {
+  border-top: 1px solid rgba(80,80,120,0.25);
+  padding: 14px 24px; display: flex; flex-direction: row;
+  gap: 14px; align-items: center; overflow-x: auto;
+  background: rgba(8,8,18,0.7);
+  min-height: 56px;
+}
+#teammates-strip .strip-label {
+  font-size: 11px; color: #888; letter-spacing: 2px; margin-right: 10px;
+  flex-shrink: 0;
+}
+.teammate-chip {
+  display: flex; flex-direction: column; padding: 6px 12px;
+  background: rgba(20,20,40,0.6); border: 1px solid rgba(80,80,120,0.35);
+  min-width: 130px; flex-shrink: 0;
+}
+.teammate-chip .tm-name { color: #ddd; font-size: 12px; letter-spacing: 1px; font-weight: bold; }
+.teammate-chip .tm-ship { color: #ffaa00; font-size: 10px; letter-spacing: 1px; margin-top: 2px; }
+.teammate-chip.you { border-color: #ffaa00; background: rgba(50,40,15,0.6); }
+.teammate-chip.empty .tm-ship { color: #555; }
+/* Countdown overlay shown while ship-select is still visible. */
+#ship-select-countdown {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 110; pointer-events: none; text-align: center;
+  display: none;
+}
+#ship-select-countdown.active { display: block; }
+#ship-select-countdown .cd-num {
+  font-size: 160px; font-weight: bold; color: #ffaa00;
+  text-shadow: 0 0 40px rgba(255,170,0,0.8), 0 0 80px rgba(255,100,0,0.4);
+  letter-spacing: 0; line-height: 1;
+  animation: cdPulse 0.9s ease-out forwards;
+}
+#ship-select-countdown .cd-sub {
+  font-size: 14px; color: #ddd; letter-spacing: 4px; margin-top: 8px;
+}
+@keyframes cdPulse {
+  0% { transform: scale(0.6); opacity: 0; }
+  15% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
 
 /* Doomed Warning */
 #doomed-warning {
@@ -688,17 +798,39 @@ canvas { display: block; }
   </div>
 </div>
 
-<div id="ship-select" style="display:none;">
-  <h1>LAST SHIP SAILING</h1>
-  <h2>CHOOSE YOUR SHIP</h2>
-  <div id="ship-grid"></div>
-
-  <div id="map-select">
-    <h3>SELECT MAP</h3>
-    <div id="map-select-grid"></div>
+<div id="ship-select">
+  <div id="ship-select-header">
+    <h1>LAST SHIP SAILING</h1>
+    <h2>CHOOSE YOUR SHIP</h2>
   </div>
-  <div style="margin-top:20px;color:#555;font-size:10px;letter-spacing:1px;">WASD: Move | SPACE/CTRL: Up/Down | MOUSE: Aim | SHIFT: Dash | Q/E/F: Abilities | V: Core | ESC: Settings</div>
-  <div style="margin-top:4px;color:#444;font-size:9px;letter-spacing:1px;">GAMEPAD: D-Pad Up/Down for vertical movement</div>
+  <div id="ship-select-body">
+    <div id="ship-list"></div>
+    <div id="ship-preview">
+      <div id="ship-preview-empty">SELECT A SHIP FROM THE LIST</div>
+      <div id="ship-preview-header" style="display:none;">
+        <div id="ship-preview-name"></div>
+        <div id="ship-preview-class"></div>
+      </div>
+      <div id="ship-preview-stats" style="display:none;"></div>
+      <div id="ship-preview-weapon" style="display:none;"></div>
+      <div id="ship-preview-abilities" style="display:none;"></div>
+      <div id="ship-preview-core" style="display:none;"></div>
+      <button id="ship-preview-confirm" style="display:none;">CONFIRM &amp; LAUNCH</button>
+      <div id="map-select" style="display:none; margin-top:28px; text-align:center;">
+        <h3 style="font-size:13px;color:#ffaa00;letter-spacing:2px;margin:0 0 8px;">SELECT MAP</h3>
+        <div id="map-select-grid" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
+      </div>
+    </div>
+  </div>
+  <div id="teammates-strip">
+    <span class="strip-label">TEAMMATES</span>
+    <div id="teammates-list" style="display:flex;gap:10px;"></div>
+  </div>
+  <div style="padding:8px 24px;color:#555;font-size:10px;letter-spacing:1px;background:rgba(4,4,10,0.85);">WASD: Move | SPACE/CTRL: Up/Down | MOUSE: Aim | SHIFT: Dash | Q/E/F: Abilities | V: Core | ESC: Settings&nbsp;&nbsp;&nbsp;GAMEPAD: D-Pad Up/Down for vertical movement</div>
+  <div id="ship-select-countdown">
+    <div class="cd-num">3</div>
+    <div class="cd-sub">LAUNCH</div>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1192,8 +1324,15 @@ function startSolo() {
 
 function enterShipSelect() {
   document.getElementById('lobby').style.display = 'none';
-  document.getElementById('ship-select').style.display = 'flex';
+  const sel = document.getElementById('ship-select');
+  sel.classList.add('active');
+  // Make sure the countdown is hidden and the preview is in its empty state
+  // whenever we (re-)enter the screen (first time, or between rounds).
+  const cd = document.getElementById('ship-select-countdown');
+  if (cd) cd.classList.remove('active');
+  buildShipSelect();
   buildMapSelector();
+  updateTeammatesStrip();
 }
 
 function buildMapSelector() {
@@ -2581,6 +2720,10 @@ function buildModelShipMesh(chassisData, teamColor, loadoutKey) {
   // Clone and retint materials (preserve baseColor texture and vertex colors,
   // add a subtle team-color emissive so you can still tell sides apart).
   const model = proto.clone(true);
+  // Collect hull-like materials so animateShipMesh can dim them on doomed state.
+  // Opaque MeshPhongMaterials that aren't additive engine/shield/plume bits are
+  // the hull; we skip transparent ones to preserve glow highlights.
+  const hullMats = [];
   model.traverse(child => {
     if (child.isMesh) {
       const mats = Array.isArray(child.material) ? child.material : [child.material];
@@ -2595,13 +2738,16 @@ function buildModelShipMesh(chassisData, teamColor, loadoutKey) {
         if (m && m.map) params.map = m.map;
         if (m && m.vertexColors) params.vertexColors = true;
         params.color = (m && m.color) ? m.color.clone() : new THREE.Color(0xbfc4d2);
-        return new THREE.MeshPhongMaterial(params);
+        const mat = new THREE.MeshPhongMaterial(params);
+        if (!params.transparent) hullMats.push(mat);
+        return mat;
       });
       child.material = newMats.length === 1 ? newMats[0] : newMats;
       child.castShadow = false; child.receiveShadow = false;
     }
   });
   group.add(model);
+  group.userData.hullMats = hullMats;
 
   // Engine + plume materials (additive, identical to procedural path).
   const engineGlowMat = new THREE.MeshBasicMaterial({
@@ -2705,14 +2851,14 @@ function buildModelShipMesh(chassisData, teamColor, loadoutKey) {
     if (child.userData && child.userData.isPlume) enginePlumes.push(child);
   });
   const barrelMeshes = []; // no procedural barrels to recoil on imported hulls
-  // Team-color rim PointLight: short-range light attached to ship root that
-  // tints the hull from inside the team color. Range ~180 u (just enough to
-  // wrap the ship silhouette); intensity gently pulses with speed via animate.
-  const rimLight = new THREE.PointLight(teamColor, 0.9, 180, 2.0);
-  rimLight.position.set(0, 0, 0);
-  group.add(rimLight);
+  // V5a rim-PointLight was removed: the fresnel rim-shader on hullMat already
+  // paints the silhouette in team color without adding a scene light. Adding a
+  // PointLight per ship pushed the scene past Three.js' baked NUM_POINT_LIGHTS,
+  // which caused MeshPhongMaterial to recompile into a variant that rendered
+  // hulls nearly black in normal play. Darkness is now reserved for the doomed
+  // state (see animateShipMesh), so "ship looks dark" reads as "executable."
   const prevUD = group.userData || {};
-  group.userData = Object.assign(prevUD, { engineMesh, shieldMesh: shield, engineGlows, enginePlumes, barrelMeshes, panelGlowMat, engineGlowMat, rimLight, isModelShip: true });
+  group.userData = Object.assign(prevUD, { engineMesh, shieldMesh: shield, engineGlows, enginePlumes, barrelMeshes, panelGlowMat, engineGlowMat, isModelShip: true });
   return group;
 }
 
@@ -2799,6 +2945,8 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
   // Register the cockpit material on the group so animateShipMesh can pulse it (heartbeat).
   group.userData.cockpitMat = cockpitMat;
   group.userData.cockpitBaseEmissiveIntensity = 1.4;
+  // Register hull material so doomed-state darkening can dim the silhouette.
+  group.userData.hullMat = hullMat;
   const engineGlowMat = new THREE.MeshBasicMaterial({
     color: teamColor, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending,
     depthWrite: false
@@ -2836,10 +2984,13 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
     group.add(cone);
     return cone;
   }
-  const outlineMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2, transparent: true, opacity: 1.0 });
-  // Expose for distance-based opacity fade in animateShipMesh (WebGL can't truly
-  // scale line width, so we fade opacity as the ship recedes: closer = darker,
-  // far = silhouette dissolves into the volumetric fog).
+  const outlineMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
+  // V2e now toggles outline.visible (not opacity) at a far-distance threshold,
+  // so we keep outlineMat fully opaque and skip the transparent render queue.
+  // Transparent line-materials were sorting incorrectly against the hull under
+  // some camera angles, stacking far-side outlines over near-side hull and
+  // reading as "all black". Hiding entirely past the fade distance is cheaper
+  // and visually equivalent (distant ships already read via plume + fresnel).
   group.userData.outlineMat = outlineMat;
 
   // Helper: add mesh + outline to group
@@ -3037,14 +3188,11 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
       barrelMeshes.push(child);
     }
   });
-  // Team-color rim PointLight: short-range light attached to ship root that
-  // tints the hull from inside the team color. Range ~180 u (just enough to
-  // wrap the ship silhouette); intensity gently pulses with speed via animate.
-  const rimLight = new THREE.PointLight(teamColor, 0.9, 180, 2.0);
-  rimLight.position.set(0, 0, 0);
-  group.add(rimLight);
+  // V5a rim-PointLight was removed here too; see note in buildModelShipMesh.
+  // The fresnel shader on hullMat delivers the silhouette tint without adding
+  // a scene light per ship.
   const prevUD = group.userData || {};
-  group.userData = Object.assign(prevUD, { engineMesh, shieldMesh: shield, engineGlows, enginePlumes, barrelMeshes, panelGlowMat, engineGlowMat, rimLight });
+  group.userData = Object.assign(prevUD, { engineMesh, shieldMesh: shield, engineGlows, enginePlumes, barrelMeshes, panelGlowMat, engineGlowMat });
   return group;
 }
 
@@ -3094,35 +3242,44 @@ function getHeatHazeSpriteMat() {
   return _heatHazeSpriteMat;
 }
 
-function animateShipMesh(mesh, speed, maxSpeed, isFiring, dt) {
+function animateShipMesh(mesh, speed, maxSpeed, isFiring, dt, doomed) {
   if (!mesh || !mesh.userData) return;
   const t = Math.min(1, speed / maxSpeed);
   const time = game.time;
-  // Distance-scaled outline fade: WebGL can't widen GL_LINES, so we fade opacity
-  // as the ship recedes. Close (<600 u) = full opacity; far (>2800 u) = fully
-  // transparent (silhouette dissolves into fog). Nearest friendly readout stays
-  // crisp; distant ships read via rim light + plume glow instead of chunky edges.
+  // Distance-based outline culling: WebGL can't widen GL_LINES, so for distant
+  // ships the outline chatter isn't useful. We keep the outline opaque (avoids
+  // transparent-queue sort issues that stacked far-side edges onto near-side
+  // hull, reading as "all black") and simply hide it past ~2200 u. Distant
+  // ships still read via plume + fresnel rim.
   if (mesh.userData.outlineMat && camera) {
     const camPos = camera.position;
     const dx = mesh.position.x - camPos.x;
     const dy = mesh.position.y - camPos.y;
     const dz = mesh.position.z - camPos.z;
-    const distSq = dx*dx + dy*dy + dz*dz;
-    // Compute fade: 1.0 under 600 u, 0.0 over 2800 u, smoothstep between.
-    const d = Math.sqrt(distSq);
-    const fade = 1.0 - Math.max(0, Math.min(1, (d - 600) / 2200));
-    // smootherstep shape feels better than linear
-    const eased = fade * fade * (3 - 2 * fade);
-    mesh.userData.outlineMat.opacity = eased;
+    const d = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    mesh.userData.outlineMat.visible = (d < 2200);
   }
-  // Team-color rim light pulse: gently modulate intensity with speed + time so
-  // the team signature breathes, and dim slightly when the ship is at rest so
-  // stationary hulls don't look self-illuminated.
-  if (mesh.userData.rimLight) {
-    const rim = mesh.userData.rimLight;
-    const base = 0.55 + t * 0.65; // 0.55 idle, ~1.2 at full throttle
-    const pulse = 1 + Math.sin(time * 2.2) * 0.12;
-    rim.intensity = base * pulse;
+  // Doomed-state hull darkening: ONLY when the ship is doomed we pull hull
+  // emissive + color toward black, so the silhouette reads as "executable." In
+  // normal play the hull stays at full brightness. Applied per-frame with a
+  // smooth lerp so the transition into/out of doomed is cinematic (about 0.5 s
+  // to fully dim at 60 fps). Shield/cockpit/plume stay bright so they catch
+  // bloom and the outline of the doomed ship stays legible against fog.
+  function dimHullMat(hullM, dim) {
+    if (hullM.userData._baseHullColor === undefined) {
+      hullM.userData._baseHullColor = hullM.color.clone();
+      hullM.userData._baseEmissiveI = hullM.emissiveIntensity;
+    }
+    hullM.color.copy(hullM.userData._baseHullColor).multiplyScalar(dim);
+    hullM.emissiveIntensity = hullM.userData._baseEmissiveI * dim;
+  }
+  const targetDim = doomed ? 0.25 : 1.0;
+  const prevDim = mesh.userData._dimAmount === undefined ? 1.0 : mesh.userData._dimAmount;
+  const nextDim = prevDim + (targetDim - prevDim) * 0.08;
+  mesh.userData._dimAmount = nextDim;
+  if (mesh.userData.hullMat) dimHullMat(mesh.userData.hullMat, nextDim);
+  if (mesh.userData.hullMats) {
+    for (const hm of mesh.userData.hullMats) dimHullMat(hm, nextDim);
   }
   // Cockpit heartbeat: slow 1 Hz emissive modulation (±10%) so idle ships read as alive.
   // Speeds up toward ~1.6 Hz at full throttle so the pulse tracks energy output.
@@ -3651,14 +3808,14 @@ class Bot {
     }
 
     playerTakeDamage(damage, this);
-    // TONE bot lock-on: hits build lock marks on the player (max 3).
-    // Sonar ping fires on lock transitions so the player hears the threat escalate.
+    // TONE bot lock-on: hits build lock marks on the player (max 3). The sonar
+    // ping is reserved for the player's OWN TONE lock progression (hear-when-
+    // you-lock), not for enemy lock progression onto you; the on-screen
+    // "ENEMY LOCKED-ON" warning pips already communicate incoming threat
+    // visually. Otherwise every ship being TONE-shot would hear lock pings.
     if (this.loadoutKey === 'TONE') {
       const prevEnemyLocks = player.enemyToneLocks[this.id] || 0;
       player.enemyToneLocks[this.id] = Math.min(3, prevEnemyLocks + 1);
-      if (player.enemyToneLocks[this.id] > prevEnemyLocks) {
-        playSound('sonar_ping_' + player.enemyToneLocks[this.id]);
-      }
       if (player._enemyLockDecayTimers) player._enemyLockDecayTimers[this.id] = 0; // reset decay
     }
     // Bot core meter charges from dealing damage
@@ -5594,9 +5751,17 @@ function spawnImpactSparks(pos, count) {
 
 // ---- PLAYER FUNCTIONS ----
 
-function selectLoadout(key) {
+// Commit a loadout: fully set up the player ship, build the map, spawn bots, and
+// kick off the launchCountdown (3-2-1-LAUNCH) while ship-select stays visible.
+// Used both for the initial pick (fresh match) and for between-round ship swaps
+// (midMatch = game.state === 'warmup' AND we already have a non-first round).
+function commitLoadout(key) {
   const loadout = LOADOUTS[key];
   const ch = CHASSIS[loadout.chassis];
+  // midMatch: between-rounds swap. Skip the match reset + map rebuild + bot respawn.
+  // The round-end path already handled those; all we need here is the player-side
+  // loadout refresh and a fresh launchCountdown.
+  const midMatch = (game.state === 'warmup' && game.currentRound && game.currentRound > 1);
 
   player.loadout = loadout;
   player.loadoutKey = key;
@@ -5679,31 +5844,46 @@ function selectLoadout(key) {
   document.getElementById('weapon-name').textContent = loadout.weapon.name;
 
   buildAbilityHUD();
-  document.getElementById('ship-select').style.display = 'none';
-  renderer.domElement.requestPointerLock();
+  // NOTE: ship-select stays visible here; launchCountdown() hides it when the
+  // 3-2-1-LAUNCH ticker finishes and the player actually warps into the arena.
+  // Pointer lock is also deferred to that moment.
 
-  // Load map from rotation (handcrafted maps + procedural)
-  shuffleMapRotation();
-  const level = getNextMap();
-  buildRoomGraphLevel(level);
-  spawnDynamicObjects(game.sdfRoomData);
-  spawnOrganics(game.sdfRoomData);
+  if (!midMatch) {
+    // Fresh match: full map build, stasis reset, bot spawn, score reset.
+    shuffleMapRotation();
+    const level = getNextMap();
+    buildRoomGraphLevel(level);
+    spawnDynamicObjects(game.sdfRoomData);
+    spawnOrganics(game.sdfRoomData);
 
-  // Place player inside the letter corridors (Fleet A territory)
-  player.position.copy(getValidSpawnPoint('A'));
+    // Place player inside the letter corridors (Fleet A territory)
+    player.position.copy(getValidSpawnPoint('A'));
 
-  // Reset stasis field state
-  game.stasisFields.forEach(f => f.destroy());
-  game.stasisFields = [];
-  game.stasisSpawnTimer = 30;
-  game.stasisFirstBatch = true;
-  game.playerInStasis = false;
-  game.playerStasisTimer = 0;
-  document.getElementById('stasis-warning').style.display = 'none';
-  document.getElementById('stasis-vignette').style.display = 'none';
+    // Reset stasis field state
+    game.stasisFields.forEach(f => f.destroy());
+    game.stasisFields = [];
+    game.stasisSpawnTimer = 30;
+    game.stasisFirstBatch = true;
+    game.playerInStasis = false;
+    game.playerStasisTimer = 0;
+    document.getElementById('stasis-warning').style.display = 'none';
+    document.getElementById('stasis-vignette').style.display = 'none';
 
-  // In multiplayer, still spawn bots to fill slots; network players coexist
-  spawnBots();
+    // In multiplayer, still spawn bots to fill slots; network players coexist
+    spawnBots();
+
+    game.state = 'warmup';
+    game.roundTimer = LSS.ROUND_TIME;
+    game.scoreA = 0;
+    game.scoreB = 0;
+    game.currentRound = 1;
+    // Start ambient sound bed (only once per match)
+    startAmbientBed();
+  } else {
+    // Between-rounds swap: place player at their team's spawn; the map is already
+    // built from the round-end transition; scores/round counter are preserved.
+    player.position.copy(getValidSpawnPoint(player.team === LSS.TEAM_FLEET_B ? 'B' : 'A'));
+  }
 
   // Announce our loadout to peers
   if (net.active && net.sendLoadout) {
@@ -5714,15 +5894,12 @@ function selectLoadout(key) {
     });
   }
 
-  game.state = 'warmup';
-  game.warmupTimer = LSS.WARMUP_TIME;
-  game.roundTimer = LSS.ROUND_TIME;
-  game.scoreA = 0;
-  game.scoreB = 0;
-  game.currentRound = 1;
-
-  // Start ambient sound bed
-  startAmbientBed();
+  // Keep 3s warmup so it syncs with the 3-2-1-LAUNCH ship-select countdown.
+  game.warmupTimer = 3.0;
+  // Refresh the teammates strip so the newly committed ship shows up as YOU's pick.
+  updateTeammatesStrip();
+  // Fire the in-screen 3-2-1-LAUNCH beep + number sequence.
+  launchCountdown();
 
   console.log('Map: ' + game.mapWord);
 }
@@ -7942,8 +8119,12 @@ function updateRoundSystem(dt) {
   if (game.state === 'warmup') {
     const prev = game.warmupTimer;
     game.warmupTimer -= dt;
+    // Suppress the overlay 3-2-1 if the ship-select screen is still handling the
+    // countdown (launchCountdown draws its own giant digits inside ship-select).
+    const selectActive = document.getElementById('ship-select') &&
+                         document.getElementById('ship-select').classList.contains('active');
     // Cinematic 3-2-1 countdown in the final seconds of warmup.
-    if (window.Overlays) {
+    if (window.Overlays && !selectActive) {
       for (let n = 3; n >= 1; n--) {
         if (prev > n && game.warmupTimer <= n) {
           Overlays.countdown(n, 'ROUND ' + (game.currentRound || 1));
@@ -7953,7 +8134,10 @@ function updateRoundSystem(dt) {
     if (game.warmupTimer <= 0) {
       game.state = 'playing';
       game.roundTimer = LSS.ROUND_TIME;
-      playSound('round_start');
+      // round_start tone: already played by launchCountdown when selectActive was true,
+      // but not when selectActive is false (between-round mid-air transitions). Guard so
+      // we don't stack two of them when the ship-select path is driving the countdown.
+      if (!selectActive) playSound('round_start');
       // Cinematic: FIGHT! banner on warmup -> playing transition.
       if (window.Overlays) {
         Overlays.countdown('FIGHT', '');
@@ -7991,7 +8175,9 @@ function updateRoundSystem(dt) {
       } else {
         game.currentRound++;
         game.state = 'warmup';
-        game.warmupTimer = LSS.WARMUP_TIME;
+        // Round warmup now runs through the ship-select screen so the player can
+        // swap ships between rounds. 3s lines up with the 3-2-1-LAUNCH beeps.
+        game.warmupTimer = 3.0;
         // Next map from rotation each round
         const level = getNextMap();
         buildRoomGraphLevel(level);
@@ -8015,6 +8201,16 @@ function updateRoundSystem(dt) {
         player.coreTimer = 0;
         respawnPlayer();
         spawnBots();
+        // Release pointer lock and re-show ship-select with the current pick
+        // highlighted; the player can swap ships or wait for the auto-launch.
+        if (document.exitPointerLock) {
+          try { document.exitPointerLock(); } catch (e) {}
+        }
+        const sel = document.getElementById('ship-select');
+        if (sel) { sel.style.display = 'flex'; sel.classList.add('active'); }
+        buildShipSelect();
+        updateTeammatesStrip();
+        launchCountdown();
       }
     }
   }
@@ -9239,28 +9435,215 @@ function updateAbilityHUD() {
 }
 
 // ---- SHIP SELECT SCREEN ----
+// Two-phase layout: (1) preview a ship's stats without committing (previewLoadout);
+// (2) confirm pick, which sets up game state and starts the launchCountdown while
+// ship-select stays visible. When the countdown finishes, ship-select hides and
+// the warp-in sequence begins. Between rounds, we return to ship-select so the
+// player can swap ships before the next launchCountdown.
+
+// Tracks which ship key is currently being previewed (not yet committed).
+let _previewedKey = null;
 
 function buildShipSelect() {
-  const grid = document.getElementById('ship-grid');
-  grid.innerHTML = '';
-
+  const list = document.getElementById('ship-list');
+  if (!list) return;
+  list.innerHTML = '';
   for (const [key, loadout] of Object.entries(LOADOUTS)) {
     const ch = CHASSIS[loadout.chassis];
-    const card = document.createElement('div');
-    card.className = 'ship-card';
-    card.innerHTML = `
-      <div class="loadout-name">${loadout.name}</div>
-      <div class="chassis-name">${loadout.className} (${ch.name})</div>
-      <div class="stat">Hull: <span>${ch.maxHealth}</span></div>
-      <div class="stat">Shield: <span>${ch.maxShield}</span></div>
-      <div class="stat">Speed: <span>${ch.flightSpeed}</span></div>
-      <div class="stat">Dashes: <span>${ch.maxDashes}</span></div>
-      <div class="weapon-name">${loadout.weapon.name} (${loadout.weapon.damage} dmg)</div>
-      <div class="abilities-list">${loadout.abilities.map(a => a.name).join(' / ')}</div>
+    const row = document.createElement('div');
+    row.className = 'ship-list-entry';
+    row.dataset.key = key;
+    row.innerHTML = `
+      <span class="sle-name">${loadout.name}</span>
+      <span class="sle-class">${loadout.className}</span>
     `;
-    card.addEventListener('click', () => selectLoadout(key));
-    grid.appendChild(card);
+    row.addEventListener('click', () => previewLoadout(key));
+    list.appendChild(row);
   }
+  // If the player already has a loadout (eg. coming back between rounds), pre-select it
+  // so the center panel isn't empty.
+  const initialKey = (player && player.loadoutKey) ? player.loadoutKey : null;
+  if (initialKey && LOADOUTS[initialKey]) {
+    previewLoadout(initialKey);
+  } else {
+    _previewedKey = null;
+    // Show empty-state messaging in the preview panel.
+    const emptyEl = document.getElementById('ship-preview-empty');
+    if (emptyEl) emptyEl.style.display = 'block';
+    for (const id of ['ship-preview-header', 'ship-preview-stats', 'ship-preview-weapon',
+                      'ship-preview-abilities', 'ship-preview-core', 'ship-preview-confirm']) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    }
+  }
+}
+
+// Render the stats/weapon/abilities/core of a loadout into the center preview panel.
+// Pure UI; does NOT mutate game state. The player only commits by clicking CONFIRM.
+function previewLoadout(key) {
+  const loadout = LOADOUTS[key];
+  if (!loadout) return;
+  const ch = CHASSIS[loadout.chassis];
+  _previewedKey = key;
+
+  // Highlight the selected entry in the left list.
+  const entries = document.querySelectorAll('.ship-list-entry');
+  entries.forEach(e => {
+    e.classList.toggle('selected', e.dataset.key === key);
+  });
+
+  const emptyEl = document.getElementById('ship-preview-empty');
+  if (emptyEl) emptyEl.style.display = 'none';
+
+  const headerEl = document.getElementById('ship-preview-header');
+  if (headerEl) {
+    headerEl.style.display = 'block';
+    document.getElementById('ship-preview-name').textContent = loadout.name;
+    document.getElementById('ship-preview-class').textContent = loadout.className + ' ; ' + ch.name;
+  }
+
+  const statsEl = document.getElementById('ship-preview-stats');
+  if (statsEl) {
+    statsEl.style.display = 'grid';
+    statsEl.innerHTML = `
+      <div class="sp-stat"><span>HULL</span><span class="sp-val">${ch.maxHealth}</span></div>
+      <div class="sp-stat"><span>SHIELD</span><span class="sp-val">${ch.maxShield}</span></div>
+      <div class="sp-stat"><span>SPEED</span><span class="sp-val">${ch.flightSpeed}</span></div>
+      <div class="sp-stat"><span>DASHES</span><span class="sp-val">${ch.maxDashes}</span></div>
+    `;
+  }
+
+  const weaponEl = document.getElementById('ship-preview-weapon');
+  if (weaponEl) {
+    weaponEl.style.display = 'block';
+    weaponEl.textContent = 'WEAPON: ' + loadout.weapon.name + ' (' + loadout.weapon.damage + ' dmg)';
+  }
+
+  const abilitiesEl = document.getElementById('ship-preview-abilities');
+  if (abilitiesEl) {
+    abilitiesEl.style.display = 'block';
+    abilitiesEl.textContent = 'ABILITIES: ' + loadout.abilities.map(a => a.name).join(' / ');
+  }
+
+  const coreEl = document.getElementById('ship-preview-core');
+  if (coreEl && loadout.core) {
+    coreEl.style.display = 'block';
+    coreEl.textContent = 'CORE: ' + loadout.core.name + ' ; ' + loadout.core.desc;
+  }
+
+  const confirmBtn = document.getElementById('ship-preview-confirm');
+  if (confirmBtn) {
+    confirmBtn.style.display = 'inline-block';
+    // Reset any prior click binding by cloning the node.
+    const newBtn = confirmBtn.cloneNode(true);
+    confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+    newBtn.addEventListener('click', () => commitLoadout(key));
+  }
+}
+
+// Legacy entry point: anywhere still calling selectLoadout(key) jumps straight to
+// the commit path (existing keyboard shortcuts, net sync, etc.).
+function selectLoadout(key) { commitLoadout(key); }
+
+// Populates the bottom teammates strip with names + ship picks. The local player
+// always shows as "YOU"; bots are listed by their loadout name; empty slots show
+// a dashed placeholder so the strip's structure stays legible before bots spawn.
+function updateTeammatesStrip() {
+  const list = document.getElementById('teammates-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  // The local player chip first.
+  const youChip = document.createElement('div');
+  youChip.className = 'teammate-chip you';
+  const yourShip = (player && player.loadoutKey) ? player.loadoutKey : '---';
+  youChip.innerHTML = `
+    <span class="tm-name">YOU</span>
+    <span class="tm-ship">${yourShip}</span>
+  `;
+  list.appendChild(youChip);
+
+  // Friendly bots: anyone on the player's team in game.entities.
+  const myTeam = (player && player.team !== undefined) ? player.team : LSS.TEAM_FLEET_A;
+  const friendlies = (game.entities || []).filter(b => b.team === myTeam);
+  for (const bot of friendlies) {
+    const chip = document.createElement('div');
+    chip.className = 'teammate-chip';
+    chip.innerHTML = `
+      <span class="tm-name">${bot.loadout && bot.loadout.name ? bot.loadout.name + ' BOT' : 'BOT'}</span>
+      <span class="tm-ship">${bot.loadoutKey || '---'}</span>
+    `;
+    list.appendChild(chip);
+  }
+
+  // Pad to 3 slots (player + 2 bots) so the strip doesn't collapse pre-spawn.
+  while (list.children.length < 3) {
+    const empty = document.createElement('div');
+    empty.className = 'teammate-chip empty';
+    empty.innerHTML = `<span class="tm-name">EMPTY</span><span class="tm-ship">---</span>`;
+    list.appendChild(empty);
+  }
+}
+
+// Plays the 3-2-1-LAUNCH beep sequence in-screen. The ship-select stays visible
+// the whole time; only on "LAUNCH" do we hide it, request pointer lock, and let
+// the warmup → playing transition finish (warmupTimer is already 3s in commitLoadout
+// so it lines up). Cancellable via _activeLaunchTimers if the player exits.
+let _activeLaunchTimers = [];
+function _clearLaunchCountdown() {
+  for (const t of _activeLaunchTimers) clearTimeout(t);
+  _activeLaunchTimers = [];
+}
+function launchCountdown() {
+  _clearLaunchCountdown();
+  const overlay = document.getElementById('ship-select-countdown');
+  const numEl = overlay ? overlay.querySelector('.cd-num') : null;
+  const subEl = overlay ? overlay.querySelector('.cd-sub') : null;
+  if (!overlay || !numEl || !subEl) return;
+
+  // Helper: pulse a single digit/word, restarting the cdPulse animation each tick.
+  function tick(text, sub) {
+    numEl.textContent = text;
+    subEl.textContent = sub;
+    overlay.classList.add('active');
+    // Re-trigger the CSS animation by removing/re-adding the node briefly.
+    numEl.style.animation = 'none';
+    // Force reflow so the next assignment restarts the keyframe.
+    void numEl.offsetWidth;
+    numEl.style.animation = '';
+  }
+
+  // 3 → 2 → 1 → LAUNCH at 1s intervals; LAUNCH then triggers warp-in.
+  // Beeps use the existing sonar_ping family (rising pitch matches countdown).
+  tick('3', 'LAUNCH IN');
+  try { playSound('sonar_ping_1'); } catch (e) {}
+
+  _activeLaunchTimers.push(setTimeout(() => {
+    tick('2', 'LAUNCH IN');
+    try { playSound('sonar_ping_2'); } catch (e) {}
+  }, 1000));
+
+  _activeLaunchTimers.push(setTimeout(() => {
+    tick('1', 'LAUNCH IN');
+    try { playSound('sonar_ping_3'); } catch (e) {}
+  }, 2000));
+
+  _activeLaunchTimers.push(setTimeout(() => {
+    tick('LAUNCH', 'WARP-IN');
+    try { playSound('round_start'); } catch (e) {}
+    // Hand off to gameplay: hide ship-select, lock pointer, hide overlay shortly.
+    const sel = document.getElementById('ship-select');
+    if (sel) {
+      sel.classList.remove('active');
+      sel.style.display = 'none';
+    }
+    if (renderer && renderer.domElement && renderer.domElement.requestPointerLock) {
+      try { renderer.domElement.requestPointerLock(); } catch (e) {}
+    }
+    _activeLaunchTimers.push(setTimeout(() => {
+      overlay.classList.remove('active');
+    }, 700));
+  }, 3000));
 }
 
 // ---- INPUT HANDLERS ----
@@ -9290,7 +9673,12 @@ document.addEventListener('keyup', e => { input.keys[e.key.toLowerCase()] = fals
 document.addEventListener('mousedown', e => {
   if (e.button === 0) input.mouseDown = true;
   if (e.button === 2) input.rightMouseDown = true;
-  if (!input.locked && game.state !== 'select') renderer.domElement.requestPointerLock();
+  // Don't grab pointer lock while ship-select is showing (between-rounds swap
+  // path leaves game.state='warmup' with ship-select visible; we need clicks to
+  // reach the ship list and confirm button).
+  const selectActive = document.getElementById('ship-select') &&
+                       document.getElementById('ship-select').classList.contains('active');
+  if (!input.locked && game.state !== 'select' && !selectActive) renderer.domElement.requestPointerLock();
 });
 
 document.addEventListener('mouseup', e => {
@@ -10765,7 +11153,7 @@ function gameLoop(timestamp) {
     // Animate bot ship: engine glow + gun recoil
     const botSpeed = bot.velocity ? bot.velocity.length() : 0;
     const botMaxSpeed = bot.chassis ? bot.chassis.maxSpeed : 400;
-    animateShipMesh(bot.mesh, botSpeed, botMaxSpeed, bot.isFiring, dt);
+    animateShipMesh(bot.mesh, botSpeed, botMaxSpeed, bot.isFiring, dt, !!bot.doomed);
   }
   // Ship-ship collision: after all movement, push overlapping ships apart
   resolveShipShipCollisions(dt);
@@ -10773,7 +11161,7 @@ function gameLoop(timestamp) {
   if (player.mesh) {
     const pSpeed = player.velocity ? player.velocity.length() : 0;
     const pMaxSpeed = player.chassis ? player.chassis.maxSpeed : 400;
-    animateShipMesh(player.mesh, pSpeed, pMaxSpeed, player.isFiring, dt);
+    animateShipMesh(player.mesh, pSpeed, pMaxSpeed, player.isFiring, dt, !!player.doomed);
   }
 
   for (let i = game.projectiles.length - 1; i >= 0; i--) {
@@ -11363,39 +11751,47 @@ function playSound(type) {
       { attack: 0.005, hold: rr(0.05, 0.2), decay: rr(0.35, 0.15) });
   }
   else if (type === 'damage_shield') {
-    // Shield hit: crystalline crack; high-pass filtered noise burst + bright bell chime.
-    // Characterful "glass-on-glass" snap, distinct from armor's dissonant pulses.
+    // Shield hit: a tempered "metal-on-plate" thud with a short metallic ring,
+    // NOT a high glass chime. Previous version lived at 2.4-3.2 kHz with a
+    // +12 dB peak, which read as "tin can." This version centers in the
+    // 400-900 Hz band where armor and ferrous impact sounds actually sit:
+    //   - Bandpass noise thump at ~500 Hz (the body / heft of the hit).
+    //   - Short metal ring: low-Q peak at ~1.1 kHz, modest +6 dB (suggests
+    //     the plate resonates briefly without ringing like a tuning fork).
+    //   - A pitched tri-chord an octave lower than before (220/330/440) for
+    //     a warm harmonic overtone; decays fast so it reads as attack, not
+    //     pitched instrument.
     const p = rr(1, 0.10);
-    // Bell-filtered noise burst (simulated high-pass: bandpass at high freq with wide Q)
-    const bellNoise = ctx.createBufferSource();
-    const bufLen = Math.floor(ctx.sampleRate * 0.08);
-    const bellBuf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
-    const bellData = bellBuf.getChannelData(0);
-    for (let i = 0; i < bufLen; i++) bellData[i] = (Math.random() * 2 - 1) * Math.exp(-i / bufLen * 4);
-    bellNoise.buffer = bellBuf;
-    const hp = ctx.createBiquadFilter();
-    hp.type = 'highpass';
-    hp.frequency.value = ri(2400 * p, 0.15);
-    hp.Q.value = 0.7;
-    const bell = ctx.createBiquadFilter();
-    bell.type = 'peaking';
-    bell.frequency.value = ri(3200 * p, 0.10);
-    bell.Q.value = rr(6, 0.2);
-    bell.gain.value = 12;
-    const bellGain = ctx.createGain();
-    bellGain.gain.setValueAtTime(rr(0.18, 0.2), now);
-    bellGain.gain.exponentialRampToValueAtTime(0.001, now + rr(0.12, 0.2));
-    bellNoise.connect(hp); hp.connect(bell); bell.connect(bellGain);
-    if (audio.dryGain) bellGain.connect(audio.dryGain);
-    else bellGain.connect(audio.masterGain);
-    if (audio.convolver) bellGain.connect(audio.convolver);
-    bellNoise.start(now);
-    // Crystalline chime: bright triangle/sine chord at a high interval (perfect fifth + octave)
+    const thudNoise = ctx.createBufferSource();
+    const bufLen = Math.floor(ctx.sampleRate * 0.09);
+    const thudBuf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+    const thudData = thudBuf.getChannelData(0);
+    for (let i = 0; i < bufLen; i++) thudData[i] = (Math.random() * 2 - 1) * Math.exp(-i / bufLen * 5);
+    thudNoise.buffer = thudBuf;
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.value = ri(500 * p, 0.12);
+    bp.Q.value = 1.1;
+    const ring = ctx.createBiquadFilter();
+    ring.type = 'peaking';
+    ring.frequency.value = ri(1100 * p, 0.12);
+    ring.Q.value = rr(3, 0.2);
+    ring.gain.value = 6;
+    const thudGain = ctx.createGain();
+    thudGain.gain.setValueAtTime(rr(0.26, 0.2), now);
+    thudGain.gain.exponentialRampToValueAtTime(0.001, now + rr(0.14, 0.2));
+    thudNoise.connect(bp); bp.connect(ring); ring.connect(thudGain);
+    if (audio.dryGain) thudGain.connect(audio.dryGain);
+    else thudGain.connect(audio.masterGain);
+    if (audio.convolver) thudGain.connect(audio.convolver);
+    thudNoise.start(now);
+    // Warm harmonic overtone, octave lower than the old chime so it reads as
+    // "impact on a dense plate" rather than "tap on glass."
     triChord(
-      [ri(880 * p, 0.05), ri(1320 * p, 0.05), ri(1760 * p, 0.05)],
+      [ri(220 * p, 0.05), ri(330 * p, 0.05), ri(440 * p, 0.05)],
       'triangle',
-      rr(0.10, 0.2), rr(0.18, 0.2), null, null, 0.005,
-      { attack: 0.001, hold: 0, decay: rr(0.15, 0.2) }
+      rr(0.09, 0.2), rr(0.14, 0.2), null, null, 0.003,
+      { attack: 0.001, hold: 0, decay: rr(0.11, 0.2) }
     );
   }
   else if (type === 'damage') {
