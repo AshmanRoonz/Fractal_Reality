@@ -5030,6 +5030,46 @@ function warmupCombatShaders() {
       } catch (_) { /* pass warmup is non-fatal */ }
     }
 
+    // --- NUM_POINT_LIGHTS warmup ---
+    // Three.js bakes the scene's active point-light count into the GLSL of
+    // every lit material as NUM_POINT_LIGHTS. Whenever a PointLight enters
+    // or leaves the scene, that #define changes and every lit program must
+    // be recompiled. The 125839 trace showed this dominating first-shot lag:
+    // 116 compile ticks at t+29s (first explosion afterglow light activated)
+    // and smaller spikes at every new dynamic-light event after.
+    //
+    // The dynamicLights pool pre-adds MAX_LIGHTS PointLights invisible at
+    // init, so the peak count is (static ambient/directional + the 1 init
+    // pointLight + however many pool lights are currently visible). We walk
+    // that count from 1 up to the pool max, calling renderer.compile() at
+    // each step, so the program cache contains a variant for every count
+    // combat can ever reach. After this loop, flipping a pool light visible
+    // never triggers a synchronous relink because the variant is warm.
+    try {
+      if (typeof dynamicLights !== 'undefined' && Array.isArray(dynamicLights.pool)) {
+        // Save current visible state so we don't accidentally leave pool
+        // lights on (they're supposed to be invisible-at-rest).
+        const savedVis = dynamicLights.pool.map(l => l.visible);
+        const savedInt = dynamicLights.pool.map(l => l.intensity);
+        // Incrementally activate pool lights and compile at each step so
+        // every intermediate NUM_POINT_LIGHTS value gets a cached program.
+        for (let n = 1; n <= dynamicLights.pool.length; n++) {
+          const light = dynamicLights.pool[n - 1];
+          // Intensity 0 means no visual change (can't leak on screen), but
+          // the renderer still counts it in NUM_POINT_LIGHTS because it's
+          // visible. Position doesn't matter; keep it at origin.
+          light.intensity = 0;
+          light.visible = true;
+          try { renderer.compile(scene, camera); } catch (_) {}
+        }
+        // Restore pool lights to their resting state (invisible, 0 intensity).
+        for (let i = 0; i < dynamicLights.pool.length; i++) {
+          dynamicLights.pool[i].visible = savedVis[i];
+          dynamicLights.pool[i].intensity = savedInt[i];
+        }
+      }
+    } catch (_) { /* light-count warmup is a bonus, non-fatal */ }
+
     scene.remove(group);
     // Dispose every ship warmup mesh's owned materials. buildModelShipMesh /
     // createShipMesh clone materials fresh per mesh, so each of the 14 ghost
@@ -7502,19 +7542,22 @@ function fireWeapon() {
   else player.gunRecoilR = 1.0;
 
   // ---- WEAPON FEEDBACK ----
-  // Muzzle flash (bright point light at weapon position, fades fast)
+  // Muzzle flash (bright point light at weapon position, fades fast).
+  //
+  // IMPORTANT: we must NOT call `new THREE.PointLight()` + scene.add() here.
+  // Every time a light enters or leaves the scene, the NUM_POINT_LIGHTS
+  // #define in the shader changes; Three.js invalidates every cached lit
+  // program and synchronously recompiles each one. With 14 ship hulls +
+  // obstacles lit, that's the ~116 getProgramInfoLog ticks observed in the
+  // 125839 trace right after the first shot at t+27.38s. Instead we route
+  // through the dynamicLights pool (pre-added invisible at init) and let
+  // spawnDynamicLight toggle .visible on an already-scene-resident light.
+  // Visible-false lights are filtered out of the count Three.js presents to
+  // the shader, so the lit-program cache is populated ONCE (via the
+  // NUM_POINT_LIGHTS warmup in warmupCombatShaders) and reused forever.
   const flashPos = origin.clone().add(forward.clone().multiplyScalar(30));
   const flashColor = w.mode === 'hitscan' ? 0xffdd44 : 0xff8833;
-  const flash = new THREE.PointLight(flashColor, 3.0, 400);
-  flash.position.copy(flashPos);
-  scene.add(flash);
-  const flashStart = performance.now();
-  (function fadeFlash() {
-    const elapsed = (performance.now() - flashStart) / 1000;
-    if (elapsed > 0.08) { scene.remove(flash); flash.dispose(); return; }
-    flash.intensity = 3.0 * (1 - elapsed / 0.08);
-    requestAnimationFrame(fadeFlash);
-  })();
+  spawnDynamicLight(flashPos, flashColor, 3.0, 400, 0.08);
 
   // Muzzle flash: concentric warm circles (drawn on HUD canvas via muzzleFlashTimer)
 
@@ -10230,32 +10273,37 @@ function drawCircumpunctHUD() {
       ctx.globalCompositeOperation = 'lighter';
 
       // --- Expanding heat shockwave ring ---
-      const shockR = 24 + age * 150;
-      ctx.strokeStyle = `rgba(255,210,130,${0.55 * fi})`;
-      ctx.lineWidth = 3 * fi + 0.5;
+      // Halved radii and softened colors compared to the original paint pass;
+      // the player was seeing this dominate the center of the screen every
+      // shot. Shockwave ring still there but tighter; bloom and cone both
+      // shrunk to ~50% of former size; warm yellow stop shifted toward white
+      // so the hue is less saturated.
+      const shockR = 16 + age * 80;
+      ctx.strokeStyle = `rgba(255,225,175,${0.45 * fi})`;
+      ctx.lineWidth = 2 * fi + 0.4;
       ctx.beginPath();
       ctx.arc(muzzleX, muzzleY, shockR, 0, Math.PI * 2);
       ctx.stroke();
       // Second, fainter wave trailing the first
-      ctx.strokeStyle = `rgba(255,160,60,${0.25 * fi})`;
-      ctx.lineWidth = 2 * fi;
+      ctx.strokeStyle = `rgba(255,190,130,${0.18 * fi})`;
+      ctx.lineWidth = 1.5 * fi;
       ctx.beginPath();
       ctx.arc(muzzleX, muzzleY, shockR * 0.65, 0, Math.PI * 2);
       ctx.stroke();
 
-      // --- Wide warm bloom (soft outer glow) ---
-      const outerR = 130 * Math.pow(fi, 0.55);
+      // --- Compact warm bloom (soft outer glow) ---
+      const outerR = 62 * Math.pow(fi, 0.55);
       const gradOut = ctx.createRadialGradient(muzzleX, muzzleY, 0, muzzleX, muzzleY, outerR);
-      gradOut.addColorStop(0.00, `rgba(255,235,170,${0.95 * fi})`);
-      gradOut.addColorStop(0.20, `rgba(255,175,70,${0.70 * fi})`);
-      gradOut.addColorStop(0.55, `rgba(255,95,30,${0.35 * fi})`);
-      gradOut.addColorStop(1.00, 'rgba(180,40,10,0)');
+      gradOut.addColorStop(0.00, `rgba(255,245,225,${0.85 * fi})`);
+      gradOut.addColorStop(0.25, `rgba(255,205,150,${0.55 * fi})`);
+      gradOut.addColorStop(0.60, `rgba(255,140,85,${0.25 * fi})`);
+      gradOut.addColorStop(1.00, 'rgba(200,90,50,0)');
       ctx.fillStyle = gradOut;
       ctx.beginPath(); ctx.arc(muzzleX, muzzleY, outerR, 0, Math.PI * 2); ctx.fill();
 
       // --- Directional flame cone along the barrel axis ---
-      const coneLen = 200 * fi;
-      const coneHalfW = 32 * fi;
+      const coneLen = 100 * fi;
+      const coneHalfW = 18 * fi;
       const tipConeX = muzzleX + dirX * coneLen;
       const tipConeY = muzzleY + dirY * coneLen;
       const baseLX = muzzleX + perpX * coneHalfW;
@@ -10263,10 +10311,10 @@ function drawCircumpunctHUD() {
       const baseRX = muzzleX - perpX * coneHalfW;
       const baseRY = muzzleY - perpY * coneHalfW;
       const coneGrad = ctx.createLinearGradient(muzzleX, muzzleY, tipConeX, tipConeY);
-      coneGrad.addColorStop(0.00, `rgba(255,250,215,${0.9 * fi})`);
-      coneGrad.addColorStop(0.25, `rgba(255,215,120,${0.75 * fi})`);
-      coneGrad.addColorStop(0.60, `rgba(255,130,45,${0.45 * fi})`);
-      coneGrad.addColorStop(1.00, 'rgba(200,50,20,0)');
+      coneGrad.addColorStop(0.00, `rgba(255,250,235,${0.75 * fi})`);
+      coneGrad.addColorStop(0.30, `rgba(255,225,170,${0.55 * fi})`);
+      coneGrad.addColorStop(0.65, `rgba(255,160,95,${0.30 * fi})`);
+      coneGrad.addColorStop(1.00, 'rgba(210,90,55,0)');
       ctx.fillStyle = coneGrad;
       ctx.beginPath();
       ctx.moveTo(baseLX, baseLY);
@@ -10289,8 +10337,8 @@ function drawCircumpunctHUD() {
       const inTipX = muzzleX + dirX * inCL;
       const inTipY = muzzleY + dirY * inCL;
       const inGrad = ctx.createLinearGradient(muzzleX, muzzleY, inTipX, inTipY);
-      inGrad.addColorStop(0.0, `rgba(255,255,240,${0.95 * fi})`);
-      inGrad.addColorStop(1.0, 'rgba(255,180,80,0)');
+      inGrad.addColorStop(0.0, `rgba(255,255,245,${0.8 * fi})`);
+      inGrad.addColorStop(1.0, 'rgba(255,210,150,0)');
       ctx.fillStyle = inGrad;
       ctx.beginPath();
       ctx.moveTo(muzzleX + perpX * inCW, muzzleY + perpY * inCW);
@@ -10300,27 +10348,29 @@ function drawCircumpunctHUD() {
       ctx.fill();
 
       // --- Bright white-hot core + second bloom ---
-      ctx.fillStyle = `rgba(255,255,240,${0.95 * fi})`;
-      ctx.beginPath(); ctx.arc(muzzleX, muzzleY, 20 * fi, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = `rgba(255,240,180,${0.55 * fi})`;
-      ctx.beginPath(); ctx.arc(muzzleX, muzzleY, 34 * fi, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgba(255,255,245,${0.85 * fi})`;
+      ctx.beginPath(); ctx.arc(muzzleX, muzzleY, 10 * fi, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgba(255,245,210,${0.45 * fi})`;
+      ctx.beginPath(); ctx.arc(muzzleX, muzzleY, 17 * fi, 0, Math.PI * 2); ctx.fill();
 
       // --- Deterministic starburst: 4 long majors + 4 short minors, rotated per shot ---
+      // Halved max length so spikes stay near the muzzle rather than
+      // reaching across the HUD, and shifted gradient warmth toward white.
       const spikeBase = rnd(1) * Math.PI * 2;
       ctx.lineCap = 'round';
       for (let sp = 0; sp < 8; sp++) {
         const isMajor = (sp % 2 === 0);
         const a = spikeBase + (sp / 8) * Math.PI * 2;
         const lenVar = 0.7 + rnd(sp + 11) * 0.55;
-        const sLen = (isMajor ? 70 : 34) * lenVar * Math.pow(fi, 0.35);
+        const sLen = (isMajor ? 35 : 18) * lenVar * Math.pow(fi, 0.35);
         const ex = muzzleX + Math.cos(a) * sLen;
         const ey = muzzleY + Math.sin(a) * sLen;
         const sGrad = ctx.createLinearGradient(muzzleX, muzzleY, ex, ey);
-        sGrad.addColorStop(0.0, `rgba(255,255,220,${(isMajor ? 0.95 : 0.75) * fi})`);
-        sGrad.addColorStop(0.5, `rgba(255,180,80,${(isMajor ? 0.55 : 0.35) * fi})`);
-        sGrad.addColorStop(1.0, 'rgba(255,100,30,0)');
+        sGrad.addColorStop(0.0, `rgba(255,255,235,${(isMajor ? 0.8 : 0.6) * fi})`);
+        sGrad.addColorStop(0.5, `rgba(255,210,145,${(isMajor ? 0.42 : 0.26) * fi})`);
+        sGrad.addColorStop(1.0, 'rgba(255,155,90,0)');
         ctx.strokeStyle = sGrad;
-        ctx.lineWidth = (isMajor ? 3.2 : 1.6) * Math.max(0.25, fi);
+        ctx.lineWidth = (isMajor ? 2.4 : 1.2) * Math.max(0.25, fi);
         ctx.beginPath();
         ctx.moveTo(muzzleX, muzzleY);
         ctx.lineTo(ex, ey);
@@ -10329,7 +10379,7 @@ function drawCircumpunctHUD() {
       ctx.lineCap = 'butt';
 
       // --- Drifting embers riding the cone outward (bright -> dim with age) ---
-      const emberCount = 7;
+      const emberCount = 4;
       for (let eIdx = 0; eIdx < emberCount; eIdx++) {
         const spd = 110 + rnd(eIdx + 21) * 180;
         const spread = (rnd(eIdx + 31) - 0.5) * 48;
