@@ -9444,73 +9444,10 @@ function drawCircumpunctHUD() {
       tipY = tipCY;
     }
 
-    if (!useFrame) {
-      // Main gun body (trapezoid: wide at bottom corner, narrow at barrel tip)
-      ctx.fillStyle = 'rgba(55,62,78,0.92)';
-      ctx.beginPath();
-      ctx.moveTo(baseOuterX, baseY);
-      ctx.lineTo(baseInnerX, baseY);
-      ctx.lineTo(tipInnerX, tipY);
-      ctx.lineTo(tipOuterX, tipY);
-      ctx.closePath();
-      ctx.fill();
-
-      // Darker barrel core (inner strip running along the gun)
-      ctx.fillStyle = 'rgba(35,40,50,0.9)';
-      ctx.beginPath();
-      const bFrac = 0.3; // barrel is 30% of gun width
-      if (side === 0) {
-        const bBaseO = baseOuterX + (baseInnerX - baseOuterX) * 0.35;
-        const bBaseI = baseOuterX + (baseInnerX - baseOuterX) * 0.65;
-        const bTipO = tipOuterX + (tipInnerX - tipOuterX) * 0.25;
-        const bTipI = tipOuterX + (tipInnerX - tipOuterX) * 0.75;
-        ctx.moveTo(bBaseO, baseY); ctx.lineTo(bBaseI, baseY);
-        ctx.lineTo(bTipI, tipY); ctx.lineTo(bTipO, tipY);
-      } else {
-        const bBaseO = baseInnerX + (baseOuterX - baseInnerX) * 0.35;
-        const bBaseI = baseInnerX + (baseOuterX - baseInnerX) * 0.65;
-        const bTipO = tipInnerX + (tipOuterX - tipInnerX) * 0.25;
-        const bTipI = tipInnerX + (tipOuterX - tipInnerX) * 0.75;
-        ctx.moveTo(bBaseO, baseY); ctx.lineTo(bBaseI, baseY);
-        ctx.lineTo(bTipI, tipY); ctx.lineTo(bTipO, tipY);
-      }
-      ctx.closePath();
-      ctx.fill();
-
-      // Team-colored accent line (runs along inner edge of gun)
-      ctx.strokeStyle = gunAccentCol + '0.6)';
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-      ctx.moveTo(baseInnerX, baseY);
-      ctx.lineTo(tipInnerX, tipY);
-      ctx.stroke();
-
-      // Outer edge highlight
-      ctx.strokeStyle = 'rgba(120,130,150,0.3)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(baseOuterX, baseY);
-      ctx.lineTo(tipOuterX, tipY);
-      ctx.stroke();
-
-      // Panel seam lines (horizontal across the gun body)
-      ctx.strokeStyle = 'rgba(30,35,45,0.5)';
-      ctx.lineWidth = 1;
-      for (let i = 1; i <= 4; i++) {
-        const frac = i / 5;
-        const ly = baseY + (tipY - baseY) * frac;
-        const lxO = baseOuterX + (tipOuterX - baseOuterX) * frac;
-        const lxI = baseInnerX + (tipInnerX - baseInnerX) * frac;
-        ctx.beginPath(); ctx.moveTo(lxO, ly); ctx.lineTo(lxI, ly); ctx.stroke();
-      }
-
-      // Power indicator dot (near barrel tip)
-      const dotFrac = 0.85;
-      const dotX = (baseOuterX + baseInnerX) / 2 + ((tipOuterX + tipInnerX) / 2 - (baseOuterX + baseInnerX) / 2) * dotFrac;
-      const dotY = baseY + (tipY - baseY) * dotFrac;
-      ctx.fillStyle = player.clipAmmo > 0 ? 'rgba(0,255,120,0.8)' : 'rgba(255,50,30,0.8)';
-      ctx.beginPath(); ctx.arc(dotX, dotY, 3.5, 0, Math.PI * 2); ctx.fill();
-    }
+    // Procedural arms/gun bodies removed; cockpit art now comes from the
+    // per-titan frame PNG overlay (see updateCockpitFrame). Only the muzzle
+    // flash is drawn from the HUD, firing from the detected frame tip when
+    // a frame is loaded or from the procedural default position otherwise.
 
     // ---- MUZZLE FLASH (at barrel tip) ----
     if (flashActive) {
