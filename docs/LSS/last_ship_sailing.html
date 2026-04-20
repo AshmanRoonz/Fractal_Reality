@@ -12387,6 +12387,36 @@ function playSound(type) {
       { attack: rr(0.04, 0.2), hold: rr(0.08, 0.2), decay: rr(0.48, 0.10) });
     playNoiseBurst(rr(0.50, 0.15), rr(0.12, 0.15), now, ri(600, 0.2), rr(0.5, 0.3));
   }
+  else if (type === 'core_titan') {
+    // Titan core activation: heavy announcement stinger. Audible across the arena so
+    // every pilot in range knows a titan just went critical. Four-layer structure:
+    //  (1) sub-bass swell (pressure rise before impact)
+    //  (2) impact thud (body hit at t = 0.05s)
+    //  (3) stacked fifth-and-octave power chord on saw/tri (the declaration)
+    //  (4) metallic shimmer transient (high brass warning, rides the chord)
+    duckAmbient(0.45); // strong duck so the stinger punches through
+    const p = rr(1, 0.04); // very little variation; this is a signature sound
+    // Layer 1: sub-bass swell (slow attack, long decay, low freq)
+    triChord([ri(32*p,0), ri(40*p,0), ri(48*p,0)], 'sine',
+      rr(0.45, 0.08), rr(1.20, 0.08), null, null, 0,
+      { attack: rr(0.12, 0.15), hold: rr(0.20, 0.15), decay: rr(0.90, 0.08) });
+    // Layer 2: impact thud (fast attack, short decay, low noise burst)
+    playNoiseBurst(rr(0.55, 0.10), rr(0.18, 0.12), now + 0.04, ri(90, 0.2), rr(0.35, 0.2));
+    playNoiseBurst(rr(0.22, 0.12), rr(0.10, 0.15), now + 0.06, ri(180, 0.2), rr(0.5, 0.2));
+    // Layer 3: stacked power chord (saw + tri, tonic + fifth + octave + 2-octave)
+    triChord([ri(65*p,0), ri(98*p,0), ri(130*p,0)], 'sawtooth',
+      rr(0.38, 0.10), rr(1.00, 0.08), [ri(82*p,0), ri(123*p,0), ri(164*p,0)], rr(0.75, 0.10), rr(0.06, 0.2),
+      { attack: rr(0.02, 0.2), hold: rr(0.18, 0.15), decay: rr(0.85, 0.10) });
+    triChord([ri(98*p,0), ri(147*p,0), ri(196*p,0)], 'triangle',
+      rr(0.26, 0.10), rr(0.85, 0.08), [ri(123*p,0), ri(185*p,0), ri(247*p,0)], rr(0.65, 0.10), rr(0.10, 0.2),
+      { attack: rr(0.02, 0.2), hold: rr(0.15, 0.15), decay: rr(0.75, 0.10) });
+    // Layer 4: metallic shimmer (high brass/horn; square for harmonic richness, narrow, rides on top)
+    triChord([ri(392*p,0), ri(523*p,0), ri(659*p,0)], 'square',
+      rr(0.08, 0.12), rr(0.70, 0.10), null, null, rr(0.18, 0.15),
+      { attack: rr(0.03, 0.2), hold: rr(0.10, 0.2), decay: rr(0.55, 0.10) });
+    // High crash noise accent (subtle, gives the stinger "air")
+    playNoiseBurst(rr(0.10, 0.20), rr(0.45, 0.10), now + 0.08, ri(4800, 0.15), rr(0.9, 0.2));
+  }
   else if (type === 'explosion') {
     // Rapid-fire destruction: 5-8 dissonant staccato pulses layered with noise blasts
     duckAmbient(0.35); // strong duck for explosions
@@ -12619,16 +12649,19 @@ const _spatialCamPos = new THREE.Vector3();
 const _spatialDir = new THREE.Vector3();
 const _spatialRaycaster = new THREE.Raycaster();
 _spatialRaycaster.firstHitOnly = true;
-function playSpatialSound(type, worldPos) {
+function playSpatialSound(type, worldPos, opts) {
   if (!audio.initialized || !audio.ctx) return;
   if (!worldPos || !camera) return playSound(type);
   try {
     const panner = audio.ctx.createPanner();
     panner.panningModel = 'HRTF';
     panner.distanceModel = 'inverse';
-    panner.refDistance = 250;
-    panner.maxDistance = 8000;
-    panner.rolloffFactor = 1.0;
+    // Optional range override: some sounds (titan core activation) should carry farther.
+    // refDistance = how close before attenuation begins; higher = louder at distance.
+    // rolloffFactor < 1 = slower falloff with distance.
+    panner.refDistance = (opts && opts.refDistance) || 250;
+    panner.maxDistance = (opts && opts.maxDistance) || 8000;
+    panner.rolloffFactor = (opts && opts.rolloffFactor) || 1.0;
     // Compute listener-relative position (camera at origin, looking -Z in local space).
     camera.getWorldPosition(_spatialCamPos);
     _spatialRelPos.subVectors(worldPos, _spatialCamPos);
@@ -12758,8 +12791,22 @@ activateAbility = function(slot) {
 const _origActivateCore = activateCore;
 activateCore = function() {
   const wasMeter = player.coreMeter;
+  const wasActive = player.coreActive;
   _origActivateCore();
-  if (wasMeter >= 100) playSound('core');
+  // Successful activation = had full meter and now coreActive is true.
+  if (wasMeter >= 100 && !wasActive && player.coreActive) {
+    // Heavy announcement stinger from the player's position. Wide spatial range so the
+    // sound carries across the arena: every titan in the area should know a core just
+    // went hot. The player is the listener AND the source, so HRTF places it close
+    // and loud; if other titans ever activate cores, the same call positions them
+    // correctly relative to the listener.
+    playSpatialSound('core_titan', player.position.clone(), {
+      refDistance: 800, maxDistance: 12000, rolloffFactor: 0.6
+    });
+    // Layer the original 'core' sound on top so the activator gets both the personal
+    // power-up cue and the broadcast stinger; the two readings reinforce each other.
+    playSound('core');
+  }
 };
 
 const _origStartReload = startReload;
