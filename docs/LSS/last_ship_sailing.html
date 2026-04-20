@@ -11082,9 +11082,12 @@ class StasisField {
     this.ring2 = ring2;
     this.group.add(ring2);
 
-    // Point light
-    this.light = new THREE.PointLight(0x00ccff, 0.6, 400);
-    this.group.add(this.light);
+    // No per-field PointLight: adding lights post-init forces Three.js to
+    // recompile all shaders (NUM_POINT_LIGHTS change), which causes a visible
+    // hitch the first time three fields spawn together at the 30s mark.
+    // The emissive core + rings carry the visual; periodic pulses from the
+    // pre-allocated dynamic light pool handle any lighting punch if needed.
+    this._pulseLightTimer = 0;
 
     this.group.position.copy(position);
     scene.add(this.group);
@@ -11096,12 +11099,19 @@ class StasisField {
     // Rotate rings
     this.ring.rotation.z += dt * 1.5;
     this.ring2.rotation.y += dt * 1.2;
-    // Pulse glow
+    // Pulse glow (core opacity only; lighting comes from pooled dynamic lights)
     const pulse = 0.4 + Math.sin(this.pulseTime * 3) * 0.2;
     this.core.material.opacity = pulse + 0.2;
-    this.light.intensity = pulse;
     const s = 1 + Math.sin(this.pulseTime * 2) * 0.1;
     this.core.scale.set(s, s, s);
+    // Occasional soft pulse from the pre-allocated pool (no shader recompile)
+    this._pulseLightTimer -= dt;
+    if (this._pulseLightTimer <= 0) {
+      if (typeof spawnDynamicLight === 'function') {
+        spawnDynamicLight(this.position, 0x00ccff, 0.55, 380, 0.9);
+      }
+      this._pulseLightTimer = 1.1;
+    }
   }
 
   destroy() {
@@ -11174,11 +11184,13 @@ function updateStasisFields(dt) {
       game.stasisSpawnTimer -= dt;
       if (game.stasisSpawnTimer <= 0) {
         if (game.stasisFirstBatch) {
-          // First batch: try to spawn up to 3 in separate spheres
-          spawnStasisField();
-          spawnStasisField();
+          // First batch: spawn one now, queue the other two on a short
+          // interval so geometry uploads (SphereGeometry + TorusGeometry x2)
+          // spread across frames instead of hitching the 30s mark.
           spawnStasisField();
           game.stasisFirstBatch = false;
+          setTimeout(() => { if (game.state === 'playing') spawnStasisField(); }, 250);
+          setTimeout(() => { if (game.state === 'playing') spawnStasisField(); }, 500);
         } else {
           // Replenish one at a time
           spawnStasisField();
