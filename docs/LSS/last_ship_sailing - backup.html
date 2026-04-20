@@ -867,7 +867,7 @@ canvas { display: block; }
     <span class="strip-label">TEAMMATES</span>
     <div id="teammates-list" style="display:flex;gap:10px;"></div>
   </div>
-  <div style="padding:8px 24px;color:#555;font-size:10px;letter-spacing:1px;background:rgba(4,4,10,0.85);">WASD: Move | SPACE/CTRL: Up/Down | MOUSE: Aim | SHIFT: Dash | Q/E/F: Abilities | V: Core | ESC: Settings&nbsp;&nbsp;&nbsp;GAMEPAD: D-Pad Up/Down for vertical movement</div>
+  <div style="padding:8px 24px;color:#555;font-size:10px;letter-spacing:1px;background:rgba(4,4,10,0.85);">WASD: Move | SPACE/CTRL: Up/Down | MOUSE: Aim | SHIFT: Dash | Q/E/F: Abilities | V: Core | ESC: Settings&nbsp;&nbsp;&nbsp;GAMEPAD: D-Pad Up/Down: browse ships | START: launch | BACK: settings (in-match) / close menu</div>
   <div id="ship-select-countdown">
     <div class="cd-num">3</div>
     <div class="cd-sub">LAUNCH</div>
@@ -1147,6 +1147,10 @@ const input = {
   gpAbility1: false, gpAbility1Prev: false,
   gpAbility2: false, gpAbility2Prev: false,
   gpCore: false, gpCorePrev: false,
+  gpMenu: false, gpMenuPrev: false,
+  gpScoreboard: false, gpScoreboardPrev: false,
+  gpDpadUp: false, gpDpadUpPrev: false,
+  gpDpadDown: false, gpDpadDownPrev: false,
   gpMoveX: 0, gpMoveY: 0,
   gpLookX: 0, gpLookY: 0,
   gpMoveUp: false, gpMoveDown: false,
@@ -4677,6 +4681,175 @@ function updateDynamicLights() {
   }
 }
 
+// ---- SHADER WARMUP ----
+// The first time each new material/blend combination appears on screen during
+// combat, Three.js synchronously compiles and links a GLSL program variant.
+// The trace captures from 20260420 showed this dominating every combat-start
+// hitch (70-90%+ of a 371ms / 104ms / 62ms frame was spent in
+// getProgramInfoLog + getShaderInfoLog). This helper builds one prototype
+// mesh per common combat-effect material combination, drops them into the
+// scene, asks the renderer to compile everything, and removes them again.
+// That moves the compile cost out of the first combat frame and into the
+// pre-match countdown where the player is already watching a 10-second timer.
+const _shaderWarmup = { done: false };
+function warmupCombatShaders() {
+  if (_shaderWarmup.done) return;
+  if (!(typeof renderer !== 'undefined' && renderer) ||
+      !(typeof scene !== 'undefined' && scene) ||
+      !(typeof camera !== 'undefined' && camera)) return;
+  _shaderWarmup.done = true;
+  try {
+    const group = new THREE.Group();
+    // Park the prototypes far below the map so they cannot be seen by the
+    // player even if a compile frame happens to render before we remove them.
+    group.position.set(0, -100000, 0);
+
+    const sphGeo = new THREE.SphereGeometry(1, 4, 3);
+    const ringGeo = new THREE.RingGeometry(1, 2, 8);
+    const boxGeo = new THREE.BoxGeometry(1, 1, 1);
+    const torusGeo = new THREE.TorusGeometry(1, 0.1, 4, 8);
+
+    // The main material-key axes that combat effects touch: transparent,
+    // blending (Normal vs Additive), wireframe, side (Double for sprites/shells),
+    // depthWrite, and fog (most effects inherit fog; some opt out).
+    const matVariants = [
+      { transparent: true, opacity: 0.8 },
+      { transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending },
+      { transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, wireframe: true },
+      { transparent: true, opacity: 0.8, wireframe: true },
+      { transparent: true, opacity: 0.8, side: THREE.DoubleSide },
+      { transparent: true, opacity: 0.8, side: THREE.DoubleSide, blending: THREE.AdditiveBlending },
+      { transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false },
+      { transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, fog: false },
+    ];
+    const matRefs = [];
+    for (const v of matVariants) {
+      const m = new THREE.MeshBasicMaterial(Object.assign({ color: 0xffffff }, v));
+      matRefs.push(m);
+      group.add(new THREE.Mesh(sphGeo, m));
+      group.add(new THREE.Mesh(ringGeo, m));
+      group.add(new THREE.Mesh(torusGeo, m));
+    }
+
+    // PlaneGeometry variants (explosion flare disc, flat shockwave ring). The
+    // flare specifically uses AdditiveBlending + DoubleSide + depthWrite:false,
+    // which is a distinct program signature from the sphere/torus variants.
+    const planeGeo = new THREE.PlaneGeometry(1, 1);
+    const planeMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+    matRefs.push(planeMat);
+    group.add(new THREE.Mesh(planeGeo, planeMat));
+    // Ring with the same Additive+DoubleSide+depthWrite:false combo (shockwave
+    // flat ring; not covered by the DoubleSide-only variant above).
+    const ringAddMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+    matRefs.push(ringAddMat);
+    group.add(new THREE.Mesh(ringGeo, ringAddMat));
+
+    // CylinderGeometry (tracers, beam cores): same MeshBasic+Additive material
+    // family but geometry-binding differs. renderer.compile() keys by program,
+    // so this is mainly insurance in case a future Three.js version tightens
+    // the signature.
+    const cylGeo = new THREE.CylinderGeometry(1, 1, 1, 4, 1);
+    group.add(new THREE.Mesh(cylGeo, matRefs[1] /* additive variant */));
+
+    // Line variants (trails, outlines, impact arcs).
+    const lineGeo = new THREE.BufferGeometry();
+    lineGeo.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0, 1,0,0], 3));
+    const lineMat1 = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 });
+    const lineMat2 = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending });
+    matRefs.push(lineMat1, lineMat2);
+    group.add(new THREE.Line(lineGeo, lineMat1));
+    group.add(new THREE.Line(lineGeo, lineMat2));
+    const edgesGeo = new THREE.EdgesGeometry(boxGeo);
+    group.add(new THREE.LineSegments(edgesGeo, lineMat1));
+
+    // Untextured sprites (fallback path for any code that builds a sprite
+    // without a map).
+    const sprMat1 = new THREE.SpriteMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
+    const sprMat2 = new THREE.SpriteMaterial({ color: 0xffffff, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+    matRefs.push(sprMat1, sprMat2);
+    group.add(new THREE.Sprite(sprMat1));
+    group.add(new THREE.Sprite(sprMat2));
+
+    // Textured sprites (USE_MAP define). These are a DIFFERENT program from
+    // untextured sprites and drive every particle, electric smoke puff, and
+    // heat trail. Not pre-compiling these was the main reason combat still
+    // stalled after the first warmup pass; updateParticles lazy-builds a new
+    // SpriteMaterial({map: _emberFalloffTexture, blending: Additive, depthWrite: false})
+    // on the first particle of combat, and Three.js has to compile its program
+    // inside the frame.
+    if (typeof _emberFalloffTexture !== 'undefined' && _emberFalloffTexture) {
+      const sprTexMat = new THREE.SpriteMaterial({
+        map: _emberFalloffTexture, color: 0xffffff, transparent: true,
+        opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false
+      });
+      matRefs.push(sprTexMat);
+      group.add(new THREE.Sprite(sprTexMat));
+      // Same material with rotation != 0 (heat trails set mat.rotation per spawn).
+      const sprTexRotMat = new THREE.SpriteMaterial({
+        map: _emberFalloffTexture, color: 0xffb070, transparent: true,
+        opacity: 1.0, blending: THREE.AdditiveBlending, depthWrite: false,
+        rotation: 0.5
+      });
+      matRefs.push(sprTexRotMat);
+      group.add(new THREE.Sprite(sprTexRotMat));
+    }
+    // Electric smoke texture (bluish, used by spawnElectricSmoke around
+    // cluster obstacles). Only warm up if the helper actually exists.
+    if (typeof getElectricSmokeTexture === 'function') {
+      try {
+        const esTex = getElectricSmokeTexture();
+        if (esTex) {
+          const esMat = new THREE.SpriteMaterial({
+            map: esTex, color: 0x88c0ff, transparent: true,
+            opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false
+          });
+          matRefs.push(esMat);
+          group.add(new THREE.Sprite(esMat));
+        }
+      } catch (_) { /* texture gen failures are non-fatal */ }
+    }
+    // Heat-trail texture (warm orange, with rotation uniform).
+    if (typeof getHeatTrailTexture === 'function') {
+      try {
+        const htTex = getHeatTrailTexture();
+        if (htTex) {
+          const htMat = new THREE.SpriteMaterial({
+            map: htTex, color: 0xffb070, transparent: true,
+            opacity: 1.0, blending: THREE.AdditiveBlending, depthWrite: false,
+            rotation: 0.25
+          });
+          matRefs.push(htMat);
+          group.add(new THREE.Sprite(htMat));
+        }
+      } catch (_) { /* same */ }
+    }
+
+    // PointsMaterial with vertexColors (used at line 2202 in the star/debris
+    // background path; compile once here to avoid any surprise the first time
+    // it hits the render list).
+    const ptsGeo = new THREE.BufferGeometry();
+    ptsGeo.setAttribute('position', new THREE.Float32BufferAttribute([0,0,0, 1,0,0, 0,1,0], 3));
+    ptsGeo.setAttribute('color', new THREE.Float32BufferAttribute([1,1,1, 1,0.5,0, 0.5,0.5,1], 3));
+    const ptsMat = new THREE.PointsMaterial({ size: 5, vertexColors: true, transparent: true, opacity: 0.9 });
+    matRefs.push(ptsMat);
+    group.add(new THREE.Points(ptsGeo, ptsMat));
+
+    scene.add(group);
+    renderer.compile(scene, camera);
+    scene.remove(group);
+    // Dispose prototype geometries/materials; the shader programs remain in
+    // Three.js' WebGL cache keyed by program signature, which is the whole
+    // point of running compile() first. Textures (_emberFalloffTexture etc.)
+    // are shared with the real effect code path and must NOT be disposed.
+    sphGeo.dispose(); ringGeo.dispose(); boxGeo.dispose();
+    torusGeo.dispose(); lineGeo.dispose(); edgesGeo.dispose();
+    planeGeo.dispose(); cylGeo.dispose(); ptsGeo.dispose();
+    for (const m of matRefs) m.dispose();
+  } catch (e) {
+    console.warn('[warmupCombatShaders] skipped:', e && e.message);
+  }
+}
+
 // ---- EFFECTS ----
 
 function spawnExplosion(pos, size) {
@@ -6533,11 +6706,19 @@ function commitLoadout(key) {
   // Hold the round in 'warmup' for the full duration of the visible
   // ship-select countdown; otherwise the warmup elapses partway through and
   // bots become live behind the scenes while the player is still ticking
-  // down to LAUNCH.
-  game.warmupTimer = LSS.LAUNCH_COUNTDOWN;
+  // down to LAUNCH. Only seed the warmup timer when no countdown is already
+  // running; swapping ships mid-countdown must not reset either clock.
+  if (!_countdownActive) {
+    game.warmupTimer = LSS.LAUNCH_COUNTDOWN;
+  }
   // Refresh the teammates strip so the newly committed ship shows up as YOU's pick.
   updateTeammatesStrip();
-  // Fire the in-screen 3-2-1-LAUNCH beep + number sequence.
+  // Pre-compile shader programs for combat-effect materials while the player
+  // watches the 10s launch countdown. One-shot (idempotent).
+  warmupCombatShaders();
+  // Fire the in-screen 3-2-1-LAUNCH beep + number sequence. launchCountdown()
+  // itself is a no-op if one is already running, so this is safe to call
+  // unconditionally.
   launchCountdown();
 }
 
@@ -9030,6 +9211,10 @@ function pollGamepad() {
   input.gpAbility1Prev = input.gpAbility1;
   input.gpAbility2Prev = input.gpAbility2;
   input.gpCorePrev = input.gpCore;
+  input.gpMenuPrev = input.gpMenu;
+  input.gpScoreboardPrev = input.gpScoreboard;
+  input.gpDpadUpPrev = input.gpDpadUp;
+  input.gpDpadDownPrev = input.gpDpadDown;
 
   // Buttons (via configurable bindings)
   input.gpFire = gpBtn('fire');
@@ -9042,13 +9227,73 @@ function pollGamepad() {
   input.gpCore = gpBtn('core');
   input.gpMoveUp = gpBtn('moveUp');
   input.gpMoveDown = gpBtn('moveDown');
+  // Menu buttons (fixed to Start/Back by convention; bindings are advisory)
+  input.gpMenu = gpBtn('menu');            // Start (confirm/select)
+  input.gpScoreboard = gpBtn('scoreboard'); // Back (cancel/esc)
+  // D-pad up/down read directly (buttons 12/13) so menu nav still works when
+  // button 12 is bound to 'core' for gameplay. We gate the gameplay core-edge
+  // below whenever a menu is active, so there's no double-fire.
+  input.gpDpadUp = !!(gp.buttons[12] && (gp.buttons[12].pressed || gp.buttons[12].value > input.triggerThreshold));
+  input.gpDpadDown = !!(gp.buttons[13] && (gp.buttons[13].pressed || gp.buttons[13].value > input.triggerThreshold));
 
-  // Edge-triggered actions
-  if (input.gpDash && !input.gpDashPrev) dash();
-  if (input.gpAbility0 && !input.gpAbility0Prev) activateAbility(0);
-  if (input.gpAbility1 && !input.gpAbility1Prev) activateAbility(1);
-  if (input.gpAbility2 && !input.gpAbility2Prev) activateAbility(2);
-  if (input.gpCore && !input.gpCorePrev) activateCore();
+  // ---- Menu navigation (runs before gameplay edge triggers) ----
+  const _shipSelect = document.getElementById('ship-select');
+  const _shipSelectActive = !!(_shipSelect && _shipSelect.classList.contains('active'));
+  const _menuActive = settingsOpen || _shipSelectActive || game.state === 'select' || game.state === 'matchEnd';
+
+  // Start: confirm / select
+  if (input.gpMenu && !input.gpMenuPrev) {
+    if (settingsOpen) {
+      closeSettings();
+    } else if (_shipSelectActive) {
+      // Confirm previewed ship; if nothing previewed yet, pick the first entry
+      if (_previewedKey && LOADOUTS[_previewedKey]) {
+        commitLoadout(_previewedKey);
+      } else {
+        const first = document.querySelector('.ship-list-entry');
+        if (first && first.dataset && first.dataset.key) previewLoadout(first.dataset.key);
+      }
+    }
+    // In-game: no-op (no confirm action during combat)
+  }
+
+  // Back: cancel / esc
+  if (input.gpScoreboard && !input.gpScoreboardPrev) {
+    if (settingsOpen) {
+      closeSettings();
+    } else if (_shipSelectActive) {
+      // Top-level menu; nothing to back out to
+    } else if (game.state !== 'select') {
+      openSettings();
+      buildSettingsPage();
+    }
+  }
+
+  // D-pad up/down while ship-select is open: cycle the ship list
+  if (_shipSelectActive) {
+    const entries = Array.from(document.querySelectorAll('.ship-list-entry'));
+    if (entries.length) {
+      let idx = entries.findIndex(e => e.classList.contains('selected'));
+      if (input.gpDpadUp && !input.gpDpadUpPrev) {
+        idx = (idx <= 0) ? entries.length - 1 : idx - 1;
+        const key = entries[idx] && entries[idx].dataset && entries[idx].dataset.key;
+        if (key) previewLoadout(key);
+      } else if (input.gpDpadDown && !input.gpDpadDownPrev) {
+        idx = (idx < 0 || idx >= entries.length - 1) ? 0 : idx + 1;
+        const key = entries[idx] && entries[idx].dataset && entries[idx].dataset.key;
+        if (key) previewLoadout(key);
+      }
+    }
+  }
+
+  // ---- Gameplay edge-triggered actions (suppressed while a menu is active) ----
+  if (!_menuActive) {
+    if (input.gpDash && !input.gpDashPrev) dash();
+    if (input.gpAbility0 && !input.gpAbility0Prev) activateAbility(0);
+    if (input.gpAbility1 && !input.gpAbility1Prev) activateAbility(1);
+    if (input.gpAbility2 && !input.gpAbility2Prev) activateAbility(2);
+    if (input.gpCore && !input.gpCorePrev) activateCore();
+  }
 }
 
 // ---- CIRCUMPUNCT HUD ----
@@ -9058,6 +9303,16 @@ function pollGamepad() {
 
 const hudCanvas = document.getElementById('circumpunct-hud');
 const hudCtx = hudCanvas.getContext('2d');
+// Cache last-applied canvas dims so we don't reset (and reallocate the
+// internal bitmap) every frame. Also cache the current font string so
+// repeated `ctx.font = '10px Courier New'` writes skip the parse.
+let _hudLastW = 0, _hudLastH = 0, _hudLastDPR = 0;
+let _hudFontCache = '';
+function hudFont(s) {
+  if (s === _hudFontCache) return;
+  _hudFontCache = s;
+  hudCtx.font = s;
+}
 
 function drawCircumpunctHUD() {
   if (!player.chassis) return;
@@ -9065,10 +9320,14 @@ function drawCircumpunctHUD() {
   const dpr = window.devicePixelRatio || 1;
   const W = window.innerWidth;
   const H = window.innerHeight;
-  hudCanvas.width = W * dpr;
-  hudCanvas.height = H * dpr;
-  hudCanvas.style.width = W + 'px';
-  hudCanvas.style.height = H + 'px';
+  if (W !== _hudLastW || H !== _hudLastH || dpr !== _hudLastDPR) {
+    hudCanvas.width = W * dpr;
+    hudCanvas.height = H * dpr;
+    hudCanvas.style.width = W + 'px';
+    hudCanvas.style.height = H + 'px';
+    _hudLastW = W; _hudLastH = H; _hudLastDPR = dpr;
+    _hudFontCache = ''; // context state reset by sizing
+  }
   const ctx = hudCtx;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, W, H);
@@ -9142,14 +9401,14 @@ function drawCircumpunctHUD() {
       // Switching animation: blink between modes
       const blinkOn = Math.floor(t * 6) % 2 === 0;
       ctx.fillStyle = amber + (blinkOn ? '0.7)' : '0.3)');
-      ctx.font = '10px Courier New';
+      hudFont('10px Courier New');
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
       ctx.fillText('SWITCHING', cx, cy + 32);
     } else {
       const modeLabel = player.legionMode === 'close' ? 'CLOSE' : 'LONG';
       ctx.fillStyle = white + '0.4)';
-      ctx.font = '10px Courier New';
+      hudFont('10px Courier New');
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
       ctx.fillText(modeLabel, cx, cy + 32);
@@ -9218,7 +9477,7 @@ function drawCircumpunctHUD() {
 
   // Health text (below ring)
   ctx.fillStyle = white + '0.6)';
-  ctx.font = '13px Courier New';
+  hudFont('13px Courier New');
   ctx.textAlign = 'center';
   ctx.fillText(Math.ceil(player.health) + '', cx, cy + r1 + 24);
 
@@ -9292,7 +9551,7 @@ function drawCircumpunctHUD() {
   const speedTx = cx + Math.cos(speedAngle) * (r3 + 22);
   const speedTy = cy + Math.sin(speedAngle) * (r3 + 22);
   ctx.fillStyle = white + '0.45)';
-  ctx.font = '11px Courier New';
+  hudFont('11px Courier New');
   ctx.textAlign = 'center';
   ctx.fillText(Math.floor(player.velocity.length()), speedTx, speedTy);
 
@@ -9323,7 +9582,7 @@ function drawCircumpunctHUD() {
   const ammoTx = cx + Math.cos(ammoAngle) * (r3 + 22);
   const ammoTy = cy + Math.sin(ammoAngle) * (r3 + 22);
   ctx.fillStyle = white + '0.45)';
-  ctx.font = '11px Courier New';
+  hudFont('11px Courier New');
   ctx.textAlign = 'center';
   const ammoStr = (player.weapon.clipSize >= 999 || smartCoreAmmo) ? 'INF' : player.clipAmmo + '';
   ctx.fillText(ammoStr, ammoTx, ammoTy);
@@ -9432,7 +9691,7 @@ function drawCircumpunctHUD() {
     const labelAngle = angle;
     const labelR = r5 + 22;
     ctx.fillStyle = ready ? (active ? amber + '0.9)' : white + '0.5)') : white + '0.2)';
-    ctx.font = '11px Courier New';
+    hudFont('11px Courier New');
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(abilityKeys[i], cx + Math.cos(labelAngle) * labelR, cy + Math.sin(labelAngle) * labelR);
@@ -9544,7 +9803,7 @@ function drawCircumpunctHUD() {
     }
     // Label
     ctx.fillStyle = chgPct >= 1 ? 'rgba(255,80,20,0.9)' : 'rgba(255,120,40,0.5)';
-    ctx.font = '10px Courier New';
+    hudFont('10px Courier New');
     ctx.textAlign = 'center';
     ctx.fillText(chgPct >= 1 ? 'MAX' : Math.floor(chgPct * 100) + '%', cx, cy + chgR + 16);
   }
@@ -9573,7 +9832,7 @@ function drawCircumpunctHUD() {
     }
     // Label
     ctx.fillStyle = chgPct >= 1 ? 'rgba(255,80,20,0.9)' : 'rgba(255,120,40,0.5)';
-    ctx.font = '10px Courier New';
+    hudFont('10px Courier New');
     ctx.textAlign = 'center';
     ctx.fillText('PWR', cx, cy + chgR + 16);
   }
@@ -9602,7 +9861,7 @@ function drawCircumpunctHUD() {
     }
     // Label
     ctx.fillStyle = nrgPct < 0.2 ? 'rgba(255,60,30,0.8)' : 'rgba(60,180,255,0.5)';
-    ctx.font = '10px Courier New';
+    hudFont('10px Courier New');
     ctx.textAlign = 'center';
     ctx.fillText('NRG ' + Math.floor(nrgPct * 100) + '%', cx, cy + nrgR + 16);
   }
@@ -9976,7 +10235,7 @@ function drawCircumpunctHUD() {
       // Full lock text
       if (locks >= 3) {
         ctx.fillStyle = fullLockColor;
-        ctx.font = 'bold 10px Courier New';
+        hudFont('bold 10px Courier New');
         ctx.textAlign = 'center';
         ctx.fillText('LOCKED', sx, sy + baseR * 1.8 + 8);
       }
@@ -10192,7 +10451,7 @@ function updateMinimap() {
   // Map word label
   if (game.mapWord) {
     ctx.fillStyle = 'rgba(255,170,0,0.4)';
-    ctx.font = '8px Courier New';
+    hudFont('8px Courier New');
     ctx.textAlign = 'center';
     ctx.fillText(game.mapWord, 75, 145);
   }
@@ -10552,17 +10811,26 @@ function updateTeammatesStrip() {
 // the whole time; only on "LAUNCH" do we hide it, request pointer lock, and let
 // the warmup → playing transition finish (warmupTimer is already 3s in commitLoadout
 // so it lines up). Cancellable via _activeLaunchTimers if the player exits.
+// Once started, the countdown is commit-only: swapping ships mid-countdown does
+// NOT reset it. `_countdownActive` gates re-entry; it clears on LAUNCH or on
+// explicit abort (round end, lobby exit).
 let _activeLaunchTimers = [];
+let _countdownActive = false;
 function _clearLaunchCountdown() {
   for (const t of _activeLaunchTimers) clearTimeout(t);
   _activeLaunchTimers = [];
+  _countdownActive = false;
 }
 function launchCountdown() {
+  // If already running, do not reset. Ship swaps during countdown are allowed
+  // by commitLoadout but must not restart the timer; the clock keeps ticking.
+  if (_countdownActive) return;
   _clearLaunchCountdown();
+  _countdownActive = true;
   const overlay = document.getElementById('ship-select-countdown');
   const numEl = overlay ? overlay.querySelector('.cd-num') : null;
   const subEl = overlay ? overlay.querySelector('.cd-sub') : null;
-  if (!overlay || !numEl || !subEl) return;
+  if (!overlay || !numEl || !subEl) { _countdownActive = false; return; }
 
   // Helper: pulse a single digit/word, restarting the cdPulse animation each tick.
   function tick(text, sub) {
@@ -10624,6 +10892,9 @@ function launchCountdown() {
     }
     _activeLaunchTimers.push(setTimeout(() => {
       overlay.classList.remove('active');
+      // Countdown has fully handed off to gameplay; next round (or a fresh
+      // post-match re-entry) is allowed to start a new one.
+      _countdownActive = false;
     }, 700));
   }, START * 1000));
 }
@@ -10997,9 +11268,12 @@ class StasisField {
     this.ring2 = ring2;
     this.group.add(ring2);
 
-    // Point light
-    this.light = new THREE.PointLight(0x00ccff, 0.6, 400);
-    this.group.add(this.light);
+    // No per-field PointLight: adding lights post-init forces Three.js to
+    // recompile all shaders (NUM_POINT_LIGHTS change), which causes a visible
+    // hitch the first time three fields spawn together at the 30s mark.
+    // The emissive core + rings carry the visual; periodic pulses from the
+    // pre-allocated dynamic light pool handle any lighting punch if needed.
+    this._pulseLightTimer = 0;
 
     this.group.position.copy(position);
     scene.add(this.group);
@@ -11011,12 +11285,19 @@ class StasisField {
     // Rotate rings
     this.ring.rotation.z += dt * 1.5;
     this.ring2.rotation.y += dt * 1.2;
-    // Pulse glow
+    // Pulse glow (core opacity only; lighting comes from pooled dynamic lights)
     const pulse = 0.4 + Math.sin(this.pulseTime * 3) * 0.2;
     this.core.material.opacity = pulse + 0.2;
-    this.light.intensity = pulse;
     const s = 1 + Math.sin(this.pulseTime * 2) * 0.1;
     this.core.scale.set(s, s, s);
+    // Occasional soft pulse from the pre-allocated pool (no shader recompile)
+    this._pulseLightTimer -= dt;
+    if (this._pulseLightTimer <= 0) {
+      if (typeof spawnDynamicLight === 'function') {
+        spawnDynamicLight(this.position, 0x00ccff, 0.55, 380, 0.9);
+      }
+      this._pulseLightTimer = 1.1;
+    }
   }
 
   destroy() {
@@ -11089,11 +11370,13 @@ function updateStasisFields(dt) {
       game.stasisSpawnTimer -= dt;
       if (game.stasisSpawnTimer <= 0) {
         if (game.stasisFirstBatch) {
-          // First batch: try to spawn up to 3 in separate spheres
-          spawnStasisField();
-          spawnStasisField();
+          // First batch: spawn one now, queue the other two on a short
+          // interval so geometry uploads (SphereGeometry + TorusGeometry x2)
+          // spread across frames instead of hitching the 30s mark.
           spawnStasisField();
           game.stasisFirstBatch = false;
+          setTimeout(() => { if (game.state === 'playing') spawnStasisField(); }, 250);
+          setTimeout(() => { if (game.state === 'playing') spawnStasisField(); }, 500);
         } else {
           // Replenish one at a time
           spawnStasisField();
@@ -11979,6 +12262,11 @@ function initHbarPool(maxBars, maxMarkers) {
   hbarPool.initialized = true;
 }
 
+// Module-level temp vectors reused across updateEnemyHealthBars calls to
+// avoid per-enemy allocations (the trace showed Vector3 churn in this path).
+const _hbTmpA = new THREE.Vector3();
+const _hbTmpB = new THREE.Vector3();
+
 function updateEnemyHealthBars() {
   if (!hbarPool.initialized) initHbarPool(24, 8);
 
@@ -11988,8 +12276,9 @@ function updateEnemyHealthBars() {
     return;
   }
 
-  const halfW = window.innerWidth / 2;
-  const halfH = window.innerHeight / 2;
+  const winW = window.innerWidth, winH = window.innerHeight;
+  const halfW = winW / 2;
+  const halfH = winH / 2;
 
   let barIdx = 0;
   for (const bot of game.entities) {
@@ -11997,22 +12286,24 @@ function updateEnemyHealthBars() {
     const dist = player.position.distanceTo(bot.position);
     if (dist > 3000) continue;
 
-    // Line-of-sight check: hide health bars behind walls
-    const toBot = new THREE.Vector3().subVectors(bot.position, player.position).normalize();
-    const wallDist = raycastLevel(player.position, toBot, dist + 50);
-    if (wallDist < dist - 30) continue; // wall blocks view
-
-    const worldPos = bot.position.clone();
+    // Project first (cheap) and early-out for off-screen / behind-camera
+    // bots before running the expensive line-of-sight raycast.
+    const worldPos = _hbTmpA.copy(bot.position);
     worldPos.y += bot.chassis.hullHeight + 30;
-    const projected = worldPos.clone().project(camera);
+    const projected = _hbTmpB.copy(worldPos).project(camera);
 
     if (projected.z > 1) continue;
 
     const sx = (projected.x * halfW) + halfW;
     const sy = -(projected.y * halfH) + halfH;
 
-    if (sx < -60 || sx > window.innerWidth + 60 || sy < -30 || sy > window.innerHeight + 30) continue;
+    if (sx < -60 || sx > winW + 60 || sy < -30 || sy > winH + 30) continue;
     if (barIdx >= hbarPool.bars.length) break;
+
+    // Line-of-sight check (raycast) only after on-screen cull passes.
+    const toBot = _hbTmpA.subVectors(bot.position, player.position).normalize();
+    const wallDist = raycastLevel(player.position, toBot, dist + 50);
+    if (wallDist < dist - 30) continue; // wall blocks view
 
     const healthPct = Math.max(0, bot.health / bot.maxHealth);
     const shieldPct = Math.max(0, bot.shield / bot.maxShield);
@@ -12050,14 +12341,14 @@ function updateEnemyHealthBars() {
     const dist = player.position.distanceTo(field.position);
     if (dist > 4000) continue;
 
-    const worldPos = field.position.clone();
+    const worldPos = _hbTmpA.copy(field.position);
     worldPos.y += 60;
-    const projected = worldPos.clone().project(camera);
+    const projected = _hbTmpB.copy(worldPos).project(camera);
     if (projected.z > 1) continue;
 
     const sx = (projected.x * halfW) + halfW;
     const sy = -(projected.y * halfH) + halfH;
-    if (sx < -30 || sx > window.innerWidth + 30 || sy < -30 || sy > window.innerHeight + 30) continue;
+    if (sx < -30 || sx > winW + 30 || sy < -30 || sy > winH + 30) continue;
     if (mkIdx >= hbarPool.markers.length) break;
 
     const div = hbarPool.markers[mkIdx];
@@ -12083,6 +12374,12 @@ function gameLoop(timestamp) {
   // Update level shader time for vein animations
   if (game.levelMaterial) game.levelMaterial.uniforms.time.value = game.time;
 
+  // Poll gamepad every frame (before any state-based early return) so menu
+  // buttons (Start/Back/D-pad) keep working while the ship-select overlay
+  // is up or while settings are open. Gameplay edge-triggered actions inside
+  // pollGamepad are gated on _menuActive so this does not misfire abilities.
+  pollGamepad();
+
   if (game.state === 'select') { renderPostFX(); return; }
 
   // Pause gameplay while settings are open
@@ -12092,9 +12389,6 @@ function gameLoop(timestamp) {
   }
 
   const dt = game.deltaTime;
-
-  // Poll gamepad
-  pollGamepad();
 
   // Update systems
   updatePlayerStasis(dt);
