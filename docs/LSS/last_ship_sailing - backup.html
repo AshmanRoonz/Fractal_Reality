@@ -381,6 +381,18 @@ canvas { display: block; }
   padding: 4px 8px; font-family: 'Courier New', monospace; font-size: 11px; cursor: pointer;
 }
 .setting-row input[type="checkbox"] { accent-color: #ffaa00; cursor: pointer; width: 16px; height: 16px; }
+/* Gamepad focus ring (d-pad nav in the settings overlay) */
+#settings-overlay .gp-focus {
+  outline: 2px solid #ffaa00;
+  outline-offset: 4px;
+  box-shadow: 0 0 12px rgba(255, 170, 0, 0.5);
+}
+#settings-overlay .setting-row.gp-focus-row {
+  background: rgba(255, 170, 0, 0.07);
+  border-left: 2px solid #ffaa00;
+  padding-left: 6px;
+  margin-left: -8px;
+}
 .bind-select {
   background: rgba(20,20,40,0.9); color: #fff; border: 1px solid rgba(100,100,120,0.5);
   padding: 4px 8px; font-family: 'Courier New', monospace; font-size: 11px;
@@ -478,11 +490,6 @@ canvas { display: block; }
   position: relative; text-align: center;
   display: flex; flex-direction: column; justify-content: center;
 }
-#map-window-check {
-  position: absolute; top: 6px; right: 10px;
-  color: #66ff66; font-size: 18px; font-weight: bold;
-  text-shadow: 0 0 6px rgba(102,255,102,0.5);
-}
 #map-window-name {
   font-size: 18px; font-weight: bold; color: #ffaa00;
   letter-spacing: 2px; margin-bottom: 8px;
@@ -518,15 +525,7 @@ canvas { display: block; }
 .map-dot.active {
   background: #ffaa00; box-shadow: 0 0 6px rgba(255,170,0,0.7);
 }
-/* Confirmed ship checkmark (on the highlighted entry in the ship list) */
 .ship-list-entry { position: relative; }
-.ship-list-entry.selected::after {
-  content: '\2713';
-  position: absolute; top: 50%; right: 12px;
-  transform: translateY(-50%);
-  color: #66ff66; font-weight: bold; font-size: 18px;
-  text-shadow: 0 0 6px rgba(102,255,102,0.5);
-}
 
 /* ==========================================================================
    CINEMATIC OVERLAYS (ported from lss_overlays.jsx; pure CSS animations)
@@ -925,7 +924,6 @@ canvas { display: block; }
     <div id="map-select">
       <div id="map-select-label">MAP</div>
       <div id="map-window">
-        <div id="map-window-check">&#10003;</div>
         <div id="map-window-name"></div>
         <div id="map-window-desc"></div>
       </div>
@@ -1516,11 +1514,6 @@ function selectMap(mapKey) {
   const descEl = document.getElementById('map-window-desc');
   if (descEl) descEl.textContent = mapData.description;
 
-  // Check is always visible in the current design (a map is always selected).
-  // Kept conditional so future states (no map chosen) can toggle it off.
-  const checkEl = document.getElementById('map-window-check');
-  if (checkEl) checkEl.style.display = 'block';
-
   // Active dot
   const dots = document.querySelectorAll('#map-indicator .map-dot');
   dots.forEach(d => d.classList.toggle('active', d.dataset.key === mapKey));
@@ -1579,6 +1572,9 @@ class NetworkPlayer {
     this.doomTimer = 0;
     this.coreMeter = 0;
     this.arcSlowTimer = 0;
+    // Stats (for scoreboard)
+    this.kills = 0;
+    this.damageDealt = 0;
 
     const teamColor = team === LSS.TEAM_FLEET_A ? 0xff4444 : 0x44bb44;
     this.mesh = createShipMesh(chassisData, teamColor, loadoutKey);
@@ -3867,6 +3863,9 @@ class Bot {
     this.doomed = false;
     this.doomTimer = 0;
     this.coreMeter = 0;
+    // Stats (for scoreboard): kills this match, damage dealt this match
+    this.kills = 0;
+    this.damageDealt = 0;
 
     const teamColor = team === LSS.TEAM_FLEET_A ? 0xff4444 : 0x44bb44;
     this.mesh = createShipMesh(chassisData, teamColor, loadoutKey);
@@ -4291,6 +4290,12 @@ class Bot {
       this.health -= amount;
     }
 
+    // Track damage-dealt on bot attackers (player is tracked at the call sites).
+    // 'debris' and string attackers pass through unchanged.
+    if (attacker && typeof attacker === 'object' && attacker.alive !== undefined) {
+      attacker.damageDealt = (attacker.damageDealt || 0) + amount;
+    }
+
     // Flash shield + shimmer effect
     const shieldMesh = this.mesh.userData.shieldMesh;
     if (shieldMesh && this.shield > 0) {
@@ -4358,6 +4363,7 @@ class Bot {
       if (attacker.alive !== undefined) {
         if (!attacker._streakCount) attacker._streakCount = 0;
         attacker._streakCount++;
+        attacker.kills = (attacker.kills || 0) + 1;
       }
     }
   }
@@ -7334,9 +7340,13 @@ function commitLoadout(key) {
   player.velocity = new THREE.Vector3(0, 0, 0);
   player.position = new THREE.Vector3(0, 0, 0); // placeholder; set properly after map build
   player.euler = new THREE.Euler(0, 0, 0, 'YXZ');
-  player.kills = 0;
-  player.deaths = 0;
-  player.damageDealt = 0;
+  // Match stats (kills/deaths/damage) only reset on a fresh match. Between
+  // rounds they accumulate so the scoreboard reflects the whole match.
+  if (!midMatch) {
+    player.kills = 0;
+    player.deaths = 0;
+    player.damageDealt = 0;
+  }
   player.shieldRegenDelay = 0;
   // Reset titan-specific state
   player.vortexEnergy = 1000;
@@ -7454,14 +7464,35 @@ function commitLoadout(key) {
 }
 
 function spawnBots() {
-  for (const bot of game.entities) bot.destroy();
+  // Snapshot existing bot match stats by loadoutKey so respawning between
+  // rounds does not wipe the scoreboard. Fresh-match callers have no
+  // existing entities, so the map is empty and new bots start at zero.
+  const _prevStats = {};
+  for (const bot of game.entities) {
+    if (bot.loadoutKey) {
+      _prevStats[bot.loadoutKey] = {
+        kills: bot.kills || 0,
+        damageDealt: bot.damageDealt || 0,
+      };
+    }
+    bot.destroy();
+  }
   game.entities = [];
+
+  const applyPrev = (bot) => {
+    const p = _prevStats[bot.loadoutKey];
+    if (p) {
+      bot.kills = p.kills;
+      bot.damageDealt = p.damageDealt;
+    }
+  };
 
   const enemyLoadouts = ['PYRO', 'SLAYER', 'TRACKER'];
   for (let i = 0; i < 3; i++) {
     const bot = new Bot(enemyLoadouts[i], LSS.TEAM_FLEET_B, i + 1);
     const sp = getValidSpawnPoint('B');
     bot.position.copy(sp);
+    applyPrev(bot);
     game.entities.push(bot);
   }
 
@@ -7470,6 +7501,7 @@ function spawnBots() {
     const bot = new Bot(friendlyLoadouts[i], LSS.TEAM_FLEET_A, i + 10);
     const sp = getValidSpawnPoint('A');
     bot.position.copy(sp);
+    applyPrev(bot);
     game.entities.push(bot);
   }
 }
@@ -9837,9 +9869,20 @@ function updateRoundSystem(dt) {
     if (game.roundEndTimer <= 0) {
       if (game.scoreA >= LSS.ROUNDS_TO_WIN || game.scoreB >= LSS.ROUNDS_TO_WIN) {
         game.state = 'matchEnd';
+        // 10-second scoreboard pause before the game returns to the root menu.
+        // _refreshScoreboardVisibility honors game.state === 'matchEnd' as a
+        // force-show condition, so just flipping the state and calling refresh
+        // brings the scoreboard up with the final totals.
+        game.matchEndTimer = 10;
+        if (typeof _refreshScoreboardVisibility === 'function') _refreshScoreboardVisibility();
         if (window.Overlays) {
           const winner = game.scoreA >= LSS.ROUNDS_TO_WIN ? 'FLEET A' : 'FLEET B';
           Overlays.banner('VICTORY', winner + ' WINS');
+        }
+        // Release pointer lock so the user can see the scoreboard without
+        // being stuck in mouselook.
+        if (document.exitPointerLock) {
+          try { document.exitPointerLock(); } catch (e) {}
         }
       } else {
         game.currentRound++;
@@ -9883,7 +9926,74 @@ function updateRoundSystem(dt) {
         launchCountdown();
       }
     }
+  } else if (game.state === 'matchEnd') {
+    // Hold the scoreboard up for ~10s, then fall back to the root menu (a fresh
+    // 'select' state with ship-select open and all match stats cleared, exactly
+    // like a cold boot).
+    game.matchEndTimer = (game.matchEndTimer === undefined) ? 10 : game.matchEndTimer - dt;
+    if (game.matchEndTimer <= 0) {
+      returnToRootMenu();
+    }
   }
+}
+
+// Return the game to its boot-time root menu: ship-select overlay visible,
+// game.state === 'select', all scores / rounds / match stats reset. Called from
+// the matchEnd handler after the 10-second scoreboard pause. Keeps the same
+// shape as a cold start so the very next commitLoadout sees midMatch === false
+// and runs the full fresh-match branch (map build, bot spawn, score reset).
+function returnToRootMenu() {
+  // Tear down the scoreboard first so it doesn't bleed into the menu.
+  _scoreboardKeyHeld = false;
+  _scoreboardGpHeld = false;
+  scoreboardVisible = false;
+  scoreboardDiv.classList.remove('visible');
+
+  // Wipe live entities / projectiles / stasis / world-effects so the next
+  // match starts from clean state (commitLoadout's fresh-match path rebuilds
+  // the world, but these references live on game until then).
+  for (const bot of game.entities) { try { bot.destroy(); } catch (e) {} }
+  game.entities = [];
+  game.projectiles = [];
+  game.particles = [];
+  for (const sf of game.stasisFields) { try { sf.destroy(); } catch (e) {} }
+  game.stasisFields = [];
+  for (const eff of game.worldEffects) {
+    if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh);
+    if (eff.coreMesh && eff.coreMesh.parent) scene.remove(eff.coreMesh);
+    if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh);
+  }
+  game.worldEffects = [];
+
+  // Reset match bookkeeping.
+  game.scoreA = 0;
+  game.scoreB = 0;
+  game.currentRound = 1;
+  game.matchEndTimer = 0;
+
+  // Reset player match stats so the root menu starts clean.
+  player.kills = 0;
+  player.deaths = 0;
+  player.damageDealt = 0;
+
+  // Flip state first; _menuActive / Tab-intercept / gamepad hold all gate on
+  // this, and the scoreboard's forced-visible condition checks it too.
+  game.state = 'select';
+
+  // Pointer lock was already released at matchEnd, but belt-and-suspenders.
+  if (document.exitPointerLock) {
+    try { document.exitPointerLock(); } catch (e) {}
+  }
+
+  // Hide any countdown overlays left over from a prior launch sequence.
+  const cd = document.getElementById('ship-select-countdown');
+  if (cd) cd.classList.remove('active');
+
+  // Show the ship-select root menu exactly as it appears on cold boot.
+  const sel = document.getElementById('ship-select');
+  if (sel) { sel.style.display = 'flex'; sel.classList.add('active'); }
+  buildShipSelect();
+  if (typeof updateTeammatesStrip === 'function') updateTeammatesStrip();
 }
 
 // ---- GAMEPAD POLLING ----
@@ -9989,7 +10099,7 @@ function pollGamepad() {
   const _shipSelectActive = !!(_shipSelect && _shipSelect.classList.contains('active'));
   const _menuActive = settingsOpen || _shipSelectActive || game.state === 'select' || game.state === 'matchEnd';
 
-  // Start: confirm / select
+  // Start: confirm / select (menus) or hold-to-show scoreboard (in combat)
   if (input.gpMenu && !input.gpMenuPrev) {
     if (settingsOpen) {
       closeSettings();
@@ -10002,7 +10112,24 @@ function pollGamepad() {
         if (first && first.dataset && first.dataset.key) previewLoadout(first.dataset.key);
       }
     }
-    // In-game: no-op (no confirm action during combat)
+    // In-combat press edge is handled below via the hold-tracker.
+  }
+
+  // Scoreboard hold (Start during combat). Mirrors the Tab key: scoreboard
+  // is visible while Start is held, hidden when released. Does not fire while
+  // any menu overlay is active (those contexts use Start as a confirm).
+  // We read button 9 RAW here (rather than going through input.gpMenu, which
+  // routes through input.gpBindings) so the scoreboard hold survives any
+  // corrupted/missing 'menu' binding loaded from localStorage; Start is a
+  // standard-layout hardware button and is always at index 9.
+  {
+    const _inCombat = !_menuActive;
+    const _startRaw = !!(gp.buttons[9] && (gp.buttons[9].pressed || gp.buttons[9].value > input.triggerThreshold));
+    const want = _inCombat && (_startRaw || !!input.gpMenu);
+    if (want !== _scoreboardGpHeld) {
+      _scoreboardGpHeld = want;
+      _refreshScoreboardVisibility();
+    }
   }
 
   // Back: cancel / esc
@@ -10039,6 +10166,20 @@ function pollGamepad() {
     } else if (input.gpDpadRight && !input.gpDpadRightPrev) {
       if (typeof cycleMap === 'function') cycleMap(1);
     }
+  } else if (settingsOpen) {
+    // Settings overlay nav: d-pad up/down moves focus between rows; d-pad
+    // left/right adjusts the focused widget (slider step or dropdown cycle);
+    // gamepad A (button 0) activates buttons or toggles checkboxes.
+    if (typeof _settingsEnsureFocus === 'function') _settingsEnsureFocus();
+    if (input.gpDpadUp    && !input.gpDpadUpPrev)    _settingsMoveFocus(-1);
+    if (input.gpDpadDown  && !input.gpDpadDownPrev)  _settingsMoveFocus(+1);
+    if (input.gpDpadLeft  && !input.gpDpadLeftPrev)  _settingsAdjustFocused(-1);
+    if (input.gpDpadRight && !input.gpDpadRightPrev) _settingsAdjustFocused(+1);
+    // Raw button 0 (A) for confirm; do not use the configurable 'dash' binding
+    // because the user may have remapped dash to something non-A.
+    const _aBtn = !!(gp.buttons[0] && gp.buttons[0].pressed);
+    if (_aBtn && !input.gpAPrev) _settingsActivateFocused();
+    input.gpAPrev = _aBtn;
   } else if (typeof deathCam !== 'undefined' && deathCam.active) {
     // Spectator mode: d-pad left/right cycles the teammate we're watching.
     // (stick-horizontal fallback is already folded into gpDpadLeft/Right above)
@@ -11772,6 +11913,10 @@ function openSettings() {
   overlay.classList.add('open');
   overlay.style.display = '';
   document.exitPointerLock();
+  // Reset gamepad focus to the first widget so d-pad nav has a predictable
+  // starting point; applied on a microtask so the overlay has laid out.
+  _settingsFocusIdx = 0;
+  setTimeout(_settingsApplyFocus, 0);
 }
 
 function closeSettings() {
@@ -11779,7 +11924,108 @@ function closeSettings() {
   const overlay = document.getElementById('settings-overlay');
   overlay.classList.remove('open');
   overlay.style.display = 'none';
+  _settingsClearFocus();
   if (game.state !== 'select') renderer.domElement.requestPointerLock();
+}
+
+// ---- Gamepad navigation helpers for the settings overlay ----
+// Focusable widgets = every interactive control in the overlay, in DOM order.
+// The focused widget gets a CSS highlight and its parent .setting-row gets a
+// row highlight so the user can see the active row even when the widget is
+// off-screen. d-pad adjusts the widget; A button activates/toggles.
+let _settingsFocusIdx = 0;
+function _settingsFocusables() {
+  const overlay = document.getElementById('settings-overlay');
+  if (!overlay || !settingsOpen) return [];
+  const nodes = overlay.querySelectorAll(
+    'input[type="range"], input[type="checkbox"], select, button'
+  );
+  return Array.from(nodes);
+}
+function _settingsClearFocus() {
+  const overlay = document.getElementById('settings-overlay');
+  if (!overlay) return;
+  overlay.querySelectorAll('.gp-focus').forEach(el => el.classList.remove('gp-focus'));
+  overlay.querySelectorAll('.gp-focus-row').forEach(el => el.classList.remove('gp-focus-row'));
+}
+function _settingsApplyFocus() {
+  const list = _settingsFocusables();
+  _settingsClearFocus();
+  if (!list.length) return;
+  if (_settingsFocusIdx < 0) _settingsFocusIdx = list.length - 1;
+  if (_settingsFocusIdx >= list.length) _settingsFocusIdx = 0;
+  const el = list[_settingsFocusIdx];
+  if (!el) return;
+  el.classList.add('gp-focus');
+  const row = el.closest('.setting-row');
+  if (row) row.classList.add('gp-focus-row');
+  try { el.focus({ preventScroll: true }); } catch (_) {}
+  try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (_) {}
+}
+function _settingsEnsureFocus() {
+  // Re-apply focus if the focused element was removed by a rebuild.
+  const list = _settingsFocusables();
+  if (!list.length) return;
+  const current = document.querySelector('#settings-overlay .gp-focus');
+  if (!current) _settingsApplyFocus();
+}
+function _settingsMoveFocus(dir) {
+  const list = _settingsFocusables();
+  if (!list.length) return;
+  _settingsFocusIdx = (_settingsFocusIdx + dir + list.length) % list.length;
+  _settingsApplyFocus();
+}
+function _settingsAdjustFocused(dir) {
+  const list = _settingsFocusables();
+  const el = list[_settingsFocusIdx];
+  if (!el) return;
+  if (el.tagName === 'INPUT' && el.type === 'range') {
+    const min = parseFloat(el.min);
+    const max = parseFloat(el.max);
+    const step = parseFloat(el.step) || 1;
+    let v = parseFloat(el.value) + dir * step;
+    if (v < min) v = min;
+    if (v > max) v = max;
+    // Snap to step grid to avoid float drift
+    v = Math.round(v / step) * step;
+    el.value = v;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  } else if (el.tagName === 'SELECT') {
+    const n = el.options.length;
+    if (n > 0) {
+      el.selectedIndex = (el.selectedIndex + dir + n) % n;
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  } else if (el.tagName === 'INPUT' && el.type === 'checkbox') {
+    // Left/right on a checkbox toggles (also handled by A; left/right is a
+    // natural affordance since the user already has their thumb on the d-pad)
+    el.checked = !el.checked;
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  } else if (el.tagName === 'BUTTON') {
+    // Buttons don't respond to left/right; A activates them.
+  }
+}
+function _settingsActivateFocused() {
+  const list = _settingsFocusables();
+  const el = list[_settingsFocusIdx];
+  if (!el) return;
+  if (el.tagName === 'INPUT' && el.type === 'checkbox') {
+    el.checked = !el.checked;
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  } else if (el.tagName === 'BUTTON') {
+    el.click();
+  } else if (el.tagName === 'SELECT') {
+    // A-button on a dropdown cycles forward (B would be "back"; we use d-pad
+    // left for that). Cycling on A matches console-menu conventions.
+    const n = el.options.length;
+    if (n > 0) {
+      el.selectedIndex = (el.selectedIndex + 1) % n;
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  } else if (el.tagName === 'INPUT' && el.type === 'range') {
+    // No-op for sliders; use d-pad left/right to adjust.
+  }
 }
 
 function resetSettingsToDefaults() {
@@ -12392,6 +12638,127 @@ const MAP_DATA = {
       { path: [{x: -SU*6, y: SU*1, z: -SU*3}, {x:  0,    y: SU*3, z: -SU*7}]},           // arc_1 -> arc_3 (skip)
       { path: [{x:  0,    y: SU*3, z: -SU*7}, {x:  SU*6, y: SU*1, z: -SU*3}]},           // arc_3 -> arc_5 (skip)
       { path: [{x: -SU*3, y: SU*2, z: -SU*6}, {x:  SU*3, y: SU*2, z: -SU*6}]},           // arc_2 -> arc_4 (over the top)
+    ]
+  },
+
+  // ----------------------------------------------------------------------
+  // The Octahedron: classical bipyramid. Two apex spawns (top, bottom) with
+  // a four-room equator ring and a central hub. Vertical combat is forced;
+  // the center is the most contested room (shared by both the spine and
+  // every equator spoke). Every room has >= 3 exits. Cool crystal blues
+  // for the equator, warm gold at the hub, icy whites at the apex spawns.
+  octahedron: {
+    name: 'The Octahedron',
+    description: 'Bipyramid. Two apex spawns, four equator rooms, a central hub. Vertical and lateral, no camp.',
+    palette: [
+      0x4a3818, 0x1a2848, 0x1c2a50, 0x1a2848, 0x1c2a50, 0x1a2848, 0x1c2a50, 0x202848
+    ],
+    rooms: [
+      { id: 'center',   team: null, x: 0,        y: 0,        z: 0,        r: SU * 2.5 },
+      { id: 'spawn_a',  team: 'A',  x: 0,        y:  SU * 8,  z: 0,        r: SU * 2.2 }, // top apex
+      { id: 'spawn_b',  team: 'B',  x: 0,        y: -SU * 8,  z: 0,        r: SU * 2.2 }, // bottom apex
+      { id: 'eq_n',     team: null, x: 0,        y: 0,        z: -SU * 6,  r: SU * 1.8 },
+      { id: 'eq_e',     team: null, x:  SU * 6,  y: 0,        z: 0,        r: SU * 1.8 },
+      { id: 'eq_s',     team: null, x: 0,        y: 0,        z:  SU * 6,  r: SU * 1.8 },
+      { id: 'eq_w',     team: null, x: -SU * 6,  y: 0,        z: 0,        r: SU * 1.8 },
+    ],
+    tunnels: [
+      // Upper pyramid edges (spawn_a to each equator room)
+      { path: [{x: 0, y:  SU*8, z: 0}, {x: 0,       y: 0, z: -SU*6}]},     // spawn_a -> eq_n
+      { path: [{x: 0, y:  SU*8, z: 0}, {x:  SU*6,  y: 0, z: 0}]},           // spawn_a -> eq_e
+      { path: [{x: 0, y:  SU*8, z: 0}, {x: 0,       y: 0, z:  SU*6}]},     // spawn_a -> eq_s
+      { path: [{x: 0, y:  SU*8, z: 0}, {x: -SU*6,  y: 0, z: 0}]},           // spawn_a -> eq_w
+      // Lower pyramid edges (spawn_b to each equator room)
+      { path: [{x: 0, y: -SU*8, z: 0}, {x: 0,       y: 0, z: -SU*6}]},     // spawn_b -> eq_n
+      { path: [{x: 0, y: -SU*8, z: 0}, {x:  SU*6,  y: 0, z: 0}]},           // spawn_b -> eq_e
+      { path: [{x: 0, y: -SU*8, z: 0}, {x: 0,       y: 0, z:  SU*6}]},     // spawn_b -> eq_s
+      { path: [{x: 0, y: -SU*8, z: 0}, {x: -SU*6,  y: 0, z: 0}]},           // spawn_b -> eq_w
+      // Equator ring (four-room loop)
+      { path: [{x: 0,      y: 0, z: -SU*6}, {x:  SU*6, y: 0, z: 0}]},       // eq_n -> eq_e
+      { path: [{x:  SU*6, y: 0, z: 0},      {x: 0,      y: 0, z:  SU*6}]},  // eq_e -> eq_s
+      { path: [{x: 0,      y: 0, z:  SU*6}, {x: -SU*6, y: 0, z: 0}]},       // eq_s -> eq_w
+      { path: [{x: -SU*6, y: 0, z: 0},      {x: 0,      y: 0, z: -SU*6}]},  // eq_w -> eq_n
+      // Vertical spine through the central hub
+      { path: [{x: 0, y:  SU*8, z: 0}, {x: 0, y: 0, z: 0}]},                 // spawn_a -> center
+      { path: [{x: 0, y: 0,     z: 0}, {x: 0, y: -SU*8, z: 0}]},             // center -> spawn_b
+    ]
+  },
+
+  // ----------------------------------------------------------------------
+  // The Pentagon: pentagonal bipyramid. Two apex spawns, five equator
+  // rooms arranged at 72-degree intervals, no center room. Forces the
+  // fight outward: every path goes through the ring. Radiant gold palette
+  // with a warm amber undertone; spawns at the poles.
+  pentagon: {
+    name: 'The Pentagon',
+    description: 'Pentagonal bipyramid. Two apex spawns, five ring rooms, no hub. Every path crosses the ring.',
+    palette: [
+      0x4a2a10, 0x3a2818, 0x4a3820, 0x3a2810, 0x4a2a18, 0x4a3820, 0x3a2818, 0x4a2a10
+    ],
+    rooms: [
+      { id: 'spawn_a', team: 'A',  x: 0,             y:  SU * 7,  z: 0,             r: SU * 2.2 }, // top apex
+      { id: 'spawn_b', team: 'B',  x: 0,             y: -SU * 7,  z: 0,             r: SU * 2.2 }, // bottom apex
+      { id: 'p0',      team: null, x:  SU *  6.000,  y: 0,        z:  SU *  0.000,  r: SU * 1.8 }, // 0 deg
+      { id: 'p1',      team: null, x:  SU *  1.854,  y: 0,        z:  SU *  5.706,  r: SU * 1.8 }, // 72 deg
+      { id: 'p2',      team: null, x: -SU *  4.854,  y: 0,        z:  SU *  3.527,  r: SU * 1.8 }, // 144 deg
+      { id: 'p3',      team: null, x: -SU *  4.854,  y: 0,        z: -SU *  3.527,  r: SU * 1.8 }, // 216 deg
+      { id: 'p4',      team: null, x:  SU *  1.854,  y: 0,        z: -SU *  5.706,  r: SU * 1.8 }, // 288 deg
+    ],
+    tunnels: [
+      // Upper cone (spawn_a to each ring room)
+      { path: [{x: 0, y:  SU*7, z: 0}, {x:  SU*6.000, y: 0, z:  SU*0.000}]}, // spawn_a -> p0
+      { path: [{x: 0, y:  SU*7, z: 0}, {x:  SU*1.854, y: 0, z:  SU*5.706}]}, // spawn_a -> p1
+      { path: [{x: 0, y:  SU*7, z: 0}, {x: -SU*4.854, y: 0, z:  SU*3.527}]}, // spawn_a -> p2
+      { path: [{x: 0, y:  SU*7, z: 0}, {x: -SU*4.854, y: 0, z: -SU*3.527}]}, // spawn_a -> p3
+      { path: [{x: 0, y:  SU*7, z: 0}, {x:  SU*1.854, y: 0, z: -SU*5.706}]}, // spawn_a -> p4
+      // Lower cone (spawn_b to each ring room)
+      { path: [{x: 0, y: -SU*7, z: 0}, {x:  SU*6.000, y: 0, z:  SU*0.000}]}, // spawn_b -> p0
+      { path: [{x: 0, y: -SU*7, z: 0}, {x:  SU*1.854, y: 0, z:  SU*5.706}]}, // spawn_b -> p1
+      { path: [{x: 0, y: -SU*7, z: 0}, {x: -SU*4.854, y: 0, z:  SU*3.527}]}, // spawn_b -> p2
+      { path: [{x: 0, y: -SU*7, z: 0}, {x: -SU*4.854, y: 0, z: -SU*3.527}]}, // spawn_b -> p3
+      { path: [{x: 0, y: -SU*7, z: 0}, {x:  SU*1.854, y: 0, z: -SU*5.706}]}, // spawn_b -> p4
+      // Pentagon ring
+      { path: [{x:  SU*6.000, y: 0, z:  SU*0.000}, {x:  SU*1.854, y: 0, z:  SU*5.706}]}, // p0 -> p1
+      { path: [{x:  SU*1.854, y: 0, z:  SU*5.706}, {x: -SU*4.854, y: 0, z:  SU*3.527}]}, // p1 -> p2
+      { path: [{x: -SU*4.854, y: 0, z:  SU*3.527}, {x: -SU*4.854, y: 0, z: -SU*3.527}]}, // p2 -> p3
+      { path: [{x: -SU*4.854, y: 0, z: -SU*3.527}, {x:  SU*1.854, y: 0, z: -SU*5.706}]}, // p3 -> p4
+      { path: [{x:  SU*1.854, y: 0, z: -SU*5.706}, {x:  SU*6.000, y: 0, z:  SU*0.000}]}, // p4 -> p0
+    ]
+  },
+
+  // ----------------------------------------------------------------------
+  // The Gyre: helix arena. Spawns at the poles, five spiral rooms winding
+  // up the Y axis at 72-degree increments. Main spiral is long; three chord
+  // shortcuts across the helix let chasers catch and flankers cut. Neon
+  // violet/cyan palette; the spiral twists visibly in the low-light glow.
+  gyre: {
+    name: 'The Gyre',
+    description: 'Helix. Spawns at the poles, five spiral rooms climbing Y. Long main path with chord shortcuts.',
+    palette: [
+      0x2a1848, 0x1a2848, 0x301848, 0x183848, 0x281a48, 0x183048, 0x2a1848, 0x1a2a48
+    ],
+    rooms: [
+      { id: 'spawn_a', team: 'A',  x: 0,             y: -SU * 7,  z: 0,             r: SU * 2.2 }, // south pole
+      { id: 'spawn_b', team: 'B',  x: 0,             y:  SU * 7,  z: 0,             r: SU * 2.2 }, // north pole
+      { id: 'g1',      team: null, x:  SU *  5.000,  y: -SU * 4,  z:  SU *  0.000,  r: SU * 1.8 }, // 0 deg,   y=-4
+      { id: 'g2',      team: null, x:  SU *  1.545,  y: -SU * 2,  z:  SU *  4.755,  r: SU * 1.8 }, // 72 deg,  y=-2
+      { id: 'g3',      team: null, x: -SU *  4.045,  y: 0,        z:  SU *  2.939,  r: SU * 2.0 }, // 144 deg, y= 0 (mid)
+      { id: 'g4',      team: null, x: -SU *  4.045,  y:  SU * 2,  z: -SU *  2.939,  r: SU * 1.8 }, // 216 deg, y=+2
+      { id: 'g5',      team: null, x:  SU *  1.545,  y:  SU * 4,  z: -SU *  4.755,  r: SU * 1.8 }, // 288 deg, y=+4
+    ],
+    tunnels: [
+      // Main spiral (six cylinders from pole to pole)
+      { path: [{x: 0,             y: -SU*7, z: 0            }, {x:  SU*5.000, y: -SU*4, z:  SU*0.000}]}, // spawn_a -> g1
+      { path: [{x:  SU*5.000,    y: -SU*4, z:  SU*0.000},     {x:  SU*1.545, y: -SU*2, z:  SU*4.755}]}, // g1 -> g2
+      { path: [{x:  SU*1.545,    y: -SU*2, z:  SU*4.755},     {x: -SU*4.045, y: 0,     z:  SU*2.939}]}, // g2 -> g3
+      { path: [{x: -SU*4.045,    y: 0,     z:  SU*2.939},     {x: -SU*4.045, y:  SU*2, z: -SU*2.939}]}, // g3 -> g4
+      { path: [{x: -SU*4.045,    y:  SU*2, z: -SU*2.939},     {x:  SU*1.545, y:  SU*4, z: -SU*4.755}]}, // g4 -> g5
+      { path: [{x:  SU*1.545,    y:  SU*4, z: -SU*4.755},     {x: 0,         y:  SU*7, z: 0           }]}, // g5 -> spawn_b
+      // Chord shortcuts (cut across the helix)
+      { path: [{x: 0,             y: -SU*7, z: 0            }, {x: -SU*4.045, y: 0,     z:  SU*2.939}]}, // spawn_a -> g3 (vertical skip up)
+      { path: [{x: -SU*4.045,    y: 0,     z:  SU*2.939},     {x: 0,         y:  SU*7, z: 0           }]}, // g3 -> spawn_b (vertical skip up)
+      { path: [{x:  SU*5.000,    y: -SU*4, z:  SU*0.000},     {x: -SU*4.045, y:  SU*2, z: -SU*2.939}]}, // g1 -> g4 (diagonal through middle)
+      { path: [{x:  SU*1.545,    y: -SU*2, z:  SU*4.755},     {x:  SU*1.545, y:  SU*4, z: -SU*4.755}]}, // g2 -> g5 (diagonal through middle)
     ]
   }
 };
@@ -13192,6 +13559,15 @@ function gameLoop(timestamp) {
   // is up or while settings are open. Gameplay edge-triggered actions inside
   // pollGamepad are gated on _menuActive so this does not misfire abilities.
   pollGamepad();
+
+  // Refresh scoreboard contents while it's visible so kills/damage update
+  // in real time (throttled to ~5 Hz to avoid rebuilding the DOM every frame).
+  if (scoreboardVisible) {
+    if (!game._sbLastUpdate || game.time - game._sbLastUpdate >= 0.2) {
+      game._sbLastUpdate = game.time;
+      updateScoreboard();
+    }
+  }
 
   if (game.state === 'select') { renderPostFX(); return; }
 
@@ -14451,6 +14827,21 @@ scoreboardDiv.id = 'scoreboard';
 document.body.appendChild(scoreboardDiv);
 
 let scoreboardVisible = false;
+// Track keyboard-hold and gamepad-hold independently; the scoreboard is shown
+// while EITHER is held. This lets Tab (keyboard) and Start (gamepad) both work
+// without fighting over the visibility flag.
+let _scoreboardKeyHeld = false;
+let _scoreboardGpHeld = false;
+function _refreshScoreboardVisibility() {
+  // Force scoreboard visible during the match-end pause so players can see the
+  // final kills/damage totals before the root menu returns.
+  const forced = (game.state === 'matchEnd');
+  const want = forced || _scoreboardKeyHeld || _scoreboardGpHeld;
+  if (want !== scoreboardVisible) {
+    scoreboardVisible = want;
+    updateScoreboard();
+  }
+}
 
 function updateScoreboard() {
   const sb = scoreboardDiv;
@@ -14460,46 +14851,68 @@ function updateScoreboard() {
   const teamA = game.entities.filter(b => b.team === LSS.TEAM_FLEET_A);
   const teamB = game.entities.filter(b => b.team === LSS.TEAM_FLEET_B);
 
-  let html = '<h2>SCOREBOARD</h2>';
-  html += '<div class="sb-header-row"><div class="sb-name sb-stat-header">SHIP</div><div class="sb-stat-header">STATUS</div><div class="sb-stat-header">HEALTH</div><div class="sb-stat-header">SHIELD</div></div>';
+  // Sort each team by kills descending (player pinned at the top of their own team).
+  teamA.sort((a, b) => (b.kills || 0) - (a.kills || 0));
+  teamB.sort((a, b) => (b.kills || 0) - (a.kills || 0));
 
+  const statusOf = (e) => !e.alive ? 'DEAD' : e.doomed ? 'DOOMED' : 'ALIVE';
+  const row = (name, status, kills, dmg, isPlayer) => (
+    '<div class="sb-row' + (isPlayer ? ' player-row' : '') + '">' +
+    '<div class="sb-name">' + name + '</div>' +
+    '<div class="sb-stat">' + status + '</div>' +
+    '<div class="sb-stat">' + (kills || 0) + '</div>' +
+    '<div class="sb-stat">' + Math.floor(dmg || 0) + '</div>' +
+    '</div>'
+  );
+
+  let html = '<h2>SCOREBOARD</h2>';
+  html += '<div class="sb-header-row"><div class="sb-name sb-stat-header">SHIP</div><div class="sb-stat-header">STATUS</div><div class="sb-stat-header">KILLS</div><div class="sb-stat-header">DAMAGE</div></div>';
+
+  // FLEET A (player's team)
   html += '<div class="sb-team-header sb-team-a">FLEET A (' + game.scoreA + ' rounds)</div>';
-  // Player
   const pStatus = player.shipState === 'dead' ? 'DEAD' : player.doomed ? 'DOOMED' : 'ALIVE';
-  html += '<div class="sb-row player-row"><div class="sb-name">YOU (' + (player.loadout ? player.loadout.name : '?') + ')</div><div class="sb-stat">' + pStatus + '</div><div class="sb-stat">' + Math.ceil(player.health) + '</div><div class="sb-stat">' + Math.ceil(player.shield) + '</div></div>';
+  html += row('YOU (' + (player.loadout ? player.loadout.name : '?') + ')', pStatus, player.kills, player.damageDealt, true);
   for (const bot of teamA) {
-    const st = !bot.alive ? 'DEAD' : bot.doomed ? 'DOOMED' : 'ALIVE';
-    html += '<div class="sb-row"><div class="sb-name">' + bot.loadout.name + '</div><div class="sb-stat">' + st + '</div><div class="sb-stat">' + Math.ceil(bot.health) + '</div><div class="sb-stat">' + Math.ceil(bot.shield) + '</div></div>';
+    html += row(bot.loadout.name, statusOf(bot), bot.kills, bot.damageDealt, false);
   }
 
+  // FLEET B (enemy team)
   html += '<div class="sb-team-header sb-team-b">FLEET B (' + game.scoreB + ' rounds)</div>';
   for (const bot of teamB) {
-    const st = !bot.alive ? 'DEAD' : bot.doomed ? 'DOOMED' : 'ALIVE';
-    html += '<div class="sb-row"><div class="sb-name">' + bot.loadout.name + '</div><div class="sb-stat">' + st + '</div><div class="sb-stat">' + Math.ceil(bot.health) + '</div><div class="sb-stat">' + Math.ceil(bot.shield) + '</div></div>';
+    html += row(bot.loadout.name, statusOf(bot), bot.kills, bot.damageDealt, false);
   }
 
-  // Network players
+  // Network players (stats track through their own Bot-like objects if present)
   for (const np of net.networkPlayers) {
-    const st = !np.alive ? 'DEAD' : np.doomed ? 'DOOMED' : 'ALIVE';
-    const teamLabel = np.team === LSS.TEAM_FLEET_A ? 'A' : 'B';
-    html += '<div class="sb-row"><div class="sb-name">[NET] ' + (np.loadout ? np.loadout.name : '?') + '</div><div class="sb-stat">' + st + '</div><div class="sb-stat">' + Math.ceil(np.health) + '</div><div class="sb-stat">' + Math.ceil(np.shield) + '</div></div>';
+    html += row('[NET] ' + (np.loadout ? np.loadout.name : '?'), statusOf(np), np.kills, np.damageDealt, false);
   }
 
-  html += '<div style="text-align:center;color:#555;font-size:9px;margin-top:12px;">K: ' + player.kills + ' / D: ' + player.deaths + ' / DMG: ' + Math.floor(player.damageDealt) + '</div>';
+  // Personal summary footer
+  html += '<div style="text-align:center;color:#888;font-size:10px;margin-top:12px;letter-spacing:2px;">KILLS ' + (player.kills || 0) + '  &middot;  DEATHS ' + (player.deaths || 0) + '  &middot;  DAMAGE ' + Math.floor(player.damageDealt || 0) + '</div>';
   sb.innerHTML = html;
 }
 
-// Tab key handler for scoreboard
+// Tab key handler for scoreboard. Only intercept Tab when we're actually in
+// combat (not select, not settings, not ship select); otherwise let the
+// browser's native Tab behavior move focus through form fields.
+function _scoreboardTabShouldIntercept() {
+  if (game.state === 'select') return false;
+  if (settingsOpen) return false;
+  const sel = document.getElementById('ship-select');
+  if (sel && sel.classList.contains('active')) return false;
+  return true;
+}
 document.addEventListener('keydown', e => {
-  if (e.key === 'Tab' && game.state !== 'select') {
-    scoreboardVisible = true;
-    updateScoreboard();
+  if (e.key === 'Tab' && _scoreboardTabShouldIntercept()) {
+    e.preventDefault();
+    _scoreboardKeyHeld = true;
+    _refreshScoreboardVisibility();
   }
 });
 document.addEventListener('keyup', e => {
   if (e.key === 'Tab') {
-    scoreboardVisible = false;
-    updateScoreboard();
+    _scoreboardKeyHeld = false;
+    _refreshScoreboardVisibility();
   }
 });
 
