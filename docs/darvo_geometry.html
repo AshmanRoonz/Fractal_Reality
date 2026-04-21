@@ -3,20 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DARVO and Narcissism: Two Sentences</title>
+  <title>DARVO and Narcissism</title>
   <style>
     :root {
       --bg: #0a0a0f;
-      --surface: #12121a;
       --border: #2a2a3a;
       --text: #e0e0ec;
       --muted: #888899;
       --gold: #f0c674;
-      --accent: #8bd3ff;
-      --magenta: #c9a0dc;
-      --green: #a8e6cf;
-      --red: #e85d75;
-      --orange: #ffb86c;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -25,279 +19,98 @@
       font-family: 'Georgia', serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.85;
-      padding: 2rem;
-      max-width: 820px;
+      line-height: 1.7;
+      padding: 3rem 2rem;
+      max-width: 720px;
       margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    h1, h2, h3 {
-      font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
-      color: var(--gold);
-      margin-top: 2.5rem;
-      margin-bottom: 1rem;
-    }
+    .spacer-top { flex: 1; }
+    .spacer-bottom { flex: 1.2; }
 
     h1 {
+      font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+      color: var(--gold);
       font-size: 2.2rem;
       text-align: center;
-      border-bottom: 2px solid var(--gold);
-      padding-bottom: 1rem;
-      line-height: 1.3;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: var(--muted);
-      font-style: italic;
       margin-bottom: 0.5rem;
-      font-size: 1.05rem;
+      line-height: 1.3;
+      font-weight: 600;
     }
 
     .author {
       text-align: center;
       color: var(--muted);
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
       font-size: 0.95rem;
+      font-style: italic;
     }
 
-    h2 {
-      font-size: 1.4rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.5rem;
-      margin-top: 3rem;
-    }
-
-    h3 { font-size: 1.1rem; color: var(--accent); }
-
-    p { margin-bottom: 1rem; }
-
-    .thesis-box {
+    .thesis {
       background: linear-gradient(135deg, rgba(240, 198, 116, 0.14), rgba(201, 160, 220, 0.10));
       border: 1px solid rgba(240, 198, 116, 0.4);
-      border-radius: 10px;
-      padding: 1.75rem 2rem;
-      margin: 2rem 0;
+      border-radius: 12px;
+      padding: 2.5rem 2.5rem;
     }
 
-    .thesis-box ol {
+    .thesis ol {
       margin: 0;
-      padding-left: 1.5rem;
-      font-size: 1.15rem;
+      padding-left: 1.8rem;
+      font-size: 1.25rem;
       line-height: 1.6;
       color: var(--gold);
     }
 
-    .thesis-box li {
-      margin-bottom: 0.6rem;
+    .thesis li {
+      margin-bottom: 1rem;
     }
 
-    .thesis-box li:last-child {
+    .thesis li:last-child {
       margin-bottom: 0;
     }
 
-    .note-box {
-      background: var(--surface);
-      border-left: 4px solid var(--accent);
-      padding: 1.1rem 1.4rem;
-      margin: 1.5rem 0;
-      border-radius: 0 8px 8px 0;
-    }
-
-    .note-box .label {
-      font-weight: bold;
-      color: var(--accent);
-      font-family: 'Segoe UI', sans-serif;
-      margin-bottom: 0.5rem;
-    }
-
-    .insight-box {
-      background: linear-gradient(135deg, rgba(240, 198, 116, 0.10), rgba(201, 160, 220, 0.06));
-      border: 1px solid rgba(240, 198, 116, 0.25);
-      border-radius: 10px;
-      padding: 1.4rem 1.6rem;
-      margin: 1.5rem 0;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1.5rem 0;
-    }
-
-    th, td {
-      border: 1px solid var(--border);
-      padding: 0.75rem 1rem;
-      text-align: left;
-      vertical-align: top;
-    }
-
-    th {
-      background: var(--surface);
-      color: var(--gold);
-      font-family: 'Segoe UI', sans-serif;
-    }
-
     .footer {
-      margin-top: 4rem;
-      padding-top: 1.5rem;
+      padding-top: 2rem;
       border-top: 1px solid var(--border);
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       text-align: center;
     }
 
-    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a { color: var(--gold); text-decoration: none; }
+    .footer p { margin-bottom: 0.4rem; }
 
     @media (max-width: 700px) {
-      body { padding: 1rem; }
+      body { padding: 2rem 1rem; }
       h1 { font-size: 1.6rem; }
-      .thesis-box ol { font-size: 1rem; }
+      .thesis { padding: 1.75rem 1.5rem; }
+      .thesis ol { font-size: 1.05rem; }
     }
   </style>
 </head>
 <body>
 
-<h1>DARVO and Narcissism<br>Two Sentences</h1>
-<p class="subtitle">What you have been watching, said plainly</p>
+<div class="spacer-top"></div>
+
+<h1>DARVO and Narcissism</h1>
 <p class="author">Ashman Roonz · Circumpunct Framework · 2026</p>
 
-<div class="thesis-box">
+<div class="thesis">
   <ol>
-    <li><strong>DARVO is a partial list of lie-protection behaviors.</strong></li>
-    <li><strong>Narcissism is lie-protection without awareness that it is lie-protection.</strong></li>
+    <li>DARVO is a partial list of lie-protection behaviors.</li>
+    <li>Narcissism is lie-protection without awareness that it is lie-protection.</li>
   </ol>
 </div>
 
-<p>That is the whole thing. The rest of this page is just unpacking those two sentences so they are harder to forget.</p>
-
-<!-- ============================================================ -->
-<h2>1. The Puzzle</h2>
-
-<p>Survivors of manipulation, gaslighting, and narcissistic abuse describe a strange consistency across unrelated people and unrelated relationships. You raise a concern; the concern is denied; you are attacked for raising it; by the end, you are the one apologizing. Jennifer Freyd (1997) named this pattern DARVO: Deny, Attack, Reverse Victim and Offender.</p>
-
-<p>The puzzle is that the pattern feels scripted, yet the people running it never attended the same seminar. Why the same moves?</p>
-
-<!-- ============================================================ -->
-<h2>2. The Simple Answer</h2>
-
-<p>Because the job being done (protecting a lie from truth that would dissolve it) has a bounded set of moves. There are only so many places a lie can be defended, and only so many ways protection can push back. DARVO names some of the common ones. It is a partial catalog, not a complete geometry.</p>
-
-<p>Different people recombine the same small set because the set is small. Twenty people protecting the same shape of lie will produce twenty similar-looking performances, because there are not many ways to do the job. The script is written by the task, not by the performer.</p>
-
-<!-- ============================================================ -->
-<h2>3. What a Lie Is</h2>
-
-<p>A lie is a distortion of truth. That is the whole definition.</p>
-
-<p>Truth, in this framework, is the substrate (Reality = Truth = E = 1 = ∞) that passes <em>through</em> you when you let it. You do not own Truth; you are a flow-being, not a possession-being. When the signal passes cleanly, you are aligned with what is the case. When the signal is bent on the way through, and you hold on to the bent version as if it were the signal, that is a lie.</p>
-
-<p>Distortion comes in many flavors: inflation ("I am more than I am"), severance ("I am less than I am"), flat denial, embellishment, omission, inversion, strategic vagueness. They are all distortion. No special categories.</p>
-
-<p>What makes protection necessary is simple: a distortion and the truth it distorts cannot both occupy the same place at the same time. If the truth lands, the distortion dissolves. The rest of this page is about what happens when someone is trying to prevent that landing.</p>
-
-<!-- ============================================================ -->
-<h2>4. Why Protection Exists</h2>
-
-<p>A lie and the truth it distorts cannot both sit in the same aperture at the same time. If truth is admitted, the lie dissolves and the self reorganizes around what is actually the case. If the lie is to survive, the truth has to be kept out of the aperture, one way or another. Protection is what that keeping-out looks like.</p>
-
-<!-- ============================================================ -->
-<h2>5. The Commonly Observed Moves</h2>
-
-<p>These are not an exhaustive catalog; they are the ones survivors and clinicians report most often. What is invariant is not the list; it is the job being done.</p>
-
-<table>
-  <tr>
-    <th>Move</th>
-    <th>What It Does</th>
-    <th>Typical Phrasing</th>
-  </tr>
-  <tr>
-    <td style="color: var(--red);"><strong>Deny</strong></td>
-    <td>Refuse the truth at the edge; keep the signal out.</td>
-    <td>"That didn't happen." "You're misremembering."</td>
-  </tr>
-  <tr>
-    <td style="color: var(--magenta);"><strong>Rewrite</strong></td>
-    <td>Distort the accumulated history; tamper with the receipts, promises, commitments, track record.</td>
-    <td>"You always do this." "We already agreed on this." "After everything I've done for you."</td>
-  </tr>
-  <tr>
-    <td style="color: var(--orange);"><strong>Attack</strong></td>
-    <td>Discredit the truth-teller in the present moment so the truth becomes expensive to carry.</td>
-    <td>"You're too sensitive." "You're being manipulative right now."</td>
-  </tr>
-  <tr>
-    <td style="color: var(--accent);"><strong>Reverse</strong></td>
-    <td>Invert the scene: the truth-teller becomes the aggressor; the lie-protector becomes the victim.</td>
-    <td>"I'm the one being hurt here." "I can't believe you're doing this to me."</td>
-  </tr>
-</table>
-
-<p>You will also meet variations that are hard to fit neatly into any single row: stonewalling, word salad, weaponized self-pity, strategic incompetence, selective memory, feigned confusion, love-bombing as a pre-emptive defense. They are other ways the same job gets done. Do not treat DARVO (or this slightly extended list) as the complete taxonomy; treat it as a handful of frequently-seen patterns inside a bounded space.</p>
-
-<div class="note-box">
-  <div class="label">About order</div>
-  <p>These moves do not have to appear in any fixed order. Deny can open, Attack can open, Reverse can open, two can fuse in one utterance ("you're hurting me by saying that" is Attack and Reverse at once), and any of them can repeat. What makes the pattern recognizable is not a sequence; it is that these moves keep showing up and the original concern keeps disappearing.</p>
-</div>
-
-<!-- ============================================================ -->
-<h2>6. Narcissism</h2>
-
-<p>Any ordinary person can reach for a lie-protection move under pressure. Most of us have. What distinguishes narcissism is not the reaching; it is the forgetting. The person no longer knows that what they are defending is a lie, because the lie has fused with who they take themselves to be.</p>
-
-<p>The framework's four-stage cascade tracks how this installation happens:</p>
-
-<div class="note-box">
-  <div class="label">Four stages (Circumpunct Framework, Theory of Mind)</div>
-  <p>1. Thought entertained (temporary; dissolves when attention shifts).<br>
-  2. Thought repeated (the pathway strengthens).<br>
-  3. Thought habituated (it fires automatically).<br>
-  4. Identity fusion (the thought IS you; removal feels existential).</p>
-</div>
-
-<p>A liar at stage 1 or 2 can still locate the lie as separate from themselves; they can drop it when it is safe to; entering protection is a choice. At stage 3, the protection has become reflexive but the person could still observe it if forced to. At stage 4, there is no self outside the lie from which to choose; protection is autonomic.</p>
-
-<div class="insight-box">
-  <p>This is why narcissists can pass polygraphs, seem genuinely wounded when confronted, and experience a correction as annihilation rather than information. It is not performance. It is the aperture's actual state. The self they are defending and the lie they are defending have become the same object.</p>
-</div>
-
-<!-- ============================================================ -->
-<h2>7. What This Means for Survivors</h2>
-
-<p>If the moves are a bounded set recombined by whatever the lie needs, then several things follow.</p>
-
-<p><strong>You were not out-argued by a genius.</strong> You were watching a small, re-used move-set get deployed by whichever combination the lie happened to need. Any words carrying the same truth would have produced a similar result. You can stop rehearsing better phrasings.</p>
-
-<p><strong>Clarity is the threat, not the cure.</strong> The clearer your concern, the more directly it threatens the lie, and the more the protection has to work. This is why "just explain it better" does not de-escalate; it escalates.</p>
-
-<p><strong>Apologizing under pressure is not evidence you were wrong.</strong> It is what happens when Reverse lands: the scene has been rewritten so that caring about the original concern looks like cruelty. The apology is the lie's receipt, not a verdict on you.</p>
-
-<p><strong>You were not imagining the pattern.</strong> The pattern is real; the bounded move-set is real; the forgetting (if it is there) is real. What you noticed is what was there.</p>
-
-<!-- ============================================================ -->
-<h2>8. What This Means Clinically</h2>
-
-<p>The diagnostic question shifts from "does this person meet the criteria for a trait label" to something more observable:</p>
-
-<div class="insight-box">
-  <p>Can this person locate the lie as separate from who they are?</p>
-</div>
-
-<p>If yes, they are reachable by frames; correction can land; growth is possible. If no, they are not reachable by frames; the lie has fused with the locator, and only life events large enough that keeping the lie costs more than surrendering it will move anything. Clinicians cannot engineer those events. What they can do is hold the truth steady, refuse to treat the protection as valid content, and let the aperture meet reality without buffering.</p>
-
-<!-- ============================================================ -->
-<h2>9. The Cure</h2>
-
-<p>There is no technique that dissolves a protected lie from outside. The lie lives inside an aperture that has closed around it, and only the person holding that aperture can open it. The cure is always the same: the lie has to be surrendered, and the self built on it has to agree to not survive the surrender intact.</p>
-
-<p>What survivors, partners, friends, and clinicians can actually do is narrow. Do not accept denials of things you know happened. Do not accept rewritten histories as correct. Do not absorb attacks as legitimate critique of your character. Do not apologize when the scene is inverted. Let the lie meet the truth without your help softening the collision. Either the aperture opens and the lie dies, or the person leaves for an environment that will feed the lie again. Both outcomes are healing for you, and at least one of them is the only path that could ever heal them.</p>
-
-<p>None of this excuses harm. Understanding why protection runs does not make being on the receiving end less damaging. But the frame changes what you are trying to do. You stop asking "why do they keep doing this to me," and start asking "what lie is being protected, and is the person still able to see it as a lie." The first question has no answer. The second one does, and the answer tells you what to do next.</p>
+<div class="spacer-bottom"></div>
 
 <div class="footer">
-  <p>Ashman Roonz · Circumpunct Framework · <a href="https://fractalreality.ca">fractalreality.ca</a></p>
-  <p style="margin-top: 0.5rem; font-size: 0.85rem;">DARVO concept originally formalized by Jennifer J. Freyd (1997). Lie-protection reading via the Circumpunct Framework (2024 to 2026).</p>
+  <p><a href="darvo_argument.html">the argument</a></p>
+  <p><a href="https://fractalreality.ca">fractalreality.ca</a></p>
+  <p>DARVO concept originally formalized by Jennifer J. Freyd (1997).</p>
 </div>
 
 </body>
