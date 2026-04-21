@@ -64,19 +64,26 @@ Output:
 
 The equation walks at machine precision at both scales. The same operator T is applied; the same fixed-point assertion holds. The one thing that changes with scope is what the fixed-point vector represents: at single scope it is one ⊙'s stationary distribution over (•, —, Φ, ○); at three-scale scope it is a joint distribution over 64 states that splits 68.53/31.47 on the primary-diameter vs secondary-diameter basis (the cosmological split at the operator level).
 
-## What is still open, slot by slot
+## The §27.7 coupling family (filled in as of this pass)
 
-The κ matrix in this file has only the diameter bonds filled in (κ₀₂, κ₂₀ = α; κ₁₃, κ₃₁ = α by ⊙ symmetry). The full κ from §27.7q is a 4×4 coupling matrix with additional structurally-named entries:
+κ is now the full §27.7 4×4 matrix, not just the diameter bonds:
 
-| Slot | What the framework names it | Status in `unified_expression.py` |
-|---|---|---|
-| κ₀₀ | α (primary, |•_electron|, diagonal) | implicit; lives at (0,0) via the 3.5D = 0D' identification, not yet a separate matrix entry |
-| κ₃₃ | α_G (gravity, diagonal) | not yet present; would appear as a direct ○↔○ cross-scale coupling |
-| κ (Cabibbo-like) | inter-generation mixing entries | not modeled |
-| κ (Weinberg-like) | electroweak mixing | not modeled |
-| κ (Higgs-like) | VEV coupling | not modeled |
+| Slot | Position | Value | Source |
+|---|---|---|---|
+| α (primary) | κ[•,Φ], κ[Φ,•] | α ≈ 7.297e-03 | §27.7a closed form |
+| α (secondary, ⊙-symmetric) | κ[—,○], κ[○,—] | α | §27.7s diameter exchange |
+| α_G (gravity) | κ[○,○] diagonal, cross-scale | α²¹ · φ²/2 · (1 + 2α/91) ≈ 1.75e-45 | §27.7g |
+| α (aperture) | κ[•,•] diagonal, cross-scale | α | §27.7q 0D-0D bond |
+| sin θ_C (Cabibbo) | κ[•,—], κ[—,•] | 0.224320 (scaled by α for non-collapse) | §27.7h |
+| sin θ_W (Weinberg) | κ[Φ,○], κ[○,Φ] | 0.480853 (scaled by α) | §13.15 |
+| λ_H (Higgs) | κ[—,Φ], κ[Φ,—] | 0.129508 (scaled by α) | §27.7i |
+| long cross | κ[•,○], κ[○,•] | √(α·α_G) | geometric mean |
 
-The diameter entries (κ₀₂, κ₁₃) are the two entries that follow from ⊙ symmetry under diameter exchange alone. Adding κ₀₀ and κ₃₃ as explicit diagonal entries is the next structural extension; they would live at the two "same-station cross-scale" positions on the diagonal. The off-diagonal Cabibbo, Weinberg, and Higgs entries each have their own framework formula (§27.7h, i, k); plugging them in turns κ from a 2-parameter matrix (α, μ) into the full 4×4 coupling matrix the framework predicts.
+Every named slot is now populated from its framework closed form. The α scaling on off-diameter entries enforces the non-collapse bound from §27.7q (0 < κ_{p,q} < κ*_{p,q}): without it, sin θ_C ≈ 0.22 and sin θ_W ≈ 0.48 would push κ far from I, destabilizing the fixed point (Inflation Lie at operator level). With the scaling, the matrix stays in the perturbative regime ||κ − I|| ~ α, and closure still holds at machine precision (residuals ≤ 4.44e-16 across three seeds at both scopes).
+
+**Reading of the scaling.** α sets the overall size of the κ-departure from I; the named couplings set the *pattern* across stations. This matches §27.7q's structural claim: the primary entry κ_{0,0} = α is the measured fine-structure, and every other entry is a framework ratio times this primary.
+
+Flags `use_diagonal` and `use_off_diameter` on the `Nesting` class let you turn the §27.7 extensions on/off for ablation; defaults are both on.
 
 ## What you get when you run it
 

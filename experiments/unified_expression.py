@@ -105,6 +105,28 @@ ALPHA = solve_alpha()    # 0.0072973526...   (framework auxiliary input to κ)
 
 
 # ═══════════════════════════════════════════════════════════════
+# §27.7 coupling family: the framework-predicted κ entries
+# ═══════════════════════════════════════════════════════════════
+# All other entries of κ are named structurally; their values come from
+# the §27.7 closed forms (each taking α as input, returning small-integer
+# combinations of T, P, R, V, SU(3), φ).  α itself lives at the primary
+# diameter (•↔Φ) and cross-scale diagonal (•↔•).
+
+# §27.7g  Gravity: α_G = α²¹ × φ²/2 × (1 + 2α/91); cross-scale 3D↔3D
+ALPHA_G = (ALPHA ** 21) * (PHI_GOLDEN ** 2 / 2) * (1 + 2 * ALPHA / 91)
+
+# §27.7h  Cabibbo-like: sin θ_C = α^(1/2 + αT/R) × SU(3)/T
+SIN_THETA_C = (ALPHA ** (0.5 + ALPHA * T_TRIAD / 7)) * (8 / T_TRIAD)
+
+# §27.7 / §13.15  Weinberg-like: sin²θ_W = SU(2)/V + (Φ+○)α/T⁴ = 3/13 + 5α/81
+SIN2_THETA_W = 3.0 / 13.0 + 5 * ALPHA / 81
+SIN_THETA_W  = np.sqrt(SIN2_THETA_W)
+
+# §27.7i  Higgs quartic: λ_H = (1/SU(3))(1 + 5α − 8α²) = (1/8)(1 + 5α − 8α²)
+LAMBDA_HIGGS = (1.0 / 8.0) * (1 + 5 * ALPHA - 8 * ALPHA ** 2)
+
+
+# ═══════════════════════════════════════════════════════════════
 # Stations (structural: •, —, Φ, ○) and (processual: ⊛, ⎇, ✹, ⟳)
 # ═══════════════════════════════════════════════════════════════
 
@@ -271,22 +293,67 @@ def engine_F(mu: float = MU_DEFAULT) -> np.ndarray:
 class Nesting:
     """⊂[α] : scale-recursive embedding carrying the 4×4 coupling matrix κ.
 
-       Default primary entries:
-           κ[•, Φ] = κ[Φ, •] = α          (primary diameter, α ≈ 1/137)
-           κ[—, ○] = κ[○, —] = α          (secondary diameter, forced by
-                                             ⊙ symmetry)
-       Other off-diagonal entries (Cabibbo-like, Weinberg-like,
-       Higgs-like) are all set to 0 in the current single-scale κ;
-       they are the open slots for future framework development."""
-    def __init__(self, alpha: float = ALPHA):
+       §27.7q names every entry of the 4×4 κ_{p,q}: V_p(λ) × V_q(Λ) → ℝ.
+
+       Off-diagonal (cross-station, within a scale; ⊙-symmetric):
+           κ[•, Φ] = κ[Φ, •] = α              primary diameter (•↔Φ)
+           κ[—, ○] = κ[○, —] = α              secondary diameter (—↔○)
+           κ[—, Φ] = κ[Φ, —] = λ_H·α          Higgs-like (—↔Φ, §27.7i)
+           κ[Φ, ○] = κ[○, Φ] = sin θ_W·α      Weinberg-like (Φ↔○, §27.7k)
+           κ[•, —] = κ[—, •] = sin θ_C·α      Cabibbo-like (•↔—, §27.7h)
+           κ[•, ○] = κ[○, •] = √(α·α_G)       long cross (•↔○)
+
+       Diagonal (cross-scale, same-station; §27.7q "destabilizing" slot):
+           κ[•, •] = α                        aperture-to-aperture (fine-structure)
+           κ[○, ○] = α_G                      boundary-to-boundary (gravity, §27.7g)
+           κ[—, —] = κ[Φ, Φ] = 1.0            line and field: no same-station
+                                               cross-scale coupling named
+
+       Each off-diagonal correction is scaled by α so the matrix stays in
+       the perturbative regime (||κ − I|| ~ α); this is the non-collapse
+       bound (§27.7q: 0 < κ_{p,q} < κ*_{p,q}) enforced in code.  Without
+       the α scaling the Cabibbo and Weinberg values are order 0.2–0.5,
+       which would destabilize the fixed point (Inflation Lie at operator
+       level).  The scaling reads as: α sets the overall κ-departure; the
+       named couplings set the *pattern* across stations."""
+    def __init__(self,
+                 alpha: float = ALPHA,
+                 alpha_G: float = ALPHA_G,
+                 sin_theta_C: float = SIN_THETA_C,
+                 sin_theta_W: float = SIN_THETA_W,
+                 lambda_H: float = LAMBDA_HIGGS,
+                 use_diagonal: bool = True,
+                 use_off_diameter: bool = True):
         self.alpha = alpha
+        self.alpha_G = alpha_G
+        self.sin_theta_C = sin_theta_C
+        self.sin_theta_W = sin_theta_W
+        self.lambda_H = lambda_H
+        self.use_diagonal = use_diagonal            # cross-scale diagonals
+        self.use_off_diameter = use_off_diameter    # Cabibbo / Weinberg / Higgs
     def matrix_single(self) -> np.ndarray:
+        """Within-scale κ₄ on ℂ⁴.  Identity plus diameter bonds (and the
+           off-diameter couplings if enabled).  Diagonal cross-scale
+           entries do NOT appear in the within-scale κ; they live in
+           matrix_three_scale() where two scales are tensored."""
         k = np.eye(4, dtype=complex)
-        k[0, 2] = self.alpha; k[2, 0] = self.alpha
-        k[1, 3] = self.alpha; k[3, 1] = self.alpha
+        # Diameter bonds (⊙-symmetric, §27.7s)
+        k[0, 2] = self.alpha; k[2, 0] = self.alpha                   # •↔Φ primary
+        k[1, 3] = self.alpha; k[3, 1] = self.alpha                   # —↔○ secondary
+        if self.use_off_diameter:
+            # §27.7 structural family; each scaled by α to stay perturbative
+            c_CAB = self.sin_theta_C * self.alpha                    # •↔—
+            c_HIG = self.lambda_H    * self.alpha                    # —↔Φ
+            c_WEI = self.sin_theta_W * self.alpha                    # Φ↔○
+            c_LNG = np.sqrt(self.alpha * self.alpha_G)               # •↔○
+            k[0, 1] = c_CAB; k[1, 0] = c_CAB
+            k[1, 2] = c_HIG; k[2, 1] = c_HIG
+            k[2, 3] = c_WEI; k[3, 2] = c_WEI
+            k[0, 3] = c_LNG; k[3, 0] = c_LNG
         return k
     def matrix_three_scale(self) -> np.ndarray:
-        """κ₆₄ : intra-scale + adjacent-scale (α) + skip (α²)."""
+        """κ₆₄ : intra-scale + adjacent-scale (α) + skip (α²) + diagonal
+           cross-scale (α for •↔•, α_G for ○↔○)."""
         dim = 64
         kappa = np.eye(dim, dtype=complex)
         I4 = np.eye(4, dtype=complex)
@@ -299,9 +366,8 @@ class Nesting:
                 for b in range(dim):
                     if a != b and abs(intra[a, b]) > 1e-15:
                         kappa[a, b] += intra[a, b]
-        cross = np.zeros((4, 4), dtype=complex)
-        cross[0, 2] = self.alpha; cross[2, 0] = self.alpha
-        cross[1, 3] = self.alpha; cross[3, 1] = self.alpha
+        # Off-diagonal cross-scale (uses within-scale κ as the station pattern)
+        cross = ks - np.eye(4, dtype=complex)                        # κ₄ − I
         for i_L in range(4):
             for j_S in range(4):
                 if abs(cross[j_S, i_L]) < 1e-15: continue
@@ -323,9 +389,24 @@ class Nesting:
                 for j_S in range(4):
                     a, b = ix(i_L, j_S, k_P), ix(k_P, j_S, i_L)
                     if a != b: kappa[a, b] += c; kappa[b, a] += c
+        # §27.7q diagonal cross-scale: κ_{0,0} = α, κ_{3,3} = α_G
+        # These couple the outer ⊙Λ's station to the inner ⊙λ's same
+        # station across scales.  Indexed as "station matches at all three
+        # positions" (diagonal of κ₆₄ at those Kronecker coordinates).
+        if self.use_diagonal:
+            for j_S in range(4):
+                for k_P in range(4):
+                    # •↔• diagonal (0D cross-scale, aperture-to-aperture)
+                    a = ix(0, j_S, k_P)
+                    kappa[a, a] += self.alpha
+                    # ○↔○ diagonal (3D cross-scale, gravity)
+                    b = ix(3, j_S, k_P)
+                    kappa[b, b] += self.alpha_G
         return kappa
     def __repr__(self) -> str:
-        return f"⊂[α={self.alpha:.6f}]"
+        return (f"⊂[α={self.alpha:.4e}, α_G={self.alpha_G:.2e}, "
+                f"θ_C={self.sin_theta_C:.4f}, θ_W={self.sin_theta_W:.4f}, "
+                f"λ_H={self.lambda_H:.4f}]")
 
 
 kappa_nesting = Nesting()
@@ -457,9 +538,16 @@ def inspect_structure(scope: str, mu: float = MU_DEFAULT) -> None:
     print(f"    det(F)       = {np.linalg.det(F):+.6f}")
     print(f"    arg(det)/π   = {np.angle(np.linalg.det(F))/pi:+.6f}  "
           f"(v11/v12/v13 invariant: -1/6)")
-    print(f"  ⊂[α]  → Nesting(α = {ALPHA:.6e})")
-    print(f"          κ₄:  diameter bonds at (0,2), (2,0), (1,3), (3,1)")
-    print(f"          κ₆₄: intra-scale + adjacent (α) + skip (α²)")
+    print(f"  ⊂[α]  → Nesting(§27.7 coupling family)")
+    print(f"          α     = {ALPHA:.10e}   (primary; §27.7a)")
+    print(f"          α_G   = {ALPHA_G:.4e}        (gravity; §27.7g)")
+    print(f"          sinθ_C = {SIN_THETA_C:.6f}            (Cabibbo; §27.7h)")
+    print(f"          sinθ_W = {SIN_THETA_W:.6f}            (Weinberg; §13.15)")
+    print(f"          λ_H    = {LAMBDA_HIGGS:.6f}            (Higgs; §27.7i)")
+    print(f"          κ₄:   diameter (•↔Φ, —↔○) + off-diameter (•↔—, —↔Φ,")
+    print(f"                 Φ↔○, •↔○); off-diameter scaled by α")
+    print(f"          κ₆₄:  intra-scale + adjacent (α) + skip (α²)")
+    print(f"                 + diagonal cross-scale (α at •↔•, α_G at ○↔○)")
     print(f"  ⊙∞  → Foam(scope = '{scope}', dim = "
           f"{Foam(scope).dim})")
     print(f"  ▸   → unfold (operator application)")
