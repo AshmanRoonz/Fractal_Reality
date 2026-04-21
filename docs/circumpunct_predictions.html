@@ -460,6 +460,7 @@ p { margin-bottom: 18px; }
   <a href="#new">New Predictions</a>
   <a href="#hierarchy">Hierarchy</a>
   <a href="#dissolves">Problems Dissolved</a>
+  <a href="#preregistered">Pre-Registered</a>
   <a href="#falsification">Falsification</a>
 </nav>
 
@@ -1172,6 +1173,126 @@ p { margin-bottom: 18px; }
       </tr>
     </tbody>
   </table>
+</section>
+
+<!-- ============ PRE-REGISTERED PREDICTIONS ============ -->
+<section id="preregistered" class="page">
+  <div class="section-header">
+    <h2>Pre-Registered Predictions</h2>
+    <p class="section-sub">One prediction per domain (physics, chemistry, biology, ethics), stated <em>before</em> the measurement exists at the precision the framework requires. Each carries a falsification band: if the measurement lands outside it, the framework is wrong at that rung.</p>
+  </div>
+
+  <div class="pred-grid">
+
+    <!-- Physics: next decimal of 1/α -->
+    <div class="pred-card framework">
+      <div class="pred-header">
+        <span class="pred-name">Physics: the next decimal of 1/&alpha;</span>
+        <span class="pred-badge framework">Pre-registered &middot; 0D</span>
+      </div>
+      <div class="pred-formula">1/&alpha; = 360/&phi;&sup2; &minus; 2/&phi;&sup3; + &alpha;/(59/3) = 137.035999147</div>
+      <div class="pred-row">
+        <div class="pred-stat">
+          <div class="pred-stat-value gold">137.035999147</div>
+          <div class="pred-stat-label">Framework value</div>
+        </div>
+        <div class="pred-stat">
+          <div class="pred-stat-value">5&sigma;</div>
+          <div class="pred-stat-label">Current Cs/Rb disagreement</div>
+        </div>
+        <div class="pred-stat">
+          <div class="pred-stat-value green">&plusmn; 5 ppb</div>
+          <div class="pred-stat-label">Falsification band</div>
+        </div>
+      </div>
+      <div class="pred-reading">
+        <strong>The 0D rung as test.</strong> Current precision measurements disagree: Berkeley-Cs (2018) gives 137.035999046(27), LKB-Rb (2020) gives 137.035999206(11), a 5&sigma; split the Standard Model does not adjudicate. The framework's pool-native closed form (360 = P! &middot; T &middot; (&Phi;+&circ;), with the &phi;&sup3; sign balance-forced and 59/3 emerging from the octave-wrap lemma) lands at 137.035999147, within 1 ppb of the midpoint. Pre-registered: as atom interferometry tightens (next-generation Cs, Rb, and independent Sr at 10&minus;100 ppt precision), the converged value will land at 137.035999147 &plusmn; 5 ppb. Outside this band, the closed-form auxiliary claim fails; &alpha; reverts to input-only at &kappa;<sub>0,0</sub> and the 0D rung loses its structural name (the ladder composition survives, the name does not).
+      </div>
+    </div>
+
+    <!-- Chemistry: main-group triple-bond ratio -->
+    <div class="pred-card framework">
+      <div class="pred-header">
+        <span class="pred-name">Chemistry: main-group X&equiv;X / X&minus;X length ratio</span>
+        <span class="pred-badge framework">Pre-registered &middot; 1.5D</span>
+      </div>
+      <div class="pred-formula">(X&equiv;X) / (X&minus;X) &rarr; R/T&sup2; = 7/9 &asymp; 0.778</div>
+      <div class="pred-row">
+        <div class="pred-stat">
+          <div class="pred-stat-value gold">0.778</div>
+          <div class="pred-stat-label">Framework ratio</div>
+        </div>
+        <div class="pred-stat">
+          <div class="pred-stat-value green">0.779</div>
+          <div class="pred-stat-label">Measured for C (0.19%)</div>
+        </div>
+        <div class="pred-stat">
+          <div class="pred-stat-value green">&plusmn; 1%</div>
+          <div class="pred-stat-label">Falsification band</div>
+        </div>
+      </div>
+      <div class="pred-reading">
+        <strong>Bond length at the 1.5D rung.</strong> Carbon's C&equiv;C / C&minus;C ratio measures 120/154 = 0.779, matching R/T&sup2; = 7/9 to 0.19%; the same ratio appears in the &pi;<sub>1</sub>/&sigma; energy ratio. The framework says this is not a carbon fact: the 1.5D rung (the i-turn, spectral splitting) sets a scale-invariant triple-to-single ratio for any homonuclear main-group bond. Pre-registered: when X&equiv;X and X&minus;X bond lengths are resolved to sub-percent precision for silicon (disilyne analogues Ar-Si&equiv;Si-Ar'), germanium, phosphorus (diphosphorus derivatives), and arsenic, every ratio will land at 0.778 &plusmn; 1%. A clean 0.82 for Si (implying stronger multiplicity contraction than the ladder permits) or a clean 0.74 for P would falsify the "R/T&sup2; is universal at 1.5D" claim.
+      </div>
+    </div>
+
+    <!-- Biology: mycelial Murray's Law -->
+    <div class="pred-card framework">
+      <div class="pred-header">
+        <span class="pred-name">Biology: mycelial Murray's Law exponent</span>
+        <span class="pred-badge framework">Pre-registered &middot; 2.5D</span>
+      </div>
+      <div class="pred-formula">r<sub>parent</sub><sup>n</sup> = &Sigma; r<sub>child</sub><sup>n</sup>,  n<sub>mycelia</sub> = 2.5</div>
+      <div class="pred-row">
+        <div class="pred-stat">
+          <div class="pred-stat-value gold">n = 2.5</div>
+          <div class="pred-stat-label">Framework exponent</div>
+        </div>
+        <div class="pred-stat">
+          <div class="pred-stat-value">n = 3 / n = 2</div>
+          <div class="pred-stat-label">Vascular (3D) / leaf (2D)</div>
+        </div>
+        <div class="pred-stat">
+          <div class="pred-stat-value green">&plusmn; 0.15</div>
+          <div class="pred-stat-label">Falsification band</div>
+        </div>
+      </div>
+      <div class="pred-reading">
+        <strong>Dimension drives the exponent.</strong> Murray's Law conserves r<sup>n</sup> where n equals the effective transport dimension. Animal vasculature (3D bulk fluid) gives n = T = 3; leaf venation (2D flat lamina) gives n = &Phi; = 2 (confirmed). Mycelial networks sit at 2.5D: branching wood-decay fungi propagate through a porous substrate that is neither 3D bulk nor 2D plane, and the emergence rung (&#10041; at 2.5D) is literally where this half-integer transport lives. Pre-registered: when Murray's Law exponents are measured precisely in <em>Armillaria</em>, <em>Phanerochaete chrysosporium</em>, or similar branching mycelia at hyphal-network resolution, the exponent will land at 2.5 &plusmn; 0.15. A clean 3.0 (the network behaves as bulk) or a clean 2.0 (it behaves as a plane) would falsify the "transport dimension = ladder rung" reading.
+      </div>
+    </div>
+
+    <!-- Ethics: five-virtue sequence -->
+    <div class="pred-card framework">
+      <div class="pred-header">
+        <span class="pred-name">Ethics: the five-virtue sequence is required, not decorative</span>
+        <span class="pred-badge framework">Pre-registered &middot; &#8857;</span>
+      </div>
+      <div class="pred-formula">GOOD &rarr; RIGHT &rarr; FAITHFUL &rarr; TRUE &rarr; AGREEMENT</div>
+      <div class="pred-row">
+        <div class="pred-stat">
+          <div class="pred-stat-value gold">Cohen's d &ge; 0.5</div>
+          <div class="pred-stat-label">Predicted effect size</div>
+        </div>
+        <div class="pred-stat">
+          <div class="pred-stat-value">12 months</div>
+          <div class="pred-stat-label">Durability window</div>
+        </div>
+        <div class="pred-stat">
+          <div class="pred-stat-value green">Pre-registered design</div>
+          <div class="pred-stat-label">Falsification: d &lt; 0.3</div>
+        </div>
+      </div>
+      <div class="pred-reading">
+        <strong>Required sequence, not one pillar among many.</strong> The framework claims GOOD (boundary, &circ;), RIGHT (field, &Phi;), FAITHFUL (line, &mdash;), TRUE (aperture, &bull;), AGREEMENT (whole, &#8857;) must be walked in order: you cannot assess faithfulness until the space is open (RIGHT), you cannot confirm truth until the history of commitment has been checked (FAITHFUL), and AGREEMENT is the compositional closure (D5) of the prior four. Pre-registered: in a controlled longitudinal study of conflict resolution (workplace disputes, long-partnership mediation, or negotiated policy settlements), groups trained in the explicit five-virtue sequence will show Cohen's d &ge; 0.5 on twelve-month agreement durability versus unsequenced controls matched for initial signed-agreement rate. If d &lt; 0.3, the "required sequence" claim reduces to "any virtue set works equivalently" and the ethical architecture is decorative rather than structural.
+      </div>
+    </div>
+
+  </div>
+
+  <p class="mt center" style="font-style: italic; color: var(--dim); max-width: 720px; margin-left: auto; margin-right: auto;">
+    These are the bolts still to land. A framework that fits every measured value already in the books is a grammar; a framework whose pre-registered predictions land at the band it named becomes a theorem.
+  </p>
 </section>
 
 <!-- ============ FALSIFICATION ============ -->
