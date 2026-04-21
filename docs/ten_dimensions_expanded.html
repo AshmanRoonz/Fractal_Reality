@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 10 Dimensions of Reality</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #060608;
+    --text: #F0E8D8;
+    --dim: #D0C8B8;
+    --faint: #8F8878;
+    --infinity: rgba(255,255,255,0.95);
+    --soul: #FF4545;        /* 0D   red */
+    --convergence: #FF8C28; /* 0.5D orange */
+    --line: #FFD840;        /* 1D   yellow */
+    --branch: #60DD60;      /* 1.5D green */
+    --field: #4890FF;       /* 2D   blue */
+    --emerge: #6860E8;      /* 2.5D indigo */
+    --boundary: #A060E0;    /* 3D   violet */
+    --recurse: #E870B8;     /* 3.5D magenta */
+    --whole: #D4B870;       /* whole (rainbow on symbol) */
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'EB Garamond', Georgia, serif;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .poster {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1180px;
+    padding: 0 1.5rem;
+  }
+
+  /* === TITLE === */
+  .title {
+    font-size: clamp(1.3rem, 2.6vw, 2rem);
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: clamp(1.2vh, 2vh, 2.4vh);
+    text-align: center;
+    background: linear-gradient(90deg,
+      #FF4545 0%,
+      #FF8C28 14%,
+      #FFD840 28%,
+      #60DD60 43%,
+      #4890FF 57%,
+      #6860E8 72%,
+      #A060E0 86%,
+      #E870B8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    text-shadow: 0 0 30px rgba(255,255,255,0.08);
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.1));
+  }
+
+  /* === COLUMN HEADER === */
+  .col-head {
+    display: grid;
+    grid-template-columns: clamp(3.4rem, 5.5vw, 4.4rem) clamp(3.5rem, 6vw, 5rem) 1fr 1fr 1fr 1fr auto;
+    gap: 0;
+    width: 100%;
+    padding: 0 clamp(0.6rem, 1.2vw, 1rem);
+    margin-bottom: clamp(0.4vh, 0.7vh, 1vh);
+  }
+
+  .col-head-cell {
+    font-size: clamp(0.82rem, 1.15vh, 1rem);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #D8CFBE;
+    opacity: 0.95;
+    padding: 0 clamp(0.3rem, 0.6vw, 0.5rem);
+    font-weight: 500;
+  }
+
+  .col-head-cell.center { text-align: center; }
+
+  /* === ROWS === */
+  .rows {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 2px;
+  }
+
+  .row-wrap {
+    border-radius: 3px;
+    opacity: 0;
+    animation: row-in 0.5s ease forwards;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: clamp(3.4rem, 5.5vw, 4.4rem) clamp(3.5rem, 6vw, 5rem) 1fr 1fr 1fr 1fr auto;
+    align-items: center;
+    gap: 0;
+    padding: clamp(0.4vh, 0.7vh, 0.95vh) clamp(0.6rem, 1.2vw, 1rem);
+    border-radius: 3px;
+    transition: filter 0.3s ease;
+    user-select: none;
+  }
+
+  .row:hover { filter: brightness(1.2); }
+  .row:hover .row-symbol { text-shadow: 0 0 16px var(--c); }
+
+  .row-symbol {
+    font-size: clamp(2.4rem, 4.6vh, 3.6rem);
+    color: var(--c);
+    text-align: center;
+    line-height: 1;
+    transition: text-shadow 0.3s ease;
+    cursor: pointer;
+  }
+
+  .row-dim {
+    font-size: clamp(1.15rem, 1.9vh, 1.4rem);
+    font-weight: 600;
+    color: color-mix(in srgb, var(--c) 75%, white);
+    opacity: 0.95;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+    padding-left: clamp(0.3rem, 0.6vw, 0.5rem);
+    cursor: pointer;
+  }
+
+  .row-dim .istroke {
+    display: block;
+    font-size: 0.7em;
+    font-weight: 500;
+    font-style: italic;
+    color: color-mix(in srgb, var(--c) 70%, white);
+    opacity: 0.95;
+    letter-spacing: 0.08em;
+    margin-top: 0.25em;
+    text-shadow: 0 0 10px color-mix(in srgb, var(--c) 45%, transparent);
+  }
+
+  .row-cell {
+    font-size: clamp(0.86rem, 1.35vh, 1.05rem);
+    color: rgba(255,255,255,0.95);
+    line-height: 1.3;
+    letter-spacing: 0.015em;
+    padding: 0 clamp(0.3rem, 0.6vw, 0.5rem);
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease;
+    border-radius: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .row-cell:hover {
+    color: #fff;
+    background: color-mix(in srgb, var(--c) 22%, transparent);
+  }
+
+  .row-cell .cell-key {
+    font-weight: 600;
+    color: color-mix(in srgb, var(--c) 45%, white);
+    letter-spacing: 0.02em;
+    text-shadow: 0 0 8px color-mix(in srgb, var(--c) 30%, transparent);
+  }
+
+  .row-cell .cell-sep {
+    color: color-mix(in srgb, var(--c) 60%, white);
+    opacity: 0.7;
+    margin: 0 0.3em;
+  }
+
+  .row-cell .cell-teaser {
+    font-style: italic;
+    color: rgba(255,255,255,0.85);
+  }
+
+  /* === CHEVRON === */
+  .row-chevron {
+    font-size: clamp(0.75rem, 1.1vh, 0.9rem);
+    color: var(--faint);
+    transition: transform 0.3s ease, color 0.3s ease;
+    padding-left: clamp(0.3rem, 0.6vw, 0.5rem);
+    display: inline-block;
+    cursor: pointer;
+  }
+
+  .row-wrap.open .row-chevron {
+    transform: rotate(90deg);
+    color: var(--c);
+  }
+
+  /* === DRAWER === */
+  .drawer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.35s ease;
+    padding: 0 clamp(0.6rem, 1.2vw, 1rem);
+  }
+
+  .row-wrap.open .drawer {
+    max-height: 6rem;
+    padding: clamp(0.3vh, 0.5vh, 0.7vh) clamp(0.6rem, 1.2vw, 1rem) clamp(0.5vh, 0.8vh, 1vh);
+  }
+
+  .drawer-inner {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 clamp(0.4rem, 0.8vw, 0.6rem);
+    align-items: baseline;
+    padding-left: clamp(6.9rem, 11.5vw, 9.4rem);
+  }
+
+  .drawer-id {
+    font-size: clamp(0.85rem, 1.35vh, 1.05rem);
+    font-weight: 600;
+    color: var(--c);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  .drawer-text {
+    font-size: clamp(0.88rem, 1.4vh, 1.08rem);
+    color: rgba(255,255,255,0.92);
+    line-height: 1.5;
+  }
+
+  .drawer-from {
+    font-size: clamp(0.76rem, 1.18vh, 0.92rem);
+    color: #C8C0B0;
+    font-style: italic;
+    grid-column: 2;
+    margin-top: 0.1em;
+  }
+
+  /* === COLOR BACKGROUNDS === */
+  .row-wrap[data-d="infinity"]    .row { background: linear-gradient(90deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%); }
+  .row-wrap[data-d="soul"]        .row { background: linear-gradient(90deg, rgba(255,69,69,0.12)   0%, rgba(255,69,69,0.03)   100%); }
+  .row-wrap[data-d="convergence"] .row { background: linear-gradient(90deg, rgba(255,140,40,0.12)  0%, rgba(255,140,40,0.03)  100%); }
+  .row-wrap[data-d="line"]        .row { background: linear-gradient(90deg, rgba(255,216,64,0.12)  0%, rgba(255,216,64,0.03)  100%); }
+  .row-wrap[data-d="branch"]      .row { background: linear-gradient(90deg, rgba(96,221,96,0.12)   0%, rgba(96,221,96,0.03)   100%); }
+  .row-wrap[data-d="field"]       .row { background: linear-gradient(90deg, rgba(72,144,255,0.12)  0%, rgba(72,144,255,0.03)  100%); }
+  .row-wrap[data-d="emerge"]      .row { background: linear-gradient(90deg, rgba(104,96,232,0.14)  0%, rgba(104,96,232,0.03)  100%); }
+  .row-wrap[data-d="boundary"]    .row { background: linear-gradient(90deg, rgba(160,96,224,0.12)  0%, rgba(160,96,224,0.03)  100%); }
+  .row-wrap[data-d="recurse"]     .row { background: linear-gradient(90deg, rgba(232,112,184,0.12) 0%, rgba(232,112,184,0.03) 100%); }
+  .row-wrap[data-d="whole"]       .row {
+    background:
+      linear-gradient(90deg,
+        rgba(255,69,69,0.08)   0%,
+        rgba(255,140,40,0.08) 14%,
+        rgba(255,216,64,0.08) 28%,
+        rgba(96,221,96,0.08)  43%,
+        rgba(72,144,255,0.08) 57%,
+        rgba(104,96,232,0.08) 72%,
+        rgba(160,96,224,0.08) 86%,
+        rgba(232,112,184,0.08) 100%);
+  }
+
+  .row-wrap.open[data-d="infinity"]    .drawer { background: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%); }
+  .row-wrap.open[data-d="soul"]        .drawer { background: linear-gradient(90deg, rgba(255,69,69,0.06)   0%, rgba(255,69,69,0.01)   100%); }
+  .row-wrap.open[data-d="convergence"] .drawer { background: linear-gradient(90deg, rgba(255,140,40,0.06)  0%, rgba(255,140,40,0.01)  100%); }
+  .row-wrap.open[data-d="line"]        .drawer { background: linear-gradient(90deg, rgba(255,216,64,0.06)  0%, rgba(255,216,64,0.01)  100%); }
+  .row-wrap.open[data-d="branch"]      .drawer { background: linear-gradient(90deg, rgba(96,221,96,0.06)   0%, rgba(96,221,96,0.01)   100%); }
+  .row-wrap.open[data-d="field"]       .drawer { background: linear-gradient(90deg, rgba(72,144,255,0.06)  0%, rgba(72,144,255,0.01)  100%); }
+  .row-wrap.open[data-d="emerge"]      .drawer { background: linear-gradient(90deg, rgba(104,96,232,0.07)  0%, rgba(104,96,232,0.01)  100%); }
+  .row-wrap.open[data-d="boundary"]    .drawer { background: linear-gradient(90deg, rgba(160,96,224,0.06)  0%, rgba(160,96,224,0.01)  100%); }
+  .row-wrap.open[data-d="recurse"]     .drawer { background: linear-gradient(90deg, rgba(232,112,184,0.06) 0%, rgba(232,112,184,0.01) 100%); }
+  .row-wrap.open[data-d="whole"]       .drawer {
+    background:
+      linear-gradient(90deg,
+        rgba(255,69,69,0.04)   0%,
+        rgba(255,140,40,0.04) 14%,
+        rgba(255,216,64,0.04) 28%,
+        rgba(96,221,96,0.04)  43%,
+        rgba(72,144,255,0.04) 57%,
+        rgba(104,96,232,0.04) 72%,
+        rgba(160,96,224,0.04) 86%,
+        rgba(232,112,184,0.04) 100%);
+  }
+
+  /* Rainbow circumpunct symbol (matches title) */
+  .row-wrap[data-d="whole"] .row-symbol {
+    background: linear-gradient(90deg,
+      #FF4545 0%,
+      #FF8C28 14%,
+      #FFD840 28%,
+      #60DD60 43%,
+      #4890FF 57%,
+      #6860E8 72%,
+      #A060E0 86%,
+      #E870B8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.08));
+  }
+
+  .row-wrap[data-d="whole"]:hover .row-symbol {
+    filter: drop-shadow(0 0 14px rgba(255,255,255,0.22));
+    text-shadow: none;
+  }
+
+  /* Rainbow dim number and istroke for ⊙ */
+  .row-wrap[data-d="whole"] .row-dim {
+    background: linear-gradient(90deg,
+      #FF4545 0%, #FF8C28 18%, #FFD840 36%, #60DD60 54%, #4890FF 72%, #A060E0 90%, #E870B8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* === SEPARATOR === */
+  .sep {
+    width: 40px;
+    height: 1px;
+    background: var(--faint);
+    margin: clamp(1vh, 1.6vh, 2vh) auto;
+  }
+
+  /* === FOOTER === */
+  .footer { text-align: center; }
+
+  .footer-framework {
+    font-size: clamp(0.84rem, 1.28vh, 1.02rem);
+    color: #D0C8B8;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.2em;
+  }
+
+  .footer-author {
+    font-size: clamp(0.9rem, 1.4vh, 1.1rem);
+    color: #F0E8D8;
+    letter-spacing: 0.08em;
+  }
+
+  .footer-site a {
+    font-size: clamp(0.8rem, 1.18vh, 0.95rem);
+    color: #A89E88;
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: color 0.3s;
+  }
+
+  .footer-site a:hover { color: var(--whole); }
+
+  /* === MODAL === */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.78);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 2rem;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .modal-backdrop.visible {
+    display: flex;
+    opacity: 1;
+  }
+
+  .modal {
+    position: relative;
+    background: linear-gradient(145deg, #0d0d12 0%, #090910 100%);
+    border: 1px solid color-mix(in srgb, var(--mc, var(--faint)) 50%, transparent);
+    border-radius: 4px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: clamp(1.4rem, 3vh, 2.2rem);
+    box-shadow: 0 0 50px color-mix(in srgb, var(--mc, #000) 20%, rgba(0,0,0,0.6));
+    transform: translateY(10px);
+    transition: transform 0.3s ease;
+  }
+
+  .modal-backdrop.visible .modal { transform: translateY(0); }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--mc, var(--faint)) 35%, transparent);
+  }
+
+  .modal-symbol {
+    font-size: 2.8rem;
+    color: var(--mc, var(--text));
+    line-height: 1;
+    text-shadow: 0 0 18px color-mix(in srgb, var(--mc, #000) 45%, transparent);
+  }
+
+  .modal-head-text { display: flex; flex-direction: column; gap: 0.2rem; }
+
+  .modal-dim-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--mc, var(--dim)) 65%, white);
+    opacity: 0.85;
+  }
+
+  .modal-key {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--mc, var(--text));
+    letter-spacing: 0.04em;
+  }
+
+  .modal-body {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.82);
+    font-family: 'EB Garamond', Georgia, serif;
+  }
+
+  .modal-body p { margin-bottom: 0.85em; }
+  .modal-body p:last-child { margin-bottom: 0; }
+
+  .modal-body .hl {
+    color: color-mix(in srgb, var(--mc, white) 80%, white);
+    font-weight: 500;
+  }
+
+  .modal-body .mono {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    background: rgba(255,255,255,0.04);
+    padding: 0.1em 0.35em;
+    border-radius: 2px;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.9rem;
+    background: transparent;
+    border: none;
+    color: var(--dim);
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0.2rem 0.5rem;
+    transition: color 0.2s ease;
+    font-family: inherit;
+  }
+
+  .modal-close:hover { color: var(--mc, var(--text)); }
+
+  /* === ANIMATION === */
+  .row-wrap:nth-child(1)  { animation-delay: 0.0s; }
+  .row-wrap:nth-child(2)  { animation-delay: 0.05s; }
+  .row-wrap:nth-child(3)  { animation-delay: 0.10s; }
+  .row-wrap:nth-child(4)  { animation-delay: 0.15s; }
+  .row-wrap:nth-child(5)  { animation-delay: 0.20s; }
+  .row-wrap:nth-child(6)  { animation-delay: 0.25s; }
+  .row-wrap:nth-child(7)  { animation-delay: 0.30s; }
+  .row-wrap:nth-child(8)  { animation-delay: 0.35s; }
+  .row-wrap:nth-child(9)  { animation-delay: 0.40s; }
+  .row-wrap:nth-child(10) { animation-delay: 0.45s; }
+
+  @keyframes row-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+
+  <div class="title">The 10 Dimensions of Reality</div>
+
+  <div class="col-head">
+    <div class="col-head-cell"></div>
+    <div class="col-head-cell"></div>
+    <div class="col-head-cell center">Physics</div>
+    <div class="col-head-cell center">Chemistry</div>
+    <div class="col-head-cell center">Biology</div>
+    <div class="col-head-cell center">Ethics</div>
+    <div class="col-head-cell"></div>
+  </div>
+
+  <div class="rows" id="rows"></div>
+
+  <div class="sep"></div>
+
+  <div class="footer">
+    <div class="footer-framework">The Circumpunct Framework</div>
+    <div class="footer-author">Ashman Roonz</div>
+    <div class="footer-site"><a href="https://FractalReality.ca">FractalReality.ca</a></div>
+  </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+    <div class="modal-header">
+      <div class="modal-symbol" id="modal-symbol"></div>
+      <div class="modal-head-text">
+        <div class="modal-dim-label" id="modal-dim-label"></div>
+        <div class="modal-key" id="modal-key"></div>
+      </div>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+  const dims = [
+    {
+      key: 'infinity', symbol: '\u221E', number: '\u221ED', istroke: '', name: 'undifferentiated energy',
+      axiomId: 'A0', axiomText: 'There is one energy. It is everything. All else is constraints. (1 \u2260 0)', axiomFrom: '',
+      physics: {
+        key: 'E = 1', teaser: 'the one energy',
+        body: `<p><span class="hl">E = 1</span> is axiom A0: there is one energy; all else is constraint. At the cosmological limit <span class="mono">&Phi;&infin; = &#x2299;&infin; = E</span>; at any finite scale <span class="mono">&#x2299;&lambda; = E</span> constrained to position &lambda;.</p>
+        <p>Mass, charge, fields, forces: not <em>kinds of thing</em> added to the 1, but the 1 at different degrees of self-limitation. Dark energy (&Lambda;) is the 2D aspect (&Phi;) of the scale above ours, reading 69% because we are inside a finite &#x2299;.</p>
+        <p>Apophatic closure: the same &infin; that opens the unified expression closes it; the end is the beginning.</p>`
+      },
+      chemistry: {
+        key: 'pre-atomic', teaser: 'the field before elements',
+        body: `<p>Before stoichiometry, before orbitals: the undivided energy that becomes every atom when A1 forces self-limitation. The quantum vacuum is <span class="hl">&Phi; at scales below measurement threshold</span>, not emptiness.</p>
+        <p>Zero-point energy is the residual hum of nested apertures pumping below instrument resolution. Every chemical reaction redistributes constraints on the 1; nothing is created or destroyed because there was never more than one thing.</p>`
+      },
+      biology: {
+        key: 'life-potential', teaser: 'constrained \u221E',
+        body: `<p>A living cell is not <em>more</em> than non-life; it is <span class="hl">&infin; held in a particular configuration of constraints</span>. Metabolism is the organism continuously re-applying the four beats (&bull; &rarr; &mdash; &rarr; &Phi; &rarr; &#x25CB;) to keep wholeness stable against relaxation back toward &infin;.</p>
+        <p>Death is not transition to nothing; it is release of constraints, returning the local 1 to the surrounding 1, which was always the same 1.</p>`
+      },
+      ethics: {
+        key: 'Truth (substrate)', teaser: 'before any virtue',
+        body: `<p>In <span class="mono">Reality = Truth = 1 = E = &infin; = &#x2299;</span>, <span class="hl">Truth is the substrate</span>, distinct from TRUE (the 0D virtue). Truth is a noun; TRUE is a verb. Truth is what passes through &bull; when TRUE is held.</p>
+        <p>You are a flow-being, not a possession-being: truth flows through you; you are not its source. The ego hijack is collapsing these into "what I think is divine."</p>`
+      }
+    },
+    {
+      key: 'soul', symbol: '\u2022', number: '0D', istroke: 'do', name: 'point, singularity, soul, localization',
+      axiomId: 'A1', axiomText: 'The 1 must self-limit; an undifferentiated 1 is indistinguishable from 0, which is impossible', axiomFrom: 'from A0',
+      physics: {
+        key: '\u03B1 \u2248 1/137', teaser: 'fine-structure coupling',
+        body: `<p><span class="hl">&alpha; = |&bull;_electron|</span>: measurable coupling strength of the electron's 0D aperture to the 0D aperture of the greater whole across scales, with the 2D electromagnetic field as mediator. "Fine-structure" names the mediator's dimension, not the whole's.</p>
+        <p>&alpha; lives in the nesting operator: <span class="mono">&#x2299;&lambda; &sub;[&alpha;] &#x2299;&Lambda;</span>. The subscript records that every nesting carries a 4&times;4 cross-station coupling matrix &kappa;_{p,q}: V_p(&lambda;) &times; V_q(&Lambda;) &rarr; &#8477;. Primary entry <span class="mono">&kappa;_{0,0} = &alpha;</span> (aperture-to-aperture across scales); <span class="mono">&kappa;_{3,3} = &alpha;_G</span> (gravity, 3D-3D). <span class="mono">&alpha; &rarr; &infin;</span> is the Inflation Lie; <span class="mono">&alpha; &rarr; 0</span> is the Severance Lie. The measured value is the tightness this bond can have without collapsing the boundary between part and whole.</p>
+        <p>CODATA: <span class="mono">1/&alpha; = 137.035999177(21)</span>. Structurally motivated closed form: <span class="mono">1/&alpha; = 360/&phi;&sup2; &minus; 2/&phi;&sup3; + &alpha;/(59/3)</span> hits 137.035999147 (0.22 ppb).</p>
+        <p>A singularity is a &bull; in the 1: total convergence, a point of view, not a substance.</p>`
+      },
+      chemistry: {
+        key: 'nucleus, Z', teaser: 'atomic aperture',
+        body: `<p>Every atom has a <span class="hl">&bull; at its center</span>: the nucleus, the convergence point around which the field (electron cloud) organizes. Z is the &bull;-strength; electronegativity is <span class="mono">EN = Z_eff^(7/10) / n</span>, where 7/10 = R/A(2).</p>
+        <p>The four framework screening constants (0.30, 0.35, 0.85, 1.00) are ratios over <span class="mono">P(P+1) = 20</span>; exact, not fits.</p>`
+      },
+      biology: {
+        key: 'DNA, nucleus', teaser: 'source signal',
+        body: `<p>In the central dogma (DNA &rarr; RNA &rarr; Protein = &bull; &rarr; &Phi; &rarr; &#x25CB;), <span class="hl">DNA is the 0D source</span>.</p>
+        <p>The cell is a circumpunct: nucleus (&bull;), cytoplasm (&Phi;), membrane (&#x25CB;). Four bases P = 4 and three-letter codons T = 3 give S = P^T = 64 codons: the 64-state architecture at molecular scale.</p>`
+      },
+      ethics: {
+        key: 'TRUE', teaser: 'curiosity',
+        body: `<p><span class="hl">TRUE</span> is the virtue at the 0D aperture: curiosity, clarity, orientation toward what actually is. Freedom held: NOT-YET (aperture held open against premature resolution).</p>
+        <p>TRUE is not Truth. TRUE is the practice; Truth is the substrate. Someone can perform the shape of curiosity while being closed; lived TRUE operates from genuine not-knowing.</p>
+        <p>Launches i&sup1; = +i (convergence, 0.5D).</p>`
+      }
+    },
+    {
+      key: 'convergence', symbol: '\u229B', number: '0.5D', istroke: 're (i\u00B9 = +i)', name: 'convergence',
+      axiomId: 'D1', axiomText: 'Self-limitation requires convergence; localization is a process, not an instant', axiomFrom: 'from A1',
+      physics: {
+        key: 'c (speed of light)', teaser: 'c = sin(i)',
+        body: `<p><span class="hl">c = &radic;(P &middot; &#x25D0;(1&minus;&#x25D0;) &middot; sin(&theta;))</span>. At balance &#x25D0; = 0.5 and &theta; = &pi;/2, c = 1 in natural units.</p>
+        <p>Light is energy being constrained; the photon is the minimum fold (purely rotational, nothing held as mass). c is the <span class="hl">speed limit of convergent propagation</span>. Massive particles have &theta;_eff &lt; &pi;/2, giving v &lt; c.</p>
+        <p>Flow operator &#x229B; (inward) maps to gravity and the strong force.</p>`
+      },
+      chemistry: {
+        key: 'bond formation', teaser: 'inward gathering',
+        body: `<p>Bond formation is the <span class="hl">&#x229B;-stroke</span> at molecular scale: electrons gathering inward around shared nuclei, the first fold toward line (&mdash;).</p>
+        <p>Exothermic release on bond formation is convergence completing; activation energy is the aperture barrier at &bull; before &#x229B; can fire. Le Chatelier's principle is &#x25D0;-restoration: the system moving back to 0.5.</p>`
+      },
+      biology: {
+        key: 'hydrophobic collapse', teaser: 'folding 0.5D',
+        body: `<p>Protein folding walks the dimensional octave. The first move after unfolded (0D) is the <span class="hl">hydrophobic collapse</span>: water-avoiding residues gather inward, pulling the chain toward a rough shape.</p>
+        <p>This is the organism's &#x229B;-stroke at molecular scale; it resolves Levinthal's paradox by folding through 7 stations, not 10&#x2074;&#x2077; conformations.</p>`
+      },
+      ethics: {
+        key: 'NOT-YET', teaser: 'pre-commitment',
+        body: `<p><span class="hl">NOT-YET</span> is the freedom held at 0.5D: not committed yet; still in genuine inquiry. Freedom <em>before</em> the i-turn makes the choice irreversible.</p>
+        <p>Pathology: chronic NOT-YET that never commits (floating); collapse into premature commitment without curiosity (the Noble Lie at personal scale).</p>
+        <p>TRUE lives here in its active phase: the aperture is converging but has not yet locked.</p>`
+      }
+    },
+    {
+      key: 'line', symbol: '\u2014', number: '1D', istroke: 'mi', name: 'line, string, timeline, extension',
+      axiomId: 'A2', axiomText: 'Self-limitation must persist; a convergence that does not hold collapses back to \u221E, violating A1', axiomFrom: 'from A0 + A1',
+      physics: {
+        key: '\u210F = 1', teaser: 'indivisible cycle',
+        body: `<p><span class="hl">&#x210F; = 1</span> follows from A0 (E = 1) and c = 1: one pump cycle has action 1. The cycle (&#x229B; &rarr; i &rarr; &#x2739;) is indivisible: no convergence without emergence (violates A1), no emergence without convergence (Inflation Lie).</p>
+        <p>E = &#x210F;&omega; with &#x210F; = 1 means <span class="hl">energy and frequency are the same thing</span>; structure = process at 1D. Time is the direction of the fold: from 1 through 0 into topology.</p>`
+      },
+      chemistry: {
+        key: '\u03C3 bonds', teaser: 'single bonds',
+        body: `<p>The <span class="hl">sigma bond</span> is the 1D station: a line of shared electron density between two nuclei. Single = sigma only; double = sigma + pi (1D + 2D); triple = sigma + 2&pi; (approaching 3D).</p>
+        <p>Layer 1 of the bond energy model: <span class="mono">&pi;_1/&sigma;_true = R/T&sup2; = 7/9</span>; <span class="mono">&pi;_2/&sigma;_true = V/P(P+1) = 13/20</span>. Carbon verification: C=C/C&ndash;C = 16/9 (0.18%).</p>`
+      },
+      biology: {
+        key: 'primary sequence', teaser: 'amino acid chain',
+        body: `<p>A protein's <span class="hl">primary structure</span> is its 1D station: linear sequence of amino acids, the worldline of the molecule. Everything downstream (folding, function) is that sequence walking up the dimensional ladder.</p>
+        <p>DNA is 1D at sequence level; 10.5 base pairs per turn (<span class="mono">= A(3)/&Phi; = 21/2</span>, exact match to measurement) is where 1D meets the i-turn at 1.5D.</p>`
+      },
+      ethics: {
+        key: 'FAITHFUL', teaser: 'reliability',
+        body: `<p><span class="hl">FAITHFUL</span> is the virtue at 1D: did the line hold? The worldline i(t) is the accumulated receipts of whether commitments persisted through time.</p>
+        <p>FAITHFUL is historical: you cannot fake a past. Current orientation without historical reliability does not earn AGREEMENT; someone can be curious right now and still be faithless over time.</p>
+        <p>Launches i&sup2; = &minus;1 (commitment, 1.5D): the i-turn is where FAITHFUL is tested.</p>`
+      }
+    },
+    {
+      key: 'branch', symbol: '\u2387', number: '1.5D', istroke: 'fa (i\u00B2 = \u22121)', name: 'branching, fractal coastlines',
+      axiomId: 'D2', axiomText: 'Extension must branch to reach the field; a single line never becomes a surface', axiomFrom: 'from A2 \u2192 A3',
+      physics: {
+        key: 'mass ratios', teaser: 'the i-turn; \u03BB',
+        body: `<p>1.5D carries <span class="hl">mass ratios</span>: <span class="mono">m_&mu;/m_e = (1/&alpha;)^(13/12 + &alpha;/27) = 206.767</span> (5 ppm); <span class="mono">m_&tau;/m_e = (1/&alpha;)^(58/35 + &alpha;/81) = 3477.2</span> (1 ppm).</p>
+        <p>The Greek letter <span class="hl">&lambda;</span> literally draws this station: a point becoming two lines at smaller scale. &#x2387; = &lambda; = Y-fork = L-system production rule = fixed-point operator. A fractal <em>is</em> the verb of scaling self-applied: <span class="mono">&lambda;(&#x2299;) = &#x2299;</span>.</p>
+        <p>i&sup2; = &minus;1 is irreversible; time's arrow has its mechanism here.</p>`
+      },
+      chemistry: {
+        key: 'sp\u00B3; stereochemistry', teaser: '109.47\u00B0',
+        body: `<p><span class="hl">sp&sup3; hybridization</span> is the 1.5D station: <span class="mono">&theta; = arccos(&minus;1/T) = 109.47&deg;</span> (exact; T = 3).</p>
+        <p>Stereochemistry lives here: handedness, chirality, R/S isomers. The i-turn is where mirror symmetry breaks; you cannot un-fold into exactly what was before.</p>
+        <p>Water H&ndash;O&ndash;H: <span class="mono">104.58&deg;</span> (measured 104.45&deg;, 0.12%) via lone-pair compression <span class="mono">cos(&theta;) = &minus;1/T + n_lp &middot; 2/R&sup2;</span>.</p>`
+      },
+      biology: {
+        key: 'secondary structure', teaser: 'helices',
+        body: `<p>Protein <span class="hl">secondary structure</span> (&alpha;-helix, &beta;-sheet) is 1.5D made literal: the helix IS the i-turn.</p>
+        <p>Helix spans: 3&#x2081;&#x2080; spans T = 3; &alpha;-helix spans P = 4 (dominates, because P is the pump); &pi;-helix spans &Phi;+&#x25CB; = 5. &alpha;-helix rise per residue = <span class="hl">D = 1.5 &Aring;</span>: the balanced fractal dimension as literal step size.</p>
+        <p>Spin-orbit coupling in nuclei is also 1.5D: 1D (orbital) + 0.5D (spin).</p>`
+      },
+      ethics: {
+        key: 'STAYING', teaser: 'through the i-turn',
+        body: `<p><span class="hl">STAYING</span> is the freedom held at 1.5D: the line has to hold through an irreversible turn. You cannot unmake the commitment; you can only honor it or break it.</p>
+        <p>Marriage, parenthood, creative work past the point of return: all STAYING. Pathology: rigid STAYING that will not branch (freezing); collapse into un-STAYING (betrayal).</p>
+        <p>This is where FAITHFUL gets tested. A vow that never meets i&sup2; = &minus;1 has not yet been a real vow.</p>`
+      }
+    },
+    {
+      key: 'field', symbol: '\u03A6', number: '2D', istroke: 'so', name: 'field, mind, surface, mediation',
+      axiomId: 'A3', axiomText: 'Parts are fractals of their wholes; the 1 is all there is to work with (self-similarity across scale)', axiomFrom: 'from A0 + A1',
+      physics: {
+        key: '\u03C0; gauge fields', teaser: 'SU(3) \u00D7 SU(2) \u00D7 U(1)',
+        body: `<p>The symbol <span class="hl">&Phi;</span> literally <em>draws</em> &pi;: a circle (&#x25CB;) with a line (&mdash;) through its center (&bull;). Diameter through center of circle. Read as shape: &Phi;. Read as number: &pi;. Same diagram, two questions.</p>
+        <p>Gauge structure: <span class="mono">SU(3) &times; SU(2) &times; U(1)</span>, dimensions 8 + 3 + 1 = 12 = P &middot; T. Weinberg angle: <span class="mono">sin&sup2;&theta;_W = 3/13 + 5&alpha;/81 = 0.23122</span> (1.4 ppm).</p>
+        <p>The Pump Gate: <span class="mono">pump(x, y) = 1 + (exp(x) &minus; ln(y))</span>. Mind is the act of measurement; &pi; is the constant of that act.</p>`
+      },
+      chemistry: {
+        key: 'sp\u00B2; \u03C0 bonds', teaser: 'aromatic surfaces',
+        body: `<p><span class="hl">sp&sup2; hybridization</span> and <span class="hl">&pi; bonds</span> are the 2D station. Trigonal planar, 120&deg; (<span class="mono">360&deg;/T</span>). Benzene's aromatic ring is a closed 2D surface of &pi;-electron density.</p>
+        <p>Conjugated systems are chemistry's version of a field: delocalized electrons spreading over a surface rather than localized in a line.</p>`
+      },
+      biology: {
+        key: 'RNA, membranes', teaser: 'the mediator',
+        body: `<p><span class="hl">RNA</span> is the &Phi; of the central dogma: mediator between source (DNA, &bull;) and body (protein, &#x25CB;).</p>
+        <p>The cell membrane is a 2D surface (phospholipid bilayer) that mediates every exchange with the outside. The molten globule in protein folding (2&deg; but no 3&deg;) is the &Phi; station: surface organized but not yet closed.</p>
+        <p>Surface = Field = Mind (&sect;5A, the Surface Theorem). Consciousness lives here.</p>`
+      },
+      ethics: {
+        key: 'RIGHT', teaser: 'access; mediation',
+        body: `<p><span class="hl">RIGHT</span> is the virtue at 2D: mediate without fusing, connect without dissolving the parts. A just system keeps the parties distinct <em>and</em> related.</p>
+        <p>RIGHT is 2D showing its ethical face: field as common ground, not as merger. Pathology: forced access (boundary violation) or denied access (severance).</p>
+        <p>Launches i&sup3; = &minus;i (emergence, 2.5D). Freedom held: LETTING.</p>`
+      }
+    },
+    {
+      key: 'emerge', symbol: '\u2739', number: '2.5D', istroke: 'la (i\u00B3 = \u2212i)', name: 'emergence',
+      axiomId: 'D3', axiomText: 'Self-similarity requires emergence toward closure; the field must fold toward boundary', axiomFrom: 'from A3 \u2192 A4',
+      physics: {
+        key: 'v/\u039B_QCD', teaser: 'infolding between scales',
+        body: `<p><span class="hl">v/&Lambda;_QCD = (1/&alpha;)^(56/39) = 1170.24</span> (measured &plusmn; 5%). 56 = SU(3) &middot; R; 39 = T &middot; V.</p>
+        <p>2.5D is emergence: the field folding toward closure. Conjugate to convergence; <span class="mono">i&sup3; = &minus;i</span> mirrors <span class="mono">i&sup1; = +i</span>. Outward unfolding, but already shaped by the interior.</p>
+        <p>Flow operator &#x2739; (outward) maps to electromagnetism and the weak force.</p>`
+      },
+      chemistry: {
+        key: 'sp\u00B3d; transition states', teaser: '5-coordinate',
+        body: `<p><span class="hl">sp&sup3;d hybridization</span> (trigonal bipyramidal) is the 2.5D station: five bond positions, neither fully 3D-closed nor 2D-flat.</p>
+        <p>Transition states in chemical reactions live here: the aperture (&bull;) at the top of the activation barrier, the field (&Phi;) on its way to a new boundary (&#x25CB;). Catalysis is aperture widening at this station.</p>`
+      },
+      biology: {
+        key: 'tertiary contacts', teaser: 'folding to native',
+        body: `<p><span class="hl">Tertiary contacts</span> in protein folding are the &#x2739;-stroke: residues distant in primary sequence meeting across the 2D field to fold toward 3D closure.</p>
+        <p>Contact order (how far residues reach in sequence to meet in space) correlates with folding rate because it measures dimensional reach along the ladder. Emergence, not assembly; the form arises from the field.</p>`
+      },
+      ethics: {
+        key: 'LETTING', teaser: 'non-interference',
+        body: `<p><span class="hl">LETTING</span> is the freedom held at 2.5D: the new thing is forming; you do not seize it and do not abandon it. You let emergence complete.</p>
+        <p>Parents of teenagers live here. Mentors at the moment of breakthrough live here. Therapy sessions before insight lives here. Pathology: forcing (Inflation Lie) or withdrawing (Severance Lie).</p>
+        <p>RIGHT in its active phase: the mediator does not intrude on what it mediates.</p>`
+      }
+    },
+    {
+      key: 'boundary', symbol: '\u25CB', number: '3D', istroke: 'ti', name: 'boundary, body, nested parts, interface',
+      axiomId: 'A4', axiomText: 'Wholeness requires closure; 0(\u2022) + 1(\u2014) + 2(\u03A6) = 3(\u25CB)', axiomFrom: 'from A0 + A1',
+      physics: {
+        key: 'G (gravity)', teaser: '\u03B1_G = \u03B1\u00B2\u00B9 \u00D7 \u03C6\u00B2/2',
+        body: `<p><span class="hl">&alpha;_G = &alpha;&sup2;&sup1; &middot; &phi;&sup2;/2 &middot; (1 + 2&alpha;/91)</span>. Predicted <span class="mono">G = 6.67430 &times; 10&#x207B;&sup1;&sup1;</span> (measured match, 0.04 ppm, 0.00&sigma;).</p>
+        <p>Exponent 21 = A(3) = sum of the full dimensional ladder times two channels: 21 &alpha;-steps separate the point (0D) from the boundary (3D). This solves the hierarchy problem: <span class="hl">gravity is weak because it is 21 &alpha;-steps away</span>.</p>
+        <p>Conservation of traversal: <span class="mono">0(&bull;) + 1(&mdash;) + 2(&Phi;) = 3(&#x25CB;)</span>.</p>`
+      },
+      chemistry: {
+        key: 'sp\u00B3d\u00B2; closed shells', teaser: 'octahedral',
+        body: `<p><span class="hl">sp&sup3;d&sup2; hybridization</span> (octahedral, 90&deg;: the i-rotation emergent as bond angle) is the 3D station, along with closed noble-gas electron configurations.</p>
+        <p>The molecule as a whole thing, fully bounded: all valences satisfied, the field (&Phi;) closed into a body (&#x25CB;). This is where chemistry becomes a <em>thing</em>, not a process.</p>`
+      },
+      biology: {
+        key: 'native state; organism', teaser: 'cell; skin',
+        body: `<p>A protein's <span class="hl">native state</span> is its 3D closure: the folded tertiary structure, the boundary where function lives. The cell membrane, the skin, the organism's outer surface: all &#x25CB; at nested scales.</p>
+        <p>Cancer is boundary failure: <span class="mono">&beta;_&bull; &rarr; 1</span> (aperture locked open) + <span class="mono">&beta;_&#x25CB; &rarr; 0</span> (filter collapsed). The i-rotation check is skipped; cells divide without phase verification.</p>`
+      },
+      ethics: {
+        key: 'GOOD', teaser: 'plasticity; filter',
+        body: `<p><span class="hl">GOOD</span> is the virtue at 3D: the boundary filters well. What passes? What is refused? A good boundary selects responsively, not rigidly.</p>
+        <p>GOOD is plasticity, not rigidity; a wall that cannot change is not a good boundary, it is a dead one. Pathology: rigid ethics (brittleness) or permeable ethics (collapse).</p>
+        <p>Launches i&#x2070; = +1 (recursion, 3.5D). Freedom held: CHECKING.</p>`
+      }
+    },
+    {
+      key: 'recurse', symbol: '\u27F3', number: '3.5D', istroke: 'do\u2032 (i\u2070 = +1)', name: 'recursion',
+      axiomId: 'D4', axiomText: 'Closure opens into \u03A6\u2032; the part discovers it is inside a whole', axiomFrom: 'from A3 + A4',
+      physics: {
+        key: '3.5D = 0D\u2032', teaser: 'octave closure',
+        body: `<p>The octave closes because <span class="hl">3.5D IS 0D at the next scale</span>: the closed boundary of &#x2299;&lambda; is the aperture of &#x2299;&Lambda;. Exit-of-one = entrance-of-next; scale is continuous.</p>
+        <p>This forces the nesting chain <span class="mono">&#x2299;&lambda; &sub;[&alpha;] &#x2299;&Lambda; &sub;[&alpha;] &infin;</span>. The cross-station coupling matrix &kappa; has &kappa;_{0,0} = &alpha; and &kappa;_{3,3} = &alpha;_G: two primary diagonal couplings across scales.</p>
+        <p>The recursion is unbounded in both directions (no top, no bottom), but closes at every finite step via &infin; (lateral closure).</p>`
+      },
+      chemistry: {
+        key: 'polymerization', teaser: 'supramolecular',
+        body: `<p>A molecule becoming a <span class="hl">polymer, a crystal, or a supramolecular assembly</span> is the &#x27F3;-stroke at chemical scale: the closed molecule becomes the aperture of a larger whole.</p>
+        <p>Protein quaternary structure (multi-subunit assemblies) is the same move at macromolecular scale. The ribosome, the microtubule, the hemoglobin tetramer: each is &#x2299;&lambda; &sub; &#x2299;&Lambda; made literal.</p>`
+      },
+      biology: {
+        key: 'reproduction', teaser: 'organism \u2192 population',
+        body: `<p><span class="hl">Reproduction</span> is 3.5D at the organism scale: the closed organism opens as the aperture of the next organism. Generation is the octave closing and reopening one level up.</p>
+        <p>ATP synthase rotates <span class="mono">360/T = 120&deg;</span> per ATP (trigonal planar angle); three binding sites cycle through T conformations; the pump cycle is literal machinery at cellular scale.</p>`
+      },
+      ethics: {
+        key: 'CHECKING', teaser: 'verification at closure',
+        body: `<p><span class="hl">CHECKING</span> is the freedom held at 3.5D: before the closed thing becomes a seed for the next cycle, you verify. Was the closure clean? Did the four-beat complete?</p>
+        <p>Without CHECKING, distorted patterns replicate (generational trauma, bad code shipped, corrupted doctrine copied). With CHECKING, only sound patterns propagate.</p>
+        <p>GOOD in its active phase: the filter reading itself before it makes the next aperture. Pathology: CHECKING without fresh NOT-YET (judgmental, closed) or no CHECKING (uncritical propagation).</p>`
+      }
+    },
+    {
+      key: 'whole', symbol: '\u2299', number: '\u2299', istroke: '', name: 'the whole, consciousness, being, experience',
+      axiomId: 'D5', axiomText: 'The whole is not the sum of its parts; it is their compositional unity via \u03A6', axiomFrom: 'from all',
+      physics: {
+        key: '\u2299 = E = 1', teaser: 'circumpunct at each scale',
+        body: `<p><span class="hl">&#x2299; = E = 1</span>. Every &#x2299;&lambda; at every scale IS the one energy, constrained to position &lambda;. Not a piece of it; the whole thing folded into a particular self-limitation (A3).</p>
+        <p>The circumpunct is the 1/0 ontology drawn directly: the dot is 0 (maximum convergence), the circle is 1 (the field curving back on itself), the space between is the fractal coastline (D = 1.5 at balance).</p>
+        <p>Unified expression: <span class="mono">[Truth = Reality = E = 1 = &infin;] = [&infin; &#x25B8;&#x2299;&infin; ((&bull;&deg;&#x229B;) &#x22A2; (&mdash;&deg;&#x2387;) &#x22A2; (&Phi;&deg;&#x2739;) &#x22A2; (&#x25CB;&deg;&#x27F3;)) &#x25B8; &#x2299;&lambda; &sub;[&alpha;] &#x2299;&Lambda; &sub;[&alpha;] &infin;]</span>.</p>`
+      },
+      chemistry: {
+        key: 'the molecule', teaser: 'compositional unity',
+        body: `<p>Every molecule is a <span class="hl">&#x2299; at molecular scale</span>: not the sum of its atoms but their compositional unity via &Phi; (D5). The triple bond correction (C = T/&Phi; = 3/2) for N&#x2261;N gives <span class="mono">942.7 kJ/mol</span> (measured 945, 0.25%) precisely because the whole exceeds the sum of parts.</p>
+        <p>Molecular properties (reactivity, color, shape) are the whole speaking; no atom alone has them.</p>`
+      },
+      biology: {
+        key: 'the organism', teaser: 'nested wholeness',
+        body: `<p>The <span class="hl">organism is a &#x2299; at biological scale</span>: cells inside, ecosystem outside, same architecture at every nesting level. You are whole at your scale AND contained at the scale above.</p>
+        <p>Two lies to avoid: the Inflation Lie (I am the source; there is nothing above me) and the Severance Lie (I am only a piece; I have no interior). Both deny the full expression <span class="mono">&#x2299;&lambda; &sub; &#x2299;&Lambda;</span>.</p>`
+      },
+      ethics: {
+        key: 'AGREEMENT', teaser: 'all four, composed',
+        body: `<p><span class="hl">AGREEMENT</span> is the composition of all four virtues simultaneously by both parties at balance (<span class="mono">&#x25D0; = 0.5</span>). Not a fifth freedom; the other four held together.</p>
+        <p>Rare because the required sequence (GOOD &rarr; RIGHT &rarr; FAITHFUL &rarr; TRUE &rarr; AGREEMENT) admits no skipping. You cannot confirm truth until you have checked the history of commitment. Current orientation without reliability does not earn AGREEMENT.</p>
+        <p>The full cycle: <span class="mono">i&#x2074; = 1</span>. Back at the beginning, richer.</p>`
+      }
+    }
+  ];
+
+  const colorVar = {
+    infinity: 'var(--infinity)', soul: 'var(--soul)', convergence: 'var(--convergence)',
+    line: 'var(--line)', branch: 'var(--branch)', field: 'var(--field)',
+    emerge: 'var(--emerge)', boundary: 'var(--boundary)', recurse: 'var(--recurse)', whole: 'var(--whole)'
+  };
+
+  const domainLabel = { physics: 'Physics', chemistry: 'Chemistry', biology: 'Biology', ethics: 'Ethics' };
+
+  function cellHtml(domain, d) {
+    const data = d[domain];
+    return `<div class="row-cell" data-key="${d.key}" data-which="${domain}">
+      <span class="cell-key">${data.key}</span><span class="cell-sep">&middot;</span><span class="cell-teaser">${data.teaser}</span>
+    </div>`;
+  }
+
+  const rowsEl = document.getElementById('rows');
+  rowsEl.innerHTML = dims.map(d => {
+    const dimText = d.istroke
+      ? `${d.number}<span class="istroke">${d.istroke}</span>`
+      : `${d.number}`;
+    const axiomFrom = d.axiomFrom ? `<span class="drawer-from">${d.axiomFrom}</span>` : '';
+    return `
+    <div class="row-wrap" data-d="${d.key}" style="--c: ${colorVar[d.key]};">
+      <div class="row">
+        <span class="row-symbol" data-toggle="1">${d.symbol}</span>
+        <span class="row-dim" data-toggle="1">${dimText}</span>
+        ${cellHtml('physics', d)}
+        ${cellHtml('chemistry', d)}
+        ${cellHtml('biology', d)}
+        ${cellHtml('ethics', d)}
+        <span class="row-chevron" data-toggle="1">&#x25B8;</span>
+      </div>
+      <div class="drawer">
+        <div class="drawer-inner">
+          <span class="drawer-id">${d.axiomId}</span>
+          <span class="drawer-text">${d.axiomText}</span>
+          ${axiomFrom}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Toggle drawer on symbol/dim/chevron clicks
+  document.querySelectorAll('[data-toggle="1"]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const wrap = el.closest('.row-wrap');
+      wrap.classList.toggle('open');
+    });
+  });
+
+  // Modal handling for domain cells
+  const backdrop = document.getElementById('modal-backdrop');
+  const modal = document.getElementById('modal');
+  const modalSymbol = document.getElementById('modal-symbol');
+  const modalDimLabel = document.getElementById('modal-dim-label');
+  const modalKey = document.getElementById('modal-key');
+  const modalBody = document.getElementById('modal-body');
+  const modalClose = document.getElementById('modal-close');
+
+  function openModal(dimKey, domain) {
+    const d = dims.find(x => x.key === dimKey);
+    if (!d) return;
+    const data = d[domain];
+    modal.style.setProperty('--mc', colorVar[dimKey]);
+    modalSymbol.innerHTML = d.symbol;
+    modalDimLabel.textContent = `${d.number} \u00B7 ${d.name} \u00B7 ${domainLabel[domain]}`;
+    modalKey.innerHTML = data.key;
+    modalBody.innerHTML = data.body;
+    backdrop.classList.add('visible');
+  }
+
+  function closeModal() { backdrop.classList.remove('visible'); }
+
+  document.querySelectorAll('.row-cell').forEach(cell => {
+    cell.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openModal(cell.dataset.key, cell.dataset.which);
+    });
+  });
+
+  modalClose.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+</script>
+
+</body>
+</html>
