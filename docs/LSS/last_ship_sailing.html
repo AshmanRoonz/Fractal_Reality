@@ -7340,9 +7340,13 @@ function commitLoadout(key) {
   player.velocity = new THREE.Vector3(0, 0, 0);
   player.position = new THREE.Vector3(0, 0, 0); // placeholder; set properly after map build
   player.euler = new THREE.Euler(0, 0, 0, 'YXZ');
-  player.kills = 0;
-  player.deaths = 0;
-  player.damageDealt = 0;
+  // Match stats (kills/deaths/damage) only reset on a fresh match. Between
+  // rounds they accumulate so the scoreboard reflects the whole match.
+  if (!midMatch) {
+    player.kills = 0;
+    player.deaths = 0;
+    player.damageDealt = 0;
+  }
   player.shieldRegenDelay = 0;
   // Reset titan-specific state
   player.vortexEnergy = 1000;
@@ -7460,14 +7464,35 @@ function commitLoadout(key) {
 }
 
 function spawnBots() {
-  for (const bot of game.entities) bot.destroy();
+  // Snapshot existing bot match stats by loadoutKey so respawning between
+  // rounds does not wipe the scoreboard. Fresh-match callers have no
+  // existing entities, so the map is empty and new bots start at zero.
+  const _prevStats = {};
+  for (const bot of game.entities) {
+    if (bot.loadoutKey) {
+      _prevStats[bot.loadoutKey] = {
+        kills: bot.kills || 0,
+        damageDealt: bot.damageDealt || 0,
+      };
+    }
+    bot.destroy();
+  }
   game.entities = [];
+
+  const applyPrev = (bot) => {
+    const p = _prevStats[bot.loadoutKey];
+    if (p) {
+      bot.kills = p.kills;
+      bot.damageDealt = p.damageDealt;
+    }
+  };
 
   const enemyLoadouts = ['PYRO', 'SLAYER', 'TRACKER'];
   for (let i = 0; i < 3; i++) {
     const bot = new Bot(enemyLoadouts[i], LSS.TEAM_FLEET_B, i + 1);
     const sp = getValidSpawnPoint('B');
     bot.position.copy(sp);
+    applyPrev(bot);
     game.entities.push(bot);
   }
 
@@ -7476,6 +7501,7 @@ function spawnBots() {
     const bot = new Bot(friendlyLoadouts[i], LSS.TEAM_FLEET_A, i + 10);
     const sp = getValidSpawnPoint('A');
     bot.position.copy(sp);
+    applyPrev(bot);
     game.entities.push(bot);
   }
 }
@@ -9843,9 +9869,20 @@ function updateRoundSystem(dt) {
     if (game.roundEndTimer <= 0) {
       if (game.scoreA >= LSS.ROUNDS_TO_WIN || game.scoreB >= LSS.ROUNDS_TO_WIN) {
         game.state = 'matchEnd';
+        // 10-second scoreboard pause before the game returns to the root menu.
+        // _refreshScoreboardVisibility honors game.state === 'matchEnd' as a
+        // force-show condition, so just flipping the state and calling refresh
+        // brings the scoreboard up with the final totals.
+        game.matchEndTimer = 10;
+        if (typeof _refreshScoreboardVisibility === 'function') _refreshScoreboardVisibility();
         if (window.Overlays) {
           const winner = game.scoreA >= LSS.ROUNDS_TO_WIN ? 'FLEET A' : 'FLEET B';
           Overlays.banner('VICTORY', winner + ' WINS');
+        }
+        // Release pointer lock so the user can see the scoreboard without
+        // being stuck in mouselook.
+        if (document.exitPointerLock) {
+          try { document.exitPointerLock(); } catch (e) {}
         }
       } else {
         game.currentRound++;
@@ -9889,7 +9926,74 @@ function updateRoundSystem(dt) {
         launchCountdown();
       }
     }
+  } else if (game.state === 'matchEnd') {
+    // Hold the scoreboard up for ~10s, then fall back to the root menu (a fresh
+    // 'select' state with ship-select open and all match stats cleared, exactly
+    // like a cold boot).
+    game.matchEndTimer = (game.matchEndTimer === undefined) ? 10 : game.matchEndTimer - dt;
+    if (game.matchEndTimer <= 0) {
+      returnToRootMenu();
+    }
   }
+}
+
+// Return the game to its boot-time root menu: ship-select overlay visible,
+// game.state === 'select', all scores / rounds / match stats reset. Called from
+// the matchEnd handler after the 10-second scoreboard pause. Keeps the same
+// shape as a cold start so the very next commitLoadout sees midMatch === false
+// and runs the full fresh-match branch (map build, bot spawn, score reset).
+function returnToRootMenu() {
+  // Tear down the scoreboard first so it doesn't bleed into the menu.
+  _scoreboardKeyHeld = false;
+  _scoreboardGpHeld = false;
+  scoreboardVisible = false;
+  scoreboardDiv.classList.remove('visible');
+
+  // Wipe live entities / projectiles / stasis / world-effects so the next
+  // match starts from clean state (commitLoadout's fresh-match path rebuilds
+  // the world, but these references live on game until then).
+  for (const bot of game.entities) { try { bot.destroy(); } catch (e) {} }
+  game.entities = [];
+  game.projectiles = [];
+  game.particles = [];
+  for (const sf of game.stasisFields) { try { sf.destroy(); } catch (e) {} }
+  game.stasisFields = [];
+  for (const eff of game.worldEffects) {
+    if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh);
+    if (eff.coreMesh && eff.coreMesh.parent) scene.remove(eff.coreMesh);
+    if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh);
+  }
+  game.worldEffects = [];
+
+  // Reset match bookkeeping.
+  game.scoreA = 0;
+  game.scoreB = 0;
+  game.currentRound = 1;
+  game.matchEndTimer = 0;
+
+  // Reset player match stats so the root menu starts clean.
+  player.kills = 0;
+  player.deaths = 0;
+  player.damageDealt = 0;
+
+  // Flip state first; _menuActive / Tab-intercept / gamepad hold all gate on
+  // this, and the scoreboard's forced-visible condition checks it too.
+  game.state = 'select';
+
+  // Pointer lock was already released at matchEnd, but belt-and-suspenders.
+  if (document.exitPointerLock) {
+    try { document.exitPointerLock(); } catch (e) {}
+  }
+
+  // Hide any countdown overlays left over from a prior launch sequence.
+  const cd = document.getElementById('ship-select-countdown');
+  if (cd) cd.classList.remove('active');
+
+  // Show the ship-select root menu exactly as it appears on cold boot.
+  const sel = document.getElementById('ship-select');
+  if (sel) { sel.style.display = 'flex'; sel.classList.add('active'); }
+  buildShipSelect();
+  if (typeof updateTeammatesStrip === 'function') updateTeammatesStrip();
 }
 
 // ---- GAMEPAD POLLING ----
@@ -14729,7 +14833,10 @@ let scoreboardVisible = false;
 let _scoreboardKeyHeld = false;
 let _scoreboardGpHeld = false;
 function _refreshScoreboardVisibility() {
-  const want = _scoreboardKeyHeld || _scoreboardGpHeld;
+  // Force scoreboard visible during the match-end pause so players can see the
+  // final kills/damage totals before the root menu returns.
+  const forced = (game.state === 'matchEnd');
+  const want = forced || _scoreboardKeyHeld || _scoreboardGpHeld;
   if (want !== scoreboardVisible) {
     scoreboardVisible = want;
     updateScoreboard();
