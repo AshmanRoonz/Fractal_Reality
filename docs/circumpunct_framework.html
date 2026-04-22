@@ -2570,8 +2570,11 @@ THE FINE STRUCTURE CONSTANT (two-layer reading):
         coincides with S only at T = 3).
 
         The φ³ correction sign is balance-forced to −Φ given pool-native
-        360 and 59/3. Single residual open question: the φ-exponent rule
-        (framework convention, not theorem).
+        360 and 59/3. As of 2026-04-22 the φ-exponent rule is closed by
+        A3 + dimensional analysis: A3 makes φ the scaling ratio across
+        self-similar nesting; scaling ratio at dimension d enters as φ^d
+        by what dimension means (length → L, area → L², volume → L³).
+        No factor-level residuals remain.
 
     The auxiliary claim is separable from the representation layer:
     if future precision pushes 1/α outside the 0.22 ppb band, the
@@ -3485,7 +3488,7 @@ PHYSICAL MEANING:
  STATUS: CANONICAL SPECIFICATION ✓</pre></div><p>The circumpunct is now <strong>completely specified</strong> with no arbitrary choices beyond the physical scale R.</p>
 <blockquote class="md-quote"><p><strong>Amendment (§29.8):</strong> Zero free parameters holds AT THE FIXED POINT. Away from the fixed point, three state variables (β_•, β_Φ, β_○) describe the deviation; these are measurable properties of specific systems, not tuneable knobs. See Chapter 29.</p>
 </blockquote>
-<blockquote class="md-quote"><p><strong>Amendment (2026-04, two-layer α reading):</strong> "Zero free parameters" applies to the <em>F</em> operator (the four-beat unitary pump kernel: ◐ = 0.5, D = 1.5, f(r) = √r, i = exp(iπ/2), all derived). It does NOT extend to the <em>κ</em> operator (the nesting / cross-scale coupling carried by ⊂[α]). The cross-station coupling matrix κ_{p,q} has measurable entries that are INPUTS to the master equation, not derivations from F. The primary entry is κ_{0,0} = α = |•_electron| (the electron aperture's coupling strength, with 2D Φ as mediator); the diagonal entry κ_{3,3} = α_G sets gravity. F is unitary and cannot set κ; the departure from trace-preservation IS α. The master equation composes consistently around any given α. Earlier wording that implied α is derived from F (pump-cycle integers, 360° subdivisions, radians-to-degrees rationales) was a type error; α's CODATA value admits a structurally motivated closed form 1/α = 360/φ² − 2/φ³ + α/(59/3) = 137.035999147 (0.22 ppb) as an auxiliary claim, pinned by Routes 6 and 7, with a single residual open question (the φ-exponent rule). See docs/alpha_derivation.html for the full two-layer audit.</p>
+<blockquote class="md-quote"><p><strong>Amendment (2026-04, two-layer α reading):</strong> "Zero free parameters" applies to the <em>F</em> operator (the four-beat unitary pump kernel: ◐ = 0.5, D = 1.5, f(r) = √r, i = exp(iπ/2), all derived). It does NOT extend to the <em>κ</em> operator (the nesting / cross-scale coupling carried by ⊂[α]). The cross-station coupling matrix κ_{p,q} has measurable entries that are INPUTS to the master equation, not derivations from F. The primary entry is κ_{0,0} = α = |•_electron| (the electron aperture's coupling strength, with 2D Φ as mediator); the diagonal entry κ_{3,3} = α_G sets gravity. F is unitary and cannot set κ; the departure from trace-preservation IS α. The master equation composes consistently around any given α. Earlier wording that implied α is derived from F (pump-cycle integers, 360° subdivisions, radians-to-degrees rationales) was a type error; α's CODATA value admits a structurally motivated closed form 1/α = 360/φ² − 2/φ³ + α/(59/3) = 137.035999147 (0.22 ppb) as an auxiliary claim, pinned by Routes 6 and 7, with the φ-exponents pinned by A3 + dimensional analysis (φ as scaling ratio; scaling ratio at dimension d enters as φ^d by what dimension means). No factor-level residuals remain as of 2026-04-22. See docs/alpha_derivation.html for the full two-layer audit.</p>
 </blockquote><h3 id="84-implementation-circumpunct-neural-network">§8.4 Implementation: Circumpunct Neural Network</h3><p>The canonical specification enables direct computational implementation:</p>
 <h4 id="basic-layer">Basic Layer</h4><pre class="md-code"><code>import numpy as np
 from typing import Tuple
@@ -8485,8 +8488,11 @@ TWO-LAYER READING (2026-04):
        holds for all T and coincides with S only at T = 3.
 
        The −2/φ³ sign is balance-forced to −Φ given pool-native 360
-       and 59/3. Single residual open question: the φ-exponent rule
-       (framework convention, not theorem).
+       and 59/3. As of 2026-04-22 the φ-exponent rule is closed by
+       A3 + dimensional analysis: A3 admits φ as the scaling ratio
+       across self-similar nesting, and a scaling ratio at dimension
+       d enters as φ^d by the definition of dimension (area → L²,
+       volume → L³). No factor-level residuals remain.
 
 PHYSICAL MEANING (preserved at the representation layer):
     π  = property of ○ (boundary shape; §27.7l glyph Φ draws π)

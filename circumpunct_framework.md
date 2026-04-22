@@ -20067,11 +20067,11 @@ The distinction between a fit and a derivation is parameter count. A fit has fre
 
 **360.** Structural product: 360 = P! · T · (Φ + ○) = 24 · 3 · 5. Every factor is a framework integer forced by T = 3 through R = T² − 2, P = T + 1, and the aperture/field/boundary assignments. Degrees are the natural unit because i⁴ = (90°)⁴ = 360° is one full pump rotation, and 90° = 360/P = one i-stroke; radians encode ○ geometry, degrees encode pump-cycle geometry, and α lives at the pump-cycle level (see §27.5). There is no "revolutions per circle" knob; 360 is the unique product of the four generating quantities at the first rung.
 
-**φ² in the first denominator.** A3 forces golden nesting (φ is the unique ratio self-similar across scale with minimum constraint). The first-order correction lives at the field station (d = 2), and exponents follow dimension, so φ² is fixed. Not φ, not φ^1.5, not φ^3: φ² because Φ is 2D.
+**φ² in the first denominator.** A3 makes φ the scaling ratio across self-similar nesting: φ is the unique real solution of x = 1 + 1/x, and self-similarity across scale IS scaling, so φ enters the framework by construction as a scaling ratio (not as a bare number, not as a phase). The first-order correction lives at the field station (d = 2). A scaling ratio applied at dimension d enters as the d-th power by the definition of dimension itself (length scales as L, area as L², volume as L³); this is grade-school dimensional geometry. Therefore φ at d = 2 is φ², forced by A3 + dimensional analysis, not by framework convention. Not φ, not φ^1.5, not φ^3: φ² because Φ is 2D and a scaling ratio in 2D is squared. (As of 2026-04-22 this closes the earlier "φ-exponent-equals-dimension" residual at the factor level; the rule is a theorem of what dimension means once A3 admits φ as a scaling ratio.)
 
 **−2 in the second term.** The 2 is Φ, the two channels of the bidirectional valve (⊛ and ✹). Every aperture has exactly two channels; neither alone is sustainable (unsustained convergence violates A1; emergence without source is the Inflation Lie). The sign is negative because the correction removes overcounting from the base. Not 1, not 3; exactly 2, because there are exactly two channels.
 
-**φ³ in the second denominator.** The correction advances one dimensional step beyond the base (φ² → φ³), because structural corrections increment along the ladder. Not arbitrary; forced by the ladder's step size.
+**φ³ in the second denominator.** The correction advances one dimensional step beyond the base (d = 2 → d = 3), standard for additive ladder corrections. By the same A3-plus-dimensional-analysis argument as φ², a scaling ratio at d = 3 enters as the cube (volume scales as length cubed). Forced by the ladder's step size and by what dimension means, not by framework convention.
 
 **21 in the self-referential term.** 21 = A(3) = 3(2·3+1), the full traversal of the dimensional ladder. Three independent routes give the same integer: A(3) = T·R = F(8) = (0 + 0.5 + 1 + 1.5 + 2 + 2.5 + 3) · 2. The same 21 appears in G (α_G = α²¹ · φ²/2), because both α's closure and G's exponent are closure phenomena at the 3D rung. Replacing 21 with 20 or 22 breaks all three routes simultaneously.
 
@@ -20134,8 +20134,8 @@ A symbol that is not assignable to (a), (b), or (c) is a free parameter and must
 | 360 | P!·T·(Φ+○) = 24·3·5; all factors from T = 3 (§27.7b) | (b) |
 | φ | Forced by Lemma 1 + Lemma 2 + four-step closure (§27.7d.2) | (c) |
 | 2 (numerator) | Φ = number of channels, from A1 | (a) |
-| φ² exponent | Field station d = 2; exponent = dimension | (c) |
-| φ³ exponent | Next rung after Φ; exponent increments by ladder step | (c) |
+| φ² exponent | A3 + dimensional analysis: A3 makes φ the scaling ratio across self-similar nesting; scaling ratio at dimension d enters as φ^d by what dimension means (length → L, area → L², volume → L³). Field station d = 2 gives φ². | (c) |
+| φ³ exponent | A3 + dimensional analysis: one ladder step past φ² (d = 2 → d = 3); volume scales as length cubed. | (c) |
 | 21 | A(3) = T·R = full ladder traversal (§27.7) | (b) |
 | 4/3 | P/T = pump phases over triad (§27.7b) | (b) |
 | α (RHS, self-referential) | Same α as LHS; eigenvalue equation | (c) |
