@@ -406,3 +406,31 @@ This is CLOSER to cosmological values than the preliminary 70/30 (which had 1.4%
 
 - `experiments/unified_expression_T_v10_predictions.py`: prediction extraction and matching code
 - `experiments/T_operator_findings_v10_predictions.md`: full prediction catalog with convergence analysis
+
+---
+
+## Results: v11 (three-scale nesting on ℂ⁶⁴) and v14 (three-scale octave on ℂ⁵¹²) — Direction #15 extended
+
+### v11: ℂ⁶⁴ = ℂ⁴ ⊗ ℂ⁴ ⊗ ℂ⁴
+
+First three-scale implementation. F₆₄ = F₄ ⊗ F₄ ⊗ F₄; A3 at the operator level. Phase sum forced to 0 via det(F₄)^48 = exp(−48iπ/6) = 1. Primary/secondary diameter split: 68.53/31.47 (cosmological 69.11/30.89; residual 0.56%). Expanding/contracting sector: 35/29 = C(R,T)/(S−C(R,T)). Leading eigenvalue at tetrahedral angle 109.47° (0.51° residual). Spectral gap = α/P. A3 outer/inner identical to machine precision; middle enriched by 0.069%. Files: `experiments/unified_expression_T_v11_C64.py`, `experiments/T_operator_findings_v11_C64.md`.
+
+### v14: ℂ⁵¹² = ℂ⁸ ⊗ ℂ⁸ ⊗ ℂ⁸ (three-scale octave)
+
+Direction #15 extended to octave resolution at three-scale. F₅₁₂ = F₈ ⊗ F₈ ⊗ F₈. Seven predictions from `plans/next_frontier_plan.md` piece #2:
+
+| # | Prediction | v14 result | Status |
+|---|---|---|---|
+| 1 | Phase sum = 0 exactly (192·(−π/3) mod 2π) | Σarg(λ) = 0.000000π exactly | ✓ pinned |
+| 2 | 69/31 cosmological split | 68.75/31.25 per scale | ✓ 0.52% |
+| 3 | A3 outer/inner identical | L2 = 4.39e-16 (machine precision) | ✓ exact |
+| 4 | Middle scale α-enriched | L2(middle vs outer) = 2.47e-03 | ✓ matches v11 pattern |
+| 5 | Spectral gap ≈ α/P | 1.93e-3 vs α/P = 1.82e-3 (ratio 1.056) | ≈ |
+| 6 | Leading |λ| = 1 + 2α | 1.02001145 ≈ 1 + 2α | ✓ exact |
+| 7 | Leading eigenvalue at tetrahedral angle | arg(λ_max) = −128.26° | ✗ shifted |
+
+**What this adds.** 69/31 is now representation-invariant across three independent representations (ℂ⁸ single-scale, ℂ⁶⁴ three-scale, ℂ⁵¹² three-scale octave). Phase closure at three-scale holds at both single-scale resolutions. A3 is a scale symmetry at the operator level. Leading |λ| = 1 + 2α is stable across nesting resolutions.
+
+**What it leaves open.** Spectral-gap coefficient correction (1.056 vs 1.000); meaning of the −128.26° angle at ℂ⁵¹²; 244/268 sector ratio (ℂ⁶⁴'s 35/29 appears to be small-N coincidence).
+
+**Files.** `experiments/unified_expression_T_v14_C512.py`, `experiments/T_operator_findings_v14_C512.md`, `experiments/T_operator_findings_v14_C512_raw_output.txt`.

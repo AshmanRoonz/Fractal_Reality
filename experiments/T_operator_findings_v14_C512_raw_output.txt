@@ -1,0 +1,124 @@
+==========================================================================
+  T-OPERATOR AT ℂ⁵¹² : THREE-SCALE OCTAVE
+  F₅₁₂ = F₈ ⊗ F₈ ⊗ F₈   (8³ = 512 states)
+==========================================================================
+  α  = 0.007297352566  (1/α = 137.035999147)
+  φ  = 1.6180339887
+
+Building F₅₁₂  (F₈ ⊗ F₈ ⊗ F₈)...
+  F₅₁₂ shape: (512, 512), built in 0.00s
+  F unitarity error: 2.88e-14
+
+Building κ₅₁₂  (intra-scale + adjacent cross-scale + skip)...
+  κ₅₁₂ shape: (512, 512), built in 0.04s
+  κ off-diagonal non-zero entries: 1728
+
+Building T₅₁₂ = κ₅₁₂ @ F₅₁₂ ...
+  T₅₁₂ shape: (512, 512), built in 0.02s
+
+==========================================================================
+  EIGENSPECTRUM
+==========================================================================
+  eig() finished in 0.81s
+  Spectral radius (max |λ|): 1.020011454441
+  Min |λ|:                    0.982613379826
+  det(T):                     +9.471057e-01+2.724696e-14j
+  arg(det(T)):                +0.0000000000  (+0.000000π)
+  Σ arg(λ) (raw):             -31.4159265359  (-10.000000π)
+  Σ arg(λ) (mod 2π):          +0.0000000000  (+0.000000π)
+  Prediction: 0 exactly  (192·(-π/3) mod 2π = 0)
+  Spectral gap (|λ₁| - |λ₂|): 0.0019265332  (α/P = 0.0018243381)
+    ratio gap / (α/P): 1.0560
+  Unique |λ|: 512
+  Top 10 unique magnitudes and their degeneracy:
+    |λ| = 1.0200114544   (degeneracy 1)
+    |λ| = 1.0180849212   (degeneracy 1)
+    |λ| = 1.0180237400   (degeneracy 1)
+    |λ| = 1.0174477764   (degeneracy 1)
+    |λ| = 1.0173063022   (degeneracy 1)
+    |λ| = 1.0164820809   (degeneracy 1)
+    |λ| = 1.0157896591   (degeneracy 1)
+    |λ| = 1.0152468391   (degeneracy 1)
+    |λ| = 1.0143519932   (degeneracy 1)
+    |λ| = 1.0141185347   (degeneracy 1)
+
+  Sector split: 244 expanding, 0 unit, 268 contracting
+    Ratio expanding/contracting: 244/268
+    = 0.910448
+    C(R,T)/(S-C(R,T)) = 35/29 = 1.206897  (ℂ⁶⁴ reference)
+
+==========================================================================
+  LEADING EIGENVECTOR (fixed point)
+==========================================================================
+  Leading eigenvalue: -0.6316854024-0.8008725989j
+  |lead|: 1.0200114544  = 1 + 2.001145e-02
+  arg(lead): -2.2386375681 rad  (-128.264485°)
+  Tetrahedral angle: 109.47122°  (ℂ⁶⁴ reference)
+
+  SCALE DECOMPOSITION (structural vs processual per scale)
+    Λ  : structural = 0.68749648   processual = 0.31250352   (sum = 1.00000000)
+    λ  : structural = 0.68784949   processual = 0.31215051   (sum = 1.00000000)
+    λ' : structural = 0.68749648   processual = 0.31250352   (sum = 1.00000000)
+
+  A3 CONSISTENCY (same operator at every scale ⇒ same marginal)
+    Λ vs λ' (outer vs inner):  L2 distance = 4.39e-16
+    Λ vs λ  (outer vs middle): L2 distance = 2.47e-03
+    λ vs λ' (middle vs inner): L2 distance = 2.47e-03
+    (v11 ℂ⁶⁴: outer/inner identical to machine precision;
+     middle α-enriched by ~0.069%)
+
+  Λ-scale station distribution:
+    •: 0.09419497  [##################]
+    ⊛: 0.02130424  [####]
+    —: 0.27737057  [#######################################################]
+    ⎇: 0.13551269  [###########################]
+    Φ: 0.02927498  [#####]
+    ✹: 0.01588574  [###]
+    ○: 0.28665596  [#########################################################]
+    ⟳: 0.13980085  [###########################]
+
+  DIAMETER DECOMPOSITION (cosmological-reading at three-scale octave)
+    D1 (•+Φ, structural 1): 0.00192914
+    D2 (—+○, structural 2): 0.18043446
+    D3 (⊛+✹, processual 1): 0.00005739
+    D4 (⎇+⟳, processual 2): 0.02110457
+    Sum (all-diameter alignment): 0.20352556
+
+    Primary  (D1 + D3) = 0.00198653
+    Secondary(D2 + D4) = 0.20153903
+    Primary fraction:   0.009761   (ℂ⁶⁴ ref: 0.6853)
+    Secondary fraction: 0.990239   (cosmic DE: 0.6911)
+
+  TOP 10 MOST WEIGHTED STATES
+    #1: |○ , ○ , ○ ⟩  w = 0.02362119
+    #2: |○ , — , ○ ⟩  w = 0.02317192
+    #3: |— , ○ , ○ ⟩  w = 0.02312336
+    #4: |○ , ○ , — ⟩  w = 0.02312336
+    #5: |— , ○ , — ⟩  w = 0.02261661
+    #6: |○ , — , — ⟩  w = 0.02196726
+    #7: |— , — , ○ ⟩  w = 0.02196726
+    #8: |— , — , — ⟩  w = 0.02084350
+    #9: |○ , ○ , ⟳ ⟩  w = 0.01151641
+    #10: |⟳ , ○ , ○ ⟩  w = 0.01151641
+
+==========================================================================
+  FRAMEWORK CONSTANT SEARCH (leading eigenvalue + diameter fractions)
+==========================================================================
+  Λ_struct                  = +0.68749648
+     ≈ DE=0.691        = +0.69110000   (error: 0.5214%)
+  Λ_proc                    = +0.31250352
+     ≈ matter=0.309    = +0.30890000   (error: 1.1666%)
+
+==========================================================================
+  CROSS-CHECK: power iteration from uniform state
+==========================================================================
+  (comparison with eig-based leading vector)
+  Running 50000 iterations...
+  Power iteration finished in 3.9s
+  |⟨power_iter | eig_leading⟩| = 1.000000   (1.0 = exact agreement)
+  Power-iter Λ structural: 0.687496  (eig: 0.687496)
+  Power-iter Λ processual: 0.312504  (eig: 0.312504)
+
+==========================================================================
+  DONE
+==========================================================================
