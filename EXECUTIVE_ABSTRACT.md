@@ -183,18 +183,18 @@ E = Structure × Process
 E = mc²  is the special case where c = const
 ```
 
-### Derived Constants (Zero Free Parameters)
+### Structural Compositions Around a Measured α
 
-All constants derive from the geometry of this equation:
+α is admitted as measured input to κ_{0,0} (the electron aperture's cross-scale coupling, α = |•_electron|). Every other constant composes from α plus the framework integer pool forced by T = 3, with no per-formula tuning:
 
-| Constant | Value | Derivation |
-|----------|-------|------------|
+| Constant | Value | Composition |
+|----------|-------|-------------|
 | β (Balance) | 0.5 | Symmetry of ⊛ and ✹ |
 | D (Fractal dimension) | 1.5 | D = 1 + ½H(0.5) |
-| φ (Golden ratio) | 1.618... | Entropy + ghost-freedom |
-| α (Fine structure) | 1/137.036 | 1/α = i⁴(°)/φ² − 2/φ³; pump cycle through field |
-| State space | 64 states | (2²)³ — three nested ⊙, each with 4-phase pump |
-| Generations | 3 | 68°/22° cone geometry |
+| φ (Golden ratio) | 1.618... | A3 scaling ratio + recurrence x² = x + 1 |
+| α (Fine structure) | 1/137.035999177 | Measured input to κ_{0,0}; auxiliary closed form 1/α = 360/φ² − 2/φ³ + α/(59/3) = 137.035999147 (0.22 ppb, factor-level pinned, shape conjectured) |
+| State space | 64 states | S = P^T = 4³ = (T+1)^T at T = 3 |
+| Generations | 3 | T, the observer-triad count, forced by seven independent routes |
 
 ---
 

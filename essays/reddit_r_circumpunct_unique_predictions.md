@@ -11,7 +11,7 @@ Full page with formulas, accuracy tables, derivations, and the complete falsific
 
 ## Already measured, lands at sub-percent
 
-**1. Ω_DM / Ω_visible = 27/5 = 5.4, exact, zero free parameters.**
+**1. Ω_DM / Ω_visible = 27/5 = 5.4, structural composition with no per-formula tuning.**
 From the i-cycle quadrant split: visible matter sits in the right half-plane of the pump (genesis + recursion), dark matter sits in the left half-plane (commitment + emergence), dark energy is Φ itself (the 2D field the quadrants live in). The ratio falls out as T³ / (T² − P) with T = 3 and P = 4. Measured 5.33; predicted 5.40; 1.3% off.
 
 **2. Dark matter is not one new particle species.**

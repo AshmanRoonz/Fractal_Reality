@@ -278,7 +278,7 @@ The seven Clay Millennium Problems map one-to-one onto the seven rungs:
 
 ## Summary Statistics
 
-    25 predictions, zero free parameters
+    25 predictions, structural compositions around a measured α
     11 with < 0.1% error
     15 with < 0.5% error
     25 with < 1.0% error

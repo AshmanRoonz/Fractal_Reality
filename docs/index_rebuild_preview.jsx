@@ -194,14 +194,14 @@ export default function FractalReality() {
         ))}
       </div>
 
-      {/* ZERO FREE PARAMETERS */}
+      {/* STRUCTURAL COMPOSITIONS AROUND α */}
       <div style={{ maxWidth: 600, margin: "20px auto", padding: "0 20px", textAlign: "center" }}>
         <div style={{ borderTop: `1px solid rgba(255,170,0,0.3)`, borderBottom: `1px solid rgba(255,170,0,0.3)`, padding: "10px 16px" }}>
           <div style={{ fontSize: 11, color: AMBER, letterSpacing: "0.06em" }}>
-            <span style={{ fontWeight: 700, fontSize: 13 }}>0</span> free parameters. α determines itself; everything else follows from α and <span style={{
+            α as measured input to κ; everything else composes from α and <span style={{
               background: `linear-gradient(90deg, ${BODY}, ${MIND}, ${SOUL})`,
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-            }}>⊙</span>.
+            }}>⊙</span>, with no per-formula tuning.
           </div>
         </div>
       </div>

@@ -2781,9 +2781,9 @@ However, "plausible mechanism" ≠ derivation. To close this gap, we would need 
 | α_quantum | ατ | 0.02705 | (via τ) | (via τ) |
 | α_texture | (2/5)φ³ | 1.6944 | DERIVED | PHENOMENOLOGICAL |
 
-**No external constants required.** The fine structure constant α is derived from the pump cycle through the field (1/α_ideal = i⁴(°)/φ² = 137.508; see §7A.5 for the full formula 1/α = i⁴(°)/φ² − 2/φ³). The rational prefactors come from circumpunct geometry. The φ³ scaling fits empirical values but awaits first-principles derivation from self-similar structure.
+**α admitted as measured input to κ_{0,0}.** The fine structure constant α = |•_electron| is the electron aperture's coupling strength across scales (κ_{0,0} in the nesting operator); the framework composes around α as input rather than producing α's numerical value from F-variables alone. The CODATA value admits a structurally motivated closed form (1/α = 360/φ² − 2/φ³ + α/(59/3) = 137.035999147; 0.22 ppb; factor-level pinned, shape conjectured) as an auxiliary claim; see §27.7a and docs/alpha_derivation.html for the two-layer audit. The rational prefactors in the table above come from circumpunct geometry; the φ³ scaling fits empirical values but awaits first-principles derivation from self-similar structure.
 
-**Important distinction:** The D = 1.5 prediction requires zero free parameters—it follows directly from ◐ = 0.5. The texture constants involving φ³ are currently phenomenological fits that require derivation from first principles.
+**Important distinction:** The D = 1.5 prediction composes directly from ◐ = 0.5 (no per-formula tuning); it follows from the balance axiom. The texture constants involving φ³ are currently phenomenological fits that require derivation from first principles.
 
 ### 7.3 Derived Mass Formulas
 
@@ -3310,9 +3310,10 @@ The infinite depth of the aperture chamber contributes at each level:
     ║                                                                   ║
     ║   BASE:   1/α₀ = i⁴(°)/φ² − 2/φ³ = 137.0356                    ║
     ║                                                                   ║
-    ║   SELF-REFERENTIAL CLOSURE:                                      ║
-    ║   1/α = 360/φ² − 2/φ³ + α/(21 − 4/3) = 137.035999147           ║
-    ║   (0.22 ppb from CODATA; 1.4σ; ZERO FREE PARAMETERS)            ║
+    ║   AUXILIARY CLOSED FORM (shape conjectured):                    ║
+    ║   1/α = 360/φ² − 2/φ³ + α/(59/3) = 137.035999147               ║
+    ║   (0.22 ppb from CODATA; factor-level pinned at T = 3)          ║
+    ║   α itself is measured input to κ_{0,0} (= |•_electron|)        ║
     ║                                                                   ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
