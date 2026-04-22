@@ -561,6 +561,121 @@
     gap: 8px;
   }
 
+  /* Visual beat section */
+  .vbeat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    align-items: stretch;
+    margin-top: 10px;
+  }
+  .vbeat-swatch {
+    border-radius: 12px;
+    min-height: 120px;
+    border: 1px solid var(--panel-b);
+    background: radial-gradient(circle at center, var(--swatch, #111) 0%, #05050a 80%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+    transition: background 120ms linear;
+  }
+  .vbeat-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .vbeat-info strong { color: var(--gold); }
+  .vbeat-launch {
+    width: 100%;
+    padding: 14px;
+    margin-top: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: var(--gold);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 120ms;
+  }
+  .vbeat-launch:hover, .vbeat-launch:focus {
+    background: var(--gold);
+    color: #000;
+  }
+  .vbeat-warn {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 120, 120, 0.4);
+    border-radius: 8px;
+    background: rgba(80, 20, 20, 0.25);
+    color: #ffd7d7;
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+
+  /* Flash overlay (full-screen) */
+  #flashOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  #flashOverlay.active { display: flex; }
+  #flashPanel {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    transition: background-color 40ms linear, opacity 40ms linear;
+  }
+  #flashHUD {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    pointer-events: none;
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.7);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  }
+  #flashClose {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+  }
+  #flashClose:hover { background: rgba(255,255,255,0.15); }
+
   /* Footer */
   footer {
     text-align: center;
@@ -889,6 +1004,65 @@
     </div>
   </section>
 
+  <!-- VISUAL BEAT (full-width at the bottom) -->
+  <section class="panel col-span-2 col-span-3">
+    <h2>⟳ Visual Beat</h2>
+    <div class="vbeat-row">
+      <div class="vbeat-swatch" id="vbeatSwatch" style="--swatch: #ff3030;">
+        <span id="vbeatNote">C</span>
+      </div>
+      <div class="vbeat-info">
+        <div>Note: <strong id="vbeatNoteName">C</strong></div>
+        <div>Color: <strong id="vbeatColorName">Red</strong></div>
+        <div>Flash rate: <strong id="vbeatRate">1.618 Hz</strong> (= current beat)</div>
+        <div style="color: var(--muted); font-size:0.75rem;">Notes (chromatic) map to ROYGBIV across the octave; C = Red, E = Yellow, G = Blue, B = Violet, and the semitones in between.</div>
+      </div>
+    </div>
+
+    <div class="param">
+      <div class="param-label"><span>Flash shape</span><span id="vbeatShapeVal">pulse</span></div>
+      <select id="vbeatShape">
+        <option value="pulse">Pulse (soft fade)</option>
+        <option value="strobe">Strobe (hard on/off)</option>
+        <option value="radial">Radial (center → edge)</option>
+        <option value="ring">Ring (expanding)</option>
+        <option value="split">Split (two colors)</option>
+      </select>
+    </div>
+
+    <div class="param">
+      <div class="param-label"><span>Intensity</span><span id="vbeatIntVal">80%</span></div>
+      <input type="range" id="vbeatInt" min="10" max="100" value="80" step="5">
+    </div>
+
+    <div class="param">
+      <div class="param-label"><span>Color source</span><span id="vbeatSrcVal">base note</span></div>
+      <select id="vbeatSrc">
+        <option value="base">Base note → color</option>
+        <option value="beat">Beat rate → color</option>
+        <option value="sweep">Auto-sweep (rainbow)</option>
+      </select>
+    </div>
+
+    <button class="vbeat-launch" id="vbeatLaunch">▣ LAUNCH FULL-SCREEN</button>
+
+    <div class="vbeat-warn">
+      <strong>Photosensitivity warning.</strong> Flashing light between about 3 Hz and 60 Hz can trigger seizures in people with photosensitive epilepsy, and may cause migraines or nausea. If you have any history of seizures, do not launch this view. If you feel dizzy, close immediately (tap anywhere, press Esc, or use the × button). Start at low intensity and low beat rates (below 3 Hz); increase slowly.
+    </div>
+  </section>
+
+</div>
+
+<!-- Full-screen flash overlay (hidden by default) -->
+<div id="flashOverlay" role="dialog" aria-label="Full-screen visual beat">
+  <div id="flashPanel"></div>
+  <canvas id="flashCanvas" style="position:absolute; inset:0; width:100%; height:100%; display:none;"></canvas>
+  <button id="flashClose" aria-label="Close full-screen">×</button>
+  <div id="flashHUD">
+    <span id="flashHUDNote">C · Red</span>
+    <span id="flashHUDRate">1.618 Hz</span>
+    <span id="flashHUDHint">tap / Esc to close</span>
+  </div>
 </div>
 
 <footer>
@@ -2371,6 +2545,240 @@
   updateStatsFromParams();
   drawBG();
   drawViz();
+
+  // ============= VISUAL BEAT (color-per-note, full-screen flasher) =============
+  // Maps a frequency to the pitch class within an octave, then to a ROYGBIV color.
+  // Drives a full-screen overlay that flashes at the current beat rate.
+
+  const NOTE_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+  // Diatonic anchor colors (C major natural notes get strong ROYGBIV);
+  // chromatic notes interpolate between their neighbors.
+  // Hue: 0=red, 30=orange, 60=yellow, 120=green, 210=blue, 260=indigo, 290=violet.
+  const NOTE_HUES = {
+    'C': 0, 'D': 30, 'E': 60, 'F': 120, 'G': 210, 'A': 260, 'B': 290
+  };
+  const NOTE_COLOR_NAMES = {
+    'C': 'Red', 'C#': 'Red-Orange', 'D': 'Orange', 'D#': 'Amber',
+    'E': 'Yellow', 'F': 'Green', 'F#': 'Teal', 'G': 'Blue',
+    'G#': 'Indigo', 'A': 'Indigo-Violet', 'A#': 'Violet', 'B': 'Magenta'
+  };
+
+  // Given a frequency, returns { note, colorName, hue, sat, pc }
+  function freqToColor(hz) {
+    if (!hz || hz <= 0) return { note: 'C', colorName: 'Red', hue: 0, sat: 90, pc: 0 };
+    // Semitones above C4 = 261.6256 Hz
+    const semisFromC4 = 12 * Math.log2(hz / 261.6256);
+    const pcRaw = ((semisFromC4 % 12) + 12) % 12;   // 0..12
+    const i = Math.round(pcRaw);
+    const note = NOTE_NAMES[i % 12];
+    const colorName = NOTE_COLOR_NAMES[note];
+    // Interpolate hue between the two surrounding naturals for a smoother scale
+    const naturals = ['C','D','E','F','G','A','B','C'];
+    const naturalPC = [0, 2, 4, 5, 7, 9, 11, 12];
+    let a = 0, b = 1;
+    for (let k = 0; k < naturalPC.length - 1; k++) {
+      if (pcRaw >= naturalPC[k] && pcRaw <= naturalPC[k + 1]) { a = k; b = k + 1; break; }
+    }
+    const span = naturalPC[b] - naturalPC[a];
+    const t = span > 0 ? (pcRaw - naturalPC[a]) / span : 0;
+    const hueA = NOTE_HUES[naturals[a]];
+    // Wrap the end: B (290) → C (0) should wrap through 360 so interpolation goes the short way
+    let hueB = naturals[b] === 'C' ? NOTE_HUES['C'] + 360 : NOTE_HUES[naturals[b]];
+    let hue = (hueA * (1 - t) + hueB * t) % 360;
+    return { note, colorName, hue, sat: 90, pc: pcRaw };
+  }
+
+  function hslCss(hue, sat, light) {
+    return `hsl(${hue.toFixed(1)}, ${sat}%, ${light}%)`;
+  }
+
+  // Update the inline swatch + labels on the page
+  function updateVBeatSwatch() {
+    const src = state.vbeat ? state.vbeat.src : 'base';
+    const hz = src === 'beat' ? state.params.beat : state.params.base;
+    const info = freqToColor(hz);
+    $('vbeatSwatch').style.setProperty('--swatch', hslCss(info.hue, info.sat, 55));
+    $('vbeatNote').textContent = info.note;
+    $('vbeatNoteName').textContent = info.note + '  (' + (src === 'beat' ? state.params.beat.toFixed(2) : Math.round(state.params.base)) + ' Hz)';
+    $('vbeatColorName').textContent = info.colorName;
+    $('vbeatRate').textContent = state.params.beat.toFixed(3) + ' Hz';
+  }
+
+  // Flash-loop state
+  state.vbeat = {
+    active: false,
+    raf: 0,
+    t0: 0,
+    shape: 'pulse',
+    intensity: 0.8,
+    src: 'base',
+    sweepHue: 0
+  };
+
+  function flashLoop(now) {
+    if (!state.vbeat.active) return;
+    if (!state.vbeat.t0) state.vbeat.t0 = now;
+    const elapsed = (now - state.vbeat.t0) / 1000; // seconds
+    const beat = Math.max(0.05, state.params.beat); // clamp to avoid div-by-zero
+    const phase = (elapsed * beat) % 1;             // 0..1 per beat cycle
+
+    // Color source
+    let hz;
+    if (state.vbeat.src === 'beat') hz = state.params.beat;
+    else if (state.vbeat.src === 'sweep') {
+      // advance hue by one full rainbow per 8 seconds independent of beat
+      state.vbeat.sweepHue = (state.vbeat.sweepHue + 0.6) % 360;
+    } else hz = state.params.base;
+
+    let hue, sat = 90, note, colorName;
+    if (state.vbeat.src === 'sweep') {
+      hue = state.vbeat.sweepHue;
+      note = '~';
+      colorName = 'Sweep';
+    } else {
+      const info = freqToColor(hz);
+      hue = info.hue;
+      note = info.note;
+      colorName = info.colorName;
+    }
+
+    // Shape → brightness curve
+    let bright;
+    switch (state.vbeat.shape) {
+      case 'strobe':
+        bright = phase < 0.1 ? 1 : 0;
+        break;
+      case 'pulse':
+        // raised cosine: bright at phase 0, dark at 0.5
+        bright = 0.5 * (1 + Math.cos(phase * TWO_PI));
+        break;
+      case 'radial':
+      case 'ring':
+      case 'split':
+        bright = 0.5 * (1 + Math.cos(phase * TWO_PI));
+        break;
+      default:
+        bright = 0.5 * (1 + Math.cos(phase * TWO_PI));
+    }
+    const I = state.vbeat.intensity * bright;
+
+    // Render
+    const panel = $('flashPanel');
+    const canvas = $('flashCanvas');
+    if (state.vbeat.shape === 'radial' || state.vbeat.shape === 'ring' || state.vbeat.shape === 'split') {
+      panel.style.background = '#000';
+      canvas.style.display = 'block';
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = canvas.width = Math.floor(window.innerWidth * dpr);
+      const h = canvas.height = Math.floor(window.innerHeight * dpr);
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, w, h);
+      if (state.vbeat.shape === 'radial') {
+        const cx = w / 2, cy = h / 2;
+        const r = Math.max(w, h) * 0.7 * (0.3 + 0.7 * phase);
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        grad.addColorStop(0, hslCss(hue, sat, 50 * I + 5));
+        grad.addColorStop(1, '#000');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+      } else if (state.vbeat.shape === 'ring') {
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, w, h);
+        const cx = w / 2, cy = h / 2;
+        const maxR = Math.hypot(w, h) / 2;
+        const r = phase * maxR;
+        const thickness = maxR * 0.15;
+        ctx.strokeStyle = hslCss(hue, sat, 55);
+        ctx.lineWidth = thickness * dpr;
+        ctx.globalAlpha = state.vbeat.intensity * (1 - phase);
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, TWO_PI);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      } else if (state.vbeat.shape === 'split') {
+        // Two-tone split (left = base note color, right = beat rate color)
+        const baseInfo = freqToColor(state.params.base);
+        const beatInfo = freqToColor(state.params.beat);
+        ctx.fillStyle = hslCss(baseInfo.hue, baseInfo.sat, 8 + 50 * I);
+        ctx.fillRect(0, 0, w / 2, h);
+        ctx.fillStyle = hslCss(beatInfo.hue, beatInfo.sat, 8 + 50 * I);
+        ctx.fillRect(w / 2, 0, w / 2, h);
+      }
+    } else {
+      canvas.style.display = 'none';
+      panel.style.background = hslCss(hue, sat, 10 + 45 * I);
+    }
+
+    // HUD
+    $('flashHUDNote').textContent = note + ' · ' + colorName;
+    $('flashHUDRate').textContent = state.params.beat.toFixed(3) + ' Hz · ' + state.vbeat.shape;
+
+    state.vbeat.raf = requestAnimationFrame(flashLoop);
+  }
+
+  function openFlash() {
+    const overlay = $('flashOverlay');
+    overlay.classList.add('active');
+    state.vbeat.active = true;
+    state.vbeat.t0 = 0;
+    state.vbeat.shape = $('vbeatShape').value;
+    state.vbeat.intensity = parseInt($('vbeatInt').value, 10) / 100;
+    state.vbeat.src = $('vbeatSrc').value;
+    // Request fullscreen (best effort; silently falls back to fixed overlay)
+    if (overlay.requestFullscreen) {
+      overlay.requestFullscreen().catch(() => {});
+    } else if (overlay.webkitRequestFullscreen) {
+      overlay.webkitRequestFullscreen();
+    }
+    cancelAnimationFrame(state.vbeat.raf);
+    state.vbeat.raf = requestAnimationFrame(flashLoop);
+  }
+
+  function closeFlash() {
+    state.vbeat.active = false;
+    cancelAnimationFrame(state.vbeat.raf);
+    $('flashOverlay').classList.remove('active');
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+  }
+
+  // Controls
+  $('vbeatShape').addEventListener('change', (e) => {
+    state.vbeat.shape = e.target.value;
+    $('vbeatShapeVal').textContent = e.target.options[e.target.selectedIndex].text.split(' ')[0].toLowerCase();
+  });
+  $('vbeatInt').addEventListener('input', (e) => {
+    state.vbeat.intensity = parseInt(e.target.value, 10) / 100;
+    $('vbeatIntVal').textContent = e.target.value + '%';
+  });
+  $('vbeatSrc').addEventListener('change', (e) => {
+    state.vbeat.src = e.target.value;
+    $('vbeatSrcVal').textContent = e.target.options[e.target.selectedIndex].text.split(' →')[0].toLowerCase();
+    updateVBeatSwatch();
+  });
+  $('vbeatLaunch').addEventListener('click', openFlash);
+  $('flashOverlay').addEventListener('click', (e) => {
+    // Click anywhere except the close button still closes (cursor is pointer)
+    closeFlash();
+  });
+  $('flashClose').addEventListener('click', (e) => { e.stopPropagation(); closeFlash(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && state.vbeat.active) closeFlash();
+  });
+  document.addEventListener('fullscreenchange', () => {
+    // If user exits fullscreen via browser chrome, also close the overlay
+    if (!document.fullscreenElement && state.vbeat.active) closeFlash();
+  });
+
+  // Keep the inline swatch live with whatever beat/base values are set
+  const origUpdateStats = updateStatsFromParams;
+  window.__updateVBeatSwatch = updateVBeatSwatch;
+  // Patch a lightweight tick: every 250ms, resync swatch + labels
+  setInterval(updateVBeatSwatch, 250);
+  updateVBeatSwatch();
 
   // Unlock on first touch for iOS
   const unlock = () => {
