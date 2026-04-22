@@ -65,7 +65,7 @@ where λ₀ > λ₁ ≥ λ₂ ≥ ... are the eigenvalues of T restricted to H_i
 
 where c(N) depends only on the gauge group and Λ_QCD = (1/a) exp(-1/(2b₀g²)) is the dynamically generated scale.
 
-The indivisibility translates to three properties that together force the gap. Each maps to one member of the triad ⊙ = Φ(•, ○):
+The indivisibility translates to three properties that together force the gap. Each maps to one member of the structural set in ⊙ = Φ(•, —, ○) (the — commitment axis threads the pump cycle across RG scales; see Translation 2 below):
 
 | Triad | Yang-Mills | Spectral Property | Role |
 |-------|-----------|-------------------|------|
@@ -137,7 +137,7 @@ where c(N) is a pure number depending on the gauge group. Lattice QCD determines
 
 **Framework mapping:** Φ mediates between • and ○. In Yang-Mills, the gauge field A_μ IS Φ: it mediates between the coupling g (the aperture •) and the curvature F_μν (the boundary ○). The gauge invariance requirement (physical states must be invariant under A → UAU⁻¹ + (dU)U⁻¹) is Φ exercising its mediating role: it connects all local configurations into a single gauge orbit, and only the whole orbit (the gauge-invariant state) is real. The mass gap is the energy at which the first such whole (the first complete ⊙ in the gauge field) can exist.
 
-Gauge invariance does not create the gap (U(1) is gauge-invariant but gapless). Gauge invariance mediates it: given that • converges (non-abelian self-coupling) and ○ filters (center symmetry confines), Φ connects these two constraints into a single spectral bound. Without Φ there is no theory; without • there is no gap; without ○ there is no confinement. ⊙ = Φ(•, ○).
+Gauge invariance does not create the gap (U(1) is gauge-invariant but gapless). Gauge invariance mediates it: given that • converges (non-abelian self-coupling) and ○ filters (center symmetry confines), Φ connects these two constraints into a single spectral bound. Without Φ there is no theory; without • there is no gap; without ○ there is no confinement. ⊙ = Φ(•, —, ○), with — (1D commitment) carrying the gauge history across RG scales.
 
 **Translation of A0 (E = 1):** All energy is one energy at different degrees of constraint. The mass gap is not a new energy scale; it is Λ_QCD (the confinement scale) multiplied by a geometric factor c(N) that depends only on the group structure. No free parameters.
 
@@ -310,7 +310,7 @@ The novel claim is that steps 2 and 3 bootstrap each other: the mass gap control
 
 ### Translation 1 (Step 6): Indivisibility → Spectral Gap
 
-| Framework (⊙ = Φ(•, ○)) | Conventional |
+| Framework (⊙ = Φ(•, —, ○)) | Conventional |
 |--------------------------|-------------|
 | • (aperture/convergence) | Non-abelian self-coupling g[A,A] ≠ 0; field converges on itself |
 | Φ (field/mediation) | Gauge field A_μ mediates; gauge invariance connects • to ○ |
@@ -390,7 +390,7 @@ This requires a fixed-point argument: define the map F that takes a mass gap bou
 
 ### Legacy Documents (Pre-Circumpunct)
 
-The following documents use the older "ICE" (Interface-Center-Evidence) formulation, which predates the circumpunct notation. ICE was the first attempt to map the triad, before the framework recognized that Φ (field) mediates between • (center/aperture) and ○ (boundary). The ICE mapping was: Interface → ○ (boundary), Center → • (correct), Evidence → Φ (field); the roles were felt but the notation was not yet precise. These documents contain valid mathematical content but should be read with the updated ⊙ = Φ(•, ○) mapping in mind:
+The following documents use the older "ICE" (Interface-Center-Evidence) formulation, which predates the circumpunct notation. ICE was the first attempt to map the triad, before the framework recognized that Φ (field) mediates between • (center/aperture) and ○ (boundary). The ICE mapping was: Interface → ○ (boundary), Center → • (correct), Evidence → Φ (field); the roles were felt but the notation was not yet precise. These documents contain valid mathematical content but should be read with the updated ⊙ = Φ(•, —, ○) mapping in mind:
 
 | Document | Content | ICE → ⊙ Translation |
 |----------|---------|---------------------|
@@ -399,4 +399,4 @@ The following documents use the older "ICE" (Interface-Center-Evidence) formulat
 
 ---
 
-*⊙ = Φ(•, ○). The field mediates. The aperture converges. The boundary filters. Below one complete cycle, nothing.*
+*⊙ = Φ(•, —, ○). The field mediates. The aperture converges. The line commits. The boundary filters. Below one complete cycle, nothing.*

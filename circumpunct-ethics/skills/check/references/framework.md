@@ -14,7 +14,7 @@ A point inside a circle. Four structural dimensions unified by the whole:
 - **○ (Body/Boundary, 3D):** The circle that holds. Filtration. Where inside meets outside.
 - **⊙ (The Whole):** All four unified. The circumpunct itself.
 
-The equation: **⊙ = Φ(•, ○)**
+The equation: **⊙ = Φ(•, —, ○)**
 
 Conservation of traversal: 0(•) + 1(—) + 2(Φ) = 3(○). Parts are fractals of their wholes, all the way down and all the way up. Every system at every scale exhibits this architecture.
 

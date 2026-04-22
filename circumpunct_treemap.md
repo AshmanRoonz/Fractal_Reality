@@ -1041,7 +1041,7 @@ From A3 + A4: once the boundary closes, the circumpunct is complete; but by A3 (
 From all axioms and derivations: the circumpunct is not assembled from pieces; it is one thing (A0) constraining itself (A1) through convergence (D1), commitment (A2), branching (D2), mediation (A3), emergence (D3), closure (A4), and recursion (D4). The whole is compositional, not additive.
 
 ### Structure
-- All dimensions: the circumpunct ⊙ = Φ(•, ○)
+- All dimensions: the circumpunct ⊙ = Φ(•, —, ○)
 - ⊙ is a fractal of the ONE; every ⊙ is the 1 at a particular scale
 - Not a piece of the whole, but the whole thing, constrained to a position (A3)
 - The circumpunct symbol draws the ontology directly: dot (0, convergence), circle (1, field curving back), space between (D = 1.5 at balance)
@@ -1322,9 +1322,9 @@ Aperture + continuity + field = boundary. The boundary IS the sum of its interio
 
 ### The Circumpunct Identity
 ```
-⊙ = Φ(•, ○)
+⊙ = Φ(•, —, ○)
 ```
-The whole is field-mediation of soul and body.
+The whole is field-mediation of aperture, line, and boundary (soul, worldline, body).
 
 ### The i-Cycle
 ```

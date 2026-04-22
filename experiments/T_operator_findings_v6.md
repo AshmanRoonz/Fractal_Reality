@@ -97,7 +97,7 @@ Two possible readings:
 The standard sphere hub fixed point encodes the triad directly:
 - Two pairs: {•, Φ} and {—, ○}, each internally equal
 - Weight ratio: 2:1 (aperture+field : line+boundary)
-- This IS ⊙ = Φ(•, ○) with — as the connection: the aperture and field share 2/3, line and boundary share 1/3
+- This reads as ⊙ = Φ(•, —, ○) at v6's resolution, where the four structural dimensions pair as {•, Φ} and {—, ○}: aperture and field share 2/3, line and boundary share 1/3 (earlier v6 prose called — "the connection" under the older binary Φ(•, ○) reading; the four-dimension reading keeps the same weight result and promotes — to a first-class primitive)
 
 ### Lenz conservation forces pair equalization
 

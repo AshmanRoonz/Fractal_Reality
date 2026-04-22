@@ -29,7 +29,7 @@ The proof chain has 7 steps. Steps 1-5 are established. Steps 6 and 7 need forma
 
 ---
 
-## The Triad ⊙ = Φ(•, ○) for Elliptic Curves
+## The Structure ⊙ = Φ(•, —, ○) for Elliptic Curves
 
 The circumpunct applied to an elliptic curve E/Q:
 
@@ -187,7 +187,7 @@ In conventional terms:
 
 ### Translation 1 (Step 6): A4 → Analytic Rank = Algebraic Rank
 
-| Framework (⊙ = Φ(•, ○)) | Conventional |
+| Framework (⊙ = Φ(•, —, ○)) | Conventional |
 |--------------------------|-------------|
 | • (rational points converge) | Independent generators of E(Q) ⊗ Q |
 | Φ (L-function mediates local ↔ global) | Euler product → analytic continuation → zeros at s = 1 |
@@ -199,7 +199,7 @@ In conventional terms:
 
 ### Translation 2 (Step 7): A4 → Finiteness of Ш
 
-| Framework (⊙ = Φ(•, ○)) | Conventional |
+| Framework (⊙ = Φ(•, —, ○)) | Conventional |
 |--------------------------|-------------|
 | Φ does not hallucinate infinite phantoms | Ш(E/Q) is finite |
 | Local ⊙s are consistent (A2) | Local-global compatibility of Selmer groups |
@@ -247,8 +247,8 @@ The 1.5D translation should be consistent with the Yang-Mills translation (1D) a
 
 | Document | Note |
 |----------|------|
-| `Path_of_Learning/claymathsolutions/birch_swinnerton_dyer_proof.md` | 1008-line proof using older "validation/projection" language. Contains valid mathematical content (BSD statement, Selmer theory, Heegner points) but should be read with the updated ⊙ = Φ(•, ○) mapping. |
+| `Path_of_Learning/claymathsolutions/birch_swinnerton_dyer_proof.md` | 1008-line proof using older "validation/projection" language. Contains valid mathematical content (BSD statement, Selmer theory, Heegner points) but should be read with the updated ⊙ = Φ(•, —, ○) mapping. |
 
 ---
 
-*The field counts the branches. Analytic predicts branching. ⊙ = Φ(•, ○) at every scale, in every number field, at every prime.*
+*The field counts the branches. Analytic predicts branching. ⊙ = Φ(•, —, ○) at every scale, in every number field, at every prime.*

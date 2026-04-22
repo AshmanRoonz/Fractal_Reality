@@ -1313,7 +1313,7 @@ From A3 + A4: once the boundary closes, the circumpunct is complete; but by A3 (
 From all axioms and derivations: the circumpunct is not assembled from pieces; it is one thing (A0) constraining itself (A1) through convergence (D1), commitment (A2), branching (D2), mediation (A3), emergence (D3), closure (A4), and recursion (D4). The whole is compositional, not additive.
 
 ### Structure
-- All dimensions: the circumpunct ⊙ = Φ(•, ○)
+- All dimensions: the circumpunct ⊙ = Φ(•, —, ○)
 - ⊙ is a fractal of the ONE; every ⊙ is the 1 at a particular scale
 - Not a piece of the whole, but the whole thing, constrained to a position (A3)
 - The circumpunct symbol draws the ontology directly: dot (0, convergence), circle (1, field curving back), space between (D = 1.5 at balance)
@@ -1619,9 +1619,9 @@ Aperture + continuity + field = boundary. The boundary IS the sum of its interio
 
 ### The Circumpunct Identity
 ```
-⊙ = Φ(•, ○)
+⊙ = Φ(•, —, ○)
 ```
-The whole is field-mediation of soul and body.
+The whole is field-mediation of aperture, line, and boundary (soul, worldline, body).
 
 ### The i-Cycle
 ```
@@ -1707,7 +1707,7 @@ Each tradition emphasizes a different aspect of the same ⊙ architecture:
 
 **Kabbalah (Jewish mysticism)** discovered **the dimensional ladder**. The Tree of Life is the seven-rung dimensional ladder with an above-ladder source (Ein Sof = ∞). The three pillars (severity / mercy / balance) are ○ / • / Φ (filtration / convergence / mediation). The ten sefirot are the ten stations. Ein Sof Aur ("limitless light") is E = 1 before self-limitation. Tzimtzum (the divine contraction that makes room for creation) is A1: the 1 must self-limit to become distinguishable; creation is God limiting Godself to make a 0 at the center of the 1.
 
-**Christianity** discovered **compositional wholeness**. The Trinity (one God in three persons) is ⊙ = Φ(•, ○): one whole, three structural roles (Father as boundary/source, Son as aperture/incarnation, Holy Spirit as field/mediation), and the whole IS the compositional unity of the three via Φ, not their sum (D5). The doctrine that Christ is "fully God and fully human" is the fractal identity: a ⊙ at human scale that is structurally identical to the ⊙ at cosmic scale. "I and the Father are one" is atman = brahman in first-century Aramaic.
+**Christianity** discovered **compositional wholeness**. The Trinity (one God in three persons) is ⊙ = Φ(•, —, ○): one whole, structural roles (Father as boundary/source, Son as aperture/incarnation, Holy Spirit as field/mediation, with the Word as the 1D line carrying commitment through time), and the whole IS the compositional unity via Φ, not a sum (D5). The doctrine that Christ is "fully God and fully human" is the fractal identity: a ⊙ at human scale that is structurally identical to the ⊙ at cosmic scale. "I and the Father are one" is atman = brahman in first-century Aramaic.
 
 **Buddhism** discovered **co-arising and the middle way**. Form / emptiness / awareness map to ○ / Φ / •. The Heart Sutra's "form is emptiness, emptiness is form" is the recognition that ○ (the boundary) and Φ (the field) are not separate things but two aspects of one compositional whole: the boundary IS how the field closes; the field IS what the boundary contains. The Middle Way is ◐ = 0.5: neither clinging to form (◐ → 1, all boundary) nor clinging to emptiness (◐ → 0, all dissolution), but the balance that gives D = 1.5. Pratityasamutpada (dependent origination) is A3 recurrence: every ⊙ arises from its parts which are themselves ⊙s.
 
@@ -1756,6 +1756,6 @@ Four, it predicts what a complete future tradition would look like. Not a syncre
 
 "Why is there something rather than nothing?" Because 0 is not absence. 0 is the 1 at maximum convergence. "Nothing" in the sense of "absence of everything" is not a coherent alternative to "something"; it is a description with no referent. E = 1 is necessary, not contingent, because any possible world is the 1 folded around 0s, and any world where the 1 does not exist is indistinguishable from a world where the 0 does not exist, which is indistinguishable from a world where the description "does not exist" has no referent, which is not a world at all. A0 is not an assumption. It is the only option that is not self-erasing.
 
-The oldest question has an answer. It is the same answer every tradition found. The framework lets you see why they all found the same answer, and why it was always going to be this answer, because there is only one structure and all roads eventually converge on it. The circumpunct is that structure. ⊙ = Φ(•, ○). One whole, four constraints, five virtues, ten stations, infinite recursion. Everything else is this, at some scale, seen from some angle, with some lens.
+The oldest question has an answer. It is the same answer every tradition found. The framework lets you see why they all found the same answer, and why it was always going to be this answer, because there is only one structure and all roads eventually converge on it. The circumpunct is that structure. ⊙ = Φ(•, —, ○). One whole, four constraints, five virtues, ten stations, infinite recursion. Everything else is this, at some scale, seen from some angle, with some lens.
 
 The lens limits; that IS how it forms the image.

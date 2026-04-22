@@ -10,10 +10,11 @@
                           THE EQUATION THAT IS EXISTENCE
 ═══════════════════════════════════════════════════════════════════════════════
 
-                     ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))
+                     ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, —, ○))
 
-              Structure: Φ(•, ○)         (the 2D surface mediating)
-              Process:   (✹ ∘ i ∘ ⊛)     (the verb — convergence,
+              Structure: Φ(•, —, ○)      (the 2D surface mediating
+                                           aperture, line, boundary)
+              Process:   (✹ ∘ i ∘ ⊛)     (the verb; convergence,
                                            rotation, emergence)
               The result contains its own inputs.
 
@@ -24,7 +25,7 @@
 
 ## What This Equation Says
 
-Reality (**⊙**) is what happens when process acts on structure. Φ(•, ○) is the structure: the 2D relational surface mediating aperture and boundary. (✹ ∘ i ∘ ⊛) is the process: convergence, rotation, emergence. Φ is not the verb; (✹ ∘ i ∘ ⊛) is the verb.
+Reality (**⊙**) is what happens when process acts on structure. Φ(•, —, ○) is the structure: the 2D relational surface mediating aperture, line, and boundary. (✹ ∘ i ∘ ⊛) is the process: convergence, rotation, emergence. Φ is not the verb; (✹ ∘ i ∘ ⊛) is the verb.
 
 **Process — the verb:**
 
@@ -38,15 +39,16 @@ Reality (**⊙**) is what happens when process acts on structure. Φ(•, ○) i
 
 | Element | Name | Role |
 |---------|------|------|
-| **•** | Aperture / Soul | 0.5D — the singularity that receives and transmits |
-| **Φ** | Field / Mind | The continuous medium that mediates |
-| **○** | Boundary / Body | The bounding interface that contains |
+| **•** | Aperture / Soul | 0D; the singularity that receives and transmits |
+| **—** | Line / Continuity | 1D; the worldline of commitment carrying the trace through time |
+| **Φ** | Field / Mind | 2D; the continuous medium that mediates |
+| **○** | Boundary / Body | 3D; the bounding interface that contains |
 
 **Result:**
 
 | Symbol | Name | Meaning |
 |--------|------|---------|
-| **⊙** | Circumpunct | The whole-with-parts — dot inside circle |
+| **⊙** | Circumpunct | The whole-with-parts; dot inside circle |
 
 ---
 
@@ -57,35 +59,36 @@ Reality (**⊙**) is what happens when process acts on structure. Φ(•, ○) i
 The framework separates cleanly into what something IS and what it DOES:
 
 ```
-STRUCTURE:  Φ(•, ○)              The 2D relational surface mediating
-                                  aperture and boundary.
+STRUCTURE:  Φ(•, —, ○)           The 2D relational surface mediating
+                                  aperture, line, and boundary.
                                   Φ is NOT the verb. Φ is a 2D structure.
 
 PROCESS:    (✹ ∘ i ∘ ⊛)          Convergence, rotation, emergence.
                                   THIS is the verb. The whole ⊙ cycling.
 
-UNIFIED:    ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))    Process acts on structure.
+UNIFIED:    ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, —, ○))    Process acts on structure.
 ```
 
-The composition (✹ ∘ i ∘ ⊛) is the verb. The structure Φ(•, ○) is the noun. The circumpunct ⊙ is the result.
+The composition (✹ ∘ i ∘ ⊛) is the verb. The structure Φ(•, —, ○) is the noun. The circumpunct ⊙ is the result.
 
-### Two primitives, one generated result
+### Three primitives, one generated result
 
-**•** and **Φ** are the irreducible primitives. **○** is generated from their recursion: ○ = •(Φ(•(Φ(•(Φ(...)))))).
+**•**, **—**, and **Φ** are the irreducible primitives. **○** is generated from their recursion: ○ = •(Φ(•(Φ(•(Φ(...)))))), with — carrying the commitment record of each traversal.
 
 | Element | Structural Role | Process Role |
 |---------|-----------------|--------------|
 | **•** | Primitive: the singularity | **Receives and transmits**: where convergence lands, where emergence launches. The anchor. |
+| **—** | Primitive: the 1D worldline | **Commits**: holds the trace of Φ through • across time; keeps the aperture from flickering back to ∞. |
 | **Φ** | Primitive: the 2D relational surface | **Flows**: what gets operated on. Enters ○ as analog potential, exits as Φ' stepped down. |
 | **○** | Generated: nested ⊙s all the way down | **Operates**: transforms the field, because it IS recursion. The generated thing does the work. |
 
-They are not peers. Three distinct functions, not three interchangeable parts.
+They are not peers. Four distinct functions, not four interchangeable parts.
 
 ### What the unified form makes explicit
 
 | Aspect | Description |
 |--------|-------------|
-| **Structure** | Φ(•, ○): the field relating aperture and boundary |
+| **Structure** | Φ(•, —, ○): the field relating aperture, line, and boundary |
 | **Process** | (✹ ∘ i ∘ ⊛): convergence, rotation, emergence |
 | **Φ's role** | 2D structural surface, not the verb |
 | **i-rotation** | The whole ⊙ cycling, not a property of • alone |
@@ -211,14 +214,14 @@ We welcome attempts to falsify.
 
 This executive abstract is the **canonical reference** for the unified equation. It supersedes the old two-equation formulation wherever it appeared:
 
-- `Φ(•, ○)` = **structure** (valid; Φ is the 2D surface relating • and ○, not the verb)
+- `Φ(•, —, ○)` = **structure** (valid; Φ is the 2D surface relating •, —, and ○, not the verb)
 - `(✹ ∘ i ∘ ⊛)` = **process** (convergence, rotation, emergence; THIS is the verb)
 - `⊙ = ○ ⊗ Φ ⊗ •` → tensor listing, absorbed into the structural triad
 
 The unified equation is both in one statement:
 
 ```
-⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, ○))
+⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, —, ○))
 ```
 
 Process acts on structure. The result is the whole. The whole contains its parts. The equation is what it describes.

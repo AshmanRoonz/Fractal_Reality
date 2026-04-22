@@ -10,7 +10,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 //       │
 //       ⊛ roots (convergence → inward → subjective → imaginary → infinite)
 //
-//  ⊙ = Φ(•, ○)  —  Parts are fractals of their wholes
+//  ⊙ = Φ(•, —, ○)  ; Parts are fractals of their wholes
 //  Conservation of Traversal: D_• + D_Φ = D_○ = 3
 //  Six Coupled ODEs  |  Bidirectional trunk flow
 //  Phase coherence T(Δφ) = cos²(Δφ/2)
