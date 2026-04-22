@@ -228,7 +228,7 @@ The only solved problem is the boundary (3D), the outermost rung.
 - [Etiology of Installation](https://fractalreality.ca/etiology_of_installation.html): how survival lies become structural corruption
 
 ### The Dimensional Ladder (Derived Constants)
-- [The Dimensional Ladder](https://fractalreality.ca/dimensional_ladder.html): master page
+- [The Dimensional Ladder](https://fractalreality.ca/ten_dimensions_expanded.html): master page
 - [0D: α (Fine-Structure Constant)](https://fractalreality.ca/alpha_derivation.html): the closed-form audit
 - [0.5D: c (Speed of Light)](https://fractalreality.ca/speed_of_light.html): the speed limit of convergence
 - [1D: ℏ (Planck Constant)](https://fractalreality.ca/planck_constant.html): the indivisible cycle
