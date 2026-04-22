@@ -1143,7 +1143,80 @@
         <option value="base">Base note → color</option>
         <option value="beat">Beat rate → color</option>
         <option value="sweep">Auto-sweep (rainbow)</option>
+        <option value="manual">Manual (pick color)</option>
       </select>
+    </div>
+
+    <div class="param" id="vbeatManualRow">
+      <div class="param-row"><span>Manual color</span><span class="param-val" id="vbeatHueVal">0°</span></div>
+      <div style="display:grid; grid-template-columns: 54px 1fr; gap:10px; align-items:center;">
+        <input type="color" id="vbeatPicker" value="#ff3030" style="width:54px; height:44px; padding:0; border:1px solid var(--panel-b); border-radius:8px; background:transparent; cursor:pointer;">
+        <input type="range" id="vbeatHue" min="0" max="359" value="0" step="1">
+      </div>
+      <div style="color: var(--muted); font-size:0.75rem; margin-top:6px;">
+        Drag the hue slider or tap the color square. Saturation and lightness are fixed to framework defaults; set "Color source" to Manual above to use this color for the flash.
+      </div>
+    </div>
+
+    <div class="param">
+      <div class="param-row"><span>Audio → Visual sync</span><span class="param-val" id="vbeatSyncVal">1 : 1 (match beat)</span></div>
+      <select id="vbeatSync">
+        <optgroup label="Direct ratios">
+          <option value="1:1">1 : 1 (match beat exactly)</option>
+          <option value="2:1">2 : 1 (double — 2 flashes per beat)</option>
+          <option value="4:1">4 : 1 (quadruple)</option>
+          <option value="8:1">8 : 1 (octuple)</option>
+          <option value="1:2">1 : 2 (half time)</option>
+          <option value="1:4">1 : 4 (quarter time)</option>
+          <option value="1:8">1 : 8 (eighth time)</option>
+        </optgroup>
+        <optgroup label="Polyrhythm">
+          <option value="3:2">3 : 2 (dotted)</option>
+          <option value="2:3">2 : 3 (triplet feel)</option>
+          <option value="5:4">5 : 4 (quintuplet)</option>
+          <option value="7:4">7 : 4 (septuplet)</option>
+        </optgroup>
+        <optgroup label="Framework ratios">
+          <option value="phi">φ : 1 (golden; ~1.618× beat)</option>
+          <option value="invphi">1 : φ (~0.618× beat)</option>
+          <option value="phisq">φ² : 1 (~2.618× beat)</option>
+        </optgroup>
+        <optgroup label="Coupled sources">
+          <option value="breath">Follow breath lead (bpm → Hz)</option>
+          <option value="base-div">Base frequency ÷ divisor</option>
+        </optgroup>
+        <optgroup label="Custom">
+          <option value="custom-hz">Custom Hz (free rate)</option>
+          <option value="custom-ratio">Custom ratio (visual : beat)</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="param" id="vbeatDivisorRow" style="display:none;">
+      <div class="param-row"><span>Base divisor</span><span class="param-val" id="vbeatDivisorVal">1000</span></div>
+      <input type="range" id="vbeatDivisor" min="10" max="10000" value="1000" step="10">
+      <div style="color: var(--muted); font-size:0.72rem; margin-top:4px;">Flash rate = base frequency ÷ divisor. At base = 432 Hz and divisor = 1000, flash = 0.432 Hz.</div>
+    </div>
+
+    <div class="param" id="vbeatCustomHzRow" style="display:none;">
+      <div class="param-row"><span>Custom Hz</span><span class="param-val" id="vbeatCustomHzVal">1.000 Hz</span></div>
+      <input type="range" id="vbeatCustomHz" min="0.05" max="40" value="1" step="0.01">
+    </div>
+
+    <div class="param" id="vbeatCustomRatioRow" style="display:none;">
+      <div class="param-row"><span>Custom ratio (visual : beat)</span><span class="param-val" id="vbeatCustomRatioVal">1.000</span></div>
+      <input type="range" id="vbeatCustomRatio" min="0.05" max="16" value="1" step="0.01">
+    </div>
+
+    <div class="param">
+      <div class="param-row"><span>Phase offset</span><span class="param-val" id="vbeatPhaseVal">0°</span></div>
+      <input type="range" id="vbeatPhase" min="0" max="360" value="0" step="1">
+      <div style="color: var(--muted); font-size:0.72rem; margin-top:4px;">Shift the flash relative to the audio beat (0° = aligned; 180° = off-beat / inverted).</div>
+    </div>
+
+    <div class="param">
+      <div class="param-row"><span>Effective flash rate</span><span class="param-val" id="vbeatEffective">1.618 Hz</span></div>
+      <div style="color: var(--muted); font-size:0.72rem;">Live computed from audio beat + sync ratio; also visible on the full-screen HUD.</div>
     </div>
 
     <button class="vbeat-launch" id="vbeatLaunch">▣ LAUNCH FULL-SCREEN</button>
@@ -2694,15 +2767,44 @@
     return `hsl(${hue.toFixed(1)}, ${sat}%, ${light}%)`;
   }
 
+  // Approximate hue → color name (same buckets as the ROYGBIV map)
+  function hueToName(h) {
+    h = ((h % 360) + 360) % 360;
+    const buckets = [
+      [15, 'Red'], [35, 'Red-Orange'], [55, 'Orange'], [75, 'Yellow'],
+      [105, 'Yellow-Green'], [150, 'Green'], [190, 'Teal'], [230, 'Blue'],
+      [260, 'Indigo'], [290, 'Violet'], [320, 'Magenta'], [360, 'Red']
+    ];
+    for (const [ceil, name] of buckets) if (h < ceil) return name;
+    return 'Red';
+  }
+
   // Update the inline swatch + labels on the page
   function updateVBeatSwatch() {
     const src = state.vbeat ? state.vbeat.src : 'base';
-    const hz = src === 'beat' ? state.params.beat : state.params.base;
-    const info = freqToColor(hz);
-    $('vbeatSwatch').style.setProperty('--swatch', hslCss(info.hue, info.sat, 55));
-    $('vbeatNote').textContent = info.note;
-    $('vbeatNoteName').textContent = info.note + '  (' + (src === 'beat' ? state.params.beat.toFixed(2) : Math.round(state.params.base)) + ' Hz)';
-    $('vbeatColorName').textContent = info.colorName;
+    let hue, sat = 90, note = '', colorName = '', rateLabel;
+    if (src === 'manual') {
+      hue = state.vbeat ? state.vbeat.manualHue : 0;
+      note = '◉';
+      colorName = hueToName(hue);
+      rateLabel = 'manual (' + Math.round(hue) + '°)';
+    } else if (src === 'sweep') {
+      hue = state.vbeat ? state.vbeat.sweepHue : 0;
+      note = '~';
+      colorName = 'Sweep';
+      rateLabel = 'rainbow';
+    } else {
+      const hz = src === 'beat' ? state.params.beat : state.params.base;
+      const info = freqToColor(hz);
+      hue = info.hue; sat = info.sat;
+      note = info.note;
+      colorName = info.colorName;
+      rateLabel = (src === 'beat' ? state.params.beat.toFixed(2) : Math.round(state.params.base)) + ' Hz';
+    }
+    $('vbeatSwatch').style.setProperty('--swatch', hslCss(hue, sat, 55));
+    $('vbeatNote').textContent = note;
+    $('vbeatNoteName').textContent = note + '  (' + rateLabel + ')';
+    $('vbeatColorName').textContent = colorName;
     $('vbeatRate').textContent = state.params.beat.toFixed(3) + ' Hz';
   }
 
@@ -2714,15 +2816,52 @@
     shape: 'pulse',
     intensity: 0.8,
     src: 'base',
-    sweepHue: 0
+    sweepHue: 0,
+    manualHue: 0,
+    manualSat: 90,
+    // Sync settings
+    sync: '1:1',
+    customHz: 1.0,
+    customRatio: 1.0,
+    phaseOffset: 0,       // degrees
+    baseDivisor: 1000
   };
+
+  // Compute the effective flash rate in Hz from current audio beat + sync selection.
+  function effectiveFlashRate() {
+    const beat = Math.max(0.001, state.params.beat);
+    const mode = state.vbeat.sync;
+    // Direct ratio string "n:m" means visual:audio = n/m
+    const ratioMatch = /^(\d+):(\d+)$/.exec(mode);
+    if (ratioMatch) {
+      const a = parseFloat(ratioMatch[1]), b = parseFloat(ratioMatch[2]);
+      return beat * (a / b);
+    }
+    switch (mode) {
+      case 'phi':    return beat * PHI;
+      case 'invphi': return beat / PHI;
+      case 'phisq':  return beat * PHI * PHI;
+      case 'breath': return (state.breath && state.breath.rate ? state.breath.rate : 6) / 60;
+      case 'base-div': return state.params.base / Math.max(1, state.vbeat.baseDivisor);
+      case 'custom-hz': return state.vbeat.customHz;
+      case 'custom-ratio': return beat * state.vbeat.customRatio;
+      default: return beat;
+    }
+  }
+
+  function updateEffectiveDisplay() {
+    const r = effectiveFlashRate();
+    const el = $('vbeatEffective');
+    if (el) el.textContent = r.toFixed(3) + ' Hz';
+  }
 
   function flashLoop(now) {
     if (!state.vbeat.active) return;
     if (!state.vbeat.t0) state.vbeat.t0 = now;
     const elapsed = (now - state.vbeat.t0) / 1000; // seconds
-    const beat = Math.max(0.05, state.params.beat); // clamp to avoid div-by-zero
-    const phase = (elapsed * beat) % 1;             // 0..1 per beat cycle
+    const rate = Math.max(0.01, effectiveFlashRate()); // Hz, sync-aware
+    const offsetPhase = ((state.vbeat.phaseOffset || 0) / 360);
+    const phase = ((elapsed * rate) + offsetPhase) % 1;  // 0..1 per flash cycle
 
     // Color source
     let hz;
@@ -2733,7 +2872,12 @@
     } else hz = state.params.base;
 
     let hue, sat = 90, note, colorName;
-    if (state.vbeat.src === 'sweep') {
+    if (state.vbeat.src === 'manual') {
+      hue = state.vbeat.manualHue;
+      sat = state.vbeat.manualSat;
+      note = '◉';
+      colorName = hueToName(hue);
+    } else if (state.vbeat.src === 'sweep') {
       hue = state.vbeat.sweepHue;
       note = '~';
       colorName = 'Sweep';
@@ -2813,7 +2957,7 @@
 
     // HUD
     $('flashHUDNote').textContent = note + ' · ' + colorName;
-    $('flashHUDRate').textContent = state.params.beat.toFixed(3) + ' Hz · ' + state.vbeat.shape;
+    $('flashHUDRate').textContent = rate.toFixed(3) + ' Hz · ' + state.vbeat.shape + ' · ' + state.vbeat.sync;
 
     state.vbeat.raf = requestAnimationFrame(flashLoop);
   }
@@ -2858,9 +3002,107 @@
   });
   $('vbeatSrc').addEventListener('change', (e) => {
     state.vbeat.src = e.target.value;
-    $('vbeatSrcVal').textContent = e.target.options[e.target.selectedIndex].text.split(' →')[0].toLowerCase();
+    $('vbeatSrcVal').textContent = e.target.options[e.target.selectedIndex].text.split(' →')[0].split(' (')[0].toLowerCase();
     updateVBeatSwatch();
   });
+
+  // ---- Manual color picker & hue slider ----
+  // HSL (hue only) → hex for syncing the picker when the hue slider moves.
+  function hslToHex(h, s, l) {
+    s /= 100; l /= 100;
+    const k = n => (n + h / 30) % 12;
+    const a = s * Math.min(l, 1 - l);
+    const f = n => {
+      const c = l - a * Math.max(-1, Math.min(Math.min(k(n) - 3, 9 - k(n)), 1));
+      return Math.round(c * 255).toString(16).padStart(2, '0');
+    };
+    return '#' + f(0) + f(8) + f(4);
+  }
+  // hex → { h, s, l } so the hue slider can follow when the picker changes.
+  function hexToHsl(hex) {
+    const m = hex.replace('#', '');
+    const r = parseInt(m.substr(0, 2), 16) / 255;
+    const g = parseInt(m.substr(2, 2), 16) / 255;
+    const b = parseInt(m.substr(4, 2), 16) / 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h = 0, s, l = (max + min) / 2;
+    if (max === min) { h = s = 0; }
+    else {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h *= 60;
+    }
+    return { h, s: s * 100, l: l * 100 };
+  }
+
+  $('vbeatHue').addEventListener('input', (e) => {
+    const h = parseInt(e.target.value, 10);
+    state.vbeat.manualHue = h;
+    $('vbeatHueVal').textContent = h + '°';
+    $('vbeatPicker').value = hslToHex(h, state.vbeat.manualSat, 55);
+    // Auto-switch the color source to manual so the user sees the change right away
+    if (state.vbeat.src !== 'manual') {
+      state.vbeat.src = 'manual';
+      $('vbeatSrc').value = 'manual';
+      $('vbeatSrcVal').textContent = 'manual';
+    }
+    updateVBeatSwatch();
+  });
+  $('vbeatPicker').addEventListener('input', (e) => {
+    const hsl = hexToHsl(e.target.value);
+    state.vbeat.manualHue = hsl.h;
+    state.vbeat.manualSat = Math.max(30, Math.min(100, hsl.s));   // floor saturation so very pale picks still read as color
+    $('vbeatHue').value = Math.round(hsl.h);
+    $('vbeatHueVal').textContent = Math.round(hsl.h) + '°';
+    if (state.vbeat.src !== 'manual') {
+      state.vbeat.src = 'manual';
+      $('vbeatSrc').value = 'manual';
+      $('vbeatSrcVal').textContent = 'manual';
+    }
+    updateVBeatSwatch();
+  });
+
+  // ---- Sync menu ----
+  function showSyncRows(mode) {
+    $('vbeatDivisorRow').style.display    = (mode === 'base-div')      ? '' : 'none';
+    $('vbeatCustomHzRow').style.display   = (mode === 'custom-hz')     ? '' : 'none';
+    $('vbeatCustomRatioRow').style.display = (mode === 'custom-ratio') ? '' : 'none';
+  }
+  $('vbeatSync').addEventListener('change', (e) => {
+    state.vbeat.sync = e.target.value;
+    const opt = e.target.options[e.target.selectedIndex];
+    $('vbeatSyncVal').textContent = opt.textContent;
+    showSyncRows(state.vbeat.sync);
+    state.vbeat.t0 = 0;  // reset phase so the ratio change starts clean
+    updateEffectiveDisplay();
+  });
+  $('vbeatDivisor').addEventListener('input', (e) => {
+    state.vbeat.baseDivisor = parseInt(e.target.value, 10);
+    $('vbeatDivisorVal').textContent = String(state.vbeat.baseDivisor);
+    updateEffectiveDisplay();
+  });
+  $('vbeatCustomHz').addEventListener('input', (e) => {
+    state.vbeat.customHz = parseFloat(e.target.value);
+    $('vbeatCustomHzVal').textContent = state.vbeat.customHz.toFixed(3) + ' Hz';
+    updateEffectiveDisplay();
+  });
+  $('vbeatCustomRatio').addEventListener('input', (e) => {
+    state.vbeat.customRatio = parseFloat(e.target.value);
+    $('vbeatCustomRatioVal').textContent = state.vbeat.customRatio.toFixed(3);
+    updateEffectiveDisplay();
+  });
+  $('vbeatPhase').addEventListener('input', (e) => {
+    state.vbeat.phaseOffset = parseInt(e.target.value, 10);
+    $('vbeatPhaseVal').textContent = state.vbeat.phaseOffset + '°';
+  });
+  // Keep the effective rate readout live as the audio beat / base change underneath
+  setInterval(updateEffectiveDisplay, 250);
+  updateEffectiveDisplay();
   $('vbeatLaunch').addEventListener('click', openFlash);
   $('flashOverlay').addEventListener('click', (e) => {
     // Click anywhere except the close button still closes (cursor is pointer)
