@@ -587,6 +587,61 @@
     gap: 8px;
   }
 
+  /* Breath lead section */
+  .breath-stage {
+    position: relative;
+    width: 100%;
+    height: clamp(160px, 28vw, 220px);
+    border-radius: 12px;
+    border: 1px solid var(--panel-b);
+    background: linear-gradient(180deg, #0a0a14 0%, #05050a 100%);
+    overflow: hidden;
+    margin: 10px 0;
+  }
+  .breath-stage canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .breath-phase {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 1.1rem;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    color: var(--gold);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+    pointer-events: none;
+  }
+  .breath-phase.inhale { color: #8fd3ff; }
+  .breath-phase.exhale { color: #ffb08f; }
+  .breath-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .breath-play {
+    min-width: 120px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: var(--gold);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 120ms;
+  }
+  .breath-play:hover, .breath-play:focus { background: var(--gold); color: #000; }
+  .breath-play.playing { background: var(--gold); color: #000; }
+
   /* Visual beat section */
   .vbeat-row {
     display: grid;
@@ -1027,6 +1082,27 @@
 
     <div class="info">
       <strong>Headphones recommended</strong> for binaural and φ-cascade modes (stereo separation matters). Drone, harmonic, chord, monaural, and noise modes play fine on any speaker. Start at low volume and raise slowly; if anything becomes uncomfortable, lower the beat rate, reverb, and volume.
+    </div>
+  </section>
+
+  <!-- BREATH LEAD (full-width) -->
+  <section class="panel col-span-2 col-span-3">
+    <h2>— Breath Lead</h2>
+    <div class="breath-stage">
+      <canvas id="breathCanvas"></canvas>
+      <div class="breath-phase" id="breathPhase">READY</div>
+    </div>
+
+    <div class="param">
+      <div class="param-row"><span>Breaths per minute</span><span class="param-val" id="breathRateVal">6.0 bpm</span></div>
+      <input type="range" id="breathRate" min="3" max="12" value="6" step="0.5">
+    </div>
+
+    <div class="breath-controls">
+      <button class="breath-play" id="breathPlay">▶ START</button>
+      <div style="color: var(--muted); font-size: 0.8rem; flex: 1;">
+        Follow the dot. Breathe <strong style="color:#8fd3ff;">IN</strong> as it rises, <strong style="color:#ffb08f;">OUT</strong> as it falls. The dot travels left to right per breath, then resets. Coherent breathing (about 5.5–6 bpm) aligns HRV with the φ-coherence peak; slower (3–4 bpm) is deeper practice.
+      </div>
     </div>
   </section>
 
@@ -2805,6 +2881,168 @@
   // Patch a lightweight tick: every 250ms, resync swatch + labels
   setInterval(updateVBeatSwatch, 250);
   updateVBeatSwatch();
+
+  // ============= BREATH LEAD (dot on a half sine; 3 - 12 bpm) =============
+  // One full traversal left-to-right = one breath (inhale on rise, exhale on fall).
+  // At breath end the dot snaps back to the left.
+
+  state.breath = {
+    playing: false,
+    raf: 0,
+    t0: 0,      // epoch ms of the current breath's start
+    rate: 6.0   // breaths per minute
+  };
+
+  const breathCanvas = $('breathCanvas');
+  const breathPhase = $('breathPhase');
+  const breathPlay = $('breathPlay');
+  const breathRate = $('breathRate');
+  const breathRateVal = $('breathRateVal');
+
+  function drawBreath(tNow) {
+    const c = breathCanvas;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const W = c.clientWidth;
+    const H = c.clientHeight;
+    if (c.width !== W * dpr || c.height !== H * dpr) {
+      c.width = W * dpr; c.height = H * dpr;
+    }
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+
+    // Layout: arch spans with margins
+    const padX = 26, padTop = 28, padBot = 24;
+    const x0 = padX, x1 = W - padX;
+    const yBase = H - padBot;
+    const yTop = padTop;
+    const archW = x1 - x0;
+    const archH = yBase - yTop;
+
+    // Draw the arch path (half sine from (x0, yBase) to (x1, yBase), peak at mid-top)
+    ctx.beginPath();
+    const steps = 64;
+    for (let i = 0; i <= steps; i++) {
+      const u = i / steps;                           // 0..1 along x
+      const px = x0 + u * archW;
+      const py = yBase - Math.sin(u * Math.PI) * archH;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.strokeStyle = 'rgba(255, 215, 0, 0.35)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Baseline (ground)
+    ctx.beginPath();
+    ctx.moveTo(x0 - 8, yBase);
+    ctx.lineTo(x1 + 8, yBase);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Compute breath phase u in [0, 1) where u is horizontal progress
+    let u = 0;
+    if (state.breath.playing) {
+      if (!state.breath.t0) state.breath.t0 = tNow;
+      const periodSec = 60 / state.breath.rate;   // seconds per breath
+      const elapsed = (tNow - state.breath.t0) / 1000;
+      u = (elapsed / periodSec) % 1;
+    } else {
+      // Dot rests at the start when paused
+      u = 0;
+    }
+
+    // Dot position
+    const dx = x0 + u * archW;
+    const dy = yBase - Math.sin(u * Math.PI) * archH;
+
+    // Trail (faint arch from start to current)
+    ctx.beginPath();
+    const trailSteps = Math.max(2, Math.floor(u * 64));
+    for (let i = 0; i <= trailSteps; i++) {
+      const tu = (i / 64);
+      const px = x0 + tu * archW;
+      const py = yBase - Math.sin(tu * Math.PI) * archH;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.strokeStyle = 'rgba(255, 215, 0, 0.75)';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Glow halo behind dot
+    const isInhale = u < 0.5;
+    const dotColor = isInhale ? '#8fd3ff' : '#ffb08f';
+    ctx.beginPath();
+    ctx.arc(dx, dy, 22, 0, Math.PI * 2);
+    const grad = ctx.createRadialGradient(dx, dy, 0, dx, dy, 22);
+    grad.addColorStop(0, dotColor + 'cc');
+    grad.addColorStop(1, dotColor + '00');
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // The dot itself
+    ctx.beginPath();
+    ctx.arc(dx, dy, 9, 0, Math.PI * 2);
+    ctx.fillStyle = dotColor;
+    ctx.shadowColor = dotColor;
+    ctx.shadowBlur = 16;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Tick markers for in/hold/out positions
+    [0, 0.5, 1].forEach(pos => {
+      const tx = x0 + pos * archW;
+      ctx.beginPath();
+      ctx.moveTo(tx, yBase);
+      ctx.lineTo(tx, yBase + 6);
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+
+    // Phase label
+    if (state.breath.playing) {
+      if (isInhale) {
+        breathPhase.textContent = 'INHALE';
+        breathPhase.className = 'breath-phase inhale';
+      } else {
+        breathPhase.textContent = 'EXHALE';
+        breathPhase.className = 'breath-phase exhale';
+      }
+    } else {
+      breathPhase.textContent = 'READY';
+      breathPhase.className = 'breath-phase';
+    }
+  }
+
+  function breathLoop(now) {
+    drawBreath(now);
+    state.breath.raf = requestAnimationFrame(breathLoop);
+  }
+
+  function startBreath() {
+    state.breath.playing = true;
+    state.breath.t0 = 0;
+    breathPlay.textContent = '■ STOP';
+    breathPlay.classList.add('playing');
+  }
+  function stopBreath() {
+    state.breath.playing = false;
+    breathPlay.textContent = '▶ START';
+    breathPlay.classList.remove('playing');
+  }
+  breathPlay.addEventListener('click', () => {
+    if (state.breath.playing) stopBreath(); else startBreath();
+  });
+  breathRate.addEventListener('input', (e) => {
+    const v = parseFloat(e.target.value);
+    state.breath.rate = v;
+    breathRateVal.textContent = v.toFixed(1) + ' bpm';
+    // Reset phase so the new rate starts cleanly (no mid-breath jump)
+    state.breath.t0 = 0;
+  });
+  // Initialize RAF loop so the canvas draws the static arch even while paused
+  state.breath.raf = requestAnimationFrame(breathLoop);
 
   // ============= CLICK-TO-EDIT SLIDER VALUES =============
   // Every range slider has a value readout with id = slider.id + 'Val'.
