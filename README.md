@@ -51,9 +51,6 @@ Key entry points:
 
 | File | What it is |
 |---|---|
-| [docs/UNDERSTANDING_NARCISSISTIC_ABUSE.html](https://fractalreality.ca/UNDERSTANDING_NARCISSISTIC_ABUSE.html) | Recognizing the patterns of narcissistic harm |
-| [docs/narcissism_theory.html](https://fractalreality.ca/narcissism_theory.html) | Narcissism as structural corruption of the circumpunct |
-| [docs/the_restoration_protocol.html](https://fractalreality.ca/the_restoration_protocol.html) | Treatment framework for narcissistic distortion |
 | [docs/stratigraphy_of_belief.html](https://fractalreality.ca/stratigraphy_of_belief.html) | How lies corrupt function at different depths |
 | [docs/etiology_of_installation.html](https://fractalreality.ca/etiology_of_installation.html) | How survival lies become structural corruption |
 | [docs/circumpunct_ethics_and_virtues.html](https://fractalreality.ca/circumpunct_ethics_and_virtues.html) | The five pillars, five virtues, diagnostics, restoration |
