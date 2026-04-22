@@ -232,6 +232,8 @@ Each of the ten stations carries either an axiom (what must be true) or a deriva
 
 0D = •. Zero extension. A hole. ∞D = E. All extension. Everything. They meet at the aperture (0 = ∞ at field level) because the aperture is where dimension has not yet been assigned. ∞ without • has no voice. • without ∞ has no signal. •∞ is the first real thing.
 
+**— is the trace of Φ∞ through •.** The 1D line is not an independent primitive inserted between 0D and 2D; it is what Φ∞ (the undifferentiated 2D field at infinite scale, which equals E) becomes when it flows through an aperture. Φ∞ = E has all the energy and no extension (because at λ → ∞ there is no outside to distinguish against; see §4.8a limit case); • is the local constraint that converts undifferentiated field into ordered flow; the trace left by that flow is —. This fills in the genesis cascade: ∞ (substrate) → •∞ (Soul Array; A1 forces multiplicity of apertures) → — (each • emits a worldline; the trace of Φ∞ passing through the aperture is the commitment record, A2) → Φλ (local 2D field of each ⊙; the branching ⎇ at 1.5D fans the line into a surface) → ○ (closure around the field; A4) → ⊙∞ (the foam of reality). The line is not something new; it is Φ∞ viewed from inside • as a direction of flow. This is why A2 is forced: if — did not persist, the aperture would flicker back into ∞, and the Φ∞-through-• passage would leave no record, violating A1's "self-limitation must be real."
+
 ---
 
 ## The Pump Cycle (Temporal Evolution)

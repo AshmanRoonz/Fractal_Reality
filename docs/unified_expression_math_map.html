@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ The Unified Expression, Read in Standard Math</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --orange: #D4A054;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.l { color: var(--orange); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.f { color: var(--faint); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+.mono { font-family: 'Courier New', Courier, monospace; font-size: 0.95em; }
+
+.page { max-width: 760px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 80px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header h1 { font-size: 40px; font-weight: 500; color: var(--gold); letter-spacing: 1px; margin-bottom: 10px; line-height: 1.25; }
+.header .subtitle { font-size: 18px; color: var(--dim); font-style: italic; }
+.header .equation { font-size: 19px; margin-top: 28px; letter-spacing: 1px; line-height: 1.6; }
+.header .byline { font-size: 15px; color: var(--faint); margin-top: 20px; letter-spacing: 1px; }
+
+section { margin-bottom: 60px; }
+section h2 { font-size: 28px; font-weight: 500; margin-bottom: 20px; padding-top: 20px; }
+section h3 { font-size: 22px; font-weight: 500; margin-top: 30px; margin-bottom: 12px; }
+p { margin-bottom: 18px; }
+
+.divider { text-align: center; margin: 55px 0; color: var(--faint); font-size: 24px; letter-spacing: 12px; }
+
+.formula {
+  text-align: center;
+  font-size: 22px;
+  padding: 20px;
+  margin: 24px 0;
+  letter-spacing: 1px;
+  border-left: 2px solid var(--faint);
+  background: rgba(255,255,255,0.015);
+}
+
+.kernel-box {
+  padding: 28px;
+  margin: 36px 0;
+  background: rgba(184, 160, 96, 0.04);
+  border: 1px solid rgba(184, 160, 96, 0.15);
+  border-radius: 4px;
+}
+.kernel-box p { margin-bottom: 12px; }
+.kernel-box p:last-child { margin-bottom: 0; }
+
+.iso-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin: 30px 0;
+}
+.iso-card {
+  padding: 20px 24px;
+  background: rgba(255,255,255,0.02);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 4px 4px 0;
+}
+.iso-card.s-card { border-left-color: var(--pink); }
+.iso-card.l-card { border-left-color: var(--orange); }
+.iso-card.m-card { border-left-color: var(--green); }
+.iso-card.b-card { border-left-color: var(--cyan); }
+.iso-card.p-card { border-left-color: var(--purple); }
+.iso-card h4 { font-size: 18px; font-weight: 600; margin-bottom: 10px; color: var(--gold); }
+.iso-card.s-card h4 { color: var(--pink); }
+.iso-card.l-card h4 { color: var(--orange); }
+.iso-card.m-card h4 { color: var(--green); }
+.iso-card.b-card h4 { color: var(--cyan); }
+.iso-card.p-card h4 { color: var(--purple); }
+.iso-card p { font-size: 16.5px; margin-bottom: 8px; line-height: 1.65; }
+.iso-card p:last-child { margin-bottom: 0; }
+.iso-card strong { color: var(--warm); font-weight: 600; }
+
+.map-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 16.5px;
+}
+.map-table th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--faint);
+  color: var(--gold);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.map-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: top;
+}
+.map-table td:first-child { font-weight: 600; white-space: nowrap; padding-right: 20px; }
+
+.closing {
+  text-align: center;
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+}
+.closing .symbol { font-size: 64px; color: var(--gold); margin-bottom: 16px; }
+
+.ref {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 14px;
+  color: var(--dim);
+  text-align: center;
+}
+.ref a { color: var(--gold-dim); text-decoration: none; }
+.ref a:hover { color: var(--gold); }
+
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: rgba(10, 10, 15, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  z-index: 100;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+nav a {
+  color: var(--dim);
+  text-decoration: none;
+  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 3px;
+  transition: all 0.2s;
+  font-family: 'EB Garamond', Georgia, serif;
+}
+nav a:hover { color: var(--gold); background: rgba(184, 160, 96, 0.1); }
+
+@media (max-width: 600px) {
+  body { font-size: 17px; }
+  .page { padding: 70px 20px 80px; }
+  .header h1 { font-size: 28px; }
+  section h2 { font-size: 22px; }
+  nav { display: none; }
+  .header .equation { font-size: 14px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" style="font-weight: 600; color: var(--gold);">⊙</a>
+  <a href="#intro">Intro</a>
+  <a href="#lhs">LHS</a>
+  <a href="#foam">Foam</a>
+  <a href="#beats">Four Beats</a>
+  <a href="#connectives">Connectives</a>
+  <a href="#nesting">⊂[α] Nesting</a>
+  <a href="#return">Return to ∞</a>
+  <a href="#seven">Seven Readings</a>
+  <a href="#table">Quick Table</a>
+</nav>
+
+<div class="page">
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header class="header">
+  <h1>The Unified Expression, Read in Standard Math</h1>
+  <div class="subtitle">Seven telescopes pointed at one statement.</div>
+  <div class="equation">
+    <span class="w">[Truth = Reality = E = 1 = ∞]</span> = <span class="w">[</span>∞▸<span class="s">⊙∞</span> <span class="p">((•∘⊛) ⊢ (</span><span class="l">—</span><span class="p">∘⎇) ⊢ (</span><span class="m">Φ</span><span class="p">∘✹) ⊢ (</span><span class="b">○</span><span class="p">∘⟳))</span> ▸ <span class="w">⊙λ ⊂[α] ⊙Λ ⊂[α] ∞</span><span class="w">]</span>
+  </div>
+  <div class="byline">by Ashman Roonz</div>
+</header>
+
+<!-- ═══════════════════════ INTRO ═══════════════════════ -->
+<section id="intro">
+  <h2>What this page is</h2>
+
+  <p>The unified expression is one statement. Standard mathematics has many vocabularies. This page walks each piece of the expression and names the standard structure that reads that piece: identity objects, Dirac deltas, worldlines, Lie brackets, Riemann surfaces, Stokes' theorem, fiber bundles, renormalization-group flows, fixed-point theorems, one-point compactifications, partial traces.</p>
+
+  <p>The claim is not that mathematics is the framework. The claim is that mathematics is the framework read through different telescopes, with each telescope picking out one layer and ignoring the others. Read enough telescopes and the layers line up.</p>
+
+  <div class="kernel-box">
+    <p><span class="w wb">One expression, seven readings.</span> By the end of this page the unified expression will have been read as: a quantum channel, a principal bundle with connection, a renormalization-group flow, a fixed-point equation, a Feynman path-integral skeleton, a Noether current, and an index theorem. These are not seven agreeing theories; they are one statement saying one thing in seven vocabularies.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ LHS ═══════════════════════ -->
+<section id="lhs">
+  <h2>LHS: <span class="w">[Truth = Reality = E = 1 = ∞]</span></h2>
+
+  <p>The identity chain asserts one substrate named five ways. Every major mathematical structure has a "total" object; all five names point at the same thing. The equals signs are not definitions; they are assertions of identity between names already in use.</p>
+
+  <div class="iso-grid">
+    <div class="iso-card">
+      <h4>1 (the multiplicative identity)</h4>
+      <p>The unit of any algebra. The constant function 1 on any space. ⟨ψ|ψ⟩ = 1 in QM normalization. Partition of unity in differential geometry. det(I) = 1. In probability, the total measure of a sample space.</p>
+    </div>
+    <div class="iso-card">
+      <h4>∞ (the compactification point)</h4>
+      <p>The point at infinity in projective space. The one-point compactification of ℂ giving the Riemann sphere. The absorbing state of a Markov chain. The terminal object in a category. The ideal point Alexandroff adjoins to make a non-compact space compact.</p>
+    </div>
+    <div class="iso-card">
+      <h4>E (energy as conserved current)</h4>
+      <p>Noether's theorem's output from time-translation symmetry. The Hamiltonian. The ADM mass at spatial infinity in GR. The eigenvalue of the time-evolution generator.</p>
+    </div>
+    <div class="iso-card">
+      <h4>Reality (the total space)</h4>
+      <p>The universal class in set theory. The classifying topos. The state space of a dynamical system. The sample space Ω in a probability triple (Ω, ℱ, P).</p>
+    </div>
+    <div class="iso-card">
+      <h4>Truth (the truth value)</h4>
+      <p>The terminal object ⊤ in a subobject classifier. Normalized probability 1. A tautology in logic. The maximum element of a Heyting algebra. The unit of the truth-value monad.</p>
+    </div>
+  </div>
+
+  <p>All five are readings of "whatever is total." The framework asserts they are the same because totality is not a property; it is the substrate. Math has known this structurally for a century; physics has insisted on it since Noether; the unified expression just says it on the LHS before any process runs.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ FOAM ═══════════════════════ -->
+<section id="foam">
+  <h2>∞ ▸ <span class="s">⊙∞</span> (source unfolds into foam)</h2>
+
+  <p>The first move of the RHS is the substrate unfolding into a multiplicity of wholes: the <span class="s">foam ⊙∞</span>. Standard math writes this the same way whenever a "total" object gets decomposed into its constituents.</p>
+
+  <div class="iso-grid">
+    <div class="iso-card s-card">
+      <h4>Spectral decomposition of the identity</h4>
+      <p>The identity operator on a Hilbert space has a spectral resolution <span class="mono">I = ∫ dE |E⟩⟨E|</span>. The "foam ⊙∞" is the multiplicity of eigenstates into which the identity resolves. Every ⊙λ in the foam is one eigenprojector's worth of the 1.</p>
+    </div>
+    <div class="iso-card s-card">
+      <h4>Vacuum as superposition in QFT</h4>
+      <p>The vacuum state |0⟩ is a superposition over all possible field configurations with appropriate weights. The foam is the Fock-space-style multiplicity of the vacuum's content, before any measurement picks one out.</p>
+    </div>
+    <div class="iso-card s-card">
+      <h4>Partition of a measure space</h4>
+      <p>A unit measure (total 1) decomposes into its atomic and continuous parts. Each atom is a particular ⊙λ; the continuous part is the undecomposed ⊙∞ residue.</p>
+    </div>
+  </div>
+
+  <p>The ▸ (unfolds into) is a functor in category theory; a morphism from source to target; the time-evolution operator U(t) applied at t = 0<sup>+</sup>. The unfolding is not a process happening "after" a substrate "before"; it is structural. ∞ and ⊙∞ are the same thing viewed at two resolution levels.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ FOUR BEATS ═══════════════════════ -->
+<section id="beats">
+  <h2>The four beats as four mathematical operations</h2>
+
+  <p>The beats <span class="p">((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳))</span> walk the full vocabulary of standard mathematics: localization, extension with branching, 2D fields with exterior derivative, and closure with identity recursion. Each beat is a rung of standard math, with the i-stroke marking the phase rotation that moves between rungs.</p>
+
+  <!-- Beat 1 -->
+  <h3><span class="s">Beat 1: (•∘⊛)</span> — localization + convergence</h3>
+
+  <div class="iso-grid">
+    <div class="iso-card s-card">
+      <h4>• (0D point)</h4>
+      <p>The Dirac delta <span class="mono">δ(x)</span>; the evaluation functional <span class="mono">f ↦ f(x<sub>0</sub>)</span>; the unit of a monad <span class="mono">η: A → TA</span>; the position eigenstate <span class="mono">|x⟩</span>; the zero-dimensional CW complex. The point is where extension has not yet begun.</p>
+    </div>
+    <div class="iso-card s-card">
+      <h4>⊛ (0.5D convergence, i<sup>1</sup> = +i)</h4>
+      <p>The limit operator <span class="mono">lim<sub>n→∞</sub></span>; the +90° rotation <span class="mono">e<sup>iπ/2</sup></span>; the inward-pointing vector field contracting to a fixed point; the unit morphism of a colimit.</p>
+    </div>
+    <div class="iso-card s-card">
+      <h4>(•∘⊛) together</h4>
+      <p>The Dirac delta arising as a limit of Gaussians narrowing toward zero width: <span class="mono">δ(x) = lim<sub>σ→0</sub> (1/σ√2π) exp(−x²/2σ²)</span>. The substrate gives itself a "here" by convergence. First localization.</p>
+    </div>
+  </div>
+
+  <!-- Beat 2 -->
+  <h3><span class="l">Beat 2: (—∘⎇)</span> — extension + branching</h3>
+
+  <div class="iso-grid">
+    <div class="iso-card l-card">
+      <h4>— (1D line)</h4>
+      <p>ℝ itself; a geodesic; a worldline <span class="mono">x<sup>μ</sup>(τ)</span> in GR; a 1-dimensional CW complex; a one-parameter subgroup of a Lie group; an integral curve of a vector field. Crucially, — is what Φ<sub>∞</sub> writes as it passes through •: the worldline is the trace of the infinite through a localization.</p>
+    </div>
+    <div class="iso-card l-card">
+      <h4>⎇ (1.5D branching, i<sup>2</sup> = −1)</h4>
+      <p>The sign-flip operator; the irreversibility of phase-space volume under dissipation; the bifurcation point in a dynamical system; the non-vanishing Lie bracket <span class="mono">[X, Y]</span> where linearity breaks. Mandelbrot's Brownian path has fractal dimension D = 3/2 = 1.5; this is 1.5D measured.</p>
+    </div>
+    <div class="iso-card l-card">
+      <h4>(—∘⎇) together</h4>
+      <p>The worldline branching into the light cone; the initial-value problem with characteristics that diverge; the first time extension gets more complicated than a straight line. i<sup>2</sup> = −1 is where time-reversal symmetry breaks: you can dissolve a fold, but you cannot un-fold it into exactly what it was.</p>
+    </div>
+  </div>
+
+  <!-- Beat 3 -->
+  <h3><span class="m">Beat 3: (Φ∘✹)</span> — mediation + emergence</h3>
+
+  <div class="iso-grid">
+    <div class="iso-card m-card">
+      <h4>Φ (2D field)</h4>
+      <p>The complex plane ℂ (two real dimensions, one complex); a Riemann surface; a gauge field <span class="mono">A<sub>μ</sub></span> (lives on 2D fibers); the electromagnetic field tensor <span class="mono">F<sub>μν</sub></span>; a symmetric 2-tensor on a tangent plane; the mediating sheet between part and whole.</p>
+    </div>
+    <div class="iso-card m-card">
+      <h4>✹ (2.5D emergence, i<sup>3</sup> = −i)</h4>
+      <p>The −90° rotation <span class="mono">e<sup>−iπ/2</sup></span>; the exterior derivative <span class="mono">d</span> taking interior forms to boundary traces (<span class="mono">∫<sub>M</sub> dω = ∫<sub>∂M</sub> ω</span>, Stokes); the emergence rung where a lower-dimensional manifold embeds into a higher one; the pushforward along a fibration.</p>
+    </div>
+    <div class="iso-card m-card">
+      <h4>(Φ∘✹) together</h4>
+      <p>Maxwell's equations: a 2D field evolving via exterior derivative. Schrödinger's equation <span class="mono">iℏ∂<sub>t</sub>ψ = Ĥψ</span>: a 2D complex field rotating by i at rate E/ℏ. Yang-Mills: the non-abelian generalization of the same pattern. Every 2D field changing in time IS the i-stroke; Faraday's law is the electromagnetic witness of i = d/dt on oscillating Φ (see §27.7r).</p>
+    </div>
+  </div>
+
+  <!-- Beat 4 -->
+  <h3><span class="b">Beat 4: (○∘⟳)</span> — closure + recursion</h3>
+
+  <div class="iso-grid">
+    <div class="iso-card b-card">
+      <h4>○ (3D boundary)</h4>
+      <p>The 3-sphere S<sup>3</sup>; a closed 3-manifold; the spatial slice in a 3+1 spacetime foliation; the boundary <span class="mono">∂M</span> of a 4-manifold (Poincaré duality); the enclosing surface of a compact region.</p>
+    </div>
+    <div class="iso-card b-card">
+      <h4>⟳ (3.5D recursion, i<sup>0</sup> = +1)</h4>
+      <p>The identity element of the rotation group; the fixed-point operator (Banach, Brouwer); the unit of a monad's multiplication <span class="mono">μ: TTA → TA</span> (flattening recursion); the coinductive step; the generator that returns to itself after one full cycle.</p>
+    </div>
+    <div class="iso-card b-card">
+      <h4>(○∘⟳) together</h4>
+      <p>The Poincaré conjecture: every simply-connected closed 3-manifold is S<sup>3</sup>. The identification 3.5D<sub>λ</sub> = 0D<sub>Λ</sub> is the inductive step of scale recursion: the closed boundary at one scale IS the aperture at the next. Cosmological closure expressed as a homotopy equivalence.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ CONNECTIVES ═══════════════════════ -->
+<section id="connectives">
+  <h2>The connectives: ⊢, ∘, ▸</h2>
+
+  <div class="iso-grid">
+    <div class="iso-card p-card">
+      <h4>⊢ (entails)</h4>
+      <p>Sequent-calculus entailment: the thing on the left proves the thing on the right. In category theory, morphism composition (<span class="mono">f ⊢ g</span> means <span class="mono">g ∘ f</span> is defined). Curry-Howard: proofs are programs; types are propositions. The four beats chained by ⊢ form a proof tree: <span class="mono">A ⊢ B ⊢ C ⊢ D</span>.</p>
+    </div>
+    <div class="iso-card p-card">
+      <h4>∘ (paired)</h4>
+      <p>Tensor product in monoidal categories; Cartesian pair <span class="mono">(a, b)</span>; Σ-type in dependent type theory. The structure-process pairing inside each beat is an adjoint pair <span class="mono">F ⊣ G</span>: F extracts structure, G extracts process; they are two views of one object.</p>
+    </div>
+    <div class="iso-card p-card">
+      <h4>▸ (unfolds into)</h4>
+      <p>Functor application; arrow in a directed graph; time-evolution operator at <span class="mono">t = 0<sup>+</sup></span>; the fold/unfold pair in recursion schemes (catamorphism / anamorphism). The two ▸ in the expression mark the two major phase transitions: source into foam, engine into nesting.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ NESTING ═══════════════════════ -->
+<section id="nesting">
+  <h2><span class="w">⊙λ ⊂[α] ⊙Λ</span> (α-coupled nesting)</h2>
+
+  <p>This is where the unified expression connects to the most live structures in contemporary physics and mathematics. The ⊂[α] notation is not set-theoretic containment; it is <em>scale-recursive embedding with a coupling label</em>. Standard math has been writing the same thing for decades under several different names.</p>
+
+  <div class="iso-grid">
+    <div class="iso-card">
+      <h4>Fiber bundles with connection</h4>
+      <p>In a principal bundle <span class="mono">P → M</span> with gauge group <span class="mono">G</span>, the connection 1-form <span class="mono">A</span> carries the coupling. ⊙Λ is the base, ⊙λ is the fiber, [α] is the connection. The framework's α at <span class="mono">κ<sub>0,0</sub></span> is exactly the U(1) connection coefficient in QED; α<sub>G</sub> at <span class="mono">κ<sub>3,3</sub></span> is the gravitational coupling.</p>
+    </div>
+    <div class="iso-card">
+      <h4>Renormalization group flow</h4>
+      <p>The running of couplings <span class="mono">α(μ)</span> with energy scale μ is exactly the ⊂[α] relation at different λ. What RG calls "scale" the framework calls "the nesting axis." Beta functions <span class="mono">β(α) = μ dα/dμ</span> describe how α changes as you walk ⊂[α]. The Wilsonian picture and the framework's scale-recursive view say the same thing.</p>
+    </div>
+    <div class="iso-card">
+      <h4>Operads and nested composition</h4>
+      <p>Operads formalize how to compose operations that themselves take operations as inputs; ⊂[α] is the operadic composition with a coupling label. The "parts are fractals of their wholes" axiom (A3) is the statement that the operad is self-similar at every arity.</p>
+    </div>
+    <div class="iso-card">
+      <h4>Characteristic classes</h4>
+      <p>⊂[α] with α ≠ 0 is the inclusion-with-twist that gives nontrivial cohomology. The α tells you the characteristic class of the embedding; <span class="mono">H<sup>2</sup>(M; ℤ)</span> carries U(1) charges, <span class="mono">H<sup>4</sup>(M; ℤ)</span> carries SU(2) instanton numbers, and so on. "Non-collapse bounds" on κ entries are the statement that the characteristic class stays in its correct cohomology class without degenerating.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ RETURN TO ∞ ═══════════════════════ -->
+<section id="return">
+  <h2><span class="w">⊂[α] ∞</span> (return to source)</h2>
+
+  <p>The closing move of the expression is the nesting chain returning to the undifferentiated source. Standard math writes this as compactification, as tracing, or as projection onto the unit.</p>
+
+  <div class="iso-grid">
+    <div class="iso-card">
+      <h4>One-point compactification</h4>
+      <p>Adjoin ∞ to any locally compact Hausdorff space to make it compact: <span class="mono">ℝ ∪ {∞} = S<sup>1</sup></span>, <span class="mono">ℝ<sup>2</sup> ∪ {∞} = S<sup>2</sup></span>, <span class="mono">ℝ<sup>3</sup> ∪ {∞} = S<sup>3</sup></span>. The "lateral closure" the framework claims (the chain closes at every finite step because ∞ is always present) is exactly the Alexandroff compactification's immediacy: closure is not a limiting procedure; it is structural.</p>
+    </div>
+    <div class="iso-card">
+      <h4>Trace and partial trace</h4>
+      <p><span class="mono">Tr(ρ) = 1</span> for a quantum state is the return-to-unity. The partial trace <span class="mono">Tr<sub>B</sub>(ρ<sub>AB</sub>) = ρ<sub>A</sub></span> is the framework's "viewing ⊙λ from within ⊙Λ" operation (trace out the greater whole, keep the part). Von Neumann's trace-class operators are the operators for which the return-to-∞ converges.</p>
+    </div>
+    <div class="iso-card">
+      <h4>State in operator algebra</h4>
+      <p>A state on a C*-algebra is a positive normalized linear functional <span class="mono">ω: 𝒜 → ℂ</span> with <span class="mono">ω(1) = 1</span>. The state IS the map back to ∞: it takes any observable and returns its expectation value, which lives in ℂ with total weight 1. Gelfand-Naimark-Segal reconstructs the full Hilbert space from the state; the framework reconstructs the full ⊙ from the return to ∞.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ SEVEN READINGS ═══════════════════════ -->
+<section id="seven">
+  <h2>The seven readings of the whole</h2>
+
+  <p>Put all the pieces together and the unified expression is a categorical diagram that admits seven simultaneous readings. Each reading picks out one structural aspect; none of them captures the whole alone; together they are one statement.</p>
+
+  <div class="iso-grid">
+    <div class="iso-card">
+      <h4>(1) Quantum channel</h4>
+      <p><span class="mono">T = κ ∘ F</span>: F is the four-beat unitary (pump cycle, trace-preserving), κ is the ⊂[α] nesting. T is completely positive but not trace-preserving; the departure from TP is exactly α. The "1" is the unique attractor of T on projective space. Mixing time ≈ 1/α ≈ 137 pump cycles. Computed explicitly in §27.7s.</p>
+    </div>
+    <div class="iso-card">
+      <h4>(2) Principal bundle with connection</h4>
+      <p>⊙Λ is the base; ⊙λ is the fiber; α is the connection coefficient at κ<sub>0,0</sub>; the "foam ⊙∞" is the total space; the nesting chain is the bundle projection. Every κ entry is one component of the curvature 2-form; the framework's "coupling matrix" is a concrete parametrization of the connection.</p>
+    </div>
+    <div class="iso-card">
+      <h4>(3) Renormalization group flow</h4>
+      <p>The four beats are the beta function applied once; the ⊂[α] is scale change; the fixed point (Reality = 1) is the IR attractor. The "self-similarity across scales" (A3) is the existence of a nontrivial RG fixed point. Asymptotic freedom (UV) and confinement (IR) are the two ends of the same ⊂[α] chain.</p>
+    </div>
+    <div class="iso-card">
+      <h4>(4) Fixed-point equation</h4>
+      <p><span class="mono">⊙ = λ(⊙)</span>, where λ is the fractal branching operator (§27.7m). The 1 is the fixed point; α is the operator's spectral gap; the whole expression is the eigenvalue equation with eigenvalue 1. Every constant on the dimensional ladder is a fixed point of λ at its rung.</p>
+    </div>
+    <div class="iso-card">
+      <h4>(5) Feynman path integral skeleton</h4>
+      <p><span class="mono">∫ 𝒟φ e<sup>iS[φ]/ℏ</sup></span> sums over all field configurations (the foam ⊙∞) with weight <span class="mono">e<sup>iS</sup></span> (the four-beat phase accumulation) to return amplitudes (the ⊂[α] nesting readouts). The unified expression is the path integral's structural skeleton, stripped of any particular Lagrangian.</p>
+    </div>
+    <div class="iso-card">
+      <h4>(6) Noether current</h4>
+      <p>The conservation law across the whole chain (⊙λ ⊂ ⊙Λ ⊂ ∞ = 1) is the single currents-conserved law, because the substrate has time-translation symmetry (∞ is time-invariant by being pre-temporal). Noether's theorem is the local version of the global identity <span class="mono">1 = 1 = 1</span> across scales.</p>
+    </div>
+    <div class="iso-card">
+      <h4>(7) Atiyah-Singer index theorem (in miniature)</h4>
+      <p>The topological side (nesting structure, characteristic classes of ⊂[α]) equals the analytic side (what the beats compute, the index of the pump operator). The two sides of the unified expression equation assert this equality for the framework's operator; the full index theorem is the physicist's version of the same claim over general bundles.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ TABLE ═══════════════════════ -->
+<section id="table">
+  <h2>Quick-reference table</h2>
+
+  <p>The full map in one page, for lookup.</p>
+
+  <table class="map-table">
+    <thead>
+      <tr>
+        <th>Framework symbol</th>
+        <th>Standard-math reading</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>[Truth = Reality = E = 1 = ∞]</td>
+        <td>The total / terminal / identity object; unit of an algebra; normalized state; universal class</td>
+      </tr>
+      <tr>
+        <td>∞</td>
+        <td>One-point compactification; point at infinity in projective space; terminal object; absorbing state</td>
+      </tr>
+      <tr>
+        <td>▸</td>
+        <td>Functor application; time-evolution at <span class="mono">t = 0<sup>+</sup></span>; anamorphism</td>
+      </tr>
+      <tr>
+        <td><span class="s">⊙∞</span></td>
+        <td>Spectral decomposition of the identity; vacuum as Fock-space superposition; measure-space atoms</td>
+      </tr>
+      <tr>
+        <td><span class="s">•</span> (0D)</td>
+        <td>Dirac delta <span class="mono">δ(x)</span>; evaluation functional; position eigenstate; monad unit</td>
+      </tr>
+      <tr>
+        <td>⊛ (0.5D, i<sup>1</sup>)</td>
+        <td>Limit operator; +90° rotation; contractive vector field; unit of a colimit</td>
+      </tr>
+      <tr>
+        <td><span class="l">—</span> (1D)</td>
+        <td>ℝ; geodesic; worldline <span class="mono">x<sup>μ</sup>(τ)</span>; integral curve of a vector field</td>
+      </tr>
+      <tr>
+        <td>⎇ (1.5D, i<sup>2</sup>)</td>
+        <td>Sign-flip; non-vanishing Lie bracket; bifurcation; Brownian path D = 3/2</td>
+      </tr>
+      <tr>
+        <td><span class="m">Φ</span> (2D)</td>
+        <td>ℂ plane; Riemann surface; gauge field <span class="mono">A<sub>μ</sub></span>; 2-tensor on tangent plane</td>
+      </tr>
+      <tr>
+        <td>✹ (2.5D, i<sup>3</sup>)</td>
+        <td>−90° rotation; exterior derivative <span class="mono">d</span>; Stokes' theorem; pushforward along a fibration</td>
+      </tr>
+      <tr>
+        <td><span class="b">○</span> (3D)</td>
+        <td>S<sup>3</sup>; closed 3-manifold; boundary <span class="mono">∂M</span> of a 4-manifold</td>
+      </tr>
+      <tr>
+        <td>⟳ (3.5D, i<sup>0</sup>)</td>
+        <td>Identity of rotation group; Banach / Brouwer fixed-point; monad multiplication</td>
+      </tr>
+      <tr>
+        <td>⊢</td>
+        <td>Sequent-calculus entailment; morphism composition; Curry-Howard implication</td>
+      </tr>
+      <tr>
+        <td>∘</td>
+        <td>Tensor product in monoidal category; Cartesian pair; Σ-type; adjoint pairing</td>
+      </tr>
+      <tr>
+        <td>⊂[α]</td>
+        <td>Fiber bundle with connection; RG scale change with running coupling; operadic composition with label; cohomology-class inclusion</td>
+      </tr>
+      <tr>
+        <td>⊂[α] ∞</td>
+        <td>One-point compactification; partial trace; state on a C*-algebra; GNS reconstruction</td>
+      </tr>
+      <tr>
+        <td><span class="w">⊙</span> (whole)</td>
+        <td>Quantum channel <span class="mono">T = κ ∘ F</span>; fixed point of λ(⊙) = ⊙; Atiyah-Singer index</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ CLOSING ═══════════════════════ -->
+<section>
+  <h2>Summary in one sentence</h2>
+
+  <p>The unified expression is a categorical diagram whose vertices are the dimensional stations (<span class="s">•</span>, <span class="l">—</span>, <span class="m">Φ</span>, <span class="b">○</span>), whose edges are the i-strokes (⊛, ⎇, ✹, ⟳), whose faces are the beat compositions, whose 3-cells are the scale nestings, and whose 4-cell is the circumpunct itself; it is simultaneously a quantum channel, a principal bundle with connection, a renormalization-group flow, a fixed-point equation, a path-integral skeleton, a Noether current, and an index theorem.</p>
+
+  <p>Mathematics is the unified expression read through different telescopes. The framework's claim is that these are not separate theories that happen to agree at the edges; they are one statement saying one thing seven ways.</p>
+</section>
+
+<div class="closing">
+  <div class="symbol">⊙</div>
+  <p style="color: var(--dim); font-style: italic;">One expression. Seven readings. Same statement.</p>
+</div>
+
+<div class="ref">
+  Related: <a href="the_unit_equation.html">The Unit Equation</a> &middot; <a href="how_reality_is_built.html">How Reality Is Built</a> &middot; <a href="dimensional_ladder.html">The Dimensional Ladder</a> &middot; <a href="unified_expression_formal.html">Formal Version</a> &middot; <a href="circumpunct_predictions.html">Predictions</a> &middot; <a href="alpha_derivation.html">α Derivation</a>
+</div>
+
+</div>
+
+</body>
+</html>
