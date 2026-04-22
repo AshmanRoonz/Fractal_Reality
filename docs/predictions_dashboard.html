@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Circumpunct Framework — Predictions Dashboard</title>
+<title>Circumpunct Framework: Predictions Dashboard</title>
 <style>
   :root {
     --bg: #0d1117;
@@ -172,7 +172,7 @@
 <header>
   <div class="container" style="padding-top: 0; padding-bottom: 0;">
     <h1>Circumpunct Framework: Predictions Dashboard</h1>
-    <p>Structural grammar given α as input (A0 (E = 1) through T = 3 and φ). α is the measured coupling strength of the electron's 0D aperture (|•<sub>electron</sub>|); the other rungs compose around it. Eight structural compositions validated (given α); six open targets listed with falsification thresholds. Integers drawn from a single pool (2, 3, 4, 5, 7, 8, 12, 13, 21, 27, 28, 56, 64); no refitting between constants.</p>
+    <p>Structural grammar given α as measured input to the κ nesting operator. Two-layer position (§27.7a): <em>representation layer</em>, α = |•<sub>electron</sub>| is the measured coupling strength of the electron's 0D aperture to the 0D aperture of the greater whole across scales, with the 2D electromagnetic field as mediator; <em>auxiliary-claim layer</em>, the CODATA value admits a structurally motivated closed form 1/α = 360/φ² − 2/φ³ + α/(59/3) = 137.035999147 (0.22 ppb from CODATA 2022), with no factor-level residuals as of 2026-04-22. Eight structural compositions validated around α; six open targets listed with falsification thresholds. Integers drawn from a single pool (2, 3, 4, 5, 7, 8, 12, 13, 21, 27, 28, 56, 64) plus φ (the unique scaling ratio admitted by A3); no refitting between constants. Seven independent routes force T = 3 (Route 6: (T−1)! = Φ from P! = G·Φ; Route 7: S = P^T = P³ iff T = 3 from P·V + R + Φ + T = (T+1)³).</p>
   </div>
 </header>
 
@@ -180,7 +180,7 @@
 
 <!-- ============ SECTION 1: TRACK RECORD ============ -->
 <section>
-  <h2>The track record (nine validated predictions)</h2>
+  <h2>The track record (eight validated compositions, α as measured input)</h2>
   <div class="card wide">
     <table>
       <thead>
@@ -194,7 +194,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr><td>1/α (fine structure)</td><td>0D</td><td class="num">input (|•<sub>e</sub>|)</td><td class="num">137.035999177(21)</td><td class="num residual tight">CODATA 2022</td><td><span class="pill" style="background: rgba(88, 166, 255, 0.2); color: #58a6ff;">input</span></td></tr>
+        <tr><td>1/α (fine structure)</td><td>0D</td><td class="num">input (|•<sub>e</sub>|); aux closed form 137.035999147</td><td class="num">137.035999177(21)</td><td class="num residual tight">0.22 ppb (aux); input (rep)</td><td><span class="pill" style="background: rgba(88, 166, 255, 0.2); color: #58a6ff;">input + aux</span></td></tr>
         <tr><td>G (Newton)</td><td>3D</td><td class="num">6.67430 × 10⁻¹¹</td><td class="num">6.67430(15) × 10⁻¹¹</td><td class="num residual tight">0.04 ppm · 0.0σ</td><td><span class="pill good">validated</span></td></tr>
         <tr><td>Λ (cosmological)</td><td>3D × scale</td><td class="num">2.8879 × 10⁻¹²²</td><td class="num">2.888(58) × 10⁻¹²²</td><td class="num residual tight">0.004% · 0.0σ</td><td><span class="pill good">validated</span></td></tr>
         <tr><td>sin²θ_W (Weinberg)</td><td>2D</td><td class="num">0.23122</td><td class="num">0.23122(4)</td><td class="num residual tight">1.4 ppm</td><td><span class="pill good">validated</span></td></tr>
@@ -205,7 +205,7 @@
         <tr><td>m_p / m_e</td><td>composite</td><td class="num">1836.143</td><td class="num">1836.15267343(11)</td><td class="num residual tight">5.35 ppm</td><td><span class="pill good">validated</span></td></tr>
       </tbody>
     </table>
-    <p class="note">Eight structural compositions spanning five orders of magnitude in energy (from Λ at 10⁻¹²² to the lepton ratios near unity), plus α as measured input. Same integer pool throughout. If this were curve-fitting, residuals would not land near measurement precision for all eight simultaneously given a single input.</p>
+    <p class="note">Eight structural compositions spanning five orders of magnitude in energy (from Λ at 10⁻¹²² to the lepton ratios near unity), plus α as measured input (with its own auxiliary closed form at 0.22 ppb). Same integer pool throughout. If this were curve-fitting, residuals would not land near measurement precision for all eight simultaneously given a single input and the pool of framework integers fixed by T = 3 (seven independent routes).</p>
   </div>
 
   <h3 style="margin-top: 24px;">Residuals (log scale)</h3>
@@ -311,15 +311,15 @@
   <p class="small" style="margin-bottom: 20px;">Per §27.7p, every coupling now carries two addresses: its <em>station</em> (where the constant lives on the ladder) and its <em>cross-station bond signature</em> (which ⊂ relation it measures). The signature is d_part→d_whole on ⊙λ⊂⊙Λ; k = Δd · Φ is the α-exponent forced by the signature.</p>
   <div class="card wide ladder">
     <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d" style="color: var(--dim); font-size: 11px;">station</div><div class="sym" style="font-size: 11px; color: var(--dim);">sym</div><div class="const" style="color: var(--dim); font-size: 11px;">constants</div><div class="const" style="color: var(--dim); font-size: 11px;">bond signature</div><div class="status" style="color: var(--dim); font-size: 11px;">status</div></div>
-    <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">0D</div><div class="sym">•</div><div class="const">α (EM vertex)</div><div class="const">0D→2D · k=1 · α = |•<sub>e</sub>| input</div><div class="status"><span class="pill" style="background: rgba(88, 166, 255, 0.2); color: #58a6ff;">input</span></div></div>
+    <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">0D</div><div class="sym">•</div><div class="const">α (EM vertex)</div><div class="const">0D↔0D cross-scale via 2D mediator · k=1 · α = |•<sub>e</sub>| input to κ<sub>0,0</sub></div><div class="status"><span class="pill" style="background: rgba(88, 166, 255, 0.2); color: #58a6ff;">input + aux</span></div></div>
     <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">0D↔0D</div><div class="sym">•↔•</div><div class="const">α_s (strong)</div><div class="const">same station, cross-scale</div><div class="status"><span class="pill open">asymptotic</span></div></div>
     <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">0.5D</div><div class="sym">⊛</div><div class="const">c = 1 (natural units)</div><div class="const">process phase; no bond</div><div class="status"><span class="pill good">trivial</span></div></div>
     <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">1D</div><div class="sym">—</div><div class="const">ℏ = 1 (natural units)</div><div class="const">commitment quantum</div><div class="status"><span class="pill good">trivial</span></div></div>
     <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">1.5D</div><div class="sym">⎇</div><div class="const">m_μ/m_e, m_τ/m_e, a_μ</div><div class="const">spectral splitting at the i-turn; K=T^(gen+1)</div><div class="status"><span class="pill open">a_μ open</span></div></div>
     <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">2D</div><div class="sym">Φ</div><div class="const">sin²θ_W, λ_H, m_W</div><div class="const">2D↔2D · k=0 · prefactor-dominated (α_W mixing with EM's k=1)</div><div class="status"><span class="pill open">m_W tense</span></div></div>
     <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">2.5D</div><div class="sym">✹</div><div class="const">v/Λ_QCD, |V_cb|, Cabibbo</div><div class="const">half-rung · k=½ base · inter-generation emergence</div><div class="status"><span class="pill open">V_cb open</span></div></div>
-    <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">3D</div><div class="sym">○</div><div class="const">r_p, τ_n, G</div><div class="const">3D↔3D compounded · k = T·R = 21 (full ladder)</div><div class="status"><span class="pill open">r_p, τ_n open</span></div></div>
-    <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">3.5D</div><div class="sym">⟳</div><div class="const">Λ (cosmological)</div><div class="const">cosmic ⊂ · k = SU(3)·R = 56</div><div class="status"><span class="pill good">0.004%</span></div></div>
+    <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">3D</div><div class="sym">○</div><div class="const">r_p, τ_n, G (α_G = κ<sub>3,3</sub>)</div><div class="const">3D↔3D cross-scale · k = T·R = 21 · same-station diagonal of κ</div><div class="status"><span class="pill open">r_p, τ_n open</span></div></div>
+    <div class="rung" style="grid-template-columns: 70px 50px 1.2fr 1fr 0.8fr;"><div class="d">3.5D</div><div class="sym">⟳</div><div class="const">Λ (cosmological)</div><div class="const">cosmic ⊂ · k = SU(3)·R = 56 (compounded boundary)</div><div class="status"><span class="pill good">0.004%</span></div></div>
     <p class="note" style="margin-top: 16px;">The k column is the α-exponent forced by the bond signature. Values match the framework's derived exponents in §27.7a–k: α at k=1 (base); Cabibbo at k=½ (half-rung); gravity at k=21 (full ladder once); Λ at k=56 (full ladder compounded by cosmic SU(3) factor). Any new coupling must fit this arithmetic or the framework fails.</p>
   </div>
 </section>
@@ -373,7 +373,7 @@
       <div class="event">
         <div class="date">ongoing</div>
         <div class="title">CODATA α adjustments</div>
-        <div class="body">Berkeley Cs and LKB Rb atom interferometry each pushing toward sub-ppb. α tightening feeds directly into the closure expression (1/α = 360/φ² − 2/φ³ + α/(21−4/3) = 137.035999147) and into G, Λ, mass ratios, Cabibbo, Weinberg, and Higgs predictions. A drift in measured α tests both the closure expression and every downstream structural composition.</div>
+        <div class="body">Berkeley Cs and LKB Rb atom interferometry each pushing toward sub-ppb. α tightening feeds directly into the auxiliary closed form (1/α = 360/φ² − 2/φ³ + α/(59/3) = 137.035999147, 0.22 ppb from CODATA 2022) and into G, Λ, mass ratios, Cabibbo, Weinberg, and Higgs predictions. 2D-rung assembly 360 = P!·T·(Φ+○) is pinned at T = 3 by the octave-wrap lemma and the P! = G·Φ identity (Route 6); 59/3 is pool-native as (P·V+R)/T = (S−Φ−T)/T, one identity viewed from two sides via Route 7; φ-exponents are closed by A3 + dimensional analysis (scaling ratio at dimension d enters as φ^d). A drift in measured α tests the auxiliary closed form without disturbing the representation layer (α remains admitted as measured input to κ<sub>0,0</sub>); the closed form fails if CODATA drifts outside the 0.22 ppb band.</div>
       </div>
     </div>
   </div>
@@ -389,7 +389,8 @@
         <li>Any structural composition given α (G, Λ, mass ratios, Cabibbo, Weinberg, Higgs) departs from its prediction by more than current error bars as measurements tighten</li>
         <li>m_W world average stabilizes below 80,400 MeV (framework predicts 80,488)</li>
         <li>Any integer in {2, 3, 4, 5, 7, 8, 12, 13, 21, 27, 28, 56, 64} requires refitting across two or more constants</li>
-        <li>T = 3 route fails: a direct measurement forces T ≠ 3 (e.g., nuclear magic numbers with a different R)</li>
+        <li>T = 3 route fails: a direct measurement forces T ≠ 3 (any one of the seven routes breaks; e.g., nuclear magic numbers with a different R, or the P! = G·Φ identity breaking at T = 3)</li>
+        <li>α closed form auxiliary layer: CODATA α drifts outside the 0.22 ppb band around 1/α = 137.035999147 (representation layer untouched; α remains admitted as measured input to κ<sub>0,0</sub>)</li>
       </ul>
     </div>
     <div class="card">
@@ -407,7 +408,7 @@
 </div>
 
 <footer>
-  Built from CLAUDE.md framework spec. Zero free parameters; every integer traces to A0 → T = 3 via five independent routes.<br>
+  Built from CLAUDE.md framework spec. α admitted as measured input to κ<sub>0,0</sub> (the electron aperture's cross-scale coupling); every other integer traces to A0 → T = 3 via seven independent routes, and the α auxiliary closed form 1/α = 360/φ² − 2/φ³ + α/(59/3) = 137.035999147 sits at 0.22 ppb from CODATA 2022 with no factor-level residuals (as of 2026-04-22).<br>
   Claim: if the next five open predictions land within framework bands, the probability of coincidence drops below 10⁻⁶.
 </footer>
 
