@@ -183,11 +183,37 @@
     color: var(--gold);
   }
 
-  .param-val {
+  .param-val, #vbeatIntVal {
     color: #fff;
     font-weight: bold;
     font-variant-numeric: tabular-nums;
   }
+  /* Click-to-edit value readouts */
+  .editable-val {
+    cursor: text;
+    padding: 1px 4px;
+    border-radius: 4px;
+    border: 1px dashed transparent;
+    transition: border-color 120ms, background 120ms;
+  }
+  .editable-val:hover { border-color: rgba(255,215,0,0.45); background: rgba(255,215,0,0.06); }
+  .editable-val:focus-within { border-color: var(--gold); background: rgba(255,215,0,0.1); }
+  .val-input {
+    background: transparent;
+    color: #fff;
+    border: none;
+    outline: none;
+    font: inherit;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+    width: 6ch;
+    text-align: right;
+    padding: 0;
+    margin: 0;
+    -moz-appearance: textfield;
+  }
+  .val-input::-webkit-outer-spin-button,
+  .val-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
   input[type="range"] {
     -webkit-appearance: none;
@@ -2779,6 +2805,84 @@
   // Patch a lightweight tick: every 250ms, resync swatch + labels
   setInterval(updateVBeatSwatch, 250);
   updateVBeatSwatch();
+
+  // ============= CLICK-TO-EDIT SLIDER VALUES =============
+  // Every range slider has a value readout with id = slider.id + 'Val'.
+  // Clicking that readout turns it into a number input; Enter or blur commits.
+
+  function attachClickToEdit(slider) {
+    const readout = $(slider.id + 'Val');
+    if (!readout) return;
+    readout.classList.add('editable-val');
+    readout.title = 'Click to type a value';
+
+    const beginEdit = () => {
+      if (readout.querySelector('.val-input')) return;  // already editing
+      const currentNum = Number(slider.value);
+      const stepStr = slider.step || '1';
+      const decimals = stepStr.includes('.') ? (stepStr.split('.')[1].length) : 0;
+      const display = decimals > 0 ? currentNum.toFixed(decimals) : String(currentNum);
+      readout.textContent = '';
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.className = 'val-input';
+      input.value = display;
+      input.min = slider.min;
+      input.max = slider.max;
+      input.step = slider.step;
+      readout.appendChild(input);
+      // Focus + select
+      input.focus();
+      input.select();
+
+      const commit = () => {
+        if (!input.isConnected) return;
+        let v = parseFloat(input.value);
+        if (!isFinite(v)) v = currentNum;
+        const mn = parseFloat(slider.min), mx = parseFloat(slider.max);
+        if (isFinite(mn)) v = Math.max(mn, v);
+        if (isFinite(mx)) v = Math.min(mx, v);
+        // Snap to step
+        const step = parseFloat(slider.step) || 1;
+        if (step > 0) {
+          const origin = isFinite(mn) ? mn : 0;
+          v = origin + Math.round((v - origin) / step) * step;
+          // Kill float drift to the step's precision
+          if (decimals > 0) v = parseFloat(v.toFixed(decimals));
+        }
+        slider.value = String(v);
+        // Dispatch events so the existing slider handlers run
+        slider.dispatchEvent(new Event('input', { bubbles: true }));
+        slider.dispatchEvent(new Event('change', { bubbles: true }));
+        // Existing handler should have rewritten readout.textContent.
+        // If it didn't (unlikely), set a sensible fallback.
+        if (readout.querySelector('.val-input')) {
+          readout.textContent = decimals > 0 ? v.toFixed(decimals) : String(v);
+        }
+      };
+      const cancel = () => {
+        if (!input.isConnected) return;
+        // Force the slider's handler to re-render the readout by dispatching input
+        slider.dispatchEvent(new Event('input', { bubbles: true }));
+      };
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); commit(); input.blur(); }
+        else if (e.key === 'Escape') { e.preventDefault(); cancel(); input.blur(); }
+        else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+          // Let the browser's native step up/down work, then commit so the slider tracks live
+          setTimeout(commit, 0);
+        }
+      });
+      input.addEventListener('blur', commit);
+      // Swallow click on the input so the outer click handler doesn't re-trigger edit
+      input.addEventListener('click', (e) => e.stopPropagation());
+    };
+
+    readout.addEventListener('click', beginEdit);
+  }
+
+  document.querySelectorAll('input[type="range"]').forEach(attachClickToEdit);
 
   // Unlock on first touch for iOS
   const unlock = () => {
