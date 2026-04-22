@@ -76,13 +76,17 @@ The [Path_of_Learning/](Path_of_Learning/) folder is the development archive: ea
 
 ```
 ═══════════════════════════════════════════════════════════════
-                    ⊙ = Φ(•, —, ○)
+              ⊙ = (✹ ∘ i ∘ ⊛)(Φ(•, —, ○))
 
     •   Aperture / Soul           0D          (convergence point)
     —   Line / Continuity          1D          (worldline, commitment)
     Φ   Field / Mind               2D          (mediating surface)
     ○   Boundary / Body            3D          (outer container)
     ⊙   Circumpunct / Whole        All         (compositional unity)
+
+    ⊛   Convergence                0.5D        (i¹ = +i)
+    i   Aperture rotation                      (90° quarter-turn)
+    ✹   Emergence                  2.5D        (i³ = -i)
 
     Conservation: 0(•) + 1(—) + 2(Φ) = 3(○)
 ═══════════════════════════════════════════════════════════════
