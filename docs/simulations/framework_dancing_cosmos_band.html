@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Circumpunct Cosmos : Dancing and Jamming</title>
+<style>
+  html, body { margin: 0; padding: 0; overflow: hidden; background: #000; height: 100%; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+  .info {
+    position: fixed; top: 12px; left: 14px; z-index: 10;
+    font-family: -apple-system, system-ui, sans-serif; font-size: 12px;
+    color: rgba(255,255,255,0.6); pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+    line-height: 1.5;
+    max-width: 540px;
+  }
+  .info a { color: rgba(184,160,96,0.9); text-decoration: none; pointer-events: auto; }
+  #readout {
+    position: fixed; bottom: 14px; left: 14px; z-index: 10;
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px;
+    color: rgba(255,255,255,0.72); pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+    line-height: 1.5;
+    white-space: pre;
+  }
+  #readout .layer-head { color: rgba(184,160,96,0.85); }
+  #readout .layer-fast { color: rgba(255,255,255,0.85); }
+  #readout .layer-med  { color: rgba(184,216,255,0.7); }
+  #readout .layer-slow { color: rgba(200,140,255,0.7); }
+  .era-name { color: rgba(184,160,96,0.95); font-weight: 600; }
+  .audio-status { color: rgba(77,184,160,0.9); }
+  .band-bass { color: rgba(232,138,175,0.95); }
+  .band-mids { color: rgba(184,216,255,0.95); }
+  .band-treb { color: rgba(245,220,140,0.95); }
+  .band-beat { color: rgba(255,255,255,0.95); }
+  .lock-tight { color: rgba(120,232,184,0.95); }
+  .lock-loose { color: rgba(200,200,200,0.6); }
+  .phrase-up { color: rgba(120,232,184,0.9); }
+  .phrase-dn { color: rgba(200,140,255,0.9); }
+  #start-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.9); z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 18px;
+    font-family: -apple-system, system-ui, sans-serif;
+    color: rgba(255,255,255,0.85);
+    transition: opacity 0.6s;
+  }
+  #start-overlay h1 {
+    font-size: 24px; font-weight: 400; letter-spacing: 0.5px;
+    color: rgba(184,160,96,0.95); margin: 0;
+  }
+  #start-overlay p { font-size: 13px; max-width: 600px; text-align: center; line-height: 1.6; margin: 0 20px; }
+  .btn {
+    padding: 12px 32px; border: 1px solid rgba(184,160,96,0.6);
+    border-radius: 4px; font-size: 13px; letter-spacing: 1px;
+    color: rgba(184,160,96,0.95); background: rgba(184,160,96,0.08);
+    cursor: pointer; font-family: inherit;
+    transition: background 0.2s;
+  }
+  .btn:hover { background: rgba(184,160,96,0.18); }
+  .btn-row { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+  #start-overlay.hide { opacity: 0; pointer-events: none; }
+  #controls {
+    position: fixed; top: 12px; right: 14px; z-index: 10;
+    font-family: -apple-system, system-ui, sans-serif;
+    display: flex; gap: 8px;
+  }
+  #controls .ctl-btn {
+    padding: 6px 14px; border: 1px solid rgba(184,160,96,0.4);
+    border-radius: 3px; font-size: 11px; letter-spacing: 0.5px;
+    color: rgba(184,160,96,0.85); background: rgba(0,0,0,0.5);
+    cursor: pointer; font-family: inherit;
+  }
+  #controls .ctl-btn:hover { background: rgba(184,160,96,0.15); }
+  #controls .ctl-btn.band-on {
+    color: rgba(120,232,184,0.95);
+    border-color: rgba(120,232,184,0.5);
+    background: rgba(120,232,184,0.08);
+  }
+  #controls select.ctl-btn { max-width: 220px; }
+  #band-status {
+    position: fixed; top: 48px; right: 14px; z-index: 10;
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px;
+    color: rgba(255,255,255,0.72); pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+    line-height: 1.5; text-align: right; white-space: pre;
+    display: none;
+  }
+  #band-status .voice-on  { color: rgba(120,232,184,0.95); }
+  #band-status .voice-off { color: rgba(200,200,200,0.4); }
+  #err {
+    position: fixed; top: 0; left: 0; right: 0;
+    color: #f88; font-family: monospace; font-size: 12px;
+    background: rgba(0,0,0,0.85); padding: 10px; white-space: pre-wrap;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<div id="start-overlay">
+  <h1>Let the field learn the music</h1>
+  <p>The shader tracks tempo, predicts the next beat, reads the phrase arc, and remembers the spectrum. SRL (Selective Rainbow Lock) at audio scale: it locks onto the carrier, and once locked, the visual anticipates instead of reacting. Give it ~12 seconds of steady beat; the lock tightens, the rotation phase-locks to the tempo, and you feel it winding up before each hit.</p>
+  <div class="btn-row">
+    <button class="btn" id="btn-mic">USE MICROPHONE</button>
+    <button class="btn" id="btn-file">LOAD AUDIO FILE</button>
+  </div>
+  <input type="file" id="file-input" accept="audio/*" style="display:none">
+</div>
+
+<div class="info">
+  Audio → shader : bass (⊛) ; mids (Φ) ; treble (○) ; centroid walks the ladder<br>
+  Learning : tempo lock (SRL on the beat) ; pre-beat anticipation ; phrase trend ; signature memory<br>
+  Jam : drums ; bass ; pad (chords) ; lead ; GM instruments chosen from era + centroid<br>
+  <a href="framework_cosmos_shader.html">silent</a> &nbsp; <a href="framework_record_player.html">reverse : field → 8 voices</a> &nbsp; <a href="dimensional_ladder.html">ladder</a>
+</div>
+
+<div id="controls">
+  <button class="ctl-btn" id="btn-band" title="Toggle jam partner">BAND : OFF</button>
+  <select id="midi-select" class="ctl-btn" style="display:none" title="MIDI output device"></select>
+  <button class="ctl-btn" id="btn-switch">SWITCH SOURCE</button>
+</div>
+<div id="band-status"></div>
+
+<canvas id="c"></canvas>
+<pre id="err"></pre>
+<div id="readout"></div>
+<audio id="audio-el" crossorigin="anonymous" style="display:none"></audio>
+
+<script id="vert" type="x-shader/x-vertex">
+  attribute vec2 a;
+  void main(){ gl_Position = vec4(a, 0.0, 1.0); }
+</script>
+
+<script id="frag" type="x-shader/x-fragment">
+  precision highp float;
+  uniform vec2 r;
+  uniform float t;
+  uniform float era;
+  uniform float comp;
+  // Three temporal layers of each audio value : [0]=fast (⊙λ, your scale),
+  // [1]=medium (⊙Λ, the containing whole), [2]=slow (∞, the source).
+  // The nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ made temporal : each scale dances
+  // at its own tempo.
+  uniform float uBass[3];
+  uniform float uMids[3];
+  uniform float uTreble[3];
+  uniform float uRMS[3];
+  uniform float uBeat[3];
+  uniform float uCentroid[3];
+  // 8 frequency octaves × 3 temporal layers, flattened : index (oct*3 + layer).
+  // Octave n maps to dimensional station n (0=• aperture ... 7=⟳ recursion).
+  uniform float uOct[24];
+  // The 12-bin chroma vector: pitch classes C, C#, D, ..., B. Because the
+  // visible spectrum is one octave of light and an audio octave subdivides
+  // into 12 semitones, each pitch class maps to a specific hue on the color
+  // wheel (hue = p/12). Sound and light are the same Φ oscillation at
+  // different scales; the 12 audio bins drive 12 hue positions, not by
+  // convention but by A3 (fractal self-similarity across scale).
+  uniform float uChroma[12];
+  uniform float uChromaBass[12];    // 40-250 Hz: chord roots, ⊛ convergence
+  uniform float uChromaTreble[12];  // 250+ Hz: melody, ✹ emergence
+  uniform float uTonic;             // 0..11 detected key center
+  uniform float uMode;              // 0=minor, 1=major
+  uniform float uKeyConf;           // 0..1
+  uniform float uChordRoot;         // 0..11
+  uniform float uChordQual;         // 0=minor, 1=major
+  uniform float uChordConf;         // 0..1
+  uniform float uFlatness;          // 0=tonal (pitched), 1=noisy (percussion)
+  uniform float uBarLen;            // 2..8 beats per bar (time signature top)
+  uniform float uBarPhase;          // 0..1 position inside current bar
+  uniform float uBarConf;           // 0..1
+  uniform float uPreBeat;           // anticipation envelope (predicts, unified)
+  uniform float uLock;              // 0..1 tempo confidence (unified)
+  uniform float uBeatPhase;         // 0..2π, wraps each beat, locked to tempo
+  uniform float uPhrase;            // -1..1, building vs ebbing
+  uniform float uFamiliarity;       // 0..1 cosine similarity with running signature
+
+  vec3 hsv(float h, float s, float v){
+    vec3 k = mod(vec3(5.0, 3.0, 1.0) + h * 6.0, 6.0);
+    return v - v * s * clamp(min(k, 4.0 - k), 0.0, 1.0);
+  }
+
+  mat3 rotate3D(float a, vec3 ax){
+    ax = normalize(ax);
+    float s = sin(a), c = cos(a), o = 1.0 - c;
+    return mat3(
+      o*ax.x*ax.x + c,      o*ax.x*ax.y - ax.z*s, o*ax.z*ax.x + ax.y*s,
+      o*ax.x*ax.y + ax.z*s, o*ax.y*ax.y + c,      o*ax.y*ax.z - ax.x*s,
+      o*ax.z*ax.x - ax.y*s, o*ax.y*ax.z + ax.x*s, o*ax.z*ax.z + c
+    );
+  }
+
+  // chromaAt: sample the 12-bin chroma vector by continuous index
+  // (0..12 wrapping). Uses Gaussian weighting on the three nearest bins
+  // so adjacent pitch classes blend smoothly (a C#/D half-step shows a
+  // hue between red-orange and orange-yellow, not a hard step).
+  float chromaAt(float idx, int which){
+    float sum = 0.0;
+    for(int i = 0; i < 12; i++){
+      float fi = float(i);
+      float d = fi - idx;
+      // Wrap distance to the nearer side of the circle.
+      if(d >  6.0) d -= 12.0;
+      if(d < -6.0) d += 12.0;
+      float w = exp(-d * d * 1.6);
+      float v = which == 0 ? uChroma[i]
+              : which == 1 ? uChromaBass[i]
+                           : uChromaTreble[i];
+      sum += v * w;
+    }
+    return sum;
+  }
+
+  void main(){
+    vec2 FC = gl_FragCoord.xy;
+    vec4 o = vec4(0.0);
+
+    // Era blending across the four scale-positions.
+    float w0 = max(0.0, 1.0 - abs(era - 0.0));
+    float w1 = max(0.0, 1.0 - abs(era - 1.0));
+    float w2 = max(0.0, 1.0 - abs(era - 2.0));
+    float w3 = max(0.0, 1.0 - abs(era - 3.0));
+    w0 = max(w0, max(0.0, 1.0 - abs(era - 4.0)));
+
+    vec3 offAtom = vec3(1.5, 1.618, 1.0);
+    vec3 offBio  = vec3(2.1, 1.5, 2.618);
+    vec3 offPlan = vec3(2.618, 1.618, 1.618);
+    vec3 offCos  = vec3(3.0, 2.618, 1.618);
+    vec3 offsetBase = offAtom*w0 + offBio*w1 + offPlan*w2 + offCos*w3;
+
+    // TONIC HUE: the detected key center IS a specific color because audio
+    // and light are the same Φ oscillation at different scales. C = 0/12,
+    // C# = 1/12, ..., B = 11/12 on the color wheel. Mode tilt: major
+    // warms the palette; minor cools it.
+    float tonicHue = uTonic / 12.0;
+    float modeTilt = (uMode - 0.5) * 0.06;   // ±0.03 hue warmth
+    // Harmonic gate: how much of the visual comes from real tonal content
+    // vs the era palette fallback. High when key+chord are locked and the
+    // signal is tonal; drops to 0 during drum fills / noise bursts.
+    float harmonic = uKeyConf * (1.0 - uFlatness * 0.8);
+    harmonic = clamp(harmonic, 0.0, 1.0);
+
+    // FEATURE PHASE: run a small kaleidoscope seed to get a per-pixel
+    // fractal angle. That angle indexes the chroma vector (0..12), so
+    // pixels in different fractal basins sample different pitch classes.
+    // The whole ring of 12 semitones wraps once around the folded figure.
+    vec3 pSeed = vec3((FC.xy * 2.0 - r) / r.y * 1.5, 0.5);
+    pSeed = pSeed * rotate3D(t * 0.09,
+                   vec3(sin(t * 0.25), 1.618, cos(t * 0.25)));
+    for(int k = 0; k < 4; k++){
+      float se = max(0.95, 9.0 / dot(pSeed, pSeed));
+      pSeed *= se;
+      if(pSeed.x + pSeed.y < 0.0) pSeed.xy = -pSeed.yx;
+      if(pSeed.x + pSeed.z < 0.0) pSeed.xz = -pSeed.zx;
+      if(pSeed.y + pSeed.z < 0.0) pSeed.yz = -pSeed.zy;
+      pSeed -= vec3(1.618, 1.5, 1.0);
+    }
+    float seedPhase = atan(pSeed.x, pSeed.y);                 // -π..π
+    // Pixel's pitch-class index, 0..12. Rotated slowly by tonic so the
+    // tonic always sits at the same angular position on screen (the key
+    // anchors the picture to itself).
+    float pcIdx = fract(seedPhase / 6.2831853 + 0.5 - uTonic / 12.0) * 12.0;
+    // Radial feature: how "inside" the fractal this pixel is (0 = near
+    // center, 1 = far out). Controls bass vs treble chroma selection.
+    float pRadius = clamp(length(pSeed) * 0.12, 0.0, 1.0);
+
+    // Per-pixel chroma energy: bass-chroma near the center (⊛, convergence),
+    // treble-chroma near the edges (✹, emergence), mid-chroma in between.
+    float eBass   = chromaAt(pcIdx, 1);
+    float eTreble = chromaAt(pcIdx, 2);
+    float eAll    = chromaAt(pcIdx, 0);
+    float radialMix = smoothstep(0.15, 0.85, pRadius);   // 0 inner, 1 outer
+    float pixChroma = mix(eBass, eTreble, radialMix) * 0.6 + eAll * 0.4;
+
+    // CHORD BOOST: if the pixel's pitch class is one of the triad notes,
+    // amplify its energy. Three peaks on the color wheel (root, third,
+    // fifth) get punched harder than the rest. Confidence-gated so
+    // ambiguous passages don't force a chord look.
+    float chordRootD = pcIdx - uChordRoot;
+    if(chordRootD >  6.0) chordRootD -= 12.0;
+    if(chordRootD < -6.0) chordRootD += 12.0;
+    float thirdSemis = mix(3.0, 4.0, uChordQual);    // minor=3, major=4
+    float chordThirdD = pcIdx - mod(uChordRoot + thirdSemis, 12.0);
+    if(chordThirdD >  6.0) chordThirdD -= 12.0;
+    if(chordThirdD < -6.0) chordThirdD += 12.0;
+    float chordFifthD = pcIdx - mod(uChordRoot + 7.0, 12.0);
+    if(chordFifthD >  6.0) chordFifthD -= 12.0;
+    if(chordFifthD < -6.0) chordFifthD += 12.0;
+    float chordPeaks = exp(-chordRootD * chordRootD * 1.2)
+                     + exp(-chordThirdD * chordThirdD * 1.4) * 0.8
+                     + exp(-chordFifthD * chordFifthD * 1.4) * 0.7;
+    pixChroma *= (1.0 + chordPeaks * uChordConf * 1.2);
+
+    // HUE: pitch-class position on the color wheel. Pure light-frequency
+    // mapping when chroma is strong; era palette when harmonic content is
+    // weak or absent.
+    float pitchHue  = pcIdx / 12.0 + modeTilt;
+    // Neutral era hue retained as fallback (slow breathing sweep).
+    float eraHueBase = 0.56*w0 + 0.36*w1 + 0.09*w2 + 0.78*w3;
+    eraHueBase += uFamiliarity * 0.08;
+    // Gate: how much a given pixel shows pitch-hue vs era-hue.
+    float pixShift = smoothstep(0.05, 0.55, pixChroma) * harmonic;
+
+    // DIMENSIONS: shared responses.
+    float invBase = 9.0*w0 + 10.5*w1 + 8.0*w2 + 7.0*w3;
+    float rotBase = 0.20*w0 + 0.15*w1 + 0.10*w2 + 0.05*w3;
+    float lockedPhase = uBeatPhase * uLock;
+    // Downbeat pulse: strongest at bar phase 0, fades through the bar.
+    // ⟳ recursion is the bar closing; the full-cycle pulse on beat 1.
+    float downbeatT = exp(-uBarPhase * uBarPhase * 20.0)
+                    + exp(-(1.0 - uBarPhase) * (1.0 - uBarPhase) * 20.0);
+    float zoom = 1.0 - uPreBeat * 0.05 - downbeatT * 0.03 * uBarConf;
+    float satBoost = uFamiliarity * 0.20;
+
+    // FOLD COUNT: the kaleidoscope symmetry equals the time signature.
+    // 3/4 → 3-fold lobes (waltz = T), 4/4 → 4-fold (P), 5/4 → 5, 6/8 → 6,
+    // 7/8 → 7 (R), etc. Falls back to 3 when no bar is locked.
+    float foldN = mix(3.0, uBarLen, uBarConf);
+
+    for(int triad = 0; triad < 3; triad++){
+      float tf = float(triad);
+      float bassT = uBass[triad];
+      float midsT = uMids[triad];
+      float trebT = uTreble[triad];
+      float rmsT  = uRMS[triad];
+      float beatT = uBeat[triad];
+      float centT = uCentroid[triad];
+
+      float tempoDamp = 1.0 - tf * 0.33;
+
+      float sMul = pow(1.618, 3.0 - tf * 2.0) * (zoom - beatT * 0.08 * tempoDamp);
+      float weight = pow(0.78, tf) * (0.7 + 0.6 * rmsT);
+
+      float mT = (tf + 1.0) * 0.35;
+      vec3 triadOff = offsetBase +
+        vec3(sin(t * (1.3 - mT)), cos(t * (1.1 - mT)), sin(t * (0.9 - mT * 0.5)))
+        * midsT * 0.5;
+
+      float triadInv = invBase + bassT * 3.0 + beatT * 3.0 * tempoDamp
+                                + uPreBeat * 2.0 * tempoDamp
+                                + downbeatT * 1.2 * uBarConf * tempoDamp;
+
+      float triadRot = rotBase * tempoDamp + trebT * 0.15 * tempoDamp
+                      + beatT * 0.18 * tempoDamp;
+      float triadDrive = t * triadRot + lockedPhase * 0.18 * tempoDamp;
+
+      float g = 0.0, e, s, q;
+
+      for(int n = 0; n < 7; n++){
+        vec3 p = vec3((FC.xy * 2.0 - r) / r.y * sMul, g + 0.2)
+                 * rotate3D(triadDrive + tf * 0.04 * t,
+                           vec3(sin(t * 0.3), 1.618, cos(t * 0.3)));
+        s = 1.0;
+        for(int k = 0; k < 8; k++){
+          e = max(0.95, triadInv / dot(p, p));
+          s *= e;
+          if(p.x + p.y < 0.0) p.xy = -p.yx;
+          if(p.x + p.z < 0.0) p.xz = -p.zx;
+          if(p.y + p.z < 0.0) p.yz = -p.zy;
+          p = p * e - vec3(triadOff.x, triadOff.y * (1.0 - comp), triadOff.z);
+        }
+        g += mod(length(p.yy), p.y) / s * 0.5;
+
+        float phase = atan(p.x, p.y);
+        // FOLD symmetry driven by time signature. Bar phase rotates the
+        // pattern once per bar (downbeat always lands in the same orientation).
+        q = 0.5 + 0.5 * sin(phase * foldN + t * 0.5
+                            + uBeatPhase * uLock * tempoDamp
+                            + uBarPhase * 6.2831853);
+        float band = q < 0.333 ? 13.0/20.0
+                   : q < 0.666 ? 7.0/9.0
+                   : 1.0;
+
+        // PITCH HUE first, era hue as backup. All 21 ring samples at this
+        // pixel share pitchHue/pixShift, so additive blending stacks one
+        // hue cleanly (no wash to white).
+        float eraHue = eraHueBase + tf * 0.06 + centT * 0.1 + trebT * 0.15
+                     + 0.12 * cos(phase + t * 0.2);
+        float hue = mix(eraHue, pitchHue, pixShift);
+        // Saturation: lifts on strong chroma, also on the downbeat.
+        float sat = 0.30 - g * 0.02 + midsT * 0.12 + satBoost
+                  + pixShift * 0.45
+                  + downbeatT * 0.10 * uBarConf;
+        // Brightness: RMS-driven with beat emphasis. Dissonance/noise
+        // (uFlatness) gently flattens brightness so percussion doesn't
+        // overdrive the exposure.
+        float val = s / 4500.0 * (0.22 + 0.78 * band)
+                    * (1.0 + beatT * 0.4 * tempoDamp
+                          + uPreBeat * 0.25 * tempoDamp
+                          + downbeatT * 0.35 * uBarConf * tempoDamp)
+                    * (1.0 + pixShift * 0.6)
+                    * (1.0 - uFlatness * 0.15);
+        o.rgb += hsv(hue, sat, val) * weight;
+      }
+    }
+
+    gl_FragColor = vec4(o.rgb, 1.0);
+  }
+</script>
+
+<script>
+(function(){
+  const canvas = document.getElementById('c');
+  const err = document.getElementById('err');
+  const readout = document.getElementById('readout');
+  const startOverlay = document.getElementById('start-overlay');
+  const btnMic = document.getElementById('btn-mic');
+  const btnFile = document.getElementById('btn-file');
+  const btnSwitch = document.getElementById('btn-switch');
+  const fileInput = document.getElementById('file-input');
+  const audioEl = document.getElementById('audio-el');
+  function showErr(msg){ err.textContent = msg; err.style.display = 'block'; }
+
+  const gl = canvas.getContext('webgl', { antialias: false, premultipliedAlpha: false });
+  if(!gl){ showErr('WebGL not available in this browser.'); return; }
+
+  function compile(type, src){
+    const sh = gl.createShader(type);
+    gl.shaderSource(sh, src);
+    gl.compileShader(sh);
+    if(!gl.getShaderParameter(sh, gl.COMPILE_STATUS)){
+      showErr('Shader compile error:\n' + gl.getShaderInfoLog(sh));
+      return null;
+    }
+    return sh;
+  }
+
+  const vs = compile(gl.VERTEX_SHADER, document.getElementById('vert').textContent);
+  const fs = compile(gl.FRAGMENT_SHADER, document.getElementById('frag').textContent);
+  if(!vs || !fs) return;
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog, vs);
+  gl.attachShader(prog, fs);
+  gl.linkProgram(prog);
+  if(!gl.getProgramParameter(prog, gl.LINK_STATUS)){
+    showErr('Program link error:\n' + gl.getProgramInfoLog(prog));
+    return;
+  }
+  gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const aLoc = gl.getAttribLocation(prog, 'a');
+  gl.enableVertexAttribArray(aLoc);
+  gl.vertexAttribPointer(aLoc, 2, gl.FLOAT, false, 0, 0);
+
+  const uR = gl.getUniformLocation(prog, 'r');
+  const uT = gl.getUniformLocation(prog, 't');
+  const uEra = gl.getUniformLocation(prog, 'era');
+  const uComp = gl.getUniformLocation(prog, 'comp');
+  const uBass = gl.getUniformLocation(prog, 'uBass');
+  const uMids = gl.getUniformLocation(prog, 'uMids');
+  const uTreble = gl.getUniformLocation(prog, 'uTreble');
+  const uRMS = gl.getUniformLocation(prog, 'uRMS');
+  const uBeat = gl.getUniformLocation(prog, 'uBeat');
+  const uPreBeat = gl.getUniformLocation(prog, 'uPreBeat');
+  const uCentroid = gl.getUniformLocation(prog, 'uCentroid');
+  const uLock = gl.getUniformLocation(prog, 'uLock');
+  const uBeatPhase = gl.getUniformLocation(prog, 'uBeatPhase');
+  const uPhrase = gl.getUniformLocation(prog, 'uPhrase');
+  const uFamiliarity = gl.getUniformLocation(prog, 'uFamiliarity');
+  const uOctLoc = gl.getUniformLocation(prog, 'uOct');
+  const uChromaLoc = gl.getUniformLocation(prog, 'uChroma');
+  const uChromaBassLoc = gl.getUniformLocation(prog, 'uChromaBass');
+  const uChromaTrebleLoc = gl.getUniformLocation(prog, 'uChromaTreble');
+  const uTonicLoc = gl.getUniformLocation(prog, 'uTonic');
+  const uModeLoc = gl.getUniformLocation(prog, 'uMode');
+  const uKeyConfLoc = gl.getUniformLocation(prog, 'uKeyConf');
+  const uChordRootLoc = gl.getUniformLocation(prog, 'uChordRoot');
+  const uChordQualLoc = gl.getUniformLocation(prog, 'uChordQual');
+  const uChordConfLoc = gl.getUniformLocation(prog, 'uChordConf');
+  const uFlatnessLoc = gl.getUniformLocation(prog, 'uFlatness');
+  const uBarLenLoc = gl.getUniformLocation(prog, 'uBarLen');
+  const uBarPhaseLoc = gl.getUniformLocation(prog, 'uBarPhase');
+  const uBarConfLoc = gl.getUniformLocation(prog, 'uBarConf');
+
+  function resize(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.floor(window.innerWidth * dpr);
+    canvas.height = Math.floor(window.innerHeight * dpr);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // ---------------- Audio graph ----------------
+  let audioCtx = null;
+  let analyser = null;
+  let freqBuf = null;
+  let timeBuf = null;
+  let sourceNode = null;
+  let sourceType = 'none';
+  let micStream = null;
+
+  // Three temporal layers per audio value : [0]=fast (⊙λ, your scale,
+  // beat-by-beat), [1]=medium (⊙Λ, the containing whole, sways with the
+  // phrase ~1s), [2]=slow (∞, the source, breathes with the song ~6s).
+  // Time IS scale (§4.11) : nested circumpuncts have nested temporal rhythms.
+  // The fast triad reacts ; the slow one abides.
+  const sBass     = [0, 0, 0];
+  const sMids     = [0, 0, 0];
+  const sTreble   = [0, 0, 0];
+  const sRMS      = [0, 0, 0];
+  const sCentroid = [0, 0, 0];
+  const beatEnv   = [0, 0, 0];
+  let sEra = 2.0;
+  let preBeatEnv = 0;
+  let bassLongAvg = 0;
+  let lastBeatT = 0;
+
+  // Preallocated upload buffers (avoid per-frame allocation).
+  const bassU = new Float32Array(3);
+  const midsU = new Float32Array(3);
+  const trebU = new Float32Array(3);
+  const rmsU  = new Float32Array(3);
+  const beatU = new Float32Array(3);
+  const centU = new Float32Array(3);
+
+  // ---------------- Spectral pyramid (8 octaves = 8 dimensional stations) ----
+  // A song runs ~6-8 frequency octaves in its actual content ; each octave is a
+  // complete traversal of the 8-station dimensional octave (do-re-mi-fa-so-la-
+  // ti-do'). So the frequency ladder and the dimensional ladder are the same
+  // ladder, and an 8-band split makes the correspondence literal :
+  //   O0 → • (0D, aperture)         40-80 Hz     ; kick drum, sub-bass
+  //   O1 → ⊛ (0.5D, convergence)    80-160 Hz    ; bass guitar, low tom
+  //   O2 → — (1D, continuity)       160-320 Hz   ; low-mid, male vocal body
+  //   O3 → ⎇ (1.5D, branching)      320-640 Hz   ; mid, vocal fundamental
+  //   O4 → Φ (2D, field)            640-1280 Hz  ; upper-mid, vocal presence
+  //   O5 → ✹ (2.5D, emergence)      1280-2560 Hz ; treble, snare crack, consonants
+  //   O6 → ○ (3D, boundary)         2560-5120 Hz ; high treble, cymbal body
+  //   O7 → ⟳ (3.5D, recursion)      5120-10240 Hz; air, cymbal wash, shimmer
+  // 3.5D = 0D' closes the loop : O7 of ⊙λ is O0 of ⊙Λ at the next scale.
+  const OCT_COUNT     = 8;
+  const OCT_BASE_HZ   = 40;
+  const OCT_GLYPH     = ['•', '⊛', '—', '⎇', 'Φ', '✹', '○', '⟳'];
+  const OCT_DIM_LABEL = ['0.0D', '0.5D', '1.0D', '1.5D', '2.0D', '2.5D', '3.0D', '3.5D'];
+  // Readout palette : same rainbow wheel the shader rings use, one seat per
+  // octave. Each octave lights up its own hue, so the readout is the key
+  // that tells you which color corresponds to which dimensional station.
+  const OCT_COLOR = [
+    'rgba(245, 95,110,0.95)', // •  red     (0.0D convergence / aperture)
+    'rgba(250,160, 80,0.95)', // ⊛  orange  (0.5D convergence phase)
+    'rgba(235,215,100,0.95)', // —  yellow  (1.0D extension)
+    'rgba(145,225,115,0.95)', // ⎇  lime    (1.5D branching, the i-turn)
+    'rgba(120,220,225,0.95)', // Φ  cyan    (2.0D field / mind)
+    'rgba(130,170,245,0.95)', // ✹  blue    (2.5D emergence)
+    'rgba(195,140,245,0.95)', // ○  violet  (3.0D boundary)
+    'rgba(240,130,205,0.95)'  // ⟳  magenta (3.5D recursion → next 0D)
+  ];
+  // [octave][layer] ; 0 = fast (⊙λ), 1 = medium (⊙Λ), 2 = slow (∞).
+  const sOct = [];
+  for(let o = 0; o < OCT_COUNT; o++) sOct.push([0, 0, 0]);
+  // Flat uniform buffer : [oct0_fast, oct0_med, oct0_slow, oct1_fast, ...].
+  const octU = new Float32Array(OCT_COUNT * 3);
+  // Bin ranges are computed once the audio context is known (sample rate).
+  let octBinLo = null;   // Int32Array(OCT_COUNT)
+  let octBinHi = null;   // Int32Array(OCT_COUNT)
+
+  // ---------------- Learning state ----------------
+  const beatHistory = [];            // timestamps of peak-picked events (phase anchors only)
+  const MAX_BEAT_HISTORY = 24;
+  let tempoSec = 0;                  // seconds per beat (0 = no lock)
+  let tempoBPM = 0;
+  let tempoLock = 0;                 // 0..1 confidence (softmax peakedness)
+  let nextBeatAt = 0;                // predicted timestamp of next beat
+  let beatPhase = 0;                 // 0..2π wraps per beat, locked to tempo
+
+  // Onset detection function (ODF) : half-wave rectified raw-bass derivative,
+  // sampled at a FIXED 60 Hz regardless of display refresh rate. 12 seconds of
+  // history gives us 11+ periods even at 55 BPM, so the past genuinely informs
+  // the present and we have enough evidence to project the future.
+  const ODF_RATE = 60;
+  const ODF_DT   = 1 / ODF_RATE;
+  const ODF_LEN  = 720;              // 12 s at 60 Hz
+  const odfBuf   = new Float32Array(ODF_LEN);
+  let odfIdx = 0;
+  let odfPrev = 0;
+  let odfClock = -1;                 // the 60Hz sample clock, decoupled from frames
+  let lastAcfT = -1;                 // wall time of previous autocorr pass (for dt-based EMAs)
+  let lastPhaseT = -1;               // wall time of previous phase update
+  // Argmax hysteresis : stay on the current winning lag unless a new one
+  // dominates for a while (stops BPM-jitter between octave partners).
+  let winnerLag       = -1;
+  let winnerChallenge = -1;
+  let winnerChallengeT = 0;
+
+  // Tempo candidates : lag = period in ODF samples. Scan 55-190 BPM inclusive.
+  // softmax over autocorr scores picks the winner ; every tempo competes every
+  // frame, no averaging of noisy interval estimates.
+  const LAG_LO = Math.round(ODF_RATE * 60 / 190);   // 19
+  const LAG_HI = Math.round(ODF_RATE * 60 /  55);   // 65
+  const N_CAND = LAG_HI - LAG_LO + 1;
+  const acfScore  = new Float32Array(N_CAND);       // raw autocorr this frame
+  const acfEMA    = new Float32Array(N_CAND);       // slow EMA of scores (the "memory")
+  const acfProb   = new Float32Array(N_CAND);       // softmax probability (raw lags)
+  const acfFolded = new Float32Array(N_CAND);       // octave-folded probability
+
+  // Framework-integer prior : candidates at framework Hz get a small bonus so
+  // the listener resonates with the same pool the phi_resonance generator
+  // uses. Hz = 60 / (lag·ODF_DT), so lag = ODF_RATE·60/BPM. Within 55-190 BPM
+  // these land at : T=3Hz→180BPM→lag 20 ; φ²≈2.618Hz→157BPM→lag 23 ;
+  // Φ=2Hz→120BPM→lag 30 ; φ≈1.618Hz→97BPM→lag 37 ; •=1Hz→60BPM→lag 60.
+  const PRIOR_LAGS   = [20, 23, 30, 37, 60];
+  const PRIOR_LABELS = ['T', 'φ²', 'Φ', 'φ', '•'];
+  const PRIOR_AMP    = 0.06;   // small ; evidence still dominates
+  const PRIOR_WIDTH  = 1.2;    // Gaussian width in samples
+  const priorBonus   = new Float32Array(N_CAND);
+  for(let k = 0; k < N_CAND; k++){
+    const lag = LAG_LO + k;
+    let b = 0;
+    for(const pl of PRIOR_LAGS){
+      const d = lag - pl;
+      b += PRIOR_AMP * Math.exp(-(d * d) / (2 * PRIOR_WIDTH * PRIOR_WIDTH));
+    }
+    priorBonus[k] = b;
+  }
+
+  let energyShort = 0, energyLong = 0;   // phrase trackers
+  let sPhrase = 0;                        // smoothed (energyShort - energyLong)
+
+  let sigSpectrum = null;            // running signature of the spectrum
+  let sFamiliarity = 0;              // smoothed cosine similarity
+
+  // ---------------- Chroma and music theory ----------------
+  // The 12 pitch classes (C, C#, D, ..., B). One Φ oscillation wraps the
+  // octave; 12 generators (G = T(T+1)) subdivide the cycle. The visible
+  // spectrum is one octave of light (400-790 THz; 790/400 ≈ 1.975), so
+  // audio pitch class p maps directly to hue = p/12 on the color wheel.
+  // This is not analogy: sound and light are the same Φ oscillation at
+  // different scales. Middle C shifted 41 octaves lands at ~575 THz
+  // (yellow-green). Every other pitch class is forced from there.
+  const CHROMA_REF_HZ = 16.35;   // C0, so log2(f/ref) gives pitch directly
+  // Three time layers of chroma, and a bass/treble split.
+  const sChroma       = [new Float32Array(12), new Float32Array(12), new Float32Array(12)];
+  const sChromaBass   = new Float32Array(12);   // 40-250 Hz: roots of chords
+  const sChromaTreble = new Float32Array(12);   // 250+ Hz: melody, upper voices
+  const chromaFast    = new Float32Array(12);   // for shader upload (fast layer)
+  // Krumhansl-Schmuckler key profiles (rotations of these 12-vectors, one
+  // rotation per tonic, matched to chroma by Pearson correlation).
+  const K_MAJOR = [6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88];
+  const K_MINOR = [6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17];
+  // Running "key chroma": ~8s window (slower than chord changes, faster than
+  // whole-song so it can track key modulations). This is the bed the key
+  // detector reads from.
+  const keyChroma = new Float32Array(12);
+  let sTonic     = 0;   // 0..11, C = 0
+  let sMode      = 1;   // 0 = minor, 1 = major
+  let sKeyConf   = 0;
+  let sChordRoot = 0;
+  let sChordQual = 1;
+  let sChordConf = 0;
+  let sFlatness  = 0;   // 0 = tonal, 1 = noisy
+
+  // ---------------- Time signature / bar structure ----------------
+  // Bar autocorrelation runs on the same 60Hz ODF, but the candidate lags
+  // are multiples of the detected beat period. Signatures 2..8 cover all
+  // common meters: 2/4, 3/4, 4/4, 5/4, 6/8, 7/8, 8/8.
+  const BAR_MIN = 2;
+  const BAR_MAX = 8;
+  const barScore = new Float32Array(BAR_MAX - BAR_MIN + 1);
+  const barEMA   = new Float32Array(BAR_MAX - BAR_MIN + 1);
+  let sBarLen   = 4;      // integer beats per bar (2..8)
+  let sBarConf  = 0;      // 0..1 confidence
+  let sBarPhase = 0;      // 0..1 position inside current bar
+  let barPhaseClock = 0;  // integrated time since last inferred downbeat
+  let lastBarWinner = 4;  // hysteresis for bar-length argmax
+  let barChallenge = -1;
+  let barChallengeT = 0;
+  let lastBarT = -1;      // wall time of previous bar detection pass
+  let beatsInBar = 0;     // integer: 0..sBarLen-1, which beat of the bar we're on
+
+  // Precomputed per-bin pitch class and bass/treble assignment, filled once
+  // the analyser is created so we can do chroma in O(N) per frame.
+  let binPitch = null;      // Int16Array: pitch class 0..11 or -1 (below ref / DC)
+  let binIsBass = null;     // Int8Array: 1 if <250 Hz (and >40 Hz)
+
+  function buildChromaTable(){
+    const sr = audioCtx.sampleRate;
+    const N  = freqBuf.length;
+    const binHz = (sr / 2) / N;
+    binPitch  = new Int16Array(N);
+    binIsBass = new Int8Array(N);
+    for(let i = 0; i < N; i++){
+      const f = i * binHz;
+      if(f < 27.5 || f > 8000){ binPitch[i] = -1; binIsBass[i] = 0; continue; }
+      // Pitch class = round(12 * log2(f / C0)) mod 12. C0 ≈ 16.35 Hz.
+      const pc = Math.round(12 * Math.log2(f / CHROMA_REF_HZ)) % 12;
+      binPitch[i]  = (pc + 12) % 12;
+      binIsBass[i] = (f >= 40 && f < 250) ? 1 : 0;
+    }
+  }
+
+  // ---------------- Chroma vector (12 pitch classes) ----------------
+  // Sum FFT magnitudes into pitch class buckets, octave-folded. Light low
+  // frequencies so the kick drum doesn't dominate the harmonic picture.
+  // Produces: raw 12-bin chroma (normalized), bass-only chroma (roots),
+  // treble-only chroma (melody/upper voices).
+  const chromaRaw    = new Float32Array(12);
+  const chromaRawB   = new Float32Array(12);
+  const chromaRawT   = new Float32Array(12);
+
+  function computeChroma(){
+    chromaRaw.fill(0);
+    chromaRawB.fill(0);
+    chromaRawT.fill(0);
+    const N = freqBuf.length;
+    for(let i = 1; i < N; i++){
+      const pc = binPitch[i];
+      if(pc < 0) continue;
+      // Magnitude squared = energy. Emphasizes tonal bins over noise floor.
+      const m = freqBuf[i] / 255.0;
+      const e = m * m;
+      chromaRaw[pc] += e;
+      if(binIsBass[i]) chromaRawB[pc] += e;
+      else             chromaRawT[pc] += e;
+    }
+    // Normalize each vector to [0,1] (max = 1 when populated).
+    let maxA = 0, maxB = 0, maxT = 0;
+    for(let p = 0; p < 12; p++){
+      if(chromaRaw[p]  > maxA) maxA = chromaRaw[p];
+      if(chromaRawB[p] > maxB) maxB = chromaRawB[p];
+      if(chromaRawT[p] > maxT) maxT = chromaRawT[p];
+    }
+    const invA = maxA > 1e-9 ? 1 / maxA : 0;
+    const invB = maxB > 1e-9 ? 1 / maxB : 0;
+    const invT = maxT > 1e-9 ? 1 / maxT : 0;
+    for(let p = 0; p < 12; p++){
+      chromaRaw[p]  *= invA;
+      chromaRawB[p] *= invB;
+      chromaRawT[p] *= invT;
+    }
+  }
+
+  // ---------------- Key detection (Krumhansl-Schmuckler) ----------------
+  // Correlate the rolling key-chroma window against 24 candidate profiles
+  // (12 major + 12 minor rotations). Pearson correlation; argmax is the key.
+  // Confidence = (best - second_best) / best (gap-normalized, 0..1).
+  function detectKey(){
+    // Chroma mean (needed for Pearson).
+    let cMean = 0;
+    for(let p = 0; p < 12; p++) cMean += keyChroma[p];
+    cMean /= 12;
+    let cSq = 0;
+    for(let p = 0; p < 12; p++){
+      const d = keyChroma[p] - cMean;
+      cSq += d * d;
+    }
+    if(cSq < 1e-9){ sKeyConf *= 0.95; return; }
+    const cNorm = Math.sqrt(cSq);
+    // Pre-compute profile means once (constants of the input profiles).
+    let mMajor = 0, mMinor = 0;
+    for(let p = 0; p < 12; p++){ mMajor += K_MAJOR[p]; mMinor += K_MINOR[p]; }
+    mMajor /= 12; mMinor /= 12;
+    let majSq = 0, minSq = 0;
+    for(let p = 0; p < 12; p++){
+      const dj = K_MAJOR[p] - mMajor;
+      const dn = K_MINOR[p] - mMinor;
+      majSq += dj * dj; minSq += dn * dn;
+    }
+    const majNorm = Math.sqrt(majSq);
+    const minNorm = Math.sqrt(minSq);
+    let bestR = -2, bestTonic = 0, bestMode = 1;
+    let secondR = -2;
+    for(let t = 0; t < 12; t++){
+      let dotMaj = 0, dotMin = 0;
+      for(let p = 0; p < 12; p++){
+        const c = keyChroma[p] - cMean;
+        dotMaj += c * (K_MAJOR[(p - t + 12) % 12] - mMajor);
+        dotMin += c * (K_MINOR[(p - t + 12) % 12] - mMinor);
+      }
+      const rMaj = dotMaj / (cNorm * majNorm);
+      const rMin = dotMin / (cNorm * minNorm);
+      if(rMaj > bestR){ secondR = bestR; bestR = rMaj; bestTonic = t; bestMode = 1; }
+      else if(rMaj > secondR) secondR = rMaj;
+      if(rMin > bestR){ secondR = bestR; bestR = rMin; bestTonic = t; bestMode = 0; }
+      else if(rMin > secondR) secondR = rMin;
+    }
+    // Smoothed key with slow EMA so modulations take seconds to register.
+    // If the new best tonic matches the current one, confidence climbs;
+    // if it jumps, confidence falls and the tonic follows only as the
+    // signal holds.
+    const conf = Math.max(0, Math.min(1, (bestR - Math.max(0, secondR)) / Math.max(0.15, bestR)));
+    if(bestTonic === sTonic && bestMode === sMode){
+      sKeyConf = sKeyConf * 0.92 + conf * 0.08;
+    } else {
+      sKeyConf *= 0.92;
+      if(sKeyConf < 0.25){
+        // Accept the new key; confidence will climb from here.
+        sTonic = bestTonic;
+        sMode  = bestMode;
+        sKeyConf = conf * 0.3;
+      }
+    }
+  }
+
+  // ---------------- Chord detection (triad templates) ----------------
+  // Match current chroma against 24 triad templates (major/minor × 12 roots).
+  // Major triad = root + major third (+4 semitones) + perfect fifth (+7).
+  // Minor triad = root + minor third (+3) + perfect fifth (+7).
+  function detectChord(){
+    let bestScore = -1, bestRoot = 0, bestQual = 1;
+    let secondScore = -1;
+    for(let r = 0; r < 12; r++){
+      // Each template is three bins. Score = sum of chroma at those bins
+      // minus penalty for mass outside them (keeps C major from winning
+      // every time there's stray energy anywhere).
+      const sMaj = chromaRaw[r] + chromaRaw[(r + 4) % 12] + chromaRaw[(r + 7) % 12];
+      const sMin = chromaRaw[r] + chromaRaw[(r + 3) % 12] + chromaRaw[(r + 7) % 12];
+      if(sMaj > bestScore){ secondScore = bestScore; bestScore = sMaj; bestRoot = r; bestQual = 1; }
+      else if(sMaj > secondScore) secondScore = sMaj;
+      if(sMin > bestScore){ secondScore = bestScore; bestScore = sMin; bestRoot = r; bestQual = 0; }
+      else if(sMin > secondScore) secondScore = sMin;
+    }
+    const conf = Math.max(0, Math.min(1, (bestScore - Math.max(0, secondScore)) / Math.max(0.3, bestScore)));
+    // Chord changes fast: short EMA so it tracks harmony in real time.
+    if(bestRoot === sChordRoot && bestQual === sChordQual){
+      sChordConf = sChordConf * 0.80 + conf * 0.20;
+    } else {
+      sChordConf *= 0.80;
+      if(sChordConf < 0.4){
+        sChordRoot = bestRoot;
+        sChordQual = bestQual;
+        sChordConf = conf * 0.5;
+      }
+    }
+  }
+
+  // ---------------- Bar length (time signature) detection ----------------
+  // Given tempoSec (seconds per beat), candidate bar lengths are N beats
+  // for N = 2..8. Autocorrelate the ODF at each bar-length lag; pick
+  // winner with hysteresis. 3→3/4 (waltz), 4→4/4 (common), 6→6/8 (compound),
+  // 7→7/8, etc.
+  function detectBar(tNow, dt){
+    if(tempoSec < 0.2 || tempoLock < 0.35){ sBarConf *= 0.95; return; }
+    const beatLag = tempoSec * ODF_RATE;   // ODF samples per beat
+    let sumTotal = 0;
+    for(let n = BAR_MIN; n <= BAR_MAX; n++){
+      const lag = Math.round(beatLag * n);
+      if(lag >= ODF_LEN) { barScore[n - BAR_MIN] = 0; continue; }
+      const Nw = ODF_LEN - lag;
+      let s = 0;
+      for(let i = 0; i < Nw; i++){
+        const a = odfBuf[(odfIdx + i) % ODF_LEN];
+        const b = odfBuf[(odfIdx + i + lag) % ODF_LEN];
+        s += a * b;
+      }
+      barScore[n - BAR_MIN] = s / Nw;
+      sumTotal += barScore[n - BAR_MIN];
+    }
+    // Time-based EMA on the bar scores.
+    const emaAlpha = 1 - Math.exp(-dt / 4.0);
+    for(let k = 0; k < barScore.length; k++){
+      barEMA[k] = barEMA[k] * (1 - emaAlpha) + barScore[k] * emaAlpha;
+    }
+    // Argmax over EMA with hysteresis.
+    let bestK = 0, bestV = barEMA[0];
+    for(let k = 1; k < barEMA.length; k++){
+      if(barEMA[k] > bestV){ bestV = barEMA[k]; bestK = k; }
+    }
+    const bestN = bestK + BAR_MIN;
+    let total = 0;
+    for(let k = 0; k < barEMA.length; k++) total += Math.max(0, barEMA[k]);
+    const conf = total > 1e-9 ? bestV / total : 0;
+    if(bestN === lastBarWinner){
+      barChallenge = -1; barChallengeT = 0;
+    } else {
+      if(bestN !== barChallenge){ barChallenge = bestN; barChallengeT = 0; }
+      else barChallengeT += dt;
+      if(barChallengeT > 1.0){
+        lastBarWinner = bestN; barChallenge = -1; barChallengeT = 0;
+      }
+    }
+    sBarLen  = lastBarWinner;
+    sBarConf = sBarConf * 0.92 + Math.min(1, conf * 3.5) * 0.08;
+  }
+
+  function ensureAudioCtx(){
+    if(!audioCtx){
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    if(!analyser){
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 2048;
+      analyser.smoothingTimeConstant = 0.6;
+      freqBuf = new Uint8Array(analyser.frequencyBinCount);
+      timeBuf = new Uint8Array(analyser.fftSize);
+      sigSpectrum = new Float32Array(analyser.frequencyBinCount);
+      // Compute octave band bin ranges for this sample rate (usually 44.1/48k).
+      const binHz = audioCtx.sampleRate / analyser.fftSize;
+      octBinLo = new Int32Array(OCT_COUNT);
+      octBinHi = new Int32Array(OCT_COUNT);
+      for(let o = 0; o < OCT_COUNT; o++){
+        const fLo = OCT_BASE_HZ * Math.pow(2, o);
+        const fHi = OCT_BASE_HZ * Math.pow(2, o + 1);
+        octBinLo[o] = Math.max(1, Math.floor(fLo / binHz));
+        octBinHi[o] = Math.min(freqBuf.length, Math.ceil(fHi / binHz));
+      }
+      buildChromaTable();
+    }
+  }
+
+  function disconnectSource(){
+    if(sourceNode){ try { sourceNode.disconnect(); } catch(_){} sourceNode = null; }
+    // Tear down the monitor path too. Without this, analyser → destination
+    // survives a source switch, and the next source (e.g. mic) ends up
+    // routed to the speakers : feedback on PC, voice-mode ducking on Android
+    // (which is why a YouTube song in another app slows down and distorts).
+    if(analyser){ try { analyser.disconnect(); } catch(_){} }
+    if(micStream){ micStream.getTracks().forEach(tr => tr.stop()); micStream = null; }
+    if(!audioEl.paused) audioEl.pause();
+    sourceType = 'none';
+    // Reset learned state when switching sources so the lock doesn't carry
+    // over an old song's tempo into a new one.
+    beatHistory.length = 0;
+    tempoSec = 0; tempoBPM = 0; tempoLock = 0; nextBeatAt = 0; beatPhase = 0;
+    if(sigSpectrum) sigSpectrum.fill(0);
+    sFamiliarity = 0; sPhrase = 0; energyShort = 0; energyLong = 0;
+    sBass.fill(0); sMids.fill(0); sTreble.fill(0); sRMS.fill(0);
+    sCentroid.fill(0); beatEnv.fill(0);
+    for(let o = 0; o < OCT_COUNT; o++){ sOct[o][0] = 0; sOct[o][1] = 0; sOct[o][2] = 0; }
+    octU.fill(0);
+    preBeatEnv = 0; bassLongAvg = 0; lastBeatT = 0;
+    odfBuf.fill(0); acfEMA.fill(0); acfProb.fill(0); acfFolded.fill(0);
+    odfIdx = 0; odfPrev = 0; odfClock = -1;
+    lastAcfT = -1; lastPhaseT = -1;
+    winnerLag = -1; winnerChallenge = -1; winnerChallengeT = 0;
+    // Music theory state.
+    for(let i = 0; i < 3; i++) sChroma[i].fill(0);
+    sChromaBass.fill(0); sChromaTreble.fill(0); keyChroma.fill(0); chromaFast.fill(0);
+    sTonic = 0; sMode = 1; sKeyConf = 0;
+    sChordRoot = 0; sChordQual = 1; sChordConf = 0;
+    sFlatness = 0;
+    barScore.fill(0); barEMA.fill(0);
+    sBarLen = 4; sBarConf = 0; sBarPhase = 0;
+    lastBarWinner = 4; barChallenge = -1; barChallengeT = 0;
+    lastBarT = -1; beatsInBar = 0; barPhaseClock = 0;
+  }
+
+  async function useMic(){
+    try {
+      ensureAudioCtx();
+      disconnectSource();
+      micStream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          // All three must be off : we want the raw spectrum for the visual,
+          // not a conversation-optimized stream. echoCancellation is what
+          // flips Android into voice-mode (ducking other apps) ; keeping it
+          // off keeps the YouTube player at full volume and speed.
+          echoCancellation: false,
+          autoGainControl:  false,
+          noiseSuppression: false
+        }
+      });
+      sourceNode = audioCtx.createMediaStreamSource(micStream);
+      // Analyser only : NO destination connect. Mic must never reach
+      // speakers (would feedback on PC, would force communication-mode
+      // audio session on Android and distort whatever is playing elsewhere).
+      sourceNode.connect(analyser);
+      sourceType = 'mic';
+      return true;
+    } catch(e){
+      showErr('Microphone access failed: ' + e.message);
+      return false;
+    }
+  }
+
+  function useFile(file){
+    try {
+      ensureAudioCtx();
+      disconnectSource();
+      const url = URL.createObjectURL(file);
+      audioEl.src = url;
+      audioEl.loop = true;
+      audioEl.play();
+      sourceNode = audioCtx.createMediaElementSource(audioEl);
+      sourceNode.connect(analyser);
+      // File playback : user wants to HEAR the song, so monitor is on.
+      // disconnectSource() tears this down before any mic path runs.
+      analyser.connect(audioCtx.destination);
+      sourceType = 'file';
+      return true;
+    } catch(e){
+      showErr('File playback failed: ' + e.message);
+      return false;
+    }
+  }
+
+  btnMic.addEventListener('click', async () => {
+    const ok = await useMic();
+    if(ok){ startOverlay.classList.add('hide'); setTimeout(() => startOverlay.style.display = 'none', 700); }
+  });
+  btnFile.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', (ev) => {
+    const f = ev.target.files && ev.target.files[0];
+    if(f && useFile(f)){
+      startOverlay.classList.add('hide');
+      setTimeout(() => startOverlay.style.display = 'none', 700);
+    }
+  });
+  btnSwitch.addEventListener('click', () => {
+    disconnectSource();
+    startOverlay.classList.remove('hide');
+    startOverlay.style.display = 'flex';
+  });
+
+  // ---------------- Tempo estimation : autocorr + softmax ----------------
+  // The ODF is sampled at a fixed 60 Hz regardless of frame rate. The
+  // autocorrelation of this signal at a given lag is high when the signal
+  // repeats at that period. We score every candidate period in parallel, softmax
+  // over the scores (with slow EMA memory for stability), and the peakedness of
+  // the distribution IS the lock confidence. No interval averaging, no ghosts :
+  // the right tempo simply wins because its autocorrelation is highest.
+
+  // Push ODF samples at exactly 60 Hz. Called from analyze() each frame with
+  // current time and raw (un-smoothed) bass level ; catches up any samples we
+  // owe since last call.
+  function pushODF(tNow, rawBass){
+    if(odfClock < 0) odfClock = tNow;
+    // Half-wave rectified derivative : we care about ATTACKS, not decays.
+    while(tNow - odfClock >= ODF_DT){
+      const onset = Math.max(0, rawBass - odfPrev);
+      odfPrev = rawBass;
+      odfBuf[odfIdx] = onset;
+      odfIdx = (odfIdx + 1) % ODF_LEN;
+      odfClock += ODF_DT;
+    }
+  }
+
+  // Run autocorrelation against every candidate lag ; softmax gives the winner.
+  // Time-based : dt measured from wall clock so EMA time constants are stable
+  // regardless of frame rate, and hysteresis windows are genuine seconds.
+  function runAutocorrSoftmax(tNow){
+    // Wall-clock dt since last pass. Clamp to sane bounds (dropped frames or
+    // tab-switch pauses shouldn't inject giant jumps).
+    const dt = lastAcfT < 0 ? 1/60 : Math.max(1/600, Math.min(0.2, tNow - lastAcfT));
+    lastAcfT = tNow;
+
+    // Raw autocorrelation this frame (not normalized by lag variance ; we
+    // just care about relative ordering between candidates).
+    for(let k = 0; k < N_CAND; k++){
+      const lag = LAG_LO + k;
+      const N = ODF_LEN - lag;
+      let sum = 0;
+      for(let i = 0; i < N; i++){
+        const a = odfBuf[(odfIdx + i) % ODF_LEN];
+        const b = odfBuf[(odfIdx + i + lag) % ODF_LEN];
+        sum += a * b;
+      }
+      acfScore[k] = sum / N;
+      // Time-based EMA : 3s time constant gives the past genuine weight without
+      // being so slow it misses real tempo changes. Candidates that keep
+      // winning accumulate ; one-frame spikes fade in a few hundred ms.
+      const emaAlpha = 1 - Math.exp(-dt / 3.0);
+      acfEMA[k] = acfEMA[k] * (1 - emaAlpha) + acfScore[k] * emaAlpha;
+    }
+
+    // Softmax with normalization, temperature, and framework-integer prior.
+    // Normalize to [0, 1] so the softmax sharpness is stable regardless of
+    // overall signal strength ; add the prior bonus inside the exponent so
+    // framework-Hz candidates get a small tie-breaking boost without
+    // overriding actual audio evidence.
+    let maxS = acfEMA[0], minS = acfEMA[0];
+    for(let k = 1; k < N_CAND; k++){
+      if(acfEMA[k] > maxS) maxS = acfEMA[k];
+      if(acfEMA[k] < minS) minS = acfEMA[k];
+    }
+    const range = Math.max(1e-9, maxS - minS);
+    const beta = 10.0;   // temperature : higher = sharper peak
+    let pSum = 0;
+    for(let k = 0; k < N_CAND; k++){
+      const nrm = (acfEMA[k] - minS) / range;
+      acfProb[k] = Math.exp((nrm + priorBonus[k]) * beta);
+      pSum += acfProb[k];
+    }
+    for(let k = 0; k < N_CAND; k++) acfProb[k] /= pSum;
+
+    // Octave fold : L and 2L are the same ⊙ at different λ (A3 at the tempo
+    // level). Accumulate mass from half-lag and double-lag into each
+    // candidate so octave partners reinforce each other ; this is how a
+    // structural tempo emerges when the music is ambiguous between octaves.
+    let foldSum = 0;
+    for(let k = 0; k < N_CAND; k++){
+      const lag = LAG_LO + k;
+      let m = acfProb[k];
+      const halfLag = Math.round(lag / 2);
+      const dblLag  = lag * 2;
+      if(halfLag >= LAG_LO && halfLag <= LAG_HI) m += 0.5 * acfProb[halfLag - LAG_LO];
+      if(dblLag  >= LAG_LO && dblLag  <= LAG_HI) m += 0.5 * acfProb[dblLag  - LAG_LO];
+      acfFolded[k] = m;
+      foldSum += m;
+    }
+    const foldNorm = foldSum > 1e-9 ? 1 / foldSum : 0;
+    for(let k = 0; k < N_CAND; k++) acfFolded[k] *= foldNorm;
+
+    // Peakedness of the FOLDED distribution = lock confidence. Folding lets
+    // 90 BPM and 180 BPM count as the same structural pulse ; the listener
+    // reports high lock when it's confident about the pulse, not when it's
+    // merely confident about one particular octave of it.
+    let entropy = 0;
+    for(let k = 0; k < N_CAND; k++){
+      const p = acfFolded[k];
+      if(p > 1e-9) entropy -= p * Math.log(p);
+    }
+    const lockCand = 1.0 - entropy / Math.log(N_CAND);
+
+    // Gate the lock on actual ODF energy (not softmax score, which is always
+    // normalized). This way silence can't produce a false lock.
+    let odfEnergy = 0;
+    for(let i = 0; i < ODF_LEN; i++) odfEnergy += odfBuf[i] * odfBuf[i];
+    odfEnergy /= ODF_LEN;
+    const energyGate = Math.min(1, odfEnergy * 1500);
+    const effectiveLock = lockCand * energyGate;
+
+    // Argmax over FOLDED distribution with hysteresis. Expected-value jitters
+    // on multi-modal distributions ; argmax + hysteresis picks one mode and
+    // stays there until a challenger dominates for long enough to earn the
+    // switch. The past (EMA memory) chooses the present (current argmax)
+    // which predicts the future (nextBeatAt projection).
+    let bestK = 0, bestP = acfFolded[0];
+    for(let k = 1; k < N_CAND; k++){
+      if(acfFolded[k] > bestP){ bestP = acfFolded[k]; bestK = k; }
+    }
+    const bestLag = LAG_LO + bestK;
+    if(winnerLag < 0){
+      winnerLag = bestLag;                     // first valid pass : adopt it
+      winnerChallenge = -1;
+      winnerChallengeT = 0;
+    } else if(bestLag === winnerLag){
+      winnerChallenge = -1;                    // champion still winning
+      winnerChallengeT = 0;
+    } else {
+      // A challenger is winning THIS frame. Require it to hold the crown for
+      // half a second (or have a big probability margin) before switching.
+      const currentIdx = winnerLag - LAG_LO;
+      const currentP = currentIdx >= 0 && currentIdx < N_CAND ? acfFolded[currentIdx] : 0;
+      const margin = bestP - currentP;
+      if(bestLag !== winnerChallenge){
+        winnerChallenge = bestLag;
+        winnerChallengeT = 0;
+      } else {
+        winnerChallengeT += dt;
+      }
+      if(winnerChallengeT > 0.5 || margin > 0.08){
+        winnerLag = bestLag;
+        winnerChallenge = -1;
+        winnerChallengeT = 0;
+      }
+    }
+    const newSec = winnerLag / ODF_RATE;
+    // Small smoothing so the BPM number doesn't twitch ; argmax already gives
+    // us a single answer, this just eases jumps during the switch itself.
+    tempoSec = tempoSec > 0 ? tempoSec * 0.85 + newSec * 0.15 : newSec;
+    tempoBPM = 60 / tempoSec;
+
+    // Asymmetric time-based EMA on the lock : rises fast (~0.5s) when the
+    // structural pulse is clear, falls slow (~3s) so a brief dip mid-song
+    // (breakdown, drop, vocal section) doesn't knock the listener off pattern.
+    const rising = effectiveLock > tempoLock;
+    const tau = rising ? 0.5 : 3.0;
+    const lockAlpha = 1 - Math.exp(-dt / tau);
+    tempoLock = tempoLock * (1 - lockAlpha) + effectiveLock * lockAlpha;
+  }
+
+  // Peak-pick only provides PHASE anchoring now. Tempo comes from autocorr.
+  function onBeatDetected(tNow){
+    beatHistory.push(tNow);
+    if(beatHistory.length > MAX_BEAT_HISTORY) beatHistory.shift();
+    // Anchor the next-beat prediction to this just-happened onset ; tempo
+    // itself was already decided by the softmax (no interval averaging).
+    if(tempoSec > 0) nextBeatAt = tNow + tempoSec;
+  }
+
+  // ---------------- Per-frame analysis ----------------
+  function analyze(tNow){
+    if(!analyser || sourceType === 'none'){
+      for(let i = 0; i < 3; i++){
+        sBass[i] *= 0.96; sMids[i] *= 0.96; sTreble[i] *= 0.96;
+        sRMS[i]  *= 0.96; beatEnv[i] *= 0.92;
+      }
+      preBeatEnv *= 0.9;
+      return;
+    }
+
+    analyser.getByteFrequencyData(freqBuf);
+    analyser.getByteTimeDomainData(timeBuf);
+
+    const sr = audioCtx.sampleRate;
+    const N = freqBuf.length;
+    const binHz = (sr / 2) / N;
+    const bassEndBin = Math.min(N - 1, Math.floor(250 / binHz));
+    const midsEndBin = Math.min(N - 1, Math.floor(2000 / binHz));
+    const trebEndBin = Math.min(N - 1, Math.floor(8000 / binHz));
+
+    let bassSum = 0, midsSum = 0, trebSum = 0;
+    let centroidNum = 0, centroidDen = 0;
+
+    for(let i = 1; i < trebEndBin; i++){
+      const v = freqBuf[i] / 255.0;
+      centroidNum += v * i;
+      centroidDen += v;
+      if(i <= bassEndBin) bassSum += v;
+      else if(i <= midsEndBin) midsSum += v;
+      else trebSum += v;
+    }
+
+    const bass = bassSum / Math.max(1, bassEndBin);
+    const mids = midsSum / Math.max(1, midsEndBin - bassEndBin);
+    const treb = trebSum / Math.max(1, trebEndBin - midsEndBin);
+
+    // Feed the onset detection function at a fixed 60 Hz (decoupled from
+    // frame rate) and run the autocorr/softmax tempo estimator every frame.
+    // tempoBPM, tempoSec, and tempoLock are updated from inside runAutocorrSoftmax.
+    pushODF(tNow, bass);
+    runAutocorrSoftmax(tNow);
+    // Bar-length / time-signature detection uses the same ODF buffer at
+    // multi-beat lags.
+    {
+      const barDt = lastBarT < 0 ? 1/60 : Math.max(1/600, Math.min(0.2, tNow - lastBarT));
+      lastBarT = tNow;
+      detectBar(tNow, barDt);
+    }
+
+    let rms = 0;
+    for(let i = 0; i < timeBuf.length; i++){
+      const x = (timeBuf[i] - 128) / 128;
+      rms += x * x;
+    }
+    rms = Math.sqrt(rms / timeBuf.length);
+
+    const centroidBin = centroidDen > 0 ? centroidNum / centroidDen : 0;
+    const centroid = Math.min(1, centroidBin / trebEndBin);
+
+    // ⊙λ : fast ; reacts within the beat (~150ms attack).
+    sBass[0]     = sBass[0]     * 0.72 + bass     * 0.28;
+    sMids[0]     = sMids[0]     * 0.78 + mids     * 0.22;
+    sTreble[0]   = sTreble[0]   * 0.78 + treb     * 0.22;
+    sRMS[0]      = sRMS[0]      * 0.80 + rms      * 0.20;
+    sCentroid[0] = sCentroid[0] * 0.90 + centroid * 0.10;
+    // ⊙Λ : medium ; sways with the phrase (~1s, the containing whole's tempo).
+    sBass[1]     = sBass[1]     * 0.96  + bass     * 0.04;
+    sMids[1]     = sMids[1]     * 0.96  + mids     * 0.04;
+    sTreble[1]   = sTreble[1]   * 0.96  + treb     * 0.04;
+    sRMS[1]      = sRMS[1]      * 0.96  + rms      * 0.04;
+    sCentroid[1] = sCentroid[1] * 0.97  + centroid * 0.03;
+    // ∞ : slow ; breathes with the whole song (~6s, the source's pulse).
+    sBass[2]     = sBass[2]     * 0.995 + bass     * 0.005;
+    sMids[2]     = sMids[2]     * 0.995 + mids     * 0.005;
+    sTreble[2]   = sTreble[2]   * 0.995 + treb     * 0.005;
+    sRMS[2]      = sRMS[2]      * 0.995 + rms      * 0.005;
+    sCentroid[2] = sCentroid[2] * 0.997 + centroid * 0.003;
+
+    // Chroma: 12-bin pitch class vector. This is the harmonic content, the
+    // input to key/chord detection and the forced hue mapping.
+    if(binPitch){
+      computeChroma();
+      // Three-layer smoothing on chroma (same pattern as bass/mids/treble).
+      for(let p = 0; p < 12; p++){
+        sChroma[0][p]     = sChroma[0][p]     * 0.78  + chromaRaw[p]  * 0.22;
+        sChroma[1][p]     = sChroma[1][p]     * 0.96  + chromaRaw[p]  * 0.04;
+        sChroma[2][p]     = sChroma[2][p]     * 0.995 + chromaRaw[p]  * 0.005;
+        sChromaBass[p]    = sChromaBass[p]    * 0.85  + chromaRawB[p] * 0.15;
+        sChromaTreble[p]  = sChromaTreble[p]  * 0.85  + chromaRawT[p] * 0.15;
+        // Key chroma: very slow EMA (~8s) so key detection sees the
+        // statistical distribution of pitch classes over a long window.
+        keyChroma[p] = keyChroma[p] * 0.992 + chromaRaw[p] * 0.008;
+      }
+      detectKey();
+      detectChord();
+    }
+
+    // Spectral flatness: geomean / arithmean over the 40-8000 Hz band.
+    // Near 1 = noise-like (percussion, breath); near 0 = tonal (pure pitch).
+    // Used to gate harmonic mapping: during drum fills we want less chroma
+    // influence because there are no real pitches.
+    {
+      const loF = Math.max(1, Math.floor(40 / binHz));
+      const hiF = Math.min(N - 1, Math.floor(8000 / binHz));
+      let logSum = 0, arithSum = 0, cnt = 0;
+      for(let i = loF; i < hiF; i++){
+        const v = freqBuf[i] / 255.0 + 1e-6;
+        logSum += Math.log(v);
+        arithSum += v;
+        cnt++;
+      }
+      if(cnt > 0 && arithSum > 1e-6){
+        const gm = Math.exp(logSum / cnt);
+        const am = arithSum / cnt;
+        const flat = Math.max(0, Math.min(1, gm / am));
+        sFlatness = sFlatness * 0.90 + flat * 0.10;
+      }
+    }
+
+    // Spectral pyramid : one value per octave, each octave = one dimensional
+    // station. A song's actual content is here ; bass/mids/treb above were a
+    // 3-bucket cross-section of the same 8 octaves.
+    if(octBinLo){
+      for(let o = 0; o < OCT_COUNT; o++){
+        let sum = 0;
+        const lo = octBinLo[o], hi = octBinHi[o];
+        for(let i = lo; i < hi; i++) sum += freqBuf[i] / 255.0;
+        const val = sum / Math.max(1, hi - lo);
+        // Same three-layer smoothing as bass/mids/treb ; each octave has its
+        // own ⊙λ/⊙Λ/∞ temporal triple.
+        sOct[o][0] = sOct[o][0] * 0.78  + val * 0.22;
+        sOct[o][1] = sOct[o][1] * 0.96  + val * 0.04;
+        sOct[o][2] = sOct[o][2] * 0.995 + val * 0.005;
+      }
+    }
+
+    // Peak-pick on the fast bass layer : provides PHASE anchoring and visual
+    // beatEnv flashes ; tempo itself comes from the autocorr/softmax above.
+    // Thresholds can be permissive because the autocorr rejects ghosts ; the
+    // peak-picker just marks "something happened here" for the visual pulse.
+    bassLongAvg = bassLongAvg * 0.99 + sBass[0] * 0.01;   // slower baseline
+    const spike    = sBass[0] - bassLongAvg;
+    const isTrans  = sBass[0] > bassLongAvg * 1.35
+                  && sBass[0] > 0.12
+                  && spike    > 0.04
+                  && (tNow - lastBeatT) > 0.18;
+    if(isTrans){
+      // Advance the bar-position counter on every confirmed beat. A bar of
+      // sBarLen beats wraps at the downbeat (beatsInBar = 0 = beat 1 of
+      // the next bar). The strongest beats tend to be downbeats, so if a
+      // hit is especially loud we snap the counter to 0 to correct drift.
+      beatsInBar = (beatsInBar + 1) % Math.max(2, sBarLen | 0);
+      // Downbeat-snap: if this onset is much stronger than recent onsets,
+      // assume it's the downbeat and realign. Gated by bar confidence.
+      if(sBarConf > 0.25 && spike > 0.12 && sBass[0] > bassLongAvg * 1.9){
+        beatsInBar = 0;
+      }
+      beatEnv[0] = 1.0;
+      // Downbeat gets an extra kick: full ⟳ recursion of the bar. Gated
+      // by bar confidence so it only kicks in once the time signature is
+      // actually known.
+      if(beatsInBar === 0) beatEnv[0] = 1.0 + 0.5 * sBarConf;
+      preBeatEnv = 0;   // reset anticipation ; the event happened
+      lastBeatT = tNow;
+      onBeatDetected(tNow);
+    }
+    // Decay : ⊙λ snaps back, ⊙Λ remembers the swell, ∞ holds the song's pulse.
+    beatEnv[0] *= 0.89;
+    beatEnv[1] = beatEnv[1] * 0.96  + beatEnv[0] * 0.04;
+    beatEnv[2] = beatEnv[2] * 0.995 + beatEnv[0] * 0.005;
+
+    // Pre-beat anticipation and forward-projected phase. The past (autocorr
+    // memory) fixed tempoSec ; we now integrate phase forward with wall-clock
+    // dt so the beat keeps coasting even if the signal dips or lock wobbles.
+    // When a real onset arrives it soft-nudges phase back toward 0 (anchor)
+    // ; between onsets, phase is a pure prediction running on tempoSec.
+    const phaseDt = lastPhaseT < 0 ? 0 : Math.max(0, Math.min(0.2, tNow - lastPhaseT));
+    lastPhaseT = tNow;
+    if(tempoSec > 0.2){
+      // Advance phase at 2π/tempoSec radians per second.
+      beatPhase = (beatPhase + (phaseDt / tempoSec) * 2 * Math.PI) % (2 * Math.PI);
+      // Soft nudge toward 0 when an onset just fired. Nudge strength scales
+      // with lock ; if we're locked, the onset confirms phase, if we're not,
+      // the onset pulls harder because we have less prior to trust.
+      if(isTrans){
+        const nudge = 0.35 + 0.25 * (1 - tempoLock);
+        // Wrap distance to 0 : shortest path on the circle.
+        let d = beatPhase;
+        if(d > Math.PI) d -= 2 * Math.PI;
+        beatPhase = (beatPhase - d * nudge + 2 * Math.PI) % (2 * Math.PI);
+      }
+      // Predict next-beat timestamp from current phase.
+      const phaseToNext = (2 * Math.PI - beatPhase) % (2 * Math.PI);
+      nextBeatAt = tNow + (phaseToNext / (2 * Math.PI)) * tempoSec;
+      // Bar phase: combine integer beatsInBar with continuous beatPhase.
+      // Range 0..1; 0 = on the downbeat, 0.25 = middle of beat 1 in 4/4,
+      // 0.5 = on beat 3 in 4/4, etc. Goes to the shader as uBarPhase.
+      const bl = Math.max(2, sBarLen | 0);
+      sBarPhase = ((beatsInBar + beatPhase / (2 * Math.PI)) / bl) % 1;
+      // Pre-beat envelope uses the projected phase directly ; cubic ease-in
+      // so it's mostly dormant until just before the predicted hit. Gated
+      // softly by lock so weak lock = weak anticipation (not off).
+      const progress = beatPhase / (2 * Math.PI);
+      preBeatEnv = Math.pow(progress, 3) * Math.max(0.15, tempoLock);
+    } else {
+      preBeatEnv *= 0.9;
+    }
+
+    // Phrase tracker : short vs long RMS envelopes (uses the fast RMS layer
+    // so phrase changes are felt against the moment, not the slow average).
+    energyShort = energyShort * 0.94 + sRMS[0] * 0.06;   // ~1.5s window
+    energyLong  = energyLong  * 0.995 + sRMS[0] * 0.005; // ~30s window
+    // Normalize by long-term level so quiet and loud songs both show phrase dynamics.
+    const phraseRaw = energyLong > 0.01 ? (energyShort - energyLong) / energyLong : 0;
+    sPhrase = sPhrase * 0.92 + Math.max(-1, Math.min(1, phraseRaw * 1.2)) * 0.08;
+
+    // Signature spectrum memory : very slow EMA of current spectrum.
+    let sigDot = 0, sigMag = 0, curMag = 0;
+    for(let i = 1; i < trebEndBin; i++){
+      const cur = freqBuf[i] / 255.0;
+      sigSpectrum[i] = sigSpectrum[i] * 0.9965 + cur * 0.0035;
+      sigDot += sigSpectrum[i] * cur;
+      sigMag += sigSpectrum[i] * sigSpectrum[i];
+      curMag += cur * cur;
+    }
+    const sim = (sigMag > 1e-6 && curMag > 1e-6) ? sigDot / Math.sqrt(sigMag * curMag) : 0;
+    // Fresh start is "familiar to itself" (sim ~1) ; subtract baseline and
+    // slowly raise as we accumulate a stable signature (gauged by sigMag).
+    const sigConfidence = Math.min(1, sigMag * 1500);  // grows with signature strength
+    sFamiliarity = sFamiliarity * 0.96 + (sim * sigConfidence) * 0.04;
+
+    // Era walks with the slow centroid (the song's overall tonal home, not
+    // moment-to-moment spectral wobble) ; phrase nudges it (building music
+    // drifts toward ATOMIC end, breakdowns toward COSMO end).
+    const targetEra = (1.0 - sCentroid[2]) * 3.0 - sPhrase * 0.4;
+    sEra = sEra * 0.97 + Math.max(0, Math.min(3, targetEra)) * 0.03;
+
+    // No hard lock-decay : the asymmetric EMA inside runAutocorrSoftmax
+    // already handles silence (3s fall time constant). A DJ cut that lasts
+    // ~3s drops lock to 1/e of its previous value without a frame-rate cliff.
+  }
+
+  // ---------------- Readout ----------------
+  function renderReadout(){
+    const eras = ['ATOMIC', 'BIOLOGICAL', 'PLANETARY', 'COSMOLOGICAL'];
+    const idx = Math.min(3, Math.max(0, Math.floor(sEra)));
+    const nextIdx = Math.min(3, idx + 1);
+    const frac = sEra - idx;
+    const transitioning = frac > 0.7 && idx !== nextIdx;
+
+    function bar(v, chars){
+      v = Math.max(0, Math.min(1, v));
+      const filled = Math.round(v * chars);
+      return '█'.repeat(filled) + '░'.repeat(chars - filled);
+    }
+    // Three little bars side-by-side : ⊙λ (fast), ⊙Λ (medium), ∞ (slow).
+    function tri(arr, mul){
+      mul = mul === undefined ? 2.0 : mul;
+      return '<span class="layer-fast">' + bar(arr[0] * mul, 8) + '</span> '
+           + '<span class="layer-med">'  + bar(arr[1] * mul, 8) + '</span> '
+           + '<span class="layer-slow">' + bar(arr[2] * mul, 8) + '</span>';
+    }
+
+    // Format an octave's lower frequency edge as a 5-char right-aligned label.
+    function hzLabel(oi){
+      const hz = OCT_BASE_HZ * Math.pow(2, oi);
+      const s = hz >= 1000 ? (hz / 1000).toFixed(1) + 'k' : hz.toFixed(0) + ' ';
+      // right-pad to 5 chars so the column stays aligned
+      return (s + '     ').slice(0, 5);
+    }
+
+    // The 8-band spectral pyramid : one row per dimensional station, from
+    // • (aperture, deepest bass) through ⟳ (recursion, highest octave).
+    function octaveRows(){
+      let rows = '';
+      for(let oi = 0; oi < OCT_COUNT; oi++){
+        const label = OCT_GLYPH[oi] + ' ' + OCT_DIM_LABEL[oi] + '  ' + hzLabel(oi) + 'Hz ';
+        rows += '<span style="color:' + OCT_COLOR[oi] + '">' + label + '</span>'
+              + tri(sOct[oi], 2.0) + '\n';
+      }
+      return rows;
+    }
+
+    const srcLabel = sourceType === 'mic'  ? '♫ microphone'
+                   : sourceType === 'file' ? '♫ audio file (playing)'
+                                           : '♪ waiting for audio';
+
+    const beatMark = beatEnv[0] > 0.5 ? '●' : beatEnv[0] > 0.2 ? '◉' : '○';
+    const lockMark = tempoLock > 0.6 ? '◆' : tempoLock > 0.3 ? '◇' : '·';
+    const lockClass = tempoLock > 0.6 ? 'lock-tight' : 'lock-loose';
+
+    const phraseArrow = sPhrase > 0.05 ? '↑'
+                      : sPhrase < -0.05 ? '↓' : '~';
+    const phraseClass = sPhrase > 0.05 ? 'phrase-up'
+                      : sPhrase < -0.05 ? 'phrase-dn' : '';
+    const phraseText = sPhrase > 0.05 ? 'building'
+                     : sPhrase < -0.05 ? 'ebbing' : 'steady';
+
+    // Pitch-class name and key/chord readouts.
+    const NOTE_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+    const tonicName = NOTE_NAMES[((sTonic % 12) + 12) % 12];
+    const modeName  = sMode > 0.5 ? 'maj' : 'min';
+    const keyText   = sKeyConf > 0.15
+                    ? tonicName + ' ' + modeName + ' (' + (sKeyConf * 100).toFixed(0) + '%)'
+                    : 'searching';
+    const chordRootName = NOTE_NAMES[((sChordRoot % 12) + 12) % 12];
+    const chordQualName = sChordQual > 0.5 ? 'maj' : 'min';
+    const chordText = sChordConf > 0.2
+                    ? chordRootName + ' ' + chordQualName + ' (' + (sChordConf * 100).toFixed(0) + '%)'
+                    : '-';
+    const barLenInt = Math.round(sBarLen);
+    const timeText  = sBarConf > 0.25
+                    ? barLenInt + '/4 (' + (sBarConf * 100).toFixed(0) + '%)'
+                    : 'searching';
+    const tonality = sFlatness < 0.2 ? 'tonal' : sFlatness > 0.6 ? 'noisy' : 'mixed';
+
+    const timeToNext = Math.max(0, nextBeatAt - (performance.now() / 1000.0 - (startTs / 1000.0)));
+    // Progressive messaging so you can see the learning happening.
+    let tempoText;
+    if(beatHistory.length < 2){
+      tempoText = 'listening ; ' + beatHistory.length + ' hit' + (beatHistory.length === 1 ? '' : 's');
+    } else if(tempoLock < 0.3){
+      tempoText = 'listening ; ' + beatHistory.length + ' hits ; '
+                + (tempoBPM > 0 ? tempoBPM.toFixed(0) + ' BPM (rough)' : 'no stable tempo');
+    } else if(tempoLock < 0.6){
+      tempoText = 'forming ; ' + tempoBPM.toFixed(1) + ' BPM ; next in ' + timeToNext.toFixed(2) + 's';
+    } else {
+      tempoText = 'locked ; ' + tempoBPM.toFixed(1) + ' BPM ; next in ' + timeToNext.toFixed(2) + 's';
+    }
+
+    readout.innerHTML =
+      '<span class="era-name">' + eras[idx] + '</span>' +
+        (transitioning ? ' <span style="color:rgba(232,138,175,0.8)">→ ' + eras[nextIdx] + '</span>' : '') +
+        '  era = ' + sEra.toFixed(2) +
+        '  <span class="' + phraseClass + '">phrase ' + phraseArrow + ' ' + phraseText + '</span>\n' +
+      '                <span class="layer-head">⊙λ fast  ⊙Λ sway  ∞  breath</span>\n' +
+      octaveRows() +
+      ' RMS            ' + tri(sRMS) + '\n' +
+      ' CENTROID       ' + tri(sCentroid, 1.0) + '\n' +
+      '<span class="band-beat">BEAT  ' + beatMark + '         </span>' + tri(beatEnv, 1.0) +
+        '   <span class="' + lockClass + '">LOCK ' + lockMark + ' ' + bar(tempoLock, 10) + '</span>\n' +
+      ' PRE-BEAT       ' + bar(preBeatEnv, 16) + '  ' + tempoText + '\n' +
+      ' FAMILIARITY    ' + bar(sFamiliarity, 16) + '  ' + sFamiliarity.toFixed(2) + '\n' +
+      ' KEY            ' + bar(sKeyConf, 16)     + '  ' + keyText + '\n' +
+      ' CHORD          ' + bar(sChordConf, 16)   + '  ' + chordText + '\n' +
+      ' METER          ' + bar(sBarConf, 16)     + '  ' + timeText +
+        '  bar φ ' + bar(sBarPhase, 8) + '\n' +
+      ' TONALITY       ' + bar(1 - sFlatness, 16) + '  ' + tonality + '\n' +
+      '<span class="audio-status">' + srcLabel + '</span>';
+  }
+
+  // ---------------- Main loop ----------------
+  const startTs = performance.now();
+
+  // ==================== BAND : MIDI jam partner ====================
+  //
+  // The listener has a tempo lock, a bar grid, a key, a running chord,
+  // a chroma vector, a phrase trend, an era label, and a familiarity
+  // score. That is enough to play along.
+  //
+  // Four voices (drums, bass, pad, lead) fade in as confidence grows
+  // and out when it fades. Instruments come from the GM set, picked by
+  // era ; pad plays triad / 7th voicings ; bass plays roots and fifths
+  // on bar-appropriate beats ; lead picks pitches from the chroma vector.
+  //
+  // Timing : nextBeatAt lives in "seconds since startTs". Web MIDI
+  // send() accepts absolute performance.now() ms, which is just
+  // startTs + nextBeatAt * 1000. Notes are queued ahead of the beat
+  // so they arrive on time, not after.
+  //
+  // Output : chosen MIDI output if any, else a built-in WebAudio synth
+  // so the page jams out of the box.
+
+  const BAND = {
+    enabled: false,
+    midiAccess: null,
+    midiOut: null,
+    voices: {
+      drums: { active: 0, channel: 9,  program: 0  },
+      bass:  { active: 0, channel: 0,  program: 38 },
+      pad:   { active: 0, channel: 1,  program: 89 },
+      lead:  { active: 0, channel: 2,  program: 80 },
+    },
+    programCache: {},
+    lastBeatId: -1,
+    beatCounter: 0,
+    padHeldNotes: [],
+    padHeldKey: '',
+    internalSynth: null,
+    _synthActive: new Map(),
+  };
+
+  const GM_INSTRUMENTS = {
+    bass: [ 38, 33, 32, 39 ],
+    pad:  [ 90,  4, 89, 94 ],
+    lead: [ 80, 73, 65, 54 ],
+  };
+  const ERA_LABELS = ['atomic', 'biological', 'planetary', 'cosmological'];
+
+  function bandInitMIDI(){
+    if(!navigator.requestMIDIAccess) return;
+    navigator.requestMIDIAccess({ sysex: false }).then(access => {
+      BAND.midiAccess = access;
+      bandPopulateMIDIDevices();
+      access.onstatechange = bandPopulateMIDIDevices;
+    }).catch(err => { console.warn('Web MIDI unavailable :', err); });
+  }
+
+  function bandPopulateMIDIDevices(){
+    const sel = document.getElementById('midi-select');
+    if(!sel || !BAND.midiAccess) return;
+    const prev = sel.value;
+    sel.innerHTML = '<option value="">built-in synth</option>';
+    for(const [id, out] of BAND.midiAccess.outputs){
+      const opt = document.createElement('option');
+      opt.value = id;
+      opt.textContent = out.name || ('MIDI out ' + id);
+      sel.appendChild(opt);
+    }
+    if(prev && BAND.midiAccess.outputs.get(prev)) sel.value = prev;
+    else { sel.value = ''; BAND.midiOut = null; }
+  }
+
+  function bandSelectMIDI(id){
+    BAND.midiOut = (id && BAND.midiAccess) ? BAND.midiAccess.outputs.get(id) || null : null;
+    BAND.programCache = {};
+  }
+
+  function bandReset(){
+    if(BAND.midiOut){
+      for(let ch = 0; ch < 16; ch++){
+        try { BAND.midiOut.send([0xB0 | ch, 0x7B, 0]); } catch(_){}
+      }
+    }
+    for(const v of BAND._synthActive.values()){
+      try { v.stop(audioCtx ? audioCtx.currentTime : 0); } catch(_){}
+    }
+    BAND._synthActive.clear();
+    BAND.padHeldNotes.length = 0;
+    BAND.padHeldKey = '';
+    BAND.lastBeatId = -1;
+    BAND.beatCounter = 0;
+    BAND.programCache = {};
+    for(const v of Object.values(BAND.voices)) v.active = 0;
+  }
+
+  function bandSend(msg, whenMs){
+    if(BAND.midiOut){
+      try { BAND.midiOut.send(msg, whenMs); }
+      catch(_){ try { BAND.midiOut.send(msg); } catch(__){} }
+    } else {
+      bandSynthSend(msg, whenMs);
+    }
+  }
+
+  function bandBeatTimeToMs(beatTimeSec){ return startTs + beatTimeSec * 1000; }
+
+  function bandNote(channel, note, vel, startBeatSec, durSec){
+    const onMs = bandBeatTimeToMs(startBeatSec);
+    const v = Math.max(1, Math.min(127, vel|0));
+    bandSend([0x90 | channel, note, v], onMs);
+    bandSend([0x80 | channel, note, 0], onMs + Math.max(10, durSec * 1000));
+  }
+
+  function bandUpdatePrograms(){
+    const eraIdx = Math.max(0, Math.min(3, Math.round(sEra)));
+    for(const role of ['bass','pad','lead']){
+      const prog = GM_INSTRUMENTS[role][eraIdx];
+      const ch = BAND.voices[role].channel;
+      if(BAND.programCache[ch] !== prog){
+        BAND.programCache[ch] = prog;
+        BAND.voices[role].program = prog;
+        bandSend([0xC0 | ch, prog, 0], performance.now());
+      }
+    }
+  }
+
+  function bandUpdateVoiceActivation(){
+    // Start rising earlier (lower threshold), and once tempoLock crosses
+    // 0.7 commit hard so voices stop second-guessing themselves.
+    const committed = tempoLock > 0.7;
+    const lockGate  = committed ? 1.0
+                    : Math.max(0, Math.min(1, (tempoLock - 0.2) / 0.3));
+    const harmonic  = Math.min(1, sKeyConf + sChordConf * 0.5);
+    // Harmonic fallback : even if the key detector hasn't fully settled,
+    // the last known tonic is still a reasonable guess. Pretend we have
+    // at least 0.35 of harmonic certainty so bass and pad can join in
+    // drum-forward / key-ambiguous material instead of sitting silent.
+    const harmonicEff = Math.max(0.35, harmonic);
+    const building = Math.max(0,  sPhrase);
+    const ebbing   = Math.max(0, -sPhrase);
+
+    const drumsT = lockGate;
+    const bassT  = lockGate * Math.min(1, harmonicEff * 1.6);
+    const padT   = lockGate * Math.min(1, harmonicEff) *
+                   Math.max(0.45, 0.7 + building - ebbing * 0.5);
+    const leadT  = lockGate * Math.min(1, harmonicEff) *
+                   Math.min(1, 0.45 + sFamiliarity + building);
+
+    // Asymmetric smoothing : fast attack so voices commit promptly when
+    // the lock tightens, slow release so a brief dip or breakdown does
+    // not drop them out.
+    function s(cur, tgt){
+      const d = tgt - cur;
+      return cur + d * (d > 0 ? 0.14 : 0.035);
+    }
+    BAND.voices.drums.active = s(BAND.voices.drums.active, drumsT);
+    BAND.voices.bass.active  = s(BAND.voices.bass.active,  bassT);
+    BAND.voices.pad.active   = s(BAND.voices.pad.active,   padT);
+    BAND.voices.lead.active  = s(BAND.voices.lead.active,  leadT);
+  }
+
+  function bandTick(tNow){
+    if(!BAND.enabled) return;
+    if(tempoSec < 0.2 || tempoLock < 0.15 || nextBeatAt <= 0){
+      if(BAND.padHeldNotes.length > 0 || BAND._synthActive.size > 0) bandReset();
+      return;
+    }
+    bandUpdateVoiceActivation();
+    bandUpdatePrograms();
+
+    // Horizon shrinks as the lock tightens : when locked, trust the
+    // prediction and schedule closer to the beat so stale predictions
+    // don't sneak in ; when loose, keep more lead time.
+    const committed = tempoLock > 0.7;
+    const horizon = committed
+      ? Math.min(0.12, tempoSec * 0.3)
+      : Math.min(0.25, tempoSec * 0.55);
+    const timeToNext = nextBeatAt - tNow;
+    // Don't schedule beats that are already in the past. At high lock
+    // we're strict (2 ms grace) ; at low lock a little more slack is ok.
+    const lateGrace = committed ? -0.002 : -0.03;
+    if(timeToNext < lateGrace || timeToNext > horizon) return;
+
+    const id = Math.round(nextBeatAt * 50);
+    if(id === BAND.lastBeatId) return;
+    BAND.lastBeatId = id;
+
+    const barLen = Math.max(2, Math.round(sBarLen));
+    let upBeatInBar;
+    if(sBarConf > 0.35 && lastBeatT > 0 && tNow - lastBeatT < tempoSec * 1.5){
+      upBeatInBar = (beatsInBar + 1) % barLen;
+      BAND.beatCounter = upBeatInBar;
+    } else {
+      BAND.beatCounter = (BAND.beatCounter + 1) % barLen;
+      upBeatInBar = BAND.beatCounter;
+    }
+
+    // Small negative lead compensation : schedule a few ms early so the
+    // note onset lands exactly on the perceived beat (accounts for tiny
+    // attack times in the fallback synth and any driver latency).
+    const LEAD = 0.006;
+    const beatTime = nextBeatAt - LEAD;
+    const beat = tempoSec;
+    const baseVel = 55 + sRMS[0] * 140 + (upBeatInBar === 0 ? 14 : 0);
+    if(BAND.voices.drums.active > 0.15) bandPlayDrums(beatTime, upBeatInBar, barLen, beat, baseVel);
+    if(BAND.voices.bass.active  > 0.15) bandPlayBass (beatTime, upBeatInBar, barLen, beat, baseVel);
+    if(BAND.voices.pad.active   > 0.15) bandPlayPad  (beatTime, upBeatInBar, barLen, beat, id);
+    if(BAND.voices.lead.active  > 0.18) bandPlayLead (beatTime, upBeatInBar, barLen, beat, baseVel);
+  }
+
+  function bandPlayDrums(t, bib, barLen, beat, vel){
+    const ch = 9;
+    const v  = Math.max(40, Math.min(120, Math.round(vel * BAND.voices.drums.active)));
+    const down = bib === 0;
+    const is3  = (barLen === 4 && bib === 2) || (barLen === 6 && bib === 3) || (barLen === 8 && bib === 4);
+    const is24 = (barLen === 4 && (bib === 1 || bib === 3)) ||
+                 (barLen === 3 && bib === 2) ||
+                 (barLen === 8 && (bib === 2 || bib === 6));
+    if(down || is3) bandNote(ch, 36, Math.min(127, v + 10), t, 0.12);
+    if(is24)        bandNote(ch, 38, v, t, 0.09);
+    bandNote(ch, 42, Math.max(30, v - 38), t, 0.05);
+    if(BAND.voices.drums.active > 0.6){
+      bandNote(ch, 42, Math.max(25, v - 55), t + beat * 0.5, 0.05);
+    }
+    if(down && sPhrase > 0.25 && BAND.voices.drums.active > 0.8){
+      bandNote(ch, 49, Math.max(40, v - 10), t, 0.3);
+    }
+  }
+
+  function bandPlayBass(t, bib, barLen, beat, vel){
+    const V = BAND.voices.bass;
+    const root = sChordConf > 0.3 ? Math.round(sChordRoot) : Math.round(sTonic);
+    const base = 36 + ((root % 12) + 12) % 12;
+    const play = (barLen === 4) ? (bib === 0 || bib === 2)
+               : (barLen === 3) ? true
+               : (bib % 2 === 0);
+    if(!play) return;
+    const note = bib === 0 ? base : base + 7;
+    const v = Math.max(40, Math.min(110, Math.round(vel * V.active * 0.9)));
+    bandNote(V.channel, note, v, t, beat * 0.75);
+  }
+
+  function bandPlayPad(t, bib, barLen, beat, beatId){
+    const V = BAND.voices.pad;
+    let root, isMaj;
+    if(sChordConf > 0.3){ root = Math.round(sChordRoot); isMaj = sChordQual > 0.5; }
+    else                { root = Math.round(sTonic);     isMaj = sMode > 0.5; }
+    const base = 60 + ((root % 12) + 12) % 12;
+    const third = base + (isMaj ? 4 : 3);
+    const fifth = base + 7;
+    const seventh = base + (isMaj ? 11 : 10);
+    const notes = [base, third, fifth];
+    if(sFamiliarity > 0.45) notes.push(seventh);
+    const newKey = notes.join(',');
+    const isBarTop = bib === 0;
+    const chordChanged = newKey !== BAND.padHeldKey;
+    if(!isBarTop && !chordChanged) return;
+    if(!chordChanged && isBarTop && BAND.padHeldKey !== '') return;
+    const padVel = Math.max(30, Math.min(85, 40 + BAND.voices.pad.active * 35));
+    if(BAND.padHeldNotes.length > 0){
+      for(const n of BAND.padHeldNotes){
+        bandSend([0x80 | V.channel, n, 0], bandBeatTimeToMs(Math.max(0, t - 0.02)));
+      }
+    }
+    for(const n of notes){
+      bandSend([0x90 | V.channel, n, padVel], bandBeatTimeToMs(t));
+    }
+    BAND.padHeldNotes = notes.slice();
+    BAND.padHeldKey   = newKey;
+  }
+
+  function bandPlayLead(t, bib, barLen, beat, vel){
+    const V = BAND.voices.lead;
+    let play = false;
+    if(barLen === 4)      play = (bib === 1 || bib === 3);
+    else if(barLen === 3) play = (bib === 1);
+    else                  play = (bib === 1 || bib === Math.floor(barLen / 2));
+    if(bib === barLen - 1 && sPhrase > 0.2) play = true;
+    if(!play) return;
+    const chrF = sChroma[0];
+    const root = sChordConf > 0.3 ? ((Math.round(sChordRoot) % 12) + 12) % 12
+                                  : ((Math.round(sTonic)     % 12) + 12) % 12;
+    const isMaj = (sChordConf > 0.3 ? sChordQual : sMode) > 0.5;
+    const chordTones = new Set([root, (root + (isMaj ? 4 : 3)) % 12, (root + 7) % 12]);
+    let best = -1, bestScore = -1;
+    for(let p = 0; p < 12; p++){
+      const boost = chordTones.has(p) ? 1.4 : 1.0;
+      const s = chrF[p] * boost;
+      if(s > bestScore){ bestScore = s; best = p; }
+    }
+    if(best < 0) best = root;
+    const note = 72 + best;
+    const v = Math.max(45, Math.min(110, Math.round(vel * V.active)));
+    bandNote(V.channel, note, v, t, beat * 0.45);
+  }
+
+  function _synthEnsure(){
+    if(!audioCtx) return null;
+    if(BAND.internalSynth) return BAND.internalSynth;
+    const master = audioCtx.createGain();
+    master.gain.value = 0.22;
+    const comp = audioCtx.createDynamicsCompressor();
+    comp.threshold.value = -12;
+    comp.knee.value = 12;
+    comp.ratio.value = 4;
+    comp.attack.value = 0.005;
+    comp.release.value = 0.2;
+    master.connect(comp).connect(audioCtx.destination);
+    BAND.internalSynth = { master };
+    return BAND.internalSynth;
+  }
+
+  function bandSynthSend(msg, whenMs){
+    if(!audioCtx) return;
+    const sv = _synthEnsure();
+    if(!sv) return;
+    const type = msg[0] & 0xF0;
+    const ch   = msg[0] & 0x0F;
+    const a = msg[1], b = msg[2] || 0;
+    const nowMs = performance.now();
+    const when = audioCtx.currentTime + Math.max(0, (whenMs - nowMs) / 1000);
+    if(type === 0x90 && b > 0) _synthNoteOn(ch, a, b, when);
+    else if(type === 0x80 || (type === 0x90 && b === 0)) _synthNoteOff(ch, a, when);
+    else if(type === 0xB0 && a === 0x7B){
+      for(const entry of BAND._synthActive.values()){
+        try { entry.stop(when); } catch(_){}
+      }
+      BAND._synthActive.clear();
+    }
+  }
+
+  function _synthNoteOn(ch, note, vel, when){
+    const sv = BAND.internalSynth;
+    const g = vel / 127;
+    const freq = 440 * Math.pow(2, (note - 69) / 12);
+    let voice;
+    if(ch === 9)      voice = _synthDrum(note, g, when, sv.master);
+    else if(ch === 0) voice = _synthBass(freq, g, when, sv.master);
+    else if(ch === 1) voice = _synthPad (freq, g, when, sv.master);
+    else              voice = _synthLead(freq, g, when, sv.master);
+    BAND._synthActive.set(ch + ':' + note, voice);
+  }
+
+  function _synthNoteOff(ch, note, when){
+    const key = ch + ':' + note;
+    const v = BAND._synthActive.get(key);
+    if(!v) return;
+    try { v.stop(when); } catch(_){}
+    BAND._synthActive.delete(key);
+  }
+
+  function _synthDrum(note, g, when, out){
+    const ctx = audioCtx;
+    if(note === 35 || note === 36){
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(150, when);
+      osc.frequency.exponentialRampToValueAtTime(45, when + 0.1);
+      const amp = ctx.createGain();
+      amp.gain.setValueAtTime(0.9 * g, when);
+      amp.gain.exponentialRampToValueAtTime(0.01, when + 0.28);
+      osc.connect(amp).connect(out);
+      osc.start(when); osc.stop(when + 0.35);
+      return { stop: (t) => { try { osc.stop(Math.max(when + 0.01, t)); } catch(_){} } };
+    }
+    if(note === 38 || note === 40){
+      const buf = ctx.createBuffer(1, 4096, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for(let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      const src = ctx.createBufferSource();
+      src.buffer = buf; src.loop = true;
+      const bp = ctx.createBiquadFilter();
+      bp.type = 'bandpass'; bp.frequency.value = 1800; bp.Q.value = 0.8;
+      const amp = ctx.createGain();
+      amp.gain.setValueAtTime(0.7 * g, when);
+      amp.gain.exponentialRampToValueAtTime(0.01, when + 0.15);
+      src.connect(bp).connect(amp).connect(out);
+      src.start(when); src.stop(when + 0.18);
+      return { stop: (t) => { try { src.stop(Math.max(when + 0.01, t)); } catch(_){} } };
+    }
+    if(note === 49 || note === 57){
+      const buf = ctx.createBuffer(1, 8192, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for(let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      const src = ctx.createBufferSource();
+      src.buffer = buf; src.loop = true;
+      const hp = ctx.createBiquadFilter();
+      hp.type = 'highpass'; hp.frequency.value = 5000;
+      const amp = ctx.createGain();
+      amp.gain.setValueAtTime(0.35 * g, when);
+      amp.gain.exponentialRampToValueAtTime(0.005, when + 1.2);
+      src.connect(hp).connect(amp).connect(out);
+      src.start(when); src.stop(when + 1.3);
+      return { stop: (t) => { try { src.stop(Math.max(when + 0.01, t)); } catch(_){} } };
+    }
+    const buf = ctx.createBuffer(1, 1024, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for(let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const hp = ctx.createBiquadFilter();
+    hp.type = 'highpass'; hp.frequency.value = 7000;
+    const amp = ctx.createGain();
+    amp.gain.setValueAtTime(0.35 * g, when);
+    amp.gain.exponentialRampToValueAtTime(0.005, when + 0.06);
+    src.connect(hp).connect(amp).connect(out);
+    src.start(when); src.stop(when + 0.08);
+    return { stop: (t) => { try { src.stop(Math.max(when + 0.01, t)); } catch(_){} } };
+  }
+
+  function _synthBass(freq, g, when, out){
+    const ctx = audioCtx;
+    const osc = ctx.createOscillator();
+    osc.type = 'sawtooth'; osc.frequency.value = freq;
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = 450; lp.Q.value = 1;
+    const amp = ctx.createGain();
+    amp.gain.setValueAtTime(0, when);
+    amp.gain.linearRampToValueAtTime(0.48 * g, when + 0.008);
+    amp.gain.linearRampToValueAtTime(0.30 * g, when + 0.15);
+    osc.connect(lp).connect(amp).connect(out);
+    osc.start(when);
+    let stopped = false;
+    return { stop: (t) => {
+      if(stopped) return; stopped = true;
+      amp.gain.cancelScheduledValues(t);
+      amp.gain.setValueAtTime(amp.gain.value, t);
+      amp.gain.linearRampToValueAtTime(0, t + 0.05);
+      try { osc.stop(t + 0.1); } catch(_){}
+    } };
+  }
+
+  function _synthPad(freq, g, when, out){
+    const ctx = audioCtx;
+    const o1 = ctx.createOscillator();
+    const o2 = ctx.createOscillator();
+    o1.type = 'sawtooth'; o2.type = 'sawtooth';
+    o1.frequency.value = freq;
+    o2.frequency.value = freq * 1.005;
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = 1400; lp.Q.value = 0.7;
+    const amp = ctx.createGain();
+    amp.gain.setValueAtTime(0, when);
+    amp.gain.linearRampToValueAtTime(0.18 * g, when + 0.35);
+    o1.connect(lp); o2.connect(lp);
+    lp.connect(amp).connect(out);
+    o1.start(when); o2.start(when);
+    let stopped = false;
+    return { stop: (t) => {
+      if(stopped) return; stopped = true;
+      amp.gain.cancelScheduledValues(t);
+      amp.gain.setValueAtTime(amp.gain.value, t);
+      amp.gain.linearRampToValueAtTime(0, t + 0.35);
+      try { o1.stop(t + 0.4); o2.stop(t + 0.4); } catch(_){}
+    } };
+  }
+
+  function _synthLead(freq, g, when, out){
+    const ctx = audioCtx;
+    const osc = ctx.createOscillator();
+    osc.type = 'triangle'; osc.frequency.value = freq;
+    const amp = ctx.createGain();
+    amp.gain.setValueAtTime(0, when);
+    amp.gain.linearRampToValueAtTime(0.28 * g, when + 0.015);
+    amp.gain.linearRampToValueAtTime(0.14 * g, when + 0.12);
+    osc.connect(amp).connect(out);
+    osc.start(when);
+    let stopped = false;
+    return { stop: (t) => {
+      if(stopped) return; stopped = true;
+      amp.gain.cancelScheduledValues(t);
+      amp.gain.setValueAtTime(amp.gain.value, t);
+      amp.gain.linearRampToValueAtTime(0, t + 0.08);
+      try { osc.stop(t + 0.12); } catch(_){}
+    } };
+  }
+
+  const bandStatusEl = document.getElementById('band-status');
+  function renderBandStatus(){
+    if(!BAND.enabled || !bandStatusEl){
+      if(bandStatusEl) bandStatusEl.style.display = 'none';
+      return;
+    }
+    bandStatusEl.style.display = 'block';
+    const eraIdx = Math.max(0, Math.min(3, Math.round(sEra)));
+    const outLabel = BAND.midiOut ? (BAND.midiOut.name || 'MIDI out') : 'built-in synth';
+    const lockTag = tempoLock > 0.7 ? ' [LOCKED]' : (tempoLock > 0.4 ? ' [forming]' : ' [listening]');
+    function row(label, active, prog){
+      const cls = active > 0.25 ? 'voice-on' : 'voice-off';
+      const fill = Math.round(active * 8);
+      const bar = '\u2588'.repeat(fill) + '\u2591'.repeat(8 - fill);
+      const p = (prog !== undefined && prog !== null) ? ' GM ' + prog : '';
+      return '<span class="' + cls + '">' + label + ' ' + bar + p + '</span>';
+    }
+    const lines = [
+      '\u2192 ' + outLabel,
+      'era : ' + ERA_LABELS[eraIdx] + lockTag,
+      row('drums', BAND.voices.drums.active, null),
+      row('bass ', BAND.voices.bass.active,  BAND.voices.bass.program),
+      row('pad  ', BAND.voices.pad.active,   BAND.voices.pad.program),
+      row('lead ', BAND.voices.lead.active,  BAND.voices.lead.program),
+    ];
+    bandStatusEl.innerHTML = lines.join('\n');
+  }
+
+  (function bandWireUI(){
+    const btn = document.getElementById('btn-band');
+    const sel = document.getElementById('midi-select');
+    if(!btn) return;
+    btn.addEventListener('click', () => {
+      BAND.enabled = !BAND.enabled;
+      btn.textContent = BAND.enabled ? 'BAND : ON' : 'BAND : OFF';
+      btn.classList.toggle('band-on', BAND.enabled);
+      if(sel) sel.style.display = BAND.enabled ? 'inline-block' : 'none';
+      if(!BAND.enabled){ bandReset(); }
+      else if(audioCtx && audioCtx.state === 'suspended'){ audioCtx.resume(); }
+    });
+    if(sel){ sel.addEventListener('change', () => { bandSelectMIDI(sel.value); }); }
+    bandInitMIDI();
+  })();
+
+  // ==================== end BAND ====================
+
+  function frame(){
+    const tNow = (performance.now() - startTs) / 1000.0;
+
+    analyze(tNow);
+
+    const atomicW = Math.max(0, 1.0 - Math.abs(sEra - 0.0));
+    const nLP = 1.0 + Math.cos(tNow * 0.26);
+    const comp = (nLP * 2.0 / 49.0) * atomicW;
+
+    gl.uniform2f(uR, canvas.width, canvas.height);
+    gl.uniform1f(uT, tNow);
+    gl.uniform1f(uEra, sEra);
+    gl.uniform1f(uComp, comp);
+    // Pack the three temporal layers for each audio value :
+    // [0] ⊙λ, fast ; [1] ⊙Λ, medium ; [2] ∞, slow.
+    for(let i = 0; i < 3; i++){
+      bassU[i] = Math.min(1, sBass[i]   * 2.0);
+      midsU[i] = Math.min(1, sMids[i]   * 2.0);
+      trebU[i] = Math.min(1, sTreble[i] * 2.0);
+      rmsU[i]  = Math.min(1, sRMS[i]    * 2.5);
+      beatU[i] = beatEnv[i];
+      centU[i] = sCentroid[i];
+    }
+    // Pack the 8 frequency octaves × 3 temporal layers : each octave maps to
+    // one station of the dimensional octave (0=• ... 7=⟳), each temporal layer
+    // to one scale-position in the nesting chain.
+    for(let oi = 0; oi < OCT_COUNT; oi++){
+      octU[oi*3 + 0] = Math.min(1, sOct[oi][0] * 2.0);
+      octU[oi*3 + 1] = Math.min(1, sOct[oi][1] * 2.0);
+      octU[oi*3 + 2] = Math.min(1, sOct[oi][2] * 2.0);
+    }
+    gl.uniform1fv(uBass, bassU);
+    gl.uniform1fv(uMids, midsU);
+    gl.uniform1fv(uTreble, trebU);
+    gl.uniform1fv(uRMS, rmsU);
+    gl.uniform1fv(uBeat, beatU);
+    gl.uniform1fv(uCentroid, centU);
+    gl.uniform1fv(uOctLoc, octU);
+    // Pack the 12-dim chroma vector (fast layer) : one weight per pitch class.
+    // Physics-grounded: pitch class = angular position on the color wheel, by A3.
+    for(let p = 0; p < 12; p++) chromaFast[p] = Math.min(1, sChroma[0][p]);
+    gl.uniform1fv(uChromaLoc, chromaFast);
+    gl.uniform1fv(uChromaBassLoc, sChromaBass);
+    gl.uniform1fv(uChromaTrebleLoc, sChromaTreble);
+    gl.uniform1f(uTonicLoc, sTonic);
+    gl.uniform1f(uModeLoc, sMode);
+    gl.uniform1f(uKeyConfLoc, Math.max(0, Math.min(1, sKeyConf)));
+    gl.uniform1f(uChordRootLoc, sChordRoot);
+    gl.uniform1f(uChordQualLoc, sChordQual);
+    gl.uniform1f(uChordConfLoc, Math.max(0, Math.min(1, sChordConf)));
+    gl.uniform1f(uFlatnessLoc, Math.max(0, Math.min(1, sFlatness)));
+    gl.uniform1f(uBarLenLoc, sBarLen);
+    gl.uniform1f(uBarPhaseLoc, sBarPhase);
+    gl.uniform1f(uBarConfLoc, Math.max(0, Math.min(1, sBarConf)));
+    gl.uniform1f(uPreBeat, preBeatEnv);
+    gl.uniform1f(uLock, tempoLock);
+    gl.uniform1f(uBeatPhase, beatPhase);
+    gl.uniform1f(uPhrase, sPhrase);
+    gl.uniform1f(uFamiliarity, Math.max(0, Math.min(1, sFamiliarity)));
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+    // Jam partner : reads the same state the shader reads and
+    // schedules notes a handful of ms ahead of each predicted beat.
+    bandTick(tNow);
+
+    renderReadout();
+    renderBandStatus();
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
+</body>
+</html>
