@@ -36,6 +36,24 @@ First-run observations (1000 wake + 100 sleep, seed 42):
 - 69/31 health DRIFTED to 45.5/54.5 (polarity reversed). Caused by isotropic ℂ⁸ signal injection biasing weights toward processual stations. See `memory/active_threads_2026_04_22.md` gap #1 for fix candidate.
 - 7th pressure layer STILL DORMANT. α-coupled κ did NOT fix it. The layer-7 issue is not pump-dynamics; see gap #2.
 
+## ℂ⁵¹² integration into universe_creator
+
+`experiments/universe_creator.py` extended to 1006 lines (compile-verified). New CLI: `--scale C64/C512` and `--compare-scales` (runs both at α = 1/137 side by side). Dispatcher helpers (`build_T_for_scale`, `cosmological_split`, `pool_integer_checks_for_scale`) route by scale. C64 runs in ~0.1 s; C512 in ~2.6 s.
+
+Results at α = 1/137 confirm v14 observations:
+
+- Phase sum = 0 exactly (machine precision); 48·(−π/3) = −16π ≡ 0 closure holds.
+- Leading eigenvalue angle = 128.2645°, matching arccos(−1/φ − 2α/G) at 0.002%; sharper than ℂ⁶⁴'s 109.47° match at 0.47%. Pool-integer recovery tightens by two orders of magnitude when the full octave is exposed.
+- A3 outer/inner L2 distance = 0 (machine precision).
+- Spectral gap = 0.001927, 5.6% above α/P (matches v14's residual).
+- 69/31 split is representation-invariant across three reps now: ℂ⁸ 68.7/31.3 (structural vs processual), ℂ⁶⁴ 68.53/31.47 (primary vs secondary diameter), ℂ⁵¹² carries both axes simultaneously.
+
+**T → φ promotion reading**: at ℂ⁶⁴ the leading-eigenvalue angle is arccos(−1/T) = 109.47° (tetrahedral); at ℂ⁵¹² it promotes to arccos(−1/φ − 2α/G) = 128.26°. Exposing the full octave slides the two-level integer T to the continuous φ with an α-scaled correction at the G station. Consistent with A3 + dimensional analysis (φ is the scaling ratio; integer T reads as the discrete sample).
+
+**Open: the |λ_max| departure is not 2α.** v14 findings claimed |λ_max| = 1 + 2α but the observed 1.02001145 corresponds to 1 + 2.74α, not 1 + 2α (2α = 0.01459, observed 0.02001). The value is stable across runs (structural fact of the operator at octave resolution) but the simple closed form does not fit it. Logged to active threads.
+
 ## Workflow note
 
 Both subagents completed in parallel (single message with two Agent tool calls). Pattern to keep: when tasks are independent, run them parallel, not serial.
+
+File-sync note: the Edit tool returned "success" on several large edits to universe_creator.py without flushing to disk (py_compile failed on the on-disk file while the Read view showed the intended content). Resolution was to reconstruct the tail via bash heredoc and concatenate. If Edit appears to succeed but later compiles fail, check file size/mtime via bash before iterating.

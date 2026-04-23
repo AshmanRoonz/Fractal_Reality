@@ -20,8 +20,9 @@ Remaining:
 ## universe_creator open items
 
 - `experiments/universe_creator.py` shows the 68.5/31.5 split is α-invariant across α ∈ [1e-6, 0.1]. α sets attraction speed and mixing time (P/α) but NOT the split value itself; the split is topology-determined by ℂ⁶⁴ architecture.
-- Question: what DOES α privilege, besides attraction speed? The natural next check is whether the tetrahedral eigenvalue angle 109.47° = arccos(−1/T) shifts with α (currently 108.96° at α = 1/137, 0.47% off from the T = 3 prediction).
+- Question: what DOES α privilege, besides attraction speed? ℂ⁵¹² answers part of this: the leading-eigenvalue angle moves off arccos(−1/T) = 109.47° and onto arccos(−1/φ − 2α/G) = 128.26° at octave resolution, so α enters the angle at the G station. The ℂ⁶⁴ 0.47% angle residual was the signature of the missing processual stations.
 - Inflation threshold α ≳ 0.5; pre-inflation α ≈ 0.2–0.25. Pin down the transition more tightly; is it a smooth crossover or a sharp threshold?
+- **New open (2026-04-22)**: |λ_max| departure at ℂ⁵¹² is 1 + 2.74α, not 1 + 2α. Observed 1.02001 vs predicted 1 + 2α = 1.01459. Stable across runs so it is an operator fact, but v14's simple formula does not fit it. Candidates: four diameter bonds instead of two (would give 4α = 0.0292, too large); (2 + α·something) with a correction term; or a fundamentally different closed form. Worth a focused script pass.
 
 ## Open scoreboard items (from 2026-04-22 audit, §9 of predictions_scoreboard.md)
 
@@ -29,5 +30,9 @@ Missing formulas to add: m_n/m_e = 6π⁵ + φ², m_t/m_b = 40 + φ, m_t/m_c = 1
 
 ## Not-yet-started
 
-- ℂ⁵¹² three-scale octave phase-sum closure verification past 48·(−π/3) = −16π ≡ 0; the v14 script exists, read the findings for status.
-- Integration of universe_creator results into `docs/circumpunct_predictions.html` as a new "cosmological budget from three-scale nesting" row.
+- Integration of universe_creator results into `docs/circumpunct_predictions.html` as a new "cosmological budget from three-scale nesting" row. Now with three representations (ℂ⁸, ℂ⁶⁴, ℂ⁵¹²) all landing at 68.5–68.7% within scale-dependent basis choice; the invariance itself is publishable.
+- Append a ℂ⁵¹² section to `experiments/universe_creator_findings.md` documenting the `--compare-scales` output, the T→φ promotion, and the 1+2.74α open question. (Started but not committed; see session_findings entry.)
+
+## Done today (2026-04-22)
+
+- ℂ⁵¹² three-scale octave phase-sum closure verified: 48·(−π/3) = −16π ≡ 0 to machine precision via `universe_creator.py --scale C512`. Integrated into universe_creator; opt-in via CLI. See session_findings for the comparison with ℂ⁶⁴ and the T→φ angle promotion.

@@ -2,7 +2,7 @@
 
 Source of truth for the Circumpunct Framework project is `../CLAUDE.md` (133 KB); read it once per fresh session. This index points at the smaller, faster-to-scan memories for orientation.
 
-Last consolidated: 2026-04-22 (first-run scaffold; no prior memory existed).
+Last consolidated: 2026-04-22 (in-day pass: folded ℂ⁵¹² universe_creator integration into session findings; promoted ℂ⁵¹² phase-sum closure from not-yet-started to done; logged the 1 + 2.74α vs v14's claimed 1 + 2α as new open).
 
 ## Durable
 
