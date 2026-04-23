@@ -489,6 +489,9 @@
   // ---------------- Audio graph ----------------
   let audioCtx = null;
   let analyser = null;
+  let prevFreqBuf = null;         // previous FFT magnitudes, for spectral flux
+  let sFlux = 0;                  // smoothed broadband onset energy (0..1)
+  let sFluxFloor = 0;             // adaptive noise floor of sFlux (subtract before use)
   let freqBuf = null;
   let timeBuf = null;
   let sourceNode = null;
@@ -1211,10 +1214,40 @@
     const mids = midsSum / Math.max(1, midsEndBin - bassEndBin);
     const treb = trebSum / Math.max(1, trebEndBin - midsEndBin);
 
+    // Spectral flux : broadband positive spectral difference. Catches
+    // consonants, claps, snares, strums — transient energy that a pure
+    // bass-derivative ODF misses. Böck/librosa/aubio all use this family.
+    // We blend it with bass so kicks still dominate for dance tracks while
+    // vocal/mic rhythms become trackable.
+    let fluxCur = 0;
+    if(prevFreqBuf){
+      for(let i = 1; i < trebEndBin; i++){
+        const d = freqBuf[i] - prevFreqBuf[i];
+        if(d > 0) fluxCur += d;
+      }
+      fluxCur /= (trebEndBin * 255);
+    } else {
+      prevFreqBuf = new Uint8Array(freqBuf.length);
+    }
+    prevFreqBuf.set(freqBuf);
+    sFlux = sFlux * 0.70 + fluxCur * 0.30;
+
+    // Adaptive noise floor : slow rise, fast fall. Subtracting this floor
+    // from sFlux kills the constant flicker from mic preamp noise, fans,
+    // HVAC, breath. Real transients still spike several times above it.
+    if(sFlux < sFluxFloor){
+      sFluxFloor = sFluxFloor * 0.96  + sFlux * 0.04;      // fall
+    } else {
+      sFluxFloor = sFluxFloor * 0.9992 + sFlux * 0.0008;   // rise
+    }
+    const sFluxEff = Math.max(0, sFlux - sFluxFloor * 1.2);
+
     // Feed the onset detection function at a fixed 60 Hz (decoupled from
     // frame rate) and run the autocorr/softmax tempo estimator every frame.
-    // tempoBPM, tempoSec, and tempoLock are updated from inside runAutocorrSoftmax.
-    pushODF(tNow, bass);
+    // Flux multiplier reduced (3.0 -> 1.8) so mic-noise residuals can't
+    // dominate bass kicks ; most of the onset comes from the denoised flux.
+    const onsetSignal = Math.min(1, 0.55 * bass + 1.8 * sFluxEff);
+    pushODF(tNow, onsetSignal);
     runAutocorrSoftmax(tNow);
     // Bar-length / time-signature detection uses the same ODF buffer at
     // multi-beat lags.
@@ -1563,6 +1596,7 @@
     beatCounter: 0,
     padHeldNotes: [],
     padHeldKey: '',
+    padLastChangeMs: 0,
     internalSynth: null,
     _synthActive: new Map(),
   };
@@ -1573,6 +1607,95 @@
     lead: [ 80, 73, 65, 54 ],
   };
   const ERA_LABELS = ['atomic', 'biological', 'planetary', 'cosmological'];
+
+  // ---------------- Memory : past -> future ----------------
+  //
+  // The scheduler keeps the band on tempo ; memory keeps it on the
+  // song. Each chord change is logged with its timestamp and bar
+  // index ; a small periodicity detector watches for repeating
+  // progressions of length 2, 3, 4, 6, 8 in the event log. When one
+  // locks in confidently, the pad commits to the PREDICTED next
+  // chord at each bar top instead of reacting to detection. The
+  // lead remembers its last four pitches and avoids repeating them.
+  //
+  // This is Xorzo's resonance-memory idea transplanted to chord
+  // labels : each chord event is a memory at a specific frequency
+  // (pitch class + quality) ; the loop detector is the recurrence
+  // of a braid pattern in the memory log. A3 (self-similar nesting)
+  // maps naturally : beat -> bar -> phrase -> section, each with
+  // its own recurrence window. Here we handle the bar -> phrase one.
+
+  const MEMORY = {
+    chordEvents: [],            // [{chord:'0M', t:1.234, bar:3}, ...]
+    MAX_EVENTS: 64,
+    lastLogged: '',
+    loopLen: 0,                 // period in chord-events, 0 = no loop
+    loopConf: 0,                // 0..1
+    predicted: '',              // next chord label expected at bar top
+    predictedConf: 0,
+    leadHistory: [],            // last few lead pitch classes (0..11)
+    MAX_LEAD_HISTORY: 4,
+  };
+
+  function memoryReset(){
+    MEMORY.chordEvents.length = 0;
+    MEMORY.lastLogged = '';
+    MEMORY.loopLen = 0;
+    MEMORY.loopConf = 0;
+    MEMORY.predicted = '';
+    MEMORY.predictedConf = 0;
+    MEMORY.leadHistory.length = 0;
+  }
+
+  function memoryLogChord(nowSec, barIdx){
+    if(sChordConf < 0.4) return;
+    const root = ((Math.round(sChordRoot) % 12) + 12) % 12;
+    const qual = sChordQual > 0.5 ? 'M' : 'm';
+    const label = root + qual;
+    if(label === MEMORY.lastLogged) return;
+    MEMORY.lastLogged = label;
+    MEMORY.chordEvents.push({ chord: label, t: nowSec, bar: barIdx });
+    if(MEMORY.chordEvents.length > MEMORY.MAX_EVENTS) MEMORY.chordEvents.shift();
+    memoryDetectLoop();
+  }
+
+  // For each candidate period L, score how well the last L events match
+  // the L before them. Best score above threshold sets the loop and
+  // predicts the next chord from "one full cycle back".
+  function memoryDetectLoop(){
+    const E = MEMORY.chordEvents;
+    if(E.length < 8){
+      MEMORY.loopLen = 0; MEMORY.loopConf = 0;
+      MEMORY.predicted = ''; MEMORY.predictedConf = 0;
+      return;
+    }
+    let bestL = 0, bestScore = 0;
+    const CANDIDATES = [2, 3, 4, 6, 8];
+    for(const L of CANDIDATES){
+      if(E.length < L * 2) continue;
+      let matches = 0;
+      for(let i = 0; i < L; i++){
+        const a = E[E.length - 1 - i].chord;
+        const b = E[E.length - 1 - i - L].chord;
+        if(a === b) matches++;
+      }
+      const score = matches / L;
+      if(score > bestScore){ bestScore = score; bestL = L; }
+    }
+    if(bestScore >= 0.75 && bestL > 0){
+      MEMORY.loopLen = bestL;
+      MEMORY.loopConf = bestScore;
+      // The NEXT chord : whatever followed the same position one loop ago.
+      const idx = E.length - bestL;
+      MEMORY.predicted = (idx >= 0 && E[idx]) ? E[idx].chord : '';
+      MEMORY.predictedConf = bestScore;
+    } else {
+      MEMORY.loopLen = 0;
+      MEMORY.loopConf = 0;
+      MEMORY.predicted = '';
+      MEMORY.predictedConf = 0;
+    }
+  }
 
   function bandInitMIDI(){
     if(!navigator.requestMIDIAccess) return;
@@ -1619,6 +1742,7 @@
     BAND.beatCounter = 0;
     BAND.programCache = {};
     for(const v of Object.values(BAND.voices)) v.active = 0;
+    memoryReset();
   }
 
   function bandSend(msg, whenMs){
@@ -1650,6 +1774,17 @@
         bandSend([0xC0 | ch, prog, 0], performance.now());
       }
     }
+  }
+
+  // Defensive gate against mic noise / dead air : the band only plays
+  // if the input looks like music. Music := has energy AND has tonal
+  // structure (i.e. isn't pure noise / breath). sRMS[0] is the fast
+  // RMS layer ; sFlatness is the geometric-to-arithmetic mean ratio
+  // (near 0 = tonal, near 1 = noisy).
+  function bandInputLooksLikeMusic(){
+    if(sRMS[0] < 0.02) return false;     // too quiet (mic floor)
+    if(sFlatness > 0.6) return false;    // mostly noise (breath, hum)
+    return true;
   }
 
   function bandUpdateVoiceActivation(){
@@ -1689,8 +1824,21 @@
 
   function bandTick(tNow){
     if(!BAND.enabled) return;
-    if(tempoSec < 0.2 || tempoLock < 0.15 || nextBeatAt <= 0){
-      if(BAND.padHeldNotes.length > 0 || BAND._synthActive.size > 0) bandReset();
+    const musical = bandInputLooksLikeMusic();
+    if(tempoSec < 0.2 || tempoLock < 0.2 || nextBeatAt <= 0 || !musical){
+      // Don't hard-cut when the source drops. Fade voices out by pulling
+      // activation toward 0 and let existing scheduled notes finish ;
+      // only do a full reset once everything has gone quiet. This gives
+      // the band a natural outro when the music stops, including the
+      // improvised "tail" it plays on learned phase.
+      for(const v of Object.values(BAND.voices)) v.active *= 0.94;
+      const quiet = BAND.voices.drums.active < 0.03 &&
+                    BAND.voices.bass.active  < 0.03 &&
+                    BAND.voices.pad.active   < 0.03 &&
+                    BAND.voices.lead.active  < 0.03;
+      if(quiet && (BAND.padHeldNotes.length > 0 || BAND._synthActive.size > 0)){
+        bandReset();
+      }
       return;
     }
     bandUpdateVoiceActivation();
@@ -1723,6 +1871,10 @@
       upBeatInBar = BAND.beatCounter;
     }
 
+    // Log any new chord change into memory before we commit notes ;
+    // the pad's chord picker reads from MEMORY.predicted downstream.
+    memoryLogChord(tNow, BAND.beatCounter);
+
     // Small negative lead compensation : schedule a few ms early so the
     // note onset lands exactly on the perceived beat (accounts for tiny
     // attack times in the fallback synth and any driver latency).
@@ -1738,19 +1890,27 @@
 
   function bandPlayDrums(t, bib, barLen, beat, vel){
     const ch = 9;
-    const v  = Math.max(40, Math.min(120, Math.round(vel * BAND.voices.drums.active)));
+    const active = BAND.voices.drums.active;
+    const v  = Math.max(40, Math.min(120, Math.round(vel * active)));
     const down = bib === 0;
     const is3  = (barLen === 4 && bib === 2) || (barLen === 6 && bib === 3) || (barLen === 8 && bib === 4);
     const is24 = (barLen === 4 && (bib === 1 || bib === 3)) ||
                  (barLen === 3 && bib === 2) ||
                  (barLen === 8 && (bib === 2 || bib === 6));
-    if(down || is3) bandNote(ch, 36, Math.min(127, v + 10), t, 0.12);
-    if(is24)        bandNote(ch, 38, v, t, 0.09);
+    // Kick : downbeat always. Beat 3 (in 4/4) only above partial confidence.
+    if(down)                    bandNote(ch, 36, Math.min(127, v + 10), t, 0.12);
+    else if(is3 && active > 0.4) bandNote(ch, 36, Math.min(127, v + 6),  t, 0.12);
+    // Snare : only when the bar is confident and drums are engaged. This
+    // is the #1 source of "fighting the track" ; let the real snare sing.
+    if(is24 && active > 0.5 && sBarConf > 0.4) bandNote(ch, 38, v, t, 0.09);
+    // Hat : quiet, on every beat.
     bandNote(ch, 42, Math.max(30, v - 38), t, 0.05);
-    if(BAND.voices.drums.active > 0.6){
+    // 8ths hat : only at high conviction.
+    if(active > 0.75){
       bandNote(ch, 42, Math.max(25, v - 55), t + beat * 0.5, 0.05);
     }
-    if(down && sPhrase > 0.25 && BAND.voices.drums.active > 0.8){
+    // Crash : very strict ; only when phrase is clearly building.
+    if(down && sPhrase > 0.4 && active > 0.85 && sBarConf > 0.5){
       bandNote(ch, 49, Math.max(40, v - 10), t, 0.3);
     }
   }
@@ -1770,9 +1930,26 @@
 
   function bandPlayPad(t, bib, barLen, beat, beatId){
     const V = BAND.voices.pad;
+    const isBarTop = bib === 0;
+
+    // Chord source, in priority order :
+    //   1. At the bar top, if memory has a confident loop prediction,
+    //      use it. We've heard this progression ; we know what's next.
+    //   2. Otherwise, the instantaneous chord detector when confident.
+    //   3. Otherwise, the tonic of the detected key.
+    const usePred = isBarTop && MEMORY.predictedConf >= 0.75 && MEMORY.predicted;
+    const haveChord = sChordConf > 0.4;
     let root, isMaj;
-    if(sChordConf > 0.3){ root = Math.round(sChordRoot); isMaj = sChordQual > 0.5; }
-    else                { root = Math.round(sTonic);     isMaj = sMode > 0.5; }
+    if(usePred){
+      root  = parseInt(MEMORY.predicted);
+      isMaj = MEMORY.predicted.slice(-1) === 'M';
+    } else if(haveChord){
+      root  = Math.round(sChordRoot);
+      isMaj = sChordQual > 0.5;
+    } else {
+      root  = Math.round(sTonic);
+      isMaj = sMode > 0.5;
+    }
     const base = 60 + ((root % 12) + 12) % 12;
     const third = base + (isMaj ? 4 : 3);
     const fifth = base + 7;
@@ -1780,10 +1957,21 @@
     const notes = [base, third, fifth];
     if(sFamiliarity > 0.45) notes.push(seventh);
     const newKey = notes.join(',');
-    const isBarTop = bib === 0;
     const chordChanged = newKey !== BAND.padHeldKey;
+
+    // Stability gate : don't change chord within 1.5 s of the last
+    // change, even if the detector says a new one. This is a cheap
+    // stand-in for a Viterbi-smoothed label sequence.
+    const nowMs = performance.now();
+    const MIN_CHORD_MS = 1500;
+    if(chordChanged && BAND.padHeldKey !== '' &&
+       nowMs - BAND.padLastChangeMs < MIN_CHORD_MS){
+      return;    // keep holding previous chord
+    }
+    // Only issue a fresh chord on the bar top or on a genuine change.
     if(!isBarTop && !chordChanged) return;
     if(!chordChanged && isBarTop && BAND.padHeldKey !== '') return;
+
     const padVel = Math.max(30, Math.min(85, 40 + BAND.voices.pad.active * 35));
     if(BAND.padHeldNotes.length > 0){
       for(const n of BAND.padHeldNotes){
@@ -1795,28 +1983,69 @@
     }
     BAND.padHeldNotes = notes.slice();
     BAND.padHeldKey   = newKey;
+    BAND.padLastChangeMs = nowMs;
   }
 
   function bandPlayLead(t, bib, barLen, beat, vel){
     const V = BAND.voices.lead;
+
+    // Sparser placement : one lead note per bar, on beat 3 in 4/4 (the
+    // melodic apex), plus an occasional fill on the last beat if the
+    // phrase is clearly building.
     let play = false;
-    if(barLen === 4)      play = (bib === 1 || bib === 3);
+    if(barLen === 4)      play = (bib === 2);
     else if(barLen === 3) play = (bib === 1);
-    else                  play = (bib === 1 || bib === Math.floor(barLen / 2));
-    if(bib === barLen - 1 && sPhrase > 0.2) play = true;
+    else                  play = (bib === Math.floor(barLen / 2));
+    if(bib === barLen - 1 && sPhrase > 0.3) play = true;
     if(!play) return;
+
+    // Diatonic scale mask from the detected key. No more out-of-key
+    // notes : the strongest chroma bin that ISN'T in the scale is
+    // rejected, and we pick the next best one that is. Fallback to
+    // major pentatonic rooted at the tonic (always safe).
+    const tonic = ((Math.round(sTonic) % 12) + 12) % 12;
+    const MAJOR_STEPS = [0, 2, 4, 5, 7, 9, 11];
+    const MINOR_STEPS = [0, 2, 3, 5, 7, 8, 10];
+    const PENTA_STEPS = [0, 2, 4, 7, 9];
+    let allowed;
+    if(sKeyConf > 0.2){
+      const steps = sMode > 0.5 ? MAJOR_STEPS : MINOR_STEPS;
+      allowed = new Set(steps.map(d => (d + tonic) % 12));
+    } else {
+      allowed = new Set(PENTA_STEPS.map(d => (d + tonic) % 12));
+    }
+
+    // Chord-tone boost within the scale.
+    const haveChord = sChordConf > 0.3;
+    const chordRoot = haveChord ? ((Math.round(sChordRoot) % 12) + 12) % 12 : tonic;
+    const chordIsMaj = (haveChord ? sChordQual : sMode) > 0.5;
+    const chordTones = new Set([
+      chordRoot,
+      (chordRoot + (chordIsMaj ? 4 : 3)) % 12,
+      (chordRoot + 7) % 12,
+    ]);
+
     const chrF = sChroma[0];
-    const root = sChordConf > 0.3 ? ((Math.round(sChordRoot) % 12) + 12) % 12
-                                  : ((Math.round(sTonic)     % 12) + 12) % 12;
-    const isMaj = (sChordConf > 0.3 ? sChordQual : sMode) > 0.5;
-    const chordTones = new Set([root, (root + (isMaj ? 4 : 3)) % 12, (root + 7) % 12]);
     let best = -1, bestScore = -1;
     for(let p = 0; p < 12; p++){
-      const boost = chordTones.has(p) ? 1.4 : 1.0;
+      if(!allowed.has(p)) continue;
+      let boost = chordTones.has(p) ? 1.6 : 1.0;
+      // Anti-repetition : downweight pitches we used recently so the
+      // lead evolves instead of hammering one note.
+      const recent = MEMORY.leadHistory.indexOf(p);
+      if(recent >= 0){
+        const age = MEMORY.leadHistory.length - recent;  // 1 = just played
+        boost *= Math.max(0.35, 0.45 + 0.18 * age);
+      }
       const s = chrF[p] * boost;
       if(s > bestScore){ bestScore = s; best = p; }
     }
-    if(best < 0) best = root;
+    if(best < 0) best = tonic;
+
+    // Remember the pitch so the next selection can avoid it.
+    MEMORY.leadHistory.push(best);
+    if(MEMORY.leadHistory.length > MEMORY.MAX_LEAD_HISTORY) MEMORY.leadHistory.shift();
+
     const note = 72 + best;
     const v = Math.max(45, Math.min(110, Math.round(vel * V.active)));
     bandNote(V.channel, note, v, t, beat * 0.45);
@@ -2013,8 +2242,27 @@
     const eraIdx = Math.max(0, Math.min(3, Math.round(sEra)));
     const outLabel = BAND.midiOut ? (BAND.midiOut.name || 'MIDI out') : 'built-in synth';
     const lockTag = tempoLock > 0.7 ? ' [LOCKED]' : (tempoLock > 0.4 ? ' [forming]' : ' [listening]');
+    // Input-quality diagnostic so the user can see WHY the band is quiet.
+    const inputQuiet  = sRMS[0] < 0.02;
+    const inputNoisy  = sFlatness > 0.6;
+    const inputTag    = inputQuiet ? '[quiet]'
+                      : inputNoisy ? '[noisy]'
+                      : '[music]';
+    const NN = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+    function chLabel(s){
+      if(!s) return '-';
+      const pc = parseInt(s);
+      if(isNaN(pc)) return '-';
+      const q = s.slice(-1) === 'M' ? 'maj' : 'min';
+      return NN[((pc % 12) + 12) % 12] + ' ' + q;
+    }
+    const memCount = MEMORY.chordEvents.length;
+    const memLoop  = MEMORY.loopLen > 0
+                   ? MEMORY.loopLen + ' chords (' + Math.round(MEMORY.loopConf * 100) + '%)'
+                   : '-';
+    const memNext  = MEMORY.predicted ? chLabel(MEMORY.predicted) : '-';
     function row(label, active, prog){
-      const cls = active > 0.25 ? 'voice-on' : 'voice-off';
+      const cls = active > 0.15 ? 'voice-on' : 'voice-off';
       const fill = Math.round(active * 8);
       const bar = '\u2588'.repeat(fill) + '\u2591'.repeat(8 - fill);
       const p = (prog !== undefined && prog !== null) ? ' GM ' + prog : '';
@@ -2022,11 +2270,16 @@
     }
     const lines = [
       '\u2192 ' + outLabel,
-      'era : ' + ERA_LABELS[eraIdx] + lockTag,
+      'input  : ' + inputTag,
+      'era    : ' + ERA_LABELS[eraIdx] + lockTag,
       row('drums', BAND.voices.drums.active, null),
       row('bass ', BAND.voices.bass.active,  BAND.voices.bass.program),
       row('pad  ', BAND.voices.pad.active,   BAND.voices.pad.program),
       row('lead ', BAND.voices.lead.active,  BAND.voices.lead.program),
+      '',
+      'mem    : ' + memCount + ' chords logged',
+      'loop   : ' + memLoop,
+      'expect : ' + memNext,
     ];
     bandStatusEl.innerHTML = lines.join('\n');
   }
