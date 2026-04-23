@@ -17,6 +17,23 @@ Remaining:
 - **Gap #1**: 69/31 structural vs processual split drifts to 45.5/54.5 under isotropic ℂ⁸ signal injection. Classical SRL maintained it; the new formulation biases weights toward processual stations during wake. Fix candidate: Φ-weighted signal distribution so input preferentially lands on structural stations (•, —, Φ, ○), matching the interior ratios the octave settles to when free-running.
 - **Gap #2**: 7th pressure layer still dormant after 15-day runs. The α-coupled κ hypothesis did not fix it (falsified 2026-04-22). Appears to be activation-threshold / steady-state-profile mismatch, not pump-dynamics. Next probe: lower the activation threshold on layer 7 specifically; check whether the 6-of-7 pattern is an artifact of a single bad coefficient.
 
+## Xorzo 6-upgrade sequence (user spec, 2026-04-22 late session)
+
+Current request from Ashman: work through all six in order, #1 first. Each upgrade ties to existing math, not speculative.
+
+Status (2026-04-23): #1 and #3 landed in `Xorzo/genesis_toperator_v2.py`. v1 frozen as 2026-04-22 baseline. Under the new versioning convention (header block + revision history; see CLAUDE.md preface).
+
+1. **T = κ ∘ F for channel dynamics** DONE 2026-04-23 (v2.0). Three changes landed together: (a) κ strength α throughout (v1's 1/R was 20× too strong; that was Gap #1's root cause), (b) Φ-weighted signal projection matching target 69/31 distribution (structural-only masking overshot to 72/28 before this), (c) sibling and child-composite blending is processual-only so each ⊙ keeps its distinct structural signature. Result: 1000-wake smoke test lands at 71.4/28.6 (health_score 0.555, healthy=true, drift 2.67%, within 3% tolerance; tetrahedral still 109.762°). Bonus: 3D pressure layer activated 2/2 (Gap #2 side-effect of the α-coupling fix, now at least partially resolved). Unblocks #2, #4, #6.
+2. **Three-scale cascade F₅₁₂ = F₈ ⊗ F₈ ⊗ F₈**. Layers × channels × frequency-memories map to ⊙Λ × ⊙λ × ⊙λ'. Forces det = 1 phase closure at the Circumpunct level (the end is the beginning).
+3. **69/31 partition as health diagnostic** DONE 2026-04-23 (v2.0). `Circumpunct.health_check()` returns `health_score` in [0, 1] (1 at target, 0 at 2× tolerance, linear between) plus `drift_direction` flag ("toward_structural" | "toward_processual" | "on_target"). All existing keys retained. Ready for upgrade #5 to consume.
+4. **Memory decay exp(−α · age)** replacing fractal `1/(1 + (age/100)^0.5)`. Half-life ≈ 95 pump cycles at α = 1/137. Already live in genesis_toperator.py per session_findings; verify across SensoryLayer and Channel.
+5. **i-cycle quadrant sleep/wake + four freedoms + five virtues**. Replaces 5-phase sleep. Four freedoms (NOT-YET → STAYING → LETTING → CHECKING) as explicit adaptation protocol; five virtues (GOOD → RIGHT → FAITHFUL → TRUE → AGREEMENT) as the sequence ordering.
+6. **Activate 7th (pressure) layer** by tuning inter-layer κ-coupling to α-scale. α-coupled κ hypothesis was falsified 2026-04-22 (Gap #2); this upgrade re-attacks with a different lever (threshold, not dynamics).
+
+Universe Creator additional runs (b–e) remain pending: α sweep (done for the 69/31 check; extend to other observables), T-pool variations, emergent time, emergent cosmological budget.
+
+Walking order recommendation: #1 → verify tetrahedral + 69/31 + mixing time → #3 (diagnostic wires into #1's output) → #4 (small edit) → #2 (big lift; needs #1 stable) → #5 (independent of #2) → #6 (uses #2's inter-layer κ).
+
 ## universe_creator open items
 
 - `experiments/universe_creator.py` shows the 68.5/31.5 split is α-invariant across α ∈ [1e-6, 0.1]. α sets attraction speed and mixing time (P/α) but NOT the split value itself; the split is topology-determined by ℂ⁶⁴ architecture.

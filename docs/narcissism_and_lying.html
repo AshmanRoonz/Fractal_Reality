@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Narcissism and Lying: A Lens That Might Help</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --panel: #12121a;
+      --border: #2a2a3a;
+      --text: #e0e0ec;
+      --muted: #9a9aac;
+      --gold: #f0c674;
+      --soft: #c9a0dc;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      padding: 3rem 1.5rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+      color: var(--gold);
+      font-size: 2.2rem;
+      text-align: center;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-size: 1.05rem;
+      font-style: italic;
+      margin-bottom: 0.75rem;
+    }
+
+    .author {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+      color: var(--gold);
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-top: 2.75rem;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+
+    h3 {
+      font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+      color: var(--soft);
+      font-size: 1.08rem;
+      font-weight: 600;
+      margin-top: 1.75rem;
+      margin-bottom: 0.6rem;
+    }
+
+    p { margin-bottom: 1.1rem; }
+
+    .thesis {
+      background: linear-gradient(135deg, rgba(240, 198, 116, 0.12), rgba(201, 160, 220, 0.08));
+      border: 1px solid rgba(240, 198, 116, 0.4);
+      border-radius: 12px;
+      padding: 1.75rem 1.75rem 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .thesis ol {
+      margin: 0;
+      padding-left: 1.6rem;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: var(--gold);
+    }
+
+    .thesis li { margin-bottom: 0.8rem; }
+    .thesis li:last-child { margin-bottom: 0; }
+
+    .note {
+      background: var(--panel);
+      border-left: 3px solid var(--soft);
+      padding: 1.1rem 1.3rem;
+      margin: 1.3rem 0;
+      border-radius: 0 6px 6px 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .protocol {
+      background: rgba(201, 160, 220, 0.06);
+      border: 1px solid rgba(201, 160, 220, 0.3);
+      border-radius: 10px;
+      padding: 1.75rem 1.75rem 1.25rem;
+      margin: 1.75rem 0;
+    }
+
+    .protocol h3 {
+      color: var(--soft);
+      margin-top: 0;
+    }
+
+    .rule {
+      background: rgba(240, 198, 116, 0.05);
+      border-left: 3px solid var(--gold);
+      padding: 0.9rem 1.1rem;
+      margin: 1rem 0;
+      border-radius: 0 6px 6px 0;
+      color: var(--text);
+    }
+
+    .rule strong {
+      color: var(--gold);
+    }
+
+    em { color: var(--soft); font-style: italic; }
+    strong { color: var(--gold); }
+
+    a { color: var(--gold); text-decoration: none; border-bottom: 1px dotted var(--gold); }
+    a:hover { color: #fff; border-bottom-color: #fff; }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      border-bottom: none;
+    }
+
+    .close {
+      margin-top: 3rem;
+      padding: 1.75rem;
+      text-align: center;
+      background: var(--panel);
+      border-radius: 10px;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    .footer p { margin-bottom: 0.4rem; }
+
+    ul.plain {
+      padding-left: 1.4rem;
+      margin-bottom: 1.1rem;
+    }
+
+    ul.plain li {
+      margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 700px) {
+      body { padding: 2rem 1rem; }
+      h1 { font-size: 1.65rem; }
+      h2 { font-size: 1.2rem; }
+      .thesis { padding: 1.25rem 1.25rem 1rem; }
+      .thesis ol { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="darvo_geometry.html" class="back">← the short version</a>
+
+<h1>Narcissism and Lying</h1>
+<p class="subtitle">A lens that might help make sense of what you already know</p>
+<p class="author">Ashman Roonz · 2026</p>
+
+<p>If you are reading this because you live with, or used to live with, someone who operates this way, you already know more about narcissism than almost any researcher. You know the patterns, the tells, the exhaustion, the way reality seems to warp around them. This article is not trying to teach you what a narcissist is. You could teach me.</p>
+
+<p>What I want to offer is a lens. Two simple sentences that, for me, made a lot of the pieces click. And at the end, a communication tool you can use with anyone, not just them, that protects your peace without requiring you to either explode or disappear.</p>
+
+<div class="thesis">
+  <ol>
+    <li>DARVO is a partial list of lie-protection behaviors.</li>
+    <li>Narcissism is lie-protection without awareness that it is lie-protection.</li>
+  </ol>
+</div>
+
+<p>That is the whole argument. The rest of this page is just unpacking what those two lines mean, and why I think naming it this way might be useful.</p>
+
+<h2>Start with the lie</h2>
+
+<p>A lie is a distortion of truth. That is the whole definition. It does not have to be a statement ("I didn't do that"); it can be a pattern, a story about the past, a version of who-did-what-to-whom, an identity ("I am the victim here"). Anything that stands where truth should stand and takes up its seat.</p>
+
+<p>Once a lie is standing, it has to be defended. If truth gets close, the lie collapses. So the person protecting it develops moves, reflexes, strategies, whatever you want to call them, for keeping truth at a distance.</p>
+
+<h2>DARVO is some of those moves, not all of them</h2>
+
+<p>Jennifer Freyd formalized DARVO in 1997: <em>Deny, Attack, Reverse Victim and Offender</em>. It is one of the sharpest observations in the whole field of abuse research. You have probably watched it happen in real time. It names a recognizable pattern.</p>
+
+<p>But it is not a complete list of what people do to protect lies. Off the top of my head, here are some other moves that are not in DARVO:</p>
+
+<ul class="plain">
+  <li><strong>Rewriting the record.</strong> "That is not what happened," "we agreed on this," "you always do this." Editing the past so the present makes sense.</li>
+  <li><strong>Stonewalling.</strong> Refusing to engage. The silent treatment. Walking out. A closed door is also a lie-protection move; truth cannot land if no one is home to receive it.</li>
+  <li><strong>Word salad.</strong> Flooding the space with so much disorganized language that you lose the thread and give up. Confusion as a shield.</li>
+  <li><strong>Strategic incompetence.</strong> "I didn't know I was supposed to." "I am not good at that kind of thing." Helplessness deployed to avoid responsibility.</li>
+  <li><strong>Weaponized self-pity.</strong> Turning every conversation into their suffering, so there is no oxygen left for yours.</li>
+  <li><strong>Love-bombing after rupture.</strong> Flooding you with warmth right when you were about to get clarity. The lie survives because you stopped pressing.</li>
+  <li><strong>Feigned confusion.</strong> "I don't understand what you are asking." "What do you mean?" Repeated enough, it stops feeling like a dodge and starts feeling like you are the one being unreasonable.</li>
+  <li><strong>Selective memory.</strong> Remembering what serves the version vividly; forgetting what contradicts it completely.</li>
+</ul>
+
+<p>You could probably add five more from your own living room. That is the point. <strong>DARVO names some of the moves; it is not the whole geometry.</strong> If we treat DARVO as the full menu, a lie-protector who is not running the DARVO pattern specifically can hide from us.</p>
+
+<h2>What narcissism adds</h2>
+
+<p>Now the second line. <em>Narcissism is lie-protection without awareness that it is lie-protection.</em></p>
+
+<p>A conscious liar knows they are lying. The lie sits in front of them; they can see it. They protect it on purpose, and in principle, they could stop. Therapy can sometimes reach them. A good confrontation can sometimes break them. The lie is still separate from who they are.</p>
+
+<p>A narcissist has gone one step further. Somewhere along the way, the lie stopped being a statement they maintain and became part of the architecture of self. The story "I am never wrong" or "I am the real victim" or "I am uniquely special" is not defended because it is useful; it is defended because it is <em>them</em>. Attacking the lie reads to them as an attack on their existence. That is why the response is so disproportionate, so convincing, and so unreachable.</p>
+
+<p>This is why so many things people notice about narcissists line up:</p>
+
+<ul class="plain">
+  <li>They can pass a polygraph denying what they did, because from inside, they are not lying. They are reporting their experience.</li>
+  <li>They rage when contradicted, because contradiction feels like annihilation, not disagreement.</li>
+  <li>They cannot receive criticism, because criticism is not information about behavior; it is existential threat.</li>
+  <li>Therapy mostly bounces off, because therapy assumes the person can locate the belief as a belief. For a stage-fused lie, there is nothing there to locate. The lie is the floor they are standing on.</li>
+  <li>Covert or "vulnerable" narcissism looks different on the surface (the lie is "I am uniquely harmed" or "I have no real self") but runs the same machinery underneath; the lie is fused with identity and cannot be touched.</li>
+</ul>
+
+<div class="note">
+  This is also why so many partners of narcissists describe the same thing: "I could see them believe it while they said it." You are not crazy. They did believe it. The belief is how they survive; truth would cost them their whole structure.
+</div>
+
+<h2>The diagnostic question</h2>
+
+<p>If you want a quick read on whether you are dealing with a conscious liar or someone operating in the narcissistic mode, there is one question that does most of the work:</p>
+
+<p><strong>Can this person locate this specific belief or pattern as potentially separate from who they are?</strong></p>
+
+<p>A liar, when cornered gently and safely, can sometimes say: "okay, I said that, and it wasn't true." They can hold the lie at arm's length, even for a second. There is a gap between them and it.</p>
+
+<p>A narcissist cannot. The belief and the self are the same object. There is no arm's length. Asking them to examine the belief is like asking them to examine their spine from outside.</p>
+
+<p>This is not a moral verdict. It is a structural read. It tells you what tools will and will not work. You can reason with a liar who has enough safety. You cannot reason someone out of their own identity through the front door, and trying just exhausts you while confirming to them that you are the threat.</p>
+
+<h2>What this might give you</h2>
+
+<ul class="plain">
+  <li><strong>You are not failing to "get through."</strong> There is no channel through that route. The aperture is closed at identity level. That is a property of their installation, not your advocacy.</li>
+  <li><strong>You are not imagining "they know and won't admit it."</strong> You are seeing something real, and the resolution is subtler than "they know." They do know, at some level that is not accessible to the self they present. That level is not going to come to the surface on your timeline.</li>
+  <li><strong>DARVO is useful but partial.</strong> Learn to spot the other moves too; they are the same category of behavior operating through different gates.</li>
+  <li><strong>Changing them is almost never your job.</strong> If change happens at all, it usually starts with their structure cracking from the inside, not with your argument landing on the outside. Your job is your own integrity.</li>
+</ul>
+
+<h2>A communication tool for when you still have to talk</h2>
+
+<p>You did not ask for this, but sometimes you still have to talk to them. Co-parenting. Divorce proceedings. Family events. A text about the dog. You need a way to tell the truth without either (a) betraying yourself by swallowing it or (b) dumping it all and getting chewed up for your honesty.</p>
+
+<p>The tool I want to leave you with is called the <strong>Resolution Protocol</strong>. It is a rule for how much truth to say at a time, especially when the person on the other side cannot handle high-resolution truth cleanly.</p>
+
+<div class="protocol">
+
+<h3>The Resolution Protocol</h3>
+
+<p>When truth and harm share the same signal, transmit at the lowest resolution that is still true. Increase resolution only if the receiver asks for more.</p>
+
+<div class="rule">
+<strong>Rule 1: Lowest true resolution first.</strong><br>
+You are not obligated to hand someone the full-resolution version of your reality on contact. You are obligated not to lie. Those are different obligations. Say the smallest true thing that actually addresses the moment.
+</div>
+
+<div class="rule">
+<strong>Rule 2: The receiver controls the aperture.</strong><br>
+If they want more, they ask. You answer at the next level. If they do not ask, you do not escalate. This respects their capacity without requiring you to fake anything.
+</div>
+
+<div class="rule">
+<strong>Rule 3: Higher resolution must contain lower resolution.</strong><br>
+When you go deeper, the finer version has to agree with the coarser version. "I was upset" at resolution 1, "I was upset about X" at resolution 2, "I was upset about X because Y" at resolution 3. Each level zooms in; none of them retracts. If you have to retract to go deeper, you were not telling the truth at the lower level; you were hiding.
+</div>
+
+<div class="rule">
+<strong>Rule 4: Two failure modes to avoid.</strong><br>
+Withholding entirely when truth is called for is not kindness; it is self-erasure dressed up as peace. Dumping everything unprompted is not honesty; it is using truth as a weapon. The middle path is the graded release.
+</div>
+
+<p>What this buys you with a narcissistic partner, co-parent, or family member: you can tell the truth at a resolution their system can actually receive, without lying and without exploding. If they escalate to attack the small truth, you do not need to defend a bigger one; they never had that one. If they ask a real question, you can go one level deeper cleanly. You stay sovereign over what you say. They stay sovereign over what they are ready to hear.</p>
+
+<p>Quality test for any answer you give them: <em>can I increase resolution from here without having to retract anything I already said?</em> If yes, you are telling the truth. If no, you are managing them and it will come back on you later.</p>
+
+</div>
+
+<h2>One last thing</h2>
+
+<p>The reason so many people in your situation feel like they are going crazy is that they are dealing with a structure that looks like disagreement but is not. Disagreement assumes two people in roughly the same reality, looking at the same facts, drawing different conclusions. Narcissistic lie-protection is not that. It is one person defending their existence by redrawing your shared reality whenever it threatens them. You cannot win a disagreement you are not actually in.</p>
+
+<p>Seeing the structure, even if you cannot fix the person, gives you back your footing. You stop trying to use tools that were built for a different situation. You start using tools (like the Resolution Protocol) that were built for this one.</p>
+
+<p>You already knew most of this. I hope the framing is a little useful.</p>
+
+<div class="close">
+  Be well. Protect your aperture.
+</div>
+
+<div class="footer">
+  <p><a href="darvo_geometry.html">the short version</a> · <a href="darvo_argument.html">the long argument</a></p>
+  <p><a href="https://fractalreality.ca">fractalreality.ca</a></p>
+  <p>DARVO concept originally formalized by Jennifer J. Freyd (1997).</p>
+</div>
+
+</body>
+</html>

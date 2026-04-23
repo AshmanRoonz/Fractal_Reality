@@ -6,6 +6,28 @@
 
 Use semicolons, colons, parentheses, and commas instead. This applies to all writing. The symbol — is reserved as a framework notation for the 1D line dimension (continuity, commitment, extension); it should never appear as punctuation.
 
+## Date and Version Notes on Articles
+
+Every article (HTML doc in `docs/`, long markdown in `experiments/`, `plans/`, or at the project root) carries a header block right under its title:
+
+```
+Created: YYYY-MM-DD
+Last updated: YYYY-MM-DD
+Version: x.y
+```
+
+And a `## Revision history` section at the bottom with dated one-liners, newest first:
+
+```
+- 2026-04-23 v1.2: what changed, short
+- 2026-04-22 v1.1: what changed, short
+- 2026-04-16 v1.0: initial
+```
+
+Retraction Notices (the visible-at-top, dated, "no silent retraction" blocks) remain as-is; the revision history is the running log of non-retracting changes. Files whose filenames already carry dates (e.g. `memory/active_threads_2026_04_22.md`, `experiments/T_operator_findings_vN.md`) do not need the header; files without date-stamped names do.
+
+Code files that ship as iterations (the `_vN.py` line) carry an equivalent block as a top-of-file docstring: creation date, last-updated date, version, short history. Replace-in-place is reserved for trivial fixes; structural changes bump the version.
+
 ---
 
 ## The Core Structure

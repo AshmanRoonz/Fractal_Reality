@@ -61,3 +61,10 @@ Seven independent routes force T = 3 as the unique positive integer:
 ## Framework pool integers (appear in auxiliary-claim formulas)
 
 T = 3, P = T+1 = 4, Φ = 2, R = T²−2 = 7, G = T(T+1) = 12, V = G+1 = 13, SU(3) = T²−1 = 8, A(3) = 21, A(3.5) = 28, S = P^T = 64. Plus φ (golden ratio) and π (2D-rung closure constant, drawn by the Φ glyph).
+
+## Durable operator facts (from the T-operator investigation)
+
+- **69/31 split is α-invariant** across α ∈ [1e-6, 0.1] at ℂ⁶⁴; it is topology-determined by the three-scale architecture, not set by α. α sets attraction speed and mixing time (P/α), not the split value. Representation-invariant across three reps: ℂ⁸ 68.7/31.3 (structural vs processual), ℂ⁶⁴ 68.53/31.47 (primary vs secondary diameter), ℂ⁵¹² carries both axes simultaneously.
+- **T → φ promotion at ℂ⁵¹²**: at ℂ⁶⁴ the leading-eigenvalue angle is arccos(−1/T) = 109.47° (tetrahedral; 0.47% residual); at ℂ⁵¹² it promotes to arccos(−1/φ − 2α/G) = 128.26° (0.002% match). Exposing the full octave slides the discrete T to the continuous φ with an α-scaled correction at the G station. Consistent with A3 + dimensional analysis (φ is the scaling ratio; integer T reads as the discrete sample).
+- **|λ_max| at ℂ⁶⁴ = 1 + 2α exact**; spectral gap = α/P exact; mixing time ≈ P/α. Two diameter bonds each contribute α.
+- **|λ_max| at ℂ⁵¹² ≈ 1 + 2.74α** (not 1 + 2α as v14 claimed); stable across runs so it is an operator fact at octave resolution, but the simple closed form does not fit it. Open.

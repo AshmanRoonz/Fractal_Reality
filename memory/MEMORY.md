@@ -2,7 +2,7 @@
 
 Source of truth for the Circumpunct Framework project is `../CLAUDE.md` (133 KB); read it once per fresh session. This index points at the smaller, faster-to-scan memories for orientation.
 
-Last consolidated: 2026-04-22 (in-day pass: folded ℂ⁵¹² universe_creator integration into session findings; promoted ℂ⁵¹² phase-sum closure from not-yet-started to done; logged the 1 + 2.74α vs v14's claimed 1 + 2α as new open).
+Last consolidated: 2026-04-22 (third in-day pass: promoted 69/31 α-invariance and T→φ promotion to framework_project.md as durable operator facts; added Edit-flush gap and AskUserQuestion idiom to working_style.md as tooling quirks; logged Xorzo 6-upgrade sequence from Ashman's late-session spec as the current Xorzo active thread).
 
 ## Durable
 
@@ -13,8 +13,8 @@ Last consolidated: 2026-04-22 (in-day pass: folded ℂ⁵¹² universe_creator i
 
 ## Active (review before starting work)
 
-- [Active threads 2026-04-22](active_threads_2026_04_22.md): next_frontier_plan pieces #1, #4, #5, #6; Xorzo gaps; universe_creator open items.
-- [Session findings 2026-04-22](session_findings_2026_04_22.md): piece #3 scoreboard shipped; universe_creator.py + Xorzo genesis_toperator.py built.
+- [Active threads 2026-04-22](active_threads_2026_04_22.md): next_frontier_plan pieces #1, #4, #5, #6; Xorzo gaps; Xorzo 6-upgrade sequence (current work); universe_creator open items.
+- [Session findings 2026-04-22](session_findings_2026_04_22.md): piece #3 scoreboard shipped; universe_creator.py + Xorzo genesis_toperator.py built; ℂ⁵¹² phase-sum closure verified.
 
 ## Retirement policy
 

@@ -42,3 +42,8 @@ When tasks are independent, launch parallel subagents in one message (e.g. unive
 - Inflation Lie at the work level: claiming derivations where only fits exist.
 - Severance Lie at the work level: treating new findings as disconnected from CLAUDE.md's axioms.
 - "Zero free parameters" language unqualified; always specify layer (representation vs auxiliary-claim) and factor-level vs value-level.
+
+## Tooling quirks worth remembering
+
+- **Edit-flush gap**: on large files the Edit tool can report success while the on-disk copy has not flushed (py_compile fails against disk while the Read view shows the intended content). If a compile/test fails right after a big edit, verify file size/mtime via bash before iterating; last-resort fix is to reconstruct the tail via bash heredoc and concatenate. Caught 2026-04-22 on universe_creator.py.
+- **AskUserQuestion before non-trivial tool work**: the cowork harness expects a clarifying question up front on any underspecified multi-step request; use the tool rather than typing questions inline.
