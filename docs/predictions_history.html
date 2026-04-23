@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Circumpunct Framework: Predictions History</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --bg2: #0E0E15;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --gold-glow: rgba(184, 160, 96, 0.15);
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --red: #E06060;
+  --success: #4DB8A0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+a { color: var(--gold-dim); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--gold); }
+
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: rgba(10, 10, 15, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--faint);
+  z-index: 100;
+  padding: 12px 30px;
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  font-size: 15px;
+}
+.nav a { color: var(--dim); transition: color 0.2s; white-space: nowrap; }
+.nav a:hover { color: var(--gold); }
+
+.hero {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 30px 60px;
+}
+.hero-symbol {
+  font-size: 96px;
+  color: var(--gold);
+  margin-bottom: 30px;
+  text-shadow: 0 0 60px rgba(184, 160, 96, 0.3);
+}
+.hero h1 {
+  font-size: 44px;
+  color: var(--gold);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  max-width: 720px;
+}
+.hero .subtitle {
+  font-size: 20px;
+  color: var(--dim);
+  font-style: italic;
+  max-width: 640px;
+}
+
+.page { max-width: 960px; margin: 0 auto; padding: 40px 30px 120px; }
+
+.section-header {
+  text-align: center;
+  padding: 60px 30px 30px;
+}
+.section-header h2 {
+  font-size: 34px;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.section-header .section-sub {
+  font-size: 17px;
+  color: var(--dim);
+  font-style: italic;
+}
+
+.log-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 16px;
+}
+.log-table th {
+  text-align: left;
+  padding: 12px 14px;
+  color: var(--gold);
+  font-weight: 600;
+  border-bottom: 2px solid var(--faint);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.log-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(68, 64, 56, 0.5);
+  vertical-align: top;
+}
+.log-table tr:hover td { background: rgba(184, 160, 96, 0.03); }
+
+.status-pending { color: var(--dim); font-style: italic; }
+.status-pass { color: var(--green); font-weight: 600; }
+.status-fail { color: var(--red); font-weight: 600; }
+.status-inconclusive { color: var(--cyan); font-weight: 600; }
+.status-retracted { color: var(--red); text-decoration: line-through; }
+
+.stub-note {
+  background: rgba(184, 160, 96, 0.06);
+  border-left: 3px solid var(--gold-dim);
+  padding: 20px 24px;
+  margin: 30px 0;
+  font-style: italic;
+  color: var(--dim);
+  border-radius: 0 8px 8px 0;
+}
+
+.stub-note strong { color: var(--warm); font-weight: 600; font-style: normal; }
+
+.footer {
+  text-align: center;
+  padding: 60px 30px;
+  border-top: 1px solid var(--faint);
+  margin-top: 80px;
+}
+.footer p { color: var(--dim); font-size: 16px; }
+
+p { margin-bottom: 18px; }
+
+@media (max-width: 640px) {
+  .hero h1 { font-size: 30px; }
+  .nav { gap: 14px; font-size: 13px; padding: 10px 16px; flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html">Index</a>
+  <a href="circumpunct_predictions.html">Predictions</a>
+  <a href="#live">Live</a>
+  <a href="#settled">Settled</a>
+  <a href="#retracted">Retracted</a>
+  <a href="#protocol">Protocol</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-symbol">⊙</div>
+  <h1>Predictions History</h1>
+  <p class="subtitle">Every pre-registered prediction, every measurement that settles one, every retraction. The record grows over time.</p>
+</section>
+
+<section class="page">
+  <div class="stub-note">
+    <strong>Status: stub, 2026-04-22.</strong> This page is the running log that accumulates as measurements arrive. Four pre-registered predictions (P1-P4) are live; none have settled. The first entry here will be whichever lands first: atom-interferometry converges on 1/α below 5 ppb precision, single-crystal XRD of disilyne analogues resolves the Si≡Si/Si−Si length ratio to sub-percent, confocal imaging of branching mycelia yields a Murray's-Law exponent, or a longitudinal conflict-resolution study reports Cohen's d for the five-virtue sequence. Framework integers, predicted bands, and timelines are locked in <a href="../plans/predictions_scoreboard.md">plans/predictions_scoreboard.md</a>; this page reports outcomes.
+  </div>
+</section>
+
+<section id="live" class="page">
+  <div class="section-header">
+    <h2>Live predictions</h2>
+    <p class="section-sub">Pre-registered; awaiting measurement.</p>
+  </div>
+
+  <table class="log-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Rung</th>
+        <th>Predicted</th>
+        <th>Band</th>
+        <th>Target data</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>P1</td>
+        <td>1/α next decimal</td>
+        <td>0D</td>
+        <td>137.035999147</td>
+        <td>±5 ppb</td>
+        <td>Atom interferometry (Cs, Rb, Sr next-gen)</td>
+        <td class="status-pending">Live</td>
+      </tr>
+      <tr>
+        <td>P2</td>
+        <td>X≡X / X−X length ratio (Si, Ge, P, As)</td>
+        <td>1.5D</td>
+        <td>R/T² = 7/9 = 0.778</td>
+        <td>±1%</td>
+        <td>Single-crystal XRD of disilyne analogues, diphosphorus derivatives</td>
+        <td class="status-pending">Live</td>
+      </tr>
+      <tr>
+        <td>P3</td>
+        <td>Mycelial Murray's Law exponent</td>
+        <td>2.5D</td>
+        <td>n = 2.5</td>
+        <td>±0.15</td>
+        <td>Confocal imaging of branching mycelia (Armillaria, Phanerochaete)</td>
+        <td class="status-pending">Live</td>
+      </tr>
+      <tr>
+        <td>P4</td>
+        <td>Five-virtue sequence effect size</td>
+        <td>⊙</td>
+        <td>Cohen's d ≥ 0.5</td>
+        <td>d &lt; 0.3 fails</td>
+        <td>Longitudinal conflict-resolution study (pre-registered)</td>
+        <td class="status-pending">Live</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="settled" class="page">
+  <div class="section-header">
+    <h2>Settled predictions</h2>
+    <p class="section-sub">Measurements that have landed. Status: pass (inside band), fail (outside band), or inconclusive.</p>
+  </div>
+
+  <div class="stub-note">
+    No entries yet. First settlement will be logged here with the measured value, distance from predicted center, Brier contribution, and publication source.
+  </div>
+</section>
+
+<section id="retracted" class="page">
+  <div class="section-header">
+    <h2>Retracted predictions & K-fit corrections</h2>
+    <p class="section-sub">Formulas that have been revised or retracted. Every change is logged; no silent retraction.</p>
+  </div>
+
+  <div class="stub-note">
+    No entries yet. When a precision measurement shifts a K-fit outside its originally claimed accuracy band, or a P-prediction lands outside its falsification band, the old formula, new formula (if any), date, and reasoning will appear here.
+  </div>
+</section>
+
+<section id="protocol" class="page">
+  <div class="section-header">
+    <h2>Retraction protocol (abridged)</h2>
+    <p class="section-sub">Full protocol: <a href="../plans/predictions_scoreboard.md">plans/predictions_scoreboard.md §4</a>.</p>
+  </div>
+
+  <p><strong>A K fit is retracted</strong> when a precision measurement shifts outside the originally claimed accuracy band. The retraction is logged here; the formula in circumpunct_framework.md gets a Revision Notice block (do not silently delete); if the retraction is factor-level, the relevant rung is marked "pool choice under review."</p>
+
+  <p><strong>A P prediction is retracted</strong> when its measurement lands outside the pre-committed band. Logged here with measured value, distance from band, and publication source. The formula demotes from P to R (retracted); it is <em>not</em> re-fit to the new value. If the failure is at a named rung, the ladder's structural name for that rung loses its claim.</p>
+
+  <p><strong>No silent retraction.</strong> Every change to a formula between measurements is logged. Post-hoc refits of a failed P into a new K are flagged "re-fit after failure" and weighted accordingly in the Brier score.</p>
+
+  <p><strong>If 2 of the 4 live P entries fail</strong>, the scoreboard is flagged "predictiveness in doubt"; piece #3 of next_frontier_plan.md reopens with new targets.</p>
+</section>
+
+<footer class="footer">
+  <p><span style="color: var(--gold);">⊙</span> The Circumpunct Framework</p>
+  <p style="margin-top: 8px;">by Ashman Roonz</p>
+  <p style="margin-top: 12px;">
+    <a href="index.html">← Index</a> ·
+    <a href="circumpunct_predictions.html">Predictions</a> ·
+    <a href="dimensional_ladder.html">The Ladder</a> ·
+    <a href="alpha_derivation.html">α Derivation</a>
+  </p>
+</footer>
+
+</body>
+</html>

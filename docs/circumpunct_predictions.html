@@ -457,11 +457,13 @@ p { margin-bottom: 18px; }
 <nav class="nav">
   <a href="#axiom">Axiom</a>
   <a href="#methodology">How to Read</a>
+  <a href="#scoring">Scoring</a>
   <a href="#confirmed">Confirmed</a>
   <a href="#new">New Predictions</a>
   <a href="#hierarchy">Hierarchy</a>
   <a href="#dissolves">Problems Dissolved</a>
   <a href="#preregistered">Pre-Registered</a>
+  <a href="predictions_history.html">History</a>
   <a href="#falsification">Falsification</a>
 </nav>
 
@@ -523,6 +525,54 @@ p { margin-bottom: 18px; }
   </div>
 
   <p>The rest of this page is a walk through the compositions, rung by rung.</p>
+</section>
+
+<!-- ============ SCORING & STATUS ============ -->
+<section id="scoring" class="page">
+  <div class="section-header">
+    <h2>Scoring &amp; Status</h2>
+    <p class="section-sub">Every formula the framework has on record, classified honestly. Grammar fits are not predictions; predictions are pre-registered and pending.</p>
+  </div>
+
+  <div class="note">
+    <strong>Three categories.</strong> Entries are classified as <strong>K</strong> (known-fit: structurally motivated composition of an already-measured value; post-hoc but not tuned, since pool integers and α-exponents are forced by the ladder), <strong>P</strong> (pre-registered prediction: value committed before measurement lands; pass/fail/inconclusive), or <strong>D</strong> (derived identity: integer relation with no free parameters at all, e.g., conservation of traversal, Route 7, S = P³ iff T = 3). K entries show the grammar is restrictive; P entries show whether it is predictive; D entries show what is true by construction.
+  </div>
+
+  <div class="pred-grid">
+    <div class="pred-card">
+      <div class="pred-header">
+        <span class="pred-name">Known-fit (K)</span>
+        <span class="pred-badge framework">44 entries</span>
+      </div>
+      <p style="color: var(--dim); font-size: 16px; margin-top: 12px;">Structural compositions of already-measured values. Pool integers and α-exponents are forced by the ladder (not tuned), so each K is a restrictiveness test: could the grammar have landed elsewhere? Median 2-3 integers per formula; typical accuracy sub-percent to sub-ppb.</p>
+    </div>
+    <div class="pred-card">
+      <div class="pred-header">
+        <span class="pred-name">Pre-registered (P)</span>
+        <span class="pred-badge new">4 entries</span>
+      </div>
+      <p style="color: var(--dim); font-size: 16px; margin-top: 12px;">Committed values awaiting measurement: P1 (1/α next decimal, ±5 ppb), P2 (X≡X/X−X length ratio, ±1%), P3 (mycelial Murray's Law exponent, ±0.15), P4 (five-virtue sequence effect size, d ≥ 0.5). None settled yet. Status tracked in the <a href="predictions_history.html">history page</a>.</p>
+    </div>
+    <div class="pred-card">
+      <div class="pred-header">
+        <span class="pred-name">Derived identity (D)</span>
+        <span class="pred-badge framework">4 entries</span>
+      </div>
+      <p style="color: var(--dim); font-size: 16px; margin-top: 12px;">Integer relations with no free parameters. Conservation of traversal (0+1+2=3), Route 6 ((T−1)! = Φ from P! = G·Φ at T = 3), Route 7 (S = P³ iff T = 3), seven independent T = 3 self-determinations. True by construction of the pool, not fits.</p>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top: 32px;">
+    <strong>What this page can and cannot claim.</strong> <em>Can claim</em>: the integer pool is sparse (14 symbols: T, P, Φ, R, G, V, S, A(d), A'(d), SU(3), φ, π, ◐, and α as input), the operations are fixed by the ladder (A(d), A'(d), compositional products, α-powers at structural rungs), and given α as input, 44 known dimensionless constants land inside their measurement uncertainty by structurally forced compositions. <em>Cannot claim</em>: that the grammar is independently predictive (the 4 pre-registered P entries are the first live test; no P has settled). If 2 of 4 P entries fail their bands, the <a href="../plans/predictions_scoreboard.md">scoreboard</a> flags "predictiveness in doubt" and piece #3 of the frontier plan reopens with new targets.
+  </div>
+
+  <div class="note">
+    <strong>Retraction protocol.</strong> When a precision measurement shifts a K fit outside its originally claimed accuracy band, the old formula gets a <em>Revision Notice</em> block in circumpunct_framework.md (not silently deleted), the retraction is logged in the <a href="predictions_history.html">history page</a>, and if the retraction is factor-level, the relevant rung is marked "pool choice under review." When a P prediction lands outside its pre-committed band, it demotes from P to R (retracted); it is <em>not</em> re-fit to the new value. No silent retraction; every change between measurements is logged. Post-hoc refits of a failed P into a new K are flagged "re-fit after failure" in the Brier score. Full protocol in <a href="../plans/predictions_scoreboard.md">plans/predictions_scoreboard.md §4</a>.
+  </div>
+
+  <div class="note">
+    <strong>Companion documents.</strong> Full audit across all 52 entries with pool-integer counts and uniqueness notes: <a href="../plans/predictions_scoreboard.md">plans/predictions_scoreboard.md</a>. Running log of settled/retracted entries as they accumulate: <a href="predictions_history.html">predictions_history.html</a>. The walking cards below are the eight headline K entries plus the four P entries; the scoreboard carries the complete set.
+  </div>
 </section>
 
 <!-- ============ CONFIRMED PREDICTIONS ============ -->
@@ -1373,6 +1423,7 @@ p { margin-bottom: 18px; }
     <a href="octave_wrap_lemma.html">Octave-Wrap Lemma</a> &middot;
     <a href="unified_expression_math_map.html">Math Map</a> &middot;
     <a href="biology_predictions.html">Biology Predictions</a> &middot;
+    <a href="predictions_history.html">History</a> &middot;
     <a href="clay_millennium.html">Clay Problems</a>
   </p>
   <p style="margin-top: 12px;"><a href="index.html">&larr; Back to Index</a></p>

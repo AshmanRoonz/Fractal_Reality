@@ -61,7 +61,19 @@ The v11 findings note this as next. Infrastructure exists: `experiments/unified_
 **Edge.** Pure infrastructure extension; the v11 machinery generalizes cleanly.
 **Risk.** Convergence time. ℂ⁸ needed ~300K iterations; ℂ⁵¹² may need millions. Budget accordingly or use sparse eigenvalue methods.
 
-### 3. Grammar predictiveness scoreboard
+### 3. Grammar predictiveness scoreboard ✓ DONE 2026-04-22
+
+**Status: complete.** See `plans/predictions_scoreboard.md`, `docs/circumpunct_predictions.html` (Scoring & Status section), and `docs/predictions_history.html`.
+
+Headline results:
+- Full audit of 52 entries across 10 domain buckets (α-ladder, cosmological, particle masses, mixing, molecular geometry, bond energies, periodic table, nuclear, biology, pre-registered)
+- Classification: 44 K (known-fit), 4 P (pre-registered), 4 D (derived identity)
+- Four P entries locked with pre-committed bands: P1 (1/α next decimal, ±5 ppb), P2 (Si≡Si/Si−Si length ratio, ±1%), P3 (mycelial Murray's Law exponent, ±0.15), P4 (five-virtue sequence Cohen's d ≥ 0.5)
+- Retraction protocol defined: Revision Notice blocks in circumpunct_framework.md, history-page logging, no silent retraction, post-hoc refits flagged "re-fit after failure" in Brier score
+- Flag threshold: if 2 of 4 P fail their bands, piece #3 reopens with new targets
+- Honest framing: 44 K entries show the grammar is restrictive (sparse pool, forced integers, tight fits); no P has settled, so predictiveness is not yet on record
+
+**Original task description (for reference):**
 
 The biggest epistemic payoff. Every existing ladder formula is a fit given α. The open question: does the grammar reproduce a NOT-YET-measured constant without per-formula tuning? `docs/circumpunct_predictions.html` stakes pre-registered predictions on specific future measurements. Upgrade that page from narrative to scoreboard.
 
@@ -128,7 +140,7 @@ m_μ/m_e is pinned at 5 ppm. m_τ/m_e at 1 ppm. m_p/m_e at 5.35 ppm. Every mass 
 
 1. **Bond energy outliers** (1-2 days; three independent small pieces; warm-up) — pending
 2. **ℂ⁵¹² octave** (2-3 days; mostly infrastructure; v11 machinery generalizes) — ✓ DONE 2026-04-22
-3. **Grammar predictiveness scoreboard** (1 week; rewrite predictions page; set up scoring rules and retraction protocol; lock pre-registered thresholds) — pending
+3. **Grammar predictiveness scoreboard** (1 week; rewrite predictions page; set up scoring rules and retraction protocol; lock pre-registered thresholds) — ✓ DONE 2026-04-22
 4. **Empirical tests catalog** (3-4 days; documentation + existing-data analysis; slots into scoreboard) — pending
 5. **Nuclear potential shape** (1-2 weeks; real derivation work; most likely to need course-correction) — pending
 6. **Absolute masses** (open-ended; may end in "the framework is dimensionless"; that is itself a clean result) — pending
