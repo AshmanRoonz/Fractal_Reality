@@ -84,13 +84,20 @@ function seededRng(seed) {
 // draw call, so adding species does not add GPU cost proportional to species
 // count — it just adds instances to the shared meshes.
 // ---------------------------------------------------------------------------
+// Geometries sized so particles overlap at organism densities below.
+// A sphere much smaller than the mean inter-particle spacing reads as "a
+// pile of beads"; a sphere comparable to or larger than the spacing merges
+// into a continuous mass. Earlier version erred on the bead side. These
+// numbers plus the higher counts in the species template below give a
+// visible body.
 const PARTICLE_TYPES = {
-  "sphere-small":  { geometry: new THREE.SphereGeometry(1.2, 6, 5) },
-  "sphere-medium": { geometry: new THREE.SphereGeometry(1.8, 7, 5) },
-  "sphere-large":  { geometry: new THREE.SphereGeometry(2.4, 8, 6) },
-  // Teardrop: a slightly tapered, elongated shape. ConeGeometry gives the
-  // right silhouette for cilia; pointy end trails, wide end anchors to the ring.
-  "teardrop":      { geometry: new THREE.ConeGeometry(0.9, 4.5, 6, 1) },
+  "sphere-small":  { geometry: new THREE.SphereGeometry(2.6, 10, 8) },
+  "sphere-medium": { geometry: new THREE.SphereGeometry(3.4, 12, 10) },
+  "sphere-large":  { geometry: new THREE.SphereGeometry(4.2, 14, 10) },
+  // Teardrop (cilia): wider base + longer body so it reads as a paddle, not
+  // a thin stick. The ConeGeometry's tip is at +Y local; we orient each
+  // instance at render time so the tip points outward from the ring.
+  "teardrop":      { geometry: new THREE.ConeGeometry(1.6, 9.0, 8, 1) },
 };
 
 // ---------------------------------------------------------------------------
@@ -100,42 +107,42 @@ const PARTICLE_TYPES = {
 // the positions particles sit at when the organism is at rest; animation
 // rules add per-frame offsets on top of these.
 // ---------------------------------------------------------------------------
+// Placement rules return an object with (at minimum) a `positions` array.
+// Rules that need per-particle orientation (like ring, for the cilia) also
+// return `outwards` and `tangents` arrays of the same length. buildOrganism
+// stashes these on the particle so animation rules can use them.
 const placement = {
   // Uniform points inside a solid sphere. Uses cube-root radius to get
   // uniform volume distribution (not uniform radial distribution, which
   // would clump particles near the center).
   filledSphere(cfg, count, rng) {
     const { center, radius } = cfg;
-    const out = [];
+    const positions = [];
     for (let i = 0; i < count; i++) {
       const u = rng(), v = rng(), w = rng();
       const theta = 2 * Math.PI * u;
       const phi = Math.acos(2 * v - 1);
       const r = radius * Math.cbrt(w);
-      out.push(new THREE.Vector3(
+      positions.push(new THREE.Vector3(
         center[0] + r * Math.sin(phi) * Math.cos(theta),
         center[1] + r * Math.sin(phi) * Math.sin(theta),
         center[2] + r * Math.cos(phi),
       ));
     }
-    return out;
+    return { positions };
   },
 
   // Points on a spherical cap (a "patch" of a sphere surface, used for the
   // mouth: a dome of particles around the buccal opening).
-  // `normal` is the direction the cap faces from the sphere center.
-  // `angleMax` is the half-angle of the cap (π/2 = hemisphere, π/3 ≈ 60°).
   cap(cfg, count, rng) {
     const { center, radius, normal, angleMax } = cfg;
     const n = new THREE.Vector3(...normal).normalize();
-    // Build an orthonormal basis with Z = n. Pick a tangent that isn't
-    // parallel to n; Gram-Schmidt to get a proper basis.
     const tmp = Math.abs(n.y) < 0.95 ? new THREE.Vector3(0,1,0) : new THREE.Vector3(1,0,0);
     const t1 = new THREE.Vector3().crossVectors(n, tmp).normalize();
     const t2 = new THREE.Vector3().crossVectors(n, t1).normalize();
-    const out = [];
+    const positions = [];
     for (let i = 0; i < count; i++) {
-      const phi = Math.acos(1 - rng() * (1 - Math.cos(angleMax))); // uniform on cap
+      const phi = Math.acos(1 - rng() * (1 - Math.cos(angleMax)));
       const theta = 2 * Math.PI * rng();
       const sp = Math.sin(phi), cp = Math.cos(phi);
       const local = new THREE.Vector3(
@@ -143,38 +150,49 @@ const placement = {
         radius * sp * Math.sin(theta),
         radius * cp,
       );
-      // Convert local (Z-aligned) to world: X = t1, Y = t2, Z = n
-      const world = new THREE.Vector3(
+      positions.push(new THREE.Vector3(
         center[0] + local.x * t1.x + local.y * t2.x + local.z * n.x,
         center[1] + local.x * t1.y + local.y * t2.y + local.z * n.y,
         center[2] + local.x * t1.z + local.y * t2.z + local.z * n.z,
-      );
-      out.push(world);
+      ));
     }
-    return out;
+    return { positions };
   },
 
   // Evenly-spaced points on a circle in the plane perpendicular to `normal`.
-  // Used for the cilia ring. Particles are placed at regular angular
-  // intervals so the metachronal wave animation has a clean phase ordering.
+  // Also emits per-particle `outwards` (radial direction away from ring
+  // center) and `tangents` (along the ring, perpendicular to outward) so
+  // oriented particles like the cilia can point outward and tilt along the
+  // ring direction during the metachronal wave.
   ring(cfg, count, rng) {
     const { center, radius, normal } = cfg;
     const n = new THREE.Vector3(...normal).normalize();
     const tmp = Math.abs(n.y) < 0.95 ? new THREE.Vector3(0,1,0) : new THREE.Vector3(1,0,0);
     const t1 = new THREE.Vector3().crossVectors(n, tmp).normalize();
     const t2 = new THREE.Vector3().crossVectors(n, t1).normalize();
-    const out = [];
+    const positions = [];
+    const outwards = [];
+    const tangents = [];
     for (let i = 0; i < count; i++) {
       const theta = (i / count) * 2 * Math.PI;
-      const x = radius * Math.cos(theta);
-      const y = radius * Math.sin(theta);
-      out.push(new THREE.Vector3(
-        center[0] + x * t1.x + y * t2.x,
-        center[1] + x * t1.y + y * t2.y,
-        center[2] + x * t1.z + y * t2.z,
+      const cos = Math.cos(theta), sin = Math.sin(theta);
+      positions.push(new THREE.Vector3(
+        center[0] + radius * cos * t1.x + radius * sin * t2.x,
+        center[1] + radius * cos * t1.y + radius * sin * t2.y,
+        center[2] + radius * cos * t1.z + radius * sin * t2.z,
       ));
+      outwards.push(new THREE.Vector3(
+        cos * t1.x + sin * t2.x,
+        cos * t1.y + sin * t2.y,
+        cos * t1.z + sin * t2.z,
+      ).normalize());
+      tangents.push(new THREE.Vector3(
+        -sin * t1.x + cos * t2.x,
+        -sin * t1.y + cos * t2.y,
+        -sin * t1.z + cos * t2.z,
+      ).normalize());
     }
-    return out;
+    return { positions, outwards, tangents };
   },
 };
 
@@ -185,32 +203,49 @@ const placement = {
 // Offsets are in organism-local coordinates; the organism's world matrix
 // handles positioning in the scene.
 // ---------------------------------------------------------------------------
+// Animation rules mutate a scratch Object3D in place, setting both its
+// position and its quaternion. The render loop then calls updateMatrix() +
+// setMatrixAt() on the instance. Having rotation in the animation API lets
+// oriented particles (cilia, flagella, pseudopods) rotate as they move.
+const _UP = new THREE.Vector3(0, 1, 0);
+const _tmpQuatA = new THREE.Quaternion();
+const _tmpQuatB = new THREE.Quaternion();
+const _tmpAxis = new THREE.Vector3();
+
 const animations = {
   // Uniform radial breath: scales the whole group about the organism center.
-  // The amplitude is a fraction of the rest position's length, so particles
-  // farther from the center move farther during the pulse.
-  pulse(params, time, particle, rest, outPos) {
+  // Particle position is rest multiplied by a scalar that oscillates; no
+  // rotation change. Produces a subtle "breathing" motion across the body.
+  pulse(params, time, particle, outObj) {
     const s = 1 + Math.sin(time * params.freq * 2 * Math.PI) * params.amp;
-    outPos.copy(rest).multiplyScalar(s);
+    outObj.position.copy(particle.rest).multiplyScalar(s);
+    outObj.quaternion.identity();
   },
 
-  // Metachronal wave: a sinusoidal offset that propagates around a ring.
-  // Each particle sees a phase delay based on its index in the ring, so the
-  // wave appears to travel around the circumference at frequency `freq`.
-  // The offset is along the ring's normal axis (outward from the ring),
-  // giving the characteristic "cilia beating" silhouette.
-  metachronal(params, time, particle, rest, outPos) {
+  // Cilia tilt: orient each cilia outward from the ring center (so the cone
+  // points away from the body like a fringe), then add a metachronal tilt
+  // around the ring tangent axis. Each cilia's tilt is phase-offset by its
+  // index in the ring, so the wave propagates around the circumference at
+  // `freq`, amplitude `amp` in radians. This is what real ciliary metachronal
+  // waves look like: paddles nodding in sequence, not particles pumping in
+  // and out.
+  ciliaTilt(params, time, particle, outObj) {
+    outObj.position.copy(particle.rest);
+    // Rest orientation: cone's +Y axis aligned with outward direction.
+    if (particle.outward) {
+      _tmpQuatA.setFromUnitVectors(_UP, particle.outward);
+    } else {
+      _tmpQuatA.identity();
+    }
+    // Tilt around the ring tangent: angle oscillates with metachronal phase.
     const phase = particle.animIndex * params.phasePerIndex;
     const t = time * params.freq * 2 * Math.PI - phase;
-    const offset = Math.sin(t) * params.amp;
-    // Direction of offset: along the ring's normal (the cap axis).
-    // For the Ciliate cilia ring, normal = [0,0,-1], so the offset is in +/-Z.
-    // We store the ring normal on the particle at build time.
-    outPos.copy(rest);
-    if (particle.ringNormal) {
-      outPos.x += particle.ringNormal[0] * offset;
-      outPos.y += particle.ringNormal[1] * offset;
-      outPos.z += particle.ringNormal[2] * offset;
+    const tiltAngle = Math.sin(t) * params.amp;
+    if (particle.tangent) {
+      _tmpQuatB.setFromAxisAngle(particle.tangent, tiltAngle);
+      outObj.quaternion.multiplyQuaternions(_tmpQuatB, _tmpQuatA);
+    } else {
+      outObj.quaternion.copy(_tmpQuatA);
     }
   },
 };
@@ -223,44 +258,89 @@ const animations = {
 const CILIATE = {
   name: "Ciliate",
   palette: {
-    core:   { color: 0x3aa8b5, emissive: 0x1f6f78, emissiveIntensity: 0.35 },
-    mouth:  { color: 0xd18a2e, emissive: 0x8a4c15, emissiveIntensity: 0.55 },
-    cilia:  { color: 0x3aa8b5, emissive: 0x4fc2d0, emissiveIntensity: 0.45 },
+    // Emissive colors are distinct from base colors so the material can use
+    // `emissive` properly (it's added to the shaded surface color, not a
+    // tint). emissiveIntensity pushes the self-illumination; higher values
+    // make the organism "glow from within" against the dark background.
+    //
+    // `rim` adds a fresnel-style edge glow via onBeforeCompile. Present on
+    // core (where it sells the translucent-tissue read) and on cilia (to
+    // brighten their silhouette as they tilt through the wave). Mouth is
+    // left without rim: the dense amber cluster reads fine without it, and
+    // adding rim there over-brightens the already-hot mouth into the bloom.
+    // v0.4 tissue noise removed: at world scale 0.08 the pattern didn't
+    // register across particle boundaries (each ~3u sphere saw one noise
+    // cell), so it read as uniform tint + small cost. The rim fresnel and
+    // bloom are doing the organic work; tissue shader needs a different
+    // approach to earn its cost. Keeping the shader code in makeGroupMaterial
+    // available for later experimentation, just not activated.
+    // Wet-matte (v0.6): no metalness, moderate roughness so there's some
+    // shine but no hot white specular, moderate emissive. Rim fresnel is
+    // back to a simple fixed-hue glow at the silhouette; iridescent body
+    // tint is off because on small spheres it produces concentric color
+    // rings that read as flat 2D patterns.
+    // Fractal: Kali IFS (same engine as LSS walls) sampled in world space.
+    // `scale` maps world units to fractal-pattern units (0.05 = 40-unit body
+    // shows ~2 pattern cells across), `intensity` is the additive strength
+    // on top of the base color, `tint` is the palette hue the fractal rotates
+    // around. Because sampling is world-space, the pattern flows continuously
+    // across many particles instead of per-sphere ring artifacts.
+    core:   {
+      color: 0x2d7e88, emissive: 0x4fc8d6, emissiveIntensity: 0.42,
+      roughness: 0.55, metalness: 0.0,
+      rim: { color: 0x7fe8f6, intensity: 0.75, power: 2.2 },
+      fractal: { scale: 0.045, intensity: 0.9, tint: 0x4fc8d6, rotSpeed: 0.08 },
+    },
+    mouth:  {
+      color: 0xc27a22, emissive: 0xffa840, emissiveIntensity: 0.78,
+      roughness: 0.50, metalness: 0.0,
+    },
+    cilia:  {
+      color: 0x3fbfcd, emissive: 0x6fd8e5, emissiveIntensity: 0.55,
+      roughness: 0.50, metalness: 0.0,
+      rim: { color: 0x9ff0ff, intensity: 0.6, power: 2.8 },
+      fractal: { scale: 0.075, intensity: 0.6, tint: 0x9ff0ff, rotSpeed: 0.12 },
+    },
   },
   particleGroups: [
     {
+      // Core: a dense filled sphere. Count increased + geometry scaled up so
+      // the particles overlap and read as one mass, not a swarm. Radius kept
+      // tight so density is high.
       name: "core",
-      placement: { rule: "filledSphere", cfg: { center: [0,0,0], radius: 22 } },
-      count: 80,
+      placement: { rule: "filledSphere", cfg: { center: [0,0,0], radius: 18 } },
+      count: 160,
       particleType: "sphere-medium",
-      animation: { rule: "pulse", params: { freq: 3.0, amp: 0.04 } },
+      animation: { rule: "pulse", params: { freq: 2.2, amp: 0.035 } },
       bondStrength: 1.6,
       shedOrder: 3,
     },
     {
+      // Mouth: a dense cap at the front. Tighter radius and higher count so
+      // it reads as an amber ring/disc at the "face" of the organism.
       name: "mouth",
-      placement: { rule: "cap", cfg: { center: [0,0,-18], radius: 10, normal: [0,0,-1], angleMax: Math.PI / 3 } },
-      count: 15,
+      placement: { rule: "cap", cfg: { center: [0,0,-15], radius: 8, normal: [0,0,-1], angleMax: Math.PI / 2.4 } },
+      count: 28,
       particleType: "sphere-small",
-      animation: { rule: "pulse", params: { freq: 3.0, amp: 0.04 } },
+      animation: { rule: "pulse", params: { freq: 2.2, amp: 0.035 } },
       bondStrength: 1.0,
       shedOrder: 2,
     },
     {
+      // Cilia: slightly outside the body ring, oriented outward. Count
+      // bumped to 30 so the ring feels dense; each cilia is now a big
+      // teardrop that tilts (not pulses) through the metachronal wave.
       name: "cilia",
-      placement: { rule: "ring", cfg: { center: [0,0,-16], radius: 18, normal: [0,0,-1] } },
-      count: 24,
+      placement: { rule: "ring", cfg: { center: [0,0,-14], radius: 19, normal: [0,0,-1] } },
+      count: 30,
       particleType: "teardrop",
-      animation: { rule: "metachronal", params: { freq: 3.0, phasePerIndex: (2*Math.PI)/24, amp: 1.8 } },
+      animation: { rule: "ciliaTilt", params: { freq: 2.4, phasePerIndex: (2*Math.PI)/30, amp: 0.55 } },
       bondStrength: 0.6,
       shedOrder: 1,
-      // Mark the ring's normal on each particle so metachronal knows which
-      // axis to offset along without needing a lookup from group config.
-      ringNormal: [0,0,-1],
     },
   ],
   totalHP: 100,
-  scaleRange: [0.85, 1.15],
+  scaleRange: [0.9, 1.1],
 };
 
 // ---------------------------------------------------------------------------
@@ -276,7 +356,10 @@ function buildOrganism(species, seed) {
   const particles = [];
   let globalIndex = 0;
   for (const group of species.particleGroups) {
-    const positions = placement[group.placement.rule](group.placement.cfg, group.count, rng);
+    const result = placement[group.placement.rule](group.placement.cfg, group.count, rng);
+    const positions = result.positions;
+    const outwards = result.outwards || null;   // may be null for non-oriented placements
+    const tangents = result.tangents || null;
     for (let i = 0; i < positions.length; i++) {
       positions[i].multiplyScalar(scale);
       particles.push({
@@ -285,14 +368,18 @@ function buildOrganism(species, seed) {
         particleType: group.particleType,
         animation: group.animation,
         animIndex: i,
-        ringNormal: group.ringNormal || null,
-        rest: positions[i].clone(),          // original target (for animation)
-        current: positions[i].clone(),       // per-frame computed position
+        // Rest position (no animation applied) and current position (this
+        // frame, possibly drifting if shed). `outward` and `tangent` are used
+        // by ciliaTilt and any future oriented-particle animation; left null
+        // for isotropic placements.
+        rest: positions[i].clone(),
+        current: positions[i].clone(),
+        outward: outwards ? outwards[i].clone() : null,
+        tangent: tangents ? tangents[i].clone() : null,
         bondStrength: group.bondStrength,
         shedOrder: group.shedOrder,
         shed: false,
         residualVel: new THREE.Vector3(),
-        color: group.name,  // key into palette; resolved when setting instance color
       });
     }
   }
@@ -310,16 +397,23 @@ function buildOrganism(species, seed) {
 // SCENE SETUP
 // ---------------------------------------------------------------------------
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x05080c);
-scene.fog = new THREE.FogExp2(0x05080c, 0.008);
+// Background is a deep teal-black: hints at "something medium" around the
+// organism rather than empty space. Keeps the scene from reading as an
+// isolated specimen on a black slide.
+scene.background = new THREE.Color(0x0a1620);
+scene.fog = new THREE.FogExp2(0x0a1620, 0.006);
 
 const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 18, 80);
+camera.position.set(0, 16, 70);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputEncoding = THREE.sRGBEncoding;
+// We disable the renderer's built-in tonemap because the postFX composite
+// pass does ACES + exposure itself; running it in both places would
+// double-tonemap and crush the bloom.
+renderer.toneMapping = THREE.NoToneMapping;
 document.body.appendChild(renderer.domElement);
 
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -328,107 +422,405 @@ controls.dampingFactor = 0.08;
 controls.minDistance = 30;
 controls.maxDistance = 240;
 
-// Lighting: cool ambient + warm key + cool fill, so the organism has depth
-// without losing its pigment.
-scene.add(new THREE.AmbientLight(0x3c4855, 0.55));
-const keyLight = new THREE.DirectionalLight(0xffe8c8, 1.1);
+// Lighting: soft ambient so nothing is pitch-black; a warm key for form; a
+// cool fill for rim/opposite. Kept moderate so the organism's own emissive
+// is the primary light source on itself.
+scene.add(new THREE.AmbientLight(0x2a3640, 0.45));
+const keyLight = new THREE.DirectionalLight(0xffe8c8, 0.85);
 keyLight.position.set(60, 80, 40);
 scene.add(keyLight);
-const fillLight = new THREE.DirectionalLight(0x7ab8c4, 0.45);
+const fillLight = new THREE.DirectionalLight(0x6fc0ce, 0.38);
 fillLight.position.set(-50, -30, -40);
 scene.add(fillLight);
 
-// Scale reference: a faint world grid that gives a sense of motion when
-// the camera orbits. Small, so it does not dominate the view.
-const grid = new THREE.GridHelper(200, 20, 0x1a2630, 0x121820);
+// Faint ground grid, well below the organism, for orbit orientation.
+const grid = new THREE.GridHelper(200, 20, 0x162430, 0x0f1820);
 grid.position.y = -40;
 scene.add(grid);
 
 // ---------------------------------------------------------------------------
+// POSTFX: BLOOM + COMPOSITE
+// Five-pass pipeline: scene -> bright-extract -> blur H -> blur V -> composite.
+// Makes the emissive parts (mouth, cilia tips, core glow) bleed into soft
+// halos instead of being flat bright pixels. The composite pass also does
+// ACES tonemap + exposure + vignette, so the final image has a cinematic
+// rolloff. Inherited from LSS's pipeline, simplified for this prototype.
+// ---------------------------------------------------------------------------
+const postFX = { enabled: true };
+
+function makeRT(w, h) {
+  return new THREE.WebGLRenderTarget(w, h, {
+    format: THREE.RGBAFormat,
+    type: THREE.HalfFloatType,    // HDR-friendly: bloom wants > 1.0 values
+    minFilter: THREE.LinearFilter,
+    magFilter: THREE.LinearFilter,
+    generateMipmaps: false,
+    depthBuffer: true,
+  });
+}
+postFX.rtScene = makeRT(window.innerWidth, window.innerHeight);
+postFX.rtBright = makeRT(Math.floor(window.innerWidth / 2), Math.floor(window.innerHeight / 2));
+postFX.rtBlurH  = makeRT(postFX.rtBright.width, postFX.rtBright.height);
+postFX.rtBlurV  = makeRT(postFX.rtBright.width, postFX.rtBright.height);
+
+postFX.quadGeo = new THREE.PlaneGeometry(2, 2);
+postFX.quadCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+postFX.passScene = new THREE.Scene();
+
+// Pass 2: bright extract. Pulls pixels above a luminance threshold into the
+// bright buffer; everything below goes to black. The smoothstep band avoids
+// a hard threshold edge.
+postFX.brightMat = new THREE.ShaderMaterial({
+  uniforms: {
+    tDiffuse: { value: null },
+    threshold: { value: 0.55 },
+    softness: { value: 0.4 },
+  },
+  vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position, 1.0); }`,
+  fragmentShader: `
+    uniform sampler2D tDiffuse;
+    uniform float threshold;
+    uniform float softness;
+    varying vec2 vUv;
+    void main() {
+      vec4 c = texture2D(tDiffuse, vUv);
+      float lum = dot(c.rgb, vec3(0.2126, 0.7152, 0.0722));
+      float b = smoothstep(threshold, threshold + softness, lum);
+      gl_FragColor = vec4(c.rgb * b, 1.0);
+    }
+  `,
+});
+
+// Passes 3 and 4: separable Gaussian blur. Direction uniform flips between
+// horizontal and vertical passes. Nine-tap kernel is enough for a soft
+// bloom look at half-resolution.
+postFX.blurMat = new THREE.ShaderMaterial({
+  uniforms: {
+    tDiffuse: { value: null },
+    direction: { value: new THREE.Vector2(1, 0) },
+    resolution: { value: new THREE.Vector2(postFX.rtBright.width, postFX.rtBright.height) },
+  },
+  vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position, 1.0); }`,
+  fragmentShader: `
+    uniform sampler2D tDiffuse;
+    uniform vec2 direction;
+    uniform vec2 resolution;
+    varying vec2 vUv;
+    // Nine-tap Gaussian weights (sigma ~ 3.0).
+    const float W0 = 0.227027;
+    const float W1 = 0.194595;
+    const float W2 = 0.121622;
+    const float W3 = 0.054054;
+    const float W4 = 0.016216;
+    void main() {
+      vec2 texel = direction / resolution;
+      vec3 col = texture2D(tDiffuse, vUv).rgb * W0;
+      col += texture2D(tDiffuse, vUv + texel * 1.0).rgb * W1;
+      col += texture2D(tDiffuse, vUv - texel * 1.0).rgb * W1;
+      col += texture2D(tDiffuse, vUv + texel * 2.0).rgb * W2;
+      col += texture2D(tDiffuse, vUv - texel * 2.0).rgb * W2;
+      col += texture2D(tDiffuse, vUv + texel * 3.0).rgb * W3;
+      col += texture2D(tDiffuse, vUv - texel * 3.0).rgb * W3;
+      col += texture2D(tDiffuse, vUv + texel * 4.0).rgb * W4;
+      col += texture2D(tDiffuse, vUv - texel * 4.0).rgb * W4;
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `,
+});
+
+// Pass 5: composite. Adds bloom to scene, applies exposure + ACES tonemap,
+// sRGB encode, subtle vignette. This is the final write to screen.
+postFX.compositeMat = new THREE.ShaderMaterial({
+  uniforms: {
+    tScene: { value: null },
+    tBloom: { value: null },
+    bloomStrength: { value: 0.9 },
+    exposure: { value: 1.25 },
+    vignetteIntensity: { value: 0.35 },
+  },
+  vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position, 1.0); }`,
+  fragmentShader: `
+    uniform sampler2D tScene;
+    uniform sampler2D tBloom;
+    uniform float bloomStrength;
+    uniform float exposure;
+    uniform float vignetteIntensity;
+    varying vec2 vUv;
+    // ACES filmic tonemap (Narkowicz 2015): cheap and cinematic.
+    vec3 aces(vec3 x) {
+      const float a = 2.51, b = 0.03, c = 2.43, d = 0.59, e = 0.14;
+      return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+    }
+    void main() {
+      vec3 scene = texture2D(tScene, vUv).rgb;
+      vec3 bloom = texture2D(tBloom, vUv).rgb;
+      vec3 col = scene + bloom * bloomStrength;
+      col *= exposure;
+      col = aces(col);
+      // sRGB encode (since the renderer's sRGB path is bypassed when we
+      // write via a ShaderMaterial to the screen).
+      col = pow(col, vec3(1.0 / 2.2));
+      // Vignette: darken edges to pull eye to the center.
+      float d = length(vUv - 0.5);
+      col *= 1.0 - smoothstep(0.45, 0.95, d) * vignetteIntensity;
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `,
+});
+
+// Each pass uses a shared full-screen quad; we toggle which material is
+// active by swapping the quad's material rather than keeping 3 quads in a
+// scene (simpler, no visibility juggling).
+postFX.quad = new THREE.Mesh(postFX.quadGeo, postFX.brightMat);
+postFX.passScene.add(postFX.quad);
+
+function renderPostFX() {
+  // 1. Scene -> rtScene
+  renderer.setRenderTarget(postFX.rtScene);
+  renderer.render(scene, camera);
+
+  // 2. rtScene -> rtBright (threshold)
+  postFX.brightMat.uniforms.tDiffuse.value = postFX.rtScene.texture;
+  postFX.quad.material = postFX.brightMat;
+  renderer.setRenderTarget(postFX.rtBright);
+  renderer.render(postFX.passScene, postFX.quadCam);
+
+  // 3. rtBright -> rtBlurH (horizontal blur)
+  postFX.blurMat.uniforms.tDiffuse.value = postFX.rtBright.texture;
+  postFX.blurMat.uniforms.direction.value.set(1, 0);
+  postFX.quad.material = postFX.blurMat;
+  renderer.setRenderTarget(postFX.rtBlurH);
+  renderer.render(postFX.passScene, postFX.quadCam);
+
+  // 4. rtBlurH -> rtBlurV (vertical blur)
+  postFX.blurMat.uniforms.tDiffuse.value = postFX.rtBlurH.texture;
+  postFX.blurMat.uniforms.direction.value.set(0, 1);
+  renderer.setRenderTarget(postFX.rtBlurV);
+  renderer.render(postFX.passScene, postFX.quadCam);
+
+  // 5. Composite to screen
+  postFX.compositeMat.uniforms.tScene.value = postFX.rtScene.texture;
+  postFX.compositeMat.uniforms.tBloom.value = postFX.rtBlurV.texture;
+  postFX.quad.material = postFX.compositeMat;
+  renderer.setRenderTarget(null);
+  renderer.render(postFX.passScene, postFX.quadCam);
+}
+
+// ---------------------------------------------------------------------------
 // RENDER INSTANTIATION
-// Build InstancedMesh per particle type based on the organism's census,
-// and pre-fill per-instance color from the palette.
+// One InstancedMesh per group. Core and cilia get fresnel rim-light via
+// onBeforeCompile so they read as translucent membrane. Mouth stays flat
+// (its dense amber cluster doesn't need rim; adding it would blow out
+// the bloom budget on this region).
 // ---------------------------------------------------------------------------
 let organism = null;
-const meshesByType = {};
+const meshesByGroup = {};
 const _tmpObj = new THREE.Object3D();
 const _tmpColor = new THREE.Color();
 const _tmpVec = new THREE.Vector3();
+let organismInnerLight = null;
 
 function disposeOrganism() {
-  for (const type in meshesByType) {
-    const m = meshesByType[type].mesh;
+  for (const k in meshesByGroup) {
+    const m = meshesByGroup[k].mesh;
     scene.remove(m);
-    m.geometry.dispose && m.geometry.dispose();
     m.material.dispose && m.material.dispose();
   }
-  for (const k in meshesByType) delete meshesByType[k];
+  for (const k in meshesByGroup) delete meshesByGroup[k];
+  if (organismInnerLight) {
+    scene.remove(organismInnerLight);
+    organismInnerLight = null;
+  }
+  // Drop shader refs from the previous organism; the new one's materials
+  // will register fresh on first render.
+  _tissueShaders.length = 0;
+}
+
+// Shaders that want a per-frame time uniform (currently: anything with
+// `tissue` noise) register here at compile time; the animate() loop pushes
+// a shared `elapsedTime` into each one. Cleared on disposeOrganism so stale
+// shaders from a previous organism do not get updated forever.
+const _tissueShaders = [];
+
+function makeGroupMaterial(palEntry) {
+  // Wet/oily default: low roughness gives tight specular highlights, slight
+  // metalness pushes a bit of reflection so the surface catches the lights
+  // crisply. Each palette entry can override these via `roughness`/`metalness`
+  // if a particular group wants to read matte instead.
+  const mat = new THREE.MeshStandardMaterial({
+    color: palEntry.color,
+    emissive: palEntry.emissive,
+    emissiveIntensity: palEntry.emissiveIntensity,
+    roughness: palEntry.roughness != null ? palEntry.roughness : 0.18,
+    metalness: palEntry.metalness != null ? palEntry.metalness : 0.15,
+  });
+  const hasRim = !!palEntry.rim;
+  const hasFractal = !!palEntry.fractal;
+  if (!hasRim && !hasFractal) return mat;
+
+  mat.onBeforeCompile = (shader) => {
+    // ---- UNIFORMS ----
+    if (hasRim) {
+      shader.uniforms.rimColor = { value: new THREE.Color(palEntry.rim.color) };
+      shader.uniforms.rimIntensity = { value: palEntry.rim.intensity };
+      shader.uniforms.rimPower = { value: palEntry.rim.power };
+    }
+    if (hasFractal) {
+      shader.uniforms.fractalTime = { value: 0.0 };
+      shader.uniforms.fractalScale = { value: palEntry.fractal.scale };
+      shader.uniforms.fractalIntensity = { value: palEntry.fractal.intensity };
+      shader.uniforms.fractalTint = { value: new THREE.Color(palEntry.fractal.tint) };
+      shader.uniforms.fractalRotSpeed = { value: palEntry.fractal.rotSpeed || 0.1 };
+      _tissueShaders.push(shader);  // reused registry for per-frame time uniform push
+    }
+
+    // ---- VERTEX: plumb world position through for fractal lookup ----
+    if (hasFractal) {
+      shader.vertexShader = "varying vec3 vWorldPos;\n" + shader.vertexShader;
+      shader.vertexShader = shader.vertexShader.replace(
+        "#include <project_vertex>",
+        [
+          "#include <project_vertex>",
+          "#ifdef USE_INSTANCING",
+          "  vWorldPos = (modelMatrix * instanceMatrix * vec4(transformed, 1.0)).xyz;",
+          "#else",
+          "  vWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;",
+          "#endif",
+        ].join("\n")
+      );
+    }
+
+    // ---- FRAGMENT: prologue (uniforms + GLSL funcs) ----
+    const prologue = [];
+    if (hasRim) {
+      prologue.push("uniform vec3 rimColor;");
+      prologue.push("uniform float rimIntensity;");
+      prologue.push("uniform float rimPower;");
+    }
+    if (hasFractal) {
+      prologue.push("varying vec3 vWorldPos;");
+      prologue.push("uniform float fractalTime;");
+      prologue.push("uniform float fractalScale;");
+      prologue.push("uniform float fractalIntensity;");
+      prologue.push("uniform vec3 fractalTint;");
+      prologue.push("uniform float fractalRotSpeed;");
+      // Kali IFS + cosmicField ported from LSS wall shader. The same fractal
+      // engine; reduced iterations (6 instead of 8) for cheaper fragment cost,
+      // and one ring instead of three since we want a subtle texture, not the
+      // walls' full dazzle. Output is additive glow in the palette's tint hue.
+      prologue.push([
+        "vec3 _fhsv(float h, float s, float v) {",
+        "  vec3 k = mod(vec3(5.0, 3.0, 1.0) + h * 6.0, 6.0);",
+        "  return v - v * s * clamp(min(k, 4.0 - k), 0.0, 1.0);",
+        "}",
+        "float _fRgbHue(vec3 c) {",
+        "  float mx = max(c.r, max(c.g, c.b));",
+        "  float mn = min(c.r, min(c.g, c.b));",
+        "  float d = mx - mn;",
+        "  if (d < 0.001) return 0.0;",
+        "  float h;",
+        "  if (mx == c.r) h = mod((c.g - c.b) / d + 6.0, 6.0) / 6.0;",
+        "  else if (mx == c.g) h = ((c.b - c.r) / d + 2.0) / 6.0;",
+        "  else h = ((c.r - c.g) / d + 4.0) / 6.0;",
+        "  return h;",
+        "}",
+        "float _fKali(vec3 p, vec3 off, float inv) {",
+        "  float s = 1.0;",
+        "  for (int k = 0; k < 6; k++) {",
+        "    if (p.x + p.y < 0.0) p.xy = -p.yx;",
+        "    if (p.x + p.z < 0.0) p.xz = -p.zx;",
+        "    if (p.y + p.z < 0.0) p.yz = -p.zy;",
+        "    float e = max(0.95, inv / dot(p, p));",
+        "    s *= e;",
+        "    p = p * e - off;",
+        "  }",
+        "  return s;",
+        "}",
+        "vec3 _fCosmic(vec3 wp, vec3 tint, float tt) {",
+        "  vec3 off = vec3(1.5, 1.618, 1.0);",
+        "  vec3 p = wp * fractalScale;",
+        "  float ca = cos(tt * fractalRotSpeed), sa = sin(tt * fractalRotSpeed);",
+        "  p = vec3(ca * p.x - sa * p.z, p.y, sa * p.x + ca * p.z);",
+        "  float s = _fKali(p, off, 9.0);",
+        "  float phase = atan(p.x, p.y);",
+        "  float val = clamp(s / 380.0, 0.0, 2.5);",
+        "  float baseHue = _fRgbHue(tint);",
+        "  float hue = fract(baseHue + phase * 0.05 + tt * 0.02);",
+        "  return _fhsv(hue, 0.65, val);",
+        "}",
+      ].join("\n"));
+    }
+    shader.fragmentShader = prologue.join("\n") + "\n" + shader.fragmentShader;
+
+    // ---- FRAGMENT: injection before tonemap ----
+    // Order: fractal first (glows from within, tints the base color in place),
+    // rim last (silhouette edge glow sits on top cleanly).
+    const injections = [];
+    if (hasFractal) {
+      injections.push([
+        "// Fractal: world-space Kali IFS pattern adding a structured glow.",
+        "// Multiplies intensity so config value 1.0 == visible but not blown.",
+        "vec3 _fracCol = _fCosmic(vWorldPos, fractalTint, fractalTime);",
+        "gl_FragColor.rgb += _fracCol * fractalIntensity;",
+      ].join("\n"));
+    }
+    if (hasRim) {
+      injections.push([
+        "vec3 _rimV = normalize(vViewPosition);",
+        "float _rimN = max(dot(normalize(vNormal), _rimV), 0.0);",
+        "float _rim = pow(1.0 - _rimN, rimPower);",
+        "gl_FragColor.rgb += rimColor * rimIntensity * _rim;",
+      ].join("\n"));
+    }
+    shader.fragmentShader = shader.fragmentShader.replace(
+      "#include <tonemapping_fragment>",
+      injections.join("\n") + "\n#include <tonemapping_fragment>"
+    );
+  };
+  return mat;
 }
 
 function spawnOrganism(seed) {
   disposeOrganism();
   organism = buildOrganism(CILIATE, seed);
-  // Census: count instances per particle type.
-  const census = {};
-  for (const p of organism.particles) census[p.particleType] = (census[p.particleType] || 0) + 1;
 
-  // One InstancedMesh per particle type actually used.
-  for (const type in census) {
-    const geo = PARTICLE_TYPES[type].geometry;
-    const mat = new THREE.MeshStandardMaterial({
-      vertexColors: false,
-      roughness: 0.55,
-      metalness: 0.05,
-      transparent: true,
-      opacity: 1.0,
-    });
-    const mesh = new THREE.InstancedMesh(geo, mat, census[type]);
-    // Per-instance color is set via setColorAt; MeshStandardMaterial picks it up.
-    mesh.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(census[type] * 3), 3);
+  for (const group of CILIATE.particleGroups) {
+    const pal = CILIATE.palette[group.name];
+    const geo = PARTICLE_TYPES[group.particleType].geometry;
+    const mat = makeGroupMaterial(pal);
+    const mesh = new THREE.InstancedMesh(geo, mat, group.count);
     scene.add(mesh);
-    meshesByType[type] = { mesh, cursor: 0 };
+    meshesByGroup[group.name] = { mesh, cursor: 0 };
   }
-  // Assign each particle a stable instance index within its mesh, and set
-  // its color once from the palette.
   for (const p of organism.particles) {
-    const slot = meshesByType[p.particleType];
+    const slot = meshesByGroup[p.groupName];
     p.instanceIdx = slot.cursor++;
-    const pal = CILIATE.palette[p.color];
-    _tmpColor.setHex(pal.color);
-    slot.mesh.setColorAt(p.instanceIdx, _tmpColor);
   }
-  for (const type in meshesByType) {
-    if (meshesByType[type].mesh.instanceColor) meshesByType[type].mesh.instanceColor.needsUpdate = true;
-  }
+
+  organismInnerLight = new THREE.PointLight(0xffc680, 1.2, 80, 1.5);
+  organismInnerLight.position.set(0, 0, -6);
+  scene.add(organismInnerLight);
+
   document.getElementById("seed").textContent = organism.seed;
   updateHpUi();
 }
 
 // ---------------------------------------------------------------------------
 // DAMAGE / SHED
-// Pick the highest-priority not-yet-shed particle (lowest shedOrder first)
-// and mark it shed. Give it a small outward velocity so it drifts away from
-// the organism center. In v0.2 this will feed biomass into the global field;
-// for now it just disappears after a fade.
 // ---------------------------------------------------------------------------
 function damageOne() {
   if (!organism) return;
-  // Find the minimum shedOrder among not-yet-shed particles.
   let minOrder = Infinity;
   for (const p of organism.particles) {
     if (!p.shed && p.shedOrder < minOrder) minOrder = p.shedOrder;
   }
-  if (!isFinite(minOrder)) return; // all shed
-  // Pick one random particle at that shedOrder.
+  if (!isFinite(minOrder)) return;
   const candidates = organism.particles.filter(p => !p.shed && p.shedOrder === minOrder);
   const victim = candidates[(Math.random() * candidates.length) | 0];
   victim.shed = true;
   victim.shedStart = performance.now() * 0.001;
-  // Outward velocity: direction from origin to particle, scaled.
   const dir = _tmpVec.copy(victim.rest).normalize();
   victim.residualVel.copy(dir).multiplyScalar(8 + Math.random() * 6);
-  // Also nudge HP (~1.2 HP per shed particle, matches the schema's
-  // shedPerDamage=1.2 reading inverted: 1 particle == some HP delta).
   organism.hp = Math.max(0, organism.hp - (100 / organism.particles.length) * 1.2);
   updateHpUi();
 }
@@ -444,11 +836,6 @@ function updateHpUi() {
 
 // ---------------------------------------------------------------------------
 // ANIMATION LOOP
-// For each particle:
-//   - if shed: drift on residual velocity with damping and fade-out; hide
-//     when fully faded (set matrix scale to 0).
-//   - if live: compute current position by applying animation rule to rest.
-// Commit instance matrix and color updates once per frame per mesh.
 // ---------------------------------------------------------------------------
 const clock = new THREE.Clock();
 function animate() {
@@ -457,55 +844,59 @@ function animate() {
   const t = clock.getElapsedTime();
   controls.update();
 
+  // Push elapsed time into every tissue shader that has been compiled.
+  for (let i = 0; i < _tissueShaders.length; i++) {
+    const u = _tissueShaders[i].uniforms;
+    if (u.fractalTime) u.fractalTime.value = t;
+  }
+
   if (organism) {
     for (const p of organism.particles) {
-      const slot = meshesByType[p.particleType];
+      const slot = meshesByGroup[p.groupName];
       if (p.shed) {
-        // Drift
         p.current.x += p.residualVel.x * dt;
         p.current.y += p.residualVel.y * dt;
         p.current.z += p.residualVel.z * dt;
-        p.residualVel.multiplyScalar(1 - 0.6 * dt); // damping toward zero
-        // Fade-out over ~2.5 s since shed. We fake it by shrinking the instance
-        // matrix scale to 0 (which also removes it from the draw visually).
+        p.residualVel.multiplyScalar(1 - 0.6 * dt);
         const age = (performance.now() * 0.001) - (p.shedStart || 0);
         const fade = Math.max(0, 1 - age / 2.5);
         _tmpObj.position.copy(p.current);
+        _tmpObj.quaternion.identity();
         _tmpObj.scale.setScalar(fade);
       } else {
-        // Live: apply animation rule
-        animations[p.animation.rule](p.animation.params, t, p, p.rest, p.current);
-        _tmpObj.position.copy(p.current);
         _tmpObj.scale.setScalar(1);
+        animations[p.animation.rule](p.animation.params, t, p, _tmpObj);
+        p.current.copy(_tmpObj.position);
       }
-      _tmpObj.rotation.set(0, 0, 0);
       _tmpObj.updateMatrix();
       slot.mesh.setMatrixAt(p.instanceIdx, _tmpObj.matrix);
     }
-    for (const type in meshesByType) {
-      meshesByType[type].mesh.instanceMatrix.needsUpdate = true;
+    for (const k in meshesByGroup) {
+      meshesByGroup[k].mesh.instanceMatrix.needsUpdate = true;
     }
   }
 
-  renderer.render(scene, camera);
+  renderPostFX();
 }
 
 // ---------------------------------------------------------------------------
 // INPUT
-// SPACE: damage (shed one particle). R: respawn with a new seed.
 // ---------------------------------------------------------------------------
 window.addEventListener("keydown", (e) => {
   if (e.code === "Space") { e.preventDefault(); damageOne(); }
   else if (e.code === "KeyR") { spawnOrganism((Math.random() * 1e9) | 0); }
 });
 
-// ---------------------------------------------------------------------------
-// RESIZE
-// ---------------------------------------------------------------------------
 window.addEventListener("resize", () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
+  const w = window.innerWidth, h = window.innerHeight;
+  camera.aspect = w / h;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(w, h);
+  postFX.rtScene.setSize(w, h);
+  postFX.rtBright.setSize(Math.floor(w / 2), Math.floor(h / 2));
+  postFX.rtBlurH.setSize(Math.floor(w / 2), Math.floor(h / 2));
+  postFX.rtBlurV.setSize(Math.floor(w / 2), Math.floor(h / 2));
+  postFX.blurMat.uniforms.resolution.value.set(Math.floor(w / 2), Math.floor(h / 2));
 });
 
 // ---------------------------------------------------------------------------
@@ -518,3 +909,4 @@ animate();
 </script>
 </body>
 </html>
+                                                                                                                                                                                         

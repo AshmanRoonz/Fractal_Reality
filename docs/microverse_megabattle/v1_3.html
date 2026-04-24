@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Microverse Megabattle — v1.3</title>
+<!--
+  Project: Microverse Megabattle
+  File:    v1_1.html (two elements, two tones, independent oscillators)
+  Created: 2026-04-24
+  Last updated: 2026-04-24
+  Version: 1.1
+
+  Scope step from v1.0: generalise to multiple particles of multiple
+  elements. Each particle carries its own oscillator state; each is wired
+  into the audio graph independently; all sum at masterGain. No bonds yet;
+  v1.2 adds those.
+
+  Added:
+    - Element M: sp² hybridisation (2D station), valence 2, 1 lone pair,
+      Z_eff 6 (valence + LP heavier than C's bare 4). Natural frequency
+      follows f0 * 2^(d/T) = 220 * 2^(2/3) ≈ 349.23 Hz (F4).
+    - Two particles spawned: one C at (-18, 0, 0), one M at (18, 0, 0).
+    - Orbit controls so the 3D layout is visible (v1.0 looked 2D because
+      the camera stared straight down -Z at a single sphere).
+    - Click now spikes the particle nearest the mouse cursor (not both),
+      which reads as "poking the one you aimed at".
+    - Two-voice chord: C at 311.13 + M at 349.23 Hz = a minor second (the
+      interval falls out of the framework, not a taste choice).
+-->
+<style>
+  html, body { margin: 0; padding: 0; background: #05080c; color: #cfd8e3; font-family: "Courier New", monospace; overflow: hidden; }
+  #info {
+    position: absolute; top: 12px; left: 14px; z-index: 10;
+    font-size: 12px; line-height: 1.55; pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.85);
+  }
+  #info .title { color: #d18a2e; font-weight: bold; letter-spacing: 0.1em; }
+  #info .k { color: #7ab8c4; }
+  #info .dim { color: #556; }
+  #info .elC { color: #7fe8f6; }
+  #info .elM { color: #ffb04a; }
+  #state {
+    position: absolute; top: 12px; right: 14px; z-index: 10;
+    font-size: 11px; line-height: 1.45; pointer-events: none;
+    text-align: right; text-shadow: 0 1px 2px rgba(0,0,0,0.85);
+    color: #8fa0ac;
+    min-width: 220px;
+  }
+  #state .v { color: #cfd8e3; }
+  #state .elC { color: #7fe8f6; }
+  #state .elM { color: #ffb04a; }
+  /* Full-screen click-to-start gate. Blocks pointer events on the canvas
+     until the user clicks, guaranteeing a proper user gesture for audio
+     activation (Chrome/Safari policy). When audio is confirmed running,
+     the overlay fades out and pointer events pass through. */
+  #audioPrompt {
+    position: fixed; inset: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(5, 8, 12, 0.88);
+    cursor: pointer; user-select: none;
+    transition: opacity 0.25s ease-out;
+  }
+  #audioPrompt .promptBox {
+    padding: 22px 34px; border: 1px solid rgba(209,138,46,0.55);
+    background: rgba(15,22,32,0.92); border-radius: 3px;
+    text-align: center; color: #d18a2e;
+    font-size: 16px; letter-spacing: 0.08em; line-height: 1.5;
+  }
+  #audioPrompt .promptBox .small {
+    font-size: 11px; color: #7ab8c4; letter-spacing: 0.02em;
+    margin-top: 10px; font-weight: normal;
+  }
+  #audioPrompt.hidden { opacity: 0; pointer-events: none; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<div id="info">
+  <div class="title">MICROVERSE MEGABATTLE v1.3</div>
+  <div class="dim">self-assembly test: 14 atoms, random spawn</div>
+  <div>&nbsp;</div>
+  <div><span class="elC">C</span>: sp³ (1.5D), <span id="freqC" class="k">—</span> Hz</div>
+  <div><span class="elM">M</span>: sp² (2.0D), <span id="freqM" class="k">—</span> Hz</div>
+  <div class="dim">bonds form on contact; voices consonate when bonded</div>
+  <div>&nbsp;</div>
+  <div><span class="k">drag</span> — orbit camera</div>
+  <div><span class="k">scroll</span> — zoom</div>
+  <div><span class="k">mouse proximity</span> — stir the soup</div>
+  <div><span class="k">click</span> — poke nearest</div>
+  <div><span class="k">S</span> — scramble (re-randomize positions)</div>
+  <div><span class="k">R</span> — reset + break all bonds</div>
+</div>
+<div id="state">
+  <div><span class="elC">C</span>: <span class="v" id="sCountC">—</span> atoms &nbsp;·&nbsp; <span class="elM">M</span>: <span class="v" id="sCountM">—</span> atoms</div>
+  <div>bonds: <span class="v" id="sBonds">0</span></div>
+  <div>audio: <span class="v" id="sAudio">off</span></div>
+</div>
+<div id="audioPrompt">
+  <div class="promptBox">
+    CLICK TO START
+    <div class="small">audio requires a user gesture · rest is silent, tones fire on collisions</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(() => {
+"use strict";
+
+// ===========================================================================
+// LAYER 0: FRAMEWORK CONSTANTS
+// Pool-native integers + derived ratios. These drive every number that is
+// not a game-native choice (scale, timestep, visual sizes).
+// ===========================================================================
+const FW = {
+  T: 3, P: 4, R: 7, V: 13, G: 12, SU3: 8, PHI_n: 2,
+  screening: { s1s: 6/20, same: 7/20, inner: 17/20, deep: 1.0 },
+  bondAngles: {
+    tetrahedral: Math.acos(-1/3),   // 109.47°, sp³
+    trigonal: 2*Math.PI/3,          // 120°, sp²
+    octahedral: Math.PI/2,          // 90°
+    linear: Math.PI,                // 180°, sp
+  },
+  hybDim: { sp: 1.0, sp2: 2.0, sp3: 1.5, sp3d: 2.5, sp3d2: 3.0 },
+  f0: 220,
+};
+FW.freqForStation = (d) => FW.f0 * Math.pow(2, d / FW.T);
+
+// ===========================================================================
+// LAYER 1: ELEMENT TABLE
+// Two entries now. Each element is (Z_eff, valence, hyb, LP); everything
+// else (station, frequency, EN) derives.
+// ===========================================================================
+const ELEMENTS = {
+  C: {
+    name: "C",
+    Zeff: 4, valence: 4, hyb: "sp3", LP: 0,
+    palette: { base: 0x3aa8b5, emissive: 0x7fe8f6 },
+  },
+  M: {
+    name: "M",
+    Zeff: 6, valence: 2, hyb: "sp2", LP: 1,
+    palette: { base: 0xb36d20, emissive: 0xffb04a },
+  },
+};
+for (const key in ELEMENTS) {
+  const e = ELEMENTS[key];
+  e.station = FW.hybDim[e.hyb];
+  e.freq = FW.freqForStation(e.station);
+  e.EN = Math.pow(e.Zeff, FW.R / (FW.R + 3)) / 2;  // ^(7/10)/2
+}
+document.getElementById("freqC").textContent = ELEMENTS.C.freq.toFixed(2);
+document.getElementById("freqM").textContent = ELEMENTS.M.freq.toFixed(2);
+
+// ===========================================================================
+// LAYER 2-3: PARTICLES
+// Generalised from singleton to array. Each particle carries its own
+// physics state (pos, vel), oscillator state (phase, amp, target), mesh,
+// material, audio node reference (populated in initAudio).
+// ===========================================================================
+function makeParticle(element, x, y, z) {
+  return {
+    element: element,
+    pos: new THREE.Vector3(x, y, z),
+    vel: new THREE.Vector3(),
+    phase: 0,
+    amplitude: 0.0,
+    amplitudeTarget: 0.0,
+    mass: 1.0,
+    mesh: null,
+    mat: null,
+    osc: null,
+    oscGain: null,
+    // v1.2 additions (were missing; caused canBond to throw on undefined.length)
+    bonds: [],                        // active Bond references; up to element.valence
+    freqEffective: element.freq,      // driven toward bond mean when bonded; natural otherwise
+  };
+}
+// v1.3 random spawn: 8 C + 6 M at random positions inside a spawn-sphere
+// smaller than the boundary (nothing starts in containment push-back).
+// Small initial drift velocities so they don't hang in place.
+const SPAWN_RADIUS = 120;
+const SPAWN_SPEED  = 18;
+function randomPosInSphere(radius) {
+  const u = Math.random(), v = Math.random(), w = Math.random();
+  const theta = 2 * Math.PI * u;
+  const phi = Math.acos(2 * v - 1);
+  const r = radius * Math.cbrt(w);
+  return new THREE.Vector3(
+    r * Math.sin(phi) * Math.cos(theta),
+    r * Math.sin(phi) * Math.sin(theta),
+    r * Math.cos(phi)
+  );
+}
+function randomDrift(speed) {
+  const d = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5);
+  const len = d.length();
+  if (len < 0.0001) return new THREE.Vector3();
+  return d.multiplyScalar(speed / len);
+}
+
+const PARTICLE_COUNTS = { C: 8, M: 6 };
+const particles = [];
+for (const key in PARTICLE_COUNTS) {
+  for (let i = 0; i < PARTICLE_COUNTS[key]; i++) {
+    const pos = randomPosInSphere(SPAWN_RADIUS);
+    const atom = makeParticle(ELEMENTS[key], pos.x, pos.y, pos.z);
+    atom.vel.copy(randomDrift(SPAWN_SPEED));
+    particles.push(atom);
+  }
+}
+
+// ===========================================================================
+// LAYER 5: VISUAL RENDERING
+// One mesh + material per particle (for now; migrates to InstancedMesh at
+// the scale where per-particle-material cost matters, probably v1.3).
+// ===========================================================================
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a1620);
+scene.fog = new THREE.FogExp2(0x0a1620, 0.0015);  // softer at v1.3 scale
+
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 500);
+// Oblique starting view so the spheres read as 3D on first paint; orbit
+// still lets the user move around, but the default angle makes the 3D
+// structure obvious before they touch the mouse.
+camera.position.set(150, 80, 200);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+document.body.appendChild(renderer.domElement);
+
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.minDistance = 60;
+controls.maxDistance = 520;
+controls.target.set(0, 0, 0);
+
+// Softer ambient + slightly brighter key so the difference between lit
+// and unlit side of a sphere reads clearly; before, ambient 0.5 was
+// flooding the dark side and flattening everything.
+scene.add(new THREE.AmbientLight(0x1a2430, 0.18));
+const keyLight = new THREE.DirectionalLight(0xffe8c8, 1.3);
+keyLight.position.set(60, 80, 40);
+scene.add(keyLight);
+
+// Cool rim fill on the opposite side so the spheres have silhouette
+// against the fog without losing depth on the shadow side.
+const fillLight = new THREE.DirectionalLight(0x88b4c8, 0.35);
+fillLight.position.set(-50, -30, -40);
+scene.add(fillLight);
+
+// Shared geometry (same sphere for both elements); per-particle material
+// because we're hue-shifting emissive per-phase independently.
+const sphereGeo = new THREE.SphereGeometry(12, 36, 28);
+
+for (const p of particles) {
+  const mat = new THREE.MeshStandardMaterial({
+    color: p.element.palette.base,
+    emissive: p.element.palette.emissive,
+    emissiveIntensity: 0.18,
+    roughness: 0.5,
+    metalness: 0.0,
+  });
+  const mesh = new THREE.Mesh(sphereGeo, mat);
+  mesh.position.copy(p.pos);
+  scene.add(mesh);
+  p.mesh = mesh;
+  p.mat = mat;
+  // Cache HSL baseline for per-phase hue shift in updateVisual.
+  p._baseHSL = {};
+  new THREE.Color(p.element.palette.emissive).getHSL(p._baseHSL);
+}
+
+function hueFromPhase(phase) { return (phase / (2 * Math.PI)) % 1; }
+
+const _emissiveColor = new THREE.Color();
+function updateVisual(dt) {
+  for (const p of particles) {
+    p.mesh.position.copy(p.pos);
+    const scale = 1.0 + p.amplitude * 0.60;
+    p.mesh.scale.setScalar(scale);
+    const hueShift = (hueFromPhase(p.phase) - 0.5) * 0.18;
+    _emissiveColor.setHSL((p._baseHSL.h + hueShift + 1) % 1, p._baseHSL.s, p._baseHSL.l);
+    p.mat.emissive.copy(_emissiveColor);
+    p.mat.emissiveIntensity = 0.12 + p.amplitude * 1.8;
+  }
+}
+
+// ===========================================================================
+// LAYER 4: AUDIO SYNTHESIS
+// One OscillatorNode per particle, summed into masterGain. Per-particle
+// gain scaled down so the two-voice chord stays under the clipping ceiling.
+// ===========================================================================
+let audioCtx = null;
+let masterGain = null;
+
+// Audio-ready flag: true after AudioContext state is "running" AND every
+// oscillator has actually been started. updateAudio() bails unless this is
+// true, so we never push gain automation into a pending graph.
+let audioReady = false;
+
+function initAudio() {
+  // Second+ calls: nudge the context if it somehow went suspended (eg. user
+  // switched tabs on some browsers). Otherwise no-op.
+  if (audioCtx) {
+    if (audioCtx.state !== "running") {
+      audioCtx.resume().then(() => { audioReady = true; }).catch(() => {});
+    } else {
+      audioReady = true;
+    }
+    return;
+  }
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  if (!Ctx) return;
+  audioCtx = new Ctx();
+  masterGain = audioCtx.createGain();
+  masterGain.gain.value = 0.15;  // lower baseline; up to 14 voices can sum
+  masterGain.connect(audioCtx.destination);
+
+  // Create the oscillator/gain nodes but do NOT start() yet. Connecting
+  // them is fine in any state; starting them must wait until the context
+  // is actually running or they will kick in late.
+  for (const p of particles) {
+    p.osc = audioCtx.createOscillator();
+    p.oscGain = audioCtx.createGain();
+    p.osc.type = "sine";
+    p.osc.frequency.value = p.element.freq;
+    p.oscGain.gain.value = 0.0;
+    p.osc.connect(p.oscGain);
+    p.oscGain.connect(masterGain);
+  }
+
+  // Once running, start every oscillator and flip audioReady.
+  const startAll = () => {
+    for (const p of particles) {
+      try { p.osc.start(); } catch (e) { /* already-started is harmless */ }
+    }
+    audioReady = true;
+    document.getElementById("audioPrompt").classList.add("hidden");
+    document.getElementById("sAudio").textContent = "on (" + audioCtx.sampleRate + " Hz)";
+  };
+
+  if (audioCtx.state === "running") {
+    // Firefox / some mobile browsers may start running immediately.
+    startAll();
+  } else {
+    // Chrome / Safari desktop: context starts suspended, resume() is async.
+    audioCtx.resume()
+      .then(startAll)
+      .catch((e) => {
+        console.error("audio resume failed:", e);
+        document.getElementById("sAudio").textContent = "resume failed";
+      });
+  }
+}
+
+function updateAudio() {
+  // Bail unless the context is actually running AND we've started oscillators.
+  // audioReady flips true in startAll() above; until then, gain automation
+  // would be queuing against a graph whose oscillators haven't begun emitting,
+  // producing the "glitches at first, then comes on solid" bug.
+  if (!audioReady || !audioCtx || audioCtx.state !== "running") return;
+  const t = audioCtx.currentTime;
+  for (const p of particles) {
+    if (!p.oscGain) continue;
+    p.oscGain.gain.setTargetAtTime(p.amplitude * 0.35, t, 0.008);
+    p.osc.frequency.setTargetAtTime(p.freqEffective || p.element.freq, t, 0.02);
+  }
+}
+
+// ===========================================================================
+// LAYER 6: INPUT / INTERACTION
+// Mouse → world point on z=0 plane; click spikes NEAREST particle.
+// ===========================================================================
+const input = {
+  mouseWorld: new THREE.Vector3(),
+  mouseActive: false,
+};
+
+const _ndc = new THREE.Vector2();
+const _ray = new THREE.Raycaster();
+const _planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+const _hit = new THREE.Vector3();
+function mouseToWorld(ev) {
+  _ndc.x = (ev.clientX / window.innerWidth) * 2 - 1;
+  _ndc.y = -(ev.clientY / window.innerHeight) * 2 + 1;
+  _ray.setFromCamera(_ndc, camera);
+  _ray.ray.intersectPlane(_planeZ, _hit);
+  input.mouseWorld.copy(_hit);
+  input.mouseActive = true;
+}
+
+function nearestParticle() {
+  let best = null;
+  let bestD2 = Infinity;
+  for (const p of particles) {
+    const d2 = p.pos.distanceToSquared(input.mouseWorld);
+    if (d2 < bestD2) { bestD2 = d2; best = p; }
+  }
+  return best;
+}
+
+renderer.domElement.addEventListener("mousemove", mouseToWorld);
+renderer.domElement.addEventListener("mouseleave", () => { input.mouseActive = false; });
+// Click-to-start overlay: the ONE place audio can initialize. When the
+// overlay is dismissed, audio is guaranteed running, so every subsequent
+// canvas interaction can spike amplitudes without wasReady gymnastics.
+const _audioPrompt = document.getElementById("audioPrompt");
+_audioPrompt.addEventListener("mousedown", (ev) => {
+  ev.preventDefault();
+  initAudio();
+  // Poll briefly for audio becoming ready; once it is, fade the overlay.
+  // Most browsers resolve resume() within 20–80ms, so this is imperceptible.
+  const fadeCheck = () => {
+    if (audioReady) {
+      _audioPrompt.classList.add("hidden");
+    } else {
+      setTimeout(fadeCheck, 30);
+    }
+  };
+  fadeCheck();
+});
+
+// Canvas mousedown: spike the nearest particle. Audio is guaranteed ready
+// by the time this fires, because the overlay blocks interaction until then.
+renderer.domElement.addEventListener("mousedown", (ev) => {
+  if (ev.button !== 0) return;
+  if (!audioReady) return;  // defensive; overlay should prevent this
+  mouseToWorld(ev);
+  const p = nearestParticle();
+  if (p) p.amplitudeTarget = Math.min(1.5, p.amplitudeTarget + 1.2);
+});
+window.addEventListener("keydown", (ev) => {
+  if (ev.code === "KeyR" || ev.code === "KeyS") {
+    breakAllBonds();
+    for (const p of particles) {
+      p.pos.copy(randomPosInSphere(SPAWN_RADIUS));
+      p.vel.copy(randomDrift(SPAWN_SPEED));
+      p.amplitudeTarget = 0.0;
+      p.freqEffective = p.element.freq;
+    }
+  }
+});
+
+// ===========================================================================
+// LAYER 2 (PHYSICS): force integration across all particles
+// Still no bonds. Mouse repulsion applies to each particle independently.
+// Viscous damping + amplitude relaxation per particle.
+// ===========================================================================
+const PHYS = {
+  mouseRepulseRadius: 120,     // larger volume needs larger mouse influence
+  mouseRepulseStrength: 4500,
+  // Pairwise volume exclusion (not a bond). Radius is roughly 2× the
+  // sphere visual radius; strength tuned so pushing one into the other
+  // produces a satisfying repel without runaway oscillation.
+  excludeRadius: 26,
+  excludeStrength: 1500,
+  // Contact detection: when two particles cross this threshold for the
+  // first time (not-touching → touching), it's a "collision event" and
+  // we fire tones on both. Slightly less than excludeRadius so the event
+  // fires once per contact, not chattering at the edge of the shell.
+  contactRadius: 24,
+  // Impact scaling: relative velocity along the separation axis, divided
+  // by this, becomes the amplitude spike (clamped). 30 units/s gives a
+  // full-strength hit; a gentle nudge barely rings.
+  impactVelScale: 30,
+  impactAmpScale: 0.9,
+  viscosity: 0.92,
+  // Amplitude decay tuned for ringing: 0.8/s means a click-spike takes
+  // ~0.75s to fall back to rest, easily long enough to hear the change
+  // and see the visual pulse track the audio.
+  // Event-driven audio: amplitudeTarget is 0 at rest; events (collisions,
+  // clicks) spike it and it decays back to silence. Faster decay than v0.6
+  // so taps read as percussive hits rather than sustained notes.
+  ampRestRate: 2.2,       // 1/s: amp-target decays ~2× per second toward 0
+  ampRestValue: 0.0,
+  ampSmoothing: 18.0,     // 1/s: amplitude chases target fast for crisp onset
+  // Soft spherical containment: particles beyond this radius get pushed
+  // back toward origin with a quadratic spring. Radius is generous so you
+  // can orbit a wide view without hitting it under normal play, but hard
+  // enough that a bonded pair with escape momentum can't leave.
+  boundaryRadius: 180,
+  boundaryStrength: 4,    // force per unit overshoot²; smaller k at this scale
+};
+
+// Soft boundary sphere visualization (wireframe). Lives after PHYS so it
+// can read PHYS.boundaryRadius; was failing at runtime earlier because it
+// was placed in the scene-setup block that runs before this declaration.
+const boundaryMesh = new THREE.Mesh(
+  new THREE.SphereGeometry(PHYS.boundaryRadius, 28, 18),
+  new THREE.MeshBasicMaterial({
+    color: 0x2b4a58,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.18,
+    depthWrite: false,
+  })
+);
+scene.add(boundaryMesh);
+
+// Mouse cursor sphere: shows where the mouse's repulsive influence lives
+// in 3D. Additive/translucent so it glows without occluding particles.
+// Positioned each frame from input.mouseWorld + camera z so it sits on a
+// plane near the volume's center, not on z=0.
+const cursorMesh = new THREE.Mesh(
+  new THREE.SphereGeometry(PHYS.mouseRepulseRadius, 18, 14),
+  new THREE.MeshBasicMaterial({
+    color: 0xd18a2e,
+    transparent: true,
+    opacity: 0.12,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  })
+);
+scene.add(cursorMesh);
+
+// v1.2 BOND constants. Formation distance is just inside the exclusion shell
+// so particles bond as they come into contact. Rest length is the sum of
+// half the sphere radii minus a small overlap so they "kiss" when bonded.
+// Stiffness and break threshold tuned so a firm push stretches the bond
+// audibly before snapping.
+const BOND = {
+  // FORM_RADIUS matches excludeRadius so bonds form as particles first touch
+  // their repulsion shell (no "fight exclusion on the way in" window).
+  FORM_RADIUS: 26,
+  // Rest length is captured per-bond at formation, clamped to [min, max].
+  // This means bonds always form at equilibrium and only oscillate from the
+  // inward velocity the particles already had.
+  REST_LENGTH_MIN: 20,
+  REST_LENGTH_MAX: 26,
+  // Soft spring (was 900, way too stiff): at typical displacement ~3u the
+  // force is now ~240 instead of 2700. Particles oscillate calmly around
+  // rest instead of launching each other past the break threshold.
+  STIFFNESS: 80,
+  // Near-critical damping for k=80, m=1 (2*sqrt(80) ~ 17.9). Bond
+  // oscillations settle within ~0.3s, which is the "sticks together" feel.
+  DAMPING: 14.0,
+  // Tolerant break threshold so casual poking does not snap the bond.
+  BREAK_STRETCH: 2.2,
+  FREQ_LOCK_RATE: 5.0,
+  FORM_AMP_SPIKE: 0.55,
+  BREAK_AMP_SPIKE: 0.9,
+};
+
+// Active bonds in the simulation. Each entry: { a, b, restLength, bondFreq, mesh }.
+const bonds = [];
+
+// ===========================================================================
+// BOND HELPERS
+// Lifecycle: canBond (valence + not-already-bonded), formBond (allocate +
+// attach to particles + emit audio), breakBond (detach + dispose + emit),
+// breakAllBonds (R reset). Spring force + damping runs in updatePhysics.
+// ===========================================================================
+function canBond(p1, p2) {
+  if (p1 === p2) return false;
+  if (p1.bonds.length >= p1.element.valence) return false;
+  if (p2.bonds.length >= p2.element.valence) return false;
+  for (const b of p1.bonds) {
+    if (b.a === p2 || b.b === p2) return false;
+  }
+  return true;
+}
+
+function areBonded(pi, pj) {
+  for (const b of pi.bonds) {
+    if (b.a === pj || b.b === pj) return true;
+  }
+  return false;
+}
+
+let _bondMatProto = null;
+function bondMaterial() {
+  if (!_bondMatProto) {
+    _bondMatProto = new THREE.MeshStandardMaterial({
+      color: 0xc0e0f0,
+      emissive: 0x80c0d8,
+      emissiveIntensity: 0.7,
+      roughness: 0.35,
+      metalness: 0.0,
+    });
+  }
+  return _bondMatProto.clone();
+}
+const _bondGeo = new THREE.CylinderGeometry(1.2, 1.2, 1, 10, 1);
+
+function formBond(p1, p2) {
+  // Rest length = current distance at formation, clamped. Bond forms at
+  // equilibrium, so it does not yank the particles unless they had inward
+  // velocity at the moment of formation.
+  let restLength = p1.pos.distanceTo(p2.pos);
+  if (restLength < BOND.REST_LENGTH_MIN) restLength = BOND.REST_LENGTH_MIN;
+  if (restLength > BOND.REST_LENGTH_MAX) restLength = BOND.REST_LENGTH_MAX;
+  // Bond frequency = arithmetic mean of the two natural frequencies. When
+  // both particles pull toward this, the chord resolves into a single tone.
+  const bondFreq = (p1.element.freq + p2.element.freq) * 0.5;
+  const bond = {
+    a: p1, b: p2,
+    restLength,
+    bondFreq,
+    mesh: new THREE.Mesh(_bondGeo, bondMaterial()),
+  };
+  p1.bonds.push(bond);
+  p2.bonds.push(bond);
+  bonds.push(bond);
+  scene.add(bond.mesh);
+  // Audio event: warm snap-in, both voices spike.
+  p1.amplitudeTarget = Math.min(1.5, p1.amplitudeTarget + BOND.FORM_AMP_SPIKE);
+  p2.amplitudeTarget = Math.min(1.5, p2.amplitudeTarget + BOND.FORM_AMP_SPIKE);
+}
+
+function breakBond(bond) {
+  const i = bonds.indexOf(bond);
+  if (i < 0) return;
+  bonds.splice(i, 1);
+  const ai = bond.a.bonds.indexOf(bond); if (ai >= 0) bond.a.bonds.splice(ai, 1);
+  const bi = bond.b.bonds.indexOf(bond); if (bi >= 0) bond.b.bonds.splice(bi, 1);
+  if (bond.mesh) {
+    scene.remove(bond.mesh);
+    if (bond.mesh.material && bond.mesh.material.dispose) bond.mesh.material.dispose();
+  }
+  // Audio event: louder dissonant snap.
+  bond.a.amplitudeTarget = Math.min(1.5, bond.a.amplitudeTarget + BOND.BREAK_AMP_SPIKE);
+  bond.b.amplitudeTarget = Math.min(1.5, bond.b.amplitudeTarget + BOND.BREAK_AMP_SPIKE);
+}
+
+function breakAllBonds() {
+  while (bonds.length > 0) breakBond(bonds[bonds.length - 1]);
+}
+
+// Bond mesh orientation: unit-length cylinder with +Y axis, rotated by a
+// quaternion from +Y to the bond direction, then scaled in Y to the current
+// distance. Emissive intensity tracks positive strain for a visible "stressed"
+// glow on stretched bonds.
+const _bondMid = new THREE.Vector3();
+const _bondDir = new THREE.Vector3();
+const _bondQuat = new THREE.Quaternion();
+const _bondAxisY = new THREE.Vector3(0, 1, 0);
+function updateBondMesh(bond) {
+  if (!bond.mesh) return;
+  _bondMid.addVectors(bond.a.pos, bond.b.pos).multiplyScalar(0.5);
+  _bondDir.subVectors(bond.b.pos, bond.a.pos);
+  const dist = _bondDir.length();
+  if (dist < 0.0001) return;
+  _bondDir.multiplyScalar(1 / dist);
+  bond.mesh.position.copy(_bondMid);
+  _bondQuat.setFromUnitVectors(_bondAxisY, _bondDir);
+  bond.mesh.quaternion.copy(_bondQuat);
+  bond.mesh.scale.set(1, dist, 1);
+  const strain = (dist - bond.restLength) / bond.restLength;
+  bond.mesh.material.emissiveIntensity = 0.6 + Math.max(0, strain) * 2.5;
+}
+
+const _force = new THREE.Vector3();
+const _toParticle = new THREE.Vector3();
+const _relVel = new THREE.Vector3();
+// Contact tracking: pairContacts[i*N + j] holds the last-frame contact state
+// for pair (i, j) where i < j. Transitioning from false → true is a collision
+// event and fires the amplitude spike on both particles. Sized for particles
+// array; recomputed only if the array grows.
+let pairContacts = new Uint8Array(particles.length * particles.length);
+
+function fireCollision(pi, pj) {
+  // Impact strength = component of relative velocity along the separation
+  // axis, i.e. how fast they're approaching each other. Normalised by
+  // impactVelScale, clamped to [0,1], then scaled to amplitude contribution.
+  _relVel.subVectors(pi.vel, pj.vel);
+  _toParticle.subVectors(pi.pos, pj.pos).normalize();
+  const approachSpeed = Math.abs(_relVel.dot(_toParticle));
+  const strength = Math.min(1.0, approachSpeed / PHYS.impactVelScale);
+  // Give each particle its share; a strong impact rings both voices loudly.
+  const spike = Math.max(0.2, strength) * PHYS.impactAmpScale;
+  pi.amplitudeTarget = Math.min(1.5, pi.amplitudeTarget + spike);
+  pj.amplitudeTarget = Math.min(1.5, pj.amplitudeTarget + spike);
+}
+
+function updatePhysics(dt) {
+  // ---- Bond spring + damping + break check ----
+  for (let bi = bonds.length - 1; bi >= 0; bi--) {
+    const bond = bonds[bi];
+    _toParticle.subVectors(bond.b.pos, bond.a.pos);
+    const dist = _toParticle.length();
+    if (dist < 0.0001) continue;
+    if (dist > bond.restLength * BOND.BREAK_STRETCH) { breakBond(bond); continue; }
+    const invLen = 1 / dist;
+    const dirX = _toParticle.x * invLen;
+    const dirY = _toParticle.y * invLen;
+    const dirZ = _toParticle.z * invLen;
+    // Spring: F = k * (dist - restLength), along (b - a).
+    const displacement = dist - bond.restLength;
+    const springMag = BOND.STIFFNESS * displacement;
+    // Damping: opposes radial velocity. Near-critical for k=80, m=1 (2*sqrt(80) ~ 17.9).
+    const dvx = bond.b.vel.x - bond.a.vel.x;
+    const dvy = bond.b.vel.y - bond.a.vel.y;
+    const dvz = bond.b.vel.z - bond.a.vel.z;
+    const radialVel = dvx * dirX + dvy * dirY + dvz * dirZ;
+    const dampMag = BOND.DAMPING * radialVel;
+    const totMag = springMag + dampMag;
+    const fx = dirX * totMag, fy = dirY * totMag, fz = dirZ * totMag;
+    bond.a.vel.x += (fx / bond.a.mass) * dt;
+    bond.a.vel.y += (fy / bond.a.mass) * dt;
+    bond.a.vel.z += (fz / bond.a.mass) * dt;
+    bond.b.vel.x -= (fx / bond.b.mass) * dt;
+    bond.b.vel.y -= (fy / bond.b.mass) * dt;
+    bond.b.vel.z -= (fz / bond.b.mass) * dt;
+  }
+
+  // ---- Bond formation: check every non-bonded pair in range ----
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const pi = particles[i], pj = particles[j];
+      if (!canBond(pi, pj)) continue;
+      const d = pi.pos.distanceTo(pj.pos);
+      if (d < BOND.FORM_RADIUS) formBond(pi, pj);
+    }
+  }
+
+  // ---- Per-particle forces: mouse repulsion + exclusion (skipping bonded pairs) ----
+  for (const p of particles) {
+    _force.set(0, 0, 0);
+
+    if (input.mouseActive) {
+      _toParticle.subVectors(p.pos, input.mouseWorld);
+      const dist = _toParticle.length();
+      if (dist > 0.0001 && dist < PHYS.mouseRepulseRadius) {
+        const falloff = 1.0 - dist / PHYS.mouseRepulseRadius;
+        const mag = PHYS.mouseRepulseStrength * falloff * falloff;
+        _toParticle.multiplyScalar(mag / dist);
+        _force.add(_toParticle);
+      }
+    }
+
+    for (const q of particles) {
+      if (q === p) continue;
+      if (areBonded(p, q)) continue;  // bonds handle repulsion for bonded pairs
+      _toParticle.subVectors(p.pos, q.pos);
+      const dist = _toParticle.length();
+      if (dist > 0.0001 && dist < PHYS.excludeRadius) {
+        const depth = 1.0 - dist / PHYS.excludeRadius;
+        const mag = PHYS.excludeStrength * depth * depth;
+        _toParticle.multiplyScalar(mag / dist);
+        _force.add(_toParticle);
+      }
+    }
+
+    // Boundary containment: radial soft-spring push toward origin when the
+    // particle is beyond boundaryRadius. Overshoot grows quadratically so
+    // the first bit is gentle and escape requires real effort. Direction is
+    // from particle to origin, which is just -p.pos / |p.pos|.
+    const rFromOrigin = p.pos.length();
+    if (rFromOrigin > PHYS.boundaryRadius) {
+      const overshoot = rFromOrigin - PHYS.boundaryRadius;
+      const mag = PHYS.boundaryStrength * overshoot * overshoot;
+      const invR = 1 / rFromOrigin;
+      _force.x -= p.pos.x * invR * mag;
+      _force.y -= p.pos.y * invR * mag;
+      _force.z -= p.pos.z * invR * mag;
+    }
+
+    p.vel.x += (_force.x / p.mass) * dt;
+    p.vel.y += (_force.y / p.mass) * dt;
+    p.vel.z += (_force.z / p.mass) * dt;
+    const damp = Math.pow(PHYS.viscosity, dt);
+    p.vel.multiplyScalar(damp);
+    p.pos.x += p.vel.x * dt;
+    p.pos.y += p.vel.y * dt;
+    p.pos.z += p.vel.z * dt;
+  }
+
+  // ---- Collision detection (skipped for bonded pairs) ----
+  const N = particles.length;
+  if (pairContacts.length !== N * N) pairContacts = new Uint8Array(N * N);
+  for (let i = 0; i < N; i++) {
+    for (let j = i + 1; j < N; j++) {
+      const pi = particles[i], pj = particles[j];
+      if (areBonded(pi, pj)) { pairContacts[i * N + j] = 0; continue; }
+      const d = pi.pos.distanceTo(pj.pos);
+      const inContact = d < PHYS.contactRadius;
+      const idx = i * N + j;
+      const wasContact = pairContacts[idx] === 1;
+      if (inContact && !wasContact) fireCollision(pi, pj);
+      pairContacts[idx] = inContact ? 1 : 0;
+    }
+  }
+
+  // ---- Envelope + phase + freqEffective per particle ----
+  for (const p of particles) {
+    p.amplitudeTarget += (PHYS.ampRestValue - p.amplitudeTarget) * PHYS.ampRestRate * dt;
+    p.amplitude += (p.amplitudeTarget - p.amplitude) * PHYS.ampSmoothing * dt;
+    p.phase = (p.phase + 2 * Math.PI * (p.freqEffective || p.element.freq) * dt) % (2 * Math.PI);
+    const targetFreq = p.bonds.length > 0 ? p.bonds[0].bondFreq : p.element.freq;
+    p.freqEffective += (targetFreq - p.freqEffective) * BOND.FREQ_LOCK_RATE * dt;
+  }
+
+  // ---- Update bond visual meshes from new positions ----
+  for (const bond of bonds) updateBondMesh(bond);
+}
+
+// ===========================================================================
+// HUD STATE READOUT
+// ===========================================================================
+const _hudEls = {
+  countC: document.getElementById("sCountC"),
+  countM: document.getElementById("sCountM"),
+  bonds:  document.getElementById("sBonds"),
+};
+let _hudTick = 0;
+function updateHud(dt) {
+  _hudTick += dt;
+  if (_hudTick < 0.08) return;
+  _hudTick = 0;
+  // Counts per element (cheap at N=14; just an iteration).
+  let cC = 0, cM = 0;
+  for (const p of particles) {
+    if (p.element.name === "C") cC++;
+    else if (p.element.name === "M") cM++;
+  }
+  if (_hudEls.countC) _hudEls.countC.textContent = cC;
+  if (_hudEls.countM) _hudEls.countM.textContent = cM;
+  if (_hudEls.bonds) _hudEls.bonds.textContent = bonds.length;
+}
+
+// ===========================================================================
+// MAIN LOOP
+// ===========================================================================
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(0.05, clock.getDelta());
+  controls.update();
+
+  updatePhysics(dt);
+  updateVisual(dt);
+  updateAudio();
+  updateHud(dt);
+
+  // Sync cursor sphere to mouse position (in world space).
+  if (input.mouseActive) {
+    cursorMesh.position.copy(input.mouseWorld);
+    cursorMesh.visible = true;
+  } else {
+    cursorMesh.visible = false;
+  }
+
+  renderer.render(scene, camera);
+}
+
+window.addEventListener("resize", () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+animate();
+
+})();
+</script>
+</body>
+</html>
