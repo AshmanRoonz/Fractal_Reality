@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Microverse — Prototype v0.1 (Ciliate)</title>
+<!--
+  Created: 2026-04-24
+  Last updated: 2026-04-24
+  Version: 0.1
+
+  First build of the organism-procedural-body toolkit. Inherits the
+  SDF/particle/shader lineage from LSS but is a new project; LSS is not
+  modified. This file prototypes ONE species (Ciliate) end to end:
+  buildOrganism from a species template + seed, rendered via InstancedMesh
+  per particle type, animated per-group (pulse on core/mouth, metachronal
+  wave on cilia), and damageable via SPACE (shed one particle at the top
+  of the shed order and let it drift into the medium).
+
+  Goal of v0.1: prove the build pipeline, the instanced rendering, and
+  the shed mechanic. No ecology, no vents, no HUD frame yet; orbit camera
+  so we can look at the organism from outside.
+-->
+<style>
+  html, body { margin: 0; padding: 0; background: #05080c; color: #cfd8e3; font-family: "Courier New", monospace; overflow: hidden; }
+  #info {
+    position: absolute; top: 12px; left: 14px; z-index: 10;
+    font-size: 12px; line-height: 1.5; pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  }
+  #info .key { color: #7ab8c4; }
+  #info .species { color: #d18a2e; font-weight: bold; }
+  #hp {
+    position: absolute; top: 12px; right: 14px; z-index: 10;
+    font-size: 12px; text-align: right;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  }
+  #hp .bar { width: 160px; height: 6px; background: #1a2630; margin-top: 3px; }
+  #hp .fill { height: 100%; background: linear-gradient(90deg, #d18a2e, #7ab8c4); transition: width 0.15s; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<div id="info">
+  <div>species: <span class="species">Ciliate (BLASTER analog)</span></div>
+  <div>seed: <span id="seed">—</span></div>
+  <div>&nbsp;</div>
+  <div><span class="key">drag</span> — orbit</div>
+  <div><span class="key">scroll</span> — zoom</div>
+  <div><span class="key">SPACE</span> — shed 1 particle (damage)</div>
+  <div><span class="key">R</span> — respawn (new seed)</div>
+</div>
+<div id="hp">
+  <div>cohesion</div>
+  <div class="bar"><div class="fill" id="hpfill" style="width:100%"></div></div>
+  <div id="hpcount" style="font-size:10px; color:#7ab8c4; margin-top:2px;">—</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(() => {
+"use strict";
+
+// ---------------------------------------------------------------------------
+// Seeded RNG (mulberry32): deterministic given a seed, so the same seed
+// always produces the same organism. Needed for per-instance variation
+// with reproducibility.
+// ---------------------------------------------------------------------------
+function seededRng(seed) {
+  let s = seed >>> 0;
+  return function() {
+    s = (s + 0x6D2B79F5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// ---------------------------------------------------------------------------
+// PARTICLE TYPES
+// Each type is one Three.js geometry. Species compose from these; a new
+// species never invents a new shape, only new combinations and placements.
+// InstancedMesh batches thousands of instances of one geometry into a single
+// draw call, so adding species does not add GPU cost proportional to species
+// count — it just adds instances to the shared meshes.
+// ---------------------------------------------------------------------------
+const PARTICLE_TYPES = {
+  "sphere-small":  { geometry: new THREE.SphereGeometry(1.2, 6, 5) },
+  "sphere-medium": { geometry: new THREE.SphereGeometry(1.8, 7, 5) },
+  "sphere-large":  { geometry: new THREE.SphereGeometry(2.4, 8, 6) },
+  // Teardrop: a slightly tapered, elongated shape. ConeGeometry gives the
+  // right silhouette for cilia; pointy end trails, wide end anchors to the ring.
+  "teardrop":      { geometry: new THREE.ConeGeometry(0.9, 4.5, 6, 1) },
+};
+
+// ---------------------------------------------------------------------------
+// PLACEMENT RULES
+// Each rule takes a configuration object + count + rng and returns an array
+// of THREE.Vector3 target positions in the organism's local frame. These are
+// the positions particles sit at when the organism is at rest; animation
+// rules add per-frame offsets on top of these.
+// ---------------------------------------------------------------------------
+const placement = {
+  // Uniform points inside a solid sphere. Uses cube-root radius to get
+  // uniform volume distribution (not uniform radial distribution, which
+  // would clump particles near the center).
+  filledSphere(cfg, count, rng) {
+    const { center, radius } = cfg;
+    const out = [];
+    for (let i = 0; i < count; i++) {
+      const u = rng(), v = rng(), w = rng();
+      const theta = 2 * Math.PI * u;
+      const phi = Math.acos(2 * v - 1);
+      const r = radius * Math.cbrt(w);
+      out.push(new THREE.Vector3(
+        center[0] + r * Math.sin(phi) * Math.cos(theta),
+        center[1] + r * Math.sin(phi) * Math.sin(theta),
+        center[2] + r * Math.cos(phi),
+      ));
+    }
+    return out;
+  },
+
+  // Points on a spherical cap (a "patch" of a sphere surface, used for the
+  // mouth: a dome of particles around the buccal opening).
+  // `normal` is the direction the cap faces from the sphere center.
+  // `angleMax` is the half-angle of the cap (π/2 = hemisphere, π/3 ≈ 60°).
+  cap(cfg, count, rng) {
+    const { center, radius, normal, angleMax } = cfg;
+    const n = new THREE.Vector3(...normal).normalize();
+    // Build an orthonormal basis with Z = n. Pick a tangent that isn't
+    // parallel to n; Gram-Schmidt to get a proper basis.
+    const tmp = Math.abs(n.y) < 0.95 ? new THREE.Vector3(0,1,0) : new THREE.Vector3(1,0,0);
+    const t1 = new THREE.Vector3().crossVectors(n, tmp).normalize();
+    const t2 = new THREE.Vector3().crossVectors(n, t1).normalize();
+    const out = [];
+    for (let i = 0; i < count; i++) {
+      const phi = Math.acos(1 - rng() * (1 - Math.cos(angleMax))); // uniform on cap
+      const theta = 2 * Math.PI * rng();
+      const sp = Math.sin(phi), cp = Math.cos(phi);
+      const local = new THREE.Vector3(
+        radius * sp * Math.cos(theta),
+        radius * sp * Math.sin(theta),
+        radius * cp,
+      );
+      // Convert local (Z-aligned) to world: X = t1, Y = t2, Z = n
+      const world = new THREE.Vector3(
+        center[0] + local.x * t1.x + local.y * t2.x + local.z * n.x,
+        center[1] + local.x * t1.y + local.y * t2.y + local.z * n.y,
+        center[2] + local.x * t1.z + local.y * t2.z + local.z * n.z,
+      );
+      out.push(world);
+    }
+    return out;
+  },
+
+  // Evenly-spaced points on a circle in the plane perpendicular to `normal`.
+  // Used for the cilia ring. Particles are placed at regular angular
+  // intervals so the metachronal wave animation has a clean phase ordering.
+  ring(cfg, count, rng) {
+    const { center, radius, normal } = cfg;
+    const n = new THREE.Vector3(...normal).normalize();
+    const tmp = Math.abs(n.y) < 0.95 ? new THREE.Vector3(0,1,0) : new THREE.Vector3(1,0,0);
+    const t1 = new THREE.Vector3().crossVectors(n, tmp).normalize();
+    const t2 = new THREE.Vector3().crossVectors(n, t1).normalize();
+    const out = [];
+    for (let i = 0; i < count; i++) {
+      const theta = (i / count) * 2 * Math.PI;
+      const x = radius * Math.cos(theta);
+      const y = radius * Math.sin(theta);
+      out.push(new THREE.Vector3(
+        center[0] + x * t1.x + y * t2.x,
+        center[1] + x * t1.y + y * t2.y,
+        center[2] + x * t1.z + y * t2.z,
+      ));
+    }
+    return out;
+  },
+};
+
+// ---------------------------------------------------------------------------
+// ANIMATION RULES
+// Each rule takes (params, time, particle, rest position) and mutates or
+// returns an offset. Called per-particle per-frame from the render loop.
+// Offsets are in organism-local coordinates; the organism's world matrix
+// handles positioning in the scene.
+// ---------------------------------------------------------------------------
+const animations = {
+  // Uniform radial breath: scales the whole group about the organism center.
+  // The amplitude is a fraction of the rest position's length, so particles
+  // farther from the center move farther during the pulse.
+  pulse(params, time, particle, rest, outPos) {
+    const s = 1 + Math.sin(time * params.freq * 2 * Math.PI) * params.amp;
+    outPos.copy(rest).multiplyScalar(s);
+  },
+
+  // Metachronal wave: a sinusoidal offset that propagates around a ring.
+  // Each particle sees a phase delay based on its index in the ring, so the
+  // wave appears to travel around the circumference at frequency `freq`.
+  // The offset is along the ring's normal axis (outward from the ring),
+  // giving the characteristic "cilia beating" silhouette.
+  metachronal(params, time, particle, rest, outPos) {
+    const phase = particle.animIndex * params.phasePerIndex;
+    const t = time * params.freq * 2 * Math.PI - phase;
+    const offset = Math.sin(t) * params.amp;
+    // Direction of offset: along the ring's normal (the cap axis).
+    // For the Ciliate cilia ring, normal = [0,0,-1], so the offset is in +/-Z.
+    // We store the ring normal on the particle at build time.
+    outPos.copy(rest);
+    if (particle.ringNormal) {
+      outPos.x += particle.ringNormal[0] * offset;
+      outPos.y += particle.ringNormal[1] * offset;
+      outPos.z += particle.ringNormal[2] * offset;
+    }
+  },
+};
+
+// ---------------------------------------------------------------------------
+// SPECIES TEMPLATE: Ciliate (BLASTER analog).
+// Three particle groups, three distinct placement rules, two animation rules.
+// shedOrder numbers: 1 = first to go under damage (peripheral), 3 = last (core).
+// ---------------------------------------------------------------------------
+const CILIATE = {
+  name: "Ciliate",
+  palette: {
+    core:   { color: 0x3aa8b5, emissive: 0x1f6f78, emissiveIntensity: 0.35 },
+    mouth:  { color: 0xd18a2e, emissive: 0x8a4c15, emissiveIntensity: 0.55 },
+    cilia:  { color: 0x3aa8b5, emissive: 0x4fc2d0, emissiveIntensity: 0.45 },
+  },
+  particleGroups: [
+    {
+      name: "core",
+      placement: { rule: "filledSphere", cfg: { center: [0,0,0], radius: 22 } },
+      count: 80,
+      particleType: "sphere-medium",
+      animation: { rule: "pulse", params: { freq: 3.0, amp: 0.04 } },
+      bondStrength: 1.6,
+      shedOrder: 3,
+    },
+    {
+      name: "mouth",
+      placement: { rule: "cap", cfg: { center: [0,0,-18], radius: 10, normal: [0,0,-1], angleMax: Math.PI / 3 } },
+      count: 15,
+      particleType: "sphere-small",
+      animation: { rule: "pulse", params: { freq: 3.0, amp: 0.04 } },
+      bondStrength: 1.0,
+      shedOrder: 2,
+    },
+    {
+      name: "cilia",
+      placement: { rule: "ring", cfg: { center: [0,0,-16], radius: 18, normal: [0,0,-1] } },
+      count: 24,
+      particleType: "teardrop",
+      animation: { rule: "metachronal", params: { freq: 3.0, phasePerIndex: (2*Math.PI)/24, amp: 1.8 } },
+      bondStrength: 0.6,
+      shedOrder: 1,
+      // Mark the ring's normal on each particle so metachronal knows which
+      // axis to offset along without needing a lookup from group config.
+      ringNormal: [0,0,-1],
+    },
+  ],
+  totalHP: 100,
+  scaleRange: [0.85, 1.15],
+};
+
+// ---------------------------------------------------------------------------
+// BUILD ORGANISM
+// Takes a species template + seed and returns a flat list of particle
+// instances ready for instanced rendering. Each particle carries its target
+// position, animation rule, shed order, bond strength, and the group's
+// palette color so the InstancedMesh can tint per-instance.
+// ---------------------------------------------------------------------------
+function buildOrganism(species, seed) {
+  const rng = seededRng(seed);
+  const scale = species.scaleRange[0] + rng() * (species.scaleRange[1] - species.scaleRange[0]);
+  const particles = [];
+  let globalIndex = 0;
+  for (const group of species.particleGroups) {
+    const positions = placement[group.placement.rule](group.placement.cfg, group.count, rng);
+    for (let i = 0; i < positions.length; i++) {
+      positions[i].multiplyScalar(scale);
+      particles.push({
+        id: globalIndex++,
+        groupName: group.name,
+        particleType: group.particleType,
+        animation: group.animation,
+        animIndex: i,
+        ringNormal: group.ringNormal || null,
+        rest: positions[i].clone(),          // original target (for animation)
+        current: positions[i].clone(),       // per-frame computed position
+        bondStrength: group.bondStrength,
+        shedOrder: group.shedOrder,
+        shed: false,
+        residualVel: new THREE.Vector3(),
+        color: group.name,  // key into palette; resolved when setting instance color
+      });
+    }
+  }
+  return {
+    species,
+    seed,
+    scale,
+    particles,
+    hp: species.totalHP,
+    maxHp: species.totalHP,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// SCENE SETUP
+// ---------------------------------------------------------------------------
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05080c);
+scene.fog = new THREE.FogExp2(0x05080c, 0.008);
+
+const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0, 18, 80);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputEncoding = THREE.sRGBEncoding;
+document.body.appendChild(renderer.domElement);
+
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.minDistance = 30;
+controls.maxDistance = 240;
+
+// Lighting: cool ambient + warm key + cool fill, so the organism has depth
+// without losing its pigment.
+scene.add(new THREE.AmbientLight(0x3c4855, 0.55));
+const keyLight = new THREE.DirectionalLight(0xffe8c8, 1.1);
+keyLight.position.set(60, 80, 40);
+scene.add(keyLight);
+const fillLight = new THREE.DirectionalLight(0x7ab8c4, 0.45);
+fillLight.position.set(-50, -30, -40);
+scene.add(fillLight);
+
+// Scale reference: a faint world grid that gives a sense of motion when
+// the camera orbits. Small, so it does not dominate the view.
+const grid = new THREE.GridHelper(200, 20, 0x1a2630, 0x121820);
+grid.position.y = -40;
+scene.add(grid);
+
+// ---------------------------------------------------------------------------
+// RENDER INSTANTIATION
+// Build InstancedMesh per particle type based on the organism's census,
+// and pre-fill per-instance color from the palette.
+// ---------------------------------------------------------------------------
+let organism = null;
+const meshesByType = {};
+const _tmpObj = new THREE.Object3D();
+const _tmpColor = new THREE.Color();
+const _tmpVec = new THREE.Vector3();
+
+function disposeOrganism() {
+  for (const type in meshesByType) {
+    const m = meshesByType[type].mesh;
+    scene.remove(m);
+    m.geometry.dispose && m.geometry.dispose();
+    m.material.dispose && m.material.dispose();
+  }
+  for (const k in meshesByType) delete meshesByType[k];
+}
+
+function spawnOrganism(seed) {
+  disposeOrganism();
+  organism = buildOrganism(CILIATE, seed);
+  // Census: count instances per particle type.
+  const census = {};
+  for (const p of organism.particles) census[p.particleType] = (census[p.particleType] || 0) + 1;
+
+  // One InstancedMesh per particle type actually used.
+  for (const type in census) {
+    const geo = PARTICLE_TYPES[type].geometry;
+    const mat = new THREE.MeshStandardMaterial({
+      vertexColors: false,
+      roughness: 0.55,
+      metalness: 0.05,
+      transparent: true,
+      opacity: 1.0,
+    });
+    const mesh = new THREE.InstancedMesh(geo, mat, census[type]);
+    // Per-instance color is set via setColorAt; MeshStandardMaterial picks it up.
+    mesh.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(census[type] * 3), 3);
+    scene.add(mesh);
+    meshesByType[type] = { mesh, cursor: 0 };
+  }
+  // Assign each particle a stable instance index within its mesh, and set
+  // its color once from the palette.
+  for (const p of organism.particles) {
+    const slot = meshesByType[p.particleType];
+    p.instanceIdx = slot.cursor++;
+    const pal = CILIATE.palette[p.color];
+    _tmpColor.setHex(pal.color);
+    slot.mesh.setColorAt(p.instanceIdx, _tmpColor);
+  }
+  for (const type in meshesByType) {
+    if (meshesByType[type].mesh.instanceColor) meshesByType[type].mesh.instanceColor.needsUpdate = true;
+  }
+  document.getElementById("seed").textContent = organism.seed;
+  updateHpUi();
+}
+
+// ---------------------------------------------------------------------------
+// DAMAGE / SHED
+// Pick the highest-priority not-yet-shed particle (lowest shedOrder first)
+// and mark it shed. Give it a small outward velocity so it drifts away from
+// the organism center. In v0.2 this will feed biomass into the global field;
+// for now it just disappears after a fade.
+// ---------------------------------------------------------------------------
+function damageOne() {
+  if (!organism) return;
+  // Find the minimum shedOrder among not-yet-shed particles.
+  let minOrder = Infinity;
+  for (const p of organism.particles) {
+    if (!p.shed && p.shedOrder < minOrder) minOrder = p.shedOrder;
+  }
+  if (!isFinite(minOrder)) return; // all shed
+  // Pick one random particle at that shedOrder.
+  const candidates = organism.particles.filter(p => !p.shed && p.shedOrder === minOrder);
+  const victim = candidates[(Math.random() * candidates.length) | 0];
+  victim.shed = true;
+  victim.shedStart = performance.now() * 0.001;
+  // Outward velocity: direction from origin to particle, scaled.
+  const dir = _tmpVec.copy(victim.rest).normalize();
+  victim.residualVel.copy(dir).multiplyScalar(8 + Math.random() * 6);
+  // Also nudge HP (~1.2 HP per shed particle, matches the schema's
+  // shedPerDamage=1.2 reading inverted: 1 particle == some HP delta).
+  organism.hp = Math.max(0, organism.hp - (100 / organism.particles.length) * 1.2);
+  updateHpUi();
+}
+
+function updateHpUi() {
+  const fill = document.getElementById("hpfill");
+  const count = document.getElementById("hpcount");
+  const shedCount = organism.particles.filter(p => p.shed).length;
+  const total = organism.particles.length;
+  fill.style.width = Math.max(0, (organism.hp / organism.maxHp) * 100) + "%";
+  count.textContent = (total - shedCount) + " / " + total + " particles intact";
+}
+
+// ---------------------------------------------------------------------------
+// ANIMATION LOOP
+// For each particle:
+//   - if shed: drift on residual velocity with damping and fade-out; hide
+//     when fully faded (set matrix scale to 0).
+//   - if live: compute current position by applying animation rule to rest.
+// Commit instance matrix and color updates once per frame per mesh.
+// ---------------------------------------------------------------------------
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(0.05, clock.getDelta());
+  const t = clock.getElapsedTime();
+  controls.update();
+
+  if (organism) {
+    for (const p of organism.particles) {
+      const slot = meshesByType[p.particleType];
+      if (p.shed) {
+        // Drift
+        p.current.x += p.residualVel.x * dt;
+        p.current.y += p.residualVel.y * dt;
+        p.current.z += p.residualVel.z * dt;
+        p.residualVel.multiplyScalar(1 - 0.6 * dt); // damping toward zero
+        // Fade-out over ~2.5 s since shed. We fake it by shrinking the instance
+        // matrix scale to 0 (which also removes it from the draw visually).
+        const age = (performance.now() * 0.001) - (p.shedStart || 0);
+        const fade = Math.max(0, 1 - age / 2.5);
+        _tmpObj.position.copy(p.current);
+        _tmpObj.scale.setScalar(fade);
+      } else {
+        // Live: apply animation rule
+        animations[p.animation.rule](p.animation.params, t, p, p.rest, p.current);
+        _tmpObj.position.copy(p.current);
+        _tmpObj.scale.setScalar(1);
+      }
+      _tmpObj.rotation.set(0, 0, 0);
+      _tmpObj.updateMatrix();
+      slot.mesh.setMatrixAt(p.instanceIdx, _tmpObj.matrix);
+    }
+    for (const type in meshesByType) {
+      meshesByType[type].mesh.instanceMatrix.needsUpdate = true;
+    }
+  }
+
+  renderer.render(scene, camera);
+}
+
+// ---------------------------------------------------------------------------
+// INPUT
+// SPACE: damage (shed one particle). R: respawn with a new seed.
+// ---------------------------------------------------------------------------
+window.addEventListener("keydown", (e) => {
+  if (e.code === "Space") { e.preventDefault(); damageOne(); }
+  else if (e.code === "KeyR") { spawnOrganism((Math.random() * 1e9) | 0); }
+});
+
+// ---------------------------------------------------------------------------
+// RESIZE
+// ---------------------------------------------------------------------------
+window.addEventListener("resize", () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ---------------------------------------------------------------------------
+// GO
+// ---------------------------------------------------------------------------
+spawnOrganism(4242);
+animate();
+
+})();
+</script>
+</body>
+</html>
