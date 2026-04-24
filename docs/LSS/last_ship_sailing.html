@@ -2172,6 +2172,17 @@ postFX.compositeMat = new THREE.ShaderMaterial({
 postFX.brightQuad = new THREE.Mesh(postFX.quadGeo, postFX.brightMat);
 postFX.blurQuad = new THREE.Mesh(postFX.quadGeo, postFX.blurMat);
 postFX.compositeQuad = new THREE.Mesh(postFX.quadGeo, postFX.compositeMat);
+
+// Tiny 1x1 black texture used as the bloom input on the low-quality path so
+// the composite shader still runs without the 3 bloom passes (bright-extract,
+// horizontal blur, vertical blur). Saves 3 fullscreen quad renders per frame
+// whenever bloom is skipped (menus, settings, postFX.enabled === false).
+postFX.blackTex = (function() {
+  const data = new Uint8Array([0, 0, 0, 255]);
+  const t = new THREE.DataTexture(data, 1, 1, THREE.RGBAFormat);
+  t.needsUpdate = true;
+  return t;
+})();
 // Single scene with all three quads; toggle .visible per pass instead of add/remove every frame.
 postFX.passScene = new THREE.Scene();
 postFX.passScene.add(postFX.brightQuad);
@@ -2188,6 +2199,15 @@ const _postFXScratchV = new THREE.Vector3();
 const _envProbeCamPos = new THREE.Vector3();
 
 function renderPostFX() {
+  // Low-quality gate: skip the three bloom passes (bright-extract + horizontal
+  // blur + vertical blur) whenever bloom cannot meaningfully be seen. Cuts
+  // GPU cost from 5 fullscreen passes to 2 on menus / settings and when the
+  // user has disabled postFX. The composite still runs so tonemap + vignette +
+  // chromatic aberration stay consistent between the menu and combat looks.
+  const lowQuality = !postFX.enabled
+    || (typeof game !== 'undefined' && (game.state === 'select' || game.state === 'matchEnd'))
+    || (typeof settingsOpen !== 'undefined' && settingsOpen);
+
   const damageMax = Math.max(
     game.damageIndicators.top, game.damageIndicators.bottom,
     game.damageIndicators.left, game.damageIndicators.right
@@ -2239,6 +2259,19 @@ function renderPostFX() {
   // 1. Render scene to offscreen target
   renderer.setRenderTarget(postFX.rtScene);
   renderer.render(scene, camera);
+
+  if (lowQuality) {
+    // Low-quality path: skip the 3 bloom passes. Composite still runs so the
+    // tonemap / grade / vignette / chromatic aberration match combat visuals.
+    postFX.compositeMat.uniforms.tScene.value = postFX.rtScene.texture;
+    postFX.compositeMat.uniforms.tBloom.value = postFX.blackTex;
+    postFX.brightQuad.visible = false;
+    postFX.blurQuad.visible = false;
+    postFX.compositeQuad.visible = true;
+    renderer.setRenderTarget(null);
+    renderer.render(postFX.passScene, postFX.quadCamera);
+    return;
+  }
 
   // 2. Extract bright pixels
   postFX.brightMat.uniforms.tDiffuse.value = postFX.rtScene.texture;
@@ -2505,12 +2538,16 @@ function worldSDF(px,py,pz) {
 }
 
 // SDF gradient (surface normal) via central differences
-function sdfNormal(px,py,pz) {
+function sdfNormal(px,py,pz, out) {
   const e = 2.0;
   const nx = worldSDF(px+e,py,pz) - worldSDF(px-e,py,pz);
   const ny = worldSDF(px,py+e,pz) - worldSDF(px,py-e,pz);
   const nz = worldSDF(px,py,pz+e) - worldSDF(px,py,pz-e);
   const len = Math.sqrt(nx*nx+ny*ny+nz*nz) || 1;
+  // When an `out` vector is passed, write into it in place (no allocation).
+  // Hot callers (resolveCollision) always pass one; legacy callers that still
+  // call sdfNormal(x, y, z) keep their existing "new vector returned" contract.
+  if (out) { out.set(nx/len, ny/len, nz/len); return out; }
   return new THREE.Vector3(nx/len, ny/len, nz/len);
 }
 
@@ -2552,6 +2589,14 @@ function checkBoxCollision(pos, radius) {
   return null;
 }
 
+// Scratch vectors for resolveCollision. This function runs in the innermost
+// collision loop (player: up to 9 iterations x up to ~4 substeps per frame;
+// every bot: once per frame), so every per-call `new THREE.Vector3()` or
+// `.clone()` inside it was multiplied by ~30-40 entities worth of allocation
+// pressure per frame. These scratches are reused in-place each invocation.
+const _rcNormal = new THREE.Vector3();   // collision normal (current box or SDF inward)
+const _rcTmp = new THREE.Vector3();      // scratch for `normal * k` combined ops
+
 function resolveCollision(pos, velocity, radius) {
   // 1) Obstacle repulsion: push AWAY from obstacle boxes (pillars, platforms, etc.)
   const REPULSE_RANGE = radius * 2.5;
@@ -2566,7 +2611,7 @@ function resolveCollision(pos, velocity, radius) {
 
     if (distSq < REPULSE_RANGE * REPULSE_RANGE) {
       const dist = Math.sqrt(distSq);
-      const normal = new THREE.Vector3();
+      const normal = _rcNormal;
       if (dist < 0.1) {
         const bx = (box.min.x + box.max.x) / 2;
         const by = (box.min.y + box.max.y) / 2;
@@ -2574,19 +2619,19 @@ function resolveCollision(pos, velocity, radius) {
         normal.set(pos.x - bx, pos.y - by, pos.z - bz);
         if (normal.lengthSq() < 0.01) normal.set(0, 1, 0);
         normal.normalize();
-        pos.add(normal.clone().multiplyScalar(radius + 2));
+        pos.add(_rcTmp.copy(normal).multiplyScalar(radius + 2));
         const vn = velocity.dot(normal);
-        if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
+        if (vn < 0) velocity.sub(_rcTmp.copy(normal).multiplyScalar(vn * 1.1));
       } else {
         normal.set(dx / dist, dy / dist, dz / dist);
         const penetration = REPULSE_RANGE - dist;
         const ratio = penetration / REPULSE_RANGE;
         const force = REPULSE_STRENGTH * ratio * ratio;
-        velocity.add(normal.clone().multiplyScalar(force * (1/60)));
+        velocity.add(_rcTmp.copy(normal).multiplyScalar(force * (1/60)));
         if (dist < radius) {
-          pos.add(normal.clone().multiplyScalar(radius - dist + 1));
+          pos.add(_rcTmp.copy(normal).multiplyScalar(radius - dist + 1));
           const vn = velocity.dot(normal);
-          if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.1));
+          if (vn < 0) velocity.sub(_rcTmp.copy(normal).multiplyScalar(vn * 1.1));
         }
       }
     }
@@ -2605,24 +2650,25 @@ function resolveCollision(pos, velocity, radius) {
   const margin = -sdfVal;
 
   if (margin < CONTAIN_RANGE) {
-    const normal = sdfNormal(pos.x, pos.y, pos.z).negate(); // inward normal
+    // Reuse _rcNormal: sdfNormal writes in-place, then negate() for inward normal.
+    const normal = sdfNormal(pos.x, pos.y, pos.z, _rcNormal).negate();
 
     if (margin < 0) {
       // Outside the level: hard push inside
-      pos.add(normal.clone().multiplyScalar(-margin + radius + 4));
+      pos.add(_rcTmp.copy(normal).multiplyScalar(-margin + radius + 4));
       const vn = velocity.dot(normal);
-      if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.5));
+      if (vn < 0) velocity.sub(_rcTmp.copy(normal).multiplyScalar(vn * 1.5));
     } else if (margin < radius * 0.8) {
       // Dangerously close: hard clamp position, kill velocity into wall
-      pos.add(normal.clone().multiplyScalar(radius * 0.8 - margin + 2));
+      pos.add(_rcTmp.copy(normal).multiplyScalar(radius * 0.8 - margin + 2));
       // Wall sliding: strip velocity component INTO the wall, keep the rest
       const vn = velocity.dot(normal);
-      if (vn < 0) velocity.sub(normal.clone().multiplyScalar(vn * 1.05)); // slight bounce (1.05x)
+      if (vn < 0) velocity.sub(_rcTmp.copy(normal).multiplyScalar(vn * 1.05)); // slight bounce (1.05x)
     } else {
       // Inside but near wall: progressive containment force
       const ratio = 1 - (margin / CONTAIN_RANGE);
       const force = CONTAIN_STRENGTH * ratio * ratio;
-      velocity.add(normal.clone().multiplyScalar(force * (1/60)));
+      velocity.add(_rcTmp.copy(normal).multiplyScalar(force * (1/60)));
     }
   }
 
@@ -2633,7 +2679,8 @@ function resolveCollision(pos, velocity, radius) {
     // Find the direction of steepest descent into open space (gradient ascent of -SDF = more room)
     // We already have the inward normal from the SDF; the entity should slide along the wall.
     // But if truly stuck (pinched), push toward the nearest corridor/room center.
-    const normal = sdfNormal(pos.x, pos.y, pos.z).negate();
+    // Reuse _rcNormal (previous value was also a normal; it's fine to overwrite).
+    const normal = sdfNormal(pos.x, pos.y, pos.z, _rcNormal).negate();
     // Check if there's more room ahead in the normal direction
     const aheadMargin = -worldSDF(pos.x + normal.x * radius * 2, pos.y + normal.y * radius * 2, pos.z + normal.z * radius * 2);
     if (aheadMargin < radius) {
@@ -2651,13 +2698,19 @@ function resolveCollision(pos, velocity, radius) {
           if (score < bestScore) { bestScore = score; bestRoom = rm; }
         }
         if (bestRoom) {
-          const escapeDir = new THREE.Vector3(bestRoom.cx - pos.x, bestRoom.cy - pos.y, bestRoom.cz - pos.z);
+          // Reuse _rcTmp as escape-direction scratch; no new Vector3 needed.
+          const escapeDir = _rcTmp.set(bestRoom.cx - pos.x, bestRoom.cy - pos.y, bestRoom.cz - pos.z);
           if (escapeDir.lengthSq() > 1) {
             escapeDir.normalize();
-            // Firm push toward open space
-            velocity.add(escapeDir.multiplyScalar(600 * (1/60)));
+            // Firm push toward open space. We want to USE escapeDir afterward for
+            // the position nudge, so apply velocity in-place with a scalar copy.
+            velocity.x += escapeDir.x * (600 * (1/60));
+            velocity.y += escapeDir.y * (600 * (1/60));
+            velocity.z += escapeDir.z * (600 * (1/60));
             // Also nudge position slightly to break free of the crevice
-            pos.add(escapeDir.clone().multiplyScalar(2));
+            pos.x += escapeDir.x * 2;
+            pos.y += escapeDir.y * 2;
+            pos.z += escapeDir.z * 2;
           }
         }
       }
@@ -3895,6 +3948,12 @@ class Bot {
     // Temp vectors for reuse (performance optimization)
     this._tempVec3a = new THREE.Vector3();
     this._tempVec3b = new THREE.Vector3();
+    // Additional per-bot scratches for update(): the flanking / strafing paths
+    // used to allocate a fresh THREE.Vector3 per call, and botCollisionStep
+    // used to clone velocity once per substep.
+    this._tempVec3c = new THREE.Vector3();
+    this._tempVec3d = new THREE.Vector3();
+    this._botStep = new THREE.Vector3();
   }
 
   getLoadoutRangePreference() {
@@ -3957,7 +4016,10 @@ class Bot {
       this.aiStrafeTimer = 1 + Math.random() * 2; // Strafe for 1-3 seconds
     }
 
-    let moveDir = this.aiWanderDir.clone();
+    // moveDir starts as the wander direction. Previously this used .clone(),
+    // which allocated per frame per bot (every bot, every frame). Copy into
+    // _tempVec3c and reuse; any reassignments below also point into scratches.
+    let moveDir = this._tempVec3c.copy(this.aiWanderDir);
     if (this.aiTarget) {
       const toTarget = this._tempVec3a.subVectors(this.aiTarget, this.position);
       const dist = toTarget.length();
@@ -3973,20 +4035,38 @@ class Bot {
         const distToPlayer = toPlayer.length();
 
         if (this.aiRole === 'flank' && distToPlayer < 3000 && distToPlayer > 300) {
-          // Build orthogonal direction for flanking (perpendicular to player facing)
+          // Build orthogonal direction for flanking (perpendicular to player facing).
+          // toPlayer becomes playerDir after normalize(); reuse _tempVec3d for the
+          // right/flank math to avoid `new THREE.Vector3()` on every flanking frame.
           const playerDir = toPlayer.normalize();
-          const right = new THREE.Vector3(0, 1, 0).cross(playerDir).normalize();
-          const flankOffset = right.multiplyScalar(600); // 600 units to the side
-          const flankTarget = player.position.clone().add(flankOffset);
-          const toFlank = this._tempVec3b.subVectors(flankTarget, this.position).normalize();
-          moveDir.lerp(toFlank, 0.6); // Blend toward flanking position
+          const right = this._tempVec3d.set(0, 1, 0).cross(playerDir).normalize();
+          // flankTarget = player.position + right * 600, then toFlank = flankTarget - this.position.
+          // = (player.position - this.position) + right * 600 = (-toPlayer_was) + right*600,
+          // but we've overwritten _tempVec3b; easiest path: reuse _tempVec3d as right*600,
+          // then build toFlank into _tempVec3b directly.
+          right.multiplyScalar(600);
+          this._tempVec3b.set(
+            player.position.x + right.x - this.position.x,
+            player.position.y + right.y - this.position.y,
+            player.position.z + right.z - this.position.z
+          ).normalize();
+          moveDir.lerp(this._tempVec3b, 0.6);
           moveDir.normalize();
         }
 
-        // Combat strafing: lateral movement when in engagement range
+        // Combat strafing: lateral movement when in engagement range.
+        // _tempVec3b here may have been overwritten by the flank branch, so
+        // re-derive toPlayer into _botStep (we reuse it below for substepping
+        // but each substep overwrites via .copy(), so this is safe).
         if (this.aiStrafe && distToPlayer < this.aiRangePreference * 1.5 && !this.doomed) {
-          const perpendicular = new THREE.Vector3(0, 1, 0).cross(toPlayer).normalize();
-          moveDir.add(perpendicular.clone().multiplyScalar(this.aiStrafeDir * 0.5));
+          // Original: up.cross(toPlayer). _tempVec3d holds world-up; _botStep holds toPlayer.
+          this._tempVec3d.set(0, 1, 0);
+          this._botStep.subVectors(player.position, this.position);
+          const perp = this._tempVec3d.cross(this._botStep).normalize();
+          const k = this.aiStrafeDir * 0.5;
+          moveDir.x += perp.x * k;
+          moveDir.y += perp.y * k;
+          moveDir.z += perp.z * k;
           moveDir.normalize();
         }
       }
@@ -3995,16 +4075,15 @@ class Bot {
     this.targetDir.lerp(moveDir, dt * 2);
     this.targetDir.normalize();
 
-    // Arc slow effect (from SLAYER Arc Wave)
-    if (this.arcSlowTimer > 0) {
-      this.arcSlowTimer -= dt;
-      // Slowed: reduce acceleration significantly
-      const accel = this.targetDir.clone().multiplyScalar(this.chassis.acceleration * dt * 0.3);
-      this.velocity.add(accel);
-    } else {
-      const accel = this.targetDir.clone().multiplyScalar(this.chassis.acceleration * dt);
-      this.velocity.add(accel);
-    }
+    // Arc slow effect (from SLAYER Arc Wave). Avoid cloning targetDir just to
+    // scale-and-add; apply component-wise to velocity.
+    const accelK = (this.arcSlowTimer > 0)
+      ? (this.chassis.acceleration * dt * 0.3)
+      : (this.chassis.acceleration * dt);
+    if (this.arcSlowTimer > 0) this.arcSlowTimer -= dt;
+    this.velocity.x += this.targetDir.x * accelK;
+    this.velocity.y += this.targetDir.y * accelK;
+    this.velocity.z += this.targetDir.z * accelK;
 
     const speed = this.velocity.length();
     const maxSpd = this.arcSlowTimer > 0 ? this.chassis.flightSpeed * 0.3 : this.chassis.flightSpeed;
@@ -4013,14 +4092,16 @@ class Bot {
     }
     this.velocity.multiplyScalar(1 - this.chassis.deceleration * dt / Math.max(speed, 1));
 
-    // Substep movement + collision (prevents tunneling at high speed)
+    // Substep movement + collision (prevents tunneling at high speed).
+    // Per-substep: was `this.velocity.clone().multiplyScalar(botSubDt)`.
+    // Now uses the per-bot _botStep scratch.
     const botCollR = this.chassis.hullLength * 0.5;
     const botMoveLen = this.velocity.length() * dt;
     const botMaxStep = botCollR * 0.8;
     const botSubs = Math.max(1, Math.ceil(botMoveLen / botMaxStep));
     const botSubDt = dt / botSubs;
     for (let ss = 0; ss < botSubs; ss++) {
-      this.position.add(this.velocity.clone().multiplyScalar(botSubDt));
+      this.position.add(this._botStep.copy(this.velocity).multiplyScalar(botSubDt));
       resolveCollision(this.position, this.velocity, botCollR);
     }
 
@@ -4373,6 +4454,17 @@ class Bot {
 
 // ---- PROJECTILE SYSTEM ----
 
+// Module-level scratches reused by Projectile.update. Projectiles update
+// serially (one at a time inside the projectile loop), so a single set is
+// safe. Previously each projectile allocated 4-6 Vector3s per frame via
+// .clone() and `new THREE.Vector3`; at 30+ active projectiles during a
+// firefight that was ~150 allocations/frame ≈ a noticeable GC tick.
+const _projPrev = new THREE.Vector3();
+const _projStep = new THREE.Vector3();
+const _projDir = new THREE.Vector3();
+const _projAimDir = new THREE.Vector3();
+const _projToTarget = new THREE.Vector3();
+
 class Projectile {
   constructor(origin, velocity, damage, splash, owner, color) {
     this.position = origin.clone();
@@ -4442,11 +4534,13 @@ class Projectile {
     // Close range: aggressive tracking (loose FOV constraint)
     // Far range: tighter FOV, gentler turns (can be dodged at distance)
     if (this.tracking && this.trackTarget && this.trackTarget.alive) {
-      const toTarget = new THREE.Vector3().subVectors(this.trackTarget.position, this.position);
+      const toTarget = _projToTarget.subVectors(this.trackTarget.position, this.position);
       const dist = toTarget.length();
       const toTargetDir = toTarget.normalize();
       const speed = this.velocity.length();
-      const curDir = this.velocity.clone().normalize();
+      // curDir reuses _projDir; the later wall-collision branch will overwrite
+      // it after the homing block finishes, so no contention.
+      const curDir = _projDir.copy(this.velocity).normalize();
       const dot = curDir.dot(toTargetDir);
 
       const CLOSE_DIST = 800;
@@ -4477,15 +4571,17 @@ class Projectile {
 
     // Salvo Core remote guidance: missile steers toward player's crosshair aim point
     if (this.salvoGuided) {
-      const aimDir = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+      const aimDir = _projAimDir.set(0, 0, -1).applyQuaternion(camera.quaternion);
       const speed = this.velocity.length();
       // Aggressive turn rate (player has full control)
       this.velocity.lerp(aimDir.multiplyScalar(speed), 6.0 * dt);
       this.velocity.normalize().multiplyScalar(speed);
     }
 
-    const prevPos = this.position.clone();
-    this.position.add(this.velocity.clone().multiplyScalar(dt));
+    // Cache previous position (needed later for wall-raycast) and step forward.
+    // Both reuse module-level scratches.
+    const prevPos = _projPrev.copy(this.position);
+    this.position.add(_projStep.copy(this.velocity).multiplyScalar(dt));
     this.mesh.position.copy(this.position);
 
     // Fire projectiles ignite gas clouds as they fly through (not just on splash).
@@ -4564,8 +4660,9 @@ class Projectile {
       }
     }
 
-    // Check wall collision via CSG-aware raycast (projectiles bounce or explode on walls)
-    const moveDir = this.velocity.clone().normalize();
+    // Check wall collision via CSG-aware raycast (projectiles bounce or explode on walls).
+    // Reuses _projDir (the homing branch above is done with it by now).
+    const moveDir = _projDir.copy(this.velocity).normalize();
     const moveDist = prevPos.distanceTo(this.position);
     if (moveDist > 0.1) {
       const wallDist = raycastLevel(prevPos, moveDir, moveDist + 5);
@@ -7718,6 +7815,12 @@ const _mvUp = new THREE.Vector3(0, 1, 0);
 const _mvMoveDir = new THREE.Vector3();
 const _mvAccelDir = new THREE.Vector3();
 const _mvDrag = new THREE.Vector3();
+// Extra scratches: collision step (velocity * dt) and the clamp min/max corners.
+// The clamp corners depend on ARENA_SIZE which is a constant once set, so we can
+// cache them in-place; the step vector is recomputed each substep.
+const _mvStep = new THREE.Vector3();
+const _mvClampMin = new THREE.Vector3();
+const _mvClampMax = new THREE.Vector3();
 
 function updatePlayerMovement(dt) {
   if (player.shipState === 'dead' || !player.chassis) return;
@@ -7867,8 +7970,10 @@ function updatePlayerMovement(dt) {
 
       let collided = false;
       for (let ss = 0; ss < subSteps; ss++) {
-        const prevPos = player.position.clone();
-        player.position.add(player.velocity.clone().multiplyScalar(subDt));
+        // prevPos used to be allocated here as `player.position.clone()` but was
+        // never actually read; removed. The velocity*subDt step uses a scratch
+        // vector so the inner loop allocates nothing.
+        player.position.add(_mvStep.copy(player.velocity).multiplyScalar(subDt));
 
         // Check if collision occurred
         const prevVelLen = player.velocity.length();
@@ -7892,17 +7997,19 @@ function updatePlayerMovement(dt) {
     }
   }
 
-  // Boundary clamp + soft push
+  // Boundary clamp + soft push. Unrolled from a forEach over ['x','y','z']:
+  // the array literal + arrow function were allocating every frame, and the
+  // per-axis bracket access defeats the JIT's field-offset optimization.
   const s = LSS.ARENA_SIZE * 0.9;
   const softEdge = LSS.ARENA_SIZE * 0.8;
-  ['x', 'y', 'z'].forEach(axis => {
-    if (player.position[axis] > softEdge) {
-      player.velocity[axis] -= (player.position[axis] - softEdge) * 0.5 * dt;
-    } else if (player.position[axis] < -softEdge) {
-      player.velocity[axis] -= (player.position[axis] + softEdge) * 0.5 * dt;
-    }
-  });
-  player.position.clamp(new THREE.Vector3(-s,-s,-s), new THREE.Vector3(s,s,s));
+  if (player.position.x > softEdge)       player.velocity.x -= (player.position.x - softEdge) * 0.5 * dt;
+  else if (player.position.x < -softEdge) player.velocity.x -= (player.position.x + softEdge) * 0.5 * dt;
+  if (player.position.y > softEdge)       player.velocity.y -= (player.position.y - softEdge) * 0.5 * dt;
+  else if (player.position.y < -softEdge) player.velocity.y -= (player.position.y + softEdge) * 0.5 * dt;
+  if (player.position.z > softEdge)       player.velocity.z -= (player.position.z - softEdge) * 0.5 * dt;
+  else if (player.position.z < -softEdge) player.velocity.z -= (player.position.z + softEdge) * 0.5 * dt;
+  // Reuse cached corner scratches; Vector3.clamp accepts any THREE.Vector3.
+  player.position.clamp(_mvClampMin.set(-s, -s, -s), _mvClampMax.set(s, s, s));
 
   camera.position.copy(player.position);
 }
@@ -11103,26 +11210,69 @@ function updateHUD() {
 
 // ---- MINIMAP ----
 
+// Cached canvas + context; resolved lazily on first tick since the <canvas>
+// isn't guaranteed to exist at script parse time depending on load order.
+const _mm = {
+  canvas: null,
+  ctx: null,
+  extent: 0,        // cached map extent in world units (0 until first build)
+  extentKey: null,  // identity of the geometry the cached extent was computed from
+  lastTick: 0,      // game.time of the last redraw; used for 20Hz throttle
+  forward: new THREE.Vector3(),  // reused scratch for the camera-forward line
+};
+
+// Invalidate the cached map extent. Call after buildLevel() swaps in a new map
+// so the next updateMinimap() recomputes. Cheap no-op if minimap never ran.
+function invalidateMinimapExtent() {
+  _mm.extent = 0;
+  _mm.extentKey = null;
+}
+
 function updateMinimap() {
-  const canvas = document.getElementById('minimap');
-  const ctx = canvas.getContext('2d');
-  canvas.width = 150;
-  canvas.height = 150;
+  // Lazy DOM/context resolution: one-time cost, then reused for the life of
+  // the page. The canvas element itself never changes.
+  if (!_mm.canvas) {
+    _mm.canvas = document.getElementById('minimap');
+    if (!_mm.canvas) return;
+    _mm.ctx = _mm.canvas.getContext('2d');
+    // Size once; setting canvas.width every frame is a full state reset (it
+    // also clears the canvas as a side effect, but clearRect is much cheaper).
+    _mm.canvas.width = 150;
+    _mm.canvas.height = 150;
+  }
+  const ctx = _mm.ctx;
+  if (!ctx) return;
+
+  // 20Hz throttle: at 60 FPS this redraws every 3rd frame. The last-drawn
+  // frame stays on the canvas between redraws (we don't clear), so the radar
+  // remains visible. A radar at 20Hz reads the same as 60Hz at 150px scale.
+  const now = (typeof game !== 'undefined' && game.time) || 0;
+  if (_mm.lastTick && now - _mm.lastTick < 0.05) return;
+  _mm.lastTick = now;
+
   ctx.clearRect(0, 0, 150, 150);
 
   ctx.strokeStyle = 'rgba(80,80,120,0.4)';
   ctx.strokeRect(0, 0, 150, 150);
 
-  // Auto-fit radar to actual level geometry
-  let mapExtent = 1000;
-  for (const s of (game.levelSpheres || [])) {
-    mapExtent = Math.max(mapExtent, Math.abs(s.cx) + s.r, Math.abs(s.cz) + s.r);
+  // Auto-fit radar to actual level geometry. This is static per map; compute
+  // it once when the map changes and cache. Key by the array-identity tuple
+  // of the two geometry arrays; buildLevel replaces these wholesale.
+  const spheres = game.levelSpheres || [];
+  const cyls = game.levelCylinders || [];
+  const key = spheres.length * 131071 + cyls.length;  // cheap identity hash
+  if (_mm.extent === 0 || _mm.extentKey !== key) {
+    let mapExtent = 1000;
+    for (const s of spheres) {
+      mapExtent = Math.max(mapExtent, Math.abs(s.cx) + s.r, Math.abs(s.cz) + s.r);
+    }
+    for (const c of cyls) {
+      mapExtent = Math.max(mapExtent, Math.abs(c.ax) + c.r, Math.abs(c.bx) + c.r, Math.abs(c.az) + c.r, Math.abs(c.bz) + c.r);
+    }
+    _mm.extent = mapExtent * 1.15;
+    _mm.extentKey = key;
   }
-  for (const c of (game.levelCylinders || [])) {
-    mapExtent = Math.max(mapExtent, Math.abs(c.ax) + c.r, Math.abs(c.bx) + c.r, Math.abs(c.az) + c.r, Math.abs(c.bz) + c.r);
-  }
-  mapExtent *= 1.15;
-  const scale = 150 / (mapExtent * 2);
+  const scale = 150 / (_mm.extent * 2);
   const cx = 75, cy = 75;
 
   // World-to-radar mapping: +X world → right on screen (unchanged); world -Z
@@ -11134,7 +11284,7 @@ function updateMinimap() {
   // Draw tunnel cylinders as lines
   ctx.strokeStyle = 'rgba(60,70,100,0.35)';
   ctx.lineWidth = 2;
-  for (const c of (game.levelCylinders || [])) {
+  for (const c of cyls) {
     const x1 = cx + c.ax * scale, y1 = cy + c.az * scale;
     const x2 = cx + c.bx * scale, y2 = cy + c.bz * scale;
     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
@@ -11144,7 +11294,7 @@ function updateMinimap() {
   ctx.fillStyle = 'rgba(80,80,120,0.2)';
   ctx.strokeStyle = 'rgba(80,90,130,0.4)';
   ctx.lineWidth = 1;
-  for (const s of (game.levelSpheres || [])) {
+  for (const s of spheres) {
     const sx = cx + s.cx * scale, sy = cy + s.cz * scale, sr = s.r * scale;
     ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
   }
@@ -11156,11 +11306,12 @@ function updateMinimap() {
   ctx.fillRect(px - 2, py - 2, 4, 4);
 
   // Direction line: forward is world -Z; on canvas that should point UP (smaller y).
-  const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+  // Reuse the module-level scratch vector to avoid GC churn.
+  _mm.forward.set(0, 0, -1).applyQuaternion(camera.quaternion);
   ctx.strokeStyle = 'rgba(255,255,255,0.5)';
   ctx.beginPath();
   ctx.moveTo(px, py);
-  ctx.lineTo(px + forward.x * 15, py + forward.z * 15);
+  ctx.lineTo(px + _mm.forward.x * 15, py + _mm.forward.z * 15);
   ctx.stroke();
 
   // Bots
@@ -12781,6 +12932,9 @@ function buildRoomGraphLevel(level) {
   game.corridorPoints = [];
   game.currentLevel = level;
   game.mapWord = level.name;
+  // Minimap caches its extent from the sphere/cylinder arrays; invalidate here
+  // so the next updateMinimap() recomputes against the fresh geometry.
+  if (typeof invalidateMinimapExtent === 'function') invalidateMinimapExtent();
 
   // Terminate old worker if still running
   if (game.levelWorker && game.levelWorkerCallbacks.length > 0) {
@@ -13426,6 +13580,12 @@ function initHbarPool(maxBars, maxMarkers) {
       <div class="enemy-hbar-shield"></div>
     `;
     container.appendChild(div);
+    // Cache inner element references so the hot loop doesn't traverse
+    // div.children[n] every frame. Still accessed as `div._name` etc.
+    div._name = div.children[0];
+    div._bg = div.children[1];
+    div._fill = div._bg.children[0];
+    div._shield = div.children[2];
     hbarPool.bars.push(div);
   }
   for (let i = 0; i < maxMarkers; i++) {
@@ -13437,6 +13597,8 @@ function initHbarPool(maxBars, maxMarkers) {
       <div class="stasis-marker-dist"></div>
     `;
     container.appendChild(div);
+    // Cache the distance label once; querySelector per-frame was a real cost.
+    div._distEl = div.querySelector('.stasis-marker-dist');
     hbarPool.markers.push(div);
   }
   hbarPool.initialized = true;
@@ -13446,6 +13608,13 @@ function initHbarPool(maxBars, maxMarkers) {
 // avoid per-enemy allocations (the trace showed Vector3 churn in this path).
 const _hbTmpA = new THREE.Vector3();
 const _hbTmpB = new THREE.Vector3();
+
+// Line-of-sight is an SDF raycast (worldSDF runs up to 80 steps); at 60 FPS and
+// 5+ enemies that was ~300 SDF ray marches per second just for health bars.
+// We keep projection/position at full frame rate (so bars track camera motion
+// smoothly) but throttle the LOS raycast to ~15 Hz and cache the result. Each
+// bot holds its own _hbLosBlocked flag and _hbLosTime timestamp.
+const HBAR_LOS_INTERVAL = 0.067; // ~15 Hz
 
 function updateEnemyHealthBars() {
   if (!hbarPool.initialized) initHbarPool(24, 8);
@@ -13459,6 +13628,7 @@ function updateEnemyHealthBars() {
   const winW = window.innerWidth, winH = window.innerHeight;
   const halfW = winW / 2;
   const halfH = winH / 2;
+  const now = game.time || 0;
 
   let barIdx = 0;
   for (const bot of game.entities) {
@@ -13480,10 +13650,16 @@ function updateEnemyHealthBars() {
     if (sx < -60 || sx > winW + 60 || sy < -30 || sy > winH + 30) continue;
     if (barIdx >= hbarPool.bars.length) break;
 
-    // Line-of-sight check (raycast) only after on-screen cull passes.
-    const toBot = _hbTmpA.subVectors(bot.position, player.position).normalize();
-    const wallDist = raycastLevel(player.position, toBot, dist + 50);
-    if (wallDist < dist - 30) continue; // wall blocks view
+    // Line-of-sight check (SDF raycast) only after on-screen cull passes.
+    // Throttle to ~15 Hz and cache the last result so the hot path costs one
+    // raycast every ~4 frames per bot instead of every frame.
+    if (bot._hbLosTime == null || now - bot._hbLosTime >= HBAR_LOS_INTERVAL) {
+      const toBot = _hbTmpA.subVectors(bot.position, player.position).normalize();
+      const wallDist = raycastLevel(player.position, toBot, dist + 50);
+      bot._hbLosBlocked = (wallDist < dist - 30);
+      bot._hbLosTime = now;
+    }
+    if (bot._hbLosBlocked) continue;
 
     const healthPct = Math.max(0, bot.health / bot.maxHealth);
     const shieldPct = Math.max(0, bot.shield / bot.maxShield);
@@ -13500,15 +13676,14 @@ function updateEnemyHealthBars() {
     div.style.display = '';
     div.style.left = (sx - barW / 2) + 'px';
     div.style.top = (sy - 20) + 'px';
-    const nameEl = div.children[0];
+    // Use cached child refs (populated in initHbarPool).
+    const nameEl = div._name;
     nameEl.style.fontSize = Math.round(9 * scale) + 'px';
     nameEl.textContent = bot.loadout.name;
-    const bgEl = div.children[1];
-    bgEl.style.width = barW + 'px';
-    const fillEl = bgEl.children[0];
-    fillEl.style.width = (healthPct * 100) + '%';
-    fillEl.style.background = hColor;
-    div.children[2].style.width = (barW * shieldPct) + 'px';
+    div._bg.style.width = barW + 'px';
+    div._fill.style.width = (healthPct * 100) + '%';
+    div._fill.style.background = hColor;
+    div._shield.style.width = (barW * shieldPct) + 'px';
     barIdx++;
   }
   // Hide unused bar pool elements
@@ -13535,7 +13710,9 @@ function updateEnemyHealthBars() {
     div.style.display = '';
     div.style.left = (sx - 20) + 'px';
     div.style.top = (sy - 20) + 'px';
-    div.querySelector('.stasis-marker-dist').textContent = Math.round(dist) + 'm';
+    // Use cached label reference (populated in initHbarPool); saves per-frame
+    // querySelector traversal across 8 markers.
+    div._distEl.textContent = Math.round(dist) + 'm';
     mkIdx++;
   }
   for (let i = mkIdx; i < hbarPool.markers.length; i++) hbarPool.markers[i].style.display = 'none';
