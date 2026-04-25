@@ -1,0 +1,2459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⊙ Topological Quantum Computer (B₃ at ℂ⁵¹²)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: #0a0a0f;
+      color: #e0e0e0;
+      height: 100vh;
+      overflow: hidden;
+      font-size: 14px;
+    }
+    
+    .app {
+      display: grid;
+      grid-template-columns: 180px 1fr 280px;
+      height: 100vh;
+    }
+    
+    /* Left - Narrow braid visualization */
+    .braid-panel {
+      display: flex;
+      flex-direction: column;
+      padding: 0.6rem;
+      gap: 0.5rem;
+      background: #080810;
+      border-right: 1px solid #1a1a1a;
+      overflow: hidden;
+    }
+    
+    .braid-header {
+      text-align: center;
+    }
+    
+    .braid-header h1 {
+      color: #ffd700;
+      font-size: 1rem;
+      font-weight: 400;
+      margin-bottom: 0.1rem;
+    }
+    
+    .braid-header h1 sub { font-size: 0.75rem; }
+    
+    .braid-header .subtitle {
+      font-size: 0.55rem;
+      color: #666;
+      margin-bottom: 0.3rem;
+    }
+    
+    .selected-particles {
+      display: flex;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+    
+    .selected-slot {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px dashed #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      color: #555;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .selected-slot.filled {
+      border-style: solid;
+    }
+    
+    .selected-slot.slot-0.filled { box-shadow: 0 0 8px #ff6b6b; }
+    .selected-slot.slot-1.filled { box-shadow: 0 0 8px #4ecdc4; }
+    .selected-slot.slot-2.filled { box-shadow: 0 0 8px #ffe66d; }
+    
+    .selected-slot .slot-label {
+      position: absolute;
+      top: -8px;
+      font-size: 0.6rem;
+      color: #666;
+    }
+    
+    .selected-slot .particle-id {
+      font-size: 0.65rem;
+      font-weight: bold;
+    }
+    
+    .selected-slot .particle-sym {
+      font-size: 0.75rem;
+      color: #888;
+    }
+    
+    .selected-slot .clear-btn {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #444;
+      color: #aaa;
+      border: none;
+      font-size: 0.6rem;
+      cursor: pointer;
+      display: none;
+    }
+    
+    .selected-slot.filled:hover .clear-btn { display: block; }
+    
+    .canvas-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    
+    .braid-view {
+      flex: 1;
+      background: #000;
+      border-radius: 4px;
+      position: relative;
+      min-height: 150px;
+    }
+    
+    #braid-canvas {
+      width: 100%;
+      height: 100%;
+      border-radius: 4px;
+    }
+    
+    .field-view {
+      display: none;
+    }
+    
+    .braid-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      justify-content: center;
+    }
+    
+    .ctrl-btn {
+      padding: 0.4rem 0.6rem;
+      font-family: inherit;
+      font-size: 0.8rem;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #888;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .ctrl-btn:hover { background: #252525; color: #aaa; }
+    .ctrl-btn.active { background: #d4a54a; color: #000; border-color: #d4a54a; }
+    .ctrl-btn.running { background: #a44; color: #fff; }
+    
+    .ctrl-btn.sigma { font-size: 0.85rem; min-width: 36px; }
+    .ctrl-btn.sigma-1 { border-color: #ff6b6b55; }
+    .ctrl-btn.sigma-2 { border-color: #ffe66d55; }
+    
+    .braid-info {
+      display: none;
+    }
+    
+    .braid-word {
+      font-size: 0.7rem;
+      color: #888;
+      background: #111;
+      padding: 0.3rem 0.5rem;
+      border-radius: 4px;
+      text-align: center;
+      max-height: 50px;
+      overflow: hidden;
+    }
+    
+    .braid-word .op { 
+      padding: 0.05rem 0.15rem;
+      border-radius: 2px;
+      margin: 0 2px;
+      font-size: 0.65rem;
+    }
+    .braid-word .op.s1 { background: #ff6b6b33; color: #ff6b6b; }
+    .braid-word .op.s2 { background: #ffe66d33; color: #ffe66d; }
+    .braid-word .op.inv { text-decoration: overline; }
+    
+    /* Center - Main field panel */
+    .field-panel {
+      display: flex;
+      flex-direction: column;
+      padding: 0.6rem;
+      gap: 0.5rem;
+      background: #000;
+    }
+    
+    .field-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .field-title {
+      color: #ffd700;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+    
+    .field-controls {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .view-btns {
+      display: flex;
+      gap: 3px;
+    }
+    
+    .view-btn {
+      padding: 0.35rem 0.6rem;
+      font-family: inherit;
+      font-size: 0.8rem;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #666;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .view-btn:hover { background: #252525; color: #888; }
+    .view-btn.active { background: #d4a54a; color: #000; border-color: #d4a54a; }
+    
+    .slider-wrap {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .slider-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      color: #666;
+    }
+    
+    .slider-group input[type="range"] {
+      width: 70px;
+      height: 4px;
+      -webkit-appearance: none;
+      background: #333;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    
+    .slider-group input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      background: #d4a54a;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    
+    .slider-group .val { color: #d4a54a; min-width: 32px; }
+    
+    .field-main {
+      flex: 1;
+      display: flex;
+      gap: 0.5rem;
+      min-height: 0;
+    }
+    
+    .main-field-wrap {
+      flex: 1;
+      background: #000;
+      border-radius: 6px;
+      position: relative;
+      border: 1px solid #1a1a1a;
+    }
+    
+    #field-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 6px;
+    }
+    
+    #trail-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 6px;
+      z-index: 1;
+      pointer-events: none;
+    }
+    
+    .field-label {
+      position: absolute;
+      top: 10px;
+      left: 14px;
+      font-size: 0.85rem;
+      color: #666;
+      z-index: 2;
+    }
+    
+    .field-stats {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.85rem;
+      color: #666;
+      padding: 0.3rem 0;
+    }
+    
+    .field-stats span { color: #d4a54a; }
+    
+    .braid-controls {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .ctrl-btn {
+      padding: 0.4rem 0.7rem;
+      font-family: inherit;
+      font-size: 0.55rem;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #888;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .ctrl-btn:hover { background: #252525; color: #aaa; }
+    .ctrl-btn.active { background: #d4a54a; color: #000; border-color: #d4a54a; }
+    .ctrl-btn.running { background: #a44; color: #fff; }
+    
+    .ctrl-btn.sigma { font-size: 0.7rem; min-width: 40px; }
+    .ctrl-btn.sigma-1 { border-color: #ff6b6b55; }
+    .ctrl-btn.sigma-2 { border-color: #ffe66d55; }
+    
+    .braid-info {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.5rem;
+      color: #666;
+      padding: 0.3rem 0;
+    }
+    
+    .braid-info span { color: #d4a54a; }
+    
+    .braid-word {
+      font-size: 0.6rem;
+      color: #888;
+      background: #111;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      min-width: 100px;
+    }
+    
+    .braid-word .op { 
+      padding: 0.1rem 0.2rem;
+      border-radius: 2px;
+      margin: 0 1px;
+    }
+    .braid-word .op.s1 { background: #ff6b6b33; color: #ff6b6b; }
+    .braid-word .op.s2 { background: #ffe66d33; color: #ffe66d; }
+    .braid-word .op.inv { text-decoration: overline; }
+    
+    /* Right - Particle grid */
+    .grid-panel {
+      background: #080810;
+      border-left: 1px solid #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .grid-header {
+      padding: 0.6rem;
+      border-bottom: 1px solid #1a1a1a;
+      text-align: center;
+    }
+    
+    .grid-header h2 {
+      font-size: 0.95rem;
+      color: #ffd700;
+      font-weight: 400;
+    }
+    
+    .grid-header .subtitle {
+      font-size: 0.7rem;
+      color: #666;
+      margin-top: 0.25rem;
+    }
+    
+    .grid-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem;
+    }
+    
+    .particle-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 4px;
+    }
+    
+    .cell {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      min-height: 28px;
+      position: relative;
+      background: #0a0a0a;
+      border: 2px solid #333;
+    }
+    
+    .cell:hover { transform: scale(1.3); z-index: 10; }
+    
+    .cell.in-braid {
+      border-width: 3px;
+    }
+    
+    .cell.in-braid.strand-0 { border-color: #ff6b6b !important; box-shadow: 0 0 10px #ff6b6b; }
+    .cell.in-braid.strand-1 { border-color: #4ecdc4 !important; box-shadow: 0 0 10px #4ecdc4; }
+    .cell.in-braid.strand-2 { border-color: #ffe66d !important; box-shadow: 0 0 10px #ffe66d; }
+    
+    .cell-id { font-size: 0.7rem; font-weight: bold; z-index: 1; }
+    .cell-sym { font-size: 0.55rem; color: #888; z-index: 1; }
+    
+    .grid-legend {
+      padding: 0.5rem;
+      border-top: 1px solid #1a1a1a;
+      font-size: 0.7rem;
+      color: #555;
+      text-align: center;
+    }
+    
+    .tooltip {
+      position: fixed;
+      background: rgba(10, 10, 20, 0.98);
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      max-width: 280px;
+      z-index: 1000;
+      pointer-events: none;
+      display: none;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    
+    .tooltip h5 { color: #ffd700; margin-bottom: 0.4rem; font-size: 1rem; }
+    .tooltip p { color: #bbb; margin: 0.2rem 0; }
+    .tooltip b { color: #888; }
+    
+    .yang-baxter-small {
+      background: #0a0a0a;
+      border-radius: 4px;
+      padding: 0.4rem;
+      margin-top: 0.4rem;
+      text-align: center;
+    }
+    
+    .unitary-display {
+      background: #0a0a0a;
+      border-radius: 4px;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+    
+    .unitary-label {
+      font-size: 0.65rem;
+      color: #666;
+      margin-bottom: 0.3rem;
+    }
+    
+    .matrix {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      position: relative;
+      padding: 0.3rem 0.5rem;
+    }
+    
+    .matrix::before, .matrix::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border: 2px solid #d4a54a;
+    }
+    
+    .matrix::before {
+      left: 0;
+      border-right: none;
+      border-radius: 4px 0 0 4px;
+    }
+    
+    .matrix::after {
+      right: 0;
+      border-left: none;
+      border-radius: 0 4px 4px 0;
+    }
+    
+    .matrix-row {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .matrix-row span {
+      min-width: 50px;
+      text-align: center;
+      color: #d4a54a;
+    }
+    
+    .unitary-info {
+      font-size: 0.55rem;
+      color: #888;
+      margin-top: 0.3rem;
+    }
+    
+    .yang-baxter-small .eq {
+      font-size: 0.8rem;
+      color: #d4a54a;
+    }
+    
+    .yang-baxter-small .status {
+      font-size: 0.65rem;
+      color: #666;
+      margin-top: 0.2rem;
+    }
+    
+    .yang-baxter-small .status.satisfied { color: #4a4; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- LEFT: Narrow braid panel -->
+    <div class="braid-panel">
+      <div class="braid-header">
+        <h1>⊙ TQC</h1>
+        <div class="subtitle">Topological Quantum Computer</div>
+      </div>
+      
+      <div class="selected-particles">
+        <div class="selected-slot slot-0" data-slot="0">
+          <span class="slot-label">1</span>
+          <span class="particle-id"></span>
+          <span class="particle-sym">?</span>
+          <button class="clear-btn">×</button>
+        </div>
+        <div class="selected-slot slot-1" data-slot="1">
+          <span class="slot-label">2</span>
+          <span class="particle-id"></span>
+          <span class="particle-sym">?</span>
+          <button class="clear-btn">×</button>
+        </div>
+        <div class="selected-slot slot-2" data-slot="2">
+          <span class="slot-label">3</span>
+          <span class="particle-id"></span>
+          <span class="particle-sym">?</span>
+          <button class="clear-btn">×</button>
+        </div>
+      </div>
+      
+      <div class="canvas-container">
+        <div class="braid-view">
+          <canvas id="braid-canvas"></canvas>
+        </div>
+      </div>
+      
+      <div class="braid-controls">
+        <button class="ctrl-btn" id="btn-run">▶</button>
+        <button class="ctrl-btn" id="btn-reset">↺</button>
+        <button class="ctrl-btn sigma sigma-1" id="btn-s1">σ₁</button>
+        <button class="ctrl-btn sigma sigma-1" id="btn-s1i">σ₁⁻¹</button>
+        <button class="ctrl-btn sigma sigma-2" id="btn-s2">σ₂</button>
+        <button class="ctrl-btn sigma sigma-2" id="btn-s2i">σ₂⁻¹</button>
+      </div>
+      
+      <div class="braid-controls">
+        <button class="ctrl-btn" id="btn-yb1">σ₁σ₂σ₁</button>
+        <button class="ctrl-btn" id="btn-yb2">σ₂σ₁σ₂</button>
+      </div>
+      
+      <div class="braid-word" id="braid-word">ε</div>
+      
+      <div class="unitary-display">
+        <div class="unitary-label">Quantum Gate U(braid):</div>
+        <div class="matrix" id="unitary-matrix"></div>
+        <div class="unitary-info" id="unitary-info">Identity</div>
+      </div>
+      
+      <div style="margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid #1a1a1a;">
+        <div style="font-size: 0.6rem; color: #888; letter-spacing: 0.05em; text-align: center; margin-bottom: 0.25rem;">OCTAVE PHASE</div>
+        <div class="phase-selector" data-strand="0">
+          <div class="phase-buttons" id="phase-row-0"></div>
+        </div>
+        <div class="phase-selector" data-strand="1">
+          <div class="phase-buttons" id="phase-row-1"></div>
+        </div>
+        <div class="phase-selector" data-strand="2">
+          <div class="phase-buttons" id="phase-row-2"></div>
+        </div>
+      </div>
+      <div class="c512-panel" id="c512-panel">
+        <h3>C512 Analysis</h3>
+        <div class="row"><span class="lbl">struct (target 0.6875)</span><span class="val" id="c512-struct">—</span></div>
+        <div class="row"><span class="lbl">proc (target 0.3125)</span><span class="val" id="c512-proc">—</span></div>
+        <div class="bars">
+          <div class="bar-s" id="c512-bar-s" style="width: 50%;"></div>
+          <div class="bar-p" id="c512-bar-p" style="width: 50%;"></div>
+        </div>
+        <div class="row"><span class="lbl">Σ|ψ|²</span><span class="val" id="c512-norm">—</span></div>
+        <div class="top-states" id="c512-top-states"></div>
+      </div>
+      <div class="yang-baxter-small">
+        <div class="eq">σ₁σ₂σ₁ = σ₂σ₁σ₂</div>
+        <div class="status" id="yb-status">Yang-Baxter</div>
+      </div>
+    </div>
+    
+    <!-- CENTER: Main field panel -->
+    <div class="field-panel">
+      <div class="field-header">
+        <span class="field-title">⊙ Topology Field</span>
+        <div class="field-controls">
+          <div class="view-btns">
+            <button class="view-btn active" data-v="mag">|Φ|</button>
+            <button class="view-btn" data-v="phase">Phase</button>
+            <button class="view-btn" data-v="re">Re</button>
+            <button class="view-btn" data-v="im">Im</button>
+          </div>
+          <div class="view-btns speed-btns">
+            <span style="color:#666;font-size:0.7rem;margin-right:4px;">Speed:</span>
+            <button class="view-btn" data-speed="1">1×</button>
+            <button class="view-btn" data-speed="10">10×</button>
+            <button class="view-btn active" data-speed="100">100×</button>
+            <button class="view-btn" data-speed="1000">1k×</button>
+            <button class="view-btn" data-speed="10000">10k×</button>
+          </div>
+          <div class="slider-wrap">
+            <div class="slider-group">
+              <span>Mem:</span>
+              <input type="range" id="persistence" min="0" max="98" value="92">
+              <span class="val" id="persistence-val">92%</span>
+            </div>
+            <div class="slider-group">
+              <span>Vac:</span>
+              <input type="range" id="vacuum" min="0" max="50" value="10">
+              <span class="val" id="vacuum-val">10%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="field-main">
+        <div class="main-field-wrap" id="combined-wrap">
+          <canvas id="trail-canvas"></canvas>
+          <canvas id="field-canvas"></canvas>
+          <div class="field-label">Φ = Φ₁ + Φ₂ + Φ₃</div>
+        </div>
+      </div>
+      
+      <div class="field-stats">
+        <span>Time:</span> <span id="time">0</span> · 
+        <span>Crossings:</span> <span id="crossings">0</span> · 
+        <span>Writhe:</span> <span id="writhe">0</span> ·
+        <span>L₀₁:</span> <span id="link01">0</span> ·
+        <span>L₁₂:</span> <span id="link12">0</span>
+      </div>
+    </div>
+    
+    <!-- RIGHT: Particle grid -->
+    <div class="grid-panel">
+      <div class="grid-header">
+        <h2>64-State Universe</h2>
+        <div class="subtitle">Click 3 particles to braid</div>
+      </div>
+      <div class="grid-scroll">
+        <div class="particle-grid" id="grid"></div>
+      </div>
+      <div class="grid-legend">
+        <span style="color:#ff6b6b">●</span> strand 1 · 
+        <span style="color:#4ecdc4">●</span> strand 2 · 
+        <span style="color:#ffe66d">●</span> strand 3
+      </div>
+      <div class="grid-legend" style="border-top:none;padding-top:0;font-size:0.5rem;">
+        <div><span style="color:#888">Number (•):</span> <span style="color:#ff6b6b">■</span>r <span style="color:#4ecdc4">■</span>g <span style="color:#6b9fff">■</span>b <span style="color:#ffaadd">■</span>e⁻ <span style="color:#aaddff">■</span>ν</div>
+        <div><span style="color:#888">Fill (Φ):</span> <span style="color:#9966cc">■</span>quark <span style="color:#4488bb">■</span>lepton <span style="color:#ff6600">■</span>gluon <span style="color:#aa00aa">■</span>weak <span style="color:#aa8800">■</span>higgs</div>
+        <div><span style="color:#888">Border (○):</span> darker=L, lighter=R · <span style="color:#888">Brightness:</span> gen 1→3</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="tooltip" id="tooltip"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// PARTICLE DATA
+// ═══════════════════════════════════════════════════════════════════════════
+const P = {
+  0:{n:"Up Quark",s:"u",sub:"L,r",g:1,t:"quark",c:"L",x:"r",S:"Fermion",Q:"+⅔",spin:0.5,mass:"2.2 MeV"},
+  1:{n:"Up Quark",s:"u",sub:"L,g",g:1,t:"quark",c:"L",x:"g",S:"Fermion",Q:"+⅔",spin:0.5,mass:"2.2 MeV"},
+  2:{n:"Up Quark",s:"u",sub:"L,b",g:1,t:"quark",c:"L",x:"b",S:"Fermion",Q:"+⅔",spin:0.5,mass:"2.2 MeV"},
+  3:{n:"Down Quark",s:"d",sub:"L,r",g:1,t:"quark",c:"L",x:"r",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.7 MeV"},
+  4:{n:"Down Quark",s:"d",sub:"L,g",g:1,t:"quark",c:"L",x:"g",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.7 MeV"},
+  5:{n:"Down Quark",s:"d",sub:"L,b",g:1,t:"quark",c:"L",x:"b",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.7 MeV"},
+  6:{n:"Up Quark",s:"u",sub:"R,r",g:1,t:"quark",c:"R",x:"r",S:"Fermion",Q:"+⅔",spin:0.5,mass:"2.2 MeV"},
+  7:{n:"Up Quark",s:"u",sub:"R,g",g:1,t:"quark",c:"R",x:"g",S:"Fermion",Q:"+⅔",spin:0.5,mass:"2.2 MeV"},
+  8:{n:"Up Quark",s:"u",sub:"R,b",g:1,t:"quark",c:"R",x:"b",S:"Fermion",Q:"+⅔",spin:0.5,mass:"2.2 MeV"},
+  9:{n:"Down Quark",s:"d",sub:"R,r",g:1,t:"quark",c:"R",x:"r",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.7 MeV"},
+  10:{n:"Down Quark",s:"d",sub:"R,g",g:1,t:"quark",c:"R",x:"g",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.7 MeV"},
+  11:{n:"Down Quark",s:"d",sub:"R,b",g:1,t:"quark",c:"R",x:"b",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.7 MeV"},
+  12:{n:"Electron Neutrino",s:"νₑ",sub:"L",g:1,t:"lepton",c:"L",S:"Fermion",Q:"0",spin:0.5,mass:"<1 eV"},
+  13:{n:"Electron",s:"e",sub:"L",g:1,t:"lepton",c:"L",S:"Fermion",Q:"-1",spin:0.5,mass:"0.511 MeV"},
+  14:{n:"Electron",s:"e",sub:"R",g:1,t:"lepton",c:"R",S:"Fermion",Q:"-1",spin:0.5,mass:"0.511 MeV"},
+  15:{n:"Electron Neutrino",s:"νₑ",sub:"R",g:1,t:"lepton",c:"R",S:"Fermion",Q:"0",spin:0.5,mass:"<1 eV"},
+  16:{n:"Charm Quark",s:"c",sub:"L,r",g:2,t:"quark",c:"L",x:"r",S:"Fermion",Q:"+⅔",spin:0.5,mass:"1.27 GeV"},
+  17:{n:"Charm Quark",s:"c",sub:"L,g",g:2,t:"quark",c:"L",x:"g",S:"Fermion",Q:"+⅔",spin:0.5,mass:"1.27 GeV"},
+  18:{n:"Charm Quark",s:"c",sub:"L,b",g:2,t:"quark",c:"L",x:"b",S:"Fermion",Q:"+⅔",spin:0.5,mass:"1.27 GeV"},
+  19:{n:"Strange Quark",s:"s",sub:"L,r",g:2,t:"quark",c:"L",x:"r",S:"Fermion",Q:"-⅓",spin:0.5,mass:"95 MeV"},
+  20:{n:"Strange Quark",s:"s",sub:"L,g",g:2,t:"quark",c:"L",x:"g",S:"Fermion",Q:"-⅓",spin:0.5,mass:"95 MeV"},
+  21:{n:"Strange Quark",s:"s",sub:"L,b",g:2,t:"quark",c:"L",x:"b",S:"Fermion",Q:"-⅓",spin:0.5,mass:"95 MeV"},
+  22:{n:"Charm Quark",s:"c",sub:"R,r",g:2,t:"quark",c:"R",x:"r",S:"Fermion",Q:"+⅔",spin:0.5,mass:"1.27 GeV"},
+  23:{n:"Charm Quark",s:"c",sub:"R,g",g:2,t:"quark",c:"R",x:"g",S:"Fermion",Q:"+⅔",spin:0.5,mass:"1.27 GeV"},
+  24:{n:"Charm Quark",s:"c",sub:"R,b",g:2,t:"quark",c:"R",x:"b",S:"Fermion",Q:"+⅔",spin:0.5,mass:"1.27 GeV"},
+  25:{n:"Strange Quark",s:"s",sub:"R,r",g:2,t:"quark",c:"R",x:"r",S:"Fermion",Q:"-⅓",spin:0.5,mass:"95 MeV"},
+  26:{n:"Strange Quark",s:"s",sub:"R,g",g:2,t:"quark",c:"R",x:"g",S:"Fermion",Q:"-⅓",spin:0.5,mass:"95 MeV"},
+  27:{n:"Strange Quark",s:"s",sub:"R,b",g:2,t:"quark",c:"R",x:"b",S:"Fermion",Q:"-⅓",spin:0.5,mass:"95 MeV"},
+  28:{n:"Muon Neutrino",s:"νμ",sub:"L",g:2,t:"lepton",c:"L",S:"Fermion",Q:"0",spin:0.5,mass:"<0.17 MeV"},
+  29:{n:"Muon",s:"μ",sub:"L",g:2,t:"lepton",c:"L",S:"Fermion",Q:"-1",spin:0.5,mass:"105.7 MeV"},
+  30:{n:"Muon",s:"μ",sub:"R",g:2,t:"lepton",c:"R",S:"Fermion",Q:"-1",spin:0.5,mass:"105.7 MeV"},
+  31:{n:"Muon Neutrino",s:"νμ",sub:"R",g:2,t:"lepton",c:"R",S:"Fermion",Q:"0",spin:0.5,mass:"<0.17 MeV"},
+  32:{n:"Top Quark",s:"t",sub:"L,r",g:3,t:"quark",c:"L",x:"r",S:"Fermion",Q:"+⅔",spin:0.5,mass:"173 GeV"},
+  33:{n:"Top Quark",s:"t",sub:"L,g",g:3,t:"quark",c:"L",x:"g",S:"Fermion",Q:"+⅔",spin:0.5,mass:"173 GeV"},
+  34:{n:"Top Quark",s:"t",sub:"L,b",g:3,t:"quark",c:"L",x:"b",S:"Fermion",Q:"+⅔",spin:0.5,mass:"173 GeV"},
+  35:{n:"Bottom Quark",s:"b",sub:"L,r",g:3,t:"quark",c:"L",x:"r",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.18 GeV"},
+  36:{n:"Bottom Quark",s:"b",sub:"L,g",g:3,t:"quark",c:"L",x:"g",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.18 GeV"},
+  37:{n:"Bottom Quark",s:"b",sub:"L,b",g:3,t:"quark",c:"L",x:"b",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.18 GeV"},
+  38:{n:"Top Quark",s:"t",sub:"R,r",g:3,t:"quark",c:"R",x:"r",S:"Fermion",Q:"+⅔",spin:0.5,mass:"173 GeV"},
+  39:{n:"Top Quark",s:"t",sub:"R,g",g:3,t:"quark",c:"R",x:"g",S:"Fermion",Q:"+⅔",spin:0.5,mass:"173 GeV"},
+  40:{n:"Top Quark",s:"t",sub:"R,b",g:3,t:"quark",c:"R",x:"b",S:"Fermion",Q:"+⅔",spin:0.5,mass:"173 GeV"},
+  41:{n:"Bottom Quark",s:"b",sub:"R,r",g:3,t:"quark",c:"R",x:"r",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.18 GeV"},
+  42:{n:"Bottom Quark",s:"b",sub:"R,g",g:3,t:"quark",c:"R",x:"g",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.18 GeV"},
+  43:{n:"Bottom Quark",s:"b",sub:"R,b",g:3,t:"quark",c:"R",x:"b",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.18 GeV"},
+  44:{n:"Tau Neutrino",s:"ντ",sub:"L",g:3,t:"lepton",c:"L",S:"Fermion",Q:"0",spin:0.5,mass:"<18.2 MeV"},
+  45:{n:"Tau",s:"τ",sub:"L",g:3,t:"lepton",c:"L",S:"Fermion",Q:"-1",spin:0.5,mass:"1.777 GeV"},
+  46:{n:"Tau",s:"τ",sub:"R",g:3,t:"lepton",c:"R",S:"Fermion",Q:"-1",spin:0.5,mass:"1.777 GeV"},
+  47:{n:"Tau Neutrino",s:"ντ",sub:"R",g:3,t:"lepton",c:"R",S:"Fermion",Q:"0",spin:0.5,mass:"<18.2 MeV"},
+  48:{n:"Gluon",s:"g",sub:"1",g:null,t:"gluon",S:"Gauge",Q:"0",spin:1,mass:"0"},
+  49:{n:"Gluon",s:"g",sub:"2",g:null,t:"gluon",S:"Gauge",Q:"0",spin:1,mass:"0"},
+  50:{n:"Gluon",s:"g",sub:"3",g:null,t:"gluon",S:"Gauge",Q:"0",spin:1,mass:"0"},
+  51:{n:"Gluon",s:"g",sub:"4",g:null,t:"gluon",S:"Gauge",Q:"0",spin:1,mass:"0"},
+  52:{n:"Gluon",s:"g",sub:"5",g:null,t:"gluon",S:"Gauge",Q:"0",spin:1,mass:"0"},
+  53:{n:"Gluon",s:"g",sub:"6",g:null,t:"gluon",S:"Gauge",Q:"0",spin:1,mass:"0"},
+  54:{n:"Gluon",s:"g",sub:"7",g:null,t:"gluon",S:"Gauge",Q:"0",spin:1,mass:"0"},
+  55:{n:"Gluon",s:"g",sub:"8",g:null,t:"gluon",S:"Gauge",Q:"0",spin:1,mass:"0"},
+  56:{n:"W Boson",s:"W",sub:"+",g:null,t:"weak",S:"Gauge",Q:"+1",spin:1,mass:"80.4 GeV"},
+  57:{n:"W Boson",s:"W",sub:"-",g:null,t:"weak",S:"Gauge",Q:"-1",spin:1,mass:"80.4 GeV"},
+  58:{n:"Z Boson",s:"Z",sub:"0",g:null,t:"weak",S:"Gauge",Q:"0",spin:1,mass:"91.2 GeV"},
+  59:{n:"Photon",s:"γ",sub:"",g:null,t:"photon",S:"Gauge",Q:"0",spin:1,mass:"0"},
+  60:{n:"Higgs (charged)",s:"H",sub:"+",g:null,t:"higgs",S:"Higgs",Q:"+1",spin:0,mass:"—"},
+  61:{n:"Higgs (charged)",s:"H",sub:"-",g:null,t:"higgs",S:"Higgs",Q:"-1",spin:0,mass:"—"},
+  62:{n:"Higgs Boson",s:"H",sub:"0",g:null,t:"higgs",S:"Higgs",Q:"0",spin:0,mass:"125.1 GeV"},
+  63:{n:"Higgs (vacuum)",s:"H",sub:"v",g:null,t:"higgs",S:"Higgs",Q:"0",spin:0,special:"⊙ v=246 GeV"}
+};
+
+// Get circumpunct colors for a particle: center(•), field(Φ), surface(○)
+function getCircumpunctColors(id) {
+  const p = P[id];
+  
+  // Default colors
+  let center = '#fff';   // Font color (•)
+  let field = '#1a1a1a'; // Fill color (Φ)
+  let surface = '#444';  // Border color (○)
+  
+  if (p.S === 'Fermion') {
+    // Generation affects field intensity
+    const gen = p.g || 1;
+    const genBright = [0.4, 0.6, 0.85][gen - 1];
+    
+    if (p.t === 'quark') {
+      // Quarks: color charge determines center
+      if (p.x === 'r') center = '#ff6b6b';
+      else if (p.x === 'g') center = '#4ecdc4';
+      else if (p.x === 'b') center = '#6b9fff';
+      
+      // Field: purple-ish for quarks, varies by generation
+      const r = Math.round(80 * genBright);
+      const g = Math.round(40 * genBright);
+      const b = Math.round(120 * genBright);
+      field = `rgb(${r},${g},${b})`;
+      
+      // Surface: chirality (L=solid, R=dashed effect via lighter)
+      surface = p.c === 'L' ? '#9966cc' : '#cc99ff';
+    } else {
+      // Leptons: no color charge, center based on charge
+      center = p.Q === '0' ? '#aaddff' : '#ffaadd';
+      
+      // Field: blue-ish for leptons
+      const r = Math.round(40 * genBright);
+      const g = Math.round(80 * genBright);
+      const b = Math.round(140 * genBright);
+      field = `rgb(${r},${g},${b})`;
+      
+      // Surface
+      surface = p.c === 'L' ? '#4499cc' : '#99ccff';
+    }
+  } else if (p.S === 'Gauge') {
+    // Gauge bosons
+    if (p.t === 'gluon') {
+      center = '#ffaa00';
+      field = '#3d2200';
+      surface = '#ff6600';
+    } else if (p.t === 'weak') {
+      center = '#ff44ff';
+      field = '#2a0033';
+      surface = '#aa00aa';
+    } else if (p.t === 'photon') {
+      center = '#ffffaa';
+      field = '#333322';
+      surface = '#ffff00';
+    }
+  } else if (p.S === 'Higgs') {
+    // Higgs sector - golden
+    center = '#ffd700';
+    field = id === 63 ? '#2a2200' : '#1a1500'; // Vacuum is special
+    surface = id === 63 ? '#ffd700' : '#aa8800';
+  }
+  
+  return { center, field, surface };
+}
+
+const STRAND_COLORS = ['#ff6b6b', '#4ecdc4', '#ffe66d'];
+
+// ═══════════════════════════════════════════════════════════════════════════
+// C512 MODULE (framework's three-scale octave T-operator, ported from
+// experiments/unified_expression_T_v14_C512.py). Adds a parallel framework
+// analysis layer on top of the existing Fibonacci anyon braid math.
+//
+// State space: ℂ⁵¹² = ℂ⁸ ⊗ ℂ⁸ ⊗ ℂ⁸ (three nested ⊙s, each with the full
+// 8-station octave). Each strand carries an octave position (one of •, ⊛,
+// —, ⎇, Φ, ✹, ○, ⟳). The braid σ₁/σ₂ acts as: apply F₈ to the relevant
+// axis (one i-stroke advance) then permute axes (the topological swap).
+// ═══════════════════════════════════════════════════════════════════════════
+const C512 = (() => {
+  const STATIONS_8 = ['•','⊛','—','⎇','Φ','✹','○','⟳'];
+  const STRUCT_IDX = [0,2,4,6];
+  const PROC_IDX   = [1,3,5,7];
+  const PHI_S_IDX  = 4;
+  const PHI_P_IDX  = 5;
+  const ALPHA = 1/137.035999147;
+  const PHI_GOLDEN = (1+Math.sqrt(5))/2;
+
+  // Complex helpers (storage: interleaved Float64Array, [re0, im0, re1, im1, ...])
+  function ccarr(n) { return new Float64Array(n*2); }
+  function csetIdentity(M, N) {
+    for (let i = 0; i < N*N*2; i++) M[i] = 0;
+    for (let i = 0; i < N; i++) { M[(i*N+i)*2] = 1; }
+  }
+  function cmatMul(A, B, N) {
+    const C = ccarr(N*N);
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+      let r = 0, im = 0;
+      for (let k = 0; k < N; k++) {
+        const ar = A[(i*N+k)*2],   ai = A[(i*N+k)*2+1];
+        const br = B[(k*N+j)*2],   bi = B[(k*N+j)*2+1];
+        r  += ar*br - ai*bi;
+        im += ar*bi + ai*br;
+      }
+      C[(i*N+j)*2] = r; C[(i*N+j)*2+1] = im;
+    }
+    return C;
+  }
+  function cmatAdd(A, B, N) {
+    const C = ccarr(N*N);
+    for (let i = 0; i < N*N*2; i++) C[i] = A[i] + B[i];
+    return C;
+  }
+  function cmatScale(A, s, N) {
+    const C = ccarr(N*N);
+    for (let i = 0; i < N*N*2; i++) C[i] = A[i]*s;
+    return C;
+  }
+  function cmatNorm(A) {
+    let s = 0;
+    for (let i = 0; i < A.length; i++) s += A[i]*A[i];
+    return Math.sqrt(s);
+  }
+  // Matrix exponential via scaling-and-squaring + Taylor series.
+  function expm(G, N) {
+    const norm = cmatNorm(G);
+    let scale = 0;
+    let n = norm;
+    while (n > 0.5) { scale++; n /= 2; }
+    let Gs = cmatScale(G, 1.0/Math.pow(2, scale), N);
+    let result = ccarr(N*N); csetIdentity(result, N);
+    let term = ccarr(N*N); csetIdentity(term, N);
+    for (let k = 1; k < 30; k++) {
+      term = cmatScale(cmatMul(term, Gs, N), 1.0/k, N);
+      result = cmatAdd(result, term, N);
+      if (cmatNorm(term) < 1e-14) break;
+    }
+    for (let s = 0; s < scale; s++) result = cmatMul(result, result, N);
+    return result;
+  }
+
+  // Build F_8: single-scale octave operator (4 beats, each pairs structural
+  // station with processual partner via i-phase, with Φ as central mediator).
+  function build_F_8() {
+    const N = 8;
+    const theta = Math.PI / 2;
+    // i¹, i², i³, i⁰ as complex pairs
+    const iPhases = [
+      [0,  1],   // +i
+      [-1, 0],   // -1
+      [0, -1],   // -i
+      [1,  0],   // +1
+    ];
+    let F = ccarr(N*N); csetIdentity(F, N);
+    for (let beat = 0; beat < 4; beat++) {
+      const s_idx = STRUCT_IDX[beat];
+      const p_idx = PROC_IDX[beat];
+      const ipR = iPhases[beat][0], ipI = iPhases[beat][1];
+      // c = i_phase * theta
+      const cR = ipR * theta, cI = ipI * theta;
+      // Build generator G
+      const G = ccarr(N*N);
+      // Internal structure-process coupling
+      G[(s_idx*N + p_idx)*2]   = cR;  G[(s_idx*N + p_idx)*2+1] = cI;
+      G[(p_idx*N + s_idx)*2]   = -cR; G[(p_idx*N + s_idx)*2+1] = cI;
+      if (s_idx === PHI_S_IDX) {
+        const cTR = cR/3, cTI = cI/3;  // T = 3
+        const otherS = [0,2,6], otherP = [1,3,7];
+        for (const o of otherS) {
+          G[(PHI_S_IDX*N + o)*2]   = cTR; G[(PHI_S_IDX*N + o)*2+1] = cTI;
+          G[(o*N + PHI_S_IDX)*2]   = -cTR; G[(o*N + PHI_S_IDX)*2+1] = cTI;
+        }
+        G[(PHI_S_IDX*N + PHI_S_IDX)*2]   = cTR; G[(PHI_S_IDX*N + PHI_S_IDX)*2+1] = cTI;
+        for (const o of otherP) {
+          G[(PHI_P_IDX*N + o)*2]   = cTR; G[(PHI_P_IDX*N + o)*2+1] = cTI;
+          G[(o*N + PHI_P_IDX)*2]   = -cTR; G[(o*N + PHI_P_IDX)*2+1] = cTI;
+        }
+        G[(PHI_P_IDX*N + PHI_P_IDX)*2]   = cTR; G[(PHI_P_IDX*N + PHI_P_IDX)*2+1] = cTI;
+      } else {
+        G[(s_idx*N + PHI_S_IDX)*2]   = cR; G[(s_idx*N + PHI_S_IDX)*2+1] = cI;
+        G[(PHI_S_IDX*N + s_idx)*2]   = -cR; G[(PHI_S_IDX*N + s_idx)*2+1] = cI;
+        G[(p_idx*N + PHI_P_IDX)*2]   = cR; G[(p_idx*N + PHI_P_IDX)*2+1] = cI;
+        G[(PHI_P_IDX*N + p_idx)*2]   = -cR; G[(PHI_P_IDX*N + p_idx)*2+1] = cI;
+      }
+      // Anti-hermitize: (G - G†)/2
+      const Gah = ccarr(N*N);
+      for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+        const aR = G[(i*N+j)*2],   aI = G[(i*N+j)*2+1];
+        const aDR = G[(j*N+i)*2],  aDI = -G[(j*N+i)*2+1];
+        Gah[(i*N+j)*2]   = (aR - aDR) / 2;
+        Gah[(i*N+j)*2+1] = (aI - aDI) / 2;
+      }
+      // expm(Gah)
+      const B = expm(Gah, N);
+      F = cmatMul(B, F, N);
+    }
+    return F;
+  }
+
+  // Build F_8_inverse: the conjugate transpose (F is unitary)
+  function build_F_8_inv(F8) {
+    const N = 8;
+    const Finv = ccarr(N*N);
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+      Finv[(i*N+j)*2]   =  F8[(j*N+i)*2];
+      Finv[(i*N+j)*2+1] = -F8[(j*N+i)*2+1];
+    }
+    return Finv;
+  }
+
+  const F8     = build_F_8();
+  const F8inv  = build_F_8_inv(F8);
+
+  // Apply 8x8 matrix to specific axis of a 512-state vector.
+  // state is Float64Array(1024) = [re0, im0, re1, im1, ...]; index = i*64+j*8+k.
+  function applyOnAxis(state, M, axis) {
+    const N = 8;
+    const out = ccarr(512);
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) for (let k = 0; k < N; k++) {
+      const dst = (i*64 + j*8 + k);
+      let r = 0, im = 0;
+      for (let a = 0; a < N; a++) {
+        let src;
+        if (axis === 0) src = (a*64 + j*8 + k);
+        else if (axis === 1) src = (i*64 + a*8 + k);
+        else src = (i*64 + j*8 + a);
+        const matIdx = (axis === 0 ? i : (axis === 1 ? j : k))*N + a;
+        const mR = M[matIdx*2], mI = M[matIdx*2+1];
+        const sR = state[src*2], sI = state[src*2+1];
+        r  += mR*sR - mI*sI;
+        im += mR*sI + mI*sR;
+      }
+      out[dst*2] = r; out[dst*2+1] = im;
+    }
+    return out;
+  }
+
+  // Permute axes 0<->1 of a 512-state vector
+  function permute01(state) {
+    const out = ccarr(512);
+    for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) for (let k = 0; k < 8; k++) {
+      out[(j*64 + i*8 + k)*2]   = state[(i*64 + j*8 + k)*2];
+      out[(j*64 + i*8 + k)*2+1] = state[(i*64 + j*8 + k)*2+1];
+    }
+    return out;
+  }
+  // Permute axes 1<->2
+  function permute12(state) {
+    const out = ccarr(512);
+    for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) for (let k = 0; k < 8; k++) {
+      out[(i*64 + k*8 + j)*2]   = state[(i*64 + j*8 + k)*2];
+      out[(i*64 + k*8 + j)*2+1] = state[(i*64 + j*8 + k)*2+1];
+    }
+    return out;
+  }
+
+  // Braid σ₁: apply F8 to axis 0, then swap axes 0<->1
+  function sigma1(state) {
+    return permute01(applyOnAxis(state, F8, 0));
+  }
+  function sigma1inv(state) {
+    return applyOnAxis(permute01(state), F8inv, 0);
+  }
+  function sigma2(state) {
+    return permute12(applyOnAxis(state, F8, 1));
+  }
+  function sigma2inv(state) {
+    return applyOnAxis(permute12(state), F8inv, 1);
+  }
+
+  function initState(phaseA, phaseB, phaseC) {
+    // Single basis state |phaseA, phaseB, phaseC⟩
+    const s = ccarr(512);
+    const idx = phaseA*64 + phaseB*8 + phaseC;
+    s[idx*2] = 1;
+    return s;
+  }
+
+  function weights(state) {
+    const w = new Float64Array(512);
+    let total = 0;
+    for (let i = 0; i < 512; i++) {
+      const r = state[i*2], im = state[i*2+1];
+      w[i] = r*r + im*im;
+      total += w[i];
+    }
+    if (total > 0) for (let i = 0; i < 512; i++) w[i] /= total;
+    return w;
+  }
+
+  // Marginal distribution at given axis (sum out the other two)
+  function marginalAxis(w, axis) {
+    const m = new Float64Array(8);
+    for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) for (let k = 0; k < 8; k++) {
+      const idx = i*64 + j*8 + k;
+      const target = (axis === 0 ? i : (axis === 1 ? j : k));
+      m[target] += w[idx];
+    }
+    return m;
+  }
+
+  function structuralFraction(marg) {
+    let s = 0;
+    for (const i of STRUCT_IDX) s += marg[i];
+    return s;
+  }
+  function processualFraction(marg) {
+    let s = 0;
+    for (const i of PROC_IDX) s += marg[i];
+    return s;
+  }
+
+  function topStates(w, n) {
+    const idxArr = Array.from({length: 512}, (_, i) => i);
+    idxArr.sort((a, b) => w[b] - w[a]);
+    return idxArr.slice(0, n).map(idx => {
+      const i = Math.floor(idx / 64);
+      const j = Math.floor((idx % 64) / 8);
+      const k = idx % 8;
+      return {
+        idx,
+        weight: w[idx],
+        label: `|${STATIONS_8[i]}, ${STATIONS_8[j]}, ${STATIONS_8[k]}⟩`,
+        i, j, k,
+      };
+    });
+  }
+
+  return {
+    STATIONS_8, STRUCT_IDX, PROC_IDX, ALPHA, PHI_GOLDEN,
+    F8, F8inv,
+    initState, sigma1, sigma1inv, sigma2, sigma2inv,
+    weights, marginalAxis, structuralFraction, processualFraction, topStates,
+  };
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BRAID CLASS - Manages B₃ braid group operations
+// ═══════════════════════════════════════════════════════════════════════════
+class Braid {
+  constructor() {
+    this.strands = [0, 1, 2]; // Current strand permutation
+    this.operations = []; // List of operations: {type: 's1'|'s1i'|'s2'|'s2i', t: time}
+    this.time = 0;
+  }
+  
+  reset() {
+    this.strands = [0, 1, 2];
+    this.operations = [];
+    this.time = 0;
+  }
+  
+  // σ₁: swap strands 0 and 1 (strand 0 goes over)
+  sigma1(inverse = false) {
+    const temp = this.strands[0];
+    this.strands[0] = this.strands[1];
+    this.strands[1] = temp;
+    this.operations.push({ type: inverse ? 's1i' : 's1', t: this.time });
+    this.time++;
+  }
+  
+  // σ₂: swap strands 1 and 2 (strand 1 goes over)
+  sigma2(inverse = false) {
+    const temp = this.strands[1];
+    this.strands[1] = this.strands[2];
+    this.strands[2] = temp;
+    this.operations.push({ type: inverse ? 's2i' : 's2', t: this.time });
+    this.time++;
+  }
+  
+  get crossings() { return this.operations.length; }
+  
+  get writhe() {
+    // Writhe = sum of crossing signs (+1 for over, -1 for under)
+    return this.operations.reduce((w, op) => {
+      return w + (op.type === 's1' || op.type === 's2' ? 1 : -1);
+    }, 0);
+  }
+  
+  get linking() {
+    // Pair-wise linking: count signed crossings per strand pair
+    // L₀₁ from σ₁ operations, L₁₂ from σ₂ operations
+    let L01 = 0, L12 = 0;
+    for (const op of this.operations) {
+      const sign = op.type.endsWith('i') ? -1 : 1;
+      if (op.type.startsWith('s1')) L01 += sign;
+      else if (op.type.startsWith('s2')) L12 += sign;
+    }
+    // Total linking is sum of pair-wise (simplified - true linking is more complex)
+    return Math.abs(L01) + Math.abs(L12);
+  }
+  
+  get linkingDetail() {
+    // Return pair-wise linking for display
+    let L01 = 0, L12 = 0;
+    for (const op of this.operations) {
+      const sign = op.type.endsWith('i') ? -1 : 1;
+      if (op.type.startsWith('s1')) L01 += sign;
+      else if (op.type.startsWith('s2')) L12 += sign;
+    }
+    return { L01, L12 };
+  }
+  
+  getWordHTML() {
+    if (this.operations.length === 0) return 'ε (identity)';
+    return this.operations.map(op => {
+      const isS1 = op.type.startsWith('s1');
+      const isInv = op.type.endsWith('i');
+      const label = isS1 ? 'σ₁' : 'σ₂';
+      const cls = `op ${isS1 ? 's1' : 's2'}${isInv ? ' inv' : ''}`;
+      return `<span class="${cls}">${label}${isInv ? '⁻¹' : ''}</span>`;
+    }).join('');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// APP
+// ═══════════════════════════════════════════════════════════════════════════
+class App {
+  constructor() {
+    this.selectedParticles = [null, null, null]; // 3 particle IDs
+    this.activeSlot = 0; // Which slot to fill next
+    this.braid = new Braid();
+    this.running = false;
+    this.animTime = 0;
+    
+    // View modes
+    this.viewMode = 'mag'; // mag, phase, re, im
+    this.speed = 100; // Animation speed multiplier
+    
+    // Field persistence and vacuum
+    this.persistence = 0.92;
+    this.vacuumStrength = 0.10;
+    
+    // Canvases
+    this.braidCanvas = document.getElementById('braid-canvas');
+    this.braidCtx = this.braidCanvas.getContext('2d');
+    this.fieldCanvas = document.getElementById('field-canvas');
+    this.fieldCtx = this.fieldCanvas.getContext('2d');
+    this.trailCanvas = document.getElementById('trail-canvas');
+    this.trailCtx = this.trailCanvas.getContext('2d');
+    
+    // Previous positions for drawing strings (3 per particle)
+    this.prevPositions = null;
+    
+    this.tooltip = document.getElementById('tooltip');
+    
+    // Track Yang-Baxter sequences
+    this.ybSequence = '';
+    
+    this.resizeCanvases();
+    window.addEventListener('resize', () => this.resizeCanvases());
+    
+    this.buildGrid();
+    this.bindControls();
+    this.updateBraidInfo(); // Initialize matrix display
+    this.buildPhaseButtons();
+    this.updateC512Panel();
+    this.render();
+    this.animate();
+  }
+  
+  resizeCanvases() {
+    const braidRect = this.braidCanvas.parentElement.getBoundingClientRect();
+    this.braidCanvas.width = braidRect.width;
+    this.braidCanvas.height = braidRect.height;
+    
+    const fieldWrap = document.getElementById('combined-wrap');
+    if (fieldWrap) {
+      const fieldRect = fieldWrap.getBoundingClientRect();
+      this.fieldCanvas.width = fieldRect.width;
+      this.fieldCanvas.height = fieldRect.height;
+      this.trailCanvas.width = fieldRect.width;
+      this.trailCanvas.height = fieldRect.height;
+    }
+    
+    // Clear prev positions on resize
+    this.prevPositions = null;
+  }
+  
+  buildGrid() {
+    const grid = document.getElementById('grid');
+    for (let id = 0; id < 64; id++) {
+      const p = P[id];
+      const colors = getCircumpunctColors(id);
+      
+      const cell = document.createElement('div');
+      cell.className = 'cell ' + p.S.toLowerCase();
+      cell.innerHTML = `<span class="cell-id">${id}</span><span class="cell-sym">${p.s}</span>`;
+      cell.dataset.id = id;
+      
+      // Apply circumpunct colors
+      cell.style.background = colors.field;
+      cell.style.borderColor = colors.surface;
+      cell.querySelector('.cell-id').style.color = colors.center;
+      
+      cell.onclick = () => this.selectParticle(id);
+      cell.onmouseenter = (e) => this.showTooltip(e, id);
+      cell.onmousemove = (e) => this.moveTooltip(e);
+      cell.onmouseleave = () => this.tooltip.style.display = 'none';
+      grid.appendChild(cell);
+    }
+  }
+  
+  selectParticle(id) {
+    // Find first empty slot, or replace active slot
+    let slot = this.selectedParticles.findIndex(p => p === null);
+    if (slot === -1) slot = this.activeSlot;
+    
+    // Remove from previous slot if already selected
+    const existingSlot = this.selectedParticles.indexOf(id);
+    if (existingSlot !== -1) {
+      this.selectedParticles[existingSlot] = null;
+      this.updateSlotDisplay(existingSlot);
+    }
+    
+    this.selectedParticles[slot] = id;
+    this.activeSlot = (slot + 1) % 3;
+    
+    // Reset persistent fields and trails when particles change (but keep braid config)
+    this.persistentField = null;
+    this.prevPositions = null;
+    if (this.trailCtx) {
+      this.trailCtx.clearRect(0, 0, this.trailCanvas.width, this.trailCanvas.height);
+    }
+    
+    this.updateSlotDisplay(slot);
+    this.updateGridHighlights();
+    this.updateBraidInfo();
+    this.render();
+  }
+  
+  updateSlotDisplay(slot) {
+    const slotEl = document.querySelector(`.selected-slot.slot-${slot}`);
+    const id = this.selectedParticles[slot];
+    
+    if (id !== null) {
+      const p = P[id];
+      const colors = getCircumpunctColors(id);
+      
+      slotEl.classList.add('filled');
+      slotEl.style.background = colors.field;
+      slotEl.style.borderColor = colors.surface;
+      
+      slotEl.querySelector('.particle-id').textContent = id;
+      slotEl.querySelector('.particle-id').style.color = colors.center;
+      slotEl.querySelector('.particle-sym').innerHTML = p.s + (p.sub ? `<sub>${p.sub}</sub>` : '');
+      slotEl.querySelector('.particle-sym').style.color = '#aaa';
+    } else {
+      slotEl.classList.remove('filled');
+      slotEl.style.background = '';
+      slotEl.style.borderColor = '';
+      slotEl.querySelector('.particle-id').textContent = '';
+      slotEl.querySelector('.particle-sym').textContent = '?';
+      slotEl.querySelector('.particle-sym').style.color = '';
+    }
+  }
+  
+  updateGridHighlights() {
+    document.querySelectorAll('.cell').forEach(cell => {
+      cell.classList.remove('in-braid', 'strand-0', 'strand-1', 'strand-2');
+      const id = parseInt(cell.dataset.id);
+      const slot = this.selectedParticles.indexOf(id);
+      if (slot !== -1) {
+        cell.classList.add('in-braid', `strand-${slot}`);
+      }
+    });
+  }
+  
+  clearSlot(slot) {
+    this.selectedParticles[slot] = null;
+    this.persistentField = null;
+    this.updateSlotDisplay(slot);
+    this.updateGridHighlights();
+    this.braid.reset();
+    this.updateBraidInfo();
+    this.render();
+  }
+  
+  showTooltip(e, id) {
+    const p = P[id];
+    let h = `<h5>${p.n}</h5>`;
+    h += `<p><b>Symbol:</b> ${p.s}${p.sub ? '<sub>'+p.sub+'</sub>' : ''}</p>`;
+    h += `<p><b>Sector:</b> ${p.S} · <b>Spin:</b> ${p.spin}</p>`;
+    h += `<p><b>Charge:</b> ${p.Q}</p>`;
+    if (p.mass) h += `<p><b>Mass:</b> ${p.mass}</p>`;
+    if (p.g) h += `<p><b>Generation:</b> ${p.g}</p>`;
+    if (p.c) h += `<p><b>Chirality:</b> ${p.c === 'L' ? 'Left-handed' : 'Right-handed'}</p>`;
+    if (p.x) h += `<p><b>Color:</b> ${p.x === 'r' ? 'Red' : p.x === 'g' ? 'Green' : 'Blue'}</p>`;
+    if (p.t) h += `<p><b>Type:</b> ${p.t}</p>`;
+    if (p.special) h += `<p style="color:#ffd700"><b>Special:</b> ${p.special}</p>`;
+    this.tooltip.innerHTML = h;
+    this.tooltip.style.display = 'block';
+    this.moveTooltip(e);
+  }
+  
+  moveTooltip(e) {
+    let x = e.clientX + 10, y = e.clientY + 10;
+    if (x + 220 > window.innerWidth) x = e.clientX - 230;
+    if (y + 100 > window.innerHeight) y = e.clientY - 100;
+    this.tooltip.style.left = x + 'px';
+    this.tooltip.style.top = y + 'px';
+  }
+  
+  bindControls() {
+    // Slot clear buttons
+    document.querySelectorAll('.clear-btn').forEach((btn, i) => {
+      btn.onclick = (e) => { e.stopPropagation(); this.clearSlot(i); };
+    });
+    
+    // Slot click to set active
+    document.querySelectorAll('.selected-slot').forEach((slot, i) => {
+      slot.onclick = () => { this.activeSlot = i; };
+    });
+    
+    // View mode buttons (mag/phase/re/im)
+    document.querySelectorAll('.view-btn[data-v]').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.view-btn[data-v]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.viewMode = btn.dataset.v;
+        this.updateFieldLabel();
+        this.render();
+      };
+    });
+    
+    // Speed buttons
+    document.querySelectorAll('.view-btn[data-speed]').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.view-btn[data-speed]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.speed = parseInt(btn.dataset.speed);
+        
+        // Stop and reset when changing speed
+        this.running = false;
+        this.animTime = 0;
+        this.prevPositions = null;
+        document.getElementById('btn-run').textContent = '▶';
+        document.getElementById('btn-run').classList.remove('running');
+        if (this.trailCtx) {
+          this.trailCtx.clearRect(0, 0, this.trailCanvas.width, this.trailCanvas.height);
+        }
+      };
+    });
+    
+    // Persistence slider
+    document.getElementById('persistence').oninput = (e) => {
+      this.persistence = e.target.value / 100;
+      document.getElementById('persistence-val').textContent = e.target.value + '%';
+    };
+    
+    // Vacuum slider
+    document.getElementById('vacuum').oninput = (e) => {
+      this.vacuumStrength = e.target.value / 100;
+      document.getElementById('vacuum-val').textContent = e.target.value + '%';
+    };
+    
+    // Braid operations
+    document.getElementById('btn-s1').onclick = () => this.applyBraid('s1');
+    document.getElementById('btn-s1i').onclick = () => this.applyBraid('s1i');
+    document.getElementById('btn-s2').onclick = () => this.applyBraid('s2');
+    document.getElementById('btn-s2i').onclick = () => this.applyBraid('s2i');
+    
+    // Yang-Baxter sequences
+    document.getElementById('btn-yb1').onclick = () => {
+      this.applyBraid('s1');
+      this.applyBraid('s2');
+      this.applyBraid('s1');
+      this.ybSequence = 'σ₁σ₂σ₁';
+      this.checkYangBaxter();
+    };
+    
+    document.getElementById('btn-yb2').onclick = () => {
+      this.applyBraid('s2');
+      this.applyBraid('s1');
+      this.applyBraid('s2');
+      this.ybSequence = 'σ₂σ₁σ₂';
+      this.checkYangBaxter();
+    };
+    
+    // Run/Reset
+    document.getElementById('btn-run').onclick = () => {
+      this.running = !this.running;
+      document.getElementById('btn-run').textContent = this.running ? '■' : '▶';
+      document.getElementById('btn-run').classList.toggle('running', this.running);
+    };
+    
+    document.getElementById('btn-reset').onclick = () => {
+      this.braid.reset();
+      this.ybSequence = '';
+      this.prevPositions = null;
+      this.persistentField = null;
+      this.animTime = 0;
+      // v2.0: re-init C512 state to current strand phases
+      this.c512State = C512.initState(this.strandPhases[0], this.strandPhases[1], this.strandPhases[2]);
+      // Clear trail canvas
+      this.trailCtx.clearRect(0, 0, this.trailCanvas.width, this.trailCanvas.height);
+      this.updateBraidInfo();
+      this.render();
+    };
+  }
+  
+  applyBraid(type) {
+    if (this.selectedParticles.some(p => p === null)) return;
+    
+    if (type === 's1') this.braid.sigma1(false);
+    else if (type === 's1i') this.braid.sigma1(true);
+    else if (type === 's2') this.braid.sigma2(false);
+    else if (type === 's2i') this.braid.sigma2(true);
+    
+    this.updateBraidInfo();
+    this.render();
+  }
+  
+  checkYangBaxter() {
+    const status = document.getElementById('yb-status');
+    // Both sequences should give same permutation
+    // σ₁σ₂σ₁: [0,1,2] → σ₁[1,0,2] → σ₂[1,2,0] → σ₁[2,1,0]
+    // σ₂σ₁σ₂: [0,1,2] → σ₂[0,2,1] → σ₁[2,0,1] → σ₂[2,1,0]
+    // Both give [2,1,0] - this IS the Yang-Baxter equation
+    const perm = this.braid.strands.join(',');
+    if (perm === '2,1,0') {
+      status.textContent = `✓ ${this.ybSequence}`;
+      status.className = 'status satisfied';
+    } else {
+      status.textContent = `${this.ybSequence} → [${perm}]`;
+      status.className = 'status';
+    }
+  }
+  
+  updateBraidInfo() {
+    document.getElementById('time').textContent = this.braid.time;
+    document.getElementById('crossings').textContent = this.braid.crossings;
+    document.getElementById('writhe').textContent = this.braid.writhe;
+    
+    // Pair-wise linking numbers
+    const link = this.braid.linkingDetail;
+    document.getElementById('link01').textContent = link.L01;
+    document.getElementById('link12').textContent = link.L12;
+    
+    document.getElementById('braid-word').innerHTML = this.braid.getWordHTML() || 'ε';
+    
+  
+  // Compute and display unitary matrix for current braid
+    this.updateUnitaryMatrix();
+    
+    if (this.braid.operations.length === 0) {
+      document.getElementById('yb-status').textContent = 'Yang-Baxter';
+      document.getElementById('yb-status').className = 'status';
+    }
+  }
+  
+  // ─────────────────────────────────────────────────────────────────────────
+  // v2.0: C512 layer rendering
+  // ─────────────────────────────────────────────────────────────────────────
+  buildPhaseButtons() {
+    const stations = C512.STATIONS_8;
+    for (let strand = 0; strand < 3; strand++) {
+      const row = document.getElementById(`phase-row-${strand}`);
+      if (!row) continue;
+      row.innerHTML = '';
+      for (let s = 0; s < 8; s++) {
+        const btn = document.createElement('button');
+        btn.className = 'phase-btn';
+        btn.textContent = stations[s];
+        btn.title = `${stations[s]} (${s % 2 === 0 ? 'structural' : 'processual'})`;
+        if (this.strandPhases[strand] === s) {
+          btn.classList.add('active');
+          btn.classList.add(s % 2 === 0 ? 'struct' : 'proc');
+        }
+        btn.onclick = () => this.setStrandPhase(strand, s);
+        row.appendChild(btn);
+      }
+    }
+  }
+  setStrandPhase(strand, phase) {
+    this.strandPhases[strand] = phase;
+    this.c512State = C512.initState(this.strandPhases[0], this.strandPhases[1], this.strandPhases[2]);
+    for (const op of this.braid.operations) {
+      if (op.type === 's1')      this.c512State = C512.sigma1(this.c512State);
+      else if (op.type === 's1i') this.c512State = C512.sigma1inv(this.c512State);
+      else if (op.type === 's2')  this.c512State = C512.sigma2(this.c512State);
+      else if (op.type === 's2i') this.c512State = C512.sigma2inv(this.c512State);
+    }
+    this.buildPhaseButtons();
+    this.updateC512Panel();
+  }
+  updateC512Panel() {
+    const w = C512.weights(this.c512State);
+    const margL = C512.marginalAxis(w, 0);
+    const sFrac = C512.structuralFraction(margL);
+    const pFrac = C512.processualFraction(margL);
+    const norm = Array.from(w).reduce((a, b) => a + b, 0);
+    const top = C512.topStates(w, 6);
+    const sEl = document.getElementById('c512-struct');
+    const pEl = document.getElementById('c512-proc');
+    const nEl = document.getElementById('c512-norm');
+    const bs = document.getElementById('c512-bar-s');
+    const bp = document.getElementById('c512-bar-p');
+    const tEl = document.getElementById('c512-top-states');
+    if (sEl) sEl.textContent = sFrac.toFixed(4);
+    if (pEl) pEl.textContent = pFrac.toFixed(4);
+    if (nEl) nEl.textContent = norm.toFixed(4);
+    if (bs) bs.style.width = (sFrac * 100).toFixed(1) + '%';
+    if (bp) bp.style.width = (pFrac * 100).toFixed(1) + '%';
+    if (tEl) {
+      tEl.innerHTML = top.map(t =>
+        `<div class="ts-row"><span class="lbl-state">${t.label}</span><span class="lbl-w">${t.weight.toFixed(4)}</span></div>`
+      ).join('');
+    }
+  }
+  
+    // Compute unitary matrix for braid word (Fibonacci anyon representation)
+  updateUnitaryMatrix() {
+    const phi = (1 + Math.sqrt(5)) / 2; // Golden ratio
+    const invPhi = 1 / phi;
+    const sqrtInvPhi = Math.sqrt(invPhi);
+    
+    // R-matrix phases for Fibonacci anyons:
+    // Channel ττ → 1:   e^{-4πi/5}
+    // Channel ττ → τ:   e^{ 3πi/5}
+    const theta0 = -4 * Math.PI / 5;
+    const theta1 =  3 * Math.PI / 5;
+    
+    const R_phase = { re: Math.cos(theta0), im: Math.sin(theta0) }; // e^{-4πi/5}
+    const R11     = { re: Math.cos(theta1), im: Math.sin(theta1) }; // e^{ 3πi/5}
+    
+    // σ₁ matrix (R-matrix)
+    const sigma1 = [
+      [R_phase, { re: 0, im: 0 }],
+      [{ re: 0, im: 0 }, R11]
+    ];
+    
+    // F-matrix for basis change
+    const F = [
+      [{ re: invPhi, im: 0 }, { re: sqrtInvPhi, im: 0 }],
+      [{ re: sqrtInvPhi, im: 0 }, { re: -invPhi, im: 0 }]
+    ];
+    
+    // F-inverse
+    const Finv = [
+      [{ re: invPhi, im: 0 }, { re: sqrtInvPhi, im: 0 }],
+      [{ re: sqrtInvPhi, im: 0 }, { re: -invPhi, im: 0 }]
+    ];
+    
+    // σ₂ = F⁻¹ σ₁ F
+    const sigma2 = this.matMul(this.matMul(Finv, sigma1), F);
+    
+    // Start with identity
+    let U = [
+      [{ re: 1, im: 0 }, { re: 0, im: 0 }],
+      [{ re: 0, im: 0 }, { re: 1, im: 0 }]
+    ];
+    
+    // Multiply by each operation
+    for (const op of this.braid.operations) {
+      let mat;
+      if (op.type === 's1') mat = sigma1;
+      else if (op.type === 's1i') mat = this.matConj(sigma1);
+      else if (op.type === 's2') mat = sigma2;
+      else if (op.type === 's2i') mat = this.matConj(sigma2);
+      
+      U = this.matMul(U, mat);
+    }
+    
+    // Display matrix
+    this.displayMatrix(U);
+  }
+  
+  // Complex matrix multiplication
+  matMul(A, B) {
+    const C = [[{ re: 0, im: 0 }, { re: 0, im: 0 }], [{ re: 0, im: 0 }, { re: 0, im: 0 }]];
+    for (let i = 0; i < 2; i++) {
+      for (let j = 0; j < 2; j++) {
+        for (let k = 0; k < 2; k++) {
+          const a = A[i][k], b = B[k][j];
+          C[i][j].re += a.re * b.re - a.im * b.im;
+          C[i][j].im += a.re * b.im + a.im * b.re;
+        }
+      }
+    }
+    return C;
+  }
+  
+  // Complex conjugate transpose (inverse for unitary)
+  matConj(A) {
+    return [
+      [{ re: A[0][0].re, im: -A[0][0].im }, { re: A[1][0].re, im: -A[1][0].im }],
+      [{ re: A[0][1].re, im: -A[0][1].im }, { re: A[1][1].re, im: -A[1][1].im }]
+    ];
+  }
+  
+  // Format complex number for display
+  fmtComplex(z) {
+    const mag = Math.sqrt(z.re * z.re + z.im * z.im);
+    if (mag < 0.001) return '0';
+    
+    const phase = Math.atan2(z.im, z.re);
+    
+    // Check for nice fractions of π
+    const piFrac = phase / Math.PI;
+    const niceFracs = [0, 0.2, 0.4, 0.6, 0.8, 1, -0.2, -0.4, -0.6, -0.8, -1];
+    
+    let phaseStr = '';
+    for (const f of niceFracs) {
+      if (Math.abs(piFrac - f) < 0.02) {
+        if (f === 0) phaseStr = '';
+        else if (f === 1) phaseStr = 'π';
+        else if (f === -1) phaseStr = '-π';
+        else phaseStr = (f > 0 ? '' : '-') + Math.abs(f * 5) + 'π/5';
+        break;
+      }
+    }
+    
+    if (Math.abs(mag - 1) < 0.01) {
+      if (phaseStr === '') return '1';
+      return 'e<sup>i' + phaseStr + '</sup>';
+    }
+    
+    const magStr = mag.toFixed(2);
+    if (phaseStr === '') return magStr;
+    return magStr + 'e<sup>i' + phaseStr + '</sup>';
+  }
+  
+  displayMatrix(U) {
+    const el = document.getElementById('unitary-matrix');
+    const info = document.getElementById('unitary-info');
+    
+    if (!el || !info) return;
+    
+    const row0 = `<div class="matrix-row"><span>${this.fmtComplex(U[0][0])}</span><span>${this.fmtComplex(U[0][1])}</span></div>`;
+    const row1 = `<div class="matrix-row"><span>${this.fmtComplex(U[1][0])}</span><span>${this.fmtComplex(U[1][1])}</span></div>`;
+    el.innerHTML = row0 + row1;
+    
+    // Check if identity
+    const isId = Math.abs(U[0][0].re - 1) < 0.01 && Math.abs(U[1][1].re - 1) < 0.01 &&
+                 Math.abs(U[0][1].re) < 0.01 && Math.abs(U[1][0].re) < 0.01;
+    
+    if (this.braid.operations.length === 0) {
+      info.textContent = 'Identity (no gates)';
+    } else {
+      info.textContent = `Fibonacci anyon: ${this.braid.operations.length} gates`;
+    }
+  }
+  
+  updateFieldLabel() {
+    const labels = {
+      'mag': '|Φ| amplitude',
+      'phase': 'Phase angle',
+      're': 'Re(Φ) real part',
+      'im': 'Im(Φ) imaginary part'
+    };
+    document.querySelector('.field-label').textContent = labels[this.viewMode];
+  }
+  
+  // Compute actual worldline position for a strand at current animation time
+  getStrandPosition(strandIndex) {
+    const numOps = this.braid.operations.length;
+    const particleId = this.selectedParticles[strandIndex];
+    const p = particleId !== null ? P[particleId] : null;
+    
+    // Unique particle characteristics
+    const spin = p ? p.spin : 0.5;
+    const gen = p ? (p.g || 1) : 1;
+    const isLeft = p ? (p.c === 'L') : true;
+    const colorPhase = p ? (p.x === 'r' ? 0 : p.x === 'g' ? 2.094 : p.x === 'b' ? 4.188 : 0) : 0;
+    
+    // Base radius varies by generation (heavier = tighter orbit)
+    const baseRadius = 1.4 - (gen - 1) * 0.15;
+    
+    // Rotation speed varies by spin and chirality
+    const spinFactor = spin === 0.5 ? 1.0 : spin === 1 ? 1.5 : 0.7;
+    const chiralSign = isLeft ? 1 : -1;
+    const baseSpeed = 0.3 * spinFactor * chiralSign;
+    
+    // Unique phase offset per particle
+    const particlePhase = colorPhase + strandIndex * 2.094;
+    
+    // Base angle for this strand's slot
+    const baseAngles = [Math.PI/2, Math.PI/2 + 2.094, Math.PI/2 + 4.188];
+    
+    if (numOps === 0) {
+      // No braiding - unique orbital motion per particle
+      const t = this.running ? this.animTime * baseSpeed : 0;
+      const angle = baseAngles[strandIndex] + t + particlePhase * 0.1;
+      
+      // Unique wobble pattern
+      const wobbleR = Math.sin(this.animTime * 0.7 + strandIndex * 1.5) * 0.1;
+      const wobbleA = Math.cos(this.animTime * 0.5 + colorPhase) * 0.05;
+      
+      return {
+        x: Math.cos(angle + wobbleA) * (baseRadius + wobbleR),
+        y: Math.sin(angle + wobbleA) * (baseRadius + wobbleR)
+      };
+    }
+    
+    // With braid operations: animate through each crossing
+    const cycleDuration = numOps * 2.5; // Time per full braid sequence
+    const t = this.running ? (this.animTime % cycleDuration) : cycleDuration;
+    
+    // Track which slot this strand currently occupies
+    let currentSlot = strandIndex;
+    
+    for (let i = 0; i < numOps; i++) {
+      const op = this.braid.operations[i];
+      const isS1 = op.type.startsWith('s1');
+      const isInv = op.type.endsWith('i');
+      const swapPair = isS1 ? [0, 1] : [1, 2];
+      
+      const opStart = i * 2.5;
+      const opEnd = (i + 1) * 2.5;
+      
+      if (t >= opEnd) {
+        // Operation complete - update slot
+        if (currentSlot === swapPair[0]) currentSlot = swapPair[1];
+        else if (currentSlot === swapPair[1]) currentSlot = swapPair[0];
+      } else if (t > opStart) {
+        // MID-CROSSING - animate the swap with over/under
+        const progress = (t - opStart) / 2.5;
+        const ease = progress < 0.5 
+          ? 2 * progress * progress 
+          : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+        
+        if (currentSlot === swapPair[0] || currentSlot === swapPair[1]) {
+          const fromSlot = currentSlot;
+          const toSlot = currentSlot === swapPair[0] ? swapPair[1] : swapPair[0];
+          
+          const fromAngle = baseAngles[fromSlot];
+          const toAngle = baseAngles[toSlot];
+          
+          // Determine if this strand goes OVER or UNDER
+          // For σ: first strand goes over, second under
+          // For σ⁻¹: first strand goes under, second over
+          const isFirstStrand = currentSlot === swapPair[0];
+          const goesOver = isFirstStrand !== isInv;
+          
+          // Arc height: positive = outward (over), negative = inward (under)
+          const arcHeight = goesOver ? 0.5 : -0.4;
+          
+          // Interpolate angle
+          const currentAngle = fromAngle + (toAngle - fromAngle) * ease;
+          
+          // Arc the radius during crossing
+          const arcFactor = Math.sin(ease * Math.PI);
+          const r = baseRadius + arcHeight * arcFactor;
+          
+          // Add unique particle wobble during crossing
+          const crossWobble = Math.sin(progress * Math.PI * 2 + colorPhase) * 0.05 * spinFactor;
+          
+          return {
+            x: Math.cos(currentAngle) * r + crossWobble,
+            y: Math.sin(currentAngle) * r + crossWobble
+          };
+        }
+      }
+    }
+    
+    // After all operations, continue with unique orbital motion in new slot
+    const t2 = this.running ? this.animTime * baseSpeed : 0;
+    const finalAngle = baseAngles[currentSlot] + t2 + particlePhase * 0.1;
+    
+    const wobbleR = Math.sin(this.animTime * 0.7 + strandIndex * 1.5) * 0.1;
+    const wobbleA = Math.cos(this.animTime * 0.5 + colorPhase) * 0.05;
+    
+    return {
+      x: Math.cos(finalAngle + wobbleA) * (baseRadius + wobbleR),
+      y: Math.sin(finalAngle + wobbleA) * (baseRadius + wobbleR)
+    };
+  }
+  
+  animate() {
+    if (this.running) {
+      // Speed multiplier affects animation rate
+      this.animTime += 0.02 * this.speed;
+      
+      // Draw strings incrementally on trail canvas
+      const hasAll = this.selectedParticles.every(p => p !== null);
+      if (hasAll) {
+        this.drawStrings();
+      }
+      
+      this.render();
+    }
+    requestAnimationFrame(() => this.animate());
+  }
+  
+  // Draw 1 string per particle, incrementally
+  drawStrings() {
+    const ctx = this.trailCtx;
+    const w = this.trailCanvas.width;
+    const h = this.trailCanvas.height;
+    
+    // Fade rate controlled by persistence (higher = longer trails)
+    const fadeRate = 0.04 * (1 - this.persistence);
+    ctx.fillStyle = `rgba(0, 0, 0, ${fadeRate})`;
+    ctx.fillRect(0, 0, w, h);
+    
+    // Get current positions for all 3 particles
+    const currentPositions = [];
+    for (let s = 0; s < 3; s++) {
+      const pos = this.getStrandPosition(s);
+      currentPositions.push({ x: pos.x, y: pos.y });
+    }
+    
+    // Draw lines from previous to current
+    if (this.prevPositions) {
+      ctx.lineCap = 'round';
+      
+      for (let s = 0; s < 3; s++) {
+        const color = STRAND_COLORS[s];
+        const prev = this.prevPositions[s];
+        const curr = currentPositions[s];
+        
+        const px0 = (prev.x / 5 + 0.5) * w;
+        const py0 = (prev.y / 5 + 0.5) * h;
+        const px1 = (curr.x / 5 + 0.5) * w;
+        const py1 = (curr.y / 5 + 0.5) * h;
+        
+        // Glow effect
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 6;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        
+        ctx.beginPath();
+        ctx.moveTo(px0, py0);
+        ctx.lineTo(px1, py1);
+        ctx.stroke();
+      }
+      ctx.shadowBlur = 0;
+    }
+    
+    this.prevPositions = currentPositions;
+  }
+  
+  render() {
+    this.renderBraid();
+    this.renderField();
+  }
+  
+  renderBraid() {
+    const ctx = this.braidCtx;
+    const w = this.braidCanvas.width;
+    const h = this.braidCanvas.height;
+    
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, w, h);
+    
+    const hasAll = this.selectedParticles.every(p => p !== null);
+    if (!hasAll) {
+      ctx.fillStyle = '#333';
+      ctx.font = '14px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText('Select 3 particles to visualize braiding', w/2, h/2);
+      return;
+    }
+    
+    const margin = 60;
+    const strandSpacing = (w - 2*margin) / 2;
+    const segmentHeight = (h - 2*margin) / Math.max(1, this.braid.operations.length + 1);
+    
+    // Draw strands as worldlines going down (time flows down)
+    const strands = [
+      { x: margin, color: STRAND_COLORS[0], id: this.selectedParticles[0] },
+      { x: margin + strandSpacing, color: STRAND_COLORS[1], id: this.selectedParticles[1] },
+      { x: margin + 2*strandSpacing, color: STRAND_COLORS[2], id: this.selectedParticles[2] }
+    ];
+    
+    // Track strand positions through braiding
+    const positions = [[...strands.map(s => s.x)]];
+    let currentX = strands.map(s => s.x);
+    
+    for (const op of this.braid.operations) {
+      const newX = [...currentX];
+      if (op.type === 's1' || op.type === 's1i') {
+        // Swap positions 0 and 1
+        const temp = newX[0];
+        newX[0] = newX[1];
+        newX[1] = temp;
+      } else {
+        // Swap positions 1 and 2
+        const temp = newX[1];
+        newX[1] = newX[2];
+        newX[2] = temp;
+      }
+      positions.push([...newX]);
+      currentX = newX;
+    }
+    
+    // Draw grid
+    ctx.strokeStyle = '#1a1a1a';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= this.braid.operations.length + 1; i++) {
+      const y = margin + i * segmentHeight;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
+      ctx.stroke();
+    }
+    
+    // Draw each strand
+    for (let s = 0; s < 3; s++) {
+      const p = P[this.selectedParticles[s]];
+      ctx.strokeStyle = strands[s].color;
+      ctx.lineWidth = 4;
+      ctx.lineCap = 'round';
+      
+      // Add glow
+      ctx.shadowColor = strands[s].color;
+      ctx.shadowBlur = 8;
+      
+      ctx.beginPath();
+      for (let i = 0; i < positions.length; i++) {
+        const y = margin + i * segmentHeight;
+        const x = positions[i][s];
+        
+        // Animate current position
+        let animX = x;
+        if (this.running && i === positions.length - 1) {
+          animX += Math.sin(this.animTime * 3 + s * 2) * 5;
+        }
+        
+        if (i === 0) ctx.moveTo(animX, y);
+        else ctx.lineTo(animX, y);
+      }
+      
+      // Extend to bottom
+      const lastX = positions[positions.length - 1][s];
+      ctx.lineTo(lastX, h - margin);
+      ctx.stroke();
+      
+      ctx.shadowBlur = 0;
+      
+      // Draw particle symbol at top
+      ctx.fillStyle = strands[s].color;
+      ctx.font = 'bold 12px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText(p.s, strands[s].x, margin - 15);
+      
+      // Draw at current position (bottom of braid)
+      ctx.beginPath();
+      ctx.arc(lastX, h - margin, 8, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#000';
+      ctx.font = 'bold 8px JetBrains Mono';
+      ctx.fillText(p.s, lastX, h - margin + 3);
+    }
+    
+    // Draw crossing indicators
+    for (let i = 0; i < this.braid.operations.length; i++) {
+      const op = this.braid.operations[i];
+      const y = margin + (i + 0.5) * segmentHeight;
+      const isS1 = op.type.startsWith('s1');
+      const isOver = !op.type.endsWith('i');
+      
+      const x = isS1 ? margin + strandSpacing/2 : margin + strandSpacing * 1.5;
+      
+      // Draw crossing symbol
+      ctx.fillStyle = isS1 ? '#ff6b6b44' : '#ffe66d44';
+      ctx.beginPath();
+      ctx.arc(x, y, 15, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#888';
+      ctx.font = '10px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText(isOver ? '↗' : '↙', x, y + 4);
+    }
+    
+    // Time arrow
+    ctx.fillStyle = '#444';
+    ctx.font = '10px JetBrains Mono';
+    ctx.save();
+    ctx.translate(20, h/2);
+    ctx.rotate(-Math.PI/2);
+    ctx.textAlign = 'center';
+    ctx.fillText('time →', 0, 0);
+    ctx.restore();
+  }
+  
+  renderField() {
+    const hasAll = this.selectedParticles.every(p => p !== null);
+    this.renderCombinedField(hasAll);
+  }
+  
+  // Compute field value for a single particle at position (px, py)
+  computeParticleField(particleId, px, py, strandIndex) {
+    const p = P[particleId];
+    const spin = p.spin || 0;
+    const gen = p.g || 1;
+    const isLeft = p.c === 'L';
+    
+    // Get particle position from braid worldline
+    const pos = this.getStrandPosition(strandIndex);
+    const cx = pos.x;
+    const cy = pos.y;
+    
+    const dx = px - cx;
+    const dy = py - cy;
+    const r = Math.sqrt(dx*dx + dy*dy);
+    const th = Math.atan2(dy, dx);
+    
+    // Scale based on generation (higher gen = tighter)
+    const scale = 1.2 / gen;
+    
+    // Color charge phase offset
+    let colorPhase = 0;
+    if (p.x === 'r') colorPhase = 0;
+    else if (p.x === 'g') colorPhase = 2*Math.PI/3;
+    else if (p.x === 'b') colorPhase = 4*Math.PI/3;
+    
+    // Chirality affects rotation
+    const chiralSign = isLeft ? 1 : -1;
+    
+    // === BRAID PHASE - count crossings involving this strand ===
+    // Spin-phase coupling v1.0:
+    //   For spin s, each braid crossing involving this strand contributes
+    //   Δφ = π * s  (sign from inverse vs forward).
+    let braidPhase = 0;
+    for (const op of this.braid.operations) {
+      const isS1 = op.type.startsWith('s1');
+      const isInverse = op.type.endsWith('i');
+      const sign = isInverse ? -1 : 1;
+      const involved = isS1 ? [0, 1] : [1, 2];
+      
+      if (involved.includes(strandIndex)) {
+        const phasePerCrossing = Math.PI * spin; // spin-tied law
+        braidPhase += sign * phasePerCrossing;
+      }
+    }
+    
+    let amp, phase;
+    
+    if (p.S === 'Higgs') {
+      // Scalar field - circumpunct pattern
+      if (p.sub === 'v') {
+        // Vacuum - pure circumpunct ⊙
+        const iR = 0.3, oR = 1.0;
+        amp = 2*Math.exp(-r*r/(2*iR*iR)) + 0.5*Math.exp(-Math.pow(r-oR,2)/(2*0.2*0.2));
+        phase = braidPhase;
+      } else {
+        amp = 1.5*Math.exp(-r*r/(2*scale*scale));
+        phase = ((p.sub === '+' || p.sub === '-') ? th : 0) + braidPhase;
+      }
+    } else if (p.S === 'Gauge') {
+      // Gauge bosons - integer vortex (spin 1)
+      const w = scale * 0.8;
+      amp = Math.pow(Math.min(r/w, 2), 1) * Math.exp(-r*r/(2*w*w)) * 1.5;
+      
+      if (p.t === 'gluon') {
+        const gluonNum = parseInt(p.sub) || 1;
+        phase = th + (gluonNum - 1) * Math.PI/4 + braidPhase;
+      } else if (p.t === 'photon') {
+        // Photon - pure transverse wave
+        phase = th + braidPhase;
+      } else {
+        phase = th * (p.sub === '0' ? 2 : 1) + braidPhase;
+      }
+    } else {
+      // Fermions - half-integer vortex (spin 1/2)
+      const vortexCharge = 0.5 * chiralSign;
+      amp = Math.pow(Math.max(r/scale, 0.1), Math.abs(vortexCharge)) * Math.exp(-r*r/(2*scale*scale)) * 1.8;
+      phase = th * vortexCharge + colorPhase + braidPhase;
+      
+      // Neutrinos are more diffuse
+      if (p.t === 'lepton' && p.Q === '0') {
+        amp *= 0.6;
+        amp += 0.4 * Math.exp(-r*r/(2*2*2));
+      }
+    }
+    
+    // Time evolution
+    const timePhase = this.running ? this.animTime * (0.5 + strandIndex * 0.2) : 0;
+    
+    return {
+      re: amp * Math.cos(phase + timePhase),
+      im: amp * Math.sin(phase + timePhase),
+      amp: amp,
+      phase: phase + timePhase
+    };
+  }
+  
+  renderCombinedField(hasAll) {
+    const ctx = this.fieldCtx;
+    const w = this.fieldCanvas.width;
+    const h = this.fieldCanvas.height;
+    
+    // Initialize persistent field if needed
+    if (!this.persistentField || this.persistentField.length !== 100) {
+      this.persistentField = [];
+      for (let y = 0; y < 100; y++) {
+        this.persistentField[y] = [];
+        for (let x = 0; x < 100; x++) {
+          this.persistentField[y][x] = { re: 0, im: 0, mag: 0 };
+        }
+      }
+    }
+    
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, w, h);
+    
+    if (!hasAll) {
+      ctx.fillStyle = '#333';
+      ctx.font = '10px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText('Select 3 particles', w/2, h/2);
+      return;
+    }
+    
+    // Get positions ONCE for this frame
+    const strandPositions = [0, 1, 2].map(s => this.getStrandPosition(s));
+    
+    const n = 100;
+    const cellW = w / n;
+    const cellH = h / n;
+    
+    // Persistence factor: how much old field remains (0 = instant, 1 = frozen)
+    const persistence = this.persistence;
+    
+    // Find max for normalization
+    let maxMag = 0, maxRe = 0, maxIm = 0;
+    const fieldData = [];
+    
+    for (let y = 0; y < n; y++) {
+      fieldData[y] = [];
+      for (let x = 0; x < n; x++) {
+        const px = (x / n - 0.5) * 5;
+        const py = (y / n - 0.5) * 5;
+        
+        let totalRe = 0, totalIm = 0;
+        
+        // Sum particle fields from CURRENT positions
+        for (let s = 0; s < 3; s++) {
+          const pos = strandPositions[s];
+          const f = this.computeParticleFieldAtPos(this.selectedParticles[s], px, py, s, pos);
+          totalRe += f.re;
+          totalIm += f.im;
+        }
+        
+        // Add vacuum fluctuations - nested structure at multiple scales
+        const t = this.animTime * 0.5;
+        const vacuum = this.vacuumField(px, py, t);
+        totalRe += vacuum.re * this.vacuumStrength;
+        totalIm += vacuum.im * this.vacuumStrength;
+        
+        // Blend with persistent field (accumulation)
+        const prev = this.persistentField[y][x];
+        const blendedRe = prev.re * persistence + totalRe * (1 - persistence);
+        const blendedIm = prev.im * persistence + totalIm * (1 - persistence);
+        const blendedMag = Math.sqrt(blendedRe*blendedRe + blendedIm*blendedIm);
+        
+        // Store for next frame
+        this.persistentField[y][x] = { re: blendedRe, im: blendedIm, mag: blendedMag };
+        
+        fieldData[y][x] = { re: blendedRe, im: blendedIm, mag: blendedMag };
+        
+        maxMag = Math.max(maxMag, blendedMag);
+        maxRe = Math.max(maxRe, Math.abs(blendedRe));
+        maxIm = Math.max(maxIm, Math.abs(blendedIm));
+      }
+    }
+    
+    // Render
+    for (let y = 0; y < n; y++) {
+      for (let x = 0; x < n; x++) {
+        const f = fieldData[y][x];
+        const [r, g, b] = this.fieldToColor(f, maxMag, maxRe, maxIm);
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        ctx.fillRect(x * cellW, y * cellH, cellW + 1, cellH + 1);
+      }
+    }
+    
+    // Draw particle markers using SAME positions as field
+    for (let s = 0; s < 3; s++) {
+      const pos = strandPositions[s];
+      const cx = (pos.x / 5 + 0.5) * w;
+      const cy = (pos.y / 5 + 0.5) * h;
+      
+      ctx.strokeStyle = STRAND_COLORS[s];
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 12, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      ctx.fillStyle = STRAND_COLORS[s] + '33';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 12, 0, Math.PI * 2);
+      ctx.fill();
+      
+      const p = P[this.selectedParticles[s]];
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 11px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(p.s, cx, cy);
+    }
+  }
+  
+  // Vacuum fluctuations - nested structure at multiple scales
+  vacuumField(x, y, t) {
+    let re = 0, im = 0;
+    
+    // Multiple octaves of structure (fractal-like)
+    const octaves = [
+      { scale: 1.0, amp: 1.0 },
+      { scale: 2.3, amp: 0.5 },
+      { scale: 5.7, amp: 0.25 },
+      { scale: 13.1, amp: 0.125 }
+    ];
+    
+    for (const oct of octaves) {
+      const sx = x * oct.scale;
+      const sy = y * oct.scale;
+      
+      // Perlin-like noise using sin combinations
+      const n1 = Math.sin(sx * 1.1 + t) * Math.cos(sy * 0.9 + t * 0.7);
+      const n2 = Math.sin(sx * 0.7 - sy * 1.3 + t * 0.5);
+      const n3 = Math.cos(sx * 1.5 + sy * 0.8 - t * 0.3);
+      
+      // Vortex-like structures in the vacuum
+      const r = Math.sqrt(sx*sx + sy*sy) + 0.1;
+      const th = Math.atan2(sy, sx);
+      const vortex = Math.sin(th * 2 + r * 0.5 - t);
+      
+      re += (n1 + n2 * 0.5 + vortex * 0.3) * oct.amp;
+      im += (n3 + n2 * 0.5 - vortex * 0.3) * oct.amp;
+    }
+    
+    return { re, im };
+  }
+  
+  // Version that takes position directly instead of calling getStrandPosition
+  computeParticleFieldAtPos(particleId, px, py, strandIndex, pos) {
+    const p = P[particleId];
+    const spin = p.spin || 0;
+    const gen = p.g || 1;
+    const isLeft = p.c === 'L';
+    
+    const cx = pos.x;
+    const cy = pos.y;
+    
+    const dx = px - cx;
+    const dy = py - cy;
+    const r = Math.sqrt(dx*dx + dy*dy);
+    const th = Math.atan2(dy, dx);
+    
+    // Scale based on generation (higher gen = tighter)
+    const scale = 1.2 / gen;
+    
+    // Color charge phase offset
+    let colorPhase = 0;
+    if (p.x === 'r') colorPhase = 0;
+    else if (p.x === 'g') colorPhase = 2*Math.PI/3;
+    else if (p.x === 'b') colorPhase = 4*Math.PI/3;
+    
+    // Chirality affects rotation
+    const chiralSign = isLeft ? 1 : -1;
+    
+    // === BRAID PHASE - count crossings involving this strand ===
+    // Spin-phase coupling v1.0:
+    //   For spin s, each braid crossing involving this strand contributes
+    //   Δφ = π * s  (sign from inverse vs forward).
+    let braidPhase = 0;
+    for (const op of this.braid.operations) {
+      const isS1 = op.type.startsWith('s1');
+      const isInverse = op.type.endsWith('i');
+      const sign = isInverse ? -1 : 1;
+      const involved = isS1 ? [0, 1] : [1, 2];
+      
+      if (involved.includes(strandIndex)) {
+        const phasePerCrossing = Math.PI * spin; // spin-tied law
+        braidPhase += sign * phasePerCrossing;
+      }
+    }
+    
+    let amp, phase;
+    
+    if (p.S === 'Higgs') {
+      if (p.sub === 'v') {
+        const iR = 0.3, oR = 1.0;
+        amp = 2*Math.exp(-r*r/(2*iR*iR)) + 0.5*Math.exp(-Math.pow(r-oR,2)/(2*0.2*0.2));
+        phase = braidPhase;
+      } else {
+        amp = 1.5*Math.exp(-r*r/(2*scale*scale));
+        phase = ((p.sub === '+' || p.sub === '-') ? th : 0) + braidPhase;
+      }
+    } else if (p.S === 'Gauge') {
+      const w = scale * 0.8;
+      amp = Math.pow(Math.min(r/w, 2), 1) * Math.exp(-r*r/(2*w*w)) * 1.5;
+      
+      if (p.t === 'gluon') {
+        const gluonNum = parseInt(p.sub) || 1;
+        phase = th + (gluonNum - 1) * Math.PI/4 + braidPhase;
+      } else if (p.t === 'photon') {
+        phase = th + braidPhase;
+      } else {
+        phase = th * (p.sub === '0' ? 2 : 1) + braidPhase;
+      }
+    } else {
+      const vortexCharge = 0.5 * chiralSign;
+      amp = Math.pow(Math.max(r/scale, 0.1), Math.abs(vortexCharge)) * Math.exp(-r*r/(2*scale*scale)) * 1.8;
+      phase = th * vortexCharge + colorPhase + braidPhase;
+      
+      if (p.t === 'lepton' && p.Q === '0') {
+        amp *= 0.6;
+        amp += 0.4 * Math.exp(-r*r/(2*2*2));
+      }
+    }
+    
+    const timePhase = this.running ? this.animTime * (0.5 + strandIndex * 0.2) : 0;
+    
+    return {
+      re: amp * Math.cos(phase + timePhase),
+      im: amp * Math.sin(phase + timePhase),
+      amp: amp,
+      phase: phase + timePhase
+    };
+  }
+  
+  fieldToColor(f, maxMag, maxRe, maxIm) {
+    const mag = f.mag / (maxMag || 1);
+    const phase = Math.atan2(f.im, f.re);
+    
+    let r, g, b;
+    
+    if (this.viewMode === 'mag') {
+      const v = Math.pow(mag, 0.6);
+      // Golden for combined
+      r = (255 * v) | 0;
+      g = (180 * v) | 0;
+      b = (40 * v * v) | 0;
+    } else if (this.viewMode === 'phase') {
+      const hue = (phase + Math.PI) / (2 * Math.PI);
+      const lightness = 0.1 + 0.6 * mag;
+      [r, g, b] = this.hsl(hue, 0.9, lightness);
+    } else if (this.viewMode === 're') {
+      const v = f.re / (maxRe || 1);
+      r = v > 0 ? (200 * v) | 0 : 0;
+      b = v < 0 ? (200 * -v) | 0 : 0;
+      g = (30 * mag) | 0;
+    } else { // im
+      const v = f.im / (maxIm || 1);
+      g = v > 0 ? (200 * v) | 0 : 0;
+      r = v < 0 ? (150 * -v) | 0 : 0;
+      b = (30 * mag) | 0;
+    }
+    
+    return [r, g, b];
+  }
+  
+  hsl(h, s, l) {
+    const f = (n) => {
+      const k = (n + h * 12) % 12;
+      const a = s * Math.min(l, 1 - l);
+      return l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+    };
+    return [f(0) * 255 | 0, f(8) * 255 | 0, f(4) * 255 | 0];
+  }
+}
+
+new App();
+</script>
+</body>
+</html>

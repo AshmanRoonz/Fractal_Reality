@@ -1,0 +1,2261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Microverse Megabattle — v2.0</title>
+<!--
+  Project: Microverse Megabattle
+  File:    v2.html (nucleosynthesis: emergent periodic table from H)
+  Created: 2026-04-24
+  Last updated: 2026-04-24
+  Version: 2.0
+
+  v1.9 scope (Stage 1 of the Path B mereology arc): make each atom a
+  compound ⊙ in its own right by giving it a visible nucleon cloud. Each
+  element carries its real-world mass number A (H=1, C=12, N=14, O=16,
+  Si=28 closes a shell, etc); each atom instance renders A small inner
+  dots inside a semi-transparent shell. Dots orbit the atom center with a
+  gentle per-frame advance; cosmetic only in this stage (no dynamics,
+  no inter-scale coupling, no fragmentation). This is the fractal reveal:
+  proof that ⊙λ contains smaller ⊙s, not just a label on a sphere.
+
+  Revision history:
+    - 2026-04-24 v2.0: NUCLEOSYNTHESIS. Soup begins as ~80 H atoms + ~10
+      He seed; heavier elements emerge from fusion when atoms collide
+      above an energy threshold and the resulting nucleon count is in
+      the framework's stability table. Mass conservation: A_new = A_a +
+      A_b. Momentum conservation. Forbidden A (5, 8) bounce. The
+      framework's four-stroke pump (⊛ → i → ✹) is the engine of
+      complexity at the cosmic scale; the periodic table is its product.
+      A heat dial in the AUTHOR panel scales kinetic energy to control
+      fusion rate. HUD now auto-discovers elements as they appear.
+    - 2026-04-24 v1.10: ladder authoring panel; spawn atoms at runtime by
+      setting inputs at each rung (hyb, valence, LP, A, Zeff) or
+      randomizing a valid vector. Nucleon Points pre-allocated to a
+      generous cap so new atoms claim slots without geometry rebuild.
+    - 2026-04-24 v1.9.2: bonds rendered as shared electron points (single
+      = sigma pair, double = sigma + pi, triple = sigma + 2 pi planes);
+      no cylinders, all circumpunct points.
+    - 2026-04-24 v1.9.1: nucleons rendered as additive Points with soft
+      disc sprites instead of opaque InstancedMesh blobs.
+    - 2026-04-24 v1.9: interior visible; A nucleons per atom, shell goes
+      translucent, cosmetic orbital motion.
+    - 2026-04-24 v1.8: ray hits audible + element table expanded to 13.
+    - 2026-04-24 v1.7: multi-bonds with framework pi ratios + D5 boost.
+    - 2026-04-24 v1.6: heat/light on reactions, rays with absorption.
+    - 2026-04-24 v1.5: angle constraints + ionic resonance + LP factor.
+    - 2026-04-24 v1.4: 5 elements across all hybridization stations.
+    - 2026-04-24 v1.3: many-particle self-assembly, boundary, cursor.
+    - 2026-04-24 v1.2: covalent bonds (spring + phase coupling).
+    - 2026-04-24 v1.1: two elements, two tones, event-driven audio.
+    - 2026-04-24 v1.0: single ringing particle.
+-->
+<style>
+  html, body { margin: 0; padding: 0; background: #05080c; color: #cfd8e3; font-family: "Courier New", monospace; overflow: hidden; }
+  #info {
+    position: absolute; top: 12px; left: 14px; z-index: 10;
+    font-size: 12px; line-height: 1.55; pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.85);
+  }
+  #info .title { color: #d18a2e; font-weight: bold; letter-spacing: 0.1em; }
+  #info .k { color: #7ab8c4; }
+  #info .dim { color: #556; }
+  #info .elL { color: #aaf0ff; }
+  #info .elC { color: #7fe8f6; }
+  #info .elM { color: #ffb04a; }
+  #info .elS { color: #f0d860; }
+  #info .elN { color: #d080ff; }
+  #state {
+    position: absolute; top: 12px; right: 14px; z-index: 10;
+    font-size: 11px; line-height: 1.45; pointer-events: none;
+    text-align: right; text-shadow: 0 1px 2px rgba(0,0,0,0.85);
+    color: #8fa0ac;
+    min-width: 220px;
+  }
+  #state .v { color: #cfd8e3; }
+  #state .elH { color: #eeeeee; }
+  #state .elL { color: #aaf0ff; }
+  #state .elF { color: #c8f090; }
+  #state .elCl { color: #d8e060; }
+  #state .elBe { color: #aabbc0; }
+  #state .elM { color: #ffb04a; }
+  #state .elO { color: #ff7060; }
+  #state .elB { color: #e8d880; }
+  #state .elC { color: #7fe8f6; }
+  #state .elSi { color: #aac8e0; }
+  #state .elP { color: #ff8050; }
+  #state .elS { color: #f0d860; }
+  #state .elN { color: #d080ff; }
+  /* Full-screen click-to-start gate. Blocks pointer events on the canvas
+     until the user clicks, guaranteeing a proper user gesture for audio
+     activation (Chrome/Safari policy). When audio is confirmed running,
+     the overlay fades out and pointer events pass through. */
+  #audioPrompt {
+    position: fixed; inset: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(5, 8, 12, 0.88);
+    cursor: pointer; user-select: none;
+    transition: opacity 0.25s ease-out;
+  }
+  #audioPrompt .promptBox {
+    padding: 22px 34px; border: 1px solid rgba(209,138,46,0.55);
+    background: rgba(15,22,32,0.92); border-radius: 3px;
+    text-align: center; color: #d18a2e;
+    font-size: 16px; letter-spacing: 0.08em; line-height: 1.5;
+  }
+  #audioPrompt .promptBox .small {
+    font-size: 11px; color: #7ab8c4; letter-spacing: 0.02em;
+    margin-top: 10px; font-weight: normal;
+  }
+  #audioPrompt.hidden { opacity: 0; pointer-events: none; }
+  #author {
+    position: absolute; bottom: 14px; right: 14px; z-index: 10;
+    background: rgba(15,22,32,0.92);
+    border: 1px solid rgba(209,138,46,0.5);
+    border-radius: 3px;
+    padding: 12px 14px;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: #cfd8e3;
+    min-width: 250px;
+    pointer-events: auto;
+    user-select: none;
+  }
+  #author .ahdr {
+    color: #d18a2e; letter-spacing: 0.1em; font-weight: bold;
+    font-size: 12px; margin-bottom: 8px; border-bottom: 1px solid rgba(209,138,46,0.3);
+    padding-bottom: 4px;
+  }
+  #author .row { display: flex; align-items: center; margin: 5px 0; }
+  #author .row label {
+    width: 76px; color: #7ab8c4; font-size: 11px;
+  }
+  #author .row .val {
+    color: #d18a2e; min-width: 32px; text-align: right;
+    font-size: 11px; margin-left: 6px;
+  }
+  #author select, #author input[type=range] {
+    flex: 1;
+    background: #11161e; color: #cfd8e3;
+    border: 1px solid #2a3a4a; border-radius: 2px;
+    font-family: inherit; font-size: 11px;
+    padding: 2px 4px; outline: none;
+  }
+  #author input[type=range] {
+    accent-color: #d18a2e;
+    height: 14px; padding: 0;
+  }
+  #author .btnrow { display: flex; gap: 6px; margin-top: 10px; }
+  #author button {
+    flex: 1; padding: 6px 8px;
+    background: rgba(209,138,46,0.15);
+    border: 1px solid rgba(209,138,46,0.6);
+    color: #d18a2e; font-family: inherit; font-size: 11px;
+    letter-spacing: 0.05em; cursor: pointer;
+    border-radius: 2px;
+  }
+  #author button:hover { background: rgba(209,138,46,0.30); }
+  #author button:active { background: rgba(209,138,46,0.50); }
+  #author .preview {
+    display: flex; align-items: center; justify-content: center;
+    margin: 8px 0;
+  }
+  #author #previewSwatch {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #888;
+    box-shadow: 0 0 14px rgba(255,255,255,0.3) inset, 0 0 8px rgba(0,0,0,0.6);
+    transition: background 0.15s ease;
+  }
+  #author #freqOut {
+    flex: 1; color: #7ab8c4; text-align: center; font-size: 11px;
+  }
+  #author .invalid {
+    color: #ff6060; font-size: 10px; text-align: center;
+    margin-top: 4px; min-height: 12px;
+    transition: opacity 0.3s ease;
+  }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<div id="info">
+  <div class="title">MICROVERSE MEGABATTLE v2.0</div>
+  <div class="dim">v2.0: nucleosynthesis; soup starts as H, fuses upward into the periodic table</div>
+  <div>&nbsp;</div>
+  <div><span class="elL">L</span>: sp (1.0D), <span id="freqL" class="k">—</span> Hz, A=7</div>
+  <div><span class="elC">C</span>: sp³ (1.5D), <span id="freqC" class="k">—</span> Hz, A=12</div>
+  <div><span class="elM">M</span>: sp² (2.0D), <span id="freqM" class="k">—</span> Hz, A=24</div>
+  <div><span class="elS">S</span>: sp³d (2.5D), <span id="freqS" class="k">—</span> Hz, A=32</div>
+  <div><span class="elN">N</span>: sp³d² (3.0D), <span id="freqN" class="k">—</span> Hz, A=14</div>
+  <div class="dim">each atom is a compound ⊙ with A nucleons inside</div>
+  <div class="dim">bonds form on contact; voices consonate when bonded</div>
+  <div>&nbsp;</div>
+  <div><span class="k">drag</span> — orbit camera</div>
+  <div><span class="k">scroll</span> — zoom</div>
+  <div><span class="k">mouse proximity</span> — stir the soup</div>
+  <div><span class="k">click</span> — poke nearest</div>
+  <div><span class="k">S</span> — scramble (re-randomize positions)</div>
+  <div><span class="k">R</span> — reset + break all bonds</div>
+</div>
+<div id="state">
+  <div id="sElements" style="line-height:1.6; max-width:380px;">
+    <span style="color:#7ab8c4;">elements:</span>
+    <span id="sElementsList">—</span>
+  </div>
+  <div>bonds: <span class="v" id="sBonds">0</span>  nucleons: <span class="v" id="sNucleons">—</span></div>
+  <div>audio: <span class="v" id="sAudio">off</span></div>
+</div>
+<div id="audioPrompt">
+  <div class="promptBox">
+    CLICK TO START
+    <div class="small">audio requires a user gesture · rest is silent, tones fire on collisions</div>
+  </div>
+</div>
+
+<div id="author">
+  <div class="ahdr">⊙ LADDER AUTHOR</div>
+  <div class="row">
+    <label>hyb</label>
+    <select id="aHyb">
+      <option value="sp">sp (1.0D)</option>
+      <option value="sp2">sp² (2.0D)</option>
+      <option value="sp3" selected>sp³ (1.5D)</option>
+      <option value="sp3d">sp³d (2.5D)</option>
+      <option value="sp3d2">sp³d² (3.0D)</option>
+    </select>
+  </div>
+  <div class="row">
+    <label>valence</label>
+    <input type="range" id="aValence" min="1" max="6" value="2" step="1">
+    <span class="val" id="aValenceVal">2</span>
+  </div>
+  <div class="row">
+    <label>lone pairs</label>
+    <input type="range" id="aLP" min="0" max="6" value="0" step="1">
+    <span class="val" id="aLPVal">0</span>
+  </div>
+  <div class="row">
+    <label>A (mass)</label>
+    <input type="range" id="aA" min="1" max="50" value="12" step="1">
+    <span class="val" id="aAVal">12</span>
+  </div>
+  <div class="row">
+    <label>Z_eff</label>
+    <input type="range" id="aZeff" min="1" max="15" value="4" step="1">
+    <span class="val" id="aZeffVal">4</span>
+  </div>
+  <div class="row">
+    <label>hue</label>
+    <input type="range" id="aHue" min="0" max="360" value="160" step="1">
+    <span class="val" id="aHueVal">160</span>
+  </div>
+  <div style="border-top:1px solid rgba(209,138,46,0.25); margin:8px 0; padding-top:6px;">
+    <div style="color:#d18a2e; font-size:10px; letter-spacing:0.08em;">SOUP</div>
+    <div class="row">
+      <label>heat</label>
+      <input type="range" id="aHeat" min="0" max="100" value="35" step="1">
+      <span class="val" id="aHeatVal">35</span>
+    </div>
+    <div style="font-size:10px; color:#7ab8c4; text-align:center; margin-top:2px;">
+      fusions: <span id="aFusionCount" style="color:#d18a2e;">0</span>
+    </div>
+  </div>
+  <div class="preview">
+    <div id="previewSwatch"></div>
+    <div id="freqOut">— Hz</div>
+  </div>
+  <div class="invalid" id="aInvalid">&nbsp;</div>
+  <div class="btnrow">
+    <button id="aRandomize">RANDOMIZE</button>
+    <button id="aSpawn">SPAWN</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(() => {
+"use strict";
+
+// ===========================================================================
+// LAYER 0: FRAMEWORK CONSTANTS
+// Pool-native integers + derived ratios. These drive every number that is
+// not a game-native choice (scale, timestep, visual sizes).
+// ===========================================================================
+const FW = {
+  T: 3, P: 4, R: 7, V: 13, G: 12, SU3: 8, PHI_n: 2,
+  screening: { s1s: 6/20, same: 7/20, inner: 17/20, deep: 1.0 },
+  bondAngles: {
+    tetrahedral: Math.acos(-1/3),   // 109.47°, sp³
+    trigonal: 2*Math.PI/3,          // 120°, sp²
+    octahedral: Math.PI/2,          // 90°
+    linear: Math.PI,                // 180°, sp
+  },
+  hybDim: { sp: 1.0, sp2: 2.0, sp3: 1.5, sp3d: 2.5, sp3d2: 3.0 },
+  f0: 220,
+};
+FW.freqForStation = (d) => FW.f0 * Math.pow(2, d / FW.T);
+
+// ===========================================================================
+// LAYER 1: ELEMENT TABLE
+// Two entries now. Each element is (Z_eff, valence, hyb, LP); everything
+// else (station, frequency, EN) derives.
+// ===========================================================================
+// v1.4 element table: 5 elements covering all 5 hybridization stations.
+// Zeff scales with station (heavier atoms further up the dimensional ladder).
+// Natural frequencies span a full octave A3→A4 at f0=220, T=3 (220·2^(d/T)).
+// v2.0: periodic-table fusion table. Keyed by mass number A. Each entry
+// is "what an atom with this nucleon count IS in real chemistry": its
+// valence, hyb, LP, and palette. Atoms in the soup come from this table
+// only via fusion; the ELEMENTS object is the lookup, FUSION_TABLE is its
+// alias. Forbidden A (5, 8) intentionally absent: those nuclei are
+// unstable in reality and a fusion landing there bounces the pair back.
+//
+// Magic closures (framework: Phi × C(N+T, T) = 2, 8, 20, 28, 50, 82, 126):
+// A=2 He, A=20 Ne are noble (closed shell, valence 0); A=28 Si is the
+// stable hub of the third group; these are the soup's natural attractors.
+const ELEMENTS = {
+  H:  { name: "H",  A: 1,  Zeff: 1,  valence: 1, hyb: "sp",    LP: 0,
+        palette: { base: 0xcccccc, emissive: 0xeeeeee } },
+  He: { name: "He", A: 4,  Zeff: 2,  valence: 0, hyb: "sp",    LP: 0,
+        palette: { base: 0x6080a0, emissive: 0x90b0d0 } },
+  Li: { name: "Li", A: 7,  Zeff: 2,  valence: 1, hyb: "sp",    LP: 0,
+        palette: { base: 0x6fb8cc, emissive: 0xaaf0ff } },
+  Be: { name: "Be", A: 9,  Zeff: 3,  valence: 2, hyb: "sp3",   LP: 0,
+        palette: { base: 0x8090a0, emissive: 0xaabbc0 } },
+  B:  { name: "B",  A: 11, Zeff: 3,  valence: 3, hyb: "sp2",   LP: 0,
+        palette: { base: 0xb0a050, emissive: 0xe8d880 } },
+  C:  { name: "C",  A: 12, Zeff: 4,  valence: 4, hyb: "sp3",   LP: 0,
+        palette: { base: 0x3aa8b5, emissive: 0x7fe8f6 } },
+  N:  { name: "N",  A: 14, Zeff: 5,  valence: 3, hyb: "sp3",   LP: 1,
+        palette: { base: 0x8040b0, emissive: 0xd080ff } },
+  O:  { name: "O",  A: 16, Zeff: 8,  valence: 2, hyb: "sp3",   LP: 2,
+        palette: { base: 0xc04030, emissive: 0xff7060 } },
+  F:  { name: "F",  A: 19, Zeff: 9,  valence: 1, hyb: "sp",    LP: 3,
+        palette: { base: 0x8fb860, emissive: 0xc8f090 } },
+  Ne: { name: "Ne", A: 20, Zeff: 10, valence: 0, hyb: "sp",    LP: 4,
+        palette: { base: 0xc080d0, emissive: 0xf0a0e0 } },
+  Mg: { name: "Mg", A: 24, Zeff: 6,  valence: 2, hyb: "sp2",   LP: 1,
+        palette: { base: 0xb36d20, emissive: 0xffb04a } },
+  Al: { name: "Al", A: 27, Zeff: 5,  valence: 3, hyb: "sp2",   LP: 0,
+        palette: { base: 0x90a0b0, emissive: 0xc0d0e0 } },
+  Si: { name: "Si", A: 28, Zeff: 6,  valence: 4, hyb: "sp3",   LP: 0,
+        palette: { base: 0x7090b0, emissive: 0xaac8e0 } },
+  P:  { name: "P",  A: 31, Zeff: 7,  valence: 5, hyb: "sp3d",  LP: 0,
+        palette: { base: 0xc06030, emissive: 0xff8050 } },
+  S:  { name: "S",  A: 32, Zeff: 8,  valence: 5, hyb: "sp3d",  LP: 1,
+        palette: { base: 0xb09030, emissive: 0xf0d860 } },
+  Cl: { name: "Cl", A: 35, Zeff: 11, valence: 1, hyb: "sp",    LP: 3,
+        palette: { base: 0xa8b030, emissive: 0xd8e060 } },
+};
+
+// Lookup by mass number A → element key. Built once after ELEMENTS is
+// finalised; used by fuseAtoms() to resolve a fusion outcome.
+const FUSION_TABLE_BY_A = {};
+for (const key in ELEMENTS) FUSION_TABLE_BY_A[ELEMENTS[key].A] = key;
+// Hybridization → target cos(angle) between bond-vectors on the same atom.
+// sp: 180° cos=-1, sp²: 120° cos=-0.5, sp³: 109.47° cos=-1/3, sp³d²: 90° cos=0.
+// sp³d is between sp³ and sp³d² in practice; we use sp³'s cos for simplicity.
+const HYB_TARGET_COS = {
+  sp:     Math.cos(Math.PI),              // -1
+  sp2:    Math.cos(2 * Math.PI / 3),      // -0.5
+  sp3:    Math.cos(Math.acos(-1/3)),      // -1/3 (exact from arccos(-1/T))
+  sp3d:   Math.cos(Math.acos(-1/3)),      // reuse sp3 approximation
+  sp3d2:  Math.cos(Math.PI / 2),          // 0
+};
+for (const key in ELEMENTS) {
+  const e = ELEMENTS[key];
+  e.station = FW.hybDim[e.hyb];
+  e.freq = FW.freqForStation(e.station);
+  // Framework EN: Z_eff^(R/A(2))/n = Z_eff^(7/10)/2. We use n=2 as a flat
+  // row-index placeholder; the exponent is the framework part.
+  e.EN = Math.pow(e.Zeff, FW.R / (FW.R + 3)) / 2;
+  // Lone-pair suppression factor for sigma: f = 1/(1 + n_LP) per element.
+  e.lpFactor = 1 / (1 + e.LP);
+  // Angle target for any two bonds sharing this atom as their common particle.
+  e.targetCosAngle = HYB_TARGET_COS[e.hyb];
+}
+for (const key in ELEMENTS) {
+  const el = document.getElementById("freq" + key);
+  if (el) el.textContent = ELEMENTS[key].freq.toFixed(2);
+}
+
+// ===========================================================================
+// LAYER 2-3: PARTICLES
+// Generalised from singleton to array. Each particle carries its own
+// physics state (pos, vel), oscillator state (phase, amp, target), mesh,
+// material, audio node reference (populated in initAudio).
+// ===========================================================================
+// v1.9: nucleon cloud constants. NUCLEON_RADIUS_FRAC controls the sphere
+// inside which nucleons can sit; < 1 keeps them within the visible shell.
+// NUCLEON_SIZE is the render radius of each nucleon dot in world units.
+// NUCLEON_ORBIT_SPEED is the base angular speed of the cosmetic orbits
+// (radians per second); small so the interior reads as breath, not chaos.
+// NUCLEON_WOBBLE_AMP lets each nucleon breathe along its radius so the
+// cloud doesn't look like rigid clockwork.
+const NUCLEON_RADIUS_FRAC = 0.68;     // fraction of atom's render radius
+const NUCLEON_SIZE         = 1.15;    // world-units
+const NUCLEON_ORBIT_SPEED  = 0.45;    // rad/s base
+const NUCLEON_WOBBLE_AMP   = 0.08;    // fractional radius wobble
+
+function buildNucleonCloud(A, atomRadius) {
+  // Build A nucleons on a jittered Fibonacci sphere inside the atom. Each
+  // nucleon carries its own orbital axis + phase + radius so the cloud
+  // breathes without drifting off-center. A=1 (hydrogen) sits at center.
+  const nucleons = new Array(A);
+  if (A === 1) {
+    nucleons[0] = {
+      baseR: 0.0,
+      axis: new THREE.Vector3(0, 1, 0),
+      phase: Math.random() * 2 * Math.PI,
+      omega: NUCLEON_ORBIT_SPEED * (0.8 + 0.4 * Math.random()),
+      wobblePhase: Math.random() * 2 * Math.PI,
+      offset: new THREE.Vector3(0, 0, 0),
+      local: new THREE.Vector3(0, 0, 0),
+    };
+    return nucleons;
+  }
+  const R_NUC = atomRadius * NUCLEON_RADIUS_FRAC;
+  const golden = Math.PI * (3 - Math.sqrt(5));
+  for (let i = 0; i < A; i++) {
+    // Fibonacci sphere lattice, normalised, then radius tapered slightly
+    // so we get concentric shells rather than a single thin spherical
+    // surface. Deeper nucleons sit at smaller r.
+    const y = 1 - (i / (A - 1)) * 2;            // [1,-1]
+    const rOnSphere = Math.sqrt(Math.max(0, 1 - y * y));
+    const theta = golden * i;
+    const x = Math.cos(theta) * rOnSphere;
+    const z = Math.sin(theta) * rOnSphere;
+    // Shell assignment: 2-8-20-28 bands. For A<=28 we just use 60-95% of R;
+    // for A>28 we compress the outer shell in a bit.
+    const shellFactor = 0.55 + 0.40 * ((i + 0.5) / A);
+    const rSized = R_NUC * shellFactor;
+    // Axis perpendicular to radial direction so the orbit stays confined.
+    const radial = new THREE.Vector3(x, y, z).normalize();
+    let axis = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5);
+    axis = axis.sub(radial.clone().multiplyScalar(axis.dot(radial))).normalize();
+    nucleons[i] = {
+      baseR: rSized,
+      axis: axis,
+      phase: Math.random() * 2 * Math.PI,
+      omega: NUCLEON_ORBIT_SPEED * (0.75 + 0.50 * Math.random()),
+      wobblePhase: Math.random() * 2 * Math.PI,
+      // offset: starting position vector from atom center; orbit rotates
+      // this vector around axis each tick.
+      offset: new THREE.Vector3(x * rSized, y * rSized, z * rSized),
+      // local: world-frame position relative to atom; recomputed each tick.
+      local: new THREE.Vector3(),
+    };
+  }
+  return nucleons;
+}
+
+function makeParticle(element, x, y, z) {
+  const atomRadius = 12;  // matches sphereGeo below
+  return {
+    element: element,
+    pos: new THREE.Vector3(x, y, z),
+    vel: new THREE.Vector3(),
+    phase: 0,
+    amplitude: 0.0,
+    amplitudeTarget: 0.0,
+    mass: 1.0,
+    mesh: null,
+    mat: null,
+    osc: null,
+    oscGain: null,
+    bonds: [],
+    bondOrderSum: 0,                  // v1.7: sum of bond orders; consumes valence
+    freqEffective: element.freq,
+    // v1.9: compound ⊙ interior. `nucleons` is the inner particle set;
+    // cosmetic dynamics in Stage 1 (orbit + wobble); real dynamics in v1.10.
+    nucleons: buildNucleonCloud(element.A, atomRadius),
+  };
+}
+// v1.3 random spawn: 8 C + 6 M at random positions inside a spawn-sphere
+// smaller than the boundary (nothing starts in containment push-back).
+// Small initial drift velocities so they don't hang in place.
+const SPAWN_RADIUS = 150;
+const SPAWN_SPEED  = 18;
+function randomPosInSphere(radius) {
+  const u = Math.random(), v = Math.random(), w = Math.random();
+  const theta = 2 * Math.PI * u;
+  const phi = Math.acos(2 * v - 1);
+  const r = radius * Math.cbrt(w);
+  return new THREE.Vector3(
+    r * Math.sin(phi) * Math.cos(theta),
+    r * Math.sin(phi) * Math.sin(theta),
+    r * Math.cos(phi)
+  );
+}
+function randomDrift(speed) {
+  const d = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5);
+  const len = d.length();
+  if (len < 0.0001) return new THREE.Vector3();
+  return d.multiplyScalar(speed / len);
+}
+
+// v2.0: genesis state. Soup begins as primarily hydrogen (the simplest
+// possible ⊙: A=1, valence=1, sp). A small helium seed (~10 atoms)
+// represents primordial nucleosynthesis (real cosmology: Big Bang
+// fusion produced ~25% He by mass before stars existed). Heavier
+// elements appear ONLY through in-game fusion events.
+const PARTICLE_COUNTS = {
+  H:  80,
+  He: 10,
+};  // total 90
+const particles = [];
+for (const key in PARTICLE_COUNTS) {
+  for (let i = 0; i < PARTICLE_COUNTS[key]; i++) {
+    const pos = randomPosInSphere(SPAWN_RADIUS);
+    const atom = makeParticle(ELEMENTS[key], pos.x, pos.y, pos.z);
+    atom.vel.copy(randomDrift(SPAWN_SPEED));
+    particles.push(atom);
+  }
+}
+
+// ===========================================================================
+// LAYER 5: VISUAL RENDERING
+// One mesh + material per particle (for now; migrates to InstancedMesh at
+// the scale where per-particle-material cost matters, probably v1.3).
+// ===========================================================================
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a1620);
+scene.fog = new THREE.FogExp2(0x0a1620, 0.0015);  // softer at v1.3 scale
+
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 500);
+// Oblique starting view so the spheres read as 3D on first paint; orbit
+// still lets the user move around, but the default angle makes the 3D
+// structure obvious before they touch the mouse.
+camera.position.set(180, 100, 240);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+document.body.appendChild(renderer.domElement);
+
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.minDistance = 60;
+controls.maxDistance = 520;
+controls.target.set(0, 0, 0);
+
+// Softer ambient + slightly brighter key so the difference between lit
+// and unlit side of a sphere reads clearly; before, ambient 0.5 was
+// flooding the dark side and flattening everything.
+scene.add(new THREE.AmbientLight(0x1a2430, 0.18));
+const keyLight = new THREE.DirectionalLight(0xffe8c8, 1.3);
+keyLight.position.set(60, 80, 40);
+scene.add(keyLight);
+
+// Cool rim fill on the opposite side so the spheres have silhouette
+// against the fog without losing depth on the shadow side.
+const fillLight = new THREE.DirectionalLight(0x88b4c8, 0.35);
+fillLight.position.set(-50, -30, -40);
+scene.add(fillLight);
+
+// Shared geometry (same sphere for both elements); per-particle material
+// because we're hue-shifting emissive per-phase independently.
+const sphereGeo = new THREE.SphereGeometry(12, 36, 28);
+
+// v1.10: factored so spawnAtom() can reuse the same mesh setup at runtime.
+function attachVisualToParticle(p) {
+  const mat = new THREE.MeshStandardMaterial({
+    color: p.element.palette.base,
+    emissive: p.element.palette.emissive,
+    emissiveIntensity: 0.18,
+    roughness: 0.5,
+    metalness: 0.0,
+    transparent: true,
+    opacity: 0.72,
+    depthWrite: false,
+  });
+  const mesh = new THREE.Mesh(sphereGeo, mat);
+  mesh.position.copy(p.pos);
+  mesh.renderOrder = 1;
+  scene.add(mesh);
+  p.mesh = mesh;
+  p.mat = mat;
+  p._baseHSL = {};
+  new THREE.Color(p.element.palette.emissive).getHSL(p._baseHSL);
+}
+for (const p of particles) attachVisualToParticle(p);
+
+// ---------------------------------------------------------------------------
+// v1.9.1: Nucleon point cloud.
+// A single THREE.Points object holds every nucleon of every atom. Each point
+// is rendered as a small glowing disc with additive blending, so overlapping
+// nucleons brighten the interior instead of stacking as opaque blobs (the
+// v1.9 attempt used InstancedMesh spheres which read as "dots visible
+// through a window"; additive points read as "lit interior"). Positions are
+// written directly into a Float32Array each frame; per-vertex colors carry
+// the parent atom's emissive.
+// ---------------------------------------------------------------------------
+// v1.10: pre-allocate against MAX_NUCLEONS instead of computing TOTAL once,
+// so new atoms spawned at runtime can claim slots from the same buffer.
+// MAX_PARTICLES sets the runtime cap; MAX_NUCLEONS is sized to allow the
+// heaviest authored atoms (up to ~50 nucleons each).
+const MAX_PARTICLES = 250;
+const MAX_NUCLEONS  = MAX_PARTICLES * 50;
+let TOTAL_NUCLEONS = 0;
+for (const p of particles) TOTAL_NUCLEONS += p.nucleons.length;
+let _usedNucleonSlots = 0;  // grows as atoms are added; setDrawRange follows it
+
+// Soft-disc sprite: 64x64 canvas with a radial gradient. This is what each
+// point samples so its silhouette is a glowing blob rather than a hard dot.
+function makeSoftDiscTexture() {
+  const size = 64;
+  const canvas = document.createElement("canvas");
+  canvas.width = size; canvas.height = size;
+  const ctx = canvas.getContext("2d");
+  const grad = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+  grad.addColorStop(0.0, "rgba(255,255,255,1.0)");
+  grad.addColorStop(0.25, "rgba(255,255,255,0.7)");
+  grad.addColorStop(0.55, "rgba(255,255,255,0.25)");
+  grad.addColorStop(1.0, "rgba(255,255,255,0.0)");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, size, size);
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.needsUpdate = true;
+  return tex;
+}
+const _nucSprite = makeSoftDiscTexture();
+
+const nucleonGeo = new THREE.BufferGeometry();
+const _nucPositions = new Float32Array(MAX_NUCLEONS * 3);
+const _nucColors    = new Float32Array(MAX_NUCLEONS * 3);
+const _nucSizes     = new Float32Array(MAX_NUCLEONS);
+nucleonGeo.setAttribute("position", new THREE.BufferAttribute(_nucPositions, 3).setUsage(THREE.DynamicDrawUsage));
+nucleonGeo.setAttribute("color",    new THREE.BufferAttribute(_nucColors, 3));
+nucleonGeo.setAttribute("size",     new THREE.BufferAttribute(_nucSizes, 1).setUsage(THREE.DynamicDrawUsage));
+
+// PointsMaterial with additive blending + size attenuation + sprite map.
+// Size here is the base; each atom's excite multiplies it per-vertex via
+// a small custom onBeforeCompile patch that reads the "size" attribute.
+const nucleonMat = new THREE.PointsMaterial({
+  size: 3.2,
+  map: _nucSprite,
+  transparent: true,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending,
+  vertexColors: true,
+  sizeAttenuation: true,
+});
+// Patch the vertex shader to multiply gl_PointSize by the per-vertex size
+// attribute so individual nucleons can breathe with their parent atom.
+nucleonMat.onBeforeCompile = (shader) => {
+  shader.vertexShader = "attribute float size;\n" + shader.vertexShader
+    .replace("gl_PointSize = size;", "gl_PointSize = size * ( scale / - mvPosition.z );");
+};
+
+const nucleonPoints = new THREE.Points(nucleonGeo, nucleonMat);
+nucleonPoints.frustumCulled = false;
+nucleonPoints.renderOrder = 2;
+scene.add(nucleonPoints);
+
+// v1.10: factored into attachNucleonsToParticle so spawnAtom() can call it
+// at runtime. _usedNucleonSlots is the cumulative head pointer; each call
+// claims p.nucleons.length consecutive slots from the cap.
+const _nucColorTmp = new THREE.Color();
+function attachNucleonsToParticle(p) {
+  if (_usedNucleonSlots + p.nucleons.length > MAX_NUCLEONS) {
+    console.warn("MAX_NUCLEONS exceeded; truncating new atom");
+    return false;
+  }
+  p.nucleonBase = _usedNucleonSlots;
+  const baseCol = new THREE.Color(p.element.palette.emissive);
+  const baseHSL = {};
+  baseCol.getHSL(baseHSL);
+  for (let i = 0; i < p.nucleons.length; i++) {
+    const l = Math.max(0.45, Math.min(0.92, baseHSL.l + (Math.random() - 0.5) * 0.16));
+    _nucColorTmp.setHSL(baseHSL.h, baseHSL.s, l);
+    const idx = _usedNucleonSlots;
+    _nucColors[idx * 3 + 0] = _nucColorTmp.r;
+    _nucColors[idx * 3 + 1] = _nucColorTmp.g;
+    _nucColors[idx * 3 + 2] = _nucColorTmp.b;
+    _nucSizes[idx] = 1.0;
+    _usedNucleonSlots++;
+  }
+  nucleonGeo.attributes.color.needsUpdate = true;
+  nucleonGeo.setDrawRange(0, _usedNucleonSlots);
+  return true;
+}
+// Initial pass for starter particles.
+for (const p of particles) attachNucleonsToParticle(p);
+
+// ===========================================================================
+// v1.10: LADDER AUTHORING
+// Set inputs at each rung of the dimensional ladder and spawn the atom
+// they describe; or randomize a valid input vector and let the ladder
+// build whatever ⊙ closes. The framework reading: same operator, same
+// substrate; what varies is the input written at each rung.
+// ===========================================================================
+
+// Slot capacity per hybridization. valence + LP must not exceed this; if
+// it does, the angular geometry can't close (D5 selection on which input
+// vectors actually produce a stable ⊙).
+const HYB_SLOTS = { sp: 2, sp2: 3, sp3: 4, sp3d: 5, sp3d2: 6 };
+const HYB_LIST  = ["sp", "sp2", "sp3", "sp3d", "sp3d2"];
+
+// Auto-derive a palette from the dimensional station and a hue seed so
+// authored atoms look distinct even without manual color choice. Hue
+// loops around the wheel; saturation/lightness chosen to read on the dark
+// background.
+function paletteFromInputs(station, hue) {
+  const c = new THREE.Color();
+  c.setHSL((hue + 1) % 1, 0.62, 0.52);
+  const baseHex = c.getHex();
+  c.setHSL((hue + 1) % 1, 0.85, 0.72);
+  const emHex = c.getHex();
+  return { base: baseHex, emissive: emHex };
+}
+
+// generateElement: wrap raw inputs in an element-like struct and run the
+// same derivations the ELEMENTS table runs. Returns null if the inputs
+// violate the slot-count constraint.
+function generateElement(inputs) {
+  const { name, A, Zeff, valence, hyb, LP, hue } = inputs;
+  if (!HYB_SLOTS[hyb]) return null;
+  if (valence + LP > HYB_SLOTS[hyb]) return null;
+  if (valence < 0 || LP < 0 || A < 1 || Zeff < 1) return null;
+  const palette = inputs.palette || paletteFromInputs(FW.hybDim[hyb], hue != null ? hue : Math.random());
+  const el = {
+    name: name || "X",
+    A: Math.round(A),
+    Zeff: Zeff,
+    valence: Math.round(valence),
+    hyb: hyb,
+    LP: Math.round(LP),
+    palette: palette,
+  };
+  el.station = FW.hybDim[el.hyb];
+  el.freq = FW.freqForStation(el.station);
+  el.EN = Math.pow(el.Zeff, FW.R / (FW.R + 3)) / 2;
+  el.lpFactor = 1 / (1 + el.LP);
+  el.targetCosAngle = HYB_TARGET_COS[el.hyb];
+  return el;
+}
+
+// randomizeInputs: roll a valid (hyb, valence, LP, A, Zeff, hue) vector.
+// Slot constraint guarantees D5 closure; ranges chosen to span the
+// existing element table's spread so authored atoms stay in family.
+function randomizeInputs() {
+  const hyb = HYB_LIST[Math.floor(Math.random() * HYB_LIST.length)];
+  const slots = HYB_SLOTS[hyb];
+  // Valence in [1, slots]; LP in [0, slots-valence].
+  const valence = 1 + Math.floor(Math.random() * slots);
+  const LP = Math.floor(Math.random() * (slots - valence + 1));
+  // A and Zeff: weighted toward the lower end so spawns aren't all whales.
+  const A = 1 + Math.floor(Math.pow(Math.random(), 1.4) * 49);
+  const Zeff = 1 + Math.floor(Math.pow(Math.random(), 1.2) * 14);
+  const hue = Math.random();
+  return { name: "X" + Math.floor(Math.random() * 1000), A, Zeff, valence, hyb, LP, hue };
+}
+
+// spawnAtom: append a new atom into the simulation at the given position.
+// Wires up nucleon allocation, mesh + material, audio osc/gain (if audio
+// is up). Returns the new particle, or null if a cap was hit.
+function spawnAtom(element, x, y, z) {
+  if (particles.length >= MAX_PARTICLES) {
+    console.warn("MAX_PARTICLES reached");
+    return null;
+  }
+  const p = makeParticle(element, x, y, z);
+  p.vel.copy(randomDrift(SPAWN_SPEED));
+  particles.push(p);
+  attachVisualToParticle(p);
+  if (!attachNucleonsToParticle(p)) {
+    // Out of nucleon capacity; roll back the spawn.
+    scene.remove(p.mesh);
+    particles.pop();
+    return null;
+  }
+  attachAudioToParticle(p);
+  return p;
+}
+
+// ===========================================================================
+// v2.0: NUCLEOSYNTHESIS
+// Fusion turns two atoms into one with their summed nucleon count IF that
+// total lands on a stable A. Forbidden A (5, 8) bounce. Successful fusion
+// emits a bright flash and a kinetic burst (the mass-defect goes back into
+// the surrounding soup as motion). The framework reading: each fusion is
+// one cycle of the four-stroke pump (⊛ pull → i rotate → ✹ release)
+// closing at a higher-complexity scale.
+// ===========================================================================
+
+let FUSION_ENERGY_THRESHOLD = 60;    // (rel-vel)^2 above which fusion attempts; tuned with HEAT
+let FUSION_PROB_PER_ATTEMPT = 0.85;  // chance of fusion if energy above threshold
+let FUSION_BOND_PENALTY = 4.0;       // bonded pairs need this many × more energy
+let HEAT = 35;                       // 0-100; scales kinetic noise
+let _fusionCount = 0;                // total successful fusion events
+
+function tryFusion(pi, pj) {
+  const A_new = pi.element.A + pj.element.A;
+  const newKey = FUSION_TABLE_BY_A[A_new];
+  if (!newKey) return false;  // forbidden A (5, 8, etc.); just bounce
+  // Energy gate: relative kinetic energy must exceed threshold. Bonded
+  // pairs need more energy because their molecular bond must "break" first
+  // (real-world: dissociation precedes fusion in a star).
+  _relVel.subVectors(pi.vel, pj.vel);
+  const e = _relVel.lengthSq();
+  const threshold = FUSION_ENERGY_THRESHOLD * (
+    (pi.bonds.length > 0 || pj.bonds.length > 0) ? FUSION_BOND_PENALTY : 1.0
+  );
+  if (e < threshold) return false;
+  if (Math.random() > FUSION_PROB_PER_ATTEMPT) return false;
+  // Compute conserved-momentum velocity for the new atom.
+  const Ma = pi.element.A, Mb = pj.element.A, Mn = Ma + Mb;
+  const vx = (pi.vel.x * Ma + pj.vel.x * Mb) / Mn;
+  const vy = (pi.vel.y * Ma + pj.vel.y * Mb) / Mn;
+  const vz = (pi.vel.z * Ma + pj.vel.z * Mb) / Mn;
+  // Spawn at the midpoint.
+  const mx = (pi.pos.x + pj.pos.x) * 0.5;
+  const my = (pi.pos.y + pj.pos.y) * 0.5;
+  const mz = (pi.pos.z + pj.pos.z) * 0.5;
+  const newElement = ELEMENTS[newKey];
+  const newAtom = spawnAtom(newElement, mx, my, mz);
+  if (!newAtom) return false;  // hit a cap; abandon
+  newAtom.vel.set(vx, vy, vz);
+  // Visible/audible event: bright flash, heat burst, audio spike.
+  newAtom.amplitudeTarget = Math.min(1.5, newAtom.amplitudeTarget + 0.85);
+  emitLight(newAtom.pos, 0xffffff, 1.6, [newAtom]);
+  emitHeat(newAtom.pos, 1.2);
+  // Remove the originals.
+  removeAtom(pi);
+  removeAtom(pj);
+  _fusionCount += 1;
+  return true;
+}
+
+function removeAtom(p) {
+  // Break any bonds first (defensive; tryFusion already rejects bonded pairs).
+  while (p.bonds.length > 0) breakBond(p.bonds[p.bonds.length - 1]);
+  // Remove mesh from scene + dispose material.
+  if (p.mesh) {
+    scene.remove(p.mesh);
+    if (p.mat && p.mat.dispose) p.mat.dispose();
+  }
+  // Stop and disconnect audio nodes.
+  if (p.osc) {
+    try { p.osc.stop(); } catch (e) {}
+    try { p.osc.disconnect(); } catch (e) {}
+  }
+  if (p.oscGain) {
+    try { p.oscGain.disconnect(); } catch (e) {}
+  }
+  // Zero out the atom's nucleon slots so they render nothing. We do NOT
+  // free the slots back to the pool (would require shifting ranges); we
+  // just blank them. The next spawnAtom claims fresh slots from the head.
+  if (p.nucleonBase != null) {
+    for (let i = 0; i < p.nucleons.length; i++) {
+      const idx = p.nucleonBase + i;
+      _nucPositions[idx * 3 + 0] = 0;
+      _nucPositions[idx * 3 + 1] = 0;
+      _nucPositions[idx * 3 + 2] = 0;
+      _nucSizes[idx] = 0;
+    }
+    nucleonGeo.attributes.position.needsUpdate = true;
+    nucleonGeo.attributes.size.needsUpdate = true;
+  }
+  // Splice from particles[].
+  const i = particles.indexOf(p);
+  if (i >= 0) particles.splice(i, 1);
+}
+
+
+nucleonGeo.attributes.size.needsUpdate  = true;
+
+function hueFromPhase(phase) { return (phase / (2 * Math.PI)) % 1; }
+
+const _emissiveColor = new THREE.Color();
+// Scratch objects for the nucleon orbital rotation.
+const _nucQuat = new THREE.Quaternion();
+const _nucRotated = new THREE.Vector3();
+function updateVisual(dt) {
+  // First pass: outer shells.
+  for (const p of particles) {
+    p.mesh.position.copy(p.pos);
+    const scale = 1.0 + p.amplitude * 0.60;
+    p.mesh.scale.setScalar(scale);
+    const hueShift = (hueFromPhase(p.phase) - 0.5) * 0.18;
+    _emissiveColor.setHSL((p._baseHSL.h + hueShift + 1) % 1, p._baseHSL.s, p._baseHSL.l);
+    p.mat.emissive.copy(_emissiveColor);
+    p.mat.emissiveIntensity = 0.12 + p.amplitude * 1.8;
+  }
+
+  // Second pass: nucleon point cloud. Advance each nucleon's orbital phase,
+  // rotate its stored offset around its axis, add a small radial wobble,
+  // write the world-space position + size directly into the Points geometry
+  // attribute arrays. Additive blending means overlapping nucleons glow
+  // brighter; excite pulses the size so strikes visibly flare the interior.
+  const t = performance.now() * 0.001;
+  for (const p of particles) {
+    const excite = 1.0 + p.amplitude * 1.5;
+    const nucCount = p.nucleons.length;
+    const base = p.nucleonBase;
+    for (let i = 0; i < nucCount; i++) {
+      const n = p.nucleons[i];
+      n.phase += dt * n.omega * excite;
+      _nucQuat.setFromAxisAngle(n.axis, dt * n.omega * excite);
+      n.offset.applyQuaternion(_nucQuat);
+      const wob = 1.0 + NUCLEON_WOBBLE_AMP * excite * Math.sin(n.wobblePhase + t * 1.7);
+      if (n.baseR > 0.0001) {
+        _nucRotated.copy(n.offset).multiplyScalar(wob);
+      } else {
+        // Single-nucleon atoms: gentle jitter around center.
+        _nucRotated.set(
+          Math.sin(n.phase) * 0.6,
+          Math.cos(n.phase * 1.3) * 0.6,
+          Math.sin(n.phase * 0.7) * 0.6
+        ).multiplyScalar(excite);
+      }
+      n.local.copy(_nucRotated);
+      const idx = base + i;
+      _nucPositions[idx * 3 + 0] = p.pos.x + _nucRotated.x;
+      _nucPositions[idx * 3 + 1] = p.pos.y + _nucRotated.y;
+      _nucPositions[idx * 3 + 2] = p.pos.z + _nucRotated.z;
+      // Size pulse: quieter at rest, flares with excite. Slightly modulated
+      // by wobble so the interior shimmers even on idle atoms.
+      _nucSizes[idx] = 0.85 + 0.50 * excite + 0.08 * (wob - 1);
+    }
+  }
+  nucleonGeo.attributes.position.needsUpdate = true;
+  nucleonGeo.attributes.size.needsUpdate = true;
+}
+
+// ===========================================================================
+// LAYER 4: AUDIO SYNTHESIS
+// One OscillatorNode per particle, summed into masterGain. Per-particle
+// gain scaled down so the two-voice chord stays under the clipping ceiling.
+// ===========================================================================
+let audioCtx = null;
+let masterGain = null;
+
+// Audio-ready flag: true after AudioContext state is "running" AND every
+// oscillator has actually been started. updateAudio() bails unless this is
+// true, so we never push gain automation into a pending graph.
+let audioReady = false;
+
+// v1.10: factored so spawnAtom() can register new atoms with the audio
+// graph at runtime. Creates osc + gain nodes and connects them; if the
+// context is already running, also starts the osc immediately so the new
+// atom is audible without waiting for another initAudio pass.
+function attachAudioToParticle(p) {
+  if (!audioCtx) return;
+  p.osc = audioCtx.createOscillator();
+  p.oscGain = audioCtx.createGain();
+  p.osc.type = "sine";
+  p.osc.frequency.value = p.element.freq;
+  p.oscGain.gain.value = 0.0;
+  p.osc.connect(p.oscGain);
+  p.oscGain.connect(masterGain);
+  if (audioReady) {
+    try { p.osc.start(); p._oscStarted = true; } catch (e) {}
+  }
+}
+
+function initAudio() {
+  // Second+ calls: nudge the context if it somehow went suspended (eg. user
+  // switched tabs on some browsers). Otherwise no-op.
+  if (audioCtx) {
+    if (audioCtx.state !== "running") {
+      audioCtx.resume().then(() => { audioReady = true; }).catch(() => {});
+    } else {
+      audioReady = true;
+    }
+    return;
+  }
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  if (!Ctx) return;
+  audioCtx = new Ctx();
+  masterGain = audioCtx.createGain();
+  masterGain.gain.value = 0.09;  // lower baseline; up to 41 voices can sum
+  masterGain.connect(audioCtx.destination);
+
+  // Create the oscillator/gain nodes but do NOT start() yet. Connecting
+  // them is fine in any state; starting them must wait until the context
+  // is actually running or they will kick in late.
+  for (const p of particles) attachAudioToParticle(p);
+
+  // Once running, start every oscillator and flip audioReady.
+  const startAll = () => {
+    for (const p of particles) {
+      try { if (p.osc && !p._oscStarted) { p.osc.start(); p._oscStarted = true; } } catch (e) { /* already-started is harmless */ }
+    }
+    audioReady = true;
+    document.getElementById("audioPrompt").classList.add("hidden");
+    document.getElementById("sAudio").textContent = "on (" + audioCtx.sampleRate + " Hz)";
+  };
+
+  if (audioCtx.state === "running") {
+    // Firefox / some mobile browsers may start running immediately.
+    startAll();
+  } else {
+    // Chrome / Safari desktop: context starts suspended, resume() is async.
+    audioCtx.resume()
+      .then(startAll)
+      .catch((e) => {
+        console.error("audio resume failed:", e);
+        document.getElementById("sAudio").textContent = "resume failed";
+      });
+  }
+}
+
+function updateAudio() {
+  // Bail unless the context is actually running AND we've started oscillators.
+  // audioReady flips true in startAll() above; until then, gain automation
+  // would be queuing against a graph whose oscillators haven't begun emitting,
+  // producing the "glitches at first, then comes on solid" bug.
+  if (!audioReady || !audioCtx || audioCtx.state !== "running") return;
+  const t = audioCtx.currentTime;
+  for (const p of particles) {
+    if (!p.oscGain) continue;
+    p.oscGain.gain.setTargetAtTime(p.amplitude * 0.18, t, 0.008);
+    p.osc.frequency.setTargetAtTime(p.freqEffective || p.element.freq, t, 0.02);
+  }
+}
+
+// ===========================================================================
+// LAYER 6: INPUT / INTERACTION
+// Mouse → world point on z=0 plane; click spikes NEAREST particle.
+// ===========================================================================
+const input = {
+  mouseWorld: new THREE.Vector3(),
+  mouseActive: false,
+};
+
+const _ndc = new THREE.Vector2();
+const _ray = new THREE.Raycaster();
+const _planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+const _hit = new THREE.Vector3();
+function mouseToWorld(ev) {
+  _ndc.x = (ev.clientX / window.innerWidth) * 2 - 1;
+  _ndc.y = -(ev.clientY / window.innerHeight) * 2 + 1;
+  _ray.setFromCamera(_ndc, camera);
+  _ray.ray.intersectPlane(_planeZ, _hit);
+  input.mouseWorld.copy(_hit);
+  input.mouseActive = true;
+}
+
+function nearestParticle() {
+  let best = null;
+  let bestD2 = Infinity;
+  for (const p of particles) {
+    const d2 = p.pos.distanceToSquared(input.mouseWorld);
+    if (d2 < bestD2) { bestD2 = d2; best = p; }
+  }
+  return best;
+}
+
+renderer.domElement.addEventListener("mousemove", mouseToWorld);
+renderer.domElement.addEventListener("mouseleave", () => { input.mouseActive = false; });
+// Click-to-start overlay: the ONE place audio can initialize. When the
+// overlay is dismissed, audio is guaranteed running, so every subsequent
+// canvas interaction can spike amplitudes without wasReady gymnastics.
+const _audioPrompt = document.getElementById("audioPrompt");
+_audioPrompt.addEventListener("mousedown", (ev) => {
+  ev.preventDefault();
+  initAudio();
+  // Poll briefly for audio becoming ready; once it is, fade the overlay.
+  // Most browsers resolve resume() within 20–80ms, so this is imperceptible.
+  const fadeCheck = () => {
+    if (audioReady) {
+      _audioPrompt.classList.add("hidden");
+    } else {
+      setTimeout(fadeCheck, 30);
+    }
+  };
+  fadeCheck();
+});
+
+// Canvas mousedown: spike the nearest particle. Audio is guaranteed ready
+// by the time this fires, because the overlay blocks interaction until then.
+renderer.domElement.addEventListener("mousedown", (ev) => {
+  if (ev.button !== 0) return;
+  if (!audioReady) return;  // defensive; overlay should prevent this
+  mouseToWorld(ev);
+  const p = nearestParticle();
+  if (p) p.amplitudeTarget = Math.min(1.5, p.amplitudeTarget + 1.2);
+});
+window.addEventListener("keydown", (ev) => {
+  if (ev.code === "KeyR" || ev.code === "KeyS") {
+    breakAllBonds();
+    for (const p of particles) {
+      p.pos.copy(randomPosInSphere(SPAWN_RADIUS));
+      p.vel.copy(randomDrift(SPAWN_SPEED));
+      p.amplitudeTarget = 0.0;
+      p.freqEffective = p.element.freq;
+    }
+  }
+});
+
+// ===========================================================================
+// LAYER 2 (PHYSICS): force integration across all particles
+// Still no bonds. Mouse repulsion applies to each particle independently.
+// Viscous damping + amplitude relaxation per particle.
+// ===========================================================================
+const PHYS = {
+  mouseRepulseRadius: 120,     // larger volume needs larger mouse influence
+  mouseRepulseStrength: 4500,
+  // Pairwise volume exclusion (not a bond). Radius is roughly 2× the
+  // sphere visual radius; strength tuned so pushing one into the other
+  // produces a satisfying repel without runaway oscillation.
+  excludeRadius: 26,
+  excludeStrength: 1500,
+  // Contact detection: when two particles cross this threshold for the
+  // first time (not-touching → touching), it's a "collision event" and
+  // we fire tones on both. Slightly less than excludeRadius so the event
+  // fires once per contact, not chattering at the edge of the shell.
+  contactRadius: 24,
+  // Impact scaling: relative velocity along the separation axis, divided
+  // by this, becomes the amplitude spike (clamped). 30 units/s gives a
+  // full-strength hit; a gentle nudge barely rings.
+  impactVelScale: 30,
+  impactAmpScale: 0.9,
+  viscosity: 0.92,
+  // Amplitude decay tuned for ringing: 0.8/s means a click-spike takes
+  // ~0.75s to fall back to rest, easily long enough to hear the change
+  // and see the visual pulse track the audio.
+  // Event-driven audio: amplitudeTarget is 0 at rest; events (collisions,
+  // clicks) spike it and it decays back to silence. Faster decay than v0.6
+  // so taps read as percussive hits rather than sustained notes.
+  ampRestRate: 2.2,       // 1/s: amp-target decays ~2× per second toward 0
+  ampRestValue: 0.0,
+  ampSmoothing: 18.0,     // 1/s: amplitude chases target fast for crisp onset
+  // Soft spherical containment: particles beyond this radius get pushed
+  // back toward origin with a quadratic spring. Radius is generous so you
+  // can orbit a wide view without hitting it under normal play, but hard
+  // enough that a bonded pair with escape momentum can't leave.
+  boundaryRadius: 220,
+  boundaryStrength: 3,    // gentler spring at larger scale; still contains escapes
+};
+
+// Soft boundary sphere visualization (wireframe). Lives after PHYS so it
+// can read PHYS.boundaryRadius; was failing at runtime earlier because it
+// was placed in the scene-setup block that runs before this declaration.
+const boundaryMesh = new THREE.Mesh(
+  new THREE.SphereGeometry(PHYS.boundaryRadius, 28, 18),
+  new THREE.MeshBasicMaterial({
+    color: 0x2b4a58,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.18,
+    depthWrite: false,
+  })
+);
+scene.add(boundaryMesh);
+
+// Mouse cursor sphere: shows where the mouse's repulsive influence lives
+// in 3D. Additive/translucent so it glows without occluding particles.
+// Positioned each frame from input.mouseWorld + camera z so it sits on a
+// plane near the volume's center, not on z=0.
+const cursorMesh = new THREE.Mesh(
+  new THREE.SphereGeometry(PHYS.mouseRepulseRadius, 18, 14),
+  new THREE.MeshBasicMaterial({
+    color: 0xd18a2e,
+    transparent: true,
+    opacity: 0.12,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  })
+);
+scene.add(cursorMesh);
+
+// v1.2 BOND constants. Formation distance is just inside the exclusion shell
+// so particles bond as they come into contact. Rest length is the sum of
+// half the sphere radii minus a small overlap so they "kiss" when bonded.
+// Stiffness and break threshold tuned so a firm push stretches the bond
+// audibly before snapping.
+const BOND = {
+  // FORM_RADIUS matches excludeRadius so bonds form as particles first touch
+  // their repulsion shell (no "fight exclusion on the way in" window).
+  FORM_RADIUS: 26,
+  // Rest length is captured per-bond at formation, clamped to [min, max].
+  // This means bonds always form at equilibrium and only oscillate from the
+  // inward velocity the particles already had.
+  REST_LENGTH_MIN: 20,
+  REST_LENGTH_MAX: 26,
+  // Soft spring (was 900, way too stiff): at typical displacement ~3u the
+  // force is now ~240 instead of 2700. Particles oscillate calmly around
+  // rest instead of launching each other past the break threshold.
+  STIFFNESS: 80,
+  // Near-critical damping for k=80, m=1 (2*sqrt(80) ~ 17.9). Bond
+  // oscillations settle within ~0.3s, which is the "sticks together" feel.
+  DAMPING: 14.0,
+  // Tolerant break threshold so casual poking does not snap the bond.
+  BREAK_STRETCH: 2.2,
+  // v1.5: angular spring stiffness for hybridization constraints. Moderate
+  // so bonds lean toward the right angles without violently yanking partners.
+  ANGLE_STIFFNESS: 220,
+  // v1.7: multi-bond (double/triple) upgrade parameters. A bond that has
+  // existed at least UPGRADE_AGE_MIN seconds and is currently at rest (low
+  // strain) can upgrade to order 2 or 3 if both atoms have free valence.
+  // Per-second probability staggers upgrades so the system doesn't
+  // instantly jump to all triples.
+  UPGRADE_AGE_MIN: 0.6,
+  UPGRADE_PROB_PER_SEC: 0.7,
+  UPGRADE_STRAIN_MAX: 0.12,
+  // v1.6 reaction-release constants. Bond formation releases energy (framework:
+  // bond energy = bond_stiffness · rest_length²; we use a simpler proxy here)
+  // as kinetic heat (velocity kick on neighbors) + photon (bright flash at
+  // bond midpoint). Break absorbs energy (cool-colored flash). Coupling
+  // coefficients are game-native; the mapping of "exothermic forms, endothermic
+  // breaks" is framework-native.
+  HEAT_RADIUS: 60,          // radius within which bond-formation heat is felt
+  HEAT_STRENGTH: 35,        // velocity kick per unit bond strength
+  LIGHT_DURATION: 0.28,     // shorter so flashes feel like sparks, not glares
+  LIGHT_SIZE_BASE: 14,
+  LIGHT_SIZE_SCALE: 18,     // moderate reach; rays shouldn't dominate the frame
+  FREQ_LOCK_RATE: 5.0,
+  FORM_AMP_SPIKE: 0.55,
+  BREAK_AMP_SPIKE: 0.9,
+};
+
+// Active bonds in the simulation. Each entry: { a, b, restLength, bondFreq, mesh }.
+const bonds = [];
+
+// ===========================================================================
+// BOND HELPERS
+// Lifecycle: canBond (valence + not-already-bonded), formBond (allocate +
+// attach to particles + emit audio), breakBond (detach + dispose + emit),
+// breakAllBonds (R reset). Spring force + damping runs in updatePhysics.
+// ===========================================================================
+function canBond(p1, p2) {
+  if (p1 === p2) return false;
+  if (p1.bondOrderSum + 1 > p1.element.valence) return false;
+  if (p2.bondOrderSum + 1 > p2.element.valence) return false;
+  for (const b of p1.bonds) {
+    if (b.a === p2 || b.b === p2) return false;
+  }
+  return true;
+}
+
+function areBonded(pi, pj) {
+  for (const b of pi.bonds) {
+    if (b.a === pj || b.b === pj) return true;
+  }
+  return false;
+}
+
+// v1.9.2: bonds are no longer rendered as cylinders. The framework reads
+// every relation as a Φ between two ⊙s; chemically, that Φ is the shared
+// electron pair(s) between the two atoms. We render bond order × 2 glowing
+// electrons orbiting a ring around the bond midpoint. Bond order is legible
+// at a glance: 2 electrons (single), 4 (double), 6 (triple). All circumpunct-
+// shaped points; no cylinders. The orbital ring's radius and tilt encode
+// sigma vs pi character; sigma electrons sit on the bond axis plane,
+// successive pi electron pairs lift above/below in perpendicular planes.
+
+const BOND_ELECTRON_RADIUS = 4.5;       // base orbit radius around midpoint
+const BOND_ELECTRON_OMEGA  = 1.6;       // rad/s per electron orbit
+const BOND_ELECTRON_PI_OFFSET = 3.2;    // axial offset for pi pairs (above/below)
+const BOND_MAX_ELECTRONS = 256;         // cap; ~42 triple-bonds before saturation
+
+function buildBondElectrons(order) {
+  // For each bond, allocate `order * 2` electrons distributed across lanes.
+  // Lane 0 is the sigma ring (in the perpendicular plane at midpoint).
+  // Lane +1 and -1 are the first pi pair (offset above and below along the
+  // bond axis, on a perpendicular plane). Lane +2 and -2 are the second pi
+  // pair (perpendicular to the first pi plane).
+  const N = order * 2;
+  const electrons = new Array(N);
+  if (order === 1) {
+    // Single bond: 2 electrons opposite each other on the sigma ring.
+    electrons[0] = { phase: 0,        lane: 0, axialOffset: 0 };
+    electrons[1] = { phase: Math.PI,  lane: 0, axialOffset: 0 };
+  } else if (order === 2) {
+    // Double bond: sigma pair + 1 pi pair.
+    electrons[0] = { phase: 0,        lane: 0, axialOffset: 0 };
+    electrons[1] = { phase: Math.PI,  lane: 0, axialOffset: 0 };
+    electrons[2] = { phase: 0,        lane: 1, axialOffset: +BOND_ELECTRON_PI_OFFSET };
+    electrons[3] = { phase: Math.PI,  lane: 1, axialOffset: -BOND_ELECTRON_PI_OFFSET };
+  } else {
+    // Triple bond: sigma + 2 pi pairs in perpendicular planes.
+    electrons[0] = { phase: 0,        lane: 0, axialOffset: 0 };
+    electrons[1] = { phase: Math.PI,  lane: 0, axialOffset: 0 };
+    electrons[2] = { phase: 0,        lane: 1, axialOffset: +BOND_ELECTRON_PI_OFFSET };
+    electrons[3] = { phase: Math.PI,  lane: 1, axialOffset: -BOND_ELECTRON_PI_OFFSET };
+    electrons[4] = { phase: 0,        lane: 2, axialOffset: +BOND_ELECTRON_PI_OFFSET };
+    electrons[5] = { phase: Math.PI,  lane: 2, axialOffset: -BOND_ELECTRON_PI_OFFSET };
+  }
+  return electrons;
+}
+
+// Bond electron Points cloud: shared by all bonds. Geometry attribute
+// arrays sized to BOND_MAX_ELECTRONS; we set draw range each frame to the
+// number of electrons actually in use this tick.
+const _bondElGeo = new THREE.BufferGeometry();
+const _bondElPositions = new Float32Array(BOND_MAX_ELECTRONS * 3);
+const _bondElColors    = new Float32Array(BOND_MAX_ELECTRONS * 3);
+const _bondElSizes     = new Float32Array(BOND_MAX_ELECTRONS);
+_bondElGeo.setAttribute("position", new THREE.BufferAttribute(_bondElPositions, 3).setUsage(THREE.DynamicDrawUsage));
+_bondElGeo.setAttribute("color",    new THREE.BufferAttribute(_bondElColors, 3).setUsage(THREE.DynamicDrawUsage));
+_bondElGeo.setAttribute("size",     new THREE.BufferAttribute(_bondElSizes, 1).setUsage(THREE.DynamicDrawUsage));
+const _bondElMat = new THREE.PointsMaterial({
+  size: 5.0,
+  map: _nucSprite,
+  transparent: true,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending,
+  vertexColors: true,
+  sizeAttenuation: true,
+});
+_bondElMat.onBeforeCompile = (shader) => {
+  shader.vertexShader = "attribute float size;\n" + shader.vertexShader
+    .replace("gl_PointSize = size;", "gl_PointSize = size * ( scale / - mvPosition.z );");
+};
+const bondElectronPoints = new THREE.Points(_bondElGeo, _bondElMat);
+bondElectronPoints.frustumCulled = false;
+bondElectronPoints.renderOrder = 3;
+scene.add(bondElectronPoints);
+
+function formBond(p1, p2) {
+  let restLength = p1.pos.distanceTo(p2.pos);
+  if (restLength < BOND.REST_LENGTH_MIN) restLength = BOND.REST_LENGTH_MIN;
+  if (restLength > BOND.REST_LENGTH_MAX) restLength = BOND.REST_LENGTH_MAX;
+  const bondFreq = (p1.element.freq + p2.element.freq) * 0.5;
+
+  // Ionic resonance (framework §16.4f): D(A-B) = sqrt(D_AA·D_BB) · (1 + 5·ΔEN²).
+  // Homonuclear (same EN) gets 1.0 × baseline; heteronuclear bonds are
+  // stiffer, scaled by 1 + (Φ+T)·ΔEN² with (Φ+T) = 5.
+  const dEN = p1.element.EN - p2.element.EN;
+  const ionicBoost = 1 + (FW.PHI_n + FW.T) * dEN * dEN;
+  // Lone-pair sigma suppression (framework §16.4e layer 2): f = 1/(1+n_LP)
+  // on each side; total sigma factor = product.
+  const lpFactor = p1.element.lpFactor * p2.element.lpFactor;
+  // Per-bond stiffness: baseline × ionic × LP.
+  const stiffness = BOND.STIFFNESS * ionicBoost * lpFactor;
+  // Rest length contracts slightly with stronger bonds (framework has bond
+  // length ~ r_i + r_j - overlap; overlap grows with bond strength). We
+  // use a small linear contraction here.
+  const contraction = Math.min(0.4, (ionicBoost - 1) * 0.10 + (1 - lpFactor) * 0.1);
+  restLength = restLength * (1 - contraction);
+
+  const bond = {
+    a: p1, b: p2,
+    order: 1,                       // v1.7: bond order; can upgrade to 2 or 3
+    formTime: performance.now() * 0.001,
+    baseStiffness: stiffness,       // pre-multiplier; stiffness = base × order_mult × lp_boost
+    baseStrengthRatio: ionicBoost * lpFactor,
+    stiffness,
+    strengthRatio: ionicBoost * lpFactor,
+    baseRestLength: restLength,
+    restLength,
+    bondFreq,
+    // v1.9.2: shared electron pair(s) instead of a cylinder.
+    // electrons[k] = { phase, laneIndex, sigma } for k in 0..order*2-1.
+    // Lane 0 (sigma) sits in the bond-axis plane; lane 1, 2 (pi) lift
+    // perpendicular. Phase advances each frame to make the cloud orbit.
+    electrons: buildBondElectrons(1),  // order=1 at formation; upgrades later
+    color: 0xffffff,                   // computed below from the two atoms' emissives
+  };
+  p1.bonds.push(bond);
+  p2.bonds.push(bond);
+  p1.bondOrderSum += 1;
+  p2.bondOrderSum += 1;
+  bonds.push(bond);
+  // Audio event: warm snap-in, both voices spike.
+  p1.amplitudeTarget = Math.min(1.5, p1.amplitudeTarget + BOND.FORM_AMP_SPIKE);
+  p2.amplitudeTarget = Math.min(1.5, p2.amplitudeTarget + BOND.FORM_AMP_SPIKE);
+  // Exothermic: emit heat + light at the bond midpoint. Light colored from
+  // the blend of the two atoms' emissives; warm mix with a white core.
+  const mid = _heatDir.copy(p1.pos).add(p2.pos).multiplyScalar(0.5);
+  const strength = bond.strengthRatio || 1.0;
+  const c1 = new THREE.Color(p1.element.palette.emissive);
+  const c2 = new THREE.Color(p2.element.palette.emissive);
+  const blend = c1.clone().lerp(c2, 0.5).lerp(new THREE.Color(0xffffff), 0.35);
+  // v1.9.2: cache the shared-electron color (closer to white than the
+  // emit-light blend so the orbit reads as luminous gas).
+  const electronColor = c1.clone().lerp(c2, 0.5).lerp(new THREE.Color(0xffffff), 0.55);
+  bond.elColorR = electronColor.r;
+  bond.elColorG = electronColor.g;
+  bond.elColorB = electronColor.b;
+  emitLight(mid, blend.getHex(), strength, [p1, p2]);
+  emitHeat(mid, strength);
+}
+
+function breakBond(bond) {
+  const i = bonds.indexOf(bond);
+  if (i < 0) return;
+  bonds.splice(i, 1);
+  const ai = bond.a.bonds.indexOf(bond); if (ai >= 0) bond.a.bonds.splice(ai, 1);
+  const bi = bond.b.bonds.indexOf(bond); if (bi >= 0) bond.b.bonds.splice(bi, 1);
+  bond.a.bondOrderSum -= bond.order;
+  bond.b.bondOrderSum -= bond.order;
+  // v1.9.2: bonds no longer carry a cylinder mesh; nothing to dispose.
+  // Electron points are reclaimed automatically by the next updateBondMesh
+  // pass since draw range collapses when the bond is gone from the array.
+  // Audio event: louder dissonant snap.
+  bond.a.amplitudeTarget = Math.min(1.5, bond.a.amplitudeTarget + BOND.BREAK_AMP_SPIKE);
+  bond.b.amplitudeTarget = Math.min(1.5, bond.b.amplitudeTarget + BOND.BREAK_AMP_SPIKE);
+  // Endothermic: cool-colored flash (no heat kick; energy went INTO the break).
+  const mid = _heatDir.copy(bond.a.pos).add(bond.b.pos).multiplyScalar(0.5);
+  emitLight(mid, 0x6fa0ff, (bond.strengthRatio || 1.0) * 0.6);
+}
+
+function breakAllBonds() {
+  while (bonds.length > 0) breakBond(bonds[bonds.length - 1]);
+}
+
+// v1.7: bond order → stiffness multiplier. pi_1/sigma = R/T² = 7/9,
+// pi_2/sigma = V/P(P+1) = 13/20. Triple bonds with lone pairs get the
+// T/Φ = 3/2 compositional boost (D5, §16.4e layer 3).
+function bondOrderMultiplier(order, aLP, bLP) {
+  if (order <= 1) return 1.0;
+  const piR = FW.R / (FW.T * FW.T);             // 7/9
+  const piV = FW.V / (FW.P * (FW.P + 1));       // 13/20
+  let mult = 1.0 + piR;                          // double = 1 + 7/9
+  if (order >= 3) {
+    mult += piV;                                 // triple = 1 + 7/9 + 13/20
+    if (aLP > 0 || bLP > 0) mult *= FW.T / FW.PHI_n;  // × 3/2 with LPs
+  }
+  return mult;
+}
+
+const _midV3 = new THREE.Vector3();
+function tryUpgradeBond(bond, dt) {
+  if (bond.order >= 3) return;
+  const age = performance.now() * 0.001 - bond.formTime;
+  if (age < BOND.UPGRADE_AGE_MIN) return;
+  // Don't upgrade a strained bond.
+  const dist = bond.a.pos.distanceTo(bond.b.pos);
+  const strain = Math.abs(dist - bond.restLength) / bond.restLength;
+  if (strain > BOND.UPGRADE_STRAIN_MAX) return;
+  // Valence check: upgrade needs both endpoints to have one more slot free.
+  if (bond.a.bondOrderSum + 1 > bond.a.element.valence) return;
+  if (bond.b.bondOrderSum + 1 > bond.b.element.valence) return;
+  // Probabilistic roll so upgrades stagger.
+  if (Math.random() > BOND.UPGRADE_PROB_PER_SEC * dt) return;
+  // Upgrade!
+  bond.order += 1;
+  bond.a.bondOrderSum += 1;
+  bond.b.bondOrderSum += 1;
+  const mult = bondOrderMultiplier(bond.order, bond.a.element.LP, bond.b.element.LP);
+  bond.stiffness = bond.baseStiffness * mult;
+  bond.strengthRatio = bond.baseStrengthRatio * mult;
+  // Bond length contracts with order: doubles ~88%, triples ~78% of baseline.
+  bond.restLength = bond.baseRestLength * (bond.order === 2 ? 0.88 : 0.78);
+  // v1.9.2: rebuild the shared-electron lanes for the new bond order.
+  // The new electrons inherit the bond's color and start with offset phases
+  // so the orbit visibly densifies.
+  bond.electrons = buildBondElectrons(bond.order);
+  // Emit the upgrade as a chemistry event: spike both voices, flash, kick.
+  _midV3.copy(bond.a.pos).add(bond.b.pos).multiplyScalar(0.5);
+  const spikeAmp = 0.35 + 0.15 * bond.order;
+  bond.a.amplitudeTarget = Math.min(1.5, bond.a.amplitudeTarget + spikeAmp);
+  bond.b.amplitudeTarget = Math.min(1.5, bond.b.amplitudeTarget + spikeAmp);
+  const flashColor = bond.order === 2 ? 0xffe0a0 : 0xffffff;
+  emitLight(_midV3, flashColor, bond.strengthRatio * 0.5, [bond.a, bond.b]);
+  emitHeat(_midV3, bond.strengthRatio * 0.35);
+}
+
+// v1.9.2: bonds render as a small ring of glowing electrons orbiting the
+// midpoint between the two atoms. We compute a frame in which the bond axis
+// is one direction and two perpendicular axes complete the basis; every
+// electron's position is midpoint + axialOffset·d̂ + r·(cos·u + sin·v) on a
+// plane chosen by its lane index. Sigma electrons (lane 0) sit on the
+// perpendicular plane at midpoint; pi electrons (lane 1, 2) shift along
+// the bond axis and use perpendicular planes. dist threshold collapses the
+// ring when atoms pull tight (so the cloud doesn't merge into the spheres).
+const _bondMid = new THREE.Vector3();
+const _bondDir = new THREE.Vector3();
+const _bondU = new THREE.Vector3();
+const _bondV = new THREE.Vector3();
+// Two pi-plane bases: lane 1 uses (u, v); lane 2 uses (u rotated 90° around d̂).
+const _bondU2 = new THREE.Vector3();
+const _bondV2 = new THREE.Vector3();
+let _bondElCount = 0;
+function updateBondMesh(bond) {
+  // No-op if missing; defensive after v1.9.2 stripped the mesh field.
+  if (!bond.electrons) return;
+  _bondMid.addVectors(bond.a.pos, bond.b.pos).multiplyScalar(0.5);
+  _bondDir.subVectors(bond.b.pos, bond.a.pos);
+  const dist = _bondDir.length();
+  if (dist < 0.0001) return;
+  _bondDir.multiplyScalar(1 / dist);
+  // Build a perpendicular pair (u, v) for the bond axis. Pick a reference
+  // axis that isn't parallel to the bond direction.
+  let ax = 1, ay = 0, az = 0;
+  if (Math.abs(_bondDir.x) > 0.9) { ax = 0; ay = 1; az = 0; }
+  _bondU.set(ax, ay, az);
+  // u' = u - (u·d̂) d̂ then normalised.
+  const proj = _bondU.dot(_bondDir);
+  _bondU.x -= proj * _bondDir.x; _bondU.y -= proj * _bondDir.y; _bondU.z -= proj * _bondDir.z;
+  _bondU.normalize();
+  _bondV.crossVectors(_bondDir, _bondU).normalize();
+  // Second pi-plane basis: rotate (u, v) by 90° around d̂; equivalent to (v, -u).
+  _bondU2.copy(_bondV);
+  _bondV2.copy(_bondU).multiplyScalar(-1);
+
+  // Ring radius: tighten as atoms pull together so electrons don't escape
+  // outside the spheres at small dist. At dist << restLength, fade out.
+  const minRing = 1.5;
+  const targetRadius = Math.min(BOND_ELECTRON_RADIUS, dist * 0.18);
+  const ringR = Math.max(minRing, targetRadius);
+  const t = performance.now() * 0.001;
+  const phaseAdvance = t * BOND_ELECTRON_OMEGA;
+  const strength = Math.sqrt(Math.max(0.5, bond.strengthRatio || 1.0));
+  // Per-bond size scales with strength so denser bonds glow brighter.
+  const baseSize = 0.85 + 0.45 * strength;
+
+  // Strain → flicker: stretched bonds flash their electrons brighter.
+  const strain = (dist - bond.restLength) / bond.restLength;
+  const flicker = 1.0 + Math.max(0, strain) * 1.8;
+
+  // Global write index (incremented across all bonds; updateBondMeshAll
+  // resets it before iterating).
+  for (let i = 0; i < bond.electrons.length; i++) {
+    if (_bondElCount >= BOND_MAX_ELECTRONS) break;
+    const el = bond.electrons[i];
+    const phi = el.phase + phaseAdvance;
+    const cosp = Math.cos(phi), sinp = Math.sin(phi);
+    // Plane basis for this lane.
+    let ux, uy, uz, vx, vy, vz;
+    if (el.lane === 0 || el.lane === 1) {
+      ux = _bondU.x; uy = _bondU.y; uz = _bondU.z;
+      vx = _bondV.x; vy = _bondV.y; vz = _bondV.z;
+    } else {
+      ux = _bondU2.x; uy = _bondU2.y; uz = _bondU2.z;
+      vx = _bondV2.x; vy = _bondV2.y; vz = _bondV2.z;
+    }
+    // Center of this electron's orbit ring: midpoint + axialOffset along d̂.
+    const cx = _bondMid.x + _bondDir.x * el.axialOffset;
+    const cy = _bondMid.y + _bondDir.y * el.axialOffset;
+    const cz = _bondMid.z + _bondDir.z * el.axialOffset;
+    const px = cx + ringR * (cosp * ux + sinp * vx);
+    const py = cy + ringR * (cosp * uy + sinp * vy);
+    const pz = cz + ringR * (cosp * uz + sinp * vz);
+    const idx = _bondElCount;
+    _bondElPositions[idx * 3 + 0] = px;
+    _bondElPositions[idx * 3 + 1] = py;
+    _bondElPositions[idx * 3 + 2] = pz;
+    _bondElColors[idx * 3 + 0] = bond.elColorR;
+    _bondElColors[idx * 3 + 1] = bond.elColorG;
+    _bondElColors[idx * 3 + 2] = bond.elColorB;
+    _bondElSizes[idx] = baseSize * flicker;
+    _bondElCount++;
+  }
+}
+
+function flushBondElectrons() {
+  // Submit attribute updates after all bonds have been processed; collapse
+  // unused trailing slots so they aren't drawn (set draw range).
+  _bondElGeo.attributes.position.needsUpdate = true;
+  _bondElGeo.attributes.color.needsUpdate = true;
+  _bondElGeo.attributes.size.needsUpdate = true;
+  _bondElGeo.setDrawRange(0, _bondElCount);
+}
+
+// ===========================================================================
+// REACTION FX: light sprite pool + heat emitter (v1.6)
+// Bond formation emits a warm bright flash; bond break emits a cool one.
+// Sprite pool pre-allocates meshes so live events do not allocate. Each
+// flash tracks its birth time and fades linearly to invisible over LIGHT_DURATION.
+// ===========================================================================
+// Rays as power flowing out. Each flash starts with RAY_COUNT primary rays
+// radiating from the bond midpoint in Fibonacci-sphere directions. For each
+// ray we ray-cast against all particles; if the ray strikes one, the primary
+// truncates at the hit point AND a secondary branch extends onward at a
+// perturbed direction. The struck particle receives energy (kinetic kick +
+// amplitude spike), so rays literally transfer power as they propagate.
+// Max segments per burst = RAY_COUNT × (primary + branch) = 40; buffer is
+// dynamic so setDrawRange limits draw calls to active segments only.
+// Fewer rays, quieter. On impact the ray terminates and spawns short
+// internal tendrils INSIDE the struck particle (absorbed power). No
+// outward continuation. Max segments accommodates the primary + up to
+// INTERNAL_BRANCHES per hit across all rays.
+const RAY_COUNT = 10;
+const INTERNAL_BRANCHES = 3;
+const MAX_SEGMENTS_PER_BURST = RAY_COUNT + RAY_COUNT * INTERNAL_BRANCHES;
+// Pre-computed unit directions (Fibonacci sphere, evenly spread).
+const RAY_DIRS = [];
+{
+  const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+  for (let i = 0; i < RAY_COUNT; i++) {
+    const y = 1 - (i / (RAY_COUNT - 1)) * 2;
+    const r = Math.sqrt(1 - y * y);
+    const theta = goldenAngle * i;
+    RAY_DIRS.push([Math.cos(theta) * r, y, Math.sin(theta) * r]);
+  }
+}
+
+function makeLightRays() {
+  const positions = new Float32Array(MAX_SEGMENTS_PER_BURST * 6);
+  const geo = new THREE.BufferGeometry();
+  const attr = new THREE.BufferAttribute(positions, 3);
+  attr.setUsage(THREE.DynamicDrawUsage);
+  geo.setAttribute("position", attr);
+  geo.setDrawRange(0, 0);
+  const mat = new THREE.LineBasicMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    depthTest: false,
+  });
+  const lines = new THREE.LineSegments(geo, mat);
+  lines.visible = false;
+  lines.renderOrder = 999;
+  lines.frustumCulled = false;
+  scene.add(lines);
+  return {
+    mesh: lines,
+    positions, attr, geo,
+    birthTime: 0, duration: 0, baseIntensity: 0, baseScale: 0,
+  };
+}
+const lightPool = [];
+for (let i = 0; i < 32; i++) lightPool.push(makeLightRays());
+
+function claimLight() {
+  // Find a sprite whose birth is oldest AND is not visible (expired), else
+  // steal the oldest regardless.
+  let best = null, bestAge = -Infinity;
+  const now = (typeof game !== "undefined" && game.time) ? game.time : performance.now() * 0.001;
+  for (const s of lightPool) {
+    if (!s.mesh.visible) return s;
+    const age = now - s.birthTime;
+    if (age > bestAge) { bestAge = age; best = s; }
+  }
+  return best;
+}
+
+// Scratch vectors reused across emitLight calls to avoid allocation.
+const _rayDir = new THREE.Vector3();
+const _rayToCam = new THREE.Vector3();
+const _rayWidthAxis = new THREE.Vector3();
+
+function emitLight(position, color, strength, excludeList) {
+  const s = claimLight();
+  if (!s) return;
+  s.mesh.visible = true;
+  s.mesh.position.copy(position);
+  s.mesh.material.color.setHex(color);
+  // Lower baseline + smaller strength coefficient so flashes read as glow,
+  // not a floodlight. Hard cap below peak so extreme strengths stay tasteful.
+  // Transparent/ghostly: lower ceiling + smaller strength coefficient so the
+  // additive blend stays translucent rather than solid. Peak ≈ 0.50 for max
+  // strength, not 1.0, which reads as glow through the lines rather than
+  // drawn-over-the-scene streaks.
+  s.baseIntensity = Math.min(0.55, 0.18 + strength * 0.18);
+  s.duration = BOND.LIGHT_DURATION;
+  s.birthTime = performance.now() * 0.001;
+  s.mesh.scale.setScalar(1);
+
+  const reach = BOND.LIGHT_SIZE_BASE + strength * BOND.LIGHT_SIZE_SCALE;
+  s.baseScale = reach;
+  const PARTICLE_RADIUS = 12;
+  const PARTICLE_R2 = PARTICLE_RADIUS * PARTICLE_RADIUS;
+  const pos = s.positions;
+  let segCount = 0;
+
+  for (let i = 0; i < RAY_COUNT; i++) {
+    const dx = RAY_DIRS[i][0], dy = RAY_DIRS[i][1], dz = RAY_DIRS[i][2];
+
+    // Nearest-particle ray-sphere intersection.
+    let hitDist = reach;
+    let hitParticle = null;
+    for (const p of particles) {
+      if (excludeList && excludeList.indexOf(p) >= 0) continue;
+      const toX = p.pos.x - position.x;
+      const toY = p.pos.y - position.y;
+      const toZ = p.pos.z - position.z;
+      const tca = toX * dx + toY * dy + toZ * dz;
+      if (tca < 2 || tca > hitDist) continue;
+      const d2 = toX * toX + toY * toY + toZ * toZ - tca * tca;
+      if (d2 > PARTICLE_R2) continue;
+      const thc = Math.sqrt(PARTICLE_R2 - d2);
+      const t0 = tca - thc;
+      if (t0 > 2 && t0 < hitDist) {
+        hitDist = t0;
+        hitParticle = p;
+      }
+    }
+
+    // Primary triangle: wide base at origin, tapered to narrow tip at
+    // hit point (or full reach on miss). Width axis is perpendicular to
+    // both the ray direction and the line from the ray start to the
+    // camera, so the triangle's flat face roughly faces the camera.
+    if (segCount < MAX_SEGMENTS_PER_BURST) {
+      const baseX = dx * 1.5, baseY = dy * 1.5, baseZ = dz * 1.5;
+      const tipX = dx * hitDist, tipY = dy * hitDist, tipZ = dz * hitDist;
+      _rayDir.set(dx, dy, dz);
+      _rayToCam.subVectors(camera.position, position).normalize();
+      _rayWidthAxis.crossVectors(_rayDir, _rayToCam);
+      const wl = _rayWidthAxis.length();
+      if (wl < 0.001) _rayWidthAxis.set(1, 0, 0);
+      else _rayWidthAxis.multiplyScalar(1 / wl);
+      const halfW = 0.8 + strength * 0.5;
+      const iPos = segCount * 9;
+      pos[iPos]     = baseX + _rayWidthAxis.x * halfW;
+      pos[iPos + 1] = baseY + _rayWidthAxis.y * halfW;
+      pos[iPos + 2] = baseZ + _rayWidthAxis.z * halfW;
+      pos[iPos + 3] = baseX - _rayWidthAxis.x * halfW;
+      pos[iPos + 4] = baseY - _rayWidthAxis.y * halfW;
+      pos[iPos + 5] = baseZ - _rayWidthAxis.z * halfW;
+      pos[iPos + 6] = tipX;
+      pos[iPos + 7] = tipY;
+      pos[iPos + 8] = tipZ;
+      segCount++;
+    }
+
+    if (hitParticle) {
+      // ABSORPTION: power is absorbed into the struck particle. The visible
+      // branches are INTERNAL tendrils that spread inside the sphere from
+      // the hit point, not outward extensions. These stay inside the
+      // particle radius so you see the power fanning out within the body.
+      const hitX = dx * hitDist, hitY = dy * hitDist, hitZ = dz * hitDist;
+      // World-space particle center (positions are in mesh-local coords,
+      // the mesh is positioned at the bond midpoint).
+      const cenX = hitParticle.pos.x - position.x;
+      const cenY = hitParticle.pos.y - position.y;
+      const cenZ = hitParticle.pos.z - position.z;
+
+      for (let b = 0; b < INTERNAL_BRANCHES; b++) {
+        if (segCount >= MAX_SEGMENTS_PER_BURST) break;
+        const pertX = (cenX - hitX) + (Math.random() - 0.5) * PARTICLE_RADIUS * 1.4;
+        const pertY = (cenY - hitY) + (Math.random() - 0.5) * PARTICLE_RADIUS * 1.4;
+        const pertZ = (cenZ - hitZ) + (Math.random() - 0.5) * PARTICLE_RADIUS * 1.4;
+        const pl = Math.sqrt(pertX*pertX + pertY*pertY + pertZ*pertZ) || 1;
+        const bx = pertX / pl, by = pertY / pl, bz = pertZ / pl;
+        const tendrilLen = PARTICLE_RADIUS * (0.5 + Math.random() * 0.4);
+        const tTipX = hitX + bx * tendrilLen;
+        const tTipY = hitY + by * tendrilLen;
+        const tTipZ = hitZ + bz * tendrilLen;
+        // Tendril-local width axis (perp to branch direction + camera).
+        _rayDir.set(bx, by, bz);
+        _rayWidthAxis.crossVectors(_rayDir, _rayToCam);
+        const wl2 = _rayWidthAxis.length();
+        if (wl2 < 0.001) _rayWidthAxis.set(1, 0, 0);
+        else _rayWidthAxis.multiplyScalar(1 / wl2);
+        const halfTW = 0.5 + strength * 0.2;  // thinner than primary rays
+        const iPos = segCount * 9;
+        pos[iPos]     = hitX + _rayWidthAxis.x * halfTW;
+        pos[iPos + 1] = hitY + _rayWidthAxis.y * halfTW;
+        pos[iPos + 2] = hitZ + _rayWidthAxis.z * halfTW;
+        pos[iPos + 3] = hitX - _rayWidthAxis.x * halfTW;
+        pos[iPos + 4] = hitY - _rayWidthAxis.y * halfTW;
+        pos[iPos + 5] = hitZ - _rayWidthAxis.z * halfTW;
+        pos[iPos + 6] = tTipX;
+        pos[iPos + 7] = tTipY;
+        pos[iPos + 8] = tTipZ;
+        segCount++;
+      }
+
+      // Absorbed energy: small amp spike + light kinetic nudge along the
+      // ray direction. Dialed down from the previous version so hit
+      // particles sing softly rather than lurch violently.
+      const ampAdd = 0.30 * strength;  // v1.8: rays audibly tap struck particles
+      if (hitParticle.amplitudeTarget < ampAdd) hitParticle.amplitudeTarget = ampAdd;
+      const kick = 1.0 * strength;
+      hitParticle.vel.x += dx * kick;
+      hitParticle.vel.y += dy * kick;
+      hitParticle.vel.z += dz * kick;
+    }
+  }
+
+  s.attr.needsUpdate = true;
+  s.geo.setDrawRange(0, segCount * 3);  // 3 verts per triangle
+}
+
+function updateLightSprites(dt) {
+  const now = performance.now() * 0.001;
+  for (const s of lightPool) {
+    if (!s.mesh.visible) continue;
+    const age = now - s.birthTime;
+    const t = age / s.duration;
+    if (t >= 1) {
+      s.mesh.visible = false;
+      s.mesh.material.opacity = 0;
+      continue;
+    }
+    // Rays are in real coords now (emitLight wrote world-relative segment
+    // lengths at emit time, including branches at hit points). Only fade
+    // opacity over lifetime; no mesh scaling needed.
+    const envelope = t < 0.08 ? (t / 0.08) : (1 - (t - 0.08) / 0.92);
+    s.mesh.material.opacity = s.baseIntensity * envelope;
+  }
+}
+
+// Heat: radial kinetic kick on every UNBONDED particle within radius, proportional
+// to bond strength with quadratic falloff. Bonded atoms receive a tiny fraction
+// (so internal energy stays in the molecule instead of rippling everything).
+const _heatDir = new THREE.Vector3();
+function emitHeat(position, strength) {
+  for (const p of particles) {
+    _heatDir.subVectors(p.pos, position);
+    const d = _heatDir.length();
+    if (d < 0.001 || d > BOND.HEAT_RADIUS) continue;
+    const falloff = 1 - d / BOND.HEAT_RADIUS;
+    const mag = BOND.HEAT_STRENGTH * strength * falloff * falloff;
+    _heatDir.multiplyScalar(mag / d);
+    const massScale = p.bonds.length > 0 ? 0.25 : 1.0;
+    p.vel.addScaledVector(_heatDir, massScale);
+    // Also ring the particle's voice softly — you hear the heat.
+    const ampAdd = falloff * 0.12 * massScale;
+    if (p.amplitudeTarget < ampAdd) p.amplitudeTarget = ampAdd;
+  }
+}
+
+const _force = new THREE.Vector3();
+const _toParticle = new THREE.Vector3();
+const _relVel = new THREE.Vector3();
+// Scratches for the bond-angle constraint pass.
+const _angDir1 = new THREE.Vector3();
+const _angDir2 = new THREE.Vector3();
+const _angTan1 = new THREE.Vector3();
+const _angTan2 = new THREE.Vector3();
+// Contact tracking: pairContacts[i*N + j] holds the last-frame contact state
+// for pair (i, j) where i < j. Transitioning from false → true is a collision
+// event and fires the amplitude spike on both particles. Sized for particles
+// array; recomputed only if the array grows.
+let pairContacts = new Uint8Array(particles.length * particles.length);
+
+function fireCollision(pi, pj) {
+  // Impact strength = component of relative velocity along the separation
+  // axis, i.e. how fast they're approaching each other. Normalised by
+  // impactVelScale, clamped to [0,1], then scaled to amplitude contribution.
+  _relVel.subVectors(pi.vel, pj.vel);
+  _toParticle.subVectors(pi.pos, pj.pos).normalize();
+  const approachSpeed = Math.abs(_relVel.dot(_toParticle));
+  const strength = Math.min(1.0, approachSpeed / PHYS.impactVelScale);
+  // Give each particle its share; a strong impact rings both voices loudly.
+  const spike = Math.max(0.2, strength) * PHYS.impactAmpScale;
+  pi.amplitudeTarget = Math.min(1.5, pi.amplitudeTarget + spike);
+  pj.amplitudeTarget = Math.min(1.5, pj.amplitudeTarget + spike);
+}
+
+function updatePhysics(dt) {
+  // ---- Bond spring + damping + break check ----
+  for (let bi = bonds.length - 1; bi >= 0; bi--) {
+    const bond = bonds[bi];
+    tryUpgradeBond(bond, dt);  // v1.7: bond order can climb 1→2→3
+    _toParticle.subVectors(bond.b.pos, bond.a.pos);
+    const dist = _toParticle.length();
+    if (dist < 0.0001) continue;
+    if (dist > bond.restLength * BOND.BREAK_STRETCH) { breakBond(bond); continue; }
+    const invLen = 1 / dist;
+    const dirX = _toParticle.x * invLen;
+    const dirY = _toParticle.y * invLen;
+    const dirZ = _toParticle.z * invLen;
+    // Spring: F = k * (dist - restLength), along (b - a).
+    const displacement = dist - bond.restLength;
+    const springMag = bond.stiffness * displacement;
+    // Strain → audio: a stretched or compressed bond contributes a small
+    // amplitude to both its voices so the molecule hums when deformed.
+    // Scales with fractional strain; gated at 10% to avoid continuous low-level
+    // noise from ordinary bond jitter.
+    const strain = Math.abs(displacement) / bond.restLength;
+    if (strain > 0.10) {
+      const strainAmp = Math.min(0.35, (strain - 0.10) * 2.0);
+      if (bond.a.amplitudeTarget < strainAmp) bond.a.amplitudeTarget = strainAmp;
+      if (bond.b.amplitudeTarget < strainAmp) bond.b.amplitudeTarget = strainAmp;
+    }
+    // Damping: opposes radial velocity. Near-critical for k=80, m=1 (2*sqrt(80) ~ 17.9).
+    const dvx = bond.b.vel.x - bond.a.vel.x;
+    const dvy = bond.b.vel.y - bond.a.vel.y;
+    const dvz = bond.b.vel.z - bond.a.vel.z;
+    const radialVel = dvx * dirX + dvy * dirY + dvz * dirZ;
+    const dampMag = BOND.DAMPING * radialVel;
+    const totMag = springMag + dampMag;
+    const fx = dirX * totMag, fy = dirY * totMag, fz = dirZ * totMag;
+    bond.a.vel.x += (fx / bond.a.mass) * dt;
+    bond.a.vel.y += (fy / bond.a.mass) * dt;
+    bond.a.vel.z += (fz / bond.a.mass) * dt;
+    bond.b.vel.x -= (fx / bond.b.mass) * dt;
+    bond.b.vel.y -= (fy / bond.b.mass) * dt;
+    bond.b.vel.z -= (fz / bond.b.mass) * dt;
+  }
+
+  // ---- Bond angle constraints: hold bonds on the same atom at the
+  //      hybridization's target angle (sp³ tetrahedral, sp² trigonal, etc).
+  //      3-body soft constraint: for every (p, bondI, bondJ) triple, apply
+  //      tangential forces to partnerI and partnerJ that push them toward
+  //      the correct angle; equal-and-opposite reaction goes back to p to
+  //      conserve linear momentum (angular conservation is approximate).
+  for (const p of particles) {
+    if (p.bonds.length < 2) continue;
+    const targetCos = p.element.targetCosAngle;
+    const n = p.bonds.length;
+    for (let i = 0; i < n; i++) {
+      for (let j = i + 1; j < n; j++) {
+        const bi = p.bonds[i], bj = p.bonds[j];
+        const pi = (bi.a === p) ? bi.b : bi.a;
+        const pj = (bj.a === p) ? bj.b : bj.a;
+        // Unit vectors from p to each partner.
+        _angDir1.subVectors(pi.pos, p.pos);
+        _angDir2.subVectors(pj.pos, p.pos);
+        const li = _angDir1.length(), lj = _angDir2.length();
+        if (li < 0.0001 || lj < 0.0001) continue;
+        _angDir1.multiplyScalar(1 / li);
+        _angDir2.multiplyScalar(1 / lj);
+        const cosTheta = _angDir1.dot(_angDir2);
+        const deltaCos = cosTheta - targetCos;  // >0 means angle too small
+        // Tangent for partner I: component of _angDir2 perpendicular to _angDir1.
+        _angTan1.copy(_angDir2).addScaledVector(_angDir1, -cosTheta);
+        // Tangent for partner J: component of _angDir1 perpendicular to _angDir2.
+        _angTan2.copy(_angDir1).addScaledVector(_angDir2, -cosTheta);
+        // Both tangents have magnitude sin(theta); same value for both.
+        const tanLen = _angTan1.length();
+        if (tanLen < 0.01) continue;
+        _angTan1.multiplyScalar(1 / tanLen);
+        _angTan2.multiplyScalar(1 / tanLen);
+        // Force: push partners AWAY from each other if angle too small (deltaCos > 0).
+        // Sign: force on I in direction of +tan1 pulls I toward J; we want opposite
+        // when deltaCos > 0, so use -deltaCos.
+        const forceMag = -BOND.ANGLE_STIFFNESS * deltaCos;
+        const fIx = _angTan1.x * forceMag;
+        const fIy = _angTan1.y * forceMag;
+        const fIz = _angTan1.z * forceMag;
+        const fJx = _angTan2.x * forceMag;
+        const fJy = _angTan2.y * forceMag;
+        const fJz = _angTan2.z * forceMag;
+        pi.vel.x += (fIx / pi.mass) * dt;
+        pi.vel.y += (fIy / pi.mass) * dt;
+        pi.vel.z += (fIz / pi.mass) * dt;
+        pj.vel.x += (fJx / pj.mass) * dt;
+        pj.vel.y += (fJy / pj.mass) * dt;
+        pj.vel.z += (fJz / pj.mass) * dt;
+        // Newton's 3rd on p (linear momentum only).
+        p.vel.x -= ((fIx + fJx) / p.mass) * dt;
+        p.vel.y -= ((fIy + fJy) / p.mass) * dt;
+        p.vel.z -= ((fIz + fJz) / p.mass) * dt;
+      }
+    }
+  }
+
+  // ---- Bond formation: check every non-bonded pair in range ----
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const pi = particles[i], pj = particles[j];
+      if (!canBond(pi, pj)) continue;
+      const d = pi.pos.distanceTo(pj.pos);
+      if (d < BOND.FORM_RADIUS) formBond(pi, pj);
+    }
+  }
+
+  // ---- Per-particle forces: mouse repulsion + exclusion (skipping bonded pairs) ----
+  for (const p of particles) {
+    _force.set(0, 0, 0);
+
+    if (input.mouseActive) {
+      _toParticle.subVectors(p.pos, input.mouseWorld);
+      const dist = _toParticle.length();
+      if (dist > 0.0001 && dist < PHYS.mouseRepulseRadius) {
+        const falloff = 1.0 - dist / PHYS.mouseRepulseRadius;
+        const mag = PHYS.mouseRepulseStrength * falloff * falloff;
+        _toParticle.multiplyScalar(mag / dist);
+        _force.add(_toParticle);
+        // Stirring the soup: pumping force also rings this particle's voice
+        // so the user hears what they are pushing. Target is a low-level
+        // "brushed" amplitude so the voice sings softly while in contact
+        // and decays between touches. Ceiling ensures we do not blow past 1.
+        const stirAmp = falloff * 0.45;
+        if (p.amplitudeTarget < stirAmp) p.amplitudeTarget = stirAmp;
+      }
+    }
+
+    for (const q of particles) {
+      if (q === p) continue;
+      if (areBonded(p, q)) continue;  // bonds handle repulsion for bonded pairs
+      _toParticle.subVectors(p.pos, q.pos);
+      const dist = _toParticle.length();
+      if (dist > 0.0001 && dist < PHYS.excludeRadius) {
+        const depth = 1.0 - dist / PHYS.excludeRadius;
+        const mag = PHYS.excludeStrength * depth * depth;
+        _toParticle.multiplyScalar(mag / dist);
+        _force.add(_toParticle);
+      }
+    }
+
+    // Boundary containment: radial soft-spring push toward origin when the
+    // particle is beyond boundaryRadius. Overshoot grows quadratically so
+    // the first bit is gentle and escape requires real effort. Direction is
+    // from particle to origin, which is just -p.pos / |p.pos|.
+    const rFromOrigin = p.pos.length();
+    if (rFromOrigin > PHYS.boundaryRadius) {
+      const overshoot = rFromOrigin - PHYS.boundaryRadius;
+      const mag = PHYS.boundaryStrength * overshoot * overshoot;
+      const invR = 1 / rFromOrigin;
+      _force.x -= p.pos.x * invR * mag;
+      _force.y -= p.pos.y * invR * mag;
+      _force.z -= p.pos.z * invR * mag;
+    }
+
+    p.vel.x += (_force.x / p.mass) * dt;
+    p.vel.y += (_force.y / p.mass) * dt;
+    p.vel.z += (_force.z / p.mass) * dt;
+    const damp = Math.pow(PHYS.viscosity, dt);
+    p.vel.multiplyScalar(damp);
+    p.pos.x += p.vel.x * dt;
+    p.pos.y += p.vel.y * dt;
+    p.pos.z += p.vel.z * dt;
+  }
+
+  // ---- v2.0: HEAT injection (kinetic noise scales with HEAT slider) ----
+  // Each atom gets a tiny random impulse proportional to HEAT. This is
+  // the cosmic-microwave-background equivalent: the soup's baseline
+  // thermal motion. Higher HEAT = more collisions above the fusion
+  // threshold = faster nucleosynthesis. Mass-weighted so heavier atoms
+  // jitter less.
+  if (HEAT > 0) {
+    // Scale chosen so default HEAT=35 at dt=1/60s produces ~10 unit/sec
+    // average velocity per axis on H atoms (rel-vel sq ~ 200, well above
+    // the FUSION_ENERGY_THRESHOLD of 60). Heavier atoms jitter less
+    // (~1/sqrt(A) law).
+    const heatImpulse = HEAT * 0.45 * dt;
+    for (const p of particles) {
+      const m = Math.max(1, p.element.A);
+      const k = heatImpulse / Math.sqrt(m);
+      p.vel.x += (Math.random() - 0.5) * k * 60;
+      p.vel.y += (Math.random() - 0.5) * k * 60;
+      p.vel.z += (Math.random() - 0.5) * k * 60;
+    }
+  }
+
+  // ---- Collision detection (skipped for bonded pairs) ----
+  const N = particles.length;
+  if (pairContacts.length !== N * N) pairContacts = new Uint8Array(N * N);
+  for (let i = 0; i < N; i++) {
+    for (let j = i + 1; j < N; j++) {
+      const pi = particles[i], pj = particles[j];
+      if (areBonded(pi, pj)) { pairContacts[i * N + j] = 0; continue; }
+      const d = pi.pos.distanceTo(pj.pos);
+      const inContact = d < PHYS.contactRadius;
+      const idx = i * N + j;
+      const wasContact = pairContacts[idx] === 1;
+      if (inContact && !wasContact) fireCollision(pi, pj);
+      pairContacts[idx] = inContact ? 1 : 0;
+    }
+  }
+
+  // ---- v2.0: per-frame fusion scan over all close pairs (incl. bonded) ----
+  // Iterate from the END so splicing during fusion doesn't corrupt indices.
+  for (let i = particles.length - 1; i >= 0; i--) {
+    if (i >= particles.length) continue;
+    const pi = particles[i];
+    for (let j = i - 1; j >= 0; j--) {
+      if (j >= particles.length) continue;
+      const pj = particles[j];
+      const d2 = (pi.pos.x - pj.pos.x) ** 2 + (pi.pos.y - pj.pos.y) ** 2 + (pi.pos.z - pj.pos.z) ** 2;
+      // Fusion contact radius slightly larger than collision contact.
+      if (d2 > (PHYS.contactRadius * 1.1) ** 2) continue;
+      if (tryFusion(pi, pj)) break;  // pi is gone; advance outer
+    }
+  }
+
+  // ---- Envelope + phase + freqEffective per particle ----
+  for (const p of particles) {
+    p.amplitudeTarget += (PHYS.ampRestValue - p.amplitudeTarget) * PHYS.ampRestRate * dt;
+    p.amplitude += (p.amplitudeTarget - p.amplitude) * PHYS.ampSmoothing * dt;
+    p.phase = (p.phase + 2 * Math.PI * (p.freqEffective || p.element.freq) * dt) % (2 * Math.PI);
+    const targetFreq = p.bonds.length > 0 ? p.bonds[0].bondFreq : p.element.freq;
+    p.freqEffective += (targetFreq - p.freqEffective) * BOND.FREQ_LOCK_RATE * dt;
+  }
+
+  // ---- Update bond visuals (shared electron points) from new positions ----
+  // v1.9.2: reset the global write index, walk every bond writing its
+  // electrons into the shared Points buffer, then flush to GPU. Unused
+  // tail slots are excluded from drawing via setDrawRange.
+  _bondElCount = 0;
+  for (const bond of bonds) updateBondMesh(bond);
+  flushBondElectrons();
+}
+
+// ===========================================================================
+// HUD STATE READOUT
+// ===========================================================================
+const _hudEls = {
+  bonds: document.getElementById("sBonds"),
+  nucleons: document.getElementById("sNucleons"),
+};
+// Auto-wire count refs from the ELEMENTS keys so adding an element only
+// requires its ELEMENTS entry and a matching sCountX element in the HUD.
+for (const key in ELEMENTS) {
+  _hudEls["count" + key] = document.getElementById("sCount" + key);
+}
+let _hudTick = 0;
+// v2.0: dynamic element counts. We render a colored chip per element
+// currently present in the soup, plus a count. New elements (from fusion)
+// appear automatically on the next refresh tick.
+const _sElementsList = document.getElementById("sElementsList");
+function updateHud(dt) {
+  _hudTick += dt;
+  if (_hudTick < 0.08) return;
+  _hudTick = 0;
+  const counts = {};
+  for (const p of particles) {
+    const k = p.element.name;
+    counts[k] = (counts[k] || 0) + 1;
+  }
+  // Sort keys by element A so display order tracks the periodic table.
+  const keys = Object.keys(counts).sort((a, b) => {
+    const ea = ELEMENTS[a], eb = ELEMENTS[b];
+    return (ea ? ea.A : 99) - (eb ? eb.A : 99);
+  });
+  if (_sElementsList) {
+    _sElementsList.innerHTML = keys.map(k => {
+      const e = ELEMENTS[k];
+      const hex = e ? "#" + e.palette.emissive.toString(16).padStart(6, "0") : "#ffffff";
+      return '<span style="color:' + hex + '">' + k + '</span> <span style="color:#cfd8e3">' + counts[k] + '</span>';
+    }).join(" &nbsp; ") || "—";
+  }
+  if (_hudEls.bonds) _hudEls.bonds.textContent = bonds.length;
+  if (_hudEls.nucleons) {
+    let total = 0;
+    for (const p of particles) total += p.nucleons.length;
+    _hudEls.nucleons.textContent = total;
+  }
+}
+
+// ===========================================================================
+// MAIN LOOP
+// ===========================================================================
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(0.05, clock.getDelta());
+  controls.update();
+
+  updatePhysics(dt);
+  updateVisual(dt);
+  updateAudio();
+  updateHud(dt);
+
+  // Update reaction light sprites (fade + scale over lifetime).
+  updateLightSprites(dt);
+
+  // Sync cursor sphere to mouse position (in world space).
+  if (input.mouseActive) {
+    cursorMesh.position.copy(input.mouseWorld);
+    cursorMesh.visible = true;
+  } else {
+    cursorMesh.visible = false;
+  }
+
+  renderer.render(scene, camera);
+}
+
+window.addEventListener("resize", () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ===========================================================================
+// v1.10: AUTHORING PANEL WIRING
+// ===========================================================================
+const aHyb = document.getElementById("aHyb");
+const aValence = document.getElementById("aValence");
+const aLP = document.getElementById("aLP");
+const aA = document.getElementById("aA");
+const aZeff = document.getElementById("aZeff");
+const aHue = document.getElementById("aHue");
+const aValenceVal = document.getElementById("aValenceVal");
+const aLPVal = document.getElementById("aLPVal");
+const aAVal = document.getElementById("aAVal");
+const aZeffVal = document.getElementById("aZeffVal");
+const aHueVal = document.getElementById("aHueVal");
+const previewSwatch = document.getElementById("previewSwatch");
+const freqOut = document.getElementById("freqOut");
+const aInvalid = document.getElementById("aInvalid");
+
+function readPanelInputs() {
+  return {
+    name: "X",
+    A: parseInt(aA.value, 10),
+    Zeff: parseInt(aZeff.value, 10),
+    valence: parseInt(aValence.value, 10),
+    LP: parseInt(aLP.value, 10),
+    hyb: aHyb.value,
+    hue: parseInt(aHue.value, 10) / 360,
+  };
+}
+function setPanelInputs(inputs) {
+  aHyb.value = inputs.hyb;
+  aValence.value = inputs.valence;
+  aLP.value = inputs.LP;
+  aA.value = inputs.A;
+  aZeff.value = inputs.Zeff;
+  aHue.value = Math.round(inputs.hue * 360);
+  refreshPanel();
+}
+function refreshPanel() {
+  aValenceVal.textContent = aValence.value;
+  aLPVal.textContent = aLP.value;
+  aAVal.textContent = aA.value;
+  aZeffVal.textContent = aZeff.value;
+  aHueVal.textContent = aHue.value;
+  // Clamp LP slider's max to (slots - valence) so the user can't easily
+  // author an invalid combination; if they DO push past it, validation in
+  // generateElement returns null and we flash the invalid message.
+  const slots = HYB_SLOTS[aHyb.value] || 0;
+  aLP.max = Math.max(0, slots - parseInt(aValence.value, 10));
+  if (parseInt(aLP.value, 10) > parseInt(aLP.max, 10)) {
+    aLP.value = aLP.max;
+    aLPVal.textContent = aLP.value;
+  }
+  // Live preview sphere + frequency.
+  const inputs = readPanelInputs();
+  const el = generateElement(inputs);
+  if (el) {
+    previewSwatch.style.background = "#" + el.palette.emissive.toString(16).padStart(6, "0");
+    freqOut.textContent = el.freq.toFixed(2) + " Hz · " + el.station.toFixed(1) + "D · A=" + el.A;
+    aInvalid.innerHTML = "&nbsp;";
+  } else {
+    aInvalid.textContent = "violates D5 (slot count)";
+  }
+}
+[aHyb, aValence, aLP, aA, aZeff, aHue].forEach(el => {
+  el.addEventListener("input", refreshPanel);
+  el.addEventListener("change", refreshPanel);
+});
+
+// v2.0: HEAT slider drives the global temperature; updated on input.
+const aHeat = document.getElementById("aHeat");
+const aHeatVal = document.getElementById("aHeatVal");
+const aFusionCount = document.getElementById("aFusionCount");
+aHeat.addEventListener("input", () => {
+  HEAT = parseInt(aHeat.value, 10);
+  aHeatVal.textContent = HEAT;
+});
+// Refresh fusion count display alongside the existing HUD throttle.
+setInterval(() => {
+  if (aFusionCount) aFusionCount.textContent = _fusionCount;
+}, 200);
+
+document.getElementById("aRandomize").addEventListener("click", () => {
+  setPanelInputs(randomizeInputs());
+});
+
+document.getElementById("aSpawn").addEventListener("click", () => {
+  const el = generateElement(readPanelInputs());
+  if (!el) {
+    aInvalid.textContent = "cannot spawn: violates D5";
+    return;
+  }
+  const pos = randomPosInSphere(SPAWN_RADIUS * 0.6);
+  const p = spawnAtom(el, pos.x, pos.y, pos.z);
+  if (!p) {
+    aInvalid.textContent = "cannot spawn: cap reached";
+  } else {
+    aInvalid.textContent = "spawned X at " + el.station.toFixed(1) + "D";
+  }
+});
+
+// Initial paint.
+refreshPanel();
+
+
+animate();
+
+})();
+</script>
+</body>
+</html>
