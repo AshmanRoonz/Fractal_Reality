@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Microverse Megabattle — v2.2</title>
+<title>Microverse Megabattle — v2.3</title>
 <!--
   Project: Microverse Megabattle
-  File:    v2_2.html (loose braid visible: proximity-weighted coupling threads)
+  File:    v2_3.html (dimensional ladder visible per cluster: • → — → Φ)
   Created: 2026-04-24
   Last updated: 2026-04-24
-  Version: 2.2
+  Version: 2.3
 
   v1.9 scope (Stage 1 of the Path B mereology arc): make each atom a
   compound ⊙ in its own right by giving it a visible nucleon cloud. Each
@@ -20,6 +20,13 @@
   proof that ⊙λ contains smaller ⊙s, not just a label on a sphere.
 
   Revision history:
+    - 2026-04-24 v2.3: DIMENSIONAL LADDER VISIBLE. Atom render radius
+      shrunk 12→5 (physics radii unchanged) so the threads dominate the
+      visual. Added Φ-surface layer: every tight triple of atoms (all 3
+      pairwise threads within range) renders as a translucent additive
+      triangle. Now you can SEE the framework's dimensional ladder
+      assemble itself in front of you: • atoms become — threads become Φ
+      surfaces. Closed 3D hulls (○ at the next scale) come in v2.4.
     - 2026-04-24 v2.2: LOOSE BRAID VISIBLE. The framework's claim that
       everything is mediated through Φ becomes literal: every nearby pair
       of atoms is connected by a luminous thread whose brightness scales
@@ -197,8 +204,8 @@
 </head>
 <body>
 <div id="info">
-  <div class="title">MICROVERSE MEGABATTLE v2.2</div>
-  <div class="dim">v2.2: loose braid visible; nearby atoms thread together with proximity-weighted coupling</div>
+  <div class="title">MICROVERSE MEGABATTLE v2.3</div>
+  <div class="dim">v2.3: small atoms; threads dominate; Φ-surfaces emerge from triples</div>
   <div>&nbsp;</div>
   <div><span class="elL">L</span>: sp (1.0D), <span id="freqL" class="k">—</span> Hz, A=7</div>
   <div><span class="elC">C</span>: sp³ (1.5D), <span id="freqC" class="k">—</span> Hz, A=12</div>
@@ -220,7 +227,7 @@
     <span style="color:#7ab8c4;">elements:</span>
     <span id="sElementsList">—</span>
   </div>
-  <div>bonds: <span class="v" id="sBonds">0</span>  nucleons: <span class="v" id="sNucleons">—</span></div>
+  <div>bonds: <span class="v" id="sBonds">0</span>  nucleons: <span class="v" id="sNucleons">—</span>  Φ-surf: <span class="v" id="sPhiTri">0</span></div>
   <div>audio: <span class="v" id="sAudio">off</span></div>
   <!-- v2.1 C512 marginal panel -->
   <div style="margin-top:10px; padding-top:6px; border-top:1px solid rgba(127,184,196,0.15); text-align:left;">
@@ -636,7 +643,10 @@ scene.add(fillLight);
 
 // Shared geometry (same sphere for both elements); per-particle material
 // because we're hue-shifting emissive per-phase independently.
-const sphereGeo = new THREE.SphereGeometry(12, 36, 28);
+// v2.3: shrunk from 12 → 5 so threads dominate the visual; physics radii
+// (PHYS.contactRadius, BOND.FORM_RADIUS, fusion thresholds) stay unchanged
+// so behavior is identical, only the rendered sphere is smaller.
+const sphereGeo = new THREE.SphereGeometry(5, 24, 18);
 
 // v1.10: factored so spawnAtom() can reuse the same mesh setup at runtime.
 function attachVisualToParticle(p) {
@@ -1448,6 +1458,149 @@ const braidThreads = new THREE.LineSegments(_braidGeo, _braidMat);
 braidThreads.frustumCulled = false;
 braidThreads.renderOrder = 1.5;  // behind bond electrons, in front of shells
 scene.add(braidThreads);
+
+// ===========================================================================
+// v2.3: Φ-SURFACE LAYER
+// Every triple of atoms with all 3 pairwise threads tight enough renders
+// as a translucent additive triangle. The dimensional ladder becomes
+// visible: atoms (•) → threads (—) → triangles (Φ-surfaces).
+// Inner loop uses a sparse adjacency cache built fresh each frame:
+// per-atom neighbor lists, then triples found by intersection.
+// ===========================================================================
+
+const MAX_PHI_TRIANGLES   = 500;
+const PHI_TRI_RADIUS_MULT = 0.85;  // triangle range slightly tighter than threads
+const PHI_TRI_ALPHA_MAX   = 0.32;
+const PHI_TRI_ALPHA_MIN   = 0.04;
+
+const _phiGeo = new THREE.BufferGeometry();
+const _phiPositions = new Float32Array(MAX_PHI_TRIANGLES * 9);   // 3 verts × 3 coords
+const _phiColors    = new Float32Array(MAX_PHI_TRIANGLES * 9);
+_phiGeo.setAttribute("position", new THREE.BufferAttribute(_phiPositions, 3).setUsage(THREE.DynamicDrawUsage));
+_phiGeo.setAttribute("color",    new THREE.BufferAttribute(_phiColors, 3).setUsage(THREE.DynamicDrawUsage));
+const _phiMat = new THREE.MeshBasicMaterial({
+  vertexColors: true,
+  transparent: true,
+  opacity: 1.0,
+  side: THREE.DoubleSide,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending,
+});
+const phiSurfaces = new THREE.Mesh(_phiGeo, _phiMat);
+phiSurfaces.frustumCulled = false;
+phiSurfaces.renderOrder = 1.2;  // behind bond electrons + threads, above shells
+scene.add(phiSurfaces);
+
+// Per-atom neighbor cache (built fresh each frame). _adjMembers[i] is an
+// array of [neighbor_index, r2]; we reuse the inner arrays to avoid GC.
+const _adjMembers = [];
+const _adjLengths = [];   // current length of each inner array (we reuse the array, just cap length)
+
+const _phiC1 = new THREE.Color();
+const _phiC2 = new THREE.Color();
+const _phiC3 = new THREE.Color();
+let _liveTriangleCount = 0;
+
+function updateSurfaceTriangles(dt) {
+  const N = particles.length;
+  const rTri = MAX_BRAID_RADIUS * PHI_TRI_RADIUS_MULT;
+  const r2max = rTri * rTri;
+
+  // Ensure cache has slot per atom
+  while (_adjMembers.length < N) { _adjMembers.push([]); _adjLengths.push(0); }
+  for (let i = 0; i < N; i++) _adjLengths[i] = 0;
+
+  // Build sparse adjacency: i < j pairs where r² < r2max
+  for (let i = 0; i < N; i++) {
+    const pi = particles[i];
+    for (let j = i + 1; j < N; j++) {
+      const pj = particles[j];
+      const dx = pi.pos.x - pj.pos.x;
+      const dy = pi.pos.y - pj.pos.y;
+      const dz = pi.pos.z - pj.pos.z;
+      const r2 = dx*dx + dy*dy + dz*dz;
+      if (r2 < r2max) {
+        // Push to i's adjacency (we need j > i, which we're iterating)
+        const ai = _adjLengths[i];
+        if (_adjMembers[i].length <= ai) _adjMembers[i].push([0, 0]);
+        _adjMembers[i][ai][0] = j;
+        _adjMembers[i][ai][1] = r2;
+        _adjLengths[i] = ai + 1;
+      }
+    }
+  }
+
+  // For each atom i, find triples (j, k) in its adjacency where (j, k) is
+  // also adjacent (i.e., k is in j's adjacency).
+  let triCount = 0;
+  outer:
+  for (let i = 0; i < N; i++) {
+    const Ni = _adjMembers[i];
+    const Li = _adjLengths[i];
+    for (let a = 0; a < Li; a++) {
+      const j = Ni[a][0];
+      const r2ij = Ni[a][1];
+      const Nj = _adjMembers[j];
+      const Lj = _adjLengths[j];
+      for (let b = a + 1; b < Li; b++) {
+        const k = Ni[b][0];
+        const r2ik = Ni[b][1];
+        // Check if (j, k) is in j's adjacency (i.e., k > j and r²(j,k) < r2max)
+        let r2jk = -1;
+        for (let c = 0; c < Lj; c++) {
+          if (Nj[c][0] === k) { r2jk = Nj[c][1]; break; }
+        }
+        if (r2jk < 0) continue;
+        if (triCount >= MAX_PHI_TRIANGLES) break outer;
+        // Emit triangle. Compute per-pair alpha and use the min.
+        const r2safe1 = Math.max(64, r2ij);
+        const r2safe2 = Math.max(64, r2ik);
+        const r2safe3 = Math.max(64, r2jk);
+        const a1 = Math.min(PHI_TRI_ALPHA_MAX, FW.PHI_n * 320 / r2safe1);
+        const a2 = Math.min(PHI_TRI_ALPHA_MAX, FW.PHI_n * 320 / r2safe2);
+        const a3 = Math.min(PHI_TRI_ALPHA_MAX, FW.PHI_n * 320 / r2safe3);
+        const alpha = Math.min(a1, a2, a3);
+        if (alpha < PHI_TRI_ALPHA_MIN) continue;
+        const pi = particles[i], pj = particles[j], pk = particles[k];
+        const o = triCount * 9;
+        _phiPositions[o + 0] = pi.pos.x;
+        _phiPositions[o + 1] = pi.pos.y;
+        _phiPositions[o + 2] = pi.pos.z;
+        _phiPositions[o + 3] = pj.pos.x;
+        _phiPositions[o + 4] = pj.pos.y;
+        _phiPositions[o + 5] = pj.pos.z;
+        _phiPositions[o + 6] = pk.pos.x;
+        _phiPositions[o + 7] = pk.pos.y;
+        _phiPositions[o + 8] = pk.pos.z;
+        _phiC1.setHex(pi.element.palette.emissive);
+        _phiC2.setHex(pj.element.palette.emissive);
+        _phiC3.setHex(pk.element.palette.emissive);
+        _phiColors[o + 0] = _phiC1.r * alpha;
+        _phiColors[o + 1] = _phiC1.g * alpha;
+        _phiColors[o + 2] = _phiC1.b * alpha;
+        _phiColors[o + 3] = _phiC2.r * alpha;
+        _phiColors[o + 4] = _phiC2.g * alpha;
+        _phiColors[o + 5] = _phiC2.b * alpha;
+        _phiColors[o + 6] = _phiC3.r * alpha;
+        _phiColors[o + 7] = _phiC3.g * alpha;
+        _phiColors[o + 8] = _phiC3.b * alpha;
+        triCount++;
+      }
+    }
+  }
+
+  // Zero out unused tail
+  for (let s = triCount; s < MAX_PHI_TRIANGLES; s++) {
+    const o = s * 9;
+    for (let q = 0; q < 9; q++) { _phiPositions[o + q] = 0; _phiColors[o + q] = 0; }
+  }
+
+  _phiGeo.setDrawRange(0, triCount * 3);
+  _phiGeo.attributes.position.needsUpdate = true;
+  _phiGeo.attributes.color.needsUpdate = true;
+  _liveTriangleCount = triCount;
+}
+
 
 // Cache for neighbor query: per-atom array of {other, r2, alpha} populated
 // each frame. Reused to avoid per-frame allocation churn.
@@ -2363,6 +2516,9 @@ function updateHud(dt) {
     for (const p of particles) total += p.nucleons.length;
     _hudEls.nucleons.textContent = total;
   }
+  // v2.3: Φ-surface triangle count
+  const phiEl = document.getElementById("sPhiTri");
+  if (phiEl) phiEl.textContent = _liveTriangleCount;
   // v2.1: C512 Λ-marginal — count atoms at each octave station, compute
   // structural/processual fractions, paint the 8-bar histogram.
   if (_c512Bars) {
@@ -2407,6 +2563,9 @@ function animate() {
 
   // v2.2: redraw the loose-braid threads connecting nearby atoms.
   updateBraidThreads(dt);
+
+  // v2.3: redraw Φ-surface triangles for tight triples.
+  updateSurfaceTriangles(dt);
 
   // Update reaction light sprites (fade + scale over lifetime).
   updateLightSprites(dt);
