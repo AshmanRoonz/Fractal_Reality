@@ -1,50 +1,10 @@
 <!--
-  Last Ship Sailing ; v7.3.1 LH (state-name fix + null-check)
+  Last Ship Sailing ; v7.1 LH (host-authoritative bots)
   Created: 2026-04-25
   Last updated: 2026-04-25
-  Version: 7.3.1 LH
+  Version: 7.1 LH
 
   Revision history:
-    - 2026-04-25 v7.3.1 LH: hot-fix on top of v7.3. The server's match
-      phase 'lobby' didn't match the client's existing 'select' state
-      string, so applyServerMatchState was setting game.state='lobby'
-      which slipped past the gameplay-loop early-return ;
-      broadcastPlayerState then ran pre-commit and crashed on null
-      player.position. Server now uses 'select' for the lobby phase to
-      match the client. Also added a defensive null-check at the top of
-      broadcastPlayerState so any other path that calls it pre-commit
-      simply returns instead of throwing.
-    - 2026-04-25 v7.3 LH: server-authoritative match state. The Bun server
-      (server/main.ts v7.3) now owns matchState (state, seed, selectedMap,
-      warmupTimer, roundTimer, scores) and broadcasts it as
-      {type:"match-state", payload}. Clients consume via
-      applyServerMatchState() which mirrors fields into game.* and
-      triggers _buildFreshMatchWorld(seed, map, team) on the warmup
-      transition. Clients send {action:"ready", payload:{ready, team,
-      loadoutKey}} on commit and on switchTeam ; server consumes and does
-      not relay. Removed match record from computeAuthoredSnapshot in MP
-      (server owns it). _checkAutoLaunch and syncFromHostMatchRecord both
-      no-op when the server is in charge. Bot host election remains for
-      bot ownership; that's separate from match state. Also fixed lobby
-      sync bug from v7.2: substrate-delta broadcast was gated behind the
-      gameLoop's "if state==select" early-return, so peers' lobby presence
-      (team, picked ship) never crossed the wire. Hoisted the broadcast
-      AND substrate-delta-receive paths to fire during select state too.
-    - 2026-04-25 v7.2 LH: lobby roster + switch-team. Right column of
-      ship-select grows a "ROSTER" panel below the map: two columns of
-      three slots each (FLEET A red, FLEET B green) showing who fills
-      every position in the 3v3. Each slot is one of: a peer (peerId +
-      loadout abbreviation, "YOU" highlighted), a bot (predicted from
-      current human counts), or "EMPTY". The panel updates each frame
-      from the substrate so it reflects peers' tentative team and ship
-      picks before they commit. Below the panel sits a SWITCH TEAM
-      button that flips player.team between FLEET_A and FLEET_B
-      pre-commit; refused if the destination team already has 3 humans
-      (a tiny status line under the button shows "FLEET X FULL" briefly).
-      Bots auto-rebalance at match start because spawnBots already counts
-      humans per team via _countHumansPerTeam. createPlayerSubstrate is
-      now idempotent so pre-commit team / ship changes update the
-      existing record in place instead of churning substrate ids.
     - 2026-04-25 v7.1 LH: host-authoritative bots. Bot._isGhost = !net.isHost
       in multiplayer; ghosts skip AI and read position/velocity/health from
       host's substrate broadcast. Host's computeAuthoredSnapshot includes
@@ -750,74 +710,6 @@ canvas { display: block; }
 .map-dot.active {
   background: #ffaa00; box-shadow: 0 0 6px rgba(255,170,0,0.7);
 }
-
-/* v7.2 LH: lobby roster panel ; under the map selector in the right column */
-#roster-divider {
-  width: 100%; height: 1px;
-  background: rgba(80,80,120,0.35);
-  margin: 14px 0 4px 0;
-}
-#roster-label {
-  font-size: 11px; color: #888; letter-spacing: 2px;
-}
-#roster-panel {
-  display: flex; flex-direction: row; gap: 10px;
-  width: 100%;
-}
-.roster-team {
-  flex: 1; display: flex; flex-direction: column; gap: 4px;
-}
-.roster-team-header {
-  font-size: 11px; font-weight: bold;
-  letter-spacing: 2px; text-align: center;
-  padding: 4px 0; border-radius: 2px;
-}
-.roster-team-a .roster-team-header { color: #ff6666; background: rgba(120,30,30,0.3); }
-.roster-team-b .roster-team-header { color: #66cc66; background: rgba(30,90,40,0.3); }
-.roster-slot {
-  font-size: 9px; padding: 5px 6px;
-  border: 1px solid rgba(80,80,120,0.4);
-  background: rgba(10,10,20,0.5);
-  border-radius: 2px;
-  letter-spacing: 1px;
-  min-height: 28px;
-  display: flex; flex-direction: column; justify-content: center;
-}
-.roster-slot.empty {
-  color: #555; border-style: dashed;
-  font-style: italic; text-align: center;
-}
-.roster-slot.bot {
-  color: #888; border-color: rgba(100,100,140,0.4);
-}
-.roster-slot.human {
-  color: #ddd; border-color: rgba(180,180,220,0.55);
-}
-.roster-slot.you {
-  color: #ffaa00; border-color: #ffaa00;
-  background: rgba(40,30,8,0.7);
-  box-shadow: inset 0 0 6px rgba(255,170,0,0.2);
-}
-.roster-slot .slot-name { font-weight: bold; font-size: 10px; }
-.roster-slot .slot-loadout { color: #999; font-size: 8px; margin-top: 1px; }
-.roster-slot.you .slot-loadout { color: #ffcc66; }
-#switch-team-btn {
-  background: rgba(20,20,40,0.7);
-  border: 1px solid rgba(120,120,160,0.5);
-  color: #cce; font-family: inherit;
-  font-size: 10px; font-weight: bold;
-  padding: 6px 10px; letter-spacing: 1.5px;
-  cursor: pointer; transition: all 0.15s;
-  width: 100%; pointer-events: all;
-  margin-top: 4px;
-}
-#switch-team-btn:hover { border-color: #ffaa00; color: #ffaa00; background: rgba(40,30,15,0.7); }
-#switch-team-btn:disabled { opacity: 0.4; cursor: not-allowed; border-color: rgba(80,80,120,0.3); }
-#switch-team-status {
-  font-size: 9px; color: #ff6666; letter-spacing: 1px;
-  text-align: center; min-height: 12px; margin-top: 2px;
-}
-
 .ship-list-entry { position: relative; }
 
 /* ==========================================================================
@@ -1224,45 +1116,7 @@ canvas { display: block; }
         <button class="map-arrow" id="map-prev" title="Previous map">&#9664;</button>
         <div id="map-indicator"></div>
         <button class="map-arrow" id="map-next" title="Next map">&#9654;</button>
-  
-      <div id="roster-divider"></div>
-      <div id="roster-label">ROSTER</div>
-      <div id="roster-panel">
-        <div class="roster-team roster-team-a">
-          <div class="roster-team-header">FLEET A</div>
-          <div class="roster-slot empty" id="roster-a-0">EMPTY</div>
-          <div class="roster-slot empty" id="roster-a-1">EMPTY</div>
-          <div class="roster-slot empty" id="roster-a-2">EMPTY</div>
-        </div>
-        <div class="roster-team roster-team-b">
-          <div class="roster-team-header">FLEET B</div>
-          <div class="roster-slot empty" id="roster-b-0">EMPTY</div>
-          <div class="roster-slot empty" id="roster-b-1">EMPTY</div>
-          <div class="roster-slot empty" id="roster-b-2">EMPTY</div>
-        </div>
       </div>
-      <button id="switch-team-btn" onclick="trySwitchTeam()">SWITCH TEAM</button>
-      <div id="switch-team-status"></div>
-    </div>
-
-      <div id="roster-divider"></div>
-      <div id="roster-label">ROSTER</div>
-      <div id="roster-panel">
-        <div class="roster-team roster-team-a">
-          <div class="roster-team-header">FLEET A</div>
-          <div class="roster-slot empty" id="roster-a-0">EMPTY</div>
-          <div class="roster-slot empty" id="roster-a-1">EMPTY</div>
-          <div class="roster-slot empty" id="roster-a-2">EMPTY</div>
-        </div>
-        <div class="roster-team roster-team-b">
-          <div class="roster-team-header">FLEET B</div>
-          <div class="roster-slot empty" id="roster-b-0">EMPTY</div>
-          <div class="roster-slot empty" id="roster-b-1">EMPTY</div>
-          <div class="roster-slot empty" id="roster-b-2">EMPTY</div>
-        </div>
-      </div>
-      <button id="switch-team-btn" onclick="trySwitchTeam()">SWITCH TEAM</button>
-      <div id="switch-team-status"></div>
     </div>
   </div>
   <div id="teammates-strip">
@@ -1436,12 +1290,9 @@ const View = {
 // Create the player's substrate record. Called from commitLoadout() once the
 // player object has been fully populated for the round. Returns the new id.
 function createPlayerSubstrate() {
-  // v7.2 LH: idempotent. If a record already exists, just refresh its
-  // gameplay-truth fields in place so substrate ids stay stable across
-  // pre-commit team / ship changes.
+  // Tear down any prior record (loadout swaps, mid-match changes).
   if (player.substrateId && Substrate.entities.has(player.substrateId)) {
-    mirrorPlayerToSubstrate();
-    return player.substrateId;
+    Substrate.destroy(player.substrateId);
   }
   const id = Substrate.create('player', {
     team: player.team,
@@ -2368,9 +2219,6 @@ async function joinRoom() {
           net.sendLoadout         = wrap('loadout');
           net.sendProjectile      = wrap('proj');
           net.sendSubstrateDelta  = wrap('subd');
-          // v7.3 LH: server-consumed actions (not relayed to other peers).
-          net.sendReady           = wrap('ready');
-          net.sendMapVote         = wrap('mapVote');
 
           updateLobbyPeers();
           document.getElementById('lobby-status').textContent = 'CONNECTED: ROOM ' + code;
@@ -2422,12 +2270,6 @@ async function joinRoom() {
           }
           net.peers.delete(peerId);
           updateLobbyPeers();
-          return;
-        }
-
-        if (msg.type === 'match-state') {
-          // v7.3 LH: server-authoritative match state.
-          applyServerMatchState(msg.payload);
           return;
         }
 
@@ -2509,16 +2351,7 @@ function enterShipSelect() {
   if (cd) cd.classList.remove('active');
   buildShipSelect();
   buildMapSelector();
-  // v7.2 LH: lobby presence ; assign initial team and create the player
-  // substrate so peers can see us in their roster panel before we commit.
-  if (typeof _computeMyTeam === 'function') {
-    player.team = _computeMyTeam();
-  }
-  if (typeof createPlayerSubstrate === 'function') {
-    createPlayerSubstrate();
-  }
   updateTeammatesStrip();
-  if (typeof updateRoster === 'function') updateRoster();
 }
 
 // Build (or rebuild) the single-window map selector. Runs each time ship-select
@@ -2785,10 +2618,6 @@ function updateNetworkPlayer(peerId, data) {
 
 function broadcastPlayerState(dt) {
   if (!net.active || !net.sendState) return;
-  // v7.3.1: defensive null-check. broadcastPlayerState only makes sense once
-  // the player has committed a loadout (which initializes position, velocity,
-  // euler). Pre-commit those are still null; skip silently rather than crash.
-  if (!player || !player.position || !player.velocity || !camera) return;
 
   net.broadcastAccum += dt;
   if (net.broadcastAccum < 1 / net.broadcastHz) return;
@@ -2870,9 +2699,8 @@ function computeAuthoredSnapshot() {
     }
   }
 
-  // v7.3 LH: server owns the match record in MP, so we don't include it in
-  // peer broadcasts. Solo still includes it locally for snapshot/save use.
-  if (!net.active && game && game._matchSubstrateId) {
+  // v6.3: host authors the match record so non-hosts can mirror round timing.
+  if (net.isHost && game && game._matchSubstrateId) {
     const matchRec = Substrate.entities.get(game._matchSubstrateId);
     if (matchRec) out[matchRec.id] = matchRec;
   }
@@ -8962,10 +8790,6 @@ function commitLoadout(key) {
   if (player.substrateId) {
     const rec = Substrate.entities.get(player.substrateId);
     if (rec) rec.ready = true;
-  }
-  // v7.3 LH: signal the server (which is the match authority in MP).
-  if (net.active && net.sendReady) {
-    net.sendReady({ ready: true, team: player.team, loadoutKey: player.loadoutKey });
   }
 }
 
@@ -15218,9 +15042,6 @@ function _hostTakeoverBuild(reason) {
 // Called each frame after applySubstrateDelta has had a chance to land
 // incoming match deltas.
 function syncFromHostMatchRecord() {
-  // v7.3 LH: server is now match authority in MP; this function only
-  // matters for solo (where it's also a no-op since net.active is false).
-  if (net.active) return;
   if (!net.active || net.isHost) return; // host already owns the values
   if (!net.hostPeerId) return;
 
@@ -15375,186 +15196,6 @@ if (typeof window !== 'undefined') {
 
 
 
-
-// ============================================================================
-// ---- LOBBY ROSTER + SWITCH-TEAM (v7.2 LH) ----
-// Renders the 3v3 slot fill on the right of the ship-select screen, driven
-// directly from substrate state. Updates each frame via gameLoop.
-// ============================================================================
-
-const _ROSTER_BOT_LOADOUTS_A = ['PUNCTURE', 'BLASTER', 'SYPHON'];
-const _ROSTER_BOT_LOADOUTS_B = ['PYRO', 'SLAYER', 'TRACKER'];
-
-function _shortLoadout(key) {
-  if (!key) return 'PICKING...';
-  return key;
-}
-
-// Collect the human entries on each team from the substrate. Returns
-// { A: [{peerId, loadoutKey, isYou}], B: [...] }, ordered by peerId.
-function _gatherRosterHumans() {
-  const out = { A: [], B: [] };
-  // Self
-  const myRec = (player.substrateId && Substrate.entities.has(player.substrateId))
-    ? Substrate.entities.get(player.substrateId) : null;
-  const myTeam = (myRec && myRec.team) ? myRec.team : (player.team || LSS.TEAM_FLEET_A);
-  const myEntry = {
-    peerId: net.myPeerId || 'YOU',
-    loadoutKey: (myRec && myRec.loadoutKey) || player.loadoutKey || null,
-    isYou: true,
-    ready: !!(myRec && myRec.ready),
-  };
-  if (myTeam === LSS.TEAM_FLEET_A) out.A.push(myEntry);
-  else out.B.push(myEntry);
-  // Peers (each substrate has its own type='player' record)
-  if (net.active && net.peerSubstrates) {
-    for (const [peerId, store] of net.peerSubstrates) {
-      let rec = null;
-      for (const r of store.values()) { if (r && r.type === 'player') { rec = r; break; } }
-      if (!rec) continue;
-      const entry = {
-        peerId,
-        loadoutKey: rec.loadoutKey || null,
-        isYou: false,
-        ready: !!rec.ready,
-      };
-      if (rec.team === LSS.TEAM_FLEET_A) out.A.push(entry);
-      else if (rec.team === LSS.TEAM_FLEET_B) out.B.push(entry);
-    }
-  }
-  // Stable order by peerId so the slot a peer occupies doesn't shuffle.
-  out.A.sort((a, b) => a.peerId < b.peerId ? -1 : 1);
-  out.B.sort((a, b) => a.peerId < b.peerId ? -1 : 1);
-  return out;
-}
-
-function updateRoster() {
-  const panel = document.getElementById('roster-panel');
-  if (!panel) return;
-  const humans = _gatherRosterHumans();
-  const TEAM_SIZE = 3;
-
-  for (const teamLetter of ['A', 'B']) {
-    const teamHumans = humans[teamLetter];
-    const botLoadouts = teamLetter === 'A' ? _ROSTER_BOT_LOADOUTS_A : _ROSTER_BOT_LOADOUTS_B;
-    const botFill = Math.max(0, TEAM_SIZE - teamHumans.length);
-    let botIdx = 0;
-    for (let i = 0; i < TEAM_SIZE; i++) {
-      const slot = document.getElementById('roster-' + teamLetter.toLowerCase() + '-' + i);
-      if (!slot) continue;
-      slot.classList.remove('empty', 'bot', 'human', 'you');
-      if (i < teamHumans.length) {
-        const h = teamHumans[i];
-        const cls = h.isYou ? 'you' : 'human';
-        slot.classList.add(cls);
-        const tag = h.isYou ? 'YOU' : ('PEER ' + (h.peerId || '?'));
-        const loadout = _shortLoadout(h.loadoutKey);
-        const ready = h.ready ? ' ✓' : '';
-        slot.innerHTML = '<div class="slot-name">' + tag + ready + '</div>'
-                       + '<div class="slot-loadout">' + loadout + '</div>';
-      } else if (botIdx < botFill) {
-        slot.classList.add('bot');
-        const loadout = botLoadouts[botIdx % botLoadouts.length];
-        slot.innerHTML = '<div class="slot-name">BOT</div>'
-                       + '<div class="slot-loadout">' + loadout + '</div>';
-        botIdx++;
-      } else {
-        slot.classList.add('empty');
-        slot.textContent = 'EMPTY';
-      }
-    }
-  }
-
-  // Switch team button label + state.
-  const btn = document.getElementById('switch-team-btn');
-  if (btn) {
-    const myTeam = player.team === LSS.TEAM_FLEET_B ? 'B' : 'A';
-    const dest = myTeam === 'A' ? 'B' : 'A';
-    btn.textContent = 'SWITCH TO FLEET ' + dest;
-    // Disable after commit; the auto-launch flow handles the final layout.
-    const myRec = player.substrateId ? Substrate.entities.get(player.substrateId) : null;
-    btn.disabled = !!(myRec && myRec.ready);
-  }
-}
-
-function trySwitchTeam() {
-  // Only allowed pre-commit. Once ready=true, the team is locked.
-  const myRec = player.substrateId ? Substrate.entities.get(player.substrateId) : null;
-  if (myRec && myRec.ready) return;
-
-  const counts = (typeof _countHumansPerTeam === 'function') ? _countHumansPerTeam() : { A: 0, B: 0 };
-  const fromTeam = player.team === LSS.TEAM_FLEET_B ? 'B' : 'A';
-  const destTeam = fromTeam === 'A' ? 'B' : 'A';
-  const destCount = destTeam === 'A' ? counts.A : counts.B;
-  // Subtract self if self is currently on the destination team (can't happen
-  // since we're switching AWAY, but guard anyway).
-  const status = document.getElementById('switch-team-status');
-  if (destCount >= 3) {
-    if (status) {
-      status.textContent = 'FLEET ' + destTeam + ' FULL';
-      setTimeout(() => { if (status.textContent === 'FLEET ' + destTeam + ' FULL') status.textContent = ''; }, 2000);
-    }
-    return;
-  }
-  player.team = destTeam === 'A' ? LSS.TEAM_FLEET_A : LSS.TEAM_FLEET_B;
-  if (myRec) myRec.team = player.team;
-  if (status) status.textContent = '';
-  // v7.3 LH: tell the server about the team change so its peerInfo stays current.
-  if (net.active && net.sendReady) {
-    net.sendReady({ ready: !!(myRec && myRec.ready), team: player.team, loadoutKey: player.loadoutKey });
-  }
-  updateRoster();
-}
-
-
-// ============================================================================
-// ---- SERVER MATCH STATE (v7.3 LH) ----
-//
-// The Bun server is the canonical source of match-level truth in MP. This
-// helper takes a {state, seed, selectedMap, warmupTimer, roundTimer,
-// currentRound, scoreA, scoreB} payload and folds it into local game.*
-// state. The first time we see state==='warmup' we trigger the deferred
-// world build with the server's seed and map, mirroring the v6.4 host-side
-// flow (which is now redundant in MP but kept for solo).
-// ============================================================================
-
-function applyServerMatchState(ms) {
-  if (!ms || typeof ms !== 'object') return;
-  game._lastServerMatchState = ms;
-  const prevState = game.state;
-  // Trigger fresh build on warmup transition (the seed and map land here).
-  if (ms.state === 'warmup' && prevState !== 'warmup' && ms.seed != null) {
-    game._matchLaunched = false; // re-arm the launch latch for the new round
-    if (typeof _buildFreshMatchWorld === 'function') {
-      try {
-        _buildFreshMatchWorld(ms.seed, ms.selectedMap || game.selectedMap, player.team);
-      } catch (e) {
-        console.error('[v7.3] _buildFreshMatchWorld threw:', e);
-      }
-    }
-  }
-  // Mirror the simple fields straight onto game.*
-  if (typeof ms.state === 'string') game.state = ms.state;
-  if (typeof ms.warmupTimer === 'number') game.warmupTimer = ms.warmupTimer;
-  if (typeof ms.roundTimer === 'number') game.roundTimer = ms.roundTimer;
-  if (typeof ms.currentRound === 'number') game.currentRound = ms.currentRound;
-  if (typeof ms.scoreA === 'number') game.scoreA = ms.scoreA;
-  if (typeof ms.scoreB === 'number') game.scoreB = ms.scoreB;
-  if (typeof ms.selectedMap === 'string') game.selectedMap = ms.selectedMap;
-  if (typeof ms.seed === 'number') game._matchSeed = ms.seed;
-  // Fire the launch countdown visual when warmupTimer first becomes positive.
-  if (ms.warmupTimer != null && ms.warmupTimer > 0 && !game._matchLaunched) {
-    if (typeof _launchMatch === 'function') _launchMatch();
-  }
-}
-
-if (typeof window !== 'undefined') {
-  window.dumpServerMatchState = function () {
-    console.log('serverMatchState:', game._lastServerMatchState, 'gameState:', game.state);
-    return game._lastServerMatchState || null;
-  };
-}
-
 // ============================================================================
 // ---- AUTO-LAUNCH + TEAM ASSIGNMENT (v6.6) ----
 // ============================================================================
@@ -15635,8 +15276,7 @@ function _launchMatch() {
 // transition in syncFromHostMatchRecord.
 function _checkAutoLaunch() {
   if (game._matchLaunched) return;
-  // v7.3 LH: server decides launch in MP. Solo still uses local logic.
-  if (net.active) return;
+  if (net.active && !net.isHost) return;
   if (game.state !== 'warmup') return; // build must have run
   if (!_allPeersReady()) return;
   _launchMatch();
@@ -15687,8 +15327,6 @@ function gameLoop(timestamp) {
   // v6.6: auto-launch check ; host-only (or solo). Fires _launchMatch when
   // every peer is ready.
   _checkAutoLaunch();
-  // v7.2 LH: refresh the lobby roster while in ship-select.
-  if (game.state === 'select' && typeof updateRoster === 'function') updateRoster();
 
   // Refresh scoreboard contents while it's visible so kills/damage update
   // in real time (throttled to ~5 Hz to avoid rebuilding the DOM every frame).
@@ -15699,15 +15337,7 @@ function gameLoop(timestamp) {
     }
   }
 
-  // v7.3 LH: substrate broadcast must flow during 'select' too so peers'
-  // lobby presence (team, picked loadout, ready) is visible to each other.
-  // We broadcast even in select; gameplay state (position, fire) is zero
-  // until commit so the per-frame delta is tiny.
-  if (game.state === 'select') {
-    broadcastSubstrateDelta(dt);
-    renderPostFX();
-    return;
-  }
+  if (game.state === 'select') { renderPostFX(); return; }
 
   // Pause gameplay while settings are open
   if (settingsOpen) {

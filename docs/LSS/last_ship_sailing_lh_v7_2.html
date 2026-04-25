@@ -1,35 +1,10 @@
 <!--
-  Last Ship Sailing ; v7.3.1 LH (state-name fix + null-check)
+  Last Ship Sailing ; v7.2 LH (lobby roster + switch-team)
   Created: 2026-04-25
   Last updated: 2026-04-25
-  Version: 7.3.1 LH
+  Version: 7.2 LH
 
   Revision history:
-    - 2026-04-25 v7.3.1 LH: hot-fix on top of v7.3. The server's match
-      phase 'lobby' didn't match the client's existing 'select' state
-      string, so applyServerMatchState was setting game.state='lobby'
-      which slipped past the gameplay-loop early-return ;
-      broadcastPlayerState then ran pre-commit and crashed on null
-      player.position. Server now uses 'select' for the lobby phase to
-      match the client. Also added a defensive null-check at the top of
-      broadcastPlayerState so any other path that calls it pre-commit
-      simply returns instead of throwing.
-    - 2026-04-25 v7.3 LH: server-authoritative match state. The Bun server
-      (server/main.ts v7.3) now owns matchState (state, seed, selectedMap,
-      warmupTimer, roundTimer, scores) and broadcasts it as
-      {type:"match-state", payload}. Clients consume via
-      applyServerMatchState() which mirrors fields into game.* and
-      triggers _buildFreshMatchWorld(seed, map, team) on the warmup
-      transition. Clients send {action:"ready", payload:{ready, team,
-      loadoutKey}} on commit and on switchTeam ; server consumes and does
-      not relay. Removed match record from computeAuthoredSnapshot in MP
-      (server owns it). _checkAutoLaunch and syncFromHostMatchRecord both
-      no-op when the server is in charge. Bot host election remains for
-      bot ownership; that's separate from match state. Also fixed lobby
-      sync bug from v7.2: substrate-delta broadcast was gated behind the
-      gameLoop's "if state==select" early-return, so peers' lobby presence
-      (team, picked ship) never crossed the wire. Hoisted the broadcast
-      AND substrate-delta-receive paths to fire during select state too.
     - 2026-04-25 v7.2 LH: lobby roster + switch-team. Right column of
       ship-select grows a "ROSTER" panel below the map: two columns of
       three slots each (FLEET A red, FLEET B green) showing who fills
@@ -2368,9 +2343,6 @@ async function joinRoom() {
           net.sendLoadout         = wrap('loadout');
           net.sendProjectile      = wrap('proj');
           net.sendSubstrateDelta  = wrap('subd');
-          // v7.3 LH: server-consumed actions (not relayed to other peers).
-          net.sendReady           = wrap('ready');
-          net.sendMapVote         = wrap('mapVote');
 
           updateLobbyPeers();
           document.getElementById('lobby-status').textContent = 'CONNECTED: ROOM ' + code;
@@ -2422,12 +2394,6 @@ async function joinRoom() {
           }
           net.peers.delete(peerId);
           updateLobbyPeers();
-          return;
-        }
-
-        if (msg.type === 'match-state') {
-          // v7.3 LH: server-authoritative match state.
-          applyServerMatchState(msg.payload);
           return;
         }
 
@@ -2785,10 +2751,6 @@ function updateNetworkPlayer(peerId, data) {
 
 function broadcastPlayerState(dt) {
   if (!net.active || !net.sendState) return;
-  // v7.3.1: defensive null-check. broadcastPlayerState only makes sense once
-  // the player has committed a loadout (which initializes position, velocity,
-  // euler). Pre-commit those are still null; skip silently rather than crash.
-  if (!player || !player.position || !player.velocity || !camera) return;
 
   net.broadcastAccum += dt;
   if (net.broadcastAccum < 1 / net.broadcastHz) return;
@@ -2870,9 +2832,8 @@ function computeAuthoredSnapshot() {
     }
   }
 
-  // v7.3 LH: server owns the match record in MP, so we don't include it in
-  // peer broadcasts. Solo still includes it locally for snapshot/save use.
-  if (!net.active && game && game._matchSubstrateId) {
+  // v6.3: host authors the match record so non-hosts can mirror round timing.
+  if (net.isHost && game && game._matchSubstrateId) {
     const matchRec = Substrate.entities.get(game._matchSubstrateId);
     if (matchRec) out[matchRec.id] = matchRec;
   }
@@ -8962,10 +8923,6 @@ function commitLoadout(key) {
   if (player.substrateId) {
     const rec = Substrate.entities.get(player.substrateId);
     if (rec) rec.ready = true;
-  }
-  // v7.3 LH: signal the server (which is the match authority in MP).
-  if (net.active && net.sendReady) {
-    net.sendReady({ ready: true, team: player.team, loadoutKey: player.loadoutKey });
   }
 }
 
@@ -15218,9 +15175,6 @@ function _hostTakeoverBuild(reason) {
 // Called each frame after applySubstrateDelta has had a chance to land
 // incoming match deltas.
 function syncFromHostMatchRecord() {
-  // v7.3 LH: server is now match authority in MP; this function only
-  // matters for solo (where it's also a no-op since net.active is false).
-  if (net.active) return;
   if (!net.active || net.isHost) return; // host already owns the values
   if (!net.hostPeerId) return;
 
@@ -15499,60 +15453,7 @@ function trySwitchTeam() {
   player.team = destTeam === 'A' ? LSS.TEAM_FLEET_A : LSS.TEAM_FLEET_B;
   if (myRec) myRec.team = player.team;
   if (status) status.textContent = '';
-  // v7.3 LH: tell the server about the team change so its peerInfo stays current.
-  if (net.active && net.sendReady) {
-    net.sendReady({ ready: !!(myRec && myRec.ready), team: player.team, loadoutKey: player.loadoutKey });
-  }
   updateRoster();
-}
-
-
-// ============================================================================
-// ---- SERVER MATCH STATE (v7.3 LH) ----
-//
-// The Bun server is the canonical source of match-level truth in MP. This
-// helper takes a {state, seed, selectedMap, warmupTimer, roundTimer,
-// currentRound, scoreA, scoreB} payload and folds it into local game.*
-// state. The first time we see state==='warmup' we trigger the deferred
-// world build with the server's seed and map, mirroring the v6.4 host-side
-// flow (which is now redundant in MP but kept for solo).
-// ============================================================================
-
-function applyServerMatchState(ms) {
-  if (!ms || typeof ms !== 'object') return;
-  game._lastServerMatchState = ms;
-  const prevState = game.state;
-  // Trigger fresh build on warmup transition (the seed and map land here).
-  if (ms.state === 'warmup' && prevState !== 'warmup' && ms.seed != null) {
-    game._matchLaunched = false; // re-arm the launch latch for the new round
-    if (typeof _buildFreshMatchWorld === 'function') {
-      try {
-        _buildFreshMatchWorld(ms.seed, ms.selectedMap || game.selectedMap, player.team);
-      } catch (e) {
-        console.error('[v7.3] _buildFreshMatchWorld threw:', e);
-      }
-    }
-  }
-  // Mirror the simple fields straight onto game.*
-  if (typeof ms.state === 'string') game.state = ms.state;
-  if (typeof ms.warmupTimer === 'number') game.warmupTimer = ms.warmupTimer;
-  if (typeof ms.roundTimer === 'number') game.roundTimer = ms.roundTimer;
-  if (typeof ms.currentRound === 'number') game.currentRound = ms.currentRound;
-  if (typeof ms.scoreA === 'number') game.scoreA = ms.scoreA;
-  if (typeof ms.scoreB === 'number') game.scoreB = ms.scoreB;
-  if (typeof ms.selectedMap === 'string') game.selectedMap = ms.selectedMap;
-  if (typeof ms.seed === 'number') game._matchSeed = ms.seed;
-  // Fire the launch countdown visual when warmupTimer first becomes positive.
-  if (ms.warmupTimer != null && ms.warmupTimer > 0 && !game._matchLaunched) {
-    if (typeof _launchMatch === 'function') _launchMatch();
-  }
-}
-
-if (typeof window !== 'undefined') {
-  window.dumpServerMatchState = function () {
-    console.log('serverMatchState:', game._lastServerMatchState, 'gameState:', game.state);
-    return game._lastServerMatchState || null;
-  };
 }
 
 // ============================================================================
@@ -15635,8 +15536,7 @@ function _launchMatch() {
 // transition in syncFromHostMatchRecord.
 function _checkAutoLaunch() {
   if (game._matchLaunched) return;
-  // v7.3 LH: server decides launch in MP. Solo still uses local logic.
-  if (net.active) return;
+  if (net.active && !net.isHost) return;
   if (game.state !== 'warmup') return; // build must have run
   if (!_allPeersReady()) return;
   _launchMatch();
@@ -15699,15 +15599,7 @@ function gameLoop(timestamp) {
     }
   }
 
-  // v7.3 LH: substrate broadcast must flow during 'select' too so peers'
-  // lobby presence (team, picked loadout, ready) is visible to each other.
-  // We broadcast even in select; gameplay state (position, fire) is zero
-  // until commit so the per-frame delta is tiny.
-  if (game.state === 'select') {
-    broadcastSubstrateDelta(dt);
-    renderPostFX();
-    return;
-  }
+  if (game.state === 'select') { renderPostFX(); return; }
 
   // Pause gameplay while settings are open
   if (settingsOpen) {
