@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Microverse Megabattle — v3.1</title>
+<title>Microverse Megabattle — v3.3</title>
 <!--
   Project: Microverse Megabattle
-  File:    v3_1.html (aggregate ⊙ recognition; A3 nesting visible at last)
+  File:    v3_3.html (LSS-style first-person movement: player IS a body in the soup)
   Created: 2026-04-24
   Last updated: 2026-04-24
-  Version: 3.1
+  Version: 3.3
 
   v1.9 scope (Stage 1 of the Path B mereology arc): make each atom a
   compound ⊙ in its own right by giving it a visible nucleon cloud. Each
@@ -20,6 +20,29 @@
   proof that ⊙λ contains smaller ⊙s, not just a label on a sphere.
 
   Revision history:
+    - 2026-04-24 v3.3: LSS-STYLE PLAYER MOVEMENT. Copied first-person
+      flight from last_ship_sailing.html. Player has position +
+      velocity + euler; mouse pointer-lock for look; WASD + space/ctrl
+      for thrust (acceleration / deceleration / speed cap). Camera
+      locked to player position. The player IS a body in the soup; their
+      position drives the existing observer attractors. OrbitControls
+      retired. Mouse-repulse retired (no longer makes sense in first-
+      person). Click-to-engage gates pointer-lock behind a user gesture
+      (same gate as audio start). Player is constrained to the boundary
+      sphere; cannot fly out of the soup.
+    - 2026-04-24 v3.2: UNIFIED OBSERVER PRESENCE. The player's • aperture
+      now exerts organizing influence in four ways simultaneously:
+      (1) camera POSITION pulls atoms (body presence in the world)
+      (2) camera TARGET pulls (gaze focus, the existing v2.4 attractor)
+      (3) the LINE between them pulls (gaze beam, weakly along the ray)
+      (4) HISTORY of recent target positions exerts decaying residual pull
+          (where you have been still matters briefly).
+      Active mouse/keyboard input boosts all attractor strengths
+      (intentional acting). The framework's "consciousness IS measurement"
+      claim becomes the game's primary organizing force, against entropy.
+      Multiplayer extension: each player gets the same four-aspect
+      attractor field; AIs do too. Where attentions overlap, structures
+      contend.
     - 2026-04-24 v3.1: AGGREGATE ⊙ RECOGNITION. Connected bonded
       clusters are detected via graph traversal; each molecule renders
       as a translucent shell ⊙ at scale Λ centered at the cluster
@@ -260,8 +283,8 @@
 </head>
 <body>
 <div id="info">
-  <div class="title">MICROVERSE MEGABATTLE v3.1</div>
-  <div class="dim">v3.1: aggregate ⊙ recognition; molecules ARE circumpuncts at scale Λ (A3 visible)</div>
+  <div class="title">MICROVERSE MEGABATTLE v3.3</div>
+  <div class="dim">v3.3: LSS-style movement; click to fly through your own soup (WASD + mouse-look)</div>
   <div>&nbsp;</div>
   <div><span class="elL">L</span>: sp (1.0D), <span id="freqL" class="k">—</span> Hz, A=7</div>
   <div><span class="elC">C</span>: sp³ (1.5D), <span id="freqC" class="k">—</span> Hz, A=12</div>
@@ -271,10 +294,11 @@
   <div class="dim">each atom is a compound ⊙ with A nucleons inside</div>
   <div class="dim">bonds form on contact; voices consonate when bonded</div>
   <div>&nbsp;</div>
-  <div><span class="k">drag</span> — orbit camera</div>
-  <div><span class="k">scroll</span> — zoom</div>
-  <div><span class="k">mouse proximity</span> — stir the soup</div>
-  <div><span class="k">click</span> — poke nearest</div>
+  <div><span class="k">click canvas</span> — engage flight (pointer-lock)</div>
+  <div><span class="k">mouse</span> — look around</div>
+  <div><span class="k">WASD</span> — thrust (forward / back / strafe)</div>
+  <div><span class="k">space / ctrl</span> — vertical thrust (up / down)</div>
+  <div><span class="k">esc</span> — release pointer-lock</div>
   <div><span class="k">S</span> — scramble (re-randomize positions)</div>
   <div><span class="k">R</span> — reset + break all bonds</div>
 </div>
@@ -1503,7 +1527,101 @@ function updateAudio() {
 const input = {
   mouseWorld: new THREE.Vector3(),
   mouseActive: false,
+  keys: {},
+  mouseDX: 0,
+  mouseDY: 0,
+  locked: false,
+  sensitivity: 0.0025,
 };
+
+// v3.3: Player state — first-person body that flies through the soup.
+const player = {
+  position: new THREE.Vector3(0, 0, 100),
+  velocity: new THREE.Vector3(),
+  euler: new THREE.Euler(0, 0, 0, 'YXZ'),
+  flightSpeed:  90,
+  strafeSpeed:  70,
+  verticalSpeed: 70,
+  acceleration: 220,
+  deceleration: 160,
+  maxSpeed:     110,
+};
+
+const _mvForward  = new THREE.Vector3(0, 0, -1);
+const _mvRight    = new THREE.Vector3(1, 0, 0);
+const _mvUp       = new THREE.Vector3(0, 1, 0);
+const _mvMoveDir  = new THREE.Vector3();
+const _mvAccelDir = new THREE.Vector3();
+const _mvDrag     = new THREE.Vector3();
+
+function updatePlayerMovement(dt) {
+  if (input.locked) {
+    player.euler.y -= input.mouseDX * input.sensitivity;
+    player.euler.x -= input.mouseDY * input.sensitivity;
+  }
+  player.euler.x = Math.max(-Math.PI * 0.45, Math.min(Math.PI * 0.45, player.euler.x));
+  input.mouseDX = 0;
+  input.mouseDY = 0;
+  camera.quaternion.setFromEuler(player.euler);
+
+  _mvForward.set(0, 0, -1).applyQuaternion(camera.quaternion);
+  _mvRight.set(1, 0, 0).applyQuaternion(camera.quaternion);
+
+  const moveDir = _mvMoveDir.set(0, 0, 0);
+  if (input.keys['w'] || input.keys['arrowup'])    moveDir.addScaledVector(_mvForward, player.flightSpeed);
+  if (input.keys['s'] || input.keys['arrowdown'])  moveDir.addScaledVector(_mvForward, -player.flightSpeed * 0.6);
+  if (input.keys['a'] || input.keys['arrowleft'])  moveDir.addScaledVector(_mvRight, -player.strafeSpeed);
+  if (input.keys['d'] || input.keys['arrowright']) moveDir.addScaledVector(_mvRight, player.strafeSpeed);
+  if (input.keys[' '])                              moveDir.addScaledVector(_mvUp, player.verticalSpeed);
+  if (input.keys['control'])                        moveDir.addScaledVector(_mvUp, -player.verticalSpeed);
+
+  if (moveDir.lengthSq() > 0) {
+    const accelDir = _mvAccelDir.copy(moveDir).sub(player.velocity);
+    const accelMag = Math.min(accelDir.length(), player.acceleration * dt);
+    if (accelMag > 0.01) player.velocity.add(accelDir.normalize().multiplyScalar(accelMag));
+  } else {
+    const speed = player.velocity.length();
+    if (speed > 1) {
+      const drag = Math.min(speed, player.deceleration * dt);
+      player.velocity.sub(_mvDrag.copy(player.velocity).normalize().multiplyScalar(drag));
+    } else {
+      player.velocity.set(0, 0, 0);
+    }
+  }
+
+  if (player.velocity.length() > player.maxSpeed) {
+    player.velocity.normalize().multiplyScalar(player.maxSpeed);
+  }
+
+  player.position.addScaledVector(player.velocity, dt);
+
+  const r = player.position.length();
+  const maxR = PHYS.boundaryRadius - 6;
+  if (r > maxR) {
+    player.position.multiplyScalar(maxR / r);
+    const ox = player.position.x / maxR, oy = player.position.y / maxR, oz = player.position.z / maxR;
+    const vDotN = player.velocity.x * ox + player.velocity.y * oy + player.velocity.z * oz;
+    if (vDotN > 0) {
+      player.velocity.x -= ox * vDotN;
+      player.velocity.y -= oy * vDotN;
+      player.velocity.z -= oz * vDotN;
+    }
+  }
+
+  camera.position.copy(player.position);
+}
+
+window.addEventListener('keydown', (e) => { input.keys[e.key.toLowerCase()] = true; });
+window.addEventListener('keyup',   (e) => { input.keys[e.key.toLowerCase()] = false; });
+document.addEventListener('pointerlockchange', () => {
+  input.locked = (document.pointerLockElement === renderer.domElement);
+});
+document.addEventListener('mousemove', (e) => {
+  if (input.locked) {
+    input.mouseDX += e.movementX;
+    input.mouseDY += e.movementY;
+  }
+});
 
 const _ndc = new THREE.Vector2();
 const _ray = new THREE.Raycaster();
@@ -1537,8 +1655,9 @@ const _audioPrompt = document.getElementById("audioPrompt");
 _audioPrompt.addEventListener("mousedown", (ev) => {
   ev.preventDefault();
   initAudio();
-  // Poll briefly for audio becoming ready; once it is, fade the overlay.
-  // Most browsers resolve resume() within 20–80ms, so this is imperceptible.
+  // v3.3: also request pointer lock so flight mode engages on the first click.
+  // Browsers require the lock request to come from a user gesture; this is it.
+  try { renderer.domElement.requestPointerLock(); } catch (e) {}
   const fadeCheck = () => {
     if (audioReady) {
       _audioPrompt.classList.add("hidden");
@@ -1547,6 +1666,14 @@ _audioPrompt.addEventListener("mousedown", (ev) => {
     }
   };
   fadeCheck();
+});
+
+// v3.3: re-engage pointer lock with a click on the canvas (e.g., after Escape).
+renderer.domElement.addEventListener("mousedown", (ev) => {
+  if (ev.button !== 0) return;
+  if (!input.locked) {
+    try { renderer.domElement.requestPointerLock(); } catch (e) {}
+  }
 });
 
 // Canvas mousedown: spike the nearest particle. Audio is guaranteed ready
@@ -1579,6 +1706,27 @@ window.addEventListener("keydown", (ev) => {
 // the camera focal point (controls.target) pulls atoms inward. Default
 // chosen to organize the soup over ~30 seconds without instantly collapsing.
 const OBSERVER_STRENGTH = 3500;
+// v3.2: unified observer presence — the player's • aperture exerts pull
+// from four aspects simultaneously.
+const OBSERVER_BODY_STRENGTH    = 2200;  // pull toward camera POSITION (the user's body)
+const OBSERVER_BEAM_STRENGTH    = 1500;  // pull toward the gaze line (camera→target)
+const OBSERVER_HISTORY_STRENGTH = 1500;  // pull toward recent target positions (decaying)
+const OBSERVER_INPUT_BOOST      = 2.2;   // multiplier on all attractors when mouse active
+const OBSERVER_HISTORY_INTERVAL = 0.30;  // sample camera target every 0.3s
+const OBSERVER_HISTORY_MAX      = 16;    // keep last 16 samples (≈ 4.8s of history)
+const OBSERVER_HISTORY_HALFLIFE = 3.0;   // exponential decay; weight halves every 3s
+
+// History buffer: [{ pos: Vector3, time: seconds }, ...]
+const _observerHistory = [];
+let _observerHistoryTimer = 0;
+function updateObserverHistory(dt) {
+  _observerHistoryTimer += dt;
+  if (_observerHistoryTimer >= OBSERVER_HISTORY_INTERVAL) {
+    _observerHistoryTimer -= OBSERVER_HISTORY_INTERVAL;
+    _observerHistory.push({ pos: controls.target.clone(), time: performance.now() * 0.001 });
+    if (_observerHistory.length > OBSERVER_HISTORY_MAX) _observerHistory.shift();
+  }
+}
 
 const PHYS = {
   mouseRepulseRadius: 120,     // larger volume needs larger mouse influence
@@ -2949,23 +3097,89 @@ function updatePhysics(dt) {
       }
     }
 
-    // v2.4: OBSERVER ATTRACTOR. The user's gaze (camera focal point) is
-    // a real • in the simulation: atoms feel a 1/r² pull toward it. The
-    // framework's "• is where the field is looked at FROM" becomes
-    // mechanic. Soft cap on close-range force so atoms don't shoot
-    // through the focal point.
+    // v3.2: UNIFIED OBSERVER PRESENCE. Four-aspect • aperture exerts
+    // pull from camera position, camera target, the gaze beam, and recent
+    // history. Active input boosts all of them.
+    const _inputBoost = input.mouseActive ? OBSERVER_INPUT_BOOST : 1.0;
+
+    // (1) Camera target attractor (gaze focus) — the v2.4 original.
     {
       const tx = controls.target.x, ty = controls.target.y, tz = controls.target.z;
       const dx = tx - p.pos.x, dy = ty - p.pos.y, dz = tz - p.pos.z;
       const r2 = dx*dx + dy*dy + dz*dz;
-      const r2soft = Math.max(900, r2);  // soften within 30 units of target
-      const fmag = OBSERVER_STRENGTH / r2soft;
+      const r2soft = Math.max(900, r2);
+      const fmag = OBSERVER_STRENGTH * _inputBoost / r2soft;
       const r = Math.sqrt(r2);
       if (r > 0.0001) {
         const inv = 1 / r;
         _force.x += dx * inv * fmag;
         _force.y += dy * inv * fmag;
         _force.z += dz * inv * fmag;
+      }
+    }
+
+    // (2) Camera position attractor (the user's body presence).
+    {
+      const cx = camera.position.x, cy = camera.position.y, cz = camera.position.z;
+      const dx = cx - p.pos.x, dy = cy - p.pos.y, dz = cz - p.pos.z;
+      const r2 = dx*dx + dy*dy + dz*dz;
+      const r2soft = Math.max(2500, r2);  // softer floor so close atoms don't shoot through
+      const fmag = OBSERVER_BODY_STRENGTH * _inputBoost / r2soft;
+      const r = Math.sqrt(r2);
+      if (r > 0.0001) {
+        const inv = 1 / r;
+        _force.x += dx * inv * fmag;
+        _force.y += dy * inv * fmag;
+        _force.z += dz * inv * fmag;
+      }
+    }
+
+    // (3) Gaze beam attractor (line from camera position to target).
+    // Project particle onto the segment; pull toward the projection.
+    {
+      const ax = camera.position.x, ay = camera.position.y, az = camera.position.z;
+      const bx = controls.target.x, by = controls.target.y, bz = controls.target.z;
+      const dx = bx - ax, dy = by - ay, dz = bz - az;
+      const lenSq = dx*dx + dy*dy + dz*dz;
+      if (lenSq > 0.01) {
+        const t = ((p.pos.x - ax) * dx + (p.pos.y - ay) * dy + (p.pos.z - az) * dz) / lenSq;
+        const tClamped = Math.max(0, Math.min(1, t));
+        const projX = ax + dx * tClamped;
+        const projY = ay + dy * tClamped;
+        const projZ = az + dz * tClamped;
+        const ddx = projX - p.pos.x, ddy = projY - p.pos.y, ddz = projZ - p.pos.z;
+        const dr2 = ddx*ddx + ddy*ddy + ddz*ddz;
+        const dr2soft = Math.max(400, dr2);
+        const fmag = OBSERVER_BEAM_STRENGTH * _inputBoost / dr2soft;
+        const dr = Math.sqrt(dr2);
+        if (dr > 0.0001) {
+          const inv = 1 / dr;
+          _force.x += ddx * inv * fmag;
+          _force.y += ddy * inv * fmag;
+          _force.z += ddz * inv * fmag;
+        }
+      }
+    }
+
+    // (4) History attractor — recent camera target positions, decaying.
+    {
+      const tNow = performance.now() * 0.001;
+      for (let h = 0; h < _observerHistory.length; h++) {
+        const hist = _observerHistory[h];
+        const age = tNow - hist.time;
+        const ageWeight = Math.exp(-age * 0.693 / OBSERVER_HISTORY_HALFLIFE);
+        if (ageWeight < 0.05) continue;
+        const dx = hist.pos.x - p.pos.x, dy = hist.pos.y - p.pos.y, dz = hist.pos.z - p.pos.z;
+        const r2 = dx*dx + dy*dy + dz*dz;
+        const r2soft = Math.max(900, r2);
+        const fmag = OBSERVER_HISTORY_STRENGTH * ageWeight / r2soft;
+        const r = Math.sqrt(r2);
+        if (r > 0.0001) {
+          const inv = 1 / r;
+          _force.x += dx * inv * fmag;
+          _force.y += dy * inv * fmag;
+          _force.z += dz * inv * fmag;
+        }
       }
     }
 
@@ -3242,14 +3456,17 @@ const PerceptionEngine = {
   },
   // Camera / scope / cursor / presence indicator updates (UI feedback).
   updateInputFeedback() {
-    if (input.mouseActive) {
-      cursorMesh.position.copy(input.mouseWorld);
-      cursorMesh.visible = true;
-    } else {
-      cursorMesh.visible = false;
-    }
-    presenceMesh.position.copy(controls.target);
-    presenceHaloMesh.position.copy(controls.target);
+    // v3.3: cursor sphere is a no-op in pointer-locked flight mode.
+    cursorMesh.visible = !input.locked && input.mouseActive;
+    if (cursorMesh.visible) cursorMesh.position.copy(input.mouseWorld);
+    // Presence indicator sits at the player's virtual gaze focus point.
+    const _focusD = 60;
+    presenceMesh.position.set(
+      camera.position.x + _mvForward.x * _focusD,
+      camera.position.y + _mvForward.y * _focusD,
+      camera.position.z + _mvForward.z * _focusD
+    );
+    presenceHaloMesh.position.copy(presenceMesh.position);
   },
   // Final render: field shader as background, then layered scene on top.
   render() {
@@ -3275,6 +3492,9 @@ function animate() {
 
   // ⊙Λ → ⊙λ' : world's ambient rules apply to substrate
   WorldEngine.applyAmbientFields(SubstrateEngine, dt);
+
+  // v3.2: sample camera-target into observer history (for residual pull)
+  updateObserverHistory(dt);
 
   // ⊙λ' substrate tick : chemistry, bonds, fusion, octave advance
   SubstrateEngine.tick(dt, WorldEngine);

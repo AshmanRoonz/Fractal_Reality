@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Microverse Megabattle — v3.1</title>
+<title>Microverse Megabattle — v3.2</title>
 <!--
   Project: Microverse Megabattle
-  File:    v3_1.html (aggregate ⊙ recognition; A3 nesting visible at last)
+  File:    v3_2.html (unified observer presence: position + gaze + beam + history)
   Created: 2026-04-24
   Last updated: 2026-04-24
-  Version: 3.1
+  Version: 3.2
 
   v1.9 scope (Stage 1 of the Path B mereology arc): make each atom a
   compound ⊙ in its own right by giving it a visible nucleon cloud. Each
@@ -20,6 +20,19 @@
   proof that ⊙λ contains smaller ⊙s, not just a label on a sphere.
 
   Revision history:
+    - 2026-04-24 v3.2: UNIFIED OBSERVER PRESENCE. The player's • aperture
+      now exerts organizing influence in four ways simultaneously:
+      (1) camera POSITION pulls atoms (body presence in the world)
+      (2) camera TARGET pulls (gaze focus, the existing v2.4 attractor)
+      (3) the LINE between them pulls (gaze beam, weakly along the ray)
+      (4) HISTORY of recent target positions exerts decaying residual pull
+          (where you have been still matters briefly).
+      Active mouse/keyboard input boosts all attractor strengths
+      (intentional acting). The framework's "consciousness IS measurement"
+      claim becomes the game's primary organizing force, against entropy.
+      Multiplayer extension: each player gets the same four-aspect
+      attractor field; AIs do too. Where attentions overlap, structures
+      contend.
     - 2026-04-24 v3.1: AGGREGATE ⊙ RECOGNITION. Connected bonded
       clusters are detected via graph traversal; each molecule renders
       as a translucent shell ⊙ at scale Λ centered at the cluster
@@ -260,8 +273,8 @@
 </head>
 <body>
 <div id="info">
-  <div class="title">MICROVERSE MEGABATTLE v3.1</div>
-  <div class="dim">v3.1: aggregate ⊙ recognition; molecules ARE circumpuncts at scale Λ (A3 visible)</div>
+  <div class="title">MICROVERSE MEGABATTLE v3.2</div>
+  <div class="dim">v3.2: player presence is the organizer; position + gaze + beam + history all pull</div>
   <div>&nbsp;</div>
   <div><span class="elL">L</span>: sp (1.0D), <span id="freqL" class="k">—</span> Hz, A=7</div>
   <div><span class="elC">C</span>: sp³ (1.5D), <span id="freqC" class="k">—</span> Hz, A=12</div>
@@ -1579,6 +1592,27 @@ window.addEventListener("keydown", (ev) => {
 // the camera focal point (controls.target) pulls atoms inward. Default
 // chosen to organize the soup over ~30 seconds without instantly collapsing.
 const OBSERVER_STRENGTH = 3500;
+// v3.2: unified observer presence — the player's • aperture exerts pull
+// from four aspects simultaneously.
+const OBSERVER_BODY_STRENGTH    = 2200;  // pull toward camera POSITION (the user's body)
+const OBSERVER_BEAM_STRENGTH    = 1500;  // pull toward the gaze line (camera→target)
+const OBSERVER_HISTORY_STRENGTH = 1500;  // pull toward recent target positions (decaying)
+const OBSERVER_INPUT_BOOST      = 2.2;   // multiplier on all attractors when mouse active
+const OBSERVER_HISTORY_INTERVAL = 0.30;  // sample camera target every 0.3s
+const OBSERVER_HISTORY_MAX      = 16;    // keep last 16 samples (≈ 4.8s of history)
+const OBSERVER_HISTORY_HALFLIFE = 3.0;   // exponential decay; weight halves every 3s
+
+// History buffer: [{ pos: Vector3, time: seconds }, ...]
+const _observerHistory = [];
+let _observerHistoryTimer = 0;
+function updateObserverHistory(dt) {
+  _observerHistoryTimer += dt;
+  if (_observerHistoryTimer >= OBSERVER_HISTORY_INTERVAL) {
+    _observerHistoryTimer -= OBSERVER_HISTORY_INTERVAL;
+    _observerHistory.push({ pos: controls.target.clone(), time: performance.now() * 0.001 });
+    if (_observerHistory.length > OBSERVER_HISTORY_MAX) _observerHistory.shift();
+  }
+}
 
 const PHYS = {
   mouseRepulseRadius: 120,     // larger volume needs larger mouse influence
@@ -2949,23 +2983,89 @@ function updatePhysics(dt) {
       }
     }
 
-    // v2.4: OBSERVER ATTRACTOR. The user's gaze (camera focal point) is
-    // a real • in the simulation: atoms feel a 1/r² pull toward it. The
-    // framework's "• is where the field is looked at FROM" becomes
-    // mechanic. Soft cap on close-range force so atoms don't shoot
-    // through the focal point.
+    // v3.2: UNIFIED OBSERVER PRESENCE. Four-aspect • aperture exerts
+    // pull from camera position, camera target, the gaze beam, and recent
+    // history. Active input boosts all of them.
+    const _inputBoost = input.mouseActive ? OBSERVER_INPUT_BOOST : 1.0;
+
+    // (1) Camera target attractor (gaze focus) — the v2.4 original.
     {
       const tx = controls.target.x, ty = controls.target.y, tz = controls.target.z;
       const dx = tx - p.pos.x, dy = ty - p.pos.y, dz = tz - p.pos.z;
       const r2 = dx*dx + dy*dy + dz*dz;
-      const r2soft = Math.max(900, r2);  // soften within 30 units of target
-      const fmag = OBSERVER_STRENGTH / r2soft;
+      const r2soft = Math.max(900, r2);
+      const fmag = OBSERVER_STRENGTH * _inputBoost / r2soft;
       const r = Math.sqrt(r2);
       if (r > 0.0001) {
         const inv = 1 / r;
         _force.x += dx * inv * fmag;
         _force.y += dy * inv * fmag;
         _force.z += dz * inv * fmag;
+      }
+    }
+
+    // (2) Camera position attractor (the user's body presence).
+    {
+      const cx = camera.position.x, cy = camera.position.y, cz = camera.position.z;
+      const dx = cx - p.pos.x, dy = cy - p.pos.y, dz = cz - p.pos.z;
+      const r2 = dx*dx + dy*dy + dz*dz;
+      const r2soft = Math.max(2500, r2);  // softer floor so close atoms don't shoot through
+      const fmag = OBSERVER_BODY_STRENGTH * _inputBoost / r2soft;
+      const r = Math.sqrt(r2);
+      if (r > 0.0001) {
+        const inv = 1 / r;
+        _force.x += dx * inv * fmag;
+        _force.y += dy * inv * fmag;
+        _force.z += dz * inv * fmag;
+      }
+    }
+
+    // (3) Gaze beam attractor (line from camera position to target).
+    // Project particle onto the segment; pull toward the projection.
+    {
+      const ax = camera.position.x, ay = camera.position.y, az = camera.position.z;
+      const bx = controls.target.x, by = controls.target.y, bz = controls.target.z;
+      const dx = bx - ax, dy = by - ay, dz = bz - az;
+      const lenSq = dx*dx + dy*dy + dz*dz;
+      if (lenSq > 0.01) {
+        const t = ((p.pos.x - ax) * dx + (p.pos.y - ay) * dy + (p.pos.z - az) * dz) / lenSq;
+        const tClamped = Math.max(0, Math.min(1, t));
+        const projX = ax + dx * tClamped;
+        const projY = ay + dy * tClamped;
+        const projZ = az + dz * tClamped;
+        const ddx = projX - p.pos.x, ddy = projY - p.pos.y, ddz = projZ - p.pos.z;
+        const dr2 = ddx*ddx + ddy*ddy + ddz*ddz;
+        const dr2soft = Math.max(400, dr2);
+        const fmag = OBSERVER_BEAM_STRENGTH * _inputBoost / dr2soft;
+        const dr = Math.sqrt(dr2);
+        if (dr > 0.0001) {
+          const inv = 1 / dr;
+          _force.x += ddx * inv * fmag;
+          _force.y += ddy * inv * fmag;
+          _force.z += ddz * inv * fmag;
+        }
+      }
+    }
+
+    // (4) History attractor — recent camera target positions, decaying.
+    {
+      const tNow = performance.now() * 0.001;
+      for (let h = 0; h < _observerHistory.length; h++) {
+        const hist = _observerHistory[h];
+        const age = tNow - hist.time;
+        const ageWeight = Math.exp(-age * 0.693 / OBSERVER_HISTORY_HALFLIFE);
+        if (ageWeight < 0.05) continue;
+        const dx = hist.pos.x - p.pos.x, dy = hist.pos.y - p.pos.y, dz = hist.pos.z - p.pos.z;
+        const r2 = dx*dx + dy*dy + dz*dz;
+        const r2soft = Math.max(900, r2);
+        const fmag = OBSERVER_HISTORY_STRENGTH * ageWeight / r2soft;
+        const r = Math.sqrt(r2);
+        if (r > 0.0001) {
+          const inv = 1 / r;
+          _force.x += dx * inv * fmag;
+          _force.y += dy * inv * fmag;
+          _force.z += dz * inv * fmag;
+        }
       }
     }
 
@@ -3275,6 +3375,9 @@ function animate() {
 
   // ⊙Λ → ⊙λ' : world's ambient rules apply to substrate
   WorldEngine.applyAmbientFields(SubstrateEngine, dt);
+
+  // v3.2: sample camera-target into observer history (for residual pull)
+  updateObserverHistory(dt);
 
   // ⊙λ' substrate tick : chemistry, bonds, fusion, octave advance
   SubstrateEngine.tick(dt, WorldEngine);

@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Microverse Megabattle — v3.1</title>
+<title>Microverse Megabattle v5.0</title>
 <!--
   Project: Microverse Megabattle
-  File:    v3_1.html (aggregate ⊙ recognition; A3 nesting visible at last)
-  Created: 2026-04-24
-  Last updated: 2026-04-24
-  Version: 3.1
+  File:    v5.html (substrate / view split; lazy 3D mesh attachment by render range)
+  Created: 2026-04-25
+  Last updated: 2026-04-25
+  Version: 5.0
 
   v1.9 scope (Stage 1 of the Path B mereology arc): make each atom a
   compound ⊙ in its own right by giving it a visible nucleon cloud. Each
@@ -20,77 +20,32 @@
   proof that ⊙λ contains smaller ⊙s, not just a label on a sphere.
 
   Revision history:
-    - 2026-04-24 v3.1: AGGREGATE ⊙ RECOGNITION. Connected bonded
-      clusters are detected via graph traversal; each molecule renders
-      as a translucent shell ⊙ at scale Λ centered at the cluster
-      centroid. The framework's A3 (parts compose into next-scale
-      circumpuncts) finally visible. Each molecule IS a ⊙ in its own
-      right; its constituent atoms are its parts (just like nucleons
-      are the parts of an atom). Tightened existing Φ-surface and
-      bondedTriangle layers so the molecule shells are visible without
-      visual noise overwhelming them.
-    - 2026-04-24 v3.0: T=3 ENGINE ARCHITECTURE. The game is now
-      structured as three nested engines reflecting the framework's
-      three-scale nesting (C64 / C512 at the software level):
-        ⊙Λ — WorldEngine: rules, boundary, ambient field, time
-        ⊙λ — PerceptionEngine: camera, render, audio, HUD, input
-        ⊙λ' — SubstrateEngine: particles, chemistry, bonds, fusion
-      Same operator runs at every scale (A3); engines couple via
-      C512-style nesting. Phase 1 (this version): façade modules + clean
-      animate-loop routing. Underlying code unchanged in this pass; v3.1+
-      migrates code into proper IIFE modules incrementally.
-    - 2026-04-24 v2.7: ATOMS AS FULLSCREEN RAYMARCHED FIELD (C step 1).
-      Atom shells removed from the scene; replaced by a fullscreen quad
-      with a raymarching fragment shader that evaluates atom Gaussian
-      metaballs in 3D world space per pixel. Atoms are no longer discrete
-      meshes; they're continuous field excitations of one shader. Other
-      layers (threads, surfaces, nucleons, bonds, presence) still draw
-      as separate meshes on top — they get absorbed into the fullscreen
-      shader in v2.8-v2.11 until full endgame: one shader, zero
-      discrete meshes.
-    - 2026-04-24 v2.6: ONE SHADER, MANY ASPECTS. Every atom is now an
-      instance of a single shared ShaderMaterial; the shader procedurally
-      generates each atom's appearance from per-instance attributes
-      (color, station, amplitude, hyb). Different hybridizations select
-      qualitatively different surface patterns (sp = smooth, sp³ =
-      fractal noise, sp² = bands, sp³d = striated, sp³d² = crystalline
-      lattice). Framework reading: every ⊙ is a different localization of
-      the one substrate; rendering them as instances of one shader makes
-      that literal in the visual.
-    - 2026-04-24 v2.5: RESONANCE MODULATES BRAID. Coupling formula now
-      κ = α × proximity × (1 + resonance × amp), where resonance is a
-      Lorentzian peaked at zero frequency difference. Two effects:
-      (a) same-frequency close pairs braid TIGHTER than mismatched close
-      pairs (visible: brighter threads for like-element pairs);
-      (b) same-frequency distant pairs maintain a sustained loose braid
-      across the void (visible: long-range resonance threads). The
-      framework's "Φ at transparency" works both spatially and
-      temporally; matching the temporal half is just like matching
-      proximity. Like resonates with like at every scale.
-    - 2026-04-24 v2.4: OBSERVER ATTRACTOR. The user's camera focal point
-      (controls.target) is now a real attractor in the simulation: atoms
-      feel a gentle 1/r² pull toward where the user is looking. The
-      framework's "• is where the field is looked at FROM" becomes a
-      mechanic: attention pulls atoms; orbiting the camera reorganizes
-      the soup. A faint glowing sphere marks the focal point. AI agents
-      and other players will be additional attractors at the same scale.
-      Also fixed: Φ-surface triangles capped at lower alpha (0.10) so
-      dense clusters don't saturate to white.
-    - 2026-04-24 v2.3: DIMENSIONAL LADDER VISIBLE. Atom render radius
-      shrunk 12→5 (physics radii unchanged) so the threads dominate the
-      visual. Added Φ-surface layer: every tight triple of atoms (all 3
-      pairwise threads within range) renders as a translucent additive
-      triangle. Now you can SEE the framework's dimensional ladder
-      assemble itself in front of you: • atoms become — threads become Φ
-      surfaces. Closed 3D hulls (○ at the next scale) come in v2.4.
-    - 2026-04-24 v2.2: LOOSE BRAID VISIBLE. The framework's claim that
-      everything is mediated through Φ becomes literal: every nearby pair
-      of atoms is connected by a luminous thread whose brightness scales
-      with their coupling strength κ ∝ α/r² (capped). Threads thicken as
-      atoms approach; they become bonds at contact distance; they fade to
-      invisible beyond 80 units. The soup goes from "balls bouncing in a
-      void" to "atoms in a luminous connectivity field." Same physics
-      underneath; the field was always there, just hidden.
+    - 2026-04-25 v5.0: SUBSTRATE / VIEW SPLIT. First build of the dimensional
+      layers architecture (see docs/microverse_megabattle/microverse_architecture_layers.md
+      v1.0). Each particle now carries a cheap always-on substrate (0D
+      position, orientation, element, state, station; 1D bonds, awareness)
+      separated from a lazy `view` object (3D mesh, material, nucleon cloud,
+      audio oscillator). Views attach only for atoms within RENDER_RADIUS
+      of the player, detach when far. Cage atoms always carry a view (they
+      are the player's body frame, must always render). HUD shows
+      "atoms: N (view: M)" to expose the optimization. This refactor is
+      mechanical (same physics, same chemistry, same gameplay as v4.0);
+      the architectural payoff is bigger soup support and the foundation
+      for v5.1 per-entity layer escalation, v5.2 2D map view, v5.3 text
+      MUD view.
+    - 2026-04-25 v4.0: CLEAN RESET. Forked from v2.1 (the visually-clean
+      substrate version, before v2.7's field-shader complexity broke
+      legibility). Adds Minecraft-style designed element library: each
+      element is an explicit DNA with role + behavior + phase bands +
+      pair-specific interactions. Matter states (solid/liquid/gas) are
+      now first-class with game purpose: solid = armor, liquid = flow,
+      gas = volatile (combustible). Combustion mechanic: H gas + O gas +
+      heat → ignition flash. LSS-style first-person movement (player has
+      a body in the world). Player composition tracker (absorbed atoms
+      reflected in HUD). Substrate stays as visually clean as v2.1; game
+      additions are minimal and additive. See
+      docs/microverse_megabattle/microverse_element_dna.md for the full
+      design spec this build implements.
     - 2026-04-24 v2.1: C512 PHASE LAYER. Each atom carries an octave
       station (one of •, ⊛, —, ⎇, Φ, ✹, ○, ⟳) that advances at a rate
       tied to its natural frequency, quantized so each station holds for
@@ -260,8 +215,8 @@
 </head>
 <body>
 <div id="info">
-  <div class="title">MICROVERSE MEGABATTLE v3.1</div>
-  <div class="dim">v3.1: aggregate ⊙ recognition; molecules ARE circumpuncts at scale Λ (A3 visible)</div>
+  <div class="title">MICROVERSE MEGABATTLE v5.0</div>
+  <div class="dim">v5.0: substrate / view split; cheap 0D-1D, lazy 3D by render range</div>
   <div>&nbsp;</div>
   <div><span class="elL">L</span>: sp (1.0D), <span id="freqL" class="k">—</span> Hz, A=7</div>
   <div><span class="elC">C</span>: sp³ (1.5D), <span id="freqC" class="k">—</span> Hz, A=12</div>
@@ -271,19 +226,20 @@
   <div class="dim">each atom is a compound ⊙ with A nucleons inside</div>
   <div class="dim">bonds form on contact; voices consonate when bonded</div>
   <div>&nbsp;</div>
-  <div><span class="k">drag</span> — orbit camera</div>
-  <div><span class="k">scroll</span> — zoom</div>
-  <div><span class="k">mouse proximity</span> — stir the soup</div>
-  <div><span class="k">click</span> — poke nearest</div>
-  <div><span class="k">S</span> — scramble (re-randomize positions)</div>
-  <div><span class="k">R</span> — reset + break all bonds</div>
+  <div><span class="k">click canvas</span> — engage flight (pointer-lock)</div>
+  <div><span class="k">mouse</span> — look around</div>
+  <div><span class="k">WASD</span> — thrust</div>
+  <div><span class="k">space / ctrl</span> — vertical</div>
+  <div><span class="k">esc</span> — release lock</div>
+  <div><span class="k">fly close to atoms</span> — absorb into body</div>
 </div>
 <div id="state">
   <div id="sElements" style="line-height:1.6; max-width:380px;">
     <span style="color:#7ab8c4;">elements:</span>
     <span id="sElementsList">—</span>
   </div>
-  <div>bonds: <span class="v" id="sBonds">0</span>  nucleons: <span class="v" id="sNucleons">—</span>  Φ-surf: <span class="v" id="sPhiTri">0</span>  faces: <span class="v" id="sBtrTri">0</span></div>
+  <div>bonds: <span class="v" id="sBonds">0</span>  nucleons: <span class="v" id="sNucleons">—</span>  body: <span class="v" id="sBody">0</span>/16</div>
+  <div>atoms: <span class="v" id="sAtoms">0</span> (view: <span class="v" id="sView">0</span>)</div>
   <div>audio: <span class="v" id="sAudio">off</span></div>
   <!-- v2.1 C512 marginal panel -->
   <div style="margin-top:10px; padding-top:6px; border-top:1px solid rgba(127,184,196,0.15); text-align:left;">
@@ -359,8 +315,8 @@
     <div style="color:#d18a2e; font-size:10px; letter-spacing:0.08em;">SOUP</div>
     <div class="row">
       <label>heat</label>
-      <input type="range" id="aHeat" min="0" max="100" value="12" step="1">
-      <span class="val" id="aHeatVal">12</span>
+      <input type="range" id="aHeat" min="0" max="100" value="35" step="1">
+      <span class="val" id="aHeatVal">35</span>
     </div>
     <div style="font-size:10px; color:#7ab8c4; text-align:center; margin-top:2px;">
       fusions: <span id="aFusionCount" style="color:#d18a2e;">0</span>
@@ -414,16 +370,14 @@ const STATION_DWELL = 0.45;  // seconds at each station before advancing
 // scale aperture (favors fusion); ✹ (5) emits. The compatibility function
 // returns a multiplier in [0,1] gating the operation's probability.
 function bondStationCompat(stA, stB) {
-  // v2.7 fix: loosened so bonds form readily on contact. Real molecules
-  // need a steady stream of bond-formation to build complexity. Station
-  // compatibility still biases toward ⊛-aligned pairs but no longer
-  // suppresses the rest to near-zero.
-  if (stA === 1 && stB === 1) return 1.0;     // both at ⊛: full
-  if (stA === 1 || stB === 1) return 0.92;    // one at ⊛: nearly full
+  // Both at ⊛: full bond probability. One at ⊛: half. Both at structural
+  // stations (no ⊛): quarter. Otherwise: 1/8 baseline.
+  if (stA === 1 && stB === 1) return 1.0;
+  if (stA === 1 || stB === 1) return 0.55;
   const aStruct = STRUCT_STATION_IDX.includes(stA);
   const bStruct = STRUCT_STATION_IDX.includes(stB);
-  if (aStruct && bStruct) return 0.78;        // both at structural: most contacts bond
-  return 0.60;                                 // baseline: still > 50% bond rate
+  if (aStruct && bStruct) return 0.30;
+  return 0.12;
 }
 function fusionStationCompat(stA, stB) {
   // Both at ⟳: full. One at ⟳: 0.4. Else: 0.08 baseline.
@@ -452,36 +406,84 @@ function fusionStationCompat(stA, stB) {
 // stable hub of the third group; these are the soup's natural attractors.
 const ELEMENTS = {
   H:  { name: "H",  A: 1,  Zeff: 1,  valence: 1, hyb: "sp",    LP: 0,
+        role: "terminal-light", behavior: ["loose","ubiquitous"],
+        states: { solid:[0,0.5], liquid:[0.5,1], gas:[1,100] },
+        combustible: true, oxidizer: false, inert: false,
         palette: { base: 0xcccccc, emissive: 0xeeeeee } },
   He: { name: "He", A: 4,  Zeff: 2,  valence: 0, hyb: "sp",    LP: 0,
+        role: "noble-light", behavior: ["inert","drifts"],
+        states: { solid:[0,0.2], liquid:[0.2,0.5], gas:[0.5,100] },
+        combustible: false, oxidizer: false, inert: true,
         palette: { base: 0x6080a0, emissive: 0x90b0d0 } },
   Li: { name: "Li", A: 7,  Zeff: 2,  valence: 1, hyb: "sp",    LP: 0,
+        role: "alkali-light", behavior: ["reactive","metallic"],
+        states: { solid:[0,40], liquid:[40,90], gas:[90,100] },
+        combustible: true, oxidizer: false, inert: false,
         palette: { base: 0x6fb8cc, emissive: 0xaaf0ff } },
   Be: { name: "Be", A: 9,  Zeff: 3,  valence: 2, hyb: "sp3",   LP: 0,
+        role: "structural-bridge", behavior: ["rigid","predictable"],
+        states: { solid:[0,85], liquid:[85,95], gas:[95,100] },
+        combustible: false, oxidizer: false, inert: false,
         palette: { base: 0x8090a0, emissive: 0xaabbc0 } },
   B:  { name: "B",  A: 11, Zeff: 3,  valence: 3, hyb: "sp2",   LP: 0,
+        role: "tri-bridge", behavior: ["trigonal","planar-template"],
+        states: { solid:[0,85], liquid:[85,95], gas:[95,100] },
+        combustible: false, oxidizer: false, inert: false,
         palette: { base: 0xb0a050, emissive: 0xe8d880 } },
   C:  { name: "C",  A: 12, Zeff: 4,  valence: 4, hyb: "sp3",   LP: 0,
+        role: "skeleton-hub", behavior: ["chains","rings","binds-tight"],
+        states: { solid:[0,90], liquid:[90,95], gas:[95,100] },
+        combustible: true, oxidizer: false, inert: false,
         palette: { base: 0x3aa8b5, emissive: 0x7fe8f6 } },
   N:  { name: "N",  A: 14, Zeff: 5,  valence: 3, hyb: "sp3",   LP: 1,
+        role: "energy-store", behavior: ["pyramidal","explosive-when-broken"],
+        states: { solid:[0,2], liquid:[2,5], gas:[5,100] },
+        combustible: false, oxidizer: true, inert: false,
         palette: { base: 0x8040b0, emissive: 0xd080ff } },
   O:  { name: "O",  A: 16, Zeff: 8,  valence: 2, hyb: "sp3",   LP: 2,
+        role: "bridge-polar", behavior: ["water-forming","oxidizing"],
+        states: { solid:[0,2], liquid:[2,30], gas:[30,100] },
+        combustible: false, oxidizer: true, inert: false,
         palette: { base: 0xc04030, emissive: 0xff7060 } },
   F:  { name: "F",  A: 19, Zeff: 9,  valence: 1, hyb: "sp",    LP: 3,
+        role: "halogen-cutter", behavior: ["aggressive","cleaves-bonds"],
+        states: { solid:[0,0.5], liquid:[0.5,1], gas:[1,100] },
+        combustible: false, oxidizer: true, inert: false,
         palette: { base: 0x8fb860, emissive: 0xc8f090 } },
   Ne: { name: "Ne", A: 20, Zeff: 10, valence: 0, hyb: "sp",    LP: 4,
+        role: "noble-medium", behavior: ["inert","glows-when-hot"],
+        states: { solid:[0,0.2], liquid:[0.2,0.5], gas:[0.5,100] },
+        combustible: false, oxidizer: false, inert: true,
         palette: { base: 0xc080d0, emissive: 0xf0a0e0 } },
   Mg: { name: "Mg", A: 24, Zeff: 6,  valence: 2, hyb: "sp2",   LP: 1,
+        role: "alkaline-bridge", behavior: ["structural","moderate-reactive"],
+        states: { solid:[0,60], liquid:[60,90], gas:[90,100] },
+        combustible: true, oxidizer: false, inert: false,
         palette: { base: 0xb36d20, emissive: 0xffb04a } },
   Al: { name: "Al", A: 27, Zeff: 5,  valence: 3, hyb: "sp2",   LP: 0,
+        role: "structural-tri", behavior: ["lightweight","oxide-passivated"],
+        states: { solid:[0,60], liquid:[60,90], gas:[90,100] },
+        combustible: false, oxidizer: false, inert: false,
         palette: { base: 0x90a0b0, emissive: 0xc0d0e0 } },
   Si: { name: "Si", A: 28, Zeff: 6,  valence: 4, hyb: "sp3",   LP: 0,
+        role: "crystal-skeleton", behavior: ["lattice-template","periodic"],
+        states: { solid:[0,80], liquid:[80,95], gas:[95,100] },
+        combustible: false, oxidizer: false, inert: false,
         palette: { base: 0x7090b0, emissive: 0xaac8e0 } },
   P:  { name: "P",  A: 31, Zeff: 7,  valence: 5, hyb: "sp3d",  LP: 0,
+        role: "energy-carrier", behavior: ["pulsing","ATP-like"],
+        states: { solid:[0,30], liquid:[30,50], gas:[50,100] },
+        combustible: true, oxidizer: false, inert: false,
         palette: { base: 0xc06030, emissive: 0xff8050 } },
   S:  { name: "S",  A: 32, Zeff: 8,  valence: 5, hyb: "sp3d",  LP: 1,
+        role: "polymer-cross", behavior: ["chains","sticky"],
+        states: { solid:[0,30], liquid:[30,50], gas:[50,100] },
+        combustible: true, oxidizer: false, inert: false,
         palette: { base: 0xb09030, emissive: 0xf0d860 } },
   Cl: { name: "Cl", A: 35, Zeff: 11, valence: 1, hyb: "sp",    LP: 3,
+        role: "halogen-cutter-medium", behavior: ["corrosive"],
+        states: { solid:[0,5], liquid:[5,20], gas:[20,100] },
+        combustible: false, oxidizer: true, inert: false,
         palette: { base: 0xa8b030, emissive: 0xd8e060 } },
 };
 
@@ -489,6 +491,321 @@ const ELEMENTS = {
 // finalised; used by fuseAtoms() to resolve a fusion outcome.
 const FUSION_TABLE_BY_A = {};
 for (const key in ELEMENTS) FUSION_TABLE_BY_A[ELEMENTS[key].A] = key;
+
+// ===========================================================================
+// v4.0: PAIR-SPECIFIC INTERACTION REGISTRY
+// Hand-designed reactions for specific element pairs. Where a pair is listed
+// here, its interaction overrides the generic bond-by-valence rule. Where
+// not listed, generic chemistry applies. See microverse_element_dna.md.
+// ===========================================================================
+const PAIR_REACTIONS = {
+  // Symmetric: order doesn't matter; we look up both ways.
+  "H|H":  { name: "fuse-to-He", kind: "fusion-pair", energy: "high" },
+  "H|O":  { name: "form-water", kind: "snap-bond", angle: 1.823 /* 104.5° */ },
+  "H|N":  { name: "form-ammonia", kind: "snap-bond", angle: 1.868 /* 107° */ },
+  "H|C":  { name: "saturate", kind: "bond" },
+  "H|F":  { name: "form-HF", kind: "bond", strength: "very-stable" },
+  "H|Cl": { name: "form-HCl", kind: "bond", strength: "stable" },
+  "C|C":  { name: "chain-or-ring", kind: "bond", behavior: "chain" },
+  "C|O":  { name: "form-CO2", kind: "bond" },
+  "C|N":  { name: "form-CN", kind: "bond" },
+  "Si|Si":{ name: "lattice-grow", kind: "bond", behavior: "crystal" },
+  "Si|O": { name: "form-silica", kind: "bond", behavior: "rigid-network" },
+  "N|N":  { name: "triple-bond-tense", kind: "bond", energy: "explosive-on-break" },
+  "O|O":  { name: "form-O2", kind: "bond" },
+  "P|O":  { name: "form-phosphate", kind: "bond", behavior: "energy-storage" },
+  "S|S":  { name: "form-S-chain", kind: "bond", behavior: "polymer" },
+  "Na|Cl":{ name: "form-NaCl", kind: "ionic-bond" },
+  "Li|F": { name: "form-LiF", kind: "ionic-bond", strength: "very-stable" },
+  "F|any":{ name: "abstract-electron", kind: "bond-cleaver" },
+};
+function pairReactionKey(elemA, elemB) {
+  // Symmetric lookup: try a|b first, then b|a.
+  const k1 = elemA.name + "|" + elemB.name;
+  if (PAIR_REACTIONS[k1]) return k1;
+  const k2 = elemB.name + "|" + elemA.name;
+  if (PAIR_REACTIONS[k2]) return k2;
+  // Wildcards (F is a universal cleaver)
+  if (elemA.name === "F") return "F|any";
+  if (elemB.name === "F") return "F|any";
+  return null;
+}
+function getPairReaction(elemA, elemB) {
+  const k = pairReactionKey(elemA, elemB);
+  return k ? PAIR_REACTIONS[k] : null;
+}
+
+// ===========================================================================
+// v4.0: PER-ATOM STATE COMPUTATION
+// Each atom has a current state (solid/liquid/gas) derived from its
+// element's phase bands and the local heat. Game purposes:
+//   solid  = armor/structure (rigid)
+//   liquid = flow/coolant
+//   gas    = volatile / combustible
+// ===========================================================================
+function computeAtomState(atom, ambientHeat) {
+  const localHeat = (atom.localHeat || 0) + ambientHeat;
+  const bands = atom.element.states;
+  if (!bands) { atom.state = "solid"; return; }
+  if (localHeat >= bands.gas[0])    atom.state = "gas";
+  else if (localHeat >= bands.liquid[0]) atom.state = "liquid";
+  else atom.state = "solid";
+}
+function updateAllStates(ambientHeat) {
+  // Decay localHeat each frame (cools off slowly), then recompute state.
+  for (const p of particles) {
+    p.localHeat = Math.max(0, (p.localHeat || 0) - 0.5);
+    computeAtomState(p, ambientHeat);
+  }
+}
+
+// ===========================================================================
+// v4.0: COMBUSTION
+// Gas-state combustible atoms near oxidizers, with sufficient local heat,
+// IGNITE: emit heat burst + visible flash + chain-react to neighbors.
+// ===========================================================================
+const IGNITION_THRESHOLD = 35;        // localHeat needed to ignite
+const IGNITION_PROXIMITY = 28;        // unit distance for combustible↔oxidizer pairing
+const IGNITION_PROXIMITY_SQ = IGNITION_PROXIMITY * IGNITION_PROXIMITY;
+const COMBUSTION_HEAT_BURST = 80;     // local heat dropped on neighbors
+const COMBUSTION_BURST_RADIUS = 60;
+const COMBUSTION_BURST_RADIUS_SQ = COMBUSTION_BURST_RADIUS * COMBUSTION_BURST_RADIUS;
+
+function tryCombustion() {
+  for (const p of particles) {
+    if (p.inCage) continue;  // v4.0: cage atoms don't combust
+    if (p.state !== "gas") continue;
+    if (!p.element.combustible) continue;
+    if ((p.localHeat || 0) < IGNITION_THRESHOLD) continue;
+    // Look for oxidizer neighbor in any state
+    let oxNear = null;
+    for (const q of particles) {
+      if (q === p) continue;
+      if (!q.element.oxidizer) continue;
+      const dx = p.pos.x - q.pos.x;
+      const dy = p.pos.y - q.pos.y;
+      const dz = p.pos.z - q.pos.z;
+      if (dx*dx + dy*dy + dz*dz < IGNITION_PROXIMITY_SQ) {
+        oxNear = q;
+        break;
+      }
+    }
+    if (!oxNear) continue;
+    // IGNITE: dump heat burst on neighbors (chain-reaction propagates),
+    // flash + audio + amplitude spike, mark p so we don't re-ignite same frame
+    p.localHeat = 0;  // discharged
+    p.amplitudeTarget = Math.min(1.5, (p.amplitudeTarget || 0) + 1.0);
+    if (typeof emitLight === "function") {
+      emitLight(p.pos, 0xff8030, 2.0, []);
+      emitHeat(p.pos, 1.5);
+    }
+    // Propagate heat outward
+    for (const r of particles) {
+      const dx = r.pos.x - p.pos.x;
+      const dy = r.pos.y - p.pos.y;
+      const dz = r.pos.z - p.pos.z;
+      const d2 = dx*dx + dy*dy + dz*dz;
+      if (d2 < COMBUSTION_BURST_RADIUS_SQ) {
+        const falloff = 1 - Math.sqrt(d2) / COMBUSTION_BURST_RADIUS;
+        r.localHeat = (r.localHeat || 0) + COMBUSTION_HEAT_BURST * falloff;
+      }
+    }
+  }
+}
+
+// ===========================================================================
+// v4.0: LSS-STYLE PLAYER MOVEMENT (port from v3.3)
+// ===========================================================================
+const player = {
+  position: new THREE.Vector3(0, 0, 100),
+  velocity: new THREE.Vector3(),
+  euler: new THREE.Euler(0, 0, 0, "YXZ"),
+  flightSpeed:  90,
+  strafeSpeed:  70,
+  verticalSpeed: 70,
+  acceleration: 220,
+  deceleration: 160,
+  maxSpeed:     110,
+  body:         [],   // v4.0: composition of absorbed elements
+};
+
+const _mvForward = new THREE.Vector3(0, 0, -1);
+const _mvRight   = new THREE.Vector3(1, 0, 0);
+const _mvUp      = new THREE.Vector3(0, 1, 0);
+const _mvMoveDir = new THREE.Vector3();
+const _mvAccelDir = new THREE.Vector3();
+const _mvDrag    = new THREE.Vector3();
+
+const playerInput = {
+  keys: {},
+  mouseDX: 0, mouseDY: 0,
+  locked: false,
+  sensitivity: 0.0025,
+};
+
+window.addEventListener("keydown", (e) => { playerInput.keys[e.key.toLowerCase()] = true; });
+window.addEventListener("keyup",   (e) => { playerInput.keys[e.key.toLowerCase()] = false; });
+document.addEventListener("pointerlockchange", () => {
+  playerInput.locked = (document.pointerLockElement === renderer.domElement);
+});
+document.addEventListener("mousemove", (e) => {
+  if (playerInput.locked) {
+    playerInput.mouseDX += e.movementX;
+    playerInput.mouseDY += e.movementY;
+  }
+});
+
+function updatePlayerMovement(dt) {
+  if (playerInput.locked) {
+    player.euler.y -= playerInput.mouseDX * playerInput.sensitivity;
+    player.euler.x -= playerInput.mouseDY * playerInput.sensitivity;
+  }
+  player.euler.x = Math.max(-Math.PI*0.45, Math.min(Math.PI*0.45, player.euler.x));
+  playerInput.mouseDX = 0;
+  playerInput.mouseDY = 0;
+  camera.quaternion.setFromEuler(player.euler);
+  _mvForward.set(0, 0, -1).applyQuaternion(camera.quaternion);
+  _mvRight.set(1, 0, 0).applyQuaternion(camera.quaternion);
+  const moveDir = _mvMoveDir.set(0, 0, 0);
+  if (playerInput.keys["w"] || playerInput.keys["arrowup"])    moveDir.addScaledVector(_mvForward, player.flightSpeed);
+  if (playerInput.keys["s"] || playerInput.keys["arrowdown"])  moveDir.addScaledVector(_mvForward, -player.flightSpeed * 0.6);
+  if (playerInput.keys["a"] || playerInput.keys["arrowleft"])  moveDir.addScaledVector(_mvRight, -player.strafeSpeed);
+  if (playerInput.keys["d"] || playerInput.keys["arrowright"]) moveDir.addScaledVector(_mvRight, player.strafeSpeed);
+  if (playerInput.keys[" "])                                    moveDir.addScaledVector(_mvUp, player.verticalSpeed);
+  if (playerInput.keys["control"])                              moveDir.addScaledVector(_mvUp, -player.verticalSpeed);
+  if (moveDir.lengthSq() > 0) {
+    const accelDir = _mvAccelDir.copy(moveDir).sub(player.velocity);
+    const accelMag = Math.min(accelDir.length(), player.acceleration * dt);
+    if (accelMag > 0.01) player.velocity.add(accelDir.normalize().multiplyScalar(accelMag));
+  } else {
+    const speed = player.velocity.length();
+    if (speed > 1) {
+      const drag = Math.min(speed, player.deceleration * dt);
+      player.velocity.sub(_mvDrag.copy(player.velocity).normalize().multiplyScalar(drag));
+    } else {
+      player.velocity.set(0, 0, 0);
+    }
+  }
+  if (player.velocity.length() > player.maxSpeed) player.velocity.normalize().multiplyScalar(player.maxSpeed);
+  player.position.addScaledVector(player.velocity, dt);
+  // Boundary clamp
+  const r = player.position.length();
+  const maxR = (typeof PHYS !== "undefined" ? PHYS.boundaryRadius : 220) - 6;
+  if (r > maxR) {
+    player.position.multiplyScalar(maxR / r);
+    const ox = player.position.x / maxR, oy = player.position.y / maxR, oz = player.position.z / maxR;
+    const vDotN = player.velocity.x*ox + player.velocity.y*oy + player.velocity.z*oz;
+    if (vDotN > 0) {
+      player.velocity.x -= ox * vDotN;
+      player.velocity.y -= oy * vDotN;
+      player.velocity.z -= oz * vDotN;
+    }
+  }
+  camera.position.copy(player.position);
+}
+
+// ===========================================================================
+// v4.0: PLAYER BODY ABSORPTION
+// Free atoms within ABSORB_RADIUS of player position get absorbed: removed
+// from the simulation, their element pushed to player.body. HUD tracks
+// composition; future weapons eject body elements as projectiles.
+// ===========================================================================
+const ABSORB_RADIUS = 28;
+const ABSORB_RADIUS_SQ = ABSORB_RADIUS * ABSORB_RADIUS;
+const PLAYER_BODY_CAP = 16;
+
+// v4.0: anatomy-inspired cage slot positions in CAMERA-LOCAL space.
+// These positions are at peripheral angles (visible at the screen edges
+// from the camera POV) and just outside the central FOV. Distance ~22-25
+// units forward of the camera so they read as "your own body around you."
+// Slot order is anatomy-meaningful: 0=nose, 1-2=eyes, 3-4=cheeks, etc.
+// v4.0: cage slots defined as SCREEN PERCENTAGES (sx, sy) plus a fisheye
+// warp factor. Each frame the slots are unprojected from screen-space to a
+// world position CAGE_DEPTH units in front of the camera; atoms get pinned
+// there. Result: atoms sit at the exact screen periphery regardless of
+// FOV / aspect / resize. Curve factor pulls corner atoms outward for a
+// porthole-like perspective warp.
+const CAGE_SCREEN_SLOTS = [
+  { sx: 0.50, sy: 0.04 },  // 0  top-center
+  { sx: 0.76, sy: 0.06 },  // 1  top-right (warped slightly into corner)
+  { sx: 0.96, sy: 0.22 },  // 2  upper-right
+  { sx: 0.97, sy: 0.50 },  // 3  middle-right
+  { sx: 0.96, sy: 0.78 },  // 4  lower-right
+  { sx: 0.76, sy: 0.94 },  // 5  bottom-right
+  { sx: 0.50, sy: 0.96 },  // 6  bottom-center
+  { sx: 0.24, sy: 0.94 },  // 7  bottom-left
+  { sx: 0.04, sy: 0.78 },  // 8  lower-left
+  { sx: 0.03, sy: 0.50 },  // 9  middle-left
+  { sx: 0.04, sy: 0.22 },  // 10 upper-left
+  { sx: 0.24, sy: 0.06 },  // 11 top-left
+];
+const CAGE_DEPTH = 18;        // world-units forward from camera
+const CAGE_FISHEYE = 0.10;    // bulge outward at corners for porthole feel
+const _slotNDC = new THREE.Vector3();
+const _slotDir = new THREE.Vector3();
+
+const _cageWorldPos = new THREE.Vector3();
+
+function tryAbsorbNearbyAtoms() {
+  if (player.body.length >= PLAYER_BODY_CAP) return;
+  for (let i = particles.length - 1; i >= 0; i--) {
+    if (player.body.length >= PLAYER_BODY_CAP) break;
+    const p = particles[i];
+    if (p.inCage) continue;
+    const dx = p.pos.x - player.position.x;
+    const dy = p.pos.y - player.position.y;
+    const dz = p.pos.z - player.position.z;
+    if (dx*dx + dy*dy + dz*dz < ABSORB_RADIUS_SQ) {
+      // Pick the next empty cage slot
+      const slotIdx = player.body.length;
+      // Pin atom to cage slot (don't remove from particles[], stays as 3D)
+      p.inCage = true;
+      p.cageSlot = slotIdx;
+      // Break any bonds it had (it's joining your body's ⊙ now)
+      if (typeof breakBond === "function") {
+        while (p.bonds && p.bonds.length > 0) breakBond(p.bonds[p.bonds.length - 1]);
+      }
+      p.vel.set(0, 0, 0);
+      player.body.push({ atom: p, element: p.element, slotIndex: slotIdx });
+      if (typeof emitLight === "function") emitLight(p.pos, 0xfff0c0, 1.6, []);
+    }
+  }
+}
+
+// Each frame, snap every cage atom to its slot's world position
+// (camera position + camera_quat × slot_local). They render via the
+// existing per-atom Mesh pipeline, appearing at the screen periphery.
+function updateCagePositions() {
+  for (let i = 0; i < player.body.length; i++) {
+    const slot = player.body[i];
+    if (!slot || !slot.atom) continue;
+    const screenSlot = CAGE_SCREEN_SLOTS[i];
+    if (!screenSlot) {
+      // Slots beyond 12 (back/spare): place behind camera, hidden.
+      _slotDir.copy(_mvForward).multiplyScalar(20);
+      slot.atom.pos.copy(camera.position).add(_slotDir);
+      slot.atom.vel.set(0, 0, 0);
+      continue;
+    }
+    // Apply fisheye warp: bulge corners outward
+    let sx = screenSlot.sx, sy = screenSlot.sy;
+    const dx = sx - 0.5, dy = sy - 0.5;
+    const r = Math.sqrt(dx*dx + dy*dy);
+    if (r > 0.001) {
+      const warp = 1.0 + CAGE_FISHEYE * r;
+      sx = 0.5 + dx * warp;
+      sy = 0.5 + dy * warp;
+    }
+    // Convert screen percentage → NDC, then unproject to world.
+    _slotNDC.set(sx * 2 - 1, -(sy * 2 - 1), 0.5);
+    _slotNDC.unproject(camera);
+    // Direction from camera through this NDC point; atom lives at CAGE_DEPTH along ray
+    _slotDir.copy(_slotNDC).sub(camera.position).normalize().multiplyScalar(CAGE_DEPTH);
+    slot.atom.pos.copy(camera.position).add(_slotDir);
+    slot.atom.vel.set(0, 0, 0);
+  }
+}
+
 // Hybridization → target cos(angle) between bond-vectors on the same atom.
 // sp: 180° cos=-1, sp²: 120° cos=-0.5, sp³: 109.47° cos=-1/3, sp³d²: 90° cos=0.
 // sp³d is between sp³ and sp³d² in practice; we use sp³'s cos for simplicity.
@@ -588,6 +905,16 @@ function buildNucleonCloud(A, atomRadius) {
 
 function makeParticle(element, x, y, z) {
   const atomRadius = 12;  // matches sphereGeo below
+  // v5.0 substrate / view split: this constructor returns ONLY substrate
+  // state (the cheap, always-on data; 0D position + element + state, 1D
+  // bonds, octave station, energy envelope). The view object (mesh,
+  // material, nucleon slots, audio oscillator) is created lazily by
+  // attachView3D when the particle is within RENDER_RADIUS of the
+  // player. Distant particles carry no view (zero render cost, zero
+  // GPU upload) and still participate in physics, bonding, fusion,
+  // combustion, and the C512 phase loop because all of that runs off
+  // substrate fields. See microverse_architecture_layers.md v1.0 for
+  // the full architecture.
   return {
     element: element,
     pos: new THREE.Vector3(x, y, z),
@@ -596,10 +923,6 @@ function makeParticle(element, x, y, z) {
     amplitude: 0.0,
     amplitudeTarget: 0.0,
     mass: 1.0,
-    mesh: null,
-    mat: null,
-    osc: null,
-    oscGain: null,
     bonds: [],
     bondOrderSum: 0,                  // v1.7: sum of bond orders; consumes valence
     freqEffective: element.freq,
@@ -611,6 +934,10 @@ function makeParticle(element, x, y, z) {
     // at one station for ~stationDwellTime seconds before stepping.
     station: Math.floor(Math.random() * 8),
     stationTimer: Math.random() * 0.5,  // de-syncs initial atoms
+    // v5.0: lazy 3D view object. Shape when present:
+    //   { mesh, mat, _baseHSL, nucleonBase, osc, oscGain, _oscStarted }
+    // Null until attachView3D is called.
+    view: null,
   };
 }
 // v1.3 random spawn: 8 C + 6 M at random positions inside a spawn-sphere
@@ -701,341 +1028,36 @@ scene.add(fillLight);
 
 // Shared geometry (same sphere for both elements); per-particle material
 // because we're hue-shifting emissive per-phase independently.
-// v2.3: shrunk from 12 → 5 so threads dominate the visual; physics radii
-// (PHYS.contactRadius, BOND.FORM_RADIUS, fusion thresholds) stay unchanged
-// so behavior is identical, only the rendered sphere is smaller.
-const sphereGeo = new THREE.SphereGeometry(5, 24, 18);
+const sphereGeo = new THREE.SphereGeometry(12, 36, 28);
 
-// v2.6: per-atom shells now render via a single InstancedMesh + shared
-// ShaderMaterial. attachVisualToParticle just stores per-atom data the
-// shader will read each frame; no separate Mesh per atom anymore.
+// v5.0 substrate / view split: attachVisualToParticle now writes into
+// p.view (created if missing). The starter loop no longer eagerly
+// attaches; manageRenderRange handles attachment lazily on the first
+// frame.
 function attachVisualToParticle(p) {
-  p._baseHSL = {};
-  new THREE.Color(p.element.palette.emissive).getHSL(p._baseHSL);
-  // p.mesh / p.mat are intentionally undefined under the InstancedMesh model.
+  if (!p.view) p.view = {};
+  const mat = new THREE.MeshStandardMaterial({
+    color: p.element.palette.base,
+    emissive: p.element.palette.emissive,
+    emissiveIntensity: 0.18,
+    roughness: 0.5,
+    metalness: 0.0,
+    transparent: true,
+    opacity: 0.72,
+    depthWrite: false,
+  });
+  const mesh = new THREE.Mesh(sphereGeo, mat);
+  mesh.position.copy(p.pos);
+  mesh.renderOrder = 1;
+  scene.add(mesh);
+  p.view.mesh = mesh;
+  p.view.mat = mat;
+  p.view._baseHSL = {};
+  new THREE.Color(p.element.palette.emissive).getHSL(p.view._baseHSL);
 }
-for (const p of particles) attachVisualToParticle(p);
-
-// v1.10: simulation caps used by both the InstancedMesh capacity and the
-// nucleon slot pool. Hoisted here so the v2.6 atom shell setup below can
-// reference them.
-const MAX_PARTICLES = 250;
-const MAX_NUCLEONS  = MAX_PARTICLES * 50;
-
-// ─────────────────────────────────────────────────────────────────────────
-// v2.6: shared ShaderMaterial + InstancedMesh for atom shells.
-// Vertex shader: standard transform + pass per-instance attributes.
-// Fragment shader: Lambertian + emissive + procedural surface pattern
-// selected by hyb station. Each element type produces a qualitatively
-// different visual signature; the shader IS the constructor.
-// ─────────────────────────────────────────────────────────────────────────
-const atomShaderMat = new THREE.ShaderMaterial({
-  uniforms: {
-    uLightDir: { value: new THREE.Vector3(0.6, 0.8, 0.4).normalize() },
-    uAmbient:  { value: 0.20 },
-    uTime:     { value: 0.0 },
-  },
-  vertexShader: `
-    attribute vec3 aColor;
-    attribute float aStation;
-    attribute float aAmplitude;
-    attribute float aHybStation;
-    attribute float aOpacity;
-    varying vec3 vColor;
-    varying float vStation;
-    varying float vAmplitude;
-    varying float vHybStation;
-    varying float vOpacity;
-    varying vec3 vNormal;
-    varying vec3 vLocalPos;
-    void main() {
-      vColor = aColor;
-      vStation = aStation;
-      vAmplitude = aAmplitude;
-      vHybStation = aHybStation;
-      vOpacity = aOpacity;
-      mat3 instanceNormalMatrix = mat3(instanceMatrix);
-      vNormal = normalize(normalMatrix * (instanceNormalMatrix * normal));
-      vLocalPos = position;
-      vec4 mvPos = modelViewMatrix * instanceMatrix * vec4(position, 1.0);
-      gl_Position = projectionMatrix * mvPos;
-    }
-  `,
-  fragmentShader: `
-    uniform vec3 uLightDir;
-    uniform float uAmbient;
-    uniform float uTime;
-    varying vec3 vColor;
-    varying float vStation;
-    varying float vAmplitude;
-    varying float vHybStation;
-    varying float vOpacity;
-    varying vec3 vNormal;
-    varying vec3 vLocalPos;
-    float hash(vec3 p) {
-      return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
-    }
-    float noise3(vec3 p) {
-      vec3 i = floor(p);
-      vec3 f = fract(p);
-      f = f * f * (3.0 - 2.0 * f);
-      return mix(
-        mix(mix(hash(i + vec3(0,0,0)), hash(i + vec3(1,0,0)), f.x),
-            mix(hash(i + vec3(0,1,0)), hash(i + vec3(1,1,0)), f.x), f.y),
-        mix(mix(hash(i + vec3(0,0,1)), hash(i + vec3(1,0,1)), f.x),
-            mix(hash(i + vec3(0,1,1)), hash(i + vec3(1,1,1)), f.x), f.y),
-        f.z);
-    }
-    float surfacePattern(vec3 p, float hyb) {
-      // sp (1.0): smooth — return 0 (clean sphere)
-      // sp³ (1.5): fractal noise (organic)
-      // sp² (2.0): planar bands
-      // sp³d (2.5): striated lines
-      // sp³d² (3.0): crystalline cubic lattice
-      if (hyb < 1.25) return 0.0;
-      else if (hyb < 1.75) {
-        return noise3(p * 4.0) * 0.5 + noise3(p * 8.0) * 0.25;
-      } else if (hyb < 2.25) {
-        return abs(sin(p.y * 9.0 + p.x * 1.5)) * 0.45;
-      } else if (hyb < 2.75) {
-        return abs(sin(p.x * 6.0 + p.y * 3.0 + p.z * 2.0)) * 0.55;
-      } else {
-        vec3 q = mod(p * 5.0 + 0.5, 1.0) - 0.5;
-        float d = max(max(abs(q.x), abs(q.y)), abs(q.z));
-        return smoothstep(0.40, 0.50, d) * 0.65;
-      }
-    }
-    void main() {
-      // Lambertian + ambient
-      float diff = max(0.0, dot(vNormal, normalize(uLightDir)));
-      vec3 lit = vColor * (uAmbient + (1.0 - uAmbient) * diff);
-      // Station-driven emissive boost
-      float stationGlow = 1.0;
-      if (vStation > 4.5 && vStation < 5.5) stationGlow = 1.4;  // ✹
-      if (vStation > 6.5) stationGlow = 2.0;                      // ⟳
-      vec3 emissive = vColor * (0.18 + vAmplitude * 1.6) * stationGlow;
-      // Hyb-selected surface pattern
-      float pattern = surfacePattern(vLocalPos, vHybStation);
-      vec3 patterned = lit + vColor * pattern * 0.7;
-      vec3 finalColor = patterned + emissive;
-      gl_FragColor = vec4(finalColor, vOpacity);
-    }
-  `,
-  transparent: true,
-  depthWrite: false,
-});
-
-const atomInstancedMesh = new THREE.InstancedMesh(sphereGeo, atomShaderMat, MAX_PARTICLES);
-atomInstancedMesh.count = particles.length;
-atomInstancedMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-atomInstancedMesh.frustumCulled = false;
-atomInstancedMesh.renderOrder = 1;
-// v2.7: NOT added to scene. Atoms are rendered by the fullscreen
-// raymarching field shader instead. We keep the InstancedMesh as a
-// no-op stub so the v2.6 update code can still write to its buffers
-// without errors (or we could delete it entirely; left in for diff legibility).
-// scene.add(atomInstancedMesh);
-
-const _aColors      = new Float32Array(MAX_PARTICLES * 3);
-const _aStations    = new Float32Array(MAX_PARTICLES);
-const _aAmplitudes  = new Float32Array(MAX_PARTICLES);
-const _aHybStations = new Float32Array(MAX_PARTICLES);
-const _aOpacities   = new Float32Array(MAX_PARTICLES);
-const atomGeo = atomInstancedMesh.geometry;
-atomGeo.setAttribute('aColor',      new THREE.InstancedBufferAttribute(_aColors, 3).setUsage(THREE.DynamicDrawUsage));
-atomGeo.setAttribute('aStation',    new THREE.InstancedBufferAttribute(_aStations, 1).setUsage(THREE.DynamicDrawUsage));
-atomGeo.setAttribute('aAmplitude',  new THREE.InstancedBufferAttribute(_aAmplitudes, 1).setUsage(THREE.DynamicDrawUsage));
-atomGeo.setAttribute('aHybStation', new THREE.InstancedBufferAttribute(_aHybStations, 1).setUsage(THREE.DynamicDrawUsage));
-atomGeo.setAttribute('aOpacity',    new THREE.InstancedBufferAttribute(_aOpacities, 1).setUsage(THREE.DynamicDrawUsage));
-
-const _atomMatrix = new THREE.Matrix4();
-const _atomQuat = new THREE.Quaternion();
-const _atomScale = new THREE.Vector3(1, 1, 1);
-const _atomColorTmp = new THREE.Color();
-
-// ===========================================================================
-// v2.7: FULLSCREEN RAYMARCHED FIELD (C endgame, step 1)
-// One fullscreen quad with a fragment shader that evaluates the soup as a
-// continuous 3D field. Atoms are passed as a DataTexture; per pixel, we
-// march a world-space ray from the camera and accumulate Gaussian metaball
-// contributions. Atoms become continuous excitations rather than discrete
-// spheres. Other layers (threads, surfaces, etc) still draw on top via
-// the main scene; they get absorbed into this shader in v2.8+.
-// ===========================================================================
-
-// Atom data textures: position+station in one RGBA, color in another.
-// 256 wide x 1 tall = up to 256 atoms (we cap at MAX_PARTICLES=250).
-const FIELD_ATOM_CAP = 256;
-const _atomPosData   = new Float32Array(FIELD_ATOM_CAP * 4);  // x, y, z, station
-const _atomColorData = new Float32Array(FIELD_ATOM_CAP * 4);  // r, g, b, amplitude
-const atomPosTex   = new THREE.DataTexture(_atomPosData,   FIELD_ATOM_CAP, 1, THREE.RGBAFormat, THREE.FloatType);
-const atomColorTex = new THREE.DataTexture(_atomColorData, FIELD_ATOM_CAP, 1, THREE.RGBAFormat, THREE.FloatType);
-atomPosTex.minFilter   = THREE.NearestFilter;
-atomPosTex.magFilter   = THREE.NearestFilter;
-atomColorTex.minFilter = THREE.NearestFilter;
-atomColorTex.magFilter = THREE.NearestFilter;
-atomPosTex.needsUpdate   = true;
-atomColorTex.needsUpdate = true;
-
-const fieldShaderMat = new THREE.ShaderMaterial({
-  uniforms: {
-    uAtomPosTex:    { value: atomPosTex },
-    uAtomColorTex:  { value: atomColorTex },
-    uAtomCount:     { value: 0 },
-    uCameraPos:     { value: new THREE.Vector3() },
-    uViewMatrixInv: { value: new THREE.Matrix4() },
-    uProjMatrixInv: { value: new THREE.Matrix4() },
-    uTime:          { value: 0.0 },
-    uResolution:    { value: new THREE.Vector2(1, 1) },
-    uBoundary:      { value: 220 },
-  },
-  vertexShader: `
-    varying vec2 vUv;
-    void main() {
-      vUv = uv;
-      gl_Position = vec4(position.xy, 0.0, 1.0);
-    }
-  `,
-  fragmentShader: `
-    uniform sampler2D uAtomPosTex;
-    uniform sampler2D uAtomColorTex;
-    uniform int uAtomCount;
-    uniform vec3 uCameraPos;
-    uniform mat4 uViewMatrixInv;
-    uniform mat4 uProjMatrixInv;
-    uniform float uTime;
-    uniform vec2 uResolution;
-    uniform float uBoundary;
-    varying vec2 vUv;
-    
-    const int MAX_ATOMS = 256;
-    const int MARCH_STEPS = 48;
-    const float STEP_BASE = 8.0;
-    const float METABALL_SIGMA = 11.0;   // Gaussian width (units)
-    const float METABALL_SIGMA2 = METABALL_SIGMA * METABALL_SIGMA;
-    
-    void main() {
-      // Reconstruct world-space ray from this pixel's NDC.
-      vec2 ndc = vUv * 2.0 - 1.0;
-      vec4 nearH = uViewMatrixInv * uProjMatrixInv * vec4(ndc, -1.0, 1.0);
-      vec4 farH  = uViewMatrixInv * uProjMatrixInv * vec4(ndc,  1.0, 1.0);
-      vec3 nearP = nearH.xyz / nearH.w;
-      vec3 farP  = farH.xyz  / farH.w;
-      vec3 rayDir = normalize(farP - nearP);
-      vec3 rayOrigin = uCameraPos;
-      
-      // Intersect ray with boundary sphere: enter the soup.
-      // Solve |O + t*D|^2 = R^2.
-      float b = dot(rayOrigin, rayDir);
-      float c = dot(rayOrigin, rayOrigin) - uBoundary * uBoundary;
-      float disc = b * b - c;
-      if (disc < 0.0) {
-        gl_FragColor = vec4(0.0);
-        return;
-      }
-      float sd = sqrt(disc);
-      float tEnter = max(0.0, -b - sd);
-      float tExit  = max(0.0, -b + sd);
-      if (tExit <= 0.0) { gl_FragColor = vec4(0.0); return; }
-      
-      vec3 color = vec3(0.0);
-      float density = 0.0;
-      float t = tEnter;
-      float stepLen = max(2.0, (tExit - tEnter) / float(MARCH_STEPS));
-      
-      for (int i = 0; i < MARCH_STEPS; i++) {
-        if (t > tExit) break;
-        if (density > 0.96) break;
-        vec3 pos = rayOrigin + rayDir * t;
-        
-        float localDensity = 0.0;
-        vec3 localColor = vec3(0.0);
-        
-        for (int a = 0; a < MAX_ATOMS; a++) {
-          if (a >= uAtomCount) break;
-          float u = (float(a) + 0.5) / float(MAX_ATOMS);
-          vec4 atomPos = texture2D(uAtomPosTex,   vec2(u, 0.5));
-          vec4 atomCol = texture2D(uAtomColorTex, vec2(u, 0.5));
-          vec3 d = pos - atomPos.xyz;
-          float r2 = dot(d, d);
-          if (r2 > 8.0 * METABALL_SIGMA2) continue;
-          float weight = exp(-r2 / METABALL_SIGMA2);
-          // Station glow: ⟳ (idx 7) and ✹ (idx 5) are brighter.
-          float stationBoost = 1.0;
-          if (atomPos.w > 4.5 && atomPos.w < 5.5) stationBoost = 1.4;
-          if (atomPos.w > 6.5) stationBoost = 2.2;
-          // Amplitude in alpha channel of color tex.
-          float amp = atomCol.w;
-          float intensity = (0.55 + amp * 1.4) * stationBoost;
-          localDensity += weight;
-          localColor   += atomCol.rgb * weight * intensity;
-        }
-        
-        // Accumulate (front-to-back compositing)
-        float alphaThis = clamp(localDensity * 0.6, 0.0, 1.0);
-        vec3 colThis = localDensity > 0.0001 ? localColor / localDensity : vec3(0.0);
-        color += colThis * alphaThis * (1.0 - density);
-        density += alphaThis * (1.0 - density);
-        
-        t += stepLen;
-      }
-      
-      gl_FragColor = vec4(color, density);
-    }
-  `,
-  transparent: true,
-  depthWrite: false,
-  depthTest: false,
-});
-
-// Fullscreen quad mesh. Use PlaneGeometry(2,2) which fills NDC space when
-// the vertex shader writes gl_Position = position.xy directly.
-const fieldQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), fieldShaderMat);
-fieldQuad.frustumCulled = false;
-// Render into a SEPARATE scene so it can be drawn first as background.
-const fieldScene = new THREE.Scene();
-fieldScene.add(fieldQuad);
-const fieldCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-
-// Each frame: write atom data into the textures and update camera matrices.
-function updateFieldShader() {
-  const N = Math.min(particles.length, FIELD_ATOM_CAP);
-  for (let i = 0; i < N; i++) {
-    const p = particles[i];
-    _atomPosData[i * 4 + 0] = p.pos.x;
-    _atomPosData[i * 4 + 1] = p.pos.y;
-    _atomPosData[i * 4 + 2] = p.pos.z;
-    _atomPosData[i * 4 + 3] = p.station;
-    // Color (already computed in updateVisual into _aColors but let's recompute
-    // here for safety). Use base palette emissive shifted by station hue.
-    const hueShift = [0.0, +0.06, -0.10, +0.14, -0.20, +0.10, -0.05, 0.0][p.station];
-    const lumShift = [0.0, +0.05, 0.0, +0.05, +0.05, +0.10, -0.03, +0.18][p.station];
-    _atomColorTmp.setHSL(
-      (p._baseHSL.h + hueShift + 1) % 1,
-      p._baseHSL.s,
-      Math.max(0.10, Math.min(0.95, p._baseHSL.l + lumShift))
-    );
-    _atomColorData[i * 4 + 0] = _atomColorTmp.r;
-    _atomColorData[i * 4 + 1] = _atomColorTmp.g;
-    _atomColorData[i * 4 + 2] = _atomColorTmp.b;
-    _atomColorData[i * 4 + 3] = p.amplitude;
-  }
-  // Zero out unused slots so they contribute nothing
-  for (let i = N; i < FIELD_ATOM_CAP; i++) {
-    _atomColorData[i * 4 + 0] = 0;
-    _atomColorData[i * 4 + 1] = 0;
-    _atomColorData[i * 4 + 2] = 0;
-    _atomColorData[i * 4 + 3] = 0;
-  }
-  atomPosTex.needsUpdate = true;
-  atomColorTex.needsUpdate = true;
-  fieldShaderMat.uniforms.uAtomCount.value = N;
-  fieldShaderMat.uniforms.uCameraPos.value.copy(camera.position);
-  fieldShaderMat.uniforms.uViewMatrixInv.value.copy(camera.matrixWorld);
-  fieldShaderMat.uniforms.uProjMatrixInv.value.copy(camera.projectionMatrixInverse);
-  fieldShaderMat.uniforms.uTime.value = performance.now() * 0.001;
-  fieldShaderMat.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
-}
+// v5.0: starter pass is deferred to manageRenderRange, called from
+// the main animate loop. This means the first frame creates only the
+// view-states for atoms within RENDER_RADIUS of the player.
 
 // ---------------------------------------------------------------------------
 // v1.9.1: Nucleon point cloud.
@@ -1047,9 +1069,12 @@ function updateFieldShader() {
 // written directly into a Float32Array each frame; per-vertex colors carry
 // the parent atom's emissive.
 // ---------------------------------------------------------------------------
-// v1.10: nucleon slot bookkeeping. MAX_PARTICLES + MAX_NUCLEONS are now
-// declared earlier (before the v2.6 InstancedMesh setup that uses them);
-// see the block right above the atom ShaderMaterial.
+// v1.10: pre-allocate against MAX_NUCLEONS instead of computing TOTAL once,
+// so new atoms spawned at runtime can claim slots from the same buffer.
+// MAX_PARTICLES sets the runtime cap; MAX_NUCLEONS is sized to allow the
+// heaviest authored atoms (up to ~50 nucleons each).
+const MAX_PARTICLES = 250;
+const MAX_NUCLEONS  = MAX_PARTICLES * 50;
 let TOTAL_NUCLEONS = 0;
 for (const p of particles) TOTAL_NUCLEONS += p.nucleons.length;
 let _usedNucleonSlots = 0;  // grows as atoms are added; setDrawRange follows it
@@ -1115,7 +1140,8 @@ function attachNucleonsToParticle(p) {
     console.warn("MAX_NUCLEONS exceeded; truncating new atom");
     return false;
   }
-  p.nucleonBase = _usedNucleonSlots;
+  if (!p.view) p.view = {};
+  p.view.nucleonBase = _usedNucleonSlots;
   const baseCol = new THREE.Color(p.element.palette.emissive);
   const baseHSL = {};
   baseCol.getHSL(baseHSL);
@@ -1133,8 +1159,7 @@ function attachNucleonsToParticle(p) {
   nucleonGeo.setDrawRange(0, _usedNucleonSlots);
   return true;
 }
-// Initial pass for starter particles.
-for (const p of particles) attachNucleonsToParticle(p);
+// v5.0: starter pass deferred to manageRenderRange (lazy view attachment).
 
 // ===========================================================================
 // v1.10: LADDER AUTHORING
@@ -1206,8 +1231,11 @@ function randomizeInputs() {
 }
 
 // spawnAtom: append a new atom into the simulation at the given position.
-// Wires up nucleon allocation, mesh + material, audio osc/gain (if audio
-// is up). Returns the new particle, or null if a cap was hit.
+// v5.0: substrate-only; manageRenderRange creates the view-state on the
+// next frame if the new atom lands within RENDER_RADIUS of the player.
+// If the atom is far from the player at spawn time, no mesh/material/
+// nucleon-cloud is created at all. Returns the new particle, or null if
+// the particle cap was hit.
 function spawnAtom(element, x, y, z) {
   if (particles.length >= MAX_PARTICLES) {
     console.warn("MAX_PARTICLES reached");
@@ -1216,15 +1244,7 @@ function spawnAtom(element, x, y, z) {
   const p = makeParticle(element, x, y, z);
   p.vel.copy(randomDrift(SPAWN_SPEED));
   particles.push(p);
-  attachVisualToParticle(p);
-  if (!attachNucleonsToParticle(p)) {
-    // Out of nucleon capacity; roll back the spawn. v2.6: no per-atom mesh
-    // to remove; the InstancedMesh count just won't be incremented because
-    // particles array shrinks back.
-    particles.pop();
-    return null;
-  }
-  attachAudioToParticle(p);
+  // v5.0: do NOT eagerly attach view; manageRenderRange handles it.
   return p;
 }
 
@@ -1241,10 +1261,11 @@ function spawnAtom(element, x, y, z) {
 let FUSION_ENERGY_THRESHOLD = 60;    // (rel-vel)^2 above which fusion attempts; tuned with HEAT
 let FUSION_PROB_PER_ATTEMPT = 0.85;  // chance of fusion if energy above threshold
 let FUSION_BOND_PENALTY = 4.0;       // bonded pairs need this many × more energy
-let HEAT = 12;                       // v2.7 settling: lower default so soup can stabilise; user can crank up via slider
+let HEAT = 35;                       // 0-100; scales kinetic noise
 let _fusionCount = 0;                // total successful fusion events
 
 function tryFusion(pi, pj) {
+  if (pi.inCage || pj.inCage) return false;  // v4.0: cage atoms don't fuse
   const A_new = pi.element.A + pj.element.A;
   const newKey = FUSION_TABLE_BY_A[A_new];
   if (!newKey) return false;  // forbidden A (5, 8, etc.); just bounce
@@ -1288,23 +1309,57 @@ function tryFusion(pi, pj) {
 function removeAtom(p) {
   // Break any bonds first (defensive; tryFusion already rejects bonded pairs).
   while (p.bonds.length > 0) breakBond(p.bonds[p.bonds.length - 1]);
-  // v2.6: no per-atom mesh to dispose; atom is rendered as an instance of
-  // the shared atomInstancedMesh, which collapses its count when particles
-  // shrinks (handled in updateVisual via instancedMesh.count = particles.length).
-  // Stop and disconnect audio nodes.
-  if (p.osc) {
-    try { p.osc.stop(); } catch (e) {}
-    try { p.osc.disconnect(); } catch (e) {}
+  // v5.0: release view-state if attached.
+  detachView3D(p);
+  // Splice from particles[].
+  const i = particles.indexOf(p);
+  if (i >= 0) particles.splice(i, 1);
+}
+
+// v5.0: lazy view attach / detach. The substrate is the always-on truth
+// (every particle in particles[] has substrate state); the view-state is
+// attached only for particles within RENDER_RADIUS of the player and
+// detached when they leave. Cage atoms are forced to keep a view since
+// they are the player's body frame (always rendered).
+function attachView3D(p) {
+  if (p.view && p.view.mesh) return true;  // already attached
+  attachVisualToParticle(p);
+  if (!attachNucleonsToParticle(p)) {
+    // Out of nucleon capacity; tear down the visual we just made and
+    // leave the atom view-less. It still exists in substrate; it just
+    // won't render until a slot frees up.
+    if (p.view && p.view.mesh) {
+      scene.remove(p.view.mesh);
+      if (p.view.mat && p.view.mat.dispose) p.view.mat.dispose();
+      p.view.mesh = null;
+      p.view.mat = null;
+    }
+    return false;
   }
-  if (p.oscGain) {
-    try { p.oscGain.disconnect(); } catch (e) {}
+  attachAudioToParticle(p);
+  return true;
+}
+
+function detachView3D(p) {
+  if (!p.view) return;
+  // Mesh + material.
+  if (p.view.mesh) {
+    scene.remove(p.view.mesh);
+    if (p.view.mat && p.view.mat.dispose) p.view.mat.dispose();
   }
-  // Zero out the atom's nucleon slots so they render nothing. We do NOT
-  // free the slots back to the pool (would require shifting ranges); we
-  // just blank them. The next spawnAtom claims fresh slots from the head.
-  if (p.nucleonBase != null) {
+  // Audio nodes.
+  if (p.view.osc) {
+    try { p.view.osc.stop(); } catch (e) {}
+    try { p.view.osc.disconnect(); } catch (e) {}
+  }
+  if (p.view.oscGain) {
+    try { p.view.oscGain.disconnect(); } catch (e) {}
+  }
+  // Nucleon slots: blank them (we don't reclaim slots to the pool; the
+  // pool is sized to MAX_PARTICLES * 50 so there's room).
+  if (p.view.nucleonBase != null) {
     for (let i = 0; i < p.nucleons.length; i++) {
-      const idx = p.nucleonBase + i;
+      const idx = p.view.nucleonBase + i;
       _nucPositions[idx * 3 + 0] = 0;
       _nucPositions[idx * 3 + 1] = 0;
       _nucPositions[idx * 3 + 2] = 0;
@@ -1313,9 +1368,34 @@ function removeAtom(p) {
     nucleonGeo.attributes.position.needsUpdate = true;
     nucleonGeo.attributes.pointSize.needsUpdate = true;
   }
-  // Splice from particles[].
-  const i = particles.indexOf(p);
-  if (i >= 0) particles.splice(i, 1);
+  p.view = null;
+}
+
+// v5.0: per-frame view manager. Walk the substrate; attach views for
+// atoms within RENDER_RADIUS of the player; detach for atoms beyond
+// RENDER_RADIUS + RENDER_HYSTERESIS. Cage atoms always get a view.
+const RENDER_RADIUS = 110;          // attach threshold
+const RENDER_HYSTERESIS = 25;       // detach threshold = RENDER_RADIUS + this
+const RENDER_RADIUS_SQ = RENDER_RADIUS * RENDER_RADIUS;
+const RENDER_DETACH_SQ = (RENDER_RADIUS + RENDER_HYSTERESIS) * (RENDER_RADIUS + RENDER_HYSTERESIS);
+let _viewCount = 0;                 // for HUD readout
+function manageRenderRange() {
+  let n = 0;
+  for (const p of particles) {
+    const dx = p.pos.x - player.position.x;
+    const dy = p.pos.y - player.position.y;
+    const dz = p.pos.z - player.position.z;
+    const dSq = dx*dx + dy*dy + dz*dz;
+    const wantView = p.inCage || dSq < RENDER_RADIUS_SQ;
+    const hasView = !!(p.view && p.view.mesh);
+    if (wantView && !hasView) {
+      attachView3D(p);
+    } else if (!wantView && hasView && dSq > RENDER_DETACH_SQ) {
+      detachView3D(p);
+    }
+    if (p.view && p.view.mesh) n++;
+  }
+  _viewCount = n;
 }
 
 
@@ -1328,41 +1408,43 @@ const _emissiveColor = new THREE.Color();
 const _nucQuat = new THREE.Quaternion();
 const _nucRotated = new THREE.Vector3();
 function updateVisual(dt) {
-  // v2.6: write per-instance data into the atom InstancedMesh.
-  // Per-atom matrix (position + uniform scale by amplitude breath).
-  const stationHueOffsets = [0.0, +0.06, -0.10, +0.14, -0.20, +0.10, -0.05, 0.0];
-  const stationLumOffsets = [0.0, +0.05, 0.0, +0.05, +0.05, +0.10, -0.03, +0.18];
-  for (let i = 0; i < particles.length; i++) {
-    const p = particles[i];
-    const scale = 1.0 + p.amplitude * 0.60;
-    _atomScale.set(scale, scale, scale);
-    _atomMatrix.compose(p.pos, _atomQuat, _atomScale);
-    atomInstancedMesh.setMatrixAt(i, _atomMatrix);
-    // Per-instance color = element emissive shifted by station hue/lum.
+  // v5.0: only particles with attached view-state are visible. Substrate-
+  // only particles (those beyond RENDER_RADIUS) are skipped here entirely.
+  // First pass: outer shells.
+  for (const p of particles) {
+    if (!p.view || !p.view.mesh) continue;
+    p.view.mesh.position.copy(p.pos);
+    // v4.0: cage atoms render at 25% scale so they sit AT the frame edge
+    // without bleeding inward into the central viewport.
+    const scale = p.inCage
+      ? 0.15
+      : 1.0 + p.amplitude * 0.60;
+    p.view.mesh.scale.setScalar(scale);
+    // v2.1: octave station hue tint. Each station gets a small hue offset
+    // around the atom's base color, mapped to the i-cycle:
+    //   • (0): no shift (rest)
+    //   ⊛ (1): warm shift (convergence pulls in)
+    //   — (2): blue shift (line extends)
+    //   ⎇ (3): violet shift (branching twists)
+    //   Φ (4): green shift (field opens)
+    //   ✹ (5): orange shift (emergence radiates)
+    //   ○ (6): cooler shift (boundary closes)
+    //   ⟳ (7): bright white-ish (recursion: closure to next aperture)
+    const stationHueOffsets = [0.0, +0.06, -0.10, +0.14, -0.20, +0.10, -0.05, 0.0];
+    const stationLumOffsets = [0.0, +0.05, 0.0, +0.05, +0.05, +0.10, -0.03, +0.18];
     const hueShift = stationHueOffsets[p.station];
     const lumShift = stationLumOffsets[p.station];
-    _atomColorTmp.setHSL(
-      (p._baseHSL.h + hueShift + 1) % 1,
-      p._baseHSL.s,
-      Math.max(0.10, Math.min(0.95, p._baseHSL.l + lumShift))
+    _emissiveColor.setHSL(
+      (p.view._baseHSL.h + hueShift + 1) % 1,
+      p.view._baseHSL.s,
+      Math.max(0.10, Math.min(0.95, p.view._baseHSL.l + lumShift))
     );
-    _aColors[i * 3 + 0] = _atomColorTmp.r;
-    _aColors[i * 3 + 1] = _atomColorTmp.g;
-    _aColors[i * 3 + 2] = _atomColorTmp.b;
-    _aStations[i]    = p.station;
-    _aAmplitudes[i]  = p.amplitude;
-    _aHybStations[i] = p.element.station;  // 1.0/1.5/2.0/2.5/3.0
-    _aOpacities[i]   = 0.72;
+    p.view.mat.emissive.copy(_emissiveColor);
+    // Boost intensity at ✹ (emergence) and ⟳ (recursion); the radiation
+    // and the boundary-opening moments.
+    const stationGlow = (p.station === 5 ? 1.4 : (p.station === 7 ? 2.0 : 1.0));
+    p.view.mat.emissiveIntensity = (0.12 + p.amplitude * 1.8) * stationGlow;
   }
-  atomInstancedMesh.count = particles.length;
-  atomInstancedMesh.instanceMatrix.needsUpdate = true;
-  atomGeo.attributes.aColor.needsUpdate      = true;
-  atomGeo.attributes.aStation.needsUpdate    = true;
-  atomGeo.attributes.aAmplitude.needsUpdate  = true;
-  atomGeo.attributes.aHybStation.needsUpdate = true;
-  atomGeo.attributes.aOpacity.needsUpdate    = true;
-  // Time uniform for any animated noise in the shader.
-  atomShaderMat.uniforms.uTime.value = performance.now() * 0.001;
 
   // Second pass: nucleon point cloud. Advance each nucleon's orbital phase,
   // rotate its stored offset around its axis, add a small radial wobble,
@@ -1371,9 +1453,10 @@ function updateVisual(dt) {
   // brighter; excite pulses the size so strikes visibly flare the interior.
   const t = performance.now() * 0.001;
   for (const p of particles) {
+    if (!p.view || p.view.nucleonBase == null) continue;
     const excite = 1.0 + p.amplitude * 1.5;
     const nucCount = p.nucleons.length;
-    const base = p.nucleonBase;
+    const base = p.view.nucleonBase;
     for (let i = 0; i < nucCount; i++) {
       const n = p.nucleons[i];
       n.phase += dt * n.omega * excite;
@@ -1417,21 +1500,21 @@ let masterGain = null;
 // true, so we never push gain automation into a pending graph.
 let audioReady = false;
 
-// v1.10: factored so spawnAtom() can register new atoms with the audio
-// graph at runtime. Creates osc + gain nodes and connects them; if the
-// context is already running, also starts the osc immediately so the new
-// atom is audible without waiting for another initAudio pass.
+// v5.0: audio is part of view-state (it's a presence-of-a-ringing-thing,
+// not just substrate truth). Attach into p.view; updateAudio walks
+// particles with views only.
 function attachAudioToParticle(p) {
   if (!audioCtx) return;
-  p.osc = audioCtx.createOscillator();
-  p.oscGain = audioCtx.createGain();
-  p.osc.type = "sine";
-  p.osc.frequency.value = p.element.freq;
-  p.oscGain.gain.value = 0.0;
-  p.osc.connect(p.oscGain);
-  p.oscGain.connect(masterGain);
+  if (!p.view) p.view = {};
+  p.view.osc = audioCtx.createOscillator();
+  p.view.oscGain = audioCtx.createGain();
+  p.view.osc.type = "sine";
+  p.view.osc.frequency.value = p.element.freq;
+  p.view.oscGain.gain.value = 0.0;
+  p.view.osc.connect(p.view.oscGain);
+  p.view.oscGain.connect(masterGain);
   if (audioReady) {
-    try { p.osc.start(); p._oscStarted = true; } catch (e) {}
+    try { p.view.osc.start(); p.view._oscStarted = true; } catch (e) {}
   }
 }
 
@@ -1453,15 +1536,20 @@ function initAudio() {
   masterGain.gain.value = 0.09;  // lower baseline; up to 41 voices can sum
   masterGain.connect(audioCtx.destination);
 
-  // Create the oscillator/gain nodes but do NOT start() yet. Connecting
-  // them is fine in any state; starting them must wait until the context
-  // is actually running or they will kick in late.
-  for (const p of particles) attachAudioToParticle(p);
+  // v5.0: only attach audio for particles that already have a view (i.e.
+  // those that manageRenderRange has lifted into 3D). Distant atoms get
+  // no oscillator. attachView3D will call attachAudioToParticle for
+  // newcomers as they cross the render boundary, and detachView3D will
+  // tear down the oscillator on exit.
+  for (const p of particles) {
+    if (p.view && p.view.mesh) attachAudioToParticle(p);
+  }
 
-  // Once running, start every oscillator and flip audioReady.
+  // Once running, start every oscillator on every viewed atom and flip audioReady.
   const startAll = () => {
     for (const p of particles) {
-      try { if (p.osc && !p._oscStarted) { p.osc.start(); p._oscStarted = true; } } catch (e) { /* already-started is harmless */ }
+      const v = p.view;
+      try { if (v && v.osc && !v._oscStarted) { v.osc.start(); v._oscStarted = true; } } catch (e) { /* already-started is harmless */ }
     }
     audioReady = true;
     document.getElementById("audioPrompt").classList.add("hidden");
@@ -1490,9 +1578,10 @@ function updateAudio() {
   if (!audioReady || !audioCtx || audioCtx.state !== "running") return;
   const t = audioCtx.currentTime;
   for (const p of particles) {
-    if (!p.oscGain) continue;
-    p.oscGain.gain.setTargetAtTime(p.amplitude * 0.18, t, 0.008);
-    p.osc.frequency.setTargetAtTime(p.freqEffective || p.element.freq, t, 0.02);
+    const v = p.view;
+    if (!v || !v.oscGain) continue;
+    v.oscGain.gain.setTargetAtTime(p.amplitude * 0.18, t, 0.008);
+    v.osc.frequency.setTargetAtTime(p.freqEffective || p.element.freq, t, 0.02);
   }
 }
 
@@ -1537,6 +1626,8 @@ const _audioPrompt = document.getElementById("audioPrompt");
 _audioPrompt.addEventListener("mousedown", (ev) => {
   ev.preventDefault();
   initAudio();
+  // v4.0: also request pointer-lock so flight engages on first click.
+  try { renderer.domElement.requestPointerLock(); } catch (e) {}
   // Poll briefly for audio becoming ready; once it is, fade the overlay.
   // Most browsers resolve resume() within 20–80ms, so this is imperceptible.
   const fadeCheck = () => {
@@ -1551,6 +1642,14 @@ _audioPrompt.addEventListener("mousedown", (ev) => {
 
 // Canvas mousedown: spike the nearest particle. Audio is guaranteed ready
 // by the time this fires, because the overlay blocks interaction until then.
+// v4.0: re-engage pointer lock on canvas click (after Escape).
+renderer.domElement.addEventListener("mousedown", (ev2) => {
+  if (ev2.button !== 0) return;
+  if (!playerInput.locked) {
+    try { renderer.domElement.requestPointerLock(); } catch (e) {}
+  }
+});
+
 renderer.domElement.addEventListener("mousedown", (ev) => {
   if (ev.button !== 0) return;
   if (!audioReady) return;  // defensive; overlay should prevent this
@@ -1575,11 +1674,6 @@ window.addEventListener("keydown", (ev) => {
 // Still no bonds. Mouse repulsion applies to each particle independently.
 // Viscous damping + amplitude relaxation per particle.
 // ===========================================================================
-// v2.4: observer attractor strength. Tunable; this controls how much
-// the camera focal point (controls.target) pulls atoms inward. Default
-// chosen to organize the soup over ~30 seconds without instantly collapsing.
-const OBSERVER_STRENGTH = 3500;
-
 const PHYS = {
   mouseRepulseRadius: 120,     // larger volume needs larger mouse influence
   mouseRepulseStrength: 4500,
@@ -1598,7 +1692,7 @@ const PHYS = {
   // full-strength hit; a gentle nudge barely rings.
   impactVelScale: 30,
   impactAmpScale: 0.9,
-  viscosity: 0.85,
+  viscosity: 0.92,
   // Amplitude decay tuned for ringing: 0.8/s means a click-spike takes
   // ~0.75s to fall back to rest, easily long enough to hear the change
   // and see the visual pulse track the audio.
@@ -1647,33 +1741,6 @@ const cursorMesh = new THREE.Mesh(
 );
 scene.add(cursorMesh);
 
-// v2.4: PRESENCE INDICATOR. Faint glowing sphere at controls.target so the
-// user can see where their attention is acting on the soup.
-const presenceMesh = new THREE.Mesh(
-  new THREE.SphereGeometry(8, 24, 18),
-  new THREE.MeshBasicMaterial({
-    color: 0xfff2c8,
-    transparent: true,
-    opacity: 0.20,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-  })
-);
-presenceMesh.renderOrder = 0.5;
-scene.add(presenceMesh);
-const presenceHaloMesh = new THREE.Mesh(
-  new THREE.SphereGeometry(28, 24, 18),
-  new THREE.MeshBasicMaterial({
-    color: 0xffd0a0,
-    transparent: true,
-    opacity: 0.05,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-  })
-);
-presenceHaloMesh.renderOrder = 0.5;
-scene.add(presenceHaloMesh);
-
 // v1.2 BOND constants. Formation distance is just inside the exclusion shell
 // so particles bond as they come into contact. Rest length is the sum of
 // half the sphere radii minus a small overlap so they "kiss" when bonded.
@@ -1688,17 +1755,15 @@ const BOND = {
   // inward velocity the particles already had.
   REST_LENGTH_MIN: 20,
   REST_LENGTH_MAX: 26,
-  // v3.1: bumped 80 → 200 so bonded atoms snap back to rest length
-  // quickly, keeping molecules tight and preventing the 'noodle' look
-  // where bonded atoms drift far apart and stretch the bonds.
-  STIFFNESS: 200,
-  // Near-critical damping for k=200, m=1 (2*sqrt(200) ~ 28.3). Bond
-  // oscillations settle within ~0.2s; molecules feel solid and rigid.
-  DAMPING: 26.0,
-  // v3.1 fix: bonds are now persistent. They almost never break from
-  // ordinary motion; only catastrophic forces (~4.5x rest length) break
-  // them. This is what allows complex structures to accumulate over time.
-  BREAK_STRETCH: 4.5,
+  // Soft spring (was 900, way too stiff): at typical displacement ~3u the
+  // force is now ~240 instead of 2700. Particles oscillate calmly around
+  // rest instead of launching each other past the break threshold.
+  STIFFNESS: 80,
+  // Near-critical damping for k=80, m=1 (2*sqrt(80) ~ 17.9). Bond
+  // oscillations settle within ~0.3s, which is the "sticks together" feel.
+  DAMPING: 14.0,
+  // Tolerant break threshold so casual poking does not snap the bond.
+  BREAK_STRETCH: 2.2,
   // v1.5: angular spring stiffness for hybridization constraints. Moderate
   // so bonds lean toward the right angles without violently yanking partners.
   ANGLE_STIFFNESS: 220,
@@ -1823,482 +1888,6 @@ const bondElectronPoints = new THREE.Points(_bondElGeo, _bondElMat);
 bondElectronPoints.frustumCulled = false;
 bondElectronPoints.renderOrder = 3;
 scene.add(bondElectronPoints);
-
-// ===========================================================================
-// v2.7 FIX: BONDED-TRIANGLE LAYER (solid molecular ring faces)
-// Φ-surface triangles (v2.3) draw between any 3 close atoms regardless of
-// whether they're bonded — they show coupling potential, not actual
-// structure. This new layer draws ONLY for triples where all 3 pairwise
-// bonds exist; these are real molecular ring faces. A bonded tetrahedron
-// (4 atoms, all 6 bonds) renders as 4 triangles forming a solid tetrahedron.
-// Visual: more opaque + uses ALPHA blending (not additive) so it reads as
-// solid material rather than a glow. The user finally sees 3D shapes.
-// ===========================================================================
-
-const MAX_BONDED_TRIANGLES = 300;
-
-const _btrGeo = new THREE.BufferGeometry();
-const _btrPositions = new Float32Array(MAX_BONDED_TRIANGLES * 9);   // 3 verts × 3 coords
-const _btrColors    = new Float32Array(MAX_BONDED_TRIANGLES * 9);
-_btrGeo.setAttribute("position", new THREE.BufferAttribute(_btrPositions, 3).setUsage(THREE.DynamicDrawUsage));
-_btrGeo.setAttribute("color",    new THREE.BufferAttribute(_btrColors, 3).setUsage(THREE.DynamicDrawUsage));
-const _btrMat = new THREE.MeshBasicMaterial({
-  vertexColors: true,
-  transparent: true,
-  opacity: 0.55,
-  side: THREE.DoubleSide,
-  depthWrite: false,
-  // Alpha blending (not additive) so triangles read as solid material.
-});
-const bondedTriangles = new THREE.Mesh(_btrGeo, _btrMat);
-bondedTriangles.frustumCulled = false;
-bondedTriangles.renderOrder = 1.4;  // above field, below presence indicator
-scene.add(bondedTriangles);
-
-// ===========================================================================
-// v3.1: AGGREGATE ⊙ RECOGNITION (molecules as scale-Λ circumpuncts)
-// Connected components of the bond graph are detected via BFS each frame.
-// Components with N≥3 atoms are MOLECULES — each is a ⊙ at scale Λ.
-// Render each as a translucent shell sphere at the cluster centroid sized
-// to enclose all constituents. The framework's A3 (parts compose into
-// next-scale circumpuncts) becomes visible.
-// ===========================================================================
-
-const MAX_MOLECULE_SHELLS = 80;
-const _moleculeShells = [];
-const _moleculeShellGeo = new THREE.SphereGeometry(1, 24, 18);
-for (let i = 0; i < MAX_MOLECULE_SHELLS; i++) {
-  const mat = new THREE.MeshBasicMaterial({
-    color: 0xffffff,
-    transparent: true,
-    opacity: 0.0,
-    side: THREE.DoubleSide,
-    depthWrite: false,
-    blending: THREE.NormalBlending,
-  });
-  const mesh = new THREE.Mesh(_moleculeShellGeo, mat);
-  mesh.visible = false;
-  mesh.renderOrder = 1.6;
-  scene.add(mesh);
-  _moleculeShells.push(mesh);
-}
-let _liveMoleculeCount = 0;
-const _moleculeColorTmp = new THREE.Color();
-const _moleculeAtomColorTmp = new THREE.Color();
-
-function updateMoleculeShells() {
-  // BFS the bond graph to find connected components
-  const visited = new Set();
-  let liveCount = 0;
-  for (const startP of particles) {
-    if (visited.has(startP)) continue;
-    if (startP.bonds.length === 0) {
-      visited.add(startP);
-      continue;
-    }
-    const component = [];
-    const queue = [startP];
-    visited.add(startP);
-    while (queue.length > 0) {
-      const p = queue.shift();
-      component.push(p);
-      for (const b of p.bonds) {
-        const other = (b.a === p) ? b.b : b.a;
-        if (!visited.has(other)) {
-          visited.add(other);
-          queue.push(other);
-        }
-      }
-    }
-    if (component.length < 3) continue;
-    if (liveCount >= MAX_MOLECULE_SHELLS) break;
-    // Centroid + average emissive
-    let cx = 0, cy = 0, cz = 0;
-    let cr = 0, cg = 0, cb = 0;
-    for (const p of component) {
-      cx += p.pos.x; cy += p.pos.y; cz += p.pos.z;
-      _moleculeAtomColorTmp.setHex(p.element.palette.emissive);
-      cr += _moleculeAtomColorTmp.r;
-      cg += _moleculeAtomColorTmp.g;
-      cb += _moleculeAtomColorTmp.b;
-    }
-    const N = component.length;
-    cx /= N; cy /= N; cz /= N;
-    cr /= N; cg /= N; cb /= N;
-    let maxR2 = 0;
-    for (const p of component) {
-      const dx = p.pos.x - cx, dy = p.pos.y - cy, dz = p.pos.z - cz;
-      const r2 = dx*dx + dy*dy + dz*dz;
-      if (r2 > maxR2) maxR2 = r2;
-    }
-    const radius = Math.sqrt(maxR2) + 6;
-    const shell = _moleculeShells[liveCount];
-    shell.position.set(cx, cy, cz);
-    shell.scale.setScalar(radius);
-    _moleculeColorTmp.setRGB(cr, cg, cb);
-    shell.material.color.copy(_moleculeColorTmp);
-    shell.material.opacity = Math.min(0.30, 0.10 + N * 0.025);
-    shell.visible = true;
-    liveCount++;
-  }
-  for (let i = liveCount; i < MAX_MOLECULE_SHELLS; i++) {
-    _moleculeShells[i].visible = false;
-  }
-  _liveMoleculeCount = liveCount;
-}
-
-const _btrC1 = new THREE.Color();
-const _btrC2 = new THREE.Color();
-const _btrC3 = new THREE.Color();
-let _liveBondedTriCount = 0;
-
-function updateBondedTriangles() {
-  // For each pair of bonds sharing a common atom, check if the OTHER ends
-  // are also bonded. If yes, that's a bonded triangle.
-  // Iterate via per-atom bond list: O(N × maxBonds²).
-  let triCount = 0;
-  // Avoid double-counting: only emit when (i, j, k) with i < j < k where
-  // i is the smallest index in the triple.
-  for (let ai = 0; ai < particles.length; ai++) {
-    if (triCount >= MAX_BONDED_TRIANGLES) break;
-    const pa = particles[ai];
-    if (pa.bonds.length < 2) continue;
-    for (let bi = 0; bi < pa.bonds.length; bi++) {
-      const bondAB = pa.bonds[bi];
-      const pb = (bondAB.a === pa) ? bondAB.b : bondAB.a;
-      const bIdx = particles.indexOf(pb);
-      if (bIdx <= ai) continue;  // ordering
-      for (let bj = bi + 1; bj < pa.bonds.length; bj++) {
-        const bondAC = pa.bonds[bj];
-        const pc = (bondAC.a === pa) ? bondAC.b : bondAC.a;
-        const cIdx = particles.indexOf(pc);
-        if (cIdx <= ai || cIdx === bIdx) continue;
-        // Are pb and pc bonded? Check pb's bond list.
-        let bcBond = false;
-        for (let k = 0; k < pb.bonds.length; k++) {
-          const b2 = pb.bonds[k];
-          if (b2.a === pc || b2.b === pc) { bcBond = true; break; }
-        }
-        if (!bcBond) continue;
-        if (triCount >= MAX_BONDED_TRIANGLES) break;
-        // Emit triangle (pa, pb, pc)
-        const o = triCount * 9;
-        _btrPositions[o + 0] = pa.pos.x;
-        _btrPositions[o + 1] = pa.pos.y;
-        _btrPositions[o + 2] = pa.pos.z;
-        _btrPositions[o + 3] = pb.pos.x;
-        _btrPositions[o + 4] = pb.pos.y;
-        _btrPositions[o + 5] = pb.pos.z;
-        _btrPositions[o + 6] = pc.pos.x;
-        _btrPositions[o + 7] = pc.pos.y;
-        _btrPositions[o + 8] = pc.pos.z;
-        _btrC1.setHex(pa.element.palette.emissive);
-        _btrC2.setHex(pb.element.palette.emissive);
-        _btrC3.setHex(pc.element.palette.emissive);
-        _btrColors[o + 0] = _btrC1.r;
-        _btrColors[o + 1] = _btrC1.g;
-        _btrColors[o + 2] = _btrC1.b;
-        _btrColors[o + 3] = _btrC2.r;
-        _btrColors[o + 4] = _btrC2.g;
-        _btrColors[o + 5] = _btrC2.b;
-        _btrColors[o + 6] = _btrC3.r;
-        _btrColors[o + 7] = _btrC3.g;
-        _btrColors[o + 8] = _btrC3.b;
-        triCount++;
-      }
-    }
-  }
-  // Zero out unused tail
-  for (let s = triCount; s < MAX_BONDED_TRIANGLES; s++) {
-    const o = s * 9;
-    for (let q = 0; q < 9; q++) { _btrPositions[o + q] = 0; _btrColors[o + q] = 0; }
-  }
-  _btrGeo.setDrawRange(0, triCount * 3);
-  _btrGeo.attributes.position.needsUpdate = true;
-  _btrGeo.attributes.color.needsUpdate = true;
-  _liveBondedTriCount = triCount;
-}
-
-// ===========================================================================
-// v2.2: LOOSE BRAID THREADS
-// Every nearby pair of atoms is connected by a luminous thread whose
-// brightness scales with coupling strength κ ∝ α/r² (clipped). Bonded pairs
-// are skipped (they have shared-electron points already). Beyond
-// MAX_BRAID_RADIUS the coupling is too weak to be worth drawing.
-//
-// Implementation: one global THREE.LineSegments with vertex colors, capacity
-// MAX_BRAID_LINES segments. Each frame we re-fill from a per-atom nearest-
-// neighbor scan (capped to NEIGHBORS_PER_ATOM closest neighbors within range).
-// O(N²) inner loop is fine for N up to a few hundred.
-// ===========================================================================
-
-const MAX_BRAID_LINES     = 800;
-const MAX_BRAID_RADIUS    = 80;     // proximity range; resonance amplifies within this range only
-const NEIGHBORS_PER_ATOM  = 6;
-const BRAID_ALPHA_MAX     = 0.85;
-const BRAID_ALPHA_MIN     = 0.02;
-// v2.5: Lorentzian half-width on |Δf|. Frequencies within RESONANCE_HALFWIDTH
-// Hz of each other count as resonant; beyond that the bonus decays.
-const RESONANCE_HALFWIDTH = 4.0;
-const RESONANCE_AMP       = 1.8;    // brightness/coupling multiplier on matched-frequency pairs (within proximity range only)
-
-const _braidGeo = new THREE.BufferGeometry();
-const _braidPositions = new Float32Array(MAX_BRAID_LINES * 6);   // 2 endpoints × 3 coords
-const _braidColors    = new Float32Array(MAX_BRAID_LINES * 6);   // 2 endpoints × 3 RGB
-_braidGeo.setAttribute("position", new THREE.BufferAttribute(_braidPositions, 3).setUsage(THREE.DynamicDrawUsage));
-_braidGeo.setAttribute("color",    new THREE.BufferAttribute(_braidColors, 3).setUsage(THREE.DynamicDrawUsage));
-const _braidMat = new THREE.LineBasicMaterial({
-  vertexColors: true,
-  transparent: true,
-  opacity: 1.0,
-  depthWrite: false,
-  blending: THREE.AdditiveBlending,
-});
-const braidThreads = new THREE.LineSegments(_braidGeo, _braidMat);
-braidThreads.frustumCulled = false;
-braidThreads.renderOrder = 1.5;  // behind bond electrons, in front of shells
-scene.add(braidThreads);
-
-// ===========================================================================
-// v2.3: Φ-SURFACE LAYER
-// Every triple of atoms with all 3 pairwise threads tight enough renders
-// as a translucent additive triangle. The dimensional ladder becomes
-// visible: atoms (•) → threads (—) → triangles (Φ-surfaces).
-// Inner loop uses a sparse adjacency cache built fresh each frame:
-// per-atom neighbor lists, then triples found by intersection.
-// ===========================================================================
-
-const MAX_PHI_TRIANGLES   = 500;
-const PHI_TRI_RADIUS_MULT = 0.85;  // triangle range slightly tighter than threads
-const PHI_TRI_ALPHA_MAX   = 0.10;
-const PHI_TRI_ALPHA_MIN   = 0.025;
-
-const _phiGeo = new THREE.BufferGeometry();
-const _phiPositions = new Float32Array(MAX_PHI_TRIANGLES * 9);   // 3 verts × 3 coords
-const _phiColors    = new Float32Array(MAX_PHI_TRIANGLES * 9);
-_phiGeo.setAttribute("position", new THREE.BufferAttribute(_phiPositions, 3).setUsage(THREE.DynamicDrawUsage));
-_phiGeo.setAttribute("color",    new THREE.BufferAttribute(_phiColors, 3).setUsage(THREE.DynamicDrawUsage));
-const _phiMat = new THREE.MeshBasicMaterial({
-  vertexColors: true,
-  transparent: true,
-  opacity: 1.0,
-  side: THREE.DoubleSide,
-  depthWrite: false,
-  blending: THREE.AdditiveBlending,
-});
-const phiSurfaces = new THREE.Mesh(_phiGeo, _phiMat);
-phiSurfaces.frustumCulled = false;
-phiSurfaces.renderOrder = 1.2;  // behind bond electrons + threads, above shells
-scene.add(phiSurfaces);
-
-// Per-atom neighbor cache (built fresh each frame). _adjMembers[i] is an
-// array of [neighbor_index, r2]; we reuse the inner arrays to avoid GC.
-const _adjMembers = [];
-const _adjLengths = [];   // current length of each inner array (we reuse the array, just cap length)
-
-const _phiC1 = new THREE.Color();
-const _phiC2 = new THREE.Color();
-const _phiC3 = new THREE.Color();
-let _liveTriangleCount = 0;
-
-function updateSurfaceTriangles(dt) {
-  const N = particles.length;
-  const rTri = MAX_BRAID_RADIUS * PHI_TRI_RADIUS_MULT;
-  const r2max = rTri * rTri;
-
-  // Ensure cache has slot per atom
-  while (_adjMembers.length < N) { _adjMembers.push([]); _adjLengths.push(0); }
-  for (let i = 0; i < N; i++) _adjLengths[i] = 0;
-
-  // Build sparse adjacency: i < j pairs where r² < r2max
-  for (let i = 0; i < N; i++) {
-    const pi = particles[i];
-    for (let j = i + 1; j < N; j++) {
-      const pj = particles[j];
-      const dx = pi.pos.x - pj.pos.x;
-      const dy = pi.pos.y - pj.pos.y;
-      const dz = pi.pos.z - pj.pos.z;
-      const r2 = dx*dx + dy*dy + dz*dz;
-      if (r2 < r2max) {
-        // Push to i's adjacency (we need j > i, which we're iterating)
-        const ai = _adjLengths[i];
-        if (_adjMembers[i].length <= ai) _adjMembers[i].push([0, 0]);
-        _adjMembers[i][ai][0] = j;
-        _adjMembers[i][ai][1] = r2;
-        _adjLengths[i] = ai + 1;
-      }
-    }
-  }
-
-  // For each atom i, find triples (j, k) in its adjacency where (j, k) is
-  // also adjacent (i.e., k is in j's adjacency).
-  let triCount = 0;
-  outer:
-  for (let i = 0; i < N; i++) {
-    const Ni = _adjMembers[i];
-    const Li = _adjLengths[i];
-    for (let a = 0; a < Li; a++) {
-      const j = Ni[a][0];
-      const r2ij = Ni[a][1];
-      const Nj = _adjMembers[j];
-      const Lj = _adjLengths[j];
-      for (let b = a + 1; b < Li; b++) {
-        const k = Ni[b][0];
-        const r2ik = Ni[b][1];
-        // Check if (j, k) is in j's adjacency (i.e., k > j and r²(j,k) < r2max)
-        let r2jk = -1;
-        for (let c = 0; c < Lj; c++) {
-          if (Nj[c][0] === k) { r2jk = Nj[c][1]; break; }
-        }
-        if (r2jk < 0) continue;
-        if (triCount >= MAX_PHI_TRIANGLES) break outer;
-        // Emit triangle. Compute per-pair alpha and use the min.
-        const r2safe1 = Math.max(400, r2ij);
-        const r2safe2 = Math.max(400, r2ik);
-        const r2safe3 = Math.max(400, r2jk);
-        const a1 = Math.min(PHI_TRI_ALPHA_MAX, FW.PHI_n * 320 / r2safe1);
-        const a2 = Math.min(PHI_TRI_ALPHA_MAX, FW.PHI_n * 320 / r2safe2);
-        const a3 = Math.min(PHI_TRI_ALPHA_MAX, FW.PHI_n * 320 / r2safe3);
-        const alpha = Math.min(a1, a2, a3);
-        if (alpha < PHI_TRI_ALPHA_MIN) continue;
-        const pi = particles[i], pj = particles[j], pk = particles[k];
-        const o = triCount * 9;
-        _phiPositions[o + 0] = pi.pos.x;
-        _phiPositions[o + 1] = pi.pos.y;
-        _phiPositions[o + 2] = pi.pos.z;
-        _phiPositions[o + 3] = pj.pos.x;
-        _phiPositions[o + 4] = pj.pos.y;
-        _phiPositions[o + 5] = pj.pos.z;
-        _phiPositions[o + 6] = pk.pos.x;
-        _phiPositions[o + 7] = pk.pos.y;
-        _phiPositions[o + 8] = pk.pos.z;
-        _phiC1.setHex(pi.element.palette.emissive);
-        _phiC2.setHex(pj.element.palette.emissive);
-        _phiC3.setHex(pk.element.palette.emissive);
-        _phiColors[o + 0] = _phiC1.r * alpha;
-        _phiColors[o + 1] = _phiC1.g * alpha;
-        _phiColors[o + 2] = _phiC1.b * alpha;
-        _phiColors[o + 3] = _phiC2.r * alpha;
-        _phiColors[o + 4] = _phiC2.g * alpha;
-        _phiColors[o + 5] = _phiC2.b * alpha;
-        _phiColors[o + 6] = _phiC3.r * alpha;
-        _phiColors[o + 7] = _phiC3.g * alpha;
-        _phiColors[o + 8] = _phiC3.b * alpha;
-        triCount++;
-      }
-    }
-  }
-
-  // Zero out unused tail
-  for (let s = triCount; s < MAX_PHI_TRIANGLES; s++) {
-    const o = s * 9;
-    for (let q = 0; q < 9; q++) { _phiPositions[o + q] = 0; _phiColors[o + q] = 0; }
-  }
-
-  _phiGeo.setDrawRange(0, triCount * 3);
-  _phiGeo.attributes.position.needsUpdate = true;
-  _phiGeo.attributes.color.needsUpdate = true;
-  _liveTriangleCount = triCount;
-}
-
-
-// Cache for neighbor query: per-atom array of {other, r2, alpha} populated
-// each frame. Reused to avoid per-frame allocation churn.
-const _neighborTmp = [];
-for (let i = 0; i < 200; i++) _neighborTmp.push({ other: null, r2: 0, alpha: 0 });
-
-const _braidColTmp1 = new THREE.Color();
-const _braidColTmp2 = new THREE.Color();
-
-function updateBraidThreads(dt) {
-  const N = particles.length;
-  let segCount = 0;
-  const r2max = MAX_BRAID_RADIUS * MAX_BRAID_RADIUS;
-
-  // For each atom, find the K nearest non-bonded neighbors within range.
-  for (let i = 0; i < N; i++) {
-    if (segCount >= MAX_BRAID_LINES) break;
-    const pi = particles[i];
-    let candCount = 0;
-
-    for (let j = 0; j < N; j++) {
-      if (i === j) continue;
-      const pj = particles[j];
-      if (areBonded(pi, pj)) continue;
-      if (j < i) continue;
-      const dx = pi.pos.x - pj.pos.x;
-      const dy = pi.pos.y - pj.pos.y;
-      const dz = pi.pos.z - pj.pos.z;
-      const r2 = dx*dx + dy*dy + dz*dz;
-      if (r2 > r2max) continue;
-      // v2.5: combined coupling κ = α × prox × (1 + resonance × amp).
-      // Proximity component falls with r²; resonance is a Lorentzian on
-      // |f_a - f_b|. When prox is tiny but resonance is high, we still
-      // emit a faint long-range thread (sustained by frequency match).
-      const r2safe = Math.max(64, r2);
-      const prox = FW.PHI_n * 320 / r2safe;
-      const df = Math.abs(pi.element.freq - pj.element.freq);
-      const reso = 1.0 / (1.0 + (df / RESONANCE_HALFWIDTH) * (df / RESONANCE_HALFWIDTH));
-      const alpha = Math.min(BRAID_ALPHA_MAX, prox * (1 + reso * RESONANCE_AMP));
-      if (alpha < BRAID_ALPHA_MIN) continue;
-      // Insert into _neighborTmp keeping only the top NEIGHBORS_PER_ATOM by alpha.
-      if (candCount < NEIGHBORS_PER_ATOM) {
-        _neighborTmp[candCount].other = pj;
-        _neighborTmp[candCount].r2 = r2;
-        _neighborTmp[candCount].alpha = alpha;
-        candCount++;
-      } else {
-        // Find the weakest in the current list and replace if this one is stronger
-        let weakIdx = 0, weakA = _neighborTmp[0].alpha;
-        for (let k = 1; k < NEIGHBORS_PER_ATOM; k++) {
-          if (_neighborTmp[k].alpha < weakA) { weakA = _neighborTmp[k].alpha; weakIdx = k; }
-        }
-        if (alpha > weakA) {
-          _neighborTmp[weakIdx].other = pj;
-          _neighborTmp[weakIdx].r2 = r2;
-          _neighborTmp[weakIdx].alpha = alpha;
-        }
-      }
-    }
-
-    // Emit segments for the kept neighbors
-    for (let k = 0; k < candCount; k++) {
-      if (segCount >= MAX_BRAID_LINES) break;
-      const cand = _neighborTmp[k];
-      const pj = cand.other;
-      const alpha = cand.alpha;
-      _braidColTmp1.setHex(pi.element.palette.emissive);
-      _braidColTmp2.setHex(pj.element.palette.emissive);
-      // Vertex 1 (pi side): pi color × alpha
-      const o = segCount * 6;
-      _braidPositions[o + 0] = pi.pos.x;
-      _braidPositions[o + 1] = pi.pos.y;
-      _braidPositions[o + 2] = pi.pos.z;
-      _braidPositions[o + 3] = pj.pos.x;
-      _braidPositions[o + 4] = pj.pos.y;
-      _braidPositions[o + 5] = pj.pos.z;
-      _braidColors[o + 0] = _braidColTmp1.r * alpha;
-      _braidColors[o + 1] = _braidColTmp1.g * alpha;
-      _braidColors[o + 2] = _braidColTmp1.b * alpha;
-      _braidColors[o + 3] = _braidColTmp2.r * alpha;
-      _braidColors[o + 4] = _braidColTmp2.g * alpha;
-      _braidColors[o + 5] = _braidColTmp2.b * alpha;
-      segCount++;
-    }
-  }
-
-  // Zero out unused tail (so leftover segments from previous frame don't draw)
-  for (let s = segCount; s < MAX_BRAID_LINES; s++) {
-    const o = s * 6;
-    for (let q = 0; q < 6; q++) _braidPositions[o + q] = 0;
-    for (let q = 0; q < 6; q++) _braidColors[o + q] = 0;
-  }
-
-  _braidGeo.setDrawRange(0, segCount * 2);
-  _braidGeo.attributes.position.needsUpdate = true;
-  _braidGeo.attributes.color.needsUpdate = true;
-}
-
 
 function formBond(p1, p2) {
   let restLength = p1.pos.distanceTo(p2.pos);
@@ -2920,6 +2509,7 @@ function updatePhysics(dt) {
   for (let i = 0; i < particles.length; i++) {
     for (let j = i + 1; j < particles.length; j++) {
       const pi = particles[i], pj = particles[j];
+      if (pi.inCage || pj.inCage) continue;  // v4.0: cage atoms don't bond
       if (!canBond(pi, pj)) continue;
       const d = pi.pos.distanceTo(pj.pos);
       if (d < BOND.FORM_RADIUS) {
@@ -2944,28 +2534,12 @@ function updatePhysics(dt) {
         const mag = PHYS.mouseRepulseStrength * falloff * falloff;
         _toParticle.multiplyScalar(mag / dist);
         _force.add(_toParticle);
+        // Stirring the soup: pumping force also rings this particle's voice
+        // so the user hears what they are pushing. Target is a low-level
+        // "brushed" amplitude so the voice sings softly while in contact
+        // and decays between touches. Ceiling ensures we do not blow past 1.
         const stirAmp = falloff * 0.45;
         if (p.amplitudeTarget < stirAmp) p.amplitudeTarget = stirAmp;
-      }
-    }
-
-    // v2.4: OBSERVER ATTRACTOR. The user's gaze (camera focal point) is
-    // a real • in the simulation: atoms feel a 1/r² pull toward it. The
-    // framework's "• is where the field is looked at FROM" becomes
-    // mechanic. Soft cap on close-range force so atoms don't shoot
-    // through the focal point.
-    {
-      const tx = controls.target.x, ty = controls.target.y, tz = controls.target.z;
-      const dx = tx - p.pos.x, dy = ty - p.pos.y, dz = tz - p.pos.z;
-      const r2 = dx*dx + dy*dy + dz*dz;
-      const r2soft = Math.max(900, r2);  // soften within 30 units of target
-      const fmag = OBSERVER_STRENGTH / r2soft;
-      const r = Math.sqrt(r2);
-      if (r > 0.0001) {
-        const inv = 1 / r;
-        _force.x += dx * inv * fmag;
-        _force.y += dy * inv * fmag;
-        _force.z += dz * inv * fmag;
       }
     }
 
@@ -3013,14 +2587,15 @@ function updatePhysics(dt) {
   // threshold = faster nucleosynthesis. Mass-weighted so heavier atoms
   // jitter less.
   if (HEAT > 0) {
-    // v2.7 settling: free atoms get the full heat impulse; bonded atoms
-    // get heavily reduced (×0.3) so molecules vibrate less and look like
-    // solid structures rather than constant scrambling.
+    // Scale chosen so default HEAT=35 at dt=1/60s produces ~10 unit/sec
+    // average velocity per axis on H atoms (rel-vel sq ~ 200, well above
+    // the FUSION_ENERGY_THRESHOLD of 60). Heavier atoms jitter less
+    // (~1/sqrt(A) law).
     const heatImpulse = HEAT * 0.45 * dt;
     for (const p of particles) {
+      if (p.inCage) continue;  // v4.0: cage atoms are pinned, no thermal jitter
       const m = Math.max(1, p.element.A);
-      const bondedDamp = p.bonds.length > 0 ? 0.3 : 1.0;
-      const k = (heatImpulse * bondedDamp) / Math.sqrt(m);
+      const k = heatImpulse / Math.sqrt(m);
       p.vel.x += (Math.random() - 0.5) * k * 60;
       p.vel.y += (Math.random() - 0.5) * k * 60;
       p.vel.z += (Math.random() - 0.5) * k * 60;
@@ -3060,6 +2635,7 @@ function updatePhysics(dt) {
 
   // ---- Envelope + phase + freqEffective per particle ----
   for (const p of particles) {
+    if (p.inCage) continue;  // v4.0: cage atoms skip envelope/phase update
     p.amplitudeTarget += (PHYS.ampRestValue - p.amplitudeTarget) * PHYS.ampRestRate * dt;
     p.amplitude += (p.amplitudeTarget - p.amplitude) * PHYS.ampSmoothing * dt;
     p.phase = (p.phase + 2 * Math.PI * (p.freqEffective || p.element.freq) * dt) % (2 * Math.PI);
@@ -3135,12 +2711,17 @@ function updateHud(dt) {
     for (const p of particles) total += p.nucleons.length;
     _hudEls.nucleons.textContent = total;
   }
-  // v2.3: Φ-surface triangle count
-  const phiEl = document.getElementById("sPhiTri");
-  if (phiEl) phiEl.textContent = _liveTriangleCount;
-  // v2.7: bonded molecular triangle (solid face) count
-  const btrEl = document.getElementById("sBtrTri");
-  if (btrEl) btrEl.textContent = _liveBondedTriCount;
+  // v4.0: player body composition counter
+  const bodyEl = document.getElementById("sBody");
+  if (bodyEl) bodyEl.textContent = player.body.length;
+  // v5.0: substrate / view counter. Total particles in substrate vs
+  // particles with attached view-state (visible 3D mesh + nucleons +
+  // audio). Big delta means the render-range optimization is working;
+  // small delta means most atoms are near the player and got escalated.
+  const atomsEl = document.getElementById("sAtoms");
+  const viewEl  = document.getElementById("sView");
+  if (atomsEl) atomsEl.textContent = particles.length;
+  if (viewEl)  viewEl.textContent  = _viewCount;
   // v2.1: C512 Λ-marginal — count atoms at each octave station, compute
   // structural/processual fractions, paint the 8-bar histogram.
   if (_c512Bars) {
@@ -3170,124 +2751,44 @@ const _sStructEl = document.getElementById("sStruct");
 const _sProcEl   = document.getElementById("sProc");
 
 // ===========================================================================
-// ═══════════════════════════════════════════════════════════════════════════
-// v3.0: T=3 ENGINE ARCHITECTURE
-// The game is structured as three nested engines reflecting the framework's
-// three-scale nesting (C64 / C512 at the software-architecture level):
-//
-//   ⊙Λ  WorldEngine     — rules, boundary, ambient field, time, win conditions
-//   ⊙λ  PerceptionEngine — camera, render, audio, HUD, input
-//   ⊙λ' SubstrateEngine  — particles, chemistry, bonds, fusion, octave
-//
-// Same operator runs at every scale (A3); engines couple via C512-style
-// nesting. Phase 1 (this version): façade modules + clean animate-loop
-// routing. Underlying code unchanged in this pass; v3.1+ migrates code into
-// proper IIFE modules incrementally.
-// ═══════════════════════════════════════════════════════════════════════════
-
-const WorldEngine = {
-  // Rules and ambient state
-  get HEAT() { return HEAT; },
-  set HEAT(v) { HEAT = v; },
-  get observerStrength() { return OBSERVER_STRENGTH; },
-  get boundaryRadius() { return PHYS.boundaryRadius; },
-  get observerTarget() { return controls.target; },
-  // Ambient-field application: HEAT, observer attractor, boundary containment
-  // are currently applied INSIDE updatePhysics; eventually they migrate here.
-  applyAmbientFields(substrate, dt) {
-    // No-op in v3.0: substrate.tick handles this internally via the existing
-    // updatePhysics. v3.1 will extract this loop and own it here.
-  },
-};
-
-const SubstrateEngine = {
-  get particles() { return particles; },
-  get bonds()     { return bonds; },
-  spawnAtom:        spawnAtom,
-  removeAtom:       removeAtom,
-  generateElement:  generateElement,
-  randomizeInputs:  randomizeInputs,
-  // Chemistry tick: collisions, bonds, fusion, station advance, fields
-  tick(dt, world) {
-    updatePhysics(dt);
-  },
-  snapshot() {
-    // Read-only view for perception. v3.1 will harden this into a real
-    // immutable snapshot; for now it's a direct alias.
-    return { particles, bonds };
-  },
-};
-
-const PerceptionEngine = {
-  scene:    scene,
-  camera:   camera,
-  renderer: renderer,
-  controls: controls,
-  // Visual layer updates derive from substrate snapshot + world state.
-  updateVisualLayers(world, substrate, dt) {
-    updateVisual(dt);
-    updateBraidThreads(dt);
-    updateSurfaceTriangles(dt);
-    updateBondedTriangles();
-    updateMoleculeShells();   // v3.1: aggregate ⊙ at scale Λ
-    updateLightSprites(dt);
-  },
-  // Audio synthesis (also part of perception; auditory render).
-  updateAudio() {
-    updateAudio();
-  },
-  // HUD (perception's UI overlay).
-  updateHud(dt) {
-    updateHud(dt);
-  },
-  // Camera / scope / cursor / presence indicator updates (UI feedback).
-  updateInputFeedback() {
-    if (input.mouseActive) {
-      cursorMesh.position.copy(input.mouseWorld);
-      cursorMesh.visible = true;
-    } else {
-      cursorMesh.visible = false;
-    }
-    presenceMesh.position.copy(controls.target);
-    presenceHaloMesh.position.copy(controls.target);
-  },
-  // Final render: field shader as background, then layered scene on top.
-  render() {
-    updateFieldShader();
-    renderer.autoClear = true;
-    renderer.render(fieldScene, fieldCamera);
-    renderer.autoClear = false;
-    renderer.render(scene, camera);
-    renderer.autoClear = true;
-  },
-};
-
-// ═══════════════════════════════════════════════════════════════════════════
-// MAIN LOOP — routes through the three engines (T=3 nesting)
-// ═══════════════════════════════════════════════════════════════════════════
+// MAIN LOOP
+// ===========================================================================
 const clock = new THREE.Clock();
 function animate() {
   requestAnimationFrame(animate);
   const dt = Math.min(0.05, clock.getDelta());
+  // v4.0: replace OrbitControls with player movement.
+  updatePlayerMovement(dt);
+  // v4.0: snap cage atoms to their camera-relative slot positions so they
+  // appear as a body around the screen periphery.
+  updateCagePositions();
 
-  // ⊙λ camera input (perception's primary self-update)
-  PerceptionEngine.controls.update();
+  updatePhysics(dt);
+  // v4.0: per-atom state (uses HEAT global), then combustion sweep,
+  // then absorb nearby atoms into player body.
+  updateAllStates(HEAT);
+  tryCombustion();
+  tryAbsorbNearbyAtoms();
+  // v5.0: lazy view attach / detach by render range. Runs after physics
+  // (positions are current) and before updateVisual (newly-attached
+  // views render this frame).
+  manageRenderRange();
+  updateVisual(dt);
+  updateAudio();
+  updateHud(dt);
 
-  // ⊙Λ → ⊙λ' : world's ambient rules apply to substrate
-  WorldEngine.applyAmbientFields(SubstrateEngine, dt);
+  // Update reaction light sprites (fade + scale over lifetime).
+  updateLightSprites(dt);
 
-  // ⊙λ' substrate tick : chemistry, bonds, fusion, octave advance
-  SubstrateEngine.tick(dt, WorldEngine);
+  // Sync cursor sphere to mouse position (in world space).
+  if (input.mouseActive) {
+    cursorMesh.position.copy(input.mouseWorld);
+    cursorMesh.visible = true;
+  } else {
+    cursorMesh.visible = false;
+  }
 
-  // ⊙λ' → ⊙λ : perception observes the substrate snapshot
-  const snapshot = SubstrateEngine.snapshot();
-  PerceptionEngine.updateVisualLayers(WorldEngine, snapshot, dt);
-  PerceptionEngine.updateAudio();
-  PerceptionEngine.updateHud(dt);
-  PerceptionEngine.updateInputFeedback();
-
-  // ⊙λ render : final draw of the perceived state
-  PerceptionEngine.render();
+  renderer.render(scene, camera);
 }
 
 window.addEventListener("resize", () => {

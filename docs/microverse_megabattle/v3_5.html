@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Microverse Megabattle — v3.1</title>
+<title>Microverse Megabattle — v3.5</title>
 <!--
   Project: Microverse Megabattle
-  File:    v3_1.html (aggregate ⊙ recognition; A3 nesting visible at last)
+  File:    v3_5.html (body frame as 3D projection: ship's actual geometry → screen periphery)
   Created: 2026-04-24
   Last updated: 2026-04-24
-  Version: 3.1
+  Version: 3.5
 
   v1.9 scope (Stage 1 of the Path B mereology arc): make each atom a
   compound ⊙ in its own right by giving it a visible nucleon cloud. Each
@@ -20,6 +20,48 @@
   proof that ⊙λ contains smaller ⊙s, not just a label on a sphere.
 
   Revision history:
+    - 2026-04-24 v3.5: BODY FRAME = SHIP PROJECTED. Cage atoms still
+      exist as 3D bodies sitting around the player; instead of fixed
+      screen positions, each atom's 3D position is projected to screen
+      via the camera, then TRANSPOSED to the screen periphery (preserve
+      angular direction from center, push to peripheral radius). Atoms
+      in the upper-left of your ship appear at upper-left of the frame;
+      atoms ahead/behind appear at the screen-edge direction they are
+      in. Different ship compositions naturally produce different frame
+      geometries. The player sits inside whatever they have absorbed and
+      sees out through the central tunnel; the frame is their ship body.
+    - 2026-04-24 v3.4: PLAYER BODY CAGE. Player has 12 cage slots in
+      camera-local space arranged as a ring at the periphery of view.
+      Free atoms that come close enough to player get absorbed into the
+      first empty slot; their world positions are overridden each frame
+      to track their cage slot. Cage atoms have no physics (zero velocity,
+      skipped in force loop). The framework's ⊙-from-inside is now
+      visual: clear view through your aperture (•) at center; your body
+      (○) ringing the periphery. As you absorb atoms the cage densifies;
+      empty cage = no body yet. Foundation for ships, weapons, damage.
+    - 2026-04-24 v3.3: LSS-STYLE PLAYER MOVEMENT. Copied first-person
+      flight from last_ship_sailing.html. Player has position +
+      velocity + euler; mouse pointer-lock for look; WASD + space/ctrl
+      for thrust (acceleration / deceleration / speed cap). Camera
+      locked to player position. The player IS a body in the soup; their
+      position drives the existing observer attractors. OrbitControls
+      retired. Mouse-repulse retired (no longer makes sense in first-
+      person). Click-to-engage gates pointer-lock behind a user gesture
+      (same gate as audio start). Player is constrained to the boundary
+      sphere; cannot fly out of the soup.
+    - 2026-04-24 v3.2: UNIFIED OBSERVER PRESENCE. The player's • aperture
+      now exerts organizing influence in four ways simultaneously:
+      (1) camera POSITION pulls atoms (body presence in the world)
+      (2) camera TARGET pulls (gaze focus, the existing v2.4 attractor)
+      (3) the LINE between them pulls (gaze beam, weakly along the ray)
+      (4) HISTORY of recent target positions exerts decaying residual pull
+          (where you have been still matters briefly).
+      Active mouse/keyboard input boosts all attractor strengths
+      (intentional acting). The framework's "consciousness IS measurement"
+      claim becomes the game's primary organizing force, against entropy.
+      Multiplayer extension: each player gets the same four-aspect
+      attractor field; AIs do too. Where attentions overlap, structures
+      contend.
     - 2026-04-24 v3.1: AGGREGATE ⊙ RECOGNITION. Connected bonded
       clusters are detected via graph traversal; each molecule renders
       as a translucent shell ⊙ at scale Λ centered at the cluster
@@ -256,12 +298,19 @@
     transition: opacity 0.3s ease;
   }
   canvas { display: block; }
+  /* v3.5: body frame SVG — fullscreen overlay with elliptical viewport hole.
+     Interior of ellipse is clear (mask cuts it out); exterior is the body,
+     filled by per-segment polygons coloured to reflect ship composition. */
+  #bodyFrameSvg {
+    position: fixed; inset: 0; width: 100vw; height: 100vh;
+    pointer-events: none; z-index: 6;
+  }
 </style>
 </head>
 <body>
 <div id="info">
-  <div class="title">MICROVERSE MEGABATTLE v3.1</div>
-  <div class="dim">v3.1: aggregate ⊙ recognition; molecules ARE circumpuncts at scale Λ (A3 visible)</div>
+  <div class="title">MICROVERSE MEGABATTLE v3.5</div>
+  <div class="dim">v3.5: ship body transposed to frame; composition determines what your cockpit looks like</div>
   <div>&nbsp;</div>
   <div><span class="elL">L</span>: sp (1.0D), <span id="freqL" class="k">—</span> Hz, A=7</div>
   <div><span class="elC">C</span>: sp³ (1.5D), <span id="freqC" class="k">—</span> Hz, A=12</div>
@@ -271,10 +320,11 @@
   <div class="dim">each atom is a compound ⊙ with A nucleons inside</div>
   <div class="dim">bonds form on contact; voices consonate when bonded</div>
   <div>&nbsp;</div>
-  <div><span class="k">drag</span> — orbit camera</div>
-  <div><span class="k">scroll</span> — zoom</div>
-  <div><span class="k">mouse proximity</span> — stir the soup</div>
-  <div><span class="k">click</span> — poke nearest</div>
+  <div><span class="k">click canvas</span> — engage flight (pointer-lock)</div>
+  <div><span class="k">mouse</span> — look around</div>
+  <div><span class="k">WASD</span> — thrust (forward / back / strafe)</div>
+  <div><span class="k">space / ctrl</span> — vertical thrust (up / down)</div>
+  <div><span class="k">esc</span> — release pointer-lock</div>
   <div><span class="k">S</span> — scramble (re-randomize positions)</div>
   <div><span class="k">R</span> — reset + break all bonds</div>
 </div>
@@ -283,7 +333,7 @@
     <span style="color:#7ab8c4;">elements:</span>
     <span id="sElementsList">—</span>
   </div>
-  <div>bonds: <span class="v" id="sBonds">0</span>  nucleons: <span class="v" id="sNucleons">—</span>  Φ-surf: <span class="v" id="sPhiTri">0</span>  faces: <span class="v" id="sBtrTri">0</span></div>
+  <div>bonds: <span class="v" id="sBonds">0</span>  nucleons: <span class="v" id="sNucleons">—</span>  Φ-surf: <span class="v" id="sPhiTri">0</span>  faces: <span class="v" id="sBtrTri">0</span>  body: <span class="v" id="sBody">0</span>/12</div>
   <div>audio: <span class="v" id="sAudio">off</span></div>
   <!-- v2.1 C512 marginal panel -->
   <div style="margin-top:10px; padding-top:6px; border-top:1px solid rgba(127,184,196,0.15); text-align:left;">
@@ -311,6 +361,20 @@
     </div>
   </div>
 </div>
+<!-- v3.5: BODY FRAME — continuous elliptical frame around viewport.
+     Inside the ellipse is clear; outside is the player's body, painted via
+     SVG segments whose color reflects absorbed atom composition. -->
+<svg id="bodyFrameSvg" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <mask id="frameMask">
+      <rect x="0" y="0" width="100%" height="100%" fill="white"/>
+      <ellipse id="viewportHole" cx="50%" cy="50%" rx="42%" ry="50%" fill="black"/>
+    </mask>
+  </defs>
+  <g id="frameSegments" mask="url(#frameMask)"></g>
+  <ellipse id="frameOutline" cx="50%" cy="50%" rx="42%" ry="50%"
+           fill="none" stroke="rgba(180,160,120,0.35)" stroke-width="1.5"/>
+</svg>
 <div id="audioPrompt">
   <div class="promptBox">
     CLICK TO START
@@ -911,7 +975,7 @@ const fieldShaderMat = new THREE.ShaderMaterial({
     const int MAX_ATOMS = 256;
     const int MARCH_STEPS = 48;
     const float STEP_BASE = 8.0;
-    const float METABALL_SIGMA = 11.0;   // Gaussian width (units)
+    const float METABALL_SIGMA = 5.0;    // tighter; atoms read as discrete points, not floods of light
     const float METABALL_SIGMA2 = METABALL_SIGMA * METABALL_SIGMA;
     
     void main() {
@@ -956,6 +1020,11 @@ const fieldShaderMat = new THREE.ShaderMaterial({
           float u = (float(a) + 0.5) / float(MAX_ATOMS);
           vec4 atomPos = texture2D(uAtomPosTex,   vec2(u, 0.5));
           vec4 atomCol = texture2D(uAtomColorTex, vec2(u, 0.5));
+          // v3.5: cockpit bubble. Atoms within 28 units of camera don't
+          // contribute to the field — keeps the central view from blowing
+          // out white when the player is surrounded by absorbed atoms.
+          vec3 dCam = atomPos.xyz - uCameraPos;
+          if (dot(dCam, dCam) < 28.0 * 28.0) continue;
           vec3 d = pos - atomPos.xyz;
           float r2 = dot(d, d);
           if (r2 > 8.0 * METABALL_SIGMA2) continue;
@@ -999,13 +1068,15 @@ const fieldCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
 // Each frame: write atom data into the textures and update camera matrices.
 function updateFieldShader() {
-  const N = Math.min(particles.length, FIELD_ATOM_CAP);
-  for (let i = 0; i < N; i++) {
+  // v3.4: skip cage atoms — they'd whiteout the central view if metaballed
+  let N = 0;
+  for (let i = 0; i < particles.length && N < FIELD_ATOM_CAP; i++) {
     const p = particles[i];
-    _atomPosData[i * 4 + 0] = p.pos.x;
-    _atomPosData[i * 4 + 1] = p.pos.y;
-    _atomPosData[i * 4 + 2] = p.pos.z;
-    _atomPosData[i * 4 + 3] = p.station;
+    if (p.inCage) continue;
+    _atomPosData[N * 4 + 0] = p.pos.x;
+    _atomPosData[N * 4 + 1] = p.pos.y;
+    _atomPosData[N * 4 + 2] = p.pos.z;
+    _atomPosData[N * 4 + 3] = p.station;
     // Color (already computed in updateVisual into _aColors but let's recompute
     // here for safety). Use base palette emissive shifted by station hue.
     const hueShift = [0.0, +0.06, -0.10, +0.14, -0.20, +0.10, -0.05, 0.0][p.station];
@@ -1015,10 +1086,11 @@ function updateFieldShader() {
       p._baseHSL.s,
       Math.max(0.10, Math.min(0.95, p._baseHSL.l + lumShift))
     );
-    _atomColorData[i * 4 + 0] = _atomColorTmp.r;
-    _atomColorData[i * 4 + 1] = _atomColorTmp.g;
-    _atomColorData[i * 4 + 2] = _atomColorTmp.b;
-    _atomColorData[i * 4 + 3] = p.amplitude;
+    _atomColorData[N * 4 + 0] = _atomColorTmp.r;
+    _atomColorData[N * 4 + 1] = _atomColorTmp.g;
+    _atomColorData[N * 4 + 2] = _atomColorTmp.b;
+    _atomColorData[N * 4 + 3] = p.amplitude;
+    N++;
   }
   // Zero out unused slots so they contribute nothing
   for (let i = N; i < FIELD_ATOM_CAP; i++) {
@@ -1374,6 +1446,18 @@ function updateVisual(dt) {
     const excite = 1.0 + p.amplitude * 1.5;
     const nucCount = p.nucleons.length;
     const base = p.nucleonBase;
+    // v3.4: cage atoms render as 2D HUD frame, not 3D nucleons. Hide their
+    // nucleon contributions by writing them off-screen and zero-size.
+    if (p.inCage) {
+      for (let ii = 0; ii < nucCount; ii++) {
+        const idx = base + ii;
+        _nucPositions[idx * 3 + 0] = 99999;
+        _nucPositions[idx * 3 + 1] = 99999;
+        _nucPositions[idx * 3 + 2] = 99999;
+        _nucSizes[idx] = 0;
+      }
+      continue;
+    }
     for (let i = 0; i < nucCount; i++) {
       const n = p.nucleons[i];
       n.phase += dt * n.omega * excite;
@@ -1503,7 +1587,220 @@ function updateAudio() {
 const input = {
   mouseWorld: new THREE.Vector3(),
   mouseActive: false,
+  keys: {},
+  mouseDX: 0,
+  mouseDY: 0,
+  locked: false,
+  sensitivity: 0.0025,
 };
+
+// v3.3: Player state — first-person body that flies through the soup.
+const player = {
+  position: new THREE.Vector3(0, 0, 100),
+  velocity: new THREE.Vector3(),
+  euler: new THREE.Euler(0, 0, 0, 'YXZ'),
+  flightSpeed:  90,
+  strafeSpeed:  70,
+  verticalSpeed: 70,
+  acceleration: 220,
+  deceleration: 160,
+  maxSpeed:     110,
+};
+
+const _mvForward  = new THREE.Vector3(0, 0, -1);
+const _mvRight    = new THREE.Vector3(1, 0, 0);
+const _mvUp       = new THREE.Vector3(0, 1, 0);
+const _mvMoveDir  = new THREE.Vector3();
+const _mvAccelDir = new THREE.Vector3();
+const _mvDrag     = new THREE.Vector3();
+
+// ===========================================================================
+// v3.4: PLAYER BODY CAGE
+// 12 slots in camera-local space ringing the view periphery; absorbed atoms
+// are pinned to slot world-positions each frame.
+// ===========================================================================
+const CAGE_SLOTS_COUNT = 12;
+const CAGE_RADIUS_LOCAL = 13;
+const CAGE_FORWARD_LOCAL = -25;
+const ABSORB_RADIUS = 30;
+const ABSORB_RADIUS_SQ = ABSORB_RADIUS * ABSORB_RADIUS;
+
+const CAGE_SLOT_POSITIONS = [];
+for (let i = 0; i < CAGE_SLOTS_COUNT; i++) {
+  const angle = (i / CAGE_SLOTS_COUNT) * Math.PI * 2;
+  CAGE_SLOT_POSITIONS.push(new THREE.Vector3(
+    Math.cos(angle) * CAGE_RADIUS_LOCAL,
+    Math.sin(angle) * CAGE_RADIUS_LOCAL,
+    CAGE_FORWARD_LOCAL
+  ));
+}
+player.body = new Array(CAGE_SLOTS_COUNT).fill(null);
+
+// v3.5: per-element cage positions. When an atom is absorbed, its world-
+// relative cage position depends on its element's hyb (sp / sp² / sp³ / etc).
+// sp atoms (terminals like H) sit close + radial; sp² atoms form trigonal
+// arms; sp³ tetrahedra; sp³d / sp³d² wrap further out. This way different
+// ship compositions produce distinct cockpit geometries.
+function computeCagePositionFor(atom, slotIdx) {
+  // Base radial position depends on hyb (further out for higher hyb)
+  const hyb = atom.element.hyb;
+  let radial = CAGE_RADIUS_LOCAL;
+  if (hyb === 'sp')     radial = CAGE_RADIUS_LOCAL * 0.85;
+  else if (hyb === 'sp2')  radial = CAGE_RADIUS_LOCAL * 1.0;
+  else if (hyb === 'sp3')  radial = CAGE_RADIUS_LOCAL * 1.15;
+  else if (hyb === 'sp3d') radial = CAGE_RADIUS_LOCAL * 1.30;
+  else if (hyb === 'sp3d2')radial = CAGE_RADIUS_LOCAL * 1.45;
+  // Forward distance also varies (sp atoms in front, sp³d² behind/around)
+  let forward = CAGE_FORWARD_LOCAL;
+  if (hyb === 'sp')     forward = -22;
+  else if (hyb === 'sp2')  forward = -28;
+  else if (hyb === 'sp3')  forward = -25;
+  else if (hyb === 'sp3d') forward = -18;
+  else if (hyb === 'sp3d2')forward = -12;
+  // Angle around the ring: spread over 360° based on slot index
+  const angle = (slotIdx / CAGE_SLOTS_COUNT) * Math.PI * 2;
+  return new THREE.Vector3(
+    Math.cos(angle) * radial,
+    Math.sin(angle) * radial,
+    forward
+  );
+}
+let _bodyAtomCount = 0;
+const _cageWorldPos = new THREE.Vector3();
+
+function absorbAtom(atom) {
+  let slotIdx = -1;
+  for (let i = 0; i < CAGE_SLOTS_COUNT; i++) {
+    if (player.body[i] === null) { slotIdx = i; break; }
+  }
+  if (slotIdx === -1) return false;
+  // v3.5 fix: store element data only; atom leaves the 3D world entirely.
+  // Brief absorption flash before removal.
+  if (typeof emitLight === 'function') emitLight(atom.pos, 0xfff0c0, 1.6, []);
+  const element = atom.element;
+  player.body[slotIdx] = { element: element, slotIndex: slotIdx };
+  _bodyAtomCount++;
+  // Remove the atom from particles + scene + audio + nucleon buffer.
+  removeAtom(atom);
+  return true;
+}
+
+function ejectAtomFromCage(slotIdx) {
+  const slot = player.body[slotIdx];
+  if (!slot || !slot.element) return null;
+  const element = slot.element;
+  player.body[slotIdx] = null;
+  _bodyAtomCount--;
+  // v3.5 fix: spawn a new atom in the world at the player position with
+  // outward velocity. Direction: the slot's angular direction in cage layout.
+  const angle = (slotIdx / CAGE_SLOTS_COUNT) * Math.PI * 2;
+  const ejectFwd = -25;  // forward in camera local
+  const ejectRadial = 13;
+  const localPos = new THREE.Vector3(
+    Math.cos(angle) * ejectRadial,
+    Math.sin(angle) * ejectRadial,
+    ejectFwd
+  );
+  const worldPos = localPos.clone().applyQuaternion(camera.quaternion).add(camera.position);
+  const newAtom = spawnAtom(element, worldPos.x, worldPos.y, worldPos.z);
+  if (newAtom) {
+    const ejectSpeed = 100;
+    newAtom.vel.set(
+      (worldPos.x - camera.position.x) / 25 * ejectSpeed,
+      (worldPos.y - camera.position.y) / 25 * ejectSpeed,
+      (worldPos.z - camera.position.z) / 25 * ejectSpeed
+    );
+  }
+  return newAtom;
+}
+
+function updateCagePositions() {
+  // v3.5 fix: no-op. Cage atoms no longer exist in the 3D scene; they're
+  // pure composition data stored as player.body[i].element. The frame
+  // painter (updateBodyFrame) reads from that data directly.
+}
+
+function tryAbsorbNearbyAtoms() {
+  // Iterate backwards because absorbAtom() splices the array.
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    const dx = p.pos.x - camera.position.x;
+    const dy = p.pos.y - camera.position.y;
+    const dz = p.pos.z - camera.position.z;
+    if (dx*dx + dy*dy + dz*dz < ABSORB_RADIUS_SQ) {
+      absorbAtom(p);
+    }
+  }
+}
+
+function updatePlayerMovement(dt) {
+  if (input.locked) {
+    player.euler.y -= input.mouseDX * input.sensitivity;
+    player.euler.x -= input.mouseDY * input.sensitivity;
+  }
+  player.euler.x = Math.max(-Math.PI * 0.45, Math.min(Math.PI * 0.45, player.euler.x));
+  input.mouseDX = 0;
+  input.mouseDY = 0;
+  camera.quaternion.setFromEuler(player.euler);
+
+  _mvForward.set(0, 0, -1).applyQuaternion(camera.quaternion);
+  _mvRight.set(1, 0, 0).applyQuaternion(camera.quaternion);
+
+  const moveDir = _mvMoveDir.set(0, 0, 0);
+  if (input.keys['w'] || input.keys['arrowup'])    moveDir.addScaledVector(_mvForward, player.flightSpeed);
+  if (input.keys['s'] || input.keys['arrowdown'])  moveDir.addScaledVector(_mvForward, -player.flightSpeed * 0.6);
+  if (input.keys['a'] || input.keys['arrowleft'])  moveDir.addScaledVector(_mvRight, -player.strafeSpeed);
+  if (input.keys['d'] || input.keys['arrowright']) moveDir.addScaledVector(_mvRight, player.strafeSpeed);
+  if (input.keys[' '])                              moveDir.addScaledVector(_mvUp, player.verticalSpeed);
+  if (input.keys['control'])                        moveDir.addScaledVector(_mvUp, -player.verticalSpeed);
+
+  if (moveDir.lengthSq() > 0) {
+    const accelDir = _mvAccelDir.copy(moveDir).sub(player.velocity);
+    const accelMag = Math.min(accelDir.length(), player.acceleration * dt);
+    if (accelMag > 0.01) player.velocity.add(accelDir.normalize().multiplyScalar(accelMag));
+  } else {
+    const speed = player.velocity.length();
+    if (speed > 1) {
+      const drag = Math.min(speed, player.deceleration * dt);
+      player.velocity.sub(_mvDrag.copy(player.velocity).normalize().multiplyScalar(drag));
+    } else {
+      player.velocity.set(0, 0, 0);
+    }
+  }
+
+  if (player.velocity.length() > player.maxSpeed) {
+    player.velocity.normalize().multiplyScalar(player.maxSpeed);
+  }
+
+  player.position.addScaledVector(player.velocity, dt);
+
+  const r = player.position.length();
+  const maxR = PHYS.boundaryRadius - 6;
+  if (r > maxR) {
+    player.position.multiplyScalar(maxR / r);
+    const ox = player.position.x / maxR, oy = player.position.y / maxR, oz = player.position.z / maxR;
+    const vDotN = player.velocity.x * ox + player.velocity.y * oy + player.velocity.z * oz;
+    if (vDotN > 0) {
+      player.velocity.x -= ox * vDotN;
+      player.velocity.y -= oy * vDotN;
+      player.velocity.z -= oz * vDotN;
+    }
+  }
+
+  camera.position.copy(player.position);
+}
+
+window.addEventListener('keydown', (e) => { input.keys[e.key.toLowerCase()] = true; });
+window.addEventListener('keyup',   (e) => { input.keys[e.key.toLowerCase()] = false; });
+document.addEventListener('pointerlockchange', () => {
+  input.locked = (document.pointerLockElement === renderer.domElement);
+});
+document.addEventListener('mousemove', (e) => {
+  if (input.locked) {
+    input.mouseDX += e.movementX;
+    input.mouseDY += e.movementY;
+  }
+});
 
 const _ndc = new THREE.Vector2();
 const _ray = new THREE.Raycaster();
@@ -1537,8 +1834,9 @@ const _audioPrompt = document.getElementById("audioPrompt");
 _audioPrompt.addEventListener("mousedown", (ev) => {
   ev.preventDefault();
   initAudio();
-  // Poll briefly for audio becoming ready; once it is, fade the overlay.
-  // Most browsers resolve resume() within 20–80ms, so this is imperceptible.
+  // v3.3: also request pointer lock so flight mode engages on the first click.
+  // Browsers require the lock request to come from a user gesture; this is it.
+  try { renderer.domElement.requestPointerLock(); } catch (e) {}
   const fadeCheck = () => {
     if (audioReady) {
       _audioPrompt.classList.add("hidden");
@@ -1547,6 +1845,14 @@ _audioPrompt.addEventListener("mousedown", (ev) => {
     }
   };
   fadeCheck();
+});
+
+// v3.3: re-engage pointer lock with a click on the canvas (e.g., after Escape).
+renderer.domElement.addEventListener("mousedown", (ev) => {
+  if (ev.button !== 0) return;
+  if (!input.locked) {
+    try { renderer.domElement.requestPointerLock(); } catch (e) {}
+  }
 });
 
 // Canvas mousedown: spike the nearest particle. Audio is guaranteed ready
@@ -1579,6 +1885,27 @@ window.addEventListener("keydown", (ev) => {
 // the camera focal point (controls.target) pulls atoms inward. Default
 // chosen to organize the soup over ~30 seconds without instantly collapsing.
 const OBSERVER_STRENGTH = 3500;
+// v3.2: unified observer presence — the player's • aperture exerts pull
+// from four aspects simultaneously.
+const OBSERVER_BODY_STRENGTH    = 2200;  // pull toward camera POSITION (the user's body)
+const OBSERVER_BEAM_STRENGTH    = 1500;  // pull toward the gaze line (camera→target)
+const OBSERVER_HISTORY_STRENGTH = 1500;  // pull toward recent target positions (decaying)
+const OBSERVER_INPUT_BOOST      = 2.2;   // multiplier on all attractors when mouse active
+const OBSERVER_HISTORY_INTERVAL = 0.30;  // sample camera target every 0.3s
+const OBSERVER_HISTORY_MAX      = 16;    // keep last 16 samples (≈ 4.8s of history)
+const OBSERVER_HISTORY_HALFLIFE = 3.0;   // exponential decay; weight halves every 3s
+
+// History buffer: [{ pos: Vector3, time: seconds }, ...]
+const _observerHistory = [];
+let _observerHistoryTimer = 0;
+function updateObserverHistory(dt) {
+  _observerHistoryTimer += dt;
+  if (_observerHistoryTimer >= OBSERVER_HISTORY_INTERVAL) {
+    _observerHistoryTimer -= OBSERVER_HISTORY_INTERVAL;
+    _observerHistory.push({ pos: controls.target.clone(), time: performance.now() * 0.001 });
+    if (_observerHistory.length > OBSERVER_HISTORY_MAX) _observerHistory.shift();
+  }
+}
 
 const PHYS = {
   mouseRepulseRadius: 120,     // larger volume needs larger mouse influence
@@ -2113,8 +2440,10 @@ function updateSurfaceTriangles(dt) {
   // Build sparse adjacency: i < j pairs where r² < r2max
   for (let i = 0; i < N; i++) {
     const pi = particles[i];
+    if (pi.inCage) continue;  // v3.4: cage atoms not in Φ-surface candidates
     for (let j = i + 1; j < N; j++) {
       const pj = particles[j];
+      if (pj.inCage) continue;
       const dx = pi.pos.x - pj.pos.x;
       const dy = pi.pos.y - pj.pos.y;
       const dz = pi.pos.z - pj.pos.z;
@@ -2226,6 +2555,7 @@ function updateBraidThreads(dt) {
       const pj = particles[j];
       if (areBonded(pi, pj)) continue;
       if (j < i) continue;
+      if (pi.inCage || pj.inCage) continue;  // v3.4: don't thread cage atoms
       const dx = pi.pos.x - pj.pos.x;
       const dy = pi.pos.y - pj.pos.y;
       const dz = pi.pos.z - pj.pos.z;
@@ -2934,6 +3264,7 @@ function updatePhysics(dt) {
 
   // ---- Per-particle forces: mouse repulsion + exclusion (skipping bonded pairs) ----
   for (const p of particles) {
+    if (p.inCage) continue;  // v3.4: cage atoms are pinned to camera-relative slots
     _force.set(0, 0, 0);
 
     if (input.mouseActive) {
@@ -2949,23 +3280,89 @@ function updatePhysics(dt) {
       }
     }
 
-    // v2.4: OBSERVER ATTRACTOR. The user's gaze (camera focal point) is
-    // a real • in the simulation: atoms feel a 1/r² pull toward it. The
-    // framework's "• is where the field is looked at FROM" becomes
-    // mechanic. Soft cap on close-range force so atoms don't shoot
-    // through the focal point.
+    // v3.2: UNIFIED OBSERVER PRESENCE. Four-aspect • aperture exerts
+    // pull from camera position, camera target, the gaze beam, and recent
+    // history. Active input boosts all of them.
+    const _inputBoost = input.mouseActive ? OBSERVER_INPUT_BOOST : 1.0;
+
+    // (1) Camera target attractor (gaze focus) — the v2.4 original.
     {
       const tx = controls.target.x, ty = controls.target.y, tz = controls.target.z;
       const dx = tx - p.pos.x, dy = ty - p.pos.y, dz = tz - p.pos.z;
       const r2 = dx*dx + dy*dy + dz*dz;
-      const r2soft = Math.max(900, r2);  // soften within 30 units of target
-      const fmag = OBSERVER_STRENGTH / r2soft;
+      const r2soft = Math.max(900, r2);
+      const fmag = OBSERVER_STRENGTH * _inputBoost / r2soft;
       const r = Math.sqrt(r2);
       if (r > 0.0001) {
         const inv = 1 / r;
         _force.x += dx * inv * fmag;
         _force.y += dy * inv * fmag;
         _force.z += dz * inv * fmag;
+      }
+    }
+
+    // (2) Camera position attractor (the user's body presence).
+    {
+      const cx = camera.position.x, cy = camera.position.y, cz = camera.position.z;
+      const dx = cx - p.pos.x, dy = cy - p.pos.y, dz = cz - p.pos.z;
+      const r2 = dx*dx + dy*dy + dz*dz;
+      const r2soft = Math.max(2500, r2);  // softer floor so close atoms don't shoot through
+      const fmag = OBSERVER_BODY_STRENGTH * _inputBoost / r2soft;
+      const r = Math.sqrt(r2);
+      if (r > 0.0001) {
+        const inv = 1 / r;
+        _force.x += dx * inv * fmag;
+        _force.y += dy * inv * fmag;
+        _force.z += dz * inv * fmag;
+      }
+    }
+
+    // (3) Gaze beam attractor (line from camera position to target).
+    // Project particle onto the segment; pull toward the projection.
+    {
+      const ax = camera.position.x, ay = camera.position.y, az = camera.position.z;
+      const bx = controls.target.x, by = controls.target.y, bz = controls.target.z;
+      const dx = bx - ax, dy = by - ay, dz = bz - az;
+      const lenSq = dx*dx + dy*dy + dz*dz;
+      if (lenSq > 0.01) {
+        const t = ((p.pos.x - ax) * dx + (p.pos.y - ay) * dy + (p.pos.z - az) * dz) / lenSq;
+        const tClamped = Math.max(0, Math.min(1, t));
+        const projX = ax + dx * tClamped;
+        const projY = ay + dy * tClamped;
+        const projZ = az + dz * tClamped;
+        const ddx = projX - p.pos.x, ddy = projY - p.pos.y, ddz = projZ - p.pos.z;
+        const dr2 = ddx*ddx + ddy*ddy + ddz*ddz;
+        const dr2soft = Math.max(400, dr2);
+        const fmag = OBSERVER_BEAM_STRENGTH * _inputBoost / dr2soft;
+        const dr = Math.sqrt(dr2);
+        if (dr > 0.0001) {
+          const inv = 1 / dr;
+          _force.x += ddx * inv * fmag;
+          _force.y += ddy * inv * fmag;
+          _force.z += ddz * inv * fmag;
+        }
+      }
+    }
+
+    // (4) History attractor — recent camera target positions, decaying.
+    {
+      const tNow = performance.now() * 0.001;
+      for (let h = 0; h < _observerHistory.length; h++) {
+        const hist = _observerHistory[h];
+        const age = tNow - hist.time;
+        const ageWeight = Math.exp(-age * 0.693 / OBSERVER_HISTORY_HALFLIFE);
+        if (ageWeight < 0.05) continue;
+        const dx = hist.pos.x - p.pos.x, dy = hist.pos.y - p.pos.y, dz = hist.pos.z - p.pos.z;
+        const r2 = dx*dx + dy*dy + dz*dz;
+        const r2soft = Math.max(900, r2);
+        const fmag = OBSERVER_HISTORY_STRENGTH * ageWeight / r2soft;
+        const r = Math.sqrt(r2);
+        if (r > 0.0001) {
+          const inv = 1 / r;
+          _force.x += dx * inv * fmag;
+          _force.y += dy * inv * fmag;
+          _force.z += dz * inv * fmag;
+        }
       }
     }
 
@@ -3018,6 +3415,7 @@ function updatePhysics(dt) {
     // solid structures rather than constant scrambling.
     const heatImpulse = HEAT * 0.45 * dt;
     for (const p of particles) {
+      if (p.inCage) continue;
       const m = Math.max(1, p.element.A);
       const bondedDamp = p.bonds.length > 0 ? 0.3 : 1.0;
       const k = (heatImpulse * bondedDamp) / Math.sqrt(m);
@@ -3141,6 +3539,9 @@ function updateHud(dt) {
   // v2.7: bonded molecular triangle (solid face) count
   const btrEl = document.getElementById("sBtrTri");
   if (btrEl) btrEl.textContent = _liveBondedTriCount;
+  // v3.4: player body cage atom count
+  const bodyEl = document.getElementById("sBody");
+  if (bodyEl) bodyEl.textContent = _bodyAtomCount;
   // v2.1: C512 Λ-marginal — count atoms at each octave station, compute
   // structural/processual fractions, paint the 8-bar histogram.
   if (_c512Bars) {
@@ -3242,14 +3643,17 @@ const PerceptionEngine = {
   },
   // Camera / scope / cursor / presence indicator updates (UI feedback).
   updateInputFeedback() {
-    if (input.mouseActive) {
-      cursorMesh.position.copy(input.mouseWorld);
-      cursorMesh.visible = true;
-    } else {
-      cursorMesh.visible = false;
-    }
-    presenceMesh.position.copy(controls.target);
-    presenceHaloMesh.position.copy(controls.target);
+    // v3.3: cursor sphere is a no-op in pointer-locked flight mode.
+    cursorMesh.visible = !input.locked && input.mouseActive;
+    if (cursorMesh.visible) cursorMesh.position.copy(input.mouseWorld);
+    // Presence indicator sits at the player's virtual gaze focus point.
+    const _focusD = 60;
+    presenceMesh.position.set(
+      camera.position.x + _mvForward.x * _focusD,
+      camera.position.y + _mvForward.y * _focusD,
+      camera.position.z + _mvForward.z * _focusD
+    );
+    presenceHaloMesh.position.copy(presenceMesh.position);
   },
   // Final render: field shader as background, then layered scene on top.
   render() {
@@ -3266,15 +3670,133 @@ const PerceptionEngine = {
 // MAIN LOOP — routes through the three engines (T=3 nesting)
 // ═══════════════════════════════════════════════════════════════════════════
 const clock = new THREE.Clock();
+// v3.5: paint the body-frame SVG. The frame is divided into N angular
+// segments around the elliptical viewport; each segment is coloured by the
+// nearest projected cage atom (none → segment is dim baseline). Different
+// compositions produce different segment colour patterns naturally.
+const FRAME_SEGMENTS = 36;        // angular resolution of frame
+const FRAME_INNER_RX = 0.42;      // inner ellipse radius (% of viewport width)
+const FRAME_INNER_RY = 0.50;      // inner ellipse radius (% of viewport height)
+const FRAME_OUTER_PAD = 1.25;     // outer extent of frame (beyond screen edge)
+const _frameSegmentsGroup = document.getElementById("frameSegments");
+const _frameSegEls = [];
+function _initFrameSegments() {
+  if (!_frameSegmentsGroup) return;
+  // Build N wedge polygons: each spans 2π/N radians of angle from screen
+  // center, between an inner ellipse and an outer rectangle (oversized).
+  for (let i = 0; i < FRAME_SEGMENTS; i++) {
+    const seg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    seg.setAttribute("fill", "rgba(30,35,45,0.55)");
+    seg.setAttribute("opacity", "0.5");
+    _frameSegmentsGroup.appendChild(seg);
+    _frameSegEls.push(seg);
+  }
+}
+_initFrameSegments();
+
+function _frameSegmentPath(i, sw, sh) {
+  // Wedge between angle1 and angle2, from inner ellipse to outer rectangle.
+  const cx = sw * 0.5, cy = sh * 0.5;
+  const irx = sw * FRAME_INNER_RX;
+  const iry = sh * FRAME_INNER_RY;
+  const a1 = (i / FRAME_SEGMENTS) * Math.PI * 2;
+  const a2 = ((i + 1) / FRAME_SEGMENTS) * Math.PI * 2;
+  // Inner two points (on the ellipse)
+  const ix1 = cx + Math.cos(a1) * irx;
+  const iy1 = cy + Math.sin(a1) * iry;
+  const ix2 = cx + Math.cos(a2) * irx;
+  const iy2 = cy + Math.sin(a2) * iry;
+  // Outer two points: project rays outward to a far rectangle
+  const outR = Math.max(sw, sh) * FRAME_OUTER_PAD;
+  const ox1 = cx + Math.cos(a1) * outR;
+  const oy1 = cy + Math.sin(a1) * outR;
+  const ox2 = cx + Math.cos(a2) * outR;
+  const oy2 = cy + Math.sin(a2) * outR;
+  return ix1 + "," + iy1 + " " + ix2 + "," + iy2 + " " +
+         ox2 + "," + oy2 + " " + ox1 + "," + oy1;
+}
+// v3.5: paint SVG frame segments. For each of FRAME_SEGMENTS angular wedges
+// around the screen center, find the nearest projected cage atom (by screen
+// angle) and colour the wedge with that atom's emissive. Empty wedges get a
+// dim baseline so the frame is always slightly visible. The result: a
+// continuous frame whose colour patterning reflects ship composition.
+const _projVec = new THREE.Vector3();
+function updateBodyFrame() {
+  const sw = window.innerWidth;
+  const sh = window.innerHeight;
+  // v3.5 fix: cage atoms are pure data, not 3D. Distribute slots evenly
+  // around the screen by their fixed slot index angle. Different
+  // compositions show as different colour patterns around the frame.
+  const atomAngles = [];
+  for (let i = 0; i < CAGE_SLOTS_COUNT; i++) {
+    const slot = player.body[i];
+    if (!slot || !slot.element) continue;
+    // Each slot owns a fixed angular sector around the frame
+    const angle = (i / CAGE_SLOTS_COUNT) * Math.PI * 2 - Math.PI;
+    atomAngles.push({
+      angle: angle,
+      colorHex: slot.element.palette.emissive,
+      depth: 0.7,  // constant since no 3D depth anymore
+    });
+  }
+  const haveAtoms = atomAngles.length > 0;
+  // Base body colour (absent any atoms, faint dark grey)
+  const baseFill = "rgba(30,35,45,0.55)";
+  // Paint each wedge
+  for (let s = 0; s < FRAME_SEGMENTS; s++) {
+    const seg = _frameSegEls[s];
+    if (!seg) continue;
+    seg.setAttribute("points", _frameSegmentPath(s, sw, sh));
+    if (!haveAtoms) {
+      seg.setAttribute("fill", baseFill);
+      seg.setAttribute("opacity", "0.55");
+      continue;
+    }
+    // Find nearest atom angle (wrap-around)
+    const wedgeAngle = ((s + 0.5) / FRAME_SEGMENTS) * Math.PI * 2 - Math.PI;
+    let best = null, bestDist = 99;
+    for (const a of atomAngles) {
+      let d = Math.abs(a.angle - wedgeAngle);
+      if (d > Math.PI) d = Math.PI * 2 - d;
+      if (d < bestDist) { bestDist = d; best = a; }
+    }
+    if (best) {
+      const r = (best.colorHex >> 16) & 0xff;
+      const g = (best.colorHex >> 8) & 0xff;
+      const b = best.colorHex & 0xff;
+      // Influence falls off with angular distance to the nearest atom
+      const influence = Math.exp(-bestDist * 2.5);
+      // Darken base body colour with element tint as influence rises
+      const bf = 0.30 + 0.45 * influence * best.depth;
+      const rr = Math.round(r * bf + 30 * (1 - bf));
+      const gg = Math.round(g * bf + 35 * (1 - bf));
+      const bb = Math.round(b * bf + 45 * (1 - bf));
+      seg.setAttribute("fill", "rgb(" + rr + "," + gg + "," + bb + ")");
+      seg.setAttribute("opacity", (0.55 + 0.40 * influence).toFixed(3));
+    } else {
+      seg.setAttribute("fill", baseFill);
+      seg.setAttribute("opacity", "0.55");
+    }
+  }
+}
+
 function animate() {
   requestAnimationFrame(animate);
   const dt = Math.min(0.05, clock.getDelta());
 
-  // ⊙λ camera input (perception's primary self-update)
-  PerceptionEngine.controls.update();
+  // v3.3: ⊙λ player movement update (replaces OrbitControls).
+  updatePlayerMovement(dt);
+  // v3.4: snap cage atoms to their cage-slot world positions, then check
+  // for nearby free atoms to absorb. Paint the body frame HUD overlay.
+  updateCagePositions();
+  tryAbsorbNearbyAtoms();
+  updateBodyFrame();
 
   // ⊙Λ → ⊙λ' : world's ambient rules apply to substrate
   WorldEngine.applyAmbientFields(SubstrateEngine, dt);
+
+  // v3.2: sample camera-target into observer history (for residual pull)
+  updateObserverHistory(dt);
 
   // ⊙λ' substrate tick : chemistry, bonds, fusion, octave advance
   SubstrateEngine.tick(dt, WorldEngine);
