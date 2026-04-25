@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Microverse Megabattle — v2.6</title>
+<title>Microverse Megabattle — v3.0</title>
 <!--
   Project: Microverse Megabattle
-  File:    v2_6.html (one shader, many aspects: each particle is a different evaluation)
+  File:    v3.html (T=3 engine architecture: World, Perception, Substrate)
   Created: 2026-04-24
   Last updated: 2026-04-24
-  Version: 2.6
+  Version: 3.0
 
   v1.9 scope (Stage 1 of the Path B mereology arc): make each atom a
   compound ⊙ in its own right by giving it a visible nucleon cloud. Each
@@ -20,6 +20,25 @@
   proof that ⊙λ contains smaller ⊙s, not just a label on a sphere.
 
   Revision history:
+    - 2026-04-24 v3.0: T=3 ENGINE ARCHITECTURE. The game is now
+      structured as three nested engines reflecting the framework's
+      three-scale nesting (C64 / C512 at the software level):
+        ⊙Λ — WorldEngine: rules, boundary, ambient field, time
+        ⊙λ — PerceptionEngine: camera, render, audio, HUD, input
+        ⊙λ' — SubstrateEngine: particles, chemistry, bonds, fusion
+      Same operator runs at every scale (A3); engines couple via
+      C512-style nesting. Phase 1 (this version): façade modules + clean
+      animate-loop routing. Underlying code unchanged in this pass; v3.1+
+      migrates code into proper IIFE modules incrementally.
+    - 2026-04-24 v2.7: ATOMS AS FULLSCREEN RAYMARCHED FIELD (C step 1).
+      Atom shells removed from the scene; replaced by a fullscreen quad
+      with a raymarching fragment shader that evaluates atom Gaussian
+      metaballs in 3D world space per pixel. Atoms are no longer discrete
+      meshes; they're continuous field excitations of one shader. Other
+      layers (threads, surfaces, nucleons, bonds, presence) still draw
+      as separate meshes on top — they get absorbed into the fullscreen
+      shader in v2.8-v2.11 until full endgame: one shader, zero
+      discrete meshes.
     - 2026-04-24 v2.6: ONE SHADER, MANY ASPECTS. Every atom is now an
       instance of a single shared ShaderMaterial; the shader procedurally
       generates each atom's appearance from per-instance attributes
@@ -232,8 +251,8 @@
 </head>
 <body>
 <div id="info">
-  <div class="title">MICROVERSE MEGABATTLE v2.6</div>
-  <div class="dim">v2.6: every particle is an aspect of one shader; hyb selects the surface pattern</div>
+  <div class="title">MICROVERSE MEGABATTLE v3.0</div>
+  <div class="dim">v3.0: T=3 engine architecture; World ⊃ Perception ⊃ Substrate (three nested ⊙s)</div>
   <div>&nbsp;</div>
   <div><span class="elL">L</span>: sp (1.0D), <span id="freqL" class="k">—</span> Hz, A=7</div>
   <div><span class="elC">C</span>: sp³ (1.5D), <span id="freqC" class="k">—</span> Hz, A=12</div>
@@ -255,7 +274,7 @@
     <span style="color:#7ab8c4;">elements:</span>
     <span id="sElementsList">—</span>
   </div>
-  <div>bonds: <span class="v" id="sBonds">0</span>  nucleons: <span class="v" id="sNucleons">—</span>  Φ-surf: <span class="v" id="sPhiTri">0</span></div>
+  <div>bonds: <span class="v" id="sBonds">0</span>  nucleons: <span class="v" id="sNucleons">—</span>  Φ-surf: <span class="v" id="sPhiTri">0</span>  faces: <span class="v" id="sBtrTri">0</span></div>
   <div>audio: <span class="v" id="sAudio">off</span></div>
   <!-- v2.1 C512 marginal panel -->
   <div style="margin-top:10px; padding-top:6px; border-top:1px solid rgba(127,184,196,0.15); text-align:left;">
@@ -331,8 +350,8 @@
     <div style="color:#d18a2e; font-size:10px; letter-spacing:0.08em;">SOUP</div>
     <div class="row">
       <label>heat</label>
-      <input type="range" id="aHeat" min="0" max="100" value="35" step="1">
-      <span class="val" id="aHeatVal">35</span>
+      <input type="range" id="aHeat" min="0" max="100" value="12" step="1">
+      <span class="val" id="aHeatVal">12</span>
     </div>
     <div style="font-size:10px; color:#7ab8c4; text-align:center; margin-top:2px;">
       fusions: <span id="aFusionCount" style="color:#d18a2e;">0</span>
@@ -386,14 +405,16 @@ const STATION_DWELL = 0.45;  // seconds at each station before advancing
 // scale aperture (favors fusion); ✹ (5) emits. The compatibility function
 // returns a multiplier in [0,1] gating the operation's probability.
 function bondStationCompat(stA, stB) {
-  // Both at ⊛: full bond probability. One at ⊛: half. Both at structural
-  // stations (no ⊛): quarter. Otherwise: 1/8 baseline.
-  if (stA === 1 && stB === 1) return 1.0;
-  if (stA === 1 || stB === 1) return 0.55;
+  // v2.7 fix: loosened so bonds form readily on contact. Real molecules
+  // need a steady stream of bond-formation to build complexity. Station
+  // compatibility still biases toward ⊛-aligned pairs but no longer
+  // suppresses the rest to near-zero.
+  if (stA === 1 && stB === 1) return 1.0;     // both at ⊛: full
+  if (stA === 1 || stB === 1) return 0.92;    // one at ⊛: nearly full
   const aStruct = STRUCT_STATION_IDX.includes(stA);
   const bStruct = STRUCT_STATION_IDX.includes(stB);
-  if (aStruct && bStruct) return 0.30;
-  return 0.12;
+  if (aStruct && bStruct) return 0.78;        // both at structural: most contacts bond
+  return 0.60;                                 // baseline: still > 50% bond rate
 }
 function fusionStationCompat(stA, stB) {
   // Both at ⟳: full. One at ⟳: 0.4. Else: 0.08 baseline.
@@ -800,7 +821,11 @@ atomInstancedMesh.count = particles.length;
 atomInstancedMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
 atomInstancedMesh.frustumCulled = false;
 atomInstancedMesh.renderOrder = 1;
-scene.add(atomInstancedMesh);
+// v2.7: NOT added to scene. Atoms are rendered by the fullscreen
+// raymarching field shader instead. We keep the InstancedMesh as a
+// no-op stub so the v2.6 update code can still write to its buffers
+// without errors (or we could delete it entirely; left in for diff legibility).
+// scene.add(atomInstancedMesh);
 
 const _aColors      = new Float32Array(MAX_PARTICLES * 3);
 const _aStations    = new Float32Array(MAX_PARTICLES);
@@ -818,6 +843,190 @@ const _atomMatrix = new THREE.Matrix4();
 const _atomQuat = new THREE.Quaternion();
 const _atomScale = new THREE.Vector3(1, 1, 1);
 const _atomColorTmp = new THREE.Color();
+
+// ===========================================================================
+// v2.7: FULLSCREEN RAYMARCHED FIELD (C endgame, step 1)
+// One fullscreen quad with a fragment shader that evaluates the soup as a
+// continuous 3D field. Atoms are passed as a DataTexture; per pixel, we
+// march a world-space ray from the camera and accumulate Gaussian metaball
+// contributions. Atoms become continuous excitations rather than discrete
+// spheres. Other layers (threads, surfaces, etc) still draw on top via
+// the main scene; they get absorbed into this shader in v2.8+.
+// ===========================================================================
+
+// Atom data textures: position+station in one RGBA, color in another.
+// 256 wide x 1 tall = up to 256 atoms (we cap at MAX_PARTICLES=250).
+const FIELD_ATOM_CAP = 256;
+const _atomPosData   = new Float32Array(FIELD_ATOM_CAP * 4);  // x, y, z, station
+const _atomColorData = new Float32Array(FIELD_ATOM_CAP * 4);  // r, g, b, amplitude
+const atomPosTex   = new THREE.DataTexture(_atomPosData,   FIELD_ATOM_CAP, 1, THREE.RGBAFormat, THREE.FloatType);
+const atomColorTex = new THREE.DataTexture(_atomColorData, FIELD_ATOM_CAP, 1, THREE.RGBAFormat, THREE.FloatType);
+atomPosTex.minFilter   = THREE.NearestFilter;
+atomPosTex.magFilter   = THREE.NearestFilter;
+atomColorTex.minFilter = THREE.NearestFilter;
+atomColorTex.magFilter = THREE.NearestFilter;
+atomPosTex.needsUpdate   = true;
+atomColorTex.needsUpdate = true;
+
+const fieldShaderMat = new THREE.ShaderMaterial({
+  uniforms: {
+    uAtomPosTex:    { value: atomPosTex },
+    uAtomColorTex:  { value: atomColorTex },
+    uAtomCount:     { value: 0 },
+    uCameraPos:     { value: new THREE.Vector3() },
+    uViewMatrixInv: { value: new THREE.Matrix4() },
+    uProjMatrixInv: { value: new THREE.Matrix4() },
+    uTime:          { value: 0.0 },
+    uResolution:    { value: new THREE.Vector2(1, 1) },
+    uBoundary:      { value: 220 },
+  },
+  vertexShader: `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = vec4(position.xy, 0.0, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform sampler2D uAtomPosTex;
+    uniform sampler2D uAtomColorTex;
+    uniform int uAtomCount;
+    uniform vec3 uCameraPos;
+    uniform mat4 uViewMatrixInv;
+    uniform mat4 uProjMatrixInv;
+    uniform float uTime;
+    uniform vec2 uResolution;
+    uniform float uBoundary;
+    varying vec2 vUv;
+    
+    const int MAX_ATOMS = 256;
+    const int MARCH_STEPS = 48;
+    const float STEP_BASE = 8.0;
+    const float METABALL_SIGMA = 11.0;   // Gaussian width (units)
+    const float METABALL_SIGMA2 = METABALL_SIGMA * METABALL_SIGMA;
+    
+    void main() {
+      // Reconstruct world-space ray from this pixel's NDC.
+      vec2 ndc = vUv * 2.0 - 1.0;
+      vec4 nearH = uViewMatrixInv * uProjMatrixInv * vec4(ndc, -1.0, 1.0);
+      vec4 farH  = uViewMatrixInv * uProjMatrixInv * vec4(ndc,  1.0, 1.0);
+      vec3 nearP = nearH.xyz / nearH.w;
+      vec3 farP  = farH.xyz  / farH.w;
+      vec3 rayDir = normalize(farP - nearP);
+      vec3 rayOrigin = uCameraPos;
+      
+      // Intersect ray with boundary sphere: enter the soup.
+      // Solve |O + t*D|^2 = R^2.
+      float b = dot(rayOrigin, rayDir);
+      float c = dot(rayOrigin, rayOrigin) - uBoundary * uBoundary;
+      float disc = b * b - c;
+      if (disc < 0.0) {
+        gl_FragColor = vec4(0.0);
+        return;
+      }
+      float sd = sqrt(disc);
+      float tEnter = max(0.0, -b - sd);
+      float tExit  = max(0.0, -b + sd);
+      if (tExit <= 0.0) { gl_FragColor = vec4(0.0); return; }
+      
+      vec3 color = vec3(0.0);
+      float density = 0.0;
+      float t = tEnter;
+      float stepLen = max(2.0, (tExit - tEnter) / float(MARCH_STEPS));
+      
+      for (int i = 0; i < MARCH_STEPS; i++) {
+        if (t > tExit) break;
+        if (density > 0.96) break;
+        vec3 pos = rayOrigin + rayDir * t;
+        
+        float localDensity = 0.0;
+        vec3 localColor = vec3(0.0);
+        
+        for (int a = 0; a < MAX_ATOMS; a++) {
+          if (a >= uAtomCount) break;
+          float u = (float(a) + 0.5) / float(MAX_ATOMS);
+          vec4 atomPos = texture2D(uAtomPosTex,   vec2(u, 0.5));
+          vec4 atomCol = texture2D(uAtomColorTex, vec2(u, 0.5));
+          vec3 d = pos - atomPos.xyz;
+          float r2 = dot(d, d);
+          if (r2 > 8.0 * METABALL_SIGMA2) continue;
+          float weight = exp(-r2 / METABALL_SIGMA2);
+          // Station glow: ⟳ (idx 7) and ✹ (idx 5) are brighter.
+          float stationBoost = 1.0;
+          if (atomPos.w > 4.5 && atomPos.w < 5.5) stationBoost = 1.4;
+          if (atomPos.w > 6.5) stationBoost = 2.2;
+          // Amplitude in alpha channel of color tex.
+          float amp = atomCol.w;
+          float intensity = (0.55 + amp * 1.4) * stationBoost;
+          localDensity += weight;
+          localColor   += atomCol.rgb * weight * intensity;
+        }
+        
+        // Accumulate (front-to-back compositing)
+        float alphaThis = clamp(localDensity * 0.6, 0.0, 1.0);
+        vec3 colThis = localDensity > 0.0001 ? localColor / localDensity : vec3(0.0);
+        color += colThis * alphaThis * (1.0 - density);
+        density += alphaThis * (1.0 - density);
+        
+        t += stepLen;
+      }
+      
+      gl_FragColor = vec4(color, density);
+    }
+  `,
+  transparent: true,
+  depthWrite: false,
+  depthTest: false,
+});
+
+// Fullscreen quad mesh. Use PlaneGeometry(2,2) which fills NDC space when
+// the vertex shader writes gl_Position = position.xy directly.
+const fieldQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), fieldShaderMat);
+fieldQuad.frustumCulled = false;
+// Render into a SEPARATE scene so it can be drawn first as background.
+const fieldScene = new THREE.Scene();
+fieldScene.add(fieldQuad);
+const fieldCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+// Each frame: write atom data into the textures and update camera matrices.
+function updateFieldShader() {
+  const N = Math.min(particles.length, FIELD_ATOM_CAP);
+  for (let i = 0; i < N; i++) {
+    const p = particles[i];
+    _atomPosData[i * 4 + 0] = p.pos.x;
+    _atomPosData[i * 4 + 1] = p.pos.y;
+    _atomPosData[i * 4 + 2] = p.pos.z;
+    _atomPosData[i * 4 + 3] = p.station;
+    // Color (already computed in updateVisual into _aColors but let's recompute
+    // here for safety). Use base palette emissive shifted by station hue.
+    const hueShift = [0.0, +0.06, -0.10, +0.14, -0.20, +0.10, -0.05, 0.0][p.station];
+    const lumShift = [0.0, +0.05, 0.0, +0.05, +0.05, +0.10, -0.03, +0.18][p.station];
+    _atomColorTmp.setHSL(
+      (p._baseHSL.h + hueShift + 1) % 1,
+      p._baseHSL.s,
+      Math.max(0.10, Math.min(0.95, p._baseHSL.l + lumShift))
+    );
+    _atomColorData[i * 4 + 0] = _atomColorTmp.r;
+    _atomColorData[i * 4 + 1] = _atomColorTmp.g;
+    _atomColorData[i * 4 + 2] = _atomColorTmp.b;
+    _atomColorData[i * 4 + 3] = p.amplitude;
+  }
+  // Zero out unused slots so they contribute nothing
+  for (let i = N; i < FIELD_ATOM_CAP; i++) {
+    _atomColorData[i * 4 + 0] = 0;
+    _atomColorData[i * 4 + 1] = 0;
+    _atomColorData[i * 4 + 2] = 0;
+    _atomColorData[i * 4 + 3] = 0;
+  }
+  atomPosTex.needsUpdate = true;
+  atomColorTex.needsUpdate = true;
+  fieldShaderMat.uniforms.uAtomCount.value = N;
+  fieldShaderMat.uniforms.uCameraPos.value.copy(camera.position);
+  fieldShaderMat.uniforms.uViewMatrixInv.value.copy(camera.matrixWorld);
+  fieldShaderMat.uniforms.uProjMatrixInv.value.copy(camera.projectionMatrixInverse);
+  fieldShaderMat.uniforms.uTime.value = performance.now() * 0.001;
+  fieldShaderMat.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
+}
 
 // ---------------------------------------------------------------------------
 // v1.9.1: Nucleon point cloud.
@@ -1023,7 +1232,7 @@ function spawnAtom(element, x, y, z) {
 let FUSION_ENERGY_THRESHOLD = 60;    // (rel-vel)^2 above which fusion attempts; tuned with HEAT
 let FUSION_PROB_PER_ATTEMPT = 0.85;  // chance of fusion if energy above threshold
 let FUSION_BOND_PENALTY = 4.0;       // bonded pairs need this many × more energy
-let HEAT = 35;                       // 0-100; scales kinetic noise
+let HEAT = 12;                       // v2.7 settling: lower default so soup can stabilise; user can crank up via slider
 let _fusionCount = 0;                // total successful fusion events
 
 function tryFusion(pi, pj) {
@@ -1360,7 +1569,7 @@ window.addEventListener("keydown", (ev) => {
 // v2.4: observer attractor strength. Tunable; this controls how much
 // the camera focal point (controls.target) pulls atoms inward. Default
 // chosen to organize the soup over ~30 seconds without instantly collapsing.
-const OBSERVER_STRENGTH = 7000;
+const OBSERVER_STRENGTH = 3500;
 
 const PHYS = {
   mouseRepulseRadius: 120,     // larger volume needs larger mouse influence
@@ -1380,7 +1589,7 @@ const PHYS = {
   // full-strength hit; a gentle nudge barely rings.
   impactVelScale: 30,
   impactAmpScale: 0.9,
-  viscosity: 0.92,
+  viscosity: 0.85,
   // Amplitude decay tuned for ringing: 0.8/s means a click-spike takes
   // ~0.75s to fall back to rest, easily long enough to hear the change
   // and see the visual pulse track the audio.
@@ -1603,6 +1812,109 @@ const bondElectronPoints = new THREE.Points(_bondElGeo, _bondElMat);
 bondElectronPoints.frustumCulled = false;
 bondElectronPoints.renderOrder = 3;
 scene.add(bondElectronPoints);
+
+// ===========================================================================
+// v2.7 FIX: BONDED-TRIANGLE LAYER (solid molecular ring faces)
+// Φ-surface triangles (v2.3) draw between any 3 close atoms regardless of
+// whether they're bonded — they show coupling potential, not actual
+// structure. This new layer draws ONLY for triples where all 3 pairwise
+// bonds exist; these are real molecular ring faces. A bonded tetrahedron
+// (4 atoms, all 6 bonds) renders as 4 triangles forming a solid tetrahedron.
+// Visual: more opaque + uses ALPHA blending (not additive) so it reads as
+// solid material rather than a glow. The user finally sees 3D shapes.
+// ===========================================================================
+
+const MAX_BONDED_TRIANGLES = 300;
+
+const _btrGeo = new THREE.BufferGeometry();
+const _btrPositions = new Float32Array(MAX_BONDED_TRIANGLES * 9);   // 3 verts × 3 coords
+const _btrColors    = new Float32Array(MAX_BONDED_TRIANGLES * 9);
+_btrGeo.setAttribute("position", new THREE.BufferAttribute(_btrPositions, 3).setUsage(THREE.DynamicDrawUsage));
+_btrGeo.setAttribute("color",    new THREE.BufferAttribute(_btrColors, 3).setUsage(THREE.DynamicDrawUsage));
+const _btrMat = new THREE.MeshBasicMaterial({
+  vertexColors: true,
+  transparent: true,
+  opacity: 0.55,
+  side: THREE.DoubleSide,
+  depthWrite: false,
+  // Alpha blending (not additive) so triangles read as solid material.
+});
+const bondedTriangles = new THREE.Mesh(_btrGeo, _btrMat);
+bondedTriangles.frustumCulled = false;
+bondedTriangles.renderOrder = 1.4;  // above field, below presence indicator
+scene.add(bondedTriangles);
+
+const _btrC1 = new THREE.Color();
+const _btrC2 = new THREE.Color();
+const _btrC3 = new THREE.Color();
+let _liveBondedTriCount = 0;
+
+function updateBondedTriangles() {
+  // For each pair of bonds sharing a common atom, check if the OTHER ends
+  // are also bonded. If yes, that's a bonded triangle.
+  // Iterate via per-atom bond list: O(N × maxBonds²).
+  let triCount = 0;
+  // Avoid double-counting: only emit when (i, j, k) with i < j < k where
+  // i is the smallest index in the triple.
+  for (let ai = 0; ai < particles.length; ai++) {
+    if (triCount >= MAX_BONDED_TRIANGLES) break;
+    const pa = particles[ai];
+    if (pa.bonds.length < 2) continue;
+    for (let bi = 0; bi < pa.bonds.length; bi++) {
+      const bondAB = pa.bonds[bi];
+      const pb = (bondAB.a === pa) ? bondAB.b : bondAB.a;
+      const bIdx = particles.indexOf(pb);
+      if (bIdx <= ai) continue;  // ordering
+      for (let bj = bi + 1; bj < pa.bonds.length; bj++) {
+        const bondAC = pa.bonds[bj];
+        const pc = (bondAC.a === pa) ? bondAC.b : bondAC.a;
+        const cIdx = particles.indexOf(pc);
+        if (cIdx <= ai || cIdx === bIdx) continue;
+        // Are pb and pc bonded? Check pb's bond list.
+        let bcBond = false;
+        for (let k = 0; k < pb.bonds.length; k++) {
+          const b2 = pb.bonds[k];
+          if (b2.a === pc || b2.b === pc) { bcBond = true; break; }
+        }
+        if (!bcBond) continue;
+        if (triCount >= MAX_BONDED_TRIANGLES) break;
+        // Emit triangle (pa, pb, pc)
+        const o = triCount * 9;
+        _btrPositions[o + 0] = pa.pos.x;
+        _btrPositions[o + 1] = pa.pos.y;
+        _btrPositions[o + 2] = pa.pos.z;
+        _btrPositions[o + 3] = pb.pos.x;
+        _btrPositions[o + 4] = pb.pos.y;
+        _btrPositions[o + 5] = pb.pos.z;
+        _btrPositions[o + 6] = pc.pos.x;
+        _btrPositions[o + 7] = pc.pos.y;
+        _btrPositions[o + 8] = pc.pos.z;
+        _btrC1.setHex(pa.element.palette.emissive);
+        _btrC2.setHex(pb.element.palette.emissive);
+        _btrC3.setHex(pc.element.palette.emissive);
+        _btrColors[o + 0] = _btrC1.r;
+        _btrColors[o + 1] = _btrC1.g;
+        _btrColors[o + 2] = _btrC1.b;
+        _btrColors[o + 3] = _btrC2.r;
+        _btrColors[o + 4] = _btrC2.g;
+        _btrColors[o + 5] = _btrC2.b;
+        _btrColors[o + 6] = _btrC3.r;
+        _btrColors[o + 7] = _btrC3.g;
+        _btrColors[o + 8] = _btrC3.b;
+        triCount++;
+      }
+    }
+  }
+  // Zero out unused tail
+  for (let s = triCount; s < MAX_BONDED_TRIANGLES; s++) {
+    const o = s * 9;
+    for (let q = 0; q < 9; q++) { _btrPositions[o + q] = 0; _btrColors[o + q] = 0; }
+  }
+  _btrGeo.setDrawRange(0, triCount * 3);
+  _btrGeo.attributes.position.needsUpdate = true;
+  _btrGeo.attributes.color.needsUpdate = true;
+  _liveBondedTriCount = triCount;
+}
 
 // ===========================================================================
 // v2.2: LOOSE BRAID THREADS
@@ -2598,14 +2910,14 @@ function updatePhysics(dt) {
   // threshold = faster nucleosynthesis. Mass-weighted so heavier atoms
   // jitter less.
   if (HEAT > 0) {
-    // Scale chosen so default HEAT=35 at dt=1/60s produces ~10 unit/sec
-    // average velocity per axis on H atoms (rel-vel sq ~ 200, well above
-    // the FUSION_ENERGY_THRESHOLD of 60). Heavier atoms jitter less
-    // (~1/sqrt(A) law).
+    // v2.7 settling: free atoms get the full heat impulse; bonded atoms
+    // get heavily reduced (×0.3) so molecules vibrate less and look like
+    // solid structures rather than constant scrambling.
     const heatImpulse = HEAT * 0.45 * dt;
     for (const p of particles) {
       const m = Math.max(1, p.element.A);
-      const k = heatImpulse / Math.sqrt(m);
+      const bondedDamp = p.bonds.length > 0 ? 0.3 : 1.0;
+      const k = (heatImpulse * bondedDamp) / Math.sqrt(m);
       p.vel.x += (Math.random() - 0.5) * k * 60;
       p.vel.y += (Math.random() - 0.5) * k * 60;
       p.vel.z += (Math.random() - 0.5) * k * 60;
@@ -2723,6 +3035,9 @@ function updateHud(dt) {
   // v2.3: Φ-surface triangle count
   const phiEl = document.getElementById("sPhiTri");
   if (phiEl) phiEl.textContent = _liveTriangleCount;
+  // v2.7: bonded molecular triangle (solid face) count
+  const btrEl = document.getElementById("sBtrTri");
+  if (btrEl) btrEl.textContent = _liveBondedTriCount;
   // v2.1: C512 Λ-marginal — count atoms at each octave station, compute
   // structural/processual fractions, paint the 8-bar histogram.
   if (_c512Bars) {
@@ -2752,40 +3067,123 @@ const _sStructEl = document.getElementById("sStruct");
 const _sProcEl   = document.getElementById("sProc");
 
 // ===========================================================================
-// MAIN LOOP
-// ===========================================================================
+// ═══════════════════════════════════════════════════════════════════════════
+// v3.0: T=3 ENGINE ARCHITECTURE
+// The game is structured as three nested engines reflecting the framework's
+// three-scale nesting (C64 / C512 at the software-architecture level):
+//
+//   ⊙Λ  WorldEngine     — rules, boundary, ambient field, time, win conditions
+//   ⊙λ  PerceptionEngine — camera, render, audio, HUD, input
+//   ⊙λ' SubstrateEngine  — particles, chemistry, bonds, fusion, octave
+//
+// Same operator runs at every scale (A3); engines couple via C512-style
+// nesting. Phase 1 (this version): façade modules + clean animate-loop
+// routing. Underlying code unchanged in this pass; v3.1+ migrates code into
+// proper IIFE modules incrementally.
+// ═══════════════════════════════════════════════════════════════════════════
+
+const WorldEngine = {
+  // Rules and ambient state
+  get HEAT() { return HEAT; },
+  set HEAT(v) { HEAT = v; },
+  get observerStrength() { return OBSERVER_STRENGTH; },
+  get boundaryRadius() { return PHYS.boundaryRadius; },
+  get observerTarget() { return controls.target; },
+  // Ambient-field application: HEAT, observer attractor, boundary containment
+  // are currently applied INSIDE updatePhysics; eventually they migrate here.
+  applyAmbientFields(substrate, dt) {
+    // No-op in v3.0: substrate.tick handles this internally via the existing
+    // updatePhysics. v3.1 will extract this loop and own it here.
+  },
+};
+
+const SubstrateEngine = {
+  get particles() { return particles; },
+  get bonds()     { return bonds; },
+  spawnAtom:        spawnAtom,
+  removeAtom:       removeAtom,
+  generateElement:  generateElement,
+  randomizeInputs:  randomizeInputs,
+  // Chemistry tick: collisions, bonds, fusion, station advance, fields
+  tick(dt, world) {
+    updatePhysics(dt);
+  },
+  snapshot() {
+    // Read-only view for perception. v3.1 will harden this into a real
+    // immutable snapshot; for now it's a direct alias.
+    return { particles, bonds };
+  },
+};
+
+const PerceptionEngine = {
+  scene:    scene,
+  camera:   camera,
+  renderer: renderer,
+  controls: controls,
+  // Visual layer updates derive from substrate snapshot + world state.
+  updateVisualLayers(world, substrate, dt) {
+    updateVisual(dt);
+    updateBraidThreads(dt);
+    updateSurfaceTriangles(dt);
+    updateBondedTriangles();
+    updateLightSprites(dt);
+  },
+  // Audio synthesis (also part of perception; auditory render).
+  updateAudio() {
+    updateAudio();
+  },
+  // HUD (perception's UI overlay).
+  updateHud(dt) {
+    updateHud(dt);
+  },
+  // Camera / scope / cursor / presence indicator updates (UI feedback).
+  updateInputFeedback() {
+    if (input.mouseActive) {
+      cursorMesh.position.copy(input.mouseWorld);
+      cursorMesh.visible = true;
+    } else {
+      cursorMesh.visible = false;
+    }
+    presenceMesh.position.copy(controls.target);
+    presenceHaloMesh.position.copy(controls.target);
+  },
+  // Final render: field shader as background, then layered scene on top.
+  render() {
+    updateFieldShader();
+    renderer.autoClear = true;
+    renderer.render(fieldScene, fieldCamera);
+    renderer.autoClear = false;
+    renderer.render(scene, camera);
+    renderer.autoClear = true;
+  },
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MAIN LOOP — routes through the three engines (T=3 nesting)
+// ═══════════════════════════════════════════════════════════════════════════
 const clock = new THREE.Clock();
 function animate() {
   requestAnimationFrame(animate);
   const dt = Math.min(0.05, clock.getDelta());
-  controls.update();
 
-  updatePhysics(dt);
-  updateVisual(dt);
-  updateAudio();
-  updateHud(dt);
+  // ⊙λ camera input (perception's primary self-update)
+  PerceptionEngine.controls.update();
 
-  // v2.2: redraw the loose-braid threads connecting nearby atoms.
-  updateBraidThreads(dt);
+  // ⊙Λ → ⊙λ' : world's ambient rules apply to substrate
+  WorldEngine.applyAmbientFields(SubstrateEngine, dt);
 
-  // v2.3: redraw Φ-surface triangles for tight triples.
-  updateSurfaceTriangles(dt);
+  // ⊙λ' substrate tick : chemistry, bonds, fusion, octave advance
+  SubstrateEngine.tick(dt, WorldEngine);
 
-  // Update reaction light sprites (fade + scale over lifetime).
-  updateLightSprites(dt);
+  // ⊙λ' → ⊙λ : perception observes the substrate snapshot
+  const snapshot = SubstrateEngine.snapshot();
+  PerceptionEngine.updateVisualLayers(WorldEngine, snapshot, dt);
+  PerceptionEngine.updateAudio();
+  PerceptionEngine.updateHud(dt);
+  PerceptionEngine.updateInputFeedback();
 
-  // Sync cursor sphere to mouse position (in world space).
-  if (input.mouseActive) {
-    cursorMesh.position.copy(input.mouseWorld);
-    cursorMesh.visible = true;
-  } else {
-    cursorMesh.visible = false;
-  }
-  // v2.4: presence indicator follows the camera focal point
-  presenceMesh.position.copy(controls.target);
-  presenceHaloMesh.position.copy(controls.target);
-
-  renderer.render(scene, camera);
+  // ⊙λ render : final draw of the perceived state
+  PerceptionEngine.render();
 }
 
 window.addEventListener("resize", () => {
