@@ -15716,6 +15716,35 @@ function buildRoomGraphLevel(level) {
       '  return accum;',
       '}',
       'void main() {',
+      // ============================================================
+      // ---- Tunable wall constants (play with these freely) -------
+      // ============================================================
+      // Static dark floor. Lifts pure-black corners so AO doesn't
+      // crush the wall to nothing in dark-palette rooms.
+      '  vec3  K_DARK_BASE         = vec3(0.018, 0.020, 0.030);',
+      // How much of the room's palette color tints the dark base.
+      // Higher = dark rooms read with more of their hue at the base
+      // brightness; lower = relies more on the fractal for color.
+      '  float K_ZONE_TINT         = 0.45;',
+      // Multiplier on the cosmic Kali IFS additive contribution.
+      // Higher = louder fractal, lower = subtler texture.
+      '  float K_COSMIC_BRIGHTNESS = 3.4;',
+      // Fresnel rim strength: how strongly grazing-angle pixels
+      // pick up the zone color. Bigger rims help dim rooms.
+      '  float K_FRESNEL_STRENGTH  = 1.20;',
+      // Diffuse multiplier range. Final diffuse term =
+      //   K_DIFF_MIN + (1 - K_DIFF_MIN) * max(dot(N, V), 0)
+      // Higher MIN keeps shadowed sides from going pitch black.
+      '  float K_DIFF_MIN          = 0.78;',
+      // AO clamp: AO multiplier never drops below this value, so
+      // even deeply concave corners keep some life.
+      '  float K_AO_FLOOR          = 0.55;',
+      // Hard minimum brightness floor (after all other math).
+      // Pre-fractal final c is max()ed with K_FLOOR * zoneColor so
+      // every pixel gets at least a faint zone-color glow even if
+      // the fractal happens to be at zero in this position.
+      '  float K_FLOOR             = 0.05;',
+      // ============================================================
       // Nearest room supplies the zone color and the local wall extent used
       // for the lower/upper half split.
       '  vec3 zoneColor = vec3(0.06, 0.08, 0.12);',
@@ -15732,8 +15761,9 @@ function buildRoomGraphLevel(level) {
       // surface gets placed along the local vertical axis, which is what we
       // want since the rooms/tunnels are rotationally symmetric.
       '  float heightFrac = clamp((vWorldPos.y - (nearC.y - nearR)) / (2.0 * nearR), 0.0, 1.0);',
-      // Base: very dark, slight zone tint. Kept dark so the bright fractal pops.
-      '  vec3 dark = vec3(0.010, 0.012, 0.022) + zoneColor * 0.20;',
+      // Base: dark floor + zone-color tint. K_ZONE_TINT controls how much
+      // hue the dark base carries from the room's palette color.
+      '  vec3 dark = K_DARK_BASE + zoneColor * K_ZONE_TINT;',
       '  vec3 c = dark;',
       // Cosmic Kali IFS fractal: the sole wall texture. Evaluated at the
       // vertex world position, steered by the zone color into a hue band,
@@ -15744,13 +15774,16 @@ function buildRoomGraphLevel(level) {
       '  float fracPulse = 0.92 + 0.12 * sin(time * 0.35);',
       '  float shimmer   = 0.90 + 0.18 * sin(time * 1.10 + vWorldPos.x * 0.003 + vWorldPos.z * 0.003);',
       '  vec3 cosmic = cosmicField(vWorldPos, zoneColor, time);',
-      '  c += cosmic * fracPulse * shimmer * 3.4;',
+      '  c += cosmic * fracPulse * shimmer * K_COSMIC_BRIGHTNESS;',
       // Soft diffuse + rim so surfaces still read in 3D.
       '  vec3 vd = normalize(cameraPosition - vWorldPos);',
-      '  float diff = max(dot(vNormal, vd), 0.0) * 0.35 + 0.65;',
+      '  float diff = K_DIFF_MIN + (1.0 - K_DIFF_MIN) * max(dot(vNormal, vd), 0.0);',
       '  float fresnelFactor = pow(1.0 - abs(dot(vNormal, vd)), 3.0);',
-      '  c += zoneColor * 1.8 * fresnelFactor * 0.5;',
-      '  c *= diff * vAO;',
+      '  c += zoneColor * K_FRESNEL_STRENGTH * fresnelFactor;',
+      '  float aoTerm = mix(K_AO_FLOOR, 1.0, vAO);',
+      '  c *= diff * aoTerm;',
+      // Hard minimum so dark-palette rooms always retain some readability.
+      '  c = max(c, zoneColor * K_FLOOR);',
       // Upper half is one-way transparent: interior (front-face) fades toward
       // low alpha above heightFrac ~0.5 so players still see the starfield
       // through the top of any chamber. Back faces stay opaque. The fractal
@@ -15775,6 +15808,15 @@ function buildRoomGraphLevel(level) {
     const roomPalette = (level && Array.isArray(level.palette) && level.palette.length > 0)
       ? level.palette
       : defaultPalette;
+    // Palette brightness boost: every palette color is multiplied by this on
+    // its way into the shader. Many of the existing per-map palettes were
+    // authored very dark (component values 0x10..0x40, i.e. 0.06..0.25), so
+    // by the time the shader applied its dark-tint and AO they collapsed
+    // toward black. Lifting them ~1.7x at the source gives the shader more
+    // signal to work with and brightens the palette-driven half of the wall
+    // color without needing to rewrite each map's palette by hand. Tweak
+    // this single knob to globally brighten/darken room hues.
+    const PALETTE_BOOST = 1.70;
     const numRooms = Math.min(game.sdfRoomData.length, 8);
     const roomCentersArr = [];
     const roomColorsArr = [];
@@ -15783,7 +15825,13 @@ function buildRoomGraphLevel(level) {
       if (i < numRooms) {
         const r = game.sdfRoomData[i];
         roomCentersArr.push(new THREE.Vector3(r.x, r.y, r.z));
-        roomColorsArr.push(new THREE.Color(roomPalette[i % roomPalette.length]));
+        const baseCol = new THREE.Color(roomPalette[i % roomPalette.length]);
+        // Multiply per-channel and clamp so a bright source palette
+        // doesn't blow past 1.0 and lose hue at the boost.
+        baseCol.r = Math.min(1.0, baseCol.r * PALETTE_BOOST);
+        baseCol.g = Math.min(1.0, baseCol.g * PALETTE_BOOST);
+        baseCol.b = Math.min(1.0, baseCol.b * PALETTE_BOOST);
+        roomColorsArr.push(baseCol);
         roomRadiiArr.push(r.r);
       } else {
         roomCentersArr.push(new THREE.Vector3(0, 99999, 0));
