@@ -203,7 +203,7 @@ canvas { display: block; }
 }
 #ship-select.active { display: flex; }
 #ship-select-header {
-  padding: 20px 32px 14px;
+  padding: 14px 28px 10px;
   border-bottom: 1px solid rgba(80,80,120,0.25);
   background: linear-gradient(180deg, rgba(15,15,30,0.75) 0%, rgba(8,8,18,0.45) 100%);
   -webkit-backdrop-filter: blur(8px);
@@ -211,12 +211,12 @@ canvas { display: block; }
 }
 #ship-select-header h1 {
   font-family: 'Orbitron', sans-serif; font-weight: 700;
-  font-size: 32px; margin: 0; letter-spacing: 6px; color: #ffaa00;
+  font-size: 24px; margin: 0; letter-spacing: 5px; color: #ffaa00;
   text-shadow: 0 0 24px rgba(255,170,0,0.35);
 }
 #ship-select-header h2 {
   font-family: 'Rajdhani', sans-serif; font-weight: 500;
-  font-size: 13px; margin: 4px 0 0; color: #888; letter-spacing: 3px;
+  font-size: 11px; margin: 3px 0 0; color: #888; letter-spacing: 2.5px;
   text-transform: uppercase;
 }
 #ship-select-body {
@@ -224,29 +224,29 @@ canvas { display: block; }
 }
 /* Left: stacked ship-name list */
 #ship-list {
-  width: 240px; flex-shrink: 0;
-  padding: 18px 14px; overflow-y: auto;
+  width: 200px; flex-shrink: 0;
+  padding: 14px 12px; overflow-y: auto;
   border-right: 1px solid rgba(80,80,120,0.25);
 }
 .ship-list-entry {
-  padding: 14px 16px; margin-bottom: 8px;
+  padding: 10px 14px; margin-bottom: 6px;
   border: 1px solid rgba(80,80,120,0.35); border-radius: 6px;
   background: rgba(20,20,40,0.45);
   -webkit-backdrop-filter: blur(6px);
           backdrop-filter: blur(6px);
   color: #ddd;
   font-family: 'Rajdhani', sans-serif;
-  font-size: 15px; letter-spacing: 1.5px; cursor: pointer;
+  font-size: 12px; letter-spacing: 1.2px; cursor: pointer;
   transition: all 0.18s ease; pointer-events: all;
   display: flex; flex-direction: column;
 }
 .ship-list-entry .sle-name {
   font-family: 'Orbitron', sans-serif; font-weight: 600;
-  color: #ffaa00; font-size: 16px; letter-spacing: 2px;
+  color: #ffaa00; font-size: 13px; letter-spacing: 1.6px;
 }
 .ship-list-entry .sle-class {
   font-family: 'Rajdhani', sans-serif; font-weight: 500;
-  font-size: 11px; color: #888; margin-top: 3px; letter-spacing: 1.5px;
+  font-size: 9px; color: #888; margin-top: 2px; letter-spacing: 1.2px;
   text-transform: uppercase;
 }
 .ship-list-entry:hover {
@@ -277,19 +277,19 @@ canvas { display: block; }
     rgba(0,0,0,0) 100%);
 }
 #ship-preview-info {
-  width: 440px; flex-shrink: 0; display: flex; flex-direction: column;
+  width: 380px; flex-shrink: 0; display: flex; flex-direction: column;
   align-items: stretch; justify-content: center; text-align: center;
   padding: 0 8px;
 }
 #ship-preview-header { text-align: center; margin-bottom: 14px; }
 #ship-preview-name {
   font-family: 'Orbitron', sans-serif; font-weight: 700;
-  font-size: 34px; letter-spacing: 6px; color: #ffaa00;
+  font-size: 26px; letter-spacing: 5px; color: #ffaa00;
   text-shadow: 0 0 20px rgba(255,170,0,0.35);
 }
 #ship-preview-class {
   font-family: 'Rajdhani', sans-serif; font-weight: 500;
-  font-size: 13px; color: #aaa; letter-spacing: 3px; margin-top: 4px;
+  font-size: 11px; color: #aaa; letter-spacing: 2.5px; margin-top: 3px;
   text-transform: uppercase;
 }
 #ship-preview-stats {
@@ -298,36 +298,36 @@ canvas { display: block; }
 }
 .sp-stat {
   font-family: 'Rajdhani', sans-serif; font-weight: 500;
-  font-size: 13px; letter-spacing: 1.5px; color: #aaa;
+  font-size: 11px; letter-spacing: 1.2px; color: #aaa;
   display: flex; justify-content: space-between;
-  padding: 8px 12px; background: rgba(20,20,40,0.35);
+  padding: 6px 10px; background: rgba(20,20,40,0.35);
   -webkit-backdrop-filter: blur(4px);
           backdrop-filter: blur(4px);
   border-left: 2px solid rgba(80,80,120,0.5); border-radius: 0 4px 4px 0;
   text-transform: uppercase;
 }
-.sp-stat .sp-val { color: #fff; font-weight: 700; letter-spacing: 1px; }
+.sp-stat .sp-val { color: #fff; font-weight: 700; letter-spacing: 0.8px; }
 #ship-preview-weapon {
-  color: #66bbff; font-size: 13px; letter-spacing: 1px; margin-top: 6px;
+  color: #66bbff; font-size: 11px; letter-spacing: 0.8px; margin-top: 5px;
   text-align: center;
 }
 #ship-preview-abilities {
-  color: #66cc66; font-size: 11px; letter-spacing: 1px;
+  color: #66cc66; font-size: 10px; letter-spacing: 0.8px;
   text-align: center; margin-top: 2px;
 }
 #ship-preview-core {
-  color: #ffaa00; font-size: 11px; letter-spacing: 1px;
-  text-align: center; margin-top: 4px; opacity: 0.8;
+  color: #ffaa00; font-size: 10px; letter-spacing: 0.8px;
+  text-align: center; margin-top: 3px; opacity: 0.8;
 }
 #ship-preview-confirm {
-  margin-top: 22px; padding: 14px 40px;
+  margin-top: 18px; padding: 11px 32px;
   background: rgba(255,170,0,0.12);
   -webkit-backdrop-filter: blur(8px) saturate(140%);
           backdrop-filter: blur(8px) saturate(140%);
   border: 2px solid #ffaa00; border-radius: 6px;
   color: #ffaa00;
   font-family: 'Orbitron', sans-serif; font-weight: 700;
-  font-size: 14px; letter-spacing: 4px;
+  font-size: 12px; letter-spacing: 3.5px;
   text-transform: uppercase;
   cursor: pointer; transition: all 0.18s ease; pointer-events: all;
   align-self: center;
@@ -352,16 +352,16 @@ canvas { display: block; }
   min-height: 56px;
 }
 #teammates-strip .strip-label {
-  font-size: 11px; color: #888; letter-spacing: 2px; margin-right: 10px;
+  font-size: 10px; color: #888; letter-spacing: 1.6px; margin-right: 8px;
   flex-shrink: 0;
 }
 .teammate-chip {
-  display: flex; flex-direction: column; padding: 6px 12px;
+  display: flex; flex-direction: column; padding: 5px 10px;
   background: rgba(20,20,40,0.6); border: 1px solid rgba(80,80,120,0.35);
-  min-width: 130px; flex-shrink: 0;
+  min-width: 110px; flex-shrink: 0;
 }
-.teammate-chip .tm-name { color: #ddd; font-size: 12px; letter-spacing: 1px; font-weight: bold; }
-.teammate-chip .tm-ship { color: #ffaa00; font-size: 10px; letter-spacing: 1px; margin-top: 2px; }
+.teammate-chip .tm-name { color: #ddd; font-size: 11px; letter-spacing: 0.8px; font-weight: bold; }
+.teammate-chip .tm-ship { color: #ffaa00; font-size: 9px; letter-spacing: 0.8px; margin-top: 2px; }
 .teammate-chip.you { border-color: #ffaa00; background: rgba(50,40,15,0.6); }
 .teammate-chip.empty .tm-ship { color: #555; }
 /* Countdown overlay shown while ship-select is still visible. */
@@ -4517,6 +4517,21 @@ function getWallNormal(point) {
 // game HTML. faceFlip rotates 180° around Y so the model's forward aligns with
 // the game's -Z forward axis. scaleMult nudges the auto-fit-to-hullLength
 // scale per model to compensate for bbox padding (wings inflate the bbox).
+//
+// VISUAL_SCALE_BOOST is a SECOND multiplier applied uniformly on top of every
+// per-model scaleMult. It exists because the chassis dimensions
+// (hullWidth/hullHeight/hullLength) plus the collision math (sphere radius =
+// hullLength * 0.4 for tunnel fit, * 0.45 for ship-vs-ship) describe a
+// collision sphere whose DIAMETER is ~80% of hullLength, while the model is
+// auto-fitted so its LONGEST axis = hullLength * scaleMult. With scaleMult
+// ~1.0 the body ends up visually thinner (especially in height) than the hit
+// sphere, so projectiles and ships register hits before the body "looks" hit.
+// Boosting the visual scale by a uniform factor makes the ship bodies fill
+// the existing collision sphere without changing any collision math
+// (collisionRadius reads chassis.hullLength directly, never the model scale).
+// Tunnel fit is therefore preserved exactly. Tweak this single knob to
+// globally grow/shrink ship bodies relative to their collision sphere.
+const VISUAL_SCALE_BOOST = 1.30;
 const SHIP_MODELS = {
   PUNCTURE: { url: 'ships/puncture.glb', faceFlip: true,  scaleMult: 1.10 },
   SLAYER:     { url: 'ships/slayer.glb',     faceFlip: true,  scaleMult: 1.10 },
@@ -4550,7 +4565,7 @@ function preloadShipModels() {
         const box = new THREE.Box3().setFromObject(proto);
         const sz = box.getSize(new THREE.Vector3());
         const longest = Math.max(sz.x, sz.y, sz.z) || 1;
-        const baseScale = (targetLen / longest) * (spec.scaleMult || 1.0);
+        const baseScale = (targetLen / longest) * (spec.scaleMult || 1.0) * VISUAL_SCALE_BOOST;
         proto.scale.setScalar(baseScale);
         // Re-center on origin so plumes at +Z sit flush with tail.
         const box2 = new THREE.Box3().setFromObject(proto);
@@ -5319,6 +5334,11 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
   // a scene light per ship.
   const prevUD = group.userData || {};
   group.userData = Object.assign(prevUD, { engineMesh, shieldMesh: shield, engineGlows, enginePlumes, barrelMeshes, panelGlowMat, engineGlowMat });
+  // Same VISUAL_SCALE_BOOST applied to the GLB-backed path; keeps the
+  // procedural fallback ships visually consistent in size with the
+  // model-backed ones. Collision math uses chassis.hullLength directly,
+  // unaffected by this scale.
+  group.scale.setScalar(VISUAL_SCALE_BOOST);
   return group;
 }
 
@@ -6215,8 +6235,17 @@ class Projectile {
     this.age = 0;
     this.bounceCount = 0;
 
-    const geo = new THREE.SphereGeometry(3, 6, 4);
-    const mat = new THREE.MeshBasicMaterial({ color: color || 0xffaa00 });
+    // (v6.7) Electric look: the bright bead at the head is itself additive
+    // (not opaque flat shading) so it reads as an energy core sitting inside
+    // the wider halo and outer haze. Slightly smaller than the previous solid
+    // sphere because the additive layers give the projectile its visual
+    // weight; the core is just the white-hot center.
+    const geo = new THREE.SphereGeometry(2.2, 8, 6);
+    const mat = new THREE.MeshBasicMaterial({
+      color: color || 0xffaa00,
+      transparent: true, opacity: 1.0,
+      blending: THREE.AdditiveBlending, depthWrite: false
+    });
     this.mesh = new THREE.Mesh(geo, mat);
     this.mesh.position.copy(origin);
     scene.add(this.mesh);
@@ -6255,12 +6284,92 @@ class Projectile {
     scene.add(this.trail);
     this.trailTimer = 0;
 
-    // Glow trail (wider, softer, brighter so post-bloom catches it)
-    const glowGeo = new THREE.SphereGeometry(7, 6, 4);
-    const glowMat = new THREE.MeshBasicMaterial({ color: this.trailColor, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending, depthWrite: false });
+    // --- Inner glow halo (wider, softer; post-bloom catches it) ---
+    const glowGeo = new THREE.SphereGeometry(7, 8, 6);
+    const glowMat = new THREE.MeshBasicMaterial({ color: this.trailColor, transparent: true, opacity: 0.65, blending: THREE.AdditiveBlending, depthWrite: false });
     this.glowMesh = new THREE.Mesh(glowGeo, glowMat);
     this.glowMesh.position.copy(origin);
     scene.add(this.glowMesh);
+
+    // --- Outer volumetric haze (much wider, very soft) ---
+    // Reads as the "atmospheric" ring around an energy ball ; gives the
+    // projectile a sense of being charged with light rather than just being a
+    // colored marble with a halo. Low opacity + lots of radius = volumetric
+    // body without saturating the frame.
+    const hazeGeo = new THREE.SphereGeometry(15, 10, 8);
+    const hazeMat = new THREE.MeshBasicMaterial({ color: this.trailColor, transparent: true, opacity: 0.16, blending: THREE.AdditiveBlending, depthWrite: false });
+    this.hazeMesh = new THREE.Mesh(hazeGeo, hazeMat);
+    this.hazeMesh.position.copy(origin);
+    scene.add(this.hazeMesh);
+
+    // --- Tube ribbon trail (Effect 07) ---
+    // A camera-facing billboarded ribbon strung along the trail's vertex
+    // history. Two ribbon vertices per trail point (one each side of the path,
+    // perpendicular to both the trail direction and the camera-to-point vector)
+    // give the trail visible volumetric width that always reads from any
+    // viewing angle. Width tapers from full at the head to ~30% at the tail
+    // tip, and the per-vertex color fades quadratically from full weapon-color
+    // at the head to (0,0,0) at the tail tip ; with additive blending,
+    // (0,0,0) contributes nothing, so the trail visually fades into nothing
+    // at its tip rather than ending in a hard edge.
+    //
+    // The geometry is pre-allocated once with fixed vertex/index counts so
+    // every frame we just rewrite the position buffer (no GC churn). Indices
+    // are static (segment connectivity never changes); colors are static
+    // (head-to-tail fade is a property of vertex index, not time).
+    this.trailRibbonBaseWidth = 5.5;
+    this.trailRibbonPositions = new Float32Array(trailSegs * 2 * 3);
+    const ribbonColors = new Float32Array(trailSegs * 2 * 3);
+    const ribbonHeadCol = new THREE.Color(this.trailColor);
+    for (let i = 0; i < trailSegs; i++) {
+      const tt = 1.0 - (i / (trailSegs - 1)); // 1 at head, 0 at tail tip
+      const fade = tt * tt; // quadratic falloff: bright head, soft fade-out tail
+      const r = ribbonHeadCol.r * fade;
+      const g = ribbonHeadCol.g * fade;
+      const b = ribbonHeadCol.b * fade;
+      // Both ribbon vertices at this trail point share the same color
+      ribbonColors[(i * 2)     * 3]     = r;
+      ribbonColors[(i * 2)     * 3 + 1] = g;
+      ribbonColors[(i * 2)     * 3 + 2] = b;
+      ribbonColors[(i * 2 + 1) * 3]     = r;
+      ribbonColors[(i * 2 + 1) * 3 + 1] = g;
+      ribbonColors[(i * 2 + 1) * 3 + 2] = b;
+    }
+    const ribbonIndices = new Uint16Array((trailSegs - 1) * 6);
+    for (let i = 0; i < trailSegs - 1; i++) {
+      const a = i * 2;          // this segment, "above" side
+      const b = i * 2 + 1;      // this segment, "below" side
+      const c = (i + 1) * 2;    // next segment, "above"
+      const d = (i + 1) * 2 + 1;// next segment, "below"
+      // Quad as two triangles, wound consistently
+      ribbonIndices[i * 6]     = a;
+      ribbonIndices[i * 6 + 1] = b;
+      ribbonIndices[i * 6 + 2] = c;
+      ribbonIndices[i * 6 + 3] = b;
+      ribbonIndices[i * 6 + 4] = d;
+      ribbonIndices[i * 6 + 5] = c;
+    }
+    const ribbonGeo = new THREE.BufferGeometry();
+    ribbonGeo.setAttribute('position', new THREE.BufferAttribute(this.trailRibbonPositions, 3));
+    ribbonGeo.setAttribute('color', new THREE.BufferAttribute(ribbonColors, 3));
+    ribbonGeo.setIndex(new THREE.BufferAttribute(ribbonIndices, 1));
+    const ribbonMat = new THREE.MeshBasicMaterial({
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      side: THREE.DoubleSide
+    });
+    this.trailRibbon = new THREE.Mesh(ribbonGeo, ribbonMat);
+    this.trailRibbon.frustumCulled = false; // we update the bounds implicitly each frame
+    scene.add(this.trailRibbon);
+
+    // --- Per-projectile electric arc emitter ---
+    // Periodic mini lightning bolts crackle outward from the projectile so it
+    // reads as an unstable charged round. Skipped for projectiles that already
+    // carry their own arc system (Arc Wave) so we don't double-spawn arcs.
+    this.electricArcTimer = 0.05 + Math.random() * 0.10;
   }
 
   update(dt) {
@@ -6346,22 +6455,118 @@ class Projectile {
       positions[2] = this.position.z;
       this.trail.geometry.attributes.position.needsUpdate = true;
     }
-    // Update glow mesh position
+    // --- Electric core: pulse the bright additive bead. The base sine pulse
+    // is mixed with a small random jitter so the head reads as live and
+    // unstable rather than a steady metronome. ---
+    if (this.mesh) {
+      const corePulse = 1 + Math.sin(this.age * 28) * 0.18 + (Math.random() - 0.5) * 0.10;
+      this.mesh.scale.setScalar(corePulse);
+    }
+    // --- Inner glow halo: stronger flicker (sine + tighter random jitter)
+    // so the halo edge reads as crackling. ---
     if (this.glowMesh) {
       this.glowMesh.position.copy(this.position);
-      // Pulse glow slightly
-      const pulse = 1 + Math.sin(this.age * 20) * 0.15;
-      this.glowMesh.scale.setScalar(pulse);
+      const haloFlicker = 1 + Math.sin(this.age * 22) * 0.18 + (Math.random() - 0.5) * 0.18;
+      this.glowMesh.scale.setScalar(haloFlicker);
     }
-    // Emit trail particles (sparse; weapon color)
-    if (Math.random() < 0.3) {
+    // --- Outer volumetric haze: slow, smooth pulse (no random jitter) so
+    // the wide shell reads as the projectile breathing while the inner
+    // layers do the fast electric crackle. ---
+    if (this.hazeMesh) {
+      this.hazeMesh.position.copy(this.position);
+      const hazePulse = 1 + Math.sin(this.age * 8) * 0.10;
+      this.hazeMesh.scale.setScalar(hazePulse);
+    }
+    // --- Tube ribbon trail update ---
+    // For each trail history point, place two ribbon vertices perpendicular
+    // to (trailDir × camDir) at a tapered width. The ribbon always faces
+    // the camera so it reads as a continuous wide streak from any angle,
+    // and width shrinks from baseWidth at the head to ~30% at the tail tip
+    // so the silhouette tapers in addition to the per-vertex color fade.
+    if (this.trailRibbon && this.trailRibbonPositions) {
+      const linePos = this.trail.geometry.attributes.position.array;
+      const ribbonPos = this.trailRibbonPositions;
+      const camPos = camera.position;
+      const segs = this.trailSegs;
+      const baseW = this.trailRibbonBaseWidth;
+      for (let i = 0; i < segs; i++) {
+        const px = linePos[i * 3];
+        const py = linePos[i * 3 + 1];
+        const pz = linePos[i * 3 + 2];
+        // Trail direction at this point: forward difference, or backward
+        // difference at the tail end so the last vertex still has a valid
+        // axis to compute the perpendicular against.
+        let dx, dy, dz;
+        if (i < segs - 1) {
+          dx = linePos[(i + 1) * 3]     - px;
+          dy = linePos[(i + 1) * 3 + 1] - py;
+          dz = linePos[(i + 1) * 3 + 2] - pz;
+        } else {
+          dx = px - linePos[(i - 1) * 3];
+          dy = py - linePos[(i - 1) * 3 + 1];
+          dz = pz - linePos[(i - 1) * 3 + 2];
+        }
+        // Camera-to-point direction
+        const tcx = camPos.x - px;
+        const tcy = camPos.y - py;
+        const tcz = camPos.z - pz;
+        // Perpendicular axis = trailDir × cameraDir (lies in the screen plane
+        // at this point, regardless of view angle, so the ribbon is always
+        // visible as a flat strip facing the camera).
+        let nx = dy * tcz - dz * tcy;
+        let ny = dz * tcx - dx * tcz;
+        let nz = dx * tcy - dy * tcx;
+        const nlen = Math.sqrt(nx * nx + ny * ny + nz * nz);
+        if (nlen > 1e-4) {
+          nx /= nlen; ny /= nlen; nz /= nlen;
+        } else {
+          // Degenerate (looking straight down the trail): pick a stable axis
+          nx = 1; ny = 0; nz = 0;
+        }
+        // Width taper: full at head (i=0), 30% at tail tip (i=segs-1)
+        const tt = 1.0 - (i / (segs - 1));
+        const w = baseW * (0.30 + 0.70 * tt);
+        // Above-side vertex
+        ribbonPos[(i * 2) * 3]     = px + nx * w;
+        ribbonPos[(i * 2) * 3 + 1] = py + ny * w;
+        ribbonPos[(i * 2) * 3 + 2] = pz + nz * w;
+        // Below-side vertex
+        ribbonPos[(i * 2 + 1) * 3]     = px - nx * w;
+        ribbonPos[(i * 2 + 1) * 3 + 1] = py - ny * w;
+        ribbonPos[(i * 2 + 1) * 3 + 2] = pz - nz * w;
+      }
+      this.trailRibbon.geometry.attributes.position.needsUpdate = true;
+    }
+    // --- Periodic mini lightning arc crackling off the projectile. Skipped
+    // for projectiles that own their own arc system (Arc Wave) so the two
+    // emitters don't compound into a strobing mess. Every fired arc is short
+    // (50..130 unit reach), thin, dies in ~80 ms, and uses the projectile's
+    // weapon color so each loadout keeps its visual identity. ---
+    if (!this.isArcWave) {
+      this.electricArcTimer -= dt;
+      if (this.electricArcTimer <= 0) {
+        const arcLen = 50 + Math.random() * 80;
+        const arcEnd = this.position.clone().add(new THREE.Vector3(
+          (Math.random() - 0.5) * arcLen,
+          (Math.random() - 0.5) * arcLen,
+          (Math.random() - 0.5) * arcLen
+        ));
+        spawnLightningBolt(this.position, arcEnd, this.trailColor, 0.08, 1, 0.9);
+        this.electricArcTimer = 0.07 + Math.random() * 0.12; // ~5-9 bolts/sec
+      }
+    }
+    // Emit trail particles. Bumped from 30% to 55% so the trail looks alive
+    // with sparks; mix weapon color with white-hot accents so the trail
+    // reads as charged plasma rather than uniform colored dust.
+    if (Math.random() < 0.55) {
+      const useWhite = Math.random() < 0.35;
       game.particles.push({
         position: this.position.clone(),
-        velocity: new THREE.Vector3((Math.random()-0.5)*20, (Math.random()-0.5)*20, (Math.random()-0.5)*20),
-        life: 0.1 + Math.random() * 0.1,
-        maxLife: 0.2,
-        color: this.trailColor,
-        size: 1.5 + Math.random()
+        velocity: new THREE.Vector3((Math.random()-0.5)*30, (Math.random()-0.5)*30, (Math.random()-0.5)*30),
+        life: 0.10 + Math.random() * 0.12,
+        maxLife: 0.22,
+        color: useWhite ? 0xffffff : this.trailColor,
+        size: 1.4 + Math.random() * 1.2
       });
     }
 
@@ -6555,9 +6760,31 @@ class Projectile {
 
   destroy() {
     this.alive = false;
-    if (this.mesh.parent) scene.remove(this.mesh);
-    if (this.trail.parent) scene.remove(this.trail);
-    if (this.glowMesh && this.glowMesh.parent) { scene.remove(this.glowMesh); this.glowMesh.geometry.dispose(); this.glowMesh.material.dispose(); }
+    if (this.mesh && this.mesh.parent) {
+      scene.remove(this.mesh);
+      if (this.mesh.geometry) this.mesh.geometry.dispose();
+      if (this.mesh.material) this.mesh.material.dispose();
+    }
+    if (this.trail && this.trail.parent) {
+      scene.remove(this.trail);
+      if (this.trail.geometry) this.trail.geometry.dispose();
+      if (this.trail.material) this.trail.material.dispose();
+    }
+    if (this.glowMesh && this.glowMesh.parent) {
+      scene.remove(this.glowMesh);
+      this.glowMesh.geometry.dispose();
+      this.glowMesh.material.dispose();
+    }
+    if (this.hazeMesh && this.hazeMesh.parent) {
+      scene.remove(this.hazeMesh);
+      this.hazeMesh.geometry.dispose();
+      this.hazeMesh.material.dispose();
+    }
+    if (this.trailRibbon && this.trailRibbon.parent) {
+      scene.remove(this.trailRibbon);
+      if (this.trailRibbon.geometry) this.trailRibbon.geometry.dispose();
+      if (this.trailRibbon.material) this.trailRibbon.material.dispose();
+    }
     spawnExplosion(this.position, 15);
   }
 }
@@ -8354,27 +8581,45 @@ function updateOrganics(dt) {
 // main-thread shader-compile stalls that showed up as 400ms+ frames in the
 // 134506 trace during combat. This also removes ~80 geometry + 80 material
 // allocations/sec at minigun rates, easing GC pressure.
-// Radii are set so scale.x == widthScale, scale.y == len, scale.z == widthScale
-// reproduces the old per-shape width/taper. Three.js CylinderGeometry's
-// default axis is +Y, so we use scale.y for length and scale.x/z for radius,
-// then rotate once at build time to align with lookAt's -Z forward convention.
-const _TRACER_CORE_GEO = new THREE.CylinderGeometry(1.2, 1.2, 1, 4, 1);
+// Radii are set so scale.x == widthScale, scale.y == widthScale, scale.z == len
+// reproduces the per-shape width/taper. Three.js CylinderGeometry's default
+// axis is +Y, so we rotate once at build time to align local +Z with lookAt's
+// -Z forward convention; after the rotation, scale.x/y == radius and
+// scale.z == length.
+//
+// (v6.7+) The radii here are deliberately small so the laser reads as a
+// THIN bright filament with a wide soft VOLUMETRIC haze around it, instead
+// of a thick rod. The four layers from inside to outside:
+//   CORE       (r=0.30)  pure white-hot pinprick, very short life
+//   BEAM       (r=0.70)  weapon-color thin filament, short life
+//   HAZE_INNER (r=2.50)  weapon-color soft sheath, additive, lingers
+//   HAZE_OUTER (r=7.00)  weapon-color very-soft outer cloud, additive,
+//                        lowest opacity, lingers longest -> volumetric body
+// The radial vertex count goes UP on the haze tubes (8/12 instead of 4/6) so
+// the soft glow reads round at oblique angles instead of faceted.
+const _TRACER_CORE_GEO = new THREE.CylinderGeometry(0.30, 0.30, 1, 4, 1);
 _TRACER_CORE_GEO.rotateX(Math.PI / 2);
-const _TRACER_BEAM_GEO = new THREE.CylinderGeometry(2.0, 1.5, 1, 4, 1);
+const _TRACER_BEAM_GEO = new THREE.CylinderGeometry(0.70, 0.50, 1, 6, 1);
 _TRACER_BEAM_GEO.rotateX(Math.PI / 2);
-const _TRACER_TAIL_INNER_GEO = new THREE.CylinderGeometry(3.0, 2.4, 1, 6, 1);
+const _TRACER_TAIL_INNER_GEO = new THREE.CylinderGeometry(2.50, 1.80, 1, 8, 1);
 _TRACER_TAIL_INNER_GEO.rotateX(Math.PI / 2);
-const _TRACER_TAIL_OUTER_GEO = new THREE.CylinderGeometry(7.0, 5.5, 1, 6, 1);
+const _TRACER_TAIL_OUTER_GEO = new THREE.CylinderGeometry(7.00, 5.00, 1, 12, 1);
 _TRACER_TAIL_OUTER_GEO.rotateX(Math.PI / 2);
 // Prototype materials. The two 'tracer' variants and the two 'tracerTail'
 // variants differ by depthWrite (false on tails, default-true on beams).
 // Every other flag (transparent, AdditiveBlending, fog-default) is identical
 // so Three.js assigns them the same program cache key family as the other
 // additive MeshBasic effects already warmed up in warmupCombatShaders.
+//
+// Opacity is tuned so the thin core and beam pop visually while the wider
+// haze tubes integrate softly without smearing over the whole frame. Inner
+// haze ~0.30, outer haze ~0.08 ; the wide outer halo is what gives the beam
+// its volumetric body even though it never gets bright enough on its own to
+// read as a solid object.
 const _TRACER_CORE_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending });
-const _TRACER_BEAM_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
-const _TRACER_TAIL_INNER_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false });
-const _TRACER_TAIL_OUTER_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false });
+const _TRACER_BEAM_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending });
+const _TRACER_TAIL_INNER_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.30, blending: THREE.AdditiveBlending, depthWrite: false });
+const _TRACER_TAIL_OUTER_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending, depthWrite: false });
 
 // Internal helper: spawn one tracer streak along (fromVec -> toVec).
 // spawnTracer() routes player-side shots through two calls to this (one
@@ -8405,17 +8650,17 @@ function _spawnSingleTracer(fromVec, toVec, color, widthScale) {
     game.effects.push({ mesh, lifetime, age: 0, type });
   }
 
-  // --- Hot core beam (thin, bright, very short-lived: the "shot" itself) ---
-  _makeShape(_TRACER_CORE_GEO, _TRACER_CORE_MAT_PROTO, 0xffffff, 1.0, 0.05, 'tracer');
-  // --- Main beam (weapon color, medium width) ---
-  _makeShape(_TRACER_BEAM_GEO, _TRACER_BEAM_MAT_PROTO, color, 0.9, 0.10, 'tracer');
-  // --- Ethereal tail: two nested additive tubes that linger and taper.
-  // The inner tail is tighter and fades faster; the outer tail is wide and
-  // wispy, fading over ~0.45s so the beam reads as a lingering ribbon of
-  // light rather than a single bright slice. Additive + depthWrite:false so
-  // the trail reads as emitted light, not a solid cylinder.
-  _makeShape(_TRACER_TAIL_INNER_GEO, _TRACER_TAIL_INNER_MAT_PROTO, color, 0.5, 0.28, 'tracerTail');
-  _makeShape(_TRACER_TAIL_OUTER_GEO, _TRACER_TAIL_OUTER_MAT_PROTO, color, 0.18, 0.45, 'tracerTail');
+  // --- Hot core (white-hot pinprick, very short-lived: the "shot" itself) ---
+  _makeShape(_TRACER_CORE_GEO, _TRACER_CORE_MAT_PROTO, 0xffffff, 1.0, 0.06, 'tracer');
+  // --- Beam (weapon color, thin filament) ---
+  _makeShape(_TRACER_BEAM_GEO, _TRACER_BEAM_MAT_PROTO, color, 0.95, 0.12, 'tracer');
+  // --- Volumetric haze: two nested additive tubes that linger and taper.
+  // The inner haze is tighter and fades faster; the outer haze is wide and
+  // wispy, fading over ~0.55s so the beam reads as a lingering volumetric
+  // shaft of light around the thin filament. Additive + depthWrite:false
+  // so the haze reads as emitted light through air, not a solid cylinder.
+  _makeShape(_TRACER_TAIL_INNER_GEO, _TRACER_TAIL_INNER_MAT_PROTO, color, 0.30, 0.32, 'tracerTail');
+  _makeShape(_TRACER_TAIL_OUTER_GEO, _TRACER_TAIL_OUTER_MAT_PROTO, color, 0.08, 0.55, 'tracerTail');
 
   // --- Tracer sparkles along the beam (trace of dust) ---
   const particleCount = Math.min(Math.ceil(len / 400), 3);
@@ -8441,21 +8686,20 @@ function _spawnSingleTracer(fromVec, toVec, color, widthScale) {
 function spawnTracer(from, to, color) {
   color = color || 0xffff00;
   // Player-side shots: split into two tracers that originate at the left
-  // and right arm positions and converge on the target. With the camera
+  // and right painted barrel tips and converge on the target. With the camera
   // sitting right at player.position, a single centered tracer paints its
   // tube interior across the middle of the screen (see T3.10). Two offset
-  // tracers angle inward, leaving the center clear and forming a visible
-  // triangle (left arm, right arm, target) pointed at what the player is
-  // shooting at, which also lines up with the two arm light-up effects
-  // already drawn on the HUD.
+  // tracers leave the center clear and form a visible "V" (left tip, right
+  // tip, target) pointed at what the player is shooting at; this is what
+  // produces the correct parallax read as the camera rotates ; the painted
+  // barrel tips stay locked to the cockpit art (fixed screen pixels) while
+  // the convergence point tracks the world target.
   const camDist = (typeof camera !== 'undefined' && camera) ? from.distanceTo(camera.position) : 9999;
   if (camDist < 80) {
     // Camera-local basis for building muzzle world positions from screen-space
-    // pixel targets. The goal is to place the two muzzle origins so they
-    // project to exact screen positions matching the cockpit frame's painted
-    // barrel tips (player.cockpitFrameMuzzle), giving a tracer triangle that
-    // lines up with the artwork. Falls back to a HUD-ring-angle approximation
-    // if the per-titan frame hasn't loaded yet.
+    // pixel targets. The two muzzle origins project to a fixed pair of screen
+    // pixels that line up with the painted barrel tips on every ship's
+    // cockpit frame (see TIP_FRAC_* constants below).
     const q = camera.quaternion;
     const right = new THREE.Vector3(1, 0, 0).applyQuaternion(q);
     const up = new THREE.Vector3(0, 1, 0).applyQuaternion(q);
@@ -8479,33 +8723,26 @@ function spawnTracer(from, to, color) {
         .add(up.clone().multiplyScalar(ndy * halfH))
         .add(fwd.clone().multiplyScalar(fwdOff));
     }
-    let leftMuzzle, rightMuzzle;
-    const fm = (typeof player !== 'undefined' && player) ? player.cockpitFrameMuzzle : null;
-    const frameOk = !!(fm && fm.left && fm.right
-      && Number.isFinite(fm.left.x) && Number.isFinite(fm.left.y)
-      && Number.isFinite(fm.right.x) && Number.isFinite(fm.right.y)
-      && fm.imgW && fm.imgH);
-    if (frameOk) {
-      // Use the detected barrel tips in screen space; the tracer will emerge
-      // exactly from the pointy part of the cockpit frame art.
-      const sL = frameImgToScreen(fm.left.x, fm.left.y, fm.imgW, fm.imgH, winW, winH);
-      const sR = frameImgToScreen(fm.right.x, fm.right.y, fm.imgW, fm.imgH, winW, winH);
-      leftMuzzle = screenToMuzzle(sL.x, sL.y);
-      rightMuzzle = screenToMuzzle(sR.x, sR.y);
-    } else {
-      // Fallback: approximate the HUD outer-ring angle if no frame is loaded.
-      const hudR = 275;
-      const angDown = 55 * Math.PI / 180;
-      const cxF = winW / 2;
-      const cyF = winH / 2;
-      const sxL = cxF - hudR * Math.cos(angDown);
-      const sxR = cxF + hudR * Math.cos(angDown);
-      const syLR = cyF + hudR * Math.sin(angDown);
-      leftMuzzle = screenToMuzzle(sxL, syLR);
-      rightMuzzle = screenToMuzzle(sxR, syLR);
-    }
-    // Each arm is a little thinner than the single-tracer default so the two
-    // converging streaks together don't exceed the old total visual weight.
+    // (v6.7) FIXED screen-space muzzle positions. Earlier passes alpha-scanned
+    // each ship's cockpit frame PNG to find its painted barrel tips, but that
+    // produced visibly different muzzle pixels per ship (some frames have
+    // cockpit detail above the actual barrels that the alpha scan locked onto
+    // first). The painted barrel tips across the existing frame art all sit in
+    // approximately the same place on screen, so we use a single hard-coded
+    // pair of screen-space tip positions for every ship. Tweak these constants
+    // if a later art revision moves the painted barrels.
+    const TIP_FRAC_X_LEFT  = 0.305; // fraction of viewport width
+    const TIP_FRAC_X_RIGHT = 0.695;
+    const TIP_FRAC_Y       = 0.680; // fraction of viewport height (same for both)
+    const sxL = winW * TIP_FRAC_X_LEFT;
+    const sxR = winW * TIP_FRAC_X_RIGHT;
+    const syLR = winH * TIP_FRAC_Y;
+    const leftMuzzle  = screenToMuzzle(sxL,  syLR);
+    const rightMuzzle = screenToMuzzle(sxR, syLR);
+    // Both tracers converge on the actual aim target so parallax tracks the
+    // world correctly as the camera rotates. Each beam is somewhat thinner
+    // than a single-tracer default so the two converging streaks together
+    // don't visually outweigh the old single-shot mass.
     _spawnSingleTracer(leftMuzzle, to, color, 0.85);
     _spawnSingleTracer(rightMuzzle, to, color, 0.85);
     return;
@@ -9142,13 +9379,23 @@ const _cockpitFrameCache = {}; // key -> { status: 'ok'|'missing', muzzle?: {...
 const _FRAME_CACHE_BUST = '?v=' + Date.now();
 const _cockpitFrameInFlight = {}; // key -> true while an Image() probe is loading
 
-// Alpha-channel scan to find where the two painted gun-barrel tips point. For
-// each half of the image (left half, right half) we sweep rows top-to-bottom in
-// the lower 2/3 of the image looking for the first row where a noticeable opaque
-// band appears; that's the painted tip. We then sample the next ~16 rows below
-// and take the median x-center so we lock onto the barrel's long axis, not a
-// single-pixel tip-corner. Returns { imgW, imgH, left: {x,y}, right: {x,y} } in
-// image-native coords, or null if either tip can't be found cleanly.
+// Alpha-channel scan to find where the two painted gun-barrel tips point AND
+// what direction the painted barrels are pointing. For each half of the image
+// (left half, right half) we:
+//   (1) Sweep rows top-to-bottom in the lower 2/3 looking for the first opaque
+//       band (the tip).
+//   (2) Sample a thin band immediately below the tip and median the horizontal
+//       centers to lock the tip's x onto the barrel axis (not a tip-corner).
+//   (3) Sample a SECOND band ~8% of imgH below the tip and median again to get
+//       a "base" point further down the same barrel. The (tip - base) vector
+//       is the painted barrel's apparent direction in image space.
+// The direction lets spawnTracer fire each beam ALONG the painted barrel rather
+// than always converging hard at screen center, so the lasers visually match
+// the angle the painted guns are drawn at.
+// Returns { imgW, imgH, left: {x,y,bx,by,dx,dy}, right: {...} } in image-native
+// coords (dx,dy is the unit-ish painted direction from base toward tip, so up
+// the screen-space barrel toward the muzzle), or null if either tip can't be
+// found cleanly.
 function detectFrameMuzzlePoints(img) {
   try {
     const iw = img.naturalWidth, ih = img.naturalHeight;
@@ -9159,6 +9406,20 @@ function detectFrameMuzzlePoints(img) {
     cx.drawImage(img, 0, 0);
     const data = cx.getImageData(0, 0, iw, ih).data;
     const MIN_RUN = Math.max(6, Math.floor(iw * 0.01)); // ignore specks smaller than ~1% wide
+    // Find the median x-center of the opaque run on a single row in [x0,x1).
+    // Returns null if no qualifying run exists.
+    const rowCenter = (y, x0, x1) => {
+      let rS = -1, rE = -1;
+      for (let x = x0; x < x1; x++) {
+        const a = data[(y * iw + x) * 4 + 3];
+        if (a > 40) {
+          if (rS < 0) rS = x;
+          rE = x;
+        }
+      }
+      if (rS < 0 || (rE - rS) < 1) return null;
+      return (rS + rE) / 2;
+    };
     const findTipInHalf = (x0, x1) => {
       const yStart = Math.floor(ih * 0.30);
       const yEnd = Math.floor(ih * 0.98);
@@ -9178,24 +9439,38 @@ function detectFrameMuzzlePoints(img) {
         }
       }
       if (tipY < 0) return null;
-      // Sample a band below the tip and median the horizontal centers.
-      const yOff = Math.min(Math.floor(ih * 0.015), yEnd - tipY);
-      const centers = [];
-      for (let y = tipY; y <= tipY + yOff; y++) {
-        let rS = -1, rE = -1;
-        for (let x = x0; x < x1; x++) {
-          const a = data[(y * iw + x) * 4 + 3];
-          if (a > 40) {
-            if (rS < 0) rS = x;
-            rE = x;
-          }
-        }
-        if (rS >= 0) centers.push((rS + rE) / 2);
+      // Tip band: thin strip (1.5% of imgH) immediately below the first opaque
+      // row; lock x onto the barrel's long axis.
+      const tipBandH = Math.min(Math.floor(ih * 0.015), yEnd - tipY);
+      const tipCenters = [];
+      for (let y = tipY; y <= tipY + tipBandH; y++) {
+        const c = rowCenter(y, x0, x1);
+        if (c !== null) tipCenters.push(c);
       }
-      if (centers.length === 0) return null;
-      centers.sort((a, b) => a - b);
-      const medX = centers[Math.floor(centers.length / 2)];
-      return { x: medX, y: tipY };
+      if (tipCenters.length === 0) return null;
+      tipCenters.sort((a, b) => a - b);
+      const tipX = tipCenters[Math.floor(tipCenters.length / 2)];
+      // Base band: thicker strip (2% of imgH) about 8% of imgH below the tip,
+      // far enough down the painted barrel to capture its true slope without
+      // hitting the cockpit-arm join.
+      const baseY0 = Math.min(yEnd, tipY + Math.floor(ih * 0.07));
+      const baseY1 = Math.min(yEnd, baseY0 + Math.floor(ih * 0.02));
+      const baseCenters = [];
+      for (let y = baseY0; y <= baseY1; y++) {
+        const c = rowCenter(y, x0, x1);
+        if (c !== null) baseCenters.push(c);
+      }
+      let bx = tipX, by = tipY + Math.floor(ih * 0.08);
+      if (baseCenters.length > 0) {
+        baseCenters.sort((a, b) => a - b);
+        bx = baseCenters[Math.floor(baseCenters.length / 2)];
+        by = (baseY0 + baseY1) / 2;
+      }
+      // Painted direction: from base up to tip (tip is "outward" along barrel).
+      const dx = tipX - bx;
+      const dy = tipY - by;
+      const dlen = Math.hypot(dx, dy) || 1;
+      return { x: tipX, y: tipY, bx: bx, by: by, dx: dx / dlen, dy: dy / dlen };
     };
     const halfW = Math.floor(iw / 2);
     const left = findTipInHalf(0, halfW);
@@ -15420,10 +15695,11 @@ function buildRoomGraphLevel(level) {
       // folds into the positive octant, scale by the reciprocal of |p|²,
       // translate by a golden-ratio triple. Returns the accumulated scale
       // factor `s`, which reads as luminosity: high where a point survives
-      // many iterations, low in the folds.
+      // many iterations, low in the folds. Iteration count was tuned to 9
+      // (was 8) in the wall-pattern lab session for slightly more detail.
       'float kaliIFS(vec3 p, vec3 off, float inv) {',
       '  float s = 1.0;',
-      '  for (int k = 0; k < 8; k++) {',
+      '  for (int k = 0; k < 9; k++) {',
       '    if (p.x + p.y < 0.0) p.xy = -p.yx;',
       '    if (p.x + p.z < 0.0) p.xz = -p.zx;',
       '    if (p.y + p.z < 0.0) p.yz = -p.zy;',
@@ -15434,33 +15710,66 @@ function buildRoomGraphLevel(level) {
       '  return s;',
       '}',
       // Cosmic fractal field evaluated from a world-space position, steered
-      // by the nearest-zone color. Three nested rings, each at phi-spaced
-      // scales, with a radial sin band so the pattern breathes around each
-      // "attractor". Returns an additive RGB glow that gets mixed into the
-      // wall's base color.
+      // by the nearest-zone color. Two nested rings (was three; tuned in the
+      // lab session for a cleaner read), each at phi-spaced scales, with a
+      // radial sin band so the pattern breathes around each "attractor".
+      // The spatial scale slowly oscillates between 0.0026 and 0.0033 so
+      // the fractal "breathes" through close-up detail and farther-out
+      // structure as the round progresses; period ~157 s. Returns an
+      // additive RGB glow that gets mixed into the wall's base color.
       'vec3 cosmicField(vec3 wp, vec3 zoneC, float tt) {',
-      '  vec3 off = vec3(1.5, 1.618, 1.0);',
-      '  vec3 p = wp * 0.0028;',
-      '  float ca = cos(tt * 0.12), sa = sin(tt * 0.12);',
+      '  vec3 off = vec3(2.03, 2.65, 2.51);',
+      '  float scale = mix(0.0026, 0.0033, 0.5 + 0.5 * sin(tt * 0.04));',
+      '  vec3 p = wp * scale;',
+      '  float ca = cos(tt * 0.08), sa = sin(tt * 0.08);',
       '  p = vec3(ca * p.x - sa * p.z, p.y, sa * p.x + ca * p.z);',
       '  float baseHue = rgbHue(zoneC);',
       '  vec3 accum = vec3(0.0);',
-      '  for (int ring = 0; ring < 3; ring++) {',
+      '  for (int ring = 0; ring < 2; ring++) {',
       '    float rf = float(ring);',
       '    float sMul = pow(1.618, 1.4 - rf * 0.7);',
       '    vec3 pp = p * sMul;',
-      '    float s = kaliIFS(pp, off, 9.0 + rf * 0.4);',
+      '    float s = kaliIFS(pp, off, 8.1 + rf * 0.4);',
       '    float phase = atan(pp.x, pp.y);',
       '    float q = 0.5 + 0.5 * sin(phase * 3.0 + tt * 0.3 + rf * 1.7);',
       '    float band = q < 0.5 ? 0.65 : 1.0;',
-      '    float val = clamp(s / 380.0 * (0.35 + 0.80 * band), 0.0, 4.5);',
-      '    float hue = fract(baseHue + rf * 0.12 + phase * 0.05 + tt * 0.02);',
-      '    float sat = 0.55 + rf * 0.10;',
+      '    float val = clamp(s / 690.0 * (0.35 + 0.80 * band), 0.0, 4.5);',
+      '    float hue = fract(baseHue + rf * 0.28 + phase * 0.05 + tt * 0.02);',
+      '    float sat = 0.75 + rf * 0.10;',
       '    accum += hsv(hue, sat, val) * pow(0.75, rf);',
       '  }',
       '  return accum;',
       '}',
       'void main() {',
+      // ============================================================
+      // ---- Tunable wall constants (play with these freely) -------
+      // ============================================================
+      // Static dark floor. Lifts pure-black corners so AO doesn't
+      // crush the wall to nothing in dark-palette rooms.
+      '  vec3  K_DARK_BASE         = vec3(0.046, 0.033, 0.035);',
+      // How much of the room's palette color tints the dark base.
+      // Higher = dark rooms read with more of their hue at the base
+      // brightness; lower = relies more on the fractal for color.
+      '  float K_ZONE_TINT         = 0.22;',
+      // Multiplier on the cosmic Kali IFS additive contribution.
+      // Higher = louder fractal, lower = subtler texture.
+      '  float K_COSMIC_BRIGHTNESS = 4.85;',
+      // Fresnel rim strength: how strongly grazing-angle pixels
+      // pick up the zone color. Bigger rims help dim rooms.
+      '  float K_FRESNEL_STRENGTH  = 1.55;',
+      // Diffuse multiplier range. Final diffuse term =
+      //   K_DIFF_MIN + (1 - K_DIFF_MIN) * max(dot(N, V), 0)
+      // Higher MIN keeps shadowed sides from going pitch black.
+      '  float K_DIFF_MIN          = 0.89;',
+      // AO clamp: AO multiplier never drops below this value, so
+      // even deeply concave corners keep some life.
+      '  float K_AO_FLOOR          = 0.17;',
+      // Hard minimum brightness floor (after all other math).
+      // Pre-fractal final c is max()ed with K_FLOOR * zoneColor so
+      // every pixel gets at least a faint zone-color glow even if
+      // the fractal happens to be at zero in this position.
+      '  float K_FLOOR             = 0.085;',
+      // ============================================================
       // Nearest room supplies the zone color and the local wall extent used
       // for the lower/upper half split.
       '  vec3 zoneColor = vec3(0.06, 0.08, 0.12);',
@@ -15477,8 +15786,9 @@ function buildRoomGraphLevel(level) {
       // surface gets placed along the local vertical axis, which is what we
       // want since the rooms/tunnels are rotationally symmetric.
       '  float heightFrac = clamp((vWorldPos.y - (nearC.y - nearR)) / (2.0 * nearR), 0.0, 1.0);',
-      // Base: very dark, slight zone tint. Kept dark so the bright fractal pops.
-      '  vec3 dark = vec3(0.010, 0.012, 0.022) + zoneColor * 0.20;',
+      // Base: dark floor + zone-color tint. K_ZONE_TINT controls how much
+      // hue the dark base carries from the room's palette color.
+      '  vec3 dark = K_DARK_BASE + zoneColor * K_ZONE_TINT;',
       '  vec3 c = dark;',
       // Cosmic Kali IFS fractal: the sole wall texture. Evaluated at the
       // vertex world position, steered by the zone color into a hue band,
@@ -15489,13 +15799,16 @@ function buildRoomGraphLevel(level) {
       '  float fracPulse = 0.92 + 0.12 * sin(time * 0.35);',
       '  float shimmer   = 0.90 + 0.18 * sin(time * 1.10 + vWorldPos.x * 0.003 + vWorldPos.z * 0.003);',
       '  vec3 cosmic = cosmicField(vWorldPos, zoneColor, time);',
-      '  c += cosmic * fracPulse * shimmer * 3.4;',
+      '  c += cosmic * fracPulse * shimmer * K_COSMIC_BRIGHTNESS;',
       // Soft diffuse + rim so surfaces still read in 3D.
       '  vec3 vd = normalize(cameraPosition - vWorldPos);',
-      '  float diff = max(dot(vNormal, vd), 0.0) * 0.35 + 0.65;',
+      '  float diff = K_DIFF_MIN + (1.0 - K_DIFF_MIN) * max(dot(vNormal, vd), 0.0);',
       '  float fresnelFactor = pow(1.0 - abs(dot(vNormal, vd)), 3.0);',
-      '  c += zoneColor * 1.8 * fresnelFactor * 0.5;',
-      '  c *= diff * vAO;',
+      '  c += zoneColor * K_FRESNEL_STRENGTH * fresnelFactor;',
+      '  float aoTerm = mix(K_AO_FLOOR, 1.0, vAO);',
+      '  c *= diff * aoTerm;',
+      // Hard minimum so dark-palette rooms always retain some readability.
+      '  c = max(c, zoneColor * K_FLOOR);',
       // Upper half is one-way transparent: interior (front-face) fades toward
       // low alpha above heightFrac ~0.5 so players still see the starfield
       // through the top of any chamber. Back faces stay opaque. The fractal
@@ -15511,15 +15824,33 @@ function buildRoomGraphLevel(level) {
     ].join('\n');
 
     // Dynamic room uniforms (pad to 8 elements for shader array).
-    // Per-map palettes live on level.palette (8 hex colors, one per room slot;
-    // shader array is fixed at 8). Falls back to a neutral jewel-tone default
-    // if the active map didn't ship a palette.
+    // (v6.7+) ALL eight room slots now share the same wall color rather than
+    // each carrying its own palette entry. Each map's palette[0] supplies the
+    // BASE HUE for that map's overall identity ; everything else is the same
+    // value on every slot. The base hue is drifted through the full spectrum
+    // each frame inside gameLoop (see HUE_PERIOD below), so the whole map
+    // slowly rotates through the color wheel as the round progresses.
+    // legacy: palette[1..7] are no longer read by the wall shader. They're
+    // kept on the map definitions in case we want to re-enable per-room
+    // palettes later, but they have no current effect.
     const defaultPalette = [
       0x1a3050, 0x3a1010, 0x103a10, 0x351828, 0x183520, 0x2a2040, 0x1a4030, 0x402020
     ];
     const roomPalette = (level && Array.isArray(level.palette) && level.palette.length > 0)
       ? level.palette
       : defaultPalette;
+    // Palette brightness boost: lifts the source palette before the shader's
+    // dark-tint and AO collapse it. Tweak to globally brighten/darken walls.
+    const PALETTE_BOOST = 1.80;
+    // Stash the base hue/sat/lit components on the game so gameLoop can
+    // hue-rotate the wall each frame without re-deriving from the hex source.
+    const baseCol = new THREE.Color(roomPalette[0]);
+    const baseHsl = { h: 0, s: 0, l: 0 };
+    baseCol.getHSL(baseHsl);
+    game.wallBaseHue = baseHsl.h;     // base hue for this map (rotates around the wheel)
+    game.wallBaseSat = baseHsl.s;
+    game.wallBaseLit = baseHsl.l;
+    game.wallPaletteBoost = PALETTE_BOOST;
     const numRooms = Math.min(game.sdfRoomData.length, 8);
     const roomCentersArr = [];
     const roomColorsArr = [];
@@ -15528,7 +15859,14 @@ function buildRoomGraphLevel(level) {
       if (i < numRooms) {
         const r = game.sdfRoomData[i];
         roomCentersArr.push(new THREE.Vector3(r.x, r.y, r.z));
-        roomColorsArr.push(new THREE.Color(roomPalette[i % roomPalette.length]));
+        // Initialize all slots to the boosted base color. gameLoop will
+        // hue-rotate them every frame, but we seed them so the first frame
+        // before gameLoop ticks already shows the right wall color.
+        const startCol = new THREE.Color(roomPalette[0]);
+        startCol.r = Math.min(1.0, startCol.r * PALETTE_BOOST);
+        startCol.g = Math.min(1.0, startCol.g * PALETTE_BOOST);
+        startCol.b = Math.min(1.0, startCol.b * PALETTE_BOOST);
+        roomColorsArr.push(startCol);
         roomRadiiArr.push(r.r);
       } else {
         roomCentersArr.push(new THREE.Vector3(0, 99999, 0));
@@ -16057,7 +16395,33 @@ function gameLoop(timestamp) {
   game.time += game.deltaTime;
 
   // Update level shader time for vein animations
-  if (game.levelMaterial) game.levelMaterial.uniforms.time.value = game.time;
+  if (game.levelMaterial) {
+    game.levelMaterial.uniforms.time.value = game.time;
+
+    // Drift the wall's base hue around the color wheel so the whole map
+    // slowly rotates through the spectrum as the round progresses. All 8
+    // room slots get the same color (single-hue map, see the wall-uniform
+    // construction in createMeshFromPositions). HUE_PERIOD = full cycle in
+    // seconds; longer = more subtle drift.
+    const HUE_PERIOD = 240; // 4 minutes per full rotation
+    if (game.wallBaseHue !== undefined && game.levelMaterial.uniforms.roomColorsU) {
+      const driftedHue = (game.wallBaseHue + game.time / HUE_PERIOD) % 1;
+      const sat = game.wallBaseSat;
+      const lit = game.wallBaseLit;
+      const boost = game.wallPaletteBoost || 1.0;
+      const colors = game.levelMaterial.uniforms.roomColorsU.value;
+      // Compute once, write to every slot. Mutating each THREE.Color is fine
+      // because Three.js samples the array each draw; no needsUpdate flag
+      // is required for value-mutation on uniform arrays.
+      const tmp = new THREE.Color().setHSL(driftedHue, sat, lit);
+      const r = Math.min(1.0, tmp.r * boost);
+      const g = Math.min(1.0, tmp.g * boost);
+      const b = Math.min(1.0, tmp.b * boost);
+      for (let i = 0; i < colors.length; i++) {
+        colors[i].setRGB(r, g, b);
+      }
+    }
+  }
 
   // Poll gamepad every frame (before any state-based early return) so menu
   // buttons (Start/Back/D-pad) keep working while the ship-select overlay
