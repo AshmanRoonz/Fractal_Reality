@@ -123,6 +123,82 @@ This is the pump cycle applied to state correction. The convergence-emergence rh
 
 ---
 
+## Lobby and Match Lifecycle
+
+The per-tick packet covers in-game state only. A complete mesh also needs to coordinate the moments *before* the match (who is here, what they picked, when we start) and the moments *between* rounds (who won, what map next, who's still ready). These are low-rate event messages, not continuous state broadcasts; they fire on transitions, are acknowledged by all peers, and then go quiet.
+
+The v6.x desync class of bugs (one client thinks the round started, another is still in the lobby; one client thinks it picked PUNCTURE, another renders them as default; bots in different positions on every screen) is what happens when these events do not exist as first-class mesh messages. The combat packet alone cannot recover from a missed transition.
+
+### Lobby Events
+
+Each event is broadcast to all peers when its trigger fires, then the sender stops resending. Receivers update their local lobby model and re-render. Late joiners receive the current lobby state in the same join handshake that hands them the world state.
+
+| Event | Trigger | Payload | Notes |
+|---|---|---|---|
+| `lobby/hello` | Peer finishes WebRTC handshake | `{peerId, name, color}` | Carries display data the mesh layer doesn't know |
+| `lobby/loadout` | Player picks chassis or changes weapons | `{peerId, chassis, weaponA, weaponB, abilities[3]}` | Last write wins; rebroadcast on every change |
+| `lobby/team` | Player switches sides | `{peerId, team}` | Auto-balance is local UI; the wire just carries the choice |
+| `lobby/map_vote` | Player picks a map | `{peerId, mapId}` | Per-peer; resolved by plurality at start time |
+| `lobby/bot_request` | Player adds or removes a bot slot | `{slotId, action, difficulty?}` | Anyone may propose; majority of human peers confirms |
+| `lobby/ready` | Player toggles their ready flag | `{peerId, ready: bool}` | The critical one; flip to all-true triggers the start handshake |
+
+When `lobby/ready` flips to all-true (every connected human peer has `ready: true`), every peer independently runs the start handshake below. Nobody decides "we are starting"; the predicate "every peer ready" is a function each peer evaluates on its own copy of lobby state, and they all reach the same answer at the same tick because they all received the same `lobby/ready` packets.
+
+### The Start Handshake
+
+A deterministic four-step sequence with no privileged "host":
+
+1. **Proposal.** The peer with the lowest `peerId` (lexicographic order over WebRTC connection identifiers) emits `match/start_proposal {seed, mapId, startAt}`. `seed` is a random 64-bit number for procedural generation; `mapId` is the plurality winner of the map vote (ties broken by the lowest-`peerId`'s vote); `startAt` is a wall-clock timestamp roughly 3 seconds in the future.
+2. **Acknowledgement.** Every other peer responds with `match/start_ack {peerId}` within 1 second.
+3. **Confirmation.** Once all peers have acked, the proposer broadcasts `match/start_confirm {seed, mapId, startAt, spawnAssignments, botAssignments}`. `spawnAssignments` is `peerId → spawnPointId`, computed by the proposer from `seed` (deterministic, no negotiation). `botAssignments` is `botId → ownerPeerId` (see Bot Ownership below).
+4. **Countdown and start.** Every peer renders the countdown locally, ticking down to `startAt`. At `startAt`, every peer simultaneously leaves the lobby and enters the active simulation, ship at the assigned spawn point, bots seeded from `seed`.
+
+If a peer drops between proposal and confirmation, the proposal is voided and re-issued by the next-lowest `peerId`. The proposer is not "the host"; they are just the deterministic tie-breaker. After `startAt`, they have zero special privilege. Authority remains distributed.
+
+### Initial Position Sync
+
+`startAt` is the critical moment for position agreement. By the time every peer enters the simulation:
+
+- Their *own* ship is at `spawnAssignments[myPeerId]`, set locally.
+- Every *other* peer's ship is at `spawnAssignments[peerId]`, set locally from the confirmed map (no waiting for the first per-tick packet from that peer; the spawn point is the seed of interpolation).
+- Every *bot* is at the position derived from `(seed, botId)` (a pure function; everyone computes the same answer).
+
+The first per-tick packets arrive within ~15ms and from then on the normal interpolate-toward-truth loop runs. The startup handshake exists so the first 15ms of the match are not visually empty, and so a peer that drops the first per-tick packet doesn't see a teleport when the second arrives.
+
+### Round Transitions
+
+Within a match, round-end events are consensus-validated the same way kills are:
+
+- Any peer can issue `round/end_claim {winningTeam, lastKillId}`.
+- The quorum (3-5 lowest-latency peers to the active combatants) votes.
+- On consensus, every peer transitions to the round-end screen and a new start handshake runs for the next round (same map, new seed, new spawn assignments, possibly new bot owners).
+
+The same start-handshake machinery serves match-start, round-start, and rejoin-mid-match. One mechanism, three triggers.
+
+---
+
+## Bot Ownership
+
+Bots are simulated by client code, but in a mesh with no server, *exactly one* peer must own each bot's AI tick. Zero owners and the bot freezes. Multiple owners and six versions of the same bot diverge across screens (this was the v6.x bot desync).
+
+### Deterministic Assignment
+
+`match/start_confirm` carries `botAssignments: botId → ownerPeerId`. The proposer computes it: hash `(seed, botId)` modulo the sorted list of peer IDs, pick that peer. With 3 peers and 6 bots, each peer ends up owning ~2 bots, and every peer can verify the assignment by recomputing it. No negotiation is required at runtime.
+
+### Per-Tick Bot Broadcast
+
+Each owner broadcasts state for *their* bots using the same per-player packet format above, substituting `botId` for `peerId` and setting a flag bit so receivers know not to look up a peer entry. Receivers treat bot packets identically to peer packets: interpolate position, render, run hit detection. The fact that the packet originated from a peer simulating an NPC is invisible to the rendering layer.
+
+### Owner Handoff
+
+When the owner of a bot drops (WebRTC connection closes, or no bot packets received for 1 second), the next peer in the deterministic ordering takes over. The handoff requires no explicit message: every peer independently recomputes "who owns this bot now" using the same hash-mod-sorted-peers rule, and the right peer just starts broadcasting bot packets from the bot's last known state. The mesh self-heals; the bot does not freeze, teleport, or duplicate.
+
+### Bot Hits in the Quorum
+
+Bot-fired hits use the same quorum protocol as player hits, with the bot's owner casting the bot's vote (the bot has no peer, but the owner speaks for it). The consensus model stays uniform: every shooter, peer or bot, is voted on by the same nearby-low-latency set.
+
+---
+
 ## Hit Detection and Conflict Resolution
 
 ### The Problem

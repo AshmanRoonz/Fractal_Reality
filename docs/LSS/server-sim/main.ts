@@ -250,6 +250,7 @@ const server = Bun.serve<ClientData>({
           pitch:   clamp(toNum(p.pitch), -Math.PI / 2, Math.PI / 2),
           fire:    !!p.fire,
           abilityPress,
+          reload:  !!p.reload,    // v8.33: manual R-key reload edge.
           tick:    typeof p.tick === 'number' ? p.tick : undefined,
         };
         inputs.set(peerId, inp);

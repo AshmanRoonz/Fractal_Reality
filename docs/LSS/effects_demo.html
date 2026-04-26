@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LSS Effects Demo</title>
+<!--
+  Created: 2026-04-26
+  Last updated: 2026-04-26
+  Version: 1.0
+
+  Live preview of visual effects we could add to last_ship_sailing_sim.html.
+  Each card is its own Three.js scene + renderer; all using r128 (the same
+  version the game uses) so anything that runs here can be ported as-is.
+
+  Open in a browser; cards animate independently. Hover a card for the
+  effect's role + rough cost in lines.
+-->
+<style>
+  html, body { margin: 0; padding: 0; background: #03060c; color: #aac; font-family: 'Consolas', 'Monaco', monospace; }
+  body { padding: 24px 32px 64px 32px; }
+  h1 { margin: 0 0 6px 0; color: #d8e8ff; font-weight: 300; letter-spacing: 0.18em; font-size: 22px; }
+  .subtitle { margin: 0 0 28px 0; opacity: 0.55; font-size: 12px; max-width: 800px; line-height: 1.6; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+  .card { background: linear-gradient(180deg, #0a1424 0%, #060b18 100%); border: 1px solid #1a2540; border-radius: 6px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+  .card-cv { width: 100%; aspect-ratio: 1 / 1; display: block; background: #02050a; border: 1px solid #142036; border-radius: 3px; }
+  .card-num { display: inline-block; color: #66ccff; font-size: 10px; letter-spacing: 0.15em; margin-bottom: 4px; }
+  .card-label { font-size: 14px; font-weight: bold; color: #ffffff; margin: 4px 0 2px 0; letter-spacing: 0.04em; }
+  .card-desc { font-size: 11px; opacity: 0.7; margin: 4px 0 6px 0; line-height: 1.5; }
+  .card-uses { font-size: 10px; color: #ffcc66; line-height: 1.5; }
+  .card-uses span { color: #66ccff; margin-right: 6px; }
+  .card-cost { font-size: 10px; color: #888; margin-top: 4px; font-style: italic; }
+  .footer { margin-top: 32px; opacity: 0.4; font-size: 11px; line-height: 1.6; max-width: 800px; }
+</style>
+</head>
+<body>
+<h1>LSS EFFECTS DEMO</h1>
+<p class="subtitle">
+  Possible visual effects for the thin-client renderer. All using Three.js r128 (the version the game already loads), so anything here ports straight in. Each card is a live preview animating independently.
+</p>
+
+<div class="grid" id="grid"></div>
+
+<p class="footer">
+  All effects are GPU-cheap and self-contained. Bloom is the highest single-line-of-impact win (one EffectComposer + UnrealBloomPass turns every emissive material into a glow source). Fresnel rim, volumetric beam, energy shield, and hologram scanlines are custom ShaderMaterials (~30-50 lines each). Particle burst, lightning, and tube ribbon are stock Three.js geometries with custom update logic. Combined cost: ~600-800 lines added to the client to wire everything up across the game.
+</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+
+<script>
+'use strict';
+
+// ============================================================================
+// Card factory
+// ============================================================================
+
+const grid = document.getElementById('grid');
+const cards = [];
+
+function makeCard(num, name, desc, uses, cost, withBloom, setupFn) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <canvas class="card-cv"></canvas>
+    <div class="card-num">EFFECT 0${num}</div>
+    <div class="card-label">${name}</div>
+    <div class="card-desc">${desc}</div>
+    <div class="card-uses"><span>USES:</span>${uses}</div>
+    <div class="card-cost">${cost}</div>
+  `;
+  grid.appendChild(card);
+
+  const cv = card.querySelector('canvas');
+  const W = 300, H = 300;
+  cv.width = W; cv.height = H;
+
+  const renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: false });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(W, H, false);
+  renderer.setClearColor(0x02050a, 1);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+  camera.position.set(0, 0, 5);
+
+  let composer = null;
+  if (withBloom) {
+    composer = new THREE.EffectComposer(renderer);
+    composer.addPass(new THREE.RenderPass(scene, camera));
+    const bloom = new THREE.UnrealBloomPass(new THREE.Vector2(W, H), 1.6, 0.5, 0.0);
+    composer.addPass(bloom);
+  }
+
+  const refs = setupFn(scene, camera, renderer, composer);
+  refs._scene = scene;
+  refs._camera = camera;
+  refs._renderer = renderer;
+  refs._composer = composer;
+  cards.push(refs);
+}
+
+// ============================================================================
+// EFFECT 01: Emissive + Bloom
+// Pulsing emissive orb. The single biggest "looks expensive" upgrade.
+// ============================================================================
+
+makeCard(1, 'EMISSIVE + BLOOM', 'EffectComposer + UnrealBloomPass on a scene with emissive materials. Anything bright glows automatically; no per-object work.', 'laser bolts, ability cores, world-effect emissions, hit flashes, kill explosions', '~50 lines client; one-time wire-up; per-effect cost = setting emissiveIntensity', true, (scene, camera) => {
+  scene.add(new THREE.AmbientLight(0x223344, 0.3));
+  const orb = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(0.9, 2),
+    new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0x33ccff, emissiveIntensity: 2.0, metalness: 0.0, roughness: 0.4 })
+  );
+  scene.add(orb);
+  const halo = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(1.4, 1),
+    new THREE.MeshBasicMaterial({ color: 0x66ddff, transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending })
+  );
+  scene.add(halo);
+  return {
+    update: (t) => {
+      orb.rotation.y = t * 0.5;
+      orb.rotation.x = t * 0.3;
+      const pulse = 1.5 + Math.sin(t * 2) * 0.6;
+      orb.material.emissiveIntensity = pulse;
+      halo.scale.setScalar(1 + Math.sin(t * 2) * 0.04);
+    },
+  };
+});
+
+// ============================================================================
+// EFFECT 02: Fresnel Rim Glow
+// Edge-only highlight that fades toward center. Reads as "energy field" or
+// a high-tech coating on a ship.
+// ============================================================================
+
+makeCard(2, 'FRESNEL RIM GLOW', 'Custom shader: brightens pixels facing perpendicular to camera. Edge highlight that follows the silhouette.', 'ship outline accent, lock-on emphasis, doomed-state indicator, pickup highlight', '~40 lines for the shader + material wrapper; reuse across every ship', false, (scene, camera) => {
+  scene.add(new THREE.AmbientLight(0x334455, 0.5));
+  const key = new THREE.DirectionalLight(0xffffff, 0.6);
+  key.position.set(2, 3, 4); scene.add(key);
+
+  // Inner ship body (for context)
+  const body = new THREE.Mesh(
+    new THREE.ConeGeometry(0.6, 1.6, 8),
+    new THREE.MeshLambertMaterial({ color: 0x445566 })
+  );
+  body.rotation.x = Math.PI / 2;
+  scene.add(body);
+
+  // Fresnel shell
+  const fresnelMat = new THREE.ShaderMaterial({
+    uniforms: {
+      rimColor: { value: new THREE.Color(0x66ddff) },
+      rimPower: { value: 2.0 },
+    },
+    vertexShader: `
+      varying vec3 vNormal;
+      varying vec3 vViewPos;
+      void main() {
+        vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+        vNormal = normalize(normalMatrix * normal);
+        vViewPos = -mvPos.xyz;
+        gl_Position = projectionMatrix * mvPos;
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 rimColor;
+      uniform float rimPower;
+      varying vec3 vNormal;
+      varying vec3 vViewPos;
+      void main() {
+        vec3 N = normalize(vNormal);
+        vec3 V = normalize(vViewPos);
+        float fr = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), rimPower);
+        gl_FragColor = vec4(rimColor * fr * 1.5, fr);
+      }
+    `,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+  const shell = new THREE.Mesh(
+    new THREE.ConeGeometry(0.62, 1.65, 16),
+    fresnelMat
+  );
+  shell.rotation.x = Math.PI / 2;
+  scene.add(shell);
+
+  return {
+    update: (t) => {
+      body.rotation.z = t * 0.4;
+      shell.rotation.z = t * 0.4;
+      fresnelMat.uniforms.rimPower.value = 1.8 + Math.sin(t) * 0.5;
+    },
+  };
+});
+
+// ============================================================================
+// EFFECT 03: Volumetric Beam
+// Additive cylinder with soft falloff at ends. Reads as a thick laser.
+// ============================================================================
+
+makeCard(3, 'VOLUMETRIC BEAM', 'Additive-blended cylinder with shader-based length falloff. Pairs with bloom for the bright halo around the core.', 'VORTEX laser, SLAYER sword-core, BLASTER smart-core auto-aim, LASER-CORE continuous beam', '~60 lines per beam type; shareable across kits', true, (scene, camera) => {
+  scene.add(new THREE.AmbientLight(0x111122, 0.3));
+
+  const beamMat = new THREE.ShaderMaterial({
+    uniforms: {
+      coreColor:  { value: new THREE.Color(0xff3344) },
+      glowColor:  { value: new THREE.Color(0xff8844) },
+      time:       { value: 0 },
+    },
+    vertexShader: `
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 coreColor;
+      uniform vec3 glowColor;
+      uniform float time;
+      varying vec2 vUv;
+      void main() {
+        float radial = 1.0 - abs(vUv.x - 0.5) * 2.0;
+        float lengthFade = smoothstep(0.0, 0.15, vUv.y) * smoothstep(1.0, 0.85, vUv.y);
+        float core = pow(radial, 6.0);
+        float halo = pow(radial, 1.5);
+        float pulse = 0.85 + sin(vUv.y * 30.0 - time * 8.0) * 0.15;
+        vec3 col = mix(glowColor, coreColor, core) * (core * 2.5 + halo * 0.4) * lengthFade * pulse;
+        gl_FragColor = vec4(col, halo * lengthFade);
+      }
+    `,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+  const beam = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.18, 0.18, 4, 16, 1, true),
+    beamMat
+  );
+  beam.rotation.z = Math.PI / 2;
+  scene.add(beam);
+
+  // Endpoint glow (emissive sphere)
+  const tip = new THREE.Mesh(
+    new THREE.SphereGeometry(0.25, 12, 12),
+    new THREE.MeshBasicMaterial({ color: 0xffaa66, transparent: true, opacity: 0.9 })
+  );
+  tip.position.x = 2;
+  scene.add(tip);
+
+  return {
+    update: (t) => {
+      beamMat.uniforms.time.value = t;
+      tip.scale.setScalar(1 + Math.sin(t * 6) * 0.1);
+      camera.position.x = Math.sin(t * 0.3) * 1.5;
+      camera.lookAt(0, 0, 0);
+    },
+  };
+});
+
+// ============================================================================
+// EFFECT 04: Energy Shield
+// Fresnel sphere with scrolling hex pattern. Used for shield bubbles.
+// ============================================================================
+
+makeCard(4, 'ENERGY SHIELD', 'Fresnel sphere overlaid with a hex-cell pattern scrolling on the surface. Subtle when calm, brightens on impact.', 'VORTEX shield, BLASTER gun-shield, PYRO thermal-shield, spawn-protection bubble, TRACKER particle wall', '~70 lines for the shader; impact-flash is one uniform pulse per hit', false, (scene, camera) => {
+  scene.add(new THREE.AmbientLight(0x111122, 0.3));
+
+  // Inner ship body
+  const inner = new THREE.Mesh(
+    new THREE.OctahedronGeometry(0.55, 0),
+    new THREE.MeshLambertMaterial({ color: 0x556677, flatShading: true })
+  );
+  scene.add(inner);
+  const dl = new THREE.DirectionalLight(0xffffff, 0.5);
+  dl.position.set(2, 3, 2); scene.add(dl);
+
+  const shieldMat = new THREE.ShaderMaterial({
+    uniforms: {
+      shieldColor: { value: new THREE.Color(0x44aaff) },
+      hotColor:    { value: new THREE.Color(0xffffff) },
+      time:        { value: 0 },
+      impact:      { value: 0 },
+    },
+    vertexShader: `
+      varying vec3 vNormal;
+      varying vec3 vViewPos;
+      varying vec3 vWorldPos;
+      void main() {
+        vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+        vNormal = normalize(normalMatrix * normal);
+        vViewPos = -mvPos.xyz;
+        vWorldPos = position;
+        gl_Position = projectionMatrix * mvPos;
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 shieldColor;
+      uniform vec3 hotColor;
+      uniform float time;
+      uniform float impact;
+      varying vec3 vNormal;
+      varying vec3 vViewPos;
+      varying vec3 vWorldPos;
+      // Cheap hex pattern via 2D coords on the sphere
+      float hexPattern(vec2 p) {
+        p *= 6.0;
+        vec2 q = vec2(p.x * 1.1547, p.y + p.x * 0.5);
+        vec2 cell = floor(q);
+        vec2 f = fract(q);
+        vec2 d = abs(f - 0.5);
+        return smoothstep(0.42, 0.5, max(d.x, d.y * 0.866 + d.x * 0.5));
+      }
+      void main() {
+        vec3 N = normalize(vNormal);
+        vec3 V = normalize(vViewPos);
+        float fr = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 2.5);
+        vec2 sphCoord = vec2(atan(vWorldPos.z, vWorldPos.x), vWorldPos.y);
+        float hex = hexPattern(sphCoord + vec2(time * 0.1, time * 0.07));
+        vec3 col = mix(shieldColor, hotColor, hex * 0.4 + impact);
+        float a = (fr * 0.7 + hex * 0.15) + impact * 0.5;
+        gl_FragColor = vec4(col * (1.2 + impact * 2.0), a);
+      }
+    `,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+  const shield = new THREE.Mesh(
+    new THREE.SphereGeometry(1.1, 32, 32),
+    shieldMat
+  );
+  scene.add(shield);
+
+  return {
+    update: (t) => {
+      inner.rotation.y = t * 0.6;
+      inner.rotation.x = t * 0.4;
+      shield.rotation.y = t * 0.1;
+      shieldMat.uniforms.time.value = t;
+      // Periodic impact pulse
+      const phase = (t * 0.7) % 3;
+      shieldMat.uniforms.impact.value = phase < 0.4 ? Math.exp(-phase * 8) : 0;
+    },
+  };
+});
+
+// ============================================================================
+// EFFECT 05: GPU Particle Burst
+// Expanding cloud of additive points. Cheap explosions.
+// ============================================================================
+
+makeCard(5, 'PARTICLE BURST', 'BufferGeometry of N points; per-particle velocity in a Float32 attribute; positions integrated each frame. Additive blended for stack-glow.', 'kill explosions, projectile impact sparks, FLAME-CORE expansion, destructible debris, CLUSTER-MISSILE split', '~120 lines for the pool + spawn helpers; reusable across all impact events', true, (scene, camera) => {
+  const N = 300;
+  const positions = new Float32Array(N * 3);
+  const velocities = new Float32Array(N * 3);
+  const colors = new Float32Array(N * 3);
+  const lives = new Float32Array(N);
+
+  function reset() {
+    for (let i = 0; i < N; i++) {
+      positions[i*3] = 0; positions[i*3+1] = 0; positions[i*3+2] = 0;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      const sp = 0.8 + Math.random() * 1.5;
+      velocities[i*3]   = Math.sin(phi) * Math.cos(theta) * sp;
+      velocities[i*3+1] = Math.cos(phi) * sp;
+      velocities[i*3+2] = Math.sin(phi) * Math.sin(theta) * sp;
+      const hot = Math.random();
+      colors[i*3]   = 1.0;
+      colors[i*3+1] = 0.4 + hot * 0.5;
+      colors[i*3+2] = 0.1 + hot * 0.3;
+      lives[i] = 1.0;
+    }
+  }
+  reset();
+
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  const mat = new THREE.PointsMaterial({
+    size: 0.08,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.95,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    sizeAttenuation: true,
+  });
+  const pts = new THREE.Points(geo, mat);
+  scene.add(pts);
+
+  let timeBurst = 0;
+  let lastT = 0;
+  return {
+    update: (t) => {
+      const dt = Math.min(0.05, t - lastT);
+      lastT = t;
+      timeBurst += dt;
+      if (timeBurst > 2.0) { reset(); timeBurst = 0; }
+      const decay = Math.exp(-dt * 1.5);
+      for (let i = 0; i < N; i++) {
+        positions[i*3]   += velocities[i*3]   * dt;
+        positions[i*3+1] += velocities[i*3+1] * dt;
+        positions[i*3+2] += velocities[i*3+2] * dt;
+        velocities[i*3]   *= decay;
+        velocities[i*3+1] *= decay;
+        velocities[i*3+2] *= decay;
+        lives[i] = Math.max(0, lives[i] - dt * 0.5);
+      }
+      mat.opacity = Math.max(0, 1 - timeBurst * 0.5);
+      geo.attributes.position.needsUpdate = true;
+    },
+  };
+});
+
+// ============================================================================
+// EFFECT 06: Lightning Bolt
+// Jagged additive line between two endpoints, regenerated periodically.
+// ============================================================================
+
+makeCard(6, 'LIGHTNING BOLT', 'Polyline through randomized midpoints between two endpoints; regenerated every ~80ms. Additive blending plus bloom equals classic electricity look.', 'SYPHON energy-siphon, electric pickups, stasis-field tendrils, lock-on indicator chain', '~90 lines: segment generator + branch fork helper + glow halo line', true, (scene, camera) => {
+  const A = new THREE.Vector3(-1.6, 0, 0);
+  const B = new THREE.Vector3(1.6, 0, 0);
+  const SEGS = 18;
+
+  function buildPath(t, jitter) {
+    const pts = [];
+    for (let i = 0; i <= SEGS; i++) {
+      const u = i / SEGS;
+      const base = A.clone().lerp(B, u);
+      if (i > 0 && i < SEGS) {
+        const noise = Math.sin(u * 17 + t * 23) * 0.5 + Math.cos(u * 31 + t * 19) * 0.5;
+        base.y += noise * jitter;
+        base.z += Math.sin(u * 23 + t * 11) * jitter * 0.6;
+      }
+      pts.push(base);
+    }
+    return pts;
+  }
+
+  function makeLine(color, width, opacity) {
+    const geo = new THREE.BufferGeometry().setFromPoints(buildPath(0, 0.3));
+    const mat = new THREE.LineBasicMaterial({
+      color, transparent: true, opacity,
+      blending: THREE.AdditiveBlending, depthWrite: false, linewidth: width,
+    });
+    const line = new THREE.Line(geo, mat);
+    scene.add(line);
+    return { line, geo, mat };
+  }
+
+  const core   = makeLine(0xffffff, 1, 1.0);
+  const inner  = makeLine(0x88ccff, 1, 0.7);
+  const outer  = makeLine(0x4488ff, 1, 0.35);
+
+  // Endpoint orbs
+  const a = new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 12), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+  a.position.copy(A); scene.add(a);
+  const b = new THREE.Mesh(new THREE.SphereGeometry(0.14, 12, 12), new THREE.MeshBasicMaterial({ color: 0x88ccff }));
+  b.position.copy(B); scene.add(b);
+
+  let lastUpdate = 0;
+  return {
+    update: (t) => {
+      if (t - lastUpdate > 0.06) {
+        lastUpdate = t;
+        const cp = buildPath(t * 13, 0.18);
+        const ip = buildPath(t * 13 + 0.5, 0.32);
+        const op = buildPath(t * 13 + 1.0, 0.5);
+        core.geo.setFromPoints(cp);
+        inner.geo.setFromPoints(ip);
+        outer.geo.setFromPoints(op);
+      }
+      a.scale.setScalar(1 + Math.sin(t * 12) * 0.15);
+      b.scale.setScalar(1 + Math.cos(t * 13) * 0.15);
+      camera.position.set(Math.sin(t * 0.2) * 1, 0, 5);
+      camera.lookAt(0, 0, 0);
+    },
+  };
+});
+
+// ============================================================================
+// EFFECT 07: Tube Ribbon Trail
+// Curved tube following a moving point. Used for projectile/missile trails.
+// ============================================================================
+
+makeCard(7, 'TUBE RIBBON TRAIL', 'CatmullRom curve through a rolling history of recent positions; rebuilt as a TubeGeometry each frame. Additive material gives a glowing contrail.', 'projectile trails, missile contrails, AFTERBURNER plume, dash-trail residue, charged-shot wind-up', '~80 lines for the rolling-history pool + per-frame rebuild', true, (scene, camera) => {
+  const N = 32;
+  const history = [];
+  for (let i = 0; i < N; i++) history.push(new THREE.Vector3());
+
+  let mesh = null;
+  const mat = new THREE.MeshBasicMaterial({
+    color: 0x44ccff, transparent: true, opacity: 0.9,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  });
+
+  // Leading tip
+  const tip = new THREE.Mesh(
+    new THREE.SphereGeometry(0.18, 16, 16),
+    new THREE.MeshBasicMaterial({ color: 0xaaffff })
+  );
+  scene.add(tip);
+
+  function rebuild() {
+    if (mesh) {
+      scene.remove(mesh);
+      mesh.geometry.dispose();
+    }
+    const path = new THREE.CatmullRomCurve3(history.slice());
+    mesh = new THREE.Mesh(new THREE.TubeGeometry(path, 64, 0.07, 8, false), mat);
+    scene.add(mesh);
+  }
+
+  let initialized = false;
+  return {
+    update: (t) => {
+      // Figure-8 path
+      const x = Math.sin(t * 1.5) * 1.6;
+      const y = Math.sin(t * 3.0) * 0.8;
+      const z = Math.cos(t * 1.5) * 0.6;
+      const head = new THREE.Vector3(x, y, z);
+
+      if (!initialized) {
+        for (let i = 0; i < N; i++) history[i].copy(head);
+        initialized = true;
+      } else {
+        // Push head, drop tail
+        for (let i = N - 1; i > 0; i--) history[i].copy(history[i-1]);
+        history[0].copy(head);
+      }
+      rebuild();
+      tip.position.copy(head);
+      tip.scale.setScalar(1 + Math.sin(t * 8) * 0.1);
+    },
+  };
+});
+
+// ============================================================================
+// EFFECT 08: Hologram Scanlines
+// Translucent panel with scrolling lines and edge flicker. UI/lock-on look.
+// ============================================================================
+
+makeCard(8, 'HOLOGRAM SCANLINES', 'Plane with shader-driven scanlines, edge fade, and occasional glitch jumps. Sci-fi UI feel without textures.', 'TRACKER lock-on indicator (1/2/3 stacks), respawn-timer overlay, ability-ready notification, mid-fight HUD pop-ups', '~50 lines for the shader; one shared material across UI placements', false, (scene, camera) => {
+  scene.add(new THREE.AmbientLight(0x223344, 0.4));
+
+  const holoMat = new THREE.ShaderMaterial({
+    uniforms: {
+      tint:    { value: new THREE.Color(0x66ffaa) },
+      time:    { value: 0 },
+      glitch:  { value: 0 },
+    },
+    vertexShader: `
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 tint;
+      uniform float time;
+      uniform float glitch;
+      varying vec2 vUv;
+
+      // Hash for cheap noise
+      float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }
+
+      void main() {
+        // Scanlines scrolling vertically
+        float scan = 0.5 + 0.5 * sin((vUv.y + time * 0.3) * 80.0);
+        // Edge fade
+        float edge = smoothstep(0.0, 0.1, vUv.x) * smoothstep(1.0, 0.9, vUv.x)
+                   * smoothstep(0.0, 0.1, vUv.y) * smoothstep(1.0, 0.9, vUv.y);
+        // Frame outline
+        float frameDist = min(min(vUv.x, 1.0 - vUv.x), min(vUv.y, 1.0 - vUv.y));
+        float frame = smoothstep(0.04, 0.02, frameDist);
+        // Crosshair lines
+        float cross = smoothstep(0.495, 0.5, vUv.x) * smoothstep(0.505, 0.5, vUv.x) * 30.0
+                    + smoothstep(0.495, 0.5, vUv.y) * smoothstep(0.505, 0.5, vUv.y) * 30.0;
+        // Glitch displacement
+        float gl = step(0.97, hash(vec2(floor(vUv.y * 30.0), floor(time * 12.0)))) * glitch;
+        float content = scan * 0.4 + frame * 1.5 + cross * 0.8 + gl * 0.6;
+        float a = (edge * 0.5 + frame * 0.9 + cross + gl) * 0.9;
+        gl_FragColor = vec4(tint * content, a);
+      }
+    `,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+  const panel = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 2.6), holoMat);
+  scene.add(panel);
+
+  // Floating rotating target inside the holo frame
+  const target = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(0.5, 0),
+    new THREE.MeshBasicMaterial({ color: 0x66ffaa, wireframe: true })
+  );
+  target.position.z = -0.5;
+  scene.add(target);
+
+  return {
+    update: (t) => {
+      holoMat.uniforms.time.value = t;
+      holoMat.uniforms.glitch.value = (t % 4) > 3.7 ? 1 : 0;
+      target.rotation.y = t * 1.0;
+      target.rotation.x = t * 0.6;
+      panel.position.y = Math.sin(t * 1.3) * 0.05;
+    },
+  };
+});
+
+// ============================================================================
+// Master render loop
+// ============================================================================
+
+const startT = performance.now();
+function tick() {
+  const t = (performance.now() - startT) / 1000;
+  for (const c of cards) {
+    c.update(t);
+    if (c._composer) c._composer.render();
+    else c._renderer.render(c._scene, c._camera);
+  }
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
+</body>
+</html>

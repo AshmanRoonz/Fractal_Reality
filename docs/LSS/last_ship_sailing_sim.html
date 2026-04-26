@@ -246,6 +246,29 @@
     80%  { opacity: 1; transform: scale(1.0); }
     100% { opacity: 0; transform: scale(1.05); }
   }
+  /* v8.36: NA22 ; loading overlay during map mesh rebuild */
+  #loading-overlay {
+    position: fixed; inset: 0; background: rgba(2, 5, 10, 0.92);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 999; pointer-events: auto;
+  }
+  #loading-overlay .lo-card {
+    text-align: center; color: #ccdfff; font-family: monospace;
+  }
+  #loading-overlay .lo-spinner {
+    width: 80px; height: 80px; margin: 0 auto 20px auto;
+    border: 3px solid rgba(100,200,255,0.2);
+    border-top-color: #66ccff;
+    border-radius: 50%;
+    animation: loSpin 1s linear infinite;
+  }
+  #loading-overlay .lo-label {
+    font-size: 14px; letter-spacing: 0.3em; opacity: 0.7; margin-bottom: 6px;
+  }
+  #loading-overlay .lo-map {
+    font-size: 22px; letter-spacing: 0.15em; color: #ffffff; font-weight: bold;
+  }
+  @keyframes loSpin { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
 
   /* v8.18: reload + ammo strip. Sits above the weapon name in the bottom HUD. */
   #hud-reload {
@@ -323,6 +346,81 @@
     100% { opacity: 0; }
   }
 
+  /* v8.29: stasis vignette + bar. Cyan ring + duration progress while
+     player is locked in a stasis pickup. */
+  #stasis-vignette {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 8;
+    box-shadow: inset 0 0 240px rgba(0,200,255,0.0);
+    transition: box-shadow 0.2s ease-out;
+  }
+  #stasis-vignette.active { box-shadow: inset 0 0 240px rgba(0,200,255,0.45); }
+  #stasis-bar {
+    position: fixed; bottom: 14%; left: 50%; transform: translateX(-50%);
+    width: 320px; pointer-events: none; z-index: 9;
+    text-align: center;
+    font-size: 13px; letter-spacing: 3px;
+    color: rgba(150,220,255,0.9);
+    text-shadow: 0 0 8px rgba(0,180,255,0.7);
+    display: none;
+  }
+  #stasis-bar.active { display: block; }
+  #stasis-bar .stasis-track {
+    width: 100%; height: 5px;
+    background: rgba(8,12,20,0.85);
+    border: 1px solid rgba(80,180,255,0.5);
+    margin-top: 6px; overflow: hidden;
+  }
+  #stasis-bar .stasis-fill {
+    height: 100%; background: rgba(80,200,255,0.85);
+    transform-origin: left center; transform: scaleX(0);
+    transition: transform 0.05s linear;
+    box-shadow: 0 0 8px rgba(80,200,255,0.7);
+  }
+
+  /* v8.32: match-end scoreboard. Big modal overlay shown for the matchEnd
+     linger; auto-hides when state goes back to select. */
+  #match-end-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(8,12,20,0.94);
+    display: none;
+    align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  #match-end-overlay.active { display: flex; }
+  #match-end-overlay .me-card {
+    width: 720px; max-width: 90vw; padding: 28px 32px;
+    border: 1px solid rgba(120,140,180,0.35);
+    background: rgba(15,20,32,0.85);
+  }
+  #match-end-overlay .me-title {
+    font-size: 42px; font-weight: bold; letter-spacing: 6px;
+    text-align: center;
+    color: #ffaa00;
+    text-shadow: 0 0 18px rgba(255,170,0,0.7);
+    margin-bottom: 4px;
+  }
+  #match-end-overlay.victory .me-title { color: #66ff88; text-shadow: 0 0 18px rgba(100,255,150,0.7); }
+  #match-end-overlay.defeat .me-title { color: #ff5566; text-shadow: 0 0 18px rgba(255,80,90,0.7); }
+  #match-end-overlay .me-sub {
+    text-align: center;
+    font-size: 14px; letter-spacing: 4px;
+    color: rgba(220,230,255,0.75);
+    margin-bottom: 20px;
+  }
+  #match-end-overlay table {
+    width: 100%; border-collapse: collapse; font-size: 12px;
+    color: rgba(220,230,255,0.92);
+  }
+  #match-end-overlay th, #match-end-overlay td {
+    padding: 6px 10px; text-align: left;
+    border-bottom: 1px solid rgba(120,140,180,0.18);
+  }
+  #match-end-overlay th { font-size: 10px; letter-spacing: 2px; color: rgba(180,200,240,0.55); font-weight: normal; }
+  #match-end-overlay tr.team-a td:first-child::before { content: '◆ '; color: #ff6666; }
+  #match-end-overlay tr.team-b td:first-child::before { content: '◆ '; color: #66cc66; }
+  #match-end-overlay tr.you   td { color: #ffcc44; }
+
   /* v8.18: doomed vignette ; pulses red when health < 30%. */
   #doomed-vignette {
     position: fixed; inset: 0;
@@ -334,6 +432,43 @@
   @keyframes doomPulse {
     0%, 100% { box-shadow: inset 0 0 180px rgba(255,40,30,0.45); }
     50%      { box-shadow: inset 0 0 240px rgba(255,40,30,0.70); }
+  }
+
+  /* v8.42: NA17 ; respawn overlay (death cam + respawn countdown). */
+  #respawn-overlay {
+    position: fixed; inset: 0; pointer-events: none; z-index: 14;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.4) 100%);
+  }
+  #respawn-overlay .ro-card {
+    text-align: center; color: #fff; font-family: monospace;
+    background: rgba(10,15,30,0.5); padding: 28px 56px;
+    border: 1px solid rgba(255,80,80,0.4); border-radius: 4px;
+    backdrop-filter: blur(2px);
+  }
+  #respawn-overlay .ro-killed {
+    color: #ff5566; font-size: 18px; letter-spacing: 0.3em; font-weight: bold; margin-bottom: 6px;
+  }
+  #respawn-overlay .ro-by {
+    color: #aac; font-size: 12px; letter-spacing: 0.15em; margin-bottom: 16px; opacity: 0.85;
+  }
+  #respawn-overlay .ro-timer {
+    color: #ffcc44; font-size: 64px; font-weight: bold; line-height: 1; margin-bottom: 4px;
+    text-shadow: 0 0 20px rgba(255,200,68,0.6);
+  }
+  #respawn-overlay .ro-label {
+    color: #aac; font-size: 11px; letter-spacing: 0.4em; opacity: 0.6;
+  }
+
+  /* v8.37: NA24 ; continuous damage vignette that scales with HP%. Below
+     full HP a faint red ring appears; intensifies as HP drops; layers under
+     the pulsing doomed effect that kicks in at <30%. Inline style sets the
+     opacity per frame from HP fraction. */
+  #damage-vignette {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 7;
+    box-shadow: inset 0 0 160px rgba(255,40,30,0.0);
+    transition: box-shadow 0.15s ease-out;
   }
 
   #help {
@@ -479,6 +614,19 @@
 <canvas id="circ-hud-canvas"></canvas>
 <div id="ship-bars"></div>
 <div id="doomed-vignette"></div>
+<!-- v8.37: NA24 ; damage vignette (intensity scales with HP%) -->
+<div id="damage-vignette"></div>
+<!-- v8.42: NA17 ; respawn timer overlay shown while dead. -->
+<div id="respawn-overlay" style="display:none;">
+  <div class="ro-card">
+    <div class="ro-killed">YOU WERE KILLED</div>
+    <div class="ro-by" id="ro-by"></div>
+    <div class="ro-timer" id="ro-timer">5</div>
+    <div class="ro-label">RESPAWN</div>
+  </div>
+</div>
+<div id="stasis-vignette"></div>
+<div id="stasis-bar">STASIS<div class="stasis-track"><div class="stasis-fill" id="stasis-fill"></div></div></div>
 <div id="damage-indicators">
   <svg class="dmg-arrow top"    viewBox="0 0 220 220"><polygon points="110,20 50,160 110,130 170,160" fill="rgba(255,30,20,0.85)" stroke="rgba(255,160,140,0.6)" stroke-width="3"/></svg>
   <svg class="dmg-arrow bottom" viewBox="0 0 220 220"><polygon points="110,20 50,160 110,130 170,160" fill="rgba(255,30,20,0.85)" stroke="rgba(255,160,140,0.6)" stroke-width="3"/></svg>
@@ -487,6 +635,18 @@
 </div>
 <div id="kill-feed"></div>
 <div id="cinematic-banner"><div class="banner-title"></div><div class="banner-sub"></div></div>
+<!-- v8.36: NA22. Loading overlay shown while marching cubes mesh rebuilds on map switch. -->
+<div id="loading-overlay" style="display:none;"><div class="lo-card"><div class="lo-spinner"></div><div class="lo-label">LOADING</div><div class="lo-map" id="lo-map">...</div></div></div>
+<div id="match-end-overlay">
+  <div class="me-card">
+    <div class="me-title" id="me-title">VICTORY</div>
+    <div class="me-sub" id="me-sub">FLEET A WINS</div>
+    <table>
+      <thead><tr><th>NAME</th><th>SHIP</th><th>K</th><th>D</th><th>DMG</th></tr></thead>
+      <tbody id="me-rows"></tbody>
+    </table>
+  </div>
+</div>
 <div id="cockpit-frame"></div>
 
 <div id="combat-hud">
@@ -654,8 +814,12 @@ function connect() {
 
     if (msg.type === 'level') {
       // v8.7: server pushed a new map. Rebuild local meshes.
+      // v8.36: NA22 ; show loading overlay during the rebuild (marching cubes
+      // is slow). Hidden when the first state for the new level arrives.
+      _showLoadingOverlay(msg.level && msg.level.name);
       net.level = msg.level;
       buildLevelMeshes(msg.level);
+      net.awaitingFirstStateAfterLevel = true;
       return;
     }
     if (msg.type === 'state') {
@@ -663,6 +827,11 @@ function connect() {
       net.prevStateTime = net.stateArrivedAt;
       net.state = msg.payload;
       net.stateArrivedAt = performance.now();
+      // v8.36: NA22 ; first state after a level swap = mesh is ready.
+      if (net.awaitingFirstStateAfterLevel) {
+        net.awaitingFirstStateAfterLevel = false;
+        _hideLoadingOverlay();
+      }
       // v8.6: surface hit/kill events to the HUD.
       processSnapshotEvents(msg.payload);
       return;
@@ -1288,10 +1457,131 @@ const input = {
   forward: 0, right: 0, up: 0,
   yaw: 0, pitch: 0,
   fire: false,
+  // v8.34: track mouse and gamepad fire as separate sources so release of
+  // either one properly clears `fire` if the other isn't held. The merged
+  // `input.fire` is recomputed each frame as `mouseFire || gpFire`.
+  mouseFire: false,
   pointerLocked: false,
   // v8.8: queued ability press for next outgoing input frame (consumed once).
   pendingAbility: null,
+  // v8.31: gamepad state (connection + previous-frame snapshot for edges).
+  gpConnected: false,
+  gpFire: false, gpFirePrev: false,
+  gpAbility0: false, gpAbility0Prev: false,  // LB → Q
+  gpAbility1: false, gpAbility1Prev: false,  // RB → E
+  gpAbility2: false, gpAbility2Prev: false,  // Y  → F
+  gpCore:     false, gpCorePrev: false,      // D-pad up → V
 };
+
+// v8.31: gamepad config. Mirrors LSS line 1237-1251 with sensible defaults.
+// Sticks: left = move (forward/right), right = look (yaw/pitch).
+// Buttons: RT = fire, A/B/X/Y per LSS, D-pad up = core, Back = scoreboard.
+const gpConfig = {
+  deadzone: 0.18,
+  lookSensitivity: 2.5, // radians/sec at full deflection
+  invertLookY: false,
+  triggerThreshold: 0.3,
+  bindings: {
+    fire: 7,       // RT
+    ability0: 4,   // LB (Q ; offensive)
+    ability1: 5,   // RB (E ; defensive)
+    ability2: 3,   // Y  (F ; utility)
+    core: 12,      // D-pad Up (V)
+    scoreboard: 8, // Back / Select
+    moveUp: 10,    // L3 (vertical thrust up)
+    moveDown: 11,  // R3 (vertical thrust down)
+  },
+};
+
+// Try to load saved settings (v8.32 will add UI; for now we just read what
+// localStorage has if anything).
+try {
+  const saved = JSON.parse(localStorage.getItem('lss_gp_config') || 'null');
+  if (saved && typeof saved === 'object') {
+    Object.assign(gpConfig, saved);
+    if (saved.bindings) Object.assign(gpConfig.bindings, saved.bindings);
+  }
+} catch (_) {}
+
+function pollGamepad(dt) {
+  const gps = navigator.getGamepads ? navigator.getGamepads() : [];
+  let gp = null;
+  for (let i = 0; i < gps.length; i++) {
+    if (gps[i] && gps[i].connected !== false) { gp = gps[i]; break; }
+  }
+  if (!gp) {
+    if (input.gpConnected) {
+      input.gpConnected = false;
+      input.gpFire = false; input.gpAbility0 = false; input.gpAbility1 = false;
+      input.gpAbility2 = false; input.gpCore = false;
+    }
+    // v8.34: even if gamepad disconnected, recompute fire so a stale gpFire
+    // bit can't keep firing. Mouse-only path still works.
+    input.fire = input.mouseFire;
+    return;
+  }
+  input.gpConnected = true;
+  const dz = gpConfig.deadzone;
+  const applyDz = (v) => Math.abs(v) < dz ? 0 : Math.sign(v) * (Math.abs(v) - dz) / (1 - dz);
+
+  // Sticks. Standard mapping: axes[0/1] = left stick, axes[2/3] = right stick.
+  const lx = applyDz(gp.axes[0] || 0);
+  const ly = applyDz(gp.axes[1] || 0);
+  const rx = applyDz(gp.axes[2] || 0);
+  const ry = applyDz(gp.axes[3] || 0);
+  // Map left stick → forward/right (note ly is negative when pushed up).
+  input.right = lx;
+  input.forward = -ly;
+  // Right stick → yaw/pitch deltas this frame. Sensitivity scales by dt so
+  // the look rate is consistent across framerates.
+  const sens = gpConfig.lookSensitivity;
+  const scale = (typeof dt === 'number' ? dt : 0.016) * sens;
+  input.yaw -= rx * scale;
+  let pitchDelta = ry * scale * (gpConfig.invertLookY ? 1 : -1);
+  input.pitch = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, input.pitch + pitchDelta));
+
+  // Vertical thrust via stick clicks (L3 / R3) so the d-pad/triggers stay
+  // free for combat.
+  const moveUpBtn = gpConfig.bindings.moveUp;
+  const moveDnBtn = gpConfig.bindings.moveDown;
+  const upHeld = (moveUpBtn >= 0 && gp.buttons[moveUpBtn] && gp.buttons[moveUpBtn].pressed) ? 1 : 0;
+  const dnHeld = (moveDnBtn >= 0 && gp.buttons[moveDnBtn] && gp.buttons[moveDnBtn].pressed) ? 1 : 0;
+  input.up = upHeld - dnHeld;
+
+  // Buttons. We snapshot prev for edge detection on abilities.
+  function gpBtn(name) {
+    const idx = gpConfig.bindings[name];
+    if (idx == null || idx < 0) return false;
+    const b = gp.buttons[idx];
+    if (!b) return false;
+    return b.pressed || (b.value > gpConfig.triggerThreshold);
+  }
+  input.gpFirePrev = input.gpFire;
+  input.gpAbility0Prev = input.gpAbility0;
+  input.gpAbility1Prev = input.gpAbility1;
+  input.gpAbility2Prev = input.gpAbility2;
+  input.gpCorePrev = input.gpCore;
+  input.gpFire = gpBtn('fire');
+  input.gpAbility0 = gpBtn('ability0');
+  input.gpAbility1 = gpBtn('ability1');
+  input.gpAbility2 = gpBtn('ability2');
+  input.gpCore     = gpBtn('core');
+
+  // v8.34: fire is the OR of mouse and gamepad fire. Each source is tracked
+  // independently (mouse via mousedown/mouseup setting input.mouseFire,
+  // gamepad via gpBtn('fire') above setting input.gpFire). We recompute
+  // input.fire fresh every frame so release of either source clears the
+  // combined flag whenever the other isn't held. This fixes the v8.31 bug
+  // where input.fire could get stuck on after a gamepad press because the
+  // merge logic only set it to true and never cleared it on release.
+  input.fire = input.mouseFire || input.gpFire;
+
+  // Ability rising edges queue input.pendingAbility (consumed once per send).
+  if (input.gpAbility0 && !input.gpAbility0Prev) input.pendingAbility = 0;
+  if (input.gpAbility1 && !input.gpAbility1Prev) input.pendingAbility = 1;
+  if (input.gpAbility2 && !input.gpAbility2Prev) input.pendingAbility = 2;
+  if (input.gpCore     && !input.gpCorePrev)     input.pendingAbility = 3;
+}
 
 // Map keyCode -> ability slot.
 const ABILITY_KEYS = { 'KeyQ': 0, 'KeyE': 1, 'KeyF': 2, 'KeyV': 3 };
@@ -1306,6 +1596,11 @@ document.addEventListener('keydown', (e) => {
   // v8.8: ability key edge press
   if (ABILITY_KEYS.hasOwnProperty(e.code)) {
     input.pendingAbility = ABILITY_KEYS[e.code];
+  }
+  // v8.33: manual reload (LSS line 8111-8114). Press R to start a reload
+  // even with ammo left. Server gates on clipAmmo < maxClip.
+  if (e.code === 'KeyR') {
+    input.pendingReload = true;
   }
 });
 document.addEventListener('keyup', (e) => {
@@ -1368,8 +1663,16 @@ document.addEventListener('mousemove', (e) => {
   input.yaw -= e.movementX * sens;
   input.pitch = Math.max(-Math.PI/2 + 0.05, Math.min(Math.PI/2 - 0.05, input.pitch - e.movementY * sens));
 });
-document.addEventListener('mousedown', (e) => { if (e.button === 0) input.fire = true; });
-document.addEventListener('mouseup',   (e) => { if (e.button === 0) input.fire = false; });
+// v8.34: mouse fire writes to input.mouseFire (separate source); the merged
+// input.fire is recomputed in pollGamepad() each frame as mouseFire || gpFire.
+// We also update input.fire eagerly here so non-gamepad users still get
+// instant response on the same frame as the click.
+document.addEventListener('mousedown', (e) => {
+  if (e.button === 0) { input.mouseFire = true; input.fire = input.mouseFire || input.gpFire; }
+});
+document.addEventListener('mouseup',   (e) => {
+  if (e.button === 0) { input.mouseFire = false; input.fire = input.mouseFire || input.gpFire; }
+});
 
 function readKeyboard() {
   const f = (keys['KeyW'] ? 1 : 0) - (keys['KeyS'] ? 1 : 0);
@@ -1384,8 +1687,26 @@ function readKeyboard() {
 // Camera follow
 // ============================================================================
 
+// v8.41: NA16 partial ; FOV opens on boost. baseFov 75; afterburner pushes
+// to 84; lerp toward target each frame for a smooth feel. Speed-based offset
+// also nudges +0..3° at full speed even without afterburner.
+const _cam = { baseFov: 75, currentFov: 75, targetFov: 75 };
+// v8.42: NA17 ; death cam state. Captured from the kill event when our
+// peerId is the victim; cleared on respawn.
+const _deathCam = {
+  killerPeerId: null,
+  killerBotId: null,
+  killerLoadoutKey: null,
+};
+const RESPAWN_DELAY_CLIENT = 5.0; // mirrors server RESPAWN_DELAY for HUD only
+
 function updateCamera(myPlayer) {
   if (!myPlayer) return;
+  // v8.42: NA17 ; if dead, point camera at killer (death cam).
+  if (!myPlayer.alive) {
+    _updateDeathCam(myPlayer);
+    return;
+  }
   const yaw = myPlayer.yaw, pitch = myPlayer.pitch;
   // First-person-ish: camera at player position, looking out along yaw/pitch.
   const cy = Math.cos(yaw), sy = Math.sin(yaw);
@@ -1406,6 +1727,104 @@ function updateCamera(myPlayer) {
     myPlayer.position.y + 30 + fy + sy2,
     myPlayer.position.z + fz + sz,
   );
+  // v8.41: FOV opens on boost. afterburnerActive flag isn't on the player
+  // snapshot directly so derive from speed-vs-baseSpeed ratio. >1.05 of base
+  // speed is treated as "boosting"; afterburner caps push to ~1.5x. We use
+  // velocity magnitude vs an approximation of baseSpeed (300).
+  const vx = myPlayer.velocity ? myPlayer.velocity.x : 0;
+  const vy2 = myPlayer.velocity ? myPlayer.velocity.y : 0;
+  const vz2 = myPlayer.velocity ? myPlayer.velocity.z : 0;
+  const speed = Math.sqrt(vx * vx + vy2 * vy2 + vz2 * vz2);
+  const SPEED_REF = 350;        // approximate non-boost top speed
+  const speedRatio = Math.min(2.0, speed / SPEED_REF);
+  const fovOffset = Math.max(0, (speedRatio - 1.0)) * 12; // 0..12° push
+  _cam.targetFov = _cam.baseFov + fovOffset;
+  _cam.currentFov += (_cam.targetFov - _cam.currentFov) * 0.10;
+  if (Math.abs(_cam.currentFov - camera.fov) > 0.05) {
+    camera.fov = _cam.currentFov;
+    camera.updateProjectionMatrix();
+  }
+}
+
+// v8.42: NA17 ; death cam + respawn timer overlay. Camera frames the killer
+// (offset slightly above and behind them). If killer can't be found (left
+// game, swapped teams, etc.), camera holds at the death position drifting
+// upward slightly. Restore FOV to base while dead.
+function _updateDeathCam(myPlayer) {
+  const snap = net.state;
+  if (!snap) return;
+  // Find killer position from current snapshot.
+  let killer = null;
+  if (_deathCam.killerPeerId) {
+    killer = (snap.players || []).find(p => p.peerId === _deathCam.killerPeerId);
+  }
+  if (!killer && _deathCam.killerBotId != null) {
+    killer = (snap.bots || []).find(b => b.id === _deathCam.killerBotId);
+  }
+  if (killer && killer.alive) {
+    // Frame killer: position camera offset above and behind, look at killer.
+    const kx = killer.position.x, ky = killer.position.y, kz = killer.position.z;
+    // Direction from death position to killer; offset camera "behind" me toward
+    // killer so the killer fills the frame (with some space).
+    const myx = myPlayer.position.x, myy = myPlayer.position.y, myz = myPlayer.position.z;
+    const dx = kx - myx, dz = kz - myz;
+    const d = Math.sqrt(dx*dx + dz*dz) || 1;
+    const ndx = dx / d, ndz = dz / d;
+    // Camera 250u in front of death position, lifted 80u, looking at killer.
+    const camX = myx + ndx * 200;
+    const camY = myy + 80;
+    const camZ = myz + ndz * 200;
+    // Smoothly slide; previous position is wherever updateCamera left it.
+    camera.position.x += (camX - camera.position.x) * 0.08;
+    camera.position.y += (camY - camera.position.y) * 0.08;
+    camera.position.z += (camZ - camera.position.z) * 0.08;
+    camera.lookAt(kx, ky + 30, kz);
+  } else {
+    // No killer (bot despawned, peer left, suicide, etc.). Drift camera up
+    // and look at the death position.
+    const myx = myPlayer.position.x, myy = myPlayer.position.y, myz = myPlayer.position.z;
+    camera.position.y += (myy + 200 - camera.position.y) * 0.04;
+    camera.position.x += (myx - camera.position.x) * 0.04;
+    camera.position.z += (myz + 250 - camera.position.z) * 0.04;
+    camera.lookAt(myx, myy, myz);
+  }
+  // Restore FOV to base while dead (no boost during death cam).
+  if (Math.abs(camera.fov - _cam.baseFov) > 0.1) {
+    _cam.currentFov += (_cam.baseFov - _cam.currentFov) * 0.10;
+    camera.fov = _cam.currentFov;
+    camera.updateProjectionMatrix();
+  }
+}
+
+// v8.42: NA17 ; respawn overlay update. Reads server time + player.deathTime
+// and shows countdown. Hidden when alive. Killer label uses peerId or botId.
+function _updateRespawnOverlay(myPlayer) {
+  const el = document.getElementById('respawn-overlay');
+  if (!el) return;
+  if (!myPlayer || myPlayer.alive) {
+    el.style.display = 'none';
+    // Reset death-cam tracking on respawn so a follow-up death starts fresh.
+    if (myPlayer && myPlayer.alive) {
+      _deathCam.killerPeerId = null;
+      _deathCam.killerBotId = null;
+      _deathCam.killerLoadoutKey = null;
+    }
+    return;
+  }
+  el.style.display = 'flex';
+  const snap = net.state;
+  const serverTime = snap ? snap.time : 0;
+  const dt = serverTime - (myPlayer.deathTime || serverTime);
+  const remaining = Math.max(0, RESPAWN_DELAY_CLIENT - dt);
+  const timerEl = document.getElementById('ro-timer');
+  if (timerEl) timerEl.textContent = Math.ceil(remaining).toString();
+  const byEl = document.getElementById('ro-by');
+  if (byEl) {
+    const who = _deathCam.killerPeerId ? ('PLAYER ' + _deathCam.killerPeerId)
+              : (_deathCam.killerBotId != null ? ('BOT ' + _deathCam.killerBotId) : 'UNKNOWN');
+    const ship = _deathCam.killerLoadoutKey ? (' / ' + _deathCam.killerLoadoutKey) : '';
+    byEl.textContent = 'BY ' + who + ship;
+  }
 }
 
 // ============================================================================
@@ -2209,6 +2628,37 @@ const _audio = (() => {
         playNoiseBurst(_rr(0.025, 0.3), _rr(0.04, 0.3), now + offset, _ri(300 + _r() * 600, 0.3), _rr(0.7, 0.3));
       }
     }
+    // v8.33: round-start fanfare (LSS line 14718-14757). Three rising chords
+    // with a reverse-cymbal swell landing on the resolve.
+    else if (type === 'round_start') {
+      triChord([65, 82, 98], 'sine', 0.18, 0.35, null, null, 0,
+        { attack: 0.01, hold: 0.08, decay: 0.26 });
+      triChord([73, 92, 110], 'sine', 0.18, 0.35, null, null, 0.18,
+        { attack: 0.01, hold: 0.08, decay: 0.26 });
+      try {
+        const swellDur = 0.36;
+        const t0 = now;
+        const bufSize = Math.floor(ctx.sampleRate * swellDur);
+        const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+        const data = buf.getChannelData(0);
+        for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+        const src = ctx.createBufferSource();
+        src.buffer = buf;
+        const sGain = ctx.createGain();
+        sGain.gain.setValueAtTime(0.001, t0);
+        sGain.gain.exponentialRampToValueAtTime(0.18, t0 + swellDur);
+        const sFilter = ctx.createBiquadFilter();
+        sFilter.type = 'highpass';
+        sFilter.frequency.value = 1800;
+        sFilter.Q.value = 0.7;
+        src.connect(sFilter); sFilter.connect(sGain);
+        sGain.connect(spatialSink || dryGain);
+        sGain.connect(convolverHub);
+        src.start(t0); src.stop(t0 + swellDur + 0.01);
+      } catch (_) {}
+      triChord([98, 123, 147], 'sine', 0.24, 0.50, null, null, 0.36,
+        { attack: 0.005, hold: 0.18, decay: 0.31 });
+    }
   }
 
   // ---- Spatial audio (v8.14) ----
@@ -2325,6 +2775,24 @@ const _audio = (() => {
   window.addEventListener('keydown', _onGesture, { once: false });
   window.addEventListener('touchstart', _onGesture, { once: false });
 
+  // v8.37: NA25 ; tremor (low-HP audio gain wobble at ~5Hz). Called per frame
+  // from the render loop with intensity 0..1; 0 = no wobble, ~0.15 deviation
+  // peak at full intensity. Multiplies the masterGain baseline of 0.85 with a
+  // sine modulation. No new nodes; just sets masterGain.gain each frame.
+  const TREMOR_HZ = 5.0;
+  const TREMOR_DEPTH = 0.15;
+  function setTremor(intensity) {
+    if (!initialized || !masterGain) return;
+    intensity = Math.max(0, Math.min(1, intensity || 0));
+    if (intensity <= 0) {
+      masterGain.gain.value = 0.85;
+      return;
+    }
+    const t = performance.now() / 1000;
+    const wobble = 1 + intensity * TREMOR_DEPTH * Math.sin(2 * Math.PI * TREMOR_HZ * t);
+    masterGain.gain.value = 0.85 * wobble;
+  }
+
   return {
     init, resume, playSound, playSoundAt,
     startEngine: startAmbientBed,           // alias for the frame-loop call site
@@ -2333,6 +2801,7 @@ const _audio = (() => {
     duckAmbient,
     updateListener,
     probeEnvironment,
+    setTremor,                              // v8.37: NA25
     get isOn() { return initialized; },
   };
 })();
@@ -2401,6 +2870,12 @@ function _playEventSounds(snap, myPeerId) {
       } else if (ev.position) {
         _audio.playSoundAt('kill', ev.position);
       }
+      // v8.42: NA17 ; track last killer for death cam.
+      if (ev.targetPeerId === myPeerId) {
+        _deathCam.killerPeerId = ev.shooterPeerId || null;
+        _deathCam.killerBotId = ev.shooterPeerId ? null : (ev.shooterId || null);
+        _deathCam.killerLoadoutKey = ev.loadoutKey || null;
+      }
       // v8.19: explosion at the dying ship + kill feed entry.
       if (ev.position) _spawnExplosion(new THREE.Vector3(ev.position.x, ev.position.y, ev.position.z));
       _addKillFeed(
@@ -2424,10 +2899,15 @@ function _playEventSounds(snap, myPeerId) {
         _audio.playSound('hit');
       }
       if (ev.targetPeerId === myPeerId) {
-        // We took damage; centered (it's "happening to me"). Server doesn't
-        // tag shield vs hull so we approximate from current shield value.
+        // v8.35: NA38. Server now tags hits with absorbedByShield (LSS line
+        // 14913-14915). Pre-v8.35 we approximated from current shield value
+        // which misfired on shield-breaking hits and on multi-hit frames.
+        // Fallback path retained in case an older server is in play.
         const me = snap.players && snap.players.find(p => p.peerId === myPeerId);
-        if (me && me.shield > 0) _audio.playSound('damage_shield');
+        const usedShield = (typeof ev.absorbedByShield === 'boolean')
+          ? ev.absorbedByShield
+          : (me && me.shield > 0);
+        if (usedShield) _audio.playSound('damage_shield');
         else _audio.playSound('damage_hull');
         // v8.19: camera shake + damage indicator on own-ship hit.
         _addCameraShake(4);
@@ -2569,6 +3049,55 @@ function _buildWorldEffectMesh(e) {
     const mesh = new THREE.Mesh(geo, mat);
     mesh.position.set(e.position.x, e.position.y, e.position.z);
     return mesh;
+  }
+  if (e.type === 'destructible') {
+    // v8.30: cluster obstacle. Shape index in data picks geometry; color
+    // from data with a faint glow. Damage is shown via opacity = hp/maxHp.
+    const scale = (d.scale || 60);
+    const shapeIdx = d.shape || 0;
+    let g;
+    switch (shapeIdx) {
+      case 1: g = new THREE.DodecahedronGeometry(scale, 0); break;
+      case 2: g = new THREE.ConeGeometry(scale, scale * 1.4, 5); break;
+      case 3: g = new THREE.BoxGeometry(scale, scale, scale); break;
+      default: g = new THREE.OctahedronGeometry(scale, 0); break;
+    }
+    const m = new THREE.MeshLambertMaterial({
+      color: d.color || 0x99aabb, flatShading: true,
+      transparent: true, opacity: 0.92,
+    });
+    const mesh = new THREE.Mesh(g, m);
+    mesh.position.set(e.position.x, e.position.y, e.position.z);
+    mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+    return mesh;
+  }
+  if (e.type === 'stasis_pickup') {
+    // v8.29: cyan glowing core + rotating ring (LSS line 12251-12283).
+    const group = new THREE.Group();
+    const core = new THREE.Mesh(
+      new THREE.SphereGeometry(15, 12, 8),
+      new THREE.MeshBasicMaterial({
+        color: 0x00ccff, transparent: true, opacity: 0.6,
+        blending: THREE.AdditiveBlending, depthWrite: false,
+      })
+    );
+    group.add(core);
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(40, 2, 8, 32),
+      new THREE.MeshBasicMaterial({
+        color: 0x0088ff, transparent: true, opacity: 0.4,
+        blending: THREE.AdditiveBlending, depthWrite: false,
+      })
+    );
+    group.add(ring);
+    const ring2 = ring.clone();
+    ring2.material = ring.material.clone();
+    ring2.rotation.x = Math.PI / 2;
+    group.add(ring2);
+    group.position.set(e.position.x, e.position.y, e.position.z);
+    // Stash the pieces so a future per-frame rotate could spin them.
+    group.userData._stasis = { core, ring, ring2 };
+    return group;
   }
   // Unknown type: small placeholder (gray cube). Logs once.
   geo = new THREE.BoxGeometry(40, 40, 40);
@@ -2814,6 +3343,95 @@ function _addKillFeed(shooterLabel, targetLabel, weaponLabel) {
   setTimeout(() => { if (entry.parentNode) entry.parentNode.removeChild(entry); }, 5100);
 }
 
+// v8.33: cinematic transitions. Watches game-state edges and the warmup
+// timer crossing whole-second thresholds in its last 3 seconds; fires the
+// banner and the round_start fanfare at the right moment.
+let _cinLastState = null;
+let _cinLastWarmupTimer = 999;
+function _tickCinematics(snap) {
+  if (!snap || !snap.match) return;
+  const ms = snap.match.state;
+  const t = snap.match.warmupTimer || 0;
+  // 3-2-1 countdown banners during the final seconds of warmup.
+  if (ms === 'warmup' && _cinLastState === 'warmup') {
+    for (let n = 3; n >= 1; n--) {
+      if (_cinLastWarmupTimer > n && t <= n) {
+        _showBanner(String(n), 'ROUND ' + (snap.match.currentRound || 1), null);
+      }
+    }
+  }
+  // FIGHT banner + round_start fanfare on warmup → playing edge.
+  if (ms === 'playing' && _cinLastState === 'warmup') {
+    _showBanner('FIGHT', '', null);
+    if (typeof _audio !== 'undefined') _audio.playSound('round_start');
+  }
+  _cinLastState = ms;
+  _cinLastWarmupTimer = t;
+}
+
+// v8.32: match-end scoreboard. Renders kills/deaths/damage by team, sorted
+// by damage within team (LSS line 11000+ convention). Hides on non-matchEnd.
+function _showMatchEndOverlay(active, snap) {
+  const el = document.getElementById('match-end-overlay');
+  if (!el) return;
+  if (!active || !snap) {
+    el.classList.remove('active', 'victory', 'defeat');
+    return;
+  }
+  const winner = (snap.match.scoreA >= snap.match.scoreB) ? 'A' : 'B';
+  const me = (snap.players || []).find(p => p.peerId === net.myPeerId);
+  const myTeam = me ? me.team : null;
+  const iWon = (winner === 'A' && myTeam === 2) || (winner === 'B' && myTeam === 3);
+  el.classList.toggle('victory', iWon);
+  el.classList.toggle('defeat', !iWon && myTeam != null);
+  el.classList.add('active');
+  const titleEl = document.getElementById('me-title');
+  const subEl = document.getElementById('me-sub');
+  if (titleEl) titleEl.textContent = iWon ? 'VICTORY' : (myTeam ? 'DEFEAT' : 'MATCH OVER');
+  if (subEl) {
+    subEl.textContent =
+      'FLEET A: ' + snap.match.scoreA + '   FLEET B: ' + snap.match.scoreB +
+      '   ; ' + (winner === 'A' ? 'FLEET A' : 'FLEET B') + ' WINS';
+  }
+  // Build rows from players + bots, sorted by damage (desc).
+  const rows = [];
+  for (const p of (snap.players || [])) {
+    rows.push({
+      name: (p.peerId === net.myPeerId ? 'YOU' : 'P ' + p.peerId),
+      ship: p.loadoutKey || '--',
+      kills: p.kills || 0,
+      deaths: p.deaths || 0,
+      dmg: p.damageDealt || 0,
+      team: p.team,
+      isYou: p.peerId === net.myPeerId,
+    });
+  }
+  for (const b of (snap.bots || [])) {
+    rows.push({
+      name: 'BOT ' + b.id,
+      ship: b.loadoutKey || '--',
+      kills: b.kills || 0,
+      deaths: b.deaths || 0,
+      dmg: b.damageDealt || 0,
+      team: b.team,
+      isYou: false,
+    });
+  }
+  // Sort by team (A first), then by damage desc.
+  rows.sort((a, b) => (a.team - b.team) || (b.dmg - a.dmg));
+  const tbody = document.getElementById('me-rows');
+  if (tbody) {
+    tbody.innerHTML = '';
+    for (const r of rows) {
+      const tr = document.createElement('tr');
+      tr.className = (r.team === 2 ? 'team-a' : 'team-b') + (r.isYou ? ' you' : '');
+      tr.innerHTML = '<td>' + r.name + '</td><td>' + r.ship +
+        '</td><td>' + r.kills + '</td><td>' + r.deaths + '</td><td>' + r.dmg + '</td>';
+      tbody.appendChild(tr);
+    }
+  }
+}
+
 // v8.18: cinematic banner helper. Resets the animation by toggling .active
 // off then on so back-to-back banners restart cleanly.
 function _showBanner(title, sub, mode) {
@@ -2831,6 +3449,21 @@ function _showBanner(title, sub, mode) {
   // Auto-clear after the animation duration.
   clearTimeout(_showBanner._timer);
   _showBanner._timer = setTimeout(() => el.classList.remove('active'), 2100);
+}
+
+// v8.36: NA22 ; loading overlay shown during marching-cubes mesh rebuild on
+// map switch. Hidden when first state for the new level arrives.
+function _showLoadingOverlay(mapName) {
+  const el = document.getElementById('loading-overlay');
+  if (!el) return;
+  const mapEl = document.getElementById('lo-map');
+  if (mapEl) mapEl.textContent = (mapName || '').toUpperCase() || 'NEW MAP';
+  el.style.display = 'flex';
+}
+function _hideLoadingOverlay() {
+  const el = document.getElementById('loading-overlay');
+  if (!el) return;
+  el.style.display = 'none';
 }
 
 // ============================================================================
@@ -2855,6 +3488,10 @@ function frame() {
   _tickCameraShake(dt);
 
   readKeyboard();
+  // v8.31: gamepad polling every frame; writes into the same `input` fields
+  // the keyboard/mouse handlers do, so the existing input pipeline picks it
+  // up automatically.
+  pollGamepad(dt);
 
   // Send input at INPUT_HZ regardless of render rate
   inputAccum += dt;
@@ -2868,9 +3505,11 @@ function frame() {
       pitch:   input.pitch,
       fire:    input.fire,
       abilityPress: input.pendingAbility,
+      reload:  !!input.pendingReload,
       tick:    frameId,
     });
     input.pendingAbility = null;
+    input.pendingReload = false;
   }
 
   // Update meshes from latest state snapshot
@@ -2930,6 +3569,8 @@ function frame() {
       if (!seenEffects.has(id)) _disposeWorldEffectMesh(id);
     }
     if (myPlayer) updateCamera(myPlayer);
+    // v8.42: NA17 ; respawn timer overlay (read server time + deathTime).
+    if (myPlayer) _updateRespawnOverlay(myPlayer);
   }
 
   // HUD + lobby + roundEnd visibility, gated on match state
@@ -2942,6 +3583,12 @@ function frame() {
     showRoundEnd(ms === 'roundEnd');
     if (ms === 'select') updateLobby();
     if (ms === 'roundEnd') updateRoundEnd();
+    // v8.32: match-end scoreboard activation. Show overlay during matchEnd
+    // state; populate from snapshot players + bots.
+    _showMatchEndOverlay(ms === 'matchEnd', net.state);
+    // v8.33: 3-2-1 launch countdown + FIGHT banner + round_start fanfare on
+    // state edges.
+    _tickCinematics(net.state);
     updateCockpitFrame();
     // v8.11: circular HUD only during active gameplay (not lobby/roundEnd).
     const inGame = (ms === 'warmup' || ms === 'playing');
@@ -3127,6 +3774,48 @@ function updateHud() {
     // v8.18: doomed vignette.
     const vig = document.getElementById('doomed-vignette');
     if (vig) vig.classList.toggle('active', !!myPlayer.doomed);
+
+    // v8.37: NA25 ; audio tremor when doomed (5Hz gain wobble). Intensity
+    // ramps from 0 at 30% HP to 1 at 0% HP so it gets more chaotic as you
+    // approach death.
+    if (_audio.setTremor) {
+      let tremor = 0;
+      if (myPlayer.doomed && myPlayer.maxHealth > 0) {
+        const frac = Math.max(0, Math.min(1, myPlayer.health / myPlayer.maxHealth));
+        tremor = Math.max(0, Math.min(1, (0.30 - frac) / 0.30));
+      }
+      _audio.setTremor(tremor);
+    }
+
+    // v8.37: NA24 ; continuous damage vignette. Opacity ramps from 0 at full HP
+    // to ~0.6 at 30% HP (where doomed takes over with its pulsing effect).
+    // Below 30% the static vignette eases off so doomed can dominate.
+    const dvig = document.getElementById('damage-vignette');
+    if (dvig && myPlayer.maxHealth > 0) {
+      const frac = Math.max(0, Math.min(1, myPlayer.health / myPlayer.maxHealth));
+      let intensity = 0;
+      if (frac < 1) {
+        // Map [0.3, 1.0] to [0.6, 0]; below 0.3 fade out so doomed dominates.
+        if (frac >= 0.3) intensity = (1 - frac) / 0.7 * 0.6;
+        else            intensity = Math.max(0, frac / 0.3 * 0.3);
+      }
+      dvig.style.boxShadow = 'inset 0 0 160px rgba(255,40,30,' + intensity.toFixed(3) + ')';
+    } else if (dvig) {
+      dvig.style.boxShadow = 'inset 0 0 160px rgba(255,40,30,0)';
+    }
+
+    // v8.29: stasis vignette + progress bar while inStasis.
+    const sVig = document.getElementById('stasis-vignette');
+    const sBar = document.getElementById('stasis-bar');
+    const sFill = document.getElementById('stasis-fill');
+    if (sVig) sVig.classList.toggle('active', !!myPlayer.inStasis);
+    if (sBar) sBar.classList.toggle('active', !!myPlayer.inStasis);
+    if (sFill && myPlayer.inStasis) {
+      const dur = myPlayer.stasisDuration || 3;
+      const remaining = myPlayer.stasisTimer || 0;
+      const progress = Math.max(0, Math.min(1, 1 - remaining / dur));
+      sFill.style.transform = 'scaleX(' + progress + ')';
+    }
   }
 }
 

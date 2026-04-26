@@ -1,5 +1,15 @@
 /*
-  LSS server-sim ; gameplay core (v8.27)
+  LSS server-sim ; gameplay core (v8.30)
+  +  v8.30 (destructibles): cluster obstacles spawned in non-spawn rooms at
+     round start. Server-tracked HP; projectiles deduct + are consumed on
+     contact. Cleared between rounds.
+  +  v8.29 (stasis fields): pickup-style worldEffects spawned at round start;
+     player contact triggers 3s stasis (immobilized + shield recharge).
+     LSS line 12251-12305 (visual), 12442-12470 (logic).
+  +  v8.28 (BLASTER spinup + mode switch): player.spinupTimer + spunUp gates
+     fire for chassis with weapon.spinup > 0 (LSS line 8085-8090). Mode
+     switch ability now sets blasterSwitchTimer + queues blasterPendingMode;
+     stats swap on lockout expiry per LSS line 9863-9877.
   +  v8.23-v8.27 (remaining ability kits, simplified):
      SLAYER:  Arc Wave, Sword Block (passive damage reduction), Sword Core.
      VORTEX:  Laser Shot, Vortex Shield (passive), Trip Wire, Laser Core.
@@ -115,6 +125,12 @@ export interface PlayerInput {
   // v8.8: ability key edges (true on the frame the key was pressed).
   // 0 = Q (offensive slot), 1 = E (defensive slot), 2 = F (utility slot), 3 = V (core).
   abilityPress: number | null;
+  // v8.33: manual reload edge (R key on client). One-shot per send; server
+  // triggers reload if clip isn't full and not already reloading.
+  reload?: boolean;
+  // v8.44: dash edge (Shift on client). One-shot per send; server consumes
+  // a dash charge and applies the dash burst (LSS line 9898-9914).
+  dash?:   boolean;
   tick?:   number;
 }
 
@@ -138,6 +154,8 @@ export interface Player {
   deathTime: number;
   kills: number;
   deaths: number;
+  // v8.32: damage credited on hit. Used by the match-end scoreboard.
+  damageDealt: number;
   // v8.4: chassis-derived stats (set on commitLoadout)
   accel: number;
   maxSpeed: number;
@@ -149,6 +167,24 @@ export interface Player {
   abilityTimers: number[];         // remaining duration if active
   // PUNCTURE Afterburner: speed multiplier while active.
   afterburnerMult: number;
+  // v8.28: spinup mechanic (LSS line 8085-8090). For chassis whose weapon
+  // has spinup > 0 (BLASTER 1.2s, SYPHON 0.4s), trigger held charges the
+  // spinupTimer; fire is gated on spunUp. Released trigger drains at 2x rate.
+  spinupTimer: number;
+  spunUp: boolean;
+  // v8.28: BLASTER mode switch (LSS line 8927). Toggled by the slot-2
+  // ability press; 1s lockout (`blasterSwitchTimer`) before stats actually
+  // swap. blasterPendingMode holds the queued target during the lockout.
+  blasterMode: 'close' | 'long';
+  blasterPendingMode: 'close' | 'long';
+  blasterSwitchTimer: number;
+  // v8.29: stasis state (LSS line 1115-1116, 12442-12470). Set when player
+  // touches a stasis_pickup; locks velocity to 0, recharges shield over the
+  // duration. Cleared when stasisTimer expires. Client renders vignette +
+  // immobilization UI while inStasis.
+  inStasis: boolean;
+  stasisTimer: number;
+  stasisDuration: number;
   // v8.18: doomed state (LSS line 4388, 7732). Set when health drops below
   // DOOMED_HEALTH_PCT of maxHealth; client uses it for HUD red flash + audio
   // tremor. Cleared on respawn.
@@ -173,6 +209,20 @@ export interface Player {
   // the player's crosshair each frame. Here we just buff the regular fire.
   coreFireRateMult: number;
   coreDamageMult: number;
+  // v8.44: universal dash system (LSS line 9898-9914 + 7916-7932). Every
+  // chassis gets `maxDashes` charges (Frigate 3 / Corvette 2 / Dreadnought 1)
+  // that consume on Shift press. Charges regenerate one at a time over
+  // `dashCooldown` seconds. While dashActive, max-speed cap rises to
+  // chassis.dashSpeed for dashDuration seconds.
+  dashCharges: number;
+  maxDashes: number;
+  dashSpeed: number;
+  dashDuration: number;
+  dashCooldown: number;
+  dashActive: boolean;
+  dashTimer: number;
+  dashCooldownTimer: number;
+  prevDash: boolean;            // for rising-edge detection
 }
 
 export interface Bot {
@@ -192,6 +242,7 @@ export interface Bot {
   deathTime: number;
   kills: number;
   deaths: number;
+  damageDealt: number;
   // chassis-derived
   accel: number;
   maxSpeed: number;
@@ -215,6 +266,15 @@ export interface Projectile {
   age: number;
   lifetime: number;
   color: number;            // packed 0xRRGGBB hint for the client
+  // v8.40: NA10 ; projectile penetration. pierceCount is how many additional
+  // entity hits this projectile survives before being consumed (0 = standard
+  // single-hit; PUNCTURE rail rounds get pierceCount > 0). wallPierce lets
+  // arc-wave-style projectiles pass through level geometry. piercedIds tracks
+  // entities already hit by this projectile so it doesn't multi-tick the same
+  // target.
+  pierceCount?: number;
+  wallPierce?: boolean;
+  piercedIds?: number[];
 }
 
 // v8.21: world effects (firewalls, trip wires, tethers, traps, deployable
@@ -227,7 +287,7 @@ export interface Projectile {
 // type and disposes on absence.
 export interface WorldEffect {
   id: number;
-  type: 'firewall' | 'trip_wire' | 'tether' | 'incendiary' | 'particle_wall' | 'gas';
+  type: 'firewall' | 'trip_wire' | 'tether' | 'incendiary' | 'particle_wall' | 'gas' | 'stasis_pickup' | 'destructible';
   ownerType: 'player' | 'bot';
   ownerId: number;
   ownerTeam: number;
@@ -290,7 +350,23 @@ export interface SimEvent {
 
 // ---- Tunables ----
 
-const PLAYER_RADIUS = 60;          // collision sphere radius
+const PLAYER_RADIUS = 60;          // collision sphere radius (FALLBACK ONLY; per-chassis radius via _hullRadius)
+
+// v8.43: NA7 ; per-chassis hull radius. LSS uses chassis.hullLength * 0.5
+// (range 40-70 across the three chassis classes). Used for both collision
+// (against walls + obstacles) and projectile-vs-ship hit detection. Falls
+// back to PLAYER_RADIUS / PLAYER_HIT_RADIUS for entities without loadout.
+function _hullRadius(ent: Player | Bot): number {
+  const ld = (ent as any).loadoutKey ? LOADOUTS[(ent as any).loadoutKey as LoadoutKey] : null;
+  if (!ld) return PLAYER_RADIUS;
+  const ch = CHASSIS[ld.chassis];
+  if (!ch) return PLAYER_RADIUS;
+  return ch.hullLength * 0.5;
+}
+function _hitRadius(ent: Player | Bot): number {
+  // Hit radius is hull radius + small forgiveness margin (LSS uses 1.33x).
+  return _hullRadius(ent) * 1.33;
+}
 const ACCEL = 1500;                 // units / s^2
 const MAX_SPEED = 600;              // units / s
 const DAMPING = 4;                  // velocity decay per second when no input
@@ -375,6 +451,7 @@ export function addPlayer(state: SimState, peerId: string, team: number): Player
     deathTime: 0,
     kills: 0,
     deaths: 0,
+    damageDealt: 0,
     accel: ch.acceleration,
     maxSpeed: ch.flightSpeed,
     weaponDamage: 250,
@@ -389,9 +466,27 @@ export function addPlayer(state: SimState, peerId: string, team: number): Player
     maxClip: 0,
     reloading: false,
     reloadTimer: 0,
+    spinupTimer: 0,
+    spunUp: false,
+    blasterMode: 'close',
+    blasterPendingMode: 'close',
+    blasterSwitchTimer: 0,
+    inStasis: false,
+    stasisTimer: 0,
+    stasisDuration: 3,
     damageImmuneTimer: 0,
     coreFireRateMult: 1.0,
     coreDamageMult: 1.0,
+    // v8.44: dash defaults; per-chassis values set in applyPlayerLoadout.
+    dashCharges: ch.maxDashes,
+    maxDashes: ch.maxDashes,
+    dashSpeed: ch.dashSpeed,
+    dashDuration: ch.dashDuration,
+    dashCooldown: ch.dashCooldown,
+    dashActive: false,
+    dashTimer: 0,
+    dashCooldownTimer: 0,
+    prevDash: false,
   };
   state.players.set(peerId, player);
   return player;
@@ -436,6 +531,15 @@ export function applyPlayerLoadout(player: Player, loadoutKey: string | null): v
   player.reloadTimer = 0;
   player.doomed = false;
   player.spawnProtection = SPAWN_PROTECTION_TIME;
+  // v8.44: dash stats from chassis. Charges refilled to max on loadout swap.
+  player.maxDashes = ch.maxDashes;
+  player.dashSpeed = ch.dashSpeed;
+  player.dashDuration = ch.dashDuration;
+  player.dashCooldown = ch.dashCooldown;
+  player.dashCharges = ch.maxDashes;
+  player.dashActive = false;
+  player.dashTimer = 0;
+  player.dashCooldownTimer = 0;
 }
 
 // v8.4: switch a player to the other team. No-op if destination is full.
@@ -461,7 +565,7 @@ export function ensurePlayerHasLoadout(player: Player): void {
 // resets HP/shield to chassis max so they start the round at full strength.
 export function respawnAllPlayers(state: SimState): void {
   for (const p of state.players.values()) {
-    _respawnPlayer(p, state.level);
+    _respawnPlayer(p, state, state.level);
   }
 }
 
@@ -511,6 +615,7 @@ export function spawnBot(state: SimState, team: number, loadoutKey: string): Bot
     deathTime: 0,
     kills: 0,
     deaths: 0,
+    damageDealt: 0,
     accel: ch.acceleration * 0.85,        // bots a bit slower than humans
     maxSpeed: ch.flightSpeed * 0.85,
     weaponDamage: ld.weapon.damage,
@@ -717,9 +822,51 @@ function _creditKill(state: SimState, ownerType: 'player' | 'bot', ownerId: numb
   }
 }
 
-function _respawnPlayer(player: Player, level: Level): void {
-  const pool = player.team === TEAM_B ? level.spawnB : level.spawnA;
-  const sp = pool[Math.floor(Math.random() * pool.length)];
+// v8.38: NA11. Anti-spawn-camp spawn picker. Score each candidate spawn by
+// MIN distance to any living enemy (higher = better) and MIN distance to any
+// teammate (higher = better but weighted less so we don't isolate spawns).
+// Returns the highest-scoring spawn with a small randomization tie-breaker
+// so identical-score spawns don't always pick the same one.
+function _pickSafeSpawn(state: SimState, team: number, level: Level): { x: number; y: number; z: number } {
+  const pool = team === TEAM_B ? level.spawnB : level.spawnA;
+  if (pool.length <= 1) return pool[0];
+  let bestScore = -Infinity;
+  let best = pool[0];
+  for (const sp of pool) {
+    let minEnemyDist2 = Infinity;
+    let minAllyDist2 = Infinity;
+    // Compare against living players + bots.
+    for (const p of state.players.values()) {
+      if (!p.alive) continue;
+      const dx = p.position.x - sp.x;
+      const dy = p.position.y - sp.y;
+      const dz = p.position.z - sp.z;
+      const d2 = dx * dx + dy * dy + dz * dz;
+      if (p.team === team) { if (d2 < minAllyDist2) minAllyDist2 = d2; }
+      else                 { if (d2 < minEnemyDist2) minEnemyDist2 = d2; }
+    }
+    for (const b of state.bots.values()) {
+      if (!b.alive) continue;
+      const dx = b.position.x - sp.x;
+      const dy = b.position.y - sp.y;
+      const dz = b.position.z - sp.z;
+      const d2 = dx * dx + dy * dy + dz * dz;
+      if (b.team === team) { if (d2 < minAllyDist2) minAllyDist2 = d2; }
+      else                 { if (d2 < minEnemyDist2) minEnemyDist2 = d2; }
+    }
+    // Score: enemy distance dominates (weight 1.0); ally distance has small
+    // bonus (weight 0.25) to spread teammates apart but not too aggressively.
+    // Square-root for more linear distance feel.
+    const enemyScore = (minEnemyDist2 === Infinity ? 1e9 : Math.sqrt(minEnemyDist2));
+    const allyScore  = (minAllyDist2  === Infinity ? 1e6 : Math.sqrt(minAllyDist2));
+    const score = enemyScore + 0.25 * allyScore + Math.random() * 50; // 50u jitter
+    if (score > bestScore) { bestScore = score; best = sp; }
+  }
+  return best;
+}
+
+function _respawnPlayer(player: Player, state: SimState, level: Level): void {
+  const sp = _pickSafeSpawn(state, player.team, level);
   player.position.x = sp.x; player.position.y = sp.y; player.position.z = sp.z;
   player.velocity.x = 0; player.velocity.y = 0; player.velocity.z = 0;
   player.health = player.maxHealth;
@@ -735,9 +882,8 @@ function _respawnPlayer(player: Player, level: Level): void {
   player.reloadTimer = 0;
 }
 
-function _respawnBot(bot: Bot, level: Level): void {
-  const pool = bot.team === TEAM_B ? level.spawnB : level.spawnA;
-  const sp = pool[Math.floor(Math.random() * pool.length)];
+function _respawnBot(bot: Bot, state: SimState, level: Level): void {
+  const sp = _pickSafeSpawn(state, bot.team, level);
   bot.position.x = sp.x + (Math.random() - 0.5) * 100;
   bot.position.y = sp.y;
   bot.position.z = sp.z + (Math.random() - 0.5) * 100;
@@ -821,15 +967,59 @@ function _applyDamage(target: Player | Bot, amount: number): boolean {
   return false;
 }
 
-function _recordHit(state: SimState, p: Projectile, target: Player | Bot, killed: boolean): void {
+// v8.39: NA8. Knockback impulse applied to the target on a non-fatal hit.
+// Direction is the projectile's normalized velocity vector (so the target is
+// pushed AWAY from the shooter along the projectile's trajectory). Magnitude
+// scales with damage; capped so single shots don't punt ships across the map.
+// Heavier weapons (rockets, cluster missiles) naturally produce larger pushes
+// because they carry more damage per hit. Adds to existing velocity rather
+// than replacing it (so a ship boosting toward you keeps its momentum and
+// just gets nudged off course).
+const KNOCKBACK_PER_DAMAGE = 0.40;       // velocity units per damage point
+const KNOCKBACK_MAX_PER_HIT = 280;       // hard cap on a single impulse
+function _applyKnockback(target: Player | Bot, p: Projectile): void {
+  const vx = p.velocity.x, vy = p.velocity.y, vz = p.velocity.z;
+  const speed = Math.sqrt(vx * vx + vy * vy + vz * vz);
+  if (speed < 1) return;
+  const nx = vx / speed, ny = vy / speed, nz = vz / speed;
+  let mag = p.damage * KNOCKBACK_PER_DAMAGE;
+  if (mag > KNOCKBACK_MAX_PER_HIT) mag = KNOCKBACK_MAX_PER_HIT;
+  target.velocity.x += nx * mag;
+  target.velocity.y += ny * mag;
+  target.velocity.z += nz * mag;
+}
+
+// v8.35: NA38. Caller passes pre-hit shield so we can deterministically
+// tag whether shield absorbed any of this hit and whether it broke. LSS
+// at line 14913-14915 uses `if (shieldBefore > 0)` for damage_shield and
+// `if (shieldAfter <= 0 && shieldBefore < amount + 0.001)` for damage.
+// Client previously approximated from snapshot shield; now uses these tags.
+function _recordHit(
+  state: SimState,
+  p: Projectile,
+  target: Player | Bot,
+  killed: boolean,
+  shieldBefore: number = 0,
+): void {
   const isPlayerTarget = (target as Player).peerId !== undefined;
-  // Lookup shooter peerId for clean attribution.
+  // Lookup shooter peerId for clean attribution. Also credit damage.
   let shooterPeerId: string | undefined;
   if (p.ownerType === 'player') {
     for (const pl of state.players.values()) {
-      if (pl.id === p.ownerId) { shooterPeerId = pl.peerId; break; }
+      if (pl.id === p.ownerId) {
+        shooterPeerId = pl.peerId;
+        pl.damageDealt = (pl.damageDealt || 0) + p.damage;
+        break;
+      }
     }
+  } else if (p.ownerType === 'bot') {
+    const b = state.bots.get(p.ownerId);
+    if (b) b.damageDealt = (b.damageDealt || 0) + p.damage;
   }
+  // v8.35: shield tagging. Compute from pre-hit shield + post-hit shield.
+  const shieldAfter = target.shield;
+  const absorbedByShield = shieldBefore > 0;
+  const brokeShield = shieldBefore > 0 && shieldAfter <= 0;
   state.events.push({
     type: killed ? 'kill' : 'hit',
     shooterType: p.ownerType,
@@ -839,6 +1029,8 @@ function _recordHit(state: SimState, p: Projectile, target: Player | Bot, killed
     targetId: (target as any).id,
     targetPeerId: isPlayerTarget ? (target as Player).peerId : undefined,
     damage: p.damage,
+    absorbedByShield,
+    brokeShield,
     // v8.14: target position so the client can position the hit/kill SFX
     // in 3D via PannerNode. Cheap (one Vec3 copy) and lets the listener
     // tell where the hit happened by ear.
@@ -857,30 +1049,73 @@ function _tickProjectiles(state: SimState, dt: number): void {
     p.position.z += p.velocity.z * dt;
 
     // Wall hit? v8.7: projectile dies if it leaves the room+tunnel envelope.
+    // v8.40: NA10 ; wallPierce skips the wall check (arc-wave style).
     let hit = false;
-    if (!pointInLevel(p.position, state.level)) {
-      hit = true;
-    } else {
-      for (let i = 0; i < state.level.obstacles.length; i++) {
-        if (_projectileHitsBox(p, state.level.obstacles[i])) { hit = true; break; }
+    if (!p.wallPierce) {
+      if (!pointInLevel(p.position, state.level)) {
+        hit = true;
+      } else {
+        for (let i = 0; i < state.level.obstacles.length; i++) {
+          if (_projectileHitsBox(p, state.level.obstacles[i])) { hit = true; break; }
+        }
       }
     }
     if (hit) { dead.push(p.id); continue; }
 
+    // v8.30: destructible obstacles. Projectiles deduct HP on contact and
+    // are consumed; on HP<=0, the worldEffect cleans up next tick.
+    let hitDestructible = false;
+    for (const eff of state.worldEffects.values()) {
+      if (eff.type !== 'destructible' || eff.hp <= 0) continue;
+      const r = ((eff.data && eff.data.scale) || 60) * 0.7; // collision radius
+      const dx = p.position.x - eff.position.x;
+      const dy = p.position.y - eff.position.y;
+      const dz = p.position.z - eff.position.z;
+      if (dx*dx + dy*dy + dz*dz < r*r) {
+        eff.hp -= p.damage;
+        hitDestructible = true;
+        break;
+      }
+    }
+    if (hitDestructible) { dead.push(p.id); continue; }
+
     // Player hit? Skip own-team (no friendly fire).
+    // v8.40: NA10 ; pierce. consumed flips true when the projectile is used up.
+    // For pierceCount > 0 each entity hit decrements the counter; same target
+    // can't be hit twice (piercedIds memo).
     let consumed = false;
     for (const player of state.players.values()) {
       if (!player.alive) continue;
       if (player.team === p.ownerTeam) continue;
       if (player.id === p.ownerId) continue;
-      if (_projectileHitsEntity(p, player.position, PLAYER_HIT_RADIUS)) {
+      if (p.piercedIds && p.piercedIds.indexOf(player.id) >= 0) continue;
+      if (_projectileHitsEntity(p, player.position, _hitRadius(player))) {
+        // v8.35: snapshot shield BEFORE damage so _recordHit can tag the event
+        // deterministically (NA38; LSS line 14913-14915).
+        const shieldBefore = player.shield;
         const killed = _applyDamage(player, p.damage);
+        // v8.39: NA8. Knockback impulse on hit. Direction from projectile
+        // velocity (normalized); magnitude scales with damage. No knockback
+        // while in spawn protection or stasis (those override movement).
+        if (!killed && !player.spawnProtection && !player.inStasis) {
+          _applyKnockback(player, p);
+        }
         if (killed) {
           _killEntity(player, state.time);
           _creditKill(state, p.ownerType, p.ownerId);
         }
-        _recordHit(state, p, player, killed);
-        consumed = true; break;
+        _recordHit(state, p, player, killed, shieldBefore);
+        // v8.40: NA10 ; pierce check.
+        if (p.pierceCount && p.pierceCount > 0) {
+          p.pierceCount--;
+          if (!p.piercedIds) p.piercedIds = [];
+          p.piercedIds.push(player.id);
+          // Don't consume; keep flying. Only one hit per tick to avoid double-
+          // hitting clustered enemies in the same frame.
+        } else {
+          consumed = true;
+        }
+        break;
       }
     }
     if (consumed) { dead.push(p.id); continue; }
@@ -890,14 +1125,27 @@ function _tickProjectiles(state: SimState, dt: number): void {
       if (!bot.alive) continue;
       if (bot.team === p.ownerTeam) continue;
       if (bot.id === p.ownerId) continue;
-      if (_projectileHitsEntity(p, bot.position, PLAYER_HIT_RADIUS)) {
+      if (p.piercedIds && p.piercedIds.indexOf(bot.id) >= 0) continue;
+      if (_projectileHitsEntity(p, bot.position, _hitRadius(bot))) {
+        // v8.35: snapshot shield BEFORE damage (NA38).
+        const shieldBefore = bot.shield;
         const killed = _applyDamage(bot, p.damage);
+        // v8.39: NA8. Knockback on bots too.
+        if (!killed) _applyKnockback(bot, p);
         if (killed) {
           _killEntity(bot, state.time);
           _creditKill(state, p.ownerType, p.ownerId);
         }
-        _recordHit(state, p, bot, killed);
-        consumed = true; break;
+        _recordHit(state, p, bot, killed, shieldBefore);
+        // v8.40: NA10 ; pierce check.
+        if (p.pierceCount && p.pierceCount > 0) {
+          p.pierceCount--;
+          if (!p.piercedIds) p.piercedIds = [];
+          p.piercedIds.push(bot.id);
+        } else {
+          consumed = true;
+        }
+        break;
       }
     }
     if (consumed) { dead.push(p.id); continue; }
@@ -1118,11 +1366,11 @@ function _activatePlayerAbility(state: SimState, player: Player, slot: number): 
   }
 
   if (lk === 'BLASTER' && slot === 2) {
-    // Mode Switch (LSS line 8927-8931): no-op stat change in the simplified
-    // port; in LSS this swaps weapon stats between close (high spread, high
-    // DPS) and long (tight spread, lower fire rate). We don't model
-    // weapon-stat swaps yet so this is just an ability press that consumes
-    // a 2s cooldown for placeholder feedback.
+    // Mode Switch (LSS line 8927-8931): real implementation in v8.28. Sets
+    // a 1s lockout; on expiry the weapon stats swap (close/long). Per-tick
+    // logic in the player update path applies the swap.
+    player.blasterSwitchTimer = 1.0;
+    player.blasterPendingMode = (player.blasterMode === 'close') ? 'long' : 'close';
     player.abilityCooldowns[slot] = cdTable[slot];
     player.abilityActive[slot] = true;
     player.abilityTimers[slot] = durTable[slot];
@@ -1584,6 +1832,15 @@ function _tickPlayerAbilities(player: Player, dt: number): void {
       player.reloading = false;
     }
   }
+  // v8.29: stasis tick. While inStasis, player is immobilized and shield
+  // recharges over the duration (LSS line 12442-12470).
+  if (player.inStasis) {
+    player.stasisTimer = Math.max(0, player.stasisTimer - dt);
+    const recharge = player.maxShield / Math.max(0.1, player.stasisDuration);
+    player.shield = Math.min(player.maxShield, player.shield + recharge * dt);
+    player.velocity.x = 0; player.velocity.y = 0; player.velocity.z = 0;
+    if (player.stasisTimer <= 0) player.inStasis = false;
+  }
   for (let i = 0; i < 4; i++) {
     if (player.abilityCooldowns[i] > 0) {
       player.abilityCooldowns[i] = Math.max(0, player.abilityCooldowns[i] - dt);
@@ -1653,10 +1910,86 @@ function _tickWorldEffects(state: SimState, dt: number): void {
       // and removing self.
       _tickTripWire(state, eff);
     }
+    else if (eff.type === 'stasis_pickup') {
+      // v8.29: pickup that traps the first player to touch it (LSS line
+      // 12251, 12442-12470). On contact: set the player's stasis state and
+      // remove the pickup from the world.
+      _tickStasisPickup(state, eff);
+    }
     // particle_wall is hp-driven (handled by projectile collision pass);
     // no per-tick logic.
   }
   for (const id of toRemove) state.worldEffects.delete(id);
+}
+
+function _tickStasisPickup(state: SimState, eff: WorldEffect): void {
+  const radius = (eff.data && eff.data.radius) || 120;
+  const r2 = radius * radius;
+  for (const p of state.players.values()) {
+    if (!p.alive || p.inStasis) continue;
+    const dx = p.position.x - eff.position.x;
+    const dy = p.position.y - eff.position.y;
+    const dz = p.position.z - eff.position.z;
+    if (dx * dx + dy * dy + dz * dz < r2) {
+      p.inStasis = true;
+      p.stasisTimer = p.stasisDuration;
+      p.velocity.x = 0; p.velocity.y = 0; p.velocity.z = 0;
+      eff.timer = 0;     // mark for cleanup
+      eff.hp = 0;
+      return;
+    }
+  }
+}
+
+// v8.30: destructible obstacles (LSS line 7383+, ClusterObstacle). Each is
+// a world entity with HP that blocks/absorbs projectiles. Spawned at round
+// start in non-spawn rooms.
+function _spawnDestructiblesForRound(state: SimState): void {
+  const level = state.level;
+  if (!level || !level.rooms || level.rooms.length === 0) return;
+  const candidates = level.rooms.filter(r => r.team !== 'A' && r.team !== 'B');
+  for (const room of candidates) {
+    // 2-3 obstacles per room, placed at random offsets within the sphere.
+    const count = 2 + Math.floor(Math.random() * 2);
+    for (let i = 0; i < count; i++) {
+      const off = room.radius * (0.3 + Math.random() * 0.4);
+      const ang = Math.random() * Math.PI * 2;
+      const phi = (Math.random() - 0.5) * Math.PI * 0.5;
+      const pos: Vec3 = {
+        x: room.center.x + Math.cos(ang) * Math.cos(phi) * off,
+        y: room.center.y + Math.sin(phi) * off,
+        z: room.center.z + Math.sin(ang) * Math.cos(phi) * off,
+      };
+      const scale = 60 + Math.random() * 40;
+      const shapeIdx = Math.floor(Math.random() * 4); // 0..3: dia/cross/wedge/box
+      _spawnWorldEffect(state, 'destructible', 'player', 0, 0, pos,
+        { scale, shape: shapeIdx, color: 0x99aabb }, 1500, 999);
+    }
+  }
+}
+
+// v8.29: spawn 3 stasis pickups at random map positions when a round starts.
+// SIMPLIFIED: LSS spawns batches periodically over the round (line 12379-12386);
+// ours spawns once at round start.
+function _spawnStasisFieldsForRound(state: SimState): void {
+  const level = state.level;
+  if (!level || !level.rooms || level.rooms.length === 0) return;
+  // Pick 3 distinct non-spawn rooms; place a pickup at each room center
+  // (offset slightly so they aren't in the dead center).
+  const candidates = level.rooms.filter(r => r.team !== 'A' && r.team !== 'B');
+  const pool = candidates.length >= 3 ? candidates : level.rooms;
+  for (let i = 0; i < 3 && pool.length > 0; i++) {
+    const r = pool[Math.floor(Math.random() * pool.length)];
+    const off = r.radius * 0.4;
+    const ang = Math.random() * Math.PI * 2;
+    const pos: Vec3 = {
+      x: r.center.x + Math.cos(ang) * off,
+      y: r.center.y + (Math.random() - 0.5) * 60,
+      z: r.center.z + Math.sin(ang) * off,
+    };
+    _spawnWorldEffect(state, 'stasis_pickup', 'player', 0, 0, pos,
+      { radius: 120 }, 1, 999); // 999s timer = lasts the round
+  }
 }
 
 function _tickAreaDamageLine(state: SimState, eff: WorldEffect, dt: number): void {
@@ -1787,7 +2120,7 @@ function _onAbilityExpire(player: Player, slot: number): void {
 
 // ---- Tick ----
 
-const NO_INPUT: PlayerInput = { forward: 0, right: 0, up: 0, yaw: 0, pitch: 0, fire: false, abilityPress: null };
+const NO_INPUT: PlayerInput = { forward: 0, right: 0, up: 0, yaw: 0, pitch: 0, fire: false, abilityPress: null, reload: false };
 
 export function tick(state: SimState, inputs: Map<string, PlayerInput>, dt: number): void {
   state.tick++;
@@ -1815,7 +2148,7 @@ export function tick(state: SimState, inputs: Map<string, PlayerInput>, dt: numb
 
     if (!player.alive) {
       if (state.time - player.deathTime >= RESPAWN_DELAY) {
-        _respawnPlayer(player, state.level);
+        _respawnPlayer(player, state, state.level);
       } else {
         player.yaw = input.yaw;
         player.pitch = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, input.pitch));
@@ -1828,13 +2161,55 @@ export function tick(state: SimState, inputs: Map<string, PlayerInput>, dt: numb
     player.pitch = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, input.pitch));
 
     player.fireTimer = Math.max(0, player.fireTimer - dt);
+    // v8.28: spinup tick (LSS line 8085-8090). For chassis whose weapon has
+    // spinup > 0, trigger held charges the timer; release drains at 2x rate.
+    // Fire path gates on spunUp. Mirror table because we don't carry the
+    // full weapon spec on Player.
+    const _SPINUP = { BLASTER: 1.2, SYPHON: 0.4 };
+    const spinupNeeded = (_SPINUP as any)[player.loadoutKey || ''] || 0;
+    if (spinupNeeded > 0) {
+      if (input.fire) {
+        player.spinupTimer = Math.min(spinupNeeded, player.spinupTimer + dt);
+        if (player.spinupTimer >= spinupNeeded) player.spunUp = true;
+      } else {
+        player.spinupTimer = Math.max(0, player.spinupTimer - dt * 2);
+        if (player.spinupTimer <= 0.001) player.spunUp = false;
+      }
+    } else {
+      player.spunUp = true; // weapons without spinup are always ready
+    }
+    // v8.28: BLASTER mode-switch lockout tick (LSS line 9855-9877). During
+    // the 1s lockout, fire is blocked. On expiry, weapon stats swap based
+    // on blasterPendingMode.
+    if (player.blasterSwitchTimer > 0) {
+      player.blasterSwitchTimer = Math.max(0, player.blasterSwitchTimer - dt);
+      if (player.blasterSwitchTimer <= 0 && player.blasterPendingMode !== player.blasterMode) {
+        player.blasterMode = player.blasterPendingMode;
+        // Apply mode-specific stats (LSS line 9863-9877).
+        const ammoPct = player.maxClip > 0 ? player.clipAmmo / player.maxClip : 1;
+        if (player.blasterMode === 'close') {
+          player.weaponFireRate = 0.05;
+          player.weaponDamage = 85;
+          player.maxClip = 150;
+          player.clipAmmo = Math.round(ammoPct * 150);
+        } else {
+          player.weaponFireRate = 0.08;
+          player.weaponDamage = 100;
+          player.maxClip = 100;
+          player.clipAmmo = Math.round(ammoPct * 100);
+        }
+      }
+    }
     // v8.15: full-auto firing (matches LSS line 8097: `if (firing && fireTimer <= 0)`).
     // The `!player.prevFire` rising-edge gate forced single-shot behavior;
     // for chainguns and most weapons, holding the trigger should fire at the
     // weapon's fireRate cadence. Semi-auto behavior is captured by the
     // weapon's fireRate alone (a 1.5s railgun naturally feels semi).
     // v8.18: gate fire on having ammo + not currently reloading.
-    if (canFire && input.fire && player.fireTimer <= 0 && !player.reloading && player.clipAmmo > 0) {
+    // v8.28: also gate on spunUp + not in mode-switch lockout.
+    if (canFire && input.fire && player.fireTimer <= 0
+        && !player.reloading && player.clipAmmo > 0
+        && player.spunUp && player.blasterSwitchTimer <= 0) {
       const dir = _facingDir(player.yaw, player.pitch);
       const origin = {
         x: player.position.x + dir.x * 80,
@@ -1874,6 +2249,13 @@ export function tick(state: SimState, inputs: Map<string, PlayerInput>, dt: numb
     _tickPlayerAbilities(player, dt);
     if (canFire && input.abilityPress != null) {
       _activatePlayerAbility(state, player, input.abilityPress | 0);
+    }
+    // v8.33: manual reload (LSS line 8111-8114). Triggers a reload if clip
+    // isn't full + not already reloading + not an infinite-clip weapon.
+    if (canFire && input.reload && !player.reloading
+        && player.clipAmmo < player.maxClip && player.maxClip < 999) {
+      player.reloading = true;
+      player.reloadTimer = 2.0;
     }
 
     // Build local-axis movement. forward = -Z when facing yaw=0; right = +X.
@@ -1929,7 +2311,7 @@ export function tick(state: SimState, inputs: Map<string, PlayerInput>, dt: numb
   for (const bot of state.bots.values()) {
     if (!bot.alive) {
       if (state.time - bot.deathTime >= RESPAWN_DELAY) {
-        _respawnBot(bot, state.level);
+        _respawnBot(bot, state, state.level);
       }
       continue;
     }
@@ -1959,6 +2341,10 @@ export function tick(state: SimState, inputs: Map<string, PlayerInput>, dt: numb
     if (state.match.warmupTimer <= 0) {
       state.match.state = 'playing';
       state.match.roundTimer = ROUND_TIME;
+      // v8.29: spawn stasis field pickups when the round actually starts.
+      _spawnStasisFieldsForRound(state);
+      // v8.30: spawn destructibles in non-spawn rooms.
+      _spawnDestructiblesForRound(state);
     }
   } else if (state.match.state === 'playing') {
     state.match.roundTimer = Math.max(0, state.match.roundTimer - dt);
@@ -2021,7 +2407,19 @@ export function tick(state: SimState, inputs: Map<string, PlayerInput>, dt: numb
         state.match.state = 'select';
         state.match.currentRound++;
         // Clear ready on every player so they have to commit again.
-        for (const p of state.players.values()) p.ready = false;
+        for (const p of state.players.values()) {
+          p.ready = false;
+          // v8.29: clear stasis carryover between rounds.
+          p.inStasis = false;
+          p.stasisTimer = 0;
+        }
+        // v8.29-v8.30: drop stasis pickups + destructibles left over from
+        // the previous round so the next round respawns clean.
+        for (const [id, eff] of [...state.worldEffects.entries()]) {
+          if (eff.type === 'stasis_pickup' || eff.type === 'destructible') {
+            state.worldEffects.delete(id);
+          }
+        }
       }
     }
   } else if (state.match.state === 'matchEnd') {
@@ -2038,10 +2436,12 @@ export function tick(state: SimState, inputs: Map<string, PlayerInput>, dt: numb
         p.ready = false;
         p.kills = 0;
         p.deaths = 0;
+        p.damageDealt = 0;
       }
       for (const b of state.bots.values()) {
         b.kills = 0;
         b.deaths = 0;
+        b.damageDealt = 0;
       }
     }
   }
@@ -2136,12 +2536,15 @@ function _resolveAABBs(pos: Vec3, vel: Vec3, radius: number, obstacles: AABB[]):
 }
 
 function resolveCollision(player: Player, level: Level): void {
-  _resolveSDF(player.position, player.velocity, PLAYER_RADIUS, level);
-  _resolveAABBs(player.position, player.velocity, PLAYER_RADIUS, level.obstacles);
+  // v8.43: NA7 ; per-chassis hull radius for wall + obstacle collision.
+  const r = _hullRadius(player);
+  _resolveSDF(player.position, player.velocity, r, level);
+  _resolveAABBs(player.position, player.velocity, r, level.obstacles);
 }
 
 function _resolveBotCollision(bot: Bot, level: Level): void {
-  const r = PLAYER_RADIUS * 0.9;
+  // v8.43: NA7 ; bots use the same per-chassis radius (no longer 0.9x).
+  const r = _hullRadius(bot);
   _resolveSDF(bot.position, bot.velocity, r, level);
   _resolveAABBs(bot.position, bot.velocity, r, level.obstacles);
 }
@@ -2169,8 +2572,18 @@ export function snapshot(state: SimState) {
       ready: p.ready,
       kills: p.kills,
       deaths: p.deaths,
+      damageDealt: Math.round(p.damageDealt || 0),
       abilityCooldowns: p.abilityCooldowns.slice(),
       abilityActive: p.abilityActive.slice(),
+      // v8.28: spinup + mode-switch state for HUD.
+      spinupTimer: round3(p.spinupTimer),
+      spunUp: p.spunUp,
+      blasterMode: p.blasterMode,
+      blasterSwitchTimer: round3(p.blasterSwitchTimer),
+      // v8.29: stasis state for client visuals.
+      inStasis: p.inStasis,
+      stasisTimer: round3(p.stasisTimer),
+      stasisDuration: p.stasisDuration,
       // v8.16: simplified TRACKER buffs surfaced for HUD/visual feedback.
       damageImmuneTimer: round3(p.damageImmuneTimer),
       coreActive: p.coreFireRateMult !== 1.0 || p.coreDamageMult !== 1.0,
@@ -2181,6 +2594,8 @@ export function snapshot(state: SimState) {
       maxClip: p.maxClip,
       reloading: p.reloading,
       reloadTimer: round3(p.reloadTimer),
+      // v8.42: NA17 ; deathTime so client can compute respawn countdown.
+      deathTime: round3(p.deathTime),
     });
   }
   // Bots: same shape as players except no peerId.
