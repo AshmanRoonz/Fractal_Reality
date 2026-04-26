@@ -15675,10 +15675,11 @@ function buildRoomGraphLevel(level) {
       // folds into the positive octant, scale by the reciprocal of |p|²,
       // translate by a golden-ratio triple. Returns the accumulated scale
       // factor `s`, which reads as luminosity: high where a point survives
-      // many iterations, low in the folds.
+      // many iterations, low in the folds. Iteration count was tuned to 9
+      // (was 8) in the wall-pattern lab session for slightly more detail.
       'float kaliIFS(vec3 p, vec3 off, float inv) {',
       '  float s = 1.0;',
-      '  for (int k = 0; k < 8; k++) {',
+      '  for (int k = 0; k < 9; k++) {',
       '    if (p.x + p.y < 0.0) p.xy = -p.yx;',
       '    if (p.x + p.z < 0.0) p.xz = -p.zx;',
       '    if (p.y + p.z < 0.0) p.yz = -p.zy;',
@@ -15689,28 +15690,32 @@ function buildRoomGraphLevel(level) {
       '  return s;',
       '}',
       // Cosmic fractal field evaluated from a world-space position, steered
-      // by the nearest-zone color. Three nested rings, each at phi-spaced
-      // scales, with a radial sin band so the pattern breathes around each
-      // "attractor". Returns an additive RGB glow that gets mixed into the
-      // wall's base color.
+      // by the nearest-zone color. Two nested rings (was three; tuned in the
+      // lab session for a cleaner read), each at phi-spaced scales, with a
+      // radial sin band so the pattern breathes around each "attractor".
+      // The spatial scale slowly oscillates between 0.0026 and 0.0033 so
+      // the fractal "breathes" through close-up detail and farther-out
+      // structure as the round progresses; period ~157 s. Returns an
+      // additive RGB glow that gets mixed into the wall's base color.
       'vec3 cosmicField(vec3 wp, vec3 zoneC, float tt) {',
-      '  vec3 off = vec3(1.5, 1.618, 1.0);',
-      '  vec3 p = wp * 0.0028;',
-      '  float ca = cos(tt * 0.12), sa = sin(tt * 0.12);',
+      '  vec3 off = vec3(2.03, 2.65, 2.51);',
+      '  float scale = mix(0.0026, 0.0033, 0.5 + 0.5 * sin(tt * 0.04));',
+      '  vec3 p = wp * scale;',
+      '  float ca = cos(tt * 0.08), sa = sin(tt * 0.08);',
       '  p = vec3(ca * p.x - sa * p.z, p.y, sa * p.x + ca * p.z);',
       '  float baseHue = rgbHue(zoneC);',
       '  vec3 accum = vec3(0.0);',
-      '  for (int ring = 0; ring < 3; ring++) {',
+      '  for (int ring = 0; ring < 2; ring++) {',
       '    float rf = float(ring);',
       '    float sMul = pow(1.618, 1.4 - rf * 0.7);',
       '    vec3 pp = p * sMul;',
-      '    float s = kaliIFS(pp, off, 9.0 + rf * 0.4);',
+      '    float s = kaliIFS(pp, off, 8.1 + rf * 0.4);',
       '    float phase = atan(pp.x, pp.y);',
       '    float q = 0.5 + 0.5 * sin(phase * 3.0 + tt * 0.3 + rf * 1.7);',
       '    float band = q < 0.5 ? 0.65 : 1.0;',
-      '    float val = clamp(s / 380.0 * (0.35 + 0.80 * band), 0.0, 4.5);',
-      '    float hue = fract(baseHue + rf * 0.12 + phase * 0.05 + tt * 0.02);',
-      '    float sat = 0.55 + rf * 0.10;',
+      '    float val = clamp(s / 690.0 * (0.35 + 0.80 * band), 0.0, 4.5);',
+      '    float hue = fract(baseHue + rf * 0.28 + phase * 0.05 + tt * 0.02);',
+      '    float sat = 0.75 + rf * 0.10;',
       '    accum += hsv(hue, sat, val) * pow(0.75, rf);',
       '  }',
       '  return accum;',
@@ -15721,29 +15726,29 @@ function buildRoomGraphLevel(level) {
       // ============================================================
       // Static dark floor. Lifts pure-black corners so AO doesn't
       // crush the wall to nothing in dark-palette rooms.
-      '  vec3  K_DARK_BASE         = vec3(0.018, 0.020, 0.030);',
+      '  vec3  K_DARK_BASE         = vec3(0.046, 0.033, 0.035);',
       // How much of the room's palette color tints the dark base.
       // Higher = dark rooms read with more of their hue at the base
       // brightness; lower = relies more on the fractal for color.
-      '  float K_ZONE_TINT         = 0.45;',
+      '  float K_ZONE_TINT         = 0.22;',
       // Multiplier on the cosmic Kali IFS additive contribution.
       // Higher = louder fractal, lower = subtler texture.
-      '  float K_COSMIC_BRIGHTNESS = 3.4;',
+      '  float K_COSMIC_BRIGHTNESS = 4.85;',
       // Fresnel rim strength: how strongly grazing-angle pixels
       // pick up the zone color. Bigger rims help dim rooms.
-      '  float K_FRESNEL_STRENGTH  = 1.20;',
+      '  float K_FRESNEL_STRENGTH  = 1.55;',
       // Diffuse multiplier range. Final diffuse term =
       //   K_DIFF_MIN + (1 - K_DIFF_MIN) * max(dot(N, V), 0)
       // Higher MIN keeps shadowed sides from going pitch black.
-      '  float K_DIFF_MIN          = 0.78;',
+      '  float K_DIFF_MIN          = 0.89;',
       // AO clamp: AO multiplier never drops below this value, so
       // even deeply concave corners keep some life.
-      '  float K_AO_FLOOR          = 0.55;',
+      '  float K_AO_FLOOR          = 0.17;',
       // Hard minimum brightness floor (after all other math).
       // Pre-fractal final c is max()ed with K_FLOOR * zoneColor so
       // every pixel gets at least a faint zone-color glow even if
       // the fractal happens to be at zero in this position.
-      '  float K_FLOOR             = 0.05;',
+      '  float K_FLOOR             = 0.085;',
       // ============================================================
       // Nearest room supplies the zone color and the local wall extent used
       // for the lower/upper half split.
@@ -15799,24 +15804,33 @@ function buildRoomGraphLevel(level) {
     ].join('\n');
 
     // Dynamic room uniforms (pad to 8 elements for shader array).
-    // Per-map palettes live on level.palette (8 hex colors, one per room slot;
-    // shader array is fixed at 8). Falls back to a neutral jewel-tone default
-    // if the active map didn't ship a palette.
+    // (v6.7+) ALL eight room slots now share the same wall color rather than
+    // each carrying its own palette entry. Each map's palette[0] supplies the
+    // BASE HUE for that map's overall identity ; everything else is the same
+    // value on every slot. The base hue is drifted through the full spectrum
+    // each frame inside gameLoop (see HUE_PERIOD below), so the whole map
+    // slowly rotates through the color wheel as the round progresses.
+    // legacy: palette[1..7] are no longer read by the wall shader. They're
+    // kept on the map definitions in case we want to re-enable per-room
+    // palettes later, but they have no current effect.
     const defaultPalette = [
       0x1a3050, 0x3a1010, 0x103a10, 0x351828, 0x183520, 0x2a2040, 0x1a4030, 0x402020
     ];
     const roomPalette = (level && Array.isArray(level.palette) && level.palette.length > 0)
       ? level.palette
       : defaultPalette;
-    // Palette brightness boost: every palette color is multiplied by this on
-    // its way into the shader. Many of the existing per-map palettes were
-    // authored very dark (component values 0x10..0x40, i.e. 0.06..0.25), so
-    // by the time the shader applied its dark-tint and AO they collapsed
-    // toward black. Lifting them ~1.7x at the source gives the shader more
-    // signal to work with and brightens the palette-driven half of the wall
-    // color without needing to rewrite each map's palette by hand. Tweak
-    // this single knob to globally brighten/darken room hues.
-    const PALETTE_BOOST = 1.70;
+    // Palette brightness boost: lifts the source palette before the shader's
+    // dark-tint and AO collapse it. Tweak to globally brighten/darken walls.
+    const PALETTE_BOOST = 1.80;
+    // Stash the base hue/sat/lit components on the game so gameLoop can
+    // hue-rotate the wall each frame without re-deriving from the hex source.
+    const baseCol = new THREE.Color(roomPalette[0]);
+    const baseHsl = { h: 0, s: 0, l: 0 };
+    baseCol.getHSL(baseHsl);
+    game.wallBaseHue = baseHsl.h;     // base hue for this map (rotates around the wheel)
+    game.wallBaseSat = baseHsl.s;
+    game.wallBaseLit = baseHsl.l;
+    game.wallPaletteBoost = PALETTE_BOOST;
     const numRooms = Math.min(game.sdfRoomData.length, 8);
     const roomCentersArr = [];
     const roomColorsArr = [];
@@ -15825,13 +15839,14 @@ function buildRoomGraphLevel(level) {
       if (i < numRooms) {
         const r = game.sdfRoomData[i];
         roomCentersArr.push(new THREE.Vector3(r.x, r.y, r.z));
-        const baseCol = new THREE.Color(roomPalette[i % roomPalette.length]);
-        // Multiply per-channel and clamp so a bright source palette
-        // doesn't blow past 1.0 and lose hue at the boost.
-        baseCol.r = Math.min(1.0, baseCol.r * PALETTE_BOOST);
-        baseCol.g = Math.min(1.0, baseCol.g * PALETTE_BOOST);
-        baseCol.b = Math.min(1.0, baseCol.b * PALETTE_BOOST);
-        roomColorsArr.push(baseCol);
+        // Initialize all slots to the boosted base color. gameLoop will
+        // hue-rotate them every frame, but we seed them so the first frame
+        // before gameLoop ticks already shows the right wall color.
+        const startCol = new THREE.Color(roomPalette[0]);
+        startCol.r = Math.min(1.0, startCol.r * PALETTE_BOOST);
+        startCol.g = Math.min(1.0, startCol.g * PALETTE_BOOST);
+        startCol.b = Math.min(1.0, startCol.b * PALETTE_BOOST);
+        roomColorsArr.push(startCol);
         roomRadiiArr.push(r.r);
       } else {
         roomCentersArr.push(new THREE.Vector3(0, 99999, 0));
@@ -16360,7 +16375,33 @@ function gameLoop(timestamp) {
   game.time += game.deltaTime;
 
   // Update level shader time for vein animations
-  if (game.levelMaterial) game.levelMaterial.uniforms.time.value = game.time;
+  if (game.levelMaterial) {
+    game.levelMaterial.uniforms.time.value = game.time;
+
+    // Drift the wall's base hue around the color wheel so the whole map
+    // slowly rotates through the spectrum as the round progresses. All 8
+    // room slots get the same color (single-hue map, see the wall-uniform
+    // construction in createMeshFromPositions). HUE_PERIOD = full cycle in
+    // seconds; longer = more subtle drift.
+    const HUE_PERIOD = 240; // 4 minutes per full rotation
+    if (game.wallBaseHue !== undefined && game.levelMaterial.uniforms.roomColorsU) {
+      const driftedHue = (game.wallBaseHue + game.time / HUE_PERIOD) % 1;
+      const sat = game.wallBaseSat;
+      const lit = game.wallBaseLit;
+      const boost = game.wallPaletteBoost || 1.0;
+      const colors = game.levelMaterial.uniforms.roomColorsU.value;
+      // Compute once, write to every slot. Mutating each THREE.Color is fine
+      // because Three.js samples the array each draw; no needsUpdate flag
+      // is required for value-mutation on uniform arrays.
+      const tmp = new THREE.Color().setHSL(driftedHue, sat, lit);
+      const r = Math.min(1.0, tmp.r * boost);
+      const g = Math.min(1.0, tmp.g * boost);
+      const b = Math.min(1.0, tmp.b * boost);
+      for (let i = 0; i < colors.length; i++) {
+        colors[i].setRGB(r, g, b);
+      }
+    }
+  }
 
   // Poll gamepad every frame (before any state-based early return) so menu
   // buttons (Start/Back/D-pad) keep working while the ship-select overlay

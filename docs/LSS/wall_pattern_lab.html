@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LSS Wall Pattern Lab</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #000; color: #ddd;
+  font-family: 'Courier New', ui-monospace, monospace;
+  overflow: hidden;
+}
+#viewport {
+  position: absolute; left: 0; top: 0; right: 380px; bottom: 0;
+  background: #000;
+}
+canvas { display: block; }
+#hint {
+  position: absolute; left: 12px; bottom: 12px;
+  font-size: 11px; color: #888; pointer-events: none;
+  background: rgba(0,0,0,0.5); padding: 6px 10px; border-radius: 3px;
+}
+#controls {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 380px;
+  background: rgba(12,12,20,0.98);
+  border-left: 1px solid #2a2a40;
+  overflow-y: auto;
+  padding: 10px 12px;
+}
+#controls h1 {
+  font-size: 13px; color: #ffaa00; letter-spacing: 3px;
+  margin-bottom: 4px;
+}
+#controls .sub {
+  font-size: 10px; color: #777; letter-spacing: 1.5px; margin-bottom: 12px;
+}
+.section {
+  margin-bottom: 12px; padding: 10px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 4px;
+}
+.section h2 {
+  font-size: 10px; color: #ffaa00; letter-spacing: 2px;
+  margin-bottom: 8px; text-transform: uppercase;
+}
+.row {
+  display: flex; align-items: center; margin-bottom: 5px; gap: 8px;
+  font-size: 11px;
+}
+.row label {
+  flex: 0 0 130px; color: #aaa; font-size: 10px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.row input[type="range"] {
+  flex: 1; min-width: 0; height: 18px;
+  background: transparent;
+}
+.row .val {
+  flex: 0 0 56px; color: #fff; text-align: right;
+  font-weight: bold; font-size: 10px;
+}
+.palette-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+}
+.palette-grid input[type="color"] {
+  width: 100%; height: 32px; border: 1px solid #444;
+  padding: 0; cursor: pointer; background: #000;
+}
+button {
+  background: #2a3040; color: #ddd; border: 1px solid #557;
+  padding: 6px 10px; cursor: pointer; border-radius: 3px;
+  font-family: inherit; font-size: 10px; letter-spacing: 1px;
+  text-transform: uppercase;
+}
+button:hover { background: #3a4a5a; border-color: #88a; }
+select {
+  background: #1a1a2a; color: #ddd; border: 1px solid #555;
+  padding: 4px; font-family: inherit; font-size: 11px; width: 100%;
+}
+#export-area {
+  width: 100%; height: 200px; background: #0a0a14; color: #8af;
+  border: 1px solid #333; padding: 6px;
+  font-family: inherit; font-size: 9px; line-height: 1.35;
+  resize: vertical; margin-top: 6px;
+}
+.btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.tip { color: #666; font-size: 9px; margin-top: 6px; line-height: 1.4; }
+</style>
+</head>
+<body>
+<div id="viewport"></div>
+<div id="hint">drag to look · WASD to fly · Q/E up/down · scroll = speed</div>
+<div id="controls">
+  <h1>WALL PATTERN LAB</h1>
+  <div class="sub">v6.7 · live shader test</div>
+
+  <!-- Palette -->
+  <div class="section">
+    <h2>Palette (8 zones)</h2>
+    <div class="palette-grid" id="palette-grid"></div>
+    <div class="row" style="margin-top:8px;">
+      <label>Map preset</label>
+      <select id="map-preset">
+        <option value="hourglass">Hourglass (Nexus)</option>
+        <option value="spine">Spine</option>
+        <option value="infinity">Infinity</option>
+        <option value="tower">Tower</option>
+        <option value="cross">Cross</option>
+        <option value="arc">Arc</option>
+        <option value="octahedron">Octahedron</option>
+        <option value="pentagon">Pentagon</option>
+        <option value="gyre">Gyre</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Wall constants -->
+  <div class="section">
+    <h2>Wall constants</h2>
+    <div class="row"><label>PALETTE_BOOST</label><input type="range" id="palette-boost" min="0.5" max="3.0" step="0.05" value="1.7"><span class="val" id="palette-boost-val">1.70</span></div>
+    <div class="row"><label>K_DARK_BASE.r</label><input type="range" id="k-dark-r" min="0" max="0.20" step="0.001" value="0.018"><span class="val" id="k-dark-r-val">0.018</span></div>
+    <div class="row"><label>K_DARK_BASE.g</label><input type="range" id="k-dark-g" min="0" max="0.20" step="0.001" value="0.020"><span class="val" id="k-dark-g-val">0.020</span></div>
+    <div class="row"><label>K_DARK_BASE.b</label><input type="range" id="k-dark-b" min="0" max="0.20" step="0.001" value="0.030"><span class="val" id="k-dark-b-val">0.030</span></div>
+    <div class="row"><label>K_ZONE_TINT</label><input type="range" id="k-zone-tint" min="0" max="2.0" step="0.01" value="0.45"><span class="val" id="k-zone-tint-val">0.45</span></div>
+    <div class="row"><label>K_COSMIC_BRIGHTNESS</label><input type="range" id="k-cosmic" min="0" max="10" step="0.05" value="3.4"><span class="val" id="k-cosmic-val">3.40</span></div>
+    <div class="row"><label>K_FRESNEL_STRENGTH</label><input type="range" id="k-fresnel" min="0" max="3.0" step="0.01" value="1.20"><span class="val" id="k-fresnel-val">1.20</span></div>
+    <div class="row"><label>K_DIFF_MIN</label><input type="range" id="k-diff" min="0" max="1.0" step="0.01" value="0.78"><span class="val" id="k-diff-val">0.78</span></div>
+    <div class="row"><label>K_AO_FLOOR</label><input type="range" id="k-ao" min="0" max="1.0" step="0.01" value="0.55"><span class="val" id="k-ao-val">0.55</span></div>
+    <div class="row"><label>K_FLOOR</label><input type="range" id="k-floor" min="0" max="0.5" step="0.005" value="0.05"><span class="val" id="k-floor-val">0.05</span></div>
+  </div>
+
+  <!-- Pattern math -->
+  <div class="section">
+    <h2>Pattern math (Kali IFS)</h2>
+    <div class="row"><label>Iterations</label><input type="range" id="p-iters" min="1" max="12" step="1" value="8"><span class="val" id="p-iters-val">8</span></div>
+    <div class="row"><label>Ring count</label><input type="range" id="p-rings" min="1" max="5" step="1" value="3"><span class="val" id="p-rings-val">3</span></div>
+    <div class="row"><label>Spatial scale</label><input type="range" id="p-scale" min="0.0005" max="0.012" step="0.0001" value="0.0028"><span class="val" id="p-scale-val">0.0028</span></div>
+    <div class="row"><label>Rotation speed</label><input type="range" id="p-rotspeed" min="0" max="1.0" step="0.01" value="0.12"><span class="val" id="p-rotspeed-val">0.12</span></div>
+    <div class="row"><label>Golden off X</label><input type="range" id="p-offx" min="0" max="3.0" step="0.01" value="1.50"><span class="val" id="p-offx-val">1.50</span></div>
+    <div class="row"><label>Golden off Y</label><input type="range" id="p-offy" min="0" max="3.0" step="0.01" value="1.618"><span class="val" id="p-offy-val">1.62</span></div>
+    <div class="row"><label>Golden off Z</label><input type="range" id="p-offz" min="0" max="3.0" step="0.01" value="1.00"><span class="val" id="p-offz-val">1.00</span></div>
+    <div class="row"><label>Inv base</label><input type="range" id="p-inv" min="3" max="20" step="0.1" value="9.0"><span class="val" id="p-inv-val">9.0</span></div>
+    <div class="row"><label>Value divisor</label><input type="range" id="p-valdiv" min="50" max="1200" step="5" value="380"><span class="val" id="p-valdiv-val">380</span></div>
+    <div class="row"><label>Hue spin/ring</label><input type="range" id="p-huespin" min="0" max="0.5" step="0.005" value="0.12"><span class="val" id="p-huespin-val">0.12</span></div>
+    <div class="row"><label>Sat base</label><input type="range" id="p-satbase" min="0" max="1.0" step="0.01" value="0.55"><span class="val" id="p-satbase-val">0.55</span></div>
+  </div>
+
+  <!-- Actions -->
+  <div class="section">
+    <h2>Export / Reset</h2>
+    <div class="btn-row">
+      <button id="reset">Reset</button>
+      <button id="export-json">Export JSON</button>
+      <button id="export-snippet">Export GLSL+JS</button>
+    </div>
+    <textarea id="export-area" readonly placeholder="Click Export to dump current config here..."></textarea>
+    <p class="tip">Slider tweaks update the shader live. Map preset reloads palette only ; sliders keep their current values.</p>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ---------------------------------------------------------------
+// Map palettes (verbatim copy from the main game so the lab and the
+// game share a single source of truth for "what each map's colors are").
+// ---------------------------------------------------------------
+const MAP_PALETTES = {
+  hourglass:  [0x4a3818, 0x2a1840, 0x1a2848, 0x18283a, 0x202848, 0x1a2840, 0x18203a, 0x1c2848],
+  spine:      [0x1c1818, 0x281a1a, 0x2a1c1c, 0x381616, 0x281818, 0x202020, 0x301818, 0x401818],
+  infinity:   [0x103838, 0x14383a, 0x12303a, 0x4a2818, 0x381038, 0x3a1438, 0x381432, 0x183838],
+  tower:      [0x281848, 0x201840, 0x282040, 0x303030, 0x382818, 0x402818, 0x481810, 0x3a2010],
+  cross:      [0x4a2818, 0x401818, 0x381818, 0x401010, 0x381010, 0x4a2010, 0x4a2010, 0x382010],
+  arc:        [0x101838, 0x182040, 0x282040, 0x481830, 0x382040, 0x282040, 0x182040, 0x101838],
+  octahedron: [0x4a3818, 0x1a2848, 0x1c2a50, 0x1a2848, 0x1c2a50, 0x1a2848, 0x1c2a50, 0x202848],
+  pentagon:   [0x4a2a10, 0x3a2818, 0x4a3820, 0x3a2810, 0x4a2a18, 0x4a3820, 0x3a2818, 0x4a2a10],
+  gyre:       [0x2a1848, 0x1a2848, 0x301848, 0x183848, 0x281a48, 0x183048, 0x2a1848, 0x1a2a48],
+};
+
+// ---------------------------------------------------------------
+// Shaders. Same architecture as v6_7's wall shader, with the wall
+// constants and pattern-math values exposed as uniforms instead of
+// inline constants so we can tweak them live.
+// ---------------------------------------------------------------
+const VERT_SRC = `
+  varying vec3 vWorldPos;
+  varying vec3 vNormal;
+  varying float vAO;
+  void main() {
+    vec4 wp = modelMatrix * vec4(position, 1.0);
+    vWorldPos = wp.xyz;
+    vNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);
+    vec3 upVec = vec3(0.0, 1.0, 0.0);
+    float normalUpDot = dot(vNormal, upVec);
+    float aoFromNormal = 0.85 + normalUpDot * 0.15;
+    vAO = clamp(aoFromNormal, 0.7, 1.0);
+    gl_Position = projectionMatrix * viewMatrix * wp;
+  }
+`;
+
+const FRAG_SRC = `
+  uniform float time;
+  uniform vec3 roomCenters[8];
+  uniform vec3 roomColorsU[8];
+  uniform float roomRadii[8];
+  uniform int roomCount;
+
+  // ---- Wall constants (live-tweakable) ----
+  uniform vec3  K_DARK_BASE;
+  uniform float K_ZONE_TINT;
+  uniform float K_COSMIC_BRIGHTNESS;
+  uniform float K_FRESNEL_STRENGTH;
+  uniform float K_DIFF_MIN;
+  uniform float K_AO_FLOOR;
+  uniform float K_FLOOR;
+
+  // ---- Kali IFS pattern math (live-tweakable) ----
+  uniform int   u_iters;       // Kali IFS iteration count (1..12)
+  uniform int   u_rings;       // cosmicField ring count (1..5)
+  uniform float u_scale;       // world->fractal-space scale
+  uniform float u_rotSpeed;    // rotation rate of fractal space
+  uniform vec3  u_off;         // golden-ratio offset triple
+  uniform float u_invBase;     // base value of |p|^-2 multiplier
+  uniform float u_valDiv;      // luminance scaling divisor
+  uniform float u_hueSpin;     // hue offset added per ring
+  uniform float u_satBase;     // base saturation (sat += 0.10*ring)
+
+  varying vec3 vWorldPos;
+  varying vec3 vNormal;
+  varying float vAO;
+
+  vec3 hsv(float h, float s, float v) {
+    vec3 k = mod(vec3(5.0, 3.0, 1.0) + h * 6.0, 6.0);
+    return v - v * s * clamp(min(k, 4.0 - k), 0.0, 1.0);
+  }
+  float rgbHue(vec3 c) {
+    float mx = max(c.r, max(c.g, c.b));
+    float mn = min(c.r, min(c.g, c.b));
+    float d = mx - mn;
+    if (d < 0.001) return 0.0;
+    float h;
+    if (mx == c.r) h = mod((c.g - c.b) / d + 6.0, 6.0) / 6.0;
+    else if (mx == c.g) h = ((c.b - c.r) / d + 2.0) / 6.0;
+    else h = ((c.r - c.g) / d + 4.0) / 6.0;
+    return h;
+  }
+  float kaliIFS(vec3 p, vec3 off, float inv) {
+    float s = 1.0;
+    for (int k = 0; k < 12; k++) {
+      if (k >= u_iters) break;
+      if (p.x + p.y < 0.0) p.xy = -p.yx;
+      if (p.x + p.z < 0.0) p.xz = -p.zx;
+      if (p.y + p.z < 0.0) p.yz = -p.zy;
+      float e = max(0.95, inv / dot(p, p));
+      s *= e;
+      p = p * e - off;
+    }
+    return s;
+  }
+  vec3 cosmicField(vec3 wp, vec3 zoneC, float tt) {
+    vec3 p = wp * u_scale;
+    float ca = cos(tt * u_rotSpeed), sa = sin(tt * u_rotSpeed);
+    p = vec3(ca * p.x - sa * p.z, p.y, sa * p.x + ca * p.z);
+    float baseHue = rgbHue(zoneC);
+    vec3 accum = vec3(0.0);
+    for (int ring = 0; ring < 5; ring++) {
+      if (ring >= u_rings) break;
+      float rf = float(ring);
+      float sMul = pow(1.618, 1.4 - rf * 0.7);
+      vec3 pp = p * sMul;
+      float s = kaliIFS(pp, u_off, u_invBase + rf * 0.4);
+      float phase = atan(pp.x, pp.y);
+      float q = 0.5 + 0.5 * sin(phase * 3.0 + tt * 0.3 + rf * 1.7);
+      float band = q < 0.5 ? 0.65 : 1.0;
+      float val = clamp(s / u_valDiv * (0.35 + 0.80 * band), 0.0, 4.5);
+      float hue = fract(baseHue + rf * u_hueSpin + phase * 0.05 + tt * 0.02);
+      float sat = u_satBase + rf * 0.10;
+      accum += hsv(hue, sat, val) * pow(0.75, rf);
+    }
+    return accum;
+  }
+
+  void main() {
+    // Nearest-zone lookup: pick the closest room center and grab its color.
+    vec3 zoneColor = vec3(0.06, 0.08, 0.12);
+    vec3 nearC = vec3(0.0);
+    float nearR = 500.0;
+    float minD = 99999.0;
+    for (int i = 0; i < 8; i++) {
+      if (i >= roomCount) break;
+      float d = length(vWorldPos - roomCenters[i]);
+      if (d < minD) { minD = d; zoneColor = roomColorsU[i]; nearC = roomCenters[i]; nearR = roomRadii[i]; }
+    }
+
+    // Base: dark floor + zone-color tint (K_ZONE_TINT controls hue weight)
+    vec3 c = K_DARK_BASE + zoneColor * K_ZONE_TINT;
+
+    // Cosmic Kali IFS additive layer
+    float fracPulse = 0.92 + 0.12 * sin(time * 0.35);
+    float shimmer   = 0.90 + 0.18 * sin(time * 1.10 + vWorldPos.x * 0.003 + vWorldPos.z * 0.003);
+    vec3 cosmic = cosmicField(vWorldPos, zoneColor, time);
+    c += cosmic * fracPulse * shimmer * K_COSMIC_BRIGHTNESS;
+
+    // Diffuse + fresnel rim
+    vec3 vd = normalize(cameraPosition - vWorldPos);
+    float diff = K_DIFF_MIN + (1.0 - K_DIFF_MIN) * max(dot(vNormal, vd), 0.0);
+    float fresnelFactor = pow(1.0 - abs(dot(vNormal, vd)), 3.0);
+    c += zoneColor * K_FRESNEL_STRENGTH * fresnelFactor;
+    float aoTerm = mix(K_AO_FLOOR, 1.0, vAO);
+    c *= diff * aoTerm;
+
+    // Hard zone-color floor so dark-palette rooms always read.
+    c = max(c, zoneColor * K_FLOOR);
+
+    gl_FragColor = vec4(c, 1.0);
+  }
+`;
+
+// ---------------------------------------------------------------
+// Three.js setup
+// ---------------------------------------------------------------
+const viewport = document.getElementById('viewport');
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.setSize(viewport.clientWidth, viewport.clientHeight);
+viewport.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x000000);
+
+const camera = new THREE.PerspectiveCamera(
+  75, viewport.clientWidth / viewport.clientHeight, 1, 5000
+);
+
+// ---------------------------------------------------------------
+// Test environment: one big inverted sphere as the wall, with 8 fake
+// "room positions" distributed at the vertices of a cube around the
+// origin. The shader picks the nearest room for each fragment, so the
+// player sees 8 distinct color zones meeting at boundaries on the wall.
+// Cube vertices give nicely separated zones; the wall sphere is large
+// enough that the player can fly around freely without leaving it.
+// ---------------------------------------------------------------
+const WALL_RADIUS = 900;
+const ZONE_OFFSET = 240; // cube vertex offset from origin
+
+const roomPositions = [
+  new THREE.Vector3( ZONE_OFFSET,  ZONE_OFFSET,  ZONE_OFFSET),
+  new THREE.Vector3( ZONE_OFFSET,  ZONE_OFFSET, -ZONE_OFFSET),
+  new THREE.Vector3( ZONE_OFFSET, -ZONE_OFFSET,  ZONE_OFFSET),
+  new THREE.Vector3( ZONE_OFFSET, -ZONE_OFFSET, -ZONE_OFFSET),
+  new THREE.Vector3(-ZONE_OFFSET,  ZONE_OFFSET,  ZONE_OFFSET),
+  new THREE.Vector3(-ZONE_OFFSET,  ZONE_OFFSET, -ZONE_OFFSET),
+  new THREE.Vector3(-ZONE_OFFSET, -ZONE_OFFSET,  ZONE_OFFSET),
+  new THREE.Vector3(-ZONE_OFFSET, -ZONE_OFFSET, -ZONE_OFFSET),
+];
+
+const envGeo = new THREE.SphereGeometry(WALL_RADIUS, 64, 48);
+// Use BackSide rendering so we see the inside surface; normals stay
+// outward-facing on the geometry but the shader handles the diffuse
+// term against the camera-direction so this still looks lit correctly.
+const uniforms = {
+  time:        { value: 0 },
+  roomCenters: { value: [] },
+  roomColorsU: { value: [] },
+  roomRadii:   { value: [] },
+  roomCount:   { value: 8 },
+  K_DARK_BASE:         { value: new THREE.Vector3(0.018, 0.020, 0.030) },
+  K_ZONE_TINT:         { value: 0.45 },
+  K_COSMIC_BRIGHTNESS: { value: 3.4 },
+  K_FRESNEL_STRENGTH:  { value: 1.20 },
+  K_DIFF_MIN:          { value: 0.78 },
+  K_AO_FLOOR:          { value: 0.55 },
+  K_FLOOR:             { value: 0.05 },
+  u_iters:    { value: 8 },
+  u_rings:    { value: 3 },
+  u_scale:    { value: 0.0028 },
+  u_rotSpeed: { value: 0.12 },
+  u_off:      { value: new THREE.Vector3(1.5, 1.618, 1.0) },
+  u_invBase:  { value: 9.0 },
+  u_valDiv:   { value: 380.0 },
+  u_hueSpin:  { value: 0.12 },
+  u_satBase:  { value: 0.55 },
+};
+
+const wallMat = new THREE.ShaderMaterial({
+  vertexShader: VERT_SRC,
+  fragmentShader: FRAG_SRC,
+  uniforms: uniforms,
+  side: THREE.BackSide,
+});
+
+const envMesh = new THREE.Mesh(envGeo, wallMat);
+scene.add(envMesh);
+
+// Optional: small wireframe markers at the room positions so you can
+// see where the zone centers are. Toggleable later if it gets noisy.
+const markerGroup = new THREE.Group();
+for (let i = 0; i < roomPositions.length; i++) {
+  const m = new THREE.Mesh(
+    new THREE.SphereGeometry(8, 8, 6),
+    new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0.25 })
+  );
+  m.position.copy(roomPositions[i]);
+  markerGroup.add(m);
+}
+scene.add(markerGroup);
+
+// ---------------------------------------------------------------
+// Palette / room-uniform handling
+// ---------------------------------------------------------------
+let currentPalette = MAP_PALETTES.hourglass.slice();
+
+function updateRoomUniforms() {
+  const PALETTE_BOOST = parseFloat(document.getElementById('palette-boost').value);
+  const centers = [];
+  const colors = [];
+  const radii = [];
+  for (let i = 0; i < 8; i++) {
+    centers.push(roomPositions[i].clone());
+    const c = new THREE.Color(currentPalette[i % currentPalette.length]);
+    c.r = Math.min(1, c.r * PALETTE_BOOST);
+    c.g = Math.min(1, c.g * PALETTE_BOOST);
+    c.b = Math.min(1, c.b * PALETTE_BOOST);
+    colors.push(c);
+    radii.push(WALL_RADIUS); // use wall radius so heightFrac stays in range
+  }
+  uniforms.roomCenters.value = centers;
+  uniforms.roomColorsU.value = colors;
+  uniforms.roomRadii.value = radii;
+  uniforms.roomCount.value = 8;
+}
+
+// ---------------------------------------------------------------
+// Camera controls: drag-look + WASD/QE fly. No OrbitControls dep.
+// ---------------------------------------------------------------
+let yaw = 0, pitch = 0;
+const camPos = new THREE.Vector3(0, 0, 0);
+let isDragging = false;
+let dragStart = { x: 0, y: 0, yaw: 0, pitch: 0 };
+let moveSpeed = 250; // units/sec, scroll-wheel adjustable
+
+renderer.domElement.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  dragStart = { x: e.clientX, y: e.clientY, yaw, pitch };
+});
+window.addEventListener('mouseup', () => { isDragging = false; });
+window.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  yaw   = dragStart.yaw   - (e.clientX - dragStart.x) * 0.005;
+  pitch = dragStart.pitch - (e.clientY - dragStart.y) * 0.005;
+  pitch = Math.max(-Math.PI/2 + 0.1, Math.min(Math.PI/2 - 0.1, pitch));
+});
+renderer.domElement.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  // Scroll up = faster, down = slower.
+  moveSpeed *= (e.deltaY < 0) ? 1.15 : 1 / 1.15;
+  moveSpeed = Math.max(20, Math.min(2000, moveSpeed));
+}, { passive: false });
+
+const keys = {};
+window.addEventListener('keydown', (e) => { keys[e.key.toLowerCase()] = true; });
+window.addEventListener('keyup',   (e) => { keys[e.key.toLowerCase()] = false; });
+
+function onResize() {
+  const w = viewport.clientWidth;
+  const h = viewport.clientHeight;
+  renderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', onResize);
+
+// ---------------------------------------------------------------
+// Animation loop
+// ---------------------------------------------------------------
+let lastTime = performance.now();
+function animate() {
+  requestAnimationFrame(animate);
+  const now = performance.now();
+  const dt = Math.min(0.1, (now - lastTime) / 1000);
+  lastTime = now;
+  uniforms.time.value = now / 1000;
+
+  // Camera orientation from yaw/pitch
+  const fwd = new THREE.Vector3(
+    Math.sin(yaw) * Math.cos(pitch),
+    Math.sin(pitch),
+    Math.cos(yaw) * Math.cos(pitch)
+  );
+  const right = new THREE.Vector3(Math.cos(yaw), 0, -Math.sin(yaw));
+  const step = moveSpeed * dt;
+  if (keys.w) camPos.addScaledVector(fwd, step);
+  if (keys.s) camPos.addScaledVector(fwd, -step);
+  if (keys.a) camPos.addScaledVector(right, -step);
+  if (keys.d) camPos.addScaledVector(right,  step);
+  if (keys.q) camPos.y -= step;
+  if (keys.e) camPos.y += step;
+
+  // Keep player inside the wall sphere.
+  const r = camPos.length();
+  if (r > WALL_RADIUS - 30) camPos.multiplyScalar((WALL_RADIUS - 30) / r);
+
+  camera.position.copy(camPos);
+  camera.lookAt(camPos.x + fwd.x, camPos.y + fwd.y, camPos.z + fwd.z);
+
+  renderer.render(scene, camera);
+}
+
+// ---------------------------------------------------------------
+// Control wiring
+// ---------------------------------------------------------------
+function bindSlider(id, valId, target, fixedDigits) {
+  const slider = document.getElementById(id);
+  const valSpan = document.getElementById(valId);
+  function refresh() {
+    const v = parseFloat(slider.value);
+    valSpan.textContent = (fixedDigits === undefined) ? v : v.toFixed(fixedDigits);
+    target(v);
+  }
+  slider.addEventListener('input', refresh);
+  refresh();
+}
+
+function setupControls() {
+  // Palette grid
+  const grid = document.getElementById('palette-grid');
+  for (let i = 0; i < 8; i++) {
+    const inp = document.createElement('input');
+    inp.type = 'color';
+    inp.value = '#' + currentPalette[i].toString(16).padStart(6, '0');
+    inp.dataset.idx = i;
+    inp.addEventListener('input', () => {
+      currentPalette[+inp.dataset.idx] = parseInt(inp.value.slice(1), 16);
+      updateRoomUniforms();
+    });
+    grid.appendChild(inp);
+  }
+
+  // Map preset
+  document.getElementById('map-preset').addEventListener('change', (e) => {
+    const palette = MAP_PALETTES[e.target.value];
+    if (!palette) return;
+    currentPalette = palette.slice();
+    const colorInputs = grid.querySelectorAll('input[type="color"]');
+    colorInputs.forEach((inp, i) => {
+      inp.value = '#' + currentPalette[i].toString(16).padStart(6, '0');
+    });
+    updateRoomUniforms();
+  });
+
+  // Wall constants
+  bindSlider('palette-boost', 'palette-boost-val', () => updateRoomUniforms(), 2);
+  bindSlider('k-dark-r',  'k-dark-r-val',  v => uniforms.K_DARK_BASE.value.x = v, 3);
+  bindSlider('k-dark-g',  'k-dark-g-val',  v => uniforms.K_DARK_BASE.value.y = v, 3);
+  bindSlider('k-dark-b',  'k-dark-b-val',  v => uniforms.K_DARK_BASE.value.z = v, 3);
+  bindSlider('k-zone-tint','k-zone-tint-val', v => uniforms.K_ZONE_TINT.value = v, 2);
+  bindSlider('k-cosmic',  'k-cosmic-val',  v => uniforms.K_COSMIC_BRIGHTNESS.value = v, 2);
+  bindSlider('k-fresnel', 'k-fresnel-val', v => uniforms.K_FRESNEL_STRENGTH.value = v, 2);
+  bindSlider('k-diff',    'k-diff-val',    v => uniforms.K_DIFF_MIN.value = v, 2);
+  bindSlider('k-ao',      'k-ao-val',      v => uniforms.K_AO_FLOOR.value = v, 2);
+  bindSlider('k-floor',   'k-floor-val',   v => uniforms.K_FLOOR.value = v, 3);
+
+  // Pattern math
+  bindSlider('p-iters',    'p-iters-val',    v => uniforms.u_iters.value    = v|0, 0);
+  bindSlider('p-rings',    'p-rings-val',    v => uniforms.u_rings.value    = v|0, 0);
+  bindSlider('p-scale',    'p-scale-val',    v => uniforms.u_scale.value    = v, 4);
+  bindSlider('p-rotspeed', 'p-rotspeed-val', v => uniforms.u_rotSpeed.value = v, 2);
+  bindSlider('p-offx',     'p-offx-val',     v => uniforms.u_off.value.x    = v, 2);
+  bindSlider('p-offy',     'p-offy-val',     v => uniforms.u_off.value.y    = v, 2);
+  bindSlider('p-offz',     'p-offz-val',     v => uniforms.u_off.value.z    = v, 2);
+  bindSlider('p-inv',      'p-inv-val',      v => uniforms.u_invBase.value  = v, 1);
+  bindSlider('p-valdiv',   'p-valdiv-val',   v => uniforms.u_valDiv.value   = v, 0);
+  bindSlider('p-huespin',  'p-huespin-val',  v => uniforms.u_hueSpin.value  = v, 3);
+  bindSlider('p-satbase',  'p-satbase-val',  v => uniforms.u_satBase.value  = v, 2);
+
+  // Reset
+  document.getElementById('reset').addEventListener('click', () => {
+    location.reload();
+  });
+
+  // Export JSON
+  document.getElementById('export-json').addEventListener('click', () => {
+    const cfg = collectConfig();
+    document.getElementById('export-area').value = JSON.stringify(cfg, null, 2);
+  });
+
+  // Export GLSL+JS snippet ready to paste back into v6_7.html
+  document.getElementById('export-snippet').addEventListener('click', () => {
+    const cfg = collectConfig();
+    const pal = cfg.palette.map(h => '0x' + h.toString(16).padStart(6, '0')).join(', ');
+    const out = [
+      '// === Wall constants (paste into v6_7 wall fragment shader top of main) ===',
+      `'  vec3  K_DARK_BASE         = vec3(${cfg.K_DARK_BASE[0].toFixed(3)}, ${cfg.K_DARK_BASE[1].toFixed(3)}, ${cfg.K_DARK_BASE[2].toFixed(3)});',`,
+      `'  float K_ZONE_TINT         = ${cfg.K_ZONE_TINT.toFixed(2)};',`,
+      `'  float K_COSMIC_BRIGHTNESS = ${cfg.K_COSMIC_BRIGHTNESS.toFixed(2)};',`,
+      `'  float K_FRESNEL_STRENGTH  = ${cfg.K_FRESNEL_STRENGTH.toFixed(2)};',`,
+      `'  float K_DIFF_MIN          = ${cfg.K_DIFF_MIN.toFixed(2)};',`,
+      `'  float K_AO_FLOOR          = ${cfg.K_AO_FLOOR.toFixed(2)};',`,
+      `'  float K_FLOOR             = ${cfg.K_FLOOR.toFixed(3)};',`,
+      '',
+      '// === PALETTE_BOOST (paste in JS room-uniform construction) ===',
+      `const PALETTE_BOOST = ${cfg.PALETTE_BOOST.toFixed(2)};`,
+      '',
+      '// === Palette (paste into MAP_DATA.<map>.palette) ===',
+      `palette: [${pal}],`,
+      '',
+      '// === Pattern math (currently inlined in shader; tweak by editing those values) ===',
+      `// kaliIFS iterations: ${cfg.pattern.iters}`,
+      `// cosmicField rings: ${cfg.pattern.rings}`,
+      `// world scale (currently 0.0028): ${cfg.pattern.scale.toFixed(4)}`,
+      `// rotation speed (currently 0.12): ${cfg.pattern.rotSpeed.toFixed(2)}`,
+      `// golden offset: vec3(${cfg.pattern.off[0].toFixed(2)}, ${cfg.pattern.off[1].toFixed(3)}, ${cfg.pattern.off[2].toFixed(2)})`,
+      `// inv base: ${cfg.pattern.invBase.toFixed(1)}`,
+      `// luminance divisor: ${cfg.pattern.valDiv.toFixed(0)}`,
+      `// hue spin per ring: ${cfg.pattern.hueSpin.toFixed(3)}`,
+      `// sat base: ${cfg.pattern.satBase.toFixed(2)}`,
+    ].join('\n');
+    document.getElementById('export-area').value = out;
+  });
+}
+
+function collectConfig() {
+  return {
+    palette: currentPalette.slice(),
+    PALETTE_BOOST: parseFloat(document.getElementById('palette-boost').value),
+    K_DARK_BASE: [
+      uniforms.K_DARK_BASE.value.x,
+      uniforms.K_DARK_BASE.value.y,
+      uniforms.K_DARK_BASE.value.z,
+    ],
+    K_ZONE_TINT:         uniforms.K_ZONE_TINT.value,
+    K_COSMIC_BRIGHTNESS: uniforms.K_COSMIC_BRIGHTNESS.value,
+    K_FRESNEL_STRENGTH:  uniforms.K_FRESNEL_STRENGTH.value,
+    K_DIFF_MIN:          uniforms.K_DIFF_MIN.value,
+    K_AO_FLOOR:          uniforms.K_AO_FLOOR.value,
+    K_FLOOR:             uniforms.K_FLOOR.value,
+    pattern: {
+      iters:    uniforms.u_iters.value,
+      rings:    uniforms.u_rings.value,
+      scale:    uniforms.u_scale.value,
+      rotSpeed: uniforms.u_rotSpeed.value,
+      off: [uniforms.u_off.value.x, uniforms.u_off.value.y, uniforms.u_off.value.z],
+      invBase:  uniforms.u_invBase.value,
+      valDiv:   uniforms.u_valDiv.value,
+      hueSpin:  uniforms.u_hueSpin.value,
+      satBase:  uniforms.u_satBase.value,
+    },
+  };
+}
+
+// ---------------------------------------------------------------
+// Boot
+// ---------------------------------------------------------------
+setupControls();
+updateRoomUniforms();
+animate();
+</script>
+</body>
+</html>
