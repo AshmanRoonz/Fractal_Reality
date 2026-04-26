@@ -2027,16 +2027,20 @@ class NetworkPlayer {
     // Velocity (for projectile inheritance, damage calcs)
     this.velocity.set(s.vx || 0, s.vy || 0, s.vz || 0);
 
-    // Shield visual. (v6.7) Either the regular HP shield (this.shield > 0) or
-    // any ability shield (Gun Shield, Sword Block, Phase Dash, thermal,
-    // vortex) lights the wraparound. Ability shields use a brighter opacity
-    // so peers can read "this enemy is currently warded" at a glance even
-    // when their HP shield is at zero.
+    // Shield visual. (v6.7) Three independent sources can light the wraparound
+    // shield mesh; we pick the strongest and let it ride. HP shield is the
+    // baseline glimmer; ability shield (Gun Shield, Sword Block, Phase Dash,
+    // thermal, vortex) is the steady ward; spawn protection is the loudest,
+    // a bubble that fades over the grace window.
     if (this.mesh.userData.shieldMesh) {
-      const hpShield = this.shield > 0;
-      const abilityShield = !!s.abilityShield;
-      this.mesh.userData.shieldMesh.material.opacity =
-        abilityShield ? 0.22 : (hpShield ? 0.08 : 0);
+      let opacity = 0;
+      if (this.shield > 0) opacity = Math.max(opacity, 0.08);
+      if (s.abilityShield) opacity = Math.max(opacity, 0.22);
+      if (s.spawnProt > 0) {
+        const frac = Math.min(1, s.spawnProt / 3);
+        opacity = Math.max(opacity, 0.30 * frac);
+      }
+      this.mesh.userData.shieldMesh.material.opacity = opacity;
     }
 
     // (v6.7) Chassis-specific ability-shield visuals on the network player.
@@ -2319,6 +2323,10 @@ function broadcastPlayerState(dt) {
          player.abilities[1].name === 'Vortex Shield' ||
          player.abilities[1].name === 'Thermal Shield'))
     ),
+    // (v6.7) Spawn-protection seconds remaining. Drives the wraparound
+    // shield bubble on peers: bright at spawn, fades over LSS.SPAWN_PROTECTION
+    // seconds (3s default), gone by the time you can be shot.
+    spawnProt: Math.max(0, Math.round((player.spawnProtection || 0) * 10) / 10),
   };
 
   const msg = JSON.stringify(state);
@@ -2436,6 +2444,11 @@ function handleHitVote(vote, fromPeerId) {
 function handleNetEvent(evt, fromPeerId) {
   if (evt.type === 'kill') {
     addKillFeed(evt.killerName || 'Peer', evt.victimName || 'Peer');
+    // (v6.7) Brief screen-shake punch on every kill so the moment registers
+    // even when you're not in the camera frame. Stronger when you killed
+    // (or were killed by) the named participants is a future polish; this
+    // is the universal "someone died nearby" pulse.
+    if (typeof triggerScreenShake === 'function') triggerScreenShake(6);
     return;
   }
   // (v6.7) Lobby ready toggle from a peer.
@@ -2538,6 +2551,16 @@ function handleNetEvent(evt, fromPeerId) {
     const from = new THREE.Vector3(evt.ox, evt.oy, evt.oz);
     const to   = new THREE.Vector3(evt.ex, evt.ey, evt.ez);
     spawnTracer(from, to, evt.color || 0xffff44);
+    // (v6.7) Chassis-specific muzzle flash for peers viewing this shot.
+    // Loadout key is looked up from the broadcasting peer's stored state.
+    const peer = net.peers.get(fromPeerId);
+    if (peer && peer.loadoutKey && typeof emitChassisMuzzleFlash === 'function') {
+      const dir = new THREE.Vector3().subVectors(to, from);
+      if (dir.lengthSq() > 0.0001) {
+        dir.normalize();
+        emitChassisMuzzleFlash(peer.loadoutKey, from, dir);
+      }
+    }
     return;
   }
   // (v6.7) Branching lightning bolt from a peer (Energy Siphon, Arc Wave
@@ -2764,6 +2787,218 @@ function spawnFirewallVisual(pos, dir, length, team, ownerPeerId, netId) {
   } catch (e) { /* visual best-effort */ }
 }
 
+// (v6.7) Per-chassis muzzle flash. Each primary weapon gets a distinct visual
+// signature so peers can read what's firing at them at a glance. All effects
+// reuse existing helpers (spawnDynamicLight, spawnTracer, spawnLightningBolt,
+// game.particles) to keep the visual vocabulary consistent.
+function chassisFlashColor(key) {
+  switch (key) {
+    case 'VORTEX':   return 0x44ddff;  // cyan, Splitter Rifle
+    case 'PYRO':     return 0xff7733;  // orange, T-203 Thermite
+    case 'SLAYER':   return 0xeeff66;  // yellow-white, Plasma Railgun
+    case 'PUNCTURE': return 0xffaa44;  // amber, Leadwall
+    case 'TRACKER':  return 0xff9944;  // amber-orange, 40mm Tracker
+    case 'BLASTER':  return 0xffcc44;  // gold, Predator Cannon
+    case 'SYPHON':   return 0x44ffaa;  // cyan-green, XO-16 Chaingun
+    default:         return 0xffffaa;
+  }
+}
+
+function emitChassisMuzzleFlash(loadoutKey, pos, dir) {
+  if (!pos || !dir) return;
+  const flashColor = chassisFlashColor(loadoutKey);
+
+  // Universal: small dynamic warm light at the muzzle so nearby surfaces
+  // pick up a brief illuminated ping.
+  if (typeof spawnDynamicLight === 'function') {
+    spawnDynamicLight(pos, flashColor, 1.4, 90, 0.25);
+  }
+
+  // Universal: 4-6 fast forward sparks in a tight cone.
+  for (let i = 0; i < 5; i++) {
+    const spread = new THREE.Vector3(
+      (Math.random() - 0.5) * 0.35,
+      (Math.random() - 0.5) * 0.35,
+      (Math.random() - 0.5) * 0.35
+    );
+    const v = dir.clone().add(spread).normalize().multiplyScalar(80 + Math.random() * 60);
+    game.particles.push({
+      position: pos.clone(),
+      velocity: v,
+      life: 0.10 + Math.random() * 0.10,
+      maxLife: 0.20,
+      color: flashColor,
+      size: 1.4 + Math.random() * 1.4,
+    });
+  }
+
+  // Chassis-specific layer on top of the universal flash.
+  if (loadoutKey === 'PYRO') {
+    // Flame tongues reaching forward; reuses Pyro's fire palette.
+    for (let i = 0; i < 5; i++) {
+      const spread = new THREE.Vector3(
+        (Math.random() - 0.5) * 0.30,
+        (Math.random() - 0.5) * 0.30,
+        (Math.random() - 0.5) * 0.30
+      );
+      const v = dir.clone().add(spread).normalize().multiplyScalar(50 + Math.random() * 50);
+      game.particles.push({
+        position: pos.clone(),
+        velocity: v,
+        life: 0.4 + Math.random() * 0.3,
+        maxLife: 0.7,
+        color: 0xff5522,
+        size: 3 + Math.random() * 3,
+      });
+    }
+  } else if (loadoutKey === 'SYPHON') {
+    // Quick electric crackle off the muzzle for the chaingun's cyan-green tone.
+    if (typeof spawnLightningBolt === 'function') {
+      const tip = pos.clone().add(dir.clone().multiplyScalar(60));
+      spawnLightningBolt(pos, tip, 0x44ffaa, 0.10, 1, 1.0);
+    }
+  } else if (loadoutKey === 'PUNCTURE') {
+    // Sharp directional cone via a short volumetric beam (Puncture's signature).
+    if (typeof spawnTracer === 'function') {
+      const tip = pos.clone().add(dir.clone().multiplyScalar(120));
+      spawnTracer(pos, tip, flashColor);
+    }
+  } else if (loadoutKey === 'SLAYER') {
+    // Plasma Railgun: bright lightning bolt out the barrel for the heavy shot.
+    if (typeof spawnLightningBolt === 'function') {
+      const tip = pos.clone().add(dir.clone().multiplyScalar(140));
+      spawnLightningBolt(pos, tip, 0xeeff66, 0.18, 2, 1.8);
+    }
+  } else if (loadoutKey === 'BLASTER') {
+    // Predator Cannon fires fast; quick yellow burst with extra sparks.
+    for (let i = 0; i < 3; i++) {
+      const v = dir.clone().add(new THREE.Vector3(
+        (Math.random() - 0.5) * 0.25,
+        (Math.random() - 0.5) * 0.25,
+        (Math.random() - 0.5) * 0.25
+      )).normalize().multiplyScalar(120 + Math.random() * 80);
+      game.particles.push({
+        position: pos.clone(),
+        velocity: v,
+        life: 0.08 + Math.random() * 0.06,
+        maxLife: 0.14,
+        color: 0xffeebb,
+        size: 1.8,
+      });
+    }
+  } else if (loadoutKey === 'TRACKER') {
+    // 40mm Tracker: ring-style expansion + warm light. Approximates a fresnel
+    // ring without a custom shader by spawning a circle of outward sparks.
+    const right = new THREE.Vector3(0, 1, 0).cross(dir).normalize();
+    if (right.lengthSq() < 0.001) right.set(1, 0, 0);
+    const up = dir.clone().cross(right).normalize();
+    for (let i = 0; i < 10; i++) {
+      const angle = (i / 10) * Math.PI * 2;
+      const radial = right.clone().multiplyScalar(Math.cos(angle))
+        .add(up.clone().multiplyScalar(Math.sin(angle))).multiplyScalar(60);
+      game.particles.push({
+        position: pos.clone(),
+        velocity: radial,
+        life: 0.18,
+        maxLife: 0.18,
+        color: flashColor,
+        size: 1.6,
+      });
+    }
+  }
+  // VORTEX uses just the universal flash; the cyan tracer beam already
+  // carries the weapon's identity downrange.
+}
+
+// (v6.7) Damage-state visuals. Smoke trickle starts at 50% HP and intensifies;
+// sparks join the smoke at 25%; electric arcs accompany doomed (regardless
+// of HP). Runs on every entity (local player, bots, NetworkPlayers) via the
+// per-frame loop, using the existing particle system so no new shader work
+// is needed. Per-entity emit timer self-throttles so particle counts stay
+// reasonable even at full burn.
+function emitDamageState(entity, dt) {
+  if (!entity || !entity.alive || !entity.position) return;
+  const maxHp = entity.maxHealth || (entity.chassis && entity.chassis.maxHealth) || 1;
+  const hpFrac = (entity.health || 0) / maxHp;
+  // Healthy + not doomed = nothing to show
+  if (hpFrac > 0.5 && !entity.doomed) return;
+  if (entity._dmgEmitTimer == null) entity._dmgEmitTimer = 0;
+  entity._dmgEmitTimer -= dt;
+  if (entity._dmgEmitTimer > 0) return;
+  const intensity = entity.doomed ? 1 : Math.max(0, 1 - hpFrac * 2);
+  entity._dmgEmitTimer = 0.07 - intensity * 0.05; // 70ms healthy -> 20ms doomed
+  const hullR = (entity.chassis && entity.chassis.hullLength) ? entity.chassis.hullLength * 0.4 : 40;
+  const offset = new THREE.Vector3(
+    (Math.random() - 0.5) * hullR,
+    (Math.random() - 0.5) * hullR * 0.6,
+    (Math.random() - 0.5) * hullR
+  );
+  const pos = entity.position.clone().add(offset);
+  // Smoke layer (always at <=50% HP)
+  game.particles.push({
+    position: pos.clone(),
+    velocity: new THREE.Vector3(
+      (Math.random() - 0.5) * 30,
+      30 + Math.random() * 50,
+      (Math.random() - 0.5) * 30
+    ),
+    life: 0.6 + Math.random() * 0.5,
+    maxLife: 1.1,
+    color: 0x333333,
+    size: 4 + intensity * 6,
+  });
+  // Hot sparks at low HP
+  if (hpFrac < 0.25 || entity.doomed) {
+    game.particles.push({
+      position: pos.clone(),
+      velocity: new THREE.Vector3(
+        (Math.random() - 0.5) * 100,
+        (Math.random() - 0.5) * 100,
+        (Math.random() - 0.5) * 100
+      ),
+      life: 0.15,
+      maxLife: 0.15,
+      color: 0xffaa44,
+      size: 2,
+    });
+  }
+  // Electric arcs at doomed (signature of the irreversible 30% threshold)
+  if (entity.doomed) {
+    game.particles.push({
+      position: pos.clone(),
+      velocity: new THREE.Vector3(
+        (Math.random() - 0.5) * 200,
+        (Math.random() - 0.5) * 200,
+        (Math.random() - 0.5) * 200
+      ),
+      life: 0.1,
+      maxLife: 0.1,
+      color: 0x44ddff,
+      size: 1.5,
+    });
+  }
+}
+
+// (v6.7) Sympathetic detonation: any cluster within radius of the popped
+// epicenter gets a warm point-light flash so the explosion feels like it
+// shook nearby fixtures. Visual-only; HP unaffected. spawnDynamicLight is
+// the same helper used for muzzle flashes / firewall warmth, so the visual
+// language stays consistent.
+function triggerSympatheticDetonation(epicenter) {
+  if (!epicenter || !game.clusters) return;
+  const radius = 250;
+  const r2 = radius * radius;
+  for (const c of game.clusters) {
+    if (!c || !c.alive || c.broken || !c.position) continue;
+    const dx = c.position.x - epicenter.x;
+    const dy = c.position.y - epicenter.y;
+    const dz = c.position.z - epicenter.z;
+    if (dx*dx + dy*dy + dz*dz < r2 && typeof spawnDynamicLight === 'function') {
+      spawnDynamicLight(c.position, 0xff8844, 1.5, 200, 0.3);
+    }
+  }
+}
+
 function spawnNetworkProjectile(data, fromPeerId) {
   // Spawn a visual-only projectile from a network peer's fire event
   if (!data || !data.ox) return;
@@ -2785,6 +3020,17 @@ function spawnNetworkProjectile(data, fromPeerId) {
   // visual + gameplay outcome (the enemy's arc wave actually pops our shield).
   if (data.isArcWave) proj.isArcWave = true;
   game.projectiles.push(proj);
+  // (v6.7) Chassis-specific muzzle flash for peers viewing a projectile-mode
+  // weapon firing (Pyro thermite, Tracker 40mm, etc.). Reuse loadoutKey from
+  // the broadcasting peer.
+  const peer = net.peers.get(fromPeerId);
+  if (peer && peer.loadoutKey && typeof emitChassisMuzzleFlash === 'function') {
+    const dir = vel.clone();
+    if (dir.lengthSq() > 0.0001) {
+      dir.normalize();
+      emitChassisMuzzleFlash(peer.loadoutKey, origin, dir);
+    }
+  }
 }
 
 // (v6.7) Broadcast helper for ability-spawned projectiles (Arc Wave, Cluster
@@ -7079,12 +7325,31 @@ class ClusterObstacle {
       this.rotation.y += this.rotSpeed.y * dt;
       this.rotation.z += this.rotSpeed.z * dt;
       const q = new THREE.Quaternion().setFromEuler(this.rotation);
+      // (v6.7) Pre-break stress: as children take damage, the cluster glows
+      // brighter and pulses faster, telegraphing the imminent pop. Compute
+      // average remaining HP fraction across living children, derive a
+      // stress value, and modulate emissive intensity each frame so the
+      // visual baseline restores cleanly when the cluster respawns.
+      let avgHpFrac = 0, aliveChildren = 0;
+      for (const c of this.children) {
+        if (c.alive) {
+          avgHpFrac += (c.hp || 0) / Math.max(1, (c.maxHp || 1));
+          aliveChildren++;
+        }
+      }
+      if (aliveChildren > 0) avgHpFrac /= aliveChildren;
+      const stress = Math.max(0, 1 - avgHpFrac); // 0 healthy -> 1 nearly dead
+      const stressPulse = Math.sin((typeof game !== 'undefined' ? game.time : 0) * (4 + stress * 12)) * 0.5 + 0.5;
+      const stressEmissive = 1 + stress * (1.0 + stressPulse * 1.5);
       for (const c of this.children) {
         if (!c.alive || c.broken) continue;
         const rotated = c.localOffset.clone().applyQuaternion(q);
         c.position.copy(this.position).add(rotated);
         if (c.mesh) c.mesh.position.copy(c.position);
         if (c.edgeMesh) c.edgeMesh.position.copy(c.position);
+        if (c.mesh && c.mesh.material && 'emissiveIntensity' in c.mesh.material) {
+          c.mesh.material.emissiveIntensity = stressEmissive;
+        }
       }
       // Electric-smoke haze inside the packing sphere. Emit slowly so a given
       // cluster has two to three puffs alive at a time. Only run emitter when
@@ -7169,6 +7434,13 @@ class ClusterObstacle {
         dy: hitDir ? hitDir.y : 0,
         dz: hitDir ? hitDir.z : 0,
       });
+    }
+    // (v6.7) Sympathetic detonation chain: nearby intact clusters get a
+    // brief warm light-flash as if they "felt" the boom. Pure visual; no
+    // gameplay change. Runs on every peer because breakApart is called via
+    // the obj_destroy receive handler too, so the flash happens everywhere.
+    if (typeof triggerSympatheticDetonation === 'function') {
+      triggerSympatheticDetonation(this.position);
     }
   }
 
@@ -8867,6 +9139,9 @@ function playerDie(attacker) {
   player.deaths++;
   spawnExplosion(player.position, player.chassis.hullLength);
   if (attacker && attacker.loadout) addKillFeed(attacker.loadout.name, 'You');
+  // (v6.7) Stronger shake when YOU die ; sells the moment more than a
+  // generic peer kill. Same trigger function; bigger amplitude.
+  if (typeof triggerScreenShake === 'function') triggerScreenShake(12);
   // (v6.7) Broadcast the kill to peers so their feed gets the entry too.
   // The receive side already routes evt.type === 'kill' to addKillFeed in
   // handleNetEvent. Sending the killer/victim chassis names is enough for
@@ -9264,6 +9539,11 @@ function fireWeapon() {
   const w = player.weapon;
   const origin = player.position.clone();
   const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+
+  // (v6.7) Per-chassis muzzle flash. Visual signature so each primary reads
+  // distinctly. Receivers spawn the matching flash via the fire_tracer /
+  // network projectile receive paths below.
+  emitChassisMuzzleFlash(player.loadoutKey, origin, forward);
 
   if (w.mode === 'hitscan') fireHitscan(origin, forward, w);
   else if (w.mode === 'projectile') fireProjectile(origin, forward, w);
@@ -13577,13 +13857,24 @@ class StasisField {
   update(dt) {
     if (!this.alive) return;
     this.pulseTime += dt;
-    // Rotate rings
-    this.ring.rotation.z += dt * 1.5;
-    this.ring2.rotation.y += dt * 1.2;
+    // (v6.7) Proximity tell: rings spin faster and the core swells as the
+    // local player gets close. Reads as "this is up for grabs, hurry"; same
+    // visual is computed independently on each peer so the effect tracks
+    // each viewer's distance to the field, not the broadcast position.
+    let proximityBoost = 1;
+    if (typeof player !== 'undefined' && player.position) {
+      const d = player.position.distanceTo(this.position);
+      if (d < 600) {
+        proximityBoost = 1 + (1 - d / 600) * 2.0; // up to 3x at zero distance
+      }
+    }
+    // Rotate rings (faster when close)
+    this.ring.rotation.z += dt * 1.5 * proximityBoost;
+    this.ring2.rotation.y += dt * 1.2 * proximityBoost;
     // Pulse glow (core opacity only; lighting comes from pooled dynamic lights)
-    const pulse = 0.4 + Math.sin(this.pulseTime * 3) * 0.2;
-    this.core.material.opacity = pulse + 0.2;
-    const s = 1 + Math.sin(this.pulseTime * 2) * 0.1;
+    const pulse = 0.4 + Math.sin(this.pulseTime * 3 * proximityBoost) * 0.2;
+    this.core.material.opacity = Math.min(1, (pulse + 0.2) * (0.7 + proximityBoost * 0.3));
+    const s = (1 + Math.sin(this.pulseTime * 2 * proximityBoost) * 0.1) * Math.min(1.4, 0.85 + proximityBoost * 0.18);
     this.core.scale.set(s, s, s);
     // Occasional soft pulse from the pre-allocated pool (no shader recompile)
     this._pulseLightTimer -= dt;
@@ -13591,7 +13882,7 @@ class StasisField {
       if (typeof spawnDynamicLight === 'function') {
         spawnDynamicLight(this.position, 0x00ccff, 0.55, 380, 0.9);
       }
-      this._pulseLightTimer = 1.1;
+      this._pulseLightTimer = 1.1 / proximityBoost; // pulse faster when close
     }
   }
 
@@ -13605,6 +13896,14 @@ class StasisField {
     ring.position.copy(this.position);
     scene.add(ring);
     game.effects.push({ mesh: ring, lifetime: 0.6, age: 0, type: 'stasis_pickup', startScale: 1 });
+    // (v6.7) Godray straight up so peers across the level can see "someone
+    // grabbed it." Pure visual; no gameplay impact. Reuses the volumetric
+    // tracer material for consistency with the rest of the visual vocabulary.
+    if (typeof spawnTracer === 'function') {
+      const skyTop = this.position.clone();
+      skyTop.y += 1500;
+      spawnTracer(this.position, skyTop, 0x00ffff);
+    }
   }
 }
 
@@ -15231,6 +15530,9 @@ function gameLoop(timestamp) {
     const botSpeed = bot.velocity ? bot.velocity.length() : 0;
     const botMaxSpeed = bot.chassis ? bot.chassis.maxSpeed : 400;
     animateShipMesh(bot.mesh, botSpeed, botMaxSpeed, bot.isFiring, dt, !!bot.doomed);
+    // (v6.7) Damage-state particles for bots and network players. Healthy
+    // ships emit nothing (early-return inside emitDamageState).
+    emitDamageState(bot, dt);
     // Heat-trail blur: throttled emitter, scales rate with speed so cruising
     // bots get a steady wake and parked bots get nothing.
     if (bot.alive && bot.velocity && typeof spawnHeatTrail === 'function') {
@@ -15251,6 +15553,17 @@ function gameLoop(timestamp) {
     const pSpeed = player.velocity ? player.velocity.length() : 0;
     const pMaxSpeed = player.chassis ? player.chassis.maxSpeed : 400;
     animateShipMesh(player.mesh, pSpeed, pMaxSpeed, player.isFiring, dt, !!player.doomed);
+    // (v6.7) Damage-state particles on the local player too (visible from
+    // third-person / death cam, and other peers see them on our broadcast
+    // position via their NetworkPlayer iteration).
+    emitDamageState(player, dt);
+    // (v6.7) Spawn-protection bubble on the local player too (visible in
+    // death cam / third-person). Same fade curve as the broadcast version.
+    if (player.mesh && player.mesh.userData && player.mesh.userData.shieldMesh && player.spawnProtection > 0) {
+      const frac = Math.min(1, player.spawnProtection / (LSS.SPAWN_PROTECTION || 3));
+      const cur = player.mesh.userData.shieldMesh.material.opacity || 0;
+      player.mesh.userData.shieldMesh.material.opacity = Math.max(cur, 0.30 * frac);
+    }
     // Heat-trail blur on the player too (visible in third-person / death cam)
     if (!player.doomed && player.velocity && typeof spawnHeatTrail === 'function') {
       if (player._heatTrailTimer == null) player._heatTrailTimer = 0;
