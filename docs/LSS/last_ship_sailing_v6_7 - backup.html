@@ -3,10 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <title>Last Ship Sailing</title>
+<!-- Modern technical typography (v6.7 modernization). Orbitron for titles
+     (geometric, sci-fi), Rajdhani for body (condensed humanist sans). Courier
+     New stays as fallback for the canvas HUD readouts that are pixel-aligned. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { overflow: hidden; background: #000; font-family: 'Courier New', monospace; cursor: none; }
+body {
+  overflow: hidden; background: #000; cursor: none;
+  font-family: 'Rajdhani', 'Inter', 'Helvetica Neue', system-ui, sans-serif;
+  font-weight: 500; letter-spacing: 0.02em;
+}
 canvas { display: block; }
+/* Title style: tighter sci-fi geometric face for screens that read as headers
+   (ship-select header, big countdown numbers, end-of-match titles). */
+.lss-title { font-family: 'Orbitron', 'Rajdhani', sans-serif; font-weight: 700; }
 
 #hud { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
 
@@ -84,41 +97,57 @@ canvas { display: block; }
 }
 .ability-slot {
   position: relative; width: 72px; height: 52px;
-  border: 1px solid rgba(100,180,255,0.25); border-radius: 4px;
-  background: rgba(6,12,20,0.75); overflow: hidden;
+  border: 1px solid rgba(100,180,255,0.30); border-radius: 6px;
+  background: rgba(6,12,20,0.55);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+          backdrop-filter: blur(8px) saturate(140%);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04);
+  overflow: hidden;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
-.ability-slot.on-cooldown { border-color: rgba(100,180,255,0.08); }
-.ability-slot.active-now { border-color: rgba(255,180,50,0.6); background: rgba(40,30,10,0.7); }
-.ability-slot.ready { border-color: rgba(80,220,255,0.4); }
+.ability-slot.on-cooldown { border-color: rgba(100,180,255,0.10); }
+.ability-slot.active-now {
+  border-color: rgba(255,180,50,0.7); background: rgba(40,30,10,0.55);
+  box-shadow: 0 2px 24px rgba(255,170,40,0.25), inset 0 1px 0 rgba(255,200,80,0.10);
+}
+.ability-slot.ready { border-color: rgba(80,220,255,0.50); }
 .ability-slot .ab-name {
-  font: bold 9px 'Courier New', monospace; color: rgba(180,220,255,0.8);
-  text-transform: uppercase; letter-spacing: 0.5px; text-align: center;
+  font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 11px;
+  color: rgba(190,225,255,0.92);
+  text-transform: uppercase; letter-spacing: 1.5px; text-align: center;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 68px;
 }
-.ability-slot.on-cooldown .ab-name { color: rgba(120,140,160,0.4); }
-.ability-slot.active-now .ab-name { color: rgba(255,200,80,0.9); }
+.ability-slot.on-cooldown .ab-name { color: rgba(120,140,160,0.45); }
+.ability-slot.active-now .ab-name { color: rgba(255,200,80,0.98); }
 .ability-slot .ab-keys {
-  display: flex; gap: 4px; align-items: center; margin-top: 2px;
+  display: flex; gap: 4px; align-items: center; margin-top: 3px;
 }
 .ability-slot .ab-key {
-  font: bold 10px 'Courier New', monospace; color: rgba(180,220,255,0.5);
-  background: rgba(80,140,200,0.12); border: 1px solid rgba(100,180,255,0.2);
-  border-radius: 2px; padding: 0 3px; line-height: 14px;
+  font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 10px;
+  color: rgba(180,220,255,0.65); letter-spacing: 0.5px;
+  background: rgba(80,140,200,0.14); border: 1px solid rgba(100,180,255,0.22);
+  border-radius: 3px; padding: 0 4px; line-height: 14px;
 }
-.ability-slot.on-cooldown .ab-key { color: rgba(100,120,140,0.3); border-color: rgba(100,180,255,0.08); }
-.ability-slot.active-now .ab-key { color: rgba(255,200,80,0.7); border-color: rgba(255,180,50,0.3); }
+.ability-slot.on-cooldown .ab-key { color: rgba(100,120,140,0.35); border-color: rgba(100,180,255,0.10); }
+.ability-slot.active-now .ab-key { color: rgba(255,200,80,0.78); border-color: rgba(255,180,50,0.35); }
 .ability-slot .ab-gp {
-  font: 8px 'Courier New', monospace; color: rgba(140,160,180,0.35);
+  font-family: 'Rajdhani', sans-serif; font-weight: 500; font-size: 9px;
+  color: rgba(140,160,180,0.40); letter-spacing: 0.5px;
 }
 .ability-slot .ab-cd-bar {
   position: absolute; bottom: 0; left: 0; height: 3px;
-  background: rgba(80,200,255,0.6); transition: width 0.1s linear;
+  background: linear-gradient(90deg, rgba(80,200,255,0.85), rgba(120,220,255,0.95));
+  box-shadow: 0 0 8px rgba(80,200,255,0.55);
+  transition: width 0.1s linear;
 }
-.ability-slot.active-now .ab-cd-bar { background: rgba(255,180,50,0.7); }
+.ability-slot.active-now .ab-cd-bar {
+  background: linear-gradient(90deg, rgba(255,180,50,0.85), rgba(255,210,100,0.95));
+  box-shadow: 0 0 8px rgba(255,180,50,0.55);
+}
 .ability-slot .ab-cd-text {
-  font: bold 11px 'Courier New', monospace; color: rgba(200,220,240,0.5);
-  position: absolute; top: 2px; right: 4px;
+  font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 12px;
+  color: rgba(210,230,250,0.65);
+  position: absolute; top: 2px; right: 5px;
 }
 .ability-slot.ready .ab-cd-text { display: none; }
 
@@ -127,19 +156,34 @@ canvas { display: block; }
 /* Round Info (top center) */
 #round-info {
   position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-  z-index: 10; pointer-events: none; color: #fff; text-align: center; font-size: 11px;
+  z-index: 10; pointer-events: none; color: #fff; text-align: center;
+  font-family: 'Rajdhani', sans-serif; font-size: 12px; letter-spacing: 1px;
 }
-#round-timer { font-size: 32px; font-weight: bold; }
-#round-state { font-size: 12px; color: #ffaa00; margin-top: 2px; }
+#round-timer {
+  font-family: 'Orbitron', sans-serif; font-size: 34px; font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.6);
+}
+#round-state {
+  font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 13px;
+  color: #ffaa00; margin-top: 2px; letter-spacing: 3px; text-transform: uppercase;
+}
 #score-display { display: flex; gap: 20px; justify-content: center; margin-top: 4px; }
-.team-score { padding: 2px 12px; font-size: 14px; font-weight: bold; }
+.team-score {
+  font-family: 'Orbitron', sans-serif; font-weight: 700;
+  padding: 3px 14px; font-size: 15px; letter-spacing: 2px;
+}
 .team-a { color: #ff6666; border-bottom: 2px solid #ff6666; }
 .team-b { color: #66bb66; border-bottom: 2px solid #66bb66; }
 
 /* Kill Feed */
 #kill-feed {
   position: fixed; top: 60px; right: 20px; z-index: 10; pointer-events: none;
-  color: #fff; font-size: 11px; text-align: right;
+  color: #fff;
+  font-family: 'Rajdhani', sans-serif; font-weight: 500; font-size: 13px;
+  letter-spacing: 0.5px;
+  text-align: right;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.7);
 }
 .kill-entry { padding: 2px 0; opacity: 1; transition: opacity 0.5s; }
 
@@ -159,10 +203,22 @@ canvas { display: block; }
 }
 #ship-select.active { display: flex; }
 #ship-select-header {
-  padding: 18px 32px 10px; border-bottom: 1px solid rgba(80,80,120,0.25);
+  padding: 20px 32px 14px;
+  border-bottom: 1px solid rgba(80,80,120,0.25);
+  background: linear-gradient(180deg, rgba(15,15,30,0.75) 0%, rgba(8,8,18,0.45) 100%);
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
 }
-#ship-select-header h1 { font-size: 30px; margin: 0; letter-spacing: 4px; color: #ffaa00; }
-#ship-select-header h2 { font-size: 12px; margin: 4px 0 0; color: #888; letter-spacing: 2px; }
+#ship-select-header h1 {
+  font-family: 'Orbitron', sans-serif; font-weight: 700;
+  font-size: 32px; margin: 0; letter-spacing: 6px; color: #ffaa00;
+  text-shadow: 0 0 24px rgba(255,170,0,0.35);
+}
+#ship-select-header h2 {
+  font-family: 'Rajdhani', sans-serif; font-weight: 500;
+  font-size: 13px; margin: 4px 0 0; color: #888; letter-spacing: 3px;
+  text-transform: uppercase;
+}
 #ship-select-body {
   flex: 1; display: flex; flex-direction: row; min-height: 0;
 }
@@ -173,19 +229,33 @@ canvas { display: block; }
   border-right: 1px solid rgba(80,80,120,0.25);
 }
 .ship-list-entry {
-  padding: 12px 14px; margin-bottom: 6px;
-  border: 1px solid rgba(80,80,120,0.35);
-  background: rgba(20,20,40,0.6); color: #ddd;
-  font-size: 15px; letter-spacing: 2px; cursor: pointer;
-  transition: all 0.15s; pointer-events: all;
+  padding: 14px 16px; margin-bottom: 8px;
+  border: 1px solid rgba(80,80,120,0.35); border-radius: 6px;
+  background: rgba(20,20,40,0.45);
+  -webkit-backdrop-filter: blur(6px);
+          backdrop-filter: blur(6px);
+  color: #ddd;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 15px; letter-spacing: 1.5px; cursor: pointer;
+  transition: all 0.18s ease; pointer-events: all;
   display: flex; flex-direction: column;
 }
-.ship-list-entry .sle-name { font-weight: bold; color: #ffaa00; font-size: 16px; }
-.ship-list-entry .sle-class { font-size: 10px; color: #888; margin-top: 2px; letter-spacing: 1px; }
-.ship-list-entry:hover { border-color: #ffaa00; background: rgba(30,30,50,0.9); }
+.ship-list-entry .sle-name {
+  font-family: 'Orbitron', sans-serif; font-weight: 600;
+  color: #ffaa00; font-size: 16px; letter-spacing: 2px;
+}
+.ship-list-entry .sle-class {
+  font-family: 'Rajdhani', sans-serif; font-weight: 500;
+  font-size: 11px; color: #888; margin-top: 3px; letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.ship-list-entry:hover {
+  border-color: #ffaa00; background: rgba(30,30,50,0.75);
+  transform: translateX(2px);
+}
 .ship-list-entry.selected {
-  border-color: #ffaa00; background: rgba(50,40,15,0.9);
-  box-shadow: inset 0 0 12px rgba(255,170,0,0.25);
+  border-color: #ffaa00; background: rgba(50,40,15,0.75);
+  box-shadow: inset 0 0 16px rgba(255,170,0,0.30), 0 2px 12px rgba(0,0,0,0.4);
 }
 /* Center + right: 3D GLB preview on the left of the preview panel, info/stack on the right */
 #ship-preview {
@@ -212,19 +282,31 @@ canvas { display: block; }
   padding: 0 8px;
 }
 #ship-preview-header { text-align: center; margin-bottom: 14px; }
-#ship-preview-name { font-size: 32px; letter-spacing: 4px; color: #ffaa00; font-weight: bold; }
-#ship-preview-class { font-size: 13px; color: #aaa; letter-spacing: 2px; margin-top: 4px; }
+#ship-preview-name {
+  font-family: 'Orbitron', sans-serif; font-weight: 700;
+  font-size: 34px; letter-spacing: 6px; color: #ffaa00;
+  text-shadow: 0 0 20px rgba(255,170,0,0.35);
+}
+#ship-preview-class {
+  font-family: 'Rajdhani', sans-serif; font-weight: 500;
+  font-size: 13px; color: #aaa; letter-spacing: 3px; margin-top: 4px;
+  text-transform: uppercase;
+}
 #ship-preview-stats {
   display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px;
   margin: 14px 0 18px; pointer-events: none; width: 100%;
 }
 .sp-stat {
-  font-size: 12px; letter-spacing: 1px; color: #aaa;
+  font-family: 'Rajdhani', sans-serif; font-weight: 500;
+  font-size: 13px; letter-spacing: 1.5px; color: #aaa;
   display: flex; justify-content: space-between;
-  padding: 6px 10px; background: rgba(20,20,40,0.4);
-  border-left: 2px solid rgba(80,80,120,0.5);
+  padding: 8px 12px; background: rgba(20,20,40,0.35);
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
+  border-left: 2px solid rgba(80,80,120,0.5); border-radius: 0 4px 4px 0;
+  text-transform: uppercase;
 }
-.sp-stat .sp-val { color: #fff; font-weight: bold; }
+.sp-stat .sp-val { color: #fff; font-weight: 700; letter-spacing: 1px; }
 #ship-preview-weapon {
   color: #66bbff; font-size: 13px; letter-spacing: 1px; margin-top: 6px;
   text-align: center;
@@ -238,13 +320,24 @@ canvas { display: block; }
   text-align: center; margin-top: 4px; opacity: 0.8;
 }
 #ship-preview-confirm {
-  margin-top: 22px; padding: 12px 36px;
-  background: rgba(255,170,0,0.15); border: 2px solid #ffaa00;
-  color: #ffaa00; font-size: 14px; letter-spacing: 3px; font-weight: bold;
-  cursor: pointer; transition: all 0.15s; pointer-events: all;
-  font-family: inherit; align-self: center;
+  margin-top: 22px; padding: 14px 40px;
+  background: rgba(255,170,0,0.12);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+          backdrop-filter: blur(8px) saturate(140%);
+  border: 2px solid #ffaa00; border-radius: 6px;
+  color: #ffaa00;
+  font-family: 'Orbitron', sans-serif; font-weight: 700;
+  font-size: 14px; letter-spacing: 4px;
+  text-transform: uppercase;
+  cursor: pointer; transition: all 0.18s ease; pointer-events: all;
+  align-self: center;
+  box-shadow: 0 0 24px rgba(255,170,0,0.18), inset 0 1px 0 rgba(255,255,255,0.06);
 }
-#ship-preview-confirm:hover { background: rgba(255,170,0,0.35); color: #fff; }
+#ship-preview-confirm:hover {
+  background: rgba(255,170,0,0.32); color: #fff;
+  box-shadow: 0 0 36px rgba(255,170,0,0.45);
+  transform: translateY(-1px);
+}
 #ship-preview-confirm:disabled { opacity: 0.3; cursor: not-allowed; }
 #ship-preview-empty {
   color: #555; font-size: 14px; letter-spacing: 2px; text-align: center;
@@ -280,13 +373,16 @@ canvas { display: block; }
 }
 #ship-select-countdown.active { display: block; }
 #ship-select-countdown .cd-num {
-  font-size: 160px; font-weight: bold; color: #ffaa00;
+  font-family: 'Orbitron', sans-serif; font-weight: 900;
+  font-size: 180px; color: #ffaa00;
   text-shadow: 0 0 40px rgba(255,170,0,0.8), 0 0 80px rgba(255,100,0,0.4);
   letter-spacing: 0; line-height: 1;
   animation: cdPulse 0.9s ease-out forwards;
 }
 #ship-select-countdown .cd-sub {
-  font-size: 14px; color: #ddd; letter-spacing: 4px; margin-top: 8px;
+  font-family: 'Orbitron', sans-serif; font-weight: 600;
+  font-size: 15px; color: #ddd; letter-spacing: 6px; margin-top: 10px;
+  text-transform: uppercase;
 }
 @keyframes cdPulse {
   0% { transform: scale(0.6); opacity: 0; }
@@ -3344,7 +3440,81 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor(0x0a0520); // Dark purple-black (cartoon space)
 renderer.outputEncoding = THREE.sRGBEncoding || 3001; // Vivid color output
+// PBR pipeline (v6.7 modernization): physicallyCorrectLights + linear workspace
+// makes MeshStandardMaterial with IBL reflections behave correctly. Tone mapping
+// stays in the composite shader (ACES filmic, see postFX.compositeMat) so the
+// renderer outputs linear and the composite consumes linear; setting renderer
+// toneMapping here would double-tonemap.
+renderer.physicallyCorrectLights = true;
 document.body.appendChild(renderer.domElement);
+
+// ---- IBL ENVIRONMENT MAP ----
+// Procedural cubemap tuned to the corridor palette (deep purple-black with cool
+// rim and warm zone glow). Processed through PMREMGenerator so it can drive
+// MeshStandardMaterial reflections on every PBR surface. Cheap (built once, no
+// network), and feels cohesive with the Kali-IFS wall shader instead of pulling
+// reflections from a starfield the player rarely sees.
+function buildProceduralEnvMap() {
+  const size = 256;
+  const faceColors = [
+    // +X (right): warm rim
+    ['#1a1230', '#2a1f50', '#5a2a4a', '#1a1230'],
+    // -X (left): cool rim
+    ['#0a0a1c', '#142244', '#2a4070', '#0a0a1c'],
+    // +Y (top): brighter ceiling glow
+    ['#1c2050', '#3a3870', '#5a5090', '#1c2050'],
+    // -Y (bottom): dark floor
+    ['#050510', '#0a0a1a', '#101028', '#050510'],
+    // +Z (front): teal accent
+    ['#0a1a26', '#163050', '#244c70', '#0a1a26'],
+    // -Z (back): magenta accent
+    ['#1a0a26', '#3a1450', '#5a2470', '#1a0a26'],
+  ];
+  const textures = faceColors.map(stops => {
+    const c = document.createElement('canvas');
+    c.width = size; c.height = size;
+    const ctx = c.getContext('2d');
+    const g = ctx.createRadialGradient(size * 0.5, size * 0.5, 0, size * 0.5, size * 0.5, size * 0.7);
+    g.addColorStop(0.00, stops[0]);
+    g.addColorStop(0.45, stops[1]);
+    g.addColorStop(0.85, stops[2]);
+    g.addColorStop(1.00, stops[3]);
+    ctx.fillStyle = g; ctx.fillRect(0, 0, size, size);
+    // Sprinkle a few soft bright dots so reflections catch highlights when the
+    // ship rotates; this is what makes a rotating hull read as "metal in a lit
+    // room" rather than "flat painted shape".
+    for (let i = 0; i < 18; i++) {
+      const x = Math.random() * size;
+      const y = Math.random() * size;
+      const r = 4 + Math.random() * 12;
+      const dotG = ctx.createRadialGradient(x, y, 0, x, y, r);
+      dotG.addColorStop(0, 'rgba(220, 230, 255, 0.6)');
+      dotG.addColorStop(1, 'rgba(220, 230, 255, 0)');
+      ctx.fillStyle = dotG;
+      ctx.fillRect(x - r, y - r, r * 2, r * 2);
+    }
+    const tex = new THREE.CanvasTexture(c);
+    tex.encoding = THREE.sRGBEncoding || 3001;
+    return tex;
+  });
+  const cubeTex = new THREE.CubeTexture(textures.map(t => t.image));
+  cubeTex.format = THREE.RGBAFormat;
+  cubeTex.encoding = THREE.sRGBEncoding || 3001;
+  cubeTex.needsUpdate = true;
+  // PMREM = pre-filtered mipmapped radiance environment map; required for
+  // MeshStandardMaterial.envMap to look correct at multiple roughness values.
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  pmrem.compileCubemapShader();
+  const envRT = pmrem.fromCubemap(cubeTex);
+  pmrem.dispose();
+  return envRT.texture;
+}
+const sceneEnvMap = buildProceduralEnvMap();
+// Auto-applies to every MeshStandardMaterial in the scene unless they override.
+// MeshBasicMaterial (engines, plumes, panels) and ShaderMaterial (shield, walls)
+// ignore scene.environment, so additive glows and the procedural wall fractal
+// stay exactly as they were.
+scene.environment = sceneEnvMap;
 
 // ---- POST-PROCESSING PIPELINE ----
 // Bloom + Vignette + Chromatic Aberration (on damage) via custom shader passes.
@@ -4429,8 +4599,12 @@ function _initShipPreview3D() {
   try {
     const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.physicallyCorrectLights = true;
+    renderer.outputEncoding = THREE.sRGBEncoding || 3001;
     renderer.setClearColor(0x000000, 0); // transparent: CSS radial gradient shows behind
     const scene = new THREE.Scene();
+    // Inherit the in-game IBL so the preview hero shot reads the same as combat.
+    if (typeof sceneEnvMap !== 'undefined') scene.environment = sceneEnvMap;
     // Lighting: cool key from upper-front, warm fill from below-back, plus ambient
     // so dark hull panels still read. Colors echo the main-game team-neutral palette.
     scene.add(new THREE.AmbientLight(0xffffff, 0.55));
@@ -4562,33 +4736,98 @@ function stopShipPreviewLoop() {
 // userData contract as the procedural path (engineMesh, shieldMesh, engineGlows,
 // enginePlumes, panelGlowMat, engineGlowMat). The rest of the game interacts
 // through userData, so this is a drop-in replacement at the call site.
+// ---- SHARED HULL NORMAL MAP ----
+// Procedural panel-lines + rivets normal map. Built once, reused on every PBR
+// hull material so flat boxes/cones read as plated metal under IBL lighting.
+// Cheap canvas-based generator: no network, no asset, ~64KB GPU footprint.
+const _hullNormalMap = (function() {
+  const size = 256;
+  const c = document.createElement('canvas');
+  c.width = size; c.height = size;
+  const ctx = c.getContext('2d');
+  // Base normal = (0.5, 0.5, 1.0) -> RGB (128, 128, 255) = "flat surface".
+  ctx.fillStyle = 'rgb(128, 128, 255)';
+  ctx.fillRect(0, 0, size, size);
+  // Horizontal panel seams: dark/light gradient pair at each seam encodes a
+  // groove (concave V). Spaced randomly so it doesn't read as a uniform grid.
+  const seams = [];
+  let y = 8;
+  while (y < size - 8) {
+    seams.push(y);
+    y += 14 + Math.floor(Math.random() * 22);
+  }
+  for (const sy of seams) {
+    // Top edge of groove: blue-green tint (normal pointing slightly +Y)
+    ctx.fillStyle = 'rgb(128, 168, 220)';
+    ctx.fillRect(0, sy - 1, size, 1);
+    // Bottom edge of groove: blue-magenta tint (normal pointing slightly -Y)
+    ctx.fillStyle = 'rgb(128, 88, 220)';
+    ctx.fillRect(0, sy + 1, size, 1);
+    // Center of groove: dark indent
+    ctx.fillStyle = 'rgb(128, 128, 200)';
+    ctx.fillRect(0, sy, size, 1);
+  }
+  // Vertical seams (sparser than horizontal)
+  for (let x = 24; x < size - 12; x += 32 + Math.floor(Math.random() * 28)) {
+    ctx.fillStyle = 'rgb(168, 128, 220)';
+    ctx.fillRect(x - 1, 0, 1, size);
+    ctx.fillStyle = 'rgb(88, 128, 220)';
+    ctx.fillRect(x + 1, 0, 1, size);
+    ctx.fillStyle = 'rgb(128, 128, 200)';
+    ctx.fillRect(x, 0, 1, size);
+  }
+  // Rivets: small bumps (radial light/dark). Encodes a tiny convex dome.
+  for (let i = 0; i < 60; i++) {
+    const rx = Math.random() * size;
+    const ry = Math.random() * size;
+    const r = 1.2 + Math.random() * 0.8;
+    // Highlight side
+    ctx.fillStyle = 'rgba(168, 168, 220, 0.7)';
+    ctx.beginPath(); ctx.arc(rx - 0.5, ry - 0.5, r, 0, Math.PI * 2); ctx.fill();
+    // Shadow side
+    ctx.fillStyle = 'rgba(88, 88, 220, 0.7)';
+    ctx.beginPath(); ctx.arc(rx + 0.5, ry + 0.5, r, 0, Math.PI * 2); ctx.fill();
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(2, 2);
+  tex.anisotropy = 4;
+  return tex;
+})();
+
 function buildModelShipMesh(chassisData, teamColor, loadoutKey) {
   const group = new THREE.Group();
   const proto = shipModelCache.loaded[loadoutKey];
   const teamCol = new THREE.Color(teamColor);
 
   // Clone and retint materials (preserve baseColor texture and vertex colors,
-  // add a subtle team-color emissive so you can still tell sides apart).
+  // add a subtle team-color emissive so you can still tell sides apart). PBR
+  // pipeline: MeshStandardMaterial with metalness/roughness picks up reflections
+  // from scene.environment, so glTF hulls match the procedural-ship look in the
+  // same scene.
   const model = proto.clone(true);
   // Collect hull-like materials so animateShipMesh can dim them on doomed state.
-  // Opaque MeshPhongMaterials that aren't additive engine/shield/plume bits are
-  // the hull; we skip transparent ones to preserve glow highlights.
+  // Opaque PBR materials that aren't additive engine/shield/plume bits are the
+  // hull; we skip transparent ones to preserve glow highlights.
   const hullMats = [];
   model.traverse(child => {
     if (child.isMesh) {
       const mats = Array.isArray(child.material) ? child.material : [child.material];
       const newMats = mats.map(m => {
         const params = {
-          specular: 0x333344, shininess: 80,
+          metalness: 0.72,
+          roughness: 0.45,
           emissive: teamCol.clone().multiplyScalar(0.08),
           emissiveIntensity: 1.0,
+          envMapIntensity: 0.90,
           transparent: !!(m && m.transparent),
           opacity: (m && m.opacity != null) ? m.opacity : 1.0,
         };
         if (m && m.map) params.map = m.map;
         if (m && m.vertexColors) params.vertexColors = true;
         params.color = (m && m.color) ? m.color.clone() : new THREE.Color(0xbfc4d2);
-        const mat = new THREE.MeshPhongMaterial(params);
+        const mat = new THREE.MeshStandardMaterial(params);
         if (!params.transparent) hullMats.push(mat);
         return mat;
       });
@@ -4767,12 +5006,21 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
   const h = chassisData.hullHeight * 0.5;
   const l = chassisData.hullLength * 0.5;
 
-  // Shared materials (cinematic sci-fi: punchier specular, subtle team-color self-emission,
-  // bright cockpit emissive that catches bloom)
+  // Shared materials (PBR sci-fi: MeshStandardMaterial with metalness/roughness,
+  // shared procedural normal map for plated-hull detail, IBL reflections from
+  // scene.environment, team-color emissive for self-glow + bloom catch).
+  // Fresnel rim-shader injection survives the Phong->Standard switch because
+  // <common> and <dithering_fragment> are present in both shader chunk sets.
   const teamCol = new THREE.Color(teamColor);
-  const hullMat = new THREE.MeshPhongMaterial({
-    color: teamColor, specular: 0x9999aa, shininess: 110,
-    emissive: teamCol.clone().multiplyScalar(0.12), emissiveIntensity: 1.0
+  const hullMat = new THREE.MeshStandardMaterial({
+    color: teamColor,
+    metalness: 0.78,
+    roughness: 0.42,
+    normalMap: _hullNormalMap,
+    normalScale: new THREE.Vector2(0.55, 0.55),
+    emissive: teamCol.clone().multiplyScalar(0.12),
+    emissiveIntensity: 1.0,
+    envMapIntensity: 0.85
   });
   // Fresnel rim-light: team-colored glow at glancing angles. onBeforeCompile injects
   // a view-dependent power(1 - n·v) term into the fragment shader so silhouettes pop
@@ -4793,15 +5041,33 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
         'gl_FragColor.rgb += rimColor * (_rimFresnel * rimStrength);\n' +
         '#include <dithering_fragment>');
   };
-  const darkMat = new THREE.MeshPhongMaterial({ color: 0x222233, specular: 0x444466, shininess: 60 });
-  const accentMat = new THREE.MeshPhongMaterial({
-    color: teamCol.clone().offsetHSL(0, 0, -0.15),
-    specular: 0xaaaacc, shininess: 130,
-    emissive: teamCol.clone().multiplyScalar(0.18), emissiveIntensity: 1.0
+  const darkMat = new THREE.MeshStandardMaterial({
+    color: 0x222233,
+    metalness: 0.85,
+    roughness: 0.55,
+    normalMap: _hullNormalMap,
+    normalScale: new THREE.Vector2(0.45, 0.45),
+    envMapIntensity: 0.8
   });
-  const cockpitMat = new THREE.MeshPhongMaterial({
-    color: 0x2244aa, specular: 0xccddff, shininess: 200,
-    emissive: 0x66aaff, emissiveIntensity: 1.4
+  const accentMat = new THREE.MeshStandardMaterial({
+    color: teamCol.clone().offsetHSL(0, 0, -0.15),
+    metalness: 0.88,
+    roughness: 0.30,
+    normalMap: _hullNormalMap,
+    normalScale: new THREE.Vector2(0.40, 0.40),
+    emissive: teamCol.clone().multiplyScalar(0.18),
+    emissiveIntensity: 1.0,
+    envMapIntensity: 1.10
+  });
+  // Cockpit canopy: glass-like (low roughness, metallic-ish for tinted reflection,
+  // bright emissive so the bloom still catches the cabin glow).
+  const cockpitMat = new THREE.MeshStandardMaterial({
+    color: 0x2244aa,
+    metalness: 0.20,
+    roughness: 0.08,
+    emissive: 0x66aaff,
+    emissiveIntensity: 1.4,
+    envMapIntensity: 1.40
   });
   // Register the cockpit material on the group so animateShipMesh can pulse it (heartbeat).
   group.userData.cockpitMat = cockpitMat;
