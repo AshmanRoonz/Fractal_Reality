@@ -2586,6 +2586,14 @@ function handleNetEvent(evt, fromPeerId) {
     }
     return;
   }
+  // (v6.7) Shotgun pellet burst from a peer's spread weapon. Renders as a
+  // cloud of sparks following the pellet path; same look as the local fire.
+  if (evt.type === 'pellet_burst' && typeof evt.ox === 'number') {
+    const origin = new THREE.Vector3(evt.ox, evt.oy, evt.oz);
+    const dir = new THREE.Vector3(evt.dx, evt.dy, evt.dz);
+    spawnPelletBurst(origin, dir, evt.range || 600);
+    return;
+  }
   // (v6.7) Branching lightning bolt from a peer (Energy Siphon, Arc Wave
   // secondary trail, future thunder weapons). Pure visual; same args as
   // local spawnLightningBolt.
@@ -2948,6 +2956,47 @@ function spawnFirewallVisual(pos, dir, length, team, ownerPeerId, netId) {
   } catch (e) { /* visual best-effort */ }
 }
 
+// (v6.7) Particle burst for shotgun-style spread weapons (Puncture Leadwall
+// and any future spread mode). Each pellet calls this with its origin,
+// direction, and traveled-distance. Spawns ~12 fast-moving warm sparks that
+// follow the pellet path with slight wobble, plus a brief flash at the
+// muzzle. Reads as a shotgun blast instead of a laser. The particles ride
+// the existing game.particles array (camera-facing sprites with the soft
+// ember falloff texture).
+function spawnPelletBurst(origin, dir, distance) {
+  if (!origin || !dir) return;
+  const partCount = 12;
+  const palette = [0xffaa44, 0xffcc66, 0xffeebb, 0xff7733];
+  const baseSpeed = Math.min(1400, Math.max(600, (distance || 600) * 1.6));
+  for (let p = 0; p < partCount; p++) {
+    const wobble = new THREE.Vector3(
+      (Math.random() - 0.5) * 0.18,
+      (Math.random() - 0.5) * 0.18,
+      (Math.random() - 0.5) * 0.18
+    );
+    const v = dir.clone().add(wobble).normalize().multiplyScalar(
+      baseSpeed * (0.55 + Math.random() * 0.6)
+    );
+    const jitter = new THREE.Vector3(
+      (Math.random() - 0.5) * 10,
+      (Math.random() - 0.5) * 10,
+      (Math.random() - 0.5) * 10
+    );
+    game.particles.push({
+      position: origin.clone().add(jitter),
+      velocity: v,
+      life: 0.18 + Math.random() * 0.14,
+      maxLife: 0.32,
+      color: palette[Math.floor(Math.random() * palette.length)],
+      size: 2.4 + Math.random() * 2.2,
+    });
+  }
+  // Warm muzzle flash so the gun reads as firing.
+  if (typeof spawnDynamicLight === 'function') {
+    spawnDynamicLight(origin, 0xffaa44, 1.6, 110, 0.2);
+  }
+}
+
 // (v6.7) Per-chassis muzzle flash. Each primary weapon gets a distinct visual
 // signature so peers can read what's firing at them at a glance. All effects
 // reuse existing helpers (spawnDynamicLight, spawnTracer, spawnLightningBolt,
@@ -2956,8 +3005,8 @@ function chassisFlashColor(key) {
   switch (key) {
     case 'VORTEX':   return 0x44ddff;  // cyan, Splitter Rifle
     case 'PYRO':     return 0xff7733;  // orange, T-203 Thermite
-    case 'SLAYER':   return 0xeeff66;  // yellow-white, Plasma Railgun
-    case 'PUNCTURE': return 0xffaa44;  // amber, Leadwall
+    case 'SLAYER':   return 0xffaa44;  // amber, Leadwall (shotgun)
+    case 'PUNCTURE': return 0xeeff66;  // yellow-white, Plasma Railgun
     case 'TRACKER':  return 0xff9944;  // amber-orange, 40mm Tracker
     case 'BLASTER':  return 0xffcc44;  // gold, Predator Cannon
     case 'SYPHON':   return 0x44ffaa;  // cyan-green, XO-16 Chaingun
@@ -3019,16 +3068,30 @@ function emitChassisMuzzleFlash(loadoutKey, pos, dir) {
       spawnLightningBolt(pos, tip, 0x44ffaa, 0.10, 1, 1.0);
     }
   } else if (loadoutKey === 'PUNCTURE') {
-    // Sharp directional cone via a short volumetric beam (Puncture's signature).
-    if (typeof spawnTracer === 'function') {
-      const tip = pos.clone().add(dir.clone().multiplyScalar(120));
-      spawnTracer(pos, tip, flashColor);
-    }
-  } else if (loadoutKey === 'SLAYER') {
-    // Plasma Railgun: bright lightning bolt out the barrel for the heavy shot.
+    // Plasma Railgun: bright electric lightning bolt out the barrel for the
+    // heavy 1000-damage hitscan shot. Reads as a charged-up shot.
     if (typeof spawnLightningBolt === 'function') {
       const tip = pos.clone().add(dir.clone().multiplyScalar(140));
       spawnLightningBolt(pos, tip, 0xeeff66, 0.18, 2, 1.8);
+    }
+  } else if (loadoutKey === 'SLAYER') {
+    // Leadwall (shotgun): wide quick burst of warm sparks. The per-pellet
+    // particle burst from spawnPelletBurst already covers the cone of fire;
+    // the muzzle flash adds extra sparks back at the gun for a kickier feel.
+    for (let i = 0; i < 6; i++) {
+      const v = dir.clone().add(new THREE.Vector3(
+        (Math.random() - 0.5) * 0.45,
+        (Math.random() - 0.5) * 0.45,
+        (Math.random() - 0.5) * 0.45
+      )).normalize().multiplyScalar(180 + Math.random() * 100);
+      game.particles.push({
+        position: pos.clone(),
+        velocity: v,
+        life: 0.10 + Math.random() * 0.08,
+        maxLife: 0.18,
+        color: 0xffcc66,
+        size: 2.0 + Math.random() * 1.6,
+      });
     }
   } else if (loadoutKey === 'BLASTER') {
     // Predator Cannon fires fast; quick yellow burst with extra sparks.
@@ -10000,14 +10063,17 @@ function fireSpread(origin, dir, w) {
 
     const levelDist = raycastLevel(origin, spreadDir, w.range);
     const end = origin.clone().add(spreadDir.clone().multiplyScalar(levelDist));
-    spawnTracer(origin, end, 0xffaa44);
-    // (v6.7) Broadcast each pellet so peers see the spread cone visually.
+    // (v6.7) Spread weapons now spawn a particle burst along each pellet's
+    // path instead of a long tracer beam. The tracer was reading as a laser;
+    // a brief shower of warm-colored sparks reads as a shotgun blast (per the
+    // particle-burst pattern in effects_demo.html).
+    spawnPelletBurst(origin, spreadDir, levelDist);
     if (net.active && net.sendEvent) {
       net.sendEvent({
-        type: 'fire_tracer',
+        type: 'pellet_burst',
         ox: origin.x, oy: origin.y, oz: origin.z,
-        ex: end.x,    ey: end.y,    ez: end.z,
-        color: 0xffaa44,
+        dx: spreadDir.x, dy: spreadDir.y, dz: spreadDir.z,
+        range: levelDist,
       });
     }
 
