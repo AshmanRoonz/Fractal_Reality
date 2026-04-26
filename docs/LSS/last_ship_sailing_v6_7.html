@@ -1444,6 +1444,13 @@ async function joinRoom() {
       if (net.myReady && net.sendEvent) {
         net.sendEvent({ type: 'ready', ready: true });
       }
+
+      // (v6.7) If I'm the world owner and we have a built world, ship the
+      // manifest to the new peer so they don't sit with empty / divergent
+      // cluster placements until next round.
+      if (game.clusters && game.clusters.length > 0) {
+        broadcastWorldObjects();
+      }
     });
 
     // Peer leaves
@@ -1461,6 +1468,19 @@ async function joinRoom() {
       updateLobbyPeers();
       checkAllReady();          // (v6.7) someone leaving may complete the ready set
       checkAllLoadoutsReady();  // (v6.7) ; same applies to the ship-select handshake
+
+      // (v6.7) Host-drop fallback. If the leaver was the world owner, the
+      // sorted-peerId tie-break now elects me (or whoever is next-lowest).
+      // amStasisOwner() is recomputed from the live peer set, so the new
+      // owner re-broadcasts the cluster manifest from their CURRENT state.
+      // In normal handoff that state already came from the dropped owner's
+      // earlier broadcast, so this is just affirming authority and catching
+      // any peer that missed the original. If the dropped owner left before
+      // broadcasting, peers had divergent local builds; the new owner's
+      // re-broadcast reconciles them.
+      if (game.clusters && game.clusters.length > 0) {
+        broadcastWorldObjects();
+      }
     });
 
     document.getElementById('lobby-status').textContent = 'CONNECTED: ROOM ' + code + ' ; WAITING FOR PLAYERS...';
@@ -2260,6 +2280,14 @@ function handleNetEvent(evt, fromPeerId) {
         break;
       }
     }
+    return;
+  }
+  // (v6.7) Authoritative cluster manifest from the world owner. Replace our
+  // local clusters with the broadcast. If we sent this ourselves (echoed back
+  // by the mesh), the from-peer check above already filtered it; trystero
+  // doesn't deliver our own broadcasts, so we never see our own world_objects.
+  if (evt.type === 'world_objects' && Array.isArray(evt.clusters)) {
+    applyWorldObjectsManifest(evt.clusters);
     return;
   }
 }
@@ -6446,7 +6474,7 @@ class DestructibleObstacle {
 // then shatter into loose debris. Each child is a DestructibleObstacle registered
 // in game.dynamicObjects so existing collision/damage iteration still works.
 class ClusterObstacle {
-  constructor(pos, clusterScale) {
+  constructor(pos, clusterScale, config) {
     this.position = pos.clone();
     this.originalPos = pos.clone();
     this.clusterScale = clusterScale;      // overall bounding radius of the cluster
@@ -6454,21 +6482,35 @@ class ClusterObstacle {
     this.broken = false;
     this.respawnTimer = 0;
     this.respawnTime = 30;
-    // Slow orbital rotation as a whole while intact
+    // (v6.7) Optional config from the world-owner's broadcast manifest.
+    // When present, every random value (rotation, color, child placement) is
+    // taken from the manifest so the receiver's cluster matches the owner's
+    // exactly. When absent (solo, or owner-side initial build), use Math.random
+    // as before. rotSpeed stays random because it's purely visual; both peers
+    // animate independently and nobody notices a small difference in tumble.
     this.rotSpeed = new THREE.Vector3(
       (Math.random() - 0.5) * 0.15,
       (Math.random() - 0.5) * 0.20,
       (Math.random() - 0.5) * 0.15
     );
-    this.rotation = new THREE.Euler(
-      Math.random() * Math.PI * 2,
-      Math.random() * Math.PI * 2,
-      Math.random() * Math.PI * 2
-    );
-    const colorIdx = Math.floor(Math.random() * OBSTACLE_COLORS.length);
-    this.baseColor = OBSTACLE_COLORS[colorIdx];
+    if (config) {
+      this.rotation = new THREE.Euler(config.rx, config.ry, config.rz);
+      this.baseColor = config.color;
+    } else {
+      this.rotation = new THREE.Euler(
+        Math.random() * Math.PI * 2,
+        Math.random() * Math.PI * 2,
+        Math.random() * Math.PI * 2
+      );
+      const colorIdx = Math.floor(Math.random() * OBSTACLE_COLORS.length);
+      this.baseColor = OBSTACLE_COLORS[colorIdx];
+    }
     this.children = [];
-    this._buildChildren();
+    if (config && config.children) {
+      this._buildChildrenFromConfig(config.children);
+    } else {
+      this._buildChildren();
+    }
   }
 
   _buildChildren() {
@@ -6502,6 +6544,30 @@ class ClusterObstacle {
       child.localOffset = offset.clone(); // body-frame offset (pre-rotation)
       child.hp = child.maxHp = 80 + childScale * 2; // weaker than standalone
       child.fragmentMaxLife = 10 + Math.random() * 6;
+      this.children.push(child);
+      game.dynamicObjects.push(child);
+    }
+  }
+
+  // (v6.7) Mirror _buildChildren but use values from the broadcast manifest
+  // instead of Math.random. Called when this cluster is being instantiated
+  // from a world_objects event sent by the world owner.
+  _buildChildrenFromConfig(childConfigs) {
+    const q = new THREE.Quaternion().setFromEuler(this.rotation);
+    for (const cc of childConfigs) {
+      const offset = new THREE.Vector3(cc.ox, cc.oy, cc.oz);
+      const rotatedOffset = offset.clone().applyQuaternion(q);
+      const childPos = this.position.clone().add(rotatedOffset);
+      const child = new DestructibleObstacle(childPos, null, cc.scale);
+      if (child.mesh && child.mesh.material) {
+        child.mesh.material.color.setHex(this.baseColor);
+        child.mesh.material.emissive.setHex(this.baseColor);
+      }
+      child.baseColor = this.baseColor;
+      child.cluster = this;
+      child.localOffset = offset.clone();
+      child.hp = child.maxHp = cc.hp;
+      child.fragmentMaxLife = cc.flife;
       this.children.push(child);
       game.dynamicObjects.push(child);
     }
@@ -8017,6 +8083,13 @@ function commitLoadout(key) {
     } else {
       buildWorld();
     }
+
+    // (v6.7) After the local build, the world owner ships an authoritative
+    // cluster manifest to all peers; non-owners' applyWorldObjectsManifest
+    // tears down their local build and rebuilds from the manifest. This is
+    // the "one decides, one agrees" path: cluster positions and child layouts
+    // match exactly across peers regardless of any RNG drift.
+    broadcastWorldObjects();
 
     game.state = 'warmup';
     game.roundTimer = LSS.ROUND_TIME;
@@ -10558,6 +10631,8 @@ function updateRoundSystem(dt) {
         } else {
           buildNextRound();
         }
+        // (v6.7) Round-restart owner ships the manifest for this round too.
+        broadcastWorldObjects();
         // Reset stasis fields
         game.stasisFields.forEach(f => { if (f.alive) f.destroy(); });
         game.stasisFields = [];
@@ -12884,11 +12959,82 @@ function getStasisSphereIndex(pos) {
 
 // (v6.7) "Am I the stasis owner?" Same lowest-peerId tie-break used for
 // match_start and launch_at. Solo always owns. Non-owners skip spawn entirely;
-// they only instantiate fields from the network.
+// they only instantiate fields from the network. The same predicate decides
+// world-objects ownership too: one peer decides cluster placements, the rest
+// agree (see broadcastWorldObjects below).
 function amStasisOwner() {
   if (!net.active) return true;
   const allIds = [net.myPeerId, ...net.peers.keys()].sort();
   return allIds[0] === net.myPeerId;
+}
+
+// ---- WORLD-OBJECTS OWNER PATTERN (v6.7) ----
+// One peer (lowest peerId) builds the cluster layout locally and broadcasts
+// the full manifest to every other peer. Receivers tear down whatever they
+// have locally and rebuild from the manifest, so screens agree exactly.
+// On peer-join the current owner re-broadcasts so late joiners catch up.
+// On peer-leave (host-drop) the new owner re-broadcasts their current state;
+// in normal handoff the data is already identical (it came from the dropped
+// owner's manifest), so this is just affirming authority. If the original
+// owner dropped before broadcasting, peers had to fall back to their own
+// local builds, and the new owner's re-broadcast reconciles them.
+
+function serializeWorldObjects() {
+  const out = [];
+  for (let i = 0; i < game.clusters.length; i++) {
+    const c = game.clusters[i];
+    if (!c) continue;
+    out.push({
+      px: c.position.x, py: c.position.y, pz: c.position.z,
+      scale: c.clusterScale,
+      rx: c.rotation.x, ry: c.rotation.y, rz: c.rotation.z,
+      color: c.baseColor,
+      children: (c.children || []).map(ch => ({
+        ox: ch.localOffset ? ch.localOffset.x : 0,
+        oy: ch.localOffset ? ch.localOffset.y : 0,
+        oz: ch.localOffset ? ch.localOffset.z : 0,
+        scale: ch.scale,
+        hp: ch.maxHp,
+        flife: ch.fragmentMaxLife,
+      })),
+    });
+  }
+  return out;
+}
+
+function broadcastWorldObjects() {
+  if (!net.active || !net.sendEvent) return;
+  if (!amStasisOwner()) return;
+  if (!game.clusters || game.clusters.length === 0) return;
+  net.sendEvent({
+    type: 'world_objects',
+    clusters: serializeWorldObjects(),
+  });
+}
+
+function applyWorldObjectsManifest(clusterEntries) {
+  if (!Array.isArray(clusterEntries)) return;
+  // Tear down whatever clusters / children we currently have. Existing meshes
+  // are removed from the scene; game.dynamicObjects (which children get pushed
+  // into during build) is cleared and refilled by the new instantiations.
+  for (const c of game.clusters || []) {
+    for (const ch of c.children || []) {
+      if (ch.mesh && ch.mesh.parent) scene.remove(ch.mesh);
+      if (ch.edgeMesh && ch.edgeMesh.parent) scene.remove(ch.edgeMesh);
+    }
+  }
+  game.clusters = [];
+  game.dynamicObjects = [];
+
+  // Rebuild from the manifest. ClusterObstacle's config-aware constructor
+  // takes the entry directly; child layouts come from entry.children.
+  for (let i = 0; i < clusterEntries.length; i++) {
+    const e = clusterEntries[i];
+    const pos = new THREE.Vector3(e.px, e.py, e.pz);
+    const cluster = new ClusterObstacle(pos, e.scale, e);
+    cluster.netId = i; // stable id matching the owner's; obj_destroy targets line up
+    game.clusters.push(cluster);
+  }
 }
 
 // (v6.7) Instantiate a stasis field at a known position with a known netId.
