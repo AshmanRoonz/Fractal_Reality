@@ -6215,8 +6215,17 @@ class Projectile {
     this.age = 0;
     this.bounceCount = 0;
 
-    const geo = new THREE.SphereGeometry(3, 6, 4);
-    const mat = new THREE.MeshBasicMaterial({ color: color || 0xffaa00 });
+    // (v6.7) Electric look: the bright bead at the head is itself additive
+    // (not opaque flat shading) so it reads as an energy core sitting inside
+    // the wider halo and outer haze. Slightly smaller than the previous solid
+    // sphere because the additive layers give the projectile its visual
+    // weight; the core is just the white-hot center.
+    const geo = new THREE.SphereGeometry(2.2, 8, 6);
+    const mat = new THREE.MeshBasicMaterial({
+      color: color || 0xffaa00,
+      transparent: true, opacity: 1.0,
+      blending: THREE.AdditiveBlending, depthWrite: false
+    });
     this.mesh = new THREE.Mesh(geo, mat);
     this.mesh.position.copy(origin);
     scene.add(this.mesh);
@@ -6255,12 +6264,56 @@ class Projectile {
     scene.add(this.trail);
     this.trailTimer = 0;
 
-    // Glow trail (wider, softer, brighter so post-bloom catches it)
-    const glowGeo = new THREE.SphereGeometry(7, 6, 4);
-    const glowMat = new THREE.MeshBasicMaterial({ color: this.trailColor, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending, depthWrite: false });
+    // --- Inner glow halo (wider, softer; post-bloom catches it) ---
+    const glowGeo = new THREE.SphereGeometry(7, 8, 6);
+    const glowMat = new THREE.MeshBasicMaterial({ color: this.trailColor, transparent: true, opacity: 0.65, blending: THREE.AdditiveBlending, depthWrite: false });
     this.glowMesh = new THREE.Mesh(glowGeo, glowMat);
     this.glowMesh.position.copy(origin);
     scene.add(this.glowMesh);
+
+    // --- Outer volumetric haze (much wider, very soft) ---
+    // Reads as the "atmospheric" ring around an energy ball ; gives the
+    // projectile a sense of being charged with light rather than just being a
+    // colored marble with a halo. Low opacity + lots of radius = volumetric
+    // body without saturating the frame.
+    const hazeGeo = new THREE.SphereGeometry(15, 10, 8);
+    const hazeMat = new THREE.MeshBasicMaterial({ color: this.trailColor, transparent: true, opacity: 0.16, blending: THREE.AdditiveBlending, depthWrite: false });
+    this.hazeMesh = new THREE.Mesh(hazeGeo, hazeMat);
+    this.hazeMesh.position.copy(origin);
+    scene.add(this.hazeMesh);
+
+    // --- Trail glow orbs ---
+    // Five additive spheres ride the trail's vertex history at fixed indices
+    // along its length. Sized larger near the head and smaller near the tail,
+    // and per-frame the scale is jittered randomly so the row of orbs reads
+    // as a live, crackling current rather than a steady ribbon. With the
+    // existing thin line acting as the "spine", the orbs are what give the
+    // trail volumetric body and electric flicker.
+    this.trailOrbIndices = [2, 4, 6, 9, 12]; // indices into trailPositions (head=0, tail=trailSegs-1)
+    this.trailOrbs = [];
+    for (let i = 0; i < this.trailOrbIndices.length; i++) {
+      const idx = this.trailOrbIndices[i];
+      const t = 1.0 - (idx / (trailSegs - 1)); // 1 near head, 0 near tail
+      const orbR = 2.4 + t * 4.0; // 2.4..6.4 — bigger near head, smaller back
+      const orbOp = 0.20 + t * 0.40; // 0.20..0.60 — brighter near head
+      const orbGeo = new THREE.SphereGeometry(orbR, 8, 6);
+      const orbMat = new THREE.MeshBasicMaterial({
+        color: this.trailColor, transparent: true,
+        opacity: orbOp, blending: THREE.AdditiveBlending, depthWrite: false
+      });
+      const orb = new THREE.Mesh(orbGeo, orbMat);
+      orb.position.copy(origin);
+      orb.userData.baseOpacity = orbOp;
+      orb.userData.flickerPhase = Math.random() * Math.PI * 2;
+      scene.add(orb);
+      this.trailOrbs.push(orb);
+    }
+
+    // --- Per-projectile electric arc emitter ---
+    // Periodic mini lightning bolts crackle outward from the projectile so it
+    // reads as an unstable charged round. Skipped for projectiles that already
+    // carry their own arc system (Arc Wave) so we don't double-spawn arcs.
+    this.electricArcTimer = 0.05 + Math.random() * 0.10;
   }
 
   update(dt) {
@@ -6346,22 +6399,78 @@ class Projectile {
       positions[2] = this.position.z;
       this.trail.geometry.attributes.position.needsUpdate = true;
     }
-    // Update glow mesh position
+    // --- Electric core: pulse the bright additive bead. The base sine pulse
+    // is mixed with a small random jitter so the head reads as live and
+    // unstable rather than a steady metronome. ---
+    if (this.mesh) {
+      const corePulse = 1 + Math.sin(this.age * 28) * 0.18 + (Math.random() - 0.5) * 0.10;
+      this.mesh.scale.setScalar(corePulse);
+    }
+    // --- Inner glow halo: stronger flicker (sine + tighter random jitter)
+    // so the halo edge reads as crackling. ---
     if (this.glowMesh) {
       this.glowMesh.position.copy(this.position);
-      // Pulse glow slightly
-      const pulse = 1 + Math.sin(this.age * 20) * 0.15;
-      this.glowMesh.scale.setScalar(pulse);
+      const haloFlicker = 1 + Math.sin(this.age * 22) * 0.18 + (Math.random() - 0.5) * 0.18;
+      this.glowMesh.scale.setScalar(haloFlicker);
     }
-    // Emit trail particles (sparse; weapon color)
-    if (Math.random() < 0.3) {
+    // --- Outer volumetric haze: slow, smooth pulse (no random jitter) so
+    // the wide shell reads as the projectile breathing while the inner
+    // layers do the fast electric crackle. ---
+    if (this.hazeMesh) {
+      this.hazeMesh.position.copy(this.position);
+      const hazePulse = 1 + Math.sin(this.age * 8) * 0.10;
+      this.hazeMesh.scale.setScalar(hazePulse);
+    }
+    // --- Trail orbs: ride the recorded trail-position history at fixed
+    // indices and flicker each one independently (different phases) so the
+    // line reads as live current rather than a steady ribbon. ---
+    if (this.trailOrbs && this.trailOrbs.length) {
+      const positions = this.trail.geometry.attributes.position.array;
+      for (let i = 0; i < this.trailOrbs.length; i++) {
+        const orb = this.trailOrbs[i];
+        const idx = this.trailOrbIndices[i];
+        orb.position.set(positions[idx*3], positions[idx*3+1], positions[idx*3+2]);
+        // Flicker: random opacity around the orb's base, wide-ish swing for
+        // the electric jitter feel. Independent phases keep the orbs from
+        // pulsing in lockstep.
+        const baseOp = orb.userData.baseOpacity || 0.4;
+        const phase = orb.userData.flickerPhase || 0;
+        const flick = 0.65 + 0.55 * Math.random() + 0.20 * Math.sin(this.age * 30 + phase);
+        orb.material.opacity = Math.max(0, Math.min(1, baseOp * flick));
+        // Gentle scale jitter as well
+        orb.scale.setScalar(0.85 + Math.random() * 0.30);
+      }
+    }
+    // --- Periodic mini lightning arc crackling off the projectile. Skipped
+    // for projectiles that own their own arc system (Arc Wave) so the two
+    // emitters don't compound into a strobing mess. Every fired arc is short
+    // (50..130 unit reach), thin, dies in ~80 ms, and uses the projectile's
+    // weapon color so each loadout keeps its visual identity. ---
+    if (!this.isArcWave) {
+      this.electricArcTimer -= dt;
+      if (this.electricArcTimer <= 0) {
+        const arcLen = 50 + Math.random() * 80;
+        const arcEnd = this.position.clone().add(new THREE.Vector3(
+          (Math.random() - 0.5) * arcLen,
+          (Math.random() - 0.5) * arcLen,
+          (Math.random() - 0.5) * arcLen
+        ));
+        spawnLightningBolt(this.position, arcEnd, this.trailColor, 0.08, 1, 0.9);
+        this.electricArcTimer = 0.07 + Math.random() * 0.12; // ~5-9 bolts/sec
+      }
+    }
+    // Emit trail particles. Bumped from 30% to 55% so the trail looks alive
+    // with sparks; mix weapon color with white-hot accents so the trail
+    // reads as charged plasma rather than uniform colored dust.
+    if (Math.random() < 0.55) {
+      const useWhite = Math.random() < 0.35;
       game.particles.push({
         position: this.position.clone(),
-        velocity: new THREE.Vector3((Math.random()-0.5)*20, (Math.random()-0.5)*20, (Math.random()-0.5)*20),
-        life: 0.1 + Math.random() * 0.1,
-        maxLife: 0.2,
-        color: this.trailColor,
-        size: 1.5 + Math.random()
+        velocity: new THREE.Vector3((Math.random()-0.5)*30, (Math.random()-0.5)*30, (Math.random()-0.5)*30),
+        life: 0.10 + Math.random() * 0.12,
+        maxLife: 0.22,
+        color: useWhite ? 0xffffff : this.trailColor,
+        size: 1.4 + Math.random() * 1.2
       });
     }
 
@@ -6555,9 +6664,34 @@ class Projectile {
 
   destroy() {
     this.alive = false;
-    if (this.mesh.parent) scene.remove(this.mesh);
-    if (this.trail.parent) scene.remove(this.trail);
-    if (this.glowMesh && this.glowMesh.parent) { scene.remove(this.glowMesh); this.glowMesh.geometry.dispose(); this.glowMesh.material.dispose(); }
+    if (this.mesh && this.mesh.parent) {
+      scene.remove(this.mesh);
+      if (this.mesh.geometry) this.mesh.geometry.dispose();
+      if (this.mesh.material) this.mesh.material.dispose();
+    }
+    if (this.trail && this.trail.parent) {
+      scene.remove(this.trail);
+      if (this.trail.geometry) this.trail.geometry.dispose();
+      if (this.trail.material) this.trail.material.dispose();
+    }
+    if (this.glowMesh && this.glowMesh.parent) {
+      scene.remove(this.glowMesh);
+      this.glowMesh.geometry.dispose();
+      this.glowMesh.material.dispose();
+    }
+    if (this.hazeMesh && this.hazeMesh.parent) {
+      scene.remove(this.hazeMesh);
+      this.hazeMesh.geometry.dispose();
+      this.hazeMesh.material.dispose();
+    }
+    if (this.trailOrbs && this.trailOrbs.length) {
+      for (const orb of this.trailOrbs) {
+        if (orb.parent) scene.remove(orb);
+        if (orb.geometry) orb.geometry.dispose();
+        if (orb.material) orb.material.dispose();
+      }
+      this.trailOrbs.length = 0;
+    }
     spawnExplosion(this.position, 15);
   }
 }
