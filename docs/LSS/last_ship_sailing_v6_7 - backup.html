@@ -2027,16 +2027,24 @@ class NetworkPlayer {
     // Velocity (for projectile inheritance, damage calcs)
     this.velocity.set(s.vx || 0, s.vy || 0, s.vz || 0);
 
-    // Shield visual. (v6.7) Either the regular HP shield (this.shield > 0) or
-    // any ability shield (Gun Shield, Sword Block, Phase Dash, thermal,
-    // vortex) lights the wraparound. Ability shields use a brighter opacity
-    // so peers can read "this enemy is currently warded" at a glance even
-    // when their HP shield is at zero.
+    // Shield visual. (v6.7) Three independent sources can light the wraparound
+    // shield mesh; we pick the strongest and let it ride. HP shield is the
+    // baseline glimmer; ability shield (Gun Shield, Sword Block, Phase Dash,
+    // thermal, vortex) is the steady ward; spawn protection is the loudest,
+    // a bubble that fades over the grace window.
     if (this.mesh.userData.shieldMesh) {
-      const hpShield = this.shield > 0;
-      const abilityShield = !!s.abilityShield;
-      this.mesh.userData.shieldMesh.material.opacity =
-        abilityShield ? 0.22 : (hpShield ? 0.08 : 0);
+      let opacity = 0;
+      if (this.shield > 0) opacity = Math.max(opacity, 0.45);
+      if (s.abilityShield) opacity = Math.max(opacity, 0.85);
+      if (s.spawnProt > 0) {
+        const frac = Math.min(1, s.spawnProt / 3);
+        opacity = Math.max(opacity, 1.0 * frac);
+      }
+      // (v6.7) intensity (0..1) drives the energy-shield shader output.
+      // Numbers are higher than the legacy opacity values because the
+      // shader's fresnel + hex math attenuates further; we want a
+      // similar perceived brightness range.
+      setShieldIntensity(this.mesh, opacity);
     }
 
     // (v6.7) Chassis-specific ability-shield visuals on the network player.
@@ -2064,10 +2072,19 @@ class NetworkPlayer {
           const y = Math.sin(angle) * shieldR;
           if (i === 0) shape.moveTo(x, y); else shape.lineTo(x, y);
         }
-        const geo = new THREE.ShapeGeometry(shape);
+        // (v6.7) ExtrudeGeometry instead of ShapeGeometry so the octagon has
+        // real depth from any angle (visible front + back octagons + 8
+        // perpendicular faces). EdgesGeometry off this shape produces the
+        // full wireframe of the prism, which reads great in additive blend.
+        // Hologram scanline texture so the shield reads as a projected
+        // hologram (matches the visual-vocabulary plan).
+        const geo = new THREE.ExtrudeGeometry(shape, { depth: 12, bevelEnabled: false });
+        // Center the extruded depth around z=0 so lookAt orients it cleanly.
+        geo.translate(0, 0, -6);
         const mat = new THREE.MeshBasicMaterial({
-          color: 0xff6644, transparent: true, opacity: 0.2,
-          side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+          color: 0xff6644, transparent: true, opacity: 0.30,
+          side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
+          map: getScanlineTexture(),
         });
         this._gunShieldMesh = new THREE.Mesh(geo, mat);
         scene.add(this._gunShieldMesh);
@@ -2110,14 +2127,21 @@ class NetworkPlayer {
       const coneReach = hLen * 1.85;
       const midR = (hLen * 0.50 + hLen * 1.20) * 0.5;
       if (!this._thermalShieldMesh) {
-        const geo = new THREE.CircleGeometry(1, 40);
+        // (v6.7) Thin cylinder instead of flat circle so the disc has visible
+        // thickness from every angle. rotateX(PI/2) flips the cylinder axis
+        // from world-Y to local-Z so lookAt(forward) presents the flat face
+        // toward the look target. Unit-scale; scaled to midR each frame.
+        const geo = new THREE.CylinderGeometry(1, 1, 0.08, 40, 1, false);
+        geo.rotateX(Math.PI / 2);
         const mat = new THREE.MeshBasicMaterial({
           color: 0xff7722, transparent: true, opacity: 0.28,
           side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false
         });
         this._thermalShieldMesh = new THREE.Mesh(geo, mat);
         scene.add(this._thermalShieldMesh);
-        const ringGeo = new THREE.RingGeometry(0.88, 1.04, 40);
+        // (v6.7) TorusGeometry instead of flat RingGeometry; the ring now
+        // reads as a 3D donut around the disc edge.
+        const ringGeo = new THREE.TorusGeometry(0.96, 0.05, 8, 40);
         const ringMat = new THREE.MeshBasicMaterial({
           color: 0xffaa44, transparent: true, opacity: 0.22,
           side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false
@@ -2159,14 +2183,17 @@ class NetworkPlayer {
     if (this.loadoutKey === 'VORTEX' && active) {
       // Replicate the rainbow circle held in front of the ship.
       if (!this._vortexShieldMesh) {
-        const geo = new THREE.CircleGeometry(120, 32);
+        // (v6.7) Thin cylinder for the disc, torus for the ring; both are
+        // 3D primitives so the shield has real thickness from any angle.
+        const geo = new THREE.CylinderGeometry(120, 120, 8, 32, 1, false);
+        geo.rotateX(Math.PI / 2);
         const mat = new THREE.MeshBasicMaterial({
           color: 0x44ccff, transparent: true, opacity: 0.25,
           side: THREE.DoubleSide, blending: THREE.AdditiveBlending
         });
         this._vortexShieldMesh = new THREE.Mesh(geo, mat);
         scene.add(this._vortexShieldMesh);
-        const ringGeo = new THREE.RingGeometry(110, 125, 32);
+        const ringGeo = new THREE.TorusGeometry(117, 7, 8, 32);
         const ringMat = new THREE.MeshBasicMaterial({
           color: 0xffffff, transparent: true, opacity: 0.15,
           side: THREE.DoubleSide, blending: THREE.AdditiveBlending
@@ -2319,6 +2346,10 @@ function broadcastPlayerState(dt) {
          player.abilities[1].name === 'Vortex Shield' ||
          player.abilities[1].name === 'Thermal Shield'))
     ),
+    // (v6.7) Spawn-protection seconds remaining. Drives the wraparound
+    // shield bubble on peers: bright at spawn, fades over LSS.SPAWN_PROTECTION
+    // seconds (3s default), gone by the time you can be shot.
+    spawnProt: Math.max(0, Math.round((player.spawnProtection || 0) * 10) / 10),
   };
 
   const msg = JSON.stringify(state);
@@ -2436,6 +2467,11 @@ function handleHitVote(vote, fromPeerId) {
 function handleNetEvent(evt, fromPeerId) {
   if (evt.type === 'kill') {
     addKillFeed(evt.killerName || 'Peer', evt.victimName || 'Peer');
+    // (v6.7) Brief screen-shake punch on every kill so the moment registers
+    // even when you're not in the camera frame. Stronger when you killed
+    // (or were killed by) the named participants is a future polish; this
+    // is the universal "someone died nearby" pulse.
+    if (typeof triggerScreenShake === 'function') triggerScreenShake(6);
     return;
   }
   // (v6.7) Lobby ready toggle from a peer.
@@ -2538,6 +2574,24 @@ function handleNetEvent(evt, fromPeerId) {
     const from = new THREE.Vector3(evt.ox, evt.oy, evt.oz);
     const to   = new THREE.Vector3(evt.ex, evt.ey, evt.ez);
     spawnTracer(from, to, evt.color || 0xffff44);
+    // (v6.7) Chassis-specific muzzle flash for peers viewing this shot.
+    // Loadout key is looked up from the broadcasting peer's stored state.
+    const peer = net.peers.get(fromPeerId);
+    if (peer && peer.loadoutKey && typeof emitChassisMuzzleFlash === 'function') {
+      const dir = new THREE.Vector3().subVectors(to, from);
+      if (dir.lengthSq() > 0.0001) {
+        dir.normalize();
+        emitChassisMuzzleFlash(peer.loadoutKey, from, dir);
+      }
+    }
+    return;
+  }
+  // (v6.7) Shotgun pellet burst from a peer's spread weapon. Renders as a
+  // cloud of sparks following the pellet path; same look as the local fire.
+  if (evt.type === 'pellet_burst' && typeof evt.ox === 'number') {
+    const origin = new THREE.Vector3(evt.ox, evt.oy, evt.oz);
+    const dir = new THREE.Vector3(evt.dx, evt.dy, evt.dz);
+    spawnPelletBurst(origin, dir, evt.range || 600);
     return;
   }
   // (v6.7) Branching lightning bolt from a peer (Energy Siphon, Arc Wave
@@ -2626,14 +2680,152 @@ function spawnTripWireOrb(pos, owner, team, ownerPeerId, netId, broadcast) {
   }
 }
 
+// (v6.7) Energy-shield ShaderMaterial. Fresnel edge brightening (so the
+// silhouette glows regardless of the shield's underlying geometry shape) plus
+// a scrolling hex-cell pattern (the classic sci-fi force-field look) plus an
+// `impact` uniform that flashes on hit. One factory per ship since each
+// instance needs its own time + impact; tickEnergyShields() drives them all
+// from the central game loop. Adapted from effects_demo.html EFFECT 04.
+const _energyShieldMaterials = [];
+function makeEnergyShieldMaterial(color) {
+  const mat = new THREE.ShaderMaterial({
+    uniforms: {
+      shieldColor: { value: new THREE.Color(color != null ? color : 0x44ccff) },
+      intensity:   { value: 0 },
+      impact:      { value: 0 },
+      time:        { value: 0 },
+    },
+    vertexShader: [
+      'varying vec3 vNormal;',
+      'varying vec3 vViewPos;',
+      'varying vec3 vWorldPos;',
+      'void main() {',
+      '  vec4 mvPos = modelViewMatrix * vec4(position, 1.0);',
+      '  vNormal = normalize(normalMatrix * normal);',
+      '  vViewPos = -mvPos.xyz;',
+      '  vWorldPos = position;',
+      '  gl_Position = projectionMatrix * mvPos;',
+      '}',
+    ].join('\n'),
+    fragmentShader: [
+      'uniform vec3 shieldColor;',
+      'uniform float intensity;',
+      'uniform float impact;',
+      'uniform float time;',
+      'varying vec3 vNormal;',
+      'varying vec3 vViewPos;',
+      'varying vec3 vWorldPos;',
+      'float hexPattern(vec2 p) {',
+      '  p *= 6.0;',
+      '  vec2 q = vec2(p.x * 1.1547, p.y + p.x * 0.5);',
+      '  vec2 f = fract(q);',
+      '  vec2 d = abs(f - 0.5);',
+      '  return smoothstep(0.42, 0.5, max(d.x, d.y * 0.866 + d.x * 0.5));',
+      '}',
+      'void main() {',
+      '  if (intensity < 0.001) discard;',
+      '  vec3 N = normalize(vNormal);',
+      '  vec3 V = normalize(vViewPos);',
+      '  float fr = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 2.5);',
+      '  vec2 sphCoord = vec2(atan(vWorldPos.z, vWorldPos.x) * 2.0, vWorldPos.y * 0.005);',
+      '  float hex = hexPattern(sphCoord + vec2(time * 0.10, time * 0.07));',
+      '  vec3 hot = vec3(1.0);',
+      '  vec3 col = mix(shieldColor, hot, hex * 0.4 + impact);',
+      '  float a = ((fr * 0.7 + hex * 0.15) + impact * 0.5) * intensity;',
+      '  gl_FragColor = vec4(col * (1.2 + impact * 2.0), a);',
+      '}',
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+  _energyShieldMaterials.push(mat);
+  return mat;
+}
+
+// Drive time + decay any active impact each frame.
+function tickEnergyShields(dt) {
+  if (typeof game === 'undefined' || typeof game.time !== 'number') return;
+  for (const m of _energyShieldMaterials) {
+    m.uniforms.time.value = game.time;
+    if (m.uniforms.impact.value > 0) {
+      m.uniforms.impact.value = Math.max(0, m.uniforms.impact.value - dt * 4);
+    }
+  }
+}
+
+// Helpers that work whether the shield uses ShaderMaterial (post-v6.7 ships)
+// or the legacy MeshBasicMaterial (in case a code path constructs it without
+// going through createShipMesh). Read/write the same logical "level".
+function setShieldIntensity(mesh, level) {
+  const sm = mesh && mesh.userData && mesh.userData.shieldMesh;
+  if (!sm) return;
+  if (sm.material.uniforms && sm.material.uniforms.intensity) {
+    sm.material.uniforms.intensity.value = level;
+  } else {
+    sm.material.opacity = level;
+  }
+}
+function flashShieldImpact(mesh, amount) {
+  const sm = mesh && mesh.userData && mesh.userData.shieldMesh;
+  if (!sm) return;
+  const target = (amount != null) ? amount : 1.0;
+  if (sm.material.uniforms && sm.material.uniforms.impact) {
+    sm.material.uniforms.impact.value = Math.max(sm.material.uniforms.impact.value, target);
+  } else {
+    sm.material.opacity = Math.min(1, (sm.material.opacity || 0) + 0.3);
+    setTimeout(() => { if (sm.material) sm.material.opacity = 0; }, 150);
+  }
+}
+
+// (v6.7) Hologram scanline texture for Tracker's Particle Wall and Blaster's
+// Gun Shield. Procedural canvas texture; mid-gray base with bright horizontal
+// stripes plus thicker stripes every 32px. Animated by tickScanlineTexture()
+// each frame so the lines drift vertically, giving the classic sci-fi hologram
+// flicker. Cached on the global; one texture shared by all instances.
+let _scanlineTexture = null;
+function makeScanlineTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 4;
+  canvas.height = 256;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#444';                   // dim base
+  ctx.fillRect(0, 0, 4, 256);
+  ctx.fillStyle = '#ffffff';                // every 8th line: bright
+  for (let y = 0; y < 256; y += 8) ctx.fillRect(0, y, 4, 1);
+  for (let y = 0; y < 256; y += 32) ctx.fillRect(0, y + 2, 4, 2);
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(1, 4);                     // tile vertically four times across the shield
+  return tex;
+}
+function getScanlineTexture() {
+  if (!_scanlineTexture) _scanlineTexture = makeScanlineTexture();
+  return _scanlineTexture;
+}
+function tickScanlineTexture() {
+  if (_scanlineTexture && typeof game !== 'undefined' && typeof game.time === 'number') {
+    // Negative offset so stripes drift downward; rate gives ~one full cycle per ~6s.
+    _scanlineTexture.offset.y = -game.time * 0.16;
+  }
+}
+
 // (v6.7) Particle Wall spawn helper, shared between the local fire path
 // (broadcast=true) and the effect_spawn receiver (broadcast=false). Same
 // pattern as Trip Wire: ownerPeerId tag gates HP / damage logic to one peer.
 function spawnParticleWall(pos, dir, owner, team, ownerPeerId, netId, broadcast) {
-  const wallGeo = new THREE.PlaneGeometry(400, 300);
+  // (v6.7) Particle Wall now uses BoxGeometry instead of PlaneGeometry so it
+  // has visible thickness from any angle. 400 wide, 300 tall, 25 deep.
+  // Hologram scanline texture is applied so the wall reads as a holographic
+  // membrane (per the visual-vocabulary plan). The texture's offset.y is
+  // animated globally by tickScanlineTexture() each frame.
+  const wallGeo = new THREE.BoxGeometry(400, 300, 25);
   const wallMat = new THREE.MeshBasicMaterial({
-    color: 0x44ccff, transparent: true, opacity: 0.25,
-    side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+    color: 0x44ccff, transparent: true, opacity: 0.35,
+    side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
+    map: getScanlineTexture(),
   });
   const wallMesh = new THREE.Mesh(wallGeo, wallMat);
   wallMesh.position.copy(pos);
@@ -2764,6 +2956,273 @@ function spawnFirewallVisual(pos, dir, length, team, ownerPeerId, netId) {
   } catch (e) { /* visual best-effort */ }
 }
 
+// (v6.7) Particle burst for shotgun-style spread weapons (Puncture Leadwall
+// and any future spread mode). Each pellet calls this with its origin,
+// direction, and traveled-distance. Spawns ~12 fast-moving warm sparks that
+// follow the pellet path with slight wobble, plus a brief flash at the
+// muzzle. Reads as a shotgun blast instead of a laser. The particles ride
+// the existing game.particles array (camera-facing sprites with the soft
+// ember falloff texture).
+function spawnPelletBurst(origin, dir, distance) {
+  if (!origin || !dir) return;
+  const partCount = 12;
+  const palette = [0xffaa44, 0xffcc66, 0xffeebb, 0xff7733];
+  const baseSpeed = Math.min(1400, Math.max(600, (distance || 600) * 1.6));
+  for (let p = 0; p < partCount; p++) {
+    const wobble = new THREE.Vector3(
+      (Math.random() - 0.5) * 0.18,
+      (Math.random() - 0.5) * 0.18,
+      (Math.random() - 0.5) * 0.18
+    );
+    const v = dir.clone().add(wobble).normalize().multiplyScalar(
+      baseSpeed * (0.55 + Math.random() * 0.6)
+    );
+    const jitter = new THREE.Vector3(
+      (Math.random() - 0.5) * 10,
+      (Math.random() - 0.5) * 10,
+      (Math.random() - 0.5) * 10
+    );
+    game.particles.push({
+      position: origin.clone().add(jitter),
+      velocity: v,
+      life: 0.18 + Math.random() * 0.14,
+      maxLife: 0.32,
+      color: palette[Math.floor(Math.random() * palette.length)],
+      size: 2.4 + Math.random() * 2.2,
+    });
+  }
+  // Warm muzzle flash so the gun reads as firing.
+  if (typeof spawnDynamicLight === 'function') {
+    spawnDynamicLight(origin, 0xffaa44, 1.6, 110, 0.2);
+  }
+}
+
+// (v6.7) Per-chassis muzzle flash. Each primary weapon gets a distinct visual
+// signature so peers can read what's firing at them at a glance. All effects
+// reuse existing helpers (spawnDynamicLight, spawnTracer, spawnLightningBolt,
+// game.particles) to keep the visual vocabulary consistent.
+function chassisFlashColor(key) {
+  switch (key) {
+    case 'VORTEX':   return 0x44ddff;  // cyan, Splitter Rifle
+    case 'PYRO':     return 0xff7733;  // orange, T-203 Thermite
+    case 'SLAYER':   return 0xffaa44;  // amber, Leadwall (shotgun)
+    case 'PUNCTURE': return 0xeeff66;  // yellow-white, Plasma Railgun
+    case 'TRACKER':  return 0xff9944;  // amber-orange, 40mm Tracker
+    case 'BLASTER':  return 0xffcc44;  // gold, Predator Cannon
+    case 'SYPHON':   return 0x44ffaa;  // cyan-green, XO-16 Chaingun
+    default:         return 0xffffaa;
+  }
+}
+
+function emitChassisMuzzleFlash(loadoutKey, pos, dir) {
+  if (!pos || !dir) return;
+  const flashColor = chassisFlashColor(loadoutKey);
+
+  // Universal: small dynamic warm light at the muzzle so nearby surfaces
+  // pick up a brief illuminated ping.
+  if (typeof spawnDynamicLight === 'function') {
+    spawnDynamicLight(pos, flashColor, 1.4, 90, 0.25);
+  }
+
+  // Universal: 4-6 fast forward sparks in a tight cone.
+  for (let i = 0; i < 5; i++) {
+    const spread = new THREE.Vector3(
+      (Math.random() - 0.5) * 0.35,
+      (Math.random() - 0.5) * 0.35,
+      (Math.random() - 0.5) * 0.35
+    );
+    const v = dir.clone().add(spread).normalize().multiplyScalar(80 + Math.random() * 60);
+    game.particles.push({
+      position: pos.clone(),
+      velocity: v,
+      life: 0.10 + Math.random() * 0.10,
+      maxLife: 0.20,
+      color: flashColor,
+      size: 1.4 + Math.random() * 1.4,
+    });
+  }
+
+  // Chassis-specific layer on top of the universal flash.
+  if (loadoutKey === 'PYRO') {
+    // Flame tongues reaching forward; reuses Pyro's fire palette.
+    for (let i = 0; i < 5; i++) {
+      const spread = new THREE.Vector3(
+        (Math.random() - 0.5) * 0.30,
+        (Math.random() - 0.5) * 0.30,
+        (Math.random() - 0.5) * 0.30
+      );
+      const v = dir.clone().add(spread).normalize().multiplyScalar(50 + Math.random() * 50);
+      game.particles.push({
+        position: pos.clone(),
+        velocity: v,
+        life: 0.4 + Math.random() * 0.3,
+        maxLife: 0.7,
+        color: 0xff5522,
+        size: 3 + Math.random() * 3,
+      });
+    }
+  } else if (loadoutKey === 'SYPHON') {
+    // Quick electric crackle off the muzzle for the chaingun's cyan-green tone.
+    if (typeof spawnLightningBolt === 'function') {
+      const tip = pos.clone().add(dir.clone().multiplyScalar(60));
+      spawnLightningBolt(pos, tip, 0x44ffaa, 0.10, 1, 1.0);
+    }
+  } else if (loadoutKey === 'PUNCTURE') {
+    // Plasma Railgun: bright electric lightning bolt out the barrel for the
+    // heavy 1000-damage hitscan shot. Reads as a charged-up shot.
+    if (typeof spawnLightningBolt === 'function') {
+      const tip = pos.clone().add(dir.clone().multiplyScalar(140));
+      spawnLightningBolt(pos, tip, 0xeeff66, 0.18, 2, 1.8);
+    }
+  } else if (loadoutKey === 'SLAYER') {
+    // Leadwall (shotgun): wide quick burst of warm sparks. The per-pellet
+    // particle burst from spawnPelletBurst already covers the cone of fire;
+    // the muzzle flash adds extra sparks back at the gun for a kickier feel.
+    for (let i = 0; i < 6; i++) {
+      const v = dir.clone().add(new THREE.Vector3(
+        (Math.random() - 0.5) * 0.45,
+        (Math.random() - 0.5) * 0.45,
+        (Math.random() - 0.5) * 0.45
+      )).normalize().multiplyScalar(180 + Math.random() * 100);
+      game.particles.push({
+        position: pos.clone(),
+        velocity: v,
+        life: 0.10 + Math.random() * 0.08,
+        maxLife: 0.18,
+        color: 0xffcc66,
+        size: 2.0 + Math.random() * 1.6,
+      });
+    }
+  } else if (loadoutKey === 'BLASTER') {
+    // Predator Cannon fires fast; quick yellow burst with extra sparks.
+    for (let i = 0; i < 3; i++) {
+      const v = dir.clone().add(new THREE.Vector3(
+        (Math.random() - 0.5) * 0.25,
+        (Math.random() - 0.5) * 0.25,
+        (Math.random() - 0.5) * 0.25
+      )).normalize().multiplyScalar(120 + Math.random() * 80);
+      game.particles.push({
+        position: pos.clone(),
+        velocity: v,
+        life: 0.08 + Math.random() * 0.06,
+        maxLife: 0.14,
+        color: 0xffeebb,
+        size: 1.8,
+      });
+    }
+  } else if (loadoutKey === 'TRACKER') {
+    // 40mm Tracker: ring-style expansion + warm light. Approximates a fresnel
+    // ring without a custom shader by spawning a circle of outward sparks.
+    const right = new THREE.Vector3(0, 1, 0).cross(dir).normalize();
+    if (right.lengthSq() < 0.001) right.set(1, 0, 0);
+    const up = dir.clone().cross(right).normalize();
+    for (let i = 0; i < 10; i++) {
+      const angle = (i / 10) * Math.PI * 2;
+      const radial = right.clone().multiplyScalar(Math.cos(angle))
+        .add(up.clone().multiplyScalar(Math.sin(angle))).multiplyScalar(60);
+      game.particles.push({
+        position: pos.clone(),
+        velocity: radial,
+        life: 0.18,
+        maxLife: 0.18,
+        color: flashColor,
+        size: 1.6,
+      });
+    }
+  }
+  // VORTEX uses just the universal flash; the cyan tracer beam already
+  // carries the weapon's identity downrange.
+}
+
+// (v6.7) Damage-state visuals. Smoke trickle starts at 50% HP and intensifies;
+// sparks join the smoke at 25%; electric arcs accompany doomed (regardless
+// of HP). Runs on every entity (local player, bots, NetworkPlayers) via the
+// per-frame loop, using the existing particle system so no new shader work
+// is needed. Per-entity emit timer self-throttles so particle counts stay
+// reasonable even at full burn.
+function emitDamageState(entity, dt) {
+  if (!entity || !entity.alive || !entity.position) return;
+  const maxHp = entity.maxHealth || (entity.chassis && entity.chassis.maxHealth) || 1;
+  const hpFrac = (entity.health || 0) / maxHp;
+  // Healthy + not doomed = nothing to show
+  if (hpFrac > 0.5 && !entity.doomed) return;
+  if (entity._dmgEmitTimer == null) entity._dmgEmitTimer = 0;
+  entity._dmgEmitTimer -= dt;
+  if (entity._dmgEmitTimer > 0) return;
+  const intensity = entity.doomed ? 1 : Math.max(0, 1 - hpFrac * 2);
+  entity._dmgEmitTimer = 0.07 - intensity * 0.05; // 70ms healthy -> 20ms doomed
+  const hullR = (entity.chassis && entity.chassis.hullLength) ? entity.chassis.hullLength * 0.4 : 40;
+  const offset = new THREE.Vector3(
+    (Math.random() - 0.5) * hullR,
+    (Math.random() - 0.5) * hullR * 0.6,
+    (Math.random() - 0.5) * hullR
+  );
+  const pos = entity.position.clone().add(offset);
+  // Smoke layer (always at <=50% HP)
+  game.particles.push({
+    position: pos.clone(),
+    velocity: new THREE.Vector3(
+      (Math.random() - 0.5) * 30,
+      30 + Math.random() * 50,
+      (Math.random() - 0.5) * 30
+    ),
+    life: 0.6 + Math.random() * 0.5,
+    maxLife: 1.1,
+    color: 0x333333,
+    size: 4 + intensity * 6,
+  });
+  // Hot sparks at low HP
+  if (hpFrac < 0.25 || entity.doomed) {
+    game.particles.push({
+      position: pos.clone(),
+      velocity: new THREE.Vector3(
+        (Math.random() - 0.5) * 100,
+        (Math.random() - 0.5) * 100,
+        (Math.random() - 0.5) * 100
+      ),
+      life: 0.15,
+      maxLife: 0.15,
+      color: 0xffaa44,
+      size: 2,
+    });
+  }
+  // Electric arcs at doomed (signature of the irreversible 30% threshold)
+  if (entity.doomed) {
+    game.particles.push({
+      position: pos.clone(),
+      velocity: new THREE.Vector3(
+        (Math.random() - 0.5) * 200,
+        (Math.random() - 0.5) * 200,
+        (Math.random() - 0.5) * 200
+      ),
+      life: 0.1,
+      maxLife: 0.1,
+      color: 0x44ddff,
+      size: 1.5,
+    });
+  }
+}
+
+// (v6.7) Sympathetic detonation: any cluster within radius of the popped
+// epicenter gets a warm point-light flash so the explosion feels like it
+// shook nearby fixtures. Visual-only; HP unaffected. spawnDynamicLight is
+// the same helper used for muzzle flashes / firewall warmth, so the visual
+// language stays consistent.
+function triggerSympatheticDetonation(epicenter) {
+  if (!epicenter || !game.clusters) return;
+  const radius = 250;
+  const r2 = radius * radius;
+  for (const c of game.clusters) {
+    if (!c || !c.alive || c.broken || !c.position) continue;
+    const dx = c.position.x - epicenter.x;
+    const dy = c.position.y - epicenter.y;
+    const dz = c.position.z - epicenter.z;
+    if (dx*dx + dy*dy + dz*dz < r2 && typeof spawnDynamicLight === 'function') {
+      spawnDynamicLight(c.position, 0xff8844, 1.5, 200, 0.3);
+    }
+  }
+}
+
 function spawnNetworkProjectile(data, fromPeerId) {
   // Spawn a visual-only projectile from a network peer's fire event
   if (!data || !data.ox) return;
@@ -2785,6 +3244,17 @@ function spawnNetworkProjectile(data, fromPeerId) {
   // visual + gameplay outcome (the enemy's arc wave actually pops our shield).
   if (data.isArcWave) proj.isArcWave = true;
   game.projectiles.push(proj);
+  // (v6.7) Chassis-specific muzzle flash for peers viewing a projectile-mode
+  // weapon firing (Pyro thermite, Tracker 40mm, etc.). Reuse loadoutKey from
+  // the broadcasting peer.
+  const peer = net.peers.get(fromPeerId);
+  if (peer && peer.loadoutKey && typeof emitChassisMuzzleFlash === 'function') {
+    const dir = vel.clone();
+    if (dir.lengthSq() > 0.0001) {
+      dir.normalize();
+      emitChassisMuzzleFlash(peer.loadoutKey, origin, dir);
+    }
+  }
 }
 
 // (v6.7) Broadcast helper for ability-spawned projectiles (Arc Wave, Cluster
@@ -3329,7 +3799,26 @@ scene.add(hemiLight);
   }
   geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-  const mat = new THREE.PointsMaterial({ size: 5, vertexColors: true, transparent: true, opacity: 0.9 });
+  // (v6.7) Soft circular point texture so each star renders as a glowing dot
+  // instead of the default screen-aligned PointsMaterial square. Built inline
+  // here because the starfield IIFE runs before _emberFalloffTexture is
+  // defined later in the script.
+  const _starPointTex = (function() {
+    const c = document.createElement('canvas');
+    c.width = 32; c.height = 32;
+    const ctx = c.getContext('2d');
+    const g = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+    g.addColorStop(0.00, 'rgba(255,255,255,1)');
+    g.addColorStop(0.40, 'rgba(255,255,255,0.7)');
+    g.addColorStop(0.80, 'rgba(255,255,255,0.15)');
+    g.addColorStop(1.00, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, 32, 32);
+    return new THREE.CanvasTexture(c);
+  })();
+  const mat = new THREE.PointsMaterial({
+    size: 6, vertexColors: true, transparent: true, opacity: 0.9,
+    map: _starPointTex, alphaTest: 0.05, depthWrite: false,
+  });
   scene.add(new THREE.Points(geo, mat));
 })();
 
@@ -4193,14 +4682,13 @@ function buildModelShipMesh(chassisData, teamColor, loadoutKey) {
     engineMesh = big[1];
   }
 
-  // Shield bubble (identical to procedural).
-  // Additive blending + depthWrite:false so the bubble reads as a light shimmer rather
-  // than a solid dark-blue disk against fog/space when it flashes on hit.
-  const shieldGeo = new THREE.SphereGeometry(Math.max(w, l) * 2, 16, 12);
-  const shieldMat = new THREE.MeshBasicMaterial({
-    color: 0x44ccff, transparent: true, opacity: 0, side: THREE.DoubleSide,
-    blending: THREE.AdditiveBlending, depthWrite: false
-  });
+  // Shield bubble. (v6.7) Energy-shield ShaderMaterial: fresnel rim + scrolling
+  // hex-cell pattern + impact-flash uniform. The shader renders nothing when
+  // intensity = 0 (early discard), so the shield is invisible by default and
+  // the existing opacity-driven activation logic now drives `intensity`
+  // through setShieldIntensity() / flashShieldImpact().
+  const shieldGeo = new THREE.SphereGeometry(Math.max(w, l) * 2, 24, 16);
+  const shieldMat = makeEnergyShieldMaterial(0x44ccff);
   const shield = new THREE.Mesh(shieldGeo, shieldMat);
   shield.name = 'shield';
   group.add(shield);
@@ -4539,10 +5027,9 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
   }
 
   // Shield bubble (shared across all chassis)
-  const shieldGeo = new THREE.SphereGeometry(Math.max(w, l) * 2, 16, 12);
-  // Additive blending + depthWrite:false prevents the shield bubble from rendering as a
-  // solid navy disk against dark fog/space when it flashes on damage hits.
-  const shieldMat = new THREE.MeshBasicMaterial({ color: 0x44ccff, transparent: true, opacity: 0, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false });
+  const shieldGeo = new THREE.SphereGeometry(Math.max(w, l) * 2, 24, 16);
+  // (v6.7) Energy-shield ShaderMaterial; same factory as the model-ship path.
+  const shieldMat = makeEnergyShieldMaterial(0x44ccff);
   const shield = new THREE.Mesh(shieldGeo, shieldMat);
   shield.name = 'shield';
   group.add(shield);
@@ -5363,8 +5850,10 @@ class Bot {
     // Flash shield + shimmer effect
     const shieldMesh = this.mesh.userData.shieldMesh;
     if (shieldMesh && this.shield > 0) {
-      shieldMesh.material.opacity = 0.3;
-      setTimeout(() => { if (shieldMesh) shieldMesh.material.opacity = 0; }, 150);
+      // (v6.7) Trigger the energy-shield shader's impact uniform; it pulses
+      // and decays automatically via tickEnergyShields. flashShieldImpact
+      // also handles the legacy MeshBasicMaterial fallback.
+      flashShieldImpact(this.mesh, 1.0);
       spawnShieldHit(this.position, this.chassis.hullLength * 0.8, 0x4488ff);
     }
 
@@ -6384,7 +6873,7 @@ const _EXPL_SPHERE_LG  = new THREE.SphereGeometry(1, 8, 6);     // flash, fire
 const _EXPL_SPHERE_SM  = new THREE.SphereGeometry(1, 6, 4);     // explosion core
 const _EXPL_SPHERE_TINY= new THREE.SphereGeometry(1, 4, 3);     // impact sparks
 const _EXPL_PLANE      = new THREE.PlaneGeometry(1, 1);          // flare billboard
-const _EXPL_RING_FLAT  = new THREE.RingGeometry(0.45, 0.55, 48); // flat shockwave (aspect preserved on unit ring)
+const _EXPL_RING_FLAT  = new THREE.TorusGeometry(0.5, 0.05, 6, 48); // (v6.7) thin torus instead of RingGeometry so the camera-facing shockwave still has real volume from any oblique angle. Major radius 0.5 / tube 0.05 gives the same 0.45-0.55 visible band as the old flat ring.
 const _EXPL_TORUS_PRI  = new THREE.TorusGeometry(0.5, 0.10, 8, 32); // primary shockwave torus
 const _EXPL_TORUS_SEC  = new THREE.TorusGeometry(0.5, 0.07, 8, 32); // secondary shockwave torus
 const _EXPL_ICOS       = new THREE.IcosahedronGeometry(1, 1);    // smoke + impact puff
@@ -6412,7 +6901,15 @@ function _makeExplosionMesh(type) {
       break;
     case 'flare':
       geo = _EXPL_PLANE;
-      matOpts = { color: 0xffeec0, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide };
+      // (v6.7) The flare always camera-faces (lookAt(camera.position) at
+      // spawn), but without a soft falloff texture the plane reads as a
+      // warm-colored SQUARE that screams "90s sprite". Mapping the ember
+      // radial-gradient texture turns it into a soft sun-flare disc.
+      matOpts = {
+        color: 0xffeec0, transparent: true, opacity: 0.95,
+        blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
+        map: _emberFalloffTexture,
+      };
       break;
     case 'fire':
       geo = _EXPL_SPHERE_LG;
@@ -7079,12 +7576,31 @@ class ClusterObstacle {
       this.rotation.y += this.rotSpeed.y * dt;
       this.rotation.z += this.rotSpeed.z * dt;
       const q = new THREE.Quaternion().setFromEuler(this.rotation);
+      // (v6.7) Pre-break stress: as children take damage, the cluster glows
+      // brighter and pulses faster, telegraphing the imminent pop. Compute
+      // average remaining HP fraction across living children, derive a
+      // stress value, and modulate emissive intensity each frame so the
+      // visual baseline restores cleanly when the cluster respawns.
+      let avgHpFrac = 0, aliveChildren = 0;
+      for (const c of this.children) {
+        if (c.alive) {
+          avgHpFrac += (c.hp || 0) / Math.max(1, (c.maxHp || 1));
+          aliveChildren++;
+        }
+      }
+      if (aliveChildren > 0) avgHpFrac /= aliveChildren;
+      const stress = Math.max(0, 1 - avgHpFrac); // 0 healthy -> 1 nearly dead
+      const stressPulse = Math.sin((typeof game !== 'undefined' ? game.time : 0) * (4 + stress * 12)) * 0.5 + 0.5;
+      const stressEmissive = 1 + stress * (1.0 + stressPulse * 1.5);
       for (const c of this.children) {
         if (!c.alive || c.broken) continue;
         const rotated = c.localOffset.clone().applyQuaternion(q);
         c.position.copy(this.position).add(rotated);
         if (c.mesh) c.mesh.position.copy(c.position);
         if (c.edgeMesh) c.edgeMesh.position.copy(c.position);
+        if (c.mesh && c.mesh.material && 'emissiveIntensity' in c.mesh.material) {
+          c.mesh.material.emissiveIntensity = stressEmissive;
+        }
       }
       // Electric-smoke haze inside the packing sphere. Emit slowly so a given
       // cluster has two to three puffs alive at a time. Only run emitter when
@@ -7169,6 +7685,13 @@ class ClusterObstacle {
         dy: hitDir ? hitDir.y : 0,
         dz: hitDir ? hitDir.z : 0,
       });
+    }
+    // (v6.7) Sympathetic detonation chain: nearby intact clusters get a
+    // brief warm light-flash as if they "felt" the boom. Pure visual; no
+    // gameplay change. Runs on every peer because breakApart is called via
+    // the obj_destroy receive handler too, so the flash happens everywhere.
+    if (typeof triggerSympatheticDetonation === 'function') {
+      triggerSympatheticDetonation(this.position);
     }
   }
 
@@ -8346,6 +8869,11 @@ function spawnImpactSparks(pos, count) {
 // tip is then used as the muzzle-flash origin on the HUD canvas, so flash lines
 // up with the painted art even when the art drifts by a few percent.
 const _cockpitFrameCache = {}; // key -> { status: 'ok'|'missing', muzzle?: {...} }
+// (v6.7) Cache-bust query string so the browser refetches frame PNGs on
+// every page load. Without this, replacing a frame file on disk leaves the
+// browser showing the previously-cached copy until a hard refresh; with it,
+// any reload picks up the latest art.
+const _FRAME_CACHE_BUST = '?v=' + Date.now();
 const _cockpitFrameInFlight = {}; // key -> true while an Image() probe is loading
 
 // Alpha-channel scan to find where the two painted gun-barrel tips point. For
@@ -8436,7 +8964,7 @@ function updateCockpitFrame() {
     if (player) player.cockpitFrameMuzzle = null;
     return;
   }
-  const url = './frames/' + key + '.png';
+  const baseUrl = './frames/' + key + '.png' + _FRAME_CACHE_BUST;
   const cached = _cockpitFrameCache[key];
   const apply = (entry) => {
     if (!entry || entry.status !== 'ok') {
@@ -8445,32 +8973,57 @@ function updateCockpitFrame() {
       if (player) player.cockpitFrameMuzzle = null;
       return;
     }
-    el.style.backgroundImage = 'url("' + url + '")';
+    el.style.backgroundImage = 'url("' + baseUrl + '")';
     el.classList.add('active');
+    entry._currentUrl = baseUrl; // tickCockpitFrameAnimation reads this to decide swaps
     if (player) player.cockpitFrameMuzzle = entry.muzzle || null;
   };
   if (cached) { apply(cached); return; }
   // Coalesce: if a probe for this key is already in flight, skip re-issuing.
-  // The original probe's onload/onerror will call apply() when it resolves (and
-  // will no-op if the player has since swapped to a different key).
   if (_cockpitFrameInFlight[key]) return;
   _cockpitFrameInFlight[key] = true;
-  // First-time: probe with an Image() so a 404 doesn't splatter a broken-image flash.
-  const probe = new Image();
-  probe.onload = function() {
+  // (v6.7) Probe BOTH the base and the firing companion (KEY1.png) in
+  // parallel. The companion is optional; if it 404s, hasFireFrame is false
+  // and the per-frame animator just leaves the base showing.
+  const baseProbe = new Image();
+  const fireProbe = new Image();
+  let baseDone = null, fireDone = null;
+  function maybeFinish() {
+    if (baseDone === null || fireDone === null) return;
     _cockpitFrameInFlight[key] = false;
-    const muzzle = detectFrameMuzzlePoints(probe);
-    const entry = { status: 'ok', muzzle: muzzle };
+    const entry = {
+      status: baseDone,
+      muzzle: baseDone === 'ok' ? detectFrameMuzzlePoints(baseProbe) : null,
+      hasFireFrame: fireDone === 'ok',
+      baseUrl: baseUrl,
+      fireUrl: './frames/' + key + '1.png' + _FRAME_CACHE_BUST,
+    };
     _cockpitFrameCache[key] = entry;
-    // Guard: player may have swapped ships while the probe was loading.
     if (player && player.loadoutKey === key) apply(entry);
-  };
-  probe.onerror = function() {
-    _cockpitFrameInFlight[key] = false;
-    _cockpitFrameCache[key] = { status: 'missing' };
-    if (player && player.loadoutKey === key) apply({ status: 'missing' });
-  };
-  probe.src = url;
+  }
+  baseProbe.onload  = () => { baseDone = 'ok';      maybeFinish(); };
+  baseProbe.onerror = () => { baseDone = 'missing'; maybeFinish(); };
+  fireProbe.onload  = () => { fireDone = 'ok';      maybeFinish(); };
+  fireProbe.onerror = () => { fireDone = 'missing'; maybeFinish(); };
+  baseProbe.src = baseUrl;
+  fireProbe.src = './frames/' + key + '1.png' + _FRAME_CACHE_BUST;
+}
+
+// (v6.7) Per-frame: swap the cockpit-frame background image to the KEY1.png
+// companion while muzzleFlashTimer > 0, then back to the base when it expires.
+// Cheap because we only set backgroundImage when the target URL actually
+// changes (the cache tracks _currentUrl).
+function tickCockpitFrameAnimation() {
+  const el = document.getElementById('cockpit-frame');
+  if (!el || !player || !player.loadoutKey) return;
+  const entry = _cockpitFrameCache[player.loadoutKey];
+  if (!entry || entry.status !== 'ok' || !entry.hasFireFrame) return;
+  const firing = (player.muzzleFlashTimer || 0) > 0;
+  const targetUrl = firing ? entry.fireUrl : entry.baseUrl;
+  if (entry._currentUrl !== targetUrl) {
+    el.style.backgroundImage = 'url("' + targetUrl + '")';
+    entry._currentUrl = targetUrl;
+  }
 }
 
 // Commit a loadout: fully set up the player ship, build the map, spawn bots, and
@@ -8867,6 +9420,9 @@ function playerDie(attacker) {
   player.deaths++;
   spawnExplosion(player.position, player.chassis.hullLength);
   if (attacker && attacker.loadout) addKillFeed(attacker.loadout.name, 'You');
+  // (v6.7) Stronger shake when YOU die ; sells the moment more than a
+  // generic peer kill. Same trigger function; bigger amplitude.
+  if (typeof triggerScreenShake === 'function') triggerScreenShake(12);
   // (v6.7) Broadcast the kill to peers so their feed gets the entry too.
   // The receive side already routes evt.type === 'kill' to addKillFeed in
   // handleNetEvent. Sending the killer/victim chassis names is enough for
@@ -9265,6 +9821,11 @@ function fireWeapon() {
   const origin = player.position.clone();
   const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
 
+  // (v6.7) Per-chassis muzzle flash. Visual signature so each primary reads
+  // distinctly. Receivers spawn the matching flash via the fire_tracer /
+  // network projectile receive paths below.
+  emitChassisMuzzleFlash(player.loadoutKey, origin, forward);
+
   if (w.mode === 'hitscan') fireHitscan(origin, forward, w);
   else if (w.mode === 'projectile') fireProjectile(origin, forward, w);
   else if (w.mode === 'spread') fireSpread(origin, forward, w);
@@ -9502,14 +10063,17 @@ function fireSpread(origin, dir, w) {
 
     const levelDist = raycastLevel(origin, spreadDir, w.range);
     const end = origin.clone().add(spreadDir.clone().multiplyScalar(levelDist));
-    spawnTracer(origin, end, 0xffaa44);
-    // (v6.7) Broadcast each pellet so peers see the spread cone visually.
+    // (v6.7) Spread weapons now spawn a particle burst along each pellet's
+    // path instead of a long tracer beam. The tracer was reading as a laser;
+    // a brief shower of warm-colored sparks reads as a shotgun blast (per the
+    // particle-burst pattern in effects_demo.html).
+    spawnPelletBurst(origin, spreadDir, levelDist);
     if (net.active && net.sendEvent) {
       net.sendEvent({
-        type: 'fire_tracer',
+        type: 'pellet_burst',
         ox: origin.x, oy: origin.y, oz: origin.z,
-        ex: end.x,    ey: end.y,    ez: end.z,
-        color: 0xffaa44,
+        dx: spreadDir.x, dy: spreadDir.y, dz: spreadDir.z,
+        range: levelDist,
       });
     }
 
@@ -10304,7 +10868,11 @@ function updateShieldVisuals(dt) {
 
   if (vortexActive) {
     if (!player.vortexShieldMesh) {
-      const geo = new THREE.CircleGeometry(120, 32);
+      // (v6.7) Thin cylinder + torus instead of CircleGeometry + RingGeometry.
+      // Both are 3D primitives, so the shield has visible thickness from any
+      // angle (third-person, peer-view, and any angled glance).
+      const geo = new THREE.CylinderGeometry(120, 120, 8, 32, 1, false);
+      geo.rotateX(Math.PI / 2);
       // Rainbow iridescent material: use additive blending with animated color
       const mat = new THREE.MeshBasicMaterial({
         color: 0x44ccff, transparent: true, opacity: 0.25,
@@ -10313,7 +10881,7 @@ function updateShieldVisuals(dt) {
       player.vortexShieldMesh = new THREE.Mesh(geo, mat);
       scene.add(player.vortexShieldMesh);
       // Add a second ring (outer glow)
-      const ringGeo = new THREE.RingGeometry(110, 125, 32);
+      const ringGeo = new THREE.TorusGeometry(117, 7, 8, 32);
       const ringMat = new THREE.MeshBasicMaterial({
         color: 0xffffff, transparent: true, opacity: 0.15,
         side: THREE.DoubleSide, blending: THREE.AdditiveBlending
@@ -10369,10 +10937,18 @@ function updateShieldVisuals(dt) {
         if (i === 0) shape.moveTo(x, y);
         else shape.lineTo(x, y);
       }
-      const geo = new THREE.ShapeGeometry(shape);
+      // (v6.7) ExtrudeGeometry instead of ShapeGeometry: octagonal prism with
+      // 12-unit depth so the shield has visible volume from any angle. The
+      // EdgesGeometry below now traces the full prism (top, bottom, vertical
+      // edges) which reads great in additive blend. Hologram scanline map so
+      // the shield reads as a projected hologram in the same visual language
+      // as Tracker's particle wall.
+      const geo = new THREE.ExtrudeGeometry(shape, { depth: 12, bevelEnabled: false });
+      geo.translate(0, 0, -6);
       const mat = new THREE.MeshBasicMaterial({
-        color: 0xff6644, transparent: true, opacity: 0.2,
-        side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+        color: 0xff6644, transparent: true, opacity: 0.30,
+        side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
+        map: getScanlineTexture(),
       });
       player.gunShieldMesh = new THREE.Mesh(geo, mat);
       scene.add(player.gunShieldMesh);
@@ -10430,15 +11006,19 @@ function updateShieldVisuals(dt) {
     const coneTipR  = hLen * 1.20;
     const midR = (coneBaseR + coneTipR) * 0.5;
     if (!player.thermalShieldMesh) {
-      const geo = new THREE.CircleGeometry(1, 40); // unit circle; scaled below
+      // (v6.7) Cylinder unit-disc + torus unit-ring; both 3D so the shield
+      // reads with depth from third-person and from peers' POV. Scaled to
+      // midR each frame.
+      const geo = new THREE.CylinderGeometry(1, 1, 0.08, 40, 1, false);
+      geo.rotateX(Math.PI / 2);
       const mat = new THREE.MeshBasicMaterial({
         color: 0xff7722, transparent: true, opacity: 0.28,
         side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false
       });
       player.thermalShieldMesh = new THREE.Mesh(geo, mat);
       scene.add(player.thermalShieldMesh);
-      // Outer heat-haze ring: unit ring 0.88..1.04 scaled to match disc
-      const ringGeo = new THREE.RingGeometry(0.88, 1.04, 40);
+      // Outer heat-haze ring: unit torus, scaled to match disc
+      const ringGeo = new THREE.TorusGeometry(0.96, 0.05, 8, 40);
       const ringMat = new THREE.MeshBasicMaterial({
         color: 0xffaa44, transparent: true, opacity: 0.22,
         side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false
@@ -10729,22 +11309,51 @@ function updateAbilities(dt) {
         game.projectiles.push(missile);
       }
     }
-    // BLASTER Smart Core: auto-aim rapid fire at nearest enemy
+    // BLASTER Smart Core: auto-aim rapid fire at nearest VISIBLE enemy.
+    // (v6.7) The auto-aim and the shot itself were both ignoring level
+    // geometry: Smart Core would lock on through walls and then fire a
+    // through-wall hitscan with full damage. Both passes now require a
+    // clear line of sight via raycastLevel; if the ray to the candidate
+    // (or to the locked target) is shorter than the distance to the
+    // candidate, a wall is in the way and we skip / trim the shot.
     else if (coreName === 'Smart Core') {
       let nearest = null, nearDist = Infinity;
       for (const bot of game.entities) {
         if (!bot.alive || bot.team === player.team) continue;
         const dist = player.position.distanceTo(bot.position);
-        if (dist < 3000 && dist < nearDist) { nearest = bot; nearDist = dist; }
+        if (dist >= 3000 || dist >= nearDist) continue;
+        const losDir = new THREE.Vector3().subVectors(bot.position, player.position).normalize();
+        // Pad +20 so a target sitting flush against a wall isn't excluded
+        // by a microscopic SDF tolerance. raycastLevel's reported distance
+        // is "to first wall hit"; targets closer than that are visible.
+        const wallDist = raycastLevel(player.position, losDir, dist + 20);
+        if (wallDist < dist) continue;
+        nearest = bot; nearDist = dist;
       }
       if (nearest) {
-        // Auto-aim: fire at nearest enemy with perfect accuracy
+        // Auto-aim: fire at nearest visible enemy with perfect accuracy.
         const toTarget = new THREE.Vector3().subVectors(nearest.position, player.position).normalize();
         if (Math.random() < dt * 20) { // 20 shots/sec
-          const end = player.position.clone().add(toTarget.clone().multiplyScalar(3000));
+          // The target's LoS may have changed in the few ms since we
+          // selected, so recheck before firing. Trim the tracer to the
+          // wall distance if anything is now in the way (the shot then
+          // visibly stops at the wall and deals no damage).
+          const wallDist = raycastLevel(player.position, toTarget, 3000);
+          const end = player.position.clone().add(toTarget.clone().multiplyScalar(wallDist));
           spawnTracer(player.position, end, 0xffaa00);
-          const dealt = nearest.takeDamage(110 * 1.2, 'player'); // hidden +20% damage (TF2)
-          if (dealt > 0) { player.damageDealt += dealt; showHitMarker(); }
+          if (net.active && net.sendEvent) {
+            net.sendEvent({
+              type: 'fire_tracer',
+              ox: player.position.x, oy: player.position.y, oz: player.position.z,
+              ex: end.x, ey: end.y, ez: end.z,
+              color: 0xffaa00,
+            });
+          }
+          // Only damage if the target is in front of the wall.
+          if (wallDist >= nearDist) {
+            const dealt = nearest.takeDamage(110 * 1.2, 'player'); // hidden +20% damage (TF2)
+            if (dealt > 0) { player.damageDealt += dealt; showHitMarker(); }
+          }
         }
       }
     }
@@ -13577,13 +14186,24 @@ class StasisField {
   update(dt) {
     if (!this.alive) return;
     this.pulseTime += dt;
-    // Rotate rings
-    this.ring.rotation.z += dt * 1.5;
-    this.ring2.rotation.y += dt * 1.2;
+    // (v6.7) Proximity tell: rings spin faster and the core swells as the
+    // local player gets close. Reads as "this is up for grabs, hurry"; same
+    // visual is computed independently on each peer so the effect tracks
+    // each viewer's distance to the field, not the broadcast position.
+    let proximityBoost = 1;
+    if (typeof player !== 'undefined' && player.position) {
+      const d = player.position.distanceTo(this.position);
+      if (d < 600) {
+        proximityBoost = 1 + (1 - d / 600) * 2.0; // up to 3x at zero distance
+      }
+    }
+    // Rotate rings (faster when close)
+    this.ring.rotation.z += dt * 1.5 * proximityBoost;
+    this.ring2.rotation.y += dt * 1.2 * proximityBoost;
     // Pulse glow (core opacity only; lighting comes from pooled dynamic lights)
-    const pulse = 0.4 + Math.sin(this.pulseTime * 3) * 0.2;
-    this.core.material.opacity = pulse + 0.2;
-    const s = 1 + Math.sin(this.pulseTime * 2) * 0.1;
+    const pulse = 0.4 + Math.sin(this.pulseTime * 3 * proximityBoost) * 0.2;
+    this.core.material.opacity = Math.min(1, (pulse + 0.2) * (0.7 + proximityBoost * 0.3));
+    const s = (1 + Math.sin(this.pulseTime * 2 * proximityBoost) * 0.1) * Math.min(1.4, 0.85 + proximityBoost * 0.18);
     this.core.scale.set(s, s, s);
     // Occasional soft pulse from the pre-allocated pool (no shader recompile)
     this._pulseLightTimer -= dt;
@@ -13591,7 +14211,7 @@ class StasisField {
       if (typeof spawnDynamicLight === 'function') {
         spawnDynamicLight(this.position, 0x00ccff, 0.55, 380, 0.9);
       }
-      this._pulseLightTimer = 1.1;
+      this._pulseLightTimer = 1.1 / proximityBoost; // pulse faster when close
     }
   }
 
@@ -13605,6 +14225,14 @@ class StasisField {
     ring.position.copy(this.position);
     scene.add(ring);
     game.effects.push({ mesh: ring, lifetime: 0.6, age: 0, type: 'stasis_pickup', startScale: 1 });
+    // (v6.7) Godray straight up so peers across the level can see "someone
+    // grabbed it." Pure visual; no gameplay impact. Reuses the volumetric
+    // tracer material for consistency with the rest of the visual vocabulary.
+    if (typeof spawnTracer === 'function') {
+      const skyTop = this.position.clone();
+      skyTop.y += 1500;
+      spawnTracer(this.position, skyTop, 0x00ffff);
+    }
   }
 }
 
@@ -15202,6 +15830,9 @@ function gameLoop(timestamp) {
   updateRoundSystem(dt);
   updateStasisFields(dt);
   updateRoomFog(dt);   // (v6.7) per-room atmospheric fog density
+  tickScanlineTexture(); // (v6.7) drift the hologram-scanline map for shields
+  tickEnergyShields(dt); // (v6.7) drive time + decay impact pulses on energy shields
+  tickCockpitFrameAnimation(); // (v6.7) swap cockpit frame to KEY1.png while firing
   checkExecutions(dt);
 
   // Network: broadcast our state to all peers
@@ -15231,6 +15862,9 @@ function gameLoop(timestamp) {
     const botSpeed = bot.velocity ? bot.velocity.length() : 0;
     const botMaxSpeed = bot.chassis ? bot.chassis.maxSpeed : 400;
     animateShipMesh(bot.mesh, botSpeed, botMaxSpeed, bot.isFiring, dt, !!bot.doomed);
+    // (v6.7) Damage-state particles for bots and network players. Healthy
+    // ships emit nothing (early-return inside emitDamageState).
+    emitDamageState(bot, dt);
     // Heat-trail blur: throttled emitter, scales rate with speed so cruising
     // bots get a steady wake and parked bots get nothing.
     if (bot.alive && bot.velocity && typeof spawnHeatTrail === 'function') {
@@ -15251,6 +15885,23 @@ function gameLoop(timestamp) {
     const pSpeed = player.velocity ? player.velocity.length() : 0;
     const pMaxSpeed = player.chassis ? player.chassis.maxSpeed : 400;
     animateShipMesh(player.mesh, pSpeed, pMaxSpeed, player.isFiring, dt, !!player.doomed);
+    // (v6.7) Damage-state particles on the local player too (visible from
+    // third-person / death cam, and other peers see them on our broadcast
+    // position via their NetworkPlayer iteration).
+    emitDamageState(player, dt);
+    // (v6.7) Spawn-protection bubble on the local player too (visible in
+    // death cam / third-person). Same fade curve as the broadcast version.
+    if (player.mesh && player.mesh.userData && player.mesh.userData.shieldMesh && player.spawnProtection > 0) {
+      const frac = Math.min(1, player.spawnProtection / (LSS.SPAWN_PROTECTION || 3));
+      // (v6.7) Drive the energy-shield shader's intensity. setShieldIntensity
+      // handles both the new ShaderMaterial and any legacy MeshBasicMaterial.
+      const m = player.mesh.userData.shieldMesh.material;
+      if (m.uniforms && m.uniforms.intensity) {
+        m.uniforms.intensity.value = Math.max(m.uniforms.intensity.value, 1.0 * frac);
+      } else {
+        m.opacity = Math.max(m.opacity || 0, 0.30 * frac);
+      }
+    }
     // Heat-trail blur on the player too (visible in third-person / death cam)
     if (!player.doomed && player.velocity && typeof spawnHeatTrail === 'function') {
       if (player._heatTrailTimer == null) player._heatTrailTimer = 0;
