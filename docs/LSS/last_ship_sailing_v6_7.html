@@ -1339,6 +1339,11 @@ const net = {
   // broadcast. Pickup is broadcast by whoever consumed the field so all
   // peers remove it visually.
   stasisIdCounter: 0,
+
+  // World-effect netIds (v6.7). Tripwires, particle walls, gas clouds, etc.
+  // Owner-broadcast spawn carries the netId; receivers tag their local copy
+  // with the same id so destroy events line up.
+  effectIdCounter: 0,
 };
 
 // Generate a short random ID
@@ -2022,9 +2027,73 @@ class NetworkPlayer {
     // Velocity (for projectile inheritance, damage calcs)
     this.velocity.set(s.vx || 0, s.vy || 0, s.vz || 0);
 
-    // Shield visual
+    // Shield visual. (v6.7) Either the regular HP shield (this.shield > 0) or
+    // any ability shield (Gun Shield, Sword Block, Phase Dash, thermal,
+    // vortex) lights the wraparound. Ability shields use a brighter opacity
+    // so peers can read "this enemy is currently warded" at a glance even
+    // when their HP shield is at zero.
     if (this.mesh.userData.shieldMesh) {
-      this.mesh.userData.shieldMesh.material.opacity = this.shield > 0 ? 0.08 : 0;
+      const hpShield = this.shield > 0;
+      const abilityShield = !!s.abilityShield;
+      this.mesh.userData.shieldMesh.material.opacity =
+        abilityShield ? 0.22 : (hpShield ? 0.08 : 0);
+    }
+
+    // (v6.7) Chassis-specific ability-shield visuals on the network player.
+    // The wraparound above is the generic indicator; this adds the actual
+    // shield mesh per chassis so peers see what kind of shield is up. Right
+    // now Vortex's rainbow circle is wired; Pyro's thermal, Blaster's gun
+    // shield, etc. plug in here with the same shape.
+    this._updateAbilityShieldVisual(s);
+  }
+
+  _updateAbilityShieldVisual(s) {
+    const active = !!(s && s.abilityShield);
+    if (this.loadoutKey === 'VORTEX' && active) {
+      // Replicate the rainbow circle held in front of the ship.
+      if (!this._vortexShieldMesh) {
+        const geo = new THREE.CircleGeometry(120, 32);
+        const mat = new THREE.MeshBasicMaterial({
+          color: 0x44ccff, transparent: true, opacity: 0.25,
+          side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+        });
+        this._vortexShieldMesh = new THREE.Mesh(geo, mat);
+        scene.add(this._vortexShieldMesh);
+        const ringGeo = new THREE.RingGeometry(110, 125, 32);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: 0xffffff, transparent: true, opacity: 0.15,
+          side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+        });
+        this._vortexShieldRing = new THREE.Mesh(ringGeo, ringMat);
+        scene.add(this._vortexShieldRing);
+      }
+      const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(this.targetQuat || new THREE.Quaternion());
+      const shieldPos = this.position.clone().add(fwd.clone().multiplyScalar(80));
+      this._vortexShieldMesh.position.copy(shieldPos);
+      this._vortexShieldMesh.lookAt(shieldPos.clone().add(fwd));
+      const t = (typeof game !== 'undefined' && game.time) ? game.time : 0;
+      const hue = (t * 0.3) % 1;
+      this._vortexShieldMesh.material.color.setHSL(hue, 0.7, 0.6);
+      this._vortexShieldMesh.material.opacity = 0.2 + Math.sin(t * 4) * 0.08;
+      if (this._vortexShieldRing) {
+        this._vortexShieldRing.position.copy(shieldPos);
+        this._vortexShieldRing.lookAt(shieldPos.clone().add(fwd));
+        this._vortexShieldRing.material.color.setHSL((hue + 0.3) % 1, 0.5, 0.7);
+        this._vortexShieldRing.material.opacity = 0.1 + Math.sin(t * 6) * 0.06;
+      }
+    } else {
+      if (this._vortexShieldMesh) {
+        if (this._vortexShieldMesh.parent) scene.remove(this._vortexShieldMesh);
+        if (this._vortexShieldMesh.geometry) this._vortexShieldMesh.geometry.dispose();
+        if (this._vortexShieldMesh.material) this._vortexShieldMesh.material.dispose();
+        this._vortexShieldMesh = null;
+      }
+      if (this._vortexShieldRing) {
+        if (this._vortexShieldRing.parent) scene.remove(this._vortexShieldRing);
+        if (this._vortexShieldRing.geometry) this._vortexShieldRing.geometry.dispose();
+        if (this._vortexShieldRing.material) this._vortexShieldRing.material.dispose();
+        this._vortexShieldRing = null;
+      }
     }
   }
 
@@ -2061,6 +2130,21 @@ class NetworkPlayer {
 
   destroy() {
     if (this.mesh && this.mesh.parent) scene.remove(this.mesh);
+    // (v6.7) Clean up any chassis-specific shield meshes attached to this
+    // network player. Without this, they'd leak in the scene when the peer
+    // leaves or swaps loadouts.
+    if (this._vortexShieldMesh) {
+      if (this._vortexShieldMesh.parent) scene.remove(this._vortexShieldMesh);
+      if (this._vortexShieldMesh.geometry) this._vortexShieldMesh.geometry.dispose();
+      if (this._vortexShieldMesh.material) this._vortexShieldMesh.material.dispose();
+      this._vortexShieldMesh = null;
+    }
+    if (this._vortexShieldRing) {
+      if (this._vortexShieldRing.parent) scene.remove(this._vortexShieldRing);
+      if (this._vortexShieldRing.geometry) this._vortexShieldRing.geometry.dispose();
+      if (this._vortexShieldRing.material) this._vortexShieldRing.material.dispose();
+      this._vortexShieldRing = null;
+    }
   }
 }
 
@@ -2113,6 +2197,22 @@ function broadcastPlayerState(dt) {
     // remote peers. Cheap (two ints, broadcast at 20 Hz with the rest).
     kills: player.kills | 0,
     damageDealt: player.damageDealt | 0,
+    // (v6.7) Ability-shield state, OR'd into a single bit so NetworkPlayer
+    // can light the wraparound shield mesh and chassis-specific visuals.
+    // Covers Gun Shield (HP-pool, charged on Power Shot), Phase Dash
+    // i-frames, and the three hold abilities (Sword Block, Vortex Shield,
+    // Thermal Shield). NOTE: thermalShieldHP is NOT used here because it
+    // initializes to max on commit (Pyro starts with a fully-charged
+    // shield); using HP > 0 would make the shield broadcast permanently
+    // on. The held-state check via abilityActive[1] is the correct gate.
+    abilityShield: !!(
+      (player.gunShieldHP > 0) ||
+      player.phaseInvuln ||
+      (player.abilityActive && player.abilityActive[1] && player.abilities && player.abilities[1] &&
+        (player.abilities[1].name === 'Sword Block' ||
+         player.abilities[1].name === 'Vortex Shield' ||
+         player.abilities[1].name === 'Thermal Shield'))
+    ),
   };
 
   const msg = JSON.stringify(state);
@@ -2191,7 +2291,16 @@ function handleHitClaim(claim, fromPeerId) {
   // If we are the target and the hit is valid, apply damage locally
   // (gives responsive feel; consensus can override if vote fails)
   if (claim.targetId === net.myPeerId && valid) {
-    playerTakeDamage(claim.damage, null);
+    // (v6.7) Synthesize a positioned attacker from the shooter coords carried
+    // in the claim. Without this, playerTakeDamage gets attacker=null and:
+    //   - directional damage indicator can't pick an edge to pulse
+    //   - Particle Wall's "is the shooter on the wall's front side?" check
+    //     short-circuits (the eff.owner === 'player' wall absorbs nothing)
+    //   - any future positional damage logic loses the spatial hook.
+    const fakeAttacker = (typeof claim.sx === 'number')
+      ? { position: new THREE.Vector3(claim.sx, claim.sy, claim.sz) }
+      : null;
+    playerTakeDamage(claim.damage, fakeAttacker);
   }
 }
 
@@ -2336,6 +2445,94 @@ function handleNetEvent(evt, fromPeerId) {
     }
     return;
   }
+  // (v6.7) Persistent world effect spawned by a peer (Trip Wire is the
+  // first wired up; particle wall, tether, gas, etc. plug into the same
+  // effect_spawn / effect_destroy channel as we extend the kinds).
+  if (evt.type === 'effect_spawn' && typeof evt.netId === 'number') {
+    if (evt.kind === 'tripwire') {
+      const pos = new THREE.Vector3(evt.px, evt.py, evt.pz);
+      spawnTripWireOrb(pos, 'peer', evt.team, evt.ownerPeerId, evt.netId, false);
+    } else if (evt.kind === 'particle_wall') {
+      const pos = new THREE.Vector3(evt.px, evt.py, evt.pz);
+      const dir = new THREE.Vector3(evt.dx, evt.dy, evt.dz);
+      spawnParticleWall(pos, dir, 'peer', evt.team, evt.ownerPeerId, evt.netId, false);
+    }
+    // (extend with else if for future effect kinds: tether, incendiary_gas, ...)
+    return;
+  }
+  if (evt.type === 'effect_destroy' && typeof evt.netId === 'number') {
+    for (let i = game.worldEffects.length - 1; i >= 0; i--) {
+      const eff = game.worldEffects[i];
+      if (eff.netId === evt.netId) {
+        // Setting timer to 0 lets the existing cleanup loop dispose meshes
+        // properly the same way local expiration does. The cleanup also
+        // checks ownerPeerId before re-broadcasting destroy, so we don't echo.
+        eff.timer = 0;
+        break;
+      }
+    }
+    return;
+  }
+}
+
+// (v6.7) Trip Wire orb spawn helper, shared between the local Trip Wire fire
+// path (broadcast=true) and the effect_spawn receiver (broadcast=false). The
+// ownerPeerId tag lets the per-frame trigger logic decide which peer's local
+// copy is allowed to detonate (only the owner's; everyone else's is visual).
+function spawnTripWireOrb(pos, owner, team, ownerPeerId, netId, broadcast) {
+  game.worldEffects.push({
+    type: 'tripwire', position: pos.clone(),
+    timer: 12, dmg: 350, radius: 220, owner, team, armed: false, armTimer: 1.0,
+    ownerPeerId, netId,
+  });
+  const mineGeo = new THREE.SphereGeometry(10, 6, 4);
+  const mineMat = new THREE.MeshBasicMaterial({ color: 0xff4444 });
+  const mineMesh = new THREE.Mesh(mineGeo, mineMat);
+  mineMesh.position.copy(pos);
+  scene.add(mineMesh);
+  game.worldEffects[game.worldEffects.length - 1].mesh = mineMesh;
+  if (broadcast && net.active && net.sendEvent) {
+    net.sendEvent({
+      type: 'effect_spawn', kind: 'tripwire',
+      netId, ownerPeerId, team,
+      px: pos.x, py: pos.y, pz: pos.z,
+    });
+  }
+}
+
+// (v6.7) Particle Wall spawn helper, shared between the local fire path
+// (broadcast=true) and the effect_spawn receiver (broadcast=false). Same
+// pattern as Trip Wire: ownerPeerId tag gates HP / damage logic to one peer.
+function spawnParticleWall(pos, dir, owner, team, ownerPeerId, netId, broadcast) {
+  const wallGeo = new THREE.PlaneGeometry(400, 300);
+  const wallMat = new THREE.MeshBasicMaterial({
+    color: 0x44ccff, transparent: true, opacity: 0.25,
+    side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+  });
+  const wallMesh = new THREE.Mesh(wallGeo, wallMat);
+  wallMesh.position.copy(pos);
+  wallMesh.lookAt(pos.clone().add(dir));
+  scene.add(wallMesh);
+  const edgeGeo = new THREE.EdgesGeometry(wallGeo);
+  const edgeMat = new THREE.LineBasicMaterial({ color: 0x66ddff, transparent: true, opacity: 0.6 });
+  const edgeMesh = new THREE.LineSegments(edgeGeo, edgeMat);
+  edgeMesh.position.copy(pos);
+  edgeMesh.lookAt(pos.clone().add(dir));
+  scene.add(edgeMesh);
+  game.worldEffects.push({
+    type: 'particle_wall', position: pos.clone(), direction: dir.clone(),
+    hp: 5000, maxHp: 5000, timer: 10, owner, team,
+    mesh: wallMesh, edgeMesh, spawnTime: game.time,
+    ownerPeerId, netId,
+  });
+  if (broadcast && net.active && net.sendEvent) {
+    net.sendEvent({
+      type: 'effect_spawn', kind: 'particle_wall',
+      netId, ownerPeerId, team,
+      px: pos.x, py: pos.y, pz: pos.z,
+      dx: dir.x, dy: dir.y, dz: dir.z,
+    });
+  }
 }
 
 function spawnNetworkProjectile(data, fromPeerId) {
@@ -2351,7 +2548,29 @@ function spawnNetworkProjectile(data, fromPeerId) {
   // (v6.7) Carry pyro-style fire-source flag so gas clouds still ignite
   // visually when a remote pyro's projectile passes through them.
   if (data.isFireSource) proj.isFireSource = true;
+  // (v6.7) Arc Wave: lightning-bolt trail visual is what makes the secondary
+  // readable. Damage stays at 0 (no double-counting); the regular hit-claim
+  // path applies the actual damage on the victim. The "destroy gun shield /
+  // particle wall" interaction in playerTakeDamage's isArcWaveHit branch
+  // still fires when the network arc wave touches us, which is the correct
+  // visual + gameplay outcome (the enemy's arc wave actually pops our shield).
+  if (data.isArcWave) proj.isArcWave = true;
   game.projectiles.push(proj);
+}
+
+// (v6.7) Broadcast helper for ability-spawned projectiles (Arc Wave, Cluster
+// Missile, anything in executeAbility that creates a Projectile). Carries the
+// flags receivers need to reproduce the visual; damage stays at 0 on receivers
+// because actual HP changes flow through the hit-claim path.
+function broadcastAbilityProjectile(proj) {
+  if (!net.active || !net.sendProjectile || !proj) return;
+  net.sendProjectile({
+    ox: proj.position.x, oy: proj.position.y, oz: proj.position.z,
+    vx: proj.velocity.x, vy: proj.velocity.y, vz: proj.velocity.z,
+    color: proj.color || 0xffaa00,
+    isFireSource: !!proj.isFireSource,
+    isArcWave: !!proj.isArcWave,
+  });
 }
 
 // Clean up stale pending hits with timeout fallback.
@@ -9199,6 +9418,22 @@ function executeAbility(slot, ability) {
       const beamEnd = player.position.clone().add(forward.clone().multiplyScalar(range));
       spawnTracer(player.position, beamEnd, 0xff2200);
       spawnTracer(player.position.clone().add(new THREE.Vector3(0,3,0)), beamEnd.clone().add(new THREE.Vector3(0,3,0)), 0xff4400);
+      // (v6.7) Both tracers ride the same fire_tracer channel as primary
+      // hitscan; receivers spawn matching beams. Damage flows via hit-claim.
+      if (net.active && net.sendEvent) {
+        net.sendEvent({
+          type: 'fire_tracer',
+          ox: player.position.x, oy: player.position.y, oz: player.position.z,
+          ex: beamEnd.x, ey: beamEnd.y, ez: beamEnd.z,
+          color: 0xff2200,
+        });
+        net.sendEvent({
+          type: 'fire_tracer',
+          ox: player.position.x, oy: player.position.y + 3, oz: player.position.z,
+          ex: beamEnd.x, ey: beamEnd.y + 3, ez: beamEnd.z,
+          color: 0xff4400,
+        });
+      }
 
       // Electrical crackle particles along the beam path
       const beamSteps = 8;
@@ -9336,6 +9571,11 @@ function executeAbility(slot, ability) {
       proj.clusterDmg = 500; // DPS of the sustained cluster area
       proj.clusterDuration = 5; // seconds of sustained explosions
       game.projectiles.push(proj);
+      // (v6.7) Broadcast as a regular projectile; the cluster ZONE that spawns
+      // on impact stays owner-local for now (its damage already flows to peers
+      // via NetworkPlayer.takeDamage hit claims; the missing piece is the
+      // visual zone effect, which is the effect_spawn follow-up).
+      broadcastAbilityProjectile(proj);
     }
     // SLAYER: Arc Wave (electric projectile, 1000 dmg, slows enemies hit; 1500 in Sword Core)
     else if (ability.name === 'Arc Wave') {
@@ -9344,6 +9584,9 @@ function executeAbility(slot, ability) {
       const proj = new Projectile(player.position.clone(), vel, arcDmg, 150, 'player', 0x44aaff);
       proj.isArcWave = true; // applies slow on hit
       game.projectiles.push(proj);
+      // (v6.7) Broadcast with isArcWave so receivers spawn the lightning-bolt
+      // trail visuals locally (visual only; damage flows via hit-claim path).
+      broadcastAbilityProjectile(proj);
     }
     // TRACKER: Tracker Rockets (fire homing salvo at fully-locked targets; partial locks preserved)
     else if (ability.name === 'Tracker Rockets') {
@@ -9365,6 +9608,10 @@ function executeAbility(slot, ability) {
             proj.tracking = true;
             proj.trackTarget = target;
             game.projectiles.push(proj);
+            // (v6.7) Receivers see straight-line missiles (no homing client-side);
+            // damage still flows via hit-claim. Future: broadcast trackTarget.peerId
+            // so receivers can render homing too.
+            broadcastAbilityProjectile(proj);
           }
           // Only consume full locks; partial locks on other targets stay
           delete player.trackerLocks[target.id];
@@ -9375,7 +9622,9 @@ function executeAbility(slot, ability) {
         for (let m = 0; m < 5; m++) {
           const spread = new THREE.Vector3((Math.random()-0.5)*0.15, (Math.random()-0.5)*0.15, 0);
           const vel = forward.clone().add(spread).normalize().multiplyScalar(900);
-          game.projectiles.push(new Projectile(player.position.clone(), vel, 500, 60, 'player', 0xffaa00));
+          const proj = new Projectile(player.position.clone(), vel, 500, 60, 'player', 0xffaa00);
+          game.projectiles.push(proj);
+          broadcastAbilityProjectile(proj);
         }
       }
     }
@@ -9497,28 +9746,7 @@ function executeAbility(slot, ability) {
     else if (ability.name === 'Particle Wall') {
       const wallPos = player.position.clone().add(forward.clone().multiplyScalar(200));
       const wallDir = forward.clone();
-      // Translucent rainbow membrane rectangle
-      const wallGeo = new THREE.PlaneGeometry(400, 300);
-      const wallMat = new THREE.MeshBasicMaterial({
-        color: 0x44ccff, transparent: true, opacity: 0.25,
-        side: THREE.DoubleSide, blending: THREE.AdditiveBlending
-      });
-      const wallMesh = new THREE.Mesh(wallGeo, wallMat);
-      wallMesh.position.copy(wallPos);
-      wallMesh.lookAt(wallPos.clone().add(wallDir));
-      scene.add(wallMesh);
-      // Edge border for visibility
-      const edgeGeo = new THREE.EdgesGeometry(wallGeo);
-      const edgeMat = new THREE.LineBasicMaterial({ color: 0x66ddff, transparent: true, opacity: 0.6 });
-      const edgeMesh = new THREE.LineSegments(edgeGeo, edgeMat);
-      edgeMesh.position.copy(wallPos);
-      edgeMesh.lookAt(wallPos.clone().add(wallDir));
-      scene.add(edgeMesh);
-      game.worldEffects.push({
-        type: 'particle_wall', position: wallPos.clone(), direction: wallDir.clone(),
-        hp: 5000, maxHp: 5000, timer: 10, owner: 'player', team: player.team,
-        mesh: wallMesh, edgeMesh: edgeMesh, spawnTime: game.time,
-      });
+      spawnParticleWall(wallPos, wallDir, 'player', player.team, net.myPeerId, ++net.effectIdCounter, true);
     }
     // Sword Block, Vortex Shield
     // are handled passively in playerTakeDamage
@@ -9560,16 +9788,9 @@ function executeAbility(slot, ability) {
         const minePos = player.position.clone()
           .add(forward.clone().multiplyScalar(250))
           .add(right.clone().multiplyScalar(offsets[ti]));
-        game.worldEffects.push({
-          type: 'tripwire', position: minePos.clone(),
-          timer: 12, dmg: 350, radius: 220, owner: 'player', team: player.team, armed: false, armTimer: 1.0,
-        });
-        const mineGeo = new THREE.SphereGeometry(10, 6, 4);
-        const mineMat = new THREE.MeshBasicMaterial({ color: 0xff4444 });
-        const mineMesh = new THREE.Mesh(mineGeo, mineMat);
-        mineMesh.position.copy(minePos);
-        scene.add(mineMesh);
-        game.worldEffects[game.worldEffects.length - 1].mesh = mineMesh;
+        // (v6.7) Single helper handles local spawn + mesh sync; receivers
+        // call it with broadcast=false to avoid re-broadcast storms.
+        spawnTripWireOrb(minePos, 'player', player.team, net.myPeerId, ++net.effectIdCounter, true);
       }
     }
     // PYRO: Incendiary Trap (gas canisters that ignite on contact with any Pyro fire source:
@@ -10317,8 +10538,13 @@ function updateAbilities(dt) {
     }
 
     else if (eff.type === 'tripwire') {
+      // (v6.7) Mesh sync gate: only the wire owner runs detonation logic;
+      // other peers hold a visual copy that disappears via effect_destroy.
+      // Without this, every peer with the enemy in their local radius would
+      // broadcast a hit claim and damage would multiply.
+      const isMyWire = !net.active || !eff.ownerPeerId || eff.ownerPeerId === net.myPeerId;
       if (eff.armTimer > 0) { eff.armTimer -= dt; }
-      else {
+      else if (isMyWire) {
         eff.armed = true;
         // Check for enemy proximity
         for (const bot of game.entities) {
@@ -10557,6 +10783,14 @@ function updateAbilities(dt) {
           if (m.geometry && m.geometry.dispose) m.geometry.dispose();
           if (m.material && m.material.dispose) m.material.dispose();
         }
+      }
+      // (v6.7) Owner broadcasts destroy so peers remove their visual copies.
+      // Timer-only expiry doesn't strictly need this (every peer ticks the
+      // same duration locally) but trigger-based destruction (Trip Wire
+      // detonating early) absolutely does.
+      if (net.active && net.sendEvent && eff.netId !== undefined &&
+          eff.ownerPeerId === net.myPeerId) {
+        net.sendEvent({ type: 'effect_destroy', netId: eff.netId });
       }
       game.worldEffects.splice(e, 1);
     }
