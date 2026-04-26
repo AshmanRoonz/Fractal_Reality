@@ -8779,6 +8779,11 @@ function spawnImpactSparks(pos, count) {
 // tip is then used as the muzzle-flash origin on the HUD canvas, so flash lines
 // up with the painted art even when the art drifts by a few percent.
 const _cockpitFrameCache = {}; // key -> { status: 'ok'|'missing', muzzle?: {...} }
+// (v6.7) Cache-bust query string so the browser refetches frame PNGs on
+// every page load. Without this, replacing a frame file on disk leaves the
+// browser showing the previously-cached copy until a hard refresh; with it,
+// any reload picks up the latest art.
+const _FRAME_CACHE_BUST = '?v=' + Date.now();
 const _cockpitFrameInFlight = {}; // key -> true while an Image() probe is loading
 
 // Alpha-channel scan to find where the two painted gun-barrel tips point. For
@@ -8869,7 +8874,7 @@ function updateCockpitFrame() {
     if (player) player.cockpitFrameMuzzle = null;
     return;
   }
-  const url = './frames/' + key + '.png';
+  const baseUrl = './frames/' + key + '.png' + _FRAME_CACHE_BUST;
   const cached = _cockpitFrameCache[key];
   const apply = (entry) => {
     if (!entry || entry.status !== 'ok') {
@@ -8878,32 +8883,57 @@ function updateCockpitFrame() {
       if (player) player.cockpitFrameMuzzle = null;
       return;
     }
-    el.style.backgroundImage = 'url("' + url + '")';
+    el.style.backgroundImage = 'url("' + baseUrl + '")';
     el.classList.add('active');
+    entry._currentUrl = baseUrl; // tickCockpitFrameAnimation reads this to decide swaps
     if (player) player.cockpitFrameMuzzle = entry.muzzle || null;
   };
   if (cached) { apply(cached); return; }
   // Coalesce: if a probe for this key is already in flight, skip re-issuing.
-  // The original probe's onload/onerror will call apply() when it resolves (and
-  // will no-op if the player has since swapped to a different key).
   if (_cockpitFrameInFlight[key]) return;
   _cockpitFrameInFlight[key] = true;
-  // First-time: probe with an Image() so a 404 doesn't splatter a broken-image flash.
-  const probe = new Image();
-  probe.onload = function() {
+  // (v6.7) Probe BOTH the base and the firing companion (KEY1.png) in
+  // parallel. The companion is optional; if it 404s, hasFireFrame is false
+  // and the per-frame animator just leaves the base showing.
+  const baseProbe = new Image();
+  const fireProbe = new Image();
+  let baseDone = null, fireDone = null;
+  function maybeFinish() {
+    if (baseDone === null || fireDone === null) return;
     _cockpitFrameInFlight[key] = false;
-    const muzzle = detectFrameMuzzlePoints(probe);
-    const entry = { status: 'ok', muzzle: muzzle };
+    const entry = {
+      status: baseDone,
+      muzzle: baseDone === 'ok' ? detectFrameMuzzlePoints(baseProbe) : null,
+      hasFireFrame: fireDone === 'ok',
+      baseUrl: baseUrl,
+      fireUrl: './frames/' + key + '1.png' + _FRAME_CACHE_BUST,
+    };
     _cockpitFrameCache[key] = entry;
-    // Guard: player may have swapped ships while the probe was loading.
     if (player && player.loadoutKey === key) apply(entry);
-  };
-  probe.onerror = function() {
-    _cockpitFrameInFlight[key] = false;
-    _cockpitFrameCache[key] = { status: 'missing' };
-    if (player && player.loadoutKey === key) apply({ status: 'missing' });
-  };
-  probe.src = url;
+  }
+  baseProbe.onload  = () => { baseDone = 'ok';      maybeFinish(); };
+  baseProbe.onerror = () => { baseDone = 'missing'; maybeFinish(); };
+  fireProbe.onload  = () => { fireDone = 'ok';      maybeFinish(); };
+  fireProbe.onerror = () => { fireDone = 'missing'; maybeFinish(); };
+  baseProbe.src = baseUrl;
+  fireProbe.src = './frames/' + key + '1.png' + _FRAME_CACHE_BUST;
+}
+
+// (v6.7) Per-frame: swap the cockpit-frame background image to the KEY1.png
+// companion while muzzleFlashTimer > 0, then back to the base when it expires.
+// Cheap because we only set backgroundImage when the target URL actually
+// changes (the cache tracks _currentUrl).
+function tickCockpitFrameAnimation() {
+  const el = document.getElementById('cockpit-frame');
+  if (!el || !player || !player.loadoutKey) return;
+  const entry = _cockpitFrameCache[player.loadoutKey];
+  if (!entry || entry.status !== 'ok' || !entry.hasFireFrame) return;
+  const firing = (player.muzzleFlashTimer || 0) > 0;
+  const targetUrl = firing ? entry.fireUrl : entry.baseUrl;
+  if (entry._currentUrl !== targetUrl) {
+    el.style.backgroundImage = 'url("' + targetUrl + '")';
+    entry._currentUrl = targetUrl;
+  }
 }
 
 // Commit a loadout: fully set up the player ship, build the map, spawn bots, and
@@ -15709,6 +15739,7 @@ function gameLoop(timestamp) {
   updateRoomFog(dt);   // (v6.7) per-room atmospheric fog density
   tickScanlineTexture(); // (v6.7) drift the hologram-scanline map for shields
   tickEnergyShields(dt); // (v6.7) drive time + decay impact pulses on energy shields
+  tickCockpitFrameAnimation(); // (v6.7) swap cockpit frame to KEY1.png while firing
   checkExecutions(dt);
 
   // Network: broadcast our state to all peers
