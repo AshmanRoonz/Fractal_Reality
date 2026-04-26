@@ -2049,6 +2049,113 @@ class NetworkPlayer {
 
   _updateAbilityShieldVisual(s) {
     const active = !!(s && s.abilityShield);
+    // Helper: get our broadcast forward vector (camera/quaternion based)
+    const getForward = () => new THREE.Vector3(0, 0, -1).applyQuaternion(this.targetQuat || new THREE.Quaternion());
+    const t = (typeof game !== 'undefined' && game.time) ? game.time : 0;
+
+    // ---- BLASTER: Gun Shield (octagon) ----
+    if (this.loadoutKey === 'BLASTER' && active) {
+      if (!this._gunShieldMesh) {
+        const shape = new THREE.Shape();
+        const sides = 8, shieldR = 100;
+        for (let i = 0; i <= sides; i++) {
+          const angle = (i / sides) * Math.PI * 2 - Math.PI / 2;
+          const x = Math.cos(angle) * shieldR;
+          const y = Math.sin(angle) * shieldR;
+          if (i === 0) shape.moveTo(x, y); else shape.lineTo(x, y);
+        }
+        const geo = new THREE.ShapeGeometry(shape);
+        const mat = new THREE.MeshBasicMaterial({
+          color: 0xff6644, transparent: true, opacity: 0.2,
+          side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+        });
+        this._gunShieldMesh = new THREE.Mesh(geo, mat);
+        scene.add(this._gunShieldMesh);
+        const edgeGeo = new THREE.EdgesGeometry(geo);
+        const edgeMat = new THREE.LineBasicMaterial({ color: 0xff8866, transparent: true, opacity: 0.5 });
+        this._gunShieldEdge = new THREE.LineSegments(edgeGeo, edgeMat);
+        scene.add(this._gunShieldEdge);
+      }
+      const fwd = getForward();
+      const shieldPos = this.position.clone().add(fwd.clone().multiplyScalar(60));
+      this._gunShieldMesh.position.copy(shieldPos);
+      this._gunShieldMesh.lookAt(shieldPos.clone().add(fwd));
+      // No HP info on the wire yet; show full-strength opacity. Future packet
+      // could carry gunShieldFrac for live drain feedback.
+      this._gunShieldMesh.material.opacity = 0.20 + Math.sin(t * 5) * 0.04;
+      this._gunShieldMesh.material.color.setHSL(0.07, 0.8, 0.6);
+      if (this._gunShieldEdge) {
+        this._gunShieldEdge.position.copy(shieldPos);
+        this._gunShieldEdge.lookAt(shieldPos.clone().add(fwd));
+        this._gunShieldEdge.material.opacity = 0.5;
+      }
+    } else {
+      if (this._gunShieldMesh) {
+        if (this._gunShieldMesh.parent) scene.remove(this._gunShieldMesh);
+        if (this._gunShieldMesh.geometry) this._gunShieldMesh.geometry.dispose();
+        if (this._gunShieldMesh.material) this._gunShieldMesh.material.dispose();
+        this._gunShieldMesh = null;
+      }
+      if (this._gunShieldEdge) {
+        if (this._gunShieldEdge.parent) scene.remove(this._gunShieldEdge);
+        if (this._gunShieldEdge.geometry) this._gunShieldEdge.geometry.dispose();
+        if (this._gunShieldEdge.material) this._gunShieldEdge.material.dispose();
+        this._gunShieldEdge = null;
+      }
+    }
+
+    // ---- PYRO: Thermal Shield (orange disc + ring; same shape as Vortex but firey) ----
+    if (this.loadoutKey === 'PYRO' && active) {
+      const hLen = (this.chassis && this.chassis.hullLength) ? this.chassis.hullLength : 140;
+      const coneReach = hLen * 1.85;
+      const midR = (hLen * 0.50 + hLen * 1.20) * 0.5;
+      if (!this._thermalShieldMesh) {
+        const geo = new THREE.CircleGeometry(1, 40);
+        const mat = new THREE.MeshBasicMaterial({
+          color: 0xff7722, transparent: true, opacity: 0.28,
+          side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false
+        });
+        this._thermalShieldMesh = new THREE.Mesh(geo, mat);
+        scene.add(this._thermalShieldMesh);
+        const ringGeo = new THREE.RingGeometry(0.88, 1.04, 40);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: 0xffaa44, transparent: true, opacity: 0.22,
+          side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false
+        });
+        this._thermalShieldRing = new THREE.Mesh(ringGeo, ringMat);
+        scene.add(this._thermalShieldRing);
+      }
+      const fwd = getForward();
+      const shieldPos = this.position.clone().add(fwd.clone().multiplyScalar(coneReach * 0.5));
+      this._thermalShieldMesh.position.copy(shieldPos);
+      this._thermalShieldMesh.lookAt(shieldPos.clone().add(fwd));
+      this._thermalShieldMesh.scale.set(midR, midR, midR);
+      const hue = 0.04 + (Math.sin(t * 2.2) * 0.5 + 0.5) * 0.07;
+      this._thermalShieldMesh.material.color.setHSL(hue, 0.85, 0.55);
+      this._thermalShieldMesh.material.opacity = 0.30 + Math.sin(t * 8) * 0.05;
+      if (this._thermalShieldRing) {
+        this._thermalShieldRing.position.copy(shieldPos);
+        this._thermalShieldRing.lookAt(shieldPos.clone().add(fwd));
+        this._thermalShieldRing.scale.set(midR, midR, midR);
+        this._thermalShieldRing.material.color.setHSL((hue + 0.02) % 1, 0.75, 0.65);
+        this._thermalShieldRing.material.opacity = 0.18 + Math.sin(t * 10) * 0.04;
+      }
+    } else {
+      if (this._thermalShieldMesh) {
+        if (this._thermalShieldMesh.parent) scene.remove(this._thermalShieldMesh);
+        if (this._thermalShieldMesh.geometry) this._thermalShieldMesh.geometry.dispose();
+        if (this._thermalShieldMesh.material) this._thermalShieldMesh.material.dispose();
+        this._thermalShieldMesh = null;
+      }
+      if (this._thermalShieldRing) {
+        if (this._thermalShieldRing.parent) scene.remove(this._thermalShieldRing);
+        if (this._thermalShieldRing.geometry) this._thermalShieldRing.geometry.dispose();
+        if (this._thermalShieldRing.material) this._thermalShieldRing.material.dispose();
+        this._thermalShieldRing = null;
+      }
+    }
+
+    // ---- VORTEX: Vortex Shield (rainbow circle + ring) ----
     if (this.loadoutKey === 'VORTEX' && active) {
       // Replicate the rainbow circle held in front of the ship.
       if (!this._vortexShieldMesh) {
@@ -2067,11 +2174,10 @@ class NetworkPlayer {
         this._vortexShieldRing = new THREE.Mesh(ringGeo, ringMat);
         scene.add(this._vortexShieldRing);
       }
-      const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(this.targetQuat || new THREE.Quaternion());
+      const fwd = getForward();
       const shieldPos = this.position.clone().add(fwd.clone().multiplyScalar(80));
       this._vortexShieldMesh.position.copy(shieldPos);
       this._vortexShieldMesh.lookAt(shieldPos.clone().add(fwd));
-      const t = (typeof game !== 'undefined' && game.time) ? game.time : 0;
       const hue = (t * 0.3) % 1;
       this._vortexShieldMesh.material.color.setHSL(hue, 0.7, 0.6);
       this._vortexShieldMesh.material.opacity = 0.2 + Math.sin(t * 4) * 0.08;
@@ -2132,19 +2238,19 @@ class NetworkPlayer {
     if (this.mesh && this.mesh.parent) scene.remove(this.mesh);
     // (v6.7) Clean up any chassis-specific shield meshes attached to this
     // network player. Without this, they'd leak in the scene when the peer
-    // leaves or swaps loadouts.
-    if (this._vortexShieldMesh) {
-      if (this._vortexShieldMesh.parent) scene.remove(this._vortexShieldMesh);
-      if (this._vortexShieldMesh.geometry) this._vortexShieldMesh.geometry.dispose();
-      if (this._vortexShieldMesh.material) this._vortexShieldMesh.material.dispose();
-      this._vortexShieldMesh = null;
-    }
-    if (this._vortexShieldRing) {
-      if (this._vortexShieldRing.parent) scene.remove(this._vortexShieldRing);
-      if (this._vortexShieldRing.geometry) this._vortexShieldRing.geometry.dispose();
-      if (this._vortexShieldRing.material) this._vortexShieldRing.material.dispose();
-      this._vortexShieldRing = null;
-    }
+    // leaves or swaps loadouts. Helper makes this a one-liner per mesh.
+    const dispose = (m) => {
+      if (!m) return;
+      if (m.parent) scene.remove(m);
+      if (m.geometry) m.geometry.dispose();
+      if (m.material) m.material.dispose();
+    };
+    dispose(this._vortexShieldMesh);  this._vortexShieldMesh = null;
+    dispose(this._vortexShieldRing);  this._vortexShieldRing = null;
+    dispose(this._gunShieldMesh);     this._gunShieldMesh = null;
+    dispose(this._gunShieldEdge);     this._gunShieldEdge = null;
+    dispose(this._thermalShieldMesh); this._thermalShieldMesh = null;
+    dispose(this._thermalShieldRing); this._thermalShieldRing = null;
   }
 }
 
@@ -2434,6 +2540,17 @@ function handleNetEvent(evt, fromPeerId) {
     spawnTracer(from, to, evt.color || 0xffff44);
     return;
   }
+  // (v6.7) Branching lightning bolt from a peer (Energy Siphon, Arc Wave
+  // secondary trail, future thunder weapons). Pure visual; same args as
+  // local spawnLightningBolt.
+  if (evt.type === 'lightning' && typeof evt.ox === 'number') {
+    const from = new THREE.Vector3(evt.ox, evt.oy, evt.oz);
+    const to   = new THREE.Vector3(evt.ex, evt.ey, evt.ez);
+    if (typeof spawnLightningBolt === 'function') {
+      spawnLightningBolt(from, to, evt.color || 0x44ff88, evt.lifetime || 0.25, evt.branches || 4, evt.thickness || 2.5);
+    }
+    return;
+  }
   // (v6.7) Peer triggered a dash; spawn the booster effect from their
   // NetworkPlayer's engine plumes pointing along the broadcast dash direction.
   if (evt.type === 'dash_burst' && typeof evt.dx === 'number') {
@@ -2456,8 +2573,17 @@ function handleNetEvent(evt, fromPeerId) {
       const pos = new THREE.Vector3(evt.px, evt.py, evt.pz);
       const dir = new THREE.Vector3(evt.dx, evt.dy, evt.dz);
       spawnParticleWall(pos, dir, 'peer', evt.team, evt.ownerPeerId, evt.netId, false);
+    } else if (evt.kind === 'incendiary_gas') {
+      const pos = new THREE.Vector3(evt.px, evt.py, evt.pz);
+      spawnIncendiaryGas(pos, 'peer', evt.team, evt.ownerPeerId, evt.netId, false);
+    } else if (evt.kind === 'tether') {
+      const pos = new THREE.Vector3(evt.px, evt.py, evt.pz);
+      spawnTetherTrap(pos, 'peer', evt.team, evt.ownerPeerId, evt.netId, false);
+    } else if (evt.kind === 'firewall') {
+      const pos = new THREE.Vector3(evt.px, evt.py, evt.pz);
+      const dir = new THREE.Vector3(evt.dx, evt.dy, evt.dz);
+      spawnFirewallVisual(pos, dir, evt.length || 800, evt.team, evt.ownerPeerId, evt.netId);
     }
-    // (extend with else if for future effect kinds: tether, incendiary_gas, ...)
     return;
   }
   if (evt.type === 'effect_destroy' && typeof evt.netId === 'number') {
@@ -2533,6 +2659,109 @@ function spawnParticleWall(pos, dir, owner, team, ownerPeerId, netId, broadcast)
       dx: dir.x, dy: dir.y, dz: dir.z,
     });
   }
+}
+
+// (v6.7) Incendiary Gas spawn helper. Same broadcast=true/false pattern as
+// Trip Wire / Particle Wall.
+function spawnIncendiaryGas(pos, owner, team, ownerPeerId, netId, broadcast) {
+  game.worldEffects.push({
+    type: 'incendiary_gas', position: pos.clone(),
+    timer: 15, radius: 350, owner, team,
+    ignited: false, igniteDmgPerSec: 450, igniteTimer: 0, igniteDuration: 10, slowFactor: 0.5,
+    fxTimer: 0,
+    ownerPeerId, netId,
+  });
+  const gasGeo = new THREE.SphereGeometry(1, 12, 8);
+  const gasMat = new THREE.MeshBasicMaterial({ color: 0x88aa33, transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending, depthWrite: false });
+  const gasMesh = new THREE.Mesh(gasGeo, gasMat);
+  gasMesh.position.copy(pos);
+  gasMesh.scale.setScalar(350);
+  scene.add(gasMesh);
+  const coreGeo = new THREE.SphereGeometry(1, 8, 6);
+  const coreMat = new THREE.MeshBasicMaterial({ color: 0x99bb44, transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending, depthWrite: false });
+  const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+  coreMesh.position.copy(pos);
+  coreMesh.scale.setScalar(200);
+  scene.add(coreMesh);
+  const effRef = game.worldEffects[game.worldEffects.length - 1];
+  effRef.mesh = gasMesh;
+  effRef.coreMesh = coreMesh;
+  if (broadcast && net.active && net.sendEvent) {
+    net.sendEvent({
+      type: 'effect_spawn', kind: 'incendiary_gas',
+      netId, ownerPeerId, team,
+      px: pos.x, py: pos.y, pz: pos.z,
+    });
+  }
+}
+
+// (v6.7) Tether Trap spawn helper.
+function spawnTetherTrap(pos, owner, team, ownerPeerId, netId, broadcast) {
+  game.worldEffects.push({
+    type: 'tether', position: pos.clone(),
+    timer: 15, rootDuration: 4, radius: 250, owner, team, triggered: false,
+    ownerPeerId, netId,
+  });
+  const tetherGeo = new THREE.OctahedronGeometry(12, 0);
+  const tetherMat = new THREE.MeshBasicMaterial({ color: 0x44aaff, transparent: true, opacity: 0.7 });
+  const tetherMesh = new THREE.Mesh(tetherGeo, tetherMat);
+  tetherMesh.position.copy(pos);
+  scene.add(tetherMesh);
+  game.worldEffects[game.worldEffects.length - 1].mesh = tetherMesh;
+  if (broadcast && net.active && net.sendEvent) {
+    net.sendEvent({
+      type: 'effect_spawn', kind: 'tether',
+      netId, ownerPeerId, team,
+      px: pos.x, py: pos.y, pz: pos.z,
+    });
+  }
+}
+
+// (v6.7) Firewall visual-only spawn (called by receivers for kind=firewall).
+// The owner already created the full effect with sprites + dmgPerSec; this
+// gives peers a matching visual at the same position/direction/length but
+// with no damage logic (gated by ownerPeerId in the per-frame trigger code).
+function spawnFirewallVisual(pos, dir, length, team, ownerPeerId, netId) {
+  const effData = {
+    type: 'firewall', position: pos.clone(), direction: dir.clone(),
+    length, timer: 5, dmgPerSec: 0, owner: 'peer', team,
+    fxTimer: 0, meshes: [],
+    ownerPeerId, netId,
+  };
+  game.worldEffects.push(effData);
+  // Reuse the same sprite-generation logic the owner ran. Wrapped in a try
+  // so a missing texture doesn't crash the receive handler.
+  try {
+    const flameTex = (typeof getFlameLickTexture === 'function') ? getFlameLickTexture() : null;
+    if (!flameTex) return;
+    const lickCount = Math.max(16, Math.floor(length * 40 / 800));
+    const perp = new THREE.Vector3(-dir.z, 0, dir.x).normalize();
+    for (let i = 0; i < lickCount; i++) {
+      const u = i / Math.max(1, lickCount - 1);
+      const tAlong = u * length + (Math.random() - 0.5) * (length / lickCount) * 0.9;
+      const layer = i % 3;
+      const lateral = (Math.random() - 0.5) * 40;
+      const basePt = pos.clone().add(dir.clone().multiplyScalar(tAlong)).add(perp.clone().multiplyScalar(lateral));
+      const mat = new THREE.SpriteMaterial({ map: flameTex, color: 0xffffff, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false });
+      const spr = new THREE.Sprite(mat);
+      const heightBase = (layer === 0) ? 180 : (layer === 1) ? 150 : 120;
+      const h = heightBase * (0.8 + Math.random() * 0.5);
+      const w = h * 0.55 * (0.85 + Math.random() * 0.3);
+      spr.scale.set(w, h, 1);
+      spr.position.copy(basePt);
+      spr.position.y += h * 0.35 + (Math.random() - 0.5) * 20;
+      spr.userData._fw = {
+        phase: Math.random() * Math.PI * 2,
+        freq: 5 + Math.random() * 4,
+        baseH: h, baseW: w, baseY: spr.position.y,
+        baseOpacity: (layer === 0) ? 0.55 : (layer === 1) ? 0.75 : 0.9,
+        layer,
+      };
+      mat.color.setHex(layer === 2 ? 0xffeecc : layer === 1 ? 0xffbb66 : 0xff7733);
+      scene.add(spr);
+      effData.meshes.push(spr);
+    }
+  } catch (e) { /* visual best-effort */ }
 }
 
 function spawnNetworkProjectile(data, fromPeerId) {
@@ -8362,8 +8591,13 @@ function commitLoadout(key) {
       spawnDynamicObjects(game.sdfRoomData);
       spawnOrganics(game.sdfRoomData);
 
-      // Place player inside the letter corridors (Fleet A territory)
-      player.position.copy(getValidSpawnPoint('A'));
+      // (v6.7) Spawn at the player's assigned team pool. assignTeamFromPeerOrder
+      // (called by applyWorldSync via the match_start handshake) splits peers
+      // across LSS.TEAM_FLEET_A and LSS.TEAM_FLEET_B by sorted-peerId index;
+      // here we just respect that and pull from the matching spawn pool. In
+      // solo, player.team is always TEAM_FLEET_A and the 'A' pool is used.
+      const teamCode = player.team === LSS.TEAM_FLEET_B ? 'B' : 'A';
+      player.position.copy(getValidSpawnPoint(teamCode));
 
       // Reset stasis field state
       game.stasisFields.forEach(f => f.destroy());
@@ -9476,12 +9710,30 @@ function executeAbility(slot, ability) {
     else if (ability.name === 'Firewall') {
       const wallLen = 800;
       const start = player.position.clone().add(forward.clone().multiplyScalar(100));
+      // (v6.7) Tag effect with owner peerId + netId so peers can mirror it
+      // and the per-frame trigger gating works the same way as Trip Wire.
+      const myEffId = ++net.effectIdCounter;
       const effData = {
         type: 'firewall', position: start.clone(), direction: forward.clone(),
         length: wallLen, timer: 5, dmgPerSec: 400, owner: 'player', team: player.team,
         fxTimer: 0, meshes: [],
+        ownerPeerId: net.myPeerId, netId: myEffId,
       };
       game.worldEffects.push(effData);
+      // Broadcast spawn so peers create their own visual copy via the
+      // effect_spawn handler (which calls back into this same fire path
+      // with a synthesized "I'm a peer" environment; simpler approach:
+      // peers re-run the lick generation from a position+direction+length
+      // payload via spawnFirewallVisual).
+      if (net.active && net.sendEvent) {
+        net.sendEvent({
+          type: 'effect_spawn', kind: 'firewall',
+          netId: myEffId, ownerPeerId: net.myPeerId, team: player.team,
+          px: start.x, py: start.y, pz: start.z,
+          dx: forward.x, dy: forward.y, dz: forward.z,
+          length: wallLen,
+        });
+      }
       // Persistent visual: a wall of flame licks. Many layered billboard sprites
       // scattered along the length with per-sprite phase so each lick bobs and
       // flickers independently. Reads as an organic fire curtain instead of a
@@ -9640,7 +9892,10 @@ function executeAbility(slot, ability) {
       for (let r = 0; r < rocketCount; r++) {
         const spread = new THREE.Vector3((Math.random()-0.5)*0.12, (Math.random()-0.5)*0.12, 0);
         const vel = forward.clone().add(spread).normalize().multiplyScalar(800);
-        game.projectiles.push(new Projectile(player.position.clone(), vel, 700, 100, 'player', 0xff4400));
+        const proj = new Projectile(player.position.clone(), vel, 700, 100, 'player', 0xff4400);
+        game.projectiles.push(proj);
+        // (v6.7) Broadcast each rocket so peers see the salvo.
+        broadcastAbilityProjectile(proj);
       }
     }
   }
@@ -9675,6 +9930,22 @@ function executeAbility(slot, ability) {
         // Secondary parallel bolt for thickness
         const offset = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(30);
         spawnLightningBolt(player.position.clone().add(offset), bestBot.position.clone().add(offset), 0x44ffaa, 0.18, 2, 1.5);
+        // (v6.7) Broadcast the lightning so peers see the siphon connection.
+        // Two bolts (primary + secondary) sent on a generic lightning channel.
+        if (net.active && net.sendEvent) {
+          net.sendEvent({
+            type: 'lightning',
+            ox: player.position.x, oy: player.position.y, oz: player.position.z,
+            ex: bestBot.position.x, ey: bestBot.position.y, ez: bestBot.position.z,
+            color: 0x44ff88, lifetime: 0.25, branches: 4, thickness: 2.5,
+          });
+          net.sendEvent({
+            type: 'lightning',
+            ox: player.position.x + offset.x, oy: player.position.y + offset.y, oz: player.position.z + offset.z,
+            ex: bestBot.position.x + offset.x, ey: bestBot.position.y + offset.y, ez: bestBot.position.z + offset.z,
+            color: 0x44ffaa, lifetime: 0.18, branches: 2, thickness: 1.5,
+          });
+        }
 
         // Electrical particles at the target bot's position
         for (let i = 0; i < 5; i++) {
@@ -9800,43 +10071,12 @@ function executeAbility(slot, ability) {
     // power runs out.
     else if (ability.name === 'Incendiary Trap') {
       const trapPos = player.position.clone().add(forward.clone().multiplyScalar(400));
-      game.worldEffects.push({
-        type: 'incendiary_gas', position: trapPos.clone(),
-        timer: 15, radius: 350, owner: 'player', team: player.team,
-        ignited: false, igniteDmgPerSec: 450, igniteTimer: 0, igniteDuration: 10, slowFactor: 0.5,
-        fxTimer: 0,
-      });
-      // Visual: large semi-transparent gas cloud (matches actual 350-unit radius)
-      const gasGeo = new THREE.SphereGeometry(1, 12, 8);
-      const gasMat = new THREE.MeshBasicMaterial({ color: 0x88aa33, transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending, depthWrite: false });
-      const gasMesh = new THREE.Mesh(gasGeo, gasMat);
-      gasMesh.position.copy(trapPos);
-      gasMesh.scale.setScalar(350); // match actual effect radius
-      scene.add(gasMesh);
-      // Inner denser core for depth
-      const coreGeo = new THREE.SphereGeometry(1, 8, 6);
-      const coreMat = new THREE.MeshBasicMaterial({ color: 0x99bb44, transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending, depthWrite: false });
-      const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-      coreMesh.position.copy(trapPos);
-      coreMesh.scale.setScalar(200); // denser inner cloud
-      scene.add(coreMesh);
-      const effRef = game.worldEffects[game.worldEffects.length - 1];
-      effRef.mesh = gasMesh;
-      effRef.coreMesh = coreMesh;
+      spawnIncendiaryGas(trapPos, 'player', player.team, net.myPeerId, ++net.effectIdCounter, true);
     }
     // PUNCTURE: Tether Trap (slow + root enemies for 4s)
     else if (ability.name === 'Tether Trap') {
       const trapPos = player.position.clone().add(forward.clone().multiplyScalar(300));
-      game.worldEffects.push({
-        type: 'tether', position: trapPos.clone(),
-        timer: 15, rootDuration: 4, radius: 250, owner: 'player', team: player.team, triggered: false,
-      });
-      const tetherGeo = new THREE.OctahedronGeometry(12, 0);
-      const tetherMat = new THREE.MeshBasicMaterial({ color: 0x44aaff, transparent: true, opacity: 0.7 });
-      const tetherMesh = new THREE.Mesh(tetherGeo, tetherMat);
-      tetherMesh.position.copy(trapPos);
-      scene.add(tetherMesh);
-      game.worldEffects[game.worldEffects.length - 1].mesh = tetherMesh;
+      spawnTetherTrap(trapPos, 'player', player.team, net.myPeerId, ++net.effectIdCounter, true);
     }
     // TRACKER: Sonar Lock (reveal enemies + build lock stacks for Tracker Rockets)
     else if (ability.name === 'Sonar Lock') {
@@ -9858,6 +10098,15 @@ function executeAbility(slot, ability) {
           if (player.trackerLocks[id] >= 3) player.trackerLockedTarget = bot;
           // Visual lock indicator
           spawnTracer(player.position, bot.position, 0xffaa00);
+          // (v6.7) Broadcast the lock pulse so peers see the indicator.
+          if (net.active && net.sendEvent) {
+            net.sendEvent({
+              type: 'fire_tracer',
+              ox: player.position.x, oy: player.position.y, oz: player.position.z,
+              ex: bot.position.x, ey: bot.position.y, ez: bot.position.z,
+              color: 0xffaa00,
+            });
+          }
         }
       }
     }
@@ -9887,6 +10136,15 @@ function firePowerShot() {
       pelletDir.normalize();
       const pelletEnd = player.position.clone().add(pelletDir.clone().multiplyScalar(range));
       spawnTracer(player.position, pelletEnd, 0xff8800);
+      // (v6.7) Broadcast each pellet on the fire_tracer channel.
+      if (net.active && net.sendEvent) {
+        net.sendEvent({
+          type: 'fire_tracer',
+          ox: player.position.x, oy: player.position.y, oz: player.position.z,
+          ex: pelletEnd.x, ey: pelletEnd.y, ez: pelletEnd.z,
+          color: 0xff8800,
+        });
+      }
       for (const bot of game.entities) {
         if (!bot.alive || bot.team === player.team) continue;
         const toBot = new THREE.Vector3().subVectors(bot.position, player.position);
@@ -9908,6 +10166,21 @@ function firePowerShot() {
     const end = player.position.clone().add(forward.clone().multiplyScalar(range));
     spawnTracer(player.position, end, 0xff8800);
     spawnTracer(player.position.clone().add(new THREE.Vector3(0,2,0)), end.clone().add(new THREE.Vector3(0,2,0)), 0xffaa44);
+    // (v6.7) Broadcast both beams on the fire_tracer channel.
+    if (net.active && net.sendEvent) {
+      net.sendEvent({
+        type: 'fire_tracer',
+        ox: player.position.x, oy: player.position.y, oz: player.position.z,
+        ex: end.x, ey: end.y, ez: end.z,
+        color: 0xff8800,
+      });
+      net.sendEvent({
+        type: 'fire_tracer',
+        ox: player.position.x, oy: player.position.y + 2, oz: player.position.z,
+        ex: end.x, ey: end.y + 2, ez: end.z,
+        color: 0xffaa44,
+      });
+    }
     for (const bot of game.entities) {
       if (!bot.alive || bot.team === player.team) continue;
       const toBot = new THREE.Vector3().subVectors(bot.position, player.position);
@@ -10485,9 +10758,12 @@ function updateAbilities(dt) {
     eff.timer -= dt;
 
     if (eff.type === 'firewall') {
+      // (v6.7) Mesh sync gate: only the owner runs damage logic. Visual fire
+      // particles below run on every peer so the flame curtain shows up.
+      const isMyEff = !net.active || !eff.ownerPeerId || eff.ownerPeerId === net.myPeerId;
       // Damage enemies crossing the fire path (position = start, direction = forward, length = extent)
       // Check bots
-      for (const bot of game.entities) {
+      if (isMyEff) for (const bot of game.entities) {
         if (!bot.alive || bot.team === eff.team) continue;
         const toBot = new THREE.Vector3().subVectors(bot.position, eff.position);
         const along = toBot.dot(eff.direction);
@@ -10500,6 +10776,13 @@ function updateAbilities(dt) {
         }
       }
       // Check player (enemy firewalls hurt the player too)
+      // (v6.7) Local player damage only fires for the owner's effect copy
+      // because: on the owner's screen, eff.owner !== 'player' isn't true (it
+      // IS 'player'), so this check would deal damage to the owner from their
+      // own firewall ; that's existing behavior we don't want to change.
+      // For mirrored copies, eff.owner === 'peer' AND ownerPeerId !== ours,
+      // so we DO want to take damage if our team differs (the actual gameplay
+      // damage flowing into us). Both branches: keep the existing behavior.
       if (eff.team !== player.team && player.shipState !== 'dead') {
         const toPlayer = new THREE.Vector3().subVectors(player.position, eff.position);
         const along = toPlayer.dot(eff.direction);
