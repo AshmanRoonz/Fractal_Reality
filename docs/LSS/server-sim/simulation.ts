@@ -1,7 +1,68 @@
 /*
-  LSS server-sim ; gameplay core (v8.9)
-  +  SDF-based collision: replaces binary pointInLevel containment with a
-     graded signed distance (rooms blended via smooth-min, tunnels hard-min'd
+  LSS server-sim ; gameplay core (v8.27)
+  +  v8.23-v8.27 (remaining ability kits, simplified):
+     SLAYER:  Arc Wave, Sword Block (passive damage reduction), Sword Core.
+     VORTEX:  Laser Shot, Vortex Shield (passive), Trip Wire, Laser Core.
+     PYRO:    Firewall, Thermal Shield (passive), Incendiary Trap, Flame Core.
+     BLASTER: Power Shot, Gun Shield (passive), Mode Switch (placeholder),
+              Smart Core.
+     SYPHON:  Rocket Salvo, Energy Siphon (drain shield + heal + slow),
+              Rearm (reset ability cooldowns), Upgrade Core (stacked buffs).
+     All 28 chassis abilities now have server-side dispatch. Each marked
+     // SIMPLIFIED: with LSS line citation; the homing/wall-collision/
+     remote-guidance behaviors come back as we deepen ports later.
+  +  v8.22 (PUNCTURE remaining): Cluster Missile (Q), Tether Trap (F using
+     world-effects framework), Afterburner Core (V) ported from LSS lines
+     8615-8623, 8890-8902, 9020-9055.
+  +  v8.21 (world-effects framework): SimState gains worldEffects map;
+     _tickWorldEffects handles area damage (line, sphere), area slow,
+     trip-wire detonation. Snapshot ships them. Foundation for the rest of
+     the ability kits.
+  +  v8.18 (Phase 1 foundation, ported from LSS):
+     - Round-win conditions (LSS line 9947-9973): count alive per team each
+       tick during 'playing'; one team at 0 alive ends the round and awards
+       score to the other. Tie on time-out goes to team A.
+     - matchEnd state (LSS line 9977-9988): when scoreA or scoreB hits 4
+       (ROUNDS_TO_WIN), transition to matchEnd, linger for 10s, then reset
+       to select with scores cleared.
+     - 'round_end' and 'match_end' SimEvents emitted on state transitions
+       so the client can show ROUND OVER / VICTORY banners.
+     - Doomed state (LSS line 4388): set when health drops below 30% of
+       maxHealth; cleared on respawn. Surfaced in snapshot.
+     - Spawn protection (LSS line 4365): 3 seconds of damage immunity on
+       spawn so spawn-killers can't insta-delete fresh ships. Surfaced in
+       snapshot for client to render a shield bubble.
+     - Reload + clip ammo (LSS line 8094-8121): each weapon has a clip;
+       firing decrements; auto-reloads at 2s when empty. Surfaced in snapshot.
+  +  v8.16 (TRACKER ability kit, simplified):
+     - Slot 0 (Q) Tracker Rockets: 5-missile spread, 1000 dmg, no homing
+       (LSS line 8633 has the full lock/homing system).
+     - Slot 1 (E) Particle Wall: 5s damage immunity buff (LSS line 8780
+       deploys a worldEffect mesh with HP).
+     - Slot 2 (F) Sonar Lock: emits a 'sonar_lock' event with enemy IDs in
+       a 2000u forward cone for client highlight + ping audio (LSS line 8904
+       builds per-target lock stacks 0..3).
+     - Slot 3 (V) Salvo Core: 3s of 0.5x fire interval + 1.5x damage on
+       regular fire (LSS line 9044 spawns remote-guided missiles steered by
+       the player's crosshair every frame).
+     Each tagged // SIMPLIFIED: with LSS line refs for future deepening.
+  +  v8.15 (combat correctness, ported from LSS):
+     - Shield-first damage. _applyDamage now drains shield before health
+       (LSS Bot.takeDamage line 4364, applyPlayerDamage line 7723). Was
+       applying the full hit straight to health.
+     - Auto-fire while held. Removed the `!player.prevFire` rising-edge
+       gate; condition is now `input.fire && player.fireTimer <= 0` to
+       match LSS's main fire loop (line 8097). Held trigger now fires at
+       the weapon's fireRate cadence; sound and projectile spawn line up.
+  +  v8.14 (audio polish): SimEvent gains a 'fire' type emitted on every
+     projectile spawn (player + bot). hit/kill events now carry a `position`
+     for 3D spatial audio on the client.
+  +  9 LSS maps ported verbatim (hourglass, spine, infinity, tower, cross,
+     arc, octahedron, pentagon, gyre). SU=150 to match LSS's tuning. Levels
+     carry palette + sdfSmoothK on the wire so the client meshes the same
+     SDF the server collides against.
+  +  SDF-based collision (v8.9): replaces binary pointInLevel containment with
+     a graded signed distance (rooms blended via smooth-min, tunnels hard-min'd
      against rooms). Resolver has three bands: outside (hard inward push),
      touching wall (clamp + bounce), and clear (no-op). Smooth at room-tunnel
      joins; no more discontinuity at the room sphere boundary.
@@ -88,6 +149,30 @@ export interface Player {
   abilityTimers: number[];         // remaining duration if active
   // PUNCTURE Afterburner: speed multiplier while active.
   afterburnerMult: number;
+  // v8.18: doomed state (LSS line 4388, 7732). Set when health drops below
+  // DOOMED_HEALTH_PCT of maxHealth; client uses it for HUD red flash + audio
+  // tremor. Cleared on respawn.
+  doomed: boolean;
+  // v8.18: spawn protection (LSS line ~7554, SPAWN_PROTECTION_TIME). Counts
+  // down from 3.0 on spawn; while >0, _applyDamage skips this player so spawn-
+  // killers can't insta-delete a fresh ship. Client renders a shimmer bubble.
+  spawnProtection: number;
+  // v8.18: reload + clip ammo (LSS line 8094-8121). Each weapon has a clip
+  // size; firing decrements clipAmmo; empty triggers reload over 2s.
+  clipAmmo: number;
+  maxClip: number;
+  reloading: boolean;
+  reloadTimer: number;
+  // v8.16: TRACKER abilities.
+  // Particle Wall (slot 1) is simplified to a 5s damage-immunity buff
+  // instead of a deployed shield entity. >0 means incoming damage is fully
+  // absorbed. SIMPLIFIED: LSS line 8780-8806 deploys a worldEffect with HP.
+  damageImmuneTimer: number;
+  // Salvo Core (slot 3) gives 3s of doubled fire rate and 1.5x damage.
+  // SIMPLIFIED: LSS line 9044-9054 spawns remote-guided missiles steered by
+  // the player's crosshair each frame. Here we just buff the regular fire.
+  coreFireRateMult: number;
+  coreDamageMult: number;
 }
 
 export interface Bot {
@@ -132,10 +217,36 @@ export interface Projectile {
   color: number;            // packed 0xRRGGBB hint for the client
 }
 
+// v8.21: world effects (firewalls, trip wires, tethers, traps, deployable
+// shields, etc.). Generic enough to back most LSS abilities without per-
+// kind server-side state. Each effect carries type-specific params in
+// `data`, common fields here (position, ownerId, ownerTeam, hp, timer).
+//
+// Server runs the tick (timer decrement, hp removal, area-of-effect damage
+// to enemies in range). Snapshot ships the array; client builds meshes per
+// type and disposes on absence.
+export interface WorldEffect {
+  id: number;
+  type: 'firewall' | 'trip_wire' | 'tether' | 'incendiary' | 'particle_wall' | 'gas';
+  ownerType: 'player' | 'bot';
+  ownerId: number;
+  ownerTeam: number;
+  position: Vec3;
+  // Type-specific orientation/extent (radius, line-direction, etc.).
+  // Read by the appropriate per-type tick + the client.
+  data: any;
+  hp: number;
+  maxHp: number;
+  timer: number;          // seconds remaining; <= 0 → cleanup
+  spawnedAt: number;
+}
+
 export interface Match {
-  state: 'select' | 'warmup' | 'playing' | 'roundEnd';
+  state: 'select' | 'warmup' | 'playing' | 'roundEnd' | 'matchEnd';
   warmupTimer: number;
   roundTimer: number;
+  // v8.18: matchEndTimer drives the post-victory scoreboard linger.
+  matchEndTimer: number;
   scoreA: number;
   scoreB: number;
   currentRound: number;
@@ -150,6 +261,9 @@ export interface SimState {
   players: Map<string, Player>;   // keyed by peerId for fast lookup
   bots: Map<number, Bot>;         // keyed by id
   projectiles: Map<number, Projectile>;
+  // v8.21: world effects (firewalls, trip wires, particle walls, etc.).
+  // Keyed by effect id; effect lifetimes and area damage are owned here.
+  worldEffects: Map<number, WorldEffect>;
   events: SimEvent[];               // cleared after each broadcast
   level: Level;
   nextEntityId: number;
@@ -157,14 +271,20 @@ export interface SimState {
 
 // v8.6: hit/kill events surfaced to clients so they can play markers.
 export interface SimEvent {
-  type: 'hit' | 'kill';
+  type: 'hit' | 'kill' | 'fire';
   shooterType: 'player' | 'bot';
   shooterId: number;
   shooterPeerId?: string;
-  targetType: 'player' | 'bot';
-  targetId: number;
+  shooterTeam?: number;
+  // 'fire' carries the shooter's loadout (so client picks the right SFX)
+  // and position (so client positions the sound in 3D). 'hit'/'kill' keep
+  // the existing shape; targetType/targetId are absent on 'fire'.
+  loadoutKey?: string;
+  position?: Vec3;
+  targetType?: 'player' | 'bot';
+  targetId?: number;
   targetPeerId?: string;
-  damage: number;
+  damage?: number;
   time: number;
 }
 
@@ -176,6 +296,14 @@ const MAX_SPEED = 600;              // units / s
 const DAMPING = 4;                  // velocity decay per second when no input
 const ROUND_TIME = 180;
 const WARMUP_TIME = 10;
+// v8.18: best-of-7 match (LSS line 964: ROUNDS_TO_WIN: 4). Whichever team
+// hits 4 wins the match; on match end, scoreboard lingers for MATCH_END_LINGER
+// seconds before the lobby reopens.
+const ROUNDS_TO_WIN = 4;
+const MATCH_END_LINGER = 10;
+const ROUND_END_LINGER_LSS = 5; // (was 6 in our v8.7; LSS uses 5 at line 9966)
+// v8.18: spawn protection grace period (LSS line ~7554, value LSS.SPAWN_PROTECTION).
+const SPAWN_PROTECTION_TIME = 3.0;
 const TEAM_SIZE = 3;
 const BOT_AI_RETARGET_INTERVAL = 4.0;   // seconds between AI target picks
 const BOT_TARGET_REACH_DIST = 200;       // pick new target when within this much
@@ -206,6 +334,7 @@ export function createSim(level: Level): SimState {
       state: 'select',
       warmupTimer: 0,
       roundTimer: 0,
+      matchEndTimer: 0,
       scoreA: 0,
       scoreB: 0,
       currentRound: 1,
@@ -215,6 +344,7 @@ export function createSim(level: Level): SimState {
     players: new Map(),
     bots: new Map(),
     projectiles: new Map(),
+    worldEffects: new Map(),
     events: [],
     level,
     nextEntityId: 1,
@@ -253,6 +383,15 @@ export function addPlayer(state: SimState, peerId: string, team: number): Player
     abilityActive: [false, false, false, false],
     abilityTimers: [0, 0, 0, 0],
     afterburnerMult: 1.0,
+    doomed: false,
+    spawnProtection: SPAWN_PROTECTION_TIME,
+    clipAmmo: 0,
+    maxClip: 0,
+    reloading: false,
+    reloadTimer: 0,
+    damageImmuneTimer: 0,
+    coreFireRateMult: 1.0,
+    coreDamageMult: 1.0,
   };
   state.players.set(peerId, player);
   return player;
@@ -287,6 +426,16 @@ export function applyPlayerLoadout(player: Player, loadoutKey: string | null): v
     player.abilityTimers[i] = 0;
   }
   player.afterburnerMult = 1.0;
+  player.damageImmuneTimer = 0;
+  player.coreFireRateMult = 1.0;
+  player.coreDamageMult = 1.0;
+  // v8.18: clip ammo from weapon stats; reload state cleared.
+  player.clipAmmo = ld.weapon.clipSize;
+  player.maxClip = ld.weapon.clipSize;
+  player.reloading = false;
+  player.reloadTimer = 0;
+  player.doomed = false;
+  player.spawnProtection = SPAWN_PROTECTION_TIME;
 }
 
 // v8.4: switch a player to the other team. No-op if destination is full.
@@ -495,6 +644,15 @@ function _tickBotAI(bot: Bot, state: SimState, dt: number): void {
     const proj = _spawnProjectile(state, 'bot', bot.id, bot.team, origin, facing);
     proj.damage = bot.weaponDamage * BOT_DAMAGE_MULT;
     bot.fireTimer = Math.max(BOT_FIRE_RATE, bot.weaponFireRate * 1.6);
+    state.events.push({
+      type: 'fire',
+      shooterType: 'bot',
+      shooterId: bot.id,
+      shooterTeam: bot.team,
+      loadoutKey: bot.loadoutKey,
+      position: { x: origin.x, y: origin.y, z: origin.z },
+      time: state.time,
+    });
   }
 }
 
@@ -568,6 +726,13 @@ function _respawnPlayer(player: Player, level: Level): void {
   player.shield = player.maxShield;
   player.alive = true;
   player.fireTimer = 0;
+  // v8.18: reset doomed + spawn protection on respawn (LSS line 7554, 7733).
+  player.doomed = false;
+  player.spawnProtection = SPAWN_PROTECTION_TIME;
+  // Refill clip on respawn so a fresh ship doesn't spawn empty.
+  player.clipAmmo = player.maxClip;
+  player.reloading = false;
+  player.reloadTimer = 0;
 }
 
 function _respawnBot(bot: Bot, level: Level): void {
@@ -583,6 +748,78 @@ function _respawnBot(bot: Bot, level: Level): void {
   bot.aiTarget = null; bot.aiTimer = 0;
 }
 
+
+// v8.15: shield-first damage application. Ported verbatim from LSS's
+// takeDamage (Bot at line 4364, Player at line 7723):
+//   if (shield > 0):
+//     if (amount <= shield):  shield -= amount;        // fully absorbed
+//     else:                   amount -= shield; shield = 0;  // overflow
+//   health -= amount;
+// The previous version applied p.damage straight to health, skipping the
+// shield entirely; v8.15 fixes that. Returns true if the target died.
+function _applyDamage(target: Player | Bot, amount: number): boolean {
+  if (!target.alive) return false;
+  // v8.18: spawn protection (LSS line 4365). Fresh-spawned ships are
+  // invulnerable for SPAWN_PROTECTION_TIME seconds so spawn-killers can't
+  // delete them before they get oriented. Bots don't have it currently;
+  // could add later.
+  if ((target as Player).spawnProtection && (target as Player).spawnProtection > 0) {
+    return false;
+  }
+  // v8.16: TRACKER Particle Wall (simplified) damage immunity.
+  // SIMPLIFIED: full LSS implementation has the wall as a separate entity
+  // that takes hits and is destroyed by Arc Wave; here the buff is on the
+  // player directly.
+  if ((target as Player).damageImmuneTimer && (target as Player).damageImmuneTimer > 0) {
+    return false; // fully absorbed; HP and shield untouched
+  }
+  // v8.23-v8.24: held defensive shields (Sword Block / Vortex Shield) act
+  // as flat damage reductions while slot 1 is active.
+  //   SLAYER Sword Block:    0.30 mult (LSS line 7633-7637)
+  //   VORTEX Vortex Shield:  0.30 mult (LSS line 9091-9118)
+  // If their respective core is also active, the reduction is stronger.
+  const tp = target as Player;
+  if (tp.peerId !== undefined && tp.abilityActive && tp.abilityActive[1]) {
+    if (tp.loadoutKey === 'SLAYER') {
+      amount *= tp.abilityActive[3] ? 0.15 : 0.30;
+    } else if (tp.loadoutKey === 'VORTEX') {
+      amount *= tp.abilityActive[3] ? 0.20 : 0.35;
+    } else if (tp.loadoutKey === 'PYRO') {
+      // Thermal Shield (LSS line 8772-8780). Stronger reduction; full LSS
+      // version drains a power pool while held but we don't model that yet.
+      amount *= 0.25;
+    } else if (tp.loadoutKey === 'BLASTER') {
+      // Gun Shield (LSS line 8762-8767). LSS uses a directional HP-based
+      // shield; simplified to a damage multiplier here.
+      amount *= 0.40;
+    }
+  }
+  if (target.shield > 0) {
+    if (amount <= target.shield) {
+      target.shield -= amount;
+      return false;
+    } else {
+      amount -= target.shield;
+      target.shield = 0;
+    }
+  }
+  target.health -= amount;
+  // v8.18: doomed flag (LSS line 4388). Once we drop below 30% HP, set the
+  // doomed bit so the client can drive its red-flash + tremor visuals from
+  // it. Cleared on respawn.
+  const DOOMED_PCT = 0.30;
+  if ((target as Player).peerId !== undefined) {
+    const p = target as Player;
+    if (!p.doomed && p.health > 0 && p.health / p.maxHealth <= DOOMED_PCT) {
+      p.doomed = true;
+    }
+  }
+  if (target.health <= 0) {
+    target.health = 0;
+    return true;
+  }
+  return false;
+}
 
 function _recordHit(state: SimState, p: Projectile, target: Player | Bot, killed: boolean): void {
   const isPlayerTarget = (target as Player).peerId !== undefined;
@@ -602,6 +839,10 @@ function _recordHit(state: SimState, p: Projectile, target: Player | Bot, killed
     targetId: (target as any).id,
     targetPeerId: isPlayerTarget ? (target as Player).peerId : undefined,
     damage: p.damage,
+    // v8.14: target position so the client can position the hit/kill SFX
+    // in 3D via PannerNode. Cheap (one Vec3 copy) and lets the listener
+    // tell where the hit happened by ear.
+    position: { x: target.position.x, y: target.position.y, z: target.position.z },
     time: state.time,
   });
 }
@@ -633,10 +874,8 @@ function _tickProjectiles(state: SimState, dt: number): void {
       if (player.team === p.ownerTeam) continue;
       if (player.id === p.ownerId) continue;
       if (_projectileHitsEntity(p, player.position, PLAYER_HIT_RADIUS)) {
-        player.health -= p.damage;
-        const killed = player.health <= 0;
+        const killed = _applyDamage(player, p.damage);
         if (killed) {
-          player.health = 0;
           _killEntity(player, state.time);
           _creditKill(state, p.ownerType, p.ownerId);
         }
@@ -652,10 +891,8 @@ function _tickProjectiles(state: SimState, dt: number): void {
       if (bot.team === p.ownerTeam) continue;
       if (bot.id === p.ownerId) continue;
       if (_projectileHitsEntity(p, bot.position, PLAYER_HIT_RADIUS)) {
-        bot.health -= p.damage;
-        const killed = bot.health <= 0;
+        const killed = _applyDamage(bot, p.damage);
         if (killed) {
-          bot.health = 0;
           _killEntity(bot, state.time);
           _creditKill(state, p.ownerType, p.ownerId);
         }
@@ -693,8 +930,11 @@ const ABILITY_DURATIONS: Record<string, number[]> = {
 
 // Try to activate ability `slot` for `player`. Honors per-loadout cooldown.
 // Returns true if activated. v8.8 implements SLAYER Phase Dash (slot 2) and
-// PUNCTURE Afterburner (slot 1); other loadouts/slots no-op for now.
-function _activatePlayerAbility(player: Player, slot: number): boolean {
+// PUNCTURE Afterburner (slot 1); v8.16 adds the TRACKER kit (slots 0-3).
+// `state` is needed by abilities that spawn projectiles (Tracker Rockets) or
+// emit events (Sonar Lock); pure player-state buffs (Phase Dash, Afterburner)
+// don't read it.
+function _activatePlayerAbility(state: SimState, player: Player, slot: number): boolean {
   if (slot < 0 || slot > 3) return false;
   if (player.abilityCooldowns[slot] > 0) return false;
   if (!player.alive) return false;
@@ -727,6 +967,599 @@ function _activatePlayerAbility(player: Player, slot: number): boolean {
     return true;
   }
 
+  // ---- SYPHON kit (v8.27) ----
+
+  if (lk === 'SYPHON' && slot === 0) {
+    // Rocket Salvo (LSS line 8672-8680): 5 rockets in spread, 700 damage each.
+    const dir = _facingDir(player.yaw, player.pitch);
+    for (let i = 0; i < 5; i++) {
+      const sx = (Math.random() - 0.5) * 0.18;
+      const sy = (Math.random() - 0.5) * 0.18;
+      const dx = dir.x + sx, dy = dir.y + sy, dz = dir.z;
+      const mag = Math.sqrt(dx*dx + dy*dy + dz*dz) || 1;
+      const ndx = dx / mag, ndy = dy / mag, ndz = dz / mag;
+      const origin = {
+        x: player.position.x + ndx * 80,
+        y: player.position.y + 30 + ndy * 80,
+        z: player.position.z + ndz * 80,
+      };
+      const proj = _spawnProjectile(state, 'player', player.id, player.team, origin, { x: ndx, y: ndy, z: ndz });
+      proj.damage = 700;
+      proj.velocity.x = ndx * 800;
+      proj.velocity.y = ndy * 800;
+      proj.velocity.z = ndz * 800;
+      proj.lifetime = 1.5;
+      proj.color = 0xff4400;
+    }
+    state.events.push({
+      type: 'fire',
+      shooterType: 'player',
+      shooterId: player.id,
+      shooterPeerId: player.peerId,
+      shooterTeam: player.team,
+      loadoutKey: 'SYPHON',
+      position: { x: player.position.x, y: player.position.y, z: player.position.z },
+      time: state.time,
+    });
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'SYPHON' && slot === 1) {
+    // Energy Siphon (LSS line 8687-8755): drain nearest enemy's shield, heal
+    // self by 800. Range 1500u, cone dot >= 0.5.
+    const dir = _facingDir(player.yaw, player.pitch);
+    let bestTarget: Player | Bot | null = null;
+    let bestDist = Infinity;
+    const all: Array<Player | Bot> = [...state.players.values(), ...state.bots.values()];
+    for (const t of all) {
+      if (!t.alive || t.team === player.team) continue;
+      if ((t as Player).peerId === player.peerId) continue;
+      const dx = t.position.x - player.position.x;
+      const dy = t.position.y - player.position.y;
+      const dz = t.position.z - player.position.z;
+      const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+      if (dist > 1500) continue;
+      const inv = 1 / (dist || 1);
+      const dot = dir.x * dx * inv + dir.y * dy * inv + dir.z * dz * inv;
+      if (dot < 0.5) continue;
+      if (dist < bestDist) { bestDist = dist; bestTarget = t; }
+    }
+    if (bestTarget) {
+      const drain = Math.min(bestTarget.shield || 0, 800);
+      bestTarget.shield = Math.max(0, (bestTarget.shield || 0) - drain);
+      // Slow the target a bit (LSS does this too).
+      bestTarget.velocity.x *= 0.4;
+      bestTarget.velocity.y *= 0.4;
+      bestTarget.velocity.z *= 0.4;
+      // Heal self.
+      player.shield = Math.min(player.maxShield, player.shield + 800);
+    }
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'SYPHON' && slot === 2) {
+    // Rearm (LSS line 8932): reset all ability cooldowns.
+    for (let i = 0; i < 4; i++) {
+      if (i !== slot) player.abilityCooldowns[i] = 0;
+    }
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'SYPHON' && slot === 3) {
+    // Upgrade Core (LSS line 9059-9082): permanent tier upgrades.
+    // SIMPLIFIED: LSS has 3 tiers (Arc Rounds, Maelstrom, XO-16 Accelerator)
+    // each granting different buffs. Ours stacks all-of-the-above for the
+    // duration: bigger clip, +500 max shield, +25% damage, faster fire.
+    player.maxClip = Math.max(player.maxClip, 50);
+    player.clipAmmo = Math.min(player.clipAmmo + 10, player.maxClip);
+    player.maxShield = player.maxShield + 500;
+    player.shield = Math.min(player.maxShield, player.shield + 500);
+    player.coreFireRateMult = 0.7;
+    player.coreDamageMult = 1.25;
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  // ---- BLASTER kit (v8.26) ----
+
+  if (lk === 'BLASTER' && slot === 0) {
+    // Power Shot (LSS line 8630-8670): high-damage charged hitscan.
+    // SIMPLIFIED: LSS has a 1s charge phase before firing. Ours fires
+    // instantly on press. Damage: 3200 (the charged-shot value from LSS).
+    const dir = _facingDir(player.yaw, player.pitch);
+    const origin = {
+      x: player.position.x + dir.x * 80,
+      y: player.position.y + 30 + dir.y * 80,
+      z: player.position.z + dir.z * 80,
+    };
+    const proj = _spawnProjectile(state, 'player', player.id, player.team, origin, dir);
+    proj.damage = 3200;
+    proj.velocity.x = dir.x * 4500;
+    proj.velocity.y = dir.y * 4500;
+    proj.velocity.z = dir.z * 4500;
+    proj.lifetime = 0.5;
+    proj.color = 0xff8844;
+    state.events.push({
+      type: 'fire',
+      shooterType: 'player',
+      shooterId: player.id,
+      shooterPeerId: player.peerId,
+      shooterTeam: player.team,
+      loadoutKey: 'BLASTER',
+      position: { x: origin.x, y: origin.y, z: origin.z },
+      time: state.time,
+    });
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'BLASTER' && slot === 1) {
+    // Gun Shield (LSS line 8762-8767): frontal HP-based shield.
+    // SIMPLIFIED: ours acts as a 0.4 damage multiplier while active (since
+    // we don't model directional shields). Stronger than the held shields
+    // because it's a one-shot panic button (not held-only).
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'BLASTER' && slot === 2) {
+    // Mode Switch (LSS line 8927-8931): no-op stat change in the simplified
+    // port; in LSS this swaps weapon stats between close (high spread, high
+    // DPS) and long (tight spread, lower fire rate). We don't model
+    // weapon-stat swaps yet so this is just an ability press that consumes
+    // a 2s cooldown for placeholder feedback.
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'BLASTER' && slot === 3) {
+    // Smart Core (LSS line 9522-9540): 8s of auto-aim + +20% damage.
+    // SIMPLIFIED: ours just buffs the regular weapon (no auto-aim because
+    // that needs server-side targeting that we'd add later). Buffs are
+    // strong to match LSS's intent.
+    player.coreFireRateMult = 0.5;
+    player.coreDamageMult = 1.5;
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  // ---- PYRO kit (v8.25) ----
+
+  if (lk === 'PYRO' && slot === 0) {
+    // Firewall (LSS line 8800-8870): line of fire 1500u long, 100u wide,
+    // 400 DPS, 6s duration. _tickAreaDamageLine handles damage application.
+    const dir = _facingDir(player.yaw, player.pitch);
+    const start = {
+      x: player.position.x + dir.x * 100,
+      y: player.position.y + dir.y * 100,
+      z: player.position.z + dir.z * 100,
+    };
+    _spawnWorldEffect(state, 'firewall', 'player', player.id, player.team, start,
+      { dirX: dir.x, dirY: dir.y, dirZ: dir.z, length: 1500, width: 100, dps: 400 }, 1, 6);
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'PYRO' && slot === 1) {
+    // Thermal Shield (LSS line 8772-8780): held shield, damage reduction.
+    // SIMPLIFIED: LSS has a power pool that drains while active and burns
+    // close enemies. Ours is just a damage reducer for now.
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'PYRO' && slot === 2) {
+    // Incendiary Trap (LSS line 8870-8902): drop a sphere of fire 250u
+    // ahead. _tickAreaDamageSphere handles damage.
+    const dir = _facingDir(player.yaw, player.pitch);
+    const trapPos = {
+      x: player.position.x + dir.x * 250,
+      y: player.position.y + dir.y * 250,
+      z: player.position.z + dir.z * 250,
+    };
+    _spawnWorldEffect(state, 'incendiary', 'player', player.id, player.team, trapPos,
+      { radius: 350, dps: 450 }, 1, 10);
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'PYRO' && slot === 3) {
+    // Flame Core (LSS line 9020-9050): 2s of massive AoE.
+    // SIMPLIFIED: spawn a big incendiary at player position that lasts 2s.
+    const flamePos = {
+      x: player.position.x, y: player.position.y, z: player.position.z,
+    };
+    _spawnWorldEffect(state, 'incendiary', 'player', player.id, player.team, flamePos,
+      { radius: 700, dps: 1500 }, 1, 2);
+    player.coreFireRateMult = 0.6;
+    player.coreDamageMult = 1.5;
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  // ---- VORTEX kit (v8.24) ----
+
+  if (lk === 'VORTEX' && slot === 0) {
+    // Laser Shot (LSS line 8550-8600): instant hitscan beam with 2400
+    // damage along the player's aim line.
+    // SIMPLIFIED: LSS sweeps a line and hits everything along it; we fire a
+    // very fast/long projectile so it acts roughly as instant.
+    const dir = _facingDir(player.yaw, player.pitch);
+    const origin = {
+      x: player.position.x + dir.x * 80,
+      y: player.position.y + 30 + dir.y * 80,
+      z: player.position.z + dir.z * 80,
+    };
+    const proj = _spawnProjectile(state, 'player', player.id, player.team, origin, dir);
+    proj.damage = 2400;
+    proj.velocity.x = dir.x * 5000;
+    proj.velocity.y = dir.y * 5000;
+    proj.velocity.z = dir.z * 5000;
+    proj.lifetime = 0.6;
+    proj.color = 0x44ddff;
+    state.events.push({
+      type: 'fire',
+      shooterType: 'player',
+      shooterId: player.id,
+      shooterPeerId: player.peerId,
+      shooterTeam: player.team,
+      loadoutKey: 'VORTEX',
+      position: { x: origin.x, y: origin.y, z: origin.z },
+      time: state.time,
+    });
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'VORTEX' && slot === 1) {
+    // Vortex Shield (LSS line 9091-9118): held shield, damage reduction.
+    // Same shape as Sword Block; _applyDamage handles VORTEX too via the
+    // generic loadout/active check below.
+    // SIMPLIFIED: LSS reflects projectiles back; ours just dampens damage.
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'VORTEX' && slot === 2) {
+    // Trip Wire (LSS line 8845-8870): drop a proximity mine 200u ahead.
+    // _tickTripWire handles enemy contact + burst damage.
+    const dir = _facingDir(player.yaw, player.pitch);
+    const trapPos = {
+      x: player.position.x + dir.x * 200,
+      y: player.position.y + dir.y * 200,
+      z: player.position.z + dir.z * 200,
+    };
+    _spawnWorldEffect(state, 'trip_wire', 'player', player.id, player.team, trapPos,
+      { radius: 120, damage: 1200 }, 1, 12);
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'VORTEX' && slot === 3) {
+    // Laser Core (LSS line 8995-9008): 4s of continuous high-power beam.
+    // SIMPLIFIED: LSS spawns the beam every frame during duration; we
+    // just buff regular fire by 0.4x interval (2.5x faster) and 2x damage
+    // for the duration so the splitter rifle melts everything.
+    player.coreFireRateMult = 0.4;
+    player.coreDamageMult = 2.0;
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  // ---- SLAYER remaining (v8.23) ----
+
+  if (lk === 'SLAYER' && slot === 0) {
+    // Arc Wave (LSS line 8624-8631): high-damage electric projectile.
+    // Damage is 2000 normally, 3000 if Sword Core is active.
+    // SIMPLIFIED: LSS sets isArcWave on the projectile to apply slow on hit
+    // and to destroy walls/Gun Shields it passes near. Here we just deal
+    // burst damage; the wall-destroy interaction will land when those
+    // worldEffects exist for SLAYER to clash with.
+    const coreOn = !!player.abilityActive[3];
+    const dir = _facingDir(player.yaw, player.pitch);
+    const origin = {
+      x: player.position.x + dir.x * 80,
+      y: player.position.y + 30 + dir.y * 80,
+      z: player.position.z + dir.z * 80,
+    };
+    const proj = _spawnProjectile(state, 'player', player.id, player.team, origin, dir);
+    proj.damage = coreOn ? 3000 : 2000;
+    proj.velocity.x = dir.x * 800;
+    proj.velocity.y = dir.y * 800;
+    proj.velocity.z = dir.z * 800;
+    proj.lifetime = 1.5;
+    proj.color = 0x44aaff;
+    state.events.push({
+      type: 'fire',
+      shooterType: 'player',
+      shooterId: player.id,
+      shooterPeerId: player.peerId,
+      shooterTeam: player.team,
+      loadoutKey: 'SLAYER',
+      position: { x: origin.x, y: origin.y, z: origin.z },
+      time: state.time,
+    });
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'SLAYER' && slot === 1) {
+    // Sword Block (LSS line 7633-7637): hold-to-block; the actual damage
+    // reduction is applied in _applyDamage when slot 1 is active. Here we
+    // just turn the active flag on; LSS treats it as a held state with
+    // duration 999 (effectively until cooldown ends or player toggles).
+    // SIMPLIFIED: LSS gates "can't shoot" while blocking; ours doesn't
+    // (might add later if balance demands).
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'SLAYER' && slot === 3) {
+    // Sword Core (LSS line 9008-9020): 5s of empowered melee + arc waves.
+    // SIMPLIFIED: LSS spawns periodic arc waves during the duration; ours
+    // just buffs Arc Wave damage (read in slot 0) and the regular weapon
+    // by 1.5x for the duration.
+    player.coreFireRateMult = 0.7;
+    player.coreDamageMult = 1.5;
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  // ---- PUNCTURE remaining (v8.22) ----
+
+  if (lk === 'PUNCTURE' && slot === 0) {
+    // Cluster Missile (LSS line 8615-8623): single high-damage projectile.
+    // SIMPLIFIED: LSS spawns a sustained 5s damage zone on impact; ours
+    // just hits hard. Will be deepened when destructibles/zones land.
+    const dir = _facingDir(player.yaw, player.pitch);
+    const origin = {
+      x: player.position.x + dir.x * 80,
+      y: player.position.y + 30 + dir.y * 80,
+      z: player.position.z + dir.z * 80,
+    };
+    const proj = _spawnProjectile(state, 'player', player.id, player.team, origin, dir);
+    proj.damage = 800;
+    proj.velocity.x = dir.x * 1000;
+    proj.velocity.y = dir.y * 1000;
+    proj.velocity.z = dir.z * 1000;
+    proj.lifetime = 1.5;
+    proj.color = 0xff6600;
+    state.events.push({
+      type: 'fire',
+      shooterType: 'player',
+      shooterId: player.id,
+      shooterPeerId: player.peerId,
+      shooterTeam: player.team,
+      loadoutKey: 'PUNCTURE',
+      position: { x: origin.x, y: origin.y, z: origin.z },
+      time: state.time,
+    });
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'PUNCTURE' && slot === 2) {
+    // Tether Trap (LSS line 8890-8902): spawns a tether worldEffect 300u
+    // ahead of the player. Slows enemies in radius. _tickAreaSlow handles it.
+    const dir = _facingDir(player.yaw, player.pitch);
+    const trapPos = {
+      x: player.position.x + dir.x * 300,
+      y: player.position.y + dir.y * 300,
+      z: player.position.z + dir.z * 300,
+    };
+    _spawnWorldEffect(state, 'tether', 'player', player.id, player.team, trapPos,
+      { radius: 250, slowMult: 0.4 }, 1, 15);
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'PUNCTURE' && slot === 3) {
+    // Afterburner Core: 5s of speed boost + rocket barrage at start.
+    // SIMPLIFIED: LSS line 9020-9055 has the rocket barrage spawn over the
+    // duration; we fire 8 rockets at activation then leave the speed boost
+    // running for the duration.
+    player.afterburnerMult = 2.5;
+    player.coreFireRateMult = 0.6;
+    player.coreDamageMult = 1.3;
+    const dir = _facingDir(player.yaw, player.pitch);
+    for (let i = 0; i < 8; i++) {
+      const sx = (Math.random() - 0.5) * 0.25;
+      const sy = (Math.random() - 0.5) * 0.25;
+      const dx = dir.x + sx, dy = dir.y + sy, dz = dir.z;
+      const mag = Math.sqrt(dx*dx + dy*dy + dz*dz) || 1;
+      const ndx = dx / mag, ndy = dy / mag, ndz = dz / mag;
+      const origin = {
+        x: player.position.x + ndx * 80,
+        y: player.position.y + 30 + ndy * 80,
+        z: player.position.z + ndz * 80,
+      };
+      const proj = _spawnProjectile(state, 'player', player.id, player.team, origin, { x: ndx, y: ndy, z: ndz });
+      proj.damage = 700;
+      proj.velocity.x = ndx * 800;
+      proj.velocity.y = ndy * 800;
+      proj.velocity.z = ndz * 800;
+      proj.lifetime = 1.2;
+      proj.color = 0xff7733;
+    }
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  // ---- TRACKER kit (v8.16, simplified) ----
+
+  if (lk === 'TRACKER' && slot === 0) {
+    // Tracker Rockets: 5 missiles in a forward spread.
+    // SIMPLIFIED: LSS line 8633-8665 has a 3-stack lock system fed by Sonar
+    // Lock; locked targets receive homing missiles. Here we fire 5 unguided
+    // missiles in a tight spread regardless of lock state. Damage 1000 each
+    // (matches LSS), velocity 900 units/s, lifetime 1.0s.
+    const dir = _facingDir(player.yaw, player.pitch);
+    for (let i = 0; i < 5; i++) {
+      const sx = (Math.random() - 0.5) * 0.20;
+      const sy = (Math.random() - 0.5) * 0.20;
+      const dx = dir.x + sx, dy = dir.y + sy, dz = dir.z;
+      const mag = Math.sqrt(dx*dx + dy*dy + dz*dz) || 1;
+      const ndx = dx / mag, ndy = dy / mag, ndz = dz / mag;
+      const origin = {
+        x: player.position.x + ndx * 80,
+        y: player.position.y + 30 + ndy * 80,
+        z: player.position.z + ndz * 80,
+      };
+      const proj = _spawnProjectile(state, 'player', player.id, player.team, origin, { x: ndx, y: ndy, z: ndz });
+      // Override defaults: tracker missiles hit hard and live a touch longer.
+      proj.damage = 1000;
+      proj.velocity.x = ndx * 900;
+      proj.velocity.y = ndy * 900;
+      proj.velocity.z = ndz * 900;
+      proj.lifetime = 1.0;
+      proj.color = 0xffaa00;
+      // Emit a fire event so the client plays the salvo sound spatially.
+      state.events.push({
+        type: 'fire',
+        shooterType: 'player',
+        shooterId: player.id,
+        shooterPeerId: player.peerId,
+        shooterTeam: player.team,
+        loadoutKey: 'TRACKER',
+        position: { x: origin.x, y: origin.y, z: origin.z },
+        time: state.time,
+      });
+    }
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'TRACKER' && slot === 1) {
+    // Particle Wall (simplified): 5s damage immunity buff.
+    // SIMPLIFIED: LSS line 8780-8806 spawns a 400x300 plane mesh in front of
+    // the player as a worldEffect with 5000 HP that absorbs incoming hits.
+    // Here we just flag the player as damage-immune for the duration; the
+    // client can read player.damageImmuneTimer to render a shield bubble.
+    player.damageImmuneTimer = 5;
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'TRACKER' && slot === 2) {
+    // Sonar Lock (simplified): emit a 'sonar_lock' event with the IDs of all
+    // enemies in a 2000u forward cone. Client plays sonar pings + highlights
+    // those enemies for the duration. Doesn't actually build lock stacks for
+    // Tracker Rockets in this simplified version (rockets fire unguided).
+    // SIMPLIFIED: LSS line 8904-8926 increments player.trackerLocks per hit
+    // and gates Tracker Rockets behind a 3-stack lock requirement.
+    const dir = _facingDir(player.yaw, player.pitch);
+    const SONAR_RANGE = 2000;
+    const SONAR_DOT = 0.3;
+    const lockedIds: number[] = [];
+    for (const bot of state.bots.values()) {
+      if (!bot.alive || bot.team === player.team) continue;
+      const dx = bot.position.x - player.position.x;
+      const dy = bot.position.y - player.position.y;
+      const dz = bot.position.z - player.position.z;
+      const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+      if (dist > SONAR_RANGE) continue;
+      const inv = 1 / (dist || 1);
+      const dot = dir.x * dx * inv + dir.y * dy * inv + dir.z * dz * inv;
+      if (dot < SONAR_DOT) continue;
+      lockedIds.push(bot.id);
+    }
+    for (const other of state.players.values()) {
+      if (!other.alive || other.team === player.team || other.id === player.id) continue;
+      const dx = other.position.x - player.position.x;
+      const dy = other.position.y - player.position.y;
+      const dz = other.position.z - player.position.z;
+      const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+      if (dist > SONAR_RANGE) continue;
+      const inv = 1 / (dist || 1);
+      const dot = dir.x * dx * inv + dir.y * dy * inv + dir.z * dz * inv;
+      if (dot < SONAR_DOT) continue;
+      lockedIds.push(other.id);
+    }
+    state.events.push({
+      type: 'sonar_lock' as any, // SimEvent's type union widened informally; client switches on it
+      shooterType: 'player',
+      shooterId: player.id,
+      shooterPeerId: player.peerId,
+      shooterTeam: player.team,
+      position: { x: player.position.x, y: player.position.y, z: player.position.z },
+      time: state.time,
+      // ad-hoc payload field: target IDs to highlight client-side
+      // (TS sees `any` here so this compiles; client reads ev.targetIds)
+      targetId: lockedIds.length > 0 ? lockedIds[0] : 0,
+    });
+    // Stash the full id list on the event so client can render all of them.
+    (state.events[state.events.length - 1] as any).targetIds = lockedIds;
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
+  if (lk === 'TRACKER' && slot === 3) {
+    // Salvo Core (simplified): 3s of doubled fire rate + 1.5x damage.
+    // SIMPLIFIED: LSS line 9044-9054 + 9511-9521 spawns remote-guided missiles
+    // that steer toward the player's crosshair every frame. Here we just
+    // enable rapid + heavy regular fire for the duration; player still has to
+    // hold the trigger.
+    player.coreFireRateMult = 0.5;   // half the fire interval = 2x rate
+    player.coreDamageMult = 1.5;
+    player.abilityCooldowns[slot] = cdTable[slot];
+    player.abilityActive[slot] = true;
+    player.abilityTimers[slot] = durTable[slot];
+    return true;
+  }
+
   // Unimplemented: still consume the cooldown so the HUD reflects a press
   // (avoids spam during testing). Comment out if undesired.
   // For v8.8 leave unimplemented as no-op; HUD shows it as ready until a
@@ -736,6 +1569,21 @@ function _activatePlayerAbility(player: Player, slot: number): boolean {
 
 // Tick ability cooldowns + timers for a player.
 function _tickPlayerAbilities(player: Player, dt: number): void {
+  // v8.16: tick simplified TRACKER buffs.
+  if (player.damageImmuneTimer > 0) {
+    player.damageImmuneTimer = Math.max(0, player.damageImmuneTimer - dt);
+  }
+  // v8.18: spawn protection + reload tick.
+  if (player.spawnProtection > 0) {
+    player.spawnProtection = Math.max(0, player.spawnProtection - dt);
+  }
+  if (player.reloading) {
+    player.reloadTimer = Math.max(0, player.reloadTimer - dt);
+    if (player.reloadTimer <= 0) {
+      player.clipAmmo = player.maxClip;
+      player.reloading = false;
+    }
+  }
   for (let i = 0; i < 4; i++) {
     if (player.abilityCooldowns[i] > 0) {
       player.abilityCooldowns[i] = Math.max(0, player.abilityCooldowns[i] - dt);
@@ -751,12 +1599,190 @@ function _tickPlayerAbilities(player: Player, dt: number): void {
   }
 }
 
+// v8.21: world-effect helpers ; spawn, tick, area damage.
+function _spawnWorldEffect(
+  state: SimState,
+  type: WorldEffect['type'],
+  ownerType: 'player' | 'bot',
+  ownerId: number,
+  ownerTeam: number,
+  position: Vec3,
+  data: any,
+  hp: number,
+  duration: number,
+): WorldEffect {
+  const id = state.nextEntityId++;
+  const eff: WorldEffect = {
+    id, type, ownerType, ownerId, ownerTeam,
+    position: { x: position.x, y: position.y, z: position.z },
+    data: data || {},
+    hp, maxHp: hp,
+    timer: duration,
+    spawnedAt: state.time,
+  };
+  state.worldEffects.set(id, eff);
+  return eff;
+}
+
+function _tickWorldEffects(state: SimState, dt: number): void {
+  if (state.worldEffects.size === 0) return;
+  const toRemove: number[] = [];
+  for (const eff of state.worldEffects.values()) {
+    eff.timer -= dt;
+    if (eff.timer <= 0 || eff.hp <= 0) {
+      toRemove.push(eff.id);
+      continue;
+    }
+    // Per-type area-of-effect ticking. Each branch is small and
+    // self-contained so individual abilities can be ported incrementally.
+    if (eff.type === 'firewall') {
+      // Linear fire: data = {dirX, dirY, dirZ, length, width}. Damages
+      // enemy entities within `width` of the line for `dps * dt` per tick.
+      _tickAreaDamageLine(state, eff, dt);
+    }
+    else if (eff.type === 'incendiary' || eff.type === 'gas') {
+      // Spherical hazard: data = {radius, dps}. Damages enemies inside.
+      _tickAreaDamageSphere(state, eff, dt);
+    }
+    else if (eff.type === 'tether') {
+      // Slows enemies inside its radius. data = {radius, slowMult}.
+      _tickAreaSlow(state, eff, dt);
+    }
+    else if (eff.type === 'trip_wire') {
+      // Proximity mines: detonate on enemy contact, dealing burst damage
+      // and removing self.
+      _tickTripWire(state, eff);
+    }
+    // particle_wall is hp-driven (handled by projectile collision pass);
+    // no per-tick logic.
+  }
+  for (const id of toRemove) state.worldEffects.delete(id);
+}
+
+function _tickAreaDamageLine(state: SimState, eff: WorldEffect, dt: number): void {
+  const d = eff.data || {};
+  const dx = d.dirX || 0, dy = d.dirY || 0, dz = d.dirZ || -1;
+  const len = d.length || 1500;
+  const width = d.width || 100;
+  const dps = d.dps || 400;
+  // Project each enemy onto the line; damage if within width.
+  const all: Array<Player | Bot> = [...state.players.values(), ...state.bots.values()];
+  for (const t of all) {
+    if (!t.alive || t.team === eff.ownerTeam) continue;
+    const px = t.position.x - eff.position.x;
+    const py = t.position.y - eff.position.y;
+    const pz = t.position.z - eff.position.z;
+    const dot = Math.max(0, Math.min(len, px * dx + py * dy + pz * dz));
+    const cx = dx * dot, cy = dy * dot, cz = dz * dot;
+    const ex = px - cx, ey = py - cy, ez = pz - cz;
+    const dist2 = ex * ex + ey * ey + ez * ez;
+    if (dist2 < width * width) _applyDamage(t, dps * dt);
+  }
+}
+
+function _tickAreaDamageSphere(state: SimState, eff: WorldEffect, dt: number): void {
+  const d = eff.data || {};
+  const radius = d.radius || 300;
+  const dps = d.dps || 200;
+  const r2 = radius * radius;
+  const all: Array<Player | Bot> = [...state.players.values(), ...state.bots.values()];
+  for (const t of all) {
+    if (!t.alive || t.team === eff.ownerTeam) continue;
+    const dx = t.position.x - eff.position.x;
+    const dy = t.position.y - eff.position.y;
+    const dz = t.position.z - eff.position.z;
+    if (dx * dx + dy * dy + dz * dz < r2) _applyDamage(t, dps * dt);
+  }
+}
+
+function _tickAreaSlow(state: SimState, eff: WorldEffect, dt: number): void {
+  const d = eff.data || {};
+  const radius = d.radius || 250;
+  const r2 = radius * radius;
+  // We damp velocity per tick instead of tracking a status effect; cheap
+  // approximation of LSS's tetherSlowTimer system. Owner's team is unaffected.
+  const all: Array<Player | Bot> = [...state.players.values(), ...state.bots.values()];
+  for (const t of all) {
+    if (!t.alive || t.team === eff.ownerTeam) continue;
+    const dx = t.position.x - eff.position.x;
+    const dy = t.position.y - eff.position.y;
+    const dz = t.position.z - eff.position.z;
+    if (dx * dx + dy * dy + dz * dz < r2) {
+      const k = Math.exp(-2 * dt); // ~50% slowdown per second of contact
+      t.velocity.x *= k; t.velocity.y *= k; t.velocity.z *= k;
+    }
+  }
+}
+
+function _tickTripWire(state: SimState, eff: WorldEffect): void {
+  const d = eff.data || {};
+  const radius = d.radius || 120;
+  const burst = d.damage || 800;
+  const r2 = radius * radius;
+  const all: Array<Player | Bot> = [...state.players.values(), ...state.bots.values()];
+  for (const t of all) {
+    if (!t.alive || t.team === eff.ownerTeam) continue;
+    const dx = t.position.x - eff.position.x;
+    const dy = t.position.y - eff.position.y;
+    const dz = t.position.z - eff.position.z;
+    if (dx * dx + dy * dy + dz * dz < r2) {
+      _applyDamage(t, burst);
+      eff.timer = 0;       // detonate (cleanup next tick)
+      eff.hp = 0;
+      return;
+    }
+  }
+}
+
 function _onAbilityExpire(player: Player, slot: number): void {
   const lk = player.loadoutKey || '';
   if (lk === 'PUNCTURE' && slot === 1) {
     player.afterburnerMult = 1.0;
   }
-  // (SLAYER Phase Dash is instantaneous; no expire side-effect.)
+  // v8.22: Afterburner Core expiry resets all the buffs it stacked.
+  if (lk === 'PUNCTURE' && slot === 3) {
+    player.afterburnerMult = 1.0;
+    player.coreFireRateMult = 1.0;
+    player.coreDamageMult = 1.0;
+  }
+  // v8.23: SLAYER Sword Core expiry.
+  if (lk === 'SLAYER' && slot === 3) {
+    player.coreFireRateMult = 1.0;
+    player.coreDamageMult = 1.0;
+  }
+  // v8.24: VORTEX Laser Core expiry.
+  if (lk === 'VORTEX' && slot === 3) {
+    player.coreFireRateMult = 1.0;
+    player.coreDamageMult = 1.0;
+  }
+  // v8.25: PYRO Flame Core expiry.
+  if (lk === 'PYRO' && slot === 3) {
+    player.coreFireRateMult = 1.0;
+    player.coreDamageMult = 1.0;
+  }
+  // v8.26: BLASTER Smart Core expiry.
+  if (lk === 'BLASTER' && slot === 3) {
+    player.coreFireRateMult = 1.0;
+    player.coreDamageMult = 1.0;
+  }
+  // v8.27: SYPHON Upgrade Core expiry. Reset the buffs we stacked.
+  if (lk === 'SYPHON' && slot === 3) {
+    player.coreFireRateMult = 1.0;
+    player.coreDamageMult = 1.0;
+    // Note: maxClip/maxShield buffs aren't reset here; LSS treats them as
+    // permanent within a match. A future round-reset path can clear them
+    // when applyPlayerLoadout is called between rounds.
+  }
+  // v8.16: TRACKER ability expiry.
+  if (lk === 'TRACKER' && slot === 1) {
+    player.damageImmuneTimer = 0;
+  }
+  if (lk === 'TRACKER' && slot === 3) {
+    player.coreFireRateMult = 1.0;
+    player.coreDamageMult = 1.0;
+  }
+  // (SLAYER Phase Dash is instantaneous; Tracker Rockets and Sonar Lock
+  // don't carry persistent buffs, so no expire side-effect for slots 0/2.)
 }
 
 // ---- Tick ----
@@ -802,7 +1828,13 @@ export function tick(state: SimState, inputs: Map<string, PlayerInput>, dt: numb
     player.pitch = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, input.pitch));
 
     player.fireTimer = Math.max(0, player.fireTimer - dt);
-    if (canFire && input.fire && !player.prevFire && player.fireTimer <= 0) {
+    // v8.15: full-auto firing (matches LSS line 8097: `if (firing && fireTimer <= 0)`).
+    // The `!player.prevFire` rising-edge gate forced single-shot behavior;
+    // for chainguns and most weapons, holding the trigger should fire at the
+    // weapon's fireRate cadence. Semi-auto behavior is captured by the
+    // weapon's fireRate alone (a 1.5s railgun naturally feels semi).
+    // v8.18: gate fire on having ammo + not currently reloading.
+    if (canFire && input.fire && player.fireTimer <= 0 && !player.reloading && player.clipAmmo > 0) {
       const dir = _facingDir(player.yaw, player.pitch);
       const origin = {
         x: player.position.x + dir.x * 80,
@@ -810,8 +1842,30 @@ export function tick(state: SimState, inputs: Map<string, PlayerInput>, dt: numb
         z: player.position.z + dir.z * 80,
       };
       const proj = _spawnProjectile(state, 'player', player.id, player.team, origin, dir);
-      proj.damage = player.weaponDamage;
-      player.fireTimer = player.weaponFireRate;
+      // v8.16: TRACKER Salvo Core (simplified) buffs damage and fire rate
+      // for its 3-second duration. coreDamageMult/coreFireRateMult default
+      // to 1.0 outside the core window so this is a no-op normally.
+      proj.damage = player.weaponDamage * player.coreDamageMult;
+      player.fireTimer = player.weaponFireRate * player.coreFireRateMult;
+      // v8.18: decrement clip; auto-reload when empty (LSS line 8104-8107).
+      // Weapons with clipSize >= 999 (Smart Core etc.) skip the decrement.
+      if (player.maxClip > 0 && player.maxClip < 999) {
+        player.clipAmmo = Math.max(0, player.clipAmmo - 1);
+        if (player.clipAmmo <= 0) {
+          player.reloading = true;
+          player.reloadTimer = 2.0; // LSS line 8120
+        }
+      }
+      state.events.push({
+        type: 'fire',
+        shooterType: 'player',
+        shooterId: player.id,
+        shooterPeerId: player.peerId,
+        shooterTeam: player.team,
+        loadoutKey: player.loadoutKey || undefined,
+        position: { x: origin.x, y: origin.y, z: origin.z },
+        time: state.time,
+      });
     }
     player.prevFire = !!input.fire;
 
@@ -819,7 +1873,7 @@ export function tick(state: SimState, inputs: Map<string, PlayerInput>, dt: numb
     // spurious activations during warmup.
     _tickPlayerAbilities(player, dt);
     if (canFire && input.abilityPress != null) {
-      _activatePlayerAbility(player, input.abilityPress | 0);
+      _activatePlayerAbility(state, player, input.abilityPress | 0);
     }
 
     // Build local-axis movement. forward = -Z when facing yaw=0; right = +X.
@@ -889,8 +1943,14 @@ export function tick(state: SimState, inputs: Map<string, PlayerInput>, dt: numb
 
   // 3b) Projectile motion + collision + damage
   _tickProjectiles(state, dt);
+  _tickWorldEffects(state, dt);
 
   // 4) Match state machine
+  // v8.18: ports LSS line 9918-10003 (updateRoundSystem). Round ends when
+  // one team is fully wiped (alive count = 0) or the round timer expires.
+  // Tie on time-out goes to team A by LSS convention. After ROUNDS_TO_WIN
+  // round wins, transition to matchEnd; otherwise back to select for next
+  // ship pick.
   if (state.match.state === 'select') {
     // Lobby ; main.ts decides when to transition to 'warmup' (when all
     // ready). The simulation just holds.
@@ -902,23 +1962,92 @@ export function tick(state: SimState, inputs: Map<string, PlayerInput>, dt: numb
     }
   } else if (state.match.state === 'playing') {
     state.match.roundTimer = Math.max(0, state.match.roundTimer - dt);
-    if (state.match.roundTimer <= 0) {
+
+    // Count alive entities per team (players + bots).
+    let aliveA = 0, aliveB = 0;
+    for (const p of state.players.values()) {
+      if (!p.alive) continue;
+      if (p.team === TEAM_A) aliveA++;
+      else if (p.team === TEAM_B) aliveB++;
+    }
+    for (const b of state.bots.values()) {
+      if (!b.alive) continue;
+      if (b.team === TEAM_A) aliveA++;
+      else if (b.team === TEAM_B) aliveB++;
+    }
+
+    // LSS line 9961-9973: end the round when a team is wiped or time runs out.
+    let winner: 'A' | 'B' | null = null;
+    if (aliveB === 0 && aliveA > 0) winner = 'A';
+    else if (aliveA === 0 && aliveB > 0) winner = 'B';
+    else if (state.match.roundTimer <= 0) winner = 'A'; // tie goes to A (LSS convention)
+    if (winner) {
+      if (winner === 'A') state.match.scoreA++;
+      else state.match.scoreB++;
       state.match.state = 'roundEnd';
-      // Reuse warmupTimer as the linger countdown.
-      state.match.warmupTimer = ROUND_END_LINGER;
+      state.match.warmupTimer = ROUND_END_LINGER_LSS;
+      state.events.push({
+        type: 'round_end' as any,
+        shooterType: 'player',
+        shooterId: 0,
+        time: state.time,
+        // ad-hoc: which team won this round and the new score
+        // (cast as any for the SimEvent union; client switches on type)
+      } as any);
+      const ev = state.events[state.events.length - 1] as any;
+      ev.winner = winner;
+      ev.scoreA = state.match.scoreA;
+      ev.scoreB = state.match.scoreB;
     }
   } else if (state.match.state === 'roundEnd') {
     state.match.warmupTimer = Math.max(0, state.match.warmupTimer - dt);
     if (state.match.warmupTimer <= 0) {
+      // LSS line 9977-10001: matchEnd if either team hit ROUNDS_TO_WIN; else
+      // back to select for next pick.
+      if (state.match.scoreA >= ROUNDS_TO_WIN || state.match.scoreB >= ROUNDS_TO_WIN) {
+        state.match.state = 'matchEnd';
+        state.match.matchEndTimer = MATCH_END_LINGER;
+        state.events.push({
+          type: 'match_end' as any,
+          shooterType: 'player',
+          shooterId: 0,
+          time: state.time,
+        } as any);
+        const ev = state.events[state.events.length - 1] as any;
+        ev.winner = state.match.scoreA >= ROUNDS_TO_WIN ? 'A' : 'B';
+        ev.scoreA = state.match.scoreA;
+        ev.scoreB = state.match.scoreB;
+      } else {
+        state.match.state = 'select';
+        state.match.currentRound++;
+        // Clear ready on every player so they have to commit again.
+        for (const p of state.players.values()) p.ready = false;
+      }
+    }
+  } else if (state.match.state === 'matchEnd') {
+    state.match.matchEndTimer = Math.max(0, state.match.matchEndTimer - dt);
+    if (state.match.matchEndTimer <= 0) {
+      // Reset scores + round counter, return to lobby for a fresh series.
+      // LSS line 10075-10084: also clears per-player stats so the new match
+      // starts clean.
+      state.match.scoreA = 0;
+      state.match.scoreB = 0;
+      state.match.currentRound = 1;
       state.match.state = 'select';
-      state.match.currentRound++;
-      // Clear ready on every player so they have to commit again.
-      for (const p of state.players.values()) p.ready = false;
+      for (const p of state.players.values()) {
+        p.ready = false;
+        p.kills = 0;
+        p.deaths = 0;
+      }
+      for (const b of state.bots.values()) {
+        b.kills = 0;
+        b.deaths = 0;
+      }
     }
   }
 }
 
-const ROUND_END_LINGER = 6;
+const ROUND_END_LINGER = ROUND_END_LINGER_LSS;
 
 // v8.9: SDF-based containment. Replaces the old binary pointInLevel check
 // with a graded distance read; resolver has three bands depending on how
@@ -1042,6 +2171,16 @@ export function snapshot(state: SimState) {
       deaths: p.deaths,
       abilityCooldowns: p.abilityCooldowns.slice(),
       abilityActive: p.abilityActive.slice(),
+      // v8.16: simplified TRACKER buffs surfaced for HUD/visual feedback.
+      damageImmuneTimer: round3(p.damageImmuneTimer),
+      coreActive: p.coreFireRateMult !== 1.0 || p.coreDamageMult !== 1.0,
+      // v8.18: foundation fields for client visuals.
+      doomed: p.doomed,
+      spawnProtection: round3(p.spawnProtection),
+      clipAmmo: p.clipAmmo,
+      maxClip: p.maxClip,
+      reloading: p.reloading,
+      reloadTimer: round3(p.reloadTimer),
     });
   }
   // Bots: same shape as players except no peerId.
@@ -1078,6 +2217,22 @@ export function snapshot(state: SimState) {
       lifetime: p.lifetime,
     });
   }
+  // v8.21: world effects.
+  const worldEffects: any[] = [];
+  for (const e of state.worldEffects.values()) {
+    worldEffects.push({
+      id: e.id,
+      type: e.type,
+      ownerType: e.ownerType,
+      ownerId: e.ownerId,
+      ownerTeam: e.ownerTeam,
+      position: { x: round1(e.position.x), y: round1(e.position.y), z: round1(e.position.z) },
+      data: e.data,
+      hp: round1(e.hp),
+      maxHp: e.maxHp,
+      timer: round3(e.timer),
+    });
+  }
   // v8.6: drain accumulated events into the snapshot. Clients use these
   // to play hit/kill markers; we clear them server-side so they only fire
   // once per event regardless of broadcast cadence.
@@ -1090,6 +2245,7 @@ export function snapshot(state: SimState) {
     players,
     bots,
     projectiles,
+    worldEffects,
     events,
   };
 }

@@ -1,10 +1,24 @@
 /*
-  LSS server-sim ; level data (v8.9)
+  LSS server-sim ; level data (v8.10)
 
   Levels are room-graph: a set of rooms (spheres) connected by tunnels
   (cylinders). Pure data; the server uses these for collision (player must
-  stay inside the union of all rooms+tunnels), the client renders them as
-  inside-out wireframe shells. No Three.js dependency here.
+  stay inside the union of all rooms+tunnels), the client renders them via
+  marching cubes on the same SDF the server uses for collision, so visuals
+  and physics agree.
+
+  v8.10:
+   - Map definitions ported verbatim from last_ship_sailing.html
+     (hourglass, spine, infinity, tower, cross, arc, octahedron, pentagon,
+     gyre); 9 maps replacing the 3 hand-rederived ones.
+   - Tunnels are now multi-waypoint paths in MapDef; flattened to single-
+     segment Tunnels at build time (the runtime form). Lets us author
+     curved corridors (arc, gyre) and figure-8s.
+   - Level carries displayName, description, palette (8 hex colors for the
+     wall shader), and sdfSmoothK on the wire so the client meshes the
+     same SDF the server collides against.
+   - SU back to LSS's 150 to preserve their chassis-speed-vs-room-size
+     tuning. (Was 700 in v8.7-v8.9; maps were 4.67x larger than designed.)
 
   v8.9: SDF helpers ported from the LSS html. The world SDF blends rooms
   via smooth-min (sdfSmin) so room-room and room-tunnel junctions are
@@ -32,94 +46,301 @@ export interface Tunnel {
 
 export interface Level {
   name: string;
+  displayName: string;
+  description: string;
+  palette: number[];        // 8 hex colors driving the wall shader's per-zone tint
   bounds: AABB;
   rooms: Room[];
-  tunnels: Tunnel[];
+  tunnels: Tunnel[];        // already split into segments at build time
   obstacles: AABB[];
   spawnA: Vec3[];
   spawnB: Vec3[];
+  sdfSmoothK: number;       // smooth-min radius; client uses this when meshing
 }
 
-const SU = 700;
+// LSS uses SU = 150; we keep that to preserve LSS's chassis-speed-to-room-size
+// tuning. Every room/tunnel coordinate in MAP_DEFS is a multiple of SU, so to
+// rescale the whole world you change this one number. Note: PLAYER_RADIUS in
+// simulation.ts is in absolute units, not SU-relative; if you change SU you
+// probably want to keep player size proportional.
+const SU = 150;
+const TUNNEL_R = SU * 1.2;  // default tunnel radius (LSS default for hand-crafted maps)
 
 interface MapDef {
-  name: string;
+  name: string;             // key (hourglass, spine, ...)
+  displayName: string;
+  description: string;
+  palette: number[];
   rooms: { id: string; team: 'A' | 'B' | null; x: number; y: number; z: number; r: number }[];
-  tunnels: { from: string; to: string; r?: number }[];
+  // Each tunnel is a path of waypoints; consecutive pairs become one cylinder
+  // segment. Lets us author curved corridors (arc, gyre) and figure-8s without
+  // contorting the data model.
+  tunnels: { path: { x: number; y: number; z: number }[]; r?: number }[];
   obstacles?: AABB[];
 }
+
+// ---- Map definitions (ported verbatim from last_ship_sailing.html, Apr 2026) ----
+//
+// Nine maps; each one a hand-authored room + tunnel graph. The wall mesh is
+// procedural (marching cubes from the SDF) but the topology is fixed so each
+// map plays the way it was designed.
 
 const MAP_DEFS: Record<string, MapDef> = {
   hourglass: {
     name: 'hourglass',
+    displayName: 'The Nexus',
+    description: 'Ring layout. Six chambers. Every room connects to two others; no dead ends.',
+    palette: [0x4a3818, 0x2a1840, 0x1a2848, 0x18283a, 0x202848, 0x1a2840, 0x18203a, 0x1c2848],
     rooms: [
-      { id: 'spawn_a', team: 'A', x: 0, y: 0, z: -SU * 4,   r: SU * 1.4 },
-      { id: 'top',     team: null, x: 0, y: SU * 1.5, z: -SU * 1.5, r: SU * 1.0 },
-      { id: 'center',  team: null, x: 0, y: 0, z: 0,        r: SU * 1.5 },
-      { id: 'bottom',  team: null, x: 0, y: -SU * 1.5, z: SU * 1.5,  r: SU * 1.0 },
-      { id: 'spawn_b', team: 'B', x: 0, y: 0, z: SU * 4,    r: SU * 1.4 },
+      { id: 'center',  team: null, x: 0,        y: 0,        z: 0,        r: SU * 2.5 },
+      { id: 'spawn_a', team: 'A',  x: 0,        y: 0,        z: -SU * 8,  r: SU * 2.2 },
+      { id: 'ne',      team: null, x:  SU * 7,  y:  SU * 2,  z: -SU * 4,  r: SU * 1.8 },
+      { id: 'se',      team: null, x:  SU * 7,  y: -SU * 2,  z:  SU * 4,  r: SU * 1.8 },
+      { id: 'spawn_b', team: 'B',  x: 0,        y: 0,        z:  SU * 8,  r: SU * 2.2 },
+      { id: 'sw',      team: null, x: -SU * 7,  y: -SU * 2,  z:  SU * 4,  r: SU * 1.8 },
+      { id: 'nw',      team: null, x: -SU * 7,  y:  SU * 2,  z: -SU * 4,  r: SU * 1.8 },
     ],
     tunnels: [
-      { from: 'spawn_a', to: 'top' },
-      { from: 'spawn_a', to: 'center' },
-      { from: 'top',     to: 'center' },
-      { from: 'center',  to: 'bottom' },
-      { from: 'bottom',  to: 'spawn_b' },
-      { from: 'center',  to: 'spawn_b' },
+      { path: [{ x: 0, y: 0, z: -SU * 8 }, { x:  SU * 7, y:  SU * 2, z: -SU * 4 }] },
+      { path: [{ x:  SU * 7, y:  SU * 2, z: -SU * 4 }, { x:  SU * 7, y: -SU * 2, z:  SU * 4 }] },
+      { path: [{ x:  SU * 7, y: -SU * 2, z:  SU * 4 }, { x: 0, y: 0, z:  SU * 8 }] },
+      { path: [{ x: 0, y: 0, z:  SU * 8 }, { x: -SU * 7, y: -SU * 2, z:  SU * 4 }] },
+      { path: [{ x: -SU * 7, y: -SU * 2, z:  SU * 4 }, { x: -SU * 7, y:  SU * 2, z: -SU * 4 }] },
+      { path: [{ x: -SU * 7, y:  SU * 2, z: -SU * 4 }, { x: 0, y: 0, z: -SU * 8 }] },
+      { path: [{ x: 0, y: 0, z: -SU * 8 }, { x: 0, y: 0, z: 0 }] },
+      { path: [{ x:  SU * 7, y:  SU * 2, z: -SU * 4 }, { x: 0, y: 0, z: 0 }] },
+      { path: [{ x:  SU * 7, y: -SU * 2, z:  SU * 4 }, { x: 0, y: 0, z: 0 }] },
+      { path: [{ x: 0, y: 0, z:  SU * 8 }, { x: 0, y: 0, z: 0 }] },
+      { path: [{ x: -SU * 7, y: -SU * 2, z:  SU * 4 }, { x: 0, y: 0, z: 0 }] },
+      { path: [{ x: -SU * 7, y:  SU * 2, z: -SU * 4 }, { x: 0, y: 0, z: 0 }] },
     ],
   },
 
-  nexus: {
-    name: 'nexus',
+  spine: {
+    name: 'spine',
+    displayName: 'The Spine',
+    description: 'Long axis with parallel bypasses. Center is the killing line; flank through the arcs.',
+    palette: [0x1c1818, 0x281a1a, 0x2a1c1c, 0x381616, 0x281818, 0x202020, 0x301818, 0x401818],
     rooms: [
-      { id: 'center',  team: null, x: 0,           y: 0,  z: 0,           r: SU * 1.6 },
-      { id: 'spawn_a', team: 'A',  x: 0,           y: 0,  z: -SU * 5,     r: SU * 1.4 },
-      { id: 'ne',      team: null, x:  SU * 4.3,    y: SU * 1.2, z: -SU * 2.5, r: SU * 1.1 },
-      { id: 'se',      team: null, x:  SU * 4.3,    y: -SU * 1.2, z:  SU * 2.5, r: SU * 1.1 },
-      { id: 'spawn_b', team: 'B',  x: 0,           y: 0,  z:  SU * 5,     r: SU * 1.4 },
-      { id: 'sw',      team: null, x: -SU * 4.3,    y: -SU * 1.2, z:  SU * 2.5, r: SU * 1.1 },
-      { id: 'nw',      team: null, x: -SU * 4.3,    y: SU * 1.2, z: -SU * 2.5, r: SU * 1.1 },
+      { id: 'spawn_a',   team: 'A',  x: 0,        y: 0,        z: -SU * 9, r: SU * 2.2 },
+      { id: 'mid_a',     team: null, x: 0,        y: 0,        z: -SU * 4, r: SU * 2.0 },
+      { id: 'center',    team: null, x: 0,        y: 0,        z:  0,      r: SU * 2.5 },
+      { id: 'mid_b',     team: null, x: 0,        y: 0,        z:  SU * 4, r: SU * 2.0 },
+      { id: 'spawn_b',   team: 'B',  x: 0,        y: 0,        z:  SU * 9, r: SU * 2.2 },
+      { id: 'north_arc', team: null, x:  SU * 5,  y:  SU * 2,  z:  0,      r: SU * 1.8 },
+      { id: 'south_arc', team: null, x: -SU * 5,  y: -SU * 2,  z:  0,      r: SU * 1.8 },
     ],
     tunnels: [
-      { from: 'spawn_a', to: 'ne' },
-      { from: 'ne',      to: 'se' },
-      { from: 'se',      to: 'spawn_b' },
-      { from: 'spawn_b', to: 'sw' },
-      { from: 'sw',      to: 'nw' },
-      { from: 'nw',      to: 'spawn_a' },
-      { from: 'spawn_a', to: 'center' },
-      { from: 'ne',      to: 'center' },
-      { from: 'se',      to: 'center' },
-      { from: 'spawn_b', to: 'center' },
-      { from: 'sw',      to: 'center' },
-      { from: 'nw',      to: 'center' },
+      { path: [{ x: 0, y: 0, z: -SU * 9 }, { x: 0, y: 0, z: -SU * 4 }] },
+      { path: [{ x: 0, y: 0, z: -SU * 4 }, { x: 0, y: 0, z:  0 }] },
+      { path: [{ x: 0, y: 0, z:  0 },      { x: 0, y: 0, z:  SU * 4 }] },
+      { path: [{ x: 0, y: 0, z:  SU * 4 }, { x: 0, y: 0, z:  SU * 9 }] },
+      { path: [{ x: 0, y: 0, z: -SU * 4 }, { x:  SU * 5, y:  SU * 2, z: 0 }] },
+      { path: [{ x:  SU * 5, y:  SU * 2, z: 0 }, { x: 0, y: 0, z:  SU * 4 }] },
+      { path: [{ x: 0, y: 0, z: -SU * 4 }, { x: -SU * 5, y: -SU * 2, z: 0 }] },
+      { path: [{ x: -SU * 5, y: -SU * 2, z: 0 }, { x: 0, y: 0, z:  SU * 4 }] },
     ],
   },
 
-  cathedral: {
-    name: 'cathedral',
+  infinity: {
+    name: 'infinity',
+    displayName: 'The Infinity',
+    description: 'Two rings joined at a pinch. Hold the center, halve the map.',
+    palette: [0x103838, 0x14383a, 0x12303a, 0x4a2818, 0x381038, 0x3a1438, 0x381432, 0x183838],
     rooms: [
-      { id: 'spawn_a', team: 'A', x: -SU * 5,     y: 0, z: 0,           r: SU * 1.4 },
-      { id: 'apse_a',  team: null, x: -SU * 3,    y: SU * 1.2, z: 0,    r: SU * 1.0 },
-      { id: 'nave_a',  team: null, x: -SU * 1.5,  y: 0, z: 0,            r: SU * 1.2 },
-      { id: 'transept', team: null, x: 0,         y: SU * 0.6, z: 0,     r: SU * 1.6 },
-      { id: 'side_n',   team: null, x: 0,         y: 0, z: -SU * 3,      r: SU * 1.0 },
-      { id: 'side_s',   team: null, x: 0,         y: 0, z:  SU * 3,      r: SU * 1.0 },
-      { id: 'nave_b',  team: null, x:  SU * 1.5,  y: 0, z: 0,            r: SU * 1.2 },
-      { id: 'apse_b',  team: null, x:  SU * 3,    y: SU * 1.2, z: 0,    r: SU * 1.0 },
-      { id: 'spawn_b', team: 'B', x:  SU * 5,     y: 0, z: 0,           r: SU * 1.4 },
+      { id: 'spawn_a', team: 'A',  x: -SU * 8, y:  0,       z:  0,       r: SU * 2.2 },
+      { id: 'left_n',  team: null, x: -SU * 4, y:  SU * 2,  z: -SU * 4,  r: SU * 1.8 },
+      { id: 'left_s',  team: null, x: -SU * 4, y: -SU * 2,  z:  SU * 4,  r: SU * 1.8 },
+      { id: 'center',  team: null, x:  0,      y:  0,       z:  0,       r: SU * 2.5 },
+      { id: 'right_n', team: null, x:  SU * 4, y: -SU * 2,  z: -SU * 4,  r: SU * 1.8 },
+      { id: 'right_s', team: null, x:  SU * 4, y:  SU * 2,  z:  SU * 4,  r: SU * 1.8 },
+      { id: 'spawn_b', team: 'B',  x:  SU * 8, y:  0,       z:  0,       r: SU * 2.2 },
     ],
     tunnels: [
-      { from: 'spawn_a', to: 'apse_a' },
-      { from: 'spawn_a', to: 'nave_a' },
-      { from: 'apse_a',  to: 'nave_a' },
-      { from: 'nave_a',  to: 'transept' },
-      { from: 'transept', to: 'side_n' },
-      { from: 'transept', to: 'side_s' },
-      { from: 'transept', to: 'nave_b' },
-      { from: 'nave_b',  to: 'apse_b' },
-      { from: 'nave_b',  to: 'spawn_b' },
-      { from: 'apse_b',  to: 'spawn_b' },
+      { path: [{ x: -SU * 8, y: 0, z: 0 },              { x: -SU * 4, y:  SU * 2, z: -SU * 4 }] },
+      { path: [{ x: -SU * 4, y:  SU * 2, z: -SU * 4 },  { x:  0,      y: 0,       z:  0 }] },
+      { path: [{ x:  0,      y: 0,       z:  0 },       { x: -SU * 4, y: -SU * 2, z:  SU * 4 }] },
+      { path: [{ x: -SU * 4, y: -SU * 2, z:  SU * 4 },  { x: -SU * 8, y: 0,       z:  0 }] },
+      { path: [{ x:  SU * 8, y: 0, z: 0 },              { x:  SU * 4, y: -SU * 2, z: -SU * 4 }] },
+      { path: [{ x:  SU * 4, y: -SU * 2, z: -SU * 4 },  { x:  0,      y: 0,       z:  0 }] },
+      { path: [{ x:  0,      y: 0,       z:  0 },       { x:  SU * 4, y:  SU * 2, z:  SU * 4 }] },
+      { path: [{ x:  SU * 4, y:  SU * 2, z:  SU * 4 },  { x:  SU * 8, y: 0,       z:  0 }] },
+    ],
+  },
+
+  tower: {
+    name: 'tower',
+    displayName: 'The Tower',
+    description: 'Vertical stack. Two layers between the spawns. Watch your six in three dimensions.',
+    palette: [0x281848, 0x201840, 0x282040, 0x303030, 0x382818, 0x402818, 0x481810, 0x3a2010],
+    rooms: [
+      { id: 'spawn_a',  team: 'A',  x:  0,       y:  SU * 8, z:  0,       r: SU * 2.2 },
+      { id: 'mid_hi_e', team: null, x:  SU * 4,  y:  SU * 4, z:  SU * 2,  r: SU * 1.8 },
+      { id: 'mid_hi_w', team: null, x: -SU * 4,  y:  SU * 4, z: -SU * 2,  r: SU * 1.8 },
+      { id: 'center',   team: null, x:  0,       y:  0,      z:  0,       r: SU * 2.5 },
+      { id: 'mid_lo_e', team: null, x:  SU * 4,  y: -SU * 4, z: -SU * 2,  r: SU * 1.8 },
+      { id: 'mid_lo_w', team: null, x: -SU * 4,  y: -SU * 4, z:  SU * 2,  r: SU * 1.8 },
+      { id: 'spawn_b',  team: 'B',  x:  0,       y: -SU * 8, z:  0,       r: SU * 2.2 },
+    ],
+    tunnels: [
+      { path: [{ x:  0, y:  SU * 8, z: 0 }, { x:  SU * 4, y:  SU * 4, z:  SU * 2 }] },
+      { path: [{ x:  0, y:  SU * 8, z: 0 }, { x: -SU * 4, y:  SU * 4, z: -SU * 2 }] },
+      { path: [{ x:  SU * 4, y:  SU * 4, z:  SU * 2 }, { x: -SU * 4, y:  SU * 4, z: -SU * 2 }] },
+      { path: [{ x:  SU * 4, y:  SU * 4, z:  SU * 2 }, { x: 0, y: 0, z: 0 }] },
+      { path: [{ x: -SU * 4, y:  SU * 4, z: -SU * 2 }, { x: 0, y: 0, z: 0 }] },
+      { path: [{ x: 0, y: 0, z: 0 }, { x:  SU * 4, y: -SU * 4, z: -SU * 2 }] },
+      { path: [{ x: 0, y: 0, z: 0 }, { x: -SU * 4, y: -SU * 4, z:  SU * 2 }] },
+      { path: [{ x:  SU * 4, y: -SU * 4, z: -SU * 2 }, { x: -SU * 4, y: -SU * 4, z:  SU * 2 }] },
+      { path: [{ x:  SU * 4, y: -SU * 4, z: -SU * 2 }, { x: 0, y: -SU * 8, z: 0 }] },
+      { path: [{ x: -SU * 4, y: -SU * 4, z:  SU * 2 }, { x: 0, y: -SU * 8, z: 0 }] },
+    ],
+  },
+
+  cross: {
+    name: 'cross',
+    displayName: 'The Cross',
+    description: 'Compact crucible. Four arms cut by diagonals; nowhere to hide.',
+    palette: [0x4a2818, 0x401818, 0x381818, 0x401010, 0x381010, 0x4a2010, 0x4a2010, 0x382010],
+    rooms: [
+      { id: 'center',  team: null, x:  0,       y:  0,       z:  0,       r: SU * 2.5 },
+      { id: 'arm_n',   team: null, x:  0,       y:  SU * 1,  z: -SU * 4,  r: SU * 1.8 },
+      { id: 'arm_s',   team: null, x:  0,       y: -SU * 1,  z:  SU * 4,  r: SU * 1.8 },
+      { id: 'arm_e',   team: null, x:  SU * 4,  y:  0,       z:  0,       r: SU * 1.8 },
+      { id: 'arm_w',   team: null, x: -SU * 4,  y:  0,       z:  0,       r: SU * 1.8 },
+      { id: 'spawn_a', team: 'A',  x:  0,       y:  SU * 2,  z: -SU * 8,  r: SU * 2.2 },
+      { id: 'spawn_b', team: 'B',  x:  0,       y: -SU * 2,  z:  SU * 8,  r: SU * 2.2 },
+    ],
+    tunnels: [
+      { path: [{ x: 0, y: 0, z: 0 }, { x: 0, y:  SU * 1, z: -SU * 4 }] },
+      { path: [{ x: 0, y: 0, z: 0 }, { x: 0, y: -SU * 1, z:  SU * 4 }] },
+      { path: [{ x: 0, y: 0, z: 0 }, { x:  SU * 4, y: 0, z: 0 }] },
+      { path: [{ x: 0, y: 0, z: 0 }, { x: -SU * 4, y: 0, z: 0 }] },
+      { path: [{ x: 0, y:  SU * 1, z: -SU * 4 }, { x:  SU * 4, y: 0, z: 0 }] },
+      { path: [{ x: 0, y:  SU * 1, z: -SU * 4 }, { x: -SU * 4, y: 0, z: 0 }] },
+      { path: [{ x: 0, y: -SU * 1, z:  SU * 4 }, { x:  SU * 4, y: 0, z: 0 }] },
+      { path: [{ x: 0, y: -SU * 1, z:  SU * 4 }, { x: -SU * 4, y: 0, z: 0 }] },
+      { path: [{ x: 0, y:  SU * 1, z: -SU * 4 }, { x: 0, y:  SU * 2, z: -SU * 8 }] },
+      { path: [{ x: 0, y: -SU * 1, z:  SU * 4 }, { x: 0, y: -SU * 2, z:  SU * 8 }] },
+    ],
+  },
+
+  arc: {
+    name: 'arc',
+    displayName: 'The Arc',
+    description: 'Curved approach with shortcuts over the top. Flank or get flanked.',
+    palette: [0x101838, 0x182040, 0x282040, 0x481830, 0x382040, 0x282040, 0x182040, 0x101838],
+    rooms: [
+      { id: 'spawn_a', team: 'A',  x: -SU * 8, y:  0,      z:  SU * 3, r: SU * 2.2 },
+      { id: 'arc_1',   team: null, x: -SU * 6, y:  SU * 1, z: -SU * 3, r: SU * 1.8 },
+      { id: 'arc_2',   team: null, x: -SU * 3, y:  SU * 2, z: -SU * 6, r: SU * 1.8 },
+      { id: 'arc_3',   team: null, x:  0,      y:  SU * 3, z: -SU * 7, r: SU * 2.0 },
+      { id: 'arc_4',   team: null, x:  SU * 3, y:  SU * 2, z: -SU * 6, r: SU * 1.8 },
+      { id: 'arc_5',   team: null, x:  SU * 6, y:  SU * 1, z: -SU * 3, r: SU * 1.8 },
+      { id: 'spawn_b', team: 'B',  x:  SU * 8, y:  0,      z:  SU * 3, r: SU * 2.2 },
+    ],
+    tunnels: [
+      { path: [{ x: -SU * 8, y: 0,      z:  SU * 3 }, { x: -SU * 6, y:  SU * 1, z: -SU * 3 }] },
+      { path: [{ x: -SU * 6, y:  SU * 1, z: -SU * 3 }, { x: -SU * 3, y:  SU * 2, z: -SU * 6 }] },
+      { path: [{ x: -SU * 3, y:  SU * 2, z: -SU * 6 }, { x:  0,      y:  SU * 3, z: -SU * 7 }] },
+      { path: [{ x:  0,      y:  SU * 3, z: -SU * 7 }, { x:  SU * 3, y:  SU * 2, z: -SU * 6 }] },
+      { path: [{ x:  SU * 3, y:  SU * 2, z: -SU * 6 }, { x:  SU * 6, y:  SU * 1, z: -SU * 3 }] },
+      { path: [{ x:  SU * 6, y:  SU * 1, z: -SU * 3 }, { x:  SU * 8, y: 0,       z:  SU * 3 }] },
+      { path: [{ x: -SU * 6, y:  SU * 1, z: -SU * 3 }, { x:  0,      y:  SU * 3, z: -SU * 7 }] },
+      { path: [{ x:  0,      y:  SU * 3, z: -SU * 7 }, { x:  SU * 6, y:  SU * 1, z: -SU * 3 }] },
+      { path: [{ x: -SU * 3, y:  SU * 2, z: -SU * 6 }, { x:  SU * 3, y:  SU * 2, z: -SU * 6 }] },
+    ],
+  },
+
+  octahedron: {
+    name: 'octahedron',
+    displayName: 'The Octahedron',
+    description: 'Bipyramid. Two apex spawns, four equator rooms, a central hub. Vertical and lateral, no camp.',
+    palette: [0x4a3818, 0x1a2848, 0x1c2a50, 0x1a2848, 0x1c2a50, 0x1a2848, 0x1c2a50, 0x202848],
+    rooms: [
+      { id: 'center',  team: null, x: 0,        y: 0,        z: 0,        r: SU * 2.5 },
+      { id: 'spawn_a', team: 'A',  x: 0,        y:  SU * 8,  z: 0,        r: SU * 2.2 },
+      { id: 'spawn_b', team: 'B',  x: 0,        y: -SU * 8,  z: 0,        r: SU * 2.2 },
+      { id: 'eq_n',    team: null, x: 0,        y: 0,        z: -SU * 6,  r: SU * 1.8 },
+      { id: 'eq_e',    team: null, x:  SU * 6,  y: 0,        z: 0,        r: SU * 1.8 },
+      { id: 'eq_s',    team: null, x: 0,        y: 0,        z:  SU * 6,  r: SU * 1.8 },
+      { id: 'eq_w',    team: null, x: -SU * 6,  y: 0,        z: 0,        r: SU * 1.8 },
+    ],
+    tunnels: [
+      { path: [{ x: 0, y:  SU * 8, z: 0 }, { x: 0,        y: 0, z: -SU * 6 }] },
+      { path: [{ x: 0, y:  SU * 8, z: 0 }, { x:  SU * 6,  y: 0, z: 0 }] },
+      { path: [{ x: 0, y:  SU * 8, z: 0 }, { x: 0,        y: 0, z:  SU * 6 }] },
+      { path: [{ x: 0, y:  SU * 8, z: 0 }, { x: -SU * 6,  y: 0, z: 0 }] },
+      { path: [{ x: 0, y: -SU * 8, z: 0 }, { x: 0,        y: 0, z: -SU * 6 }] },
+      { path: [{ x: 0, y: -SU * 8, z: 0 }, { x:  SU * 6,  y: 0, z: 0 }] },
+      { path: [{ x: 0, y: -SU * 8, z: 0 }, { x: 0,        y: 0, z:  SU * 6 }] },
+      { path: [{ x: 0, y: -SU * 8, z: 0 }, { x: -SU * 6,  y: 0, z: 0 }] },
+      { path: [{ x: 0,        y: 0, z: -SU * 6 }, { x:  SU * 6,  y: 0, z: 0 }] },
+      { path: [{ x:  SU * 6,  y: 0, z: 0 },        { x: 0,        y: 0, z:  SU * 6 }] },
+      { path: [{ x: 0,        y: 0, z:  SU * 6 }, { x: -SU * 6,  y: 0, z: 0 }] },
+      { path: [{ x: -SU * 6,  y: 0, z: 0 },        { x: 0,        y: 0, z: -SU * 6 }] },
+      { path: [{ x: 0, y:  SU * 8, z: 0 }, { x: 0, y: 0, z: 0 }] },
+      { path: [{ x: 0, y: 0,       z: 0 }, { x: 0, y: -SU * 8, z: 0 }] },
+    ],
+  },
+
+  pentagon: {
+    name: 'pentagon',
+    displayName: 'The Pentagon',
+    description: 'Pentagonal bipyramid. Two apex spawns, five ring rooms, no hub. Every path crosses the ring.',
+    palette: [0x4a2a10, 0x3a2818, 0x4a3820, 0x3a2810, 0x4a2a18, 0x4a3820, 0x3a2818, 0x4a2a10],
+    rooms: [
+      { id: 'spawn_a', team: 'A',  x: 0,             y:  SU * 7,  z: 0,             r: SU * 2.2 },
+      { id: 'spawn_b', team: 'B',  x: 0,             y: -SU * 7,  z: 0,             r: SU * 2.2 },
+      { id: 'p0',      team: null, x:  SU *  6.000,  y: 0,        z:  SU *  0.000,  r: SU * 1.8 },
+      { id: 'p1',      team: null, x:  SU *  1.854,  y: 0,        z:  SU *  5.706,  r: SU * 1.8 },
+      { id: 'p2',      team: null, x: -SU *  4.854,  y: 0,        z:  SU *  3.527,  r: SU * 1.8 },
+      { id: 'p3',      team: null, x: -SU *  4.854,  y: 0,        z: -SU *  3.527,  r: SU * 1.8 },
+      { id: 'p4',      team: null, x:  SU *  1.854,  y: 0,        z: -SU *  5.706,  r: SU * 1.8 },
+    ],
+    tunnels: [
+      { path: [{ x: 0, y:  SU * 7, z: 0 }, { x:  SU * 6.000, y: 0, z:  SU * 0.000 }] },
+      { path: [{ x: 0, y:  SU * 7, z: 0 }, { x:  SU * 1.854, y: 0, z:  SU * 5.706 }] },
+      { path: [{ x: 0, y:  SU * 7, z: 0 }, { x: -SU * 4.854, y: 0, z:  SU * 3.527 }] },
+      { path: [{ x: 0, y:  SU * 7, z: 0 }, { x: -SU * 4.854, y: 0, z: -SU * 3.527 }] },
+      { path: [{ x: 0, y:  SU * 7, z: 0 }, { x:  SU * 1.854, y: 0, z: -SU * 5.706 }] },
+      { path: [{ x: 0, y: -SU * 7, z: 0 }, { x:  SU * 6.000, y: 0, z:  SU * 0.000 }] },
+      { path: [{ x: 0, y: -SU * 7, z: 0 }, { x:  SU * 1.854, y: 0, z:  SU * 5.706 }] },
+      { path: [{ x: 0, y: -SU * 7, z: 0 }, { x: -SU * 4.854, y: 0, z:  SU * 3.527 }] },
+      { path: [{ x: 0, y: -SU * 7, z: 0 }, { x: -SU * 4.854, y: 0, z: -SU * 3.527 }] },
+      { path: [{ x: 0, y: -SU * 7, z: 0 }, { x:  SU * 1.854, y: 0, z: -SU * 5.706 }] },
+      { path: [{ x:  SU * 6.000, y: 0, z:  SU * 0.000 }, { x:  SU * 1.854, y: 0, z:  SU * 5.706 }] },
+      { path: [{ x:  SU * 1.854, y: 0, z:  SU * 5.706 }, { x: -SU * 4.854, y: 0, z:  SU * 3.527 }] },
+      { path: [{ x: -SU * 4.854, y: 0, z:  SU * 3.527 }, { x: -SU * 4.854, y: 0, z: -SU * 3.527 }] },
+      { path: [{ x: -SU * 4.854, y: 0, z: -SU * 3.527 }, { x:  SU * 1.854, y: 0, z: -SU * 5.706 }] },
+      { path: [{ x:  SU * 1.854, y: 0, z: -SU * 5.706 }, { x:  SU * 6.000, y: 0, z:  SU * 0.000 }] },
+    ],
+  },
+
+  gyre: {
+    name: 'gyre',
+    displayName: 'The Gyre',
+    description: 'Helix. Spawns at the poles, five spiral rooms climbing Y. Long main path with chord shortcuts.',
+    palette: [0x2a1848, 0x1a2848, 0x301848, 0x183848, 0x281a48, 0x183048, 0x2a1848, 0x1a2a48],
+    rooms: [
+      { id: 'spawn_a', team: 'A',  x: 0,             y: -SU * 7,  z: 0,             r: SU * 2.2 },
+      { id: 'spawn_b', team: 'B',  x: 0,             y:  SU * 7,  z: 0,             r: SU * 2.2 },
+      { id: 'g1',      team: null, x:  SU *  5.000,  y: -SU * 4,  z:  SU *  0.000,  r: SU * 1.8 },
+      { id: 'g2',      team: null, x:  SU *  1.545,  y: -SU * 2,  z:  SU *  4.755,  r: SU * 1.8 },
+      { id: 'g3',      team: null, x: -SU *  4.045,  y: 0,        z:  SU *  2.939,  r: SU * 2.0 },
+      { id: 'g4',      team: null, x: -SU *  4.045,  y:  SU * 2,  z: -SU *  2.939,  r: SU * 1.8 },
+      { id: 'g5',      team: null, x:  SU *  1.545,  y:  SU * 4,  z: -SU *  4.755,  r: SU * 1.8 },
+    ],
+    tunnels: [
+      { path: [{ x: 0,             y: -SU * 7, z: 0 },            { x:  SU * 5.000, y: -SU * 4, z:  SU * 0.000 }] },
+      { path: [{ x:  SU * 5.000,   y: -SU * 4, z:  SU * 0.000 },  { x:  SU * 1.545, y: -SU * 2, z:  SU * 4.755 }] },
+      { path: [{ x:  SU * 1.545,   y: -SU * 2, z:  SU * 4.755 },  { x: -SU * 4.045, y: 0,       z:  SU * 2.939 }] },
+      { path: [{ x: -SU * 4.045,   y: 0,       z:  SU * 2.939 },  { x: -SU * 4.045, y:  SU * 2, z: -SU * 2.939 }] },
+      { path: [{ x: -SU * 4.045,   y:  SU * 2, z: -SU * 2.939 },  { x:  SU * 1.545, y:  SU * 4, z: -SU * 4.755 }] },
+      { path: [{ x:  SU * 1.545,   y:  SU * 4, z: -SU * 4.755 },  { x: 0,           y:  SU * 7, z: 0 }] },
+      { path: [{ x: 0,             y: -SU * 7, z: 0 },            { x: -SU * 4.045, y: 0,       z:  SU * 2.939 }] },
+      { path: [{ x: -SU * 4.045,   y: 0,       z:  SU * 2.939 },  { x: 0,           y:  SU * 7, z: 0 }] },
+      { path: [{ x:  SU * 5.000,   y: -SU * 4, z:  SU * 0.000 },  { x: -SU * 4.045, y:  SU * 2, z: -SU * 2.939 }] },
+      { path: [{ x:  SU * 1.545,   y: -SU * 2, z:  SU * 4.755 },  { x:  SU * 1.545, y:  SU * 4, z: -SU * 4.755 }] },
     ],
   },
 };
@@ -132,23 +353,30 @@ export function buildLevel(mapKey?: string): Level {
 }
 
 function _buildLevelFromDef(def: MapDef): Level {
-  const TUNNEL_R = SU * 0.35;
   const rooms: Room[] = def.rooms.map(r => ({
     id: r.id, team: r.team,
     center: { x: r.x, y: r.y, z: r.z },
     radius: r.r,
   }));
-  const roomById: Record<string, Room> = {};
-  for (const r of rooms) roomById[r.id] = r;
 
-  const tunnels: Tunnel[] = def.tunnels.map(t => {
-    const a = roomById[t.from]; const b = roomById[t.to];
-    return {
-      a: { x: a.center.x, y: a.center.y, z: a.center.z },
-      b: { x: b.center.x, y: b.center.y, z: b.center.z },
-      radius: t.r != null ? t.r : TUNNEL_R,
-    };
-  });
+  // Each tunnel is a path of N waypoints; expand to N-1 cylinder segments.
+  // The SDF and the marching cubes worker both treat tunnels as flat lists
+  // of cylinder segments, so paths are an authoring convenience that gets
+  // flattened here.
+  const tunnels: Tunnel[] = [];
+  for (const t of def.tunnels) {
+    const r = t.r != null ? t.r : TUNNEL_R;
+    for (let i = 0; i < t.path.length - 1; i++) {
+      const a = t.path[i], b = t.path[i + 1];
+      const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z;
+      if (dx * dx + dy * dy + dz * dz < 100) continue; // skip near-zero segments
+      tunnels.push({
+        a: { x: a.x, y: a.y, z: a.z },
+        b: { x: b.x, y: b.y, z: b.z },
+        radius: r,
+      });
+    }
+  }
 
   const spawnA: Vec3[] = [];
   const spawnB: Vec3[] = [];
@@ -188,9 +416,13 @@ function _buildLevelFromDef(def: MapDef): Level {
 
   return {
     name: def.name,
+    displayName: def.displayName,
+    description: def.description,
+    palette: def.palette.slice(),
     bounds, rooms, tunnels,
     obstacles: def.obstacles || [],
     spawnA, spawnB,
+    sdfSmoothK: SDF_SMOOTH_K,
   };
 }
 
@@ -230,9 +462,12 @@ export function pointInLevel(p: Vec3, level: Level): boolean {
 // stay separate (smooth-blending all tunnels would merge nearby parallels
 // into a single fat tube).
 //
-// Smooth-min radius. LSS uses 45 with SU=150; we scale to our SU=700.
-// Bigger k = softer blend (more rounded junctions); smaller k = sharper.
-const SDF_SMOOTH_K = 200;
+// Smooth-min radius. Match LSS exactly (45 with SU=150). Bigger k = softer
+// blend (more rounded junctions); smaller k = sharper. Travels on the wire
+// as level.sdfSmoothK so the client's marching cubes pass agrees with the
+// server's collision SDF; if they diverge, players see one wall but collide
+// with another.
+const SDF_SMOOTH_K = 45;
 
 function sdSphere(px: number, py: number, pz: number, cx: number, cy: number, cz: number, r: number): number {
   const dx = px - cx, dy = py - cy, dz = pz - cz;

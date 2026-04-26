@@ -219,123 +219,6 @@
     text-shadow: 0 0 3px rgba(0,0,0,0.9);
     white-space: nowrap;
   }
-  /* v8.18: cinematic banner overlay (ROUND OVER / VICTORY / FIGHT). */
-  #cinematic-banner {
-    position: fixed; left: 0; right: 0; top: 30%;
-    pointer-events: none; z-index: 80;
-    text-align: center;
-    display: none;
-  }
-  #cinematic-banner.active { display: block; animation: bannerPulse 2.0s ease-out forwards; }
-  #cinematic-banner .banner-title {
-    font-size: 64px; font-weight: bold; letter-spacing: 6px;
-    color: #ffaa00;
-    text-shadow: 0 0 24px rgba(255,170,0,0.9), 0 0 60px rgba(255,170,0,0.5);
-  }
-  #cinematic-banner .banner-sub {
-    font-size: 18px; letter-spacing: 4px;
-    color: rgba(255,255,255,0.85);
-    margin-top: 8px;
-    text-shadow: 0 0 12px rgba(0,0,0,0.9);
-  }
-  #cinematic-banner.victory .banner-title { color: #66ff88; text-shadow: 0 0 24px rgba(100,255,150,0.9), 0 0 60px rgba(100,255,150,0.5); }
-  #cinematic-banner.defeat .banner-title { color: #ff5566; text-shadow: 0 0 24px rgba(255,80,90,0.9), 0 0 60px rgba(255,80,90,0.5); }
-  @keyframes bannerPulse {
-    0%   { opacity: 0; transform: scale(0.85); }
-    20%  { opacity: 1; transform: scale(1.0); }
-    80%  { opacity: 1; transform: scale(1.0); }
-    100% { opacity: 0; transform: scale(1.05); }
-  }
-
-  /* v8.18: reload + ammo strip. Sits above the weapon name in the bottom HUD. */
-  #hud-reload {
-    position: absolute; bottom: 70px; left: 50%; transform: translateX(-50%);
-    width: 240px;
-    text-align: center;
-    font-size: 11px; letter-spacing: 2px;
-    color: rgba(255,200,80,0.9);
-    display: none;
-  }
-  #hud-reload.active { display: block; }
-  #hud-reload .reload-bar-track {
-    width: 100%; height: 4px;
-    background: rgba(15,20,32,0.85);
-    border: 1px solid rgba(255,170,0,0.55);
-    margin-top: 4px;
-    overflow: hidden;
-  }
-  #hud-reload .reload-bar-fill {
-    height: 100%; background: rgba(255,170,0,0.85);
-    transform-origin: left center; transform: scaleX(0);
-    transition: transform 0.05s linear;
-  }
-  #hud-ammo {
-    position: absolute; bottom: 50px; right: 24px;
-    font-size: 14px; letter-spacing: 2px;
-    color: rgba(220,230,255,0.85);
-    text-shadow: 0 0 4px rgba(0,0,0,0.8);
-  }
-  #hud-ammo .ammo-cur { color: #ffcc44; font-weight: bold; font-size: 22px; }
-  #hud-ammo .ammo-max { color: rgba(180,200,240,0.6); }
-
-  /* v8.19: damage indicator. Four directional arrows that flash red when
-     hit from that direction. Each is an SVG arc fading out over ~600ms. */
-  #damage-indicators {
-    position: fixed; inset: 0;
-    pointer-events: none; z-index: 9;
-  }
-  .dmg-arrow {
-    position: absolute;
-    width: 220px; height: 220px;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.6s ease-out;
-  }
-  .dmg-arrow.active { opacity: 0.9; }
-  .dmg-arrow.top    { top: 8%;    left: 50%; transform: translate(-50%, 0); }
-  .dmg-arrow.bottom { bottom: 8%; left: 50%; transform: translate(-50%, 0) rotate(180deg); }
-  .dmg-arrow.left   { left: 5%;   top: 50%;  transform: translate(0, -50%) rotate(-90deg); }
-  .dmg-arrow.right  { right: 5%;  top: 50%;  transform: translate(0, -50%) rotate(90deg); }
-
-  /* v8.19: kill feed. Top-right, last 5 entries, oldest fades. */
-  #kill-feed {
-    position: fixed; top: 60px; right: 20px;
-    width: 320px;
-    pointer-events: none; z-index: 7;
-    display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
-  }
-  .kill-entry {
-    background: rgba(8,12,20,0.78);
-    border: 1px solid rgba(120,140,180,0.35);
-    padding: 4px 10px;
-    font-size: 11px; letter-spacing: 1px;
-    color: rgba(220,230,255,0.92);
-    text-shadow: 0 0 4px rgba(0,0,0,0.9);
-    animation: killFade 5.0s ease-out forwards;
-  }
-  .kill-entry .kill-shooter { color: #ff8888; font-weight: bold; }
-  .kill-entry .kill-target  { color: #88ff88; font-weight: bold; }
-  .kill-entry .kill-arrow   { color: #ffaa00; margin: 0 6px; }
-  @keyframes killFade {
-    0%   { opacity: 0; transform: translateX(40px); }
-    8%   { opacity: 1; transform: translateX(0); }
-    80%  { opacity: 1; }
-    100% { opacity: 0; }
-  }
-
-  /* v8.18: doomed vignette ; pulses red when health < 30%. */
-  #doomed-vignette {
-    position: fixed; inset: 0;
-    pointer-events: none; z-index: 8;
-    box-shadow: inset 0 0 200px rgba(255,40,30,0.0);
-    transition: box-shadow 0.2s ease-out;
-  }
-  #doomed-vignette.active { box-shadow: inset 0 0 200px rgba(255,40,30,0.55); animation: doomPulse 0.8s infinite; }
-  @keyframes doomPulse {
-    0%, 100% { box-shadow: inset 0 0 180px rgba(255,40,30,0.45); }
-    50%      { box-shadow: inset 0 0 240px rgba(255,40,30,0.70); }
-  }
-
   #help {
     position: fixed; top: 12px; right: 12px;
     font-size: 10px; color: rgba(140,160,200,0.55);
@@ -478,15 +361,6 @@
 <canvas id="canvas"></canvas>
 <canvas id="circ-hud-canvas"></canvas>
 <div id="ship-bars"></div>
-<div id="doomed-vignette"></div>
-<div id="damage-indicators">
-  <svg class="dmg-arrow top"    viewBox="0 0 220 220"><polygon points="110,20 50,160 110,130 170,160" fill="rgba(255,30,20,0.85)" stroke="rgba(255,160,140,0.6)" stroke-width="3"/></svg>
-  <svg class="dmg-arrow bottom" viewBox="0 0 220 220"><polygon points="110,20 50,160 110,130 170,160" fill="rgba(255,30,20,0.85)" stroke="rgba(255,160,140,0.6)" stroke-width="3"/></svg>
-  <svg class="dmg-arrow left"   viewBox="0 0 220 220"><polygon points="110,20 50,160 110,130 170,160" fill="rgba(255,30,20,0.85)" stroke="rgba(255,160,140,0.6)" stroke-width="3"/></svg>
-  <svg class="dmg-arrow right"  viewBox="0 0 220 220"><polygon points="110,20 50,160 110,130 170,160" fill="rgba(255,30,20,0.85)" stroke="rgba(255,160,140,0.6)" stroke-width="3"/></svg>
-</div>
-<div id="kill-feed"></div>
-<div id="cinematic-banner"><div class="banner-title"></div><div class="banner-sub"></div></div>
 <div id="cockpit-frame"></div>
 
 <div id="combat-hud">
@@ -494,13 +368,6 @@
     <div><span class="label">FLEET A</span><span class="score-a" id="score-a">0</span></div>
     <div class="timer" id="round-timer">3:00</div>
     <div><span class="label">FLEET B</span><span class="score-b" id="score-b">0</span></div>
-  </div>
-  <div id="hud-reload">
-    RELOADING
-    <div class="reload-bar-track"><div class="reload-bar-fill" id="hud-reload-fill"></div></div>
-  </div>
-  <div id="hud-ammo">
-    <span class="ammo-cur" id="hud-ammo-cur">0</span><span class="ammo-max" id="hud-ammo-max"> / 0</span>
   </div>
 
   <div id="hud-ship">
@@ -1391,20 +1258,12 @@ function updateCamera(myPlayer) {
   const cy = Math.cos(yaw), sy = Math.sin(yaw);
   const cp = Math.cos(pitch), sp = Math.sin(pitch);
   const fx = -sy * cp, fy = sp, fz = -cy * cp;
-  // v8.19: shake offset added to position; lookAt target gets the same offset
-  // so the camera stays oriented but jitters around the ship.
-  const sx = (typeof _shakeOffsetX === 'number') ? _shakeOffsetX : 0;
-  const sy2 = (typeof _shakeOffsetY === 'number') ? _shakeOffsetY : 0;
-  const sz = (typeof _shakeOffsetZ === 'number') ? _shakeOffsetZ : 0;
-  camera.position.set(
-    myPlayer.position.x + sx,
-    myPlayer.position.y + 30 + sy2,
-    myPlayer.position.z + sz,
-  );
+  // Camera at player position with a small forward offset
+  camera.position.set(myPlayer.position.x, myPlayer.position.y + 30, myPlayer.position.z);
   camera.lookAt(
-    myPlayer.position.x + fx + sx,
-    myPlayer.position.y + 30 + fy + sy2,
-    myPlayer.position.z + fz + sz,
+    myPlayer.position.x + fx,
+    myPlayer.position.y + 30 + fy,
+    myPlayer.position.z + fz,
   );
 }
 
@@ -1460,20 +1319,11 @@ const _circHud = (() => {
                : green + '0.75)';
 
     // ---- Health ring: segmented arc across the bottom ----
-    // Arc spans roughly 7 to 5 o'clock as in LSS. Segment count is
-    // chassis-driven (LSS chassis.healthSegments): 3 for FRIGATE, 5 for
-    // CORVETTE, 7 for DREADNOUGHT. Maps from loadoutKey via the lookup
-    // below so reading from server snapshot's loadoutKey is enough.
-    const _SEG_BY_CHASSIS = {
-      FRIGATE: 3, CORVETTE: 5, DREADNOUGHT: 7,
-    };
-    const _CHASSIS_BY_LOADOUT = {
-      VORTEX: 'CORVETTE', PYRO: 'DREADNOUGHT', PUNCTURE: 'FRIGATE',
-      SLAYER: 'FRIGATE', TRACKER: 'CORVETTE', BLASTER: 'DREADNOUGHT',
-      SYPHON: 'CORVETTE',
-    };
+    // 5 segments along the lower semicircle so partial hits read as a
+    // chunked drain rather than a smooth slide. Arc spans roughly 7 to 5
+    // o'clock as in LSS.
     const r1 = 150;
-    const segments = _SEG_BY_CHASSIS[_CHASSIS_BY_LOADOUT[player.loadoutKey || 'CORVETTE'] || 'CORVETTE'] || 5;
+    const segments = 5;
     const segGap = 0.04;
     const aStart = Math.PI * 0.65;
     const aEnd   = Math.PI * 2.35;
@@ -1566,83 +1416,6 @@ const _circHud = (() => {
       ctx.textAlign = 'center';
       ctx.textBaseline = 'bottom';
       ctx.fillText(Math.ceil(player.shield) + ' / ' + player.maxShield, cx, cy - r2 - 8);
-    }
-
-    // ---- Speed arc: left side, ~7-9 o'clock ----
-    // Maps current velocity magnitude to fill ratio over a generous cap
-    // (chassis.flightSpeed * 1.5; matches LSS line 10358).
-    const v = player.velocity || { x: 0, y: 0, z: 0 };
-    const speed = Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
-    // Per-chassis maxSpeed isn't on the snapshot, so use a per-loadout cap
-    // mirror of CHASSIS.flightSpeed * 1.5.
-    const _MAX_SPEED_FOR_HUD = {
-      VORTEX: 900, PYRO: 630, PUNCTURE: 1200, SLAYER: 1200,
-      TRACKER: 900, BLASTER: 630, SYPHON: 900,
-    };
-    const speedMax = _MAX_SPEED_FOR_HUD[player.loadoutKey] || 900;
-    const speedPct = Math.min(1, speed / speedMax);
-    const r3 = 240;
-    const spdStart = Math.PI * 0.55;
-    const spdEnd   = Math.PI * 0.95;
-    const spdSpan  = spdEnd - spdStart;
-    ctx.strokeStyle = white + '0.08)';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r3, spdStart, spdEnd);
-    ctx.stroke();
-    if (speedPct > 0) {
-      ctx.save();
-      ctx.shadowColor = white + '0.6)';
-      ctx.shadowBlur = 5;
-      ctx.strokeStyle = white + '0.45)';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.arc(cx, cy, r3, spdStart, spdStart + spdSpan * speedPct);
-      ctx.stroke();
-      ctx.restore();
-    }
-    // Speed label outside the arc.
-    {
-      const a = (spdStart + spdEnd) / 2;
-      const tx = cx + Math.cos(a) * (r3 + 22);
-      const ty = cy + Math.sin(a) * (r3 + 22);
-      ctx.fillStyle = white + '0.45)';
-      ctx.font = '11px "Courier New", monospace';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(Math.floor(speed), tx, ty);
-    }
-
-    // ---- Ammo arc: right side, ~3-5 o'clock ----
-    const ammoStart = Math.PI * 0.05;
-    const ammoEnd   = Math.PI * 0.45;
-    const ammoSpan  = ammoEnd - ammoStart;
-    const maxClip = player.maxClip || 0;
-    const ammoPct = (maxClip >= 999 || maxClip <= 0) ? 1 : (player.clipAmmo || 0) / maxClip;
-    ctx.strokeStyle = white + '0.08)';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r3, ammoStart, ammoEnd);
-    ctx.stroke();
-    if (ammoPct > 0) {
-      const ammoCol = player.reloading ? amber + '0.55)' : white + '0.45)';
-      ctx.strokeStyle = ammoCol;
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.arc(cx, cy, r3, ammoStart, ammoStart + ammoSpan * ammoPct);
-      ctx.stroke();
-    }
-    // Ammo label outside the arc.
-    {
-      const a = (ammoStart + ammoEnd) / 2;
-      const tx = cx + Math.cos(a) * (r3 + 22);
-      const ty = cy + Math.sin(a) * (r3 + 22);
-      ctx.fillStyle = white + '0.45)';
-      ctx.font = '11px "Courier New", monospace';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      const ammoStr = (maxClip >= 999) ? 'INF' : ((player.clipAmmo || 0) + '');
-      ctx.fillText(ammoStr, tx, ty);
     }
   }
 
@@ -2401,22 +2174,6 @@ function _playEventSounds(snap, myPeerId) {
       } else if (ev.position) {
         _audio.playSoundAt('kill', ev.position);
       }
-      // v8.19: explosion at the dying ship + kill feed entry.
-      if (ev.position) _spawnExplosion(new THREE.Vector3(ev.position.x, ev.position.y, ev.position.z));
-      _addKillFeed(
-        ev.shooterPeerId ? 'P ' + ev.shooterPeerId : ('BOT ' + (ev.shooterId || '?')),
-        ev.targetPeerId ? 'P ' + ev.targetPeerId : ('BOT ' + (ev.targetId || '?')),
-        '→'
-      );
-      // Camera shake if explosion was nearby.
-      const me = (snap.players || []).find(p => p.peerId === myPeerId);
-      if (me && ev.position) {
-        const dx = ev.position.x - me.position.x;
-        const dy = ev.position.y - me.position.y;
-        const dz = ev.position.z - me.position.z;
-        const d = Math.sqrt(dx*dx + dy*dy + dz*dz);
-        if (d < 800) _addCameraShake(8 * (1 - d / 800));
-      }
     }
     else if (ev.type === 'hit') {
       if (ev.shooterPeerId === myPeerId) {
@@ -2429,408 +2186,9 @@ function _playEventSounds(snap, myPeerId) {
         const me = snap.players && snap.players.find(p => p.peerId === myPeerId);
         if (me && me.shield > 0) _audio.playSound('damage_shield');
         else _audio.playSound('damage_hull');
-        // v8.19: camera shake + damage indicator on own-ship hit.
-        _addCameraShake(4);
-        // We don't have the shooter's position directly on hit events; look
-        // them up from snap.players / snap.bots by shooterId.
-        const shooter = (snap.players || []).find(p => p.id === ev.shooterId)
-          || (snap.bots || []).find(b => b.id === ev.shooterId);
-        if (shooter && me) _showDamageIndicator(me, shooter.position);
-      }
-      // v8.19: hit sparks at the hit location (target's position).
-      if (ev.position) {
-        const target = (snap.players || []).find(p => p.id === ev.targetId)
-          || (snap.bots || []).find(b => b.id === ev.targetId);
-        const hadShield = target && target.shield > 0;
-        const pos3 = new THREE.Vector3(ev.position.x, ev.position.y, ev.position.z);
-        if (hadShield) _spawnShieldHit(pos3);
-        else _spawnImpactSparks(pos3, 0xff8844);
       }
     }
-    // v8.18: round/match end banners. Server emits state-edge events so the
-    // client doesn't have to detect transitions itself.
-    else if (ev.type === 'round_end') {
-      const sub = 'FLEET A: ' + (ev.scoreA || 0) + '   FLEET B: ' + (ev.scoreB || 0);
-      _showBanner('ROUND OVER', sub, null);
-    }
-    else if (ev.type === 'match_end') {
-      const me = (snap.players || []).find(p => p.peerId === myPeerId);
-      const myTeam = me ? me.team : null;
-      // Team ints: 2 = A, 3 = B (TEAM_A / TEAM_B in server constants).
-      const iWon = (ev.winner === 'A' && myTeam === 2) || (ev.winner === 'B' && myTeam === 3);
-      _showBanner(iWon ? 'VICTORY' : 'DEFEAT',
-                  (ev.winner === 'A' ? 'FLEET A' : 'FLEET B') + ' WINS',
-                  iWon ? 'victory' : 'defeat');
-    }
   }
-}
-
-// v8.18: spawn protection shield bubble. Toggled on while server's
-// spawnProtection timer is positive. Cyan-white sphere around the ship.
-// Stored on mesh.userData.spawnBubble so we don't double-add per frame.
-function _setSpawnBubble(mesh, on) {
-  if (!mesh) return;
-  const has = !!mesh.userData.spawnBubble;
-  if (on && !has) {
-    const geo = new THREE.SphereGeometry(60, 16, 12);
-    const mat = new THREE.MeshBasicMaterial({
-      color: 0xaaeeff, transparent: true, opacity: 0.22,
-      side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-    const bubble = new THREE.Mesh(geo, mat);
-    mesh.add(bubble);
-    mesh.userData.spawnBubble = bubble;
-  } else if (!on && has) {
-    mesh.remove(mesh.userData.spawnBubble);
-    if (mesh.userData.spawnBubble.geometry) mesh.userData.spawnBubble.geometry.dispose();
-    if (mesh.userData.spawnBubble.material) mesh.userData.spawnBubble.material.dispose();
-    mesh.userData.spawnBubble = null;
-  }
-}
-
-// ============================================================================
-// v8.21 Phase 3: world-effect renderer (firewalls, walls, traps, tethers, etc.)
-// ============================================================================
-//
-// Each entry in snap.worldEffects gets a Three.js mesh. Type-specific shapes
-// and materials are created in _buildWorldEffectMesh; per-frame the position
-// + rotation are synced from the snapshot. Disposed when the effect is gone
-// from the snapshot.
-
-const _worldEffectMeshes = new Map(); // id -> { mesh, type }
-
-function _buildWorldEffectMesh(e) {
-  const d = e.data || {};
-  let geo, mat;
-  if (e.type === 'particle_wall') {
-    const w = d.width || 400, h = d.height || 300;
-    geo = new THREE.PlaneGeometry(w, h);
-    mat = new THREE.MeshBasicMaterial({
-      color: 0x44ccff, transparent: true, opacity: 0.25,
-      side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(e.position.x, e.position.y, e.position.z);
-    if (d.dirX != null) {
-      // Face the wall along the deployment direction.
-      mesh.lookAt(new THREE.Vector3(e.position.x + d.dirX, e.position.y + d.dirY, e.position.z + d.dirZ));
-    }
-    return mesh;
-  }
-  if (e.type === 'firewall') {
-    const length = d.length || 1500, width = d.width || 100;
-    geo = new THREE.BoxGeometry(width * 2, 80, length);
-    mat = new THREE.MeshBasicMaterial({
-      color: 0xff5522, transparent: true, opacity: 0.45,
-      blending: THREE.AdditiveBlending, depthWrite: false,
-    });
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(e.position.x + (d.dirX || 0) * length / 2,
-                       e.position.y,
-                       e.position.z + (d.dirZ || 0) * length / 2);
-    if (d.dirX != null) {
-      mesh.lookAt(new THREE.Vector3(e.position.x + d.dirX, e.position.y, e.position.z + d.dirZ));
-    }
-    return mesh;
-  }
-  if (e.type === 'incendiary' || e.type === 'gas') {
-    const radius = d.radius || 300;
-    geo = new THREE.SphereGeometry(radius, 16, 12);
-    mat = new THREE.MeshBasicMaterial({
-      color: e.type === 'gas' ? 0x88ff66 : 0xff7733,
-      transparent: true, opacity: 0.30,
-      blending: THREE.AdditiveBlending, depthWrite: false,
-    });
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(e.position.x, e.position.y, e.position.z);
-    return mesh;
-  }
-  if (e.type === 'tether') {
-    const radius = d.radius || 250;
-    geo = new THREE.SphereGeometry(radius, 16, 12);
-    mat = new THREE.MeshBasicMaterial({
-      color: 0xaa44ff, transparent: true, opacity: 0.20,
-      side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(e.position.x, e.position.y, e.position.z);
-    return mesh;
-  }
-  if (e.type === 'trip_wire') {
-    const radius = d.radius || 60;
-    geo = new THREE.SphereGeometry(radius, 8, 6);
-    mat = new THREE.MeshBasicMaterial({
-      color: 0xffaa00, transparent: true, opacity: 0.55,
-      blending: THREE.AdditiveBlending, depthWrite: false,
-    });
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(e.position.x, e.position.y, e.position.z);
-    return mesh;
-  }
-  // Unknown type: small placeholder (gray cube). Logs once.
-  geo = new THREE.BoxGeometry(40, 40, 40);
-  mat = new THREE.MeshBasicMaterial({ color: 0x888888, wireframe: true });
-  const mesh = new THREE.Mesh(geo, mat);
-  mesh.position.set(e.position.x, e.position.y, e.position.z);
-  return mesh;
-}
-
-function _getOrCreateWorldEffectMesh(e) {
-  let entry = _worldEffectMeshes.get(e.id);
-  if (!entry) {
-    const mesh = _buildWorldEffectMesh(e);
-    if (mesh) {
-      scene.add(mesh);
-      entry = { mesh, type: e.type };
-      _worldEffectMeshes.set(e.id, entry);
-    }
-  }
-  if (entry && entry.mesh) {
-    entry.mesh.position.set(e.position.x, e.position.y, e.position.z);
-    // Spheres etc. don't have orientation; planes/boxes do, but we set them
-    // at creation since their direction shouldn't change after spawn.
-    // Fade opacity as the timer runs out so expirations don't pop visually.
-    if (entry.mesh.material && e.timer != null && e.timer < 1.5) {
-      entry.mesh.material.opacity = entry.mesh.material.opacity * (e.timer / 1.5);
-    }
-  }
-  return entry ? entry.mesh : null;
-}
-
-function _disposeWorldEffectMesh(id) {
-  const entry = _worldEffectMeshes.get(id);
-  if (!entry) return;
-  if (entry.mesh.parent) entry.mesh.parent.remove(entry.mesh);
-  if (entry.mesh.geometry) entry.mesh.geometry.dispose();
-  if (entry.mesh.material) entry.mesh.material.dispose();
-  _worldEffectMeshes.delete(id);
-}
-
-// ============================================================================
-// v8.19 Phase 2: combat feel (particles + camera shake + damage indicator + kill feed)
-// ============================================================================
-
-// ---- Particle pool ----
-// Small additive-blended dots/sprites with life timers. Pooled to keep GC
-// pressure flat; spawn helpers acquire from the free list, tick advances
-// position/life, expired particles return to the pool.
-const _PARTICLE_GEO = new THREE.SphereGeometry(1, 4, 3);
-const _particles = [];        // active particles
-const _particlePool = [];     // freed meshes ready for reuse
-const _PARTICLE_MAX = 400;    // hard cap to avoid runaway
-
-function _acquireParticle(color, scale) {
-  let m;
-  if (_particlePool.length > 0) {
-    m = _particlePool.pop();
-    m.material.color.setHex(color);
-    m.material.opacity = 1.0;
-    m.visible = true;
-  } else {
-    if (_particles.length >= _PARTICLE_MAX) return null; // pool exhausted
-    const mat = new THREE.MeshBasicMaterial({
-      color, transparent: true, opacity: 1.0,
-      blending: THREE.AdditiveBlending, depthWrite: false,
-    });
-    m = new THREE.Mesh(_PARTICLE_GEO, mat);
-    scene.add(m);
-  }
-  m.scale.set(scale, scale, scale);
-  return m;
-}
-function _releaseParticle(m) {
-  m.visible = false;
-  _particlePool.push(m);
-}
-
-function _spawnParticle(pos, vel, color, scale, life) {
-  const m = _acquireParticle(color, scale);
-  if (!m) return;
-  m.position.copy(pos);
-  _particles.push({
-    mesh: m,
-    vx: vel.x, vy: vel.y, vz: vel.z,
-    life: life, maxLife: life,
-    startScale: scale,
-  });
-}
-
-function _tickParticles(dt) {
-  for (let i = _particles.length - 1; i >= 0; i--) {
-    const p = _particles[i];
-    p.life -= dt;
-    if (p.life <= 0) {
-      _releaseParticle(p.mesh);
-      _particles.splice(i, 1);
-      continue;
-    }
-    p.mesh.position.x += p.vx * dt;
-    p.mesh.position.y += p.vy * dt;
-    p.mesh.position.z += p.vz * dt;
-    // Drag so particles slow down over their life; scale down + fade out.
-    p.vx *= 0.94; p.vy *= 0.94; p.vz *= 0.94;
-    const t = p.life / p.maxLife;
-    p.mesh.material.opacity = t;
-    const s = p.startScale * (0.4 + 0.6 * t);
-    p.mesh.scale.set(s, s, s);
-  }
-}
-
-// Spawn helpers ; called from snap event handlers.
-function _spawnImpactSparks(pos, color) {
-  const c = color != null ? color : 0xffcc44;
-  for (let i = 0; i < 8; i++) {
-    const ang = Math.random() * Math.PI * 2;
-    const phi = (Math.random() - 0.5) * Math.PI;
-    const speed = 200 + Math.random() * 250;
-    const v = {
-      x: Math.cos(ang) * Math.cos(phi) * speed,
-      y: Math.sin(phi) * speed,
-      z: Math.sin(ang) * Math.cos(phi) * speed,
-    };
-    _spawnParticle(pos, v, c, 4 + Math.random() * 3, 0.35 + Math.random() * 0.25);
-  }
-}
-function _spawnShieldHit(pos) {
-  for (let i = 0; i < 12; i++) {
-    const ang = Math.random() * Math.PI * 2;
-    const phi = (Math.random() - 0.5) * Math.PI;
-    const speed = 80 + Math.random() * 120;
-    const v = {
-      x: Math.cos(ang) * Math.cos(phi) * speed,
-      y: Math.sin(phi) * speed,
-      z: Math.sin(ang) * Math.cos(phi) * speed,
-    };
-    _spawnParticle(pos, v, 0x66ccff, 5 + Math.random() * 4, 0.45 + Math.random() * 0.20);
-  }
-}
-function _spawnExplosion(pos) {
-  // Bright core
-  for (let i = 0; i < 16; i++) {
-    const ang = Math.random() * Math.PI * 2;
-    const phi = (Math.random() - 0.5) * Math.PI;
-    const speed = 350 + Math.random() * 350;
-    const v = {
-      x: Math.cos(ang) * Math.cos(phi) * speed,
-      y: Math.sin(phi) * speed,
-      z: Math.sin(ang) * Math.cos(phi) * speed,
-    };
-    _spawnParticle(pos, v, 0xffaa44, 8 + Math.random() * 6, 0.6 + Math.random() * 0.3);
-  }
-  // Smoke / debris (slower, dimmer, longer)
-  for (let i = 0; i < 12; i++) {
-    const ang = Math.random() * Math.PI * 2;
-    const phi = (Math.random() - 0.5) * Math.PI;
-    const speed = 120 + Math.random() * 180;
-    const v = {
-      x: Math.cos(ang) * Math.cos(phi) * speed,
-      y: Math.sin(phi) * speed * 0.6 + 60,
-      z: Math.sin(ang) * Math.cos(phi) * speed,
-    };
-    _spawnParticle(pos, v, 0x664433, 12 + Math.random() * 8, 1.2 + Math.random() * 0.8);
-  }
-}
-
-// ---- Camera shake ----
-let _shakeIntensity = 0;
-let _shakeOffsetX = 0, _shakeOffsetY = 0, _shakeOffsetZ = 0;
-function _addCameraShake(amount) {
-  _shakeIntensity = Math.min(_shakeIntensity + amount, 30);
-}
-function _tickCameraShake(dt) {
-  // Random walk offset; intensity decays exponentially.
-  if (_shakeIntensity > 0.05) {
-    _shakeOffsetX = (Math.random() - 0.5) * _shakeIntensity * 2;
-    _shakeOffsetY = (Math.random() - 0.5) * _shakeIntensity * 2;
-    _shakeOffsetZ = (Math.random() - 0.5) * _shakeIntensity * 2;
-    _shakeIntensity *= Math.exp(-dt * 4); // ~250ms decay constant
-  } else {
-    _shakeIntensity = 0;
-    _shakeOffsetX = _shakeOffsetY = _shakeOffsetZ = 0;
-  }
-}
-
-// ---- Damage indicator ----
-// When you take damage, light up the directional arrow pointing to the
-// attacker's screen-relative position. Auto-clears after the CSS transition.
-const _dmgArrowEls = {
-  top:    null, bottom: null, left:   null, right:  null,
-};
-function _initDamageArrows() {
-  _dmgArrowEls.top    = document.querySelector('.dmg-arrow.top');
-  _dmgArrowEls.bottom = document.querySelector('.dmg-arrow.bottom');
-  _dmgArrowEls.left   = document.querySelector('.dmg-arrow.left');
-  _dmgArrowEls.right  = document.querySelector('.dmg-arrow.right');
-}
-_initDamageArrows();
-
-function _showDamageIndicator(myPlayer, attackerPos) {
-  if (!myPlayer || !attackerPos) return;
-  // Compute attacker direction in the local player's view space.
-  const dx = attackerPos.x - myPlayer.position.x;
-  const dz = attackerPos.z - myPlayer.position.z;
-  const dy = attackerPos.y - myPlayer.position.y;
-  // Player yaw: 0 looks toward -Z; +yaw turns CCW from above.
-  const cy = Math.cos(myPlayer.yaw || 0), sy = Math.sin(myPlayer.yaw || 0);
-  // Local-space: x' = dx*cy - dz*sy ; z' = -dx*sy - dz*cy (forward = -z')
-  const xLocal = dx * cy - dz * sy;
-  const zLocal = -dx * sy - dz * cy;
-  // Pick arrow by which axis dominates.
-  let which;
-  if (Math.abs(zLocal) > Math.abs(xLocal) && Math.abs(zLocal) > Math.abs(dy)) {
-    which = (zLocal > 0) ? 'top' : 'bottom';   // forward / behind
-  } else if (Math.abs(xLocal) > Math.abs(dy)) {
-    which = (xLocal > 0) ? 'right' : 'left';
-  } else {
-    which = (dy > 0) ? 'top' : 'bottom';        // above / below maps to top/bottom
-  }
-  const el = _dmgArrowEls[which];
-  if (!el) return;
-  el.classList.remove('active');
-  void el.offsetWidth;
-  el.classList.add('active');
-  setTimeout(() => el.classList.remove('active'), 600);
-}
-
-// ---- Kill feed ----
-const _killFeedMaxEntries = 5;
-function _addKillFeed(shooterLabel, targetLabel, weaponLabel) {
-  const root = document.getElementById('kill-feed');
-  if (!root) return;
-  const entry = document.createElement('div');
-  entry.className = 'kill-entry';
-  entry.innerHTML =
-    '<span class="kill-shooter">' + (shooterLabel || '?') + '</span>' +
-    '<span class="kill-arrow">' + (weaponLabel || '→') + '</span>' +
-    '<span class="kill-target">' + (targetLabel || '?') + '</span>';
-  root.appendChild(entry);
-  while (root.children.length > _killFeedMaxEntries) {
-    root.removeChild(root.firstChild);
-  }
-  // Auto-remove after the CSS animation completes (5.0s).
-  setTimeout(() => { if (entry.parentNode) entry.parentNode.removeChild(entry); }, 5100);
-}
-
-// v8.18: cinematic banner helper. Resets the animation by toggling .active
-// off then on so back-to-back banners restart cleanly.
-function _showBanner(title, sub, mode) {
-  const el = document.getElementById('cinematic-banner');
-  if (!el) return;
-  const titleEl = el.querySelector('.banner-title');
-  const subEl = el.querySelector('.banner-sub');
-  if (titleEl) titleEl.textContent = title || '';
-  if (subEl) subEl.textContent = sub || '';
-  el.classList.remove('victory', 'defeat', 'active');
-  if (mode === 'victory') el.classList.add('victory');
-  else if (mode === 'defeat') el.classList.add('defeat');
-  void el.offsetWidth; // force reflow so animation restarts
-  el.classList.add('active');
-  // Auto-clear after the animation duration.
-  clearTimeout(_showBanner._timer);
-  _showBanner._timer = setTimeout(() => el.classList.remove('active'), 2100);
 }
 
 // ============================================================================
@@ -2848,11 +2206,6 @@ function frame() {
   const now = performance.now();
   const dt = Math.min(0.1, (now - lastFrameMs) / 1000);
   lastFrameMs = now;
-
-  // v8.19: tick particles + camera shake before any input/render so the
-  // shake offset is current when updateCamera runs.
-  _tickParticles(dt);
-  _tickCameraShake(dt);
 
   readKeyboard();
 
@@ -2885,9 +2238,6 @@ function frame() {
       mesh.position.set(p.position.x, p.position.y, p.position.z);
       mesh.rotation.set(0, p.yaw, 0);
       mesh.visible = (p.peerId !== net.myPeerId); // hide own ship in 1st-person view
-      // v8.18: spawn protection bubble. Translucent shimmer around any ship
-      // that's still inside its 3-second spawn-protection grace period.
-      _setSpawnBubble(mesh, (p.spawnProtection || 0) > 0);
     }
     for (const peerId of playerMeshes.keys()) {
       if (!seenPeers.has(peerId)) disposePlayerMesh(peerId);
@@ -2917,17 +2267,6 @@ function frame() {
     }
     for (const id of projMeshes.keys()) {
       if (!seenProjs.has(id)) disposeProjMesh(id);
-    }
-    // v8.21: world effects (firewalls, traps, walls, tethers, etc.).
-    const seenEffects = new Set();
-    if (snap.worldEffects) {
-      for (const e of snap.worldEffects) {
-        seenEffects.add(e.id);
-        _getOrCreateWorldEffectMesh(e);
-      }
-    }
-    for (const id of _worldEffectMeshes.keys()) {
-      if (!seenEffects.has(id)) _disposeWorldEffectMesh(id);
     }
     if (myPlayer) updateCamera(myPlayer);
   }
@@ -3102,31 +2441,6 @@ function updateHud() {
     const sp = Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
     const speedEl = document.getElementById('speed-val');
     if (speedEl) speedEl.textContent = String(sp | 0);
-
-    // v8.18: reload progress + ammo display.
-    const reloadEl = document.getElementById('hud-reload');
-    const reloadFill = document.getElementById('hud-reload-fill');
-    if (reloadEl) {
-      if (myPlayer.reloading) {
-        reloadEl.classList.add('active');
-        const pct = 1 - (myPlayer.reloadTimer || 0) / 2.0;
-        if (reloadFill) reloadFill.style.transform = 'scaleX(' + Math.max(0, Math.min(1, pct)) + ')';
-      } else {
-        reloadEl.classList.remove('active');
-      }
-    }
-    const ammoCur = document.getElementById('hud-ammo-cur');
-    const ammoMax = document.getElementById('hud-ammo-max');
-    if (ammoCur && ammoMax && myPlayer.maxClip != null) {
-      ammoCur.textContent = String(myPlayer.clipAmmo || 0);
-      ammoMax.textContent = ' / ' + (myPlayer.maxClip || 0);
-      // Empty clip color cue.
-      ammoCur.style.color = (myPlayer.clipAmmo > 0) ? '#ffcc44' : '#ff5566';
-    }
-
-    // v8.18: doomed vignette.
-    const vig = document.getElementById('doomed-vignette');
-    if (vig) vig.classList.toggle('active', !!myPlayer.doomed);
   }
 }
 

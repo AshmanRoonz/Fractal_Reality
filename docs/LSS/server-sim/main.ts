@@ -1,5 +1,5 @@
 /*
-  LSS server-sim ; main entry (v8.9) ; SDF collision + abilities + respawn-on-map-change
+  LSS server-sim ; main entry (v8.18) ; round-win + match-end + reload
 
   Server-authoritative simulation. Bun WebSocket server. One simulation
   runs at 64 Hz; clients send inputs, receive state snapshots, render
