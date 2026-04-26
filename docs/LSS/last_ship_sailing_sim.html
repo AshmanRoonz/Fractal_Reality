@@ -138,6 +138,29 @@
   #hud-speed .speed-val { color: #ffaa00; font-size: 22px; font-weight: bold; }
   #hud-speed .speed-label { font-size: 9px; color: rgba(200,210,240,0.5); letter-spacing: 3px; }
 
+  /* v8.44: dash pips bottom-left ; row of dots, full = available, faint = consumed,
+     leading-edge fills toward 1 over the cooldown period. */
+  #hud-dash {
+    position: absolute; bottom: 100px; left: 24px;
+    font-size: 11px; letter-spacing: 2px; text-align: left;
+    text-shadow: 0 0 6px rgba(0,0,0,0.8);
+  }
+  #hud-dash .dash-pips { display: flex; gap: 6px; align-items: center; margin-bottom: 4px; }
+  #hud-dash .dash-pip {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: rgba(120,180,255,0.15); border: 1px solid rgba(120,180,255,0.4);
+    transition: background 0.15s ease-out, border-color 0.15s ease-out;
+  }
+  #hud-dash .dash-pip.full {
+    background: rgba(120,200,255,0.85); border-color: rgba(180,220,255,1);
+    box-shadow: 0 0 8px rgba(120,200,255,0.6);
+  }
+  #hud-dash .dash-pip.charging {
+    background: linear-gradient(180deg, rgba(120,200,255,0.55) 0%, rgba(120,180,255,0.15) 100%);
+    border-color: rgba(180,220,255,0.7);
+  }
+  #hud-dash .dash-label { font-size: 9px; color: rgba(200,210,240,0.5); letter-spacing: 3px; }
+
   /* Center crosshair */
   #crosshair {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -690,6 +713,12 @@
   <div id="hud-speed">
     <div class="speed-val" id="speed-val">0</div>
     <div class="speed-label">M/S</div>
+  </div>
+
+  <!-- v8.44: dash pips ; one per maxDashes charge, fades empty when consumed. -->
+  <div id="hud-dash">
+    <div class="dash-pips" id="dash-pips"></div>
+    <div class="dash-label">DASH</div>
   </div>
 
   <div id="crosshair"></div>
@@ -1464,6 +1493,10 @@ const input = {
   pointerLocked: false,
   // v8.8: queued ability press for next outgoing input frame (consumed once).
   pendingAbility: null,
+  // v8.33: manual reload edge (R key).
+  pendingReload: false,
+  // v8.44: dash edge (Shift key). One-shot per send.
+  pendingDash: false,
   // v8.31: gamepad state (connection + previous-frame snapshot for edges).
   gpConnected: false,
   gpFire: false, gpFirePrev: false,
@@ -1471,6 +1504,8 @@ const input = {
   gpAbility1: false, gpAbility1Prev: false,  // RB → E
   gpAbility2: false, gpAbility2Prev: false,  // Y  → F
   gpCore:     false, gpCorePrev: false,      // D-pad up → V
+  // v8.44: gamepad dash button (A by default).
+  gpDash:     false, gpDashPrev: false,
 };
 
 // v8.31: gamepad config. Mirrors LSS line 1237-1251 with sensible defaults.
@@ -1490,6 +1525,7 @@ const gpConfig = {
     scoreboard: 8, // Back / Select
     moveUp: 10,    // L3 (vertical thrust up)
     moveDown: 11,  // R3 (vertical thrust down)
+    dash: 0,       // A button (v8.44 ; Shift on keyboard)
   },
 };
 
@@ -1561,11 +1597,15 @@ function pollGamepad(dt) {
   input.gpAbility1Prev = input.gpAbility1;
   input.gpAbility2Prev = input.gpAbility2;
   input.gpCorePrev = input.gpCore;
+  input.gpDashPrev = input.gpDash;
   input.gpFire = gpBtn('fire');
   input.gpAbility0 = gpBtn('ability0');
   input.gpAbility1 = gpBtn('ability1');
   input.gpAbility2 = gpBtn('ability2');
   input.gpCore     = gpBtn('core');
+  input.gpDash     = gpBtn('dash');
+  // v8.44: gamepad dash rising edge queues pendingDash same as Shift.
+  if (input.gpDash && !input.gpDashPrev) input.pendingDash = true;
 
   // v8.34: fire is the OR of mouse and gamepad fire. Each source is tracked
   // independently (mouse via mousedown/mouseup setting input.mouseFire,
@@ -1601,6 +1641,11 @@ document.addEventListener('keydown', (e) => {
   // even with ammo left. Server gates on clipAmmo < maxClip.
   if (e.code === 'KeyR') {
     input.pendingReload = true;
+  }
+  // v8.44: dash (LSS line 11815). Shift consumes a charge and bursts in
+  // current movement direction (or facing direction if stopped).
+  if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+    input.pendingDash = true;
   }
 });
 document.addEventListener('keyup', (e) => {
@@ -3506,10 +3551,12 @@ function frame() {
       fire:    input.fire,
       abilityPress: input.pendingAbility,
       reload:  !!input.pendingReload,
+      dash:    !!input.pendingDash,    // v8.44: dash key edge (Shift)
       tick:    frameId,
     });
     input.pendingAbility = null;
     input.pendingReload = false;
+    input.pendingDash = false;
   }
 
   // Update meshes from latest state snapshot
@@ -3749,6 +3796,29 @@ function updateHud() {
     const sp = Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
     const speedEl = document.getElementById('speed-val');
     if (speedEl) speedEl.textContent = String(sp | 0);
+
+    // v8.44: dash pips. One pip per maxDashes; full pips = available charges,
+    // empty = consumed, leading-edge pip glows while regenerating.
+    const dashPipsEl = document.getElementById('dash-pips');
+    if (dashPipsEl && myPlayer.maxDashes != null) {
+      const charges = myPlayer.dashCharges || 0;
+      const max = myPlayer.maxDashes || 0;
+      // Rebuild only when count changes (chassis swap on respawn or loadout).
+      if (dashPipsEl.childElementCount !== max) {
+        dashPipsEl.innerHTML = '';
+        for (let i = 0; i < max; i++) {
+          const pip = document.createElement('div');
+          pip.className = 'dash-pip';
+          dashPipsEl.appendChild(pip);
+        }
+      }
+      const pips = dashPipsEl.children;
+      for (let i = 0; i < pips.length; i++) {
+        pips[i].classList.remove('full', 'charging');
+        if (i < charges) pips[i].classList.add('full');
+        else if (i === charges) pips[i].classList.add('charging');
+      }
+    }
 
     // v8.18: reload progress + ammo display.
     const reloadEl = document.getElementById('hud-reload');

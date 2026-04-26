@@ -2,7 +2,7 @@
 
 Created: 2026-04-26
 Last updated: 2026-04-26
-Version: 0.8
+Version: 0.9
 
 The plan for finishing the thin-client + server-authoritative port of Last Ship Sailing.
 
@@ -20,7 +20,7 @@ Why this path: code we control, anti-cheat by construction, swappable client (mo
 ## Files
 
 - **`last_ship_sailing.html` ; the original LSS, the canonical source we are porting from.** Untouched. Every feature claim, every behavior detail, every audio recipe, every tuning value should be cross-checked against this file by line number before being declared "done." When in doubt about how something should behave, **read LSS first**. Each numbered plan item below cites LSS line ranges, and every "LSS reference:" tag should resolve to actual code in this file. If a behavior is missing from LSS, it is a [PROPOSED] addition and should be flagged as such, not assumed.
-- `last_ship_sailing_sim.html` ; the thin client we're building. Currently at v8.43.
+- `last_ship_sailing_sim.html` ; the thin client we're building. Currently at v8.44.
 - `server-sim/main.ts`, `simulation.ts`, `level.ts`, `loadouts.ts` ; the server.
 - Backups preserved: `last_ship_sailing_sim_v8.15_thinclient_backup.html`, `last_ship_sailing_sim_v8.16_lssfork_broken.html`, `last_ship_sailing_sim_v8.17_lssfork_phaseA.html` (the LSS-fork experiment, abandoned).
 
@@ -1002,6 +1002,7 @@ These can be added later but aren't part of "feature parity with LSS."
 
 ## Revision history
 
+- 2026-04-26 v0.9: shipped v8.44 universal dash system ; ports LSS line 9898-9914 (dash function) + 7916-7932 (dash duration tick + charge regen). Per-chassis charges (Frigate 3 / Corvette 2 / Dreadnought 1) consumed on Shift, dash burst in current movement (or facing) direction at chassis.dashSpeed for dashDuration, charges regen one at a time over dashCooldown. Server: PlayerInput.dash; Player.dashCharges/maxDashes/dashSpeed/dashDuration/dashCooldown/dashActive/dashTimer/dashCooldownTimer; per-tick edge detection + duration tick + cooldown regen + max-speed cap during dash + refill on respawn; gated to playing state. Snapshot ships dashCharges + maxDashes + dashActive. Client: Shift keybind, gamepad A button, pendingDash one-shot, dash pip HUD bottom-left (full = available, charging glow = leading regen pip). SLAYER Phase Dash (slot 2 ability, instant teleport 700u) kept separate as a stronger ability-on-cooldown variant. Adds the missing universal dash gap.
 - 2026-04-26 v0.8: shipped NA38 (v8.35), NA22 (v8.36), NA24 + NA25 (v8.37), NA11 (v8.38), NA8 (v8.39), NA10 (v8.40), NA16 partial: FOV-on-boost (v8.41), NA17 death cam + respawn timer (v8.42), NA7 per-chassis hull radius (v8.43). Discovered NA15 (engine pitch shift with speed) was already implemented as `_audio.setEngineSpeed(speed/maxSpeed)` at client line 3375 ; pre-existing, just not previously documented as done. Status: 10 non-ability gaps closed in this batch, ~700 lines added across server + client. Remaining critical: NA1 (player-vs-player collision), NA2/NA3 (snapshot interpolation + client-side prediction; gate on whether WAN play is the target), NA4 (hitscan path), NA5 (bot ability use). Remaining polish: NA6 bot pathfinding, NA9 splash damage system, NA12 match seed used, NA13 reconnection, NA14 audio Doppler/occlusion, NA16 banking + own-fire shake (FOV done), NA18 crosshair variants, NA19 mid-match Tab scoreboard, NA20 lobby teammates strip, NA21 settings menu, NA23 ping indicator, NA27 boosters, NA28 minimap, NA29-NA34 (lobby thumbs, tooltips, music, spectator, practice, text chat). Deferred: NA26, NA35, NA36, NA37.
 - 2026-04-26 v0.7: added NA38 (server-tagged shield-vs-hull hit SFX) ; LSS at line 14913-14915 plays distinct sounds (`damage_shield` crystalline crack vs `damage` dissonance); our client recipes exist but the wire-up at line 2682 of last_ship_sailing_sim.html approximates from snapshot shield value instead of using server tagging. Fix is server emits `absorbedByShield` + optional `brokeShield` on hit events; client picks recipe deterministically. Made the "LSS is the canonical source" rule explicit in the Files section header (every feature claim cross-checked against LSS line numbers before claiming "done").
 - 2026-04-26 v0.6: added NA29 (lobby map preview thumbnails), NA30 (lobby chassis tooltips), NA31 (per-map music tracks), NA32 (spectator mode), NA33 (practice/tutorial mode; moved out of "Out of scope"), NA34 (text chat), NA35 (voice chat; deferred), NA36 (replay / kill-cam saves; deferred), NA37 (persistent player identity; deferred). Refreshed Out of scope to reflect the moves. Estimates table now distinguishes active scope (~3410 lines) from deferred (~1100 lines).

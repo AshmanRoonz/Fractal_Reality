@@ -880,6 +880,11 @@ function _respawnPlayer(player: Player, state: SimState, level: Level): void {
   player.clipAmmo = player.maxClip;
   player.reloading = false;
   player.reloadTimer = 0;
+  // v8.44: refill dash charges on respawn (LSS line 7774, 8836).
+  player.dashCharges = player.maxDashes;
+  player.dashActive = false;
+  player.dashTimer = 0;
+  player.dashCooldownTimer = 0;
 }
 
 function _respawnBot(bot: Bot, state: SimState, level: Level): void {
@@ -2120,7 +2125,7 @@ function _onAbilityExpire(player: Player, slot: number): void {
 
 // ---- Tick ----
 
-const NO_INPUT: PlayerInput = { forward: 0, right: 0, up: 0, yaw: 0, pitch: 0, fire: false, abilityPress: null, reload: false };
+const NO_INPUT: PlayerInput = { forward: 0, right: 0, up: 0, yaw: 0, pitch: 0, fire: false, abilityPress: null, reload: false, dash: false };
 
 export function tick(state: SimState, inputs: Map<string, PlayerInput>, dt: number): void {
   state.tick++;
@@ -2285,10 +2290,56 @@ export function tick(state: SimState, inputs: Map<string, PlayerInput>, dt: numb
     if (planeMag < 0.01) { player.velocity.x *= dampFactor; player.velocity.z *= dampFactor; }
     if (Math.abs(input.up) < 0.01) { player.velocity.y *= dampFactor; }
 
-    // Clamp to chassis max speed
+    // v8.44: dash burst (LSS line 9898-9914). Rising-edge press while not
+    // already dashing AND with a charge available AND match is playing
+    // (not warmup; LSS line 9902 explicitly blocks dash before launch).
+    // Direction = current velocity if moving; else forward facing. Velocity
+    // is REPLACED with dashDir * dashSpeed for the burst (LSS line 9908).
+    const dashEdge = !!input.dash && !player.prevDash;
+    if (dashEdge && !player.dashActive && player.dashCharges > 0
+        && state.match.state === 'playing') {
+      let ddx = player.velocity.x, ddy = player.velocity.y, ddz = player.velocity.z;
+      const dvLen = Math.sqrt(ddx * ddx + ddy * ddy + ddz * ddz);
+      if (dvLen < 10) {
+        // No movement; use facing direction (yaw + pitch).
+        const fd = _facingDir(player.yaw, player.pitch);
+        ddx = fd.x; ddy = fd.y; ddz = fd.z;
+      } else {
+        ddx /= dvLen; ddy /= dvLen; ddz /= dvLen;
+      }
+      player.velocity.x = ddx * player.dashSpeed;
+      player.velocity.y = ddy * player.dashSpeed;
+      player.velocity.z = ddz * player.dashSpeed;
+      player.dashActive = true;
+      player.dashTimer = player.dashDuration;
+      player.dashCharges--;
+      // Re-arm cooldown timer when consuming a charge.
+      if (player.dashCooldownTimer <= 0) player.dashCooldownTimer = player.dashCooldown;
+    }
+    player.prevDash = !!input.dash;
+
+    // v8.44: dash duration tick (LSS line 7916-7923).
+    if (player.dashActive) {
+      player.dashTimer -= dt;
+      if (player.dashTimer <= 0) player.dashActive = false;
+    }
+    // v8.44: dash charge regen (LSS line 7925-7932). Cooldown regenerates
+    // one charge at a time; re-arms after each regen until charges full.
+    if (player.dashCooldownTimer > 0) {
+      player.dashCooldownTimer -= dt;
+      if (player.dashCooldownTimer <= 0 && player.dashCharges < player.maxDashes) {
+        player.dashCharges++;
+        if (player.dashCharges < player.maxDashes) player.dashCooldownTimer = player.dashCooldown;
+      }
+    }
+
+    // Clamp to chassis max speed.
+    // v8.44: max speed cap is dashSpeed during dash, else flight speed × afterburner mult.
     const sx = player.velocity.x, sy2 = player.velocity.y, sz = player.velocity.z;
     const speed = Math.sqrt(sx * sx + sy2 * sy2 + sz * sz);
-    const effectiveMax = player.maxSpeed * player.afterburnerMult;
+    const effectiveMax = player.dashActive
+      ? player.dashSpeed
+      : (player.maxSpeed * player.afterburnerMult);
     if (speed > effectiveMax) {
       const k = effectiveMax / speed;
       player.velocity.x *= k; player.velocity.y *= k; player.velocity.z *= k;
@@ -2596,6 +2647,11 @@ export function snapshot(state: SimState) {
       reloadTimer: round3(p.reloadTimer),
       // v8.42: NA17 ; deathTime so client can compute respawn countdown.
       deathTime: round3(p.deathTime),
+      // v8.44: dash state for HUD pip rendering + visuals.
+      dashCharges: p.dashCharges,
+      maxDashes: p.maxDashes,
+      dashActive: p.dashActive,
+      dashCooldownTimer: round3(p.dashCooldownTimer),
     });
   }
   // Bots: same shape as players except no peerId.

@@ -251,6 +251,7 @@ const server = Bun.serve<ClientData>({
           fire:    !!p.fire,
           abilityPress,
           reload:  !!p.reload,    // v8.33: manual R-key reload edge.
+          dash:    !!p.dash,      // v8.44: dash key (Shift) edge.
           tick:    typeof p.tick === 'number' ? p.tick : undefined,
         };
         inputs.set(peerId, inp);
