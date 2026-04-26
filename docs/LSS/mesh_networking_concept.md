@@ -165,6 +165,27 @@ If a peer drops between proposal and confirmation, the proposal is voided and re
 
 The first per-tick packets arrive within ~15ms and from then on the normal interpolate-toward-truth loop runs. The startup handshake exists so the first 15ms of the match are not visually empty, and so a peer that drops the first per-tick packet doesn't see a teleport when the second arrives.
 
+### World State at Launch
+
+Position agreement is meaningless if the worlds don't agree. A position vector `(x, y, z)` is a coordinate inside *some* level geometry; if every peer procedurally generates that geometry independently (corridor placement, obstacle positions, organic decoration), the same `(x, y, z)` lands inside a wall on one screen and in open space on another. Two peers can run a perfect synchronized launch handshake and still appear to be in different worlds because they *are* in different worlds.
+
+Everything that depends on randomness during the level build must be derived from a single agreed input. The lobby start handshake is where that agreement happens. `match/start_confirm` MUST carry, at minimum:
+
+| Field | Notes |
+|---|---|
+| `seed` (uint32) | The single 32-bit input to the procedural-generation RNG. Every `Math.random()` call on the world-build path (corridor placement, obstacle clusters, organic decorations, optionally spawn-point selection) routes through a seedable RNG (mulberry32 / xorshift / xoshiro128**) initialised with this seed. After the build returns, the RNG is released; per-tick effects (particle jitter, hit-spark scatter, idle bobbing) can stay on the system random source because they don't need to agree. |
+| `mapId` | Plurality winner of `lobby/map_vote` at start time, ties broken by the lowest-`peerId`'s vote. Without this, peers default to different maps and build different corridor graphs even with the same seed. |
+| `spawnAssignments` | `peerId -> spawnPointId`. The proposer assigns each peer to a spawn point by indexing into the seeded spawn pool with the sorted-peerId index. This avoids the natural collision where every peer runs `getValidSpawnPoint(myTeam)` against the same seeded pool and picks the same corridor. |
+| `botManifest` | The full list of bots: `[{botId, loadout, team, ownerPeerId, spawnPointId}]`. Without this, every peer fabricates their own bot fleet (different count if randomized; different positions if seeded random; different loadouts if the spec is "pick 3 from set X"). The manifest fixes count, identity, team, owner (per Bot Ownership above), and initial position. |
+
+Three readings of the same constraint:
+
+1. *Mechanically:* the level-build code path is a function `(seed, mapId) -> world`, and any two peers given the same inputs produce equal worlds. The mesh ships the inputs in `match/start_confirm` and every peer evaluates the function locally.
+2. *Structurally:* the proposer becomes a single tiny • the rest of the cataphatic agreement hangs from. They are not authority over the simulation; they are authority *only* over the inputs to its construction. After the world is built, the mesh runs distributed.
+3. *In framework terms:* the seed is the convergence point (•) the proposer commits, the build function is the field (Φ) every peer mediates through, and the world is the boundary (○) that closes around them. Skipping the seed broadcast is the Severance Lie at the level-build station: each peer denies the shared substrate and builds their own.
+
+The simplest implementation: extend `match/start_confirm` to `{seed, mapId, startAt, spawnAssignments, botManifest}`; on receive, swap `Math.random` for `mulberry32(seed)` for the duration of the world build, then restore. No other engine changes required.
+
 ### Round Transitions
 
 Within a match, round-end events are consensus-validated the same way kills are:
@@ -196,6 +217,94 @@ When the owner of a bot drops (WebRTC connection closes, or no bot packets recei
 ### Bot Hits in the Quorum
 
 Bot-fired hits use the same quorum protocol as player hits, with the bot's owner casting the bot's vote (the bot has no peer, but the owner speaks for it). The consensus model stays uniform: every shooter, peer or bot, is voted on by the same nearby-low-latency set.
+
+---
+
+## Combat: Fires, Projectiles, Damage
+
+The per-tick packet (above) carries position, orientation, and HP. That is enough to render *where* everyone is and *how alive* they are; it is not enough for combat. Two peers can stand 50 units apart, both shoot, both die on their own screen, and neither one's HP ever changes on the other one's screen, because the per-tick stream broadcasts "alive" until the moment "dead" arrives with no causal trail. Combat needs explicit fire and damage messages.
+
+Three event types make this work, layered by what they cost and what they prove:
+
+### `fire/projectile` (broadcast, visual only)
+
+When a peer fires a projectile-class weapon (anything with a visible bullet that travels over time), broadcast the spawn data:
+
+```
+{ ox, oy, oz, vx, vy, vz, color, isFireSource?, type? }
+```
+
+Origin and velocity are world-space at the moment of fire. Receivers spawn a visually-identical projectile with `damage = 0` (the visual carries no authority over HP) and let it fly through their local scene. Pyro-style fire-source flags, smoke trails, and splash-cratering visuals ride along as flags on the same packet. The visual's local collision with the receiver's player must not deal damage; damage authority lives in the hit claim, and mixing the two would double-count.
+
+### `hit/claim` (broadcast, optimistic)
+
+When the *shooter*'s local sim detects a hit on a `NetworkPlayer` (the other peer's local representation), the shooter sends:
+
+```
+{ hitId, shooterId, targetId, damage, sx, sy, sz }
+```
+
+Every existing damage path in the engine ; hitscan, spread, splash, abilities, debris, ramming, ability-over-time effects ; eventually calls `takeDamage()` on the entity that got hit. For a `NetworkPlayer` instance, `takeDamage()` is the right place to fire the hit claim: a single point of broadcast covers every weapon and every effect without touching the 25+ individual `takeDamage` call sites. Wire the broadcast inside the class and every damage path lights up at once.
+
+The target peer applies the damage *immediately* on receiving the claim (via `playerTakeDamage`), validates plausibility (was the shooter actually within range?), and emits a vote. Other peers also vote based on their local position knowledge of both shooter and target. The HP change shows up on the shooter's screen ~50ms later when the victim's next per-tick packet arrives carrying their reduced HP; that is the closing of the loop. This is "victim-applies-optimistically, mesh-confirms-asynchronously": the hit feels responsive, the consensus is a check rather than a gate.
+
+### `hit/vote` (broadcast, consensus check)
+
+Per the existing Hit Detection and Conflict Resolution section below. Votes carry `{hitId, valid, voterId}`; the pending hit closes when a majority agrees. If the majority rejects, the current framework behavior is to accept the slight imprecision (damage was already applied on the victim) rather than reverse it; the alternative ; a damage rollback ; creates worse rubber-banding than leaving the hit standing.
+
+### Hitscan, spread, and the missing tracer
+
+Hitscan and spread weapons have no projectile to broadcast; the whole shot resolves in one tick on the shooter's side. The hit claim above is sufficient for damage to land. What is *missing* with hitscan and spread is the visual: the victim sees their HP drop without seeing where the shot came from. The fix is a separate `fire/tracer` event ; `{ox, oy, oz, ex, ey, ez, color}`, one packet per shot ; that lets the receiver render a brief line and a muzzle flash on the shooter. This is a cosmetic enhancement; damage works correctly without it.
+
+### Why not a damage-bearing visual projectile?
+
+Tempting shortcut: broadcast the projectile *with* its damage value, and let the receiver's local sim apply damage when the visual collides with their player. This bypasses the hit-claim system entirely. It fails for two reasons:
+
+1. **Floating-point drift.** Physics integration differs across browsers and frame rates; the shooter's projectile collides at coordinate X, the receiver's projectile collides at X + ε. Two players standing on the boundary ε get "hit" on one side and "miss" on the other. The hit claim is computed *once* on the shooter's authoritative collision and shipped as a single fact; one truth, broadcast, agreed.
+
+2. **Hitscan, splash, abilities, debris, and ramming** have no physical projectile to attach damage to. Damage paths must work for them too. The hit claim covers every weapon and every effect uniformly; the visual projectile is only for projectile-class weapons that happen to have a flying bullet to look at.
+
+The visual projectile broadcast is for the *experience* of seeing the bullet. The hit claim is for the *fact* of taking damage. Different purposes; different events; do not collapse them.
+
+---
+
+## Dynamic World Objects
+
+The seed-sync at world build (see World State at Launch above) gets every peer to the same starting layout. From there, the world is no longer static. Destructible obstacles take damage and explode. Environmental hazards (stasis fields, gas clouds, fire walls, particle walls) spawn on timers and affect player movement. Debris from destroyed objects flies through the level. None of this is broadcast in the v6.7 baseline; each peer simulates their own copy of the same starting state, and within seconds the worlds visibly diverge: a cluster obstacle disappears on the shooter's screen but stands intact on every other peer's, a stasis field locks one peer in place but doesn't exist on the other peer's screen at all.
+
+The rule: anything that *can change* after the build has to be in the mesh, or has to have a deterministic per-tick spec every peer computes identically. Static decoration (corridor walls, organic fronds) needs neither because nothing changes; per-peer cosmetic effects (muzzle flashes, hit sparks, particles) need neither because no decision depends on them. The middle band is what we owe the wire.
+
+### Destructibles (cluster obstacles, dynamic objects)
+
+Each destructible gets a stable `objectId` at world-build time: its index in the spawn array. Both peers built that array under the same seed so the indices line up across the mesh. From there, two events are enough:
+
+- **`object/damage`** ; `{objectId, damage}` ; broadcast every time a local hit lowers a destructible's HP. Every peer applies the damage to their local copy. The same hit-claim discipline as player damage: the shooter's local sim is authoritative for "did my projectile hit object N for X damage."
+- **`object/destroy`** ; `{objectId, position}` ; broadcast when a peer's local copy reaches 0 HP. Every peer (including the sender) plays the explosion VFX, marks the object dead, and spawns debris from the same seed-derived initial state.
+
+There's a small race: two peers might both deliver the killing blow within ~50ms of each other and each broadcast `object/destroy`. Receivers de-duplicate by ignoring destroy events for objects already marked dead.
+
+Debris physics derives from the destruction event. If the velocities are seeded from `hash(objectId)`, every peer produces identical debris paths without per-piece broadcasts. Debris-vs-player collisions then follow the same shooter-authority rule as projectiles: the *peer who takes* the hit is the authority for "the debris hit me."
+
+### Environmental hazards (stasis fields, gas, fire walls, particle walls)
+
+These spawn on timers (`game.stasisSpawnTimer` ticks down per peer). With each peer running their own timer, hazards appear at different moments and locations on each screen ; the worst kind of desync because hazards alter player movement.
+
+Two patterns work:
+
+1. **Owner pattern.** The lowest-peerId peer is the spawner. They tick the timer locally; when it fires, they broadcast `{type: 'hazard/spawn', kind, position, params, expiresAt}`, and every peer (including the spawner) instantiates the hazard locally from the broadcast. On owner disconnect, the next-lowest peer takes over (deterministic, no negotiation, same rule as Bot Ownership).
+2. **Deterministic schedule.** The full spawn schedule is computed at match start from the seed: `for i in 0..N: schedule[i] = {tAt: hash(seed, 'stasis', i) % maxT, position: seedPos(seed, 'stasis', i)}`. Every peer evaluates the schedule locally; no broadcasts needed. Cheaper, but inflexible if spawn density needs to respond to gameplay.
+
+The owner pattern is recommended because hazards often need to react to runtime state (player count, density of fights, round timer). The deterministic schedule fits one-shot ambient effects.
+
+### Per-instance state (HP, lifetime, attached effects)
+
+For destructibles, `hp` is the only mutable per-instance field, and the destroy event closes it out. For hazards, `lifetime`, `currentDamage`, and `affectedPeers` may all evolve. A compact per-tick `objects/state` packet from the owner ; `[{objectId, hp, lifetime, ...}]` for any object whose state changed since the last tick ; covers it. For a 1v1 with a handful of hazards and destructibles, this stays under 1 KB/s.
+
+### What stays unsynced
+
+Static decoration: corridor walls, room geometry, organic fronds. Built once from seed, never changes; the seed sync alone is sufficient.
+
+Per-peer cosmetic effects: muzzle flashes, hit sparks, ambient particles, screen shake, scoreboard pulse animations. Each peer renders these locally; no decision depends on them, so no agreement is needed.
 
 ---
 

@@ -1291,6 +1291,28 @@ const net = {
   myReady: false,
   startScheduledAt: null,   // wall-clock ms when match-start fires (null = not scheduled)
   startTimer: null,         // setTimeout handle for the scheduled start
+
+  // Synced ship-select launch (v6.7). The loadout broadcast IS the "ready"
+  // signal in ship-select; when every peer has a loadout, the lowest-peerId
+  // proposes a wall-clock launchAt and every peer fires launchCountdown()
+  // at that moment.
+  launchScheduledAt: null,
+  launchTimer: null,
+
+  // Synced world state (v6.7). The lobby proposer picks a map key + a 32-bit
+  // seed and broadcasts them with match_start; every peer applies them before
+  // commitLoadout's world build. Seeding the corridor / obstacle / organic
+  // placement ensures both peers stand in the same physical geometry, so
+  // broadcast player positions land in the same coordinate frame.
+  worldMap: null,
+  worldSeed: null,
+
+  // Stasis field sync (v6.7). Owner pattern: lowest-peerId in the mesh is
+  // the spawner. They tick the spawn timer, compute positions, broadcast
+  // stasis_spawn; every peer (including spawner) instantiates from the
+  // broadcast. Pickup is broadcast by whoever consumed the field so all
+  // peers remove it visually.
+  stasisIdCounter: 0,
 };
 
 // Generate a short random ID
@@ -1317,9 +1339,14 @@ async function joinRoom() {
   try {
     // Dynamic import of trystero (loaded via module script tag)
     const trystero = await import('https://esm.sh/@trystero-p2p/torrent');
-    const { joinRoom: trysteroJoin } = trystero;
+    const { joinRoom: trysteroJoin, selfId } = trystero;
 
-    net.myPeerId = generatePeerId();
+    // (v6.7) Use trystero's own peer-id, not our local random id. The mesh
+    // identifies us by selfId (the same id other peers see in their onPeerJoin
+    // handler), so the proposer-tie-break in checkAllReady() must compare
+    // own-id and other-ids in the same id-space. Using two different schemes
+    // breaks the all-ready handshake silently (nobody picks themselves).
+    net.myPeerId = selfId;
     net.active = true;
     net.solo = false;
 
@@ -1376,6 +1403,9 @@ async function joinRoom() {
         peer.team = data.team;
         // Create or update their NetworkPlayer
         updateNetworkPlayer(peerId, data);
+        // (v6.7) A peer just committed in ship-select; if everyone now has a
+        // loadout, this triggers the synced launchAt proposal.
+        checkAllLoadoutsReady();
       }
     });
 
@@ -1399,6 +1429,7 @@ async function joinRoom() {
       });
       updateLobbyPeers();
       checkAllReady();          // (v6.7) a new not-ready peer cancels any pending start
+      checkAllLoadoutsReady();  // (v6.7) and a new peer in ship-select cancels pending launch
 
       // If we already have a loadout, announce it
       if (player.loadoutKey && net.sendLoadout) {
@@ -1429,6 +1460,7 @@ async function joinRoom() {
       net.peers.delete(peerId);
       updateLobbyPeers();
       checkAllReady();          // (v6.7) someone leaving may complete the ready set
+      checkAllLoadoutsReady();  // (v6.7) ; same applies to the ship-select handshake
     });
 
     document.getElementById('lobby-status').textContent = 'CONNECTED: ROOM ' + code + ' ; WAITING FOR PLAYERS...';
@@ -1522,6 +1554,10 @@ function buildMapSelector() {
 // the checkmark. Safe to call directly (used by click handlers and cycleMap).
 function selectMap(mapKey) {
   if (!MAP_DATA[mapKey]) return;
+  // (v6.7) Echo guard: receivers re-call selectMap with the new key, which
+  // would re-broadcast and bounce back. The early return when the key is
+  // already selected stops the storm without needing a per-call suppress flag.
+  if (game.selectedMap === mapKey) return;
   game.selectedMap = mapKey;
   const mapData = MAP_DATA[mapKey];
 
@@ -1533,6 +1569,14 @@ function selectMap(mapKey) {
   // Active dot
   const dots = document.querySelectorAll('#map-indicator .map-dot');
   dots.forEach(d => d.classList.toggle('active', d.dataset.key === mapKey));
+
+  // (v6.7) Pre-match map sync. Map can be changed by anyone in lobby /
+  // ship-select; once the world is built (commitLoadout runs), changes affect
+  // the next round only. The picker is hidden during gameplay, so no explicit
+  // lock is needed beyond the existing UI gating.
+  if (net.active && net.sendEvent) {
+    net.sendEvent({ type: 'map_change', mapKey });
+  }
 }
 
 // Cycle to the prev (-1) or next (+1) map, wrapping at either end.
@@ -1632,14 +1676,17 @@ function checkAllReady() {
   // Already scheduled; nothing more to do.
   if (net.startScheduledAt) return;
 
-  // Everyone is ready. Lowest peerId proposes the start time. Every peer
-  // computes the same proposer independently (deterministic tie-break);
-  // no negotiation, no host election.
+  // Everyone is ready. Lowest peerId proposes the start time, the map, and
+  // the world seed. Every peer computes the same proposer independently
+  // (deterministic tie-break); no negotiation, no host election.
   const allIds = [net.myPeerId, ...net.peers.keys()].sort();
   const proposer = allIds[0];
   if (proposer === net.myPeerId) {
     const startAt = Date.now() + 3000;
-    if (net.sendEvent) net.sendEvent({ type: 'match_start', startAt });
+    const mapKey = (typeof game !== 'undefined' && game.selectedMap) || 'hourglass';
+    const seed = (Math.random() * 0xFFFFFFFF) >>> 0;
+    if (net.sendEvent) net.sendEvent({ type: 'match_start', startAt, mapKey, seed });
+    applyWorldSync(mapKey, seed);
     scheduleMatchStart(startAt);
   }
   // Non-proposers schedule when the match_start event arrives in handleNetEvent.
@@ -1666,6 +1713,143 @@ function tickStartCountdown() {
     status.style.color = '#66cc66';
     setTimeout(tickStartCountdown, 100);
   }
+}
+
+// ---- SHIP-SELECT SYNCED LAUNCH (v6.7) ----
+// Same handshake as the lobby ready button, applied to ship selection. The
+// loadout broadcast in commitLoadout() is the "ready" signal here. When every
+// peer (including us) has a loadout, the lowest-peerId peer proposes a synced
+// launchAt timestamp and every peer schedules launchCountdown() for that moment.
+
+function checkAllLoadoutsReady() {
+  if (!net.active) return;
+  if (typeof _countdownActive !== 'undefined' && _countdownActive) return; // already launching
+  if (!player.loadoutKey) return;                                          // we haven't picked yet
+
+  // Refresh the waiting overlay (peer count may have just changed).
+  showShipSelectWaiting();
+
+  // Alone in the mesh (e.g. peers all dropped during ship-select); fall back
+  // to launching solo so testing doesn't deadlock.
+  if (net.peers.size === 0) {
+    launchCountdown();
+    return;
+  }
+
+  // Are all peers committed?
+  let allCommitted = true;
+  for (const peer of net.peers.values()) {
+    if (!peer.loadoutKey) { allCommitted = false; break; }
+  }
+
+  if (!allCommitted) {
+    // A new peer joined late without a loadout, or someone with a loadout
+    // left. Cancel any pending launch; we'll wait for them.
+    if (net.launchTimer) {
+      clearTimeout(net.launchTimer);
+      net.launchTimer = null;
+      net.launchScheduledAt = null;
+    }
+    return;
+  }
+
+  // Already scheduled; nothing to do.
+  if (net.launchScheduledAt) return;
+
+  // Lowest peerId proposes the launch moment. 1.5s buffer so the launch_at
+  // event reaches every peer before any peer's local timer fires.
+  const allIds = [net.myPeerId, ...net.peers.keys()].sort();
+  const proposer = allIds[0];
+  if (proposer === net.myPeerId) {
+    const launchAt = Date.now() + 1500;
+    if (net.sendEvent) net.sendEvent({ type: 'launch_at', launchAt });
+    scheduleLaunch(launchAt);
+  }
+  // Non-proposers wait for the launch_at event in handleNetEvent.
+}
+
+function scheduleLaunch(launchAt) {
+  if (net.launchTimer) clearTimeout(net.launchTimer);
+  net.launchScheduledAt = launchAt;
+  const delay = Math.max(0, launchAt - Date.now());
+  net.launchTimer = setTimeout(() => {
+    net.launchTimer = null;
+    net.launchScheduledAt = null;
+    launchCountdown();
+  }, delay);
+}
+
+// ---- WORLD-STATE SYNC (v6.7) ----
+// Per docs/LSS/mesh_networking_concept.md: before launch, every peer must
+// agree on the map and on the procedural seed used to place corridors,
+// obstacles, and organics. Without this, peers build different worlds and
+// broadcast positions land in mismatched coordinate frames; players appear
+// to be in different places because they ARE.
+//
+// applyWorldSync stashes the proposer's choices on net so the world-build
+// path inside commitLoadout can swap in a seeded RNG just for the build.
+
+function applyWorldSync(mapKey, seed) {
+  net.worldMap = mapKey;
+  net.worldSeed = seed >>> 0;
+  if (typeof game !== 'undefined') game.selectedMap = mapKey;
+  // (v6.7) Split peers across Fleet A and Fleet B so the round-end check
+  // (which fires the moment one team is empty) doesn't insta-end every round.
+  // Without bots filling slots, two peers on the same fleet leave the other
+  // fleet permanently empty and produce a launch / round-end / re-launch loop.
+  // Sorted-peerId index is deterministic; every peer assigns themselves the
+  // same team without negotiation.
+  assignTeamFromPeerOrder();
+}
+
+function assignTeamFromPeerOrder() {
+  if (typeof player === 'undefined' || !net.myPeerId) return;
+  const allIds = [net.myPeerId, ...net.peers.keys()].sort();
+  const myIndex = allIds.indexOf(net.myPeerId);
+  player.team = (myIndex % 2 === 0) ? LSS.TEAM_FLEET_A : LSS.TEAM_FLEET_B;
+}
+
+// mulberry32: small, fast, well-distributed seedable RNG. Two peers seeded
+// with the same 32-bit integer produce identical sequences, so calls to
+// Math.random() during the world build land identical corridors / obstacles
+// / organics on every peer.
+function mulberry32(seed) {
+  let s = seed >>> 0;
+  return function() {
+    s = (s + 0x6D2B79F5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// Override Math.random for the duration of fn(), then restore. Used to seed
+// only the world-build window; per-tick effects after restore stay random.
+function withSeededRandom(seed, fn) {
+  const orig = Math.random;
+  Math.random = mulberry32(seed);
+  try { return fn(); }
+  finally { Math.random = orig; }
+}
+
+// Reuse the ship-select-countdown overlay as a "waiting for others" panel
+// while we wait for all peers to pick a ship. launchCountdown() will
+// overwrite the cd-num / cd-sub text when the synced launch fires, so this
+// is safe to leave in place.
+function showShipSelectWaiting() {
+  const overlay = document.getElementById('ship-select-countdown');
+  const numEl = overlay ? overlay.querySelector('.cd-num') : null;
+  const subEl = overlay ? overlay.querySelector('.cd-sub') : null;
+  if (!overlay || !numEl || !subEl) return;
+  let committed = player.loadoutKey ? 1 : 0;
+  for (const peer of net.peers.values()) {
+    if (peer.loadoutKey) committed++;
+  }
+  const total = net.peers.size + 1;
+  numEl.textContent = committed + ' / ' + total;
+  subEl.textContent = 'READY ; WAITING FOR ALL PLAYERS';
+  overlay.classList.add('active');
 }
 
 // ---- NETWORK PLAYER CLASS ----
@@ -1717,18 +1901,49 @@ class NetworkPlayer {
   }
 
   update(dt) {
-    if (!this.alive) return;
-
-    // Get latest peer data
+    // Get latest peer data first; we need to read it even when locally
+    // dead so we can detect the next-round respawn (dead -> alive).
     const peer = net.peers.get(this.peerId);
     if (!peer || !peer.state) return;
 
     const s = peer.state;
 
+    // (v6.7) Revival: locally dead but the peer's broadcast now shows them
+    // alive again (next-round respawn). Restore the mesh, reset health,
+    // re-snap to the broadcast position so we don't tween through the
+    // wreck. Without this, the killer never sees the victim re-appear after
+    // round-end without a ship-swap.
+    if (!this.alive && s.dead !== true && (typeof s.hp !== 'number' || s.hp > 0)) {
+      this.alive = true;
+      this.health = (this.chassis && this.chassis.maxHealth) || 100;
+      this.shield = 0;
+      if (this.mesh && !this.mesh.parent && typeof scene !== 'undefined') scene.add(this.mesh);
+      if (typeof s.px === 'number') this.position.set(s.px, s.py, s.pz);
+    }
+
+    if (!this.alive) return;
+
+    // (v6.7) React to the broadcast death flag. Without this, NetworkPlayer
+    // keeps interpolating as alive even after the actual peer's player has
+    // died, the ship lingers at low HP on the killer's screen, and the
+    // round-end check (which counts NetworkPlayer.alive) never trips on the
+    // killer's side ; round desyncs across peers, victim goes to ship-select
+    // alone, killer keeps flying. Calling die() plays the explosion VFX,
+    // removes the mesh, flips alive=false, and lets the round-end logic see
+    // the team as empty.
+    if (s.dead === true || (typeof s.hp === 'number' && s.hp <= 0)) {
+      this.die(null);
+      return;
+    }
+
     // Update health/shield from network
     this.health = s.hp || this.health;
     this.shield = s.shield || 0;
     this.doomed = s.doomed || false;
+    // (v6.7) Mirror per-player stats so scoreboard rows for remote peers
+    // show real kill / damage numbers instead of zeros.
+    if (typeof s.kills === 'number') this.kills = s.kills;
+    if (typeof s.damageDealt === 'number') this.damageDealt = s.damageDealt;
 
     // Smooth interpolation toward target position/rotation
     this.targetPos.set(s.px || 0, s.py || 0, s.pz || 0);
@@ -1761,7 +1976,24 @@ class NetworkPlayer {
   takeDamage(amount, attacker) {
     // For network players, damage is handled via consensus.
     // Local hit detection creates a claim; actual HP change comes from network state.
-    // But we still need this method for compatibility with existing code.
+    // (v6.7) Wire this up. Every damage path in the engine ; hitscan, spread,
+    // splash, abilities, debris, ramming ; eventually calls takeDamage on
+    // the entity that got hit. For a NetworkPlayer that means we have to
+    // tell the actual peer "you took N damage from me." Their handleHitClaim
+    // applies it to their local player and the next state broadcast confirms
+    // the new HP back to us. Without this call, hits silently no-op.
+    if (amount > 0 && net.active && net.sendHitClaim && this.peerId) {
+      const hitId = ++net.hitIdCounter;
+      net.sendHitClaim({
+        hitId,
+        shooterId: net.myPeerId,
+        targetId: this.peerId,
+        damage: amount,
+        sx: player.position.x,
+        sy: player.position.y,
+        sz: player.position.z,
+      });
+    }
     return amount;
   }
 
@@ -1822,6 +2054,10 @@ function broadcastPlayerState(dt) {
     shield: player.shield,
     doomed: player.doomed,
     dead: player.shipState === 'dead',
+    // (v6.7) Per-player stats so the scoreboard isn't permanently 0 for
+    // remote peers. Cheap (two ints, broadcast at 20 Hz with the rest).
+    kills: player.kills | 0,
+    damageDealt: player.damageDealt | 0,
   };
 
   const msg = JSON.stringify(state);
@@ -1949,7 +2185,71 @@ function handleNetEvent(evt, fromPeerId) {
     const allIds = [net.myPeerId, ...net.peers.keys()].sort();
     const expectedProposer = allIds[0];
     if (fromPeerId === expectedProposer && net.myReady) {
+      // (v6.7) Apply the proposer's chosen map + seed before scheduling the
+      // start, so commitLoadout's world build is identical on every peer.
+      if (evt.mapKey && typeof evt.seed === 'number') {
+        applyWorldSync(evt.mapKey, evt.seed);
+      }
       scheduleMatchStart(evt.startAt);
+    }
+    return;
+  }
+  // (v6.7) Synced ship-select launch from the lowest-peerId proposer.
+  if (evt.type === 'launch_at' && typeof evt.launchAt === 'number') {
+    const allIds = [net.myPeerId, ...net.peers.keys()].sort();
+    const expectedProposer = allIds[0];
+    if (fromPeerId === expectedProposer && player.loadoutKey) {
+      scheduleLaunch(evt.launchAt);
+    }
+    return;
+  }
+  // (v6.7) A peer destroyed a cluster obstacle; mirror it locally so the
+  // object pops on every screen even if our local HP for it wasn't 0 yet.
+  // Cluster netIds were assigned in spawnDynamicObjects under the seed-synced
+  // RNG, so evt.objId targets the same cluster on every peer.
+  if (evt.type === 'obj_destroy' && typeof evt.objId === 'number') {
+    const cluster = game.clusters && game.clusters[evt.objId];
+    if (cluster && !cluster.broken) {
+      const hitPos = (typeof evt.hx === 'number')
+        ? new THREE.Vector3(evt.hx, evt.hy, evt.hz)
+        : null;
+      const hitDir = (typeof evt.dx === 'number' && (evt.dx || evt.dy || evt.dz))
+        ? new THREE.Vector3(evt.dx, evt.dy, evt.dz)
+        : null;
+      cluster.breakApart(hitPos, hitDir);
+    }
+    return;
+  }
+  // (v6.7) Pre-match map sync. selectMap's "no-op if already selected"
+  // early-return prevents the receiver re-broadcasting and creating a storm.
+  if (evt.type === 'map_change' && typeof evt.mapKey === 'string') {
+    if (typeof selectMap === 'function') selectMap(evt.mapKey);
+    return;
+  }
+  // (v6.7) Stasis owner spawned a field; mirror it at the broadcast position
+  // with the broadcast netId so pickups can target it across peers.
+  if (evt.type === 'stasis_spawn' && typeof evt.fieldId === 'number') {
+    // Don't double-spawn if we already have this field (defensive against
+    // late re-broadcast on peer-join scenarios).
+    const exists = game.stasisFields.some(f => f.netId === evt.fieldId);
+    if (!exists) {
+      const pos = new THREE.Vector3(evt.x, evt.y, evt.z);
+      instantiateStasisField(pos, evt.fieldId);
+      // Keep our id counter ahead of any inbound id so a future local owner
+      // role doesn't reuse an id another peer already burned.
+      if (evt.fieldId > net.stasisIdCounter) net.stasisIdCounter = evt.fieldId;
+    }
+    return;
+  }
+  // (v6.7) Someone else picked up a stasis field; remove it from our world.
+  // Don't grant shields locally; the consumer is the broadcaster.
+  if (evt.type === 'stasis_pickup' && typeof evt.fieldId === 'number') {
+    for (let i = game.stasisFields.length - 1; i >= 0; i--) {
+      const f = game.stasisFields[i];
+      if (f.netId === evt.fieldId && f.alive) {
+        f.destroy();
+        break;
+      }
     }
     return;
   }
@@ -1961,9 +2261,13 @@ function spawnNetworkProjectile(data, fromPeerId) {
   const origin = new THREE.Vector3(data.ox, data.oy, data.oz);
   const vel = new THREE.Vector3(data.vx, data.vy, data.vz);
   const color = data.color || 0xffaa00;
-  // Reuse existing Projectile class but mark as network (no local damage)
+  // Reuse existing Projectile class but mark as network (no local damage;
+  // damage flows via the hit-claim path, NetworkPlayer.takeDamage).
   const proj = new Projectile(origin, vel, 0, 0, 'network', color);
   proj.isNetwork = true;
+  // (v6.7) Carry pyro-style fire-source flag so gas clouds still ignite
+  // visually when a remote pyro's projectile passes through them.
+  if (data.isFireSource) proj.isFireSource = true;
   game.projectiles.push(proj);
 }
 
@@ -6282,6 +6586,21 @@ class ClusterObstacle {
     if (typeof spawnDynamicLight === 'function') {
       spawnDynamicLight(this.position, 0xffaa66, 1.2, Math.min(260, this.clusterScale * 3), 0.25);
     }
+    // (v6.7) Tell the mesh this cluster popped. Receivers find their local
+    // cluster by netId and call breakApart() with the same hit point so the
+    // explosion looks the same on every screen. The this.broken guard at the
+    // top of breakApart prevents echo storms (the receiver's local breakApart
+    // returns early on the round-trip).
+    if (net.active && net.sendEvent && this.netId !== undefined) {
+      net.sendEvent({
+        type: 'obj_destroy',
+        objId: this.netId,
+        hx: src.x, hy: src.y, hz: src.z,
+        dx: hitDir ? hitDir.x : 0,
+        dy: hitDir ? hitDir.y : 0,
+        dz: hitDir ? hitDir.z : 0,
+      });
+    }
   }
 
   respawn() {
@@ -6341,6 +6660,13 @@ function spawnDynamicObjects(rooms) {
     const pos = new THREE.Vector3(pt.x, pt.y, pt.z);
     const clusterScale = 25 + Math.random() * 35;
     game.clusters.push(new ClusterObstacle(pos, clusterScale));
+  }
+
+  // (v6.7) Assign stable netIds so cluster destruction events can target the
+  // same cluster on every peer. Both peers built game.clusters in the same
+  // order under the seed-synced RNG, so index = id is stable across the mesh.
+  for (let i = 0; i < game.clusters.length; i++) {
+    game.clusters[i].netId = i;
   }
 }
 
@@ -7645,27 +7971,41 @@ function commitLoadout(key) {
 
   if (!midMatch) {
     // Fresh match: full map build, stasis reset, bot spawn, score reset.
-    shuffleMapRotation();
-    const level = getNextMap();
-    buildRoomGraphLevel(level);
-    spawnDynamicObjects(game.sdfRoomData);
-    spawnOrganics(game.sdfRoomData);
+    // (v6.7) In multiplayer, swap Math.random for a seeded RNG for the
+    // duration of the world build so every peer constructs identical
+    // corridors, obstacles, organics, and bot placements. After the build,
+    // Math.random returns to the system source so per-tick effects stay
+    // unique per peer.
+    const buildWorld = () => {
+      shuffleMapRotation();
+      const level = getNextMap();
+      buildRoomGraphLevel(level);
+      spawnDynamicObjects(game.sdfRoomData);
+      spawnOrganics(game.sdfRoomData);
 
-    // Place player inside the letter corridors (Fleet A territory)
-    player.position.copy(getValidSpawnPoint('A'));
+      // Place player inside the letter corridors (Fleet A territory)
+      player.position.copy(getValidSpawnPoint('A'));
 
-    // Reset stasis field state
-    game.stasisFields.forEach(f => f.destroy());
-    game.stasisFields = [];
-    game.stasisSpawnTimer = 30;
-    game.stasisFirstBatch = true;
-    game.playerInStasis = false;
-    game.playerStasisTimer = 0;
-    document.getElementById('stasis-warning').style.display = 'none';
-    document.getElementById('stasis-vignette').style.display = 'none';
+      // Reset stasis field state
+      game.stasisFields.forEach(f => f.destroy());
+      game.stasisFields = [];
+      game.stasisSpawnTimer = 30;
+      game.stasisFirstBatch = true;
+      game.playerInStasis = false;
+      game.playerStasisTimer = 0;
+      document.getElementById('stasis-warning').style.display = 'none';
+      document.getElementById('stasis-vignette').style.display = 'none';
 
-    // In multiplayer, still spawn bots to fill slots; network players coexist
-    spawnBots();
+      // (v6.7) Multiplayer is humans only; bots removed. Skip the local bot
+      // fleet so the match is just the connected peers. Solo still spawns
+      // the full bot fleet as before.
+      if (!net.active) spawnBots();
+    };
+    if (net.active && typeof net.worldSeed === 'number') {
+      withSeededRandom(net.worldSeed, buildWorld);
+    } else {
+      buildWorld();
+    }
 
     game.state = 'warmup';
     game.roundTimer = LSS.ROUND_TIME;
@@ -7702,10 +8042,18 @@ function commitLoadout(key) {
   // Pre-compile shader programs for combat-effect materials while the player
   // watches the 10s launch countdown. One-shot (idempotent).
   warmupCombatShaders();
-  // Fire the in-screen 3-2-1-LAUNCH beep + number sequence. launchCountdown()
-  // itself is a no-op if one is already running, so this is safe to call
-  // unconditionally.
-  launchCountdown();
+  // (v6.7) In multiplayer, picking a ship is the ship-select equivalent of
+  // pressing READY in the lobby. Don't launch alone; the loadout broadcast
+  // above is the "ready" signal. The lowest-peerId peer proposes a synced
+  // launchAt timestamp once every peer has committed, and every peer fires
+  // launchCountdown() at that wall-clock moment so the 3-2-1-LAUNCH sequence
+  // is in lockstep across the mesh. In solo mode, launch immediately as before.
+  if (net.active) {
+    showShipSelectWaiting();
+    checkAllLoadoutsReady();
+  } else {
+    launchCountdown();
+  }
 }
 
 function spawnBots() {
@@ -7893,6 +8241,21 @@ function playerDie(attacker) {
   player.deaths++;
   spawnExplosion(player.position, player.chassis.hullLength);
   if (attacker && attacker.loadout) addKillFeed(attacker.loadout.name, 'You');
+  // (v6.7) Broadcast the kill to peers so their feed gets the entry too.
+  // The receive side already routes evt.type === 'kill' to addKillFeed in
+  // handleNetEvent. Sending the killer/victim chassis names is enough for
+  // a readable feed; killerPeerId is included for future per-peer stats
+  // attribution (kill streaks, third-party assist tracking).
+  if (net.active && net.sendEvent) {
+    const killerName = (attacker && attacker.loadout && attacker.loadout.name) || 'Unknown';
+    const victimName = (player.loadout && player.loadout.name) || 'You';
+    net.sendEvent({
+      type: 'kill',
+      killerName,
+      victimName,
+      killerPeerId: (attacker && attacker.peerId) ? attacker.peerId : null,
+    });
+  }
   // Cinematic: respawn overlay + track killer for revenge medals.
   player._streakCount = 0;
   player._lastKilledBy = attacker && attacker.loadout ? attacker : null;
@@ -8473,6 +8836,18 @@ function fireProjectile(origin, dir, w) {
   // Pyro projectiles are fire sources (ignite gas clouds on pass-through)
   if (player.loadoutKey === 'PYRO') proj.isFireSource = true;
   game.projectiles.push(proj);
+  // (v6.7) Broadcast a visual-only twin of this projectile so peers see
+  // the shot fly at them. Damage authority stays with the hit-claim path
+  // (NetworkPlayer.takeDamage), so spawnNetworkProjectile keeps damage = 0
+  // and the visual carries no extra hp impact ; no double-counting.
+  if (net.active && net.sendProjectile) {
+    net.sendProjectile({
+      ox: origin.x, oy: origin.y, oz: origin.z,
+      vx: vel.x,   vy: vel.y,   vz: vel.z,
+      color: 0xff8800,
+      isFireSource: !!proj.isFireSource,
+    });
+  }
 }
 
 function fireSpread(origin, dir, w) {
@@ -10097,8 +10472,16 @@ function updateRoundSystem(dt) {
     // Single pass over the entity list to count alive on each team; previously
     // we walked the array twice via .filter, which is double the work for a
     // hot per-tick check.
-    let aliveA = (player.shipState !== 'dead' ? 1 : 0);
+    // (v6.7) Don't hardcode the local player to Fleet A; in multiplayer the
+    // peer assigned to Fleet B by assignTeamFromPeerOrder() would be miscounted
+    // and the round would end "instantly" on their screen but not on the
+    // other peer's, creating a desync loop.
+    let aliveA = 0;
     let aliveB = 0;
+    if (player.shipState !== 'dead') {
+      if (player.team === LSS.TEAM_FLEET_B) aliveB++;
+      else aliveA++;
+    }
     for (let i = 0, n = game.entities.length; i < n; i++) {
       const b = game.entities[i];
       if (!b.alive) continue;
@@ -10168,7 +10551,7 @@ function updateRoundSystem(dt) {
         player.coreActive = false;
         player.coreTimer = 0;
         respawnPlayer();
-        spawnBots();
+        if (!net.active) spawnBots();   // (v6.7) no bots in multiplayer
         // Release pointer lock and re-show ship-select with the current pick
         // highlighted; the player can swap ships or wait for the auto-launch.
         if (document.exitPointerLock) {
@@ -12475,7 +12858,31 @@ function getStasisSphereIndex(pos) {
   return -1;
 }
 
+// (v6.7) "Am I the stasis owner?" Same lowest-peerId tie-break used for
+// match_start and launch_at. Solo always owns. Non-owners skip spawn entirely;
+// they only instantiate fields from the network.
+function amStasisOwner() {
+  if (!net.active) return true;
+  const allIds = [net.myPeerId, ...net.peers.keys()].sort();
+  return allIds[0] === net.myPeerId;
+}
+
+// (v6.7) Instantiate a stasis field at a known position with a known netId.
+// Used by both the local owner (after computing the spawn) and by every peer
+// when receiving a stasis_spawn event.
+function instantiateStasisField(pos, fieldId) {
+  const field = new StasisField(pos);
+  field.netId = fieldId;
+  game.stasisFields.push(field);
+  return field;
+}
+
 function spawnStasisField() {
+  // (v6.7) Only the stasis owner computes spawns; receivers get them via the
+  // stasis_spawn event. This is the simplest fix for "every peer ticks their
+  // own timer and spawns at different moments and positions."
+  if (net.active && !amStasisOwner()) return;
+
   // Max 3 on the map at once
   const aliveFields = game.stasisFields.filter(f => f.alive);
   if (aliveFields.length >= 3) return;
@@ -12506,9 +12913,16 @@ function spawnStasisField() {
     }
     if (tooClose) continue;
 
-    // Valid spawn
-    const field = new StasisField(pos);
-    game.stasisFields.push(field);
+    // Valid spawn ; instantiate locally and broadcast so peers can mirror.
+    const fieldId = ++net.stasisIdCounter;
+    instantiateStasisField(pos, fieldId);
+    if (net.active && net.sendEvent) {
+      net.sendEvent({
+        type: 'stasis_spawn',
+        x: pos.x, y: pos.y, z: pos.z,
+        fieldId,
+      });
+    }
     return;
   }
   // If 50 attempts fail, skip this spawn cycle (will retry next interval)
@@ -12585,6 +12999,13 @@ function enterStasis(field) {
 
   document.getElementById('stasis-warning').style.display = 'block';
   document.getElementById('stasis-vignette').style.display = 'block';
+
+  // (v6.7) Tell peers I just consumed this field so they remove it from
+  // their world too. Receivers find the field by netId and call destroy()
+  // locally without granting shields (the consumer is whoever sent the event).
+  if (net.active && net.sendEvent && field.netId !== undefined) {
+    net.sendEvent({ type: 'stasis_pickup', fieldId: field.netId });
+  }
 }
 
 function updatePlayerStasis(dt) {

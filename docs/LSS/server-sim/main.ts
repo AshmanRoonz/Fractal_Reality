@@ -282,6 +282,13 @@ const server = Bun.serve<ClientData>({
         player.ready = !!data.payload.ready;
         return;
       }
+
+      // v8.49: NA23 ; ping/pong for client RTT measurement. Echo back the
+      // client's `t` so they can compute round-trip time.
+      if (data && data.type === 'ping') {
+        send(ws, { type: 'pong', t: data.t });
+        return;
+      }
     },
 
     close(ws, code, reason) {

@@ -253,6 +253,23 @@ export interface Bot {
   aiTimer: number;
   aiTargetType: 'player' | 'bot' | null;
   aiTargetId: number | null;
+  // v8.54: NA5 ; bot ability scheduling. Per-slot cooldown timers (bot's
+  // perspective; throttles re-attempts after a successful or rejected use).
+  // We don't read player.abilityCooldowns directly because bots have their
+  // own ability state (similar shape but separate fields).
+  abilityCooldowns: number[];
+  abilityActive: boolean[];
+  abilityTimers: number[];
+  // Persistent buffs that bot abilities can grant (mirror of Player fields).
+  afterburnerMult: number;
+  damageImmuneTimer: number;
+  coreFireRateMult: number;
+  coreDamageMult: number;
+  // Defensive trigger memory: bot tries defensive/utility abilities more
+  // eagerly when recently damaged.
+  lastDamageTime: number;
+  // v8.54: per-bot ability cooldown bias so different bots don't synchronize.
+  abilityScheduleJitter: number;
 }
 
 export interface Projectile {
@@ -331,7 +348,7 @@ export interface SimState {
 
 // v8.6: hit/kill events surfaced to clients so they can play markers.
 export interface SimEvent {
-  type: 'hit' | 'kill' | 'fire';
+  type: 'hit' | 'kill' | 'fire' | 'beam'; // v8.51: beam for hitscan visuals
   shooterType: 'player' | 'bot';
   shooterId: number;
   shooterPeerId?: string;
@@ -622,6 +639,16 @@ export function spawnBot(state: SimState, team: number, loadoutKey: string): Bot
     weaponFireRate: ld.weapon.fireRate,
     aiTarget: null, aiTimer: 0,
     aiTargetType: null, aiTargetId: null,
+    // v8.54: NA5 ; ability scheduling fields.
+    abilityCooldowns: [0, 0, 0, 0],
+    abilityActive: [false, false, false, false],
+    abilityTimers: [0, 0, 0, 0],
+    afterburnerMult: 1.0,
+    damageImmuneTimer: 0,
+    coreFireRateMult: 1.0,
+    coreDamageMult: 1.0,
+    lastDamageTime: -999,
+    abilityScheduleJitter: Math.random() * 2.0,
   };
   state.bots.set(id, bot);
   return bot;
@@ -629,6 +656,197 @@ export function spawnBot(state: SimState, team: number, loadoutKey: string): Bot
 
 export function clearAllBots(state: SimState): void {
   state.bots.clear();
+}
+
+// v8.54: NA5 ; bot ability scheduler + dispatch. Picks a slot to use based
+// on situation (recently-damaged + low HP → defensive; target in range →
+// offensive; HP healthy + target visible → core); calls dispatcher to
+// actually invoke. Bots only use what's wired here ; some abilities (utility
+// slot 2) are skipped because their LSS heuristics are situational and not
+// worth modeling for bot AI yet.
+function _tryBotAbility(bot: Bot, state: SimState, distToTarget: number): void {
+  const lk = bot.loadoutKey;
+  const cdTable = ABILITY_COOLDOWNS[lk];
+  if (!cdTable) return;
+  // Add small jitter so two same-loadout bots don't synchronize button presses.
+  const minDelay = 0.5 + bot.abilityScheduleJitter;
+  if ((state.time + bot.abilityScheduleJitter) < minDelay) return;
+  const hpFrac = bot.health / bot.maxHealth;
+  const recentlyHit = (state.time - bot.lastDamageTime) < 2.0;
+
+  // Defensive (slot 1) ; high priority when threatened.
+  if (bot.abilityCooldowns[1] <= 0 && !bot.abilityActive[1]
+      && (hpFrac < 0.5 || recentlyHit)) {
+    if (_activateBotAbility(state, bot, 1)) return;
+  }
+  // Offensive (slot 0) ; main combat ability.
+  if (bot.abilityCooldowns[0] <= 0 && !bot.abilityActive[0]
+      && distToTarget < 2500) {
+    if (_activateBotAbility(state, bot, 0)) return;
+  }
+  // Core (slot 3) ; emergency / aggressive moment.
+  if (bot.abilityCooldowns[3] <= 0 && !bot.abilityActive[3]
+      && hpFrac > 0.3 && distToTarget < 3000) {
+    if (_activateBotAbility(state, bot, 3)) return;
+  }
+  // Utility (slot 2) is skipped for bots; LSS heuristics for trip wires /
+  // traps / sonar-lock are situational and don't model cleanly without LOS
+  // and ground-tracking infrastructure.
+}
+
+// Per-loadout bot-side ability implementation. Mirrors the player dispatcher
+// in spirit but fires the same projectile types or applies the same buffs.
+// Returns true if dispatched.
+function _activateBotAbility(state: SimState, bot: Bot, slot: number): boolean {
+  const lk = bot.loadoutKey;
+  const cdTable = ABILITY_COOLDOWNS[lk];
+  const durTable = ABILITY_DURATIONS[lk];
+  if (!cdTable || !durTable) return false;
+
+  // Resolve target position. Used by some abilities to aim non-fire effects.
+  let targetPos: Vec3 | null = null;
+  if (bot.aiTargetType === 'player' && bot.aiTargetId != null) {
+    for (const p of state.players.values()) {
+      if (p.id === bot.aiTargetId) { targetPos = p.position; break; }
+    }
+  } else if (bot.aiTargetType === 'bot' && bot.aiTargetId != null) {
+    const b = state.bots.get(bot.aiTargetId);
+    if (b) targetPos = b.position;
+  }
+  // For most abilities we just need facing + origin.
+  const facing = _facingDir(bot.yaw, bot.pitch);
+  const origin: Vec3 = {
+    x: bot.position.x + facing.x * 80,
+    y: bot.position.y + 30 + facing.y * 80,
+    z: bot.position.z + facing.z * 80,
+  };
+
+  let dispatched = false;
+
+  if (lk === 'VORTEX' && slot === 0) {
+    _hitscanFire(state, 'bot', bot.id, bot.team, origin, facing, 2400, 3000, false);
+    dispatched = true;
+  } else if (lk === 'VORTEX' && slot === 1) {
+    // Vortex Shield ; reduces damage via _applyDamage check on abilityActive[1].
+    dispatched = true;
+  } else if (lk === 'VORTEX' && slot === 3) {
+    bot.coreDamageMult = 3.0;
+    dispatched = true;
+  } else if (lk === 'PYRO' && slot === 0) {
+    // Firewall in front of bot.
+    const wallPos: Vec3 = { x: bot.position.x + facing.x * 200, y: bot.position.y, z: bot.position.z + facing.z * 200 };
+    _spawnWorldEffect(state, 'firewall', 'bot', bot.id, bot.team, wallPos,
+      { width: 600, height: 200, dps: 400, dirX: facing.x, dirZ: facing.z, color: 0xff7733 }, durTable[0] || 6, 999);
+    dispatched = true;
+  } else if (lk === 'PYRO' && slot === 1) {
+    dispatched = true;
+  } else if (lk === 'PYRO' && slot === 3) {
+    // Flame Core ; massive AoE at bot's position.
+    _spawnWorldEffect(state, 'incendiary', 'bot', bot.id, bot.team, bot.position,
+      { radius: 800, dps: 4500 }, durTable[3] || 2, 999);
+    dispatched = true;
+  } else if (lk === 'PUNCTURE' && slot === 0) {
+    // Cluster Missile (single fast projectile; no burst zone for bots).
+    const proj = _spawnProjectile(state, 'bot', bot.id, bot.team, origin, facing);
+    proj.damage = 800;
+    proj.velocity.x = facing.x * 1500;
+    proj.velocity.y = facing.y * 1500;
+    proj.velocity.z = facing.z * 1500;
+    proj.lifetime = 3.0;
+    proj.color = 0xffaa44;
+    dispatched = true;
+  } else if (lk === 'PUNCTURE' && slot === 1) {
+    bot.afterburnerMult = 2.0;
+    dispatched = true;
+  } else if (lk === 'PUNCTURE' && slot === 3) {
+    bot.afterburnerMult = 2.5;
+    bot.coreDamageMult = 1.5;
+    dispatched = true;
+  } else if (lk === 'SLAYER' && slot === 0) {
+    // Arc Wave (short range wide projectile; wallPierce so it threads tunnels).
+    const proj = _spawnProjectile(state, 'bot', bot.id, bot.team, origin, facing);
+    proj.damage = 1200;
+    proj.velocity.x = facing.x * 800;
+    proj.velocity.y = facing.y * 800;
+    proj.velocity.z = facing.z * 800;
+    proj.wallPierce = true;
+    proj.lifetime = 1.5;
+    proj.color = 0xffeeaa;
+    dispatched = true;
+  } else if (lk === 'SLAYER' && slot === 1) {
+    dispatched = true;
+  } else if (lk === 'SLAYER' && slot === 3) {
+    bot.coreDamageMult = 2.5;
+    dispatched = true;
+  } else if (lk === 'TRACKER' && slot === 0) {
+    // Tracker Rockets ; 3-shot fan instead of homing salvo (simpler).
+    for (let i = -1; i <= 1; i++) {
+      const angOff = i * 0.1;
+      const cy = Math.cos(bot.yaw + angOff), sy2 = Math.sin(bot.yaw + angOff);
+      const dir = { x: -sy2, y: facing.y, z: -cy };
+      const proj = _spawnProjectile(state, 'bot', bot.id, bot.team, origin, dir);
+      proj.damage = 600;
+      proj.velocity.x = dir.x * 1200;
+      proj.velocity.y = dir.y * 1200;
+      proj.velocity.z = dir.z * 1200;
+      proj.lifetime = 2.5;
+      proj.color = 0x88ddaa;
+    }
+    dispatched = true;
+  } else if (lk === 'TRACKER' && slot === 1) {
+    bot.damageImmuneTimer = durTable[1] || 5;
+    dispatched = true;
+  } else if (lk === 'TRACKER' && slot === 3) {
+    bot.coreFireRateMult = 2.0;
+    bot.coreDamageMult = 1.5;
+    dispatched = true;
+  } else if (lk === 'BLASTER' && slot === 0) {
+    // Power Shot ; single big-damage projectile.
+    const proj = _spawnProjectile(state, 'bot', bot.id, bot.team, origin, facing);
+    proj.damage = 3000;
+    proj.velocity.x = facing.x * 2500;
+    proj.velocity.y = facing.y * 2500;
+    proj.velocity.z = facing.z * 2500;
+    proj.lifetime = 1.5;
+    proj.color = 0xffdd44;
+    dispatched = true;
+  } else if (lk === 'BLASTER' && slot === 1) {
+    dispatched = true;
+  } else if (lk === 'BLASTER' && slot === 3) {
+    bot.coreFireRateMult = 1.5;
+    bot.coreDamageMult = 1.2;
+    dispatched = true;
+  } else if (lk === 'SYPHON' && slot === 0) {
+    // Rocket Salvo ; 5-shot tight spread.
+    for (let i = 0; i < 5; i++) {
+      const angOff = (i - 2) * 0.04;
+      const cy = Math.cos(bot.yaw + angOff), sy2 = Math.sin(bot.yaw + angOff);
+      const dir = { x: -sy2, y: facing.y, z: -cy };
+      const proj = _spawnProjectile(state, 'bot', bot.id, bot.team, origin, dir);
+      proj.damage = 700;
+      proj.velocity.x = dir.x * 1400;
+      proj.velocity.y = dir.y * 1400;
+      proj.velocity.z = dir.z * 1400;
+      proj.lifetime = 2.5;
+      proj.color = 0xcc77ff;
+    }
+    dispatched = true;
+  } else if (lk === 'SYPHON' && slot === 1) {
+    // Energy Siphon ; cheap hitscan that drains.
+    _hitscanFire(state, 'bot', bot.id, bot.team, origin, facing, 1500, 2500, false);
+    dispatched = true;
+  } else if (lk === 'SYPHON' && slot === 3) {
+    bot.coreDamageMult = 1.5;
+    dispatched = true;
+  }
+
+  if (!dispatched) return false;
+  bot.abilityCooldowns[slot] = cdTable[slot];
+  if (durTable[slot] > 0) {
+    bot.abilityActive[slot] = true;
+    bot.abilityTimers[slot] = durTable[slot];
+  }
+  return true;
 }
 
 // v8.3: chase-and-shoot AI. Bot finds the nearest live enemy, flies toward
@@ -723,6 +941,86 @@ function _tickBotAI(bot: Bot, state: SimState, dt: number): void {
     // Pseudo-random side: vary by id so two bots don't strafe the same way.
     if ((bot.id & 1) === 0) { steerX = -steerX; steerZ = -steerZ; }
   }
+
+  // v8.56: NA6 ; cheap obstacle avoidance. Sample SDF 200u ahead of intended
+  // direction; if outside the level (i.e. would hit wall), nudge sideways
+  // until clearer. Prevents bots from grinding wall corners in tunnels.
+  {
+    const lookAhead = 250;
+    const probeX = bot.position.x + steerX * lookAhead;
+    const probeY = bot.position.y + steerY * lookAhead;
+    const probeZ = bot.position.z + steerZ * lookAhead;
+    if (!pointInLevel({ x: probeX, y: probeY, z: probeZ }, state.level)) {
+      // Try perpendicular candidates (left-strafe + right-strafe) and pick
+      // the one with cleaner forward path. Use cross product with up vector.
+      const altLX = -steerZ, altLY = steerY, altLZ = steerX;     // left
+      const altRX =  steerZ, altRY = steerY, altRZ = -steerX;    // right
+      const probeL = pointInLevel({
+        x: bot.position.x + altLX * lookAhead,
+        y: bot.position.y + altLY * lookAhead,
+        z: bot.position.z + altLZ * lookAhead,
+      }, state.level);
+      const probeR = pointInLevel({
+        x: bot.position.x + altRX * lookAhead,
+        y: bot.position.y + altRY * lookAhead,
+        z: bot.position.z + altRZ * lookAhead,
+      }, state.level);
+      if (probeL && !probeR)      { steerX = altLX; steerY = altLY; steerZ = altLZ; }
+      else if (probeR && !probeL) { steerX = altRX; steerY = altRY; steerZ = altRZ; }
+      else if (probeL && probeR) {
+        // Both clear ; deterministic pick by bot id so neighbors don't oscillate.
+        if ((bot.id & 1) === 0) { steerX = altLX; steerY = altLY; steerZ = altLZ; }
+        else                    { steerX = altRX; steerY = altRY; steerZ = altRZ; }
+      }
+      // Both blocked: keep original; SDF push-out resolves whatever happens.
+    }
+  }
+
+  // v8.56: NA6 ; projectile dodge. If an enemy projectile is heading toward us
+  // within ~1s impact, sidestep perpendicular to its velocity. Cheap O(P)
+  // scan; we only check projectiles within a forward cone.
+  {
+    const dodgeR2 = 1500 * 1500; // only consider projectiles within 1500u
+    let dodgeX = 0, dodgeZ = 0, dodgeFound = false;
+    for (const proj of state.projectiles.values()) {
+      if (proj.ownerTeam === bot.team) continue;
+      const px = bot.position.x - proj.position.x;
+      const py = bot.position.y - proj.position.y;
+      const pz = bot.position.z - proj.position.z;
+      const distP2 = px * px + py * py + pz * pz;
+      if (distP2 > dodgeR2) continue;
+      const pvx = proj.velocity.x, pvy = proj.velocity.y, pvz = proj.velocity.z;
+      const pvLen2 = pvx * pvx + pvy * pvy + pvz * pvz;
+      if (pvLen2 < 100) continue;
+      // Closing velocity ; dot of (bot - proj) and projectile velocity sign.
+      // If projectile moving toward us, (proj.pos + t*vel) approaches bot.
+      // Compute t of closest approach; if t < 1.0 and miss distance < 250 → dodge.
+      const dotPv = -(px * pvx + py * pvy + pz * pvz); // > 0 means proj heading toward bot
+      if (dotPv <= 0) continue;
+      const tClose = dotPv / pvLen2;
+      if (tClose > 1.0 || tClose < 0.05) continue;
+      const cx = proj.position.x + pvx * tClose;
+      const cy = proj.position.y + pvy * tClose;
+      const cz = proj.position.z + pvz * tClose;
+      const mx = cx - bot.position.x, my = cy - bot.position.y, mz = cz - bot.position.z;
+      const missD2 = mx * mx + my * my + mz * mz;
+      if (missD2 > 250 * 250) continue;
+      // Dodge perpendicular to projectile velocity (in horizontal plane).
+      const pvLen = Math.sqrt(pvLen2);
+      const npvx = pvx / pvLen, npvz = pvz / pvLen;
+      // Perpendicular = (-z, +x).
+      dodgeX += -npvz;
+      dodgeZ +=  npvx;
+      dodgeFound = true;
+    }
+    if (dodgeFound) {
+      const dLen = Math.sqrt(dodgeX * dodgeX + dodgeZ * dodgeZ) || 1;
+      // Blend dodge into existing steer (60% dodge, 40% original).
+      steerX = (dodgeX / dLen) * 0.6 + steerX * 0.4;
+      steerZ = (dodgeZ / dLen) * 0.6 + steerZ * 0.4;
+    }
+  }
+
   bot.velocity.x += steerX * accel * dt;
   bot.velocity.y += steerY * accel * dt;
   bot.velocity.z += steerZ * accel * dt;
@@ -732,6 +1030,30 @@ function _tickBotAI(bot: Bot, state: SimState, dt: number): void {
   if (speed > bot.maxSpeed) {
     const k = bot.maxSpeed / speed;
     bot.velocity.x *= k; bot.velocity.y *= k; bot.velocity.z *= k;
+  }
+
+  // v8.54: NA5 ; tick bot ability cooldowns/active timers + try to use them.
+  // Done before fire so an offensive ability press in this tick still goes
+  // through. State machine is independent from the player ability system but
+  // dispatches to similar effect (projectile spawns, world effect spawns,
+  // self-buff timers).
+  if (state.match.state === 'playing') {
+    for (let i = 0; i < 4; i++) {
+      if (bot.abilityCooldowns[i] > 0) bot.abilityCooldowns[i] = Math.max(0, bot.abilityCooldowns[i] - dt);
+      if (bot.abilityActive[i]) {
+        bot.abilityTimers[i] -= dt;
+        if (bot.abilityTimers[i] <= 0) {
+          bot.abilityActive[i] = false;
+          bot.abilityTimers[i] = 0;
+          // Clear duration buffs that map to this slot.
+          if (i === 1 && bot.afterburnerMult !== 1.0) bot.afterburnerMult = 1.0;
+          if (i === 3) { bot.coreFireRateMult = 1.0; bot.coreDamageMult = 1.0; }
+        }
+      }
+    }
+    // Tick damageImmuneTimer (TRACKER particle wall).
+    if (bot.damageImmuneTimer > 0) bot.damageImmuneTimer = Math.max(0, bot.damageImmuneTimer - dt);
+    _tryBotAbility(bot, state, dist);
   }
 
   // Fire if aligned. Bots only fire when a match is in playing state.
@@ -747,8 +1069,10 @@ function _tickBotAI(bot: Bot, state: SimState, dt: number): void {
       z: bot.position.z + facing.z * 80,
     };
     const proj = _spawnProjectile(state, 'bot', bot.id, bot.team, origin, facing);
-    proj.damage = bot.weaponDamage * BOT_DAMAGE_MULT;
-    bot.fireTimer = Math.max(BOT_FIRE_RATE, bot.weaponFireRate * 1.6);
+    // v8.54: NA5 ; bot core damage / fire-rate buffs apply to regular fire.
+    proj.damage = bot.weaponDamage * BOT_DAMAGE_MULT * (bot.coreDamageMult || 1.0);
+    const baseFr = Math.max(BOT_FIRE_RATE, bot.weaponFireRate * 1.6);
+    bot.fireTimer = baseFr / (bot.coreFireRateMult || 1.0);
     state.events.push({
       type: 'fire',
       shooterType: 'bot',
@@ -908,8 +1232,13 @@ function _respawnBot(bot: Bot, state: SimState, level: Level): void {
 //   health -= amount;
 // The previous version applied p.damage straight to health, skipping the
 // shield entirely; v8.15 fixes that. Returns true if the target died.
-function _applyDamage(target: Player | Bot, amount: number): boolean {
+function _applyDamage(target: Player | Bot, amount: number, state?: SimState): boolean {
   if (!target.alive) return false;
+  // v8.54: NA5 ; bot defensive trigger memory.
+  const tBot = target as Bot;
+  if (tBot.lastDamageTime !== undefined && state) {
+    tBot.lastDamageTime = state.time;
+  }
   // v8.18: spawn protection (LSS line 4365). Fresh-spawned ships are
   // invulnerable for SPAWN_PROTECTION_TIME seconds so spawn-killers can't
   // delete them before they get oriented. Bots don't have it currently;
@@ -929,8 +1258,9 @@ function _applyDamage(target: Player | Bot, amount: number): boolean {
   //   SLAYER Sword Block:    0.30 mult (LSS line 7633-7637)
   //   VORTEX Vortex Shield:  0.30 mult (LSS line 9091-9118)
   // If their respective core is also active, the reduction is stronger.
-  const tp = target as Player;
-  if (tp.peerId !== undefined && tp.abilityActive && tp.abilityActive[1]) {
+  // v8.54: NA5 ; bots also have abilityActive[1] for these chassis now.
+  const tp = target as Player | Bot;
+  if (tp.abilityActive && tp.abilityActive[1]) {
     if (tp.loadoutKey === 'SLAYER') {
       amount *= tp.abilityActive[3] ? 0.15 : 0.30;
     } else if (tp.loadoutKey === 'VORTEX') {
@@ -1044,6 +1374,196 @@ function _recordHit(
   });
 }
 
+// v8.51: NA4 ; hitscan / raycast path. Used for instant beams (VORTEX laser,
+// BLASTER smart-core, sniper-style abilities). Ray-marches the level SDF in
+// fixed steps until either a wall blocks the beam or an entity sphere is
+// hit. Returns the first hit (player/bot/wall) along with hit position +
+// distance. Spawns a `beam` event so the client can render a flash/streak.
+//
+// Caller signature mirrors a fire: shooterTeam excludes own-team hits;
+// shooterId+shooterType for kill attribution; damage applied at the hit
+// point; range caps the beam length; wallPierce skips wall blocking.
+type HitscanResult = {
+  hitType: 'player' | 'bot' | 'wall' | 'none';
+  hitId?: number;
+  hitPosition: Vec3;
+  distance: number;
+};
+function _hitscanFire(
+  state: SimState,
+  shooterType: 'player' | 'bot',
+  shooterId: number,
+  shooterTeam: number,
+  origin: Vec3,
+  dir: Vec3,
+  damage: number,
+  range: number,
+  wallPierce: boolean = false,
+): HitscanResult {
+  // Normalize direction.
+  const len = Math.sqrt(dir.x * dir.x + dir.y * dir.y + dir.z * dir.z) || 1;
+  const dx = dir.x / len, dy = dir.y / len, dz = dir.z / len;
+  // March in 30u steps (a typical projectile moves ~5-10u per tick at 64Hz,
+  // so 30u is fine-grained enough to not skip thin walls or hulls).
+  const STEP = 30;
+  let bestHitDist = range;
+  let bestHitType: 'player' | 'bot' | 'wall' | 'none' = 'none';
+  let bestHitId: number | undefined;
+  let bestHitPos: Vec3 = { x: origin.x + dx * range, y: origin.y + dy * range, z: origin.z + dz * range };
+
+  // 1) Sphere-vs-line check against players + bots first; pick the nearest.
+  // We use the standard ray-vs-sphere closed-form with t in [0, range].
+  const checkSphere = (cx: number, cy: number, cz: number, r: number, hitType: 'player' | 'bot', id: number) => {
+    // Vector from origin to center.
+    const ox = cx - origin.x, oy = cy - origin.y, oz = cz - origin.z;
+    // Project onto ray.
+    const tProj = ox * dx + oy * dy + oz * dz;
+    if (tProj < 0 || tProj > bestHitDist) return; // behind shooter or beyond best.
+    // Closest point on ray.
+    const cpx = origin.x + dx * tProj;
+    const cpy = origin.y + dy * tProj;
+    const cpz = origin.z + dz * tProj;
+    const dxc = cx - cpx, dyc = cy - cpy, dzc = cz - cpz;
+    const d2 = dxc * dxc + dyc * dyc + dzc * dzc;
+    if (d2 > r * r) return;
+    // Compute actual entry point along ray (tProj minus how far inside sphere
+    // the closest point sits).
+    const back = Math.sqrt(r * r - d2);
+    const tEntry = Math.max(0, tProj - back);
+    if (tEntry < bestHitDist) {
+      bestHitDist = tEntry;
+      bestHitType = hitType;
+      bestHitId = id;
+      bestHitPos = { x: origin.x + dx * tEntry, y: origin.y + dy * tEntry, z: origin.z + dz * tEntry };
+    }
+  };
+  for (const p of state.players.values()) {
+    if (!p.alive) continue;
+    if (p.team === shooterTeam) continue;
+    if (p.id === shooterId && shooterType === 'player') continue;
+    checkSphere(p.position.x, p.position.y, p.position.z, _hitRadius(p), 'player', p.id);
+  }
+  for (const b of state.bots.values()) {
+    if (!b.alive) continue;
+    if (b.team === shooterTeam) continue;
+    if (b.id === shooterId && shooterType === 'bot') continue;
+    checkSphere(b.position.x, b.position.y, b.position.z, _hitRadius(b), 'bot', b.id);
+  }
+
+  // 2) March the ray; stop on wall (unless wallPierce). Check wall hit only
+  // up to bestHitDist so a wall behind a closer entity doesn't override.
+  if (!wallPierce) {
+    let t = STEP;
+    while (t < bestHitDist) {
+      const sx = origin.x + dx * t;
+      const sy = origin.y + dy * t;
+      const sz = origin.z + dz * t;
+      if (!pointInLevel({ x: sx, y: sy, z: sz }, state.level)) {
+        // Wall blocks. Only override if closer than current best entity hit.
+        if (t < bestHitDist) {
+          bestHitDist = t;
+          bestHitType = 'wall';
+          bestHitId = undefined;
+          bestHitPos = { x: sx, y: sy, z: sz };
+        }
+        break;
+      }
+      t += STEP;
+    }
+  }
+
+  // 3) Apply damage if entity hit + emit event for client beam render.
+  if (bestHitType === 'player' || bestHitType === 'bot') {
+    const target: Player | Bot | undefined = bestHitType === 'player'
+      ? state.players.get(_findPeerByEntityId(state, bestHitId!) || '')
+      : state.bots.get(bestHitId!);
+    if (target && target.alive) {
+      const shieldBefore = target.shield;
+      const killed = _applyDamage(target, damage, state);
+      // Build a synthetic projectile-like object so _recordHit can attribute
+      // properly + tag shield-vs-hull. Knockback applied directly along ray dir.
+      const syntheticProj: Projectile = {
+        id: -1, ownerType: shooterType, ownerId: shooterId, ownerTeam: shooterTeam,
+        position: { x: bestHitPos.x, y: bestHitPos.y, z: bestHitPos.z },
+        velocity: { x: dx * 1000, y: dy * 1000, z: dz * 1000 },
+        damage, age: 0, lifetime: 0, color: 0xffffff,
+      };
+      if (killed) {
+        _killEntity(target, state.time);
+        _creditKill(state, shooterType, shooterId);
+      } else {
+        const isProtected = (target as Player).peerId !== undefined
+          && ((target as Player).spawnProtection || 0) > 0;
+        if (!isProtected) _applyKnockback(target, syntheticProj);
+      }
+      _recordHit(state, syntheticProj, target, killed, shieldBefore);
+    }
+  }
+
+  // Emit beam event regardless of hit so the client can render the visual.
+  state.events.push({
+    type: 'beam',
+    shooterType, shooterId, shooterTeam,
+    origin: { x: origin.x, y: origin.y, z: origin.z },
+    end: bestHitPos,
+    distance: bestHitDist,
+    hit: bestHitType !== 'none',
+    time: state.time,
+  } as any);
+
+  return { hitType: bestHitType, hitId: bestHitId, hitPosition: bestHitPos, distance: bestHitDist };
+}
+
+// Helper: find player peerId by entity id (for hitscan target lookup).
+function _findPeerByEntityId(state: SimState, id: number): string | null {
+  for (const [peerId, p] of state.players) {
+    if (p.id === id) return peerId;
+  }
+  return null;
+}
+
+// v8.55: NA9 ; shared splash damage helper. Used by explosions, cluster
+// impacts, rocket detonations, smart-core blasts. Applies damage to every
+// alive enemy entity within `radius` of `center`, with linear falloff from
+// `damage` at center to 0 at radius. Optionally also damages owner team
+// (LSS doesn't FF; opt-in for self-damage scenarios). `excludeId/Type`
+// skips a specific entity (typically the projectile owner so a self-fired
+// rocket doesn't friendly-blast you on contact).
+function _applySplashDamage(
+  state: SimState,
+  center: Vec3,
+  radius: number,
+  damage: number,
+  ownerTeam: number,
+  options?: {
+    friendlyFire?: boolean;
+    excludeType?: 'player' | 'bot';
+    excludeId?: number;
+    falloff?: 'linear' | 'flat';
+  }
+): void {
+  const opts = options || {};
+  const r2 = radius * radius;
+  const apply = (ent: Player | Bot, type: 'player' | 'bot') => {
+    if (!ent.alive) return;
+    if (!opts.friendlyFire && ent.team === ownerTeam) return;
+    if (opts.excludeType === type && opts.excludeId === (ent as any).id) return;
+    const dx = ent.position.x - center.x;
+    const dy = ent.position.y - center.y;
+    const dz = ent.position.z - center.z;
+    const d2 = dx * dx + dy * dy + dz * dz;
+    if (d2 >= r2) return;
+    let dmg = damage;
+    if (opts.falloff !== 'flat') {
+      const d = Math.sqrt(d2);
+      dmg = damage * (1 - d / radius);
+    }
+    if (dmg > 0) _applyDamage(ent, dmg, state);
+  };
+  for (const p of state.players.values()) apply(p, 'player');
+  for (const b of state.bots.values()) apply(b, 'bot');
+}
+
 function _tickProjectiles(state: SimState, dt: number): void {
   const dead: number[] = [];
   for (const p of state.projectiles.values()) {
@@ -1098,7 +1618,7 @@ function _tickProjectiles(state: SimState, dt: number): void {
         // v8.35: snapshot shield BEFORE damage so _recordHit can tag the event
         // deterministically (NA38; LSS line 14913-14915).
         const shieldBefore = player.shield;
-        const killed = _applyDamage(player, p.damage);
+        const killed = _applyDamage(player, p.damage, state);
         // v8.39: NA8. Knockback impulse on hit. Direction from projectile
         // velocity (normalized); magnitude scales with damage. No knockback
         // while in spawn protection or stasis (those override movement).
@@ -1134,7 +1654,7 @@ function _tickProjectiles(state: SimState, dt: number): void {
       if (_projectileHitsEntity(p, bot.position, _hitRadius(bot))) {
         // v8.35: snapshot shield BEFORE damage (NA38).
         const shieldBefore = bot.shield;
-        const killed = _applyDamage(bot, p.damage);
+        const killed = _applyDamage(bot, p.damage, state);
         // v8.39: NA8. Knockback on bots too.
         if (!killed) _applyKnockback(bot, p);
         if (killed) {
@@ -1462,21 +1982,15 @@ function _activatePlayerAbility(state: SimState, player: Player, slot: number): 
   if (lk === 'VORTEX' && slot === 0) {
     // Laser Shot (LSS line 8550-8600): instant hitscan beam with 2400
     // damage along the player's aim line.
-    // SIMPLIFIED: LSS sweeps a line and hits everything along it; we fire a
-    // very fast/long projectile so it acts roughly as instant.
+    // v8.51: NA4 ; now uses real hitscan path. Walls block; first entity
+    // hit takes the full 2400. The 'beam' event drives the client visual.
     const dir = _facingDir(player.yaw, player.pitch);
     const origin = {
       x: player.position.x + dir.x * 80,
       y: player.position.y + 30 + dir.y * 80,
       z: player.position.z + dir.z * 80,
     };
-    const proj = _spawnProjectile(state, 'player', player.id, player.team, origin, dir);
-    proj.damage = 2400;
-    proj.velocity.x = dir.x * 5000;
-    proj.velocity.y = dir.y * 5000;
-    proj.velocity.z = dir.z * 5000;
-    proj.lifetime = 0.6;
-    proj.color = 0x44ddff;
+    _hitscanFire(state, 'player', player.id, player.team, origin, dir, 2400, 3000, false);
     state.events.push({
       type: 'fire',
       shooterType: 'player',
@@ -1946,6 +2460,20 @@ function _tickStasisPickup(state: SimState, eff: WorldEffect): void {
   }
 }
 
+// v8.47: NA12. Seeded PRNG (mulberry32). Used for round-deterministic
+// placement so every connected client agrees on where destructibles +
+// stasis fields spawn given the same match.seed. Server is authoritative;
+// this just makes the math reproducible for replays + cross-checking.
+function _seededRng(seed: number): () => number {
+  let t = (seed | 0) || 1;
+  return function () {
+    t = (t + 0x6D2B79F5) | 0;
+    let r = Math.imul(t ^ (t >>> 15), 1 | t);
+    r = (r + Math.imul(r ^ (r >>> 7), 61 | r)) ^ r;
+    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 // v8.30: destructible obstacles (LSS line 7383+, ClusterObstacle). Each is
 // a world entity with HP that blocks/absorbs projectiles. Spawned at round
 // start in non-spawn rooms.
@@ -1953,20 +2481,23 @@ function _spawnDestructiblesForRound(state: SimState): void {
   const level = state.level;
   if (!level || !level.rooms || level.rooms.length === 0) return;
   const candidates = level.rooms.filter(r => r.team !== 'A' && r.team !== 'B');
+  // v8.47: NA12 ; seed RNG from match.seed for deterministic placement.
+  // Mix in currentRound so each round in a match gets a fresh layout.
+  const rng = _seededRng(state.match.seed ^ (state.match.currentRound * 0x9E3779B9));
   for (const room of candidates) {
-    // 2-3 obstacles per room, placed at random offsets within the sphere.
-    const count = 2 + Math.floor(Math.random() * 2);
+    // 2-3 obstacles per room, placed at deterministic offsets within the sphere.
+    const count = 2 + Math.floor(rng() * 2);
     for (let i = 0; i < count; i++) {
-      const off = room.radius * (0.3 + Math.random() * 0.4);
-      const ang = Math.random() * Math.PI * 2;
-      const phi = (Math.random() - 0.5) * Math.PI * 0.5;
+      const off = room.radius * (0.3 + rng() * 0.4);
+      const ang = rng() * Math.PI * 2;
+      const phi = (rng() - 0.5) * Math.PI * 0.5;
       const pos: Vec3 = {
         x: room.center.x + Math.cos(ang) * Math.cos(phi) * off,
         y: room.center.y + Math.sin(phi) * off,
         z: room.center.z + Math.sin(ang) * Math.cos(phi) * off,
       };
-      const scale = 60 + Math.random() * 40;
-      const shapeIdx = Math.floor(Math.random() * 4); // 0..3: dia/cross/wedge/box
+      const scale = 60 + rng() * 40;
+      const shapeIdx = Math.floor(rng() * 4); // 0..3: dia/cross/wedge/box
       _spawnWorldEffect(state, 'destructible', 'player', 0, 0, pos,
         { scale, shape: shapeIdx, color: 0x99aabb }, 1500, 999);
     }
@@ -1979,17 +2510,20 @@ function _spawnDestructiblesForRound(state: SimState): void {
 function _spawnStasisFieldsForRound(state: SimState): void {
   const level = state.level;
   if (!level || !level.rooms || level.rooms.length === 0) return;
+  // v8.47: NA12 ; deterministic placement from match.seed + currentRound.
+  // Different mix-in than destructibles so they don't share patterns.
+  const rng = _seededRng(state.match.seed ^ (state.match.currentRound * 0x85EBCA6B));
   // Pick 3 distinct non-spawn rooms; place a pickup at each room center
   // (offset slightly so they aren't in the dead center).
   const candidates = level.rooms.filter(r => r.team !== 'A' && r.team !== 'B');
   const pool = candidates.length >= 3 ? candidates : level.rooms;
   for (let i = 0; i < 3 && pool.length > 0; i++) {
-    const r = pool[Math.floor(Math.random() * pool.length)];
+    const r = pool[Math.floor(rng() * pool.length)];
     const off = r.radius * 0.4;
-    const ang = Math.random() * Math.PI * 2;
+    const ang = rng() * Math.PI * 2;
     const pos: Vec3 = {
       x: r.center.x + Math.cos(ang) * off,
-      y: r.center.y + (Math.random() - 0.5) * 60,
+      y: r.center.y + (rng() - 0.5) * 60,
       z: r.center.z + Math.sin(ang) * off,
     };
     _spawnWorldEffect(state, 'stasis_pickup', 'player', 0, 0, pos,
@@ -2014,7 +2548,7 @@ function _tickAreaDamageLine(state: SimState, eff: WorldEffect, dt: number): voi
     const cx = dx * dot, cy = dy * dot, cz = dz * dot;
     const ex = px - cx, ey = py - cy, ez = pz - cz;
     const dist2 = ex * ex + ey * ey + ez * ez;
-    if (dist2 < width * width) _applyDamage(t, dps * dt);
+    if (dist2 < width * width) _applyDamage(t, dps * dt, state);
   }
 }
 
@@ -2029,7 +2563,7 @@ function _tickAreaDamageSphere(state: SimState, eff: WorldEffect, dt: number): v
     const dx = t.position.x - eff.position.x;
     const dy = t.position.y - eff.position.y;
     const dz = t.position.z - eff.position.z;
-    if (dx * dx + dy * dy + dz * dz < r2) _applyDamage(t, dps * dt);
+    if (dx * dx + dy * dy + dz * dz < r2) _applyDamage(t, dps * dt, state);
   }
 }
 
@@ -2064,7 +2598,7 @@ function _tickTripWire(state: SimState, eff: WorldEffect): void {
     const dy = t.position.y - eff.position.y;
     const dz = t.position.z - eff.position.z;
     if (dx * dx + dy * dy + dz * dz < r2) {
-      _applyDamage(t, burst);
+      _applyDamage(t, burst, state);
       eff.timer = 0;       // detonate (cleanup next tick)
       eff.hp = 0;
       return;
@@ -2374,6 +2908,14 @@ export function tick(state: SimState, inputs: Map<string, PlayerInput>, dt: numb
     _resolveBotCollision(bot, state.level);
   }
 
+  // 3a) v8.45: NA1 ; player-vs-player + player-vs-bot collision. Run AFTER
+  // both groups have integrated + done wall collision so the per-pair push
+  // doesn't fight the SDF resolver. O(n²) but n is small (≤12 entities).
+  // Mass weighting from chassis.mass via _entityMass; lighter ships bounce
+  // off heavier ones more. Spawn-protected ships are intangible (push others
+  // out of the way without taking the hit themselves).
+  _resolveEntityCollisions(state);
+
   // 3b) Projectile motion + collision + damage
   _tickProjectiles(state, dt);
   _tickWorldEffects(state, dt);
@@ -2598,6 +3140,98 @@ function _resolveBotCollision(bot: Bot, level: Level): void {
   const r = _hullRadius(bot);
   _resolveSDF(bot.position, bot.velocity, r, level);
   _resolveAABBs(bot.position, bot.velocity, r, level.obstacles);
+}
+
+// v8.45: NA1. Per-chassis mass for collision response (heavier ships push
+// lighter ones harder). Defaults to 8000 (Corvette) when no loadout.
+function _entityMass(ent: Player | Bot): number {
+  const lk = (ent as any).loadoutKey;
+  if (!lk) return 8000;
+  const ld = LOADOUTS[lk as LoadoutKey];
+  if (!ld) return 8000;
+  const ch = CHASSIS[ld.chassis];
+  return ch ? ch.mass : 8000;
+}
+
+// v8.45: NA1. Player-vs-player + player-vs-bot collision. Sphere-vs-sphere
+// overlap → mass-weighted position separation along contact normal +
+// reflective velocity component along the normal so they bounce apart
+// instead of grinding through each other. Spawn-protected entities are
+// intangible: they push others out of the way without absorbing the
+// momentum themselves. O(n²) but typically ≤ 12 alive entities.
+function _resolveEntityCollisions(state: SimState): void {
+  // Collect all alive entities (players + bots) into one list for uniform
+  // pair iteration.
+  const ents: Array<Player | Bot> = [];
+  for (const p of state.players.values()) {
+    if (p.alive) ents.push(p);
+  }
+  for (const b of state.bots.values()) {
+    if (b.alive) ents.push(b);
+  }
+  for (let i = 0; i < ents.length; i++) {
+    const a = ents[i];
+    const ra = _hullRadius(a);
+    const ma = _entityMass(a);
+    const aProtected = (a as any).spawnProtection && (a as any).spawnProtection > 0;
+    for (let j = i + 1; j < ents.length; j++) {
+      const b = ents[j];
+      const rb = _hullRadius(b);
+      const dx = b.position.x - a.position.x;
+      const dy = b.position.y - a.position.y;
+      const dz = b.position.z - a.position.z;
+      const d2 = dx * dx + dy * dy + dz * dz;
+      const minD = ra + rb;
+      if (d2 >= minD * minD) continue; // no overlap
+      const d = Math.sqrt(d2) || 0.001;
+      // Contact normal pointing from a → b.
+      const nx = dx / d, ny = dy / d, nz = dz / d;
+      const overlap = minD - d;
+      const mb = _entityMass(b);
+      const bProtected = (b as any).spawnProtection && (b as any).spawnProtection > 0;
+      // Position separation. Spawn-protected entities don't move; the other
+      // takes the full push.
+      let pushA: number, pushB: number;
+      if (aProtected && bProtected) { pushA = pushB = overlap * 0.5; }
+      else if (aProtected)          { pushA = 0;            pushB = overlap; }
+      else if (bProtected)          { pushA = overlap;      pushB = 0; }
+      else {
+        // Mass-weighted: lighter entity moves more.
+        pushA = overlap * (mb / (ma + mb));
+        pushB = overlap * (ma / (ma + mb));
+      }
+      a.position.x -= nx * pushA;
+      a.position.y -= ny * pushA;
+      a.position.z -= nz * pushA;
+      b.position.x += nx * pushB;
+      b.position.y += ny * pushB;
+      b.position.z += nz * pushB;
+      // Velocity exchange: only the components along the normal swap with
+      // mass-weighted elastic-ish response (coefficient 0.5; lossy, prevents
+      // perpetual bouncing). Skip if either is spawn-protected.
+      if (aProtected || bProtected) continue;
+      const va_n = a.velocity.x * nx + a.velocity.y * ny + a.velocity.z * nz;
+      const vb_n = b.velocity.x * nx + b.velocity.y * ny + b.velocity.z * nz;
+      const relVel = vb_n - va_n;
+      if (relVel < 0) {
+        // Already separating; let them continue.
+        continue;
+      }
+      const e = 0.5; // restitution
+      // v8.50: rename from `j` to `impulseJ` to avoid shadowing the for-loop
+      // counter `j` at block scope (block-scoped const created TDZ for the
+      // whole loop body).
+      const impulseJ = -(1 + e) * relVel / (1 / ma + 1 / mb);
+      const impulseA = impulseJ / ma;
+      const impulseB = impulseJ / mb;
+      a.velocity.x -= nx * impulseA;
+      a.velocity.y -= ny * impulseA;
+      a.velocity.z -= nz * impulseA;
+      b.velocity.x += nx * impulseB;
+      b.velocity.y += ny * impulseB;
+      b.velocity.z += nz * impulseB;
+    }
+  }
 }
 
 // ---- Snapshot for the wire ----

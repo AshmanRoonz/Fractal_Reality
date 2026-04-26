@@ -138,6 +138,129 @@
   #hud-speed .speed-val { color: #ffaa00; font-size: 22px; font-weight: bold; }
   #hud-speed .speed-label { font-size: 9px; color: rgba(200,210,240,0.5); letter-spacing: 3px; }
 
+  /* v8.57: NA21 ; settings menu overlay. Esc opens; click outside or X closes.
+     Tabs along top, content panel below, Apply/Cancel/Defaults in footer. */
+  #settings-overlay {
+    position: fixed; inset: 0; background: rgba(2,5,10,0.85);
+    display: none; align-items: center; justify-content: center;
+    z-index: 50; pointer-events: auto; backdrop-filter: blur(3px);
+  }
+  #settings-overlay.active { display: flex; }
+  #settings-overlay .se-card {
+    background: linear-gradient(180deg, #0a1428 0%, #060b18 100%);
+    border: 1px solid #1a2540; border-radius: 8px;
+    width: 720px; max-width: 90vw; max-height: 88vh;
+    display: flex; flex-direction: column;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  }
+  #settings-overlay .se-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 24px; border-bottom: 1px solid rgba(120,180,255,0.15);
+  }
+  #settings-overlay .se-title {
+    color: #d8e8ff; font-family: monospace; font-size: 18px;
+    letter-spacing: 0.25em; font-weight: 300;
+  }
+  #settings-overlay .se-close {
+    background: none; border: 1px solid rgba(255,140,140,0.4); color: #ffaaaa;
+    padding: 4px 14px; cursor: pointer; font-family: monospace;
+    letter-spacing: 0.1em; font-size: 12px;
+  }
+  #settings-overlay .se-close:hover { background: rgba(255,90,90,0.15); }
+  #settings-overlay .se-tabs {
+    display: flex; gap: 4px; padding: 14px 24px 0 24px;
+    border-bottom: 1px solid rgba(120,180,255,0.1);
+  }
+  #settings-overlay .se-tab {
+    background: rgba(20,30,50,0.4); border: 1px solid rgba(120,180,255,0.15);
+    border-bottom: none; color: rgba(170,190,220,0.7);
+    padding: 8px 18px; cursor: pointer; font-family: monospace;
+    font-size: 11px; letter-spacing: 0.2em;
+    border-radius: 4px 4px 0 0;
+  }
+  #settings-overlay .se-tab:hover { color: #d8e8ff; }
+  #settings-overlay .se-tab.active {
+    background: rgba(40,60,100,0.5); color: #ffffff;
+    border-color: rgba(120,180,255,0.4);
+  }
+  #settings-overlay .se-body {
+    padding: 22px 28px; overflow-y: auto; flex: 1;
+    color: #ccdfff; font-family: monospace; font-size: 13px;
+  }
+  #settings-overlay .se-section { display: none; }
+  #settings-overlay .se-section.active { display: block; }
+  #settings-overlay .se-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0; border-bottom: 1px dashed rgba(120,180,255,0.08);
+  }
+  #settings-overlay .se-row:last-child { border-bottom: none; }
+  #settings-overlay .se-label {
+    color: rgba(200,220,255,0.85); font-size: 12px; letter-spacing: 0.08em;
+  }
+  #settings-overlay .se-control { display: flex; align-items: center; gap: 10px; }
+  #settings-overlay input[type="range"] {
+    width: 180px; accent-color: #66ccff;
+  }
+  #settings-overlay .se-value {
+    color: #ffcc44; font-size: 12px; min-width: 40px; text-align: right;
+  }
+  #settings-overlay input[type="checkbox"] { accent-color: #66ccff; transform: scale(1.2); }
+  #settings-overlay .se-bind-btn {
+    background: rgba(20,40,70,0.6); border: 1px solid rgba(120,180,255,0.3);
+    color: #ffcc44; padding: 4px 14px; cursor: pointer; font-family: monospace;
+    font-size: 11px; letter-spacing: 0.15em; min-width: 80px;
+  }
+  #settings-overlay .se-bind-btn:hover { border-color: #66ccff; color: #ffffff; }
+  #settings-overlay .se-bind-btn.listening { background: rgba(255,200,68,0.25); color: #ffffff; animation: bindPulse 0.6s infinite; }
+  @keyframes bindPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+  #settings-overlay .se-action-btn {
+    background: rgba(80,40,40,0.4); border: 1px solid rgba(255,140,140,0.4);
+    color: #ffaaaa; padding: 8px 24px; cursor: pointer; font-family: monospace;
+    font-size: 12px; letter-spacing: 0.15em;
+  }
+  #settings-overlay .se-action-btn:hover { background: rgba(255,90,90,0.2); }
+  #settings-overlay .se-footer {
+    display: flex; gap: 12px; justify-content: flex-end;
+    padding: 16px 24px; border-top: 1px solid rgba(120,180,255,0.15);
+  }
+  #settings-overlay .se-footer-btn {
+    padding: 8px 24px; cursor: pointer; font-family: monospace;
+    font-size: 12px; letter-spacing: 0.15em;
+  }
+  #settings-overlay .se-footer-btn.defaults {
+    background: rgba(40,60,80,0.4); border: 1px solid rgba(170,190,220,0.3); color: rgba(200,220,255,0.85);
+  }
+  #settings-overlay .se-footer-btn.cancel {
+    background: rgba(40,60,80,0.4); border: 1px solid rgba(170,190,220,0.3); color: rgba(200,220,255,0.85);
+  }
+  #settings-overlay .se-footer-btn.apply {
+    background: rgba(50,140,90,0.45); border: 1px solid rgba(100,255,160,0.5); color: #cfffe0;
+  }
+  #settings-overlay .se-footer-btn:hover { filter: brightness(1.3); }
+
+  /* v8.53: NA28 ; minimap (top-down Canvas 2D overlay, top-left). Sized
+     so it doesn't dominate; the player + key contacts only. */
+  #hud-minimap {
+    position: absolute; top: 14px; left: 14px;
+    width: 200px; height: 200px;
+    background: rgba(4,8,14,0.55);
+    border: 1px solid rgba(120,180,255,0.25);
+    border-radius: 4px;
+    pointer-events: none; z-index: 6;
+  }
+  #hud-minimap canvas { display: block; width: 100%; height: 100%; }
+
+  /* v8.49: NA23 ; ping/lag indicator (top-right above kill feed). */
+  #hud-ping {
+    position: absolute; top: 12px; right: 14px;
+    font-size: 10px; letter-spacing: 0.15em;
+    color: rgba(170,200,240,0.6);
+    text-shadow: 0 0 4px rgba(0,0,0,0.8);
+    pointer-events: none; z-index: 6;
+  }
+  #hud-ping.warn { color: rgba(255,200,80,0.85); }
+  #hud-ping.bad  { color: rgba(255,90,90,0.95); }
+
   /* v8.44: dash pips bottom-left ; row of dots, full = available, faint = consumed,
      leading-edge fills toward 1 over the cooldown period. */
   #hud-dash {
@@ -165,6 +288,7 @@
   #crosshair {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
     width: 24px; height: 24px; pointer-events: none;
+    transition: width 0.2s ease-out, height 0.2s ease-out;
   }
   #crosshair::before, #crosshair::after {
     content: ''; position: absolute;
@@ -173,6 +297,17 @@
   }
   #crosshair::before { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-50%); }
   #crosshair::after  { left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-50%); }
+  /* v8.48: NA18 ; per-chassis crosshair variants. Each toggle modifier
+     changes width / color / extra ring to match the weapon's character. */
+  #crosshair.cross-tight       { width: 14px; height: 14px; }
+  #crosshair.cross-wide        { width: 40px; height: 40px; }
+  #crosshair.cross-ring        { width: 28px; height: 28px; border: 1px solid rgba(255,170,0,0.4); border-radius: 50%; }
+  #crosshair.cross-cyan::before, #crosshair.cross-cyan::after { background: rgba(80,200,255,0.85); box-shadow: 0 0 6px rgba(80,200,255,0.6); }
+  #crosshair.cross-orange::before, #crosshair.cross-orange::after { background: rgba(255,140,60,0.9); box-shadow: 0 0 8px rgba(255,140,60,0.7); }
+  #crosshair.cross-red::before, #crosshair.cross-red::after { background: rgba(255,80,80,0.85); box-shadow: 0 0 6px rgba(255,80,80,0.6); }
+  #crosshair.cross-green::before, #crosshair.cross-green::after { background: rgba(120,255,170,0.85); box-shadow: 0 0 6px rgba(120,255,170,0.6); }
+  #crosshair.cross-purple::before, #crosshair.cross-purple::after { background: rgba(200,120,255,0.85); box-shadow: 0 0 6px rgba(200,120,255,0.6); }
+  #crosshair.cross-yellow::before, #crosshair.cross-yellow::after { background: rgba(255,220,68,0.9); box-shadow: 0 0 6px rgba(255,220,68,0.6); }
 
   /* Hit + kill markers (center, animated) */
   .hit-marker, .kill-marker {
@@ -721,6 +856,102 @@
     <div class="dash-label">DASH</div>
   </div>
 
+  <!-- v8.49: NA23 ; ping indicator (top-right corner) -->
+  <div id="hud-ping" title="WebSocket round-trip time"></div>
+
+  <!-- v8.53: NA28 ; minimap top-left -->
+  <div id="hud-minimap"><canvas id="minimap-canvas" width="200" height="200"></canvas></div>
+
+<!-- v8.57: NA21 ; settings menu overlay (Esc opens, click X closes) -->
+<div id="settings-overlay">
+  <div class="se-card">
+    <div class="se-header">
+      <div class="se-title">SETTINGS</div>
+      <button class="se-close" onclick="_closeSettings()">CLOSE</button>
+    </div>
+    <div class="se-tabs">
+      <div class="se-tab active" data-section="gamepad" onclick="_setSettingsTab('gamepad')">GAMEPAD</div>
+      <div class="se-tab" data-section="mouse" onclick="_setSettingsTab('mouse')">MOUSE / KEYS</div>
+      <div class="se-tab" data-section="audio" onclick="_setSettingsTab('audio')">AUDIO</div>
+      <div class="se-tab" data-section="graphics" onclick="_setSettingsTab('graphics')">GRAPHICS</div>
+      <div class="se-tab" data-section="match" onclick="_setSettingsTab('match')">MATCH</div>
+    </div>
+    <div class="se-body">
+      <!-- Gamepad section -->
+      <div class="se-section active" data-section="gamepad">
+        <div class="se-row"><div class="se-label">LOOK SENSITIVITY</div>
+          <div class="se-control"><input type="range" id="se-gp-sens" min="0.5" max="6" step="0.1"><span class="se-value" id="se-gp-sens-val">2.5</span></div></div>
+        <div class="se-row"><div class="se-label">STICK DEADZONE</div>
+          <div class="se-control"><input type="range" id="se-gp-dz" min="0" max="0.5" step="0.01"><span class="se-value" id="se-gp-dz-val">0.18</span></div></div>
+        <div class="se-row"><div class="se-label">TRIGGER THRESHOLD</div>
+          <div class="se-control"><input type="range" id="se-gp-trig" min="0.1" max="0.9" step="0.05"><span class="se-value" id="se-gp-trig-val">0.30</span></div></div>
+        <div class="se-row"><div class="se-label">INVERT LOOK Y</div>
+          <div class="se-control"><input type="checkbox" id="se-gp-invy"></div></div>
+        <div class="se-row"><div class="se-label">FIRE BUTTON</div>
+          <div class="se-control"><button class="se-bind-btn" data-bind="fire">RT</button></div></div>
+        <div class="se-row"><div class="se-label">ABILITY Q</div>
+          <div class="se-control"><button class="se-bind-btn" data-bind="ability0">LB</button></div></div>
+        <div class="se-row"><div class="se-label">ABILITY E</div>
+          <div class="se-control"><button class="se-bind-btn" data-bind="ability1">RB</button></div></div>
+        <div class="se-row"><div class="se-label">ABILITY F</div>
+          <div class="se-control"><button class="se-bind-btn" data-bind="ability2">Y</button></div></div>
+        <div class="se-row"><div class="se-label">CORE V</div>
+          <div class="se-control"><button class="se-bind-btn" data-bind="core">D-PAD UP</button></div></div>
+        <div class="se-row"><div class="se-label">DASH</div>
+          <div class="se-control"><button class="se-bind-btn" data-bind="dash">A</button></div></div>
+      </div>
+      <!-- Mouse / Keys section -->
+      <div class="se-section" data-section="mouse">
+        <div class="se-row"><div class="se-label">MOUSE SENSITIVITY</div>
+          <div class="se-control"><input type="range" id="se-mouse-sens" min="0.1" max="3" step="0.05"><span class="se-value" id="se-mouse-sens-val">1.0</span></div></div>
+        <div class="se-row"><div class="se-label">INVERT MOUSE Y</div>
+          <div class="se-control"><input type="checkbox" id="se-mouse-invy"></div></div>
+        <div class="se-row" style="opacity:0.5"><div class="se-label">KEYBINDS</div>
+          <div class="se-value" style="font-size:10px">WASD: MOVE / SPACE-CTRL: UP-DOWN / SHIFT: DASH / Q-E-F: ABILITIES / V: CORE / R: RELOAD / TAB: SCOREBOARD / ESC: SETTINGS</div></div>
+      </div>
+      <!-- Audio section -->
+      <div class="se-section" data-section="audio">
+        <div class="se-row"><div class="se-label">MASTER VOLUME</div>
+          <div class="se-control"><input type="range" id="se-aud-master" min="0" max="1" step="0.01"><span class="se-value" id="se-aud-master-val">85%</span></div></div>
+        <div class="se-row"><div class="se-label">MUSIC / AMBIENT</div>
+          <div class="se-control"><input type="range" id="se-aud-music" min="0" max="1" step="0.01"><span class="se-value" id="se-aud-music-val">100%</span></div></div>
+        <div class="se-row"><div class="se-label">SFX</div>
+          <div class="se-control"><input type="range" id="se-aud-sfx" min="0" max="1" step="0.01"><span class="se-value" id="se-aud-sfx-val">100%</span></div></div>
+        <div class="se-row"><div class="se-label">MUTE WHEN BACKGROUNDED</div>
+          <div class="se-control"><input type="checkbox" id="se-aud-mutebg" checked></div></div>
+      </div>
+      <!-- Graphics section -->
+      <div class="se-section" data-section="graphics">
+        <div class="se-row"><div class="se-label">FIELD OF VIEW</div>
+          <div class="se-control"><input type="range" id="se-gfx-fov" min="60" max="100" step="1"><span class="se-value" id="se-gfx-fov-val">75</span></div></div>
+        <div class="se-row"><div class="se-label">PARTICLE DENSITY</div>
+          <div class="se-control"><input type="range" id="se-gfx-particles" min="0.25" max="1.5" step="0.05"><span class="se-value" id="se-gfx-particles-val">100%</span></div></div>
+        <div class="se-row"><div class="se-label">CAMERA SHAKE</div>
+          <div class="se-control"><input type="range" id="se-gfx-shake" min="0" max="1.5" step="0.05"><span class="se-value" id="se-gfx-shake-val">100%</span></div></div>
+        <div class="se-row"><div class="se-label">SHOW MINIMAP</div>
+          <div class="se-control"><input type="checkbox" id="se-gfx-minimap" checked></div></div>
+        <div class="se-row"><div class="se-label">SHOW PING</div>
+          <div class="se-control"><input type="checkbox" id="se-gfx-ping" checked></div></div>
+      </div>
+      <!-- Match section -->
+      <div class="se-section" data-section="match">
+        <div class="se-row"><div class="se-label">RETURN TO LOBBY</div>
+          <div class="se-control"><button class="se-action-btn" onclick="_actionReturnToLobby()">EXIT MATCH</button></div></div>
+        <div class="se-row"><div class="se-label">DISCONNECT FROM SERVER</div>
+          <div class="se-control"><button class="se-action-btn" onclick="_actionQuitServer()">QUIT</button></div></div>
+        <div class="se-row" style="opacity:0.6;font-size:11px;line-height:1.5;padding-top:18px;">
+          <div style="color:rgba(200,220,255,0.6)">Use these to leave the current match or fully disconnect. The server is authoritative; quitting drops your peer slot. Reconnecting joins as a fresh player.</div>
+        </div>
+      </div>
+    </div>
+    <div class="se-footer">
+      <button class="se-footer-btn defaults" onclick="_settingsDefaults()">DEFAULTS</button>
+      <button class="se-footer-btn cancel" onclick="_closeSettings()">CANCEL</button>
+      <button class="se-footer-btn apply" onclick="_applySettings()">APPLY</button>
+    </div>
+  </div>
+</div>
+
   <div id="crosshair"></div>
   <div class="hit-marker" id="hit-marker">
     <svg class="marker-svg" viewBox="0 0 28 28">
@@ -841,6 +1072,16 @@ function connect() {
       return;
     }
 
+    // v8.49: NA23 ; ping/pong RTT measurement.
+    if (msg.type === 'pong') {
+      const rtt = performance.now() - (msg.t || 0);
+      net.pingMs = rtt;
+      // Track last 5 samples for jitter and a smoother display value.
+      if (!net.pingSamples) net.pingSamples = [];
+      net.pingSamples.push(rtt);
+      if (net.pingSamples.length > 5) net.pingSamples.shift();
+      return;
+    }
     if (msg.type === 'level') {
       // v8.7: server pushed a new map. Rebuild local meshes.
       // v8.36: NA22 ; show loading overlay during the rebuild (marching cubes
@@ -1386,6 +1627,61 @@ function buildShipMesh(loadoutKey, team) {
   return group;
 }
 
+// v8.52: NA27 ; per-chassis booster palette (mirrors visual identity table
+// in PLAN.md). Color is the primary chassis tint; secondary brightens the core.
+const _BOOSTER_PALETTE = {
+  VORTEX:   { core: 0xffffff, glow: 0x44ccff },
+  PYRO:     { core: 0xffcc44, glow: 0xff7733 },
+  TRACKER:  { core: 0xffffff, glow: 0x66ff99 },
+  SLAYER:   { core: 0xffcc66, glow: 0xff4444 },
+  BLASTER:  { core: 0xffeebb, glow: 0xffdd44 },
+  SYPHON:   { core: 0x88ccff, glow: 0xcc66ff },
+  PUNCTURE: { core: 0xffffff, glow: 0xaaccdd },
+};
+function _attachBooster(shipGroup, loadoutKey) {
+  const palette = _BOOSTER_PALETTE[loadoutKey] || _BOOSTER_PALETTE.TRACKER;
+  const length = 80;
+  const radius = 12;
+  // Cylinder along local Y; we rotate so it points backward (+Z in world
+  // since our ships face -Z when yaw=0, so trail goes +Z).
+  const geo = new THREE.CylinderGeometry(radius * 0.4, radius, length, 12, 1, true);
+  geo.translate(0, length / 2, 0); // origin at base, extends along +Y
+  const mat = new THREE.MeshBasicMaterial({
+    color: palette.glow, transparent: true, opacity: 0,
+    blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
+  });
+  const trail = new THREE.Mesh(geo, mat);
+  // Rotate so +Y aligns with +Z (rear of ship).
+  trail.rotation.x = Math.PI / 2;
+  // Position at the rear of the hull (ships are roughly 80-120u long).
+  trail.position.set(0, -5, 50);
+  shipGroup.add(trail);
+  shipGroup.userData._booster = trail;
+  shipGroup.userData._boosterMat = mat;
+  shipGroup.userData._boosterBase = length;
+  shipGroup.userData._boosterCore = palette.core;
+  shipGroup.userData._boosterGlow = palette.glow;
+}
+// Update booster intensity each frame based on entity speed (0..maxSpeed).
+function _updateBooster(shipGroup, speed, maxSpeedRef) {
+  const trail = shipGroup.userData._booster;
+  const mat = shipGroup.userData._boosterMat;
+  if (!trail || !mat) return;
+  const ratio = Math.min(2.0, speed / Math.max(50, maxSpeedRef || 350));
+  // Below 0.1 of nominal: no booster. Above 0.1: scales smoothly.
+  const intensity = Math.max(0, Math.min(1, (ratio - 0.1) / 1.4));
+  mat.opacity = 0.85 * intensity;
+  // Length scales 0.6..1.6 with speed; afterburner-coded brightness boost.
+  const lengthScale = 0.6 + intensity * 1.0;
+  trail.scale.z = lengthScale;
+  // Color shift toward core white when boosting hard.
+  if (intensity > 0.7) {
+    mat.color.setHex(shipGroup.userData._boosterCore);
+  } else {
+    mat.color.setHex(shipGroup.userData._boosterGlow);
+  }
+}
+
 // ============================================================================
 // Player meshes (one per peerId)
 // ============================================================================
@@ -1407,6 +1703,10 @@ function getOrCreatePlayerMesh(peerId, team, loadoutKey) {
     ring.rotation.x = Math.PI / 2;
     ship.add(ring);
   }
+  // v8.52: NA27 ; engine booster trail (volumetric beam pointing backward).
+  // One cylinder oriented along local -Z (forward); positioned behind hull.
+  // Color from per-chassis palette (PLAN.md visual identity).
+  _attachBooster(ship, loadoutKey || 'TRACKER');
   scene.add(ship);
   playerMeshes.set(peerId, ship);
   return ship;
@@ -1439,6 +1739,8 @@ function getOrCreateBotMesh(id, team, loadoutKey) {
   const tag = new THREE.Mesh(tagGeo, tagMat);
   tag.position.y = 90;
   ship.add(tag);
+  // v8.52: NA27 ; bots get boosters too.
+  _attachBooster(ship, loadoutKey || 'PYRO');
   scene.add(ship);
   botMeshes.set(id, ship);
   return ship;
@@ -1592,6 +1894,21 @@ function pollGamepad(dt) {
     if (!b) return false;
     return b.pressed || (b.value > gpConfig.triggerThreshold);
   }
+  // v8.57: NA21 ; binding capture. While the settings menu has a bind-button
+  // armed, the next pressed gamepad button writes to the corresponding slot
+  // in the draft + refreshes the UI label.
+  if (_bindCaptureSlot && _settingsDraft) {
+    for (let i = 0; i < gp.buttons.length; i++) {
+      const b = gp.buttons[i];
+      if (b && (b.pressed || b.value > 0.5)) {
+        _settingsDraft.gamepad.bindings[_bindCaptureSlot] = i;
+        _refreshSettingsUI(_settingsDraft);
+        document.querySelectorAll('#settings-overlay .se-bind-btn').forEach(el => el.classList.remove('listening'));
+        _bindCaptureSlot = null;
+        break;
+      }
+    }
+  }
   input.gpFirePrev = input.gpFire;
   input.gpAbility0Prev = input.gpAbility0;
   input.gpAbility1Prev = input.gpAbility1;
@@ -1623,6 +1940,238 @@ function pollGamepad(dt) {
   if (input.gpCore     && !input.gpCorePrev)     input.pendingAbility = 3;
 }
 
+// v8.57: NA21 ; settings menu state. _settings is the live in-use config;
+// _settingsDraft is the editing copy while the menu is open. Apply commits
+// draft → settings + writes to localStorage. Cancel reverts.
+const _SETTINGS_KEY = 'lss_settings_v1';
+const _DEFAULT_SETTINGS = {
+  gamepad: {
+    lookSensitivity: 2.5,
+    deadzone: 0.18,
+    triggerThreshold: 0.30,
+    invertLookY: false,
+    bindings: { fire: 7, ability0: 4, ability1: 5, ability2: 3, core: 12, scoreboard: 8, moveUp: 10, moveDown: 11, dash: 0 },
+  },
+  mouse: { sensitivity: 1.0, invertY: false },
+  audio: { master: 0.85, music: 1.0, sfx: 1.0, muteBg: true },
+  graphics: { fov: 75, particles: 1.0, shake: 1.0, minimap: true, ping: true },
+};
+const _settings = JSON.parse(JSON.stringify(_DEFAULT_SETTINGS));
+let _settingsDraft = null; // populated when menu opens
+let _bindCaptureSlot = null; // 'fire', 'ability0', etc., when listening for next button
+
+// Load saved settings (if any) on boot ; merges over defaults so missing keys
+// fall back cleanly when we add new settings later.
+try {
+  const raw = localStorage.getItem(_SETTINGS_KEY);
+  if (raw) {
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object') {
+      Object.assign(_settings.gamepad, parsed.gamepad || {});
+      Object.assign(_settings.gamepad.bindings, (parsed.gamepad && parsed.gamepad.bindings) || {});
+      Object.assign(_settings.mouse, parsed.mouse || {});
+      Object.assign(_settings.audio, parsed.audio || {});
+      Object.assign(_settings.graphics, parsed.graphics || {});
+    }
+  }
+} catch (_) {}
+
+function _saveSettings() {
+  try { localStorage.setItem(_SETTINGS_KEY, JSON.stringify(_settings)); } catch (_) {}
+}
+function _openSettings() {
+  _settingsDraft = JSON.parse(JSON.stringify(_settings));
+  _refreshSettingsUI(_settingsDraft);
+  const el = document.getElementById('settings-overlay');
+  if (el) el.classList.add('active');
+}
+function _closeSettings() {
+  _settingsDraft = null;
+  _bindCaptureSlot = null;
+  const el = document.getElementById('settings-overlay');
+  if (el) el.classList.remove('active');
+}
+function _setSettingsTab(name) {
+  document.querySelectorAll('#settings-overlay .se-tab').forEach(el => el.classList.toggle('active', el.dataset.section === name));
+  document.querySelectorAll('#settings-overlay .se-section').forEach(el => el.classList.toggle('active', el.dataset.section === name));
+}
+function _refreshSettingsUI(d) {
+  // Gamepad
+  const gp = d.gamepad;
+  const g = (id) => document.getElementById(id);
+  const setRange = (id, valId, value, fmt) => {
+    if (g(id)) g(id).value = value;
+    if (g(valId)) g(valId).textContent = (fmt || ((v) => v))(value);
+  };
+  setRange('se-gp-sens', 'se-gp-sens-val', gp.lookSensitivity, v => Number(v).toFixed(1));
+  setRange('se-gp-dz', 'se-gp-dz-val', gp.deadzone, v => Number(v).toFixed(2));
+  setRange('se-gp-trig', 'se-gp-trig-val', gp.triggerThreshold, v => Number(v).toFixed(2));
+  if (g('se-gp-invy')) g('se-gp-invy').checked = !!gp.invertLookY;
+  // Bindings: show button index (or label).
+  const labelMap = { 0: 'A', 1: 'B', 2: 'X', 3: 'Y', 4: 'LB', 5: 'RB', 6: 'LT', 7: 'RT', 8: 'BACK', 9: 'START', 10: 'L3', 11: 'R3', 12: 'D-UP', 13: 'D-DN', 14: 'D-LF', 15: 'D-RT' };
+  ['fire','ability0','ability1','ability2','core','dash'].forEach(slot => {
+    const btn = document.querySelector(`#settings-overlay .se-bind-btn[data-bind="${slot}"]`);
+    if (btn) btn.textContent = labelMap[gp.bindings[slot]] || ('BTN ' + gp.bindings[slot]);
+  });
+  // Mouse
+  setRange('se-mouse-sens', 'se-mouse-sens-val', d.mouse.sensitivity, v => Number(v).toFixed(2));
+  if (g('se-mouse-invy')) g('se-mouse-invy').checked = !!d.mouse.invertY;
+  // Audio
+  const pct = (v) => Math.round(v * 100) + '%';
+  setRange('se-aud-master', 'se-aud-master-val', d.audio.master, pct);
+  setRange('se-aud-music', 'se-aud-music-val', d.audio.music, pct);
+  setRange('se-aud-sfx', 'se-aud-sfx-val', d.audio.sfx, pct);
+  if (g('se-aud-mutebg')) g('se-aud-mutebg').checked = !!d.audio.muteBg;
+  // Graphics
+  setRange('se-gfx-fov', 'se-gfx-fov-val', d.graphics.fov, v => Math.round(v));
+  setRange('se-gfx-particles', 'se-gfx-particles-val', d.graphics.particles, pct);
+  setRange('se-gfx-shake', 'se-gfx-shake-val', d.graphics.shake, pct);
+  if (g('se-gfx-minimap')) g('se-gfx-minimap').checked = !!d.graphics.minimap;
+  if (g('se-gfx-ping')) g('se-gfx-ping').checked = !!d.graphics.ping;
+}
+function _applySettings() {
+  if (!_settingsDraft) return;
+  // Pull current input values from controls into draft; sliders/checkboxes
+  // bind via input listeners but we also do a final scrape here in case.
+  Object.assign(_settings, _settingsDraft);
+  _saveSettings();
+  // Live-apply to runtime systems.
+  if (gpConfig) {
+    gpConfig.lookSensitivity = _settings.gamepad.lookSensitivity;
+    gpConfig.deadzone = _settings.gamepad.deadzone;
+    gpConfig.triggerThreshold = _settings.gamepad.triggerThreshold;
+    gpConfig.invertLookY = _settings.gamepad.invertLookY;
+    Object.assign(gpConfig.bindings, _settings.gamepad.bindings);
+  }
+  // Camera FOV.
+  if (_cam) {
+    _cam.baseFov = _settings.graphics.fov;
+    if (camera) { camera.fov = _settings.graphics.fov; camera.updateProjectionMatrix(); }
+  }
+  // Audio buses.
+  if (_audio && _audio.setBusVolumes) {
+    _audio.setBusVolumes(_settings.audio.master, _settings.audio.music, _settings.audio.sfx);
+  }
+  if (_audio && _audio.setMuteWhenBackgrounded) {
+    _audio.setMuteWhenBackgrounded(_settings.audio.muteBg);
+  }
+  // Mouse sensitivity is read live by the look handler (lookMul global below).
+  _mouseLookMul = _settings.mouse.sensitivity;
+  _mouseInvertY = !!_settings.mouse.invertY;
+  // Particle density + camera shake scale are read at use-site.
+  _particleDensity = _settings.graphics.particles;
+  _cameraShakeScale = _settings.graphics.shake;
+  // Minimap + ping visibility.
+  const mm = document.getElementById('hud-minimap');
+  if (mm) mm.style.display = _settings.graphics.minimap ? '' : 'none';
+  const pe = document.getElementById('hud-ping');
+  if (pe) pe.style.display = _settings.graphics.ping ? '' : 'none';
+  _closeSettings();
+}
+function _settingsDefaults() {
+  _settingsDraft = JSON.parse(JSON.stringify(_DEFAULT_SETTINGS));
+  _refreshSettingsUI(_settingsDraft);
+}
+function _actionReturnToLobby() {
+  // Server doesn't have a "leave to lobby" message yet; closest thing is to
+  // disconnect WS and reload page. Match continues server-side; we re-join.
+  if (confirm('Return to lobby? You will rejoin as a fresh player.')) {
+    if (net.ws) try { net.ws.close(1000, 'user-exit-match'); } catch (_) {}
+    setTimeout(() => location.reload(), 200);
+  }
+}
+function _actionQuitServer() {
+  if (confirm('Disconnect from server? You will need to refresh to reconnect.')) {
+    if (net.ws) try { net.ws.close(1000, 'user-quit'); } catch (_) {}
+    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#aac;font-family:monospace;font-size:14px;letter-spacing:0.2em;">DISCONNECTED. <a href="" style="color:#66ccff;margin-left:14px;">RECONNECT</a></div>';
+  }
+}
+
+// Wire the controls in the settings menu after the DOM is ready ; this
+// happens once at startup. Each control updates _settingsDraft on change.
+function _wireSettingsControls() {
+  const linkRange = (id, path, fmt) => {
+    const el = document.getElementById(id);
+    const valEl = document.getElementById(id + '-val');
+    if (!el) return;
+    el.addEventListener('input', () => {
+      const v = parseFloat(el.value);
+      const parts = path.split('.');
+      let cur = _settingsDraft;
+      for (let i = 0; i < parts.length - 1; i++) cur = cur[parts[i]];
+      cur[parts[parts.length - 1]] = v;
+      if (valEl) valEl.textContent = (fmt || ((v) => v))(v);
+    });
+  };
+  const linkCheck = (id, path) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('change', () => {
+      const parts = path.split('.');
+      let cur = _settingsDraft;
+      for (let i = 0; i < parts.length - 1; i++) cur = cur[parts[i]];
+      cur[parts[parts.length - 1]] = el.checked;
+    });
+  };
+  const pct = (v) => Math.round(v * 100) + '%';
+  linkRange('se-gp-sens', 'gamepad.lookSensitivity', v => Number(v).toFixed(1));
+  linkRange('se-gp-dz', 'gamepad.deadzone', v => Number(v).toFixed(2));
+  linkRange('se-gp-trig', 'gamepad.triggerThreshold', v => Number(v).toFixed(2));
+  linkCheck('se-gp-invy', 'gamepad.invertLookY');
+  linkRange('se-mouse-sens', 'mouse.sensitivity', v => Number(v).toFixed(2));
+  linkCheck('se-mouse-invy', 'mouse.invertY');
+  linkRange('se-aud-master', 'audio.master', pct);
+  linkRange('se-aud-music', 'audio.music', pct);
+  linkRange('se-aud-sfx', 'audio.sfx', pct);
+  linkCheck('se-aud-mutebg', 'audio.muteBg');
+  linkRange('se-gfx-fov', 'graphics.fov', v => Math.round(v));
+  linkRange('se-gfx-particles', 'graphics.particles', pct);
+  linkRange('se-gfx-shake', 'graphics.shake', pct);
+  linkCheck('se-gfx-minimap', 'graphics.minimap');
+  linkCheck('se-gfx-ping', 'graphics.ping');
+  // Bind buttons capture next gamepad press.
+  document.querySelectorAll('#settings-overlay .se-bind-btn[data-bind]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#settings-overlay .se-bind-btn').forEach(b => b.classList.remove('listening'));
+      btn.classList.add('listening');
+      btn.textContent = 'PRESS BTN...';
+      _bindCaptureSlot = btn.dataset.bind;
+    });
+  });
+}
+// Defer wiring until DOM is fully parsed.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', _wireSettingsControls);
+} else {
+  _wireSettingsControls();
+}
+
+// v8.57: NA21 ; runtime scalars that read from settings.
+let _mouseLookMul = 1.0;
+let _mouseInvertY = false;
+let _particleDensity = 1.0;
+let _cameraShakeScale = 1.0;
+
+// Apply settings on initial boot so saved values take effect immediately.
+function _initialApplySettings() {
+  if (gpConfig) {
+    gpConfig.lookSensitivity = _settings.gamepad.lookSensitivity;
+    gpConfig.deadzone = _settings.gamepad.deadzone;
+    gpConfig.triggerThreshold = _settings.gamepad.triggerThreshold;
+    gpConfig.invertLookY = _settings.gamepad.invertLookY;
+    Object.assign(gpConfig.bindings, _settings.gamepad.bindings);
+  }
+  if (_cam) _cam.baseFov = _settings.graphics.fov;
+  const mm = document.getElementById('hud-minimap');
+  if (mm) mm.style.display = _settings.graphics.minimap ? '' : 'none';
+  const pe = document.getElementById('hud-ping');
+  if (pe) pe.style.display = _settings.graphics.ping ? '' : 'none';
+  _mouseLookMul = _settings.mouse.sensitivity;
+  _mouseInvertY = !!_settings.mouse.invertY;
+  _particleDensity = _settings.graphics.particles;
+  _cameraShakeScale = _settings.graphics.shake;
+}
+
 // Map keyCode -> ability slot.
 const ABILITY_KEYS = { 'KeyQ': 0, 'KeyE': 1, 'KeyF': 2, 'KeyV': 3 };
 
@@ -1646,6 +2195,13 @@ document.addEventListener('keydown', (e) => {
   // current movement direction (or facing direction if stopped).
   if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
     input.pendingDash = true;
+  }
+  // v8.57: NA21 ; Esc toggles the settings menu.
+  if (e.code === 'Escape') {
+    e.preventDefault();
+    const overlay = document.getElementById('settings-overlay');
+    if (overlay && overlay.classList.contains('active')) _closeSettings();
+    else _openSettings();
   }
 });
 document.addEventListener('keyup', (e) => {
@@ -1704,9 +2260,11 @@ document.addEventListener('pointerlockchange', () => {
 });
 document.addEventListener('mousemove', (e) => {
   if (!input.pointerLocked) return;
-  const sens = 0.0025;
+  // v8.57: NA21 ; mouse sensitivity + invert-Y multiplier from settings.
+  const sens = 0.0025 * (typeof _mouseLookMul === 'number' ? _mouseLookMul : 1.0);
+  const yMul = (typeof _mouseInvertY === 'boolean' && _mouseInvertY) ? -1 : 1;
   input.yaw -= e.movementX * sens;
-  input.pitch = Math.max(-Math.PI/2 + 0.05, Math.min(Math.PI/2 - 0.05, input.pitch - e.movementY * sens));
+  input.pitch = Math.max(-Math.PI/2 + 0.05, Math.min(Math.PI/2 - 0.05, input.pitch - e.movementY * sens * yMul));
 });
 // v8.34: mouse fire writes to input.mouseFire (separate source); the merged
 // input.fire is recomputed in pollGamepad() each frame as mouseFire || gpFire.
@@ -2838,15 +3396,81 @@ const _audio = (() => {
     masterGain.gain.value = 0.85 * wobble;
   }
 
+  // v8.57: NA21 ; bus volume scalars. Settings menu adjusts these; the
+  // existing masterGain.gain (modulated by tremor + base 0.85) is multiplied
+  // by _masterMul. ambientGain (music/ambient bed) by _musicMul. SFX by
+  // _sfxMul. setTremor() preserves _masterMul when no tremor is active.
+  let _masterMul = 1.0, _musicMul = 1.0, _sfxMul = 1.0;
+  function setBusVolumes(master, music, sfx) {
+    if (!initialized) return;
+    _masterMul = (master == null) ? _masterMul : master;
+    _musicMul  = (music == null)  ? _musicMul : music;
+    _sfxMul    = (sfx == null)    ? _sfxMul : sfx;
+    // Apply now: master via masterGain (re-applied each frame by tremor),
+    // music via ambientGain (computed from baseVol * duck * mul each setAmbientSpeed),
+    // sfx via sfxBus.
+    if (sfxBus) sfxBus.gain.value = _sfxMul;
+  }
+  // Override setTremor so it picks up _masterMul.
+  const _origSetTremor = setTremor;
+  function setTremorWithMul(intensity) {
+    if (!initialized || !masterGain) return;
+    intensity = Math.max(0, Math.min(1, intensity || 0));
+    if (intensity <= 0) {
+      masterGain.gain.value = 0.85 * _masterMul;
+      return;
+    }
+    const t = performance.now() / 1000;
+    const wobble = 1 + intensity * TREMOR_DEPTH * Math.sin(2 * Math.PI * TREMOR_HZ * t);
+    masterGain.gain.value = 0.85 * _masterMul * wobble;
+  }
+  // Also override setAmbientSpeed to multiply by _musicMul.
+  const _origSetAmbientSpeed = setAmbientSpeed;
+  function setAmbientSpeedWithMul(speedNorm, inGame) {
+    if (!ambientStarted || !initialized) return;
+    speedNorm = Math.max(0, Math.min(1, speedNorm || 0));
+    duckFactor += (duckTarget - duckFactor) * 0.04;
+    duckTarget += (1.0 - duckTarget) * 0.08;
+    const baseVol = inGame ? 1.0 : 0.08;
+    const targetVol = baseVol * duckFactor * _musicMul;
+    ambientGain.gain.value += (targetVol - ambientGain.gain.value) * 0.04;
+    const currentBase = PHI_REST_BASE + speedNorm * (PHI_SPEED_BASE - PHI_REST_BASE);
+    if (phiLayers) {
+      for (const layer of phiLayers) {
+        const layerFreq = currentBase * Math.pow(PHI, layer.layerIndex - 3);
+        layer.oscL.frequency.value = layerFreq;
+        layer.oscR.frequency.value = layerFreq + PHI_BEAT;
+        const vol = layer.layerVol * (1 + speedNorm * 0.8);
+        layer.gainL.gain.value = vol;
+        layer.gainR.gain.value = vol;
+      }
+    }
+  }
+
+  // v8.57: NA21 ; mute-on-tab-out. When document is hidden, drop master to
+  // 0; restore on visible. Settings.audio.muteBg controls whether this is
+  // active. We assume true by default; settings can disable.
+  let _bgMuted = false, _bgMuteEnabled = true;
+  function setMuteWhenBackgrounded(enabled) { _bgMuteEnabled = !!enabled; if (!enabled && _bgMuted) { _bgMuted = false; if (masterGain) masterGain.gain.value = 0.85 * _masterMul; } }
+  if (typeof document !== 'undefined') {
+    document.addEventListener('visibilitychange', () => {
+      if (!_bgMuteEnabled) return;
+      if (document.hidden) { _bgMuted = true; if (masterGain) masterGain.gain.value = 0; }
+      else { _bgMuted = false; if (masterGain) masterGain.gain.value = 0.85 * _masterMul; }
+    });
+  }
+
   return {
     init, resume, playSound, playSoundAt,
     startEngine: startAmbientBed,           // alias for the frame-loop call site
-    setEngineSpeed: (s) => setAmbientSpeed(s, true),
+    setEngineSpeed: (s) => setAmbientSpeedWithMul(s, true),
     stopEngine: fadeAmbientOut,
     duckAmbient,
     updateListener,
     probeEnvironment,
-    setTremor,                              // v8.37: NA25
+    setTremor: setTremorWithMul,            // v8.37: NA25 (now mul-aware)
+    setBusVolumes,                          // v8.57: NA21
+    setMuteWhenBackgrounded,                // v8.57: NA21
     get isOn() { return initialized; },
   };
 })();
@@ -2888,6 +3512,12 @@ function _maybePlayLocalFire(myPlayer) {
   if (!_wasFiringLastFrame || (now - _lastLocalFireSoundTime) >= fr) {
     _audio.playSound(_fireSoundFor(myPlayer.loadoutKey));
     _lastLocalFireSoundTime = now;
+    // v8.46: NA16 ; small camera shake on own fire. Heavy weapons feel
+    // weightier when the cockpit kicks slightly per shot. Magnitude scales
+    // with weapon fireRate (slow heavy weapons shake more, fast weapons shake
+    // less so it doesn't compound into a constant rumble).
+    const shakeMag = Math.min(2.5, 0.6 + fr * 1.5);
+    _addCameraShake(shakeMag);
   }
   _wasFiringLastFrame = true;
 }
@@ -2899,6 +3529,12 @@ function _maybePlayLocalFire(myPlayer) {
 function _playEventSounds(snap, myPeerId) {
   if (!snap || !Array.isArray(snap.events) || snap.events.length === 0) return;
   for (const ev of snap.events) {
+    // v8.51: NA4 ; beam events from hitscan fires. Spawn a transient beam
+    // mesh from origin to end; auto-disposes after ~150ms.
+    if (ev.type === 'beam') {
+      _spawnBeamMesh(ev.origin, ev.end, 0x44ddff);
+      continue;
+    }
     if (ev.type === 'fire') {
       // Networked fire SFX. Skip our own fire (we play it locally with no
       // server roundtrip lag). Other peers and bots are positioned in 3D.
@@ -3254,6 +3890,52 @@ function _tickParticles(dt) {
 }
 
 // Spawn helpers ; called from snap event handlers.
+// v8.51: NA4 ; beam mesh for hitscan visuals. Cylinder from origin to end
+// with additive blending; fades over ~150ms. Reuses the volumetric beam
+// pattern from effects_demo.html (effect 03). Auto-disposes when faded.
+const _activeBeams = [];
+function _spawnBeamMesh(origin, end, color) {
+  if (!origin || !end || !scene) return;
+  const ox = origin.x, oy = origin.y, oz = origin.z;
+  const ex = end.x, ey = end.y, ez = end.z;
+  const dx = ex - ox, dy = ey - oy, dz = ez - oz;
+  const len = Math.sqrt(dx*dx + dy*dy + dz*dz);
+  if (len < 1) return;
+  // Cylinder geometry along Y axis; we orient via lookAt.
+  const geo = new THREE.CylinderGeometry(8, 8, len, 12, 1, true);
+  geo.translate(0, len / 2, 0);
+  const mat = new THREE.MeshBasicMaterial({
+    color, transparent: true, opacity: 0.85,
+    blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set(ox, oy, oz);
+  // Orient Y axis toward end point.
+  const axisY = new THREE.Vector3(0, 1, 0);
+  const dir = new THREE.Vector3(dx, dy, dz).normalize();
+  const q = new THREE.Quaternion().setFromUnitVectors(axisY, dir);
+  mesh.quaternion.copy(q);
+  scene.add(mesh);
+  _activeBeams.push({ mesh, mat, geo, ageMs: 0, lifeMs: 150 });
+}
+function _tickBeams(dt) {
+  if (!_activeBeams.length) return;
+  const dtMs = dt * 1000;
+  for (let i = _activeBeams.length - 1; i >= 0; i--) {
+    const b = _activeBeams[i];
+    b.ageMs += dtMs;
+    const t = b.ageMs / b.lifeMs;
+    if (t >= 1) {
+      scene.remove(b.mesh);
+      b.geo.dispose();
+      b.mat.dispose();
+      _activeBeams.splice(i, 1);
+      continue;
+    }
+    b.mat.opacity = 0.85 * (1 - t);
+  }
+}
+
 function _spawnImpactSparks(pos, color) {
   const c = color != null ? color : 0xffcc44;
   for (let i = 0; i < 8; i++) {
@@ -3531,6 +4213,29 @@ function frame() {
   // shake offset is current when updateCamera runs.
   _tickParticles(dt);
   _tickCameraShake(dt);
+  // v8.51: NA4 ; tick + dispose hitscan beam meshes.
+  _tickBeams(dt);
+
+  // v8.49: NA23 ; ping every 1s. Tracks per-frame accumulator so it stays
+  // independent of rAF cadence. HUD reads net.pingMs directly each frame.
+  if (!net.pingAccum) net.pingAccum = 0;
+  net.pingAccum += dt;
+  if (net.pingAccum >= 1.0 && net.ws && net.ws.readyState === WebSocket.OPEN) {
+    net.pingAccum = 0;
+    try { net.ws.send(JSON.stringify({ type: 'ping', t: performance.now() })); } catch (_) {}
+  }
+  // Update HUD ping element each frame (cheap; just text + class swap).
+  const pingEl = document.getElementById('hud-ping');
+  if (pingEl) {
+    if (net.pingMs == null) {
+      pingEl.textContent = '...';
+      pingEl.className = '';
+    } else {
+      const ms = Math.round(net.pingMs);
+      pingEl.textContent = ms + ' MS';
+      pingEl.className = ms > 200 ? 'bad' : (ms > 100 ? 'warn' : '');
+    }
+  }
 
   readKeyboard();
   // v8.31: gamepad polling every frame; writes into the same `input` fields
@@ -3569,11 +4274,29 @@ function frame() {
       if (p.peerId === net.myPeerId) myPlayer = p;
       const mesh = getOrCreatePlayerMesh(p.peerId, p.team, p.loadoutKey);
       mesh.position.set(p.position.x, p.position.y, p.position.z);
-      mesh.rotation.set(0, p.yaw, 0);
+      // v8.46: NA16 ; banking. Roll around forward axis based on yaw rate.
+      // YXZ order means Z (roll) is applied around the ship's local forward
+      // axis after yaw. Track prev yaw on the mesh to compute yaw rate.
+      if (mesh.rotation.order !== 'YXZ') mesh.rotation.order = 'YXZ';
+      const prevYaw = mesh.userData._prevYaw != null ? mesh.userData._prevYaw : p.yaw;
+      let yawRate = p.yaw - prevYaw;
+      // Wrap to [-π, π].
+      if (yawRate > Math.PI) yawRate -= 2 * Math.PI;
+      else if (yawRate < -Math.PI) yawRate += 2 * Math.PI;
+      mesh.userData._prevYaw = p.yaw;
+      const targetRoll = Math.max(-0.4, Math.min(0.4, -yawRate * 6));
+      const curRoll = mesh.userData._roll || 0;
+      const newRoll = curRoll + (targetRoll - curRoll) * 0.15;
+      mesh.userData._roll = newRoll;
+      mesh.rotation.set(0, p.yaw, newRoll);
       mesh.visible = (p.peerId !== net.myPeerId); // hide own ship in 1st-person view
       // v8.18: spawn protection bubble. Translucent shimmer around any ship
       // that's still inside its 3-second spawn-protection grace period.
       _setSpawnBubble(mesh, (p.spawnProtection || 0) > 0);
+      // v8.52: NA27 ; booster trail intensity from velocity magnitude.
+      const pv = p.velocity || { x: 0, y: 0, z: 0 };
+      const pSpeed = Math.sqrt(pv.x*pv.x + pv.y*pv.y + pv.z*pv.z);
+      _updateBooster(mesh, pSpeed, 350);
     }
     for (const peerId of playerMeshes.keys()) {
       if (!seenPeers.has(peerId)) disposePlayerMesh(peerId);
@@ -3585,8 +4308,23 @@ function frame() {
         seenBots.add(b.id);
         const mesh = getOrCreateBotMesh(b.id, b.team, b.loadoutKey);
         mesh.position.set(b.position.x, b.position.y, b.position.z);
-        mesh.rotation.set(0, b.yaw, 0);
+        // v8.46: NA16 ; banking on bots too.
+        if (mesh.rotation.order !== 'YXZ') mesh.rotation.order = 'YXZ';
+        const prevYaw = mesh.userData._prevYaw != null ? mesh.userData._prevYaw : b.yaw;
+        let yawRate = b.yaw - prevYaw;
+        if (yawRate > Math.PI) yawRate -= 2 * Math.PI;
+        else if (yawRate < -Math.PI) yawRate += 2 * Math.PI;
+        mesh.userData._prevYaw = b.yaw;
+        const targetRoll = Math.max(-0.4, Math.min(0.4, -yawRate * 6));
+        const curRoll = mesh.userData._roll || 0;
+        const newRoll = curRoll + (targetRoll - curRoll) * 0.15;
+        mesh.userData._roll = newRoll;
+        mesh.rotation.set(0, b.yaw, newRoll);
         mesh.visible = !!b.alive;
+        // v8.52: NA27 ; bot booster.
+        const bv = b.velocity || { x: 0, y: 0, z: 0 };
+        const bSpeed = Math.sqrt(bv.x*bv.x + bv.y*bv.y + bv.z*bv.z);
+        _updateBooster(mesh, bSpeed, 350);
       }
     }
     for (const id of botMeshes.keys()) {
@@ -3622,6 +4360,8 @@ function frame() {
 
   // HUD + lobby + roundEnd visibility, gated on match state
   updateHud();
+  // v8.53: NA28 ; minimap ; cheap canvas redraw each frame.
+  _renderMinimap();
   if (keys['Tab']) updateScoreboard();
   if (net.state && net.state.match) {
     watchLobbyReset(net.state);
@@ -3681,6 +4421,144 @@ function frame() {
 
   renderer.render(scene, camera);
   requestAnimationFrame(frame);
+}
+
+// v8.53: NA28 ; minimap renderer. Top-down 2D canvas. Computes bounds from
+// level rooms and scales positions into the canvas viewport. Player at center
+// pointing up; teammates as triangles; enemies as red dots; world effects
+// color-coded; destructibles as small grey squares.
+function _renderMinimap() {
+  const canvas = document.getElementById('minimap-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+  const snap = net.state;
+  if (!snap || !net.level) return;
+  const myPlayer = (snap.players || []).find(p => p.peerId === net.myPeerId);
+  if (!myPlayer) return;
+
+  // Compute level bounds from rooms; fall back to spawn extents.
+  let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity;
+  if (net.level.rooms) {
+    for (const r of net.level.rooms) {
+      if (!r || !r.center) continue;
+      const cx = r.center.x, cz = r.center.z, rad = r.radius || 0;
+      if (cx - rad < minX) minX = cx - rad;
+      if (cx + rad > maxX) maxX = cx + rad;
+      if (cz - rad < minZ) minZ = cz - rad;
+      if (cz + rad > maxZ) maxZ = cz + rad;
+    }
+  }
+  if (!isFinite(minX)) { minX = -2000; maxX = 2000; minZ = -2000; maxZ = 2000; }
+  // Add padding.
+  const padW = (maxX - minX) * 0.1, padH = (maxZ - minZ) * 0.1;
+  minX -= padW; maxX += padW; minZ -= padH; maxZ += padH;
+  const sx = W / (maxX - minX), sz = H / (maxZ - minZ);
+  const scale = Math.min(sx, sz);
+  // Center if aspect doesn't match.
+  const offX = (W - (maxX - minX) * scale) / 2;
+  const offZ = (H - (maxZ - minZ) * scale) / 2;
+  const toX = (worldX) => offX + (worldX - minX) * scale;
+  const toY = (worldZ) => offZ + (worldZ - minZ) * scale;
+
+  // Room outlines (grey).
+  if (net.level.rooms) {
+    ctx.strokeStyle = 'rgba(120,160,200,0.3)';
+    ctx.lineWidth = 1;
+    for (const r of net.level.rooms) {
+      if (!r || !r.center) continue;
+      ctx.beginPath();
+      ctx.arc(toX(r.center.x), toY(r.center.z), (r.radius || 0) * scale, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+  // Tunnels as connecting lines. Server Tunnel interface is { a, b, radius }.
+  if (net.level.tunnels) {
+    ctx.strokeStyle = 'rgba(120,160,200,0.2)';
+    ctx.lineWidth = 0.8;
+    for (const t of net.level.tunnels) {
+      if (!t || !t.a || !t.b) continue;
+      ctx.beginPath();
+      ctx.moveTo(toX(t.a.x), toY(t.a.z));
+      ctx.lineTo(toX(t.b.x), toY(t.b.z));
+      ctx.stroke();
+    }
+  }
+  // World effects (color per type).
+  if (snap.worldEffects) {
+    for (const we of snap.worldEffects) {
+      if (!we || !we.position) continue;
+      let col = 'rgba(180,180,180,0.6)';
+      if (we.type === 'firewall')      col = 'rgba(255,140,40,0.8)';
+      else if (we.type === 'incendiary') col = 'rgba(255,180,40,0.7)';
+      else if (we.type === 'trip_wire')  col = 'rgba(255,220,80,0.7)';
+      else if (we.type === 'tether')     col = 'rgba(180,100,255,0.8)';
+      else if (we.type === 'particle_wall') col = 'rgba(80,200,255,0.7)';
+      else if (we.type === 'gas')        col = 'rgba(120,255,180,0.5)';
+      else if (we.type === 'stasis_pickup') col = 'rgba(120,255,170,0.85)';
+      else if (we.type === 'destructible') col = 'rgba(180,180,180,0.5)';
+      ctx.fillStyle = col;
+      ctx.beginPath();
+      const sz = we.type === 'destructible' ? 2 : 3;
+      ctx.arc(toX(we.position.x), toY(we.position.z), sz, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  // Projectiles of interest (rockets, cluster missiles ; based on color).
+  if (snap.projectiles) {
+    for (const p of snap.projectiles) {
+      if (!p || !p.position) continue;
+      // Approximate "interesting" by speed; rockets have moderate speed.
+      const v = p.velocity || { x: 0, y: 0, z: 0 };
+      const sp = Math.sqrt(v.x*v.x + v.z*v.z);
+      if (sp > 200 && sp < 800) {
+        ctx.fillStyle = 'rgba(255,200,100,0.8)';
+        ctx.fillRect(toX(p.position.x) - 1, toY(p.position.z) - 1, 2, 2);
+      }
+    }
+  }
+  // Sensor range for enemies (rough; LSS varies per-chassis but we use a flat
+  // 1500u so things outside don't show).
+  const SENSOR_RANGE2 = 1500 * 1500;
+  // Other players + bots.
+  const drawShip = (entity, isMe) => {
+    if (!entity || !entity.position) return;
+    const ex = toX(entity.position.x), ey = toY(entity.position.z);
+    const isAlly = entity.team === myPlayer.team;
+    let col;
+    if (isMe) col = 'rgba(255,220,68,1)';
+    else if (isAlly) col = 'rgba(80,180,255,0.9)';
+    else {
+      // Enemy ; only draw if within sensor range.
+      const dx = entity.position.x - myPlayer.position.x;
+      const dz = entity.position.z - myPlayer.position.z;
+      if (dx * dx + dz * dz > SENSOR_RANGE2) return;
+      col = 'rgba(255,80,80,0.95)';
+    }
+    ctx.save();
+    ctx.translate(ex, ey);
+    ctx.rotate(entity.yaw); // map yaw to canvas rotation
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    // Triangle pointing up (north on map = ship's forward when yaw 0).
+    ctx.moveTo(0, -5);
+    ctx.lineTo(-3, 3);
+    ctx.lineTo(3, 3);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  };
+  for (const p of (snap.players || [])) {
+    if (!p.alive) continue;
+    drawShip(p, p.peerId === net.myPeerId);
+  }
+  for (const b of (snap.bots || [])) {
+    if (!b.alive) continue;
+    drawShip(b, false);
+  }
+  // Highlight self (last) so it's on top.
+  drawShip(myPlayer, true);
 }
 
 function updateHud() {
@@ -3796,6 +4674,28 @@ function updateHud() {
     const sp = Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
     const speedEl = document.getElementById('speed-val');
     if (speedEl) speedEl.textContent = String(sp | 0);
+
+    // v8.48: NA18 ; per-chassis crosshair variant. Mapping mirrors the visual
+    // identity table in PLAN.md: VORTEX cyan tight, PYRO orange ring (heat
+    // splash), TRACKER green ring (lock-on), SLAYER red wide (shotgun),
+    // BLASTER yellow tight (precise), SYPHON purple tight, PUNCTURE white tight.
+    // BLASTER long-mode adds the ring; close-mode is wide.
+    const crosshairEl = document.getElementById('crosshair');
+    if (crosshairEl) {
+      crosshairEl.className = ''; // reset
+      const lk = myPlayer.loadoutKey;
+      let cls = '';
+      if (lk === 'VORTEX')   cls = 'cross-cyan cross-tight';
+      else if (lk === 'PYRO')     cls = 'cross-orange cross-ring';
+      else if (lk === 'TRACKER')  cls = 'cross-green cross-ring';
+      else if (lk === 'SLAYER')   cls = 'cross-red cross-wide';
+      else if (lk === 'BLASTER') {
+        cls = 'cross-yellow ' + (myPlayer.blasterMode === 'long' ? 'cross-tight cross-ring' : 'cross-wide');
+      }
+      else if (lk === 'SYPHON')   cls = 'cross-purple cross-tight';
+      else if (lk === 'PUNCTURE') cls = 'cross-tight';
+      crosshairEl.className = cls;
+    }
 
     // v8.44: dash pips. One pip per maxDashes; full pips = available charges,
     // empty = consumed, leading-edge pip glows while regenerating.
@@ -3957,6 +4857,9 @@ function hideOverlay() {
 }
 
 // Boot
+// v8.57: NA21 ; apply saved settings before connecting so saved bindings,
+// FOV, etc. take effect on first frame.
+_initialApplySettings();
 connect();
 requestAnimationFrame(frame);
 
