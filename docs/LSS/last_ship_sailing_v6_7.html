@@ -1833,6 +1833,15 @@ function withSeededRandom(seed, fn) {
   finally { Math.random = orig; }
 }
 
+// Derive a per-round seed from the match seed. Both peers compute the same
+// value without negotiation: every round gets a different geometry, every
+// peer agrees on what that geometry is. The golden-ratio constant 0x9E3779B9
+// gives good bit dispersion for small round numbers.
+function getRoundSeed(roundNum) {
+  if (typeof net.worldSeed !== 'number') return null;
+  return ((net.worldSeed + (roundNum >>> 0) * 0x9E3779B9) >>> 0);
+}
+
 // Reuse the ship-select-countdown overlay as a "waiting for others" panel
 // while we wait for all peers to pick a ship. launchCountdown() will
 // overwrite the cd-num / cd-sub text when the synced launch fires, so this
@@ -8002,7 +8011,9 @@ function commitLoadout(key) {
       if (!net.active) spawnBots();
     };
     if (net.active && typeof net.worldSeed === 'number') {
-      withSeededRandom(net.worldSeed, buildWorld);
+      const roundSeed = getRoundSeed(1);
+      console.log('[v6.7] round 1 build, worldSeed=', net.worldSeed, 'roundSeed=', roundSeed, 'mapKey=', game.selectedMap);
+      withSeededRandom(roundSeed, buildWorld);
     } else {
       buildWorld();
     }
@@ -10531,9 +10542,22 @@ function updateRoundSystem(dt) {
         game.warmupTimer = LSS.LAUNCH_COUNTDOWN;
         // Next map from rotation each round
         const level = getNextMap();
-        buildRoomGraphLevel(level);
-        spawnDynamicObjects(game.sdfRoomData);
-        spawnOrganics(game.sdfRoomData);
+        // (v6.7) Wrap the round-restart world build with the seeded RNG too;
+        // without this, every round past 1 diverges across peers because
+        // buildRoomGraphLevel / spawnDynamicObjects / spawnOrganics all call
+        // Math.random and the round-end path here was missing the wrapper.
+        const buildNextRound = () => {
+          buildRoomGraphLevel(level);
+          spawnDynamicObjects(game.sdfRoomData);
+          spawnOrganics(game.sdfRoomData);
+        };
+        if (net.active && typeof net.worldSeed === 'number') {
+          const roundSeed = getRoundSeed(game.currentRound);
+          console.log('[v6.7] round', game.currentRound, 'build, worldSeed=', net.worldSeed, 'roundSeed=', roundSeed, 'mapKey=', game.selectedMap);
+          withSeededRandom(roundSeed, buildNextRound);
+        } else {
+          buildNextRound();
+        }
         // Reset stasis fields
         game.stasisFields.forEach(f => { if (f.alive) f.destroy(); });
         game.stasisFields = [];
