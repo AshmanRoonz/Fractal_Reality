@@ -3736,7 +3736,26 @@ scene.add(hemiLight);
   }
   geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-  const mat = new THREE.PointsMaterial({ size: 5, vertexColors: true, transparent: true, opacity: 0.9 });
+  // (v6.7) Soft circular point texture so each star renders as a glowing dot
+  // instead of the default screen-aligned PointsMaterial square. Built inline
+  // here because the starfield IIFE runs before _emberFalloffTexture is
+  // defined later in the script.
+  const _starPointTex = (function() {
+    const c = document.createElement('canvas');
+    c.width = 32; c.height = 32;
+    const ctx = c.getContext('2d');
+    const g = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+    g.addColorStop(0.00, 'rgba(255,255,255,1)');
+    g.addColorStop(0.40, 'rgba(255,255,255,0.7)');
+    g.addColorStop(0.80, 'rgba(255,255,255,0.15)');
+    g.addColorStop(1.00, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, 32, 32);
+    return new THREE.CanvasTexture(c);
+  })();
+  const mat = new THREE.PointsMaterial({
+    size: 6, vertexColors: true, transparent: true, opacity: 0.9,
+    map: _starPointTex, alphaTest: 0.05, depthWrite: false,
+  });
   scene.add(new THREE.Points(geo, mat));
 })();
 
@@ -6819,7 +6838,15 @@ function _makeExplosionMesh(type) {
       break;
     case 'flare':
       geo = _EXPL_PLANE;
-      matOpts = { color: 0xffeec0, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide };
+      // (v6.7) The flare always camera-faces (lookAt(camera.position) at
+      // spawn), but without a soft falloff texture the plane reads as a
+      // warm-colored SQUARE that screams "90s sprite". Mapping the ember
+      // radial-gradient texture turns it into a soft sun-flare disc.
+      matOpts = {
+        color: 0xffeec0, transparent: true, opacity: 0.95,
+        blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
+        map: _emberFalloffTexture,
+      };
       break;
     case 'fire':
       geo = _EXPL_SPHERE_LG;
