@@ -4622,12 +4622,16 @@ function _initShipPreview3D() {
     if (typeof sceneEnvMap !== 'undefined') scene.environment = sceneEnvMap;
     // Lighting: cool key from upper-front, warm fill from below-back, plus ambient
     // so dark hull panels still read. Colors echo the main-game team-neutral palette.
-    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-    const keyL = new THREE.DirectionalLight(0xbfd9ff, 1.1);
+    // (v6.7+) Earlier values stacked four hot lights on top of the in-game IBL,
+    // which combined with the emissive lift below to wash out the silhouette;
+    // dialed back so the body reads as a defined hull against the background
+    // gradient instead of a flat lit shape.
+    scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+    const keyL = new THREE.DirectionalLight(0xbfd9ff, 0.65);
     keyL.position.set(180, 240, 160); scene.add(keyL);
-    const fillL = new THREE.DirectionalLight(0xffb066, 0.45);
+    const fillL = new THREE.DirectionalLight(0xffb066, 0.28);
     fillL.position.set(-140, -80, -200); scene.add(fillL);
-    const rimL = new THREE.DirectionalLight(0xffaa00, 0.25);
+    const rimL = new THREE.DirectionalLight(0xffaa00, 0.18);
     rimL.position.set(0, 120, -260); scene.add(rimL);
     const camera = new THREE.PerspectiveCamera(32, 1, 1, 8000);
     camera.position.set(0, 70, 320);
@@ -4682,8 +4686,12 @@ function _applyShipPreviewModel(key) {
       const newMats = mats.map(m => {
         if (!m) return m;
         const copy = m.clone();
-        if (copy.emissive) copy.emissive.setHex(0x22334a);
-        if ('emissiveIntensity' in copy) copy.emissiveIntensity = 1.0;
+        // Subtle emissive lift so dark hull plates aren't pitch black, but
+        // not loud enough to flatten the silhouette. Earlier value (0x22334a
+        // at intensity 1.0) made every panel self-glow on top of the
+        // ambient + 3 directionals + IBL, washing out form.
+        if (copy.emissive) copy.emissive.setHex(0x121a26);
+        if ('emissiveIntensity' in copy) copy.emissiveIntensity = 0.45;
         return copy;
       });
       child.material = newMats.length === 1 ? newMats[0] : newMats;
