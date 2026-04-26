@@ -2325,6 +2325,17 @@ function handleNetEvent(evt, fromPeerId) {
     spawnTracer(from, to, evt.color || 0xffff44);
     return;
   }
+  // (v6.7) Peer triggered a dash; spawn the booster effect from their
+  // NetworkPlayer's engine plumes pointing along the broadcast dash direction.
+  if (evt.type === 'dash_burst' && typeof evt.dx === 'number') {
+    const peer = net.peers.get(fromPeerId);
+    const np = peer && peer.networkPlayer;
+    if (np && np.mesh) {
+      const dir = new THREE.Vector3(evt.dx, evt.dy, evt.dz);
+      spawnDashBoosters(np.mesh, dir, evt.color || 0xaaeeff);
+    }
+    return;
+  }
 }
 
 function spawnNetworkProjectile(data, fromPeerId) {
@@ -10600,6 +10611,30 @@ function updateAbilities(dt) {
 
 // ---- DASH ----
 
+// (v6.7) Dash boosters: brief bright volumetric beam from each engine plume
+// position pointing backward along the dash axis. Reuses spawnTracer for the
+// volumetric beam material; one tracer per engine port so multi-engine
+// chassis (Frigate, Corvette) get a fan of boosters. Falls back to a single
+// booster from the ship's origin if the chassis mesh has no plume children.
+function spawnDashBoosters(shipMesh, dashWorldDir, color) {
+  if (!shipMesh) return;
+  const back = dashWorldDir.clone().normalize().multiplyScalar(-1);
+  const length = 240;
+  const plumes = (shipMesh.userData && shipMesh.userData.enginePlumes) || [];
+  if (plumes.length === 0) {
+    const from = new THREE.Vector3();
+    shipMesh.getWorldPosition(from);
+    spawnTracer(from, from.clone().add(back.clone().multiplyScalar(length)), color);
+    return;
+  }
+  for (const plume of plumes) {
+    const from = new THREE.Vector3();
+    plume.getWorldPosition(from);
+    const to = from.clone().add(back.clone().multiplyScalar(length));
+    spawnTracer(from, to, color);
+  }
+}
+
 function dash() {
   if (player.shipState === 'dead' || player.dashCharges <= 0 || player.dashActive) return;
   // Hold dashes until LAUNCH; bots are also frozen during warmup, so the
@@ -10610,12 +10645,23 @@ function dash() {
   let dashDir = player.velocity.clone();
   if (dashDir.length() < 10) dashDir = forward;
   dashDir.normalize();
-  player.velocity.copy(dashDir.multiplyScalar(ch.dashSpeed));
+  player.velocity.copy(dashDir.clone().multiplyScalar(ch.dashSpeed));
   player.dashActive = true;
   player.dashTimer = ch.dashDuration;
   player.dashCharges--;
   player.shipState = 'dashing';
   if (player.dashCooldownTimer <= 0) player.dashCooldownTimer = ch.dashCooldown;
+  // (v6.7) Visual dash boosters: short bright volumetric beams out of each
+  // engine port along the dash axis. Local + broadcast so peers see it too.
+  const dashColor = 0xaaeeff;
+  spawnDashBoosters(player.mesh, dashDir, dashColor);
+  if (net.active && net.sendEvent) {
+    net.sendEvent({
+      type: 'dash_burst',
+      dx: dashDir.x, dy: dashDir.y, dz: dashDir.z,
+      color: dashColor,
+    });
+  }
 }
 
 // ---- ROUND SYSTEM ----
@@ -13258,6 +13304,40 @@ function updateStasisFields(dt) {
   }
 }
 
+// (v6.7) Per-room volumetric fog density. Modulates the global scene.fog
+// based on which room the player is currently in: spawn rooms (team-tagged)
+// stay clear so newly-spawned players have sightlines, central / no-team
+// rooms get hazier so muzzle flashes and explosions push through, tunnels
+// land in the middle. The lerp keeps the transition smooth so the player
+// doesn't see a hard step-change when crossing a room boundary.
+const _FOG_BASE_DENSITY = 0.000015;
+const _FOG_SPAWN_MULT = 0.55;   // spawn rooms: clear
+const _FOG_CENTRAL_MULT = 2.6;  // central rooms: hazy
+const _FOG_TUNNEL_MULT = 1.4;   // tunnels: in-between
+function updateRoomFog(dt) {
+  if (!scene.fog || !player || !player.position) return;
+  if (!game.currentLevel || !Array.isArray(game.currentLevel.rooms)) return;
+  // Find the room the player is inside (closest center within radius).
+  let inRoom = null;
+  let bestD = Infinity;
+  const rooms = game.currentLevel.rooms;
+  for (let i = 0; i < rooms.length; i++) {
+    const r = rooms[i];
+    const dx = player.position.x - r.x;
+    const dy = player.position.y - r.y;
+    const dz = player.position.z - r.z;
+    const d2 = dx*dx + dy*dy + dz*dz;
+    if (d2 < r.r * r.r && d2 < bestD) { inRoom = r; bestD = d2; }
+  }
+  let target;
+  if (!inRoom)            target = _FOG_BASE_DENSITY * _FOG_TUNNEL_MULT;
+  else if (inRoom.team)   target = _FOG_BASE_DENSITY * _FOG_SPAWN_MULT;
+  else                    target = _FOG_BASE_DENSITY * _FOG_CENTRAL_MULT;
+  // Lerp toward target so the transition is smooth across room boundaries.
+  const k = Math.min(1, dt * 1.8);
+  scene.fog.density += (target - scene.fog.density) * k;
+}
+
 function enterStasis(field) {
   game.playerInStasis = true;
   game.playerStasisTimer = game.playerStasisDuration;
@@ -14604,6 +14684,7 @@ function gameLoop(timestamp) {
   }
   updateRoundSystem(dt);
   updateStasisFields(dt);
+  updateRoomFog(dt);   // (v6.7) per-room atmospheric fog density
   checkExecutions(dt);
 
   // Network: broadcast our state to all peers
