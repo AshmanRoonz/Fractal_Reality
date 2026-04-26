@@ -4517,6 +4517,21 @@ function getWallNormal(point) {
 // game HTML. faceFlip rotates 180° around Y so the model's forward aligns with
 // the game's -Z forward axis. scaleMult nudges the auto-fit-to-hullLength
 // scale per model to compensate for bbox padding (wings inflate the bbox).
+//
+// VISUAL_SCALE_BOOST is a SECOND multiplier applied uniformly on top of every
+// per-model scaleMult. It exists because the chassis dimensions
+// (hullWidth/hullHeight/hullLength) plus the collision math (sphere radius =
+// hullLength * 0.4 for tunnel fit, * 0.45 for ship-vs-ship) describe a
+// collision sphere whose DIAMETER is ~80% of hullLength, while the model is
+// auto-fitted so its LONGEST axis = hullLength * scaleMult. With scaleMult
+// ~1.0 the body ends up visually thinner (especially in height) than the hit
+// sphere, so projectiles and ships register hits before the body "looks" hit.
+// Boosting the visual scale by a uniform factor makes the ship bodies fill
+// the existing collision sphere without changing any collision math
+// (collisionRadius reads chassis.hullLength directly, never the model scale).
+// Tunnel fit is therefore preserved exactly. Tweak this single knob to
+// globally grow/shrink ship bodies relative to their collision sphere.
+const VISUAL_SCALE_BOOST = 1.30;
 const SHIP_MODELS = {
   PUNCTURE: { url: 'ships/puncture.glb', faceFlip: true,  scaleMult: 1.10 },
   SLAYER:     { url: 'ships/slayer.glb',     faceFlip: true,  scaleMult: 1.10 },
@@ -4550,7 +4565,7 @@ function preloadShipModels() {
         const box = new THREE.Box3().setFromObject(proto);
         const sz = box.getSize(new THREE.Vector3());
         const longest = Math.max(sz.x, sz.y, sz.z) || 1;
-        const baseScale = (targetLen / longest) * (spec.scaleMult || 1.0);
+        const baseScale = (targetLen / longest) * (spec.scaleMult || 1.0) * VISUAL_SCALE_BOOST;
         proto.scale.setScalar(baseScale);
         // Re-center on origin so plumes at +Z sit flush with tail.
         const box2 = new THREE.Box3().setFromObject(proto);
@@ -5319,6 +5334,11 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
   // a scene light per ship.
   const prevUD = group.userData || {};
   group.userData = Object.assign(prevUD, { engineMesh, shieldMesh: shield, engineGlows, enginePlumes, barrelMeshes, panelGlowMat, engineGlowMat });
+  // Same VISUAL_SCALE_BOOST applied to the GLB-backed path; keeps the
+  // procedural fallback ships visually consistent in size with the
+  // model-backed ones. Collision math uses chassis.hullLength directly,
+  // unaffected by this scale.
+  group.scale.setScalar(VISUAL_SCALE_BOOST);
   return group;
 }
 
