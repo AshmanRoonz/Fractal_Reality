@@ -545,6 +545,27 @@ canvas { display: block; }
   100% { opacity: 0; }
 }
 
+/* (v6.7) Directional damage indicator. Four edge bands; the one closest to the
+   incoming hit direction (in view space) pulses red so the player knows where
+   they are being shot from. */
+.dmg-edge {
+  position: fixed; pointer-events: none; z-index: 51; opacity: 0;
+}
+.dmg-edge.top    { top: 0;    left: 0; right: 0;  height: 28vh;
+  background: linear-gradient(to bottom, rgba(255,40,40,0.55), transparent); }
+.dmg-edge.bottom { bottom: 0; left: 0; right: 0;  height: 28vh;
+  background: linear-gradient(to top,    rgba(255,40,40,0.55), transparent); }
+.dmg-edge.left   { top: 0; bottom: 0; left: 0;    width: 24vw;
+  background: linear-gradient(to right,  rgba(255,40,40,0.55), transparent); }
+.dmg-edge.right  { top: 0; bottom: 0; right: 0;   width: 24vw;
+  background: linear-gradient(to left,   rgba(255,40,40,0.55), transparent); }
+.dmg-edge.pulse  { animation: dmgEdgePulse 0.55s ease-out forwards; }
+@keyframes dmgEdgePulse {
+  0%   { opacity: 0; }
+  20%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 /* Kill streak announcement */
 #ov-killstreak {
   position: fixed; top: 28%; left: 50%;
@@ -805,6 +826,11 @@ canvas { display: block; }
 
 <!-- Cinematic overlays (ported from lss_overlays.jsx) -->
 <div id="ov-damage-vignette"></div>
+<!-- (v6.7) Directional damage edges; one of these pulses on each incoming hit -->
+<div id="ov-dmg-top"    class="dmg-edge top"></div>
+<div id="ov-dmg-right"  class="dmg-edge right"></div>
+<div id="ov-dmg-bottom" class="dmg-edge bottom"></div>
+<div id="ov-dmg-left"   class="dmg-edge left"></div>
 
 <div id="ov-killstreak">
   <div class="ks-label"></div>
@@ -2288,6 +2314,15 @@ function handleNetEvent(evt, fromPeerId) {
   // doesn't deliver our own broadcasts, so we never see our own world_objects.
   if (evt.type === 'world_objects' && Array.isArray(evt.clusters)) {
     applyWorldObjectsManifest(evt.clusters);
+    return;
+  }
+  // (v6.7) Hitscan / spread tracer from a peer's shot. Render with the local
+  // spawnTracer so it looks like our own muzzle line; damage flows separately
+  // through the hit-claim path so this is purely cosmetic.
+  if (evt.type === 'fire_tracer' && typeof evt.ox === 'number') {
+    const from = new THREE.Vector3(evt.ox, evt.oy, evt.oz);
+    const to   = new THREE.Vector3(evt.ex, evt.ey, evt.ez);
+    spawnTracer(from, to, evt.color || 0xffff44);
     return;
   }
 }
@@ -7733,6 +7768,45 @@ function showKillMarker() {
   el.classList.add('active');
 }
 
+// (v6.7) Pulse one of the four edge bands to tell the player where a hit came
+// from. attacker.position is preferred (most accurate); if missing, fall back
+// to negating the projectile's velocity (origin direction). Hits with no
+// spatial source (world effects, unowned ticks) silently no-op.
+const _dmgEdgeWorld = new THREE.Vector3();
+const _dmgEdgeView = new THREE.Vector3();
+function showDirectionalDamage(attacker, projectile) {
+  // Pick a world-space direction from the player TOWARD the source of damage.
+  if (attacker && attacker.position) {
+    _dmgEdgeWorld.subVectors(attacker.position, player.position);
+  } else if (projectile && projectile.velocity) {
+    // Projectile velocity points away from its source; negate to face the source.
+    _dmgEdgeWorld.copy(projectile.velocity).multiplyScalar(-1);
+  } else {
+    return;
+  }
+  if (_dmgEdgeWorld.lengthSq() < 0.0001) return;
+  _dmgEdgeWorld.normalize();
+  // Convert world direction to view space. View space: +X right, +Y up, -Z forward.
+  // Rotating by the inverse camera quaternion lands the world vector in that frame.
+  _dmgEdgeView.copy(_dmgEdgeWorld).applyQuaternion(camera.quaternion.clone().conjugate());
+  const x = _dmgEdgeView.x;
+  const y = _dmgEdgeView.y;
+  // Project to the screen plane (drop Z), pick the dominant axis. If both
+  // components are tiny (attacker is directly in front or behind), fall back
+  // to a left/right pulse based on a small bias so something always shows.
+  let edge;
+  if (Math.abs(x) >= Math.abs(y)) {
+    edge = (x >= 0) ? 'right' : 'left';
+  } else {
+    edge = (y >= 0) ? 'top' : 'bottom';
+  }
+  const el = document.getElementById('ov-dmg-' + edge);
+  if (!el) return;
+  el.classList.remove('pulse');
+  void el.offsetWidth; // force reflow so the animation restarts on rapid hits
+  el.classList.add('pulse');
+}
+
 // Spawn impact sparks at a hit location (small fast-moving particles)
 function spawnImpactSparks(pos, count) {
   count = count || 6;
@@ -8188,6 +8262,10 @@ function playerTakeDamage(amount, attacker, projectile) {
   // Phase Dash invulnerability (SLAYER)
   if (player.phaseInvuln) return;
   player.lastDamageTime = game.time;
+  // (v6.7) Edge-of-screen directional damage indicator. Project the attacker
+  // direction (or, fallback, the negated projectile velocity) into view space
+  // and pulse the screen edge nearest the projection's screen-plane angle.
+  showDirectionalDamage(attacker, projectile);
 
   // Arc Wave counter: instantly destroys Particle Wall and Gun Shield (TF2 interaction)
   const isArcWaveHit = projectile && projectile.isArcWave;
@@ -8811,6 +8889,17 @@ function fireHitscan(origin, dir, w) {
   // Color depends on loadout: VORTEX uses cyan, otherwise yellow
   const tracerColor = player.loadoutKey === 'VORTEX' ? 0x44ddff : 0xffff44;
   spawnTracer(origin, end, tracerColor);
+  // (v6.7) Hitscan has no flying projectile to broadcast; ship the tracer line
+  // so peers see where the shot came from. Damage already flows via the
+  // hit-claim path (NetworkPlayer.takeDamage), so this is purely visual.
+  if (net.active && net.sendEvent) {
+    net.sendEvent({
+      type: 'fire_tracer',
+      ox: origin.x, oy: origin.y, oz: origin.z,
+      ex: end.x,    ey: end.y,    ez: end.z,
+      color: tracerColor,
+    });
+  }
 
   // Check destructible obstacles (hitscan can damage them too)
   let bestObstacle = null, bestObstDist = Infinity;
@@ -8950,6 +9039,15 @@ function fireSpread(origin, dir, w) {
     const levelDist = raycastLevel(origin, spreadDir, w.range);
     const end = origin.clone().add(spreadDir.clone().multiplyScalar(levelDist));
     spawnTracer(origin, end, 0xffaa44);
+    // (v6.7) Broadcast each pellet so peers see the spread cone visually.
+    if (net.active && net.sendEvent) {
+      net.sendEvent({
+        type: 'fire_tracer',
+        ox: origin.x, oy: origin.y, oz: origin.z,
+        ex: end.x,    ey: end.y,    ez: end.z,
+        color: 0xffaa44,
+      });
+    }
 
     // Check destructible obstacles first
     let hitObstacle = false;
