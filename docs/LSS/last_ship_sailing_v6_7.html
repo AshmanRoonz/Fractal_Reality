@@ -7925,13 +7925,14 @@ class Projectile {
           (Math.random() - 0.5) * arcLen
         ));
         spawnLightningBolt(this.position, arcEnd, this.trailColor, 0.08, 1, 0.9);
-        this.electricArcTimer = 0.07 + Math.random() * 0.12; // ~5-9 bolts/sec
+        // Bolt rate dropped from 5-9/sec → 2.5-4/sec (combat perf). Each
+        // bolt is a TubeGeometry + 2 materials. With many projectiles in
+        // flight at once this was a major per-frame allocation source.
+        this.electricArcTimer = 0.25 + Math.random() * 0.15;
       }
     }
-    // Emit trail particles. Bumped from 30% to 55% so the trail looks alive
-    // with sparks; mix weapon color with white-hot accents so the trail
-    // reads as charged plasma rather than uniform colored dust.
-    if (Math.random() < 0.55) {
+    // Emit trail particles. Reduced from 55% per-frame to 30% (combat perf).
+    if (Math.random() < 0.30) {
       const useWhite = Math.random() < 0.35;
       game.particles.push({
         position: this.position.clone(),
@@ -10498,9 +10499,19 @@ function _disposeOrReleaseEffect(e) {
   if (e.mesh.material) e.mesh.material.dispose();
 }
 function updateEffects(dt) {
-  // Cap effects: cull oldest when over budget
+  // Cap effects: cull excess when over budget. Was using array.shift()
+  // which is O(n) — moves up to 349 elements every cull, which during
+  // heavy combat (shields up + multiple shooters) was firing every
+  // frame and accumulating real CPU cost. Swap-with-last + pop is O(1)
+  // and visually indistinguishable: we still take the "oldest end" of
+  // the array as the cull target, but move the newest into its slot so
+  // the pop is constant-time. Strict insertion order isn't preserved
+  // but visuals don't care which old effect gets culled.
   while (game.effects.length > MAX_EFFECTS) {
-    const e = game.effects.shift();
+    const e = game.effects[0];
+    const last = game.effects.length - 1;
+    if (last > 0) game.effects[0] = game.effects[last];
+    game.effects.pop();
     _disposeOrReleaseEffect(e);
   }
   for (let i = game.effects.length - 1; i >= 0; i--) {
@@ -13252,12 +13263,12 @@ function _emitVortexShieldArcs(shieldPos, radius, fwd, dt, energyPct) {
   if (_vortexRimRight.lengthSq() < 0.001) _vortexRimRight.set(1, 0, 0);
   _vortexRimRight.normalize();
   _vortexRimUp.crossVectors(fwd, _vortexRimRight).normalize();
-  // Thinner + slower + denser arcs: doubled lifetime per bolt makes the ring
-  // feel less hectic (bolts linger instead of strobing) while a slight
-  // ARCS_PER_SEC bump preserves visual density. Tube radii drop substantially
-  // (core 6.0→2.0, halo 11.0→5.0) so the ring stops reading as a chunky
-  // ribbon and reads as crackling filaments.
-  const ARCS_PER_SEC = 280;
+  // Spawn rate dropped 280 → 180 to relieve combat framerate pressure.
+  // Each spawnLightningBolt allocates a TubeGeometry + 2 materials; at
+  // 280/sec × multiple shielders that was the dominant per-frame cost.
+  // The 0.36-0.55s lifetime per bolt keeps the visual density high
+  // (180 × 0.45 avg = ~80 bolts alive at any moment, plenty of crackle).
+  const ARCS_PER_SEC = 180;
   const expected = ARCS_PER_SEC * dt;
   let toSpawn = Math.floor(expected);
   if (Math.random() < (expected - toSpawn)) toSpawn += 1;
@@ -13310,7 +13321,9 @@ function _emitVortexShieldArcs(shieldPos, radius, fwd, dt, energyPct) {
   }
   // Glow particles streaming around the ring. Color spectrum follows the
   // current state — blue when full, red when empty, smooth path between.
-  const GLOW_PER_SEC = 90;
+  // Rate dropped 90 → 55 (combat perf). Each particle lazy-allocates a
+  // fresh THREE.Sprite + SpriteMaterial on its first frame.
+  const GLOW_PER_SEC = 55;
   const expectedGlow = GLOW_PER_SEC * dt;
   let toGlow = Math.floor(expectedGlow);
   if (Math.random() < (expectedGlow - toGlow)) toGlow += 1;
@@ -13368,11 +13381,10 @@ function _emitGunShieldArcs(shieldPos, radius, fwd, dt, hpPct) {
   if (_gunRimRight.lengthSq() < 0.001) _gunRimRight.set(1, 0, 0);
   _gunRimRight.normalize();
   _gunRimUp.crossVectors(fwd, _gunRimRight).normalize();
-  // Thinner + slower + denser arcs: same treatment as Vortex shield.
-  // Lifetime ~2x for a less hectic feel, slight ARCS_PER_SEC bump,
-  // tube radii drop substantially (core 6.0→2.0, halo 11.5→5.0) so
-  // the ring no longer reads as a chunky ribbon.
-  const ARCS_PER_SEC = 280 * (0.55 + 0.45 * hpPct);
+  // Spawn rate dropped 280 → 180 to match Vortex shield (combat perf).
+  // Each spawnLightningBolt is a TubeGeometry + 2 materials allocation;
+  // the longer per-bolt lifetime keeps visual density acceptable.
+  const ARCS_PER_SEC = 180 * (0.55 + 0.45 * hpPct);
   const expected = ARCS_PER_SEC * dt;
   let toSpawn = Math.floor(expected);
   if (Math.random() < (expected - toSpawn)) toSpawn += 1;
@@ -13424,7 +13436,8 @@ function _emitGunShieldArcs(shieldPos, radius, fwd, dt, hpPct) {
   }
   // Glow particles painting the soft halo around the ring. Hue spectrum
   // follows hpPct (blue full → red almost dead) just like the halo bolts.
-  const GLOW_PER_SEC = 80 * (0.55 + 0.45 * hpPct);
+  // Glow rate dropped 80 → 50 to match Vortex shield (combat perf).
+  const GLOW_PER_SEC = 50 * (0.55 + 0.45 * hpPct);
   const expectedGlow = GLOW_PER_SEC * dt;
   let toGlow = Math.floor(expectedGlow);
   if (Math.random() < (expectedGlow - toGlow)) toGlow += 1;
@@ -14640,6 +14653,13 @@ function updateAbilities(dt) {
 // booster from the ship's origin if the chassis mesh has no plume children.
 function spawnDashBoosters(shipMesh, dashWorldDir, color) {
   if (!shipMesh) return;
+  // Force the ship's matrix tree to refresh before reading per-plume
+  // world positions. Without this, plume.getWorldPosition() returns the
+  // PREVIOUS frame's matrix (or the spawn-point matrix on respawn),
+  // which is why dash trails were appearing detached from the ship or
+  // on the other side of the room. updateMatrixWorld(true) walks the
+  // group + plume children and recomputes their world transforms now.
+  shipMesh.updateMatrixWorld(true);
   const back = dashWorldDir.clone().normalize().multiplyScalar(-1);
   const length = 240;
   const plumes = (shipMesh.userData && shipMesh.userData.enginePlumes) || [];
