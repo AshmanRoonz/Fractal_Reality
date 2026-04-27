@@ -2740,7 +2740,13 @@ function handleNetEvent(evt, fromPeerId) {
   if (evt.type === 'fire_tracer' && typeof evt.ox === 'number') {
     const from = new THREE.Vector3(evt.ox, evt.oy, evt.oz);
     const to   = new THREE.Vector3(evt.ex, evt.ey, evt.ez);
-    spawnTracer(from, to, evt.color || 0xffff44);
+    // Use the broadcaster's loadout fireRate to apply the same chaingun-class
+    // thinning the local player gets, so peer shots also look right.
+    const peerForWidth = net.peers.get(fromPeerId);
+    const peerLoadout  = peerForWidth && peerForWidth.loadoutKey ? LOADOUTS[peerForWidth.loadoutKey] : null;
+    const peerFireRate = peerLoadout && peerLoadout.weapon ? peerLoadout.weapon.fireRate : 0.5;
+    const peerWScale   = (peerFireRate <= 0.10) ? 0.55 : 1.0;
+    spawnTracer(from, to, evt.color || 0xffff44, peerWScale);
     // (v6.7) Chassis-specific muzzle flash for peers viewing this shot.
     // Loadout key is looked up from the broadcasting peer's stored state.
     const peer = net.peers.get(fromPeerId);
@@ -3747,12 +3753,6 @@ function emitChassisMuzzleFlash(loadoutKey, pos, dir) {
         color: 0xff5522,
         size: 3 + Math.random() * 3,
       });
-    }
-  } else if (loadoutKey === 'SYPHON') {
-    // Quick electric crackle off the muzzle for the chaingun's cyan-green tone.
-    if (typeof spawnLightningBolt === 'function') {
-      const tip = pos.clone().add(dir.clone().multiplyScalar(60));
-      spawnLightningBolt(pos, tip, 0x44ffaa, 0.10, 1, 1.0);
     }
   } else if (loadoutKey === 'PUNCTURE') {
     // Plasma Railgun: bright electric lightning bolt out the barrel for the
@@ -6693,21 +6693,20 @@ class Bot {
     const fireOrigin = this.position.clone();
     const fireDir = dir.clone().normalize();
 
-    // Color scheme per loadout
-    const loadoutColors = {
-      'VORTEX': 0x44ddff,
-      'PYRO': 0xff4400,
-      'PUNCTURE': 0x88aaff,
-      'SLAYER': 0xffaa44,
-      'TRACKER': 0xffaa00,
-      'BLASTER': 0xffdd44,
-      'SYPHON': 0xffdd44
-    };
-    const flashColor = loadoutColors[this.loadout.name] || 0xffdd44;
+    // Color scheme per loadout. Pulled from chassisFlashColor() so bot
+    // tracers share the same per-ship palette as player tracers (Syphon
+    // cyan-green, Vortex cyan, etc.) instead of every non-Vortex bot
+    // firing yellow.
+    const flashColor = (typeof chassisFlashColor === 'function')
+      ? chassisFlashColor(this.loadout.name)
+      : 0xffdd44;
 
     if (weapon.mode === 'hitscan') {
-      // Hitscan weapons: tracer, muzzle particles, muzzle flash light
-      spawnTracer(fireOrigin, player.position, flashColor);
+      // Hitscan weapons: tracer, muzzle particles, muzzle flash light.
+      // Chaingun-class weapons (fireRate <= 0.10) get a thinner tracer so
+      // overlapping haze layers don't pile up into a 2D streak.
+      const isChaingunBot = (weapon.fireRate <= 0.10);
+      spawnTracer(fireOrigin, player.position, flashColor, isChaingunBot ? 0.55 : 1.0);
 
       // Muzzle particles
       for (let i = 0; i < 2; i++) {
@@ -9514,8 +9513,12 @@ function _spawnSingleTracer(fromVec, toVec, color, widthScale) {
   }
 }
 
-function spawnTracer(from, to, color) {
+function spawnTracer(from, to, color, widthScale) {
   color = color || 0xffff00;
+  // Per-call width multiplier so rapid-fire weapons (chaingun, Predator
+  // Cannon) can pass a smaller value (~0.55) and stop their long-lived haze
+  // layers from stacking into a thick 2D streak across the screen.
+  const wScale = (typeof widthScale === 'number' && widthScale > 0) ? widthScale : 1.0;
   // Player-side shots: split into two tracers that originate at the left
   // and right painted barrel tips and converge on the target. With the camera
   // sitting right at player.position, a single centered tracer paints its
@@ -9574,12 +9577,12 @@ function spawnTracer(from, to, color) {
     // world correctly as the camera rotates. Each beam is somewhat thinner
     // than a single-tracer default so the two converging streaks together
     // don't visually outweigh the old single-shot mass.
-    _spawnSingleTracer(leftMuzzle, to, color, 0.85);
-    _spawnSingleTracer(rightMuzzle, to, color, 0.85);
+    _spawnSingleTracer(leftMuzzle, to, color, 0.85 * wScale);
+    _spawnSingleTracer(rightMuzzle, to, color, 0.85 * wScale);
     return;
   }
   // Bot / far-field shots: single tracer as before.
-  _spawnSingleTracer(from, to, color, 1.0);
+  _spawnSingleTracer(from, to, color, 1.0 * wScale);
 }
 
 // Lightning bolt: jagged line from A to B using a single merged BufferGeometry (1 draw call)
@@ -9626,29 +9629,56 @@ function spawnLightningBolt(from, to, color, lifetime, branches, thickness) {
     }
     allChains.push(forkPts);
   }
-  // Build a single line geometry from all chains (uses GL_LINE; very cheap)
-  const lineVerts = [];
+  // Build each chain as a TubeGeometry so the `thickness` parameter actually
+  // produces visible width. THREE.LineSegments + linewidth is broken in WebGL
+  // (browsers cap line width at 1px regardless of the requested value), which
+  // made every bolt render as a single 1-pixel branching line — invisible
+  // against bright cosmic walls and prone to look like sub-pixel dashes that
+  // appear to leak across the map at certain camera angles. Tubes give us
+  // proper 3D geometry that depth-tests correctly against the wall.
   for (const chain of allChains) {
-    for (let i = 0; i < chain.length - 1; i++) {
-      lineVerts.push(chain[i].x, chain[i].y, chain[i].z);
-      lineVerts.push(chain[i+1].x, chain[i+1].y, chain[i+1].z);
-    }
+    if (chain.length < 2) continue;
+    // CatmullRom curve through the jagged points. Three.js needs at least
+    // 2 points; with 2 it falls back to a straight segment which is fine.
+    const curve = new THREE.CatmullRomCurve3(chain, false, 'catmullrom', 0.0);
+    const tubularSegs = Math.max(8, (chain.length - 1) * 4);
+    const radialSegs = 4; // octagonal cross-section is plenty for thin tubes
+    const glowRadius = thickness * 0.5;
+    const coreRadius = Math.max(0.4, thickness * 0.18);
+    // Glow tube (wider, colored, lower opacity).
+    const glowGeo = new THREE.TubeGeometry(curve, tubularSegs, glowRadius, radialSegs, false);
+    const glowMat = new THREE.MeshBasicMaterial({
+      color: color,
+      transparent: true,
+      opacity: 0.55,
+      blending: THREE.AdditiveBlending,
+      depthTest: true,
+      depthWrite: false,
+      side: THREE.DoubleSide
+    });
+    const glowMesh = new THREE.Mesh(glowGeo, glowMat);
+    glowMesh.renderOrder = 1; // composite over wall (see gas cloud comment)
+    scene.add(glowMesh);
+    // Use 'lightningTube' (not 'tracer') so the cleanup path disposes
+    // BOTH geometry and material — TubeGeometry is per-bolt, not pooled.
+    game.effects.push({ mesh: glowMesh, lifetime: lifetime * 1.3, age: 0, type: 'lightningTube' });
+    // Core tube (thinner, bright white, full opacity at peak).
+    const coreGeo = new THREE.TubeGeometry(curve, tubularSegs, coreRadius, radialSegs, false);
+    const coreMat = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.95,
+      blending: THREE.AdditiveBlending,
+      depthTest: true,
+      depthWrite: false,
+      side: THREE.DoubleSide
+    });
+    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    coreMesh.renderOrder = 1;
+    scene.add(coreMesh);
+    game.effects.push({ mesh: coreMesh, lifetime: lifetime, age: 0, type: 'lightningTube' });
   }
-  const lineGeo = new THREE.BufferGeometry();
-  lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(lineVerts, 3));
-  // Core line (bright white)
-  const coreMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, linewidth: 1 });
-  const coreLine = new THREE.LineSegments(lineGeo, coreMat);
-  coreLine.renderOrder = 1; // composite over wall (see gas cloud comment)
-  scene.add(coreLine);
-  game.effects.push({ mesh: coreLine, lifetime: lifetime, age: 0, type: 'tracer' });
-  // Glow line (wider colored; uses same geo, different material)
-  const glowMat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, linewidth: 1 });
-  const glowLine = new THREE.LineSegments(lineGeo.clone(), glowMat);
-  glowLine.renderOrder = 1;
-  scene.add(glowLine);
-  game.effects.push({ mesh: glowLine, lifetime: lifetime * 1.3, age: 0, type: 'tracer' });
-  // Dynamic light (reuse pooled)
+  // Dynamic light at the midpoint (same as before).
   const boltMid = points[Math.floor(points.length / 2)];
   spawnDynamicLight(boltMid, color, 2.0, 400, lifetime);
 }
@@ -9868,6 +9898,13 @@ function updateEffects(dt) {
     // --- Tracers: fade ---
     else if (e.type === 'tracer') {
       e.mesh.material.opacity = (e.mesh.material.opacity || 0.8) * (1 - t);
+    }
+    // --- Lightning tubes (spawnLightningBolt): linear fade from initial opacity.
+    // Stores _initialOpacity on first tick so the curve is single-shot rather
+    // than the legacy compounding multiply that 'tracer' uses.
+    else if (e.type === 'lightningTube') {
+      if (e._initialOpacity == null) e._initialOpacity = e.mesh.material.opacity;
+      e.mesh.material.opacity = e._initialOpacity * Math.max(0, 1 - t);
     }
     // --- Tracer ethereal tail: linger, slowly dim, slight radial swell
     // so the trail reads as an expanding ribbon of light rather than a
@@ -11338,9 +11375,14 @@ function fireHitscan(origin, dir, w) {
   // Check level geometry first
   const levelDist = raycastLevel(origin, aimDir, w.range);
   const end = origin.clone().add(aimDir.clone().multiplyScalar(levelDist));
-  // Color depends on loadout: VORTEX uses cyan, otherwise yellow
-  const tracerColor = player.loadoutKey === 'VORTEX' ? 0x44ddff : 0xffff44;
-  spawnTracer(origin, end, tracerColor);
+  // Color follows each loadout's chassis flash color so muzzle flash and
+  // tracer share one palette (Syphon cyan-green, Blaster gold, Puncture
+  // yellow-white, Vortex cyan, etc.). Chaingun-class weapons (Syphon's
+  // XO-16, Blaster's Predator) get a thinner tracer because rapid fire
+  // makes the long-lived haze layers stack into a thick 2D streak.
+  const tracerColor = chassisFlashColor(player.loadoutKey);
+  const isChaingun = (w.fireRate <= 0.10);
+  spawnTracer(origin, end, tracerColor, isChaingun ? 0.55 : 1.0);
   // (v6.7) Hitscan has no flying projectile to broadcast; ship the tracer line
   // so peers see where the shot came from. Damage already flows via the
   // hit-claim path (NetworkPlayer.takeDamage), so this is purely visual.
@@ -16078,27 +16120,19 @@ function buildSettingsPage() {
           ${WALL_PATTERN_NAMES.map((nm, i) => `<option value="${i}"${(game.wallPattern|0) === i ? ' selected' : ''}>${nm}</option>`).join('')}
         </select>
       </div>
+      <div class="setting-row">
+        <label>Pure Black Base</label>
+        <input type="checkbox" id="set-wall-black-base" ${game.wallBlackBase ? 'checked' : ''}>
+      </div>
       <div class="setting-row" style="opacity:0.7; font-size:0.85em;">
-        <label style="flex:1;">Press P in-game to cycle. Patterns 0-7 use the dark-base + cosmic-additive shape with live tunable math below; pattern 8 (Soul Array) renders •∞ as a dot lattice with waves from each room.</label>
+        <label style="flex:1;">Pure Black Base hides the map's wall geometry (no zone-color tint, no AO/diffuse, no fresnel rim) so only the active pattern reads against pure black. Press P in-game to cycle patterns. Tune everything else in the companion lab (docs/LSS/wall_pattern_lab.html), download a config, then import it here.</label>
       </div>
-      <div class="setting-row" style="margin-top:6px;">
-        <button id="wall-lab-reset">Reset Lab to Defaults</button>
+      <div class="setting-row" style="margin-top:6px; gap:6px; flex-wrap:wrap;">
+        <button id="wall-import-btn">Import Lab Config</button>
+        <button id="wall-lab-reset">Reset to Defaults</button>
+        <input type="file" id="wall-import-file" accept="application/json,.json" style="display:none;">
       </div>
-    </div>
-
-    <div class="settings-section">
-      <h3>Wall Constants</h3>
-      <div id="wall-lab-wallc"></div>
-    </div>
-
-    <div class="settings-section">
-      <h3>Pattern Math (Patterns 0-7)</h3>
-      <div id="wall-lab-pmath"></div>
-    </div>
-
-    <div class="settings-section">
-      <h3>Soul Array (Pattern 8)</h3>
-      <div id="wall-lab-soul"></div>
+      <div class="setting-row" style="opacity:0.7; font-size:0.85em;" id="wall-import-status"></div>
     </div>
 
     <h2>AUDIO</h2>
@@ -16197,49 +16231,58 @@ function buildSettingsPage() {
       setWallPattern(parseInt(e.target.value, 10) | 0);
     });
   }
+  // Pure Black Base checkbox
+  const blackBaseChk = overlay.querySelector('#set-wall-black-base');
+  if (blackBaseChk) {
+    blackBaseChk.addEventListener('change', e => {
+      setWallBlackBase(!!e.target.checked);
+    });
+  }
 
-  // Build the wall lab slider rows (Wall Constants, Pattern Math, Soul Array)
-  // dynamically from WALL_PARAM_DEFS so adding/removing a tunable is one
-  // edit instead of three.
-  (function buildWallLabRows() {
-    const params = applyWallParamDefaults(game.wallParams || (game.wallParams = {}));
-    const containers = {
-      wallc: overlay.querySelector('#wall-lab-wallc'),
-      pmath: overlay.querySelector('#wall-lab-pmath'),
-      soul:  overlay.querySelector('#wall-lab-soul')
-    };
-    for (let i = 0; i < WALL_PARAM_DEFS.length; i++) {
-      const d = WALL_PARAM_DEFS[i];
-      const target = containers[d.scope];
-      if (!target) continue;
-      const v = params[d.key];
-      const decimals = (d.step >= 1) ? 0 : (d.step >= 0.1) ? 1 : (d.step >= 0.01) ? 2 : (d.step >= 0.001) ? 3 : 4;
-      const row = document.createElement('div');
-      row.className = 'setting-row';
-      row.innerHTML = `
-        <label>${d.label}</label>
-        <input type="range" id="wl-${d.key}" min="${d.min}" max="${d.max}" step="${d.step}" value="${v}">
-        <div class="value-display" id="wl-val-${d.key}">${(d.type === 'i') ? (v|0) : v.toFixed(decimals)}</div>
-      `;
-      target.appendChild(row);
-      const slider = row.querySelector('#wl-' + d.key);
-      const valEl  = row.querySelector('#wl-val-' + d.key);
-      slider.addEventListener('input', () => {
-        const raw = parseFloat(slider.value);
-        const out = (d.type === 'i') ? (raw | 0) : raw;
-        valEl.textContent = (d.type === 'i') ? out : out.toFixed(decimals);
-        setWallParam(d.key, out);
-      });
-    }
-    const resetBtn = overlay.querySelector('#wall-lab-reset');
-    if (resetBtn) {
-      resetBtn.addEventListener('click', () => {
-        resetWallParams();
-        // Rebuild the panel so slider positions reflect the defaults.
-        buildSettingsPage();
-      });
-    }
-  })();
+  // Wall lab integration: import a JSON config exported from
+  // docs/LSS/wall_pattern_lab.html, or reset to defaults. The lab is the
+  // single place to tweak the 30+ shader parameters; the game just consumes
+  // its output. Format is { wallPattern: int, wallParams: {KEY: value, ...} }
+  // where the keys match WALL_PARAM_DEFS.
+  const importBtn   = overlay.querySelector('#wall-import-btn');
+  const importInput = overlay.querySelector('#wall-import-file');
+  const importStat  = overlay.querySelector('#wall-import-status');
+  if (importBtn && importInput) {
+    importBtn.addEventListener('click', () => importInput.click());
+    importInput.addEventListener('change', (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const cfg = JSON.parse(reader.result);
+          const result = importWallLabConfig(cfg);
+          if (importStat) {
+            importStat.style.color = result.ok ? '#9af' : '#f88';
+            importStat.textContent = result.message + ' (' + f.name + ')';
+          }
+        } catch (err) {
+          if (importStat) {
+            importStat.style.color = '#f88';
+            importStat.textContent = 'Import failed: ' + err.message;
+          }
+        }
+        // Clear the input so re-selecting the same file fires change again.
+        importInput.value = '';
+      };
+      reader.readAsText(f);
+    });
+  }
+  const resetBtn = overlay.querySelector('#wall-lab-reset');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      resetWallParams();
+      if (importStat) {
+        importStat.style.color = '#9af';
+        importStat.textContent = 'Reset to defaults.';
+      }
+    });
+  }
 
   // Bind dropdowns
   overlay.querySelectorAll('.bind-select').forEach(sel => {
@@ -16519,6 +16562,63 @@ function resetWallParams() {
   saveSettings();
 }
 
+// Toggle Pure Black Base mode. When on, the wall draws only the active
+// pattern over black (no dark floor, no zone-color tint, no fresnel, no
+// diffuse/AO, no zone floor) so the map's geometry disappears and only
+// the pattern reads. Live-pushes uBlackBase and persists.
+function setWallBlackBase(on) {
+  game.wallBlackBase = !!on;
+  if (game.levelMaterial && game.levelMaterial.uniforms && game.levelMaterial.uniforms.uBlackBase) {
+    game.levelMaterial.uniforms.uBlackBase.value = game.wallBlackBase ? 1 : 0;
+  }
+  saveSettings();
+}
+
+// Import a config JSON exported by wall_pattern_lab.html. Expected shape:
+//   { wallPattern: 0..8, wallParams: { KEY: value, ... } }
+// Returns { ok: bool, message: string }. Unknown keys are ignored; missing
+// keys keep their current value (so partial configs are valid). The lab and
+// the game share WALL_PARAM_DEFS key names, so the JSON is plug-and-play.
+function importWallLabConfig(cfg) {
+  if (!cfg || typeof cfg !== 'object') {
+    return { ok: false, message: 'Config is not an object.' };
+  }
+  let appliedCount = 0;
+  let skippedCount = 0;
+  // wallPattern is optional; clamp to [0, N) if present.
+  if (typeof cfg.wallPattern === 'number') {
+    setWallPattern(cfg.wallPattern | 0);
+  }
+  // wallParams is the bulk of the work.
+  const incoming = cfg.wallParams || {};
+  if (typeof incoming !== 'object') {
+    return { ok: false, message: 'wallParams field is missing or not an object.' };
+  }
+  if (!game.wallParams) game.wallParams = {};
+  for (const key in incoming) {
+    if (!Object.prototype.hasOwnProperty.call(incoming, key)) continue;
+    const def = WALL_PARAM_DEFS.find(d => d.key === key);
+    if (!def) { skippedCount++; continue; }
+    let v = incoming[key];
+    if (typeof v === 'string') v = parseFloat(v);
+    if (!isFinite(v)) { skippedCount++; continue; }
+    if (def.type === 'i') v = v | 0;
+    // Clamp to slider range so weird values can't blow up the shader.
+    if (typeof def.min === 'number' && v < def.min) v = def.min;
+    if (typeof def.max === 'number' && v > def.max) v = def.max;
+    game.wallParams[key] = v;
+    appliedCount++;
+  }
+  applyWallParamDefaults(game.wallParams);
+  pushWallParamsToUniforms();
+  saveSettings();
+  return {
+    ok: appliedCount > 0,
+    message: 'Applied ' + appliedCount + ' params' +
+             (skippedCount > 0 ? (', skipped ' + skippedCount + ' unknown') : '') + '.'
+  };
+}
+
 function saveSettings() {
   try {
     const data = {
@@ -16536,6 +16636,7 @@ function saveSettings() {
       audioSfx: audio.userVol.sfx,
       audioAmbient: audio.userVol.ambient,
       wallPattern: (typeof game.wallPattern === 'number') ? game.wallPattern : 0,
+      wallBlackBase: !!game.wallBlackBase,
       wallParams: applyWallParamDefaults(game.wallParams || {}),
     };
     localStorage.setItem('lss_settings', JSON.stringify(data));
@@ -16564,6 +16665,7 @@ function loadSettings() {
     // Wall pattern (0..7 = lab cosmic patterns, 8 = Soul Array). Stored on
     // game so createMeshFromPositions can read it when the shader is built.
     if (data.wallPattern !== undefined) game.wallPattern = data.wallPattern | 0;
+    if (data.wallBlackBase !== undefined) game.wallBlackBase = !!data.wallBlackBase;
     // Wall lab parameters: merge saved values onto defaults so any new param
     // added in a future version gets its default automatically.
     if (data.wallParams && typeof data.wallParams === 'object') {
@@ -17612,6 +17714,12 @@ function buildRoomGraphLevel(level) {
       // the GRAPHICS section in settings, the P hotkey (cycles), or
       // setWallPattern(n).
       'uniform int uPattern;',
+      // When 1, the wall draws ONLY the active pattern over pure black:
+      // no K_DARK_BASE, no zoneColor tinting, no fresnel rim, no diffuse/AO
+      // shaping, no zone-color floor. Useful when you want the map's
+      // geometry to disappear and only the pattern to read. Pattern 8
+      // (Soul Array) also zeroes its SA_ZONE_FLOOR contribution.
+      'uniform int uBlackBase;',
       // ---- Wall constants (live-tweakable) ----
       'uniform vec3  K_DARK_BASE;',
       'uniform float K_ZONE_TINT;',
@@ -17968,28 +18076,37 @@ function buildRoomGraphLevel(level) {
       '    vec3 dotRGB = hsv(dotHue, SA_DOT_SAT, waveBright);',
       '    c = dotRGB * dotMask;',
       // Faint zone-color hint so wall silhouettes still read between dots.
-      '    c += zoneColor * SA_ZONE_FLOOR;',
+      // Skipped in Pure Black Base mode so walls go fully black between dots.
+      '    if (uBlackBase == 0) c += zoneColor * SA_ZONE_FLOOR;',
       '  } else {',
       // ============================================================
       // ---- Patterns 0-7: lab cosmic dispatcher -------------------
       // ============================================================
-      // Dark base + zone-tinted floor.
-      '    vec3 dark = K_DARK_BASE + zoneColor * K_ZONE_TINT;',
-      '    c = dark;',
       // Cosmic field (the dispatcher routes to one of the 8 lab patterns).
+      // Computed once; used by both Pure Black Base and normal paths below.
       '    float fracPulse = 0.92 + 0.12 * sin(time * 0.35);',
       '    float shimmer   = 0.90 + 0.18 * sin(time * 1.10 + vWorldPos.x * 0.003 + vWorldPos.z * 0.003);',
       '    vec3 cosmic = cosmicField(vWorldPos, zoneColor, time);',
-      '    c += cosmic * fracPulse * shimmer * K_COSMIC_BRIGHTNESS;',
-      // Soft diffuse + rim so surfaces still read in 3D.
-      '    vec3 vd = normalize(cameraPosition - vWorldPos);',
-      '    float diff = K_DIFF_MIN + (1.0 - K_DIFF_MIN) * max(dot(vNormal, vd), 0.0);',
-      '    float fresnelFactor = pow(1.0 - abs(dot(vNormal, vd)), 3.0);',
-      '    c += zoneColor * K_FRESNEL_STRENGTH * fresnelFactor;',
-      '    float aoTerm = mix(K_AO_FLOOR, 1.0, vAO);',
-      '    c *= diff * aoTerm;',
+      '    if (uBlackBase == 1) {',
+      // Pure Black Base: render only the pattern over black. No dark floor,
+      // no zone-color tint, no fresnel rim, no diffuse/AO shaping, no
+      // zone-color floor. The geometry disappears and only the pattern reads.
+      '      c = cosmic * fracPulse * shimmer * K_COSMIC_BRIGHTNESS;',
+      '    } else {',
+      // Normal path: dark base + zone tint + cosmic + diffuse + fresnel +
+      // AO + zone floor. Walls read as 3D solid surfaces.
+      '      vec3 dark = K_DARK_BASE + zoneColor * K_ZONE_TINT;',
+      '      c = dark;',
+      '      c += cosmic * fracPulse * shimmer * K_COSMIC_BRIGHTNESS;',
+      '      vec3 vd = normalize(cameraPosition - vWorldPos);',
+      '      float diff = K_DIFF_MIN + (1.0 - K_DIFF_MIN) * max(dot(vNormal, vd), 0.0);',
+      '      float fresnelFactor = pow(1.0 - abs(dot(vNormal, vd)), 3.0);',
+      '      c += zoneColor * K_FRESNEL_STRENGTH * fresnelFactor;',
+      '      float aoTerm = mix(K_AO_FLOOR, 1.0, vAO);',
+      '      c *= diff * aoTerm;',
       // Hard minimum so dark-palette rooms always retain some readability.
-      '    c = max(c, zoneColor * K_FLOOR);',
+      '      c = max(c, zoneColor * K_FLOOR);',
+      '    }',
       '  }',
       '',
       // Upper half is one-way transparent: interior (front-face) fades toward
@@ -18062,6 +18179,7 @@ function buildRoomGraphLevel(level) {
     // game.wallPattern is loaded from localStorage by loadSettings(); seed it
     // here in case the shader is built before settings have been read.
     if (typeof game.wallPattern !== 'number') game.wallPattern = 0;
+    if (typeof game.wallBlackBase !== 'boolean') game.wallBlackBase = false;
     if (!game.wallParams) game.wallParams = {};
     // Pull current values out of the central params table (with defaults) so
     // every uniform has a known starting value.
@@ -18080,7 +18198,8 @@ function buildRoomGraphLevel(level) {
         roomColorsU: { value: roomColorsArr },
         roomRadii: { value: roomRadiiArr },
         roomCount: { value: numRooms },
-        uPattern: { value: game.wallPattern | 0 },
+        uPattern:   { value: game.wallPattern | 0 },
+        uBlackBase: { value: game.wallBlackBase ? 1 : 0 },
         // ---- Wall constants ----
         K_DARK_BASE:         { value: new THREE.Vector3(wp.K_DARK_BASE_R, wp.K_DARK_BASE_G, wp.K_DARK_BASE_B) },
         K_ZONE_TINT:         { value: wp.K_ZONE_TINT },

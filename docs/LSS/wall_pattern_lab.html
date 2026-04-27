@@ -144,6 +144,7 @@ select {
         <option value="5">Hex Lattice</option>
         <option value="6">Plasma FBM</option>
         <option value="7">Circumpunct Lattice</option>
+        <option value="8">Soul Array (dot lattice)</option>
       </select>
     </div>
     <div class="row"><label>Iterations</label><input type="range" id="p-iters" min="1" max="12" step="1" value="8"><span class="val" id="p-iters-val">8</span></div>
@@ -159,16 +160,36 @@ select {
     <div class="row"><label>Sat base</label><input type="range" id="p-satbase" min="0" max="1.0" step="0.01" value="0.55"><span class="val" id="p-satbase-val">0.55</span></div>
   </div>
 
+  <!-- Soul Array (Pattern 8) -->
+  <div class="section">
+    <h2>Soul Array (Pattern 8)</h2>
+    <div class="row"><label>Cell size</label><input type="range" id="sa-cell" min="30" max="300" step="1" value="110"><span class="val" id="sa-cell-val">110</span></div>
+    <div class="row"><label>Dot radius</label><input type="range" id="sa-radius" min="4" max="80" step="0.5" value="18"><span class="val" id="sa-radius-val">18</span></div>
+    <div class="row"><label>Depth tolerance</label><input type="range" id="sa-depth" min="10" max="300" step="1" value="70"><span class="val" id="sa-depth-val">70</span></div>
+    <div class="row"><label>Wave speed</label><input type="range" id="sa-wspeed" min="0" max="1500" step="5" value="260"><span class="val" id="sa-wspeed-val">260</span></div>
+    <div class="row"><label>Wave period</label><input type="range" id="sa-wperiod" min="100" max="3000" step="10" value="720"><span class="val" id="sa-wperiod-val">720</span></div>
+    <div class="row"><label>Wave sharpness</label><input type="range" id="sa-wsharp" min="1" max="16" step="0.5" value="4"><span class="val" id="sa-wsharp-val">4.0</span></div>
+    <div class="row"><label>Base brightness</label><input type="range" id="sa-base" min="0" max="2" step="0.01" value="0.30"><span class="val" id="sa-base-val">0.30</span></div>
+    <div class="row"><label>Wave peak</label><input type="range" id="sa-peak" min="0" max="5" step="0.05" value="2.10"><span class="val" id="sa-peak-val">2.10</span></div>
+    <div class="row"><label>Breath amp</label><input type="range" id="sa-bamp" min="0" max="1" step="0.01" value="0.22"><span class="val" id="sa-bamp-val">0.22</span></div>
+    <div class="row"><label>Breath rate</label><input type="range" id="sa-brate" min="0" max="3" step="0.01" value="0.40"><span class="val" id="sa-brate-val">0.40</span></div>
+    <div class="row"><label>Dot saturation</label><input type="range" id="sa-sat" min="0" max="1" step="0.01" value="0.92"><span class="val" id="sa-sat-val">0.92</span></div>
+    <div class="row"><label>Zone color floor</label><input type="range" id="sa-zfloor" min="0" max="0.2" step="0.001" value="0.012"><span class="val" id="sa-zfloor-val">0.012</span></div>
+  </div>
+
   <!-- Actions -->
   <div class="section">
-    <h2>Export / Reset</h2>
+    <h2>Export / Import / Reset</h2>
     <div class="btn-row">
       <button id="reset">Reset</button>
       <button id="export-json">Export JSON</button>
-      <button id="export-snippet">Export GLSL+JS</button>
+      <button id="download-config">Download .json</button>
+      <button id="load-config">Load .json</button>
+      <button id="export-snippet">GLSL+JS Snippet</button>
+      <input type="file" id="config-file-input" accept="application/json,.json" style="display:none;">
     </div>
-    <textarea id="export-area" readonly placeholder="Click Export to dump current config here..."></textarea>
-    <p class="tip">Slider tweaks update the shader live. Map preset reloads palette only ; sliders keep their current values.</p>
+    <textarea id="export-area" readonly placeholder="Click Export JSON to dump current config here. Use Download .json to save it as a file the game can import via Settings -> Graphics -> Import Lab Config."></textarea>
+    <p class="tip">Slider tweaks update the shader live. Map preset reloads palette only ; sliders keep their current values. Download saves the JSON the main game's Import Lab Config button accepts.</p>
   </div>
 </div>
 
@@ -228,10 +249,11 @@ const FRAG_SRC = `
   uniform float K_FLOOR;
 
   // ---- Pattern math (live-tweakable) ----
-  // u_patternId selects which projection algorithm runs in cosmicField.
-  // Most parameters apply to multiple patterns ; per-pattern meaning noted
-  // in comments at each pattern function below.
-  uniform int   u_patternId;   // 0..7 dispatch
+  // u_patternId selects which projection algorithm runs in cosmicField (0-7)
+  // or whether the Soul Array dot lattice (8) is rendered instead. Most
+  // parameters apply to multiple patterns ; per-pattern meaning noted in
+  // comments at each pattern function below.
+  uniform int   u_patternId;   // 0..8 dispatch (8 = Soul Array)
   uniform int   u_iters;       // generic iteration count (1..12)
   uniform int   u_rings;       // generic outer ring/layer count (1..5)
   uniform float u_scale;       // world->pattern-space scale
@@ -241,6 +263,20 @@ const FRAG_SRC = `
   uniform float u_valDiv;      // luminance scaling divisor
   uniform float u_hueSpin;     // hue offset added per ring/layer
   uniform float u_satBase;     // base saturation
+
+  // ---- Soul Array tunables (Pattern 8 only) ----
+  uniform float SA_CELL_SIZE;
+  uniform float SA_DOT_RADIUS;
+  uniform float SA_DOT_DEPTH_TOL;
+  uniform float SA_WAVE_SPEED;
+  uniform float SA_WAVE_PERIOD;
+  uniform float SA_WAVE_SHARPNESS;
+  uniform float SA_BASE_DOT;
+  uniform float SA_WAVE_PEAK;
+  uniform float SA_BREATH_AMP;
+  uniform float SA_BREATH_RATE;
+  uniform float SA_DOT_SAT;
+  uniform float SA_ZONE_FLOOR;
 
   varying vec3 vWorldPos;
   varying vec3 vNormal;
@@ -267,6 +303,10 @@ const FRAG_SRC = `
     p = fract(p * vec3(443.897, 441.423, 437.195));
     p += dot(p, p.yxz + 19.19);
     return fract(vec3(p.x * p.y, p.x * p.z, p.y * p.z));
+  }
+  // Soul Array per-cell hue hash (cheap deterministic).
+  float hash3s(vec3 p) {
+    return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
   }
   float hash13(vec3 p) {
     p = fract(p * 0.1031);
@@ -563,25 +603,60 @@ const FRAG_SRC = `
       if (d < minD) { minD = d; zoneColor = roomColorsU[i]; nearC = roomCenters[i]; nearR = roomRadii[i]; }
     }
 
-    // Base: dark floor + zone-color tint (K_ZONE_TINT controls hue weight)
-    vec3 c = K_DARK_BASE + zoneColor * K_ZONE_TINT;
+    vec3 c;
+    if (u_patternId == 8) {
+      // ============================================================
+      // Pattern 8: Soul Array dot lattice (•∞)
+      // Pure black walls + 3D dot grid; energy waves from each room
+      // brighten dots they pass through; global breath modulates the
+      // whole array. Wall-constants section is bypassed for this mode.
+      // ============================================================
+      vec3 cellId    = floor(vWorldPos / SA_CELL_SIZE);
+      vec3 dotCenter = (cellId + 0.5) * SA_CELL_SIZE;
+      vec3 toDot     = vWorldPos - dotCenter;
+      float alongN     = abs(dot(toDot, vNormal));
+      vec3  inSurfVec  = toDot - vNormal * dot(toDot, vNormal);
+      float inSurfDist = length(inSurfVec);
+      float depthFade  = 1.0 - smoothstep(SA_DOT_DEPTH_TOL * 0.5, SA_DOT_DEPTH_TOL, alongN);
+      float dotMask    = (1.0 - smoothstep(SA_DOT_RADIUS * 0.45, SA_DOT_RADIUS, inSurfDist)) * depthFade;
+      float dotHue     = fract(hash3s(cellId) + time * 0.011);
 
-    // Cosmic Kali IFS additive layer
-    float fracPulse = 0.92 + 0.12 * sin(time * 0.35);
-    float shimmer   = 0.90 + 0.18 * sin(time * 1.10 + vWorldPos.x * 0.003 + vWorldPos.z * 0.003);
-    vec3 cosmic = cosmicField(vWorldPos, zoneColor, time);
-    c += cosmic * fracPulse * shimmer * K_COSMIC_BRIGHTNESS;
-
-    // Diffuse + fresnel rim
-    vec3 vd = normalize(cameraPosition - vWorldPos);
-    float diff = K_DIFF_MIN + (1.0 - K_DIFF_MIN) * max(dot(vNormal, vd), 0.0);
-    float fresnelFactor = pow(1.0 - abs(dot(vNormal, vd)), 3.0);
-    c += zoneColor * K_FRESNEL_STRENGTH * fresnelFactor;
-    float aoTerm = mix(K_AO_FLOOR, 1.0, vAO);
-    c *= diff * aoTerm;
-
-    // Hard zone-color floor so dark-palette rooms always read.
-    c = max(c, zoneColor * K_FLOOR);
+      float waveBright = SA_BASE_DOT;
+      for (int j = 0; j < 8; j++) {
+        if (j >= roomCount) break;
+        float distToRoom = length(dotCenter - roomCenters[j]);
+        float roomPhase  = float(j) * 0.785398;
+        float phase      = (distToRoom - time * SA_WAVE_SPEED) * 6.28318 / SA_WAVE_PERIOD + roomPhase;
+        float wave       = pow(0.5 + 0.5 * cos(phase), SA_WAVE_SHARPNESS);
+        float roomLitDot = SA_BASE_DOT + (SA_WAVE_PEAK - SA_BASE_DOT) * wave;
+        waveBright       = max(waveBright, roomLitDot);
+      }
+      float breath = 1.0 + SA_BREATH_AMP * sin(time * SA_BREATH_RATE);
+      waveBright  *= breath;
+      vec3 dotRGB = hsv(dotHue, SA_DOT_SAT, waveBright);
+      c = dotRGB * dotMask;
+      c += zoneColor * SA_ZONE_FLOOR;
+    } else {
+      // ============================================================
+      // Patterns 0-7: lab cosmic dispatcher
+      // ============================================================
+      // Base: dark floor + zone-color tint (K_ZONE_TINT controls hue weight)
+      c = K_DARK_BASE + zoneColor * K_ZONE_TINT;
+      // Cosmic additive layer
+      float fracPulse = 0.92 + 0.12 * sin(time * 0.35);
+      float shimmer   = 0.90 + 0.18 * sin(time * 1.10 + vWorldPos.x * 0.003 + vWorldPos.z * 0.003);
+      vec3 cosmic = cosmicField(vWorldPos, zoneColor, time);
+      c += cosmic * fracPulse * shimmer * K_COSMIC_BRIGHTNESS;
+      // Diffuse + fresnel rim
+      vec3 vd = normalize(cameraPosition - vWorldPos);
+      float diff = K_DIFF_MIN + (1.0 - K_DIFF_MIN) * max(dot(vNormal, vd), 0.0);
+      float fresnelFactor = pow(1.0 - abs(dot(vNormal, vd)), 3.0);
+      c += zoneColor * K_FRESNEL_STRENGTH * fresnelFactor;
+      float aoTerm = mix(K_AO_FLOOR, 1.0, vAO);
+      c *= diff * aoTerm;
+      // Hard zone-color floor so dark-palette rooms always read.
+      c = max(c, zoneColor * K_FLOOR);
+    }
 
     gl_FragColor = vec4(c, 1.0);
   }
@@ -652,6 +727,19 @@ const uniforms = {
   u_valDiv:   { value: 380.0 },
   u_hueSpin:  { value: 0.12 },
   u_satBase:  { value: 0.55 },
+  // Soul Array (defaults match the game's WALL_PARAM_DEFS)
+  SA_CELL_SIZE:      { value: 110.0 },
+  SA_DOT_RADIUS:     { value: 18.0 },
+  SA_DOT_DEPTH_TOL:  { value: 70.0 },
+  SA_WAVE_SPEED:     { value: 260.0 },
+  SA_WAVE_PERIOD:    { value: 720.0 },
+  SA_WAVE_SHARPNESS: { value: 4.0 },
+  SA_BASE_DOT:       { value: 0.30 },
+  SA_WAVE_PEAK:      { value: 2.10 },
+  SA_BREATH_AMP:     { value: 0.22 },
+  SA_BREATH_RATE:    { value: 0.40 },
+  SA_DOT_SAT:        { value: 0.92 },
+  SA_ZONE_FLOOR:     { value: 0.012 },
 };
 
 const wallMat = new THREE.ShaderMaterial({
@@ -852,82 +940,263 @@ function setupControls() {
   bindSlider('p-huespin',  'p-huespin-val',  v => uniforms.u_hueSpin.value  = v, 3);
   bindSlider('p-satbase',  'p-satbase-val',  v => uniforms.u_satBase.value  = v, 2);
 
+  // Soul Array (Pattern 8)
+  bindSlider('sa-cell',    'sa-cell-val',    v => uniforms.SA_CELL_SIZE.value      = v, 0);
+  bindSlider('sa-radius',  'sa-radius-val',  v => uniforms.SA_DOT_RADIUS.value     = v, 1);
+  bindSlider('sa-depth',   'sa-depth-val',   v => uniforms.SA_DOT_DEPTH_TOL.value  = v, 0);
+  bindSlider('sa-wspeed',  'sa-wspeed-val',  v => uniforms.SA_WAVE_SPEED.value     = v, 0);
+  bindSlider('sa-wperiod', 'sa-wperiod-val', v => uniforms.SA_WAVE_PERIOD.value    = v, 0);
+  bindSlider('sa-wsharp',  'sa-wsharp-val',  v => uniforms.SA_WAVE_SHARPNESS.value = v, 1);
+  bindSlider('sa-base',    'sa-base-val',    v => uniforms.SA_BASE_DOT.value       = v, 2);
+  bindSlider('sa-peak',    'sa-peak-val',    v => uniforms.SA_WAVE_PEAK.value      = v, 2);
+  bindSlider('sa-bamp',    'sa-bamp-val',    v => uniforms.SA_BREATH_AMP.value     = v, 2);
+  bindSlider('sa-brate',   'sa-brate-val',   v => uniforms.SA_BREATH_RATE.value    = v, 2);
+  bindSlider('sa-sat',     'sa-sat-val',     v => uniforms.SA_DOT_SAT.value        = v, 2);
+  bindSlider('sa-zfloor',  'sa-zfloor-val',  v => uniforms.SA_ZONE_FLOOR.value     = v, 3);
+
   // Reset
   document.getElementById('reset').addEventListener('click', () => {
     location.reload();
   });
 
-  // Export JSON
+  // Export JSON (dump to textarea so the user can copy/paste).
   document.getElementById('export-json').addEventListener('click', () => {
     const cfg = collectConfig();
     document.getElementById('export-area').value = JSON.stringify(cfg, null, 2);
   });
 
-  // Export GLSL+JS snippet ready to paste back into v6_7.html
+  // Download config.json (file format the main game's Import Lab Config
+  // button consumes). Saves with the active pattern in the filename.
+  document.getElementById('download-config').addEventListener('click', () => {
+    const cfg = collectConfig();
+    const json = JSON.stringify(cfg, null, 2);
+    const patternId = cfg.wallPattern;
+    const patternName = ['kali','apollonian','voronoi','waves','mandelbox','hex','plasma','circumpunct','soularray'][patternId] || 'pattern';
+    const fname = 'lss_walls_' + patternName + '.json';
+    const blob = new Blob([json], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = fname;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    document.getElementById('export-area').value = json;
+  });
+
+  // Load config.json: pick a previously-saved file and re-apply every
+  // slider + pattern selector + Soul Array tunable. Lets you iterate on a
+  // saved config instead of starting from defaults each session.
+  document.getElementById('load-config').addEventListener('click', () => {
+    document.getElementById('config-file-input').click();
+  });
+  document.getElementById('config-file-input').addEventListener('change', (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const cfg = JSON.parse(reader.result);
+        applyConfigToControls(cfg);
+        document.getElementById('export-area').value = 'Loaded ' + f.name;
+      } catch (err) {
+        document.getElementById('export-area').value = 'Load failed: ' + err.message;
+      }
+      e.target.value = '';
+    };
+    reader.readAsText(f);
+  });
+
+  // GLSL+JS snippet: a quick visual summary of the active config (legacy
+  // helper from before the uniform-driven shader). Useful for pasting into
+  // commit messages or chat ; the game itself uses the JSON file path.
   document.getElementById('export-snippet').addEventListener('click', () => {
     const cfg = collectConfig();
+    const wp = cfg.wallParams;
     const pal = cfg.palette.map(h => '0x' + h.toString(16).padStart(6, '0')).join(', ');
-    const out = [
-      '// === Wall constants (paste into v6_7 wall fragment shader top of main) ===',
-      `'  vec3  K_DARK_BASE         = vec3(${cfg.K_DARK_BASE[0].toFixed(3)}, ${cfg.K_DARK_BASE[1].toFixed(3)}, ${cfg.K_DARK_BASE[2].toFixed(3)});',`,
-      `'  float K_ZONE_TINT         = ${cfg.K_ZONE_TINT.toFixed(2)};',`,
-      `'  float K_COSMIC_BRIGHTNESS = ${cfg.K_COSMIC_BRIGHTNESS.toFixed(2)};',`,
-      `'  float K_FRESNEL_STRENGTH  = ${cfg.K_FRESNEL_STRENGTH.toFixed(2)};',`,
-      `'  float K_DIFF_MIN          = ${cfg.K_DIFF_MIN.toFixed(2)};',`,
-      `'  float K_AO_FLOOR          = ${cfg.K_AO_FLOOR.toFixed(2)};',`,
-      `'  float K_FLOOR             = ${cfg.K_FLOOR.toFixed(3)};',`,
+    const lines = [
+      '// === Active pattern: ' + cfg.patternName + ' (id=' + cfg.wallPattern + ') ===',
       '',
-      '// === PALETTE_BOOST (paste in JS room-uniform construction) ===',
-      `const PALETTE_BOOST = ${cfg.PALETTE_BOOST.toFixed(2)};`,
+      '// --- Wall constants ---',
+      'K_DARK_BASE = vec3(' + wp.K_DARK_BASE_R.toFixed(3) + ', ' + wp.K_DARK_BASE_G.toFixed(3) + ', ' + wp.K_DARK_BASE_B.toFixed(3) + ')',
+      'K_ZONE_TINT         = ' + wp.K_ZONE_TINT.toFixed(2),
+      'K_COSMIC_BRIGHTNESS = ' + wp.K_COSMIC_BRIGHTNESS.toFixed(2),
+      'K_FRESNEL_STRENGTH  = ' + wp.K_FRESNEL_STRENGTH.toFixed(2),
+      'K_DIFF_MIN          = ' + wp.K_DIFF_MIN.toFixed(2),
+      'K_AO_FLOOR          = ' + wp.K_AO_FLOOR.toFixed(2),
+      'K_FLOOR             = ' + wp.K_FLOOR.toFixed(3),
       '',
-      '// === Palette (paste into MAP_DATA.<map>.palette) ===',
-      `palette: [${pal}],`,
+      '// --- Pattern math (Patterns 0-7) ---',
+      'iterations:       ' + (wp.u_iters|0),
+      'rings/layers:     ' + (wp.u_rings|0),
+      'world scale:      ' + wp.u_scale.toFixed(4),
+      'rotation speed:   ' + wp.u_rotSpeed.toFixed(2),
+      'offset triple:    vec3(' + wp.u_off_x.toFixed(2) + ', ' + wp.u_off_y.toFixed(3) + ', ' + wp.u_off_z.toFixed(2) + ')',
+      'inv base:         ' + wp.u_invBase.toFixed(1),
+      'luminance div:    ' + wp.u_valDiv.toFixed(0),
+      'hue spin/ring:    ' + wp.u_hueSpin.toFixed(3),
+      'sat base:         ' + wp.u_satBase.toFixed(2),
       '',
-      `// === Pattern math (active pattern: ${cfg.pattern.patternName}) ===`,
-      `// patternId:        ${cfg.pattern.patternId}  // 0=Kali 1=Apollonian 2=Voronoi 3=Waves 4=Mandelbox 5=Hex 6=Plasma 7=Circumpunct`,
-      `// iterations:       ${cfg.pattern.iters}`,
-      `// rings/layers:     ${cfg.pattern.rings}`,
-      `// world scale:      ${cfg.pattern.scale.toFixed(4)}`,
-      `// rotation speed:   ${cfg.pattern.rotSpeed.toFixed(2)}`,
-      `// offset triple:    vec3(${cfg.pattern.off[0].toFixed(2)}, ${cfg.pattern.off[1].toFixed(3)}, ${cfg.pattern.off[2].toFixed(2)})`,
-      `// inv base:         ${cfg.pattern.invBase.toFixed(1)}`,
-      `// luminance div:    ${cfg.pattern.valDiv.toFixed(0)}`,
-      `// hue spin/ring:    ${cfg.pattern.hueSpin.toFixed(3)}`,
-      `// sat base:         ${cfg.pattern.satBase.toFixed(2)}`,
-    ].join('\n');
-    document.getElementById('export-area').value = out;
+      '// --- Soul Array (Pattern 8) ---',
+      'cell size:        ' + wp.SA_CELL_SIZE.toFixed(0),
+      'dot radius:       ' + wp.SA_DOT_RADIUS.toFixed(1),
+      'depth tolerance:  ' + wp.SA_DOT_DEPTH_TOL.toFixed(0),
+      'wave speed:       ' + wp.SA_WAVE_SPEED.toFixed(0),
+      'wave period:      ' + wp.SA_WAVE_PERIOD.toFixed(0),
+      'wave sharpness:   ' + wp.SA_WAVE_SHARPNESS.toFixed(1),
+      'base brightness:  ' + wp.SA_BASE_DOT.toFixed(2),
+      'wave peak:        ' + wp.SA_WAVE_PEAK.toFixed(2),
+      'breath amp/rate:  ' + wp.SA_BREATH_AMP.toFixed(2) + ' / ' + wp.SA_BREATH_RATE.toFixed(2),
+      'dot saturation:   ' + wp.SA_DOT_SAT.toFixed(2),
+      'zone floor:       ' + wp.SA_ZONE_FLOOR.toFixed(3),
+      '',
+      '// --- Palette (' + pal.split(',').length + ' zones) ---',
+      pal,
+      '',
+      '// --- PALETTE_BOOST ---',
+      cfg.PALETTE_BOOST.toFixed(2)
+    ];
+    document.getElementById('export-area').value = lines.join('\n');
   });
 }
 
+// Collect the full lab state into the JSON shape the main game expects:
+//   { wallPattern: 0..8, wallParams: { KEY: value, ... }, palette, PALETTE_BOOST }
+// The wallParams keys mirror the game's WALL_PARAM_DEFS so import is a flat
+// Object.assign on the game side. palette + PALETTE_BOOST are kept for the
+// GLSL+JS snippet exporter and for round-tripping back into the lab; the
+// game ignores them (it gets palette from each map's definition).
 function collectConfig() {
+  const id = uniforms.u_patternId.value | 0;
+  const patternNames = [
+    'Kali IFS','Apollonian','Voronoi','Waves','Mandelbox','Hex Lattice',
+    'Plasma FBM','Circumpunct','Soul Array'
+  ];
   return {
+    wallPattern: id,
+    patternName: patternNames[id] || 'Kali IFS',
     palette: currentPalette.slice(),
     PALETTE_BOOST: parseFloat(document.getElementById('palette-boost').value),
-    K_DARK_BASE: [
-      uniforms.K_DARK_BASE.value.x,
-      uniforms.K_DARK_BASE.value.y,
-      uniforms.K_DARK_BASE.value.z,
-    ],
-    K_ZONE_TINT:         uniforms.K_ZONE_TINT.value,
-    K_COSMIC_BRIGHTNESS: uniforms.K_COSMIC_BRIGHTNESS.value,
-    K_FRESNEL_STRENGTH:  uniforms.K_FRESNEL_STRENGTH.value,
-    K_DIFF_MIN:          uniforms.K_DIFF_MIN.value,
-    K_AO_FLOOR:          uniforms.K_AO_FLOOR.value,
-    K_FLOOR:             uniforms.K_FLOOR.value,
-    pattern: {
-      patternId:   uniforms.u_patternId.value,
-      patternName: ['Kali IFS','Apollonian','Voronoi','Waves','Mandelbox','Hex Lattice','Plasma FBM','Circumpunct'][uniforms.u_patternId.value] || 'Kali IFS',
-      iters:       uniforms.u_iters.value,
-      rings:       uniforms.u_rings.value,
-      scale:       uniforms.u_scale.value,
-      rotSpeed:    uniforms.u_rotSpeed.value,
-      off: [uniforms.u_off.value.x, uniforms.u_off.value.y, uniforms.u_off.value.z],
-      invBase:     uniforms.u_invBase.value,
-      valDiv:      uniforms.u_valDiv.value,
-      hueSpin:     uniforms.u_hueSpin.value,
-      satBase:     uniforms.u_satBase.value,
-    },
+    wallParams: {
+      // ---- Wall constants ----
+      K_DARK_BASE_R:       uniforms.K_DARK_BASE.value.x,
+      K_DARK_BASE_G:       uniforms.K_DARK_BASE.value.y,
+      K_DARK_BASE_B:       uniforms.K_DARK_BASE.value.z,
+      K_ZONE_TINT:         uniforms.K_ZONE_TINT.value,
+      K_COSMIC_BRIGHTNESS: uniforms.K_COSMIC_BRIGHTNESS.value,
+      K_FRESNEL_STRENGTH:  uniforms.K_FRESNEL_STRENGTH.value,
+      K_DIFF_MIN:          uniforms.K_DIFF_MIN.value,
+      K_AO_FLOOR:          uniforms.K_AO_FLOOR.value,
+      K_FLOOR:             uniforms.K_FLOOR.value,
+      // ---- Pattern math ----
+      u_iters:    uniforms.u_iters.value | 0,
+      u_rings:    uniforms.u_rings.value | 0,
+      u_scale:    uniforms.u_scale.value,
+      u_rotSpeed: uniforms.u_rotSpeed.value,
+      u_off_x:    uniforms.u_off.value.x,
+      u_off_y:    uniforms.u_off.value.y,
+      u_off_z:    uniforms.u_off.value.z,
+      u_invBase:  uniforms.u_invBase.value,
+      u_valDiv:   uniforms.u_valDiv.value,
+      u_hueSpin:  uniforms.u_hueSpin.value,
+      u_satBase:  uniforms.u_satBase.value,
+      // ---- Soul Array ----
+      SA_CELL_SIZE:      uniforms.SA_CELL_SIZE.value,
+      SA_DOT_RADIUS:     uniforms.SA_DOT_RADIUS.value,
+      SA_DOT_DEPTH_TOL:  uniforms.SA_DOT_DEPTH_TOL.value,
+      SA_WAVE_SPEED:     uniforms.SA_WAVE_SPEED.value,
+      SA_WAVE_PERIOD:    uniforms.SA_WAVE_PERIOD.value,
+      SA_WAVE_SHARPNESS: uniforms.SA_WAVE_SHARPNESS.value,
+      SA_BASE_DOT:       uniforms.SA_BASE_DOT.value,
+      SA_WAVE_PEAK:      uniforms.SA_WAVE_PEAK.value,
+      SA_BREATH_AMP:     uniforms.SA_BREATH_AMP.value,
+      SA_BREATH_RATE:    uniforms.SA_BREATH_RATE.value,
+      SA_DOT_SAT:        uniforms.SA_DOT_SAT.value,
+      SA_ZONE_FLOOR:     uniforms.SA_ZONE_FLOOR.value
+    }
   };
+}
+
+// Map of wallParams key -> [slider DOM id, value-display id, decimals,
+// uniformWriter(value)]. Used by applyConfigToControls() to push a loaded
+// config back through every slider so DOM, displays, and uniforms all sync.
+const LAB_PARAM_BINDINGS = {
+  K_DARK_BASE_R:       ['k-dark-r',     'k-dark-r-val',     3, v => uniforms.K_DARK_BASE.value.x = v],
+  K_DARK_BASE_G:       ['k-dark-g',     'k-dark-g-val',     3, v => uniforms.K_DARK_BASE.value.y = v],
+  K_DARK_BASE_B:       ['k-dark-b',     'k-dark-b-val',     3, v => uniforms.K_DARK_BASE.value.z = v],
+  K_ZONE_TINT:         ['k-zone-tint',  'k-zone-tint-val',  2, v => uniforms.K_ZONE_TINT.value = v],
+  K_COSMIC_BRIGHTNESS: ['k-cosmic',     'k-cosmic-val',     2, v => uniforms.K_COSMIC_BRIGHTNESS.value = v],
+  K_FRESNEL_STRENGTH:  ['k-fresnel',    'k-fresnel-val',    2, v => uniforms.K_FRESNEL_STRENGTH.value = v],
+  K_DIFF_MIN:          ['k-diff',       'k-diff-val',       2, v => uniforms.K_DIFF_MIN.value = v],
+  K_AO_FLOOR:          ['k-ao',         'k-ao-val',         2, v => uniforms.K_AO_FLOOR.value = v],
+  K_FLOOR:             ['k-floor',      'k-floor-val',      3, v => uniforms.K_FLOOR.value = v],
+  u_iters:             ['p-iters',      'p-iters-val',      0, v => uniforms.u_iters.value = v|0],
+  u_rings:             ['p-rings',      'p-rings-val',      0, v => uniforms.u_rings.value = v|0],
+  u_scale:             ['p-scale',      'p-scale-val',      4, v => uniforms.u_scale.value = v],
+  u_rotSpeed:          ['p-rotspeed',   'p-rotspeed-val',   2, v => uniforms.u_rotSpeed.value = v],
+  u_off_x:             ['p-offx',       'p-offx-val',       2, v => uniforms.u_off.value.x = v],
+  u_off_y:             ['p-offy',       'p-offy-val',       2, v => uniforms.u_off.value.y = v],
+  u_off_z:             ['p-offz',       'p-offz-val',       2, v => uniforms.u_off.value.z = v],
+  u_invBase:           ['p-inv',        'p-inv-val',        1, v => uniforms.u_invBase.value = v],
+  u_valDiv:            ['p-valdiv',     'p-valdiv-val',     0, v => uniforms.u_valDiv.value = v],
+  u_hueSpin:           ['p-huespin',    'p-huespin-val',    3, v => uniforms.u_hueSpin.value = v],
+  u_satBase:           ['p-satbase',    'p-satbase-val',    2, v => uniforms.u_satBase.value = v],
+  SA_CELL_SIZE:        ['sa-cell',      'sa-cell-val',      0, v => uniforms.SA_CELL_SIZE.value = v],
+  SA_DOT_RADIUS:       ['sa-radius',    'sa-radius-val',    1, v => uniforms.SA_DOT_RADIUS.value = v],
+  SA_DOT_DEPTH_TOL:    ['sa-depth',     'sa-depth-val',     0, v => uniforms.SA_DOT_DEPTH_TOL.value = v],
+  SA_WAVE_SPEED:       ['sa-wspeed',    'sa-wspeed-val',    0, v => uniforms.SA_WAVE_SPEED.value = v],
+  SA_WAVE_PERIOD:      ['sa-wperiod',   'sa-wperiod-val',   0, v => uniforms.SA_WAVE_PERIOD.value = v],
+  SA_WAVE_SHARPNESS:   ['sa-wsharp',    'sa-wsharp-val',    1, v => uniforms.SA_WAVE_SHARPNESS.value = v],
+  SA_BASE_DOT:         ['sa-base',      'sa-base-val',      2, v => uniforms.SA_BASE_DOT.value = v],
+  SA_WAVE_PEAK:        ['sa-peak',      'sa-peak-val',      2, v => uniforms.SA_WAVE_PEAK.value = v],
+  SA_BREATH_AMP:       ['sa-bamp',      'sa-bamp-val',      2, v => uniforms.SA_BREATH_AMP.value = v],
+  SA_BREATH_RATE:      ['sa-brate',     'sa-brate-val',     2, v => uniforms.SA_BREATH_RATE.value = v],
+  SA_DOT_SAT:          ['sa-sat',       'sa-sat-val',       2, v => uniforms.SA_DOT_SAT.value = v],
+  SA_ZONE_FLOOR:       ['sa-zfloor',    'sa-zfloor-val',    3, v => uniforms.SA_ZONE_FLOOR.value = v],
+};
+
+// Apply a loaded config object to every slider, value display, and uniform.
+// Accepts the new flat shape (wallPattern + wallParams) and is forgiving about
+// missing keys (they keep their current value). Pattern dropdown also synced.
+function applyConfigToControls(cfg) {
+  if (!cfg || typeof cfg !== 'object') return;
+  // Pattern selector
+  if (typeof cfg.wallPattern === 'number') {
+    const sel = document.getElementById('p-pattern');
+    sel.value = String(cfg.wallPattern | 0);
+    uniforms.u_patternId.value = cfg.wallPattern | 0;
+  }
+  // Palette
+  if (Array.isArray(cfg.palette) && cfg.palette.length === 8) {
+    currentPalette = cfg.palette.slice();
+    const inputs = document.querySelectorAll('#palette-grid input[type="color"]');
+    inputs.forEach((inp, i) => {
+      inp.value = '#' + (currentPalette[i] >>> 0).toString(16).padStart(6, '0');
+    });
+    updateRoomUniforms();
+  }
+  if (typeof cfg.PALETTE_BOOST === 'number') {
+    const s = document.getElementById('palette-boost');
+    const v = document.getElementById('palette-boost-val');
+    s.value = cfg.PALETTE_BOOST;
+    v.textContent = cfg.PALETTE_BOOST.toFixed(2);
+    updateRoomUniforms();
+  }
+  // wallParams: every slider + display + uniform.
+  const params = cfg.wallParams || {};
+  for (const key in LAB_PARAM_BINDINGS) {
+    if (!Object.prototype.hasOwnProperty.call(params, key)) continue;
+    const [sliderId, valId, decimals, writer] = LAB_PARAM_BINDINGS[key];
+    let v = params[key];
+    if (typeof v === 'string') v = parseFloat(v);
+    if (!isFinite(v)) continue;
+    const slider = document.getElementById(sliderId);
+    const valEl  = document.getElementById(valId);
+    if (slider) slider.value = v;
+    if (valEl) valEl.textContent = (decimals === 0) ? (v|0) : Number(v).toFixed(decimals);
+    writer(v);
+  }
 }
 
 // ---------------------------------------------------------------
