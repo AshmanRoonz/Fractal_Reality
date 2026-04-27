@@ -15927,6 +15927,11 @@ document.addEventListener('keydown', e => {
   if (e.key.toLowerCase() === 'f') activateAbility(2);
   if (e.key.toLowerCase() === 'v') activateCore();
   if (e.key === 'Shift') dash();
+  // Wall pattern cycle (P): rotates through all 9 lab patterns.
+  // Persists to localStorage and shows a brief on-screen toast.
+  if (e.key.toLowerCase() === 'p') {
+    setWallPattern((game.wallPattern | 0) + 1);
+  }
   if (e.key === 'Escape' && game.state !== 'select') {
     openSettings();
     buildSettingsPage();
@@ -16063,6 +16068,39 @@ function buildSettingsPage() {
       <div id="bind-rows"></div>
     </div>
 
+    <h2>GRAPHICS</h2>
+
+    <div class="settings-section">
+      <h3>Wall Pattern</h3>
+      <div class="setting-row">
+        <label>Style</label>
+        <select id="set-wall-pattern" style="flex:1;">
+          ${WALL_PATTERN_NAMES.map((nm, i) => `<option value="${i}"${(game.wallPattern|0) === i ? ' selected' : ''}>${nm}</option>`).join('')}
+        </select>
+      </div>
+      <div class="setting-row" style="opacity:0.7; font-size:0.85em;">
+        <label style="flex:1;">Press P in-game to cycle. Patterns 0-7 use the dark-base + cosmic-additive shape with live tunable math below; pattern 8 (Soul Array) renders •∞ as a dot lattice with waves from each room.</label>
+      </div>
+      <div class="setting-row" style="margin-top:6px;">
+        <button id="wall-lab-reset">Reset Lab to Defaults</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Wall Constants</h3>
+      <div id="wall-lab-wallc"></div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Pattern Math (Patterns 0-7)</h3>
+      <div id="wall-lab-pmath"></div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Soul Array (Pattern 8)</h3>
+      <div id="wall-lab-soul"></div>
+    </div>
+
     <h2>AUDIO</h2>
 
     <div class="settings-section">
@@ -16151,6 +16189,57 @@ function buildSettingsPage() {
   // Checkboxes
   overlay.querySelector('#set-gp-invert-y').addEventListener('change', e => { input.invertLookY = e.target.checked; saveSettings(); });
   overlay.querySelector('#set-gp-swap').addEventListener('change', e => { input.swapSticks = e.target.checked; saveSettings(); });
+
+  // Wall pattern dropdown (9 options)
+  const wpSel = overlay.querySelector('#set-wall-pattern');
+  if (wpSel) {
+    wpSel.addEventListener('change', e => {
+      setWallPattern(parseInt(e.target.value, 10) | 0);
+    });
+  }
+
+  // Build the wall lab slider rows (Wall Constants, Pattern Math, Soul Array)
+  // dynamically from WALL_PARAM_DEFS so adding/removing a tunable is one
+  // edit instead of three.
+  (function buildWallLabRows() {
+    const params = applyWallParamDefaults(game.wallParams || (game.wallParams = {}));
+    const containers = {
+      wallc: overlay.querySelector('#wall-lab-wallc'),
+      pmath: overlay.querySelector('#wall-lab-pmath'),
+      soul:  overlay.querySelector('#wall-lab-soul')
+    };
+    for (let i = 0; i < WALL_PARAM_DEFS.length; i++) {
+      const d = WALL_PARAM_DEFS[i];
+      const target = containers[d.scope];
+      if (!target) continue;
+      const v = params[d.key];
+      const decimals = (d.step >= 1) ? 0 : (d.step >= 0.1) ? 1 : (d.step >= 0.01) ? 2 : (d.step >= 0.001) ? 3 : 4;
+      const row = document.createElement('div');
+      row.className = 'setting-row';
+      row.innerHTML = `
+        <label>${d.label}</label>
+        <input type="range" id="wl-${d.key}" min="${d.min}" max="${d.max}" step="${d.step}" value="${v}">
+        <div class="value-display" id="wl-val-${d.key}">${(d.type === 'i') ? (v|0) : v.toFixed(decimals)}</div>
+      `;
+      target.appendChild(row);
+      const slider = row.querySelector('#wl-' + d.key);
+      const valEl  = row.querySelector('#wl-val-' + d.key);
+      slider.addEventListener('input', () => {
+        const raw = parseFloat(slider.value);
+        const out = (d.type === 'i') ? (raw | 0) : raw;
+        valEl.textContent = (d.type === 'i') ? out : out.toFixed(decimals);
+        setWallParam(d.key, out);
+      });
+    }
+    const resetBtn = overlay.querySelector('#wall-lab-reset');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        resetWallParams();
+        // Rebuild the panel so slider positions reflect the defaults.
+        buildSettingsPage();
+      });
+    }
+  })();
 
   // Bind dropdowns
   overlay.querySelectorAll('.bind-select').forEach(sel => {
@@ -16317,6 +16406,119 @@ function resetSettingsToDefaults() {
   saveSettings();
 }
 
+// ---- WALL PATTERN LAB ----
+// Single source of truth for every tunable wall-shader parameter. Each entry
+// declares the slider range, label, defaults, and which "scope" it belongs
+// to so the settings UI can group sliders into Wall Constants, Pattern Math,
+// and Soul Array sections. The "uniform" key names the shader uniform that
+// receives the value (or, for the vector packs K_DARK_BASE / u_off, the
+// uniform name + component letter).
+const WALL_PATTERN_NAMES = [
+  'Kali IFS (cosmic)',
+  'Apollonian Gasket',
+  'Voronoi Cells',
+  'Wave Interference',
+  'Mandelbox Folds',
+  'Hex Lattice',
+  'Plasma FBM',
+  'Circumpunct Lattice',
+  'Soul Array (dot lattice)'
+];
+
+const WALL_PARAM_DEFS = [
+  // ---- Wall constants ----
+  { key: 'K_DARK_BASE_R',     label: 'K_DARK_BASE.r',         scope: 'wallc',  type: 'f', def: 0.046, min: 0,    max: 0.20, step: 0.001, uniform: 'K_DARK_BASE', comp: 'x' },
+  { key: 'K_DARK_BASE_G',     label: 'K_DARK_BASE.g',         scope: 'wallc',  type: 'f', def: 0.033, min: 0,    max: 0.20, step: 0.001, uniform: 'K_DARK_BASE', comp: 'y' },
+  { key: 'K_DARK_BASE_B',     label: 'K_DARK_BASE.b',         scope: 'wallc',  type: 'f', def: 0.035, min: 0,    max: 0.20, step: 0.001, uniform: 'K_DARK_BASE', comp: 'z' },
+  { key: 'K_ZONE_TINT',       label: 'K_ZONE_TINT',           scope: 'wallc',  type: 'f', def: 0.22,  min: 0,    max: 2.0,  step: 0.01,  uniform: 'K_ZONE_TINT' },
+  { key: 'K_COSMIC_BRIGHTNESS', label: 'K_COSMIC_BRIGHTNESS', scope: 'wallc',  type: 'f', def: 4.85,  min: 0,    max: 10,   step: 0.05,  uniform: 'K_COSMIC_BRIGHTNESS' },
+  { key: 'K_FRESNEL_STRENGTH',  label: 'K_FRESNEL_STRENGTH',  scope: 'wallc',  type: 'f', def: 1.55,  min: 0,    max: 3.0,  step: 0.01,  uniform: 'K_FRESNEL_STRENGTH' },
+  { key: 'K_DIFF_MIN',        label: 'K_DIFF_MIN',            scope: 'wallc',  type: 'f', def: 0.89,  min: 0,    max: 1.0,  step: 0.01,  uniform: 'K_DIFF_MIN' },
+  { key: 'K_AO_FLOOR',        label: 'K_AO_FLOOR',            scope: 'wallc',  type: 'f', def: 0.17,  min: 0,    max: 1.0,  step: 0.01,  uniform: 'K_AO_FLOOR' },
+  { key: 'K_FLOOR',           label: 'K_FLOOR',               scope: 'wallc',  type: 'f', def: 0.085, min: 0,    max: 0.5,  step: 0.005, uniform: 'K_FLOOR' },
+  // ---- Pattern math ----
+  { key: 'u_iters',           label: 'Iterations',            scope: 'pmath',  type: 'i', def: 9,     min: 1,    max: 12,   step: 1,     uniform: 'u_iters' },
+  { key: 'u_rings',           label: 'Ring count',            scope: 'pmath',  type: 'i', def: 2,     min: 1,    max: 5,    step: 1,     uniform: 'u_rings' },
+  { key: 'u_scale',           label: 'Spatial scale',         scope: 'pmath',  type: 'f', def: 0.0028, min: 0.0005, max: 0.012, step: 0.0001, uniform: 'u_scale' },
+  { key: 'u_rotSpeed',        label: 'Rotation speed',        scope: 'pmath',  type: 'f', def: 0.08,  min: 0,    max: 1.0,  step: 0.01,  uniform: 'u_rotSpeed' },
+  { key: 'u_off_x',           label: 'Offset X',              scope: 'pmath',  type: 'f', def: 2.03,  min: 0,    max: 3.0,  step: 0.01,  uniform: 'u_off', comp: 'x' },
+  { key: 'u_off_y',           label: 'Offset Y',              scope: 'pmath',  type: 'f', def: 2.65,  min: 0,    max: 3.0,  step: 0.01,  uniform: 'u_off', comp: 'y' },
+  { key: 'u_off_z',           label: 'Offset Z',              scope: 'pmath',  type: 'f', def: 2.51,  min: 0,    max: 3.0,  step: 0.01,  uniform: 'u_off', comp: 'z' },
+  { key: 'u_invBase',         label: 'Inverse base',          scope: 'pmath',  type: 'f', def: 8.1,   min: 3,    max: 20,   step: 0.1,   uniform: 'u_invBase' },
+  { key: 'u_valDiv',          label: 'Value divisor',         scope: 'pmath',  type: 'f', def: 690,   min: 50,   max: 1200, step: 5,     uniform: 'u_valDiv' },
+  { key: 'u_hueSpin',         label: 'Hue spin / ring',       scope: 'pmath',  type: 'f', def: 0.28,  min: 0,    max: 0.5,  step: 0.005, uniform: 'u_hueSpin' },
+  { key: 'u_satBase',         label: 'Saturation base',       scope: 'pmath',  type: 'f', def: 0.75,  min: 0,    max: 1.0,  step: 0.01,  uniform: 'u_satBase' },
+  // ---- Soul Array ----
+  { key: 'SA_CELL_SIZE',      label: 'Cell size',             scope: 'soul',   type: 'f', def: 110,   min: 30,   max: 300,  step: 1,     uniform: 'SA_CELL_SIZE' },
+  { key: 'SA_DOT_RADIUS',     label: 'Dot radius',            scope: 'soul',   type: 'f', def: 18,    min: 4,    max: 80,   step: 0.5,   uniform: 'SA_DOT_RADIUS' },
+  { key: 'SA_DOT_DEPTH_TOL',  label: 'Depth tolerance',       scope: 'soul',   type: 'f', def: 70,    min: 10,   max: 300,  step: 1,     uniform: 'SA_DOT_DEPTH_TOL' },
+  { key: 'SA_WAVE_SPEED',     label: 'Wave speed',            scope: 'soul',   type: 'f', def: 260,   min: 0,    max: 1500, step: 5,     uniform: 'SA_WAVE_SPEED' },
+  { key: 'SA_WAVE_PERIOD',    label: 'Wave period',           scope: 'soul',   type: 'f', def: 720,   min: 100,  max: 3000, step: 10,    uniform: 'SA_WAVE_PERIOD' },
+  { key: 'SA_WAVE_SHARPNESS', label: 'Wave sharpness',        scope: 'soul',   type: 'f', def: 4,     min: 1,    max: 16,   step: 0.5,   uniform: 'SA_WAVE_SHARPNESS' },
+  { key: 'SA_BASE_DOT',       label: 'Base brightness',       scope: 'soul',   type: 'f', def: 0.30,  min: 0,    max: 2,    step: 0.01,  uniform: 'SA_BASE_DOT' },
+  { key: 'SA_WAVE_PEAK',      label: 'Wave peak brightness',  scope: 'soul',   type: 'f', def: 2.10,  min: 0,    max: 5,    step: 0.05,  uniform: 'SA_WAVE_PEAK' },
+  { key: 'SA_BREATH_AMP',     label: 'Breath amplitude',      scope: 'soul',   type: 'f', def: 0.22,  min: 0,    max: 1,    step: 0.01,  uniform: 'SA_BREATH_AMP' },
+  { key: 'SA_BREATH_RATE',    label: 'Breath rate',           scope: 'soul',   type: 'f', def: 0.40,  min: 0,    max: 3,    step: 0.01,  uniform: 'SA_BREATH_RATE' },
+  { key: 'SA_DOT_SAT',        label: 'Dot saturation',        scope: 'soul',   type: 'f', def: 0.92,  min: 0,    max: 1,    step: 0.01,  uniform: 'SA_DOT_SAT' },
+  { key: 'SA_ZONE_FLOOR',     label: 'Zone color floor',      scope: 'soul',   type: 'f', def: 0.012, min: 0,    max: 0.2,  step: 0.001, uniform: 'SA_ZONE_FLOOR' }
+];
+
+// Fill a params object with defaults for any missing keys, returning it.
+// Numeric type coercion happens here so int sliders never end up storing floats.
+function applyWallParamDefaults(out) {
+  out = out || {};
+  for (let i = 0; i < WALL_PARAM_DEFS.length; i++) {
+    const d = WALL_PARAM_DEFS[i];
+    if (typeof out[d.key] !== 'number' || !isFinite(out[d.key])) {
+      out[d.key] = d.def;
+    }
+    if (d.type === 'i') out[d.key] = out[d.key] | 0;
+  }
+  return out;
+}
+
+// Push every param into its corresponding shader uniform (called whenever
+// a slider changes, after a level rebuilds, or when settings load).
+function pushWallParamsToUniforms() {
+  const mat = game.levelMaterial;
+  if (!mat || !mat.uniforms) return;
+  const params = applyWallParamDefaults(game.wallParams);
+  for (let i = 0; i < WALL_PARAM_DEFS.length; i++) {
+    const d = WALL_PARAM_DEFS[i];
+    const u = mat.uniforms[d.uniform];
+    if (!u) continue;
+    if (d.comp) {
+      // Vec3 component: write into u.value[comp]
+      u.value[d.comp] = params[d.key];
+    } else {
+      u.value = (d.type === 'i') ? (params[d.key] | 0) : params[d.key];
+    }
+  }
+  // Pattern selector also lives on game.wallPattern
+  if (mat.uniforms.uPattern) mat.uniforms.uPattern.value = (game.wallPattern | 0) % WALL_PATTERN_NAMES.length;
+}
+
+// Update one wall param and live-push it into the active shader.
+function setWallParam(key, value) {
+  const def = WALL_PARAM_DEFS.find(d => d.key === key);
+  if (!def) return;
+  if (typeof value === 'string') value = parseFloat(value);
+  if (!isFinite(value)) value = def.def;
+  if (def.type === 'i') value = value | 0;
+  if (!game.wallParams) game.wallParams = {};
+  game.wallParams[key] = value;
+  pushWallParamsToUniforms();
+  saveSettings();
+}
+
+// Reset all wall params to defaults and push to uniforms.
+function resetWallParams() {
+  game.wallParams = {};
+  applyWallParamDefaults(game.wallParams);
+  pushWallParamsToUniforms();
+  saveSettings();
+}
+
 function saveSettings() {
   try {
     const data = {
@@ -16333,6 +16535,8 @@ function saveSettings() {
       audioMaster: audio.userVol.master,
       audioSfx: audio.userVol.sfx,
       audioAmbient: audio.userVol.ambient,
+      wallPattern: (typeof game.wallPattern === 'number') ? game.wallPattern : 0,
+      wallParams: applyWallParamDefaults(game.wallParams || {}),
     };
     localStorage.setItem('lss_settings', JSON.stringify(data));
   } catch(e) {}
@@ -16357,6 +16561,54 @@ function loadSettings() {
     if (data.audioMaster !== undefined) audio.userVol.master = data.audioMaster;
     if (data.audioSfx !== undefined) audio.userVol.sfx = data.audioSfx;
     if (data.audioAmbient !== undefined) audio.userVol.ambient = data.audioAmbient;
+    // Wall pattern (0..7 = lab cosmic patterns, 8 = Soul Array). Stored on
+    // game so createMeshFromPositions can read it when the shader is built.
+    if (data.wallPattern !== undefined) game.wallPattern = data.wallPattern | 0;
+    // Wall lab parameters: merge saved values onto defaults so any new param
+    // added in a future version gets its default automatically.
+    if (data.wallParams && typeof data.wallParams === 'object') {
+      game.wallParams = applyWallParamDefaults(Object.assign({}, data.wallParams));
+    } else {
+      game.wallParams = applyWallParamDefaults({});
+    }
+  } catch(e) {}
+}
+
+// Switch the wall shader to one of the 9 patterns (0..8). Updates the live
+// ShaderMaterial uniform if a level is loaded, persists the choice, refreshes
+// the settings panel if open (so the lab dropdown stays in sync), and shows
+// a brief HUD toast. Safe to call before a level exists.
+function setWallPattern(idx) {
+  const N = WALL_PATTERN_NAMES.length;
+  idx = (idx | 0) % N;
+  if (idx < 0) idx = (idx + N) % N;
+  game.wallPattern = idx;
+  if (game.levelMaterial && game.levelMaterial.uniforms && game.levelMaterial.uniforms.uPattern) {
+    game.levelMaterial.uniforms.uPattern.value = idx;
+  }
+  saveSettings();
+  // Keep the settings dropdown in sync if the panel is open.
+  try {
+    const sel = document.getElementById('set-wall-pattern');
+    if (sel && sel.value !== String(idx)) sel.value = String(idx);
+  } catch(e) {}
+  // Brief on-screen toast so the player sees what they picked.
+  try {
+    let toast = document.getElementById('wall-pattern-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'wall-pattern-toast';
+      toast.style.cssText = 'position:fixed;top:14%;left:50%;transform:translateX(-50%);' +
+        'padding:8px 18px;background:rgba(0,0,0,0.55);color:#cfe7ff;' +
+        'border:1px solid rgba(120,200,255,0.45);border-radius:6px;' +
+        'font:600 14px/1.2 system-ui,sans-serif;letter-spacing:0.06em;' +
+        'pointer-events:none;z-index:99999;opacity:0;transition:opacity 0.18s;';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = 'WALLS: ' + (WALL_PATTERN_NAMES[idx] || ('PATTERN ' + idx)).toUpperCase();
+    toast.style.opacity = '1';
+    if (toast._t) clearTimeout(toast._t);
+    toast._t = setTimeout(() => { toast.style.opacity = '0'; }, 1100);
   } catch(e) {}
 }
 
@@ -17329,11 +17581,23 @@ function buildRoomGraphLevel(level) {
       '}'
     ].join('\n');
 
-    // Wall shader (Nexus): dark base with the dancing Kali IFS cosmic fractal
-    // covering every surface at full brightness (floor to ceiling), and a
-    // one-way-transparent upper half (interior view sees through to the
-    // starfield/skybox; exterior/back-face view stays opaque). No grid;
-    // the fractal IS the texture.
+    // Wall shader (Nexus): full lab-style dispatcher with 9 selectable
+    // patterns and all parameters exposed as uniforms for live tweaking.
+    // Pattern is selected by uPattern, every other parameter is a tunable
+    // uniform driven from the GRAPHICS section of the settings menu.
+    //
+    // Patterns 0-7 (lab patterns) share the dark-base + cosmic-additive +
+    // diffuse/fresnel/AO shape, and dispatch to one of 8 pattern functions
+    // inside cosmicField(): Kali IFS, Apollonian, Voronoi, Wave Interference,
+    // Mandelbox, Hex Lattice, Plasma FBM, Circumpunct Lattice.
+    //
+    // Pattern 8 (Soul Array): pure black walls with a 3D dot lattice on top
+    // (the framework's •∞ — infinite multiplicity of apertures). Each dot
+    // gets a hash-derived hue; energy waves propagate from each room center
+    // and brighten dots they pass through; a global breath modulates the
+    // whole array so the level feels like a single organism breathing.
+    //
+    // Both modes share the upper-half see-through alpha logic.
     const sdfFragSrc = [
       'uniform float time;',
       'varying vec3 vWorldPos;',
@@ -17343,6 +17607,42 @@ function buildRoomGraphLevel(level) {
       'uniform vec3 roomColorsU[8];',
       'uniform float roomRadii[8];',
       'uniform int roomCount;',
+      // Pattern dispatch (0..8). 0..7 are lab patterns dispatched in
+      // cosmicField(); 8 is the Soul Array dot lattice. Toggled live from
+      // the GRAPHICS section in settings, the P hotkey (cycles), or
+      // setWallPattern(n).
+      'uniform int uPattern;',
+      // ---- Wall constants (live-tweakable) ----
+      'uniform vec3  K_DARK_BASE;',
+      'uniform float K_ZONE_TINT;',
+      'uniform float K_COSMIC_BRIGHTNESS;',
+      'uniform float K_FRESNEL_STRENGTH;',
+      'uniform float K_DIFF_MIN;',
+      'uniform float K_AO_FLOOR;',
+      'uniform float K_FLOOR;',
+      // ---- Pattern math (live-tweakable) ----
+      'uniform int   u_iters;',
+      'uniform int   u_rings;',
+      'uniform float u_scale;',
+      'uniform float u_rotSpeed;',
+      'uniform vec3  u_off;',
+      'uniform float u_invBase;',
+      'uniform float u_valDiv;',
+      'uniform float u_hueSpin;',
+      'uniform float u_satBase;',
+      // ---- Soul Array tunables (live-tweakable) ----
+      'uniform float SA_CELL_SIZE;',
+      'uniform float SA_DOT_RADIUS;',
+      'uniform float SA_DOT_DEPTH_TOL;',
+      'uniform float SA_WAVE_SPEED;',
+      'uniform float SA_WAVE_PERIOD;',
+      'uniform float SA_WAVE_SHARPNESS;',
+      'uniform float SA_BASE_DOT;',
+      'uniform float SA_WAVE_PEAK;',
+      'uniform float SA_BREATH_AMP;',
+      'uniform float SA_BREATH_RATE;',
+      'uniform float SA_DOT_SAT;',
+      'uniform float SA_ZONE_FLOOR;',
       '',
       // HSV -> RGB (same formulation as the dancing cosmos shader so the
       // wall palette harmonises with the docs page).
@@ -17363,16 +17663,40 @@ function buildRoomGraphLevel(level) {
       '  else h = ((c.r - c.g) / d + 4.0) / 6.0;',
       '  return h;',
       '}',
-      // Kali IFS (Apollonian-style fold/scale/offset fractal); the core
-      // pattern from docs/framework_dancing_cosmos.html. Iterative mirror
-      // folds into the positive octant, scale by the reciprocal of |p|²,
-      // translate by a golden-ratio triple. Returns the accumulated scale
-      // factor `s`, which reads as luminosity: high where a point survives
-      // many iterations, low in the folds. Iteration count was tuned to 9
-      // (was 8) in the wall-pattern lab session for slightly more detail.
+      // ---- Shared noise/hash helpers ----
+      'vec3 hash33(vec3 p) {',
+      '  p = fract(p * vec3(443.897, 441.423, 437.195));',
+      '  p += dot(p, p.yxz + 19.19);',
+      '  return fract(vec3(p.x * p.y, p.x * p.z, p.y * p.z));',
+      '}',
+      'float hash13(vec3 p) {',
+      '  p = fract(p * 0.1031);',
+      '  p += dot(p, p.yzx + 33.33);',
+      '  return fract((p.x + p.y) * p.z);',
+      '}',
+      // 3D value noise on a unit lattice; smoothed by Perlin-style cubic.
+      'float noise3(vec3 p) {',
+      '  vec3 i = floor(p);',
+      '  vec3 f = fract(p);',
+      '  f = f * f * (3.0 - 2.0 * f);',
+      '  return mix(',
+      '    mix(mix(hash13(i + vec3(0,0,0)), hash13(i + vec3(1,0,0)), f.x),',
+      '        mix(hash13(i + vec3(0,1,0)), hash13(i + vec3(1,1,0)), f.x), f.y),',
+      '    mix(mix(hash13(i + vec3(0,0,1)), hash13(i + vec3(1,0,1)), f.x),',
+      '        mix(hash13(i + vec3(0,1,1)), hash13(i + vec3(1,1,1)), f.x), f.y),',
+      '    f.z);',
+      '}',
+      // Cheap deterministic hash for Soul Array per-cell hue.
+      'float hash3s(vec3 p) {',
+      '  return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);',
+      '}',
+      // ============================================================
+      // PATTERN 0: Kali IFS (Apollonian-style fold/scale/offset fractal)
+      // ============================================================
       'float kaliIFS(vec3 p, vec3 off, float inv) {',
       '  float s = 1.0;',
-      '  for (int k = 0; k < 9; k++) {',
+      '  for (int k = 0; k < 12; k++) {',
+      '    if (k >= u_iters) break;',
       '    if (p.x + p.y < 0.0) p.xy = -p.yx;',
       '    if (p.x + p.z < 0.0) p.xz = -p.zx;',
       '    if (p.y + p.z < 0.0) p.yz = -p.zy;',
@@ -17382,69 +17706,217 @@ function buildRoomGraphLevel(level) {
       '  }',
       '  return s;',
       '}',
-      // Cosmic fractal field evaluated from a world-space position, steered
-      // by the nearest-zone color. Two nested rings (was three; tuned in the
-      // lab session for a cleaner read), each at phi-spaced scales, with a
-      // radial sin band so the pattern breathes around each "attractor".
-      // The spatial scale slowly oscillates between 0.0026 and 0.0033 so
-      // the fractal "breathes" through close-up detail and farther-out
-      // structure as the round progresses; period ~157 s. Returns an
-      // additive RGB glow that gets mixed into the wall's base color.
-      'vec3 cosmicField(vec3 wp, vec3 zoneC, float tt) {',
-      '  vec3 off = vec3(2.03, 2.65, 2.51);',
-      '  float scale = mix(0.0026, 0.0033, 0.5 + 0.5 * sin(tt * 0.04));',
-      '  vec3 p = wp * scale;',
-      '  float ca = cos(tt * 0.08), sa = sin(tt * 0.08);',
-      '  p = vec3(ca * p.x - sa * p.z, p.y, sa * p.x + ca * p.z);',
+      'vec3 patternKali(vec3 p, vec3 zoneC, float tt) {',
       '  float baseHue = rgbHue(zoneC);',
       '  vec3 accum = vec3(0.0);',
-      '  for (int ring = 0; ring < 2; ring++) {',
+      '  for (int ring = 0; ring < 5; ring++) {',
+      '    if (ring >= u_rings) break;',
       '    float rf = float(ring);',
       '    float sMul = pow(1.618, 1.4 - rf * 0.7);',
       '    vec3 pp = p * sMul;',
-      '    float s = kaliIFS(pp, off, 8.1 + rf * 0.4);',
+      '    float s = kaliIFS(pp, u_off, u_invBase + rf * 0.4);',
       '    float phase = atan(pp.x, pp.y);',
       '    float q = 0.5 + 0.5 * sin(phase * 3.0 + tt * 0.3 + rf * 1.7);',
       '    float band = q < 0.5 ? 0.65 : 1.0;',
-      '    float val = clamp(s / 690.0 * (0.35 + 0.80 * band), 0.0, 4.5);',
-      '    float hue = fract(baseHue + rf * 0.28 + phase * 0.05 + tt * 0.02);',
-      '    float sat = 0.75 + rf * 0.10;',
+      '    float val = clamp(s / u_valDiv * (0.35 + 0.80 * band), 0.0, 4.5);',
+      '    float hue = fract(baseHue + rf * u_hueSpin + phase * 0.05 + tt * 0.02);',
+      '    float sat = u_satBase + rf * 0.10;',
       '    accum += hsv(hue, sat, val) * pow(0.75, rf);',
       '  }',
       '  return accum;',
       '}',
+      // ============================================================
+      // PATTERN 1: Apollonian Gasket (recursive sphere-inversion)
+      // ============================================================
+      'vec3 patternApollonian(vec3 p, vec3 zoneC, float tt) {',
+      '  float baseHue = rgbHue(zoneC);',
+      '  float scl = 1.0;',
+      '  vec3 q = p;',
+      '  for (int k = 0; k < 12; k++) {',
+      '    if (k >= u_iters) break;',
+      '    q = -1.0 + 2.0 * fract(0.5 * q + 0.5 * u_off);',
+      '    float r2 = max(0.001, dot(q, q));',
+      '    float kk = max(0.5, u_invBase * 0.13 / r2);',
+      '    q *= kk;',
+      '    scl *= kk;',
+      '  }',
+      '  float lum = abs(0.25 * q.y / scl) * 100.0;',
+      '  float val = clamp(lum / u_valDiv * 60.0, 0.0, 4.5);',
+      '  float phase = atan(q.x, q.z);',
+      '  float hue = fract(baseHue + phase * 0.10 + tt * 0.02);',
+      '  return hsv(hue, u_satBase, val);',
+      '}',
+      // ============================================================
+      // PATTERN 2: Voronoi Cells (cellular structure, edges bright)
+      // ============================================================
+      'float voronoi3(vec3 x) {',
+      '  vec3 p = floor(x);',
+      '  vec3 f = fract(x);',
+      '  float d = 1.0;',
+      '  for (int k = -1; k <= 1; k++)',
+      '  for (int j = -1; j <= 1; j++)',
+      '  for (int i = -1; i <= 1; i++) {',
+      '    vec3 g = vec3(i, j, k);',
+      '    vec3 o = hash33(p + g);',
+      '    d = min(d, length(g + o - f));',
+      '  }',
+      '  return d;',
+      '}',
+      'vec3 patternVoronoi(vec3 p, vec3 zoneC, float tt) {',
+      '  float baseHue = rgbHue(zoneC);',
+      '  vec3 accum = vec3(0.0);',
+      '  for (int layer = 0; layer < 5; layer++) {',
+      '    if (layer >= u_iters) break;',
+      '    float lf = float(layer);',
+      '    float sMul = pow(1.7, lf * 0.6);',
+      '    vec3 q = p * sMul + u_off * lf;',
+      '    float d = voronoi3(q + vec3(0.0, tt * 0.05, 0.0));',
+      '    float edge = 1.0 - smoothstep(0.05, 0.45, d);',
+      '    float val = clamp(edge * 4.0 / u_valDiv * 80.0, 0.0, 4.0);',
+      '    float hue = fract(baseHue + lf * u_hueSpin + tt * 0.02);',
+      '    accum += hsv(hue, u_satBase, val) * pow(0.65, lf);',
+      '  }',
+      '  return accum;',
+      '}',
+      // ============================================================
+      // PATTERN 3: Wave Interference (sum of plane waves)
+      // ============================================================
+      'vec3 patternWaves(vec3 p, vec3 zoneC, float tt) {',
+      '  float baseHue = rgbHue(zoneC);',
+      '  float v = 0.0;',
+      '  float freq = u_invBase * 0.05;',
+      '  for (int k = 0; k < 12; k++) {',
+      '    if (k >= u_iters) break;',
+      '    float fk = float(k);',
+      '    vec3 dir = normalize(vec3(',
+      '      sin(fk * 1.7 + 0.3),',
+      '      cos(fk * 2.3 + 1.1),',
+      '      sin(fk * 0.9 + 2.5)',
+      '    ));',
+      '    v += sin(dot(p, dir) * freq + tt * (0.4 + fk * 0.07));',
+      '  }',
+      '  v /= max(1.0, float(u_iters));',
+      '  float lum = 0.5 + 0.5 * v;',
+      '  float val = clamp(pow(lum, 1.6) * 4.5 / u_valDiv * 80.0, 0.0, 4.5);',
+      '  float phase = atan(p.x, p.z);',
+      '  float hue = fract(baseHue + phase * 0.05 + v * u_hueSpin + tt * 0.02);',
+      '  return hsv(hue, u_satBase, val);',
+      '}',
+      // ============================================================
+      // PATTERN 4: Mandelbox Folds (box-fold + sphere-fold iterated)
+      // ============================================================
+      'vec3 patternMandelbox(vec3 p, vec3 zoneC, float tt) {',
+      '  float baseHue = rgbHue(zoneC);',
+      '  vec3 cv = p;',
+      '  vec3 q = p;',
+      '  float dr = 1.0;',
+      '  float scaleP = u_invBase * 0.3;',
+      '  for (int k = 0; k < 12; k++) {',
+      '    if (k >= u_iters) break;',
+      '    q = clamp(q, -1.0, 1.0) * 2.0 - q;',
+      '    float r2 = dot(q, q);',
+      '    if (r2 < 0.5) {',
+      '      float t = 1.0 / 0.5;',
+      '      q *= t; dr *= t;',
+      '    } else if (r2 < 1.0) {',
+      '      float t = 1.0 / r2;',
+      '      q *= t; dr *= t;',
+      '    }',
+      '    q = scaleP * q + cv;',
+      '    dr = dr * abs(scaleP) + 1.0;',
+      '  }',
+      '  float lum = length(q) / max(0.001, abs(dr));',
+      '  float val = clamp(lum * 80.0 / u_valDiv, 0.0, 4.5);',
+      '  float hue = fract(baseHue + length(q) * u_hueSpin * 0.1 + tt * 0.02);',
+      '  return hsv(hue, u_satBase, val);',
+      '}',
+      // ============================================================
+      // PATTERN 5: Hex Lattice (extruded 2D hex grid, layered)
+      // ============================================================
+      'float hex2D(vec2 q, float cell) {',
+      '  q /= cell;',
+      '  vec2 r = vec2(1.0, 1.7320508);',
+      '  vec2 h = r * 0.5;',
+      '  vec2 a = mod(q, r) - h;',
+      '  vec2 b = mod(q + h, r) - h;',
+      '  vec2 d = (dot(a, a) < dot(b, b)) ? a : b;',
+      '  return max(abs(d.x), abs(d.y * 0.86603 + d.x * 0.5));',
+      '}',
+      'vec3 patternHex(vec3 p, vec3 zoneC, float tt) {',
+      '  float baseHue = rgbHue(zoneC);',
+      '  vec3 accum = vec3(0.0);',
+      '  float cell = 1.0 / max(0.001, u_invBase);',
+      '  for (int layer = 0; layer < 5; layer++) {',
+      '    if (layer >= u_iters) break;',
+      '    float lf = float(layer);',
+      '    float ca = cos(lf * 1.04719), sa = sin(lf * 1.04719);',
+      '    vec3 q = vec3(ca * p.x - sa * p.y, sa * p.x + ca * p.y, p.z);',
+      '    float h = hex2D(q.xy + vec2(tt * 0.10, 0.0), cell * pow(1.5, lf));',
+      '    float edge = 1.0 - smoothstep(0.42, 0.50, h);',
+      '    float val = clamp(edge * 3.5 / u_valDiv * 80.0, 0.0, 4.0);',
+      '    float hue = fract(baseHue + lf * u_hueSpin + tt * 0.02);',
+      '    accum += hsv(hue, u_satBase, val) * pow(0.70, lf);',
+      '  }',
+      '  return accum;',
+      '}',
+      // ============================================================
+      // PATTERN 6: Plasma FBM (fractal Brownian motion)
+      // ============================================================
+      'vec3 patternPlasma(vec3 p, vec3 zoneC, float tt) {',
+      '  float baseHue = rgbHue(zoneC);',
+      '  float v = 0.0;',
+      '  float a = 0.5;',
+      '  vec3 q = p + vec3(0.0, tt * 0.05, tt * 0.03);',
+      '  for (int k = 0; k < 12; k++) {',
+      '    if (k >= u_iters) break;',
+      '    v += a * noise3(q);',
+      '    q *= 2.0;',
+      '    a *= 0.5;',
+      '  }',
+      '  float val = clamp(pow(v, 1.4) * 4.5 / u_valDiv * 80.0, 0.0, 4.5);',
+      '  float hue = fract(baseHue + v * u_hueSpin * 4.0 + tt * 0.02);',
+      '  return hsv(hue, u_satBase, val);',
+      '}',
+      // ============================================================
+      // PATTERN 7: Circumpunct Lattice (rings around lattice convergence pts)
+      // ============================================================
+      'vec3 patternCircumpunct(vec3 p, vec3 zoneC, float tt) {',
+      '  float baseHue = rgbHue(zoneC);',
+      '  vec3 cell = floor(p) + 0.5;',
+      '  vec3 d = p - cell;',
+      '  float r = length(d);',
+      '  float ringFreq = 6.0 + u_invBase * 0.5;',
+      '  float rings = 0.5 + 0.5 * cos(r * ringFreq - tt * 1.2);',
+      '  rings = pow(rings, 2.0);',
+      '  float center = 1.0 - smoothstep(0.04, 0.10, r);',
+      '  float boundaryFade = 1.0 - smoothstep(0.42, 0.55, r);',
+      '  float lum = (rings * 0.6 + center * 1.4) * boundaryFade;',
+      '  float cellHue = fract(hash13(cell) * 0.25 + baseHue);',
+      '  float val = clamp(lum * 4.5 / u_valDiv * 80.0, 0.0, 4.5);',
+      '  float hue = fract(cellHue + u_hueSpin * lum + tt * 0.02);',
+      '  return hsv(hue, u_satBase, val);',
+      '}',
+      // ============================================================
+      // Lab pattern dispatcher: scale + rotate input, then route to one
+      // of the 8 lab patterns above.
+      // ============================================================
+      'vec3 cosmicField(vec3 wp, vec3 zoneC, float tt) {',
+      '  vec3 p = wp * u_scale;',
+      '  float ca = cos(tt * u_rotSpeed), sa = sin(tt * u_rotSpeed);',
+      '  p = vec3(ca * p.x - sa * p.z, p.y, sa * p.x + ca * p.z);',
+      '  if (uPattern == 0) return patternKali(p, zoneC, tt);',
+      '  if (uPattern == 1) return patternApollonian(p, zoneC, tt);',
+      '  if (uPattern == 2) return patternVoronoi(p, zoneC, tt);',
+      '  if (uPattern == 3) return patternWaves(p, zoneC, tt);',
+      '  if (uPattern == 4) return patternMandelbox(p, zoneC, tt);',
+      '  if (uPattern == 5) return patternHex(p, zoneC, tt);',
+      '  if (uPattern == 6) return patternPlasma(p, zoneC, tt);',
+      '  if (uPattern == 7) return patternCircumpunct(p, zoneC, tt);',
+      '  return vec3(0.0);',
+      '}',
       'void main() {',
-      // ============================================================
-      // ---- Tunable wall constants (play with these freely) -------
-      // ============================================================
-      // Static dark floor. Lifts pure-black corners so AO doesn't
-      // crush the wall to nothing in dark-palette rooms.
-      '  vec3  K_DARK_BASE         = vec3(0.046, 0.033, 0.035);',
-      // How much of the room's palette color tints the dark base.
-      // Higher = dark rooms read with more of their hue at the base
-      // brightness; lower = relies more on the fractal for color.
-      '  float K_ZONE_TINT         = 0.22;',
-      // Multiplier on the cosmic Kali IFS additive contribution.
-      // Higher = louder fractal, lower = subtler texture.
-      '  float K_COSMIC_BRIGHTNESS = 4.85;',
-      // Fresnel rim strength: how strongly grazing-angle pixels
-      // pick up the zone color. Bigger rims help dim rooms.
-      '  float K_FRESNEL_STRENGTH  = 1.55;',
-      // Diffuse multiplier range. Final diffuse term =
-      //   K_DIFF_MIN + (1 - K_DIFF_MIN) * max(dot(N, V), 0)
-      // Higher MIN keeps shadowed sides from going pitch black.
-      '  float K_DIFF_MIN          = 0.89;',
-      // AO clamp: AO multiplier never drops below this value, so
-      // even deeply concave corners keep some life.
-      '  float K_AO_FLOOR          = 0.17;',
-      // Hard minimum brightness floor (after all other math).
-      // Pre-fractal final c is max()ed with K_FLOOR * zoneColor so
-      // every pixel gets at least a faint zone-color glow even if
-      // the fractal happens to be at zero in this position.
-      '  float K_FLOOR             = 0.085;',
-      // ============================================================
       // Nearest room supplies the zone color and the local wall extent used
-      // for the lower/upper half split.
+      // for the lower/upper half split. Both modes need this.
       '  vec3 zoneColor = vec3(0.06, 0.08, 0.12);',
       '  vec3 nearC = vec3(0.0, 0.0, 0.0);',
       '  float nearR = 500.0;',
@@ -17454,39 +17926,77 @@ function buildRoomGraphLevel(level) {
       '    float d = length(vWorldPos - roomCenters[i]);',
       '    if (d < minD) { minD = d; zoneColor = roomColorsU[i]; nearC = roomCenters[i]; nearR = roomRadii[i]; }',
       '  }',
-      // Fraction along the nearest room's vertical extent: 0 at floor, 1 at
-      // ceiling. Works for both spherical rooms and cylindrical tunnels: any
-      // surface gets placed along the local vertical axis, which is what we
-      // want since the rooms/tunnels are rotationally symmetric.
+      // Fraction along the nearest room's vertical extent: 0 at floor, 1 at ceiling.
       '  float heightFrac = clamp((vWorldPos.y - (nearC.y - nearR)) / (2.0 * nearR), 0.0, 1.0);',
-      // Base: dark floor + zone-color tint. K_ZONE_TINT controls how much
-      // hue the dark base carries from the room's palette color.
-      '  vec3 dark = K_DARK_BASE + zoneColor * K_ZONE_TINT;',
-      '  vec3 c = dark;',
-      // Cosmic Kali IFS fractal: the sole wall texture. Evaluated at the
-      // vertex world position, steered by the zone color into a hue band,
-      // and rendered at full brightness across the ENTIRE surface (floor,
-      // walls, ceiling) so the dancing fractal surrounds the player. A
-      // gentle pulse breathes the whole pattern; a second faster shimmer
-      // adds sparkle. No floor-up fade; no grid.
-      '  float fracPulse = 0.92 + 0.12 * sin(time * 0.35);',
-      '  float shimmer   = 0.90 + 0.18 * sin(time * 1.10 + vWorldPos.x * 0.003 + vWorldPos.z * 0.003);',
-      '  vec3 cosmic = cosmicField(vWorldPos, zoneColor, time);',
-      '  c += cosmic * fracPulse * shimmer * K_COSMIC_BRIGHTNESS;',
+      '  vec3 c = vec3(0.0);',
+      '',
+      '  if (uPattern == 8) {',
+      // ============================================================
+      // ---- Pattern 8: Soul Array dot lattice ---------------------
+      // ============================================================
+      // Pure black walls with a 3D dot lattice on top. Each cell holds
+      // one dot at its center; per-dot hash hue gives every soul a
+      // unique color signature (•∞). Energy waves from every room
+      // center brighten dots they pass; a global breath modulates the
+      // whole array so the level reads as one organism breathing.
+      '    vec3 cellId    = floor(vWorldPos / SA_CELL_SIZE);',
+      '    vec3 dotCenter = (cellId + 0.5) * SA_CELL_SIZE;',
+      '    vec3 toDot     = vWorldPos - dotCenter;',
+      // Decompose toDot into along-normal and in-surface components so
+      // dots appear round on curved wall surfaces.
+      '    float alongN     = abs(dot(toDot, vNormal));',
+      '    vec3  inSurfVec  = toDot - vNormal * dot(toDot, vNormal);',
+      '    float inSurfDist = length(inSurfVec);',
+      '    float depthFade  = 1.0 - smoothstep(SA_DOT_DEPTH_TOL * 0.5, SA_DOT_DEPTH_TOL, alongN);',
+      '    float dotMask    = (1.0 - smoothstep(SA_DOT_RADIUS * 0.45, SA_DOT_RADIUS, inSurfDist)) * depthFade;',
+      '    float dotHue     = fract(hash3s(cellId) + time * 0.011);',
+      // Wave brightness contributed by each room center; rooms run at
+      // staggered phases so they do not pulse in lockstep.
+      '    float waveBright = SA_BASE_DOT;',
+      '    for (int j = 0; j < 8; j++) {',
+      '      if (j >= roomCount) break;',
+      '      float distToRoom = length(dotCenter - roomCenters[j]);',
+      '      float roomPhase  = float(j) * 0.785398;',
+      '      float phase      = (distToRoom - time * SA_WAVE_SPEED) * 6.28318 / SA_WAVE_PERIOD + roomPhase;',
+      '      float wave       = pow(0.5 + 0.5 * cos(phase), SA_WAVE_SHARPNESS);',
+      '      float roomLitDot = SA_BASE_DOT + (SA_WAVE_PEAK - SA_BASE_DOT) * wave;',
+      '      waveBright       = max(waveBright, roomLitDot);',
+      '    }',
+      // Global breath.
+      '    float breath = 1.0 + SA_BREATH_AMP * sin(time * SA_BREATH_RATE);',
+      '    waveBright  *= breath;',
+      '    vec3 dotRGB = hsv(dotHue, SA_DOT_SAT, waveBright);',
+      '    c = dotRGB * dotMask;',
+      // Faint zone-color hint so wall silhouettes still read between dots.
+      '    c += zoneColor * SA_ZONE_FLOOR;',
+      '  } else {',
+      // ============================================================
+      // ---- Patterns 0-7: lab cosmic dispatcher -------------------
+      // ============================================================
+      // Dark base + zone-tinted floor.
+      '    vec3 dark = K_DARK_BASE + zoneColor * K_ZONE_TINT;',
+      '    c = dark;',
+      // Cosmic field (the dispatcher routes to one of the 8 lab patterns).
+      '    float fracPulse = 0.92 + 0.12 * sin(time * 0.35);',
+      '    float shimmer   = 0.90 + 0.18 * sin(time * 1.10 + vWorldPos.x * 0.003 + vWorldPos.z * 0.003);',
+      '    vec3 cosmic = cosmicField(vWorldPos, zoneColor, time);',
+      '    c += cosmic * fracPulse * shimmer * K_COSMIC_BRIGHTNESS;',
       // Soft diffuse + rim so surfaces still read in 3D.
-      '  vec3 vd = normalize(cameraPosition - vWorldPos);',
-      '  float diff = K_DIFF_MIN + (1.0 - K_DIFF_MIN) * max(dot(vNormal, vd), 0.0);',
-      '  float fresnelFactor = pow(1.0 - abs(dot(vNormal, vd)), 3.0);',
-      '  c += zoneColor * K_FRESNEL_STRENGTH * fresnelFactor;',
-      '  float aoTerm = mix(K_AO_FLOOR, 1.0, vAO);',
-      '  c *= diff * aoTerm;',
+      '    vec3 vd = normalize(cameraPosition - vWorldPos);',
+      '    float diff = K_DIFF_MIN + (1.0 - K_DIFF_MIN) * max(dot(vNormal, vd), 0.0);',
+      '    float fresnelFactor = pow(1.0 - abs(dot(vNormal, vd)), 3.0);',
+      '    c += zoneColor * K_FRESNEL_STRENGTH * fresnelFactor;',
+      '    float aoTerm = mix(K_AO_FLOOR, 1.0, vAO);',
+      '    c *= diff * aoTerm;',
       // Hard minimum so dark-palette rooms always retain some readability.
-      '  c = max(c, zoneColor * K_FLOOR);',
+      '    c = max(c, zoneColor * K_FLOOR);',
+      '  }',
+      '',
       // Upper half is one-way transparent: interior (front-face) fades toward
       // low alpha above heightFrac ~0.5 so players still see the starfield
-      // through the top of any chamber. Back faces stay opaque. The fractal
-      // continues to the fade edge so the transition reads as a glowing
-      // cosmic haze dissolving into sky, not a ragged hole.
+      // through the top of any chamber. Back faces stay opaque. The pattern
+      // continues to the fade edge so the transition reads as the level
+      // dissolving into sky, not a ragged hole. Same for both patterns.
       '  float upperMask = smoothstep(0.50, 0.80, heightFrac);',
       '  float alpha = 1.0;',
       '  if (gl_FrontFacing) {',
@@ -17548,6 +18058,14 @@ function buildRoomGraphLevel(level) {
       }
     }
 
+    // Wall pattern: 0..7 are lab cosmic patterns, 8 is the Soul Array.
+    // game.wallPattern is loaded from localStorage by loadSettings(); seed it
+    // here in case the shader is built before settings have been read.
+    if (typeof game.wallPattern !== 'number') game.wallPattern = 0;
+    if (!game.wallParams) game.wallParams = {};
+    // Pull current values out of the central params table (with defaults) so
+    // every uniform has a known starting value.
+    const wp = applyWallParamDefaults(game.wallParams);
     const sdfMat = new THREE.ShaderMaterial({
       vertexShader: sdfVertSrc,
       fragmentShader: sdfFragSrc,
@@ -17561,7 +18079,39 @@ function buildRoomGraphLevel(level) {
         roomCenters: { value: roomCentersArr },
         roomColorsU: { value: roomColorsArr },
         roomRadii: { value: roomRadiiArr },
-        roomCount: { value: numRooms }
+        roomCount: { value: numRooms },
+        uPattern: { value: game.wallPattern | 0 },
+        // ---- Wall constants ----
+        K_DARK_BASE:         { value: new THREE.Vector3(wp.K_DARK_BASE_R, wp.K_DARK_BASE_G, wp.K_DARK_BASE_B) },
+        K_ZONE_TINT:         { value: wp.K_ZONE_TINT },
+        K_COSMIC_BRIGHTNESS: { value: wp.K_COSMIC_BRIGHTNESS },
+        K_FRESNEL_STRENGTH:  { value: wp.K_FRESNEL_STRENGTH },
+        K_DIFF_MIN:          { value: wp.K_DIFF_MIN },
+        K_AO_FLOOR:          { value: wp.K_AO_FLOOR },
+        K_FLOOR:             { value: wp.K_FLOOR },
+        // ---- Pattern math ----
+        u_iters:    { value: wp.u_iters | 0 },
+        u_rings:    { value: wp.u_rings | 0 },
+        u_scale:    { value: wp.u_scale },
+        u_rotSpeed: { value: wp.u_rotSpeed },
+        u_off:      { value: new THREE.Vector3(wp.u_off_x, wp.u_off_y, wp.u_off_z) },
+        u_invBase:  { value: wp.u_invBase },
+        u_valDiv:   { value: wp.u_valDiv },
+        u_hueSpin:  { value: wp.u_hueSpin },
+        u_satBase:  { value: wp.u_satBase },
+        // ---- Soul Array ----
+        SA_CELL_SIZE:      { value: wp.SA_CELL_SIZE },
+        SA_DOT_RADIUS:     { value: wp.SA_DOT_RADIUS },
+        SA_DOT_DEPTH_TOL:  { value: wp.SA_DOT_DEPTH_TOL },
+        SA_WAVE_SPEED:     { value: wp.SA_WAVE_SPEED },
+        SA_WAVE_PERIOD:    { value: wp.SA_WAVE_PERIOD },
+        SA_WAVE_SHARPNESS: { value: wp.SA_WAVE_SHARPNESS },
+        SA_BASE_DOT:       { value: wp.SA_BASE_DOT },
+        SA_WAVE_PEAK:      { value: wp.SA_WAVE_PEAK },
+        SA_BREATH_AMP:     { value: wp.SA_BREATH_AMP },
+        SA_BREATH_RATE:    { value: wp.SA_BREATH_RATE },
+        SA_DOT_SAT:        { value: wp.SA_DOT_SAT },
+        SA_ZONE_FLOOR:     { value: wp.SA_ZONE_FLOOR }
       }
     });
 
