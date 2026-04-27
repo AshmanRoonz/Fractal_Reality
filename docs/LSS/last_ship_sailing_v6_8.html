@@ -2754,7 +2754,9 @@ function handleNetEvent(evt, fromPeerId) {
       const dir = new THREE.Vector3().subVectors(to, from);
       if (dir.lengthSq() > 0.0001) {
         dir.normalize();
-        emitChassisMuzzleFlash(peer.loadoutKey, from, dir);
+        // Forward the peer's last-known velocity (if replicated) so their
+        // muzzle flash also stays glued to their gun at high speed.
+        emitChassisMuzzleFlash(peer.loadoutKey, from, dir, peer.velocity || null);
       }
     }
     return;
@@ -4316,9 +4318,18 @@ function chassisFlashColor(key) {
   }
 }
 
-function emitChassisMuzzleFlash(loadoutKey, pos, dir) {
+function emitChassisMuzzleFlash(loadoutKey, pos, dir, parentVel) {
   if (!pos || !dir) return;
   const flashColor = chassisFlashColor(loadoutKey);
+  // Inherit firing entity's velocity into every particle so the flash + sparks
+  // travel WITH the ship at high speed. Without this, a fast-moving ship
+  // leaves its own muzzle flash behind every shot, which feels wrong (the
+  // flash should appear stuck to the gun barrel). Descent 3 does this in
+  // VisEffectCreate by setting `vis->velocity = obj->phys_info.velocity`.
+  // pvx/pvy/pvz are zero when no parentVel is provided (existing behavior).
+  const pvx = (parentVel && parentVel.x) ? parentVel.x : 0;
+  const pvy = (parentVel && parentVel.y) ? parentVel.y : 0;
+  const pvz = (parentVel && parentVel.z) ? parentVel.z : 0;
 
   // Universal: small dynamic warm light at the muzzle so nearby surfaces
   // pick up a brief illuminated ping.
@@ -4334,6 +4345,7 @@ function emitChassisMuzzleFlash(loadoutKey, pos, dir) {
       (Math.random() - 0.5) * 0.35
     );
     const v = dir.clone().add(spread).normalize().multiplyScalar(80 + Math.random() * 60);
+    v.x += pvx; v.y += pvy; v.z += pvz;
     game.particles.push({
       position: pos.clone(),
       velocity: v,
@@ -4354,6 +4366,7 @@ function emitChassisMuzzleFlash(loadoutKey, pos, dir) {
         (Math.random() - 0.5) * 0.30
       );
       const v = dir.clone().add(spread).normalize().multiplyScalar(50 + Math.random() * 50);
+      v.x += pvx; v.y += pvy; v.z += pvz;
       game.particles.push({
         position: pos.clone(),
         velocity: v,
@@ -4380,6 +4393,8 @@ function emitChassisMuzzleFlash(loadoutKey, pos, dir) {
         (Math.random() - 0.5) * 0.45,
         (Math.random() - 0.5) * 0.45
       )).normalize().multiplyScalar(180 + Math.random() * 100);
+      v.x += pvx; v.y += pvy; v.z += pvz;
+      v.x += pvx; v.y += pvy; v.z += pvz;
       game.particles.push({
         position: pos.clone(),
         velocity: v,
@@ -4397,6 +4412,7 @@ function emitChassisMuzzleFlash(loadoutKey, pos, dir) {
         (Math.random() - 0.5) * 0.25,
         (Math.random() - 0.5) * 0.25
       )).normalize().multiplyScalar(120 + Math.random() * 80);
+      v.x += pvx; v.y += pvy; v.z += pvz;
       game.particles.push({
         position: pos.clone(),
         velocity: v,
@@ -4416,6 +4432,7 @@ function emitChassisMuzzleFlash(loadoutKey, pos, dir) {
       const angle = (i / 10) * Math.PI * 2;
       const radial = right.clone().multiplyScalar(Math.cos(angle))
         .add(up.clone().multiplyScalar(Math.sin(angle))).multiplyScalar(60);
+      radial.x += pvx; radial.y += pvy; radial.z += pvz;
       game.particles.push({
         position: pos.clone(),
         velocity: radial,
@@ -7830,15 +7847,6 @@ class Projectile {
       const camPos = camera.position;
       const segs = this.trailSegs;
       const baseW = this.trailRibbonBaseWidth;
-      // Near-camera fade: any trail vertex inside NEAR_FADE_END units of the
-      // camera collapses the ribbon strip to zero width (both above/below
-      // verts at the same point = degenerate quad = nothing rendered). This
-      // hides the "2D streak right in my face" effect on Pyro / Tracker /
-      // Puncture projectile trails when the projectile has just spawned and
-      // its tail still extends back through the cockpit. The full width
-      // ramps in over the next NEAR_FADE_END..NEAR_FADE_START unit range.
-      const NEAR_FADE_END   = 30; // 0% width at this distance
-      const NEAR_FADE_START = 110; // 100% width at this distance
       for (let i = 0; i < segs; i++) {
         const px = linePos[i * 3];
         const py = linePos[i * 3 + 1];
@@ -7856,22 +7864,10 @@ class Projectile {
           dy = py - linePos[(i - 1) * 3 + 1];
           dz = pz - linePos[(i - 1) * 3 + 2];
         }
-        // Camera-to-point direction (also used for the near-fade distance check below).
+        // Camera-to-point direction
         const tcx = camPos.x - px;
         const tcy = camPos.y - py;
         const tcz = camPos.z - pz;
-        const camDistSq = tcx * tcx + tcy * tcy + tcz * tcz;
-        // Squared comparison avoids the sqrt for the common "far enough" case.
-        let camFade;
-        if (camDistSq >= NEAR_FADE_START * NEAR_FADE_START) {
-          camFade = 1;
-        } else if (camDistSq <= NEAR_FADE_END * NEAR_FADE_END) {
-          camFade = 0;
-        } else {
-          const camDist = Math.sqrt(camDistSq);
-          camFade = (camDist - NEAR_FADE_END) / (NEAR_FADE_START - NEAR_FADE_END);
-          camFade = camFade * camFade * (3 - 2 * camFade); // smoothstep
-        }
         // Perpendicular axis = trailDir × cameraDir (lies in the screen plane
         // at this point, regardless of view angle, so the ribbon is always
         // visible as a flat strip facing the camera).
@@ -7885,10 +7881,9 @@ class Projectile {
           // Degenerate (looking straight down the trail): pick a stable axis
           nx = 1; ny = 0; nz = 0;
         }
-        // Width taper: full at head (i=0), 30% at tail tip (i=segs-1).
-        // Multiplied by camFade so near-camera vertices have zero width.
+        // Width taper: full at head (i=0), 30% at tail tip (i=segs-1)
         const tt = 1.0 - (i / (segs - 1));
-        const w = baseW * (0.30 + 0.70 * tt) * camFade;
+        const w = baseW * (0.30 + 0.70 * tt);
         // Above-side vertex
         ribbonPos[(i * 2) * 3]     = px + nx * w;
         ribbonPos[(i * 2) * 3 + 1] = py + ny * w;
@@ -8998,38 +8993,15 @@ function spawnExplosion(pos, size) {
   }
 
   // --- Phase 4: Volumetric shader smoke (churning dark cloud, longer life) ---
-  // Uses the shared _SMOKE_GEO sphere prototype so we don't allocate fresh
-  // SphereGeometry per call. The shader material still has to be unique
-  // per mesh (each plume animates with its own time offset baked into the
-  // uniforms), but Three.js's program cache deduplicates the GLSL so only
-  // the first ever smoke compiles a program. Concurrent smoke count is
-  // capped at SMOKE_MAX so cluster missiles + ship deaths don't pile up
-  // 50+ overlapping plumes; oldest is culled when over cap. Lifetime cut
-  // from 1.4s to 1.0s — the eye doesn't notice a tighter fade and the
-  // typical alive count drops by ~30%.
+  // Replaces the old smooth-icosahedron + MeshBasicMaterial smoke. Uses the
+  // _makeSmokeMaterial Plasma-FBM shader so the smoke reads as a real
+  // turbulent plume with holes and density variation, not a solid dark
+  // blob. Built fresh per-explosion (the shader material is per-instance
+  // so each plume animates with its own time offset).
   if (size > 12) {
-    const SMOKE_MAX = 25;
-    let smokeAlive = 0;
-    let oldestSmokeIdx = -1;
-    let oldestSmokeAge = -1;
-    for (let i = 0; i < game.effects.length; i++) {
-      if (game.effects[i].type === 'shaderSmoke') {
-        smokeAlive++;
-        if (game.effects[i].age > oldestSmokeAge) {
-          oldestSmokeAge = game.effects[i].age;
-          oldestSmokeIdx = i;
-        }
-      }
-    }
-    if (smokeAlive >= SMOKE_MAX && oldestSmokeIdx >= 0) {
-      // Force-expire the oldest so the new one fits within the cap.
-      const old = game.effects[oldestSmokeIdx];
-      if (old.mesh && old.mesh.parent) scene.remove(old.mesh);
-      if (old.mesh && old.mesh.material && old.mesh.material.dispose) old.mesh.material.dispose();
-      game.effects.splice(oldestSmokeIdx, 1);
-    }
+    const smokeGeo = new THREE.SphereGeometry(1, 16, 12);
     const smokeMat = _makeSmokeMaterial(0x222018, 0.85);
-    const smokeMesh = new THREE.Mesh(_SMOKE_GEO, smokeMat);
+    const smokeMesh = new THREE.Mesh(smokeGeo, smokeMat);
     smokeMesh.position.copy(pos);
     smokeMesh.scale.setScalar(size * 0.7);
     smokeMesh.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
@@ -9037,7 +9009,7 @@ function spawnExplosion(pos, size) {
     smokeMesh.renderOrder = 1; // composite over wall
     scene.add(smokeMesh);
     game.effects.push({
-      mesh: smokeMesh, lifetime: 1.0, age: 0, type: 'shaderSmoke',
+      mesh: smokeMesh, lifetime: 1.4, age: 0, type: 'shaderSmoke',
       maxSize: size * 4, baseScale: size * 0.7,
       rotVel: new THREE.Vector3((Math.random()-0.5)*2, (Math.random()-0.5)*2, (Math.random()-0.5)*2),
     });
@@ -10066,15 +10038,6 @@ function updateOrganics(dt) {
 //                        lowest opacity, lingers longest -> volumetric body
 // The radial vertex count goes UP on the haze tubes (8/12 instead of 4/6) so
 // the soft glow reads round at oblique angles instead of faceted.
-// Shared smoke-cloud geometry for explosion plume meshes. Built once at
-// module init so spawnExplosion's smoke phase can avoid per-call
-// SphereGeometry allocation. Lower poly count than the previous
-// per-spawn (16,12) because the smoke is large + additive + heavily
-// shader-modulated; faceting is invisible. ~80 verts vs 288. Frustum
-// culling stays disabled per-mesh (the cloud expands fast and we don't
-// want it popping out at the edges of the screen).
-const _SMOKE_GEO = new THREE.SphereGeometry(1, 12, 8);
-
 const _TRACER_CORE_GEO = new THREE.CylinderGeometry(0.55, 0.55, 1, 4, 1);
 _TRACER_CORE_GEO.rotateX(Math.PI / 2);
 const _TRACER_BEAM_GEO = new THREE.CylinderGeometry(1.30, 0.95, 1, 6, 1);
@@ -10137,7 +10100,7 @@ const _TRACER_TAIL_OUTER_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffff
 // Internal helper: spawn one tracer streak along (fromVec -> toVec).
 // spawnTracer() routes player-side shots through two calls to this (one
 // from each arm) so the visible beams converge on the target as a triangle.
-function _spawnSingleTracer(fromVec, toVec, color, widthScale) {
+function _spawnSingleTracer(fromVec, toVec, color, widthScale, lean) {
   widthScale = widthScale || 1.0;
   const dir = new THREE.Vector3().subVectors(toVec, fromVec);
   const len = dir.length();
@@ -10172,12 +10135,16 @@ function _spawnSingleTracer(fromVec, toVec, color, widthScale) {
   // --- Beam (weapon color, thin filament) ---
   _makeShape(_TRACER_BEAM_GEO, _TRACER_BEAM_MAT_PROTO, color, 1.0, 0.18, 'tracer');
   // --- Volumetric haze: two nested additive tubes that linger and taper.
-  // The inner haze is tighter and fades faster; the outer haze is wide and
-  // wispy, fading over ~0.55s so the beam reads as a lingering volumetric
-  // shaft of light around the thin filament. Additive + depthWrite:false
-  // so the haze reads as emitted light through air, not a solid cylinder.
-  _makeShape(_TRACER_TAIL_INNER_GEO, _TRACER_TAIL_INNER_MAT_PROTO, color, 0.55, 0.42, 'tracerTail');
-  _makeShape(_TRACER_TAIL_OUTER_GEO, _TRACER_TAIL_OUTER_MAT_PROTO, color, 0.18, 0.65, 'tracerTail');
+  // SKIPPED in `lean` mode (local player shots): the inner+outer hazes
+  // (radii 3.5 and 9.0) read as huge 2D shapes when the camera is right
+  // behind the muzzle. With them gone the player sees only the thin core +
+  // beam fan out from their cockpit, which is the Descent 3 look. Other
+  // ships' shots viewed from a distance keep all four layers and read as
+  // proper volumetric streaks.
+  if (!lean) {
+    _makeShape(_TRACER_TAIL_INNER_GEO, _TRACER_TAIL_INNER_MAT_PROTO, color, 0.55, 0.42, 'tracerTail');
+    _makeShape(_TRACER_TAIL_OUTER_GEO, _TRACER_TAIL_OUTER_MAT_PROTO, color, 0.18, 0.65, 'tracerTail');
+  }
 
   // --- Tracer sparkles along the beam (trace of dust) ---
   const particleCount = Math.min(Math.ceil(len / 400), 3);
@@ -10264,12 +10231,16 @@ function spawnTracer(from, to, color, widthScale) {
     // world correctly as the camera rotates. Each beam is somewhat thinner
     // than a single-tracer default so the two converging streaks together
     // don't visually outweigh the old single-shot mass.
-    _spawnSingleTracer(leftMuzzle, to, color, 0.85 * wScale);
-    _spawnSingleTracer(rightMuzzle, to, color, 0.85 * wScale);
+    // lean=true → skip the wide haze layers so the player doesn't see big
+    // 2D shapes spawning right in front of the cockpit. Two thin streaks
+    // (core + beam) converging on the target from the painted barrel tips
+    // is the Descent 3 first-person look.
+    _spawnSingleTracer(leftMuzzle, to, color, 0.85 * wScale, true);
+    _spawnSingleTracer(rightMuzzle, to, color, 0.85 * wScale, true);
     return;
   }
-  // Bot / far-field shots: single tracer as before.
-  _spawnSingleTracer(from, to, color, 1.0 * wScale);
+  // Bot / far-field shots: full four-layer tracer including volumetric haze.
+  _spawnSingleTracer(from, to, color, 1.0 * wScale, false);
 }
 
 // Lightning bolt: jagged line from A to B using a single merged BufferGeometry (1 draw call)
@@ -10463,15 +10434,6 @@ function _disposeOrReleaseEffect(e) {
   // materials are still cloned per-spawn and need to be disposed to free
   // the clone. Everything else still disposes both geo and material.
   if (e.type === 'tracer' || e.type === 'tracerTail') {
-    scene.remove(e.mesh);
-    if (e.mesh.material) e.mesh.material.dispose();
-    return;
-  }
-  // Shader-smoke meshes (explosion plumes) share the global _SMOKE_GEO so
-  // disposing the geometry would break the next spawn. Material is cloned
-  // per-spawn (each plume animates with its own time offset baked into
-  // uniforms) and must be disposed.
-  if (e.type === 'shaderSmoke') {
     scene.remove(e.mesh);
     if (e.mesh.material) e.mesh.material.dispose();
     return;
@@ -11998,7 +11960,9 @@ function fireWeapon() {
   // (v6.7) Per-chassis muzzle flash. Visual signature so each primary reads
   // distinctly. Receivers spawn the matching flash via the fire_tracer /
   // network projectile receive paths below.
-  emitChassisMuzzleFlash(player.loadoutKey, origin, forward);
+  // Pass player.velocity so muzzle particles inherit the ship's motion and
+  // the flash stays glued to the gun barrel at high speed (Descent 3 trick).
+  emitChassisMuzzleFlash(player.loadoutKey, origin, forward, player.velocity);
 
   if (w.mode === 'hitscan') fireHitscan(origin, forward, w);
   else if (w.mode === 'projectile') fireProjectile(origin, forward, w);
@@ -19375,21 +19339,41 @@ const Overlays = (() => {
 // Expose globally for ease of debugging / future hooks.
 window.Overlays = Overlays;
 
-// ---- SCREEN SHAKE ----
+// ---- SCREEN SHAKE / BUFFET ----
+// Descent 3 style position-only buffet: when the player takes a hit, the
+// camera position offsets along the view basis with a damped sine wave.
+// The look DIRECTION never changes, so the world reads stable and aim
+// stays accurate; only the cockpit shakes. This replaces the previous
+// random per-frame jitter, which fights the player's aim during firefights.
 
 function triggerScreenShake(intensity) {
   game.shakeIntensity = Math.min(game.shakeIntensity + intensity, 15);
+  // Pick a random buffet direction (in camera-relative XY) once per impact;
+  // the sine wave below shakes back and forth along this axis instead of
+  // re-randomizing every frame.
+  if (!game._buffetDir) game._buffetDir = { x: 0, y: 0 };
+  const ang = Math.random() * Math.PI * 2;
+  game._buffetDir.x = Math.cos(ang);
+  game._buffetDir.y = Math.sin(ang);
+  game._buffetTime = 0;
 }
 
 function updateScreenShake(dt) {
   if (game.shakeIntensity > 0.1) {
-    game.shakeOffset.x = (Math.random() - 0.5) * game.shakeIntensity * 2;
-    game.shakeOffset.y = (Math.random() - 0.5) * game.shakeIntensity * 2;
+    // Buffet phase advances at ~12 Hz so the cockpit visibly rocks rather
+    // than blurs into noise. Sine wave keeps motion smooth (no hitching).
+    game._buffetTime = (game._buffetTime || 0) + dt;
+    const phase = game._buffetTime * 75.0; // ~12 Hz × 2π
+    const wave = Math.sin(phase) * Math.exp(-game._buffetTime * 6.0);
+    const dir = game._buffetDir || { x: 1, y: 0 };
+    game.shakeOffset.x = dir.x * game.shakeIntensity * wave;
+    game.shakeOffset.y = dir.y * game.shakeIntensity * wave;
     game.shakeIntensity *= Math.pow(0.5, dt * game.shakeDecay);
   } else {
     game.shakeIntensity = 0;
     game.shakeOffset.x = 0;
     game.shakeOffset.y = 0;
+    game._buffetTime = 0;
   }
 }
 
@@ -19775,10 +19759,18 @@ function gameLoop(timestamp) {
   updateMinimap();
   updateEnemyHealthBars();
 
-  // Apply screen shake offset to camera (skip during death cam)
-  if (!deathCam.active) {
-    camera.position.x += game.shakeOffset.x;
-    camera.position.y += game.shakeOffset.y;
+  // Apply buffet offset along the CAMERA basis (right + up), not world XY,
+  // so the offset always reads as "the cockpit rocks side-to-side" relative
+  // to where the player is looking. Descent 3 does the same in cockpit.cpp:
+  // view_pos += view_tmat.rvec * buffetX + view_tmat.uvec * buffetY. Look
+  // direction never changes — only position offsets — so aim stays accurate.
+  if (!deathCam.active && (game.shakeOffset.x !== 0 || game.shakeOffset.y !== 0)) {
+    if (!game._buffetRight) game._buffetRight = new THREE.Vector3();
+    if (!game._buffetUp)    game._buffetUp    = new THREE.Vector3();
+    game._buffetRight.set(1, 0, 0).applyQuaternion(camera.quaternion);
+    game._buffetUp.set(0, 1, 0).applyQuaternion(camera.quaternion);
+    camera.position.addScaledVector(game._buffetRight, game.shakeOffset.x);
+    camera.position.addScaledVector(game._buffetUp,    game.shakeOffset.y);
   }
 
   // In-place expire of old kill-feed entries; avoids per-frame array allocation.
