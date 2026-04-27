@@ -9642,7 +9642,11 @@ function spawnLightningBolt(from, to, color, lifetime, branches, thickness) {
     // 2 points; with 2 it falls back to a straight segment which is fine.
     const curve = new THREE.CatmullRomCurve3(chain, false, 'catmullrom', 0.0);
     const tubularSegs = Math.max(8, (chain.length - 1) * 4);
-    const radialSegs = 4; // octagonal cross-section is plenty for thin tubes
+    // 6 = hexagonal cross-section. With the previous radialSegs=4 the tubes
+    // had a square cross-section that read as a chunky ribbon at thicker
+    // radii (Vortex/Blaster shield arcs). 6 gives a smooth round look at
+    // the smaller radii we actually use, without much vertex-count growth.
+    const radialSegs = 6;
     const glowRadius = thickness * 0.5;
     const coreRadius = Math.max(0.4, thickness * 0.18);
     // Glow tube (wider, colored, lower opacity).
@@ -12502,19 +12506,40 @@ function _emitThermalShieldFlames(shieldPos, midR, fwd, dt) {
 // at any moment forms the "ring of electricity" silhouette.
 const _vortexRimRight = new THREE.Vector3();
 const _vortexRimUp    = new THREE.Vector3();
-function _emitVortexShieldArcs(shieldPos, radius, fwd, dt) {
+// Map a 0..1 state value to a status color the player can read at a glance:
+// t=1 returns a bright blue (full / healthy), t=0 returns a hot red (empty /
+// dying), and the path between rotates smoothly through cyan, green, yellow,
+// orange. Used by Vortex shield (energyPct) and Blaster gun shield (hpPct).
+const _shieldStateScratchColor = new THREE.Color();
+function _shieldStateColor(t, lightness) {
+  t = Math.max(0, Math.min(1, t));
+  // Hue 0.0 = red, 0.667 = blue. Linear interpolation crosses cyan/yellow.
+  const hue = t * 0.667;
+  _shieldStateScratchColor.setHSL(hue, 1.0, (typeof lightness === 'number') ? lightness : 0.6);
+  return (Math.round(_shieldStateScratchColor.r * 255) << 16) |
+         (Math.round(_shieldStateScratchColor.g * 255) << 8)  |
+          Math.round(_shieldStateScratchColor.b * 255);
+}
+
+function _emitVortexShieldArcs(shieldPos, radius, fwd, dt, energyPct) {
   if (!shieldPos || !radius || !fwd || typeof spawnLightningBolt !== 'function') return;
+  // Energy fraction (0..1). Drives the halo color and glow particles so the
+  // shield reads blue when full → red as it drains. Defaults to 1.0 for
+  // peers/bots whose energy isn't replicated.
+  energyPct = (typeof energyPct === 'number') ? Math.max(0, Math.min(1, energyPct)) : 1.0;
+  const haloColor = _shieldStateColor(energyPct, 0.62);
+  const haloBright = _shieldStateColor(energyPct, 0.78);
   // Disc-plane axes (same construction as the flame helper).
   _vortexRimRight.set(0, 1, 0).cross(fwd);
   if (_vortexRimRight.lengthSq() < 0.001) _vortexRimRight.set(1, 0, 0);
   _vortexRimRight.normalize();
   _vortexRimUp.crossVectors(fwd, _vortexRimRight).normalize();
-  // (v6.7++) Even thicker / brighter, with a purple glow halo painted by
-  // a stream of magenta-violet particles around the ring. Two layers of
-  // bolts: a thick white-violet core arc and a wider purple halo arc that
-  // sits behind it, so the visual reads as crackling lightning *with* a
-  // soft purple aura instead of plain white sparks.
-  const ARCS_PER_SEC = 260;
+  // Thinner + slower + denser arcs: doubled lifetime per bolt makes the ring
+  // feel less hectic (bolts linger instead of strobing) while a slight
+  // ARCS_PER_SEC bump preserves visual density. Tube radii drop substantially
+  // (core 6.0→2.0, halo 11.0→5.0) so the ring stops reading as a chunky
+  // ribbon and reads as crackling filaments.
+  const ARCS_PER_SEC = 280;
   const expected = ARCS_PER_SEC * dt;
   let toSpawn = Math.floor(expected);
   if (Math.random() < (expected - toSpawn)) toSpawn += 1;
@@ -12537,15 +12562,15 @@ function _emitVortexShieldArcs(shieldPos, radius, fwd, dt) {
       shieldPos.y + (_vortexRimRight.y * c2 + _vortexRimUp.y * s2) * r2,
       shieldPos.z + (_vortexRimRight.z * c2 + _vortexRimUp.z * s2) * r2
     );
-    // Bright white core bolt (thick, sharp).
-    spawnLightningBolt(p1, p2, 0xeeeaff, 0.16 + Math.random() * 0.09, 0, 6.0);
-    // Wider purple-tinted halo bolt drawn at the same path so each crackle
-    // visibly sits inside a violet glow. Lower thickness multiplier on
-    // the halo end-glow makes it read soft, not stripey.
-    spawnLightningBolt(p1, p2, 0xaa66ff, 0.18 + Math.random() * 0.08, 0, 11.0);
+    // Bright white core bolt (very thin filament; reads as the spark itself).
+    spawnLightningBolt(p1, p2, 0xeeeaff, 0.36 + Math.random() * 0.18, 0, 2.0);
+    // Wider state-colored halo bolt at the same path. Halo color follows
+    // energy: full = blue, empty = red.
+    spawnLightningBolt(p1, p2, haloColor, 0.42 + Math.random() * 0.18, 0, 5.0);
   }
-  // Quarter-ring spider arcs ~16/sec for prominent flashes around the rim.
-  if (Math.random() < dt * 16) {
+  // Quarter-ring spider arcs ~10/sec for prominent flashes (down from 16,
+  // matching the slower-feel ask). Thinner spider tubes too.
+  if (Math.random() < dt * 10) {
     const ang1 = Math.random() * Math.PI * 2;
     const ang2 = ang1 + (Math.random() - 0.5) * 1.6;
     const r1 = radius * (0.95 + Math.random() * 0.08);
@@ -12562,16 +12587,23 @@ function _emitVortexShieldArcs(shieldPos, radius, fwd, dt) {
       shieldPos.y + (_vortexRimRight.y * c2 + _vortexRimUp.y * s2) * r2,
       shieldPos.z + (_vortexRimRight.z * c2 + _vortexRimUp.z * s2) * r2
     );
-    spawnLightningBolt(p1, p2, 0xffffff, 0.22, 3, 7.0);
-    spawnLightningBolt(p1, p2, 0xcc88ff, 0.26, 4, 13.0);
+    spawnLightningBolt(p1, p2, 0xffffff, 0.42, 3, 2.5);
+    spawnLightningBolt(p1, p2, haloBright, 0.50, 4, 6.0);
   }
-  // Purple glow particles streaming around the ring. Sparse but lingering;
-  // they paint the violet aura around the ring of bolts.
+  // Glow particles streaming around the ring. Color spectrum follows the
+  // current state — blue when full, red when empty, smooth path between.
   const GLOW_PER_SEC = 90;
   const expectedGlow = GLOW_PER_SEC * dt;
   let toGlow = Math.floor(expectedGlow);
   if (Math.random() < (expectedGlow - toGlow)) toGlow += 1;
-  const PURPLE_HUES = [0x9944ff, 0xaa66ff, 0xcc88ff, 0xddaaee];
+  // Build a small palette of state-tinted hues centered on the current
+  // energy level, with slight lightness variation for sparkle.
+  const glowPalette = [
+    _shieldStateColor(energyPct, 0.50),
+    _shieldStateColor(energyPct, 0.65),
+    _shieldStateColor(energyPct, 0.78),
+    _shieldStateColor(energyPct, 0.88)
+  ];
   for (let g = 0; g < toGlow; g++) {
     const ang = Math.random() * Math.PI * 2;
     const cosA = Math.cos(ang), sinA = Math.sin(ang);
@@ -12595,7 +12627,7 @@ function _emitVortexShieldArcs(shieldPos, radius, fwd, dt) {
       ),
       life: 0.30 + Math.random() * 0.20,
       maxLife: 0.50,
-      color: PURPLE_HUES[Math.floor(Math.random() * PURPLE_HUES.length)],
+      color: glowPalette[Math.floor(Math.random() * glowPalette.length)],
       size: 6 + Math.random() * 6,
     });
   }
@@ -12609,15 +12641,20 @@ const _gunRimRight = new THREE.Vector3();
 const _gunRimUp    = new THREE.Vector3();
 function _emitGunShieldArcs(shieldPos, radius, fwd, dt, hpPct) {
   if (!shieldPos || !radius || !fwd || typeof spawnLightningBolt !== 'function') return;
-  hpPct = (typeof hpPct === 'number') ? hpPct : 1.0;
+  hpPct = (typeof hpPct === 'number') ? Math.max(0, Math.min(1, hpPct)) : 1.0;
+  // Halo color follows shield HP: full = blue, dying = red, smooth path
+  // through cyan/yellow as it depletes.
+  const haloColor  = _shieldStateColor(hpPct, 0.62);
+  const haloBright = _shieldStateColor(hpPct, 0.78);
   _gunRimRight.set(0, 1, 0).cross(fwd);
   if (_gunRimRight.lengthSq() < 0.001) _gunRimRight.set(1, 0, 0);
   _gunRimRight.normalize();
   _gunRimUp.crossVectors(fwd, _gunRimRight).normalize();
-  // Continuous-ring arc spawn: pick a random angle, then a partner offset
-  // by a small angular delta so the chord hugs the ring shape (instead
-  // of snapping to 8 octagon vertices).
-  const ARCS_PER_SEC = 240 * (0.5 + 0.5 * hpPct);
+  // Thinner + slower + denser arcs: same treatment as Vortex shield.
+  // Lifetime ~2x for a less hectic feel, slight ARCS_PER_SEC bump,
+  // tube radii drop substantially (core 6.0→2.0, halo 11.5→5.0) so
+  // the ring no longer reads as a chunky ribbon.
+  const ARCS_PER_SEC = 280 * (0.55 + 0.45 * hpPct);
   const expected = ARCS_PER_SEC * dt;
   let toSpawn = Math.floor(expected);
   if (Math.random() < (expected - toSpawn)) toSpawn += 1;
@@ -12640,13 +12677,14 @@ function _emitGunShieldArcs(shieldPos, radius, fwd, dt, hpPct) {
       shieldPos.y + (_gunRimRight.y * c2 + _gunRimUp.y * s2) * r2,
       shieldPos.z + (_gunRimRight.z * c2 + _gunRimUp.z * s2) * r2
     );
-    // Bright white-blue core bolt and a wider blue-tinted halo bolt at
-    // the same path. The halo is the "blue glow" the user asked for.
-    spawnLightningBolt(p1, p2, 0xeef4ff, 0.14 + Math.random() * 0.08, 0, 6.0);
-    spawnLightningBolt(p1, p2, 0x66bbff, 0.18 + Math.random() * 0.08, 0, 11.5);
+    // Bright white-blue core bolt (thin filament). Halo bolt below carries
+    // the state color so the whole ring shifts hue with HP.
+    spawnLightningBolt(p1, p2, 0xeef4ff, 0.32 + Math.random() * 0.18, 0, 2.0);
+    spawnLightningBolt(p1, p2, haloColor, 0.40 + Math.random() * 0.18, 0, 5.0);
   }
-  // Quarter-ring spider arcs ~14/sec for dramatic flashes.
-  if (Math.random() < dt * 14) {
+  // Quarter-ring spider arcs ~9/sec for dramatic flashes (down from 14,
+  // matching the slower-feel ask).
+  if (Math.random() < dt * 9) {
     const ang1 = Math.random() * Math.PI * 2;
     const ang2 = ang1 + (Math.random() - 0.5) * 1.6;
     const r1 = radius * (0.95 + Math.random() * 0.08);
@@ -12663,15 +12701,21 @@ function _emitGunShieldArcs(shieldPos, radius, fwd, dt, hpPct) {
       shieldPos.y + (_gunRimRight.y * c2 + _gunRimUp.y * s2) * r2,
       shieldPos.z + (_gunRimRight.z * c2 + _gunRimUp.z * s2) * r2
     );
-    spawnLightningBolt(p1, p2, 0xffffff, 0.22, 3, 7.0);
-    spawnLightningBolt(p1, p2, 0x88ccff, 0.26, 4, 14.0);
+    spawnLightningBolt(p1, p2, 0xffffff, 0.40, 3, 2.5);
+    spawnLightningBolt(p1, p2, haloBright, 0.50, 4, 6.5);
   }
-  // Blue glow particles painting the soft halo around the ring.
-  const GLOW_PER_SEC = 80 * (0.5 + 0.5 * hpPct);
+  // Glow particles painting the soft halo around the ring. Hue spectrum
+  // follows hpPct (blue full → red almost dead) just like the halo bolts.
+  const GLOW_PER_SEC = 80 * (0.55 + 0.45 * hpPct);
   const expectedGlow = GLOW_PER_SEC * dt;
   let toGlow = Math.floor(expectedGlow);
   if (Math.random() < (expectedGlow - toGlow)) toGlow += 1;
-  const BLUE_HUES = [0x44aaff, 0x66bbff, 0x88ccff, 0xaaeeff];
+  const glowPalette = [
+    _shieldStateColor(hpPct, 0.50),
+    _shieldStateColor(hpPct, 0.65),
+    _shieldStateColor(hpPct, 0.78),
+    _shieldStateColor(hpPct, 0.88)
+  ];
   for (let g = 0; g < toGlow; g++) {
     const ang = Math.random() * Math.PI * 2;
     const cosA = Math.cos(ang), sinA = Math.sin(ang);
@@ -12695,7 +12739,7 @@ function _emitGunShieldArcs(shieldPos, radius, fwd, dt, hpPct) {
       ),
       life: 0.28 + Math.random() * 0.20,
       maxLife: 0.48,
-      color: BLUE_HUES[Math.floor(Math.random() * BLUE_HUES.length)],
+      color: glowPalette[Math.floor(Math.random() * glowPalette.length)],
       size: 5 + Math.random() * 5,
     });
   }
@@ -12748,7 +12792,11 @@ function updateShieldVisuals(dt) {
     // local space). Same disc-plane construction as the Pyro flame ring
     // so both shields read as their respective elemental ring of
     // particles/arcs without any visible mesh.
-    _emitVortexShieldArcs(shieldPos, 120, forward, dt);
+    // Pass energy fraction so the halo color spectrum tracks energy:
+    // blue full → red almost empty.
+    const vEnergyPct = (player.vortexMaxEnergy > 0)
+      ? (player.vortexEnergy / player.vortexMaxEnergy) : 1.0;
+    _emitVortexShieldArcs(shieldPos, 120, forward, dt, vEnergyPct);
   } else {
     if (player.vortexShieldMesh) {
       scene.remove(player.vortexShieldMesh);
