@@ -3042,7 +3042,7 @@ function _makeGasCloudMaterial(initialColor, baseAlpha, radius) {
       time:       { value: 0 },
       uColor:     { value: new THREE.Color(initialColor) },
       uBaseAlpha: { value: baseAlpha },
-      uOctaves:   { value: 5 },
+      uOctaves:   { value: 7 },
       uRadius:    { value: radius },
     },
     vertexShader: [
@@ -3093,37 +3093,43 @@ function _makeGasCloudMaterial(initialColor, baseAlpha, radius) {
       '  return v;',
       '}',
       'void main() {',
-      // World-space FBM sample. Scale tuned so each ~350-radius cloud
-      // shows several noise periods across its diameter (otherwise the
-      // whole cloud sits in one cell of the noise field and renders
-      // smooth). Slow drift: rising on Y plus a gentle Z twist so the
-      // cloud "breathes" without visibly scrolling.
-      '  vec3 q = vWorldPos * 0.012 + vec3(0.0, time * 0.18, time * 0.10);',
-      '  float v = fbm(q);',
-      // FBM output clusters around 0.5 ; smoothstep pushes that range
-      // out to the full 0..1 band so dense and sparse pockets read
-      // strongly instead of all blending toward the middle.
-      '  v = smoothstep(0.25, 0.75, v);',
-      // View-angle (fresnel) bonus: rim picks up extra density because a
-      // grazing line of sight passes through more "imaginary" cloud
-      // thickness. fres is high at the rim, low at the visual center.
+      // Two FBM noise layers at different scales summed for richer
+      // turbulence — single-scale FBM tends to look smooth/blobby.
+      // Larger scale (0.018) gives chunky cloud-puff structure ; the
+      // higher-frequency layer (0.055) adds finer detail.
+      '  vec3 q1 = vWorldPos * 0.018 + vec3(0.0, time * 0.20, time * 0.12);',
+      '  float v1 = fbm(q1);',
+      '  vec3 q2 = vWorldPos * 0.055 + vec3(time * 0.10, time * 0.05, 0.0);',
+      '  float v2 = fbm(q2);',
+      // Push contrast hard so values cluster at the extremes (dense vs
+      // empty) instead of all sitting near 0.5 ; this is what gives the
+      // cloud distinct dense pockets and hollow gaps.
+      '  v1 = smoothstep(0.32, 0.78, v1);',
+      '  v2 = smoothstep(0.35, 0.75, v2);',
+      // Combine: chunky base + finer detail accent.
+      '  float v = v1 * 0.70 + v2 * 0.40;',
+      // Noise threshold — values below ~0.17 are subtracted past zero so
+      // the discard below kills them. THIS is what cuts holes in the
+      // silhouette and makes the cloud look like a cloud instead of a
+      // sphere with bumpy color. The 1.5 multiplier keeps high-noise
+      // pockets dense after the subtraction.
+      '  float baseDensity = clamp(v * 1.5 - 0.25, 0.0, 1.0);',
+      // Fresnel adds a small bonus at grazing angles, but ONLY where
+      // the cloud already exists (multiplied by baseDensity), so it
+      // never lights up a fragment that should have been a hole.
       '  vec3 viewDir = normalize(cameraPosition - vWorldPos);',
-      '  float fres = pow(1.0 - clamp(dot(vNormal, viewDir), 0.0, 1.0), 1.4);',
-      // Density formula. Noise (v) is the dominant driver so the cloud
-      // shows turbulent variation everywhere ; fresnel adds a softer rim
-      // bonus. Clamped to 0..1 so neither high noise nor high fresnel can
-      // saturate the alpha into a solid shell. With clamp in place, the
-      // variation in v survives all the way to the final alpha, which is
-      // what makes the cloud read as cloudy in both states (the green
-      // gas and the orange fire) instead of as a uniform colored ball.
-      '  float density = clamp(v * 0.75 + fres * 0.45, 0.0, 1.0);',
-      // Color brightens with density so dense spots glow; sparse spots
-      // are dim AND mostly transparent (alpha follows density).
-      '  vec3 col = uColor * (0.55 + density * 1.30);',
+      '  float fres = pow(1.0 - clamp(dot(vNormal, viewDir), 0.0, 1.0), 1.6);',
+      '  float density = clamp(baseDensity * (1.0 + fres * 0.60), 0.0, 1.0);',
+      // HDR-bright color in dense spots so the cloud reads from across
+      // the room. Walls render very bright (K_COSMIC_BRIGHTNESS = 4.85)
+      // and additive contribution from a faintly-colored cloud gets
+      // washed out against them ; pushing dense pixels into super-1.0
+      // range lets the cloud compete.
+      '  vec3 col = uColor * (0.80 + density * 3.20);',
       '  float alpha = density * uBaseAlpha;',
-      // Discard near-zero alpha — produces visible holes in the cloud
-      // silhouette and breaks up the perfect-sphere outline.
-      '  if (alpha < 0.02) discard;',
+      // Higher discard threshold so the silhouette breakup is more
+      // aggressive — many low-density rim fragments simply vanish.
+      '  if (alpha < 0.05) discard;',
       '  gl_FragColor = vec4(col, alpha);',
       '}',
     ].join('\n'),
@@ -3158,8 +3164,10 @@ function spawnIncendiaryGas(pos, owner, team, ownerPeerId, netId, broadcast) {
   const gasMesh = new THREE.Mesh(gasGeo, gasMat);
   gasMesh.position.copy(pos);
   gasMesh.scale.setScalar(350);
-  // frustumCulled stays true; the unit-sphere bounding sphere scales with the
-  // mesh transform automatically (Three.js handles this for SphereGeometry).
+  // Disable frustum culling — the cloud's silhouette is dense enough at the
+  // rim that any clip-off causes a noticeable pop ; the cost of always
+  // rendering a 350-radius sphere is negligible.
+  gasMesh.frustumCulled = false;
   scene.add(gasMesh);
   const coreGeo = new THREE.SphereGeometry(1, 8, 6);
   const coreMat = new THREE.MeshBasicMaterial({ color: 0xc8e870, transparent: true, opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false });
