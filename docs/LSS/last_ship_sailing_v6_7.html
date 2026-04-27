@@ -3931,7 +3931,7 @@ function _makeHexHologramMaterial(baseColor) {
       'void main() {',
       // Centered UVs so the pattern sits symmetric on the wall.
       '  vec2 p = vUv - 0.5;',
-      // Slow drift so the hex grid reads as live (uHp doesn\'t affect drift).
+      // Slow drift so the hex grid reads as live (uHp does not affect drift).
       '  vec2 q = p + vec2(time * 0.012, time * 0.020);',
       '  float h = hex2D(q, 0.07);',
       '  float edge = 1.0 - smoothstep(0.42, 0.50, h);', // 1 at hex edge, 0 inside
@@ -3945,8 +3945,14 @@ function _makeHexHologramMaterial(baseColor) {
       '  vec3 dyingTint = vec3(1.0, 0.35, 0.30);',
       '  vec3 col = mix(dyingTint, uColor, uHp);',
       '  float bright = edge * 1.4 + fres * 0.6 + crack * 0.8;',
-      '  float alpha = (edge * 0.55 + fres * 0.35 + crack * 0.6) * (0.5 + 0.5 * uHp);',
-      '  alpha = clamp(alpha, 0.0, 1.0);',
+      // Alpha tuned to match Tracker\'s original wall opacity (~0.35 max).
+      // Hex edges give the pattern its silhouette; cell interiors stay
+      // mostly transparent so you can still SEE through the shield, which
+      // is the whole point of a hologram. Cracks bump alpha so damage
+      // reads strongly as HP drops. Final cap at 0.55 (down from 1.0).
+      '  float alpha = edge * 0.28 + fres * 0.16 + crack * 0.45;',
+      '  alpha *= (0.45 + 0.55 * uHp);',
+      '  alpha = clamp(alpha, 0.0, 0.55);',
       '  gl_FragColor = vec4(col * bright, alpha);',
       '}'
     ].join('\n'),
@@ -14726,8 +14732,49 @@ function updateRoundSystem(dt) {
         game.playerInStasis = false;
         document.getElementById('stasis-warning').style.display = 'none';
         document.getElementById('stasis-vignette').style.display = 'none';
-        // Clean up world effects
-        for (const eff of game.worldEffects) { if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh); if (eff.coreMesh && eff.coreMesh.parent) scene.remove(eff.coreMesh); if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh); }
+        // Clean up world effects. The previous version only removed
+        // eff.mesh / coreMesh / edgeMesh, which left firewall flame sprites
+        // (eff.meshes), tether/tripwire halos (eff.glow), and incendiary
+        // gas puff spheres (eff.puffMeshes) orphaned in the scene — that's
+        // why a Pyro firewall could "stay for the whole match" across
+        // round-end transitions. Now we walk every known per-effect mesh
+        // reference and remove + dispose each one.
+        for (const eff of game.worldEffects) {
+          if (eff.mesh && eff.mesh.parent) {
+            scene.remove(eff.mesh);
+            if (eff.mesh.geometry) eff.mesh.geometry.dispose();
+            if (eff.mesh.material && eff.mesh.material.dispose) eff.mesh.material.dispose();
+          }
+          if (eff.coreMesh && eff.coreMesh.parent) {
+            scene.remove(eff.coreMesh);
+            if (eff.coreMesh.geometry) eff.coreMesh.geometry.dispose();
+            if (eff.coreMesh.material && eff.coreMesh.material.dispose) eff.coreMesh.material.dispose();
+          }
+          if (eff.edgeMesh && eff.edgeMesh.parent) {
+            scene.remove(eff.edgeMesh);
+            if (eff.edgeMesh.geometry) eff.edgeMesh.geometry.dispose();
+            if (eff.edgeMesh.material && eff.edgeMesh.material.dispose) eff.edgeMesh.material.dispose();
+          }
+          if (eff.glow && eff.glow.parent) {
+            scene.remove(eff.glow);
+            if (eff.glow.geometry) eff.glow.geometry.dispose();
+            if (eff.glow.material && eff.glow.material.dispose) eff.glow.material.dispose();
+          }
+          if (eff.meshes) {
+            for (const m of eff.meshes) {
+              if (m.parent) scene.remove(m);
+              if (m.geometry && m.geometry.dispose) m.geometry.dispose();
+              if (m.material && m.material.dispose) m.material.dispose();
+            }
+          }
+          if (eff.puffMeshes) {
+            for (const p of eff.puffMeshes) {
+              if (p.parent) scene.remove(p);
+              if (p.geometry && p.geometry.dispose) p.geometry.dispose();
+              if (p.material && p.material.dispose) p.material.dispose();
+            }
+          }
+        }
         game.worldEffects = [];
         // Reset cores each round (builds with damage dealt)
         player.coreMeter = 0;
@@ -14780,10 +14827,44 @@ function returnToRootMenu() {
   game.particles = [];
   for (const sf of game.stasisFields) { try { sf.destroy(); } catch (e) {} }
   game.stasisFields = [];
+  // Same exhaustive cleanup as round-end (see updateAbilities for context).
+  // Without this, firewall sprites / trap halos / gas puffs leak across
+  // match-end → root-menu transitions.
   for (const eff of game.worldEffects) {
-    if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh);
-    if (eff.coreMesh && eff.coreMesh.parent) scene.remove(eff.coreMesh);
-    if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh);
+    if (eff.mesh && eff.mesh.parent) {
+      scene.remove(eff.mesh);
+      if (eff.mesh.geometry) eff.mesh.geometry.dispose();
+      if (eff.mesh.material && eff.mesh.material.dispose) eff.mesh.material.dispose();
+    }
+    if (eff.coreMesh && eff.coreMesh.parent) {
+      scene.remove(eff.coreMesh);
+      if (eff.coreMesh.geometry) eff.coreMesh.geometry.dispose();
+      if (eff.coreMesh.material && eff.coreMesh.material.dispose) eff.coreMesh.material.dispose();
+    }
+    if (eff.edgeMesh && eff.edgeMesh.parent) {
+      scene.remove(eff.edgeMesh);
+      if (eff.edgeMesh.geometry) eff.edgeMesh.geometry.dispose();
+      if (eff.edgeMesh.material && eff.edgeMesh.material.dispose) eff.edgeMesh.material.dispose();
+    }
+    if (eff.glow && eff.glow.parent) {
+      scene.remove(eff.glow);
+      if (eff.glow.geometry) eff.glow.geometry.dispose();
+      if (eff.glow.material && eff.glow.material.dispose) eff.glow.material.dispose();
+    }
+    if (eff.meshes) {
+      for (const m of eff.meshes) {
+        if (m.parent) scene.remove(m);
+        if (m.geometry && m.geometry.dispose) m.geometry.dispose();
+        if (m.material && m.material.dispose) m.material.dispose();
+      }
+    }
+    if (eff.puffMeshes) {
+      for (const p of eff.puffMeshes) {
+        if (p.parent) scene.remove(p);
+        if (p.geometry && p.geometry.dispose) p.geometry.dispose();
+        if (p.material && p.material.dispose) p.material.dispose();
+      }
+    }
   }
   game.worldEffects = [];
 
