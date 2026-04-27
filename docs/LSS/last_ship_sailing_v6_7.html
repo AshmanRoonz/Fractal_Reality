@@ -2245,29 +2245,33 @@ class NetworkPlayer {
         // Center the extruded depth around z=0 so lookAt orients it cleanly.
         geo.translate(0, 0, -6);
         const mat = new THREE.MeshBasicMaterial({
-          color: 0xff6644, transparent: true, opacity: 0.30,
+          color: 0xff8a55, transparent: true, opacity: 0.70,
           side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
+          depthWrite: false,
           map: getScanlineTexture(),
         });
         this._gunShieldMesh = new THREE.Mesh(geo, mat);
+        this._gunShieldMesh.renderOrder = 1;
         scene.add(this._gunShieldMesh);
         const edgeGeo = new THREE.EdgesGeometry(geo);
-        const edgeMat = new THREE.LineBasicMaterial({ color: 0xff8866, transparent: true, opacity: 0.5 });
+        const edgeMat = new THREE.LineBasicMaterial({ color: 0xffcc88, transparent: true, opacity: 0.95 });
         this._gunShieldEdge = new THREE.LineSegments(edgeGeo, edgeMat);
+        this._gunShieldEdge.renderOrder = 1;
         scene.add(this._gunShieldEdge);
       }
       const fwd = getForward();
       const shieldPos = this.position.clone().add(fwd.clone().multiplyScalar(60));
       this._gunShieldMesh.position.copy(shieldPos);
       this._gunShieldMesh.lookAt(shieldPos.clone().add(fwd));
-      // No HP info on the wire yet; show full-strength opacity. Future packet
-      // could carry gunShieldFrac for live drain feedback.
-      this._gunShieldMesh.material.opacity = 0.20 + Math.sin(t * 5) * 0.04;
-      this._gunShieldMesh.material.color.setHSL(0.07, 0.8, 0.6);
+      // Mesh + edge wireframe invisible ; shield is the lightning ring.
+      this._gunShieldMesh.visible = false;
       if (this._gunShieldEdge) {
         this._gunShieldEdge.position.copy(shieldPos);
         this._gunShieldEdge.lookAt(shieldPos.clone().add(fwd));
-        this._gunShieldEdge.material.opacity = 0.5;
+        this._gunShieldEdge.visible = false;
+      }
+      if (typeof _emitGunShieldArcs === 'function') {
+        _emitGunShieldArcs(shieldPos, 100, fwd, (typeof dt === 'number' ? dt : 1/60), 1.0);
       }
     } else {
       if (this._gunShieldMesh) {
@@ -2316,21 +2320,14 @@ class NetworkPlayer {
       this._thermalShieldMesh.position.copy(shieldPos);
       this._thermalShieldMesh.lookAt(shieldPos.clone().add(fwd));
       this._thermalShieldMesh.scale.set(midR, midR, midR);
-      // Fire shader: advance time uniform; modulate base alpha for pulse.
-      if (this._thermalShieldMesh.material && this._thermalShieldMesh.material.uniforms) {
-        this._thermalShieldMesh.material.uniforms.time.value = t;
-        this._thermalShieldMesh.material.uniforms.uBaseAlpha.value = 0.85 + Math.sin(t * 8) * 0.08;
-      }
+      // Disc + torus invisible; the ring of fire particles is the visible
+      // shield. Same approach as the local-player path so peer/bot Pyros
+      // read identically.
+      this._thermalShieldMesh.visible = false;
       if (this._thermalShieldRing) {
         this._thermalShieldRing.position.copy(shieldPos);
-        this._thermalShieldRing.lookAt(shieldPos.clone().add(fwd));
-        this._thermalShieldRing.scale.set(midR, midR, midR);
-        const ringHue = 0.06 + (Math.sin(t * 2.2) * 0.5 + 0.5) * 0.07;
-        this._thermalShieldRing.material.color.setHSL(ringHue, 0.75, 0.65);
-        this._thermalShieldRing.material.opacity = 0.18 + Math.sin(t * 10) * 0.04;
+        this._thermalShieldRing.visible = false;
       }
-      // Flames around the rim (same helper as the local-player path so peers
-      // and bots running Pyro look identical).
       if (typeof _emitThermalShieldFlames === 'function') {
         _emitThermalShieldFlames(shieldPos, midR, fwd, (typeof dt === 'number' ? dt : 1/60));
       }
@@ -2374,17 +2371,15 @@ class NetworkPlayer {
       const shieldPos = this.position.clone().add(fwd.clone().multiplyScalar(80));
       this._vortexShieldMesh.position.copy(shieldPos);
       this._vortexShieldMesh.lookAt(shieldPos.clone().add(fwd));
-      // Advance shader time + breathe the base alpha for the pulse.
-      if (this._vortexShieldMesh.material && this._vortexShieldMesh.material.uniforms) {
-        this._vortexShieldMesh.material.uniforms.time.value = t;
-        this._vortexShieldMesh.material.uniforms.uBaseAlpha.value = 0.85 + Math.sin(t * 4) * 0.10;
-      }
+      // Disc + torus invisible; the ring of crackling lightning is the
+      // visible shield. Mirror of the local-player path.
+      this._vortexShieldMesh.visible = false;
       if (this._vortexShieldRing) {
         this._vortexShieldRing.position.copy(shieldPos);
-        this._vortexShieldRing.lookAt(shieldPos.clone().add(fwd));
-        const ringHue = (t * 0.3 + 0.15) % 1;
-        this._vortexShieldRing.material.color.setHSL(ringHue, 0.4, 0.78);
-        this._vortexShieldRing.material.opacity = 0.30 + Math.sin(t * 6) * 0.10;
+        this._vortexShieldRing.visible = false;
+      }
+      if (typeof _emitVortexShieldArcs === 'function') {
+        _emitVortexShieldArcs(shieldPos, 120, fwd, (typeof dt === 'number' ? dt : 1/60));
       }
     } else {
       if (this._vortexShieldMesh) {
@@ -2838,15 +2833,38 @@ function spawnTripWireOrb(pos, owner, team, ownerPeerId, netId, broadcast, group
   game.worldEffects.push({
     type: 'tripwire', position: pos.clone(),
     timer: 12, dmg: 350, radius: 220, owner, team, armed: false, armTimer: 1.0,
-    ownerPeerId, netId, groupId, arcTimer: 0.05 + Math.random() * 0.10,
+    ownerPeerId, netId, groupId,
+    arcTimer: 0.05 + Math.random() * 0.10,
+    sparkTimer: 0,
+    pulsePhase: Math.random() * Math.PI * 2,
   });
-  const mineGeo = new THREE.SphereGeometry(10, 6, 4);
-  const mineMat = new THREE.MeshBasicMaterial({ color: 0xff4444 });
+  // Inner core sphere — bright cyan-white energy bead. Switched from a
+  // dull red basic sphere to an additive bright core so the orb reads as
+  // active electrical charge instead of a static red marker.
+  const mineGeo = new THREE.SphereGeometry(7, 10, 8);
+  const mineMat = new THREE.MeshBasicMaterial({
+    color: 0x88eeff, transparent: true, opacity: 1.0,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  });
   const mineMesh = new THREE.Mesh(mineGeo, mineMat);
   mineMesh.position.copy(pos);
-  mineMesh.renderOrder = 1; // draw after the wall (see gas cloud comment)
+  mineMesh.renderOrder = 1;
   scene.add(mineMesh);
-  game.worldEffects[game.worldEffects.length - 1].mesh = mineMesh;
+  // Glow halo around the core — wider, dimmer additive sphere that pulses
+  // along with the core in the per-frame tick. Gives the orb visible mass
+  // from a distance and catches post-bloom light.
+  const glowGeo = new THREE.SphereGeometry(22, 12, 8);
+  const glowMat = new THREE.MeshBasicMaterial({
+    color: 0x44ccff, transparent: true, opacity: 0.35,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  });
+  const glowMesh = new THREE.Mesh(glowGeo, glowMat);
+  glowMesh.position.copy(pos);
+  glowMesh.renderOrder = 1;
+  scene.add(glowMesh);
+  const eff = game.worldEffects[game.worldEffects.length - 1];
+  eff.mesh = mineMesh;
+  eff.glow = glowMesh;
   if (broadcast && net.active && net.sendEvent) {
     net.sendEvent({
       type: 'effect_spawn', kind: 'tripwire',
@@ -3543,13 +3561,31 @@ function spawnTetherTrap(pos, owner, team, ownerPeerId, netId, broadcast) {
     timer: 15, rootDuration: 4, radius: 250, owner, team, triggered: false,
     ownerPeerId, netId,
   });
-  const tetherGeo = new THREE.OctahedronGeometry(12, 0);
-  const tetherMat = new THREE.MeshBasicMaterial({ color: 0x44aaff, transparent: true, opacity: 0.7 });
+  const tetherGeo = new THREE.OctahedronGeometry(14, 0);
+  const tetherMat = new THREE.MeshBasicMaterial({
+    color: 0x88ddff, transparent: true, opacity: 0.85,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  });
   const tetherMesh = new THREE.Mesh(tetherGeo, tetherMat);
   tetherMesh.position.copy(pos);
   tetherMesh.renderOrder = 1;
   scene.add(tetherMesh);
-  game.worldEffects[game.worldEffects.length - 1].mesh = tetherMesh;
+  // Halo around the trap so it reads as an active ensnare from far away.
+  // Pulsing/spinning per-frame in the tether tick.
+  const haloGeo = new THREE.SphereGeometry(36, 12, 8);
+  const haloMat = new THREE.MeshBasicMaterial({
+    color: 0x55aadd, transparent: true, opacity: 0.40,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  });
+  const haloMesh = new THREE.Mesh(haloGeo, haloMat);
+  haloMesh.position.copy(pos);
+  haloMesh.renderOrder = 1;
+  scene.add(haloMesh);
+  const tetherEff = game.worldEffects[game.worldEffects.length - 1];
+  tetherEff.mesh = tetherMesh;
+  tetherEff.glow = haloMesh;
+  tetherEff.pulsePhase = Math.random() * Math.PI * 2;
+  tetherEff.arcTimer = 0;
   if (broadcast && net.active && net.sendEvent) {
     net.sendEvent({
       type: 'effect_spawn', kind: 'tether',
@@ -6861,6 +6897,11 @@ class Projectile {
     // multiplies each layer's base opacity by Math.min(1, dist/FADE).
     this.spawnOrigin = origin.clone();
     this.fadeInDist = 80;
+    // Visual size multiplier — applied to the core / glow / haze scales
+    // each frame on top of the base pulse animation. Default 1.0 = standard
+    // projectile size ; ability projectiles can override (e.g. Cluster
+    // Missile sets sizeMult=2.8 so it reads as a heavy missile from far).
+    this.sizeMult = 1.0;
 
     // (v6.7) Electric look: the bright bead at the head is itself additive
     // (not opaque flat shading) so it reads as an energy core sitting inside
@@ -6910,6 +6951,14 @@ class Projectile {
     });
     this.trail = new THREE.Line(trailGeo, trailMat);
     this.trail.renderOrder = 1;
+    // (v6.7) The 1-pixel WebGL line was reading as harsh aliased "2D
+    // geometry" against the wall fractal — especially noticeable on
+    // bright-colored projectiles like Pyro's orange thermite (the line
+    // gets perceived as a flat yellow ribbon). The wide tube-ribbon trail
+    // + spherical glow + haze layers fully cover the trail visual, so we
+    // hide the underlying line. The geometry is still updated each frame
+    // because the ribbon reads its position data from the same buffer.
+    this.trail.visible = false;
     scene.add(this.trail);
     this.trailTimer = 0;
 
@@ -7111,19 +7160,23 @@ class Projectile {
       if (this.trail)       this.trail.material.opacity       = this._baseOpacityTrail  * _fadeIn;
       if (this.trailRibbon) this.trailRibbon.material.opacity = this._baseOpacityRibbon * _fadeIn;
     }
+    // sizeMult is applied to all three layers each frame so heavy ability
+    // projectiles (Cluster Missile, etc.) read as physically bigger from
+    // any distance. Default value 1.0 leaves normal projectiles unchanged.
+    const _szM = this.sizeMult || 1.0;
     // --- Electric core: pulse the bright additive bead. The base sine pulse
     // is mixed with a small random jitter so the head reads as live and
     // unstable rather than a steady metronome. ---
     if (this.mesh) {
       const corePulse = 1 + Math.sin(this.age * 28) * 0.18 + (Math.random() - 0.5) * 0.10;
-      this.mesh.scale.setScalar(corePulse);
+      this.mesh.scale.setScalar(corePulse * _szM);
     }
     // --- Inner glow halo: stronger flicker (sine + tighter random jitter)
     // so the halo edge reads as crackling. ---
     if (this.glowMesh) {
       this.glowMesh.position.copy(this.position);
       const haloFlicker = 1 + Math.sin(this.age * 22) * 0.18 + (Math.random() - 0.5) * 0.18;
-      this.glowMesh.scale.setScalar(haloFlicker);
+      this.glowMesh.scale.setScalar(haloFlicker * _szM);
     }
     // --- Outer volumetric haze: slow, smooth pulse (no random jitter) so
     // the wide shell reads as the projectile breathing while the inner
@@ -7131,7 +7184,7 @@ class Projectile {
     if (this.hazeMesh) {
       this.hazeMesh.position.copy(this.position);
       const hazePulse = 1 + Math.sin(this.age * 8) * 0.10;
-      this.hazeMesh.scale.setScalar(hazePulse);
+      this.hazeMesh.scale.setScalar(hazePulse * _szM);
     }
     // --- Tube ribbon trail update ---
     // For each trail history point, place two ribbon vertices perpendicular
@@ -9336,13 +9389,13 @@ function updateOrganics(dt) {
 //                        lowest opacity, lingers longest -> volumetric body
 // The radial vertex count goes UP on the haze tubes (8/12 instead of 4/6) so
 // the soft glow reads round at oblique angles instead of faceted.
-const _TRACER_CORE_GEO = new THREE.CylinderGeometry(0.30, 0.30, 1, 4, 1);
+const _TRACER_CORE_GEO = new THREE.CylinderGeometry(0.55, 0.55, 1, 4, 1);
 _TRACER_CORE_GEO.rotateX(Math.PI / 2);
-const _TRACER_BEAM_GEO = new THREE.CylinderGeometry(0.70, 0.50, 1, 6, 1);
+const _TRACER_BEAM_GEO = new THREE.CylinderGeometry(1.30, 0.95, 1, 6, 1);
 _TRACER_BEAM_GEO.rotateX(Math.PI / 2);
-const _TRACER_TAIL_INNER_GEO = new THREE.CylinderGeometry(2.50, 1.80, 1, 8, 1);
+const _TRACER_TAIL_INNER_GEO = new THREE.CylinderGeometry(3.50, 2.50, 1, 8, 1);
 _TRACER_TAIL_INNER_GEO.rotateX(Math.PI / 2);
-const _TRACER_TAIL_OUTER_GEO = new THREE.CylinderGeometry(7.00, 5.00, 1, 12, 1);
+const _TRACER_TAIL_OUTER_GEO = new THREE.CylinderGeometry(9.00, 6.50, 1, 12, 1);
 _TRACER_TAIL_OUTER_GEO.rotateX(Math.PI / 2);
 
 // Per-vertex fade-in attribute on the shared tracer cylinders. After the
@@ -9391,9 +9444,9 @@ _TRACER_TAIL_OUTER_GEO.rotateX(Math.PI / 2);
 // its volumetric body even though it never gets bright enough on its own to
 // read as a solid object.
 const _TRACER_CORE_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending, vertexColors: true });
-const _TRACER_BEAM_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, vertexColors: true });
-const _TRACER_TAIL_INNER_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.30, blending: THREE.AdditiveBlending, depthWrite: false, vertexColors: true });
-const _TRACER_TAIL_OUTER_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending, depthWrite: false, vertexColors: true });
+const _TRACER_BEAM_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending, vertexColors: true });
+const _TRACER_TAIL_INNER_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false, vertexColors: true });
+const _TRACER_TAIL_OUTER_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false, vertexColors: true });
 
 // Internal helper: spawn one tracer streak along (fromVec -> toVec).
 // spawnTracer() routes player-side shots through two calls to this (one
@@ -9429,16 +9482,16 @@ function _spawnSingleTracer(fromVec, toVec, color, widthScale) {
   }
 
   // --- Hot core (white-hot pinprick, very short-lived: the "shot" itself) ---
-  _makeShape(_TRACER_CORE_GEO, _TRACER_CORE_MAT_PROTO, 0xffffff, 1.0, 0.06, 'tracer');
+  _makeShape(_TRACER_CORE_GEO, _TRACER_CORE_MAT_PROTO, 0xffffff, 1.0, 0.10, 'tracer');
   // --- Beam (weapon color, thin filament) ---
-  _makeShape(_TRACER_BEAM_GEO, _TRACER_BEAM_MAT_PROTO, color, 0.95, 0.12, 'tracer');
+  _makeShape(_TRACER_BEAM_GEO, _TRACER_BEAM_MAT_PROTO, color, 1.0, 0.18, 'tracer');
   // --- Volumetric haze: two nested additive tubes that linger and taper.
   // The inner haze is tighter and fades faster; the outer haze is wide and
   // wispy, fading over ~0.55s so the beam reads as a lingering volumetric
   // shaft of light around the thin filament. Additive + depthWrite:false
   // so the haze reads as emitted light through air, not a solid cylinder.
-  _makeShape(_TRACER_TAIL_INNER_GEO, _TRACER_TAIL_INNER_MAT_PROTO, color, 0.30, 0.32, 'tracerTail');
-  _makeShape(_TRACER_TAIL_OUTER_GEO, _TRACER_TAIL_OUTER_MAT_PROTO, color, 0.08, 0.55, 'tracerTail');
+  _makeShape(_TRACER_TAIL_INNER_GEO, _TRACER_TAIL_INNER_MAT_PROTO, color, 0.55, 0.42, 'tracerTail');
+  _makeShape(_TRACER_TAIL_OUTER_GEO, _TRACER_TAIL_OUTER_MAT_PROTO, color, 0.18, 0.65, 'tracerTail');
 
   // --- Tracer sparkles along the beam (trace of dust) ---
   const particleCount = Math.min(Math.ceil(len / 400), 3);
@@ -11764,10 +11817,20 @@ function executeAbility(slot, ability) {
     // PUNCTURE: Cluster Missile (impact + sustained explosions in area for 3s)
     else if (ability.name === 'Cluster Missile') {
       const vel = forward.clone().multiplyScalar(1000);
-      const proj = new Projectile(player.position.clone(), vel, 800, 250, 'player', 0xff6600);
+      const proj = new Projectile(player.position.clone(), vel, 800, 250, 'player', 0xff5520);
       proj.isCluster = true; // on impact, creates sustained explosion zone
       proj.clusterDmg = 500; // DPS of the sustained cluster area
       proj.clusterDuration = 5; // seconds of sustained explosions
+      // Heavy-missile rendering: 3.0x sizeMult applies to the per-frame
+      // pulse on core/glow/haze layers (see Projectile.update). Pump up
+      // the base opacities so the missile reads bright across the room ;
+      // additive contribution otherwise gets lost against bright walls.
+      proj.sizeMult = 3.0;
+      if (proj._baseOpacityCore  !== undefined) proj._baseOpacityCore  = 1.0;
+      if (proj._baseOpacityGlow  !== undefined) proj._baseOpacityGlow  = 0.95;
+      if (proj._baseOpacityHaze  !== undefined) proj._baseOpacityHaze  = 0.45;
+      if (proj._baseOpacityTrail !== undefined) proj._baseOpacityTrail = 1.0;
+      if (proj._baseOpacityRibbon!== undefined) proj._baseOpacityRibbon= 1.0;
       game.projectiles.push(proj);
       // (v6.7) Broadcast as a regular projectile; the cluster ZONE that spawns
       // on impact stays owner-local for now (its damage already flows to peers
@@ -11871,25 +11934,69 @@ function executeAbility(slot, ability) {
         // Heal player
         player.shield = Math.min(player.maxShield, player.shield + 800);
 
-        // Lightning bolt to target (actual branching lightning, not a straight tracer)
-        spawnLightningBolt(player.position, bestBot.position, 0x44ff88, 0.25, 4, 2.5);
-        // Secondary parallel bolt for thickness
-        const offset = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(30);
-        spawnLightningBolt(player.position.clone().add(offset), bestBot.position.clone().add(offset), 0x44ffaa, 0.18, 2, 1.5);
-        // (v6.7) Broadcast the lightning so peers see the siphon connection.
-        // Two bolts (primary + secondary) sent on a generic lightning channel.
+        // Siphon conduit: stack of huge lightning bolts at multiple
+        // colors and offsets, plus a wide blue-glow halo of soft particles
+        // running along the beam path. Thickness pushed to 9.0 / 7.0 / 5.0
+        // ; branches 8/6/4 — this should read as a real heavy energy
+        // conduit, not a thin lightning thread.
+        spawnLightningBolt(player.position, bestBot.position, 0xccffe0, 0.32, 8, 9.0);
+        spawnLightningBolt(player.position, bestBot.position, 0xffffff, 0.28, 6, 7.0);
+        // Wide blue-tinted halo bolt for the soft glow read.
+        spawnLightningBolt(player.position, bestBot.position, 0x66ccff, 0.32, 8, 14.0);
+        // Five parallel offset bolts give the conduit visible thickness
+        // around the central core. Mix of green/blue tints so the conduit
+        // pulses between life-energy green and electric blue.
+        for (let oi = 0; oi < 5; oi++) {
+          const offset = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5)
+            .normalize().multiplyScalar(40 + Math.random() * 30);
+          const tint = (oi % 2 === 0) ? 0x66ffaa : 0x88ccff;
+          spawnLightningBolt(
+            player.position.clone().add(offset),
+            bestBot.position.clone().add(offset),
+            tint, 0.20 + Math.random() * 0.10, 4, 4.0
+          );
+        }
+        // Blue glow particles along the beam path — soft additive sprites
+        // that linger and fade, sitting around the bolts to give the
+        // conduit a volumetric blue halo. ~24 particles per tick.
+        const _siphonDir = new THREE.Vector3().subVectors(bestBot.position, player.position);
+        const _siphonLen = _siphonDir.length();
+        if (_siphonLen > 1) {
+          for (let gi = 0; gi < 24; gi++) {
+            const t = Math.random();
+            const pPos = player.position.clone().addScaledVector(_siphonDir, t);
+            // Random transverse offset so the glow forms a fat tube around
+            // the beam axis instead of a line on it.
+            pPos.x += (Math.random() - 0.5) * 50;
+            pPos.y += (Math.random() - 0.5) * 50;
+            pPos.z += (Math.random() - 0.5) * 50;
+            game.particles.push({
+              position: pPos,
+              velocity: new THREE.Vector3(
+                (Math.random() - 0.5) * 80,
+                (Math.random() - 0.5) * 80,
+                (Math.random() - 0.5) * 80
+              ),
+              life: 0.18 + Math.random() * 0.18,
+              maxLife: 0.36,
+              color: Math.random() < 0.5 ? 0x66ccff : 0xaaeeff,
+              size: 4 + Math.random() * 4,
+            });
+          }
+        }
+        // Broadcast the primary bolts so peers see the siphon connection.
         if (net.active && net.sendEvent) {
           net.sendEvent({
             type: 'lightning',
             ox: player.position.x, oy: player.position.y, oz: player.position.z,
             ex: bestBot.position.x, ey: bestBot.position.y, ez: bestBot.position.z,
-            color: 0x44ff88, lifetime: 0.25, branches: 4, thickness: 2.5,
+            color: 0xccffe0, lifetime: 0.32, branches: 8, thickness: 9.0,
           });
           net.sendEvent({
             type: 'lightning',
-            ox: player.position.x + offset.x, oy: player.position.y + offset.y, oz: player.position.z + offset.z,
-            ex: bestBot.position.x + offset.x, ey: bestBot.position.y + offset.y, ez: bestBot.position.z + offset.z,
-            color: 0x44ffaa, lifetime: 0.18, branches: 2, thickness: 1.5,
+            ox: player.position.x, oy: player.position.y, oz: player.position.z,
+            ex: bestBot.position.x, ey: bestBot.position.y, ez: bestBot.position.z,
+            color: 0x66ccff, lifetime: 0.32, branches: 8, thickness: 14.0,
           });
         }
 
@@ -12299,40 +12406,255 @@ function _emitThermalShieldFlames(shieldPos, midR, fwd, dt) {
   if (_flameRimRight.lengthSq() < 0.001) _flameRimRight.set(1, 0, 0);
   _flameRimRight.normalize();
   _flameRimUp.crossVectors(fwd, _flameRimRight).normalize();
-  // Spawn count scales with dt so a 30 fps and 60 fps machine see the same
-  // density. ~24 flames per second target.
-  const FLAMES_PER_SEC = 24;
+  // (v6.7) Particles flow TANGENTIALLY along the rim (no upward world-Y
+  // bias) so the shield reads as a ring of fire that hugs the disc shape
+  // — flames stick to the ring instead of shooting off into space. Density
+  // is high enough (220/sec) that the ring stays continuously populated;
+  // each particle has a short life so they don't drift far from the rim.
+  const FLAMES_PER_SEC = 420;
   const expectedThisFrame = FLAMES_PER_SEC * dt;
   let toSpawn = Math.floor(expectedThisFrame);
   if (Math.random() < (expectedThisFrame - toSpawn)) toSpawn += 1;
   if (toSpawn <= 0) return;
-  const FIRE_COLORS = [0xff4400, 0xff6620, 0xff8830, 0xffaa44, 0xffcc66];
+  const FIRE_COLORS = [0xff3300, 0xff5520, 0xff7740, 0xff9955, 0xffcc88, 0xffeebb];
   for (let f = 0; f < toSpawn; f++) {
-    // Random angle around the rim; small jitter on the radius so the flames
-    // form a rough band, not a perfect circle.
     const ang = Math.random() * Math.PI * 2;
-    const rJit = midR * (0.92 + Math.random() * 0.18);
+    // Tighter radial jitter so the flames cling to the ring instead of
+    // smearing into a wide cloud.
+    const rJit = midR * (0.95 + Math.random() * 0.10);
     const cosA = Math.cos(ang), sinA = Math.sin(ang);
-    const offX = _flameRimRight.x * cosA + _flameRimUp.x * sinA;
-    const offY = _flameRimRight.y * cosA + _flameRimUp.y * sinA;
-    const offZ = _flameRimRight.z * cosA + _flameRimUp.z * sinA;
-    const px = shieldPos.x + offX * rJit;
-    const py = shieldPos.y + offY * rJit;
-    const pz = shieldPos.z + offZ * rJit;
-    // Velocity: outward from the rim slightly, plus a strong upward bias so
-    // flames lick "up" along world-Y regardless of the shield's orientation.
-    // Adds a touch of forward bleed so the wall feels like it's pushing.
-    const outSpeed = 30 + Math.random() * 60;
-    const vx = offX * outSpeed + (Math.random() - 0.5) * 25 + fwd.x * 20;
-    const vy = offY * outSpeed * 0.4 + 80 + Math.random() * 80; // dominant upward
-    const vz = offZ * outSpeed + (Math.random() - 0.5) * 25 + fwd.z * 20;
+    // Radial direction at this rim point (pointing OUT from disc center).
+    const radX = _flameRimRight.x * cosA + _flameRimUp.x * sinA;
+    const radY = _flameRimRight.y * cosA + _flameRimUp.y * sinA;
+    const radZ = _flameRimRight.z * cosA + _flameRimUp.z * sinA;
+    // Tangent direction at this rim point (along the ring circumference).
+    const tanX = -_flameRimRight.x * sinA + _flameRimUp.x * cosA;
+    const tanY = -_flameRimRight.y * sinA + _flameRimUp.y * cosA;
+    const tanZ = -_flameRimRight.z * sinA + _flameRimUp.z * cosA;
+    const px = shieldPos.x + radX * rJit;
+    const py = shieldPos.y + radY * rJit;
+    const pz = shieldPos.z + radZ * rJit;
+    // Velocity: small outward (radial) + bigger tangential drift. Particles
+    // chase each other around the ring, with a slight bidirectional flow
+    // so the ring doesn't all spin one way. No world-Y bias.
+    const radSpeed = 20 + Math.random() * 30;
+    const tanSpeed = (Math.random() - 0.5) * 200; // bidirectional flow
+    const vx = radX * radSpeed + tanX * tanSpeed;
+    const vy = radY * radSpeed + tanY * tanSpeed;
+    const vz = radZ * radSpeed + tanZ * tanSpeed;
     game.particles.push({
       position: new THREE.Vector3(px, py, pz),
       velocity: new THREE.Vector3(vx, vy, vz),
-      life: 0.30 + Math.random() * 0.25,
-      maxLife: 0.55,
+      life: 0.22 + Math.random() * 0.18,
+      maxLife: 0.40,
       color: FIRE_COLORS[Math.floor(Math.random() * FIRE_COLORS.length)],
-      size: 6 + Math.random() * 5,
+      size: 10 + Math.random() * 8, // bigger particles for a thick fire band
+    });
+  }
+}
+
+// Vortex Shield ring of electricity. Fires short lightning bolts between
+// adjacent points on the disc rim every frame so the ring reads as a
+// continuous crackle of energy without any visible mesh underneath. Each
+// arc is a fast, short-lived branched bolt — the cumulative pile of arcs
+// at any moment forms the "ring of electricity" silhouette.
+const _vortexRimRight = new THREE.Vector3();
+const _vortexRimUp    = new THREE.Vector3();
+function _emitVortexShieldArcs(shieldPos, radius, fwd, dt) {
+  if (!shieldPos || !radius || !fwd || typeof spawnLightningBolt !== 'function') return;
+  // Disc-plane axes (same construction as the flame helper).
+  _vortexRimRight.set(0, 1, 0).cross(fwd);
+  if (_vortexRimRight.lengthSq() < 0.001) _vortexRimRight.set(1, 0, 0);
+  _vortexRimRight.normalize();
+  _vortexRimUp.crossVectors(fwd, _vortexRimRight).normalize();
+  // (v6.7++) Even thicker / brighter, with a purple glow halo painted by
+  // a stream of magenta-violet particles around the ring. Two layers of
+  // bolts: a thick white-violet core arc and a wider purple halo arc that
+  // sits behind it, so the visual reads as crackling lightning *with* a
+  // soft purple aura instead of plain white sparks.
+  const ARCS_PER_SEC = 260;
+  const expected = ARCS_PER_SEC * dt;
+  let toSpawn = Math.floor(expected);
+  if (Math.random() < (expected - toSpawn)) toSpawn += 1;
+  for (let i = 0; i < toSpawn; i++) {
+    const ang1 = Math.random() * Math.PI * 2;
+    const angDelta = 0.05 + Math.random() * 0.14;
+    const sign = Math.random() < 0.5 ? -1 : 1;
+    const ang2 = ang1 + sign * angDelta;
+    const r1 = radius * (0.97 + Math.random() * 0.06);
+    const r2 = radius * (0.97 + Math.random() * 0.06);
+    const c1 = Math.cos(ang1), s1 = Math.sin(ang1);
+    const c2 = Math.cos(ang2), s2 = Math.sin(ang2);
+    const p1 = new THREE.Vector3(
+      shieldPos.x + (_vortexRimRight.x * c1 + _vortexRimUp.x * s1) * r1,
+      shieldPos.y + (_vortexRimRight.y * c1 + _vortexRimUp.y * s1) * r1,
+      shieldPos.z + (_vortexRimRight.z * c1 + _vortexRimUp.z * s1) * r1
+    );
+    const p2 = new THREE.Vector3(
+      shieldPos.x + (_vortexRimRight.x * c2 + _vortexRimUp.x * s2) * r2,
+      shieldPos.y + (_vortexRimRight.y * c2 + _vortexRimUp.y * s2) * r2,
+      shieldPos.z + (_vortexRimRight.z * c2 + _vortexRimUp.z * s2) * r2
+    );
+    // Bright white core bolt (thick, sharp).
+    spawnLightningBolt(p1, p2, 0xeeeaff, 0.16 + Math.random() * 0.09, 0, 6.0);
+    // Wider purple-tinted halo bolt drawn at the same path so each crackle
+    // visibly sits inside a violet glow. Lower thickness multiplier on
+    // the halo end-glow makes it read soft, not stripey.
+    spawnLightningBolt(p1, p2, 0xaa66ff, 0.18 + Math.random() * 0.08, 0, 11.0);
+  }
+  // Quarter-ring spider arcs ~16/sec for prominent flashes around the rim.
+  if (Math.random() < dt * 16) {
+    const ang1 = Math.random() * Math.PI * 2;
+    const ang2 = ang1 + (Math.random() - 0.5) * 1.6;
+    const r1 = radius * (0.95 + Math.random() * 0.08);
+    const r2 = radius * (0.95 + Math.random() * 0.08);
+    const c1 = Math.cos(ang1), s1 = Math.sin(ang1);
+    const c2 = Math.cos(ang2), s2 = Math.sin(ang2);
+    const p1 = new THREE.Vector3(
+      shieldPos.x + (_vortexRimRight.x * c1 + _vortexRimUp.x * s1) * r1,
+      shieldPos.y + (_vortexRimRight.y * c1 + _vortexRimUp.y * s1) * r1,
+      shieldPos.z + (_vortexRimRight.z * c1 + _vortexRimUp.z * s1) * r1
+    );
+    const p2 = new THREE.Vector3(
+      shieldPos.x + (_vortexRimRight.x * c2 + _vortexRimUp.x * s2) * r2,
+      shieldPos.y + (_vortexRimRight.y * c2 + _vortexRimUp.y * s2) * r2,
+      shieldPos.z + (_vortexRimRight.z * c2 + _vortexRimUp.z * s2) * r2
+    );
+    spawnLightningBolt(p1, p2, 0xffffff, 0.22, 3, 7.0);
+    spawnLightningBolt(p1, p2, 0xcc88ff, 0.26, 4, 13.0);
+  }
+  // Purple glow particles streaming around the ring. Sparse but lingering;
+  // they paint the violet aura around the ring of bolts.
+  const GLOW_PER_SEC = 90;
+  const expectedGlow = GLOW_PER_SEC * dt;
+  let toGlow = Math.floor(expectedGlow);
+  if (Math.random() < (expectedGlow - toGlow)) toGlow += 1;
+  const PURPLE_HUES = [0x9944ff, 0xaa66ff, 0xcc88ff, 0xddaaee];
+  for (let g = 0; g < toGlow; g++) {
+    const ang = Math.random() * Math.PI * 2;
+    const cosA = Math.cos(ang), sinA = Math.sin(ang);
+    const r = radius * (0.92 + Math.random() * 0.16);
+    const radX = _vortexRimRight.x * cosA + _vortexRimUp.x * sinA;
+    const radY = _vortexRimRight.y * cosA + _vortexRimUp.y * sinA;
+    const radZ = _vortexRimRight.z * cosA + _vortexRimUp.z * sinA;
+    const tanX = -_vortexRimRight.x * sinA + _vortexRimUp.x * cosA;
+    const tanY = -_vortexRimRight.y * sinA + _vortexRimUp.y * cosA;
+    const tanZ = -_vortexRimRight.z * sinA + _vortexRimUp.z * cosA;
+    game.particles.push({
+      position: new THREE.Vector3(
+        shieldPos.x + radX * r,
+        shieldPos.y + radY * r,
+        shieldPos.z + radZ * r
+      ),
+      velocity: new THREE.Vector3(
+        radX * (Math.random() - 0.4) * 30 + tanX * (Math.random() - 0.5) * 100,
+        radY * (Math.random() - 0.4) * 30 + tanY * (Math.random() - 0.5) * 100,
+        radZ * (Math.random() - 0.4) * 30 + tanZ * (Math.random() - 0.5) * 100
+      ),
+      life: 0.30 + Math.random() * 0.20,
+      maxLife: 0.50,
+      color: PURPLE_HUES[Math.floor(Math.random() * PURPLE_HUES.length)],
+      size: 6 + Math.random() * 6,
+    });
+  }
+}
+
+// Blaster Gun Shield ring of electricity. Same continuous-ring approach
+// as Vortex (arcs at random angles around a circular rim, not snapped to
+// octagon corners), with a blue glow halo painted by tinted halo bolts
+// and glow particles. Thick, bright bolts so the shield reads strongly.
+const _gunRimRight = new THREE.Vector3();
+const _gunRimUp    = new THREE.Vector3();
+function _emitGunShieldArcs(shieldPos, radius, fwd, dt, hpPct) {
+  if (!shieldPos || !radius || !fwd || typeof spawnLightningBolt !== 'function') return;
+  hpPct = (typeof hpPct === 'number') ? hpPct : 1.0;
+  _gunRimRight.set(0, 1, 0).cross(fwd);
+  if (_gunRimRight.lengthSq() < 0.001) _gunRimRight.set(1, 0, 0);
+  _gunRimRight.normalize();
+  _gunRimUp.crossVectors(fwd, _gunRimRight).normalize();
+  // Continuous-ring arc spawn: pick a random angle, then a partner offset
+  // by a small angular delta so the chord hugs the ring shape (instead
+  // of snapping to 8 octagon vertices).
+  const ARCS_PER_SEC = 240 * (0.5 + 0.5 * hpPct);
+  const expected = ARCS_PER_SEC * dt;
+  let toSpawn = Math.floor(expected);
+  if (Math.random() < (expected - toSpawn)) toSpawn += 1;
+  for (let i = 0; i < toSpawn; i++) {
+    const ang1 = Math.random() * Math.PI * 2;
+    const angDelta = 0.06 + Math.random() * 0.16;
+    const sign = Math.random() < 0.5 ? -1 : 1;
+    const ang2 = ang1 + sign * angDelta;
+    const r1 = radius * (0.97 + Math.random() * 0.06);
+    const r2 = radius * (0.97 + Math.random() * 0.06);
+    const c1 = Math.cos(ang1), s1 = Math.sin(ang1);
+    const c2 = Math.cos(ang2), s2 = Math.sin(ang2);
+    const p1 = new THREE.Vector3(
+      shieldPos.x + (_gunRimRight.x * c1 + _gunRimUp.x * s1) * r1,
+      shieldPos.y + (_gunRimRight.y * c1 + _gunRimUp.y * s1) * r1,
+      shieldPos.z + (_gunRimRight.z * c1 + _gunRimUp.z * s1) * r1
+    );
+    const p2 = new THREE.Vector3(
+      shieldPos.x + (_gunRimRight.x * c2 + _gunRimUp.x * s2) * r2,
+      shieldPos.y + (_gunRimRight.y * c2 + _gunRimUp.y * s2) * r2,
+      shieldPos.z + (_gunRimRight.z * c2 + _gunRimUp.z * s2) * r2
+    );
+    // Bright white-blue core bolt and a wider blue-tinted halo bolt at
+    // the same path. The halo is the "blue glow" the user asked for.
+    spawnLightningBolt(p1, p2, 0xeef4ff, 0.14 + Math.random() * 0.08, 0, 6.0);
+    spawnLightningBolt(p1, p2, 0x66bbff, 0.18 + Math.random() * 0.08, 0, 11.5);
+  }
+  // Quarter-ring spider arcs ~14/sec for dramatic flashes.
+  if (Math.random() < dt * 14) {
+    const ang1 = Math.random() * Math.PI * 2;
+    const ang2 = ang1 + (Math.random() - 0.5) * 1.6;
+    const r1 = radius * (0.95 + Math.random() * 0.08);
+    const r2 = radius * (0.95 + Math.random() * 0.08);
+    const c1 = Math.cos(ang1), s1 = Math.sin(ang1);
+    const c2 = Math.cos(ang2), s2 = Math.sin(ang2);
+    const p1 = new THREE.Vector3(
+      shieldPos.x + (_gunRimRight.x * c1 + _gunRimUp.x * s1) * r1,
+      shieldPos.y + (_gunRimRight.y * c1 + _gunRimUp.y * s1) * r1,
+      shieldPos.z + (_gunRimRight.z * c1 + _gunRimUp.z * s1) * r1
+    );
+    const p2 = new THREE.Vector3(
+      shieldPos.x + (_gunRimRight.x * c2 + _gunRimUp.x * s2) * r2,
+      shieldPos.y + (_gunRimRight.y * c2 + _gunRimUp.y * s2) * r2,
+      shieldPos.z + (_gunRimRight.z * c2 + _gunRimUp.z * s2) * r2
+    );
+    spawnLightningBolt(p1, p2, 0xffffff, 0.22, 3, 7.0);
+    spawnLightningBolt(p1, p2, 0x88ccff, 0.26, 4, 14.0);
+  }
+  // Blue glow particles painting the soft halo around the ring.
+  const GLOW_PER_SEC = 80 * (0.5 + 0.5 * hpPct);
+  const expectedGlow = GLOW_PER_SEC * dt;
+  let toGlow = Math.floor(expectedGlow);
+  if (Math.random() < (expectedGlow - toGlow)) toGlow += 1;
+  const BLUE_HUES = [0x44aaff, 0x66bbff, 0x88ccff, 0xaaeeff];
+  for (let g = 0; g < toGlow; g++) {
+    const ang = Math.random() * Math.PI * 2;
+    const cosA = Math.cos(ang), sinA = Math.sin(ang);
+    const r = radius * (0.92 + Math.random() * 0.16);
+    const radX = _gunRimRight.x * cosA + _gunRimUp.x * sinA;
+    const radY = _gunRimRight.y * cosA + _gunRimUp.y * sinA;
+    const radZ = _gunRimRight.z * cosA + _gunRimUp.z * sinA;
+    const tanX = -_gunRimRight.x * sinA + _gunRimUp.x * cosA;
+    const tanY = -_gunRimRight.y * sinA + _gunRimUp.y * cosA;
+    const tanZ = -_gunRimRight.z * sinA + _gunRimUp.z * cosA;
+    game.particles.push({
+      position: new THREE.Vector3(
+        shieldPos.x + radX * r,
+        shieldPos.y + radY * r,
+        shieldPos.z + radZ * r
+      ),
+      velocity: new THREE.Vector3(
+        radX * (Math.random() - 0.4) * 30 + tanX * (Math.random() - 0.5) * 90,
+        radY * (Math.random() - 0.4) * 30 + tanY * (Math.random() - 0.5) * 90,
+        radZ * (Math.random() - 0.4) * 30 + tanZ * (Math.random() - 0.5) * 90
+      ),
+      life: 0.28 + Math.random() * 0.20,
+      maxLife: 0.48,
+      color: BLUE_HUES[Math.floor(Math.random() * BLUE_HUES.length)],
+      size: 5 + Math.random() * 5,
     });
   }
 }
@@ -12371,21 +12693,20 @@ function updateShieldVisuals(dt) {
     const shieldPos = player.position.clone().add(forward.clone().multiplyScalar(80));
     player.vortexShieldMesh.position.copy(shieldPos);
     player.vortexShieldMesh.lookAt(shieldPos.clone().add(forward));
-    // Energy shader: advance time + drift hue offset slowly. The shader
-    // does its own rainbow cycle internally; uHueShift just biases the
-    // overall hue so each player's shield isn't synchronized.
-    if (player.vortexShieldMesh.material && player.vortexShieldMesh.material.uniforms) {
-      player.vortexShieldMesh.material.uniforms.time.value = game.time;
-      player.vortexShieldMesh.material.uniforms.uBaseAlpha.value = 0.85 + Math.sin(game.time * 4) * 0.10;
-    }
-    // Outer ring
+    // (v6.7) Disc + torus are now invisible. The shield is rendered purely
+    // as a crackling ring of lightning around the rim via
+    // _emitVortexShieldArcs. The meshes still exist (for position tracking
+    // + future re-enable) but neither participates in rendering.
+    player.vortexShieldMesh.visible = false;
     if (player.vortexShieldRing) {
       player.vortexShieldRing.position.copy(shieldPos);
-      player.vortexShieldRing.lookAt(shieldPos.clone().add(forward));
-      const ringHue = (game.time * 0.3 + 0.15) % 1;
-      player.vortexShieldRing.material.color.setHSL(ringHue, 0.4, 0.78);
-      player.vortexShieldRing.material.opacity = 0.30 + Math.sin(game.time * 6) * 0.10;
+      player.vortexShieldRing.visible = false;
     }
+    // Lightning ring at the disc circumference (radius 120 in the disc's
+    // local space). Same disc-plane construction as the Pyro flame ring
+    // so both shields read as their respective elemental ring of
+    // particles/arcs without any visible mesh.
+    _emitVortexShieldArcs(shieldPos, 120, forward, dt);
   } else {
     if (player.vortexShieldMesh) {
       scene.remove(player.vortexShieldMesh);
@@ -12428,31 +12749,39 @@ function updateShieldVisuals(dt) {
       const geo = new THREE.ExtrudeGeometry(shape, { depth: 12, bevelEnabled: false });
       geo.translate(0, 0, -6);
       const mat = new THREE.MeshBasicMaterial({
-        color: 0xff6644, transparent: true, opacity: 0.30,
+        color: 0xff8a55, transparent: true, opacity: 0.70,
         side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
+        depthWrite: false,
         map: getScanlineTexture(),
       });
       player.gunShieldMesh = new THREE.Mesh(geo, mat);
+      player.gunShieldMesh.renderOrder = 1; // composite over wall
       scene.add(player.gunShieldMesh);
-      // Edge wireframe
+      // Edge wireframe — bright outline so the shield's silhouette is
+      // unambiguous even in busy combat backgrounds.
       const edgeGeo = new THREE.EdgesGeometry(geo);
-      const edgeMat = new THREE.LineBasicMaterial({ color: 0xff8866, transparent: true, opacity: 0.5 });
+      const edgeMat = new THREE.LineBasicMaterial({ color: 0xffcc88, transparent: true, opacity: 0.95 });
       player.gunShieldEdge = new THREE.LineSegments(edgeGeo, edgeMat);
+      player.gunShieldEdge.renderOrder = 1;
       scene.add(player.gunShieldEdge);
     }
-    // Position close to player guns (slightly forward and down)
+    // Position close to player guns (slightly forward and down).
     const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
     const shieldPos = player.position.clone().add(forward.clone().multiplyScalar(60));
     player.gunShieldMesh.position.copy(shieldPos);
     player.gunShieldMesh.lookAt(shieldPos.clone().add(forward));
-    // Opacity based on remaining HP
-    const hpPct = player.gunShieldHP / player.gunShieldMaxHP;
-    player.gunShieldMesh.material.opacity = 0.12 + hpPct * 0.18;
-    player.gunShieldMesh.material.color.setHSL(0.05 + hpPct * 0.05, 0.8, 0.5 + hpPct * 0.2);
+    // (v6.7) Shield mesh + edge wireframe are now invisible — same approach
+    // as Vortex/Pyro shields. The shield is rendered entirely as a ring of
+    // octagonal lightning arcs via _emitGunShieldArcs.
+    player.gunShieldMesh.visible = false;
     if (player.gunShieldEdge) {
       player.gunShieldEdge.position.copy(shieldPos);
       player.gunShieldEdge.lookAt(shieldPos.clone().add(forward));
-      player.gunShieldEdge.material.opacity = 0.3 + hpPct * 0.4;
+      player.gunShieldEdge.visible = false;
+    }
+    const hpPct = player.gunShieldHP / player.gunShieldMaxHP;
+    if (typeof _emitGunShieldArcs === 'function') {
+      _emitGunShieldArcs(shieldPos, 100, forward, dt, hpPct);
     }
   } else {
     if (player.gunShieldMesh) {
@@ -12523,22 +12852,17 @@ function updateShieldVisuals(dt) {
       player.thermalShieldMesh.material.uniforms.uBaseAlpha.value =
         (0.55 + hpPct * 0.40) + Math.sin(game.time * 8) * 0.06;
     }
-    // Outer ring (matches disc scale). Hue cycle stays here (the shader
-    // owns the disc color, but the torus ring is still a MeshBasicMaterial
-    // and gets its hue rotated locally to give the rim a warm flicker).
+    // (v6.7) Disc + torus are now invisible. The shield is rendered purely
+    // as the dense ring of fire particles emitted by the helper below. The
+    // meshes are kept for future re-enable / scale tracking but skip render.
+    player.thermalShieldMesh.visible = false;
     if (player.thermalShieldRing) {
       player.thermalShieldRing.position.copy(shieldPos);
-      player.thermalShieldRing.lookAt(shieldPos.clone().add(forward));
-      player.thermalShieldRing.scale.set(midR, midR, midR);
-      const ringHue = 0.06 + (Math.sin(game.time * 2.2) * 0.5 + 0.5) * 0.07;
-      player.thermalShieldRing.material.color.setHSL(ringHue, 0.75, 0.65);
-      player.thermalShieldRing.material.opacity = (0.14 + hpPct * 0.12) + Math.sin(game.time * 10) * 0.04;
+      player.thermalShieldRing.visible = false;
     }
-    // Flames around the rim. Each frame, push a handful of fire particles at
-    // random angles around the disc's circumference so the shield reads as a
-    // wall of flame instead of a flat colored disc. Particles ride the
-    // existing camera-facing sprite system in game.particles, so cost is low
-    // and the look matches every other fire effect in the game.
+    // Ring of fire: dense flame particles around the rim each frame. With
+    // the disc invisible, this is the entire visible shield. _emitFlame
+    // rate is bumped (130/sec) so the ring stays continuously populated.
     _emitThermalShieldFlames(shieldPos, midR, forward, dt);
   } else {
     if (player.thermalShieldMesh) {
@@ -12764,11 +13088,50 @@ function updateAbilities(dt) {
     const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
     const coreName = player.loadout ? player.loadout.core.name : '';
 
-    // VORTEX Laser Core: continuous laser beam (1500 DPS over 3s)
+    // VORTEX Laser Core: continuous heavy laser. Two thick beams emerge
+    // from the painted barrel tips and join into a single focused beam at
+    // the target — spawnTracer already splits player tracers into two
+    // converging streaks, so we multi-call it to stack thickness on top
+    // of itself for a heavier core. Multiple parallel offsets give a
+    // properly thick beam ; periodic lightning arcs along the beam path
+    // sell the "high-power electric laser" feel.
     if (coreName === 'Laser Core') {
       const range = 3000;
       const end = player.position.clone().add(forward.clone().multiplyScalar(range));
-      spawnTracer(player.position, end, 0xff0000);
+      // Stack 5 tracer calls — one centered (red core), four offset
+      // (orange/white halo), so the resulting cylinder pile reads as a
+      // really thick beam. spawnTracer already converts each call into
+      // two muzzle-tip-anchored streaks that converge on `end`, so the
+      // visual effect is two thick beams joining at the target.
+      spawnTracer(player.position, end, 0xff2200);
+      spawnTracer(player.position, end, 0xff5520);
+      spawnTracer(player.position, end, 0xffaa44);
+      spawnTracer(player.position, end, 0xffeeaa);
+      // White-hot center stack to push the beam into HDR territory.
+      spawnTracer(player.position, end, 0xffffff);
+      // Electric crackle along the beam length: every 0.04 s, throw a
+      // short lightning arc near a random point along the beam for a
+      // continuous pulsing electrical feel.
+      if (typeof spawnLightningBolt === 'function') {
+        if (!player._laserCoreArcTimer) player._laserCoreArcTimer = 0;
+        player._laserCoreArcTimer -= dt;
+        if (player._laserCoreArcTimer <= 0) {
+          // Spawn 2 arcs per pulse for density.
+          for (let a = 0; a < 2; a++) {
+            const t = 0.20 + Math.random() * 0.70;
+            const along = player.position.clone().add(forward.clone().multiplyScalar(range * t));
+            const jit = new THREE.Vector3(
+              (Math.random() - 0.5) * 80,
+              (Math.random() - 0.5) * 80,
+              (Math.random() - 0.5) * 80
+            );
+            const tip = along.clone().add(jit);
+            spawnLightningBolt(along, tip, 0xffeeaa, 0.10, 1, 1.6);
+          }
+          player._laserCoreArcTimer = 0.03 + Math.random() * 0.04;
+        }
+      }
+      // Damage check (unchanged)
       for (const bot of game.entities) {
         if (!bot.alive || bot.team === player.team) continue;
         const toBot = new THREE.Vector3().subVectors(bot.position, player.position);
@@ -13000,6 +13363,46 @@ function updateAbilities(dt) {
           eff.arcTimer = 0.06 + Math.random() * 0.10; // ~6-12 arcs/sec across the trio
         }
       }
+      // ---- Per-orb effects: pulse + sparkle emission ----
+      // Each orb breathes (core + glow scale modulation) and emits a
+      // continuous trail of sparkle particles around it, so the orb reads
+      // as a live energy mine instead of a static red marker. Sparkle
+      // density is light enough to not overwhelm the inter-orb arcs.
+      const phase = (eff.pulsePhase || 0) + game.time * 4.0;
+      const corePulse = 1 + Math.sin(phase) * 0.18 + (Math.random() - 0.5) * 0.10;
+      if (eff.mesh) eff.mesh.scale.setScalar(corePulse);
+      if (eff.glow) {
+        const haloPulse = 1 + Math.sin(phase * 0.7 + 1.1) * 0.22 + (Math.random() - 0.5) * 0.12;
+        eff.glow.scale.setScalar(haloPulse);
+        eff.glow.material.opacity = 0.30 + Math.sin(phase * 0.9) * 0.10;
+      }
+      // Sparkle particles fizzing around the orb. ~30/sec target.
+      eff.sparkTimer = (eff.sparkTimer || 0) - dt;
+      if (eff.sparkTimer <= 0) {
+        const spawnN = 1 + (Math.random() < 0.4 ? 1 : 0);
+        for (let s = 0; s < spawnN; s++) {
+          const u = Math.random(), v = Math.random();
+          const theta = 2 * Math.PI * u;
+          const phi = Math.acos(2 * v - 1);
+          const sx = eff.position.x + Math.sin(phi) * Math.cos(theta) * 22;
+          const sy = eff.position.y + Math.sin(phi) * Math.sin(theta) * 22;
+          const sz = eff.position.z + Math.cos(phi) * 22;
+          // Drift inward / outward with small random velocity ; sparks
+          // orbit briefly around the orb instead of flying off.
+          const vx = (Math.random() - 0.5) * 60;
+          const vy = (Math.random() - 0.5) * 60;
+          const vz = (Math.random() - 0.5) * 60;
+          game.particles.push({
+            position: new THREE.Vector3(sx, sy, sz),
+            velocity: new THREE.Vector3(vx, vy, vz),
+            life: 0.20 + Math.random() * 0.15,
+            maxLife: 0.35,
+            color: Math.random() < 0.4 ? 0xffffff : 0x66ddff,
+            size: 1.4 + Math.random() * 1.2,
+          });
+        }
+        eff.sparkTimer = 0.03 + Math.random() * 0.02;
+      }
     }
 
     else if (eff.type === 'incendiary_gas') {
@@ -13214,6 +13617,44 @@ function updateAbilities(dt) {
         if (eff.rootTarget.velocity) eff.rootTarget.velocity.set(0, 0, 0);
         if (eff.rootTimer <= 0) eff.timer = 0; // done
       }
+      // ---- Visible effects so the trap reads as an active ensnare ----
+      // The bare octahedron looks like a static debug widget ; layer in:
+      //   * spinning rotation per frame so the geometry visibly tumbles,
+      //   * a pulsing additive glow halo around it,
+      //   * tendril lightning arcs reaching outward (and toward the rooted
+      //     target if one exists, "tether" reading).
+      if (eff.mesh) {
+        eff.mesh.rotation.x += dt * 1.4;
+        eff.mesh.rotation.y += dt * 2.1;
+        const ph = (eff.pulsePhase || 0) + game.time * 5.0;
+        if (eff.glow) {
+          const haloPulse = 1 + Math.sin(ph * 0.7) * 0.25 + (Math.random() - 0.5) * 0.10;
+          eff.glow.scale.setScalar(haloPulse);
+          eff.glow.material.opacity = 0.30 + Math.sin(ph * 0.9) * 0.12;
+        }
+      }
+      // Periodic crackle: short lightning tendrils outward in random
+      // directions ; if a target is rooted, also arc toward them so the
+      // tether is visually obvious.
+      eff.arcTimer = (eff.arcTimer || 0) - dt;
+      if (eff.arcTimer <= 0 && typeof spawnLightningBolt === 'function') {
+        // Random outward tendril
+        const dir = new THREE.Vector3(
+          (Math.random() - 0.5),
+          (Math.random() - 0.5),
+          (Math.random() - 0.5)
+        );
+        if (dir.lengthSq() < 0.001) dir.set(1, 0, 0);
+        dir.normalize();
+        const reach = 80 + Math.random() * 100;
+        const arcEnd = eff.position.clone().add(dir.multiplyScalar(reach));
+        spawnLightningBolt(eff.position, arcEnd, 0x66bbff, 0.08, 1, 1.0);
+        // Tether arc to the rooted target, if any (longer, brighter, branched)
+        if (eff.triggered && eff.rootTarget && eff.rootTarget.alive) {
+          spawnLightningBolt(eff.position, eff.rootTarget.position, 0xaaeeff, 0.10, 2, 1.4);
+        }
+        eff.arcTimer = 0.05 + Math.random() * 0.05;
+      }
     }
 
     // Particle Wall: animate rainbow membrane and update opacity based on HP
@@ -13276,6 +13717,7 @@ function updateAbilities(dt) {
     if (eff.timer <= 0) {
       if (eff.mesh && eff.mesh.parent) { scene.remove(eff.mesh); eff.mesh.geometry.dispose(); eff.mesh.material.dispose(); }
       if (eff.coreMesh && eff.coreMesh.parent) { scene.remove(eff.coreMesh); eff.coreMesh.geometry.dispose(); eff.coreMesh.material.dispose(); }
+      if (eff.glow && eff.glow.parent) { scene.remove(eff.glow); eff.glow.geometry.dispose(); eff.glow.material.dispose(); }
       if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh);
       // Clean up firewall line meshes / sprites
       if (eff.meshes) {
