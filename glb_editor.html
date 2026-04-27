@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GLB Surface Editor</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #1a1a1a; color: #e0e0e0; }
+  #app { display: flex; height: 100vh; width: 100vw; }
+  #viewer { flex: 1; position: relative; background: #2a2a2a; }
+  #viewer canvas { display: block; }
+  #drop-hint { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #666; font-size: 18px; pointer-events: none; text-align: center; }
+  #drop-hint.hidden { display: none; }
+  #panel { width: 320px; background: #222; padding: 16px; overflow-y: auto; border-left: 1px solid #333; display: flex; flex-direction: column; gap: 14px; }
+  h1 { font-size: 16px; font-weight: 600; color: #fff; }
+  h2 { font-size: 13px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+  .section { display: flex; flex-direction: column; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid #333; }
+  .section:last-child { border-bottom: none; }
+  button { padding: 8px 12px; background: #3a3a3a; color: #e0e0e0; border: 1px solid #4a4a4a; border-radius: 4px; cursor: pointer; font-size: 13px; transition: background 0.15s; }
+  button:hover { background: #4a4a4a; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.primary { background: #2563eb; border-color: #1d4ed8; }
+  button.primary:hover { background: #1d4ed8; }
+  input[type="file"] { display: none; }
+  input[type="color"] { width: 100%; height: 40px; border: 1px solid #4a4a4a; border-radius: 4px; cursor: pointer; background: #3a3a3a; }
+  input[type="range"] { width: 100%; }
+  label { font-size: 12px; color: #aaa; display: flex; flex-direction: column; gap: 4px; }
+  .row { display: flex; gap: 8px; align-items: center; }
+  .row label { flex: 1; }
+  #selected-info { font-size: 12px; color: #888; padding: 8px; background: #2a2a2a; border-radius: 4px; min-height: 36px; word-break: break-word; }
+  #selected-info.active { color: #4ade80; }
+  .mesh-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+  .mesh-item { padding: 6px 8px; background: #2a2a2a; border-radius: 4px; cursor: pointer; font-size: 12px; border: 1px solid transparent; }
+  .mesh-item:hover { background: #333; }
+  .mesh-item.selected { border-color: #2563eb; background: #1e3a8a33; }
+  .hint { font-size: 11px; color: #666; line-height: 1.4; }
+  #status { position: absolute; bottom: 12px; left: 12px; padding: 6px 12px; background: rgba(0,0,0,0.6); border-radius: 4px; font-size: 12px; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  #status.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="viewer">
+    <div id="drop-hint">Drop a .glb file here, or click "Open GLB"</div>
+    <div id="status"></div>
+  </div>
+  <div id="panel">
+    <h1>GLB Surface Editor</h1>
+
+    <div class="section">
+      <h2>File</h2>
+      <button id="btn-open" class="primary">Open GLB</button>
+      <input type="file" id="file-input" accept=".glb,.gltf">
+      <button id="btn-save" disabled>Save GLB</button>
+    </div>
+
+    <div class="section">
+      <h2>Selection</h2>
+      <div id="selected-info">No surface selected</div>
+      <p class="hint">Click on a surface in the 3D view, or pick from the list below.</p>
+      <div class="mesh-list" id="mesh-list"></div>
+    </div>
+
+    <div class="section">
+      <h2>Color</h2>
+      <input type="color" id="color-picker" value="#ffffff">
+      <label>Metalness <span id="metal-val">0.0</span>
+        <input type="range" id="metal" min="0" max="1" step="0.01" value="0">
+      </label>
+      <label>Roughness <span id="rough-val">0.5</span>
+        <input type="range" id="rough" min="0" max="1" step="0.01" value="0.5">
+      </label>
+    </div>
+
+    <div class="section">
+      <h2>Texture</h2>
+      <button id="btn-texture">Apply Texture Image</button>
+      <input type="file" id="texture-input" accept="image/*">
+      <button id="btn-clear-texture">Remove Texture</button>
+      <label>Repeat U <span id="repu-val">1</span>
+        <input type="range" id="repu" min="0.1" max="10" step="0.1" value="1">
+      </label>
+      <label>Repeat V <span id="repv-val">1</span>
+        <input type="range" id="repv" min="0.1" max="10" step="0.1" value="1">
+      </label>
+    </div>
+
+    <div class="section">
+      <h2>View</h2>
+      <button id="btn-reset-view">Reset Camera</button>
+      <label>Background
+        <input type="color" id="bg-color" value="#2a2a2a">
+      </label>
+    </div>
+
+    <div class="section">
+      <p class="hint">Tip: Left-drag to orbit, right-drag to pan, scroll to zoom. Click a surface to select it.</p>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+
+const viewer = document.getElementById('viewer');
+const dropHint = document.getElementById('drop-hint');
+const statusEl = document.getElementById('status');
+const meshListEl = document.getElementById('mesh-list');
+const selectedInfo = document.getElementById('selected-info');
+
+let scene, camera, renderer, controls;
+let loadedRoot = null;
+let selectedMesh = null;
+const meshes = [];
+
+function showStatus(msg, ms = 2000) {
+  statusEl.textContent = msg;
+  statusEl.classList.add('show');
+  clearTimeout(showStatus._t);
+  showStatus._t = setTimeout(() => statusEl.classList.remove('show'), ms);
+}
+
+function init() {
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x2a2a2a);
+
+  camera = new THREE.PerspectiveCamera(45, viewer.clientWidth / viewer.clientHeight, 0.01, 1000);
+  camera.position.set(3, 2, 3);
+
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(viewer.clientWidth, viewer.clientHeight);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  viewer.appendChild(renderer.domElement);
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+
+  const hemi = new THREE.HemisphereLight(0xffffff, 0x222244, 0.6);
+  scene.add(hemi);
+  const dir = new THREE.DirectionalLight(0xffffff, 1.0);
+  dir.position.set(5, 10, 7);
+  scene.add(dir);
+  const dir2 = new THREE.DirectionalLight(0xffffff, 0.4);
+  dir2.position.set(-5, 3, -5);
+  scene.add(dir2);
+
+  const grid = new THREE.GridHelper(10, 20, 0x444444, 0x333333);
+  scene.add(grid);
+
+  window.addEventListener('resize', onResize);
+  renderer.domElement.addEventListener('pointerdown', onPointerDown);
+
+  animate();
+}
+
+function onResize() {
+  camera.aspect = viewer.clientWidth / viewer.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(viewer.clientWidth, viewer.clientHeight);
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+let dragStart = null;
+
+function onPointerDown(e) {
+  if (e.button !== 0) return;
+  dragStart = { x: e.clientX, y: e.clientY };
+  const onUp = (ev) => {
+    renderer.domElement.removeEventListener('pointerup', onUp);
+    if (!dragStart) return;
+    const dx = ev.clientX - dragStart.x;
+    const dy = ev.clientY - dragStart.y;
+    if (Math.sqrt(dx * dx + dy * dy) > 4) return;
+    pickAt(ev);
+  };
+  renderer.domElement.addEventListener('pointerup', onUp);
+}
+
+function pickAt(e) {
+  const rect = renderer.domElement.getBoundingClientRect();
+  pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
+  const hits = raycaster.intersectObjects(meshes, false);
+  if (hits.length > 0) selectMesh(hits[0].object);
+}
+
+function clearScene() {
+  if (loadedRoot) {
+    scene.remove(loadedRoot);
+    loadedRoot.traverse((o) => {
+      if (o.isMesh) {
+        if (o.material) {
+          if (o.material.map) o.material.map.dispose();
+          o.material.dispose();
+        }
+        if (o.geometry) o.geometry.dispose();
+      }
+    });
+    loadedRoot = null;
+  }
+  meshes.length = 0;
+  meshListEl.innerHTML = '';
+  selectedMesh = null;
+  updateSelectedInfo();
+}
+
+function loadGLB(arrayBuffer, name) {
+  clearScene();
+  const loader = new GLTFLoader();
+  loader.parse(arrayBuffer, '', (gltf) => {
+    loadedRoot = gltf.scene;
+    scene.add(loadedRoot);
+
+    loadedRoot.traverse((o) => {
+      if (o.isMesh) {
+        // Ensure each mesh has its own material instance so edits don't bleed
+        if (Array.isArray(o.material)) {
+          o.material = o.material.map((m) => convertMaterial(m));
+        } else {
+          o.material = convertMaterial(o.material);
+        }
+        meshes.push(o);
+      }
+    });
+
+    fitCameraToObject(loadedRoot);
+    rebuildMeshList();
+    dropHint.classList.add('hidden');
+    document.getElementById('btn-save').disabled = false;
+    showStatus(`Loaded: ${name} (${meshes.length} surface${meshes.length === 1 ? '' : 's'})`);
+  }, (err) => {
+    console.error(err);
+    showStatus('Failed to load GLB: ' + err.message, 4000);
+  });
+}
+
+function convertMaterial(src) {
+  // Use MeshStandardMaterial so PBR properties survive export
+  const m = new THREE.MeshStandardMaterial();
+  if (src) {
+    if (src.color) m.color.copy(src.color);
+    if (src.map) m.map = src.map;
+    if (src.normalMap) m.normalMap = src.normalMap;
+    if ('metalness' in src) m.metalness = src.metalness;
+    if ('roughness' in src) m.roughness = src.roughness;
+    if (src.name) m.name = src.name;
+    if ('transparent' in src) m.transparent = src.transparent;
+    if ('opacity' in src) m.opacity = src.opacity;
+    if (src.side !== undefined) m.side = src.side;
+  }
+  return m;
+}
+
+function fitCameraToObject(obj) {
+  const box = new THREE.Box3().setFromObject(obj);
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+  const maxDim = Math.max(size.x, size.y, size.z) || 1;
+  const dist = maxDim / (2 * Math.tan((Math.PI * camera.fov) / 360)) * 1.6;
+  camera.position.copy(center).add(new THREE.Vector3(dist, dist * 0.7, dist));
+  camera.near = maxDim / 100;
+  camera.far = maxDim * 100;
+  camera.updateProjectionMatrix();
+  controls.target.copy(center);
+  controls.update();
+}
+
+function rebuildMeshList() {
+  meshListEl.innerHTML = '';
+  meshes.forEach((m, i) => {
+    const div = document.createElement('div');
+    div.className = 'mesh-item';
+    div.textContent = m.name || `Mesh ${i + 1}`;
+    div.addEventListener('click', () => selectMesh(m));
+    div.dataset.idx = i;
+    meshListEl.appendChild(div);
+  });
+}
+
+function selectMesh(mesh) {
+  selectedMesh = mesh;
+  updateSelectedInfo();
+  // Sync UI controls to material
+  const mat = Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
+  if (mat) {
+    document.getElementById('color-picker').value = '#' + mat.color.getHexString();
+    document.getElementById('metal').value = mat.metalness ?? 0;
+    document.getElementById('rough').value = mat.roughness ?? 0.5;
+    document.getElementById('metal-val').textContent = (mat.metalness ?? 0).toFixed(2);
+    document.getElementById('rough-val').textContent = (mat.roughness ?? 0.5).toFixed(2);
+    if (mat.map) {
+      document.getElementById('repu').value = mat.map.repeat.x;
+      document.getElementById('repv').value = mat.map.repeat.y;
+      document.getElementById('repu-val').textContent = mat.map.repeat.x.toFixed(1);
+      document.getElementById('repv-val').textContent = mat.map.repeat.y.toFixed(1);
+    }
+  }
+  // Update list highlighting
+  [...meshListEl.children].forEach((el) => {
+    el.classList.toggle('selected', meshes[+el.dataset.idx] === mesh);
+  });
+}
+
+function updateSelectedInfo() {
+  if (selectedMesh) {
+    selectedInfo.textContent = selectedMesh.name || '(unnamed mesh)';
+    selectedInfo.classList.add('active');
+  } else {
+    selectedInfo.textContent = 'No surface selected';
+    selectedInfo.classList.remove('active');
+  }
+}
+
+function getActiveMaterial() {
+  if (!selectedMesh) return null;
+  return Array.isArray(selectedMesh.material) ? selectedMesh.material[0] : selectedMesh.material;
+}
+
+// File input
+document.getElementById('btn-open').addEventListener('click', () => {
+  document.getElementById('file-input').click();
+});
+document.getElementById('file-input').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => loadGLB(ev.target.result, file.name);
+  reader.readAsArrayBuffer(file);
+});
+
+// Drag & drop
+viewer.addEventListener('dragover', (e) => { e.preventDefault(); });
+viewer.addEventListener('drop', (e) => {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => loadGLB(ev.target.result, file.name);
+  reader.readAsArrayBuffer(file);
+});
+
+// Color
+document.getElementById('color-picker').addEventListener('input', (e) => {
+  const mat = getActiveMaterial();
+  if (mat) mat.color.set(e.target.value);
+});
+
+// Metalness / Roughness
+document.getElementById('metal').addEventListener('input', (e) => {
+  const v = parseFloat(e.target.value);
+  document.getElementById('metal-val').textContent = v.toFixed(2);
+  const mat = getActiveMaterial();
+  if (mat) mat.metalness = v;
+});
+document.getElementById('rough').addEventListener('input', (e) => {
+  const v = parseFloat(e.target.value);
+  document.getElementById('rough-val').textContent = v.toFixed(2);
+  const mat = getActiveMaterial();
+  if (mat) mat.roughness = v;
+});
+
+// Texture
+document.getElementById('btn-texture').addEventListener('click', () => {
+  if (!selectedMesh) { showStatus('Select a surface first'); return; }
+  document.getElementById('texture-input').click();
+});
+document.getElementById('texture-input').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  const loader = new THREE.TextureLoader();
+  loader.load(url, (tex) => {
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(
+      parseFloat(document.getElementById('repu').value),
+      parseFloat(document.getElementById('repv').value)
+    );
+    tex.needsUpdate = true;
+    const mat = getActiveMaterial();
+    if (mat) {
+      if (mat.map) mat.map.dispose();
+      mat.map = tex;
+      mat.needsUpdate = true;
+    }
+    URL.revokeObjectURL(url);
+  });
+});
+document.getElementById('btn-clear-texture').addEventListener('click', () => {
+  const mat = getActiveMaterial();
+  if (mat && mat.map) {
+    mat.map.dispose();
+    mat.map = null;
+    mat.needsUpdate = true;
+  }
+});
+
+// Texture repeat
+function updateRepeat() {
+  const mat = getActiveMaterial();
+  const u = parseFloat(document.getElementById('repu').value);
+  const v = parseFloat(document.getElementById('repv').value);
+  document.getElementById('repu-val').textContent = u.toFixed(1);
+  document.getElementById('repv-val').textContent = v.toFixed(1);
+  if (mat && mat.map) {
+    mat.map.repeat.set(u, v);
+    mat.map.needsUpdate = true;
+  }
+}
+document.getElementById('repu').addEventListener('input', updateRepeat);
+document.getElementById('repv').addEventListener('input', updateRepeat);
+
+// Reset camera
+document.getElementById('btn-reset-view').addEventListener('click', () => {
+  if (loadedRoot) fitCameraToObject(loadedRoot);
+});
+
+// Background color
+document.getElementById('bg-color').addEventListener('input', (e) => {
+  scene.background.set(e.target.value);
+});
+
+// Save GLB
+document.getElementById('btn-save').addEventListener('click', () => {
+  if (!loadedRoot) return;
+  const exporter = new GLTFExporter();
+  exporter.parse(loadedRoot, (result) => {
+    const blob = new Blob([result], { type: 'model/gltf-binary' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'edited.glb';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showStatus('Saved as edited.glb');
+  }, (err) => {
+    console.error(err);
+    showStatus('Save failed: ' + err.message, 4000);
+  }, { binary: true, embedImages: true });
+});
+
+init();
+</script>
+</body>
+</html>
