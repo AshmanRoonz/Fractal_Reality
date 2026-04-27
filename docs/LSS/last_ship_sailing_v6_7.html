@@ -8780,8 +8780,17 @@ function _makeExplosionMesh(type) {
   let geo, matOpts;
   switch (type) {
     case 'flash':
-      geo = _EXPL_SPHERE_LG;
-      matOpts = { color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending, depthWrite: false };
+      // (Descent 3 style) Camera-facing billboard quad with the ember radial-
+      // falloff texture instead of a sphere. A 3D sphere always reads as a
+      // hard ball over whatever you hit (especially noticeable when a
+      // projectile destroys at a ship's center). A camera-facing soft disc
+      // reads as a real burst of light from any viewing angle.
+      geo = _EXPL_PLANE;
+      matOpts = {
+        color: 0xffffff, transparent: true, opacity: 1.0,
+        blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
+        map: _emberFalloffTexture,
+      };
       break;
     case 'flare':
       geo = _EXPL_PLANE;
@@ -8796,12 +8805,23 @@ function _makeExplosionMesh(type) {
       };
       break;
     case 'fire':
-      geo = _EXPL_SPHERE_LG;
-      matOpts = { color: 0xff6600, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending };
+      // Same Descent 3 treatment: camera-facing billboard with ember
+      // texture, color tinted orange. Replaces the old _EXPL_SPHERE_LG
+      // 3D ball that was clearly geometric on top of every ship hit.
+      geo = _EXPL_PLANE;
+      matOpts = {
+        color: 0xff6600, transparent: true, opacity: 0.85,
+        blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
+        map: _emberFalloffTexture,
+      };
       break;
     case 'core':
-      geo = _EXPL_SPHERE_SM;
-      matOpts = { color: 0xff2200, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending };
+      geo = _EXPL_PLANE;
+      matOpts = {
+        color: 0xff2200, transparent: true, opacity: 0.6,
+        blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
+        map: _emberFalloffTexture,
+      };
       break;
     case 'flatShock':
       geo = _EXPL_RING_FLAT;
@@ -8926,16 +8946,16 @@ function spawnExplosion(pos, size) {
     }
   }
 
-  // --- Phase 1: White-hot flash core (instant, tiny, bright) ---
-  // Pooled unit-sphere; baseScale carries the original size * 0.55 factor into
-  // updateEffects' scale math. Material is reused across calls; reset opacity +
-  // color on acquire because the previous user may have faded it to black.
+  // --- Phase 1: White-hot flash core (camera-facing billboard) ---
+  // Was a 3D sphere; now a soft ember disc that always faces the camera so
+  // it never reads as a hard "ball" overlapping a ship.
   const flashMesh = _acquireExplosionMesh('flash');
   flashMesh.position.copy(pos);
   flashMesh.scale.setScalar(size * 0.55);
+  flashMesh.lookAt(camera.position);
   flashMesh.material.color.setHex(0xffffff);
   flashMesh.material.opacity = 1.0;
-  game.effects.push({ mesh: flashMesh, lifetime: 0.12, age: 0, type: 'explosionFlash', pooled: true, baseScale: size * 0.55 });
+  game.effects.push({ mesh: flashMesh, lifetime: 0.12, age: 0, type: 'explosionFlash', pooled: true, billboard: true, baseScale: size * 0.55 });
 
   // --- Phase 1b: Cinematic billboarded "lens flare" disc that faces the camera ---
   const flareMesh = _acquireExplosionMesh('flare');
@@ -8946,56 +8966,34 @@ function spawnExplosion(pos, size) {
   flareMesh.material.opacity = 0.95;
   game.effects.push({ mesh: flareMesh, lifetime: 0.22, age: 0, type: 'explosionFlash', pooled: true, billboard: true, baseScale: size * 1.6 });
 
-  // --- Phase 2: Expanding fireball (orange-red, multi-layer) ---
+  // --- Phase 2: Expanding fireball (orange-red, multi-layer, camera-facing) ---
   const fireMesh = _acquireExplosionMesh('fire');
   fireMesh.position.copy(pos);
   fireMesh.scale.setScalar(size);
+  fireMesh.lookAt(camera.position);
   fireMesh.material.color.setHex(0xff6600);
   fireMesh.material.opacity = 0.85;
-  game.effects.push({ mesh: fireMesh, lifetime: 0.5, age: 0, type: 'explosionFire', pooled: true, maxSize: size * 2.5, baseScale: size });
+  game.effects.push({ mesh: fireMesh, lifetime: 0.5, age: 0, type: 'explosionFire', pooled: true, billboard: true, maxSize: size * 2.5, baseScale: size });
 
-  // Inner darker core (red, slightly delayed expansion)
+  // Inner darker core (red, slightly delayed expansion, also billboarded).
   const coreMesh = _acquireExplosionMesh('core');
   coreMesh.position.copy(pos);
   coreMesh.scale.setScalar(size * 0.7);
+  coreMesh.lookAt(camera.position);
   coreMesh.material.color.setHex(0xff2200);
   coreMesh.material.opacity = 0.6;
-  game.effects.push({ mesh: coreMesh, lifetime: 0.35, age: 0, type: 'explosionFire', pooled: true, maxSize: size * 1.8, baseScale: size * 0.7 });
+  game.effects.push({ mesh: coreMesh, lifetime: 0.35, age: 0, type: 'explosionFire', pooled: true, billboard: true, maxSize: size * 1.8, baseScale: size * 0.7 });
 
-  // --- Phase 3: Shockwave rings (volumetric torus + billboarded flat ring) ---
-  if (size > 12) {
-    // Camera-facing billboarded flat shockwave (the "cinematic" disc you can always read).
-    // Unit ring is pre-built at inner=0.45 / outer=0.55; scaling by size keeps the
-    // same aspect as the old size*0.45 / size*0.55 call.
-    const flatMesh = _acquireExplosionMesh('flatShock');
-    flatMesh.position.copy(pos);
-    flatMesh.scale.setScalar(size);
-    flatMesh.lookAt(camera.position);
-    flatMesh.material.color.setHex(0xffd080);
-    flatMesh.material.opacity = 0.95;
-    game.effects.push({ mesh: flatMesh, lifetime: 0.55, age: 0, type: 'shockwave', pooled: true, maxSize: size * 6, billboard: true, baseScale: size });
-
-    // Volumetric torus shockwave for depth (random orientation). Unit torus is
-    // major=0.5 / minor=0.10, so scaling by size recovers size*0.5 / size*0.10.
-    const ringMesh = _acquireExplosionMesh('ringShock');
-    ringMesh.position.copy(pos);
-    ringMesh.scale.setScalar(size);
-    ringMesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
-    ringMesh.material.color.setHex(0xffaa44);
-    ringMesh.material.opacity = 0.8;
-    game.effects.push({ mesh: ringMesh, lifetime: 0.45, age: 0, type: 'shockwave', pooled: true, maxSize: size * 5, baseScale: size });
-
-    // Second perpendicular ring for big explosions
-    if (size > 30) {
-      const ring2Mesh = _acquireExplosionMesh('ring2Shock');
-      ring2Mesh.position.copy(pos);
-      ring2Mesh.scale.setScalar(size);
-      ring2Mesh.rotation.set(Math.random() * Math.PI + 1.5, Math.random() * Math.PI, 0);
-      ring2Mesh.material.color.setHex(0xff8833);
-      ring2Mesh.material.opacity = 0.6;
-      game.effects.push({ mesh: ring2Mesh, lifetime: 0.55, age: 0, type: 'shockwave', pooled: true, maxSize: size * 6, baseScale: size });
-    }
-  }
+  // --- Phase 3: (removed) Shockwave torus rings ---
+  // The flat camera-facing torus + volumetric ringShock + secondary
+  // perpendicular ring used to fire on every explosion with size > 12.
+  // Removed in favor of the billboard quad phases (flash, flare, fire,
+  // core) plus the volumetric shader smoke; those carry the impact
+  // without 2D ring geometry. Tracker, Pyro, and Puncture projectile
+  // hits no longer leak rings into the scene. The pool slots
+  // (flatShock/ringShock/ring2Shock) stay defined so any saved state /
+  // mods that referenced them won't crash, but spawnExplosion never
+  // acquires them.
 
   // --- Phase 4: Volumetric shader smoke (churning dark cloud, longer life) ---
   // Uses the shared _SMOKE_GEO sphere prototype so we don't allocate fresh
@@ -10543,6 +10541,10 @@ function updateEffects(dt) {
       const b = 0;
       e.mesh.material.color.setRGB(r, g, b);
       e.mesh.material.opacity = 0.85 * (1 - t * t);
+      // Re-face camera each frame so the billboard quad always reads as a
+      // 2D disc, never as a thin sliver from edge-on. Same pattern as the
+      // shockwave / flash phases above.
+      if (e.billboard) e.mesh.lookAt(camera.position);
     }
     // --- Shockwave ring: rapid radial expansion ---
     else if (e.type === 'shockwave') {
