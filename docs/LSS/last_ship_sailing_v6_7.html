@@ -5128,31 +5128,29 @@ function renderPostFX() {
 }
 
 // Cartoon-style lighting (bright, high-contrast, minimal shadow).
-// Boosted across the board so ships catch more light from outside and
-// stay readable against the dark cosmic walls. Walls use their own
-// self-lit ShaderMaterial and are NOT affected by these lights, so the
-// boost only makes the ships (MeshStandardMaterial) brighter.
-const ambientLight = new THREE.AmbientLight(0x445577, 1.4);
+// Boosted further so ships catch even more light from outside. Walls
+// use a self-lit ShaderMaterial and are NOT affected by these scene
+// lights, so this brightens only the ships (MeshStandardMaterial).
+const ambientLight = new THREE.AmbientLight(0x445577, 3.9);
 scene.add(ambientLight);
-const dirLight = new THREE.DirectionalLight(0xffeedd, 1.9);
+const dirLight = new THREE.DirectionalLight(0xffeedd, 5.0);
 dirLight.position.set(1000, 3000, 1500);
 scene.add(dirLight);
 // Second key light from a near-opposite direction so ships have light
-// on BOTH sides instead of one shadowed half. Pure white-ish, strong
-// enough to lift the back-side shadow without flattening the silhouette.
-const dirLight2 = new THREE.DirectionalLight(0xb0c8e0, 1.1);
+// on BOTH sides instead of one shadowed half.
+const dirLight2 = new THREE.DirectionalLight(0xb0c8e0, 3.1);
 dirLight2.position.set(-1500, 2000, -1200);
 scene.add(dirLight2);
 // Cool under-fill stays for ground-up bounce-light feel.
-const dirLight3 = new THREE.DirectionalLight(0x8888ff, 0.65);
+const dirLight3 = new THREE.DirectionalLight(0x8888ff, 1.8);
 dirLight3.position.set(-500, -1000, -500);
 scene.add(dirLight3);
-const pointLight = new THREE.PointLight(0x6699ff, 0.9, 12000);
+const pointLight = new THREE.PointLight(0x6699ff, 2.5, 12000);
 pointLight.position.set(0, 500, 0);
 scene.add(pointLight);
 
 // Hemisphere light for cartoon-style ambient (sky/ground color split)
-const hemiLight = new THREE.HemisphereLight(0x6688cc, 0x224466, 1.1);
+const hemiLight = new THREE.HemisphereLight(0x6688cc, 0x224466, 3.1);
 scene.add(hemiLight);
 
 // ---- STARFIELD ----
