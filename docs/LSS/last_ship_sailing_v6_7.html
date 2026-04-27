@@ -2840,6 +2840,7 @@ function spawnTripWireOrb(pos, owner, team, ownerPeerId, netId, broadcast, group
   const mineMat = new THREE.MeshBasicMaterial({ color: 0xff4444 });
   const mineMesh = new THREE.Mesh(mineGeo, mineMat);
   mineMesh.position.copy(pos);
+  mineMesh.renderOrder = 1; // draw after the wall (see gas cloud comment)
   scene.add(mineMesh);
   game.worldEffects[game.worldEffects.length - 1].mesh = mineMesh;
   if (broadcast && net.active && net.sendEvent) {
@@ -3164,16 +3165,24 @@ function spawnIncendiaryGas(pos, owner, team, ownerPeerId, netId, broadcast) {
   const gasMesh = new THREE.Mesh(gasGeo, gasMat);
   gasMesh.position.copy(pos);
   gasMesh.scale.setScalar(350);
-  // Disable frustum culling — the cloud's silhouette is dense enough at the
-  // rim that any clip-off causes a noticeable pop ; the cost of always
-  // rendering a 350-radius sphere is negligible.
   gasMesh.frustumCulled = false;
+  // (v6.7) renderOrder=1 forces the cloud to draw AFTER the wall. The wall
+  // material is transparent + depthWrite:true, and its bounding-sphere
+  // center sits at room-origin which makes Three.js sort it as "closer"
+  // than offset transparent effects ; without renderOrder the wall
+  // renders second and overwrites the cloud's color, making the cloud
+  // disappear behind opaque wall sections. With renderOrder=1 the wall
+  // draws first, then the cloud's depth test correctly composites it on
+  // top where it's geometrically in front, and the wall correctly
+  // occludes it where it's behind (cross-room visibility).
+  gasMesh.renderOrder = 1;
   scene.add(gasMesh);
   const coreGeo = new THREE.SphereGeometry(1, 8, 6);
   const coreMat = new THREE.MeshBasicMaterial({ color: 0xc8e870, transparent: true, opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false });
   const coreMesh = new THREE.Mesh(coreGeo, coreMat);
   coreMesh.position.copy(pos);
   coreMesh.scale.setScalar(200);
+  coreMesh.renderOrder = 1;
   scene.add(coreMesh);
   const effRef = game.worldEffects[game.worldEffects.length - 1];
   effRef.mesh = gasMesh;
@@ -3241,6 +3250,7 @@ function spawnTetherTrap(pos, owner, team, ownerPeerId, netId, broadcast) {
   const tetherMat = new THREE.MeshBasicMaterial({ color: 0x44aaff, transparent: true, opacity: 0.7 });
   const tetherMesh = new THREE.Mesh(tetherGeo, tetherMat);
   tetherMesh.position.copy(pos);
+  tetherMesh.renderOrder = 1;
   scene.add(tetherMesh);
   game.worldEffects[game.worldEffects.length - 1].mesh = tetherMesh;
   if (broadcast && net.active && net.sendEvent) {
@@ -3293,6 +3303,7 @@ function spawnFirewallVisual(pos, dir, length, team, ownerPeerId, netId) {
         layer,
       };
       mat.color.setHex(layer === 2 ? 0xffeecc : layer === 1 ? 0xffbb66 : 0xff7733);
+      spr.renderOrder = 1; // draw after wall
       scene.add(spr);
       effData.meshes.push(spr);
     }
@@ -6567,6 +6578,7 @@ class Projectile {
     });
     this.mesh = new THREE.Mesh(geo, mat);
     this.mesh.position.copy(origin);
+    this.mesh.renderOrder = 1; // composite over wall (see gas cloud comment)
     scene.add(this.mesh);
 
     // --- Enhanced multi-segment ribbon trail (per-vertex color gradient) ---
@@ -6600,6 +6612,7 @@ class Projectile {
       linewidth: 1 // webgl caps at 1, but the gradient reads as ribbon anyway
     });
     this.trail = new THREE.Line(trailGeo, trailMat);
+    this.trail.renderOrder = 1;
     scene.add(this.trail);
     this.trailTimer = 0;
 
@@ -6608,6 +6621,7 @@ class Projectile {
     const glowMat = new THREE.MeshBasicMaterial({ color: this.trailColor, transparent: true, opacity: 0.65, blending: THREE.AdditiveBlending, depthWrite: false });
     this.glowMesh = new THREE.Mesh(glowGeo, glowMat);
     this.glowMesh.position.copy(origin);
+    this.glowMesh.renderOrder = 1;
     scene.add(this.glowMesh);
 
     // --- Outer volumetric haze (much wider, very soft) ---
@@ -6619,6 +6633,7 @@ class Projectile {
     const hazeMat = new THREE.MeshBasicMaterial({ color: this.trailColor, transparent: true, opacity: 0.16, blending: THREE.AdditiveBlending, depthWrite: false });
     this.hazeMesh = new THREE.Mesh(hazeGeo, hazeMat);
     this.hazeMesh.position.copy(origin);
+    this.hazeMesh.renderOrder = 1;
     scene.add(this.hazeMesh);
 
     // Cache the at-spawn opacity of every layer that participates in fade-in.
@@ -6692,6 +6707,7 @@ class Projectile {
     });
     this.trailRibbon = new THREE.Mesh(ribbonGeo, ribbonMat);
     this.trailRibbon.frustumCulled = false; // we update the bounds implicitly each frame
+    this.trailRibbon.renderOrder = 1;
     scene.add(this.trailRibbon);
 
     // --- Per-projectile electric arc emitter ---
@@ -9024,6 +9040,10 @@ function _spawnSingleTracer(fromVec, toVec, color, widthScale) {
     // (1.2, 2.0, 3.0, 7.0), scale.x/y == widthScale and scale.z == len
     // reproduces the pre-pool per-shape widths.
     mesh.scale.set(widthScale, widthScale, len);
+    // Render after the wall (renderOrder=0) so the tracer cylinder always
+    // composites on top of the wall instead of being overwritten when the
+    // wall's bounding-sphere-center sort puts it later in the queue.
+    mesh.renderOrder = 1;
     scene.add(mesh);
     game.effects.push({ mesh, lifetime, age: 0, type });
   }
@@ -9186,11 +9206,13 @@ function spawnLightningBolt(from, to, color, lifetime, branches, thickness) {
   // Core line (bright white)
   const coreMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, linewidth: 1 });
   const coreLine = new THREE.LineSegments(lineGeo, coreMat);
+  coreLine.renderOrder = 1; // composite over wall (see gas cloud comment)
   scene.add(coreLine);
   game.effects.push({ mesh: coreLine, lifetime: lifetime, age: 0, type: 'tracer' });
   // Glow line (wider colored; uses same geo, different material)
   const glowMat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, linewidth: 1 });
   const glowLine = new THREE.LineSegments(lineGeo.clone(), glowMat);
+  glowLine.renderOrder = 1;
   scene.add(glowLine);
   game.effects.push({ mesh: glowLine, lifetime: lifetime * 1.3, age: 0, type: 'tracer' });
   // Dynamic light (reuse pooled)
@@ -11267,6 +11289,7 @@ function executeAbility(slot, ability) {
           layer: layer,
         };
         mat.color.setHex(layer === 2 ? 0xffeecc : layer === 1 ? 0xffbb66 : 0xff7733);
+        spr.renderOrder = 1; // draw after wall (see gas cloud comment)
         scene.add(spr);
         effData.meshes.push(spr);
       }
@@ -11293,6 +11316,7 @@ function executeAbility(slot, ability) {
           baseH: h, baseW: w, baseY: spr.position.y,
           baseOpacity: 0.55, layer: -1, // ember row
         };
+        spr.renderOrder = 1;
         scene.add(spr);
         effData.meshes.push(spr);
       }
