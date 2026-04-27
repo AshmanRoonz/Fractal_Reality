@@ -2293,14 +2293,13 @@ class NetworkPlayer {
         // (v6.7) Thin cylinder instead of flat circle so the disc has visible
         // thickness from every angle. rotateX(PI/2) flips the cylinder axis
         // from world-Y to local-Z so lookAt(forward) presents the flat face
-        // toward the look target. Unit-scale; scaled to midR each frame.
+        // toward the look target. Disc material is the Plasma-FBM fire
+        // shader so the shield reads as flames, not a flat colored circle.
         const geo = new THREE.CylinderGeometry(1, 1, 0.08, 40, 1, false);
         geo.rotateX(Math.PI / 2);
-        const mat = new THREE.MeshBasicMaterial({
-          color: 0xff7722, transparent: true, opacity: 0.28,
-          side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false
-        });
+        const mat = _makeFireShieldMaterial(0.85);
         this._thermalShieldMesh = new THREE.Mesh(geo, mat);
+        this._thermalShieldMesh.renderOrder = 1;
         scene.add(this._thermalShieldMesh);
         // (v6.7) TorusGeometry instead of flat RingGeometry; the ring now
         // reads as a 3D donut around the disc edge.
@@ -2317,14 +2316,17 @@ class NetworkPlayer {
       this._thermalShieldMesh.position.copy(shieldPos);
       this._thermalShieldMesh.lookAt(shieldPos.clone().add(fwd));
       this._thermalShieldMesh.scale.set(midR, midR, midR);
-      const hue = 0.04 + (Math.sin(t * 2.2) * 0.5 + 0.5) * 0.07;
-      this._thermalShieldMesh.material.color.setHSL(hue, 0.85, 0.55);
-      this._thermalShieldMesh.material.opacity = 0.30 + Math.sin(t * 8) * 0.05;
+      // Fire shader: advance time uniform; modulate base alpha for pulse.
+      if (this._thermalShieldMesh.material && this._thermalShieldMesh.material.uniforms) {
+        this._thermalShieldMesh.material.uniforms.time.value = t;
+        this._thermalShieldMesh.material.uniforms.uBaseAlpha.value = 0.85 + Math.sin(t * 8) * 0.08;
+      }
       if (this._thermalShieldRing) {
         this._thermalShieldRing.position.copy(shieldPos);
         this._thermalShieldRing.lookAt(shieldPos.clone().add(fwd));
         this._thermalShieldRing.scale.set(midR, midR, midR);
-        this._thermalShieldRing.material.color.setHSL((hue + 0.02) % 1, 0.75, 0.65);
+        const ringHue = 0.06 + (Math.sin(t * 2.2) * 0.5 + 0.5) * 0.07;
+        this._thermalShieldRing.material.color.setHSL(ringHue, 0.75, 0.65);
         this._thermalShieldRing.material.opacity = 0.18 + Math.sin(t * 10) * 0.04;
       }
       // Flames around the rim (same helper as the local-player path so peers
@@ -2347,40 +2349,42 @@ class NetworkPlayer {
       }
     }
 
-    // ---- VORTEX: Vortex Shield (rainbow circle + ring) ----
+    // ---- VORTEX: Vortex Shield (energy disc + ring) ----
     if (this.loadoutKey === 'VORTEX' && active) {
-      // Replicate the rainbow circle held in front of the ship.
       if (!this._vortexShieldMesh) {
-        // (v6.7) Thin cylinder for the disc, torus for the ring; both are
-        // 3D primitives so the shield has real thickness from any angle.
+        // Disc material is the energy-field shader (matches the local
+        // player's path so the shield reads the same from your screen as
+        // from a peer's screen). Torus stays as a clean bright outline.
         const geo = new THREE.CylinderGeometry(120, 120, 8, 32, 1, false);
         geo.rotateX(Math.PI / 2);
-        const mat = new THREE.MeshBasicMaterial({
-          color: 0x44ccff, transparent: true, opacity: 0.25,
-          side: THREE.DoubleSide, blending: THREE.AdditiveBlending
-        });
+        const mat = _makeVortexShieldMaterial(0.85);
         this._vortexShieldMesh = new THREE.Mesh(geo, mat);
+        this._vortexShieldMesh.renderOrder = 1;
         scene.add(this._vortexShieldMesh);
-        const ringGeo = new THREE.TorusGeometry(117, 7, 8, 32);
+        const ringGeo = new THREE.TorusGeometry(117, 5, 8, 48);
         const ringMat = new THREE.MeshBasicMaterial({
-          color: 0xffffff, transparent: true, opacity: 0.15,
-          side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+          color: 0xaaeeff, transparent: true, opacity: 0.40,
+          side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false,
         });
         this._vortexShieldRing = new THREE.Mesh(ringGeo, ringMat);
+        this._vortexShieldRing.renderOrder = 1;
         scene.add(this._vortexShieldRing);
       }
       const fwd = getForward();
       const shieldPos = this.position.clone().add(fwd.clone().multiplyScalar(80));
       this._vortexShieldMesh.position.copy(shieldPos);
       this._vortexShieldMesh.lookAt(shieldPos.clone().add(fwd));
-      const hue = (t * 0.3) % 1;
-      this._vortexShieldMesh.material.color.setHSL(hue, 0.7, 0.6);
-      this._vortexShieldMesh.material.opacity = 0.2 + Math.sin(t * 4) * 0.08;
+      // Advance shader time + breathe the base alpha for the pulse.
+      if (this._vortexShieldMesh.material && this._vortexShieldMesh.material.uniforms) {
+        this._vortexShieldMesh.material.uniforms.time.value = t;
+        this._vortexShieldMesh.material.uniforms.uBaseAlpha.value = 0.85 + Math.sin(t * 4) * 0.10;
+      }
       if (this._vortexShieldRing) {
         this._vortexShieldRing.position.copy(shieldPos);
         this._vortexShieldRing.lookAt(shieldPos.clone().add(fwd));
-        this._vortexShieldRing.material.color.setHSL((hue + 0.3) % 1, 0.5, 0.7);
-        this._vortexShieldRing.material.opacity = 0.1 + Math.sin(t * 6) * 0.06;
+        const ringHue = (t * 0.3 + 0.15) % 1;
+        this._vortexShieldRing.material.color.setHSL(ringHue, 0.4, 0.78);
+        this._vortexShieldRing.material.opacity = 0.30 + Math.sin(t * 6) * 0.10;
       }
     } else {
       if (this._vortexShieldMesh) {
@@ -3117,9 +3121,15 @@ function _makeGasCloudMaterial(initialColor, baseAlpha, radius) {
       '  float baseDensity = clamp(v * 1.5 - 0.25, 0.0, 1.0);',
       // Fresnel adds a small bonus at grazing angles, but ONLY where
       // the cloud already exists (multiplied by baseDensity), so it
-      // never lights up a fragment that should have been a hole.
+      // never lights up a fragment that should have been a hole. abs()
+      // on the dot product so the formula works on both faces — when the
+      // player flies INSIDE the cloud, the DoubleSide back-faces have
+      // inverted normals (pointing away from camera) and a plain
+      // clamp(dot, 0, 1) would zero them out, leaving inside views
+      // looking like a hollow sphere. abs() flips the sign so back-face
+      // fragments get the same fresnel treatment as front-face ones.
       '  vec3 viewDir = normalize(cameraPosition - vWorldPos);',
-      '  float fres = pow(1.0 - clamp(dot(vNormal, viewDir), 0.0, 1.0), 1.6);',
+      '  float fres = pow(1.0 - abs(dot(vNormal, viewDir)), 1.6);',
       '  float density = clamp(baseDensity * (1.0 + fres * 0.60), 0.0, 1.0);',
       // HDR-bright color in dense spots so the cloud reads from across
       // the room. Walls render very bright (K_COSMIC_BRIGHTNESS = 4.85)
@@ -3136,6 +3146,293 @@ function _makeGasCloudMaterial(initialColor, baseAlpha, radius) {
     ].join('\n'),
     transparent: true,
     blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    // DoubleSide so the player sees cloud noise from INSIDE the trap too
+    // (FrontSide-only previously made the inside view a hollow sphere).
+    // abs() in the fresnel above keeps back-face shading correct.
+    side: THREE.DoubleSide,
+  });
+}
+
+// Fire shader for Pyro's Thermal Shield. Animated FBM noise mapped to a
+// fire-color gradient (red -> orange -> white-hot). Pattern scrolls upward
+// in world Y so the disc reads as flames rising. Uniforms:
+//   time      animates the noise scroll
+//   uBaseAlpha density gate, modulated for shield-power fade
+//   uOctaves  detail level
+function _makeFireShieldMaterial(baseAlpha) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      time:       { value: 0 },
+      uBaseAlpha: { value: baseAlpha },
+      uOctaves:   { value: 6 },
+    },
+    vertexShader: [
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocalPos;',
+      'varying vec3 vNormal;',
+      'void main() {',
+      '  vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;',
+      '  vLocalPos = position;',
+      '  vNormal = normalize(normalMatrix * normal);',
+      '  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);',
+      '}',
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float time;',
+      'uniform float uBaseAlpha;',
+      'uniform int uOctaves;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocalPos;',
+      'varying vec3 vNormal;',
+      'float hash13(vec3 p) {',
+      '  p = fract(p * 0.1031);',
+      '  p += dot(p, p.yzx + 33.33);',
+      '  return fract((p.x + p.y) * p.z);',
+      '}',
+      'float noise3(vec3 p) {',
+      '  vec3 i = floor(p);',
+      '  vec3 f = fract(p);',
+      '  f = f * f * (3.0 - 2.0 * f);',
+      '  return mix(',
+      '    mix(mix(hash13(i + vec3(0,0,0)), hash13(i + vec3(1,0,0)), f.x),',
+      '        mix(hash13(i + vec3(0,1,0)), hash13(i + vec3(1,1,0)), f.x), f.y),',
+      '    mix(mix(hash13(i + vec3(0,0,1)), hash13(i + vec3(1,0,1)), f.x),',
+      '        mix(hash13(i + vec3(0,1,1)), hash13(i + vec3(1,1,1)), f.x), f.y),',
+      '    f.z);',
+      '}',
+      'float fbm(vec3 p) {',
+      '  float v = 0.0; float a = 0.5;',
+      '  for (int k = 0; k < 8; k++) {',
+      '    if (k >= uOctaves) break;',
+      '    v += a * noise3(p);',
+      '    p *= 2.0;',
+      '    a *= 0.5;',
+      '  }',
+      '  return v;',
+      '}',
+      'void main() {',
+      // Sample FBM at world position, with time-driven negative-Y scroll so
+      // patterns visually RISE on the disc (subtract time from q.y inside
+      // the FBM input).
+      '  vec3 q = vWorldPos * 0.045;',
+      '  q.y -= time * 0.7;',
+      '  q.x += time * 0.20;',
+      '  q.z += time * 0.10;',
+      '  float v = fbm(q);',
+      // Add a faster, finer detail layer so the flames have crackling
+      // high-frequency texture in addition to the slow main turbulence.
+      '  vec3 q2 = vWorldPos * 0.13;',
+      '  q2.y -= time * 1.4;',
+      '  float v2 = fbm(q2);',
+      '  v = smoothstep(0.25, 0.78, v) * 0.75 + smoothstep(0.30, 0.78, v2) * 0.40;',
+      // Disc edge falloff: vLocalPos lives in unit-cylinder space (disc
+      // radius 1 in local XY because the geometry was rotated so the
+      // circular face is on XY). Soft fade at the rim so the shield's
+      // outline is feathered fire, not a hard circle.
+      '  float r = length(vLocalPos.xy);',
+      '  float edgeFall = 1.0 - smoothstep(0.78, 1.02, r);',
+      // Inner core is denser (more fire) ; rim is wispier. Combined with
+      // edgeFall this gives a center-bright disc that fades to nothing.
+      '  float coreBoost = 1.0 - smoothstep(0.0, 0.55, r);',
+      '  float density = clamp(v * 1.4 - 0.18 + coreBoost * 0.10, 0.0, 1.0) * edgeFall;',
+      // Fire color gradient: dark red at low density, orange in mid,
+      // white-hot at peak. HDR brightness in dense pockets so the fire
+      // reads bright enough against the bright walls.
+      '  vec3 coolC = vec3(0.95, 0.18, 0.04);',
+      '  vec3 midC  = vec3(1.55, 0.60, 0.10);',
+      '  vec3 hotC  = vec3(1.95, 1.55, 0.80);',
+      '  vec3 col = mix(coolC, midC, smoothstep(0.15, 0.55, density));',
+      '  col = mix(col, hotC, smoothstep(0.55, 0.92, density));',
+      '  float alpha = density * uBaseAlpha;',
+      '  if (alpha < 0.04) discard;',
+      '  gl_FragColor = vec4(col, alpha);',
+      '}',
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+}
+
+// Energy-field shader for Vortex's Shield. Disc geometry, so we use
+// disc-radial coords (vLocalPos.xy after rotateX) for the pattern instead
+// of the sphere-shaped helper above. Layers: concentric ripples animated
+// outward + hex shimmer + fresnel rim + rainbow hue cycle + edge falloff.
+// Reads as an active energy field rather than a flat translucent disc.
+function _makeVortexShieldMaterial(baseAlpha) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      time:       { value: 0 },
+      uBaseAlpha: { value: baseAlpha },
+      uHueShift:  { value: 0 },
+    },
+    vertexShader: [
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocalPos;',
+      'varying vec3 vNormal;',
+      'void main() {',
+      '  vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;',
+      '  vLocalPos = position;',
+      '  vNormal = normalize(normalMatrix * normal);',
+      '  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);',
+      '}',
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float time;',
+      'uniform float uBaseAlpha;',
+      'uniform float uHueShift;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocalPos;',
+      'varying vec3 vNormal;',
+      // HSV->RGB (single-pixel rainbow shaping)
+      'vec3 hsv(float h, float s, float v) {',
+      '  vec3 k = mod(vec3(5.0, 3.0, 1.0) + h * 6.0, 6.0);',
+      '  return v - v * s * clamp(min(k, 4.0 - k), 0.0, 1.0);',
+      '}',
+      // Honeycomb pattern (sci-fi shield staple)
+      'float hexPattern(vec2 p) {',
+      '  p *= 5.0;',
+      '  vec2 q = vec2(p.x * 1.1547, p.y + p.x * 0.5);',
+      '  vec2 f = fract(q);',
+      '  vec2 d = abs(f - 0.5);',
+      '  return smoothstep(0.42, 0.5, max(d.x, d.y * 0.866 + d.x * 0.5));',
+      '}',
+      'void main() {',
+      // Disc-plane radial + angular coords. vLocalPos.xy ranges -1..1 on
+      // the disc face after the rotateX(PI/2) flip applied to the
+      // CylinderGeometry, so length(xy) gives radius 0..1 across the
+      // shield surface and atan(y, x) gives angle around the disc.
+      '  vec2 disc = vLocalPos.xy;',
+      '  float r = length(disc);',
+      '  float theta = atan(disc.y, disc.x);',
+      // Soft fade at the disc rim so the silhouette is feathered energy
+      // instead of a hard circle.
+      '  float edgeFall = 1.0 - smoothstep(0.82, 1.02, r);',
+      // Concentric ripples expanding outward over time. Sharpened with
+      // pow() so each wavefront reads as a distinct ring rather than a
+      // soft sine wave.
+      '  float ripple = 0.5 + 0.5 * sin(r * 22.0 - time * 4.0);',
+      '  ripple = pow(ripple, 2.0);',
+      // Hex shimmer in disc-uv space (theta-vs-radius), scrolled in
+      // theta over time so the cells visibly drift around the disc.
+      '  vec2 hexUV = vec2(theta * 1.6 + time * 0.30, r * 4.0 - time * 0.45);',
+      '  float hex = hexPattern(hexUV);',
+      // Fresnel: glow brighter at the disc rim. abs() so DoubleSide
+      // back-faces also light up correctly when viewed from behind.
+      '  vec3 viewDir = normalize(cameraPosition - vWorldPos);',
+      '  float fr = pow(1.0 - abs(dot(vNormal, viewDir)), 2.0);',
+      // Combine layers into a single intensity value gated by edge fall.
+      '  float intensity = (hex * 0.45 + ripple * 0.50 + fr * 0.65) * edgeFall;',
+      // Rainbow hue cycling: drifts around the disc by angle and
+      // advances slowly with time. uHueShift lets the JS side bias it.
+      '  float hue = fract(uHueShift + time * 0.12 + theta * 0.16 + r * 0.08);',
+      '  vec3 col = hsv(hue, 0.65, 1.0);',
+      // White-hot accent in dense pockets so the shield reads bright
+      // against the wall fractal background.
+      '  vec3 hot = vec3(1.50, 1.50, 1.55);',
+      '  col = mix(col, hot, smoothstep(0.65, 1.20, intensity));',
+      '  float alpha = clamp(intensity, 0.0, 1.0) * uBaseAlpha;',
+      '  if (alpha < 0.03) discard;',
+      '  gl_FragColor = vec4(col * (1.0 + intensity * 0.55), alpha);',
+      '}',
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+}
+
+// Volumetric smoke shader for explosion plumes. Same Plasma-FBM language as
+// the gas cloud but tuned for smaller-radius churning smoke: shorter sample
+// scale, dark-grey palette, faster animation. Reused per-spawn (cloned) by
+// the explosion pool so the smoke icosahedron in spawnExplosion gets shader
+// treatment instead of a smooth dark blob. Uniforms:
+//   time      animates the noise (rising drift simulates buoyant plume)
+//   uColor    smoke tint (darker for explosion vs lighter for sustained gas)
+//   uBaseAlpha density gate ; modulated by updateEffects for fade-out
+//   uOctaves  FBM detail levels
+function _makeSmokeMaterial(initialColor, baseAlpha) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      time:       { value: 0 },
+      uColor:     { value: new THREE.Color(initialColor) },
+      uBaseAlpha: { value: baseAlpha },
+      uOctaves:   { value: 6 },
+    },
+    vertexShader: [
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocalPos;',
+      'varying vec3 vNormal;',
+      'void main() {',
+      '  vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;',
+      '  vLocalPos = position;',
+      '  vNormal = normalize(normalMatrix * normal);',
+      '  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);',
+      '}',
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float time;',
+      'uniform vec3 uColor;',
+      'uniform float uBaseAlpha;',
+      'uniform int uOctaves;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocalPos;',
+      'varying vec3 vNormal;',
+      // FBM helpers (duplicated locally so this material is self-contained
+      // and doesn't require shader-include glue at module load).
+      'float hash13(vec3 p) {',
+      '  p = fract(p * 0.1031);',
+      '  p += dot(p, p.yzx + 33.33);',
+      '  return fract((p.x + p.y) * p.z);',
+      '}',
+      'float noise3(vec3 p) {',
+      '  vec3 i = floor(p);',
+      '  vec3 f = fract(p);',
+      '  f = f * f * (3.0 - 2.0 * f);',
+      '  return mix(',
+      '    mix(mix(hash13(i + vec3(0,0,0)), hash13(i + vec3(1,0,0)), f.x),',
+      '        mix(hash13(i + vec3(0,1,0)), hash13(i + vec3(1,1,0)), f.x), f.y),',
+      '    mix(mix(hash13(i + vec3(0,0,1)), hash13(i + vec3(1,0,1)), f.x),',
+      '        mix(hash13(i + vec3(0,1,1)), hash13(i + vec3(1,1,1)), f.x), f.y),',
+      '    f.z);',
+      '}',
+      'float fbm(vec3 p) {',
+      '  float v = 0.0; float a = 0.5;',
+      '  for (int k = 0; k < 8; k++) {',
+      '    if (k >= uOctaves) break;',
+      '    v += a * noise3(p);',
+      '    p *= 2.0;',
+      '    a *= 0.5;',
+      '  }',
+      '  return v;',
+      '}',
+      'void main() {',
+      // Two-scale FBM (chunky base + fine detail) at smoke-appropriate
+      // sampling scales. Y-axis drift simulates rising thermal column.
+      '  vec3 q1 = vWorldPos * 0.04 + vec3(0.0, time * 0.30, time * 0.15);',
+      '  float v1 = fbm(q1);',
+      '  vec3 q2 = vWorldPos * 0.12 + vec3(time * 0.20, time * 0.10, 0.0);',
+      '  float v2 = fbm(q2);',
+      '  v1 = smoothstep(0.30, 0.78, v1);',
+      '  v2 = smoothstep(0.35, 0.75, v2);',
+      '  float v = v1 * 0.70 + v2 * 0.45;',
+      '  float baseDensity = clamp(v * 1.4 - 0.18, 0.0, 1.0);',
+      '  vec3 viewDir = normalize(cameraPosition - vWorldPos);',
+      '  float fres = pow(1.0 - clamp(dot(vNormal, viewDir), 0.0, 1.0), 1.6);',
+      '  float density = clamp(baseDensity * (1.0 + fres * 0.55), 0.0, 1.0);',
+      // Smoke is darker — color is dimmer overall. Slight brightness boost
+      // in dense pockets so the smoke isn't pure black.
+      '  vec3 col = uColor * (0.50 + density * 1.20);',
+      '  float alpha = density * uBaseAlpha;',
+      '  if (alpha < 0.04) discard;',
+      '  gl_FragColor = vec4(col, alpha);',
+      '}',
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.NormalBlending, // smoke blocks light, doesn't add it
     depthWrite: false,
     side: THREE.FrontSide,
   });
@@ -7157,11 +7454,39 @@ function igniteNearbyGas(pos, radius) {
     if (eff.type !== 'incendiary_gas') continue;
     if (pos.distanceTo(eff.position) >= eff.radius + radius) continue;
     if (!eff.ignited) {
-      // First ignition: light the cloud, color swap, pop explosion/light
+      // First ignition: light the cloud, color swap, pop explosion/light.
+      // (v6.7) The outer hull is now a ShaderMaterial (no .color property),
+      // so we recolor by writing to its uniforms.uColor uniform. Old
+      // MeshBasicMaterial fallback retained for safety in case any legacy
+      // gas cloud is still alive without uniforms.
       eff.ignited = true;
       eff.igniteTimer = eff.igniteDuration;
-      if (eff.mesh) { eff.mesh.material.color.setHex(0xff4400); eff.mesh.material.opacity = 0.18; }
-      if (eff.coreMesh) { eff.coreMesh.material.color.setHex(0xff6600); eff.coreMesh.material.opacity = 0.15; }
+      if (eff.mesh && eff.mesh.material) {
+        if (eff.mesh.material.uniforms && eff.mesh.material.uniforms.uColor) {
+          eff.mesh.material.uniforms.uColor.value.setHex(0xff5520);
+          if (eff.mesh.material.uniforms.uBaseAlpha) {
+            eff.mesh.material.uniforms.uBaseAlpha.value = 0.95;
+          }
+        } else if (eff.mesh.material.color) {
+          eff.mesh.material.color.setHex(0xff4400);
+          eff.mesh.material.opacity = 0.18;
+        }
+      }
+      if (eff.coreMesh && eff.coreMesh.material && eff.coreMesh.material.color) {
+        eff.coreMesh.material.color.setHex(0xff6600);
+        eff.coreMesh.material.opacity = 0.36;
+      }
+      // Recolor any legacy puff meshes (PUFF_COUNT is 0 in v6.7, but a
+      // mid-game state might still have older clouds with puffs).
+      if (eff.puffMeshes) {
+        for (const p of eff.puffMeshes) {
+          if (p.material && p.material.color) {
+            const r = Math.random();
+            const hot = r < 0.33 ? 0xff4520 : (r < 0.66 ? 0xff7530 : 0xffa540);
+            p.material.color.setHex(hot);
+          }
+        }
+      }
       spawnExplosion(eff.position, 30);
       spawnDynamicLight(eff.position, 0xff4400, 3.0, 500, 0.5);
     } else {
@@ -7965,16 +8290,27 @@ function spawnExplosion(pos, size) {
     }
   }
 
-  // --- Phase 4: Smoke cloud (dark, slow expansion, longer life) ---
-  if (size > 15) {
-    const smokeMesh = _acquireExplosionMesh('smoke');
+  // --- Phase 4: Volumetric shader smoke (churning dark cloud, longer life) ---
+  // Replaces the old smooth-icosahedron + MeshBasicMaterial smoke. Uses the
+  // _makeSmokeMaterial Plasma-FBM shader so the smoke reads as a real
+  // turbulent plume with holes and density variation, not a solid dark
+  // blob. Built fresh per-explosion (the shader material is per-instance
+  // so each plume animates with its own time offset).
+  if (size > 12) {
+    const smokeGeo = new THREE.SphereGeometry(1, 16, 12);
+    const smokeMat = _makeSmokeMaterial(0x222018, 0.85);
+    const smokeMesh = new THREE.Mesh(smokeGeo, smokeMat);
     smokeMesh.position.copy(pos);
-    smokeMesh.scale.setScalar(size * 0.6);
+    smokeMesh.scale.setScalar(size * 0.7);
     smokeMesh.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
-    smokeMesh.material.color.setHex(0x221100);
-    smokeMesh.material.opacity = 0.4;
-    game.effects.push({ mesh: smokeMesh, lifetime: 1.2, age: 0, type: 'smoke', pooled: true, maxSize: size * 4, baseScale: size * 0.6,
-      rotVel: new THREE.Vector3((Math.random()-0.5)*2, (Math.random()-0.5)*2, (Math.random()-0.5)*2) });
+    smokeMesh.frustumCulled = false;
+    smokeMesh.renderOrder = 1; // composite over wall
+    scene.add(smokeMesh);
+    game.effects.push({
+      mesh: smokeMesh, lifetime: 1.4, age: 0, type: 'shaderSmoke',
+      maxSize: size * 4, baseScale: size * 0.7,
+      rotVel: new THREE.Vector3((Math.random()-0.5)*2, (Math.random()-0.5)*2, (Math.random()-0.5)*2),
+    });
   }
 
   // --- Phase 5: Ember/debris particles (many small, fast, varied colors) ---
@@ -8028,6 +8364,50 @@ function spawnExplosion(pos, size) {
   spawnDynamicLight(pos, 0xffcc88, lightIntensity * 1.5, lightRange * 0.6, 0.1);  // flash
   spawnDynamicLight(pos, 0xff5500, lightIntensity, lightRange, 0.45);              // glow
   spawnDynamicLight(pos, 0xff3300, lightIntensity * 0.35, lightRange * 0.8, 1.5); // afterglow
+
+  // --- Phase 6: Electric discharge ---
+  // Every explosion now also throws lightning bolts in random directions, so
+  // the blast reads as having an electric / plasma character on top of the
+  // fire and smoke. Bolt count and reach scale with size so a small impact
+  // gets a few short crackles and a ship-kill explosion gets a real arc cage.
+  // The bolts are rendered through spawnLightningBolt which already gets
+  // renderOrder=1 so they composite on top of the wall.
+  if (typeof spawnLightningBolt === 'function') {
+    const arcCount = Math.max(2, Math.min(7, Math.ceil(size * 0.18)));
+    for (let i = 0; i < arcCount; i++) {
+      const dir = new THREE.Vector3(
+        (Math.random() - 0.5) * 2,
+        (Math.random() - 0.5) * 2,
+        (Math.random() - 0.5) * 2
+      );
+      if (dir.lengthSq() < 0.001) dir.set(1, 0, 0);
+      dir.normalize();
+      const reach = size * (1.4 + Math.random() * 1.2);
+      const arcEnd = pos.clone().add(dir.multiplyScalar(reach));
+      // Cyan-white core color reads as electric. Lifetime ~150ms; branch
+      // count scales with explosion size so big blasts get spider-leg arcs.
+      const branches = Math.min(3, Math.max(1, Math.ceil(size * 0.05)));
+      const thickness = 1.2 + Math.min(1.6, size * 0.02);
+      spawnLightningBolt(pos, arcEnd, 0xaaccff, 0.12 + Math.random() * 0.08, branches, thickness);
+    }
+    // For big explosions, an extra slower-fading inner crackle that lingers
+    // (~250ms) so the blast feels charged after the initial flash dies.
+    if (size > 20) {
+      const lingerCount = Math.min(3, Math.ceil(size * 0.05));
+      for (let i = 0; i < lingerCount; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const elev = (Math.random() - 0.5) * Math.PI * 0.6;
+        const dir = new THREE.Vector3(
+          Math.cos(ang) * Math.cos(elev),
+          Math.sin(elev),
+          Math.sin(ang) * Math.cos(elev)
+        );
+        const reach = size * (0.8 + Math.random() * 0.6);
+        const arcEnd = pos.clone().add(dir.multiplyScalar(reach));
+        spawnLightningBolt(pos, arcEnd, 0x88ddff, 0.20 + Math.random() * 0.08, 2, 0.9);
+      }
+    }
+  }
 }
 
 // ---- DESTRUCTIBLE DYNAMIC GEOMETRY ----
@@ -9398,6 +9778,24 @@ function updateEffects(dt) {
         e.mesh.rotation.z += e.rotVel.z * dt;
       }
     }
+    // --- Volumetric shader smoke: same expansion + drift + rotation as the
+    // legacy smoke type but advances the shader's time uniform and fades
+    // alpha through uBaseAlpha (ShaderMaterial has no plain .opacity). ---
+    else if (e.type === 'shaderSmoke') {
+      const base = e.baseScale || 1;
+      const smokeExpand = (1 + t * ((e.maxSize || 4) - 1)) * base;
+      e.mesh.scale.set(smokeExpand, smokeExpand, smokeExpand);
+      const fadeCurve = (1 - t) * (1 - t); // quadratic ease-out
+      if (e.mesh.material && e.mesh.material.uniforms) {
+        e.mesh.material.uniforms.time.value = game.time;
+        e.mesh.material.uniforms.uBaseAlpha.value = 0.85 * fadeCurve;
+      }
+      if (e.rotVel) {
+        e.mesh.rotation.x += e.rotVel.x * dt;
+        e.mesh.rotation.y += e.rotVel.y * dt;
+        e.mesh.rotation.z += e.rotVel.z * dt;
+      }
+    }
     // --- Debris chunks: fly outward, spin, fade ---
     else if (e.type === 'debris') {
       const base = e.baseScale || 1;
@@ -9470,21 +9868,55 @@ function updateEffects(dt) {
   }
 }
 
-// --- Shield impact shimmer effect (call when shields take a hit) ---
+// --- Shield impact effect (call when shields take a hit) ---
+// (v6.7) Replaced the wireframe sphere with a sparks + lightning burst so
+// hits no longer paint a giant sphere over the ship center. The visual
+// reads as deflected energy crackling at the impact zone instead of a 3D
+// debug-style outline. Still uses ship position because takeDamage doesn't
+// know the projectile's exact strike point ; future pass could thread that
+// through, but the burst is small enough that center-of-ship feels fine.
 function spawnShieldHit(pos, radius, color) {
   color = color || 0x4488ff;
   radius = radius || 40;
-  const geo = new THREE.SphereGeometry(radius, 12, 8);
-  const mat = new THREE.MeshBasicMaterial({
-    color, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending,
-    wireframe: true
-  });
-  const mesh = new THREE.Mesh(geo, mat);
-  mesh.position.copy(pos);
-  scene.add(mesh);
-  game.effects.push({ mesh, lifetime: 0.3, age: 0, type: 'shieldHit' });
-  // Blue flash light
-  spawnDynamicLight(pos, color, 2.5, 400, 0.15);
+  // Bright instant flash light at the impact site.
+  spawnDynamicLight(pos, color, 3.0, 350, 0.18);
+  // Sparks burst — ~14 small bright sparks shooting outward in random
+  // directions. Speed scales lightly with the impact radius so big
+  // ships' shield hits feel slightly bigger than tiny-bot hits.
+  const sparkCount = 14;
+  const baseSpeed = 180 + radius * 1.2;
+  for (let i = 0; i < sparkCount; i++) {
+    const dir = new THREE.Vector3(
+      (Math.random() - 0.5),
+      (Math.random() - 0.5),
+      (Math.random() - 0.5)
+    );
+    if (dir.lengthSq() < 0.001) dir.set(1, 0, 0);
+    dir.normalize();
+    const speed = baseSpeed * (0.6 + Math.random() * 0.7);
+    game.particles.push({
+      position: pos.clone(),
+      velocity: dir.multiplyScalar(speed),
+      life: 0.18 + Math.random() * 0.18,
+      maxLife: 0.36,
+      color: Math.random() < 0.4 ? 0xffffff : color,
+      size: 1.4 + Math.random() * 1.8,
+    });
+  }
+  // 2-3 short lightning arcs crackling outward — "deflected energy" feel.
+  if (typeof spawnLightningBolt === 'function') {
+    const arcs = 2 + (Math.random() < 0.5 ? 1 : 0);
+    for (let a = 0; a < arcs; a++) {
+      const dir = new THREE.Vector3(
+        (Math.random() - 0.5),
+        (Math.random() - 0.5),
+        (Math.random() - 0.5)
+      ).normalize();
+      const reach = radius * (0.6 + Math.random() * 0.7);
+      const arcEnd = pos.clone().add(dir.multiplyScalar(reach));
+      spawnLightningBolt(pos, arcEnd, color, 0.10, 1, 1.0);
+    }
+  }
 }
 
 // --- Ship damage state effects (smoke + fire trailing from damaged ships) ---
@@ -11914,41 +12346,45 @@ function updateShieldVisuals(dt) {
 
   if (vortexActive) {
     if (!player.vortexShieldMesh) {
-      // (v6.7) Thin cylinder + torus instead of CircleGeometry + RingGeometry.
-      // Both are 3D primitives, so the shield has visible thickness from any
-      // angle (third-person, peer-view, and any angled glance).
+      // (v6.7) Thin cylinder + torus, both 3D so the shield has thickness
+      // from any viewing angle. Disc material is the energy-field shader
+      // (_makeVortexShieldMaterial) so the surface reads as concentric
+      // ripples + hex shimmer + rainbow + fresnel rim, not a flat
+      // translucent circle. Torus stays as a clean bright outline.
       const geo = new THREE.CylinderGeometry(120, 120, 8, 32, 1, false);
       geo.rotateX(Math.PI / 2);
-      // Rainbow iridescent material: use additive blending with animated color
-      const mat = new THREE.MeshBasicMaterial({
-        color: 0x44ccff, transparent: true, opacity: 0.25,
-        side: THREE.DoubleSide, blending: THREE.AdditiveBlending
-      });
+      const mat = _makeVortexShieldMaterial(0.85);
       player.vortexShieldMesh = new THREE.Mesh(geo, mat);
+      player.vortexShieldMesh.renderOrder = 1; // composite over wall
       scene.add(player.vortexShieldMesh);
-      // Add a second ring (outer glow)
-      const ringGeo = new THREE.TorusGeometry(117, 7, 8, 32);
+      // Outer torus rim — kept as a thin cyan-white ring for hard outline
+      const ringGeo = new THREE.TorusGeometry(117, 5, 8, 48);
       const ringMat = new THREE.MeshBasicMaterial({
-        color: 0xffffff, transparent: true, opacity: 0.15,
-        side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+        color: 0xaaeeff, transparent: true, opacity: 0.40,
+        side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false,
       });
       player.vortexShieldRing = new THREE.Mesh(ringGeo, ringMat);
+      player.vortexShieldRing.renderOrder = 1;
       scene.add(player.vortexShieldRing);
     }
     // Position in front of player
     const shieldPos = player.position.clone().add(forward.clone().multiplyScalar(80));
     player.vortexShieldMesh.position.copy(shieldPos);
     player.vortexShieldMesh.lookAt(shieldPos.clone().add(forward));
-    // Rainbow color cycling
-    const hue = (game.time * 0.3) % 1;
-    player.vortexShieldMesh.material.color.setHSL(hue, 0.7, 0.6);
-    player.vortexShieldMesh.material.opacity = 0.2 + Math.sin(game.time * 4) * 0.08;
+    // Energy shader: advance time + drift hue offset slowly. The shader
+    // does its own rainbow cycle internally; uHueShift just biases the
+    // overall hue so each player's shield isn't synchronized.
+    if (player.vortexShieldMesh.material && player.vortexShieldMesh.material.uniforms) {
+      player.vortexShieldMesh.material.uniforms.time.value = game.time;
+      player.vortexShieldMesh.material.uniforms.uBaseAlpha.value = 0.85 + Math.sin(game.time * 4) * 0.10;
+    }
     // Outer ring
     if (player.vortexShieldRing) {
       player.vortexShieldRing.position.copy(shieldPos);
       player.vortexShieldRing.lookAt(shieldPos.clone().add(forward));
-      player.vortexShieldRing.material.color.setHSL((hue + 0.3) % 1, 0.5, 0.7);
-      player.vortexShieldRing.material.opacity = 0.1 + Math.sin(game.time * 6) * 0.06;
+      const ringHue = (game.time * 0.3 + 0.15) % 1;
+      player.vortexShieldRing.material.color.setHSL(ringHue, 0.4, 0.78);
+      player.vortexShieldRing.material.opacity = 0.30 + Math.sin(game.time * 6) * 0.10;
     }
   } else {
     if (player.vortexShieldMesh) {
@@ -12054,14 +12490,14 @@ function updateShieldVisuals(dt) {
     if (!player.thermalShieldMesh) {
       // (v6.7) Cylinder unit-disc + torus unit-ring; both 3D so the shield
       // reads with depth from third-person and from peers' POV. Scaled to
-      // midR each frame.
+      // midR each frame. The disc material is the Plasma-FBM fire shader
+      // (_makeFireShieldMaterial), so the disc reads as animated flames
+      // rather than a flat orange circle.
       const geo = new THREE.CylinderGeometry(1, 1, 0.08, 40, 1, false);
       geo.rotateX(Math.PI / 2);
-      const mat = new THREE.MeshBasicMaterial({
-        color: 0xff7722, transparent: true, opacity: 0.28,
-        side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false
-      });
+      const mat = _makeFireShieldMaterial(0.95);
       player.thermalShieldMesh = new THREE.Mesh(geo, mat);
+      player.thermalShieldMesh.renderOrder = 1; // composite over wall
       scene.add(player.thermalShieldMesh);
       // Outer heat-haze ring: unit torus, scaled to match disc
       const ringGeo = new THREE.TorusGeometry(0.96, 0.05, 8, 40);
@@ -12078,18 +12514,24 @@ function updateShieldVisuals(dt) {
     player.thermalShieldMesh.position.copy(shieldPos);
     player.thermalShieldMesh.lookAt(shieldPos.clone().add(forward));
     player.thermalShieldMesh.scale.set(midR, midR, midR);
-    // Orange hue cycling (kept in warm band).
-    const hue = 0.04 + (Math.sin(game.time * 2.2) * 0.5 + 0.5) * 0.07; // 0.04 → 0.11
     const hpPct = Math.max(0, player.thermalShieldHP / player.thermalShieldMaxHP);
-    player.thermalShieldMesh.material.color.setHSL(hue, 0.85, 0.55);
-    // Opacity scales with remaining power (brighter when full) + pulse
-    player.thermalShieldMesh.material.opacity = (0.22 + hpPct * 0.18) + Math.sin(game.time * 8) * 0.05;
-    // Outer ring (matches disc scale)
+    // Fire shader: advance time uniform + modulate uBaseAlpha so the flames
+    // get dimmer as the shield's power drains. The color gradient lives
+    // entirely inside the shader so we no longer need an HSL hue write here.
+    if (player.thermalShieldMesh.material && player.thermalShieldMesh.material.uniforms) {
+      player.thermalShieldMesh.material.uniforms.time.value = game.time;
+      player.thermalShieldMesh.material.uniforms.uBaseAlpha.value =
+        (0.55 + hpPct * 0.40) + Math.sin(game.time * 8) * 0.06;
+    }
+    // Outer ring (matches disc scale). Hue cycle stays here (the shader
+    // owns the disc color, but the torus ring is still a MeshBasicMaterial
+    // and gets its hue rotated locally to give the rim a warm flicker).
     if (player.thermalShieldRing) {
       player.thermalShieldRing.position.copy(shieldPos);
       player.thermalShieldRing.lookAt(shieldPos.clone().add(forward));
       player.thermalShieldRing.scale.set(midR, midR, midR);
-      player.thermalShieldRing.material.color.setHSL((hue + 0.02) % 1, 0.75, 0.65);
+      const ringHue = 0.06 + (Math.sin(game.time * 2.2) * 0.5 + 0.5) * 0.07;
+      player.thermalShieldRing.material.color.setHSL(ringHue, 0.75, 0.65);
       player.thermalShieldRing.material.opacity = (0.14 + hpPct * 0.12) + Math.sin(game.time * 10) * 0.04;
     }
     // Flames around the rim. Each frame, push a handful of fire particles at
