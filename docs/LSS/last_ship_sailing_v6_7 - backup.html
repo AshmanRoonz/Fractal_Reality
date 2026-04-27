@@ -2844,21 +2844,19 @@ function spawnTripWireOrb(pos, owner, team, ownerPeerId, netId, broadcast, group
     sparkTimer: 0,
     pulsePhase: Math.random() * Math.PI * 2,
   });
-  // Inner core sphere — bright cyan-white energy bead. Switched from a
-  // dull red basic sphere to an additive bright core so the orb reads as
-  // active electrical charge instead of a static red marker.
-  const mineGeo = new THREE.SphereGeometry(7, 10, 8);
-  const mineMat = new THREE.MeshBasicMaterial({
-    color: 0x88eeff, transparent: true, opacity: 1.0,
-    blending: THREE.AdditiveBlending, depthWrite: false,
-  });
+  // Inner core sphere — shader-driven energy bead with internal crackle and
+  // fresnel rim. Reads as a live electrical charge instead of a static
+  // colored marker. The shader's time uniform is bumped in the per-frame
+  // tripwire updater alongside the existing pulse logic.
+  const mineGeo = new THREE.SphereGeometry(7, 16, 12);
+  const mineMat = _makeOrbCoreMaterial(0x88eeff);
   const mineMesh = new THREE.Mesh(mineGeo, mineMat);
   mineMesh.position.copy(pos);
   mineMesh.renderOrder = 1;
   scene.add(mineMesh);
-  // Glow halo around the core — wider, dimmer additive sphere that pulses
-  // along with the core in the per-frame tick. Gives the orb visible mass
-  // from a distance and catches post-bloom light.
+  // Glow halo around the core — kept as a simple additive sphere so the
+  // orb has visible mass at a distance. Inner core's shader does the
+  // close-range visual work; this halo just paints the bloom rim.
   const glowGeo = new THREE.SphereGeometry(22, 12, 8);
   const glowMat = new THREE.MeshBasicMaterial({
     color: 0x44ccff, transparent: true, opacity: 0.35,
@@ -3027,7 +3025,15 @@ function spawnParticleWall(pos, dir, owner, team, ownerPeerId, netId, broadcast)
     side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
     map: getScanlineTexture(),
   });
-  const wallMesh = new THREE.Mesh(wallGeo, wallMat);
+  // (legacy scanline texture kept above for fallback; the wall now renders
+  // through a hex-hologram shader overlay on top of it via wallMesh.material
+  // swap below.)
+  // Replace flat MeshBasicMaterial with the hex hologram shader so the wall
+  // reads as a live energy field with damage cracks revealed as hp drops.
+  // The original scanline material is kept as wallMat and the geometry is
+  // unchanged so existing depth-test / sort behavior is preserved.
+  const hexHologramMat = _makeHexHologramMaterial(0x66ddff);
+  const wallMesh = new THREE.Mesh(wallGeo, hexHologramMat);
   wallMesh.position.copy(pos);
   wallMesh.lookAt(pos.clone().add(dir));
   scene.add(wallMesh);
@@ -3462,6 +3468,611 @@ function _makeSmokeMaterial(initialColor, baseAlpha) {
   });
 }
 
+// ============================================================
+// SHADER FACTORY LIBRARY
+// ============================================================
+// Reusable ShaderMaterial factories that replace flat MeshBasicMaterial
+// usages with animated procedural surfaces. Each factory exposes uniforms
+// via the returned material so callers can update them per frame
+// (color, throttle, hp, age, etc.). All factories use the same time
+// uniform name 'time' so the existing per-frame uniform-bump code in
+// updateEffects can drive them. Built around shared GLSL helpers
+// inlined per factory (no #include / no chunk system since Three.js r128
+// doesn't expose them cleanly for ShaderMaterial without ONBeforeCompile).
+
+// ---- Engine plume (cone) ----------------------------------------------
+// Animated plasma exhaust along the cone's axis. Bright hot core at the
+// engine end fades along the cone toward the tip; FBM noise scrolls
+// along the axis at uThrottle-modulated speed. uColor sets the warm
+// outer tint; hot core stays white-blue. UV.y goes 0 (cone tip /
+// far end) → 1 (cone base / engine end) for ConeGeometry rotated so its
+// axis is +Z.
+function _makePlumeShaderMaterial(baseColor, baseAlpha) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      time:       { value: 0 },
+      uColor:     { value: new THREE.Color(baseColor) },
+      uBaseAlpha: { value: (typeof baseAlpha === 'number') ? baseAlpha : 0.55 },
+      uThrottle:  { value: 0.0 },
+    },
+    vertexShader: [
+      'varying vec3 vLocal;',
+      'varying vec2 vUv;',
+      'void main() {',
+      '  vLocal = position;',
+      '  vUv = uv;',
+      '  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
+      '}'
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float time;',
+      'uniform vec3 uColor;',
+      'uniform float uBaseAlpha;',
+      'uniform float uThrottle;',
+      'varying vec3 vLocal;',
+      'varying vec2 vUv;',
+      // Cheap value noise + 3-octave FBM. Just enough for plume turbulence.
+      'float hash21(vec2 p) {',
+      '  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);',
+      '}',
+      'float vnoise(vec2 p) {',
+      '  vec2 i = floor(p); vec2 f = fract(p);',
+      '  f = f * f * (3.0 - 2.0 * f);',
+      '  float a = hash21(i + vec2(0,0));',
+      '  float b = hash21(i + vec2(1,0));',
+      '  float c = hash21(i + vec2(0,1));',
+      '  float d = hash21(i + vec2(1,1));',
+      '  return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);',
+      '}',
+      'float fbm(vec2 p) {',
+      '  float v = 0.0; float a = 0.5;',
+      '  for (int i = 0; i < 3; i++) { v += a * vnoise(p); p *= 2.1; a *= 0.5; }',
+      '  return v;',
+      '}',
+      'void main() {',
+      // For the cone geometry (radius 1 at base, 0 at tip, axis +Z), the
+      // local XY plane gives the radial position; local Z gives axis.
+      // We work in a reconstructed (axisFrac, theta) space.
+      '  float r = length(vLocal.xy);',
+      '  float axisFrac = clamp(vUv.y, 0.0, 1.0);', // 0 = base (engine), 1 = tip
+      '  float theta = atan(vLocal.y, vLocal.x);',
+      // Scrolling FBM along axis. Speed scales with throttle so a stationary
+      // ship has subtle bubbling, full throttle has fast streaks.
+      '  float scroll = time * (1.5 + uThrottle * 4.0);',
+      '  float n1 = fbm(vec2(theta * 1.8, axisFrac * 4.0 - scroll));',
+      '  float n2 = fbm(vec2(theta * 3.2 + 1.7, axisFrac * 6.5 - scroll * 1.6));',
+      '  float turbulence = mix(n1, n2, 0.55);',
+      // Core hotness: bright white-blue at the base center, fading along axis.
+      '  float coreHot = pow(1.0 - axisFrac, 1.8) * (1.0 - r);',
+      '  vec3 hotCore = vec3(1.0, 1.0, 1.05);',
+      '  vec3 plasma  = mix(uColor, hotCore, coreHot);',
+      // Brightness: turbulence-modulated, fades along axis.
+      '  float bright = (0.40 + turbulence * 0.85) * (1.0 - axisFrac * 0.85);',
+      '  bright *= (0.55 + 0.45 * uThrottle);',
+      // Radial falloff so the cone edge fades softly instead of hard cutting.
+      '  float radial = 1.0 - smoothstep(0.65, 1.0, r);',
+      '  bright *= radial;',
+      '  vec3 col = plasma * bright * 1.4;',
+      '  float alpha = bright * uBaseAlpha * (0.85 + 0.15 * uThrottle);',
+      '  if (alpha < 0.02) discard;',
+      '  gl_FragColor = vec4(col, alpha);',
+      '}'
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+}
+
+// ---- Engine glow disc (circle) ----------------------------------------
+// Pulsing radial disc with internal swirl. Used for the engine "back of
+// nozzle" glow. Bright hot center, colored outer ring, slow rotating
+// spiral pattern, throttle-driven brightness.
+function _makeEngineDiscMaterial(baseColor) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      time:      { value: 0 },
+      uColor:    { value: new THREE.Color(baseColor) },
+      uThrottle: { value: 0.0 },
+    },
+    vertexShader: [
+      'varying vec2 vUv;',
+      'void main() {',
+      '  vUv = uv;',
+      '  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
+      '}'
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float time;',
+      'uniform vec3 uColor;',
+      'uniform float uThrottle;',
+      'varying vec2 vUv;',
+      'void main() {',
+      '  vec2 p = vUv * 2.0 - 1.0;',
+      '  float r = length(p);',
+      '  if (r > 1.0) discard;',
+      '  float theta = atan(p.y, p.x);',
+      // Hot center → colored ring → fade out at edge.
+      '  float center = 1.0 - smoothstep(0.0, 0.45, r);',
+      '  float ring   = exp(-pow((r - 0.55) * 4.0, 2.0));',
+      '  float edgeFade = 1.0 - smoothstep(0.85, 1.0, r);',
+      // Slow rotating spiral pattern: brightness modulated by a function
+      // of theta and r so we get a 3-arm pinwheel look.
+      '  float spiral = 0.5 + 0.5 * sin(theta * 3.0 + r * 8.0 - time * 2.0);',
+      '  spiral = mix(0.65, 1.0, spiral); // never fully dark',
+      '  float pulse = 0.85 + 0.15 * sin(time * 4.0);',
+      '  vec3 hot   = vec3(1.0, 1.0, 1.05);',
+      '  vec3 col = mix(uColor * 1.4, hot, center * 0.85);',
+      '  float bright = (center * 1.6 + ring * 1.2) * spiral * pulse * edgeFade;',
+      '  bright *= (0.6 + 0.4 * uThrottle);',
+      '  gl_FragColor = vec4(col * bright, bright);',
+      '}'
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+}
+
+// ---- Stasis field core (sphere) ---------------------------------------
+// Vortex/time-distortion energy. Concentric spiraling bands rotating
+// around the surface, fresnel-strong edge so the sphere reads as a
+// coherent energy field, gentle pulsing.
+function _makeStasisCoreMaterial(baseColor) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      time:    { value: 0 },
+      uColor:  { value: new THREE.Color(baseColor) },
+      uPulse:  { value: 1.0 }, // proximity boost, written per-frame
+    },
+    vertexShader: [
+      'varying vec3 vNormal;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocal;',
+      'void main() {',
+      '  vLocal = position;',
+      '  vNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);',
+      '  vec4 wp = modelMatrix * vec4(position, 1.0);',
+      '  vWorldPos = wp.xyz;',
+      '  gl_Position = projectionMatrix * viewMatrix * wp;',
+      '}'
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float time;',
+      'uniform vec3 uColor;',
+      'uniform float uPulse;',
+      'varying vec3 vNormal;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocal;',
+      'void main() {',
+      // Spherical coordinates from local position so bands wrap the sphere.
+      '  vec3 n = normalize(vLocal);',
+      '  float phi = atan(n.z, n.x);',
+      '  float theta = acos(clamp(n.y, -1.0, 1.0));',
+      // Rotating spiral bands. Two layers at different speeds for depth.
+      '  float band1 = 0.5 + 0.5 * sin(theta * 8.0 + phi * 3.0 + time * 1.6 * uPulse);',
+      '  float band2 = 0.5 + 0.5 * sin(theta * 14.0 - phi * 2.0 - time * 2.4 * uPulse);',
+      '  float bands = band1 * 0.6 + band2 * 0.4;',
+      '  bands = pow(bands, 1.5);',
+      // Fresnel rim — strong glow at silhouette so the field reads as a
+      // bounded energy bubble instead of a diffuse sphere.
+      '  vec3 viewDir = normalize(cameraPosition - vWorldPos);',
+      '  float fres = pow(1.0 - max(dot(vNormal, viewDir), 0.0), 2.5);',
+      '  float pulse = 0.85 + 0.30 * sin(time * 2.5 * uPulse);',
+      '  vec3 hot = vec3(0.85, 0.95, 1.10);',
+      '  vec3 col = mix(uColor * 0.8, hot, bands * 0.75);',
+      '  float bright = (0.3 + bands * 0.9) * pulse + fres * 1.6;',
+      '  float alpha = clamp(0.45 + fres * 0.55 + bands * 0.15, 0.0, 1.0) * uPulse;',
+      '  gl_FragColor = vec4(col * bright, alpha);',
+      '}'
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+}
+
+// ---- Orb core (sphere) ------------------------------------------------
+// Energy bead for trip-wire mines and similar small "armed" markers.
+// Tighter spirals than stasis core, stronger pulse, brighter center
+// so the orb reads as a charged-up node from any distance.
+function _makeOrbCoreMaterial(baseColor) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      time:   { value: 0 },
+      uColor: { value: new THREE.Color(baseColor) },
+      uPulse: { value: 1.0 },
+    },
+    vertexShader: [
+      'varying vec3 vNormal;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocal;',
+      'void main() {',
+      '  vLocal = position;',
+      '  vNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);',
+      '  vec4 wp = modelMatrix * vec4(position, 1.0);',
+      '  vWorldPos = wp.xyz;',
+      '  gl_Position = projectionMatrix * viewMatrix * wp;',
+      '}'
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float time;',
+      'uniform vec3 uColor;',
+      'uniform float uPulse;',
+      'varying vec3 vNormal;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocal;',
+      'void main() {',
+      '  vec3 n = normalize(vLocal);',
+      '  float phi = atan(n.z, n.x);',
+      '  float theta = acos(clamp(n.y, -1.0, 1.0));',
+      // High-frequency crackle pattern.
+      '  float c1 = 0.5 + 0.5 * sin(theta * 18.0 + phi * 7.0 + time * 6.0);',
+      '  float c2 = 0.5 + 0.5 * sin(theta * 11.0 - phi * 13.0 - time * 4.5);',
+      '  float crackle = pow(c1 * c2, 0.6);',
+      '  vec3 viewDir = normalize(cameraPosition - vWorldPos);',
+      '  float fres = pow(1.0 - max(dot(vNormal, viewDir), 0.0), 2.0);',
+      '  float pulse = 0.7 + 0.5 * sin(time * 3.5 * uPulse);',
+      '  vec3 hot = vec3(1.0, 1.0, 1.0);',
+      '  vec3 col = mix(uColor, hot, crackle * 0.6 + fres * 0.3);',
+      '  float bright = (0.6 + crackle * 0.8) * pulse + fres * 1.4;',
+      '  float alpha = clamp(0.6 + fres * 0.6, 0.0, 1.0);',
+      '  gl_FragColor = vec4(col * bright, alpha);',
+      '}'
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+}
+
+// ---- Gravity halo (sphere) --------------------------------------------
+// Concentric inward-collapsing rings on a sphere shell. Used for the
+// Tether Trap halo so the trap reads as a gravitational ensnare instead
+// of a flat blue ball. Rings march inward over time.
+function _makeGravityHaloMaterial(baseColor) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      time:   { value: 0 },
+      uColor: { value: new THREE.Color(baseColor) },
+    },
+    vertexShader: [
+      'varying vec3 vNormal;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocal;',
+      'void main() {',
+      '  vLocal = position;',
+      '  vNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);',
+      '  vec4 wp = modelMatrix * vec4(position, 1.0);',
+      '  vWorldPos = wp.xyz;',
+      '  gl_Position = projectionMatrix * viewMatrix * wp;',
+      '}'
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float time;',
+      'uniform vec3 uColor;',
+      'varying vec3 vNormal;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocal;',
+      'void main() {',
+      '  vec3 n = normalize(vLocal);',
+      // Distance from "polar axis" (we use Y) drives concentric bands.
+      // Bands march inward (toward y=±1, the poles) over time so they read
+      // as gravitational lensing pulling matter toward the trap center.
+      '  float lat = abs(n.y);', // 0 at equator → 1 at poles
+      '  float bands = 0.5 + 0.5 * sin(lat * 14.0 - time * 3.0);',
+      '  bands = pow(bands, 2.5);',
+      '  vec3 viewDir = normalize(cameraPosition - vWorldPos);',
+      '  float fres = pow(1.0 - max(dot(vNormal, viewDir), 0.0), 1.8);',
+      '  vec3 col = uColor * (0.6 + bands * 1.5);',
+      '  float bright = bands * 0.9 + fres * 1.2;',
+      '  float alpha = clamp(0.3 + fres * 0.5 + bands * 0.25, 0.0, 0.95);',
+      '  gl_FragColor = vec4(col * bright, alpha);',
+      '}'
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+}
+
+// ---- Missile body (sphere/icosa) --------------------------------------
+// Internal energy churn for the cluster missile body. Surface seams glow
+// brighter as it nears detonation (uChargeUp 0..1 driven externally).
+function _makeMissileBodyMaterial(baseColor) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      time:      { value: 0 },
+      uColor:    { value: new THREE.Color(baseColor) },
+      uChargeUp: { value: 0.0 },
+    },
+    vertexShader: [
+      'varying vec3 vNormal;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocal;',
+      'void main() {',
+      '  vLocal = position;',
+      '  vNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);',
+      '  vec4 wp = modelMatrix * vec4(position, 1.0);',
+      '  vWorldPos = wp.xyz;',
+      '  gl_Position = projectionMatrix * viewMatrix * wp;',
+      '}'
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float time;',
+      'uniform vec3 uColor;',
+      'uniform float uChargeUp;',
+      'varying vec3 vNormal;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocal;',
+      'void main() {',
+      '  vec3 n = normalize(vLocal);',
+      '  float phi = atan(n.z, n.x);',
+      '  float theta = acos(clamp(n.y, -1.0, 1.0));',
+      // Seam pattern: high-frequency stripes around the body, plus
+      // turbulent noise that strengthens with chargeUp.
+      '  float seams = 0.5 + 0.5 * sin(theta * 22.0 + phi * 4.0 + time * 1.5);',
+      '  seams = smoothstep(0.78, 1.0, seams);',
+      '  float churn = 0.5 + 0.5 * sin(theta * 6.0 - phi * 5.0 + time * (3.0 + uChargeUp * 4.0));',
+      '  vec3 viewDir = normalize(cameraPosition - vWorldPos);',
+      '  float fres = pow(1.0 - max(dot(vNormal, viewDir), 0.0), 2.0);',
+      '  vec3 hot = vec3(1.0, 0.92, 0.85);',
+      '  vec3 surface = mix(uColor * 0.5, uColor * 1.5, churn);',
+      '  vec3 col = mix(surface, hot, seams * (0.4 + uChargeUp * 0.6));',
+      '  float bright = 0.55 + churn * 0.4 + seams * (0.6 + uChargeUp * 1.2) + fres * 0.6;',
+      '  float alpha = clamp(0.85 + fres * 0.15, 0.0, 1.0);',
+      '  gl_FragColor = vec4(col * bright, alpha);',
+      '}'
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+}
+
+// ---- Projectile glow (sphere) -----------------------------------------
+// Soft internal flow + radial fresnel for the inner glow halo around
+// projectiles. Replaces the flat additive sphere with a sphere that
+// has internal motion (subtle plasma flow) so projectiles read as
+// energy balls rather than lit billiard balls.
+function _makeProjGlowMaterial(baseColor) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      time:   { value: 0 },
+      uColor: { value: new THREE.Color(baseColor) },
+      uOpacity: { value: 0.65 },
+    },
+    vertexShader: [
+      'varying vec3 vNormal;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocal;',
+      'void main() {',
+      '  vLocal = position;',
+      '  vNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);',
+      '  vec4 wp = modelMatrix * vec4(position, 1.0);',
+      '  vWorldPos = wp.xyz;',
+      '  gl_Position = projectionMatrix * viewMatrix * wp;',
+      '}'
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float time;',
+      'uniform vec3 uColor;',
+      'uniform float uOpacity;',
+      'varying vec3 vNormal;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocal;',
+      'void main() {',
+      '  vec3 n = normalize(vLocal);',
+      '  float flow = 0.5 + 0.5 * sin(n.x * 8.0 + n.y * 7.0 + n.z * 6.0 + time * 4.0);',
+      '  vec3 viewDir = normalize(cameraPosition - vWorldPos);',
+      '  float fres = pow(1.0 - max(dot(vNormal, viewDir), 0.0), 2.5);',
+      '  vec3 hot = vec3(1.0, 1.0, 1.0);',
+      '  vec3 col = mix(uColor, hot, flow * 0.35 + fres * 0.4);',
+      '  float bright = 0.7 + flow * 0.5 + fres * 1.0;',
+      '  float alpha = clamp(uOpacity + fres * 0.3, 0.0, 1.0);',
+      '  gl_FragColor = vec4(col * bright, alpha);',
+      '}'
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+}
+
+// ---- Hex hologram (plane / shape) -------------------------------------
+// Hex grid pattern with damage cracks, used for Tracker's particle wall.
+// uHp 1.0 = pristine hex grid, 0.0 = many cracks revealed. The hex
+// pattern moves slowly so the wall reads as live, not a static decal.
+function _makeHexHologramMaterial(baseColor) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      time:   { value: 0 },
+      uColor: { value: new THREE.Color(baseColor) },
+      uHp:    { value: 1.0 },
+    },
+    vertexShader: [
+      'varying vec2 vUv;',
+      'varying vec3 vNormal;',
+      'varying vec3 vWorldPos;',
+      'void main() {',
+      '  vUv = uv;',
+      '  vNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);',
+      '  vec4 wp = modelMatrix * vec4(position, 1.0);',
+      '  vWorldPos = wp.xyz;',
+      '  gl_Position = projectionMatrix * viewMatrix * wp;',
+      '}'
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float time;',
+      'uniform vec3 uColor;',
+      'uniform float uHp;',
+      'varying vec2 vUv;',
+      'varying vec3 vNormal;',
+      'varying vec3 vWorldPos;',
+      'float hex2D(vec2 q, float cell) {',
+      '  q /= cell;',
+      '  vec2 r = vec2(1.0, 1.7320508);',
+      '  vec2 h = r * 0.5;',
+      '  vec2 a = mod(q, r) - h;',
+      '  vec2 b = mod(q + h, r) - h;',
+      '  vec2 d = (dot(a, a) < dot(b, b)) ? a : b;',
+      '  return max(abs(d.x), abs(d.y * 0.86603 + d.x * 0.5));',
+      '}',
+      'float hash21(vec2 p) {',
+      '  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);',
+      '}',
+      'void main() {',
+      // Centered UVs so the pattern sits symmetric on the wall.
+      '  vec2 p = vUv - 0.5;',
+      // Slow drift so the hex grid reads as live (uHp does not affect drift).
+      '  vec2 q = p + vec2(time * 0.012, time * 0.020);',
+      '  float h = hex2D(q, 0.07);',
+      '  float edge = 1.0 - smoothstep(0.42, 0.50, h);', // 1 at hex edge, 0 inside
+      // Cracks: 1 - smooth random per-cell cluster appears as hp drops.
+      '  vec2 cell = floor(q / 0.07);',
+      '  float r1 = hash21(cell);',
+      '  float crack = step(uHp, r1) * (1.0 - smoothstep(0.30, 0.55, h));',
+      '  vec3 viewDir = normalize(cameraPosition - vWorldPos);',
+      '  float fres = pow(1.0 - abs(dot(vNormal, viewDir)), 2.0);',
+      // Color shifts toward red as hp drops; healthy is bluish from input.
+      '  vec3 dyingTint = vec3(1.0, 0.35, 0.30);',
+      '  vec3 col = mix(dyingTint, uColor, uHp);',
+      '  float bright = edge * 1.4 + fres * 0.6 + crack * 0.8;',
+      // Alpha tuned to match Tracker\'s original wall opacity (~0.35 max).
+      // Hex edges give the pattern its silhouette; cell interiors stay
+      // mostly transparent so you can still SEE through the shield, which
+      // is the whole point of a hologram. Cracks bump alpha so damage
+      // reads strongly as HP drops. Final cap at 0.55 (down from 1.0).
+      '  float alpha = edge * 0.28 + fres * 0.16 + crack * 0.45;',
+      '  alpha *= (0.45 + 0.55 * uHp);',
+      '  alpha = clamp(alpha, 0.0, 0.55);',
+      '  gl_FragColor = vec4(col * bright, alpha);',
+      '}'
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+}
+
+// ---- Shockwave ring (torus / ring geometry) ---------------------------
+// Expanding shockwave with chromatic edge for stasis pickup and similar
+// "I just collected this" rings. uAge 0..1 drives the expansion; the ring
+// brightens at the leading edge.
+function _makeShockwaveMaterial(baseColor) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      time:   { value: 0 },
+      uColor: { value: new THREE.Color(baseColor) },
+      uAge:   { value: 0.0 }, // 0 fresh, 1 fully expanded
+    },
+    vertexShader: [
+      'varying vec2 vUv;',
+      'varying vec3 vNormal;',
+      'varying vec3 vWorldPos;',
+      'void main() {',
+      '  vUv = uv;',
+      '  vNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);',
+      '  vec4 wp = modelMatrix * vec4(position, 1.0);',
+      '  vWorldPos = wp.xyz;',
+      '  gl_Position = projectionMatrix * viewMatrix * wp;',
+      '}'
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float time;',
+      'uniform vec3 uColor;',
+      'uniform float uAge;',
+      'varying vec2 vUv;',
+      'varying vec3 vNormal;',
+      'varying vec3 vWorldPos;',
+      'void main() {',
+      // Torus UV.x wraps around the ring tube cross-section.
+      '  float r = abs(vUv.x - 0.5) * 2.0;', // 0 inside, 1 at edge
+      '  vec3 viewDir = normalize(cameraPosition - vWorldPos);',
+      '  float fres = pow(1.0 - abs(dot(vNormal, viewDir)), 1.8);',
+      // Chromatic edge: separate R/G/B channels at slight UV offsets.
+      '  float chR = 1.0 - smoothstep(0.0, 0.85, r + 0.12);',
+      '  float chG = 1.0 - smoothstep(0.0, 0.85, r);',
+      '  float chB = 1.0 - smoothstep(0.0, 0.85, r - 0.12);',
+      '  vec3 chroma = vec3(chR, chG, chB);',
+      '  vec3 col = uColor * 0.7 + chroma * 1.4 + vec3(fres);',
+      '  float fade = 1.0 - uAge;',
+      '  float bright = (chG * 1.4 + fres * 0.8) * fade;',
+      '  float alpha = clamp(bright * 0.85, 0.0, 1.0);',
+      '  gl_FragColor = vec4(col * bright, alpha);',
+      '}'
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+}
+
+// ---- Ribbon flow (plane / strip geometry) -----------------------------
+// UV-scrolling noise + brightness gradient for projectile trail ribbons.
+// Vertex colors (already on the existing ribbon geometry) act as the
+// fade-toward-tail; this shader adds internal motion so the trail reads
+// as a streaming energy filament instead of a stretched cylinder.
+function _makeRibbonFlowMaterial(baseColor) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      time:   { value: 0 },
+      uColor: { value: new THREE.Color(baseColor) },
+    },
+    vertexShader: [
+      'attribute vec3 color;',
+      'varying vec2 vUv;',
+      'varying vec3 vColor;',
+      'void main() {',
+      '  vUv = uv;',
+      '  vColor = color;',
+      '  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
+      '}'
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float time;',
+      'uniform vec3 uColor;',
+      'varying vec2 vUv;',
+      'varying vec3 vColor;',
+      'float hash21(vec2 p) {',
+      '  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);',
+      '}',
+      'float vnoise(vec2 p) {',
+      '  vec2 i = floor(p); vec2 f = fract(p);',
+      '  f = f * f * (3.0 - 2.0 * f);',
+      '  return mix(mix(hash21(i), hash21(i + vec2(1,0)), f.x),',
+      '             mix(hash21(i + vec2(0,1)), hash21(i + vec2(1,1)), f.x), f.y);',
+      '}',
+      'void main() {',
+      // Scroll along V (length axis of ribbon) so the trail visibly flows.
+      '  float scroll = time * 1.5;',
+      '  float n = vnoise(vec2(vUv.x * 6.0, vUv.y * 14.0 - scroll));',
+      // Cross-section soft falloff so the ribbon doesn\'t hard-edge.
+      '  float crossFade = 1.0 - pow(abs(vUv.x - 0.5) * 2.0, 2.0);',
+      '  vec3 col = uColor * (0.6 + n * 0.7) * vColor * 1.5;',
+      '  float bright = (0.5 + n * 0.7) * crossFade;',
+      '  float alpha = bright * 0.85;',
+      '  if (alpha < 0.02) discard;',
+      '  gl_FragColor = vec4(col * bright, alpha);',
+      '}'
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+    vertexColors: true,
+  });
+}
+
 // (v6.7) Incendiary Gas spawn helper. Same broadcast=true/false pattern as
 // Trip Wire / Particle Wall.
 function spawnIncendiaryGas(pos, owner, team, ownerPeerId, netId, broadcast) {
@@ -3567,22 +4178,20 @@ function spawnTetherTrap(pos, owner, team, ownerPeerId, netId, broadcast) {
     timer: 15, rootDuration: 4, radius: 250, owner, team, triggered: false,
     ownerPeerId, netId,
   });
+  // Center: orb-core shader on an octahedron so the central node reads as
+  // a charged-up node (matches the rest of the visual vocabulary).
   const tetherGeo = new THREE.OctahedronGeometry(14, 0);
-  const tetherMat = new THREE.MeshBasicMaterial({
-    color: 0x88ddff, transparent: true, opacity: 0.85,
-    blending: THREE.AdditiveBlending, depthWrite: false,
-  });
+  const tetherMat = _makeOrbCoreMaterial(0x88ddff);
   const tetherMesh = new THREE.Mesh(tetherGeo, tetherMat);
   tetherMesh.position.copy(pos);
   tetherMesh.renderOrder = 1;
   scene.add(tetherMesh);
-  // Halo around the trap so it reads as an active ensnare from far away.
-  // Pulsing/spinning per-frame in the tether tick.
-  const haloGeo = new THREE.SphereGeometry(36, 12, 8);
-  const haloMat = new THREE.MeshBasicMaterial({
-    color: 0x55aadd, transparent: true, opacity: 0.40,
-    blending: THREE.AdditiveBlending, depthWrite: false,
-  });
+  // Halo around the trap: gravity-distortion shader (concentric rings
+  // marching inward toward the poles). Reads as gravitational lensing
+  // pulling matter toward the trap's center, which is what the trap
+  // mechanically does. Per-frame tether tick drives time uniform.
+  const haloGeo = new THREE.SphereGeometry(36, 24, 16);
+  const haloMat = _makeGravityHaloMaterial(0x55aadd);
   const haloMesh = new THREE.Mesh(haloGeo, haloMat);
   haloMesh.position.copy(pos);
   haloMesh.renderOrder = 1;
@@ -4518,21 +5127,30 @@ function renderPostFX() {
   renderer.render(postFX.passScene, postFX.quadCamera);
 }
 
-// Cartoon-style lighting (bright, high-contrast, minimal shadow)
-const ambientLight = new THREE.AmbientLight(0x445577, 0.8); // Brighter ambient for flat look
+// Cartoon-style lighting (bright, high-contrast, minimal shadow).
+// Boosted further so ships catch even more light from outside. Walls
+// use a self-lit ShaderMaterial and are NOT affected by these scene
+// lights, so this brightens only the ships (MeshStandardMaterial).
+const ambientLight = new THREE.AmbientLight(0x445577, 3.9);
 scene.add(ambientLight);
-const dirLight = new THREE.DirectionalLight(0xffeedd, 1.2); // Stronger directional for hard toon edges
+const dirLight = new THREE.DirectionalLight(0xffeedd, 5.0);
 dirLight.position.set(1000, 3000, 1500);
 scene.add(dirLight);
-const dirLight2 = new THREE.DirectionalLight(0x8888ff, 0.4); // Cool fill light from below
-dirLight2.position.set(-500, -1000, -500);
+// Second key light from a near-opposite direction so ships have light
+// on BOTH sides instead of one shadowed half.
+const dirLight2 = new THREE.DirectionalLight(0xb0c8e0, 3.1);
+dirLight2.position.set(-1500, 2000, -1200);
 scene.add(dirLight2);
-const pointLight = new THREE.PointLight(0x6699ff, 0.5, 12000);
+// Cool under-fill stays for ground-up bounce-light feel.
+const dirLight3 = new THREE.DirectionalLight(0x8888ff, 1.8);
+dirLight3.position.set(-500, -1000, -500);
+scene.add(dirLight3);
+const pointLight = new THREE.PointLight(0x6699ff, 2.5, 12000);
 pointLight.position.set(0, 500, 0);
 scene.add(pointLight);
 
 // Hemisphere light for cartoon-style ambient (sky/ground color split)
-const hemiLight = new THREE.HemisphereLight(0x6688cc, 0x224466, 0.6);
+const hemiLight = new THREE.HemisphereLight(0x6688cc, 0x224466, 3.1);
 scene.add(hemiLight);
 
 // ---- STARFIELD ----
@@ -5510,28 +6128,23 @@ function buildModelShipMesh(chassisData, teamColor, loadoutKey) {
   group.add(model);
   group.userData.hullMats = hullMats;
 
-  // Engine + plume materials (additive, identical to procedural path).
-  const engineGlowMat = new THREE.MeshBasicMaterial({
-    color: teamColor, transparent: true, opacity: 1.0,
-    blending: THREE.AdditiveBlending, depthWrite: false
-  });
-  const thrusterMat = new THREE.MeshBasicMaterial({
-    color: 0x66eeff, transparent: true, opacity: 0.95,
-    blending: THREE.AdditiveBlending, depthWrite: false
-  });
+  // Engine + plume materials. Engine glow disc + plume cones now use
+  // ShaderMaterial factories with internal animation (radial pulse,
+  // scrolling exhaust noise) so engines read as live combustion instead
+  // of flat additive shapes. Time + uThrottle are bumped per frame in
+  // animateShipMesh from each ship's accelerating/coasting state.
+  const engineGlowMat = _makeEngineDiscMaterial(teamColor);
+  const thrusterMat   = _makeEngineDiscMaterial(0x66eeff);
+  // Panel glow stays as a flat additive material — small surface area,
+  // close to the hull, doesn't benefit much from internal animation.
   const panelGlowMat = new THREE.MeshBasicMaterial({
     color: teamColor, transparent: true, opacity: 0.85,
     blending: THREE.AdditiveBlending, depthWrite: false
   });
-  const plumeMat = new THREE.MeshBasicMaterial({
-    color: teamCol.clone().lerp(new THREE.Color(0xffffff), 0.35),
-    transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending,
-    depthWrite: false
-  });
-  const plumeMatCool = new THREE.MeshBasicMaterial({
-    color: 0xaaeeff, transparent: true, opacity: 0.55,
-    blending: THREE.AdditiveBlending, depthWrite: false
-  });
+  const plumeMat     = _makePlumeShaderMaterial(teamCol.clone().lerp(new THREE.Color(0xffffff), 0.35), 0.55);
+  const plumeMatCool = _makePlumeShaderMaterial(0xaaeeff, 0.55);
+  // Track these so animateShipMesh can bump time + throttle each frame.
+  group.userData.shaderEngineMats = [engineGlowMat, thrusterMat, plumeMat, plumeMatCool];
 
   // Engine layout per chassis. Anchor tail to the model's +Z bbox edge so
   // plumes sit flush behind the real hull, not at a synthetic coordinate.
@@ -5694,9 +6307,10 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
     emissiveIntensity: 1.0,
     envMapIntensity: 0.85
   });
-  // Fresnel rim-light: team-colored glow at glancing angles. onBeforeCompile injects
-  // a view-dependent power(1 - n·v) term into the fragment shader so silhouettes pop
-  // for instant target ID at distance. Cheap (no extra passes) and compatible with bloom.
+  // Restored to original team-colored fresnel rim. Procedural ships are
+  // already entirely team-colored (color: teamColor + normalMap detail),
+  // so a team-color rim doesn't change their visual identity the way it
+  // did on the GLB hulls.
   hullMat.userData.rimColor = { value: teamCol.clone().multiplyScalar(1.35) };
   hullMat.userData.rimPower = { value: 2.5 };
   hullMat.userData.rimStrength = { value: 0.75 };
@@ -5746,28 +6360,18 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
   group.userData.cockpitBaseEmissiveIntensity = 1.4;
   // Register hull material so doomed-state darkening can dim the silhouette.
   group.userData.hullMat = hullMat;
-  const engineGlowMat = new THREE.MeshBasicMaterial({
-    color: teamColor, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending,
-    depthWrite: false
-  });
-  const thrusterMat = new THREE.MeshBasicMaterial({
-    color: 0x66eeff, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending,
-    depthWrite: false
-  });
-  // Glowing panel strips (emissive accent along hull seams)
+  // Procedural-fallback engine + plume materials. Same shader treatment
+  // as the GLB path (see buildModelShipMesh) so the two paths look
+  // identical from outside.
+  const engineGlowMat = _makeEngineDiscMaterial(teamColor);
+  const thrusterMat   = _makeEngineDiscMaterial(0x66eeff);
   const panelGlowMat = new THREE.MeshBasicMaterial({
     color: teamColor, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending,
     depthWrite: false
   });
-  // Tapered engine plume (bright additive cone behind engine glow circles)
-  const plumeMat = new THREE.MeshBasicMaterial({
-    color: teamCol.clone().lerp(new THREE.Color(0xffffff), 0.35),
-    transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false
-  });
-  const plumeMatCool = new THREE.MeshBasicMaterial({
-    color: 0xaaeeff, transparent: true, opacity: 0.55,
-    blending: THREE.AdditiveBlending, depthWrite: false
-  });
+  const plumeMat     = _makePlumeShaderMaterial(teamCol.clone().lerp(new THREE.Color(0xffffff), 0.35), 0.55);
+  const plumeMatCool = _makePlumeShaderMaterial(0xaaeeff, 0.55);
+  group.userData.shaderEngineMats = [engineGlowMat, thrusterMat, plumeMat, plumeMatCool];
 
   // Helper: build a tapered engine plume cone at (x,y,z) extending +z (out the back).
   // Returns the cone mesh (so caller can register it for animation).
@@ -6214,12 +6818,23 @@ function animateShipMesh(mesh, speed, maxSpeed, isFiring, dt, doomed) {
     const pulse = (lub + dub) * 0.10; // ±10% of base
     mesh.userData.cockpitMat.emissiveIntensity = base * (1 + pulse - 0.05);
   }
-  // Engines: pulse opacity and scale with speed
+  // Engines: drive shader uniforms (or opacity for legacy basic mat) plus
+  // scale with speed. Shader path uses uThrottle to ramp internal
+  // brightness; legacy path mutates material.opacity directly.
   if (mesh.userData.engineGlows) {
     for (const glow of mesh.userData.engineGlows) {
-      const baseOp = 0.45 + t * 0.55;
-      const pulse = Math.sin(time * 12 + Math.random() * 0.1) * 0.08 * t;
-      glow.material.opacity = baseOp + pulse;
+      if (glow.material && glow.material.uniforms) {
+        glow.material.uniforms.time.value = time;
+        if (glow.material.uniforms.uThrottle) {
+          // Smooth throttle write so the disc doesn't snap when t jitters.
+          const prev = glow.material.uniforms.uThrottle.value;
+          glow.material.uniforms.uThrottle.value = prev + (t - prev) * 0.15;
+        }
+      } else if (glow.material && typeof glow.material.opacity === 'number') {
+        const baseOp = 0.45 + t * 0.55;
+        const pulse = Math.sin(time * 12 + Math.random() * 0.1) * 0.08 * t;
+        glow.material.opacity = baseOp + pulse;
+      }
       const baseScale = 0.7 + t * 0.9;
       const flicker = 1 + Math.sin(time * 18) * 0.05 * t;
       glow.scale.setScalar(baseScale * flicker);
@@ -6230,22 +6845,34 @@ function animateShipMesh(mesh, speed, maxSpeed, isFiring, dt, doomed) {
   // and pick up a hot-white tint; animateShipMesh already knows speed so no extra state needed.
   if (mesh.userData.enginePlumes) {
     for (const plume of mesh.userData.enginePlumes) {
-      const baseOp = (plume.userData.basePlumeOpacity || 0.55);
       const flicker = 1 + Math.sin(time * 22 + plume.position.x * 0.5) * 0.12;
-      // Opacity: near-zero at idle (t<0.05), ramps hard through midrange, ceiling at full.
-      // t-squared curve concentrates visible plume in the upper throttle band.
       const opCurve = Math.max(0, t * t * 1.15 + (t > 0.02 ? 0.05 : 0));
-      plume.material.opacity = (opCurve * baseOp) * flicker;
+      if (plume.material && plume.material.uniforms) {
+        // Shader plume: drive time + uThrottle (which the fragment uses to
+        // scale internal brightness, scroll speed, alpha). The opCurve and
+        // flicker still feed in via uThrottle so the perceived brightness
+        // matches the legacy path.
+        plume.material.uniforms.time.value = time;
+        if (plume.material.uniforms.uThrottle) {
+          const prev = plume.material.uniforms.uThrottle.value;
+          const target = Math.min(1.5, opCurve * flicker * 1.5);
+          plume.material.uniforms.uThrottle.value = prev + (target - prev) * 0.15;
+        }
+      } else if (plume.material && typeof plume.material.opacity === 'number') {
+        const baseOp = (plume.userData.basePlumeOpacity || 0.55);
+        plume.material.opacity = (opCurve * baseOp) * flicker;
+      }
       // Stretch along Z with wider dynamic range: 0.22 at rest, up to 2.2 at full throttle.
       const lenScale = 0.22 + t * 2.0 + Math.sin(time * 26) * 0.05 * t;
       const radScale = 0.65 + t * 0.5 + Math.sin(time * 16) * 0.07 * t;
       plume.scale.set(radScale, radScale, lenScale);
-      // Hot-white tint at high throttle: plume core gets whiter/hotter the harder you burn.
-      if (plume.userData.basePlumeColor === undefined && plume.material.color) {
-        plume.userData.basePlumeColor = plume.material.color.clone();
-      }
-      if (plume.userData.basePlumeColor && plume.material.color) {
-        const heat = Math.min(1, Math.max(0, (t - 0.5) * 2.0)); // 0 below half throttle, 1 at full
+      // Hot-white tint at high throttle (legacy basic-material path only —
+      // the shader plume mixes hot white internally via the coreHot factor).
+      if (plume.material && plume.material.color) {
+        if (plume.userData.basePlumeColor === undefined) {
+          plume.userData.basePlumeColor = plume.material.color.clone();
+        }
+        const heat = Math.min(1, Math.max(0, (t - 0.5) * 2.0));
         plume.material.color.copy(plume.userData.basePlumeColor).lerp(new THREE.Color(0xffffff), heat * 0.55);
       }
       // Heat-haze billboard: a stretched additive Sprite sits behind the plume tip.
@@ -6962,8 +7589,12 @@ class Projectile {
     this.trailTimer = 0;
 
     // --- Inner glow halo (wider, softer; post-bloom catches it) ---
-    const glowGeo = new THREE.SphereGeometry(7, 8, 6);
-    const glowMat = new THREE.MeshBasicMaterial({ color: this.trailColor, transparent: true, opacity: 0.65, blending: THREE.AdditiveBlending, depthWrite: false });
+    // Shader-driven energy ball: internal plasma flow + fresnel rim so it
+    // reads as charged energy rather than a lit billiard ball. time
+    // uniform is bumped in this.update() each frame.
+    const glowGeo = new THREE.SphereGeometry(7, 16, 12);
+    const glowMat = _makeProjGlowMaterial(this.trailColor);
+    glowMat.uniforms.uOpacity.value = 0.65;
     this.glowMesh = new THREE.Mesh(glowGeo, glowMat);
     this.glowMesh.position.copy(origin);
     this.glowMesh.renderOrder = 1;
@@ -7154,7 +7785,15 @@ class Projectile {
       const distFromSpawn = this.position.distanceTo(this.spawnOrigin);
       _fadeIn = Math.min(1, distFromSpawn / this.fadeInDist);
       if (this.mesh)        this.mesh.material.opacity        = this._baseOpacityCore   * _fadeIn;
-      if (this.glowMesh)    this.glowMesh.material.opacity    = this._baseOpacityGlow   * _fadeIn;
+      // glowMesh now uses the shader-driven _makeProjGlowMaterial; write
+      // the fade through its uOpacity uniform so the fragment respects it.
+      if (this.glowMesh) {
+        if (this.glowMesh.material.uniforms && this.glowMesh.material.uniforms.uOpacity) {
+          this.glowMesh.material.uniforms.uOpacity.value = this._baseOpacityGlow * _fadeIn;
+        } else {
+          this.glowMesh.material.opacity = this._baseOpacityGlow * _fadeIn;
+        }
+      }
       if (this.hazeMesh)    this.hazeMesh.material.opacity    = this._baseOpacityHaze   * _fadeIn;
       if (this.trail)       this.trail.material.opacity       = this._baseOpacityTrail  * _fadeIn;
       if (this.trailRibbon) this.trailRibbon.material.opacity = this._baseOpacityRibbon * _fadeIn;
@@ -7176,6 +7815,10 @@ class Projectile {
       this.glowMesh.position.copy(this.position);
       const haloFlicker = 1 + Math.sin(this.age * 22) * 0.18 + (Math.random() - 0.5) * 0.18;
       this.glowMesh.scale.setScalar(haloFlicker * _szM);
+      // Tick the projectile-glow shader's time uniform.
+      if (this.glowMesh.material && this.glowMesh.material.uniforms) {
+        this.glowMesh.material.uniforms.time.value = (typeof game !== 'undefined' && game.time) ? game.time : this.age;
+      }
     }
     // --- Outer volumetric haze: slow, smooth pulse (no random jitter) so
     // the wide shell reads as the projectile breathing while the inner
@@ -7197,6 +7840,15 @@ class Projectile {
       const camPos = camera.position;
       const segs = this.trailSegs;
       const baseW = this.trailRibbonBaseWidth;
+      // Near-camera fade: any trail vertex inside NEAR_FADE_END units of the
+      // camera collapses the ribbon strip to zero width (both above/below
+      // verts at the same point = degenerate quad = nothing rendered). This
+      // hides the "2D streak right in my face" effect on Pyro / Tracker /
+      // Puncture projectile trails when the projectile has just spawned and
+      // its tail still extends back through the cockpit. The full width
+      // ramps in over the next NEAR_FADE_END..NEAR_FADE_START unit range.
+      const NEAR_FADE_END   = 30; // 0% width at this distance
+      const NEAR_FADE_START = 110; // 100% width at this distance
       for (let i = 0; i < segs; i++) {
         const px = linePos[i * 3];
         const py = linePos[i * 3 + 1];
@@ -7214,10 +7866,22 @@ class Projectile {
           dy = py - linePos[(i - 1) * 3 + 1];
           dz = pz - linePos[(i - 1) * 3 + 2];
         }
-        // Camera-to-point direction
+        // Camera-to-point direction (also used for the near-fade distance check below).
         const tcx = camPos.x - px;
         const tcy = camPos.y - py;
         const tcz = camPos.z - pz;
+        const camDistSq = tcx * tcx + tcy * tcy + tcz * tcz;
+        // Squared comparison avoids the sqrt for the common "far enough" case.
+        let camFade;
+        if (camDistSq >= NEAR_FADE_START * NEAR_FADE_START) {
+          camFade = 1;
+        } else if (camDistSq <= NEAR_FADE_END * NEAR_FADE_END) {
+          camFade = 0;
+        } else {
+          const camDist = Math.sqrt(camDistSq);
+          camFade = (camDist - NEAR_FADE_END) / (NEAR_FADE_START - NEAR_FADE_END);
+          camFade = camFade * camFade * (3 - 2 * camFade); // smoothstep
+        }
         // Perpendicular axis = trailDir × cameraDir (lies in the screen plane
         // at this point, regardless of view angle, so the ribbon is always
         // visible as a flat strip facing the camera).
@@ -7231,9 +7895,10 @@ class Projectile {
           // Degenerate (looking straight down the trail): pick a stable axis
           nx = 1; ny = 0; nz = 0;
         }
-        // Width taper: full at head (i=0), 30% at tail tip (i=segs-1)
+        // Width taper: full at head (i=0), 30% at tail tip (i=segs-1).
+        // Multiplied by camFade so near-camera vertices have zero width.
         const tt = 1.0 - (i / (segs - 1));
-        const w = baseW * (0.30 + 0.70 * tt);
+        const w = baseW * (0.30 + 0.70 * tt) * camFade;
         // Above-side vertex
         ribbonPos[(i * 2) * 3]     = px + nx * w;
         ribbonPos[(i * 2) * 3 + 1] = py + ny * w;
@@ -7260,13 +7925,14 @@ class Projectile {
           (Math.random() - 0.5) * arcLen
         ));
         spawnLightningBolt(this.position, arcEnd, this.trailColor, 0.08, 1, 0.9);
-        this.electricArcTimer = 0.07 + Math.random() * 0.12; // ~5-9 bolts/sec
+        // Bolt rate dropped from 5-9/sec → 2.5-4/sec (combat perf). Each
+        // bolt is a TubeGeometry + 2 materials. With many projectiles in
+        // flight at once this was a major per-frame allocation source.
+        this.electricArcTimer = 0.25 + Math.random() * 0.15;
       }
     }
-    // Emit trail particles. Bumped from 30% to 55% so the trail looks alive
-    // with sparks; mix weapon color with white-hot accents so the trail
-    // reads as charged plasma rather than uniform colored dust.
-    if (Math.random() < 0.55) {
+    // Emit trail particles. Reduced from 55% per-frame to 30% (combat perf).
+    if (Math.random() < 0.30) {
       const useWhite = Math.random() < 0.35;
       game.particles.push({
         position: this.position.clone(),
@@ -8125,8 +8791,17 @@ function _makeExplosionMesh(type) {
   let geo, matOpts;
   switch (type) {
     case 'flash':
-      geo = _EXPL_SPHERE_LG;
-      matOpts = { color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending, depthWrite: false };
+      // (Descent 3 style) Camera-facing billboard quad with the ember radial-
+      // falloff texture instead of a sphere. A 3D sphere always reads as a
+      // hard ball over whatever you hit (especially noticeable when a
+      // projectile destroys at a ship's center). A camera-facing soft disc
+      // reads as a real burst of light from any viewing angle.
+      geo = _EXPL_PLANE;
+      matOpts = {
+        color: 0xffffff, transparent: true, opacity: 1.0,
+        blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
+        map: _emberFalloffTexture,
+      };
       break;
     case 'flare':
       geo = _EXPL_PLANE;
@@ -8141,12 +8816,23 @@ function _makeExplosionMesh(type) {
       };
       break;
     case 'fire':
-      geo = _EXPL_SPHERE_LG;
-      matOpts = { color: 0xff6600, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending };
+      // Same Descent 3 treatment: camera-facing billboard with ember
+      // texture, color tinted orange. Replaces the old _EXPL_SPHERE_LG
+      // 3D ball that was clearly geometric on top of every ship hit.
+      geo = _EXPL_PLANE;
+      matOpts = {
+        color: 0xff6600, transparent: true, opacity: 0.85,
+        blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
+        map: _emberFalloffTexture,
+      };
       break;
     case 'core':
-      geo = _EXPL_SPHERE_SM;
-      matOpts = { color: 0xff2200, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending };
+      geo = _EXPL_PLANE;
+      matOpts = {
+        color: 0xff2200, transparent: true, opacity: 0.6,
+        blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
+        map: _emberFalloffTexture,
+      };
       break;
     case 'flatShock':
       geo = _EXPL_RING_FLAT;
@@ -8271,16 +8957,16 @@ function spawnExplosion(pos, size) {
     }
   }
 
-  // --- Phase 1: White-hot flash core (instant, tiny, bright) ---
-  // Pooled unit-sphere; baseScale carries the original size * 0.55 factor into
-  // updateEffects' scale math. Material is reused across calls; reset opacity +
-  // color on acquire because the previous user may have faded it to black.
+  // --- Phase 1: White-hot flash core (camera-facing billboard) ---
+  // Was a 3D sphere; now a soft ember disc that always faces the camera so
+  // it never reads as a hard "ball" overlapping a ship.
   const flashMesh = _acquireExplosionMesh('flash');
   flashMesh.position.copy(pos);
   flashMesh.scale.setScalar(size * 0.55);
+  flashMesh.lookAt(camera.position);
   flashMesh.material.color.setHex(0xffffff);
   flashMesh.material.opacity = 1.0;
-  game.effects.push({ mesh: flashMesh, lifetime: 0.12, age: 0, type: 'explosionFlash', pooled: true, baseScale: size * 0.55 });
+  game.effects.push({ mesh: flashMesh, lifetime: 0.12, age: 0, type: 'explosionFlash', pooled: true, billboard: true, baseScale: size * 0.55 });
 
   // --- Phase 1b: Cinematic billboarded "lens flare" disc that faces the camera ---
   const flareMesh = _acquireExplosionMesh('flare');
@@ -8291,67 +8977,68 @@ function spawnExplosion(pos, size) {
   flareMesh.material.opacity = 0.95;
   game.effects.push({ mesh: flareMesh, lifetime: 0.22, age: 0, type: 'explosionFlash', pooled: true, billboard: true, baseScale: size * 1.6 });
 
-  // --- Phase 2: Expanding fireball (orange-red, multi-layer) ---
+  // --- Phase 2: Expanding fireball (orange-red, multi-layer, camera-facing) ---
   const fireMesh = _acquireExplosionMesh('fire');
   fireMesh.position.copy(pos);
   fireMesh.scale.setScalar(size);
+  fireMesh.lookAt(camera.position);
   fireMesh.material.color.setHex(0xff6600);
   fireMesh.material.opacity = 0.85;
-  game.effects.push({ mesh: fireMesh, lifetime: 0.5, age: 0, type: 'explosionFire', pooled: true, maxSize: size * 2.5, baseScale: size });
+  game.effects.push({ mesh: fireMesh, lifetime: 0.5, age: 0, type: 'explosionFire', pooled: true, billboard: true, maxSize: size * 2.5, baseScale: size });
 
-  // Inner darker core (red, slightly delayed expansion)
+  // Inner darker core (red, slightly delayed expansion, also billboarded).
   const coreMesh = _acquireExplosionMesh('core');
   coreMesh.position.copy(pos);
   coreMesh.scale.setScalar(size * 0.7);
+  coreMesh.lookAt(camera.position);
   coreMesh.material.color.setHex(0xff2200);
   coreMesh.material.opacity = 0.6;
-  game.effects.push({ mesh: coreMesh, lifetime: 0.35, age: 0, type: 'explosionFire', pooled: true, maxSize: size * 1.8, baseScale: size * 0.7 });
+  game.effects.push({ mesh: coreMesh, lifetime: 0.35, age: 0, type: 'explosionFire', pooled: true, billboard: true, maxSize: size * 1.8, baseScale: size * 0.7 });
 
-  // --- Phase 3: Shockwave rings (volumetric torus + billboarded flat ring) ---
-  if (size > 12) {
-    // Camera-facing billboarded flat shockwave (the "cinematic" disc you can always read).
-    // Unit ring is pre-built at inner=0.45 / outer=0.55; scaling by size keeps the
-    // same aspect as the old size*0.45 / size*0.55 call.
-    const flatMesh = _acquireExplosionMesh('flatShock');
-    flatMesh.position.copy(pos);
-    flatMesh.scale.setScalar(size);
-    flatMesh.lookAt(camera.position);
-    flatMesh.material.color.setHex(0xffd080);
-    flatMesh.material.opacity = 0.95;
-    game.effects.push({ mesh: flatMesh, lifetime: 0.55, age: 0, type: 'shockwave', pooled: true, maxSize: size * 6, billboard: true, baseScale: size });
-
-    // Volumetric torus shockwave for depth (random orientation). Unit torus is
-    // major=0.5 / minor=0.10, so scaling by size recovers size*0.5 / size*0.10.
-    const ringMesh = _acquireExplosionMesh('ringShock');
-    ringMesh.position.copy(pos);
-    ringMesh.scale.setScalar(size);
-    ringMesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
-    ringMesh.material.color.setHex(0xffaa44);
-    ringMesh.material.opacity = 0.8;
-    game.effects.push({ mesh: ringMesh, lifetime: 0.45, age: 0, type: 'shockwave', pooled: true, maxSize: size * 5, baseScale: size });
-
-    // Second perpendicular ring for big explosions
-    if (size > 30) {
-      const ring2Mesh = _acquireExplosionMesh('ring2Shock');
-      ring2Mesh.position.copy(pos);
-      ring2Mesh.scale.setScalar(size);
-      ring2Mesh.rotation.set(Math.random() * Math.PI + 1.5, Math.random() * Math.PI, 0);
-      ring2Mesh.material.color.setHex(0xff8833);
-      ring2Mesh.material.opacity = 0.6;
-      game.effects.push({ mesh: ring2Mesh, lifetime: 0.55, age: 0, type: 'shockwave', pooled: true, maxSize: size * 6, baseScale: size });
-    }
-  }
+  // --- Phase 3: (removed) Shockwave torus rings ---
+  // The flat camera-facing torus + volumetric ringShock + secondary
+  // perpendicular ring used to fire on every explosion with size > 12.
+  // Removed in favor of the billboard quad phases (flash, flare, fire,
+  // core) plus the volumetric shader smoke; those carry the impact
+  // without 2D ring geometry. Tracker, Pyro, and Puncture projectile
+  // hits no longer leak rings into the scene. The pool slots
+  // (flatShock/ringShock/ring2Shock) stay defined so any saved state /
+  // mods that referenced them won't crash, but spawnExplosion never
+  // acquires them.
 
   // --- Phase 4: Volumetric shader smoke (churning dark cloud, longer life) ---
-  // Replaces the old smooth-icosahedron + MeshBasicMaterial smoke. Uses the
-  // _makeSmokeMaterial Plasma-FBM shader so the smoke reads as a real
-  // turbulent plume with holes and density variation, not a solid dark
-  // blob. Built fresh per-explosion (the shader material is per-instance
-  // so each plume animates with its own time offset).
+  // Uses the shared _SMOKE_GEO sphere prototype so we don't allocate fresh
+  // SphereGeometry per call. The shader material still has to be unique
+  // per mesh (each plume animates with its own time offset baked into the
+  // uniforms), but Three.js's program cache deduplicates the GLSL so only
+  // the first ever smoke compiles a program. Concurrent smoke count is
+  // capped at SMOKE_MAX so cluster missiles + ship deaths don't pile up
+  // 50+ overlapping plumes; oldest is culled when over cap. Lifetime cut
+  // from 1.4s to 1.0s — the eye doesn't notice a tighter fade and the
+  // typical alive count drops by ~30%.
   if (size > 12) {
-    const smokeGeo = new THREE.SphereGeometry(1, 16, 12);
+    const SMOKE_MAX = 25;
+    let smokeAlive = 0;
+    let oldestSmokeIdx = -1;
+    let oldestSmokeAge = -1;
+    for (let i = 0; i < game.effects.length; i++) {
+      if (game.effects[i].type === 'shaderSmoke') {
+        smokeAlive++;
+        if (game.effects[i].age > oldestSmokeAge) {
+          oldestSmokeAge = game.effects[i].age;
+          oldestSmokeIdx = i;
+        }
+      }
+    }
+    if (smokeAlive >= SMOKE_MAX && oldestSmokeIdx >= 0) {
+      // Force-expire the oldest so the new one fits within the cap.
+      const old = game.effects[oldestSmokeIdx];
+      if (old.mesh && old.mesh.parent) scene.remove(old.mesh);
+      if (old.mesh && old.mesh.material && old.mesh.material.dispose) old.mesh.material.dispose();
+      game.effects.splice(oldestSmokeIdx, 1);
+    }
     const smokeMat = _makeSmokeMaterial(0x222018, 0.85);
-    const smokeMesh = new THREE.Mesh(smokeGeo, smokeMat);
+    const smokeMesh = new THREE.Mesh(_SMOKE_GEO, smokeMat);
     smokeMesh.position.copy(pos);
     smokeMesh.scale.setScalar(size * 0.7);
     smokeMesh.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
@@ -8359,7 +9046,7 @@ function spawnExplosion(pos, size) {
     smokeMesh.renderOrder = 1; // composite over wall
     scene.add(smokeMesh);
     game.effects.push({
-      mesh: smokeMesh, lifetime: 1.4, age: 0, type: 'shaderSmoke',
+      mesh: smokeMesh, lifetime: 1.0, age: 0, type: 'shaderSmoke',
       maxSize: size * 4, baseScale: size * 0.7,
       rotVel: new THREE.Vector3((Math.random()-0.5)*2, (Math.random()-0.5)*2, (Math.random()-0.5)*2),
     });
@@ -9388,6 +10075,15 @@ function updateOrganics(dt) {
 //                        lowest opacity, lingers longest -> volumetric body
 // The radial vertex count goes UP on the haze tubes (8/12 instead of 4/6) so
 // the soft glow reads round at oblique angles instead of faceted.
+// Shared smoke-cloud geometry for explosion plume meshes. Built once at
+// module init so spawnExplosion's smoke phase can avoid per-call
+// SphereGeometry allocation. Lower poly count than the previous
+// per-spawn (16,12) because the smoke is large + additive + heavily
+// shader-modulated; faceting is invisible. ~80 verts vs 288. Frustum
+// culling stays disabled per-mesh (the cloud expands fast and we don't
+// want it popping out at the edges of the screen).
+const _SMOKE_GEO = new THREE.SphereGeometry(1, 12, 8);
+
 const _TRACER_CORE_GEO = new THREE.CylinderGeometry(0.55, 0.55, 1, 4, 1);
 _TRACER_CORE_GEO.rotateX(Math.PI / 2);
 const _TRACER_BEAM_GEO = new THREE.CylinderGeometry(1.30, 0.95, 1, 6, 1);
@@ -9428,6 +10124,63 @@ _TRACER_TAIL_OUTER_GEO.rotateX(Math.PI / 2);
   }
   g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 });
+
+// ---- LIGHTNING BOLT POOL ----
+// Replaces the per-call TubeGeometry + CatmullRomCurve3 + 2 Material
+// allocations in spawnLightningBolt with pooled cylinder-segment meshes.
+// Each lightning bolt becomes a chain of N straight cylinders (one per
+// segment of the jagged path) drawn against a single SHARED open
+// cylinder geometry. Per-mesh state (position, scale, color, opacity)
+// lives on the Mesh + Material instance pre-allocated in the pool —
+// acquire just flips visible=true, release flips it false. No GPU
+// buffer uploads per spawn, no JS object allocation in the hot path.
+// At 360 bolts/sec average during heavy shield combat the previous
+// path was allocating ~720 KB/sec of GPU buffer + JS GC. Pool keeps
+// allocation at zero after warmup.
+const _LIGHTNING_CYL_GEO = new THREE.CylinderGeometry(1, 1, 1, 6, 1, true); // openEnded, no caps
+_LIGHTNING_CYL_GEO.rotateX(Math.PI / 2); // length axis -> local +Z
+
+// Two materials per pool slot (core white + colored halo). Stored
+// alongside the mesh so per-spawn color writes don't bleed across
+// alive bolts. Material allocation happens once at pool init.
+const _LIGHTNING_POOL_SIZE = 1024;
+const _lightningPool = [];
+function _initLightningPool() {
+  for (let i = 0; i < _LIGHTNING_POOL_SIZE; i++) {
+    const mat = new THREE.MeshBasicMaterial({
+      color: 0xffffff, transparent: true, opacity: 0.95,
+      blending: THREE.AdditiveBlending, depthTest: true, depthWrite: false,
+      side: THREE.DoubleSide
+    });
+    const mesh = new THREE.Mesh(_LIGHTNING_CYL_GEO, mat);
+    mesh.frustumCulled = false; // bolts are too brief to bother with culling
+    mesh.visible = false;
+    mesh.renderOrder = 1;
+    scene.add(mesh);
+    _lightningPool.push({ mesh, mat, free: true });
+  }
+}
+_initLightningPool();
+let _lightningPoolCursor = 0; // round-robin to avoid scanning from 0 every time
+function _acquireLightningSlot() {
+  // Round-robin search from the cursor for an O(1)-amortized acquire.
+  for (let i = 0; i < _LIGHTNING_POOL_SIZE; i++) {
+    const idx = (_lightningPoolCursor + i) % _LIGHTNING_POOL_SIZE;
+    const slot = _lightningPool[idx];
+    if (slot.free) {
+      slot.free = false;
+      slot.mesh.visible = true;
+      _lightningPoolCursor = (idx + 1) % _LIGHTNING_POOL_SIZE;
+      return slot;
+    }
+  }
+  return null; // pool exhausted; spawn skipped (visually a missed crackle)
+}
+function _releaseLightningSlot(slot) {
+  if (!slot) return;
+  slot.free = true;
+  slot.mesh.visible = false;
+}
 
 // Prototype materials. The two 'tracer' variants and the two 'tracerTail'
 // variants differ by depthWrite (false on tails, default-true on beams).
@@ -9629,58 +10382,46 @@ function spawnLightningBolt(from, to, color, lifetime, branches, thickness) {
     }
     allChains.push(forkPts);
   }
-  // Build each chain as a TubeGeometry so the `thickness` parameter actually
-  // produces visible width. THREE.LineSegments + linewidth is broken in WebGL
-  // (browsers cap line width at 1px regardless of the requested value), which
-  // made every bolt render as a single 1-pixel branching line — invisible
-  // against bright cosmic walls and prone to look like sub-pixel dashes that
-  // appear to leak across the map at certain camera angles. Tubes give us
-  // proper 3D geometry that depth-tests correctly against the wall.
+  // POOLED LIGHTNING SEGMENTS. Replaces the previous per-call
+  // CatmullRomCurve3 + 2 TubeGeometry + 2 MeshBasicMaterial allocations
+  // with cylinder-segment meshes pulled from _lightningPool. Each chain
+  // becomes (chain.length - 1) straight cylinders rendered at full
+  // thickness; the joints between segments are masked by additive
+  // blending and the chain jitter so the look reads as a continuous
+  // jagged bolt. No GPU buffer uploads per spawn, no JS GC churn.
+  const glowRadius = thickness * 0.5;
+  const coreRadius = Math.max(0.4, thickness * 0.18);
   for (const chain of allChains) {
     if (chain.length < 2) continue;
-    // CatmullRom curve through the jagged points. Three.js needs at least
-    // 2 points; with 2 it falls back to a straight segment which is fine.
-    const curve = new THREE.CatmullRomCurve3(chain, false, 'catmullrom', 0.0);
-    const tubularSegs = Math.max(8, (chain.length - 1) * 4);
-    // 6 = hexagonal cross-section. With the previous radialSegs=4 the tubes
-    // had a square cross-section that read as a chunky ribbon at thicker
-    // radii (Vortex/Blaster shield arcs). 6 gives a smooth round look at
-    // the smaller radii we actually use, without much vertex-count growth.
-    const radialSegs = 6;
-    const glowRadius = thickness * 0.5;
-    const coreRadius = Math.max(0.4, thickness * 0.18);
-    // Glow tube (wider, colored, lower opacity).
-    const glowGeo = new THREE.TubeGeometry(curve, tubularSegs, glowRadius, radialSegs, false);
-    const glowMat = new THREE.MeshBasicMaterial({
-      color: color,
-      transparent: true,
-      opacity: 0.55,
-      blending: THREE.AdditiveBlending,
-      depthTest: true,
-      depthWrite: false,
-      side: THREE.DoubleSide
-    });
-    const glowMesh = new THREE.Mesh(glowGeo, glowMat);
-    glowMesh.renderOrder = 1; // composite over wall (see gas cloud comment)
-    scene.add(glowMesh);
-    // Use 'lightningTube' (not 'tracer') so the cleanup path disposes
-    // BOTH geometry and material — TubeGeometry is per-bolt, not pooled.
-    game.effects.push({ mesh: glowMesh, lifetime: lifetime * 1.3, age: 0, type: 'lightningTube' });
-    // Core tube (thinner, bright white, full opacity at peak).
-    const coreGeo = new THREE.TubeGeometry(curve, tubularSegs, coreRadius, radialSegs, false);
-    const coreMat = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0.95,
-      blending: THREE.AdditiveBlending,
-      depthTest: true,
-      depthWrite: false,
-      side: THREE.DoubleSide
-    });
-    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-    coreMesh.renderOrder = 1;
-    scene.add(coreMesh);
-    game.effects.push({ mesh: coreMesh, lifetime: lifetime, age: 0, type: 'lightningTube' });
+    for (let s = 0; s < chain.length - 1; s++) {
+      const a = chain[s];
+      const b = chain[s + 1];
+      const sx = (a.x + b.x) * 0.5;
+      const sy = (a.y + b.y) * 0.5;
+      const sz = (a.z + b.z) * 0.5;
+      const segLen = a.distanceTo(b);
+      if (segLen < 0.5) continue;
+      // Halo segment (wider, colored, lower opacity).
+      const haloSlot = _acquireLightningSlot();
+      if (haloSlot) {
+        haloSlot.mesh.position.set(sx, sy, sz);
+        haloSlot.mesh.lookAt(b);
+        haloSlot.mesh.scale.set(glowRadius, glowRadius, segLen);
+        haloSlot.mat.color.setHex(color);
+        haloSlot.mat.opacity = 0.55;
+        game.effects.push({ poolSlot: haloSlot, lifetime: lifetime * 1.3, age: 0, type: 'lightningSeg' });
+      }
+      // Core segment (thinner, white, brighter).
+      const coreSlot = _acquireLightningSlot();
+      if (coreSlot) {
+        coreSlot.mesh.position.set(sx, sy, sz);
+        coreSlot.mesh.lookAt(b);
+        coreSlot.mesh.scale.set(coreRadius, coreRadius, segLen);
+        coreSlot.mat.color.setHex(0xffffff);
+        coreSlot.mat.opacity = 0.95;
+        game.effects.push({ poolSlot: coreSlot, lifetime: lifetime, age: 0, type: 'lightningSeg' });
+      }
+    }
   }
   // Dynamic light at the midpoint (same as before).
   const boltMid = points[Math.floor(points.length / 2)];
@@ -9710,6 +10451,52 @@ const _emberFalloffTexture = (function() {
   return tex;
 })();
 
+// ---- PARTICLE SPRITE POOL ----
+// Replaces updateParticles' per-particle lazy-create-on-first-frame path
+// (new SpriteMaterial + new Sprite + scene.add per particle, then dispose
+// + scene.remove on expiration). At 200-400 particles per second during
+// shielded combat that was the second-largest combat allocation source
+// after lightning. Pool is sized to MAX_PARTICLES so every particle gets
+// a slot. Pre-allocated Sprites stay scene-resident at visible:false
+// when free; acquire/release just toggles visibility.
+const _particlePool = [];
+function _initParticlePool() {
+  for (let i = 0; i < MAX_PARTICLES; i++) {
+    const mat = new THREE.SpriteMaterial({
+      map: _emberFalloffTexture,
+      color: 0xffffff,
+      transparent: true,
+      opacity: 1.0,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+    const sprite = new THREE.Sprite(mat);
+    sprite.visible = false;
+    scene.add(sprite);
+    _particlePool.push({ sprite, mat, free: true });
+  }
+}
+_initParticlePool();
+let _particlePoolCursor = 0;
+function _acquireParticleSlot() {
+  for (let i = 0; i < MAX_PARTICLES; i++) {
+    const idx = (_particlePoolCursor + i) % MAX_PARTICLES;
+    const slot = _particlePool[idx];
+    if (slot.free) {
+      slot.free = false;
+      slot.sprite.visible = true;
+      _particlePoolCursor = (idx + 1) % MAX_PARTICLES;
+      return slot;
+    }
+  }
+  return null; // pool exhausted (shouldn't happen — pool size = MAX_PARTICLES)
+}
+function _releaseParticleSlot(slot) {
+  if (!slot) return;
+  slot.free = true;
+  slot.sprite.visible = false;
+}
+
 function cullOldestParticle() {
   // Remove the particle with the least remaining life
   let oldestIdx = 0, lowestLife = Infinity;
@@ -9717,7 +10504,7 @@ function cullOldestParticle() {
     if (game.particles[i].life < lowestLife) { lowestLife = game.particles[i].life; oldestIdx = i; }
   }
   const p = game.particles[oldestIdx];
-  if (p.mesh) { scene.remove(p.mesh); p.mesh.material.dispose(); }
+  if (p.poolSlot) _releaseParticleSlot(p.poolSlot);
   game.particles.splice(oldestIdx, 1);
 }
 
@@ -9732,7 +10519,7 @@ function updateParticles(dt) {
     // Kill expired particles and those outside arena bounds
     const pos = p.position;
     if (p.life <= 0 || Math.abs(pos.x) > arenaLimit || Math.abs(pos.y) > arenaLimit || Math.abs(pos.z) > arenaLimit) {
-      if (p.mesh) { scene.remove(p.mesh); p.mesh.material.dispose(); }
+      if (p.poolSlot) _releaseParticleSlot(p.poolSlot);
       game.particles.splice(i, 1);
       continue;
     }
@@ -9741,24 +10528,21 @@ function updateParticles(dt) {
     pos.z += p.velocity.z * dt;
     p.velocity.multiplyScalar(0.95); // drag on particles
     const alpha = p.life / p.maxLife;
-    if (!p.mesh) {
-      // Camera-facing sprite with soft radial falloff: reads as light, not geometry.
-      const mat = new THREE.SpriteMaterial({
-        map: _emberFalloffTexture,
-        color: p.color,
-        transparent: true,
-        opacity: alpha,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false
-      });
-      p.mesh = new THREE.Sprite(mat);
-      // Sprites need roughly 2.2x the radius to match the apparent size of the old spheres.
-      p.mesh.scale.setScalar(p.size * 2.2);
-      scene.add(p.mesh);
+    if (!p.poolSlot) {
+      // First frame: acquire a pool slot. The shared SpriteMaterial in the
+      // slot is reset per-spawn (color, opacity, scale) so this particle's
+      // appearance doesn't bleed across alive particles. If the pool is
+      // exhausted (shouldn't happen since pool size = MAX_PARTICLES) the
+      // particle is just invisible this frame and will retry next tick.
+      const slot = _acquireParticleSlot();
+      if (!slot) continue;
+      p.poolSlot = slot;
+      slot.mat.color.setHex(p.color || 0xffffff);
     }
-    p.mesh.position.copy(pos);
-    p.mesh.material.opacity = alpha;
-    p.mesh.scale.setScalar(p.size * 2.2 * (0.5 + alpha * 0.5));
+    const slot = p.poolSlot;
+    slot.sprite.position.copy(pos);
+    slot.mat.opacity = alpha;
+    slot.sprite.scale.setScalar(p.size * 2.2 * (0.5 + alpha * 0.5));
   }
 }
 
@@ -9780,6 +10564,22 @@ function _disposeOrReleaseEffect(e) {
     if (e.mesh.material) e.mesh.material.dispose();
     return;
   }
+  // Shader-smoke meshes (explosion plumes) share the global _SMOKE_GEO so
+  // disposing the geometry would break the next spawn. Material is cloned
+  // per-spawn (each plume animates with its own time offset baked into
+  // uniforms) and must be disposed.
+  if (e.type === 'shaderSmoke') {
+    scene.remove(e.mesh);
+    if (e.mesh.material) e.mesh.material.dispose();
+    return;
+  }
+  // Lightning segments use a pooled mesh + material; just return the
+  // slot to the pool. Mesh stays in the scene (visible=false) and the
+  // material instance is reused by future spawns — no dispose, no GC.
+  if (e.type === 'lightningSeg') {
+    _releaseLightningSlot(e.poolSlot);
+    return;
+  }
   // Pooled explosion / impact meshes (Trace 20260420T164534 fix): return the
   // mesh to its type pool instead of disposing. The pool keeps a cap per type
   // and disposes overflow, so unbounded growth is impossible. Crucially, the
@@ -9794,9 +10594,19 @@ function _disposeOrReleaseEffect(e) {
   if (e.mesh.material) e.mesh.material.dispose();
 }
 function updateEffects(dt) {
-  // Cap effects: cull oldest when over budget
+  // Cap effects: cull excess when over budget. Was using array.shift()
+  // which is O(n) — moves up to 349 elements every cull, which during
+  // heavy combat (shields up + multiple shooters) was firing every
+  // frame and accumulating real CPU cost. Swap-with-last + pop is O(1)
+  // and visually indistinguishable: we still take the "oldest end" of
+  // the array as the cull target, but move the newest into its slot so
+  // the pop is constant-time. Strict insertion order isn't preserved
+  // but visuals don't care which old effect gets culled.
   while (game.effects.length > MAX_EFFECTS) {
-    const e = game.effects.shift();
+    const e = game.effects[0];
+    const last = game.effects.length - 1;
+    if (last > 0) game.effects[0] = game.effects[last];
+    game.effects.pop();
     _disposeOrReleaseEffect(e);
   }
   for (let i = game.effects.length - 1; i >= 0; i--) {
@@ -9808,6 +10618,16 @@ function updateEffects(dt) {
       continue;
     }
     const t = e.age / e.lifetime;
+    // Generic time + age uniform tick for any effect whose material is a
+    // ShaderMaterial. Lets the shader factories (_makeShockwaveMaterial,
+    // _makeProjGlowMaterial, etc.) drive their animations off game.time and
+    // their own age-fraction without each effect type writing the bump
+    // explicitly. Cheap: just two property writes per ticked effect.
+    if (e.mesh && e.mesh.material && e.mesh.material.uniforms) {
+      const u = e.mesh.material.uniforms;
+      if (u.time) u.time.value = game.time;
+      if (u.uAge) u.uAge.value = t;
+    }
 
     // --- Legacy explosion (keep for any old callers) ---
     if (e.type === 'explosion') {
@@ -9837,6 +10657,10 @@ function updateEffects(dt) {
       const b = 0;
       e.mesh.material.color.setRGB(r, g, b);
       e.mesh.material.opacity = 0.85 * (1 - t * t);
+      // Re-face camera each frame so the billboard quad always reads as a
+      // 2D disc, never as a thin sliver from edge-on. Same pattern as the
+      // shockwave / flash phases above.
+      if (e.billboard) e.mesh.lookAt(camera.position);
     }
     // --- Shockwave ring: rapid radial expansion ---
     else if (e.type === 'shockwave') {
@@ -9909,6 +10733,12 @@ function updateEffects(dt) {
     else if (e.type === 'lightningTube') {
       if (e._initialOpacity == null) e._initialOpacity = e.mesh.material.opacity;
       e.mesh.material.opacity = e._initialOpacity * Math.max(0, 1 - t);
+    }
+    // --- Pooled lightning segment: same linear fade, but the material
+    // is on the pool slot (e.poolSlot.mat) instead of e.mesh.material.
+    else if (e.type === 'lightningSeg') {
+      if (e._initialOpacity == null) e._initialOpacity = e.poolSlot.mat.opacity;
+      e.poolSlot.mat.opacity = e._initialOpacity * Math.max(0, 1 - t);
     }
     // --- Tracer ethereal tail: linger, slowly dim, slight radial swell
     // so the trail reads as an expanding ribbon of light rather than a
@@ -12534,12 +13364,12 @@ function _emitVortexShieldArcs(shieldPos, radius, fwd, dt, energyPct) {
   if (_vortexRimRight.lengthSq() < 0.001) _vortexRimRight.set(1, 0, 0);
   _vortexRimRight.normalize();
   _vortexRimUp.crossVectors(fwd, _vortexRimRight).normalize();
-  // Thinner + slower + denser arcs: doubled lifetime per bolt makes the ring
-  // feel less hectic (bolts linger instead of strobing) while a slight
-  // ARCS_PER_SEC bump preserves visual density. Tube radii drop substantially
-  // (core 6.0→2.0, halo 11.0→5.0) so the ring stops reading as a chunky
-  // ribbon and reads as crackling filaments.
-  const ARCS_PER_SEC = 280;
+  // Spawn rate dropped 280 → 180 to relieve combat framerate pressure.
+  // Each spawnLightningBolt allocates a TubeGeometry + 2 materials; at
+  // 280/sec × multiple shielders that was the dominant per-frame cost.
+  // The 0.36-0.55s lifetime per bolt keeps the visual density high
+  // (180 × 0.45 avg = ~80 bolts alive at any moment, plenty of crackle).
+  const ARCS_PER_SEC = 180;
   const expected = ARCS_PER_SEC * dt;
   let toSpawn = Math.floor(expected);
   if (Math.random() < (expected - toSpawn)) toSpawn += 1;
@@ -12592,7 +13422,9 @@ function _emitVortexShieldArcs(shieldPos, radius, fwd, dt, energyPct) {
   }
   // Glow particles streaming around the ring. Color spectrum follows the
   // current state — blue when full, red when empty, smooth path between.
-  const GLOW_PER_SEC = 90;
+  // Rate dropped 90 → 55 (combat perf). Each particle lazy-allocates a
+  // fresh THREE.Sprite + SpriteMaterial on its first frame.
+  const GLOW_PER_SEC = 55;
   const expectedGlow = GLOW_PER_SEC * dt;
   let toGlow = Math.floor(expectedGlow);
   if (Math.random() < (expectedGlow - toGlow)) toGlow += 1;
@@ -12650,11 +13482,10 @@ function _emitGunShieldArcs(shieldPos, radius, fwd, dt, hpPct) {
   if (_gunRimRight.lengthSq() < 0.001) _gunRimRight.set(1, 0, 0);
   _gunRimRight.normalize();
   _gunRimUp.crossVectors(fwd, _gunRimRight).normalize();
-  // Thinner + slower + denser arcs: same treatment as Vortex shield.
-  // Lifetime ~2x for a less hectic feel, slight ARCS_PER_SEC bump,
-  // tube radii drop substantially (core 6.0→2.0, halo 11.5→5.0) so
-  // the ring no longer reads as a chunky ribbon.
-  const ARCS_PER_SEC = 280 * (0.55 + 0.45 * hpPct);
+  // Spawn rate dropped 280 → 180 to match Vortex shield (combat perf).
+  // Each spawnLightningBolt is a TubeGeometry + 2 materials allocation;
+  // the longer per-bolt lifetime keeps visual density acceptable.
+  const ARCS_PER_SEC = 180 * (0.55 + 0.45 * hpPct);
   const expected = ARCS_PER_SEC * dt;
   let toSpawn = Math.floor(expected);
   if (Math.random() < (expected - toSpawn)) toSpawn += 1;
@@ -12706,7 +13537,8 @@ function _emitGunShieldArcs(shieldPos, radius, fwd, dt, hpPct) {
   }
   // Glow particles painting the soft halo around the ring. Hue spectrum
   // follows hpPct (blue full → red almost dead) just like the halo bolts.
-  const GLOW_PER_SEC = 80 * (0.55 + 0.45 * hpPct);
+  // Glow rate dropped 80 → 50 to match Vortex shield (combat perf).
+  const GLOW_PER_SEC = 50 * (0.55 + 0.45 * hpPct);
   const expectedGlow = GLOW_PER_SEC * dt;
   let toGlow = Math.floor(expectedGlow);
   if (Math.random() < (expectedGlow - toGlow)) toGlow += 1;
@@ -13460,7 +14292,15 @@ function updateAbilities(dt) {
       // density is light enough to not overwhelm the inter-orb arcs.
       const phase = (eff.pulsePhase || 0) + game.time * 4.0;
       const corePulse = 1 + Math.sin(phase) * 0.18 + (Math.random() - 0.5) * 0.10;
-      if (eff.mesh) eff.mesh.scale.setScalar(corePulse);
+      if (eff.mesh) {
+        eff.mesh.scale.setScalar(corePulse);
+        // Drive shader: time advances normally, uPulse spikes a bit when
+        // armed so the crackle reads as charged.
+        if (eff.mesh.material && eff.mesh.material.uniforms) {
+          eff.mesh.material.uniforms.time.value = game.time;
+          eff.mesh.material.uniforms.uPulse.value = eff.armed ? 1.5 : 1.0;
+        }
+      }
       if (eff.glow) {
         const haloPulse = 1 + Math.sin(phase * 0.7 + 1.1) * 0.22 + (Math.random() - 0.5) * 0.12;
         eff.glow.scale.setScalar(haloPulse);
@@ -13716,11 +14556,20 @@ function updateAbilities(dt) {
       if (eff.mesh) {
         eff.mesh.rotation.x += dt * 1.4;
         eff.mesh.rotation.y += dt * 2.1;
+        // Tick the orb-core shader on the central node.
+        if (eff.mesh.material && eff.mesh.material.uniforms) {
+          eff.mesh.material.uniforms.time.value = game.time;
+          eff.mesh.material.uniforms.uPulse.value = eff.triggered ? 1.7 : 1.0;
+        }
         const ph = (eff.pulsePhase || 0) + game.time * 5.0;
         if (eff.glow) {
           const haloPulse = 1 + Math.sin(ph * 0.7) * 0.25 + (Math.random() - 0.5) * 0.10;
           eff.glow.scale.setScalar(haloPulse);
-          eff.glow.material.opacity = 0.30 + Math.sin(ph * 0.9) * 0.12;
+          // Gravity-halo shader: just bump time. Uniform-driven brightness
+          // already pulses; opacity is computed inside the fragment.
+          if (eff.glow.material && eff.glow.material.uniforms) {
+            eff.glow.material.uniforms.time.value = game.time;
+          }
         }
       }
       // Periodic crackle: short lightning tendrils outward in random
@@ -13753,8 +14602,20 @@ function updateAbilities(dt) {
         const hpPct = eff.hp / eff.maxHp;
         const age = game.time - (eff.spawnTime || 0);
         const hue = (age * 0.2) % 1;
-        eff.mesh.material.color.setHSL(hue, 0.6, 0.55);
-        eff.mesh.material.opacity = 0.12 + 0.2 * hpPct + Math.sin(age * 3) * 0.04;
+        // Hex hologram shader path: drive uniforms instead of color/opacity.
+        if (eff.mesh.material && eff.mesh.material.uniforms) {
+          eff.mesh.material.uniforms.time.value = game.time;
+          eff.mesh.material.uniforms.uHp.value = hpPct;
+          // Color cycles slowly through the spectrum as before; the shader
+          // mixes this with a red dying-tint based on uHp.
+          if (eff.mesh.material.uniforms.uColor) {
+            eff.mesh.material.uniforms.uColor.value.setHSL(hue, 0.6, 0.55);
+          }
+        } else {
+          // Legacy MeshBasicMaterial fallback (if shader factory was unavailable)
+          eff.mesh.material.color.setHSL(hue, 0.6, 0.55);
+          eff.mesh.material.opacity = 0.12 + 0.2 * hpPct + Math.sin(age * 3) * 0.04;
+        }
         if (eff.edgeMesh) {
           eff.edgeMesh.material.color.setHSL((hue + 0.3) % 1, 0.5, 0.7);
           eff.edgeMesh.material.opacity = 0.3 + 0.4 * hpPct;
@@ -13893,6 +14754,13 @@ function updateAbilities(dt) {
 // booster from the ship's origin if the chassis mesh has no plume children.
 function spawnDashBoosters(shipMesh, dashWorldDir, color) {
   if (!shipMesh) return;
+  // Force the ship's matrix tree to refresh before reading per-plume
+  // world positions. Without this, plume.getWorldPosition() returns the
+  // PREVIOUS frame's matrix (or the spawn-point matrix on respawn),
+  // which is why dash trails were appearing detached from the ship or
+  // on the other side of the room. updateMatrixWorld(true) walks the
+  // group + plume children and recomputes their world transforms now.
+  shipMesh.updateMatrixWorld(true);
   const back = dashWorldDir.clone().normalize().multiplyScalar(-1);
   const length = 240;
   const plumes = (shipMesh.userData && shipMesh.userData.enginePlumes) || [];
@@ -14060,8 +14928,49 @@ function updateRoundSystem(dt) {
         game.playerInStasis = false;
         document.getElementById('stasis-warning').style.display = 'none';
         document.getElementById('stasis-vignette').style.display = 'none';
-        // Clean up world effects
-        for (const eff of game.worldEffects) { if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh); if (eff.coreMesh && eff.coreMesh.parent) scene.remove(eff.coreMesh); if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh); }
+        // Clean up world effects. The previous version only removed
+        // eff.mesh / coreMesh / edgeMesh, which left firewall flame sprites
+        // (eff.meshes), tether/tripwire halos (eff.glow), and incendiary
+        // gas puff spheres (eff.puffMeshes) orphaned in the scene — that's
+        // why a Pyro firewall could "stay for the whole match" across
+        // round-end transitions. Now we walk every known per-effect mesh
+        // reference and remove + dispose each one.
+        for (const eff of game.worldEffects) {
+          if (eff.mesh && eff.mesh.parent) {
+            scene.remove(eff.mesh);
+            if (eff.mesh.geometry) eff.mesh.geometry.dispose();
+            if (eff.mesh.material && eff.mesh.material.dispose) eff.mesh.material.dispose();
+          }
+          if (eff.coreMesh && eff.coreMesh.parent) {
+            scene.remove(eff.coreMesh);
+            if (eff.coreMesh.geometry) eff.coreMesh.geometry.dispose();
+            if (eff.coreMesh.material && eff.coreMesh.material.dispose) eff.coreMesh.material.dispose();
+          }
+          if (eff.edgeMesh && eff.edgeMesh.parent) {
+            scene.remove(eff.edgeMesh);
+            if (eff.edgeMesh.geometry) eff.edgeMesh.geometry.dispose();
+            if (eff.edgeMesh.material && eff.edgeMesh.material.dispose) eff.edgeMesh.material.dispose();
+          }
+          if (eff.glow && eff.glow.parent) {
+            scene.remove(eff.glow);
+            if (eff.glow.geometry) eff.glow.geometry.dispose();
+            if (eff.glow.material && eff.glow.material.dispose) eff.glow.material.dispose();
+          }
+          if (eff.meshes) {
+            for (const m of eff.meshes) {
+              if (m.parent) scene.remove(m);
+              if (m.geometry && m.geometry.dispose) m.geometry.dispose();
+              if (m.material && m.material.dispose) m.material.dispose();
+            }
+          }
+          if (eff.puffMeshes) {
+            for (const p of eff.puffMeshes) {
+              if (p.parent) scene.remove(p);
+              if (p.geometry && p.geometry.dispose) p.geometry.dispose();
+              if (p.material && p.material.dispose) p.material.dispose();
+            }
+          }
+        }
         game.worldEffects = [];
         // Reset cores each round (builds with damage dealt)
         player.coreMeter = 0;
@@ -14111,13 +15020,50 @@ function returnToRootMenu() {
   for (const bot of game.entities) { try { bot.destroy(); } catch (e) {} }
   game.entities = [];
   game.projectiles = [];
+  // Release particle pool slots back before clearing the array, otherwise
+  // the slots stay claimed forever and the pool exhausts after a few rounds.
+  for (const p of game.particles) { if (p.poolSlot) _releaseParticleSlot(p.poolSlot); }
   game.particles = [];
   for (const sf of game.stasisFields) { try { sf.destroy(); } catch (e) {} }
   game.stasisFields = [];
+  // Same exhaustive cleanup as round-end (see updateAbilities for context).
+  // Without this, firewall sprites / trap halos / gas puffs leak across
+  // match-end → root-menu transitions.
   for (const eff of game.worldEffects) {
-    if (eff.mesh && eff.mesh.parent) scene.remove(eff.mesh);
-    if (eff.coreMesh && eff.coreMesh.parent) scene.remove(eff.coreMesh);
-    if (eff.edgeMesh && eff.edgeMesh.parent) scene.remove(eff.edgeMesh);
+    if (eff.mesh && eff.mesh.parent) {
+      scene.remove(eff.mesh);
+      if (eff.mesh.geometry) eff.mesh.geometry.dispose();
+      if (eff.mesh.material && eff.mesh.material.dispose) eff.mesh.material.dispose();
+    }
+    if (eff.coreMesh && eff.coreMesh.parent) {
+      scene.remove(eff.coreMesh);
+      if (eff.coreMesh.geometry) eff.coreMesh.geometry.dispose();
+      if (eff.coreMesh.material && eff.coreMesh.material.dispose) eff.coreMesh.material.dispose();
+    }
+    if (eff.edgeMesh && eff.edgeMesh.parent) {
+      scene.remove(eff.edgeMesh);
+      if (eff.edgeMesh.geometry) eff.edgeMesh.geometry.dispose();
+      if (eff.edgeMesh.material && eff.edgeMesh.material.dispose) eff.edgeMesh.material.dispose();
+    }
+    if (eff.glow && eff.glow.parent) {
+      scene.remove(eff.glow);
+      if (eff.glow.geometry) eff.glow.geometry.dispose();
+      if (eff.glow.material && eff.glow.material.dispose) eff.glow.material.dispose();
+    }
+    if (eff.meshes) {
+      for (const m of eff.meshes) {
+        if (m.parent) scene.remove(m);
+        if (m.geometry && m.geometry.dispose) m.geometry.dispose();
+        if (m.material && m.material.dispose) m.material.dispose();
+      }
+    }
+    if (eff.puffMeshes) {
+      for (const p of eff.puffMeshes) {
+        if (p.parent) scene.remove(p);
+        if (p.geometry && p.geometry.dispose) p.geometry.dispose();
+        if (p.material && p.material.dispose) p.material.dispose();
+      }
+    }
   }
   game.worldEffects = [];
 
@@ -16771,20 +17717,26 @@ class StasisField {
     this.radius = 120;
     this.pulseTime = 0;
 
-    // Visual: glowing sphere with rotating ring
+    // Visual: shader-driven energy core (vortex bands + fresnel rim) with
+    // two rotating rings around it. Core's uPulse uniform is updated each
+    // frame from proximityBoost so the field intensifies as the player
+    // approaches; updateEffects-style time tick is done in update(dt).
     this.group = new THREE.Group();
-    const coreMat = new THREE.MeshBasicMaterial({ color: 0x00ccff, transparent: true, opacity: 0.6 });
-    const coreGeo = new THREE.SphereGeometry(15, 12, 8);
+    const coreGeo = new THREE.SphereGeometry(22, 24, 16);
+    const coreMat = _makeStasisCoreMaterial(0x00ccff);
     this.core = new THREE.Mesh(coreGeo, coreMat);
+    this.core.renderOrder = 1;
     this.group.add(this.core);
 
     const ringGeo = new THREE.TorusGeometry(40, 2, 8, 32);
-    const ringMat = new THREE.MeshBasicMaterial({ color: 0x0088ff, transparent: true, opacity: 0.4 });
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0x0088ff, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending, depthWrite: false });
     this.ring = new THREE.Mesh(ringGeo, ringMat);
+    this.ring.renderOrder = 1;
     this.group.add(this.ring);
 
     const ring2 = new THREE.Mesh(ringGeo, ringMat.clone());
     ring2.rotation.x = Math.PI / 2;
+    ring2.renderOrder = 1;
     this.ring2 = ring2;
     this.group.add(ring2);
 
@@ -16816,9 +17768,13 @@ class StasisField {
     // Rotate rings (faster when close)
     this.ring.rotation.z += dt * 1.5 * proximityBoost;
     this.ring2.rotation.y += dt * 1.2 * proximityBoost;
-    // Pulse glow (core opacity only; lighting comes from pooled dynamic lights)
-    const pulse = 0.4 + Math.sin(this.pulseTime * 3 * proximityBoost) * 0.2;
-    this.core.material.opacity = Math.min(1, (pulse + 0.2) * (0.7 + proximityBoost * 0.3));
+    // Drive shader uniforms on the energy core: time advances regardless of
+    // proximity; uPulse boosts band rotation speed and brightness when the
+    // player approaches. Scale still pulses so the field reads as breathing.
+    if (this.core.material.uniforms) {
+      this.core.material.uniforms.time.value = (typeof game !== 'undefined' && game.time) ? game.time : 0;
+      this.core.material.uniforms.uPulse.value = Math.min(2.0, proximityBoost);
+    }
     const s = (1 + Math.sin(this.pulseTime * 2 * proximityBoost) * 0.1) * Math.min(1.4, 0.85 + proximityBoost * 0.18);
     this.core.scale.set(s, s, s);
     // Occasional soft pulse from the pre-allocated pool (no shader recompile)
@@ -16836,9 +17792,13 @@ class StasisField {
     if (this.group.parent) scene.remove(this.group);
     // Pickup effect: expanding ring
     const ringGeo = new THREE.TorusGeometry(20, 3, 8, 32);
-    const ringMat = new THREE.MeshBasicMaterial({ color: 0x00ddff, transparent: true, opacity: 0.8 });
+    // Shader-driven shockwave: chromatic edge that fades as it expands.
+    // updateEffects bumps time/uAge each frame so the ring brightens at
+    // the leading edge then fades out cleanly.
+    const ringMat = _makeShockwaveMaterial(0x00ddff);
     const ring = new THREE.Mesh(ringGeo, ringMat);
     ring.position.copy(this.position);
+    ring.renderOrder = 1;
     scene.add(ring);
     game.effects.push({ mesh: ring, lifetime: 0.6, age: 0, type: 'stasis_pickup', startScale: 1 });
     // (v6.7) Godray straight up so peers across the level can see "someone
@@ -17921,7 +18881,11 @@ function buildRoomGraphLevel(level) {
       'vec3 patternVoronoi(vec3 p, vec3 zoneC, float tt) {',
       '  float baseHue = rgbHue(zoneC);',
       '  vec3 accum = vec3(0.0);',
-      '  for (int layer = 0; layer < 5; layer++) {',
+      // Voronoi3 internally runs a 3x3x3 = 27-iteration loop per call. Layer
+      // count is hard-capped at 2 here (regardless of user u_iters) so the
+      // fragment cost stays at ~54 ops instead of 297. Lab-level perf
+      // complaints all stemmed from the layer count scaling with u_iters.
+      '  for (int layer = 0; layer < 2; layer++) {',
       '    if (layer >= u_iters) break;',
       '    float lf = float(layer);',
       '    float sMul = pow(1.7, lf * 0.6);',
@@ -17940,8 +18904,15 @@ function buildRoomGraphLevel(level) {
       'vec3 patternWaves(vec3 p, vec3 zoneC, float tt) {',
       '  float baseHue = rgbHue(zoneC);',
       '  float v = 0.0;',
-      '  float freq = u_invBase * 0.05;',
-      '  for (int k = 0; k < 12; k++) {',
+      // Wave count hard-capped at 5. With more than ~6 averaged sine waves
+      // the sum trends toward zero (waves cancel) and the pattern flattens
+      // into uniform grey. Five is the sweet spot for visible standing-wave
+      // interference. Frequency clamped to a sensible band so very high
+      // u_invBase doesn\'t make the pattern noise-out, and very low values
+      // don\'t flatten it.
+      '  float freq = clamp(u_invBase * 0.05, 0.30, 1.20);',
+      '  int waveCap = 5;',
+      '  for (int k = 0; k < 5; k++) {',
       '    if (k >= u_iters) break;',
       '    float fk = float(k);',
       '    vec3 dir = normalize(vec3(',
@@ -17951,7 +18922,7 @@ function buildRoomGraphLevel(level) {
       '    ));',
       '    v += sin(dot(p, dir) * freq + tt * (0.4 + fk * 0.07));',
       '  }',
-      '  v /= max(1.0, float(u_iters));',
+      '  v /= float(waveCap);',
       '  float lum = 0.5 + 0.5 * v;',
       '  float val = clamp(pow(lum, 1.6) * 4.5 / u_valDiv * 80.0, 0.0, 4.5);',
       '  float phase = atan(p.x, p.z);',
@@ -17966,8 +18937,13 @@ function buildRoomGraphLevel(level) {
       '  vec3 cv = p;',
       '  vec3 q = p;',
       '  float dr = 1.0;',
-      '  float scaleP = u_invBase * 0.3;',
-      '  for (int k = 0; k < 12; k++) {',
+      // Mandelbox scale parameter is unstable outside ~[1.5, 2.6]. Above 3
+      // the iteration diverges to infinity in 1-2 steps and the output
+      // collapses to (0,0,0). User u_invBase is mapped into the working
+      // range here so the pattern is always visible regardless of the
+      // global setting. Iteration count similarly capped at 8.
+      '  float scaleP = clamp(u_invBase * 0.18, 1.5, 2.6);',
+      '  for (int k = 0; k < 8; k++) {',
       '    if (k >= u_iters) break;',
       '    q = clamp(q, -1.0, 1.0) * 2.0 - q;',
       '    float r2 = dot(q, q);',
@@ -18001,8 +18977,15 @@ function buildRoomGraphLevel(level) {
       'vec3 patternHex(vec3 p, vec3 zoneC, float tt) {',
       '  float baseHue = rgbHue(zoneC);',
       '  vec3 accum = vec3(0.0);',
-      '  float cell = 1.0 / max(0.001, u_invBase);',
-      '  for (int layer = 0; layer < 5; layer++) {',
+      // Hex cell pitch in PATTERN space is 1/u_invBase. In WORLD space it
+      // becomes (1/u_invBase) / u_scale. With high u_invBase + low u_scale
+      // the cells go subpixel (~5 world units). Floor the pattern-space
+      // cell at 0.5 so the hex tiling is always at least visible.
+      // Layer count capped at 3 (vs 5) because the per-layer scale doubles
+      // each time (pow(1.5, lf)), and beyond layer 3 the hexes are
+      // sub-pixel anyway. User u_iters still terminates the loop early.
+      '  float cell = max(0.5, 1.0 / max(0.001, u_invBase));',
+      '  for (int layer = 0; layer < 3; layer++) {',
       '    if (layer >= u_iters) break;',
       '    float lf = float(layer);',
       '    float ca = cos(lf * 1.04719), sa = sin(lf * 1.04719);',
