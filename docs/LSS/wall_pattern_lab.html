@@ -412,7 +412,10 @@ const FRAG_SRC = `
   vec3 patternVoronoi(vec3 p, vec3 zoneC, float tt) {
     float baseHue = rgbHue(zoneC);
     vec3 accum = vec3(0.0);
-    for (int layer = 0; layer < 5; layer++) {
+    // Hard-cap at 2 layers because each Voronoi3 call is a 27-iteration
+    // 3x3x3 grid scan. 2 layers = ~54 ops/pixel, 5 layers = 135, 11 = 297.
+    // Loop still respects u_iters as an early-out for users who want 1.
+    for (int layer = 0; layer < 2; layer++) {
       if (layer >= u_iters) break;
       float lf = float(layer);
       float sMul = pow(1.7, lf * 0.6);
@@ -436,8 +439,12 @@ const FRAG_SRC = `
   vec3 patternWaves(vec3 p, vec3 zoneC, float tt) {
     float baseHue = rgbHue(zoneC);
     float v = 0.0;
-    float freq = u_invBase * 0.05;
-    for (int k = 0; k < 12; k++) {
+    // Cap waves at 5: above ~6, sine sums cancel out and the pattern
+    // flattens into uniform grey. Frequency clamped into a band that
+    // produces visible standing waves at typical u_scale settings.
+    float freq = clamp(u_invBase * 0.05, 0.30, 1.20);
+    int waveCap = 5;
+    for (int k = 0; k < 5; k++) {
       if (k >= u_iters) break;
       float fk = float(k);
       vec3 dir = normalize(vec3(
@@ -447,7 +454,7 @@ const FRAG_SRC = `
       ));
       v += sin(dot(p, dir) * freq + tt * (0.4 + fk * 0.07));
     }
-    v /= max(1.0, float(u_iters));
+    v /= float(waveCap);
     // Map [-1, 1] to luminance with a soft squash.
     float lum = 0.5 + 0.5 * v;
     float val = clamp(pow(lum, 1.6) * 4.5 / u_valDiv * 80.0, 0.0, 4.5);
@@ -467,8 +474,13 @@ const FRAG_SRC = `
     vec3 c = p;
     vec3 q = p;
     float dr = 1.0;
-    float scaleP = u_invBase * 0.3;
-    for (int k = 0; k < 12; k++) {
+    // Mandelbox scale parameter is unstable outside ~[1.5, 2.6]. Above 3
+    // the iteration diverges to (0,0,0) in 1-2 steps. Map u_invBase into
+    // the working range so the pattern is always visible regardless of
+    // the global setting. Iteration count capped at 8 — beyond that the
+    // result barely changes.
+    float scaleP = clamp(u_invBase * 0.18, 1.5, 2.6);
+    for (int k = 0; k < 8; k++) {
       if (k >= u_iters) break;
       // Box fold
       q = clamp(q, -1.0, 1.0) * 2.0 - q;
@@ -507,8 +519,13 @@ const FRAG_SRC = `
   vec3 patternHex(vec3 p, vec3 zoneC, float tt) {
     float baseHue = rgbHue(zoneC);
     vec3 accum = vec3(0.0);
-    float cell = 1.0 / max(0.001, u_invBase);
-    for (int layer = 0; layer < 5; layer++) {
+    // Hex cell pitch in pattern space: floor at 0.5 so the tiling is
+    // always visible. With high u_invBase + low u_scale the unfloored
+    // cell goes subpixel (~5 world units per tile). Layer count capped
+    // at 3; each layer doubles scale (pow(1.5, lf)), so beyond layer 3
+    // the hexes are sub-pixel anyway.
+    float cell = max(0.5, 1.0 / max(0.001, u_invBase));
+    for (int layer = 0; layer < 3; layer++) {
       if (layer >= u_iters) break;
       float lf = float(layer);
       // Rotate per-layer plane orientation a bit so layers don't all align

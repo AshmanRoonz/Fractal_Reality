@@ -5127,21 +5127,32 @@ function renderPostFX() {
   renderer.render(postFX.passScene, postFX.quadCamera);
 }
 
-// Cartoon-style lighting (bright, high-contrast, minimal shadow)
-const ambientLight = new THREE.AmbientLight(0x445577, 0.8); // Brighter ambient for flat look
+// Cartoon-style lighting (bright, high-contrast, minimal shadow).
+// Boosted across the board so ships catch more light from outside and
+// stay readable against the dark cosmic walls. Walls use their own
+// self-lit ShaderMaterial and are NOT affected by these lights, so the
+// boost only makes the ships (MeshStandardMaterial) brighter.
+const ambientLight = new THREE.AmbientLight(0x445577, 1.4);
 scene.add(ambientLight);
-const dirLight = new THREE.DirectionalLight(0xffeedd, 1.2); // Stronger directional for hard toon edges
+const dirLight = new THREE.DirectionalLight(0xffeedd, 1.9);
 dirLight.position.set(1000, 3000, 1500);
 scene.add(dirLight);
-const dirLight2 = new THREE.DirectionalLight(0x8888ff, 0.4); // Cool fill light from below
-dirLight2.position.set(-500, -1000, -500);
+// Second key light from a near-opposite direction so ships have light
+// on BOTH sides instead of one shadowed half. Pure white-ish, strong
+// enough to lift the back-side shadow without flattening the silhouette.
+const dirLight2 = new THREE.DirectionalLight(0xb0c8e0, 1.1);
+dirLight2.position.set(-1500, 2000, -1200);
 scene.add(dirLight2);
-const pointLight = new THREE.PointLight(0x6699ff, 0.5, 12000);
+// Cool under-fill stays for ground-up bounce-light feel.
+const dirLight3 = new THREE.DirectionalLight(0x8888ff, 0.65);
+dirLight3.position.set(-500, -1000, -500);
+scene.add(dirLight3);
+const pointLight = new THREE.PointLight(0x6699ff, 0.9, 12000);
 pointLight.position.set(0, 500, 0);
 scene.add(pointLight);
 
 // Hemisphere light for cartoon-style ambient (sky/ground color split)
-const hemiLight = new THREE.HemisphereLight(0x6688cc, 0x224466, 0.6);
+const hemiLight = new THREE.HemisphereLight(0x6688cc, 0x224466, 1.1);
 scene.add(hemiLight);
 
 // ---- STARFIELD ----
@@ -6298,9 +6309,10 @@ function createShipMesh(chassisData, teamColor, loadoutKey) {
     emissiveIntensity: 1.0,
     envMapIntensity: 0.85
   });
-  // Fresnel rim-light: team-colored glow at glancing angles. onBeforeCompile injects
-  // a view-dependent power(1 - n·v) term into the fragment shader so silhouettes pop
-  // for instant target ID at distance. Cheap (no extra passes) and compatible with bloom.
+  // Restored to original team-colored fresnel rim. Procedural ships are
+  // already entirely team-colored (color: teamColor + normalMap detail),
+  // so a team-color rim doesn't change their visual identity the way it
+  // did on the GLB hulls.
   hullMat.userData.rimColor = { value: teamCol.clone().multiplyScalar(1.35) };
   hullMat.userData.rimPower = { value: 2.5 };
   hullMat.userData.rimStrength = { value: 0.75 };
@@ -18747,7 +18759,11 @@ function buildRoomGraphLevel(level) {
       'vec3 patternVoronoi(vec3 p, vec3 zoneC, float tt) {',
       '  float baseHue = rgbHue(zoneC);',
       '  vec3 accum = vec3(0.0);',
-      '  for (int layer = 0; layer < 5; layer++) {',
+      // Voronoi3 internally runs a 3x3x3 = 27-iteration loop per call. Layer
+      // count is hard-capped at 2 here (regardless of user u_iters) so the
+      // fragment cost stays at ~54 ops instead of 297. Lab-level perf
+      // complaints all stemmed from the layer count scaling with u_iters.
+      '  for (int layer = 0; layer < 2; layer++) {',
       '    if (layer >= u_iters) break;',
       '    float lf = float(layer);',
       '    float sMul = pow(1.7, lf * 0.6);',
@@ -18766,8 +18782,15 @@ function buildRoomGraphLevel(level) {
       'vec3 patternWaves(vec3 p, vec3 zoneC, float tt) {',
       '  float baseHue = rgbHue(zoneC);',
       '  float v = 0.0;',
-      '  float freq = u_invBase * 0.05;',
-      '  for (int k = 0; k < 12; k++) {',
+      // Wave count hard-capped at 5. With more than ~6 averaged sine waves
+      // the sum trends toward zero (waves cancel) and the pattern flattens
+      // into uniform grey. Five is the sweet spot for visible standing-wave
+      // interference. Frequency clamped to a sensible band so very high
+      // u_invBase doesn\'t make the pattern noise-out, and very low values
+      // don\'t flatten it.
+      '  float freq = clamp(u_invBase * 0.05, 0.30, 1.20);',
+      '  int waveCap = 5;',
+      '  for (int k = 0; k < 5; k++) {',
       '    if (k >= u_iters) break;',
       '    float fk = float(k);',
       '    vec3 dir = normalize(vec3(',
@@ -18777,7 +18800,7 @@ function buildRoomGraphLevel(level) {
       '    ));',
       '    v += sin(dot(p, dir) * freq + tt * (0.4 + fk * 0.07));',
       '  }',
-      '  v /= max(1.0, float(u_iters));',
+      '  v /= float(waveCap);',
       '  float lum = 0.5 + 0.5 * v;',
       '  float val = clamp(pow(lum, 1.6) * 4.5 / u_valDiv * 80.0, 0.0, 4.5);',
       '  float phase = atan(p.x, p.z);',
@@ -18792,8 +18815,13 @@ function buildRoomGraphLevel(level) {
       '  vec3 cv = p;',
       '  vec3 q = p;',
       '  float dr = 1.0;',
-      '  float scaleP = u_invBase * 0.3;',
-      '  for (int k = 0; k < 12; k++) {',
+      // Mandelbox scale parameter is unstable outside ~[1.5, 2.6]. Above 3
+      // the iteration diverges to infinity in 1-2 steps and the output
+      // collapses to (0,0,0). User u_invBase is mapped into the working
+      // range here so the pattern is always visible regardless of the
+      // global setting. Iteration count similarly capped at 8.
+      '  float scaleP = clamp(u_invBase * 0.18, 1.5, 2.6);',
+      '  for (int k = 0; k < 8; k++) {',
       '    if (k >= u_iters) break;',
       '    q = clamp(q, -1.0, 1.0) * 2.0 - q;',
       '    float r2 = dot(q, q);',
@@ -18827,8 +18855,15 @@ function buildRoomGraphLevel(level) {
       'vec3 patternHex(vec3 p, vec3 zoneC, float tt) {',
       '  float baseHue = rgbHue(zoneC);',
       '  vec3 accum = vec3(0.0);',
-      '  float cell = 1.0 / max(0.001, u_invBase);',
-      '  for (int layer = 0; layer < 5; layer++) {',
+      // Hex cell pitch in PATTERN space is 1/u_invBase. In WORLD space it
+      // becomes (1/u_invBase) / u_scale. With high u_invBase + low u_scale
+      // the cells go subpixel (~5 world units). Floor the pattern-space
+      // cell at 0.5 so the hex tiling is always at least visible.
+      // Layer count capped at 3 (vs 5) because the per-layer scale doubles
+      // each time (pow(1.5, lf)), and beyond layer 3 the hexes are
+      // sub-pixel anyway. User u_iters still terminates the loop early.
+      '  float cell = max(0.5, 1.0 / max(0.001, u_invBase));',
+      '  for (int layer = 0; layer < 3; layer++) {',
       '    if (layer >= u_iters) break;',
       '    float lf = float(layer);',
       '    float ca = cos(lf * 1.04719), sa = sin(lf * 1.04719);',
