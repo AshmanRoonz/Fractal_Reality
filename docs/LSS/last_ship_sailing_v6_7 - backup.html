@@ -90,10 +90,76 @@ canvas { display: block; }
 /* Legacy HUD elements (integrated into circumpunct ring HUD) */
 #health-canvas, #ship-status, #core-container { display: none; }
 
-/* Abilities (hidden; in circumpunct ring brackets) */
+/* Abilities — old rectangular row.
+   The DOM still exists so the existing updateAbilityHUD logic can populate
+   each slot's class (ready / on-cooldown / active-now) and cooldown bar
+   width; the pie widget below reads those derived values. The row itself
+   is hidden because the player-facing UI is now the four-quarter pie. */
 #abilities {
   position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
-  display: flex; gap: 6px; z-index: 30; pointer-events: none;
+  display: none; gap: 6px; z-index: 30; pointer-events: none;
+}
+
+/* Ability pie: small four-quarter SOLID disk (no center hole) that overlays
+   the painted blue radar-like circle at the bottom-center of every cockpit
+   frame PNG. Each quarter is one ability slot (top=Q, right=E, bottom=F,
+   left=V/core), filled with a color that reflects state ; recharging fades
+   from red toward green, full ready is solid green, active-now is gold.
+   Anchored to the BOTTOM of the viewport (not vertical center) because the
+   painted radar in the cockpit art lives near the bottom. */
+#ability-pie {
+  position: fixed;
+  left: 50%; bottom: 0;
+  transform: translateX(-50%);
+  width: 160px; height: 160px;
+  pointer-events: none;
+  z-index: 25; /* above #cockpit-frame (z=9) and #circumpunct-hud (z=20) */
+}
+#ability-pie svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.ap-quarter {
+  fill: rgba(60, 60, 80, 0.22);
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 1.2;
+  transition: fill 0.18s ease;
+  filter: drop-shadow(0 0 6px rgba(0,0,0,0.35));
+}
+.ap-key {
+  fill: rgba(255, 255, 255, 0.95);
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: rgba(0,0,0,0.65);
+  stroke-width: 2.5;
+}
+.ap-label {
+  fill: rgba(230, 240, 255, 0.92);
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 7.5px;
+  letter-spacing: 0.8px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+  text-transform: uppercase;
+  paint-order: stroke;
+  stroke: rgba(0,0,0,0.7);
+  stroke-width: 1.6;
+}
+.ap-cdtext {
+  fill: rgba(255, 255, 255, 0.90);
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 9px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: rgba(0,0,0,0.7);
+  stroke-width: 1.6;
 }
 .ability-slot {
   position: relative; width: 72px; height: 52px;
@@ -168,7 +234,7 @@ canvas { display: block; }
   font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 13px;
   color: #ffaa00; margin-top: 2px; letter-spacing: 3px; text-transform: uppercase;
 }
-#score-display { display: flex; gap: 20px; justify-content: center; margin-top: 4px; }
+#score-display { display: flex; gap: 180px; justify-content: center; margin-top: 4px; }
 .team-score {
   font-family: 'Orbitron', sans-serif; font-weight: 700;
   padding: 3px 14px; font-size: 15px; letter-spacing: 2px;
@@ -873,6 +939,7 @@ canvas { display: block; }
     </div>
   </div>
   <div id="abilities"></div>
+  <div id="ability-pie"><svg viewBox="0 0 200 200"></svg></div>
 
   <div id="weapon-info">
     <div id="weapon-name">Splitter Rifle</div>
@@ -1186,7 +1253,7 @@ const LOADOUTS = {
     abilities: [
       { name: 'Power Shot', cooldown: 8, duration: 0.1, desc: 'High-power: 3200 damage', type: 'offensive', dmg: 3200 },
       { name: 'Gun Shield', cooldown: 0, duration: 999, desc: 'Frontal shield (5000 HP, 10s)', type: 'defensive' },
-      { name: 'Mode Switch', cooldown: 2, duration: 999, desc: 'Close/long range modes', type: 'utility' },
+      { name: 'Mode Switch', cooldown: 2, duration: 0.05, desc: 'Close/long range modes', type: 'utility' },
     ],
     core: { name: 'Smart Core', desc: 'Auto-aim + unlimited ammo', duration: 10, damage: 10000, cooldown: 60 },
   },
@@ -2718,7 +2785,7 @@ function handleNetEvent(evt, fromPeerId) {
   if (evt.type === 'effect_spawn' && typeof evt.netId === 'number') {
     if (evt.kind === 'tripwire') {
       const pos = new THREE.Vector3(evt.px, evt.py, evt.pz);
-      spawnTripWireOrb(pos, 'peer', evt.team, evt.ownerPeerId, evt.netId, false);
+      spawnTripWireOrb(pos, 'peer', evt.team, evt.ownerPeerId, evt.netId, false, evt.groupId);
     } else if (evt.kind === 'particle_wall') {
       const pos = new THREE.Vector3(evt.px, evt.py, evt.pz);
       const dir = new THREE.Vector3(evt.dx, evt.dy, evt.dz);
@@ -2755,11 +2822,14 @@ function handleNetEvent(evt, fromPeerId) {
 // path (broadcast=true) and the effect_spawn receiver (broadcast=false). The
 // ownerPeerId tag lets the per-frame trigger logic decide which peer's local
 // copy is allowed to detonate (only the owner's; everyone else's is visual).
-function spawnTripWireOrb(pos, owner, team, ownerPeerId, netId, broadcast) {
+// groupId links the three orbs spawned by one Trip Wire ability use so the
+// per-frame tick can arc lightning between siblings (and only siblings ; we
+// don't want unrelated trip wires from different casts to chain together).
+function spawnTripWireOrb(pos, owner, team, ownerPeerId, netId, broadcast, groupId) {
   game.worldEffects.push({
     type: 'tripwire', position: pos.clone(),
     timer: 12, dmg: 350, radius: 220, owner, team, armed: false, armTimer: 1.0,
-    ownerPeerId, netId,
+    ownerPeerId, netId, groupId, arcTimer: 0.05 + Math.random() * 0.10,
   });
   const mineGeo = new THREE.SphereGeometry(10, 6, 4);
   const mineMat = new THREE.MeshBasicMaterial({ color: 0xff4444 });
@@ -2770,7 +2840,7 @@ function spawnTripWireOrb(pos, owner, team, ownerPeerId, netId, broadcast) {
   if (broadcast && net.active && net.sendEvent) {
     net.sendEvent({
       type: 'effect_spawn', kind: 'tripwire',
-      netId, ownerPeerId, team,
+      netId, ownerPeerId, team, groupId,
       px: pos.x, py: pos.y, pz: pos.z,
     });
   }
@@ -2959,14 +3029,19 @@ function spawnIncendiaryGas(pos, owner, team, ownerPeerId, netId, broadcast) {
     fxTimer: 0,
     ownerPeerId, netId,
   });
+  // (v6.7+) The cloud is now built from a soft "halo" outer sphere PLUS a
+  // scattering of additive puff spheres at offset positions. The puffs do
+  // the volumetric "billowing cloud" work ; the outer sphere is dialed
+  // down (was 0.12 opacity, now 0.06) so it just provides a faint overall
+  // tint instead of dominating as a smooth blob.
   const gasGeo = new THREE.SphereGeometry(1, 12, 8);
-  const gasMat = new THREE.MeshBasicMaterial({ color: 0x88aa33, transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending, depthWrite: false });
+  const gasMat = new THREE.MeshBasicMaterial({ color: 0xaecc55, transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false });
   const gasMesh = new THREE.Mesh(gasGeo, gasMat);
   gasMesh.position.copy(pos);
   gasMesh.scale.setScalar(350);
   scene.add(gasMesh);
   const coreGeo = new THREE.SphereGeometry(1, 8, 6);
-  const coreMat = new THREE.MeshBasicMaterial({ color: 0x99bb44, transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending, depthWrite: false });
+  const coreMat = new THREE.MeshBasicMaterial({ color: 0xc8e870, transparent: true, opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false });
   const coreMesh = new THREE.Mesh(coreGeo, coreMat);
   coreMesh.position.copy(pos);
   coreMesh.scale.setScalar(200);
@@ -2974,6 +3049,47 @@ function spawnIncendiaryGas(pos, owner, team, ownerPeerId, netId, broadcast) {
   const effRef = game.worldEffects[game.worldEffects.length - 1];
   effRef.mesh = gasMesh;
   effRef.coreMesh = coreMesh;
+  // ---- Billowing puff spheres ----
+  // 8 additive sphere puffs scattered within ~70% of the cloud radius, each
+  // with its own random size, opacity, drift phase, and bob frequency. The
+  // per-frame tick (in updateWorldEffects -> incendiary_gas) advances these
+  // so the puffs slowly bob and grow/shrink, giving the cloud a lumpy
+  // moving silhouette instead of a smooth sphere.
+  const PUFF_COUNT = 8;
+  const puffMeshes = [];
+  for (let pi = 0; pi < PUFF_COUNT; pi++) {
+    // Spherical-uniform random offset inside 70% of radius
+    const u = Math.random(), v = Math.random();
+    const theta = 2 * Math.PI * u;
+    const phi = Math.acos(2 * v - 1);
+    const r = (0.20 + Math.random() * 0.55) * 350; // 70..262 units from center
+    const off = new THREE.Vector3(
+      r * Math.sin(phi) * Math.cos(theta),
+      r * Math.sin(phi) * Math.sin(theta) * 0.55, // squash vertically; clouds spread wider than tall
+      r * Math.cos(phi)
+    );
+    const puffSize = 110 + Math.random() * 90; // 110..200 unit puffs
+    const puffMat = new THREE.MeshBasicMaterial({
+      color: pi % 3 === 0 ? 0xc4e060 : (pi % 3 === 1 ? 0xa6c648 : 0xd0eb70),
+      transparent: true, opacity: 0.22 + Math.random() * 0.14,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+    });
+    const puff = new THREE.Mesh(new THREE.SphereGeometry(1, 10, 8), puffMat);
+    puff.position.copy(pos).add(off);
+    puff.scale.setScalar(puffSize);
+    puff.userData._cloud = {
+      offset: off.clone(),
+      baseSize: puffSize,
+      baseOpacity: puffMat.opacity,
+      phase: Math.random() * Math.PI * 2,
+      freq: 0.6 + Math.random() * 0.7,        // bob frequency in rad/s
+      driftAxis: new THREE.Vector3((Math.random()-0.5), (Math.random()-0.5), (Math.random()-0.5)).normalize(),
+      driftAmp: 18 + Math.random() * 20,      // bob amplitude in world units
+    };
+    scene.add(puff);
+    puffMeshes.push(puff);
+  }
+  effRef.puffMeshes = puffMeshes;
   if (broadcast && net.active && net.sendEvent) {
     net.sendEvent({
       type: 'effect_spawn', kind: 'incendiary_gas',
@@ -4599,6 +4715,17 @@ const _shipPreview3D = {
   model: null, lastKey: null, pendingKey: null, animId: null,
   rotationSpeed: 0.005, // radians per frame at 60fps (slow, graceful)
   initFailed: false, // set true if WebGL init throws; prevents retry storm
+  // User-controlled rotation. yaw is the canonical y-rotation (radians) the
+  // ship is rendered at; both auto-rotation and user input add into yaw, so
+  // when the user stops driving the stick or mouse the auto-rotation just
+  // continues from wherever they left it.
+  yaw: 0,
+  isMouseDragging: false,
+  lastMouseX: 0,
+  // Sensitivities tuned to feel close to the right-stick on a controller
+  // and a typical mouse drag inside a small preview pane.
+  GAMEPAD_ROT_RATE: 2.6,   // radians/sec at full stick deflection
+  MOUSE_ROT_RATE: 0.012,   // radians per pixel of horizontal mouse motion
 };
 
 function _initShipPreview3D() {
@@ -4622,12 +4749,16 @@ function _initShipPreview3D() {
     if (typeof sceneEnvMap !== 'undefined') scene.environment = sceneEnvMap;
     // Lighting: cool key from upper-front, warm fill from below-back, plus ambient
     // so dark hull panels still read. Colors echo the main-game team-neutral palette.
-    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-    const keyL = new THREE.DirectionalLight(0xbfd9ff, 1.1);
+    // (v6.7+) Earlier values stacked four hot lights on top of the in-game IBL,
+    // which combined with the emissive lift below to wash out the silhouette;
+    // dialed back so the body reads as a defined hull against the background
+    // gradient instead of a flat lit shape.
+    scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+    const keyL = new THREE.DirectionalLight(0xbfd9ff, 0.65);
     keyL.position.set(180, 240, 160); scene.add(keyL);
-    const fillL = new THREE.DirectionalLight(0xffb066, 0.45);
+    const fillL = new THREE.DirectionalLight(0xffb066, 0.28);
     fillL.position.set(-140, -80, -200); scene.add(fillL);
-    const rimL = new THREE.DirectionalLight(0xffaa00, 0.25);
+    const rimL = new THREE.DirectionalLight(0xffaa00, 0.18);
     rimL.position.set(0, 120, -260); scene.add(rimL);
     const camera = new THREE.PerspectiveCamera(32, 1, 1, 8000);
     camera.position.set(0, 70, 320);
@@ -4636,6 +4767,29 @@ function _initShipPreview3D() {
     _shipPreview3D.scene = scene;
     _shipPreview3D.camera = camera;
     _shipPreview3D.canvas = canvas;
+    // Mouse-drag rotation: hold left button on the preview canvas and drag
+    // horizontally to spin the ship. mousedown latches the drag; mousemove
+    // adds to yaw on each pixel of horizontal motion; mouseup/leave drops
+    // the latch. We listen to mousemove/mouseup on `window` (not the canvas)
+    // so a drag that exits the canvas mid-motion still tracks until release.
+    canvas.style.cursor = 'grab';
+    canvas.addEventListener('mousedown', (e) => {
+      _shipPreview3D.isMouseDragging = true;
+      _shipPreview3D.lastMouseX = e.clientX;
+      canvas.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
+    window.addEventListener('mouseup', () => {
+      if (!_shipPreview3D.isMouseDragging) return;
+      _shipPreview3D.isMouseDragging = false;
+      if (_shipPreview3D.canvas) _shipPreview3D.canvas.style.cursor = 'grab';
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (!_shipPreview3D.isMouseDragging) return;
+      const dx = e.clientX - _shipPreview3D.lastMouseX;
+      _shipPreview3D.lastMouseX = e.clientX;
+      _shipPreview3D.yaw += dx * _shipPreview3D.MOUSE_ROT_RATE;
+    });
     return renderer;
   } catch (e) {
     console.warn('[ship-preview] WebGL init failed:', e && e.message ? e.message : e);
@@ -4682,8 +4836,12 @@ function _applyShipPreviewModel(key) {
       const newMats = mats.map(m => {
         if (!m) return m;
         const copy = m.clone();
-        if (copy.emissive) copy.emissive.setHex(0x22334a);
-        if ('emissiveIntensity' in copy) copy.emissiveIntensity = 1.0;
+        // Subtle emissive lift so dark hull plates aren't pitch black, but
+        // not loud enough to flatten the silhouette. Earlier value (0x22334a
+        // at intensity 1.0) made every panel self-glow on top of the
+        // ambient + 3 directionals + IBL, washing out form.
+        if (copy.emissive) copy.emissive.setHex(0x121a26);
+        if ('emissiveIntensity' in copy) copy.emissiveIntensity = 0.45;
         return copy;
       });
       child.material = newMats.length === 1 ? newMats[0] : newMats;
@@ -4701,6 +4859,7 @@ function _applyShipPreviewModel(key) {
   cam.lookAt(0, 0, 0);
   // Reset rotation so every new ship starts facing camera.
   clone.rotation.set(0, 0, 0);
+  s.yaw = 0; // canonical yaw; animate-loop & input handlers add into this
   s.scene.add(clone);
   s.model = clone;
 }
@@ -4730,7 +4889,30 @@ function _animateShipPreview() {
       s.camera.updateProjectionMatrix();
     }
   }
-  if (s.model) s.model.rotation.y += s.rotationSpeed;
+  // Compute frame dt so gamepad rotation rate is well-defined in radians/sec
+  // even if rAF stutters. Cap dt at 0.1 s so a tab-blur stall doesn't fling
+  // the ship around when focus returns.
+  const _now = performance.now();
+  const _last = s._lastAnimT || _now;
+  const dt = Math.min(0.1, (_now - _last) / 1000);
+  s._lastAnimT = _now;
+
+  // Gamepad right-stick X (already deadzoned + curve-applied by pollGamepad).
+  // Positive = stick pushed right => ship rotates such that its right side
+  // comes toward the camera (model.rotation.y increases). Mouse drag adds
+  // into yaw directly via the mousemove handler.
+  const gpX = (typeof input !== 'undefined' && input && input.gpConnected) ? (input.gpLookX || 0) : 0;
+  const userActive = Math.abs(gpX) > 0.01 || s.isMouseDragging;
+  if (Math.abs(gpX) > 0.01) {
+    s.yaw += gpX * s.GAMEPAD_ROT_RATE * dt;
+  }
+  // Auto-rotation continues only while neither input is active, so the ship
+  // holds its pose the moment the user takes control and resumes drifting
+  // after they let go.
+  if (!userActive) {
+    s.yaw += s.rotationSpeed;
+  }
+  if (s.model) s.model.rotation.y = s.yaw;
   s.renderer.render(s.scene, s.camera);
   s.animId = requestAnimationFrame(_animateShipPreview);
 }
@@ -9625,6 +9807,7 @@ function commitLoadout(key) {
   player.vortexEnergy = 1000;
   player.vortexAdsActive = false;
   player.vortexStored = 0;
+  player.vortexShieldLockout = false;
   player.trackerLocks = {};
   player.trackerLockedTarget = null;
   player.enemyToneLocks = {};
@@ -10693,8 +10876,12 @@ function activateAbility(slot) {
     if (player.abilityCooldowns[slot] > 0) return;
   }
 
-  // Vortex Shield: can't reactivate if VORTEX energy is depleted
-  if (ability.name === 'Vortex Shield' && player.vortexEnergy <= 0) return;
+  // Vortex Shield: can't reactivate while the post-depletion lockout is set.
+  // The lockout is raised when the shield drained to zero during a hold; it
+  // clears only once the energy pool has refilled to at least 20% of max
+  // (see updateAbilities). This forces a real cooldown after a full drain
+  // so the shield can't be spammed back on with a sliver of charge.
+  if (ability.name === 'Vortex Shield' && player.vortexShieldLockout) return;
 
   // Hold-to-use abilities: pressing while already held does nothing (release handles deactivation)
   const isHoldAbility = ['Vortex Shield', 'Sword Block', 'Thermal Shield'].includes(ability.name);
@@ -10742,8 +10929,10 @@ function activateAbility(slot) {
 function executeAbility(slot, ability) {
   const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
 
-  // VORTEX energy cost check (all VORTEX abilities share one energy pool)
-  const vortexEnergyCosts = { 'Laser Shot': 350, 'Vortex Shield': 200, 'Trip Wire': 250 };
+  // VORTEX energy cost check (all VORTEX abilities share one energy pool).
+  // Vortex Shield has NO upfront cost; it's a continuous hold ability whose
+  // cost comes from the per-frame drain in updateAbilities while held.
+  const vortexEnergyCosts = { 'Laser Shot': 350, 'Trip Wire': 250 };
   if (player.loadoutKey === 'VORTEX' && vortexEnergyCosts[ability.name]) {
     if (player.vortexEnergy < vortexEnergyCosts[ability.name]) return; // not enough energy
     player.vortexEnergy -= vortexEnergyCosts[ability.name];
@@ -11160,13 +11349,16 @@ function executeAbility(slot, ability) {
     else if (ability.name === 'Trip Wire') {
       const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
       const offsets = [-180, 0, 180]; // lateral spread
+      // Single shared groupId so the three siblings can arc lightning to each
+      // other in the per-frame tick (see updateWorldEffects -> tripwire).
+      const tripGroupId = ++net.effectIdCounter;
       for (let ti = 0; ti < 3; ti++) {
         const minePos = player.position.clone()
           .add(forward.clone().multiplyScalar(250))
           .add(right.clone().multiplyScalar(offsets[ti]));
         // (v6.7) Single helper handles local spawn + mesh sync; receivers
         // call it with broadcast=false to avoid re-broadcast storms.
-        spawnTripWireOrb(minePos, 'player', player.team, net.myPeerId, ++net.effectIdCounter, true);
+        spawnTripWireOrb(minePos, 'player', player.team, net.myPeerId, ++net.effectIdCounter, true, tripGroupId);
       }
     }
     // PYRO: Incendiary Trap (gas canisters that ignite on contact with any Pyro fire source:
@@ -11337,6 +11529,39 @@ function activateCore() {
     igniteNearbyGas(player.position, radius);
     spawnExplosion(player.position, 80);
     triggerScreenShake(8);
+    // Three trails of flame radiating outward, 120° apart in the horizontal
+    // plane. Each trail uses the same spawnFirewallVisual sprite layout as
+    // Pyro's Firewall ability so the visual language stays consistent ; this
+    // is the Flame Core's signature read on top of the instant AoE blast.
+    // We zero the Y component of the spine direction so the trails lay flat
+    // along the floor regardless of where the player was looking when Core
+    // fired (a steep up- or down-aim shouldn't fling the trails into the
+    // ceiling/floor).
+    const _flameSpine = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+    _flameSpine.y = 0;
+    if (_flameSpine.lengthSq() < 0.001) _flameSpine.set(0, 0, -1);
+    _flameSpine.normalize();
+    const FLAME_TRAIL_LENGTH = 700;
+    const _flameY = new THREE.Vector3(0, 1, 0);
+    const _flameAngles = [0, (2 * Math.PI) / 3, -(2 * Math.PI) / 3];
+    for (const ang of _flameAngles) {
+      const dir = _flameSpine.clone().applyAxisAngle(_flameY, ang);
+      const start = player.position.clone().add(dir.clone().multiplyScalar(60));
+      const trailId = ++net.effectIdCounter;
+      spawnFirewallVisual(start, dir, FLAME_TRAIL_LENGTH, player.team, net.myPeerId, trailId);
+      // Broadcast so peers see the same three trails. spawnFirewallVisual on
+      // the receiver side spawns visual-only sprites with dmgPerSec: 0, so
+      // there's no double-damage risk; the Core's burst above is what kills.
+      if (net.active && net.sendEvent) {
+        net.sendEvent({
+          type: 'effect_spawn', kind: 'firewall',
+          netId: trailId, ownerPeerId: net.myPeerId, team: player.team,
+          px: start.x, py: start.y, pz: start.z,
+          dx: dir.x, dy: dir.y, dz: dir.z,
+          length: FLAME_TRAIL_LENGTH,
+        });
+      }
+    }
   }
   // PUNCTURE: Afterburner Core (speed boost + rocket barrage over 5s)
   else if (coreName === 'Afterburner Core') {
@@ -11611,34 +11836,57 @@ function updateAbilities(dt) {
   // Hold-to-use abilities: auto-deactivate when button released
   const holdNames = ['Vortex Shield', 'Sword Block', 'Thermal Shield'];
   const holdKey = !input.keys['e'] && !(input.gpAbility1); // E key or gamepad RB
-  for (let i = 0; i < 3; i++) {
-    if (player.abilityActive[i] && player.abilities[i] && holdNames.includes(player.abilities[i].name)) {
-      if (holdKey) {
-        player.abilityActive[i] = false;
-        // Trigger Vortex Shield burst release on drop
-        if (player.abilities[i].name === 'Vortex Shield' && player.vortexStored > 0) {
-          const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
-          for (const bot of game.entities) {
-            if (!bot.alive || bot.team === player.team) continue;
-            const dist = player.position.distanceTo(bot.position);
-            if (dist < 300) {
-              const toBot = new THREE.Vector3().subVectors(bot.position, player.position).normalize();
-              if (fwd.dot(toBot) > 0.2) {
-                const dealt = bot.takeDamage(player.vortexStored, 'player');
-                if (dealt > 0) { player.damageDealt += dealt; showHitMarker(); }
-              }
-            }
-          }
-          spawnExplosion(player.position.clone().add(fwd.multiplyScalar(100)), 30);
-          player.vortexStored = 0;
-        }
-        // Afterburner deactivation
-        if (player.abilities[i].name === 'Afterburner') {
-          player.afterburnerActive = false;
-          player.afterburnerSpeedMult = 1.0;
+  // Helper: detonate the Vortex Shield's stored projectile damage as a forward
+  // burst. Called both on key-release deactivation and on energy-drain
+  // forced-deactivation so either path delivers the same payoff.
+  const _vortexShieldRelease = () => {
+    if (player.vortexStored <= 0) return;
+    const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+    for (const bot of game.entities) {
+      if (!bot.alive || bot.team === player.team) continue;
+      const dist = player.position.distanceTo(bot.position);
+      if (dist < 300) {
+        const toBot = new THREE.Vector3().subVectors(bot.position, player.position).normalize();
+        if (fwd.dot(toBot) > 0.2) {
+          const dealt = bot.takeDamage(player.vortexStored, 'player');
+          if (dealt > 0) { player.damageDealt += dealt; showHitMarker(); }
         }
       }
     }
+    spawnExplosion(player.position.clone().add(fwd.multiplyScalar(100)), 30);
+    player.vortexStored = 0;
+  };
+  for (let i = 0; i < 3; i++) {
+    if (player.abilityActive[i] && player.abilities[i] && holdNames.includes(player.abilities[i].name)) {
+      const abName = player.abilities[i].name;
+      if (holdKey) {
+        player.abilityActive[i] = false;
+        // Trigger Vortex Shield burst release on drop
+        if (abName === 'Vortex Shield') _vortexShieldRelease();
+        // Afterburner deactivation
+        if (abName === 'Afterburner') {
+          player.afterburnerActive = false;
+          player.afterburnerSpeedMult = 1.0;
+        }
+      } else if (abName === 'Vortex Shield') {
+        // Held: drain the shared VORTEX energy pool. 250/sec means a full
+        // 1000 pool sustains ~4 s of continuous hold. When the pool hits 0,
+        // force-deactivate the shield and raise the lockout flag so the
+        // user can't immediately re-activate; lockout clears in the cooldown
+        // tick block below once energy regens to 20%.
+        const VORTEX_SHIELD_DRAIN = 250; // energy units per second
+        player.vortexEnergy = Math.max(0, player.vortexEnergy - VORTEX_SHIELD_DRAIN * dt);
+        if (player.vortexEnergy <= 0) {
+          player.abilityActive[i] = false;
+          player.vortexShieldLockout = true;
+          _vortexShieldRelease();
+        }
+      }
+    }
+  }
+  // Clear the Vortex Shield lockout once energy refills to 20% of max.
+  if (player.vortexShieldLockout && player.vortexEnergy >= player.vortexMaxEnergy * 0.20) {
+    player.vortexShieldLockout = false;
   }
 
   // Cooldown ticking
@@ -11992,9 +12240,61 @@ function updateAbilities(dt) {
           }
         }
       }
+      // ---- Electric arcs to sibling Trip Wire orbs ----
+      // Once per random interval, this orb fires a lightning bolt to ONE of
+      // its same-group siblings so the trio reads as a live electric snare
+      // instead of three discrete balls. Only one half of each pair emits
+      // per tick (we pick the partner from siblings whose memory address
+      // > this one's via Array index ordering) which halves draw calls
+      // without losing visual coverage. The arc is short-lived (~80 ms),
+      // electric-blue, and inherits the existing spawnLightningBolt helper.
+      if (eff.armed && eff.groupId !== undefined) {
+        eff.arcTimer -= dt;
+        if (eff.arcTimer <= 0) {
+          // Find this orb's siblings (same groupId, different netId/index).
+          const siblings = [];
+          for (let j = 0; j < game.worldEffects.length; j++) {
+            const o = game.worldEffects[j];
+            if (o === eff) continue;
+            if (o.type !== 'tripwire') continue;
+            if (o.groupId !== eff.groupId) continue;
+            // De-dup: only emit from the lower-index orb of each pair so
+            // each arc fires once per cycle, not twice. (Outer loop
+            // variable is `e`, not `i` — the latter doesn't exist in this
+            // scope and was the source of a per-frame ReferenceError.)
+            if (j < e) continue;
+            siblings.push(o);
+          }
+          if (siblings.length > 0) {
+            const target = siblings[Math.floor(Math.random() * siblings.length)];
+            spawnLightningBolt(eff.position, target.position, 0x44ccff, 0.10, 1, 1.4);
+          }
+          eff.arcTimer = 0.06 + Math.random() * 0.10; // ~6-12 arcs/sec across the trio
+        }
+      }
     }
 
     else if (eff.type === 'incendiary_gas') {
+      // Animate billowing puffs (runs in BOTH unignited gas and ignited fire
+      // states): bob along per-puff drift axis, breathe via sin scale, slowly
+      // rotate. Independent phases per puff so the cluster never reads in
+      // lockstep. baseOpacity gets rewritten on ignition (see ignite block
+      // below), so this same loop drives both the green gas haze and the
+      // orange burn cluster — keeps the puffs alive while burning.
+      if (eff.puffMeshes) {
+        for (const p of eff.puffMeshes) {
+          const ud = p.userData._cloud;
+          if (!ud) continue;
+          const phase = ud.phase + game.time * ud.freq;
+          const bob = Math.sin(phase) * ud.driftAmp;
+          p.position.copy(eff.position).add(ud.offset);
+          p.position.addScaledVector(ud.driftAxis, bob);
+          const breathe = 0.88 + 0.20 * Math.sin(phase * 0.7 + 1.3);
+          p.scale.setScalar(ud.baseSize * breathe);
+          p.material.opacity = ud.baseOpacity * (0.85 + 0.30 * Math.sin(phase * 1.1));
+          p.rotation.y += dt * 0.2;
+        }
+      }
       // Gas cloud ignites ONLY from fire sources (firewall proximity, thermite splash, Flame Core)
       // Thermite splash ignition is handled in Projectile.splashDamage() via igniteNearbyGas()
       if (!eff.ignited) {
@@ -12010,8 +12310,25 @@ function updateAbilities(dt) {
                 eff.ignited = true;
                 eff.igniteTimer = eff.igniteDuration;
                 spawnExplosion(eff.position, 30);
-                if (eff.mesh) { eff.mesh.material.color.setHex(0xff4400); eff.mesh.material.opacity = 0.18; }
-                if (eff.coreMesh) { eff.coreMesh.material.color.setHex(0xff6600); eff.coreMesh.material.opacity = 0.15; }
+                // Ignited cloud is a serious hazard ; bump alpha hard so the
+                // burn zone reads at a glance from across the room.
+                if (eff.mesh) { eff.mesh.material.color.setHex(0xff5520); eff.mesh.material.opacity = 0.42; }
+                if (eff.coreMesh) { eff.coreMesh.material.color.setHex(0xff8a30); eff.coreMesh.material.opacity = 0.36; }
+                // Recolor every puff to the burning palette AND bump its
+                // base opacity so the whole cluster lights up, not just the
+                // inner sphere. Three flame hues mixed so the cluster has
+                // texture instead of a uniform red.
+                if (eff.puffMeshes) {
+                  for (const p of eff.puffMeshes) {
+                    const r = Math.random();
+                    const hot = r < 0.33 ? 0xff4520 : (r < 0.66 ? 0xff7530 : 0xffa540);
+                    p.material.color.setHex(hot);
+                    const ud = p.userData && p.userData._cloud;
+                    const burnAlpha = 0.40 + Math.random() * 0.20; // 0.40..0.60
+                    p.material.opacity = burnAlpha;
+                    if (ud) ud.baseOpacity = burnAlpha;
+                  }
+                }
                 spawnDynamicLight(eff.position, 0xff4400, 3.0, 500, 0.5);
                 break;
               }
@@ -12023,7 +12340,7 @@ function updateAbilities(dt) {
         if (eff.mesh) {
           const pulse = 350 + Math.sin(game.time * 1.5) * 20;
           eff.mesh.scale.setScalar(pulse);
-          eff.mesh.material.opacity = 0.10 + Math.sin(game.time * 0.8) * 0.03;
+          eff.mesh.material.opacity = 0.22 + Math.sin(game.time * 0.8) * 0.05;
         }
         if (eff.coreMesh) {
           const corePulse = 200 + Math.sin(game.time * 2.0 + 1.0) * 15;
@@ -12080,14 +12397,16 @@ function updateAbilities(dt) {
           }
         }
 
-        // Animate ignited cloud: flicker and pulse
+        // Animate ignited cloud: flicker and pulse. Opacities live high so the
+        // burning zone is read at a glance from across the room ; the random
+        // jitter on top sells the chaos of an active fire.
         if (eff.mesh) {
-          const flicker = 0.14 + Math.sin(game.time * 8 + Math.random()) * 0.04;
+          const flicker = 0.42 + Math.sin(game.time * 8) * 0.06 + (Math.random() - 0.5) * 0.05;
           eff.mesh.material.opacity = flicker;
           eff.mesh.scale.setScalar(350 + Math.sin(game.time * 3) * 30);
         }
         if (eff.coreMesh) {
-          eff.coreMesh.material.opacity = 0.12 + Math.sin(game.time * 6) * 0.04;
+          eff.coreMesh.material.opacity = 0.36 + Math.sin(game.time * 6) * 0.05;
         }
         // Spawn fire particles throughout the burning volume
         eff.fxTimer -= dt;
@@ -12215,6 +12534,14 @@ function updateAbilities(dt) {
           if (m.parent) scene.remove(m);
           if (m.geometry && m.geometry.dispose) m.geometry.dispose();
           if (m.material && m.material.dispose) m.material.dispose();
+        }
+      }
+      // Clean up incendiary gas puff spheres
+      if (eff.puffMeshes) {
+        for (const p of eff.puffMeshes) {
+          if (p.parent) scene.remove(p);
+          if (p.geometry && p.geometry.dispose) p.geometry.dispose();
+          if (p.material && p.material.dispose) p.material.dispose();
         }
       }
       // (v6.7) Owner broadcasts destroy so peers remove their visual copies.
@@ -13852,6 +14179,125 @@ function buildAbilityHUD() {
     '</div>' +
     '<div class="ab-cd-bar" style="width:0%"></div>';
   container.appendChild(coreSlot);
+  // Build the matching pie widget once the abilities are known.
+  buildAbilityPie();
+}
+
+// ---- Pie widget (four-quarter circular replacement for the rectangular row) ----
+// Quarters arranged clockwise from the top: Q (slot 0), E (slot 1), F (slot 2),
+// V (core). Each quarter is an SVG arc ring-segment with its own fill that the
+// per-frame updater rewrites based on the same state the rectangular slots
+// have already been updated to (cls + cooldown bar width). Built once at
+// loadout select time; updates are cheap inline-style writes.
+const _apQuarters = [
+  // SVG angles: 0 = right, increases clockwise (because SVG y points down).
+  // Each slice spans 90 deg ; small angular gap between slices for visual breath.
+  { id: 'top',    t1: 225, t2: 315, key: 'Q', gp: 'LB', slotKey: 0 },
+  { id: 'right',  t1: 315, t2: 405, key: 'E', gp: 'RB', slotKey: 1 },
+  { id: 'bottom', t1:  45, t2: 135, key: 'F', gp: 'Y',  slotKey: 2 },
+  { id: 'left',   t1: 135, t2: 225, key: 'V', gp: 'D^', slotKey: 'core' },
+];
+// Pie sized to overlay the painted radar-like disk at the bottom of each
+// cockpit frame. Solid disk: inner radius 0 so each wedge runs all the way
+// to the center and the four slices meet at a point. Tweak _AP_OUTER_R to
+// resize, _AP_GAP_DEG to widen/tighten the kerf between slices.
+const _AP_INNER_R = 0;
+const _AP_OUTER_R = 92;
+const _AP_GAP_DEG = 3.0;
+const _apCache = {};
+
+function buildAbilityPie() {
+  const svg = document.querySelector('#ability-pie svg');
+  if (!svg) return;
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  Object.keys(_apCache).forEach(k => delete _apCache[k]);
+  const cx = 100, cy = 100; // viewBox is 200x200; center sits at (100,100)
+  const inR = _AP_INNER_R, outR = _AP_OUTER_R;
+  // Label radius: each wedge runs from the center to outR. We want the
+  // labels positioned roughly 60% out from the center so they sit in the
+  // visual mass of the wedge (not crowded at the apex).
+  const labelR = outR * 0.58;
+  const NS = 'http://www.w3.org/2000/svg';
+  for (const q of _apQuarters) {
+    const t1 = (q.t1 + _AP_GAP_DEG / 2) * Math.PI / 180;
+    const t2 = (q.t2 - _AP_GAP_DEG / 2) * Math.PI / 180;
+    const x1o = cx + outR * Math.cos(t1), y1o = cy + outR * Math.sin(t1);
+    const x2o = cx + outR * Math.cos(t2), y2o = cy + outR * Math.sin(t2);
+    let d;
+    if (inR <= 0.001) {
+      // Solid pie wedge meeting at center. M to apex, L to outer-start,
+      // arc to outer-end (sweep=1, CW in SVG screen coords), close.
+      d = `M ${cx} ${cy}` +
+          ` L ${x1o.toFixed(2)} ${y1o.toFixed(2)}` +
+          ` A ${outR} ${outR} 0 0 1 ${x2o.toFixed(2)} ${y2o.toFixed(2)}` +
+          ` Z`;
+    } else {
+      const x1i = cx + inR * Math.cos(t1), y1i = cy + inR * Math.sin(t1);
+      const x2i = cx + inR * Math.cos(t2), y2i = cy + inR * Math.sin(t2);
+      d = `M ${x1i.toFixed(2)} ${y1i.toFixed(2)}` +
+          ` L ${x1o.toFixed(2)} ${y1o.toFixed(2)}` +
+          ` A ${outR} ${outR} 0 0 1 ${x2o.toFixed(2)} ${y2o.toFixed(2)}` +
+          ` L ${x2i.toFixed(2)} ${y2i.toFixed(2)}` +
+          ` A ${inR} ${inR} 0 0 0 ${x1i.toFixed(2)} ${y1i.toFixed(2)} Z`;
+    }
+    const path = document.createElementNS(NS, 'path');
+    path.setAttribute('d', d);
+    path.setAttribute('class', 'ap-quarter');
+    path.setAttribute('id', 'ap-q-' + q.id);
+    svg.appendChild(path);
+    // Label position: center of the wedge at the chosen label radius.
+    const tMid = ((q.t1 + q.t2) / 2) * Math.PI / 180;
+    const lx = cx + labelR * Math.cos(tMid);
+    const ly = cy + labelR * Math.sin(tMid);
+    // Key letter (Q/E/F/V) — primary call-out, drawn slightly above the
+    // wedge center. Bigger than the secondary text so it reads at a glance.
+    const keyEl = document.createElementNS(NS, 'text');
+    keyEl.setAttribute('class', 'ap-key');
+    keyEl.setAttribute('x', lx);
+    keyEl.setAttribute('y', ly - 7);
+    keyEl.textContent = q.key;
+    svg.appendChild(keyEl);
+    // Ability name (truncated to first word for fit), below the key.
+    const nameEl = document.createElementNS(NS, 'text');
+    nameEl.setAttribute('class', 'ap-label');
+    nameEl.setAttribute('x', lx);
+    nameEl.setAttribute('y', ly + 5);
+    nameEl.setAttribute('id', 'ap-name-' + q.id);
+    nameEl.textContent = '';
+    svg.appendChild(nameEl);
+    // Cooldown / charge / energy text, drawn under the name.
+    const cdEl = document.createElementNS(NS, 'text');
+    cdEl.setAttribute('class', 'ap-cdtext');
+    cdEl.setAttribute('x', lx);
+    cdEl.setAttribute('y', ly + 14);
+    cdEl.setAttribute('id', 'ap-cd-' + q.id);
+    cdEl.textContent = '';
+    svg.appendChild(cdEl);
+    _apCache[q.id] = { path, keyEl, nameEl, cdEl, lastFill: '', lastName: '', lastCd: '' };
+  }
+}
+
+// Compute a CSS color for a pie quarter from the same derived state the
+// rectangular slot row already produced (cls = "ability-slot ready" /
+// "...on-cooldown" / "...active-now"; barW = cooldown bar width 0..100).
+// Recharging quarters lerp red->green via HSL hue.
+function _apFillForState(cls, barW) {
+  // Alphas are kept low so the painted radar art under the pie still reads
+  // through ; the wedges should feel like translucent gels, not solid disks.
+  if (cls.indexOf('active-now') >= 0) return 'rgba(255,180,50,0.45)';
+  if (cls.indexOf('ready') >= 0)      return 'rgba(40,210,90,0.36)';
+  // on-cooldown: barW (0..100) maps to recharge progress (0 = just used,
+  // 100 = ready). Hue lerp from red (0deg) to green (120deg).
+  const p = Math.max(0, Math.min(1, (barW || 0) / 100));
+  const hue = p * 120;
+  return `hsla(${hue.toFixed(0)}, 78%, 48%, 0.36)`;
+}
+function _apShortName(s) {
+  if (!s) return '';
+  // Take the first whitespace-separated word, capped at 9 chars so it fits
+  // inside the quarter without overflowing the label arc.
+  const w = String(s).split(/\s+/)[0];
+  return w.length > 9 ? w.slice(0, 9) : w;
 }
 
 // Cache of per-slot DOM refs. Rebuilt whenever buildAbilityHUD rewrites the
@@ -13981,6 +14427,42 @@ function updateAbilityHUD() {
     else if (!coreReady) { cdTextVal = Math.floor(player.coreMeter) + '%'; }
     else { cdTextVal = ''; }
     _hudText(core.cdText, 'ab:core:t', cdTextVal);
+  }
+
+  // ---- Pie quarter colors + labels ----
+  // Read the cls/barW/cdText we just wrote to the (hidden) rectangular slots
+  // and translate into the pie's fill color + name + cd-text. Cached per
+  // quarter so we only touch the SVG when something changed.
+  function _apApplyFromSlot(qid, slotEl) {
+    const cache = _apCache[qid];
+    if (!cache || !slotEl) return;
+    const cls = slotEl.className || '';
+    const bar = slotEl.querySelector('.ab-cd-bar');
+    const barW = bar && bar.style && bar.style.width
+      ? parseFloat(bar.style.width) || 0
+      : 0;
+    const fill = _apFillForState(cls, barW);
+    if (fill !== cache.lastFill) {
+      cache.path.style.fill = fill;
+      cache.lastFill = fill;
+    }
+    const cdTextEl = slotEl.querySelector('.ab-cd-text');
+    const cdTxt = cdTextEl ? (cdTextEl.textContent || '') : '';
+    if (cdTxt !== cache.lastCd) {
+      cache.cdEl.textContent = cdTxt;
+      cache.lastCd = cdTxt;
+    }
+    const nameEl = slotEl.querySelector('.ab-name');
+    const nameTxt = _apShortName(nameEl ? nameEl.textContent : '');
+    if (nameTxt !== cache.lastName) {
+      cache.nameEl.textContent = nameTxt;
+      cache.lastName = nameTxt;
+    }
+  }
+  for (const q of _apQuarters) {
+    const id = (q.slotKey === 'core') ? 'ab-slot-core' : ('ab-slot-' + q.slotKey);
+    const slotEl = document.getElementById(id);
+    _apApplyFromSlot(q.id, slotEl);
   }
 }
 

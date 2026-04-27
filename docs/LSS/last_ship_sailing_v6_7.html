@@ -3035,13 +3035,13 @@ function spawnIncendiaryGas(pos, owner, team, ownerPeerId, netId, broadcast) {
   // down (was 0.12 opacity, now 0.06) so it just provides a faint overall
   // tint instead of dominating as a smooth blob.
   const gasGeo = new THREE.SphereGeometry(1, 12, 8);
-  const gasMat = new THREE.MeshBasicMaterial({ color: 0x88aa33, transparent: true, opacity: 0.06, blending: THREE.AdditiveBlending, depthWrite: false });
+  const gasMat = new THREE.MeshBasicMaterial({ color: 0xaecc55, transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false });
   const gasMesh = new THREE.Mesh(gasGeo, gasMat);
   gasMesh.position.copy(pos);
   gasMesh.scale.setScalar(350);
   scene.add(gasMesh);
   const coreGeo = new THREE.SphereGeometry(1, 8, 6);
-  const coreMat = new THREE.MeshBasicMaterial({ color: 0x99bb44, transparent: true, opacity: 0.05, blending: THREE.AdditiveBlending, depthWrite: false });
+  const coreMat = new THREE.MeshBasicMaterial({ color: 0xc8e870, transparent: true, opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false });
   const coreMesh = new THREE.Mesh(coreGeo, coreMat);
   coreMesh.position.copy(pos);
   coreMesh.scale.setScalar(200);
@@ -3070,8 +3070,8 @@ function spawnIncendiaryGas(pos, owner, team, ownerPeerId, netId, broadcast) {
     );
     const puffSize = 110 + Math.random() * 90; // 110..200 unit puffs
     const puffMat = new THREE.MeshBasicMaterial({
-      color: pi % 3 === 0 ? 0xa8c548 : (pi % 3 === 1 ? 0x88aa33 : 0xb8d558),
-      transparent: true, opacity: 0.07 + Math.random() * 0.06,
+      color: pi % 3 === 0 ? 0xc4e060 : (pi % 3 === 1 ? 0xa6c648 : 0xd0eb70),
+      transparent: true, opacity: 0.22 + Math.random() * 0.14,
       blending: THREE.AdditiveBlending, depthWrite: false,
     });
     const puff = new THREE.Mesh(new THREE.SphereGeometry(1, 10, 8), puffMat);
@@ -12275,6 +12275,26 @@ function updateAbilities(dt) {
     }
 
     else if (eff.type === 'incendiary_gas') {
+      // Animate billowing puffs (runs in BOTH unignited gas and ignited fire
+      // states): bob along per-puff drift axis, breathe via sin scale, slowly
+      // rotate. Independent phases per puff so the cluster never reads in
+      // lockstep. baseOpacity gets rewritten on ignition (see ignite block
+      // below), so this same loop drives both the green gas haze and the
+      // orange burn cluster — keeps the puffs alive while burning.
+      if (eff.puffMeshes) {
+        for (const p of eff.puffMeshes) {
+          const ud = p.userData._cloud;
+          if (!ud) continue;
+          const phase = ud.phase + game.time * ud.freq;
+          const bob = Math.sin(phase) * ud.driftAmp;
+          p.position.copy(eff.position).add(ud.offset);
+          p.position.addScaledVector(ud.driftAxis, bob);
+          const breathe = 0.88 + 0.20 * Math.sin(phase * 0.7 + 1.3);
+          p.scale.setScalar(ud.baseSize * breathe);
+          p.material.opacity = ud.baseOpacity * (0.85 + 0.30 * Math.sin(phase * 1.1));
+          p.rotation.y += dt * 0.2;
+        }
+      }
       // Gas cloud ignites ONLY from fire sources (firewall proximity, thermite splash, Flame Core)
       // Thermite splash ignition is handled in Projectile.splashDamage() via igniteNearbyGas()
       if (!eff.ignited) {
@@ -12290,14 +12310,23 @@ function updateAbilities(dt) {
                 eff.ignited = true;
                 eff.igniteTimer = eff.igniteDuration;
                 spawnExplosion(eff.position, 30);
-                if (eff.mesh) { eff.mesh.material.color.setHex(0xff4400); eff.mesh.material.opacity = 0.10; }
-                if (eff.coreMesh) { eff.coreMesh.material.color.setHex(0xff6600); eff.coreMesh.material.opacity = 0.08; }
-                // Recolor every puff to the burning palette so the whole
-                // cloud reads as on fire, not just the inner core.
+                // Ignited cloud is a serious hazard ; bump alpha hard so the
+                // burn zone reads at a glance from across the room.
+                if (eff.mesh) { eff.mesh.material.color.setHex(0xff5520); eff.mesh.material.opacity = 0.42; }
+                if (eff.coreMesh) { eff.coreMesh.material.color.setHex(0xff8a30); eff.coreMesh.material.opacity = 0.36; }
+                // Recolor every puff to the burning palette AND bump its
+                // base opacity so the whole cluster lights up, not just the
+                // inner sphere. Three flame hues mixed so the cluster has
+                // texture instead of a uniform red.
                 if (eff.puffMeshes) {
                   for (const p of eff.puffMeshes) {
-                    const hot = Math.random() < 0.5 ? 0xff5520 : 0xff8030;
+                    const r = Math.random();
+                    const hot = r < 0.33 ? 0xff4520 : (r < 0.66 ? 0xff7530 : 0xffa540);
                     p.material.color.setHex(hot);
+                    const ud = p.userData && p.userData._cloud;
+                    const burnAlpha = 0.40 + Math.random() * 0.20; // 0.40..0.60
+                    p.material.opacity = burnAlpha;
+                    if (ud) ud.baseOpacity = burnAlpha;
                   }
                 }
                 spawnDynamicLight(eff.position, 0xff4400, 3.0, 500, 0.5);
@@ -12311,30 +12340,11 @@ function updateAbilities(dt) {
         if (eff.mesh) {
           const pulse = 350 + Math.sin(game.time * 1.5) * 20;
           eff.mesh.scale.setScalar(pulse);
-          eff.mesh.material.opacity = 0.05 + Math.sin(game.time * 0.8) * 0.02;
+          eff.mesh.material.opacity = 0.22 + Math.sin(game.time * 0.8) * 0.05;
         }
         if (eff.coreMesh) {
           const corePulse = 200 + Math.sin(game.time * 2.0 + 1.0) * 15;
           eff.coreMesh.scale.setScalar(corePulse);
-        }
-        // Animate billowing puffs: bob along their per-puff drift axis,
-        // breathe via sin scale, slowly rotate. Independent phases so the
-        // cluster never reads as in lockstep.
-        if (eff.puffMeshes) {
-          for (const p of eff.puffMeshes) {
-            const ud = p.userData._cloud;
-            if (!ud) continue;
-            const phase = ud.phase + game.time * ud.freq;
-            const bob = Math.sin(phase) * ud.driftAmp;
-            // Reposition relative to current cloud center; offset is fixed
-            // per puff but bob drifts the puff slightly along its axis.
-            p.position.copy(eff.position).add(ud.offset);
-            p.position.addScaledVector(ud.driftAxis, bob);
-            const breathe = 0.88 + 0.20 * Math.sin(phase * 0.7 + 1.3);
-            p.scale.setScalar(ud.baseSize * breathe);
-            p.material.opacity = ud.baseOpacity * (0.85 + 0.30 * Math.sin(phase * 1.1));
-            p.rotation.y += dt * 0.2;
-          }
         }
         // Periodic gas drift particles (not ignited)
         eff.fxTimer -= dt;
@@ -12387,14 +12397,16 @@ function updateAbilities(dt) {
           }
         }
 
-        // Animate ignited cloud: flicker and pulse
+        // Animate ignited cloud: flicker and pulse. Opacities live high so the
+        // burning zone is read at a glance from across the room ; the random
+        // jitter on top sells the chaos of an active fire.
         if (eff.mesh) {
-          const flicker = 0.14 + Math.sin(game.time * 8 + Math.random()) * 0.04;
+          const flicker = 0.42 + Math.sin(game.time * 8) * 0.06 + (Math.random() - 0.5) * 0.05;
           eff.mesh.material.opacity = flicker;
           eff.mesh.scale.setScalar(350 + Math.sin(game.time * 3) * 30);
         }
         if (eff.coreMesh) {
-          eff.coreMesh.material.opacity = 0.12 + Math.sin(game.time * 6) * 0.04;
+          eff.coreMesh.material.opacity = 0.36 + Math.sin(game.time * 6) * 0.05;
         }
         // Spawn fire particles throughout the burning volume
         eff.fxTimer -= dt;
