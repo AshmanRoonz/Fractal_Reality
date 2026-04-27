@@ -3024,6 +3024,107 @@ function spawnParticleWall(pos, dir, owner, team, ownerPeerId, netId, broadcast)
   }
 }
 
+// Volumetric-cloud shader for Pyro's Incendiary Gas trap. Same Plasma FBM
+// pattern that lives in the wall lab (patternId=6), now applied to the
+// trap's outer sphere. The shader samples 3D noise at the world position
+// of every fragment and falls off from sphere center to sphere edge so the
+// surface reads as a cloudy volume rather than a smooth additive ball.
+//
+// Uniforms:
+//   time      animates the noise (drift up + slight twist)
+//   uColor    base cloud tint (green when unignited, orange when burning)
+//   uBaseAlpha  scale on the final alpha (density), tuned per state
+//   uOctaves  FBM octave count (more = more detail, costs more)
+//   uRadius   sphere radius in world units, used for the edge falloff
+function _makeGasCloudMaterial(initialColor, baseAlpha, radius) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      time:       { value: 0 },
+      uColor:     { value: new THREE.Color(initialColor) },
+      uBaseAlpha: { value: baseAlpha },
+      uOctaves:   { value: 5 },
+      uRadius:    { value: radius },
+    },
+    vertexShader: [
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocalPos;',
+      'varying vec3 vNormal;',
+      'void main() {',
+      '  vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;',
+      '  vLocalPos = position;',  // unit-sphere local coords (radius applied via mesh.scale)
+      '  vNormal = normalize(normalMatrix * normal);',
+      '  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);',
+      '}',
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float time;',
+      'uniform vec3 uColor;',
+      'uniform float uBaseAlpha;',
+      'uniform int uOctaves;',
+      'uniform float uRadius;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocalPos;',
+      'varying vec3 vNormal;',
+      // Cheap 3D noise (matches the lab\'s patternPlasma)
+      'float hash13(vec3 p) {',
+      '  p = fract(p * 0.1031);',
+      '  p += dot(p, p.yzx + 33.33);',
+      '  return fract((p.x + p.y) * p.z);',
+      '}',
+      'float noise3(vec3 p) {',
+      '  vec3 i = floor(p);',
+      '  vec3 f = fract(p);',
+      '  f = f * f * (3.0 - 2.0 * f);',
+      '  return mix(',
+      '    mix(mix(hash13(i + vec3(0,0,0)), hash13(i + vec3(1,0,0)), f.x),',
+      '        mix(hash13(i + vec3(0,1,0)), hash13(i + vec3(1,1,0)), f.x), f.y),',
+      '    mix(mix(hash13(i + vec3(0,0,1)), hash13(i + vec3(1,0,1)), f.x),',
+      '        mix(hash13(i + vec3(0,1,1)), hash13(i + vec3(1,1,1)), f.x), f.y),',
+      '    f.z);',
+      '}',
+      'float fbm(vec3 p) {',
+      '  float v = 0.0; float a = 0.5;',
+      '  for (int k = 0; k < 8; k++) {',
+      '    if (k >= uOctaves) break;',
+      '    v += a * noise3(p);',
+      '    p *= 2.0;',
+      '    a *= 0.5;',
+      '  }',
+      '  return v;',
+      '}',
+      'void main() {',
+      // Sample noise at the world position so the cloud has world-space
+      // detail (it doesn\'t drift if the player walks past it). Slow time
+      // animation: vertical drift plus a slow twist on Z so the cloud
+      // breathes without scrolling visibly fast.
+      '  vec3 q = vWorldPos * 0.0018 + vec3(0.0, time * 0.06, time * 0.04);',
+      '  float v = fbm(q);',
+      // Distance falloff from sphere center to surface: dense in the
+      // middle, fades to nothing at the rim. vLocalPos is unit-sphere
+      // coords so length goes 0..1 across the radius.
+      '  float r = length(vLocalPos);',
+      '  float edgeFall = 1.0 - smoothstep(0.55, 1.0, r);',
+      // Combine: shape the noise (pow sharpens), gate by edge falloff.
+      '  float density = pow(clamp(v, 0.0, 1.0), 1.4) * edgeFall;',
+      // View-angle bonus: density goes up at grazing angles so the
+      // silhouette feels thick. Helps sell volume from any viewpoint.
+      '  vec3 viewDir = normalize(cameraPosition - vWorldPos);',
+      '  float fres = pow(1.0 - clamp(dot(vNormal, viewDir), 0.0, 1.0), 1.4);',
+      '  density = clamp(density + fres * 0.20 * edgeFall, 0.0, 1.0);',
+      // Color: tint by density (deeper noise = brighter color).
+      '  vec3 col = uColor * (0.55 + density * 1.30);',
+      '  float alpha = density * uBaseAlpha;',
+      '  if (alpha < 0.005) discard;',  // skip fragments that contribute nothing
+      '  gl_FragColor = vec4(col, alpha);',
+      '}',
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.FrontSide,
+  });
+}
+
 // (v6.7) Incendiary Gas spawn helper. Same broadcast=true/false pattern as
 // Trip Wire / Particle Wall.
 function spawnIncendiaryGas(pos, owner, team, ownerPeerId, netId, broadcast) {
@@ -3039,11 +3140,17 @@ function spawnIncendiaryGas(pos, owner, team, ownerPeerId, netId, broadcast) {
   // the volumetric "billowing cloud" work ; the outer sphere is dialed
   // down (was 0.12 opacity, now 0.06) so it just provides a faint overall
   // tint instead of dominating as a smooth blob.
-  const gasGeo = new THREE.SphereGeometry(1, 12, 8);
-  const gasMat = new THREE.MeshBasicMaterial({ color: 0xaecc55, transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false });
+  // Outer cloud hull: Plasma FBM ShaderMaterial sampling 3D noise per fragment
+  // (see _makeGasCloudMaterial). Replaces the old smooth additive sphere so
+  // the cloud surface reads as turbulent vapor rather than a solid colored
+  // ball. The mesh is still a unit sphere scaled to the cloud radius.
+  const gasGeo = new THREE.SphereGeometry(1, 24, 16);
+  const gasMat = _makeGasCloudMaterial(0xaecc55, 0.55, 350);
   const gasMesh = new THREE.Mesh(gasGeo, gasMat);
   gasMesh.position.copy(pos);
   gasMesh.scale.setScalar(350);
+  // frustumCulled stays true; the unit-sphere bounding sphere scales with the
+  // mesh transform automatically (Three.js handles this for SphereGeometry).
   scene.add(gasMesh);
   const coreGeo = new THREE.SphereGeometry(1, 8, 6);
   const coreMat = new THREE.MeshBasicMaterial({ color: 0xc8e870, transparent: true, opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false });
@@ -12446,9 +12553,13 @@ function updateAbilities(dt) {
                 eff.ignited = true;
                 eff.igniteTimer = eff.igniteDuration;
                 spawnExplosion(eff.position, 30);
-                // Ignited cloud is a serious hazard ; bump alpha hard so the
-                // burn zone reads at a glance from across the room.
-                if (eff.mesh) { eff.mesh.material.color.setHex(0xff5520); eff.mesh.material.opacity = 0.42; }
+                // Ignited cloud is a serious hazard ; the outer Plasma-FBM
+                // shader gets a fire-color uniform + brighter base alpha so
+                // the burn zone reads at a glance from across the room.
+                if (eff.mesh && eff.mesh.material && eff.mesh.material.uniforms) {
+                  eff.mesh.material.uniforms.uColor.value.setHex(0xff5520);
+                  eff.mesh.material.uniforms.uBaseAlpha.value = 0.95;
+                }
                 if (eff.coreMesh) { eff.coreMesh.material.color.setHex(0xff8a30); eff.coreMesh.material.opacity = 0.36; }
                 // Recolor every puff to the burning palette AND bump its
                 // base opacity so the whole cluster lights up, not just the
@@ -12472,11 +12583,17 @@ function updateAbilities(dt) {
           }
         }
 
-        // Animate gas cloud: slow pulse (breathing)
+        // Animate gas cloud: slow pulse (breathing). The outer hull uses
+        // a shader material (Plasma FBM) ; we advance its time uniform here
+        // and modulate uBaseAlpha for the breathing effect since opacity
+        // isn't a property on ShaderMaterial.
         if (eff.mesh) {
           const pulse = 350 + Math.sin(game.time * 1.5) * 20;
           eff.mesh.scale.setScalar(pulse);
-          eff.mesh.material.opacity = 0.22 + Math.sin(game.time * 0.8) * 0.05;
+          if (eff.mesh.material && eff.mesh.material.uniforms) {
+            eff.mesh.material.uniforms.time.value = game.time;
+            eff.mesh.material.uniforms.uBaseAlpha.value = 0.55 + Math.sin(game.time * 0.8) * 0.10;
+          }
         }
         if (eff.coreMesh) {
           const corePulse = 200 + Math.sin(game.time * 2.0 + 1.0) * 15;
@@ -12533,12 +12650,15 @@ function updateAbilities(dt) {
           }
         }
 
-        // Animate ignited cloud: flicker and pulse. Opacities live high so the
-        // burning zone is read at a glance from across the room ; the random
-        // jitter on top sells the chaos of an active fire.
+        // Animate ignited cloud: flicker and pulse. The outer-hull shader
+        // material gets its time uniform advanced + uBaseAlpha modulated
+        // for the flicker. Random jitter on top sells the chaos of fire.
         if (eff.mesh) {
-          const flicker = 0.42 + Math.sin(game.time * 8) * 0.06 + (Math.random() - 0.5) * 0.05;
-          eff.mesh.material.opacity = flicker;
+          const flicker = 0.95 + Math.sin(game.time * 8) * 0.10 + (Math.random() - 0.5) * 0.10;
+          if (eff.mesh.material && eff.mesh.material.uniforms) {
+            eff.mesh.material.uniforms.time.value = game.time;
+            eff.mesh.material.uniforms.uBaseAlpha.value = Math.max(0, flicker);
+          }
           eff.mesh.scale.setScalar(350 + Math.sin(game.time * 3) * 30);
         }
         if (eff.coreMesh) {

@@ -132,7 +132,20 @@ select {
 
   <!-- Pattern math -->
   <div class="section">
-    <h2>Pattern math (Kali IFS)</h2>
+    <h2>Pattern math</h2>
+    <div class="row" style="margin-bottom:8px;">
+      <label>Pattern</label>
+      <select id="p-pattern">
+        <option value="0">Kali IFS (default)</option>
+        <option value="1">Apollonian Gasket</option>
+        <option value="2">Voronoi Cells</option>
+        <option value="3">Wave Interference</option>
+        <option value="4">Mandelbox Folds</option>
+        <option value="5">Hex Lattice</option>
+        <option value="6">Plasma FBM</option>
+        <option value="7">Circumpunct Lattice</option>
+      </select>
+    </div>
     <div class="row"><label>Iterations</label><input type="range" id="p-iters" min="1" max="12" step="1" value="8"><span class="val" id="p-iters-val">8</span></div>
     <div class="row"><label>Ring count</label><input type="range" id="p-rings" min="1" max="5" step="1" value="3"><span class="val" id="p-rings-val">3</span></div>
     <div class="row"><label>Spatial scale</label><input type="range" id="p-scale" min="0.0005" max="0.012" step="0.0001" value="0.0028"><span class="val" id="p-scale-val">0.0028</span></div>
@@ -214,16 +227,20 @@ const FRAG_SRC = `
   uniform float K_AO_FLOOR;
   uniform float K_FLOOR;
 
-  // ---- Kali IFS pattern math (live-tweakable) ----
-  uniform int   u_iters;       // Kali IFS iteration count (1..12)
-  uniform int   u_rings;       // cosmicField ring count (1..5)
-  uniform float u_scale;       // world->fractal-space scale
-  uniform float u_rotSpeed;    // rotation rate of fractal space
-  uniform vec3  u_off;         // golden-ratio offset triple
-  uniform float u_invBase;     // base value of |p|^-2 multiplier
+  // ---- Pattern math (live-tweakable) ----
+  // u_patternId selects which projection algorithm runs in cosmicField.
+  // Most parameters apply to multiple patterns ; per-pattern meaning noted
+  // in comments at each pattern function below.
+  uniform int   u_patternId;   // 0..7 dispatch
+  uniform int   u_iters;       // generic iteration count (1..12)
+  uniform int   u_rings;       // generic outer ring/layer count (1..5)
+  uniform float u_scale;       // world->pattern-space scale
+  uniform float u_rotSpeed;    // rotation rate of pattern space
+  uniform vec3  u_off;         // generic offset / pattern-specific triple
+  uniform float u_invBase;     // generic "tightness" knob
   uniform float u_valDiv;      // luminance scaling divisor
-  uniform float u_hueSpin;     // hue offset added per ring
-  uniform float u_satBase;     // base saturation (sat += 0.10*ring)
+  uniform float u_hueSpin;     // hue offset added per ring/layer
+  uniform float u_satBase;     // base saturation
 
   varying vec3 vWorldPos;
   varying vec3 vNormal;
@@ -244,6 +261,37 @@ const FRAG_SRC = `
     else h = ((c.r - c.g) / d + 4.0) / 6.0;
     return h;
   }
+
+  // ---- Shared helpers ----
+  vec3 hash33(vec3 p) {
+    p = fract(p * vec3(443.897, 441.423, 437.195));
+    p += dot(p, p.yxz + 19.19);
+    return fract(vec3(p.x * p.y, p.x * p.z, p.y * p.z));
+  }
+  float hash13(vec3 p) {
+    p = fract(p * 0.1031);
+    p += dot(p, p.yzx + 33.33);
+    return fract((p.x + p.y) * p.z);
+  }
+  float noise3(vec3 p) {
+    vec3 i = floor(p);
+    vec3 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    return mix(
+      mix(mix(hash13(i + vec3(0,0,0)), hash13(i + vec3(1,0,0)), f.x),
+          mix(hash13(i + vec3(0,1,0)), hash13(i + vec3(1,1,0)), f.x), f.y),
+      mix(mix(hash13(i + vec3(0,0,1)), hash13(i + vec3(1,0,1)), f.x),
+          mix(hash13(i + vec3(0,1,1)), hash13(i + vec3(1,1,1)), f.x), f.y),
+      f.z);
+  }
+
+  // ============================================================
+  // PATTERN 0: Kali IFS
+  // Apollonian-style fold/scale/offset fractal, the original "cosmic"
+  // pattern. Iterations: fold count. Rings: nested ring count.
+  // u_off is the golden-ratio offset triple, u_invBase is the |p|^-2
+  // tightness, u_valDiv is the luminance divisor.
+  // ============================================================
   float kaliIFS(vec3 p, vec3 off, float inv) {
     float s = 1.0;
     for (int k = 0; k < 12; k++) {
@@ -257,10 +305,7 @@ const FRAG_SRC = `
     }
     return s;
   }
-  vec3 cosmicField(vec3 wp, vec3 zoneC, float tt) {
-    vec3 p = wp * u_scale;
-    float ca = cos(tt * u_rotSpeed), sa = sin(tt * u_rotSpeed);
-    p = vec3(ca * p.x - sa * p.z, p.y, sa * p.x + ca * p.z);
+  vec3 patternKali(vec3 p, vec3 zoneC, float tt) {
     float baseHue = rgbHue(zoneC);
     vec3 accum = vec3(0.0);
     for (int ring = 0; ring < 5; ring++) {
@@ -278,6 +323,232 @@ const FRAG_SRC = `
       accum += hsv(hue, sat, val) * pow(0.75, rf);
     }
     return accum;
+  }
+
+  // ============================================================
+  // PATTERN 1: Apollonian Gasket
+  // Recursive sphere-inversion fractal ; reads as nested bubbles
+  // within bubbles ("circumpunct foam"). Iterations: fold count.
+  // u_invBase tightens/loosens the bubbles. u_off shifts the
+  // wrap-around grid origin.
+  // ============================================================
+  vec3 patternApollonian(vec3 p, vec3 zoneC, float tt) {
+    float baseHue = rgbHue(zoneC);
+    float scale = 1.0;
+    vec3 q = p;
+    for (int k = 0; k < 12; k++) {
+      if (k >= u_iters) break;
+      q = -1.0 + 2.0 * fract(0.5 * q + 0.5 * u_off);
+      float r2 = max(0.001, dot(q, q));
+      float kk = max(0.5, u_invBase * 0.13 / r2);
+      q *= kk;
+      scale *= kk;
+    }
+    float lum = abs(0.25 * q.y / scale) * 100.0;
+    float val = clamp(lum / u_valDiv * 60.0, 0.0, 4.5);
+    float phase = atan(q.x, q.z);
+    float hue = fract(baseHue + phase * 0.10 + tt * 0.02);
+    return hsv(hue, u_satBase, val);
+  }
+
+  // ============================================================
+  // PATTERN 2: Voronoi Cells
+  // Cellular structure ; bright at cell boundaries, dark inside.
+  // Reads as alien skin / bone matrix. Iterations: layer count.
+  // ============================================================
+  float voronoi3(vec3 x) {
+    vec3 p = floor(x);
+    vec3 f = fract(x);
+    float d = 1.0;
+    for (int k = -1; k <= 1; k++)
+    for (int j = -1; j <= 1; j++)
+    for (int i = -1; i <= 1; i++) {
+      vec3 g = vec3(i, j, k);
+      vec3 o = hash33(p + g);
+      d = min(d, length(g + o - f));
+    }
+    return d;
+  }
+  vec3 patternVoronoi(vec3 p, vec3 zoneC, float tt) {
+    float baseHue = rgbHue(zoneC);
+    vec3 accum = vec3(0.0);
+    for (int layer = 0; layer < 5; layer++) {
+      if (layer >= u_iters) break;
+      float lf = float(layer);
+      float sMul = pow(1.7, lf * 0.6);
+      vec3 q = p * sMul + u_off * lf;
+      // Edge highlight: 1 - smooth transition near cell boundary
+      float d = voronoi3(q + vec3(0.0, tt * 0.05, 0.0));
+      float edge = 1.0 - smoothstep(0.05, 0.45, d);
+      float val = clamp(edge * 4.0 / u_valDiv * 80.0, 0.0, 4.0);
+      float hue = fract(baseHue + lf * u_hueSpin + tt * 0.02);
+      accum += hsv(hue, u_satBase, val) * pow(0.65, lf);
+    }
+    return accum;
+  }
+
+  // ============================================================
+  // PATTERN 3: Wave Interference
+  // Sum of plane waves traveling in pseudo-random directions.
+  // Reads as standing energy field / quantum probability cloud.
+  // Iterations: wave count. u_invBase: spatial frequency.
+  // ============================================================
+  vec3 patternWaves(vec3 p, vec3 zoneC, float tt) {
+    float baseHue = rgbHue(zoneC);
+    float v = 0.0;
+    float freq = u_invBase * 0.05;
+    for (int k = 0; k < 12; k++) {
+      if (k >= u_iters) break;
+      float fk = float(k);
+      vec3 dir = normalize(vec3(
+        sin(fk * 1.7 + 0.3),
+        cos(fk * 2.3 + 1.1),
+        sin(fk * 0.9 + 2.5)
+      ));
+      v += sin(dot(p, dir) * freq + tt * (0.4 + fk * 0.07));
+    }
+    v /= max(1.0, float(u_iters));
+    // Map [-1, 1] to luminance with a soft squash.
+    float lum = 0.5 + 0.5 * v;
+    float val = clamp(pow(lum, 1.6) * 4.5 / u_valDiv * 80.0, 0.0, 4.5);
+    float phase = atan(p.x, p.z);
+    float hue = fract(baseHue + phase * 0.05 + v * u_hueSpin + tt * 0.02);
+    return hsv(hue, u_satBase, val);
+  }
+
+  // ============================================================
+  // PATTERN 4: Mandelbox Folds
+  // Box-fold + sphere-fold iterated map. Reads as crystalline
+  // spaceship-interior scaffolding. Iterations: fold count.
+  // u_invBase: scale parameter (1.5..3.0 are interesting).
+  // ============================================================
+  vec3 patternMandelbox(vec3 p, vec3 zoneC, float tt) {
+    float baseHue = rgbHue(zoneC);
+    vec3 c = p;
+    vec3 q = p;
+    float dr = 1.0;
+    float scaleP = u_invBase * 0.3;
+    for (int k = 0; k < 12; k++) {
+      if (k >= u_iters) break;
+      // Box fold
+      q = clamp(q, -1.0, 1.0) * 2.0 - q;
+      // Sphere fold
+      float r2 = dot(q, q);
+      if (r2 < 0.5) {
+        float t = 1.0 / 0.5;
+        q *= t; dr *= t;
+      } else if (r2 < 1.0) {
+        float t = 1.0 / r2;
+        q *= t; dr *= t;
+      }
+      q = scaleP * q + c;
+      dr = dr * abs(scaleP) + 1.0;
+    }
+    float lum = length(q) / max(0.001, abs(dr));
+    float val = clamp(lum * 80.0 / u_valDiv, 0.0, 4.5);
+    float hue = fract(baseHue + length(q) * u_hueSpin * 0.1 + tt * 0.02);
+    return hsv(hue, u_satBase, val);
+  }
+
+  // ============================================================
+  // PATTERN 5: Hex Lattice
+  // 2D hex grid extruded, layered. Clean sci-fi grid feel.
+  // Iterations: layer count. u_invBase: cell tightness.
+  // ============================================================
+  float hex2D(vec2 q, float cell) {
+    q /= cell;
+    vec2 r = vec2(1.0, 1.7320508);
+    vec2 h = r * 0.5;
+    vec2 a = mod(q, r) - h;
+    vec2 b = mod(q + h, r) - h;
+    vec2 d = (dot(a, a) < dot(b, b)) ? a : b;
+    return max(abs(d.x), abs(d.y * 0.86603 + d.x * 0.5));
+  }
+  vec3 patternHex(vec3 p, vec3 zoneC, float tt) {
+    float baseHue = rgbHue(zoneC);
+    vec3 accum = vec3(0.0);
+    float cell = 1.0 / max(0.001, u_invBase);
+    for (int layer = 0; layer < 5; layer++) {
+      if (layer >= u_iters) break;
+      float lf = float(layer);
+      // Rotate per-layer plane orientation a bit so layers don't all align
+      float ca = cos(lf * 1.04719), sa = sin(lf * 1.04719);
+      vec3 q = vec3(ca * p.x - sa * p.y, sa * p.x + ca * p.y, p.z);
+      float h = hex2D(q.xy + vec2(tt * 0.10, 0.0), cell * pow(1.5, lf));
+      float edge = 1.0 - smoothstep(0.42, 0.50, h);
+      float val = clamp(edge * 3.5 / u_valDiv * 80.0, 0.0, 4.0);
+      float hue = fract(baseHue + lf * u_hueSpin + tt * 0.02);
+      accum += hsv(hue, u_satBase, val) * pow(0.70, lf);
+    }
+    return accum;
+  }
+
+  // ============================================================
+  // PATTERN 6: Plasma FBM
+  // Fractal Brownian Motion ; layered noise gives smooth animated
+  // plasma. Iterations: octave count.
+  // ============================================================
+  vec3 patternPlasma(vec3 p, vec3 zoneC, float tt) {
+    float baseHue = rgbHue(zoneC);
+    float v = 0.0;
+    float a = 0.5;
+    vec3 q = p + vec3(0.0, tt * 0.05, tt * 0.03);
+    for (int k = 0; k < 12; k++) {
+      if (k >= u_iters) break;
+      v += a * noise3(q);
+      q *= 2.0;
+      a *= 0.5;
+    }
+    // v is roughly 0..1
+    float val = clamp(pow(v, 1.4) * 4.5 / u_valDiv * 80.0, 0.0, 4.5);
+    float hue = fract(baseHue + v * u_hueSpin * 4.0 + tt * 0.02);
+    return hsv(hue, u_satBase, val);
+  }
+
+  // ============================================================
+  // PATTERN 7: Circumpunct Lattice
+  // Concentric rings around lattice convergence points. Custom-themed
+  // pattern: every cell has a "soul" (dot at center) and pulsing rings
+  // expanding outward. Iterations: ring count per cell.
+  // ============================================================
+  vec3 patternCircumpunct(vec3 p, vec3 zoneC, float tt) {
+    float baseHue = rgbHue(zoneC);
+    // Tile the space into unit cells; each cell has a center point with
+    // expanding concentric rings. The cell pitch is controlled by scale
+    // already (u_scale is applied in cosmicField before calling here).
+    vec3 cell = floor(p) + 0.5;
+    vec3 d = p - cell;
+    float r = length(d);
+    // Rings: alternating cosine bands, animated outward over time.
+    float ringFreq = 6.0 + u_invBase * 0.5;
+    float rings = 0.5 + 0.5 * cos(r * ringFreq - tt * 1.2);
+    rings = pow(rings, 2.0); // sharpen
+    // Center dot ("soul"): bright pinprick at cell center.
+    float center = 1.0 - smoothstep(0.04, 0.10, r);
+    // Boundary fade: rings die out near cell edges so cells stay distinct.
+    float boundaryFade = 1.0 - smoothstep(0.42, 0.55, r);
+    float lum = (rings * 0.6 + center * 1.4) * boundaryFade;
+    // Per-cell hue jitter so adjacent cells aren't identical.
+    float cellHue = fract(hash13(cell) * 0.25 + baseHue);
+    float val = clamp(lum * 4.5 / u_valDiv * 80.0, 0.0, 4.5);
+    float hue = fract(cellHue + u_hueSpin * lum + tt * 0.02);
+    return hsv(hue, u_satBase, val);
+  }
+
+  // ---- Dispatcher ----
+  vec3 cosmicField(vec3 wp, vec3 zoneC, float tt) {
+    vec3 p = wp * u_scale;
+    float ca = cos(tt * u_rotSpeed), sa = sin(tt * u_rotSpeed);
+    p = vec3(ca * p.x - sa * p.z, p.y, sa * p.x + ca * p.z);
+    if (u_patternId == 0) return patternKali(p, zoneC, tt);
+    if (u_patternId == 1) return patternApollonian(p, zoneC, tt);
+    if (u_patternId == 2) return patternVoronoi(p, zoneC, tt);
+    if (u_patternId == 3) return patternWaves(p, zoneC, tt);
+    if (u_patternId == 4) return patternMandelbox(p, zoneC, tt);
+    if (u_patternId == 5) return patternHex(p, zoneC, tt);
+    if (u_patternId == 6) return patternPlasma(p, zoneC, tt);
+    if (u_patternId == 7) return patternCircumpunct(p, zoneC, tt);
+    return vec3(0.0);
   }
 
   void main() {
@@ -371,6 +642,7 @@ const uniforms = {
   K_DIFF_MIN:          { value: 0.78 },
   K_AO_FLOOR:          { value: 0.55 },
   K_FLOOR:             { value: 0.05 },
+  u_patternId:{ value: 0 },
   u_iters:    { value: 8 },
   u_rings:    { value: 3 },
   u_scale:    { value: 0.0028 },
@@ -560,6 +832,13 @@ function setupControls() {
   bindSlider('k-ao',      'k-ao-val',      v => uniforms.K_AO_FLOOR.value = v, 2);
   bindSlider('k-floor',   'k-floor-val',   v => uniforms.K_FLOOR.value = v, 3);
 
+  // Pattern selector — switches the shader's dispatcher to the chosen
+  // pattern. All other pattern-math sliders apply to whichever pattern
+  // is active; their interpretation varies (see comments at each pattern
+  // function in the fragment shader).
+  document.getElementById('p-pattern').addEventListener('change', (e) => {
+    uniforms.u_patternId.value = parseInt(e.target.value, 10) || 0;
+  });
   // Pattern math
   bindSlider('p-iters',    'p-iters-val',    v => uniforms.u_iters.value    = v|0, 0);
   bindSlider('p-rings',    'p-rings-val',    v => uniforms.u_rings.value    = v|0, 0);
@@ -604,16 +883,17 @@ function setupControls() {
       '// === Palette (paste into MAP_DATA.<map>.palette) ===',
       `palette: [${pal}],`,
       '',
-      '// === Pattern math (currently inlined in shader; tweak by editing those values) ===',
-      `// kaliIFS iterations: ${cfg.pattern.iters}`,
-      `// cosmicField rings: ${cfg.pattern.rings}`,
-      `// world scale (currently 0.0028): ${cfg.pattern.scale.toFixed(4)}`,
-      `// rotation speed (currently 0.12): ${cfg.pattern.rotSpeed.toFixed(2)}`,
-      `// golden offset: vec3(${cfg.pattern.off[0].toFixed(2)}, ${cfg.pattern.off[1].toFixed(3)}, ${cfg.pattern.off[2].toFixed(2)})`,
-      `// inv base: ${cfg.pattern.invBase.toFixed(1)}`,
-      `// luminance divisor: ${cfg.pattern.valDiv.toFixed(0)}`,
-      `// hue spin per ring: ${cfg.pattern.hueSpin.toFixed(3)}`,
-      `// sat base: ${cfg.pattern.satBase.toFixed(2)}`,
+      `// === Pattern math (active pattern: ${cfg.pattern.patternName}) ===`,
+      `// patternId:        ${cfg.pattern.patternId}  // 0=Kali 1=Apollonian 2=Voronoi 3=Waves 4=Mandelbox 5=Hex 6=Plasma 7=Circumpunct`,
+      `// iterations:       ${cfg.pattern.iters}`,
+      `// rings/layers:     ${cfg.pattern.rings}`,
+      `// world scale:      ${cfg.pattern.scale.toFixed(4)}`,
+      `// rotation speed:   ${cfg.pattern.rotSpeed.toFixed(2)}`,
+      `// offset triple:    vec3(${cfg.pattern.off[0].toFixed(2)}, ${cfg.pattern.off[1].toFixed(3)}, ${cfg.pattern.off[2].toFixed(2)})`,
+      `// inv base:         ${cfg.pattern.invBase.toFixed(1)}`,
+      `// luminance div:    ${cfg.pattern.valDiv.toFixed(0)}`,
+      `// hue spin/ring:    ${cfg.pattern.hueSpin.toFixed(3)}`,
+      `// sat base:         ${cfg.pattern.satBase.toFixed(2)}`,
     ].join('\n');
     document.getElementById('export-area').value = out;
   });
@@ -635,15 +915,17 @@ function collectConfig() {
     K_AO_FLOOR:          uniforms.K_AO_FLOOR.value,
     K_FLOOR:             uniforms.K_FLOOR.value,
     pattern: {
-      iters:    uniforms.u_iters.value,
-      rings:    uniforms.u_rings.value,
-      scale:    uniforms.u_scale.value,
-      rotSpeed: uniforms.u_rotSpeed.value,
+      patternId:   uniforms.u_patternId.value,
+      patternName: ['Kali IFS','Apollonian','Voronoi','Waves','Mandelbox','Hex Lattice','Plasma FBM','Circumpunct'][uniforms.u_patternId.value] || 'Kali IFS',
+      iters:       uniforms.u_iters.value,
+      rings:       uniforms.u_rings.value,
+      scale:       uniforms.u_scale.value,
+      rotSpeed:    uniforms.u_rotSpeed.value,
       off: [uniforms.u_off.value.x, uniforms.u_off.value.y, uniforms.u_off.value.z],
-      invBase:  uniforms.u_invBase.value,
-      valDiv:   uniforms.u_valDiv.value,
-      hueSpin:  uniforms.u_hueSpin.value,
-      satBase:  uniforms.u_satBase.value,
+      invBase:     uniforms.u_invBase.value,
+      valDiv:      uniforms.u_valDiv.value,
+      hueSpin:     uniforms.u_hueSpin.value,
+      satBase:     uniforms.u_satBase.value,
     },
   };
 }
