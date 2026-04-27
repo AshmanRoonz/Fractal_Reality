@@ -12258,9 +12258,11 @@ function updateAbilities(dt) {
             if (o === eff) continue;
             if (o.type !== 'tripwire') continue;
             if (o.groupId !== eff.groupId) continue;
-            // De-dup: only emit from the lower-index orb so each pair
-            // produces one arc per cycle, not two.
-            if (j < i) continue;
+            // De-dup: only emit from the lower-index orb of each pair so
+            // each arc fires once per cycle, not twice. (Outer loop
+            // variable is `e`, not `i` — the latter doesn't exist in this
+            // scope and was the source of a per-frame ReferenceError.)
+            if (j < e) continue;
             siblings.push(o);
           }
           if (siblings.length > 0) {
