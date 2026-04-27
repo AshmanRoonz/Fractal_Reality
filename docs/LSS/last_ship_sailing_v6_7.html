@@ -2327,6 +2327,11 @@ class NetworkPlayer {
         this._thermalShieldRing.material.color.setHSL((hue + 0.02) % 1, 0.75, 0.65);
         this._thermalShieldRing.material.opacity = 0.18 + Math.sin(t * 10) * 0.04;
       }
+      // Flames around the rim (same helper as the local-player path so peers
+      // and bots running Pyro look identical).
+      if (typeof _emitThermalShieldFlames === 'function') {
+        _emitThermalShieldFlames(shieldPos, midR, fwd, (typeof dt === 'number' ? dt : 1/60));
+      }
     } else {
       if (this._thermalShieldMesh) {
         if (this._thermalShieldMesh.parent) scene.remove(this._thermalShieldMesh);
@@ -6416,6 +6421,12 @@ class Projectile {
     this.lifetime = 5;
     this.age = 0;
     this.bounceCount = 0;
+    // Fade-in: projectile is invisible at the muzzle and ramps to full
+    // opacity over the first FADE_IN_DIST world units. Hides the harsh
+    // "geometry pops in at the gun" look. Per-frame the update loop
+    // multiplies each layer's base opacity by Math.min(1, dist/FADE).
+    this.spawnOrigin = origin.clone();
+    this.fadeInDist = 80;
 
     // (v6.7) Electric look: the bright bead at the head is itself additive
     // (not opaque flat shading) so it reads as an energy core sitting inside
@@ -6483,6 +6494,16 @@ class Projectile {
     this.hazeMesh = new THREE.Mesh(hazeGeo, hazeMat);
     this.hazeMesh.position.copy(origin);
     scene.add(this.hazeMesh);
+
+    // Cache the at-spawn opacity of every layer that participates in fade-in.
+    // The per-frame update multiplies each base by the fade factor so the
+    // existing pulse/flicker animation can keep its multiplicative behavior
+    // without needing to know about fade-in.
+    this._baseOpacityCore   = mat.opacity;
+    this._baseOpacityGlow   = glowMat.opacity;
+    this._baseOpacityHaze   = hazeMat.opacity;
+    this._baseOpacityTrail  = trailMat.opacity;
+    this._baseOpacityRibbon = 0.85; // (matches ribbon mat opacity below)
 
     // --- Tube ribbon trail (Effect 07) ---
     // A camera-facing billboarded ribbon strung along the trail's vertex
@@ -6636,6 +6657,20 @@ class Projectile {
       positions[1] = this.position.y;
       positions[2] = this.position.z;
       this.trail.geometry.attributes.position.needsUpdate = true;
+    }
+    // --- Fade-in: invisible at the muzzle, ramps to full opacity over the
+    // first fadeInDist world units of travel. Multiplies each layer's stored
+    // base opacity so the existing animations (pulse, flicker, swell) just
+    // run on a smaller value during the ramp instead of fighting it. ---
+    let _fadeIn = 1;
+    if (this.spawnOrigin && this.fadeInDist > 0) {
+      const distFromSpawn = this.position.distanceTo(this.spawnOrigin);
+      _fadeIn = Math.min(1, distFromSpawn / this.fadeInDist);
+      if (this.mesh)        this.mesh.material.opacity        = this._baseOpacityCore   * _fadeIn;
+      if (this.glowMesh)    this.glowMesh.material.opacity    = this._baseOpacityGlow   * _fadeIn;
+      if (this.hazeMesh)    this.hazeMesh.material.opacity    = this._baseOpacityHaze   * _fadeIn;
+      if (this.trail)       this.trail.material.opacity       = this._baseOpacityTrail  * _fadeIn;
+      if (this.trailRibbon) this.trailRibbon.material.opacity = this._baseOpacityRibbon * _fadeIn;
     }
     // --- Electric core: pulse the bright additive bead. The base sine pulse
     // is mixed with a small random jitter so the head reads as live and
@@ -8787,21 +8822,56 @@ const _TRACER_TAIL_INNER_GEO = new THREE.CylinderGeometry(2.50, 1.80, 1, 8, 1);
 _TRACER_TAIL_INNER_GEO.rotateX(Math.PI / 2);
 const _TRACER_TAIL_OUTER_GEO = new THREE.CylinderGeometry(7.00, 5.00, 1, 12, 1);
 _TRACER_TAIL_OUTER_GEO.rotateX(Math.PI / 2);
+
+// Per-vertex fade-in attribute on the shared tracer cylinders. After the
+// rotateX(PI/2) above, the cylinder's length axis is local +Z; vertices at
+// local Z = -0.5 are the NEAR end (next to the muzzle when the mesh is
+// placed via lookAt), vertices at +0.5 are the FAR end (at the target).
+// We write a smoothstep curve into the vertex color attribute so the near
+// end is (0,0,0) and the far end is (1,1,1). With AdditiveBlending plus
+// vertexColors:true on the materials below, the shared per-spawn material
+// color gets multiplied by the vertex color, so every tracer fades in over
+// roughly the first portion of its length without per-spawn allocations.
+// Fade window: full black at z = FADE_START, full color at z = FADE_END.
+[ _TRACER_CORE_GEO, _TRACER_BEAM_GEO, _TRACER_TAIL_INNER_GEO, _TRACER_TAIL_OUTER_GEO ].forEach(g => {
+  const pos = g.attributes.position.array;
+  const count = pos.length / 3;
+  const colors = new Float32Array(count * 3);
+  const FADE_START = -0.50;
+  const FADE_END   = -0.20;
+  for (let i = 0; i < count; i++) {
+    const z = pos[i * 3 + 2];
+    let t;
+    if (z <= FADE_START) t = 0;
+    else if (z >= FADE_END) t = 1;
+    else {
+      const k = (z - FADE_START) / (FADE_END - FADE_START);
+      t = k * k * (3 - 2 * k); // smoothstep
+    }
+    colors[i * 3]     = t;
+    colors[i * 3 + 1] = t;
+    colors[i * 3 + 2] = t;
+  }
+  g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+});
+
 // Prototype materials. The two 'tracer' variants and the two 'tracerTail'
 // variants differ by depthWrite (false on tails, default-true on beams).
 // Every other flag (transparent, AdditiveBlending, fog-default) is identical
 // so Three.js assigns them the same program cache key family as the other
 // additive MeshBasic effects already warmed up in warmupCombatShaders.
+// vertexColors:true so the per-vertex fade attribute above multiplies the
+// per-spawn material.color, giving every tracer a near-end-invisible fade.
 //
 // Opacity is tuned so the thin core and beam pop visually while the wider
 // haze tubes integrate softly without smearing over the whole frame. Inner
 // haze ~0.30, outer haze ~0.08 ; the wide outer halo is what gives the beam
 // its volumetric body even though it never gets bright enough on its own to
 // read as a solid object.
-const _TRACER_CORE_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending });
-const _TRACER_BEAM_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending });
-const _TRACER_TAIL_INNER_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.30, blending: THREE.AdditiveBlending, depthWrite: false });
-const _TRACER_TAIL_OUTER_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending, depthWrite: false });
+const _TRACER_CORE_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending, vertexColors: true });
+const _TRACER_BEAM_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, vertexColors: true });
+const _TRACER_TAIL_INNER_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.30, blending: THREE.AdditiveBlending, depthWrite: false, vertexColors: true });
+const _TRACER_TAIL_OUTER_MAT_PROTO = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending, depthWrite: false, vertexColors: true });
 
 // Internal helper: spawn one tracer streak along (fromVec -> toVec).
 // spawnTracer() routes player-side shots through two calls to this (one
@@ -11625,6 +11695,66 @@ function activateCore() {
 // ---- SHIELD VISUAL MESHES ----
 // Create and manage the 3D shield meshes for Vortex (rainbow circle), Tracker (rectangle), Blaster (octagon)
 
+// Emit fire particles around the rim of a Pyro Thermal Shield so it reads as
+// a flaming barrier, not a flat orange disc. Called every frame from the
+// shield-render paths (local player + bot/peer). The particles ride the
+// existing game.particles array (camera-facing sprite billboards), so this
+// is cheap and the visual style matches every other fire in the game.
+//
+// shieldPos: world position of the disc center.
+// midR:      world radius of the disc.
+// fwd:       world-space forward (the disc's facing direction).
+// dt:        frame delta in seconds (used to scale spawn count by frame
+//            duration so framerate doesn't change flame density).
+const _flameRimRight = new THREE.Vector3();
+const _flameRimUp    = new THREE.Vector3();
+function _emitThermalShieldFlames(shieldPos, midR, fwd, dt) {
+  if (!shieldPos || !midR || !fwd || !game || !Array.isArray(game.particles)) return;
+  // Build two axes in the disc plane (perpendicular to fwd). Cross with world
+  // up to get an in-plane horizontal axis ; if fwd is nearly vertical, fall
+  // back to a fixed reference so we don't get a degenerate cross product.
+  _flameRimRight.set(0, 1, 0).cross(fwd);
+  if (_flameRimRight.lengthSq() < 0.001) _flameRimRight.set(1, 0, 0);
+  _flameRimRight.normalize();
+  _flameRimUp.crossVectors(fwd, _flameRimRight).normalize();
+  // Spawn count scales with dt so a 30 fps and 60 fps machine see the same
+  // density. ~24 flames per second target.
+  const FLAMES_PER_SEC = 24;
+  const expectedThisFrame = FLAMES_PER_SEC * dt;
+  let toSpawn = Math.floor(expectedThisFrame);
+  if (Math.random() < (expectedThisFrame - toSpawn)) toSpawn += 1;
+  if (toSpawn <= 0) return;
+  const FIRE_COLORS = [0xff4400, 0xff6620, 0xff8830, 0xffaa44, 0xffcc66];
+  for (let f = 0; f < toSpawn; f++) {
+    // Random angle around the rim; small jitter on the radius so the flames
+    // form a rough band, not a perfect circle.
+    const ang = Math.random() * Math.PI * 2;
+    const rJit = midR * (0.92 + Math.random() * 0.18);
+    const cosA = Math.cos(ang), sinA = Math.sin(ang);
+    const offX = _flameRimRight.x * cosA + _flameRimUp.x * sinA;
+    const offY = _flameRimRight.y * cosA + _flameRimUp.y * sinA;
+    const offZ = _flameRimRight.z * cosA + _flameRimUp.z * sinA;
+    const px = shieldPos.x + offX * rJit;
+    const py = shieldPos.y + offY * rJit;
+    const pz = shieldPos.z + offZ * rJit;
+    // Velocity: outward from the rim slightly, plus a strong upward bias so
+    // flames lick "up" along world-Y regardless of the shield's orientation.
+    // Adds a touch of forward bleed so the wall feels like it's pushing.
+    const outSpeed = 30 + Math.random() * 60;
+    const vx = offX * outSpeed + (Math.random() - 0.5) * 25 + fwd.x * 20;
+    const vy = offY * outSpeed * 0.4 + 80 + Math.random() * 80; // dominant upward
+    const vz = offZ * outSpeed + (Math.random() - 0.5) * 25 + fwd.z * 20;
+    game.particles.push({
+      position: new THREE.Vector3(px, py, pz),
+      velocity: new THREE.Vector3(vx, vy, vz),
+      life: 0.30 + Math.random() * 0.25,
+      maxLife: 0.55,
+      color: FIRE_COLORS[Math.floor(Math.random() * FIRE_COLORS.length)],
+      size: 6 + Math.random() * 5,
+    });
+  }
+}
+
 function updateShieldVisuals(dt) {
   const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
 
@@ -11812,6 +11942,12 @@ function updateShieldVisuals(dt) {
       player.thermalShieldRing.material.color.setHSL((hue + 0.02) % 1, 0.75, 0.65);
       player.thermalShieldRing.material.opacity = (0.14 + hpPct * 0.12) + Math.sin(game.time * 10) * 0.04;
     }
+    // Flames around the rim. Each frame, push a handful of fire particles at
+    // random angles around the disc's circumference so the shield reads as a
+    // wall of flame instead of a flat colored disc. Particles ride the
+    // existing camera-facing sprite system in game.particles, so cost is low
+    // and the look matches every other fire effect in the game.
+    _emitThermalShieldFlames(shieldPos, midR, forward, dt);
   } else {
     if (player.thermalShieldMesh) {
       scene.remove(player.thermalShieldMesh);
