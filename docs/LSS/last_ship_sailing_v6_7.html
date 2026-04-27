@@ -4599,6 +4599,17 @@ const _shipPreview3D = {
   model: null, lastKey: null, pendingKey: null, animId: null,
   rotationSpeed: 0.005, // radians per frame at 60fps (slow, graceful)
   initFailed: false, // set true if WebGL init throws; prevents retry storm
+  // User-controlled rotation. yaw is the canonical y-rotation (radians) the
+  // ship is rendered at; both auto-rotation and user input add into yaw, so
+  // when the user stops driving the stick or mouse the auto-rotation just
+  // continues from wherever they left it.
+  yaw: 0,
+  isMouseDragging: false,
+  lastMouseX: 0,
+  // Sensitivities tuned to feel close to the right-stick on a controller
+  // and a typical mouse drag inside a small preview pane.
+  GAMEPAD_ROT_RATE: 2.6,   // radians/sec at full stick deflection
+  MOUSE_ROT_RATE: 0.012,   // radians per pixel of horizontal mouse motion
 };
 
 function _initShipPreview3D() {
@@ -4640,6 +4651,29 @@ function _initShipPreview3D() {
     _shipPreview3D.scene = scene;
     _shipPreview3D.camera = camera;
     _shipPreview3D.canvas = canvas;
+    // Mouse-drag rotation: hold left button on the preview canvas and drag
+    // horizontally to spin the ship. mousedown latches the drag; mousemove
+    // adds to yaw on each pixel of horizontal motion; mouseup/leave drops
+    // the latch. We listen to mousemove/mouseup on `window` (not the canvas)
+    // so a drag that exits the canvas mid-motion still tracks until release.
+    canvas.style.cursor = 'grab';
+    canvas.addEventListener('mousedown', (e) => {
+      _shipPreview3D.isMouseDragging = true;
+      _shipPreview3D.lastMouseX = e.clientX;
+      canvas.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
+    window.addEventListener('mouseup', () => {
+      if (!_shipPreview3D.isMouseDragging) return;
+      _shipPreview3D.isMouseDragging = false;
+      if (_shipPreview3D.canvas) _shipPreview3D.canvas.style.cursor = 'grab';
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (!_shipPreview3D.isMouseDragging) return;
+      const dx = e.clientX - _shipPreview3D.lastMouseX;
+      _shipPreview3D.lastMouseX = e.clientX;
+      _shipPreview3D.yaw += dx * _shipPreview3D.MOUSE_ROT_RATE;
+    });
     return renderer;
   } catch (e) {
     console.warn('[ship-preview] WebGL init failed:', e && e.message ? e.message : e);
@@ -4709,6 +4743,7 @@ function _applyShipPreviewModel(key) {
   cam.lookAt(0, 0, 0);
   // Reset rotation so every new ship starts facing camera.
   clone.rotation.set(0, 0, 0);
+  s.yaw = 0; // canonical yaw; animate-loop & input handlers add into this
   s.scene.add(clone);
   s.model = clone;
 }
@@ -4738,7 +4773,30 @@ function _animateShipPreview() {
       s.camera.updateProjectionMatrix();
     }
   }
-  if (s.model) s.model.rotation.y += s.rotationSpeed;
+  // Compute frame dt so gamepad rotation rate is well-defined in radians/sec
+  // even if rAF stutters. Cap dt at 0.1 s so a tab-blur stall doesn't fling
+  // the ship around when focus returns.
+  const _now = performance.now();
+  const _last = s._lastAnimT || _now;
+  const dt = Math.min(0.1, (_now - _last) / 1000);
+  s._lastAnimT = _now;
+
+  // Gamepad right-stick X (already deadzoned + curve-applied by pollGamepad).
+  // Positive = stick pushed right => ship rotates such that its right side
+  // comes toward the camera (model.rotation.y increases). Mouse drag adds
+  // into yaw directly via the mousemove handler.
+  const gpX = (typeof input !== 'undefined' && input && input.gpConnected) ? (input.gpLookX || 0) : 0;
+  const userActive = Math.abs(gpX) > 0.01 || s.isMouseDragging;
+  if (Math.abs(gpX) > 0.01) {
+    s.yaw += gpX * s.GAMEPAD_ROT_RATE * dt;
+  }
+  // Auto-rotation continues only while neither input is active, so the ship
+  // holds its pose the moment the user takes control and resumes drifting
+  // after they let go.
+  if (!userActive) {
+    s.yaw += s.rotationSpeed;
+  }
+  if (s.model) s.model.rotation.y = s.yaw;
   s.renderer.render(s.scene, s.camera);
   s.animId = requestAnimationFrame(_animateShipPreview);
 }
