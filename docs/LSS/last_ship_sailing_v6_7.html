@@ -3093,28 +3093,37 @@ function _makeGasCloudMaterial(initialColor, baseAlpha, radius) {
       '  return v;',
       '}',
       'void main() {',
-      // Sample noise at the world position so the cloud has world-space
-      // detail (it doesn\'t drift if the player walks past it). Slow time
-      // animation: vertical drift plus a slow twist on Z so the cloud
-      // breathes without scrolling visibly fast.
-      '  vec3 q = vWorldPos * 0.0018 + vec3(0.0, time * 0.06, time * 0.04);',
+      // World-space FBM sample. Scale tuned so each ~350-radius cloud
+      // shows several noise periods across its diameter (otherwise the
+      // whole cloud sits in one cell of the noise field and renders
+      // smooth). Slow drift: rising on Y plus a gentle Z twist so the
+      // cloud "breathes" without visibly scrolling.
+      '  vec3 q = vWorldPos * 0.012 + vec3(0.0, time * 0.18, time * 0.10);',
       '  float v = fbm(q);',
-      // Distance falloff from sphere center to surface: dense in the
-      // middle, fades to nothing at the rim. vLocalPos is unit-sphere
-      // coords so length goes 0..1 across the radius.
-      '  float r = length(vLocalPos);',
-      '  float edgeFall = 1.0 - smoothstep(0.55, 1.0, r);',
-      // Combine: shape the noise (pow sharpens), gate by edge falloff.
-      '  float density = pow(clamp(v, 0.0, 1.0), 1.4) * edgeFall;',
-      // View-angle bonus: density goes up at grazing angles so the
-      // silhouette feels thick. Helps sell volume from any viewpoint.
+      // FBM output clusters around 0.5 ; smoothstep pushes that range
+      // out to the full 0..1 band so dense and sparse pockets read
+      // strongly instead of all blending toward the middle.
+      '  v = smoothstep(0.25, 0.75, v);',
+      // View-angle (fresnel) bonus: rim picks up extra density because a
+      // grazing line of sight passes through more "imaginary" cloud
+      // thickness. fres is high at the rim, low at the visual center.
       '  vec3 viewDir = normalize(cameraPosition - vWorldPos);',
       '  float fres = pow(1.0 - clamp(dot(vNormal, viewDir), 0.0, 1.0), 1.4);',
-      '  density = clamp(density + fres * 0.20 * edgeFall, 0.0, 1.0);',
-      // Color: tint by density (deeper noise = brighter color).
+      // Density formula. Noise (v) is the dominant driver so the cloud
+      // shows turbulent variation everywhere ; fresnel adds a softer rim
+      // bonus. Clamped to 0..1 so neither high noise nor high fresnel can
+      // saturate the alpha into a solid shell. With clamp in place, the
+      // variation in v survives all the way to the final alpha, which is
+      // what makes the cloud read as cloudy in both states (the green
+      // gas and the orange fire) instead of as a uniform colored ball.
+      '  float density = clamp(v * 0.75 + fres * 0.45, 0.0, 1.0);',
+      // Color brightens with density so dense spots glow; sparse spots
+      // are dim AND mostly transparent (alpha follows density).
       '  vec3 col = uColor * (0.55 + density * 1.30);',
       '  float alpha = density * uBaseAlpha;',
-      '  if (alpha < 0.005) discard;',  // skip fragments that contribute nothing
+      // Discard near-zero alpha — produces visible holes in the cloud
+      // silhouette and breaks up the perfect-sphere outline.
+      '  if (alpha < 0.02) discard;',
       '  gl_FragColor = vec4(col, alpha);',
       '}',
     ].join('\n'),
@@ -3162,12 +3171,14 @@ function spawnIncendiaryGas(pos, owner, team, ownerPeerId, netId, broadcast) {
   effRef.mesh = gasMesh;
   effRef.coreMesh = coreMesh;
   // ---- Billowing puff spheres ----
-  // 8 additive sphere puffs scattered within ~70% of the cloud radius, each
-  // with its own random size, opacity, drift phase, and bob frequency. The
-  // per-frame tick (in updateWorldEffects -> incendiary_gas) advances these
-  // so the puffs slowly bob and grow/shrink, giving the cloud a lumpy
-  // moving silhouette instead of a smooth sphere.
-  const PUFF_COUNT = 8;
+  // The outer-hull Plasma FBM shader now does the volumetric work and the
+  // discard at low-noise rim fragments breaks up the silhouette by itself,
+  // so the row of additive puffs (which read as overlapping circles when
+  // the shader was failing to draw) is no longer needed. PUFF_COUNT = 0
+  // disables them ; the surrounding loop / animation / cleanup blocks all
+  // already null-check eff.puffMeshes so they no-op cleanly. Bump this back
+  // up if the cloud silhouette ever feels too uniform.
+  const PUFF_COUNT = 0;
   const puffMeshes = [];
   for (let pi = 0; pi < PUFF_COUNT; pi++) {
     // Spherical-uniform random offset inside 70% of radius
@@ -12557,8 +12568,13 @@ function updateAbilities(dt) {
                 // shader gets a fire-color uniform + brighter base alpha so
                 // the burn zone reads at a glance from across the room.
                 if (eff.mesh && eff.mesh.material && eff.mesh.material.uniforms) {
+                  // Recolor the Plasma FBM hull to fire orange and bump its
+                  // base alpha. Kept below 1 so the volumetric noise still
+                  // has room to vary in the alpha channel ; if uBaseAlpha
+                  // were 1.0 the dense spots would just clamp opaque and
+                  // the cloud would read as a solid orange shell.
                   eff.mesh.material.uniforms.uColor.value.setHex(0xff5520);
-                  eff.mesh.material.uniforms.uBaseAlpha.value = 0.95;
+                  eff.mesh.material.uniforms.uBaseAlpha.value = 0.75;
                 }
                 if (eff.coreMesh) { eff.coreMesh.material.color.setHex(0xff8a30); eff.coreMesh.material.opacity = 0.36; }
                 // Recolor every puff to the burning palette AND bump its
@@ -12652,12 +12668,15 @@ function updateAbilities(dt) {
 
         // Animate ignited cloud: flicker and pulse. The outer-hull shader
         // material gets its time uniform advanced + uBaseAlpha modulated
-        // for the flicker. Random jitter on top sells the chaos of fire.
+        // around the ignited baseline (0.75). Capped below 1.0 so dense
+        // noise spots don't clamp opaque ; that's what kept the variation
+        // visible and let the burning cloud read as fire-colored clouds
+        // instead of a solid orange shell.
         if (eff.mesh) {
-          const flicker = 0.95 + Math.sin(game.time * 8) * 0.10 + (Math.random() - 0.5) * 0.10;
+          const flicker = 0.75 + Math.sin(game.time * 8) * 0.08 + (Math.random() - 0.5) * 0.08;
           if (eff.mesh.material && eff.mesh.material.uniforms) {
             eff.mesh.material.uniforms.time.value = game.time;
-            eff.mesh.material.uniforms.uBaseAlpha.value = Math.max(0, flicker);
+            eff.mesh.material.uniforms.uBaseAlpha.value = Math.max(0, Math.min(0.95, flicker));
           }
           eff.mesh.scale.setScalar(350 + Math.sin(game.time * 3) * 30);
         }
