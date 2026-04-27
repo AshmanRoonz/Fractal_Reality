@@ -8185,9 +8185,13 @@ class Projectile {
             player.damageDealt += dealt;
             player.coreMeter = Math.min(100, player.coreMeter + dealt / 100);
             showHitMarker();
-            // Hull-hit sparks only when the shot wasn't absorbed by shields.
-            // Shielded hits already get a directional ripple via the shader.
-            if (!hadShield) spawnImpactSparks(this.position, 5);
+            // Hull-hit sparks + cloud burst only when the shot wasn't
+            // absorbed by shields. Shielded hits already get a directional
+            // ripple via the shader.
+            if (!hadShield) {
+              spawnImpactSparks(this.position, 5);
+              spawnHullBurst(this.position, 0xffaa44, bot.chassis.hullLength * 0.5);
+            }
           }
           // TRACKER 40mm Tracker Cannon: weapon hits build lock marks
           if (player.loadoutKey === 'TRACKER' && !this.isArcWave && !this.isCluster && !this.tracking) {
@@ -9484,8 +9488,12 @@ class DestructibleObstacle {
         if (typeof bot.takeDamage === 'function') {
           const hadShield = bot.shield > 0;
           const dealt = bot.takeDamage(dmg, 'debris', this.position);
-          // Sparks on hull only; shield hits get the ripple shader.
-          if (dealt > 0 && !hadShield) spawnImpactSparks(this.position, 3);
+          // Sparks + small cloud burst on hull only; shielded hits get the
+          // ripple shader instead.
+          if (dealt > 0 && !hadShield) {
+            spawnImpactSparks(this.position, 3);
+            spawnHullBurst(this.position, 0xffaa44, bot.chassis.hullLength * 0.35);
+          }
         }
         this._fragmentExplode();
         return;
@@ -10959,6 +10967,35 @@ function updateEffects(dt) {
 // debug-style outline. Still uses ship position because takeDamage doesn't
 // know the projectile's exact strike point ; future pass could thread that
 // through, but the burst is small enough that center-of-ship feels fine.
+// Hull-hit cloud burst: a tighter, smaller version of the old shield-hit
+// cloud the user liked. Only fired when a SHIP's hull takes a hit (not
+// shields, not walls, not obstacles). Smaller particle count (8 vs the
+// original 14), lower speed, shorter reach — reads as "puff of debris
+// kicked out of the hull" rather than the full deflected-energy splash
+// the original was painting on every shielded shot.
+function spawnHullBurst(pos, color, size) {
+  size = size || 50;
+  color = color != null ? color : 0xffaa44;
+  const PARTS = 8;
+  const baseSpeed = 100 + size * 0.8;
+  for (let i = 0; i < PARTS; i++) {
+    const dx = (Math.random() - 0.5);
+    const dy = (Math.random() - 0.5);
+    const dz = (Math.random() - 0.5);
+    const len = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
+    const speed = baseSpeed * (0.55 + Math.random() * 0.65);
+    game.particles.push({
+      position: pos.clone(),
+      velocity: new THREE.Vector3(dx / len * speed, dy / len * speed, dz / len * speed),
+      life: 0.20 + Math.random() * 0.20,
+      maxLife: 0.40,
+      // Mix in some white-hot accents so the cloud reads as energetic, not just dust.
+      color: Math.random() < 0.30 ? 0xffffff : color,
+      size: 1.2 + Math.random() * 1.4,
+    });
+  }
+}
+
 // Shield hit visual: a directional ripple on the shield sphere shader at
 // the impact point, plus a brief dynamic light. No spark burst, no
 // outward-flying particles, no lightning arcs — those were the "cloud
@@ -12458,7 +12495,10 @@ function fireHitscan(origin, dir, w) {
       showHitMarker();
     }
     spawnExplosion(hitPoint, 8);
-    if (!hadShield) spawnImpactSparks(hitPoint, 4);
+    if (!hadShield) {
+      spawnImpactSparks(hitPoint, 4);
+      spawnHullBurst(hitPoint, 0xffaa44, bestHit.chassis.hullLength * 0.5);
+    }
 
     // VORTEX specific hit effects: electrical sparks
     if (player.loadoutKey === 'VORTEX') {
@@ -12569,8 +12609,13 @@ function fireSpread(origin, dir, w) {
           player.damageDealt += dealt;
           player.coreMeter = Math.min(100, player.coreMeter + dealt / 100);
           showHitMarker();
-          // Sparks on hull only; shielded hits get the directional ripple.
-          if (!hadShield) spawnImpactSparks(closest, 3);
+          // Sparks + small cloud burst on hull only; shielded hits get the
+          // directional ripple instead. Pellet hits get a smaller burst
+          // since each shot is one of many.
+          if (!hadShield) {
+            spawnImpactSparks(closest, 3);
+            spawnHullBurst(closest, 0xffaa44, bot.chassis.hullLength * 0.35);
+          }
         }
         hitBot = true;
         break;
