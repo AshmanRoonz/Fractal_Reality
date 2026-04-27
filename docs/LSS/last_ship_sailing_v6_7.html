@@ -90,10 +90,75 @@ canvas { display: block; }
 /* Legacy HUD elements (integrated into circumpunct ring HUD) */
 #health-canvas, #ship-status, #core-container { display: none; }
 
-/* Abilities (hidden; in circumpunct ring brackets) */
+/* Abilities — old rectangular row.
+   The DOM still exists so the existing updateAbilityHUD logic can populate
+   each slot's class (ready / on-cooldown / active-now) and cooldown bar
+   width; the pie widget below reads those derived values. The row itself
+   is hidden because the player-facing UI is now the four-quarter pie. */
 #abilities {
   position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
-  display: flex; gap: 6px; z-index: 30; pointer-events: none;
+  display: none; gap: 6px; z-index: 30; pointer-events: none;
+}
+
+/* Ability pie: four-quarter circular widget that overlays the painted
+   circle in the cockpit-frame PNG. Each quarter is one ability slot
+   (top=Q, right=E, bottom=F, left=V/core), filled with a color that
+   reflects state ; recharging fades from red toward green, full ready
+   is solid green, active-now is gold. Centered on screen so it lines
+   up with the canvas-drawn circumpunct HUD ring inside the cockpit. */
+#ability-pie {
+  position: fixed;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 440px; height: 440px;
+  pointer-events: none;
+  z-index: 25; /* above #circumpunct-hud (z=20) so the quarters cover the painted ring */
+}
+#ability-pie svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.ap-quarter {
+  fill: rgba(60, 60, 80, 0.40);
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 1.2;
+  transition: fill 0.18s ease;
+  filter: drop-shadow(0 0 6px rgba(0,0,0,0.45));
+}
+.ap-key {
+  fill: rgba(255, 255, 255, 0.92);
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: rgba(0,0,0,0.55);
+  stroke-width: 3;
+}
+.ap-label {
+  fill: rgba(230, 240, 255, 0.92);
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+  text-transform: uppercase;
+  paint-order: stroke;
+  stroke: rgba(0,0,0,0.6);
+  stroke-width: 2;
+}
+.ap-cdtext {
+  fill: rgba(255, 255, 255, 0.85);
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: rgba(0,0,0,0.6);
+  stroke-width: 2;
 }
 .ability-slot {
   position: relative; width: 72px; height: 52px;
@@ -168,7 +233,7 @@ canvas { display: block; }
   font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 13px;
   color: #ffaa00; margin-top: 2px; letter-spacing: 3px; text-transform: uppercase;
 }
-#score-display { display: flex; gap: 20px; justify-content: center; margin-top: 4px; }
+#score-display { display: flex; gap: 180px; justify-content: center; margin-top: 4px; }
 .team-score {
   font-family: 'Orbitron', sans-serif; font-weight: 700;
   padding: 3px 14px; font-size: 15px; letter-spacing: 2px;
@@ -873,6 +938,7 @@ canvas { display: block; }
     </div>
   </div>
   <div id="abilities"></div>
+  <div id="ability-pie"><svg viewBox="0 0 440 440"></svg></div>
 
   <div id="weapon-info">
     <div id="weapon-name">Splitter Rifle</div>
@@ -13918,6 +13984,107 @@ function buildAbilityHUD() {
     '</div>' +
     '<div class="ab-cd-bar" style="width:0%"></div>';
   container.appendChild(coreSlot);
+  // Build the matching pie widget once the abilities are known.
+  buildAbilityPie();
+}
+
+// ---- Pie widget (four-quarter circular replacement for the rectangular row) ----
+// Quarters arranged clockwise from the top: Q (slot 0), E (slot 1), F (slot 2),
+// V (core). Each quarter is an SVG arc ring-segment with its own fill that the
+// per-frame updater rewrites based on the same state the rectangular slots
+// have already been updated to (cls + cooldown bar width). Built once at
+// loadout select time; updates are cheap inline-style writes.
+const _apQuarters = [
+  // SVG angles: 0 = right, increases clockwise (because SVG y points down).
+  // Each slice spans 90 deg ; small angular gap between slices for visual breath.
+  { id: 'top',    t1: 225, t2: 315, key: 'Q', gp: 'LB', slotKey: 0 },
+  { id: 'right',  t1: 315, t2: 405, key: 'E', gp: 'RB', slotKey: 1 },
+  { id: 'bottom', t1:  45, t2: 135, key: 'F', gp: 'Y',  slotKey: 2 },
+  { id: 'left',   t1: 135, t2: 225, key: 'V', gp: 'D^', slotKey: 'core' },
+];
+const _AP_INNER_R = 150;
+const _AP_OUTER_R = 215;
+const _AP_GAP_DEG = 4;
+const _apCache = {};
+
+function buildAbilityPie() {
+  const svg = document.querySelector('#ability-pie svg');
+  if (!svg) return;
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  Object.keys(_apCache).forEach(k => delete _apCache[k]);
+  const cx = 220, cy = 220;
+  const inR = _AP_INNER_R, outR = _AP_OUTER_R;
+  const midR = (inR + outR) / 2;
+  const NS = 'http://www.w3.org/2000/svg';
+  for (const q of _apQuarters) {
+    const t1 = (q.t1 + _AP_GAP_DEG / 2) * Math.PI / 180;
+    const t2 = (q.t2 - _AP_GAP_DEG / 2) * Math.PI / 180;
+    // SVG point: (cx + r*cos(t), cy + r*sin(t))
+    const x1o = cx + outR * Math.cos(t1), y1o = cy + outR * Math.sin(t1);
+    const x2o = cx + outR * Math.cos(t2), y2o = cy + outR * Math.sin(t2);
+    const x1i = cx + inR  * Math.cos(t1), y1i = cy + inR  * Math.sin(t1);
+    const x2i = cx + inR  * Math.cos(t2), y2i = cy + inR  * Math.sin(t2);
+    // Outer arc CW (sweep=1), inner arc CCW back (sweep=0).
+    const d = `M ${x1i.toFixed(2)} ${y1i.toFixed(2)}` +
+              ` L ${x1o.toFixed(2)} ${y1o.toFixed(2)}` +
+              ` A ${outR} ${outR} 0 0 1 ${x2o.toFixed(2)} ${y2o.toFixed(2)}` +
+              ` L ${x2i.toFixed(2)} ${y2i.toFixed(2)}` +
+              ` A ${inR} ${inR} 0 0 0 ${x1i.toFixed(2)} ${y1i.toFixed(2)} Z`;
+    const path = document.createElementNS(NS, 'path');
+    path.setAttribute('d', d);
+    path.setAttribute('class', 'ap-quarter');
+    path.setAttribute('id', 'ap-q-' + q.id);
+    svg.appendChild(path);
+    // Label position: center of the quarter, on the mid-radius arc.
+    const tMid = ((q.t1 + q.t2) / 2) * Math.PI / 180;
+    const lx = cx + midR * Math.cos(tMid);
+    const ly = cy + midR * Math.sin(tMid);
+    // Key letter (Q/E/F/V), drawn slightly above center of the quarter.
+    const keyEl = document.createElementNS(NS, 'text');
+    keyEl.setAttribute('class', 'ap-key');
+    keyEl.setAttribute('x', lx);
+    keyEl.setAttribute('y', ly - 11);
+    keyEl.textContent = q.key;
+    svg.appendChild(keyEl);
+    // Ability name (truncated to first word for fit), below the key.
+    const nameEl = document.createElementNS(NS, 'text');
+    nameEl.setAttribute('class', 'ap-label');
+    nameEl.setAttribute('x', lx);
+    nameEl.setAttribute('y', ly + 4);
+    nameEl.setAttribute('id', 'ap-name-' + q.id);
+    nameEl.textContent = '';
+    svg.appendChild(nameEl);
+    // Cooldown / charge / energy text (varies by ability), drawn under the name.
+    const cdEl = document.createElementNS(NS, 'text');
+    cdEl.setAttribute('class', 'ap-cdtext');
+    cdEl.setAttribute('x', lx);
+    cdEl.setAttribute('y', ly + 18);
+    cdEl.setAttribute('id', 'ap-cd-' + q.id);
+    cdEl.textContent = '';
+    svg.appendChild(cdEl);
+    _apCache[q.id] = { path, keyEl, nameEl, cdEl, lastFill: '', lastName: '', lastCd: '' };
+  }
+}
+
+// Compute a CSS color for a pie quarter from the same derived state the
+// rectangular slot row already produced (cls = "ability-slot ready" /
+// "...on-cooldown" / "...active-now"; barW = cooldown bar width 0..100).
+// Recharging quarters lerp red->green via HSL hue.
+function _apFillForState(cls, barW) {
+  if (cls.indexOf('active-now') >= 0) return 'rgba(255,180,50,0.78)';
+  if (cls.indexOf('ready') >= 0)      return 'rgba(40,210,90,0.62)';
+  // on-cooldown: barW (0..100) maps to recharge progress (0 = just used,
+  // 100 = ready). Hue lerp from red (0deg) to green (120deg).
+  const p = Math.max(0, Math.min(1, (barW || 0) / 100));
+  const hue = p * 120;
+  return `hsla(${hue.toFixed(0)}, 78%, 48%, 0.62)`;
+}
+function _apShortName(s) {
+  if (!s) return '';
+  // Take the first whitespace-separated word, capped at 9 chars so it fits
+  // inside the quarter without overflowing the label arc.
+  const w = String(s).split(/\s+/)[0];
+  return w.length > 9 ? w.slice(0, 9) : w;
 }
 
 // Cache of per-slot DOM refs. Rebuilt whenever buildAbilityHUD rewrites the
@@ -14047,6 +14214,42 @@ function updateAbilityHUD() {
     else if (!coreReady) { cdTextVal = Math.floor(player.coreMeter) + '%'; }
     else { cdTextVal = ''; }
     _hudText(core.cdText, 'ab:core:t', cdTextVal);
+  }
+
+  // ---- Pie quarter colors + labels ----
+  // Read the cls/barW/cdText we just wrote to the (hidden) rectangular slots
+  // and translate into the pie's fill color + name + cd-text. Cached per
+  // quarter so we only touch the SVG when something changed.
+  function _apApplyFromSlot(qid, slotEl) {
+    const cache = _apCache[qid];
+    if (!cache || !slotEl) return;
+    const cls = slotEl.className || '';
+    const bar = slotEl.querySelector('.ab-cd-bar');
+    const barW = bar && bar.style && bar.style.width
+      ? parseFloat(bar.style.width) || 0
+      : 0;
+    const fill = _apFillForState(cls, barW);
+    if (fill !== cache.lastFill) {
+      cache.path.style.fill = fill;
+      cache.lastFill = fill;
+    }
+    const cdTextEl = slotEl.querySelector('.ab-cd-text');
+    const cdTxt = cdTextEl ? (cdTextEl.textContent || '') : '';
+    if (cdTxt !== cache.lastCd) {
+      cache.cdEl.textContent = cdTxt;
+      cache.lastCd = cdTxt;
+    }
+    const nameEl = slotEl.querySelector('.ab-name');
+    const nameTxt = _apShortName(nameEl ? nameEl.textContent : '');
+    if (nameTxt !== cache.lastName) {
+      cache.nameEl.textContent = nameTxt;
+      cache.lastName = nameTxt;
+    }
+  }
+  for (const q of _apQuarters) {
+    const id = (q.slotKey === 'core') ? 'ab-slot-core' : ('ab-slot-' + q.slotKey);
+    const slotEl = document.getElementById(id);
+    _apApplyFromSlot(q.id, slotEl);
   }
 }
 
