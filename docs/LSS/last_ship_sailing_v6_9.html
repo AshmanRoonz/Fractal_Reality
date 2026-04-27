@@ -8185,13 +8185,11 @@ class Projectile {
             player.damageDealt += dealt;
             player.coreMeter = Math.min(100, player.coreMeter + dealt / 100);
             showHitMarker();
-            // Hull-hit sparks + cloud burst only when the shot wasn't
-            // absorbed by shields. Shielded hits already get a directional
-            // ripple via the shader.
-            if (!hadShield) {
-              spawnImpactSparks(this.position, 5);
-              spawnHullBurst(this.position, 0xffaa44, bot.chassis.hullLength * 0.5);
-            }
+            // Hull-hit sparks only when the shot wasn't absorbed by shields.
+            // Shielded hits get a directional ripple via the shader instead.
+            // (Removed the hull-burst cloud — at chaingun rates it was
+            // pushing too many particles into the pool and tanking framerate.)
+            if (!hadShield) spawnImpactSparks(this.position, 5);
           }
           // TRACKER 40mm Tracker Cannon: weapon hits build lock marks
           if (player.loadoutKey === 'TRACKER' && !this.isArcWave && !this.isCluster && !this.tracking) {
@@ -8263,7 +8261,11 @@ class Projectile {
   }
 
   spawnClusterChildren() {
-    // PUNCTURE Cluster Missile: creates sustained explosion zone on impact
+    // PUNCTURE Cluster Missile: creates sustained explosion zone on impact.
+    // The initial impact gets a big fireworks burst — radial streaks of
+    // light shooting outward in all directions plus drifting embers — on
+    // top of the standard explosion. The sustained 'cluster' zone updater
+    // also fires smaller fireworks bursts every 0.3s while the zone lives.
     const dmgPerSec = this.clusterDmg || 80;
     const duration = this.clusterDuration || 3;
     game.worldEffects.push({
@@ -8272,6 +8274,9 @@ class Projectile {
       owner: this.owner, team: player.team, fxTimer: 0,
     });
     spawnExplosion(this.position, 25);
+    if (typeof spawnFireworksBurst === 'function') {
+      spawnFireworksBurst(this.position, 280);
+    }
   }
 
   splashDamage() {
@@ -9488,12 +9493,8 @@ class DestructibleObstacle {
         if (typeof bot.takeDamage === 'function') {
           const hadShield = bot.shield > 0;
           const dealt = bot.takeDamage(dmg, 'debris', this.position);
-          // Sparks + small cloud burst on hull only; shielded hits get the
-          // ripple shader instead.
-          if (dealt > 0 && !hadShield) {
-            spawnImpactSparks(this.position, 3);
-            spawnHullBurst(this.position, 0xffaa44, bot.chassis.hullLength * 0.35);
-          }
+          // Sparks on hull only; shielded hits get the ripple shader instead.
+          if (dealt > 0 && !hadShield) spawnImpactSparks(this.position, 3);
         }
         this._fragmentExplode();
         return;
@@ -10967,6 +10968,76 @@ function updateEffects(dt) {
 // debug-style outline. Still uses ship position because takeDamage doesn't
 // know the projectile's exact strike point ; future pass could thread that
 // through, but the burst is small enough that center-of-ship feels fine.
+// Fireworks burst: radial streaks of light shooting outward from a point,
+// like a real firework. Used by Cluster Missile impacts (initial blast +
+// each periodic secondary explosion) so the sustained zone reads as a
+// constant fireworks display rather than a series of plain explosions.
+// Reuses the pooled tracer system for the streaks (no per-call geometry
+// allocation) and the particle pool for trailing embers.
+function spawnFireworksBurst(pos, radius, palette) {
+  radius = radius || 200;
+  // Default warm/cool fireworks palette: gold, white-hot, amber, cyan accent.
+  const colors = palette || [0xffcc44, 0xffffff, 0xff8833, 0x66ddff, 0xffaa66, 0xfff0a0];
+  const STREAK_COUNT = 12;
+  // Radial streak tracers — each one is a pooled tracer cylinder going
+  // from the impact point out to a random offset within `radius`. The
+  // tracer's existing fade and haze makes it read as a glowing trail.
+  for (let i = 0; i < STREAK_COUNT; i++) {
+    const dx = Math.random() - 0.5;
+    const dy = Math.random() - 0.5;
+    const dz = Math.random() - 0.5;
+    const ln = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
+    const reach = radius * (0.55 + Math.random() * 0.45);
+    const end = new THREE.Vector3(
+      pos.x + (dx / ln) * reach,
+      pos.y + (dy / ln) * reach,
+      pos.z + (dz / ln) * reach
+    );
+    const col = colors[Math.floor(Math.random() * colors.length)];
+    if (typeof spawnTracer === 'function') {
+      spawnTracer(pos, end, col, 0.5);
+    }
+  }
+  // Trailing embers along the streak paths — slower particles that
+  // continue drifting after the streaks fade. ~24 sprites, life 0.4-0.8s.
+  const EMBER_COUNT = 24;
+  for (let i = 0; i < EMBER_COUNT; i++) {
+    const dx = Math.random() - 0.5;
+    const dy = Math.random() - 0.5;
+    const dz = Math.random() - 0.5;
+    const ln = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
+    const speed = (radius * 0.4) * (0.4 + Math.random() * 0.8);
+    game.particles.push({
+      position: pos.clone(),
+      velocity: new THREE.Vector3((dx / ln) * speed, (dy / ln) * speed, (dz / ln) * speed),
+      life: 0.4 + Math.random() * 0.4,
+      maxLife: 0.8,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      size: 1.6 + Math.random() * 1.4,
+    });
+  }
+  // A handful of hot-white center sparks that fizz around the impact
+  // point briefly — sells the "burst" feeling at the heart of it.
+  for (let i = 0; i < 8; i++) {
+    const dx = (Math.random() - 0.5) * 2;
+    const dy = (Math.random() - 0.5) * 2;
+    const dz = (Math.random() - 0.5) * 2;
+    const speed = 80 + Math.random() * 80;
+    game.particles.push({
+      position: pos.clone(),
+      velocity: new THREE.Vector3(dx * speed, dy * speed, dz * speed),
+      life: 0.18 + Math.random() * 0.14,
+      maxLife: 0.32,
+      color: 0xffffff,
+      size: 1.0 + Math.random() * 0.8,
+    });
+  }
+  // One bright dynamic light flash to ping nearby walls.
+  if (typeof spawnDynamicLight === 'function') {
+    spawnDynamicLight(pos, colors[0], 3.0, radius * 1.5, 0.15);
+  }
+}
+
 // Hull-hit cloud burst: a tighter, smaller version of the old shield-hit
 // cloud the user liked. Only fired when a SHIP's hull takes a hit (not
 // shields, not walls, not obstacles). Smaller particle count (8 vs the
@@ -12495,10 +12566,8 @@ function fireHitscan(origin, dir, w) {
       showHitMarker();
     }
     spawnExplosion(hitPoint, 8);
-    if (!hadShield) {
-      spawnImpactSparks(hitPoint, 4);
-      spawnHullBurst(hitPoint, 0xffaa44, bestHit.chassis.hullLength * 0.5);
-    }
+    // Hull-burst cloud removed (perf). Shielded hits get the ripple shader.
+    if (!hadShield) spawnImpactSparks(hitPoint, 4);
 
     // VORTEX specific hit effects: electrical sparks
     if (player.loadoutKey === 'VORTEX') {
@@ -12609,13 +12678,10 @@ function fireSpread(origin, dir, w) {
           player.damageDealt += dealt;
           player.coreMeter = Math.min(100, player.coreMeter + dealt / 100);
           showHitMarker();
-          // Sparks + small cloud burst on hull only; shielded hits get the
-          // directional ripple instead. Pellet hits get a smaller burst
-          // since each shot is one of many.
-          if (!hadShield) {
-            spawnImpactSparks(closest, 3);
-            spawnHullBurst(closest, 0xffaa44, bot.chassis.hullLength * 0.35);
-          }
+          // Sparks on hull only; shielded hits get the directional ripple.
+          // (Pellet weapons fire 12+ pellets per shot — even a small cloud
+          // burst per pellet pushes too many particles for the pool.)
+          if (!hadShield) spawnImpactSparks(closest, 3);
         }
         hitBot = true;
         break;
@@ -14841,11 +14907,21 @@ function updateAbilities(dt) {
           if (dealt > 0 && eff.owner === 'player') { player.damageDealt += dealt; }
         }
       }
-      // Periodic explosion visuals
+      // Periodic fireworks bursts. Each tick: a smaller fireworks display
+      // somewhere within the zone radius, plus a small explosion at the
+      // same point. The user wanted the cluster zone to read like a
+      // continuous fireworks display — one big burst on impact, then
+      // smaller staggered bursts throughout the zone's lifetime.
       eff.fxTimer -= dt;
       if (eff.fxTimer <= 0) {
         const offset = new THREE.Vector3((Math.random()-0.5)*eff.radius, (Math.random()-0.5)*eff.radius, (Math.random()-0.5)*eff.radius);
-        spawnExplosion(eff.position.clone().add(offset), 12);
+        const burstAt = eff.position.clone().add(offset);
+        spawnExplosion(burstAt, 12);
+        if (typeof spawnFireworksBurst === 'function') {
+          // Smaller secondary burst — half the radial reach of the
+          // initial impact so the zone reads as continuing detonations.
+          spawnFireworksBurst(burstAt, 140);
+        }
         eff.fxTimer = 0.3;
       }
     }
