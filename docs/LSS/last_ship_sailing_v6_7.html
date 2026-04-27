@@ -117,11 +117,11 @@ canvas { display: block; }
 }
 #ability-pie svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .ap-quarter {
-  fill: rgba(60, 60, 80, 0.40);
-  stroke: rgba(255, 255, 255, 0.18);
+  fill: rgba(60, 60, 80, 0.22);
+  stroke: rgba(255, 255, 255, 0.14);
   stroke-width: 1.2;
   transition: fill 0.18s ease;
-  filter: drop-shadow(0 0 6px rgba(0,0,0,0.45));
+  filter: drop-shadow(0 0 6px rgba(0,0,0,0.35));
 }
 .ap-key {
   fill: rgba(255, 255, 255, 0.95);
@@ -14268,13 +14268,15 @@ function buildAbilityPie() {
 // "...on-cooldown" / "...active-now"; barW = cooldown bar width 0..100).
 // Recharging quarters lerp red->green via HSL hue.
 function _apFillForState(cls, barW) {
-  if (cls.indexOf('active-now') >= 0) return 'rgba(255,180,50,0.78)';
-  if (cls.indexOf('ready') >= 0)      return 'rgba(40,210,90,0.62)';
+  // Alphas are kept low so the painted radar art under the pie still reads
+  // through ; the wedges should feel like translucent gels, not solid disks.
+  if (cls.indexOf('active-now') >= 0) return 'rgba(255,180,50,0.45)';
+  if (cls.indexOf('ready') >= 0)      return 'rgba(40,210,90,0.36)';
   // on-cooldown: barW (0..100) maps to recharge progress (0 = just used,
   // 100 = ready). Hue lerp from red (0deg) to green (120deg).
   const p = Math.max(0, Math.min(1, (barW || 0) / 100));
   const hue = p * 120;
-  return `hsla(${hue.toFixed(0)}, 78%, 48%, 0.62)`;
+  return `hsla(${hue.toFixed(0)}, 78%, 48%, 0.36)`;
 }
 function _apShortName(s) {
   if (!s) return '';
