@@ -1153,7 +1153,7 @@ canvas { display: block; }
 
 const LSS = {
   MAX_PLAYERS: 12, TEAM_FLEET_A: 2, TEAM_FLEET_B: 3,
-  ROUND_TIME: 110, WARMUP_TIME: 5, ROUNDS_TO_WIN: 4,
+  ROUND_TIME: 80, WARMUP_TIME: 5, ROUNDS_TO_WIN: 4,
   // (v6.9) Champion mode: at CHAMPION_TIME seconds remaining, a giant
   // purple stasis field spawns at map center. The first team to hold a
   // ship inside it for CHAMPION_CHARGE_TIME seconds wins the round. A
@@ -15989,13 +15989,21 @@ function updateRoundSystem(dt) {
     const endByTimer = game.roundTimer <= 0;
     if (endByChampion || aliveB === 0 || aliveA === 0 || endByTimer) {
       let winnerLabel = '';
+      // (post-v6.9) Track which fleet won so the round-end banner can read
+      // personally to the local player ("Round Won!" / "Round Lost") instead
+      // of the generic "ROUND OVER". Default to fleet A for the safety
+      // fall-through branch below, same as the score increment.
+      let winnerTeam = LSS.TEAM_FLEET_A;
       if (endByChampion) {
-        if (game.championResult === 'A') game.scoreA++; else game.scoreB++;
+        if (game.championResult === 'A') { game.scoreA++; winnerTeam = LSS.TEAM_FLEET_A; }
+        else                              { game.scoreB++; winnerTeam = LSS.TEAM_FLEET_B; }
         winnerLabel = game.championResult === 'A' ? 'FLEET A CLAIMED CHAMPION' : 'FLEET B CLAIMED CHAMPION';
       } else if (aliveB === 0 && aliveA > 0) {
-        game.scoreA++; winnerLabel = 'FLEET A WIPED FLEET B';
+        game.scoreA++; winnerTeam = LSS.TEAM_FLEET_A;
+        winnerLabel = 'FLEET A WIPED FLEET B';
       } else if (aliveA === 0 && aliveB > 0) {
-        game.scoreB++; winnerLabel = 'FLEET B WIPED FLEET A';
+        game.scoreB++; winnerTeam = LSS.TEAM_FLEET_B;
+        winnerLabel = 'FLEET B WIPED FLEET A';
       } else if (endByTimer) {
         // HP-total tiebreaker (sum of remaining hull HP on alive ships).
         let hpA = 0, hpB = 0;
@@ -16009,17 +16017,33 @@ function updateRoundSystem(dt) {
           if (b.team === LSS.TEAM_FLEET_A) hpA += b.health || 0;
           else if (b.team === LSS.TEAM_FLEET_B) hpB += b.health || 0;
         }
-        if (hpA > hpB) { game.scoreA++; winnerLabel = 'FLEET A: ' + Math.round(hpA) + ' HP > FLEET B: ' + Math.round(hpB) + ' HP'; }
-        else if (hpB > hpA) { game.scoreB++; winnerLabel = 'FLEET B: ' + Math.round(hpB) + ' HP > FLEET A: ' + Math.round(hpA) + ' HP'; }
-        else { game.scoreA++; winnerLabel = 'TIE BROKEN BY DEFAULT TO FLEET A'; }
+        if (hpA > hpB) {
+          game.scoreA++; winnerTeam = LSS.TEAM_FLEET_A;
+          winnerLabel = 'FLEET A: ' + Math.round(hpA) + ' HP > FLEET B: ' + Math.round(hpB) + ' HP';
+        } else if (hpB > hpA) {
+          game.scoreB++; winnerTeam = LSS.TEAM_FLEET_B;
+          winnerLabel = 'FLEET B: ' + Math.round(hpB) + ' HP > FLEET A: ' + Math.round(hpA) + ' HP';
+        } else {
+          game.scoreA++; winnerTeam = LSS.TEAM_FLEET_A;
+          winnerLabel = 'TIE BROKEN BY DEFAULT TO FLEET A';
+        }
       } else {
         // Both alive counts > 0 but neither end condition triggered ; fall
         // through (shouldn't normally happen but covered for safety).
-        game.scoreA++;
+        game.scoreA++; winnerTeam = LSS.TEAM_FLEET_A;
       }
       game.state = 'roundEnd';
       game.roundEndTimer = 5;
-      if (window.Overlays) Overlays.banner('ROUND OVER', winnerLabel + '  |  FLEET A: ' + game.scoreA + '  FLEET B: ' + game.scoreB);
+      if (window.Overlays) {
+        // Personalize the banner title: if the local player\'s team won,
+        // "Round Won!" ; otherwise "Round Lost". Spectators or players
+        // with no team assigned fall back to the generic "ROUND OVER".
+        let title = 'ROUND OVER';
+        if (player && (player.team === LSS.TEAM_FLEET_A || player.team === LSS.TEAM_FLEET_B)) {
+          title = (player.team === winnerTeam) ? 'Round Won!' : 'Round Lost';
+        }
+        Overlays.banner(title, winnerLabel + '  |  FLEET A: ' + game.scoreA + '  FLEET B: ' + game.scoreB);
+      }
     }
   } else if (game.state === 'roundEnd') {
     game.roundEndTimer -= dt;
