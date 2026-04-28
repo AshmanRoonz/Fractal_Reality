@@ -10853,6 +10853,14 @@ function _disposeOrReleaseEffect(e) {
     if (e.mesh.material) e.mesh.material.dispose();
     return;
   }
+  // (v6.9) Vortex Laser Shot beams share the global _VORTEX_CORE_BEAM_GEO ;
+  // same dispose discipline as shaderSmoke above (drop material, keep
+  // geometry alive for future spawns).
+  if (e.type === 'vortexLaserBeam') {
+    scene.remove(e.mesh);
+    if (e.mesh.material) e.mesh.material.dispose();
+    return;
+  }
   // Lightning segments use a pooled mesh + material; just return the
   // slot to the pool. Mesh stays in the scene (visible=false) and the
   // material instance is reused by future spawns — no dispose, no GC.
@@ -10985,6 +10993,20 @@ function updateEffects(dt) {
         e.mesh.rotation.x += e.rotVel.x * dt;
         e.mesh.rotation.y += e.rotVel.y * dt;
         e.mesh.rotation.z += e.rotVel.z * dt;
+      }
+    }
+    // --- Vortex Laser Shot beam: a one-shot volumetric cylinder using the
+    // same shader as the Laser Core beam, but as a transient effect entry
+    // that fades uIntensity to zero over its lifetime then disposes itself.
+    // The beam transform is fixed at spawn time, so we just step time and
+    // fade the alpha gate. ---
+    else if (e.type === 'vortexLaserBeam') {
+      if (e.mesh.material && e.mesh.material.uniforms) {
+        e.mesh.material.uniforms.time.value = game.time;
+        // Snappy attack (full bright early), then quadratic ease-out so the
+        // beam visibly snaps in at fire and dissolves smoothly.
+        const fade = (1 - t) * (1 - t);
+        e.mesh.material.uniforms.uIntensity.value = fade * 1.15;
       }
     }
     // --- Debris chunks: fly outward, spin, fade ---
@@ -12896,14 +12918,49 @@ function executeAbility(slot, ability) {
 
   // ---- OFFENSIVE ABILITIES ----
   if (ability.type === 'offensive') {
-    // VORTEX: Laser Shot (concentrated beam, 1200 dmg in a line)
+    // VORTEX: Laser Shot (concentrated beam, 2400 dmg in a line). Three-
+    // layer visual: (1) volumetric shader cylinder for the bulk of the
+    // beam mass ; (2) stacked converging tracer streaks from the painted
+    // muzzle tips ; (3) lightning arcs cracking off the beam length.
     if (ability.name === 'Laser Shot') {
       const range = 2500;
       const beamEnd = player.position.clone().add(forward.clone().multiplyScalar(range));
-      spawnTracer(player.position, beamEnd, 0xff2200);
-      spawnTracer(player.position.clone().add(new THREE.Vector3(0,3,0)), beamEnd.clone().add(new THREE.Vector3(0,3,0)), 0xff4400);
-      // (v6.7) Both tracers ride the same fire_tracer channel as primary
-      // hitscan; receivers spawn matching beams. Damage flows via hit-claim.
+      // (v6.9) Volumetric shader beam. Spawned as a transient effect with
+      // a short lifetime that matches the ability's burst window. The
+      // mesh's transform is fixed at spawn time (laser leaves a snapshot
+      // of where the player was aiming when they pulled the trigger,
+      // which feels more like a "shot" than a moving beam). Reuses the
+      // _makeVortexCoreBeamMaterial shader factory so the same crackle /
+      // pulse / fresnel look applies.
+      const BEAM_RADIUS = 80;
+      const beamLife = 0.45;
+      const beamMid = player.position.clone().add(forward.clone().multiplyScalar(range * 0.5));
+      const beamMat = _makeVortexCoreBeamMaterial();
+      const beamMesh = new THREE.Mesh(_getVortexCoreBeamGeometry(), beamMat);
+      beamMesh.position.copy(beamMid);
+      beamMesh.quaternion.setFromUnitVectors(_mvUp, forward);
+      beamMesh.scale.set(BEAM_RADIUS, range, BEAM_RADIUS);
+      beamMesh.frustumCulled = false;
+      beamMesh.renderOrder = 2;
+      scene.add(beamMesh);
+      game.effects.push({
+        mesh: beamMesh,
+        type: 'vortexLaserBeam',
+        age: 0,
+        lifetime: beamLife,
+      });
+      // Stacked thick tracers. spawnTracer splits each call into two
+      // muzzle-tip-anchored streaks that converge on beamEnd, so 5 calls
+      // give 10 visible streaks fanning into the beam.
+      spawnTracer(player.position, beamEnd, 0xff2200, 1.7);
+      spawnTracer(player.position, beamEnd, 0xff5520, 1.6);
+      spawnTracer(player.position, beamEnd, 0xffaa44, 1.5);
+      spawnTracer(player.position, beamEnd, 0xffeeaa, 1.4);
+      spawnTracer(player.position, beamEnd, 0xffffff, 1.3);
+      // Network: ride the existing fire_tracer channel for the lead pair
+      // so peers see at least the converging streaks. The volumetric beam
+      // is local-only (peers don't render it) ; this matches how Trip Wire
+      // arcs and other shader effects are local-only on receivers.
       if (net.active && net.sendEvent) {
         net.sendEvent({
           type: 'fire_tracer',
@@ -12915,28 +12972,53 @@ function executeAbility(slot, ability) {
           type: 'fire_tracer',
           ox: player.position.x, oy: player.position.y + 3, oz: player.position.z,
           ex: beamEnd.x, ey: beamEnd.y + 3, ez: beamEnd.z,
-          color: 0xff4400,
+          color: 0xffeeaa,
         });
       }
-
-      // Electrical crackle particles along the beam path
-      const beamSteps = 8;
+      // Lightning crackle along the beam path. Six arcs at staggered
+      // positions, each with lateral jitter, gives a high-voltage feel
+      // without tying us to per-frame emission (this is one-shot).
+      if (typeof spawnLightningBolt === 'function') {
+        for (let a = 0; a < 6; a++) {
+          const t = 0.12 + (a / 6) * 0.78 + (Math.random() - 0.5) * 0.05;
+          const along = player.position.clone().add(forward.clone().multiplyScalar(range * t));
+          const reach = 90 + Math.random() * 100;
+          const jit = new THREE.Vector3(
+            (Math.random() - 0.5) * reach,
+            (Math.random() - 0.5) * reach,
+            (Math.random() - 0.5) * reach
+          );
+          const tip = along.clone().add(jit);
+          spawnLightningBolt(along, tip, 0xffeeaa, 0.18, 1, 2.2);
+        }
+      }
+      // Muzzle flash: bright warm dynamic light at the player position so
+      // nearby walls catch a wash of orange when the shot fires. Short
+      // lifetime so it doesn't linger past the burst.
+      if (typeof spawnDynamicLight === 'function') {
+        const muzzlePos = player.position.clone().add(forward.clone().multiplyScalar(40));
+        spawnDynamicLight(muzzlePos, 0xffaa66, 4.5, 700, 0.25);
+      }
+      // Hot embers along the beam path (smaller count than before since
+      // the shader carries the visual mass now). 3 steps x 2 sparks = 6
+      // particles instead of the old 14.
+      const beamSteps = 3;
       for (let step = 1; step < beamSteps; step++) {
-        const t = step / beamSteps;
-        const sparkPos = player.position.clone().add(forward.clone().multiplyScalar(range * t));
+        const tStep = step / beamSteps;
+        const sparkPos = player.position.clone().add(forward.clone().multiplyScalar(range * tStep));
         for (let i = 0; i < 2; i++) {
           const sparkVel = new THREE.Vector3(
-            (Math.random() - 0.5) * 200,
-            (Math.random() - 0.5) * 200,
-            (Math.random() - 0.5) * 200
+            (Math.random() - 0.5) * 220,
+            (Math.random() - 0.5) * 220,
+            (Math.random() - 0.5) * 220
           );
           game.particles.push({
             position: sparkPos.clone(),
             velocity: sparkVel,
-            life: 0.15,
-            maxLife: 0.15,
-            color: 0x44ddff,
-            size: 1 + Math.random() * 1
+            life: 0.2,
+            maxLife: 0.2,
+            color: 0xffcc66,
+            size: 1.2 + Math.random() * 1.4
           });
         }
       }
