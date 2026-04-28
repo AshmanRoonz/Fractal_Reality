@@ -21933,17 +21933,38 @@ function duckAmbient(depth) {
 // All SFX route through both dry and reverb (convolver) for spatial presence.
 // Each oscillator gets a detuned chorus partner (±5 cents alternating, 30% mix) for
 // procedural thickness; same ADSR envelope is shared so the partner tracks perfectly.
+// Web Audio's OscillatorNode.type only accepts 'sine' | 'square' |
+// 'sawtooth' | 'triangle'. Lab recipes (or stale localStorage imports of
+// older recipe JSON) occasionally carry typos like 'sin' or 'saw' ; an
+// invalid assignment throws synchronously inside triChord's forEach,
+// silently kills the rest of that shot's audio, and spams the console
+// (the "288 The provided value 'sin' is not a valid enum value of type
+// OscillatorType" symptom). Normalize once at the boundary so a bad
+// recipe degrades to a safe 'sine' instead of breaking the call.
+const _VALID_OSC_TYPES = { sine: 1, square: 1, sawtooth: 1, triangle: 1 };
+function _safeOscType(wave) {
+  if (typeof wave !== 'string') return 'sine';
+  if (_VALID_OSC_TYPES[wave]) return wave;
+  // Common typos: 'sin' -> 'sine', 'saw' -> 'sawtooth', 'tri' -> 'triangle'.
+  if (wave === 'sin') return 'sine';
+  if (wave === 'saw') return 'sawtooth';
+  if (wave === 'tri') return 'triangle';
+  if (wave === 'sqr' || wave === 'sq') return 'square';
+  return 'sine';
+}
+
 function triChord(freqs, wave, vol, dur, rampFreqs, rampTime, startOffset, envelope) {
   const ctx = audio.ctx;
   const now = ctx.currentTime + (startOffset || 0);
   const env = envelope || { attack: 0.003, hold: 0, decay: dur };
   const CHORUS_DETUNE_CENTS = 5;
   const CHORUS_MIX = 0.30;
+  const safeWave = _safeOscType(wave);
   freqs.forEach((freq, i) => {
     // Main oscillator and shared envelope gain
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    osc.type = wave;
+    osc.type = safeWave;
     osc.frequency.setValueAtTime(freq, now);
     if (rampFreqs && rampFreqs[i] !== undefined) {
       osc.frequency.exponentialRampToValueAtTime(Math.max(1, rampFreqs[i]), now + (rampTime || dur));
@@ -21961,7 +21982,7 @@ function triChord(freqs, wave, vol, dur, rampFreqs, rampTime, startOffset, envel
     // Chorus partner: same envelope, detuned ±5 cents (alternating sign per i for stereo spread)
     const chorusOsc = ctx.createOscillator();
     const chorusGain = ctx.createGain();
-    chorusOsc.type = wave;
+    chorusOsc.type = safeWave;
     chorusOsc.frequency.setValueAtTime(freq, now);
     chorusOsc.detune.setValueAtTime((i % 2 === 0 ? 1 : -1) * CHORUS_DETUNE_CENTS, now);
     if (rampFreqs && rampFreqs[i] !== undefined) {

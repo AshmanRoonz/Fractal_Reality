@@ -10,7 +10,7 @@
         {
           "kind": "tri",
           "wavePool": [
-            "sin",
+            "sine",
             "triangle"
           ],
           "freqs": [
