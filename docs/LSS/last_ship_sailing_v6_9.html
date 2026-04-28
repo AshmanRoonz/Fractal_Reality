@@ -2360,16 +2360,19 @@ class NetworkPlayer {
       this._thermalShieldMesh.position.copy(shieldPos);
       this._thermalShieldMesh.lookAt(this._shieldLook.copy(shieldPos).add(fwd));
       this._thermalShieldMesh.scale.set(midR, midR, midR);
-      // Disc + torus invisible; the ring of fire particles is the visible
-      // shield. Same approach as the local-player path so peer/bot Pyros
-      // read identically.
-      this._thermalShieldMesh.visible = false;
+      // (post-v6.9) FBM fire shader on the disc is the visible shield now ;
+      // sprite-ring particles dropped (they read as small dots, not flame).
+      // The disc itself paints volumetric-feeling fire via _makeFireShieldMaterial.
+      this._thermalShieldMesh.visible = true;
+      if (this._thermalShieldMesh.material && this._thermalShieldMesh.material.uniforms) {
+        const u = this._thermalShieldMesh.material.uniforms;
+        if (u.time) u.time.value = (typeof game !== 'undefined' && game.time) ? game.time : 0;
+      }
       if (this._thermalShieldRing) {
         this._thermalShieldRing.position.copy(shieldPos);
-        this._thermalShieldRing.visible = false;
-      }
-      if (typeof _emitThermalShieldFlames === 'function') {
-        _emitThermalShieldFlames(shieldPos, midR, fwd, (typeof dt === 'number' ? dt : 1/60));
+        this._thermalShieldRing.lookAt(this._shieldLook.copy(shieldPos).add(fwd));
+        this._thermalShieldRing.scale.set(midR, midR, midR);
+        this._thermalShieldRing.visible = true;
       }
     } else {
       if (this._thermalShieldMesh) {
@@ -2411,12 +2414,19 @@ class NetworkPlayer {
       const shieldPos = this._shieldPos.copy(this.position).addScaledVector(fwd, 80);
       this._vortexShieldMesh.position.copy(shieldPos);
       this._vortexShieldMesh.lookAt(this._shieldLook.copy(shieldPos).add(fwd));
-      // Disc + torus invisible; the ring of crackling lightning is the
-      // visible shield. Mirror of the local-player path.
-      this._vortexShieldMesh.visible = false;
+      // (post-v6.9) Lightning removed; the disc + torus are now the visible
+      // shield. Rainbow energy field shader on the disc, bright torus around
+      // the rim, and a soft state-color particle shimmer from the rim helper.
+      this._vortexShieldMesh.visible = true;
+      // Bump shader time so the energy field actually animates on peers.
+      if (this._vortexShieldMesh.material && this._vortexShieldMesh.material.uniforms) {
+        const u = this._vortexShieldMesh.material.uniforms;
+        if (u.time) u.time.value = (typeof game !== 'undefined' && game.time) ? game.time : 0;
+      }
       if (this._vortexShieldRing) {
         this._vortexShieldRing.position.copy(shieldPos);
-        this._vortexShieldRing.visible = false;
+        this._vortexShieldRing.lookAt(this._shieldLook.copy(shieldPos).add(fwd));
+        this._vortexShieldRing.visible = true;
       }
       if (typeof _emitVortexShieldArcs === 'function') {
         _emitVortexShieldArcs(shieldPos, 120, fwd, (typeof dt === 'number' ? dt : 1/60));
@@ -3432,6 +3442,136 @@ function _makeFireShieldMaterial(baseAlpha) {
       '  vec3 col = mix(coolC, midC, smoothstep(0.15, 0.55, density));',
       '  col = mix(col, hotC, smoothstep(0.55, 0.92, density));',
       '  float alpha = density * uBaseAlpha;',
+      '  if (alpha < 0.04) discard;',
+      '  gl_FragColor = vec4(col, alpha);',
+      '}',
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+}
+
+// Flamethrower-jet shader for Pyro's Thermal Shield. Designed for a
+// ConeGeometry with apex at the muzzle and base flared forward (the same
+// cones the spiral shader used to drive). FBM noise scrolls along the
+// cone axis from apex outward so the flame visibly *pours* away from the
+// ship; brightness peaks at the muzzle (white-yellow core) and fades
+// through orange to red at the tip; radial falloff softens the silhouette
+// so the cone reads as flame, not a solid colored shell.
+//
+// Cone UV convention (Three.js ConeGeometry side faces): vUv.x wraps
+// around the circumference (0..1), vUv.y runs from base (0) to apex (1).
+// We define axisT = vUv.y so axisT=1 sits at the muzzle and axisT=0 at
+// the forward tip, matching the placement in updateShieldVisuals where
+// the cone's +Y (apex) is aligned to -forward.
+//
+// Uniforms:
+//   time        animates the noise scroll
+//   uIntensity  alpha gate (driven by HP fraction outside the shader)
+//   uOctaves    detail level for FBM
+function _makeFlamethrowerJetMaterial(opts) {
+  opts = opts || {};
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      time:       { value: 0 },
+      uIntensity: { value: 1.0 },
+      uOctaves:   { value: 6 },
+    },
+    vertexShader: [
+      'varying vec2 vUv;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocalPos;',
+      'varying vec3 vNormal;',
+      'void main() {',
+      '  vUv = uv;',
+      '  vec4 wp = modelMatrix * vec4(position, 1.0);',
+      '  vWorldPos = wp.xyz;',
+      '  vLocalPos = position;',
+      '  vNormal = normalize(normalMatrix * normal);',
+      '  gl_Position = projectionMatrix * viewMatrix * wp;',
+      '}',
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float time;',
+      'uniform float uIntensity;',
+      'uniform int uOctaves;',
+      'varying vec2 vUv;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vLocalPos;',
+      'varying vec3 vNormal;',
+      'float hash13(vec3 p) {',
+      '  p = fract(p * 0.1031);',
+      '  p += dot(p, p.yzx + 33.33);',
+      '  return fract((p.x + p.y) * p.z);',
+      '}',
+      'float noise3(vec3 p) {',
+      '  vec3 i = floor(p);',
+      '  vec3 f = fract(p);',
+      '  f = f * f * (3.0 - 2.0 * f);',
+      '  return mix(',
+      '    mix(mix(hash13(i + vec3(0,0,0)), hash13(i + vec3(1,0,0)), f.x),',
+      '        mix(hash13(i + vec3(0,1,0)), hash13(i + vec3(1,1,0)), f.x), f.y),',
+      '    mix(mix(hash13(i + vec3(0,0,1)), hash13(i + vec3(1,0,1)), f.x),',
+      '        mix(hash13(i + vec3(0,1,1)), hash13(i + vec3(1,1,1)), f.x), f.y),',
+      '    f.z);',
+      '}',
+      'float fbm(vec3 p) {',
+      '  float v = 0.0; float a = 0.5;',
+      '  for (int k = 0; k < 8; k++) {',
+      '    if (k >= uOctaves) break;',
+      '    v += a * noise3(p);',
+      '    p *= 2.0;',
+      '    a *= 0.5;',
+      '  }',
+      '  return v;',
+      '}',
+      'void main() {',
+      // axisT: 1 at muzzle (apex), 0 at forward tip.
+      '  float axisT = vUv.y;',
+      // Sample FBM in cone-local space so the pattern stays attached to
+      // the jet regardless of ship orientation. Scroll the noise along
+      // -axis (so flame moves *outward* from the muzzle as time advances).
+      // Two layers ; slow large-scale turbulence + fast crackling detail.
+      '  vec3 q = vec3(vLocalPos.x * 0.18, vLocalPos.y * 0.06, vLocalPos.z * 0.18);',
+      '  q.y -= time * 1.3;',
+      '  float v = fbm(q);',
+      '  vec3 q2 = vec3(vLocalPos.x * 0.55, vLocalPos.y * 0.18, vLocalPos.z * 0.55);',
+      '  q2.y -= time * 2.6;',
+      '  float v2 = fbm(q2);',
+      '  float turbo = smoothstep(0.30, 0.80, v) * 0.85 + smoothstep(0.32, 0.82, v2) * 0.45;',
+      // Axial profile: dense near the muzzle, thinning toward the tip.
+      // smoothstep gives a soft taper instead of a hard cutoff.
+      '  float axisDensity = mix(0.30, 1.10, smoothstep(-0.05, 0.85, axisT));',
+      // Radial falloff inside the cone slice: stronger fire near the cone
+      // axis, wispy at the silhouette edge. ConeGeometry side verts share
+      // a circular cross-section at each axisT ; vLocalPos.xz length
+      // approximates the radial coordinate (Y is the cone axis after the
+      // standard orientation).
+      '  float r = length(vLocalPos.xz);',
+      // Cone radius at this axisT in local space: cone is unit (radius 1
+      // at base, 0 at apex). axisT=1 (apex) -> r=0, axisT=0 (base) -> r=1.
+      '  float coneR = max(1.0 - axisT, 0.04);',
+      '  float radialT = clamp(r / coneR, 0.0, 1.0);',
+      '  float radialFall = 1.0 - smoothstep(0.55, 1.05, radialT);',
+      // Combine: turbulence × axial × radial. Slight constant lift so the
+      // muzzle core never goes pitch black.
+      '  float density = clamp((turbo * axisDensity + 0.05) * radialFall, 0.0, 1.0);',
+      // Color gradient: deep red wisps at low density, hot orange in mid,
+      // white-yellow core at peak. Push HDR brightness so bloom catches
+      // the muzzle white-hot point.
+      '  vec3 coolC = vec3(0.85, 0.10, 0.02);',
+      '  vec3 midC  = vec3(1.70, 0.65, 0.10);',
+      '  vec3 hotC  = vec3(2.20, 1.85, 1.10);',
+      '  vec3 col = mix(coolC, midC, smoothstep(0.18, 0.55, density));',
+      '  col = mix(col, hotC, smoothstep(0.55, 0.92, density));',
+      // Extra muzzle bias: near the apex (axisT high) the core stays
+      // bright even where density is moderate, so the jet has a clear
+      // white-hot ignition point.
+      '  float muzzleCore = smoothstep(0.78, 0.98, axisT) * (1.0 - radialT);',
+      '  col += hotC * muzzleCore * 0.45;',
+      '  float alpha = clamp(density * uIntensity, 0.0, 0.95);',
       '  if (alpha < 0.04) discard;',
       '  gl_FragColor = vec4(col, alpha);',
       '}',
@@ -14227,84 +14367,22 @@ function _shieldStateColor(t, lightness) {
 }
 
 function _emitVortexShieldArcs(shieldPos, radius, fwd, dt, energyPct, convergencePos) {
-  if (!shieldPos || !radius || !fwd || typeof spawnLightningBolt !== 'function') return;
-  // Energy fraction (0..1). Drives the halo color and glow particles so the
-  // shield reads blue when full → red as it drains. Defaults to 1.0 for
-  // peers/bots whose energy isn't replicated.
+  // (post-v6.9) Lightning bolts removed: Vortex now reads as a translucent
+  // hex hologram dome (local player) or rainbow energy disc (peers/bots),
+  // *without* the electric arc crackle. This emitter is kept under its
+  // original name purely for the rim glow shimmer ; the convergencePos
+  // parameter is accepted but unused now that no arc traverses the cone
+  // interior. Callers don\'t need to change.
+  if (!shieldPos || !radius || !fwd || !game || !Array.isArray(game.particles)) return;
+  // Energy fraction (0..1). Drives the rim glow palette so the shield reads
+  // blue when full → red as it drains. Defaults to 1.0 for peers/bots whose
+  // energy isn't replicated.
   energyPct = (typeof energyPct === 'number') ? Math.max(0, Math.min(1, energyPct)) : 1.0;
-  const haloColor = _shieldStateColor(energyPct, 0.62);
-  const haloBright = _shieldStateColor(energyPct, 0.78);
   // Disc-plane axes (same construction as the flame helper).
   _vortexRimRight.set(0, 1, 0).cross(fwd);
   if (_vortexRimRight.lengthSq() < 0.001) _vortexRimRight.set(1, 0, 0);
   _vortexRimRight.normalize();
   _vortexRimUp.crossVectors(fwd, _vortexRimRight).normalize();
-  // Spawn rate dropped 280 → 180 to relieve combat framerate pressure.
-  // Each spawnLightningBolt allocates a TubeGeometry + 2 materials; at
-  // 280/sec × multiple shielders that was the dominant per-frame cost.
-  // The 0.36-0.55s lifetime per bolt keeps the visual density high
-  // (180 × 0.45 avg = ~80 bolts alive at any moment, plenty of crackle).
-  const ARCS_PER_SEC = 180;
-  const expected = ARCS_PER_SEC * dt;
-  let toSpawn = Math.floor(expected);
-  if (Math.random() < (expected - toSpawn)) toSpawn += 1;
-  for (let i = 0; i < toSpawn; i++) {
-    // (v6.9) Inward arcs: each bolt starts on the rim and lands at the
-    // shield center. Reads as "energy is being pulled into the vortex"
-    // rather than crackling around the perimeter, which is the whole
-    // visual identity ask. The core is shifted slightly off-center per
-    // bolt so the streams don\'t all converge on a single pixel.
-    const ang1 = Math.random() * Math.PI * 2;
-    const r1 = radius * (0.94 + Math.random() * 0.08);
-    const c1 = Math.cos(ang1), s1 = Math.sin(ang1);
-    const p1 = _vortexArcP1.set(
-      shieldPos.x + (_vortexRimRight.x * c1 + _vortexRimUp.x * s1) * r1,
-      shieldPos.y + (_vortexRimRight.y * c1 + _vortexRimUp.y * s1) * r1,
-      shieldPos.z + (_vortexRimRight.z * c1 + _vortexRimUp.z * s1) * r1
-    );
-    // Endpoint near the eye of the storm with a bit of jitter (radius
-    // 6-18 u from center) so successive bolts spread across the eye
-    // rather than stacking on a single spot. (v6.9) When the cone
-    // version is in use, convergencePos points at the cone apex (the
-    // ship), so bolts visibly traverse the cone interior from rim to
-    // ship. Without convergencePos we fall back to shieldPos for the
-    // legacy disc behavior.
-    const eyeAng = Math.random() * Math.PI * 2;
-    const eyeR = 6 + Math.random() * 12;
-    const ec = Math.cos(eyeAng), es = Math.sin(eyeAng);
-    const eyeBase = convergencePos || shieldPos;
-    const p2 = _vortexArcP2.set(
-      eyeBase.x + (_vortexRimRight.x * ec + _vortexRimUp.x * es) * eyeR,
-      eyeBase.y + (_vortexRimRight.y * ec + _vortexRimUp.y * es) * eyeR,
-      eyeBase.z + (_vortexRimRight.z * ec + _vortexRimUp.z * es) * eyeR
-    );
-    // Bright white core filament + wider state-colored halo on the same
-    // path. Halo color follows energy: full = cool, empty = red.
-    spawnLightningBolt(p1, p2, 0xeeeaff, 0.36 + Math.random() * 0.18, 0, 2.0);
-    spawnLightningBolt(p1, p2, haloColor, 0.42 + Math.random() * 0.18, 0, 5.0);
-  }
-  // Quarter-ring spider arcs ~10/sec for prominent flashes (down from 16,
-  // matching the slower-feel ask). Thinner spider tubes too.
-  if (Math.random() < dt * 10) {
-    const ang1 = Math.random() * Math.PI * 2;
-    const ang2 = ang1 + (Math.random() - 0.5) * 1.6;
-    const r1 = radius * (0.95 + Math.random() * 0.08);
-    const r2 = radius * (0.95 + Math.random() * 0.08);
-    const c1 = Math.cos(ang1), s1 = Math.sin(ang1);
-    const c2 = Math.cos(ang2), s2 = Math.sin(ang2);
-    const p1 = _vortexArcP1.set(
-      shieldPos.x + (_vortexRimRight.x * c1 + _vortexRimUp.x * s1) * r1,
-      shieldPos.y + (_vortexRimRight.y * c1 + _vortexRimUp.y * s1) * r1,
-      shieldPos.z + (_vortexRimRight.z * c1 + _vortexRimUp.z * s1) * r1
-    );
-    const p2 = _vortexArcP2.set(
-      shieldPos.x + (_vortexRimRight.x * c2 + _vortexRimUp.x * s2) * r2,
-      shieldPos.y + (_vortexRimRight.y * c2 + _vortexRimUp.y * s2) * r2,
-      shieldPos.z + (_vortexRimRight.z * c2 + _vortexRimUp.z * s2) * r2
-    );
-    spawnLightningBolt(p1, p2, 0xffffff, 0.42, 3, 2.5);
-    spawnLightningBolt(p1, p2, haloBright, 0.50, 4, 6.0);
-  }
   // Glow particles streaming around the ring. Color spectrum follows the
   // current state — blue when full, red when empty, smooth path between.
   // Rate dropped 90 → 55 (combat perf). Each particle lazy-allocates a
@@ -14661,72 +14739,78 @@ function updateShieldVisuals(dt) {
     }
   }
 
-  // ---- PYRO: Thermal Shield (translucent orange disc held in front) ----
-  // Visual parity with Vortex's Vortex Shield: a bright circle + outer ring in
-  // front of the player, pulsing. Coloring stays in the orange/amber band
-  // (hue oscillates 0.04–0.11) so it reads as heat rather than the rainbow.
+  // ---- PYRO: Thermal Shield (hex hologram dome, fire palette) ----
+  // (post-v6.9) Switched from two flamethrower jets to a Vortex-style
+  // hex hologram dome with a fire palette. Same hemisphere geometry the
+  // local Vortex shield uses ; only the color cycle changes. Reads as a
+  // wall of heat-haze hexes glowing yellow-orange when full, deepening
+  // through orange to red-ember as HP drops.
   const thermalActive = player.loadoutKey === 'PYRO' &&
     player.abilityActive[1] && player.abilities[1] && player.abilities[1].name === 'Thermal Shield' &&
     player.thermalShieldHP > 0;
 
   if (thermalActive) {
-    // (v6.9 redo) Two flamethrower jets: one from each painted muzzle
-    // tip. Each is a thin ConeGeometry oriented along forward, apex at
-    // the muzzle, base ~2 hullLen out. Same spiral shader (outward fire)
-    // configured for a thinner, more turbulent flame look (fewer arms,
-    // tighter twist, faster spin).
-    const hLen = (player.chassis && player.chassis.hullLength) ? player.chassis.hullLength : 140;
-    const jetReach = hLen * 2.2;
-    const jetTipR  = hLen * 0.55;
-    if (!player.thermalShieldJets) {
-      const buildJet = () => {
-        const geo = new THREE.ConeGeometry(1, 1, 24, 1, true);
-        const mat = _makeSpiralConeMaterial({
-          direction: +1,
-          hotColor:  0xfff0bb,    // white-yellow peaks
-          midColor:  0xff7020,    // hot orange
-          coolColor: 0x551400,    // deep red valleys
-          arms: 4,
-          twist: 4.0,
-          spinSpeed: 5.0,         // fast turbulent flame motion
-        });
-        const m = new THREE.Mesh(geo, mat);
-        m.renderOrder = 1;
-        scene.add(m);
-        return m;
-      };
-      player.thermalShieldJets = [buildJet(), buildJet()];
+    const tHull = (player.chassis && player.chassis.hullLength) ? player.chassis.hullLength : 140;
+    const tDomeR = tHull * 1.4;
+    if (!player.thermalShieldMesh) {
+      // Hemisphere matching the Vortex shield: full phi sweep, theta 0..PI/2.
+      // Apex at +Y in geometry-local space ; we orient +Y along forward so
+      // the dome bows out in front of the player.
+      const geo = new THREE.SphereGeometry(tDomeR, 36, 18, 0, Math.PI * 2, 0, Math.PI / 2);
+      // Fire base color: hot yellow-orange. uColor is rewritten per frame
+      // along a fire palette anyway ; this is just the initial value.
+      const mat = _makeHexHologramMaterial(0xffaa33);
+      player.thermalShieldMesh = new THREE.Mesh(geo, mat);
+      player.thermalShieldMesh.renderOrder = 1;
+      scene.add(player.thermalShieldMesh);
+      // Equator ring in deep amber, slightly thicker than Vortex\'s
+      // (2.2 -> 2.6) so the dome has a more pronounced fire-circle base.
+      const ringGeo = new THREE.TorusGeometry(tDomeR * 0.99, 2.6, 8, 64);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0xffaa44, transparent: true, opacity: 0.65,
+        side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false,
+      });
+      player.thermalShieldRing = new THREE.Mesh(ringGeo, ringMat);
+      player.thermalShieldRing.renderOrder = 1;
+      scene.add(player.thermalShieldRing);
     }
-    // Per-frame placement: muzzle world positions from the painted barrel
-    // tip helper, oriented so the cone\'s apex sits at the muzzle and the
-    // wide end blasts forward. setFromUnitVectors aligns +Y (apex) with
-    // -forward so position+(forward*reach/2) puts the cone center
-    // straddling the muzzle->forward span correctly.
-    const lMuzzle = getPaintedMuzzleWorld('left',  player._jetTmpL || (player._jetTmpL = new THREE.Vector3()));
-    const rMuzzle = getPaintedMuzzleWorld('right', player._jetTmpR || (player._jetTmpR = new THREE.Vector3()));
-    const placeJet = (mesh, muzzle) => {
-      // Cone center at midpoint between muzzle and forward tip ; scale Y
-      // to full reach, X/Z to tip radius.
-      const center = muzzle.clone().addScaledVector(forward, jetReach * 0.5);
-      mesh.position.copy(center);
-      mesh.quaternion.setFromUnitVectors(_mvUp, forward.clone().multiplyScalar(-1));
-      mesh.scale.set(jetTipR, jetReach, jetTipR);
-      mesh.visible = true;
-    };
-    placeJet(player.thermalShieldJets[0], lMuzzle);
-    placeJet(player.thermalShieldJets[1], rMuzzle);
-    const hpPct = Math.max(0, player.thermalShieldHP / player.thermalShieldMaxHP);
-    for (const m of player.thermalShieldJets) {
-      if (m.material && m.material.uniforms) {
-        m.material.uniforms.time.value = game.time;
-        m.material.uniforms.uIntensity.value = (0.70 + hpPct * 0.30) + Math.sin(game.time * 9) * 0.05;
+    // Place dome with open base just in front of the ship and apex bowing
+    // forward by domeR. Same offset constant Vortex uses (0.20 hullLen).
+    const tBaseOffset = tHull * 0.20;
+    const tBasePos = _shieldPos.copy(player.position).addScaledVector(forward, tBaseOffset);
+    player.thermalShieldMesh.position.copy(tBasePos);
+    player.thermalShieldMesh.quaternion.setFromUnitVectors(_mvUp, forward);
+    player.thermalShieldMesh.visible = true;
+    if (player.thermalShieldRing) {
+      player.thermalShieldRing.position.copy(tBasePos);
+      player.thermalShieldRing.lookAt(_shieldLook.copy(tBasePos).add(forward));
+      player.thermalShieldRing.visible = true;
+    }
+    // Drive shader uniforms. uHp tracks shield HP (controls cracks +
+    // dim). uColor cycles through a fire palette: bright yellow at full
+    // HP, deepening through orange to ember red as HP drains. A small
+    // sin-modulation gives the dome a flicker so it reads as fire, not a
+    // static colored shell.
+    if (player.thermalShieldMesh.material && player.thermalShieldMesh.material.uniforms) {
+      const u = player.thermalShieldMesh.material.uniforms;
+      const hpFrac = (player.thermalShieldMaxHP > 0)
+        ? Math.max(0, Math.min(1, player.thermalShieldHP / player.thermalShieldMaxHP)) : 1.0;
+      u.time.value = game.time;
+      if (u.uHp) u.uHp.value = hpFrac;
+      if (u.uColor) {
+        // Fire palette: at hpFrac=1, hot yellow (1.0, 0.85, 0.30);
+        // at hpFrac=0, deep ember red (1.0, 0.20, 0.05). Linear blend
+        // in RGB for a smooth yellow -> orange -> red ramp. Flicker
+        // ±5% on green so the dome shimmers like flame.
+        const t = 1 - hpFrac;
+        const flicker = Math.sin(game.time * 11) * 0.05 + Math.sin(game.time * 17) * 0.03;
+        u.uColor.value.setRGB(
+          1.00,
+          Math.max(0.0, 0.85 - 0.65 * t + flicker),
+          Math.max(0.0, 0.30 - 0.25 * t)
+        );
       }
     }
-    // Embers: keep a soft flow at the merge zone where both jets overlap
-    // so the convergence reads as hot. Use the original mid-point as the
-    // emit anchor (between the two muzzles, ~1 hullLen forward).
-    const mergePos = lMuzzle.clone().add(rMuzzle).multiplyScalar(0.5).addScaledVector(forward, hLen * 0.6);
-    _emitThermalShieldFlames(mergePos, hLen * 0.5, forward, dt);
     _tickSoundLoop(player, '_thermalShieldHumTimer', dt, 0.95, 'fire_shield_hum');
   } else {
     player._thermalShieldHumTimer = 0;
