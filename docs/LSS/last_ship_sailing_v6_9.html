@@ -20096,11 +20096,30 @@ function gameLoop(timestamp) {
     }
   }
 
-  if (game.state === 'select') { renderPostFX(); return; }
+  // (v6.9) Lobby/ship-select perf: the #ship-select panel is rgba(5,5,15,0.95),
+  // so the game scene behind it is reduced to ~5% intensity (practically
+  // invisible). Throttle the background render to ~6 Hz (every ~167 ms) so we
+  // still keep a "live" frame visible if the lobby is ever made translucent,
+  // but we stop burning the wall shader + composite at 60 fps for a frame
+  // nobody can see. Cuts lobby GPU cost by ~10x.
+  if (game.state === 'select') {
+    const _selNow = timestamp;
+    if (!game._selectLastRender || _selNow - game._selectLastRender >= 167) {
+      game._selectLastRender = _selNow;
+      renderPostFX();
+    }
+    return;
+  }
 
-  // Pause gameplay while settings are open
+  // Pause gameplay while settings are open. Same throttle reasoning as the
+  // lobby: settings panel sits opaque on top, so 6 Hz background render is
+  // fine.
   if (settingsOpen) {
-    renderPostFX();
+    const _setNow = timestamp;
+    if (!game._settingsLastRender || _setNow - game._settingsLastRender >= 167) {
+      game._settingsLastRender = _setNow;
+      renderPostFX();
+    }
     return;
   }
 
