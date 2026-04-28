@@ -1365,12 +1365,19 @@ const DEFAULT_PRESETS = [
 ];
 
 // Working state. recipes is the live editable library ; current is the
-// active recipe being shown in the panel and played by buttons.
+// active recipe being shown in the panel and played by buttons. We pass
+// the defaults through _normalizeRecipe at boot so every preset carries
+// recipeGain + the full layer schema (count, spacing, wavePool, etc.) ;
+// otherwise older presets that pre-date a field would render the slider
+// for it but have no underlying property until the user touches it.
 const state = {
   recipes: JSON.parse(JSON.stringify(DEFAULT_PRESETS)),
   currentIndex: 0,
   loopHandle: null,
 };
+// _normalizeRecipe is hoisted via function declaration ; safe to call here
+// even though the function is declared further down.
+state.recipes = state.recipes.map(_normalizeRecipe);
 
 function currentRecipe() { return state.recipes[state.currentIndex]; }
 
@@ -1781,20 +1788,118 @@ function downloadAll() {
   a.click();
   setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
 }
+// Normalize a layer object so every field the lab UI/audio path can read
+// is present, with sensible defaults for missing values. Lets us import
+// recipes that pre-date schema additions (recipeGain, count/spacing,
+// wavePool, pitchPool, pitchPick, filterType, peakGain, reverseEnvelope)
+// and have the new sliders/dropdowns reflect a real value rather than a
+// silent fallback that doesn't write back to the recipe object.
+function _normalizeLayer(layer) {
+  if (!layer || typeof layer !== 'object') return layer;
+  const out = Object.assign({}, layer);
+  // Common to both kinds:
+  if (out.startOffset == null) out.startOffset = 0;
+  if (out.chance == null) out.chance = 1.0;
+  if (out.count == null) out.count = 1;
+  if (out.spacing == null) out.spacing = 0;
+  if (out.spacingVar == null) out.spacingVar = 0;
+  if (out.countDecay == null) out.countDecay = 0;
+  if (out.kind === 'tri') {
+    if (!Array.isArray(out.freqs)) out.freqs = [220, 330, 440];
+    if (out.rampFreqs && !Array.isArray(out.rampFreqs)) out.rampFreqs = null;
+    if (!out.rampFreqs) out.rampFreqs = [out.freqs[0] || 0, out.freqs[1] || 0, out.freqs[2] || 0];
+    if (out.wave == null) out.wave = 'sine';
+    if (out.vol == null) out.vol = 0.20;
+    if (out.dur == null) out.dur = 0.20;
+    if (out.rampTime == null) out.rampTime = out.dur;
+    if (!out.envelope || typeof out.envelope !== 'object') {
+      out.envelope = { attack: 0.003, hold: 0, decay: out.dur };
+    } else {
+      out.envelope = Object.assign({ attack: 0.003, hold: 0, decay: out.dur }, out.envelope);
+    }
+    if (out.pitchVar == null) out.pitchVar = 0;
+    if (out.durVar == null) out.durVar = 0;
+    if (out.volVar == null) out.volVar = 0;
+    if (!Array.isArray(out.wavePool)) out.wavePool = [];
+    if (!Array.isArray(out.pitchPool)) out.pitchPool = [];
+    if (out.pitchPick == null) out.pitchPick = 'perVoice';
+  } else if (out.kind === 'noise') {
+    if (out.duration == null) out.duration = 0.05;
+    if (out.volume == null) out.volume = 0.10;
+    if (out.filterFreq == null) out.filterFreq = 1500;
+    if (out.filterQ == null) out.filterQ = 0.8;
+    if (out.varDur == null) out.varDur = 0;
+    if (out.varVol == null) out.varVol = 0;
+    if (out.varFreq == null) out.varFreq = 0;
+    if (out.filterType == null) out.filterType = 'lowpass';
+    if (out.peakGain == null) out.peakGain = 0;
+    if (out.reverseEnvelope == null) out.reverseEnvelope = false;
+  }
+  return out;
+}
+
+// Normalize a recipe: fill missing top-level fields and walk every layer
+// through _normalizeLayer. Safe to call on already-normalized recipes ;
+// existing values are preserved.
+function _normalizeRecipe(recipe) {
+  if (!recipe || typeof recipe !== 'object' || !Array.isArray(recipe.layers)) return recipe;
+  const out = Object.assign({}, recipe);
+  if (out.description == null) out.description = '';
+  if (out.category == null) out.category = 'Other';
+  if (typeof out.recipeGain !== 'number') out.recipeGain = 1.0;
+  out.layers = recipe.layers.map(_normalizeLayer);
+  return out;
+}
+
+// Merge an imported recipe list with DEFAULT_PRESETS so any preset the
+// user's JSON doesn't carry (new factory recipes added between exports)
+// still appears in the library. The user's recipe wins on name conflict.
+function _mergeWithDefaults(importedRecipes) {
+  const byName = {};
+  for (const r of importedRecipes) {
+    if (r && r.name) byName[r.name] = _normalizeRecipe(r);
+  }
+  // Append default presets that the import didn't include, in original order.
+  for (const preset of DEFAULT_PRESETS) {
+    if (!byName[preset.name]) {
+      byName[preset.name] = _normalizeRecipe(JSON.parse(JSON.stringify(preset)));
+    }
+  }
+  // Preserve the order: imported first (in their original order), then any
+  // defaults that weren't in the import, also in their original order.
+  const seen = new Set();
+  const result = [];
+  for (const r of importedRecipes) {
+    if (r && r.name && byName[r.name] && !seen.has(r.name)) {
+      result.push(byName[r.name]);
+      seen.add(r.name);
+    }
+  }
+  for (const preset of DEFAULT_PRESETS) {
+    if (!seen.has(preset.name)) {
+      result.push(byName[preset.name]);
+      seen.add(preset.name);
+    }
+  }
+  return result;
+}
+
 function applyTextarea() {
   const text = document.getElementById('export-area').value.trim();
   if (!text) return;
   let parsed;
   try { parsed = JSON.parse(text); } catch (e) { alert('JSON parse error: ' + e.message); return; }
   if (parsed && Array.isArray(parsed.recipes)) {
-    // Bulk replace
-    state.recipes = parsed.recipes;
+    // Bulk import: normalize every recipe and merge in any default presets
+    // the user's library doesn't include. Keeps schema additions visible
+    // and prevents new factory presets from going missing across exports.
+    state.recipes = _mergeWithDefaults(parsed.recipes);
     state.currentIndex = 0;
     rebuildPresetDropdown();
     setCurrentRecipe(0);
   } else if (parsed && parsed.name && Array.isArray(parsed.layers)) {
-    // Single recipe: replace the current slot
-    state.recipes[state.currentIndex] = parsed;
+    // Single recipe: normalize before swapping into the current slot.
+    state.recipes[state.currentIndex] = _normalizeRecipe(parsed);
     rebuildPresetDropdown();
     setCurrentRecipe(state.currentIndex);
   } else {
@@ -1932,7 +2037,7 @@ function init() {
   });
   document.getElementById('reset-recipe').addEventListener('click', () => {
     if (!confirm('Reset all recipes to defaults? Unsaved edits will be lost.')) return;
-    state.recipes = JSON.parse(JSON.stringify(DEFAULT_PRESETS));
+    state.recipes = JSON.parse(JSON.stringify(DEFAULT_PRESETS)).map(_normalizeRecipe);
     state.currentIndex = 0;
     rebuildPresetDropdown();
     setCurrentRecipe(0);

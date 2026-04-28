@@ -1086,9 +1086,12 @@ canvas { display: block; }
 </div>
 
 <div id="ship-select">
-  <div id="ship-select-header">
-    <h1>LAST SHIP SAILING</h1>
-    <h2>CHOOSE YOUR SHIP</h2>
+  <div id="ship-select-header" style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+    <div>
+      <h1>LAST SHIP SAILING</h1>
+      <h2>CHOOSE YOUR SHIP</h2>
+    </div>
+    <button id="lobby-settings-btn" title="Open settings (Esc)" style="background:#2a3040;color:#ddd;border:1px solid #557;padding:8px 16px;cursor:pointer;border-radius:3px;font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;">SETTINGS</button>
   </div>
   <div id="ship-select-body">
     <div id="ship-list"></div>
@@ -1436,6 +1439,26 @@ const input = {
     moveDown: 11,  // R3 (right stick click)
     scoreboard: 8, // Back
     menu: 9,       // Start
+  },
+  // (v6.9) Keyboard mappings. Values are KeyboardEvent.key values normalized
+  // to lowercase (' ' for Space, 'control' for Ctrl, etc.). Empty string =
+  // unbound (no key triggers this action). Defaults match the keys this game
+  // shipped with (W/A/S/D/Space/Ctrl/Shift/R/Q/E/F/V/Tab/Esc).
+  kbBindings: {
+    forward:    'w',
+    back:       's',
+    left:       'a',
+    right:      'd',
+    up:         ' ',
+    down:       'control',
+    dash:       'shift',
+    reload:     'r',
+    ability0:   'q',
+    ability1:   'e',
+    ability2:   'f',
+    core:       'v',
+    scoreboard: 'tab',
+    menu:       'escape',
   },
 };
 
@@ -12247,14 +12270,17 @@ function updatePlayerMovement(dt) {
   const right = _mvRight.set(1, 0, 0).applyQuaternion(camera.quaternion);
   const up = _mvUp;
 
-  // Movement input (keyboard)
+  // Movement input (keyboard). Reads from input.kbBindings so the user can
+  // rebind via Settings -> Keyboard - Mapping. Arrow keys remain hardcoded
+  // alternates (always available) so a user who unbinds a movement key
+  // doesn't lose the ability to fly.
   const moveDir = _mvMoveDir.set(0, 0, 0);
-  if (input.keys['w'] || input.keys['arrowup']) moveDir.addScaledVector(forward, ch.flightSpeed);
-  if (input.keys['s'] || input.keys['arrowdown']) moveDir.addScaledVector(forward, -ch.flightSpeed * 0.6);
-  if (input.keys['a'] || input.keys['arrowleft']) moveDir.addScaledVector(right, -ch.strafeSpeed);
-  if (input.keys['d'] || input.keys['arrowright']) moveDir.addScaledVector(right, ch.strafeSpeed);
-  if (input.keys[' ']) moveDir.addScaledVector(up, ch.verticalSpeed);
-  if (input.keys['control']) moveDir.addScaledVector(up, -ch.verticalSpeed);
+  if (_kbActionHeld('forward') || input.keys['arrowup'])    moveDir.addScaledVector(forward, ch.flightSpeed);
+  if (_kbActionHeld('back')    || input.keys['arrowdown'])  moveDir.addScaledVector(forward, -ch.flightSpeed * 0.6);
+  if (_kbActionHeld('left')    || input.keys['arrowleft'])  moveDir.addScaledVector(right, -ch.strafeSpeed);
+  if (_kbActionHeld('right')   || input.keys['arrowright']) moveDir.addScaledVector(right, ch.strafeSpeed);
+  if (_kbActionHeld('up'))                                  moveDir.addScaledVector(up, ch.verticalSpeed);
+  if (_kbActionHeld('down'))                                moveDir.addScaledVector(up, -ch.verticalSpeed);
 
   // Gamepad movement (uses configured curve and sensitivity)
   if (input.gpConnected) {
@@ -12498,8 +12524,8 @@ function updateWeapon(dt) {
     }
   }
 
-  // Manual reload
-  const reloadPressed = input.keys['r'] || (input.gpReload && !input.gpReloadPrev);
+  // Manual reload (v6.9: kb-bindable, default 'r')
+  const reloadPressed = _kbActionHeld('reload') || (input.gpReload && !input.gpReloadPrev);
   if (reloadPressed && player.clipAmmo < player.maxClip && !player.reloading && w.clipSize < 999) {
     startReload();
   }
@@ -17481,29 +17507,92 @@ function launchCountdown() {
 
 // ---- INPUT HANDLERS ----
 
+// (v6.9) Capture mode for keyboard rebinding. When the settings panel
+// arms a row, the next non-Escape keypress is consumed by captureKbKey
+// and assigned to that action ; Escape cancels. Returns true when the
+// key was consumed so the caller can suppress its normal handling.
+let _kbRebindAction = null;
+function _formatKey(k) {
+  if (k == null || k === '') return '(unbound)';
+  const map = {
+    ' ': 'Space', 'control': 'Ctrl', 'shift': 'Shift', 'alt': 'Alt',
+    'meta': 'Meta', 'tab': 'Tab', 'escape': 'Esc', 'enter': 'Enter',
+    'backspace': 'Backspace', 'capslock': 'Caps',
+    'arrowup': '↑', 'arrowdown': '↓', 'arrowleft': '←', 'arrowright': '→',
+  };
+  if (map[k]) return map[k];
+  if (k.length === 1) return k.toUpperCase();
+  return k;
+}
+function _captureKbKey(e) {
+  if (!_kbRebindAction) return false;
+  if (e.key === 'Escape') {
+    _kbRebindAction = null;
+    if (typeof _refreshKbBindRows === 'function') _refreshKbBindRows();
+    return true;
+  }
+  // Disallow F-keys and a couple of browser shortcuts so users can't lock
+  // themselves out of devtools / refresh.
+  const key = e.key.toLowerCase();
+  if (/^f\d{1,2}$/.test(key)) return true; // swallow but don't bind
+  input.kbBindings[_kbRebindAction] = key;
+  _kbRebindAction = null;
+  saveSettings();
+  if (typeof _refreshKbBindRows === 'function') _refreshKbBindRows();
+  return true;
+}
+// True if the action's bound key is currently held.
+function _kbActionHeld(action) {
+  const k = input.kbBindings && input.kbBindings[action];
+  if (!k) return false;
+  return !!input.keys[k];
+}
+
 document.addEventListener('keydown', e => {
+  // Settings open: Esc closes ; any other key may be a rebind capture.
   if (settingsOpen) {
+    if (_captureKbKey(e)) { e.preventDefault(); return; }
     if (e.key === 'Escape') closeSettings();
     return;
   }
 
   input.keys[e.key.toLowerCase()] = true;
   if (e.repeat) return; // prevent key repeat from double-firing abilities
-  if (e.key.toLowerCase() === 'q') activateAbility(0);
-  if (e.key.toLowerCase() === 'e') activateAbility(1);
-  if (e.key.toLowerCase() === 'f') activateAbility(2);
-  if (e.key.toLowerCase() === 'v') activateCore();
-  if (e.key === 'Shift') dash();
+  const k = e.key.toLowerCase();
+  const kb = input.kbBindings;
+  if (kb) {
+    if (k === kb.ability0) activateAbility(0);
+    if (k === kb.ability1) activateAbility(1);
+    if (k === kb.ability2) activateAbility(2);
+    if (k === kb.core) activateCore();
+    if (k === kb.dash) dash();
+  }
   // Wall pattern cycle (P): rotates through all 9 lab patterns.
-  // Persists to localStorage and shows a brief on-screen toast.
-  if (e.key.toLowerCase() === 'p') {
+  // Persists to localStorage and shows a brief on-screen toast. Not user-
+  // rebindable on purpose ; this is a debug / discovery shortcut.
+  if (k === 'p') {
     setWallPattern((game.wallPattern | 0) + 1);
   }
-  if (e.key === 'Escape' && game.state !== 'select') {
-    openSettings();
+  // (v6.9) Escape opens settings from any state, including 'select'
+  // (lobby / ship-select). Settings is the universal pause/options panel ;
+  // gating it on game.state forced lobby users to enter a match before they
+  // could rebind keys or change volume.
+  if (e.key === 'Escape') {
     buildSettingsPage();
+    openSettings();
   }
   if (e.key === 'Tab') e.preventDefault();
+});
+
+// (v6.9) Lobby Settings button: same behavior as Esc when ship-select
+// is the visible screen. Bound once at load ; the button is in the
+// ship-select header HTML at the top of <body>.
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('lobby-settings-btn');
+  if (btn) btn.addEventListener('click', () => {
+    buildSettingsPage();
+    openSettings();
+  });
 });
 
 document.addEventListener('keyup', e => { input.keys[e.key.toLowerCase()] = false; });
@@ -17561,6 +17650,34 @@ const ACTION_LABELS = {
   reload: 'Reload', ability0: 'Ability 1 (Offensive)', ability1: 'Ability 2 (Defensive)',
   ability2: 'Ability 3 (Utility)', core: 'Core Ability',
   moveUp: 'Move Up', moveDown: 'Move Down', scoreboard: 'Scoreboard', menu: 'Menu',
+};
+
+// (v6.9) Keyboard action labels. Subset of gamepad labels because mouse owns
+// fire/altFire on keyboard ; the rest are 1:1 with gp actions plus WASD-style
+// movement keys that don't have direct gamepad equivalents (sticks handle
+// continuous motion on a controller).
+const KB_ACTION_LABELS = {
+  forward:    'Move Forward',
+  back:       'Move Back',
+  left:       'Strafe Left',
+  right:      'Strafe Right',
+  up:         'Move Up',
+  down:       'Move Down',
+  dash:       'Dash',
+  reload:     'Reload',
+  ability0:   'Ability 1 (Offensive)',
+  ability1:   'Ability 2 (Defensive)',
+  ability2:   'Ability 3 (Utility)',
+  core:       'Core Ability',
+  scoreboard: 'Scoreboard (hold)',
+  menu:       'Menu / Settings',
+};
+const KB_DEFAULTS = {
+  forward: 'w', back: 's', left: 'a', right: 'd',
+  up: ' ', down: 'control',
+  dash: 'shift', reload: 'r',
+  ability0: 'q', ability1: 'e', ability2: 'f', core: 'v',
+  scoreboard: 'tab', menu: 'escape',
 };
 
 let settingsOpen = false;
@@ -17633,6 +17750,17 @@ function buildSettingsPage() {
     <div class="settings-section">
       <h3>Gamepad - Button Mapping</h3>
       <div id="bind-rows"></div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Keyboard - Mapping</h3>
+      <div id="kb-bind-rows"></div>
+      <div class="setting-row" style="opacity:0.7; font-size:0.85em; margin-top:6px;">
+        <label style="flex:1;">Click Rebind on a row, then press the key you want bound. Esc cancels mid-rebind. Arrow keys are always available as movement fallbacks regardless of binding.</label>
+      </div>
+      <div class="setting-row" style="margin-top:4px;">
+        <button id="kb-reset-defaults">Reset Keyboard Defaults</button>
+      </div>
     </div>
 
     <h2>GRAPHICS</h2>
@@ -17723,6 +17851,64 @@ function buildSettingsPage() {
       <select class="bind-select" data-action="${action}">${optionsHtml}</select>
     `;
     bindContainer.appendChild(row);
+  }
+
+  // (v6.9) Build keyboard bind rows. Each row: action label, current key,
+  // Rebind button. Click Rebind to arm the row ; the next keypress while
+  // settings is open is captured by _captureKbKey and assigned. _refreshKbBindRows
+  // re-renders only the current-key text and button label so a rebind in
+  // progress doesn't blow away other rows. Stored on overlay so the helper
+  // function below can find them after the panel is rebuilt.
+  const kbBindContainer = overlay.querySelector('#kb-bind-rows');
+  function buildKbRow(action, label) {
+    const row = document.createElement('div');
+    row.className = 'setting-row';
+    row.dataset.kbAction = action;
+    const cur = (input.kbBindings && input.kbBindings[action]) || '';
+    row.innerHTML = `
+      <label>${label}</label>
+      <span class="kb-current" style="flex:1;color:#9af;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;">${_formatKey(cur)}</span>
+      <button class="kb-rebind" data-action="${action}" style="min-width:80px;">Rebind</button>
+    `;
+    return row;
+  }
+  for (const [action, label] of Object.entries(KB_ACTION_LABELS)) {
+    kbBindContainer.appendChild(buildKbRow(action, label));
+  }
+  kbBindContainer.addEventListener('click', e => {
+    const btn = e.target.closest('.kb-rebind');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    _kbRebindAction = action;
+    _refreshKbBindRows();
+  });
+  // Refresh function lives on window so the keydown capture can call it
+  // after assigning. Rewrites the display + button text for every row.
+  window._refreshKbBindRows = function() {
+    if (!kbBindContainer || !kbBindContainer.parentNode) return;
+    for (const row of kbBindContainer.querySelectorAll('[data-kb-action]')) {
+      const action = row.dataset.kbAction;
+      const cur = (input.kbBindings && input.kbBindings[action]) || '';
+      const span = row.querySelector('.kb-current');
+      const btn = row.querySelector('.kb-rebind');
+      if (_kbRebindAction === action) {
+        if (span) { span.textContent = 'press a key...'; span.style.color = '#ffaa00'; }
+        if (btn) btn.textContent = 'Cancel';
+      } else {
+        if (span) { span.textContent = _formatKey(cur); span.style.color = '#9af'; }
+        if (btn) btn.textContent = 'Rebind';
+      }
+    }
+  };
+  // Reset Keyboard Defaults button: restores KB_DEFAULTS, persists, redraws.
+  const kbResetBtn = overlay.querySelector('#kb-reset-defaults');
+  if (kbResetBtn) {
+    kbResetBtn.addEventListener('click', () => {
+      input.kbBindings = Object.assign({}, KB_DEFAULTS);
+      _kbRebindAction = null;
+      saveSettings();
+      _refreshKbBindRows();
+    });
   }
 
   // Wire up slider events
@@ -17905,6 +18091,9 @@ function closeSettings() {
   overlay.classList.remove('open');
   overlay.style.display = 'none';
   _settingsClearFocus();
+  // (v6.9) Cancel any half-finished keyboard rebind so re-opening settings
+  // doesn't drop the user back into capture mode.
+  _kbRebindAction = null;
   if (game.state !== 'select') renderer.domElement.requestPointerLock();
 }
 
@@ -18215,6 +18404,7 @@ function saveSettings() {
       swapSticks: input.swapSticks,
       triggerThreshold: input.triggerThreshold,
       gpBindings: input.gpBindings,
+      kbBindings: input.kbBindings,
       audioMaster: audio.userVol.master,
       audioSfx: audio.userVol.sfx,
       audioAmbient: audio.userVol.ambient,
@@ -18241,6 +18431,7 @@ function loadSettings() {
     if (data.swapSticks !== undefined) input.swapSticks = data.swapSticks;
     if (data.triggerThreshold !== undefined) input.triggerThreshold = data.triggerThreshold;
     if (data.gpBindings) Object.assign(input.gpBindings, data.gpBindings);
+    if (data.kbBindings) Object.assign(input.kbBindings, data.kbBindings);
     // Audio volumes (applied later when initAudio creates the gain nodes)
     if (data.audioMaster !== undefined) audio.userVol.master = data.audioMaster;
     if (data.audioSfx !== undefined) audio.userVol.sfx = data.audioSfx;
@@ -22000,15 +22191,20 @@ function _scoreboardTabShouldIntercept() {
   if (sel && sel.classList.contains('active')) return false;
   return true;
 }
+// (v6.9) Scoreboard hold-key reads from kbBindings.scoreboard so users can
+// rebind from Tab. preventDefault still applies (we don't want browser tab
+// navigation while in match) and the intercept gate keeps it out of menus.
 document.addEventListener('keydown', e => {
-  if (e.key === 'Tab' && _scoreboardTabShouldIntercept()) {
+  const sbKey = (input.kbBindings && input.kbBindings.scoreboard) || 'tab';
+  if (e.key.toLowerCase() === sbKey && _scoreboardTabShouldIntercept()) {
     e.preventDefault();
     _scoreboardKeyHeld = true;
     _refreshScoreboardVisibility();
   }
 });
 document.addEventListener('keyup', e => {
-  if (e.key === 'Tab') {
+  const sbKey = (input.kbBindings && input.kbBindings.scoreboard) || 'tab';
+  if (e.key.toLowerCase() === sbKey) {
     _scoreboardKeyHeld = false;
     _refreshScoreboardVisibility();
   }
