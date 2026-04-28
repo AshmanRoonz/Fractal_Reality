@@ -1204,7 +1204,7 @@ const LOADOUTS = {
     name: 'VORTEX', className: 'Corvette MkII', chassis: 'CORVETTE',
     weapon: { name: 'Splitter Rifle', mode: 'hitscan', damage: 380, fireRate: 0.25, clipSize: 30, range: 3000, splash: 0, projSpeed: 0, pellets: 1, spinup: 0 },
     abilities: [
-      { name: 'Laser Shot', cooldown: 10, duration: 0.5, desc: 'Massive beam: 2400 damage', type: 'offensive', dmg: 2400 },
+      { name: 'Laser Shot', cooldown: 5, duration: 0.5, desc: 'Massive beam: 2400 damage', type: 'offensive', dmg: 2400 },
       { name: 'Vortex Shield', cooldown: 0, duration: 999, desc: 'Hold to absorb and return projectiles', type: 'defensive' },
       { name: 'Trip Wire', cooldown: 12, duration: 12, desc: 'Proximity mines on contact', type: 'utility' },
     ],
@@ -1228,7 +1228,7 @@ const LOADOUTS = {
       { name: 'Afterburner', cooldown: 10, duration: 3, desc: 'Speed boost to 600', type: 'defensive' },
       { name: 'Tether Trap', cooldown: 12, duration: 4, desc: 'Slow and root enemies', type: 'utility' },
     ],
-    core: { name: 'Afterburner Core', desc: 'Speed boost + rocket barrage', duration: 5, damage: 7000, cooldown: 60 },
+    core: { name: 'Barrage Core', desc: 'Speed boost + rocket barrage', duration: 5, damage: 7000, cooldown: 60 },
   },
   SLAYER: {
     name: 'SLAYER', className: 'Frigate Blade', chassis: 'FRIGATE',
@@ -2321,9 +2321,11 @@ class NetworkPlayer {
 
     // ---- PYRO: Thermal Shield (orange disc + ring; same shape as Vortex but firey) ----
     if (this.loadoutKey === 'PYRO' && active) {
+      // (v6.9) Match the buffed player cone: 2.6 hullLen reach, base 0.75,
+      // tip 1.70. Bots' shield visual stays in step with their damage volume.
       const hLen = (this.chassis && this.chassis.hullLength) ? this.chassis.hullLength : 140;
-      const coneReach = hLen * 1.85;
-      const midR = (hLen * 0.50 + hLen * 1.20) * 0.5;
+      const coneReach = hLen * 2.6;
+      const midR = (hLen * 0.75 + hLen * 1.70) * 0.5;
       if (!this._thermalShieldMesh) {
         // (v6.7) Thin cylinder instead of flat circle so the disc has visible
         // thickness from every angle. rotateX(PI/2) flips the cylinder axis
@@ -4318,10 +4320,16 @@ function _makeRibbonFlowMaterial(baseColor) {
 // (v6.7) Incendiary Gas spawn helper. Same broadcast=true/false pattern as
 // Trip Wire / Particle Wall.
 function spawnIncendiaryGas(pos, owner, team, ownerPeerId, netId, broadcast) {
+  // (v6.9) Gas timing: 10 s unignited (down from 15 s) so untouched clouds
+  // dissolve faster ; 10 s ignited burn duration after lighting (unchanged
+  // there). Ignite DPS bumped from 450 to 1500 ; the area-denial ability
+  // was doing trivial chip damage and reading as bugged. With 1500 DPS a
+  // ship caught in a burning cloud loses ~6000 hp/4s, which is meaningful
+  // pressure without instant-killing.
   game.worldEffects.push({
     type: 'incendiary_gas', position: pos.clone(),
-    timer: 15, radius: 350, owner, team,
-    ignited: false, igniteDmgPerSec: 450, igniteTimer: 0, igniteDuration: 10, slowFactor: 0.5,
+    timer: 10, radius: 350, owner, team,
+    ignited: false, igniteDmgPerSec: 1500, igniteTimer: 0, igniteDuration: 10, slowFactor: 0.5,
     fxTimer: 0,
     ownerPeerId, netId,
   });
@@ -7213,6 +7221,11 @@ class Bot {
     this.velocity = new THREE.Vector3();
     this.targetDir = new THREE.Vector3(0, 0, -1);
     this.fireTimer = 0;
+    // (v6.9) Bot ability cooldowns. Stagger initial values per slot so a
+    // wave of just-spawned bots doesn't release every ability on the same
+    // frame. Indexing matches the player (0 = offensive, 1 = defensive,
+    // 2 = utility) ; the offensive use AI lives in update().
+    this.abilityCooldowns = [3 + Math.random() * 4, 0, 5 + Math.random() * 6];
     this.shieldRegenDelay = 0;
     this.spawnProtection = LSS.SPAWN_PROTECTION;
     this.doomed = false;
@@ -7438,7 +7451,160 @@ class Bot {
       }
     }
 
+    // (v6.9) Bot ability use. Tick cooldowns and (when not retreating, in
+    // playing state, with player visible) attempt the offensive ability.
+    // Utility traps (Trip Wire, Incendiary Trap) drop opportunistically
+    // when the player is within range and bot is healthy.
+    this.abilityCooldowns[0] = Math.max(0, this.abilityCooldowns[0] - dt);
+    this.abilityCooldowns[2] = Math.max(0, this.abilityCooldowns[2] - dt);
+    if (game.state === 'playing' && !this.aiRetreating && player.shipState !== 'dead' && player.team !== this.team) {
+      this.tryUseAbilities();
+    }
+
     this.coreMeter = Math.min(100, this.coreMeter + dt * 1.5);
+  }
+
+  // (v6.9) Try to fire any ready offensive / utility ability. Each branch
+  // implements a simplified version of the player's executeAbility for that
+  // loadout: aim toward the player, spawn the same projectile/effect with
+  // owner = 'bot' so playerTakeDamage / Particle Wall etc. accept it. Bots
+  // skip defensive shields for now (added complexity for marginal AI gain).
+  tryUseAbilities() {
+    const off = this.loadout.abilities[0];
+    const util = this.loadout.abilities[2];
+    if (off && this.abilityCooldowns[0] <= 0) {
+      this._tryUseOffensive(off);
+    }
+    if (util && this.abilityCooldowns[2] <= 0) {
+      this._tryUseUtility(util);
+    }
+  }
+
+  _tryUseOffensive(ability) {
+    if (player.shipState === 'dead') return;
+    const toPlayer = this._tempVec3a.subVectors(player.position, this.position);
+    const dist = toPlayer.length();
+    // Range gate: most offensive abilities want the player within 2400 u and
+    // visible. Out-of-range just skips ; we keep the cooldown ticking from 0.
+    if (dist > 2400) return;
+    const dir = toPlayer.clone().normalize();
+    const losDist = raycastLevel(this.position, dir, dist + 10);
+    if (losDist < dist - 5) return; // wall in the way
+    const aim = dir; // already normalized
+    let used = true;
+    if (ability.name === 'Laser Shot') {
+      // Hitscan beam. Same color stack as the player's Laser Shot and
+      // damage scaled to the ability's listed dmg, with bot accuracy
+      // multiplier so shots aren't pinpoint at long range.
+      const range = 2500;
+      const beamEnd = this.position.clone().add(aim.clone().multiplyScalar(Math.min(range, losDist)));
+      spawnTracer(this.position, beamEnd, 0xff2200, 1.6);
+      spawnTracer(this.position, beamEnd, 0xffaa44, 1.4);
+      // Hit if target is roughly along the beam axis.
+      const along = toPlayer.dot(aim);
+      if (along > 0 && along < range) {
+        const closest = this.position.clone().add(aim.clone().multiplyScalar(along));
+        if (closest.distanceTo(player.position) < player.chassis.hullLength * 1.0) {
+          playerTakeDamage(2400 * 0.6, this, null);
+        }
+      }
+    } else if (ability.name === 'Cluster Missile') {
+      const vel = aim.clone().multiplyScalar(900);
+      const proj = new Projectile(this.position.clone(), vel, 800, 200, 'bot', 0xff8800);
+      proj.cluster = true;
+      proj.sizeMult = 2.4;
+      game.projectiles.push(proj);
+    } else if (ability.name === 'Arc Wave') {
+      const vel = aim.clone().multiplyScalar(800);
+      const proj = new Projectile(this.position.clone(), vel, 1200, 150, 'bot', 0x44aaff);
+      proj.isArcWave = true;
+      game.projectiles.push(proj);
+    } else if (ability.name === 'Power Shot') {
+      const vel = aim.clone().multiplyScalar(1200);
+      const proj = new Projectile(this.position.clone(), vel, 1900, 100, 'bot', 0xffaa00);
+      proj.sizeMult = 1.8;
+      game.projectiles.push(proj);
+    } else if (ability.name === 'Tracker Rockets') {
+      // Three rockets in a tight cone toward the player.
+      for (let i = 0; i < 3; i++) {
+        const spread = new THREE.Vector3((Math.random()-0.5)*0.10, (Math.random()-0.5)*0.10, 0);
+        const rDir = aim.clone().add(spread).normalize();
+        const vel = rDir.multiplyScalar(700);
+        const proj = new Projectile(this.position.clone(), vel, 1100, 100, 'bot', 0xffcc00);
+        game.projectiles.push(proj);
+      }
+    } else if (ability.name === 'Energy Siphon') {
+      // Beam that pulls + damages. Skip implementation complexity ; bots
+      // just fire a high-damage hitscan to mimic the gameplay impact.
+      const range = 1500;
+      const beamEnd = this.position.clone().add(aim.clone().multiplyScalar(Math.min(range, losDist)));
+      spawnTracer(this.position, beamEnd, 0x66ddff, 1.4);
+      const along = toPlayer.dot(aim);
+      if (along > 0 && along < range) {
+        const closest = this.position.clone().add(aim.clone().multiplyScalar(along));
+        if (closest.distanceTo(player.position) < player.chassis.hullLength * 1.0) {
+          playerTakeDamage(900 * 0.6, this, null);
+        }
+      }
+    } else if (ability.name === 'Firewall') {
+      // Plant a forward firewall in the bot's facing direction. Same world
+      // effect as the player path so it shares damage / sound / cleanup.
+      const wallStart = this.position.clone().add(aim.clone().multiplyScalar(80));
+      const myEffId = ++net.effectIdCounter;
+      if (typeof spawnFirewallVisual === 'function') {
+        spawnFirewallVisual(wallStart, aim.clone(), 800, this.team, null, myEffId);
+      }
+      game.worldEffects.push({
+        type: 'firewall', position: wallStart, direction: aim.clone(),
+        length: 800, timer: 5, dmgPerSec: 400, owner: 'bot', team: this.team,
+        fxTimer: 0, meshes: [], netId: myEffId,
+      });
+    } else {
+      used = false;
+    }
+    if (used) {
+      // 1.5x to 2x the listed cooldown so bots don't spam abilities perfectly.
+      this.abilityCooldowns[0] = ability.cooldown * (1.4 + Math.random() * 0.6);
+    }
+  }
+
+  _tryUseUtility(ability) {
+    // Drop traps when the player is in range and roughly in front of us.
+    if (player.shipState === 'dead') return;
+    const toPlayer = this._tempVec3a.subVectors(player.position, this.position);
+    const dist = toPlayer.length();
+    if (dist > 1400) return;
+    const aim = toPlayer.clone().normalize();
+    let used = true;
+    if (ability.name === 'Incendiary Trap') {
+      const dropPos = this.position.clone().add(aim.clone().multiplyScalar(160));
+      if (typeof spawnIncendiaryGas === 'function') {
+        spawnIncendiaryGas(dropPos, 'bot', this.team, null, ++net.effectIdCounter, false);
+      }
+    } else if (ability.name === 'Trip Wire') {
+      // Three trip-wire orbs in a forward line ; matches the player drop.
+      const dropAhead = this.position.clone().add(aim.clone().multiplyScalar(220));
+      for (let i = 0; i < 3; i++) {
+        const offset = aim.clone().multiplyScalar(i * 110);
+        const orb = dropAhead.clone().add(offset);
+        game.worldEffects.push({
+          type: 'tripwire', position: orb, radius: 200,
+          timer: 12, owner: 'bot', team: this.team,
+          triggered: false, dmg: 600, slowFactor: 0.4, slowTimer: 1.5,
+          arcTimer: 0, mesh: null,
+        });
+      }
+    } else if (ability.name === 'Particle Wall') {
+      const wallPos = this.position.clone().add(aim.clone().multiplyScalar(140));
+      if (typeof spawnParticleWall === 'function') {
+        spawnParticleWall(wallPos, aim.clone(), 'bot', this.team, null, ++net.effectIdCounter, false);
+      }
+    } else {
+      used = false;
+    }
+    if (used) {
+      this.abilityCooldowns[2] = ability.cooldown * (1.4 + Math.random() * 0.6);
+    }
   }
 
   findTarget() {
@@ -8471,6 +8637,9 @@ function igniteNearbyGas(pos, radius) {
       // gas cloud is still alive without uniforms.
       eff.ignited = true;
       eff.igniteTimer = eff.igniteDuration;
+      // (v6.9) Lock the outer lifetime to igniteDuration so the burn lasts
+      // the full 10 s no matter how late the gas was lit.
+      eff.timer = Math.max(eff.timer, eff.igniteDuration);
       if (eff.mesh && eff.mesh.material) {
         if (eff.mesh.material.uniforms && eff.mesh.material.uniforms.uColor) {
           eff.mesh.material.uniforms.uColor.value.setHex(0xff5520);
@@ -13707,8 +13876,8 @@ function activateCore() {
       }
     }
   }
-  // PUNCTURE: Afterburner Core (speed boost + rocket barrage over 5s)
-  else if (coreName === 'Afterburner Core') {
+  // PUNCTURE: Barrage Core (speed boost + rocket barrage over 5s)
+  else if (coreName === 'Barrage Core') {
     // Speed boost is handled in updateAbilities; initial rocket volley
     player.velocity.add(forward.clone().multiplyScalar(600));
   }
@@ -14173,10 +14342,15 @@ function updateShieldVisuals(dt) {
 
   if (gunShieldActive) {
     if (!player.gunShieldMesh) {
-      // Octagonal shield geometry
+      // (v6.9) Octagonal hologram shield. Same hex-hologram shader as
+      // Tracker's Particle Wall so the two read as the same visual
+      // language ; only difference is this one tracks the player every
+      // frame instead of staying parked in space. ExtrudeGeometry over
+      // an 8-sided shape gives a thin octagonal prism with real depth
+      // from any angle (matching Particle Wall's BoxGeometry approach).
       const shape = new THREE.Shape();
       const sides = 8;
-      const shieldR = 100;
+      const shieldR = 110;
       for (let i = 0; i <= sides; i++) {
         const angle = (i / sides) * Math.PI * 2 - Math.PI / 2;
         const x = Math.cos(angle) * shieldR;
@@ -14184,45 +14358,46 @@ function updateShieldVisuals(dt) {
         if (i === 0) shape.moveTo(x, y);
         else shape.lineTo(x, y);
       }
-      // (v6.7) ExtrudeGeometry instead of ShapeGeometry: octagonal prism with
-      // 12-unit depth so the shield has visible volume from any angle. The
-      // EdgesGeometry below now traces the full prism (top, bottom, vertical
-      // edges) which reads great in additive blend. Hologram scanline map so
-      // the shield reads as a projected hologram in the same visual language
-      // as Tracker's particle wall.
-      const geo = new THREE.ExtrudeGeometry(shape, { depth: 12, bevelEnabled: false });
-      geo.translate(0, 0, -6);
-      const mat = new THREE.MeshBasicMaterial({
-        color: 0xff8a55, transparent: true, opacity: 0.70,
-        side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
-        depthWrite: false,
-        map: getScanlineTexture(),
-      });
+      const geo = new THREE.ExtrudeGeometry(shape, { depth: 14, bevelEnabled: false });
+      geo.translate(0, 0, -7);
+      const mat = _makeHexHologramMaterial(0xff8a55);
+      mat.transparent = true;
+      mat.depthWrite = false;
+      mat.side = THREE.DoubleSide;
+      mat.blending = THREE.AdditiveBlending;
       player.gunShieldMesh = new THREE.Mesh(geo, mat);
-      player.gunShieldMesh.renderOrder = 1; // composite over wall
+      player.gunShieldMesh.renderOrder = 1;
       scene.add(player.gunShieldMesh);
-      // Edge wireframe — bright outline so the shield's silhouette is
-      // unambiguous even in busy combat backgrounds.
+      // Edge wireframe so the octagon outline reads cleanly against the
+      // hologram scan field, same as Particle Wall.
       const edgeGeo = new THREE.EdgesGeometry(geo);
-      const edgeMat = new THREE.LineBasicMaterial({ color: 0xffcc88, transparent: true, opacity: 0.95 });
+      const edgeMat = new THREE.LineBasicMaterial({ color: 0xffcc88, transparent: true, opacity: 0.85 });
       player.gunShieldEdge = new THREE.LineSegments(edgeGeo, edgeMat);
       player.gunShieldEdge.renderOrder = 1;
       scene.add(player.gunShieldEdge);
     }
-    // Position close to player guns (slightly forward and down).
+    // (v6.9) Track player every frame: position 60 u in front, oriented to
+    // match the look direction. The mesh visibility is on so the octagon
+    // reads as a held shield ; arc emitter still runs underneath for the
+    // electrical accent at the perimeter.
     const shieldPos = _shieldPos.copy(player.position).addScaledVector(forward, 60);
     player.gunShieldMesh.position.copy(shieldPos);
     player.gunShieldMesh.lookAt(_shieldLook.copy(shieldPos).add(forward));
-    // (v6.7) Shield mesh + edge wireframe are now invisible — same approach
-    // as Vortex/Pyro shields. The shield is rendered entirely as a ring of
-    // octagonal lightning arcs via _emitGunShieldArcs.
-    player.gunShieldMesh.visible = false;
+    player.gunShieldMesh.visible = true;
     if (player.gunShieldEdge) {
       player.gunShieldEdge.position.copy(shieldPos);
       player.gunShieldEdge.lookAt(_shieldLook.copy(shieldPos).add(forward));
-      player.gunShieldEdge.visible = false;
+      player.gunShieldEdge.visible = true;
     }
     const hpPct = player.gunShieldHP / player.gunShieldMaxHP;
+    // Drive shader uniforms so the hologram dims/cracks as the shield
+    // takes damage. Same uniform contract as Particle Wall.
+    if (player.gunShieldMesh.material && player.gunShieldMesh.material.uniforms) {
+      player.gunShieldMesh.material.uniforms.time.value = game.time;
+      if (player.gunShieldMesh.material.uniforms.uHp) {
+        player.gunShieldMesh.material.uniforms.uHp.value = hpPct;
+      }
+    }
     if (typeof _emitGunShieldArcs === 'function') {
       _emitGunShieldArcs(shieldPos, 100, forward, dt, hpPct);
     }
@@ -14253,14 +14428,13 @@ function updateShieldVisuals(dt) {
     player.thermalShieldHP > 0;
 
   if (thermalActive) {
-    // Size the visual to the actual cone (reach ≈ hullLength * 1.85, tip
-    // radius ≈ hullLength * 1.20). Disc sits at the cone's mid-point and is
-    // scaled to the mid-cone radius so the visual footprint lines up with
-    // where damage actually lands.
+    // (v6.9) Visual matches the buffed cone (reach 2.6 hullLen, tip 1.7
+    // hullLen, base 0.75 hullLen). Disc sits at cone mid-point and scales
+    // to mid-cone radius so the visual footprint lines up with damage.
     const hLen = (player.chassis && player.chassis.hullLength) ? player.chassis.hullLength : 140;
-    const coneReach = hLen * 1.85;
-    const coneBaseR = hLen * 0.50;
-    const coneTipR  = hLen * 1.20;
+    const coneReach = hLen * 2.6;
+    const coneBaseR = hLen * 0.75;
+    const coneTipR  = hLen * 1.70;
     const midR = (coneBaseR + coneTipR) * 0.5;
     if (!player.thermalShieldMesh) {
       // (v6.7) Cylinder unit-disc + torus unit-ring; both 3D so the shield
@@ -14449,15 +14623,16 @@ function updateAbilities(dt) {
         player.abilityTimers[i] = 0;
         // No fixed cooldown; the 10s recharge IS the cooldown.
       }
-      // Forward burn cone: the shield projects heat well past the hull. Reach
-      // and width were bumped after playtesting; the cone now stretches almost
-      // two ship lengths (~250u for Dreadnought) and flares wider at the tip
-      // so enemies a touch off-axis still take damage.
+      // (v6.9) Big buff pass: range and DPS both go up. Reach is ~2.6 hull
+      // lengths (Dreadnought hits ~360u in front), tip flares to 1.7x hull
+      // length, and DPS jumps from 2500 to 4000 so enemies caught in the
+      // cone aren't taking trivial chip damage. Pyro is a melee bruiser ;
+      // this is now the bruiser threat.
       const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
-      const reach = player.chassis.hullLength * 1.85;
-      const baseRadius = player.chassis.hullLength * 0.50; // wider face
-      const tipRadius  = player.chassis.hullLength * 1.20; // much wider tip
-      const maxDPS = 2500; // unchanged DPS; bigger volume already buffs uptime damage
+      const reach = player.chassis.hullLength * 2.6;
+      const baseRadius = player.chassis.hullLength * 0.75; // wider face
+      const tipRadius  = player.chassis.hullLength * 1.70; // much wider tip
+      const maxDPS = 4000;
       for (const bot of game.entities) {
         if (!bot.alive || bot.team === player.team) continue;
         const toBot = new THREE.Vector3().subVectors(bot.position, player.position);
@@ -14627,8 +14802,8 @@ function updateAbilities(dt) {
         }
       }
     }
-    // PUNCTURE Afterburner Core: speed boost + rockets every 0.5s
-    else if (coreName === 'Afterburner Core') {
+    // PUNCTURE Barrage Core: speed boost + rockets every 0.5s
+    else if (coreName === 'Barrage Core') {
       // Speed boost
       const curSpeed = player.velocity.length();
       if (curSpeed < player.chassis.flightSpeed * 2) {
@@ -14945,6 +15120,10 @@ function updateAbilities(dt) {
               if (perp.length() < eff.radius + 150) {
                 eff.ignited = true;
                 eff.igniteTimer = eff.igniteDuration;
+                // (v6.9) Reset the cloud's outer lifetime to the ignite
+                // duration so the burn always lasts the full 10 s
+                // regardless of how late in the cloud's life it lit.
+                eff.timer = Math.max(eff.timer, eff.igniteDuration);
                 spawnExplosion(eff.position, 30);
                 // Ignited cloud is a serious hazard ; the outer Plasma-FBM
                 // shader gets a fire-color uniform + brighter base alpha so
@@ -15390,6 +15569,18 @@ function dash() {
   if (player.dashCooldownTimer <= 0) player.dashCooldownTimer = ch.dashCooldown;
   // (v6.7) Visual dash boosters: short bright volumetric beams out of each
   // engine port along the dash axis. Local + broadcast so peers see it too.
+  // (v6.9) The player's mesh stays invisible in first-person and isn't synced
+  // to player.position elsewhere, so its world transform was usually pointing
+  // at the spawn point. spawnDashBoosters reads each engine plume's world
+  // position via plume.getWorldPosition() ; if the parent mesh is at the
+  // spawn point, the plumes return that spawn-point world transform and the
+  // tracers fly out from the wrong location. Sync the mesh's position and
+  // quaternion to the live player state right before we sample plumes so
+  // every dash trail anchors to the actual ship.
+  if (player.mesh) {
+    player.mesh.position.copy(player.position);
+    player.mesh.quaternion.copy(camera.quaternion);
+  }
   const dashColor = 0xaaeeff;
   spawnDashBoosters(player.mesh, dashDir, dashColor);
   if (net.active && net.sendEvent) {
