@@ -18453,7 +18453,8 @@ function buildSettingsPage() {
       </div>
       <div class="setting-row" style="margin-top:6px; gap:6px; flex-wrap:wrap;">
         <button id="wall-import-btn">Import Lab Config</button>
-        <button id="wall-lab-reset">Reset to Defaults</button>
+        <button id="wall-reload-defaults">Reload LSS_WALLS.json</button>
+        <button id="wall-lab-reset">Reset to Built-in</button>
         <input type="file" id="wall-import-file" accept="application/json,.json" style="display:none;">
       </div>
       <div class="setting-row" style="opacity:0.7; font-size:0.85em;" id="wall-import-status"></div>
@@ -18490,6 +18491,7 @@ function buildSettingsPage() {
       </div>
       <div class="setting-row" style="margin-top:6px; gap:6px; flex-wrap:wrap;">
         <button id="sound-import-btn">Import Sound Library</button>
+        <button id="sound-reload-defaults">Reload LSS_SOUND.json</button>
         <button id="sound-lab-reset">Reset to Built-in</button>
         <input type="file" id="sound-import-file" accept="application/json,.json" style="display:none;">
       </div>
@@ -18685,6 +18687,18 @@ function buildSettingsPage() {
       }
     });
   }
+  const wallReloadBtn = overlay.querySelector('#wall-reload-defaults');
+  if (wallReloadBtn) {
+    wallReloadBtn.addEventListener('click', () => {
+      const result = reloadDefaultWallConfig();
+      if (importStat) {
+        importStat.style.color = result.ok ? '#9af' : '#f88';
+        importStat.textContent = 'LSS_WALLS.json: ' + result.message;
+      }
+      // Refresh the panel so the pattern dropdown and slider values update.
+      buildSettingsPage();
+    });
+  }
 
   // (v6.9) Sound lab integration: import a sound_library.json exported by
   // docs/LSS/sound_lab.html. Recipe names match playSound types (fire_*,
@@ -18727,6 +18741,16 @@ function buildSettingsPage() {
       if (soundImportStat) {
         soundImportStat.style.color = '#9af';
         soundImportStat.textContent = 'Cleared. Using built-in synth for all sounds.';
+      }
+    });
+  }
+  const soundReloadBtn = overlay.querySelector('#sound-reload-defaults');
+  if (soundReloadBtn) {
+    soundReloadBtn.addEventListener('click', () => {
+      const result = reloadDefaultSoundLibrary();
+      if (soundImportStat) {
+        soundImportStat.style.color = result.ok ? '#9af' : '#f88';
+        soundImportStat.textContent = 'LSS_SOUND.json: ' + result.message;
       }
     });
   }
@@ -19039,6 +19063,11 @@ function importWallLabConfig(cfg) {
   if (typeof cfg.wallPattern === 'number') {
     setWallPattern(cfg.wallPattern | 0);
   }
+  // wallBlackBase is optional. Honor it when present so reloading the JSON
+  // can flip the toggle for users whose localStorage still has the old default.
+  if (typeof cfg.wallBlackBase === 'boolean') {
+    setWallBlackBase(cfg.wallBlackBase);
+  }
   // wallParams is the bulk of the work.
   const incoming = cfg.wallParams || {};
   if (typeof incoming !== 'object') {
@@ -19068,6 +19097,18 @@ function importWallLabConfig(cfg) {
              (skippedCount > 0 ? (', skipped ' + skippedCount + ' unknown') : '') + '.'
   };
 }
+
+// Force-reapply the embedded LSS_WALLS.json (DEFAULT_WALL_CONFIG) so the
+// user can one-click revert to the ship pattern + tuning without resorting
+// to DevTools. Same shape as importWallLabConfig's return so the settings
+// row can show the result. Also exposed on window for console use.
+function reloadDefaultWallConfig() {
+  if (!DEFAULT_WALL_CONFIG || typeof DEFAULT_WALL_CONFIG !== 'object') {
+    return { ok: false, message: 'No embedded default wall config found.' };
+  }
+  return importWallLabConfig(DEFAULT_WALL_CONFIG);
+}
+if (typeof window !== 'undefined') window.reloadDefaultWallConfig = reloadDefaultWallConfig;
 
 function saveSettings() {
   try {
@@ -19102,6 +19143,7 @@ function saveSettings() {
 const DEFAULT_WALL_CONFIG = {
   "wallPattern": 8,
   "patternName": "Soul Array",
+  "wallBlackBase": true,
   "palette": [
     5111552,
     8388863,
@@ -19161,15 +19203,24 @@ function loadSettings() {
           if (typeof DEFAULT_WALL_CONFIG.wallPattern === 'number') {
             game.wallPattern = DEFAULT_WALL_CONFIG.wallPattern | 0;
           }
+          // Pure Black Base default = true (curated look). JSON can opt out
+          // explicitly via "wallBlackBase": false.
+          game.wallBlackBase = (typeof DEFAULT_WALL_CONFIG.wallBlackBase === 'boolean')
+            ? DEFAULT_WALL_CONFIG.wallBlackBase
+            : true;
           const seedParams = (DEFAULT_WALL_CONFIG.wallParams && typeof DEFAULT_WALL_CONFIG.wallParams === 'object')
             ? Object.assign({}, DEFAULT_WALL_CONFIG.wallParams)
             : {};
           game.wallParams = applyWallParamDefaults(seedParams);
         } else {
+          game.wallBlackBase = true;
           game.wallParams = applyWallParamDefaults({});
         }
       } catch(e) {
-        try { game.wallParams = applyWallParamDefaults({}); } catch(_) {}
+        try {
+          game.wallBlackBase = true;
+          game.wallParams = applyWallParamDefaults({});
+        } catch(_) {}
       }
       return;
     }
@@ -20914,7 +20965,9 @@ function buildRoomGraphLevel(level) {
     // game.wallPattern is loaded from localStorage by loadSettings(); seed it
     // here in case the shader is built before settings have been read.
     if (typeof game.wallPattern !== 'number') game.wallPattern = 0;
-    if (typeof game.wallBlackBase !== 'boolean') game.wallBlackBase = false;
+    // Pure Black Base is on by default: wall geometry hides, only the active
+    // pattern reads against pure black. User can toggle off in Settings.
+    if (typeof game.wallBlackBase !== 'boolean') game.wallBlackBase = true;
     if (!game.wallParams) game.wallParams = {};
     // Pull current values out of the central params table (with defaults) so
     // every uniform has a known starting value.
@@ -24339,6 +24392,19 @@ function clearSoundLabLibrary() {
   audio.labRecipes = null;
   try { localStorage.removeItem('lss_sound_recipes'); } catch(e) {}
 }
+
+// Force-reapply the embedded LSS_SOUND.json (DEFAULT_SOUND_LIBRARY) to
+// localStorage and active recipes, wiping any stale or broken entries. Use
+// this when the user wants a one-click factory reset to ship-sound defaults
+// without going into DevTools to clear localStorage. Wired to a button in
+// Settings; also exposed on window for console use.
+function reloadDefaultSoundLibrary() {
+  if (!DEFAULT_SOUND_LIBRARY || !Array.isArray(DEFAULT_SOUND_LIBRARY.recipes)) {
+    return { ok: false, message: 'No embedded default library found.' };
+  }
+  return importSoundLabLibrary(DEFAULT_SOUND_LIBRARY, { replace: true });
+}
+if (typeof window !== 'undefined') window.reloadDefaultSoundLibrary = reloadDefaultSoundLibrary;
 
 // (v6.9) Sound loop ticker. Re-triggers a sound at a fixed interval as
 // long as it's called every frame. Used by held shields (Vortex / Gun /

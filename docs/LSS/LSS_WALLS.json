@@ -1,6 +1,7 @@
 {
   "wallPattern": 8,
   "patternName": "Soul Array",
+  "wallBlackBase": true,
   "palette": [
     5111552,
     8388863,
