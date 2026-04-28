@@ -11192,6 +11192,17 @@ function spawnFireworksBurst(pos, radius, palette) {
   if (typeof spawnDynamicLight === 'function') {
     spawnDynamicLight(pos, colors[0], 3.0, radius * 1.5, 0.15);
   }
+  // (v6.9) Spatial firework pop. Each burst gets its own positioned crackle
+  // so the cluster zone reads as a continuous fireworks display rather
+  // than silent visuals. playSpatialSound HRTF-positions the call and
+  // gracefully no-ops if audio isn't initialized yet.
+  try {
+    if (typeof playSpatialSound === 'function') {
+      playSpatialSound('firework_pop', pos.clone(), { refDistance: 400, maxDistance: 6000, rolloffFactor: 1.0 });
+    } else if (typeof playSound === 'function') {
+      playSound('firework_pop');
+    }
+  } catch (e) {}
 }
 
 // Hull-hit cloud burst: a tighter, smaller version of the old shield-hit
@@ -14135,7 +14146,12 @@ function updateShieldVisuals(dt) {
     const vEnergyPct = (player.vortexMaxEnergy > 0)
       ? (player.vortexEnergy / player.vortexMaxEnergy) : 1.0;
     _emitVortexShieldArcs(shieldPos, 120, forward, dt, vEnergyPct);
+    // (v6.9) Continuous low-hum loop while the shield is up. Re-triggers
+    // every 0.95 s ; recipe duration is 1 s so successive triggers
+    // overlap slightly and read as sustained.
+    _tickSoundLoop(player, '_vortexHumTimer', dt, 0.95, 'shield_hum');
   } else {
+    player._vortexHumTimer = 0;
     if (player.vortexShieldMesh) {
       scene.remove(player.vortexShieldMesh);
       if (player.vortexShieldMesh.geometry) player.vortexShieldMesh.geometry.dispose();
@@ -14210,7 +14226,10 @@ function updateShieldVisuals(dt) {
     if (typeof _emitGunShieldArcs === 'function') {
       _emitGunShieldArcs(shieldPos, 100, forward, dt, hpPct);
     }
+    // (v6.9) Continuous low-hum loop while the shield is up.
+    _tickSoundLoop(player, '_gunShieldHumTimer', dt, 0.95, 'shield_hum');
   } else {
+    player._gunShieldHumTimer = 0;
     if (player.gunShieldMesh) {
       scene.remove(player.gunShieldMesh);
       if (player.gunShieldMesh.geometry) player.gunShieldMesh.geometry.dispose();
@@ -14291,7 +14310,11 @@ function updateShieldVisuals(dt) {
     // the disc invisible, this is the entire visible shield. _emitFlame
     // rate is bumped (130/sec) so the ring stays continuously populated.
     _emitThermalShieldFlames(shieldPos, midR, forward, dt);
+    // (v6.9) Pyro thermal shield gets its own fiery loop separate from the
+    // electrical shield_hum used by the other defensive shields.
+    _tickSoundLoop(player, '_thermalShieldHumTimer', dt, 0.95, 'fire_shield_hum');
   } else {
+    player._thermalShieldHumTimer = 0;
     if (player.thermalShieldMesh) {
       scene.remove(player.thermalShieldMesh);
       if (player.thermalShieldMesh.geometry) player.thermalShieldMesh.geometry.dispose();
@@ -14717,6 +14740,10 @@ function updateAbilities(dt) {
     eff.timer -= dt;
 
     if (eff.type === 'firewall') {
+      // (v6.9) Continuous burning loop. Re-triggers every 0.95 s while
+      // the firewall is alive, so the player hears a sustained fire roar
+      // wherever the curtain is in the room.
+      _tickSoundLoop(eff, '_burnTimer', dt, 0.95, 'fire_burn');
       // (v6.7) Mesh sync gate: only the owner runs damage logic. Visual fire
       // particles below run on every peer so the flame curtain shows up.
       const isMyEff = !net.active || !eff.ownerPeerId || eff.ownerPeerId === net.myPeerId;
@@ -15002,6 +15029,9 @@ function updateAbilities(dt) {
       }
 
       if (eff.ignited) {
+        // (v6.9) Ignited gas cloud burns: same fire_burn loop as the
+        // firewall, so all sustained fire shares one sound identity.
+        _tickSoundLoop(eff, '_burnTimer', dt, 0.95, 'fire_burn');
         eff.igniteTimer -= dt;
         // Damage and slow ALL enemies in the burning area (bots + player)
         for (const bot of game.entities) {
@@ -15146,6 +15176,12 @@ function updateAbilities(dt) {
 
     // Particle Wall: animate rainbow membrane and update opacity based on HP
     else if (eff.type === 'particle_wall') {
+      // (v6.9) Same low electrical hum used by Vortex Shield and Gun
+      // Shield. Held to a single hum identity for "energy shield" so the
+      // player can audibly distinguish energy shields from fire effects.
+      if (eff.hp > 0) {
+        _tickSoundLoop(eff, '_humTimer', dt, 0.95, 'shield_hum');
+      }
       if (eff.mesh && eff.hp > 0) {
         const hpPct = eff.hp / eff.maxHp;
         const age = game.time - (eff.spawnTime || 0);
@@ -21384,6 +21420,27 @@ function importSoundLabLibrary(cfg, opts) {
 function clearSoundLabLibrary() {
   audio.labRecipes = null;
   try { localStorage.removeItem('lss_sound_recipes'); } catch(e) {}
+}
+
+// (v6.9) Sound loop ticker. Re-triggers a sound at a fixed interval as
+// long as it's called every frame. Used by held shields (Vortex / Gun /
+// Particle Wall / Thermal) and persistent fire effects (firewall /
+// incendiary trap / gas cloud / Flame Core) so a continuous source reads
+// as a sustained hum/roar without needing a streaming-buffer playback path.
+//
+//   _tickSoundLoop(player, '_vortexShieldHumTimer', dt, 0.95, 'shield_hum');
+//
+// host stores the timer state; pick a unique stateKey per source so two
+// hums on the same host don't fight. interval should match (or slightly
+// undercut) the recipe's duration so successive triggers crossfade.
+function _tickSoundLoop(host, stateKey, dt, interval, soundType) {
+  if (!host) return;
+  if (host[stateKey] == null) host[stateKey] = 0;
+  host[stateKey] -= dt;
+  if (host[stateKey] <= 0) {
+    try { playSound(soundType); } catch (e) {}
+    host[stateKey] = interval;
+  }
 }
 
 // Boot-time restore: pull the persisted library from localStorage. Called

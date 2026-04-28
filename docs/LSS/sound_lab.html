@@ -1279,6 +1279,161 @@ const DEFAULT_PRESETS = [
   },
 
   // ============================================================
+  // FIREWORKS / EFFECTS
+  // ============================================================
+  // Played by spawnFireworksBurst on every cluster missile sub-burst, so
+  // the cluster zone sounds like a continuous fireworks display matching
+  // the visual streaks. Short and bright ; HRTF-positioned at the burst
+  // center via playSpatialSound on the game side.
+  {
+    name: 'firework_pop',
+    description: 'cluster missile firework crackle, bright + short',
+    category: 'Effects',
+    layers: [
+      {
+        kind: 'tri', wavePool: ['triangle','square'],
+        freqs: [820, 1230, 1640], rampFreqs: [410, 615, 820],
+        vol: 0.22, dur: 0.16, rampTime: 0.13, startOffset: 0,
+        envelope: { attack: 0.001, hold: 0, decay: 0.16 },
+        pitchVar: 0.20, durVar: 0.20, volVar: 0.20,
+        chance: 1.0,
+      },
+      {
+        kind: 'noise',
+        duration: 0.05, volume: 0.16, startOffset: 0,
+        filterFreq: 3500, filterQ: 0.9, filterType: 'lowpass',
+        varDur: 0.30, varVol: 0.20, varFreq: 0.25,
+        chance: 1.0,
+      },
+      {
+        kind: 'noise',
+        duration: 0.018, volume: 0.10, startOffset: 0,
+        filterFreq: 80, filterQ: 0.5, filterType: 'lowpass',
+        varDur: 0.30, varVol: 0.30, varFreq: 0.20,
+        chance: 0.7,
+      },
+      {
+        kind: 'noise',
+        duration: 0.012, volume: 0.06, startOffset: 0.05,
+        filterFreq: 2200, filterQ: 0.95, filterType: 'lowpass',
+        varDur: 0.40, varVol: 0.30, varFreq: 0.30,
+        count: 3, spacing: 0.025, spacingVar: 0.4, countDecay: 0.20,
+        chance: 1.0,
+      },
+    ],
+    recipeGain: 0.85,
+  },
+
+  // ============================================================
+  // SHIELD / FIRE LOOPS
+  // ============================================================
+  // These play in 1 s cycles that re-trigger from the game while the
+  // matching ability or effect is active. Tuning the duration and gain
+  // here changes how the loop reads in combat. recipeGain is set low by
+  // default so a held shield doesn't drown out shots.
+  {
+    name: 'shield_hum',
+    description: 'Vortex / Gun Shield / Particle Wall low electrical hum (loops)',
+    category: 'Shield / fire loops',
+    layers: [
+      {
+        kind: 'tri', wave: 'sawtooth',
+        freqs: [55, 82, 110], rampFreqs: [55, 82, 110],
+        vol: 0.10, dur: 1.0, rampTime: 1.0, startOffset: 0,
+        envelope: { attack: 0.10, hold: 0.70, decay: 0.20 },
+        pitchVar: 0.02, durVar: 0.05, volVar: 0.05,
+        chance: 1.0,
+      },
+      {
+        kind: 'tri', wave: 'sine',
+        freqs: [110, 165, 220], rampFreqs: [110, 165, 220],
+        vol: 0.05, dur: 1.0, rampTime: 1.0, startOffset: 0.05,
+        envelope: { attack: 0.20, hold: 0.55, decay: 0.25 },
+        pitchVar: 0.02, durVar: 0.05, volVar: 0.05,
+        chance: 1.0,
+      },
+      {
+        kind: 'noise',
+        duration: 1.0, volume: 0.025, startOffset: 0,
+        filterFreq: 800, filterQ: 0.4, filterType: 'lowpass',
+        varDur: 0.05, varVol: 0.20, varFreq: 0.10,
+        chance: 1.0,
+      },
+    ],
+    recipeGain: 0.55,
+  },
+  {
+    name: 'fire_burn',
+    description: 'firewall / gas cloud / incendiary trap / Flame Core (loops)',
+    category: 'Shield / fire loops',
+    layers: [
+      {
+        kind: 'noise',
+        duration: 1.0, volume: 0.18, startOffset: 0,
+        filterFreq: 700, filterQ: 0.6, filterType: 'lowpass',
+        varDur: 0.05, varVol: 0.25, varFreq: 0.20,
+        chance: 1.0,
+      },
+      {
+        kind: 'noise',
+        duration: 0.50, volume: 0.10, startOffset: 0.05,
+        filterFreq: 2400, filterQ: 0.85, filterType: 'lowpass',
+        varDur: 0.30, varVol: 0.30, varFreq: 0.25,
+        count: 3, spacing: 0.30, spacingVar: 0.5, countDecay: 0.10,
+        chance: 1.0,
+      },
+      {
+        kind: 'tri', wave: 'sawtooth',
+        freqs: [60, 80], rampFreqs: [40, 55],
+        vol: 0.10, dur: 0.95, rampTime: 0.85, startOffset: 0,
+        envelope: { attack: 0.08, hold: 0.55, decay: 0.32 },
+        pitchVar: 0.20, durVar: 0.10, volVar: 0.20,
+        chance: 1.0,
+      },
+    ],
+    recipeGain: 0.70,
+  },
+  {
+    name: 'fire_shield_hum',
+    description: 'Pyro Thermal Shield fiery roar (loops)',
+    category: 'Shield / fire loops',
+    layers: [
+      {
+        kind: 'noise',
+        duration: 1.0, volume: 0.22, startOffset: 0,
+        filterFreq: 900, filterQ: 0.55, filterType: 'lowpass',
+        varDur: 0.05, varVol: 0.20, varFreq: 0.20,
+        chance: 1.0,
+      },
+      {
+        kind: 'tri', wave: 'sawtooth',
+        freqs: [80, 100, 130], rampFreqs: [60, 75, 95],
+        vol: 0.16, dur: 1.0, rampTime: 0.90, startOffset: 0,
+        envelope: { attack: 0.10, hold: 0.55, decay: 0.35 },
+        pitchVar: 0.10, durVar: 0.05, volVar: 0.10,
+        chance: 1.0,
+      },
+      {
+        kind: 'noise',
+        duration: 0.40, volume: 0.10, startOffset: 0.10,
+        filterFreq: 3000, filterQ: 0.9, filterType: 'lowpass',
+        varDur: 0.30, varVol: 0.30, varFreq: 0.25,
+        count: 3, spacing: 0.25, spacingVar: 0.5, countDecay: 0.15,
+        chance: 1.0,
+      },
+      {
+        kind: 'tri', wave: 'square',
+        freqs: [240, 320], rampFreqs: [180, 240],
+        vol: 0.05, dur: 0.85, rampTime: 0.80, startOffset: 0.05,
+        envelope: { attack: 0.15, hold: 0.40, decay: 0.30 },
+        pitchVar: 0.10, durVar: 0.10, volVar: 0.20,
+        chance: 1.0,
+      },
+    ],
+    recipeGain: 0.65,
+  },
+
+  // ============================================================
   // CHARGE-UP SOUNDS
   // ============================================================
   // Played on the rising edge of a charge action ; recipe duration matches
