@@ -12439,6 +12439,14 @@ function updateWeapon(dt) {
 
   // Puncture Railgun charge: hold alt-fire to charge over 3s, boosted damage
   if (player.loadoutKey === 'PUNCTURE') {
+    // (v6.9) Play charge spool sound on the rising edge of aim. Recipe
+    // duration matches the 2.5 s charge time, so the sound naturally
+    // tapers as the charge tops out. Tracked on player so loadout swaps
+    // reset the edge state cleanly.
+    if (aiming && !player._railgunChargingPrev) {
+      try { playSound('railgun_charge'); } catch (e) {}
+    }
+    player._railgunChargingPrev = aiming;
     if (aiming) {
       player.railgunCharge = Math.min(1.0, player.railgunCharge + dt / 2.5); // full charge in 2.5s (TF2)
     } else if (!aiming && player.railgunCharge > 0 && player.railgunCharge < 0.05) {
@@ -12446,6 +12454,8 @@ function updateWeapon(dt) {
     }
     // Charge decays slowly if not aiming
     if (!aiming) player.railgunCharge = Math.max(0, player.railgunCharge - dt * 0.2);
+  } else {
+    player._railgunChargingPrev = false;
   }
 
   // ADS zoom (FOV change)
@@ -13229,6 +13239,9 @@ function executeAbility(slot, ability) {
       // Start charging; actual fire happens in updateAbilities when charge reaches 1.0
       player.powerShotCharging = true;
       player.powerShotCharge = 0;
+      // (v6.9) Charge spool sound. Recipe duration is tuned to ~1 s so it
+      // naturally fades as the auto-fire trigger lands.
+      try { playSound('powershot_charge'); } catch (e) {}
     }
     // SYPHON: Rocket Salvo (5 rockets, 350 dmg each; doubled with Missile Racks upgrade)
     else if (ability.name === 'Rocket Salvo') {
@@ -17671,6 +17684,19 @@ function buildSettingsPage() {
       </div>
     </div>
 
+    <div class="settings-section">
+      <h3>Sound Lab</h3>
+      <div class="setting-row" style="opacity:0.7; font-size:0.85em;">
+        <label style="flex:1;">Tweak every game sound recipe in the companion lab (docs/LSS/sound_lab.html), download a sound_library.json, then import it here. Recipes you don't override keep their built-in synth.</label>
+      </div>
+      <div class="setting-row" style="margin-top:6px; gap:6px; flex-wrap:wrap;">
+        <button id="sound-import-btn">Import Sound Library</button>
+        <button id="sound-lab-reset">Reset to Built-in</button>
+        <input type="file" id="sound-import-file" accept="application/json,.json" style="display:none;">
+      </div>
+      <div class="setting-row" style="opacity:0.7; font-size:0.85em;" id="sound-import-status">${audio.labRecipes ? Object.keys(audio.labRecipes).length + ' recipes active' : 'using built-in synth for all sounds'}</div>
+    </div>
+
     <button id="settings-close">CLOSE</button>
     <button id="settings-reset">RESET TO DEFAULTS</button>
   `;
@@ -17792,6 +17818,51 @@ function buildSettingsPage() {
       if (importStat) {
         importStat.style.color = '#9af';
         importStat.textContent = 'Reset to defaults.';
+      }
+    });
+  }
+
+  // (v6.9) Sound lab integration: import a sound_library.json exported by
+  // docs/LSS/sound_lab.html. Recipe names match playSound types (fire_*,
+  // hit, kill, damage*, dash, ability, core, core_titan, explosion,
+  // stasis, reload, death, sonar_ping_*, round_start). Imported recipes
+  // override the baked-in synthesis ; Reset clears them so the built-in
+  // synth comes back. Persistence handled inside importSoundLabLibrary.
+  const soundImportBtn   = overlay.querySelector('#sound-import-btn');
+  const soundImportInput = overlay.querySelector('#sound-import-file');
+  const soundImportStat  = overlay.querySelector('#sound-import-status');
+  if (soundImportBtn && soundImportInput) {
+    soundImportBtn.addEventListener('click', () => soundImportInput.click());
+    soundImportInput.addEventListener('change', (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const cfg = JSON.parse(reader.result);
+          const result = importSoundLabLibrary(cfg);
+          if (soundImportStat) {
+            soundImportStat.style.color = result.ok ? '#9af' : '#f88';
+            soundImportStat.textContent = result.message + ' (' + f.name + ')';
+          }
+        } catch (err) {
+          if (soundImportStat) {
+            soundImportStat.style.color = '#f88';
+            soundImportStat.textContent = 'Import failed: ' + err.message;
+          }
+        }
+        soundImportInput.value = '';
+      };
+      reader.readAsText(f);
+    });
+  }
+  const soundResetBtn = overlay.querySelector('#sound-lab-reset');
+  if (soundResetBtn) {
+    soundResetBtn.addEventListener('click', () => {
+      clearSoundLabLibrary();
+      if (soundImportStat) {
+        soundImportStat.style.color = '#9af';
+        soundImportStat.textContent = 'Cleared. Using built-in synth for all sounds.';
       }
     });
   }
@@ -20925,9 +20996,231 @@ function playNoiseBurst(duration, volume, startTime, filterFreq, filterQ) {
   src.start(startTime);
 }
 
+// ============================================================
+// SOUND LAB INTEGRATION (v6.9)
+// ============================================================
+// Recipes loaded from sound_library.json (exported by docs/LSS/sound_lab.html)
+// are dispatched here. If a recipe matches the requested type, it overrides
+// the baked-in synthesis below ; otherwise we fall through to the original
+// playSound switch. Recipes use the lab's layer schema:
+//   kind: 'tri' | 'noise'
+//   tri:    freqs, rampFreqs, wave|wavePool, vol, dur, rampTime, envelope,
+//           pitchPool + pitchPick, count/spacing/spacingVar/countDecay,
+//           pitchVar/durVar/volVar/chance/startOffset
+//   noise:  duration, volume, filterFreq, filterQ, filterType, peakGain,
+//           reverseEnvelope, count/spacing/spacingVar/countDecay,
+//           varDur/varVol/varFreq/chance/startOffset
+audio.labRecipes = null; // map of type -> recipe object once a library is loaded
+
+function _jitterLabLayer(layer) {
+  const out = Object.assign({}, layer);
+  if (layer.kind === 'tri') {
+    if (layer.pitchVar > 0) {
+      const m = 1 + (Math.random() - 0.5) * layer.pitchVar;
+      out.freqs = layer.freqs.map(f => (f || 0) * m);
+      if (layer.rampFreqs) out.rampFreqs = layer.rampFreqs.map(f => (f || 0) * m);
+    }
+    if (layer.durVar > 0) {
+      out.dur = layer.dur * (1 + (Math.random() - 0.5) * layer.durVar);
+      if (layer.envelope) {
+        out.envelope = Object.assign({}, layer.envelope);
+        if (typeof out.envelope.decay === 'number') {
+          out.envelope.decay = out.envelope.decay * (1 + (Math.random() - 0.5) * layer.durVar);
+        }
+      }
+    }
+    if (layer.volVar > 0) {
+      out.vol = layer.vol * (1 + (Math.random() - 0.5) * layer.volVar);
+    }
+  } else if (layer.kind === 'noise') {
+    if (layer.varDur > 0) out.duration = layer.duration * (1 + (Math.random() - 0.5) * layer.varDur);
+    if (layer.varVol > 0) out.volume = layer.volume * (1 + (Math.random() - 0.5) * layer.varVol);
+    if (layer.varFreq > 0 && layer.filterFreq) {
+      out.filterFreq = layer.filterFreq * (1 + (Math.random() - 0.5) * layer.varFreq);
+    }
+  }
+  return out;
+}
+
+function _runLabTriLayer(layer, atOffsetSec, volMul) {
+  // Resolve wave: wavePool overrides wave once per call so all voices share.
+  let wave = layer.wave || 'sine';
+  if (Array.isArray(layer.wavePool) && layer.wavePool.length) {
+    wave = layer.wavePool[Math.floor(Math.random() * layer.wavePool.length)];
+  }
+  // Pitch pool: dissonant cluster picks. perCall = one mul shared by all
+  // voices ; perVoice = each voice picks independently. Default perVoice.
+  const useCallMul = layer.pitchPick === 'perCall' && Array.isArray(layer.pitchPool) && layer.pitchPool.length;
+  const usePerVoice = layer.pitchPick !== 'perCall' && Array.isArray(layer.pitchPool) && layer.pitchPool.length;
+  const callMul = useCallMul ? layer.pitchPool[Math.floor(Math.random() * layer.pitchPool.length)] : 1;
+  const freqs = [];
+  const rampOut = layer.rampFreqs ? [] : null;
+  for (let i = 0; i < layer.freqs.length; i++) {
+    const f = layer.freqs[i] || 0;
+    if (f <= 0) continue;
+    const voiceMul = usePerVoice ? layer.pitchPool[Math.floor(Math.random() * layer.pitchPool.length)] : callMul;
+    freqs.push(f * voiceMul);
+    if (rampOut) rampOut.push((layer.rampFreqs[i] || 0) * voiceMul);
+  }
+  if (!freqs.length) return;
+  triChord(freqs, wave, layer.vol * volMul, layer.dur,
+    rampOut, layer.rampTime || layer.dur, atOffsetSec,
+    layer.envelope || { attack: 0.003, hold: 0, decay: layer.dur });
+}
+
+function _runLabNoiseLayer(layer, atOffsetSec, volMul) {
+  const ctx = audio.ctx;
+  const dur = Math.max(0.003, layer.duration);
+  const filterType = layer.filterType || 'lowpass';
+  const startTime = ctx.currentTime + atOffsetSec;
+  // Lowpass + standard envelope: route through the existing playNoiseBurst
+  // (caps Q, handles dry+convolver routing). All other filter types and
+  // reverseEnvelope take the custom path below.
+  if (filterType === 'lowpass' && !layer.reverseEnvelope) {
+    playNoiseBurst(dur, layer.volume * volMul, startTime, layer.filterFreq, layer.filterQ);
+    return;
+  }
+  // Custom path for bandpass / peaking / highpass + reverse envelope.
+  // Mirrors playNoiseBurst's routing so the lab-tuned sound lands in the
+  // same dry+reverb mix as everything else in the game.
+  const bufSize = Math.max(8, Math.floor(ctx.sampleRate * dur));
+  const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+  const data = buf.getChannelData(0);
+  if (layer.reverseEnvelope) {
+    for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+  } else {
+    for (let i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / bufSize);
+  }
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  const gain = ctx.createGain();
+  const vol = (layer.volume || 0.1) * volMul;
+  if (layer.reverseEnvelope) {
+    gain.gain.setValueAtTime(0.0001, startTime);
+    gain.gain.exponentialRampToValueAtTime(Math.max(0.001, vol), startTime + dur);
+  } else {
+    gain.gain.setValueAtTime(vol, startTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + dur);
+  }
+  let head = src;
+  if (layer.filterFreq) {
+    const f = ctx.createBiquadFilter();
+    f.type = filterType;
+    f.frequency.value = Math.max(40, layer.filterFreq);
+    if (filterType === 'lowpass' || filterType === 'highpass') {
+      f.Q.value = Math.min(layer.filterQ || 0.7, 1.0);
+    } else {
+      f.Q.value = layer.filterQ || 1.0;
+    }
+    if (filterType === 'peaking') f.gain.value = layer.peakGain || 6;
+    head.connect(f);
+    head = f;
+  }
+  head.connect(gain);
+  const drySink = audio._spatialSink || audio.dryGain || audio.masterGain;
+  gain.connect(drySink);
+  if (audio.convolver) gain.connect(audio.convolver);
+  if (audio._extraReverbSend) gain.connect(audio._extraReverbSend);
+  src.start(startTime);
+}
+
+// Returns true if a recipe was registered for this type and was scheduled ;
+// false if no recipe is loaded for this type, in which case playSound falls
+// through to the original synthesis branches.
+//
+// recipeGain (per-recipe scalar set in the lab) folds into the layer volume
+// multiplier so a single recipe can be made quieter or louder than its peers
+// without touching individual layer volumes. Default 1.0 means recipes that
+// pre-date this field are unaffected.
+function _playSoundFromLabRecipe(type) {
+  if (!audio.labRecipes) return false;
+  const recipe = audio.labRecipes[type];
+  if (!recipe || !Array.isArray(recipe.layers)) return false;
+  const recipeGain = (typeof recipe.recipeGain === 'number') ? recipe.recipeGain : 1.0;
+  for (const layer of recipe.layers) {
+    if (typeof layer.chance === 'number' && layer.chance < 1 && Math.random() > layer.chance) continue;
+    const baseOffset = layer.startOffset || 0;
+    const count = Math.max(1, Math.floor(layer.count || 1));
+    const spacing = layer.spacing || 0;
+    const spacingVar = layer.spacingVar || 0;
+    const countDecay = layer.countDecay || 0;
+    let cursor = 0;
+    for (let r = 0; r < count; r++) {
+      const j = _jitterLabLayer(layer);
+      const repeatVolMul = Math.max(0, 1 - r * countDecay) * recipeGain;
+      if (j.kind === 'tri') _runLabTriLayer(j, baseOffset + cursor, repeatVolMul);
+      else if (j.kind === 'noise') _runLabNoiseLayer(j, baseOffset + cursor, repeatVolMul);
+      const stepJ = spacing > 0 ? spacing * (1 + (Math.random() - 0.5) * spacingVar) : 0;
+      cursor += stepJ;
+    }
+  }
+  return true;
+}
+
+// Import a JSON object exported by sound_lab.html. Accepts either the full
+// library shape ({recipes:[{name, layers:[...]},...]}) or a single recipe
+// ({name, layers:[...]}). Existing recipes for any name not in the import
+// are preserved ; pass replace:true to wipe first. Persists via localStorage
+// so the library survives reloads. Returns {ok, message}.
+function importSoundLabLibrary(cfg, opts) {
+  opts = opts || {};
+  if (!cfg || typeof cfg !== 'object') {
+    return { ok: false, message: 'Config is not an object.' };
+  }
+  let recipes = null;
+  if (Array.isArray(cfg.recipes)) {
+    recipes = cfg.recipes;
+  } else if (cfg.name && Array.isArray(cfg.layers)) {
+    recipes = [cfg];
+  } else {
+    return { ok: false, message: 'Expected {recipes:[...]} or a single {name, layers:[...]} recipe.' };
+  }
+  const baseMap = (opts.replace || !audio.labRecipes) ? {} : Object.assign({}, audio.labRecipes);
+  let count = 0;
+  for (const r of recipes) {
+    if (!r || typeof r !== 'object' || !r.name || !Array.isArray(r.layers)) continue;
+    baseMap[r.name] = r;
+    count++;
+  }
+  if (count === 0) {
+    return { ok: false, message: 'No valid recipes found.' };
+  }
+  audio.labRecipes = baseMap;
+  try { localStorage.setItem('lss_sound_recipes', JSON.stringify({ recipes: Object.values(baseMap) })); } catch(e) {}
+  return { ok: true, message: 'Loaded ' + count + ' recipe' + (count === 1 ? '' : 's') + ' (' + Object.keys(baseMap).length + ' total active).' };
+}
+
+function clearSoundLabLibrary() {
+  audio.labRecipes = null;
+  try { localStorage.removeItem('lss_sound_recipes'); } catch(e) {}
+}
+
+// Boot-time restore: pull the persisted library from localStorage. Called
+// once at module init ; safe to call before audio.ctx exists because we
+// just attach the recipes dict, no audio nodes built here.
+function _loadPersistedSoundRecipes() {
+  try {
+    const raw = localStorage.getItem('lss_sound_recipes');
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    if (parsed && Array.isArray(parsed.recipes)) {
+      const map = {};
+      for (const r of parsed.recipes) {
+        if (r && r.name && Array.isArray(r.layers)) map[r.name] = r;
+      }
+      if (Object.keys(map).length) audio.labRecipes = map;
+    }
+  } catch(e) {}
+}
+_loadPersistedSoundRecipes();
+
 function playSound(type) {
   if (!audio.initialized || !audio.ctx) return;
   resumeAudio();
+  // (v6.9) Sound lab integration: if a recipe is loaded for this type, run
+  // it instead of the baked-in branch below. Returns false when no recipe
+  // is registered, and we fall through to legacy synthesis.
+  if (_playSoundFromLabRecipe(type)) return;
   const ctx = audio.ctx;
   const now = ctx.currentTime;
 
