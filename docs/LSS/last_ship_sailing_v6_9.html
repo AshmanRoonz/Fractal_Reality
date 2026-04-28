@@ -3507,7 +3507,10 @@ function _makeSmokeMaterial(initialColor, baseAlpha) {
       time:       { value: 0 },
       uColor:     { value: new THREE.Color(initialColor) },
       uBaseAlpha: { value: baseAlpha },
-      uOctaves:   { value: 6 },
+      // (v6.9) Octaves dropped 6 -> 3. Smoke at radial scale doesn't need
+      // sub-pixel detail; 3 octaves still reads as turbulent volume and
+      // every dropped octave halves per-pixel noise cost.
+      uOctaves:   { value: 3 },
     },
     vertexShader: [
       'varying vec3 vWorldPos;',
@@ -3557,20 +3560,22 @@ function _makeSmokeMaterial(initialColor, baseAlpha) {
       '  return v;',
       '}',
       'void main() {',
-      // Two-scale FBM (chunky base + fine detail) at smoke-appropriate
-      // sampling scales. Y-axis drift simulates rising thermal column.
-      '  vec3 q1 = vWorldPos * 0.04 + vec3(0.0, time * 0.30, time * 0.15);',
-      '  float v1 = fbm(q1);',
-      '  vec3 q2 = vWorldPos * 0.12 + vec3(time * 0.20, time * 0.10, 0.0);',
-      '  float v2 = fbm(q2);',
-      '  v1 = smoothstep(0.30, 0.78, v1);',
-      '  v2 = smoothstep(0.35, 0.75, v2);',
-      '  float v = v1 * 0.70 + v2 * 0.45;',
+      // (v6.9) Single FBM evaluation plus one fine-detail noise3 sample,
+      // down from two full FBM calls. The chunky base carries the volumetric
+      // shape ; one extra noise3 sample at higher frequency adds the swirl
+      // detail that broke up the silhouette in the old two-FBM version,
+      // for ~1/8 the noise cost of the original (3 octaves vs 12).
+      '  vec3 qBase = vWorldPos * 0.04 + vec3(0.0, time * 0.30, time * 0.15);',
+      '  float vBase = fbm(qBase);',
+      '  vec3 qFine = vWorldPos * 0.12 + vec3(time * 0.20, time * 0.10, 0.0);',
+      '  float vFine = noise3(qFine);',
+      '  float v = smoothstep(0.30, 0.78, vBase) * 0.78',
+      '          + smoothstep(0.35, 0.78, vFine) * 0.32;',
       '  float baseDensity = clamp(v * 1.4 - 0.18, 0.0, 1.0);',
       '  vec3 viewDir = normalize(cameraPosition - vWorldPos);',
       '  float fres = pow(1.0 - clamp(dot(vNormal, viewDir), 0.0, 1.0), 1.6);',
       '  float density = clamp(baseDensity * (1.0 + fres * 0.55), 0.0, 1.0);',
-      // Smoke is darker — color is dimmer overall. Slight brightness boost
+      // Smoke is darker (color is dimmer overall). Slight brightness boost
       // in dense pockets so the smoke isn't pure black.
       '  vec3 col = uColor * (0.50 + density * 1.20);',
       '  float alpha = density * uBaseAlpha;',
@@ -3582,6 +3587,103 @@ function _makeSmokeMaterial(initialColor, baseAlpha) {
     blending: THREE.NormalBlending, // smoke blocks light, doesn't add it
     depthWrite: false,
     side: THREE.FrontSide,
+  });
+}
+
+// (v6.9) Vortex Laser Core volumetric beam material. A thick open-ended
+// cylinder gets oriented along the firing direction each frame ; this
+// shader paints it with a white-hot inner band, a hot-orange halo, a
+// traveling longitudinal pulse, and crackling noise so it reads as a
+// continuous high-power energy beam rather than a stack of thin tracers.
+// Uniforms:
+//   time       drives crackle + traveling pulse
+//   uIntensity overall alpha gate (1.0 while firing, faded for spool-up/down)
+let _VORTEX_CORE_BEAM_GEO = null;
+function _getVortexCoreBeamGeometry() {
+  if (_VORTEX_CORE_BEAM_GEO) return _VORTEX_CORE_BEAM_GEO;
+  // Open-ended cylinder along Y, length 1, radius 1. Per-frame we scale Y
+  // to the firing range and X/Z to the beam radius. 24 segments around
+  // gives a smooth silhouette ; openEnded skips end caps that would look
+  // like flat discs floating in space.
+  _VORTEX_CORE_BEAM_GEO = new THREE.CylinderGeometry(1, 1, 1, 24, 1, true);
+  return _VORTEX_CORE_BEAM_GEO;
+}
+function _makeVortexCoreBeamMaterial() {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      time:       { value: 0 },
+      uIntensity: { value: 1.0 },
+    },
+    vertexShader: [
+      'varying vec2 vUv;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vNormal;',
+      'void main() {',
+      '  vUv = uv;',
+      '  vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;',
+      '  vNormal = normalize(normalMatrix * normal);',
+      '  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);',
+      '}',
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float time;',
+      'uniform float uIntensity;',
+      'varying vec2 vUv;',
+      'varying vec3 vWorldPos;',
+      'varying vec3 vNormal;',
+      'float hash21(vec2 p) {',
+      '  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);',
+      '}',
+      'float noise2(vec2 p) {',
+      '  vec2 i = floor(p);',
+      '  vec2 f = fract(p);',
+      '  f = f * f * (3.0 - 2.0 * f);',
+      '  return mix(mix(hash21(i + vec2(0.0,0.0)), hash21(i + vec2(1.0,0.0)), f.x),',
+      '             mix(hash21(i + vec2(0.0,1.0)), hash21(i + vec2(1.0,1.0)), f.x), f.y);',
+      '}',
+      'void main() {',
+      // Two view-relative quantities drive the beam look:
+      //   facing = how face-on the cylinder surface is to the camera. 1.0
+      //            when the surface normal points directly at the camera
+      //            (we are looking through the diameter), 0.0 at the
+      //            silhouette edge.
+      //   With AdditiveBlending: face-on pixels stack many cylinder slabs
+      //   so the perceived center is brightest, and the silhouette edge
+      //   is where the fresnel halo sits.
+      '  vec3 viewDir = normalize(cameraPosition - vWorldPos);',
+      '  float facing = abs(dot(normalize(vNormal), viewDir));',
+      '  float core = pow(facing, 1.4);',
+      '  float halo = pow(1.0 - facing, 2.2);',
+      // Longitudinal crackle. vUv.y goes 0..1 along the cylinder length ;
+      // vUv.x wraps around the circumference. Two octaves of cheap value
+      // noise advected along the beam axis give a continuous energy churn
+      // without paying for a real FBM.
+      '  float n1 = noise2(vec2(vUv.y * 14.0 - time * 4.5, vUv.x * 7.0));',
+      '  float n2 = noise2(vec2(vUv.y * 32.0 - time * 9.0, vUv.x * 5.0 + 12.3));',
+      '  float crackle = n1 * 0.6 + n2 * 0.4;',
+      // Traveling pulse: a sin wave moving along the beam axis biases the
+      // alpha so the eye reads "energy pumping toward the target" rather
+      // than a static tube.
+      '  float pulse = 0.5 + 0.5 * sin(vUv.y * 26.0 - time * 16.0);',
+      // Color stack: white-hot innermost, hot orange halo, deep red rim.
+      '  vec3 coreCol = vec3(1.00, 0.96, 0.78) * 3.4;',
+      '  vec3 hotCol  = vec3(1.00, 0.55, 0.18) * 2.4;',
+      '  vec3 redCol  = vec3(0.95, 0.18, 0.04) * 1.5;',
+      '  vec3 col = coreCol * core',
+      '           + hotCol  * (halo + crackle * 0.45) * (0.85 + pulse * 0.30)',
+      '           + redCol  * halo * 0.55;',
+      // Soft fade at the very ends of the cylinder so the beam doesn't
+      // terminate in a hard rectangle.
+      '  float endFade = smoothstep(0.0, 0.05, vUv.y) * smoothstep(1.0, 0.93, vUv.y);',
+      '  float alpha = (core * 0.85 + halo * 0.70 + crackle * 0.25) * endFade * uIntensity;',
+      '  alpha = clamp(alpha, 0.0, 1.0);',
+      '  gl_FragColor = vec4(col, alpha);',
+      '}',
+    ].join('\n'),
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide, // visible from inside too if camera ever clips into it
   });
 }
 
@@ -9184,7 +9286,12 @@ function spawnExplosion(pos, size) {
   // from 1.4s to 1.0s — the eye doesn't notice a tighter fade and the
   // typical alive count drops by ~30%.
   if (size > 12) {
-    const SMOKE_MAX = 25;
+    // (v6.9) Lowered from 25 to 12. The shader is FBM-heavy and overdraw
+    // stacks fast when plumes overlap ; 12 is still a thick battle's worth
+    // of smoke without burning fillrate on plumes that sit behind newer
+    // ones anyway. Pairs with the simplified shader (1 FBM + 1 noise sample
+    // instead of 2 FBM, 3 octaves instead of 6).
+    const SMOKE_MAX = 12;
     let smokeAlive = 0;
     let oldestSmokeIdx = -1;
     let oldestSmokeAge = -1;
@@ -9209,7 +9316,11 @@ function spawnExplosion(pos, size) {
     smokeMesh.position.copy(pos);
     smokeMesh.scale.setScalar(size * 0.7);
     smokeMesh.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
-    smokeMesh.frustumCulled = false;
+    // (v6.9) frustumCulled flipped on: the icosahedron has a tight bbox and
+    // its scale/position are fixed-up before render, so Three.js can safely
+    // skip drawing it when off-screen. Free win on big-fight cameras where
+    // half the explosions happen behind the player.
+    smokeMesh.frustumCulled = true;
     smokeMesh.renderOrder = 1; // composite over wall
     scene.add(smokeMesh);
     game.effects.push({
@@ -14284,47 +14395,78 @@ function updateAbilities(dt) {
     const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
     const coreName = player.loadout ? player.loadout.core.name : '';
 
-    // VORTEX Laser Core: continuous heavy laser. Two thick beams emerge
-    // from the painted barrel tips and join into a single focused beam at
-    // the target — spawnTracer already splits player tracers into two
-    // converging streaks, so we multi-call it to stack thickness on top
-    // of itself for a heavier core. Multiple parallel offsets give a
-    // properly thick beam ; periodic lightning arcs along the beam path
-    // sell the "high-power electric laser" feel.
+    // VORTEX Laser Core: continuous heavy laser. Three layers stack into
+    // one really thick beam: (1) the converging muzzle-tip tracer streaks
+    // ; (2) a fat shader-driven volumetric beam cylinder running from
+    // the player straight to the impact point ; (3) electric arcs cracking
+    // off the beam along its length. The shader cylinder is the bulk of
+    // the visual mass ; the tracers add the from-the-barrels parallax
+    // ; the arcs sell the high-voltage feel.
     if (coreName === 'Laser Core') {
       const range = 3000;
       const end = player.position.clone().add(forward.clone().multiplyScalar(range));
-      // Stack 5 tracer calls — one centered (red core), four offset
-      // (orange/white halo), so the resulting cylinder pile reads as a
-      // really thick beam. spawnTracer already converts each call into
-      // two muzzle-tip-anchored streaks that converge on `end`, so the
-      // visual effect is two thick beams joining at the target.
-      spawnTracer(player.position, end, 0xff2200);
-      spawnTracer(player.position, end, 0xff5520);
-      spawnTracer(player.position, end, 0xffaa44);
-      spawnTracer(player.position, end, 0xffeeaa);
-      // White-hot center stack to push the beam into HDR territory.
-      spawnTracer(player.position, end, 0xffffff);
-      // Electric crackle along the beam length: every 0.04 s, throw a
-      // short lightning arc near a random point along the beam for a
-      // continuous pulsing electrical feel.
+      // (v6.9) Volumetric shader beam. Lazy-create the cylinder mesh on
+      // first frame of firing ; subsequent frames just reposition/orient
+      // it. The mesh is parented to the scene (not the player) because
+      // we orient it explicitly via setFromUnitVectors against the camera
+      // forward, which already accounts for player position.
+      if (!player._vortexCoreBeam) {
+        const beamMat = _makeVortexCoreBeamMaterial();
+        const beamMesh = new THREE.Mesh(_getVortexCoreBeamGeometry(), beamMat);
+        beamMesh.frustumCulled = false; // we rebuild its transform every frame
+        beamMesh.renderOrder = 2;       // composite over walls + smoke
+        scene.add(beamMesh);
+        player._vortexCoreBeam = beamMesh;
+      }
+      const beam = player._vortexCoreBeam;
+      // Beam is a unit cylinder along Y. Center it at the midpoint of
+      // (player -> end), align local +Y with the firing direction, then
+      // scale Y to the full range and X/Z to the beam radius. BEAM_RADIUS
+      // controls the visible thickness ; bumped up for "epic" mass.
+      const BEAM_RADIUS = 95;
+      const mid = player.position.clone().add(forward.clone().multiplyScalar(range * 0.5));
+      beam.position.copy(mid);
+      beam.quaternion.setFromUnitVectors(_mvUp, forward);
+      beam.scale.set(BEAM_RADIUS, range, BEAM_RADIUS);
+      beam.visible = true;
+      if (beam.material && beam.material.uniforms) {
+        beam.material.uniforms.time.value = game.time;
+        // Slight breath in/out on intensity so even a held core pulses.
+        const breath = 0.92 + 0.10 * Math.sin(game.time * 7.0);
+        beam.material.uniforms.uIntensity.value = breath;
+      }
+      // Stack 6 tracer calls (boosted from 5) with widthScale > 1 so the
+      // converging streaks read as visibly thick funnels feeding the beam,
+      // not as hairline lines floating beside it. spawnTracer already
+      // splits each call into two muzzle-tip-anchored streaks.
+      spawnTracer(player.position, end, 0xff2200, 1.8);
+      spawnTracer(player.position, end, 0xff5520, 1.7);
+      spawnTracer(player.position, end, 0xffaa44, 1.6);
+      spawnTracer(player.position, end, 0xffeeaa, 1.5);
+      spawnTracer(player.position, end, 0xffffff, 1.4);
+      // Extra hot-pink stack at the center for the "white-hot" overload look.
+      spawnTracer(player.position, end, 0xffd0a0, 1.3);
+      // Electric crackle along the beam length. Boosted: more arcs per pulse,
+      // wider lateral jitter, slightly longer reach so the beam feels alive
+      // with discharge ; thicker tube radius for fatter bolts.
       if (typeof spawnLightningBolt === 'function') {
         if (!player._laserCoreArcTimer) player._laserCoreArcTimer = 0;
         player._laserCoreArcTimer -= dt;
         if (player._laserCoreArcTimer <= 0) {
-          // Spawn 2 arcs per pulse for density.
-          for (let a = 0; a < 2; a++) {
-            const t = 0.20 + Math.random() * 0.70;
+          // Spawn 4 arcs per pulse (was 2) at varying scales.
+          for (let a = 0; a < 4; a++) {
+            const t = 0.15 + Math.random() * 0.78;
             const along = player.position.clone().add(forward.clone().multiplyScalar(range * t));
+            const reach = 110 + Math.random() * 90; // was ~80
             const jit = new THREE.Vector3(
-              (Math.random() - 0.5) * 80,
-              (Math.random() - 0.5) * 80,
-              (Math.random() - 0.5) * 80
+              (Math.random() - 0.5) * reach,
+              (Math.random() - 0.5) * reach,
+              (Math.random() - 0.5) * reach
             );
             const tip = along.clone().add(jit);
-            spawnLightningBolt(along, tip, 0xffeeaa, 0.10, 1, 1.6);
+            spawnLightningBolt(along, tip, 0xffeeaa, 0.12, 1, 2.4);
           }
-          player._laserCoreArcTimer = 0.03 + Math.random() * 0.04;
+          player._laserCoreArcTimer = 0.025 + Math.random() * 0.03;
         }
       }
       // Damage check (unchanged)
@@ -14435,6 +14577,17 @@ function updateAbilities(dt) {
     }
 
     if (player.coreTimer <= 0) player.coreActive = false;
+  }
+
+  // (v6.9) Hide the Vortex Laser Core volumetric beam outside the active
+  // firing window. The mesh persists across spawns (lazy-created on first
+  // fire) so we can't rely on the inner block re-running ; we just toggle
+  // visibility here. coreName is recomputed because it's scoped inside the
+  // block above.
+  if (player._vortexCoreBeam) {
+    const _coreName = (player.loadout && player.loadout.core) ? player.loadout.core.name : '';
+    const isFiringLaserCore = player.coreActive && _coreName === 'Laser Core';
+    if (!isFiringLaserCore) player._vortexCoreBeam.visible = false;
   }
 
   // ---- WORLD EFFECTS UPDATE (firewalls, trip wires, traps, tethers) ----
