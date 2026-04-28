@@ -21801,13 +21801,15 @@ function initAudio() {
     audio.hiCut.connect(audio.ctx.destination);
 
     // Master bus compressor (glue): keeps simultaneous SFX legible without clipping.
-    // threshold -18 dB, ratio 4:1, fast attack for transient control, musical release.
+    // Threshold -14 dB lets typical SFX pass un-compressed ; only loud peaks
+    // get tamed. Ratio 3:1 is gentler than the prior 4:1 so sustained heavy
+    // fire doesn't pump the mix down hard enough to read as a "cutout".
     audio.masterComp = audio.ctx.createDynamicsCompressor();
-    audio.masterComp.threshold.value = -18;
-    audio.masterComp.knee.value = 12;
-    audio.masterComp.ratio.value = 4;
+    audio.masterComp.threshold.value = -14;
+    audio.masterComp.knee.value = 8;
+    audio.masterComp.ratio.value = 3;
     audio.masterComp.attack.value = 0.005;
-    audio.masterComp.release.value = 0.100;
+    audio.masterComp.release.value = 0.120;
     audio.masterComp.connect(audio.hiCut);
 
     // Master output (routes into compressor, then hi-cut). Base 0.85 multiplied
@@ -24494,9 +24496,46 @@ function _loadPersistedSoundRecipes() {
 }
 _loadPersistedSoundRecipes();
 
+// Per-type minimum gap (seconds) between successive playSound() calls.
+// Sustained heavy fire (Predator at 20 Hz + bot return fire + hits + damage
+// sounds) was overloading Chrome's audio thread and dropping a buffer
+// (audible as a 1-2s cutout). Capping the spawn rate of high-rate sounds
+// to slightly above their natural fire rate lets every shot through in
+// the common case but folds duplicate stacking from multiple sources
+// (other players' minigun streams, multi-pellet hits) into a single
+// audible event. Gaps are picked per-type so the rate-limit is invisible
+// during normal play.
+const _SOUND_MIN_GAP = {
+  // Weapon fire: cap a hair below each weapon's natural fire rate so the
+  // local player's stream always passes ; concurrent enemy streams get
+  // folded into the same audible burst instead of doubling the load.
+  fire_minigun:    0.040, // 25 Hz cap (Predator fires 20 Hz)
+  fire_hitscan:    0.045, // 22 Hz cap (Blaster long mode 12.5 Hz, Syphon 11 Hz)
+  fire_spread:     0.080, // 12 Hz cap (shotgun-class)
+  fire_projectile: 0.080,
+  fire_railgun:    0.060,
+  fire_salvo:      0.080,
+  // Hits / damage / shields can pile up when pellets land or shields chip;
+  // 25-40 Hz is plenty to feel responsive without thrashing.
+  hit:             0.025,
+  damage:          0.040,
+  damage_shield:   0.040,
+};
+const _lastSoundTime = {};
+
 function playSound(type) {
   if (!audio.initialized || !audio.ctx) return;
   resumeAudio();
+  // Rate-limit per type. ctx.currentTime is monotonic and tracks audio-thread
+  // time, which is what we actually want here (real time can drift if the
+  // tab loses focus).
+  const gap = _SOUND_MIN_GAP[type];
+  if (gap) {
+    const t = audio.ctx.currentTime;
+    const last = _lastSoundTime[type] || 0;
+    if (t - last < gap) return;
+    _lastSoundTime[type] = t;
+  }
   // (v6.9) Sound lab integration: if a recipe is loaded for this type, run
   // it instead of the baked-in branch below. Returns false when no recipe
   // is registered, and we fall through to legacy synthesis.
