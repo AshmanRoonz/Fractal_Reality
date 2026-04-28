@@ -2328,11 +2328,14 @@ class NetworkPlayer {
 
     // ---- PYRO: Thermal Shield (orange disc + ring; same shape as Vortex but firey) ----
     if (this.loadoutKey === 'PYRO' && active) {
-      // (v6.9) Match the buffed player cone: 2.6 hullLen reach, base 0.75,
-      // tip 1.70. Bots' shield visual stays in step with their damage volume.
+      // Sized to read as a "shield in front of the ship" rather than a giant
+      // forward cone the size of the ship itself. Previous values (2.6
+      // hullLen reach, 1.225 hullLen radius) overwhelmed the silhouette
+      // when seen from another peer's screen ; tightened to match the
+      // visual scale of the gun shield / vortex dome.
       const hLen = (this.chassis && this.chassis.hullLength) ? this.chassis.hullLength : 140;
-      const coneReach = hLen * 2.6;
-      const midR = (hLen * 0.75 + hLen * 1.70) * 0.5;
+      const coneReach = hLen * 1.2;
+      const midR = hLen * 0.55;
       if (!this._thermalShieldMesh) {
         // (v6.7) Thin cylinder instead of flat circle so the disc has visible
         // thickness from every angle. rotateX(PI/2) flips the cylinder axis
@@ -2389,47 +2392,55 @@ class NetworkPlayer {
       }
     }
 
-    // ---- VORTEX: Vortex Shield (energy disc + ring) ----
+    // ---- VORTEX: Vortex Shield (hex-hologram forward dome) ----
+    // Mirrors the local player's dome (see line ~14585) so the peer view
+    // matches what the player sees on their own screen instead of a flat
+    // empty white ring. Uses _makeHexHologramMaterial (same hologram look
+    // as Tracker's Particle Wall) so the shield reads as a live energy field.
     if (this.loadoutKey === 'VORTEX' && active) {
+      const vHull = (this.chassis && this.chassis.hullLength) ? this.chassis.hullLength : 110;
+      const domeR = vHull * 1.4;
       if (!this._vortexShieldMesh) {
-        // Disc material is the energy-field shader (matches the local
-        // player's path so the shield reads the same from your screen as
-        // from a peer's screen). Torus stays as a clean bright outline.
-        const geo = new THREE.CylinderGeometry(120, 120, 8, 32, 1, false);
-        geo.rotateX(Math.PI / 2);
-        const mat = _makeVortexShieldMaterial(0.85);
+        // Top hemisphere: phi 0..2π, theta 0..π/2. Apex at +Y in geometry-local
+        // space ; quaternion rotates so +Y aligns with the peer's forward.
+        const geo = new THREE.SphereGeometry(domeR, 36, 18, 0, Math.PI * 2, 0, Math.PI / 2);
+        const mat = _makeHexHologramMaterial(0x66aaff);
         this._vortexShieldMesh = new THREE.Mesh(geo, mat);
         this._vortexShieldMesh.renderOrder = 1;
         scene.add(this._vortexShieldMesh);
-        const ringGeo = new THREE.TorusGeometry(117, 5, 8, 48);
+        const ringGeo = new THREE.TorusGeometry(domeR * 0.99, 2.2, 8, 64);
         const ringMat = new THREE.MeshBasicMaterial({
-          color: 0xaaeeff, transparent: true, opacity: 0.40,
+          color: 0xaaccff, transparent: true, opacity: 0.55,
           side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false,
         });
         this._vortexShieldRing = new THREE.Mesh(ringGeo, ringMat);
         this._vortexShieldRing.renderOrder = 1;
         scene.add(this._vortexShieldRing);
+        // Geometry-local +Y unit, used by setFromUnitVectors below to align
+        // the apex with the forward direction. Allocated once per peer.
+        if (!this._shieldUp) this._shieldUp = new THREE.Vector3(0, 1, 0);
       }
       const fwd = getForward();
-      const shieldPos = this._shieldPos.copy(this.position).addScaledVector(fwd, 80);
-      this._vortexShieldMesh.position.copy(shieldPos);
-      this._vortexShieldMesh.lookAt(this._shieldLook.copy(shieldPos).add(fwd));
-      // (post-v6.9) Lightning removed; the disc + torus are now the visible
-      // shield. Rainbow energy field shader on the disc, bright torus around
-      // the rim, and a soft state-color particle shimmer from the rim helper.
+      const baseOffset = vHull * 0.20;
+      const basePos = this._shieldPos.copy(this.position).addScaledVector(fwd, baseOffset);
+      this._vortexShieldMesh.position.copy(basePos);
+      this._vortexShieldMesh.quaternion.setFromUnitVectors(this._shieldUp, fwd);
       this._vortexShieldMesh.visible = true;
-      // Bump shader time so the energy field actually animates on peers.
       if (this._vortexShieldMesh.material && this._vortexShieldMesh.material.uniforms) {
         const u = this._vortexShieldMesh.material.uniforms;
         if (u.time) u.time.value = (typeof game !== 'undefined' && game.time) ? game.time : 0;
+        // Peers don't see the shield's energy reservoir, so just keep uHp at 1
+        // (full pattern brightness). Local view dims it as energy drains.
+        if (u.uHp) u.uHp.value = 1.0;
       }
       if (this._vortexShieldRing) {
-        this._vortexShieldRing.position.copy(shieldPos);
-        this._vortexShieldRing.lookAt(this._shieldLook.copy(shieldPos).add(fwd));
+        this._vortexShieldRing.position.copy(basePos);
+        this._vortexShieldRing.lookAt(this._shieldLook.copy(basePos).add(fwd));
         this._vortexShieldRing.visible = true;
       }
       if (typeof _emitVortexShieldArcs === 'function') {
-        _emitVortexShieldArcs(shieldPos, 120, fwd, (typeof dt === 'number' ? dt : 1/60));
+        const apexPos = basePos.clone().addScaledVector(fwd, domeR);
+        _emitVortexShieldArcs(basePos, domeR, fwd, (typeof dt === 'number' ? dt : 1/60), 1.0, apexPos);
       }
     } else {
       if (this._vortexShieldMesh) {
@@ -5040,6 +5051,23 @@ function spawnNetworkProjectile(data, fromPeerId) {
   // still fires when the network arc wave touches us, which is the correct
   // visual + gameplay outcome (the enemy's arc wave actually pops our shield).
   if (data.isArcWave) proj.isArcWave = true;
+  // (post-v6.9) Cluster Missile mirror: marking the network projectile as a
+  // cluster makes Projectile.update fire spawnClusterChildren() on impact,
+  // so the peer sees the firework salvo of bomblets just like the shooter
+  // does. sizeMult beefs up the missile body so it reads as a heavy missile
+  // from far. Beefy opacity values match the shooter-side overrides so the
+  // missile body is bright instead of dim during flight.
+  if (data.isCluster) {
+    proj.isCluster = true;
+    if (proj._baseOpacityCore   !== undefined) proj._baseOpacityCore   = 1.0;
+    if (proj._baseOpacityGlow   !== undefined) proj._baseOpacityGlow   = 0.95;
+    if (proj._baseOpacityHaze   !== undefined) proj._baseOpacityHaze   = 0.45;
+    if (proj._baseOpacityTrail  !== undefined) proj._baseOpacityTrail  = 1.0;
+    if (proj._baseOpacityRibbon !== undefined) proj._baseOpacityRibbon = 1.0;
+  }
+  if (typeof data.sizeMult === 'number' && data.sizeMult > 0) {
+    proj.sizeMult = data.sizeMult;
+  }
   game.projectiles.push(proj);
   // (v6.7) Chassis-specific muzzle flash for peers viewing a projectile-mode
   // weapon firing (Pyro thermite, Tracker 40mm, etc.). Reuse loadoutKey from
@@ -5066,6 +5094,15 @@ function broadcastAbilityProjectile(proj) {
     color: proj.color || 0xffaa00,
     isFireSource: !!proj.isFireSource,
     isArcWave: !!proj.isArcWave,
+    // (post-v6.9) Cluster Missile and other heavy / homing ability projectiles
+    // need their visual flags carried so the peer renders the same chonky
+    // body the shooter sees. Without isCluster + sizeMult the receiver got
+    // a tiny default-size projectile and spawnClusterChildren() never ran
+    // on impact, so the firework salvo + sub-bomblets were invisible to
+    // the enemy. Damage still flows through the hit-claim path; these are
+    // visual-only flags.
+    isCluster: !!proj.isCluster,
+    sizeMult: (typeof proj.sizeMult === 'number') ? proj.sizeMult : 1.0,
   });
 }
 
@@ -6270,9 +6307,25 @@ function getWallNormal(point) {
 // SHIP MODELS (CC0, Quaternius + Poly.pizza)
 // ============================================================================
 // Each loadout gets its own 3D model. Files live in ./ships/ relative to the
-// game HTML. faceFlip rotates 180° around Y so the model's forward aligns with
-// the game's -Z forward axis. scaleMult nudges the auto-fit-to-hullLength
-// scale per model to compensate for bbox padding (wings inflate the bbox).
+// game HTML. The GLBs were exported with the nose pointing along the model's
+// local +X axis (artist's "forward" was +X), but Three.js convention is that
+// a freshly added Object3D faces -Z. Rotating Y by -π/2 brings local +X
+// around to local -Z so the ship's actual nose aligns with the camera's
+// view direction when player.mesh.quaternion = camera.quaternion. The
+// previous π rotation (faceFlip: true) was wrong: it assumed nose at +Z, so
+// a +X-nose model ended up sideways under flight (broadside to motion).
+// scaleMult nudges the auto-fit-to-hullLength scale per model to compensate
+// for bbox padding (wings inflate the bbox).
+//
+// faceRotY (radians) overrides faceFlip when present. Use this if a model's
+// nose is on a different axis than the rest. Easy axis cheatsheet:
+//   nose at +Z (THREE forward)      → faceRotY:  Math.PI       (flip 180°)
+//   nose at +X (modeled rightward)  → faceRotY: -Math.PI / 2   (default below)
+//   nose at -X (modeled leftward)   → faceRotY:  Math.PI / 2
+//   nose at -Z (already correct)    → faceRotY:  0
+//
+// If a fix in either direction still looks sideways or backwards, just flip
+// the sign of faceRotY for the offending model.
 //
 // VISUAL_SCALE_BOOST is a SECOND multiplier applied uniformly on top of every
 // per-model scaleMult. It exists because the chassis dimensions
@@ -6289,13 +6342,13 @@ function getWallNormal(point) {
 // globally grow/shrink ship bodies relative to their collision sphere.
 const VISUAL_SCALE_BOOST = 1.30;
 const SHIP_MODELS = {
-  PUNCTURE: { url: 'ships/puncture.glb', faceFlip: true,  scaleMult: 1.10 },
-  SLAYER:     { url: 'ships/slayer.glb',     faceFlip: true,  scaleMult: 1.10 },
-  VORTEX:       { url: 'ships/vortex.glb',       faceFlip: true,  scaleMult: 1.15 },
-  TRACKER:      { url: 'ships/tracker.glb',      faceFlip: true,  scaleMult: 1.00 },
-  SYPHON:   { url: 'ships/syphon.glb',   faceFlip: true,  scaleMult: 1.10 },
-  PYRO:    { url: 'ships/pyro.glb',    faceFlip: true,  scaleMult: 1.05 },
-  BLASTER:    { url: 'ships/blaster.glb',    faceFlip: true,  scaleMult: 1.05 },
+  PUNCTURE: { url: 'ships/puncture.glb', faceRotY: -Math.PI / 2, scaleMult: 1.10 },
+  SLAYER:   { url: 'ships/slayer.glb',   faceRotY: -Math.PI / 2, scaleMult: 1.10 },
+  VORTEX:   { url: 'ships/vortex.glb',   faceRotY: -Math.PI / 2, scaleMult: 1.15 },
+  TRACKER:  { url: 'ships/tracker.glb',  faceRotY: -Math.PI / 2, scaleMult: 1.00 },
+  SYPHON:   { url: 'ships/syphon.glb',   faceRotY: -Math.PI / 2, scaleMult: 1.10 },
+  PYRO:     { url: 'ships/pyro.glb',     faceRotY: -Math.PI / 2, scaleMult: 1.05 },
+  BLASTER:  { url: 'ships/blaster.glb',  faceRotY: -Math.PI / 2, scaleMult: 1.05 },
 };
 
 const shipModelCache = { loaded: {}, ready: null };
@@ -6313,7 +6366,12 @@ function preloadShipModels() {
       spec.url,
       gltf => {
         const proto = gltf.scene;
-        if (spec.faceFlip) proto.rotation.y = Math.PI;
+        // faceRotY overrides; faceFlip kept as legacy alias.
+        if (typeof spec.faceRotY === 'number') {
+          proto.rotation.y = spec.faceRotY;
+        } else if (spec.faceFlip) {
+          proto.rotation.y = Math.PI;
+        }
         // Fit to chassis hullLength (pre-bake scale; clones inherit it).
         const ld = LOADOUTS[key];
         const ch = ld ? CHASSIS[ld.chassis] : null;
