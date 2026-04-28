@@ -1153,7 +1153,14 @@ canvas { display: block; }
 
 const LSS = {
   MAX_PLAYERS: 12, TEAM_FLEET_A: 2, TEAM_FLEET_B: 3,
-  ROUND_TIME: 180, WARMUP_TIME: 5, ROUNDS_TO_WIN: 4,
+  ROUND_TIME: 110, WARMUP_TIME: 5, ROUNDS_TO_WIN: 4,
+  // (v6.9) Champion mode: at CHAMPION_TIME seconds remaining, a giant
+  // purple stasis field spawns at map center. The first team to hold a
+  // ship inside it for CHAMPION_CHARGE_TIME seconds wins the round. A
+  // charging ship that dies in the field loses the round. If the timer
+  // runs out with no champion declared, total team HP breaks the tie.
+  CHAMPION_TIME: 10,
+  CHAMPION_CHARGE_TIME: 4,
   SPAWN_PROTECTION: 3, DOOMED_HEALTH_PCT: 0.15, DOOMED_TIMER: 10,
   GRAVITY: 0, ARENA_SIZE: 25000, TICK_RATE: 60,
   // Seconds shown on the in-screen 3-2-1-LAUNCH ticker. The round-system
@@ -2740,9 +2747,17 @@ function handleNetEvent(evt, fromPeerId) {
     const exists = game.stasisFields.some(f => f.netId === evt.fieldId);
     if (!exists) {
       const pos = new THREE.Vector3(evt.x, evt.y, evt.z);
-      instantiateStasisField(pos, evt.fieldId);
-      // Keep our id counter ahead of any inbound id so a future local owner
-      // role doesn't reuse an id another peer already burned.
+      // (v6.9) Honor the champion flag so receivers build the big purple
+      // field instead of a regular stasis ; charge resolution is local
+      // on each peer (cosmetic), but the owner's locked-in result is
+      // authoritative via the round-end broadcast.
+      const field = new StasisField(pos, !!evt.champion);
+      field.netId = evt.fieldId;
+      game.stasisFields.push(field);
+      if (evt.champion) {
+        game.championField = field;
+        game.championSpawned = true;
+      }
       if (evt.fieldId > net.stasisIdCounter) net.stasisIdCounter = evt.fieldId;
     }
     return;
@@ -4971,6 +4986,32 @@ scene.environment = sceneEnvMap;
 // Uses render targets and fullscreen quads; no external postprocessing library needed.
 
 const postFX = { enabled: true };
+
+// (v6.9) Graphics quality preset. Read by various render paths to lower
+// detail (smoke octaves, smoke cap, particle rates, bloom). Default 'high'
+// matches pre-v6.9 behavior ; 'medium' / 'low' shed cost progressively.
+// Settings -> Graphics -> Quality drives this and persists via saveSettings.
+const QUALITY = {
+  level: 'high',
+  // Multipliers applied where they're read each frame.
+  bloomEnabled() { return this.level === 'high'; },
+  smokeOctaves() { return this.level === 'high' ? 3 : (this.level === 'medium' ? 2 : 1); },
+  smokeMax()      { return this.level === 'high' ? 12 : (this.level === 'medium' ? 8 : 5); },
+  particleRate()  { return this.level === 'high' ? 1.0 : (this.level === 'medium' ? 0.7 : 0.4); },
+  heatTrails()    { return this.level === 'high' ? 1.0 : (this.level === 'medium' ? 0.6 : 0.0); },
+};
+function applyQualityPreset(level) {
+  QUALITY.level = (level === 'low' || level === 'medium' || level === 'high') ? level : 'high';
+  postFX.enabled = QUALITY.bloomEnabled();
+  try { localStorage.setItem('lss_quality', QUALITY.level); } catch (e) {}
+}
+try {
+  const stored = localStorage.getItem('lss_quality');
+  if (stored === 'low' || stored === 'medium' || stored === 'high') {
+    QUALITY.level = stored;
+    postFX.enabled = QUALITY.bloomEnabled();
+  }
+} catch (e) {}
 
 // Render target: scene renders here first, then post-processed to screen
 postFX.rtScene = new THREE.WebGLRenderTarget(
@@ -9478,12 +9519,12 @@ function spawnExplosion(pos, size) {
   // from 1.4s to 1.0s — the eye doesn't notice a tighter fade and the
   // typical alive count drops by ~30%.
   if (size > 12) {
-    // (v6.9) Lowered from 25 to 12. The shader is FBM-heavy and overdraw
-    // stacks fast when plumes overlap ; 12 is still a thick battle's worth
-    // of smoke without burning fillrate on plumes that sit behind newer
-    // ones anyway. Pairs with the simplified shader (1 FBM + 1 noise sample
-    // instead of 2 FBM, 3 octaves instead of 6).
-    const SMOKE_MAX = 12;
+    // (v6.9) Cap is dynamic now: graphics quality preset trims it for
+    // medium / low so a busy fight doesn't pile up FBM cost. High = 12,
+    // Medium = 8, Low = 5. Octaves on the per-spawn material below are
+    // also pulled from QUALITY so the shader runs cheaper at lower
+    // settings.
+    const SMOKE_MAX = (typeof QUALITY !== 'undefined') ? QUALITY.smokeMax() : 12;
     let smokeAlive = 0;
     let oldestSmokeIdx = -1;
     let oldestSmokeAge = -1;
@@ -9504,6 +9545,13 @@ function spawnExplosion(pos, size) {
       game.effects.splice(oldestSmokeIdx, 1);
     }
     const smokeMat = _makeSmokeMaterial(0x222018, 0.85);
+    // (v6.9) Override the shader's uOctaves to track the live quality
+    // preset. Low = 1, Medium = 2, High = 3. Existing smoke materials
+    // keep their bake-time octave count ; only newly spawned plumes
+    // pick up the change, which is what we want.
+    if (smokeMat.uniforms && smokeMat.uniforms.uOctaves && typeof QUALITY !== 'undefined') {
+      smokeMat.uniforms.uOctaves.value = QUALITY.smokeOctaves();
+    }
     const smokeMesh = new THREE.Mesh(_SMOKE_GEO, smokeMat);
     smokeMesh.position.copy(pos);
     smokeMesh.scale.setScalar(size * 0.7);
@@ -12071,6 +12119,11 @@ function commitLoadout(key) {
     game.scoreA = 0;
     game.scoreB = 0;
     game.currentRound = 1;
+    // (v6.9) Champion-mode reset for fresh-match start.
+    game.championField = null;
+    game.championSpawned = false;
+    game.championResult = null;
+    game._championPlayerChargingTeam = null;
     // Start ambient sound bed (only once per match)
     startAmbientBed();
   } else {
@@ -15645,18 +15698,46 @@ function updateRoundSystem(dt) {
       else if (b.team === LSS.TEAM_FLEET_B) aliveB++;
     }
 
-    if (aliveB === 0 || game.roundTimer <= 0) {
-      if (aliveB === 0) game.scoreA++;
-      else if (aliveA === 0) game.scoreB++;
-      else game.scoreA++;
+    // (v6.9) Champion-mode resolution. championResult takes priority over
+    // every other end-condition: if a team claimed the field (or fell
+    // mid-charge) the result is locked in regardless of timer / alive
+    // counts. Otherwise: total team HP at timer-out is the tiebreaker
+    // (all-dead on one side still ends the round immediately as before).
+    const endByChampion = game.championResult === 'A' || game.championResult === 'B';
+    const endByTimer = game.roundTimer <= 0;
+    if (endByChampion || aliveB === 0 || aliveA === 0 || endByTimer) {
+      let winnerLabel = '';
+      if (endByChampion) {
+        if (game.championResult === 'A') game.scoreA++; else game.scoreB++;
+        winnerLabel = game.championResult === 'A' ? 'FLEET A CLAIMED CHAMPION' : 'FLEET B CLAIMED CHAMPION';
+      } else if (aliveB === 0 && aliveA > 0) {
+        game.scoreA++; winnerLabel = 'FLEET A WIPED FLEET B';
+      } else if (aliveA === 0 && aliveB > 0) {
+        game.scoreB++; winnerLabel = 'FLEET B WIPED FLEET A';
+      } else if (endByTimer) {
+        // HP-total tiebreaker (sum of remaining hull HP on alive ships).
+        let hpA = 0, hpB = 0;
+        if (player.shipState !== 'dead') {
+          if (player.team === LSS.TEAM_FLEET_A) hpA += player.health || 0;
+          else if (player.team === LSS.TEAM_FLEET_B) hpB += player.health || 0;
+        }
+        for (let i = 0, n = game.entities.length; i < n; i++) {
+          const b = game.entities[i];
+          if (!b.alive) continue;
+          if (b.team === LSS.TEAM_FLEET_A) hpA += b.health || 0;
+          else if (b.team === LSS.TEAM_FLEET_B) hpB += b.health || 0;
+        }
+        if (hpA > hpB) { game.scoreA++; winnerLabel = 'FLEET A: ' + Math.round(hpA) + ' HP > FLEET B: ' + Math.round(hpB) + ' HP'; }
+        else if (hpB > hpA) { game.scoreB++; winnerLabel = 'FLEET B: ' + Math.round(hpB) + ' HP > FLEET A: ' + Math.round(hpA) + ' HP'; }
+        else { game.scoreA++; winnerLabel = 'TIE BROKEN BY DEFAULT TO FLEET A'; }
+      } else {
+        // Both alive counts > 0 but neither end condition triggered ; fall
+        // through (shouldn't normally happen but covered for safety).
+        game.scoreA++;
+      }
       game.state = 'roundEnd';
       game.roundEndTimer = 5;
-      if (window.Overlays) Overlays.banner('ROUND OVER', 'FLEET A: ' + game.scoreA + '  FLEET B: ' + game.scoreB);
-    } else if (aliveA === 0) {
-      game.scoreB++;
-      game.state = 'roundEnd';
-      game.roundEndTimer = 5;
-      if (window.Overlays) Overlays.banner('ROUND OVER', 'FLEET A: ' + game.scoreA + '  FLEET B: ' + game.scoreB);
+      if (window.Overlays) Overlays.banner('ROUND OVER', winnerLabel + '  |  FLEET A: ' + game.scoreA + '  FLEET B: ' + game.scoreB);
     }
   } else if (game.state === 'roundEnd') {
     game.roundEndTimer -= dt;
@@ -15711,6 +15792,11 @@ function updateRoundSystem(dt) {
         game.stasisSpawnTimer = 30;
         game.stasisFirstBatch = true;
         game.playerInStasis = false;
+        // (v6.9) Reset champion-mode state for the new round.
+        game.championField = null;
+        game.championSpawned = false;
+        game.championResult = null;
+        game._championPlayerChargingTeam = null;
         document.getElementById('stasis-warning').style.display = 'none';
         document.getElementById('stasis-vignette').style.display = 'none';
         // Clean up world effects. The previous version only removed
@@ -17993,6 +18079,21 @@ function buildSettingsPage() {
     <h2>GRAPHICS</h2>
 
     <div class="settings-section">
+      <h3>Quality</h3>
+      <div class="setting-row">
+        <label>Preset</label>
+        <select id="set-quality" style="flex:1;">
+          <option value="low" ${QUALITY.level === 'low' ? 'selected' : ''}>Low (no bloom, 1-octave smoke, light particles)</option>
+          <option value="medium" ${QUALITY.level === 'medium' ? 'selected' : ''}>Medium (no bloom, 2-octave smoke)</option>
+          <option value="high" ${QUALITY.level === 'high' ? 'selected' : ''}>High (full bloom + 3-octave smoke)</option>
+        </select>
+      </div>
+      <div class="setting-row" style="opacity:0.7; font-size:0.85em;">
+        <label style="flex:1;">If the framerate dips during heavy fights, drop to Medium or Low. The change applies to newly-spawned effects ; existing smoke plumes keep their settings until they fade out.</label>
+      </div>
+    </div>
+
+    <div class="settings-section">
       <h3>Wall Pattern</h3>
       <div class="setting-row">
         <label>Style</label>
@@ -18180,6 +18281,13 @@ function buildSettingsPage() {
   if (wpSel) {
     wpSel.addEventListener('change', e => {
       setWallPattern(parseInt(e.target.value, 10) | 0);
+    });
+  }
+  // (v6.9) Quality preset dropdown.
+  const qSel = overlay.querySelector('#set-quality');
+  if (qSel) {
+    qSel.addEventListener('change', e => {
+      applyQualityPreset(e.target.value);
     });
   }
   // Pure Black Base checkbox
@@ -18718,25 +18826,39 @@ function setWallPattern(idx) {
 // ---- STASIS FIELD SYSTEM ----
 
 class StasisField {
-  constructor(position) {
+  constructor(position, championMode) {
     this.position = position.clone();
     this.alive = true;
-    this.radius = 120;
+    // (v6.9) Champion fields are bigger so two ships can cross paths in
+    // them and the contested-charge resolution reads at a glance.
+    this.championMode = !!championMode;
+    this.radius = this.championMode ? 260 : 120;
     this.pulseTime = 0;
+    // Charge state for champion mode. chargingTeam is null while empty
+    // or contested ; chargeTimer accumulates while a single team's
+    // ship sits in the field. See updateStasisFields for the rules.
+    this.chargingTeam = null;
+    this.chargeTimer = 0;
+    this.lastChargingShipDiedTeam = null;
 
     // Visual: shader-driven energy core (vortex bands + fresnel rim) with
     // two rotating rings around it. Core's uPulse uniform is updated each
     // frame from proximityBoost so the field intensifies as the player
     // approaches; updateEffects-style time tick is done in update(dt).
+    // Champion fields are bigger and purple so the prize feels singular.
+    const coreColor = this.championMode ? 0xaa55ff : 0x00ccff;
+    const ringColor = this.championMode ? 0x9933ff : 0x0088ff;
+    const coreRadius = this.championMode ? 50 : 22;
+    const ringRadius = this.championMode ? 90 : 40;
     this.group = new THREE.Group();
-    const coreGeo = new THREE.SphereGeometry(22, 24, 16);
-    const coreMat = _makeStasisCoreMaterial(0x00ccff);
+    const coreGeo = new THREE.SphereGeometry(coreRadius, 32, 20);
+    const coreMat = _makeStasisCoreMaterial(coreColor);
     this.core = new THREE.Mesh(coreGeo, coreMat);
     this.core.renderOrder = 1;
     this.group.add(this.core);
 
-    const ringGeo = new THREE.TorusGeometry(40, 2, 8, 32);
-    const ringMat = new THREE.MeshBasicMaterial({ color: 0x0088ff, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending, depthWrite: false });
+    const ringGeo = new THREE.TorusGeometry(ringRadius, this.championMode ? 4 : 2, 10, 40);
+    const ringMat = new THREE.MeshBasicMaterial({ color: ringColor, transparent: true, opacity: 0.45, blending: THREE.AdditiveBlending, depthWrite: false });
     this.ring = new THREE.Mesh(ringGeo, ringMat);
     this.ring.renderOrder = 1;
     this.group.add(this.ring);
@@ -18746,6 +18868,24 @@ class StasisField {
     ring2.renderOrder = 1;
     this.ring2 = ring2;
     this.group.add(ring2);
+
+    // (v6.9) Champion fields get a third ring rotated on the third axis
+    // and a wider outer "claim radius" wireframe so the contested zone
+    // is visible from across the room. The wider ring is purely visual.
+    if (this.championMode) {
+      const ring3 = new THREE.Mesh(ringGeo, ringMat.clone());
+      ring3.rotation.z = Math.PI / 2;
+      ring3.rotation.x = Math.PI / 4;
+      ring3.renderOrder = 1;
+      this.ring3 = ring3;
+      this.group.add(ring3);
+      const claimGeo = new THREE.TorusGeometry(this.radius * 0.95, 2.5, 8, 64);
+      const claimMat = new THREE.MeshBasicMaterial({ color: 0xddaaff, transparent: true, opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false });
+      this.claimRing = new THREE.Mesh(claimGeo, claimMat);
+      this.claimRing.rotation.x = Math.PI / 2;
+      this.claimRing.renderOrder = 1;
+      this.group.add(this.claimRing);
+    }
 
     // No per-field PointLight: adding lights post-init forces Three.js to
     // recompile all shaders (NUM_POINT_LIGHTS change), which causes a visible
@@ -18775,6 +18915,16 @@ class StasisField {
     // Rotate rings (faster when close)
     this.ring.rotation.z += dt * 1.5 * proximityBoost;
     this.ring2.rotation.y += dt * 1.2 * proximityBoost;
+    // (v6.9) Champion field's third ring + claim wireframe for the
+    // bigger silhouette. Rotation slightly faster while charging so the
+    // field reads as "active" as soon as a team plants in it.
+    if (this.ring3) {
+      const chargingBoost = this.chargingTeam ? 1.8 : 1.0;
+      this.ring3.rotation.x += dt * 1.0 * proximityBoost * chargingBoost;
+    }
+    if (this.claimRing) {
+      this.claimRing.rotation.z += dt * 0.4 * proximityBoost;
+    }
     // Drive shader uniforms on the energy core: time advances regardless of
     // proximity; uPulse boosts band rotation speed and brightness when the
     // player approaches. Scale still pulses so the field reads as breathing.
@@ -18919,6 +19069,43 @@ function instantiateStasisField(pos, fieldId) {
   return field;
 }
 
+// (v6.9) Spawn the round's single champion stasis at map center. Only the
+// stasis owner spawns and broadcasts ; receivers mirror via stasis_spawn
+// with a special championMode flag. The field's chargeTimer + chargingTeam
+// drive the round-end resolution.
+function spawnChampionField() {
+  if (net.active && !amStasisOwner()) return;
+  if (game.championField && game.championField.alive) return;
+  // Map center. Use the average of room positions if available so off-center
+  // levels still place the field somewhere sensible ; fall back to origin.
+  let cx = 0, cy = 0, cz = 0;
+  if (game.levelSpheres && game.levelSpheres.length) {
+    for (const s of game.levelSpheres) { cx += s.cx; cy += s.cy; cz += s.cz; }
+    cx /= game.levelSpheres.length;
+    cy /= game.levelSpheres.length;
+    cz /= game.levelSpheres.length;
+  }
+  const pos = new THREE.Vector3(cx, cy, cz);
+  const fieldId = ++net.stasisIdCounter;
+  const field = new StasisField(pos, true);
+  field.netId = fieldId;
+  game.stasisFields.push(field);
+  game.championField = field;
+  // Cinematic announce: banner + a fat dynamic light pulse at the field.
+  if (window.Overlays) Overlays.banner('CHAMPION OBJECTIVE', 'Charge in the field to win the round');
+  if (typeof spawnDynamicLight === 'function') {
+    spawnDynamicLight(pos, 0xaa55ff, 6.0, 1500, 0.8);
+  }
+  if (net.active && net.sendEvent) {
+    net.sendEvent({
+      type: 'stasis_spawn',
+      x: pos.x, y: pos.y, z: pos.z,
+      fieldId,
+      champion: true,
+    });
+  }
+}
+
 function spawnStasisField() {
   // (v6.7) Only the stasis owner computes spawns; receivers get them via the
   // stasis_spawn event. This is the simplest fix for "every peer ticks their
@@ -18994,11 +19181,99 @@ function updateStasisFields(dt) {
     }
   }
 
+  // (v6.9) Champion-field auto-spawn. Once the round timer drops below
+  // CHAMPION_TIME, drop a single big purple stasis at map center. game.
+  // championSpawned guards against re-spawning if this peer's logic
+  // re-enters the branch.
+  if (game.state === 'playing' && !game.championSpawned && game.roundTimer <= LSS.CHAMPION_TIME) {
+    spawnChampionField();
+    game.championSpawned = true;
+  }
+
   // Update existing fields
   for (let i = game.stasisFields.length - 1; i >= 0; i--) {
     const field = game.stasisFields[i];
     if (!field.alive) { game.stasisFields.splice(i, 1); continue; }
     field.update(dt);
+
+    // (v6.9) Champion fields use a contested-charge model instead of
+    // instant pickup. Determine which teams have a ship inside the radius
+    // ; one-team-only accumulates charge, two-team contested resets, no
+    // ships present resets. If a ship that was charging just died, the
+    // OTHER team wins immediately (death-while-charging penalty).
+    if (field.championMode) {
+      let teamA_in = false;
+      let teamB_in = false;
+      // Track whether the player is the charging ship so the death-mid-
+      // charge penalty kicks in correctly. Bots that die mid-charge just
+      // reset the field (no auto-loss for the team).
+      let playerIn = false;
+      if (player.shipState !== 'dead' && player.position) {
+        const d = player.position.distanceTo(field.position);
+        if (d < field.radius) {
+          if (player.team === LSS.TEAM_FLEET_A) teamA_in = true;
+          else teamB_in = true;
+          playerIn = true;
+        }
+      }
+      for (const bot of game.entities) {
+        if (!bot.alive) continue;
+        if (bot.position.distanceTo(field.position) < field.radius) {
+          if (bot.team === LSS.TEAM_FLEET_A) teamA_in = true;
+          else teamB_in = true;
+        }
+      }
+      if (teamA_in && teamB_in) {
+        // Contested ; no charge progress.
+        field.chargingTeam = null;
+        field.chargeTimer = 0;
+      } else if (teamA_in || teamB_in) {
+        const team = teamA_in ? LSS.TEAM_FLEET_A : LSS.TEAM_FLEET_B;
+        if (field.chargingTeam !== team) {
+          field.chargingTeam = team;
+          field.chargeTimer = 0;
+        }
+        field.chargeTimer += dt;
+        // Player-charging-this-frame snapshot for the death penalty:
+        // if the player is the charger, remember the team so a death
+        // next frame resolves as a loss.
+        if (playerIn) game._championPlayerChargingTeam = player.team;
+        else game._championPlayerChargingTeam = null;
+        if (field.chargeTimer >= LSS.CHAMPION_CHARGE_TIME) {
+          // Win condition met. Resolve the round to that team and remove
+          // the field cleanly.
+          game.championResult = (team === LSS.TEAM_FLEET_A) ? 'A' : 'B';
+          field.alive = false;
+          if (field.group.parent) scene.remove(field.group);
+          if (window.Overlays) {
+            const teamLabel = team === LSS.TEAM_FLEET_A ? 'FLEET A' : 'FLEET B';
+            Overlays.banner('CHAMPION CLAIMED', teamLabel + ' WINS THE ROUND');
+          }
+          continue;
+        }
+      } else {
+        // Field is empty. If the player WAS charging on the previous
+        // frame and is now dead (left the radius via death rather than
+        // moving out), the death-mid-charge penalty applies.
+        if (game._championPlayerChargingTeam != null && player.shipState === 'dead') {
+          const losingTeam = game._championPlayerChargingTeam;
+          game.championResult = (losingTeam === LSS.TEAM_FLEET_A) ? 'B' : 'A';
+          field.alive = false;
+          if (field.group.parent) scene.remove(field.group);
+          if (window.Overlays) {
+            const losingLabel = losingTeam === LSS.TEAM_FLEET_A ? 'FLEET A' : 'FLEET B';
+            Overlays.banner('CHAMPION FELL', losingLabel + ' loses the round');
+          }
+          game._championPlayerChargingTeam = null;
+          continue;
+        }
+        field.chargingTeam = null;
+        field.chargeTimer = 0;
+        game._championPlayerChargingTeam = null;
+      }
+      // Skip the regular pickup paths for the champion field.
+      continue;
+    }
 
     // Check player pickup (if not already in stasis and not dead)
     if (!game.playerInStasis && player.shipState !== 'dead' && player.position) {
@@ -22466,6 +22741,17 @@ document.addEventListener('keyup', e => {
 
 const deathCam = {
   active: false,
+  // (v6.9) Kill-cam phase: brief cinematic before the spectate cam takes
+  // over. Holds the camera at (or near) the killer's POV looking at the
+  // wreck so the player sees how they died. Attacker is the Bot / 'world'
+  // tag passed in from playerDie ; null fallback uses a high pan above
+  // the death point.
+  killCamTimer: 0,
+  killCamDuration: 2.5,
+  killCamAttacker: null,
+  killCamStartCam: null,   // THREE.Vector3 cached at kill-cam start
+  killCamEndCam: null,     // THREE.Vector3 cached at kill-cam start
+  killCamDeathPos: null,
   // Orbit-mode state (fallback when no living teammates remain)
   angle: 0,
   radius: 400,
@@ -22518,7 +22804,7 @@ function _updateSpectateOverlay() {
   }
 }
 
-function startDeathCam() {
+function startDeathCam(attacker) {
   deathCam.active = true;
   deathCam.target = player.position.clone();
   deathCam.angle = player.euler.y;
@@ -22527,12 +22813,60 @@ function startDeathCam() {
   deathCam._kbPrevLeft = false;
   deathCam._kbPrevRight = false;
   deathCam._kbPrevClick = false;
-  // Auto-pick first living teammate if one exists
+  // (v6.9) Kill-cam: capture start + end positions so updateDeathCam can
+  // smoothly slerp between them across killCamDuration. Start point sits
+  // a bit behind the killer's hull looking at the wreck ; if there's no
+  // killer (suicide / world damage) we fall back to a high external pan.
+  deathCam.killCamAttacker = (attacker && attacker.position) ? attacker : null;
+  deathCam.killCamTimer = deathCam.killCamDuration;
+  deathCam.killCamDeathPos = deathCam.target.clone();
+  if (deathCam.killCamAttacker) {
+    // Start point: behind the killer over their shoulder, looking at the
+    // wreck. End point: closer to the wreck for the dolly-in.
+    const att = deathCam.killCamAttacker;
+    const toWreck = new THREE.Vector3().subVectors(deathCam.target, att.position);
+    const dist = Math.max(60, toWreck.length());
+    const back = toWreck.clone().normalize().multiplyScalar(-(att.chassis ? att.chassis.hullLength * 1.6 : 120));
+    const up = new THREE.Vector3(0, (att.chassis ? att.chassis.hullLength * 0.5 : 50), 0);
+    deathCam.killCamStartCam = att.position.clone().add(back).add(up);
+    // Dolly endpoint: 60% of the way toward the wreck, slightly elevated.
+    const dolly = att.position.clone().add(toWreck.clone().multiplyScalar(0.6)).add(new THREE.Vector3(0, 60, 0));
+    deathCam.killCamEndCam = dolly;
+  } else {
+    // No attacker: high pan above the death point.
+    const aboveOff = new THREE.Vector3(180, 320, 180);
+    deathCam.killCamStartCam = deathCam.target.clone().add(aboveOff);
+    deathCam.killCamEndCam = deathCam.target.clone().add(new THREE.Vector3(60, 120, 60));
+  }
+  // Auto-pick first living teammate if one exists, but the kill-cam still
+  // takes priority for its duration so the player sees the killing blow.
   cycleSpectateTarget(1);
 }
 
 function updateDeathCam(dt) {
   if (!deathCam.active) return;
+
+  // (v6.9) Kill-cam phase: hold + dolly the camera from the killer's
+  // shoulder to the wreck, looking at the corpse the whole time. Skips
+  // spectate input until the kill cam finishes so the player can't
+  // accidentally cycle past the cinematic. Mouse-click during kill cam
+  // skips it (impatient players).
+  if (deathCam.killCamTimer > 0) {
+    deathCam.killCamTimer -= dt;
+    const skipKill = !!input.mouseDown;
+    if (skipKill) deathCam.killCamTimer = 0;
+    if (deathCam.killCamStartCam && deathCam.killCamEndCam && deathCam.killCamDeathPos) {
+      // Ease-out interpolation 0..1 across the duration.
+      const t = 1 - Math.max(0, deathCam.killCamTimer / deathCam.killCamDuration);
+      const eased = 1 - (1 - t) * (1 - t);
+      camera.position.lerpVectors(deathCam.killCamStartCam, deathCam.killCamEndCam, eased);
+      camera.lookAt(deathCam.killCamDeathPos);
+    }
+    if (deathCam.killCamTimer > 0) return;
+    // Kill cam just ended ; reset edge-detection so a held mouse click
+    // during the kill cam doesn't immediately register as a cycle.
+    deathCam._kbPrevClick = !!input.mouseDown;
+  }
 
   // Input: cycle spectate target (keyboard + mouse; gamepad handled in the
   // main input pass so it shares the existing edge-tracking state).
@@ -22591,13 +22925,19 @@ function updateDeathCam(dt) {
 const _origPlayerDie2 = playerDie;
 playerDie = function(attacker) {
   _origPlayerDie2(attacker);
-  startDeathCam();
+  // (v6.9) Pass attacker into startDeathCam so the kill-cam phase can
+  // anchor to the killer's POV. attacker is null for world / suicide
+  // damage, in which case startDeathCam falls back to a high pan.
+  startDeathCam(attacker);
 };
 
 const _origRespawnPlayer = respawnPlayer;
 respawnPlayer = function() {
   deathCam.active = false;
   deathCam.spectateTarget = null;
+  // (v6.9) Cancel any in-flight kill cam.
+  deathCam.killCamTimer = 0;
+  deathCam.killCamAttacker = null;
   _origRespawnPlayer();
 };
 
