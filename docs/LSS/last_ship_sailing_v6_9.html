@@ -12532,6 +12532,15 @@ function updatePlayerMovement(dt) {
   // Puncture Afterburner speed boost
   if (player.afterburnerActive) moveDir.multiplyScalar(player.afterburnerSpeedMult);
 
+  // (v6.9) Slayer Sword Block locks the ship into a heavy guarding stance:
+  // 60% slower movement and a matching speed cap. The block is the
+  // defensive trade ; mobility loss is what makes it a real choice vs
+  // staying mobile and shooting.
+  const swordBlockActive = player.loadoutKey === 'SLAYER' &&
+    player.abilityActive[1] && player.abilities[1] &&
+    player.abilities[1].name === 'Sword Block';
+  if (swordBlockActive) moveDir.multiplyScalar(0.4);
+
   // Acceleration
   if (moveDir.lengthSq() > 0) {
     const accelDir = _mvAccelDir.copy(moveDir).sub(player.velocity);
@@ -12547,8 +12556,9 @@ function updatePlayerMovement(dt) {
     }
   }
 
-  // Speed cap (afterburner raises the cap to 600)
-  const maxSpeed = player.dashActive ? ch.dashSpeed : (player.afterburnerActive ? 600 : ch.flightSpeed);
+  // Speed cap (afterburner raises the cap to 600 ; sword block clamps to 40%)
+  let maxSpeed = player.dashActive ? ch.dashSpeed : (player.afterburnerActive ? 600 : ch.flightSpeed);
+  if (swordBlockActive) maxSpeed = ch.flightSpeed * 0.4;
   if (player.velocity.length() > maxSpeed) {
     player.velocity.normalize().multiplyScalar(maxSpeed);
   }
@@ -14395,15 +14405,16 @@ function updateShieldVisuals(dt) {
 
   if (gunShieldActive) {
     if (!player.gunShieldMesh) {
-      // (v6.9) Octagonal hologram shield. Same hex-hologram shader as
-      // Tracker's Particle Wall so the two read as the same visual
-      // language ; only difference is this one tracks the player every
-      // frame instead of staying parked in space. ExtrudeGeometry over
-      // an 8-sided shape gives a thin octagonal prism with real depth
-      // from any angle (matching Particle Wall's BoxGeometry approach).
-      const shape = new THREE.Shape();
+      // (v6.9 fix) Octagonal hologram shield, properly UV-mapped this
+      // time. Earlier ExtrudeGeometry caused the hex pattern to come out
+      // garbled because extruded UVs wrap across the prism's side walls.
+      // ShapeGeometry gives a clean planar UV map from the shape's
+      // bounding box, so the hex shader reads the same way it does on
+      // Particle Wall's BoxGeometry. Octagon vertices placed manually
+      // and UVs assigned by re-mapping vertex XY into [0,1].
       const sides = 8;
       const shieldR = 110;
+      const shape = new THREE.Shape();
       for (let i = 0; i <= sides; i++) {
         const angle = (i / sides) * Math.PI * 2 - Math.PI / 2;
         const x = Math.cos(angle) * shieldR;
@@ -14411,20 +14422,28 @@ function updateShieldVisuals(dt) {
         if (i === 0) shape.moveTo(x, y);
         else shape.lineTo(x, y);
       }
-      const geo = new THREE.ExtrudeGeometry(shape, { depth: 14, bevelEnabled: false });
-      geo.translate(0, 0, -7);
+      const geo = new THREE.ShapeGeometry(shape);
+      // ShapeGeometry's default UV0 is the same as position.xy mapped to
+      // the geometry-local space ; remap to [0,1] over the octagon
+      // bounding box so the hex shader's centered (vUv - 0.5) read
+      // works regardless of where in world space the shield sits.
+      const posAttr = geo.attributes.position;
+      const uvArr = new Float32Array(posAttr.count * 2);
+      for (let i = 0; i < posAttr.count; i++) {
+        const vx = posAttr.getX(i);
+        const vy = posAttr.getY(i);
+        uvArr[i * 2 + 0] = (vx + shieldR) / (2 * shieldR);
+        uvArr[i * 2 + 1] = (vy + shieldR) / (2 * shieldR);
+      }
+      geo.setAttribute('uv', new THREE.BufferAttribute(uvArr, 2));
       const mat = _makeHexHologramMaterial(0xff8a55);
-      mat.transparent = true;
-      mat.depthWrite = false;
-      mat.side = THREE.DoubleSide;
-      mat.blending = THREE.AdditiveBlending;
       player.gunShieldMesh = new THREE.Mesh(geo, mat);
       player.gunShieldMesh.renderOrder = 1;
       scene.add(player.gunShieldMesh);
       // Edge wireframe so the octagon outline reads cleanly against the
-      // hologram scan field, same as Particle Wall.
+      // hex scan field, same as Particle Wall's edge ring.
       const edgeGeo = new THREE.EdgesGeometry(geo);
-      const edgeMat = new THREE.LineBasicMaterial({ color: 0xffcc88, transparent: true, opacity: 0.85 });
+      const edgeMat = new THREE.LineBasicMaterial({ color: 0xffcc88, transparent: true, opacity: 0.9 });
       player.gunShieldEdge = new THREE.LineSegments(edgeGeo, edgeMat);
       player.gunShieldEdge.renderOrder = 1;
       scene.add(player.gunShieldEdge);
@@ -16070,7 +16089,27 @@ function pollGamepad() {
   // ---- Menu navigation (runs before gameplay edge triggers) ----
   const _shipSelect = document.getElementById('ship-select');
   const _shipSelectActive = !!(_shipSelect && _shipSelect.classList.contains('active'));
-  const _menuActive = settingsOpen || _shipSelectActive || game.state === 'select' || game.state === 'matchEnd';
+  // (v6.9) The first screen shown on cold boot is #lobby (Solo vs Join Room
+  // chooser), not #ship-select. Without an explicit gate here gamepad input
+  // never reaches the lobby, so users had to mouse-click SOLO once before
+  // gamepad started working. Detect it via display style and treat it as a
+  // menu state for nav purposes.
+  const _lobby = document.getElementById('lobby');
+  const _lobbyActive = !!(_lobby && _lobby.style.display !== 'none' && _lobby.offsetParent !== null);
+  const _menuActive = settingsOpen || _shipSelectActive || _lobbyActive || game.state === 'select' || game.state === 'matchEnd';
+
+  // Lobby (cold-boot screen) gamepad shortcut: Start or A (button 0) commits
+  // SOLO + BOTS so the user can launch into a match without touching the
+  // mouse. Multiplayer Join still requires keyboard input for the room
+  // code ; gamepad-driven text entry is out of scope.
+  if (_lobbyActive) {
+    const _aBtn = !!(gp.buttons[0] && gp.buttons[0].pressed);
+    if ((input.gpMenu && !input.gpMenuPrev) || (_aBtn && !input.gpAPrev)) {
+      const soloBtn = document.getElementById('btn-solo');
+      if (soloBtn) soloBtn.click();
+    }
+    input.gpAPrev = _aBtn;
+  }
 
   // Start: confirm / select (menus) or hold-to-show scoreboard (in combat)
   if (input.gpMenu && !input.gpMenuPrev) {
