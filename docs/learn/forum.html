@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Learning Claude AI with Ashman; bring-your-own-laptop AI courses</title>
-<meta name="description" content="Hands-on local AI courses with Ashman. Bring your own laptop, leave with something you built using Claude." />
+<title>Forum; Learning Claude AI with Ashman</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -14,226 +13,361 @@
 
 <header class="site-header">
   <div class="container nav">
-    <a href="#top" class="logo">
+    <a href="index.html" class="logo">
       <span class="logo-mark">A</span>
       <span>Learning Claude AI <span style="color: var(--ink-soft); font-weight: 500;">with Ashman</span></span>
     </a>
     <nav class="nav-links">
-      <a href="#courses">Courses</a>
-      <a href="#about">About</a>
-      <a href="forum.html">Forum</a>
-      <a href="#signup" class="btn btn-primary btn-sm">Sign up</a>
+      <a href="index.html#courses">Courses</a>
+      <a href="index.html#about">About</a>
+      <a href="forum.html"><strong>Forum</strong></a>
+      <a href="index.html#signup" class="btn btn-primary btn-sm">Sign up</a>
     </nav>
   </div>
 </header>
 
-<main id="top">
+<main class="container forum-shell">
 
-  <!-- Hero -->
-  <section class="hero container">
-    <div>
-      <h1>Build something real <span class="accent">with AI</span>; in one afternoon.</h1>
-      <p class="lead">
-        Local, in-person courses where you bring your laptop and walk out with a working project.
-        No theory dumps, no jargon walls; just hands-on building with Claude, taught by someone who'll sit beside you.
-      </p>
-      <div class="hero-cta">
-        <a href="#courses" class="btn btn-primary">See upcoming courses</a>
-        <a href="forum.html" class="btn btn-ghost">Join the forum</a>
-      </div>
+  <div id="config-warning-slot"></div>
+
+  <div class="forum-toolbar">
+    <h2 id="forum-title">Course community</h2>
+    <div id="auth-area" class="auth-status"></div>
+  </div>
+
+  <div id="view-list">
+    <p style="color: var(--ink-soft); margin: 0 0 16px;">
+      A place for current and past students to share what they're building, ask questions, and help each other out.
+      Be kind; we're all learning.
+    </p>
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
+      <button id="new-topic-btn" class="btn btn-primary btn-sm" disabled>New topic</button>
     </div>
-    <aside class="hero-card">
-      <h3>Each course you'll build:</h3>
-      <ul>
-        <li>A real, working project on your own laptop</li>
-        <li>The skill to keep going on your own</li>
-        <li>Confidence; no more AI-anxiety</li>
-        <li>A community of locals doing the same</li>
-      </ul>
-    </aside>
-  </section>
+    <div id="topic-list" class="topic-list"></div>
+  </div>
 
-  <!-- Courses -->
-  <section id="courses" class="alt">
-    <div class="container">
-      <div class="section-head">
-        <h2>Upcoming courses</h2>
-        <p>Small groups, bring your own laptop, finish with something you made yourself. Times are local.</p>
+  <div id="view-thread" style="display: none;">
+    <a href="#" id="back-to-list" style="display: inline-block; margin-bottom: 16px;">&larr; All topics</a>
+    <div id="thread-header" class="thread-header"></div>
+    <div id="reply-list"></div>
+    <form id="reply-form" style="margin-top: 24px;" class="form-card">
+      <div class="form-row">
+        <label for="reply-body">Your reply</label>
+        <textarea id="reply-body" required placeholder="Share what you're thinking..."></textarea>
       </div>
-      <div class="course-grid">
-
-        <article class="course-card">
-          <span class="course-tag">Beginner</span>
-          <h3>Your first AI assistant</h3>
-          <p>Set up Claude, learn how to talk to it, and build a personal helper that drafts emails, summarises documents, and answers questions about your own files.</p>
-          <div class="course-meta">
-            <span><strong>3 hours</strong> &middot; Sat morning</span>
-            <span>$45</span>
-          </div>
-        </article>
-
-        <article class="course-card">
-          <span class="course-tag">Beginner</span>
-          <h3>Build a website with AI</h3>
-          <p>Go from a blank page to a working website you can show off, using Claude as your pair-programmer. No coding background needed.</p>
-          <div class="course-meta">
-            <span><strong>4 hours</strong> &middot; Sun afternoon</span>
-            <span>$65</span>
-          </div>
-        </article>
-
-        <article class="course-card">
-          <span class="course-tag">Intermediate</span>
-          <h3>Automate your workflow</h3>
-          <p>Pick a real task you do every week and build an AI workflow that handles it. Email triage, meeting notes, content drafts; your call.</p>
-          <div class="course-meta">
-            <span><strong>4 hours</strong> &middot; Sat afternoon</span>
-            <span>$75</span>
-          </div>
-        </article>
-
-        <article class="course-card">
-          <span class="course-tag">Intermediate</span>
-          <h3>Working with your data</h3>
-          <p>Bring your own spreadsheets, PDFs, or notes. Leave with an AI tool that searches, summarises, and answers questions across all of them.</p>
-          <div class="course-meta">
-            <span><strong>4 hours</strong> &middot; Weeknight series</span>
-            <span>$75</span>
-          </div>
-        </article>
-
-        <article class="course-card">
-          <span class="course-tag">Advanced</span>
-          <h3>Build an AI agent</h3>
-          <p>Move past chatting to agents that take actions: book things, send messages, manage files. Real agentic workflows on your laptop.</p>
-          <div class="course-meta">
-            <span><strong>6 hours</strong> &middot; Full Saturday</span>
-            <span>$120</span>
-          </div>
-        </article>
-
-        <article class="course-card">
-          <span class="course-tag">Custom</span>
-          <h3>Team workshops</h3>
-          <p>I come to your office or community space and run a tailored session for your team or group. Drop me a note; happy to design something around your goals.</p>
-          <div class="course-meta">
-            <span><strong>Half/full day</strong></span>
-            <span>From $400</span>
-          </div>
-        </article>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- About -->
-  <section id="about">
-    <div class="container">
-      <div class="section-head">
-        <h2>About Ashman</h2>
-      </div>
-      <div class="about">
-        <div class="about-photo" aria-hidden="true">A</div>
-        <div>
-          <h3>Hi, I'm Ashman.</h3>
-          <p>
-            I teach AI the way I wish I'd been taught: in person, side-by-side, with a real project at the end of the day.
-            I work with Claude every day and have helped beginners, professionals, and full teams get past the I-don't-know-where-to-start stage.
-          </p>
-          <p>
-            My classes are small on purpose; small enough that I can sit next to you when you're stuck, and big enough that you meet other people in the area doing the same thing.
-            We don't read slides. We build.
-          </p>
-          <p>
-            If you've ever felt that AI is moving too fast or that the online tutorials aren't quite for you, this is the room you want to be in.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Sign up -->
-  <section id="signup" class="alt">
-    <div class="container">
-      <div class="section-head">
-        <h2>Save your seat</h2>
-        <p>Tell me which course you're interested in and I'll get back to you with dates and the venue.</p>
-      </div>
-      <form class="form-card" id="signup-form">
-        <div class="form-row">
-          <label for="name">Your name</label>
-          <input type="text" id="name" name="name" required autocomplete="name" />
-        </div>
-        <div class="form-row">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required autocomplete="email" />
-        </div>
-        <div class="form-row">
-          <label for="course">Which course?</label>
-          <select id="course" name="course" required>
-            <option value="">Choose one...</option>
-            <option>Your first AI assistant</option>
-            <option>Build a website with AI</option>
-            <option>Automate your workflow</option>
-            <option>Working with your data</option>
-            <option>Build an AI agent</option>
-            <option>Team workshop (custom)</option>
-            <option>Not sure yet; recommend something</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label for="note">Anything you want me to know? (optional)</label>
-          <textarea id="note" name="note" placeholder="What you're hoping to build, your experience level, scheduling notes..."></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Send sign-up</button>
-        <div id="signup-result"></div>
-      </form>
-    </div>
-  </section>
+      <button type="submit" class="btn btn-primary">Post reply</button>
+      <div id="reply-result"></div>
+    </form>
+  </div>
 
 </main>
 
+<div class="modal-backdrop" id="auth-modal">
+  <div class="modal">
+    <h3 id="auth-title">Sign in</h3>
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-mode="signin">Sign in</button>
+      <button class="modal-tab" data-mode="signup">Create account</button>
+    </div>
+    <form id="auth-form">
+      <div class="form-row" id="display-name-row" style="display: none;">
+        <label for="auth-name">Display name</label>
+        <input type="text" id="auth-name" />
+      </div>
+      <div class="form-row">
+        <label for="auth-email">Email</label>
+        <input type="email" id="auth-email" required />
+      </div>
+      <div class="form-row">
+        <label for="auth-pass">Password</label>
+        <input type="password" id="auth-pass" required minlength="6" />
+      </div>
+      <button type="submit" class="btn btn-primary" style="width: 100%;" id="auth-submit">Sign in</button>
+      <button type="button" class="btn btn-ghost btn-sm" id="auth-cancel" style="width: 100%; margin-top: 8px;">Cancel</button>
+      <div id="auth-result"></div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="topic-modal">
+  <div class="modal">
+    <h3>Start a new topic</h3>
+    <form id="topic-form">
+      <div class="form-row">
+        <label for="topic-title-in">Title</label>
+        <input type="text" id="topic-title-in" required maxlength="120" />
+      </div>
+      <div class="form-row">
+        <label for="topic-body-in">First post</label>
+        <textarea id="topic-body-in" required style="min-height: 140px;" placeholder="What's on your mind? Share what you're working on, ask a question, or post something cool you built."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width: 100%;">Post topic</button>
+      <button type="button" class="btn btn-ghost btn-sm" id="topic-cancel" style="width: 100%; margin-top: 8px;">Cancel</button>
+      <div id="topic-result"></div>
+    </form>
+  </div>
+</div>
+
 <footer>
   <div class="container">
-    Learning Claude AI with Ashman &middot; <a href="forum.html">Join the forum</a> &middot; <a href="mailto:ashroney@gmail.com">ashroney@gmail.com</a>
+    Learning Claude AI with Ashman &middot; <a href="index.html">Home</a> &middot; <a href="mailto:ashroney@gmail.com">ashroney@gmail.com</a>
   </div>
 </footer>
 
 <script type="module">
-  import { supabase, isConfigured } from './app.js';
+import { supabase, isConfigured, showConfigWarning, fmtDate, escapeHtml } from './app.js';
 
-  const form = document.getElementById('signup-form');
-  const resultEl = document.getElementById('signup-result');
+const warningSlot = document.getElementById('config-warning-slot');
+const authArea = document.getElementById('auth-area');
+const newTopicBtn = document.getElementById('new-topic-btn');
+const topicListEl = document.getElementById('topic-list');
+const viewList = document.getElementById('view-list');
+const viewThread = document.getElementById('view-thread');
+const threadHeader = document.getElementById('thread-header');
+const replyList = document.getElementById('reply-list');
+const replyForm = document.getElementById('reply-form');
+const replyResult = document.getElementById('reply-result');
+const replyBody = document.getElementById('reply-body');
+const backLink = document.getElementById('back-to-list');
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    resultEl.innerHTML = '';
-    const data = {
-      name: form.name.value.trim(),
-      email: form.email.value.trim(),
-      course: form.course.value,
-      note: form.note.value.trim() || null,
-    };
+const authModal = document.getElementById('auth-modal');
+const authForm = document.getElementById('auth-form');
+const authTitle = document.getElementById('auth-title');
+const authSubmit = document.getElementById('auth-submit');
+const authCancel = document.getElementById('auth-cancel');
+const authResult = document.getElementById('auth-result');
+const authEmailIn = document.getElementById('auth-email');
+const authPassIn = document.getElementById('auth-pass');
+const authNameIn = document.getElementById('auth-name');
+const displayNameRow = document.getElementById('display-name-row');
 
-    if (!isConfigured) {
-      // Fallback: open a pre-filled email so the form works even before Supabase is wired up.
-      const subject = encodeURIComponent(`Course sign-up: ${data.course}`);
-      const body = encodeURIComponent(
-        `Name: ${data.name}\nEmail: ${data.email}\nCourse: ${data.course}\n\n${data.note || ''}`
-      );
-      window.location.href = `mailto:ashroney@gmail.com?subject=${subject}&body=${body}`;
-      resultEl.innerHTML = '<div class="notice good">Opening your email app... finish sending and I\'ll be in touch.</div>';
-      return;
-    }
+const topicModal = document.getElementById('topic-modal');
+const topicForm = document.getElementById('topic-form');
+const topicCancel = document.getElementById('topic-cancel');
+const topicTitleIn = document.getElementById('topic-title-in');
+const topicBodyIn = document.getElementById('topic-body-in');
+const topicResult = document.getElementById('topic-result');
 
-    const { error } = await supabase.from('signups').insert([data]);
-    if (error) {
-      resultEl.innerHTML = `<div class="notice bad">Couldn't send: ${error.message}</div>`;
-      return;
-    }
-    form.reset();
-    resultEl.innerHTML = '<div class="notice good">Got it; I\'ll get back to you soon.</div>';
+let currentUser = null;
+let authMode = 'signin';
+let activeTopicId = null;
+
+if (!isConfigured) {
+  showConfigWarning(warningSlot);
+  newTopicBtn.disabled = true;
+  topicListEl.innerHTML = '<div class="empty">Forum will appear here once Supabase is set up.</div>';
+} else {
+  await runForum();
+}
+
+async function runForum() {
+  function setAuthMode(mode) {
+    authMode = mode;
+    document.querySelectorAll('.modal-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
+    authTitle.textContent = mode === 'signin' ? 'Sign in' : 'Create account';
+    authSubmit.textContent = mode === 'signin' ? 'Sign in' : 'Create account';
+    displayNameRow.style.display = mode === 'signup' ? 'block' : 'none';
+    authResult.innerHTML = '';
+  }
+
+  document.querySelectorAll('.modal-tab').forEach(t => {
+    t.addEventListener('click', () => setAuthMode(t.dataset.mode));
   });
+
+  function openAuth() { authModal.classList.add('open'); }
+  function closeAuth() { authModal.classList.remove('open'); authResult.innerHTML = ''; authForm.reset(); }
+  authCancel.addEventListener('click', closeAuth);
+  authModal.addEventListener('click', (e) => { if (e.target === authModal) closeAuth(); });
+
+  authForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    authResult.innerHTML = '';
+    const email = authEmailIn.value.trim();
+    const password = authPassIn.value;
+    if (authMode === 'signin') {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) { authResult.innerHTML = '<div class="notice bad">' + escapeHtml(error.message) + '</div>'; return; }
+      closeAuth();
+    } else {
+      const displayName = authNameIn.value.trim() || email.split('@')[0];
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { display_name: displayName } },
+      });
+      if (error) { authResult.innerHTML = '<div class="notice bad">' + escapeHtml(error.message) + '</div>'; return; }
+      if (data.user && !data.session) {
+        authResult.innerHTML = '<div class="notice good">Account created. Check your email to confirm, then sign in.</div>';
+      } else {
+        closeAuth();
+      }
+    }
+  });
+
+  function renderAuthArea() {
+    if (currentUser) {
+      const name = currentUser.user_metadata?.display_name || currentUser.email;
+      authArea.innerHTML =
+        'Signed in as <strong>' + escapeHtml(name) + '</strong> ' +
+        '<button class="btn btn-ghost btn-sm" id="signout-btn">Sign out</button>';
+      document.getElementById('signout-btn').addEventListener('click', async () => {
+        await supabase.auth.signOut();
+      });
+      newTopicBtn.disabled = false;
+    } else {
+      authArea.innerHTML =
+        '<span>Sign in to post or reply</span> ' +
+        '<button class="btn btn-primary btn-sm" id="signin-btn">Sign in / Sign up</button>';
+      document.getElementById('signin-btn').addEventListener('click', () => { setAuthMode('signin'); openAuth(); });
+      newTopicBtn.disabled = true;
+    }
+  }
+
+  supabase.auth.onAuthStateChange((_event, session) => {
+    currentUser = session?.user ?? null;
+    renderAuthArea();
+  });
+
+  const { data: { session } } = await supabase.auth.getSession();
+  currentUser = session?.user ?? null;
+  renderAuthArea();
+
+  async function loadTopics() {
+    topicListEl.innerHTML = '<div class="empty">Loading topics...</div>';
+    const { data, error } = await supabase
+      .from('topics')
+      .select('id, title, created_at, author_name, reply_count, last_activity_at')
+      .order('last_activity_at', { ascending: false })
+      .limit(100);
+    if (error) {
+      topicListEl.innerHTML = '<div class="empty">Could not load topics: ' + escapeHtml(error.message) + '</div>';
+      return;
+    }
+    if (!data || data.length === 0) {
+      topicListEl.innerHTML = '<div class="empty">No topics yet. Be the first to start one.</div>';
+      return;
+    }
+    topicListEl.innerHTML = data.map(t => {
+      const replyWord = (t.reply_count || 0) === 1 ? 'reply' : 'replies';
+      return '<div class="topic-item" data-id="' + t.id + '">' +
+        '<div>' +
+          '<div class="topic-title">' + escapeHtml(t.title) + '</div>' +
+          '<div class="topic-meta">by ' + escapeHtml(t.author_name || 'someone') + ' &middot; last activity ' + fmtDate(t.last_activity_at || t.created_at) + '</div>' +
+        '</div>' +
+        '<div class="topic-count">' + (t.reply_count || 0) + ' ' + replyWord + '</div>' +
+      '</div>';
+    }).join('');
+    topicListEl.querySelectorAll('.topic-item').forEach(el => {
+      el.addEventListener('click', () => openThread(el.dataset.id));
+    });
+  }
+
+  async function openThread(topicId) {
+    activeTopicId = topicId;
+    viewList.style.display = 'none';
+    viewThread.style.display = 'block';
+    threadHeader.innerHTML = '<div class="empty">Loading...</div>';
+    replyList.innerHTML = '';
+
+    const { data: topic, error: tErr } = await supabase
+      .from('topics')
+      .select('id, title, body, created_at, author_name')
+      .eq('id', topicId)
+      .maybeSingle();
+    if (tErr || !topic) {
+      threadHeader.innerHTML = '<div class="empty">Could not load topic.</div>';
+      return;
+    }
+    threadHeader.innerHTML =
+      '<h2>' + escapeHtml(topic.title) + '</h2>' +
+      '<div class="topic-meta">by ' + escapeHtml(topic.author_name || 'someone') + ' &middot; ' + fmtDate(topic.created_at) + '</div>' +
+      '<div class="reply-body" style="margin-top: 16px;">' + escapeHtml(topic.body) + '</div>';
+
+    const { data: replies } = await supabase
+      .from('replies')
+      .select('id, body, created_at, author_name')
+      .eq('topic_id', topicId)
+      .order('created_at', { ascending: true });
+
+    if (replies && replies.length > 0) {
+      replyList.innerHTML = replies.map(r =>
+        '<div class="reply">' +
+          '<div class="reply-meta">' +
+            '<span><strong>' + escapeHtml(r.author_name || 'someone') + '</strong></span>' +
+            '<span>' + fmtDate(r.created_at) + '</span>' +
+          '</div>' +
+          '<div class="reply-body">' + escapeHtml(r.body) + '</div>' +
+        '</div>'
+      ).join('');
+    } else {
+      replyList.innerHTML = '<div class="empty">No replies yet.</div>';
+    }
+
+    replyForm.style.display = currentUser ? 'block' : 'none';
+  }
+
+  backLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    viewThread.style.display = 'none';
+    viewList.style.display = 'block';
+    activeTopicId = null;
+    loadTopics();
+  });
+
+  replyForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    replyResult.innerHTML = '';
+    if (!currentUser) {
+      replyResult.innerHTML = '<div class="notice bad">Sign in to reply.</div>';
+      return;
+    }
+    const body = replyBody.value.trim();
+    if (!body) return;
+    const author_name = currentUser.user_metadata?.display_name || currentUser.email;
+    const { error } = await supabase.from('replies').insert([{
+      topic_id: activeTopicId,
+      body,
+      author_id: currentUser.id,
+      author_name,
+    }]);
+    if (error) {
+      replyResult.innerHTML = '<div class="notice bad">' + escapeHtml(error.message) + '</div>';
+      return;
+    }
+    replyBody.value = '';
+    openThread(activeTopicId);
+  });
+
+  newTopicBtn.addEventListener('click', () => {
+    if (!currentUser) { setAuthMode('signin'); openAuth(); return; }
+    topicModal.classList.add('open');
+  });
+  topicCancel.addEventListener('click', () => topicModal.classList.remove('open'));
+  topicModal.addEventListener('click', (e) => { if (e.target === topicModal) topicModal.classList.remove('open'); });
+
+  topicForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    topicResult.innerHTML = '';
+    if (!currentUser) return;
+    const title = topicTitleIn.value.trim();
+    const body = topicBodyIn.value.trim();
+    if (!title || !body) return;
+    const author_name = currentUser.user_metadata?.display_name || currentUser.email;
+    const { data, error } = await supabase.from('topics').insert([{
+      title, body, author_id: currentUser.id, author_name,
+    }]).select('id').single();
+    if (error) {
+      topicResult.innerHTML = '<div class="notice bad">' + escapeHtml(error.message) + '</div>';
+      return;
+    }
+    topicForm.reset();
+    topicModal.classList.remove('open');
+    if (data?.id) openThread(data.id);
+    else loadTopics();
+  });
+
+  loadTopics();
+}
 </script>
 
 </body>
