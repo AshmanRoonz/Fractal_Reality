@@ -162,10 +162,10 @@ section.alt { background: var(--bg-soft); }
   background: var(--accent-soft);
   border-radius: var(--radius);
   aspect-ratio: 1 / 1;
-  display: grid;
-  place-items: center;
-  font-size: 96px;
-  color: var(--accent-deep);
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
   border: 1px solid var(--border);
 }
 .about h3 { margin-top: 0; font-size: 24px; }
