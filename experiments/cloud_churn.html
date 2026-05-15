@@ -1,0 +1,271 @@
+<!doctype html>
+<!--
+  Created: 2026-05-10
+  Last updated: 2026-05-10
+  Version: 1.0
+
+  Framework-native cloud churn for Last Ship Sailing.
+
+  Standalone preview. Open this file in a browser; the shader is the
+  <script id="frag" type="x-shader/x-fragment"> block below. Copy that
+  block into LSS/fx_lab.html as a new effect layer, or wire its uniforms
+  into EFFECT_PRESETS once it looks right.
+
+  The math comes from the Circumpunct Framework. Every line of the shader
+  that does real work has a section reference (e.g., §27.7r) tying it to
+  the framework.md statement it implements.
+
+  Revision history
+  - 2026-05-10 v1.0: initial; pump-cycle velocity, fBm with H=0.5, 4-phase
+    advection, §10.10a quadrant weighting, A3 golden lacunarity.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Cloud Churn (framework-native)</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #060812; color: #cdd; font-family: ui-monospace, monospace; }
+  #ui {
+    position: fixed; top: 10px; left: 10px; z-index: 10;
+    background: rgba(8,10,18,0.78); padding: 10px 12px; border: 1px solid #2a3550;
+    border-radius: 6px; font-size: 12px; min-width: 240px;
+  }
+  #ui h1 { font-size: 13px; margin: 0 0 6px; letter-spacing: 0.08em; }
+  #ui label { display: block; margin: 4px 0; }
+  #ui input[type=range] { width: 130px; vertical-align: middle; }
+  #ui .v { display: inline-block; width: 50px; text-align: right; color: #8ab; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<div id="ui">
+  <h1>cloud churn ⊙ = Φ(•, —, ○)</h1>
+  <label>time scale <input id="uTimeScale" type="range" min="0" max="2" step="0.01" value="0.40"><span class="v" id="vTimeScale"></span></label>
+  <label>scale <input id="uScale" type="range" min="0.5" max="8" step="0.05" value="3.0"><span class="v" id="vScale"></span></label>
+  <label>brightness <input id="uBright" type="range" min="0" max="2" step="0.01" value="1.10"><span class="v" id="vBright"></span></label>
+  <label>density floor <input id="uFloor" type="range" min="0" max="0.9" step="0.01" value="0.35"><span class="v" id="vFloor"></span></label>
+  <label>density ceil <input id="uCeil" type="range" min="0.2" max="1.2" step="0.01" value="0.95"><span class="v" id="vCeil"></span></label>
+  <label>quadrant mix <input id="uQuad" type="range" min="0" max="1" step="0.01" value="0.50"><span class="v" id="vQuad"></span></label>
+  <label>color R <input id="uR" type="range" min="0" max="1" step="0.01" value="0.92"><span class="v" id="vR"></span></label>
+  <label>color G <input id="uG" type="range" min="0" max="1" step="0.01" value="0.96"><span class="v" id="vG"></span></label>
+  <label>color B <input id="uB" type="range" min="0" max="1" step="0.01" value="1.00"><span class="v" id="vB"></span></label>
+</div>
+
+<script id="vert" type="x-shader/x-vertex">
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+  }
+</script>
+
+<script id="frag" type="x-shader/x-fragment">
+  // ===========================================================
+  // Framework-native cloud churn (Circumpunct Framework)
+  // Maps to: ⊙ = Φ(•, —, ○), pump cycle (⊛→i→✹), §10.10a quadrants,
+  // §27.7r (i performed), D = 1.5 = 1 + ◐, A3 nesting, R = 7 octaves.
+  // ===========================================================
+  precision highp float;
+
+  varying vec2 vUv;
+
+  uniform float uTime;
+  uniform float uTimeScale;
+  uniform float uScale;
+  uniform float uBright;
+  uniform float uFloor;
+  uniform float uCeil;
+  uniform float uQuad;
+  uniform vec3  uColor;
+  uniform vec2  uRes;
+
+  // ----- framework constants (kept literal so the mapping is auditable) -----
+  const float PHI       = 1.6180339887;   // golden, A3 nesting ratio
+  const float HURST     = 0.5;            // H = D - 1 with D = 1.5 (◐ = 0.5)
+  const float P_PUMP    = 4.0;            // pump phases (P = T + 1)
+  const int   R_OCT     = 7;              // R = T² - 2 = 7 (octaves)
+  const float W_RIGHT   = 0.05;           // visible-matter fraction (i⁰+i¹)
+  const float W_LEFT    = 0.27;           // dark-matter fraction (i²+i³)
+
+  // ----- primitive: a 0D • in the 1 -----
+  float hash(vec2 p) {
+    p = fract(p * vec2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
+  }
+
+  // ----- value noise: a small Φ patch -----
+  float vnoise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    float a = hash(i + vec2(0.0, 0.0));
+    float b = hash(i + vec2(1.0, 0.0));
+    float c = hash(i + vec2(0.0, 1.0));
+    float d = hash(i + vec2(1.0, 1.0));
+    return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+  }
+
+  // ----- fBm with H = 0.5 → D = 1.5 (framework balance, ◐ = 0.5) -----
+  // A3 nesting: each octave is ⊙λ ⊂ ⊙Λ at scale ratio ≈ φ (golden lacunarity);
+  // R = 7 octaves matches the 7 rungs of the dimensional ladder.
+  float fbm(vec2 p) {
+    float v = 0.0;
+    float a = 1.0;
+    float n = 0.0;
+    for (int i = 0; i < R_OCT; i++) {
+      v += a * vnoise(p);
+      n += a;
+      p *= PHI;                  // golden lacunarity (A3)
+      a *= pow(0.5, HURST);      // amplitude rolloff fixed by D = 1.5
+    }
+    return v / n;
+  }
+
+  // ----- i, performed (§27.7r): 90° quarter-turn on a 2D field -----
+  vec2 rot90(vec2 v) { return vec2(-v.y, v.x); }
+
+  // ----- pump-cycle velocity field (⊛ → i → ✹) -----
+  // ∇Φ is the convergence vector (⊛, points toward peaks of the field).
+  // rot90(∇Φ) is the curl direction (i-stroke), which is divergence-free
+  // (Lenz/§27.7r: conservation under the i-turn), so density advected by
+  // this velocity neither piles up nor leaks; the foam ⊙∞ is preserved.
+  vec2 pumpVelocity(vec2 p, float t) {
+    float eps = 0.012;
+    float dx = fbm(p + vec2(eps, 0.0) + t * 0.10)
+             - fbm(p - vec2(eps, 0.0) + t * 0.10);
+    float dy = fbm(p + vec2(0.0, eps) + t * 0.10)
+             - fbm(p - vec2(0.0, eps) + t * 0.10);
+    vec2 grad = vec2(dx, dy) / (2.0 * eps);
+    return rot90(grad);          // i applied to ∇Φ
+  }
+
+  // ----- §10.10a i-cycle quadrants: superposed, not sequential -----
+  // Right half-plane (i⁰ + i¹) reads as bright edges (visible cloud surface);
+  // left half-plane (i² + i³) reads as interior fog (dark-matter analog).
+  // The 5/27 weighting is the cosmological-budget ratio from §10.10a.
+  float quadrantWeight(vec2 p, float t) {
+    float theta = 6.2831853 * fbm(p * 0.7 + t * 0.05);
+    float i0 =  cos(theta);
+    float i1 =  sin(theta);
+    float i2 = -cos(theta);
+    float i3 = -sin(theta);
+    float bright   = max(0.0, i0) + max(0.0, i1);
+    float interior = max(0.0, i2) + max(0.0, i3);
+    return W_RIGHT * bright + W_LEFT * interior;
+  }
+
+  void main() {
+    float t = uTime * uTimeScale;
+
+    // sample point in field coordinates
+    vec2 p = (vUv - 0.5) * uScale * vec2(uRes.x / max(uRes.y, 1.0), 1.0);
+
+    // step 1: velocity from the pump cycle
+    vec2 v = pumpVelocity(p, t);
+
+    // step 2: walk four i-strokes (one full pump period, P = 4),
+    //         rotating the velocity by i at each step. Each step samples
+    //         Φ at the advected position; the integral is the cloud density.
+    vec2  q       = p;
+    float density = 0.0;
+    float amp     = 1.0;
+    float total   = 0.0;
+    for (int i = 0; i < 4; i++) {           // P = 4 pump phases
+      q       -= v * 0.18;                  // backward advection (upstream)
+      density += amp * fbm(q + t * 0.06);
+      total   += amp;
+      v        = rot90(v) * 0.95;           // i-rotation between phases
+      amp     *= 0.7;
+    }
+    density /= total;
+
+    // step 3: apply §10.10a quadrant weighting
+    float w = quadrantWeight(p, t);
+    density = mix(density, density + 0.5 * w, uQuad);
+
+    // step 4: ○ filters; sharp tops, soft bottoms
+    float shaped = smoothstep(uFloor, uCeil, density);
+
+    // step 5: color + alpha
+    vec3 col = uColor * (uBright * shaped);
+    // a touch of self-shadow at the edges (boundary filtration)
+    col *= mix(0.65, 1.0, shaped);
+
+    gl_FragColor = vec4(col, shaped);
+  }
+</script>
+
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.165.0/build/three.module.js" } }
+</script>
+<script type="module">
+  import * as THREE from 'three';
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  const scene  = new THREE.Scene();
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+  const uniforms = {
+    uTime:      { value: 0 },
+    uTimeScale: { value: parseFloat(uTimeScale.value) },
+    uScale:     { value: parseFloat(uScale.value) },
+    uBright:    { value: parseFloat(uBright.value) },
+    uFloor:     { value: parseFloat(uFloor.value) },
+    uCeil:      { value: parseFloat(uCeil.value) },
+    uQuad:      { value: parseFloat(uQuad.value) },
+    uColor:     { value: new THREE.Color(parseFloat(uR.value), parseFloat(uG.value), parseFloat(uB.value)) },
+    uRes:       { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+  };
+
+  const mat = new THREE.ShaderMaterial({
+    uniforms,
+    vertexShader:   document.getElementById('vert').textContent,
+    fragmentShader: document.getElementById('frag').textContent,
+    transparent: true,
+  });
+
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat);
+  scene.add(mesh);
+
+  // ----- ui wiring -----
+  function bind(id, key, set) {
+    const el = document.getElementById(id);
+    const out = document.getElementById('v' + id.slice(1));
+    function update() {
+      const x = parseFloat(el.value);
+      set(x);
+      out.textContent = x.toFixed(2);
+    }
+    el.addEventListener('input', update);
+    update();
+  }
+  bind('uTimeScale', null, x => uniforms.uTimeScale.value = x);
+  bind('uScale',     null, x => uniforms.uScale.value     = x);
+  bind('uBright',    null, x => uniforms.uBright.value    = x);
+  bind('uFloor',     null, x => uniforms.uFloor.value     = x);
+  bind('uCeil',      null, x => uniforms.uCeil.value      = x);
+  bind('uQuad',      null, x => uniforms.uQuad.value      = x);
+  bind('uR', null, x => uniforms.uColor.value.r = x);
+  bind('uG', null, x => uniforms.uColor.value.g = x);
+  bind('uB', null, x => uniforms.uColor.value.b = x);
+
+  addEventListener('resize', () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    uniforms.uRes.value.set(window.innerWidth, window.innerHeight);
+  });
+
+  const clock = new THREE.Clock();
+  function loop() {
+    uniforms.uTime.value += clock.getDelta();
+    renderer.render(scene, camera);
+    requestAnimationFrame(loop);
+  }
+  loop();
+</script>
+</body>
+</html>
