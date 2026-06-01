@@ -148,47 +148,86 @@
     aspect-ratio: 1/1;
   }
   .pond svg { width: 100%; height: 100%; display: block; overflow: visible; }
-  /* Concentric ripples expanding from center to edge */
-  @keyframes pond-ripple {
-    0%   { r: 14;  opacity: 0; stroke-width: 1.4; }
-    8%   { opacity: 0.85; }
-    100% { r: 230; opacity: 0; stroke-width: 0.3; }
+
+  /* A wave crest: thick blurred ring that expands outward.
+     Animates radius + stroke-width + opacity so each ripple
+     feels like a wave that crests, peaks, then dissipates. */
+  @keyframes wave {
+    0%   { r: 18;  opacity: 0;    stroke-width: 6; }
+    14%  { opacity: 0.55; }
+    40%  { stroke-width: 26; }
+    100% { r: 230; opacity: 0;    stroke-width: 8; }
   }
-  .pond-ripple {
+  .wave {
     fill: none;
-    stroke: rgba(88,166,255,0.9);
     transform-origin: 250px 250px;
-    animation: pond-ripple 7s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+    animation: wave 14s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+    filter: url(#wave-blur);
   }
-  .pond-ripple.gold { stroke: rgba(184,160,96,0.85); }
-  /* Slow drift of the surface highlight */
-  @keyframes pond-shimmer {
-    0%, 100% { transform: rotate(0deg); opacity: 0.45; }
-    50%      { transform: rotate(360deg); opacity: 0.75; }
+  .wave.crest { stroke: rgba(140,200,255,0.35); }
+  .wave.trough { stroke: rgba(30,70,140,0.4); }
+  .wave.gold-glint { stroke: rgba(212,184,112,0.25); }
+
+  /* Soft halo on the leading edge, no longer reads as a line. */
+  @keyframes wave-glint {
+    0%   { r: 18;  opacity: 0;    stroke-width: 3; }
+    18%  { opacity: 0.5; stroke-width: 4; }
+    100% { r: 230; opacity: 0;    stroke-width: 2; }
   }
-  .pond-shimmer {
+  .wave-glint {
+    fill: none;
+    stroke: rgba(220,240,255,0.4);
     transform-origin: 250px 250px;
-    animation: pond-shimmer 24s linear infinite;
+    animation: wave-glint 14s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+    filter: url(#glint-blur);
   }
-  /* Soft breathing of the core */
+
+  /* Continuous caustic shimmer over the whole pond. */
+  @keyframes shimmer-drift {
+    0%   { transform: translate(0, 0); }
+    50%  { transform: translate(-12px, 8px); }
+    100% { transform: translate(0, 0); }
+  }
+  .caustics { animation: shimmer-drift 14s ease-in-out infinite; opacity: 0.55; mix-blend-mode: screen; }
+
+  /* Slow rotating sheen on the surface. */
+  @keyframes sheen {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .sheen { transform-origin: 250px 250px; animation: sheen 32s linear infinite; }
+
+  /* Breathing core. */
   @keyframes pond-core {
-    0%, 100% { r: 11; opacity: 0.95; filter: url(#pond-glow); }
+    0%, 100% { r: 10; opacity: 0.95; }
     50%      { r: 14; opacity: 1; }
   }
-  .pond-core {
-    animation: pond-core 4.5s ease-in-out infinite;
+  .pond-core { animation: pond-core 4.5s ease-in-out infinite; }
+
+  /* Drop pulse: faint flash at the impact point each time a wave begins. */
+  @keyframes drop-pulse {
+    0%, 92%, 100% { opacity: 0; r: 4; }
+    96%           { opacity: 0.8; r: 18; }
   }
-  /* Floating phi marks */
+  .drop-pulse {
+    fill: none;
+    stroke: rgba(220,240,255,0.9);
+    stroke-width: 1.4;
+    animation: drop-pulse 6.5s ease-out infinite;
+  }
+
+  /* Phi tick floats. */
   @keyframes pond-float {
-    0%, 100% { transform: translateY(0); opacity: 0.55; }
-    50%      { transform: translateY(-4px); opacity: 0.8; }
+    0%, 100% { transform: translateY(0);  opacity: 0.55; }
+    50%      { transform: translateY(-4px); opacity: 0.85; }
   }
   .pond-tick { animation: pond-float 6s ease-in-out infinite; }
   .pond-tick.delay-1 { animation-delay: -2s; }
   .pond-tick.delay-2 { animation-delay: -4s; }
   .pond-tick.delay-3 { animation-delay: -1s; }
+
   @media (prefers-reduced-motion: reduce) {
-    .pond-ripple, .pond-shimmer, .pond-core, .pond-tick { animation: none; }
+    .wave, .wave-glint, .caustics, .sheen, .pond-core, .drop-pulse, .pond-tick { animation: none; }
   }
   /* Grain overlay */
   .grain::after {
@@ -265,105 +304,169 @@
   <div class="pond reveal" data-reveal-delay="200" aria-hidden="true">
     <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <!-- Soft glow for the core -->
-        <filter id="pond-glow" x="-100%" y="-100%" width="300%" height="300%">
-          <feGaussianBlur stdDeviation="6" result="blur"/>
-          <feMerge>
-            <feMergeNode in="blur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
+        <!-- Core glow -->
+        <filter id="core-glow" x="-200%" y="-200%" width="500%" height="500%">
+          <feGaussianBlur stdDeviation="7" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
-        <!-- Stronger glow for boundary -->
-        <filter id="pond-edge-glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="3"/>
+
+        <!-- Heavy blur for wave crests so they read as pulses of light, not lines -->
+        <filter id="wave-blur" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="9"/>
         </filter>
-        <!-- Pond surface: water-like radial gradient -->
-        <radialGradient id="pond-surface" cx="50%" cy="50%" r="50%">
-          <stop offset="0%"  stop-color="#58a6ff" stop-opacity="0.22"/>
-          <stop offset="35%" stop-color="#3a7fd4" stop-opacity="0.14"/>
-          <stop offset="70%" stop-color="#1e3a7a" stop-opacity="0.08"/>
+        <!-- Lighter blur for the leading-edge glint, still very diffuse -->
+        <filter id="glint-blur" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="5"/>
+        </filter>
+
+        <!-- Caustic light pattern: turbulence + radial mask = "moving water" sparkle -->
+        <filter id="caustic-fx" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.012" numOctaves="2" seed="3" result="t"/>
+          <feColorMatrix in="t" type="matrix"
+            values="0 0 0 0 0.55
+                    0 0 0 0 0.78
+                    0 0 0 0 1
+                    0 0 0 2.2 -1.2"/>
+        </filter>
+
+        <!-- Liquid distortion: warps everything beneath it (waves AND clouds)
+             so the whole surface moves as one body of water. Higher scale +
+             animated baseFrequency means the ripple warp actually pushes
+             the cloud-like caustics around as it expands. -->
+        <filter id="liquid-warp" x="-15%" y="-15%" width="130%" height="130%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="2" seed="7" result="warp">
+            <animate attributeName="baseFrequency"
+                     dur="18s"
+                     values="0.012 0.014;0.020 0.018;0.014 0.024;0.012 0.014"
+                     repeatCount="indefinite"/>
+            <animate attributeName="seed"
+                     dur="36s"
+                     values="3;9;5;11;3"
+                     repeatCount="indefinite"/>
+          </feTurbulence>
+          <feDisplacementMap in="SourceGraphic" in2="warp" scale="22"
+                             xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+
+        <!-- Pond surface gradient -->
+        <radialGradient id="surface" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"  stop-color="#79c0ff" stop-opacity="0.32"/>
+          <stop offset="22%" stop-color="#3a7fd4" stop-opacity="0.22"/>
+          <stop offset="55%" stop-color="#1c3a7a" stop-opacity="0.14"/>
+          <stop offset="85%" stop-color="#0a0d14" stop-opacity="0.04"/>
           <stop offset="100%" stop-color="#0a0d14" stop-opacity="0"/>
         </radialGradient>
-        <!-- Shimmer: rotating soft light -->
-        <radialGradient id="pond-shimmer-grad" cx="50%" cy="35%" r="55%">
-          <stop offset="0%"  stop-color="#ffffff" stop-opacity="0.10"/>
-          <stop offset="40%" stop-color="#ffffff" stop-opacity="0.04"/>
+
+        <!-- Specular highlight near top: like sky reflecting on water -->
+        <radialGradient id="specular" cx="50%" cy="30%" r="45%">
+          <stop offset="0%"  stop-color="#ffffff" stop-opacity="0.18"/>
+          <stop offset="40%" stop-color="#ffffff" stop-opacity="0.06"/>
           <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
         </radialGradient>
-        <!-- Gold outer boundary glow -->
-        <radialGradient id="pond-rim" cx="50%" cy="50%" r="50%">
-          <stop offset="88%" stop-color="rgba(184,160,96,0)"  stop-opacity="0"/>
-          <stop offset="96%" stop-color="rgba(184,160,96,0.35)" stop-opacity="0.35"/>
-          <stop offset="100%" stop-color="rgba(184,160,96,0)" stop-opacity="0"/>
+
+        <!-- Vignette so the pond fades into the page -->
+        <radialGradient id="vignette" cx="50%" cy="50%" r="50%">
+          <stop offset="80%" stop-color="#000" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#000" stop-opacity="0.45"/>
         </radialGradient>
+
+        <!-- Gold rim glow -->
+        <radialGradient id="rim" cx="50%" cy="50%" r="50%">
+          <stop offset="88%" stop-color="#b8a060" stop-opacity="0"/>
+          <stop offset="96%" stop-color="#b8a060" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#b8a060" stop-opacity="0"/>
+        </radialGradient>
+
+        <!-- Clip mask so all effects stay inside the pond -->
+        <clipPath id="pond-clip">
+          <circle cx="250" cy="250" r="240"/>
+        </clipPath>
       </defs>
 
-      <!-- Pond surface -->
-      <circle cx="250" cy="250" r="235" fill="url(#pond-surface)"/>
+      <!-- Everything clipped to the pond circle -->
+      <g clip-path="url(#pond-clip)">
 
-      <!-- Outer rim halo -->
-      <circle cx="250" cy="250" r="240" fill="url(#pond-rim)"/>
+        <!-- Base water -->
+        <circle cx="250" cy="250" r="240" fill="#0c1422"/>
+        <circle cx="250" cy="250" r="240" fill="url(#surface)"/>
 
-      <!-- Rotating shimmer light on the surface -->
-      <g class="pond-shimmer">
-        <circle cx="250" cy="250" r="220" fill="url(#pond-shimmer-grad)"/>
+        <!-- Slow rotating specular highlight (above the surface, unwarped) -->
+        <g class="sheen">
+          <ellipse cx="250" cy="170" rx="180" ry="110" fill="url(#specular)"/>
+        </g>
+
+        <!-- Everything below shares the same liquid-warp, so the caustic
+             clouds get pushed and pulled by the same displacement field
+             as the wave crests. The whole surface moves as one body. -->
+        <g filter="url(#liquid-warp)">
+
+          <!-- Caustic clouds (now coupled to the ripple warp) -->
+          <g class="caustics">
+            <rect x="0" y="0" width="500" height="500" filter="url(#caustic-fx)" opacity="0.55"/>
+          </g>
+
+          <!-- Wave crests + glints, irregular timings + durations so the pond
+               reads as a random surface, not a metronome. Each ripple has its
+               own duration AND its own offset; the ratios are intentionally
+               non-rational so they never re-sync. -->
+          <circle class="wave crest"      cx="250" cy="250" r="18"
+                  style="animation-duration: 13.4s; animation-delay: -0.7s;"/>
+          <circle class="wave-glint"      cx="250" cy="250" r="18"
+                  style="animation-duration: 13.4s; animation-delay: -0.7s;"/>
+
+          <circle class="wave gold-glint" cx="250" cy="250" r="18"
+                  style="animation-duration: 17.1s; animation-delay: -4.3s;"/>
+          <circle class="wave-glint"      cx="250" cy="250" r="18"
+                  style="animation-duration: 17.1s; animation-delay: -4.3s;"/>
+
+          <circle class="wave crest"      cx="250" cy="250" r="18"
+                  style="animation-duration: 11.7s; animation-delay: -8.9s;"/>
+          <circle class="wave-glint"      cx="250" cy="250" r="18"
+                  style="animation-duration: 11.7s; animation-delay: -8.9s;"/>
+
+          <circle class="wave trough"     cx="250" cy="250" r="18"
+                  style="animation-duration: 19.3s; animation-delay: -12.4s;"/>
+
+          <circle class="wave crest"      cx="250" cy="250" r="18"
+                  style="animation-duration: 15.6s; animation-delay: -6.1s;"/>
+          <circle class="wave-glint"      cx="250" cy="250" r="18"
+                  style="animation-duration: 15.6s; animation-delay: -6.1s;"/>
+        </g>
+
+        <!-- Drop impact flash at the source (also slowed and irregular) -->
+        <circle class="drop-pulse" cx="250" cy="250" r="4" style="animation-duration: 13.4s; animation-delay: -0.7s;"/>
+        <circle class="drop-pulse" cx="250" cy="250" r="4" style="animation-duration: 17.1s; animation-delay: -4.3s;"/>
+        <circle class="drop-pulse" cx="250" cy="250" r="4" style="animation-duration: 15.6s; animation-delay: -6.1s;"/>
+
+        <!-- Subtle vignette darkens the edges -->
+        <circle cx="250" cy="250" r="240" fill="url(#vignette)"/>
       </g>
 
-      <!-- Concentric ripples expanding outward (staggered) -->
-      <circle class="pond-ripple"      cx="250" cy="250" r="14" style="animation-delay: 0s;"/>
-      <circle class="pond-ripple gold" cx="250" cy="250" r="14" style="animation-delay: -1.0s;"/>
-      <circle class="pond-ripple"      cx="250" cy="250" r="14" style="animation-delay: -2.0s;"/>
-      <circle class="pond-ripple gold" cx="250" cy="250" r="14" style="animation-delay: -3.0s;"/>
-      <circle class="pond-ripple"      cx="250" cy="250" r="14" style="animation-delay: -4.0s;"/>
-      <circle class="pond-ripple gold" cx="250" cy="250" r="14" style="animation-delay: -5.0s;"/>
-      <circle class="pond-ripple"      cx="250" cy="250" r="14" style="animation-delay: -6.0s;"/>
+      <!-- Gold rim halo (outside clip so it glows beyond) -->
+      <circle cx="250" cy="250" r="240" fill="url(#rim)"/>
 
-      <!-- Outer boundary ring (the body / shore of the pond) -->
-      <circle cx="250" cy="250" r="240"
-              fill="none"
-              stroke="rgba(184,160,96,0.55)"
-              stroke-width="1.5"
-              filter="url(#pond-edge-glow)"/>
-      <circle cx="250" cy="250" r="240"
-              fill="none"
-              stroke="rgba(184,160,96,0.85)"
-              stroke-width="0.8"/>
+      <!-- Pond shoreline -->
+      <circle cx="250" cy="250" r="240" fill="none" stroke="rgba(184,160,96,0.85)" stroke-width="0.8"/>
 
-      <!-- Inner "convergence" ring -->
-      <circle cx="250" cy="250" r="60"
-              fill="none"
-              stroke="rgba(88,166,255,0.18)"
-              stroke-width="0.8"
-              stroke-dasharray="2 4"/>
+      <!-- Inner convergence ring -->
+      <circle cx="250" cy="250" r="60" fill="none" stroke="rgba(88,166,255,0.18)" stroke-width="0.8" stroke-dasharray="2 4"/>
 
-      <!-- Central source: the soul / drop point -->
-      <circle class="pond-core" cx="250" cy="250" r="11"
-              fill="#79c0ff"
-              filter="url(#pond-glow)"/>
-      <circle cx="250" cy="250" r="3.5" fill="#ffffff" opacity="0.9"/>
+      <!-- Source: the drop point / soul -->
+      <circle class="pond-core" cx="250" cy="250" r="11" fill="#79c0ff" filter="url(#core-glow)"/>
+      <circle cx="250" cy="250" r="3.5" fill="#ffffff" opacity="0.95"/>
 
-      <!-- Phi tick marks around the rim -->
+      <!-- Phi marks around the shore -->
       <text class="pond-tick" x="250" y="4"
-            text-anchor="middle"
-            font-family="EB Garamond, serif"
-            font-style="italic"
-            font-size="22"
-            fill="rgba(184,160,96,0.75)">&#x03C6;</text>
+            text-anchor="middle" font-family="EB Garamond, serif" font-style="italic" font-size="22"
+            fill="rgba(184,160,96,0.78)">&#x03C6;</text>
       <text class="pond-tick delay-1" x="250" y="500"
-            text-anchor="middle"
-            font-family="EB Garamond, serif"
-            font-style="italic"
-            font-size="22"
-            fill="rgba(184,160,96,0.75)">&#x03C6;</text>
+            text-anchor="middle" font-family="EB Garamond, serif" font-style="italic" font-size="22"
+            fill="rgba(184,160,96,0.78)">&#x03C6;</text>
       <text class="pond-tick delay-2" x="-2" y="258"
-            text-anchor="middle"
-            font-family="EB Garamond, serif"
-            font-size="22"
+            text-anchor="middle" font-family="EB Garamond, serif" font-size="22"
             fill="rgba(184,160,96,0.55)">&#x2022;</text>
       <text class="pond-tick delay-3" x="502" y="258"
-            text-anchor="middle"
-            font-family="EB Garamond, serif"
-            font-size="22"
+            text-anchor="middle" font-family="EB Garamond, serif" font-size="22"
             fill="rgba(184,160,96,0.55)">&#x2022;</text>
     </svg>
   </div>
