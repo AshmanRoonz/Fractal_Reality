@@ -141,27 +141,54 @@
 </style>
 
 <style>
-  /* Custom: hero circumpunct mark */
-  .mark-ring { position: absolute; border-radius: 9999px; }
-  .mark-dot {
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%,-50%);
-    width: 32px; height: 32px;
-    border-radius: 9999px;
-    background: #58a6ff;
-    box-shadow: 0 0 32px rgba(88,166,255,0.6), 0 0 80px rgba(88,166,255,0.2);
+  /* ===== Hero: Infinity Pond ===== */
+  .pond {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1/1;
   }
-  .mark-field {
-    position: absolute; inset: 32%;
-    border-radius: 9999px;
-    background: radial-gradient(circle at 50% 50%, rgba(184,160,96,0.28) 0%, rgba(184,160,96,0.08) 55%, transparent 80%);
+  .pond svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  /* Concentric ripples expanding from center to edge */
+  @keyframes pond-ripple {
+    0%   { r: 14;  opacity: 0; stroke-width: 1.4; }
+    8%   { opacity: 0.85; }
+    100% { r: 230; opacity: 0; stroke-width: 0.3; }
   }
-  .mark-orbit-dot {
-    position: absolute;
-    width: 6px; height: 6px;
-    border-radius: 9999px;
-    top: 50%; left: 50%;
-    margin-top: -3px; margin-left: -3px;
+  .pond-ripple {
+    fill: none;
+    stroke: rgba(88,166,255,0.9);
+    transform-origin: 250px 250px;
+    animation: pond-ripple 7s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+  }
+  .pond-ripple.gold { stroke: rgba(184,160,96,0.85); }
+  /* Slow drift of the surface highlight */
+  @keyframes pond-shimmer {
+    0%, 100% { transform: rotate(0deg); opacity: 0.45; }
+    50%      { transform: rotate(360deg); opacity: 0.75; }
+  }
+  .pond-shimmer {
+    transform-origin: 250px 250px;
+    animation: pond-shimmer 24s linear infinite;
+  }
+  /* Soft breathing of the core */
+  @keyframes pond-core {
+    0%, 100% { r: 11; opacity: 0.95; filter: url(#pond-glow); }
+    50%      { r: 14; opacity: 1; }
+  }
+  .pond-core {
+    animation: pond-core 4.5s ease-in-out infinite;
+  }
+  /* Floating phi marks */
+  @keyframes pond-float {
+    0%, 100% { transform: translateY(0); opacity: 0.55; }
+    50%      { transform: translateY(-4px); opacity: 0.8; }
+  }
+  .pond-tick { animation: pond-float 6s ease-in-out infinite; }
+  .pond-tick.delay-1 { animation-delay: -2s; }
+  .pond-tick.delay-2 { animation-delay: -4s; }
+  .pond-tick.delay-3 { animation-delay: -1s; }
+  @media (prefers-reduced-motion: reduce) {
+    .pond-ripple, .pond-shimmer, .pond-core, .pond-tick { animation: none; }
   }
   /* Grain overlay */
   .grain::after {
@@ -234,27 +261,111 @@
     </div>
   </div>
 
-  <!-- Hero mark -->
-  <div class="relative w-full max-w-md mx-auto aspect-square reveal" data-reveal-delay="200" aria-hidden="true">
-    <div class="mark-ring inset-0 border border-gold/25 animate-spin-slow"></div>
-    <div class="mark-ring inset-[14%] border border-dashed border-cyan-brand/25 animate-spin-slower"></div>
-    <div class="mark-ring inset-[32%] border border-gold/40"></div>
-    <div class="mark-field"></div>
-    <div class="mark-dot animate-pulse-soft"></div>
+  <!-- Hero: Infinity Pond -->
+  <div class="pond reveal" data-reveal-delay="200" aria-hidden="true">
+    <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Soft glow for the core -->
+        <filter id="pond-glow" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="6" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <!-- Stronger glow for boundary -->
+        <filter id="pond-edge-glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3"/>
+        </filter>
+        <!-- Pond surface: water-like radial gradient -->
+        <radialGradient id="pond-surface" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"  stop-color="#58a6ff" stop-opacity="0.22"/>
+          <stop offset="35%" stop-color="#3a7fd4" stop-opacity="0.14"/>
+          <stop offset="70%" stop-color="#1e3a7a" stop-opacity="0.08"/>
+          <stop offset="100%" stop-color="#0a0d14" stop-opacity="0"/>
+        </radialGradient>
+        <!-- Shimmer: rotating soft light -->
+        <radialGradient id="pond-shimmer-grad" cx="50%" cy="35%" r="55%">
+          <stop offset="0%"  stop-color="#ffffff" stop-opacity="0.10"/>
+          <stop offset="40%" stop-color="#ffffff" stop-opacity="0.04"/>
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+        </radialGradient>
+        <!-- Gold outer boundary glow -->
+        <radialGradient id="pond-rim" cx="50%" cy="50%" r="50%">
+          <stop offset="88%" stop-color="rgba(184,160,96,0)"  stop-opacity="0"/>
+          <stop offset="96%" stop-color="rgba(184,160,96,0.35)" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="rgba(184,160,96,0)" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
 
-    <!-- Phi marks -->
-    <span class="absolute -top-1 left-1/2 -translate-x-1/2 font-serif italic text-gold/70 text-sm">&phi;</span>
-    <span class="absolute -bottom-1 left-1/2 -translate-x-1/2 font-serif italic text-gold/70 text-sm">&phi;</span>
-    <span class="absolute top-1/2 -translate-y-1/2 -left-1 text-gold/50 text-lg">&middot;</span>
-    <span class="absolute top-1/2 -translate-y-1/2 -right-1 text-gold/50 text-lg">&middot;</span>
+      <!-- Pond surface -->
+      <circle cx="250" cy="250" r="235" fill="url(#pond-surface)"/>
 
-    <!-- Orbiting tiny dots -->
-    <div class="absolute inset-[14%] animate-spin-slow">
-      <span class="mark-orbit-dot bg-cyan-brand/70 shadow-[0_0_8px_rgba(88,166,255,0.6)]" style="top:0;"></span>
-    </div>
-    <div class="absolute inset-[14%] animate-spin-slower">
-      <span class="mark-orbit-dot bg-gold/80 shadow-[0_0_8px_rgba(184,160,96,0.6)]" style="bottom:0;"></span>
-    </div>
+      <!-- Outer rim halo -->
+      <circle cx="250" cy="250" r="240" fill="url(#pond-rim)"/>
+
+      <!-- Rotating shimmer light on the surface -->
+      <g class="pond-shimmer">
+        <circle cx="250" cy="250" r="220" fill="url(#pond-shimmer-grad)"/>
+      </g>
+
+      <!-- Concentric ripples expanding outward (staggered) -->
+      <circle class="pond-ripple"      cx="250" cy="250" r="14" style="animation-delay: 0s;"/>
+      <circle class="pond-ripple gold" cx="250" cy="250" r="14" style="animation-delay: -1.0s;"/>
+      <circle class="pond-ripple"      cx="250" cy="250" r="14" style="animation-delay: -2.0s;"/>
+      <circle class="pond-ripple gold" cx="250" cy="250" r="14" style="animation-delay: -3.0s;"/>
+      <circle class="pond-ripple"      cx="250" cy="250" r="14" style="animation-delay: -4.0s;"/>
+      <circle class="pond-ripple gold" cx="250" cy="250" r="14" style="animation-delay: -5.0s;"/>
+      <circle class="pond-ripple"      cx="250" cy="250" r="14" style="animation-delay: -6.0s;"/>
+
+      <!-- Outer boundary ring (the body / shore of the pond) -->
+      <circle cx="250" cy="250" r="240"
+              fill="none"
+              stroke="rgba(184,160,96,0.55)"
+              stroke-width="1.5"
+              filter="url(#pond-edge-glow)"/>
+      <circle cx="250" cy="250" r="240"
+              fill="none"
+              stroke="rgba(184,160,96,0.85)"
+              stroke-width="0.8"/>
+
+      <!-- Inner "convergence" ring -->
+      <circle cx="250" cy="250" r="60"
+              fill="none"
+              stroke="rgba(88,166,255,0.18)"
+              stroke-width="0.8"
+              stroke-dasharray="2 4"/>
+
+      <!-- Central source: the soul / drop point -->
+      <circle class="pond-core" cx="250" cy="250" r="11"
+              fill="#79c0ff"
+              filter="url(#pond-glow)"/>
+      <circle cx="250" cy="250" r="3.5" fill="#ffffff" opacity="0.9"/>
+
+      <!-- Phi tick marks around the rim -->
+      <text class="pond-tick" x="250" y="4"
+            text-anchor="middle"
+            font-family="EB Garamond, serif"
+            font-style="italic"
+            font-size="22"
+            fill="rgba(184,160,96,0.75)">&#x03C6;</text>
+      <text class="pond-tick delay-1" x="250" y="500"
+            text-anchor="middle"
+            font-family="EB Garamond, serif"
+            font-style="italic"
+            font-size="22"
+            fill="rgba(184,160,96,0.75)">&#x03C6;</text>
+      <text class="pond-tick delay-2" x="-2" y="258"
+            text-anchor="middle"
+            font-family="EB Garamond, serif"
+            font-size="22"
+            fill="rgba(184,160,96,0.55)">&#x2022;</text>
+      <text class="pond-tick delay-3" x="502" y="258"
+            text-anchor="middle"
+            font-family="EB Garamond, serif"
+            font-size="22"
+            fill="rgba(184,160,96,0.55)">&#x2022;</text>
+    </svg>
   </div>
 </header>
 
