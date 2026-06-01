@@ -182,13 +182,15 @@
     filter: url(#glint-blur);
   }
 
-  /* Continuous caustic shimmer over the whole pond. */
+  /* Continuous, slow caustic drift; long path so motion is barely perceptible. */
   @keyframes shimmer-drift {
     0%   { transform: translate(0, 0); }
-    50%  { transform: translate(-12px, 8px); }
+    25%  { transform: translate(-18px, 10px); }
+    50%  { transform: translate(-6px, -14px); }
+    75%  { transform: translate(14px, 8px); }
     100% { transform: translate(0, 0); }
   }
-  .caustics { animation: shimmer-drift 14s ease-in-out infinite; opacity: 0.55; mix-blend-mode: screen; }
+  .caustics { animation: shimmer-drift 48s ease-in-out infinite; opacity: 0.5; mix-blend-mode: screen; }
 
   /* Slow rotating sheen on the surface. */
   @keyframes sheen {
@@ -330,21 +332,14 @@
         </filter>
 
         <!-- Liquid distortion: warps everything beneath it (waves AND clouds)
-             so the whole surface moves as one body of water. Higher scale +
-             animated baseFrequency means the ripple warp actually pushes
-             the cloud-like caustics around as it expands. -->
+             with a STATIC turbulence field. The waves themselves move through
+             this fixed displacement texture; the caustics drift via their own
+             CSS transform. Animating turbulence seed/baseFrequency regenerates
+             the noise each tick and causes visible popping, so we keep it
+             still and let motion come from the things moving through it. -->
         <filter id="liquid-warp" x="-15%" y="-15%" width="130%" height="130%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="2" seed="7" result="warp">
-            <animate attributeName="baseFrequency"
-                     dur="18s"
-                     values="0.012 0.014;0.020 0.018;0.014 0.024;0.012 0.014"
-                     repeatCount="indefinite"/>
-            <animate attributeName="seed"
-                     dur="36s"
-                     values="3;9;5;11;3"
-                     repeatCount="indefinite"/>
-          </feTurbulence>
-          <feDisplacementMap in="SourceGraphic" in2="warp" scale="22"
+          <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" seed="7" result="warp"/>
+          <feDisplacementMap in="SourceGraphic" in2="warp" scale="16"
                              xChannelSelector="R" yChannelSelector="G"/>
         </filter>
 
