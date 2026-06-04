@@ -510,7 +510,7 @@
       <p class="text-fog-300 text-[15px] leading-relaxed mb-5">Our games studio. We build playable systems that take physics, mechanics, and meaning seriously; multiplayer-first, web-native, and shipped under our own flag.</p>
       <ul class="space-y-2 mb-7 text-sm text-fog-300">
         <li class="flex gap-2.5"><i data-lucide="check" class="w-4 h-4 text-ember shrink-0 mt-0.5"></i>Last Ship Sailing: zero-gravity titan combat, WebXR</li>
-        <li class="flex gap-2.5"><i data-lucide="check" class="w-4 h-4 text-ember shrink-0 mt-0.5"></i>Microverse: experimental multiplayer prototypes</li>
+        <li class="flex gap-2.5"><i data-lucide="check" class="w-4 h-4 text-ember shrink-0 mt-0.5"></i>Ace Starship: endless-tunnel shooter on Roblox</li>
         <li class="flex gap-2.5"><i data-lucide="check" class="w-4 h-4 text-ember shrink-0 mt-0.5"></i>Custom engines, open-source where it makes sense</li>
       </ul>
       <a href="#game" class="mt-auto text-ember font-medium text-sm tracking-wide inline-flex items-center gap-1.5 group-hover:gap-3 transition-all">
@@ -542,45 +542,94 @@
   </div>
 </section>
 
-<!-- ===== FEATURED GAME ===== -->
+<!-- ===== FEATURED GAMES ===== -->
 <section id="game" class="relative max-w-6xl mx-auto px-6 lg:px-8 py-20 lg:py-24">
   <div class="flex items-baseline justify-between flex-wrap gap-6 mb-10 reveal">
     <h2 class="h-display text-[clamp(28px,3.6vw,40px)]">Now playing.</h2>
-    <span class="kicker">Featured release</span>
+    <span class="kicker">Fractal Gaming releases</span>
   </div>
 
-  <div class="reveal grid lg:grid-cols-[1.1fr_1fr] rounded-2xl overflow-hidden border border-rule bg-gradient-to-br from-ember/[0.06] to-transparent">
-    <div class="relative min-h-[320px] flex items-center justify-center p-8 border-b lg:border-b-0 lg:border-r border-rule"
-         style="background:
-           radial-gradient(circle at 30% 40%, rgba(255,170,0,0.16), transparent 50%),
-           radial-gradient(circle at 70% 60%, rgba(88,166,255,0.12), transparent 55%),
-           #06070d;">
-      <img src="LSS.png" alt="Last Ship Sailing emblem"
-           class="max-w-[78%] max-h-[280px] animate-float"
-           style="filter: drop-shadow(0 14px 44px rgba(255,170,0,0.32));">
-    </div>
-    <div class="p-10 lg:p-12 flex flex-col justify-center bg-ink-700/40">
-      <div class="font-display font-bold text-[11px] tracking-[0.28em] uppercase text-ember mb-3">Fractal Gaming &mdash; flagship title</div>
-      <h3 class="font-display font-bold text-[clamp(26px,3vw,36px)] leading-tight tracking-wide text-fog-100 mb-4">Last Ship Sailing</h3>
-      <div class="font-serif italic text-[17px] text-gold mb-4">Zero-gravity titan combat. The last ship sailing wins.</div>
-      <p class="text-fog-300 text-[15px] mb-6">A free, browser-based arena game where colossal ships fight across open space. Built on a custom engine, designed for short matches and long mastery, playable in VR.</p>
-      <div class="flex flex-wrap gap-4 pt-5 border-t border-rule text-[11px] tracking-[0.12em] uppercase text-fog-500 mb-6">
-        <span class="flex items-center gap-1.5"><i data-lucide="globe" class="w-3.5 h-3.5"></i> <strong class="text-fog-100 font-medium">Free to play</strong> &middot; in browser</span>
-        <span class="flex items-center gap-1.5"><i data-lucide="glasses" class="w-3.5 h-3.5"></i> Web &amp; <strong class="text-fog-100 font-medium">WebXR</strong></span>
-        <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-3.5 h-3.5"></i> Multiplayer</span>
+  <div class="grid lg:grid-cols-2 gap-6">
+
+    <!-- Last Ship Sailing -->
+    <article class="reveal flex flex-col rounded-2xl overflow-hidden border border-rule bg-gradient-to-br from-ember/[0.06] to-transparent">
+      <div class="relative aspect-[16/10] flex items-center justify-center p-8 border-b border-rule"
+           style="background:
+             radial-gradient(circle at 30% 40%, rgba(255,170,0,0.18), transparent 50%),
+             radial-gradient(circle at 70% 60%, rgba(88,166,255,0.12), transparent 55%),
+             #06070d;">
+        <img src="LSS.png" alt="Last Ship Sailing emblem"
+             class="max-w-[70%] max-h-[220px] animate-float"
+             style="filter: drop-shadow(0 14px 44px rgba(255,170,0,0.32));">
       </div>
-      <div class="flex flex-wrap gap-3">
-        <a class="btn btn-ember" href="https://lss.fractalreality.ca">
-          <i data-lucide="play" class="w-4 h-4"></i>
-          Launch the game
-          <i data-lucide="arrow-right" class="w-4 h-4 btn-arrow"></i>
-        </a>
-        <a class="btn btn-secondary" href="https://lss.fractalreality.ca/about.html">
-          <i data-lucide="info" class="w-4 h-4"></i>
-          About the game
-        </a>
+      <div class="p-8 lg:p-9 flex flex-col flex-1 bg-ink-700/40">
+        <div class="font-display font-bold text-[11px] tracking-[0.28em] uppercase text-ember mb-3">Flagship title</div>
+        <h3 class="font-display font-bold text-2xl leading-tight tracking-wide text-fog-100 mb-3">Last Ship Sailing</h3>
+        <div class="font-serif italic text-[15px] text-gold mb-3">Zero-gravity titan combat. The last ship sailing wins.</div>
+        <p class="text-fog-300 text-[14.5px] mb-5">A free, browser-based arena game where colossal ships fight across open space. Built on a custom engine, designed for short matches and long mastery, playable in VR.</p>
+        <div class="flex flex-wrap gap-x-4 gap-y-2 pt-4 border-t border-rule text-[10.5px] tracking-[0.12em] uppercase text-fog-500 mb-6">
+          <span class="flex items-center gap-1.5"><i data-lucide="globe" class="w-3.5 h-3.5"></i> <strong class="text-fog-100 font-medium">Free</strong> &middot; browser</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="glasses" class="w-3.5 h-3.5"></i> <strong class="text-fog-100 font-medium">WebXR</strong></span>
+          <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-3.5 h-3.5"></i> Multiplayer</span>
+        </div>
+        <div class="flex flex-wrap gap-3 mt-auto">
+          <a class="btn btn-ember" href="https://lss.fractalreality.ca">
+            <i data-lucide="play" class="w-4 h-4"></i>
+            Launch
+            <i data-lucide="arrow-right" class="w-4 h-4 btn-arrow"></i>
+          </a>
+          <a class="btn btn-secondary" href="https://lss.fractalreality.ca/about.html">
+            <i data-lucide="info" class="w-4 h-4"></i>
+            About
+          </a>
+        </div>
       </div>
-    </div>
+    </article>
+
+    <!-- Ace Starship -->
+    <article class="reveal flex flex-col rounded-2xl overflow-hidden border border-rule bg-gradient-to-br from-cyan-brand/[0.06] to-transparent" data-reveal-delay="100">
+      <div class="relative aspect-[16/10] overflow-hidden border-b border-rule"
+           style="background:
+             radial-gradient(circle at 70% 35%, rgba(167,139,250,0.22), transparent 55%),
+             radial-gradient(circle at 25% 65%, rgba(88,166,255,0.18), transparent 55%),
+             #06070d;">
+        <img src="Ace_Starship.png" alt="Ace Starship key art"
+             class="absolute inset-0 w-full h-full object-cover opacity-90"
+             style="filter: saturate(1.05);">
+        <div class="absolute inset-0 pointer-events-none"
+             style="background: linear-gradient(to bottom, transparent 55%, rgba(6,7,13,0.85) 100%);"></div>
+        <span class="absolute top-3 right-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/55 border border-white/15 text-[10px] tracking-[0.18em] uppercase text-fog-100 backdrop-blur">
+          <i data-lucide="sparkles" class="w-3 h-3"></i> New
+        </span>
+      </div>
+      <div class="p-8 lg:p-9 flex flex-col flex-1 bg-ink-700/40">
+        <div class="font-display font-bold text-[11px] tracking-[0.28em] uppercase text-cyan-brand mb-3">Latest release &middot; Roblox</div>
+        <h3 class="font-display font-bold text-2xl leading-tight tracking-wide text-fog-100 mb-3">Ace Starship</h3>
+        <div class="font-serif italic text-[15px] text-gold mb-3">Endless tunnels. Sillier guns. Go deeper.</div>
+        <p class="text-fog-300 text-[14.5px] mb-5">A Roblox tunnel shooter: fly through procedurally generated tunnels, blast the monsters that swarm you, and grind to unlock increasingly ridiculous projectiles (ducks, toilet paper, rubber chickens). Mobile-first, co-op or solo.</p>
+        <div class="flex flex-wrap gap-x-4 gap-y-2 pt-4 border-t border-rule text-[10.5px] tracking-[0.12em] uppercase text-fog-500 mb-6">
+          <span class="flex items-center gap-1.5"><i data-lucide="gamepad-2" class="w-3.5 h-3.5"></i> <strong class="text-fog-100 font-medium">Roblox</strong></span>
+          <span class="flex items-center gap-1.5"><i data-lucide="smartphone" class="w-3.5 h-3.5"></i> Mobile-first</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-3.5 h-3.5"></i> Co-op</span>
+        </div>
+        <div class="flex flex-wrap gap-3 mt-auto">
+          <a class="btn"
+             style="background:#58a6ff;color:#0a0d14;border-color:#58a6ff;"
+             href="https://www.roblox.com/games/87753657136129/Ace-Starship"
+             onmouseover="this.style.background='#79c0ff';this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 24px rgba(88,166,255,0.32)';"
+             onmouseout="this.style.background='#58a6ff';this.style.transform='';this.style.boxShadow='';">
+            <i data-lucide="play" class="w-4 h-4"></i>
+            Play on Roblox
+            <i data-lucide="arrow-right" class="w-4 h-4 btn-arrow"></i>
+          </a>
+          <a class="btn btn-secondary" href="https://www.roblox.com/games/87753657136129/Ace-Starship">
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+            Roblox page
+          </a>
+        </div>
+      </div>
+    </article>
+
   </div>
 </section>
 
@@ -671,8 +720,8 @@
       <div>
         <h5 class="font-sans text-[11px] tracking-[0.22em] uppercase text-fog-500 mb-3 font-medium">Studio</h5>
         <a href="#studio" class="block py-1 text-sm text-fog-300 hover:text-fog-100 transition-colors">What we do</a>
-        <a href="#game" class="block py-1 text-sm text-fog-300 hover:text-fog-100 transition-colors">Last Ship Sailing</a>
-        <a href="https://lss.fractalreality.ca" class="block py-1 text-sm text-fog-300 hover:text-fog-100 transition-colors">Play LSS</a>
+        <a href="https://lss.fractalreality.ca" class="block py-1 text-sm text-fog-300 hover:text-fog-100 transition-colors">Last Ship Sailing</a>
+        <a href="https://www.roblox.com/games/87753657136129/Ace-Starship" class="block py-1 text-sm text-fog-300 hover:text-fog-100 transition-colors">Ace Starship</a>
       </div>
       <div>
         <h5 class="font-sans text-[11px] tracking-[0.22em] uppercase text-fog-500 mb-3 font-medium">Services</h5>
