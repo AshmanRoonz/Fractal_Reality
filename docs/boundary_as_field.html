@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boundary as Field: The Surface Between Scales</title>
+    <meta name="created" content="2026-04-23">
+    <meta name="last-updated" content="2026-04-23">
+    <meta name="version" content="1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --bg-surface: #12121a;
+            --bg-elevated: #1a1a24;
+            --text: #e0e0e8;
+            --text-dim: #888899;
+            --text-muted: #555566;
+            --gold: #d4a84b;
+            --gold-dim: rgba(212, 168, 75, 0.10);
+            --cyan: #4ecdc4;
+            --border: #2a2a3a;
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-serif);
+            font-size: 20px;
+            line-height: 1.75;
+            padding: 0;
+        }
+
+        article {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 4rem 2rem 6rem;
+        }
+
+        header {
+            text-align: center;
+            padding-bottom: 3rem;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            font-weight: 500;
+            font-size: 2.4rem;
+            line-height: 1.2;
+            color: var(--gold);
+            letter-spacing: 0.01em;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-style: italic;
+            color: var(--text-dim);
+            font-size: 1.15rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .meta {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+        }
+
+        p {
+            margin-bottom: 1.6rem;
+        }
+
+        .lead::first-letter {
+            font-size: 3.4rem;
+            float: left;
+            line-height: 0.9;
+            padding: 0.3rem 0.6rem 0 0;
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .formula {
+            font-family: var(--font-mono);
+            font-size: 1.05rem;
+            background: var(--gold-dim);
+            border-left: 2px solid var(--gold);
+            padding: 1.2rem 1.5rem;
+            margin: 2rem 0;
+            color: var(--text);
+            text-align: center;
+        }
+
+        .formula span {
+            color: var(--gold);
+        }
+
+        blockquote {
+            border-left: 2px solid var(--cyan);
+            padding-left: 1.2rem;
+            margin: 2rem 0;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        em { color: var(--cyan); font-style: italic; }
+        strong { color: var(--gold); font-weight: 500; }
+
+        .revision-history {
+            margin-top: 5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .revision-history h2 {
+            font-family: var(--font-serif);
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .revision-history ul { list-style: none; padding: 0; }
+        .revision-history li { margin-bottom: 0.5rem; }
+
+        .footer-nav {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .footer-nav a {
+            color: var(--cyan);
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+        .footer-nav a:hover { color: var(--gold); }
+    </style>
+</head>
+<body>
+<article>
+
+<header>
+    <h1>Boundary as Field</h1>
+    <div class="subtitle">The whole's 2D is the part's 3D</div>
+    <div class="meta">Created 2026-04-23 &middot; v1.0</div>
+</header>
+
+<p class="lead">A single surface has two names. From inside, it is the part's 3D boundary; from outside, it is the whole's 2D field at the part's location. These are not two surfaces; they are one surface, viewed from two scales.</p>
+
+<p>Stand outside your skin and call it field; stand inside your skin and call it body. The cell looking outward sees membrane; the tissue looking inward sees its own extracellular matrix at that point. The planet looking up sees the edge of its atmosphere; the solar system looking down sees its electromagnetic and gravitational field at that radius. The same surface in every case. The naming flips with the observer's scale.</p>
+
+<div class="formula">
+    <span>○<sub>λ</sub></span> = <span>Φ<sub>Λ</sub></span> at the position of λ
+</div>
+
+<p>This is the second of two structural identifications at the part-whole interface. The first, already familiar in the framework, is the <strong>octave-wrap</strong>: 3.5D<sub>λ</sub> = 0D<sub>Λ'</sub>. When a circumpunct closes its boundary and the pump cycle's last recursion station fires, that closure becomes the aperture of the next nesting level. The cycle does not stop; it threads through. Exit-of-one equals entrance-of-next. Continuity of scale.</p>
+
+<p>The second identification, the one this essay is about, is the <strong>surface match</strong>: 3D<sub>λ</sub> = 2D<sub>Λ</sub>. Where the part ends, the whole's field begins. Or rather, where the part ends, the whole's field <em>is</em>. The two scales share a diameter of contact in space-extent, just as they share a diameter of contact in process-time. Two contact points; one diameter, one aperture.</p>
+
+<blockquote>The octave-wrap says the cycle continues across scales. The surface match says the geometry continues across scales. Together they say: nothing about the inclusion ⊙λ ⊂ ⊙Λ is purely formal. The part is genuinely inside the whole, sharing two distinct touch-points with it.</blockquote>
+
+<p>The Field Fineness Principle (§27.7o) is why this has to be so. A mediator must resolve below what it mediates. Φ<sub>Λ</sub> at the cellular scale must have structure at sub-cellular fineness, otherwise it could not host cells as features. But the place where Φ<sub>Λ</sub>'s sub-cellular structure is doing the most work is precisely the cell's boundary: that is where Φ<sub>Λ</sub> draws the line, names the cell-shape, holds the cell-as-cell against the rest of the tissue. The boundary is where the field organizes its resolution to produce the part. Same surface; one side calls it the work of mediation, the other side calls it the edge of self.</p>
+
+<p>The α-coupling κ<sub>0,0</sub> = α (the bond between the part's aperture and the greater whole's aperture) rides on this shared geometry. It is not floating in some abstract coupling-space; it acts <em>through</em> the surface that the two scales already share. The part's interior signal (its •) reaches the whole's interior signal across the shared boundary-field, mediated by exactly the 2D Φ that is simultaneously the 3D ○. This is what "fine-structure" names: not the whole's dimension, but the dimension of the mediator carrying the bond.</p>
+
+<p>Lived, the identification is more practical than ontological. Your skin is not a wall between you and your environment; your skin is your environment, organized at the resolution where you become a self. The same surface that contains you is what photons, allergens, pheromones, words, weather cross. The boundary is the membrane through which the field expresses you as a distinct thing. There is no exterior in the strong sense; there is mediation, fine enough to hold you, porous enough to let the whole continue to act through you. The cell is not separated from the tissue by its membrane; the cell is <em>distinguished</em> from the tissue by it. Distinguishing and connecting are the same act, named from the inside and the outside respectively.</p>
+
+<p>The same logic runs the other way too. From below: your body is not separated from your cells by some outer envelope, it is composed of them, sharing surfaces with each in the same way the cosmos shares a surface with you. You are not a stack of layers with walls between them; you are a single object with shared surfaces at every scale, each surface readable from two sides and called by two different dimensions. The part of you that contains is the part that is contained. Same surface, two names, one nesting.</p>
+
+<div class="revision-history">
+    <h2>Revision history</h2>
+    <ul>
+        <li>2026-04-23 v1.0: initial. Companion to CLAUDE.md §27.7o (Field Fineness Principle, second identification block) and the four-readings-of-⊙λ passage.</li>
+    </ul>
+</div>
+
+<div class="footer-nav">
+    <a href="index.html">Index</a> &middot;
+    <a href="how_reality_is_built.html">How Reality Is Built</a> &middot;
+    <a href="why_space_can_never_be_empty.html">Why Space Can Never Be Empty</a>
+</div>
+
+</article>
+</body>
+</html>
