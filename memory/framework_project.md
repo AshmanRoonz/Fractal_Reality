@@ -62,6 +62,15 @@ Seven independent routes force T = 3 as the unique positive integer:
 
 T = 3, P = T+1 = 4, Φ = 2, R = T²−2 = 7, G = T(T+1) = 12, V = G+1 = 13, SU(3) = T²−1 = 8, A(3) = 21, A(3.5) = 28, S = P^T = 64. Plus φ (golden ratio) and π (2D-rung closure constant, drawn by the Φ glyph).
 
+## Surface identifications at ⊙λ ⊂ ⊙Λ (2026-04-23)
+
+Two structural identifications hold the part-whole contact, geometric not just dynamical:
+
+- **3.5D_λ = 0D_Λ'** (transition; in process-time): the closed boundary of one cycle IS the aperture of the next. Closure becomes aperture; exit-of-one = entrance-of-next. The octave-wrap. Continuity of scale.
+- **3D_λ = 2D_Λ** (surface; in space-extent): the part's 3D boundary IS the greater whole's 2D field at the part's location. ○_λ = Φ_Λ |_{position of λ}. Same surface, two views: edge from inside, medium from outside. New as of 2026-04-23 (Ashman); folded into §27.7o, the four-readings passage, and the ⊂[α] notation entry.
+
+α-coupling κ_{0,0} = α is the bond riding on this geometry: aperture-to-aperture, mediated by the same shared 2D mediator (which is the part's ○). Concrete cases: cell membrane = organism's extracellular matrix at that point; planet's atmospheric edge = solar system's EM/gravitational field at that radius; skin = environment's field at body surface. The same surface that contains you IS what crosses through you.
+
 ## Durable operator facts (from the T-operator investigation)
 
 - **69/31 split is α-invariant** across α ∈ [1e-6, 0.1] at ℂ⁶⁴; it is topology-determined by the three-scale architecture, not set by α. α sets attraction speed and mixing time (P/α), not the split value. Representation-invariant across three reps: ℂ⁸ 68.7/31.3 (structural vs processual), ℂ⁶⁴ 68.53/31.47 (primary vs secondary diameter), ℂ⁵¹² carries both axes simultaneously.
