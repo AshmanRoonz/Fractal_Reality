@@ -53,7 +53,9 @@ Every constants formula uses Φ and ○ as integers: Φ = 2 and ○ = 3. Example
 
 **Fix:** decouple explicitly and permanently. Define the pool integers by dimension value, not glyph: D0 = 0, D1 = 1, D2 = 2, D3 = 3, and rewrite pool-facing formulas in dimension-anchored vocabulary (360 = P! · T · (D2+D3)), or alternatively pin each glyph-integer to a glyph-independent definition (Φ = 2 because two channels; ○ = 3 because triad closure) and state that station assignment and pool value are different layers. Either way, one paragraph in the corrected-ladder doc kills the ambiguity. Without it, every formula is now under-defined.
 
-### B2. The wrap modulus conflict (second sharpest)
+### B2. The wrap modulus conflict (second sharpest) [RESOLVED 2026-06-09]
+
+**Resolution (Ashman, same day):** the wrap stays at 3.5D ≡ 0D′; the card's "4D ≡ 0D′" label was wrong and has been corrected in `docs/index_legacy.html` (⊙ row now reads "all D"; the D5 drawer pins the wrap at 3.5D ≡ 0D′). Option (i) below, adopted. The octave-wrap lemma's mod-3.5 arithmetic and the (Φ+○) = 1.5D′ pin in the α assembly stand. Original analysis kept for the record:
 
 `docs/octave_wrap_lemma.html` computes 2D + 3D = 5 ≡ 1.5D′ explicitly under mod 3.5 (3.5D = 0D′), and the α formula's 360-factor pinning rides on (Φ+○) = 1.5D′. The corrected card says ⊙ sits at 4D ≡ 0D′ with i⁴ = i⁰, which is mod-4 arithmetic. Under mod 4, 2 + 3 = 5 ≡ 1D′, not 1.5D′, and the lemma's pin breaks.
 
@@ -140,9 +142,10 @@ Related to C2 but procedural: the integer pool has historically grown when a for
 ## 6. Forward path
 
 **Decision queue (Ashman adjudicates; each is one sitting):**
-1. Wrap modulus: 3.5, 4, or act/arrival reconciliation (B2). This gates the lemma and the α pinning.
-2. Integer pool decoupling: dimension-anchored names vs glyph-independent definitions (B1). This gates every constants formula.
+1. ~~Wrap modulus~~ RESOLVED 2026-06-09: 3.5D ≡ 0D′ stands; card fixed (B2).
+2. Integer pool decoupling: dimension-anchored names vs glyph-independent definitions (B1). Interim rule now in CLAUDE.md (Φ = 2, ○ = 3 fixed by legacy dictionary); final naming still open.
 3. Ethics sequence under the corrected circuit: reorder, re-derive, or detach (B4). This gates the ethics docs and skills.
+4. The self-similarity axiom's home: the card reassigns A3 to the boundary axiom; old A3 (fractality) needs a citation-stable resolution (keep name vs promote to wrap-theorem). Flagged in CLAUDE.md axioms table.
 
 **Walking order after the decisions:**
 4. Write `the_corrected_ladder` doc: statement, seven arguments, Retraction Notice, impact table (keep / re-derive / retract per claim), frozen pool (C5).
@@ -161,4 +164,5 @@ Related to C2 but procedural: the integer pool has historically grown when a for
 
 ## Revision history
 
+- 2026-06-09 v1.1: B2 resolved (wrap stays 3.5D ≡ 0D′, Ashman); CLAUDE.md migrated to corrected ladder with Ladder Correction Notice; card's 4D label fixed; A3-reassignment added to decision queue.
 - 2026-06-09 v1.0: initial review; first Fable 5 session.
