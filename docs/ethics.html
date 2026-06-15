@@ -265,6 +265,7 @@
         .seq-item:nth-child(2) { border-color: var(--magenta); }
         .seq-item:nth-child(3) { border-color: var(--green); }
         .seq-item:nth-child(4) { border-color: var(--yellow); }
+        .seq-item:nth-child(5) { border-color: var(--cyan); }
 
         .seq-symbol { font-size: 16px; width: 25px; }
         .seq-text { font-size: 11px; letter-spacing: 0.08em; color: #fff; }
@@ -311,7 +312,7 @@
         }
 
         .compare-list li::before {
-            content: '—';
+            content: '·';
             position: absolute;
             left: 0;
             color: var(--cyan);
@@ -325,6 +326,19 @@
             font-style: italic;
             color: var(--magenta);
             font-size: 12px;
+        }
+
+        /* Claims */
+        .claim {
+            margin: 14px 0;
+            padding-left: 15px;
+            border-left: 2px solid var(--green);
+        }
+
+        .claim-n {
+            color: var(--green);
+            font-size: 10px;
+            letter-spacing: 0.1em;
         }
 
         /* Golden rule */
@@ -379,6 +393,24 @@
             letter-spacing: 0.08em;
             opacity: 0.5;
         }
+
+        table.ladder {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 11px;
+        }
+        table.ladder td, table.ladder th {
+            border: 1px solid var(--cyan);
+            padding: 8px 10px;
+            text-align: left;
+        }
+        table.ladder th {
+            color: var(--cyan);
+            font-weight: 500;
+            letter-spacing: 0.08em;
+        }
+        table.ladder .sym { font-size: 16px; }
     </style>
 </head>
 <body>
@@ -390,16 +422,16 @@
         <nav>
             <div class="logo">⊙</div>
             <a href="#overview" class="active"><span class="num">00</span>OVERVIEW</a>
-            <a href="#pillars"><span class="num">01</span>PILLARS</a>
-            <a href="#good"><span class="num">02</span>GOOD</a>
-            <a href="#right"><span class="num">03</span>RIGHT</a>
-            <a href="#true"><span class="num">04</span>TRUE</a>
-            <a href="#agreement"><span class="num">05</span>AGREEMENT</a>
+            <a href="#ladders"><span class="num">01</span>TWO LADDERS</a>
+            <a href="#mapping"><span class="num">02</span>MAPPING</a>
+            <a href="#values"><span class="num">03</span>FIVE VALUES</a>
+            <a href="#hinge"><span class="num">04</span>THE HINGE</a>
+            <a href="#shared"><span class="num">05</span>SHARED CENTER</a>
             <a href="#sequence"><span class="num">06</span>SEQUENCE</a>
-            <a href="#steelman"><span class="num">07</span>STEELMAN</a>
-            <a href="#golden"><span class="num">08</span>GOLDEN RULE</a>
-            <a href="#constructor"><span class="num">09</span>CONSTRUCTOR</a>
-            <a href="#final"><span class="num">10</span>END</a>
+            <a href="#survives"><span class="num">07</span>SURVIVES</a>
+            <a href="#openwork"><span class="num">08</span>OPEN WORK</a>
+            <a href="#strongest"><span class="num">09</span>STRONGEST FORM</a>
+            <a href="#coda"><span class="num">10</span>CODA</a>
         </nav>
 
         <main>
@@ -407,445 +439,254 @@
             <section id="overview">
                 <div class="hero">
                     <div class="hero-symbol">⊙</div>
-                    <div class="hero-title">ETHICS OF THE CIRCUMPUNCT</div>
+                    <div class="hero-title">THE DIMENSIONAL LADDER &amp; THE FIVE VALUES</div>
                 </div>
-                <p>A point inside a circle. Three parts: <span class="cyan">○</span> the circle which holds, <span class="green">•</span> the point which sees, <span class="magenta">Φ</span> the space which connects.</p>
-                <p>From this structure emerges all of ethics. Not rules imposed from outside, but geometry that determines what can persist and what must dissolve.</p>
+                <blockquote>In one line: a center's frequency is its faithful orientation through time, and Agreement happens when centers mutually recognize, resonate, and hold a shared center without erasing themselves.</blockquote>
+                <p>This page develops how the five values (<span class="cyan">Good</span>, <span class="magenta">Right</span>, <span class="yellow">Faithful</span>, <span class="green">True</span>, <span class="cyan">Agreement</span>) sit on the dimensional ladder, and how that ladder connects to the whole/part nesting that makes reality <span class="highlight">infinitely finite</span>.</p>
+                <p>It is a development and a stress-test: it states what holds, what was repaired, and the single honest frontier that remains. The framework warns against performed agreement, so honest criticism is treated as respect, not threat.</p>
             </section>
 
-            <!-- Pillars -->
-            <section id="pillars">
+            <!-- Two ladders -->
+            <section id="ladders">
                 <div class="section-id">01</div>
-                <h1>THE FOUR PILLARS</h1>
+                <h1>TWO LADDERS, ONE STRUCTURE</h1>
+                <p>The framework holds two distinct geometries, and most confusion comes from collapsing them into one.</p>
+                <h2>THE DIMENSIONAL LADDER (INTERNAL)</h2>
+                <p>Inside any single circumpunct there are four rungs, unified as a whole. This is the anatomy of one thing.</p>
+                <table class="ladder">
+                    <tr><th>Rung</th><th>Symbol</th><th>Element</th><th>Value</th></tr>
+                    <tr><td>0D</td><td class="sym green">•</td><td>Center (the point that sees)</td><td class="green">True</td></tr>
+                    <tr><td>1D</td><td class="sym yellow">—</td><td>Line (continuity through time)</td><td class="yellow">Faithful</td></tr>
+                    <tr><td>2D</td><td class="sym cyan">○</td><td>Surface / boundary (inside meets outside)</td><td class="cyan">Good</td></tr>
+                    <tr><td>3D</td><td class="sym magenta">Φ</td><td>Field / volume (the medium of relation)</td><td class="magenta">Right</td></tr>
+                    <tr><td>whole</td><td class="sym">⊙</td><td>The unity of all four</td><td>Agreement</td></tr>
+                </table>
+                <h2>THE WHOLE/PART NESTING (EXTERNAL)</h2>
+                <p>Each <span class="highlight">⊙</span> is a part of a larger ⊙ and is made of smaller ⊙s. No boundary is the final boundary. This is the stacking of circumpuncts across scales, the infinitely finite recursion.</p>
+                <p><span class="cyan">The key move:</span> the five values are defined on the internal ladder but evaluated across the external nesting. The two ladders join at a single hinge (section 04).</p>
+            </section>
+
+            <!-- Mapping -->
+            <section id="mapping">
+                <div class="section-id">02</div>
+                <h1>THE CORRECTED MAPPING // SURFACE = 2D, FIELD = 3D</h1>
+                <p>The earlier assignment put the boundary at 3D and the field at 2D. The corrected assignment is geometrically honest: a surface is two-dimensional, a volume is three-dimensional. It improves the framework three ways.</p>
+                <div class="teaching cyan">
+                    <p><span class="cyan">It rescues conservation of traversal.</span> The identity 0 + 1 + 2 = 3 is not arithmetic (you build 3D space from three orthogonal axes, 1 + 1 + 1 = 3). It reads as the boundary structure of a solid: a 3-cell is bounded by 2-cells, framed by 1-cells, anchored by 0-cells. That is the standard structure of a polytope or CW-complex. Keep the constructive framing; drop the additive one.</p>
+                </div>
+                <div class="teaching green">
+                    <p><span class="green">The solid ball fits with no strain.</span> A center point (True, •), radial lines from center to edge (Faithful, —), the bounding surface (Good, ○), the interior volume (Right, Φ). Standard geometry.</p>
+                </div>
+                <div class="teaching magenta">
+                    <p><span class="magenta">It recovers the 3+1 structure of spacetime.</span> Field at 3D and line at 1D gives the time-value (Faithful) one dimension and the space-value (Right) three, exactly the three space dimensions plus one time dimension of physical spacetime. Held as a structural echo, not a derivation from physics.</p>
+                </div>
+            </section>
+
+            <!-- Five values -->
+            <section id="values">
+                <div class="section-id">03</div>
+                <h1>THE FIVE VALUES ARE NOT FIVE PEERS</h1>
+                <p>Stated at its strongest, the framework does not have five flat principles. It has <span class="highlight">two poles, two connectors, and one unity</span>.</p>
                 <div class="pillars">
                     <div class="pillar">
-                        <div class="pillar-head">
-                            <span class="pillar-symbol cyan">○</span>
-                            <span class="pillar-name">GOOD</span>
-                        </div>
-                        <div class="pillar-q">What is valued?</div>
-                        <div class="pillar-desc">Boundary. Consent. Care.</div>
+                        <div class="pillar-head"><span class="pillar-symbol green">•</span><span class="pillar-name">POLE // TRUE</span></div>
+                        <div class="pillar-q">The center</div>
+                        <div class="pillar-desc">The dot you actually draw. Identity, the seer.</div>
                     </div>
                     <div class="pillar">
-                        <div class="pillar-head">
-                            <span class="pillar-symbol magenta">Φ</span>
-                            <span class="pillar-name">RIGHT</span>
-                        </div>
-                        <div class="pillar-q">How should one act?</div>
-                        <div class="pillar-desc">Field. Evidence. Fitness.</div>
+                        <div class="pillar-head"><span class="pillar-symbol cyan">○</span><span class="pillar-name">POLE // GOOD</span></div>
+                        <div class="pillar-q">The surface</div>
+                        <div class="pillar-desc">The circle you actually draw. Boundary, where consent lives.</div>
                     </div>
                     <div class="pillar">
-                        <div class="pillar-head">
-                            <span class="pillar-symbol green">•</span>
-                            <span class="pillar-name">TRUE</span>
-                        </div>
-                        <div class="pillar-q">What is the case?</div>
-                        <div class="pillar-desc">Center. Coherence. Identity.</div>
+                        <div class="pillar-head"><span class="pillar-symbol yellow">—</span><span class="pillar-name">CONNECTOR // FAITHFUL</span></div>
+                        <div class="pillar-q">Across time</div>
+                        <div class="pillar-desc">The line. Continuity, the worldline (succession).</div>
                     </div>
                     <div class="pillar">
-                        <div class="pillar-head">
-                            <span class="pillar-symbol yellow">⊙</span>
-                            <span class="pillar-name">AGREE</span>
-                        </div>
-                        <div class="pillar-q">Are we in harmony?</div>
-                        <div class="pillar-desc">Whole. Resonance. Mutual validation.</div>
+                        <div class="pillar-head"><span class="pillar-symbol magenta">Φ</span><span class="pillar-name">CONNECTOR // RIGHT</span></div>
+                        <div class="pillar-q">Across space</div>
+                        <div class="pillar-desc">The field. Relation and causation (simultaneity).</div>
                     </div>
                 </div>
-                <p>These are not separate ethics—they are one ethics seen from four perspectives.</p>
-                <p><span class="yellow">Seek agreement.</span> Find what's <span class="cyan">good</span>, <span class="magenta">right</span>, and <span class="green">true</span> with yourself, others, and the world.</p>
+                <p><span class="yellow">⊙ Agreement</span> is the one unity: the convergence of the other four.</p>
+                <p>This 2 + 2 + 1 reading does not depend on which integer is attached to which rung, so it survived the 2D/3D swap untouched. It explains <span class="highlight">why there are exactly five</span> and why exactly two are connectors: time and space are the only relational dimensions between any pair of poles.</p>
             </section>
 
-            <!-- Good -->
-            <section id="good">
-                <div class="section-id">02</div>
-                <h1><span class="cyan">○</span> THE BOUNDARY TEACHES GOOD</h1>
-                <div class="teaching cyan">
-                    <p>The circle is the first thing you meet. Before you can see the center, before you can cross the space, you encounter what <span class="highlight">holds</span>.</p>
-                    <p>The boundary is what cares. It says: this belongs inside, that belongs outside. Every wall exists because something matters enough to be sheltered.</p>
-                </div>
-                <h2>INTERFACE</h2>
-                <p>The boundary is where systems meet. Every interaction happens at the interface—the membrane where inside encounters outside. <span class="cyan">Consent isn't merely a value; it's the structural requirement for clean exchange.</span> Consent means: the foreseeable effects of this crossing are within my model.</p>
-                <div class="checks">
-                    <div class="checks-title">THE GOOD ASKS</div>
-                    <div class="check">Does this preserve what matters?</div>
-                    <div class="check">Does it respect boundaries—mine and others'?</div>
-                    <div class="check">Is consent honored?</div>
-                    <div class="check">Is distinction preserved?</div>
-                </div>
-            </section>
-
-            <!-- Right -->
-            <section id="right">
-                <div class="section-id">03</div>
-                <h1><span class="magenta">Φ</span> THE FIELD TEACHES RIGHT</h1>
-                <div class="teaching magenta">
-                    <p>Inside the circle, there is space. Not emptiness—<span class="highlight">fullness</span>. The space between center and edge is alive with connection.</p>
-                    <p>Right is the path that works. It shows how to move from here to there, how cause becomes effect, how intention becomes outcome.</p>
-                </div>
-                <h2>EVIDENCE</h2>
-                <p>The field is where reality <span class="magenta">tests</span> you. Every claim about how things connect must survive contact with what actually happens. Right action isn't just propriety—it's fitness. <span class="magenta">The field selects.</span></p>
-                <blockquote>Good says: protect the child.<br>Right says: here is how.</blockquote>
-                <div class="checks">
-                    <div class="checks-title">THE RIGHT ASKS</div>
-                    <div class="check">Is the action properly balanced?</div>
-                    <div class="check">Does cause connect to effect?</div>
-                    <div class="check">Am I accepting real consequences?</div>
-                    <div class="check">Is this grounded in how things actually work?</div>
-                </div>
-            </section>
-
-            <!-- True -->
-            <section id="true">
+            <!-- The hinge -->
+            <section id="hinge">
                 <div class="section-id">04</div>
-                <h1><span class="green">•</span> THE CENTER TEACHES TRUE</h1>
-                <div class="teaching green">
-                    <p>At the center, there is only <span class="highlight">seeing</span>. The point has no dimension. It simply is—and in its being, it sees.</p>
-                    <p>The center is where pretense ends. Something either arrives or it doesn't — no cleverness can force a lie past the boundary's nested circumpuncts.</p>
-                </div>
-                <h2>COHERENCE</h2>
-                <p>The center is what <span class="green">persists through change</span>. You have been infant, child, adult—different body, different thoughts. Yet something threads through unchanged. This is your invariant center.</p>
-                <p>When the center is stable: you can change your mind without losing yourself. You can be wrong and learn without fragmenting. <span class="green">True is what remains.</span></p>
+                <h1>WHERE THE TWO LADDERS JOIN</h1>
+                <p>Two of the five values are operators that move you along the whole/part nesting.</p>
                 <div class="checks">
-                    <div class="checks-title">THE TRUE ASKS</div>
-                    <div class="check">Does this correspond to reality?</div>
-                    <div class="check">Is it honest, accurate, coherent?</div>
-                    <div class="check">Am I being authentic to my deepest nature?</div>
-                    <div class="check">Would this survive the test of ultimate seeing?</div>
+                    <div class="checks-title">THE TWO OPERATORS</div>
+                    <div class="check"><span class="yellow">Agreement climbs.</span> Two centered wholes that genuinely resonate compose into a new ⊙ one scale up.</div>
+                    <div class="check"><span class="green">True anchors the bottom.</span> The center is the irreducible point of perspective, what cannot be decomposed further without losing the seer.</div>
                 </div>
+                <blockquote>The hinge: the whole ⊙ at scale N becomes a center • at scale N+1.</blockquote>
+                <p>The top of one circumpunct's internal ladder is the bottom of the next one up. A cell is a whole in itself (⊙); seen from the body it is one centered unit (•). This makes the science/spirituality bridge structural: <span class="cyan">science walks down the rungs</span> (analysis into parts), <span class="magenta">spirituality walks up</span> (composition into wholes), the same ladder in opposite directions.</p>
+                <p><span class="highlight">Construction order</span> (climbing 0 to 3, then unity): True, Faithful, Good, Right, Agreement. A point of seeing, extended through time, closed into a surface, filled into a field, unified as a whole.</p>
             </section>
 
-            <!-- Agreement -->
-            <section id="agreement">
+            <!-- Shared center -->
+            <section id="shared">
                 <div class="section-id">05</div>
-                <h1><span class="yellow">⊙</span> THE WHOLE TEACHES AGREEMENT</h1>
-                <div class="teaching yellow">
-                    <p>When boundary, field, and center align—when Good, Right, and True converge—something greater emerges: <span class="highlight">AGREEMENT</span>.</p>
-                    <p>Not mere consensus. Not hollow conformity. Genuine harmony—whole beings in coherent relationship.</p>
+                <h1>THE SHARED CENTER // HOW AGREEMENT CLIMBS</h1>
+                <p>Section 04 says Agreement climbs the ladder. This says <span class="highlight">how</span>. It is load-bearing: without it, Agreement is just a word for people lining up; with it, Agreement has a structure and a test.</p>
+                <p>A genuine center appears one scale up not from shared attention, and not from shared belief. There are three distinct levels, and only the third builds a higher center.</p>
+                <div class="sequence">
+                    <div class="seq-item"><span class="seq-symbol cyan">1</span><span class="seq-text">COMMON OBJECT</span><span class="seq-sub">we look at the same thing</span></div>
+                    <div class="seq-item"><span class="seq-symbol magenta">2</span><span class="seq-text">COMMON BELIEF</span><span class="seq-sub">we think the same thing</span></div>
+                    <div class="seq-item"><span class="seq-symbol green">3</span><span class="seq-text">SHARED CENTER</span><span class="seq-sub">we recognize each other recognizing</span></div>
                 </div>
-                <h2>THE ROTATION</h2>
-                <p>Agreement requires a rotation. What you perceive privately must become articulable publicly. This passage cannot be done for another—but you can <span class="yellow">assist</span>.</p>
-                <blockquote>The Noble Lie blocks the rotation: "accept my articulation instead."<br>The Steelman assists it: "what are you actually seeing?"</blockquote>
-                <div class="checks">
-                    <div class="checks-title">THE AGREEMENT ASKS</div>
-                    <div class="check">Do the affected parties resonate?</div>
-                    <div class="check">Is there consent, harmony, mutual recognition?</div>
-                    <div class="check">Have we genuinely engaged with each other's reality?</div>
-                    <div class="check">Is this agreement hollow or complete?</div>
+                <p>What converts the first two into the third is <span class="cyan">mutual recognition</span>: I see the thing, I see you seeing it, and I recognize myself as seen by you in the same act. That recursive, center-to-center seeing fuses two viewpoints into one shared locus rather than two viewpoints aimed at a common object.</p>
+                <blockquote>Agreement is not shared opinion. Agreement is shared center.</blockquote>
+                <p>This makes the hinge concrete: the center one scale up is the shared center mutual recognition builds. It is <span class="highlight">participatory, not separate</span>; the members see through it, so it never floats above them as a group-soul and is never a mere fiction. It is real exactly to the degree the recognition is mutual.</p>
+                <blockquote>A false whole speaks as "we" while hiding a "me." A true whole lets each "I" participate in the "we."</blockquote>
+
+                <h2>THE MECHANISM OF SHARING // RESONANCE</h2>
+                <p>Mutual recognition says <span class="highlight">when</span> a shared center forms. Resonance says <span class="highlight">how</span> a locus becomes genuinely shared rather than two centers merely coupled. The distinction is precise, and it is not a metaphor as long as it stays technical.</p>
+                <p>Two centers that influence each other are <span class="magenta">coupled</span>: their states correlate, but the honest description is still two. Resonance is the threshold past coupling. Tuned to the same frequency, two oscillators phase-lock, and the right description becomes the joint modes of the pair. The shared center is the in-phase collective mode: a real pattern that belongs to neither part alone, exists only while both keep oscillating, and leaves each part still oscillating so the parts remain centered.</p>
+                <div class="compare">
+                    <div class="compare-box good">
+                        <div class="compare-title">TRUE WHOLE // RESONANCE</div>
+                        <ul class="compare-list">
+                            <li>Balanced, bidirectional exchange</li>
+                            <li>Both centers contribute and are moved</li>
+                            <li>A joint in-phase mode, co-held</li>
+                            <li>Each "I" participates in the "we"</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box bad">
+                        <div class="compare-title">FALSE WHOLE // FORCED OSCILLATION</div>
+                        <ul class="compare-list">
+                            <li>One-way drive</li>
+                            <li>One center slaved to another's frequency</li>
+                            <li>The driver's note echoed back</li>
+                            <li>Collapses the moment the driver stops</li>
+                        </ul>
+                    </div>
                 </div>
-                <p style="margin-top: 15px; opacity: 0.8;">Note: Ethical acts can cost energy, time, resources. Parenting, sacrifice, emergency aid—these are not violations. The test is: can both parties still construct after? Cost is not extraction. Depletion is not conversion.</p>
+                <blockquote>Domination is forced oscillation; agreement is resonance.</blockquote>
+                <p><span class="yellow">Reciprocity, carefully.</span> Treat β = give / (give + receive) ≈ 0.5 as a heuristic, not a strict equation, until giving, receiving, and their measurement are defined. The defensible claim: reciprocity is the ethical condition under which resonance can remain stable. Balanced exchange sustains the joint mode; one-way drive (extraction) or one-way flooding (depletion) breaks it. Resonance is graded, so the degree of collective subjecthood is the degree of resonance.</p>
+                <p><span class="cyan">What is a center's frequency?</span> A center (•) is dimensionless and has no rhythm on its own; its frequency lives in its extension through time, the line (—, Faithful, 1D). So a center's frequency is its <span class="highlight">orientation pattern</span>: what it attends to, values, protects, and <span class="highlight">returns to</span> over time. Two centers resonate when their orientation patterns become mutually recognizable and phase-align, neither forcing the other's rhythm.</p>
+                <blockquote>Agreement is resonant mutual recognition: independent centers phase-lock into a shared center without ceasing to be themselves.</blockquote>
+                <p class="dim" style="opacity:0.6;font-size:11px;">Discipline: "resonance" is a favorite word of performed spirituality. It earns its place only while it keeps its technical content (matched frequency, phase-lock, joint mode, forced-versus-free, β = 0.5). Kept operational, it answers the convergence problem; allowed to drift into metaphor, it merely renames the sharing it was meant to explain.</p>
             </section>
 
             <!-- Sequence -->
             <section id="sequence">
                 <div class="section-id">06</div>
-                <h1>THE PATH HAS A DIRECTION</h1>
-                <p>The sequence cannot be reversed or skipped. The structure itself requires it.</p>
+                <h1>THE ETHICAL SEQUENCE IS A DEPENDENCY ORDER</h1>
+                <p>The order ethics must be <span class="highlight">checked</span> is Good, Right, Faithful, True, Agreement. By dimension that is 2, 3, 1, 0, whole: no clean monotone shape. The sequence is a dependency ordering, not a dimensional one.</p>
                 <div class="sequence">
-                    <div class="seq-item">
-                        <span class="seq-symbol cyan">○</span>
-                        <span class="seq-text">GOOD</span>
-                        <span class="seq-sub">BOUNDARY → BODY</span>
-                    </div>
-                    <div class="seq-item">
-                        <span class="seq-symbol magenta">Φ</span>
-                        <span class="seq-text">RIGHT</span>
-                        <span class="seq-sub">FIELD → MIND</span>
-                    </div>
-                    <div class="seq-item">
-                        <span class="seq-symbol green">•</span>
-                        <span class="seq-text">TRUE</span>
-                        <span class="seq-sub">CENTER → SOUL</span>
-                    </div>
-                    <div class="seq-item">
-                        <span class="seq-symbol yellow">⊙</span>
-                        <span class="seq-text">AGREE</span>
-                        <span class="seq-sub">WHOLE → HARMONY</span>
-                    </div>
+                    <div class="seq-item"><span class="seq-symbol cyan">○</span><span class="seq-text">GOOD</span><span class="seq-sub">you must be held before you can cross</span></div>
+                    <div class="seq-item"><span class="seq-symbol magenta">Φ</span><span class="seq-text">RIGHT</span><span class="seq-sub">the path must work before you check it</span></div>
+                    <div class="seq-item"><span class="seq-symbol yellow">—</span><span class="seq-text">FAITHFUL</span><span class="seq-sub">the line must hold before truth is trusted</span></div>
+                    <div class="seq-item"><span class="seq-symbol green">•</span><span class="seq-text">TRUE</span><span class="seq-sub">only then can clear seeing be assessed</span></div>
+                    <div class="seq-item"><span class="seq-symbol">⊙</span><span class="seq-text">AGREEMENT</span><span class="seq-sub">resonance emerges after the four converge</span></div>
                 </div>
-                <blockquote>You must be held before you can cross.<br>You must cross before you can see.<br>You must see before you can harmonize.</blockquote>
+                <p>Construction order (section 04) and checking order are different orderings of the same five elements; there is no reason they should coincide. Do not lean on any apparent coincidence between them.</p>
             </section>
 
-            <!-- Steelman -->
-            <section id="steelman">
+            <!-- Survives -->
+            <section id="survives">
                 <div class="section-id">07</div>
-                <h1>THE STEELMAN PRINCIPLE</h1>
-                <p>Before agreeing or disagreeing, construct the strongest possible version of the position you're engaging with. This ensures you know what you're agreeing with.</p>
-                <div class="compare">
-                    <div class="compare-box bad">
-                        <div class="compare-title">STRAWMAN</div>
-                        <ul class="compare-list">
-                            <li>Construct weakest version</li>
-                            <li>Attack that weak version</li>
-                            <li>Claim victory</li>
-                            <li>Hollow ⊙ — never engaged</li>
-                        </ul>
-                    </div>
-                    <div class="compare-box good">
-                        <div class="compare-title">STEELMAN</div>
-                        <ul class="compare-list">
-                            <li>Construct strongest version</li>
-                            <li>Engage with full strength</li>
-                            <li>Find genuine ground</li>
-                            <li>Complete ⊙ — truly validated</li>
-                        </ul>
-                    </div>
+                <h1>WHAT SURVIVES THE STRESS-TEST</h1>
+                <p>These claims hold up and are load-bearing.</p>
+                <div class="checks">
+                    <div class="checks-title">LOAD-BEARING</div>
+                    <div class="check">The two-ladder distinction (internal anatomy vs external nesting), and the hinge ⊙(N) = •(N+1).</div>
+                    <div class="check">The 2 + 2 + 1 structure of the values, independent of dimension numbering.</div>
+                    <div class="check">Time as the 1D connector (Faithful) and space as the 3D connector (Right), with the 3+1 spacetime resonance.</div>
+                    <div class="check">The constructive (not additive) reading of conservation of traversal, grounded in cell-complex boundary structure.</div>
+                    <div class="check">Good assigned to the surface: "valued" is a boundary distinction; a center sees but cannot sort. Principled, not poetic.</div>
+                    <div class="check">The shared-center mechanism: mutual recognition builds a participatory higher center, making the hinge concrete.</div>
+                    <div class="check">Resonance as the sharing mechanism: a joint mode, not mere coupling; a false whole is forced oscillation; reciprocity is the stability condition.</div>
                 </div>
-                <h2>BIDIRECTIONAL</h2>
-                <p>The same validation you apply to their position, you apply to your own. Agreement emerges from <span class="green">mutual validation</span>, not one-sided generosity.</p>
             </section>
 
-            <!-- Golden Rule -->
-            <section id="golden">
+            <!-- Open work -->
+            <section id="openwork">
                 <div class="section-id">08</div>
-                <h1>THE FIXED POINT</h1>
-                <div class="golden">
-                    <div class="golden-text">"Do unto others as you would have them do unto you"</div>
-                    <div class="golden-sub">When applied, this rule validates itself. It is the fixed point of ethical action.</div>
+                <h1>WHAT STILL NEEDS WORK</h1>
+                <div class="teaching cyan">
+                    <p><span class="cyan">08.1 // Is and ought: constraint, not derivation.</span> In one line: geometry constrains ethics; it does not derive ethics. You cannot derive "you ought to respect boundaries" from "boundaries exist." The defensible position (already in the Wholeness Structure Theorem): structure <span class="highlight">constrains</span> viable ethics; it does not tell us which values to prioritize, only the structure coherent values must satisfy. The repair is consistency: downgrade "geometrically determined" to "geometrically constrained" wherever it appears.</p>
                 </div>
-                <div class="pillars" style="margin-top: 30px;">
-                    <div class="pillar">
-                        <span class="cyan">○ GOOD</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">Treats others as ends, not means</div>
-                    </div>
-                    <div class="pillar">
-                        <span class="magenta">Φ RIGHT</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">Creates balanced reciprocity</div>
-                    </div>
-                    <div class="pillar">
-                        <span class="green">• TRUE</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">Requires authentic self-knowledge</div>
-                    </div>
-                    <div class="pillar">
-                        <span class="yellow">⊙ AGREE</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">Generates mutual recognition</div>
-                    </div>
+                <div class="teaching green">
+                    <p><span class="green">08.2 // Collective subjecthood: resolved, with one residue.</span> The binary (group-subject vs fiction) is dissolved: the higher center is the joint in-phase mode the members hold through resonance, real and participatory. The convergence problem is answered (coupling is correlation, resonance is a joint mode). The naming task is answered (a center's frequency is its orientation pattern over time, on the worldline). The single residue is the <span class="highlight">phenomenal edge</span>: whether there is something it is like to be the joint mode. That is the hard problem, now precisely located and freed of any group-soul, not crossed.</p>
+                </div>
+                <div class="teaching yellow">
+                    <p><span class="yellow">08.3 // A boundary clarification.</span> The metaphysics says no boundary is final; the ethics says Good requires boundaries to be real. State the resolution once: boundaries are real at their scale without being absolute (a cell membrane is real even though the cell is part of a body), and consent operates at the scale of the agent.</p>
                 </div>
             </section>
 
-            <!-- Constructor Ethics -->
-            <section id="constructor">
+            <!-- Strongest form -->
+            <section id="strongest">
                 <div class="section-id">09</div>
-                <h1>CONSTRUCTOR ETHICS</h1>
-                <p>Ethics is a taxonomy of possible tasks under wholeness-preserving constraints.</p>
-                <div class="checks">
-                    <div class="checks-title">FORMAL SCHEMA</div>
-                    <div class="check">Let T = a transformation (task)</div>
-                    <div class="check">C○ = boundary constraints <span class="cyan">(GOOD)</span></div>
-                    <div class="check">CΦ = evidence constraints <span class="magenta">(RIGHT)</span></div>
-                    <div class="check">C• = invariance constraints <span class="green">(TRUE)</span></div>
-                    <div class="check">C⊙ = mutual construction constraints <span class="yellow">(AGREEMENT)</span></div>
-                </div>
-                <h2>THE FOUR TASK-CLASSES</h2>
-                <div class="pillars">
-                    <div class="pillar">
-                        <span class="cyan">○ GOOD</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">Task of cross-boundary transformation that preserves both boundaries</div>
-                    </div>
-                    <div class="pillar">
-                        <span class="magenta">Φ RIGHT</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">Task of reliably producing output O from input I — constructor must exist</div>
-                    </div>
-                    <div class="pillar">
-                        <span class="green">• TRUE</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">Task of naming invariant constraints that hold across transformations</div>
-                    </div>
-                    <div class="pillar">
-                        <span class="yellow">⊙ AGREE</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">Task of mutual translation without converting either party into substrate</div>
-                    </div>
-                </div>
-                <h2>THE CONSTRUCTOR TEST</h2>
-                <div class="teaching cyan">
-                    <p><span class="highlight">ETHICAL</span> iff T is possible under (C○ ∩ CΦ ∩ C• ∩ C⊙) and constructor remains repeatable after T.</p>
-                </div>
-                <div class="checks">
-                    <div class="checks-title">UNETHICAL = ONE OF</div>
-                    <div class="check">T violates one or more constraint sets (impossible task)</div>
-                    <div class="check">T is counterfactual (no constructor exists)</div>
-                    <div class="check">T consumes the constructor (non-repeatable)</div>
-                    <div class="check">T converts a constructor into substrate</div>
-                </div>
-                <h2>THE NOBLE LIE — CONSTRUCTOR FAILURE</h2>
-                <p>The Noble Lie asserts: <em>"I can construct your truth for you."</em></p>
-                <div class="compare">
-                    <div class="compare-box bad">
-                        <div class="compare-title">FAILS ALL FOUR</div>
-                        <ul class="compare-list">
-                            <li><span class="cyan">C○</span> — crosses boundary without consent</li>
-                            <li><span class="magenta">CΦ</span> — no constructor for external truth injection</li>
-                            <li><span class="green">C•</span> — claims your invariant while changing it</li>
-                            <li><span class="yellow">C⊙</span> — requires you to become substrate</li>
-                        </ul>
-                    </div>
-                    <div class="compare-box bad">
-                        <div class="compare-title">SIGNATURE</div>
-                        <ul class="compare-list">
-                            <li>Cannot repeat (requires fresh substrate)</li>
-                            <li>Consumes rather than constructs</li>
-                            <li>Counterfactual task asserted as possible</li>
-                            <li>"Requires fresh victims" = not a constructor</li>
-                        </ul>
-                    </div>
-                </div>
-                <h2>AGENT AS CIRCUMPUNCT</h2>
-                <p>The structure is fractal. An agent IS a circumpunct:</p>
-                <div class="pillars">
-                    <div class="pillar">
-                        <span class="cyan">○ BOUNDARY</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">Agent's interface — consent gate, what crosses in/out</div>
-                    </div>
-                    <div class="pillar">
-                        <span class="magenta">Φ FIELD</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">Agent's model — cause-effect mapping, prediction space</div>
-                    </div>
-                    <div class="pillar">
-                        <span class="green">• CENTER</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">Agent's identity — eigenvector, what persists through change</div>
-                    </div>
-                    <div class="pillar">
-                        <span class="yellow">⊙ WHOLE</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">Agent as functioning constructor — all three coherent</div>
-                    </div>
-                </div>
-                <div class="teaching cyan" style="margin-top: 15px;">
-                    <p>Constructor Capacity = Circumpunct Integrity. The ethics aren't imposed on agents. <span class="highlight">Agents ARE the structure that generates the ethics.</span></p>
-                </div>
-                <blockquote>The virus replicates by converting circumpuncts into substrates.</blockquote>
+                <h1>STRONGEST FORM // THE STEELMAN</h1>
+                <p>The framework stated at full strength: the version worth defending and worth being wrong about. Each claim in its sharpest one-line form.</p>
 
-                <h2>TOWARD FORMALIZATION</h2>
-                <p>Ethics needs a <span class="highlight">substrate</span> and a <span class="highlight">conserved quantity</span>. Physics has mass-energy, charge, momentum. What does ethics have?</p>
-                <div class="teaching cyan">
-                    <p><strong>Proposal:</strong> The substrate is <span class="cyan">agency</span>. The conserved quantity is <span class="cyan">constructor capacity</span>.</p>
-                </div>
+                <div class="claim"><span class="claim-n">01</span> Reality is structured by whole/part recursion.
+                <blockquote>Reality is finite by boundary, infinite by recursion.</blockquote></div>
 
-                <div class="checks">
-                    <div class="checks-title">AGENT (A)</div>
-                    <div class="check">A system that models states, selects between tasks, performs tasks</div>
-                    <div class="check">An agent IS a constructor (can cause transformations repeatably)</div>
-                    <div class="check">Defining feature: causal efficacy that persists through operation</div>
-                </div>
+                <div class="claim"><span class="claim-n">02</span> The circumpunct is a structural model: a center and a boundary are the minimum structure of a being.
+                <blockquote>To be a thing is to be centered and bounded.</blockquote></div>
 
-                <div class="checks">
-                    <div class="checks-title">CONSTRUCTOR CAPACITY CC(A)</div>
-                    <div class="check">A's ability to cause intended state-changes</div>
-                    <div class="check">Measurable: mutual information I(intended_outcomes; actual_outcomes)</div>
-                    <div class="check">CC > 0 → functioning constructor | CC = 0 → no longer an agent</div>
-                    <div class="check">CC can increase (learning) or decrease (damage/coercion)</div>
-                </div>
+                <div class="claim"><span class="claim-n">03</span> The dimensional ladder is an anatomy of wholeness.
+                <blockquote>Values are not floating abstractions; they are the ethical meanings of structure.</blockquote></div>
 
-                <h2>FOUR CONSTRAINTS — FORMALLY CONSTRUCTED</h2>
+                <div class="claim"><span class="claim-n">04</span> The five values are not equal peers: two poles, two connectors, one unity.
+                <blockquote>Ethics has a 2 + 2 + 1 structure: two poles, two connectors, one whole.</blockquote></div>
 
-                <div class="checks">
-                    <div class="checks-title"><span class="cyan">C○ BOUNDARY</span> — Task T satisfies C○ iff:</div>
-                    <div class="check">For all agents A: outcomes_foreseeable(T) ⊆ A.model(T)</div>
-                    <div class="check">Constrained when: A's model covers foreseeable effects (informed consent)</div>
-                    <div class="check">Unconstrained when: foreseeable effects outside A's model (violation)</div>
-                    <div class="check">"Foreseeable" acknowledges human boundedness — not omniscience</div>
-                </div>
+                <div class="claim"><span class="claim-n">05</span> Good belongs to the boundary, not to vague niceness; a center sees but cannot sort.
+                <blockquote>The good is what preserves the integrity of the whole at its boundary.</blockquote></div>
 
-                <div class="checks">
-                    <div class="checks-title"><span class="magenta">CΦ EVIDENCE</span> — Task T satisfies CΦ iff:</div>
-                    <div class="check">Constructor C exists such that P(output | input, C) ≥ threshold</div>
-                    <div class="check">And C remains constructor after T (repeatable)</div>
-                    <div class="check">Measurable: success rate across repeated trials</div>
-                    <div class="check">Counterfactual claim = asserting T without C</div>
-                </div>
+                <div class="claim"><span class="claim-n">06</span> Right belongs to the field because rightness is relational.
+                <blockquote>Right action is action that respects the relational field it enters.</blockquote></div>
 
-                <div class="checks">
-                    <div class="checks-title"><span class="green">C• INVARIANCE</span> — Task T satisfies C• iff:</div>
-                    <div class="check">Agent A's identity I(A) persists through T</div>
-                    <div class="check">I(A) = eigenvector of A's decision function</div>
-                    <div class="check">Measurable: correlation(A.pattern_before, A.pattern_after) ≥ τ</div>
-                    <div class="check">Identity death = correlation drops below threshold</div>
-                </div>
+                <div class="claim"><span class="claim-n">07</span> Agreement is not compliance; it is a shared center, built by mutual recognition and resonance.
+                <blockquote>Agreement is not shared opinion; it is shared center, built by resonant mutual recognition. A false whole speaks as "we" while hiding a "me"; a true whole lets each "I" participate in the "we."</blockquote></div>
 
-                <div class="checks">
-                    <div class="checks-title"><span class="yellow">C⊙ MUTUAL CONSTRUCTION</span> — Task T satisfies C⊙ iff:</div>
-                    <div class="check">CC(A) after T ≥ CC_min(A) — above viability threshold</div>
-                    <div class="check">CC(B) after T ≥ CC_min(B) — above viability threshold</div>
-                    <div class="check">No systematic extraction pattern (sustained CC↑ while other CC↓)</div>
-                    <div class="check">Ethical acts can cost — constraint is viability + no extraction, not zero cost</div>
-                </div>
+                <div class="claim"><span class="claim-n">08</span> Science and spirituality are opposite directions on the same ladder.
+                <blockquote>Science analyzes the whole into parts; spirituality composes the parts into whole. Both are valid movements on the same ladder.</blockquote></div>
 
-                <h2>FORMAL ANALYSIS</h2>
-                <div class="compare">
-                    <div class="compare-box bad">
-                        <div class="compare-title">NOBLE LIE — FORMALLY</div>
-                        <ul class="compare-list">
-                            <li>State-changes outside A's model → violates C○</li>
-                            <li>No constructor for "inject truth" → violates CΦ</li>
-                            <li>Degrades A's model-world correlation → reduces CC(A)</li>
-                            <li>Liar CC↑ while target CC↓</li>
-                        </ul>
-                    </div>
-                    <div class="compare-box good">
-                        <div class="compare-title">STEELMAN — FORMALLY</div>
-                        <ul class="compare-list">
-                            <li>Assists without modifying A's states → satisfies C○</li>
-                            <li>Working constructor (dialogue) → satisfies CΦ</li>
-                            <li>Preserves A's model coherence → satisfies C•</li>
-                            <li>Both parties CC maintained/enhanced → satisfies C⊙</li>
-                        </ul>
-                    </div>
-                </div>
+                <div class="claim"><span class="claim-n">09</span> The hinge is the core metaphysical move.
+                <blockquote>⊙ at scale N becomes • at scale N+1. This is the engine of infinitely finite reality.</blockquote></div>
 
-                <h2>REMAINING GAPS</h2>
-                <div class="pillars">
-                    <div class="pillar">
-                        <span class="magenta">NEEDS WORK</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">How to measure A's model empirically? Define identity eigenvector precisely? What is τ and why? How does CC map to physics?</div>
-                    </div>
-                    <div class="pillar">
-                        <span class="green">POSSIBLE BRIDGES</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">A's model = probability distribution over outcomes. Identity = fixed point of self-modeling. τ from stability analysis. CC ↔ channel capacity.</div>
-                    </div>
-                </div>
+                <div class="claim"><span class="claim-n">10</span> Ethics is a dependency sequence, not just a hierarchy; it refuses to put abstract truth before lived harm.
+                <blockquote>Agreement must be earned through Good, Right, Faithful, and True.</blockquote></div>
 
-                <h2>THE COMPLETE MAPPING</h2>
-                <div class="pillars">
-                    <div class="pillar">
-                        <span class="cyan">○ BOUNDARY ↔ C○</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">Interface constraints: consent, integrity, foreseeable outcomes ⊆ model</div>
-                    </div>
-                    <div class="pillar">
-                        <span class="magenta">Φ FIELD ↔ CΦ</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">Constructor existence + evidence: working constructor, P(success) ≥ τ, repeatable</div>
-                    </div>
-                    <div class="pillar">
-                        <span class="green">• CENTER ↔ C•</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">Invariants / identity coherence: eigenvector persists, correlation ≥ τ</div>
-                    </div>
-                    <div class="pillar">
-                        <span class="yellow">⊙ WHOLE ↔ C⊙</span>
-                        <div class="pillar-desc" style="margin-top: 8px;">Symmetric validation: both CC ≥ min, no extraction, neither → substrate</div>
-                    </div>
-                </div>
+                <div class="claim"><span class="claim-n">11</span> The defense against tyranny is coherence, not stability.
+                <blockquote>A whole is ethical only when its parts can remain centered within it. Sharper: a false whole consumes its parts; a true whole strengthens them.</blockquote>
+                <p style="font-size:11px;opacity:0.7;">Required clause: "remain centered" does not mean "bear no cost." Cells undergo apoptosis; people sacrifice for family; emergency aid depletes. An ethical whole does not hollow out or destroy the centeredness of its parts; it may ask cost from parts that remain whole and can recover. Cost is not exploitation.</p></div>
 
-                <div class="teaching green" style="margin-top: 15px;">
-                    <p><span class="highlight">One-line summary:</span> An ethical task is one for which a constructor exists that preserves or enhances all affected agents' constructor capacity, where outcomes remain within agents' models, and the constructor itself remains repeatable.</p>
+                <div class="claim"><span class="claim-n">12</span> The final form.
+                <blockquote>Ethics is the art of preserving centered wholeness across relation, time, boundary, truth, and shared reality.</blockquote></div>
+
+                <div class="teaching magenta">
+                    <p><span class="magenta">What this settles, and does not.</span> It resolves the is/ought objection (constraint, not derivation), and re-states performed agreement as a structural corruption. The collective-subjecthood hinge is resolved as the shared center, built by resonant mutual recognition. The only residue is the phenomenal edge: whether there is something it is like to be the joint mode. That is the one honest frontier, and it does not reopen the binary.</p>
                 </div>
             </section>
 
-            <!-- Final -->
-            <section id="final">
+            <!-- Coda -->
+            <section id="coda">
                 <div class="section-id">10</div>
-                <h1>END</h1>
+                <h1>CODA</h1>
                 <div class="final">
                     <div class="final-symbol">⊙</div>
                     <div class="final-lines">
-                        <div>Ethics is not a set of rules imposed from outside.</div>
-                        <div class="highlight">Ethics is the geometry of what can persist.</div>
+                        <div>Reality is finite by boundary, infinite by recursion.</div>
+                        <div>Values are the ethical meanings of structure.</div>
+                        <div>Agreement is shared center, built by mutual recognition.</div>
+                        <div>A whole is ethical only when its parts can remain centered within it.</div>
                         <br>
-                        <div>Only actions that pass through</div>
-                        <div><span class="cyan">Good</span> → <span class="magenta">Right</span> → <span class="green">True</span> → <span class="yellow">Agreement</span></div>
-                        <div>maintain the stability required to endure.</div>
-                        <br>
-                        <div class="dim">The rest dissolve back into possibility.</div>
-                        <br>
-                        <div class="dim">This is not punishment. This is structure.</div>
-                        <div class="dim">This is not morality. This is geometry.</div>
-                        <div class="dim">This is not should. This is IS.</div>
+                        <div class="dim">A center's frequency is its faithful orientation through time.</div>
+                        <div class="dim">Centers mutually recognize, resonate, and hold a shared center without erasing themselves.</div>
                     </div>
+                </div>
+                <div class="golden">
+                    <div class="golden-text">The whole is not above the parts; the whole is the shared center the parts become capable of holding together.</div>
                 </div>
             </section>
 
@@ -868,7 +709,7 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     navLinks.forEach(link => {
-                        link.classList.toggle('active', 
+                        link.classList.toggle('active',
                             link.getAttribute('href') === '#' + entry.target.id);
                     });
                 }
