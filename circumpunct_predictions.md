@@ -36,7 +36,7 @@ From this single axiom and the structure of the circumpunct (three irreducible p
 
     1/α₀ = i⁴(°)/φ² - 2/φ³ = 360/φ² - 2/φ³ = 137.0356
 
-**Structural reading:** i⁴ = full pump rotation (360°). φ² = Φ, the field's 2D self-similar nesting. 2/φ³ = bidirectional valve correction (⊛ and ✹).
+**Structural reading:** i⁴ = full pump rotation (360°). φ² = ○, the surface's 2D self-similar nesting (the 2D station). 2/φ³ = bidirectional valve correction (⊛ and ✹).
 
 **Self-referential closure:**
 
@@ -102,7 +102,7 @@ The pump cycle (⊛ → i → ✹) is indivisible: you cannot have convergence w
     Measured:   206.768
     Error:      5 ppm
 
-Exponent 13/12 = (generators + whole) / generators. K = 27 = 3³ (boundary cubed; generation 2).
+Exponent 13/12 = (generators + whole) / generators. K = 27 = 3³ (T cubed; generation 2).
 
 ### Tau/Electron
 
@@ -112,11 +112,11 @@ Exponent 13/12 = (generators + whole) / generators. K = 27 = 3³ (boundary cubed
     Measured:   3477.2
     Error:      1 ppm
 
-Base exponent 58/35 = (59 - 1)/(5 × 7) = (k_α - •)/(sum_of_dimensions × rungs). K = 81 = 3⁴ (boundary to the fourth; generation 3).
+Base exponent 58/35 = (59 - 1)/(5 × 7) = (k_α - •)/(sum_of_dimensions × rungs). K = 81 = 3⁴ (T to the fourth; generation 3).
 
 ### Mass Correction Pattern
 
-K = 3^(n+1) where n is the lepton generation: powers of the boundary.
+K = 3^(n+1) where n is the lepton generation: powers of T (the triad).
 
 ### Additional Mass Predictions
 
@@ -176,7 +176,7 @@ Four pump strokes times T = 3 (the observer-triad count; three scale-positions i
     Measured:   0.23122
     Error:      1.4 ppm
 
-K = 81/5 = 3⁴/(Φ + ○). Selection rule: 13 = 12 + 1 (generators + compositional whole, A4); 3 = dim(SU(2)) = triad = ○.
+K = 81/5 = 3⁴/(Φ + ○). Selection rule: 13 = 12 + 1 (generators + compositional whole, A4); 3 = dim(SU(2)) = triad (T).
 
 ### v/Λ_QCD Ratio
 
@@ -193,9 +193,9 @@ No self-referential correction needed: base formula already far more precise tha
 
 ---
 
-## Rung 3D: G (Gravity, The Boundary Closes)
+## Rung 3D: G (Gravity, The Field is the Outermost Rung)
 
-**What it is:** Gravity is convergence compounding convergence (• attracting •). Inverse-square because Φ is 2D.
+**What it is:** Gravity is convergence compounding convergence (• attracting •). Inverse-square because the surface flux spreads over is 2D (the boundary ○); the field Φ is the 3D medium it crosses.
 
 **Base:** α_G = α²¹ × φ²/2 (0.016% error)
 
@@ -217,7 +217,7 @@ K = 91 = 7 × 13 (rungs × (generators + •)). Exponent 21 = sum of all dimensi
 
 Why is gravity ~10⁴⁵ times weaker than electromagnetism?
 
-Because 21 α-steps separate the point (0D) from the boundary (3D). α ≈ 1/137 compounded 21 times = 10⁻⁴⁵. Not tuning. Not accident. Counting. The dimensional ladder IS the hierarchy. The weakness of gravity is the depth of the fold from aperture to boundary.
+Because 21 α-steps separate the point (0D) from the field (3D, the outermost rung). α ≈ 1/137 compounded 21 times = 10⁻⁴⁵. Not tuning. Not accident. Counting. The dimensional ladder IS the hierarchy. The weakness of gravity is the depth of the fold from aperture to the field (the outermost rung).
 
 ### Earth Surface Gravity Verification
 
@@ -272,7 +272,7 @@ The seven Clay Millennium Problems map one-to-one onto the seven rungs:
 | 1.5D | Birch and Swinnerton-Dyer | Open |
 | 2D | Navier-Stokes | Open |
 | 2.5D | Hodge Conjecture | Open |
-| 3D | Poincare Conjecture | Solved (the boundary, the outermost rung) |
+| 3D | Poincare Conjecture | Solved (the field, the outermost rung) |
 
 ---
 
