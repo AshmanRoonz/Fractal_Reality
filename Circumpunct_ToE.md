@@ -397,8 +397,8 @@ Numerical confirmation: k = 59/3 gives residual 0.22 ppb. Next nearest framework
     - **Route 5 (nuclear single-intruder):** Spin-orbit splitting ratio R/(R-4) > 2 (exactly one intruder) requires R < 8, i.e. T < √10. Onset condition R > Φ+T requires T ≥ 3. Only T = 3 satisfies both. Uses R and splitting ratio, independent of first four.
 5. **The integer pool** drops out of T = 3 algebraically: R = T² − 2 = 7, P = T + 1 = 4, G = T(T+1) = 12, V = G + 1 = 13, SU(3) = T² − 1 = 8, S = (T+1)^T = 64, A(3) = T(2T+1) = 21. No new choices; every integer is a closed-form function of T.
 6. **φ** is forced by the three convergent routes above (Route A: the four-step recurrence-selection closure gives x² − x − 1 = 0 and its positive root; Route B: A3 read as x = 1 + 1/x gives the same, confirmed independently by the Mandelbrot iteration at c = i² = −1; Route C: the integer pool *is* Lucas, so accepting step 5 already accepts φ).
-7. **The ladder exponents** follow dimensional station: the field at d = 2 carries φ², the next rung at d = 3 carries φ³. Exponent = station index; no additional rule.
-8. **360 as a pump-cycle integer (the Number-Type Principle)**: The dimensional station determines the number type of its constant. §3.3 establishes: • (0D) = discrete/binary, Φ (2D) = continuous/analog, ○ (3D) = fractal (both). Integer stations produce integer-valued base terms because discreteness cannot generate transcendence; the information at a point is countable. At 2D, one full rotation = 2π (continuous, transcendental; this is why π lives at the Φ station, §27.7l). At 0D, the same rotation is counted discretely as an integer: P! · T · (Φ + ○) = 24 · 3 · 5 = 360. Each factor is independently forced: P! = permutations of the pump cycle (the cycle's combinatorial content), T = structural constraints traversed, (Φ+○) = output dimensions produced. α is a vertex-level coupling (coupling per complete interaction = one full pump cycle), so it uses the 0D (integer) measure of rotation. Why 360 specifically and not another framework integer: the base term must be one *full* rotation (a partial rotation would describe a partial coupling, not what α measures), and P! · T · (Φ+○) is the unique decomposition of one full rotation into the cycle's three independent contributions. Exhaustive check: no other framework integer N gives N/φ² - 2/φ³ ≈ 137 (nearest: 312 → 119.2, 384 → 146.3).
+7. **The ladder exponents** follow dimensional station: the surface at d = 2 carries φ², the field at d = 3 carries φ³. Exponent = station index; no additional rule.
+8. **360 as a pump-cycle integer (the Number-Type Principle)**: The dimensional station determines the number type of its constant. §3.3 establishes: • (0D) = discrete/binary, ○ (2D) = continuous/analog, Φ (3D) = fractal (both). Integer stations produce integer-valued base terms because discreteness cannot generate transcendence; the information at a point is countable. At 2D, one full rotation = 2π (continuous, transcendental; this is why π lives at the 2D station, now the surface ○, §27.7l). At 0D, the same rotation is counted discretely as an integer: P! · T · (Φ + ○) = 24 · 3 · 5 = 360. Each factor is independently forced: P! = permutations of the pump cycle (the cycle's combinatorial content), T = structural constraints traversed, (Φ+○) = output dimensions produced. α is a vertex-level coupling (coupling per complete interaction = one full pump cycle), so it uses the 0D (integer) measure of rotation. Why 360 specifically and not another framework integer: the base term must be one *full* rotation (a partial rotation would describe a partial coupling, not what α measures), and P! · T · (Φ+○) is the unique decomposition of one full rotation into the cycle's three independent contributions. Exhaustive check: no other framework integer N gives N/φ² - 2/φ³ ≈ 137 (nearest: 312 → 119.2, 384 → 146.3).
 9. **The base term** is the 0D rung evaluated at the field station: 360/φ² (one full pump rotation divided by the field at its dimensional home).
 10. **The bidirectional valve correction** subtracts 2/φ³: the two channels ⊛ (convergence) and ✹ (emergence) each contribute one Φ-unit at the next rung deeper than the base. The 2 is Φ (channel count from A1); the φ³ exponent is step 7 applied at d = 3.
 11. **The self-referential term** adds α/(21 − 4/3): the full ladder traversal A(3) = 21 corrected by the process/structure ratio P/T = 4/3. The denominator 59/3 is irreducible (59 is prime); it is the full ladder minus what the base already consumed.
@@ -685,7 +685,7 @@ The second pi bond adds V/P(P+1) of the true sigma energy.
 
 ---
 
-## Φ — FIELD / MIND (2D, Surface)
+## Φ — FIELD / MIND (3D, Volume)
 
 ### Axiom A3
 **Parts are fractals of their wholes (self-similarity across scale); the 1 is all there is to work with.**
@@ -693,9 +693,9 @@ The second pi bond adds V/P(P+1) of the true sigma energy.
 From A0 + A1: since there is only one energy, every part must contain the pattern of the whole. Fractal self-similarity is forced.
 
 ### Structure
-- 2D: field. Relational surface. The third constraint: mediation.
-- At finite λ: Φλ is the 2D aspect of ⊙λ = E (mediation inside the whole). At λ → ∞: Φ∞ = ⊙∞ = E (field equals whole because there is no outside). Finite: the 2D aspect. Infinite: all there is.
-- Surface = Field = Mind (§5A, The Surface Theorem)
+- 3D: field. Relational volume. The fourth constraint: mediation.
+- At finite λ: Φλ is the 3D aspect of ⊙λ = E (mediation inside the whole). At λ → ∞: Φ∞ = ⊙∞ = E (field equals whole because there is no outside). Finite: the 3D aspect. Infinite: all there is.
+- Volume = Field = Mind (§5A, The Surface Theorem)
 - Music: so (fifth note)
 - A(2) = 10 (accumulated traversal at the field station)
 
@@ -727,7 +727,7 @@ Complete axiom chain: A0 → A1 → T=3 → G=12, V=13, SU(2)=3 → sin²θ_W (b
 
 **Electromagnetic force**: mediation (Φ). Maxwell's equations: the field mediates with amplitude and phase (two axes of 2D surface).
 
-**Why inverse-square**: Gravity is inverse-square because Φ is 2D. The field through which convergence propagates is a surface.
+**Why inverse-square**: Gravity is inverse-square because the surface it spreads over is 2D (the boundary ○). The field (Φ) is the 3D medium through which convergence propagates; its falloff is set by the 2D surface the flux crosses.
 
 ### Physics: Navier-Stokes (Clay Problem at 2D)
 - Navier-Stokes existence and smoothness = the 2D Clay problem
@@ -872,22 +872,22 @@ Complete axiom chain: A0 → T=3 → SU(3)=8, R=7 → base 1/2 (balanced mixing)
 
 ---
 
-## ○ — BOUNDARY / BODY (3D)
+## ○ — BOUNDARY / BODY (2D, Surface)
 
 ### Axiom A4
-**Wholeness requires closure; conservation of traversal: 0(•) + 1(—) + 2(Φ) = 3(○).**
+**Wholeness requires closure; conservation of traversal: 0(•) + 1(—) + 2(○) = 3(Φ).**
 
-From A0 + A1: the three constraints must close into a boundary. Aperture + continuity + field = boundary.
+From A0 + A1: the lower constraints must close into the whole. Aperture + continuity + surface = field.
 
 ### Structure
-- 3D: boundary. Stabilized closure. The fourth constraint: filtration.
+- 2D: boundary. The membrane surface; filtration. The third constraint.
 - The outer container; nested parts; interface
 - Music: ti (seventh note)
 - A(3) = 21 = E(3) (at 3D, accumulated and local converge: closure unifies global and local)
 
 ### Physics at 3D: Gravity (G)
 
-G lives at 3D (boundary closure).
+G lives at 3D (the field/volume).
 
 **Gravitational coupling**: ⊙ Derived
 ```
