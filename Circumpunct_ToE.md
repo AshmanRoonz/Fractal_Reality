@@ -539,9 +539,9 @@ From A0 + A1: if convergence is real (D1), it must hold. A line that breaks is n
 **Exponent home**: A(1) = 1·(2·1+1) = 3 (accumulated traversal at 1D). ℏ itself equals 1 (not an α-power); it IS the baseline against which other constants are measured.
 
 ### E = mc² at 1D
-- c² is squared because Φλ is the 2D aspect of ⊙λ = E (a surface is length × length)
-- The squaring is the field declaring its dimensionality
-- To release energy from mass is to peel the 3D boundary back to reveal the 2D field underneath
+- c² is squared because the 2D aspect of ⊙λ = E is a surface (the boundary ○λ); a surface is length × length
+- The squaring is the surface declaring its dimensionality
+- To release energy from mass is to open the 2D surface and release the 3D field (the energy) it encloses
 
 ### Physics: Yang-Mills (Clay Problem at 1D)
 - Yang-Mills existence and mass gap = the 1D Clay problem
@@ -701,7 +701,7 @@ From A0 + A1: since there is only one energy, every part must contain the patter
 
 ### Physics at 2D: Gauge Structure
 
-Gauge structure lives at 2D (field symmetry).
+Gauge structure lives at 2D (surface symmetry, the boundary ○).
 
 **SU(3) × SU(2) × U(1)** derived from 64-state validation architecture:
 - Gauge group dimensions: 8 + 3 + 1 = 12 = G = 4 × 3 = P × T
@@ -719,13 +719,13 @@ sin²θ_W = 3/13 + 5α/81 = SU(2)/V + (Φ+○)α/T⁴ = 0.23122
 
 Base fraction: 3/13 is the ONLY simple fraction of framework numbers within 2% of 0.23122 (exhaustive search). The numerator SU(2) = T = 3 is forced by T self-determination. The denominator V = G+1 = 13 is forced by D5 (the whole exceeds the sum of parts); using G = 12 instead gives 3/12 = 0.250 (8.1% error, structurally wrong because mixing involves the whole algebra, not just generators).
 
-Correction numerator: only n = 5 = Φ+○ makes 3/13 + nα/81 match measurement. n = 4 (P) gives 391 ppm error; n = 6 (T!) gives 388 ppm. The Weinberg angle measures mixing between SU(2) (lives at Φ = 2D) and U(1) (couples to ○ = 3D); the correction must involve both dimensions: Φ+○ = 5. Correction denominator T⁴ = 81 matches the tau generation nesting depth, because the Weinberg angle IS a generation-mixing quantity.
+Correction numerator: only n = 5 = Φ+○ makes 3/13 + nα/81 match measurement. n = 4 (P) gives 391 ppm error; n = 6 (T!) gives 388 ppm. The Weinberg angle measures mixing between SU(2) (lives at ○ = 2D) and U(1) (couples to Φ = 3D); the correction must involve both dimensions: Φ+○ = 5. Correction denominator T⁴ = 81 matches the tau generation nesting depth, because the Weinberg angle IS a generation-mixing quantity.
 
 GUT connection: 3/13 = (SU(3)/V) × (3/8). The SU(5) GUT prediction at unification (3/8) is suppressed by exactly SU(3)/V = strong sector / whole algebra when running to the electroweak scale.
 
 Complete axiom chain: A0 → A1 → T=3 → G=12, V=13, SU(2)=3 → sin²θ_W (base) = SU(2)/V = 3/13 (unique) → correction (Φ+○)α/T⁴ (forced: n=5 is only integer that works, denominator = tau nesting) → sin²θ_W = 0.23122 (1.4 ppm).
 
-**Electromagnetic force**: mediation (Φ). Maxwell's equations: the field mediates with amplitude and phase (two axes of 2D surface).
+**Electromagnetic force**: a 2D-surface gauge mediation (the boundary ○). Maxwell's equations: amplitude and phase (two transverse axes).
 
 **Why inverse-square**: Gravity is inverse-square because the surface it spreads over is 2D (the boundary ○). The field (Φ) is the 3D medium through which convergence propagates; its falloff is set by the 2D surface the flux crosses.
 
@@ -899,7 +899,7 @@ G lives at 3D (the field/volume).
 - Predicted G = 6.67430 × 10⁻¹¹ (measured 6.67430 × 10⁻¹¹, error 0.04 ppm, 0.00σ)
 - M_Pl/m_e = (1/α)^(21/2) × √2/φ (0.008% accuracy)
 
-**Solves the hierarchy problem**: Gravity is weak because 21 α-steps separate the point (0D) from the boundary (3D).
+**Solves the hierarchy problem**: Gravity is weak because 21 α-steps separate the point (0D) from the field (3D, the outermost rung).
 
 **Uniqueness proof**: Exponent 21 forced by three independent routes: A(3) = 3·7 = 21, E(3) = T·R = 21, and the compositional product E(1.5)×E(2.5)×T^T/2 = 21. At 3D, accumulated and local traversal converge (closure). The golden nesting factor φ²/2 is forced by A3 (self-similar nesting) and is the same root r₁ that appears in Λ (coupled through 1/P = i-stroke). Correction denominator K = 91 = R·V is the only framework product that matches (exhaustive search of candidates); it reads: boundary accumulates coupling from every rung (R=7) through the full algebra (V=13). Complete chain: A0 → T=3 → R=7, V=13 → exponent 21 (closure) → φ²/2 (golden nesting, A3) → K=91=R·V (unique) → α_G to 0.04 ppm.
 
@@ -913,7 +913,7 @@ Verified: (13/12)(56/39)(27/2) = 21 exactly. The whole is not the sum of its par
 
 ### Physics: Poincaré Conjecture (Clay Problem at 3D, SOLVED)
 - Poincaré Conjecture = the 3D Clay problem (solved by Perelman)
-- The only solved Clay problem is the boundary (3D), the outermost rung
+- The only solved Clay problem is the field (3D), the outermost rung
 - About whether every simply connected closed 3-manifold is a 3-sphere (boundary closure)
 
 ### All Physics as Compounded Constraints
@@ -1326,9 +1326,9 @@ From all axioms and derivations: the circumpunct is not assembled from pieces; i
 | ⊛ | 0.5D | c (speed of light) | c = √(P·◐(1-◐)·sin(θ)) = 1 | Exact |
 | — | 1D | ℏ (Planck constant) | ℏ = E_cycle/ω_cycle = 1 | Exact |
 | ⎇ | 1.5D | Mass ratios | m_μ/m_e = (1/α)^(13/12+α/27) | 5 ppm |
-| Φ | 2D | Gauge structure | SU(3)×SU(2)×U(1); sin²θ_W = 3/13+5α/81 | 1.4 ppm |
+| ○ | 2D | Gauge structure | SU(3)×SU(2)×U(1); sin²θ_W = 3/13+5α/81 | 1.4 ppm |
 | ✹ | 2.5D | v/Λ_QCD | (1/α)^(56/39) | ~5% (limited by Λ_QCD) |
-| ○ | 3D | G (gravity) | α_G = α²¹×φ²/2×(1+2α/91) | 0.04 ppm |
+| Φ | 3D | G (gravity) | α_G = α²¹×φ²/2×(1+2α/91) | 0.04 ppm |
 
 Additional constants at their home stations:
 - Cabibbo angle (2.5D): sin(θ_C) = α^(1/2+3α/7)·8/3 → 0.009%
