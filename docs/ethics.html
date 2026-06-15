@@ -26,18 +26,13 @@
             line-height: 1.5;
         }
 
-        /* Layout */
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
+        .container { display: flex; min-height: 100vh; }
 
         @media (max-width: 900px) {
             nav { display: none; }
             main { margin-left: 0 !important; }
         }
 
-        /* Navigation */
         nav {
             position: fixed;
             left: 0;
@@ -50,12 +45,7 @@
             flex-shrink: 0;
         }
 
-        nav .logo {
-            font-size: 28px;
-            color: var(--cyan);
-            text-align: center;
-            margin-bottom: 20px;
-        }
+        nav .logo { font-size: 28px; color: var(--cyan); text-align: center; margin-bottom: 20px; }
 
         nav a {
             display: block;
@@ -71,43 +61,15 @@
             opacity: 0.5;
         }
 
-        nav a:hover, nav a.active {
-            color: var(--cyan);
-            border-left-color: var(--cyan);
-            opacity: 1;
-        }
+        nav a:hover, nav a.active { color: var(--cyan); border-left-color: var(--cyan); opacity: 1; }
+        nav a .num { color: var(--cyan); margin-right: 8px; }
 
-        nav a .num {
-            color: var(--cyan);
-            margin-right: 8px;
-        }
+        main { margin-left: 160px; padding: 30px 40px; flex: 1; min-width: 0; }
+        @media (max-width: 900px) { main { margin-left: 0; padding: 20px 15px; } }
 
-        /* Main content */
-        main {
-            margin-left: 160px;
-            padding: 30px 40px;
-            flex: 1;
-            min-width: 0;
-        }
+        section { margin-bottom: 60px; padding-top: 10px; max-width: 650px; }
 
-        @media (max-width: 900px) {
-            main { margin-left: 0; padding: 20px 15px; }
-        }
-
-        /* Sections */
-        section {
-            margin-bottom: 60px;
-            padding-top: 10px;
-            max-width: 650px;
-        }
-
-        .section-id {
-            color: var(--cyan);
-            font-size: 10px;
-            letter-spacing: 0.15em;
-            margin-bottom: 4px;
-            opacity: 0.6;
-        }
+        .section-id { color: var(--cyan); font-size: 10px; letter-spacing: 0.15em; margin-bottom: 4px; opacity: 0.6; }
 
         h1 {
             font-size: 12px;
@@ -119,17 +81,8 @@
             border-bottom: 1px solid var(--cyan);
         }
 
-        h2 {
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            color: #fff;
-            margin: 25px 0 12px;
-        }
-
-        p {
-            margin-bottom: 12px;
-        }
+        h2 { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; color: #fff; margin: 25px 0 12px; }
+        p { margin-bottom: 12px; }
 
         .highlight { color: #fff; }
         .cyan { color: var(--cyan); }
@@ -137,280 +90,107 @@
         .green { color: var(--green); }
         .yellow { color: var(--yellow); }
 
-        /* Hero */
-        .hero {
-            text-align: center;
-            padding: 40px 0;
-        }
+        .hero { text-align: center; padding: 40px 0; }
+        .hero-symbol { font-size: 80px; color: var(--cyan); line-height: 1; }
+        .hero-title { font-size: 10px; letter-spacing: 0.3em; color: var(--cyan); margin-top: 15px; opacity: 0.7; }
 
-        .hero-symbol {
-            font-size: 80px;
-            color: var(--cyan);
-            line-height: 1;
-        }
+        .pillars { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--cyan); margin: 15px 0; }
+        @media (max-width: 500px) { .pillars { grid-template-columns: 1fr; } }
+        .pillar { background: var(--bg); padding: 15px; }
+        .pillar-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .pillar-symbol { font-size: 20px; }
+        .pillar-name { font-size: 10px; letter-spacing: 0.12em; color: #fff; }
+        .pillar-q { font-size: 11px; color: #fff; margin-bottom: 6px; opacity: 0.6; }
+        .pillar-desc { font-size: 12px; }
 
-        .hero-title {
-            font-size: 10px;
-            letter-spacing: 0.3em;
-            color: var(--cyan);
-            margin-top: 15px;
-            opacity: 0.7;
-        }
-
-        /* Pillars grid */
-        .pillars {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1px;
-            background: var(--cyan);
-            margin: 15px 0;
-        }
-
-        @media (max-width: 500px) {
-            .pillars { grid-template-columns: 1fr; }
-        }
-
-        .pillar {
-            background: var(--bg);
-            padding: 15px;
-        }
-
-        .pillar-head {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .pillar-symbol {
-            font-size: 20px;
-        }
-
-        .pillar-name {
-            font-size: 10px;
-            letter-spacing: 0.12em;
-            color: #fff;
-        }
-
-        .pillar-q {
-            font-size: 11px;
-            color: #fff;
-            margin-bottom: 6px;
-            opacity: 0.6;
-        }
-
-        .pillar-desc {
-            font-size: 12px;
-        }
-
-        /* Teaching blocks */
-        .teaching {
-            border-left: 2px solid var(--cyan);
-            padding-left: 15px;
-            margin: 15px 0;
-        }
-
+        .teaching { border-left: 2px solid var(--cyan); padding-left: 15px; margin: 15px 0; }
         .teaching.cyan { border-color: var(--cyan); }
         .teaching.magenta { border-color: var(--magenta); }
         .teaching.green { border-color: var(--green); }
         .teaching.yellow { border-color: var(--yellow); }
 
-        /* Check lists */
-        .checks {
-            margin: 15px 0;
-            padding: 12px 15px;
-            background: #000;
-            border: 1px solid var(--cyan);
-        }
+        .checks { margin: 15px 0; padding: 12px 15px; background: #000; border: 1px solid var(--cyan); }
+        .checks-title { font-size: 10px; color: var(--cyan); letter-spacing: 0.08em; margin-bottom: 10px; }
+        .check { padding: 3px 0; padding-left: 15px; position: relative; font-size: 12px; }
+        .check::before { content: '>'; position: absolute; left: 0; color: var(--cyan); }
 
-        .checks-title {
-            font-size: 10px;
-            color: var(--cyan);
-            letter-spacing: 0.08em;
-            margin-bottom: 10px;
-        }
-
-        .check {
-            padding: 3px 0;
-            padding-left: 15px;
-            position: relative;
-            font-size: 12px;
-        }
-
-        .check::before {
-            content: '>';
-            position: absolute;
-            left: 0;
-            color: var(--cyan);
-        }
-
-        /* Sequence */
-        .sequence {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            margin: 15px 0;
-        }
-
-        .seq-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 10px 15px;
-            background: #000;
-            border-left: 3px solid;
-        }
-
+        .sequence { display: flex; flex-direction: column; gap: 2px; margin: 15px 0; }
+        .seq-item { display: flex; align-items: center; gap: 15px; padding: 10px 15px; background: #000; border-left: 3px solid; }
         .seq-item:nth-child(1) { border-color: var(--cyan); }
         .seq-item:nth-child(2) { border-color: var(--magenta); }
         .seq-item:nth-child(3) { border-color: var(--green); }
         .seq-item:nth-child(4) { border-color: var(--yellow); }
         .seq-item:nth-child(5) { border-color: var(--cyan); }
-
         .seq-symbol { font-size: 16px; width: 25px; }
         .seq-text { font-size: 11px; letter-spacing: 0.08em; color: #fff; }
         .seq-sub { font-size: 10px; color: #fff; margin-left: auto; opacity: 0.5; }
 
-        /* Comparison */
-        .compare {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin: 15px 0;
-        }
-
-        @media (max-width: 500px) {
-            .compare { grid-template-columns: 1fr; }
-        }
-
-        .compare-box {
-            padding: 15px;
-            border: 1px solid var(--cyan);
-        }
-
+        .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0; }
+        @media (max-width: 500px) { .compare { grid-template-columns: 1fr; } }
+        .compare-box { padding: 15px; border: 1px solid var(--cyan); }
         .compare-box.bad { border-color: var(--magenta); }
         .compare-box.good { border-color: var(--green); }
-
-        .compare-title {
-            font-size: 10px;
-            letter-spacing: 0.12em;
-            margin-bottom: 10px;
-        }
-
+        .compare-title { font-size: 10px; letter-spacing: 0.12em; margin-bottom: 10px; }
         .compare-box.bad .compare-title { color: var(--magenta); }
         .compare-box.good .compare-title { color: var(--green); }
+        .compare-list { list-style: none; font-size: 11px; }
+        .compare-list li { padding: 3px 0; padding-left: 12px; position: relative; }
+        .compare-list li::before { content: '·'; position: absolute; left: 0; color: var(--cyan); }
 
-        .compare-list {
-            list-style: none;
-            font-size: 11px;
-        }
+        blockquote { border-left: 1px solid var(--magenta); padding-left: 15px; margin: 15px 0; font-style: italic; color: var(--magenta); font-size: 12px; }
 
-        .compare-list li {
-            padding: 3px 0;
-            padding-left: 12px;
-            position: relative;
-        }
+        .claim { margin: 14px 0; padding-left: 15px; border-left: 2px solid var(--green); }
+        .claim-n { color: var(--green); font-size: 10px; letter-spacing: 0.1em; }
 
-        .compare-list li::before {
-            content: '·';
-            position: absolute;
-            left: 0;
-            color: var(--cyan);
-        }
+        .golden { text-align: center; padding: 25px 20px; border: 1px solid var(--yellow); margin: 15px 0; }
+        .golden-text { font-size: 14px; color: var(--yellow); max-width: 450px; margin: 0 auto; line-height: 1.6; }
+        .golden-sub { font-size: 10px; color: var(--yellow); margin-top: 12px; opacity: 0.6; }
 
-        /* Quote */
-        blockquote {
-            border-left: 1px solid var(--magenta);
-            padding-left: 15px;
-            margin: 15px 0;
-            font-style: italic;
-            color: var(--magenta);
-            font-size: 12px;
-        }
-
-        /* Claims */
-        .claim {
-            margin: 14px 0;
-            padding-left: 15px;
-            border-left: 2px solid var(--green);
-        }
-
-        .claim-n {
-            color: var(--green);
-            font-size: 10px;
-            letter-spacing: 0.1em;
-        }
-
-        /* Golden rule */
-        .golden {
-            text-align: center;
-            padding: 25px 20px;
-            border: 1px solid var(--yellow);
-            margin: 15px 0;
-        }
-
-        .golden-text {
-            font-size: 14px;
-            color: var(--yellow);
-            max-width: 450px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        .golden-sub {
-            font-size: 10px;
-            color: var(--yellow);
-            margin-top: 12px;
-            opacity: 0.6;
-        }
-
-        /* Final */
-        .final {
-            text-align: center;
-            padding: 40px 0;
-        }
-
-        .final-symbol {
-            font-size: 60px;
-            color: var(--cyan);
-            margin-bottom: 25px;
-        }
-
-        .final-lines {
-            font-size: 12px;
-            line-height: 1.8;
-        }
-
+        .final { text-align: center; padding: 40px 0; }
+        .final-symbol { font-size: 60px; color: var(--cyan); margin-bottom: 25px; }
+        .final-lines { font-size: 12px; line-height: 1.8; }
         .final-lines .dim { color: #fff; opacity: 0.5; }
 
-        /* Footer */
-        footer {
-            padding: 25px 0;
-            border-top: 1px solid var(--cyan);
-            font-size: 10px;
-            color: var(--cyan);
-            text-align: center;
-            letter-spacing: 0.08em;
-            opacity: 0.5;
-        }
+        footer { padding: 25px 0; border-top: 1px solid var(--cyan); font-size: 10px; color: var(--cyan); text-align: center; letter-spacing: 0.08em; opacity: 0.5; }
 
-        table.ladder {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-            font-size: 11px;
-        }
-        table.ladder td, table.ladder th {
-            border: 1px solid var(--cyan);
-            padding: 8px 10px;
-            text-align: left;
-        }
-        table.ladder th {
-            color: var(--cyan);
-            font-weight: 500;
-            letter-spacing: 0.08em;
-        }
+        table.ladder { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 11px; }
+        table.ladder td, table.ladder th { border: 1px solid var(--cyan); padding: 8px 10px; text-align: left; }
+        table.ladder th { color: var(--cyan); font-weight: 500; letter-spacing: 0.08em; }
         table.ladder .sym { font-size: 16px; }
+
+        /* Layer tabs */
+        .tabs {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            gap: 1px;
+            background: var(--cyan);
+            border: 1px solid var(--cyan);
+            margin-bottom: 30px;
+            max-width: 650px;
+        }
+        .tab {
+            flex: 1;
+            background: #000;
+            color: var(--cyan);
+            border: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            padding: 13px 10px;
+            cursor: pointer;
+            opacity: 0.45;
+            transition: all 0.15s;
+        }
+        .tab:hover { opacity: 0.85; }
+        .tab.active { opacity: 1; background: #001515; }
+        .tab .tnum { margin-right: 8px; opacity: 0.6; }
+
+        .layer { display: none; }
+        .layer.active { display: block; }
+        .nav-group { display: none; }
+        .nav-group.active { display: block; }
     </style>
 </head>
 <body>
@@ -421,274 +201,425 @@
     <div class="container">
         <nav>
             <div class="logo">⊙</div>
-            <a href="#overview" class="active"><span class="num">00</span>OVERVIEW</a>
-            <a href="#ladders"><span class="num">01</span>TWO LADDERS</a>
-            <a href="#mapping"><span class="num">02</span>MAPPING</a>
-            <a href="#values"><span class="num">03</span>FIVE VALUES</a>
-            <a href="#hinge"><span class="num">04</span>THE HINGE</a>
-            <a href="#shared"><span class="num">05</span>SHARED CENTER</a>
-            <a href="#sequence"><span class="num">06</span>SEQUENCE</a>
-            <a href="#foundations"><span class="num">07</span>FOUNDATIONS</a>
-            <a href="#openwork"><span class="num">08</span>CLARIFICATIONS</a>
-            <a href="#strongest"><span class="num">09</span>THE CLAIMS</a>
-            <a href="#coda"><span class="num">10</span>CODA</a>
+            <div class="nav-group nav-human active">
+                <a href="#h-start" class="active"><span class="num">00</span>START HERE</a>
+                <a href="#h-wholepart"><span class="num">01</span>WHOLE &amp; PART</a>
+                <a href="#h-five"><span class="num">02</span>FIVE QUESTIONS</a>
+                <a href="#h-order"><span class="num">03</span>THE ORDER</a>
+                <a href="#h-we"><span class="num">04</span>REAL VS FAKE WE</a>
+                <a href="#h-connection"><span class="num">05</span>CONNECTION</a>
+                <a href="#h-cost"><span class="num">06</span>FAIR COST</a>
+                <a href="#h-living"><span class="num">07</span>LIVING IT</a>
+            </div>
+            <div class="nav-group nav-framework">
+                <a href="#overview" class="active"><span class="num">00</span>OVERVIEW</a>
+                <a href="#ladders"><span class="num">01</span>TWO LADDERS</a>
+                <a href="#mapping"><span class="num">02</span>MAPPING</a>
+                <a href="#values"><span class="num">03</span>FIVE VALUES</a>
+                <a href="#hinge"><span class="num">04</span>THE HINGE</a>
+                <a href="#shared"><span class="num">05</span>SHARED CENTER</a>
+                <a href="#sequence"><span class="num">06</span>SEQUENCE</a>
+                <a href="#foundations"><span class="num">07</span>FOUNDATIONS</a>
+                <a href="#openwork"><span class="num">08</span>CLARIFICATIONS</a>
+                <a href="#strongest"><span class="num">09</span>THE CLAIMS</a>
+                <a href="#coda"><span class="num">10</span>CODA</a>
+            </div>
         </nav>
 
         <main>
-            <!-- Overview -->
-            <section id="overview">
-                <div class="hero">
-                    <div class="hero-symbol">⊙</div>
-                    <div class="hero-title">THE ETHICAL GUIDE TO THE CIRCUMPUNCT FRAMEWORK</div>
-                </div>
-                <blockquote>A center's frequency is its faithful orientation through time, and Agreement happens when centers mutually recognize, resonate, and hold a shared center without erasing themselves.</blockquote>
-                <p>This is the ethical guide to the Circumpunct Framework. It shows how the five values (<span class="cyan">Good</span>, <span class="magenta">Right</span>, <span class="yellow">Faithful</span>, <span class="green">True</span>, <span class="cyan">Agreement</span>) sit on the dimensional ladder, and how that ladder connects to the whole/part nesting that makes reality <span class="highlight">infinitely finite</span>.</p>
-                <p>The structure is simple enough to state and strong enough to test. What follows builds it from the ground up: the ladder, the five values, the hinge that joins scale to scale, and what genuine agreement actually is.</p>
-            </section>
+            <div class="tabs">
+                <button class="tab active" data-layer="human"><span class="tnum">01</span>FRIENDLY GUIDE</button>
+                <button class="tab" data-layer="framework"><span class="tnum">02</span>FRAMEWORK</button>
+            </div>
 
-            <!-- Two ladders -->
-            <section id="ladders">
-                <div class="section-id">01</div>
-                <h1>TWO LADDERS, ONE STRUCTURE</h1>
-                <p>The framework holds two distinct geometries. They are easily mistaken for one, so it helps to separate them from the start.</p>
-                <h2>THE DIMENSIONAL LADDER (INTERNAL)</h2>
-                <p>Inside any single circumpunct there are four rungs, unified as a whole. This is the anatomy of one thing.</p>
-                <table class="ladder">
-                    <tr><th>Rung</th><th>Symbol</th><th>Element</th><th>Value</th></tr>
-                    <tr><td>0D</td><td class="sym green">•</td><td>Center (the point that sees)</td><td class="green">True</td></tr>
-                    <tr><td>1D</td><td class="sym yellow">—</td><td>Line (continuity through time)</td><td class="yellow">Faithful</td></tr>
-                    <tr><td>2D</td><td class="sym cyan">○</td><td>Surface / boundary (inside meets outside)</td><td class="cyan">Good</td></tr>
-                    <tr><td>3D</td><td class="sym magenta">Φ</td><td>Field / volume (the medium of relation)</td><td class="magenta">Right</td></tr>
-                    <tr><td>whole</td><td class="sym">⊙</td><td>The unity of all four</td><td>Agreement</td></tr>
-                </table>
-                <h2>THE WHOLE/PART NESTING (EXTERNAL)</h2>
-                <p>Each <span class="highlight">⊙</span> is a part of a larger ⊙ and is made of smaller ⊙s. No boundary is the final boundary. This is the stacking of circumpuncts across scales, the infinitely finite recursion.</p>
-                <p><span class="cyan">The key move:</span> the five values are defined on the internal ladder but evaluated across the external nesting. The two ladders join at a single hinge (section 04).</p>
-            </section>
+            <!-- ============ HUMAN LAYER ============ -->
+            <div class="layer layer-human active">
 
-            <!-- Mapping -->
-            <section id="mapping">
-                <div class="section-id">02</div>
-                <h1>THE MAPPING // SURFACE = 2D, FIELD = 3D</h1>
-                <p>A surface is two-dimensional; a volume is three-dimensional. Good lives on the 2D surface, Right in the 3D field. The placement is geometrically exact, and it pays off three ways.</p>
-                <div class="teaching cyan">
-                    <p><span class="cyan">Conservation of traversal.</span> The identity 0 + 1 + 2 = 3 is not arithmetic (you build 3D space from three orthogonal axes, 1 + 1 + 1 = 3). It is the boundary structure of a solid: a 3-cell is bounded by 2-cells, framed by 1-cells, anchored by 0-cells. The 3D field is constructed from and bounded by center, line, and surface, the standard structure of a polytope or CW-complex.</p>
-                </div>
-                <div class="teaching green">
-                    <p><span class="green">The solid ball.</span> A center point (True, •), radial lines from center to edge (Faithful, —), the bounding surface (Good, ○), the interior volume (Right, Φ). Standard geometry.</p>
-                </div>
-                <div class="teaching magenta">
-                    <p><span class="magenta">The 3+1 structure of spacetime.</span> Field at 3D and line at 1D gives the time-value (Faithful) one dimension and the space-value (Right) three: the three space dimensions plus one time dimension of physical spacetime. A structural echo, not a derivation from physics.</p>
-                </div>
-            </section>
-
-            <!-- Five values -->
-            <section id="values">
-                <div class="section-id">03</div>
-                <h1>THE FIVE VALUES ARE NOT FIVE PEERS</h1>
-                <p>Stated at its strongest, the framework does not have five flat principles. It has <span class="highlight">two poles, two connectors, and one unity</span>.</p>
-                <div class="pillars">
-                    <div class="pillar">
-                        <div class="pillar-head"><span class="pillar-symbol green">•</span><span class="pillar-name">POLE // TRUE</span></div>
-                        <div class="pillar-q">The center</div>
-                        <div class="pillar-desc">The dot you actually draw. Identity, the seer.</div>
+                <section id="h-start">
+                    <div class="hero">
+                        <div class="hero-symbol">⊙</div>
+                        <div class="hero-title">THE ETHICAL GUIDE TO THE CIRCUMPUNCT FRAMEWORK</div>
                     </div>
-                    <div class="pillar">
-                        <div class="pillar-head"><span class="pillar-symbol cyan">○</span><span class="pillar-name">POLE // GOOD</span></div>
-                        <div class="pillar-q">The surface</div>
-                        <div class="pillar-desc">The circle you actually draw. Boundary, where consent lives.</div>
+                    <p>This is a guide to living well with other people. It grows from one simple picture: a dot inside a circle.</p>
+                    <p>The <span class="green">dot</span> is your center: the part of you that sees, feels, and chooses. The <span class="cyan">circle</span> is your edge: what is inside you and what is outside. You are a whole person. You are also part of bigger wholes: a friendship, a family, a team, a town. That double truth is where all of this starts.</p>
+                    <p>At the heart of it are five questions. Is it <span class="cyan">good</span>? Is it <span class="magenta">right</span>? Is it <span class="green">honest</span>? Is it <span class="yellow">faithful</span>? Are we <span class="highlight">truly agreed</span>? Live those well and you get something rare: real connection that does not erase anyone.</p>
+                </section>
+
+                <section id="h-wholepart">
+                    <div class="section-id">01</div>
+                    <h1>YOU ARE A WHOLE, AND A PART</h1>
+                    <p>Look one way and you are a whole made of parts: your thoughts, your body, your history. Look the other way and you are a part inside something bigger: your relationships, your community, the world.</p>
+                    <p>Everything is like this. A cell is a whole, and part of a body. A person is a whole, and part of a family. There is no final edge in either direction; you can always look closer at smaller parts, or step back to larger wholes.</p>
+                    <div class="teaching cyan">
+                        <p>This is why taking things apart and stepping back both matter. To understand anything you can look at its pieces, or look at the whole it belongs to. Both are real. A good life keeps both eyes open: close enough to see the parts, wide enough to see where you belong.</p>
                     </div>
-                    <div class="pillar">
-                        <div class="pillar-head"><span class="pillar-symbol yellow">—</span><span class="pillar-name">CONNECTOR // FAITHFUL</span></div>
-                        <div class="pillar-q">Across time</div>
-                        <div class="pillar-desc">The line. Continuity, the worldline (succession).</div>
+                </section>
+
+                <section id="h-five">
+                    <div class="section-id">02</div>
+                    <h1>THE FIVE QUESTIONS</h1>
+                    <p>Each value is really a question you can ask about anything you do.</p>
+                    <div class="pillars">
+                        <div class="pillar">
+                            <div class="pillar-head"><span class="pillar-symbol cyan">○</span><span class="pillar-name">GOOD</span></div>
+                            <div class="pillar-q">Does it protect what matters?</div>
+                            <div class="pillar-desc">Are people's limits and consent respected? Good lives at the edge, where care and harm are decided.</div>
+                        </div>
+                        <div class="pillar">
+                            <div class="pillar-head"><span class="pillar-symbol magenta">Φ</span><span class="pillar-name">RIGHT</span></div>
+                            <div class="pillar-q">Does it actually work?</div>
+                            <div class="pillar-desc">In the real world, do the effects land fairly? Good intentions can still cause harm.</div>
+                        </div>
+                        <div class="pillar">
+                            <div class="pillar-head"><span class="pillar-symbol yellow">—</span><span class="pillar-name">FAITHFUL</span></div>
+                            <div class="pillar-q">Will it hold over time?</div>
+                            <div class="pillar-desc">Do you show up again tomorrow, and the day after? Trust is built from kept promises, not good moments.</div>
+                        </div>
+                        <div class="pillar">
+                            <div class="pillar-head"><span class="pillar-symbol green">•</span><span class="pillar-name">TRUE</span></div>
+                            <div class="pillar-q">Is it honest?</div>
+                            <div class="pillar-desc">Does it match what is really there? Not what you wish were true, or what is easy to say.</div>
+                        </div>
                     </div>
-                    <div class="pillar">
-                        <div class="pillar-head"><span class="pillar-symbol magenta">Φ</span><span class="pillar-name">CONNECTOR // RIGHT</span></div>
-                        <div class="pillar-q">Across space</div>
-                        <div class="pillar-desc">The field. Relation and causation (simultaneity).</div>
+                    <div class="teaching yellow">
+                        <p><span class="yellow">⊙ AGREEMENT</span> is the fifth, and it holds the other four together. <span class="highlight">Do we genuinely see the same thing, freely, both of us?</span> Not one person going along to keep the peace. A real yes, where nobody disappears.</p>
                     </div>
-                </div>
-                <p><span class="yellow">⊙ Agreement</span> is the one unity: the convergence of the other four.</p>
-                <p>This 2 + 2 + 1 reading does not depend on which integer is attached to which rung. It explains <span class="highlight">why there are exactly five</span> and why exactly two are connectors: time and space are the only relational dimensions between any pair of poles.</p>
-            </section>
+                </section>
 
-            <!-- The hinge -->
-            <section id="hinge">
-                <div class="section-id">04</div>
-                <h1>WHERE THE TWO LADDERS JOIN</h1>
-                <p>Two of the five values are operators that move you along the whole/part nesting.</p>
-                <div class="checks">
-                    <div class="checks-title">THE TWO OPERATORS</div>
-                    <div class="check"><span class="yellow">Agreement climbs.</span> Two centered wholes that genuinely resonate compose into a new ⊙ one scale up.</div>
-                    <div class="check"><span class="green">True anchors the bottom.</span> The center is the irreducible point of perspective, what cannot be decomposed further without losing the seer.</div>
-                </div>
-                <blockquote>The hinge: the whole ⊙ at scale N becomes a center • at scale N+1.</blockquote>
-                <p>The top of one circumpunct's internal ladder is the bottom of the next one up. A cell is a whole in itself (⊙); seen from the body it is one centered unit (•). This makes the science/spirituality bridge structural: <span class="cyan">science walks down the rungs</span> (analysis into parts), <span class="magenta">spirituality walks up</span> (composition into wholes), the same ladder in opposite directions.</p>
-                <p><span class="highlight">Construction order</span> (climbing 0 to 3, then unity): True, Faithful, Good, Right, Agreement. A point of seeing, extended through time, closed into a surface, filled into a field, unified as a whole.</p>
-            </section>
-
-            <!-- Shared center -->
-            <section id="shared">
-                <div class="section-id">05</div>
-                <h1>THE SHARED CENTER // HOW AGREEMENT CLIMBS</h1>
-                <p>Section 04 says Agreement climbs the ladder. This says <span class="highlight">how</span>. It is load-bearing: without it, Agreement is just a word for people lining up; with it, Agreement has a structure and a test.</p>
-                <p>A genuine center appears one scale up not from shared attention, and not from shared belief. There are three distinct levels, and only the third builds a higher center.</p>
-                <div class="sequence">
-                    <div class="seq-item"><span class="seq-symbol cyan">1</span><span class="seq-text">COMMON OBJECT</span><span class="seq-sub">we look at the same thing</span></div>
-                    <div class="seq-item"><span class="seq-symbol magenta">2</span><span class="seq-text">COMMON BELIEF</span><span class="seq-sub">we think the same thing</span></div>
-                    <div class="seq-item"><span class="seq-symbol green">3</span><span class="seq-text">SHARED CENTER</span><span class="seq-sub">we recognize each other recognizing</span></div>
-                </div>
-                <p>What converts the first two into the third is <span class="cyan">mutual recognition</span>: I see the thing, I see you seeing it, and I recognize myself as seen by you in the same act. That recursive, center-to-center seeing fuses two viewpoints into one shared locus rather than two viewpoints aimed at a common object.</p>
-                <blockquote>Agreement is not shared opinion. Agreement is shared center.</blockquote>
-                <p>This makes the hinge concrete: the center one scale up is the shared center mutual recognition builds. It is <span class="highlight">participatory, not separate</span>; the members see through it, so it never floats above them as a group-soul and is never a mere fiction. It is real exactly to the degree the recognition is mutual.</p>
-                <blockquote>A false whole speaks as "we" while hiding a "me." A true whole lets each "I" participate in the "we."</blockquote>
-
-                <h2>THE MECHANISM OF SHARING // RESONANCE</h2>
-                <p>Mutual recognition says <span class="highlight">when</span> a shared center forms. Resonance says <span class="highlight">how</span> a locus becomes genuinely shared rather than two centers merely coupled. The distinction is precise, and it is not a metaphor as long as it stays technical.</p>
-                <p>Two centers that influence each other are <span class="magenta">coupled</span>: their states correlate, but the honest description is still two. Resonance is the threshold past coupling. Tuned to the same frequency, two oscillators phase-lock, and the right description becomes the joint modes of the pair. The shared center is the in-phase collective mode: a real pattern that belongs to neither part alone, exists only while both keep oscillating, and leaves each part still oscillating so the parts remain centered.</p>
-                <div class="compare">
-                    <div class="compare-box good">
-                        <div class="compare-title">TRUE WHOLE // RESONANCE</div>
-                        <ul class="compare-list">
-                            <li>Balanced, bidirectional exchange</li>
-                            <li>Both centers contribute and are moved</li>
-                            <li>A joint in-phase mode, co-held</li>
-                            <li>Each "I" participates in the "we"</li>
-                        </ul>
+                <section id="h-order">
+                    <div class="section-id">03</div>
+                    <h1>THE ORDER THEY COME IN</h1>
+                    <p>These are not a checklist you can shuffle. They build on each other.</p>
+                    <div class="sequence">
+                        <div class="seq-item"><span class="seq-symbol cyan">1</span><span class="seq-text">GOOD</span><span class="seq-sub">first: is everyone safe and willing?</span></div>
+                        <div class="seq-item"><span class="seq-symbol magenta">2</span><span class="seq-text">RIGHT</span><span class="seq-sub">then: does the action actually work?</span></div>
+                        <div class="seq-item"><span class="seq-symbol yellow">3</span><span class="seq-text">FAITHFUL</span><span class="seq-sub">then: does it hold up over time?</span></div>
+                        <div class="seq-item"><span class="seq-symbol green">4</span><span class="seq-text">TRUE</span><span class="seq-sub">then: is it honest about what is real?</span></div>
+                        <div class="seq-item"><span class="seq-symbol">5</span><span class="seq-text">AGREEMENT</span><span class="seq-sub">only then can a real "yes" form</span></div>
                     </div>
-                    <div class="compare-box bad">
-                        <div class="compare-title">FALSE WHOLE // FORCED OSCILLATION</div>
-                        <ul class="compare-list">
-                            <li>One-way drive</li>
-                            <li>One center slaved to another's frequency</li>
-                            <li>The driver's note echoed back</li>
-                            <li>Collapses the moment the driver stops</li>
-                        </ul>
+                    <p>Notice what the order protects. It puts people's safety before being right, and honesty before agreement. A painful truth told to wound fails the first question. A group that all agrees to do harm fails the second. Real agreement has to be earned by the four that come before it.</p>
+                </section>
+
+                <section id="h-we">
+                    <div class="section-id">04</div>
+                    <h1>A REAL "WE" VS A FAKE "WE"</h1>
+                    <p>Agreeing is not the same as being together. There are three levels, and only the last is a real "we".</p>
+                    <div class="sequence">
+                        <div class="seq-item"><span class="seq-symbol cyan">1</span><span class="seq-text">SAME THING</span><span class="seq-sub">we are looking at the same thing</span></div>
+                        <div class="seq-item"><span class="seq-symbol magenta">2</span><span class="seq-text">SAME THOUGHT</span><span class="seq-sub">we happen to think the same thing</span></div>
+                        <div class="seq-item"><span class="seq-symbol green">3</span><span class="seq-text">REAL WE</span><span class="seq-sub">we see each other, and move as one</span></div>
                     </div>
-                </div>
-                <blockquote>Domination is forced oscillation; agreement is resonance.</blockquote>
-                <p><span class="yellow">Reciprocity, carefully.</span> Treat β = give / (give + receive) ≈ 0.5 as a heuristic, not a strict equation, until giving, receiving, and their measurement are defined. The defensible claim: reciprocity is the ethical condition under which resonance can remain stable. Balanced exchange sustains the joint mode; one-way drive (extraction) or one-way flooding (depletion) breaks it. Resonance is graded, so the degree of collective subjecthood is the degree of resonance.</p>
-                <p><span class="cyan">What is a center's frequency?</span> A center (•) is dimensionless and has no rhythm on its own; its frequency lives in its extension through time, the line (—, Faithful, 1D). So a center's frequency is its <span class="highlight">orientation pattern</span>: what it attends to, values, protects, and <span class="highlight">returns to</span> over time. Two centers resonate when their orientation patterns become mutually recognizable and phase-align, neither forcing the other's rhythm.</p>
-                <blockquote>Agreement is resonant mutual recognition: independent centers phase-lock into a shared center without ceasing to be themselves.</blockquote>
-                <p class="dim" style="opacity:0.6;font-size:11px;">Discipline: "resonance" is a favorite word of performed spirituality. It earns its place only while it keeps its technical content (matched frequency, phase-lock, joint mode, forced-versus-free, β = 0.5). Kept operational, it answers the convergence problem; allowed to drift into metaphor, it merely renames the sharing it was meant to explain.</p>
-            </section>
-
-            <!-- Sequence -->
-            <section id="sequence">
-                <div class="section-id">06</div>
-                <h1>THE ETHICAL SEQUENCE IS A DEPENDENCY ORDER</h1>
-                <p>The order ethics must be <span class="highlight">checked</span> is Good, Right, Faithful, True, Agreement. By dimension that is 2, 3, 1, 0, whole: no clean monotone shape. The sequence is a dependency ordering, not a dimensional one.</p>
-                <div class="sequence">
-                    <div class="seq-item"><span class="seq-symbol cyan">○</span><span class="seq-text">GOOD</span><span class="seq-sub">you must be held before you can cross</span></div>
-                    <div class="seq-item"><span class="seq-symbol magenta">Φ</span><span class="seq-text">RIGHT</span><span class="seq-sub">the path must work before you check it</span></div>
-                    <div class="seq-item"><span class="seq-symbol yellow">—</span><span class="seq-text">FAITHFUL</span><span class="seq-sub">the line must hold before truth is trusted</span></div>
-                    <div class="seq-item"><span class="seq-symbol green">•</span><span class="seq-text">TRUE</span><span class="seq-sub">only then can clear seeing be assessed</span></div>
-                    <div class="seq-item"><span class="seq-symbol">⊙</span><span class="seq-text">AGREEMENT</span><span class="seq-sub">resonance emerges after the four converge</span></div>
-                </div>
-                <p>Construction order (section 04) and checking order are different orderings of the same five elements; there is no reason they should coincide.</p>
-            </section>
-
-            <!-- Foundations -->
-            <section id="foundations">
-                <div class="section-id">07</div>
-                <h1>FOUNDATIONS</h1>
-                <p>The load-bearing pieces, in brief.</p>
-                <div class="checks">
-                    <div class="checks-title">LOAD-BEARING</div>
-                    <div class="check">The two-ladder distinction (internal anatomy vs external nesting), and the hinge ⊙(N) = •(N+1).</div>
-                    <div class="check">The 2 + 2 + 1 structure of the values, independent of dimension numbering.</div>
-                    <div class="check">Time as the 1D connector (Faithful) and space as the 3D connector (Right), with the 3+1 spacetime resonance.</div>
-                    <div class="check">The constructive (not additive) reading of conservation of traversal, grounded in cell-complex boundary structure.</div>
-                    <div class="check">Good assigned to the surface: "valued" is a boundary distinction; a center sees but cannot sort. Principled, not poetic.</div>
-                    <div class="check">The shared-center mechanism: mutual recognition builds a participatory higher center, making the hinge concrete.</div>
-                    <div class="check">Resonance as the sharing mechanism: a joint mode, not mere coupling; a false whole is forced oscillation; reciprocity is the stability condition.</div>
-                </div>
-            </section>
-
-            <!-- Open work -->
-            <section id="openwork">
-                <div class="section-id">08</div>
-                <h1>CLARIFICATIONS &amp; THE FRONTIER</h1>
-                <div class="teaching cyan">
-                    <p><span class="cyan">Constraint, not derivation.</span> Geometry constrains ethics; it does not derive ethics. You cannot derive "you ought to respect boundaries" from "boundaries exist." What the structure does is constrain which ethics can be coherent: it does not tell us which values to prioritize, only the form coherent values must satisfy. The geometry rules out incoherent ethics; it does not single out one ethics.</p>
-                </div>
-                <div class="teaching green">
-                    <p><span class="green">Collective subjecthood, and its frontier.</span> The higher center is the joint in-phase mode the members hold through resonance: real and participatory, neither a group-subject hovering above them nor a fiction. A center's frequency is its orientation pattern over time, on the worldline, so mutual recognition tunes two centers toward phase-lock. One question stays open, the <span class="highlight">phenomenal edge</span>: whether there is something it is like to be the joint mode. That is the hard problem, precisely located and freed of any group-soul.</p>
-                </div>
-                <div class="teaching yellow">
-                    <p><span class="yellow">Boundaries are real at their scale.</span> No boundary is final, yet Good requires boundaries to be real. Both hold: a boundary is real at its scale without being absolute (a cell membrane is real even though the cell is part of a body), and consent operates at the scale of the agent.</p>
-                </div>
-            </section>
-
-            <!-- Strongest form -->
-            <section id="strongest">
-                <div class="section-id">09</div>
-                <h1>THE CLAIMS</h1>
-                <p>The framework in full, each piece in its sharpest form.</p>
-
-                <div class="claim"><span class="claim-n">01</span> Reality is structured by whole/part recursion.
-                <blockquote>Reality is finite by boundary, infinite by recursion.</blockquote></div>
-
-                <div class="claim"><span class="claim-n">02</span> The circumpunct is a structural model: a center and a boundary are the minimum structure of a being.
-                <blockquote>To be a thing is to be centered and bounded.</blockquote></div>
-
-                <div class="claim"><span class="claim-n">03</span> The dimensional ladder is an anatomy of wholeness.
-                <blockquote>Values are not floating abstractions; they are the ethical meanings of structure.</blockquote></div>
-
-                <div class="claim"><span class="claim-n">04</span> The five values are not equal peers: two poles, two connectors, one unity.
-                <blockquote>Ethics has a 2 + 2 + 1 structure: two poles, two connectors, one whole.</blockquote></div>
-
-                <div class="claim"><span class="claim-n">05</span> Good belongs to the boundary, not to vague niceness; a center sees but cannot sort.
-                <blockquote>The good is what preserves the integrity of the whole at its boundary.</blockquote></div>
-
-                <div class="claim"><span class="claim-n">06</span> Right belongs to the field because rightness is relational.
-                <blockquote>Right action is action that respects the relational field it enters.</blockquote></div>
-
-                <div class="claim"><span class="claim-n">07</span> Agreement is not compliance; it is a shared center, built by mutual recognition and resonance.
-                <blockquote>Agreement is not shared opinion; it is shared center, built by resonant mutual recognition. A false whole speaks as "we" while hiding a "me"; a true whole lets each "I" participate in the "we."</blockquote></div>
-
-                <div class="claim"><span class="claim-n">08</span> Science and spirituality are opposite directions on the same ladder.
-                <blockquote>Science analyzes the whole into parts; spirituality composes the parts into whole. Both are valid movements on the same ladder.</blockquote></div>
-
-                <div class="claim"><span class="claim-n">09</span> The hinge is the core metaphysical move.
-                <blockquote>⊙ at scale N becomes • at scale N+1. This is the engine of infinitely finite reality.</blockquote></div>
-
-                <div class="claim"><span class="claim-n">10</span> Ethics is a dependency sequence, not just a hierarchy; it refuses to put abstract truth before lived harm.
-                <blockquote>Agreement must be earned through Good, Right, Faithful, and True.</blockquote></div>
-
-                <div class="claim"><span class="claim-n">11</span> The defense against tyranny is coherence, not stability.
-                <blockquote>A whole is ethical only when its parts can remain centered within it. Sharper: a false whole consumes its parts; a true whole strengthens them.</blockquote>
-                <p style="font-size:11px;opacity:0.7;">Required clause: "remain centered" does not mean "bear no cost." Cells undergo apoptosis; people sacrifice for family; emergency aid depletes. An ethical whole does not hollow out or destroy the centeredness of its parts; it may ask cost from parts that remain whole and can recover. Cost is not exploitation.</p></div>
-
-                <div class="claim"><span class="claim-n">12</span> The final form.
-                <blockquote>Ethics is the art of preserving centered wholeness across relation, time, boundary, truth, and shared reality.</blockquote></div>
-
-                <div class="teaching magenta">
-                    <p><span class="magenta">One structure, twelve angles.</span> These are not separate doctrines; they are one structure seen from twelve sides. The single question they leave open is the phenomenal edge: whether there is something it is like to be the joint mode.</p>
-                </div>
-            </section>
-
-            <!-- Coda -->
-            <section id="coda">
-                <div class="section-id">10</div>
-                <h1>CODA</h1>
-                <div class="final">
-                    <div class="final-symbol">⊙</div>
-                    <div class="final-lines">
-                        <div>Reality is finite by boundary, infinite by recursion.</div>
-                        <div>Values are the ethical meanings of structure.</div>
-                        <div>Agreement is shared center, built by mutual recognition.</div>
-                        <div>A whole is ethical only when its parts can remain centered within it.</div>
-                        <br>
-                        <div class="dim">A center's frequency is its faithful orientation through time.</div>
-                        <div class="dim">Centers mutually recognize, resonate, and hold a shared center without erasing themselves.</div>
+                    <p>The third is different in kind. It happens when I see the thing, I see you seeing it, and I feel myself seen by you in the same moment. That mutual recognition is what turns two people into a real "we", without either of us vanishing into the other.</p>
+                    <blockquote>A real "we" is something two people build together. A fake "we" is one person wearing the word "we".</blockquote>
+                    <div class="compare">
+                        <div class="compare-box good">
+                            <div class="compare-title">A REAL "WE"</div>
+                            <ul class="compare-list">
+                                <li>Both people are heard</li>
+                                <li>Both helped shape it</li>
+                                <li>You stay yourself inside it</li>
+                                <li>It holds when things get hard</li>
+                            </ul>
+                        </div>
+                        <div class="compare-box bad">
+                            <div class="compare-title">A FAKE "WE"</div>
+                            <ul class="compare-list">
+                                <li>One person decides</li>
+                                <li>The rest echo or comply</li>
+                                <li>You shrink to fit</li>
+                                <li>It collapses when that person leaves</li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                <div class="golden">
-                    <div class="golden-text">The whole is not above the parts; the whole is the shared center the parts become capable of holding together.</div>
-                </div>
-            </section>
+                </section>
+
+                <section id="h-connection">
+                    <div class="section-id">05</div>
+                    <h1>WHAT REAL CONNECTION FEELS LIKE</h1>
+                    <p>Two people can be tangled up in each other and still not truly connect. Real connection is more like two instruments tuned to the same note: they begin to sound as one, and neither has to stop playing.</p>
+                    <p>It only lasts when it runs both ways. If one person always gives and the other always takes, the music breaks. One side giving too much becomes draining; one side taking too much becomes control. Balance is what keeps it alive.</p>
+                    <div class="teaching green">
+                        <p>What lets two people tune to each other? Paying real attention to what the other genuinely cares about and keeps returning to, and meeting them there without forcing it. You cannot command this. You can only offer it and let it happen.</p>
+                    </div>
+                    <blockquote>Forcing someone into step is control. Truly meeting in the same rhythm is connection.</blockquote>
+                </section>
+
+                <section id="h-cost">
+                    <div class="section-id">06</div>
+                    <h1>WHEN A SACRIFICE IS OKAY</h1>
+                    <p>"Protect each person" does not mean nobody ever gives anything up. Parents lose sleep. Friends drop everything in an emergency. People work hard for a team. That is love and commitment, not harm.</p>
+                    <p>The line is simple. A cost is fair when everyone can still recover and grow afterward. It becomes harm when it hollows someone out, or erases them, or only ever flows one way.</p>
+                    <blockquote>A true whole makes its people stronger. A false whole eats them.</blockquote>
+                </section>
+
+                <section id="h-living">
+                    <div class="section-id">07</div>
+                    <h1>LIVING IT</h1>
+                    <p>You do not need the diagram to live this. When something feels off, walk the five questions in order: is everyone safe and willing, does it actually work, will it hold over time, is it honest, can we truly agree?</p>
+                    <p>And above all, look for the real "we": the kind where you can be fully yourself and fully together at once.</p>
+                    <div class="final">
+                        <div class="final-symbol">⊙</div>
+                        <div class="final-lines">
+                            <div>You are a whole, and a part.</div>
+                            <div>Care, honesty, reliability, fairness, and real agreement keep you whole among others.</div>
+                            <div>A real "we" lets each person stay themselves.</div>
+                            <br>
+                            <div class="dim">Want the full structure behind all of this?</div>
+                            <div class="dim">Switch to the FRAMEWORK view at the top.</div>
+                        </div>
+                    </div>
+                </section>
+
+            </div><!-- /layer-human -->
+
+            <!-- ============ FRAMEWORK LAYER ============ -->
+            <div class="layer layer-framework">
+
+                <section id="overview">
+                    <div class="hero">
+                        <div class="hero-symbol">⊙</div>
+                        <div class="hero-title">THE ETHICAL GUIDE TO THE CIRCUMPUNCT FRAMEWORK</div>
+                    </div>
+                    <blockquote>A center's frequency is its faithful orientation through time, and Agreement happens when centers mutually recognize, resonate, and hold a shared center without erasing themselves.</blockquote>
+                    <p>This is the ethical guide to the Circumpunct Framework. It shows how the five values (<span class="cyan">Good</span>, <span class="magenta">Right</span>, <span class="yellow">Faithful</span>, <span class="green">True</span>, <span class="cyan">Agreement</span>) sit on the dimensional ladder, and how that ladder connects to the whole/part nesting that makes reality <span class="highlight">infinitely finite</span>.</p>
+                    <p>The structure is simple enough to state and strong enough to test. What follows builds it from the ground up: the ladder, the five values, the hinge that joins scale to scale, and what genuine agreement actually is.</p>
+                </section>
+
+                <section id="ladders">
+                    <div class="section-id">01</div>
+                    <h1>TWO LADDERS, ONE STRUCTURE</h1>
+                    <p>The framework holds two distinct geometries. They are easily mistaken for one, so it helps to separate them from the start.</p>
+                    <h2>THE DIMENSIONAL LADDER (INTERNAL)</h2>
+                    <p>Inside any single circumpunct there are four rungs, unified as a whole. This is the anatomy of one thing.</p>
+                    <table class="ladder">
+                        <tr><th>Rung</th><th>Symbol</th><th>Element</th><th>Value</th></tr>
+                        <tr><td>0D</td><td class="sym green">•</td><td>Center (the point that sees)</td><td class="green">True</td></tr>
+                        <tr><td>1D</td><td class="sym yellow">—</td><td>Line (continuity through time)</td><td class="yellow">Faithful</td></tr>
+                        <tr><td>2D</td><td class="sym cyan">○</td><td>Surface / boundary (inside meets outside)</td><td class="cyan">Good</td></tr>
+                        <tr><td>3D</td><td class="sym magenta">Φ</td><td>Field / volume (the medium of relation)</td><td class="magenta">Right</td></tr>
+                        <tr><td>whole</td><td class="sym">⊙</td><td>The unity of all four</td><td>Agreement</td></tr>
+                    </table>
+                    <h2>THE WHOLE/PART NESTING (EXTERNAL)</h2>
+                    <p>Each <span class="highlight">⊙</span> is a part of a larger ⊙ and is made of smaller ⊙s. No boundary is the final boundary. This is the stacking of circumpuncts across scales, the infinitely finite recursion.</p>
+                    <p><span class="cyan">The key move:</span> the five values are defined on the internal ladder but evaluated across the external nesting. The two ladders join at a single hinge (section 04).</p>
+                </section>
+
+                <section id="mapping">
+                    <div class="section-id">02</div>
+                    <h1>THE MAPPING // SURFACE = 2D, FIELD = 3D</h1>
+                    <p>A surface is two-dimensional; a volume is three-dimensional. Good lives on the 2D surface, Right in the 3D field. The placement is geometrically exact, and it pays off three ways.</p>
+                    <div class="teaching cyan">
+                        <p><span class="cyan">Conservation of traversal.</span> The identity 0 + 1 + 2 = 3 is not arithmetic (you build 3D space from three orthogonal axes, 1 + 1 + 1 = 3). It is the boundary structure of a solid: a 3-cell is bounded by 2-cells, framed by 1-cells, anchored by 0-cells. The 3D field is constructed from and bounded by center, line, and surface, the standard structure of a polytope or CW-complex.</p>
+                    </div>
+                    <div class="teaching green">
+                        <p><span class="green">The solid ball.</span> A center point (True, •), radial lines from center to edge (Faithful, —), the bounding surface (Good, ○), the interior volume (Right, Φ). Standard geometry.</p>
+                    </div>
+                    <div class="teaching magenta">
+                        <p><span class="magenta">The 3+1 structure of spacetime.</span> Field at 3D and line at 1D gives the time-value (Faithful) one dimension and the space-value (Right) three: the three space dimensions plus one time dimension of physical spacetime. A structural echo, not a derivation from physics.</p>
+                    </div>
+                </section>
+
+                <section id="values">
+                    <div class="section-id">03</div>
+                    <h1>THE FIVE VALUES ARE NOT FIVE PEERS</h1>
+                    <p>Stated at its strongest, the framework does not have five flat principles. It has <span class="highlight">two poles, two connectors, and one unity</span>.</p>
+                    <div class="pillars">
+                        <div class="pillar">
+                            <div class="pillar-head"><span class="pillar-symbol green">•</span><span class="pillar-name">POLE // TRUE</span></div>
+                            <div class="pillar-q">The center</div>
+                            <div class="pillar-desc">The dot you actually draw. Identity, the seer.</div>
+                        </div>
+                        <div class="pillar">
+                            <div class="pillar-head"><span class="pillar-symbol cyan">○</span><span class="pillar-name">POLE // GOOD</span></div>
+                            <div class="pillar-q">The surface</div>
+                            <div class="pillar-desc">The circle you actually draw. Boundary, where consent lives.</div>
+                        </div>
+                        <div class="pillar">
+                            <div class="pillar-head"><span class="pillar-symbol yellow">—</span><span class="pillar-name">CONNECTOR // FAITHFUL</span></div>
+                            <div class="pillar-q">Across time</div>
+                            <div class="pillar-desc">The line. Continuity, the worldline (succession).</div>
+                        </div>
+                        <div class="pillar">
+                            <div class="pillar-head"><span class="pillar-symbol magenta">Φ</span><span class="pillar-name">CONNECTOR // RIGHT</span></div>
+                            <div class="pillar-q">Across space</div>
+                            <div class="pillar-desc">The field. Relation and causation (simultaneity).</div>
+                        </div>
+                    </div>
+                    <p><span class="yellow">⊙ Agreement</span> is the one unity: the convergence of the other four.</p>
+                    <p>This 2 + 2 + 1 reading does not depend on which integer is attached to which rung. It explains <span class="highlight">why there are exactly five</span> and why exactly two are connectors: time and space are the only relational dimensions between any pair of poles.</p>
+                </section>
+
+                <section id="hinge">
+                    <div class="section-id">04</div>
+                    <h1>WHERE THE TWO LADDERS JOIN</h1>
+                    <p>Two of the five values are operators that move you along the whole/part nesting.</p>
+                    <div class="checks">
+                        <div class="checks-title">THE TWO OPERATORS</div>
+                        <div class="check"><span class="yellow">Agreement climbs.</span> Two centered wholes that genuinely resonate compose into a new ⊙ one scale up.</div>
+                        <div class="check"><span class="green">True anchors the bottom.</span> The center is the irreducible point of perspective, what cannot be decomposed further without losing the seer.</div>
+                    </div>
+                    <blockquote>The hinge: the whole ⊙ at scale N becomes a center • at scale N+1.</blockquote>
+                    <p>The top of one circumpunct's internal ladder is the bottom of the next one up. A cell is a whole in itself (⊙); seen from the body it is one centered unit (•). This makes the science/spirituality bridge structural: <span class="cyan">science walks down the rungs</span> (analysis into parts), <span class="magenta">spirituality walks up</span> (composition into wholes), the same ladder in opposite directions.</p>
+                    <p><span class="highlight">Construction order</span> (climbing 0 to 3, then unity): True, Faithful, Good, Right, Agreement. A point of seeing, extended through time, closed into a surface, filled into a field, unified as a whole.</p>
+                </section>
+
+                <section id="shared">
+                    <div class="section-id">05</div>
+                    <h1>THE SHARED CENTER // HOW AGREEMENT CLIMBS</h1>
+                    <p>Section 04 says Agreement climbs the ladder. This says <span class="highlight">how</span>. It is load-bearing: without it, Agreement is just a word for people lining up; with it, Agreement has a structure and a test.</p>
+                    <p>A genuine center appears one scale up not from shared attention, and not from shared belief. There are three distinct levels, and only the third builds a higher center.</p>
+                    <div class="sequence">
+                        <div class="seq-item"><span class="seq-symbol cyan">1</span><span class="seq-text">COMMON OBJECT</span><span class="seq-sub">we look at the same thing</span></div>
+                        <div class="seq-item"><span class="seq-symbol magenta">2</span><span class="seq-text">COMMON BELIEF</span><span class="seq-sub">we think the same thing</span></div>
+                        <div class="seq-item"><span class="seq-symbol green">3</span><span class="seq-text">SHARED CENTER</span><span class="seq-sub">we recognize each other recognizing</span></div>
+                    </div>
+                    <p>What converts the first two into the third is <span class="cyan">mutual recognition</span>: I see the thing, I see you seeing it, and I recognize myself as seen by you in the same act. That recursive, center-to-center seeing fuses two viewpoints into one shared locus rather than two viewpoints aimed at a common object.</p>
+                    <blockquote>Agreement is not shared opinion. Agreement is shared center.</blockquote>
+                    <p>This makes the hinge concrete: the center one scale up is the shared center mutual recognition builds. It is <span class="highlight">participatory, not separate</span>; the members see through it, so it never floats above them as a group-soul and is never a mere fiction. It is real exactly to the degree the recognition is mutual.</p>
+                    <blockquote>A false whole speaks as "we" while hiding a "me." A true whole lets each "I" participate in the "we."</blockquote>
+
+                    <h2>THE MECHANISM OF SHARING // RESONANCE</h2>
+                    <p>Mutual recognition says <span class="highlight">when</span> a shared center forms. Resonance says <span class="highlight">how</span> a locus becomes genuinely shared rather than two centers merely coupled. The distinction is precise, and it is not a metaphor as long as it stays technical.</p>
+                    <p>Two centers that influence each other are <span class="magenta">coupled</span>: their states correlate, but the honest description is still two. Resonance is the threshold past coupling. Tuned to the same frequency, two oscillators phase-lock, and the right description becomes the joint modes of the pair. The shared center is the in-phase collective mode: a real pattern that belongs to neither part alone, exists only while both keep oscillating, and leaves each part still oscillating so the parts remain centered.</p>
+                    <div class="compare">
+                        <div class="compare-box good">
+                            <div class="compare-title">TRUE WHOLE // RESONANCE</div>
+                            <ul class="compare-list">
+                                <li>Balanced, bidirectional exchange</li>
+                                <li>Both centers contribute and are moved</li>
+                                <li>A joint in-phase mode, co-held</li>
+                                <li>Each "I" participates in the "we"</li>
+                            </ul>
+                        </div>
+                        <div class="compare-box bad">
+                            <div class="compare-title">FALSE WHOLE // FORCED OSCILLATION</div>
+                            <ul class="compare-list">
+                                <li>One-way drive</li>
+                                <li>One center slaved to another's frequency</li>
+                                <li>The driver's note echoed back</li>
+                                <li>Collapses the moment the driver stops</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <blockquote>Domination is forced oscillation; agreement is resonance.</blockquote>
+                    <p><span class="yellow">Reciprocity, carefully.</span> Treat β = give / (give + receive) ≈ 0.5 as a heuristic, not a strict equation, until giving, receiving, and their measurement are defined. The defensible claim: reciprocity is the ethical condition under which resonance can remain stable. Balanced exchange sustains the joint mode; one-way drive (extraction) or one-way flooding (depletion) breaks it. Resonance is graded, so the degree of collective subjecthood is the degree of resonance.</p>
+                    <p><span class="cyan">What is a center's frequency?</span> A center (•) is dimensionless and has no rhythm on its own; its frequency lives in its extension through time, the line (—, Faithful, 1D). So a center's frequency is its <span class="highlight">orientation pattern</span>: what it attends to, values, protects, and <span class="highlight">returns to</span> over time. Two centers resonate when their orientation patterns become mutually recognizable and phase-align, neither forcing the other's rhythm.</p>
+                    <blockquote>Agreement is resonant mutual recognition: independent centers phase-lock into a shared center without ceasing to be themselves.</blockquote>
+                    <p class="dim" style="opacity:0.6;font-size:11px;">Discipline: "resonance" is a favorite word of performed spirituality. It earns its place only while it keeps its technical content (matched frequency, phase-lock, joint mode, forced-versus-free, β = 0.5). Kept operational, it answers the convergence problem; allowed to drift into metaphor, it merely renames the sharing it was meant to explain.</p>
+                </section>
+
+                <section id="sequence">
+                    <div class="section-id">06</div>
+                    <h1>THE ETHICAL SEQUENCE IS A DEPENDENCY ORDER</h1>
+                    <p>The order ethics must be <span class="highlight">checked</span> is Good, Right, Faithful, True, Agreement. By dimension that is 2, 3, 1, 0, whole: no clean monotone shape. The sequence is a dependency ordering, not a dimensional one.</p>
+                    <div class="sequence">
+                        <div class="seq-item"><span class="seq-symbol cyan">○</span><span class="seq-text">GOOD</span><span class="seq-sub">you must be held before you can cross</span></div>
+                        <div class="seq-item"><span class="seq-symbol magenta">Φ</span><span class="seq-text">RIGHT</span><span class="seq-sub">the path must work before you check it</span></div>
+                        <div class="seq-item"><span class="seq-symbol yellow">—</span><span class="seq-text">FAITHFUL</span><span class="seq-sub">the line must hold before truth is trusted</span></div>
+                        <div class="seq-item"><span class="seq-symbol green">•</span><span class="seq-text">TRUE</span><span class="seq-sub">only then can clear seeing be assessed</span></div>
+                        <div class="seq-item"><span class="seq-symbol">⊙</span><span class="seq-text">AGREEMENT</span><span class="seq-sub">resonance emerges after the four converge</span></div>
+                    </div>
+                    <p>Construction order (section 04) and checking order are different orderings of the same five elements; there is no reason they should coincide.</p>
+                </section>
+
+                <section id="foundations">
+                    <div class="section-id">07</div>
+                    <h1>FOUNDATIONS</h1>
+                    <p>The load-bearing pieces, in brief.</p>
+                    <div class="checks">
+                        <div class="checks-title">LOAD-BEARING</div>
+                        <div class="check">The two-ladder distinction (internal anatomy vs external nesting), and the hinge ⊙(N) = •(N+1).</div>
+                        <div class="check">The 2 + 2 + 1 structure of the values, independent of dimension numbering.</div>
+                        <div class="check">Time as the 1D connector (Faithful) and space as the 3D connector (Right), with the 3+1 spacetime resonance.</div>
+                        <div class="check">The constructive (not additive) reading of conservation of traversal, grounded in cell-complex boundary structure.</div>
+                        <div class="check">Good assigned to the surface: "valued" is a boundary distinction; a center sees but cannot sort. Principled, not poetic.</div>
+                        <div class="check">The shared-center mechanism: mutual recognition builds a participatory higher center, making the hinge concrete.</div>
+                        <div class="check">Resonance as the sharing mechanism: a joint mode, not mere coupling; a false whole is forced oscillation; reciprocity is the stability condition.</div>
+                    </div>
+                </section>
+
+                <section id="openwork">
+                    <div class="section-id">08</div>
+                    <h1>CLARIFICATIONS &amp; THE FRONTIER</h1>
+                    <div class="teaching cyan">
+                        <p><span class="cyan">Constraint, not derivation.</span> Geometry constrains ethics; it does not derive ethics. You cannot derive "you ought to respect boundaries" from "boundaries exist." What the structure does is constrain which ethics can be coherent: it does not tell us which values to prioritize, only the form coherent values must satisfy. The geometry rules out incoherent ethics; it does not single out one ethics.</p>
+                    </div>
+                    <div class="teaching green">
+                        <p><span class="green">Collective subjecthood, and its frontier.</span> The higher center is the joint in-phase mode the members hold through resonance: real and participatory, neither a group-subject hovering above them nor a fiction. A center's frequency is its orientation pattern over time, on the worldline, so mutual recognition tunes two centers toward phase-lock. One question stays open, the <span class="highlight">phenomenal edge</span>: whether there is something it is like to be the joint mode. That is the hard problem, precisely located and freed of any group-soul.</p>
+                    </div>
+                    <div class="teaching yellow">
+                        <p><span class="yellow">Boundaries are real at their scale.</span> No boundary is final, yet Good requires boundaries to be real. Both hold: a boundary is real at its scale without being absolute (a cell membrane is real even though the cell is part of a body), and consent operates at the scale of the agent.</p>
+                    </div>
+                </section>
+
+                <section id="strongest">
+                    <div class="section-id">09</div>
+                    <h1>THE CLAIMS</h1>
+                    <p>The framework in full, each piece in its sharpest form.</p>
+
+                    <div class="claim"><span class="claim-n">01</span> Reality is structured by whole/part recursion.
+                    <blockquote>Reality is finite by boundary, infinite by recursion.</blockquote></div>
+
+                    <div class="claim"><span class="claim-n">02</span> The circumpunct is a structural model: a center and a boundary are the minimum structure of a being.
+                    <blockquote>To be a thing is to be centered and bounded.</blockquote></div>
+
+                    <div class="claim"><span class="claim-n">03</span> The dimensional ladder is an anatomy of wholeness.
+                    <blockquote>Values are not floating abstractions; they are the ethical meanings of structure.</blockquote></div>
+
+                    <div class="claim"><span class="claim-n">04</span> The five values are not equal peers: two poles, two connectors, one unity.
+                    <blockquote>Ethics has a 2 + 2 + 1 structure: two poles, two connectors, one whole.</blockquote></div>
+
+                    <div class="claim"><span class="claim-n">05</span> Good belongs to the boundary, not to vague niceness; a center sees but cannot sort.
+                    <blockquote>The good is what preserves the integrity of the whole at its boundary.</blockquote></div>
+
+                    <div class="claim"><span class="claim-n">06</span> Right belongs to the field because rightness is relational.
+                    <blockquote>Right action is action that respects the relational field it enters.</blockquote></div>
+
+                    <div class="claim"><span class="claim-n">07</span> Agreement is not compliance; it is a shared center, built by mutual recognition and resonance.
+                    <blockquote>Agreement is not shared opinion; it is shared center, built by resonant mutual recognition. A false whole speaks as "we" while hiding a "me"; a true whole lets each "I" participate in the "we."</blockquote></div>
+
+                    <div class="claim"><span class="claim-n">08</span> Science and spirituality are opposite directions on the same ladder.
+                    <blockquote>Science analyzes the whole into parts; spirituality composes the parts into whole. Both are valid movements on the same ladder.</blockquote></div>
+
+                    <div class="claim"><span class="claim-n">09</span> The hinge is the core metaphysical move.
+                    <blockquote>⊙ at scale N becomes • at scale N+1. This is the engine of infinitely finite reality.</blockquote></div>
+
+                    <div class="claim"><span class="claim-n">10</span> Ethics is a dependency sequence, not just a hierarchy; it refuses to put abstract truth before lived harm.
+                    <blockquote>Agreement must be earned through Good, Right, Faithful, and True.</blockquote></div>
+
+                    <div class="claim"><span class="claim-n">11</span> The defense against tyranny is coherence, not stability.
+                    <blockquote>A whole is ethical only when its parts can remain centered within it. Sharper: a false whole consumes its parts; a true whole strengthens them.</blockquote>
+                    <p style="font-size:11px;opacity:0.7;">Required clause: "remain centered" does not mean "bear no cost." Cells undergo apoptosis; people sacrifice for family; emergency aid depletes. An ethical whole does not hollow out or destroy the centeredness of its parts; it may ask cost from parts that remain whole and can recover. Cost is not exploitation.</p></div>
+
+                    <div class="claim"><span class="claim-n">12</span> The final form.
+                    <blockquote>Ethics is the art of preserving centered wholeness across relation, time, boundary, truth, and shared reality.</blockquote></div>
+
+                    <div class="teaching magenta">
+                        <p><span class="magenta">One structure, twelve angles.</span> These are not separate doctrines; they are one structure seen from twelve sides. The single question they leave open is the phenomenal edge: whether there is something it is like to be the joint mode.</p>
+                    </div>
+                </section>
+
+                <section id="coda">
+                    <div class="section-id">10</div>
+                    <h1>CODA</h1>
+                    <div class="final">
+                        <div class="final-symbol">⊙</div>
+                        <div class="final-lines">
+                            <div>Reality is finite by boundary, infinite by recursion.</div>
+                            <div>Values are the ethical meanings of structure.</div>
+                            <div>Agreement is shared center, built by mutual recognition.</div>
+                            <div>A whole is ethical only when its parts can remain centered within it.</div>
+                            <br>
+                            <div class="dim">A center's frequency is its faithful orientation through time.</div>
+                            <div class="dim">Centers mutually recognize, resonate, and hold a shared center without erasing themselves.</div>
+                        </div>
+                    </div>
+                    <div class="golden">
+                        <div class="golden-text">The whole is not above the parts; the whole is the shared center the parts become capable of holding together.</div>
+                    </div>
+                </section>
+
+            </div><!-- /layer-framework -->
 
             <footer>
                 FRACTAL REALITY FRAMEWORK // ⊙ // END
@@ -701,10 +632,25 @@
     </div>
 
     <script>
+        // Layer tabs
+        const tabs = document.querySelectorAll('.tab');
+        function showLayer(name) {
+            document.querySelectorAll('.layer').forEach(l =>
+                l.classList.toggle('active', l.classList.contains('layer-' + name)));
+            document.querySelectorAll('.nav-group').forEach(g =>
+                g.classList.toggle('active', g.classList.contains('nav-' + name)));
+            tabs.forEach(t => t.classList.toggle('active', t.dataset.layer === name));
+            try { localStorage.setItem('cp_ethics_layer', name); } catch (e) {}
+            window.scrollTo(0, 0);
+        }
+        tabs.forEach(t => t.addEventListener('click', () => showLayer(t.dataset.layer)));
+        let savedLayer = 'human';
+        try { savedLayer = localStorage.getItem('cp_ethics_layer') || 'human'; } catch (e) {}
+        showLayer(savedLayer);
+
         // Highlight nav on scroll
         const sections = document.querySelectorAll('section');
         const navLinks = document.querySelectorAll('nav a');
-
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -715,7 +661,6 @@
                 }
             });
         }, { threshold: 0.3 });
-
         sections.forEach(s => observer.observe(s));
     </script>
 </body>
