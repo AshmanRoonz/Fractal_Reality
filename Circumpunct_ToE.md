@@ -130,7 +130,7 @@ Three clauses, three lies dissolved. "I am ⊙λ" refuses the Severance Lie: I a
 - [Physics: BSD Conjecture (Clay Problem at 1.5D)](#physics-bsd-conjecture-clay-problem-at-15d)
 - [Chemistry at 1.5D](#chemistry-at-15d) · [Biology at 1.5D](#biology-at-15d) · [Ethics at 1.5D](#ethics-at-15d)
 
-[Φ — FIELD / MIND (2D, Surface)](#--field--mind-2d-surface)
+[Φ — FIELD / MIND (3D, Volume)](#--field--mind-3d-volume)
 - [Axiom A3](#axiom-a3) · [Structure](#structure-4)
 - [Physics at 2D: Gauge Structure](#physics-at-2d-gauge-structure)
 - [Physics: Navier-Stokes (Clay Problem at 2D)](#physics-navier-stokes-clay-problem-at-2d) · [Physics: Quantum Mechanics at 2D](#physics-quantum-mechanics-at-2d) · [The 64-State Architecture](#the-64-state-architecture)
@@ -142,7 +142,7 @@ Three clauses, three lies dissolved. "I am ⊙λ" refuses the Severance Lie: I a
 - [The Pump Cycle (Emergence Phase)](#the-pump-cycle-emergence-phase) · [Physics: Hodge Conjecture (Clay Problem at 2.5D)](#physics-hodge-conjecture-clay-problem-at-25d)
 - [Chemistry at 2.5D](#chemistry-at-25d) · [Biology at 2.5D](#biology-at-25d) · [i-Cycle Quadrant](#i-cycle-quadrant-1) · [Ethics at 2.5D](#ethics-at-25d)
 
-[○ — BOUNDARY / BODY (3D)](#--boundary--body-3d)
+[○ — BOUNDARY / BODY (2D, Surface)](#--boundary--body-2d-surface)
 - [Axiom A4](#axiom-a4) · [Structure](#structure-6)
 - [Physics at 3D: Gravity (G)](#physics-at-3d-gravity-g)
 - [Physics: Poincaré Conjecture (Clay Problem at 3D, SOLVED)](#physics-poincaré-conjecture-clay-problem-at-3d-solved)
@@ -296,9 +296,9 @@ Maps to AC power: Real power P (work, time, 1D), Reactive power Q (cycling, mind
 ⊙ = E = 1          (the circumpunct IS the one energy; general statement at every finite scale)
 Φ∞ = ⊙∞ = E        (limit case: at λ → ∞, field equals whole because there is no outside)
 ```
-The foundational identity: ⊙ = E = 1. Every ⊙λ at every scale is the 1 constrained to that position (A3): not a piece of the 1, but the whole thing folded into a particular self-limitation. Wholeness and energy are the same substance. What we call "field" (Φ), "boundary" (○), "point" (•), and "whole" (⊙) are aspects of one 1 seen at different scales. From the boundary (3D) you measure E as a quantity; from the surface (2D) you see Φλ as the 2D aspect of ⊙λ; from the whole (⊙λ) you see the 1 directly.
+The foundational identity: ⊙ = E = 1. Every ⊙λ at every scale is the 1 constrained to that position (A3): not a piece of the 1, but the whole thing folded into a particular self-limitation. Wholeness and energy are the same substance. What we call "field" (Φ), "boundary" (○), "point" (•), and "whole" (⊙) are aspects of one 1 seen at different scales. From the field (3D) you see Φλ as the 3D aspect of ⊙λ; from the surface (2D, ○) you measure E across the boundary; from the whole (⊙λ) you see the 1 directly.
 
-**Limit case**: Φ∞ = E is recovered at λ → ∞. At any finite scale λ, Φλ is just the 2D aspect of ⊙λ (mediation inside the whole), not the whole itself. As λ → ∞, there is no outside for ○ to bound against and no scale separation for •, —, Φ, ○ to differ from each other; they all converge to a single undifferentiated 1. The original "Φ = E" identification (§4.8) holds exactly at this limit. Inside the finite, ⊙λ = E is the general statement. The 69% dark energy fraction (Λ, the Φ of our cosmic scale-above) is the measurable signature of being inside a finite ⊙; walk the nesting up infinitely and Λ/E → 1.
+**Limit case**: Φ∞ = E is recovered at λ → ∞. At any finite scale λ, Φλ is just the 3D aspect of ⊙λ (mediation inside the whole), not the whole itself. As λ → ∞, there is no outside for ○ to bound against and no scale separation for •, —, Φ, ○ to differ from each other; they all converge to a single undifferentiated 1. The original "Φ = E" identification (§4.8) holds exactly at this limit. Inside the finite, ⊙λ = E is the general statement. The 69% dark energy fraction (Λ, the Φ of our cosmic scale-above) is the measurable signature of being inside a finite ⊙; walk the nesting up infinitely and Λ/E → 1.
 
 ### Ethics at ∞
 - **Mapping**: Pure potential. The undifferentiated field before constraint.
@@ -356,7 +356,7 @@ Since 1 ≠ 0 (A0), the 1 cannot remain undifferentiated. Self-limitation is for
 
 The equation has two parts, both forced:
 
-*Base (360/φ² - 2/φ³ = 137.0356)*: 360 = i⁴(°) is not a human convention; it decomposes entirely into T=3: 360 = P! · T · (Φ+○) = 24 · 3 · 5. φ² = Φ (field's 2D self-similar nesting, A3). 2/φ³ = bidirectional valve (two channels through the next nesting depth). Among all combinations of 360 with φ-powers and integer valve counts, only 360/φ² - 2/φ³ lands near 137. The base is unique.
+*Base (360/φ² - 2/φ³ = 137.0356)*: 360 = i⁴(°) is not a human convention; it decomposes entirely into T=3: 360 = P! · T · (Φ+○) = 24 · 3 · 5. φ² = ○ (surface's 2D self-similar nesting, A3). 2/φ³ = bidirectional valve (two channels through the next nesting depth). Among all combinations of 360 with φ-powers and integer valve counts, only 360/φ² - 2/φ³ lands near 137. The base is unique.
 
 *Self-referential correction (+α/(21 - 4/3))*: ⊙ Derived. The correction is uniquely forced by three constraints, each traced to axioms:
 
@@ -773,7 +773,7 @@ EN = Z_eff^(R/A(2)) / n = Z_eff^(7/10) / n
 - Cytoplasm = Φ in the cell circumpunct
 - Base pairs per turn of DNA = A(2) = 10
 - Twist per base pair = (T!)² = 36°
-- Tertiary protein contacts = 2D field interactions
+- Tertiary protein contacts = 3D field interactions
 - Membrane potential = Φ at neuron scale
 
 ### Why Space Is Never Empty
@@ -789,7 +789,7 @@ EN = Z_eff^(R/A(2)) / n = Z_eff^(7/10) / n
 - The Resolution Protocol: transmit at the lowest resolution that is still true, increase only upon the receiver's request
 
 ### Psychology at 2D
-- Surface (Φ, 2D mind): the totality of mental surfaces; connection, relation, mediation
+- Volume (Φ, 3D mind): the totality of mental space; connection, relation, mediation
 - "Made in God's image" = fractal structure (same pattern every scale) (A3)
 - Resonance as direct connection: two souls sharing the same frequency make the Φ field between them transparent
   - **Derives from**: A3 (two ⊙s at the same scale share the same Φ) → Φ mediates (connects without fusing; A3 constraint function) → the SRL mechanism: a channel locked to frequency ω_c responds maximally to signals at ω_c (cos²((ω_signal - ω_memory)/2) = 1 when frequencies match) → when two ⊙s share ω_c, the Φ between them transmits without distortion (cos² = 1; perfect resonance) → "transparent" = Φ carries signal without attenuation; "direct" = Φ at maximum fidelity, not Φ absent → the mediator is still there (A3: connection is always through Φ); transparency ≠ absence. Far frequencies = strangers (cos² ≈ 0); close = rapport; exact match = "I know you."
@@ -918,7 +918,7 @@ Verified: (13/12)(56/39)(27/2) = 21 exactly. The whole is not the sum of its par
 
 ### All Physics as Compounded Constraints
 Every physical law is •, —, Φ, or ○ compounded:
-- **Gravity**: • attracting • (convergence compounding convergence). Inverse-square because Φ is 2D.
+- **Gravity**: • attracting • (convergence compounding convergence). Inverse-square because the surface flux spreads over is 2D (the boundary ○); the field Φ is the 3D medium.
 - **Electromagnetism**: Φ (mediation). Maxwell's equations: amplitude and phase (two axes of 2D surface).
 - **Strong force**: • at maximum intensity (convergence at smallest scale). Confinement = aperture closing with distance.
 - **Weak force**: ○ at particle level (filtration). Parity violation = the filter is asymmetric.
@@ -961,7 +961,7 @@ Every physical law is •, —, Φ, or ○ compounded:
 - **Uniqueness**: Base 1/SU(3) is the only inverse framework integer within range (1/7 is 14.3% too high, 1/12 is 33.3% too low). Given base 1/8, n = 5 = Φ+○ is the only framework number giving first-order accuracy below 0.5% (n = 4 gives 0.39% but is not (Φ+○); n = 7 overshoots). Vieta's formulas on the correction roots: product = 1/SU(3), sum = (Φ+○)/SU(3), fixing the polynomial uniquely. The Λ parallel seals it: same quadratic architecture, opposite signs (Λ suppresses with (1 - T!·α + P·α²), λ enhances with (1 + (Φ+○)·α - SU(3)·α²); both corrections are determined by Vieta's on their respective framework numbers)
 
 ### Gauge Boson Sector: ⊙ Derived
-- **Higgs VEV** (⊙): v/m_e = T³/α² × (1 - R·α) = 245,857 MeV (measured 246,220, 0.15%). Base T³ = 27 is the only framework cube in range; the meson D± has F = T³ = 27, so the VEV is the D± quantum divided by one more α (field asserting at boundary, Φ = 2D, hence α²). Correction: R = 7 is the only framework integer giving error below 0.5% (n = 6 gives 0.62%, n = 8 gives 0.92%).
+- **Higgs VEV** (⊙): v/m_e = T³/α² × (1 - R·α) = 245,857 MeV (measured 246,220, 0.15%). Base T³ = 27 is the only framework cube in range; the meson D± has F = T³ = 27, so the VEV is the D± quantum divided by one more α (the field asserting through the 2D surface ○, hence α²). Correction: R = 7 is the only framework integer giving error below 0.5% (n = 6 gives 0.62%, n = 8 gives 0.92%).
 - **W boson** (⊙): m_W/m_e = (1/α)^(95/39 - α/Φ); predicted 80,488 MeV (measured 80,369, 0.15%). The exponent 95/39 = E(2.5) + 1 = 56/39 + 1; the W sits exactly one unit above the emergence rung (the field's own quantum at 2.5D). Numerator 95 = ΣA + T·V = 56 + 39, denominator 39 = T·V; no other simple fraction is within 0.1% of the effective exponent AND framework-decomposable. Correction α/Φ = α/2: the only framework denominator giving sub-0.5% accuracy (α/1 gives 1.6%, α/3 gives 0.75%).
 - **Z boson** (⊙ chain): m_Z = m_W/cos(θ_W); predicted 91,798 MeV (measured 91,188, 0.67%). No new formula; composes W (⊙) with Weinberg angle (⊙). The 0.67% residual is dominated by the Weinberg angle correction term.
 - **Higgs mass** (⊙ chain): m_H = √(2λ)·v; predicted 125,125 MeV (measured 125,250, 0.10%). No new formula; composes λ (⊙, §27.7i) with VEV (⊙). This is D5 (compositional closure) in action: m_H is the compositional unity of two independently derived quantities.
@@ -1041,7 +1041,7 @@ cos(θ_bb) = -1/T + n_lp × (2/R²)
 ```
 - Water: cos(θ_HOH) = -(R² - G)/(T × R²) = -37/147, giving 104.58° (measured 104.45°, 0.12%)
 - NH₃: 107.01° (measured 107.0°, 0.01%)
-- Convergence asymmetry per lone pair is 2/R² because repulsion is a field effect (2D) propagating as inverse-square
+- Convergence asymmetry per lone pair is 2/R² because repulsion is a 2D-surface flux effect (the boundary ○) propagating as inverse-square
   - **Derives from**: A3 (Φ is 2D: repulsion is a field effect propagating through a surface) → lone pair repulsion transmits through Φ → inverse-square (1/R²) because the field is 2D (same geometric reason gravity is inverse-square: flux through a 2D surface) → the numerator 2: two channels (⊛ and ✹); lone pair repulsion pushes through both convergent and emergent channels simultaneously → 2/R² = both channels / (rungs squared): the repulsive contribution per lone pair as seen through the full rung structure
 - **Uniqueness**: 2/R² = 2/49 is the only a/b² framework fraction matching the empirical correction (next: 1/5² = 1/25, 2% off but lacks the channels/rungs decomposition; 2/8² = 2/64, 23% off). The base -1/T is the ideal tetrahedral cosine (already ⊙ Derived from the simplex formula)
 
@@ -1062,7 +1062,7 @@ Values:          2,  8, 8, 18, 18, 32, 32
 - Each length (except the first) appears Phi = 2 times: the pump cycle makes two passes through each capacity level (first pass explores new subshell type at lower n+l; second pass fills the same pattern at higher n)
 - The first period (length Phi = 2) appears once: at n = 1, only the s-subshell exists; the aperture (•) is singular
 - **Derives from**: subshell capacities (Phi × A'(d), already ⊙) summed by principal quantum number n; the sum of the first n odd numbers is n², times Phi channels = Phi × n². The doubling comes from the Madelung filling order: n+l = total dimensional commitment; two consecutive Madelung groups share the same subshell inventory
-- **Hydrogen mirror**: E_n = -1/(Phi × n²). The hydrogen energy levels have the SAME denominator as the period lengths. Both are determined by the 2D field (Phi): the field sets both the number of states (capacity) and the depth of the potential well (binding). This is not coincidence; it is Phi doing the same work (mediating) in both contexts
+- **Hydrogen mirror**: E_n = -1/(Phi × n²). The hydrogen energy levels have the SAME denominator as the period lengths. Both are determined by the field (Φ, mediating): the field sets both the number of states (capacity) and the depth of the potential well (binding). This is not coincidence; it is Phi doing the same work (mediating) in both contexts
 
 ### Nuclear Shell Closures (Magic Numbers): ⊙ Derived
 ```
@@ -1135,9 +1135,9 @@ Prediction: 2, 8, 20, 28, 50, 82, 126. Observed: 2, 8, 20, 28, 50, 82, 126. **7/
 ### Biology at 3D
 - Protein = ○ in the central dogma triad (boundary/body)
 - Cell membrane = ○ in the cell circumpunct
-- Native protein state = 3D (○ closes)
+- Native protein state = 3D (Φ, the field closes the fold)
 - f-subshell has l = T = 3, giving R = 7 substates
-- Murray's Law: ⊙ Derived. Vascular branching conserves r^T = r³ because boundary is 3D
+- Murray's Law: ⊙ Derived. Vascular branching conserves r^T = r³ because the field (volume) is 3D (T = 3)
   - **Derives from**: A4 (boundary is 3D; the volume it encloses has T = 3 spatial dimensions) → A3 (vascular network is nested ⊙s; each vessel = ⊙ with lumen = •, wall = Φ, outer surface = ○) → A2 (flow must persist without breaking through the network) → optimization: minimum dissipation in a volume-filling branching network requires Σr_child^T = r_parent^T, where the exponent equals the spatial dimension of the boundary the network must fill → exponent = T because ○ provides exactly T dimensions
 - Leaf venation (2D target): exponent = Φ = 2 (the network fills a surface, not a volume; confirms the exponent tracks the target dimension)
 
@@ -1236,7 +1236,7 @@ To have a body is to filter. Filters compound (the Stacking Problem). Intellectu
 - The boundary selects what enters and exits; a healthy boundary protects without imprisoning
 
 ### Psychology at 3D
-- Boundary (○, 3D body): the physical and psychological container
+- Boundary (○, 2D surface): the physical and psychological membrane
 - Mental health = range of motion along the source-to-boundary axis
 - Pathology = being locked at either extreme (all center or all boundary)
 - **Derives from**: ◐ = 0.5 is the balanced state (forced by symmetry, entropy, virial) → ◐ → 0 = all boundary, no center (scattered, dissociated) → ◐ → 1 = all center, no boundary (tunnel vision, obsessive convergence) → health is the ability to move along the ◐ spectrum: approaching • when depth is needed, approaching ○ when breadth is needed → pathology = ◐ frozen at an extreme (A2 applied destructively: commitment to an unbalanced state; the line holds where it should flex) → the •-to-○ axis IS the ◐ axis; there is no other axis in the framework because all structure lives on the dimensional ladder from 0D to 3D. Plasticity (the virtue of GOOD at ○) is exactly what pathology lacks.
@@ -1361,7 +1361,7 @@ A(d) IS the selection rule; the framework does not choose exponents, the ladder 
 ### The Cosmological Energy Budget: ⊙ Derived
 The four i-strokes are superposed quadrants of the complex plane. The energy budget follows from two structural splits:
 
-**Level 1: DE/Matter = T²/P = 9/4.** Dark energy IS the field surface (T² = 9 degrees of the 2D field). Matter IS the pump cycle (P = 4 phases). Total structure = V = T² + P = 13 (generators + whole). Matter = P/V = 4/13, DE = T²/V = 9/13.
+**Level 1: DE/Matter = T²/P = 9/4.** Dark energy IS the field (T² = 9 degrees of the 3D field). Matter IS the pump cycle (P = 4 phases). Total structure = V = T² + P = 13 (generators + whole). Matter = P/V = 4/13, DE = T²/V = 9/13.
 
 **Level 2: DM/Vis = S/G = 64/12 = 16/3.** Within the matter fraction, dark matter IS the unresolved state space (S = P^T = 64 states: committed, gravitating, but at phases the boundary cannot resolve). Visible matter IS the symmetry-accessible fraction (G = T(T+1) = 12 generators: the degrees of freedom our boundary's passband detects).
 
@@ -1438,8 +1438,8 @@ D = 1.5 is not one possibility among many. It is the only balance point, and it 
 
 | Pillar | Dim | Symbol | Constraint | Virtue | Key |
 |--------|-----|--------|-----------|--------|-----|
-| GOOD | 3D | ○ | Filters | Plasticity | Boundary that flexes without breaking |
-| RIGHT | 2D | Φ | Mediates | Access | Space between stays open and clear |
+| GOOD | 2D | ○ | Filters | Plasticity | Boundary that flexes without breaking |
+| RIGHT | 3D | Φ | Mediates | Access | Space between stays open and clear |
 | FAITHFUL | 1D | — | Commits | Reliability | The line holds; receipts unbroken |
 | TRUE | 0D | • | Converges | Curiosity | Orientation toward the unknown |
 | AGREEMENT | ⊙ | ⊙ | Whole | Validation | Independent seeing recognizes independent seeing |
@@ -1582,7 +1582,7 @@ The same i-cycle quadrant structure maps across scales:
 | 6 | 2.5D | Hodge Conjecture | Open |
 | 7 | 3D | Poincaré Conjecture | **Solved** |
 
-The only solved problem is the boundary (3D), the outermost rung. Each validates the transition TO its rung. The operation at each rung has ORDER = d: integer rungs produce structures (fixed points, identities, symmetry groups, topological closures); half-integer rungs produce processes (propagation, splitting, emergence).
+The only solved problem is the field (3D), the outermost rung. Each validates the transition TO its rung. The operation at each rung has ORDER = d: integer rungs produce structures (fixed points, identities, symmetry groups, topological closures); half-integer rungs produce processes (propagation, splitting, emergence).
 
 **Derives from**: Each Clay problem asks whether a mathematical transition is well-defined; the dimensional ladder has R = 7 rungs; there are 7 Clay problems. The mapping: each problem validates the transition TO its dimensional rung by asking the foundational question at that station → 0D (Riemann): where do the convergence points (zeros) of ζ(s) sit? Re(s) = 1/2 = ◐; this IS the question of whether convergence (•) is balanced → 0.5D (P vs NP): can the speed of convergent verification (P) equal the speed of emergent search (NP)? This IS c at 0.5D, the limit of convergent propagation → 1D (Yang-Mills): does the committed line (gauge field) have a minimum quantum (mass gap)? This IS ℏ at 1D, the indivisible quantum of commitment → 1.5D (BSD): do branching structures (elliptic curves over rationals) have predictable rank from their L-function? This IS the i-turn at 1.5D, whether branching behaves as the splitting formula predicts → 2D (Navier-Stokes): does the field (fluid) remain smooth (mediated) or break (singularity)? This IS Φ at 2D, whether mediation holds → 2.5D (Hodge): can emergent topology (cohomology classes) be grounded in algebraic cycles? This IS emergence at 2.5D, whether what emerges has a source in the field → 3D (Poincare, solved): is every simply connected closed 3-manifold a 3-sphere? This IS ○ at 3D, whether boundary closure has a unique form (yes; Perelman proved it).
 
