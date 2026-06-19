@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fractal Gaming &mdash; Game Design Studio</title>
+<meta name="description" content="Fractal Gaming is the video game design studio of Ashman Roonz and a branch of Fractal Reality. Home of Last Ship Sailing and Ace Starship.">
+<meta name="theme-color" content="#0a0d14">
+
+<meta property="og:title" content="Fractal Gaming">
+<meta property="og:description" content="Video game design studio. A branch of Fractal Reality. Makers of Last Ship Sailing and Ace Starship.">
+<meta property="og:image" content="https://fractalreality.ca/FractalGaming.png">
+<meta property="og:url" content="https://fractalreality.ca/fractalgaming.html">
+<meta property="og:type" content="website">
+
+<link rel="icon" type="image/png" href="FractalGaming.png">
+
+<!-- Tailwind CSS (Play CDN) -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: {
+            900: '#0a0d14',
+            800: '#11141d',
+            700: '#141823',
+            600: '#1a1f2c',
+            500: '#252a38',
+          },
+          rule: {
+            DEFAULT: 'rgba(255,255,255,0.07)',
+            strong: 'rgba(255,255,255,0.14)',
+          },
+          fog: {
+            100: '#e6e8ee',
+            300: '#a4abb8',
+            500: '#6b7180',
+          },
+          gold: {
+            DEFAULT: '#b8a060',
+            bright: '#d4b870',
+            soft: 'rgba(184,160,96,0.18)',
+          },
+          cyan: {
+            brand: '#58a6ff',
+            bright: '#79c0ff',
+          },
+          ember: '#ffaa00',
+          leaf: '#66cc88',
+        },
+        fontFamily: {
+          serif: ['"EB Garamond"', 'Georgia', 'serif'],
+          sans: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
+          display: ['"Orbitron"', 'sans-serif'],
+        },
+        boxShadow: {
+          'glow-gold': '0 6px 24px rgba(184,160,96,0.18)',
+          'glow-ember': '0 6px 28px rgba(255,170,0,0.22)',
+          'glow-cyan': '0 6px 24px rgba(88,166,255,0.22)',
+        },
+        animation: {
+          'spin-slow': 'spin 80s linear infinite',
+          'pulse-soft': 'pulseSoft 6s ease-in-out infinite',
+          'float': 'float 8s ease-in-out infinite',
+        },
+        keyframes: {
+          pulseSoft: {
+            '0%, 100%': { opacity: '0.85', transform: 'scale(1)' },
+            '50%': { opacity: '1', transform: 'scale(1.05)' },
+          },
+          float: {
+            '0%, 100%': { transform: 'translateY(0)' },
+            '50%': { transform: 'translateY(-8px)' },
+          },
+        },
+      }
+    }
+  }
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+
+<style type="text/tailwindcss">
+  @layer base {
+    body {
+      @apply bg-ink-900 text-fog-100 font-sans antialiased;
+      background-image:
+        radial-gradient(circle at 18% 12%, rgba(255,170,0,0.06), transparent 45%),
+        radial-gradient(circle at 82% 78%, rgba(88,166,255,0.05), transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(184,160,96,0.02), transparent 70%);
+      background-attachment: fixed;
+    }
+    ::selection { background: rgba(255,170,0,0.32); color: #fff; }
+  }
+  @layer components {
+    .btn {
+      @apply inline-flex items-center gap-2 font-medium text-sm tracking-wide px-6 py-3 rounded-md border transition-all;
+    }
+    .btn-ember {
+      @apply bg-ember text-ink-900 border-ember hover:-translate-y-0.5 hover:shadow-glow-ember;
+    }
+    .btn-secondary {
+      @apply text-fog-100 border-rule-strong hover:border-white/40 hover:bg-white/5;
+    }
+    .btn-arrow { @apply transition-transform; }
+    .btn:hover .btn-arrow { transform: translateX(3px); }
+    .kicker {
+      @apply font-sans text-[11px] tracking-[0.22em] uppercase text-fog-500;
+    }
+    .eyebrow {
+      @apply inline-block font-sans text-[11px] tracking-[0.22em] uppercase px-3 py-1.5 border border-ember/30 rounded text-ember;
+    }
+    .h-display {
+      @apply font-serif font-medium leading-[1.05] tracking-tight text-fog-100;
+    }
+  }
+  @layer utilities {
+    .text-balance { text-wrap: balance; }
+    .reveal { opacity: 0; transform: translateY(24px); }
+  }
+</style>
+
+<style>
+  .grain::after {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+  .nav-scrolled {
+    background: rgba(10,13,20,0.85) !important;
+    border-bottom-color: rgba(255,255,255,0.12) !important;
+  }
+</style>
+</head>
+<body class="grain">
+
+<!-- ===== NAV ===== -->
+<nav id="nav" class="sticky top-0 z-50 backdrop-blur-xl bg-ink-900/70 border-b border-rule transition-colors duration-300">
+  <div class="max-w-6xl mx-auto px-6 lg:px-8 py-3.5 flex items-center justify-between gap-6">
+    <a href="fractalgaming.html" class="flex items-center gap-3 text-fog-100 hover:text-fog-100 group" aria-label="Fractal Gaming home">
+      <img src="FractalGaming.png" alt="Fractal Gaming logo" class="w-8 h-8 rounded-md object-contain shrink-0">
+      <span class="font-display font-bold text-base tracking-wide">Fractal<span class="text-ember"> Gaming</span></span>
+    </a>
+    <div class="flex items-center gap-1 sm:gap-2 text-sm">
+      <a href="#games" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Games</a>
+      <a href="#studio" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Studio</a>
+      <a href="index.html" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Fractal Reality</a>
+      <a href="mailto:ashroney@gmail.com?subject=Fractal%20Gaming%20Inquiry"
+         class="ml-2 px-4 py-2 text-[12px] uppercase tracking-[0.18em] text-ember bg-ember/10 border border-ember/40 rounded-md hover:bg-ember/20 hover:border-ember transition-all">
+        Get in touch
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="relative max-w-6xl mx-auto px-6 lg:px-8 pt-20 lg:pt-24 pb-12 lg:pb-16 grid lg:grid-cols-[1.15fr_1fr] gap-12 lg:gap-16 items-center">
+  <div>
+    <span class="eyebrow reveal" data-reveal-delay="0">A branch of Fractal Reality</span>
+    <h1 class="font-display font-black text-[clamp(40px,6vw,72px)] mt-6 reveal text-balance tracking-wide leading-[1.02]" data-reveal-delay="80">
+      Fractal <span class="text-ember">Gaming</span>
+    </h1>
+    <p class="mt-6 max-w-xl text-fog-300 text-lg leading-relaxed reveal" data-reveal-delay="160">
+      My video game design studio. We build playable systems that take physics, mechanics, and meaning seriously: multiplayer-first, web-native, and shipped under our own flag.
+    </p>
+    <div class="mt-8 flex flex-wrap gap-3 reveal" data-reveal-delay="240">
+      <a class="btn btn-ember" href="#games">
+        <i data-lucide="gamepad-2" class="w-4 h-4"></i>
+        See the lineup
+        <i data-lucide="arrow-right" class="w-4 h-4 btn-arrow"></i>
+      </a>
+      <a class="btn btn-secondary" href="https://lss.fractalreality.ca">
+        <i data-lucide="rocket" class="w-4 h-4"></i>
+        Play Last Ship Sailing
+      </a>
+    </div>
+    <div class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs text-fog-500 reveal" data-reveal-delay="320">
+      <span class="flex items-center gap-2"><i data-lucide="globe" class="w-3.5 h-3.5"></i> Web-native</span>
+      <span class="flex items-center gap-2"><i data-lucide="users" class="w-3.5 h-3.5"></i> Multiplayer-first</span>
+      <span class="flex items-center gap-2"><i data-lucide="glasses" class="w-3.5 h-3.5"></i> WebXR &amp; VR</span>
+      <span class="flex items-center gap-2"><i data-lucide="cpu" class="w-3.5 h-3.5"></i> Custom engines</span>
+    </div>
+  </div>
+
+  <div class="flex justify-center reveal" data-reveal-delay="200">
+    <div class="relative">
+      <div class="absolute inset-0 rounded-[2rem] blur-3xl" style="background: radial-gradient(circle at 50% 50%, rgba(255,170,0,0.25), transparent 65%);"></div>
+      <img src="FractalGaming.png" alt="Fractal Gaming logo"
+           class="relative w-64 h-64 lg:w-80 lg:h-80 rounded-[2rem] object-contain border border-ember/25 bg-ember/[0.04] p-4 animate-float"
+           style="filter: drop-shadow(0 18px 50px rgba(255,170,0,0.30));">
+    </div>
+  </div>
+</header>
+
+<!-- ===== GAMES ===== -->
+<section id="games" class="relative max-w-6xl mx-auto px-6 lg:px-8 py-20 lg:py-24">
+  <div class="flex items-baseline justify-between flex-wrap gap-6 mb-10 reveal">
+    <h2 class="h-display text-[clamp(28px,3.6vw,40px)]">Our games.</h2>
+    <span class="kicker">Now playing</span>
+  </div>
+
+  <div class="grid lg:grid-cols-2 gap-6">
+
+    <!-- Last Ship Sailing -->
+    <article class="reveal flex flex-col rounded-2xl overflow-hidden border border-rule bg-gradient-to-br from-ember/[0.06] to-transparent">
+      <div class="relative aspect-[4/3] flex items-center justify-center p-6 border-b border-rule overflow-hidden"
+           style="background:
+             radial-gradient(circle at 30% 40%, rgba(255,170,0,0.18), transparent 50%),
+             radial-gradient(circle at 70% 60%, rgba(88,166,255,0.12), transparent 55%),
+             #06070d;">
+        <img src="LSS.png" alt="Last Ship Sailing emblem"
+             class="max-h-full max-w-full w-auto h-auto object-contain animate-float"
+             style="filter: drop-shadow(0 14px 44px rgba(255,170,0,0.32));">
+      </div>
+      <div class="p-8 lg:p-9 flex flex-col flex-1 bg-ink-700/40">
+        <div class="font-display font-bold text-[11px] tracking-[0.28em] uppercase text-ember mb-3">Flagship title</div>
+        <h3 class="font-display font-bold text-2xl leading-tight tracking-wide text-fog-100 mb-3">Last Ship Sailing</h3>
+        <div class="font-serif italic text-[15px] text-gold mb-3">Zero-gravity titan combat. The last ship sailing wins.</div>
+        <p class="text-fog-300 text-[14.5px] mb-5">A free, browser-based arena game where colossal ships fight across open space. Built on a custom engine, designed for short matches and long mastery, playable in VR.</p>
+        <div class="flex flex-wrap gap-x-4 gap-y-2 pt-4 border-t border-rule text-[10.5px] tracking-[0.12em] uppercase text-fog-500 mb-6">
+          <span class="flex items-center gap-1.5"><i data-lucide="globe" class="w-3.5 h-3.5"></i> <strong class="text-fog-100 font-medium">Free</strong> &middot; browser</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="glasses" class="w-3.5 h-3.5"></i> <strong class="text-fog-100 font-medium">WebXR</strong></span>
+          <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-3.5 h-3.5"></i> Multiplayer</span>
+        </div>
+        <div class="flex flex-wrap gap-3 mt-auto">
+          <a class="btn btn-ember" href="https://lss.fractalreality.ca">
+            <i data-lucide="play" class="w-4 h-4"></i>
+            Launch
+            <i data-lucide="arrow-right" class="w-4 h-4 btn-arrow"></i>
+          </a>
+          <a class="btn btn-secondary" href="https://lss.fractalreality.ca/about.html">
+            <i data-lucide="info" class="w-4 h-4"></i>
+            About
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Ace Starship -->
+    <article class="reveal flex flex-col rounded-2xl overflow-hidden border border-rule bg-gradient-to-br from-cyan-brand/[0.06] to-transparent" data-reveal-delay="100">
+      <div class="relative aspect-[4/3] flex items-center justify-center p-6 overflow-hidden border-b border-rule"
+           style="background:
+             radial-gradient(circle at 70% 35%, rgba(167,139,250,0.22), transparent 55%),
+             radial-gradient(circle at 25% 65%, rgba(88,166,255,0.18), transparent 55%),
+             #06070d;">
+        <img src="Ace_Starship.png" alt="Ace Starship key art"
+             class="max-h-full max-w-full w-auto h-auto object-contain animate-float"
+             style="filter: drop-shadow(0 14px 44px rgba(88,166,255,0.32));">
+        <span class="absolute top-3 right-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/55 border border-white/15 text-[10px] tracking-[0.18em] uppercase text-fog-100 backdrop-blur">
+          <i data-lucide="sparkles" class="w-3 h-3"></i> New
+        </span>
+      </div>
+      <div class="p-8 lg:p-9 flex flex-col flex-1 bg-ink-700/40">
+        <div class="font-display font-bold text-[11px] tracking-[0.28em] uppercase text-cyan-brand mb-3">Latest release &middot; Roblox</div>
+        <h3 class="font-display font-bold text-2xl leading-tight tracking-wide text-fog-100 mb-3">Ace Starship</h3>
+        <div class="font-serif italic text-[15px] text-gold mb-3">Endless tunnels. Sillier guns. Go deeper.</div>
+        <p class="text-fog-300 text-[14.5px] mb-5">A Roblox tunnel shooter: fly through procedurally generated tunnels, blast the monsters that swarm you, and grind to unlock increasingly ridiculous projectiles (ducks, toilet paper, rubber chickens). Mobile-first, co-op or solo.</p>
+        <div class="flex flex-wrap gap-x-4 gap-y-2 pt-4 border-t border-rule text-[10.5px] tracking-[0.12em] uppercase text-fog-500 mb-6">
+          <span class="flex items-center gap-1.5"><i data-lucide="gamepad-2" class="w-3.5 h-3.5"></i> <strong class="text-fog-100 font-medium">Roblox</strong></span>
+          <span class="flex items-center gap-1.5"><i data-lucide="smartphone" class="w-3.5 h-3.5"></i> Mobile-first</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-3.5 h-3.5"></i> Co-op</span>
+        </div>
+        <div class="flex flex-wrap gap-3 mt-auto">
+          <a class="btn"
+             style="background:#58a6ff;color:#0a0d14;border-color:#58a6ff;"
+             href="https://www.roblox.com/games/87753657136129/Ace-Starship"
+             onmouseover="this.style.background='#79c0ff';this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 24px rgba(88,166,255,0.32)';"
+             onmouseout="this.style.background='#58a6ff';this.style.transform='';this.style.boxShadow='';">
+            <i data-lucide="play" class="w-4 h-4"></i>
+            Play on Roblox
+            <i data-lucide="arrow-right" class="w-4 h-4 btn-arrow"></i>
+          </a>
+          <a class="btn btn-secondary" href="https://www.roblox.com/games/87753657136129/Ace-Starship">
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+            Roblox page
+          </a>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===== STUDIO ===== -->
+<section id="studio" class="relative max-w-6xl mx-auto px-6 lg:px-8 py-20 lg:py-24">
+  <div class="flex items-baseline justify-between flex-wrap gap-6 mb-10 reveal">
+    <h2 class="h-display text-[clamp(28px,3.6vw,40px)]">How we build.</h2>
+    <span class="kicker">The studio</span>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-5">
+    <article class="reveal bg-ink-700 border border-rule rounded-xl p-8 hover:border-ember/40 transition-colors" data-reveal-delay="0">
+      <div class="w-10 h-10 mb-4 rounded-lg bg-ember/10 border border-ember/30 inline-flex items-center justify-center text-ember">
+        <i data-lucide="cpu" class="w-5 h-5"></i>
+      </div>
+      <h3 class="font-serif font-medium text-2xl text-fog-100 mb-3">Systems first.</h3>
+      <p class="text-fog-300 text-[15px] leading-relaxed">Real physics, real mechanics. We build playable systems where the rules matter, not just the surface. Custom engines where it makes sense, open-source where it helps.</p>
+    </article>
+    <article class="reveal bg-ink-700 border border-rule rounded-xl p-8 hover:border-ember/40 transition-colors" data-reveal-delay="80">
+      <div class="w-10 h-10 mb-4 rounded-lg bg-ember/10 border border-ember/30 inline-flex items-center justify-center text-ember">
+        <i data-lucide="globe" class="w-5 h-5"></i>
+      </div>
+      <h3 class="font-serif font-medium text-2xl text-fog-100 mb-3">Web-native.</h3>
+      <p class="text-fog-300 text-[15px] leading-relaxed">No installs, no gatekeepers. Our games run in the browser and scale to VR, multiplayer, and mobile, so anyone can jump in from anywhere.</p>
+    </article>
+    <article class="reveal bg-ink-700 border border-rule rounded-xl p-8 hover:border-ember/40 transition-colors" data-reveal-delay="160">
+      <div class="w-10 h-10 mb-4 rounded-lg bg-ember/10 border border-ember/30 inline-flex items-center justify-center text-ember">
+        <i data-lucide="flag" class="w-5 h-5"></i>
+      </div>
+      <h3 class="font-serif font-medium text-2xl text-fog-100 mb-3">Under our own flag.</h3>
+      <p class="text-fog-300 text-[15px] leading-relaxed">Independent and self-published. Fractal Gaming is a branch of Fractal Reality, the studio of Ashman Roonz; the same first-principles approach, pointed at play.</p>
+    </article>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="relative max-w-6xl mx-auto px-6 lg:px-8 py-20 lg:py-24">
+  <div class="reveal text-center bg-ink-800 border border-rule rounded-2xl px-8 py-16 lg:py-20 relative overflow-hidden">
+    <div class="absolute inset-x-0 -bottom-32 h-64 pointer-events-none"
+         style="background: radial-gradient(circle at 50% 50%, rgba(255,170,0,0.10), transparent 60%);"></div>
+    <div class="relative">
+      <img src="FractalGaming.png" alt="Fractal Gaming logo" class="w-16 h-16 mx-auto mb-5 rounded-xl object-contain border border-ember/30 bg-ember/[0.06] p-1.5">
+      <h2 class="h-display text-[clamp(26px,3.4vw,36px)] mb-3">Work with the studio.</h2>
+      <p class="max-w-2xl mx-auto text-fog-300 text-base leading-relaxed mb-8">Collaborations, commissions, or just want to talk shop about game systems? Get in touch.</p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <a class="btn btn-ember" href="mailto:ashroney@gmail.com?subject=Fractal%20Gaming%20Inquiry">
+          <i data-lucide="mail" class="w-4 h-4"></i>
+          Start a conversation
+          <i data-lucide="arrow-right" class="w-4 h-4 btn-arrow"></i>
+        </a>
+        <a class="btn btn-secondary" href="index.html">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          Back to Fractal Reality
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="relative border-t border-rule mt-12 bg-black/20">
+  <div class="max-w-6xl mx-auto px-6 lg:px-8 pt-12 pb-8">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] gap-9">
+      <div>
+        <a href="fractalgaming.html" class="flex items-center gap-3 mb-4 text-fog-100 hover:text-fog-100">
+          <img src="FractalGaming.png" alt="Fractal Gaming logo" class="w-8 h-8 rounded-md object-contain">
+          <span class="font-display font-bold text-base tracking-wide">Fractal<span class="text-ember"> Gaming</span></span>
+        </a>
+        <p class="text-sm text-fog-300 leading-relaxed">The video game design studio of Ashman Roonz, and a branch of Fractal Reality. Web-native, multiplayer-first games shipped under our own flag.</p>
+      </div>
+      <div>
+        <h5 class="font-sans text-[11px] tracking-[0.22em] uppercase text-fog-500 mb-3 font-medium">Games</h5>
+        <a href="https://lss.fractalreality.ca" class="block py-1 text-sm text-fog-300 hover:text-fog-100 transition-colors">Last Ship Sailing</a>
+        <a href="https://www.roblox.com/games/87753657136129/Ace-Starship" class="block py-1 text-sm text-fog-300 hover:text-fog-100 transition-colors">Ace Starship</a>
+      </div>
+      <div>
+        <h5 class="font-sans text-[11px] tracking-[0.22em] uppercase text-fog-500 mb-3 font-medium">More</h5>
+        <a href="index.html" class="block py-1 text-sm text-fog-300 hover:text-fog-100 transition-colors">Fractal Reality</a>
+        <a href="mailto:ashroney@gmail.com?subject=Fractal%20Gaming%20Inquiry" class="block py-1 text-sm text-fog-300 hover:text-fog-100 transition-colors">Get in touch</a>
+      </div>
+    </div>
+    <div class="mt-10 pt-6 border-t border-rule flex flex-wrap items-center justify-between gap-3 text-xs text-fog-500 tracking-wide">
+      <span>&copy; 2026 Fractal Gaming &middot; A branch of Fractal Reality</span>
+      <span class="font-serif italic">Ashman Roonz &middot; <a href="mailto:ashroney@gmail.com" class="underline hover:text-fog-100">ashroney@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== JS: Lucide icons + GSAP reveals ===== -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+  if (window.lucide) lucide.createIcons();
+
+  const nav = document.getElementById('nav');
+  const onScroll = () => {
+    if (window.scrollY > 12) nav.classList.add('nav-scrolled');
+    else nav.classList.remove('nav-scrolled');
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  if (window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+    document.querySelectorAll('header.relative .reveal').forEach(el => {
+      const delay = parseInt(el.dataset.revealDelay || 0, 10) / 1000;
+      gsap.to(el, { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out', delay: 0.1 + delay });
+    });
+    document.querySelectorAll('section .reveal').forEach(el => {
+      const delay = parseInt(el.dataset.revealDelay || 0, 10) / 1000;
+      gsap.to(el, {
+        opacity: 1, y: 0, duration: 0.85, ease: 'power3.out', delay,
+        scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+      });
+    });
+  } else {
+    document.querySelectorAll('.reveal').forEach(el => { el.style.opacity = 1; el.style.transform = 'none'; });
+  }
+</script>
+
+</body>
+</html>
