@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Circumpunct Octave</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@400;450;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ground:#07070b;
+    --panel:#0d0d13;
+    --ink:#e9e5d8;
+    --ink-soft:#b8b3a6;
+    --muted:#6a6a78;
+    --line:#1c1c25;
+    --gold:#d4b063;
+    --serif:"Cormorant Garamond",Georgia,serif;
+    --sans:"Inter",system-ui,sans-serif;
+    --mono:"Spline Sans Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:
+      radial-gradient(1200px 700px at 75% -5%, #11111c 0%, transparent 55%),
+      radial-gradient(900px 600px at 0% 100%, #0c0c16 0%, transparent 50%),
+      var(--ground);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.5;
+    min-height:100vh;
+    padding:clamp(16px,4vw,48px);
+  }
+  .wrap{max-width:1120px;margin:0 auto}
+
+  /* ---- masthead ---- */
+  header{text-align:center;margin-bottom:clamp(20px,4vw,40px)}
+  .eyebrow{
+    font-family:var(--mono);font-size:11px;letter-spacing:.42em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:14px;
+  }
+  h1{
+    font-family:var(--serif);font-weight:500;
+    font-size:clamp(34px,7vw,62px);letter-spacing:.06em;line-height:1.02;
+    background:linear-gradient(180deg,#f3eeda,#cdb988 120%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .count{
+    margin-top:14px;font-family:var(--mono);font-size:12.5px;
+    color:var(--ink-soft);letter-spacing:.02em;
+  }
+  .count b{color:var(--gold);font-weight:500}
+  .count s{color:var(--muted);text-decoration-color:#5a3b3b}
+
+  /* ---- layout ---- */
+  .stage{
+    display:grid;grid-template-columns:1.5fr 1fr;
+    gap:clamp(18px,3vw,40px);align-items:start;margin-top:8px;
+  }
+  @media (max-width:880px){ .stage{grid-template-columns:1fr} }
+
+  /* ---- ladder ---- */
+  .ladder{position:relative}
+  .spine{position:absolute;left:33px;top:54px;bottom:54px;width:2px;
+    background:linear-gradient(180deg,transparent,#2a2a38 8%,#2a2a38 92%,transparent);}
+  @media (max-width:540px){ .spine{left:27px} }
+
+  .pole{
+    position:relative;display:flex;align-items:center;gap:18px;
+    padding:18px 20px;border-radius:14px;
+    border:1px solid var(--line);
+    background:linear-gradient(180deg,#101019,#0a0a11);
+    margin:6px 0;
+  }
+  .pole .glyph{
+    font-size:30px;width:34px;text-align:center;flex:0 0 34px;
+    filter:drop-shadow(0 0 14px color-mix(in srgb,var(--gold) 50%,transparent));
+  }
+  .pole.bottom .glyph{color:var(--gold)}
+  .pole.top .glyph{color:#e9e5d8}
+  .pole .body{flex:1}
+  .pole .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.28em;
+    text-transform:uppercase;color:var(--muted)}
+  .pole .name{font-family:var(--serif);font-size:23px;font-weight:500;color:var(--ink);margin-top:1px}
+  .pole .desc{font-size:13px;color:var(--ink-soft);margin-top:3px}
+
+  /* structure rung */
+  .rung{position:relative;display:flex;align-items:center;gap:16px;padding:11px 18px 11px 0;margin-left:0}
+  .node{
+    flex:0 0 34px;width:34px;height:34px;border-radius:50%;
+    display:grid;place-items:center;font-size:19px;z-index:2;
+    background:#0b0b12;
+    border:1.5px solid color-mix(in srgb,var(--hue) 80%,#222);
+    color:var(--hue);
+    box-shadow:0 0 0 5px var(--ground), 0 0 16px -2px color-mix(in srgb,var(--hue) 55%,transparent);
+  }
+  .line-glyph{display:inline-block;width:19px;height:0;border-top:2.5px solid currentColor;border-radius:2px}
+  .rung .meta{flex:1;min-width:0}
+  .rung .row1{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .dim{font-family:var(--mono);font-weight:500;font-size:15px;color:var(--hue);letter-spacing:.02em}
+  .sol{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--ink-soft)}
+  .kind{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:2px 8px}
+  .rung .label{font-size:14px;color:var(--ink);margin-top:2px}
+  .rung .label .plain{display:none}
+
+  /* operator segment */
+  .op{
+    position:relative;display:flex;align-items:stretch;gap:14px;
+    margin:2px 0 2px 0;padding:0;border:0;background:none;width:100%;
+    text-align:left;cursor:pointer;color:inherit;font:inherit;
+    border-radius:12px;transition:background .18s ease;
+  }
+  .op:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .op .rail{flex:0 0 34px;display:grid;place-items:center;position:relative;z-index:2}
+  .op .diamond{
+    width:17px;height:17px;transform:rotate(45deg);
+    border:1.5px solid color-mix(in srgb,var(--hue) 85%,#222);
+    background:#0b0b12;border-radius:3px;
+    box-shadow:0 0 12px -3px color-mix(in srgb,var(--hue) 60%,transparent);
+    transition:transform .2s ease,box-shadow .2s ease;
+  }
+  .op .opbody{
+    flex:1;padding:9px 14px;border-radius:11px;
+    border:1px solid var(--line);
+    background:linear-gradient(180deg,#0c0c14,#0a0a10);
+    border-left:2px solid color-mix(in srgb,var(--hue) 70%,transparent);
+    transition:border-color .18s ease,background .18s ease;
+  }
+  .op .row1{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .op .pos{font-family:var(--mono);font-size:13px;color:var(--hue)}
+  .op .power{font-family:var(--mono);font-size:12px;color:var(--ink-soft);
+    background:#111119;border:1px solid var(--line);border-radius:5px;padding:1px 7px}
+  .op .axis{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .op .opname{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--ink);margin-top:1px}
+  .op .opsol{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--muted);margin-left:2px}
+  .op:hover .opbody{border-color:color-mix(in srgb,var(--hue) 45%,var(--line));background:#0f0f17}
+  .op:hover .diamond{transform:rotate(45deg) scale(1.12)}
+  .op.active .opbody{
+    border-color:color-mix(in srgb,var(--hue) 70%,transparent);
+    background:color-mix(in srgb,var(--hue) 10%,#0a0a10);
+  }
+  .op.active .diamond{transform:rotate(45deg) scale(1.25);
+    box-shadow:0 0 18px -1px color-mix(in srgb,var(--hue) 75%,transparent)}
+  .rung.antipode .node{box-shadow:0 0 0 5px var(--ground),0 0 22px 0 color-mix(in srgb,var(--hue) 65%,transparent)}
+  .op.antipode .opbody{border-color:color-mix(in srgb,var(--hue) 55%,var(--line))}
+  .op.antipode .diamond{transform:rotate(45deg) scale(1.15)}
+
+  /* tension badge on convergence */
+  .tension{
+    margin-left:8px;font-family:var(--mono);font-size:10px;
+    color:#e0b070;border:1px solid #4a3a1e;background:#161009;
+    border-radius:20px;padding:1px 7px;cursor:help;white-space:nowrap;
+  }
+
+  /* ---- engine panel ---- */
+  .engine{position:sticky;top:18px;display:flex;flex-direction:column;gap:18px}
+  @media (max-width:880px){ .engine{position:static} }
+  .card{
+    border:1px solid var(--line);border-radius:16px;
+    background:linear-gradient(180deg,#0c0c14,#090910);
+    padding:18px;
+  }
+  .card h2{font-family:var(--mono);font-size:10.5px;letter-spacing:.28em;
+    text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:14px}
+
+  .plane{width:100%;aspect-ratio:1;max-width:300px;margin:0 auto;display:block}
+  .axisline{stroke:#23232f;stroke-width:1}
+  .axislbl{font-family:var(--mono);font-size:8px;fill:var(--muted);letter-spacing:.1em}
+  .ucircle{fill:none;stroke:#20202b;stroke-width:1;stroke-dasharray:2 4}
+  .pointer{transform-origin:130px 130px;transition:transform .5s cubic-bezier(.5,.05,.2,1)}
+  .pointer line{stroke:var(--gold);stroke-width:2}
+  .pointer polygon{fill:var(--gold)}
+  .root{cursor:pointer}
+  .root circle{transition:r .25s ease,fill .25s ease,stroke .25s ease}
+  .root .rdot{r:6}
+  .root.on .rdot{r:9}
+  .root text{font-family:var(--mono);font-size:11px;font-weight:500}
+  .connector{stroke-dasharray:3 4;stroke-width:1.4;opacity:0;transition:opacity .3s ease}
+  .connector.show{opacity:.7}
+
+  .readout{font-family:var(--mono);font-size:12px;color:var(--ink-soft);
+    line-height:1.7;min-height:80px;border-top:1px solid var(--line);margin-top:14px;padding-top:14px}
+  .readout .hl{color:var(--gold)}
+  .readout .dim{color:var(--muted)}
+  .readout em{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink)}
+
+  /* toggles */
+  .toggles{display:flex;flex-direction:column;gap:10px}
+  .tog{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    border:1px solid var(--line);border-radius:11px;padding:11px 14px;
+    background:#0b0b12;cursor:pointer;transition:border-color .18s ease,background .18s ease}
+  .tog:hover{border-color:#2a2a38}
+  .tog:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .tog .t-name{font-size:13px;color:var(--ink)}
+  .tog .t-sub{font-size:11px;color:var(--muted);margin-top:1px}
+  .switch{flex:0 0 38px;width:38px;height:21px;border-radius:20px;background:#1d1d27;
+    position:relative;transition:background .2s ease}
+  .switch::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;
+    border-radius:50%;background:#6a6a78;transition:transform .2s ease,background .2s ease}
+  .tog[aria-pressed="true"] .switch{background:color-mix(in srgb,var(--gold) 35%,#1d1d27)}
+  .tog[aria-pressed="true"] .switch::after{transform:translateX(17px);background:var(--gold)}
+
+  /* legend + notes */
+  .legend{display:flex;flex-direction:column;gap:9px;font-size:12.5px;color:var(--ink-soft)}
+  .legend .li{display:flex;align-items:center;gap:11px}
+  .legend .sw{flex:0 0 22px;display:grid;place-items:center}
+  .legend .d{width:13px;height:13px;border-radius:50%;border:1.5px solid var(--gold);background:#0b0b12}
+  .legend .q{width:13px;height:13px;border:1.5px solid #6da0e0;background:#0b0b12;transform:rotate(45deg);border-radius:2px}
+  .legend b{color:var(--ink);font-weight:500}
+
+  .note{font-size:12.5px;color:var(--ink-soft);line-height:1.65}
+  .note + .note{margin-top:11px;padding-top:11px;border-top:1px solid var(--line)}
+  .note b{color:var(--gold);font-weight:500}
+  .note s{color:var(--muted);text-decoration-color:#5a3b3b}
+  .note code{font-family:var(--mono);font-size:11px;color:var(--ink);background:#11111a;
+    border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+
+  /* honest-label reveal */
+  body.honest .rung .label .orig{display:none}
+  body.honest .rung .label .plain{display:inline}
+  body.honest .pole .desc .orig{display:none}
+  body.honest .pole .desc .plain{display:inline}
+  .label .plain{color:var(--ink-soft)}
+  .pole .desc .plain{color:var(--ink-soft)}
+
+  footer{margin-top:34px;text-align:center;border-top:1px solid var(--line);padding-top:20px}
+  footer .mark{font-family:var(--serif);font-size:19px;letter-spacing:.18em;color:var(--ink-soft)}
+  footer .by{font-family:var(--mono);font-size:10.5px;letter-spacing:.26em;
+    text-transform:uppercase;color:var(--muted);margin-top:6px}
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">The Circumpunct Framework</div>
+    <h1>The Circumpunct Octave</h1>
+    <div class="count" id="count">
+      <span id="count-default">four <b>structures</b> &middot; four <b>operators</b> &middot; two <b>poles</b> &nbsp;|&nbsp; eight rungs = one octave (do &rarr; do&prime;)</span>
+      <span id="count-ten" hidden>eight rungs <b>+</b> two poles, read as <s>&ldquo;10 dimensions&rdquo;</s> &nbsp;|&nbsp; the organizing number is <b>8</b>, not 10</span>
+    </div>
+  </header>
+
+  <div class="stage">
+
+    <!-- LADDER -->
+    <div class="ladder">
+      <div class="spine"></div>
+
+      <!-- TOP POLE -->
+      <div class="pole top">
+        <div class="glyph">&infin;</div>
+        <div class="body">
+          <div class="tag">Pole &middot; greater whole &middot; one by inclusion</div>
+          <div class="name">The undifferentiated ground</div>
+          <div class="desc">
+            <span class="orig">undifferentiated energy; E = 1</span>
+            <span class="plain">pure potential, part of nothing further. (&ldquo;energy, E=1&rdquo; is metaphor, not measured Joules.)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 0D -->
+      <div class="rung" style="--hue:#5aa2ff" data-key="0D">
+        <div class="node">&bull;</div>
+        <div class="meta">
+          <div class="row1"><span class="dim">0D</span><span class="sol">do</span><span class="kind">Structure</span></div>
+          <div class="label">point, singularity, soul, localization &middot; <em style="font-style:italic;color:var(--muted)">one by indivisibility</em></div>
+        </div>
+      </div>
+
+      <!-- 0.5 convergence -->
+      <button class="op" style="--hue:#8a7bff" data-op="conv" aria-pressed="false">
+        <div class="rail"><div class="diamond"></div></div>
+        <div class="opbody">
+          <div class="row1">
+            <span class="pos">0.5</span>
+            <span class="power">i&sup1; = +i</span>
+            <span class="axis">Imaginary &middot; in/out</span>
+          </div>
+          <div><span class="opname">convergence</span><span class="opsol"> re</span>
+            <span class="tension" title="Convergence is inward, many-to-one: it builds the point. Its meaning fits the infinity-to-0D gap, not the 0D-to-1D gap it sits in. Open tension, left in canonical position.">? placement</span>
+          </div>
+        </div>
+      </button>
+
+      <!-- 1D -->
+      <div class="rung" style="--hue:#43c9c0" data-key="1D">
+        <div class="node"><span class="line-glyph"></span></div>
+        <div class="meta">
+          <div class="row1"><span class="dim">1D</span><span class="sol">mi</span><span class="kind">Structure</span></div>
+          <div class="label">
+            <span class="orig">line, string, timeline, extension</span>
+            <span class="plain">extension: line, timeline. (&ldquo;string&rdquo; dropped: borrowed from string theory.)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1.5 branching -->
+      <button class="op" style="--hue:#e06aa0" data-op="branch" aria-pressed="false">
+        <div class="rail"><div class="diamond"></div></div>
+        <div class="opbody">
+          <div class="row1">
+            <span class="pos">1.5</span>
+            <span class="power">i&sup2; = &minus;1</span>
+            <span class="axis">Real &middot; split/return</span>
+          </div>
+          <div><span class="opname">branching</span><span class="opsol"> fa</span>
+            <span class="tension" style="color:#7fcf8f;border-color:#234a2a;background:#0c160d" title="Only this rung earns a real metric dimension. Fractal coastlines have a measured Hausdorff dimension near 1.25. The other halves are ordinal, not metric.">&#10003; metric ~1.25</span>
+          </div>
+        </div>
+      </button>
+
+      <!-- 2D -->
+      <div class="rung" style="--hue:#e2554f" data-key="2D">
+        <div class="node">&#9711;</div>
+        <div class="meta">
+          <div class="row1"><span class="dim">2D</span><span class="sol">so</span><span class="kind">Structure</span></div>
+          <div class="label">boundary, body, surface, interface</div>
+        </div>
+      </div>
+
+      <!-- 2.5 emergence -->
+      <button class="op" style="--hue:#f0a93f" data-op="emerg" aria-pressed="false">
+        <div class="rail"><div class="diamond"></div></div>
+        <div class="opbody">
+          <div class="row1">
+            <span class="pos">2.5</span>
+            <span class="power">i&sup3; = &minus;i</span>
+            <span class="axis">Imaginary &middot; in/out</span>
+          </div>
+          <div><span class="opname">emergence</span><span class="opsol"> la</span></div>
+        </div>
+      </button>
+
+      <!-- 3D -->
+      <div class="rung" style="--hue:#5cbf6a" data-key="3D">
+        <div class="node">&Phi;</div>
+        <div class="meta">
+          <div class="row1"><span class="dim">3D</span><span class="sol">ti</span><span class="kind">Structure</span></div>
+          <div class="label">
+            <span class="orig">field, mind, interior volume, mediation</span>
+            <span class="plain">interior volume, mind, mediation. (&ldquo;field&rdquo; dropped: borrowed from field theory.)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3.5 recursion -->
+      <button class="op" style="--hue:#a479ff" data-op="recur" aria-pressed="false">
+        <div class="rail"><div class="diamond"></div></div>
+        <div class="opbody">
+          <div class="row1">
+            <span class="pos">3.5</span>
+            <span class="power">i&#8304; = +1</span>
+            <span class="axis">Real &middot; split/return</span>
+          </div>
+          <div><span class="opname">recursion</span><span class="opsol"> do&prime;</span></div>
+        </div>
+      </button>
+
+      <!-- BOTTOM POLE -->
+      <div class="pole bottom">
+        <div class="glyph">&#9737;</div>
+        <div class="body">
+          <div class="tag">Pole &middot; the whole &middot; one by integration</div>
+          <div class="name">Centered wholeness</div>
+          <div class="desc">consciousness, being, experience: the octave closed, the dot seated in its circle.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENGINE -->
+    <div class="engine">
+
+      <div class="card">
+        <h2>The operator engine &middot; 4th roots of 1</h2>
+        <svg class="plane" viewBox="0 0 260 260" role="img" aria-label="Complex unit circle showing the four process operators as fourth roots of unity">
+          <circle class="ucircle" cx="130" cy="130" r="92"/>
+          <line class="axisline" x1="18" y1="130" x2="242" y2="130"/>
+          <line class="axisline" x1="130" y1="18" x2="130" y2="242"/>
+          <text class="axislbl" x="244" y="127" text-anchor="end">Re +1</text>
+          <text class="axislbl" x="16" y="127">Re &minus;1</text>
+          <text class="axislbl" x="134" y="26">Im +i</text>
+          <text class="axislbl" x="134" y="250">Im &minus;i</text>
+
+          <!-- connectors (antipode) -->
+          <line id="conn-im" class="connector" x1="130" y1="38" x2="130" y2="222" stroke="#8a7bff"/>
+          <line id="conn-re" class="connector" x1="38" y1="130" x2="222" y2="130" stroke="#a479ff"/>
+
+          <!-- pointer -->
+          <g class="pointer" id="pointer" style="transform:rotate(0deg)">
+            <line x1="130" y1="130" x2="214" y2="130"/>
+            <polygon points="214,124 226,130 214,136"/>
+          </g>
+
+          <!-- roots -->
+          <g class="root" data-op="conv"   transform="translate(130,38)">
+            <circle class="rdot" fill="#8a7bff" stroke="#0b0b12" stroke-width="2"/>
+            <text x="0" y="-12" text-anchor="middle" fill="#8a7bff">+i</text>
+          </g>
+          <g class="root" data-op="emerg"  transform="translate(130,222)">
+            <circle class="rdot" fill="#f0a93f" stroke="#0b0b12" stroke-width="2"/>
+            <text x="0" y="20" text-anchor="middle" fill="#f0a93f">&minus;i</text>
+          </g>
+          <g class="root" data-op="branch" transform="translate(38,130)">
+            <circle class="rdot" fill="#e06aa0" stroke="#0b0b12" stroke-width="2"/>
+            <text x="0" y="22" text-anchor="middle" fill="#e06aa0">&minus;1</text>
+          </g>
+          <g class="root" data-op="recur"  transform="translate(222,130)">
+            <circle class="rdot" fill="#a479ff" stroke="#0b0b12" stroke-width="2"/>
+            <text x="0" y="22" text-anchor="middle" fill="#a479ff">+1</text>
+          </g>
+        </svg>
+        <div class="readout" id="readout">
+          <span class="dim">Tap an operator (left) or a root (above).</span><br>
+          The four processes are the fourth roots of unity. <span class="hl">Imaginary axis</span> = in/out (convergence &amp; emergence, conjugates). <span class="hl">Real axis</span> = split/return (branching &amp; recursion). Moving two rungs multiplies by <code style="font-family:var(--mono);color:var(--ink)">i&sup2; = &minus;1</code>: every operator&rsquo;s antipode is its own negation.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Read the ladder two ways</h2>
+        <div class="toggles">
+          <button class="tog" id="tog-honest" aria-pressed="false">
+            <div><div class="t-name">Plain reading</div><div class="t-sub">strip the borrowed physics words</div></div>
+            <span class="switch" aria-hidden="true"></span>
+          </button>
+          <button class="tog" id="tog-ten" aria-pressed="false">
+            <div><div class="t-name">Show the &ldquo;10D&rdquo; count</div><div class="t-sub">8 rungs + 2 poles, not 10 dimensions</div></div>
+            <span class="switch" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Legend</h2>
+        <div class="legend">
+          <div class="li"><span class="sw"><span class="d"></span></span><span><b>Structures</b> (integers) are dimensions: 0D, 1D, 2D, 3D.</span></div>
+          <div class="li"><span class="sw"><span class="q"></span></span><span><b>Operators</b> (halves) are not dimensions: they act between or within structures.</span></div>
+        </div>
+        <div class="note" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line)">
+          <b>Why the halves are not &ldquo;dimensions.&rdquo;</b> Only <code>1.5</code> earns a measured fraction (a coastline&rsquo;s Hausdorff dimension, ~1.25). For <code>0.5</code>, <code>2.5</code>, <code>3.5</code> the half is <b>ordinal</b> (it sits between structure n and n+1), not metric. One word was doing two jobs.
+        </div>
+        <div class="note">
+          <b>The convergence wrinkle.</b> Convergence is many-to-one, inward: it builds the <em style="font-family:var(--serif);font-style:italic">point</em>. So its meaning fits the <code>&infin; &rarr; 0D</code> gap, not the <code>0D &rarr; 1D</code> slot it occupies. Either a half-rung is missing above 0D, or it is mislabeled. Flagged, left in place.
+        </div>
+        <div class="note">
+          <b>Still owed.</b> The vertical gap from <code>0D</code> to <code>&infin;</code> asserts that the center is not the greater whole. That inequality is exactly what non-dualism denies. The ladder draws the debt; it does not yet pay it.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="mark">&#9737;</div>
+    <div class="by">The Circumpunct Framework &middot; Ashman Roonz</div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  // operator data
+  var OPS = {
+    conv:  {pos:"0.5", sol:"re",  name:"convergence", root:"+i", axis:"imaginary (in/out)", angle:-90,
+            conj:"emergence (&minus;i)", anti:"emerg", gloss:"inward, many to one. builds the point.", hue:"#8a7bff", axisGroup:"im"},
+    branch:{pos:"1.5", sol:"fa",  name:"branching",   root:"&minus;1", axis:"real (split/return)", angle:180,
+            conj:"itself (self-conjugate)", anti:"recur", gloss:"splits a line toward a surface.", hue:"#e06aa0", axisGroup:"re"},
+    emerg: {pos:"2.5", sol:"la",  name:"emergence",   root:"&minus;i", axis:"imaginary (in/out)", angle:90,
+            conj:"convergence (+i)", anti:"conv", gloss:"outward, one to many. lifts surface toward volume.", hue:"#f0a93f", axisGroup:"im"},
+    recur: {pos:"3.5", sol:"do&prime;", name:"recursion", root:"+1", axis:"real (split/return)", angle:0,
+            conj:"itself (self-conjugate)", anti:"branch", gloss:"folds the field back into the whole.", hue:"#a479ff", axisGroup:"re"}
+  };
+  var STRUCT_OF = {conv:"1D", branch:"2D", emerg:"3D", recur:"3D"}; // not used for highlight; kept minimal
+
+  var opButtons = document.querySelectorAll('.op');
+  var roots = document.querySelectorAll('.root');
+  var rungs = document.querySelectorAll('.rung');
+  var pointer = document.getElementById('pointer');
+  var readout = document.getElementById('readout');
+  var connIm = document.getElementById('conn-im');
+  var connRe = document.getElementById('conn-re');
+  var current = null;
+
+  function clearAll(){
+    opButtons.forEach(function(b){ b.classList.remove('active','antipode'); b.setAttribute('aria-pressed','false'); });
+    roots.forEach(function(r){ r.classList.remove('on'); });
+    connIm.classList.remove('show'); connRe.classList.remove('show');
+  }
+
+  function select(key){
+    if(current === key){ // toggle off
+      clearAll(); current=null;
+      readout.innerHTML = '<span class="dim">Tap an operator (left) or a root (above).</span><br>The four processes are the fourth roots of unity. <span class="hl">Imaginary axis</span> = in/out (convergence &amp; emergence, conjugates). <span class="hl">Real axis</span> = split/return (branching &amp; recursion). Moving two rungs multiplies by <code style="font-family:var(--mono);color:var(--ink)">i&sup2; = &minus;1</code>: every operator&rsquo;s antipode is its own negation.';
+      return;
+    }
+    current = key;
+    var d = OPS[key];
+    clearAll();
+
+    // active op
+    document.querySelectorAll('.op[data-op="'+key+'"]').forEach(function(b){ b.classList.add('active'); b.setAttribute('aria-pressed','true'); });
+    // antipode op
+    document.querySelectorAll('.op[data-op="'+d.anti+'"]').forEach(function(b){ b.classList.add('antipode'); });
+    // roots
+    document.querySelectorAll('.root[data-op="'+key+'"]').forEach(function(r){ r.classList.add('on'); });
+    document.querySelectorAll('.root[data-op="'+d.anti+'"]').forEach(function(r){ r.classList.add('on'); });
+
+    // pointer + connector
+    pointer.style.transform = 'rotate(' + d.angle + 'deg)';
+    if(d.axisGroup === 'im'){ connIm.classList.add('show'); } else { connRe.classList.add('show'); }
+
+    // readout
+    readout.innerHTML =
+      '<em>' + d.name + '</em> <span class="dim">&middot; ' + d.sol + ' &middot; ' + d.pos + '</span><br>' +
+      '<span class="hl">' + d.root + '</span> on the ' + d.axis + ' axis<br>' +
+      'conjugate: ' + d.conj + '<br>' +
+      'antipode (&times; i&sup2;): <span class="hl">' + OPS[d.anti].name + ' (' + OPS[d.anti].root + ')</span><br>' +
+      '<span class="dim">' + d.gloss + '</span>';
+  }
+
+  opButtons.forEach(function(b){ b.addEventListener('click', function(){ select(b.dataset.op); }); });
+  roots.forEach(function(r){ r.addEventListener('click', function(){ select(r.dataset.op); }); });
+
+  // toggles
+  var togHonest = document.getElementById('tog-honest');
+  togHonest.addEventListener('click', function(){
+    var on = togHonest.getAttribute('aria-pressed') === 'true';
+    togHonest.setAttribute('aria-pressed', String(!on));
+    document.body.classList.toggle('honest', !on);
+  });
+
+  var togTen = document.getElementById('tog-ten');
+  var cDefault = document.getElementById('count-default');
+  var cTen = document.getElementById('count-ten');
+  togTen.addEventListener('click', function(){
+    var on = togTen.getAttribute('aria-pressed') === 'true';
+    togTen.setAttribute('aria-pressed', String(!on));
+    cDefault.hidden = !on ? true : false;
+    cTen.hidden = !on ? false : true;
+  });
+})();
+</script>
+</body>
+</html>
