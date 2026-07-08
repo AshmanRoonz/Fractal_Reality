@@ -13,7 +13,7 @@
 
 This paper does two things. First, it reads the Circumpunct Truth Protocol (TRP) through the precision dynamics of predictive processing, and shows that TRP's central claim (you never have to lie) is not a hope but a structural fact: the honest exit is the top element of a lattice that exists for any reality. It then closes the residue between literal honesty and full honesty, the space where true statements still mislead, and in doing so fuses the Truth Protocol with the stance of attention the confirmatory-curiosity paper describes: honesty is exploratory curiosity about where your words land. Second, it names a condition the dimensional ladder never states: the metabolic and attentional headroom (**slack**) that lets a center see at all. Slack sits beneath True as a zeroth precondition for every value, and once named it converts the framework's ethics into a partial political economy: how a whole distributes slack decides which of its parts can be centers and which are reduced to files.
 
-The two contributions are one contribution. Slack is the evidence-precision budget of Part I, read at the scale of a life. This is shown in Part III.
+The two contributions are one contribution. Slack is the evidence-precision budget of Part I, read at the scale of a life. This is shown in Part III, and its ethical consequence, that the duty of honesty scales with the receiver's slack and falls on whoever controls it, is drawn in Part IV.
 
 Throughout, the discipline the framework applies to the word *resonance* is applied here to the words *precision*, *gain*, and *slack*: they earn their place only while they stay technical (measurable as update rate, load, reserve, exploration fraction). Allowed to drift into metaphor, they merely rename what they were meant to explain.
 
@@ -229,7 +229,43 @@ This is why the framework's deepest instruction and its politics are one instruc
 
 ---
 
-## 7. Strongest form
+# Part IV. The truth-duty scales with slack
+
+## 7. Who owns the misleading
+
+Part I's responsibility boundary and Part II's slack thesis collide, and the collision is not a flaw; it is where the framework says something neither half could say alone.
+
+The boundary (3.7): you own the implicatures a *competent cooperative interpreter* would draw, not the receiver's own confirmatory distortions. The slack thesis (Part II): interpretive competence is itself slack-bound. Under load a receiver's π_e falls, they run confirmatory, they miss or over-read implicatures. So "competent cooperative interpreter" is not a fixed standard; it is a slack-dependent capacity, and a depleted receiver is a degraded interpreter. The boundary was defined against a constant that Part II shows is a variable.
+
+**The loophole this opens.** If competence is idealized, you can mislead by pitching to a competence the receiver does not have. Every marginal true, the disclosure "complete," and yet the actual receiver reliably ends with a false model, because decoding it required a slack they lacked. This is misleading laundered through the competence standard: the fine print that was technically sufficient for a rested expert and useless to the exhausted person in front of you. The "it was all disclosed" defense is this loophole worn as a virtue.
+
+**The closure: index competence to the actual receiver, then route the residue by who caused the depletion.** The competence standard for non-misleading is the receiver's *actual* interpretive capacity as far as you can read it, not an idealized one. This is not a new demand; it is TRP's original one returning with force, because TRP already held that you cannot find the right resolution "without attending to where the other person actually is." The idealized interpreter was a placeholder, and the slack thesis forces it back into the read standard: transmit at the resolution *this* receiver can actually incorporate. The residual responsibility for any competence shortfall then tracks its cause. Three cases:
+
+1. **Exogenous depletion** (grief, illness, poverty, load you did not create). You did not cause it, but you encounter it, and the duty is indexed to the actual receiver: if you can see they are depleted, pitching above their visible competence misleads even though a rested person would decode it. You owe accommodation.
+2. **Self-inflicted distortion** (the receiver's own π_m inflated by a motive you did not induce and are not exploiting). Here the 3.7 boundary holds and the divergence is theirs: you spoke to their actual reachable competence and they refused to update for reasons internal to them.
+3. **Engineered depletion** (you, or the whole you speak for, consumed the receiver's slack, then spoke at a resolution only an un-depleted interpreter could decode). This is the culpable case, and responsibility is doubled: Part II makes you answerable for foreclosing their competence, Part I for exploiting the competence you removed. You built the low-gain interpreter you then held to a high-gain standard.
+
+**The strong form.** Put the three cases together and the boundary stops being a line and becomes a slope:
+
+> Non-misleading is not a fixed duty. Its stringency scales inversely with the receiver's interpretive slack, and it concentrates on whoever controls that slack.
+
+A rested peer is owed less accommodation, and the standard approaches the idealized interpreter. A depleted receiver is owed more: lower resolution, more declaration, more checking. And a whole that depletes its parts thereby *raises its own truth-duty toward them*, because it lowered their competence; it cannot deplete them and then hold them to the rested standard. Power over someone's attentional conditions is duty toward their comprehension. The party who can starve a receiver of slack inherits the burden of not misleading them, in proportion to that power.
+
+This is where the framework's clinical work becomes a special case. The abuser who installs a fear and then speaks truths the fear predictably misreads is running case 3 through case 2: the distortion is proximately the victim's own π_m, but its cause is the abuser's, so its exploitation is the abuser's. Where the whole authored the prior, the whole authors the misreading. Manufactured consent, predatory disclosure, and the overwhelm-then-sign pattern are the same structure at institutional scale: deplete, disclose above the depleted receiver's competence, then point to the disclosure.
+
+**Where Part IV strains.** Four limits.
+
+First, causation of depletion is usually diffuse. Who starved this receiver of slack (this speaker, prior relationships, an economic order, their own choices) is rarely cleanly traceable, so the principle yields a gradient (more control over the receiver's slack means more duty) rather than a ledger with a verdict. It is directional, and honest only as a direction.
+
+Second, it can slide into paternalism, the exact posture TRP was built to kill. Deciding a receiver is "too depleted for the truth" and feeding them a comfortable picture is the Noble Lie again. The guardrail is TRP's own: accommodation means *lowering resolution with declaration*, never substituting content. You simplify and you flag that you are simplifying; you never decide for them what they cannot handle and hand them a false marginal. The duty to accommodate the depleted is bounded by the duty not to patronize them.
+
+Third, timing becomes an ethical variable, which lands on the Faithful rung. Sometimes the honest move is neither to transmit into a depleted state nor to withhold, but to *defer*: "this is a large decision and you are exhausted; I will not walk you through it tonight." Honest communication has a *when*, and pushing a heavy truth into a receiver with no slack to hold it can discharge your duty on paper while ensuring it fails in fact.
+
+Fourth, the collision applies inward, by the symmetry that has run through the paper. Your own depleted state degrades you as an interpreter of the world and of others, so "do not lie inward" now includes: do not make large interpretive commitments while depleted, because your low-slack self is a degraded reader you should not fully trust. Defer the reading, not only the telling.
+
+---
+
+## 8. Strongest form
 
 The system stated at full strength, each claim in its sharpest line.
 
@@ -269,12 +305,15 @@ The system stated at full strength, each claim in its sharpest line.
 **12. The two theses are one.** Slack is π_e at life-scale; the politics of attention and the ethics of truth are the same maintenance of one channel.
 > *Ethics is keeping the gain high, in yourself, toward others, and in the conditions a whole sets for its parts.*
 
-**13. The scope is honest.** Slack governs the depleted mode only; charity and faith deficits run at full rest and need their own repairs; the phenomenal edge is untouched.
+**13. The truth-duty scales with slack.** Interpretive competence is itself slack-bound, so non-misleading is indexed to the receiver's actual capacity, and the burden concentrates on whoever controls that capacity.
+> *Power over another's attention is duty toward their comprehension; deplete a hearer and you inherit the burden of not misleading them.*
+
+**14. The scope is honest.** Slack governs the depleted mode only; charity and faith deficits run at full rest and need their own repairs; the phenomenal edge is untouched.
 > *One dial explains the epistemics of wholeness and leaves the hard problem exactly where it was.*
 
 ---
 
-## 8. Summary table
+## 9. Summary table
 
 | Phenomenon | Setting of the dial | Circumpunct reading |
 |------------|--------------------|---------------------|
@@ -284,6 +323,7 @@ The system stated at full strength, each claim in its sharpest line.
 | Truthful transmission | raises receiver G | Helping a part touch the Whole |
 | Lie | installs high-precision false prior | Severs another's dot-circle link |
 | Misleading | all true marginals, receiver's inferred posterior diverges | Lying outsourced to the receiver's own inference |
+| Engineered misleading | deplete the receiver, then disclose above their competence | Doubled culpability; the slack-holder owns the truth-duty |
 | TRP resolution | choose grain r; assert only true marginals | Appropriate-level truth |
 | Full honesty (TRP+) | true marginals and receiver's posterior converges | No lie and no mislead |
 | Max-entropy floor (declared) | r = top of lattice, implicature cancelled | The declared door that is always there |
