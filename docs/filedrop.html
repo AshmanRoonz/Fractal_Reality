@@ -181,6 +181,30 @@
   }
   footer a { color: var(--cyan); text-decoration: none; }
   .toolbar { display: flex; gap: 10px; padding: 12px 14px 0; }
+
+  #lobby {
+    position: fixed; inset: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(4,5,10,.94); backdrop-filter: blur(4px);
+  }
+  #lobby.hidden { display: none; }
+  .lobbycard {
+    background: var(--panel); border: 1px solid var(--edge); border-radius: 8px;
+    padding: 34px 38px; text-align: center; width: min(440px, 92vw);
+    box-shadow: 0 0 60px rgba(33,230,240,.08), 0 0 120px rgba(255,46,166,.05);
+  }
+  .lobbycard .logo { font-size: 26px; }
+  #roominput {
+    width: 100%; margin-top: 4px; padding: 12px 14px;
+    font-family: var(--mono); font-size: 18px; letter-spacing: 3px;
+    text-align: center; text-transform: uppercase;
+    color: var(--lime); background: #060810;
+    border: 1px solid var(--edge); border-radius: 5px; outline: none;
+  }
+  #roominput:focus { border-color: var(--cyan); box-shadow: 0 0 12px rgba(33,230,240,.2); }
+  .lobbyrow { display: flex; gap: 10px; margin-top: 14px; }
+  .lobbyrow button { flex: 1; padding: 11px; font-size: 13px; }
+  .lobbyhint { color: var(--dim); font-size: 11px; line-height: 1.7; margin-top: 16px; }
 </style>
 </head>
 <body>
@@ -193,8 +217,28 @@
   <div class="roombox">
     <span class="roomcode" id="roomcode">------</span>
     <button id="btn-copy">COPY LINK</button>
+    <button id="btn-switch" title="Leave this room and pick another">SWITCH</button>
   </div>
 </header>
+
+<div id="lobby" class="hidden">
+  <div class="lobbycard">
+    <div class="logo"><span class="dd">DEAD</span><span class="drop">DROP</span></div>
+    <p class="lobbyhint" style="margin:8px 0 20px">
+      Name a room to host it, or type the name a friend gave you to join theirs.
+      Same name = same room.
+    </p>
+    <input id="roominput" maxlength="24" placeholder="ROOM NAME" autocomplete="off" spellcheck="false">
+    <div class="lobbyrow">
+      <button id="btn-enter" class="ok">ENTER ROOM</button>
+      <button id="btn-random" title="Generate a random room code">&#127922; RANDOM</button>
+    </div>
+    <p class="lobbyhint">
+      No servers, no accounts. The room name is the meeting point &mdash;
+      share it (or the link) with whoever you want in.
+    </p>
+  </div>
+</div>
 
 <div class="statstrip">
   <div class="stat"><div class="k">YOU</div><div class="v cy" id="st-you">--</div></div>
@@ -376,10 +420,37 @@ function genCode(n = 6) {
   for (let i = 0; i < n; i++) s += CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)];
   return s;
 }
-let roomCode = (location.hash || '').replace('#', '').trim().toUpperCase();
-if (!roomCode) { roomCode = genCode(); history.replaceState(null, '', '#' + roomCode); }
+const sanitizeCode = s =>
+  s.toUpperCase().replace(/\s+/g, '-').replace(/[^A-Z0-9\-_]/g, '').slice(0, 24);
+
+// no room in the URL -> lobby: name a room to host it, or type a friend's
+// room name to join theirs (same name = same room, first one in hosts)
+function showLobby() {
+  return new Promise(resolve => {
+    const lobby = $('lobby'), input = $('roominput');
+    lobby.classList.remove('hidden');
+    input.focus();
+    const enter = () => {
+      const code = sanitizeCode(input.value);
+      if (!code) { input.focus(); return; }
+      lobby.classList.add('hidden');
+      resolve(code);
+    };
+    $('btn-enter').onclick = enter;
+    $('btn-random').onclick = () => { input.value = genCode(); enter(); };
+    input.onkeydown = e => { if (e.key === 'Enter') enter(); };
+  });
+}
+
+let roomCode = sanitizeCode((location.hash || '').replace('#', ''));
+if (!roomCode) roomCode = await showLobby();
+history.replaceState(null, '', '#' + roomCode);
 window.addEventListener('hashchange', () => location.reload());
 $('roomcode').textContent = roomCode;
+$('btn-switch').onclick = () => {
+  history.replaceState(null, '', location.pathname + location.search);
+  location.reload();
+};
 
 // ---- deterministic callsigns from peer ids ----------------------------------
 const HANDLES = ['GHOST','NEON','VOLT','CIPHER','RAZOR','STATIC','CHROME','ECHO',
