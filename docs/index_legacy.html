@@ -568,7 +568,7 @@
                     .td-card .td-rows { display: flex; flex-direction: column; gap: 2px; }
                     .td-card .td-row-wrap { border-radius: 3px; opacity: 0; animation: td-row-in 0.5s ease forwards; }
                     .td-card .td-row {
-                        display: grid; grid-template-columns: 2.2rem auto auto 1fr auto;
+                        display: grid; grid-template-columns: 2.2rem auto auto 1fr auto auto;
                         align-items: baseline; gap: 0; padding: 5px 10px; border-radius: 3px;
                         cursor: pointer; transition: filter 0.3s ease; user-select: none;
                     }
@@ -586,6 +586,13 @@
                     .td-card .td-dr-id { font-size: 0.8rem; font-weight: 600; color: var(--rc); letter-spacing: 0.04em; white-space: nowrap; }
                     .td-card .td-dr-text { font-size: 0.8rem; color: #e0dbd0; line-height: 1.5; }
                     .td-card .td-dr-from { font-size: 0.68rem; color: #c8c0b0; font-style: italic; grid-column: 2; margin-top: 0.1em; }
+
+                    /* Octave reframe (2026-07-11, per circumpunct-octave.html) */
+                    .td-card .td-count { font-size: 0.68rem; color: #c8c0b0; font-style: italic; text-align: center; letter-spacing: 0.05em; line-height: 1.5; margin: -0.3rem 0 0.55rem; opacity: 0.9; }
+                    .td-card .td-count b { color: #B8A060; font-weight: 600; }
+                    .td-card .td-kind { font-family: 'Space Grotesk', sans-serif; font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase; color: #908878; border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 1px 6px; white-space: nowrap; justify-self: end; align-self: center; margin: 0 0.35rem 0 0.4rem; }
+                    .td-card .td-one { color: #908878; font-style: italic; font-size: 0.78rem; }
+                    .td-card .td-foot { font-size: 0.7rem; color: #c8c0b0; font-style: italic; line-height: 1.55; margin-top: 0.6rem; padding: 0.5rem 4px 0; border-top: 1px solid rgba(184,160,96,0.18); }
 
                     /* Row backgrounds */
                     .td-card .td-row-wrap[data-d="infinity"]    .td-row { background: linear-gradient(90deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%); }
@@ -816,71 +823,75 @@
                     </div>
                 </details>
 
+                <!-- Reframed 2026-07-11 per circumpunct-octave.html: four structures + four operators + two poles; eight rungs = one octave; the organizing number is 8, not 10. Axiom and derivation drawers unchanged. -->
                 <div class="td-card">
-                    <a href="ten_dimensions.html" style="text-decoration:none;"><div class="td-title">The 10 Dimensions of Reality</div></a>
+                    <a href="circumpunct-octave.html" style="text-decoration:none;"><div class="td-title">The Circumpunct Octave</div></a>
+                    <div class="td-count">four <b>structures</b> &middot; four <b>operators</b> &middot; two <b>poles</b><br>eight rungs = one octave (do &rarr; do&prime;)</div>
                     <div class="td-rows">
 
                         <!-- ∞ — A0 -->
                         <div class="td-row-wrap" data-d="infinity" style="--rc: rgba(255,255,255,0.9);">
-                            <div class="td-row"><span class="td-sym">&#x221E;</span><span class="td-dim"></span><span class="td-note"></span><span class="td-name">undifferentiated energy; E = 1</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-row"><span class="td-sym">&#x221E;</span><span class="td-dim"></span><span class="td-note"></span><span class="td-name">undifferentiated energy; E = 1 <span class="td-one">&middot; one by inclusion</span></span><span class="td-kind">Pole</span><span class="td-chev">&#x25B8;</span></div>
                             <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">A0</span><span class="td-dr-text">There is one energy. It is everything. All else is constraints. (1 &ne; 0)</span></div></div>
                         </div>
 
                         <!-- • — A1 -->
                         <div class="td-row-wrap" data-d="soul" style="--rc: #4488ff;">
-                            <div class="td-row"><span class="td-sym">&bull;</span><span class="td-dim">(0D)</span><span class="td-note">do</span><span class="td-name">point, singularity, soul, localization</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-row"><span class="td-sym">&bull;</span><span class="td-dim">(0D)</span><span class="td-note">do</span><span class="td-name">point, singularity, soul, localization <span class="td-one">&middot; one by indivisibility</span></span><span class="td-kind">Structure</span><span class="td-chev">&#x25B8;</span></div>
                             <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">A1</span><span class="td-dr-text">The 1 must self-limit; an undifferentiated 1 is indistinguishable from 0</span><span class="td-dr-from">from A0</span></div></div>
                         </div>
 
                         <!-- ⊛ — D1 -->
                         <div class="td-row-wrap" data-d="convergence" style="--rc: #6B5BFF;">
-                            <div class="td-row"><span class="td-sym">&#x229B;</span><span class="td-dim">(0.5D, i&sup1; = +i)</span><span class="td-note">re</span><span class="td-name">convergence</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-row"><span class="td-sym">&#x229B;</span><span class="td-dim">(0.5, i&sup1; = +i)</span><span class="td-note">re</span><span class="td-name">convergence</span><span class="td-kind">Operator</span><span class="td-chev">&#x25B8;</span></div>
                             <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">D1</span><span class="td-dr-text">Self-limitation requires convergence; localization is a process, not an instant</span><span class="td-dr-from">from A1</span></div></div>
                         </div>
 
                         <!-- — — A2 -->
                         <div class="td-row-wrap" data-d="line" style="--rc: #44ddcc;">
-                            <div class="td-row"><span class="td-sym">&mdash;</span><span class="td-dim">(1D)</span><span class="td-note">mi</span><span class="td-name">line, string, timeline, extension</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-row"><span class="td-sym">&mdash;</span><span class="td-dim">(1D)</span><span class="td-note">mi</span><span class="td-name">line, string, timeline, extension</span><span class="td-kind">Structure</span><span class="td-chev">&#x25B8;</span></div>
                             <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">A2</span><span class="td-dr-text">Self-limitation must persist; a convergence that does not hold collapses back to &infin;</span><span class="td-dr-from">from A0 + A1</span></div></div>
                         </div>
 
                         <!-- ⎇ — D2 -->
                         <div class="td-row-wrap" data-d="branch" style="--rc: #E88AAF;">
-                            <div class="td-row"><span class="td-sym">&#x2387;</span><span class="td-dim">(1.5D, i&sup2; = &minus;1)</span><span class="td-note">fa</span><span class="td-name">branching, fractal coastlines</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-row"><span class="td-sym">&#x2387;</span><span class="td-dim">(1.5, i&sup2; = &minus;1)</span><span class="td-note">fa</span><span class="td-name">branching, fractal coastlines</span><span class="td-kind">Operator</span><span class="td-chev">&#x25B8;</span></div>
                             <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">D2</span><span class="td-dr-text">Line branches into boundary; a single line never becomes an edge until it multiplies and curves</span><span class="td-dr-from">from A2 &rarr; A3</span></div></div>
                         </div>
 
                         <!-- ○ — A3 -->
                         <div class="td-row-wrap" data-d="boundary" style="--rc: #ff4444;">
-                            <div class="td-row"><span class="td-sym">&#x25CB;</span><span class="td-dim">(2D)</span><span class="td-note">so</span><span class="td-name">boundary, body, surface, interface</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-row"><span class="td-sym">&#x25CB;</span><span class="td-dim">(2D)</span><span class="td-note">so</span><span class="td-name">boundary, body, surface, interface</span><span class="td-kind">Structure</span><span class="td-chev">&#x25B8;</span></div>
                             <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">A3</span><span class="td-dr-text">Distinction requires a boundary; an edge is lower-dimensional than the region it bounds</span><span class="td-dr-from">from A2 (branching)</span></div></div>
                         </div>
 
                         <!-- ✹ — D3 -->
                         <div class="td-row-wrap" data-d="emerge" style="--rc: #ffaa00;">
-                            <div class="td-row"><span class="td-sym">&#x2739;</span><span class="td-dim">(2.5D, i&sup3; = &minus;i)</span><span class="td-note">la</span><span class="td-name">emergence</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-row"><span class="td-sym">&#x2739;</span><span class="td-dim">(2.5, i&sup3; = &minus;i)</span><span class="td-note">la</span><span class="td-name">emergence</span><span class="td-kind">Operator</span><span class="td-chev">&#x25B8;</span></div>
                             <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">D3</span><span class="td-dr-text">Boundary emerges into field; closure encloses an interior where relation can be held</span><span class="td-dr-from">from A3 &rarr; A4</span></div></div>
                         </div>
 
                         <!-- Φ — A4 -->
                         <div class="td-row-wrap" data-d="field" style="--rc: #44cc44;">
-                            <div class="td-row"><span class="td-sym">&Phi;</span><span class="td-dim">(3D)</span><span class="td-note">ti</span><span class="td-name">field, mind, interior volume, mediation</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-row"><span class="td-sym">&Phi;</span><span class="td-dim">(3D)</span><span class="td-note">ti</span><span class="td-name">field, mind, interior volume, mediation</span><span class="td-kind">Structure</span><span class="td-chev">&#x25B8;</span></div>
                             <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">A4</span><span class="td-dr-text">Wholeness requires an interior; the bounded volume holds relation. 0(&bull;) + 1(&mdash;) + 2(&#x25CB;) = 3(&Phi;)</span><span class="td-dr-from">from A0 + A1</span></div></div>
                         </div>
 
                         <!-- ⟳ — D4 -->
                         <div class="td-row-wrap" data-d="recurse" style="--rc: #9B7AD8;">
-                            <div class="td-row"><span class="td-sym">&#x27F3;</span><span class="td-dim">(3.5D, i&#x2070; = +1)</span><span class="td-note">do&prime;</span><span class="td-name">recursion</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-row"><span class="td-sym">&#x27F3;</span><span class="td-dim">(3.5, i&#x2070; = +1)</span><span class="td-note">do&prime;</span><span class="td-name">recursion</span><span class="td-kind">Operator</span><span class="td-chev">&#x25B8;</span></div>
                             <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">D4</span><span class="td-dr-text">Field recurses back to the point; the closed whole becomes a new aperture (&Phi; &rarr; &#x2299;)</span><span class="td-dr-from">from A4</span></div></div>
                         </div>
 
                         <!-- ⊙ — D5 -->
                         <div class="td-row-wrap" data-d="whole" style="--rc: #B8A060;">
-                            <div class="td-row"><span class="td-sym">&#x2299;</span><span class="td-dim">(all D)</span><span class="td-note"></span><span class="td-name">centered wholeness: consciousness, being, experience</span><span class="td-chev">&#x25B8;</span></div>
+                            <div class="td-row"><span class="td-sym">&#x2299;</span><span class="td-dim"></span><span class="td-note"></span><span class="td-name">centered wholeness: consciousness, being, experience <span class="td-one">&middot; one by integration</span></span><span class="td-kind">Pole</span><span class="td-chev">&#x25B8;</span></div>
                             <div class="td-drawer"><div class="td-dr-inner"><span class="td-dr-id">D5</span><span class="td-dr-text">The whole is not the sum of its parts; it is their compositional unity via &Phi;. The octave wraps at 3.5D &equiv; 0D&prime; (i&#x2074; = i&#x2070; = +1): the closed whole becomes the aperture of the next nesting (&#x2299;&lambda; &sub; &#x2299;&Lambda;)</span><span class="td-dr-from">from all</span></div></div>
                         </div>
 
                     </div>
+
+                    <div class="td-foot"><b style="color:#B8A060;font-style:normal;">Structures</b> (integers) are dimensions: 0D, 1D, 2D, 3D. <b style="color:#B8A060;font-style:normal;">Operators</b> (halves) are not dimensions; they act between or within structures, each carrying one i-stroke of the pump. The <b style="color:#B8A060;font-style:normal;">poles</b> bookend the ladder: &#x221E; is one by inclusion, &#x2299; is one by integration, and the octave closes when 3.5 wraps to 0D&prime;.</div>
 
                     <div style="width:40px;height:1px;background:#908878;margin:0.7rem auto;"></div>
                     <div style="text-align:center;">
