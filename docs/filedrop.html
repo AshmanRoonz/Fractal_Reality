@@ -15,6 +15,15 @@
               - VoteRegister      -> quorum-voted "wipe room" action
 
   Single file. No build. No backend. Open it twice, share the link, drop files.
+
+  ---------------------------------------------------------------------------
+  DEADDROP (c) 2026 Ashman Roonz / fractalreality.ca
+  Copyleft: licensed under the GNU General Public License v3.0 (see LICENSE).
+  Free to use, copy, modify, and redistribute; derivatives must stay GPL-3.0
+  AND, per the GPL section 7(b) additional term, must keep visible credit:
+  "Based on DEADDROP by fractalreality.ca -- https://fractalreality.ca".
+  The inlined trystero-consensus helpers stay under their upstream MIT license.
+  ---------------------------------------------------------------------------
 -->
 <style>
   :root {
@@ -56,6 +65,8 @@
   .logo .dd { color: var(--magenta); text-shadow: 0 0 14px rgba(255,46,166,.7); }
   .logo .drop { color: var(--cyan); text-shadow: 0 0 14px rgba(33,230,240,.6); }
   .tagline { color: var(--dim); font-size: 11px; letter-spacing: 1px; }
+  .tagline a { color: var(--cyan); text-decoration: none; }
+  .tagline a:hover { text-decoration: underline; }
 
   .roombox { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .roomcode {
@@ -177,9 +188,17 @@
   footer {
     padding: 10px 20px; border-top: 1px solid var(--edge);
     color: var(--dim); font-size: 10px; letter-spacing: 1px;
-    display: flex; gap: 8px; flex-wrap: wrap;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
   }
   footer a { color: var(--cyan); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  .foot-spring { flex: 1 1 20px; }
+  a.donate {
+    color: var(--magenta); border: 1px solid var(--magenta); border-radius: 4px;
+    padding: 3px 9px; letter-spacing: 1px;
+  }
+  a.donate:hover { background: rgba(255,46,166,.12); text-decoration: none; box-shadow: 0 0 10px rgba(255,46,166,.3); }
+  .lobbyhint a.donate { display: inline-block; margin-top: 6px; font-size: 11px; }
   .toolbar { display: flex; gap: 10px; padding: 12px 14px 0; }
 
   #lobby {
@@ -212,7 +231,7 @@
 <header>
   <div>
     <div class="logo"><span class="dd">DEAD</span><span class="drop">DROP</span></div>
-    <div class="tagline">peer-to-peer file drop // zero servers // trystero + trystero-consensus</div>
+    <div class="tagline">peer-to-peer file drop // zero servers // a <a href="https://fractalreality.ca" target="_blank" rel="noopener">fractalreality.ca</a> lab</div>
   </div>
   <div class="roombox">
     <span class="roomcode" id="roomcode">------</span>
@@ -236,6 +255,9 @@
     <p class="lobbyhint">
       No servers, no accounts. The room name is the meeting point &mdash;
       share it (or the link) with whoever you want in.
+      <br>Free &amp; open source (GPL-3.0) by
+      <a href="https://fractalreality.ca" target="_blank" rel="noopener">fractalreality.ca</a>.
+      <br><a class="donate" href="https://www.paypal.com/donate/?hosted_button_id=DHDK64UWAWEKA" target="_blank" rel="noopener">&#9829; DONATE</a>
     </p>
   </div>
 </div>
@@ -286,6 +308,10 @@
   <span>stats converge with no owner</span><span>&middot;</span>
   <span>wipes need a quorum</span><span>&middot;</span>
   <a href="https://github.com/AshmanRoonz/trystero-consensus" target="_blank" rel="noopener">github.com/AshmanRoonz/trystero-consensus</a>
+  <span class="foot-spring"></span>
+  <a class="donate" href="https://www.paypal.com/donate/?hosted_button_id=DHDK64UWAWEKA" target="_blank" rel="noopener">&#9829; DONATE</a>
+  <span>Copyleft (GPL-3.0) &mdash; free to use &amp; fork, must credit</span>
+  <a href="https://fractalreality.ca" target="_blank" rel="noopener">fractalreality.ca</a>
 </footer>
 
 <script type="module">
