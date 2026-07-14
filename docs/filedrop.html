@@ -199,6 +199,32 @@
   }
   a.donate:hover { background: rgba(255,46,166,.12); text-decoration: none; box-shadow: 0 0 10px rgba(255,46,166,.3); }
   .lobbyhint a.donate { display: inline-block; margin-top: 6px; font-size: 11px; }
+
+  #safety { border-bottom: 1px solid var(--edge); background: var(--panel); }
+  #safety > summary {
+    list-style: none; cursor: pointer; padding: 10px 20px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    color: var(--amber); font-size: 12px; letter-spacing: .3px;
+  }
+  #safety > summary::-webkit-details-marker { display: none; }
+  #safety > summary .warn-ico { font-size: 14px; flex: none; }
+  #safety > summary .warn-txt { flex: 1 1 240px; }
+  #safety > summary .chev { color: var(--dim); font-size: 10px; letter-spacing: 1px; margin-left: auto; }
+  #safety[open] > summary .chev::after { content: 'HIDE ▲'; }
+  #safety:not([open]) > summary .chev::after { content: 'DETAILS ▼'; }
+  #safety .body { padding: 2px 20px 16px; font-size: 12px; line-height: 1.65; color: var(--txt); max-width: 900px; }
+  #safety .body h3 { font-size: 10px; letter-spacing: 2px; margin: 14px 0 4px; color: var(--dim); font-weight: 400; }
+  #safety .body ul { margin: 2px 0 0 18px; }
+  #safety .body li { margin: 4px 0; }
+  #safety .yes { color: var(--lime); }
+  #safety .no { color: var(--magenta); }
+  #safety .body a { color: var(--cyan); text-decoration: none; }
+  #safety .body a:hover { text-decoration: underline; }
+  #safety .warn {
+    margin-top: 14px; padding: 11px 13px; border: 1px solid var(--amber);
+    border-radius: 5px; background: rgba(255,176,32,.07); color: var(--amber);
+  }
+  #safety .scope { margin-top: 12px; color: var(--dim); }
   .toolbar { display: flex; gap: 10px; padding: 12px 14px 0; }
 
   #lobby {
@@ -255,6 +281,7 @@
     <p class="lobbyhint">
       No servers, no accounts. The room name is the meeting point &mdash;
       share it (or the link) with whoever you want in.
+      <br><span style="color:var(--amber)">Not anonymous: peers see your IP. At risk? Use OnionShare/SecureDrop instead.</span>
       <br>Free &amp; open source (GPL-3.0) by
       <a href="https://fractalreality.ca" target="_blank" rel="noopener">fractalreality.ca</a>.
       <br><a class="donate" href="https://www.paypal.com/donate/?hosted_button_id=DHDK64UWAWEKA" target="_blank" rel="noopener">&#9829; DONATE</a>
@@ -269,6 +296,37 @@
   <div class="stat"><div class="k">ROOM AGE</div><div class="v" id="st-age">0s</div></div>
   <div class="stat"><div class="k">FILES DROPPED</div><div class="v" id="st-files">0</div></div>
 </div>
+
+<details id="safety">
+  <summary>
+    <span class="warn-ico">&#9888;</span>
+    <span class="warn-txt">Not anonymous &mdash; every peer in the room learns your IP address. Files are encrypted in transit, but this is <strong>not</strong> a whistleblowing tool.</span>
+    <span class="chev"></span>
+  </summary>
+  <div class="body">
+    <h3>WHAT THIS PROTECTS</h3>
+    <ul>
+      <li><span class="yes">Files travel directly peer-to-peer</span> over an encrypted (DTLS) WebRTC channel &mdash; they are never uploaded to or stored on any server.</li>
+      <li>No account, no sign-up. Fully open source (GPL-3.0), so the code can be audited.</li>
+    </ul>
+    <h3>WHAT THIS DOES NOT PROTECT</h3>
+    <ul>
+      <li><span class="no">Your IP address.</span> WebRTC needs it to make the connection, so every peer in the room &mdash; including whoever invited you &mdash; sees it. A hostile host can log &ldquo;this IP received this file at this time.&rdquo;</li>
+      <li><span class="no">Metadata.</span> The public signaling relays see connection timing, the room name&rsquo;s fingerprint, and your IP when your browser reaches them.</li>
+      <li><span class="no">Code integrity.</span> Whoever serves this page controls the code your browser runs. Trust that host &mdash; or download this single file and open it locally (<code>file://</code>), with no host in the loop.</li>
+      <li><span class="no">Access.</span> The room name is the only secret; anyone who has it can join and receive. Peers are not authenticated.</li>
+    </ul>
+    <div class="warn">
+      <strong>&#9888; If you are a source, journalist, activist, or otherwise at physical or legal risk: do not use this.</strong>
+      Use tools designed for that threat model, which hide both parties&rsquo; IPs over Tor &mdash;
+      <a href="https://onionshare.org" target="_blank" rel="noopener">OnionShare</a> or
+      <a href="https://securedrop.org" target="_blank" rel="noopener">SecureDrop</a>.
+    </div>
+    <div class="scope">
+      Think of DEADDROP like AirDrop: convenient, cloud-free sharing between people who already know and trust each other and don&rsquo;t mind revealing their IP to one another.
+    </div>
+  </div>
+</details>
 
 <main>
   <div class="panel">
@@ -291,7 +349,7 @@
       <h2>DROP</h2>
       <div id="dropzone">
         <div class="big">Drag files here or click to browse</div>
-        <div id="dropsub">Files stream directly to every peer in the room. Nothing is uploaded anywhere.</div>
+        <div id="dropsub">Files stream directly, peer-to-peer &mdash; never uploaded to a server. Note: every peer in the room can see your IP address.</div>
       </div>
       <input type="file" id="fileinput" multiple hidden>
       <ul id="transfers"></ul>
@@ -863,7 +921,7 @@ window.FD = {
   vote: castVote
 };
 
-log('signaling via public nostr relays — no server involved', 'cy');
+log('signaling via public nostr relays; files go directly peer-to-peer — see the privacy note up top', 'cy');
 </script>
 </body>
 </html>
