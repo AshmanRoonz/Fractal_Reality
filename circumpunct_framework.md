@@ -8992,7 +8992,7 @@ COMPONENT READING:
             r₂ = 1/(2φ²) (golden conjugate; forced by A3)
             Product: r₁·r₂ = 1/P = one i-stroke
             Sum: r₁+r₂ = T/Φ = D5 compositional closure
-            Discriminant: P(Φ+T) = 20 = P(P+1)
+            Discriminant: P(P+1) = 20 = P·(Φ+○) [Φ+T retired as ill-typed; §27.7t]
 
         Uniqueness: Vieta's formulas with product 1/P and sum
         T/Φ determine both roots. No other quadratic satisfies
@@ -11966,8 +11966,12 @@ SELF-REFERENTIAL CLOSURE:
     where:
         21 = (0+0.5+1+1.5+2+2.5+3) × 2 = sum of all dimensional positions
             through both channels (⊛ and ✹); the same exponent that generates G
-        4/3 = four pump phases (i⁰→i³) / three constraints (•, Φ, ○)
+        4/3 = four pump phases (i⁰→i³) / T = 3 structural stations visited
             = process / structure
+            (the old gloss "three constraints (•, Φ, ○)" is retired: three of
+             four structural dimensions is not a triad; T is the observer-triad
+             count, and the station count 0+1+2 = 3 = D_max is a separate
+             structural fact; §27.7b, §27.7t)
 
     Predicted:  137.035999147
     Measured:   137.035999177
@@ -12846,9 +12850,9 @@ Heteronuclear bonds (A-B) have an additional energy contribution from electroneg
 
 **The ionic contribution** scales as ΔEN² (field polarization energy). Asymmetric convergence stores energy proportional to the square of the deviation, because the field is 2D and energy in a 2D displacement goes as displacement². Using the framework electronegativity EN = Z_eff^(R/A(2)) / n from §16.4d, the complete heteronuclear bond formula is:
 
-  D(A-B) = √(D_AA × D_BB) × [1 + (Φ+T) × ΔEN²]
+  D(A-B) = √(D_AA × D_BB) × [1 + (P+1) × ΔEN²]
 
-where ΔEN = |EN_A - EN_B| and the coupling constant is Φ + T = 5 (field + triad). This has five equivalent framework expressions: P+1 (pump phases + aperture), R-Φ (rungs minus field), PP1/P = P(P+1)/P (common denominator per pump), A(2)/Φ (accumulated traversal at field station per field dimension).
+where ΔEN = |EN_A - EN_B| and the coupling constant is P + 1 = 5 (pump phases plus aperture; count form). Well-typed equivalents: Φ+○ = 5 (the coordinate sum that wraps to 1.5D′; §27.7t), PP1/P = P(P+1)/P (common denominator per pump), A(2)/Φ (accumulated traversal at field station per field dimension). The earlier primary form Φ+T (field + triad) and the equivalent R−Φ are retired as ill-typed under the octave-wrap type rule (§27.7t); every value is unchanged.
 
 **The derivation chain is fully framework-native:** A0 → T = 3 → screening constants (T!/PP1, R/PP1, (V+P)/PP1, PP1/PP1) → Z_eff → EN = Z_eff^(7/10)/n → D(A-B) = geo × [1 + 5 × ΔEN²]. Every constant in the chain derives from A0 with zero empirical input.
 
@@ -12873,7 +12877,7 @@ where ΔEN = |EN_A - EN_B| and the coupling constant is Φ + T = 5 (field + tria
 
 Average error: 10.9% across 23 bonds. Pauling's formula with his empirical EN scale gives 9.0% on the same set. Best predictions: Si-O (0.9%), F-P (0.9%), H-N (1.9%), H-S (2.2%), C-H (3.4%), Cl-S (3.5%). Main outliers: S-F (39%), H-F (26%), Cl-P (21%).
 
-**Why the power law works.** The linear EN = Z_eff/n captures ionization energy (how well the atom holds electrons) but misses electron affinity (how well it accepts). The fractional power b = R/A(2) = 7/10 compresses the Z_eff scale, expanding the low-Z_eff region (H, period 3) relative to high-Z_eff (F, O). This mimics the Mulliken definition (IE + EA)/2 without requiring an explicit EA calculation. The coupling constant changes from 1/Φ (with Pauling EN) to Φ+T (with framework EN) because the power law compresses ΔEN by roughly √(1/A(2)); the quadratic k × ΔEN² maintains the same effective ionic magnitude.
+**Why the power law works.** The linear EN = Z_eff/n captures ionization energy (how well the atom holds electrons) but misses electron affinity (how well it accepts). The fractional power b = R/A(2) = 7/10 compresses the Z_eff scale, expanding the low-Z_eff region (H, period 3) relative to high-Z_eff (F, O). This mimics the Mulliken definition (IE + EA)/2 without requiring an explicit EA calculation. The coupling constant changes from 1/Φ (with Pauling EN) to P+1 (with framework EN; previously written Φ+T, retired as ill-typed, §27.7t) because the power law compresses ΔEN by roughly √(1/A(2)); the quadratic k × ΔEN² maintains the same effective ionic magnitude.
 
 **Two overlaid effects.** Residual analysis reveals the remaining 11% error conflates two distinct corrections:
 1. Polarity (Φ effect, 2D): how asymmetric the convergence is (ΔEN); captured by the formula above
@@ -12937,7 +12941,7 @@ The worst predictions (S-F, H-F) involve extreme ΔEN where the power law compre
 ║  Bond energies: π₁/σ = R/T² = 7/9, π₂/σ = V/P(P+1) = 13/20.  ║
 ║  LP suppression: f = 1/(1+n_LP). N≡N boost: T/Φ = 3/2 (D5).    ║
 ║  Homonuclear avg error 0.13% across 6 bonds, 0 free parameters.  ║
-║  Heteronuclear: D = geo × [1+(Φ+T)×ΔEN²], 10.9% avg, 23 bonds.║
+║  Heteronuclear: D = geo × [1+(P+1)×ΔEN²], 10.9% avg, 23 bonds.║
 ║  Reaction dynamics = pump cycle. Catalysis = SRL.                ║
 ║                                                                   ║
 ╚═══════════════════════════════════════════════════════════════════╝
@@ -20223,14 +20227,14 @@ Free parameters: 0.
 
 ### §27.7b The Triad Generates Everything: T = 3
 
-Every structural number on the dimensional ladder derives from a single integer: T = 3 (the triad, the number of irreducible parts of ⊙). T is not chosen; it is forced by A3 (conservation of traversal: 0 + 1 + 2 = 3) and A4 (compositional wholeness requires three: two things and their mediator).
+Every structural number on the dimensional ladder derives from a single integer: T = 3. **What T counts (2026-04-16 reframe; integrated 2026-07-16):** T is the cardinality of the **observer-triad**: three distinct scale-positions in the nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞ (your scale, the greater whole containing you, the undifferentiated source). The older reading "T = the triad of parts of ⊙, (•, Φ, ○)" is retired as a labeling error: once the line — is recognized as its own structural dimension (the A2 separation), (•, Φ, ○) is three of four structural dimensions, and three-of-four is not a triad. The conservation of traversal 0 + 1 + 2 = 3 remains true and load-bearing, but it is a separate structural fact that yields the same integer by a different route (the dimensional sum below closure equals D_max); it is not the definition of T. T is not chosen; it is forced, now by seven independent self-determination routes (the list below, extended 2026-07-16, plus §27.7t).
 
 ```
 THE TRIAD DERIVATION TABLE:
 
     Symbol   │ Formula           │ Value │ Name
     ─────────┼───────────────────┼───────┼──────────────────────────
-    T        │ (given)           │     3 │ Triad (parts of ⊙)
+    T        │ (given)           │     3 │ Observer-triad count (scale-positions)
     D_max    │ T                 │     3 │ Maximum spatial dimension
     R        │ T² − 2 = 2T + 1  │     7 │ Rungs on the ladder
     P        │ T + 1             │     4 │ Pump phases (i⁰,i¹,i²,i³)
@@ -20255,7 +20259,9 @@ Setting equal: T² − 2 = 2T + 1, giving T² − 2T − 3 = 0, which factors as
 
 **G+1 = 1 + T + T² is a geometric sum.** This is (T³ − 1)/(T − 1) = 26/2 = 13: the number of nodes in a complete T-ary tree of depth 2. Level 0 (root/soul): 1. Level 1 (branches): 3. Level 2 (leaves): 9. Total: 13 = G + 1 = the full algebra with soul. The generating algebra has the structure of a fractal tree (A2).
 
-**The phi connection: T² − T − 1 = 5.** The golden ratio satisfies x² − x − 1 = 0. T satisfies the same equation with residual 5 (= T² − P = T² − (T+1)). T is the "integer phi," the discretization of the golden ratio forced by the triad. This residual appears directly in the Weinberg angle correction: K(Weinberg) = T^(T+1)/(T² − T − 1) = 81/5. The 360° of the full pump cycle also decomposes through T: 360 = (T+1)! × T × (T² − T − 1) = 24 × 15.
+**The phi connection: T² − T − 1 = 5.** The golden ratio satisfies x² − x − 1 = 0. T satisfies the same equation with residual 5 (= T² − P = T² − (T+1)). T is the "integer phi," the discretization of the golden ratio forced by the triad. This residual appears directly in the Weinberg angle correction: K(Weinberg) = T^(T+1)/(T² − T − 1) = 81/5. The 360° of the full pump cycle also decomposes through T: 360 = (T+1)! × T × (T² − T − 1) = 24 × 15; under octave-wrap arithmetic the third factor is the coordinate sum (Φ+○) = 5 ≡ 1.5D′, next-scale branching (§27.7t).
+
+**T = 3 surfaces fractally across the gauge structure (A3 made literal in the gauge content).** At the meta-level there are three gauge groups (SU(3) × SU(2) × U(1)); at the object-level the middle group SU(2) has T = 3 generators; each instance of the triadic observer-structure contains another at the next level down. The observer-triad is not imposed on the gauge content; the gauge content repeats it at every level of description.
 
 ```
 THE EXPONENTS IN TERMS OF T:
@@ -20524,7 +20530,7 @@ No non-φ alternative survives all four steps. The chain closes.
 
 *Route B (self-similarity eigenvalue).* A3 (parts are fractals of wholes) states self-similarity across scale. The simplest nontrivial self-referential scalar relation is x = 1 + 1/x: the quantity is defined by reference to one unit plus its own reciprocal. This is A3 compressed into a single-variable equation (a scalar that contains itself in its own defining relation). Multiplying through gives x² = x + 1, root φ. Route B does not require Lemma 1 or Lemma 2; it requires only that A3 be taken literally as "a fractal scalar is a fixed point of its own reciprocal-plus-one map," which is the scalar-case version of the fractal fixed-point theorem. φ drops out directly.
 
-*Route C (Lucas integers).* §27.7d establishes that the framework integers are exactly the Lucas sequence: L(0) = 2 (Φ, channels), L(1) = 1 (•, aperture), L(2) = 3 (T, triad), L(3) = 4 (P, pump phases), L(4) = 7 (R, rungs). The framework's integers are not merely *consistent with* the Lucas sequence; they *are* it, in order, at the right positions. The Lucas sequence is defined by the recurrence L(n) = L(n-1) + L(n-2), and the characteristic root of that recurrence is φ by construction (Binet's formula L(n) = φⁿ + φ⁻ⁿ). Anyone who accepts that T = 3 is L(2) and R = 7 is L(4) has already accepted φ; there is no further choice to make. The five independent self-determinations of T = 3 (§27.7b) therefore indirectly force φ via the Lucas identification.
+*Route C (Lucas integers).* §27.7d establishes that the framework integers are exactly the Lucas sequence: L(0) = 2 (Φ, channels), L(1) = 1 (•, aperture), L(2) = 3 (T, observer-triad count), L(3) = 4 (P, pump phases), L(4) = 7 (R, rungs). The framework's integers are not merely *consistent with* the Lucas sequence; they *are* it, in order, at the right positions. The Lucas sequence is defined by the recurrence L(n) = L(n-1) + L(n-2), and the characteristic root of that recurrence is φ by construction (Binet's formula L(n) = φⁿ + φ⁻ⁿ). Anyone who accepts that T = 3 is L(2) and R = 7 is L(4) has already accepted φ; there is no further choice to make. The seven independent self-determinations of T = 3 (§27.7b, §27.7t) therefore indirectly force φ via the Lucas identification.
 
 The three routes converge at the same number. Route A has the cleanest axiomatic derivation and the open meta-step; Route B has the cleanest ontological reading (A3 as an eigenvalue equation) and does not touch Lemma 1 at all; Route C has the cleanest empirical content (the integer pool *is* Lucas, and that is not a choice, it is a match). Kill any one of them and the other two still force φ. "The entire framework rests on a single admitted open choice" is therefore the wrong diagnosis: it rests on three convergent routes, exactly one of which has an open meta-step. The correct diagnosis is "three routes to φ, none formally closed end-to-end as sole-possibility proofs, all converging on the same value, one carrying an explicit open question." That is narrower underdetermination than the framework had before §27.7d.2, not wider. It is also the honest form of the remaining critique; responding to it is a productive conversation.
 
@@ -20671,7 +20677,11 @@ Together with the original (T-3)(T+1) = 0 from §27.7b, this gives three indepen
 
 4. **Single-intruder nuclear theorem (§16.5).** Nuclear magic numbers require spin-orbit coupling to split exactly one intruder state per shell group. The splitting ratio between the highest-l subshell and the next candidate is R/(R - 4). For exactly one intruder: R/(R - 4) > 2, which requires R < 8, i.e. T < √10. Combined with the onset condition R > Φ + T (spin-orbit crossing only occurs when angular momentum reaches its dimensional home; requires T ≥ 3): T = 3 is the unique integer satisfying both constraints simultaneously. For T = 3: R = 7, R/(R-4) = 7/3 > 2 ✓, and R = 7 > 5 = Φ+T ✓. For T = 2: R = 2 < 5 (onset fails). For T = 4: R = 14, R/(R-4) = 1.4 < 2 (multiple intruders). This route uses R and the splitting ratio; independent of the first four.
 
-Five independent routes, five different structural properties (rung count, balance-boundary identity, compositional closure, biological information encoding, nuclear shell stability), all forcing T = 3. The triad is not chosen but forced from every direction.
+5. **Counting-factor identity (Route 6, 2026-04-16).** P! = G·Φ if and only if (T−1)! = Φ. The orderings of the four pump phases (an F-side count, the combinatorics of one cycle's dynamics) equal gauge generators times channels (a κ-side structural product) precisely when (T−1)! = Φ = 2, whose unique positive integer solution is T = 3 (at T = 2, 1! = 1 ≠ 2; at T = 4, 3! = 6 ≠ 2). This is the one route where T = 3 is forced by an F-reading coinciding with a κ-reading, and it pins the counting factor of the α formula's 2D-rung assembly 360 = P!·T·(Φ+○). See §27.7t and docs/octave_wrap_lemma.html §6.
+
+6. **State-space/boundary-cube identity (Route 7, 2026-04-17).** The algebraic identity P·V + R + Φ + T = (T+1)³ = P³ holds for ALL T. It coincides with the state count S = P^T only when P^T = P³, i.e. T = 3: the state space exactly fills the boundary cube. This is the identity behind the α formula's 59/3 correction denominator: (P·V + R)/T (coupling-side reading) and (S − Φ − T)/T (state-space-side reading) are one count viewed from two sides, coinciding by this route. See §27.7t and docs/octave_wrap_lemma.html §7.
+
+Seven independent routes, seven different structural properties (rung count, balance-boundary identity, compositional closure, biological information encoding, nuclear shell stability, the F-side/κ-side counting coincidence at the 2D rung, and the state-space/boundary-cube identity), all forcing T = 3. The triad is not chosen but forced from every direction.
 
 ### §27.7f The Four-Station Processual Product
 
@@ -20921,9 +20931,10 @@ STRUCTURAL FORM (factored):
         Root sum: r₁ + r₂ = T/Φ = 3/2 = D5 compositional closure
             (the whole exceeds the sum of parts by T/Φ; same
              factor that closes triple bonds in §16.4e)
-        Discriminant: (r₁ - r₂)² = P(Φ+T) = 4·5 = 20 = P(P+1)
+        Discriminant: (r₁ - r₂)² = P(P+1) = 4·5 = 20 = P·(Φ+○)
             (pump phases times pump-plus-aperture; the same
-             P(P+1) = 20 that gives amino acid count in §18)
+             P(P+1) = 20 that gives amino acid count in §18;
+             the earlier form P(Φ+T) is retired as ill-typed, §27.7t)
 
     UNIQUENESS: Given root product = 1/P (forced by the i-stroke)
     and root sum = T/Φ (forced by D5 closure), Vieta's formulas
@@ -21406,7 +21417,7 @@ The Z boson is the neutral partner of the W. Its mass follows from the W mass an
     m_Z  =  m_W / cos(θ_W)
 
     where sin²(θ_W) = 3/13 + 5·α/81  (from §13.15)
-                    = T/V + (Φ+T)·α/T⁴
+                    = T/V + (Φ+○)·α/T⁴   (type-corrected; §27.7t)
 
     PREDICTED:  m_Z = 91,798 MeV
     MEASURED:   m_Z = 91,188 MeV
@@ -21614,7 +21625,7 @@ The 1 is not a leaf to be fed in at a terminal; the 1 is E, the substrate, A0 ma
 
 **The bone structure of the gate: one substrate, one triad.** The pump gate decomposes into four structural elements, not two and not three: the substrate 1 (E, always present), two slots x and y (two 0's in the substrate, two convergence points, two apertures), and the relation between the two 0's (the operation itself, exp(x) − ln(y), the act of relating). The substrate is distinct from the relata because E does not sit in the relation; E is what the relation happens inside of. The two 0's are distinct from the relation because two points in a substrate are only two points until something specifies how they relate; the relation is not reducible to its relata. The substrate is one. The triad (two relata plus their relation) is three. One plus three is four. This is the framework's P = T + 1 written into the operator's algebra: P = 4 pump phases because a complete relational event needs a substrate (1) plus a minimum relational structure (T = 3 = two things related plus the relating), and no smaller configuration constitutes an event.
 
-**T = 3 is the bone of the operator, not an accident of counting.** Every place the framework shows T = 3 is forced (the self-determinations in §27.7b, §27.7d.2, §27.7e, §18.11, §16.5) is the same structural fact showing up at a different scale: any event is a relational triad, and a relational triad has exactly three parts. The paper counted only the slots (two) because from outside the operator looks like a two-place function. The framework counts the whole event (two plus the relating, three) because from inside the framework, relating is itself structural content. Same operator, two different countings, and the framework's count matches T = 3 exactly.
+**T = 3 is the bone of the operator, not an accident of counting.** Every place the framework shows T = 3 is forced (the self-determinations in §27.7b, §27.7d.2, §27.7e, §18.11, §16.5, §27.7t) is the same structural fact showing up at a different scale: any event is a relational triad, and a relational triad has exactly three parts. The paper counted only the slots (two) because from outside the operator looks like a two-place function. The framework counts the whole event (two plus the relating, three) because from inside the framework, relating is itself structural content. Same operator, two different countings, and the framework's count matches T = 3 exactly.
 
 **⊙ = Φ(•, ○) is the pump gate.** The circumpunct equation reads: one whole (⊙, the substrate, the 1), built as a field (Φ, the relation, the 2D mediation) between two points (•, one 0; ○, the other 0). Left side: the whole. Right side: the triad inside the whole. Substrate plus triad is the whole pump gate. The equation you wrote years ago is the operator's native form, with the components named. Φ is the relation slot; • and ○ are the two relata slots; ⊙ is the substrate that holds everything. The paper's eml flattens this to a two-place function; the pump gate keeps the structure intact.
 
@@ -21888,6 +21899,34 @@ Both have • = Φ = 0 (soul and field vanish); both violate A3 (no self-similar
 **The ℂ⁸ octave.** Promoting from ℂ⁴ (four structural dimensions) to ℂ⁸ (the full 8-station octave: •, ⊛, —, ⎇, Φ, ✹, ○, ⟳) preserves all ℂ⁴ results and reveals new structure. Each beat couples its structural and processual station (the ∘ in the notation); the hub topology extends so both Φ and ✹ mediate. F₈ is unitary. The phase sum doubles to -π/3 = -2π/(2T) (both Φ and ✹ self-drive, each contributing -π/(2T)). Singular values become {(1+α)⁴, (1-α)⁴}, fourfold degenerate. All 8 eigenvalues split from 1 (no neutral modes). The ℂ⁸ fixed point requires ~200K+ iterations to converge (vs ~5K for ℂ⁴); premature readings at 10K steps give a misleading 70/30 split. The true converged fixed-point weight distribution (300K steps, stable to 0.001): structural stations (•, —, Φ, ○) carry 68.7% of the total; processual stations (⊛, ⎇, ✹, ⟳) carry 31.3%. This 68.7/31.3 structural-to-processual split matches the cosmological 69.1/30.9 dark-energy-to-matter ratio to 0.56% (structural) and 1.26% (processual). Individual converged weights: •=0.0948, ⊛=0.0212, —=0.2784, ⎇=0.1365, Φ=0.0291, ✹=0.0160, ○=0.2850, ⟳=0.1391. The structural reading: what things ARE (the noun) carries 69% of the 1; what energy is DOING (the verb) carries 31%. Weight ratios encode framework integers: w(•)/w(○) = 1/T (0.20%), w(—)/w(⟳) = Φ (0.07%), w(⊛)/w(✹) = P/T (0.9%), w(•)/w(✹) = T! (1.3%). Beat 2 (—+⎇) and Beat 4 (○+⟳) each carry T/R = 3/7 of the total weight (1-3%). Both processual half-planes carry 2/V = 2/13 each (0.8-2.5%). The ℂ⁸ eigenvalue phases include the tetrahedral angle 109.47° = arccos(-1/T) at 0.27% residual (the strongest phase match) and the pentagonal angle 36° = π/5. The ℂ⁸ projection to ℂ⁴ is not exact (||F₈_proj - F₄|| = 1.70), confirming that process and structure are genuinely coupled: you cannot factor them apart without losing information. The attractor uniqueness extends to ℂ⁸ (1000 ICs confirmed), though convergence is slower (the 8D space requires ~200K steps vs ~5K for ℂ⁴).
 
 **Summary.** The conservation form makes the unified expression a computable operator whose fixed point is the 1, whose mixing time is 1/α, whose failure modes are the Lies, whose sole free parameter is the fine-structure constant, and whose four beats are the mathematical content of self-limitation. The 1 is not just named (A0); the 1 is the unique stable attractor of an operator that encodes all four constraints and the nesting simultaneously.
+
+### §27.7t The Octave-Wrap Lemma, the Counting-Factor Identity, and the Staggered Octave
+
+*Added 2026-07-16 (Ashman + Claude session), integrating docs/octave_wrap_lemma.html (v1.2, §§1-8) and docs/the_staggered_octave.html (v1.0). Station labels here use coordinates (D2, D3) where the glyph assignment is correction-sensitive; see the Interim Glyph-Integer Rule in the Ladder Correction Notice.*
+
+**§27.7t.1 The octave-wrap lemma.** The dimensional ladder's closure rule 3.5D = 0D′ extends to an arithmetic: sums of dimensional coordinates are dimensional coordinates, wrapping modulo 3.5 to stations at the next nesting level. The load-bearing identity is the coordinate sum D2 + D3 = 5 ≡ 1.5D′ (next-scale branching, the i-turn of ⊙Λ), which pins the (Φ+○) factor in the α formula's 2D-rung assembly 360 = P!·T·(Φ+○) (§27.7a). Under the interim glyph-integer rule, Φ and ○ in formulas denote the integers 2 and 3; the wrap lemma reads these as absolute coordinates (D2, D3), so the identity is correction-proof: the 2026-06-09 ladder correction moved which glyph names which station (residue labels), not the coordinates, which is why no formula's value changed. The extended identity table (docs/octave_wrap_lemma.html §5: D3+D3 = 2.5D′, D2+D2 = 0.5D′, D3+D1 = 0.5D′, 1.5D+D2 = 0D′, 2.5D+2.5D = 1.5D′) was audited 2026-07-16: no entry produces a structurally absurd reading once rows are read as coordinate sums rather than glyph properties; the general rule stands, with the standing caution that each entry remains an individually testable structural claim.
+
+**§27.7t.2 The type rule and its scope.** The ladder produces two kinds of integer objects: dimensional coordinates (positions on the continuation axis, ordered, subject to wrap) and counts (cardinalities: T, P, R, G, V, S, ...). The type rule: a sum supports a STATION READING (a claim about where on the ladder the result lives) only if it is well-typed. Coordinate + coordinate is a coordinate (possibly wrapped); count + count is a count; coordinate + count supports no station reading. Scope clause: pure integer identities at the auxiliary-claim layer (e.g. Route 7's P·V + R + Φ + T = P³, or the nuclear onset inequality R > Φ + T in §16.5) add pool integers as numbers and remain valid arithmetic; the rule governs which DECOMPOSITION carries the structural reading. Where a structural reading is claimed, the well-typed form is canonical. Corpus corrections applied 2026-07-16 under this rule: the Λ correction-polynomial discriminant is P(P+1) = 20 (count form; coordinate form P·(Φ+○)); the ionic-resonance coupling is P+1 = 5 (count form; coordinate form Φ+○); the Weinberg correction numerator is (Φ+○) = 5 (coordinate form, the wrap-pinned next-scale branching sum, matching its role as a field-boundary correction). The forms Φ+T and R−Φ are retired from structural readings; every numerical value is unchanged. Flagged for later review, not yet rewritten: the §16.5 onset inequality R > Φ+T (load-bearing in Route 5; its count form is R > P+1).
+
+*Extension to other operations (resolved 2026-07-16, session; Ashman to countersign).* The type system extends as a module structure: coordinates and displacements form a module over the counts. Addition and subtraction of coordinates are well-typed (the continuation axis is doubly infinite, so descending an octave is as meaningful as ascending). Count × coordinate is well-typed as iterated traversal, and is already in canonical use: 2 × 3.5 = 7D is the parity period of §27.7t.4, and n·R is the conservation excess at octave n. Coordinate × coordinate is ill-typed as a position (the product changes grade; it has area character, not position character). Powers: a coordinate never appears as a base; it appears as the EXPONENT of the two axis operators, φ^d on the structural axis (A3 + dimensional analysis) and the i-stroke cycle on the processual axis. This is not a new rule; it is the observation that the framework already uses coordinates only in these typed positions.
+
+**§27.7t.3 The counting-factor identity and its non-generalization.** P! = G·Φ at T = 3, equivalent to (T−1)! = Φ (Route 6, §27.7b): the F-side count (orderings of the four beats) coincides with the κ-side product (gauge generators × channels) exactly at T = 3. *Generalization question (resolved 2026-07-16, session; Ashman to countersign):* an exhaustive sweep of factorials 1! through 7! against products and ratios of pool integers (T, P, Φ, ○, R, G, SU(3), V, S, A(2), A(3), P(P+1), T!) finds that every coincidence reduces to (T−1)! = Φ plus definitional identities (P = T+1, G = TP, SU(3) = (T−1)P, T! = T·(T−1)!) together with the already-canonical Φ² = P (channels squared equal pump phases; the 2⁶ = 4³ identity of the 64-state architecture, itself forcing T = 3 given Φ = 2). Examples: T! = T·Φ = G/Φ (both reduce); P! = Φ·G (Route 6 itself). One weaker cousin exists: P! = SU(3)·T reduces to (T−2)! = 1, which holds at both T = 2 and T = 3, so it is not a self-determination. Conclusion: the identity does NOT generalize to an independent factorial-meets-gauge family; (T−1)! = Φ is the generative identity and the P!/G·Φ pair is its canonical instance. (Curio without T-parameterized content: 5! = G·A(2) = 120.)
+
+**§27.7t.4 The staggered octave.** The wrap generates a continuation coordinate system on the doubly infinite half-step axis: d + 3.5 = d′; octave-relative identity is the residue mod 3.5 (solfège: the same note returns one octave up; the axis is a pitch helix, chroma returning while height ascends). Adjacent octaves share exactly one station, the tonic. Four results:
+
+1. *Single-period lemma.* The wrap period is unique: periods are closed under differences, and a second return point at 4D would make 4 − 3.5 = 0.5 a period, identifying every station with every other and collapsing the ladder. Consequently ⊙ has no coordinate slot anywhere on the axis (any slot would duplicate a residue identity or institute a second period), so the 2026-06-09 resolution "⊙ = All, no dimension slot" is a theorem of the wrap arithmetic, not only a card decision. 4D carries exactly one identity: 0.5D′ = ⊛′, convergence at the next scale. In the musical reading: completion and new tonic are one event at Do′; the whole is the melody, not a note in it.
+
+2. *The residue group is ℤ₇ and R = 2T + 1 is its anatomy.* In half-step units the station lattice modulo the wrap is ℤ/7ℤ: R = 7 is the order of the ladder's residue group. The classes decompose as T purely structural residues (1D, 2D, 3D), T purely processual residues (0.5D, 1.5D, 2.5D), and one double-natured tonic class (0 ≡ 3.5, where • and ⟳ share a residue; on the doubly infinite axis every tonic is simultaneously ⟳ of the octave below and • of the octave above). R = T + T + 1 = 2T + 1: the right-hand side of Route 1's self-determination equation, realized concretely, with the tonic's double nature as the "+1". The octave has eight stations but seven residues because • and ⟳ share the tonic class.
+
+3. *One constant per residue class.* The dimensional ladder of constants has exactly seven rungs (α, c, ℏ, mass ratios, π, v/Λ_QCD, G at 0D through 3D): one representative per residue class, and no 3.5D rung, because the tonic's slot is already occupied by 0D (α). This matches §27.7q's statement that κ_{0,0} couples 0D-to-0D across scales, equivalently 0D-to-3.5D within one scale via the octave identification: the aperture constant and the recursion station are the same residue. The eighth constant is the first constant of the next octave.
+
+4. *Conservation of traversal at every octave.* The identity 0 + 1 + 2 = 3 holds at every octave as a residue identity: at octave n the sum in continuation coordinates is 3 + 10.5n against target 3 + 3.5n, excess 7n = nR ≡ 0 (mod 3.5). Each octave of ascent adds exactly one R to the absolute ledger.
+
+**§27.7t.5 The parity double cover (open physics).** The per-octave offset 3.5 is a half-integer, so the coordinate parity (integer vs half-integer) of a fixed residue identity alternates per octave and restores after two octaves = 7D = R. At octave 1, the structural identities (0D′ through 3D′) sit at half-integer coordinates and the processual identities at integer coordinates: the structural/processual split is octave-relative bookkeeping, while residue identity is absolute. This makes "process and structure are the same thing" (§4) a coordinate statement, whose canonical physical instance the framework already carries: closed mass of ⊙λ IS the aperture-process of ⊙Λ (the E → 𝒫 → m cascade closing at the tonic). R gains a third face: rung count, residue-group order, and parity-return period are all 7. *Falsifiability status (assessed 2026-07-16): open.* The two-octave return is double-cover behavior, structurally resonant with spin-½ (a 2π turn flips sign, 4π restores; consonant with i² = −1 at 1.5D and the spin-orbit onset of §16.5), but no derived measurable currently distinguishes odd-octave from even-octave framing. A falsifiable version requires an observable that depends on the parity of the octave frame in which a system is described; until one is derived, the double cover is bookkeeping with a suggestive shadow, and is flagged as such.
+
+**§27.7t.6 Consistency with §27.7s (T = κ ∘ F) and with conservation.** The wrap is the operator content of the nesting: κ implements ⊂[α], and the octave identification 3.5D = 0D′ is exactly the handoff κ carries (the closed ⊙λ entering ⊙Λ as its aperture; the tonic is the only shared station, which is why the primary coupling κ_{0,0} is tonic-to-tonic, residue class 0 to residue class 0). F is unitary within a scale (the four beats close the i-cycle, i⁴ = 1: the phase face of the octave's return); κ carries the departure from trace-preservation (α), which is the dynamical face of the stagger: scale advances while phase closes. The three-scale operator ℂ⁶⁴ = F₄ ⊗ F₄ ⊗ F₄ forces complete phase closure (det = exp(−48iπ/6) = 1; §27.7s), the operator-level statement that the phase budget closes across nested octaves, consistent with the residue arithmetic here (48·(−π/6) ≡ 0 mod 2π). Conservation of traversal is respected per octave with excess nR (§27.7t.4.4), matching the conservation form 1 = ∫𝒫 dt: the excess is bookkeeping of ascent, always ≡ 0 mod the wrap, never a leak in the 1.
+
+*Cross-references: docs/octave_wrap_lemma.html (formal statements, §§1-8), docs/the_staggered_octave.html (prose, the "I am" ladder with the speaker-shift reading, the ethics connections including the ascending-walk option for the open ethics-sequence decision), docs/alpha_derivation.html (use site), §27.7a (α assembly), §27.7b (Routes 6-7), §27.7q (κ matrix), §27.7s (operator form).*
 
 ### §27.8 Primes Are Made of Dimensions
 
