@@ -1,0 +1,114 @@
+======================================================================
+G1: LONG-CHAIN PROFILE AND DECAY FIT (n = 12)
+======================================================================
+  per-octave weights of leading mode:
+    oct  0: 0.004412 #
+    oct  1: 0.023437 #######
+    oct  2: 0.066237 #####################
+    oct  3: 0.118652 ######################################
+    oct  4: 0.164053 ####################################################
+    oct  5: 0.188465 ############################################################
+    oct  6: 0.184701 ###########################################################
+    oct  7: 0.154319 #################################################
+    oct  8: 0.106875 ##################################
+    oct  9: 0.056783 ##################
+    oct 10: 0.018810 ######
+    oct 11: 0.003601 #
+
+  interior log-linear fit: slope = 0.0937/octave
+  no decay (slope >= 0): profile not bottom-anchored
+  bottom octave share: 0.0044   top octave share: 0.0036
+  bottom/top ratio: 1.225
+
+======================================================================
+G2: SKIN TEST: ALL EIGENMODES, CHAIN vs RING (n = 10)
+======================================================================
+  chain: fraction of modes with COM in bottom/middle/top third: 0.07 / 0.86 / 0.07
+  chain: mean COM = 0.4905 (0.5 = unbiased), mean participation = 0.454
+  ring : mean participation = 0.623
+  skin-effect signature: chain modes pile into one third and
+  chain participation collapses relative to the ring.
+  chain |lambda| range: [0.994283, 1.005508]
+  ring  |lambda| range: [0.994436, 1.005851]
+
+======================================================================
+G3: DIRECTION CONTROLS (n = 8)
+======================================================================
+                             variant bottom-3rd share  top-3rd share    floor
+              ascending, chirality +           0.0944         0.0800   bottom
+              ascending, chirality -           0.0944         0.0800   bottom
+             descending, chirality +           1.0442         0.0025   bottom
+             descending, chirality -           1.0442         0.0025   bottom
+  reading: if order flips the floor, the ascent direction sets it;
+  if chirality flips it, the i-cycle's winding sets it;
+  if neither flips it, the kappa edge asymmetry sets it.
+
+======================================================================
+G4: MODE-FAMILY CROSSOVER: FLOOR MODE vs DOME MODE vs TOWER HEIGHT
+======================================================================
+    n bottom-oct share  peak octave   profile type
+    3           0.5070            0          floor
+    4           0.5605            0          floor
+    5           0.6678            0          floor
+    6           0.0316            2           dome
+    7           0.0195            3           dome
+    8           0.0128            3           dome
+    9           0.0089            4           dome
+   10           0.0064            4           dome
+   11           0.0048            5           dome
+   12           0.0037            5           dome
+   13           0.0029            6           dome
+   14           0.0023            6           dome
+
+  top-3 modes at n = 4 and n = 12 (profile peaks and bottom shares):
+    n=4 rank 0: |l| = 1.004402  bottom = 0.5605  peak oct = 0
+    n=4 rank 1: |l| = 1.003539  bottom = 0.1126  peak oct = 1
+    n=4 rank 2: |l| = 1.003310  bottom = 0.0767  peak oct = 2
+    n=12 rank 0: |l| = 1.005602  bottom = 0.0037  peak oct = 5
+    n=12 rank 1: |l| = 1.005076  bottom = 0.0137  peak oct = 3
+    n=12 rank 2: |l| = 1.004657  bottom = 0.7949  peak oct = 0
+
+======================================================================
+G5: THE DESCENDING REGIME (n = 12)
+======================================================================
+  per-octave shares, descending composition:
+    oct  0: 0.792340 ############################################################
+    oct  1: 0.164532 ############
+    oct  2: 0.034168 ###
+    oct  3: 0.007096 #
+    oct  4: 0.001474 
+    oct  5: 0.000306 
+    oct  6: 0.000064 
+    oct  7: 0.000013 
+    oct  8: 0.000003 
+    oct  9: 0.000001 
+    oct 10: 0.000001 
+    oct 11: 0.000004 
+  bottom-region log slope: -1.570/octave (decay length 0.64 octaves)
+  leading |lambda| = 1.004698 (ascending at same n: see G1 run)
+  reading: applying the beats top-down dams the 1 at the floor;
+  the canonical ascending order spreads it through the bulk.
+
+======================================================================
+G6: CROSSOVER HEIGHT vs ALPHA, AND DOME SCALING
+======================================================================
+  alpha mult  crossover n*
+         0.5             6
+         1.0             6
+         2.0             6
+         4.0             6
+         8.0             6
+
+  dome scaling (ascending, standard alpha): max octave share vs n
+    n  max share  n * max share
+    6     0.3202          1.921
+    7     0.2986          2.090
+    8     0.2528          2.023
+    9     0.2338          2.104
+   10     0.2059          2.059
+   11     0.1910          2.101
+   12     0.1727          2.072
+   13     0.1610          2.093
+   14     0.1483          2.076
+  box-ground-state scaling predicts n * max share -> constant (= 2
+  for a pure sin^2 envelope); no privileged scale in the limit.
