@@ -267,6 +267,10 @@
       <a href="learn/" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Learn</a>
       <a href="#framework" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Framework</a>
       <a href="ethics.html" class="hidden md:inline-block px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors">Ethics</a>
+      <button onclick="openPagesOverlay()" class="inline-flex items-center gap-2 px-3 py-2 text-[12px] uppercase tracking-[0.18em] text-fog-300 hover:text-fog-100 transition-colors" title="Search all pages (press /)" aria-label="Search all pages">
+        <i data-lucide="search" class="w-3.5 h-3.5"></i>
+        <span class="hidden sm:inline">Search</span>
+      </button>
       <a href="mailto:ashroney@gmail.com?subject=Fractal%20Reality%20Inquiry"
          class="ml-2 px-4 py-2 text-[12px] uppercase tracking-[0.18em] text-gold-bright bg-gold/10 border border-gold/40 rounded-md hover:bg-gold/20 hover:border-gold transition-all">
         Get in touch
@@ -690,6 +694,23 @@
     </div>
   </aside>
 
+  <!-- The Labs (added 2026-07-16) -->
+  <div class="reveal mt-12 bg-ink-800 border border-rule rounded-2xl p-8 lg:p-10 relative overflow-hidden">
+    <div class="absolute inset-y-0 right-0 w-1/2 pointer-events-none" style="background: radial-gradient(circle at 80% 50%, rgba(77,160,200,0.08), transparent 65%);"></div>
+    <div class="relative flex flex-wrap items-center justify-between gap-6">
+      <div class="max-w-xl">
+        <span class="font-sans text-[11px] tracking-[0.22em] uppercase text-gold/80">Fractal Gaming &middot; R&amp;D</span>
+        <h3 class="h-display text-[clamp(22px,2.8vw,30px)] mt-2 mb-3">The Labs.</h3>
+        <p class="text-fog-300 text-[15px] leading-relaxed">Forty-plus live experiments behind Last Ship Sailing: WebGPU fluids and volumetric clouds, matter engines where rock, water, and vapor share one substrate, emergence worlds, meta-generators, and the cymatics of water. Open them in a WebGPU-capable browser (Chrome or Edge) and fly around.</p>
+      </div>
+      <a class="btn btn-primary" href="labs.html">
+        <i data-lucide="flask-conical" class="w-4 h-4"></i>
+        Browse the labs
+        <i data-lucide="arrow-right" class="w-4 h-4 btn-arrow"></i>
+      </a>
+    </div>
+  </div>
+
 </section>
 
 <!-- ===== CONSULTING ===== -->
@@ -900,5 +921,28 @@
   }
 </script>
 
+<!-- Pages search overlay (added 2026-07-16) -->
+<div id="pagesOverlay" class="fixed inset-0 z-[100] hidden bg-black/70 backdrop-blur-sm">
+  <button onclick="closePagesOverlay()" class="absolute top-4 right-5 z-[101] w-10 h-10 rounded-full bg-ink-800 border border-rule text-fog-100 text-xl hover:border-gold/60 transition-colors" aria-label="Close search">&times;</button>
+  <iframe id="pagesFrame" src="about:blank" class="w-full h-full border-0" title="Search all pages"></iframe>
+</div>
+<script>
+function openPagesOverlay() {
+  var f = document.getElementById('pagesFrame');
+  if (!f.src || f.src === 'about:blank' || !f.src.includes('pages.html')) f.src = 'pages.html';
+  document.getElementById('pagesOverlay').classList.remove('hidden');
+  document.documentElement.style.overflow = 'hidden';
+}
+function closePagesOverlay() {
+  document.getElementById('pagesOverlay').classList.add('hidden');
+  document.documentElement.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closePagesOverlay();
+  if (e.key === '/' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    e.preventDefault(); openPagesOverlay();
+  }
+});
+</script>
 </body>
 </html>

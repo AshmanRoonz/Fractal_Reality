@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Labs &middot; Fractal Gaming</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@300;400;500&display=swap');
+:root {
+  --bg: #0A0A0F; --ink: #12121A; --ink2: #16161f; --rule: #26262f;
+  --gold: #B8A060; --gold-bright: #D8C080; --cyan: #4DA0C8;
+  --warm: #E0D8C8; --fog: #a8a094; --dim: #8A8272;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--warm); font-family: 'EB Garamond', Georgia, serif; font-size: 18px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--gold); color: var(--bg); }
+a { color: var(--gold); text-decoration: none; }
+.page { max-width: 1040px; margin: 0 auto; padding: 60px 24px 100px; }
+.topline { font-family: 'Space Grotesk', sans-serif; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
+.topline a { color: var(--fog); } .topline a:hover { color: var(--warm); }
+.header { text-align: center; margin-bottom: 20px; }
+.header .symbol { font-size: 54px; color: var(--gold); line-height: 1; margin-bottom: 14px; text-shadow: 0 0 30px rgba(184,160,96,0.35); }
+.header h1 { font-size: 40px; color: var(--gold-bright); font-weight: 600; margin-bottom: 10px; }
+.header .subtitle { font-size: 18px; color: var(--dim); font-style: italic; max-width: 640px; margin: 0 auto; }
+.note { max-width: 640px; margin: 26px auto 10px; padding: 14px 20px; border-left: 3px solid var(--cyan); background: rgba(77,160,200,0.05); font-size: 15.5px; color: var(--fog); }
+h2 { font-family: 'Space Grotesk', sans-serif; font-size: 15px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin: 50px 0 4px; }
+.group-blurb { color: var(--dim); font-style: italic; font-size: 16px; margin-bottom: 16px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.card { display: block; background: var(--ink2); border: 1px solid var(--rule); border-radius: 10px; padding: 16px 18px; transition: border-color 0.2s, transform 0.2s; }
+.card:hover { border-color: rgba(184,160,96,0.55); transform: translateY(-2px); }
+.card-name { font-weight: 600; font-size: 18px; color: var(--gold-bright); margin-bottom: 4px; }
+.card-desc { font-size: 15px; color: var(--fog); line-height: 1.55; margin-bottom: 8px; }
+.card-go { font-family: 'Space Grotesk', sans-serif; font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); opacity: 0.75; }
+.card:hover .card-go { opacity: 1; }
+.footer { margin-top: 70px; padding-top: 26px; border-top: 1px solid var(--rule); text-align: center; color: var(--dim); font-size: 15px; }
+.footer .sig { color: var(--gold); font-size: 24px; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="topline">
+  <a href="index.html#game">&larr; Fractal Reality</a>
+  <span>Fractal Gaming &middot; R&amp;D</span>
+  <a href="https://lss.fractalreality.ca" target="_blank" rel="noopener">Play Last Ship Sailing &rarr;</a>
+</div>
+
+<div class="header">
+  <div class="symbol">&#x2299;</div>
+  <h1>The Labs</h1>
+  <div class="subtitle">42 live experiments behind Last Ship Sailing: fluids, matter, clouds, worlds, and the physics of emergence, all running in your browser.</div>
+</div>
+
+<div class="note">Most labs use WebGPU and want a recent Chrome or Edge. Each opens in a new tab at lss.fractalreality.ca; fly with WASD and the mouse where flying is offered.</div>
+
+<h2>Worlds & Generators</h2>
+<p class="group-blurb">Meta-generated terrain, cities, and flyable worlds.</p>
+<div class="grid">
+  <a class="card" href="https://lss.fractalreality.ca/labs/meta_generator_webgpu.html" target="_blank" rel="noopener">
+    <div class="card-name">Meta-Generator</div>
+    <div class="card-desc">A generator of field-generators (WebGPU)</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/world_navigator_webgpu.html" target="_blank" rel="noopener">
+    <div class="card-name">World Navigator</div>
+    <div class="card-desc">Fly a meta-generated world</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/world_volumetric_webgpu.html" target="_blank" rel="noopener">
+    <div class="card-name">Volumetric World</div>
+    <div class="card-desc">Fly inside a meta-generated world</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/city_generator_webgpu.html" target="_blank" rel="noopener">
+    <div class="card-name">City Genome</div>
+    <div class="card-desc">Procedural city generation on WebGPU</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/procedural-world.html" target="_blank" rel="noopener">
+    <div class="card-name">Procedural World</div>
+    <div class="card-desc">The Information-Field Engine generating terrain</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/hybrid_world.html" target="_blank" rel="noopener">
+    <div class="card-name">Hybrid World</div>
+    <div class="card-desc">Rasterized terrain with raymarched clouds</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/recursive_emergence_world.html" target="_blank" rel="noopener">
+    <div class="card-name">Recursive Emergence World</div>
+    <div class="card-desc">A world that emerges from its own recursion</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/recursive_webgpu_emergence_engine_v2.html" target="_blank" rel="noopener">
+    <div class="card-name">Recursive Emergence Engine v2</div>
+    <div class="card-desc">GPU-resident recursive emergence engine</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/matter_cavern.html" target="_blank" rel="noopener">
+    <div class="card-name">Matter Cavern</div>
+    <div class="card-desc">WebGPU cavern scene; the foundation build</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+</div>
+
+<h2>Matter & Particles</h2>
+<p class="group-blurb">One substrate, many materials; particles that break, join, and reform.</p>
+<div class="grid">
+  <a class="card" href="https://lss.fractalreality.ca/labs/engine.html" target="_blank" rel="noopener">
+    <div class="card-name">Engine (Phase 0)</div>
+    <div class="card-desc">GPU particles; the first engine</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/particle_engine.html" target="_blank" rel="noopener">
+    <div class="card-name">Particle Engine (Phase 1)</div>
+    <div class="card-desc">One world, all phases coupled; WebGPU SPH</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/matter_lab.html" target="_blank" rel="noopener">
+    <div class="card-name">Matter Lab</div>
+    <div class="card-desc">One substance walking the full cycle</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/matter_world.html" target="_blank" rel="noopener">
+    <div class="card-name">Matter World</div>
+    <div class="card-desc">One substrate, many materials</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/matter_3d.html" target="_blank" rel="noopener">
+    <div class="card-name">Matter 3D</div>
+    <div class="card-desc">Rock, water, and cloud from one engine</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/field_particle_join_webgpu.html" target="_blank" rel="noopener">
+    <div class="card-name">Field and Particle Join</div>
+    <div class="card-desc">Breakable, reforming terrain; field and particles as one medium</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/particle_break_world_webgpu.html" target="_blank" rel="noopener">
+    <div class="card-name">Particle Break World</div>
+    <div class="card-desc">Explore and connect; a breakable particle world</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/particle_cloud_break_lab.html" target="_blank" rel="noopener">
+    <div class="card-name">Particle Cloud Break Lab</div>
+    <div class="card-desc">Concentration and H2O model</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/particle_cloud_break_lab_3d.html" target="_blank" rel="noopener">
+    <div class="card-name">Particle Field 3D</div>
+    <div class="card-desc">Fly through the full medium</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/metaball_cloud.html" target="_blank" rel="noopener">
+    <div class="card-name">Metaball Cloud</div>
+    <div class="card-desc">Particles fuse into one soft surface</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/gpu_cloud.html" target="_blank" rel="noopener">
+    <div class="card-name">GPU Cloud</div>
+    <div class="card-desc">Particles sized by density (WebGPU)</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+</div>
+
+<h2>Fluids, Clouds & Weather</h2>
+<p class="group-blurb">Navier-Stokes on the GPU; volumetric clouds, wind, and open sky.</p>
+<div class="grid">
+  <a class="card" href="https://lss.fractalreality.ca/labs/fluid_webgpu_lab.html" target="_blank" rel="noopener">
+    <div class="card-name">Fluid WebGPU Lab</div>
+    <div class="card-desc">2D Navier-Stokes on the GPU</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/fluid3d_webgpu_lab.html" target="_blank" rel="noopener">
+    <div class="card-name">Fluid 3D WebGPU Lab</div>
+    <div class="card-desc">Navier-Stokes smoke in three dimensions</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/fluid_cloud_lab.html" target="_blank" rel="noopener">
+    <div class="card-name">Fluid Cloud Lab</div>
+    <div class="card-desc">Lit volumetric clouds driven by Navier-Stokes</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/fluid_smoke_lab.html" target="_blank" rel="noopener">
+    <div class="card-name">Fluid Smoke Lab</div>
+    <div class="card-desc">Navier-Stokes clouds; the Saharan Chill study</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/fluid3d_nested_lab.html" target="_blank" rel="noopener">
+    <div class="card-name">Fluid 3D Nested Lab</div>
+    <div class="card-desc">A ship tears world-anchored clouds</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/cloud_lab.html" target="_blank" rel="noopener">
+    <div class="card-name">Cloud Lab</div>
+    <div class="card-desc">3D gas simulation (WebGPU)</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/cloud_sim.html" target="_blank" rel="noopener">
+    <div class="card-name">Cloud Sim</div>
+    <div class="card-desc">GPU particles with velocity; a persistent vortex wake</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/gardner.html" target="_blank" rel="noopener">
+    <div class="card-name">Gardner Clouds</div>
+    <div class="card-desc">Texture-modulated translucent puffs</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/eml_cloud_lab.html" target="_blank" rel="noopener">
+    <div class="card-name">EML Subtractive Cloud Lab</div>
+    <div class="card-desc">Clouds carved by the eml operator</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/eml_cloud_field_lab.html" target="_blank" rel="noopener">
+    <div class="card-name">EML Cloud Field Lab</div>
+    <div class="card-desc">Procedural, instanced, varied cloud fields</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/eml_cloud_fly_webgpu.html" target="_blank" rel="noopener">
+    <div class="card-name">EML Cloud Flight</div>
+    <div class="card-desc">Fly through eml-generated clouds (WebGPU)</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/sky_weather_sim_webgpu.html" target="_blank" rel="noopener">
+    <div class="card-name">Sky Weather Sim</div>
+    <div class="card-desc">Full-sky weather on WebGPU (three.js TSL)</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/wind-routing.html" target="_blank" rel="noopener">
+    <div class="card-name">Wind Routing</div>
+    <div class="card-desc">Air flows around the mountains</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/wind-tank.html" target="_blank" rel="noopener">
+    <div class="card-name">Wind Tank</div>
+    <div class="card-desc">Two-way flow prototype</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/ship-field-demo.html" target="_blank" rel="noopener">
+    <div class="card-name">Ships on Water</div>
+    <div class="card-desc">The Information-Field Engine driving ships on a live water field</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+</div>
+
+<h2>Emergence & Resonance</h2>
+<p class="group-blurb">Seeds, cellular automata, and the cymatics of water.</p>
+<div class="grid">
+  <a class="card" href="https://lss.fractalreality.ca/labs/rule_zero.html" target="_blank" rel="noopener">
+    <div class="card-name">Rule 0: Substrate Potential</div>
+    <div class="card-desc">The substrate before any structure</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/emergence.html" target="_blank" rel="noopener">
+    <div class="card-name">Emergence</div>
+    <div class="card-desc">Code-seeds interacting; structure arising from simple rules</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/seeds_ladder.html" target="_blank" rel="noopener">
+    <div class="card-name">Seeds Ladder</div>
+    <div class="card-desc">Atoms to molecules and up; the nesting ladder played live</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/gather_ca_webgpu.html" target="_blank" rel="noopener">
+    <div class="card-name">Gather-CA</div>
+    <div class="card-desc">Cellular automaton where substances are parameter settings</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/morpho_lab.html" target="_blank" rel="noopener">
+    <div class="card-name">Morpho Lab</div>
+    <div class="card-desc">Resonance and bonds; form finding through frequency</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/molecule_lab.html" target="_blank" rel="noopener">
+    <div class="card-name">Molecule Lab</div>
+    <div class="card-desc">The cymatics of water at molecular scale</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+  <a class="card" href="https://lss.fractalreality.ca/labs/modal-lab.html" target="_blank" rel="noopener">
+    <div class="card-name">Modal Water Lab</div>
+    <div class="card-desc">Basin eigenmodes; cymatics in a tank</div>
+    <div class="card-go">Open lab &rarr;</div>
+  </a>
+</div>
+
+<div class="footer">
+  <div>Part of <a href="index.html">Fractal Reality</a>, the studio of Ashman Roonz &middot; <a href="pages.html">Search all pages</a></div>
+  <div class="sig">&#x2299;</div>
+</div>
+
+</div>
+</body>
+</html>

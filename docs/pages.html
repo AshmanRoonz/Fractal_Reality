@@ -925,13 +925,47 @@
                 { href: "tts_reader.html", name: "TTS Reader", desc: "Reads any web page, HTML file, or pasted text aloud using cloud neural voices" },
             ]
         }
+,
+        labs: {
+            title: "The Labs — Fractal Gaming Experiments",
+            pages: [
+                { href: "labs.html", name: "The Labs: Full Directory", desc: "Every live experiment from the Fractal Gaming labs, grouped by family" },
+                { href: "https://lss.fractalreality.ca/labs/rule_zero.html", name: "Rule 0: Substrate Potential", desc: "The substrate before any structure; potential as the zeroth rule" },
+                { href: "https://lss.fractalreality.ca/labs/emergence.html", name: "Emergence", desc: "Code-seeds interacting; structure arising from simple rules" },
+                { href: "https://lss.fractalreality.ca/labs/seeds_ladder.html", name: "Seeds Ladder", desc: "Atoms to molecules and up; the nesting ladder played live" },
+                { href: "https://lss.fractalreality.ca/labs/recursive_emergence_world.html", name: "Recursive Emergence World", desc: "A world that emerges from its own recursion" },
+                { href: "https://lss.fractalreality.ca/labs/recursive_webgpu_emergence_engine_v2.html", name: "Recursive Emergence Engine v2", desc: "GPU-resident recursive emergence engine (WebGPU)" },
+                { href: "https://lss.fractalreality.ca/labs/gather_ca_webgpu.html", name: "Gather-CA: Parameter Substances", desc: "Cellular automaton where substances are parameter settings (WebGPU)" },
+                { href: "https://lss.fractalreality.ca/labs/morpho_lab.html", name: "Morpho Lab", desc: "Resonance and bonds; form finding through frequency" },
+                { href: "https://lss.fractalreality.ca/labs/molecule_lab.html", name: "Molecule Lab", desc: "The cymatics of water at molecular scale" },
+                { href: "https://lss.fractalreality.ca/labs/modal-lab.html", name: "Modal Water Lab", desc: "Basin eigenmodes; cymatics in a tank" },
+                { href: "https://lss.fractalreality.ca/labs/matter_lab.html", name: "Matter Lab", desc: "One substance walking the full cycle" },
+                { href: "https://lss.fractalreality.ca/labs/matter_world.html", name: "Matter World", desc: "One substrate, many materials" },
+                { href: "https://lss.fractalreality.ca/labs/matter_3d.html", name: "Matter 3D", desc: "Rock, water, and cloud from one engine" },
+                { href: "https://lss.fractalreality.ca/labs/particle_engine.html", name: "Particle Engine (Phase 1)", desc: "One world, all phases coupled; WebGPU SPH" },
+                { href: "https://lss.fractalreality.ca/labs/field_particle_join_webgpu.html", name: "Field and Particle Join", desc: "Breakable, reforming terrain; field and particles as one medium (WebGPU)" },
+                { href: "https://lss.fractalreality.ca/labs/particle_cloud_break_lab_3d.html", name: "Particle Field 3D", desc: "Fly through the full medium" },
+                { href: "https://lss.fractalreality.ca/labs/fluid_webgpu_lab.html", name: "Fluid WebGPU Lab", desc: "2D Navier-Stokes on the GPU" },
+                { href: "https://lss.fractalreality.ca/labs/fluid_cloud_lab.html", name: "Fluid Cloud Lab", desc: "Lit volumetric clouds driven by Navier-Stokes" },
+                { href: "https://lss.fractalreality.ca/labs/fluid3d_nested_lab.html", name: "Fluid 3D Nested Lab", desc: "A ship tears world-anchored clouds" },
+                { href: "https://lss.fractalreality.ca/labs/sky_weather_sim_webgpu.html", name: "Sky Weather Sim", desc: "Full-sky weather simulation on WebGPU" },
+                { href: "https://lss.fractalreality.ca/labs/hybrid_world.html", name: "Hybrid World", desc: "Rasterized terrain with raymarched clouds" },
+                { href: "https://lss.fractalreality.ca/labs/meta_generator_webgpu.html", name: "Meta-Generator", desc: "A generator of field-generators (WebGPU)" },
+                { href: "https://lss.fractalreality.ca/labs/world_navigator_webgpu.html", name: "World Navigator", desc: "Fly a meta-generated world" },
+                { href: "https://lss.fractalreality.ca/labs/world_volumetric_webgpu.html", name: "Volumetric World", desc: "Fly inside a meta-generated world" },
+                { href: "https://lss.fractalreality.ca/labs/city_generator_webgpu.html", name: "City Genome", desc: "Procedural city generation on WebGPU" },
+                { href: "https://lss.fractalreality.ca/labs/procedural-world.html", name: "Procedural World", desc: "The Information-Field Engine generating terrain" },
+                { href: "https://lss.fractalreality.ca/labs/ship-field-demo.html", name: "Ships on Water", desc: "The Information-Field Engine driving ships on a live water field" },
+                { href: "https://lss.fractalreality.ca/labs/wind-routing.html", name: "Wind Routing", desc: "Air flows around the mountains" },
+            ]
+        }
     };
 
     // Domain short labels for pills & tags
     const domainLabels = {
         you: "You", cell: "Cell", relationship: "Relationship", atom: "Atom",
         conversation: "Conversation", breath: "Breath", physics: "Physics",
-        story: "Story", ethics: "Ethics", cosmos: "Cosmos", tools: "Tools"
+        story: "Story", ethics: "Ethics", cosmos: "Cosmos", tools: "Tools", labs: "Labs"
     };
 
     // ===== Build flat index =====
@@ -1046,7 +1080,7 @@
             html += `<div class="domain-pages">`;
 
             for (const page of pages) {
-                html += `<a href="${page.href}" class="page-row">`;
+                html += `<a href="${page.href}" class="page-row"${page.href.startsWith('http') ? ' target="_blank" rel="noopener"' : ''}>`;
                 html += `<span class="page-icon">⊙</span>`;
                 html += `<div class="page-info">`;
                 html += `<div class="page-name">${highlight(page.name, currentQuery)}</div>`;
