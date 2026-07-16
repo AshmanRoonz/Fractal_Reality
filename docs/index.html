@@ -927,15 +927,31 @@
   <iframe id="pagesFrame" src="about:blank" class="w-full h-full border-0" title="Search all pages"></iframe>
 </div>
 <script>
-function openPagesOverlay() {
+function pagesUrl() {
+  return new URL('pages.html', location.href).href;
+}
+// The iframe's src ATTRIBUTE never changes when the user clicks a link inside it,
+// so it cannot tell us where the frame actually is; read contentWindow.location.
+function pagesFrameAtSearch(f) {
+  try { return f.contentWindow.location.href === pagesUrl(); }
+  catch (e) { return false; } // cross-origin or not yet loaded
+}
+function resetPagesFrame() {
   var f = document.getElementById('pagesFrame');
-  if (!f.src || f.src === 'about:blank' || !f.src.includes('pages.html')) f.src = 'pages.html';
+  if (pagesFrameAtSearch(f)) return; // already on search; keep the typed query
+  // replace() so iframe navigations don't pile onto the top-level history
+  try { f.contentWindow.location.replace(pagesUrl()); }
+  catch (e) { f.src = pagesUrl(); }
+}
+function openPagesOverlay() {
+  resetPagesFrame();
   document.getElementById('pagesOverlay').classList.remove('hidden');
   document.documentElement.style.overflow = 'hidden';
 }
 function closePagesOverlay() {
   document.getElementById('pagesOverlay').classList.add('hidden');
   document.documentElement.style.overflow = '';
+  resetPagesFrame(); // rewind to search while hidden, so reopening never flashes the last article
 }
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closePagesOverlay();
