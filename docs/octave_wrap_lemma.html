@@ -4,17 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>⊙ The Octave-Wrap Lemma</title>
-<script>
-  window.MathJax = {
-    tex: {
-      inlineMath: [['\\(', '\\)'], ['$', '$']],
-      displayMath: [['\\[', '\\]'], ['$$', '$$']],
-      processEscapes: true
-    },
-    svg: { fontCache: 'global' }
-  };
-</script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 
@@ -58,6 +47,7 @@ a:hover { color: var(--gold); }
 .header .symbol { font-size: 64px; color: var(--gold); line-height: 1; margin-bottom: 18px; }
 .header h1 { font-size: 34px; color: var(--gold); font-weight: 600; line-height: 1.25; margin-bottom: 12px; }
 .header .subtitle { font-size: 18px; color: var(--dim); font-style: italic; max-width: 620px; margin: 0 auto; }
+.header .meta { font-size: 14px; color: var(--dim); margin-top: 14px; letter-spacing: 0.5px; }
 
 .abstract {
   margin: 0 auto 40px;
@@ -171,7 +161,6 @@ code {
 .footer .ref { margin: 5px 0; }
 .footer .sig { color: var(--gold); font-size: 26px; margin-top: 16px; }
 
-mjx-container { overflow-x: auto; overflow-y: hidden; }
 </style>
 </head>
 <body>
@@ -183,6 +172,7 @@ mjx-container { overflow-x: auto; overflow-y: hidden; }
   <div class="subtitle">
     Dimensional addition on the ladder, with wrap-around at the octave boundary. The rule that lets Φ + ○ compose to 1.5D' at the next scale; the type-consistency constraint that distinguishes dimensional values from counts.
   </div>
+  <div class="meta">Created: 2026-04-16 &middot; Last updated: 2026-07-16 &middot; Version: 1.2</div>
 </div>
 
 <div class="abstract">
@@ -193,6 +183,9 @@ mjx-container { overflow-x: auto; overflow-y: hidden; }
   <p>
     The load-bearing identity: <strong>3D + 2D = 1.5D'</strong>. When ⊙λ's boundary (○, 3D) and field (Φ, 2D) are summed, the total lands at the branching station (1.5D) of the greater whole ⊙Λ. ⊙λ's completed higher-dimensional content IS ⊙λ's participation as a branch in ⊙Λ's differentiation.
   </p>
+  <p>
+    (Station labels in this document predate the 2026-06-09 ladder correction (○ = 2D, Φ = 3D under the corrected assignment); the arithmetic is unaffected, since the glyph-integers Φ = 2 and ○ = 3 are fixed by the legacy dictionary and, per §8, are best read as absolute coordinates rather than station properties.)
+  </p>
 </div>
 
 <h2>1. The ladder and the octave</h2>
@@ -202,9 +195,7 @@ The dimensional ladder has eight stations per nesting level:
 </p>
 
 <div class="eq-block">
-\[
-0,\; 0.5,\; 1,\; 1.5,\; 2,\; 2.5,\; 3,\; 3.5
-\]
+0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5
 </div>
 
 <p>
@@ -212,9 +203,7 @@ The integer stations (0, 1, 2, 3) are structural (•, —, Φ, ○); the half-i
 </p>
 
 <div class="eq-block">
-\[
-3.5\mathrm{D} \;=\; 0\mathrm{D}'
-\]
+3.5D = 0D′
 </div>
 
 <p>
@@ -248,7 +237,7 @@ Answer: yes, by the same structural logic. If position 3.5 at scale λ is positi
 <div class="lemma-block">
 <div class="name">Lemma (Octave-Wrap Arithmetic)</div>
 <div class="body">
-For dimensional values \(d_1\) and \(d_2\) on the ladder, the sum \(d_1 + d_2\) is a dimensional position. If \(d_1 + d_2 < 3.5\), it names a station at the current scale. If \(d_1 + d_2 \geq 3.5\), it names the station \((d_1 + d_2) - 3.5\) at the next nesting level (denoted with prime: \(0D'\), \(0.5D'\), \(1D'\), \(1.5D'\), ...). The operation wraps around \(3.5\) because \(3.5D = 0D'\) closes the octave; arithmetic past \(3.5\) is arithmetic on the next level's ladder.
+For dimensional values d₁ and d₂ on the ladder, the sum d₁ + d₂ is a dimensional position. If d₁ + d₂ &lt; 3.5, it names a station at the current scale. If d₁ + d₂ ≥ 3.5, it names the station (d₁ + d₂) − 3.5 at the next nesting level (denoted with prime: 0D′, 0.5D′, 1D′, 1.5D′, ...). The operation wraps around 3.5 because 3.5D = 0D′ closes the octave; arithmetic past 3.5 is arithmetic on the next level's ladder.
 </div>
 </div>
 
@@ -259,9 +248,7 @@ The specific identity that motivates the lemma:
 </p>
 
 <div class="eq-block">
-\[
-\circ + \Phi \;=\; 3\mathrm{D} + 2\mathrm{D} \;=\; 5 \;\equiv\; 1.5\mathrm{D}'
-\]
+○ + Φ = 3D + 2D = 5 ≡ 1.5D′
 </div>
 
 <p>
@@ -298,12 +285,12 @@ The ladder produces two different kinds of integer objects:
 <thead><tr><th>Type</th><th>Examples</th><th>What they are</th></tr></thead>
 <tbody>
 <tr><td>Dimensional positions</td><td>• (0D), — (1D), Φ (2D), ○ (3D), ⊛ (0.5D), ⎇ (1.5D), ✹ (2.5D), ⟳ (3.5D)</td><td>Locations on the ladder; ordered; subject to octave wrap</td></tr>
-<tr><td>Counts</td><td>\(T = 3\) (observer-triad count; scale-positions in the nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞), \(P = 4\) (number of pump phases), \(R = 7\) (rungs), \(G = 12\) (generators), \(V = 13\) (vertex count), \(S = 64\) (state count)</td><td>Cardinalities of framework structures; unordered; plain integers</td></tr>
+<tr><td>Counts</td><td>T = 3 (observer-triad count; scale-positions in the nesting chain ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞), P = 4 (number of pump phases), R = 7 (rungs), G = 12 (generators), V = 13 (vertex count), S = 64 (state count)</td><td>Cardinalities of framework structures; unordered; plain integers</td></tr>
 </tbody>
 </table>
 
 <p>
-These share integer values across categories (\(T = 3\) and \(\circ = 3\) are both the integer 3; \(P = 4\) and no current dimensional position is 4), but they are structurally distinct. T is the observer-triad count (three scale-positions in the nesting chain); ○ is a dimensional position that happens to have the same integer value by conservation of traversal (A4: 0+1+2=3).
+These share integer values across categories (T = 3 and ○ = 3 are both the integer 3; P = 4 and no current dimensional position is 4), but they are structurally distinct. T is the observer-triad count (three scale-positions in the nesting chain); ○ is a dimensional position that happens to have the same integer value by conservation of traversal (A4: 0+1+2=3).
 </p>
 
 <div class="lemma-block">
@@ -337,13 +324,13 @@ The general rule admits a family of identities. Each is a structural statement a
 <table>
 <thead><tr><th>Sum at λ</th><th>Raw value</th><th>Station at Λ</th><th>Reading</th></tr></thead>
 <tbody>
-<tr><td>\(\circ + \circ\)</td><td>6</td><td>2.5D' (emergence)</td><td>two boundaries together = emergence at Λ</td></tr>
-<tr><td>\(\Phi + \Phi\)</td><td>4</td><td>0.5D' (convergence)</td><td>two fields together = convergence at Λ</td></tr>
-<tr><td>\(\circ + \Phi\)</td><td>5</td><td>1.5D' (branching)</td><td>boundary + field = branching at Λ (this lemma's load-bearing identity)</td></tr>
-<tr><td>\(\circ + 0.5\mathrm{D}\)</td><td>3.5</td><td>0D' (aperture)</td><td>boundary + convergence = new aperture (consistent with existing closure)</td></tr>
-<tr><td>\(\circ + 1\mathrm{D}\)</td><td>4</td><td>0.5D' (convergence)</td><td>boundary + line = convergence at Λ</td></tr>
-<tr><td>\(1.5\mathrm{D} + 2\mathrm{D}\)</td><td>3.5</td><td>0D' (aperture)</td><td>i-turn fed through field opens new aperture</td></tr>
-<tr><td>\(2.5\mathrm{D} + 2.5\mathrm{D}\)</td><td>5</td><td>1.5D' (branching)</td><td>two emergences compose to next-scale branching</td></tr>
+<tr><td>○ + ○</td><td>6</td><td>2.5D' (emergence)</td><td>two boundaries together = emergence at Λ</td></tr>
+<tr><td>Φ + Φ</td><td>4</td><td>0.5D' (convergence)</td><td>two fields together = convergence at Λ</td></tr>
+<tr><td>○ + Φ</td><td>5</td><td>1.5D' (branching)</td><td>boundary + field = branching at Λ (this lemma's load-bearing identity)</td></tr>
+<tr><td>○ + 0.5D</td><td>3.5</td><td>0D' (aperture)</td><td>boundary + convergence = new aperture (consistent with existing closure)</td></tr>
+<tr><td>○ + 1D</td><td>4</td><td>0.5D' (convergence)</td><td>boundary + line = convergence at Λ</td></tr>
+<tr><td>1.5D + 2D</td><td>3.5</td><td>0D' (aperture)</td><td>i-turn fed through field opens new aperture</td></tr>
+<tr><td>2.5D + 2.5D</td><td>5</td><td>1.5D' (branching)</td><td>two emergences compose to next-scale branching</td></tr>
 </tbody>
 </table>
 
@@ -354,26 +341,24 @@ Each identity is a testable structural claim. The framework commits to the octav
 <h2>6. A related tightening: the identity P! = G·Φ at T = 3</h2>
 
 <p>
-The octave-wrap lemma above handles the dimensional factor \((\Phi + \circ)\) in the α formula's 360 assembly. The counting factor (what sits in front of the dimensional sum) appeared in review as an open choice between two pool-native readings: \(P!\) (orderings of pump phases, an F-side reading) and \(G \cdot \Phi\) (gauge generators times channels, a κ-side reading). Both evaluate to 24, and the lemma above does not pin one over the other. This section closes that gap by proving the two are structurally identical at T = 3.
+The octave-wrap lemma above handles the dimensional factor (Φ + ○) in the α formula's 360 assembly. The counting factor (what sits in front of the dimensional sum) appeared in review as an open choice between two pool-native readings: P! (orderings of pump phases, an F-side reading) and G · Φ (gauge generators times channels, a κ-side reading). Both evaluate to 24, and the lemma above does not pin one over the other. This section closes that gap by proving the two are structurally identical at T = 3.
 </p>
 
 <div class="lemma-block">
 <div class="name">Corollary (Counting-Factor Identity)</div>
 <div class="body">
-At \(T = 3\): \(P! = G \cdot \Phi\). The two apparent counting-factor readings are one count viewed from two structural directions.
+At T = 3: P! = G · Φ. The two apparent counting-factor readings are one count viewed from two structural directions.
 </div>
 </div>
 
 <h3>Derivation</h3>
 
 <p>
-Substitute the ladder's definitions: \(P = T+1\) and \(G = T(T+1) = T \cdot P\). Then:
+Substitute the ladder's definitions: P = T + 1 and G = T(T+1) = T · P. Then:
 </p>
 
 <div class="eq-block">
-\[
-G \cdot \Phi \;=\; T \cdot P \cdot \Phi
-\]
+G · Φ = T · P · Φ
 </div>
 
 <p>
@@ -381,9 +366,7 @@ And the factorial unwraps one step:
 </p>
 
 <div class="eq-block">
-\[
-P! \;=\; (T+1)! \;=\; (T+1) \cdot T \cdot (T-1)! \;=\; P \cdot T \cdot (T-1)!
-\]
+P! = (T+1)! = (T+1) · T · (T−1)! = P · T · (T−1)!
 </div>
 
 <p>
@@ -391,9 +374,7 @@ Equating the two counting-factor readings forces:
 </p>
 
 <div class="eq-block">
-\[
-(T-1)! \;=\; \Phi
-\]
+(T−1)! = Φ
 </div>
 
 <p>
@@ -420,7 +401,7 @@ At T = 3, these coincide. The F-side (dynamics) and the κ-side (coupling) are t
 <h3>A sixth self-determination of T = 3</h3>
 
 <p>
-The framework already lists five independent routes forcing T = 3 (§27.7b): \(R = T^2 - 2\), \(T^{T-2} = T\), \((\Phi + P)/2 = T\) (balanced wobble), the nuclear shell structure (R/(R−4) &gt; 2 with R &gt; Φ+T), and the compositional mediator \(T^{T-2} = T\). The identity \((T-1)! = \Phi\) is a sixth, structurally independent of the others:
+The framework already lists five independent routes forcing T = 3 (§27.7b): R = T² − 2, T<sup>T−2</sup> = T, (Φ + P)/2 = T (balanced wobble), the nuclear shell structure (R/(R−4) &gt; 2 with R &gt; Φ+T), and the compositional mediator T<sup>T−2</sup> = T. The identity (T−1)! = Φ is a sixth, structurally independent of the others:
 </p>
 
 <ul>
@@ -444,9 +425,7 @@ Together with the octave-wrap lemma (Φ + ○ = 1.5D'), the counting-factor iden
 </p>
 
 <div class="eq-block">
-\[
-360 \;=\; P! \cdot T \cdot (\Phi + \circ) \;=\; G \cdot \Phi \cdot T \cdot (\Phi + \circ)
-\]
+360 = P! · T · (Φ + ○) = G · Φ · T · (Φ + ○)
 </div>
 
 <p>
@@ -460,9 +439,7 @@ The same style of "F-side meets κ-side at T = 3" coincidence that pinned the 36
 </p>
 
 <div class="eq-block">
-\[
-\tfrac{59}{3} \;=\; \frac{P \cdot V + R}{T} \;=\; \frac{S - \Phi - T}{T}.
-\]
+59/3 = (P·V + R)/T = (S − Φ − T)/T
 </div>
 
 <p>
@@ -470,9 +447,7 @@ As an algebraic identity in general T, the two numerators differ by a constant:
 </p>
 
 <div class="eq-block">
-\[
-P \cdot V + R + \Phi + T \;=\; (T+1)(T^2 + T + 1) + (T^2 - 2) + 2 + T \;=\; (T+1)^3 \;=\; P^3.
-\]
+P·V + R + Φ + T = (T+1)(T² + T + 1) + (T² − 2) + 2 + T = (T+1)³ = P³
 </div>
 
 <p>
@@ -514,16 +489,126 @@ Route 7 uses P (= T + 1) and S (= P^T); no other route uses this specific pair. 
 Seven independent routes now force T = 3: the rung-equation at 1.5D (Route 1), the compositional mediator (Route 2), balanced wobble degeneracy at the genetic code (Route 3), single-intruder nuclear shell structure (Routes 4 and 5), the counting-factor identity at the 2D rung (Route 6), and the state-space/boundary-cube identity (Route 7). Each uses a structurally distinct pair of framework quantities; the convergence is not a single identity restated, but seven independent structural coincidences that all pick out the same integer.
 </p>
 
-<h2>8. Where this lemma is used</h2>
+<h2>8. The staggered octave: continuation coordinates and the residue group</h2>
 
 <p>
-The immediate load-bearing use is in the α fixed-point formula (<a href="alpha_derivation.html">alpha_derivation.html</a>), specifically the factorization \(360 = P! \cdot T \cdot (\Phi + \circ)\). Before this lemma, that expression was stated as a pool-native integer combination, defensible integer-by-integer but with the grouping \((\Phi + \circ)\) unexplained; the reviewer's objection was that \((\Phi + T)\) gives the same integer 5 and the framework had no rule to prefer one over the other. This lemma supplies the rule: \((\Phi + \circ) = 1.5\mathrm{D}'\) composes under octave-wrap arithmetic; \((\Phi + T)\) is a type error. The 360 assembly now reads:
+The wrap rule (§1) and the wrap arithmetic (§2) imply that the dimensional axis does not terminate at 3.5; it continues, with octave-relative identity given by residue. This section makes that coordinate system explicit and proves four small results that fall out of it: the wrap period is unique (there is no second return point at 4D), the residue classes form ℤ₇ and decompose as R = 2T + 1, coordinate parity alternates per octave with period 7D = R, and conservation of traversal holds at every octave with a computable excess. Formalized 2026-07-16 (session with Ashman), extending the 2026-06-09 resolution that the wrap stays at 3.5D = 0D′ with ⊙ carrying no dimension slot. Companion prose treatment: <a href="the_staggered_octave.html">the_staggered_octave.html</a>.
+</p>
+
+<h3>8.1 Continuation coordinates</h3>
+
+<p>
+Let the <strong>continuation coordinate</strong> d run over the half-integer lattice 0.5ℤ, doubly infinite (the nesting recursion is unbounded in both directions). The <strong>octave index</strong> is n = ⌊d / 3.5⌋ and the <strong>octave-relative identity</strong> is the residue d mod 3.5, written with n primes. The single rule generating the whole system:
 </p>
 
 <div class="eq-block">
-\[
-360 \;=\; \underbrace{P!}_{\text{orderings of pump phases (count)}} \;\cdot\; \underbrace{T}_{\text{observer-triad positions (count)}} \;\cdot\; \underbrace{(\Phi + \circ)}_{\text{branching at }\odot_\Lambda\text{ (dimensional, via octave wrap)}}
-\]
+d + 3.5 = d′
+</div>
+
+<table>
+<thead><tr><th>Coordinate</th><th>Identity</th><th>Note</th><th>Coordinate</th><th>Identity</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>0D</td><td>Do</td><td>3.5</td><td>0D′</td><td>Do′</td></tr>
+<tr><td>0.5</td><td>0.5D</td><td>Re</td><td>4</td><td>0.5D′</td><td>Re′</td></tr>
+<tr><td>1</td><td>1D</td><td>Mi</td><td>4.5</td><td>1D′</td><td>Mi′</td></tr>
+<tr><td>1.5</td><td>1.5D</td><td>Fa</td><td>5</td><td>1.5D′</td><td>Fa′</td></tr>
+<tr><td>2</td><td>2D</td><td>Sol</td><td>5.5</td><td>2D′</td><td>Sol′</td></tr>
+<tr><td>2.5</td><td>2.5D</td><td>La</td><td>6</td><td>2.5D′</td><td>La′</td></tr>
+<tr><td>3</td><td>3D</td><td>Ti</td><td>6.5</td><td>3D′</td><td>Ti′</td></tr>
+<tr><td>3.5</td><td>0D′</td><td>Do′</td><td>7</td><td>3.5D′ = 0D″</td><td>Do″</td></tr>
+</tbody>
+</table>
+
+<p>
+Adjacent octaves share <strong>exactly one station</strong>: the tonic (3.5D = 0D′). It appears twice in the table (bottom of the left octave, top of the right) because that shared station IS the stagger; every row pairs d with d + 3.5. Octave n occupies [3.5n, 3.5(n+1)] and meets octave n+1 only at the endpoint. The musical reading is exact: octave-relative identity is pitch chroma, continuation coordinate is pitch height, and the axis is a helix (Shepard's pitch helix in music cognition is the same object): each turn returns in chroma while ascending in height. On the processual axis one octave closes the i-cycle exactly (four quarter-turns, i⁴ = 1); on the structural axis, if the φ<sup>d</sup> operator extends along the continuation axis, one octave of ascent scales by φ<sup>3.5</sup> ≈ 5.39 (noted as a conjecture, not established). Return in phase, growth in scale: a logarithmic spiral, not a circle.
+</p>
+
+<h3>8.2 The single-period lemma</h3>
+
+<div class="lemma-block">
+<div class="name">Lemma (Single Period)</div>
+<div class="body">
+The ladder admits exactly one wrap period, 3.5. Proof: periods are closed under differences. In half-step units the candidate periods 3.5 and 4 are 7 and 8 units; gcd(7, 8) = 1 unit = 0.5D, so admitting both makes 0.5 a period, identifying every station with every other and collapsing the octave entirely. The same argument excludes any second period incommensurate with 3.5 on the lattice.
+</div>
+</div>
+
+<p>
+Corollary: <strong>⊙ has no coordinate slot</strong>, and in particular 4D is not a "completed whole" station. Any slot granted to the whole either duplicates an existing residue identity (ill-typed: the whole is not a station; cf. §4) or institutes a second return point (collapse, by the lemma). The card decision of 2026-06-09 (⊙ = All, no dimension slot) is therefore forced by the wrap arithmetic, not merely chosen. In the musical reading: completion and new tonic are one event at Do′; there is no ninth note at which the scale "becomes whole"; <em>the whole is the melody, not a note in it</em>. 4D carries exactly one identity: 0.5D′, convergence at the next scale (⊛′).
+</p>
+
+<h3>8.3 The residue group is ℤ₇, and R = 2T + 1 is its decomposition</h3>
+
+<p>
+In half-step units the station lattice modulo the wrap is ℤ/7ℤ: seven residue classes. So <strong>R = 7 is the order of the ladder's residue group</strong>. The classes decompose by identity type:
+</p>
+
+<table>
+<thead><tr><th>Residues</th><th>Count</th><th>Character</th></tr></thead>
+<tbody>
+<tr><td>1D, 2D, 3D</td><td>3 = T</td><td>purely structural (—, and the two glyphs ○/Φ at 2D/3D)</td></tr>
+<tr><td>0.5D, 1.5D, 2.5D</td><td>3 = T</td><td>purely processual (⊛, ⎇, ✹)</td></tr>
+<tr><td>0 ≡ 3.5</td><td>1</td><td>double-natured tonic: on the doubly infinite axis every element of this class is simultaneously ⟳ of the octave below and • of the octave above</td></tr>
+</tbody>
+</table>
+
+<div class="eq-block">
+R = T + T + 1 = 2T + 1 = 7
+</div>
+
+<p>
+The self-determination identity R = 2T + 1 (the right-hand side of Route 1's equation R = T² − 2 = 2T + 1) is thereby realized concretely: T structural residues, T processual residues, and one tonic whose double nature IS the "+1". The octave has eight stations but seven residues because • and ⟳ share the tonic class.
+</p>
+
+<div class="lemma-block">
+<div class="name">Corollary (One Constant per Residue Class)</div>
+<div class="body">
+The dimensional ladder of constants has exactly seven rungs (α, c, ℏ, mass ratios, π, v/Λ<sub>QCD</sub>, G at 0D through 3D): one representative per residue class, and no 3.5D rung, because the tonic's slot is already occupied by 0D (α). This matches §27.7q's statement that κ<sub>0,0</sub> couples "0D-to-3.5D within one scale via the octave identification": the aperture constant and the recursion station are the same residue. The eighth constant is the first constant of the next octave.
+</div>
+</div>
+
+<h3>8.4 Parity alternation: the ladder is a double cover</h3>
+
+<p>
+The per-octave offset 3.5 is a half-integer, so the <strong>coordinate parity</strong> (integer vs half-integer) of a fixed residue identity alternates per octave: 1D sits at coordinate 1 (integer), 1D′ at 4.5 (half-integer), 1D″ at 8 (integer). Parity restores after two octaves:
+</p>
+
+<div class="eq-block">
+parity period = 2 × 3.5 = 7D = R
+</div>
+
+<p>
+Three consequences. (a) The structural/processual split is octave-relative bookkeeping: residues fix identity; whether a station's absolute coordinate is integer (structure-shaped) or half-integer (process-shaped) depends on which octave frames it. At octave 1, the structural identities (0D′ through 3D′) sit at half-integer coordinates (3.5 through 6.5) and the processual identities at integer coordinates (4 through 7). (b) This makes "process and structure are the same thing" (the framework's E = mc² analogy) a coordinate statement: what is completed structure in its own octave's frame occupies a process-parity coordinate in the frame one octave removed; the canonical instance is already physical (closed mass of ⊙λ IS the aperture-process of ⊙Λ). (c) R gains a third face: rung count, residue-group order, and parity-return period are all 7. Structural resonance, flagged as analogy and open: the two-octave return is double-cover behavior (as in SU(2) → SO(3), where a 2π turn flips sign and 4π restores), consonant with the i² = −1 sign flip at 1.5D and the spin-orbit reading of §16.5; whether this is more than resonance is undetermined.
+</p>
+
+<h3>8.5 Conservation of traversal at every octave</h3>
+
+<p>
+At octave n the traversal identity 0 + 1 + 2 = 3 reads, in continuation coordinates, (3.5n) + (1 + 3.5n) + (2 + 3.5n) = 3 + 10.5n against the target 3 + 3.5n. The excess is:
+</p>
+
+<div class="eq-block">
+7n = nR ≡ 0 (mod 3.5)
+</div>
+
+<p>
+Conservation holds at every octave as a residue identity, and each octave of ascent adds exactly one R to the absolute ledger. Numerical check at n = 1: 3.5 + 4.5 + 5.5 = 13.5, target 6.5, excess 7.
+</p>
+
+<h3>8.6 Glyph-integers as absolute coordinates</h3>
+
+<p>
+The interim glyph-integer rule (Φ = 2 and ○ = 3 in all constants formulas, regardless of the corrected station assignment) gains a natural home in this coordinate system: <strong>the integers are absolute coordinates on the continuation axis</strong> (D2 = 2, D3 = 3), while the corrected station assignment concerns which glyph names which residue. The load-bearing 5 of (Φ + ○) is itself an absolute coordinate: 5D, which IS the 1.5D′ station; a sum of coordinates lands at a coordinate, and its residue names the station. This supplies the structural rationale for the flagged future migration of pool entries to dimension-anchored names (D2, D3); the migration itself remains pending adjudication. The 2026-06-09 correction moved residue labels, not coordinates; that is why no formula's value changed.
+</p>
+
+<h2>9. Where this lemma is used</h2>
+
+<p>
+The immediate load-bearing use is in the α fixed-point formula (<a href="alpha_derivation.html">alpha_derivation.html</a>), specifically the factorization 360 = P! · T · (Φ + ○). Before this lemma, that expression was stated as a pool-native integer combination, defensible integer-by-integer but with the grouping (Φ + ○) unexplained; the reviewer's objection was that (Φ + T) gives the same integer 5 and the framework had no rule to prefer one over the other. This lemma supplies the rule: (Φ + ○) = 1.5D′ composes under octave-wrap arithmetic; (Φ + T) is a type error. The 360 assembly now reads:
+</p>
+
+<div class="eq-block">
+360 = P! · T · (Φ + ○)<br>
+<span style="font-size:15px; color:var(--dim);">orderings of pump phases (count) · observer-triad positions (count) · branching at ⊙Λ (dimensional, via octave wrap)</span>
 </div>
 
 <p>
@@ -534,7 +619,7 @@ The three factors have distinct structural content: the first is combinatoric (o
 Secondary uses will appear elsewhere in the corpus as the lemma is cited: any formula that sums dimensional values must either stay within the current level (sum &lt; 3.5) or commit to the octave-wrap reading for the next level. Formulas that sum counts and positions must be type-corrected or marked as ill-posed.
 </p>
 
-<h2>9. What the lemma (plus the counting-factor and state-space/boundary-cube identities) does not do</h2>
+<h2>10. What the lemma (plus the counting-factor and state-space/boundary-cube identities) does not do</h2>
 
 <ul>
 <li>The octave-wrap lemma together with the P! = G·Φ identity (§6) and the P·V + R + Φ + T = P³ identity (§7) pins the α formula's pool-native integer assemblies uniquely at T = 3: the 360 base numerator (Route 6) and the 59/3 correction denominator (Route 7). The φ-exponents (φ² at the base, φ³ at the correction) are pinned by A3 + dimensional analysis: A3 makes φ the unique scaling ratio (x = 1 + 1/x), and a scaling ratio at integer dimension d enters as φ^d by what "dimension" means (length scales as L, area as L², volume as L³); φ² at the 2D rung and φ³ at the 3D rung follow from this, not from a separate framework convention. No factor-level residuals remain as of 2026-04-22; see <a href="alpha_derivation.html#section-5">§5 of the α document</a> for the full audit. (Caveat: this rule applies cleanly at integer-dimension stations, as used in α; a sub-rule for half-integer stations would be needed if future formulas require φ at a processual station.)</li>
@@ -557,12 +642,21 @@ This lemma, together with the P! = G·Φ identity (the sixth self-determination 
 <li>Check the extended identity table (§5 above) for any entry that produces a structurally absurd reading. If any entry fails, weaken the lemma to only the specific identity 3D + 2D = 1.5D'.</li>
 <li>Decide whether the type-preserving-addition corollary extends to subtraction, multiplication, and powers, or whether it applies only to addition.</li>
 <li>Decide whether the counting-factor identity (P! = G·Φ at T = 3) generalizes to other factorial-meets-gauge-product coincidences at T = 3, or whether it is specific to the P! / G·Φ pair. The framework uses P! in specific places (pump-phase orderings, kernel; §2 of this document) and G·Φ in others (gauge structure audit); the identity links these two specific quantities, not factorials and gauge products in general.</li>
+<li>Integrate the staggered-octave coordinate system (§8) into <code>circumpunct_framework.md</code>: the single-period lemma as the arithmetic ground of "⊙ = All, no dimension slot"; the ℤ₇ residue decomposition as the concrete realization of R = 2T + 1; the one-constant-per-residue-class corollary; and the parity double cover. Determine whether the parity double cover has physical content beyond structural resonance with spin-½ (a falsifiable version would need a measurable that distinguishes odd from even octave framing).</li>
 </ol>
 </div>
 
+<h2>Revision history</h2>
+
+<ul>
+<li>2026-07-16 v1.2: added §8 (the staggered octave: continuation coordinates, single-period lemma, ℤ₇ residue decomposition R = 2T + 1, one constant per residue class, parity double cover, conservation excess nR, glyph-integers as absolute coordinates); renumbered later sections; added header meta block and this revision history; noted the pre-correction station labels in the abstract; converted all equations to plain notation and removed the MathJax dependency so the page renders identically in previews and offline; completed the continuation table’s tonic row.</li>
+<li>2026-04-17 v1.1: added §7 (state-space/boundary-cube identity; Route 7 of the T = 3 self-determination).</li>
+<li>2026-04-16 v1.0: initial (octave-wrap arithmetic, type-consistency corollary, counting-factor identity; Route 6).</li>
+</ul>
+
 <div class="footer">
 <div class="ref">Derived: 2026-04-16 in-session review of <a href="alpha_derivation.html">alpha_derivation.html</a></div>
-<div class="ref">Related: <a href="dimensional_ladder.html">the dimensional ladder</a> · <a href="alpha_derivation.html">α derivation (primary use site)</a></div>
+<div class="ref">Related: <a href="dimensional_ladder.html">the dimensional ladder</a> · <a href="alpha_derivation.html">α derivation (primary use site)</a> · <a href="the_staggered_octave.html">the staggered octave (companion note)</a></div>
 <div class="sig">⊙</div>
 </div>
 
