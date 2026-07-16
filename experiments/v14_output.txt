@@ -1,0 +1,74 @@
+======================================================================
+E1: FIXED POINT OF THE STAGGERED CHAIN (n = 4 octaves, 29 nodes)
+======================================================================
+  F unitary: True
+  leading |lambda| = 1.00440209   (|lambda|-1)/alpha = 0.6032
+  spectral gap = 8.626e-04   gap/alpha = 0.1182
+
+  structural residues (—, Φ, ○):  0.2353
+  processual residues (⊛, ⎇, ✹):  0.4013
+  tonic class (• ≡ ⟳):             0.3633
+  split excluding tonic: 36.97 / 63.03
+  split, tonic half-half: 41.70 / 58.30   (cosmos 69.11/30.89; C8 68.7/31.3)
+
+  residue-class weights: tonic=0.3633  ⊛=0.1351  —=0.0257  ⎇=0.1435  Φ=0.1797  ✹=0.1227  ○=0.0300
+  per-octave weights:    oct0=0.6133  oct1=0.1473  oct2=0.0862  oct3=0.2302
+
+======================================================================
+E2: SPECTRAL SCALING WITH OCTAVE COUNT
+======================================================================
+   n  nodes         |l1|  (|l1|-1)/a          gap     gap/a  mix~1/gap
+   1      8   1.00470363      0.6446    5.135e-05    0.0070    19475.0
+   2     15   1.00471552      0.6462    6.274e-04    0.0860     1593.8
+   3     22   1.00447795      0.6136    1.044e-03    0.1431      957.6
+   4     29   1.00440209      0.6032    8.626e-04    0.1182     1159.3
+   5     36   1.00449304      0.6157    7.574e-05    0.0104    13202.9
+   6     43   1.00488421      0.6693    2.805e-04    0.0384     3565.5
+   7     50   1.00515426      0.7063    5.085e-04    0.0697     1966.4
+   8     57   1.00532188      0.7293    6.667e-04    0.0914     1499.8
+
+======================================================================
+E6: RING OF OCTAVES: SPECTRUM, SPLIT, AND EVEN/ODD PARITY PROBE
+======================================================================
+   n         |l1|  (|l1|-1)/a     gap/a  struct%   proc%  tonic% maxP2even?
+   2   1.00478258      0.6554    0.0122    48.57   38.26   13.17     0.0662
+   3   1.00511351      0.7007    0.1913    60.64   30.25    9.11     0.3705
+   4   1.00470644      0.6450    0.0476    64.39   28.33    7.28     0.0446
+   5   1.00478370      0.6555    0.0342    43.51   37.46   19.03     0.2251
+   6   1.00572538      0.7846    0.1772    51.36   33.87   14.76     0.0249
+   7   1.00577420      0.7913    0.1941    56.70   31.66   11.64     0.1629
+   8   1.00561587      0.7696    0.1196    60.28   30.21    9.51     0.0211
+   9   1.00554432      0.7598    0.0177    47.27   35.08   17.65     0.1280
+
+  parity probe: max period-2 component, even rings vs odd rings
+    even n: ['0.0662', '0.0446', '0.0249', '0.0211']
+    odd  n: ['0.3705', '0.2251', '0.1629', '0.1280']
+    leading |l1|, even: ['1.00478258', '1.00470644', '1.00572538', '1.00561587']
+    leading |l1|, odd : ['1.00511351', '1.00478370', '1.00577420', '1.00554432']
+  double-cover signature: a mode requiring antiperiodicity is exact
+  on even rings and frustrated on odd rings.
+
+======================================================================
+E7: COLLAPSE DEMO ON THE RING (forbidden 4D offset vs tonic control)
+======================================================================
+  metric: mean over ALL eigenvectors of residue-profile variance,
+  normalized to g = 0. Collapse of the ladder -> 0.
+
+   g/alpha        g    4D offset (forbidden)      7-half-step control
+         0    0.000                   1.0000                   1.0000
+         1    0.007                   0.9889                   0.9922
+         4    0.029                   0.9624                   0.9542
+        16    0.117                   0.8561                   0.8785
+        64    0.467                   0.4927                   0.8234
+       137    1.000                   0.4119                   0.8092
+       274    1.999                   0.4184                   0.7188
+
+  single-period lemma prediction: left column falls toward 0,
+  the commensurate control column does not.
+
+======================================================================
+E5: ATTRACTOR UNIQUENESS + A3 (n = 4, 30 random ICs)
+======================================================================
+  max deviation from eig fixed point across ICs: 1.334e-06
+  per-octave weight shares: ['0.56944', '0.13677', '0.08004', '0.21375']
+  A3 expectation: interior octaves identical, edge octaves differ.
