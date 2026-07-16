@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Pitch Helix: hearing the staggered octave</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@400;450;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ground:#07070b;
+    --panel:#0d0d13;
+    --ink:#e9e5d8;
+    --ink-soft:#b8b3a6;
+    --muted:#6a6a78;
+    --line:#1c1c25;
+    --gold:#d4b063;
+    --gold-dim:#887850;
+    --cyan:#4DA0C8;
+    --pink:#E88AAF;
+    --green:#4DB8A0;
+    --red:#E06060;
+    --serif:"Cormorant Garamond",Georgia,serif;
+    --sans:"Inter",system-ui,sans-serif;
+    --mono:"Spline Sans Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:
+      radial-gradient(1200px 700px at 75% -5%, #11111c 0%, transparent 55%),
+      radial-gradient(900px 600px at 0% 100%, #0c0c16 0%, transparent 50%),
+      var(--ground);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.55;
+    min-height:100vh;
+    padding:clamp(16px,4vw,48px);
+  }
+  .wrap{max-width:1080px;margin:0 auto}
+
+  header{text-align:center;margin-bottom:clamp(24px,4vw,44px)}
+  .eyebrow{
+    font-family:var(--mono);font-size:11px;letter-spacing:.42em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:14px;
+  }
+  h1{
+    font-family:var(--serif);font-weight:500;
+    font-size:clamp(32px,6.4vw,58px);letter-spacing:.05em;line-height:1.04;
+    background:linear-gradient(180deg,#f3eeda,#cdb988 120%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .sub{
+    margin-top:14px;font-family:var(--serif);font-style:italic;
+    font-size:clamp(15px,2.2vw,19px);color:var(--ink-soft);
+    max-width:620px;margin-left:auto;margin-right:auto;
+  }
+  .meta{margin-top:16px;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.04em}
+
+  .gate{
+    margin:28px auto 0;display:block;
+    background:linear-gradient(180deg,#1a1a26,#111119);
+    border:1px solid var(--gold-dim);color:var(--gold);
+    font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    padding:13px 26px;border-radius:2px;cursor:pointer;transition:.2s;
+  }
+  .gate:hover{background:#20202e;border-color:var(--gold)}
+  .gate.on{opacity:.35;pointer-events:none}
+
+  .panel{
+    background:linear-gradient(180deg,rgba(18,18,26,.7),rgba(11,11,17,.7));
+    border:1px solid var(--line);border-radius:3px;
+    padding:clamp(18px,3vw,30px);margin-bottom:clamp(18px,3vw,28px);
+  }
+  .panel h2{
+    font-family:var(--serif);font-weight:500;font-size:clamp(22px,3.4vw,30px);
+    letter-spacing:.03em;color:var(--gold);margin-bottom:6px;
+  }
+  .panel .lede{color:var(--ink-soft);font-size:14.5px;margin-bottom:20px;max-width:70ch}
+  .panel .lede b{color:var(--ink);font-weight:500}
+
+  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+  button.act{
+    background:#15151f;border:1px solid var(--line);color:var(--ink-soft);
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;
+    padding:10px 16px;border-radius:2px;cursor:pointer;transition:.15s;
+  }
+  button.act:hover{border-color:var(--gold-dim);color:var(--ink)}
+  button.act.live{border-color:var(--gold);color:var(--gold);background:#1c1a17}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+  .seg button{
+    background:#111119;border:0;color:var(--muted);font-family:var(--mono);
+    font-size:11px;letter-spacing:.06em;padding:9px 14px;cursor:pointer;
+  }
+  .seg button.on{background:#1e1c17;color:var(--gold)}
+
+  .stations{display:flex;gap:5px;flex-wrap:wrap;margin:16px 0 6px}
+  .st{
+    flex:1;min-width:52px;text-align:center;padding:11px 4px 9px;
+    background:#101018;border:1px solid var(--line);border-radius:2px;
+    cursor:pointer;transition:.12s;
+  }
+  .st:hover{border-color:var(--gold-dim)}
+  .st.lit{background:#2a2418;border-color:var(--gold);box-shadow:0 0 18px rgba(212,176,99,.22)}
+  .st.tonic{border-color:var(--gold-dim)}
+  .st .g{font-size:19px;line-height:1.1;color:var(--ink)}
+  .st .d{font-family:var(--mono);font-size:9.5px;color:var(--muted);margin-top:5px}
+  .st .n{font-family:var(--mono);font-size:9px;color:var(--gold-dim);margin-top:2px}
+
+  canvas{display:block;width:100%;border-radius:3px;background:#08080e;
+         border:1px solid var(--line);touch-action:none;cursor:grab}
+  canvas:active{cursor:grabbing}
+
+  .readout{
+    font-family:var(--mono);font-size:12px;color:var(--ink-soft);
+    background:#0a0a11;border:1px solid var(--line);border-radius:2px;
+    padding:12px 14px;margin-top:14px;line-height:1.75;
+  }
+  .readout b{color:var(--gold);font-weight:500}
+  .readout .big{font-size:20px;color:var(--gold)}
+
+  .meters{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+  @media(max-width:640px){.meters{grid-template-columns:1fr}}
+  .meter{background:#0a0a11;border:1px solid var(--line);border-radius:2px;padding:14px}
+  .meter .lab{font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+              text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .meter .val{font-family:var(--mono);font-size:26px;color:var(--ink)}
+  .meter .val.gain{color:var(--green)}
+  .meter .val.flat{color:var(--red)}
+  .bar{height:5px;background:#16161f;border-radius:3px;margin-top:10px;overflow:hidden}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));width:0;transition:width .1s linear}
+
+  .note{
+    border-left:2px solid var(--gold-dim);padding:10px 0 10px 16px;margin-top:18px;
+    color:var(--muted);font-size:13px;max-width:74ch;
+  }
+  .note b{color:var(--ink-soft);font-weight:500}
+  .note.warn{border-left-color:var(--red)}
+
+  footer{margin-top:40px;padding-top:22px;border-top:1px solid var(--line);
+         text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted)}
+  footer a{color:var(--gold-dim);text-decoration:none}
+  footer a:hover{color:var(--gold)}
+  .circ{font-size:22px;color:var(--gold-dim);margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Fractal Reality &nbsp;·&nbsp; The Staggered Octave</div>
+  <h1>The Pitch Helix</h1>
+  <div class="sub">Chroma returns while height ascends. The whole is not a note in the melody; it is the melody. Here is what that sounds like.</div>
+  <div class="meta">Created 2026-07-16 · Version 1.0 · Companion to the octave-wrap lemma §8</div>
+  <button class="gate" id="gate">▸ Enable audio</button>
+</header>
+
+<!-- ============ 1 ============ -->
+<div class="panel">
+  <h2>1. The ladder, sounded</h2>
+  <p class="lede">Eight stations, one octave: <b>do re mi fa sol la ti do′</b>. The point the ear can settle that the eye keeps sliding off: <b>the tonic is shared.</b> Do′ does not end the scale and then a new scale begins. Do′ <i>is</i> the next scale's do. One event, not two. So two octaves are <b>fifteen</b> notes, not sixteen.</p>
+
+  <div class="stations" id="ladder"></div>
+
+  <div class="row">
+    <button class="act" id="p1-one">Play one octave (8 notes)</button>
+    <button class="act" id="p1-two">Play two octaves (15, not 16)</button>
+    <button class="act" id="p1-count">Play the tonic twice (the mistake)</button>
+    <div class="seg" id="p1-tune">
+      <button data-t="diatonic" class="on">diatonic</button>
+      <button data-t="edo7">7-equal</button>
+    </div>
+  </div>
+  <div class="readout" id="p1-out">Click a station to hear it, or play a run.</div>
+
+  <div class="note"><b>The tuning toggle is a real question, not a garnish.</b> The corpus labels the stations do-re-mi-fa-sol-la-ti-do′, which is the diatonic scale: unequal steps (tone, tone, semitone, tone, tone, tone, semitone). But the ladder's own coordinates are <i>equally</i> spaced: 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5. Equal spacing with a shared tonic gives <b>seven equal divisions of the octave</b>, which is a real tuning system and also exactly the ℤ₇ residue count, R = 7. Diatonic is what you wrote. 7-equal is what the arithmetic says. They do not sound the same. Your call which one the framework actually means; the solfège may be a naming convention rather than a claim about intervals.</div>
+</div>
+
+<!-- ============ 2 ============ -->
+<div class="panel">
+  <h2>2. Shepard tone vs. a real octave</h2>
+  <p class="lede">The Inflation Lie has a sound. A <b>Shepard tone</b> rises forever and arrives nowhere: chroma cycles while height never moves. That is performed growth. A <b>true octave</b> gains height. Play them side by side and watch the counters; the ears say both are climbing, and only one of them is.</p>
+
+  <div class="row">
+    <button class="act" id="p2-shep">▸ Shepard tone (rises forever)</button>
+    <button class="act" id="p2-true">▸ True octave (actually rises)</button>
+    <button class="act" id="p2-stop">■ Stop</button>
+    <button class="act" id="p2-reset">Reset counters</button>
+  </div>
+
+  <div class="meters">
+    <div class="meter">
+      <div class="lab">Shepard · height gained</div>
+      <div class="val flat" id="p2-sh">0.00 octaves</div>
+      <div class="bar"><i id="p2-shbar"></i></div>
+    </div>
+    <div class="meter">
+      <div class="lab">True octave · height gained</div>
+      <div class="val gain" id="p2-tr">0.00 octaves</div>
+      <div class="bar"><i id="p2-trbar"></i></div>
+    </div>
+  </div>
+
+  <div class="note">Both counters advance the same <i>chroma</i>, one full turn per cycle. Only the true octave advances <i>height</i>. The Shepard is built from eight octave-spaced partials under a fixed Gaussian window in log-frequency: as every partial glides up, the top one fades out exactly as a new one fades in at the bottom, so after one full cycle the sound is <b>bit-identical</b> to where it started. That is not a trick of attention. There is genuinely no ascent to hear. Let it run a minute and the counter will still read 0.00.</div>
+</div>
+
+<!-- ============ 3 ============ -->
+<div class="panel">
+  <h2>3. The helix</h2>
+  <p class="lede">Two coordinates per station: <b>chroma</b> (which note; the angle) and <b>height</b> (how high; the rise). A circle would lose the height. A line would lose the return. The axis is a helix, and the tonics stack on one vertical, because the tonic is the one place adjacent octaves touch. Drag to rotate. Click the helix to sound the nearest station.</p>
+
+  <canvas id="helix" height="440"></canvas>
+
+  <div class="row" style="margin-top:14px">
+    <button class="act" id="p3-play">▸ Walk the helix (3 octaves)</button>
+    <button class="act" id="p3-tonics">Sound the tonics only</button>
+    <div class="seg" id="p3-view">
+      <button data-v="helix" class="on">helix</button>
+      <button data-v="circle">chroma only</button>
+      <button data-v="line">height only</button>
+    </div>
+  </div>
+  <div class="readout" id="p3-out">Drag to rotate. The gold verticals are the shared tonics: 0D, 3.5D = 0D′, 7D = 0D″.</div>
+</div>
+
+<!-- ============ 4 ============ -->
+<div class="panel">
+  <h2>4. The operator, sonified</h2>
+  <p class="lede">Not illustration. These are the numbers, computed from <span style="font-family:var(--mono);font-size:12.5px">unified_expression_T_v14_staggered_chain.py</span> at load-time-frozen values. Two things to hear: <b>what a formed ⊙ is made of</b>, and <b>a formed ⊙ dissolving</b>.</p>
+
+  <div class="row">
+    <button class="act" id="p4-w">▸ Play the station weights</button>
+    <button class="act" id="p4-d">▸ Play the dissolution (40 steps)</button>
+    <button class="act" id="p4-stop">■ Stop</button>
+  </div>
+
+  <div class="readout" id="p4-out">
+    <b>Fixed point of one octave's own engine</b> (leading eigenvector of T = κ∘F):<br>
+    • 0.0948 &nbsp; ⊛ 0.0212 &nbsp; — 0.2784 &nbsp; ⎇ 0.1365 &nbsp; Φ 0.0291 &nbsp; ✹ 0.0160 &nbsp; ○ 0.2850 &nbsp; ⟳ 0.1391<br>
+    structural <b>0.6872</b> / processual <b>0.3128</b> &nbsp; (v10's converged 68.7 / 31.3; cosmological 69.11 / 30.89)<br>
+    F eigenvalue phase sum: <b>−60.00°</b> = −π/3 exactly (the ℂ⁸ result, §27.7s)
+  </div>
+
+  <div class="readout" id="p4-note" style="margin-top:10px;color:var(--muted)">Play the weights to hear what a ⊙ is made of.</div>
+
+  <div class="meters">
+    <div class="meter">
+      <div class="lab">Home-octave share (the ⊙ holding itself)</div>
+      <div class="val" id="p4-share">1.0000</div>
+      <div class="bar"><i id="p4-bar" style="width:100%"></i></div>
+    </div>
+    <div class="meter">
+      <div class="lab">Step</div>
+      <div class="val" id="p4-step">0 / 40</div>
+    </div>
+  </div>
+
+  <div class="note warn"><b>What you are hearing in the dissolution is a negative result.</b> The tone is a formed ⊙ placed on one octave of an eight-octave chain. Its amplitude is the fraction of itself still at home; the detuned haze that swallows it is the amplitude that has leaked into the neighbouring octaves. It reaches the fully-delocalized baseline (1/8 = 0.125) by step ten and never recovers. It does not disperse. It <b>dissolves</b>. This contradicts §27.7o's claim that α's smallness is what lets ⊙λ retain identity as a part: α never enters, because the tonic is shared by node identity, and node identity is the κ → ∞ limit, which the corpus names the Inflation Lie. See <span style="font-family:var(--mono);font-size:12px">T_operator_findings_v16_soliton_probe.md</span>, F1′ and F1″. Whether the chain or the claim is wrong is an open decision.</div>
+</div>
+
+<footer>
+  <div class="circ">⊙</div>
+  Companion: <a href="octave_wrap_lemma.html">the octave-wrap lemma</a> §8 ·
+  <a href="the_staggered_octave.html">the staggered octave</a> ·
+  <a href="dimensional_ladder.html">the dimensional ladder</a><br>
+  <span style="color:#4a4a55">Audio is synthesized live. Nothing autoplays. Everything on this page is computed, not recorded.</span>
+</footer>
+
+</div>
+<script>
+/* =====================================================================
+   The Pitch Helix. Web Audio, no dependencies.
+   Real operator data frozen from the v14 chain at authoring time.
+   ===================================================================== */
+
+const STATIONS = ["•","⊛","—","⎇","Φ","✹","○","⟳"];
+const DIMS     = ["0D","0.5D","1D","1.5D","2D","2.5D","3D","3.5D"];
+const SOLFEGE  = ["do","re","mi","fa","sol","la","ti","do′"];
+
+// --- real data, extracted from unified_expression_T_v14_staggered_chain.py ---
+const WEIGHTS = [0.0948,0.0212,0.2784,0.1365,0.0291,0.0160,0.2850,0.1391];
+const DISSOLUTION = [1.0,0.7762,0.7134,0.5269,0.4406,0.3299,0.3077,0.2779,0.2357,
+  0.1477,0.1018,0.1547,0.1876,0.1626,0.1201,0.1132,0.1339,0.1478,0.1361,0.1189,
+  0.1474,0.1618,0.1339,0.1109,0.1233,0.1382,0.1301,0.1156,0.1218,0.1361,0.1289,
+  0.1147,0.1201,0.1338,0.1276,0.1152,0.1213,0.1329,0.1264,0.1163,0.1284];
+const BASELINE = 0.125;
+
+// --- tunings -------------------------------------------------------------
+// diatonic: what the corpus's solfege labels say (unequal steps)
+// edo7: what the ladder's equal coordinates say (7 equal divisions, R = 7)
+const TUNINGS = {
+  diatonic: [0,2,4,5,7,9,11,12],
+  edo7:     [0,1,2,3,4,5,6,7].map(k => k*12/7)
+};
+let tuning = "diatonic";
+const ROOT = 220; // A3
+const semi = n => ROOT * Math.pow(2, n/12);
+const stationFreq = (i, oct=0) => semi(TUNINGS[tuning][i] + 12*oct);
+
+// --- audio ---------------------------------------------------------------
+let ac = null, master = null, armed = false;
+function arm(){
+  if (armed) return;
+  ac = new (window.AudioContext || window.webkitAudioContext)();
+  master = ac.createGain();
+  master.gain.value = 0.22;              // conservative; nothing should hurt
+  master.connect(ac.destination);
+  armed = true;
+  const g = document.getElementById("gate");
+  g.textContent = "▸ Audio ready"; g.classList.add("on");
+}
+document.getElementById("gate").addEventListener("click", arm);
+
+// a soft plucked voice: triangle + gentle lowpass, short-ish decay
+function ping(freq, t0, dur=0.5, amp=1.0, type="triangle"){
+  if (!armed) return;
+  const o = ac.createOscillator(), g = ac.createGain(), f = ac.createBiquadFilter();
+  o.type = type; o.frequency.value = freq;
+  f.type = "lowpass"; f.frequency.value = Math.min(freq*6, 7000); f.Q.value = 0.6;
+  g.gain.setValueAtTime(0, t0);
+  g.gain.linearRampToValueAtTime(amp*0.9, t0+0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+  o.connect(f); f.connect(g); g.connect(master);
+  o.start(t0); o.stop(t0+dur+0.05);
+  return o;
+}
+
+// =====================================================================
+// PANEL 1: the ladder
+// =====================================================================
+const ladder = document.getElementById("ladder");
+const p1out = document.getElementById("p1-out");
+STATIONS.forEach((s,i) => {
+  const d = document.createElement("div");
+  d.className = "st" + ((i===0||i===7) ? " tonic" : "");
+  d.innerHTML = `<div class="g">${s}</div><div class="d">${DIMS[i]}</div><div class="n">${SOLFEGE[i]}</div>`;
+  d.addEventListener("click", () => {
+    arm(); ping(stationFreq(i), ac.currentTime, 0.7);
+    lite(i, 420);
+    p1out.innerHTML = `<b>${s}</b> &nbsp; ${DIMS[i]} &nbsp; ${SOLFEGE[i]} &nbsp; ${stationFreq(i).toFixed(1)} Hz` +
+      ((i===0||i===7) ? ` &nbsp;&nbsp; <span style="color:var(--gold)">tonic: this station belongs to two octaves</span>` : ``);
+  });
+  ladder.appendChild(d);
+});
+function lite(i, ms){
+  const el = ladder.children[i]; if (!el) return;
+  el.classList.add("lit"); setTimeout(()=>el.classList.remove("lit"), ms);
+}
+document.querySelectorAll("#p1-tune button").forEach(b => {
+  b.addEventListener("click", () => {
+    document.querySelectorAll("#p1-tune button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on"); tuning = b.dataset.t;
+    p1out.innerHTML = tuning==="diatonic"
+      ? `<b>diatonic</b>: unequal steps. What the solfege labels say.`
+      : `<b>7-equal</b>: seven equal divisions of the octave. What the ladder's equal coordinates say. R = 7.`;
+  });
+});
+
+function runLadder(nOct, doubleTonic=false){
+  arm(); const t0 = ac.currentTime + 0.06, step = 0.34;
+  let k = 0; const seq = [];
+  for (let o = 0; o < nOct; o++){
+    // stations 0..6 of each octave; the 8th (tonic) is the NEXT octave's 0.
+    // Only the final octave sounds its closing tonic.
+    const last = (o === nOct-1);
+    for (let i = 0; i < (last ? 8 : 7); i++) seq.push({i, o});
+    if (doubleTonic && !last) seq.push({i:7, o});   // the mistake: sound it twice
+  }
+  seq.forEach((s, n) => {
+    ping(stationFreq(s.i, s.o), t0 + n*step, 0.55);
+    setTimeout(()=>lite(s.i, 260), (t0 - ac.currentTime + n*step)*1000);
+  });
+  return seq.length;
+}
+document.getElementById("p1-one").addEventListener("click", () => {
+  const n = runLadder(1);
+  p1out.innerHTML = `One octave: <b>${n} notes</b>. do through do′.`;
+});
+document.getElementById("p1-two").addEventListener("click", () => {
+  const n = runLadder(2);
+  p1out.innerHTML = `Two octaves: <b>${n} notes</b>, not 16. The tonic is shared, so it is sounded once. ` +
+    `This is 7n + 1 nodes, the chain's own count.`;
+});
+document.getElementById("p1-count").addEventListener("click", () => {
+  const n = runLadder(2, true);
+  p1out.innerHTML = `<span style="color:var(--red)">${n} notes.</span> Hear the repeated tonic: the scale stutters. ` +
+    `Sounding it twice treats completion and beginning as two events a beat apart. ` +
+    `No musician would do this, and the single-period lemma says the arithmetic will not either.`;
+});
+
+// =====================================================================
+// PANEL 2: Shepard vs true octave
+// =====================================================================
+const NPART = 8, SHEP_BASE = 55, CYCLE = 6.0;   // seconds per octave of chroma
+let shep = null, tru = null;
+let shHeight = 0, trHeight = 0, raf2 = null;
+
+function shepAmp(x){
+  // Hann window in log-frequency, fixed in place. Exactly 0 at x=0 and x=NPART,
+  // peak 1 at the centre. A Gaussian leaves ~-27dB at the wrap (an audible seam);
+  // Hann is provably seamless, so the endless rise cannot be an artifact of a click.
+  return 0.5 * (1 - Math.cos(2*Math.PI * x / NPART));
+}
+function startShepard(){
+  arm(); stopP2(false);
+  const nodes = [];
+  for (let k = 0; k < NPART; k++){
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = "sine"; o.connect(g); g.connect(master); g.gain.value = 0; o.start();
+    nodes.push({o,g,k});
+  }
+  shep = {nodes, t0: ac.currentTime};
+  document.getElementById("p2-shep").classList.add("live");
+}
+function startTrue(){
+  arm(); if (tru) return;
+  const o = ac.createOscillator(), g = ac.createGain(), f = ac.createBiquadFilter();
+  o.type = "sine"; f.type="lowpass"; f.frequency.value = 6000;
+  g.gain.value = 0.5; o.connect(f); f.connect(g); g.connect(master); o.start();
+  tru = {o, g, t0: ac.currentTime};
+  document.getElementById("p2-true").classList.add("live");
+}
+function stopP2(clearTrue=true){
+  if (shep){ shep.nodes.forEach(n=>{ n.g.gain.setTargetAtTime(0, ac.currentTime, .03);
+    n.o.stop(ac.currentTime+.3); }); shep = null;
+    document.getElementById("p2-shep").classList.remove("live"); }
+  if (clearTrue && tru){ tru.g.gain.setTargetAtTime(0, ac.currentTime, .03);
+    tru.o.stop(ac.currentTime+.3); tru = null;
+    document.getElementById("p2-true").classList.remove("live"); }
+}
+function tick2(){
+  if (armed){
+    if (shep){
+      const p = ((ac.currentTime - shep.t0) / CYCLE) % 1;
+      shep.nodes.forEach(n => {
+        const x = (n.k + p) % NPART;                    // position in octaves
+        n.o.frequency.setValueAtTime(SHEP_BASE * Math.pow(2, x), ac.currentTime);
+        n.g.gain.setTargetAtTime(shepAmp(x) * 0.30, ac.currentTime, 0.02);
+      });
+      shHeight = 0;                                     // by construction. always.
+    }
+    if (tru){
+      const e = ac.currentTime - tru.t0;
+      trHeight = e / CYCLE;
+      tru.o.frequency.setValueAtTime(SHEP_BASE*2 * Math.pow(2, trHeight), ac.currentTime);
+      if (trHeight > 5){ stopP2(true); }                // do not climb out of hearing
+    }
+  }
+  document.getElementById("p2-sh").textContent = shHeight.toFixed(2) + " octaves";
+  document.getElementById("p2-tr").textContent = trHeight.toFixed(2) + " octaves";
+  document.getElementById("p2-shbar").style.width = "0%";
+  document.getElementById("p2-trbar").style.width = Math.min(100, trHeight/5*100) + "%";
+  raf2 = requestAnimationFrame(tick2);
+}
+tick2();
+document.getElementById("p2-shep").addEventListener("click", startShepard);
+document.getElementById("p2-true").addEventListener("click", startTrue);
+document.getElementById("p2-stop").addEventListener("click", ()=>stopP2(true));
+document.getElementById("p2-reset").addEventListener("click", ()=>{
+  stopP2(true); shHeight = 0; trHeight = 0;
+});
+
+// =====================================================================
+// PANEL 3: the helix
+// =====================================================================
+const cv = document.getElementById("helix"), cx = cv.getContext("2d");
+let rotY = 0.6, rotX = 0.32, drag = null, view = "helix";
+const NOCT = 3, PER = 7;      // 7 half-steps per octave; the 8th is the next do
+
+function resize(){
+  const w = cv.clientWidth; cv.width = w * devicePixelRatio; cv.height = 440 * devicePixelRatio;
+  cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  draw();
+}
+window.addEventListener("resize", resize);
+
+function nodes(){
+  const out = [];
+  for (let n = 0; n <= NOCT*PER; n++){
+    const d = n * 0.5;                       // continuation coordinate
+    const res = n % PER;                     // residue class: which note
+    const oct = Math.floor(n / PER);
+    out.push({n, d, res, oct, tonic: res === 0});
+  }
+  return out;
+}
+function project(p){
+  const W = cv.clientWidth, H = 440;
+  const R = view === "line" ? 0 : Math.min(W*0.16, 96);
+  const theta = (p.res / PER) * Math.PI*2 + rotY;
+  let x = R * Math.cos(theta);
+  let z = R * Math.sin(theta);
+  let y = view === "circle" ? 0 : (p.d / (NOCT*3.5) - 0.5) * -300;
+  const yy = y*Math.cos(rotX) - z*Math.sin(rotX);
+  const zz = y*Math.sin(rotX) + z*Math.cos(rotX);
+  const s = 420 / (420 + zz);
+  return {x: W/2 + x*s, y: H/2 + yy*s, s, z: zz};
+}
+function draw(){
+  const W = cv.clientWidth, H = 440;
+  cx.clearRect(0,0,W,H);
+  const ns = nodes().map(p => ({...p, ...project(p)}));
+
+  // helix ribbon
+  cx.strokeStyle = "rgba(212,176,99,.22)"; cx.lineWidth = 1.2;
+  cx.beginPath();
+  for (let t = 0; t <= NOCT*PER; t += 0.08){
+    const res = t % PER, d = t*0.5;
+    const q = project({res, d});
+    t === 0 ? cx.moveTo(q.x,q.y) : cx.lineTo(q.x,q.y);
+  }
+  cx.stroke();
+
+  // the tonic vertical: every do stacked on one line
+  if (view !== "circle"){
+    const ts = ns.filter(p => p.tonic);
+    cx.strokeStyle = "rgba(212,176,99,.5)"; cx.setLineDash([3,4]); cx.lineWidth = 1;
+    cx.beginPath();
+    ts.forEach((p,i) => i===0 ? cx.moveTo(p.x,p.y) : cx.lineTo(p.x,p.y));
+    cx.stroke(); cx.setLineDash([]);
+  }
+
+  ns.sort((a,b) => b.z - a.z).forEach(p => {
+    const r = (p.tonic ? 6 : 4) * p.s;
+    cx.beginPath(); cx.arc(p.x, p.y, r, 0, Math.PI*2);
+    cx.fillStyle = p.tonic ? "#d4b063" : "rgba(233,229,216,.55)";
+    cx.fill();
+    if (p.tonic){
+      cx.strokeStyle = "rgba(212,176,99,.35)"; cx.lineWidth = 1;
+      cx.beginPath(); cx.arc(p.x,p.y, r+5, 0, Math.PI*2); cx.stroke();
+    }
+    if (p.s > 0.82){
+      cx.fillStyle = p.tonic ? "rgba(212,176,99,.95)" : "rgba(140,140,155,.75)";
+      cx.font = `${Math.round(9*p.s)}px "Spline Sans Mono", monospace`;
+      cx.fillText(p.tonic ? `${p.d}D` : STATIONS[p.res], p.x + r + 4, p.y + 3);
+    }
+  });
+}
+cv.addEventListener("pointerdown", e => { drag = {x:e.clientX, y:e.clientY, rY:rotY, rX:rotX}; cv.setPointerCapture(e.pointerId); });
+cv.addEventListener("pointermove", e => {
+  if (!drag) return;
+  rotY = drag.rY + (e.clientX - drag.x)*0.011;
+  rotX = Math.max(-0.9, Math.min(0.9, drag.rX + (e.clientY - drag.y)*0.005));
+  draw();
+});
+cv.addEventListener("pointerup", e => {
+  if (drag && Math.abs(e.clientX-drag.x) < 4 && Math.abs(e.clientY-drag.y) < 4){
+    // a click, not a drag: sound the nearest station
+    const rect = cv.getBoundingClientRect();
+    const mx = e.clientX-rect.left, my = e.clientY-rect.top;
+    let best = null, bd = 1e9;
+    nodes().forEach(p => { const q = project(p);
+      const dd = (q.x-mx)**2 + (q.y-my)**2; if (dd < bd){ bd = dd; best = {p,q}; } });
+    if (best && bd < 900){
+      arm(); ping(stationFreq(best.p.res, best.p.oct), ac.currentTime, 0.7);
+      document.getElementById("p3-out").innerHTML =
+        `<b>${STATIONS[best.p.res]}</b> at continuation coordinate <b>${best.p.d}D</b> ` +
+        `&nbsp;·&nbsp; residue ${best.p.res} (${SOLFEGE[best.p.res]}) &nbsp;·&nbsp; octave ${best.p.oct}` +
+        (best.p.tonic ? ` &nbsp;·&nbsp; <span style="color:var(--gold)">tonic. Same note as 0D. Different height.</span>` : ``);
+    }
+  }
+  drag = null;
+});
+document.querySelectorAll("#p3-view button").forEach(b => {
+  b.addEventListener("click", () => {
+    document.querySelectorAll("#p3-view button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on"); view = b.dataset.v; draw();
+    const msg = {
+      helix:  "The helix: chroma returns, height ascends. Both coordinates kept.",
+      circle: "Chroma only. Every octave collapses onto the same ring: you can see which note, never how high. This is the Shepard tone's view of you.",
+      line:   "Height only. You can see how high, never which note. The return is invisible; nothing ever comes back."
+    }[view];
+    document.getElementById("p3-out").innerHTML = msg;
+  });
+});
+document.getElementById("p3-play").addEventListener("click", () => {
+  arm(); const t0 = ac.currentTime + 0.06, step = 0.3;
+  nodes().forEach((p, n) => ping(stationFreq(p.res, p.oct), t0 + n*step, 0.5));
+  document.getElementById("p3-out").innerHTML =
+    `Walking three octaves: <b>${nodes().length} notes</b> for ${NOCT} octaves = 7n + 1. ` +
+    `The tonics are sounded once each, because each one is both an ending and a beginning.`;
+});
+document.getElementById("p3-tonics").addEventListener("click", () => {
+  arm(); const t0 = ac.currentTime + 0.06;
+  nodes().filter(p=>p.tonic).forEach((p,n) => ping(stationFreq(0, p.oct), t0 + n*0.85, 1.5));
+  document.getElementById("p3-out").innerHTML =
+    `The tonics alone: <b>do, do′, do″, do‴</b>. The same note, four heights. ` +
+    `This is the "I am" ladder: same sentence, larger speaker.`;
+});
+resize();
+
+// =====================================================================
+// PANEL 4: the operator
+// =====================================================================
+let dis = null;
+document.getElementById("p4-w").addEventListener("click", () => {
+  arm(); const t0 = ac.currentTime + 0.06;
+  WEIGHTS.forEach((w,i) => ping(stationFreq(i), t0 + i*0.42, 0.9, w*2.6));
+  WEIGHTS.forEach((w,i) => setTimeout(()=>lite(i,340), (0.06 + i*0.42)*1000));
+  const loud = STATIONS[WEIGHTS.indexOf(Math.max(...WEIGHTS))];
+  const quiet = STATIONS[WEIGHTS.indexOf(Math.min(...WEIGHTS))];
+  document.getElementById("p4-note").innerHTML =
+    `Amplitude is the station's weight at the fixed point. <b>${loud}</b> is loudest (0.2850), ` +
+    `<b>${quiet}</b> is nearly inaudible (0.0160). The ⊙ is mostly line and boundary; ` +
+    `emergence barely registers. This is what a formed whole is made of, by its own engine.`;
+});
+function stopDis(){
+  if (!dis) return;
+  dis.voices.forEach(v => { v.g.gain.setTargetAtTime(0, ac.currentTime, .05); v.o.stop(ac.currentTime+.4); });
+  clearInterval(dis.iv); dis = null;
+  document.getElementById("p4-d").classList.remove("live");
+}
+document.getElementById("p4-d").addEventListener("click", () => {
+  arm(); stopDis();
+  // home voice + six neighbour voices that swell as the home share bleeds away
+  const voices = [];
+  const mk = (f, det) => {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = "sine"; o.frequency.value = f; o.detune.value = det;
+    g.gain.value = 0; o.connect(g); g.connect(master); o.start();
+    return {o,g};
+  };
+  const home = mk(stationFreq(0,1), 0); voices.push(home);
+  const nbrs = [-38,-19,-9,9,19,38].map(d => mk(stationFreq(0,1), d*3));
+  nbrs.forEach(v => voices.push(v));
+
+  let k = 0;
+  const iv = setInterval(() => {
+    if (k >= DISSOLUTION.length){ stopDis(); return; }
+    const share = DISSOLUTION[k];
+    const leaked = 1 - share;
+    home.g.gain.setTargetAtTime(share*0.5, ac.currentTime, 0.08);
+    nbrs.forEach(v => v.g.gain.setTargetAtTime(leaked*0.5/nbrs.length, ac.currentTime, 0.08));
+    document.getElementById("p4-share").textContent = share.toFixed(4);
+    document.getElementById("p4-share").style.color = share <= BASELINE*1.15 ? "var(--red)" : "var(--ink)";
+    document.getElementById("p4-bar").style.width = (share*100) + "%";
+    document.getElementById("p4-step").textContent = k + " / 40";
+    k++;
+  }, 220);
+  dis = {voices, iv};
+  document.getElementById("p4-d").classList.add("live");
+});
+document.getElementById("p4-stop").addEventListener("click", stopDis);
+</script>
+</body>
+</html>
