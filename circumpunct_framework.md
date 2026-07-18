@@ -19766,22 +19766,45 @@ STATUS KEY:
 
 > **2026 restoration note.** §27.7 and §27.7a were retracted mid-2026 on three objections (the 360 as unit convention, the 59/3 as post-hoc, the F/κ type question) and then restored late-2026 after the 360 objection was answered (360 = P!·T·(Φ+○) is pool-native) and the P! factor was grounded in κ-bijection cardinality (§27.7q). The current position is **conditional restoration as structural conjecture**: 1/α has a framework-integer expression (every factor in the pool); axiomatic derivation of the specific three-term shape from A0–A4 is ongoing; the F/κ distinction is consistent rather than contradictory (structural expression and κ-measurement reading coexist, because F's integer architecture sets the natural κ-rung scale). See the [framework revision notice](#framework-revision-2026-α-as-structural-expression-in-framework-integers-conditional-restoration) at the top of this document, §27.7a for the canonical treatment, and §27.7q for the κ-matrix reading of P!.
 
-The dimensional ladder expresses each fundamental constant at its dimensional home as a small-integer composition of α, φ, and framework integers. Each rung lives at its dimensional home. Integer dimensions (stabilized forms) produce single constants; half-integer dimensions (process phases) produce spectra. The ladder describes one circumpunct unfolding from localization to closure.
+The dimensional ladder expresses each fundamental constant at its dimensional home as a small-integer composition of α, φ, and framework integers. Each rung lives at its dimensional home. Integer dimensions (stabilized forms) produce single constants; half-integer dimensions (process phases) produce spectra. The ladder describes one circumpunct unfolding from localization to closure, and, under the staggered octave (§27.7t), continuing: the eighth station is the shared tonic (3.5D ≡ 0D′), which carries no independent constant because its slot is the next octave's 0D (κ_{0,0} bonds tonic to tonic), and the cross-scale hierarchy exponents complete whole octaves.
+
+*Table updated 2026-07-18 (session; staged with §27.7t.7): the 2D and 2.5D rows now carry the station constants π and v/Λ_QCD (per §27.7l and §27.7j) with the gauge group and Weinberg angle compounding at the same stations; the tonic row and the octave-integral continuation are added. No formula or value changed.*
 
 ```
-THE DIMENSIONAL LADDER:
+THE DIMENSIONAL LADDER (full form, with the tonic wrap and continuation):
 
-╔═════════════════════════════════════════════════════════════════════════════════╗
-║  DIM   │ TYPE        │ CONSTANT            │ FORMULA                │ ACCURACY ║
-╠═════════════════════════════════════════════════════════════════════════════════╣
-║  0D    │ Structural  │ α (fine-structure)   │ 1/α = 360/φ²-2/φ³+α/k │ 0.22 ppb ║
-║  0.5D  │ Processual  │ c (speed of light)   │ c = √(P·◐(1-◐)·sinθ)  │ exact    ║
-║  1D    │ Structural  │ ℏ (Planck constant)  │ E_cycle/ω_cycle = 1    │ exact    ║
-║  1.5D  │ Processual  │ mass ratios          │ (1/α)^(13/12+α/27)    │ 5 ppm    ║
-║  2D    │ Structural  │ gauge group          │ SU(3)×SU(2)×U(1)      │ exact    ║
-║  2.5D  │ Processual  │ Weinberg angle       │ 3/13 + 5α/81          │ 1.4 ppm  ║
-║  3D    │ Structural  │ G (gravity)          │ α²¹×φ²/2×(1+2α/91)   │ 0.04 ppm ║
-╚═════════════════════════════════════════════════════════════════════════════════╝
+╔═══════════════════════════════════════════════════════════════════════════════════╗
+║  DIM    │ TYPE        │ CONSTANT              │ FORMULA                │ ACCURACY ║
+╠═══════════════════════════════════════════════════════════════════════════════════╣
+║  0D     │ Structural  │ α (fine-structure)    │ 1/α = 360/φ²−2/φ³+α/k  │ 0.22 ppb ║
+║  0.5D   │ Processual  │ c (speed of light)    │ c = √(P·◐(1−◐)·sinθ)   │ exact    ║
+║  1D     │ Structural  │ ℏ (Planck constant)   │ E_cycle/ω_cycle = 1    │ exact    ║
+║  1.5D   │ Processual  │ mass ratios           │ (1/α)^(13/12+α/27)     │ 5 ppm    ║
+║         │             │   tau: 58/35 + α/81   │ (1/α)^(58/35+α/81)     │ 1 ppm    ║
+║  2D     │ Structural  │ π (closure constant)  │ the Φ glyph draws it   │ exact    ║
+║         │             │  + gauge structure    │ SU(3)×SU(2)×U(1)       │ exact    ║
+║         │             │  + Weinberg angle     │ 3/13 + 5α/81           │ 1.4 ppm  ║
+║  2.5D   │ Processual  │ v/Λ_QCD (emergence)   │ (1/α)^(56/39)          │ 0.005%   ║
+║  3D     │ Structural  │ G (gravity)           │ α²¹×φ²/2×(1+2α/91)     │ 0.04 ppm ║
+║  3.5D   │ Tonic ≡ 0D′ │ no eighth rung:       │ 3.5D = 0D′ (wrap);     │ theorem  ║
+║         │             │ the next octave's α   │ κ_{0,0} = α, the bond  │ §27.7t   ║
+╠═══════════════════════════════════════════════════════════════════════════════════╣
+║  THE CONTINUATION: cross-scale exponents are whole octaves (§27.7t.7c)            ║
+╠═══════════════════════════════════════════════════════════════════════════════════╣
+║  G      │ exp 21      │ 6 octaves = T!        │ α²¹×φ²/2×(1+2α/91)     │ 0.04 ppm ║
+║  M_Pl   │ exp 21/2    │ 3 octaves = T         │ (1/α)^(21/2)×√2/φ      │ 0.008%   ║
+║  Λ      │ exp 56      │ 16 octaves = P²       │ α⁵⁶(1−6α+4α²)/72       │ 0.004%   ║
+╚═══════════════════════════════════════════════════════════════════════════════════╝
+
+Seven rungs, one per residue class of the ladder's ℤ₇ (§27.7t.4.3): the
+eighth station is the shared tonic, whose constant is the next octave's α
+(no independent 3.5D rung exists; the tonic's slot is 0D's). Station
+constants at 2D and 2.5D follow §27.7l (π, the cost of closure) and
+§27.7j (v/Λ_QCD at E(2.5) = 56/39); the gauge group and the Weinberg
+angle compound at those same stations (§13.15). Hierarchy exponents are
+octave-integral (one octave = 3.5 in dimension units = R half-steps):
+21 = 6×3.5, 21/2 = 3×3.5, 56 = 16×3.5, with counts T!, T, P² pool-native;
+station-local exponents (13/12, 58/35, 56/39, 1/2) never are (§27.7t.7c).
 
 STRUCTURAL CONJECTURE: α ADMITS POOL-NATIVE EXPRESSION.
 1/α = P!·T·(Φ+○)/φ² − Φ/φ³ + α·T/(P·V+R)
@@ -19816,9 +19839,9 @@ counting-factor identity.
 
 **Rung 1.5D: mass ratios.** The i-turn: where linear extension ceases to remain simple and begins to differentiate into families. Mass ratios come from rotational spectral splitting at the i-turn. Base formula: m_μ/m_e = (1/α)^(13/12) ≈ 206.49 (0.13%). Self-referential correction: m_μ/m_e = (1/α)^(13/12 + α/27) = 206.767 (measured: 206.768, error 5 ppm). K = 27 = 3³ = ○³ (boundary cubed). The exponent 13/12 = (12+1)/12 = (generators + whole)/generators. The tau: m_τ/m_e = (1/α)^(58/35 + α/81) = 3477.2 (measured: 3477.2, error 1 ppm). K = 81 = 3⁴ = ○⁴ (boundary to the fourth). Base exponent 58/35 = (59−1)/(5×7) = (k_α − •)/(sum_of_dimensions × rungs). Mass correction constants are K = 3^(n+1) where n is the generation: powers of the boundary. Process phases produce spectra, not single values.
 
-**Rung 2D: gauge structure.** The surface selects its symmetry. SU(3)×SU(2)×U(1) is the maximal symmetry of the 64-state validation architecture (§13.15). dim(SU(3)) + dim(SU(2)) + dim(U(1)) = 8 + 3 + 1 = 12 = 4 × 3 (pump strokes × triad components). 3 × 2 × 1 = 6 = the 6 binary degrees of freedom in the 64-state architecture.
+**Rung 2D: π, and the gauge structure that compounds on it.** The station constant of the 2D rung is π, the cost of closure around a center; the glyph Φ literally draws the construction that defines it (diameter through center of circle; see §27.7l for the full treatment). Gauge structure is what compounds on that closure: the surface selects its symmetry. SU(3)×SU(2)×U(1) is the maximal symmetry of the 64-state validation architecture (§13.15). dim(SU(3)) + dim(SU(2)) + dim(U(1)) = 8 + 3 + 1 = 12 = 4 × 3 (pump strokes × triad components). 3 × 2 × 1 = 6 = the 6 binary degrees of freedom in the 64-state architecture.
 
-**Rung 2.5D: emergence (Weinberg angle).** The field unfolding toward bounded structure. Transmission between scales. T = cos²(Δφ/2) applied to the three gauge factors as a triad: U(1) = Φ (T = 1, transparent), SU(2) = • (T = 10/13, partial), SU(3) = ○ (T → 0, confined). Base formula: sin²θ_W = 3/13 (0.19% error). Self-referential correction: sin²θ_W = 3/13 + 5α/81 = 0.23122 (measured: 0.23122, error 1.4 ppm). K = 81/5 = 3⁴/(Φ+○): the tau correction constant divided by the sum of higher dimensions. The selection rule: 13 = 12 + 1 (generators + compositional whole, A4); 3 = dim(SU(2)) = the triad = ○ (boundary generators). cos²θ_W = 10/13 = (12−2)/(12+1) = (generators minus bidirectional valve) / (generators plus whole).
+**Rung 2.5D: emergence (v/Λ_QCD, and the Weinberg angle).** The field unfolding toward bounded structure. The station's ladder constant is the emergence exponent between scales: v/Λ_QCD = (1/α)^(56/39) = 1170.24 (measured 1170.2; E(2.5) = 56/39 = ΣA/(T·V), forced by the compositional product, §27.7c and §27.7j). The Weinberg angle is the transmission quantity at the same station. T = cos²(Δφ/2) applied to the three gauge factors as a triad: U(1) = Φ (T = 1, transparent), SU(2) = • (T = 10/13, partial), SU(3) = ○ (T → 0, confined). Base formula: sin²θ_W = 3/13 (0.19% error). Self-referential correction: sin²θ_W = 3/13 + 5α/81 = 0.23122 (measured: 0.23122, error 1.4 ppm). K = 81/5 = 3⁴/(Φ+○): the tau correction constant divided by the sum of higher dimensions. The selection rule: 13 = 12 + 1 (generators + compositional whole, A4); 3 = dim(SU(2)) = the triad = ○ (boundary generators). cos²θ_W = 10/13 = (12−2)/(12+1) = (generators minus bidirectional valve) / (generators plus whole).
 
 **Rung 3D: G (gravity).** The boundary closes. Base formula: α_G = α²¹ × φ²/2 (0.016% error). Self-referential correction: α_G = α²¹ × φ²/2 × (1 + 2α/91) (error 0.04 ppm, 0.00σ from CODATA). K = 91 = 7 × 13 = rungs × (generators + •). The exponent 21 = (0 + 0.5 + 1 + 1.5 + 2 + 2.5 + 3) × 2 = 10.5 × 2: the sum of all dimensional positions on the ladder, counted through both channels (⊛ and ✹). φ²/2 = (φ+1)/2 = 1.309017: golden nesting correction. The correction 2α/91 reads: two channels times α divided by (rungs × 13); the boundary accumulates a small additional coupling from every rung and every generator. Equivalent: M_Pl/m_e = (1/α)^(21/2) × √2/φ (0.008% accuracy).
 
