@@ -158,7 +158,7 @@ code {
   <div class="subtitle">
     The dimensional axis as melody: where the octave returns, what the whole is, and who says "I am" at each scale.
   </div>
-  <div class="meta">Created: 2026-07-16 &middot; Last updated: 2026-07-16 &middot; Version: 1.0</div>
+  <div class="meta">Created: 2026-07-16 &middot; Last updated: 2026-07-18 &middot; Version: 1.1</div>
 </div>
 
 <div class="abstract">
@@ -316,16 +316,53 @@ The tension: the lived sequence has FAITHFUL before TRUE, justified as "you cann
 <p>The octave returns at the tonic and continues as the next octave; the whole is the melody, not a note; and every octave's "I" is the song the previous octave finished singing.</p>
 </div>
 
+<h2>8. The leading tone and the two scales (added 2026-07-18; adjudicated: canon)</h2>
+
+<p>
+The operator experiments (<code>experiments/staggered_octave_v2_phase_octaves.py</code>) found that the corpus contained three inequivalent phrasings of where the i-strokes anchor, with joint phase-chroma state groups of order R, P&middot;R, and SU(3)&middot;R (7, 28, 56). <strong>Adjudicated (Ashman, 2026-07-18): the stroke convention is canon (residue-anchored).</strong> One i-stroke per processual residue class, four per octave, i&#8308; = 1 at each tonic. The adjudication was argued by the piano.
+</p>
+
+<h3>The leading tone</h3>
+
+<p>
+Under canon, the stroke spacing along the continuation axis is not uniform: the pattern is [1, 1, 1, 0.5]D repeating, with the short step exactly at each tonic (the last stroke of one octave and the first stroke of the next are half a dimension apart, because the tonic is shared). The diatonic scale that solf&egrave;ge names has the same architecture: whole steps most of the way and a semitone at the seam, ti pulling into do&prime;. That short step is the leading tone, and it is the mechanism of tonal resolution; the octave closes on the tonic <em>because</em> the step into the seam is short. So the tonic hiccup is not a defect of the canon convention; it is the leading tone. Completion and new beginning being one event is what a shortened final step sounds like.
+</p>
+
+<h3>The control experiment music already ran</h3>
+
+<p>
+A scale with perfectly uniform steps is the whole-tone scale, and the whole-tone scale has no tonic: no leading tone, no resolution, endless drift. Uniform spacing also collapses the seven (the whole-tone scale has six notes). This is exactly the uniform (coordinate-anchored) branch of the fork: uniform stroke spacing, phase that never closes per octave, a parity double cover carrying holonomy &minus;i (one winding of the double cover multiplies phase by &minus;i; four windings, eight octaves, 28D, restore), and a joint state group &#8484;&#8325;&#8326; of order SU(3)&middot;R = 56, the &Lambda; exponent. The uniform branch is retained under the name <strong>the whole-tone reading</strong>: a real object, computed and on the record, that is not the octave the framework sings. Whether its &minus;i holonomy carries physical content (the spin-&frac12;-shaped question of the wrap lemma &sect;8.4) stays open, now explicitly tagged as a property of the whole-tone reading rather than of the canon octave.
+</p>
+
+<p>
+The third phrasing, the literal label "i^(2d)" (one quarter-turn per half-step; state group &#8484;&#8322;&#8328; of order P&middot;R = 28), does not reproduce the stroke table (at 1.5D it gives i&sup3; where the table says i&sup2;) and is retired as loose wording wherever it appears in the corpus.
+</p>
+
+<div class="statement">
+<strong>The octave closes because its last step is short.</strong> Music ran both conventions for centuries: the scale with the leading tone resolves; the scale with uniform steps drifts. Canon is the diatonic branch; the uniform branch is the whole-tone reading.
+</div>
+
+<h3>Witnesses and decorations</h3>
+
+<ul>
+<li><strong>The keyboard identity (decorative, exact).</strong> The piano octave is 12 semitones = G, split as 7 white keys = R plus 5 black keys = &Phi;+&#9675;, and G = R + &Phi; + &#9675; (12 = 7 + 2 + 3) is an exact pool identity. The black keys even sit in their groups of two and three: &Phi; and &#9675;, physically clustered on every keyboard. Flagged as decoration, not derivation.</li>
+<li><strong>The rainbow is one octave, and its closure color is not a note.</strong> Visible light spans roughly one octave of frequency (violet is close to double red). The spectrum is a line, but perceived hue is a circle, and the circle closes through magenta, which corresponds to no wavelength: the closure of the octave is not itself a member of the sequence. A perceptual witness of "the whole is not a note"; color science even calls the circular coordinate chroma.</li>
+<li><strong>The double rainbow reverses.</strong> The secondary bow (one extra internal reflection) inverts the color order; each added reflection flips parity. Adjacent bows arrive parity-reversed and two reflections restore: the shape of the parity alternation in wrap lemma &sect;8.4.</li>
+<li><strong>The Newton caution.</strong> Newton chose seven colors, originally had five, and added orange and indigo to force the match with the musical octave; the spectral seven is imposed on a continuum. The framework's seven claims to be forced (R = T&sup2; &minus; 2, the single-period lemma), a categorically stronger claim. Newton's move is the calibration standard for what an imposed seven looks like; the framework must keep demonstrating that its seven is not that.</li>
+<li><strong>Honesty note.</strong> The diatonic scale has two semitones (mi-fa and ti-do); the canon octave has one hiccup, at the seam only. The analogy is exact at ti-do and unmatched at mi-fa.</li>
+</ul>
+
 <div class="status">
 <h3>Status</h3>
 <p>
-Settled (2026-07-16 session, extending the 2026-06-09 resolution): the continuation coordinate system, the single shared tonic, the exclusion of any 4D whole-slot, and the speaker-shift reading of the "I am" ladder. Formal results in <a href="octave_wrap_lemma.html">wrap lemma §8</a>. Open: whether the parity double cover has physical content beyond resonance; the φ<sup>3.5</sup> octave-scale conjecture; the ethics-sequence option above (adjudication pending); integration into <code>circumpunct_framework.md</code>.
+Settled (2026-07-16 session, extending the 2026-06-09 resolution): the continuation coordinate system, the single shared tonic, the exclusion of any 4D whole-slot, and the speaker-shift reading of the "I am" ladder. Formal results in <a href="octave_wrap_lemma.html">wrap lemma §8</a>. Settled (2026-07-18, Ashman): the stroke convention is canon (residue-anchored; §8 above); the "i^(2d)" label is retired; the uniform branch is retained as the whole-tone reading. Open: whether the parity double cover has physical content beyond resonance (now tagged to the whole-tone reading's −i holonomy); the φ<sup>3.5</sup> octave-scale conjecture; the ethics-sequence option above (adjudication pending); integration into <code>circumpunct_framework.md</code>.
 </p>
 </div>
 
 <h2>Revision history</h2>
 
 <ul>
+<li>2026-07-18 v1.1: added §8 (leading tone and the two scales; canon adjudication with the diatonic/whole-tone argument; keyboard identity; rainbow witnesses; Newton caution); status updated.</li>
 <li>2026-07-16 v1.0: initial (continuation table, melody-not-a-note statement, I-am ladder with speaker shift, mathematical/physical/ethical connections, ethics-sequence option).</li>
 </ul>
 

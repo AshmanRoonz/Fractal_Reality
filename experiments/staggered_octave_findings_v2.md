@@ -2,7 +2,7 @@
 
 Created: 2026-07-18
 Last updated: 2026-07-18
-Version: 1.0
+Version: 1.1
 
 Companion code: `staggered_octave_v2_phase_octaves.py`
 Context: the three next steps queued by `staggered_octave_z7_findings_v1.md`; framework §27.7t; wrap lemma §8.
@@ -38,10 +38,11 @@ Exact facts, all asserted in code: the gen-2 to gen-3 base-exponent gap is 58/35
 
 ## Status
 
-- E1: computed on all three branches; convention adjudication queued (canon table vs "i^(2d)" wording; whether ℤ₅₆ and the −i holonomy are live objects).
+- E1: **adjudicated (Ashman, 2026-07-18): canon is definitional.** The argument is the leading tone: canon's short step at the tonic ([1, 1, 1, 0.5]D) is the diatonic semitone at ti-do′, the mechanism of closure rather than a defect; the uniform branch is the whole-tone scale (uniform steps, no tonic, drift) and is retained under the name "the whole-tone reading" with its ℤ₅₆ state group and −i double-cover holonomy; the §8.4 physical-content question now tags to that reading. The "i^(2d)" label is retired as loose wherever it appears (fixed in CLAUDE.md this session; no doc carried it). Prose record: `docs/the_staggered_octave.html` §8.
 - E2: conjecture confirmed 13/13 on the corpus; Lucas boundary at Pascal m = 5 logged as a falsification handle; candidate for a §27.7t addendum after countersign.
 - E3: exact identity logged at C+; needs a derivation of the 1/420 term to graduate.
 
 ## Revision history
 
+- 2026-07-18 v1.1: E1 adjudicated (canon; leading-tone argument; uniform branch renamed the whole-tone reading; i^(2d) retired); status updated.
 - 2026-07-18 v1.0: initial (three-branch convention fork with state groups R/PR/SU(3)R and the −i double-cover holonomy; octave-integrality 13/13 with Lucas boundary; generation gap = P/R + 1/lcm(1..R) at C+).
