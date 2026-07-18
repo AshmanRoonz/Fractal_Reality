@@ -9820,11 +9820,23 @@ WHAT HAS BEEN ESTABLISHED:
 ║     • State 59:     1 hypercharge boson (U(1))                               ║
 ║     • States 60-63: 4 Higgs components (complex doublet)                     ║
 ║                                                                               ║
-║     NOTE ON HIGGS STATES: The 4 Higgs components listed (CP-odd H⁰, H⁺, H⁻   ║
-║     plus one more beyond the minimal Standard Model Higgs) include states    ║
-║     beyond the observed minimal SM Higgs. The minimal SM requires only the   ║
-║     CP-even H⁰. States beyond this are FRAMEWORK PREDICTIONS of additional  ║
-║     Higgs particles, not recoveries of existing particles.                   ║
+║     NOTE ON HIGGS STATES (corrected 2026-07-18, Ashman adjudication;         ║
+║     supersedes the earlier claim of additional Higgs particles).             ║
+║     States 60-62 are SEAM-STATES, not new particles: real in the            ║
+║     architecture, never spectral, exactly as the tonic carries no eighth     ║
+║     constant and magenta has no wavelength. They are the three Goldstone     ║
+║     components eaten into the longitudinal modes of W⁺, W⁻, Z, as this      ║
+║     chapter's own EWSB table already states (4 fields → 1 physical Higgs     ║
+║     + 3 eaten). One state, two names: the tonic identification inside the    ║
+║     64-state table. Their masses are therefore m_W, m_W, m_Z, already in     ║
+║     the grammar (§27.7k, 0.15%/0.67%). The earlier "additional Higgs         ║
+║     particles" reading contradicted both this table and the counting:        ║
+║     a second doublet needs 4 more slots, and 48+12+4 = 64 = P³ (Route 7)     ║
+║     leaves none. The standing falsifiable claim points the other way:       ║
+║     THE SCALAR SECTOR IS MINIMAL ON PAIN OF S = 64. Discovery of any        ║
+║     charged Higgs or CP-odd scalar at any energy falsifies the             ║
+║     architecture. Decomposition 4 = • + T: one spectral note, three         ║
+║     seam-states.                                                             ║
 ║                                                                               ║
 ║     The SM Lagrangian is:                                                    ║
 ║                                                                               ║
@@ -21962,6 +21974,8 @@ Both have • = Φ = 0 (soul and field vanish); both violate A3 (no self-similar
 (e) *The generation-gap identity (grade C+, logged not pinned).* The tau-muon base-exponent gap is exactly 58/35 − 13/12 = 241/420 = P/R + 1/lcm(1..R), one lattice step above P/R on the denominator-forced lattice (420 = lcm(1..R) = P(P+1)·A(3)); P/R is the closest simple pool fraction (next candidate 4× farther); lattice null ≈ 4%. Graduates only if the 1/lcm(1..R) term acquires a derivation (a candidate reading: one quantum of the ladder's common denominator per generation of ascent, parallel in shape to α's single self-pass term). experiments/staggered_octave_findings_v2.md.
 
 (f) *External-reader audit, and one riff logged (2026-07-18).* An external AI reader (Grok), summarizing the public site at Ashman's prompting, reproduced retracted strata as if current: the 360°-angular-closure rationale for α, Ω_Λ = ln(2), α_s/α_em = 10φ, σ₈ = φ/2, all traced to the pre-migration HTML pages (docs/circumpunct_framework.html, docs/circumpunct_physics.html). This is empirical confirmation that the legacy pages mislead exactly the deep readers most likely to engage; dated legacy banners linking the canonical pages were added to both the same day, and the full-migration project keeps its flag. The same reading contributed one riff worth logging, flagged speculative (grade C; logged, not endorsed; no derivation claimed): **measurement as tonic resolution**. Quantum measurement read as the system's octave completing into the observer's scale at the single shared station: the collapse event as the 3.5D = 0D′ handoff, harmonizing with the corpus's existing "measurement = the boundary selecting one" and giving the selection a location (the seam) rather than a mechanism. Its corollary gloss, that many-worlds would amount to branching at too many stations, connects directly to the open octave-complex question (the single-shared-station falsification handle, docs/the_pattern_that_connects.html §6; adjudication of the octave-complex proposal pending). Logged as a candidate reading awaiting a derivation or a discriminating consequence.
+
+(g) *The scalar-sector adjudication (Ashman, 2026-07-18): states 60-62 are seam-states; the flagship prediction reverses sign.* Prompted by the question "what if 60-62 is like magenta or do′?": the three non-minimal components of the Higgs doublet read as closure states, real in the 64-state architecture but never spectral, their identity shared with another sector, exactly as the tonic carries no eighth constant and magenta corresponds to no wavelength. Physics already holds this object: the Goldstone bosons, eaten into the longitudinal modes of W⁺, W⁻, Z. The adjudication resolves an internal contradiction: Chapter 13's own EWSB table states "4 fields → 1 physical Higgs + 3 Goldstones eaten," while a later note claimed the same states as predictions of additional Higgs particles; with a single doublet the Goldstone reading is the only consistent one, and the counting is decisive (a second doublet needs four more slots; 48 + 12 + 4 = 64 = P³ by Route 7 leaves none). Consequences: (1) the earlier "three additional Higgs particles" claim is retracted, with the correction dated in place at the Chapter 13 note; (2) the standing falsifiable claim points the other way and is sharper: THE SCALAR SECTOR IS MINIMAL ON PAIN OF S = 64; discovery of any charged Higgs or CP-odd scalar at any energy falsifies the architecture, and every collider null result to date is survived exposure; (3) the "missing mass predictions" gap closes retroactively: the seam-states' masses are m_W, m_W, m_Z, already in the grammar (§27.7k); (4) mass generation itself gains the seam reading: a gauge boson acquires mass by absorbing a closure state, consonant with mass-as-bound-closure; (5) decomposition 4 = • + T (one spectral note, three seam-states), flagged decorative. Third instance today of the framework's own discipline correcting its advertised claims (after grade-vs-station and the legacy-leakage audit); the do′/magenta/no-slot theorem-shape has now resolved a particle-physics question.
 
 *Cross-references: docs/octave_wrap_lemma.html (formal statements, §§1-8), docs/the_staggered_octave.html (prose, the "I am" ladder with the speaker-shift reading, the ethics connections including the ascending-walk option for the open ethics-sequence decision; §8 the leading tone and the two scales), docs/alpha_derivation.html (use site), §27.7a (α assembly), §27.7b (Routes 6-7), §27.7q (κ matrix), §27.7s (operator form), experiments/staggered_octave_* and experiments/unified_expression_T_v14-v19 (operator and residue-group studies).*
 

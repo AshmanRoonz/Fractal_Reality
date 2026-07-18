@@ -407,7 +407,7 @@ Fractal dimension at balance: D = 1 + ◐ = 1.5 (Brownian motion, proven by Mand
 ## The 64-State Architecture
 
 3 circumpuncts × 2 channels each = 6 binary degrees of freedom. 2⁶ = 64 states.
-Maps to I Ching hexagrams, DNA codons, and the Standard Model particle spectrum (with 3 extended Higgs states as framework predictions beyond the minimal SM).
+Maps to I Ching hexagrams, DNA codons, and the Standard Model particle spectrum. **Scalar-sector adjudication (Ashman, 2026-07-18): the earlier "3 extended Higgs states as framework predictions" claim is retracted.** States 60-62 are seam-states (the do′/magenta shape: real in the architecture, never spectral): the three Goldstone components eaten into the W±/Z longitudinal modes, as Ch. 13's own EWSB table always said; their masses are m_W, m_W, m_Z, already in the grammar (§27.7k). A second doublet would need four more slots and 48+12+4 = 64 = P³ leaves none, so the standing falsifiable claim is the reverse of the old one: **the scalar sector is minimal on pain of S = 64**; discovery of any charged Higgs or CP-odd scalar falsifies the architecture. See framework §27.7t.7(g) and the corrected Ch. 13 note.
 
 ### Time Is Scale (§4.11)
 
