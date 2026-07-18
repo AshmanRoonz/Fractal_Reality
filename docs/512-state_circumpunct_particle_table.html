@@ -778,8 +778,9 @@
       </div>
       <div class="grid-legend" style="border-top:none;padding-top:0;font-size:0.5rem;">
         <div><span style="color:#888">Number (•):</span> <span style="color:#ff6b6b">■</span>r <span style="color:#4ecdc4">■</span>g <span style="color:#6b9fff">■</span>b <span style="color:#ffaadd">■</span>e⁻ <span style="color:#aaddff">■</span>ν</div>
-        <div><span style="color:#888">Fill (Φ):</span> <span style="color:#9966cc">■</span>quark <span style="color:#4488bb">■</span>lepton <span style="color:#ff6600">■</span>gluon <span style="color:#aa00aa">■</span>weak <span style="color:#aa8800">■</span>higgs</div>
+        <div><span style="color:#888">Fill (Φ):</span> <span style="color:#9966cc">■</span>quark <span style="color:#4488bb">■</span>lepton <span style="color:#ff6600">■</span>gluon <span style="color:#aa00aa">■</span>weak <span style="color:#ffd700">■</span>higgs <span style="color:#ff2ea6">■</span>seam (eaten)</div>
         <div><span style="color:#888">Border (○):</span> darker=L, lighter=R · <span style="color:#888">Brightness:</span> gen 1→3</div>
+        <div style="margin-top:2px; color:#996; font-size:0.5rem;">Scalar sector corrected 2026-07-18: states 60-62 are seam-states (Goldstones eaten into W±/Z longitudinal modes; masses m_W, m_W, m_Z), 63 is the one physical Higgs. Minimal on pain of S = 64.</div>
       </div>
     </div>
   </div>
@@ -851,10 +852,10 @@ const P = {
   57:{n:"W Boson",s:"W",sub:"-",g:null,t:"weak",S:"Gauge",Q:"-1",spin:1,mass:"80.4 GeV"},
   58:{n:"Z Boson",s:"Z",sub:"0",g:null,t:"weak",S:"Gauge",Q:"0",spin:1,mass:"91.2 GeV"},
   59:{n:"Photon",s:"γ",sub:"",g:null,t:"photon",S:"Gauge",Q:"0",spin:1,mass:"0"},
-  60:{n:"Higgs (charged)",s:"H",sub:"+",g:null,t:"higgs",S:"Higgs",Q:"+1",spin:0,mass:"—"},
-  61:{n:"Higgs (charged)",s:"H",sub:"-",g:null,t:"higgs",S:"Higgs",Q:"-1",spin:0,mass:"—"},
-  62:{n:"Higgs Boson",s:"H",sub:"0",g:null,t:"higgs",S:"Higgs",Q:"0",spin:0,mass:"125.1 GeV"},
-  63:{n:"Higgs (vacuum)",s:"H",sub:"v",g:null,t:"higgs",S:"Higgs",Q:"0",spin:0,special:"⊙ v=246 GeV"}
+  60:{n:"Goldstone seam-state (eaten → W⁺ longitudinal)",s:"G",sub:"+",g:null,t:"higgs",S:"Higgs",seam:true,Q:"+1",spin:0,mass:"m_W = 80.4 GeV"},
+  61:{n:"Goldstone seam-state (eaten → W⁻ longitudinal)",s:"G",sub:"-",g:null,t:"higgs",S:"Higgs",seam:true,Q:"-1",spin:0,mass:"m_W = 80.4 GeV"},
+  62:{n:"Goldstone seam-state, CP-odd (eaten → Z longitudinal)",s:"G",sub:"0",g:null,t:"higgs",S:"Higgs",seam:true,Q:"0",spin:0,mass:"m_Z = 91.2 GeV"},
+  63:{n:"Higgs Boson (physical; vacuum excitation)",s:"h",sub:"v",g:null,t:"higgs",S:"Higgs",Q:"0",spin:0,mass:"125.1 GeV",special:"⊙ v=246 GeV"}
 };
 
 // Get circumpunct colors for a particle: center(•), field(Φ), surface(○)
@@ -914,10 +915,18 @@ function getCircumpunctColors(id) {
       surface = '#ffff00';
     }
   } else if (p.S === 'Higgs') {
-    // Higgs sector - golden
-    center = '#ffd700';
-    field = id === 63 ? '#2a2200' : '#1a1500'; // Vacuum is special
-    surface = id === 63 ? '#ffd700' : '#aa8800';
+    if (p.seam) {
+      // Seam-states (corrected 2026-07-18): magenta, the non-spectral color;
+      // real in the architecture, never independently spectral (eaten into W±/Z)
+      center = '#ff2ea6';
+      field = '#2a0018';
+      surface = '#aa0066';
+    } else {
+      // The one physical Higgs - golden
+      center = '#ffd700';
+      field = '#2a2200';
+      surface = '#ffd700';
+    }
   }
   
   return { center, field, surface };
@@ -934,6 +943,16 @@ const STRAND_COLORS = ['#ff6b6b', '#4ecdc4', '#ffe66d'];
 // 8-station octave). Each strand carries an octave position (one of •, ⊛,
 // —, ⎇, Φ, ✹, ○, ⟳). The braid σ₁/σ₂ acts as: apply F₈ to the relevant
 // axis (one i-stroke advance) then permute axes (the topological swap).
+//
+// NOTE (2026-07-18): the stroke phases below follow the canon adjudication
+// (residue-anchored, i⁴ = 1 per octave), so the operator core survived the
+// 2026-07 refinements unchanged. But the ⊗ nesting itself is now known to
+// be the DISJOINT-scales architecture: tensor nesting compounds the
+// departure from trace preservation and cannot express constitutive
+// composition order, while tonic-shared (staggered) nesting conserves the 1
+// at O(α) and makes order physical (v14/v15 findings; framework §27.7t.6).
+// A staggered TQC variant (three octaves sharing tonic nodes, 22 sites) is
+// the flagged upgrade path for this instrument.
 // ═══════════════════════════════════════════════════════════════════════════
 const C512 = (() => {
   const STATIONS_8 = ['•','⊛','—','⎇','Φ','✹','○','⟳'];
