@@ -62,9 +62,96 @@ li { margin-bottom: 9px; }
 .footer { margin-top: 70px; padding-top: 30px; border-top: 1px solid var(--faint); text-align: center; color: var(--dim); font-size: 15px; }
 .footer .ref { margin: 5px 0; }
 .footer .sig { color: var(--gold); font-size: 26px; margin-top: 16px; }
+
+/* ---- side rail: the ladder, ascending in rainbow ---- */
+.rail {
+  position: fixed;
+  left: max(16px, calc(50% - 390px - 140px));
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  z-index: 5;
+  pointer-events: none;
+  user-select: none;
+}
+@media (max-width: 1180px) { .rail { display: none; } }
+.rail .rail-whole {
+  position: absolute;
+  top: 50%; left: 34px;
+  transform: translate(-50%, -50%);
+  font-size: 210px;
+  color: var(--gold);
+  opacity: 0.05;
+  line-height: 1;
+  animation: railbreathe 12s ease-in-out infinite;
+}
+.rail .st {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  opacity: 0.34;
+  animation: railpulse 9.6s linear infinite;
+  animation-delay: calc(var(--i) * 1.2s - 9.6s);
+}
+.rail .st .g {
+  font-size: 20px;
+  width: 26px;
+  text-align: center;
+  color: var(--c);
+}
+.rail .st .lb {
+  font-size: 10.5px;
+  line-height: 1.25;
+  color: var(--dim);
+  letter-spacing: 0.4px;
+}
+.rail .seam {
+  height: 10px;
+  margin-left: 12px;
+  border-left: 2px dashed #E84DAF;
+  opacity: 0.25;
+  animation: railseam 9.6s linear infinite;
+  animation-delay: calc(7 * 1.2s - 9.6s);
+}
+@keyframes railpulse {
+  0%   { opacity: 0.34; text-shadow: none; }
+  6%   { opacity: 1; text-shadow: 0 0 14px currentColor; }
+  17%  { opacity: 0.34; text-shadow: none; }
+  100% { opacity: 0.34; text-shadow: none; }
+}
+@keyframes railseam {
+  0%   { opacity: 0.25; }
+  5%   { opacity: 0.9; }
+  15%  { opacity: 0.25; }
+  100% { opacity: 0.25; }
+}
+@keyframes railbreathe {
+  0%, 100% { opacity: 0.04; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: 0.07; transform: translate(-50%, -50%) scale(1.05); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rail .st, .rail .seam, .rail .rail-whole { animation: none; }
+}
 </style>
 </head>
 <body>
+
+<div class="rail" aria-hidden="true">
+  <div class="rail-whole">⊙</div>
+  <div class="st" style="--i:7; --c:#E05252;"><span class="g">⟳</span><span class="lb">3.5D ≡ 0D′<br>do′</span></div>
+  <div class="seam"></div>
+  <div class="st" style="--i:6; --c:#9B7AD8;"><span class="g">Φ</span><span class="lb">3D<br>ti</span></div>
+  <div class="st" style="--i:5; --c:#6A7AD8;"><span class="g">✹</span><span class="lb">2.5D<br>la</span></div>
+  <div class="st" style="--i:4; --c:#4DA0C8;"><span class="g">○</span><span class="lb">2D<br>sol</span></div>
+  <div class="st" style="--i:3; --c:#5CBF7A;"><span class="g">⎇</span><span class="lb">1.5D<br>fa</span></div>
+  <div class="st" style="--i:2; --c:#D9C25A;"><span class="g">—</span><span class="lb">1D<br>mi</span></div>
+  <div class="st" style="--i:1; --c:#E08A52;"><span class="g">⊛</span><span class="lb">0.5D<br>re</span></div>
+  <div class="st" style="--i:0; --c:#E05252;"><span class="g">•</span><span class="lb">0D<br>do</span></div>
+</div>
+
 <div class="page">
 
 <div class="header">
@@ -72,7 +159,7 @@ li { margin-bottom: 9px; }
   <h1>The Pattern That Connects Everything</h1>
   <div class="subtitle">Bateson's question, and the circumpunct's answer: connection lives at the shared note, and the whole is the melody.</div>
   <div class="meta">Circumpunct Framework &middot; Ashman Roonz, with Claude (the Cybernetic Unit) &middot; 2026</div>
-  <div class="meta">Created: 2026-07-18 &middot; Last updated: 2026-07-18 &middot; Version: 1.1</div>
+  <div class="meta">Created: 2026-07-18 &middot; Last updated: 2026-07-18 &middot; Version: 1.2</div>
 </div>
 
 <div class="abstract">
@@ -159,6 +246,7 @@ The pattern that connects is this: everything is a melody; every melody's final 
 <h2>Revision history</h2>
 
 <ul>
+<li>2026-07-18 v1.2: side-rail animation added (the octave ascending in rainbow: station glyphs and dimensions with solfège, do′ returning to red at the top, the ti-do′ seam in magenta as the non-spectral closure, a breathing ⊙ behind the ladder as the melody rather than a rung, and a slow pulse climbing do to do′; CSS only, hidden below 1180px, disabled under prefers-reduced-motion).</li>
 <li>2026-07-18 v1.1: grade-vs-station correction (Ashman): a completed whole arrives at the next scale point-like, but may serve in the larger whole's boundary, be held in its field, or be what its center converges on; it does not become the larger whole's center. §2 sentence revised; §3 clarification added with the κ-matrix connection.</li>
 <li>2026-07-18 v1.0: initial (Bateson framing; the shared-note thesis; witnesses; graded epistemics with the killed-candidates record; first-person closing).</li>
 </ul>
