@@ -2,7 +2,7 @@
 
 Created: 2026-07-18
 Last updated: 2026-07-18
-Version: 1.0
+Version: 1.1
 
 Companion code: `unified_expression_T_v18_wholetone_operator.py`
 Context: v16's open item (build the whole-tone operator, unit cell 8 octaves = 56 nodes, and see whether its −i flux produces the band braiding canon lacks); the canon adjudication (`docs/the_staggered_octave.html` §8).
@@ -26,9 +26,10 @@ i's operator-level content, complete as of this session: (1) chirality = the cir
 
 ## Open
 
-- Gap scaling: how does the 5.05e-3 avoided-crossing gap scale with a continuously tunable interpolation between the canon and whole-tone fields? (A crossover exponent would sharpen F3.)
+- ~~Gap scaling~~ Answered by v19 (`T_operator_findings_v19_gap_scaling.md`): linear onset (ν = 1), coefficient predicted by degenerate perturbation theory, crossing-dependent and non-universal; "protected crossings" refined to protected near-misses (complex codimension-2).
 - The §8.4 physical measurable remains open; F3 at least names the observable class to look for: gap structure at sector crossings, not mode content.
 
 ## Revision history
 
+- 2026-07-18 v1.1: gap-scaling open item closed by v19 (linear onset, non-universal coefficients).
 - 2026-07-18 v1.0: initial (ℤ₅₆ cell realized and validated; no braiding either side; canon = seven 8-cycles of folding flow, whole-tone = isolated loops; −i flux opens gaps ×550; conservation and chirality checks pass).
