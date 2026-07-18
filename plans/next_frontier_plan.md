@@ -79,7 +79,7 @@ The biggest epistemic payoff. Every existing ladder formula is a fit given α. T
 
 **What the scoreboard needs.**
 - Pre-registered predictions table: constant, formula, framework integers used, predicted value, measurement uncertainty band, target timeline, data source, live/retracted/confirmed status
-- Primary targets: three extended Higgs states (mass and couplings), muon g−2 anomalous contribution at higher precision, proton radius at next-generation precision, α drift across cosmic time (QSO spectra), neutrino masses and mixing angles, Δ_ν / Δ_atm mass splittings, electron EDM upper bound
+- Primary targets: ~~three extended Higgs states (mass and couplings)~~ (retracted 2026-07-18: states 60-62 are the Goldstone seam-states; the standing claim is scalar minimality on pain of S = 64, monitored via extended-scalar search nulls), muon g−2 anomalous contribution at higher precision, proton radius at next-generation precision, α drift across cosmic time (QSO spectra), neutrino masses and mixing angles, Δ_ν / Δ_atm mass splittings, electron EDM upper bound
 - Secondary targets: dark matter phase identification (left-half-plane signature in direct-detection), HRV coherence ≈ 0.1 Hz in clinical populations, bond-angle predictions for unmeasured heavy-atom molecules
 - Scoring rule: pass/fail thresholds in advance; Brier score tracked over time; retraction protocol if a prediction fails
 - Falsification log: which predictions failed, what the failure mode said about the framework
