@@ -244,11 +244,12 @@ canvas {
   <div class="symbol">⊙</div>
   <h1>The Dimensional Ladder</h1>
   <div class="subtitle">Structural grammar given &alpha; as input; Circumpunct Framework, Ashman Roonz, 2026</div>
+  <div style="font-size: 14px; color: var(--dim); margin-top: 12px; letter-spacing: 0.5px;">Created: 2026-06-08 &middot; Last updated: 2026-07-18 &middot; Version: 1.1</div>
 </div>
 
 <!-- ============================================================ -->
 
-<p>Every fundamental constant lives at a specific dimensional home. &alpha; is given by measurement at the 0D rung; the rest of the ladder is structural grammar composing around it. Given &alpha;, each downstream constant is a small-integer product / power of &alpha;, &phi;, and a specific pool of framework integers (T, P, &Phi;, R, V, SU(3), A(3), etc.) selected by its dimensional home. Integer dimensions (0D, 1D, 2D, 3D) are <span class="b">structural</span>: stabilized forms of energy. Half-integer dimensions (0.5D, 1.5D, 2.5D, 3.5D) are <span class="s">processual</span>: phases of the pump cycle. Integer dimensions are what energy IS. Half-integer dimensions are what energy is DOING. Structural rungs produce single constants; processual rungs produce spectra. The dimensional octave (0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5) forms a complete cycle: do, re, mi, fa, so, la, ti, do'. At 3.5D (recursion), the closed boundary becomes a new aperture, completing the cycle at the next nesting level.</p>
+<p>Every fundamental constant lives at a specific dimensional home. &alpha; is given by measurement at the 0D rung; the rest of the ladder is structural grammar composing around it. Given &alpha;, each downstream constant is a small-integer product / power of &alpha;, &phi;, and a specific pool of framework integers (T, P, &Phi;, R, V, SU(3), A(3), etc.) selected by its dimensional home. Integer dimensions (0D, 1D, 2D, 3D) are <span class="b">structural</span>: stabilized forms of energy. Half-integer dimensions (0.5D, 1.5D, 2.5D, 3.5D) are <span class="s">processual</span>: phases of the pump cycle. Integer dimensions are what energy IS. Half-integer dimensions are what energy is DOING. Structural rungs produce single constants; processual rungs produce spectra. The dimensional octave (0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5) forms a complete cycle: do, re, mi, fa, so, la, ti, do'. At 3.5D (recursion), the closed boundary becomes a new aperture, completing the cycle at the next nesting level. Under the staggered octave (<a href="octave_wrap_lemma.html">wrap lemma</a> &sect;8; <a href="the_staggered_octave.html">prose</a>) the ladder continues past 3.5D rather than restarting: adjacent octaves share exactly one station, the tonic (3.5D = 0D&prime;), which is why there are seven rungs and no eighth constant (the tonic's slot is 0D's, and the tonic-to-tonic bond is &kappa;<sub>0,0</sub> = &alpha;), and why the cross-scale hierarchy exponents complete whole octaves (see The Continuation below).</p>
 
 <div class="eq">E = 1. All else is constraints.<br><span class="d" style="font-size: 18px;">&alpha; is the electron aperture's coupling strength, given by measurement. The ladder is what structure composes around it.</span></div>
 
@@ -264,7 +265,7 @@ canvas {
     <div class="rung-body">
       <div class="rung-title">Coupling at a Point (input)</div>
       <div class="rung-formula">α = |•<sub>electron</sub>| = e²/(4πε₀ℏc)</div>
-      <div class="rung-desc">Coupling at a point. α is the measured coupling strength of the electron's 0D aperture to the surrounding 2D electromagnetic field; primary entry κ<sub>0,2</sub> of the cross-station coupling matrix that the ⊂[α] nesting carries. Input to the master equation, not output of the pump cycle F. CODATA 2022: 1/α = 137.035999177(21).</div>
+      <div class="rung-desc">Coupling at a point. α is the measured coupling strength of the electron's 0D aperture to the 0D aperture of the greater whole across scales, with the 2D electromagnetic field as the mediator carrying the bond; primary entry κ<sub>0,0</sub> of the cross-station coupling matrix that the ⊂[α] nesting carries (label corrected 2026-07-18 from the earlier κ<sub>0,2</sub>; "fine-structure" names the mediator's dimension, not the coupling cell). Input to the master equation, not output of the pump cycle F. CODATA 2022: 1/α = 137.035999177(21).</div>
     </div>
     <div class="rung-accuracy">input</div>
   </a>
@@ -275,8 +276,8 @@ canvas {
     <div class="rung-const">c</div>
     <div class="rung-body">
       <div class="rung-title">Convergence; Speed Limit</div>
-      <div class="rung-formula">c = √(2◐ · sin θ) = 1</div>
-      <div class="rung-desc">Speed limit of convergent propagation; inward gathering at the aperture. The photon is the minimum fold: purely rotational, nothing held as mass. At balance (◐ = 0.5) and the i rotation (θ = π/2): c = 1 exactly. Three ingredients: 2 (both channels), ◐ (balance), sin θ (transverse projection).</div>
+      <div class="rung-formula">c = √(P · ◐(1−◐) · sin θ) = 1</div>
+      <div class="rung-desc">Speed limit of convergent propagation; inward gathering at the aperture. The photon is the minimum fold: purely rotational, nothing held as mass. At balance (◐ = 0.5) and the i rotation (θ = π/2): c = √(4 × 0.25 × 1) = 1 exactly. The coupling ◐(1−◐) peaks at balance (value 1/P, one i-stroke); any departure from balance gives v &lt; c, so the speed limit is emergent. (The earlier formula √(2◐·sinθ) gives the right value at balance but allows v &gt; c off balance; superseded per <a href="speed_of_light.html">the c page</a>.)</div>
     </div>
     <div class="rung-accuracy exact">exact</div>
   </a>
@@ -308,25 +309,25 @@ canvas {
   <!-- 2D -->
   <a class="rung structural" href="gauge_structure.html">
     <div class="rung-dim">2D</div>
-    <div class="rung-const">gauge</div>
+    <div class="rung-const">π</div>
     <div class="rung-body">
-      <div class="rung-title">The Surface</div>
-      <div class="rung-formula">SU(3) × SU(2) × U(1)&ensp;→&ensp;8 + 3 + 1 = 12 = 4 × 3</div>
-      <div class="rung-desc">The field has enough room to carry internal degrees of freedom. The gauge group is selected (not assumed) as the maximal symmetry of the 64-state validation architecture (<a href="https://fractalreality.ca/circumpunct_framework.html#1315-deriving-su3su2u1-from-circumpunct-symmetry" target="_blank" style="color:inherit;text-decoration:underline dotted;text-underline-offset:3px">§13.15</a>). 12 generators = 4 pump strokes × 3 triad components. SU(3) from color (triad at quark scale), SU(2) from doublet structure (two pump directions), U(1) from remaining phase.</div>
+      <div class="rung-title">Closure, and the Surface Symmetry that Compounds on It</div>
+      <div class="rung-formula">π (cost of closure around a center)&ensp;+&ensp;SU(3) × SU(2) × U(1)&ensp;→&ensp;8 + 3 + 1 = 12 = 4 × 3</div>
+      <div class="rung-desc">The station constant of the 2D rung is π: the conversion rate from diameter to circumference, the cost of closure around a center; the glyph Φ literally draws the construction that defines it (§27.7l). Gauge structure is what compounds on that closure: the field has enough room to carry internal degrees of freedom, and the gauge group is selected (not assumed) as the maximal symmetry of the 64-state validation architecture (<a href="https://fractalreality.ca/circumpunct_framework.html#1315-deriving-su3su2u1-from-circumpunct-symmetry" target="_blank" style="color:inherit;text-decoration:underline dotted;text-underline-offset:3px">§13.15</a>). 12 generators = 4 pump strokes × 3 triad components. SU(3) from color (triad at quark scale), SU(2) from doublet structure (two pump directions), U(1) from remaining phase.</div>
     </div>
-    <div class="rung-accuracy" style="color: var(--cyan);">derived</div>
+    <div class="rung-accuracy" style="color: var(--cyan);">exact + derived</div>
   </a>
 
   <!-- 2.5D -->
   <a class="rung processual" href="infolding.html">
     <div class="rung-dim">2.5D</div>
-    <div class="rung-const">T</div>
+    <div class="rung-const">v/Λ<sub>QCD</sub></div>
     <div class="rung-body">
       <div class="rung-title">Emergence; Outward Unfolding</div>
-      <div class="rung-formula">T = cos²(Δφ/2)&ensp;→&ensp;sin²θ_W = 3/13 + 5α/81</div>
-      <div class="rung-desc">Outward unfolding toward closure; the surface folds closed into boundary. Each gauge force transmits differently through the scale boundary: U(1) = Φ (T = 1, transparent), SU(2) = • (T = 10/13, partial), SU(3) = ○ (T → 0, confined). The Weinberg angle is a transmission coefficient with self-referential correction; K = 81/5 = 3⁴/(Φ+○).</div>
+      <div class="rung-formula">v/Λ_QCD = (1/α)^(56/39) = 1170.24&ensp;·&ensp;T = cos²(Δφ/2)&ensp;→&ensp;sin²θ_W = 3/13 + 5α/81</div>
+      <div class="rung-desc">Outward unfolding toward closure; the surface folds closed into boundary. The station's ladder constant is the emergence exponent between scales: v/Λ_QCD = (1/α)^(56/39) (measured 1170.2; E(2.5) = 56/39 forced by the compositional product). The Weinberg angle is the transmission quantity at the same station: each gauge force transmits differently through the scale boundary, U(1) = Φ (T = 1, transparent), SU(2) = • (T = 10/13, partial), SU(3) = ○ (T → 0, confined), with self-referential correction K = 81/5 = 3⁴/(Φ+○).</div>
     </div>
-    <div class="rung-accuracy">1.4 ppm</div>
+    <div class="rung-accuracy">0.003% / 1.4 ppm</div>
   </a>
 
   <!-- 3D -->
@@ -348,7 +349,7 @@ canvas {
     <div class="rung-body">
       <div class="rung-title">Recursion; Octave Closure</div>
       <div class="rung-formula">i⁰ = +1: 3.5D = 0D at next scale</div>
-      <div class="rung-desc">The closed boundary at 3D becomes a new aperture. The cycle completes: the eight stations (0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5) form a dimensional octave (do, re, mi, fa, so, la, ti, do') with 3.5D = 0D at the next nesting level. This is not a new constant but the establishment of self-similarity: the same dimensional structure recurses at every scale. Recursion IS the fractal structure of reality (A3). At 3.5D, rotational identity (+1) is earned; the cycle can begin again, differentiating the next octave from the first.</div>
+      <div class="rung-desc">The closed boundary at 3D becomes a new aperture. The cycle completes: the eight stations (0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5) form a dimensional octave (do, re, mi, fa, so, la, ti, do') with 3.5D = 0D at the next nesting level. This is not a new constant but the establishment of self-similarity: the same dimensional structure recurses at every scale. Recursion IS the fractal structure of reality (A3). At 3.5D, rotational identity (+1) is earned; the cycle can begin again, differentiating the next octave from the first. Sharpened by the staggered octave (2026-07): the tonic is the ONE station adjacent octaves share, so there is no eighth rung as a theorem (a second return point would collapse the ladder; <a href="octave_wrap_lemma.html">wrap lemma</a> §8.2); the tonic's constant is the next octave's α, and κ<sub>0,0</sub> = α is the tonic-to-tonic bond (<a href="the_staggered_octave.html">the staggered octave</a>).</div>
     </div>
     <div class="rung-accuracy exact">structural</div>
   </a>
@@ -411,6 +412,14 @@ canvas {
 </tr>
 <tr>
   <td><span class="b">2D</span></td>
+  <td>π</td>
+  <td class="num">closure per diameter (Φ glyph)</td>
+  <td class="num">3.14159...</td>
+  <td class="num">3.14159...</td>
+  <td class="good">exact</td>
+</tr>
+<tr>
+  <td><span class="b">2D</span></td>
   <td>gauge</td>
   <td class="num">SU(3)×SU(2)×U(1)</td>
   <td class="num">12 gen.</td>
@@ -419,19 +428,19 @@ canvas {
 </tr>
 <tr>
   <td><span class="s">2.5D</span></td>
-  <td>sin²θ<sub>W</sub></td>
-  <td class="num">3/13 + 5α/81</td>
-  <td class="num">0.23115</td>
-  <td class="num">0.23116</td>
-  <td class="good">1.4 ppm</td>
+  <td>v/Λ<sub>QCD</sub></td>
+  <td class="num">(1/α)<sup>56/39</sup></td>
+  <td class="num">1170.24</td>
+  <td class="num">1170.2</td>
+  <td class="good">0.003%</td>
 </tr>
 <tr>
   <td><span class="s">2.5D</span></td>
-  <td>v/Λ<sub>QCD</sub></td>
-  <td class="num">(1/α)<sup>56/39</sup></td>
-  <td class="num">1170.6</td>
-  <td class="num">1170.2</td>
-  <td class="good">3.4 ppm</td>
+  <td>sin²θ<sub>W</sub></td>
+  <td class="num">3/13 + 5α/81</td>
+  <td class="num">0.23122</td>
+  <td class="num">0.23122</td>
+  <td class="good">1.4 ppm</td>
 </tr>
 <tr>
   <td><span class="b">3D</span></td>
@@ -442,6 +451,38 @@ canvas {
   <td class="good">0.04 ppm</td>
 </tr>
 </table>
+
+<!-- ============================================================ -->
+<h2>The Continuation: Cross-Scale Exponents Are Whole Octaves</h2>
+
+<p><em>Added 2026-07-18 (per the staggered octave; framework §27.7t.7c).</em> The ladder does not end at 3.5D; it continues, and the constants that couple ACROSS scales sit whole octaves up the continuation axis. One octave = 3.5 in dimension units = R half-steps, so an exponent is octave-integral exactly when divisible by R in half-steps. Every cross-scale exponent in the corpus is; every station-local exponent (13/12, 58/35, 56/39, 1/2) is not.</p>
+
+<table>
+<tr><th>Quantity</th><th>Exponent (α-steps)</th><th>Octaves</th><th>Formula</th><th>Accuracy</th></tr>
+<tr>
+  <td>G (gravity)</td>
+  <td class="num">21</td>
+  <td class="num">6 = T!</td>
+  <td class="num">α²¹ × φ²/2 × (1 + 2α/91)</td>
+  <td class="good">0.04 ppm</td>
+</tr>
+<tr>
+  <td>M<sub>Pl</sub>/m<sub>e</sub></td>
+  <td class="num">21/2</td>
+  <td class="num">3 = T</td>
+  <td class="num">(1/α)<sup>21/2</sup> × √2/φ</td>
+  <td class="good">0.008%</td>
+</tr>
+<tr>
+  <td>Λ (cosmological)</td>
+  <td class="num">56</td>
+  <td class="num">16 = P²</td>
+  <td class="num">α⁵⁶ (1 − 6α + 4α²) / 72</td>
+  <td class="good">0.004%</td>
+</tr>
+</table>
+
+<p>The hierarchy problem restated in these coordinates: gravity is not fine-tuned to be weak; it sits exactly T! octaves up the continuation axis from the aperture, and the cosmological constant sits P² octaves up. The octave counts are pool-native (Φ × the R-cofactor of each exponent). Formal statement and the falsification handle (the abstract Pascal diagonal loses R-divisibility at level m = 5): <a href="octave_wrap_lemma.html">wrap lemma</a> §8 and framework §27.7t.7c.</p>
 
 <!-- ============================================================ -->
 <h2>Open Problems</h2>
@@ -473,10 +514,16 @@ The dimensional ladder is not a list of independent results. It is a single unfo
 
 <!-- ============================================================ -->
 
+<h2>Revision history</h2>
+<ul style="max-width: 900px; margin: 0 auto 20px; padding-left: 28px; color: var(--dim); font-size: 16px;">
+  <li>2026-07-18 v1.1: consistency sweep to the full staggered ladder. 0D coupling cell corrected to κ<sub>0,0</sub> (was κ<sub>0,2</sub>); 0.5D formula updated to the coupling form √(P·◐(1−◐)·sinθ) (the 2◐ form allows v &gt; c off balance); 2D rung now carries π with gauge structure compounding; 2.5D rung now carries v/Λ<sub>QCD</sub> with the Weinberg angle as transmission; 3.5D block sharpened with the tonic theorem; summary table corrected (Weinberg 0.23122, v/Λ 1170.24) and π row added; The Continuation section added (octave-integral hierarchy exponents).</li>
+  <li>2026-06-08 v1.0: initial.</li>
+</ul>
+
 <div class="footer">
   <p><span class="w" style="font-size: 28px;">⊙</span></p>
   <p>E = 1; all else is constraints.<br>
-  One measured scalar (&alpha; = |&bull;<sub>electron</sub>|). Seven rungs. Structural grammar for the rest.</p>
+  One measured scalar (&alpha; = |&bull;<sub>electron</sub>|). Seven rungs, one per residue class; the eighth station is the shared tonic. Structural grammar for the rest.</p>
   <p style="margin-top: 20px;">
     <a href="e_equals_1.html">E = 1</a> ·
     <a href="speed_of_light.html">c</a> ·
@@ -525,8 +572,8 @@ function draw() {
     { dim: '0.5D', label: 'c', type: 'P', dimVal: 0.5, color: '#E88AAF', accuracy: 'exact' },
     { dim: '1D', label: 'ℏ', type: 'S', dimVal: 1, color: '#4DA0C8', accuracy: 'exact' },
     { dim: '1.5D', label: 'mass', type: 'P', dimVal: 1.5, color: '#E88AAF', accuracy: '5 ppm' },
-    { dim: '2D', label: 'gauge', type: 'S', dimVal: 2, color: '#4DA0C8', accuracy: 'exact' },
-    { dim: '2.5D', label: 'T', type: 'P', dimVal: 2.5, color: '#E88AAF', accuracy: '1.4 ppm' },
+    { dim: '2D', label: 'π+gauge', type: 'S', dimVal: 2, color: '#4DA0C8', accuracy: 'exact' },
+    { dim: '2.5D', label: 'v/Λ', type: 'P', dimVal: 2.5, color: '#E88AAF', accuracy: '0.003%' },
     { dim: '3D', label: 'G', type: 'S', dimVal: 3, color: '#4DA0C8', accuracy: '0.04 ppm' },
     { dim: '3.5D', label: '⊙', type: 'P', dimVal: 3.5, color: '#E88AAF', accuracy: 'closure' },
   ];
