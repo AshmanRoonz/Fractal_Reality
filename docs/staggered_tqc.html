@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>⊙ The Staggered Quantum Machine</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+:root {
+  --bg: #0A0A0F; --gold: #B8A060; --gold-dim: #887850; --pink: #E88AAF;
+  --green: #4DB8A0; --cyan: #4DA0C8; --purple: #9B7AD8; --warm: #E0D8C8;
+  --dim: #8A8272; --faint: #444038; --magenta: #FF2EA6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--warm); font-family: 'EB Garamond', Georgia, serif; font-size: 17px; line-height: 1.6; }
+::selection { background: var(--gold); color: var(--bg); }
+a { color: var(--gold-dim); text-decoration: none; }
+a:hover { color: var(--gold); }
+.page { max-width: 1060px; margin: 0 auto; padding: 40px 22px 90px; }
+.header { text-align: center; margin-bottom: 26px; padding-bottom: 22px; border-bottom: 1px solid var(--faint); }
+.header .symbol { font-size: 44px; color: var(--gold); line-height: 1; margin-bottom: 8px; }
+.header h1 { font-size: 27px; color: var(--gold); font-weight: 600; }
+.header .subtitle { font-size: 16px; color: var(--dim); font-style: italic; margin-top: 6px; }
+.header .meta { font-size: 12.5px; color: var(--dim); margin-top: 8px; letter-spacing: 0.5px; }
+h2 { font-size: 19px; color: var(--gold); font-weight: 600; margin: 26px 0 10px; }
+p { margin-bottom: 12px; }
+canvas { display: block; margin: 10px auto; background: #0d0d14; border: 1px solid var(--faint); border-radius: 8px; max-width: 100%; }
+button {
+  font-family: inherit; font-size: 15px; color: var(--warm);
+  background: rgba(184,160,96,0.10); border: 1px solid var(--gold-dim);
+  border-radius: 6px; padding: 7px 14px; margin: 3px 5px 3px 0; cursor: pointer;
+}
+button:hover { background: rgba(184,160,96,0.22); }
+button.engine { border-color: var(--cyan); }
+button.kappa-btn { border-color: var(--pink); }
+button.state-btn { border-color: var(--green); }
+.controls { margin: 12px 0; }
+.meters {
+  display: flex; flex-wrap: wrap; gap: 14px; margin: 12px 0;
+  font-size: 14.5px; color: var(--dim);
+}
+.meter { background: #12121a; border: 1px solid var(--faint); border-radius: 6px; padding: 8px 14px; }
+.meter b { color: var(--cyan); font-weight: 600; }
+.meter .val { color: var(--warm); }
+.program {
+  font-family: monospace; font-size: 14px; color: var(--green);
+  background: #0d0d14; border: 1px solid var(--faint); border-radius: 6px;
+  padding: 8px 12px; margin: 10px 0; min-height: 36px; word-wrap: break-word;
+}
+.note-box { margin: 20px 0; padding: 14px 18px; background: rgba(232,138,175,0.05); border-left: 3px solid var(--pink); font-size: 15.5px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+.commutes { color: var(--green); }
+.noncommutes { color: var(--magenta); }
+.footer { margin-top: 50px; padding-top: 22px; border-top: 1px solid var(--faint); text-align: center; color: var(--dim); font-size: 14px; }
+.footer .sig { color: var(--gold); font-size: 22px; margin-top: 10px; }
+ul { margin: 0 0 12px 24px; }
+li { margin-bottom: 5px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="header">
+  <div class="symbol">⊙</div>
+  <h1>The Staggered Quantum Machine</h1>
+  <div class="subtitle">A tonic-shared topological instrument: three octaves, two seams, 22 sites. Composition order as the computational resource.</div>
+  <div class="meta">Created: 2026-07-18 &middot; Last updated: 2026-07-18 &middot; Version: 1.0 &middot; successor to the <a href="512-state_circumpunct_particle_table.html">ℂ⁵¹² tensor TQC</a></div>
+</div>
+
+<p>The first-generation machine braids on ℂ⁸ ⊗ ℂ⁸ ⊗ ℂ⁸: three octaves as disjoint tensor factors. The v14/v15 operator studies showed what that architecture cannot express: disjoint blocks commute, so composition order carries no information, and the departure from trace preservation compounds across scales. The staggered architecture fixes both by the framework's own mechanism: adjacent octaves share exactly one station, the tonic. This machine runs on that chain: octaves A (sites 0-7), B (7-14), C (14-21), with sites 7 and 14 shared. The canon stroke phases (i&sup1;, i&sup2;, i&sup3;, i&#8304;; the 2026-07-18 adjudication) drive every beat. All numbers displayed are computed live in your browser from the actual operators.</p>
+
+<h2>The machine</h2>
+<canvas id="chain" width="1000" height="300"></canvas>
+
+<div class="controls">
+  <span style="color:var(--dim); font-size:14px;">Prepare:</span>
+  <button class="state-btn" onclick="M.prep('tonic')">|do⟩ (site 0)</button>
+  <button class="state-btn" onclick="M.prep('uniform')">uniform</button>
+  <button class="state-btn" onclick="M.prep('fixed')">ψ* (ascending fixed point)</button>
+  <br>
+  <span style="color:var(--dim); font-size:14px;">Gates:</span>
+  <button class="engine" onclick="M.apply('A')">E_A (octave A engine)</button>
+  <button class="engine" onclick="M.apply('B')">E_B</button>
+  <button class="engine" onclick="M.apply('C')">E_C</button>
+  <button class="kappa-btn" onclick="M.apply('K')">κ (α-coupling)</button>
+  <button onclick="M.apply('T')">T = κ∘F (full pump)</button>
+  <button onclick="M.iterate(137)">T ×137 (one mixing time)</button>
+  <button onclick="M.clearProgram()">clear</button>
+</div>
+
+<div class="program" id="program">ε</div>
+
+<div class="meters" id="meters"></div>
+
+<h2>What only this architecture can show</h2>
+<div class="two-col">
+  <div>
+    <p><strong>Order is physical, and only at the seams.</strong> Live commutator norms of the octave engines:</p>
+    <div class="meters" id="commutators"></div>
+    <p style="font-size:15px; color:var(--dim);">A and B share the tonic at site 7: they do not commute, and the disturbance is localized at the seam (watch the seam sites flash when you swap orders). A and C share nothing: they commute to machine precision. In the tensor machine every pair commutes and order means nothing; here, the program E_A E_B and the program E_B E_A are different computations. Sharing exactly one station is what makes order a resource.</p>
+  </div>
+  <div>
+    <p><strong>The braid test, honestly failed.</strong> A true braid representation satisfies the Yang-Baxter relation. This machine's engines do not:</p>
+    <div class="meters" id="yb"></div>
+    <p style="font-size:15px; color:var(--dim);">The defect is nonzero: the staggered machine is NOT a braid-group representation, and that is the finding rather than a flaw. Tensor-factor swapping (the old machine's σ) has no meaning when octaves share a site; what replaces braiding is ordered composition through shared tonics. Different topology, different computer.</p>
+  </div>
+</div>
+
+<h2>Conservation and ascent</h2>
+<p>With κ applied, the machine is not unitary: the norm drifts by O(α) per pump, and the drift does not compound with octave count (the tensor machine's does). Iterate T to one mixing time (1/α ≈ 137 pumps) and the state converges to the ascending fixed point ψ*: per-octave weights near-uniform (A3), phase traveling up the chain. The meters track ‖ψ‖ drift, overlap with ψ*, and the leading eigenvalue's departure (|λ₁|−1)/α, which lands in the v14 band (0.6 to 0.8) computed fresh at load.</p>
+
+<div class="note-box">
+<strong>What this machine is and is not.</strong> It is a faithful, live implementation of the framework's staggered three-octave operator (v14 construction, canon strokes, κ at the measured α), demonstrating the computational structure the tensor architecture cannot express: order-as-resource localized at shared tonics, O(α) conservation without compounding, and the ascending fixed point as a preparable state. It is not a universal quantum computer and does not claim quantum advantage; the Yang-Baxter defect is displayed, not hidden, because the machine's departure from braid topology IS the physics of the seam. Formal record: framework §27.7t.6-7, experiments v14-v19.
+</div>
+
+<h2>Revision history</h2>
+<ul>
+<li>2026-07-18 v1.0: initial (22-site tonic-shared chain; engines, κ, T, mixing-time iteration; live commutator and Yang-Baxter meters; ascending-fixed-point preparation; conservation meters).</li>
+</ul>
+
+<div class="footer">
+  <div>Companions: <a href="512-state_circumpunct_particle_table.html">the ℂ⁵¹² tensor TQC (gen 1)</a> &middot; <a href="the_staggered_octave.html">the staggered octave</a> &middot; <a href="the_staggered_octave_heard.html">heard and seen</a></div>
+  <div class="sig">⊙</div>
+</div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// CORE: the staggered three-octave operator on 22 sites (v14 construction,
+// canon strokes per the 2026-07-18 adjudication). Pure math, DOM-free.
+// ═══════════════════════════════════════════════════════════════════════
+const CORE = (() => {
+  const N = 22;              // 7*3 + 1 sites; tonics shared at 7 and 14
+  const ALPHA = 1 / 137.035999177;
+  const THETA = Math.PI / 2;
+  const T_TRIAD = 3;
+  const I_PHASES = [[0,1], [-1,0], [0,-1], [1,0]];   // i, -1, -i, +1
+  const STRUCT = [0,2,4,6], PROC = [1,3,5,7], PHI_S = 4, PHI_P = 5;
+
+  function arr(n) { return new Float64Array(n*2); }
+  function ident(n) { const M = arr(n*n); for (let i=0;i<n;i++) M[(i*n+i)*2]=1; return M; }
+  function mul(A,B,n) {
+    const C = arr(n*n);
+    for (let i=0;i<n;i++) for (let j=0;j<n;j++) {
+      let r=0,m=0;
+      for (let k=0;k<n;k++) {
+        const ar=A[(i*n+k)*2], ai=A[(i*n+k)*2+1], br=B[(k*n+j)*2], bi=B[(k*n+j)*2+1];
+        r += ar*br - ai*bi; m += ar*bi + ai*br;
+      }
+      C[(i*n+j)*2]=r; C[(i*n+j)*2+1]=m;
+    }
+    return C;
+  }
+  function fnormDiff(A,B) { let s=0; for (let i=0;i<A.length;i++){const d=A[i]-B[i]; s+=d*d;} return Math.sqrt(s); }
+  function fnorm(A) { let s=0; for (let i=0;i<A.length;i++) s+=A[i]*A[i]; return Math.sqrt(s); }
+  function expmAH(G,n) {
+    let nb = fnorm(G), scale=0, x=nb;
+    while (x>0.5) { scale++; x/=2; }
+    const s = 1/Math.pow(2,scale);
+    const Gs = arr(n*n); for (let i=0;i<G.length;i++) Gs[i]=G[i]*s;
+    let R = ident(n), term = ident(n);
+    for (let k=1;k<40;k++) {
+      term = mul(term,Gs,n);
+      for (let i=0;i<term.length;i++) term[i]/=k;
+      const R2 = arr(n*n); for (let i=0;i<R.length;i++) R2[i]=R[i]+term[i];
+      R = R2;
+      if (fnorm(term)<1e-15) break;
+    }
+    for (let q=0;q<scale;q++) R = mul(R,R,n);
+    return R;
+  }
+
+  // one octave's four beat generators at base site b0, on N sites
+  function beatGens(b0) {
+    const gens = [];
+    for (let bi=0; bi<4; bi++) {
+      const s = STRUCT[bi], p = PROC[bi], ph = I_PHASES[bi];
+      const G = arr(N*N);
+      const add = (a,b,re,im) => { G[(a*N+b)*2]+=re; G[(a*N+b)*2+1]+=im; };
+      const cRe = ph[0]*THETA, cIm = ph[1]*THETA;
+      const pair = (a,b,re,im) => { add(b0+a,b0+b,re,im); add(b0+b,b0+a,-re,im); };
+      pair(s,p,cRe,cIm);
+      if (s === PHI_S) {
+        const hRe = cRe/T_TRIAD, hIm = cIm/T_TRIAD;
+        for (const o of [0,2,6]) pair(PHI_S,o,hRe,hIm);
+        add(b0+PHI_S,b0+PHI_S,hRe,hIm);
+        for (const o of [1,3,7]) pair(PHI_P,o,hRe,hIm);
+        add(b0+PHI_P,b0+PHI_P,hRe,hIm);
+      } else {
+        pair(s,PHI_S,cRe,cIm);
+        pair(p,PHI_P,cRe,cIm);
+      }
+      // (G - G†)/2
+      const A = arr(N*N);
+      for (let i=0;i<N;i++) for (let j=0;j<N;j++) {
+        const re=G[(i*N+j)*2], im=G[(i*N+j)*2+1];
+        const reT=G[(j*N+i)*2], imT=G[(j*N+i)*2+1];
+        A[(i*N+j)*2]=(re-reT)/2; A[(i*N+j)*2+1]=(im+imT)/2;
+      }
+      gens.push(A);
+    }
+    return gens;
+  }
+
+  // engines: E_k = B4 B3 B2 B1 of octave k
+  const E = [];
+  for (let k=0;k<3;k++) {
+    let F = ident(N);
+    for (const G of beatGens(7*k)) F = mul(expmAH(G,N), F, N);
+    E.push(F);
+  }
+  // kappa: identity + alpha diameter bonds per octave
+  const K = ident(N);
+  for (let k=0;k<3;k++) {
+    const b0=7*k;
+    for (const [a,b] of [[0,4],[2,6],[1,5],[3,7]]) {
+      K[((b0+a)*N+(b0+b))*2]+=ALPHA;
+      K[((b0+b)*N+(b0+a))*2]+=ALPHA;
+    }
+  }
+  const F_asc = mul(E[2], mul(E[1], E[0], N), N);
+  const T_op = mul(K, F_asc, N);
+
+  // diagnostics
+  const cAB = fnormDiff(mul(E[0],E[1],N), mul(E[1],E[0],N));
+  const cBC = fnormDiff(mul(E[1],E[2],N), mul(E[2],E[1],N));
+  const cAC = fnormDiff(mul(E[0],E[2],N), mul(E[2],E[0],N));
+  const ybABA = fnormDiff(mul(E[0],mul(E[1],E[0],N),N), mul(E[1],mul(E[0],E[1],N),N));
+  const ybBCB = fnormDiff(mul(E[1],mul(E[2],E[1],N),N), mul(E[2],mul(E[1],E[2],N),N));
+
+  // vector ops
+  function applyM(M, v) {
+    const w = arr(N);
+    for (let i=0;i<N;i++) {
+      let r=0,m=0;
+      for (let j=0;j<N;j++) {
+        const mr=M[(i*N+j)*2], mi=M[(i*N+j)*2+1], vr=v[j*2], vi=v[j*2+1];
+        r += mr*vr - mi*vi; m += mr*vi + mi*vr;
+      }
+      w[i*2]=r; w[i*2+1]=m;
+    }
+    return w;
+  }
+  function vnorm(v) { let s=0; for (let i=0;i<v.length;i++) s+=v[i]*v[i]; return Math.sqrt(s); }
+  function vscale(v,s) { const w=arr(N); for (let i=0;i<v.length;i++) w[i]=v[i]*s; return w; }
+  function overlap(a,b) {
+    let r=0,m=0;
+    for (let i=0;i<N;i++) { r += a[i*2]*b[i*2]+a[i*2+1]*b[i*2+1]; m += a[i*2]*b[i*2+1]-a[i*2+1]*b[i*2]; }
+    return Math.sqrt(r*r+m*m);
+  }
+
+  // ascending fixed point + leading eigenvalue via power iteration
+  let psiStar = arr(N);
+  for (let i=0;i<N;i++) { psiStar[i*2]=Math.random()-0.5; psiStar[i*2+1]=Math.random()-0.5; }
+  psiStar = vscale(psiStar, 1/vnorm(psiStar));
+  let lam = 1;
+  for (let it=0; it<20000; it++) {
+    const w = applyM(T_op, psiStar);
+    lam = vnorm(w);
+    psiStar = vscale(w, 1/lam);
+  }
+  const depPerAlpha = (lam - 1) / ALPHA;
+
+  return { N, ALPHA, E, K, T_op, applyM, vnorm, vscale, overlap, psiStar,
+           depPerAlpha, cAB, cBC, cAC, ybABA, ybBCB };
+})();
+
+// headless diagnostics hook (used by the validation harness)
+if (typeof window === 'undefined') { globalThis.CORE_DIAG = CORE; }
+
+// ═══════════════════════════════════════════════════════════════════════
+// UI
+// ═══════════════════════════════════════════════════════════════════════
+if (typeof document !== 'undefined') {
+  const RESIDUE_COLORS = ['#E05252','#E08A52','#D9C25A','#5CBF7A','#4DA0C8','#6A7AD8','#9B7AD8'];
+  const cv = document.getElementById('chain');
+  const ctx = cv.getContext('2d');
+  let psi, program = [], seamFlash = 0;
+
+  function prep(kind) {
+    psi = new Float64Array(CORE.N*2);
+    if (kind === 'tonic') psi[0] = 1;
+    else if (kind === 'uniform') { for (let i=0;i<CORE.N;i++) psi[i*2] = 1/Math.sqrt(CORE.N); }
+    else { psi = Float64Array.from(CORE.psiStar); }
+    program = ['|' + (kind==='fixed'?'ψ*':kind==='tonic'?'do':'u') + '⟩'];
+    render();
+  }
+  function apply(g) {
+    const M = g==='A'?CORE.E[0] : g==='B'?CORE.E[1] : g==='C'?CORE.E[2] : g==='K'?CORE.K : CORE.T_op;
+    // seam flash when applying an engine that doesn't commute with the last one
+    const last = program[program.length-1];
+    if ((g==='A'&&last==='E_B')||(g==='B'&&(last==='E_A'||last==='E_C'))||(g==='C'&&last==='E_B')) seamFlash = 24;
+    psi = CORE.applyM(M, psi);
+    program.push(g==='K'?'κ' : g==='T'?'T' : 'E_'+g);
+    if (program.length > 40) program = ['…'].concat(program.slice(-39));
+    render();
+  }
+  function iterate(n) {
+    for (let i=0;i<n;i++) { psi = CORE.applyM(CORE.T_op, psi); psi = CORE.vscale(psi, 1/CORE.vnorm(psi)); }
+    program.push('T^'+n+'(renorm)');
+    render();
+  }
+  function clearProgram() { prep('tonic'); }
+
+  function render() {
+    const W = cv.width, H = cv.height;
+    ctx.clearRect(0,0,W,H);
+    const nrm = CORE.vnorm(psi);
+    const x0 = 46, dx = (W-92)/(CORE.N-1), y = H/2 - 18;
+    // octave brackets
+    ctx.strokeStyle = '#444038'; ctx.fillStyle = '#8A8272'; ctx.font = '13px EB Garamond';
+    const names = ['octave A','octave B','octave C'];
+    for (let k=0;k<3;k++) {
+      const xa = x0 + 7*k*dx, xb = x0 + 7*(k+1)*dx;
+      ctx.beginPath(); ctx.moveTo(xa, y+62); ctx.lineTo(xa, y+70); ctx.lineTo(xb, y+70); ctx.lineTo(xb, y+62); ctx.stroke();
+      ctx.textAlign = 'center'; ctx.fillText(names[k], (xa+xb)/2, y+86);
+    }
+    // nodes
+    for (let j=0;j<CORE.N;j++) {
+      const w = (psi[j*2]*psi[j*2]+psi[j*2+1]*psi[j*2+1])/(nrm*nrm);
+      const phase = Math.atan2(psi[j*2+1], psi[j*2]);
+      const res = j % 7;
+      const isSeam = (j===7||j===14);
+      const x = x0 + j*dx;
+      const r = 4 + 34*Math.sqrt(w);
+      ctx.beginPath(); ctx.arc(x, y, r, 0, 2*Math.PI);
+      ctx.fillStyle = `hsl(${((phase*180/Math.PI)%360+360)%360}, 60%, ${30+40*Math.min(1,w*CORE.N)}%)`;
+      ctx.fill();
+      ctx.lineWidth = isSeam ? 3 : 1.5;
+      ctx.strokeStyle = isSeam
+        ? (seamFlash>0 ? '#FF2EA6' : '#E05252')
+        : RESIDUE_COLORS[res];
+      ctx.stroke();
+      if (isSeam) {
+        ctx.fillStyle = '#E05252'; ctx.font = '12px EB Garamond'; ctx.textAlign = 'center';
+        ctx.fillText('do′ (shared)', x, y - 46);
+      }
+    }
+    if (seamFlash>0) seamFlash--;
+    // meters
+    const dev = Math.abs(nrm-1)/CORE.ALPHA;
+    const ov = CORE.overlap(CORE.vscale(psi,1/nrm), CORE.psiStar);
+    document.getElementById('meters').innerHTML =
+      `<div class="meter"><b>‖ψ‖</b> <span class="val">${nrm.toFixed(6)}</span> (drift = ${dev.toFixed(3)} α)</div>` +
+      `<div class="meter"><b>⟨ψ*|ψ⟩</b> <span class="val">${ov.toFixed(4)}</span></div>` +
+      `<div class="meter"><b>(|λ₁|−1)/α</b> <span class="val">${CORE.depPerAlpha.toFixed(4)}</span> <span style="font-size:12px">(v14 band 0.6-0.8)</span></div>`;
+    document.getElementById('program').textContent = program.join(' · ') || 'ε';
+    requestAnimationFrame(() => { if (seamFlash>0) render(); });
+  }
+
+  document.getElementById('commutators').innerHTML =
+    `<div class="meter"><b>‖[E_A,E_B]‖</b> <span class="val noncommutes">${CORE.cAB.toFixed(3)}</span> (seam at 7)</div>` +
+    `<div class="meter"><b>‖[E_B,E_C]‖</b> <span class="val noncommutes">${CORE.cBC.toFixed(3)}</span> (seam at 14)</div>` +
+    `<div class="meter"><b>‖[E_A,E_C]‖</b> <span class="val commutes">${CORE.cAC.toExponential(1)}</span> (no shared site)</div>`;
+  document.getElementById('yb').innerHTML =
+    `<div class="meter"><b>‖E_AE_BE_A − E_BE_AE_B‖</b> <span class="val noncommutes">${CORE.ybABA.toFixed(3)}</span></div>` +
+    `<div class="meter"><b>‖E_BE_CE_B − E_CE_BE_C‖</b> <span class="val noncommutes">${CORE.ybBCB.toFixed(3)}</span></div>`;
+
+  window.M = { prep, apply, iterate, clearProgram };
+  prep('tonic');
+}
+</script>
+</body>
+</html>
