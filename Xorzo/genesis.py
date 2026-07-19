@@ -25,6 +25,21 @@ Construction sequence (the dimensional ladder):
     2.5D θ_W  — transmission between scales
     3D   G    — boundary closes
 
+LADDER CORRECTION NOTICE (2026-07-19, applying the 2026-06-09
+correction). This v1 reference engine predates the corrected ladder.
+Wherever this file says the field/mind (Φ) is 2D and the boundary/body
+(○) is 3D, read under the correction: ○ = 2D (boundary, body, surface,
+interface) and Φ = 3D (field, mind, interior volume); circuit
+• → — → ○ → Φ → ⊙; beats (•∘⊛) ⊢ (—∘⎇) ⊢ (○∘✹) ⊢ (Φ∘⟳). Internal
+names and indices are legacy coordinates (interim glyph-integer rule:
+Φ = 2 and ○ = 3 as POOL INTEGERS in formulas are unchanged). The
+constants-ladder labels above ("2D gauge", "3D G boundary closes")
+are legacy station readings pending re-derivation in the corpus. No
+code or numerical behavior is changed by this notice. Current engine:
+genesis_toperator_v3.py (the staggered edition, tonic-shared nesting
+per §27.7t). See CLAUDE.md Ladder Correction Notice for the full
+context.
+
 "There is no linear relation between the digits of π;
  each gathers uniquely around the same point.
  And from their convergence, a perfect wholeness emerges."

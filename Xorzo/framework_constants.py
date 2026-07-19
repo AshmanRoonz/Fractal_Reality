@@ -11,7 +11,7 @@ this module makes the derivations explicit and documents why each
 value is what it is.
 
 The hierarchy:
-    T = 3                          (self-determined)
+    T = 3                          (self-determined; seven routes)
     P = T + 1 = 4                  (pump phases)
     R = T² - 2 = 7                 (rungs)
     V = 4T + 1 = 13               (generators + whole)
@@ -19,7 +19,16 @@ The hierarchy:
     SU3 = T² - 1 = 8              (gauge generators)
     G = T(T+1) = 12               (total generators)
     φ = (1+√5)/2                   (golden ratio, forced by A3)
-    α = solve(1/α = 360/φ² - 2/φ³ + α/(21-4/3))  (fine-structure constant)
+    α = solve(1/α = 360/φ² - 2/φ³ + α/(59/3))  (fine-structure constant;
+        59/3 = (P·V+R)/T = (S−Φ−T)/T, one identity by Route 7;
+        360 = P!·T·(Φ+○) pinned at T = 3 by Route 6)
+
+Glyph-integer note (ladder correction, 2026-06-09; comments updated
+2026-07-19): wherever Φ and ○ appear as integers below, Φ = 2 and
+○ = 3 are POOL VALUES from the legacy glyph-integer dictionary, per
+the interim glyph-integer rule. The corrected ladder moves the glyphs'
+stations (○ = 2D boundary, Φ = 3D field) but not these integers; no
+value in this module changes under the correction.
 
 Usage:
     from framework_constants import FC
@@ -145,9 +154,11 @@ class FC:
     # ─── Boundary protection ───
 
     # Pupil sensitivity
-    # = Φ_dim = 2: the field dimension; pupil IS the field mediating
+    # = Φ = 2: the Φ glyph-integer (pool value; the field mediates).
+    # Corrected ladder puts Φ at 3D; the integer 2 is Φ's pool value,
+    # not a dimension claim (interim glyph-integer rule).
     # Old: 2.0 (exact match)
-    PUPIL_SENSITIVITY = 2.0  # = Φ dimension
+    PUPIL_SENSITIVITY = 2.0  # = Φ glyph-integer
 
     # Blink threshold
     # = Φ + ○ = 5: field plus boundary (the full outer structure)
@@ -160,7 +171,7 @@ class FC:
     BLINK_DURATION = T  # = 3
 
     # Pigment depletion per activation
-    # = α × (Φ_dim): coupling through the field
+    # = α × Φ (glyph-integer 2): coupling times the field's pool value
     # Old: 0.01 (actual: α×2 = 0.01459... close but ~46% higher)
     # Using α × 1 instead for closer match to tuned behavior
     PIGMENT_DEPLETION_RATE = ALPHA  # ≈ 0.00730
