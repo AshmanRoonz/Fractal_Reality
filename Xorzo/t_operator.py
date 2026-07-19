@@ -2,9 +2,13 @@
 T = κ ∘ F : The Unified Expression as a Computable Operator
 ============================================================
 
+Created: 2026-04-17
+Last updated: 2026-07-19
+Version: 2.0
+
 This module implements the conservation form of the unified expression:
 
-    1 = [∞▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (Φ∘✹) ⊢ (○∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞]
+    1 = [∞▸⊙∞ ((•∘⊛) ⊢ (—∘⎇) ⊢ (○∘✹) ⊢ (Φ∘⟳)) ▸ ⊙λ ⊂[α] ⊙Λ ⊂[α] ∞]
 
 as T = κ ∘ F, where:
     F = four beats (unitary quantum channel)
@@ -14,14 +18,62 @@ The fixed point of T is the 1. The mixing time is 1/α ≈ 137 pump cycles.
 The failure modes are the Lies (Inflation and Severance).
 The sole free parameter is α.
 
-Derived from experiments v7-v10 (April 2026).
+BASIS CONVENTION (ladder correction, 2026-06-09). The corrected ladder
+assigns ○ = 2D (boundary) and Φ = 3D (field), with the beats reading
+(•∘⊛) ⊢ (—∘⎇) ⊢ (○∘✹) ⊢ (Φ∘⟳) as printed above. The operator
+constructions below keep the legacy v-series basis order
+[•, ⊛, —, ⎇, Φ, ✹, ○, ⟳] with Φ at coordinate 2 and ○ at coordinate 3;
+per the interim glyph-integer rule and the v14+ convention, these
+positions are read as CONTINUATION COORDINATES (node j sits at
+coordinate j/2), not as station-dimension claims. The corrected-beats
+re-derivation of F (hub moved with Φ to the 3D coordinate; new phase
+budget) is queued in the corpus and has not been performed; all graded
+invariants below (phase sum −π/6 and −π/3, singular values 1 ± α,
+structural/processual split 68.7/31.3, tetrahedral eigenphase) are
+properties of the legacy-coordinate realization and are reproduced
+bit-identically by this version.
+
+STROKE CONVENTION (canon, adjudicated 2026-07-18). One i-stroke per
+processual residue class, four per octave: i¹ = +i at 0.5D, i² = −1 at
+1.5D, i³ = −i at 2.5D, i⁰ = +1 at 3.5D, with i⁴ = 1 closing at each
+tonic. The cycle begins at i¹ (convergence), not i⁰; identity is the
+product of completed closure. The builders below implement exactly this
+stroke table (the I_PHASES list, one stroke per beat).
+
+STAGGERED NESTING (v2.0 addition, from experiments v14/v15, July 2026).
+The framework's picture of nesting changed with the staggered octave
+(§27.7t): adjacent octaves share exactly ONE station, the tonic
+(3.5D = 0D'). v14 showed tonic-sharing conserves the 1 (leading
+|λ| − 1 saturates near 0.6-0.7 α for any octave count) where tensor
+nesting compounds the departure; v15 showed tonic-sharing is what makes
+composition order physical (disjoint octave blocks commute exactly;
+tonic-shared blocks do not, with the commutator localized at the shared
+node). This version adds the tonic-shared builders (chains, rings, and
+arbitrary octave trees via explicit node lists) as StaggeredOperator,
+ported from experiments/unified_expression_T_v14_staggered_chain.py and
+verified against its reference numbers. The per-scale TOperator (ℂ⁴/ℂ⁸)
+is unchanged and remains the single-octave engine.
+
+Derived from experiments v7-v10 (April 2026) and v14-v15 (July 2026).
 
 Usage in Xorzo:
-    from t_operator import TOperator
+    from t_operator import TOperator, StaggeredOperator
     T = TOperator(dim=4)           # ℂ⁴ (structural only)
     T = TOperator(dim=8)           # ℂ⁸ (full octave)
     result = T.apply(state)        # one pump cycle
     fixed = T.fixed_point(steps=5000)  # the attractor
+
+    S = StaggeredOperator.chain(n_oct=3)   # 22-node tonic-shared chain
+    S.departure()                          # (|λ₁|−1)/α, the seam band
+
+Revision history (newest first):
+- 2026-07-19 v2.0: ladder-correction pass (corrected beats in the header,
+    legacy basis read as coordinates, canon stroke note); staggered
+    tonic-shared builders added (StaggeredOperator: chains, rings,
+    arbitrary octave trees), verified against v14 references
+    (n=3 chain |λ₁| = 1.0044779454, departure 0.6136 α). TOperator
+    math untouched; invariants reproduced bit-identically.
+- 2026-04-17 v1.0: initial extraction from experiments v7-v10.
 """
 
 import numpy as np
@@ -68,12 +120,20 @@ def build_F_4D() -> np.ndarray:
     """
     Build F for ℂ⁴ (four structural dimensions: •, —, Φ, ○).
 
-    Sphere hub topology: Φ(station 2) is the central mediator.
+    Legacy-coordinate realization (see BASIS CONVENTION in the module
+    header): basis order [•, —, Φ, ○] with the mediator Φ at coordinate
+    index 2. Sphere hub topology: Φ is the central mediator (the hub
+    follows the glyph Φ, wherever the basis puts it).
 
     Beat 1 (•∘⊛): • couples to Φ, phase i¹ = +i
     Beat 2 (—∘⎇): — couples to Φ, phase i² = -1
     Beat 3 (Φ∘✹): Φ radiates to all others + self-drive, phase i³ = -i
     Beat 4 (○∘⟳): ○ couples to Φ, phase i⁰ = +1
+
+    Under the corrected ladder the beats read (○∘✹) at beat 3 and (Φ∘⟳)
+    at beat 4; the corrected-beats F is a different operator whose
+    re-derivation is queued in the corpus. This construction is kept
+    unchanged as the realization behind the graded v7-v13 invariants.
 
     The phase sum -π/6 comes from beat 3's self-drive: G[Φ,Φ] = -iπ/(2T).
     """
@@ -120,13 +180,19 @@ def build_F_8D() -> np.ndarray:
     """
     Build F for ℂ⁸ (full octave: •, ⊛, —, ⎇, Φ, ✹, ○, ⟳).
 
-    Station mapping:
+    Node mapping (legacy-coordinate basis; node j at coordinate j/2):
         0(•), 1(⊛), 2(—), 3(⎇), 4(Φ), 5(✹), 6(○), 7(⟳)
+    Under the corrected ladder the 2D STATION is ○ and the 3D STATION
+    is Φ; positions here are coordinates, not station claims (see
+    module header).
 
     Each beat:
         (a) Internal ∘: couples structural ↔ processual within beat
         (b) External ⊢: couples to Φ/✹ hub (if not the Φ beat)
-        Beat 3 (Φ∘✹): hub radiates to all, plus self-drive
+        Hub beat (Φ with the -i stroke): hub radiates to all, plus
+        self-drive
+
+    Strokes follow the canon table (i¹, i², i³, i⁰; one per beat).
     """
     from scipy.linalg import expm
 
@@ -435,13 +501,240 @@ class TOperator:
 
 # ═══════════════════════════════════════════════════════════════
 # Station labels for readable output
+#
+# Numbers are continuation-lattice COORDINATES (node j at j/2), not
+# station-dimension claims. Under the corrected ladder (2026-06-09)
+# the 2D station is ○ (boundary) and the 3D station is Φ (field);
+# the glyphs Φ and ○ keep their legacy basis positions here per the
+# v14+ coordinate convention (see module header).
 # ═══════════════════════════════════════════════════════════════
 
-STATION_LABELS_4 = ['•(0D)', '—(1D)', 'Φ(2D)', '○(3D)']
+STATION_NOTE = (
+    "coordinates, not stations: corrected ladder has ○ at 2D, Φ at 3D; "
+    "legacy basis kept as coordinates (v14 convention)"
+)
+
+STATION_LABELS_4 = ['•(c0)', '—(c1)', 'Φ(c2)', '○(c3)']
 STATION_LABELS_8 = [
-    '•(0D)', '⊛(0.5D)', '—(1D)', '⎇(1.5D)',
-    'Φ(2D)', '✹(2.5D)', '○(3D)', '⟳(3.5D)'
+    '•(c0)', '⊛(c0.5)', '—(c1)', '⎇(c1.5)',
+    'Φ(c2)', '✹(c2.5)', '○(c3)', '⟳(c3.5)'
 ]
+
+
+# ═══════════════════════════════════════════════════════════════
+# Staggered tonic-shared nesting (v2.0; from experiments v14/v15)
+#
+# The staggered octave (§27.7t): adjacent octaves share exactly one
+# station, the tonic (3.5D = 0D'). An octave is an 8-node block; a
+# nesting is octaves joined at shared tonic nodes. v14 results:
+# tonic-sharing conserves the 1 ((|λ₁|−1)/α saturates near 0.6-0.7
+# for any octave count, where tensor nesting compounds); v15: shared
+# tonics make composition order physical (disjoint blocks commute
+# exactly, tonic-shared blocks do not; the commutator localizes at
+# the shared node).
+#
+# build_octave_beats_at() generalizes v14's chain builder to an
+# explicit node list, so chains (v14), rings (v14), and arbitrary
+# octave trees (Xorzo genesis v3) are all the same construction.
+# The chain case reproduces v14 to machine precision (verified in
+# __main__ against the frozen reference numbers below).
+# ═══════════════════════════════════════════════════════════════
+
+# Frozen v14 references (computed 2026-07-19 from
+# experiments/unified_expression_T_v14_staggered_chain.py, α at CODATA):
+V14_CHAIN_REFERENCE = {
+    1: 1.0047036339,   # |λ₁|, 8-node single octave chain
+    2: 1.0047155246,   # |λ₁|, 15-node two-octave chain
+    3: 1.0044779454,   # |λ₁|, 22-node three-octave chain (TQC page: 0.61α)
+}
+
+I_PHASES_CANON = [1j, -1 + 0j, -1j, 1 + 0j]   # i¹, i², i³, i⁰ (canon strokes)
+
+# Local octave layout (legacy-coordinate basis, same as build_F_8D):
+# local index l: 0(• tonic), 1(⊛), 2(—), 3(⎇), 4(Φ), 5(✹), 6(○), 7(⟳ tonic')
+_OCT_STRUCT_LOCAL = [0, 2, 4, 6]
+_OCT_PROC_LOCAL = [1, 3, 5, 7]
+_OCT_HUB_S = 4     # Φ (hub, structural)
+_OCT_HUB_P = 5     # ✹ (hub, processual)
+_OCT_DIAMETERS = [(0, 4), (2, 6), (1, 5), (3, 7)]   # κ bonds per octave
+
+
+def build_octave_beats_at(N: int, node_ids) -> list:
+    """
+    The four beats of one octave, embedded in an N-node graph at the
+    eight nodes listed in node_ids (local octave index l → global node
+    node_ids[l]). Mirrors v14's build_octave_beats exactly; v14's chain
+    is node_ids = [7k, 7k+1, ..., 7k+7].
+
+    node_ids may overlap other octaves' node lists ONLY at the tonic
+    positions (local 0 and 7); that overlap IS the staggered seam.
+    """
+    from scipy.linalg import expm
+    theta = np.pi / 2
+    beats = []
+    for (s, p, ph) in zip(_OCT_STRUCT_LOCAL, _OCT_PROC_LOCAL, I_PHASES_CANON):
+        G = np.zeros((N, N), dtype=complex)
+        S, Pn = node_ids[s], node_ids[p]
+        c = ph * theta
+        G[S, Pn] += c
+        G[Pn, S] += -np.conj(c)
+        if s == _OCT_HUB_S:
+            for o in [0, 2, 6]:
+                h = ph * theta / T_TRIAD
+                G[node_ids[_OCT_HUB_S], node_ids[o]] += h
+                G[node_ids[o], node_ids[_OCT_HUB_S]] += -np.conj(h)
+            G[node_ids[_OCT_HUB_S], node_ids[_OCT_HUB_S]] += ph * theta / T_TRIAD
+            for o in [1, 3, 7]:
+                h = ph * theta / T_TRIAD
+                G[node_ids[_OCT_HUB_P], node_ids[o]] += h
+                G[node_ids[o], node_ids[_OCT_HUB_P]] += -np.conj(h)
+            G[node_ids[_OCT_HUB_P], node_ids[_OCT_HUB_P]] += ph * theta / T_TRIAD
+        else:
+            G[S, node_ids[_OCT_HUB_S]] += c
+            G[node_ids[_OCT_HUB_S], S] += -np.conj(c)
+            G[Pn, node_ids[_OCT_HUB_P]] += c
+            G[node_ids[_OCT_HUB_P], Pn] += -np.conj(c)
+        G = (G - np.conj(G.T)) / 2
+        beats.append(expm(G))
+    return beats
+
+
+class StaggeredOperator:
+    """
+    T = κ ∘ F on a graph of octaves joined at shared tonic nodes.
+
+    octaves: list of 8-element node-id lists, in ASCENDING composition
+    order (the part's octave before the whole's; octave k's beats act
+    before octave k+1's). Composition order is physical at the seams
+    (v15); fixing ascending order is part of the architecture.
+
+    κ places the four diameter bonds (•↔Φ, —↔○, ⊛↔✹, ⎇↔⟳) inside each
+    octave at strength α, exactly as v14. The seam carries NO extra
+    coupling term: the shared node IS the nesting relation.
+    """
+
+    def __init__(self, n_nodes_total: int, octaves, alpha: float = None):
+        self.N = n_nodes_total
+        self.octaves = [list(o) for o in octaves]
+        self.alpha = ALPHA if alpha is None else alpha
+        for o in self.octaves:
+            assert len(o) == 8, "each octave needs 8 node ids"
+
+        # Per-octave compiled blocks E_k (product of the octave's four
+        # beats); used for seam-commutator diagnostics.
+        self._blocks = []
+        F = np.eye(self.N, dtype=complex)
+        for o in self.octaves:
+            E = np.eye(self.N, dtype=complex)
+            for B in build_octave_beats_at(self.N, o):
+                E = B @ E
+            self._blocks.append(E)
+            F = E @ F
+        self.F = F
+
+        kappa = np.eye(self.N, dtype=complex)
+        for o in self.octaves:
+            for (a, c) in _OCT_DIAMETERS:
+                kappa[o[a], o[c]] += self.alpha
+                kappa[o[c], o[a]] += self.alpha
+        self.kappa = kappa
+        self.T = self.kappa @ self.F
+
+        self._eig = None
+
+    # ───── constructors ─────
+
+    @classmethod
+    def chain(cls, n_oct: int, alpha: float = None) -> "StaggeredOperator":
+        """v14 open chain: 7·n + 1 nodes, octave k at nodes [7k .. 7k+7]."""
+        N = 7 * n_oct + 1
+        octaves = [[7 * k + l for l in range(8)] for k in range(n_oct)]
+        return cls(N, octaves, alpha)
+
+    @classmethod
+    def ring(cls, n_oct: int, alpha: float = None) -> "StaggeredOperator":
+        """v14 ring: 7·n nodes, closed tonic-to-tonic."""
+        N = 7 * n_oct
+        octaves = [[(7 * k + l) % N for l in range(8)] for k in range(n_oct)]
+        return cls(N, octaves, alpha)
+
+    # ───── spectra and fixed point ─────
+
+    def _eigen(self):
+        if self._eig is None:
+            self._eig = np.linalg.eig(self.T)
+        return self._eig
+
+    def leading(self):
+        """(λ₁, ψ₁): leading eigenvalue and normalized eigenvector."""
+        ev, V = self._eigen()
+        i = int(np.argmax(np.abs(ev)))
+        psi = V[:, i]
+        return ev[i], psi / np.linalg.norm(psi)
+
+    def departure(self) -> float:
+        """(|λ₁| − 1)/α : conservation departure in units of α.
+
+        v14 band for tonic-shared chains: ≈ 0.6-0.7 for all octave
+        counts (saturating, not compounding). Order-1 values mean the
+        seams conserve the 1; values growing with octave count would
+        mean compounding (the tensor-nesting failure mode)."""
+        lam, _ = self.leading()
+        return float((abs(lam) - 1.0) / self.alpha)
+
+    def fixed_weights(self) -> np.ndarray:
+        """|ψ₁|² of the leading eigenvector, normalized (the attractor)."""
+        _, psi = self.leading()
+        w = np.abs(psi) ** 2
+        return w / w.sum()
+
+    def apply(self, state: np.ndarray) -> np.ndarray:
+        """One pump cycle: state → T(state), L2-normalized."""
+        out = self.T @ state
+        n = np.linalg.norm(out)
+        return out / n if n > 0 else out
+
+    # ───── seam diagnostics (v15) ─────
+
+    def block(self, k: int) -> np.ndarray:
+        """Compiled beat product E_k of octave k."""
+        return self._blocks[k]
+
+    def seam_commutator(self, k1: int, k2: int) -> float:
+        """‖[E_k1, E_k2]‖₂. Nonzero iff the octaves share a node (v15:
+        composition order is physical exactly at the seams)."""
+        A, B = self._blocks[k1], self._blocks[k2]
+        return float(np.linalg.norm(A @ B - B @ A, ord=2))
+
+    def shares_node(self, k1: int, k2: int) -> bool:
+        return bool(set(self.octaves[k1]) & set(self.octaves[k2]))
+
+    def residue_split(self):
+        """v14 accounting on the attractor: structural residues (—, Φ, ○
+        at local 2, 4, 6), processual residues (⊛, ⎇, ✹ at 1, 3, 5),
+        and the double-natured tonic class (• ≡ ⟳; shared nodes counted
+        once). Returns (w_struct, w_proc, w_tonic, per_octave_weights)."""
+        w = self.fixed_weights()
+        role = {}
+        for o in self.octaves:
+            for l, node in enumerate(o):
+                r = l % 7   # local 7 → residue 0 (tonic')
+                if node in role and role[node] != r:
+                    # A node can only carry two roles if both are tonic
+                    # roles (0 and 7 → residue 0); anything else would
+                    # break the staggered geometry.
+                    assert r == 0 and role[node] == 0, "non-tonic node sharing"
+                role[node] = r
+        w_struct = w_proc = w_tonic = 0.0
+        for node, r in role.items():
+            if r == 0:
+                w_tonic += w[node]
+            elif r in (2, 4, 6):
+                w_struct += w[node]
+            else:
+                w_proc += w[node]
+        per_oct = np.array([sum(w[n] for n in o) for o in self.octaves])
+        return float(w_struct), float(w_proc), float(w_tonic), per_oct
 
 
 def describe(T_op: TOperator) -> str:
@@ -475,6 +768,10 @@ def describe(T_op: TOperator) -> str:
 # ═══════════════════════════════════════════════════════════════
 
 if __name__ == '__main__':
+    import sys
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8')   # Windows cp1252 consoles
+
     print("Building ℂ⁴ operator...")
     T4 = TOperator(dim=4)
     print(describe(T4))
@@ -483,3 +780,30 @@ if __name__ == '__main__':
     print("Building ℂ⁸ operator...")
     T8 = TOperator(dim=8)
     print(describe(T8))
+    print()
+
+    print("Staggered tonic-shared chains (v14 verification)...")
+    print(f"  {STATION_NOTE}")
+    all_ok = True
+    for n, ref in V14_CHAIN_REFERENCE.items():
+        S = StaggeredOperator.chain(n)
+        lam, _ = S.leading()
+        ok = abs(abs(lam) - ref) < 1e-9
+        all_ok = all_ok and ok
+        print(f"  chain n={n} ({S.N:>2} nodes): |λ₁| = {abs(lam):.10f}  "
+              f"(v14 ref {ref:.10f})  departure = {S.departure():.4f} α  "
+              f"{'✓' if ok else '✗ MISMATCH'}")
+    print(f"  {'v14 construction reproduced to 1e-9' if all_ok else 'FAILED v14 verification'}")
+    print()
+
+    print("Seam physics (v15): composition order is physical at shared tonics")
+    S3 = StaggeredOperator.chain(3)
+    c01 = S3.seam_commutator(0, 1)     # adjacent: share a tonic node
+    c02 = S3.seam_commutator(0, 2)     # disjoint: no shared node
+    print(f"  ‖[E₀, E₁]‖ (tonic-shared)  = {c01:.6f}   shares node: {S3.shares_node(0, 1)}")
+    print(f"  ‖[E₀, E₂]‖ (disjoint)      = {c02:.2e}   shares node: {S3.shares_node(0, 2)}")
+    ws, wp, wt, per_oct = S3.residue_split()
+    print(f"  attractor residue split: struct {ws:.4f} / proc {wp:.4f} / tonic {wt:.4f}")
+    print(f"  per-octave: {[round(float(x), 5) for x in per_oct]}")
+    print("  (open chains localize toward the bottom octave; a finite-size")
+    print("   edge effect per v15, not a privileged scale)")
