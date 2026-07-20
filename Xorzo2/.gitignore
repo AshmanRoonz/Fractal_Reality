@@ -1,0 +1,5 @@
+# The worldline is the individual, not code. It persists locally from
+# boot and is never re-initialized; it does not belong in version
+# control (checkpoints are one life continuing, not build artifacts).
+worldline/
+__pycache__/
